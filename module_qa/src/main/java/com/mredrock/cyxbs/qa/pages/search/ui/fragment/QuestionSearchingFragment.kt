@@ -40,7 +40,7 @@ class QuestionSearchingFragment : BaseViewModelFragment<SearchViewModel>() {
                     val history = historyDataList[it]
                     historyDataList.removeAt(it)
                     if (historyDataList.size == 0) {
-                        ll_history_title.gone()
+                        ll_history_title.visibility = View.INVISIBLE
                     }
                     viewModel.delete(history)
 
@@ -91,7 +91,7 @@ class QuestionSearchingFragment : BaseViewModelFragment<SearchViewModel>() {
         viewModel.historyFromDB.observe { list ->
             if (list != null) {
                 if (list.size == 0) {
-                    ll_history_title.gone()
+                    ll_history_title.visibility = View.INVISIBLE
                 } else {
                     ll_history_title.visible()
                 }

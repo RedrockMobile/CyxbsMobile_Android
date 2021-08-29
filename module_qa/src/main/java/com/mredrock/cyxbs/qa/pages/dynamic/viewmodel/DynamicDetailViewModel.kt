@@ -1,12 +1,15 @@
 package com.mredrock.cyxbs.qa.pages.dynamic.viewmodel
 
+import android.util.Log
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import com.mredrock.cyxbs.common.BaseApp
 import com.mredrock.cyxbs.common.network.ApiGenerator
 import com.mredrock.cyxbs.common.utils.extensions.mapOrThrowApiException
+
 import com.mredrock.cyxbs.common.utils.extensions.safeSubscribeBy
+
 import com.mredrock.cyxbs.common.utils.extensions.setSchedulers
 import com.mredrock.cyxbs.common.utils.extensions.toast
 import com.mredrock.cyxbs.common.viewmodel.BaseViewModel
@@ -43,6 +46,17 @@ open class DynamicDetailViewModel : BaseViewModel() {
     val commentReleaseResult = SingleLiveEvent<CommentReleaseResult>()
 
     val deleteDynamic = MutableLiveData<Boolean>()
+
+
+    /**
+     * 此变量是为了解决学长bug（由于LiveData粘性事件而带来的） 由于LiveData
+     * 被封装过 我不采用反射的方式去解决（不好拿到observe对象）
+     * 所以采取用一个变量进去解决
+     * 表示是否杀掉当前Activity
+     * @author WangXi
+     * @Date: 2021/8/28/ 19:36
+     */
+    var isNeedFinish = false
 
     // commentId用于刷新后聚焦到某一个评论。
     fun refreshCommentList(postId: String, commentId: String) {
@@ -128,7 +142,9 @@ open class DynamicDetailViewModel : BaseViewModel() {
                 }
     }
 
+    //对自己的帖子进行删除
     fun deleteId(id: String, model: String) {
+        Log.e("xxx","(DynamicDetailViewModel.kt:134)-> deleteId")
         ApiGenerator.getApiService(ApiServiceNew::class.java)
                 .deleteId(id, model)
                 .setSchedulers()
@@ -143,9 +159,11 @@ open class DynamicDetailViewModel : BaseViewModel() {
                         DynamicDetailActivity.DYNAMIC_DELETE -> {
                             toastEvent.value = R.string.qa_delete_dynamic_failure
                         }
+
                         DynamicDetailActivity.COMMENT_DELETE -> {
                             toastEvent.value = R.string.qa_delete_comment_failure
                         }
+
                     }
                 }
                 .safeSubscribeBy {
@@ -153,7 +171,8 @@ open class DynamicDetailViewModel : BaseViewModel() {
 
                     when (model) {
                         DynamicDetailActivity.DYNAMIC_DELETE -> {
-                            deleteDynamic.postValue(true)
+                            isNeedFinish=true
+                                deleteDynamic.postValue(true)
                             toastEvent.value = R.string.qa_delete_dynamic_success
                         }
                         DynamicDetailActivity.COMMENT_DELETE -> {
@@ -220,6 +239,9 @@ open class DynamicDetailViewModel : BaseViewModel() {
             }
         }
     }
+
+
+
 
 
 }

@@ -69,6 +69,7 @@ class RvAdapterWrapper(normalAdapter: RecyclerView.Adapter<out RecyclerView.View
     }
 
     private inner class AdapterDataObserver(val type: Int) : RecyclerView.AdapterDataObserver() {
+
         override fun onChanged() = when (type) {
             TYPE_HEADER -> notifyItemRangeChanged(0, normalPositionStart)
             TYPE_NORMAL -> {

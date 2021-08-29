@@ -43,6 +43,7 @@
                         app:layout_constraintTop_toTopOf="@id/qa_search_cs_one" />
 
                     <androidx.recyclerview.widget.RecyclerView
+                        android:focusableInTouchMode="true"
                         android:id="@+id/qa_rv_knowledge"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"

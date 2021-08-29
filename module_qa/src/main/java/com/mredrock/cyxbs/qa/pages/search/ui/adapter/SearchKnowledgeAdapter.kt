@@ -4,7 +4,6 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.mredrock.cyxbs.common.BaseApp
-import com.mredrock.cyxbs.common.utils.LogUtils
 import com.mredrock.cyxbs.qa.R
 import com.mredrock.cyxbs.qa.beannew.Knowledge
 import com.mredrock.cyxbs.qa.component.recycler.BaseRvAdapter
@@ -31,7 +30,6 @@ class SearchKnowledgeAdapter( val recyclerView: RecyclerView) : BaseRvAdapter<Kn
     override fun onItemClickListener(holder: BaseViewHolder<Knowledge>, position: Int, data: Knowledge) {
         super.onItemClickListener(holder, position, data)
         holder.itemView.setOnClickListener {
-            LogUtils.d("onQaItemClicked","onclick")
             ClickKnowledge = true
             searchResultHeaderAdapter?.knowledge=data
             recyclerView.adapter=searchResultHeaderAdapter

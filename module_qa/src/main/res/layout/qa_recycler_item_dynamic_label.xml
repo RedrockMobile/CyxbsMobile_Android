@@ -6,6 +6,7 @@
 
     <androidx.appcompat.widget.AppCompatTextView
         android:id="@+id/tv_dynamic_label"
+        android:focusableInTouchMode="true"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:background="@drawable/qa_shape_common_single_line_back"

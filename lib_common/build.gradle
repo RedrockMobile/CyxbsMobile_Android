@@ -7,7 +7,6 @@ android.defaultConfig {
         buildConfigField("String", k, v)
     })
 }
-
 // 这里添加每个模块都可能会使用到的公用库，添加之前请调研一下，该库是否会持续维护
 // 请不要把需要kapt(注解处理)声明的添加到这其中，这样不会在业务模块中生效
 // 需要添加请移步项目根目录下的config.gradle中的dependencies

@@ -17,7 +17,9 @@ abstract class BaseRvAdapter<T> : androidx.recyclerview.widget.RecyclerView.Adap
             return
         }
         holder.refresh(dataList[position])
-        holder.itemView.setOnSingleClickListener { onItemClickListener(holder, position, dataList[position]) }
+        holder.itemView.setOnSingleClickListener {
+            onItemClickListener(holder, position, dataList[position])
+        }
         holder.itemView.setOnLongClickListener {
             onItemLongClickListener(holder, position, dataList[position], it)
             true

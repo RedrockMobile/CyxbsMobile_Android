@@ -19,6 +19,7 @@ internal fun TextView.setPraise(praiseNum: String?,
     if (praiseNum != null) {
         text = praiseNum
     }
+
     isPraised ?: return
     val drawable = if (isPraised) {
         ContextCompat.getDrawable(context, praisedIcon)

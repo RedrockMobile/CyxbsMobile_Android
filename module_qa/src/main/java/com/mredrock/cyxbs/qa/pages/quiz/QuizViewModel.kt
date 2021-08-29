@@ -3,6 +3,7 @@ package com.mredrock.cyxbs.qa.pages.quiz
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import android.os.Environment
+import android.util.Log
 import androidx.lifecycle.MutableLiveData
 import com.google.gson.Gson
 import com.mredrock.cyxbs.common.BaseApp
@@ -104,10 +105,12 @@ class QuizViewModel : BaseViewModel() {
                         }
                         sendDynamicRequest(parts = builder.build().parts, filePairs = list)
                     }
+
                 }
         } else {
             //不含图片的情况
             sendDynamicRequest(parts = builder.build().parts, filePairs = null)
+
         }
     }
 
@@ -231,6 +234,7 @@ class QuizViewModel : BaseViewModel() {
     }
 
     fun submitComment(postId: String, content: String, replyId: String) {
+        Log.e("xxx","(QuizViewModel.kt:235)-> 开始提交自己的按钮点击")
         val builder = MultipartBody.Builder()
             .setType(MultipartBody.FORM)
             .addFormDataPart("content", content.removeContinuousEnters())
@@ -266,6 +270,7 @@ class QuizViewModel : BaseViewModel() {
             }
             .safeSubscribeBy {
                 toastEvent.value = R.string.qa_release_comment_success
+                Log.e("xxx","(QuizViewModel.kt:269)->提交里面发布任务成功 ")
                 finishReleaseCommentEvent.value = true
             }
     }
