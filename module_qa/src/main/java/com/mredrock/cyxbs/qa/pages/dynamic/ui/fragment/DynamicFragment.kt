@@ -403,6 +403,7 @@ open class DynamicFragment : BaseViewModelFragment<DynamicListViewModel>(), Even
             handler.postDelayed(windowAlphaRunnable, 1000)
 
             SearchActivity.activityStart(this, hotWord.toString(), iv_question_search)
+
             MobclickAgent.onEvent(context, CyxbsMob.Event.QA_SEARCH_RECOMMEND)
         }
 
