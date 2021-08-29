@@ -76,6 +76,7 @@ class SearchActivity : BaseViewModelActivity<SearchViewModel>(), EventBusLifecyc
         et_question_search.setOnEditorActionListener { v, actionId, _ ->
             if (actionId == EditorInfo.IME_ACTION_SEARCH) {
                 if (v.text.toString().isBlank()) {
+                    //如果textview的text是空的但如果hint不为空此时触发搜索的话就搜索这个hint,如果hint也没有的话就弹一个toast
                     if (!searchHint.isNullOrEmpty() && !v.hint.isNullOrEmpty()) {
                         v.text = searchHint
                         searchText = searchHint
@@ -86,6 +87,7 @@ class SearchActivity : BaseViewModelActivity<SearchViewModel>(), EventBusLifecyc
                         v.text = ""
                     }
                 } else {
+                    //如果textview的text不是空，就搜索这个text
                     searchText = v.text.toString()
                     turnToResult(v.text.toString())
                     viewModel.insert(QAHistory(v.text.toString(), System.currentTimeMillis()))
@@ -94,6 +96,8 @@ class SearchActivity : BaseViewModelActivity<SearchViewModel>(), EventBusLifecyc
             }
             false
         }
+
+        //点击后切换到SearchingFragment
         et_question_search.setOnTouchListener { _, _ ->
             turnToSearching()
             false
@@ -101,6 +105,7 @@ class SearchActivity : BaseViewModelActivity<SearchViewModel>(), EventBusLifecyc
 
     }
 
+    //切换到QuestionSearchingFragment
     private fun turnToSearching() {
         val curFragment = supportFragmentManager.findFragmentById(R.id.fcv_question_search)
         if (curFragment is QuestionSearchedFragment) {
@@ -109,12 +114,12 @@ class SearchActivity : BaseViewModelActivity<SearchViewModel>(), EventBusLifecyc
         }
     }
 
+    //根据搜索词切换到QuestionSearchedFragment
     private fun turnToResult(keyWord: String) {
         val bundle = Bundle()
         val curFragment = supportFragmentManager.findFragmentById(R.id.fcv_question_search)
         bundle.putString(QuestionSearchedFragment.SEARCH_KEY, keyWord)
         if (curFragment is QuestionSearchedFragment) {
-            Log.d(TAG, "turnToResult: curFragment is QuestionSearchedFragment ")
             curFragment.refreshSearchKey(keyWord)
             curFragment.arguments = bundle
             curFragment.invalidate()
@@ -122,7 +127,6 @@ class SearchActivity : BaseViewModelActivity<SearchViewModel>(), EventBusLifecyc
             questionSearchedFragment.arguments = bundle
             supportFragmentManager.beginTransaction()
                 .replace(R.id.fcv_question_search, questionSearchedFragment).commit()
-            Log.d(TAG, "turnToResult: curFragment is not QuestionSearchedFragment ")
         }
         (getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager).hideSoftInputFromWindow(
             currentFocus?.windowToken,
