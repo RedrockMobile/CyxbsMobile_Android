@@ -173,7 +173,6 @@ class DynamicFragment : BaseViewModelFragment<DynamicListViewModel>(), EventBusL
                     TopicDataSet.getTopicData(topic)?.let {
                         CircleDetailActivity.activityStartFromCircle(
                             this@DynamicFragment,
-                            view,
                             it
                         )
                     }
@@ -233,7 +232,7 @@ class DynamicFragment : BaseViewModelFragment<DynamicListViewModel>(), EventBusL
                 if (topic.topicId == "0") {
                     CircleSquareActivity.activityStartFromDynamic(this)
                 } else
-                    CircleDetailActivity.activityStartFromCircle(this, view, topic)
+                    CircleDetailActivity.activityStartFromCircle(this, topic)
             }, this)
         }
         val linearLayoutManager = LinearLayoutManager(context)
@@ -410,7 +409,7 @@ class DynamicFragment : BaseViewModelFragment<DynamicListViewModel>(), EventBusL
             //在fragment onResume时将alpha值设置回来
             handler.postDelayed(windowAlphaRunnable, 1000)
 
-            SearchActivity.activityStart(this, hotWord.toString(), iv_question_search)
+            SearchActivity.activityStart(this, hotWord.toString())
             MobclickAgent.onEvent(context, CyxbsMob.Event.QA_SEARCH_RECOMMEND)
         }
 

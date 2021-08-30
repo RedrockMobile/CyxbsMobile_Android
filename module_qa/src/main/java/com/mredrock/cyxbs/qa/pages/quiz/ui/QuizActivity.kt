@@ -1,12 +1,12 @@
 package com.mredrock.cyxbs.qa.pages.quiz.ui
 
-import android.os.Build
 import android.annotation.SuppressLint
 import android.app.Activity
 import android.app.ProgressDialog
 import android.content.Intent
 import android.graphics.drawable.Drawable
 import android.net.Uri
+import android.os.Build
 import android.os.Bundle
 import android.text.InputFilter
 import android.view.KeyEvent
@@ -51,6 +51,7 @@ class QuizActivity : BaseViewModelActivity<QuizViewModel>() {
         const val UPDATE_DRAFT = "1"
         fun activityStart(fragment: Fragment, type: String, requestCode: Int) {
             fragment.startActivityForResult<QuizActivity>(requestCode, "type" to type)
+            fragment.activity?.overridePendingTransition(0, 0)
         }
     }
 

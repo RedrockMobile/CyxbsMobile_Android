@@ -91,7 +91,7 @@ class CirclesAdapter(private val onItemClickEvent: (Topic, View) -> Unit, privat
                 viewHolder.itemView.apply {
                     setOnSingleClickListener {
                         circlesItemList[position].post_count = 0
-                        onItemClickEvent(circlesItemList[position], viewHolder.itemView.findViewById<LinearLayout>(R.id.qa_ll_topic))
+                        onItemClickEvent(circlesItemList[position], viewHolder.itemView.findViewById<ImageViewAddCount>(R.id.qa_iv_circle))
                     }
                     qa_iv_circle.apply {
 

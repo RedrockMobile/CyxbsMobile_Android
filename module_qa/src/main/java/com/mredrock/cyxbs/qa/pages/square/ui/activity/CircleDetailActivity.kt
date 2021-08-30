@@ -40,6 +40,7 @@ import com.mredrock.cyxbs.qa.ui.widget.ShareDialog
 import com.mredrock.cyxbs.qa.utils.ClipboardController
 import com.mredrock.cyxbs.qa.utils.ShareUtils
 import com.tencent.tauth.Tencent
+import de.hdodenhof.circleimageview.CircleImageView
 import kotlinx.android.synthetic.main.qa_activity_circle_detail.*
 import kotlinx.android.synthetic.main.qa_recycler_item_circle_square.*
 
@@ -63,19 +64,15 @@ class CircleDetailActivity : BaseViewModelActivity<CircleDetailViewModel>() {
             }
         }
 
-        fun activityStartFromCircle(fragment: Fragment, topicItemView: View, data: Topic) {
+        // 从邮问界面我关注的圈子列表跳转到圈子详情
+        fun activityStartFromCircle(fragment: Fragment, data: Topic) {
             fragment.apply {
                 activity?.let {
-                    val opt = ActivityOptionsCompat.makeSceneTransitionAnimation(
-                        it,
-                        topicItemView,
-                        "topicItem"
-                    )
                     val intent = Intent(BaseApp.context, CircleDetailActivity::class.java)
                     intent.putExtra("topicItemData", data)
                     it.window.exitTransition = Slide(Gravity.START).apply { duration = 300L }
                     startPosition = DYNAMIC_DETAIL_REQUEST
-                    startActivityForResult(intent, DYNAMIC_DETAIL_REQUEST, opt.toBundle())
+                    startActivityForResult(intent, DYNAMIC_DETAIL_REQUEST)
                 }
             }
         }

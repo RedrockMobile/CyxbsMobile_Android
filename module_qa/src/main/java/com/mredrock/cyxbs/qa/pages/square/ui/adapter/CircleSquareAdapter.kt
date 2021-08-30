@@ -112,8 +112,6 @@ class CircleSquareDiffCallback : DiffUtil.ItemCallback<Topic>() {
     override fun areItemsTheSame(oldItem: Topic, newItem: Topic) =
         oldItem.topicId == newItem.topicId
 
-    override fun areContentsTheSame(oldItem: Topic, newItem: Topic): Boolean {
-        return oldItem == newItem
-
-    }
+    override fun areContentsTheSame(oldItem: Topic, newItem: Topic) =
+        oldItem == newItem
 }
