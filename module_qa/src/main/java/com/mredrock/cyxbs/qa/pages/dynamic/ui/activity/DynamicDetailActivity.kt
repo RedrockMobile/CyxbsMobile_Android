@@ -567,6 +567,7 @@ class DynamicDetailActivity : BaseViewModelActivity<DynamicDetailViewModel>() {
             initChangeColorAnimator("#000000", "#1D1D1D")
         }
         window.returnTransition = Slide(Gravity.END).apply { duration = animatorDuration }
+        viewModel.replyInfo.value = ReplyInfo("", "", "")
         super.onBackPressed()
     }
 
