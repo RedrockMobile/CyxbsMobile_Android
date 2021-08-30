@@ -117,6 +117,7 @@ class AddItemDialog(context: Context, onConfirm: (Todo) -> Unit) :
                 //制空remindMode
                 todo.remindMode = RemindMode.generateDefaultRemindMode()
                 curOperate = NONE
+                hideWheel()
             }
 
             todo_inner_add_thing_repeat_time_confirm.setOnClickListener {
@@ -228,6 +229,8 @@ class AddItemDialog(context: Context, onConfirm: (Todo) -> Unit) :
         curOperate = NONE
         todo_tv_set_notify_time.isClickable = true
         todo_tv_set_repeat_time.isClickable = true
+        todo_inner_add_thing_repeat_time_cancle.visibility = View.GONE
+        todo_inner_add_thing_repeat_time_confirm.visibility = View.GONE
     }
 
     private fun updateNotifyTime() {
@@ -464,21 +467,4 @@ class AddItemDialog(context: Context, onConfirm: (Todo) -> Unit) :
         override fun getTextWithMaximumLength(): String = "周天"
         override fun getPositivePosition(position: Int): String = "周" + weekStringList[position]
     }
-
-//    abstract class BaseWheelAdapter(private val size: Int) : WheelAdapter {
-//        override fun getMaxIndex(): Int = size - 1
-//
-//        override fun getMinIndex(): Int = 0
-//
-//        override fun getPosition(vale: String): Int = 0
-//
-//        override fun getValue(position: Int): String {
-//            if (position < 0) {
-//                return getPositivePosition((size + position) % size)
-//            }
-//            return getPositivePosition(position % size)
-//        }
-//
-//        abstract fun getPositivePosition(position: Int): String
-//    }
 }

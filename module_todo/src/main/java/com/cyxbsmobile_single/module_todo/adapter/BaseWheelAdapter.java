@@ -11,7 +11,7 @@ import org.jetbrains.annotations.NotNull;
  */
 public abstract class BaseWheelAdapter implements WheelAdapter {
 
-    private int size;
+    private final int size;
 
     public BaseWheelAdapter(int size){
         this.size = size;
