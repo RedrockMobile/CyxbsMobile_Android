@@ -7,6 +7,7 @@ import android.view.LayoutInflater
 import android.view.View
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.cyxbsmobile_single.module_todo.R
+import com.cyxbsmobile_single.module_todo.adapter.BaseWheelAdapter
 import com.cyxbsmobile_single.module_todo.adapter.RepeatTimeAdapter
 import com.cyxbsmobile_single.module_todo.model.bean.DateBeen
 import com.cyxbsmobile_single.module_todo.model.bean.RemindMode
@@ -47,9 +48,24 @@ class AddItemDialog(context: Context, onConfirm: (Todo) -> Unit) :
     private val repeatTimeAdapter by lazy {
         RepeatTimeAdapter(arrayListOf()) {
             when (todo.remindMode.repeatMode) {
-                RemindMode.YEAR -> todo.remindMode.date.removeAt(it)
-                RemindMode.WEEK -> todo.remindMode.week.removeAt(it)
-                RemindMode.MONTH -> todo.remindMode.day.removeAt(it)
+                RemindMode.YEAR -> {
+                    todo.remindMode.date.removeAt(it)
+                    if (todo.remindMode.date.isEmpty()) {
+                        todo.remindMode.repeatMode = RemindMode.NONE
+                    }
+                }
+                RemindMode.WEEK -> {
+                    todo.remindMode.week.removeAt(it)
+                    if (todo.remindMode.week.isEmpty()) {
+                        todo.remindMode.repeatMode = RemindMode.NONE
+                    }
+                }
+                RemindMode.MONTH -> {
+                    todo.remindMode.day.removeAt(it)
+                    if (todo.remindMode.day.isEmpty()) {
+                        todo.remindMode.repeatMode = RemindMode.NONE
+                    }
+                }
             }
         }
     }
@@ -131,6 +147,11 @@ class AddItemDialog(context: Context, onConfirm: (Todo) -> Unit) :
         val repeatString = when (todo_inner_add_thing_first.getCurrentItem()) {
             "每周" -> {
                 todo.remindMode.apply {
+                    if (repeatMode != RemindMode.WEEK && repeatMode != RemindMode.NONE) {
+                        //不允许添加两种以上的重复提醒
+                        BaseApp.context.toast("掌友，只能选择一种重复模式哦！")
+                        return
+                    }
                     repeatMode = RemindMode.WEEK
                     week.add(
                         0,
@@ -144,6 +165,11 @@ class AddItemDialog(context: Context, onConfirm: (Todo) -> Unit) :
             }
             "每月" -> {
                 todo.remindMode.apply {
+                    if (repeatMode != RemindMode.MONTH && repeatMode != RemindMode.NONE) {
+                        //不允许添加两种以上的重复提醒
+                        BaseApp.context.toast("掌友，只能选择一种重复模式哦！")
+                        return
+                    }
                     repeatMode = RemindMode.MONTH
                     day.add(0, Integer.parseInt(todo_inner_add_thing_second.getCurrentItem()))
                 }
@@ -151,6 +177,11 @@ class AddItemDialog(context: Context, onConfirm: (Todo) -> Unit) :
             }
             "每年" -> {
                 todo.remindMode.apply {
+                    if (repeatMode != RemindMode.YEAR && repeatMode != RemindMode.NONE) {
+                        //不允许添加两种以上的重复提醒
+                        BaseApp.context.toast("掌友，只能选择一种重复模式哦！")
+                        return
+                    }
                     repeatMode = RemindMode.YEAR
                     date.add(
                         0,
@@ -161,11 +192,21 @@ class AddItemDialog(context: Context, onConfirm: (Todo) -> Unit) :
             }
 
             "每天" -> {
+                if (todo.remindMode.repeatMode != RemindMode.DAY && todo.remindMode.repeatMode != RemindMode.NONE) {
+                    //不允许添加两种以上的重复提醒
+                    BaseApp.context.toast("掌友，只能选择一种重复模式哦！")
+                    return
+                }
                 todo.remindMode.repeatMode = RemindMode.DAY
                 ""
             }
 
             else -> {
+                if (todo.remindMode.repeatMode != RemindMode.WEEK && todo.remindMode.repeatMode != RemindMode.NONE) {
+                    //不允许添加两种以上的重复提醒
+                    BaseApp.context.toast("掌友，只能选择一种重复模式哦！")
+                    return
+                }
                 todo.remindMode.repeatMode = RemindMode.NONE
                 ""
             }
@@ -266,10 +307,6 @@ class AddItemDialog(context: Context, onConfirm: (Todo) -> Unit) :
                     oldVal: String,
                     newVal: String
                 ) {
-                    repeatTimeAdapter.removeAll()
-                    val remindDate = todo.remindMode.notifyDateTime
-                    todo.remindMode = RemindMode.generateDefaultRemindMode()
-                    todo.remindMode.notifyDateTime = remindDate
                     when (newVal) {
                         "每天" -> {
                             todo_inner_add_thing_second.apply {
@@ -352,23 +389,6 @@ class AddItemDialog(context: Context, onConfirm: (Todo) -> Unit) :
         )
     }
 
-    abstract class NormalWheelAdapter(private val size: Int) : WheelAdapter {
-        override fun getMaxIndex(): Int = size - 1
-
-        override fun getMinIndex(): Int = 0
-
-        override fun getPosition(vale: String): Int = 0
-
-        override fun getValue(position: Int): String {
-            if (position < 0) {
-                return getPositivePosition((size + position) % size)
-            }
-            return getPositivePosition(position % size)
-        }
-
-        abstract fun getPositivePosition(position: Int): String
-    }
-
     private fun initWheelPicker(wheelPicker: WheelPicker, adapter: WheelAdapter) {
         wheelPicker.setAdapter(adapter)
         wheelPicker.setSelectorRoundedWrapPreferred(true)
@@ -386,7 +406,7 @@ class AddItemDialog(context: Context, onConfirm: (Todo) -> Unit) :
 
     //日期（带星期数）的适配器
     class DateAdapter(private val dateBeenList: List<DateBeen>) :
-        NormalWheelAdapter(dateBeenList.size) {
+        BaseWheelAdapter(dateBeenList.size) {
         override fun getTextWithMaximumLength(): String = "12月31日 周天"
 
         override fun getValue(position: Int): String {
@@ -406,13 +426,13 @@ class AddItemDialog(context: Context, onConfirm: (Todo) -> Unit) :
     }
 
     //数字适配器
-    class NumAdapter(size: Int) : NormalWheelAdapter(size) {
+    class NumAdapter(size: Int) : BaseWheelAdapter(size) {
         override fun getTextWithMaximumLength(): String = "24"
         override fun getPositivePosition(position: Int): String = "${position + 1}"
     }
 
     //选择重复类型的适配器
-    class RepeatTypeAdapter : NormalWheelAdapter(6) {
+    class RepeatTypeAdapter : BaseWheelAdapter(6) {
         private val dataList = listOf(
             "每天",
             "每周",
@@ -434,14 +454,31 @@ class AddItemDialog(context: Context, onConfirm: (Todo) -> Unit) :
         override fun getPositivePosition(position: Int): String = dataList[position]
     }
 
-    class SubOneNumberAdapter(size: Int) : NormalWheelAdapter(size) {
+    class SubOneNumberAdapter(size: Int) : BaseWheelAdapter(size) {
         override fun getTextWithMaximumLength(): String = "24"
         override fun getPositivePosition(position: Int): String = "$position"
     }
 
     //星期
-    class WeekAdapter : NormalWheelAdapter(7) {
+    class WeekAdapter : BaseWheelAdapter(7) {
         override fun getTextWithMaximumLength(): String = "周天"
         override fun getPositivePosition(position: Int): String = "周" + weekStringList[position]
     }
+
+//    abstract class BaseWheelAdapter(private val size: Int) : WheelAdapter {
+//        override fun getMaxIndex(): Int = size - 1
+//
+//        override fun getMinIndex(): Int = 0
+//
+//        override fun getPosition(vale: String): Int = 0
+//
+//        override fun getValue(position: Int): String {
+//            if (position < 0) {
+//                return getPositivePosition((size + position) % size)
+//            }
+//            return getPositivePosition(position % size)
+//        }
+//
+//        abstract fun getPositivePosition(position: Int): String
+//    }
 }
