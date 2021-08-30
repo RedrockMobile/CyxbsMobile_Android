@@ -7,10 +7,12 @@
     android:orientation="vertical">
 
     <LinearLayout
+        android:id="@+id/todo_ll_widget_back"
         android:layout_width="match_parent"
         android:layout_height="20dp"
         android:orientation="horizontal">
         <ImageView
+            android:id="@+id/todo_iv_widget_check"
             android:layout_width="16dp"
             android:layout_height="16dp"
             android:layout_gravity="center_vertical"

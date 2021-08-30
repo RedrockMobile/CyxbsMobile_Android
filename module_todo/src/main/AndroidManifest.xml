@@ -19,6 +19,8 @@
                 <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
                 <action android:name="cyxbs.widget.todo.refresh" />
                 <action android:name="cyxbs.widget.todo.add"/>
+                <action android:name="cyxbs.widget.todo.jump" />
+                <action android:name="cyxbs.widget.todo.check"/>
             </intent-filter>
 
             <meta-data

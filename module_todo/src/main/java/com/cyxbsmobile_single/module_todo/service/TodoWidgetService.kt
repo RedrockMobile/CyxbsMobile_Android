@@ -1,5 +1,6 @@
 package com.cyxbsmobile_single.module_todo.service
 
+import android.app.PendingIntent
 import android.content.Intent
 import android.widget.RemoteViews
 import android.widget.RemoteViewsService
@@ -8,6 +9,7 @@ import com.cyxbsmobile_single.module_todo.model.TodoModel
 import com.cyxbsmobile_single.module_todo.model.bean.RemindMode
 import com.cyxbsmobile_single.module_todo.model.bean.Todo
 import com.cyxbsmobile_single.module_todo.model.database.TodoDatabase
+import com.cyxbsmobile_single.module_todo.ui.widget.TodoWidget
 import com.cyxbsmobile_single.module_todo.util.repeatMode2RemindTime
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
@@ -53,6 +55,21 @@ class TodoWidgetService : RemoteViewsService() {
 
         override fun getViewAt(position: Int): RemoteViews {
             val listItem = RemoteViews(baseContext.packageName, R.layout.todo_widget_todo_list_item)
+            listItem.setOnClickFillInIntent(
+                R.id.todo_ll_widget_back,
+                Intent(BaseApp.context, TodoWidget::class.java).apply {
+                    action = "cyxbs.widget.todo.jump"
+                    putExtra("todo", Gson().toJson(todoList[position]))
+                }
+            )
+
+            listItem.setOnClickFillInIntent(
+                R.id.todo_iv_widget_check,
+                Intent(BaseApp.context, TodoWidget::class.java).apply {
+                    action = "cyxbs.widget.todo.check"
+                    putExtra("todo", Gson().toJson(todoList[position]))
+                }
+            )
             if (position in todoList.indices) {
                 val curTodo = todoList[position]
                 listItem.setTextViewText(R.id.todo_tv_widget_todo_title, curTodo.title)

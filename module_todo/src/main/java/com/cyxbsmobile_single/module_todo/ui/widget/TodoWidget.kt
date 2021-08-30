@@ -9,7 +9,12 @@ import android.content.Intent
 import android.widget.RemoteViews
 import com.alibaba.android.arouter.launcher.ARouter
 import com.cyxbsmobile_single.module_todo.R
+import com.cyxbsmobile_single.module_todo.model.TodoModel
+import com.cyxbsmobile_single.module_todo.model.bean.Todo
 import com.cyxbsmobile_single.module_todo.service.TodoWidgetService
+import com.cyxbsmobile_single.module_todo.ui.activity.TodoDetailActivity
+import com.cyxbsmobile_single.module_todo.ui.activity.TodoInnerMainActivity
+import com.google.gson.Gson
 import com.mredrock.cyxbs.common.BaseApp
 import com.mredrock.cyxbs.common.config.TODO_ADD_TODO_BY_WIDGET
 import com.mredrock.cyxbs.common.utils.LogUtils
@@ -50,6 +55,12 @@ class TodoWidget : AppWidgetProvider() {
                 PendingIntent.FLAG_UPDATE_CURRENT
             )
         )
+        remoteView.setPendingIntentTemplate(R.id.todo_lv_widget_todo_list, PendingIntent.getBroadcast(
+            context,
+            0,
+            Intent(context, TodoWidget::class.java),
+            PendingIntent.FLAG_UPDATE_CURRENT
+        ))
         return remoteView
     }
 
@@ -59,20 +70,42 @@ class TodoWidget : AppWidgetProvider() {
         when (intent?.action) {
             "cyxbs.widget.todo.refresh" -> {
                 context?.let {
-                    val manager = AppWidgetManager.getInstance(it)
-                    val componentName = ComponentName(it, TodoWidget::class.java)
-                    val remoteView = initRemoteView(it)
-                    manager.updateAppWidget(componentName, remoteView)
-                    manager.notifyAppWidgetViewDataChanged(
-                        manager.getAppWidgetIds(componentName),
-                        R.id.todo_lv_widget_todo_list
-                    )
+                    refresh(it)
                 }
             }
 
             "cyxbs.widget.todo.add" -> {
                 ARouter.getInstance().build(TODO_ADD_TODO_BY_WIDGET).navigation()
             }
+
+            "cyxbs.widget.todo.check" -> {
+                val todo = Gson().fromJson(intent.getStringExtra("todo"),Todo::class.java)
+                todo.isChecked = true
+                TodoModel.INSTANCE.updateTodo(todo){
+                    //刷新一波
+                    context?.let {
+                        refresh(it)
+                    }
+                }
+            }
+
+            "cyxbs.widget.todo.jump" -> {
+                val todo = Gson().fromJson(intent.getStringExtra("todo"),Todo::class.java)
+                context?.let {
+                    TodoDetailActivity.startActivity(todo, it)
+                }
+            }
         }
+    }
+
+    private fun refresh(context: Context){
+        val manager = AppWidgetManager.getInstance(context)
+        val componentName = ComponentName(context, TodoWidget::class.java)
+        val remoteView = initRemoteView(context)
+        manager.updateAppWidget(componentName, remoteView)
+        manager.notifyAppWidgetViewDataChanged(
+            manager.getAppWidgetIds(componentName),
+            R.id.todo_lv_widget_todo_list
+        )
     }
 }
