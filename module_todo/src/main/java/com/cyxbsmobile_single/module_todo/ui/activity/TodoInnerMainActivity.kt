@@ -24,11 +24,25 @@ import kotlinx.android.synthetic.main.todo_rv_item_todo.view.*
 @Route(path = DISCOVER_TODO_MAIN)
 class TodoInnerMainActivity : BaseViewModelActivity<TodoViewModel>() {
 
+    companion object var CHANGED_FLAG = false
+
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.todo_activity_inner_main)
+        CHANGED_FLAG = false
         viewModel.initDataList {
             onDateLoaded()
+        }
+    }
+
+    override fun onResume() {
+        super.onResume()
+        if (CHANGED_FLAG){
+            //私以为都在子线程进行，不会ANR
+            viewModel.initDataList {
+                onDateLoaded()
+            }
         }
     }
 
@@ -71,17 +85,21 @@ class TodoInnerMainActivity : BaseViewModelActivity<TodoViewModel>() {
                         todo_fl_todo_back.setOnClickListener {
                             wrapper.todo?.let {
                                 TodoDetailActivity.startActivity(it, this@TodoInnerMainActivity)
+                                CHANGED_FLAG = true
                             }
                         }
                         todo_tv_todo_title.setOnClickListener{
                             wrapper.todo?.let {
                                 TodoDetailActivity.startActivity(it, this@TodoInnerMainActivity)
+                                CHANGED_FLAG = true
                             }
                         }
                         todo_fl_del.visibility = View.VISIBLE
                         todo_fl_del.setOnClickListener {
-                            adapter.delItem(wrapper)
-                            LogUtils.d("RayJoe", "position = $pos")
+                            if (todo_cl_item_main.translationX != 0f){
+                                adapter.delItem(wrapper)
+                                LogUtils.d("RayJoe", "position = $pos")
+                            }
                         }
                         todo_cl_item_main.setBackgroundColor(Color.WHITE)
 

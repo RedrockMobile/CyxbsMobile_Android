@@ -25,4 +25,8 @@ class TodoDetailViewModel: BaseViewModel() {
         isChanged = todoAfterChange != rawTodo
         return isChanged
     }
+
+    fun delTodo(todo: Todo, onSuccess: () -> Unit){
+        TodoModel.INSTANCE.delTodo(todo.todoId, onSuccess)
+    }
 }

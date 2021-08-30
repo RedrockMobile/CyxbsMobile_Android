@@ -1,9 +1,11 @@
 package com.cyxbsmobile_single.module_todo.adapter
 
+import android.animation.ValueAnimator
 import android.content.Context
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.view.animation.OvershootInterpolator
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.cyxbsmobile_single.module_todo.R
 import com.cyxbsmobile_single.module_todo.adapter.DoubleListFoldRvAdapter.ShowType.*
@@ -11,6 +13,7 @@ import com.cyxbsmobile_single.module_todo.ui.activity.TodoDetailActivity
 import com.cyxbsmobile_single.module_todo.viewmodel.TodoViewModel
 import com.mredrock.cyxbs.common.ui.BaseFeedFragment
 import com.mredrock.cyxbs.common.utils.LogUtils
+import com.mredrock.cyxbs.common.utils.extensions.setOnSingleClickListener
 import kotlinx.android.synthetic.main.todo_fragment_feed.view.*
 import kotlinx.android.synthetic.main.todo_rv_item_todo.view.*
 
@@ -22,6 +25,12 @@ class TodoFeedAdapter(private val todoViewModel: TodoViewModel) :
     BaseFeedFragment.Adapter() {
 
     private lateinit var feedView: View
+    private val checkImageBoomAnime by lazy {
+        ValueAnimator.ofFloat(0.5f, 1f).apply {
+            interpolator = OvershootInterpolator()
+            duration = 500
+        }
+    }
 
     override fun onCreateView(context: Context, parent: ViewGroup): View {
         feedView = LayoutInflater.from(context).inflate(R.layout.todo_fragment_feed, parent, false)
@@ -56,7 +65,13 @@ class TodoFeedAdapter(private val todoViewModel: TodoViewModel) :
                                 }
                             }
 
-                            todo_iv_todo_item.setOnClickListener {
+                            todo_iv_todo_item.setOnSingleClickListener {
+                                todo_iv_check.visibility = View.VISIBLE
+                                checkImageBoomAnime.addUpdateListener {
+                                    todo_iv_check.scaleX = it.animatedValue as Float
+                                    todo_iv_check.scaleY = it.animatedValue as Float
+                                }
+                                checkImageBoomAnime.start()
                                 todo_iv_todo_item.setStatusWithAnime(isChecked = true){
                                     adapter.checkItemAndPopUp(wrapper)
                                     if (adapter.itemCount == 0){

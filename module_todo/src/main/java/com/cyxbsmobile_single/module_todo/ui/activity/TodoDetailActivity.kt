@@ -43,7 +43,6 @@ class TodoDetailActivity : BaseViewModelActivity<TodoDetailViewModel>() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.todo_activity_inner_detail)
-
         todo = Gson().fromJson(intent.getStringExtra("todo"),Todo::class.java)
         //这里反序列化两次是为了防止内外拿到同一个引用
         viewModel.rawTodo = Gson().fromJson(intent.getStringExtra("todo"),Todo::class.java)
@@ -78,6 +77,12 @@ class TodoDetailActivity : BaseViewModelActivity<TodoDetailViewModel>() {
     private fun initClick(){
         todo_inner_detail_header.setOnClickListener{
             finish()
+        }
+
+        todo_tv_inner_detail_del_todo.setOnClickListener {
+            viewModel.delTodo(todo){
+                finish()
+            }
         }
 
         todo_tv_inner_detail_time.setOnClickListener {

@@ -237,7 +237,7 @@ fun remindMode2RemindList(remindMode: RemindMode): List<String> {
 
         RemindMode.WEEK -> {
             return remindMode.week.map {
-                "每周${weekStringList[it]}"
+                "每周${weekStringList[it - 1]}"
             }
         }
 

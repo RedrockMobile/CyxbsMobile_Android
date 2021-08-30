@@ -105,7 +105,7 @@ class CheckLineView @JvmOverloads constructor(
         if (isChecked) {
             selectAnime ?: let {
                 selectAnime = ValueAnimator.ofFloat(0f, 200f).apply {
-                    duration = 1000
+                    duration = 800
                     addUpdateListener {
                         curAnimeProcess = it.animatedValue as Float
                         invalidate()
@@ -119,7 +119,7 @@ class CheckLineView @JvmOverloads constructor(
         } else {
             unSelectAnime ?: let {
                 unSelectAnime = ValueAnimator.ofFloat(200f, 0f).apply {
-                    duration = 1000
+                    duration = 800
                     addUpdateListener {
                         curAnimeProcess = it.animatedValue as Float
                         invalidate()

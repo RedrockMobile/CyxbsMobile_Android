@@ -193,7 +193,7 @@ class AddItemDialog(context: Context, onConfirm: (Todo) -> Unit) :
                     return
                 }
                 todo.remindMode.repeatMode = RemindMode.DAY
-                ""
+                "每天"
             }
 
             else -> {
@@ -279,7 +279,11 @@ class AddItemDialog(context: Context, onConfirm: (Todo) -> Unit) :
         if (todo.remindMode.repeatMode == RemindMode.NONE){
             repeatTimeAdapter.resetAll(emptyList())
         } else {
-            repeatTimeAdapter.resetAll(remindMode2RemindList(todo.remindMode))
+            repeatTimeAdapter.resetAll(remindMode2RemindList(todo.remindMode).map {
+                //如果你要问这里是为什么
+                //视觉图无脑每周一和周一切换我也没办法啊
+                it.subSequence(1, it.length).toString()
+            })
         }
         this.todo.remindMode = todo.remindMode
         isFromDetail = true
