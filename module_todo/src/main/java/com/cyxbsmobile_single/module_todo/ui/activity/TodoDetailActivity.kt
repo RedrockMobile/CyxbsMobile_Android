@@ -154,8 +154,9 @@ class TodoDetailActivity : BaseViewModelActivity<TodoDetailViewModel>() {
 
     private fun changeModifyStatus(isChanged: Boolean){
         viewModel.isChanged = isChanged
-        if (viewModel.isChanged) todo_thing_detail_save.setTextColor(Color.parseColor("#2923D2"))
-        else todo_thing_detail_save.setTextColor(Color.parseColor("#4015315B"))
+        todo_thing_detail_save.visibility =
+        if (viewModel.isChanged) View.VISIBLE
+        else View.GONE
     }
 
     override fun onBackPressed() {

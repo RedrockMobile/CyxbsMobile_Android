@@ -115,7 +115,7 @@
             android:layout_width="match_parent"
             android:layout_height="36dp"
             android:layout_marginStart="18dp"
-            tools:listitem="@layout/todo_inner_add_thing_repeat_select_auto_warp_item"
+            tools:listitem="@layout/todo_rv_item_repeat_select_auto_warp_item"
             android:layout_marginTop="14dp" />
 
         <androidx.constraintlayout.widget.ConstraintLayout

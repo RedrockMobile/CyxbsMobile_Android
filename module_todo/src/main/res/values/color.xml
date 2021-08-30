@@ -7,8 +7,9 @@
     <color name="todo_inner_add_thing_nf_tv_unclick_color">#802A4E84</color>
     <color name="todo_inner_add_thing_nf_tv_click_color">#642A4E84</color>
     <color name="todo_inner_add_thing_repeat_time_item_shape_color">#F2F3F7</color>
-    <color name="todo_inner_add_thing_repeat_time_canlce">#A0EDF4FD</color>
-    <color name="todo_inner_add_thing_repeat_time_canlce_text_color">#2815315B</color>
+    <color name="todo_inner_add_thing_repeat_time_canlce">#E6EFFC</color>
+    <color name="todo_inner_add_thing_repeat_time_canlce_text_color">#7CA3DF</color>
+    <color name="todo_inner_hint_color">#A0EDF4FD</color>
     <color name="todo_inner_add_thing_repeat_time_confirm_text_color">#FFFFFF</color>
     <color name="todo_inner_detail_line_color">#102A4E84</color>
     <color name="todo_inner_detail_edittext_line_color">#20BDCCE5</color>

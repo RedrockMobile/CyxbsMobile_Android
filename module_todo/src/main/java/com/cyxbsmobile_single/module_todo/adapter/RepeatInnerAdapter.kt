@@ -3,6 +3,7 @@ package com.cyxbsmobile_single.module_todo.adapter
 import android.content.res.ColorStateList
 import android.graphics.Color
 import android.view.View
+import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.RecyclerView
 import com.cyxbsmobile_single.module_todo.R
 import kotlinx.android.synthetic.main.todo_rv_item_simple_text.view.*
@@ -19,9 +20,9 @@ class RepeatInnerAdapter(
         holder.itemView.apply {
             todo_tv_simple_text.text = dataList[position]
             if (dataList[position] == "设置提醒时间"){
-                todo_tv_simple_text.setTextColor(Color.parseColor("#2815315B"))
+                todo_tv_simple_text.setTextColor(ContextCompat.getColor(context, R.color.todo_inner_add_thing_et_hint_color))
             } else {
-                todo_tv_simple_text.setTextColor(Color.parseColor("#15315B"))
+                todo_tv_simple_text.setTextColor(ContextCompat.getColor(context, R.color.todo_feed_divide_line_color))
             }
             setOnClickListener {
                 onItemClick.invoke(it)

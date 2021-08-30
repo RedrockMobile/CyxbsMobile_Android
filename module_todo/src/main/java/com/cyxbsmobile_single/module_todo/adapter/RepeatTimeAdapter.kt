@@ -1,11 +1,8 @@
 package com.cyxbsmobile_single.module_todo.adapter
 
-import android.view.LayoutInflater
-import android.view.ViewGroup
-import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import com.cyxbsmobile_single.module_todo.R
-import kotlinx.android.synthetic.main.todo_inner_add_thing_repeat_select_auto_warp_item.view.*
+import kotlinx.android.synthetic.main.todo_rv_item_repeat_select_auto_warp_item.view.*
 
 /**
  * Author: RayleighZ
@@ -13,7 +10,7 @@ import kotlinx.android.synthetic.main.todo_inner_add_thing_repeat_select_auto_wa
  */
 @Suppress("UNCHECKED_CAST")
 class RepeatTimeAdapter(private val dataList: ArrayList<String>, private val onCancel: (Int)->Unit) :
-    SimpleTextAdapter(dataList, R.layout.todo_inner_add_thing_repeat_select_auto_warp_item) {
+    SimpleTextAdapter(dataList, R.layout.todo_rv_item_repeat_select_auto_warp_item) {
 
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
         holder.itemView.apply {

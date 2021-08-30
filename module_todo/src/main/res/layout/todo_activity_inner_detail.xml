@@ -33,9 +33,10 @@
             android:layout_gravity="right"
             android:layout_marginEnd="15dp"
             android:layout_marginTop="15dp"
+            android:visibility="gone"
             android:layout_marginBottom="4.5dp"
             android:text="保存"
-            android:textColor="@color/todo_inner_add_thing_repeat_time_canlce_text_color"
+            android:textColor="@color/todo_inner_add_save_text_color"
             android:textSize="20sp"
             android:textStyle="normal" />
     </FrameLayout>
@@ -111,7 +112,7 @@
         android:textSize="15sp"
         android:hint="@string/todo_inner_add_thing_nf_text"
         android:textColor="@color/todo_check_line_color"
-        android:textColorHint="@color/todo_inner_add_thing_repeat_time_canlce_text_color" />
+        android:textColorHint="@color/todo_inner_add_thing_et_hint_color" />
 
     <View
         android:layout_width="match_parent"
@@ -169,14 +170,8 @@
         android:background="@null"
         android:maxLines="20"
         android:textColor="@color/todo_check_line_color"
-        android:textColorHint="@color/todo_inner_add_thing_repeat_time_canlce_text_color" />
+        android:textColorHint="@color/todo_inner_add_thing_et_hint_color" />
 
-    <View
-        android:layout_width="match_parent"
-        android:layout_height="1dp"
-        android:layout_marginStart="50dp"
-        android:layout_marginTop="4dp"
-        android:background="@color/todo_inner_detail_edittext_line_color" />
     <View
         android:layout_width="0dp"
         android:layout_height="0dp"

@@ -30,6 +30,7 @@
             android:layout_marginStart="12dp"
             android:layout_toEndOf="@+id/todo_inner_home_bar_back"
             android:gravity="center"
+            android:textStyle="bold"
             android:text="邮子清单"
             android:textColor="@color/todo_check_line_color"
             android:textSize="21sp" />
@@ -42,7 +43,7 @@
             android:layout_centerVertical="true"
             android:layout_gravity="center_vertical"
             android:layout_marginEnd="15dp"
-            android:src="@drawable/todo_ic_add" />
+            android:src="@drawable/todo_ic_add_thin" />
 
         <View
             android:layout_width="match_parent"
