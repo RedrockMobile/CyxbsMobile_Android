@@ -17,7 +17,7 @@ class RvAdapter() : ListAdapter<RvBinder<*>, RvHolder>(diff) {
     companion object {
         private val diff = object : DiffUtil.ItemCallback<RvBinder<*>>() {
             override fun areItemsTheSame(oldItem: RvBinder<*>, newItem: RvBinder<*>): Boolean =
-                oldItem.layoutId() == newItem.layoutId()
+                oldItem.itemId == newItem.itemId
 
             override fun areContentsTheSame(oldItem: RvBinder<*>, newItem: RvBinder<*>): Boolean =
                 /*oldItem.hashCode() == newItem.hashCode() &&*/ oldItem.areContentsTheSame(newItem)
@@ -32,7 +32,7 @@ class RvAdapter() : ListAdapter<RvBinder<*>, RvHolder>(diff) {
 
     override fun onBindViewHolder(holder: RvHolder, position: Int) {
         val binder = currentList[position] as RvBinder<ViewDataBinding>
-        holder.bind(binder, position)
+        holder.bind(binder)
     }
 
     override fun submitList(list: MutableList<RvBinder<*>>?) {

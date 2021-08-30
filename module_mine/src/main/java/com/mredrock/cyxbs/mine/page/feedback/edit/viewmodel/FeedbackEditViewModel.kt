@@ -16,7 +16,7 @@ class FeedbackEditViewModel:BaseViewModel(),FeedbackEditContract.IVM {
     /**
      * 内容详情的字数
      */
-    private val _editDesNum = MutableLiveData<Int>()
+    private val _editDesNum = MutableLiveData<Int>(0)
     val editDesNum : LiveData<Int>
         get() = _editDesNum
     override fun setEditDesNum(value:Int){
@@ -26,7 +26,7 @@ class FeedbackEditViewModel:BaseViewModel(),FeedbackEditContract.IVM {
     /**
      * 标题剩余能写的数字
      */
-    private val _editTitleNum = MutableLiveData<Int>()
+    private val _editTitleNum = MutableLiveData<Int>(12)
     val editTitleNum:LiveData<Int>
         get() = _editTitleNum
     override fun setEditTitleNum(value: Int){

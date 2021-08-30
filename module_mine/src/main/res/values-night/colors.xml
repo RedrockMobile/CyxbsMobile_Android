@@ -63,5 +63,8 @@
     <color name="mine_feedback_not_reply_color">#FFE8E5</color>
     <color name="mine_feedback_recycle_item_text_color">#000101</color>
     <color name="mine_feedback_recycle_item_dividor_color">#333333</color>
+    <color name="mine_feedback_add_bg_color">#313131</color>
+    <color name="mine_feedback_add_fill_color">#202020</color>
+    <color name="mine_feedback_history_icon_color">#E5E5E5</color>
 
 </resources>

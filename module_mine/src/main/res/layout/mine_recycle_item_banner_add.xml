@@ -5,8 +5,8 @@
     <data>
 
         <variable
-            name="position"
-            type="Integer" />
+            name="holder"
+            type="com.mredrock.cyxbs.mine.page.feedback.adapter.rv.RvHolder" />
 
         <variable
             name="data"
@@ -32,7 +32,7 @@
                 android:layout_height="wrap_content"
                 android:background="@color/mine_feedback_add_bg_color"
                 android:elevation="1dp"
-                android:onClick="@{(v)->data.onClicked(v,position)}"
+                android:onClick="@{(v)->data.onClicked(v,holder)}"
                 android:padding="34dp"
                 app:srcCompat="@drawable/mine_ic_feedback_add_more" />
 

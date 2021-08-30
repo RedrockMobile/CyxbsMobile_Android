@@ -1,5 +1,6 @@
 package com.mredrock.cyxbs.mine.page.feedback.adapter.rv
 
+import android.util.Log
 import androidx.databinding.ViewDataBinding
 import androidx.recyclerview.widget.RecyclerView
 
@@ -10,9 +11,10 @@ import androidx.recyclerview.widget.RecyclerView
  */
 class RvHolder(private val binding: ViewDataBinding) :
     RecyclerView.ViewHolder(binding.root) {
-    fun bind(binder: RvBinder<ViewDataBinding>, position: Int) {
+    fun bind(binder: RvBinder<ViewDataBinding>) {
         //讲View绑定入Data
+        Log.e("TAG", "bind: ")
         binder.binding = binding
-        binder.onBind(position)
+        binder.onBind(this)
     }
 }

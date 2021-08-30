@@ -67,5 +67,6 @@
     <color name="mine_feedback_recycle_item_dividor_color">#E6ECF5</color>
     <color name="mine_feedback_add_bg_color">#F7FAFF</color>
     <color name="mine_feedback_add_fill_color">#E1EBFA</color>
+    <color name="mine_feedback_history_icon_color">#15315B</color>
 
 </resources>

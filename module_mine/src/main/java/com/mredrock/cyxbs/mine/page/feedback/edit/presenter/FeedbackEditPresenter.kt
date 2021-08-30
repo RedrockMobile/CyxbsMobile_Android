@@ -31,10 +31,7 @@ class FeedbackEditPresenter : BasePresenter<FeedbackEditViewModel>(),
     /**
      * 初始化数据
      */
-    override fun fetch() {
-        vm?.setEditDesNum(0)
-        vm?.setEditTitleNum(12)
-    }
+    override fun fetch() {}
 
     /**
      * 对chip是否选中的处理
@@ -100,6 +97,7 @@ class FeedbackEditPresenter : BasePresenter<FeedbackEditViewModel>(),
                     PicBannerBinderPic(it).apply {
                         setOnContentClickListener { view, i -> contentListener(view, i) }
                         setOnIconClickListener { view, i -> iconListener(view, i) }
+                        itemId = it.picUri.toString()
                     }
                 }
             )
