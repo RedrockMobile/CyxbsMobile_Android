@@ -36,6 +36,7 @@ import java.io.InputStreamReader
 /**
  * Created by zzzia on 2018/8/14.
  * 我的 主界面Fragment
+ * 这个类的代码不要格式化了吧 否则initView里面的代码会很凌乱
  */
 @SuppressLint("SetTextI18n")
 @Route(path = MINE_ENTRY)
@@ -64,14 +65,7 @@ class UserFragment : BaseViewModelFragment<UserViewModel>() {
             mine_main_tv_comment.setOnSingleClickListener { doIfLogin { jumpAndSaveTime(QA_MY_COMMENT, 1) } }
             mine_main_tv_praise.setOnSingleClickListener { doIfLogin { jumpAndSaveTime(QA_MY_PRAISE, 2) } }
             mine_main_fm_feedback.setOnSingleClickListener { doIfLogin { Jump2QQHelper.onFeedBackClick(this) } }
-            mine_main_cl_info_edit.setOnClickListener {
-                doIfLogin {
-                    startActivity(
-                            Intent(context, EditInfoActivity::class.java),
-                            ActivityOptionsCompat.makeSceneTransitionAnimation(context as Activity, Pair(mine_main_avatar, "avatar")).toBundle())
-                }
-            }
-        }
+            mine_main_cl_info_edit.setOnClickListener { doIfLogin { startActivity(Intent(context, EditInfoActivity::class.java), ActivityOptionsCompat.makeSceneTransitionAnimation(context as Activity, Pair(mine_main_avatar, "avatar")).toBundle()) } } }
     }
 
     @SuppressLint("SetTextI18n")

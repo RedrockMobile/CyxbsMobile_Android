@@ -28,7 +28,6 @@ import com.mredrock.cyxbs.qa.config.CommentConfig.IGNORE
 import com.mredrock.cyxbs.qa.config.CommentConfig.QQ_FRIEND
 import com.mredrock.cyxbs.qa.config.CommentConfig.QQ_ZONE
 import com.mredrock.cyxbs.qa.config.CommentConfig.REPORT
-import com.mredrock.cyxbs.qa.config.RequestResultCode.ClickKnowledge
 import com.mredrock.cyxbs.qa.config.RequestResultCode.DYNAMIC_DETAIL_REQUEST
 import com.mredrock.cyxbs.qa.config.RequestResultCode.NEED_REFRESH_RESULT
 import com.mredrock.cyxbs.qa.config.RequestResultCode.RELEASE_DYNAMIC_ACTIVITY_REQUEST
@@ -141,14 +140,9 @@ class QuestionSearchedFragment : BaseViewModelFragment<QuestionSearchedViewModel
                     }
                     if (viewModel.isKnowledge) {
                         //知识库不为空时候显示
-                        if (ClickKnowledge) {
-                            qa_line.gone()
-                            qa_tv_knowledge.gone()
-                        } else {
-                            qa_line.visibility = View.VISIBLE
-                            qa_rv_knowledge.visibility = View.VISIBLE
-                            qa_tv_knowledge.visibility = View.VISIBLE
-                        }
+                        qa_line.visibility = View.VISIBLE
+                        qa_rv_knowledge.visibility = View.VISIBLE
+                        qa_tv_knowledge.visibility = View.VISIBLE
                     } else {
                         qa_line.gone()
                         qa_tv_knowledge.gone()
@@ -250,7 +244,6 @@ class QuestionSearchedFragment : BaseViewModelFragment<QuestionSearchedViewModel
     private fun initResultView() {
         viewModel.questionList.observe {
             dynamicListRvAdapter.submitList(it)
-
         }
         viewModel.networkState.observe {
             it?.run {
@@ -282,16 +275,11 @@ class QuestionSearchedFragment : BaseViewModelFragment<QuestionSearchedViewModel
                 }
             }
         }
+
         swipe_refresh_layout_searching.setOnRefreshListener {
-            if (ClickKnowledge) {
-                //点击知识库时的刷新
-                viewModel.invalidateSearchQuestionList()
-                qa_line.gone()
-                qa_tv_knowledge.gone()
-            } else {
-                viewModel.invalidateSearchQuestionList()
-            }
+            viewModel.invalidateSearchQuestionList()
         }
+
         viewModel.deleteTips.observe {
             if (it == true)
                 viewModel.invalidateSearchQuestionList()
