@@ -35,14 +35,14 @@ class TodoWidgetService : RemoteViewsService() {
         private var todoList: List<Todo> = emptyList()
 
         override fun onCreate() {
-            TodoModel.INSTANCE.queryByIsDone(false){
+            TodoModel.INSTANCE.queryByIsDone(0){
                 todoList = it
             }
         }
 
         override fun onDataSetChanged() {
             //从room中加载尚未完成的todo
-            TodoModel.INSTANCE.queryByIsDone(false){
+            TodoModel.INSTANCE.queryByIsDone(0){
                 todoList = it
             }
         }

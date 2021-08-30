@@ -21,7 +21,7 @@ data class Todo(
     @SerializedName("detail")
     var detail: String,//todo的详情
     @SerializedName("is_done")
-    var isChecked: Boolean,//todo是否已经完成
+    var isChecked: Int,//todo是否已经完成
     @SerializedName("remind_mode")
     var remindMode: RemindMode,
     @SerializedName("last_modify_time")
@@ -33,7 +33,7 @@ data class Todo(
                 0,
                 "",
                 "",
-                false,
+                0,
                 RemindMode.generateDefaultRemindMode(),
                 System.currentTimeMillis()
             )

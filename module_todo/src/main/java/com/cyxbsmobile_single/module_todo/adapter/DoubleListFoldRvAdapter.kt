@@ -102,12 +102,12 @@ class DoubleListFoldRvAdapter(
     fun checkItemAndSwap(wrapper: TodoItemWrapper) {
         LogUtils.d("RayZY", "checkedTopMark = $checkedTopMark")
         wrapperCopyList.remove(wrapper)
-        wrapper.todo?.isChecked = true
+        wrapper.todo?.isChecked = 1
         wrapperCopyList.add(checkedTopMark - 1, wrapper)
         refreshList()
         //同步修改todoItemWrapperArrayList
         todoItemWrapperArrayList.remove(wrapper)
-        wrapper.todo?.isChecked = true
+        wrapper.todo?.isChecked = 1
         todoItemWrapperArrayList.add(checkedTopMark - 1, wrapper)
         //更新database中的todo
         updateTodo(wrapper.todo)
@@ -119,7 +119,7 @@ class DoubleListFoldRvAdapter(
     //feed处的check, check之后将条目上浮
     fun checkItemAndPopUp(wrapperTodo: TodoItemWrapper) {
         wrapperCopyList.remove(wrapperTodo)
-        wrapperTodo.todo?.isChecked = true
+        wrapperTodo.todo?.isChecked = 1
         refreshList()
         todoItemWrapperArrayList.remove(wrapperTodo)
         //更新database中的todo
@@ -128,7 +128,7 @@ class DoubleListFoldRvAdapter(
 
     fun delItem(wrapper: TodoItemWrapper) {
         wrapper.todo?.let { todo ->
-            if (todo.isChecked) checkedArray.remove(wrapper) else uncheckedArray.remove(wrapper)
+            if (todo.isChecked == 1) checkedArray.remove(wrapper) else uncheckedArray.remove(wrapper)
             TodoModel.INSTANCE.delTodo(todo.todoId){
                 wrapperCopyList.remove(wrapper)
                 refreshList()
@@ -261,8 +261,8 @@ class DoubleListFoldRvAdapter(
                             todo_tv_notify_time.visibility = View.VISIBLE
                             todo_iv_bell.visibility = View.VISIBLE
                         }
-                        todo_iv_todo_item.setStatusWithoutAnime(todo.isChecked)
-                        if (todo.isChecked) {
+                        todo_iv_todo_item.setStatusWithoutAnime(todo.isChecked == 1)
+                        if (todo.isChecked == 1) {
                             todo_tv_todo_title.setTextColor(ContextCompat.getColor(context, R.color.todo_item_checked_color))
                             todo_iv_check.visibility = View.VISIBLE
                         } else {
@@ -356,7 +356,7 @@ class DoubleListFoldRvAdapter(
         for (wrapper in wrapperCopyList) {
             if (wrapper.viewType == TODO) {
                 wrapper.todo?.let {
-                    if (it.isChecked) {
+                    if (it.isChecked == 1) {
                         checkedArray.add(wrapper)
                     } else {
                         uncheckedArray.add(wrapper)

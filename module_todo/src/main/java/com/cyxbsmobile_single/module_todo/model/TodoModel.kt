@@ -187,7 +187,7 @@ class TodoModel {
         commit()
     }
 
-    fun queryByIsDone(isDone: Boolean, onSuccess: (todoList: List<Todo>) -> Unit) {
+    fun queryByIsDone(isDone: Int, onSuccess: (todoList: List<Todo>) -> Unit) {
         TodoDatabase.INSTANCE.todoDao()
             .queryTodoByWeatherDone(isDone)
             .toObservable()

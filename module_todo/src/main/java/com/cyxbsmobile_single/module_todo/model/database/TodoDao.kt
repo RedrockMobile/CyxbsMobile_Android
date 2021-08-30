@@ -25,7 +25,7 @@ interface TodoDao {
     fun queryTodoById(todoId: Long): Flowable<Todo>
 
     @Query("SELECT * FROM todo_list WHERE isChecked = :isChecked ORDER by lastModifyTime desc")
-    fun queryTodoByWeatherDone(isChecked: Boolean): Flowable<List<Todo>>
+    fun queryTodoByWeatherDone(isChecked: Int): Flowable<List<Todo>>
 
 //    //分页查找未完成事项
 //    @Query("SELECT * FROM todo_list WHERE isChecked = :isChecked ORDER by lastModifyTime limit :size offset :page-1 * :size")

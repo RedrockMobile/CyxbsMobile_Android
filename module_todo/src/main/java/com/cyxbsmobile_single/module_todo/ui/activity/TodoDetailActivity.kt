@@ -134,7 +134,7 @@ class TodoDetailActivity : BaseViewModelActivity<TodoDetailViewModel>() {
 
         todo_iv_todo_item.setOnClickListener {
             //改变todo的check状态
-            todo.isChecked = !todo.isChecked
+            todo.isChecked = 1 - todo.isChecked
             changeModifyStatus()
             //防止暴击，在todo更新成功之间不允许再一次点击
             it.isClickable = false
@@ -174,9 +174,9 @@ class TodoDetailActivity : BaseViewModelActivity<TodoDetailViewModel>() {
     }
 
     private fun setCheckedStatus() {
-        todo_iv_check.visibility = if (todo.isChecked) View.VISIBLE else View.GONE
+        todo_iv_check.visibility = if (todo.isChecked == 1) View.VISIBLE else View.GONE
         todo_tv_todo_title.setTextColor(
-            if (todo.isChecked) ContextCompat.getColor(this, R.color.todo_item_checked_color)
+            if (todo.isChecked == 1) ContextCompat.getColor(this, R.color.todo_item_checked_color)
             else ContextCompat.getColor(this, R.color.todo_check_line_color)
         )
     }

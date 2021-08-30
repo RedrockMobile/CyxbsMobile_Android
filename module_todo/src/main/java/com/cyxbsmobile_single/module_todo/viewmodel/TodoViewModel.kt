@@ -45,10 +45,10 @@ class TodoViewModel : BaseViewModel() {
                     //下面的逻辑是：如果到达了todo重复提醒的下一次的那一天，则将todo设定为尚未完成
                     if (todo.remindMode.repeatMode != RemindMode.NONE) {
                         if (needTodayDone(todo.remindMode)) {
-                            todo.isChecked = false
+                            todo.isChecked = 0
                         }
                     }
-                    if (todo.isChecked) checkedTodoList.add(
+                    if (todo.isChecked == 1) checkedTodoList.add(
                         TodoItemWrapper.todoWrapper(
                             todo
                         )

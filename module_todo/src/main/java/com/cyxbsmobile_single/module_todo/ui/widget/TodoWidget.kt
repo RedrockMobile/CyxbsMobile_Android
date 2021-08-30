@@ -80,7 +80,7 @@ class TodoWidget : AppWidgetProvider() {
 
             "cyxbs.widget.todo.check" -> {
                 val todo = Gson().fromJson(intent.getStringExtra("todo"),Todo::class.java)
-                todo.isChecked = true
+                todo.isChecked = 1
                 TodoModel.INSTANCE.updateTodo(todo){
                     //刷新一波
                     context?.let {

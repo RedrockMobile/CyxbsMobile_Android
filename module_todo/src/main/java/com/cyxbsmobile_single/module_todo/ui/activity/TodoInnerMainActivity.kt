@@ -115,7 +115,7 @@ class TodoInnerMainActivity : BaseViewModelActivity<TodoViewModel>() {
 
                         todo_iv_todo_item.setOnClickListener {
                             wrapper.todo?.apply {
-                                if (!isChecked) {
+                                if (isChecked == 0) {
                                     todo_iv_todo_item.setStatusWithAnime(true) {
                                         adapter.checkItemAndSwap(wrapper)
                                         changeItemToChecked(view)
