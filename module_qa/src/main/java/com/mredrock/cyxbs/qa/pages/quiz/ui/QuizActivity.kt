@@ -1,7 +1,6 @@
 package com.mredrock.cyxbs.qa.pages.quiz.ui
 
 import android.os.Build
-import androidx.annotation.RequiresApi
 import android.annotation.SuppressLint
 import android.app.Activity
 import android.app.ProgressDialog
@@ -45,6 +44,7 @@ import top.limuyang2.photolibrary.LPhotoHelper
 class QuizActivity : BaseViewModelActivity<QuizViewModel>() {
 
     companion object {
+        // 允许发送动态的最大字数
         const val MAX_CONTENT_SIZE = 500
         const val MAX_SELECTABLE_IMAGE_COUNT = 8
         const val NOT_DRAFT = "0"
@@ -160,8 +160,8 @@ class QuizActivity : BaseViewModelActivity<QuizViewModel>() {
         type.delete(0, 2)
         return type.toString()
     }
-    //动态监听内容文字变化
 
+    //动态监听内容文字变化
     @SuppressLint("SetTextI18n")
     private fun initEditListener() {
         qa_edt_quiz_content.filters = arrayOf(
@@ -351,7 +351,7 @@ class QuizActivity : BaseViewModelActivity<QuizViewModel>() {
 
     private fun createImageView(uri: Uri) = RectangleView(this).apply {
         scaleType = ImageView.ScaleType.CENTER_CROP
-        val bitMap = if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
+        val bitMap = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             uri.bmSizeStandardizing(context = this.context)
         } else {
             TODO("VERSION.SDK_INT < O")

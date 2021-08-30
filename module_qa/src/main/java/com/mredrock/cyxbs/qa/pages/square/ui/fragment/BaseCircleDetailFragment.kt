@@ -47,7 +47,7 @@ import kotlinx.android.synthetic.main.qa_fragment_last_hot.*
 abstract class BaseCircleDetailFragment<T : CircleDetailViewModel> : BaseViewModelFragment<T>() {
 
     private var mTencent: Tencent? = null
-    lateinit var dynamicListRvAdapter: DynamicAdapter
+    private lateinit var dynamicListRvAdapter: DynamicAdapter
     private var loop = 1
     private var type = "main"
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -183,16 +183,19 @@ abstract class BaseCircleDetailFragment<T : CircleDetailViewModel> : BaseViewMod
                     viewModel.invalidateQuestionList()
                 } else {
                     // 不需要刷新，则更新当前的dynamic为详细页的dynamic（避免出现评论数目不一致的问题）
-                    dynamicListRvAdapter
                     dynamicListRvAdapter.curSharedItem?.apply {
                         val dynamic = data?.getParcelableExtra<Dynamic>("refresh_dynamic")
                         dynamic?.let {
-                            dynamicListRvAdapter.curSharedDynamic?.commentCount = dynamic.commentCount
-                            this.findViewById<TextView>(R.id.qa_tv_dynamic_comment_count).text = it.commentCount.toString()
+                            // 进行判断，如果返回的数据评论数和当前的不一样才回去刷新列表
+                            if (dynamicListRvAdapter.curSharedDynamic?.commentCount != it.commentCount) {
+                                dynamicListRvAdapter.curSharedDynamic?.commentCount =
+                                    it.commentCount
+                                this.findViewById<TextView>(R.id.qa_tv_dynamic_comment_count).text =
+                                    it.commentCount.toString()
+                                dynamicListRvAdapter.notifyItemChanged(dynamicListRvAdapter.curSharedItemPosition)
+                            }
                         }
                     }
-                    dynamicListRvAdapter.notifyDataSetChanged()
-                    dynamicListRvAdapter.notifyDataSetChanged()
                 }
             }
             // 从发动态返回

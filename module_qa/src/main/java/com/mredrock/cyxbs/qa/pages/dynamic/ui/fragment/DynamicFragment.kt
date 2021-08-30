@@ -101,7 +101,7 @@ class DynamicFragment : BaseViewModelFragment<DynamicListViewModel>(), EventBusL
     private var token: String? = null
 
     // 判断rv是否到顶
-    protected var isRvAtTop = true
+    var isRvAtTop = true
     private lateinit var dynamicListRvAdapter: DynamicAdapter
     override fun getViewModelFactory() = DynamicListViewModel.Factory("recommend")
     override fun onCreateView(
@@ -121,8 +121,6 @@ class DynamicFragment : BaseViewModelFragment<DynamicListViewModel>(), EventBusL
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        postponeEnterTransition()
-        view.doOnPreDraw { startPostponedEnterTransition() }
         initScrollText()
         initDynamics()
         initClick()
@@ -439,7 +437,6 @@ class DynamicFragment : BaseViewModelFragment<DynamicListViewModel>(), EventBusL
         vf_hot_search.stopFlipping()
     }
 
-    @SuppressLint("NotifyDataSetChanged")
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         when (requestCode) {
             // 从动态详细返回
@@ -456,6 +453,7 @@ class DynamicFragment : BaseViewModelFragment<DynamicListViewModel>(), EventBusL
                     dynamicListRvAdapter.curSharedItem?.apply {
                         val dynamic = data?.getParcelableExtra<Dynamic>("refresh_dynamic")
                         dynamic?.let {
+                            // 进行判断，如果返回的数据评论数和当前的不一样才回去刷新列表
                             if (dynamicListRvAdapter.curSharedDynamic?.commentCount != it.commentCount) {
                                 dynamicListRvAdapter.curSharedDynamic?.commentCount =
                                     it.commentCount
@@ -483,7 +481,7 @@ class DynamicFragment : BaseViewModelFragment<DynamicListViewModel>(), EventBusL
     }
 
     @Subscribe(threadMode = ThreadMode.MAIN, sticky = true)
-    open fun refreshQuestionList(event: RefreshQaEvent) {
+    fun refreshQuestionList(event: RefreshQaEvent) {
         if (isRvAtTop)
             viewModel.invalidateDynamicList()
         else
