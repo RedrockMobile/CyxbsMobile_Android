@@ -36,7 +36,8 @@
     <View
         android:layout_width="match_parent"
         android:layout_height="1dp"
-        android:background="@color/todo_feed_divide_line_color"
+        android:alpha="0.1"
+        android:background="@color/levelFourFontColor"
         app:layout_constraintBottom_toBottomOf="parent" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

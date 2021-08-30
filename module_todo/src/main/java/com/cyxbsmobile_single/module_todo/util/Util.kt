@@ -111,6 +111,11 @@ fun repeatMode2RemindTime(remindMode: RemindMode): String {
                     return "${calendar.get(Calendar.MONTH) + 1}月${calendar.get(Calendar.DAY_OF_MONTH)}日 $remindTime"
                 }
             }
+
+            //到这里说明这周已经没得了，需要切换到下一周
+            val dif = 7 - (calendar.get(Calendar.DAY_OF_WEEK) - remindMode.week[0])
+            calendar.add(Calendar.DAY_OF_WEEK, dif)
+            return "${calendar.get(Calendar.MONTH) + 1}月${calendar.get(Calendar.DAY_OF_MONTH)}日 $remindTime"
         }
 
         RemindMode.YEAR -> {

@@ -22,7 +22,7 @@ class RepeatInnerAdapter(
             if (dataList[position] == "设置提醒时间"){
                 todo_tv_simple_text.setTextColor(ContextCompat.getColor(context, R.color.todo_inner_add_thing_et_hint_color))
             } else {
-                todo_tv_simple_text.setTextColor(ContextCompat.getColor(context, R.color.todo_feed_divide_line_color))
+                todo_tv_simple_text.setTextColor(ContextCompat.getColor(context, R.color.todo_check_line_color))
             }
             setOnClickListener {
                 onItemClick.invoke(it)

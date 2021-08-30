@@ -5,6 +5,9 @@ import android.content.Context
 import android.graphics.Color
 import android.view.LayoutInflater
 import android.view.View
+import android.view.ViewGroup
+import android.widget.FrameLayout
+import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.cyxbsmobile_single.module_todo.R
 import com.cyxbsmobile_single.module_todo.adapter.BaseWheelAdapter
@@ -14,6 +17,7 @@ import com.cyxbsmobile_single.module_todo.model.bean.RemindMode
 import com.cyxbsmobile_single.module_todo.model.bean.Todo
 import com.cyxbsmobile_single.module_todo.ui.dialog.AddItemDialog.CurOperate.*
 import com.cyxbsmobile_single.module_todo.util.*
+import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.mredrock.cyxbs.common.BaseApp
 import com.mredrock.cyxbs.common.component.RedRockBottomSheetDialog
 import com.mredrock.cyxbs.common.utils.LogUtils
@@ -33,12 +37,18 @@ import java.util.regex.Pattern
  * 写出如此长的代码我很抱歉
  */
 class AddItemDialog(context: Context, onConfirm: (Todo) -> Unit) :
-    RedRockBottomSheetDialog(context) {
+    BottomSheetDialog(context, R.style.BottomSheetDialogTheme) {
 
     enum class CurOperate {
         REPEAT,
         NOTIFY,
         NONE
+    }
+
+    override fun setContentView(view: View) {
+        val viewGroup = LayoutInflater.from(context).inflate(R.layout.todo_dialog_bottom_sheet_container, window?.decorView as ViewGroup, false) as FrameLayout
+        viewGroup.addView(view)
+        super.setContentView(viewGroup)
     }
 
     private var curOperate: CurOperate = NONE
@@ -75,7 +85,6 @@ class AddItemDialog(context: Context, onConfirm: (Todo) -> Unit) :
         val dialogView =
             LayoutInflater.from(context).inflate(R.layout.todo_inner_add_thing_dialog, null, false)
         setContentView(dialogView)
-
         dialogView?.apply {
             todo_tv_set_notify_time.setOnClickListener {
                 hideKeyboard(context, this)
@@ -280,9 +289,13 @@ class AddItemDialog(context: Context, onConfirm: (Todo) -> Unit) :
             repeatTimeAdapter.resetAll(emptyList())
         } else {
             repeatTimeAdapter.resetAll(remindMode2RemindList(todo.remindMode).map {
-                //如果你要问这里是为什么
-                //视觉图无脑每周一和周一切换我也没办法啊
-                it.subSequence(1, it.length).toString()
+                if (todo.remindMode.repeatMode == RemindMode.WEEK){
+                    //如果你要问这里是为什么
+                    //视觉图无脑每周一和周一切换我也没办法
+                    return@map it.subSequence(1, it.length).toString()
+                } else {
+                    return@map it
+                }
             })
         }
         this.todo.remindMode = todo.remindMode
@@ -295,7 +308,7 @@ class AddItemDialog(context: Context, onConfirm: (Todo) -> Unit) :
         todo_et_todo_title.visibility = View.GONE
         todo_iv_add_bell.visibility = View.GONE
         todo_ll_notify_time.visibility = View.GONE
-        todo_tv_set_repeat_time.setTextColor(Color.parseColor("#15315b"))
+        todo_tv_set_repeat_time.setTextColor(ContextCompat.getColor(context, R.color.todo_check_line_color))
     }
 
     fun showRepeatModePicker() {

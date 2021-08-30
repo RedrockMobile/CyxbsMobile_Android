@@ -6,6 +6,7 @@ import android.graphics.Color
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import com.cyxbsmobile_single.module_todo.R
@@ -262,11 +263,11 @@ class DoubleListFoldRvAdapter(
                         }
                         todo_iv_todo_item.setStatusWithoutAnime(todo.isChecked)
                         if (todo.isChecked) {
-                            todo_tv_todo_title.setTextColor(Color.parseColor("#6615315B"))
+                            todo_tv_todo_title.setTextColor(ContextCompat.getColor(context, R.color.todo_item_checked_color))
                             todo_iv_check.visibility = View.VISIBLE
                         } else {
                             todo_iv_check.visibility = View.GONE
-                            todo_tv_todo_title.setTextColor(Color.parseColor("#15315B"))
+                            todo_tv_todo_title.setTextColor(ContextCompat.getColor(context, R.color.todo_check_line_color))
                         }
                     }
                 }

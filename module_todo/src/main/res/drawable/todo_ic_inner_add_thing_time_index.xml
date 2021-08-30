@@ -7,6 +7,6 @@
       android:strokeWidth="1"
       android:pathData="M1,5V1L7,5L1,9V5Z"
       android:strokeLineJoin="round"
-      android:fillColor="#2923D2"
-      android:strokeColor="#2923D2"/>
+      android:fillColor="@color/todo_inner_add_save_text_color"
+      android:strokeColor="@color/todo_inner_add_save_text_color"/>
 </vector>

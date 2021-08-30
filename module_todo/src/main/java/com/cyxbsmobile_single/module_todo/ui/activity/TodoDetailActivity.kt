@@ -2,14 +2,13 @@ package com.cyxbsmobile_single.module_todo.ui.activity
 
 import android.content.Context
 import android.content.Intent
-import android.graphics.Color
 import android.os.Bundle
 import android.view.View
+import androidx.core.content.ContextCompat
 import androidx.core.widget.addTextChangedListener
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.cyxbsmobile_single.module_todo.R
 import com.cyxbsmobile_single.module_todo.adapter.RepeatInnerAdapter
-import com.cyxbsmobile_single.module_todo.model.bean.RemindMode
 import com.cyxbsmobile_single.module_todo.model.bean.Todo
 import com.cyxbsmobile_single.module_todo.ui.dialog.AddItemDialog
 import com.cyxbsmobile_single.module_todo.util.remindMode2RemindList
@@ -27,11 +26,11 @@ import kotlinx.android.synthetic.main.todo_inner_add_thing_dialog.*
 class TodoDetailActivity : BaseViewModelActivity<TodoDetailViewModel>() {
 
     lateinit var todo: Todo
-    private lateinit var repeatAdapter :RepeatInnerAdapter
+    private lateinit var repeatAdapter: RepeatInnerAdapter
     private var backTime = 2
 
-    companion object{
-        fun startActivity(todo: Todo, context: Context){
+    companion object {
+        fun startActivity(todo: Todo, context: Context) {
             context.startActivity(
                 Intent(context, TodoDetailActivity::class.java).apply {
                     putExtra("todo", Gson().toJson(todo))
@@ -43,9 +42,9 @@ class TodoDetailActivity : BaseViewModelActivity<TodoDetailViewModel>() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.todo_activity_inner_detail)
-        todo = Gson().fromJson(intent.getStringExtra("todo"),Todo::class.java)
+        todo = Gson().fromJson(intent.getStringExtra("todo"), Todo::class.java)
         //这里反序列化两次是为了防止内外拿到同一个引用
-        viewModel.rawTodo = Gson().fromJson(intent.getStringExtra("todo"),Todo::class.java)
+        viewModel.rawTodo = Gson().fromJson(intent.getStringExtra("todo"), Todo::class.java)
 
         LogUtils.d("RayleighZ", " todo = $todo")
 
@@ -54,10 +53,10 @@ class TodoDetailActivity : BaseViewModelActivity<TodoDetailViewModel>() {
         initClick()
     }
 
-    private fun initView(){
+    private fun initView() {
         todo_tv_todo_title.setText(todo.title)
-        todo_tv_todo_title.addTextChangedListener{
-            if (it.toString() != todo.title){
+        todo_tv_todo_title.addTextChangedListener {
+            if (it.toString() != todo.title) {
                 //判定为做出了修改
                 backTime = 2
                 todo.title = it.toString()
@@ -67,27 +66,27 @@ class TodoDetailActivity : BaseViewModelActivity<TodoDetailViewModel>() {
         todo_inner_detail_remark_ed.setText(todo.detail)
         setCheckedStatus()
 
-        if (todo.remindMode.notifyDateTime == ""){
+        if (todo.remindMode.notifyDateTime == "") {
             todo_tv_inner_detail_time.hint = "设置提醒时间"
         } else {
             todo_tv_inner_detail_time.text = todo.remindMode.notifyDateTime
         }
     }
 
-    private fun initClick(){
-        todo_inner_detail_header.setOnClickListener{
+    private fun initClick() {
+        todo_inner_detail_header.setOnClickListener {
             finish()
         }
 
         todo_tv_inner_detail_del_todo.setOnClickListener {
-            viewModel.delTodo(todo){
+            viewModel.delTodo(todo) {
                 finish()
             }
         }
 
         todo_tv_inner_detail_time.setOnClickListener {
             backTime = 2
-            AddItemDialog(context = this){
+            AddItemDialog(context = this) {
                 todo.remindMode.notifyDateTime = it.remindMode.notifyDateTime
                 todo_tv_inner_detail_time.text = todo.remindMode.notifyDateTime
                 changeModifyStatus()
@@ -100,9 +99,9 @@ class TodoDetailActivity : BaseViewModelActivity<TodoDetailViewModel>() {
             }.show()
         }
 
-        repeatAdapter = RepeatInnerAdapter(ArrayList(remindMode2RemindList(todo.remindMode))){
+        repeatAdapter = RepeatInnerAdapter(ArrayList(remindMode2RemindList(todo.remindMode))) {
             backTime = 2
-            AddItemDialog(context = this){
+            AddItemDialog(context = this) {
                 repeatAdapter.resetAll(remindMode2RemindList(it.remindMode))
                 todo.remindMode = it.remindMode
                 changeModifyStatus()
@@ -123,7 +122,7 @@ class TodoDetailActivity : BaseViewModelActivity<TodoDetailViewModel>() {
         todo_thing_detail_save.setOnClickListener {
             todo.detail = todo_inner_detail_remark_ed.text.toString()
             todo.lastModifyTime = System.currentTimeMillis()
-            viewModel.updateTodo(todo){
+            viewModel.updateTodo(todo) {
                 finish()
             }
         }
@@ -139,30 +138,32 @@ class TodoDetailActivity : BaseViewModelActivity<TodoDetailViewModel>() {
             changeModifyStatus()
             //防止暴击，在todo更新成功之间不允许再一次点击
             it.isClickable = false
-            viewModel.updateTodo(todo){
+            viewModel.updateTodo(todo) {
                 setCheckedStatus()
                 it.isClickable = true
             }
         }
     }
 
-    private fun changeModifyStatus(){
+    private fun changeModifyStatus() {
         viewModel.judgeChange(todo)
-        if (viewModel.isChanged) todo_thing_detail_save.setTextColor(Color.parseColor("#2923D2"))
-        else todo_thing_detail_save.setTextColor(Color.parseColor("#4015315B"))
+        todo_thing_detail_save.visibility =
+            if (viewModel.isChanged) View.VISIBLE
+            else View.GONE
+
     }
 
-    private fun changeModifyStatus(isChanged: Boolean){
+    private fun changeModifyStatus(isChanged: Boolean) {
         viewModel.isChanged = isChanged
         todo_thing_detail_save.visibility =
-        if (viewModel.isChanged) View.VISIBLE
-        else View.GONE
+            if (viewModel.isChanged) View.VISIBLE
+            else View.GONE
     }
 
     override fun onBackPressed() {
-        if (viewModel.isChanged){
-            backTime --
-            if (backTime == 0){
+        if (viewModel.isChanged) {
+            backTime--
+            if (backTime == 0) {
                 super.onBackPressed()
             } else {
                 BaseApp.context.toast("你的修改未保存")
@@ -172,7 +173,11 @@ class TodoDetailActivity : BaseViewModelActivity<TodoDetailViewModel>() {
         }
     }
 
-    private fun setCheckedStatus(){
-        todo_iv_check.visibility = if(todo.isChecked) View.VISIBLE else View.GONE
+    private fun setCheckedStatus() {
+        todo_iv_check.visibility = if (todo.isChecked) View.VISIBLE else View.GONE
+        todo_tv_todo_title.setTextColor(
+            if (todo.isChecked) ContextCompat.getColor(this, R.color.todo_item_checked_color)
+            else ContextCompat.getColor(this, R.color.todo_check_line_color)
+        )
     }
 }

@@ -3,6 +3,7 @@ package com.cyxbsmobile_single.module_todo.ui.activity
 import android.graphics.Color
 import android.os.Bundle
 import android.view.View
+import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.alibaba.android.arouter.facade.annotation.Route
@@ -101,7 +102,8 @@ class TodoInnerMainActivity : BaseViewModelActivity<TodoViewModel>() {
                                 LogUtils.d("RayJoe", "position = $pos")
                             }
                         }
-                        todo_cl_item_main.setBackgroundColor(Color.WHITE)
+
+                        todo_cl_item_main.setBackgroundColor(ContextCompat.getColor(this@TodoInnerMainActivity, R.color.common_white_background))
 
                         if (wrapper.todo?.remindMode?.notifyDateTime == "") {
                             //判断为没有设置提醒，也没有设置重复

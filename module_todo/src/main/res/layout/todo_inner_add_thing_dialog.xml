@@ -55,7 +55,7 @@
         android:paddingStart="17dp"
         android:singleLine="true"
         android:textColor="@color/todo_check_line_color"
-        android:textColorHint="@color/common_othercourse_common_hint_text_color" />
+        android:textColorHint="@color/todo_add_todo_title_hint_color" />
 
     <androidx.appcompat.widget.LinearLayoutCompat
         android:id="@+id/todo_ll_notify_time"
@@ -76,7 +76,7 @@
             android:layout_marginStart="10dp"
             android:clickable="true"
             android:text="@string/todo_inner_add_thing_nf_text"
-            android:textColor="@color/todo_inner_add_thing_nf_tv_color"
+            android:textColor="@color/todo_inner_add_thing_et_hint_color"
             android:textSize="15sp" />
     </androidx.appcompat.widget.LinearLayoutCompat>
 
@@ -100,7 +100,7 @@
             android:layout_marginStart="12dp"
             android:clickable="true"
             android:text="@string/todo_inner_add_thing_repeat_time_text"
-            android:textColor="@color/todo_inner_add_thing_nf_tv_color"
+            android:textColor="@color/todo_inner_add_thing_et_hint_color"
             android:textSize="15sp" />
     </androidx.appcompat.widget.LinearLayoutCompat>
 
