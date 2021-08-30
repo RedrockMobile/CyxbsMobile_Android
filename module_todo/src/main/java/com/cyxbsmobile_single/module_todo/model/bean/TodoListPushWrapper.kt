@@ -15,9 +15,7 @@ data class TodoListPushWrapper(
     @SerializedName("force")
     var force: Int = 0,
     @SerializedName("first_push")
-    var firsPush: Int = 1,
-    @SerializedName("del_todo_array")
-    var delTodoArray: List<Long> = emptyList()
+    var firsPush: Int = 1
 ): Serializable{
     companion object{
         const val IS_FORCE = 1

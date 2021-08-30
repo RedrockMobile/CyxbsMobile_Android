@@ -63,7 +63,6 @@ class TodoModel {
         apiGenerator.pushTodo(
             TodoListPushWrapper(
                 todoList = listOf(todo),
-                delTodoArray = emptyList(),
                 syncTime = syncTime,
                 force = TodoListPushWrapper.NONE_FORCE,
                 firsPush = if (syncTime == 0L) 1 else 0
@@ -117,26 +116,26 @@ class TodoModel {
             .setSchedulers()
             .safeSubscribeBy {
                 onSuccess(it)
+                todo.todoId = it
+                apiGenerator.pushTodo(
+                    TodoListPushWrapper(
+                        todoList = listOf(todo),
+                        syncTime = syncTime,
+                        force = TodoListPushWrapper.NONE_FORCE,
+                        firsPush = if (syncTime == 0L) 1 else 0
+                    )
+                ).setSchedulers()
+                    .safeSubscribeBy(
+                        onNext = {
+                            setLastSyncTime(it.data.syncTime)
+                            setLastModifyTime(it.data.syncTime)
+                        },
+                        onError = {
+                            //缓存为本地修改
+                            addOffLineModifyTodo(todo.todoId, CHANGE)
+                        }
+                    )
             }
-        apiGenerator.pushTodo(
-            TodoListPushWrapper(
-                todoList = listOf(todo),
-                delTodoArray = emptyList(),
-                syncTime = syncTime,
-                force = TodoListPushWrapper.NONE_FORCE,
-                firsPush = if (syncTime == 0L) 1 else 0
-            )
-        ).setSchedulers()
-            .safeSubscribeBy(
-                onNext = {
-                    setLastSyncTime(it.data.syncTime)
-                    setLastModifyTime(it.data.syncTime)
-                },
-                onError = {
-                    //缓存为本地修改
-                    addOffLineModifyTodo(todo.todoId, CHANGE)
-                }
-            )
     }
 
     enum class ModifyType {
@@ -316,7 +315,6 @@ class TodoModel {
                     todoList = it,
                     force = isForce,
                     firsPush = isFirstPush,
-                    delTodoArray = delList,
                     syncTime = syncTime
                 )
 
