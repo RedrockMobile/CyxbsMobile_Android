@@ -80,7 +80,6 @@ class AddItemDialog(context: Context, onConfirm: (Todo) -> Unit) :
             todo_tv_set_notify_time.setOnClickListener {
                 hideKeyboard(context, this)
                 showNotifyDatePicker()
-                todo_tv_set_repeat_time.isClickable = false
             }
 
             todo_inner_add_thing_cancel.setOnClickListener {
@@ -101,7 +100,6 @@ class AddItemDialog(context: Context, onConfirm: (Todo) -> Unit) :
             todo_tv_set_repeat_time.setOnClickListener {
                 hideKeyboard(context, this)
                 showRepeatModePicker()
-                todo_tv_set_notify_time.isClickable = false
             }
 
             todo_inner_add_thing_repeat_time_cancle.setOnClickListener {
@@ -109,8 +107,6 @@ class AddItemDialog(context: Context, onConfirm: (Todo) -> Unit) :
                     hide()
                     return@setOnClickListener
                 }
-                todo_tv_set_notify_time.isClickable = true
-                todo_tv_set_repeat_time.isClickable = true
                 //制空remindMode
                 todo.remindMode = RemindMode.generateDefaultRemindMode()
                 curOperate = NONE
@@ -122,6 +118,7 @@ class AddItemDialog(context: Context, onConfirm: (Todo) -> Unit) :
                     updateNotifyTime()
                 }
                 if (isFromDetail) {
+                    LogUtils.d("RayleighZ", "on Confirm, todo = $todo")
                     onConfirm(todo)
                     hide()
                     return@setOnClickListener
@@ -151,7 +148,7 @@ class AddItemDialog(context: Context, onConfirm: (Todo) -> Unit) :
                         return
                     }
                     repeatMode = RemindMode.WEEK
-                    week.add(
+                    week.addWithoutRepeat(
                         0,
                         weekStringList.indexOf(
                             todo_inner_add_thing_second.getCurrentItem()
@@ -169,7 +166,7 @@ class AddItemDialog(context: Context, onConfirm: (Todo) -> Unit) :
                         return
                     }
                     repeatMode = RemindMode.MONTH
-                    day.add(0, Integer.parseInt(todo_inner_add_thing_second.getCurrentItem()))
+                    day.addWithoutRepeat(0, Integer.parseInt(todo_inner_add_thing_second.getCurrentItem()))
                 }
                 "每月${todo_inner_add_thing_second.getCurrentItem()}日"
             }
@@ -181,7 +178,7 @@ class AddItemDialog(context: Context, onConfirm: (Todo) -> Unit) :
                         return
                     }
                     repeatMode = RemindMode.YEAR
-                    date.add(
+                    date.addWithoutRepeat(
                         0,
                         "${todo_inner_add_thing_second.getCurrentItem()}.${todo_inner_add_thing_third.getCurrentItem()}"
                     )
@@ -244,7 +241,11 @@ class AddItemDialog(context: Context, onConfirm: (Todo) -> Unit) :
             todo.remindMode.notifyDateTime =
                 "${
                     Calendar.getInstance().get(Calendar.YEAR)
-                }年${dateWithoutWeek}${todo_inner_add_thing_second.getCurrentItem()}:${todo_inner_add_thing_third.getCurrentItem()}"
+                }年${dateWithoutWeek}${
+                    numToString(todo_inner_add_thing_second.getCurrentItem())
+                }:${
+                    numToString(todo_inner_add_thing_third.getCurrentItem())
+                }"
             val date =
                 "$dateWithoutWeek ${numToString(todo_inner_add_thing_second.getCurrentItem())}:${numToString(todo_inner_add_thing_third.getCurrentItem())}"
             todo_tv_set_notify_time.text = date
@@ -275,7 +276,11 @@ class AddItemDialog(context: Context, onConfirm: (Todo) -> Unit) :
     }
 
     fun resetAllRepeatMode(todo: Todo) {
-        repeatTimeAdapter.resetAll(remindMode2RemindList(todo.remindMode))
+        if (todo.remindMode.repeatMode == RemindMode.NONE){
+            repeatTimeAdapter.resetAll(emptyList())
+        } else {
+            repeatTimeAdapter.resetAll(remindMode2RemindList(todo.remindMode))
+        }
         this.todo.remindMode = todo.remindMode
         isFromDetail = true
     }

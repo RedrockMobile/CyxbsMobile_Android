@@ -1,17 +1,13 @@
 package com.cyxbsmobile_single.module_todo.util
 
-import android.app.Activity
 import android.content.Context
 import android.view.View
 import android.view.ViewGroup
-import android.view.WindowManager
 import android.view.inputmethod.InputMethodManager
-import androidx.core.content.ContextCompat.getSystemService
 import androidx.core.view.marginBottom
 import androidx.core.view.marginLeft
 import androidx.core.view.marginRight
 import androidx.core.view.marginTop
-import com.bumptech.glide.load.engine.bitmap_recycle.IntegerArrayAdapter
 import com.cyxbsmobile_single.module_todo.model.bean.DateBeen
 import com.cyxbsmobile_single.module_todo.model.bean.RemindMode
 import com.google.gson.Gson
@@ -50,12 +46,12 @@ val weekStringList = listOf(
  * 不重复不提醒       -> 返回""
  */
 fun repeatMode2RemindTime(remindMode: RemindMode): String {
-    if (remindMode.notifyDateTime == "" && remindMode.repeatMode == RemindMode.NONE){
+    if (remindMode.notifyDateTime == "" && remindMode.repeatMode == RemindMode.NONE) {
         return ""
     }
     //今天的日历
     val calendar = Calendar.getInstance()
-    val remindTime = if (remindMode.notifyDateTime == ""){
+    val remindTime = if (remindMode.notifyDateTime == "") {
         //只要没设置提醒时间，就返回""，ui不展示
         "00:00"
     } else {
@@ -66,7 +62,11 @@ fun repeatMode2RemindTime(remindMode: RemindMode): String {
         LogUtils.d("RayleighZ", "notifyTime = ${remindMode.notifyDateTime}")
         val remindDate = format.parse(remindMode.notifyDateTime)
         remindDateCalender.time = remindDate
-        "${numToString(remindDateCalender.get(Calendar.HOUR_OF_DAY))}:${numToString(remindDateCalender.get(Calendar.MINUTE))}"
+        "${numToString(remindDateCalender.get(Calendar.HOUR_OF_DAY))}:${
+            numToString(
+                remindDateCalender.get(Calendar.MINUTE)
+            )
+        }"
     }
 
     when (remindMode.repeatMode) {
@@ -80,15 +80,24 @@ fun repeatMode2RemindTime(remindMode: RemindMode): String {
                 BaseApp.context.toast("提醒日期错误")
                 return "提醒日期错误"
             }
-            while (calendar.getActualMaximum(Calendar.DAY_OF_MONTH) < remindMode.day.last()) {
-                //判定为这个月的日期数不足，需要切换到下个月
-                calendar.add(Calendar.MONTH, 1)
-            }
-            for (day in remindMode.day) {
-                if (calendar.get(Calendar.DAY_OF_MONTH) <= day) {
-                    //如果今日日期要早于提醒时间，就展示提为day
-                    return "${calendar.get(Calendar.MONTH) + 1}月${day}日 $remindTime"
+            repeat(12) {
+                while (calendar.getActualMaximum(Calendar.DAY_OF_MONTH) < remindMode.day.last()) {
+                    //判定为这个月的日期数不足，需要切换到下个月
+                    //防止出现诸如2月31号这种情况
+                    calendar.add(Calendar.MONTH, 1)
                 }
+
+                for (day in remindMode.day) {
+                    if (calendar.get(Calendar.DAY_OF_MONTH) <= day) {
+                        //如果今日日期要早于提醒时间，就展示提为day
+                        return "${calendar.get(Calendar.MONTH) + 1}月${day}日 $remindTime"
+                    }
+                }
+
+                //走到这里说明这个月的时间都超了，需要到下个月
+                //这里就remake到下个月月初
+                calendar.add(Calendar.MONTH, 1)
+                calendar.set(Calendar.DAY_OF_MONTH, 1)
             }
         }
 
@@ -228,7 +237,7 @@ fun remindMode2RemindList(remindMode: RemindMode): List<String> {
 
         RemindMode.WEEK -> {
             return remindMode.week.map {
-                "每周$it"
+                "每周${weekStringList[it]}"
             }
         }
 
@@ -239,8 +248,14 @@ fun remindMode2RemindList(remindMode: RemindMode): List<String> {
             }
         }
 
+        RemindMode.MONTH -> {
+            return remindMode.day.map {
+                "每月${it}日"
+            }
+        }
+
         else -> {
-            return listOf("设置提醒时间")
+            return emptyList()
         }
     }
 }
@@ -250,6 +265,6 @@ fun hideKeyboard(context: Context, v: View) {
     imm.hideSoftInputFromWindow(v.windowToken, 0)
 }
 
-fun numToString(num: Int): String = if(num < 10) "0$num" else num.toString()
+fun numToString(num: Int): String = if (num < 10) "0$num" else num.toString()
 
-fun numToString(num: String): String = if(Integer.parseInt(num) < 10) "0$num" else num
+fun numToString(num: String): String = if (Integer.parseInt(num) < 10) "0$num" else num

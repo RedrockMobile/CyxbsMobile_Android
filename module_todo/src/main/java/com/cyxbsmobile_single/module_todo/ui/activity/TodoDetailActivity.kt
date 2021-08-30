@@ -9,6 +9,7 @@ import androidx.core.widget.addTextChangedListener
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.cyxbsmobile_single.module_todo.R
 import com.cyxbsmobile_single.module_todo.adapter.RepeatInnerAdapter
+import com.cyxbsmobile_single.module_todo.model.bean.RemindMode
 import com.cyxbsmobile_single.module_todo.model.bean.Todo
 import com.cyxbsmobile_single.module_todo.ui.dialog.AddItemDialog
 import com.cyxbsmobile_single.module_todo.util.remindMode2RemindList
@@ -47,6 +48,8 @@ class TodoDetailActivity : BaseViewModelActivity<TodoDetailViewModel>() {
         //这里反序列化两次是为了防止内外拿到同一个引用
         viewModel.rawTodo = Gson().fromJson(intent.getStringExtra("todo"),Todo::class.java)
 
+        LogUtils.d("RayleighZ", " todo = $todo")
+
         initView()
 
         initClick()
@@ -73,6 +76,10 @@ class TodoDetailActivity : BaseViewModelActivity<TodoDetailViewModel>() {
     }
 
     private fun initClick(){
+        todo_inner_detail_header.setOnClickListener{
+            finish()
+        }
+
         todo_tv_inner_detail_time.setOnClickListener {
             backTime = 2
             AddItemDialog(context = this){
@@ -92,7 +99,6 @@ class TodoDetailActivity : BaseViewModelActivity<TodoDetailViewModel>() {
             backTime = 2
             AddItemDialog(context = this){
                 repeatAdapter.resetAll(remindMode2RemindList(it.remindMode))
-                LogUtils.d("ZhangYu", "$it")
                 todo.remindMode = it.remindMode
                 changeModifyStatus()
             }.apply {
@@ -139,16 +145,12 @@ class TodoDetailActivity : BaseViewModelActivity<TodoDetailViewModel>() {
         viewModel.judgeChange(todo)
         if (viewModel.isChanged) todo_thing_detail_save.setTextColor(Color.parseColor("#2923D2"))
         else todo_thing_detail_save.setTextColor(Color.parseColor("#4015315B"))
-
-        LogUtils.d("RayleighZ", "${viewModel.rawTodo?.toString()}  $todo")
     }
 
     private fun changeModifyStatus(isChanged: Boolean){
         viewModel.isChanged = isChanged
         if (viewModel.isChanged) todo_thing_detail_save.setTextColor(Color.parseColor("#2923D2"))
         else todo_thing_detail_save.setTextColor(Color.parseColor("#4015315B"))
-
-        LogUtils.d("RayleighZ", "${viewModel.isChanged}")
     }
 
     override fun onBackPressed() {

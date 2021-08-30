@@ -14,8 +14,7 @@ import kotlinx.android.synthetic.main.todo_rv_item_simple_text.view.*
 class RepeatInnerAdapter(
     private val dataList: ArrayList<String>,
     private val onItemClick: (view: View) -> Unit
-) :
-    SimpleTextAdapter(dataList, R.layout.todo_rv_item_simple_text) {
+) : SimpleTextAdapter(dataList, R.layout.todo_rv_item_simple_text) {
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
         holder.itemView.apply {
             todo_tv_simple_text.text = dataList[position]
