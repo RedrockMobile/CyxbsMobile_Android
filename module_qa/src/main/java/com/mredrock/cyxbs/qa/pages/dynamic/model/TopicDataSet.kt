@@ -1,4 +1,3 @@
-
 package com.mredrock.cyxbs.qa.pages.dynamic.model
 
 import com.google.gson.Gson

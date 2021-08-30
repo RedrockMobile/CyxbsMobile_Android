@@ -1,6 +1,5 @@
 package com.mredrock.cyxbs.qa.pages.square.viewmodel
 
-import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import com.mredrock.cyxbs.common.network.ApiGenerator

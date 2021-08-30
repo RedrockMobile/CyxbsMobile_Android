@@ -58,10 +58,12 @@ abstract class BaseCircleDetailFragment<T : CircleDetailViewModel> : BaseViewMod
         super.onCreate(savedInstanceState)
     }
 
-    override fun getViewModelFactory() = CircleDetailViewModel.Factory(type,loop)
+    override fun getViewModelFactory() = CircleDetailViewModel.Factory(type, loop)
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
-                              savedInstanceState: Bundle?): View? {
+    override fun onCreateView(
+        inflater: LayoutInflater, container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View? {
         return inflater.inflate(R.layout.qa_fragment_last_hot, container, false)
     }
 
@@ -78,20 +80,38 @@ abstract class BaseCircleDetailFragment<T : CircleDetailViewModel> : BaseViewMod
             onShareClickListener = { dynamic, mode ->
                 val url = "${CommentConfig.SHARE_URL}dynamic?id=${dynamic.postId}"
                 when (mode) {
-                    QQ_FRIEND ->{
-                        val pic = if(dynamic.pics.isNullOrEmpty()) "" else dynamic.pics[0]
-                        mTencent?.let { it1 -> ShareUtils.qqShare(it1, this@BaseCircleDetailFragment, dynamic.topic, dynamic.content, url, pic) }
+                    QQ_FRIEND -> {
+                        val pic = if (dynamic.pics.isNullOrEmpty()) "" else dynamic.pics[0]
+                        mTencent?.let { it1 ->
+                            ShareUtils.qqShare(
+                                it1,
+                                this@BaseCircleDetailFragment,
+                                dynamic.topic,
+                                dynamic.content,
+                                url,
+                                pic
+                            )
+                        }
                     }
                     QQ_ZONE ->
-                        mTencent?.let { it1 -> ShareUtils.qqQzoneShare(it1, this@BaseCircleDetailFragment, dynamic.topic, dynamic.content, url, ArrayList(dynamic.pics)) }
-                    COPY_LINK ->{
+                        mTencent?.let { it1 ->
+                            ShareUtils.qqQzoneShare(
+                                it1,
+                                this@BaseCircleDetailFragment,
+                                dynamic.topic,
+                                dynamic.content,
+                                url,
+                                ArrayList(dynamic.pics)
+                            )
+                        }
+                    COPY_LINK -> {
                         this@BaseCircleDetailFragment.context?.let {
                             ClipboardController.copyText(it, url)
                         }
                     }
                 }
             }
-            onPopWindowClickListener = { position, string, dynamic ->
+            onPopWindowClickListener = { _, string, dynamic ->
                 when (string) {
                     IGNORE -> {
                         viewModel.ignore(dynamic)
@@ -105,17 +125,22 @@ abstract class BaseCircleDetailFragment<T : CircleDetailViewModel> : BaseViewMod
                             }.show()
                         }
                     }
-                    UN_FOLLOW->{
-                        activityViewModels<CircleDetailViewModel>().value.followStateChangedMarkObservableByActivity.value = false
+                    UN_FOLLOW -> {
+                        activityViewModels<CircleDetailViewModel>().value.followStateChangedMarkObservableByActivity.value =
+                            false
                         viewModel.invalidateQuestionList()
                     }
-                    FOLLOW ->{
-                        activityViewModels<CircleDetailViewModel>().value.followStateChangedMarkObservableByActivity.value = true
+                    FOLLOW -> {
+                        activityViewModels<CircleDetailViewModel>().value.followStateChangedMarkObservableByActivity.value =
+                            true
                         viewModel.invalidateQuestionList()
                     }
                     DELETE -> {
                         this@BaseCircleDetailFragment.activity?.let { it1 ->
-                            QaDialog.show(it1, resources.getString(R.string.qa_dialog_tip_delete_comment_text), {}) {
+                            QaDialog.show(
+                                it1,
+                                resources.getString(R.string.qa_dialog_tip_delete_comment_text),
+                                {}) {
                                 viewModel.deleteId(dynamic.postId, "0")
                             }
                         }
@@ -137,9 +162,9 @@ abstract class BaseCircleDetailFragment<T : CircleDetailViewModel> : BaseViewMod
         val footerRvAdapter = FooterRvAdapter { viewModel.retry() }
         val emptyRvAdapter = EmptyRvAdapter(getString(R.string.qa_question_list_empty_hint))
         val adapterWrapper = RvAdapterWrapper(
-                normalAdapter = dynamicListRvAdapter,
-                emptyAdapter = emptyRvAdapter,
-                footerAdapter = footerRvAdapter
+            normalAdapter = dynamicListRvAdapter,
+            emptyAdapter = emptyRvAdapter,
+            footerAdapter = footerRvAdapter
         )
         qa_rv_circle_detail_last_hot.adapter = adapterWrapper
         qa_rv_circle_detail_last_hot.layoutManager = LinearLayoutManager(context)
@@ -174,6 +199,7 @@ abstract class BaseCircleDetailFragment<T : CircleDetailViewModel> : BaseViewMod
             }
         }
     }
+
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         when (requestCode) {
             // 从动态详细返回
@@ -183,6 +209,7 @@ abstract class BaseCircleDetailFragment<T : CircleDetailViewModel> : BaseViewMod
                     viewModel.invalidateQuestionList()
                 } else {
                     // 不需要刷新，则更新当前的dynamic为详细页的dynamic（避免出现评论数目不一致的问题）
+                    dynamicListRvAdapter
                     dynamicListRvAdapter.curSharedItem?.apply {
                         val dynamic = data?.getParcelableExtra<Dynamic>("refresh_dynamic")
                         dynamic?.let {
@@ -196,6 +223,8 @@ abstract class BaseCircleDetailFragment<T : CircleDetailViewModel> : BaseViewMod
                             }
                         }
                     }
+                    dynamicListRvAdapter.notifyDataSetChanged()
+                    dynamicListRvAdapter.notifyDataSetChanged()
                 }
             }
             // 从发动态返回

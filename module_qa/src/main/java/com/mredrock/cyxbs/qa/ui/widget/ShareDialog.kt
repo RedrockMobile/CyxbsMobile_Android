@@ -8,7 +8,6 @@ import android.view.Gravity
 import android.view.View
 import android.view.WindowManager
 import com.mredrock.cyxbs.qa.R
-import com.mredrock.cyxbs.qa.pages.dynamic.ui.fragment.DynamicFragment
 import kotlinx.android.synthetic.main.qa_dialog_share.*
 
 /**
@@ -33,18 +32,18 @@ class ShareDialog(context: Context) : Dialog(context) {
     }
 
     fun initView(
-            qqshare: View.OnClickListener,
-            qqZoneShare: View.OnClickListener,
-            weChatShare: View.OnClickListener,
-            friendShipCircle: View.OnClickListener,
-            copylink: View.OnClickListener,
-            onCancelListener: View.OnClickListener
+        qqShare: View.OnClickListener,
+        qqZoneShare: View.OnClickListener,
+        weChatShare: View.OnClickListener,
+        friendShipCircle: View.OnClickListener,
+        copyLink: View.OnClickListener,
+        onCancelListener: View.OnClickListener
     ) {
-        qa_ll_share_qq.setOnClickListener(qqshare)
+        qa_ll_share_qq.setOnClickListener(qqShare)
         qa_ll_share_qq_zone.setOnClickListener(qqZoneShare)
         qa_ll_share_wechat.setOnClickListener(weChatShare)
         qa_ll_share_friend_circle.setOnClickListener(friendShipCircle)
-        qa_ll_share_copy_link.setOnClickListener(copylink)
+        qa_ll_share_copy_link.setOnClickListener(copyLink)
         qa_tv_cancel.setOnClickListener(onCancelListener)
     }
 }

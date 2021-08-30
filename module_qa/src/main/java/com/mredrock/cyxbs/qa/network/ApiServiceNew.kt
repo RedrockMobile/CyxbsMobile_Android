@@ -7,7 +7,6 @@ import com.mredrock.cyxbs.qa.beannew.*
 import io.reactivex.Observable
 import okhttp3.MultipartBody
 import retrofit2.http.*
-import java.io.File
 
 /**
  * Created By zhangzhe 2020/12/1
@@ -15,45 +14,55 @@ import java.io.File
 interface ApiServiceNew {
     //圈子详情里面的最新和热门帖子的接口
     @GET("/magipoke-loop/post/getLoopPage")
-    fun getCircleDynamicList(@Query("loop")
-                             loop: Int,
-                             @Query("page")
-                             page: Int,
-                             @Query("size")
-                             size: Int = 6,
-                             @Query("type")
-                             type: String): Observable<RedrockApiWrapper<List<Dynamic>>>
+    fun getCircleDynamicList(
+        @Query("loop")
+        loop: Int,
+        @Query("page")
+        page: Int,
+        @Query("size")
+        size: Int = 6,
+        @Query("type")
+        type: String
+    ): Observable<RedrockApiWrapper<List<Dynamic>>>
 
     @GET("/magipoke-loop/post/getMainPage")
-    fun getDynamicList(@Query("type")
-                       type: String,
-                       @Query("page")
-                       page: Int,
-                       @Query("size")
-                       size: Int = 6): Observable<RedrockApiWrapper<List<Dynamic>>>
+    fun getDynamicList(
+        @Query("type")
+        type: String,
+        @Query("page")
+        page: Int,
+        @Query("size")
+        size: Int = 6
+    ): Observable<RedrockApiWrapper<List<Dynamic>>>
 
     @GET("/magipoke-loop/ground/getFollowedTopic")
     fun getFollowedTopic(): Observable<RedrockApiWrapper<List<Topic>>>
 
     @POST("/magipoke-loop/ground/getTopicGround")
     @FormUrlEncoded
-    fun getTopicGround(@Field("topic_name")
-                       topic_name: String, @Field("instruction")
-                       instruction: String): Observable<RedrockApiWrapper<List<Topic>>>
+    fun getTopicGround(
+        @Field("topic_name")
+        topic_name: String, @Field("instruction")
+        instruction: String
+    ): Observable<RedrockApiWrapper<List<Topic>>>
 
     @GET("/magipoke-loop/search/getSearchHotWord")
     fun getSearchHotWord(): Observable<RedrockApiWrapper<SearchHotWord>>
 
     @GET("/magipoke-loop/search/searchPost")
-    fun getSearchResult(@Query("key")
-                        searchContent: String,
-                        @Query("page") page: Int,
-                        @Query("size") size: Int): Observable<RedrockApiWrapper<List<Dynamic>>>
+    fun getSearchResult(
+        @Query("key")
+        searchContent: String,
+        @Query("page") page: Int,
+        @Query("size") size: Int
+    ): Observable<RedrockApiWrapper<List<Dynamic>>>
 
     @GET("/magipoke-loop/search/searchKnowledge")
-    fun getSearchKnowledge(@Query("key") searchKey: String,
-                           @Query("page") page: Int,
-                           @Query("size") size: Int): Observable<RedrockApiWrapper<List<Knowledge>>>
+    fun getSearchKnowledge(
+        @Query("key") searchKey: String,
+        @Query("page") page: Int,
+        @Query("size") size: Int
+    ): Observable<RedrockApiWrapper<List<Knowledge>>>
 
     @GET("/magipoke-loop/ground/getUnreadCount")
     fun getTopicMessage(@Query("last") last: String): Observable<RedrockApiWrapper<List<TopicMessage>>>
@@ -78,59 +87,68 @@ interface ApiServiceNew {
 
     @POST("/magipoke-loop/comment/releaseComment")
     @FormUrlEncoded
-    fun releaseComment(@Field("content")
-                       content: String,
-                       @Field("post_id")
-                       postId: String,
-                       @Field("reply_id")
-                       replyId: String
+    fun releaseComment(
+        @Field("content")
+        content: String,
+        @Field("post_id")
+        postId: String,
+        @Field("reply_id")
+        replyId: String
     ): Observable<RedrockApiWrapper<CommentReleaseResult>>
 
     @POST("/magipoke-loop/comment/praise")
     @FormUrlEncoded
-    fun praise(@Field("id")
-               replyId: String, @Field("model") model: String
+    fun praise(
+        @Field("id")
+        replyId: String, @Field("model") model: String
     ): Observable<RedrockApiStatus>
 
     @POST("/magipoke-loop/ignore/addIgnoreUid")
     @FormUrlEncoded
-    fun ignoreUid(@Field("uid")
-                  uid: String
+    fun ignoreUid(
+        @Field("uid")
+        uid: String
     ): Observable<RedrockApiStatus>
 
     @POST("/magipoke-loop/ignore/cancelIgnoreUid")
     @FormUrlEncoded
-    fun cancelIgnoreUid(@Field("uid")
-                        uid: String
+    fun cancelIgnoreUid(
+        @Field("uid")
+        uid: String
     ): Observable<RedrockApiStatus>
 
     @POST("/magipoke-loop/ground/followTopicGround")
     @FormUrlEncoded
-    fun followTopicGround(@Field("topic_name") topicName: String
+    fun followTopicGround(
+        @Field("topic_name") topicName: String
     ): Observable<RedrockApiStatus>
 
     @POST("/magipoke-loop/comment/report")
     @FormUrlEncoded
-    fun report(@Field("id")
-               id: String, @Field("model") model: String, @Field("content") content: String
+    fun report(
+        @Field("id")
+        id: String, @Field("model") model: String, @Field("content") content: String
     ): Observable<RedrockApiStatus>
 
     @POST("/magipoke-loop/comment/deleteId")
     @FormUrlEncoded
-    fun deleteId(@Field("id")
-                 id: String,
-                 @Field("model")
-                 model: String
+    fun deleteId(
+        @Field("id")
+        id: String,
+        @Field("model")
+        model: String
     ): Observable<RedrockApiStatus>
 
     @GET("/magipoke-loop/comment/getallcomment")
-    fun getComment(@Query("post_id")
-                   postId: String
+    fun getComment(
+        @Query("post_id")
+        postId: String
     ): Observable<RedrockApiWrapper<List<Comment>>>
 
     @GET("/magipoke-loop/post/getPostInfo")
-    fun getPostInfo(@Query("id")
-                    postId: String
+    fun getPostInfo(
+        @Query("id")
+        postId: String
     ): Observable<RedrockApiWrapper<Dynamic>>
 
     /**
@@ -139,8 +157,8 @@ interface ApiServiceNew {
     @FormUrlEncoded
     @POST("/magipoke-loop/user/replyme")
     fun getUserReplay(
-            @Field("page") page: Int,
-            @Field("size") size: Int
+        @Field("page") page: Int,
+        @Field("size") size: Int
     ): Observable<RedrockApiWrapper<List<CommentWrapper>>>
 
     /**
@@ -149,8 +167,8 @@ interface ApiServiceNew {
     @FormUrlEncoded
     @POST("/magipoke-loop/user/praisedme")
     fun getUserPraise(
-            @Field("page") page: Int,
-            @Field("size") size: Int
+        @Field("page") page: Int,
+        @Field("size") size: Int
     ): Observable<RedrockApiWrapper<List<Praise>>>
 
     /**
@@ -159,8 +177,8 @@ interface ApiServiceNew {
     @FormUrlEncoded
     @POST("/magipoke-loop/user/getIgnoreUid")
     fun getIgnoreUid(
-            @Field("page") page: Int,
-            @Field("size") size: Int
+        @Field("page") page: Int,
+        @Field("size") size: Int
     ): Observable<RedrockApiWrapper<List<Ignore>>>
 
     /**
@@ -168,9 +186,10 @@ interface ApiServiceNew {
      */
     @GET("/magipoke-loop/user/getUserPostList")
     fun getUserDynamic(
-            @Query("page") page: Int,
-            @Query("size") size: Int
+        @Query("page") page: Int,
+        @Query("size") size: Int
     ): Observable<RedrockApiWrapper<List<Dynamic>>>
+
     /*
     获取草稿
      */

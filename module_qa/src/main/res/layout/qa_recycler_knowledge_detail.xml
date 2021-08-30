@@ -56,7 +56,7 @@
                 提问的所有回答进行查看，选出最有价值的回答，将你的积分悬赏给该" />
 
             <RelativeLayout
-                android:id="@+id/qa_knowledge_cancel"
+                android:id="@+id/qa_knowledge_cancle"
                 android:layout_width="36dp"
                 android:layout_height="36dp"
                 android:layout_marginTop="19dp"

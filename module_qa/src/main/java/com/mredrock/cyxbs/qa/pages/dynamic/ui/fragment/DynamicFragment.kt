@@ -13,7 +13,6 @@ import android.widget.TextView
 import android.widget.Toast
 import android.widget.ViewFlipper
 import androidx.core.content.ContextCompat
-import androidx.core.view.doOnPreDraw
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.alibaba.android.arouter.facade.annotation.Route
@@ -80,16 +79,12 @@ import kotlin.collections.ArrayList
  * @Date: 2020/11/16 22:07
  */
 @Route(path = QA_ENTRY)
-class DynamicFragment : BaseViewModelFragment<DynamicListViewModel>(), EventBusLifecycleSubscriber {
+open class DynamicFragment : BaseViewModelFragment<DynamicListViewModel>(), EventBusLifecycleSubscriber {
     companion object {
         const val REQUEST_LIST_REFRESH_ACTIVITY = 0x1
 
         //R.string.qa_search_hot_word_key 长度
         const val HOT_WORD_HEAD_LENGTH = 6
-    }
-
-    init {
-        isOpenLifeCycleLog = true
     }
 
     //用来将发送调节window alpha的handler,如果任务还未执行就返回到了这个window就马上取消任务
@@ -419,6 +414,7 @@ class DynamicFragment : BaseViewModelFragment<DynamicListViewModel>(), EventBusL
     }
 
 
+
     private fun getTextView(info: String): TextView {
         return TextView(context).apply {
             text = info
@@ -436,6 +432,7 @@ class DynamicFragment : BaseViewModelFragment<DynamicListViewModel>(), EventBusL
         vf_hot_search.stopFlipping()
     }
 
+    @SuppressLint("NotifyDataSetChanged")
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         when (requestCode) {
             // 从动态详细返回
@@ -445,24 +442,20 @@ class DynamicFragment : BaseViewModelFragment<DynamicListViewModel>(), EventBusL
                     viewModel.getAllCirCleData("问答圈", "test1")
                     //获取用户进入圈子详情退出的时间，去请求从而刷新未读消息
                     viewModel.getMyCirCleData()
-//                    refreshTopicMessage()
-//                    viewModel.invalidateDynamicList()
+                    refreshTopicMessage()
+                    viewModel.invalidateDynamicList()
                 } else {
                     // 不需要刷新，则更新当前的dynamic为详细页的dynamic（避免出现评论数目不一致的问题）
                     dynamicListRvAdapter.curSharedItem?.apply {
                         val dynamic = data?.getParcelableExtra<Dynamic>("refresh_dynamic")
                         dynamic?.let {
-                            // 进行判断，如果返回的数据评论数和当前的不一样才回去刷新列表
-                            if (dynamicListRvAdapter.curSharedDynamic?.commentCount != it.commentCount) {
-                                dynamicListRvAdapter.curSharedDynamic?.commentCount =
-                                    it.commentCount
-                                this.findViewById<TextView>(R.id.qa_tv_dynamic_comment_count).text =
-                                    it.commentCount.toString()
-                                dynamicListRvAdapter.notifyItemChanged(dynamicListRvAdapter.curSharedItemPosition)
-                            }
+                            dynamicListRvAdapter.curSharedDynamic?.commentCount =
+                                dynamic.commentCount
+                            this.findViewById<TextView>(R.id.qa_tv_dynamic_comment_count).text =
+                                it.commentCount.toString()
                         }
                     }
-//                    dynamicListRvAdapter.notifyDataSetChanged()
+                    dynamicListRvAdapter.notifyDataSetChanged()
                 }
             }
             // 从发动态返回
@@ -480,7 +473,7 @@ class DynamicFragment : BaseViewModelFragment<DynamicListViewModel>(), EventBusL
     }
 
     @Subscribe(threadMode = ThreadMode.MAIN, sticky = true)
-    fun refreshQuestionList(event: RefreshQaEvent) {
+    open fun refreshQuestionList(event: RefreshQaEvent) {
         if (isRvAtTop)
             viewModel.invalidateDynamicList()
         else

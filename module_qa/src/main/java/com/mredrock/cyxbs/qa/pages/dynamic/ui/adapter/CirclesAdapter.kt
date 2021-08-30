@@ -5,10 +5,7 @@ import android.annotation.SuppressLint
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.ImageView
 import android.widget.LinearLayout
-import android.widget.TextView
-import androidx.core.view.setPadding
 import androidx.recyclerview.widget.RecyclerView
 import com.mredrock.cyxbs.common.BaseApp
 import com.mredrock.cyxbs.common.utils.extensions.dp2px
@@ -20,7 +17,6 @@ import com.mredrock.cyxbs.qa.beannew.Topic
 import com.mredrock.cyxbs.qa.beannew.TopicMessage
 import com.mredrock.cyxbs.qa.pages.dynamic.ui.fragment.DynamicFragment
 import com.mredrock.cyxbs.qa.pages.square.ui.activity.CircleSquareActivity
-import com.mredrock.cyxbs.qa.ui.widget.ImageViewAddCount
 import kotlinx.android.synthetic.main.qa_recycler_item_circles.view.*
 
 
@@ -30,7 +26,10 @@ import kotlinx.android.synthetic.main.qa_recycler_item_circles.view.*
  * @Description:
  * @Date: 2020/11/18 23:18
  */
-class CirclesAdapter(private val onItemClickEvent: (Topic, View) -> Unit, private val fragment: DynamicFragment) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
+class CirclesAdapter(
+    private val onItemClickEvent: (Topic, View) -> Unit,
+    private val fragment: DynamicFragment
+) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
     companion object {
         const val NO_CIRCLE = 0
         const val HAVE_CIRCLE = 1
@@ -39,14 +38,7 @@ class CirclesAdapter(private val onItemClickEvent: (Topic, View) -> Unit, privat
     private val circlesItemList = ArrayList<Topic>()
     private val topicMessageList = ArrayList<TopicMessage>()
 
-    class NoCircleItem(itemView: View) : RecyclerView.ViewHolder(itemView) {
-        val iv_add_circles: ImageView = itemView.findViewById(R.id.qa_iv_add_circles)
-    }
-
-    class CirclesItem(itemView: View) : RecyclerView.ViewHolder(itemView) {
-        val iv_circle: ImageViewAddCount = itemView.findViewById(R.id.qa_iv_circle)
-        val tv_circle_name: TextView = itemView.findViewById(R.id.qa_tv_circle_name)
-    }
+    class NoCircleItem(itemView: View) : RecyclerView.ViewHolder(itemView)
 
     override fun getItemViewType(position: Int): Int {
         return if (circlesItemList.size == 0)
@@ -57,20 +49,20 @@ class CirclesAdapter(private val onItemClickEvent: (Topic, View) -> Unit, privat
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
-        return when (viewType) {
+        when (viewType) {
             NO_CIRCLE -> {
                 val view = LayoutInflater.from(parent.context).inflate(
-                        R.layout.qa_recycler_item_no_circles,
-                        parent,
-                        false
+                    R.layout.qa_recycler_item_no_circles,
+                    parent,
+                    false
                 )
                 return NoCircleItem(view)
             }
             else -> {
                 val view = LayoutInflater.from(parent.context).inflate(
-                        R.layout.qa_recycler_item_circles,
-                        parent,
-                        false
+                    R.layout.qa_recycler_item_circles,
+                    parent,
+                    false
                 )
                 return CircleListViewHolder(view)
             }
@@ -91,7 +83,10 @@ class CirclesAdapter(private val onItemClickEvent: (Topic, View) -> Unit, privat
                 viewHolder.itemView.apply {
                     setOnSingleClickListener {
                         circlesItemList[position].post_count = 0
-                        onItemClickEvent(circlesItemList[position], viewHolder.itemView.findViewById<ImageViewAddCount>(R.id.qa_iv_circle))
+                        onItemClickEvent(
+                            circlesItemList[position],
+                            viewHolder.itemView.findViewById<LinearLayout>(R.id.qa_ll_topic)
+                        )
                     }
                     qa_iv_circle.apply {
 
@@ -105,7 +100,8 @@ class CirclesAdapter(private val onItemClickEvent: (Topic, View) -> Unit, privat
                     if (circlesItemList[position].topicName.length <= 4)
                         qa_tv_circle_name.text = circlesItemList[position].topicName
                     else
-                        qa_tv_circle_name.text = circlesItemList[position].topicName.substring(0, 4) + "..."
+                        qa_tv_circle_name.text =
+                            circlesItemList[position].topicName.substring(0, 4) + "..."
                 }
             }
         }
@@ -119,18 +115,21 @@ class CirclesAdapter(private val onItemClickEvent: (Topic, View) -> Unit, privat
 
     }
 
+    @SuppressLint("NotifyDataSetChanged")
     fun addCircleData(newData: List<Topic>) {
         circlesItemList.clear()
         circlesItemList.addAll(newData)
         notifyDataSetChanged()
     }
 
+    @SuppressLint("NotifyDataSetChanged")
     fun noticeChangeCircleData() {
         circlesItemList.clear()
         notifyDataSetChanged()
     }
 
 
+    @SuppressLint("NotifyDataSetChanged")
     fun addTopicMessageData(newTopicMessageData: List<TopicMessage>) {
         topicMessageList.clear()
         topicMessageList.addAll(newTopicMessageData)

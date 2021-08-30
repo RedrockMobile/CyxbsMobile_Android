@@ -12,7 +12,7 @@ import com.mredrock.cyxbs.common.ui.BaseViewModelFragment
 import com.mredrock.cyxbs.common.utils.extensions.gone
 import com.mredrock.cyxbs.common.utils.extensions.visible
 import com.mredrock.cyxbs.qa.R
-import com.mredrock.cyxbs.qa.bean.QAHistory
+import com.mredrock.cyxbs.qa.beannew.QAHistory
 import com.mredrock.cyxbs.qa.event.QASearchEvent
 import com.mredrock.cyxbs.qa.pages.search.ui.adapter.SearchHistoryRvAdapter
 import com.mredrock.cyxbs.qa.pages.search.ui.adapter.SearchHotRvAdapter
@@ -25,31 +25,34 @@ import org.greenrobot.eventbus.EventBus
  */
 class QuestionSearchingFragment : BaseViewModelFragment<SearchViewModel>() {
 
-
     private val historyRvAdapter = SearchHistoryRvAdapter(
-            onHistoryClick = {
-                if (historyDataList.size > it) {
-                    val history = historyDataList[it]
-                    EventBus.getDefault().post(QASearchEvent(history.info))
-                    history.time = System.currentTimeMillis()
-                    viewModel.update(history)
+        onHistoryClick = {
+            if (historyDataList.size > it) {
+                val history = historyDataList[it]
+                EventBus.getDefault().post(QASearchEvent(history.info))
+                history.time = System.currentTimeMillis()
+                viewModel.update(history)
+            }
+        },
+        onCleanIconClick = {
+            if (historyDataList.size > it) {
+                val history = historyDataList[it]
+                historyDataList.removeAt(it)
+                if (historyDataList.size == 0) {
+                    ll_history_title.gone()
                 }
-            },
-            onCleanIconClick = {
-                if (historyDataList.size > it) {
-                    val history = historyDataList[it]
-                    historyDataList.removeAt(it)
-                    if (historyDataList.size == 0) {
-                        ll_history_title.gone()
-                    }
-                    viewModel.delete(history)
+                viewModel.delete(history)
 
-                }
-            })
+            }
+        })
 
     private var historyDataList = mutableListOf<QAHistory>()
     private var hotSearchAdapter: SearchHotRvAdapter? = null
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
+    override fun onCreateView(
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View? {
         return inflater.inflate(R.layout.qa_fragment_question_search, container, false)
     }
 

@@ -22,6 +22,7 @@ import com.mredrock.cyxbs.qa.pages.square.ui.adapter.CircleSquareAdapter
 import com.mredrock.cyxbs.qa.pages.square.viewmodel.CircleSquareViewModel
 import kotlinx.android.synthetic.main.qa_activity_circle_square.*
 import kotlinx.android.synthetic.main.qa_common_toolbar.*
+import java.util.*
 
 class CircleSquareActivity : BaseViewModelActivity<CircleSquareViewModel>() {
 

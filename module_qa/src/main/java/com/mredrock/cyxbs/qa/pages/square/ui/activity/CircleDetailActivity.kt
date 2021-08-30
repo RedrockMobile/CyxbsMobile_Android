@@ -90,7 +90,7 @@ class CircleDetailActivity : BaseViewModelActivity<CircleDetailViewModel>() {
 
     private var isFormReceive = false
 
-    override fun getViewModelFactory(): ViewModelProvider.Factory? {
+    override fun getViewModelFactory(): ViewModelProvider.Factory {
         var loop = 1
         intent.extras?.apply {
             loop = getInt("id")
@@ -117,6 +117,7 @@ class CircleDetailActivity : BaseViewModelActivity<CircleDetailViewModel>() {
         }
     }
 
+    @SuppressLint("SetTextI18n")
     override fun onCreate(savedInstanceState: Bundle?) {
         window.setBackgroundDrawableResource(android.R.color.transparent)
         super.onCreate(savedInstanceState)
@@ -235,7 +236,7 @@ class CircleDetailActivity : BaseViewModelActivity<CircleDetailViewModel>() {
             ShareDialog(it.context).apply {
                 initView(onCancelListener = View.OnClickListener {
                     dismiss()
-                }, qqshare = View.OnClickListener {
+                }, qqShare = View.OnClickListener {
                     mTencent?.let { it1 ->
                         ShareUtils.qqShare(
                             it1,
@@ -267,7 +268,7 @@ class CircleDetailActivity : BaseViewModelActivity<CircleDetailViewModel>() {
                     CyxbsToast.makeText(context, R.string.qa_share_wechat_text, Toast.LENGTH_SHORT)
                         .show()
 
-                }, copylink = View.OnClickListener {
+                }, copyLink = View.OnClickListener {
                     ClipboardController.copyText(this@CircleDetailActivity, url)
                 })
             }.show()
@@ -284,7 +285,7 @@ class CircleDetailActivity : BaseViewModelActivity<CircleDetailViewModel>() {
             tv_circle_square_description.text = topic.introduction
             tv_circle_square_person_number.text = topic.follow_count.toString() + "个成员"
             qa_detail_tv_title.text = topic.topicName
-            if (topic._isFollow.equals(1)) {
+            if (topic._isFollow == 1) {
                 btn_circle_square_concern.text = "已关注"
                 btn_circle_square_concern.background =
                     context.getDrawable(R.drawable.qa_shape_send_dynamic_btn_grey_background)
@@ -321,6 +322,7 @@ class CircleDetailActivity : BaseViewModelActivity<CircleDetailViewModel>() {
         }
     }
 
+    @SuppressLint("SetTextI18n")
     private fun changeFollowState() {
         if (topic._isFollow == 1) {
             //关注的状态下点击，取消关注
