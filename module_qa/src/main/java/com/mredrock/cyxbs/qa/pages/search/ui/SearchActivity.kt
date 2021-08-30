@@ -2,16 +2,14 @@ package com.mredrock.cyxbs.qa.pages.search.ui
 
 import android.annotation.SuppressLint
 import android.content.Context
+import android.content.Intent
 import android.os.Bundle
-import android.view.View
 import android.view.inputmethod.EditorInfo
 import android.view.inputmethod.InputMethodManager
-import androidx.core.app.ActivityOptionsCompat
 import androidx.fragment.app.Fragment
 import com.mredrock.cyxbs.common.config.CyxbsMob
 import com.mredrock.cyxbs.common.mark.EventBusLifecycleSubscriber
 import com.mredrock.cyxbs.common.ui.BaseViewModelActivity
-import com.mredrock.cyxbs.common.utils.extensions.intentFor
 import com.mredrock.cyxbs.common.utils.extensions.longToast
 import com.mredrock.cyxbs.qa.R
 import com.mredrock.cyxbs.qa.beannew.QAHistory
@@ -34,19 +32,14 @@ class SearchActivity : BaseViewModelActivity<SearchViewModel>(), EventBusLifecyc
 
     private var searchText = "红岩"//用于保存搜索的数据
 
+
     companion object {
         private const val SEARCH_HINT_KEY = "search_hint_key"
-        fun activityStart(fragment: Fragment, searchHint: String, view: View) {
-
-            val bundle = Bundle().apply {
-                putString(SEARCH_HINT_KEY, searchHint)
-            }
-            val intent =
-                fragment.context?.intentFor<SearchActivity>().apply { this?.putExtras(bundle) }
-
-            fragment.startActivity(intent, fragment.activity?.let {
-                ActivityOptionsCompat.makeSceneTransitionAnimation(it, view, "ImageView_Search")
-                    .apply {}.toBundle()
+        fun activityStart(fragment: Fragment, searchHint: String) {
+            fragment.startActivity(Intent(
+                fragment.context, SearchActivity::class.java
+            ).apply {
+                putExtra(SEARCH_HINT_KEY, searchHint)
             })
         }
     }

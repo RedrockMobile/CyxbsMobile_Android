@@ -1,12 +1,10 @@
 package com.mredrock.cyxbs.qa.pages.dynamic.ui.adapter
 
 
-import android.annotation.SuppressLint
 import android.content.Context
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
-import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.recyclerview.widget.DiffUtil
 import com.mredrock.cyxbs.common.component.CyxbsToast
 import com.mredrock.cyxbs.common.utils.extensions.setAvatarImageFromUrl
@@ -55,6 +53,7 @@ class DynamicAdapter(val context: Context, private val onItemClickEvent: (Dynami
 
     var curSharedItem: View? = null
     var curSharedDynamic: Dynamic? = null
+    var curSharedItemPosition: Int = 0
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int) = DynamicViewHolder(parent)
 
     override fun onBindViewHolder(holder: BaseViewHolder<Dynamic>, position: Int) {
@@ -140,15 +139,12 @@ class DynamicAdapter(val context: Context, private val onItemClickEvent: (Dynami
         if (holder !is DynamicViewHolder) return
         curSharedDynamic = data
         curSharedItem = holder.itemView
-        onItemClickEvent.invoke(
-            data,
-            holder.itemView.findViewById<ConstraintLayout>(R.id.qa_ctl_dynamic)
-        )
+        curSharedItemPosition = position
+        onItemClickEvent.invoke(data, holder.itemView)
     }
 
     class DynamicViewHolder(parent: ViewGroup) :
         BaseViewHolder<Dynamic>(parent, R.layout.qa_recycler_item_dynamic_header) {
-        @SuppressLint("SetTextI18n")
         override fun refresh(data: Dynamic?) {
             data ?: return
             itemView.apply {

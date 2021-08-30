@@ -55,43 +55,37 @@
     </com.google.android.material.appbar.AppBarLayout>
 
     <RelativeLayout
+        android:id="@+id/rl_qa_hot_search"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:background="@color/common_window_background"
-        android:paddingBottom="20dp">
+        android:layout_height="36dp"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="20dp"
+        android:layout_marginEnd="16dp"
+        android:layout_marginBottom="20dp"
+        android:background="@drawable/qa_shape_question_search_background">
 
-        <RelativeLayout
-            android:id="@+id/rl_qa_hot_search"
+        <androidx.appcompat.widget.AppCompatImageView
+            android:id="@+id/iv_question_search"
+            android:layout_width="22.5dp"
+            android:layout_height="20dp"
+            android:layout_alignParentStart="true"
+            android:layout_centerVertical="true"
+            android:layout_marginStart="17dp"
+            android:src="@drawable/qa_ic_search" />
+
+        <ViewFlipper
+            android:id="@+id/vf_hot_search"
             android:layout_width="match_parent"
-            android:layout_height="36dp"
-            android:layout_marginStart="16dp"
-            android:layout_marginTop="20dp"
-            android:layout_marginEnd="16dp"
-            android:background="@drawable/qa_shape_question_search_background">
-
-            <androidx.appcompat.widget.AppCompatImageView
-                android:id="@+id/iv_question_search"
-                android:layout_width="22.5dp"
-                android:layout_height="20dp"
-                android:layout_alignParentStart="true"
-                android:layout_centerVertical="true"
-                android:layout_marginStart="17dp"
-                android:src="@drawable/qa_ic_search" />
-
-            <ViewFlipper
-                android:id="@+id/vf_hot_search"
-                android:layout_width="match_parent"
-                android:layout_height="30dp"
-                android:layout_centerVertical="true"
-                android:layout_gravity="center_vertical|start"
-                android:layout_marginStart="10dp"
-                android:layout_marginEnd="14dp"
-                android:layout_toEndOf="@id/iv_question_search"
-                android:paddingTop="5dp"
-                android:paddingBottom="5dp"
-                android:textColor="@color/common_level_two_font_color"
-                android:textSize="14sp" />
-        </RelativeLayout>
+            android:layout_height="30dp"
+            android:layout_centerVertical="true"
+            android:layout_gravity="center_vertical|start"
+            android:layout_marginStart="10dp"
+            android:layout_marginEnd="14dp"
+            android:layout_toEndOf="@id/iv_question_search"
+            android:paddingTop="5dp"
+            android:paddingBottom="5dp"
+            android:textColor="@color/common_level_two_font_color"
+            android:textSize="14sp" />
     </RelativeLayout>
 
     <RelativeLayout
@@ -126,6 +120,7 @@
                     android:id="@+id/qa_rv_dynamic_List"
                     android:layout_width="match_parent"
                     android:layout_height="100dp"
+                    android:transitionGroup="true"
                     tools:listitem="@layout/qa_recycler_item_dynamic_header" />
             </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
         </LinearLayout>
