@@ -11,6 +11,7 @@ import androidx.core.view.marginBottom
 import androidx.core.view.marginLeft
 import androidx.core.view.marginRight
 import androidx.core.view.marginTop
+import com.bumptech.glide.load.engine.bitmap_recycle.IntegerArrayAdapter
 import com.cyxbsmobile_single.module_todo.model.bean.DateBeen
 import com.cyxbsmobile_single.module_todo.model.bean.RemindMode
 import com.google.gson.Gson
@@ -65,7 +66,7 @@ fun repeatMode2RemindTime(remindMode: RemindMode): String {
         LogUtils.d("RayleighZ", "notifyTime = ${remindMode.notifyDateTime}")
         val remindDate = format.parse(remindMode.notifyDateTime)
         remindDateCalender.time = remindDate
-        "${remindDateCalender.get(Calendar.HOUR_OF_DAY)}:${remindDateCalender.get(Calendar.MINUTE)}"
+        "${numToString(remindDateCalender.get(Calendar.HOUR_OF_DAY))}:${numToString(remindDateCalender.get(Calendar.MINUTE))}"
     }
 
     when (remindMode.repeatMode) {
@@ -248,3 +249,7 @@ fun hideKeyboard(context: Context, v: View) {
     val imm = context.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
     imm.hideSoftInputFromWindow(v.windowToken, 0)
 }
+
+fun numToString(num: Int): String = if(num < 10) "0$num" else num.toString()
+
+fun numToString(num: String): String = if(Integer.parseInt(num) < 10) "0$num" else num

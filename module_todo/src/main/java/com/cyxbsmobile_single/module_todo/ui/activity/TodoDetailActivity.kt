@@ -54,6 +54,14 @@ class TodoDetailActivity : BaseViewModelActivity<TodoDetailViewModel>() {
 
     private fun initView(){
         todo_tv_todo_title.setText(todo.title)
+        todo_tv_todo_title.addTextChangedListener{
+            if (it.toString() != todo.title){
+                //判定为做出了修改
+                backTime = 2
+                todo.title = it.toString()
+                changeModifyStatus(true)
+            }
+        }
         todo_inner_detail_remark_ed.setText(todo.detail)
         setCheckedStatus()
 
@@ -117,6 +125,7 @@ class TodoDetailActivity : BaseViewModelActivity<TodoDetailViewModel>() {
         todo_iv_todo_item.setOnClickListener {
             //改变todo的check状态
             todo.isChecked = !todo.isChecked
+            changeModifyStatus()
             //防止暴击，在todo更新成功之间不允许再一次点击
             it.isClickable = false
             viewModel.updateTodo(todo){

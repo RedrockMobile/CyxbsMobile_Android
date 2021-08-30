@@ -13,10 +13,7 @@ import com.cyxbsmobile_single.module_todo.model.bean.DateBeen
 import com.cyxbsmobile_single.module_todo.model.bean.RemindMode
 import com.cyxbsmobile_single.module_todo.model.bean.Todo
 import com.cyxbsmobile_single.module_todo.ui.dialog.AddItemDialog.CurOperate.*
-import com.cyxbsmobile_single.module_todo.util.getThisYearDateSting
-import com.cyxbsmobile_single.module_todo.util.hideKeyboard
-import com.cyxbsmobile_single.module_todo.util.remindMode2RemindList
-import com.cyxbsmobile_single.module_todo.util.weekStringList
+import com.cyxbsmobile_single.module_todo.util.*
 import com.mredrock.cyxbs.common.BaseApp
 import com.mredrock.cyxbs.common.component.RedRockBottomSheetDialog
 import com.mredrock.cyxbs.common.utils.LogUtils
@@ -249,7 +246,7 @@ class AddItemDialog(context: Context, onConfirm: (Todo) -> Unit) :
                     Calendar.getInstance().get(Calendar.YEAR)
                 }年${dateWithoutWeek}${todo_inner_add_thing_second.getCurrentItem()}:${todo_inner_add_thing_third.getCurrentItem()}"
             val date =
-                "$dateWithoutWeek ${todo_inner_add_thing_second.getCurrentItem()}:${todo_inner_add_thing_third.getCurrentItem()}"
+                "$dateWithoutWeek ${numToString(todo_inner_add_thing_second.getCurrentItem())}:${numToString(todo_inner_add_thing_third.getCurrentItem())}"
             todo_tv_set_notify_time.text = date
         }
     }
