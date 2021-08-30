@@ -6,6 +6,7 @@ import android.content.Intent
 import android.os.Bundle
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.mredrock.cyxbs.common.BaseApp
@@ -24,9 +25,13 @@ import kotlinx.android.synthetic.main.qa_common_toolbar.*
 import java.util.*
 
 class CircleSquareActivity : BaseViewModelActivity<CircleSquareViewModel>() {
-    var adapter: CircleSquareAdapter? = null
-    private var mPosition = 0//记录当前item的位置
-    private var topicList = ArrayList<Topic>()
+
+    private lateinit var adapter: CircleSquareAdapter
+
+    /**
+     * 记录点击的Topic，如果返回时数据不一样再次进行网络请求刷新数据
+     */
+    private var clickTopic: Topic? = null
 
     companion object {
         fun activityStartFromDynamic(fragment: Fragment) {
@@ -50,10 +55,13 @@ class CircleSquareActivity : BaseViewModelActivity<CircleSquareViewModel>() {
         super.onActivityResult(requestCode, resultCode, data)
         when (requestCode) {
             RESULT_CODE -> if (resultCode == Activity.RESULT_OK) {
+                // 返回的最新数据
                 val resultTopic = data?.getParcelableExtra<Topic>("topic_return")
-                if (resultTopic != null) {
-                    topicList[mPosition] = resultTopic
-                    topicList.let { adapter?.refreshData(it) }
+                if (resultTopic != null && clickTopic != null) {
+                    if (resultTopic != clickTopic){
+                        // 返回时数据发生改变，重新请求数据
+                        viewModel.getAllCirCleData("问答圈", "test1")
+                    }
                 }
             }
         }
@@ -61,7 +69,6 @@ class CircleSquareActivity : BaseViewModelActivity<CircleSquareViewModel>() {
 
     override fun onBackPressed() {
         setResult(NEED_REFRESH_RESULT)
-        finish()
         super.onBackPressed()
     }
 
@@ -77,9 +84,18 @@ class CircleSquareActivity : BaseViewModelActivity<CircleSquareViewModel>() {
     }
 
     private fun initView() {
-        adapter = CircleSquareAdapter(viewModel) { topic, view, position ->
-            mPosition = position
-            CircleDetailActivity.activityStartFromSquare(this, view, topic)
+        adapter = CircleSquareAdapter().apply {
+            // 设置item点击事件
+            itemClick = { topic, view ->
+                clickTopic = topic
+                CircleDetailActivity
+                    .activityStartFromSquare(this@CircleSquareActivity, view, topic)
+            }
+            // 设置关注按钮点击事件
+            concernClick = { topicName, state ->
+                // 发送关注圈子的POST请求
+                viewModel.followTopic(topicName, state)
+            }
         }
         rv_circle_square.layoutManager = LinearLayoutManager(context)
         rv_circle_square.adapter = adapter
@@ -89,12 +105,11 @@ class CircleSquareActivity : BaseViewModelActivity<CircleSquareViewModel>() {
             rv_circle_square.addItemDecoration(divide)
         }
         viewModel.getAllCirCleData("问答圈", "test1")
-        viewModel.allCircle.observe {
-            if (it != null) {
-                adapter?.refreshData(it)
-                topicList.addAll(it)
+        viewModel.allCircle.observe(this, Observer {
+            it?.let {
+                adapter.submitList(it)
             }
-        }
+        })
     }
 
 }

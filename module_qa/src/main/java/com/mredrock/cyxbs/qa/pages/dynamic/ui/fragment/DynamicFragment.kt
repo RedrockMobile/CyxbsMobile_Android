@@ -3,6 +3,9 @@ package com.mredrock.cyxbs.qa.pages.dynamic.ui.fragment
 import android.annotation.SuppressLint
 import android.content.Intent
 import android.os.Bundle
+import android.view.LayoutInflater
+import android.view.View
+import android.view.ViewGroup
 import android.os.Handler
 import android.view.*
 import android.widget.RelativeLayout
@@ -93,7 +96,7 @@ open class DynamicFragment : BaseViewModelFragment<DynamicListViewModel>(), Even
     private var token: String? = null
 
     // 判断rv是否到顶
-    private var isRvAtTop = true
+    var isRvAtTop = true
     private lateinit var dynamicListRvAdapter: DynamicAdapter
     override fun getViewModelFactory() = DynamicListViewModel.Factory("recommend")
     override fun onCreateView(
@@ -165,7 +168,6 @@ open class DynamicFragment : BaseViewModelFragment<DynamicListViewModel>(), Even
                     TopicDataSet.getTopicData(topic)?.let {
                         CircleDetailActivity.activityStartFromCircle(
                             this@DynamicFragment,
-                            view,
                             it
                         )
                     }
@@ -225,7 +227,7 @@ open class DynamicFragment : BaseViewModelFragment<DynamicListViewModel>(), Even
                 if (topic.topicId == "0") {
                     CircleSquareActivity.activityStartFromDynamic(this)
                 } else
-                    CircleDetailActivity.activityStartFromCircle(this, view, topic)
+                    CircleDetailActivity.activityStartFromCircle(this, topic)
             }, this)
         }
         val linearLayoutManager = LinearLayoutManager(context)
@@ -402,8 +404,7 @@ open class DynamicFragment : BaseViewModelFragment<DynamicListViewModel>(), Even
             //在fragment onResume时将alpha值设置回来
             handler.postDelayed(windowAlphaRunnable, 1000)
 
-            SearchActivity.activityStart(this, hotWord.toString(), iv_question_search)
-
+            SearchActivity.activityStart(this, hotWord.toString())
             MobclickAgent.onEvent(context, CyxbsMob.Event.QA_SEARCH_RECOMMEND)
         }
 
@@ -411,6 +412,7 @@ open class DynamicFragment : BaseViewModelFragment<DynamicListViewModel>(), Even
         viewFlipper.setInAnimation(context, R.anim.qa_anim_hot_search_flip_in)
         viewFlipper.setOutAnimation(context, R.anim.qa_anim_hot_search_flip_out)
     }
+
 
 
     private fun getTextView(info: String): TextView {

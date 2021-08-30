@@ -44,12 +44,14 @@ import top.limuyang2.photolibrary.LPhotoHelper
 class QuizActivity : BaseViewModelActivity<QuizViewModel>() {
 
     companion object {
+        // 允许发送动态的最大字数
         const val MAX_CONTENT_SIZE = 500
         const val MAX_SELECTABLE_IMAGE_COUNT = 8
         const val NOT_DRAFT = "0"
         const val UPDATE_DRAFT = "1"
         fun activityStart(fragment: Fragment, type: String, requestCode: Int) {
             fragment.startActivityForResult<QuizActivity>(requestCode, "type" to type)
+            fragment.activity?.overridePendingTransition(0, 0)
         }
     }
 
@@ -159,8 +161,8 @@ class QuizActivity : BaseViewModelActivity<QuizViewModel>() {
         type.delete(0, 2)
         return type.toString()
     }
-    //动态监听内容文字变化
 
+    //动态监听内容文字变化
     @SuppressLint("SetTextI18n")
     private fun initEditListener() {
         qa_edt_quiz_content.filters = arrayOf(
