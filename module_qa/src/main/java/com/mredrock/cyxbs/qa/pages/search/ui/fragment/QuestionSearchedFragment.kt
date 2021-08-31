@@ -7,6 +7,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.view.WindowManager
 import android.widget.TextView
 import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -27,7 +28,6 @@ import com.mredrock.cyxbs.qa.config.CommentConfig.IGNORE
 import com.mredrock.cyxbs.qa.config.CommentConfig.QQ_FRIEND
 import com.mredrock.cyxbs.qa.config.CommentConfig.QQ_ZONE
 import com.mredrock.cyxbs.qa.config.CommentConfig.REPORT
-import com.mredrock.cyxbs.qa.config.RequestResultCode.ClickKnowledge
 import com.mredrock.cyxbs.qa.config.RequestResultCode.DYNAMIC_DETAIL_REQUEST
 import com.mredrock.cyxbs.qa.config.RequestResultCode.NEED_REFRESH_RESULT
 import com.mredrock.cyxbs.qa.config.RequestResultCode.RELEASE_DYNAMIC_ACTIVITY_REQUEST
@@ -70,6 +70,10 @@ class QuestionSearchedFragment : BaseViewModelFragment<QuestionSearchedViewModel
     var emptyRvAdapter: SearchNoResultAdapter? = null
     var footerRvAdapter: FooterRvAdapter? = null
 
+    init {
+        isOpenLifeCycleLog = true
+    }
+
     fun refreshSearchKey(newSearchKey: String) {
         searchKey = newSearchKey
     }
@@ -92,6 +96,7 @@ class QuestionSearchedFragment : BaseViewModelFragment<QuestionSearchedViewModel
             searchKey = savedInstanceState?.getString(SEARCH_KEY) ?: searchKey
         }
     }
+
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -135,14 +140,9 @@ class QuestionSearchedFragment : BaseViewModelFragment<QuestionSearchedViewModel
                     }
                     if (viewModel.isKnowledge) {
                         //知识库不为空时候显示
-                        if (ClickKnowledge) {
-                            qa_line.gone()
-                            qa_tv_knowledge.gone()
-                        } else {
-                            qa_line.visibility = View.VISIBLE
-                            qa_rv_knowledge.visibility = View.VISIBLE
-                            qa_tv_knowledge.visibility = View.VISIBLE
-                        }
+                        qa_line.visibility = View.VISIBLE
+                        qa_rv_knowledge.visibility = View.VISIBLE
+                        qa_tv_knowledge.visibility = View.VISIBLE
                     } else {
                         qa_line.gone()
                         qa_tv_knowledge.gone()
@@ -155,6 +155,8 @@ class QuestionSearchedFragment : BaseViewModelFragment<QuestionSearchedViewModel
     private fun initInitialView() {
         viewModel.getKnowledge(searchKey)
         dynamicListRvAdapter = DynamicAdapter(this.requireContext()) { dynamic, view ->
+            //当进入动态详情页面时 搜索界面的window 的软键盘不允许再被弹起，写这个的原因是不知道为什么从动态详情页面返回搜索界面时软键盘会自动弹起
+            requireActivity().window.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN)
             DynamicDetailActivity.activityStart(this, view, dynamic)
         }.apply {
             onShareClickListener = { dynamic, mode ->
@@ -242,7 +244,6 @@ class QuestionSearchedFragment : BaseViewModelFragment<QuestionSearchedViewModel
     private fun initResultView() {
         viewModel.questionList.observe {
             dynamicListRvAdapter.submitList(it)
-
         }
         viewModel.networkState.observe {
             it?.run {
@@ -274,16 +275,11 @@ class QuestionSearchedFragment : BaseViewModelFragment<QuestionSearchedViewModel
                 }
             }
         }
+
         swipe_refresh_layout_searching.setOnRefreshListener {
-            if (ClickKnowledge) {
-                //点击知识库时的刷新
-                viewModel.invalidateSearchQuestionList()
-                qa_line.gone()
-                qa_tv_knowledge.gone()
-            } else {
-                viewModel.invalidateSearchQuestionList()
-            }
+            viewModel.invalidateSearchQuestionList()
         }
+
         viewModel.deleteTips.observe {
             if (it == true)
                 viewModel.invalidateSearchQuestionList()
@@ -321,6 +317,8 @@ class QuestionSearchedFragment : BaseViewModelFragment<QuestionSearchedViewModel
         when (requestCode) {
             // 从动态详细返回
             DYNAMIC_DETAIL_REQUEST -> {
+                //设置软键盘为可以展示
+                requireActivity().window.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_UNCHANGED)
                 if (resultCode == NEED_REFRESH_RESULT) {
                     // 需要刷新 则 刷新显示动态
                     viewModel.invalidateSearchQuestionList()

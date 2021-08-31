@@ -5,12 +5,12 @@
     android:gravity="center"
     android:orientation="vertical">
 
-    <com.umeng.socialize.shareboard.SocializeImageView
-        android:id="@+id/socialize_image_view"
-        android:layout_width="50dp"
-        android:layout_height="50dp"
-        android:padding="5dp"
-        android:src="@drawable/umeng_socialize_menu_default" />
+<!--    <com.umeng.socialize.shareboard.SocializeImageView-->
+<!--        android:id="@+id/socialize_image_view"-->
+<!--        android:layout_width="50dp"-->
+<!--        android:layout_height="50dp"-->
+<!--        android:padding="5dp"-->
+<!--        android:src="@drawable/umeng_socialize_menu_default" />-->
 
     <TextView
         android:id="@+id/socialize_text_view"
