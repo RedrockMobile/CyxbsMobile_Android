@@ -2,14 +2,10 @@ package com.mredrock.cyxbs.qa.pages.dynamic.ui.adapter
 
 import android.annotation.SuppressLint
 import android.os.Build
-import android.text.Spannable
-import android.text.SpannableString
-import android.text.style.ForegroundColorSpan
 import android.view.View
 import android.view.ViewGroup
 import androidx.annotation.RequiresApi
-import androidx.core.content.ContextCompat
-import com.mredrock.cyxbs.common.BaseApp
+import com.mredrock.cyxbs.common.utils.LogUtils
 import com.mredrock.cyxbs.common.utils.extensions.setAvatarImageFromUrl
 import com.mredrock.cyxbs.common.utils.extensions.setOnSingleClickListener
 import com.mredrock.cyxbs.qa.R
@@ -26,7 +22,15 @@ import kotlinx.android.synthetic.main.qa_recycler_item_dynamic_reply_show_more.v
  *@description
  */
 
-class ReplyListAdapter(private val onReplyInnerClickEvent: (comment: Comment) -> Unit, private val onReplyInnerLongClickEvent: (comment: Comment, itemView: View) -> Unit, var onMoreClickEvent: () -> Unit) : BaseRvAdapter<Comment>() {
+class ReplyListAdapter(
+    private val onReplyInnerClickEvent: (comment: Comment) -> Unit,
+    private val onReplyInnerLongClickEvent: (comment: Comment, itemView: View) -> Unit,
+    var onMoreClickEvent: () -> Unit,
+    private val isFromMine: Boolean = false
+) : BaseRvAdapter<Comment>() {
+
+    //是否从个人界面进入的动态详情界面
+
 
     override fun getItemCount(): Int {
         return if (dataList.size > 3) 4 else super.getItemCount()
@@ -56,7 +60,8 @@ class ReplyListAdapter(private val onReplyInnerClickEvent: (comment: Comment) ->
     }
 
 
-    inner class ReplyViewHolder(parent: ViewGroup) : BaseViewHolder<Comment>(parent, R.layout.qa_recycler_item_dynamic_reply_inner) {
+    inner class ReplyViewHolder(parent: ViewGroup) :
+        BaseViewHolder<Comment>(parent, R.layout.qa_recycler_item_dynamic_reply_inner) {
         @SuppressLint("SetTextI18n")
         override fun refresh(data: Comment?) {
             data ?: return
@@ -65,22 +70,16 @@ class ReplyListAdapter(private val onReplyInnerClickEvent: (comment: Comment) ->
                 if (data.fromNickname.isEmpty()) {
                     qa_tv_reply_inner_content.setContent(data.content)
                 } else {
-//                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
-//                        // 回复时，被回复人名称显示颜色
-//                        val span = SpannableString("回复 @${data.fromNickname} : ${data.content}").apply {
-//                            setSpan(
-//                                    ForegroundColorSpan(ContextCompat.getColor(BaseApp.context, R.color.qa_reply_inner_reply_name_color)),
-//                                    3, 3 + data.fromNickname.length + 1,
-//                                    Spannable.SPAN_INCLUSIVE_EXCLUSIVE
-//                            )
-//                        }
-//                        qa_tv_reply_inner_content.text = span
-//                    } else {
-//                        qa_tv_reply_inner_content.text = "回复 @${data.fromNickname} : ${data.content}"
-//                    }
                     qa_tv_reply_inner_content.setContent("回复 @${data.fromNickname} : ${data.content}")
                 }
-                qa_iv_reply_inner_praise_count_image.registerLikeView(data.commentId, CommentConfig.PRAISE_MODEL_COMMENT, data.isPraised, data.praiseCount)
+                LogUtils.d("ReplyListAdapter_isFromMine", "isFromMine-->$isFromMine")
+                qa_iv_reply_inner_praise_count_image.registerLikeView(
+                    data.commentId,
+                    CommentConfig.PRAISE_MODEL_COMMENT,
+                    data.isPraised,
+                    data.praiseCount,
+                    isFromMine
+                )
                 qa_iv_reply_inner_praise_count_image.setOnSingleClickListener {
                     qa_iv_reply_inner_praise_count_image.click()
                 }
@@ -89,7 +88,8 @@ class ReplyListAdapter(private val onReplyInnerClickEvent: (comment: Comment) ->
         }
     }
 
-    inner class MoreViewHolder(parent: ViewGroup) : BaseViewHolder<Comment>(parent, R.layout.qa_recycler_item_dynamic_reply_show_more) {
+    inner class MoreViewHolder(parent: ViewGroup) :
+        BaseViewHolder<Comment>(parent, R.layout.qa_recycler_item_dynamic_reply_show_more) {
         @SuppressLint("SetTextI18n")
         @RequiresApi(Build.VERSION_CODES.N)
         override fun refresh(data: Comment?) {
@@ -99,11 +99,20 @@ class ReplyListAdapter(private val onReplyInnerClickEvent: (comment: Comment) ->
         }
     }
 
-    override fun onItemClickListener(holder: BaseViewHolder<Comment>, position: Int, data: Comment) {
+    override fun onItemClickListener(
+        holder: BaseViewHolder<Comment>,
+        position: Int,
+        data: Comment
+    ) {
         onReplyInnerClickEvent.invoke(data)
     }
 
-    override fun onItemLongClickListener(holder: BaseViewHolder<Comment>, position: Int, data: Comment, itemView: View) {
+    override fun onItemLongClickListener(
+        holder: BaseViewHolder<Comment>,
+        position: Int,
+        data: Comment,
+        itemView: View
+    ) {
         onReplyInnerLongClickEvent.invoke(data, itemView)
     }
 

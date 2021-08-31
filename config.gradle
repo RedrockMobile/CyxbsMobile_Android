@@ -20,6 +20,8 @@ apply plugin: 'kotlin-android-extensions'
 apply plugin: 'kotlin-kapt'
 
 android {
+    //避免编译不能用于在编译类路径中发现的注解处理器，因为它们中的任何更改都需要运行注解处理任务
+    kapt.includeCompileClasspath = false
     compileSdkVersion build_versions.compile_sdk
     buildToolsVersion build_versions.build_tools
 

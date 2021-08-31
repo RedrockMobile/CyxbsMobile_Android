@@ -9,7 +9,7 @@ import com.tencent.tauth.UiError
  * @Description:
  * @Date: 2021/1/31 20:34
  */
-public class BaseUiListener :IUiListener {
+class BaseUiListener :IUiListener {
     override fun onComplete(p0: Any?) {
     }
 

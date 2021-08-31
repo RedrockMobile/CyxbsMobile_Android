@@ -12,7 +12,7 @@ import java.util.*
  * @date 2021-03-05
  * @author Sca RayleighZ
  */
-class MyCommentViewHolder(val item: View) : BaseViewHolder<CommentWrapper>(item){
+class MyCommentViewHolder(val item: View) : BaseViewHolder<CommentWrapper>(item) {
     override fun refresh(data: CommentWrapper?) {
         val comment = data?.comment
         val from = data?.from
@@ -22,7 +22,7 @@ class MyCommentViewHolder(val item: View) : BaseViewHolder<CommentWrapper>(item)
                 qa_like_view_my_comment_item_praise.setCheckedWithoutAnimator(comment.isPraised)
                 qa_tv_my_comment_item_nickname.text = nickName
                 qa_tv_my_comment_from.text = from
-                qa_tv_my_comment_item_tip_and_date.text = dateFormat.format(Date(publishTime*1000L))
+                qa_tv_my_comment_item_tip_and_date.text = dateFormat.format(Date(publishTime * 1000L))
                 qa_tv_my_comment_item_comment.text = content
                 qa_circle_iv_my_comment_item_avatar.setAvatarImageFromUrl(avatar)
             }

@@ -8,7 +8,6 @@ import com.mredrock.cyxbs.qa.R
 import com.mredrock.cyxbs.qa.beannew.Knowledge
 import com.mredrock.cyxbs.qa.component.recycler.BaseRvAdapter
 import com.mredrock.cyxbs.qa.component.recycler.BaseViewHolder
-import com.mredrock.cyxbs.qa.config.RequestResultCode
 import com.mredrock.cyxbs.qa.config.RequestResultCode.ClickKnowledge
 import kotlinx.android.synthetic.main.qa_recycler_item_dynamic_label.view.*
 
@@ -18,25 +17,28 @@ import kotlinx.android.synthetic.main.qa_recycler_item_dynamic_label.view.*
  *@author SpreadWater
  *@description
  */
-class SearchKnowledgeAdapter( val recyclerView: RecyclerView) : BaseRvAdapter<Knowledge>() {
-    var searchResultHeaderAdapter: SearchResultHeaderAdapter?=null
+class SearchKnowledgeAdapter(val recyclerView: RecyclerView) : BaseRvAdapter<Knowledge>() {
+    var searchResultHeaderAdapter: SearchResultHeaderAdapter? = null
 
-    class ViewHolder(parent: ViewGroup) : BaseViewHolder<Knowledge>(parent, R.layout.qa_recycler_item_dynamic_label) {
+    class ViewHolder(parent: ViewGroup) :
+        BaseViewHolder<Knowledge>(parent, R.layout.qa_recycler_item_dynamic_label) {
         override fun refresh(data: Knowledge?) {
-           itemView.tv_dynamic_label.text=data?.title ?: ""
+            itemView.tv_dynamic_label.text = data?.title ?: ""
         }
     }
 
-    override fun onItemClickListener(holder: BaseViewHolder<Knowledge>, position: Int, data: Knowledge) {
-        super.onItemClickListener(holder, position, data)
-        holder.itemView.setOnClickListener {
-            ClickKnowledge = true
-            searchResultHeaderAdapter?.knowledge=data
-            recyclerView.adapter=searchResultHeaderAdapter
-            recyclerView.layoutManager=LinearLayoutManager(BaseApp.context)
-        }
+    override fun onItemClickListener(
+        holder: BaseViewHolder<Knowledge>,
+        position: Int,
+        data: Knowledge
+    ) {
+        ClickKnowledge = true
+        searchResultHeaderAdapter?.knowledge = data
+        recyclerView.adapter = searchResultHeaderAdapter
+        recyclerView.layoutManager = LinearLayoutManager(BaseApp.context)
     }
 
 
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): BaseViewHolder<Knowledge> = ViewHolder(parent)
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): BaseViewHolder<Knowledge> =
+        ViewHolder(parent)
 }

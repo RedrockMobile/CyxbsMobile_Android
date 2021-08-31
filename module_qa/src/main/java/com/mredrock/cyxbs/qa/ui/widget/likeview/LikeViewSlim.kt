@@ -5,7 +5,7 @@ import android.graphics.Canvas
 import android.os.Build
 import android.text.TextPaint
 import android.util.AttributeSet
-import android.util.Log
+import androidx.core.content.ContextCompat
 import com.mredrock.cyxbs.common.network.ApiGenerator
 import com.mredrock.cyxbs.common.utils.extensions.*
 import com.mredrock.cyxbs.qa.R
@@ -18,7 +18,7 @@ import java.lang.ref.WeakReference
  *@description 采用观察者模式，观察点赞的变化
  */
 class LikeViewSlim @JvmOverloads constructor(
-        context: Context, attrs: AttributeSet? = null, defStyleAttr: Int = 0
+    context: Context, attrs: AttributeSet? = null, defStyleAttr: Int = 0
 ) : LikeView(context, attrs, defStyleAttr) {
 
     companion object {
@@ -68,7 +68,12 @@ class LikeViewSlim @JvmOverloads constructor(
         } else {
             getColor(R.color.qa_question_bottom_count_color)
         }
-        canvas?.drawText(praiseCount.toString(), width / 2f + context.dp2px(18f), height / 2f + offsetY, textPaint)
+        canvas?.drawText(
+            praiseCount.toString(),
+            width / 2f + context.dp2px(18f),
+            height / 2f + offsetY,
+            textPaint
+        )
         canvas?.translate(0f, -7f)
         super.onDraw(canvas)
     }
@@ -76,8 +81,13 @@ class LikeViewSlim @JvmOverloads constructor(
     /**
      * 传入id和model，注册LikeView的监听，并且自动取消原来的监听
      */
-    fun registerLikeView(id: String, model: String, isPraised: Boolean, praiseCount: Int) {
-        // Log.e("sandyzhang", "[$id:$model], isPraised = $isPraised, praiseCount = $praiseCount")
+    fun registerLikeView(
+        id: String,
+        model: String,
+        isPraised: Boolean,
+        praiseCount: Int,
+        isFromMine: Boolean = false
+    ) {
         if (id == "0") {
             throw IllegalStateException("id must not be 0")
         }
@@ -89,7 +99,7 @@ class LikeViewSlim @JvmOverloads constructor(
         this.model = model
 
         // 查询map中是否有记录
-        if (likeMap["$id-$model"] == null) {
+        if (likeMap["$id-$model"] == null || isFromMine) {
             // 如果map中没有记录，则新建
             this.praiseCount = praiseCount
             this.isPraised = isPraised
@@ -98,7 +108,8 @@ class LikeViewSlim @JvmOverloads constructor(
 
             this.isPraised = likeMap["$id-$model"]?.second ?: false
             // 如果map中有记录是否点赞。则根据外部传来的真实点赞值（除了自己），加上自己是否点赞
-            this.praiseCount = praiseCount + (if (isPraised) -1 else 0) + (if (this.isPraised) 1 else 0) // likeMap["$id-$model"]?.first ?: 0
+            this.praiseCount =
+                praiseCount + (if (isPraised) -1 else 0) + (if (this.isPraised) 1 else 0) // likeMap["$id-$model"]?.first ?: 0
 
             likeMap["$id-$model"] = Pair(this.praiseCount, this.isPraised)
         }
@@ -167,19 +178,19 @@ class LikeViewSlim @JvmOverloads constructor(
         likeMap["$tmpId-$tmpModel"] = Pair(praiseCount, isPraised)
         invalidate()
         ApiGenerator.getApiService(ApiServiceNew::class.java)
-                .praise(tmpId, tmpModel)
-                .checkError()
-                .setSchedulers()
-                .doOnError {
-                    // 如果失败，则通知所有订阅了的view，回到原始状态
-                    likeMap["$tmpId-$tmpModel"] = Pair(originPraiseCount, originIsPraised)
-                    sendBroadcast("$tmpId-$tmpModel")
-                }.doFinally {
-                    isLoading = false
-                }.safeSubscribeBy {
-                    // 如果成功，则保持
-                    sendBroadcast("$tmpId-$tmpModel")
-                }
+            .praise(tmpId, tmpModel)
+            .checkError()
+            .setSchedulers()
+            .doOnError {
+                // 如果失败，则通知所有订阅了的view，回到原始状态
+                likeMap["$tmpId-$tmpModel"] = Pair(originPraiseCount, originIsPraised)
+                sendBroadcast("$tmpId-$tmpModel")
+            }.doFinally {
+                isLoading = false
+            }.safeSubscribeBy {
+                // 如果成功，则保持
+                sendBroadcast("$tmpId-$tmpModel")
+            }
 
     }
 
@@ -187,7 +198,7 @@ class LikeViewSlim @JvmOverloads constructor(
         return if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             resources.getColor(res, null)
         } else {
-            resources.getColor(res)
+            ContextCompat.getColor(context,res)
         }
     }
 
