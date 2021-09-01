@@ -20,7 +20,7 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center_vertical"
             android:id="@+id/fab_back"
-            android:layout_margin="3dp"
+            android:layout_marginStart="8dp"
             android:background="@color/common_transparent_background"
             android:backgroundTint="@color/common_transparent_background"
             android:contentDescription="@string/mine_feedback_back_ic_description"

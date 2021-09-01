@@ -19,8 +19,8 @@
         tools:context=".page.feedback.history.list.HistoryListActivity">
 
         <include
-            layout="@layout/mine_layout_history_toolbar"
             android:id="@+id/include_tool_bar"
+            layout="@layout/mine_layout_history_toolbar"
             android:layout_width="match_parent"
             android:layout_height="@dimen/mine_feedback_toolbar_height"
             android:orientation="horizontal"
@@ -54,14 +54,27 @@
             android:id="@+id/tv_none_history"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="32dp"
+            android:layout_marginTop="16dp"
             android:text="@string/mine_feedback_none_history_text"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="@+id/mine_view"
+            app:layout_constraintTop_toBottomOf="@+id/mine_appcompatimageview"
+            app:layout_constraintVertical_bias="0.0"
             app:showView="@{!vm.hasHistory}"
             tools:text="@string/mine_feedback_none_history_text" />
+
+        <androidx.appcompat.widget.AppCompatImageView
+            android:id="@+id/mine_appcompatimageview"
+            android:layout_width="wrap_content"
+            android:layout_height="0dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintDimensionRatio="h,127.32:100"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:showView="@{!vm.hasHistory}"
+            app:srcCompat="@drawable/mine_ic_feedback_none_history" />
 
 
     </androidx.constraintlayout.widget.ConstraintLayout>

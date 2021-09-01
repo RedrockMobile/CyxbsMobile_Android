@@ -67,6 +67,7 @@
     <color name="mine_feedback_add_fill_color">#202020</color>
     <color name="mine_feedback_history_icon_color">#E5E5E5</color>
     <color name="mine_feedback_edit_underline_color">#DFDFE3</color>
-    <color name="mine_feedback_bg_color">#1D1D1D</color>
+    <color name="mine_feedback_bg_color">#000000</color>
+    <color name="mine_feedback_history_list_not_reply_bg_color">#2B263F</color>
 
 </resources>

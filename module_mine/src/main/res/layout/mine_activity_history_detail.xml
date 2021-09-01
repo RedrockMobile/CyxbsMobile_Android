@@ -266,18 +266,30 @@
 
             </androidx.cardview.widget.CardView>
 
+            <androidx.appcompat.widget.AppCompatImageView
+                android:id="@+id/iv_none_reply"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="60dp"
+                app:layout_constraintDimensionRatio="w,122.9:110.09"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/tv_reply_date"
+                app:showView="@{!vm.isReply}"
+                app:srcCompat="@drawable/mine_ic_feedback_none_reply_image" />
+
             <androidx.appcompat.widget.AppCompatTextView
                 android:id="@+id/tv_none_reply"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_horizontal|bottom"
-                android:layout_marginTop="100dp"
+                android:layout_marginTop="16dp"
+                android:text="@string/mine_feedback_none_reply_text_content"
                 android:textColor="@color/mine_feedback_no_reply_content_color"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/tv_reply_date"
-                app:showView="@{!vm.isReply}"
-                android:text="@string/mine_feedback_none_reply_text_content" />
+                app:layout_constraintTop_toBottomOf="@id/iv_none_reply"
+                app:showView="@{!vm.isReply}" />
 
 
         </androidx.constraintlayout.widget.ConstraintLayout>
