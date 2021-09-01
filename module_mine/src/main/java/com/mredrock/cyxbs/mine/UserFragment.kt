@@ -18,6 +18,7 @@ import com.alibaba.android.arouter.facade.annotation.Route
 import com.alibaba.android.arouter.launcher.ARouter
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.mredrock.cyxbs.api.account.IAccountService
+import com.mredrock.cyxbs.common.BaseApp
 import com.mredrock.cyxbs.common.config.*
 import com.mredrock.cyxbs.common.service.ServiceManager
 import com.mredrock.cyxbs.common.ui.BaseViewModelFragment
@@ -51,11 +52,16 @@ class UserFragment : BaseViewModelFragment<UserViewModel>() {
     private fun initView() {
         //功能按钮
         context?.apply {
-            mine_main_btn_sign.setOnClickListener { doIfLogin { startActivity<DailySignActivity>() } }
-            mine_main_btn_sign.setOnClickListener { doIfLogin { startActivity<DailySignActivity>() } }
+            /**
+             * 封锁积分商城和签到部分，下个版本合并
+             */
+            mine_main_btn_sign.setOnClickListener { BaseApp.context.toast("积分商城即将上线，\n一大波礼品正在紧张筹备，尽情期待") }
+            mine_main_fm_point_store.setOnClickListener { BaseApp.context.toast("积分商城即将上线，\n一大波礼品正在紧张筹备，尽情期待") }
+//            mine_main_btn_sign.setOnClickListener { doIfLogin { startActivity<DailySignActivity>() } }
+//            mine_main_btn_sign.setOnClickListener { doIfLogin { startActivity<DailySignActivity>() } }
             mine_main_fm_setting.setOnSingleClickListener { doIfLogin { startActivity<SettingActivity>() } }
             mine_main_fm_about_us.setOnSingleClickListener { doIfLogin { startActivity<AboutActivity>() } }
-            mine_main_fm_point_store.setOnClickListener { doIfLogin { DailySignActivity.actionStart(this, BottomSheetBehavior.STATE_EXPANDED) } }
+//            mine_main_fm_point_store.setOnClickListener { doIfLogin { DailySignActivity.actionStart(this, BottomSheetBehavior.STATE_EXPANDED) } }
             mine_main_tv_sign.setOnClickListener { doIfLogin { DailySignActivity.actionStart(this, BottomSheetBehavior.STATE_COLLAPSED) } }
             mine_main_tv_dynamic_number.setOnSingleClickListener { doIfLogin { jump(QA_DYNAMIC_MINE) } }
             mine_main_tv_dynamic.setOnSingleClickListener { doIfLogin { jump(QA_DYNAMIC_MINE) } }
@@ -124,7 +130,8 @@ class UserFragment : BaseViewModelFragment<UserViewModel>() {
     }
 
     private fun fetchInfo() {
-        viewModel.getScoreStatus()
+        //积分以及签到信息获取
+//        viewModel.getScoreStatus()
         viewModel.getUserCount()
         refreshUserLayout()
     }
