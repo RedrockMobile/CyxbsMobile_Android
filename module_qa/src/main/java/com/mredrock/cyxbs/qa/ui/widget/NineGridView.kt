@@ -7,7 +7,6 @@ import android.view.ViewGroup
 import android.widget.FrameLayout
 import android.widget.ImageView
 import androidx.core.view.forEach
-import com.mredrock.cyxbs.common.utils.LogUtils
 import com.mredrock.cyxbs.common.utils.extensions.*
 import com.mredrock.cyxbs.qa.R
 
@@ -150,7 +149,7 @@ class NineGridView(context: Context, attrs: AttributeSet?, defStyleAttr: Int) :
         onItemClickListener = listener
     }
 
-    fun setNormalImages(urls: List<String>) {
+    private fun setNormalImages(urls: List<String>) {
         repeat(childCount) {
             when {
                 it < urls.size -> {
@@ -185,7 +184,7 @@ class NineGridView(context: Context, attrs: AttributeSet?, defStyleAttr: Int) :
         }
     }
 
-    fun setShowPhotoSize(photoUrl: List<String>, countSize: Int): ArrayList<String> {
+    private fun setShowPhotoSize(photoUrl: List<String>, countSize: Int): ArrayList<String> {
         val photoUrls = ArrayList<String>()
         var count = 0
         for (it in photoUrl)

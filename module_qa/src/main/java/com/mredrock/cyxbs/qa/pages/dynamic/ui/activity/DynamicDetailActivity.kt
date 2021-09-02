@@ -64,7 +64,7 @@ import kotlinx.android.synthetic.main.qa_recycler_item_dynamic_header.view.*
 class DynamicDetailActivity : BaseViewModelActivity<DynamicDetailViewModel>() {
     companion object {
 
-        // 有共享元素动画的启动
+        // 有共享元素动画的启动，是从邮问主界面启动的
         fun activityStart(page: Any?, dynamicItem: View, data: Dynamic) {
 
             page.apply {
@@ -77,12 +77,20 @@ class DynamicDetailActivity : BaseViewModelActivity<DynamicDetailViewModel>() {
                     activity = page
                 }
                 activity?.let { it ->
-                    val opt = ActivityOptionsCompat.makeSceneTransitionAnimation(it, dynamicItem, "dynamicItem")
+                    val opt = ActivityOptionsCompat.makeSceneTransitionAnimation(
+                        it,
+                        dynamicItem,
+                        "dynamicItem"
+                    )
                     val intent = Intent(it, DynamicDetailActivity::class.java)
                     intent.putExtra("dynamic", data)
                     it.window.exitTransition = Slide(Gravity.START).apply { duration = 300 }
                     if (fragment != null) {
-                        fragment.startActivityForResult(intent, DYNAMIC_DETAIL_REQUEST, opt.toBundle())
+                        fragment.startActivityForResult(
+                            intent,
+                            DYNAMIC_DETAIL_REQUEST,
+                            opt.toBundle()
+                        )
                     } else {
                         it.startActivityForResult(intent, DYNAMIC_DETAIL_REQUEST, opt.toBundle())
                     }
@@ -90,7 +98,7 @@ class DynamicDetailActivity : BaseViewModelActivity<DynamicDetailViewModel>() {
             }
         }
 
-        // 根据postId启动
+        // 根据postId启动,是从个人界面启动的
         fun activityStart(page: Any?, postId: String) {
 
             var activity: Activity? = null
@@ -104,6 +112,7 @@ class DynamicDetailActivity : BaseViewModelActivity<DynamicDetailViewModel>() {
                 activity?.let {
                     val intent = Intent(context, DynamicDetailActivity::class.java)
                     intent.putExtra("post_id", postId)
+                    intent.putExtra("is_from_mine", true)
                     it.window.exitTransition = Slide(Gravity.START).apply { duration = 300 }
                     it.startActivityForResult(intent, DYNAMIC_DETAIL_REQUEST)
                 }
@@ -113,6 +122,9 @@ class DynamicDetailActivity : BaseViewModelActivity<DynamicDetailViewModel>() {
         const val DYNAMIC_DELETE = "0"
         const val COMMENT_DELETE = "1"
     }
+
+    //是否从个人界面进入的动态详情界面
+    private var isFromMine = false
 
     private val animatorDuration = 300L
 
@@ -141,78 +153,103 @@ class DynamicDetailActivity : BaseViewModelActivity<DynamicDetailViewModel>() {
 
     // 评论点击的逻辑
     private val commentListRvAdapter = CommentListAdapter(
-            onItemClickEvent = { comment ->
-                viewModel.replyInfo.value = ReplyInfo(comment.nickName, comment.content, comment.commentId)
-            },
-            onReplyInnerClickEvent = { comment ->
-                viewModel.replyInfo.value = ReplyInfo(comment.nickName, comment.content, comment.commentId)
-            },
-            onItemLongClickEvent = { comment, itemView ->
-                // 消除回复弹窗
-                viewModel.replyInfo.value = ReplyInfo("", "", "")
+        onItemClickEvent = { comment ->
+            viewModel.replyInfo.value =
+                ReplyInfo(comment.nickName, comment.content, comment.commentId)
+        },
+        onReplyInnerClickEvent = { comment ->
+            viewModel.replyInfo.value =
+                ReplyInfo(comment.nickName, comment.content, comment.commentId)
+        },
+        onItemLongClickEvent = { comment, itemView ->
+            // 消除回复弹窗
+            viewModel.replyInfo.value = ReplyInfo("", "", "")
 
-                val optionPopWindow = OptionalPopWindow.Builder().with(this)
-                        .addOptionAndCallback(CommentConfig.REPLY) {
-                            viewModel.replyInfo.value = ReplyInfo(comment.nickName, comment.content, comment.commentId)
-                        }.addOptionAndCallback(CommentConfig.COPY) {
-                            ClipboardController.copyText(this, comment.content)
-                        }
-                if (viewModel.dynamic.value?.isSelf == 1 || comment.isSelf) {
-                    optionPopWindow.addOptionAndCallback(CommentConfig.DELETE) {
-                        QaDialog.show(this, resources.getString(R.string.qa_dialog_tip_delete_comment_text), {}) {
-                            viewModel.deleteId(comment.commentId, COMMENT_DELETE)
-                        }
+            val optionPopWindow = OptionalPopWindow.Builder().with(this)
+                .addOptionAndCallback(CommentConfig.REPLY) {
+                    viewModel.replyInfo.value =
+                        ReplyInfo(comment.nickName, comment.content, comment.commentId)
+                }.addOptionAndCallback(CommentConfig.COPY) {
+                    ClipboardController.copyText(this, comment.content)
+                }
+            if (viewModel.dynamic.value?.isSelf == 1 || comment.isSelf) {
+                optionPopWindow.addOptionAndCallback(CommentConfig.DELETE) {
+                    QaDialog.show(
+                        this,
+                        resources.getString(R.string.qa_dialog_tip_delete_comment_text),
+                        {}) {
+                        viewModel.deleteId(comment.commentId, COMMENT_DELETE)
                     }
                 }
-                if (!comment.isSelf) {
-                    optionPopWindow.addOptionAndCallback(CommentConfig.REPORT) {
-                        QaReportDialog(this).apply {
-                            show { reportContent ->
-                                viewModel.report(comment.commentId, reportContent, CommentConfig.REPORT_COMMENT_MODEL)
-                            }
-                        }.show()
-                    }
-                }
-                optionPopWindow.show(itemView, OptionalPopWindow.AlignMode.CENTER, 0)
-
-            },
-            onReplyInnerLongClickEvent = { comment, itemView ->
-                // 消除回复弹窗
-                viewModel.replyInfo.value = ReplyInfo("", "", "")
-
-                val optionPopWindow = OptionalPopWindow.Builder().with(this)
-                        .addOptionAndCallback(CommentConfig.REPLY) {
-                            viewModel.replyInfo.value = ReplyInfo(comment.nickName, comment.content, comment.commentId)
-                        }.addOptionAndCallback(CommentConfig.COPY) {
-                            ClipboardController.copyText(this, comment.content)
+            }
+            if (!comment.isSelf) {
+                optionPopWindow.addOptionAndCallback(CommentConfig.REPORT) {
+                    QaReportDialog(this).apply {
+                        show { reportContent ->
+                            viewModel.report(
+                                comment.commentId,
+                                reportContent,
+                                CommentConfig.REPORT_COMMENT_MODEL
+                            )
                         }
-                // 如果总动态是自己发的，或者该评论是自己的，则可以删除（可以控评）
-                if (viewModel.dynamic.value?.isSelf == 1 || comment.isSelf) {
-                    optionPopWindow.addOptionAndCallback(CommentConfig.DELETE) {
-                        QaDialog.show(this, resources.getString(R.string.qa_dialog_tip_delete_comment_text), {}) {
-                            viewModel.deleteId(comment.commentId, COMMENT_DELETE)
-                        }
-                    }
+                    }.show()
                 }
-                // 如果回复不是自己的，就可以举报
-                if (!comment.isSelf) {
-                    optionPopWindow.addOptionAndCallback(CommentConfig.REPORT) {
-                        QaReportDialog(this).apply {
-                            show { reportContent ->
-                                viewModel.report(comment.commentId, reportContent, CommentConfig.REPORT_COMMENT_MODEL)
-                            }
-                        }.show()
-                    }
-                }
-                optionPopWindow.show(itemView, OptionalPopWindow.AlignMode.CENTER, 0)
+            }
+            optionPopWindow.show(itemView, OptionalPopWindow.AlignMode.CENTER, 0)
 
-            },
-            onMoreReplyClickEvent = { commentId -> ReplyDetailActivity.activityStart(this, commentId, null) }
+        },
+        onReplyInnerLongClickEvent = { comment, itemView ->
+            // 消除回复弹窗
+            viewModel.replyInfo.value = ReplyInfo("", "", "")
+
+            val optionPopWindow = OptionalPopWindow.Builder().with(this)
+                .addOptionAndCallback(CommentConfig.REPLY) {
+                    viewModel.replyInfo.value =
+                        ReplyInfo(comment.nickName, comment.content, comment.commentId)
+                }.addOptionAndCallback(CommentConfig.COPY) {
+                    ClipboardController.copyText(this, comment.content)
+                }
+            // 如果总动态是自己发的，或者该评论是自己的，则可以删除（可以控评）
+            if (viewModel.dynamic.value?.isSelf == 1 || comment.isSelf) {
+                optionPopWindow.addOptionAndCallback(CommentConfig.DELETE) {
+                    QaDialog.show(
+                        this,
+                        resources.getString(R.string.qa_dialog_tip_delete_comment_text),
+                        {}) {
+                        viewModel.deleteId(comment.commentId, COMMENT_DELETE)
+                    }
+                }
+            }
+            // 如果回复不是自己的，就可以举报
+            if (!comment.isSelf) {
+                optionPopWindow.addOptionAndCallback(CommentConfig.REPORT) {
+                    QaReportDialog(this).apply {
+                        show { reportContent ->
+                            viewModel.report(
+                                comment.commentId,
+                                reportContent,
+                                CommentConfig.REPORT_COMMENT_MODEL
+                            )
+                        }
+                    }.show()
+                }
+            }
+            optionPopWindow.show(itemView, OptionalPopWindow.AlignMode.CENTER, 0)
+
+        },
+        onMoreReplyClickEvent = { commentId ->
+            ReplyDetailActivity.activityStart(
+                this,
+                commentId,
+                null
+            )
+        }
     )
 
 
     @SuppressLint("ClickableViewAccessibility")
     override fun onCreate(savedInstanceState: Bundle?) {
+        window.setBackgroundDrawableResource(android.R.color.transparent)
         super.onCreate(savedInstanceState)
         setContentView(R.layout.qa_activity_dynamic_detail)
 
@@ -225,6 +262,10 @@ class DynamicDetailActivity : BaseViewModelActivity<DynamicDetailViewModel>() {
             val postId = getString("id")
             intent.putExtra("post_id", postId)
         }
+
+        isFromMine = intent.extras?.get("is_from_mine") as Boolean? ?: false
+        LogUtils.d("is_from_mine", "isFromMine-->$isFromMine")
+        commentListRvAdapter.isFromMine = isFromMine
 
         // 设置进入动画
         window.enterTransition = Slide(Gravity.END).apply { duration = animatorDuration }
@@ -248,7 +289,8 @@ class DynamicDetailActivity : BaseViewModelActivity<DynamicDetailViewModel>() {
     }
 
     private fun initChangeColorAnimator(startColor: String, endColor: String) {
-        val isDarkMode = context.resources.configuration.uiMode and Configuration.UI_MODE_NIGHT_MASK == Configuration.UI_MODE_NIGHT_YES
+        val isDarkMode =
+            context.resources.configuration.uiMode and Configuration.UI_MODE_NIGHT_MASK == Configuration.UI_MODE_NIGHT_YES
         if (haveShareItem) {
             if (isDarkMode) {//如果是深色模式
                 //因为视觉图颜色不一样的缘故，这里要在转场动画的同时添加一个变色动画
@@ -348,13 +390,20 @@ class DynamicDetailActivity : BaseViewModelActivity<DynamicDetailViewModel>() {
             it?.let {
                 if (it.replyId.isNotEmpty()) {
                     qa_coordinatorlayout.isReplyEdit = true
-                    KeyboardController.showInputKeyboard(this@DynamicDetailActivity, qa_et_my_comment_reply)
+                    KeyboardController.showInputKeyboard(
+                        this@DynamicDetailActivity,
+                        qa_et_my_comment_reply
+                    )
                     ReplyPopWindow.with(this@DynamicDetailActivity)
                     ReplyPopWindow.setReplyName(it.nickname, it.content)
                     ReplyPopWindow.setOnClickEvent {
                         viewModel.replyInfo.value = ReplyInfo("", "", "")
                     }
-                    ReplyPopWindow.show(qa_et_my_comment_reply, ReplyPopWindow.AlignMode.LEFT, this@DynamicDetailActivity.dp2px(6f))
+                    ReplyPopWindow.show(
+                        qa_et_my_comment_reply,
+                        ReplyPopWindow.AlignMode.LEFT,
+                        this@DynamicDetailActivity.dp2px(6f)
+                    )
                 } else {
                     qa_coordinatorlayout.isReplyEdit = false
                     if (ReplyPopWindow.isShowing()) {
@@ -370,8 +419,10 @@ class DynamicDetailActivity : BaseViewModelActivity<DynamicDetailViewModel>() {
             KeyboardController.hideInputKeyboard(this, qa_et_my_comment_reply)
 
             viewModel.dynamic.value?.let { dynamic ->
-                viewModel.refreshCommentList(dynamic.postId, (it?.commentId
-                        ?: -1).toString())
+                viewModel.refreshCommentList(
+                    dynamic.postId, (it?.commentId
+                        ?: -1).toString()
+                )
             }
         }
         viewModel.deleteDynamic.observe {
@@ -386,11 +437,17 @@ class DynamicDetailActivity : BaseViewModelActivity<DynamicDetailViewModel>() {
         qa_et_my_comment_reply.addTextChangedListener {
             it?.apply {
                 qa_btn_my_comment_send.background =
-                        if (length == 0) {
-                            ContextCompat.getDrawable(this@DynamicDetailActivity, R.drawable.qa_shape_send_dynamic_btn_grey_background)
-                        } else {
-                            ContextCompat.getDrawable(this@DynamicDetailActivity, R.drawable.qa_shape_send_dynamic_btn_blue_background)
-                        }
+                    if (length == 0) {
+                        ContextCompat.getDrawable(
+                            this@DynamicDetailActivity,
+                            R.drawable.qa_shape_send_dynamic_btn_grey_background
+                        )
+                    } else {
+                        ContextCompat.getDrawable(
+                            this@DynamicDetailActivity,
+                            R.drawable.qa_shape_send_dynamic_btn_blue_background
+                        )
+                    }
             }
         }
     }
@@ -431,42 +488,71 @@ class DynamicDetailActivity : BaseViewModelActivity<DynamicDetailViewModel>() {
                     val url = "${CommentConfig.SHARE_URL}dynamic?id=${dynamic.postId}"
                     initView(onCancelListener = View.OnClickListener {
                         dismiss()
-                    }, qqshare = View.OnClickListener {
+                    }, qqShare = View.OnClickListener {
                         val pic = if (dynamic.pics.isNullOrEmpty()) "" else dynamic.pics[0]
-                        mTencent?.let { it1 -> ShareUtils.qqShare(it1, this@DynamicDetailActivity, dynamic.topic, dynamic.content, url, pic) }
+                        mTencent?.let { it1 ->
+                            ShareUtils.qqShare(
+                                it1,
+                                this@DynamicDetailActivity,
+                                dynamic.topic,
+                                dynamic.content,
+                                url,
+                                pic
+                            )
+                        }
                     }, qqZoneShare = View.OnClickListener {
-                        mTencent?.let { it1 -> ShareUtils.qqQzoneShare(it1, this@DynamicDetailActivity, dynamic.topic, dynamic.content, url, ArrayList(dynamic.pics)) }
+                        mTencent?.let { it1 ->
+                            ShareUtils.qqQzoneShare(
+                                it1,
+                                this@DynamicDetailActivity,
+                                dynamic.topic,
+                                dynamic.content,
+                                url,
+                                ArrayList(dynamic.pics)
+                            )
+                        }
 
                     }, weChatShare = View.OnClickListener {
-                        CyxbsToast.makeText(context, R.string.qa_share_wechat_text, Toast.LENGTH_SHORT).show()
+                        CyxbsToast.makeText(
+                            context,
+                            R.string.qa_share_wechat_text,
+                            Toast.LENGTH_SHORT
+                        ).show()
 
                     }, friendShipCircle = View.OnClickListener {
-                        CyxbsToast.makeText(context, R.string.qa_share_wechat_text, Toast.LENGTH_SHORT).show()
+                        CyxbsToast.makeText(
+                            context,
+                            R.string.qa_share_wechat_text,
+                            Toast.LENGTH_SHORT
+                        ).show()
 
-                    }, copylink = View.OnClickListener {
+                    }, copyLink = View.OnClickListener {
                         ClipboardController.copyText(this@DynamicDetailActivity, url)
                     })
                 }.show()
             }
         }
 
-        qa_iv_dynamic_more_tips_clicked.setOnSingleClickListener {
+        qa_iv_dynamic_more_tips_clicked.setOnSingleClickListener { it ->
 
             // 消除回复弹窗
             viewModel.replyInfo.value = ReplyInfo("", "", "")
 
             val optionPopWindow = OptionalPopWindow.Builder().with(this)
-                    .addOptionAndCallback(CommentConfig.REPLY) {
-                        KeyboardController.showInputKeyboard(this, qa_et_my_comment_reply)
-                        viewModel.replyInfo.value = ReplyInfo("", "", "")
-                    }.addOptionAndCallback(CommentConfig.COPY) {
-                        viewModel.dynamic.value?.let {
-                            ClipboardController.copyText(this, it.content)
-                        }
+                .addOptionAndCallback(CommentConfig.REPLY) {
+                    KeyboardController.showInputKeyboard(this, qa_et_my_comment_reply)
+                    viewModel.replyInfo.value = ReplyInfo("", "", "")
+                }.addOptionAndCallback(CommentConfig.COPY) {
+                    viewModel.dynamic.value?.let {
+                        ClipboardController.copyText(this, it.content)
                     }
+                }
             if (viewModel.dynamic.value?.isSelf == 1) { // 如果帖子是自己的，则可以删除
                 optionPopWindow.addOptionAndCallback(CommentConfig.DELETE) {
-                    QaDialog.show(this, resources.getString(R.string.qa_dialog_tip_delete_dynamic_text), {}) {
+                    QaDialog.show(
+                        this,
+                        resources.getString(R.string.qa_dialog_tip_delete_dynamic_text),
+                        {}) {
                         viewModel.dynamic.value?.let { dynamic ->
                             viewModel.deleteId(dynamic.postId, DYNAMIC_DELETE)
                         }
@@ -477,7 +563,11 @@ class DynamicDetailActivity : BaseViewModelActivity<DynamicDetailViewModel>() {
                     QaReportDialog(this).apply {
                         show { reportContent ->
                             viewModel.dynamic.value?.let { dynamic ->
-                                viewModel.report(dynamic.postId, reportContent, CommentConfig.REPORT_DYNAMIC_MODEL)
+                                viewModel.report(
+                                    dynamic.postId,
+                                    reportContent,
+                                    CommentConfig.REPORT_DYNAMIC_MODEL
+                                )
                             }
                         }
                     }.show()
@@ -486,7 +576,12 @@ class DynamicDetailActivity : BaseViewModelActivity<DynamicDetailViewModel>() {
             optionPopWindow.show(it, OptionalPopWindow.AlignMode.RIGHT, 0)
         }
         dynamic?.let {
-            qa_iv_dynamic_praise_count_image.registerLikeView(it.postId, CommentConfig.PRAISE_MODEL_DYNAMIC, it.isPraised, it.praiseCount)
+            qa_iv_dynamic_praise_count_image.registerLikeView(
+                it.postId,
+                CommentConfig.PRAISE_MODEL_DYNAMIC,
+                it.isPraised,
+                it.praiseCount
+            )
         }
         qa_iv_dynamic_praise_count_image.setOnSingleClickListener {
             qa_iv_dynamic_praise_count_image.click()
@@ -507,9 +602,9 @@ class DynamicDetailActivity : BaseViewModelActivity<DynamicDetailViewModel>() {
             layoutManager = LinearLayoutManager(context)
 
             val adapterWrapper = RvAdapterWrapper(
-                    normalAdapter = commentListRvAdapter,
-                    emptyAdapter = emptyRvAdapter,
-                    footerAdapter = footerRvAdapter
+                normalAdapter = commentListRvAdapter,
+                emptyAdapter = emptyRvAdapter,
+                footerAdapter = footerRvAdapter
             )
             adapter = adapterWrapper
         }
@@ -523,25 +618,45 @@ class DynamicDetailActivity : BaseViewModelActivity<DynamicDetailViewModel>() {
         qa_tv_dynamic_content.setContent(viewModel.dynamic.value?.content)
         qa_tv_dynamic_comment_count.text = viewModel.dynamic.value?.commentCount.toString()
         viewModel.dynamic.value?.let {
-            qa_iv_dynamic_praise_count_image.registerLikeView(it.postId, CommentConfig.PRAISE_MODEL_DYNAMIC, it.isPraised, it.praiseCount)
+            qa_iv_dynamic_praise_count_image.registerLikeView(
+                it.postId,
+                CommentConfig.PRAISE_MODEL_DYNAMIC,
+                it.isPraised,
+                it.praiseCount
+            )
         }
         viewModel.dynamic.value?.let {
-            qa_tv_dynamic_publish_at.text = dynamicTimeDescription(System.currentTimeMillis(), it.publishTime * 1000)
+            qa_tv_dynamic_publish_at.text =
+                dynamicTimeDescription(System.currentTimeMillis(), it.publishTime * 1000)
         }
         if (viewModel.dynamic.value?.pics.isNullOrEmpty())
-            qa_dynamic_nine_grid_view.setRectangleImages(emptyList(), NineGridView.MODE_IMAGE_THREE_SIZE)
+            qa_dynamic_nine_grid_view.setRectangleImages(
+                emptyList(),
+                NineGridView.MODE_IMAGE_THREE_SIZE
+            )
         else {
             viewModel.dynamic.value?.pics?.apply {
                 val tag = qa_dynamic_nine_grid_view.tag
                 if (null == tag || tag == this) {
                     val tagStore = qa_dynamic_nine_grid_view.tag
-                    qa_dynamic_nine_grid_view.setImages(this, NineGridView.MODE_IMAGE_THREE_SIZE, NineGridView.ImageMode.MODE_IMAGE_RECTANGLE)
+                    qa_dynamic_nine_grid_view.setImages(
+                        this,
+                        NineGridView.MODE_IMAGE_THREE_SIZE,
+                        NineGridView.ImageMode.MODE_IMAGE_RECTANGLE
+                    )
                     qa_dynamic_nine_grid_view.tag = tagStore
                 } else {
                     val tagStore = this
                     qa_dynamic_nine_grid_view.tag = null
-                    qa_dynamic_nine_grid_view.setRectangleImages(emptyList(), NineGridView.MODE_IMAGE_THREE_SIZE)
-                    qa_dynamic_nine_grid_view.setImages(this, NineGridView.MODE_IMAGE_NORMAL_SIZE, NineGridView.ImageMode.MODE_IMAGE_RECTANGLE)
+                    qa_dynamic_nine_grid_view.setRectangleImages(
+                        emptyList(),
+                        NineGridView.MODE_IMAGE_THREE_SIZE
+                    )
+                    qa_dynamic_nine_grid_view.setImages(
+                        this,
+                        NineGridView.MODE_IMAGE_NORMAL_SIZE,
+                        NineGridView.ImageMode.MODE_IMAGE_RECTANGLE
+                    )
                     qa_dynamic_nine_grid_view.tag = tagStore
                 }
             }

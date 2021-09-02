@@ -55,38 +55,23 @@
                 且你的提问已经超过了任务最晚完成时间，这个时候我们将对你所
                 提问的所有回答进行查看，选出最有价值的回答，将你的积分悬赏给该" />
 
-<!--            <androidx.appcompat.widget.AppCompatTextView-->
-<!--                android:id="@+id/tv_knowledge_from"-->
-<!--                android:layout_width="wrap_content"-->
-<!--                android:layout_height="wrap_content"-->
-<!--                android:layout_marginStart="20dp"-->
-<!--                android:layout_marginTop="20dp"-->
-<!--                android:layout_marginBottom="20dp"-->
-<!--                android:textColor="@color/qa_common_hint_text_color"-->
-<!--                android:textSize="14.6sp"-->
-<!--                app:layout_constraintBottom_toBottomOf="parent"-->
-<!--                app:layout_constraintStart_toStartOf="parent"-->
-<!--                app:layout_constraintTop_toBottomOf="@id/tv_knowledge_base_detail"-->
-<!--                tools:text="来源：邮问知识库" />-->
-            <androidx.appcompat.widget.AppCompatImageView
+            <RelativeLayout
                 android:id="@+id/qa_knowledge_cancle"
-                android:layout_width="12dp"
-                android:layout_height="12dp"
-                android:src="@drawable/qa_ic_detail_cancel"
-                app:layout_constraintTop_toTopOf="parent"
+                android:layout_width="36dp"
+                android:layout_height="36dp"
+                android:layout_marginTop="19dp"
+                android:layout_marginEnd="16dp"
                 app:layout_constraintEnd_toEndOf="parent"
-                android:layout_marginTop="27dp"
-                android:layout_marginEnd="16dp"/>
+                app:layout_constraintTop_toTopOf="parent">
 
-<!--            <androidx.appcompat.widget.AppCompatImageView-->
-<!--                android:id="@+id/iv_knowledge"-->
-<!--                android:layout_width="100dp"-->
-<!--                android:layout_height="0dp"-->
-<!--                android:layout_marginEnd="20dp"-->
-<!--                android:scaleType="centerInside"-->
-<!--                app:layout_constraintBottom_toBottomOf="@id/tv_knowledge_from"-->
-<!--                app:layout_constraintEnd_toEndOf="parent"-->
-<!--                app:layout_constraintTop_toTopOf="@id/tv_knowledge_base_title" />-->
+                <androidx.appcompat.widget.AppCompatImageView
+                    android:layout_width="12dp"
+                    android:layout_height="12dp"
+                    android:layout_centerInParent="true"
+                    android:src="@drawable/qa_ic_detail_cancel" />
+            </RelativeLayout>
+
+
         </androidx.constraintlayout.widget.ConstraintLayout>
     </androidx.cardview.widget.CardView>
 

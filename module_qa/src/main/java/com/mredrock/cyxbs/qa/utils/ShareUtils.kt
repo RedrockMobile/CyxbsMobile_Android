@@ -19,7 +19,14 @@ object ShareUtils {
     /*
     分享到qq好友
     */
-    fun qqShare(tencent: Tencent, fragment: Fragment, title: String, content: String, url: String, imageUrl: String) {
+    fun qqShare(
+        tencent: Tencent,
+        fragment: Fragment,
+        title: String,
+        content: String,
+        url: String,
+        imageUrl: String
+    ) {
         val params = Bundle()
         params.putInt(QQShare.SHARE_TO_QQ_KEY_TYPE, QQShare.SHARE_TO_QQ_TYPE_DEFAULT) //分享的类型
         params.putString(QQShare.SHARE_TO_QQ_TITLE, title) //分享标题
@@ -33,7 +40,14 @@ object ShareUtils {
     /*
     分享到qq好友
     */
-    fun qqShare(tencent: Tencent, activity: Activity, title: String, content: String, url: String, imageUrl: String) {
+    fun qqShare(
+        tencent: Tencent,
+        activity: Activity,
+        title: String,
+        content: String,
+        url: String,
+        imageUrl: String
+    ) {
         val params = Bundle()
         params.putInt(QzoneShare.SHARE_TO_QZONE_KEY_TYPE, QQShare.SHARE_TO_QQ_TYPE_DEFAULT)
         params.putString(QzoneShare.SHARE_TO_QQ_TITLE, title) //分享标题
@@ -48,7 +62,14 @@ object ShareUtils {
     /*
     分享到qq空间
      */
-    fun qqQzoneShare(tencent: Tencent, fragment: Fragment, title: String, content: String, url: String, imageUrl: ArrayList<String>) {
+    fun qqQzoneShare(
+        tencent: Tencent,
+        fragment: Fragment,
+        title: String,
+        content: String,
+        url: String,
+        imageUrl: ArrayList<String>
+    ) {
         val QzoneType = QzoneShare.SHARE_TO_QZONE_TYPE_NO_TYPE
         val params = Bundle()
         params.putInt(QzoneShare.SHARE_TO_QZONE_KEY_TYPE, QzoneType)
@@ -64,7 +85,14 @@ object ShareUtils {
     /*
   分享到qq空间
    */
-    fun qqQzoneShare(tencent: Tencent, activity: Activity, title: String, content: String, url: String, imageUrl: ArrayList<String>) {
+    fun qqQzoneShare(
+        tencent: Tencent,
+        activity: Activity,
+        title: String,
+        content: String,
+        url: String,
+        imageUrl: ArrayList<String>
+    ) {
         val QzoneType = QzoneShare.SHARE_TO_QZONE_TYPE_NO_TYPE
         val params = Bundle()
         params.putInt(QzoneShare.SHARE_TO_QZONE_KEY_TYPE, QzoneType)

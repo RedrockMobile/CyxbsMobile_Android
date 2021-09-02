@@ -8,7 +8,6 @@ import android.os.Bundle
 import android.os.Environment
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
-import androidx.fragment.app.Fragment
 import com.bumptech.glide.Glide
 import com.bumptech.glide.request.RequestOptions
 import com.mredrock.cyxbs.common.config.DIR
@@ -29,15 +28,19 @@ class ViewImageCropActivity : AppCompatActivity() {
             context.startActivity<ViewImageCropActivity>(IMG_RES_PATH to imgResUrl)
         }
 
-        fun activityStartForResult(context: Activity, imgResPath: String, resultCode: Int = DEFAULT_RESULT_CODE) {
-            context.startActivityForResult<ViewImageCropActivity>(resultCode, IMG_RES_PATH to imgResPath, NEED_RESULT to true)
+        fun activityStartForResult(
+            context: Activity,
+            imgResPath: String,
+            resultCode: Int = DEFAULT_RESULT_CODE
+        ) {
+            context.startActivityForResult<ViewImageCropActivity>(
+                resultCode,
+                IMG_RES_PATH to imgResPath,
+                NEED_RESULT to true
+            )
         }
 
-        fun activityStartForResult(context: Fragment, imgResPath: String, resultCode: Int = DEFAULT_RESULT_CODE) {
-            context.startActivityForResult<ViewImageCropActivity>(resultCode, IMG_RES_PATH to imgResPath, NEED_RESULT to true)
-        }
     }
-
 
     private var needResult: Boolean = false
     private var imgResPath: String = ""
@@ -49,7 +52,7 @@ class ViewImageCropActivity : AppCompatActivity() {
         setFullScreen()
 
         needResult = intent.getBooleanExtra(NEED_RESULT, false)
-        imgResPath = intent.getStringExtra(IMG_RES_PATH)?:""
+        imgResPath = intent.getStringExtra(IMG_RES_PATH) ?: ""
 
         tv_delete.setOnSingleClickListener {
             setResult(DELETE_CODE)
@@ -64,19 +67,23 @@ class ViewImageCropActivity : AppCompatActivity() {
         }
 
         Glide.with(this)
-                .load(imgResPath)
-                .apply(RequestOptions()
-                        .placeholder(com.mredrock.cyxbs.common.R.drawable.common_ic_place_holder)
-                        .error(com.mredrock.cyxbs.common.R.drawable.common_ic_place_holder))
-                .into(iv)
+            .load(imgResPath)
+            .apply(
+                RequestOptions()
+                    .placeholder(com.mredrock.cyxbs.common.R.drawable.common_ic_place_holder)
+                    .error(com.mredrock.cyxbs.common.R.drawable.common_ic_place_holder)
+            )
+            .into(iv)
     }
 
     private val resultPath by lazy {
-        val path = File(StringBuilder(Environment.getExternalStorageDirectory().path)
+        val path = File(
+            StringBuilder(Environment.getExternalStorageDirectory().path)
                 .append(DIR)
                 .append(File.separatorChar)
                 .append("crop")
-                .toString())
+                .toString()
+        )
         if (!path.exists()) {
             path.mkdirs()
         }
@@ -85,22 +92,29 @@ class ViewImageCropActivity : AppCompatActivity() {
     private var cropResultFilePath: File? = null
     private fun getNewResultUri(): Uri {
         val name = StringBuilder(imgResPath.split(File.separatorChar).last().split(".").first())
-                .append(System.currentTimeMillis())
-                .append(".png")
-                .toString()
+            .append(System.currentTimeMillis())
+            .append(".png")
+            .toString()
         cropResultFilePath = File(resultPath, name)
         return Uri.fromFile(cropResultFilePath)
     }
 
     private fun startCropActivity() = UCrop.of(Uri.fromFile(File(imgResPath)), getNewResultUri())
-            .withOptions(UCrop.Options().apply {
-                setLogoColor(ContextCompat.getColor(this@ViewImageCropActivity, R.color.qa_crop_logo_color))
-                setToolbarColor(
-                        ContextCompat.getColor(this@ViewImageCropActivity, R.color.colorPrimaryDark))
-                setStatusBarColor(
-                        ContextCompat.getColor(this@ViewImageCropActivity, R.color.colorPrimaryDark))
-            })
-            .start(this)
+        .withOptions(UCrop.Options().apply {
+            setLogoColor(
+                ContextCompat.getColor(
+                    this@ViewImageCropActivity,
+                    R.color.qa_crop_logo_color
+                )
+            )
+            setToolbarColor(
+                ContextCompat.getColor(this@ViewImageCropActivity, R.color.colorPrimaryDark)
+            )
+            setStatusBarColor(
+                ContextCompat.getColor(this@ViewImageCropActivity, R.color.colorPrimaryDark)
+            )
+        })
+        .start(this)
 
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
@@ -115,10 +129,12 @@ class ViewImageCropActivity : AppCompatActivity() {
         } else if (resultCode == Activity.RESULT_OK && data != null) {
             imgResPath = cropResultFilePath?.absolutePath ?: ""
             Glide.with(this)
-                    .load(imgResPath)
-                    .apply(RequestOptions().placeholder(com.mredrock.cyxbs.common.R.drawable.common_ic_place_holder)
-                            .error(com.mredrock.cyxbs.common.R.drawable.common_ic_place_holder))
-                    .into(iv)
+                .load(imgResPath)
+                .apply(
+                    RequestOptions().placeholder(com.mredrock.cyxbs.common.R.drawable.common_ic_place_holder)
+                        .error(com.mredrock.cyxbs.common.R.drawable.common_ic_place_holder)
+                )
+                .into(iv)
             setResult(Activity.RESULT_OK, Intent().putExtra(EXTRA_NEW_PATH, imgResPath))
         } else {
             toast("无法获得裁剪结果")

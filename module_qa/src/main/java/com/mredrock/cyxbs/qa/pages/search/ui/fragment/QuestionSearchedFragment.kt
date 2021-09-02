@@ -1,19 +1,19 @@
 package com.mredrock.cyxbs.qa.pages.search.ui.fragment
 
+import android.annotation.SuppressLint
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.view.WindowManager
 import android.widget.TextView
 import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.android.flexbox.FlexWrap
 import com.google.android.flexbox.FlexboxLayoutManager
-import com.mredrock.cyxbs.api.account.IAccountService
 import com.mredrock.cyxbs.common.BaseApp
-import com.mredrock.cyxbs.common.service.ServiceManager
 import com.mredrock.cyxbs.common.ui.BaseViewModelFragment
 import com.mredrock.cyxbs.common.utils.extensions.doIfLogin
 import com.mredrock.cyxbs.common.utils.extensions.gone
@@ -28,7 +28,6 @@ import com.mredrock.cyxbs.qa.config.CommentConfig.IGNORE
 import com.mredrock.cyxbs.qa.config.CommentConfig.QQ_FRIEND
 import com.mredrock.cyxbs.qa.config.CommentConfig.QQ_ZONE
 import com.mredrock.cyxbs.qa.config.CommentConfig.REPORT
-import com.mredrock.cyxbs.qa.config.RequestResultCode.ClickKnowledge
 import com.mredrock.cyxbs.qa.config.RequestResultCode.DYNAMIC_DETAIL_REQUEST
 import com.mredrock.cyxbs.qa.config.RequestResultCode.NEED_REFRESH_RESULT
 import com.mredrock.cyxbs.qa.config.RequestResultCode.RELEASE_DYNAMIC_ACTIVITY_REQUEST
@@ -37,7 +36,7 @@ import com.mredrock.cyxbs.qa.network.NetworkState.Companion.LOADING
 import com.mredrock.cyxbs.qa.pages.dynamic.ui.activity.DynamicDetailActivity
 import com.mredrock.cyxbs.qa.pages.dynamic.ui.adapter.DynamicAdapter
 import com.mredrock.cyxbs.qa.pages.quiz.ui.QuizActivity
-import com.mredrock.cyxbs.qa.pages.search.model.SearchQuestionDataSource.Companion.SEARCHRESULT
+import com.mredrock.cyxbs.qa.pages.search.model.SearchQuestionDataSource.Companion.SEARCH_RESULT
 import com.mredrock.cyxbs.qa.pages.search.ui.adapter.SearchKnowledgeAdapter
 import com.mredrock.cyxbs.qa.pages.search.ui.adapter.SearchNoResultAdapter
 import com.mredrock.cyxbs.qa.pages.search.ui.adapter.SearchResultHeaderAdapter
@@ -66,10 +65,14 @@ class QuestionSearchedFragment : BaseViewModelFragment<QuestionSearchedViewModel
 
     //搜索关键词
     private var searchKey = ""
-    lateinit var dynamicListRvAdapter: DynamicAdapter
-    var knowledges: List<Knowledge>? = null
+    private lateinit var dynamicListRvAdapter: DynamicAdapter
+    private var knowledge: List<Knowledge>? = null
     var emptyRvAdapter: SearchNoResultAdapter? = null
     var footerRvAdapter: FooterRvAdapter? = null
+
+    init {
+        isOpenLifeCycleLog = true
+    }
 
     fun refreshSearchKey(newSearchKey: String) {
         searchKey = newSearchKey
@@ -94,7 +97,12 @@ class QuestionSearchedFragment : BaseViewModelFragment<QuestionSearchedViewModel
         }
     }
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
+
+    override fun onCreateView(
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View? {
         return inflater.inflate(R.layout.qa_fragment_question_search_result, container, false)
     }
 
@@ -112,7 +120,7 @@ class QuestionSearchedFragment : BaseViewModelFragment<QuestionSearchedViewModel
             if (it != null) {
                 if (it) {
                     //加载完成
-                    if (SEARCHRESULT || viewModel.isKnowledge) {
+                    if (SEARCH_RESULT || viewModel.isKnowledge) {
                         //有数据的刷新
                         swipe_refresh_layout_searching.isRefreshing = false
                         emptyRvAdapter?.showResultRefreshHolder()
@@ -121,22 +129,20 @@ class QuestionSearchedFragment : BaseViewModelFragment<QuestionSearchedViewModel
                         swipe_refresh_layout_searching.isRefreshing = false
                         emptyRvAdapter?.showNOResultRefreshHolder()
                     }
-                    if (SEARCHRESULT) {
+                    if (SEARCH_RESULT) {
                         qa_tv_contract_content.visibility = View.VISIBLE
                         this.context?.apply {
-                            rv_searched_question.background=ContextCompat.getDrawable(this,R.drawable.qa_shape_comment_header_background)
+                            rv_searched_question.background = ContextCompat.getDrawable(
+                                this,
+                                R.drawable.qa_shape_comment_header_background
+                            )
                         }
                     }
                     if (viewModel.isKnowledge) {
                         //知识库不为空时候显示
-                        if (ClickKnowledge) {
-                            qa_line.gone()
-                            qa_tv_knowledge.gone()
-                        } else {
-                            qa_line.visibility = View.VISIBLE
-                            qa_rv_knowledge.visibility = View.VISIBLE
-                            qa_tv_knowledge.visibility = View.VISIBLE
-                        }
+                        qa_line.visibility = View.VISIBLE
+                        qa_rv_knowledge.visibility = View.VISIBLE
+                        qa_tv_knowledge.visibility = View.VISIBLE
                     } else {
                         qa_line.gone()
                         qa_tv_knowledge.gone()
@@ -149,17 +155,37 @@ class QuestionSearchedFragment : BaseViewModelFragment<QuestionSearchedViewModel
     private fun initInitialView() {
         viewModel.getKnowledge(searchKey)
         dynamicListRvAdapter = DynamicAdapter(this.requireContext()) { dynamic, view ->
+            //当进入动态详情页面时 搜索界面的window 的软键盘不允许再被弹起，写这个的原因是不知道为什么从动态详情页面返回搜索界面时软键盘会自动弹起
+            requireActivity().window.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN)
             DynamicDetailActivity.activityStart(this, view, dynamic)
         }.apply {
             onShareClickListener = { dynamic, mode ->
                 val url = "${CommentConfig.SHARE_URL}dynamic?id=${dynamic.postId}"
-                val pic = if (dynamic.pics.isNullOrEmpty()) "" else dynamic.pics[0]
                 when (mode) {
                     QQ_FRIEND -> {
-                        mTencent?.let { it1 -> ShareUtils.qqShare(it1, this@QuestionSearchedFragment, dynamic.topic, dynamic.content, url, pic) }
+                        val pic = if (dynamic.pics.isNullOrEmpty()) "" else dynamic.pics[0]
+                        mTencent?.let { it1 ->
+                            ShareUtils.qqShare(
+                                it1,
+                                this@QuestionSearchedFragment,
+                                dynamic.topic,
+                                dynamic.content,
+                                url,
+                                pic
+                            )
+                        }
                     }
                     QQ_ZONE ->
-                        mTencent?.let { it1 -> ShareUtils.qqQzoneShare(it1, this@QuestionSearchedFragment, dynamic.topic, dynamic.content, url, arrayListOf(pic)) }
+                        mTencent?.let { it1 ->
+                            ShareUtils.qqQzoneShare(
+                                it1,
+                                this@QuestionSearchedFragment,
+                                dynamic.topic,
+                                dynamic.content,
+                                url,
+                                ArrayList(dynamic.pics)
+                            )
+                        }
                     COPY_LINK -> {
                         this@QuestionSearchedFragment.context?.let {
                             ClipboardController.copyText(it, url)
@@ -167,7 +193,7 @@ class QuestionSearchedFragment : BaseViewModelFragment<QuestionSearchedViewModel
                     }
                 }
             }
-            onPopWindowClickListener = { position, string, dynamic ->
+            onPopWindowClickListener = { _, string, dynamic ->
                 when (string) {
                     IGNORE -> {
                         viewModel.ignore(dynamic)
@@ -184,7 +210,10 @@ class QuestionSearchedFragment : BaseViewModelFragment<QuestionSearchedViewModel
                     }
                     DELETE -> {
                         activity?.let { it1 ->
-                            QaDialog.show(it1, resources.getString(R.string.qa_dialog_tip_delete_comment_text), {}) {
+                            QaDialog.show(
+                                it1,
+                                resources.getString(R.string.qa_dialog_tip_delete_comment_text),
+                                {}) {
                                 viewModel.deleteId(dynamic.postId, "0")
                             }
                         }
@@ -201,9 +230,9 @@ class QuestionSearchedFragment : BaseViewModelFragment<QuestionSearchedViewModel
         }
         footerRvAdapter = FooterRvAdapter { viewModel.retry() }
         val adapterWrapper = RvAdapterWrapper(
-                normalAdapter = dynamicListRvAdapter,
-                emptyAdapter = emptyRvAdapter,
-                footerAdapter = footerRvAdapter
+            normalAdapter = dynamicListRvAdapter,
+            emptyAdapter = emptyRvAdapter,
+            footerAdapter = footerRvAdapter
         )
         rv_searched_question.layoutManager = LinearLayoutManager(context)
         rv_searched_question.adapter = adapterWrapper
@@ -215,7 +244,6 @@ class QuestionSearchedFragment : BaseViewModelFragment<QuestionSearchedViewModel
     private fun initResultView() {
         viewModel.questionList.observe {
             dynamicListRvAdapter.submitList(it)
-
         }
         viewModel.networkState.observe {
             it?.run {
@@ -235,7 +263,7 @@ class QuestionSearchedFragment : BaseViewModelFragment<QuestionSearchedViewModel
                     swipe_refresh_layout_searching.isRefreshing = false
                 }
                 else -> {
-                    if (SEARCHRESULT || viewModel.isKnowledge) {
+                    if (SEARCH_RESULT || viewModel.isKnowledge) {
                         //有数据的刷新
                         swipe_refresh_layout_searching.isRefreshing = false
                         emptyRvAdapter?.showResultRefreshHolder()
@@ -247,16 +275,11 @@ class QuestionSearchedFragment : BaseViewModelFragment<QuestionSearchedViewModel
                 }
             }
         }
+
         swipe_refresh_layout_searching.setOnRefreshListener {
-            if (ClickKnowledge) {
-                //点击知识库时的刷新
-                viewModel.invalidateSearchQuestionList()
-                qa_line.gone()
-                qa_tv_knowledge.gone()
-            } else {
-                viewModel.invalidateSearchQuestionList()
-            }
+            viewModel.invalidateSearchQuestionList()
         }
+
         viewModel.deleteTips.observe {
             if (it == true)
                 viewModel.invalidateSearchQuestionList()
@@ -268,19 +291,19 @@ class QuestionSearchedFragment : BaseViewModelFragment<QuestionSearchedViewModel
 
         viewModel.knowledge.observe {
             if (!it.isNullOrEmpty()) {
-                knowledges=it
-                val adapterKnowledge=SearchKnowledgeAdapter(qa_rv_knowledge)
-                val adapterSearchResultHeader=SearchResultHeaderAdapter(adapterKnowledge,qa_rv_knowledge)
-                adapterKnowledge.searchResultHeaderAdapter=adapterSearchResultHeader
+                knowledge = it
+                val adapterKnowledge = SearchKnowledgeAdapter(qa_rv_knowledge)
+                val adapterSearchResultHeader =
+                    SearchResultHeaderAdapter(adapterKnowledge, qa_rv_knowledge)
+                adapterKnowledge.searchResultHeaderAdapter = adapterSearchResultHeader
 
                 val flexBoxManager = FlexboxLayoutManager(BaseApp.context)
                 flexBoxManager.flexWrap = FlexWrap.WRAP
                 qa_rv_knowledge.layoutManager = flexBoxManager
                 qa_rv_knowledge.adapter = adapterKnowledge
-                knowledges?.let { it1 ->
+                knowledge?.let { it1 ->
                     adapterKnowledge.addData(it1)
                 }
-                qa_rv_knowledge.layoutManager = flexBoxManager
             } else {
                 qa_rv_knowledge.gone()
                 qa_line.gone()
@@ -289,10 +312,13 @@ class QuestionSearchedFragment : BaseViewModelFragment<QuestionSearchedViewModel
         }
     }
 
+    @SuppressLint("NotifyDataSetChanged")
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         when (requestCode) {
             // 从动态详细返回
             DYNAMIC_DETAIL_REQUEST -> {
+                //设置软键盘为可以展示
+                requireActivity().window.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_UNCHANGED)
                 if (resultCode == NEED_REFRESH_RESULT) {
                     // 需要刷新 则 刷新显示动态
                     viewModel.invalidateSearchQuestionList()
@@ -301,11 +327,16 @@ class QuestionSearchedFragment : BaseViewModelFragment<QuestionSearchedViewModel
                     dynamicListRvAdapter.curSharedItem?.apply {
                         val dynamic = data?.getParcelableExtra<Dynamic>("refresh_dynamic")
                         dynamic?.let {
-                            dynamicListRvAdapter.curSharedDynamic?.commentCount = dynamic.commentCount
-                            this.findViewById<TextView>(R.id.qa_tv_dynamic_comment_count).text = it.commentCount.toString()
+                            // 进行判断，如果返回的数据评论数和当前的不一样才回去刷新列表
+                            if (dynamicListRvAdapter.curSharedDynamic?.commentCount != it.commentCount) {
+                                dynamicListRvAdapter.curSharedDynamic?.commentCount =
+                                    it.commentCount
+                                this.findViewById<TextView>(R.id.qa_tv_dynamic_comment_count).text =
+                                    it.commentCount.toString()
+                                dynamicListRvAdapter.notifyItemChanged(dynamicListRvAdapter.curSharedItemPosition)
+                            }
                         }
                     }
-                    dynamicListRvAdapter.notifyDataSetChanged()
                 }
             }
         }

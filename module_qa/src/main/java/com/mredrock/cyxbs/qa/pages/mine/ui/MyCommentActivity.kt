@@ -14,11 +14,8 @@ import com.mredrock.cyxbs.common.utils.extensions.setOnSingleClickListener
 import com.mredrock.cyxbs.common.utils.extensions.toast
 import com.mredrock.cyxbs.qa.R
 import com.mredrock.cyxbs.qa.beannew.Comment
-import com.mredrock.cyxbs.qa.beannew.ReplyInfo
 import com.mredrock.cyxbs.qa.component.recycler.RvAdapterWrapper
-import com.mredrock.cyxbs.qa.config.RequestResultCode
 import com.mredrock.cyxbs.qa.network.NetworkState
-import com.mredrock.cyxbs.qa.pages.dynamic.ui.activity.DynamicDetailActivity
 import com.mredrock.cyxbs.qa.pages.mine.ui.adapter.MyCommentRvAdapter
 import com.mredrock.cyxbs.qa.pages.mine.viewmodel.MyCommentViewModel
 import com.mredrock.cyxbs.qa.pages.quiz.ui.QuizActivity
@@ -88,16 +85,21 @@ class MyCommentActivity : BaseViewModelActivity<MyCommentViewModel>() {
         qa_ib_toolbar_back.setOnSingleClickListener {
             onBackPressed()
         }
-        qa_tb_my_comment.setBackgroundColor(ContextCompat.getColor(this, R.color.qa_ignore_item_background_color))
+        qa_tb_my_comment.setBackgroundColor(
+            ContextCompat.getColor(
+                this,
+                R.color.qa_ignore_item_background_color
+            )
+        )
 
         //初始化三个Adapter
         myCommentRvAdapter = MyCommentRvAdapter(this, viewModel)
         footerRvAdapter = FooterRvAdapter { viewModel.retry() }
         emptyRvAdapter = EmptyRvAdapter(getString(R.string.qa_my_comment_no_reply))
         val adapterWrapper = RvAdapterWrapper(
-                normalAdapter = myCommentRvAdapter,
-                emptyAdapter = emptyRvAdapter,
-                footerAdapter = footerRvAdapter
+            normalAdapter = myCommentRvAdapter,
+            emptyAdapter = emptyRvAdapter,
+            footerAdapter = footerRvAdapter
         )
 
         qa_rv_my_comment.adapter = adapterWrapper
@@ -140,11 +142,17 @@ class MyCommentActivity : BaseViewModelActivity<MyCommentViewModel>() {
         qa_et_my_comment_reply.addTextChangedListener {
             it?.apply {
                 qa_btn_my_comment_send.background =
-                        if (length == 0) {
-                            ContextCompat.getDrawable(this@MyCommentActivity, R.drawable.qa_shape_send_dynamic_btn_grey_background)
-                        } else {
-                            ContextCompat.getDrawable(this@MyCommentActivity, R.drawable.qa_shape_send_dynamic_btn_blue_background)
-                        }
+                    if (length == 0) {
+                        ContextCompat.getDrawable(
+                            this@MyCommentActivity,
+                            R.drawable.qa_shape_send_dynamic_btn_grey_background
+                        )
+                    } else {
+                        ContextCompat.getDrawable(
+                            this@MyCommentActivity,
+                            R.drawable.qa_shape_send_dynamic_btn_blue_background
+                        )
+                    }
             }
         }
     }

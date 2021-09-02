@@ -10,15 +10,7 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         tools:ignore="GoogleAppIndexingWarning">
-        <activity android:name="debug.DebugActivity">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
-        </activity>
         <activity android:name=".pages.RollerViewActivity" />
-        <activity android:name=".pages.hiding.DiscoverHidingActivity" />
     </application>
 
 </manifest>

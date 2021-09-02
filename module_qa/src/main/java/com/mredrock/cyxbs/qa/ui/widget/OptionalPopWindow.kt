@@ -1,6 +1,7 @@
 package com.mredrock.cyxbs.qa.ui.widget
 
 import android.animation.ValueAnimator
+import android.annotation.SuppressLint
 import android.app.Activity
 import android.content.Context
 import android.graphics.Color
@@ -40,22 +41,26 @@ class OptionalPopWindow private constructor(val context: Context?) : PopupWindow
     }
 
     class Builder {
-        var optionalPopWindow: OptionalPopWindow? = null
+        private var optionalPopWindow: OptionalPopWindow? = null
         var context: Context? = null
-        var mainView: View? = null
-        var childCount = 0
+        private var mainView: View? = null
+        private var childCount = 0
+        @SuppressLint("InflateParams")
         fun with(context: Context): Builder {
             optionalPopWindow = OptionalPopWindow(context)
             this.context = context
-            mainView = LayoutInflater.from(context).inflate(R.layout.qa_popwindow_options, null, false)
+            mainView =
+                LayoutInflater.from(context).inflate(R.layout.qa_popwindow_options, null, false)
             return this
         }
 
+        @SuppressLint("InflateParams")
         fun addOptionAndCallback(optionText: String, onClickCallback: () -> Unit): Builder {
             if (context == null || optionalPopWindow == null) {
                 throw IllegalStateException("$TAG Can't add option without context!")
             }
-            val view = LayoutInflater.from(context).inflate(R.layout.qa_popwindow_option_normal, null, false)
+            val view = LayoutInflater.from(context)
+                .inflate(R.layout.qa_popwindow_option_normal, null, false)
             view.findViewById<TextView>(R.id.qa_popwindow_tv_option).text = optionText
             view.findViewById<TextView>(R.id.qa_popwindow_tv_option).setOnClickListener {
                 optionalPopWindow!!.dismiss()
@@ -72,15 +77,24 @@ class OptionalPopWindow private constructor(val context: Context?) : PopupWindow
          * @param view 要展示在哪个view的下面？
          * @param alignMode 对齐方式
          * @param offsetY 要在view的下面多少的位置？
+         * @param needWindowAlphaChange dialog展示时是否需要窗口变暗？
          */
-        fun show(view: View, alignMode: AlignMode, offsetY: Int) {
+        fun show(
+            view: View,
+            alignMode: AlignMode,
+            offsetY: Int,
+            needWindowAlphaChange: Boolean = true
+        ) {
             if (optionalPopWindow == null || mainView == null || context == null || childCount == 0) {
                 throw IllegalStateException("$TAG IllegalState!")
             }
             optionalPopWindow!!.contentView = mainView
 
             // 先测量mainView，以免取到measuredWidth为0
-            mainView!!.measure(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT)
+            mainView!!.measure(
+                LinearLayout.LayoutParams.WRAP_CONTENT,
+                LinearLayout.LayoutParams.WRAP_CONTENT
+            )
             // 这样就可以根据布局的大小去计算是居中还是左右对齐了
             val offsetXt = when (alignMode) {
                 AlignMode.MIDDLE -> -(View.MeasureSpec.getSize(mainView!!.measuredWidth) - view.width) / 2
@@ -89,9 +103,10 @@ class OptionalPopWindow private constructor(val context: Context?) : PopupWindow
                 AlignMode.CENTER -> {
                     //居中时需要遍历子view来提升宽度
                     val width = BaseApp.context.dp2px(178f)
-                    mainView?.apply{
-                        for (v in (this as LinearLayout).children){
-                            val lp = v.qa_popwindow_tv_option.layoutParams as LinearLayout.LayoutParams
+                    mainView?.apply {
+                        for (v in (this as LinearLayout).children) {
+                            val lp =
+                                v.qa_popwindow_tv_option.layoutParams as LinearLayout.LayoutParams
                             lp.width = width
                             v.qa_popwindow_tv_option.layoutParams = lp
                         }
@@ -108,9 +123,11 @@ class OptionalPopWindow private constructor(val context: Context?) : PopupWindow
 
             // 显示弹窗
             optionalPopWindow!!.showAsDropDown(view, offsetXt, offsetYt, Gravity.START)
-            optionalPopWindow!!.showBackgroundAnimator()
+            if (needWindowAlphaChange)
+                optionalPopWindow!!.showBackgroundAnimator()
             optionalPopWindow!!.setOnDismissListener {
-                optionalPopWindow!!.hideBackgroundAnimator()
+                if (needWindowAlphaChange)
+                    optionalPopWindow!!.hideBackgroundAnimator()
             }
 
         }
