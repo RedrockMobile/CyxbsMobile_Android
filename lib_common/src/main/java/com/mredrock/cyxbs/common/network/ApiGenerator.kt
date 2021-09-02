@@ -276,7 +276,7 @@ object ApiGenerator {
     class BackupInterceptor : Interceptor {
 
         private var useBackupUrl: Boolean = false
-        private var backupUrl: String = ""
+        private var backupUrl: String = getBaseUrlWithoutHttps()
 
         override fun intercept(chain: Interceptor.Chain): Response {
 
@@ -328,17 +328,17 @@ object ApiGenerator {
             return try {
                 val backupUrlStatus = Gson().fromJson<RedrockApiWrapper<BackupUrlStatus>>(json, object : TypeToken<RedrockApiWrapper<BackupUrlStatus>>() {}.type)
                 if (backupUrlStatus.data.baseUrl.isNullOrEmpty()) {
-                    getBaseUrl()
+                    getBaseUrlWithoutHttps()
                 }else{
                     backupUrlStatus.data.baseUrl
                 }
             } catch (e: Exception) {
                 e.printStackTrace()
-                ""
+                getBaseUrlWithoutHttps()
             }
         }
 
 
     }
-
+    private fun getBaseUrlWithoutHttps() = getBaseUrl().subSequence(8, getBaseUrl().length).toString()
 }
