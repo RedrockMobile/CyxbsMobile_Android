@@ -1,0 +1,238 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:tools="http://schemas.android.com/tools"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <data>
+        <variable
+            name="data"
+            type="com.mredrock.cyxbs.store.bean.ProductDetail" />
+    </data>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/store_product_exchange_bg">
+
+        <include
+            android:id="@+id/store_toolbar_store_product_detail"
+            layout="@layout/store_common_toolbar" />
+
+        <TextView
+            android:id="@+id/store_tv_product_detail_title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="7dp"
+            android:text="邮货详细"
+            android:textColor="@color/store_common_title"
+            android:textSize="22sp"
+            android:textStyle="bold"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintHorizontal_bias="0.09867"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintVertical_bias="0.06821"
+            tools:ignore="HardcodedText" />
+
+        <com.mredrock.cyxbs.store.utils.widget.slideshow.SlideShow
+            android:id="@+id/store_slideShow_exchange_product_image"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_marginLeft="16dp"
+            android:layout_marginRight="16dp"
+            android:layout_marginTop="20dp"
+            android:background="@drawable/store_shape_stamp_center_product"
+            app:slide_imgRadius="8dp"
+            app:indicators_backgroundCircleColor="#4D000000"
+            app:indicators_circleColor="#F6F6F6"
+            app:indicators_circleRadius="3.5dp"
+            app:indicators_intervalMargin="16dp"
+            app:indicators_style="water_drop"
+            app:indicators_wrapWidth="16dp"
+            app:layout_constraintDimensionRatio="192:100"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/store_tv_product_detail_title" />
+
+        <TextView
+            android:id="@+id/store_tv_product_name"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="16dp"
+            android:layout_marginTop="28dp"
+            android:text="@{data.title}"
+            android:textColor="@color/store_common_title"
+            android:textSize="18sp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/store_slideShow_exchange_product_image"
+            tools:ignore="HardcodedText"
+            tools:text="兮哥哥的爱❤" />
+
+        <TextView
+            android:id="@+id/store_tv_product_stock"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="15dp"
+            android:text="@{@string/store_product_stock_title+String.valueOf(data.amount)}"
+            android:textColor="@color/store_product_stock"
+            android:textSize="13sp"
+            app:layout_constraintBottom_toBottomOf="@+id/store_tv_product_name"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="@+id/store_tv_product_name"
+            app:layout_constraintVertical_bias="0.0"
+            tools:ignore="HardcodedText"
+            tools:text="库存量：无穷大" />
+
+        <TextView
+            android:id="@+id/store_tv_product_describe"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="16dp"
+            android:layout_marginTop="16dp"
+            android:layout_marginEnd="15dp"
+            android:text="@{data.description}"
+            android:textColor="@color/store_product_describe"
+            android:textSize="16sp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/store_tv_product_name"
+            tools:ignore="HardcodedText"
+            tools:text="兮哥哥的爱❤😘😍能把你迷得梦魂颠倒，快拿起你的邮票购买吧！" />
+
+        <TextView
+            android:id="@+id/store_tv_product_prescription_title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="16dp"
+            android:layout_marginTop="8dp"
+            android:text="@string/store_product_prescription_title"
+            android:textColor="@color/store_product_prescription"
+            android:textSize="13sp"
+            app:layout_constraintTop_toBottomOf="@+id/store_tv_product_describe"
+            app:layout_constraintStart_toStartOf="parent"
+            tools:text="永久"/>
+
+        <TextView
+            android:id="@+id/store_tv_product_prescription"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:text="@{@string/store_product_life(data.life)}"
+            android:textColor="@color/store_product_prescription"
+            android:textSize="13sp"
+            app:layout_constraintLeft_toRightOf="@id/store_tv_product_prescription_title"
+            app:layout_constraintTop_toBottomOf="@+id/store_tv_product_describe"
+            tools:ignore="HardcodedText" />
+
+        <TextView
+            android:id="@+id/store_textview2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="17dp"
+            android:layout_marginTop="36dp"
+            android:text="@string/store_equity_description"
+            android:textColor="@color/store_equity_description_title"
+            android:textSize="14sp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/store_tv_product_prescription" />
+
+        <TextView
+            android:id="@+id/store_tv_equity_description"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="15dp"
+            android:layout_marginRight="15dp"
+            android:layout_marginTop="12dp"
+            android:lineSpacingExtra="3dp"
+            android:text="1、每个实物商品每人限兑换一次，已经兑换的商品不能退货换货也不予折现。\n2、在法律允许的范围内，本活动的最终解释权归红岩网校工作站所有。"
+            android:textColor="@color/store_equity_description"
+            android:textSize="14sp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/store_textview2"
+            tools:ignore="HardcodedText" />
+
+        <View
+            android:id="@+id/store_product_detail_line"
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:layout_marginBottom="71dp"
+            android:background="@drawable/store_ic_common_divide_line"
+            app:layout_constraintBottom_toBottomOf="parent" />
+
+        <ImageView
+            android:id="@+id/store_iv_stamp"
+            android:layout_width="21.13dp"
+            android:layout_height="21.13dp"
+            android:layout_marginStart="15dp"
+            android:layout_marginBottom="36.87dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:srcCompat="@drawable/store_ic_stamp"
+            tools:ignore="ContentDescription" />
+
+        <TextView
+            android:id="@+id/store_tv_exchange_detail_price"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="5dp"
+            android:layout_marginBottom="35dp"
+            android:fontFamily="@font/store_din_medium"
+            android:text="@{String.valueOf(data.price)}"
+            android:textColor="@color/store_product_exchange_price"
+            android:textSize="18sp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toEndOf="@+id/store_iv_stamp"
+            tools:ignore="HardcodedText"
+            tools:text="9999999999999999999999999" />
+
+        <TextView
+            android:id="@+id/store_tv_user_balance_title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="15dp"
+            android:layout_marginBottom="14dp"
+            android:text="@string/store_balance_title"
+            android:textColor="@color/store_balance"
+            android:textSize="12sp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent" />
+
+        <TextView
+            android:id="@+id/store_tv_user_stamp_count"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="14dp"
+            android:textColor="@color/store_balance"
+            android:textSize="12sp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintLeft_toRightOf="@+id/store_tv_user_balance_title"
+            tools:ignore="HardcodedText"
+            tools:text="0"/>
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/store_btn_exchange"
+            android:layout_width="112dp"
+            android:layout_height="42dp"
+            android:layout_marginEnd="16dp"
+            android:layout_marginBottom="17dp"
+            android:text="@string/store_exchange"
+            android:textColor="@color/common_white_font_color"
+            android:textSize="16dp"
+            android:textStyle="bold"
+            android:theme="@style/Theme.MaterialComponents"
+            android:insetTop="0dp"
+            android:insetBottom="0dp"
+            android:padding="0dp"
+            android:clickable="@{data.amount>0}"
+            android:backgroundTint="@{data.amount>0?@color/store_btn_product_exchange:@color/store_btn_ban_product_exchange}"
+            app:cornerRadius="27dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            tools:ignore="SpUsage"
+            tools:backgroundTint="@color/store_btn_product_exchange"
+            style="@style/Widget.MaterialComponents.Button.UnelevatedButton"/>
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</layout>

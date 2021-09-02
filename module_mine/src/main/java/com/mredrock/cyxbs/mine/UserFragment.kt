@@ -57,12 +57,13 @@ class UserFragment : BaseViewModelFragment<UserViewModel>() {
              */
             mine_main_btn_sign.setOnClickListener { BaseApp.context.toast("积分商城即将上线，\n一大波礼品正在紧张筹备，尽情期待") }
             mine_main_fm_point_store.setOnClickListener { BaseApp.context.toast("积分商城即将上线，\n一大波礼品正在紧张筹备，尽情期待") }
-//            mine_main_btn_sign.setOnClickListener { doIfLogin { startActivity<DailySignActivity>() } }
-//            mine_main_btn_sign.setOnClickListener { doIfLogin { startActivity<DailySignActivity>() } }
+
+            mine_main_btn_sign.setOnClickListener { doIfLogin { startActivity<DailySignActivity>() } }
+            mine_main_tv_sign.setOnClickListener { doIfLogin { startActivity<DailySignActivity>() } }
+
             mine_main_fm_setting.setOnSingleClickListener { doIfLogin { startActivity<SettingActivity>() } }
             mine_main_fm_about_us.setOnSingleClickListener { doIfLogin { startActivity<AboutActivity>() } }
-//            mine_main_fm_point_store.setOnClickListener { doIfLogin { DailySignActivity.actionStart(this, BottomSheetBehavior.STATE_EXPANDED) } }
-            mine_main_tv_sign.setOnClickListener { doIfLogin { DailySignActivity.actionStart(this, BottomSheetBehavior.STATE_COLLAPSED) } }
+            mine_main_fm_point_store.setOnClickListener { doIfLogin { jump(STORE_ENTRY) } }
             mine_main_tv_dynamic_number.setOnSingleClickListener { doIfLogin { jump(QA_DYNAMIC_MINE) } }
             mine_main_tv_dynamic.setOnSingleClickListener { doIfLogin { jump(QA_DYNAMIC_MINE) } }
             mine_main_tv_comment_number.setOnSingleClickListener { doIfLogin { jumpAndSaveTime(QA_MY_COMMENT, 1) } }

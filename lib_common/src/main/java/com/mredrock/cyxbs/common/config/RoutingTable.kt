@@ -84,3 +84,6 @@ const val ELECTRICITY_SERVICE = "/electricity/service"
 
 //电费模块服务
 const val VOLUNTEER_SERVICE = "/volunteer/service"
+
+// module_store 邮票中心页
+const val STORE_ENTRY="/store/entry"
