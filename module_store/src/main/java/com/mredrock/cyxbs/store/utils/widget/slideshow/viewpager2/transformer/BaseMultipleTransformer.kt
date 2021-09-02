@@ -9,7 +9,7 @@ import java.util.*
  * .....
  * @author 985892345
  * @email 2767465918@qq.com
- * @data 2021/5/28
+ * @date 2021/5/28
  */
 class BaseMultipleTransformer : ViewPager2.PageTransformer {
     val mTransformers: MutableList<ViewPager2.PageTransformer> = ArrayList()

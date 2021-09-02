@@ -6,7 +6,7 @@ import android.content.res.Resources
  * .....
  * @author 985892345
  * @email 2767465918@qq.com
- * @data 2021/6/17
+ * @date 2021/6/17
  */
 internal class SlideShowUtils {
 

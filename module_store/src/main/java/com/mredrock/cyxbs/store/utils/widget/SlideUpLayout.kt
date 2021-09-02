@@ -47,7 +47,7 @@ import kotlin.math.pow
  * ```
  * @author 985892345 (Guo Xiangrui)
  * @email 2767465918@qq.com
- * @data 2021/8/6
+ * @date 2021/8/6
  */
 class SlideUpLayout(
     context: Context,

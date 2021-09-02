@@ -10,7 +10,7 @@ import com.mredrock.cyxbs.store.base.SimpleRvAdapter
  * 自己写了个用于解耦不同的 item 的 Adapter 的封装类, 详情请看 [SimpleRvAdapter]
  * @author 985892345 (Guo Xiangrui)
  * @email 2767465918@qq.com
- * @data 2021/8/9
+ * @date 2021/8/9
  */
 class SmallShopTitleItem(
     titleMap: Map<Int, String>

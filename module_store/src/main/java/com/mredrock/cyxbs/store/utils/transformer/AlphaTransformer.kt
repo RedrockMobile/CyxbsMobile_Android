@@ -7,7 +7,7 @@ import androidx.viewpager2.widget.ViewPager2
  * ...
  * @author 985892345 (Guo Xiangrui)
  * @email 2767465918@qq.com
- * @data 2021/8/29
+ * @date 2021/8/29
  * @time 19:16
  */
 class AlphaTransformer : ViewPager2.PageTransformer {

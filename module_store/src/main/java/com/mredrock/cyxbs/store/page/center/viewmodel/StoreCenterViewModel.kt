@@ -1,5 +1,6 @@
 package com.mredrock.cyxbs.store.page.center.viewmodel
 
+import android.util.Log
 import androidx.lifecycle.MutableLiveData
 import com.mredrock.cyxbs.common.BaseApp.Companion.context
 import com.mredrock.cyxbs.common.network.ApiGenerator
@@ -13,7 +14,7 @@ import com.mredrock.cyxbs.store.utils.Date
  * ...
  * @author 985892345 (Guo Xiangrui)
  * @email 2767465918@qq.com
- * @data 2021/8/7
+ * @date 2021/8/7
  */
 class StoreCenterViewModel: BaseViewModel() {
     // 邮票中心界面数据
@@ -47,7 +48,8 @@ class StoreCenterViewModel: BaseViewModel() {
             .setSchedulers()
             .safeSubscribeBy(
                 onError = {
-                    refreshIsSuccessful.value = false
+                    Log.d("ggg","(StoreCenterViewModel.kt:51)-->> ${it.message}")
+                    refreshIsSuccessful.postValue(false)
                 },
                 onNext = {
                     refreshIsSuccessful.postValue(true)

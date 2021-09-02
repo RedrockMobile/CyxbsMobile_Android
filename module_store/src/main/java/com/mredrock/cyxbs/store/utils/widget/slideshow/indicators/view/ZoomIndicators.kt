@@ -12,7 +12,7 @@ import kotlin.math.sin
  * .....
  * @author 985892345
  * @email 2767465918@qq.com
- * @data 2021/6/19
+ * @date 2021/6/19
  */
 class ZoomIndicators(context: Context) : AbstractIndicatorsView(context) {
 

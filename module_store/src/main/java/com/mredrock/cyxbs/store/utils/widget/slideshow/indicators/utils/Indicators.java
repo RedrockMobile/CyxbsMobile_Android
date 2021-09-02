@@ -17,7 +17,7 @@ import static java.lang.annotation.RetentionPolicy.SOURCE;
  *
  * @author 985892345
  * @email 2767465918@qq.com
- * @data 2021/5/29
+ * @date 2021/5/29
  */
 public class Indicators {
 

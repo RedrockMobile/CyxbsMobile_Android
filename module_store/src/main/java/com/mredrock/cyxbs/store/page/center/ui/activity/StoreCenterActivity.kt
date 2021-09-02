@@ -29,7 +29,7 @@ import com.mredrock.cyxbs.store.utils.transformer.ScaleInTransformer
  *
  * @author 985892345 (Guo Xiangrui)
  * @email 2767465918@qq.com
- * @data 2021/8/7
+ * @date 2021/8/7
  */
 @Route(path = STORE_ENTRY)
 class StoreCenterActivity : BaseViewModelActivity<StoreCenterViewModel>() {
@@ -185,5 +185,11 @@ class StoreCenterActivity : BaseViewModelActivity<StoreCenterViewModel>() {
             mRefreshLayout.isRefreshing = false
             isFirstLoad = false
         }
+    }
+
+    // 从邮货详细界面以及经过邮票任务界面跳转后的返回刷新数据
+    override fun onRestart() {
+        viewModel.refresh()
+        super.onRestart()
     }
 }

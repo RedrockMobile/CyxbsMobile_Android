@@ -43,7 +43,7 @@ import androidx.recyclerview.widget.RecyclerView.NO_ID
  * ```
  * @author 985892345 (Guo Xiangrui)
  * @email 2767465918@qq.com
- * @data 2021/5/31 (在开发邮票商城项目前在自己的项目中开发的, 后续进行了许多优化和修改)
+ * @date 2021/5/31 (在开发邮票商城项目前在自己的项目中开发的, 后续进行了许多优化和修改)
  * 开发邮票商城项目时间: 2021-8
  */
 class SimpleRvAdapter : RecyclerView.Adapter<RecyclerView.ViewHolder>() {

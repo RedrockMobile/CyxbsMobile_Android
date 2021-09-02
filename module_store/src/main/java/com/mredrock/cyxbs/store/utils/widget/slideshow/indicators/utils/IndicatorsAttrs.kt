@@ -10,7 +10,7 @@ import com.mredrock.cyxbs.store.utils.widget.slideshow.indicators.AbstractIndica
  * .....
  * @author 985892345
  * @email 2767465918@qq.com
- * @data 2021/6/17
+ * @date 2021/6/17
  */
 class IndicatorsAttrs private constructor() {
 

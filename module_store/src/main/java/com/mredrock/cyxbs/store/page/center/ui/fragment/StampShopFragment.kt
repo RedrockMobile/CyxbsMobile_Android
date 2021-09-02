@@ -28,7 +28,7 @@ import com.mredrock.cyxbs.store.base.SimpleRvAdapter
  * ...
  * @author 985892345 (Guo Xiangrui)
  * @email 2767465918@qq.com
- * @data 2021/8/14
+ * @date 2021/8/14
  */
 class StampShopFragment : BaseFragment() {
 
@@ -39,26 +39,6 @@ class StampShopFragment : BaseFragment() {
     // 因为我只需要 Activity 的 ViewModel, 所以没有继承于 BaseViewModelFragment
     private val viewModel by lazy(LazyThreadSafetyMode.NONE) {
         ViewModelProvider(requireActivity()).get(StoreCenterViewModel::class.java)
-    }
-
-    /**
-     * 启动 [ProductExchangeActivity] 的启动器
-     *
-     * 1、因为要判断 [ProductExchangeActivity] 是否成功购买了商品, 所以需要使用到 [startActivityForResult],
-     * 但该方法被废弃了
-     *
-     * 2、新方法有一个麻烦的地方, 就是必须在 [onStart] 回调前先使用 [registerForActivityResult]
-     * 方法注册回调的 result
-     *
-     * 3、注册后会返回一个启动器用于启动, 我再用了一个接口来封装, 所以下面这个就是一个启动器,
-     * 该启动器在 [SmallShopProductItem] 中点击整个商品图片时进行启动
-     */
-    private lateinit var mProductExchangeLauncher: ProductExchangeActivity.IProductExchangeLauncher
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        mProductExchangeLauncher = ProductExchangeActivity.getActivityLauncher(this) {
-            if (it) viewModel.refresh() // 返回值是是否购买, 如果购买了就刷新数据
-        }
     }
 
     override fun onCreateView(
@@ -127,7 +107,7 @@ class StampShopFragment : BaseFragment() {
             )
         mRecyclerView.layoutManager = layoutManager
         mSmallShopTitleItem = SmallShopTitleItem(titleMap)
-        mSmallShopProductItem = SmallShopProductItem(shopMap, stampCount, mProductExchangeLauncher)
+        mSmallShopProductItem = SmallShopProductItem(shopMap, stampCount)
         mRecyclerView.adapter = SimpleRvAdapter() // 自己写的解耦 Adapter 的封装类, 可用于解耦不同的 item
             .addItem(mSmallShopTitleItem)
             .addItem(mSmallShopProductItem)

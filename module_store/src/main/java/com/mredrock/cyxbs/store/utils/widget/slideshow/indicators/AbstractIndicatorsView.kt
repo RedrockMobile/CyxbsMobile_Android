@@ -20,7 +20,7 @@ import com.mredrock.cyxbs.store.utils.widget.slideshow.utils.SlideShowUtils
  * 继承后，你只需要实现 [onDrawMovePath] 方法即可，该方法可以实现一个区间的轨迹绘制而实现全部轨迹的绘制
  * @author 985892345
  * @email 2767465918@qq.com
- * @data 2021/5/28
+ * @date 2021/5/28
  */
 abstract class AbstractIndicatorsView(
     context: Context

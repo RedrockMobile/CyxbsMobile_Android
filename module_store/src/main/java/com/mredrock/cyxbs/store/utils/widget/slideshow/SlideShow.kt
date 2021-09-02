@@ -43,7 +43,7 @@ import kotlin.math.abs
  *```
  * @author 985892345
  * @email 2767465918@qq.com
- * @data 2021/5/26
+ * @date 2021/5/26
  */
 class SlideShow : CardView {
 

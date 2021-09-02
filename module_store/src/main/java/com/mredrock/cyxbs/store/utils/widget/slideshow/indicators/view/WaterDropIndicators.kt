@@ -9,7 +9,7 @@ import kotlin.math.*
  * 基本思路是两个圆点之间的上下方有两个半径很大的圆, 小圆点就在这两个大圆之间被挤压着移动
  * @author 985892345
  * @email 2767465918@qq.com
- * @data 2021/6/19
+ * @date 2021/6/19
  */
 class WaterDropIndicators(
     context: Context

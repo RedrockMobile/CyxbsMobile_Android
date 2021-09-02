@@ -12,12 +12,11 @@ import com.mredrock.cyxbs.store.base.SimpleRvAdapter
  * 自己写了个用于解耦不同的 item 的 Adapter 的封装类, 详情请看 [SimpleRvAdapter]
  * @author 985892345 (Guo Xiangrui)
  * @email 2767465918@qq.com
- * @data 2021/8/9
+ * @date 2021/8/9
  */
 class SmallShopProductItem(
     shopMap: HashMap<Int, StampCenter.Shop>,
-    private var stampCount: Int,
-    private var productActivityLauncher: ProductExchangeActivity.IProductExchangeLauncher
+    private var stampCount: Int
 ): SimpleRvAdapter.DBItem<StoreRecyclerItemSmallShopProductBinding, StampCenter.Shop>(
     shopMap, R.layout.store_recycler_item_small_shop_product
 ) {
@@ -48,7 +47,7 @@ class SmallShopProductItem(
         binding.storeCvStampSmallShop.setOnSingleClickListener {
             val shop = map[holder.layoutPosition]
             if (shop != null) {
-                productActivityLauncher.launch(shop.id, stampCount)
+//                productActivityLauncher.launch(shop.id, stampCount)
             }
         }
     }

@@ -14,7 +14,7 @@ import com.mredrock.cyxbs.store.utils.widget.slideshow.indicators.utils.Indicato
  * .....
  * @author 985892345
  * @email 2767465918@qq.com
- * @data 2021/5/27
+ * @date 2021/5/27
  */
 class SlideShowAttrs private constructor(){
 

@@ -9,7 +9,7 @@ import com.mredrock.cyxbs.common.BaseApp.Companion.context
  * ...
  * @author 985892345 (Guo Xiangrui)
  * @email 2767465918@qq.com
- * @data 2021/8/27
+ * @date 2021/8/27
  */
 internal fun Int.dp2px(): Int {
     return (this.dp2pxF() + 0.5f).toInt()

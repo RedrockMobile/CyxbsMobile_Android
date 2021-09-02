@@ -8,12 +8,13 @@ import com.mredrock.cyxbs.store.R
 import com.mredrock.cyxbs.store.bean.StampCenter
 import com.mredrock.cyxbs.store.databinding.StoreRecyclerItemStampTaskListBinding
 import com.mredrock.cyxbs.store.base.SimpleRvAdapter
+import com.mredrock.cyxbs.store.utils.Type
 
 /**
  * 自己写了个用于解耦不同的 item 的 Adapter 的封装类, 详情请看 [SimpleRvAdapter]
  * @author 985892345 (Guo Xiangrui)
  * @email 2767465918@qq.com
- * @data 2021/8/9
+ * @date 2021/8/9
  */
 class StampTaskListItem(
     taskMap: Map<Int, StampCenter.Task>
@@ -53,7 +54,12 @@ class StampTaskListItem(
             // 点击事件的跳转
             val position = holder.layoutPosition
             val task = map[position]
-            if (position == 0) { // 第一个是默认跳转到签到界面
+            if (task != null) {
+                when (task.type) {
+
+                }
+            }
+            if (task) { // 第一个是默认跳转到签到界面
                 ARouter.getInstance().build(MINE_CHECK_IN).navigation()
             }
         }

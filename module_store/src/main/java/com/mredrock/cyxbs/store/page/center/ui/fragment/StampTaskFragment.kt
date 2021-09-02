@@ -27,7 +27,7 @@ import com.mredrock.cyxbs.store.base.SimpleRvAdapter
  * ...
  * @author 985892345 (Guo Xiangrui)
  * @email 2767465918@qq.com
- * @data 2021/8/14
+ * @date 2021/8/14
  */
 class StampTaskFragment : BaseFragment() {
 

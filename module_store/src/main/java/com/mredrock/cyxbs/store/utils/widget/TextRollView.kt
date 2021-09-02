@@ -17,7 +17,7 @@ import java.util.*
  * 邮票中心界面的邮票数字滚动动画
  * @author 985892345 (Guo Xiangrui)
  * @email 2767465918@qq.com
- * @data 2021/8/15
+ * @date 2021/8/15
  */
 class TextRollView(
     context: Context,
