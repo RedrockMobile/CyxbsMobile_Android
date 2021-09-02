@@ -327,7 +327,11 @@ object ApiGenerator {
             val json = call.execute().body?.string()
             return try {
                 val backupUrlStatus = Gson().fromJson<RedrockApiWrapper<BackupUrlStatus>>(json, object : TypeToken<RedrockApiWrapper<BackupUrlStatus>>() {}.type)
-                backupUrlStatus.data.baseUrl
+                if (backupUrlStatus.data.baseUrl.isNullOrEmpty()) {
+                    getBaseUrl()
+                }else{
+                    backupUrlStatus.data.baseUrl
+                }
             } catch (e: Exception) {
                 e.printStackTrace()
                 ""
