@@ -20,7 +20,7 @@ import com.mredrock.cyxbs.store.bean.StampCenter
 import com.mredrock.cyxbs.store.page.center.ui.item.StampTaskListItem
 import com.mredrock.cyxbs.store.page.center.ui.item.StampTaskTitleItem
 import com.mredrock.cyxbs.store.page.center.viewmodel.StoreCenterViewModel
-import com.mredrock.cyxbs.store.utils.Type
+import com.mredrock.cyxbs.store.utils.StoreType
 import com.mredrock.cyxbs.store.base.SimpleRvAdapter
 
 /**
@@ -126,8 +126,8 @@ class StampTaskFragment : BaseFragment() {
         moreList.clear()
         for (task in tasks) { // 后端返回的 type = "base" 时为每日任务, type = "more" 时为更多任务
             when (task.type) {
-                Type.Task.Base -> baseList.add(task)
-                Type.Task.More -> moreList.add(task)
+                StoreType.Task.Base -> baseList.add(task)
+                StoreType.Task.More -> moreList.add(task)
             }
         }
         titleMap[baseList.size] = "更多任务"

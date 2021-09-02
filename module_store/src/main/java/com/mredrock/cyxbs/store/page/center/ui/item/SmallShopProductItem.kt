@@ -47,7 +47,7 @@ class SmallShopProductItem(
         binding.storeCvStampSmallShop.setOnSingleClickListener {
             val shop = map[holder.layoutPosition]
             if (shop != null) {
-//                productActivityLauncher.launch(shop.id, stampCount)
+                ProductExchangeActivity.activityStart(it.context, shop.id, stampCount)
             }
         }
     }

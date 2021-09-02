@@ -20,7 +20,7 @@ import com.mredrock.cyxbs.store.databinding.StoreActivityProductExchangeBinding
 import com.mredrock.cyxbs.store.page.exchange.viewmodel.ProductExchangeViewModel
 import com.mredrock.cyxbs.store.ui.activity.PhotoActivity
 import com.mredrock.cyxbs.store.ui.fragment.ExchangeDialog
-import com.mredrock.cyxbs.store.utils.Type
+import com.mredrock.cyxbs.store.utils.StoreType
 import com.mredrock.cyxbs.store.utils.transformer.AlphaTransformer
 import com.mredrock.cyxbs.store.utils.transformer.ScaleInTransformer
 
@@ -42,53 +42,12 @@ class ProductExchangeActivity : BaseViewModelActivity<ProductExchangeViewModel>(
         private const val INTENT_PRODUCT_ID = "id" // 商品 id
         private const val INTENT_STAMP_COUNT = "stampCount" // 邮票数量
 
-        /**
-         * 使用 [registerForActivityResult] 方法帮你注册返回值的回调,
-         * 再返回一个启动 [ProductExchangeActivity] 的启动器
-         *
-         * @param caller 传入 Activity 或 Fragment 即可
-         * @param buyResult 当 [ProductExchangeActivity] 退出时返回的是否购买成功的回调
-         * @return 启动该 Activity 的启动器, id: 商品 id, stampCunt: 邮票剩余数量
-         *
-         * **WARNING:** 该方法必须在生命周期 onStart() 前使用
-         */
-        fun getActivityLauncher(
-            caller: ActivityResultCaller,
-            buyResult: (isSuccessful: Boolean) -> Unit // 是否购买成功的回调
-        ): IProductExchangeLauncher {
-            val contract = object : ActivityResultContract<Pair<Int, Int>, Boolean>() {
-                override fun createIntent(context: Context, input: Pair<Int, Int>): Intent {
-                    val intent = Intent(context, ProductExchangeActivity::class.java)
-                    intent.putExtra(INTENT_PRODUCT_ID, input.first)
-                    intent.putExtra(INTENT_STAMP_COUNT, input.second)
-                    return intent
-                }
-
-                override fun parseResult(resultCode: Int, intent: Intent?): Boolean {
-                    return resultCode == RESULT_OK
-                }
-            }
-            val launcher = caller.registerForActivityResult(contract, buyResult)
-            return object : IProductExchangeLauncher {
-                override fun launch(id: Int, stampCunt: Int, options: ActivityOptionsCompat?) {
-                    launcher.launch(Pair(id, stampCunt), options)
-                }
-            }
+        fun activityStart(context: Context, id: Int, stampCount: Int) {
+            val intent = Intent(context, ProductExchangeActivity::class.java)
+            intent.putExtra(INTENT_PRODUCT_ID, id)
+            intent.putExtra(INTENT_STAMP_COUNT, stampCount)
+            context.startActivity(intent)
         }
-    }
-
-    /**
-     * 启动器接口
-     *
-     * 为什么我要写一个接口? 虽然用 kotlin 的接口申明更快捷, 但这会使在其他类中使用时就根本看不懂
-     */
-    interface IProductExchangeLauncher {
-        /**
-         * @param id 商品 id
-         * @param stampCunt 邮票剩余数量
-         * @param options 动画(已试过元素共享动画, 太闪眼了, 就取消了)
-         */
-        fun launch(id: Int, stampCunt: Int, options: ActivityOptionsCompat? = null)
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -145,14 +104,14 @@ class ProductExchangeActivity : BaseViewModelActivity<ProductExchangeViewModel>(
             dataBinding.data = it
             // 处理权益说明以及标题
             when (it.type) {
-                Type.Product.DRESS -> {
+                StoreType.Product.DRESS -> {
                     dataBinding.storeTvProductDetailTitle.text =
                         getString(R.string.store_attire_product_detail)
                     dataBinding.storeTvEquityDescription.text =
                         "1、虚拟商品版权归红岩网校工作站所有。\n" +
                                 "2、在法律允许的范围内，本活动的最终解释权归红岩网校工作站所有。"
                 }
-                Type.Product.GOODS -> {
+                StoreType.Product.GOODS -> {
                     dataBinding.storeTvProductDetailTitle.text =
                         getString(R.string.store_entity_product_detail)
                     dataBinding.storeTvEquityDescription.text =
@@ -173,7 +132,7 @@ class ProductExchangeActivity : BaseViewModelActivity<ProductExchangeViewModel>(
         viewModel.exchangeResult.observeNotNull {
             // 根据不同商品类型弹出不同dialog
             when (mData.type) {
-                Type.Product.DRESS -> {
+                StoreType.Product.DRESS -> {
                     //刷新兑换后的余额与库存 下同
                     mStampCount -= mData.price
                     mData.amount = it.amount //由兑换成功时获取到的最新amount来更新mData 下同
@@ -196,7 +155,7 @@ class ProductExchangeActivity : BaseViewModelActivity<ProductExchangeViewModel>(
                     )
                     setResult(RESULT_OK) // 告诉 StoreCenterActivity 我购买了商品
                 }
-                Type.Product.GOODS -> {
+                StoreType.Product.GOODS -> {
                     mStampCount -= mData.price
                     mData.amount = it.amount
                     dataBinding.data = mData
@@ -218,7 +177,7 @@ class ProductExchangeActivity : BaseViewModelActivity<ProductExchangeViewModel>(
         // 请求失败的观察
         viewModel.exchangeError.observeNotNull {
             when (it) {
-                Type.ExchangeError.OUT_OF_STOCK -> {
+                StoreType.ExchangeError.OUT_OF_STOCK -> {
                     ExchangeDialog.show(
                         supportFragmentManager,
                         null,
@@ -228,7 +187,7 @@ class ProductExchangeActivity : BaseViewModelActivity<ProductExchangeViewModel>(
                         dismissCallback = { dataBinding.storeBtnExchange.isCheckable = true }
                     )
                 }
-                Type.ExchangeError.NOT_ENOUGH_MONEY -> {
+                StoreType.ExchangeError.NOT_ENOUGH_MONEY -> {
                     ExchangeDialog.show(
                         supportFragmentManager,
                         null,

@@ -1,6 +1,5 @@
 package com.mredrock.cyxbs.store.page.center.viewmodel
 
-import android.util.Log
 import androidx.lifecycle.MutableLiveData
 import com.mredrock.cyxbs.common.BaseApp.Companion.context
 import com.mredrock.cyxbs.common.network.ApiGenerator
@@ -48,7 +47,6 @@ class StoreCenterViewModel: BaseViewModel() {
             .setSchedulers()
             .safeSubscribeBy(
                 onError = {
-                    Log.d("ggg","(StoreCenterViewModel.kt:51)-->> ${it.message}")
                     refreshIsSuccessful.postValue(false)
                 },
                 onNext = {

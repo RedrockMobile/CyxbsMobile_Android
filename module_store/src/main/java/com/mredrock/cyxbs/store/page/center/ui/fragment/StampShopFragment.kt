@@ -20,8 +20,7 @@ import com.mredrock.cyxbs.store.bean.StampCenter
 import com.mredrock.cyxbs.store.page.center.ui.item.SmallShopProductItem
 import com.mredrock.cyxbs.store.page.center.ui.item.SmallShopTitleItem
 import com.mredrock.cyxbs.store.page.center.viewmodel.StoreCenterViewModel
-import com.mredrock.cyxbs.store.page.exchange.ui.activity.ProductExchangeActivity
-import com.mredrock.cyxbs.store.utils.Type
+import com.mredrock.cyxbs.store.utils.StoreType
 import com.mredrock.cyxbs.store.base.SimpleRvAdapter
 
 /**
@@ -133,8 +132,8 @@ class StampShopFragment : BaseFragment() {
         // 因为后端不同 type 是混在一起的, 不遍历的话我就不知道 "邮货" 这个 title 是在哪个位置
         for (shop in products) {
             when (shop.type) { // 后端返回的 type = 1 时为装扮, type = 0 时为邮货
-                Type.Product.DRESS -> dressList.add(shop)
-                Type.Product.GOODS -> goodsList.add(shop)
+                StoreType.Product.DRESS -> dressList.add(shop)
+                StoreType.Product.GOODS -> goodsList.add(shop)
             }
         }
         titleMap[0] = "装扮"
