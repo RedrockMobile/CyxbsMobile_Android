@@ -34,6 +34,7 @@ import com.mredrock.cyxbs.api.account.IAccountService
 import com.mredrock.cyxbs.api.account.IUserService
 import com.mredrock.cyxbs.common.config.MINE_EDIT_INFO
 import com.mredrock.cyxbs.common.ui.BaseViewModelActivity
+import com.mredrock.cyxbs.common.utils.LogUtils
 import com.mredrock.cyxbs.common.utils.extensions.*
 import com.mredrock.cyxbs.mine.R
 import com.mredrock.cyxbs.mine.util.ui.DynamicRVAdapter
@@ -187,6 +188,7 @@ class EditInfoActivity
             if (it) {
                 toast("更改资料成功")
                 checkColorAndText()
+                ServiceManager.getService(IAccountService::class.java).getUserService().refreshInfo()
             } else {
                 toast("上传资料失败")
             }

@@ -115,6 +115,11 @@ internal class AccountService : IAccountService {
         override fun getRealName() = user?.realName.orEmpty()
 
         override fun getCollege() = user?.college.orEmpty()
+
+        //用于刷新个人信息，请在需要的地方调用
+        override fun refreshInfo() {
+            (mUserStateService as UserStateService).loginFromCache(mContext)
+        }
     }
 
     inner class UserEditorService : IUserEditorService {
