@@ -41,11 +41,15 @@
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/rv_history_list"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/mine_feedback_detail_rv_margin_top_size"
+            android:layout_height="0dp"
+            android:clipToPadding="false"
+            android:paddingTop="@dimen/mine_feedback_detail_rv_margin_top_size"
+            android:paddingBottom="300dp"
+            app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/mine_view"
+            app:layout_constraintVertical_bias="0.0"
             app:showView="@{vm.hasHistory}"
             tools:itemCount="4"
             tools:listitem="@layout/mine_feedback_recycle_item_detail" />

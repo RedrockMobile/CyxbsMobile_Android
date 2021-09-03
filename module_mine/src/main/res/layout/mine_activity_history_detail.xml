@@ -61,7 +61,7 @@
             <androidx.cardview.widget.CardView
                 android:id="@+id/cv_feedback"
                 android:layout_width="match_parent"
-                android:layout_height="@dimen/mine_feedback_cards_height"
+                android:layout_height="wrap_content"
                 android:layout_marginStart="@dimen/mine_feedback_cards_horizontal_margins"
                 android:layout_marginTop="@dimen/mine_feedback_cards_margin_top_dimension"
                 android:layout_marginEnd="@dimen/mine_feedback_cards_horizontal_margins"
@@ -106,7 +106,9 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="@dimen/mine_feedback_banner_marigin_top_dimension"
-                        android:orientation="horizontal">
+                        android:orientation="horizontal"
+                        app:showView="@{vm.feedback.urls.size() > 0}"
+                        >
 
                         <androidx.cardview.widget.CardView
                             android:id="@+id/cv_card_1"
