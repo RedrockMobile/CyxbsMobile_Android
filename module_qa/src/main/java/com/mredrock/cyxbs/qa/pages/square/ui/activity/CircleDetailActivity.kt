@@ -40,6 +40,7 @@ import com.mredrock.cyxbs.qa.ui.widget.ShareDialog
 import com.mredrock.cyxbs.qa.utils.ClipboardController
 import com.mredrock.cyxbs.qa.utils.ShareUtils
 import com.tencent.tauth.Tencent
+import de.hdodenhof.circleimageview.CircleImageView
 import kotlinx.android.synthetic.main.qa_activity_circle_detail.*
 import kotlinx.android.synthetic.main.qa_recycler_item_circle_square.*
 
@@ -56,26 +57,22 @@ class CircleDetailActivity : BaseViewModelActivity<CircleDetailViewModel>() {
                     "topicItem"
                 )
                 val intent = Intent(context, CircleDetailActivity::class.java)
-                intent.putExtra("topicItem", data)
+                intent.putExtra("topicItemData", data)
                 it.window.exitTransition = Slide(Gravity.START).apply { duration = 500 }
                 startPosition = RESULT_CODE
                 startActivityForResult(activity, intent, RESULT_CODE, opt.toBundle())
             }
         }
 
-        fun activityStartFromCircle(fragment: Fragment, topicItemView: View, data: Topic) {
+        // 从邮问界面我关注的圈子列表跳转到圈子详情
+        fun activityStartFromCircle(fragment: Fragment, data: Topic) {
             fragment.apply {
                 activity?.let {
-                    val opt = ActivityOptionsCompat.makeSceneTransitionAnimation(
-                        it,
-                        topicItemView,
-                        "topicItem"
-                    )
                     val intent = Intent(BaseApp.context, CircleDetailActivity::class.java)
-                    intent.putExtra("topicItem", data)
-                    it.window.exitTransition = Slide(Gravity.START).apply { duration = 500 }
+                    intent.putExtra("topicItemData", data)
+                    it.window.exitTransition = Slide(Gravity.START).apply { duration = 300L }
                     startPosition = DYNAMIC_DETAIL_REQUEST
-                    startActivityForResult(intent, DYNAMIC_DETAIL_REQUEST, opt.toBundle())
+                    startActivityForResult(intent, DYNAMIC_DETAIL_REQUEST)
                 }
             }
         }
@@ -93,7 +90,7 @@ class CircleDetailActivity : BaseViewModelActivity<CircleDetailViewModel>() {
 
     private var isFormReceive = false
 
-    override fun getViewModelFactory(): ViewModelProvider.Factory? {
+    override fun getViewModelFactory(): ViewModelProvider.Factory {
         var loop = 1
         intent.extras?.apply {
             loop = getInt("id")
@@ -120,7 +117,9 @@ class CircleDetailActivity : BaseViewModelActivity<CircleDetailViewModel>() {
         }
     }
 
+    @SuppressLint("SetTextI18n")
     override fun onCreate(savedInstanceState: Bundle?) {
+        window.setBackgroundDrawableResource(android.R.color.transparent)
         super.onCreate(savedInstanceState)
         setContentView(R.layout.qa_activity_circle_detail)
         intent.extras?.apply { //在目前情况下，属于是自receive跳转的情况，所以需要再度请求圈子信息
@@ -149,7 +148,7 @@ class CircleDetailActivity : BaseViewModelActivity<CircleDetailViewModel>() {
                         viewModel.topicId = topic.topicId.toInt()
                         iv_circle_square.setAvatarImageFromUrl(topic.topicLogo)
                         tv_circle_square_name.text = topic.topicName
-                        tv_circle_square_descriprion.text = topic.introduction
+                        tv_circle_square_description.text = topic.introduction
                         tv_circle_square_person_number.text = topic.follow_count.toString() + "个成员"
                         qa_detail_tv_title.text = topic.topicName
                         if (topic._isFollow == 1) {
@@ -179,7 +178,7 @@ class CircleDetailActivity : BaseViewModelActivity<CircleDetailViewModel>() {
                 )
         }
         mTencent = Tencent.createInstance(CommentConfig.APP_ID, this)
-        window.enterTransition = Slide(Gravity.END).apply { duration = 500 }
+        window.enterTransition = Slide(Gravity.END).apply { duration = 300L }
         initView()
         if (!isFormReceive) {
             qa_vp_circle_detail.adapter =
@@ -204,7 +203,6 @@ class CircleDetailActivity : BaseViewModelActivity<CircleDetailViewModel>() {
                 }
             }
         }
-        finish()
         super.onBackPressed()
     }
 
@@ -238,7 +236,7 @@ class CircleDetailActivity : BaseViewModelActivity<CircleDetailViewModel>() {
             ShareDialog(it.context).apply {
                 initView(onCancelListener = View.OnClickListener {
                     dismiss()
-                }, qqshare = View.OnClickListener {
+                }, qqShare = View.OnClickListener {
                     mTencent?.let { it1 ->
                         ShareUtils.qqShare(
                             it1,
@@ -270,7 +268,7 @@ class CircleDetailActivity : BaseViewModelActivity<CircleDetailViewModel>() {
                     CyxbsToast.makeText(context, R.string.qa_share_wechat_text, Toast.LENGTH_SHORT)
                         .show()
 
-                }, copylink = View.OnClickListener {
+                }, copyLink = View.OnClickListener {
                     ClipboardController.copyText(this@CircleDetailActivity, url)
                 })
             }.show()
@@ -280,14 +278,14 @@ class CircleDetailActivity : BaseViewModelActivity<CircleDetailViewModel>() {
     @SuppressLint("SetTextI18n", "UseCompatLoadingForDrawables")
     private fun initView() {
         if (!isFormReceive) {
-            topic = intent.getParcelableExtra("topicItem")
+            topic = intent.getParcelableExtra("topicItemData")
             viewModel.topicId = topic.topicId.toInt()
             iv_circle_square.setAvatarImageFromUrl(topic.topicLogo)
             tv_circle_square_name.text = topic.topicName
-            tv_circle_square_descriprion.text = topic.introduction
+            tv_circle_square_description.text = topic.introduction
             tv_circle_square_person_number.text = topic.follow_count.toString() + "个成员"
             qa_detail_tv_title.text = topic.topicName
-            if (topic._isFollow.equals(1)) {
+            if (topic._isFollow == 1) {
                 btn_circle_square_concern.text = "已关注"
                 btn_circle_square_concern.background =
                     context.getDrawable(R.drawable.qa_shape_send_dynamic_btn_grey_background)
@@ -324,6 +322,7 @@ class CircleDetailActivity : BaseViewModelActivity<CircleDetailViewModel>() {
         }
     }
 
+    @SuppressLint("SetTextI18n")
     private fun changeFollowState() {
         if (topic._isFollow == 1) {
             //关注的状态下点击，取消关注

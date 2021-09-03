@@ -1,13 +1,12 @@
 package com.mredrock.cyxbs.qa.pages.quiz.ui
 
-import android.os.Build
-import androidx.annotation.RequiresApi
 import android.annotation.SuppressLint
 import android.app.Activity
 import android.app.ProgressDialog
 import android.content.Intent
 import android.graphics.drawable.Drawable
 import android.net.Uri
+import android.os.Build
 import android.os.Bundle
 import android.text.InputFilter
 import android.view.KeyEvent
@@ -45,12 +44,14 @@ import top.limuyang2.photolibrary.LPhotoHelper
 class QuizActivity : BaseViewModelActivity<QuizViewModel>() {
 
     companion object {
+        // 允许发送动态的最大字数
         const val MAX_CONTENT_SIZE = 500
         const val MAX_SELECTABLE_IMAGE_COUNT = 8
         const val NOT_DRAFT = "0"
         const val UPDATE_DRAFT = "1"
         fun activityStart(fragment: Fragment, type: String, requestCode: Int) {
             fragment.startActivityForResult<QuizActivity>(requestCode, "type" to type)
+            fragment.activity?.overridePendingTransition(0, 0)
         }
     }
 
@@ -95,8 +96,8 @@ class QuizActivity : BaseViewModelActivity<QuizViewModel>() {
                 if (viewModel.isReleaseSuccess) {
                     topicMap[topicType]?.let { id ->
                         CircleDetailActivity.activityStartFormQuiz(
-                                this,
-                                id
+                            this,
+                            id
                         )
                     }
                     progressDialog?.dismiss()
@@ -134,21 +135,21 @@ class QuizActivity : BaseViewModelActivity<QuizViewModel>() {
                 for (topic in it.withIndex()) {
                     topicMap[topic.value.topicName] = topic.value.topicId
                     chipGroup?.addView(
-                            (layoutInflater.inflate(
-                                    R.layout.qa_quiz_view_chip,
-                                    chipGroup,
-                                    false
-                            ) as Chip).apply {
-                                text = "# " + topic.value.topicName
-                                setOnClickListener {
-                                    topicType = if (topicType == getTopicText(text.toString())) {
-                                        //当第二次点击时值为零，表示未选择圈子
-                                        "0"
-                                    } else {
-                                        getTopicText(text.toString())
-                                    }
+                        (layoutInflater.inflate(
+                            R.layout.qa_quiz_view_chip,
+                            chipGroup,
+                            false
+                        ) as Chip).apply {
+                            text = "# " + topic.value.topicName
+                            setOnClickListener {
+                                topicType = if (topicType == getTopicText(text.toString())) {
+                                    //当第二次点击时值为零，表示未选择圈子
+                                    "0"
+                                } else {
+                                    getTopicText(text.toString())
                                 }
-                            })
+                            }
+                        })
                 }
             }
         }
@@ -160,25 +161,25 @@ class QuizActivity : BaseViewModelActivity<QuizViewModel>() {
         type.delete(0, 2)
         return type.toString()
     }
-    //动态监听内容文字变化
 
+    //动态监听内容文字变化
     @SuppressLint("SetTextI18n")
     private fun initEditListener() {
         qa_edt_quiz_content.filters = arrayOf(
-                object : InputFilter.LengthFilter(
-                        MAX_CONTENT_SIZE
-                ) {}
+            object : InputFilter.LengthFilter(
+                MAX_CONTENT_SIZE
+            ) {}
         )
         qa_edt_quiz_content.doOnTextChanged { text, _, _, _ ->
             text?.let {
                 qa_tv_edit_num.text = "${text.length}/$MAX_CONTENT_SIZE"
                 if (text.length in 1..MAX_CONTENT_SIZE) {
                     qa_tv_toolbar_right.setBackgroundResource(
-                            qa_shape_send_dynamic_btn_blue_background
+                        qa_shape_send_dynamic_btn_blue_background
                     )
                 } else {
                     qa_tv_toolbar_right.setBackgroundResource(
-                            qa_shape_send_dynamic_btn_grey_background
+                        qa_shape_send_dynamic_btn_grey_background
                     )
                 }
             }
@@ -219,9 +220,9 @@ class QuizActivity : BaseViewModelActivity<QuizViewModel>() {
             setOnClickListener {
                 if (isComment == "") {
                     if (viewModel.checkTitleAndContent(
-                                    topicType,
-                                    qa_edt_quiz_content.text.toString()
-                            )
+                            topicType,
+                            qa_edt_quiz_content.text.toString()
+                        )
                     ) {
                         progressDialog?.show()
                         viewModel.deleteDraft()
@@ -241,7 +242,7 @@ class QuizActivity : BaseViewModelActivity<QuizViewModel>() {
 
     private fun initImageAddView() {
         nine_grid_view.addView(
-                ContextCompat.getDrawable(this, qa_ic_add_photo)?.let { createImageViewFromVector(it) })
+            ContextCompat.getDrawable(this, qa_ic_add_photo)?.let { createImageViewFromVector(it) })
         nine_grid_view.setOnItemClickListener { _, index ->
             if (index == nine_grid_view.childCount - 1) {
                 //如果达到选择图片的上限，就ban掉不允许添加图片
@@ -252,7 +253,7 @@ class QuizActivity : BaseViewModelActivity<QuizViewModel>() {
                 }
             } else {
                 ViewImageCropActivity.activityStartForResult(
-                        this@QuizActivity, viewModel.tryEditImg(index)
+                    this@QuizActivity, viewModel.tryEditImg(index)
                         ?: return@setOnItemClickListener
                 )
             }
@@ -276,7 +277,10 @@ class QuizActivity : BaseViewModelActivity<QuizViewModel>() {
                 if (selectedImageFiles[i].isNotEmpty()) {
                     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
                         //大图片压缩加载
-                        (view as ImageView).setImageBitmap(Uri.parse(selectedImageFiles[i]).bmSizeStandardizing(context = this.applicationContext))
+                        (view as ImageView).setImageBitmap(
+                            Uri.parse(selectedImageFiles[i])
+                                .bmSizeStandardizing(context = this.applicationContext)
+                        )
                     } else
 
                         viewModel.checkInvalid(false)
@@ -285,16 +289,16 @@ class QuizActivity : BaseViewModelActivity<QuizViewModel>() {
             }
             //补充缺少的view
             selectedImageFiles.asSequence()
-                    .filterIndexed { index, _ -> index >= nine_grid_view.childCount - 1 }
-                    .forEach {
-                        if (it.isNotEmpty()) {
-                            nine_grid_view.addView(
-                                    createImageView(Uri.parse(it)),
-                                    nine_grid_view.childCount - 1
-                            )
-                            viewModel.checkInvalid(false)
-                        } else viewModel.checkInvalid(true)
-                    }
+                .filterIndexed { index, _ -> index >= nine_grid_view.childCount - 1 }
+                .forEach {
+                    if (it.isNotEmpty()) {
+                        nine_grid_view.addView(
+                            createImageView(Uri.parse(it)),
+                            nine_grid_view.childCount - 1
+                        )
+                        viewModel.checkInvalid(false)
+                    } else viewModel.checkInvalid(true)
+                }
         }
     }
 
@@ -317,7 +321,7 @@ class QuizActivity : BaseViewModelActivity<QuizViewModel>() {
                 val imageListAbsolutePath = ArrayList<String>()
                 imageListUri.forEach {
                     imageListAbsolutePath.add(
-                            Uri.parse(it).getAbsolutePath(this)
+                        Uri.parse(it).getAbsolutePath(this)
                     )
                 }
                 //为再次进入图库保存以前添加的图片，进行的逻辑
@@ -325,17 +329,17 @@ class QuizActivity : BaseViewModelActivity<QuizViewModel>() {
                     viewModel.lastImageLiveData.addAll(imageListAbsolutePath)
                 else {
                     CyxbsToast.makeText(
-                            this,
-                            getString(R.string.qa_choose_image_tips),
-                            Toast.LENGTH_SHORT
+                        this,
+                        getString(R.string.qa_choose_image_tips),
+                        Toast.LENGTH_SHORT
                     ).show()
                 }
                 viewModel.setImageList(viewModel.lastImageLiveData)
             }
             ViewImageCropActivity.DEFAULT_RESULT_CODE -> viewModel.setImageList(viewModel.imageLiveData.value!!.apply {
                 set(
-                        viewModel.editingImgPos,
-                        data.getStringExtra(ViewImageCropActivity.EXTRA_NEW_PATH)
+                    viewModel.editingImgPos,
+                    data.getStringExtra(ViewImageCropActivity.EXTRA_NEW_PATH)
                 )
             })
         }
@@ -344,14 +348,14 @@ class QuizActivity : BaseViewModelActivity<QuizViewModel>() {
     private fun createImageViewFromVector(drawable: Drawable) = RectangleView(this).apply {
         scaleType = ImageView.ScaleType.CENTER
         background =
-                ContextCompat.getDrawable(this@QuizActivity, qa_shape_quiz_select_pic_empty_background)
+            ContextCompat.getDrawable(this@QuizActivity, qa_shape_quiz_select_pic_empty_background)
         setImageDrawable(drawable)
     }
 
 
     private fun createImageView(uri: Uri) = RectangleView(this).apply {
         scaleType = ImageView.ScaleType.CENTER_CROP
-        val bitMap = if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
+        val bitMap = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             uri.bmSizeStandardizing(context = this.context)
         } else {
             TODO("VERSION.SDK_INT < O")
@@ -410,22 +414,22 @@ class QuizActivity : BaseViewModelActivity<QuizViewModel>() {
 
     private fun createExitDialog() = DraftDialog(this).apply {
         initView(
-                title = getString(R.string.qa_quiz_dialog_exit_text),
-                saveText = "保存",
-                noSaveText = "不保存",
-                cancelText = "取消",
-                saveListener = View.OnClickListener {
-                    saveDraft()
-                    dismiss()
-                },
-                noSaveListener = View.OnClickListener {
-                    viewModel.deleteDraft()
-                    dismiss()
-                    finish()
-                },
-                cancelListener = View.OnClickListener {
-                    dismiss()
-                })
+            title = getString(R.string.qa_quiz_dialog_exit_text),
+            saveText = "保存",
+            noSaveText = "不保存",
+            cancelText = "取消",
+            saveListener = View.OnClickListener {
+                saveDraft()
+                dismiss()
+            },
+            noSaveListener = View.OnClickListener {
+                viewModel.deleteDraft()
+                dismiss()
+                finish()
+            },
+            cancelListener = View.OnClickListener {
+                dismiss()
+            })
     }
 
     override fun onPause() {

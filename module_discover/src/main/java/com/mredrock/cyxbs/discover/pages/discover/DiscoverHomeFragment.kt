@@ -39,6 +39,8 @@ import com.mredrock.cyxbs.discover.pages.discover.adapter.DiscoverMoreFunctionRv
 import com.mredrock.cyxbs.discover.utils.BannerAdapter
 import com.mredrock.cyxbs.discover.utils.MoreFunctionProvider
 import com.mredrock.cyxbs.api.volunteer.IVolunteerService
+import com.mredrock.cyxbs.common.BaseApp
+import com.mredrock.cyxbs.common.utils.extensions.toast
 import kotlinx.android.synthetic.main.discover_home_fragment.*
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
@@ -70,9 +72,13 @@ class DiscoverHomeFragment : BaseViewModelFragment<DiscoverHomeViewModel>(), Eve
         initViewPager()
         viewModel.getRollInfo()
         iv_check_in.setOnSingleClickListener {
-            context?.doIfLogin("签到") {
-                ARouter.getInstance().build(MINE_CHECK_IN).navigation()
-            }
+            /**
+             * 封锁积分商城部分
+             */
+            BaseApp.context.toast("积分商城即将上线，\n一大波礼品正在紧张筹备，尽情期待")
+//            context?.doIfLogin("签到") {
+//                ARouter.getInstance().build(MINE_CHECK_IN).navigation()
+//            }
         }
     }
 

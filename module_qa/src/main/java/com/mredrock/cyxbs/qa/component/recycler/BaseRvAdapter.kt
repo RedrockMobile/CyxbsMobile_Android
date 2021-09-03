@@ -24,6 +24,11 @@ abstract class BaseRvAdapter<T> : androidx.recyclerview.widget.RecyclerView.Adap
         }
     }
 
+    /**
+     * 注意不用在重写这个方法的时候使用
+     * holder.itemView.setOnClickListener {}
+     * 因为在onBindViewHolder已经设置了，如果再次设置会导致需要点俩次才能起到效果
+     */
     protected open fun onItemClickListener(holder: BaseViewHolder<T>, position: Int, data: T) = Unit
 
     protected open fun onItemLongClickListener(holder: BaseViewHolder<T>, position: Int, data: T, itemView: View) = Unit

@@ -38,7 +38,7 @@ class EditViewModel : BaseViewModel() {
                        , photoSrc: String = userService.getAvatarImgUrl()) {
 
 
-        apiService.updateUserInfo(nickname, introduction, qq, phone, photoThumbnailSrc, photoSrc)
+        apiService.updateUserInfo(nickname, introduction, qq, phone, photoSrc)
                 .normalStatus(this)
                 .observeOn(Schedulers.io())
                 .map {

@@ -12,4 +12,5 @@ include ':module_app', ':lib_common', ':module_main', ':lib_account', ':lib_upda
         ':module_othercourse', ':module_noclass', ':module_map',
         ':module_calendar', ':module_electricity', ':module_emptyroom',
         ':module_grades', ':module_volunteer', ':module_schoolcar',
-        ':module_news', ':module_widget', ':module_redrock_home'
+        ':module_news', ':module_widget', ':module_redrock_home',
+        ':module_store'

@@ -4,7 +4,7 @@ import android.content.Context
 import androidx.room.Database
 import androidx.room.Room
 import androidx.room.RoomDatabase
-import com.mredrock.cyxbs.qa.bean.QAHistory
+import com.mredrock.cyxbs.qa.beannew.QAHistory
 
 /**
  * Created by yyfbe, Date on 2020/8/16.
@@ -24,9 +24,9 @@ abstract class QASearchHistoryDatabase : RoomDatabase() {
             }
             synchronized(this) {
                 val instance = Room.databaseBuilder(
-                        context.applicationContext,
-                        QASearchHistoryDatabase::class.java,
-                        "qa_history_database"
+                    context.applicationContext,
+                    QASearchHistoryDatabase::class.java,
+                    "qa_history_database"
                 ).build()
                 INSTANCE = instance
                 return instance

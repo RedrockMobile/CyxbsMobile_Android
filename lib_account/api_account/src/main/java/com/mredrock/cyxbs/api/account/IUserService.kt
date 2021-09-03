@@ -1,13 +1,9 @@
 package com.mredrock.cyxbs.api.account
 
 interface IUserService {
-    fun getRedid(): String
-
     fun getStuNum(): String
 
     fun getNickname(): String
-
-    fun getAvatarImgUrl(): String
 
     fun getIntroduction(): String
 
@@ -17,11 +13,14 @@ interface IUserService {
 
     fun getGender(): String
 
-    fun getIntegral(): Int
+    fun getAvatarImgUrl(): String
 
     fun getRealName(): String
 
-    fun getCheckInDay(): Int
+    fun getPhotoThumbnailSrc(): String
 
     fun getCollege(): String
+
+    //用于刷新个人信息，请在需要的地方调用
+    fun refreshInfo()
 }

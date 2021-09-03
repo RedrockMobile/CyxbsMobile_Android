@@ -7,7 +7,6 @@ import com.mredrock.cyxbs.common.network.ApiGenerator
 import com.mredrock.cyxbs.common.utils.extensions.safeSubscribeBy
 import com.mredrock.cyxbs.common.utils.extensions.setSchedulers
 import com.mredrock.cyxbs.common.viewmodel.BaseViewModel
-import com.mredrock.cyxbs.common.viewmodel.event.SingleLiveEvent
 import com.mredrock.cyxbs.qa.R
 import com.mredrock.cyxbs.qa.beannew.Dynamic
 import com.mredrock.cyxbs.qa.config.CommentConfig
@@ -30,10 +29,13 @@ open class CircleDetailViewModel(kind: String, loop: Int) : BaseViewModel() {
     val ignorePeople = MutableLiveData<Boolean>()
     val deleteTips = MutableLiveData<Boolean>()
     var topicId = 1
+
     //Activity观察的liveData，用于监测内部Fragment引起的FollowState的改变
     val followStateChangedMarkObservableByActivity = MutableLiveData<Boolean>()
+
     //Fragment观察的liveData，用于监测内部Activity引起的FollowState的改变
     val followStateChangedMarkObservableByFragment = MutableLiveData<Boolean>()
+
     init {
         val config = PagedList.Config.Builder()
             .setEnablePlaceholders(false)

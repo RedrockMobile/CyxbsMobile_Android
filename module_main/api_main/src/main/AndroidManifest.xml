@@ -1,4 +1,3 @@
-<manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.mredrock.cyxbs.api.main">
+<manifest package="com.mredrock.cyxbs.api.main">
 
 </manifest>

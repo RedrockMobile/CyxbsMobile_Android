@@ -7,7 +7,6 @@ package com.mredrock.cyxbs.qa.config
  * @Date: 2020/12/14 15:18
  */
 object CommentConfig {
-
     const val SHARE_URL = "https://fe-prod.redrock.team/zscy-youwen-share/#/"
 
     const val IGNORE = "屏蔽此人"
@@ -25,7 +24,5 @@ object CommentConfig {
     const val APP_NAME="掌上重邮"
     const val QQ_FRIEND = "0"
     const val QQ_ZONE = "1"
-    const val WECHAT = "2"
-    const val FRIEND_CIRCLE = "3"
     const val COPY_LINK = "4"
 }

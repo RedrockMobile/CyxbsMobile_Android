@@ -5,14 +5,12 @@ import android.graphics.BitmapFactory
 import android.os.Environment
 import androidx.lifecycle.MutableLiveData
 import com.google.gson.Gson
-import com.mredrock.cyxbs.common.BaseApp
+import com.mredrock.cyxbs.common.BaseApp.Companion.context
 import com.mredrock.cyxbs.common.config.DIR_PHOTO
+import com.mredrock.cyxbs.common.config.StoreTask
 import com.mredrock.cyxbs.common.network.ApiGenerator
 import com.mredrock.cyxbs.common.utils.LogUtils
-import com.mredrock.cyxbs.common.utils.extensions.mapOrThrowApiException
-import com.mredrock.cyxbs.common.utils.extensions.safeSubscribeBy
-import com.mredrock.cyxbs.common.utils.extensions.setSchedulers
-import com.mredrock.cyxbs.common.utils.extensions.toast
+import com.mredrock.cyxbs.common.utils.extensions.*
 import com.mredrock.cyxbs.common.viewmodel.BaseViewModel
 import com.mredrock.cyxbs.common.viewmodel.event.ProgressDialogEvent
 import com.mredrock.cyxbs.common.viewmodel.event.SingleLiveEvent
@@ -26,7 +24,7 @@ import com.mredrock.cyxbs.qa.utils.removeContinuousEnters
 import io.reactivex.Observable
 import okhttp3.MediaType.Companion.toMediaTypeOrNull
 import okhttp3.MultipartBody
-import okhttp3.RequestBody
+import okhttp3.RequestBody.Companion.asRequestBody
 import java.io.ByteArrayOutputStream
 import java.io.File
 import java.io.FileOutputStream
@@ -96,9 +94,10 @@ class QuizViewModel : BaseViewModel() {
                 .safeSubscribeBy {
                     it?.let { list ->
                         list.forEachIndexed { index, pair ->
-                            val suffix = pair.first.name.substring(pair.first.name.lastIndexOf(".") + 1)
+                            val suffix =
+                                pair.first.name.substring(pair.first.name.lastIndexOf(".") + 1)
                             val imageBody =
-                                RequestBody.create("image/$suffix".toMediaTypeOrNull(), pair.first)
+                                pair.first.asRequestBody("image/$suffix".toMediaTypeOrNull())
                             val name = "photo" + (index + 1)
                             builder.addFormDataPart(name, pair.first.name, imageBody)
                         }
@@ -112,7 +111,7 @@ class QuizViewModel : BaseViewModel() {
     }
 
     //暂时想不出太好的解耦合方案，这里设计的不太好，可能需要重构
-    fun sendDynamicRequest(parts :List<MultipartBody.Part>, filePairs: List<Pair<File, Boolean>>?){
+    private fun sendDynamicRequest(parts: List<MultipartBody.Part>, filePairs: List<Pair<File, Boolean>>?) {
         ApiGenerator.getApiService(ApiServiceNew::class.java)
             .releaseDynamic(parts)
             .mapOrThrowApiException()
@@ -127,7 +126,7 @@ class QuizViewModel : BaseViewModel() {
             .doOnError { throwable ->
                 isReleaseSuccess = false
                 throwable?.let { e ->
-                    BaseApp.context.toast(e.toString())
+                    context.toast(e.toString())
                 }
                 backAndRefreshPreActivityEvent.value = true
             }
@@ -135,7 +134,16 @@ class QuizViewModel : BaseViewModel() {
                 isReleaseSuccess = true
                 toastEvent.value = R.string.qa_release_dynamic_success
                 backAndRefreshPreActivityEvent.value = true
+                sendTaskChanged()
             }
+    }
+
+    /**
+     * 因积分商城界面有发布动态的任务, 所以添加此方法
+     * @date 2021.9.3-0:30
+     */
+    private fun sendTaskChanged() {
+        StoreTask.postTask(StoreTask.Task.PUBLISH_DYNAMIC, null)
     }
 
     fun checkTitleAndContent(type: String, content: String): Boolean {
@@ -152,7 +160,7 @@ class QuizViewModel : BaseViewModel() {
         return result
     }
 
-    fun getDraft() {
+    private fun getDraft() {
         ApiGenerator.getApiService(ApiServiceNew::class.java)
             .getDraft()
             .mapOrThrowApiException()
@@ -169,7 +177,10 @@ class QuizViewModel : BaseViewModel() {
                 }
                 it.images = newList
                 draft.value = it
-                LogUtils.d("Gibson", "after cast = $it, imagesIsNullOrEmpty = ${draft.value?.images.isNullOrEmpty()}, imageList size = ${draft.value?.images?.size}")
+                LogUtils.d(
+                    "Gibson",
+                    "after cast = $it, imagesIsNullOrEmpty = ${draft.value?.images.isNullOrEmpty()}, imageList size = ${draft.value?.images?.size}"
+                )
             }
     }
 
@@ -181,7 +192,6 @@ class QuizViewModel : BaseViewModel() {
                 toastEvent.value = R.string.qa_delete_draft
             }
             .safeSubscribeBy {
-                LogUtils.d("deletedraft", it.toString())
             }
     }
 
@@ -243,7 +253,7 @@ class QuizViewModel : BaseViewModel() {
                 .toList()
             files.forEachIndexed { index, pair ->
                 val suffix = pair.first.name.substring(pair.first.name.lastIndexOf(".") + 1)
-                val imageBody = RequestBody.create("image/$suffix".toMediaTypeOrNull(), pair.first)
+                val imageBody = pair.first.asRequestBody("image/$suffix".toMediaTypeOrNull())
                 val name = "photo" + (index + 1)
                 builder.addFormDataPart(name, pair.first.name, imageBody)
             }

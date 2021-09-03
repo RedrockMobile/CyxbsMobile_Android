@@ -42,6 +42,8 @@ const val MINE_CHECK_IN = "/check_in/mine/entry"
 const val MINE_FORGET_PASSWORD = "/forget_password/mine/entry"
 // 个人界面的绑定邮箱模块
 const val MINE_BIND_EMAIL = "/bind_email/mine/entry"
+// 个人界面的编辑个人信息界面
+const val MINE_EDIT_INFO = "/edit_info/mine/entry"
 
 // NoCourseInviteActivity
 const val COURSE_NO_COURSE_INVITE = "/course/no_course_invite_activity"
@@ -84,3 +86,6 @@ const val ELECTRICITY_SERVICE = "/electricity/service"
 
 //电费模块服务
 const val VOLUNTEER_SERVICE = "/volunteer/service"
+
+// module_store 邮票中心页
+const val STORE_ENTRY="/store/entry"

@@ -9,26 +9,27 @@ import android.text.TextPaint
 import android.util.AttributeSet
 import androidx.appcompat.widget.AppCompatImageView
 import androidx.core.graphics.drawable.toBitmap
-import com.mredrock.cyxbs.common.utils.LogUtils
 
 
 class RectangleView @JvmOverloads constructor(
-        context: Context,
-        attrs: AttributeSet? = null,
-        defStyle: Int = 0
+    context: Context,
+    attrs: AttributeSet? = null,
+    defStyle: Int = 0
 ) : AppCompatImageView(context, attrs, defStyle) {
     private var paint: Paint = Paint()
     private var textPaint: TextPaint = TextPaint()
     private var imageCount: Int = 0
 
     private val path = Path()
+
     //是否显示蒙版
     private var isShowMask = false
 
     //蒙版色值
     private val maskColor = Color.parseColor("#80000000")
 
-    private var bitmap : Bitmap? = null
+    private var bitmap: Bitmap? = null
+
     init {
         textPaint.apply {
             style = Paint.Style.FILL
@@ -67,7 +68,12 @@ class RectangleView @JvmOverloads constructor(
                     path.lineTo((width - 20).toFloat(), 0f)
                     path.quadTo(width.toFloat(), 0f, width.toFloat(), 20f)
                     path.lineTo(width.toFloat(), (height - 20).toFloat())
-                    path.quadTo(width.toFloat(), height.toFloat(), (width - 20).toFloat(), height.toFloat())
+                    path.quadTo(
+                        width.toFloat(),
+                        height.toFloat(),
+                        (width - 20).toFloat(),
+                        height.toFloat()
+                    )
                     path.lineTo(20f, height.toFloat())
                     path.quadTo(0f, height.toFloat(), 0f, (height - 20).toFloat())
                     path.lineTo(0f, 20f)
@@ -75,9 +81,9 @@ class RectangleView @JvmOverloads constructor(
                     canvas.clipPath(path)
                 }
                 val rectSrc =
-                        Rect(0, 0, it.width, it.height)
+                    Rect(0, 0, it.width, it.height)
                 val rectDest =
-                        Rect(0, 0, width, height)
+                    Rect(0, 0, width, height)
                 paint.reset()
                 drawable.draw(canvas)
                 canvas.drawBitmap(it, rectSrc, rectDest, paint)

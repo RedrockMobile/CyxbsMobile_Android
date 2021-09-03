@@ -3,46 +3,46 @@ package com.mredrock.cyxbs.qa.beannew
 import android.os.Parcel
 import android.os.Parcelable
 import com.google.gson.annotations.SerializedName
-import com.mredrock.cyxbs.common.utils.LogUtils
 import com.mredrock.cyxbs.qa.utils.cutEnterAndBlank
 
-data class Dynamic(@SerializedName("post_id")
-                   var postId: String = "",
+data class Dynamic(
+    @SerializedName("post_id")
+    var postId: String = "",
 
-                   @SerializedName("is_follow_topic")
-                   var isFollowTopic: Int = 0,
+    @SerializedName("is_follow_topic")
+    var isFollowTopic: Int = 0,
 
-                   @SerializedName("is_praised")
-                   private var _isPraised: Int = 0,
+    @SerializedName("is_praised")
+    private var _isPraised: Int = 0,
 
-                   @SerializedName("avatar")
-                   val avatar: String = "",
+    @SerializedName("avatar")
+    val avatar: String = "",
 
-                   @SerializedName("nickname")
-                   val nickName: String = "",
+    @SerializedName("nickname")
+    val nickName: String = "",
 
-                   @SerializedName("is_self")
-                   val isSelf: Int = 0,
+    @SerializedName("is_self")
+    val isSelf: Int = 0,
 
-                   @SerializedName("praise_count")
-                   var praiseCount: Int = 0,
+    @SerializedName("praise_count")
+    var praiseCount: Int = 0,
 
-                   @SerializedName("topic")
-                   val topic: String = "",
-                   @SerializedName("publish_time")
-                   val publishTime: Long = 0L,
+    @SerializedName("topic")
+    val topic: String = "",
+    @SerializedName("publish_time")
+    val publishTime: Long = 0L,
 
-                   @SerializedName("uid")
-                   val uid: String = "",
+    @SerializedName("uid")
+    val uid: String = "",
 
-                   @SerializedName("content")
-                   var content: String = "",
+    @SerializedName("content")
+    var content: String = "",
 
-                   @SerializedName("comment_count")
-                   var commentCount: Int = 0,
+    @SerializedName("comment_count")
+    var commentCount: Int = 0,
 
-                   @SerializedName("pics")
-                   var pics: List<String> = mutableListOf()
+    @SerializedName("pics")
+    var pics: List<String> = mutableListOf()
 
 ) : Parcelable {
     var isPraised
@@ -58,18 +58,19 @@ data class Dynamic(@SerializedName("post_id")
         }
 
     constructor(parcel: Parcel) : this(
-            parcel.readString(),
-            parcel.readInt(),
-            parcel.readInt(),
-            parcel.readString(),
-            parcel.readString(),
-            parcel.readInt(),
-            parcel.readInt(),
-            parcel.readString(),
-            parcel.readLong(),
-            parcel.readString(),
-            parcel.readString(),
-            parcel.readInt()) {
+        parcel.readString(),
+        parcel.readInt(),
+        parcel.readInt(),
+        parcel.readString(),
+        parcel.readString(),
+        parcel.readInt(),
+        parcel.readInt(),
+        parcel.readString(),
+        parcel.readLong(),
+        parcel.readString(),
+        parcel.readString(),
+        parcel.readInt()
+    ) {
         parcel.readStringList(pics)
         //利用正则剔除大量空白
         content = cutEnterAndBlank(content)

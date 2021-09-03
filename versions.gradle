@@ -1,6 +1,6 @@
 /**********************************应用版本以及gradle版本**************************************/
-ext.version_code = 66 // 线上66，开发67
-ext.version_name = "6.2.0" // 线上6.2.0，开发6.2.1
+ext.version_code = 67 // 线上66，开发67
+ext.version_name = "6.2.1" // 线上6.2.0，开发6.2.1
 ext.gradle_plugins = '4.0.1'
 /**********************************构建版本**************************************/
 def build_versions = [:]
@@ -69,7 +69,7 @@ support.fragment = "androidx.fragment:fragment-ktx:$fragment_version"
 support.app_compat = "androidx.appcompat:appcompat:1.1.0"
 support.recyclerview = "androidx.recyclerview:recyclerview:1.1.0"
 support.cardview = "androidx.cardview:cardview:1.0.0"
-support.design = "com.google.android.material:material:1.1.0-rc02"
+support.design = "com.google.android.material:material:1.4.0"
 support.v4 = "androidx.legacy:legacy-support-v4:1.0.0"
 support.multidex = "androidx.multidex:multidex:$version_multidex"
 deps.support = support

@@ -9,17 +9,17 @@ import android.view.animation.OvershootInterpolator
 import androidx.appcompat.widget.AppCompatImageView
 
 class ClickView : AppCompatImageView {
-    constructor(context: Context?) : super(context) {
+    constructor(context: Context) : super(context) {
         //        必须设置setClickable(true), 要不然像ImageView 默认是点击不了的，它就收不到Action_Up 事件
 //        如果一个view 的onTouchEvent 的Action_Down 返回false ，那么view的 Action_Up 是不会执行的
         this.isClickable = true
     }
 
-    constructor(context: Context?, attrs: AttributeSet?) : super(context, attrs) {
+    constructor(context: Context, attrs: AttributeSet?) : super(context, attrs) {
         this.isClickable = true
     }
 
-    constructor(context: Context?, attrs: AttributeSet?, defStyleAttr: Int) : super(context, attrs, defStyleAttr) {
+    constructor(context: Context, attrs: AttributeSet?, defStyleAttr: Int) : super(context, attrs, defStyleAttr) {
         this.isClickable = true
     }
 

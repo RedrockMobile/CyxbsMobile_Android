@@ -1,5 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/mine_cl_layout_dialog"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
     android:orientation="vertical">
@@ -8,19 +10,25 @@
         android:id="@+id/dialog_title"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_gravity="center_horizontal"
         android:layout_marginTop="17dp"
+        android:text="test"
         android:textColor="@color/common_level_two_font_color"
         android:textSize="18sp"
-        android:textStyle="bold" />
+        android:textStyle="bold"
+        app:layout_constraintLeft_toLeftOf="@id/mine_cl_layout_dialog"
+        app:layout_constraintRight_toRightOf="@id/mine_cl_layout_dialog"
+        app:layout_constraintTop_toTopOf="@id/mine_cl_layout_dialog" />
 
     <TextView
         android:id="@+id/dialog_content"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_gravity="center_horizontal"
         android:layout_marginTop="10dp"
+        android:text="ghhhhhhhhhhhhhhhhhhhhhhhhhh"
         android:textColor="@color/levelFourFontColor"
-        android:textSize="13sp" />
+        android:textSize="13sp"
+        app:layout_constraintLeft_toLeftOf="@id/mine_cl_layout_dialog"
+        app:layout_constraintRight_toRightOf="@id/mine_cl_layout_dialog"
+        app:layout_constraintTop_toBottomOf="@id/dialog_title" />
 
-</LinearLayout>
+</androidx.constraintlayout.widget.ConstraintLayout>
