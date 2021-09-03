@@ -15,6 +15,7 @@ import android.os.Environment
 import android.provider.MediaStore
 import android.text.Editable
 import android.text.TextWatcher
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.MotionEvent
 import android.view.View
@@ -165,10 +166,11 @@ class EditInfoActivity
 
     private fun refreshUserInfo() {
         loadAvatar(userService.getAvatarImgUrl(), mine_edit_et_avatar)
-        mine_et_nickname.setText(userService.getNickname())
-        mine_et_introduce.setText(userService.getIntroduction())
-        mine_et_qq.setText(userService.getQQ())
-        mine_et_phone.setText(userService.getPhone())
+        Log.d("TAG","(EditInfoActivity.kt:172)->nickname ${userService.getNickname()} into ${userService.getIntroduction()} qq ${userService.getQQ()} phone ${userService.getPhone()}")
+        if (userService.getNickname() == " ") mine_et_nickname.setText("") else mine_et_nickname.setText(userService.getNickname())
+        if (userService.getIntroduction() == " ") mine_et_introduce.setText("") else mine_et_introduce.setText(userService.getIntroduction())
+        if (userService.getQQ() == " ") mine_et_qq.setText("") else mine_et_qq.setText(userService.getQQ())
+        if (userService.getPhone() == " ") mine_et_phone.setText("") else mine_et_phone.setText(userService.getPhone())
         mine_tv_college_concrete.text = userService.getCollege()
     }
 
@@ -200,21 +202,19 @@ class EditInfoActivity
     }
 
     private fun saveInfo() {
-        val nickname = mine_et_nickname.text.toString() ?: ""
-        val introduction = mine_et_introduce.text.toString() ?: ""
-        val qq = mine_et_qq.text.toString() ?: ""
-        val phone = mine_et_phone.text.toString() ?: ""
+        val nickname = if (mine_et_nickname.text.toString().isNotEmpty()) mine_et_nickname.text.toString() else " "
+        val introduction = if (mine_et_introduce.text.toString().isNotEmpty()) mine_et_introduce.text.toString() else " "
+        val qq = if (mine_et_qq.text.toString().isNotEmpty()) mine_et_qq.text.toString() else " "
+        val phone = if (mine_et_phone.text.toString().isNotEmpty()) mine_et_phone.text.toString() else " "
 
         //数据没有改变，不进行网络请求
         if (!checkIfInfoChange()) {
             return
         }
-
-        if (nickname.isEmpty() || introduction.isEmpty() || qq.isEmpty() || phone.isEmpty()) {
-            toast("信息不能为空")
-            return
-        }
+        Log.d("TAG","(EditInfoActivity.kt:218)->before name:${userService.getNickname()} intro:${userService.getIntroduction()} ")
         viewModel.updateUserInfo(nickname, introduction, qq, phone)
+        Log.d("TAG","(EditInfoActivity.kt:218)->after name:${userService.getNickname()} intro:${userService.getIntroduction()} ")
+
     }
 
     private fun checkIfInfoChange(): Boolean {
