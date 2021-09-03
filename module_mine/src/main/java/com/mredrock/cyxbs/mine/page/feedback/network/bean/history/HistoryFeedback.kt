@@ -31,7 +31,7 @@ data class Feedback(
     @SerializedName("DeletedAt")
     val deletedAt: Any,
     @SerializedName("ID")
-    val iD: Int,
+    val iD: Long,
     @SerializedName("name")
     val name: String,
     @SerializedName("product_id")

@@ -10,8 +10,6 @@ import com.mredrock.cyxbs.mine.page.feedback.history.list.bean.History
 import com.mredrock.cyxbs.mine.page.feedback.utils.DateUtils
 import com.mredrock.cyxbs.mine.page.feedback.utils.change
 import com.mredrock.cyxbs.mine.page.feedback.utils.getPointStateSharedPreference
-import java.text.SimpleDateFormat
-import java.util.*
 
 /**
  *@author ZhiQiang Tu
@@ -39,7 +37,13 @@ class HistoryListPresenter : BasePresenter<HistoryListViewModel>() {
             }.map { it ->
                 it.map {
                     val timePill = DateUtils.strToLong(it.createdAt)
-                    History(it.title, timePill, it.replied, false, it.iD.toLong())
+                    it.updatedAt
+                    History(it.title,
+                        timePill,
+                        it.replied,
+                        getState(it.replied, it.iD, it.updatedAt),
+                        it.iD,
+                        it.updatedAt)
                 }
             }
             .safeSubscribeBy(onError = {
@@ -79,42 +83,48 @@ class HistoryListPresenter : BasePresenter<HistoryListViewModel>() {
                 System.currentTimeMillis(),
                 true,
                 isRead = false,
-                id = 1
+                id = 1,
+                updateTime = ""
             ),
             History(
                 "无法切换账号",
                 System.currentTimeMillis(),
                 false,
                 isRead = false,
-                id = 2
+                id = 2,
+                updateTime = ""
             ),
             History(
                 "a",
                 System.currentTimeMillis(),
                 true,
                 isRead = false,
-                id = 3
+                id = 3,
+                updateTime = ""
             ),
             History(
                 "b",
                 System.currentTimeMillis(),
                 false,
                 isRead = false,
-                id = 4
+                id = 4,
+                updateTime = ""
             ),
             History(
                 "c",
                 System.currentTimeMillis(),
                 false,
                 isRead = false,
-                id = 5
+                id = 5,
+                updateTime = ""
             ),
             History(
                 "点击电费查询后数据为空",
                 System.currentTimeMillis(),
                 true,
                 isRead = false,
-                id = 6
+                id = 6,
+                updateTime = ""
             )
         )
     }
@@ -123,15 +133,15 @@ class HistoryListPresenter : BasePresenter<HistoryListViewModel>() {
         if (data.replyOrNot) {
             val pointSP = BaseApp.context.getPointStateSharedPreference()
             pointSP?.change {
-                putBoolean(data.id.toString(), true)
+                putString(data.id.toString(), data.updateTime)
             }
         }
     }
 
-    private fun getState(data: History): Boolean {
-        return if (data.replyOrNot) {
+    private fun getState(replyOrNot: Boolean, id: Long, updateTime: String): Boolean {
+        return if (replyOrNot) {
             val pointSP = BaseApp.context.getPointStateSharedPreference()
-            pointSP?.getBoolean(data.id.toString(), false) ?: false
+            pointSP?.getString(id.toString(), "") == updateTime
         } else {
             true
         }
