@@ -14,6 +14,7 @@ import android.widget.TextView
 import android.widget.Toast
 import android.widget.ViewFlipper
 import androidx.core.content.ContextCompat
+import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.alibaba.android.arouter.facade.annotation.Route
@@ -23,6 +24,7 @@ import com.mredrock.cyxbs.common.BaseApp
 import com.mredrock.cyxbs.common.component.CyxbsToast
 import com.mredrock.cyxbs.common.config.CyxbsMob
 import com.mredrock.cyxbs.common.config.QA_ENTRY
+import com.mredrock.cyxbs.common.config.StoreTask
 import com.mredrock.cyxbs.common.event.RefreshQaEvent
 import com.mredrock.cyxbs.common.mark.EventBusLifecycleSubscriber
 import com.mredrock.cyxbs.common.service.ServiceManager
@@ -130,9 +132,9 @@ open class DynamicFragment : BaseViewModelFragment<DynamicListViewModel>(), Even
         viewModel.getAllCirCleData("问答圈", "test1")
         dynamicListRvAdapter =
             DynamicAdapter(this.requireContext()) { dynamic, view ->
+                StoreTask.postTask(StoreTask.Task.SEE_DYNAMIC, dynamic.postId) // 浏览动态修改任务进度
                 DynamicDetailActivity.activityStart(this, view, dynamic)
             }.apply {
-
                 onShareClickListener = { dynamic, mode ->
                     val url = "${CommentConfig.SHARE_URL}dynamic?id=${dynamic.postId}"
                     when (mode) {
@@ -275,6 +277,13 @@ open class DynamicFragment : BaseViewModelFragment<DynamicListViewModel>(), Even
 
         observeLoading(dynamicListRvAdapter, footerRvAdapter, emptyRvAdapter)
         qa_rv_dynamic_List.apply {
+            val animator = itemAnimator // 取消 RecyclerView 刷新的动画, 因为会出现图片闪动问题
+            if (animator != null) {
+                animator.changeDuration = 0
+                animator.removeDuration = 0
+                animator.moveDuration = 0
+                animator.addDuration = 0
+            }
             layoutManager = LinearLayoutManager(context)
             adapter = adapterWrapper
             addOnScrollListener(object : RecyclerView.OnScrollListener() {
@@ -456,7 +465,6 @@ open class DynamicFragment : BaseViewModelFragment<DynamicListViewModel>(), Even
                                 it.commentCount.toString()
                         }
                     }
-                    dynamicListRvAdapter.notifyDataSetChanged()
                 }
             }
             // 从发动态返回

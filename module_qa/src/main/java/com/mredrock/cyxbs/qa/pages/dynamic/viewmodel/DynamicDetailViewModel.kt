@@ -4,6 +4,7 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import com.mredrock.cyxbs.common.BaseApp
+import com.mredrock.cyxbs.common.config.StoreTask
 import com.mredrock.cyxbs.common.network.ApiGenerator
 import com.mredrock.cyxbs.common.utils.extensions.mapOrThrowApiException
 import com.mredrock.cyxbs.common.utils.extensions.safeSubscribeBy
@@ -134,6 +135,7 @@ open class DynamicDetailViewModel : BaseViewModel() {
             }
             .safeSubscribeBy {
                 commentReleaseResult.postValue(it)
+                StoreTask.postTask(StoreTask.Task.POST_COMMENT, null) // 更新发送评论的任务
             }
     }
 

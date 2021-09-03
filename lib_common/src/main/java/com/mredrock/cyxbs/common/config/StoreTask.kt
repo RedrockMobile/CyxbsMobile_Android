@@ -1,5 +1,6 @@
 package com.mredrock.cyxbs.common.config
 
+import android.util.Log
 import androidx.core.content.edit
 import com.google.gson.Gson
 import com.mredrock.cyxbs.common.BaseApp.Companion.context
@@ -19,7 +20,7 @@ import java.util.*
 
 
 /**
- * 邮票任务的名称, 分别会跳转到不同模块中的界面, 而且完成任务后需要向后端发送进度(以任务名称为请求), 所以写在这里
+ * 邮票任务, 分别会跳转到不同模块中的界面, 而且完成任务后需要向后端发送进度(以任务名称为请求), 所以写在这里
  * @author 985892345 (Guo Xiangrui)
  * @email 2767465918@qq.com
  * @date 2021/9/3
@@ -34,7 +35,7 @@ object StoreTask {
 
     enum class Task(val title: String, val type: TaskType) {
         // 以下跳转到 module_qa 的 DailySignActivity
-        DAILY_SIGN("今日签到", TaskType.BASE),
+        DAILY_SIGN("今日打卡", TaskType.BASE),
 
         // 以下跳转到 module_qa 的 DynamicFragment
         SEE_DYNAMIC("逛逛邮问", TaskType.BASE), // 浏览动态
@@ -67,7 +68,6 @@ object StoreTask {
                     share.edit {
                         putString("last_save_date", nowDate)
                         Task.values().forEach {
-                            this.putInt(it.title, 0)
                             this.putStringSet("${it.title}_set", null)
                         }
                     }
@@ -103,13 +103,12 @@ object StoreTask {
 
     private fun postTask(
         title: String,
-        onSlopOver: ((maxProgress: Int) -> Unit)? = null,
-        onSuccess: ((currentProgress: Int) -> Unit)? = null
+        onSlopOver: (() -> Unit)? = null,
+        onSuccess: (() -> Unit)? = null
     ) {
-        val share = context.sharedPreferences(this::class.java.simpleName)
-        val currentProgress = share.getInt(title, 0)
+        Log.d("ggg","(StoreTask.kt:109)-->> ???")
         ApiGenerator.getApiService(ApiService::class.java)
-            .changeTaskProgress(title, currentProgress)
+            .changeTaskProgress(title)
             .setSchedulers()
             .safeSubscribeBy(
                 onError = {
@@ -121,14 +120,13 @@ object StoreTask {
                             val gson = Gson()
                             val data = gson.fromJson(responseBody?.string(), RedrockApiStatus::class.java)
                             if (data.status == 400) {
-                                onSlopOver?.invoke(currentProgress)
+                                onSlopOver?.invoke()
                             }
                         }
                     }
                 },
                 onNext = {
-                    share.edit { putInt(title, currentProgress + 1) }
-                    onSuccess?.invoke(currentProgress + 1)
+                    onSuccess?.invoke()
                 }
             )
     }
@@ -138,8 +136,7 @@ object StoreTask {
         @POST("/magipoke-intergral/Integral/progress")
         @FormUrlEncoded
         fun changeTaskProgress(
-            @Field("title") title: String,
-            @Field("current_progress") currentProgress: Int
+            @Field("title") title: String
         ): Observable<RedrockApiStatus>
     }
 }
