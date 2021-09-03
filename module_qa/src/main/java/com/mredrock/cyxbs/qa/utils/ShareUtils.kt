@@ -19,9 +19,8 @@ import com.tencent.tauth.UiError
  */
 object ShareUtils {
 
-    class QQUiListener(val url: String) : IUiListener {
+    class QQUiListener : IUiListener {
         override fun onComplete(p0: Any?) {
-            StoreTask.postTask(StoreTask.Task.SHARE_DYNAMIC, url)
         }
 
         override fun onError(p0: UiError?) {
@@ -53,7 +52,13 @@ object ShareUtils {
         params.putString(QQShare.SHARE_TO_QQ_TARGET_URL, url) //内容地址
         params.putString(QQShare.SHARE_TO_QQ_IMAGE_URL, imageUrl) //分享的图片URL
         params.putString(QQShare.SHARE_TO_QQ_APP_NAME, CommentConfig.APP_NAME) //应用名称
-        tencent.shareToQQ(fragment.activity, params, QQUiListener(url))
+        tencent.shareToQQ(fragment.activity, params, QQUiListener())
+
+        /*
+        * 更新任务进度
+        * 那个 QQUiListener 有问题, onComplete() 一直不回调, 在于产品沟通后最终以点击跳转为准
+        * */
+        StoreTask.postTask(StoreTask.Task.SHARE_DYNAMIC, url)
     }
 
     /*
@@ -74,7 +79,13 @@ object ShareUtils {
         params.putString(QzoneShare.SHARE_TO_QQ_TARGET_URL, url) //分享的链接
         params.putString(QQShare.SHARE_TO_QQ_IMAGE_URL, imageUrl) //分享的图片URL
         params.putString(QQShare.SHARE_TO_QQ_APP_NAME, CommentConfig.APP_NAME) //应用名称
-        tencent.shareToQQ(activity, params, QQUiListener(url))
+        tencent.shareToQQ(activity, params, QQUiListener())
+
+        /*
+        * 更新任务进度
+        * 那个 QQUiListener 有问题, onComplete() 一直不回调, 在于产品沟通后最终以点击跳转为准
+        * */
+        StoreTask.postTask(StoreTask.Task.SHARE_DYNAMIC, url)
     }
 
 
@@ -98,7 +109,13 @@ object ShareUtils {
         //分享的图片, 以ArrayList<String>的类型传入，以便支持多张图片
         // （注：图片最多支持9张图片，多余的图片会被丢弃），qq接口暂时只支持一张
         params.putStringArrayList(QzoneShare.SHARE_TO_QQ_IMAGE_URL, imageUrl) //分享的图片URL
-        tencent.shareToQzone(fragment.activity, params, QQUiListener(url))
+        tencent.shareToQzone(fragment.activity, params, QQUiListener())
+
+        /*
+        * 更新任务进度
+        * 那个 QQUiListener 有问题, onComplete() 一直不回调, 在于产品沟通后最终以点击跳转为准
+        * */
+        StoreTask.postTask(StoreTask.Task.SHARE_DYNAMIC, url)
     }
 
     /*
@@ -119,7 +136,12 @@ object ShareUtils {
         params.putString(QzoneShare.SHARE_TO_QQ_SUMMARY, content) //分享的内容摘要
         params.putString(QzoneShare.SHARE_TO_QQ_TARGET_URL, url) //分享的链接
         params.putStringArrayList(QzoneShare.SHARE_TO_QQ_IMAGE_URL, imageUrl) //分享的图片URL
-        tencent.shareToQzone(activity, params, QQUiListener(url))
-    }
+        tencent.shareToQzone(activity, params, QQUiListener())
 
+        /*
+        * 更新任务进度
+        * 那个 QQUiListener 有问题, onComplete() 一直不回调, 在于产品沟通后最终以点击跳转为准
+        * */
+        StoreTask.postTask(StoreTask.Task.SHARE_DYNAMIC, url)
+    }
 }

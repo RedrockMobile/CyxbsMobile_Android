@@ -6,6 +6,7 @@ import android.os.Build
 import android.text.TextPaint
 import android.util.AttributeSet
 import androidx.core.content.ContextCompat
+import com.mredrock.cyxbs.common.config.StoreTask
 import com.mredrock.cyxbs.common.network.ApiGenerator
 import com.mredrock.cyxbs.common.utils.extensions.*
 import com.mredrock.cyxbs.qa.R
@@ -190,8 +191,13 @@ class LikeViewSlim @JvmOverloads constructor(
             }.safeSubscribeBy {
                 // 如果成功，则保持
                 sendBroadcast("$tmpId-$tmpModel")
-            }
 
+                /*
+                * (这个自定义 View 不是我写的)
+                * 在网络请求成功后向后端发送请求更新任务进度
+                * */
+                StoreTask.postTask(StoreTask.Task.GIVE_A_LIKE, tmpId)
+            }
     }
 
     private fun getColor(res: Int): Int {

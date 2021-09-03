@@ -134,16 +134,9 @@ class QuizViewModel : BaseViewModel() {
                 isReleaseSuccess = true
                 toastEvent.value = R.string.qa_release_dynamic_success
                 backAndRefreshPreActivityEvent.value = true
-                sendTaskChanged()
-            }
-    }
 
-    /**
-     * 因积分商城界面有发布动态的任务, 所以添加此方法
-     * @date 2021.9.3-0:30
-     */
-    private fun sendTaskChanged() {
-        StoreTask.postTask(StoreTask.Task.PUBLISH_DYNAMIC, null)
+                StoreTask.postTask(StoreTask.Task.PUBLISH_DYNAMIC, null) // 更新发布动态的任务
+            }
     }
 
     fun checkTitleAndContent(type: String, content: String): Boolean {
@@ -277,6 +270,8 @@ class QuizViewModel : BaseViewModel() {
             .safeSubscribeBy {
                 toastEvent.value = R.string.qa_release_comment_success
                 finishReleaseCommentEvent.value = true
+
+                StoreTask.postTask(StoreTask.Task.POST_COMMENT, null) // 更新发送评论的任务
             }
     }
 
