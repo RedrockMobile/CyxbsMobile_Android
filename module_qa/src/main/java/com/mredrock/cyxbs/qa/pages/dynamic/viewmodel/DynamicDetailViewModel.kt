@@ -54,7 +54,6 @@ open class DynamicDetailViewModel : BaseViewModel() {
 
     // commentId用于刷新后聚焦到某一个评论。
     fun refreshCommentList(postId: String, commentId: String) {
-
         ApiGenerator.getApiService(ApiServiceNew::class.java)
             .getPostInfo(postId)
             .mapOrThrowApiException()
@@ -173,7 +172,6 @@ open class DynamicDetailViewModel : BaseViewModel() {
                 }
             }
     }
-
     fun report(id: String, content: String, model: String) {
         ApiGenerator.getApiService(ApiServiceNew::class.java)
             .report(id, CommentConfig.REPORT_DYNAMIC_MODEL, content)
