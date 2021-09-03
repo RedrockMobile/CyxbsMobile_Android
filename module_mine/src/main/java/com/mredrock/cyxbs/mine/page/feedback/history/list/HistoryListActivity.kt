@@ -63,9 +63,8 @@ class HistoryListActivity :
                     if (current - tag < 500) return
                     tag = current
                     presenter?.savedState(data)
-                    toast(data.toString())
                     val intentExtra = Intent(this@HistoryListActivity,
-                        HistoryDetailActivity::class.java).putExtra("id", data.id)
+                        HistoryDetailActivity::class.java).putExtra("id", data.id).putExtra("isReply",data.replyOrNot)
                     startActivity(intentExtra)
                 }
 

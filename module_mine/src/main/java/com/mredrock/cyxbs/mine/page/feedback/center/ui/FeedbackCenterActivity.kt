@@ -12,6 +12,7 @@ import com.mredrock.cyxbs.mine.page.feedback.center.presenter.FeedbackCenterPres
 import com.mredrock.cyxbs.mine.page.feedback.center.viewmodel.FeedbackCenterViewModel
 import com.mredrock.cyxbs.mine.page.feedback.edit.ui.FeedbackEditActivity
 import com.mredrock.cyxbs.mine.page.feedback.history.list.HistoryListActivity
+import com.mredrock.cyxbs.mine.page.security.util.Jump2QQHelper
 
 /**
  * @Date : 2021/8/23   20:51
@@ -75,6 +76,11 @@ class FeedbackCenterActivity :
             ivHistory.setOnSingleClickListener {
                 startActivity<HistoryListActivity>()
             }
+            tvQqTwo.setOnSingleClickListener {
+                Jump2QQHelper.onFeedBackClick(
+                    this@FeedbackCenterActivity
+                )
+            }
         }
     }
 
@@ -82,12 +88,13 @@ class FeedbackCenterActivity :
      * 每个item的监听事件 通过dataBinding传递
      */
     inner class EventHandler {
-        var position :Int = 0
-        fun onItemClick(itemView: View,title:String,content:String) {
-            val intent = Intent(this@FeedbackCenterActivity,FeedbackDetailActivity::class.java).apply {
-                putExtra("title", title)
-                putExtra("content",content)
-            }
+        var position: Int = 0
+        fun onItemClick(itemView: View, title: String, content: String) {
+            val intent =
+                Intent(this@FeedbackCenterActivity, FeedbackDetailActivity::class.java).apply {
+                    putExtra("title", title)
+                    putExtra("content", content)
+                }
             startActivity(intent)
         }
     }

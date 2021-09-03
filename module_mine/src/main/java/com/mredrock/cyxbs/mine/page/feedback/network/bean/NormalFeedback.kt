@@ -34,4 +34,3 @@ data class NormalFeedback(
         val updatedAt: String
     ):Serializable
 }
-

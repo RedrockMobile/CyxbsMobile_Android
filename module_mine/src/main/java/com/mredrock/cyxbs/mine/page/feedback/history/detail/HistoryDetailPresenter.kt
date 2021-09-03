@@ -1,32 +1,60 @@
 package com.mredrock.cyxbs.mine.page.feedback.history.detail
 
+import com.mredrock.cyxbs.common.BaseApp
+import com.mredrock.cyxbs.common.utils.extensions.safeSubscribeBy
+import com.mredrock.cyxbs.common.utils.extensions.setSchedulers
+import com.mredrock.cyxbs.common.utils.extensions.toast
+import com.mredrock.cyxbs.mine.page.feedback.api
 import com.mredrock.cyxbs.mine.page.feedback.base.presenter.BasePresenter
 import com.mredrock.cyxbs.mine.page.feedback.history.detail.bean.Feedback
 import com.mredrock.cyxbs.mine.page.feedback.history.detail.bean.Reply
+import com.mredrock.cyxbs.mine.page.feedback.utils.DateUtils
 
 /**
  *@author ZhiQiang Tu
  *@time 2021/8/24  9:12
  *@signature 我们不明前路，却已在路上
  */
-class HistoryDetailPresenter : BasePresenter<HistoryDetailViewModel>() {
+class HistoryDetailPresenter(private val id: Long, private val isReply: Boolean) :
+    BasePresenter<HistoryDetailViewModel>() {
     override fun fetch() {
         //设置默认数据
-        setDefaultData()
+        //setDefaultData()
+        api.getDetailFeedback("1", id.toString()).setSchedulers()
+            .map {
+                it.data.feedback
+            }.safeSubscribeBy(
+                onNext = {
+                    vm?.setIsReply(it.replied)
+                    vm?.setFeedback(Feedback(DateUtils.strToLong(it.updatedAt),
+                        it.title,
+                        it.content,
+                        it.type.replace("\n", ""),
+                        it.pictures ?: listOf()))
+                },
+                onComplete = {},
+                onError = {
+                    BaseApp.context.toast("出问题啦~ ${it.message}")
+                }
+            )
     }
 
     /**
      * 设置默认数据
      */
+    @Deprecated("接口都有了还自己模拟数据？？")
     private fun setDefaultData() {
+        //获取反馈内容
         val defaultFeedback = getDefaultFeedback()
         vm?.setFeedback(defaultFeedback)
+        vm?.setIsReply(isReply)
+        //获取返回内容
         val defaultReply = getDefaultReply()
         vm?.setReply(defaultReply)
-        val defaultBannerPic = getDefaultBannerPic()
-        vm?.setReplyPicUrls(defaultBannerPic)
+        vm?.setReplyPicUrls(defaultReply.bannerPics)
     }
 
+    @Deprecated("接口都有了还自己模拟数据？？")
     private fun getDefaultBannerPic(): List<String> {
         return listOf(
             "https://images.unsplash.com/photo-1625730385203-8645ca4e42c3?ixid=MnwxMjA3fDB8MHx0b3BpYy1mZWVkfDEwfGJvOGpRS1RhRTBZfHxlbnwwfHx8fA%3D%3D&ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=60",
@@ -35,10 +63,12 @@ class HistoryDetailPresenter : BasePresenter<HistoryDetailViewModel>() {
         )
     }
 
+    @Deprecated("接口都有了还自己模拟数据？？")
     private fun getDefaultReply(): Reply {
-        return Reply(System.currentTimeMillis(), "你的问题我们已收到，感谢同学你的反馈。", false)
+        return Reply(System.currentTimeMillis(), "你的问题我们已收到，感谢同学你的反馈。", getDefaultBannerPic())
     }
 
+    @Deprecated("接口都有了还自己模拟数据？？")
     private fun getDefaultFeedback(): Feedback {
         return Feedback(System.currentTimeMillis(),
             "参与买一送一活动",

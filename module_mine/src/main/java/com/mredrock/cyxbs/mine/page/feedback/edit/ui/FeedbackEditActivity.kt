@@ -1,21 +1,16 @@
 package com.mredrock.cyxbs.mine.page.feedback.edit.ui
 
-import android.annotation.SuppressLint
-import android.content.ContentResolver
-import android.content.Context
 import android.content.Intent
 import android.net.Uri
-import android.os.Build
 import android.os.Bundle
 import android.provider.MediaStore
-import android.webkit.MimeTypeMap
-import androidx.annotation.RequiresApi
 import androidx.lifecycle.LiveData
 import androidx.recyclerview.widget.GridLayoutManager
-import androidx.room.util.FileUtil
-import androidx.room.util.FileUtil.copy
+import com.google.android.material.chip.Chip
 import com.mredrock.cyxbs.common.ui.BaseMVPVMActivity
+import com.mredrock.cyxbs.common.utils.extensions.setOnSingleClickListener
 import com.mredrock.cyxbs.common.utils.extensions.toast
+import com.mredrock.cyxbs.common.viewmodel.event.SingleLiveEvent
 import com.mredrock.cyxbs.mine.R
 import com.mredrock.cyxbs.mine.databinding.MineActivityFeedbackEditBinding
 import com.mredrock.cyxbs.mine.page.feedback.adapter.rv.RvAdapter
@@ -24,17 +19,8 @@ import com.mredrock.cyxbs.mine.page.feedback.edit.viewmodel.FeedbackEditViewMode
 import com.mredrock.cyxbs.mine.page.feedback.utils.CHOOSE_FEED_BACK_PIC
 import com.mredrock.cyxbs.mine.page.feedback.utils.selectImageFromAlbum
 import com.mredrock.cyxbs.mine.page.feedback.utils.setSelectedPhotos
-import com.uc.crashsdk.g.Q
-import com.umeng.analytics.pro.ax.Q
-import com.umeng.analytics.pro.b.Q
-import com.umeng.analytics.pro.h.Q
-import com.umeng.commonsdk.utils.b.Q
-import com.yalantis.ucrop.util.FileUtils
 import java.io.File
-import java.io.FileOutputStream
 import java.util.*
-import kotlin.random.Random
-import kotlin.random.Random.Default.nextInt
 
 /**
  * @Date : 2021/8/23   20:52
@@ -44,6 +30,8 @@ import kotlin.random.Random.Default.nextInt
  **/
 class FeedbackEditActivity :
     BaseMVPVMActivity<FeedbackEditViewModel, MineActivityFeedbackEditBinding, FeedbackEditPresenter>() {
+
+    private var label: String = "NONE"
 
     /**
      * 初始化adapter
@@ -99,6 +87,14 @@ class FeedbackEditActivity :
         viewModel.apply {
             //Change
             observePics(uris)
+            //observe finish
+            observeFinish(finish)
+        }
+    }
+
+    private fun observeFinish(finish: SingleLiveEvent<Unit>) {
+        finish.observe({ lifecycle }) {
+            finish()
         }
     }
 
@@ -141,17 +137,52 @@ class FeedbackEditActivity :
      */
     override fun initListener() {
         binding?.apply {
-            mineButton.setOnClickListener {
+            mineButton.setOnSingleClickListener {
+                if (label == "NONE") {
+                    toast("必须筛选一个标签")
+                    return@setOnSingleClickListener
+                }
+                //判断标题合法性
+                if (etEditTitle.text.toString().isEmpty()
+                    ||
+                    etEditTitle.text.toString().replace(" ", "").isEmpty()
+                ) {
+                    toast("标题内容不能为空哦~")
+                    return@setOnSingleClickListener
+                }
+                //判断内容合法性
+                if (etEditDescription.text.toString().isEmpty()
+                    ||
+                    etEditDescription.text.toString().replace(" ", "").isEmpty()
+                ) {
+                    toast("描述信息不能为空哦")
+                    return@setOnSingleClickListener
+                }
                 vm?.uris?.value?.let {
-                    presenter?.postFeedbackInfo(
-                        productId = "1",
-                        type = chipOne.text.toString(),
-                        title = etEditTitle.text.toString(),
-                        content = etEditDescription.text.toString(),
-                        uri2File(it[0])
-                    )
+                    if (vm?.picCount?.value ?: 0 != 0) {
+                        val files = it.map { uri2File(it) }
+                        presenter?.postFeedbackInfo(
+                            productId = "1",
+                            type = label,
+                            title = etEditTitle.text.toString(),
+                            content = etEditDescription.text.toString(),
+                            files
+                        )
+                    } else {
+                        presenter?.postFeedbackInfo(
+                            productId = "1",
+                            type = label,
+                            title = etEditTitle.text.toString(),
+                            content = etEditDescription.text.toString(),
+                            listOf()
+                        )
+                    }
                 }
             }
+        }
+
+        binding?.chipGroup?.setOnCheckedChangeListener { group, checkedId ->
+            label = findViewById<Chip>(checkedId).text as String
         }
     }
 

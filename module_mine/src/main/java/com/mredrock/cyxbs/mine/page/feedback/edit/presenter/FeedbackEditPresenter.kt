@@ -5,7 +5,6 @@ import android.content.Intent
 import android.graphics.Color
 import android.net.Uri
 import android.os.Build
-import android.provider.MediaStore
 import android.text.Editable
 import android.text.TextWatcher
 import android.util.Log
@@ -52,7 +51,7 @@ class FeedbackEditPresenter(val activity:Activity) : BasePresenter<FeedbackEditV
     /**
      * Post数据
      */
-    fun postFeedbackInfo(productId:String,type:String,title:String,content:String,file:File){
+    fun postFeedbackInfo(productId:String, type:String, title:String, content:String, file: List<File>){
         val productIdRB = productId.toRequestBody("multipart/form-data".toMediaTypeOrNull())
         val typeRB = type.toRequestBody("multipart/form-data".toMediaTypeOrNull())
         val titleRB = title.toRequestBody("multipart/form-data".toMediaTypeOrNull())
@@ -65,7 +64,13 @@ class FeedbackEditPresenter(val activity:Activity) : BasePresenter<FeedbackEditV
             put("content", contentRB)
         }
         Log.d("sss", "postFeedbackInfo: ${file.toString()}")
-        val fileBody = MultipartBody.Part.createFormData("file", file.name, file.getRequestBody())
+        val fileBody = if (file.isNotEmpty()){
+            (file.indices).map {
+                MultipartBody.Part.createFormData("file", file[it].name, file[it].getRequestBody())
+            }
+        }else{
+            null
+        }
         apiServiceNew.postFeedbackInfo(map,fileBody)
             .setSchedulers()
             .doOnSubscribe {}
@@ -73,13 +78,14 @@ class FeedbackEditPresenter(val activity:Activity) : BasePresenter<FeedbackEditV
             .safeSubscribeBy(
                 onNext = {
                     Log.d("sss", "fetch:${it.code} ${it.info} ")
+                    BaseApp.context.toast("提交成功  我们会在十四个工作日内回复")
                 },
                 onError = {
                     BaseApp.context.toast("网络请求失败")
                     Log.d("sss", "initListener: ${it.message}${it.cause}")
                 },
                 onComplete = {
-
+                    vm?.sendFinishEvent()
                 })
     }
 

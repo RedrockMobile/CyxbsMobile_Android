@@ -17,7 +17,7 @@
         app:cardCornerRadius="@dimen/mine_feedback_banner_radius"
         app:cardElevation="@dimen/mine_shop_card_elevation">
 
-        <androidx.appcompat.widget.AppCompatImageView
+        <com.mredrock.cyxbs.mine.page.feedback.widget.SquareImageView
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:scaleType="centerCrop"

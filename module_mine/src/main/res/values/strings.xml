@@ -152,7 +152,7 @@
     <string name="mine_feedback_center_qq_num">57919844</string>
     <string name="mine_feedback_edit_title_num">12</string>
     <string name="mine_feedback_edit_description_num">%d/200</string>
-    <string name="mine_feedback_edit_pic_num">0/3</string>
+    <string name="mine_feedback_edit_pic_num">%d/3</string>
 
     <!--    详情页-->
     <string name="mine_feedback_detail_toolbar_title">怎么才能把我的课表放到桌面鸭</string>
