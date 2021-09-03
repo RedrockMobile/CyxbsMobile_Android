@@ -1,11 +1,16 @@
 package com.mredrock.cyxbs.common.config
 
-import android.content.SharedPreferences
 import androidx.core.content.edit
+import com.google.gson.Gson
 import com.mredrock.cyxbs.common.BaseApp.Companion.context
 import com.mredrock.cyxbs.common.bean.RedrockApiStatus
+import com.mredrock.cyxbs.common.network.ApiGenerator
+import com.mredrock.cyxbs.common.utils.extensions.safeSubscribeBy
+import com.mredrock.cyxbs.common.utils.extensions.setSchedulers
 import com.mredrock.cyxbs.common.utils.extensions.sharedPreferences
 import io.reactivex.Observable
+import okhttp3.ResponseBody
+import retrofit2.HttpException
 import retrofit2.http.Field
 import retrofit2.http.FormUrlEncoded
 import retrofit2.http.POST
@@ -22,24 +27,27 @@ import java.util.*
  */
 object StoreTask {
 
-    enum class Base(val s: String) {
-        // 以下跳转到 module_qa 的 DailySignActivity
-        DAILY_SIGN("今日签到"),
-
-        // 以下跳转到 module_qa 的 DynamicFragment
-        SEE_DYNAMIC("逛逛邮问"), // 浏览动态
-        PUBLISH_DYNAMIC("斐然成章"), // 发布动态
-        SHARE_DYNAMIC("围观吃瓜"), // 分享动态
-        POST_COMMENT("能说会道"), // 发布评论
-        GIVE_A_LIKE("拍案叫绝") // 点赞
+    enum class TaskType(val type: String) {
+        BASE("base"),
+        MORE("more")
     }
 
-    enum class More(val s: String) {
+    enum class Task(val title: String, val type: TaskType) {
+        // 以下跳转到 module_qa 的 DailySignActivity
+        DAILY_SIGN("今日签到", TaskType.BASE),
+
+        // 以下跳转到 module_qa 的 DynamicFragment
+        SEE_DYNAMIC("逛逛邮问", TaskType.BASE), // 浏览动态
+        PUBLISH_DYNAMIC("斐然成章", TaskType.BASE), // 发布动态
+        SHARE_DYNAMIC("围观吃瓜", TaskType.BASE), // 分享动态
+        POST_COMMENT("能说会道", TaskType.BASE), // 发布评论
+        GIVE_A_LIKE("拍案叫绝", TaskType.BASE), // 点赞
+
         // 以下跳转到 module_mine 的 EditInfoActivity
-        EDIT_INFO("完善个人信息"),
+        EDIT_INFO("完善个人信息", TaskType.MORE),
 
         // 以下跳转到 module_volunteer 的 VolunteerLoginActivity
-        LOGIN_VOLUNTEER("绑定志愿者账号")
+        LOGIN_VOLUNTEER("绑定志愿者账号", TaskType.MORE)
     }
 
     private val lastSaveDate by lazy {
@@ -47,37 +55,89 @@ object StoreTask {
         share.getString("last_save_date", "")
     }
 
-    fun postBaseTask(task: Base) {
+    fun postTask(
+        task: Task,
+        onlyTag: String?
+    ) {
         val share = context.sharedPreferences(this::class.java.simpleName)
-        val nowDate = SimpleDateFormat("yyyy.M.d", Locale.CHINA).format(Date())
-        if (lastSaveDate != nowDate) {
-            share.edit {
-                putString("last_save_date", nowDate)
-                clearLocalAllBaseTaskProgress(this)
+        when (task.type) {
+            TaskType.BASE -> { // Base 任务是每天刷新的, 不相等时就先清空所有本地保存的 sharedPreferences
+                val nowDate = SimpleDateFormat("yyyy.M.d", Locale.CHINA).format(Date())
+                if (lastSaveDate != nowDate) {
+                    share.edit {
+                        putString("last_save_date", nowDate)
+                        Task.values().forEach {
+                            this.putInt(it.title, 0)
+                            this.putStringSet("${it.title}_set", null)
+                        }
+                    }
+                }
+            }
+            TaskType.MORE -> {
             }
         }
-        val currentProgress = share.getInt(task.s, 0)
 
+        if (isAllowPost(task.title, onlyTag)) {
+            postTask(task.title)
+        }
     }
 
-    fun postMoreTask(task: More) {
-
+    private fun isAllowPost(title: String, onlyTag: String? = null): Boolean {
+        if (onlyTag != null) {
+            val share = context.sharedPreferences(this::class.java.simpleName)
+            val set = share.getStringSet("${title}_set", setOf())
+            if (set != null) {
+                if (set.contains(onlyTag)) { // 如果包含就返回 false, 说明已经请求过了
+                    return false
+                }else {
+                    share.edit { putStringSet("${title}_set", setOf(onlyTag)) }
+                    return true
+                }
+            }else { // set 为 null 时直接发请求
+                return true
+            }
+        }else { // onlyTag 为 null 时直接发请求
+            return true
+        }
     }
 
-    private fun clearLocalAllBaseTaskProgress(editor: SharedPreferences.Editor) {
-        editor.putInt(Base.DAILY_SIGN.s, 0)
-        editor.putInt(Base.SEE_DYNAMIC.s, 0)
-        editor.putInt(Base.PUBLISH_DYNAMIC.s, 0)
-        editor.putInt(Base.SHARE_DYNAMIC.s, 0)
-        editor.putInt(Base.POST_COMMENT.s, 0)
-        editor.putInt(Base.GIVE_A_LIKE.s, 0)
+    private fun postTask(
+        title: String,
+        onSlopOver: ((maxProgress: Int) -> Unit)? = null,
+        onSuccess: ((currentProgress: Int) -> Unit)? = null
+    ) {
+        val share = context.sharedPreferences(this::class.java.simpleName)
+        val currentProgress = share.getInt(title, 0)
+        ApiGenerator.getApiService(ApiService::class.java)
+            .changeTaskProgress(title, currentProgress)
+            .setSchedulers()
+            .safeSubscribeBy(
+                onError = {
+                    if (it is HttpException) {
+                        // 在任务进度大于最大进度时, 后端返回 http 的错误码 500 导致回调到 onError 方法 所以这里手动拿到返回的 bean 类
+                        val responseBody: ResponseBody? = it.response()?.errorBody()
+                        val code = it.response()?.code()// 返回的 code 如果为 500
+                        if (code == 500) {
+                            val gson = Gson()
+                            val data = gson.fromJson(responseBody?.string(), RedrockApiStatus::class.java)
+                            if (data.status == 400) {
+                                onSlopOver?.invoke(currentProgress)
+                            }
+                        }
+                    }
+                },
+                onNext = {
+                    share.edit { putInt(title, currentProgress + 1) }
+                    onSuccess?.invoke(currentProgress + 1)
+                }
+            )
     }
 
     private interface ApiService {
         // 用于改变积分商城界面的任务
         @POST("/magipoke-intergral/Integral/progress")
         @FormUrlEncoded
-        fun postTaskIsSuccessful(
+        fun changeTaskProgress(
             @Field("title") title: String,
             @Field("current_progress") currentProgress: Int
         ): Observable<RedrockApiStatus>

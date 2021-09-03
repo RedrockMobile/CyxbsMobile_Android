@@ -7,6 +7,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.os.Handler
+import android.util.Log
 import android.view.*
 import android.widget.RelativeLayout
 import android.widget.TextView

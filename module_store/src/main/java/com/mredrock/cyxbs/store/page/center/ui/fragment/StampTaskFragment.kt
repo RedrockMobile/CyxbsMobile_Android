@@ -12,6 +12,7 @@ import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.mredrock.cyxbs.common.config.StoreTask
 import com.mredrock.cyxbs.common.ui.BaseFragment
 import com.mredrock.cyxbs.common.utils.extensions.gone
 import com.mredrock.cyxbs.common.utils.extensions.visible
@@ -126,8 +127,8 @@ class StampTaskFragment : BaseFragment() {
         moreList.clear()
         for (task in tasks) { // 后端返回的 type = "base" 时为每日任务, type = "more" 时为更多任务
             when (task.type) {
-                StoreType.Task.Base -> baseList.add(task)
-                StoreType.Task.More -> moreList.add(task)
+                StoreTask.TaskType.BASE.type -> baseList.add(task)
+                StoreTask.TaskType.MORE.type -> moreList.add(task)
             }
         }
         titleMap[baseList.size] = "更多任务"

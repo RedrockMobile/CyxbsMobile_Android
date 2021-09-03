@@ -1,6 +1,5 @@
 package com.mredrock.cyxbs.common.network
 
-import com.mredrock.cyxbs.common.bean.RedrockApiStatus
 import com.mredrock.cyxbs.common.bean.RedrockApiWrapper
 import com.mredrock.cyxbs.common.utils.down.bean.DownMessage
 import com.mredrock.cyxbs.common.utils.down.params.DownMessageParams
@@ -21,12 +20,4 @@ interface CommonApiService {
     @Headers("Content-Type: application/json")
     @POST("/magipoke-text/text/get")
     fun getDownMessage(@Body downMessageParams: DownMessageParams): Observable<RedrockApiWrapper<DownMessage>>
-
-    // 用于改变积分商城界面的任务
-    @POST("/magipoke-intergral/Integral/progress")
-    @FormUrlEncoded
-    fun postTaskIsSuccessful(
-        @Field("title") title: String,
-        @Field("current_progress") currentProgress: Int
-    ): Observable<RedrockApiStatus>
 }

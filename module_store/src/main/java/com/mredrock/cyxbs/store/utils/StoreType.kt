@@ -23,28 +23,25 @@ class StoreType {
         const val GOODS = 0 // 邮货
     }
 
-    object Task { // 邮票中心首页的邮票任务
-        const val Base = "base" // 每日任务
-        const val More = "more" // 更多任务
-
+    object Task { // 邮票中心首页的邮票任务, 因为在进度修改时要我们自己上传任务进度(会涉及不同模块), 所以类型写在了 common 模块中
         fun jumpOtherUi(context: Context, task: StampCenter.Task) {
             when (task.title) {
-                StoreTask.Base.DAILY_SIGN.s -> {
+                StoreTask.Task.DAILY_SIGN.title -> {
                     ARouter.getInstance().build(MINE_CHECK_IN).navigation()
                 }
-                StoreTask.Base.SEE_DYNAMIC.s,
-                StoreTask.Base.PUBLISH_DYNAMIC.s,
-                StoreTask.Base.SHARE_DYNAMIC.s,
-                StoreTask.Base.POST_COMMENT.s,
-                StoreTask.Base.GIVE_A_LIKE.s -> {
+                StoreTask.Task.SEE_DYNAMIC.title,
+                StoreTask.Task.PUBLISH_DYNAMIC.title,
+                StoreTask.Task.SHARE_DYNAMIC.title,
+                StoreTask.Task.POST_COMMENT.title,
+                StoreTask.Task.GIVE_A_LIKE.title -> {
                     val intent = Intent(context, QaActivity::class.java)
                     context.startActivity(intent)
                 }
-                StoreTask.More.EDIT_INFO.s -> {
+                StoreTask.Task.EDIT_INFO.title -> {
                     ARouter.getInstance().build(MINE_EDIT_INFO).navigation()
 
                 }
-                StoreTask.More.LOGIN_VOLUNTEER.s -> {
+                StoreTask.Task.LOGIN_VOLUNTEER.title -> {
                     ARouter.getInstance().build(DISCOVER_VOLUNTEER).navigation()
                 }
                 else -> {
