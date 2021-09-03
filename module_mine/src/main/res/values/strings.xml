@@ -27,6 +27,7 @@
     <!--    编辑-->
     <string name="mine_nickname">昵称</string>
     <string name="mine_nickname_default">输入您的昵称</string>
+    <string name="mine_nickname_null">昵称不可为空哦</string>
     <string name="mine_introduce">个性签名</string>
     <string name="mine_introduce_default">输入个性签名</string>
     <string name="mine_qq">QQ</string>
