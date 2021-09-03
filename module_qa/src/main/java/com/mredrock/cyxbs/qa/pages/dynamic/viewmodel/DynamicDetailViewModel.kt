@@ -44,9 +44,16 @@ open class DynamicDetailViewModel : BaseViewModel() {
 
     val deleteDynamic = MutableLiveData<Boolean>()
 
+    /**
+     * bug修复代码
+     * @author wx
+     * @Date：2021/8/31
+     * 限制livedata的粘性事件  造成activity被finish
+     */
+    var isNeedFinish=false
+
     // commentId用于刷新后聚焦到某一个评论。
     fun refreshCommentList(postId: String, commentId: String) {
-
         ApiGenerator.getApiService(ApiServiceNew::class.java)
             .getPostInfo(postId)
             .mapOrThrowApiException()
@@ -155,6 +162,7 @@ open class DynamicDetailViewModel : BaseViewModel() {
 
                 when (model) {
                     DynamicDetailActivity.DYNAMIC_DELETE -> {
+                        isNeedFinish=true
                         deleteDynamic.postValue(true)
                         toastEvent.value = R.string.qa_delete_dynamic_success
                     }
@@ -164,7 +172,6 @@ open class DynamicDetailViewModel : BaseViewModel() {
                 }
             }
     }
-
     fun report(id: String, content: String, model: String) {
         ApiGenerator.getApiService(ApiServiceNew::class.java)
             .report(id, CommentConfig.REPORT_DYNAMIC_MODEL, content)
