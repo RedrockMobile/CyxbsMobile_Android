@@ -2,9 +2,14 @@ package com.mredrock.cyxbs.mine.page.feedback.history.list
 
 import android.content.Intent
 import android.net.Uri
+import android.util.Log
 import com.mredrock.cyxbs.common.BaseApp
+import com.mredrock.cyxbs.common.utils.extensions.safeSubscribeBy
+import com.mredrock.cyxbs.common.utils.extensions.setSchedulers
+import com.mredrock.cyxbs.common.utils.extensions.toast
 import com.mredrock.cyxbs.mine.page.feedback.base.presenter.BasePresenter
 import com.mredrock.cyxbs.mine.page.feedback.history.list.bean.History
+import com.mredrock.cyxbs.mine.page.feedback.network.bean.apiServiceNew
 import com.mredrock.cyxbs.mine.page.feedback.utils.change
 import com.mredrock.cyxbs.mine.page.feedback.utils.getPointStateSharedPreference
 import top.limuyang2.photolibrary.LPhotoHelper
@@ -23,6 +28,21 @@ class HistoryListPresenter : BasePresenter<HistoryListViewModel>() {
             defaultHistoryList[index].isRead = state
         }
         vm?.setListData(defaultHistoryList)
+
+        apiServiceNew.getHistoryFeedback("1")
+            .setSchedulers()
+            .doOnSubscribe {}
+            .doOnError { }
+            .safeSubscribeBy(
+                onNext = {
+                    Log.d("sss", "fetch: ${it.data.feedbacks[0].content}")
+                },
+                onError = {
+                    BaseApp.context.toast("网络请求失败")
+                },
+                onComplete = {
+                }
+            )
     }
 
     private fun getDefaultHistoryList(): List<History> {

@@ -15,6 +15,7 @@ import android.os.Environment
 import android.provider.MediaStore
 import android.text.Editable
 import android.text.TextWatcher
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.MotionEvent
 import android.view.View
@@ -303,7 +304,8 @@ class EditInfoActivity
                 .toString()
     }
     private val cameraImageFile by lazy { File(fileDir + File.separator + System.currentTimeMillis() + ".png") }
-    private val destinationFile by lazy { File(fileDir + File.separator + userService.getStuNum() + ".png") }
+    private val destinationFile by lazy { File(fileDir + File.separator + userService.getStuNum() + ".png")}
+
 
     private fun getImageFromCamera() {
         doPermissionAction(Manifest.permission.CAMERA) {

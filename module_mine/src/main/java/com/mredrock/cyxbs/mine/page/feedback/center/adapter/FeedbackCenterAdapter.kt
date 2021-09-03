@@ -9,6 +9,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.mredrock.cyxbs.mine.R
 import com.mredrock.cyxbs.mine.databinding.MineItemQuestionBinding
 import com.mredrock.cyxbs.mine.page.feedback.center.ui.FeedbackCenterActivity
+import com.mredrock.cyxbs.mine.page.feedback.network.bean.NormalFeedback
 
 /**
  * @Date : 2021/8/24   18:27
@@ -21,7 +22,7 @@ class FeedbackCenterAdapter : RecyclerView.Adapter<FeedbackCenterAdapter.InnerVi
     private var eventHandler:FeedbackCenterActivity.EventHandler?=null
 
     private val mContentList by lazy {
-        mutableListOf<String>()
+        mutableListOf<NormalFeedback.Data>()
     }
 
     inner class InnerViewHolder(itemView:View,val itemBinding:MineItemQuestionBinding):RecyclerView.ViewHolder(itemView){}
@@ -37,16 +38,15 @@ class FeedbackCenterAdapter : RecyclerView.Adapter<FeedbackCenterAdapter.InnerVi
     }
 
     override fun onBindViewHolder(holder: InnerViewHolder, position: Int) {
-        val title = mContentList[position]
         holder.itemBinding.eventHandler = eventHandler
-        holder.itemBinding.tvCenterTitle.text = title
+        holder.itemBinding.data = mContentList[position]
     }
 
     override fun getItemCount(): Int {
         return mContentList.size
     }
 
-    fun setData(contentList:List<String>){
+    fun setData(contentList:List<NormalFeedback.Data>){
         mContentList.clear()
         mContentList.addAll(contentList)
 
@@ -56,7 +56,4 @@ class FeedbackCenterAdapter : RecyclerView.Adapter<FeedbackCenterAdapter.InnerVi
     fun setEventHandler(eventHandler:FeedbackCenterActivity.EventHandler){
         this.eventHandler = eventHandler
     }
-
-
-
 }

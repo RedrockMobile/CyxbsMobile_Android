@@ -1,15 +1,23 @@
 package com.mredrock.cyxbs.mine.page.feedback.edit.presenter
 
+import android.app.Activity
 import android.content.Intent
 import android.graphics.Color
 import android.net.Uri
 import android.os.Build
+import android.provider.MediaStore
 import android.text.Editable
 import android.text.TextWatcher
+import android.util.Log
 import android.view.View
 import android.widget.CompoundButton
 import androidx.annotation.RequiresApi
 import com.google.android.material.chip.Chip
+import com.mredrock.cyxbs.common.BaseApp
+import com.mredrock.cyxbs.common.utils.extensions.getRequestBody
+import com.mredrock.cyxbs.common.utils.extensions.safeSubscribeBy
+import com.mredrock.cyxbs.common.utils.extensions.setSchedulers
+import com.mredrock.cyxbs.common.utils.extensions.toast
 import com.mredrock.cyxbs.mine.R
 import com.mredrock.cyxbs.mine.base.presenter.BasePresenter
 import com.mredrock.cyxbs.mine.page.feedback.adapter.rv.RvBinder
@@ -17,7 +25,13 @@ import com.mredrock.cyxbs.mine.page.feedback.edit.viewmodel.FeedbackEditViewMode
 import com.mredrock.cyxbs.mine.page.feedback.history.list.adapter.PicBannerBinderAdd
 import com.mredrock.cyxbs.mine.page.feedback.history.list.adapter.PicBannerBinderPic
 import com.mredrock.cyxbs.mine.page.feedback.history.list.bean.Pic
+import com.mredrock.cyxbs.mine.page.feedback.network.bean.apiServiceNew
+import okhttp3.MediaType.Companion.toMediaTypeOrNull
+import okhttp3.MultipartBody
+import okhttp3.RequestBody
+import okhttp3.RequestBody.Companion.toRequestBody
 import top.limuyang2.photolibrary.LPhotoHelper
+import java.io.File
 
 /**
  * @Date : 2021/8/23   20:59
@@ -25,13 +39,49 @@ import top.limuyang2.photolibrary.LPhotoHelper
  * @Usage :
  * @Request : God bless my code
  **/
-class FeedbackEditPresenter : BasePresenter<FeedbackEditViewModel>(),
+class FeedbackEditPresenter(val activity:Activity) : BasePresenter<FeedbackEditViewModel>(),
     FeedbackEditContract.IPresenter {
 
     /**
      * 初始化数据
      */
-    override fun fetch() {}
+    override fun fetch() {
+
+    }
+
+    /**
+     * Post数据
+     */
+    fun postFeedbackInfo(productId:String,type:String,title:String,content:String,file:File){
+        val productIdRB = productId.toRequestBody("multipart/form-data".toMediaTypeOrNull())
+        val typeRB = type.toRequestBody("multipart/form-data".toMediaTypeOrNull())
+        val titleRB = title.toRequestBody("multipart/form-data".toMediaTypeOrNull())
+        val contentRB = content.toRequestBody("multipart/form-data".toMediaTypeOrNull())
+        val map = HashMap<String, RequestBody>()
+        map.apply {
+            put("product_id", productIdRB)
+            put("type", typeRB)
+            put("title", titleRB)
+            put("content", contentRB)
+        }
+        Log.d("sss", "postFeedbackInfo: ${file.toString()}")
+        val fileBody = MultipartBody.Part.createFormData("file", file.name, file.getRequestBody())
+        apiServiceNew.postFeedbackInfo(map,fileBody)
+            .setSchedulers()
+            .doOnSubscribe {}
+            .doOnError { }
+            .safeSubscribeBy(
+                onNext = {
+                    Log.d("sss", "fetch:${it.code} ${it.info} ")
+                },
+                onError = {
+                    BaseApp.context.toast("网络请求失败")
+                    Log.d("sss", "initListener: ${it.message}${it.cause}")
+                },
+                onComplete = {
+
+                })
+    }
 
     /**
      * 对chip是否选中的处理

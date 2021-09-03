@@ -1,12 +1,19 @@
 package com.mredrock.cyxbs.mine.page.feedback.edit.ui
 
+import android.annotation.SuppressLint
+import android.content.ContentResolver
+import android.content.Context
 import android.content.Intent
 import android.net.Uri
+import android.os.Build
 import android.os.Bundle
+import android.provider.MediaStore
+import android.webkit.MimeTypeMap
+import androidx.annotation.RequiresApi
 import androidx.lifecycle.LiveData
-import androidx.lifecycle.ViewTreeLifecycleOwner
 import androidx.recyclerview.widget.GridLayoutManager
-import androidx.recyclerview.widget.RecyclerView
+import androidx.room.util.FileUtil
+import androidx.room.util.FileUtil.copy
 import com.mredrock.cyxbs.common.ui.BaseMVPVMActivity
 import com.mredrock.cyxbs.common.utils.extensions.toast
 import com.mredrock.cyxbs.mine.R
@@ -17,7 +24,17 @@ import com.mredrock.cyxbs.mine.page.feedback.edit.viewmodel.FeedbackEditViewMode
 import com.mredrock.cyxbs.mine.page.feedback.utils.CHOOSE_FEED_BACK_PIC
 import com.mredrock.cyxbs.mine.page.feedback.utils.selectImageFromAlbum
 import com.mredrock.cyxbs.mine.page.feedback.utils.setSelectedPhotos
+import com.uc.crashsdk.g.Q
+import com.umeng.analytics.pro.ax.Q
+import com.umeng.analytics.pro.b.Q
+import com.umeng.analytics.pro.h.Q
+import com.umeng.commonsdk.utils.b.Q
+import com.yalantis.ucrop.util.FileUtils
+import java.io.File
+import java.io.FileOutputStream
 import java.util.*
+import kotlin.random.Random
+import kotlin.random.Random.Default.nextInt
 
 /**
  * @Date : 2021/8/23   20:52
@@ -38,7 +55,7 @@ class FeedbackEditActivity :
     /**
      * 得到P层
      */
-    override fun createPresenter(): FeedbackEditPresenter = FeedbackEditPresenter()
+    override fun createPresenter(): FeedbackEditPresenter = FeedbackEditPresenter(this)
 
     /**
      * 得到布局id
@@ -123,6 +140,34 @@ class FeedbackEditActivity :
      * 初始化listener
      */
     override fun initListener() {
-
+        binding?.apply {
+            mineButton.setOnClickListener {
+                vm?.uris?.value?.let {
+                    presenter?.postFeedbackInfo(
+                        productId = "1",
+                        type = chipOne.text.toString(),
+                        title = etEditTitle.text.toString(),
+                        content = etEditDescription.text.toString(),
+                        uri2File(it[0])
+                    )
+                }
+            }
+        }
     }
+
+    private fun uri2File(uri: Uri): File {
+        var ima: String = ""
+        val proj = arrayOf<String>(MediaStore.Images.Media.DATA)
+        val actualimagecursor = this.managedQuery(uri, proj, null, null, null)
+        if (actualimagecursor == null) {
+            ima = uri.path
+        } else {
+            val index = actualimagecursor.getColumnIndexOrThrow(MediaStore.Images.Media.DATA)
+            actualimagecursor.moveToFirst()
+            ima = actualimagecursor.getString(index)
+        }
+        return File(ima)
+    }
+
+
 }
