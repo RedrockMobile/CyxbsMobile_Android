@@ -95,7 +95,7 @@
         android:layout_height="52dp"
         android:layout_gravity="center"
         android:layout_marginTop="195dp"
-        android:background="@drawable/mine_shape_round_cornor_purple_blue"
+        android:background="@drawable/mine_shape_round_corner_purple_blue"
         android:letterSpacing="0.1"
         android:text="@string/mine_security_bind_email_next"
         android:textColor="@color/common_white_font_color"

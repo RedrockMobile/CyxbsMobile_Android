@@ -66,7 +66,7 @@
         android:layout_height="34dp"
         android:layout_marginEnd="23dp"
         android:layout_marginBottom="29dp"
-        android:background="@drawable/mine_shape_round_cornor_purple_blue"
+        android:background="@drawable/mine_shape_round_corner_purple_blue"
         android:letterSpacing="0.1"
         android:lineSpacingExtra="21dp"
         android:text="绑定邮箱"
