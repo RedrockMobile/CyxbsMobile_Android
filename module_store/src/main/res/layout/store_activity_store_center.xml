@@ -90,6 +90,7 @@
                 app:layout_constraintBottom_toTopOf="@+id/store_fl_stamp_number_layout"
                 app:layout_constraintStart_toStartOf="@+id/store_iv_stamp_center_stamp_bg"
                 app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintVertical_bias="0.25"
                 tools:ignore="SpUsage" />
 
             <TextView
@@ -120,15 +121,15 @@
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintStart_toStartOf="@+id/store_iv_stamp_center_stamp_bg"
                 app:layout_constraintTop_toTopOf="parent"
-                app:layout_constraintVertical_bias="0.57">
+                app:layout_constraintVertical_bias="0.60">
 
                 <com.mredrock.cyxbs.store.utils.widget.TextRollView
                     android:id="@+id/store_tv_stamp_number"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     app:view_textColor="@color/store_stamp_center_my_stamp_number"
-                    app:view_textSize="48dp"
                     app:view_textFontFromAssets="font/store_my_stamp_number.ttf"
+                    app:view_textSize="48dp"
                     tools:ignore="HardcodedText,SpUsage" />
 
             </FrameLayout>

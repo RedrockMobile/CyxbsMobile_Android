@@ -40,8 +40,6 @@ import kotlin.math.abs
 class DailySignActivity : BaseViewModelActivity<DailyViewModel>() {
 
     private var objectAnimator: ObjectAnimator? = null
-    private var onStartBottomStatus = BottomSheetBehavior.STATE_COLLAPSED
-    private var requestPointStore = false
 
     private val dividerResArr: Array<Stick> by lazy {
         arrayOf(mine_daily_v_divider_mon_tue,

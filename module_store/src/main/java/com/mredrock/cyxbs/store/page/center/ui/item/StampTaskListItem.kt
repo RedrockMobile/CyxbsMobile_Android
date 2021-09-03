@@ -55,7 +55,7 @@ class StampTaskListItem(
             val position = holder.layoutPosition
             val task = map[position]
             if (task != null) {
-                StoreType.Task.jumpOtherUi(task) // 跳转统一写在这个类里
+                StoreType.Task.jumpOtherUi(it.context, task) // 跳转统一写在这个类里
             }
         }
     }

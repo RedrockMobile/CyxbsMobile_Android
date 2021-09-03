@@ -24,14 +24,13 @@ import org.greenrobot.eventbus.EventBus
 
 @Route(path = DISCOVER_VOLUNTEER)
 class VolunteerLoginActivity : BaseViewModelActivity<VolunteerLoginViewModel>() {
+
     companion object {
         const val BIND_SUCCESS: Int = 0
         const val FAILED: Int = -1
         const val INVALID_ACCOUNT: Int = -2
         const val WRONG_PASSWORD: Int = 3
     }
-
-
 
     //进入登录页面，说明发现页的vm中志愿数据为空，或者用户主动接触绑定
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -80,7 +79,8 @@ class VolunteerLoginActivity : BaseViewModelActivity<VolunteerLoginViewModel>() 
         viewModel.loginCode.observe {
             it ?: return@observe
             when (it) {
-                VolunteerLoginActivity.BIND_SUCCESS -> {
+                BIND_SUCCESS -> {
+
                 }
 
                 INVALID_ACCOUNT, WRONG_PASSWORD -> failedAction("亲，输入的账号或密码有误哦")

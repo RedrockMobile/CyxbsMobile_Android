@@ -3,16 +3,17 @@ package com.mredrock.cyxbs.qa.pages.quiz
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import android.os.Environment
+import androidx.core.content.edit
 import androidx.lifecycle.MutableLiveData
 import com.google.gson.Gson
 import com.mredrock.cyxbs.common.BaseApp
+import com.mredrock.cyxbs.common.BaseApp.Companion.context
 import com.mredrock.cyxbs.common.config.DIR_PHOTO
+import com.mredrock.cyxbs.common.config.StoreTask
 import com.mredrock.cyxbs.common.network.ApiGenerator
+import com.mredrock.cyxbs.common.network.CommonApiService
 import com.mredrock.cyxbs.common.utils.LogUtils
-import com.mredrock.cyxbs.common.utils.extensions.mapOrThrowApiException
-import com.mredrock.cyxbs.common.utils.extensions.safeSubscribeBy
-import com.mredrock.cyxbs.common.utils.extensions.setSchedulers
-import com.mredrock.cyxbs.common.utils.extensions.toast
+import com.mredrock.cyxbs.common.utils.extensions.*
 import com.mredrock.cyxbs.common.viewmodel.BaseViewModel
 import com.mredrock.cyxbs.common.viewmodel.event.ProgressDialogEvent
 import com.mredrock.cyxbs.common.viewmodel.event.SingleLiveEvent
@@ -128,7 +129,7 @@ class QuizViewModel : BaseViewModel() {
             .doOnError { throwable ->
                 isReleaseSuccess = false
                 throwable?.let { e ->
-                    BaseApp.context.toast(e.toString())
+                    context.toast(e.toString())
                 }
                 backAndRefreshPreActivityEvent.value = true
             }
@@ -136,7 +137,25 @@ class QuizViewModel : BaseViewModel() {
                 isReleaseSuccess = true
                 toastEvent.value = R.string.qa_release_dynamic_success
                 backAndRefreshPreActivityEvent.value = true
+                sendTaskChanged()
             }
+    }
+
+    /**
+     * 因积分商城界面有发送动态的任务, 所以添加此方法
+     * @date 2021.9.3-0:30
+     */
+    private fun sendTaskChanged() {
+//        val share = context.sharedPreferences(StoreTask.SharedPreferencesName)
+//        val currentProgress = share.getInt(StoreTask.PUBLISH_DYNAMIC, 0)
+//        ApiGenerator.getApiService(CommonApiService::class.java)
+//            .postTaskIsSuccessful(StoreTask.PUBLISH_DYNAMIC, currentProgress)
+//            .setSchedulers()
+//            .safeSubscribeBy {
+//                share.edit {
+//                    putInt(StoreTask.PUBLISH_DYNAMIC, currentProgress + 1)
+//                }
+//            }
     }
 
     fun checkTitleAndContent(type: String, content: String): Boolean {

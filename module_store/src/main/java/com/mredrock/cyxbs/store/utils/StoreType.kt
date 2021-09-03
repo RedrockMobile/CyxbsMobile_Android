@@ -1,8 +1,15 @@
 package com.mredrock.cyxbs.store.utils
 
+import android.content.Context
+import android.content.Intent
 import com.alibaba.android.arouter.launcher.ARouter
+import com.mredrock.cyxbs.common.config.DISCOVER_VOLUNTEER
 import com.mredrock.cyxbs.common.config.MINE_CHECK_IN
+import com.mredrock.cyxbs.common.config.MINE_EDIT_INFO
+import com.mredrock.cyxbs.common.config.StoreTask
+import com.mredrock.cyxbs.common.utils.extensions.toast
 import com.mredrock.cyxbs.store.bean.StampCenter
+import com.mredrock.cyxbs.store.page.qa.ui.activity.QaActivity
 
 /**
  * 需要与后端交互时的类型区分
@@ -20,22 +27,28 @@ class StoreType {
         const val Base = "base" // 每日任务
         const val More = "more" // 更多任务
 
-        fun jumpOtherUi(task: StampCenter.Task) {
+        fun jumpOtherUi(context: Context, task: StampCenter.Task) {
             when (task.title) {
-                "今日打卡" -> {
+                StoreTask.Base.DAILY_SIGN.s -> {
                     ARouter.getInstance().build(MINE_CHECK_IN).navigation()
                 }
-                "逛逛邮问" -> {
+                StoreTask.Base.SEE_DYNAMIC.s,
+                StoreTask.Base.PUBLISH_DYNAMIC.s,
+                StoreTask.Base.SHARE_DYNAMIC.s,
+                StoreTask.Base.POST_COMMENT.s,
+                StoreTask.Base.GIVE_A_LIKE.s -> {
+                    val intent = Intent(context, QaActivity::class.java)
+                    context.startActivity(intent)
+                }
+                StoreTask.More.EDIT_INFO.s -> {
+                    ARouter.getInstance().build(MINE_EDIT_INFO).navigation()
 
                 }
-                "斐然成章" -> {
-
+                StoreTask.More.LOGIN_VOLUNTEER.s -> {
+                    ARouter.getInstance().build(DISCOVER_VOLUNTEER).navigation()
                 }
-                "围观吃瓜" -> {
-
-                }
-                "能说会道" -> {
-
+                else -> {
+                    context.toast("若点击无跳转，请向我们反馈，谢谢")
                 }
             }
         }

@@ -17,6 +17,9 @@
             android:name=".page.exchange.ui.activity.ProductExchangeActivity"
             android:theme="@style/AppTheme_NoSplitMotionEvent"/>
         <activity
+            android:name=".page.qa.ui.activity.QaActivity"
+            android:theme="@style/AppTheme_NoSplitMotionEvent"/>
+        <activity
             android:name=".ui.activity.PhotoActivity" />
     </application>
 

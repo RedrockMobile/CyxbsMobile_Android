@@ -26,8 +26,6 @@ import org.greenrobot.eventbus.EventBus
 @Route(path = DISCOVER_VOLUNTEER_RECORD)
 class VolunteerRecordActivity : BaseViewModelActivity<VolunteerRecordViewModel>() {
 
-
-
     companion object {
         fun startActivity(activity: Activity, volunteerTime: VolunteerTime) {
             activity.startActivity(
