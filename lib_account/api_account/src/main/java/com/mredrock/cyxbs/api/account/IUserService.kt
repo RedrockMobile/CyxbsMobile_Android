@@ -20,4 +20,7 @@ interface IUserService {
     fun getPhotoThumbnailSrc(): String
 
     fun getCollege(): String
+
+    //用于刷新个人信息，请在需要的地方调用
+    fun refreshInfo()
 }
