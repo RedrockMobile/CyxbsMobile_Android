@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<TextView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/store_tv_stamp_task_title"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:layout_marginTop="36dp"
+    android:text="更多任务"
+    android:textSize="20sp"
+    android:textColor="@color/store_stamp_task_title"
+    android:textStyle="bold"
+    tools:ignore="HardcodedText" />

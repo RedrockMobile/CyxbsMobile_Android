@@ -27,10 +27,12 @@ import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.afollestad.materialdialogs.MaterialDialog
 import com.afollestad.materialdialogs.list.listItems
+import com.alibaba.android.arouter.facade.annotation.Route
 import com.mredrock.cyxbs.common.config.DIR_PHOTO
 import com.mredrock.cyxbs.common.service.ServiceManager
 import com.mredrock.cyxbs.api.account.IAccountService
 import com.mredrock.cyxbs.api.account.IUserService
+import com.mredrock.cyxbs.common.config.MINE_EDIT_INFO
 import com.mredrock.cyxbs.common.ui.BaseViewModelActivity
 import com.mredrock.cyxbs.common.utils.extensions.*
 import com.mredrock.cyxbs.mine.R
@@ -49,6 +51,7 @@ import java.io.IOException
  * Created by zzzia on 2018/8/14.
  * 编辑个人信息
  */
+@Route(path = MINE_EDIT_INFO)
 class EditInfoActivity
     : BaseViewModelActivity<EditViewModel>() {
 

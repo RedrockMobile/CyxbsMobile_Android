@@ -1,0 +1,106 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <data>
+        <variable
+            name="task"
+            type="com.mredrock.cyxbs.store.bean.StampCenter.Task" />
+    </data>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="22dp">
+
+        <TextView
+            android:id="@+id/store_tv_stamp_task_list_name"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@{task.title}"
+            android:textColor="@color/store_stamp_task_name"
+            android:textSize="16sp"
+            app:layout_constraintBottom_toTopOf="@+id/store_tv_stamp_task_list_describe"
+            app:layout_constraintStart_toStartOf="@+id/store_tv_stamp_task_list_describe"
+            tools:ignore="HardcodedText"
+            tools:text="等兮哥哥的爱❤"/>
+
+        <TextView
+            android:id="@+id/store_tv_stamp_task_list_describe"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:alpha="0.3"
+            android:text="@{task.description}"
+            android:textSize="14sp"
+            android:textColor="@color/store_stamp_task_detail"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            tools:ignore="HardcodedText"
+            tools:text="上床就能得到兮哥哥的爱❤"/>
+
+        <TextView
+            android:id="@+id/store_tv_stamp_task_list_gain_number"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
+            android:alpha="0.3"
+            android:text="@{`+`+task.gainStamp}"
+            android:textColor="@color/store_stamp_task_detail"
+            android:textSize="14sp"
+            app:layout_constraintBottom_toBottomOf="@+id/store_tv_stamp_task_list_describe"
+            app:layout_constraintStart_toEndOf="@+id/store_tv_stamp_task_list_describe"
+            app:layout_constraintTop_toTopOf="@+id/store_tv_stamp_task_list_describe"
+            tools:ignore="HardcodedText"
+            tools:text="+99999999"/>
+
+        <com.google.android.material.button.MaterialButton
+            style="@style/Widget.MaterialComponents.Button.UnelevatedButton"
+            android:id="@+id/store_btn_stamp_task_list_go"
+            android:layout_width="66dp"
+            android:layout_height="30dp"
+            android:insetTop="0dp"
+            android:insetBottom="0dp"
+            android:padding="0dp"
+            android:textColor="@color/store_stamp_task_go_btn_text"
+            android:textSize="14dp"
+            android:theme="@style/Theme.MaterialComponents"
+            android:clickable="@{task.currentProgress!=task.maxProgress}"
+            android:backgroundTint="@{task.currentProgress!=task.maxProgress?@color/store_stamp_task_go_btn_bg:@color/store_stamp_task_go_btn_bg_ok, default=@color/store_stamp_task_go_btn_bg}"
+            app:cornerRadius="19dp"
+            app:layout_constraintBottom_toBottomOf="@+id/store_tv_stamp_task_list_describe"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="@+id/store_tv_stamp_task_list_describe"
+            tools:ignore="HardcodedText,SpUsage"
+            tools:text="去上床" />
+
+        <com.google.android.material.progressindicator.LinearProgressIndicator
+            android:id="@+id/store_progress_bar_stamp_task"
+            android:layout_width="150dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:max="@{task.maxProgress}"
+            app:trackThickness="8dp"
+            app:indicatorColor="#7D8AFF"
+            app:layout_constraintStart_toStartOf="@+id/store_tv_stamp_task_list_describe"
+            app:layout_constraintTop_toBottomOf="@+id/store_tv_stamp_task_list_describe"
+            app:trackColor="@color/store_stamp_task_progress_trackColor"
+            app:trackCornerRadius="4dp" />
+
+        <TextView
+            android:id="@+id/store_tv_stamp_task_list_progress"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="6dp"
+            android:text="@{task.currentProgress+`/`+task.maxProgress}"
+            android:textSize="12sp"
+            android:textColor="@color/store_stamp_task_progress_text"
+            app:layout_constraintBottom_toBottomOf="@+id/store_progress_bar_stamp_task"
+            app:layout_constraintStart_toEndOf="@+id/store_progress_bar_stamp_task"
+            app:layout_constraintTop_toTopOf="@+id/store_progress_bar_stamp_task"
+            tools:ignore="HardcodedText"
+            tools:text="0/99999999"/>
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</layout>

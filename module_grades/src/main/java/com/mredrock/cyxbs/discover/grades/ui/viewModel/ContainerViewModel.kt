@@ -85,7 +85,7 @@ class ContainerViewModel : BaseViewModel() {
                 onError = {
                     //密码错误的话,会导致状态码为400，Retrofit无法回调onNext
                     //详见：https://www.cnblogs.com/fuyaozhishang/p/8607706.html
-                    if (it is HttpException) {
+                    if ( it is HttpException && it.code() == 400 ) {
                         val body = (it).response()?.errorBody() ?: return@safeSubscribeBy
                         val data = Gson().fromJson(body.string(), IdsStatus::class.java)
                         if (data.errorCode == ERROR) {

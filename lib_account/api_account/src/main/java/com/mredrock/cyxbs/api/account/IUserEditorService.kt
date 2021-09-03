@@ -10,8 +10,4 @@ interface IUserEditorService {
     fun setPhone(phone: String)
 
     fun setQQ(qq: String)
-
-    fun setIntegral(integral: Int)
-
-    fun setCheckInDay(checkInDay: Int)
 }

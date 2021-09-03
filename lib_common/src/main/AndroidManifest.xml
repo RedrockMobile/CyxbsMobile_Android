@@ -37,10 +37,10 @@
     <uses-permission android:name="android.permission.SYSTEM_ALERT_WINDOW" />
 
     <application>
-        <service
-            android:name="com.mredrock.cyxbs.update.component.AppUpdateDownloadService"
-            android:enabled="true"
-            android:exported="true" />
+<!--        <service-->
+<!--            android:name="com.mredrock.cyxbs.update.component.AppUpdateDownloadService"-->
+<!--            android:enabled="true"-->
+<!--            android:exported="true" />-->
 
         <provider
             android:name="androidx.core.content.FileProvider"
@@ -51,10 +51,10 @@
                 android:name="android.support.FILE_PROVIDER_PATHS"
                 android:resource="@xml/provider_paths" />
         </provider> <!-- bugly -->
-        <activity
-            android:name="com.tencent.bugly.beta.ui.BetaActivity"
-            android:configChanges="keyboardHidden|orientation|screenSize|locale"
-            android:theme="@android:style/Theme.Translucent" />
+<!--        <activity-->
+<!--            android:name="com.tencent.bugly.beta.ui.BetaActivity"-->
+<!--            android:configChanges="keyboardHidden|orientation|screenSize|locale"-->
+<!--            android:theme="@android:style/Theme.Translucent" />-->
         <activity
             android:name=".ui.ExceptionActivity"
             android:process=":exception_handler"
