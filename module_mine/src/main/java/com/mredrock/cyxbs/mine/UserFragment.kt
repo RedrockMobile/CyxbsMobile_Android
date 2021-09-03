@@ -17,10 +17,7 @@ import com.alibaba.android.arouter.facade.annotation.Route
 import com.alibaba.android.arouter.launcher.ARouter
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.mredrock.cyxbs.api.account.IAccountService
-import com.mredrock.cyxbs.common.config.MINE_ENTRY
-import com.mredrock.cyxbs.common.config.QA_DYNAMIC_MINE
-import com.mredrock.cyxbs.common.config.QA_MY_COMMENT
-import com.mredrock.cyxbs.common.config.QA_MY_PRAISE
+import com.mredrock.cyxbs.common.config.*
 import com.mredrock.cyxbs.common.service.ServiceManager
 import com.mredrock.cyxbs.common.ui.BaseViewModelFragment
 import com.mredrock.cyxbs.common.utils.extensions.doIfLogin
@@ -57,63 +54,15 @@ class UserFragment : BaseViewModelFragment<UserViewModel>() {
             mine_main_btn_sign.setOnClickListener { doIfLogin { startActivity<DailySignActivity>() } }
             mine_main_fm_setting.setOnSingleClickListener { doIfLogin { startActivity<SettingActivity>() } }
             mine_main_fm_about_us.setOnSingleClickListener { doIfLogin { startActivity<AboutActivity>() } }
-            mine_main_fm_point_store.setOnClickListener {
-                doIfLogin {
-                    DailySignActivity.actionStart(
-                        this,
-                        BottomSheetBehavior.STATE_EXPANDED
-                    )
-                }
-            }
-            mine_main_tv_sign.setOnClickListener {
-                doIfLogin {
-                    DailySignActivity.actionStart(
-                        this,
-                        BottomSheetBehavior.STATE_COLLAPSED
-                    )
-                }
-            }
+            mine_main_fm_point_store.setOnClickListener { doIfLogin { jump(STORE_ENTRY) } }
+            mine_main_tv_sign.setOnClickListener { doIfLogin { startActivity<DailySignActivity>() } }
             mine_main_tv_dynamic_number.setOnSingleClickListener { doIfLogin { jump(QA_DYNAMIC_MINE) } }
             mine_main_tv_dynamic.setOnSingleClickListener { doIfLogin { jump(QA_DYNAMIC_MINE) } }
-            mine_main_tv_comment_number.setOnSingleClickListener {
-                doIfLogin {
-                    jumpAndSaveTime(
-                        QA_MY_COMMENT,
-                        1
-                    )
-                }
-            }
-            mine_main_tv_praise_number.setOnSingleClickListener {
-                doIfLogin {
-                    jumpAndSaveTime(
-                        QA_MY_PRAISE,
-                        2
-                    )
-                }
-            }
-            mine_main_tv_comment.setOnSingleClickListener {
-                doIfLogin {
-                    jumpAndSaveTime(
-                        QA_MY_COMMENT,
-                        1
-                    )
-                }
-            }
-            mine_main_tv_praise.setOnSingleClickListener {
-                doIfLogin {
-                    jumpAndSaveTime(
-                        QA_MY_PRAISE,
-                        2
-                    )
-                }
-            }
-            mine_main_fm_feedback.setOnSingleClickListener {
-                doIfLogin {
-                    Jump2QQHelper.onFeedBackClick(
-                        this
-                    )
-                }
-            }
+            mine_main_tv_comment_number.setOnSingleClickListener { doIfLogin { jumpAndSaveTime(QA_MY_COMMENT, 1) } }
+            mine_main_tv_praise_number.setOnSingleClickListener { doIfLogin { jumpAndSaveTime(QA_MY_PRAISE, 2) } }
+            mine_main_tv_comment.setOnSingleClickListener { doIfLogin { jumpAndSaveTime(QA_MY_COMMENT, 1) } }
+            mine_main_tv_praise.setOnSingleClickListener { doIfLogin { jumpAndSaveTime(QA_MY_PRAISE, 2) } }
+            mine_main_fm_feedback.setOnSingleClickListener { doIfLogin { Jump2QQHelper.onFeedBackClick(this) } }
             mine_main_cl_info_edit.setOnClickListener {
                 doIfLogin {
                     startActivity(

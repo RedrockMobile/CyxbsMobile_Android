@@ -7,7 +7,7 @@
     <!--    首页-->
     <!--TODO: 删除无用String-->
     <string name="mine_sign_name">签到</string>
-    <string name="mine_sing_successive_default">已连续签到--天</string>
+    <string name="mine_sing_successive_default">已连续签到 天</string>
     <string name="mine_question">提问</string>
     <string name="mine_answer">回答</string>
     <string name="mine_reply_to_comment">评论</string>

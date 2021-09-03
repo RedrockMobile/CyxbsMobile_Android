@@ -1,0 +1,24 @@
+<resources xmlns:tools="http://schemas.android.com/tools">
+
+    <!-- Base application theme. -->
+
+    <style name="store_tablayout_text_appearance" parent="TextAppearance.AppCompat.Widget.ActionBar.Title.Inverse">
+        <item name="android:textSize">21sp</item>
+        <item name="android:textStyle">bold</item>
+        <item name="android:textAllCaps">true</item>
+    </style>
+
+    <style name="AppTheme.NoActionBar" tools:ignore="ResourceName">
+        <item name="windowActionBar">false</item>
+        <item name="windowNoTitle">true</item>
+    </style>
+
+    <style name="transparent_dialog" parent="Theme.AppCompat.Dialog" tools:ignore="ResourceName">
+        <item name="android:windowBackground">@null</item>
+    </style>
+
+    <style name="tab_style" tools:ignore="ResourceName">
+        <item name="android:textSize">18sp</item>
+    </style>
+
+</resources>

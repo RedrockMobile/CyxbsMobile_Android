@@ -8,7 +8,7 @@ interface IUserStateService {
     enum class UserState {
         LOGIN, // 登录之后发送的事件
         NOT_LOGIN, // 退出登录发送的事件
-        EXPIRED, // Token过期发送的事件
+//        EXPIRED, // Token过期发送的事件
         TOURIST, // 进入访客模式发送的事件
         REFRESH // 刷新Token发送的事件
     }
@@ -32,7 +32,6 @@ interface IUserStateService {
 
     fun isLogin(): Boolean
 
-    fun isExpired(): Boolean
 
     fun isTouristMode(): Boolean
 

@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<shape xmlns:android="http://schemas.android.com/apk/res/android"
+    android:shape="rectangle">
+
+    <corners android:radius="8dp" />
+
+    <!--视觉不喜欢 CardView 的阴影, 非要虚影-->
+    <gradient
+        android:startColor="#80F4F6FF"
+        android:endColor="@color/store_stamp_center_cardView_background"
+        android:centerX="0.5"
+        android:centerY="0.5"
+        android:gradientRadius="600"
+        android:type="radial"/>
+
+</shape>

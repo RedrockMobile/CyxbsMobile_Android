@@ -31,7 +31,6 @@ interface ApiService {
                        @Field("introduction") introduction: String,
                        @Field("qq") qq: String,
                        @Field("phone") phone: String,
-                       @Field("photo_thumbnail_src") photo_thumbnail_src: String,
                        @Field("photo_src") photo_src: String): Observable<RedrockApiStatus>
 
     /**
