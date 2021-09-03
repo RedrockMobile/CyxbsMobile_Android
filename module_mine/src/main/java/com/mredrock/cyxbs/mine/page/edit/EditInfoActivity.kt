@@ -170,7 +170,9 @@ class EditInfoActivity
 
     private fun refreshUserInfo() {
         loadAvatar(userService.getAvatarImgUrl(), mine_edit_et_avatar)
-        Log.d("TAG","(EditInfoActivity.kt:172)->nickname ${userService.getNickname()} into ${userService.getIntroduction()} qq ${userService.getQQ()} phone ${userService.getPhone()}")
+        /*
+        * 如果返回的数据为空格，则表示数据为空
+        * */
         if (userService.getNickname() == " ") mine_et_nickname.setText("") else mine_et_nickname.setText(userService.getNickname())
         if (userService.getIntroduction() == " ") mine_et_introduce.setText("") else mine_et_introduce.setText(userService.getIntroduction())
         if (userService.getQQ() == " ") mine_et_qq.setText("") else mine_et_qq.setText(userService.getQQ())
@@ -207,6 +209,10 @@ class EditInfoActivity
     }
 
     private fun saveInfo() {
+        /*
+        * 为什么这里会有一个空格,原因就在于后端不能保存长度为零的字符串，但是我们又想清空数据，所以就用空格来代替
+        * 注意请求数据时，如果数据为空格，即为空
+        * */
         val nickname = if (mine_et_nickname.text.toString().isNotEmpty()) mine_et_nickname.text.toString() else " "
         val introduction = if (mine_et_introduce.text.toString().isNotEmpty()) mine_et_introduce.text.toString() else " "
         val qq = if (mine_et_qq.text.toString().isNotEmpty()) mine_et_qq.text.toString() else " "
@@ -216,10 +222,7 @@ class EditInfoActivity
         if (!checkIfInfoChange()) {
             return
         }
-        Log.d("TAG","(EditInfoActivity.kt:218)->before name:${userService.getNickname()} intro:${userService.getIntroduction()} ")
         viewModel.updateUserInfo(nickname, introduction, qq, phone)
-        Log.d("TAG","(EditInfoActivity.kt:218)->after name:${userService.getNickname()} intro:${userService.getIntroduction()} ")
-
     }
 
     private fun checkIfInfoChange(): Boolean {

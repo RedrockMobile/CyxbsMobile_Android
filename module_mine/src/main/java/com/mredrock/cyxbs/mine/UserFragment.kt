@@ -51,7 +51,6 @@ class UserFragment : BaseViewModelFragment<UserViewModel>() {
         //功能按钮
         context?.apply {
             mine_main_btn_sign.setOnClickListener { doIfLogin { startActivity<DailySignActivity>() } }
-            mine_main_btn_sign.setOnClickListener { doIfLogin { startActivity<DailySignActivity>() } }
             mine_main_fm_setting.setOnSingleClickListener { doIfLogin { startActivity<SettingActivity>() } }
             mine_main_fm_about_us.setOnSingleClickListener { doIfLogin { startActivity<AboutActivity>() } }
             mine_main_fm_point_store.setOnClickListener { doIfLogin { jump(STORE_ENTRY) } }
@@ -157,12 +156,12 @@ class UserFragment : BaseViewModelFragment<UserViewModel>() {
     private fun refreshUserLayout() {
         val userService = ServiceManager.getService(IAccountService::class.java).getUserService()
         context?.loadAvatar(userService.getAvatarImgUrl(), mine_main_avatar)
-        mine_main_username.text = if (userService.getNickname()
-                .isBlank()
-        ) getString(R.string.mine_user_empty_username) else userService.getNickname()
-        mine_main_introduce.text = if (userService.getIntroduction()
-                .isBlank()
-        ) getString(R.string.mine_user_empty_introduce) else userService.getIntroduction()
+        mine_main_username.text =
+            if (userService.getNickname().isBlank()) getString(R.string.mine_user_empty_username)
+            else userService.getNickname()
+        mine_main_introduce.text =
+            if (userService.getIntroduction().isBlank()) getString(R.string.mine_user_empty_introduce)
+            else userService.getIntroduction()
     }
 
     override fun onCreateView(
