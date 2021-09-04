@@ -73,6 +73,7 @@ class StoreCenterActivity : BaseViewModelActivity<StoreCenterViewModel>() {
             )
         )
         mViewPager2.setPageTransformer(ScaleInTransformer())
+//        mViewPager2.offscreenPageLimit = 1 // 设置虽然可以提前加载第二页, 但第二页的进度条动画却没了
     }
 
     // 设置 TabLayout

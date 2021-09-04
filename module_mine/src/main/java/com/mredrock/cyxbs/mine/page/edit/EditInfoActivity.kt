@@ -172,9 +172,9 @@ class EditInfoActivity
         loadAvatar(userService.getAvatarImgUrl(), mine_edit_et_avatar)
 
         /*
-        * 如果返回的数据为空格，则表示数据为空
+        * 如果返回的数据为空格，则表示数据为空，昵称除外
         * */
-        mine_et_nickname.setText(if (userService.getNickname().isBlank()) "" else userService.getNickname())
+        mine_et_nickname.setText(userService.getNickname())
         mine_et_introduce.setText(if (userService.getIntroduction().isBlank()) "" else userService.getIntroduction())
         mine_et_qq.setText(if (userService.getQQ().isBlank()) "" else userService.getQQ())
         mine_et_phone.setText(if (userService.getPhone().isBlank()) "" else userService.getPhone())
