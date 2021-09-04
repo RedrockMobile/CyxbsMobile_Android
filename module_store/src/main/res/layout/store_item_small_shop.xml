@@ -7,16 +7,6 @@
     android:paddingStart="12.5dp"
     android:paddingEnd="12.5dp">
 
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/store_rv_fragment_small_shop"
-        android:layout_width="0dp"
-        android:layout_height="0dp"
-        android:background="@color/store_stamp_center_cardView_background"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
-
     <ImageView
         android:id="@+id/store_iv_fragment_small_shop"
         android:layout_width="157dp"
@@ -26,7 +16,8 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        tools:ignore="ContentDescription" />
+        tools:ignore="ContentDescription"
+        tools:src="@drawable/store_ic_no_internet"/>
 
     <TextView
         android:id="@+id/store_tv_fragment_small_shop"
@@ -38,6 +29,20 @@
         app:layout_constraintEnd_toEndOf="@+id/store_iv_fragment_small_shop"
         app:layout_constraintStart_toStartOf="@+id/store_iv_fragment_small_shop"
         app:layout_constraintTop_toBottomOf="@+id/store_iv_fragment_small_shop" />
+
+
+    <!--这个背景只是用的 tools:listitem 属性, 只是起展示作用, 方便你寻找-->
+    <!--只是设置预览时不能设置一排展示两个, 所以看起来是这样的-->
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/store_rv_fragment_small_shop"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:background="@color/store_stamp_center_cardView_background"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:listitem="@layout/store_recycler_item_small_shop_product"/>
 
 </androidx.constraintlayout.widget.ConstraintLayout>
 

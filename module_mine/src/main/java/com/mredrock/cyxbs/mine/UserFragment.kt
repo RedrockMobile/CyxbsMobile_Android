@@ -15,7 +15,6 @@ import androidx.core.util.Pair
 import androidx.lifecycle.Observer
 import com.alibaba.android.arouter.facade.annotation.Route
 import com.alibaba.android.arouter.launcher.ARouter
-import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.mredrock.cyxbs.api.account.IAccountService
 import com.mredrock.cyxbs.common.config.*
 import com.mredrock.cyxbs.common.service.ServiceManager
@@ -50,11 +49,11 @@ class UserFragment : BaseViewModelFragment<UserViewModel>() {
     private fun initView() {
         //功能按钮
         context?.apply {
-            mine_main_btn_sign.setOnClickListener { doIfLogin { startActivity<DailySignActivity>() } }
+            mine_main_btn_sign.setOnSingleClickListener { doIfLogin { startActivity<DailySignActivity>() } }
             mine_main_fm_setting.setOnSingleClickListener { doIfLogin { startActivity<SettingActivity>() } }
             mine_main_fm_about_us.setOnSingleClickListener { doIfLogin { startActivity<AboutActivity>() } }
-            mine_main_fm_point_store.setOnClickListener { doIfLogin { jump(STORE_ENTRY) } }
-            mine_main_tv_sign.setOnClickListener { doIfLogin { startActivity<DailySignActivity>() } }
+            mine_main_fm_point_store.setOnSingleClickListener { doIfLogin { jump(STORE_ENTRY) } }
+            mine_main_tv_sign.setOnSingleClickListener { doIfLogin { startActivity<DailySignActivity>() } }
             mine_main_tv_dynamic_number.setOnSingleClickListener { doIfLogin { jump(QA_DYNAMIC_MINE) } }
             mine_main_tv_dynamic.setOnSingleClickListener { doIfLogin { jump(QA_DYNAMIC_MINE) } }
             mine_main_tv_comment_number.setOnSingleClickListener { doIfLogin { jumpAndSaveTime(QA_MY_COMMENT, 1) } }
@@ -62,7 +61,7 @@ class UserFragment : BaseViewModelFragment<UserViewModel>() {
             mine_main_tv_comment.setOnSingleClickListener { doIfLogin { jumpAndSaveTime(QA_MY_COMMENT, 1) } }
             mine_main_tv_praise.setOnSingleClickListener { doIfLogin { jumpAndSaveTime(QA_MY_PRAISE, 2) } }
             mine_main_fm_feedback.setOnSingleClickListener { doIfLogin { Jump2QQHelper.onFeedBackClick(this) } }
-            mine_main_cl_info_edit.setOnClickListener {
+            mine_main_cl_info_edit.setOnSingleClickListener {
                 doIfLogin {
                     startActivity(
                         Intent(
@@ -162,6 +161,15 @@ class UserFragment : BaseViewModelFragment<UserViewModel>() {
         mine_main_introduce.text =
             if (userService.getIntroduction().isBlank()) getString(R.string.mine_user_empty_introduce)
             else userService.getIntroduction()
+
+        if (userService.getNickname().isNotBlank() &&
+            userService.getIntroduction().isNotBlank() &&
+            userService.getQQ().isNotBlank() &&
+            userService.getPhone().isNotBlank()
+        ) {
+            // 当都不为空时, 说明已经设置了个人信息, 则提交积分商城任务进度, 后端已做重复处理
+            StoreTask.postTask(StoreTask.Task.EDIT_INFO, null)
+        }
     }
 
     override fun onCreateView(

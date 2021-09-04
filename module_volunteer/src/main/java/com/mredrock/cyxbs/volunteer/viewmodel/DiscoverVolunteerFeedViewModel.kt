@@ -39,7 +39,8 @@ class DiscoverVolunteerFeedViewModel : BaseViewModel() {
                     isBind = true
                     volunteerData.value = it
                     isQuerying = false
-                    // 登录了就更新积分商城的任务, 后端说任务是只能领取一次的
+
+                    // 登录了就更新积分商城的任务, 后端已做重复处理
                     StoreTask.postTask(StoreTask.Task.LOGIN_VOLUNTEER, null)
                 }
     }

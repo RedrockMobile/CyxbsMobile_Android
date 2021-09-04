@@ -17,11 +17,12 @@ object Date {
     private val sdf2 = SimpleDateFormat("yyyy-MM-dd HH:mm", Locale.CHINA)
 
     /**
-     * 根据时间戳获取日期
+     * 根据时间戳获取日期, 形式为 yyyy.M.d
+     *
+     * **NOTE:** 时间单位是毫秒
      */
     fun getTime(time: Long): String {
-        val date = Date()
-        date.time = time
+        val date = Date(time * 1000)
         return sdf1.format(date)
     }
 
@@ -29,9 +30,13 @@ object Date {
         return sdf1.format(date)
     }
 
+    /**
+     * 根据时间戳获取日期, 形式为 yyyy-MM-dd HH:mm
+     *
+     * **NOTE:** 时间单位是毫秒
+     */
     fun getExactTime(time: Long): String {
-        val date = Date()
-        date.time = time
+        val date = Date(time * 1000)
         return sdf2.format(date)
     }
 }

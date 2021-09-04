@@ -15,14 +15,16 @@ import androidx.recyclerview.widget.RecyclerView
 import com.mredrock.cyxbs.common.config.StoreTask
 import com.mredrock.cyxbs.common.ui.BaseFragment
 import com.mredrock.cyxbs.common.utils.extensions.gone
+import com.mredrock.cyxbs.common.utils.extensions.invisible
 import com.mredrock.cyxbs.common.utils.extensions.visible
 import com.mredrock.cyxbs.store.R
 import com.mredrock.cyxbs.store.bean.StampCenter
 import com.mredrock.cyxbs.store.page.center.ui.item.StampTaskListItem
 import com.mredrock.cyxbs.store.page.center.ui.item.StampTaskTitleItem
 import com.mredrock.cyxbs.store.page.center.viewmodel.StoreCenterViewModel
-import com.mredrock.cyxbs.store.utils.StoreType
 import com.mredrock.cyxbs.store.base.SimpleRvAdapter
+import java.util.*
+import kotlin.collections.HashMap
 
 /**
  * ...
@@ -65,10 +67,12 @@ class StampTaskFragment : BaseFragment() {
     private fun initObserve() {
         viewModel.refreshIsSuccessful.observe(viewLifecycleOwner, Observer {
             if (it) {
-                mImageView.gone()
-                mTextView.gone()
+                // 取消断网图片的显示
+                mImageView.invisible()
+                mTextView.invisible()
                 mRecyclerView.visible()
             }else {
+                // 显示断网图片
                 mImageView.visible()
                 mTextView.visible()
                 mRecyclerView.gone()
@@ -131,6 +135,15 @@ class StampTaskFragment : BaseFragment() {
                 StoreTask.TaskType.MORE.type -> moreList.add(task)
             }
         }
+
+        // 优先显示未完成的任务(如果用 TreeSet 会出现有多个大小相同时会被删除的问题)
+        baseList.sortWith(kotlin.Comparator { o1, o2 ->
+            (o2.maxProgress - o2.currentProgress) - (o1.maxProgress - o1.currentProgress)
+        })
+        moreList.sortWith(kotlin.Comparator { o1, o2 ->
+            (o2.maxProgress - o2.currentProgress) - (o1.maxProgress - o1.currentProgress)
+        })
+
         titleMap[baseList.size] = "更多任务"
         for (i in baseList.indices) {
             taskMap[i] = baseList[i]

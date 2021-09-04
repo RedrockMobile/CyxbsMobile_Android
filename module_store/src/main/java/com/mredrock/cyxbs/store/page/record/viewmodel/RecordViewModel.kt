@@ -23,9 +23,13 @@ class RecordViewModel : BaseViewModel() {
     val mExchangeRecordIsSuccessful by lazy(LazyThreadSafetyMode.NONE) { MutableLiveData<Boolean>() }
 
     // 获取记录
-    val mStampGetRecord by lazy(LazyThreadSafetyMode.NONE) { MutableLiveData<List<StampGetRecord>>() }
-    // 获取记录请求是否成功
-    val mStampGetRecordIsSuccessful by lazy(LazyThreadSafetyMode.NONE) { MutableLiveData<Boolean>() }
+    val mFirstPageStampGetRecord by lazy(LazyThreadSafetyMode.NONE) { MutableLiveData<List<StampGetRecord>>() }
+    // 第一页获取记录请求是否成功
+    val mFirstPageGetRecordIsSuccessful by lazy(LazyThreadSafetyMode.NONE) { MutableLiveData<Boolean>() }
+    // 下一页获取记录请求是否成功
+    val mNestPageGetRecordIsSuccessful by lazy(LazyThreadSafetyMode.NONE) { MutableLiveData<Boolean>() }
+    // 没有更多数据时的回调
+    var mHaveNotNestGetRecord: (() -> Unit)? = null
 
     fun getExchangeRecord() {
         ApiGenerator.getApiService(ApiService::class.java)
@@ -48,23 +52,49 @@ class RecordViewModel : BaseViewModel() {
             )
     }
 
-    fun getStampRecord() {
+    private var nowPage = 1
+    fun getFirstPageGetRecord() {
         ApiGenerator.getApiService(ApiService::class.java)
-            .getStampGetRecord(1, 100)
+            .getStampGetRecord(1, 30)
             .mapOrThrowApiException()
             .setSchedulers()
             .safeSubscribeBy(
                 onError = {
                     if (it is RedrockApiIllegalStateException) {
-                        mStampGetRecordIsSuccessful.postValue(true)
-                        mStampGetRecord.postValue(listOf())
+                        mFirstPageGetRecordIsSuccessful.postValue(true)
+                        mFirstPageStampGetRecord.postValue(listOf())
                     }else {
-                        mStampGetRecordIsSuccessful.postValue(false)
+                        mFirstPageGetRecordIsSuccessful.postValue(false)
                     }
                 },
                 onNext = {
-                    mStampGetRecordIsSuccessful.postValue(true)
-                    mStampGetRecord.postValue(it)
+                    mFirstPageGetRecordIsSuccessful.postValue(true)
+                    mFirstPageStampGetRecord.postValue(it)
+                }
+            )
+    }
+
+    fun getNextPageGetRecord() {
+        ApiGenerator.getApiService(ApiService::class.java)
+            .getStampGetRecord(nowPage + 1, 30)
+            .mapOrThrowApiException()
+            .setSchedulers()
+            .safeSubscribeBy(
+                onNext = {
+                    if (it.isNotEmpty()) {
+                        val list = mFirstPageStampGetRecord.value
+                        if (list is MutableList) {
+                            nowPage++
+                            list.addAll(it)
+                            mNestPageGetRecordIsSuccessful.postValue(true)
+                            mFirstPageStampGetRecord.postValue(list)
+                        }
+                    }else {
+                        mHaveNotNestGetRecord?.invoke()
+                    }
+                },
+                onError = {
+                    mNestPageGetRecordIsSuccessful.postValue(false)
                 }
             )
     }

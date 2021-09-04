@@ -84,8 +84,6 @@ open class DynamicDetailViewModel : BaseViewModel() {
                 loadStatus.value = NetworkState.SUCCESSFUL
                 commentList.postValue(list.reversed())
                 position = findCommentByCommentId(list.reversed(), commentId)
-
-
             }
     }
 
