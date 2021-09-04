@@ -38,12 +38,12 @@ class UserViewModel : BaseViewModel() {
     val qaNumber: LiveData<QANumber>
         get() = _qaNumber
 
-    private val _userCount = MutableLiveData<UserCount>()
-    val userCount: LiveData<UserCount>
+    private val _userCount = MutableLiveData<UserCount?>()
+    val userCount: LiveData<UserCount?>
         get() = _userCount
 
-    private val _userUncheckCount = MutableLiveData<UserUncheckCount>()
-    val userUncheckCount: LiveData<UserUncheckCount>
+    private val _userUncheckCount = MutableLiveData<UserUncheckCount?>()
+    val userUncheckCount: LiveData<UserUncheckCount?>
         get() = _userUncheckCount
 
     fun getScoreStatus() {
@@ -81,7 +81,7 @@ class UserViewModel : BaseViewModel() {
                     _userCount.postValue(it.data)
                 },
                 onError = {
-                    BaseApp.context.toast("请求异常:${it.message}")
+                    BaseApp.context.toast("获取动态等信息异常")
                 }
             )
     }
@@ -103,7 +103,7 @@ class UserViewModel : BaseViewModel() {
                     _userUncheckCount.postValue(it.data)
                 },
                 onError = {
-                    BaseApp.context.toast("请求异常:${it.message}")
+//                    BaseApp.context.toast("获取评论等信息异常")
                 }
             )
     }

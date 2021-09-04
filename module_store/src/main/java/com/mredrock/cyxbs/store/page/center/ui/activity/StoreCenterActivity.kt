@@ -94,7 +94,7 @@ class StoreCenterActivity : BaseViewModelActivity<StoreCenterViewModel>() {
                 badge.backgroundColor = getColor2(R.color.store_stamp_center_tabLayout_tab_badge)
                 try {
                     /*
-                    * 视觉说这个小圆点大了, 艹, 妈的官方也不提供方法修改, 只好靠反射拿了 :)
+                    * 视觉说这个小圆点大了, 官方没提供方法修改, 只好靠反射拿了 :)
                     * 官方中 badgeRadius 是 final 常量, 但反射却能修改, 原因在于它在构造器中被初始化, 不会被内联优化, 所以是可以改的
                     * */
                     val field = badge.javaClass.getDeclaredField("badgeRadius")
@@ -116,6 +116,7 @@ class StoreCenterActivity : BaseViewModelActivity<StoreCenterViewModel>() {
         }
     }
 
+    // 设置刷新控件
     private fun initRefreshLayout() {
         /*
         * 官方刷新控件不能修改偏移的误差值, 在左右滑动时与 ViewPager2 出现滑动冲突问题
@@ -125,7 +126,7 @@ class StoreCenterActivity : BaseViewModelActivity<StoreCenterViewModel>() {
             val field = mRefreshLayout.javaClass.getDeclaredField("mTouchSlop")
             field.isAccessible = true
             field.set(mRefreshLayout, 220)
-        }catch (e: Exception) {  }
+        }catch (e: Exception) { }
 
         // 下面这个 setOnChildScrollUpCallback() 返回 false 就代表刷新控件可以拦截滑动
         mRefreshLayout.setOnChildScrollUpCallback { _, _ -> !mSlideUpLayout.isUnfold() }

@@ -5,10 +5,11 @@
     <application
         android:theme="@style/AppTheme">
         <activity
-            android:name=".page.record.ui.activity.ExchangeDetailActivity"
+            android:name=".page.center.ui.activity.StoreCenterActivity"
+            android:launchMode="singleTop"
             android:theme="@style/AppTheme_NoSplitMotionEvent"/>
         <activity
-            android:name=".page.center.ui.activity.StoreCenterActivity"
+            android:name=".page.record.ui.activity.ExchangeDetailActivity"
             android:theme="@style/AppTheme_NoSplitMotionEvent"/>
         <activity
             android:name=".page.record.ui.activity.StampDetailActivity"

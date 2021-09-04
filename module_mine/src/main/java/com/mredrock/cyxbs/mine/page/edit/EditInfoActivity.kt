@@ -156,15 +156,15 @@ class EditInfoActivity
         refreshUserInfo()
 
         //点击更换头像
-        mine_edit_et_avatar.setOnClickListener { changeAvatar() }
+        mine_edit_et_avatar.setOnSingleClickListener { changeAvatar() }
         //需调用一次给textView赋值
         checkColorAndText()
-        mine_btn_info_save.setOnClickListener {
+        mine_btn_info_save.setOnSingleClickListener {
             saveInfo()
         }
         mine_btn_info_save.isClickable = false
 
-        mine_edit_iv_agreement.setOnClickListener {
+        mine_edit_iv_agreement.setOnSingleClickListener {
             showAgree()
         }
     }
@@ -175,20 +175,10 @@ class EditInfoActivity
         /*
         * 如果返回的数据为空格，则表示数据为空
         * */
-        mine_et_nickname.setText(if (userService.getNickname() == " ") "" else userService.getNickname())
-        mine_et_introduce.setText(if (userService.getIntroduction() == " ") "" else userService.getIntroduction())
-        mine_et_qq.setText(if (userService.getQQ() == " ") "" else userService.getQQ())
-        mine_et_phone.setText(if (userService.getPhone() == " ") "" else userService.getPhone())
-
-        if (mine_et_nickname.text.isNotEmpty() &&
-            mine_et_introduce.text.isNotEmpty() &&
-            mine_et_qq.text.isNotEmpty() &&
-            mine_et_phone.text.isNotEmpty()
-        ) {
-            // 当都不为空时, 说明已经设置了个人信息, 则提交积分商城任务进度, 后端已做重复处理
-            StoreTask.postTask(StoreTask.Task.EDIT_INFO, null)
-        }
-
+        mine_et_nickname.setText(if (userService.getNickname().isBlank()) "" else userService.getNickname())
+        mine_et_introduce.setText(if (userService.getIntroduction().isBlank()) "" else userService.getIntroduction())
+        mine_et_qq.setText(if (userService.getQQ().isBlank()) "" else userService.getQQ())
+        mine_et_phone.setText(if (userService.getPhone().isBlank()) "" else userService.getPhone())
         mine_tv_college_concrete.text = userService.getCollege()
     }
 
@@ -225,10 +215,10 @@ class EditInfoActivity
         * 为什么这里会有一个空格,原因就在于后端不能保存长度为零的字符串，但是我们又想清空数据，所以就用空格来代替
         * 注意请求数据时，如果数据为空格，即为空
         * */
-        val nickname = if (mine_et_nickname.text.toString().isNotEmpty()) mine_et_nickname.text.toString() else " "
-        val introduction = if (mine_et_introduce.text.toString().isNotEmpty()) mine_et_introduce.text.toString() else " "
-        val qq = if (mine_et_qq.text.toString().isNotEmpty()) mine_et_qq.text.toString() else " "
-        val phone = if (mine_et_phone.text.toString().isNotEmpty()) mine_et_phone.text.toString() else " "
+        val nickname = if (mine_et_nickname.text.toString().isNotBlank()) mine_et_nickname.text.toString() else " "
+        val introduction = if (mine_et_introduce.text.toString().isNotBlank()) mine_et_introduce.text.toString() else " "
+        val qq = if (mine_et_qq.text.toString().isNotBlank()) mine_et_qq.text.toString() else " "
+        val phone = if (mine_et_phone.text.toString().isNotBlank()) mine_et_phone.text.toString() else " "
 
         //数据没有改变，不进行网络请求
         if (!checkIfInfoChange()) {

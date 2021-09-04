@@ -19,9 +19,9 @@ class SmallShopTitleItem(
 ) {
 
     /**
-     * 该方法调用了 [refreshAllItemMap] 用于自动刷新
+     * 该方法调用了 [diffRefreshAllItemMap] 用于自动刷新
      *
-     * 因为我在 Item 中整合了 DiffUtil 自动刷新, 只有你全部的 Item 都调用了 [refreshAllItemMap],
+     * 因为我在 Item 中整合了 DiffUtil 自动刷新, 只有你全部的 Item 都调用了 [diffRefreshAllItemMap],
      * 就会自动启动 DiffUtil
      */
     fun resetData(titleMap: Map<Int, String>) {
