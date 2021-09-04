@@ -1,5 +1,6 @@
 package com.mredrock.cyxbs.discover.grades.network
 
+import com.mredrock.cyxbs.common.bean.RedrockApiStatus
 import com.mredrock.cyxbs.common.bean.RedrockApiWrapper
 import com.mredrock.cyxbs.discover.grades.bean.Exam
 import com.mredrock.cyxbs.discover.grades.bean.IdsBean
@@ -33,6 +34,9 @@ interface ApiService {
 
     @POST("/magipoke/ids/bind")
     fun bindIds(@Body idsBean: IdsBean) : Observable<IdsStatus>
+
+    @POST("/magipoke/ids/unbind")
+    fun unbindIds() : Observable<RedrockApiStatus>
 
     @GET("/magipoke/gpa")
     fun getAnalyzeData(): Observable<GPAStatus>

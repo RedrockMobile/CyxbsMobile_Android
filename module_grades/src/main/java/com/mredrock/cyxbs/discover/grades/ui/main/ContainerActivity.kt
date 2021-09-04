@@ -25,6 +25,7 @@ import com.mredrock.cyxbs.common.config.DISCOVER_GRADES
 import com.mredrock.cyxbs.common.service.ServiceManager
 import com.mredrock.cyxbs.common.ui.BaseActivity
 import com.mredrock.cyxbs.common.utils.extensions.pressToZoomOut
+import com.mredrock.cyxbs.common.utils.extensions.setOnSingleClickListener
 import com.mredrock.cyxbs.discover.grades.R
 import com.mredrock.cyxbs.discover.grades.bean.Exam
 import com.mredrock.cyxbs.discover.grades.bean.analyze.isSuccessful
@@ -136,14 +137,24 @@ class ContainerActivity : BaseActivity() {
         viewModel.analyzeData.observe(this@ContainerActivity, Observer {
             if (it != null && it.isSuccessful) {
                 if (typeOfFragment != IS_GPA_FRAGMENT) {
+                    // 绑定成功，可解除绑定
                     typeOfFragment = IS_GPA_FRAGMENT
-                    tv_grades_no_bind.visibility = View.INVISIBLE
+                    tv_grades_no_bind.text = getString(R.string.grades_unbind_stdNum)
+                    tv_grades_no_bind.setOnSingleClickListener {
+                        viewModel.unbindIds {
+                            // 解绑成功后的操作
+                            tv_grades_no_bind.text = getString(R.string.grades_no_bind_stdNum)
+                            initHeader()
+                            replaceFragment(NoBindFragment())
+                        }
+                    }
                     replaceFragment(GPAFragment())
                 }
             } else {
                 if (typeOfFragment != IS_BIND_FRAGMENT) {
+                    // 未绑定
                     typeOfFragment = IS_BIND_FRAGMENT
-                    tv_grades_no_bind.visibility = View.VISIBLE
+                    tv_grades_no_bind.text = getString(R.string.grades_no_bind_stdNum)
                     replaceFragment(NoBindFragment())
                 }
             }
@@ -202,8 +213,8 @@ class ContainerActivity : BaseActivity() {
         Glide.with(BaseApp.context).load(user.getAvatarImgUrl()).into(parent.iv_grades_avatar)
         parent.tv_grades_stuNum.text = user.getStuNum()
         parent.tv_grades_name.text = user.getRealName()
-        tv_grades_no_bind.setOnClickListener {
-            it.pressToZoomOut()
+        tv_grades_no_bind.setOnSingleClickListener { v ->
+            v.pressToZoomOut()
             val intent = Intent(this, BindActivity::class.java)
             this.startActivity(intent)
         }
