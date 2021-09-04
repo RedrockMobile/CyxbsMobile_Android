@@ -15,7 +15,6 @@ import android.os.Environment
 import android.provider.MediaStore
 import android.text.Editable
 import android.text.TextWatcher
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.MotionEvent
 import android.view.View
@@ -36,7 +35,6 @@ import com.mredrock.cyxbs.api.account.IUserService
 import com.mredrock.cyxbs.common.config.MINE_EDIT_INFO
 import com.mredrock.cyxbs.common.config.StoreTask
 import com.mredrock.cyxbs.common.ui.BaseViewModelActivity
-import com.mredrock.cyxbs.common.utils.LogUtils
 import com.mredrock.cyxbs.common.utils.extensions.*
 import com.mredrock.cyxbs.mine.R
 import com.mredrock.cyxbs.mine.util.ui.DynamicRVAdapter
@@ -130,6 +128,7 @@ class EditInfoActivity
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
+        window.setBackgroundDrawableResource(android.R.color.transparent)
         super.onCreate(savedInstanceState)
         setContentView(R.layout.mine_activity_edit_info)
 
@@ -215,7 +214,7 @@ class EditInfoActivity
         * 为什么这里会有一个空格,原因就在于后端不能保存长度为零的字符串，但是我们又想清空数据，所以就用空格来代替
         * 注意请求数据时，如果数据为空格，即为空
         * */
-        val nickname = if (mine_et_nickname.text.toString().isNotBlank()) mine_et_nickname.text.toString() else " "
+        val nickname = mine_et_nickname.text.toString()
         val introduction = if (mine_et_introduce.text.toString().isNotBlank()) mine_et_introduce.text.toString() else " "
         val qq = if (mine_et_qq.text.toString().isNotBlank()) mine_et_qq.text.toString() else " "
         val phone = if (mine_et_phone.text.toString().isNotBlank()) mine_et_phone.text.toString() else " "
@@ -224,6 +223,12 @@ class EditInfoActivity
         if (!checkIfInfoChange()) {
             return
         }
+
+        if(nickname.isBlank()){
+            toast(R.string.mine_nickname_null)
+            return
+        }
+
         viewModel.updateUserInfo(nickname, introduction, qq, phone)
     }
 
