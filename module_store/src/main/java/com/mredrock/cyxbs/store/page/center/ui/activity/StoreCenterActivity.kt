@@ -73,7 +73,20 @@ class StoreCenterActivity : BaseViewModelActivity<StoreCenterViewModel>() {
             )
         )
         mViewPager2.setPageTransformer(ScaleInTransformer())
-//        mViewPager2.offscreenPageLimit = 1 // 设置虽然可以提前加载第二页, 但第二页的进度条动画却没了
+        mViewPager2.offscreenPageLimit = 1
+        mViewPager2.registerOnPageChangeCallback(object : ViewPager2.OnPageChangeCallback() {
+            override fun onPageScrolled(
+                position: Int,
+                positionOffset: Float,
+                positionOffsetPixels: Int
+            ) {
+                if (position + positionOffset >= 0.97F) {
+                    // 通知 StampTaskFragment 加载 RecyclerView, 这么做的原因我写在了 ViewModel 的这个回调上
+                    viewModel.loadStampTaskRecyclerView?.invoke()
+                    viewModel.loadStampTaskRecyclerView = null
+                }
+            }
+        })
     }
 
     // 设置 TabLayout

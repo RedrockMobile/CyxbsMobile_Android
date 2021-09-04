@@ -65,6 +65,13 @@ class StampTaskFragment : BaseFragment() {
     }
 
     private fun initObserve() {
+
+        viewModel.loadStampTaskRecyclerView = {
+            if (mRecyclerView.adapter == null) {
+                setAdapter() // 为什么在这里设置 Adapter? 可以去看这个回调上写的注释
+            }
+        }
+
         viewModel.refreshIsSuccessful.observe(viewLifecycleOwner, Observer {
             if (it) {
                 // 取消断网图片的显示
@@ -87,9 +94,7 @@ class StampTaskFragment : BaseFragment() {
             }else {
                 resetData(it.task) // 重新设置数据
             }
-            if (mRecyclerView.adapter == null) {
-                setAdapter() // 第一次得到数据时设置 adapter
-            }else {
+            if (mRecyclerView.adapter != null) {
                 refreshAdapter() // 再次得到数据时刷新
             }
         })
