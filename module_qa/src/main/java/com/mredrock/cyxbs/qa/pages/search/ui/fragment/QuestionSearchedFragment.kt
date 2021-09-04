@@ -333,7 +333,7 @@ class QuestionSearchedFragment : BaseViewModelFragment<QuestionSearchedViewModel
                                     it.commentCount
                                 this.findViewById<TextView>(R.id.qa_tv_dynamic_comment_count).text =
                                     it.commentCount.toString()
-                                dynamicListRvAdapter.notifyItemChanged(dynamicListRvAdapter.curSharedItemPosition)
+                                dynamicListRvAdapter.notifyItemChanged(dynamicListRvAdapter.curSharedItemPosition, "")
                             }
                         }
                     }

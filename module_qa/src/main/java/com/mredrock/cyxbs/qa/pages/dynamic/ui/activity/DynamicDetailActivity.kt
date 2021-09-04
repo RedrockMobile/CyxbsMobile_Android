@@ -427,8 +427,12 @@ class DynamicDetailActivity : BaseViewModelActivity<DynamicDetailViewModel>() {
         }
         viewModel.deleteDynamic.observe {
             // 通知主页面刷新
-            setResult(NEED_REFRESH_RESULT)
-            finish()
+            if(viewModel.isNeedFinish){
+
+                setResult(NEED_REFRESH_RESULT)
+                finish()
+                viewModel.isNeedFinish=false
+            }
         }
         viewModel.dynamic.observe {
             refreshDynamic()
@@ -682,6 +686,7 @@ class DynamicDetailActivity : BaseViewModelActivity<DynamicDetailViewModel>() {
             initChangeColorAnimator("#000000", "#1D1D1D")
         }
         window.returnTransition = Slide(Gravity.END).apply { duration = animatorDuration }
+        viewModel.replyInfo.value = ReplyInfo("", "", "")
         super.onBackPressed()
     }
 

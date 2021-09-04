@@ -4,6 +4,7 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import com.mredrock.cyxbs.common.BaseApp
+import com.mredrock.cyxbs.common.config.StoreTask
 import com.mredrock.cyxbs.common.network.ApiGenerator
 import com.mredrock.cyxbs.common.utils.extensions.mapOrThrowApiException
 import com.mredrock.cyxbs.common.utils.extensions.safeSubscribeBy
@@ -44,9 +45,16 @@ open class DynamicDetailViewModel : BaseViewModel() {
 
     val deleteDynamic = MutableLiveData<Boolean>()
 
+    /**
+     * bug修复代码
+     * @author wx
+     * @Date：2021/8/31
+     * 限制livedata的粘性事件  造成activity被finish
+     */
+    var isNeedFinish=false
+
     // commentId用于刷新后聚焦到某一个评论。
     fun refreshCommentList(postId: String, commentId: String) {
-
         ApiGenerator.getApiService(ApiServiceNew::class.java)
             .getPostInfo(postId)
             .mapOrThrowApiException()
@@ -127,6 +135,7 @@ open class DynamicDetailViewModel : BaseViewModel() {
             }
             .safeSubscribeBy {
                 commentReleaseResult.postValue(it)
+                StoreTask.postTask(StoreTask.Task.POST_COMMENT, null) // 更新发送评论的任务
             }
     }
 
@@ -155,6 +164,7 @@ open class DynamicDetailViewModel : BaseViewModel() {
 
                 when (model) {
                     DynamicDetailActivity.DYNAMIC_DELETE -> {
+                        isNeedFinish=true
                         deleteDynamic.postValue(true)
                         toastEvent.value = R.string.qa_delete_dynamic_success
                     }
@@ -164,7 +174,6 @@ open class DynamicDetailViewModel : BaseViewModel() {
                 }
             }
     }
-
     fun report(id: String, content: String, model: String) {
         ApiGenerator.getApiService(ApiServiceNew::class.java)
             .report(id, CommentConfig.REPORT_DYNAMIC_MODEL, content)

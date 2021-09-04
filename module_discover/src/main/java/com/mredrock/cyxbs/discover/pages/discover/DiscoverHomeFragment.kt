@@ -207,9 +207,7 @@ class DiscoverHomeFragment : BaseViewModelFragment<DiscoverHomeViewModel>(), Eve
                 (it.getSystemService(Context.WINDOW_SERVICE) as WindowManager).defaultDisplay.getSize(point)
                 ll_discover_feeds.minimumHeight = point.y - ll_discover_feeds.top
             }
-
         }
-
     }
 
     private fun addFeedFragment(fragment: Fragment) {

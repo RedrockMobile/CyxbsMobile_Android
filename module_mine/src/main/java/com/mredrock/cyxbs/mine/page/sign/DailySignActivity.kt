@@ -2,8 +2,6 @@ package com.mredrock.cyxbs.mine.page.sign
 
 import android.animation.ObjectAnimator
 import android.annotation.SuppressLint
-import android.content.Context
-import android.content.Intent
 import android.graphics.Color
 import android.os.Build
 import android.os.Bundle
@@ -18,7 +16,6 @@ import androidx.core.content.ContextCompat
 import androidx.core.content.res.ResourcesCompat
 import androidx.lifecycle.Observer
 import com.alibaba.android.arouter.facade.annotation.Route
-import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.mredrock.cyxbs.common.component.CommonDialogFragment
 import com.mredrock.cyxbs.common.config.MINE_CHECK_IN
 import com.mredrock.cyxbs.common.ui.BaseViewModelActivity
@@ -26,7 +23,6 @@ import com.mredrock.cyxbs.common.utils.extensions.toast
 import com.mredrock.cyxbs.mine.R
 import com.mredrock.cyxbs.mine.network.model.Product
 import com.mredrock.cyxbs.mine.network.model.ScoreStatus
-import com.mredrock.cyxbs.mine.util.ui.ProductAdapter
 import com.mredrock.cyxbs.mine.util.widget.*
 import kotlinx.android.synthetic.main.mine_activity_daily_sign.*
 import kotlin.math.abs
@@ -71,10 +67,6 @@ class DailySignActivity : BaseViewModelActivity<DailyViewModel>() {
         WeekGenerator()
     }
 
-    private val adapter: ProductAdapter by lazy {
-        ProductAdapter()
-    }
-
     //通过一个标志位，来判断刷新divider的时候是否需要动画，
     //当为true时，表明用户点击了签到按钮导致的UI刷新，这时候需要动画，
     //当为false时，表明为正常的进入Activity刷新
@@ -86,7 +78,6 @@ class DailySignActivity : BaseViewModelActivity<DailyViewModel>() {
         setContentView(R.layout.mine_activity_daily_sign)
         common_toolbar.initWithSplitLine("", false)
         initView()
-        initAdapter()
         initData()
     }
 
@@ -115,28 +106,12 @@ class DailySignActivity : BaseViewModelActivity<DailyViewModel>() {
     //ViewModel观察和网络请求
     private fun initData() {
         viewModel.loadAllData()
-        viewModel.loadProduct()
         viewModel.status.observe(this, Observer {
             refreshUI(it)
-        })
-        viewModel.products.observe(this, Observer {
-
-            if (it == null || it.isEmpty()) {
-                return@Observer
-            }
-
-            adapter.submitList(it)
         })
         viewModel.isInVacation.observe(this, Observer {
             if (it == true) {
                 toast("寒暑假不可签到")
-            }
-        })
-        viewModel.exchangeEvent.observe(this, Observer {
-            if (it == true) {
-                toast("兑换成功， 如果是实体物品，请携带相关证件前往红岩网校工作站领取奖品")
-            } else {
-                toast("兑换失败")
             }
         })
     }
@@ -262,59 +237,5 @@ class DailySignActivity : BaseViewModelActivity<DailyViewModel>() {
                 dividerResArr[i].color.color = ContextCompat.getColor(this, R.color.common_mine_sign_divider_blue_light)
             }
         }
-    }
-
-    //设置商品展示的Adapter，同时设置监听，弹出DialogFragment
-    private fun initAdapter() {
-        val click: ((Product, Int) -> Unit)? = { product, position ->
-            val integral = viewModel.status.value?.integral
-
-            integral?.let {
-                //防止商品积分为空，同时需处理积分为小数的情况
-                val productIntegral = if (product.integral.isEmpty()) 0 else product.integral.toFloat().toInt()
-                //判断用户积分是否大于物品所需积分数 && 物品剩余数大于0
-                if (integral >= productIntegral && product.count > 0) {
-                    val tag = "exchange"
-                    if (supportFragmentManager.findFragmentByTag(tag) == null) {
-                        CommonDialogFragment().apply {
-                            initView(
-                                containerRes = R.layout.mine_layout_dialog_exchange,
-                                positiveString = "确认兑换",
-                                onPositiveClick = {
-                                    viewModel.exchangeProduct(product, position)
-                                    dismiss()
-                                },
-                                onNegativeClick = { dismiss() },
-                                elseFunction = {
-                                    val str = "这将消耗您的${product.integral}个积分，仍然要兑换吗？"
-                                    it.findViewById<TextView>(R.id.mine_tv_exchange_for_sure_content).text = str
-                                }
-                            )
-                        }.show(supportFragmentManager, tag)
-                    }
-                } else {
-                    val tag = "lack of integral"
-                    //防止连续两次快速点击两次重复创建相同tag的DialogFragment
-                    if (supportFragmentManager.findFragmentByTag(tag) == null) {
-                        CommonDialogFragment().apply {
-                            initView(
-                                containerRes = R.layout.mine_layout_dialog_exchange,
-                                positiveString = "确认",
-                                onPositiveClick = { dismiss() },
-                                elseFunction = {
-                                    //区分是积分不足还是物品剩余数为0
-                                    if (product.count <= 0) {
-                                        it.findViewById<TextView>(R.id.mine_tv_exchange_for_sure_content).text = "物品被抢光了，明天再来吧"
-                                    } else {
-                                        it.findViewById<TextView>(R.id.mine_tv_exchange_for_sure_content).text = "积分不足"
-                                    }
-                                }
-                            )
-                        }.show(supportFragmentManager, tag)
-                    }
-                }
-            }
-        }
-        adapter.setOnExChangeClick(click)
     }
 }
