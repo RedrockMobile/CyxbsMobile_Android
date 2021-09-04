@@ -18,6 +18,7 @@ import com.mredrock.cyxbs.common.BaseApp
 import com.mredrock.cyxbs.common.component.CyxbsToast
 import com.mredrock.cyxbs.common.config.DISCOVER_EMPTY_ROOM
 import com.mredrock.cyxbs.common.ui.BaseViewModelActivity
+import com.mredrock.cyxbs.common.utils.LogUtils
 import com.mredrock.cyxbs.common.utils.SchoolCalendar
 import com.mredrock.cyxbs.common.utils.extensions.dip
 import com.mredrock.cyxbs.common.utils.extensions.gone
@@ -166,6 +167,8 @@ class EmptyRoomActivity : BaseViewModelActivity<EmptyRoomViewModel>(), OnItemSel
         repeat(week) { list.removeAt(0) }
         multi_selector_week.setDisplayValues(list)
         weekApi = IntArray(list.size)
+        //这里是，初始值相差2
+        week += 2
         repeat(list.size) { weekApi[it] = ++week }
     }
 
@@ -230,6 +233,7 @@ class EmptyRoomActivity : BaseViewModelActivity<EmptyRoomViewModel>(), OnItemSel
 
     private fun query() {
         val week = multi_selector_week.getSelectedValues()[0]
+        LogUtils.d("LJXiao","week $week")
         val weekday = multi_selector_weekday.getSelectedValues()[0]
         val building = buildingApi[buildingPosition]
         val section = multi_selector_section.getSelectedValues()
