@@ -47,6 +47,10 @@ abstract class BaseMVPVMActivity<VM : BaseViewModel, T : ViewDataBinding, P : Ba
         initListener()
         //初始化数据监听
         observeData()
+    }
+
+    override fun onStart() {
+        super.onStart()
         //丢锅
         fetch()
     }

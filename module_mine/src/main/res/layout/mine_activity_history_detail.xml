@@ -17,6 +17,7 @@
     <androidx.core.widget.NestedScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:background="@color/mine_feedback_bg_color"
         android:fillViewport="true"
         tools:context=".page.feedback.history.detail.HistoryDetailActivity">
 
@@ -60,7 +61,7 @@
             <androidx.cardview.widget.CardView
                 android:id="@+id/cv_feedback"
                 android:layout_width="match_parent"
-                android:layout_height="@dimen/mine_feedback_cards_height"
+                android:layout_height="wrap_content"
                 android:layout_marginStart="@dimen/mine_feedback_cards_horizontal_margins"
                 android:layout_marginTop="@dimen/mine_feedback_cards_margin_top_dimension"
                 android:layout_marginEnd="@dimen/mine_feedback_cards_horizontal_margins"
@@ -105,7 +106,9 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="@dimen/mine_feedback_banner_marigin_top_dimension"
-                        android:orientation="horizontal">
+                        android:orientation="horizontal"
+                        app:showView="@{vm.feedback.urls.size() > 0}"
+                        >
 
                         <androidx.cardview.widget.CardView
                             android:id="@+id/cv_card_1"
@@ -222,7 +225,7 @@
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/cv_feedback"
-                app:showView="@{vm.reply.isReply}"
+                app:showView="@{vm.isReply}"
                 tools:text="@string/mine_feedback_reply_date_test_text" />
 
             <androidx.cardview.widget.CardView
@@ -235,7 +238,7 @@
                 app:cardCornerRadius="@dimen/mine_feedback_cards_radius"
                 app:cardElevation="@dimen/mine_feedback_banner_elevation"
                 app:layout_constraintTop_toBottomOf="@id/tv_reply_date"
-                app:showView="@{vm.reply.isReply}">
+                app:showView="@{vm.isReply}">
 
                 <androidx.appcompat.widget.LinearLayoutCompat
                     android:layout_width="match_parent"
@@ -265,19 +268,30 @@
 
             </androidx.cardview.widget.CardView>
 
+            <androidx.appcompat.widget.AppCompatImageView
+                android:id="@+id/iv_none_reply"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="60dp"
+                app:layout_constraintDimensionRatio="w,122.9:110.09"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/tv_reply_date"
+                app:showView="@{!vm.isReply}"
+                app:srcCompat="@drawable/mine_ic_feedback_none_reply_image" />
+
             <androidx.appcompat.widget.AppCompatTextView
                 android:id="@+id/tv_none_reply"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_horizontal|bottom"
-                android:layout_marginTop="100dp"
-                android:text="@{vm.reply.content}"
+                android:layout_marginTop="16dp"
+                android:text="@string/mine_feedback_none_reply_text_content"
                 android:textColor="@color/mine_feedback_no_reply_content_color"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/tv_reply_date"
-                app:showView="@{!vm.reply.isReply}"
-                tools:text="@string/mine_feedback_none_reply_text_content" />
+                app:layout_constraintTop_toBottomOf="@id/iv_none_reply"
+                app:showView="@{!vm.isReply}" />
 
 
         </androidx.constraintlayout.widget.ConstraintLayout>

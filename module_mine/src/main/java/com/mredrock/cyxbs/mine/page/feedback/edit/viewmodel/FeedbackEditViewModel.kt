@@ -3,7 +3,9 @@ package com.mredrock.cyxbs.mine.page.feedback.edit.viewmodel
 import android.net.Uri
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.Transformations
 import com.mredrock.cyxbs.common.viewmodel.BaseViewModel
+import com.mredrock.cyxbs.common.viewmodel.event.SingleLiveEvent
 import com.mredrock.cyxbs.mine.page.feedback.edit.presenter.FeedbackEditContract
 
 /**
@@ -52,4 +54,12 @@ class FeedbackEditViewModel:BaseViewModel(),FeedbackEditContract.IVM {
     }
 
 
+    //图片的展示个数
+    val picCount:LiveData<Int> = Transformations.map(_uris){it.size}
+
+    //finish
+    val finish:SingleLiveEvent<Unit> = SingleLiveEvent()
+    fun sendFinishEvent(){
+        finish.value = Unit
+    }
 }

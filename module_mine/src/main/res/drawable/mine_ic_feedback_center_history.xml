@@ -1,5 +1,4 @@
 <vector xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
     android:width="19dp"
     android:height="20dp"
     android:viewportWidth="19"
@@ -10,25 +9,20 @@
       android:strokeWidth="2"
       android:fillColor="#00000000"
       android:strokeColor="#15315B"
-      android:strokeLineCap="round"
-      tools:ignore="VectorRaster" />
+      android:strokeLineCap="round"/>
   <path
       android:pathData="M13,14m-5,0a5,5 0,1 1,10 0a5,5 0,1 1,-10 0"
       android:strokeWidth="2"
       android:fillColor="#00000000"
-      android:strokeColor="#15315B"
-      tools:ignore="VectorRaster" />
+      android:strokeColor="#15315B"/>
   <path
       android:pathData="M12.5,11C11.9477,11 11.5,11.4477 11.5,12V15C11.5,15.5523 11.9477,16 12.5,16H14.5C15.0523,16 15.5,15.5523 15.5,15C15.5,14.4477 15.0523,14 14.5,14H13.5V12C13.5,11.4477 13.0523,11 12.5,11Z"
       android:fillColor="#15315B"
-      android:fillType="evenOdd"
-      tools:ignore="VectorRaster" />
+      android:fillType="evenOdd"/>
   <path
       android:pathData="M5,4L11,4A1,1 0,0 1,12 5L12,5A1,1 0,0 1,11 6L5,6A1,1 0,0 1,4 5L4,5A1,1 0,0 1,5 4z"
-      android:fillColor="#15315B"
-      tools:ignore="VectorRaster" />
+      android:fillColor="#15315B"/>
   <path
       android:pathData="M5,8L7,8A1,1 0,0 1,8 9L8,9A1,1 0,0 1,7 10L5,10A1,1 0,0 1,4 9L4,9A1,1 0,0 1,5 8z"
-      android:fillColor="#15315B"
-      tools:ignore="VectorRaster" />
+      android:fillColor="#15315B"/>
 </vector>

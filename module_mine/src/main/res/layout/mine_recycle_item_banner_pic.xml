@@ -14,7 +14,7 @@
         android:layout_height="wrap_content"
         android:padding="4dp">
 
-        <com.mredrock.cyxbs.mine.page.feedback.history.widget.RightTopDrawableLayout
+        <com.mredrock.cyxbs.mine.page.feedback.widget.RightTopDrawableLayout
             android:id="@+id/rtdl_banner_pic"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content">
@@ -25,7 +25,7 @@
                 app:cardCornerRadius="5dp"
                 app:cardElevation="0dp">
 
-                <androidx.appcompat.widget.AppCompatImageView
+                <com.mredrock.cyxbs.mine.page.feedback.widget.SquareImageView
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:scaleType="centerCrop"
@@ -34,7 +34,7 @@
 
             </androidx.cardview.widget.CardView>
 
-        </com.mredrock.cyxbs.mine.page.feedback.history.widget.RightTopDrawableLayout>
+        </com.mredrock.cyxbs.mine.page.feedback.widget.RightTopDrawableLayout>
 
     </FrameLayout>
 </layout>

@@ -33,4 +33,10 @@ class HistoryDetailViewModel : BaseViewModel() {
         _replyPicUrls.value = value
     }
 
+    private val _isReply: MutableLiveData<Boolean> = MutableLiveData()
+    val isReply: LiveData<Boolean> = _isReply
+    fun setIsReply(value: Boolean) {
+        _isReply.value = value
+    }
+
 }
