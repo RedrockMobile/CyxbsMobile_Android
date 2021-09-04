@@ -32,6 +32,7 @@ import com.mredrock.cyxbs.api.account.IAccountService
 import com.mredrock.cyxbs.api.account.IUserService
 import com.mredrock.cyxbs.common.config.DIR_PHOTO
 import com.mredrock.cyxbs.common.config.MINE_EDIT_INFO
+import com.mredrock.cyxbs.common.config.StoreTask
 import com.mredrock.cyxbs.common.service.ServiceManager
 import com.mredrock.cyxbs.common.ui.BaseViewModelActivity
 import com.mredrock.cyxbs.common.utils.extensions.*
@@ -172,10 +173,19 @@ class EditInfoActivity
         * 如果返回的数据为空格，则表示数据为空，昵称除外
         * */
         mine_et_nickname.setText(userService.getNickname())
-        if (userService.getIntroduction() == " ") mine_et_introduce.setText("") else mine_et_introduce.setText(userService.getIntroduction())
-        if (userService.getQQ() == " ") mine_et_qq.setText("") else mine_et_qq.setText(userService.getQQ())
-        if (userService.getPhone() == " ") mine_et_phone.setText("") else mine_et_phone.setText(userService.getPhone())
+        mine_et_introduce.setText(if (userService.getIntroduction().isBlank()) "" else userService.getIntroduction())
+        mine_et_qq.setText(if (userService.getQQ().isBlank()) "" else userService.getQQ())
+        mine_et_phone.setText(if (userService.getPhone().isBlank()) "" else userService.getPhone())
         mine_tv_college_concrete.text = userService.getCollege()
+
+        if (userService.getNickname().isNotBlank() &&
+            userService.getIntroduction().isNotBlank() &&
+            userService.getQQ().isNotBlank() &&
+            userService.getPhone().isNotBlank()
+        ) {
+            // 当都不为空时, 说明已经设置了个人信息, 则提交积分商城任务进度, 后端已做重复处理
+            StoreTask.postTask(StoreTask.Task.EDIT_INFO, null)
+        }
     }
 
     private fun setTextChangeListener() {
