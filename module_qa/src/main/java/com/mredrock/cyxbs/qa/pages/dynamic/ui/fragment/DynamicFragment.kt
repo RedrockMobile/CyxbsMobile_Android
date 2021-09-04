@@ -459,12 +459,17 @@ open class DynamicFragment : BaseViewModelFragment<DynamicListViewModel>(), Even
                     dynamicListRvAdapter.curSharedItem?.apply {
                         val dynamic = data?.getParcelableExtra<Dynamic>("refresh_dynamic")
                         dynamic?.let {
-                            dynamicListRvAdapter.curSharedDynamic?.commentCount =
-                                dynamic.commentCount
-                            this.findViewById<TextView>(R.id.qa_tv_dynamic_comment_count).text =
-                                it.commentCount.toString()
+                            // 进行判断，如果返回的数据评论数和当前的不一样才回去刷新列表
+                            if (dynamicListRvAdapter.curSharedDynamic?.commentCount != it.commentCount) {
+                                dynamicListRvAdapter.curSharedDynamic?.commentCount =
+                                    it.commentCount
+                                this.findViewById<TextView>(R.id.qa_tv_dynamic_comment_count).text =
+                                    it.commentCount.toString()
+                                dynamicListRvAdapter.notifyItemChanged(dynamicListRvAdapter.curSharedItemPosition, "")
+                            }
                         }
                     }
+//                    dynamicListRvAdapter.notifyDataSetChanged()
                 }
             }
             // 从发动态返回
