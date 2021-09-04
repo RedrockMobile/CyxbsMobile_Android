@@ -21,6 +21,7 @@ class AboutViewModel : BaseViewModel() {
 
     fun getFeatureIntro(packageName: String, successCallBack: () -> Unit, errorCallback: () -> Unit) {
         val time = System.currentTimeMillis()
+        LogUtils.d("qt", packageName)
         ApiGenerator.getCommonApiService(CommonApiService::class.java)
                 .getDownMessage(DownMessageParams(packageName))
                 .setSchedulers(observeOn = Schedulers.io())

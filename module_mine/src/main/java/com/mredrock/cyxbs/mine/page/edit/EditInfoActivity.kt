@@ -128,6 +128,7 @@ class EditInfoActivity
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
+        window.setBackgroundDrawableResource(android.R.color.transparent)
         super.onCreate(savedInstanceState)
         setContentView(R.layout.mine_activity_edit_info)
 
