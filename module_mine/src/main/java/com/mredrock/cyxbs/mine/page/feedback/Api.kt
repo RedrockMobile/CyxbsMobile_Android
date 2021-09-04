@@ -1,6 +1,8 @@
 package com.mredrock.cyxbs.mine.page.feedback
 
+import com.mredrock.cyxbs.api.account.IAccountService
 import com.mredrock.cyxbs.common.network.ApiGenerator
+import com.mredrock.cyxbs.common.service.ServiceManager
 import com.mredrock.cyxbs.mine.page.feedback.network.bean.ApiService
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
@@ -57,9 +59,4 @@ fun getRetrofit(): Retrofit {
 
 fun getMineBaseUrl(): String = "https://be-prod.redrock.cqupt.edu.cn"
 
-fun getMToken(): String {
-    val clazz = ApiGenerator::class.java
-    val field = clazz.getDeclaredField("token")
-    field.isAccessible = true
-    return field.get(null) as String
-}
+fun getMToken(): String  = ServiceManager.getService(IAccountService::class.java).getUserTokenService().getToken()

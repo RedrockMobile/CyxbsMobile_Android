@@ -22,15 +22,18 @@ class HistoryDetailPresenter(private val id: Long, private val isReply: Boolean)
         //setDefaultData()
         api.getDetailFeedback("1", id.toString()).setSchedulers()
             .map {
-                it.data.feedback
+                it.data
             }.safeSubscribeBy(
                 onNext = {
-                    vm?.setIsReply(it.replied)
-                    vm?.setFeedback(Feedback(DateUtils.strToLong(it.updatedAt),
-                        it.title,
-                        it.content,
-                        it.type.replace("\n", ""),
-                        it.pictures ?: listOf()))
+                    vm?.setIsReply(it.feedback.replied)
+                    vm?.setFeedback(Feedback(DateUtils.strToLong(it.feedback.updatedAt),
+                        it.feedback.title,
+                        it.feedback.content,
+                        it.feedback.type.replace("\n", ""),
+                        it.feedback.pictures ?: listOf()))
+
+                    val last = it.reply?.last() ?: return@safeSubscribeBy
+                    vm?.setReply(Reply(DateUtils.strToLong(it.feedback.updatedAt),last.content,last.urls))
                 },
                 onComplete = {},
                 onError = {

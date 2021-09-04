@@ -1,4 +1,4 @@
-package com.mredrock.cyxbs.mine.page.feedback.network.bean
+package com.mredrock.cyxbs.mine.page.feedback.network.bean.history
 
 /**
  *@author ZhiQiang Tu
@@ -11,16 +11,16 @@ data class HistoryDetail(
     @SerializedName("code")
     val code: Int,
     @SerializedName("data")
-    val `data`: Data2,
+    val `data`: Data,
     @SerializedName("info")
     val info: String
 )
 
-data class Data2(
+data class Data(
     @SerializedName("feedback")
     val feedback: Feedback,
     @SerializedName("reply")
-    val reply: Any
+    val reply: List<Reply>?
 )
 
 data class Feedback(
@@ -29,7 +29,7 @@ data class Feedback(
     @SerializedName("CreatedAt")
     val createdAt: String,
     @SerializedName("DeletedAt")
-    val deletedAt: Any,
+    val deletedAt: String,
     @SerializedName("ID")
     val iD: Int,
     @SerializedName("name")
@@ -46,4 +46,21 @@ data class Feedback(
     val type: String,
     @SerializedName("UpdatedAt")
     val updatedAt: String
+)
+
+data class Reply(
+    @SerializedName("content")
+    val content: String,
+    @SerializedName("CreatedAt")
+    val createdAt: String,
+    @SerializedName("DeletedAt")
+    val deletedAt: String,
+    @SerializedName("feedback_id")
+    val feedbackId: Int,
+    @SerializedName("ID")
+    val iD: Long,
+    @SerializedName("UpdatedAt")
+    val updatedAt: String,
+    @SerializedName("urls")
+    val urls: List<String>
 )
