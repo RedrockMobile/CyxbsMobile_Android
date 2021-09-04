@@ -641,6 +641,7 @@ class SimpleRvAdapter : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
     abstract class VHItem<VH: RecyclerView.ViewHolder, T> : Item<T> {
         constructor(map: Map<Int, T>, @LayoutRes layoutId: Int) : super(map, layoutId)
         constructor(list: List<T>, startPosition: Int, @LayoutRes layoutId: Int) : super(list, startPosition, layoutId)
+
         /**
          * 返回一个新的 ViewHolder，**请不要返回相同的对象**
          */

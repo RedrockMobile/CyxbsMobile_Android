@@ -59,6 +59,6 @@ class SmallShopProductItem(
         value: StampCenter.Shop
     ) {
         binding.storeIvSmallShopProduct.setImageFromUrl(value.url)
-        binding.shop = value
+        binding.shop = value // 设置 xml 中 binding 了的属性
     }
 }

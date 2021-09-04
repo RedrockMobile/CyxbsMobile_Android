@@ -27,7 +27,7 @@
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.06821" />
+        app:layout_constraintVertical_bias="0.067" />
 
     <TextView
         android:id="@+id/store_tv_stamp_number_left_top"
@@ -170,8 +170,8 @@
                 app:tabIndicatorColor="@android:color/transparent"
                 app:tabIndicatorFullWidth="false"
                 app:tabIndicatorHeight="3dp"
-                app:tabMaxWidth="160dp"
-                app:tabMinWidth="150dp"
+                app:tabMaxWidth="180dp"
+                app:tabMinWidth="160dp"
                 app:tabMode="fixed"
                 app:tabPaddingEnd="40dp"
                 app:tabPaddingStart="40dp"

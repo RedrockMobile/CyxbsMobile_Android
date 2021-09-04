@@ -21,6 +21,20 @@ class GetPageItem(
     R.layout.store_recycler_item_record_get
 ) {
 
+    /**
+     * 用于传入新数据使用差分刷新
+     */
+    fun refresh(list: List<StampGetRecord>, startPosition: Int) {
+        diffRefreshAllItemMap(list, startPosition,
+            isSameName = { oldData, newData ->
+                oldData.date == newData.date
+            },
+            isSameData = { oldData, newData ->
+                oldData == newData
+            }
+        )
+    }
+
     override fun onCreate(
         binding: StoreRecyclerItemRecordGetBinding,
         holder: SimpleRvAdapter.BindingVH,

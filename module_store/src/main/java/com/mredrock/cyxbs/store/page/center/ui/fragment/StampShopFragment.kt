@@ -14,6 +14,7 @@ import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.mredrock.cyxbs.common.ui.BaseFragment
 import com.mredrock.cyxbs.common.utils.extensions.gone
+import com.mredrock.cyxbs.common.utils.extensions.invisible
 import com.mredrock.cyxbs.common.utils.extensions.visible
 import com.mredrock.cyxbs.store.R
 import com.mredrock.cyxbs.store.bean.StampCenter
@@ -64,10 +65,12 @@ class StampShopFragment : BaseFragment() {
     private fun initObserve() {
         viewModel.refreshIsSuccessful.observe(viewLifecycleOwner, Observer {
             if (it) {
-                mImageView.gone()
-                mTextView.gone()
+                // 取消断网图片的显示
+                mImageView.invisible()
+                mTextView.invisible()
                 mRecyclerView.visible()
             }else {
+                // 显示断网图片
                 mImageView.visible()
                 mTextView.visible()
                 mRecyclerView.gone()
