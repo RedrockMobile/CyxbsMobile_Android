@@ -58,6 +58,7 @@ class CommentListAdapter(
     inner class CommentViewHolder(parent: ViewGroup) :
         BaseViewHolder<Comment>(parent, R.layout.qa_recycler_item_dynamic_reply) {
         override fun refresh(data: Comment?) {
+            //data为空则return 不会空则向下执行
             data ?: return
             itemView.apply {
                 qa_tv_reply_nickname.text = data.nickName
@@ -65,7 +66,6 @@ class CommentListAdapter(
                     dynamicTimeDescription(System.currentTimeMillis(), data.publishTime * 1000)
 
                 qa_tv_reply_content.setContent(data.content)
-                LogUtils.d(TAG, "data.isPraised-->${data.isPraised} +postId-->${data.postId}")
                 qa_iv_reply_praise_count_image.isChecked = data.isPraised
                 qa_iv_reply_avatar.setAvatarImageFromUrl(data.avatar)
                 if (data.pics.isNullOrEmpty())
