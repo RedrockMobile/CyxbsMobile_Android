@@ -130,7 +130,6 @@ class StoreCenterActivity : BaseViewModelActivity<StoreCenterViewModel>() {
         }
     }
 
-    // 设置刷新控件
     private fun initRefreshLayout() {
         /*
         * 官方刷新控件不能修改偏移的误差值, 在左右滑动时与 ViewPager2 出现滑动冲突问题
