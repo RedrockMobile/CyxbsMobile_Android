@@ -13,10 +13,10 @@ abstract class BaseRvAdapter<T> : androidx.recyclerview.widget.RecyclerView.Adap
     override fun getItemCount() = dataList.size
 
     override fun onBindViewHolder(holder: BaseViewHolder<T>, position: Int) {
-        if (position >= dataList.size) {
-            return
-        }
+        if (position >= dataList.size) { return }
         holder.refresh(dataList[position])
+        //可能在refresh方法对dataList进行了更改，导致判空失效，再次判空
+        if (position >= dataList.size) { return }
         holder.itemView.setOnSingleClickListener { onItemClickListener(holder, position, dataList[position]) }
         holder.itemView.setOnLongClickListener {
             onItemLongClickListener(holder, position, dataList[position], it)
