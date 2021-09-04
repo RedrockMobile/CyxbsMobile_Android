@@ -85,7 +85,7 @@ class ContainerViewModel : BaseViewModel() {
                 onError = {
                     //密码错误的话,会导致状态码为400，Retrofit无法回调onNext
                     //详见：https://www.cnblogs.com/fuyaozhishang/p/8607706.html
-                    if ( it is HttpException && it.code() == 400 ) {
+                    if (it is HttpException && it.code() == 400) {
                         val body = (it).response()?.errorBody() ?: return@safeSubscribeBy
                         val data = Gson().fromJson(body.string(), IdsStatus::class.java)
                         if (data.errorCode == ERROR) {
@@ -102,9 +102,33 @@ class ContainerViewModel : BaseViewModel() {
 
     }
 
+    /**
+     * 解绑ids
+     */
+    fun unbindIds(onSuccess: () -> Unit) {
+        apiService.unbindIds()
+            .doOnNext {
+            }
+            .doOnError {
+            }
+            .setSchedulers()
+            .safeSubscribeBy(
+                onNext = {
+                    replaceBindFragmentToGPAFragment.postValue(false)
+                    bottomStateListener.postValue(true)
+                    BaseApp.context.toast(R.string.grades_bottom_sheet_unbind_success)
+                    onSuccess.invoke()
+                },
+                onError = {
+                    replaceBindFragmentToGPAFragment.postValue(false)
+                    BaseApp.context.toast(R.string.grades_bottom_sheet_unbind_success)
+                }
+            ).lifeCycle()
+    }
+
     private fun sleepThread(startTime: Long) {
         val curTime = System.currentTimeMillis()
-        val waitTime = 2000
+        val waitTime = 1500L
         if (curTime - startTime < waitTime) {
             Thread.sleep(waitTime - curTime + startTime)
         }
