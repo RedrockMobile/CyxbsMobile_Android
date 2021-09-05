@@ -286,11 +286,9 @@ object ApiGenerator {
             }
 
             // 正常请求，照理说应该进入tokenInterceptor
-            val response = proceedPoxyWithTryCatch {
-                chain.proceed(chain.request())
-            }
+            val response = chain.proceed(chain.request())
 
-            if (response?.isSuccessful == true) {
+            if (response.isSuccessful) {
                 return response
             }
 
@@ -305,7 +303,7 @@ object ApiGenerator {
             }
 
 
-            return response!!
+            return response
         }
 
         private fun useBackupUrl(chain: Interceptor.Chain): Response {
