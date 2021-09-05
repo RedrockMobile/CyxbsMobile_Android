@@ -20,7 +20,7 @@ data class Data(
     @SerializedName("feedback")
     val feedback: Feedback,
     @SerializedName("reply")
-    val reply: List<Reply>?
+    val reply: Reply?
 )
 
 data class Feedback(
