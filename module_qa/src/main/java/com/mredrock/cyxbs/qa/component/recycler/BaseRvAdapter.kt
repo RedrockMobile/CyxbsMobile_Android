@@ -42,22 +42,13 @@ abstract class BaseRvAdapter<T> : androidx.recyclerview.widget.RecyclerView.Adap
 
     open fun refreshData(dataCollection: Collection<T>) {
         /*
-        * 为什么先调用的 notifyDataSetChanged(), 再修改的数据?
-        *
-        * 如果放在修改数据后再调用, 邮问主界面就会报错, 而先刷新再修改数就不会报错了, 我猜测原因在于有人在 Adapter 正在
-        * 构建过程中就调用了这个方法, 因为 notifyDataSetChanged() 是延时的, 所以数据立马就被修改了, 导致 onBindViewHolder()
-        * 回调找不到 list 之前位置的数据(notifyDataSetChanged() 是延时的, 不会立即刷新)
-        *
-        * 为什么数据修改放在后面仍能成功刷新?
-        *
-        * 原因在于 notifyDataSetChanged() 最终调用的是 requestLayout(), 这个方法有一定的延时效果, 所以紧接着再修改
-        * 数据是可以的
-        * @author 985892345 (不要以为这是我写的, 我只是在针对学长之前写的在优化而已, 但目前只能这样写)
-        * (不行的话可以看 2021/8/30 17:31 的历史记录进行比对, 之前学长写的更..., 先删除在加(我无语了...))
+        * 先删后加, 这代码动不得, 动了就会有部分评论刷新出错, 也不能用 notifyDataSetChange() 改写, 相信我
+        * @Date 2021/9/5 13:28
         * */
-        notifyDataSetChanged()
+        notifyItemRangeRemoved(0, list.size)
         list.clear()
         list.addAll(dataCollection)
+        notifyItemRangeInserted(0, list.size)
     }
 
 
