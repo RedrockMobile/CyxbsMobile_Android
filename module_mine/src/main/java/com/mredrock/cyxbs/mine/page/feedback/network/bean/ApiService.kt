@@ -1,6 +1,7 @@
 package com.mredrock.cyxbs.mine.page.feedback.network.bean
 
 import HistoryFeedback
+import com.mredrock.cyxbs.mine.page.feedback.network.bean.history.HistoryDetail
 import io.reactivex.Observable
 import okhttp3.MultipartBody
 import okhttp3.RequestBody

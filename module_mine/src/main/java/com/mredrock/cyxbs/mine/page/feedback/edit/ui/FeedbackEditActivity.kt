@@ -138,6 +138,10 @@ class FeedbackEditActivity :
      */
     override fun initListener() {
         binding?.apply {
+            fabCenterBack.setOnSingleClickListener {
+                onBackPressed()
+            }
+
             mineButton.setOnSingleClickListener {
                 if (label == "NONE") {
                     toast("必须筛选一个标签")

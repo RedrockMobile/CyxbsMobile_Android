@@ -24,16 +24,22 @@ class HistoryDetailPresenter(private val id: Long, private val isReply: Boolean)
         //setDefaultData()
         api.getDetailFeedback("1", id.toString()).setSchedulers()
             .map {
-                it.data.feedback
+                it.data
             }.safeSubscribeBy(
                 onNext = {
-                    Log.d("sss", "fetch:${it.pictures?.get(0).toString()}${it.pictures?.get(1)} ")
-                    vm?.setIsReply(it.replied)
-                    vm?.setFeedback(Feedback(DateUtils.strToLong(it.updatedAt),
-                        it.title,
-                        it.content,
-                        it.type.replace("\n", ""),
-                        it.pictures ?: listOf()))
+                    vm?.setFeedback(Feedback(DateUtils.strToLong(it.feedback.updatedAt),
+                        it.feedback.title,
+                        it.feedback.content,
+                        it.feedback.type.replace("\n", ""),
+                        it.feedback.pictures ?: listOf()))
+                    val last = it.reply
+                    if (last == null){
+                        vm?.setIsReply(false)
+                        return@safeSubscribeBy
+                    }
+                    //val last = it.reply?.last() ?: return@safeSubscribeBy
+                    vm?.setIsReply(true)
+                    vm?.setReply(Reply(DateUtils.strToLong(it.feedback.updatedAt),last.content,last.urls))
                 },
                 onComplete = {},
                 onError = {
@@ -54,7 +60,7 @@ class HistoryDetailPresenter(private val id: Long, private val isReply: Boolean)
         //获取返回内容
         val defaultReply = getDefaultReply()
         vm?.setReply(defaultReply)
-        vm?.setReplyPicUrls(defaultReply.bannerPics)
+        defaultReply.bannerPics?.let { vm?.setReplyPicUrls(it) }
     }
 
     @Deprecated("接口都有了还自己模拟数据？？")

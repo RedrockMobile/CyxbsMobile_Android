@@ -85,6 +85,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="16dp"
+            android:layout_marginBottom="5dp"
             android:text="@string/mine_feedback_center_normal_question"
             android:textColor="@color/mine_feedback_center_normal_question"
             android:textSize="20sp"

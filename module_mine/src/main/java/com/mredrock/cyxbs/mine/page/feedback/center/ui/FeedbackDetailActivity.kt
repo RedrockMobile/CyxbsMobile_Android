@@ -2,9 +2,10 @@ package com.mredrock.cyxbs.mine.page.feedback.center.ui
 
 import android.os.Bundle
 import com.mredrock.cyxbs.common.ui.BaseActivity
+import com.mredrock.cyxbs.common.utils.extensions.setOnSingleClickListener
 import com.mredrock.cyxbs.mine.databinding.MineActivityFeedbackDetailBinding
 class FeedbackDetailActivity : BaseActivity() {
-    private lateinit var binding:MineActivityFeedbackDetailBinding
+    private lateinit var binding: MineActivityFeedbackDetailBinding
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -21,6 +22,9 @@ class FeedbackDetailActivity : BaseActivity() {
                     defaultTextEncodingName = "utf-8";
                 }
                 loadDataWithBaseURL(null, intent.getStringExtra("content"), "text/html", "utf-8", null)
+            }
+            fabCenterBack.setOnSingleClickListener {
+                onBackPressed()
             }
         }
     }

@@ -11,6 +11,7 @@ import com.mredrock.cyxbs.mine.page.feedback.center.adapter.FeedbackCenterAdapte
 import com.mredrock.cyxbs.mine.page.feedback.center.presenter.FeedbackCenterPresenter
 import com.mredrock.cyxbs.mine.page.feedback.center.viewmodel.FeedbackCenterViewModel
 import com.mredrock.cyxbs.mine.page.feedback.edit.ui.FeedbackEditActivity
+import com.mredrock.cyxbs.mine.page.feedback.center.ui.FeedbackDetailActivity
 import com.mredrock.cyxbs.mine.page.feedback.history.list.HistoryListActivity
 import com.mredrock.cyxbs.mine.page.security.util.Jump2QQHelper
 
@@ -70,6 +71,9 @@ class FeedbackCenterActivity :
      */
     override fun initListener() {
         binding?.apply {
+            fabCenterBack.setOnSingleClickListener {
+                onBackPressed()
+            }
             btnQuestion.setOnClickListener {
                 startActivity<FeedbackEditActivity>()
             }

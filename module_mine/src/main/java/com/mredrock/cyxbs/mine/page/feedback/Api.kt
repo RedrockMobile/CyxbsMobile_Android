@@ -59,4 +59,4 @@ fun getRetrofit(): Retrofit {
 
 fun getMineBaseUrl(): String = "https://be-prod.redrock.cqupt.edu.cn"
 
-fun getMToken(): String = ServiceManager.getService(IAccountService::class.java).getUserTokenService().getToken()
+fun getMToken(): String  = ServiceManager.getService(IAccountService::class.java).getUserTokenService().getToken()
