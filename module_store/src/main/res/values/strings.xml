@@ -4,7 +4,6 @@
 
     <string name="store_stamp_center">邮票中心</string>
     <string name="store_stamp_center_my_stamp">我的邮票</string>
-    <string name="store_stamp_center_get_remind">你还有待领取的商品，请尽快领取</string>
     <string name="store_stamp_center_small_shop">邮票小店</string>
     <string name="store_stamp_center_stamp_task">邮票任务</string>
     <string name="store_stamp_center_detail">明细</string>
@@ -19,15 +18,14 @@
     <string name="store_product_state_title">商品状态:</string>
     <string name="store_exchange">兑换</string>
     <string name="store_balance_title">余额：</string>
-    <string name="store_product_prescription_title">有效期：</string>
     <string name="store_product_stock_title">库存量：</string>
     <string name="store_equity_description">权益说明</string>
     <string name="store_pic_save_alert_dialog_title">是否保存</string>
     <string name="store_pic_save_alert_dialog_message">这张图片将保存到手机</string>
-    <string name="store_product_detail_failure">获取商品详情失败</string>
-    <string name="store_exchange_product_failure">兑换请求异常</string>
 
-    <string name="store_product_life">%s天</string>
+    <!--如果要在 xml 中使用 DataBinding, 对于直接添加其他字符串可能会出现 kaptDebugKotlin 的 bug
+        使用下面这种方式可以解决(%s 就是你要替换的文字)-->
+    <string name="store_product_life">有效期: %s天</string>
     <string name="store_exchange_detail_price">%s邮票</string>
     <string name="store_entity_product_detail">邮货详情</string>
     <string name="store_attire_product_detail">装扮详情</string>

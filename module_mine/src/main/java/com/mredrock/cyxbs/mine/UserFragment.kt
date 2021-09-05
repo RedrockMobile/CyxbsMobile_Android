@@ -1,6 +1,5 @@
 package com.mredrock.cyxbs.mine
 
-
 import android.annotation.SuppressLint
 import android.app.Activity
 import android.content.Intent
@@ -39,7 +38,6 @@ import kotlinx.android.synthetic.main.mine_fragment_main.*
 @Route(path = MINE_ENTRY)
 class UserFragment : BaseViewModelFragment<UserViewModel>() {
 
-
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
         addObserver()
@@ -52,7 +50,16 @@ class UserFragment : BaseViewModelFragment<UserViewModel>() {
             mine_main_btn_sign.setOnSingleClickListener { doIfLogin { startActivity<DailySignActivity>() } }
             mine_main_fm_setting.setOnSingleClickListener { doIfLogin { startActivity<SettingActivity>() } }
             mine_main_fm_about_us.setOnSingleClickListener { doIfLogin { startActivity<AboutActivity>() } }
-            mine_main_fm_point_store.setOnSingleClickListener { doIfLogin { jump(STORE_ENTRY) } }
+            mine_main_fm_point_store.setOnSingleClickListener {
+//                Log.d("ggg","(UserFragment.kt:56)-->> 点击前")
+                doIfLogin { jump(STORE_ENTRY) }
+//                Log.d("ggg","(UserFragment.kt:58)-->> 点击后")
+            }
+            mine_main_store_test.setOnClickListener {
+//                Log.d("ggg","(UserFragment.kt:62)-->> 测试按钮点击")
+                doIfLogin { jump(STORE_ENTRY) }
+//                Log.d("ggg","(UserFragment.kt:64)-->> 测试按钮结束")
+            }
             mine_main_tv_sign.setOnSingleClickListener { doIfLogin { startActivity<DailySignActivity>() } }
             mine_main_tv_dynamic_number.setOnSingleClickListener { doIfLogin { jump(QA_DYNAMIC_MINE) } }
             mine_main_tv_dynamic.setOnSingleClickListener { doIfLogin { jump(QA_DYNAMIC_MINE) } }
@@ -180,7 +187,9 @@ class UserFragment : BaseViewModelFragment<UserViewModel>() {
         inflater.inflate(R.layout.mine_fragment_main, container, false)
 
     private fun jump(path: String) {
+//        Log.d("ggg","(UserFragment.kt:187)-->> 跳转前 path = $path")
         ARouter.getInstance().build(path).navigation()
+//        Log.d("ggg","(UserFragment.kt:189)-->> 跳转后 path = $path")
     }
 
     private fun jumpAndSaveTime(path: String, type: Int) {

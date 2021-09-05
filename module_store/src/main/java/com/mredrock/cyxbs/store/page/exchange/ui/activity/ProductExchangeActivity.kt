@@ -6,8 +6,6 @@ import android.content.Intent
 import android.os.Bundle
 import android.view.View
 import android.widget.ImageButton
-import androidx.activity.result.ActivityResultCaller
-import androidx.activity.result.contract.ActivityResultContract
 import androidx.core.app.ActivityOptionsCompat
 import androidx.core.util.Pair
 import com.mredrock.cyxbs.common.ui.BaseViewModelActivity
@@ -31,11 +29,12 @@ import com.mredrock.cyxbs.store.utils.transformer.ScaleInTransformer
  */
 class ProductExchangeActivity : BaseViewModelActivity<ProductExchangeViewModel>() {
 
-    private var mImageList = ArrayList<String>()
-    private var mStampCount = 0 //我的余额
-    private var mId = "" //商品ID
-    private lateinit var mData: ProductDetail
     private lateinit var dataBinding: StoreActivityProductExchangeBinding
+    private lateinit var mData: ProductDetail // 记录该页面的商品数据, 用于之后的判断
+    private var mId = "" //商品ID
+    private var mStampCount = 0 //我的余额
+    private var mImageList = ArrayList<String>()
+    private var mIsAllowClick = true // 是否允许兑换按钮点击
 
     companion object {
 
@@ -67,6 +66,7 @@ class ProductExchangeActivity : BaseViewModelActivity<ProductExchangeViewModel>(
     private fun initData() {
         mId = intent.getIntExtra(INTENT_PRODUCT_ID, 0).toString()
         mStampCount = intent.getIntExtra(INTENT_STAMP_COUNT, 0)
+
         dataBinding.storeTvUserStampCount.text = mStampCount.toString()
 
         viewModel.getProductDetail(mId) // 请求商品详细页数据
@@ -78,23 +78,25 @@ class ProductExchangeActivity : BaseViewModelActivity<ProductExchangeViewModel>(
         button.setOnSingleClickListener { finishAfterTransition() }
 
         dataBinding.storeBtnExchange.setOnSingleClickListener {
-            ExchangeDialog.show(
-                supportFragmentManager,
-                null,
-                type = ExchangeDialog.DialogType.TWO_BUTTON,
-                exchangeTips = "确认要用${dataBinding.storeTvExchangeDetailPrice.text}" +
-                        "邮票兑换${dataBinding.storeTvProductName.text}吗？",
-                onPositiveClick = {
-                    viewModel.getExchangeResult(mId) // 请求用户是否能购买
-                    dismiss()
-                },
-                onNegativeClick = {
-                    dismiss()
-                    it.isClickable = true
-                },
-                cancelCallback = { it.isClickable = true }
-            )
-            it.isClickable = false // 在显示 dialog 期间禁止用户点击
+            if (mIsAllowClick) {
+                it.isClickable = false // 在继续显示 dialog 期间禁止用户点击
+                ExchangeDialog.show(
+                    supportFragmentManager,
+                    null,
+                    type = ExchangeDialog.DialogType.TWO_BUTTON,
+                    exchangeTips = "确认要用${dataBinding.storeTvExchangeDetailPrice.text}" +
+                            "邮票兑换${dataBinding.storeTvProductName.text}吗？",
+                    onPositiveClick = {
+                        viewModel.getExchangeResult(mId) // 请求用户是否能购买
+                        dismiss()
+                    },
+                    onNegativeClick = {
+                        dismiss()
+                        it.isClickable = true
+                    },
+                    cancelCallback = { it.isClickable = true }
+                )
+            }
         }
     }
 
@@ -148,12 +150,16 @@ class ProductExchangeActivity : BaseViewModelActivity<ProductExchangeViewModel>(
                         negativeString = "再想想",
                         onNegativeClick = { dismiss() },
                         onPositiveClick = {
+                            toast("个人界面即将上线")
+                            /*
+                            * 这里按下"好的", 应该还要写一个跳转
+                            *
+                            * 应该是跳转到个人界面
+                            * */
                             dismiss()
-                            // 这里按下好的, 应该还要写一个跳转
                         },
-                        dismissCallback = { dataBinding.storeBtnExchange.isCheckable = true }
+                        dismissCallback = { dataBinding.storeBtnExchange.isClickable = true }
                     )
-                    setResult(RESULT_OK) // 告诉 StoreCenterActivity 我购买了商品
                 }
                 StoreType.Product.GOODS -> {
                     mStampCount -= mData.price
@@ -167,9 +173,8 @@ class ProductExchangeActivity : BaseViewModelActivity<ProductExchangeViewModel>(
                         type = ExchangeDialog.DialogType.ONR_BUTTON,
                         exchangeTips = "兑换成功！请在30天内到红岩网校领取哦",
                         onPositiveClick = { dismiss() },
-                        dismissCallback = { dataBinding.storeBtnExchange.isCheckable = true }
+                        dismissCallback = { dataBinding.storeBtnExchange.isClickable = true }
                     )
-                    setResult(RESULT_OK) // 告诉 StoreCenterActivity 我购买了商品
                 }
             }
         }
@@ -184,7 +189,7 @@ class ProductExchangeActivity : BaseViewModelActivity<ProductExchangeViewModel>(
                         type = ExchangeDialog.DialogType.ONR_BUTTON,
                         exchangeTips = "啊欧，手慢了！下次再来吧=.=",
                         onPositiveClick = { dismiss() },
-                        dismissCallback = { dataBinding.storeBtnExchange.isCheckable = true }
+                        dismissCallback = { dataBinding.storeBtnExchange.isClickable = true }
                     )
                 }
                 StoreType.ExchangeError.NOT_ENOUGH_MONEY -> {
@@ -194,12 +199,12 @@ class ProductExchangeActivity : BaseViewModelActivity<ProductExchangeViewModel>(
                         type = ExchangeDialog.DialogType.ONR_BUTTON,
                         exchangeTips = "诶......邮票不够啊......穷日子真不好过呀QAQ",
                         onPositiveClick = { dismiss() },
-                        dismissCallback = { dataBinding.storeBtnExchange.isCheckable = true }
+                        dismissCallback = { dataBinding.storeBtnExchange.isClickable = true }
                     )
                 }
                 else -> {
                     toast("兑换请求异常")
-                    dataBinding.storeBtnExchange.isCheckable = true
+                    dataBinding.storeBtnExchange.isClickable = true
                 }
             }
         }

@@ -6,7 +6,6 @@
         android:theme="@style/AppTheme">
         <activity
             android:name=".page.center.ui.activity.StoreCenterActivity"
-            android:launchMode="singleTop"
             android:theme="@style/AppTheme_NoSplitMotionEvent"/>
         <activity
             android:name=".page.record.ui.activity.ExchangeDetailActivity"

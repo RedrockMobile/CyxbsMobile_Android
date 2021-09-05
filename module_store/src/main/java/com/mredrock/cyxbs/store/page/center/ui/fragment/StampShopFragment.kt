@@ -124,7 +124,7 @@ class StampShopFragment : BaseFragment() {
 
     private val dressList = ArrayList<StampCenter.Shop>()
     private val goodsList = ArrayList<StampCenter.Shop>()
-    private val titleMap = HashMap<Int, String>() // adapter 的 position 与标题的映射
+    private val titleMap = HashMap<Int, Pair<String, String>>() // adapter 的 position 与标题的映射
     private val shopMap = HashMap<Int, StampCenter.Shop>() // adapter 的 position 与商品数据的映射
     private fun resetData(products: List<StampCenter.Shop>) {
         dressList.clear()
@@ -139,8 +139,8 @@ class StampShopFragment : BaseFragment() {
                 StoreType.Product.GOODS -> goodsList.add(shop)
             }
         }
-        titleMap[0] = "装扮"
-        titleMap[dressList.size + 1] = "邮货"
+        titleMap[0] = Pair("装扮", if (dressList.isEmpty()) "敬请期待" else "请在个人资料里查看")
+        titleMap[dressList.size + 1] = Pair("邮货", if (goodsList.isEmpty()) "敬请期待" else "需要到红岩网校领取哦")
         for (i in dressList.indices) {
             shopMap[i + 1] = dressList[i]
         }
