@@ -1,5 +1,6 @@
 package com.mredrock.cyxbs.mine.page.feedback.history.detail
 
+import android.util.Log
 import com.mredrock.cyxbs.common.BaseApp
 import com.mredrock.cyxbs.common.utils.extensions.safeSubscribeBy
 import com.mredrock.cyxbs.common.utils.extensions.setSchedulers
@@ -9,6 +10,7 @@ import com.mredrock.cyxbs.mine.page.feedback.base.presenter.BasePresenter
 import com.mredrock.cyxbs.mine.page.feedback.history.detail.bean.Feedback
 import com.mredrock.cyxbs.mine.page.feedback.history.detail.bean.Reply
 import com.mredrock.cyxbs.mine.page.feedback.utils.DateUtils
+import com.mredrock.cyxbs.mine.util.extension.log
 
 /**
  *@author ZhiQiang Tu
@@ -25,6 +27,7 @@ class HistoryDetailPresenter(private val id: Long, private val isReply: Boolean)
                 it.data.feedback
             }.safeSubscribeBy(
                 onNext = {
+                    Log.d("sss", "fetch:${it.pictures?.get(0).toString()}${it.pictures?.get(1)} ")
                     vm?.setIsReply(it.replied)
                     vm?.setFeedback(Feedback(DateUtils.strToLong(it.updatedAt),
                         it.title,

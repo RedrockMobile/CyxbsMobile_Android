@@ -12,7 +12,16 @@ class FeedbackDetailActivity : BaseActivity() {
         setContentView(binding.root)
         binding.apply {
             tvEditToolbar.text = intent.getStringExtra("title")
-            tvDetailContent.text = intent.getStringExtra("content")
+            tvDetailContent.apply {
+                val setting = settings
+                setting.apply {
+                    javaScriptEnabled = true
+                    useWideViewPort = true
+                    allowFileAccess = true
+                    defaultTextEncodingName = "utf-8";
+                }
+                loadDataWithBaseURL(null, intent.getStringExtra("content"), "text/html", "utf-8", null)
+            }
         }
     }
 }
