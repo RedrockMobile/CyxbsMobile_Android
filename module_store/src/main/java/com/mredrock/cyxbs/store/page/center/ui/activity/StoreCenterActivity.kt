@@ -73,6 +73,20 @@ class StoreCenterActivity : BaseViewModelActivity<StoreCenterViewModel>() {
             )
         )
         mViewPager2.setPageTransformer(ScaleInTransformer())
+        mViewPager2.offscreenPageLimit = 1
+        mViewPager2.registerOnPageChangeCallback(object : ViewPager2.OnPageChangeCallback() {
+            override fun onPageScrolled(
+                position: Int,
+                positionOffset: Float,
+                positionOffsetPixels: Int
+            ) {
+                if (position + positionOffset >= 0.97F) {
+                    // 通知 StampTaskFragment 加载 RecyclerView, 这么做的原因我写在了 ViewModel 的这个回调上
+                    viewModel.loadStampTaskRecyclerView?.invoke()
+                    viewModel.loadStampTaskRecyclerView = null
+                }
+            }
+        })
     }
 
     // 设置 TabLayout
@@ -94,7 +108,7 @@ class StoreCenterActivity : BaseViewModelActivity<StoreCenterViewModel>() {
                 badge.backgroundColor = getColor2(R.color.store_stamp_center_tabLayout_tab_badge)
                 try {
                     /*
-                    * 视觉说这个小圆点大了, 艹, 妈的官方也不提供方法修改, 只好靠反射拿了 :)
+                    * 视觉说这个小圆点大了, 官方没提供方法修改, 只好靠反射拿了 :)
                     * 官方中 badgeRadius 是 final 常量, 但反射却能修改, 原因在于它在构造器中被初始化, 不会被内联优化, 所以是可以改的
                     * */
                     val field = badge.javaClass.getDeclaredField("badgeRadius")
@@ -125,7 +139,7 @@ class StoreCenterActivity : BaseViewModelActivity<StoreCenterViewModel>() {
             val field = mRefreshLayout.javaClass.getDeclaredField("mTouchSlop")
             field.isAccessible = true
             field.set(mRefreshLayout, 220)
-        }catch (e: Exception) {  }
+        }catch (e: Exception) { }
 
         // 下面这个 setOnChildScrollUpCallback() 返回 false 就代表刷新控件可以拦截滑动
         mRefreshLayout.setOnChildScrollUpCallback { _, _ -> !mSlideUpLayout.isUnfold() }
@@ -169,9 +183,9 @@ class StoreCenterActivity : BaseViewModelActivity<StoreCenterViewModel>() {
 
             mTvStampSideNumber.text = " $text" // 右上方小的邮票显示, 空一格是为了增加与左边图片的距离
 
-            // 显示"你还有待领取的商品，请尽快领取" 文字的逻辑
-            if (it.unGotGood) { mTvShopHint.visible() }
-            else { mTvShopHint.invisible() }
+            // 如果有商品要领就显示 "你还有待领取的商品，请尽快领取", (没有就显示 "快去做任务吧", 暂时不加)
+            if (it.unGotGood) { mTvShopHint.text = "你还有待领取的商品，请尽快领取" }
+            else { mTvShopHint.text = "" }
         }
 
         // 对数据是否请求成功的观察

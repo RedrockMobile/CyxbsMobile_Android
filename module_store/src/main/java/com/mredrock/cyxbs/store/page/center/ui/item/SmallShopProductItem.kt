@@ -6,7 +6,7 @@ import com.mredrock.cyxbs.store.R
 import com.mredrock.cyxbs.store.bean.StampCenter
 import com.mredrock.cyxbs.store.databinding.StoreRecyclerItemSmallShopProductBinding
 import com.mredrock.cyxbs.store.page.exchange.ui.activity.ProductExchangeActivity
-import com.mredrock.cyxbs.store.base.SimpleRvAdapter
+import com.mredrock.cyxbs.common.utils.SimpleRvAdapter
 
 /**
  * 自己写了个用于解耦不同的 item 的 Adapter 的封装类, 详情请看 [SimpleRvAdapter]
@@ -59,6 +59,6 @@ class SmallShopProductItem(
         value: StampCenter.Shop
     ) {
         binding.storeIvSmallShopProduct.setImageFromUrl(value.url)
-        binding.shop = value
+        binding.shop = value // 设置 xml 中 binding 了的属性
     }
 }

@@ -23,6 +23,7 @@
         tools:ignore="HardcodedText" />
 
     <TextView
+        android:id="@+id/store_tv_small_shop_other"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:alpha="0.4"

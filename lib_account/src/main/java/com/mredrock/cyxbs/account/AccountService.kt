@@ -118,7 +118,7 @@ internal class AccountService : IAccountService {
 
         //用于刷新个人信息，请在需要的地方调用
         override fun refreshInfo() {
-            (mUserStateService as UserStateService).loginFromCache(mContext)
+            tokenWrapper?.let { bind(it) }
         }
     }
 
@@ -190,15 +190,11 @@ internal class AccountService : IAccountService {
                 user = GsonBuilder().create()
                     .fromJson(mUserInfoEncryption.decrypt(userInfo), UserInfo::class.java)
             }
-            takeIfNoException {
-                bind(
-                    TokenWrapper.fromJson(
-                        mUserInfoEncryption.decrypt(
-                            encryptedTokenJson
-                        )
-                    )
+            tokenWrapper = TokenWrapper.fromJson(
+                mUserInfoEncryption.decrypt(
+                    encryptedTokenJson
                 )
-            }
+            )
             val state = when {
                 isLogin() -> IUserStateService.UserState.LOGIN
                 else -> IUserStateService.UserState.NOT_LOGIN

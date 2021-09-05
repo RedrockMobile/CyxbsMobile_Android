@@ -15,14 +15,16 @@ import androidx.recyclerview.widget.RecyclerView
 import com.mredrock.cyxbs.common.config.StoreTask
 import com.mredrock.cyxbs.common.ui.BaseFragment
 import com.mredrock.cyxbs.common.utils.extensions.gone
+import com.mredrock.cyxbs.common.utils.extensions.invisible
 import com.mredrock.cyxbs.common.utils.extensions.visible
 import com.mredrock.cyxbs.store.R
 import com.mredrock.cyxbs.store.bean.StampCenter
 import com.mredrock.cyxbs.store.page.center.ui.item.StampTaskListItem
 import com.mredrock.cyxbs.store.page.center.ui.item.StampTaskTitleItem
 import com.mredrock.cyxbs.store.page.center.viewmodel.StoreCenterViewModel
-import com.mredrock.cyxbs.store.utils.StoreType
-import com.mredrock.cyxbs.store.base.SimpleRvAdapter
+import com.mredrock.cyxbs.common.utils.SimpleRvAdapter
+import java.util.*
+import kotlin.collections.HashMap
 
 /**
  * ...
@@ -63,12 +65,21 @@ class StampTaskFragment : BaseFragment() {
     }
 
     private fun initObserve() {
+
+        viewModel.loadStampTaskRecyclerView = {
+            if (mRecyclerView.adapter == null) {
+                setAdapter() // 为什么在这里设置 Adapter? 可以点进去看这个回调上写的注释
+            }
+        }
+
         viewModel.refreshIsSuccessful.observe(viewLifecycleOwner, Observer {
             if (it) {
-                mImageView.gone()
-                mTextView.gone()
+                // 取消断网图片的显示
+                mImageView.invisible()
+                mTextView.invisible()
                 mRecyclerView.visible()
             }else {
+                // 显示断网图片
                 mImageView.visible()
                 mTextView.visible()
                 mRecyclerView.gone()
@@ -83,9 +94,7 @@ class StampTaskFragment : BaseFragment() {
             }else {
                 resetData(it.task) // 重新设置数据
             }
-            if (mRecyclerView.adapter == null) {
-                setAdapter() // 第一次得到数据时设置 adapter
-            }else {
+            if (mRecyclerView.adapter != null) {
                 refreshAdapter() // 再次得到数据时刷新
             }
         })
@@ -131,6 +140,7 @@ class StampTaskFragment : BaseFragment() {
                 StoreTask.TaskType.MORE.type -> moreList.add(task)
             }
         }
+
         titleMap[baseList.size] = "更多任务"
         for (i in baseList.indices) {
             taskMap[i] = baseList[i]

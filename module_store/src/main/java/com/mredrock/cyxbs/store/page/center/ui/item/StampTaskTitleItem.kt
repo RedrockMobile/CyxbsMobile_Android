@@ -4,7 +4,7 @@ import android.view.View
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.mredrock.cyxbs.store.R
-import com.mredrock.cyxbs.store.base.SimpleRvAdapter
+import com.mredrock.cyxbs.common.utils.SimpleRvAdapter
 
 /**
  * 自己写了个用于解耦不同的 item 的 Adapter 的封装类, 详情请看 [SimpleRvAdapter]
@@ -19,9 +19,9 @@ class StampTaskTitleItem(
 ) {
 
     /**
-     * 该方法调用了 [refreshAllItemMap] 用于自动刷新
+     * 该方法调用了 [diffRefreshAllItemMap] 用于自动刷新
      *
-     * 因为我在 Item 中整合了 DiffUtil 自动刷新, 只有你全部的 Item 都调用了 [refreshAllItemMap],
+     * 因为我在 Item 中整合了 DiffUtil 自动刷新, 只有你全部的 Item 都调用了 [diffRefreshAllItemMap],
      * 就会自动启动 DiffUtil
      */
     fun resetData(titleMap: Map<Int, String>) {

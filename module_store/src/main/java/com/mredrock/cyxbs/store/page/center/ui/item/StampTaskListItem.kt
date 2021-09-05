@@ -1,13 +1,11 @@
 package com.mredrock.cyxbs.store.page.center.ui.item
 
 import android.content.res.ColorStateList
-import com.alibaba.android.arouter.launcher.ARouter
-import com.mredrock.cyxbs.common.config.MINE_CHECK_IN
 import com.mredrock.cyxbs.common.utils.extensions.setOnSingleClickListener
 import com.mredrock.cyxbs.store.R
 import com.mredrock.cyxbs.store.bean.StampCenter
 import com.mredrock.cyxbs.store.databinding.StoreRecyclerItemStampTaskListBinding
-import com.mredrock.cyxbs.store.base.SimpleRvAdapter
+import com.mredrock.cyxbs.common.utils.SimpleRvAdapter
 import com.mredrock.cyxbs.store.utils.StoreType
 
 /**
