@@ -14,6 +14,7 @@ import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.mredrock.cyxbs.common.ui.BaseFragment
 import com.mredrock.cyxbs.common.utils.extensions.gone
+import com.mredrock.cyxbs.common.utils.extensions.invisible
 import com.mredrock.cyxbs.common.utils.extensions.visible
 import com.mredrock.cyxbs.store.R
 import com.mredrock.cyxbs.store.bean.StampCenter
@@ -21,7 +22,7 @@ import com.mredrock.cyxbs.store.page.center.ui.item.SmallShopProductItem
 import com.mredrock.cyxbs.store.page.center.ui.item.SmallShopTitleItem
 import com.mredrock.cyxbs.store.page.center.viewmodel.StoreCenterViewModel
 import com.mredrock.cyxbs.store.utils.StoreType
-import com.mredrock.cyxbs.store.base.SimpleRvAdapter
+import com.mredrock.cyxbs.common.utils.SimpleRvAdapter
 
 /**
  * ...
@@ -64,10 +65,12 @@ class StampShopFragment : BaseFragment() {
     private fun initObserve() {
         viewModel.refreshIsSuccessful.observe(viewLifecycleOwner, Observer {
             if (it) {
-                mImageView.gone()
-                mTextView.gone()
+                // 取消断网图片的显示
+                mImageView.invisible()
+                mTextView.invisible()
                 mRecyclerView.visible()
             }else {
+                // 显示断网图片
                 mImageView.visible()
                 mTextView.visible()
                 mRecyclerView.gone()
@@ -113,7 +116,11 @@ class StampShopFragment : BaseFragment() {
             .show()
     }
 
-    // 用于再次得到数据后的刷新, 我在 Item 中整合了 DiffUtil 的自动刷新, 不用再使用 notifyDataSetChanged()
+    /**
+     * 差分刷新
+     *
+     * 用于再次得到数据后的刷新, 我在 Item 中整合了 DiffUtil 的自动刷新, 不用再使用 notifyDataSetChanged()
+     */
     private fun refreshAdapter(stampCount: Int) {
         mSmallShopTitleItem.resetData(titleMap)
         mSmallShopProductItem.resetData(shopMap, stampCount)
@@ -121,7 +128,7 @@ class StampShopFragment : BaseFragment() {
 
     private val dressList = ArrayList<StampCenter.Shop>()
     private val goodsList = ArrayList<StampCenter.Shop>()
-    private val titleMap = HashMap<Int, String>() // adapter 的 position 与标题的映射
+    private val titleMap = HashMap<Int, Pair<String, String>>() // adapter 的 position 与标题的映射
     private val shopMap = HashMap<Int, StampCenter.Shop>() // adapter 的 position 与商品数据的映射
     private fun resetData(products: List<StampCenter.Shop>) {
         dressList.clear()
@@ -136,8 +143,8 @@ class StampShopFragment : BaseFragment() {
                 StoreType.Product.GOODS -> goodsList.add(shop)
             }
         }
-        titleMap[0] = "装扮"
-        titleMap[dressList.size + 1] = "邮货"
+        titleMap[0] = Pair("装扮", if (dressList.isEmpty()) "敬请期待" else "请在个人资料里查看")
+        titleMap[dressList.size + 1] = Pair("邮货", if (goodsList.isEmpty()) "敬请期待" else "需要到红岩网校领取哦")
         for (i in dressList.indices) {
             shopMap[i + 1] = dressList[i]
         }

@@ -15,7 +15,8 @@ import com.mredrock.cyxbs.common.utils.extensions.setOnSingleClickListener
 import com.mredrock.cyxbs.common.utils.extensions.toast
 import com.mredrock.cyxbs.store.R
 import com.mredrock.cyxbs.store.base.BaseFragmentVPAdapter
-import com.mredrock.cyxbs.store.page.record.ui.fragment.RecordFragment
+import com.mredrock.cyxbs.store.page.record.ui.fragment.ExchangeRecordFragment
+import com.mredrock.cyxbs.store.page.record.ui.fragment.GetRecordFragment
 import com.mredrock.cyxbs.store.page.record.viewmodel.RecordViewModel
 import com.mredrock.cyxbs.store.utils.dp2pxF
 import com.mredrock.cyxbs.store.utils.getColor2
@@ -54,8 +55,8 @@ class StampDetailActivity : BaseViewModelActivity<RecordViewModel>() {
         mViewPager2.adapter = BaseFragmentVPAdapter(
             this,
             listOf(
-                RecordFragment.getFragment(RecordFragment.Page.EXCHANGE),
-                RecordFragment.getFragment(RecordFragment.Page.GET)
+                ExchangeRecordFragment(),
+                GetRecordFragment()
             )
         )
         mViewPager2.registerOnPageChangeCallback(object : ViewPager2.OnPageChangeCallback() {
@@ -72,7 +73,7 @@ class StampDetailActivity : BaseViewModelActivity<RecordViewModel>() {
                 }else {
                     if (!hasObservedSecond) {
                         hasObservedSecond = true
-                        viewModel.mStampGetRecordIsSuccessful.observeNotNull {
+                        viewModel.mFirstPageGetRecordIsSuccessful.observeNotNull {
                             if (!it) { toast("获取邮票记录失败") }
                         }
                     }
@@ -156,6 +157,6 @@ class StampDetailActivity : BaseViewModelActivity<RecordViewModel>() {
     private fun initData() {
         // 请求网络数据
         viewModel.getExchangeRecord()
-        viewModel.getStampRecord()
+        viewModel.getFirstPageGetRecord()
     }
 }

@@ -32,7 +32,7 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintVertical_bias="0.06821"
+            app:layout_constraintVertical_bias="0.067"
             tools:ignore="HardcodedText" />
 
         <com.mredrock.cyxbs.store.utils.widget.slideshow.SlideShow
@@ -101,28 +101,18 @@
             tools:text="兮哥哥的爱❤😘😍能把你迷得梦魂颠倒，快拿起你的邮票购买吧！" />
 
         <TextView
-            android:id="@+id/store_tv_product_prescription_title"
+            android:id="@+id/store_tv_product_prescription"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="16dp"
             android:layout_marginTop="8dp"
-            android:text="@string/store_product_prescription_title"
-            android:textColor="@color/store_product_prescription"
-            android:textSize="13sp"
-            app:layout_constraintTop_toBottomOf="@+id/store_tv_product_describe"
-            app:layout_constraintStart_toStartOf="parent"
-            tools:text="永久"/>
-
-        <TextView
-            android:id="@+id/store_tv_product_prescription"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="8dp"
             android:text="@{@string/store_product_life(data.life)}"
             android:textColor="@color/store_product_prescription"
             android:textSize="13sp"
-            app:layout_constraintLeft_toRightOf="@id/store_tv_product_prescription_title"
+            android:alpha="@{data.life==0?0F:1F}"
             app:layout_constraintTop_toBottomOf="@+id/store_tv_product_describe"
+            app:layout_constraintStart_toStartOf="parent"
+            tools:text="有效期: 永久"
             tools:ignore="HardcodedText" />
 
         <TextView

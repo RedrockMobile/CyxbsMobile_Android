@@ -115,13 +115,4 @@ class ReplyListAdapter(
     ) {
         onReplyInnerLongClickEvent.invoke(data, itemView)
     }
-
-    override fun refreshData(dataCollection: Collection<Comment>) {
-        notifyItemRangeRemoved(0, dataList.size)
-        dataList.clear()
-        dataList.addAll(dataCollection.sortedBy { it.praiseCount }.reversed())
-        notifyItemRangeInserted(0, dataList.size)
-    }
-
-
 }

@@ -1,4 +1,4 @@
-package com.mredrock.cyxbs.store.base
+package com.mredrock.cyxbs.common.utils
 
 import android.view.LayoutInflater
 import android.view.View
@@ -11,16 +11,21 @@ import androidx.recyclerview.widget.RecyclerView
 import androidx.recyclerview.widget.RecyclerView.NO_ID
 
 /**
- * 实现像数组一样的直接添加不同类型的 item, 使用方法可以点击查看使用实例(最好看我本人写的界面)
+ * 实现像数组一样的直接添加不同类型的 item, 使用方法可以点击查看使用实例(最好看我本人写的 module_store 模块中的界面)
  *
  * **WARNING:** 必须使用 [show] 方法来开始加载
  *
  * **NOTE:** 没显示? 可能是你 RecyclerView 的 layoutManager 没设置。。。。。。
  * ```
+ * 本 Adapter 能实现的效果:
+ * 1、实现需要添加多种类型 item 时的快捷操作
+ * 2、可以实现 Rv 数据分页懒加载效果, 且可以在末尾添加一个正在加载的动画(具体可以看 GetRecordFragment 有已实现的效果)
+ * 3、告别 notifyDataSetChange(), 内部整合差分, 且传入新的数据就可简单使用(具体可以看 StampShopFragment 的正规写法)
+ *
  * 本 Adapter 的实现涉及到了:
  * 1、泛型擦除的解决(如何同时绑定多个不同类型的 DataBinding 或 ViewHolder)
  * 2、官方推荐的 DiffUtil 刷新帮助类
- * 3、带有三个参数的 onBindViewHolder 的使用
+ * 3、带有三个参数的 onBindViewHolder 的使用(重点)
  *
  * 样例:
  * mTitleItem = TitleItem(mTitleMap) // 用来显示标题
@@ -28,19 +33,52 @@ import androidx.recyclerview.widget.RecyclerView.NO_ID
  * mRecyclerView.adapter = SimpleRvAdapter()
  *     .addItem(mTitleItem)
  *     .addItem(mDataItem)
- *     .show()
+ *     .show()                       // 必须使用 show() 来展示
  *
- * 差分刷新使用方式:
- * mTitleItem.diffRefreshAllItemMap(mNewTitleMap,  // 传入新的键值对数据
- *     isSameName = { oldData, newData ->
- *         oldData.id == newData.id  // 比对两个数据类的唯一 id (可以去看我方法中的注释)
- *     },
- *     isSameData = { oldData, newData ->
- *         oldData == newData        // 比对两个数据类所有数据是否完全相同
+ * 差分刷新使用方式 及 Item 通用写法:
+ * class TitleItem(                             // map 为在 Rv 中绝对 position 与 数据的映射
+ *     titleMap: Map<Int, Data>                 // 注意严厉禁止 map 设置为 val 让内部可读, 原因在于差分要使用这个 map
+ * ) : SimpleRvAdapter.VHItem<TitleVH, Data>(   // 刷新后 map 不会改变. 在内部想使用时回调都会给你最新 map 中对应的值
+ *     titleMap, R.layout.item_title
+ * ) {
+ *
+ *     // 建议在 Item 的类中写比对逻辑, 然后 Item 类暴露一个 public fun refresh(map: Map<>) 供外部调用刷新
+ *     fun refresh(newMap: Map<Int, Data>) {
+ *         diffRefreshAllItemMap(newMap,        // 传入新的键值对数据
+ *                 isSameName = { oldData, newData ->
+ *                 oldData.id == newData.id     // 比对两个数据类的唯一 id (可以去看我方法中的注释)
+ *             },
+ *             isSameData = { oldData, newData ->
+ *                 oldData == newData           // 比对两个数据类所有数据是否完全相同(注意当不是 data class 时的问题)
+ *             })
  *     }
- * )
- * mDataItem 与上面一样, 不做演示
+ *
+ *     class TitleVH(itemView: View) : RecyclerView.ViewHolder(itemView) {
+ *         val tvTitle: TextView = itemView.findViewById(R.id.tv_title)
+ *     }
+ *
+ *     // 如果使用的是 DBItem 就不用写下面这个方法
+ *     override fun getNewViewHolder(itemView: View): TitleVH {
+ *         return TitleVH(itemView)
+ *     }
+ *
+ *     override fun onCreate(holder: TitleVH, map: Map<Int, Data>) {
+ *         holder.title.setOnClickListener {    // 点击事件写这里
+ *             val position = holder.layoutPosition // 用 holder.layoutPosition 得到点击位置
+ *             context.toast(map[position])     // 这个 map 永远是最新的
+ *         }
+ *     }
+ *
+ *     override fun onRefactor(holder: TitleVH, position: Int, value: Data) {
+ *         holder.tvTitle.text = value.title
+ *     }
+ * }
+ * mDataItem 的刷新与上面一样, 不做演示
  * ```
+ * **WARNING:** 使用差分刷新必须调用所有的 item 的 [Item.diffRefreshAllItemMap] 方法
+ *
+ * ***有技术上问题或者该类出现 bug, 可以随时来找我***
+ *
  * @author 985892345 (Guo Xiangrui)
  * @email 2767465918@qq.com
  * @date 2021/5/31 (在开发邮票商城项目前在自己的项目中开发的, 后续进行了许多优化和修改)
@@ -136,7 +174,7 @@ class SimpleRvAdapter : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
     }
 
     /**
-     * 本方法只是内部 Item 调用
+     * 本方法只是内部 Item 调用差分刷新时使用
      */
     private fun refreshAuto() {
         // 先检查全部的 Item 是否已经准备好了更新
@@ -147,7 +185,7 @@ class SimpleRvAdapter : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
     private val mLayoutIdWithCallback = HashMap<Int, Callback<*>>() // LayoutId 与 CallBack 的对应关系
 
-
+    private val mRvAdapterName = this::class.java.simpleName
 
     /*
     * =====================================================================================================================
@@ -499,11 +537,15 @@ class SimpleRvAdapter : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
          * 2、对于 isSameData 就应该返回新旧数据的 “场地” 和  “安排” 和  “其他”  是否 都 相同
          * 2、如果对于某些数据没有名字或学号这种东西, 也可以以那些不会发生改变的数据来作为唯一 id
          * ```
+         * **WARNING:** 使用差分刷新必须调用所有 item 的该方法后才有效
+         *
+         * **NOTE:** 建议遵守我的写法, 该方法写在 Item 的类中, 然后 Item 类暴露一个 public fun refresh(map: Map<>)
+         * 供外面 Activity 或 Fragment 调用. 差分的比对就在 Item 类中写逻辑
          *
          * @param isSameName 比对两个数据的唯一 id 是否相同
          * @param isSameData 比对其他数据是否相同
          */
-        fun diffRefreshAllItemMap(
+        protected fun diffRefreshAllItemMap(
             map: Map<Int, T>,
             isSameName: (oldData: T, newData: T) -> Boolean,
             isSameData: (oldData: T, newData: T) -> Boolean,
@@ -517,7 +559,7 @@ class SimpleRvAdapter : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
             adapter.refreshAuto()
         }
         /** 用于传入数据为 list **/
-        fun diffRefreshAllItemMap(
+        protected fun diffRefreshAllItemMap(
             list: List<T>,
             startPosition: Int,
             isSameName: (oldData: T, newData: T) -> Boolean,
@@ -528,13 +570,25 @@ class SimpleRvAdapter : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
         }
 
         /**
-         * 只用于**没有增加或删除**时刷新自己
+         * 只能用于**没有增加或删除**时刷新自己, 不然报错
          *
          * @param refreshMode 刷新方式
+         * @throws RuntimeException [refreshSelfMap] 方法禁止在增加和删除时电泳刷新,
+         *   如果数据发生增删移动请使用 [diffRefreshAllItemMap]
          */
         fun refreshSelfMap(map: Map<Int, T>, refreshMode: Mode = Mode.REFACTOR_MILD) {
-            if (map.size != this.__oldMap.size) { return }
-            map.forEach { if (!this.__oldMap.containsKey(it.key)) { return } }
+            if (map.size != this.__oldMap.size) {
+                throw RuntimeException("${SimpleRvAdapter::class.java.simpleName}: " +
+                        "Item#refreshSelfMap() 方法禁止在增加和删除时电泳刷新, " +
+                        "如果数据发生增删移动请使用 Item#diffRefreshAllItemMap()")
+            }
+            map.forEach {
+                if (!this.__oldMap.containsKey(it.key)) {
+                    throw RuntimeException("${SimpleRvAdapter::class.java.simpleName}: " +
+                            "Item#refreshSelfMap() 方法禁止在增加和删除时电泳刷新, " +
+                            "如果数据发生增删移动请使用 Item#diffRefreshAllItemMap()")
+                }
+            }
             __newMap = map
             __oldMap.clear()
             __oldMap.putAll(map)
@@ -556,8 +610,8 @@ class SimpleRvAdapter : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
      *
      * **WARNING:**
      * ```
-     * 注意这个 map 不建议你直接拿来用, 因为在回调中会直接返回 map 中的值.
-     * (不让直接用的原因在与内部的差分刷新会使用到这个 map)
+     * 注意严厉禁止 map 设置为 val 让内部可读, 在内部想使用时回调都会给你最新 map 中对应的值
+     * (不让直接用的原因在与内部的差分刷新会使用到这个 map, 刷新后不会改变)
      * ```
      */
     abstract class DBItem<DB: ViewDataBinding, T> : Item<T> {
@@ -568,8 +622,9 @@ class SimpleRvAdapter : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
          *
          * **WARNING:** ***禁止在这里使用 kotlin 的扩展插件只使用 layoutId 得到 View***
          *
-         * **WARNING:** 在该方法中并**不能直接**得到当前 item 的 ***position***, 但对于设置**点击事件等回调除外**,
+         * **WARNING:** 在该方法中并**不能直接** 得到当前 item 的 ***position***, 但对于设置**点击事件等回调除外**,
          * 可以使用 ***holder.adapterPosition*** 或者 ***holder.layoutPosition*** 得到
+         *
          * ```
          * (简单插一句, 对于 holder.adapterPosition 与 holder.layoutPosition 的区别
          * 可以查看: https://blog.csdn.net/u013467495/article/details/109078905?utm_
@@ -582,19 +637,17 @@ class SimpleRvAdapter : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
         abstract fun onCreate(binding: DB, holder: BindingVH, map: Map<Int, T>)
 
         /**
-         * 用于设置当前 item **每次进入屏幕**显示的数据(包括离开屏幕又回到屏幕)
+         * 用于设置当前 item **每次进入屏幕** 显示的数据(包括离开屏幕又回到屏幕)
+         *
+         * **NOTE:** 会在第一次创建 item 或者当前 item 离开屏幕再回到屏幕后回调, 相当于 onBindViewHolder()。
          *
          * **WARNING:** ***禁止在这里使用 kotlin 的扩展插件只使用 layoutId 得到 View***
          *
-         * **WARNING:** **点击事件等回调不能写在这里**,
+         * **WARNING:** **禁止在这里写点击事件等延时回调, 且不建议在此处创建任何新的对象**,
          * ```
-         * 原因在于: https://blog.csdn.net/weixin_28318011/article/details/112872952
-         * ```
-         * **NOTE:** 会在第一次创建 item 或者当前 item 离开屏幕再回到屏幕后调用。
-         *
-         * **WARNING:** **->> 请不要在此处创建任何新的对象 <<-**
-         * ```
-         * 比如：设置点击监听(会生成匿名内部类)、设置只需用于 item 整个生命周期的对象等其他需要创建对象的做法,
+         * 原因 1: https://blog.csdn.net/weixin_28318011/article/details/112872952
+         * 原因 2: onBindViewHolder() 会重复回调, 设置点击监听就会重复生成匿名内部类
+         * 设置点击监听(会生成匿名内部类)、设置只需用于 item 整个生命周期的对象等其他需要创建对象的做法,
          * ```
          * ***->> 这些做法应写在 [onCreate] 中 <<-***
          *
@@ -623,7 +676,7 @@ class SimpleRvAdapter : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
         open fun onViewDetachedFromWindow(binding: DB, holder: BindingVH) {}
 
         /**
-         * 当这个 holder 被回收时(在调用刷新传入 isRefactor 为 true 后 item 会被回收, 此时就会回调该方法)
+         * 当这个 holder 被回收时(一般在离开屏幕的位置较远时回调)
          */
         open fun onViewRecycled(binding: DB, holder: BindingVH) {}
     }
@@ -634,13 +687,14 @@ class SimpleRvAdapter : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
      *
      * **WARNING:**
      * ```
-     * 注意这个 map 不建议你直接拿来用, 因为在回调中会直接返回 map 中的值.
-     * (不让直接用的原因在与内部的差分刷新会使用到这个 map)
+     * 注意严厉禁止 map 设置为 val 让内部可读, 在内部想使用时回调都会给你最新 map 中对应的值
+     * (不让直接用的原因在与内部的差分刷新会使用到这个 map, 刷新后不会改变)
      * ```
      */
     abstract class VHItem<VH: RecyclerView.ViewHolder, T> : Item<T> {
         constructor(map: Map<Int, T>, @LayoutRes layoutId: Int) : super(map, layoutId)
         constructor(list: List<T>, startPosition: Int, @LayoutRes layoutId: Int) : super(list, startPosition, layoutId)
+
         /**
          * 返回一个新的 ViewHolder，**请不要返回相同的对象**
          */
@@ -651,8 +705,9 @@ class SimpleRvAdapter : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
          *
          * **WARNING:** ***禁止在这里使用 kotlin 的扩展插件只使用 layoutId 得到 View***
          *
-         * **WARNING:** 在该方法中并**不能直接**得到当前 item 的 ***position***, 但对于设置**点击事件等回调除外**,
+         * **WARNING:** 在该方法中并 **不能直接** 得到当前 item 的 ***position***, 但对于设置**点击事件等回调除外**,
          * 可以使用 ***holder.adapterPosition*** 或者 ***holder.layoutPosition*** 得到
+         *
          * ```
          * (简单插一句, 对于 holder.adapterPosition 与 holder.layoutPosition 的区别
          * 可以查看: https://blog.csdn.net/u013467495/article/details/109078905?utm_
@@ -665,19 +720,17 @@ class SimpleRvAdapter : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
         abstract fun onCreate(holder: VH, map: Map<Int, T>)
 
         /**
-         * 用于设置当前 item **每次进入屏幕**显示的数据(包括离开屏幕又回到屏幕)
+         * 用于设置当前 item **每次进入屏幕** 显示的数据(包括离开屏幕又回到屏幕)
+         *
+         * **NOTE:** 会在第一次创建 item 或者当前 item 离开屏幕再回到屏幕后回调, 相当于 onBindViewHolder()。
          *
          * **WARNING:** ***禁止在这里使用 kotlin 的扩展插件只使用 layoutId 得到 View***
          *
-         * **WARNING:** **点击事件等回调不能写在这里**,
+         * **WARNING:** **禁止在这里写点击事件等延时回调, 且不建议在此处创建任何新的对象**,
          * ```
-         * 原因在于: https://blog.csdn.net/weixin_28318011/article/details/112872952
-         * ```
-         * **NOTE:** 会在第一次创建 item 或者当前 item 离开屏幕再回到屏幕后调用。
-         *
-         * **WARNING:** **->> 请不要在此处创建任何新的对象 <<-**
-         * ```
-         * 比如：设置点击监听(会生成匿名内部类)、设置只需用于 item 整个生命周期的对象等其他需要创建对象的做法,
+         * 原因 1: https://blog.csdn.net/weixin_28318011/article/details/112872952
+         * 原因 2: onBindViewHolder() 会重复回调, 设置点击监听就会重复生成匿名内部类
+         * 设置点击监听(会生成匿名内部类)、设置只需用于 item 整个生命周期的对象等其他需要创建对象的做法, 应写在 onCreate() 中
          * ```
          * ***->> 这些做法应写在 [onCreate] 中 <<-***
          *
@@ -706,7 +759,7 @@ class SimpleRvAdapter : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
         open fun onViewDetachedFromWindow(holder: VH) {}
 
         /**
-         * 当这个 holder 被回收时(在调用刷新传入 isRefactor 为 true 后 item 会被回收, 此时就会回调该方法)
+         * 当这个 holder 被回收时(一般在离开屏幕的位置较远时回调)
          */
         open fun onViewRecycled(holder: VH) {}
     }

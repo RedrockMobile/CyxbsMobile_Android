@@ -51,11 +51,21 @@ object StoreTask {
         LOGIN_VOLUNTEER("绑定志愿者账号", TaskType.MORE)
     }
 
+    // 上一次发送任务的时间
     private val lastSaveDate by lazy {
         val share = context.sharedPreferences(this::class.java.simpleName)
         share.getString("last_save_date", "")
     }
 
+    /**
+     * 用于向后端发送任务更新的请求(接手改积分商城项目的后端老哥后面也承认任务进度该他们做)
+     *
+     * [onlyTag] 为发送该类型任务的唯一标记, 比如我要看 5 个动态, 总不能让我看 5 个相同的就能得到积分,
+     * 该形参就用于传入一个唯一的标记, 然后会自动判断是否发送过该标记的请求, 你只管在看了评论后调用该方法即可
+     *
+     * @param task 任务
+     * @param onlyTag 唯一标记
+     */
     fun postTask(
         task: Task,
         onlyTag: String?
@@ -68,7 +78,7 @@ object StoreTask {
                     share.edit {
                         putString("last_save_date", nowDate)
                         Task.values().forEach {
-                            this.putStringSet("${it.title}_set", null)
+                            this.putString("list_${it.title}", null)
                         }
                     }
                 }
@@ -78,22 +88,26 @@ object StoreTask {
         }
 
         if (isAllowPost(task.title, onlyTag)) {
-            postTask(task.title)
+            postTask(task.title, onSuccess = {
+                val s = share.getString("list_${task.title}", null)
+                if (!s.isNullOrEmpty()) {
+                    share.edit { putString("list_${task.title}", "$s$%@$onlyTag") }
+                }else {
+                    share.edit { putString("list_${task.title}", onlyTag) }
+                }
+            })
         }
     }
 
+    // 检查之前是否存在相同的 onlyTage
     private fun isAllowPost(title: String, onlyTag: String? = null): Boolean {
         if (onlyTag != null) {
             val share = context.sharedPreferences(this::class.java.simpleName)
-            val set = share.getStringSet("${title}_set", setOf())
-            if (set != null) {
-                if (set.contains(onlyTag)) { // 如果包含就返回 false, 说明已经请求过了
-                    return false
-                }else {
-                    share.edit { putStringSet("${title}_set", setOf(onlyTag)) }
-                    return true
-                }
-            }else { // set 为 null 时直接发请求
+            val s = share.getString("list_${title}", null)
+            if (!s.isNullOrEmpty()) {
+            val list = s.split("$%@")
+                return !list.contains(onlyTag) // 如果包含就返回 false, 说明已经请求过了
+            }else { // s 为 null 时直接发请求
                 return true
             }
         }else { // onlyTag 为 null 时直接发请求
@@ -101,12 +115,12 @@ object StoreTask {
         }
     }
 
+    // 发送请求, 该网络请求私有
     private fun postTask(
         title: String,
         onSlopOver: (() -> Unit)? = null,
         onSuccess: (() -> Unit)? = null
     ) {
-        Log.d("ggg","(StoreTask.kt:109)-->> ???")
         ApiGenerator.getApiService(ApiService::class.java)
             .changeTaskProgress(title)
             .setSchedulers()
@@ -115,11 +129,11 @@ object StoreTask {
                     if (it is HttpException) {
                         // 在任务进度大于最大进度时, 后端返回 http 的错误码 500 导致回调到 onError 方法 所以这里手动拿到返回的 bean 类
                         val responseBody: ResponseBody? = it.response()?.errorBody()
-                        val code = it.response()?.code()// 返回的 code 如果为 500
+                        val code = it.response()?.code() // 返回的 code 如果为 500
                         if (code == 500) {
                             val gson = Gson()
                             val data = gson.fromJson(responseBody?.string(), RedrockApiStatus::class.java)
-                            if (data.status == 400) {
+                            if (data.status == 400) { // 此时说明超过了最大进度
                                 onSlopOver?.invoke()
                             }
                         }
