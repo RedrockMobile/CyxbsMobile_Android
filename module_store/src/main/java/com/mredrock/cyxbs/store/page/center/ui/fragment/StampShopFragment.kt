@@ -22,7 +22,7 @@ import com.mredrock.cyxbs.store.page.center.ui.item.SmallShopProductItem
 import com.mredrock.cyxbs.store.page.center.ui.item.SmallShopTitleItem
 import com.mredrock.cyxbs.store.page.center.viewmodel.StoreCenterViewModel
 import com.mredrock.cyxbs.store.utils.StoreType
-import com.mredrock.cyxbs.store.base.SimpleRvAdapter
+import com.mredrock.cyxbs.common.utils.SimpleRvAdapter
 
 /**
  * ...
@@ -116,7 +116,11 @@ class StampShopFragment : BaseFragment() {
             .show()
     }
 
-    // 用于再次得到数据后的刷新, 我在 Item 中整合了 DiffUtil 的自动刷新, 不用再使用 notifyDataSetChanged()
+    /**
+     * 差分刷新
+     *
+     * 用于再次得到数据后的刷新, 我在 Item 中整合了 DiffUtil 的自动刷新, 不用再使用 notifyDataSetChanged()
+     */
     private fun refreshAdapter(stampCount: Int) {
         mSmallShopTitleItem.resetData(titleMap)
         mSmallShopProductItem.resetData(shopMap, stampCount)

@@ -236,7 +236,6 @@
                 android:textSize="15sp" />
 
             <ImageView
-                android:id="@+id/mine_main_store_test"
                 android:layout_width="6dp"
                 android:layout_height="12.5dp"
                 android:layout_gravity="end|center_vertical"

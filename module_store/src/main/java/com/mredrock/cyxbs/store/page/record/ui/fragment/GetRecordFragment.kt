@@ -1,7 +1,6 @@
 package com.mredrock.cyxbs.store.page.record.ui.fragment
 
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -14,7 +13,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.mredrock.cyxbs.common.ui.BaseFragment
 import com.mredrock.cyxbs.common.utils.extensions.toast
 import com.mredrock.cyxbs.store.R
-import com.mredrock.cyxbs.store.base.SimpleRvAdapter
+import com.mredrock.cyxbs.common.utils.SimpleRvAdapter
 import com.mredrock.cyxbs.store.bean.StampGetRecord
 import com.mredrock.cyxbs.store.page.record.ui.item.GetPageItem
 import com.mredrock.cyxbs.store.page.record.ui.item.ProgressBarItem

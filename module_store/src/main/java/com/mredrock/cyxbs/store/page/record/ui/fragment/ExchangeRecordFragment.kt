@@ -11,9 +11,8 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.mredrock.cyxbs.common.ui.BaseFragment
-import com.mredrock.cyxbs.common.utils.extensions.gone
 import com.mredrock.cyxbs.store.R
-import com.mredrock.cyxbs.store.base.SimpleRvAdapter
+import com.mredrock.cyxbs.common.utils.SimpleRvAdapter
 import com.mredrock.cyxbs.store.bean.ExchangeRecord
 import com.mredrock.cyxbs.store.page.record.ui.item.ExchangePageItem
 import com.mredrock.cyxbs.store.page.record.viewmodel.RecordViewModel

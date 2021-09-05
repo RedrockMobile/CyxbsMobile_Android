@@ -22,7 +22,7 @@ import com.mredrock.cyxbs.store.bean.StampCenter
 import com.mredrock.cyxbs.store.page.center.ui.item.StampTaskListItem
 import com.mredrock.cyxbs.store.page.center.ui.item.StampTaskTitleItem
 import com.mredrock.cyxbs.store.page.center.viewmodel.StoreCenterViewModel
-import com.mredrock.cyxbs.store.base.SimpleRvAdapter
+import com.mredrock.cyxbs.common.utils.SimpleRvAdapter
 import java.util.*
 import kotlin.collections.HashMap
 
