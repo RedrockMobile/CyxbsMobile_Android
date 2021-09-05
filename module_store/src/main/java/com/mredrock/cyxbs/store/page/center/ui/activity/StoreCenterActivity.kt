@@ -183,9 +183,9 @@ class StoreCenterActivity : BaseViewModelActivity<StoreCenterViewModel>() {
 
             mTvStampSideNumber.text = " $text" // 右上方小的邮票显示, 空一格是为了增加与左边图片的距离
 
-            // 显示"你还有待领取的商品，请尽快领取" 文字的逻辑
-            if (it.unGotGood) { mTvShopHint.visible() }
-            else { mTvShopHint.invisible() }
+            // 如果有商品要领就显示 "你还有待领取的商品，请尽快领取", (没有就显示 "快去做任务吧", 暂时不加)
+            if (it.unGotGood) { mTvShopHint.text = "你还有待领取的商品，请尽快领取" }
+            else { mTvShopHint.text = "" }
         }
 
         // 对数据是否请求成功的观察

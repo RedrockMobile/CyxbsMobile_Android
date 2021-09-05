@@ -2,11 +2,11 @@ package com.mredrock.cyxbs.store.page.exchange.viewmodel
 
 import androidx.lifecycle.MutableLiveData
 import com.google.gson.Gson
+import com.mredrock.cyxbs.common.BaseApp.Companion.context
 import com.mredrock.cyxbs.common.bean.RedrockApiStatus
 import com.mredrock.cyxbs.common.network.ApiGenerator
 import com.mredrock.cyxbs.common.utils.extensions.*
 import com.mredrock.cyxbs.common.viewmodel.BaseViewModel
-import com.mredrock.cyxbs.store.R
 import com.mredrock.cyxbs.store.bean.ExchangeState
 import com.mredrock.cyxbs.store.bean.ProductDetail
 import com.mredrock.cyxbs.store.network.ApiService
@@ -35,7 +35,7 @@ class ProductExchangeViewModel : BaseViewModel() {
             .setSchedulers()
             .safeSubscribeBy(
                 onError = {
-                    toastEvent.postValue(R.string.store_product_detail_failure)
+                    context.toast("获取商品详情失败")
                 },
                 onNext = {
                     productDetail.postValue(it)
@@ -59,7 +59,7 @@ class ProductExchangeViewModel : BaseViewModel() {
                             val exchangeState = gson.fromJson(responseBody?.string(), RedrockApiStatus::class.java)
                             exchangeError.postValue(exchangeState.info)
                         } else {
-                            toastEvent.postValue(R.string.store_exchange_product_failure)
+                            exchangeError.postValue(it.message())
                         }
                     }
                 },

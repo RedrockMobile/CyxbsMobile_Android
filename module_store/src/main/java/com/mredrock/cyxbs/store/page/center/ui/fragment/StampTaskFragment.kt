@@ -68,7 +68,7 @@ class StampTaskFragment : BaseFragment() {
 
         viewModel.loadStampTaskRecyclerView = {
             if (mRecyclerView.adapter == null) {
-                setAdapter() // 为什么在这里设置 Adapter? 可以去看这个回调上写的注释
+                setAdapter() // 为什么在这里设置 Adapter? 可以点进去看这个回调上写的注释
             }
         }
 
@@ -140,14 +140,6 @@ class StampTaskFragment : BaseFragment() {
                 StoreTask.TaskType.MORE.type -> moreList.add(task)
             }
         }
-
-        // 优先显示未完成的任务(如果用 TreeSet 会出现有多个大小相同时会被删除的问题)
-        baseList.sortWith(kotlin.Comparator { o1, o2 ->
-            (o2.maxProgress - o2.currentProgress) - (o1.maxProgress - o1.currentProgress)
-        })
-        moreList.sortWith(kotlin.Comparator { o1, o2 ->
-            (o2.maxProgress - o2.currentProgress) - (o1.maxProgress - o1.currentProgress)
-        })
 
         titleMap[baseList.size] = "更多任务"
         for (i in baseList.indices) {
