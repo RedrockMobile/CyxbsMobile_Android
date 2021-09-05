@@ -10,6 +10,7 @@ import androidx.lifecycle.MutableLiveData
 import com.google.gson.Gson
 import com.mredrock.cyxbs.common.BaseApp
 import com.mredrock.cyxbs.common.network.ApiGenerator
+import com.mredrock.cyxbs.common.utils.LogUtils
 import com.mredrock.cyxbs.common.utils.extensions.doOnErrorWithDefaultErrorHandler
 import com.mredrock.cyxbs.common.utils.extensions.safeSubscribeBy
 import com.mredrock.cyxbs.common.utils.extensions.setSchedulers
@@ -152,8 +153,13 @@ class ContainerViewModel : BaseViewModel() {
                     //详见：https://www.cnblogs.com/fuyaozhishang/p/8607706.html
                     if (it is HttpException) {
                         val errorBody = it.response()?.errorBody()?.string() ?: ""
-                        val gpaStatus = Gson().fromJson(errorBody, GPAStatus::class.java)
-                        _analyzeData.postValue(gpaStatus)
+                        try{
+                            // 防止后端返回的status不符合json格式报错
+                            val gpaStatus = Gson().fromJson(errorBody, GPAStatus::class.java)
+                            _analyzeData.postValue(gpaStatus)
+                        }catch (e: Exception){
+                            BaseApp.context.toast("加载绩点失败")
+                        }
                     } else {
                         //此时说明是一些其他的错误
                         val s =
@@ -163,7 +169,6 @@ class ContainerViewModel : BaseViewModel() {
 
                         BaseApp.context.toast("加载绩点失败")
                     }
-
                 }
             ).lifeCycle()
     }
