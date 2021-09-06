@@ -54,12 +54,12 @@ import com.mredrock.cyxbs.common.utils.extensions.*
  * Created by anriku on 2018/8/16.
  */
 @Route(path = COURSE_ENTRY)
-class CourseContainerEntryFragment : BaseViewModelFragment<CoursesViewModel>(), IUserStateService.StateListener, EventBusLifecycleSubscriber {
+class CourseContainerEntryFragment : BaseViewModelFragment<CoursesViewModel>(),
+    IUserStateService.StateListener, EventBusLifecycleSubscriber {
     override val openStatistics: Boolean
         get() = false
 
     private var courseState = CourseState.OrdinaryCourse
-
 
 
     //如果是在获取老师课表下面两值不为空
@@ -123,7 +123,8 @@ class CourseContainerEntryFragment : BaseViewModelFragment<CoursesViewModel>(), 
         ScheduleDetailBottomSheetDialogHelper(requireContext())
     }
 
-    private val accountService: IAccountService = ServiceManager.getService(IAccountService::class.java)
+    private val accountService: IAccountService =
+        ServiceManager.getService(IAccountService::class.java)
 
     //懒加载课表具体内容，加快启动速度
     private val inflateView: View by lazy(LazyThreadSafetyMode.NONE) {
@@ -138,20 +139,31 @@ class CourseContainerEntryFragment : BaseViewModelFragment<CoursesViewModel>(), 
     //我已经在形参里传给你了,如果你通过[inflateView]来取，极有可能造成死循环
     private var inflateListener: ((View) -> Unit)? = null
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        mBinding = DataBindingUtil.inflate(inflater, R.layout.course_fragment_course_container, container, false)
+    override fun onCreateView(
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View {
+        mBinding = DataBindingUtil.inflate(
+            inflater,
+            R.layout.course_fragment_course_container,
+            container,
+            false
+        )
         return mBinding.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        ServiceManager.getService(IAccountService::class.java).getVerifyService().addOnStateChangedListener(this)
+        ServiceManager.getService(IAccountService::class.java).getVerifyService()
+            .addOnStateChangedListener(this)
         initFragment()
     }
 
     override fun onDestroyView() {
         super.onDestroyView()
-        ServiceManager.getService(IAccountService::class.java).getVerifyService().removeStateChangedListener(this)
+        ServiceManager.getService(IAccountService::class.java).getVerifyService()
+            .removeStateChangedListener(this)
     }
 
     /**
@@ -162,7 +174,8 @@ class CourseContainerEntryFragment : BaseViewModelFragment<CoursesViewModel>(), 
             course_header_show.invisible()
             rl_tourist_course_title.visible()
             fl.setOnSingleClickListener {}//处理所有未处理的点击事件，防止穿透点击或者滑动
-            EventBus.getDefault().postSticky(CurrentDateInformationEvent(getString(R.string.course_tourist_date_txt)))
+            EventBus.getDefault()
+                .postSticky(CurrentDateInformationEvent(getString(R.string.course_tourist_date_txt)))
             return
         }
         rl_tourist_course_title.gone()
@@ -173,9 +186,10 @@ class CourseContainerEntryFragment : BaseViewModelFragment<CoursesViewModel>(), 
         fl.setOnSingleClickListener {}//处理所有未处理的点击事件，防止穿透点击或者滑动
 
         //获取主模块服务并添加bottom状态的监听
-        ServiceManager.getService(IMainService::class.java).obtainBottomSheetStateLiveData().observe(viewLifecycleOwner, Observer {
-            settingFollowBottomSheet(it)
-        })
+        ServiceManager.getService(IMainService::class.java).obtainBottomSheetStateLiveData()
+            .observe(viewLifecycleOwner, Observer {
+                settingFollowBottomSheet(it)
+            })
 
         //获取从其他模块传来的数据
         arguments?.let { bundle ->
@@ -196,14 +210,21 @@ class CourseContainerEntryFragment : BaseViewModelFragment<CoursesViewModel>(), 
             //如果是普通课表
             CourseState.OrdinaryCourse -> {
                 mBinding.coursesViewModel = viewModel
-                context?.let { viewModel.getSchedulesDataFromLocalThenNetwork(accountService.getUserService().getStuNum()) }
+                context?.let {
+                    viewModel.getSchedulesDataFromLocalThenNetwork(
+                        accountService.getUserService().getStuNum()
+                    )
+                }
             }
             //如果是没课约
             CourseState.NoClassInvitationCourse -> {
                 mBinding.coursesViewModel = viewModel
                 mNoCourseInviteViewModel =
-                        ViewModelProvider(this, NoCourseInviteViewModel.Factory(mStuNumList!!, mNameList!!))
-                                .get(NoCourseInviteViewModel::class.java)
+                    ViewModelProvider(
+                        this,
+                        NoCourseInviteViewModel.Factory(mStuNumList!!, mNameList!!)
+                    )
+                        .get(NoCourseInviteViewModel::class.java)
                 mNoCourseInviteViewModel?.getCourses()
             }
             //如果是查询其他同学的课表
@@ -218,7 +239,12 @@ class CourseContainerEntryFragment : BaseViewModelFragment<CoursesViewModel>(), 
                 mOthersTeaName?.let {
                     viewModel.mUserName = it
                 }
-                context?.let { viewModel.getSchedulesDataFromLocalThenNetwork(mOthersTeaNum!!, true) }
+                context?.let {
+                    viewModel.getSchedulesDataFromLocalThenNetwork(
+                        mOthersTeaNum!!,
+                        true
+                    )
+                }
             }
         }
 
@@ -235,22 +261,23 @@ class CourseContainerEntryFragment : BaseViewModelFragment<CoursesViewModel>(), 
             })
             // 给ViewPager添加OnPageChangeListener
             VPOnPagerChangeObserver(inflate.vp,
-                    mOnPageSelected = {
-                        // 当ViewPager发生了滑动，清理课表上加备忘的View
-                        EventBus.getDefault().post(DismissAddAffairViewEvent())
-                        // 本周提示文字是否显示
-                        viewModel.isShowPresentTips.set(
-                                when (it) {
-                                    //零判断需要在最前面，应为nowWeekkennel也会为0，
-                                    // 但是整学期不需要显示本周
-                                    0 -> View.GONE
-                                    viewModel.nowWeek.value -> View.VISIBLE
-                                    else -> View.GONE
-                                }
-                        )
-                        viewModel.isShowBackPresentWeek.value = if (viewModel.nowWeek.value == it) View.GONE else View.VISIBLE
-                        viewModel.mWeekTitle.set(mWeeks[it])
-                    })
+                mOnPageSelected = {
+                    // 当ViewPager发生了滑动，清理课表上加备忘的View
+                    EventBus.getDefault().post(DismissAddAffairViewEvent())
+                    // 本周提示文字是否显示
+                    viewModel.isShowPresentTips.set(
+                        when (it) {
+                            //零判断需要在最前面，应为nowWeekkennel也会为0，
+                            // 但是整学期不需要显示本周
+                            0 -> View.GONE
+                            viewModel.nowWeek.value -> View.VISIBLE
+                            else -> View.GONE
+                        }
+                    )
+                    viewModel.isShowBackPresentWeek.value =
+                        if (viewModel.nowWeek.value == it) View.GONE else View.VISIBLE
+                    viewModel.mWeekTitle.set(mWeeks[it])
+                })
             //回到本周按钮的点击事件
             course_back_present_week.setOnSingleClickListener {
                 viewModel.nowWeek.value?.let {
@@ -281,8 +308,20 @@ class CourseContainerEntryFragment : BaseViewModelFragment<CoursesViewModel>(), 
             }
         }
 
-        viewModel.toastEvent.observe(viewLifecycleOwner, Observer { str -> str?.let { CyxbsToast.makeText(activity, it, Toast.LENGTH_SHORT).show() } })
-        viewModel.longToastEvent.observe(viewLifecycleOwner, Observer { str -> str?.let { CyxbsToast.makeText(activity, it, Toast.LENGTH_LONG).show() } })
+        viewModel.toastEvent.observe(
+            viewLifecycleOwner,
+            Observer { str ->
+                str?.let {
+                    CyxbsToast.makeText(activity, it, Toast.LENGTH_SHORT).show()
+                }
+            })
+        viewModel.longToastEvent.observe(
+            viewLifecycleOwner,
+            Observer { str ->
+                str?.let {
+                    CyxbsToast.makeText(activity, it, Toast.LENGTH_LONG).show()
+                }
+            })
         viewModel.isShowBackPresentWeek.observe(viewLifecycleOwner, Observer {
             /**
              * 这里为什么要判空呢，因为 viewModel.isShowBackPresentWeek
@@ -290,7 +329,9 @@ class CourseContainerEntryFragment : BaseViewModelFragment<CoursesViewModel>(), 
              * 还没有生成，进一步说在应用内开启黑夜模式因为会重启activity但是[viewModel]没有
              */
             course_current_course_week_select_container?.apply {
-                TransitionManager.beginDelayedTransition(this, Slide().apply { slideEdge = Gravity.END })
+                TransitionManager.beginDelayedTransition(
+                    this,
+                    Slide().apply { slideEdge = Gravity.END })
                 this.course_back_present_week?.visibility = it
             }
         })
@@ -299,7 +340,7 @@ class CourseContainerEntryFragment : BaseViewModelFragment<CoursesViewModel>(), 
     }
 
     private fun loadViewPager() {
-        MobclickAgent.onEvent(context,CyxbsMob.Event.COURSE_SHOW)
+        MobclickAgent.onEvent(context, CyxbsMob.Event.COURSE_SHOW)
         viewModel.nowWeek.value?.let { nowWeek ->
             if (inflateView.vp.adapter == null) {
                 inflateView.vp.offscreenPageLimit = 1
@@ -308,8 +349,9 @@ class CourseContainerEntryFragment : BaseViewModelFragment<CoursesViewModel>(), 
             }
             if (courseState == CourseState.OrdinaryCourse) { // 如果是普通课表, 就不加载动画
                 inflateView.vp.setCurrentItem(nowWeek, false)
-            }else {
+            } else {
                 /*
+                * 在第一周的时候出现问题
                 * 这里不加 post 将出现查询其他人课表时出现页数卡在一半的 bug, 目前原因不明
                 * 之后我们要重构课表, 所以暂时先这样解决
                 * @author 985892345
@@ -318,9 +360,7 @@ class CourseContainerEntryFragment : BaseViewModelFragment<CoursesViewModel>(), 
                 inflateView.vp.post { inflateView.vp.setCurrentItem(nowWeek, true) }
             }
             viewModel.mWeekTitle.set(
-                    mWeeks[
-                            if (inflateView.vp.currentItem <= 21) inflateView.vp.currentItem else 0
-                    ]
+                mWeeks[if (inflateView.vp.currentItem <= 21) inflateView.vp.currentItem else 0]
             )
         }
     }
@@ -346,7 +386,9 @@ class CourseContainerEntryFragment : BaseViewModelFragment<CoursesViewModel>(), 
         course_this_week_tips.setOnSingleClickListener { isShow() }
 
         course_header_back.setOnSingleClickListener {
-            TransitionManager.beginDelayedTransition(fl, Slide().apply { slideEdge = Gravity.START })
+            TransitionManager.beginDelayedTransition(
+                fl,
+                Slide().apply { slideEdge = Gravity.START })
             course_header_week_select_content.visibility = View.GONE
             course_header_show.visibility = View.VISIBLE
         }
@@ -473,7 +515,8 @@ class CourseContainerEntryFragment : BaseViewModelFragment<CoursesViewModel>(), 
     fun addTheAffairsToTheCalendar(affairFromInternetEvent: AffairFromInternetEvent) {
         activity?.let { activity ->
             if (affairFromInternetEvent.affairs.isNotEmpty()) {
-                val affairToCalendar = AffairToCalendar(activity as AppCompatActivity, affairFromInternetEvent.affairs)
+                val affairToCalendar =
+                    AffairToCalendar(activity as AppCompatActivity, affairFromInternetEvent.affairs)
                 if (affairFromInternetEvent.affairs.find { it.affairTime.isNullOrBlank() } != null) {
                     affairToCalendar.getPermissionToInsert()
                 }
