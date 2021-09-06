@@ -61,7 +61,10 @@ class PhotoActivity : AppCompatActivity() {
     }
 
     private fun initData() {
-        mImgUrls = intent.getStringArrayListExtra(INTENT_IMG_URLS)
+        val imgUrls = intent.getStringArrayListExtra(INTENT_IMG_URLS)
+        if (imgUrls != null ) {
+            mImgUrls = imgUrls
+        }
     }
 
     @SuppressLint("SetTextI18n")

@@ -28,8 +28,8 @@ class RecordViewModel : BaseViewModel() {
     val mFirstPageGetRecordIsSuccessful by lazy(LazyThreadSafetyMode.NONE) { MutableLiveData<Boolean>() }
     // 下一页获取记录请求是否成功
     val mNestPageGetRecordIsSuccessful by lazy(LazyThreadSafetyMode.NONE) { MutableLiveData<Boolean>() }
-    // 没有更多数据时的回调
-    var mHaveNotNestGetRecord: (() -> Unit)? = null
+    // 没有更多获取记录数据时的回调
+    var mHaveNotMoreNestGetRecord: (() -> Unit)? = null
 
     fun getExchangeRecord() {
         ApiGenerator.getApiService(ApiService::class.java)
@@ -38,7 +38,7 @@ class RecordViewModel : BaseViewModel() {
             .setSchedulers()
             .safeSubscribeBy(
                 onError = {
-                    if (it is RedrockApiIllegalStateException) {
+                    if (it is RedrockApiIllegalStateException) { // 如果请求来的数据中 data 为空, 将报这个错误
                         mExchangeRecordIsSuccessful.postValue(true)
                         mExchangeRecord.postValue(listOf())
                     }else {
@@ -60,7 +60,7 @@ class RecordViewModel : BaseViewModel() {
             .setSchedulers()
             .safeSubscribeBy(
                 onError = {
-                    if (it is RedrockApiIllegalStateException) {
+                    if (it is RedrockApiIllegalStateException) { // 如果请求来的数据中 data 为空, 将报这个错误
                         mFirstPageGetRecordIsSuccessful.postValue(true)
                         mFirstPageStampGetRecord.postValue(listOf())
                     }else {
@@ -83,14 +83,14 @@ class RecordViewModel : BaseViewModel() {
                 onNext = {
                     if (it.isNotEmpty()) {
                         val list = mFirstPageStampGetRecord.value
-                        if (list is MutableList) {
+                        if (list is MutableList) { // 这里不是第一次加载, list 不会为空
                             nowPage++
                             list.addAll(it)
                             mNestPageGetRecordIsSuccessful.postValue(true)
                             mFirstPageStampGetRecord.postValue(list)
                         }
                     }else {
-                        mHaveNotNestGetRecord?.invoke()
+                        mHaveNotMoreNestGetRecord?.invoke() // 没有更多数据时
                     }
                 },
                 onError = {

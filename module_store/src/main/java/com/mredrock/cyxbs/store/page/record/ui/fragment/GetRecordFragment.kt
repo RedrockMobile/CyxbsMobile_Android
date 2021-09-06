@@ -75,7 +75,7 @@ class GetRecordFragment : BaseFragment() {
                 mProgressBarItem.hideProgressBarWhenNoMoreData() // 取消 ProgressBar 动画
             }
         })
-        viewModel.mHaveNotNestGetRecord = {
+        viewModel.mHaveNotMoreNestGetRecord = {
             mProgressBarItem.hideProgressBarWhenNoMoreData() // 取消 ProgressBar 动画
         }
     }
