@@ -120,7 +120,7 @@ class CourseContainerEntryFragment : BaseViewModelFragment<CoursesViewModel>(), 
     private lateinit var mWeeks: Array<String>
 
     private val mDialogHelper: ScheduleDetailBottomSheetDialogHelper by lazy(LazyThreadSafetyMode.NONE) {
-        ScheduleDetailBottomSheetDialogHelper(context!!)
+        ScheduleDetailBottomSheetDialogHelper(requireContext())
     }
 
     private val accountService: IAccountService = ServiceManager.getService(IAccountService::class.java)
@@ -230,9 +230,8 @@ class CourseContainerEntryFragment : BaseViewModelFragment<CoursesViewModel>(), 
         }
 
         inflateListener = { inflate ->
-
             viewModel.nowWeek.observe(viewLifecycleOwner, Observer {
-                inflate.vp.currentItem = it ?: 0
+                inflate.vp.setCurrentItem(it ?: 0, false)
             })
             // 给ViewPager添加OnPageChangeListener
             VPOnPagerChangeObserver(inflate.vp,
@@ -301,10 +300,23 @@ class CourseContainerEntryFragment : BaseViewModelFragment<CoursesViewModel>(), 
 
     private fun loadViewPager() {
         MobclickAgent.onEvent(context,CyxbsMob.Event.COURSE_SHOW)
-        inflateView.vp.adapter = mScheduleAdapter
-        tab_layout.setupWithViewPager(inflateView.vp)
         viewModel.nowWeek.value?.let { nowWeek ->
-            inflateView.vp.currentItem = nowWeek
+            if (inflateView.vp.adapter == null) {
+                inflateView.vp.offscreenPageLimit = 1
+                inflateView.vp.adapter = mScheduleAdapter
+                tab_layout.setupWithViewPager(inflateView.vp)
+            }
+            if (courseState == CourseState.OrdinaryCourse) { // 如果是普通课表, 就不加载动画
+                inflateView.vp.setCurrentItem(nowWeek, false)
+            }else {
+                /*
+                * 这里不加 post 将出现查询其他人课表时出现页数卡在一半的 bug, 目前原因不明
+                * 之后我们要重构课表, 所以暂时先这样解决
+                * @author 985892345
+                * @time 2021/9/6 18:40
+                * */
+                inflateView.vp.post { inflateView.vp.setCurrentItem(nowWeek, true) }
+            }
             viewModel.mWeekTitle.set(
                     mWeeks[
                             if (inflateView.vp.currentItem <= 21) inflateView.vp.currentItem else 0
