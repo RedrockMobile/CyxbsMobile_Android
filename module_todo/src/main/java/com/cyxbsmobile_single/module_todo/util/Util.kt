@@ -46,27 +46,34 @@ val weekStringList = listOf(
  * 不重复不提醒       -> 返回""
  */
 fun repeatMode2RemindTime(remindMode: RemindMode): String {
-    if (remindMode.notifyDateTime == "" && remindMode.repeatMode == RemindMode.NONE) {
+    LogUtils.d("RayleighZ","remindMode = $remindMode")
+    if (remindMode.notifyDateTime.isNullOrEmpty() && remindMode.repeatMode == RemindMode.NONE) {
+        LogUtils.d("RayleighZ","handle todo")
         return ""
     }
+
     //今天的日历
     val calendar = Calendar.getInstance()
-    val remindTime = if (remindMode.notifyDateTime == "") {
+    val remindTime = if (remindMode.notifyDateTime.isNullOrEmpty()) {
         //只要没设置提醒时间，就返回""，ui不展示
         "00:00"
     } else {
         //提醒那一天的日历
-        val remindDateCalender = Calendar.getInstance()
-        //这里可以保证已经是可以解析的了
-        val format = SimpleDateFormat("yy年MM月dd日hh:mm", Locale.CHINA)
-        LogUtils.d("RayleighZ", "notifyTime = ${remindMode.notifyDateTime}")
-        val remindDate = format.parse(remindMode.notifyDateTime)
-        remindDateCalender.time = remindDate
+        val remindDateCalender = getNotifyDayCandler(remindMode)
         "${numToString(remindDateCalender.get(Calendar.HOUR_OF_DAY))}:${
             numToString(
                 remindDateCalender.get(Calendar.MINUTE)
             )
         }"
+    }
+
+    fun getTrueRemindDay(calendar: Calendar): String{
+        val notifyCandler = getNotifyDayCandler(remindMode)
+        return if (calendar.timeInMillis < notifyCandler.timeInMillis){
+            "${calendar.get(Calendar.MONTH) + 1}月${calendar.get(Calendar.DAY_OF_MONTH)}日 $remindTime"
+        } else {
+            "${calendar.get(Calendar.MONTH) + 1}月${calendar.get(Calendar.DAY_OF_MONTH)}日 $remindTime"
+        }
     }
 
     when (remindMode.repeatMode) {
@@ -107,14 +114,14 @@ fun repeatMode2RemindTime(remindMode: RemindMode): String {
                 if (calendar.get(Calendar.DAY_OF_WEEK) <= weekDay) {
                     //判定为今天是早于下一次提醒的时间的，所以说可以进行提醒
                     val dif = weekDay - calendar.get(Calendar.DAY_OF_WEEK)
-                    calendar.add(Calendar.DAY_OF_WEEK, dif)
+                    calendar.add(Calendar.DAY_OF_WEEK, dif + 1)
                     return "${calendar.get(Calendar.MONTH) + 1}月${calendar.get(Calendar.DAY_OF_MONTH)}日 $remindTime"
                 }
             }
 
             //到这里说明这周已经没得了，需要切换到下一周
             val dif = 7 - (calendar.get(Calendar.DAY_OF_WEEK) - remindMode.week[0])
-            calendar.add(Calendar.DAY_OF_WEEK, dif)
+            calendar.add(Calendar.DAY_OF_WEEK, dif + 1)
             return "${calendar.get(Calendar.MONTH) + 1}月${calendar.get(Calendar.DAY_OF_MONTH)}日 $remindTime"
         }
 
@@ -273,3 +280,14 @@ fun hideKeyboard(context: Context, v: View) {
 fun numToString(num: Int): String = if (num < 10) "0$num" else num.toString()
 
 fun numToString(num: String): String = if (Integer.parseInt(num) < 10) "0$num" else num
+
+private fun getNotifyDayCandler(remindMode: RemindMode): Calendar{
+    //提醒那一天的日历
+    val remindDateCalender = Calendar.getInstance()
+    //这里可以保证已经是可以解析的了
+    val format = SimpleDateFormat("yy年MM月dd日hh:mm", Locale.CHINA)
+    LogUtils.d("RayleighZ", "notifyTime = ${remindMode.notifyDateTime}")
+    val remindDate = format.parse(remindMode.notifyDateTime)
+    remindDateCalender.time = remindDate
+    return remindDateCalender
+}

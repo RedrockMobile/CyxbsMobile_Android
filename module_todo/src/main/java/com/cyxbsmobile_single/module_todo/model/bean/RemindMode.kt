@@ -19,7 +19,7 @@ data class RemindMode(
     @SerializedName("day")
     var day: ArrayList<Int>,
     @SerializedName("notify_date_time")
-    var notifyDateTime: String
+    var notifyDateTime: String?
 ): Serializable{
     companion object{
         const val NONE = 0

@@ -17,6 +17,7 @@ import com.mredrock.cyxbs.common.config.TODO_OFFLINE_DEL_LIST
 import com.mredrock.cyxbs.common.config.TODO_OFFLINE_MODIFY_LIST
 import com.mredrock.cyxbs.common.network.ApiGenerator
 import com.mredrock.cyxbs.common.utils.ExecuteOnceObserver
+import com.mredrock.cyxbs.common.utils.LogUtils
 import com.mredrock.cyxbs.common.utils.extensions.*
 import io.reactivex.Observable
 
@@ -109,6 +110,7 @@ class TodoModel {
     }
 
     fun addTodo(todo: Todo, onSuccess: (todoId: Long) -> Unit) {
+        LogUtils.d("RayleighZ", "todo = $todo")
         val syncTime = getLastSyncTime()
         TodoDatabase.INSTANCE.todoDao()
             .insertTodo(todo)
@@ -143,15 +145,14 @@ class TodoModel {
         DEL
     }
 
-    fun getOfflineModifyTodo(type: ModifyType): List<Long> {
+    private fun getOfflineModifyTodo(type: ModifyType): List<Long> {
         val key = if (type == CHANGE) TODO_OFFLINE_MODIFY_LIST else TODO_OFFLINE_DEL_LIST
         val json =
             BaseApp.context.defaultSharedPreferences.getString(key, "[]")
         return Gson().fromJson(json, object : TypeToken<List<Long>>() {}.type)
     }
 
-    //TODO: 逻辑有待优化
-    fun addOffLineModifyTodo(id: Long = -1, type: ModifyType) {
+    private fun addOffLineModifyTodo(id: Long = -1, type: ModifyType) {
         val key = if (type == CHANGE) TODO_OFFLINE_MODIFY_LIST else TODO_OFFLINE_DEL_LIST
         if (id == -1L) {
             BaseApp.context.defaultSharedPreferences.editor {
@@ -208,61 +209,83 @@ class TodoModel {
             .setSchedulers()
             .safeSubscribeBy(
                 onNext = {
-                    val remoteSyncTime = it.data.syncTime
-                    if (lastSyncTime == remoteSyncTime) {
-                        //两端数据同步，不需要拉取，可以使用本地数据
-                        TodoDatabase.INSTANCE.todoDao()
-                            .queryAllTodo()
-                            .toObservable()
+                    if(lastSyncTime == 0L){
+                        apiGenerator.queryAllTodo()
                             .setSchedulers()
-                            .subscribe(
-                                ExecuteOnceObserver(
-                                    onExecuteOnceNext = { list ->
-                                        onSuccess(list)
-                                    }
-                                )
+                            .safeSubscribeBy(
+                                onNext = { inner ->
+                                    //排一下序
+                                    inner.data.todoArray = inner.data.todoArray.sorted()
+                                    onSuccess(inner.data.todoArray)
+                                    setLastModifyTime(inner.data.syncTime)
+                                    setLastSyncTime(inner.data.syncTime)
+                                    //Insert到本地数据库
+                                    Observable.just(inner.data.todoArray)
+                                        .map { list ->
+                                            TodoDatabase.INSTANCE
+                                                .todoDao()
+                                                .insertTodoList(list)
+                                        }
+                                        .setSchedulers()
+                                        .safeSubscribeBy {  }
+                                }
                             )
-
-                        //这时需要比较是否存在本地修改，如果存在本地修改，则需要将本地修改重传
-                        if (lastModifyTime != lastSyncTime) {
-                            resendModifyList(TodoListPushWrapper.NONE_FORCE)
-                        }
                     } else {
-                        //两端数据不同步，需要判断是否存在本地修改
-                        if (lastModifyTime == lastSyncTime) {
-                            //不存在本地修改，以远程为主
-                            apiGenerator.queryChangedTodo(lastSyncTime)
+                        val remoteSyncTime = it.data.syncTime
+                        if (lastSyncTime == remoteSyncTime) {
+                            //两端数据同步，不需要拉取，可以使用本地数据
+                            TodoDatabase.INSTANCE.todoDao()
+                                .queryAllTodo()
+                                .toObservable()
                                 .setSchedulers()
-                                .safeSubscribeBy(
-                                    onNext = { wrapper ->
-                                        //更新本地
-                                        Observable.just(wrapper.data.todoList)
-                                            .map { list ->
-                                                TodoDatabase.INSTANCE
-                                                    .todoDao().updateTodoList(list)
-                                            }.setSchedulers().safeSubscribeBy { }
-
-                                        //删除本地
-                                        Observable.fromArray(wrapper.data.delTodoArray)
-                                            .map { idList ->
-                                                for (id in idList) {
-                                                    TodoDatabase.INSTANCE.todoDao()
-                                                        .deleteTodoById(id)
-                                                }
-                                            }.setSchedulers().safeSubscribeBy { }
-
-                                        //两个时间记录同步处理
-                                        setLastSyncTime(wrapper.data.syncTime)
-                                        setLastModifyTime(wrapper.data.syncTime)
-                                    },
-
-                                    onError = {
-
-                                    }
+                                .subscribe(
+                                    ExecuteOnceObserver(
+                                        onExecuteOnceNext = { list ->
+                                            onSuccess(list)
+                                        }
+                                    )
                                 )
+
+                            //这时需要比较是否存在本地修改，如果存在本地修改，则需要将本地修改重传
+                            if (lastModifyTime != lastSyncTime) {
+                                resendModifyList(TodoListPushWrapper.NONE_FORCE)
+                            }
                         } else {
-                            //冲突了
-                            onConflict?.invoke()
+                            //两端数据不同步，需要判断是否存在本地修改
+                            if (lastModifyTime == lastSyncTime) {
+                                //不存在本地修改，以远程为主
+                                apiGenerator.queryChangedTodo(lastSyncTime)
+                                    .setSchedulers()
+                                    .safeSubscribeBy(
+                                        onNext = { wrapper ->
+                                            //更新本地
+                                            Observable.just(wrapper.data.todoList)
+                                                .map { list ->
+                                                    TodoDatabase.INSTANCE
+                                                        .todoDao().updateTodoList(list)
+                                                }.setSchedulers().safeSubscribeBy { }
+                                            //删除本地
+                                            Observable.fromArray(wrapper.data.delTodoArray)
+                                                .map { idList ->
+                                                    for (id in idList) {
+                                                        TodoDatabase.INSTANCE.todoDao()
+                                                            .deleteTodoById(id)
+                                                    }
+                                                }.setSchedulers().safeSubscribeBy { }
+
+                                            //两个时间记录同步处理
+                                            setLastSyncTime(wrapper.data.syncTime)
+                                            setLastModifyTime(wrapper.data.syncTime)
+                                        },
+
+                                        onError = {
+
+                                        }
+                                    )
+                            } else {
+                                //冲突了
+                                onConflict?.invoke()
+                            }
                         }
                     }
                 },

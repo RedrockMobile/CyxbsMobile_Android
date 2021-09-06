@@ -8,7 +8,7 @@ import java.io.Serializable
  * Time: 2021-08-29 0:51
  */
 data class DelPushWrapper(
-    @SerializedName("")
+    @SerializedName("del_todo_array")
     val delTodoList: List<Long>,
     @SerializedName("sync_time")
     val syncTime: Long,

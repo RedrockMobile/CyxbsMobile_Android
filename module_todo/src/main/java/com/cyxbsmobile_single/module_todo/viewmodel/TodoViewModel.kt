@@ -8,6 +8,7 @@ import com.cyxbsmobile_single.module_todo.model.bean.TodoItemWrapper
 import com.cyxbsmobile_single.module_todo.model.database.TodoDatabase
 import com.cyxbsmobile_single.module_todo.util.needTodayDone
 import com.mredrock.cyxbs.common.utils.ExecuteOnceObserver
+import com.mredrock.cyxbs.common.utils.LogUtils
 import com.mredrock.cyxbs.common.utils.extensions.safeSubscribeBy
 import com.mredrock.cyxbs.common.utils.extensions.setSchedulers
 import com.mredrock.cyxbs.common.viewmodel.BaseViewModel
@@ -68,6 +69,7 @@ class TodoViewModel : BaseViewModel() {
                 wrapperList.add(TodoItemWrapper.titleWrapper("待办"))
                 wrapperList.add(TodoItemWrapper.titleWrapper("已完成"))
             }
+            LogUtils.d("Gibson", "aGibson")
             onLoadSuccess.invoke()
         }
     }

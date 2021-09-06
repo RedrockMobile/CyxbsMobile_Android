@@ -11,5 +11,5 @@ data class TodoListSyncTimeWrapper(
     @SerializedName("sync_time")
     val syncTime: Long,
     @SerializedName("changed_todo_array")
-    val todoArray: List<Todo>
+    var todoArray: List<Todo>
 ): Serializable

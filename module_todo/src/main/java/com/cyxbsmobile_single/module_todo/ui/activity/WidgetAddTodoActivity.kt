@@ -15,10 +15,13 @@ import com.mredrock.cyxbs.common.config.TODO_ADD_TODO_BY_WIDGET
 //这里不使用BaseActivity的原因是需要设置成透明的theme
 @Route(path = TODO_ADD_TODO_BY_WIDGET)
 class WidgetAddTodoActivity : AppCompatActivity() {
+
+    lateinit var dialog: AddItemDialog
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.todo_activity_widget_add_todo)
-        AddItemDialog(this) { todo ->
+        dialog = AddItemDialog(this) { todo ->
             TodoModel.INSTANCE
                 .addTodo(todo) {
                     //通知小组件更新数据
@@ -29,6 +32,13 @@ class WidgetAddTodoActivity : AppCompatActivity() {
                     )
                     finish()
                 }
-        }.show()
+        }
+        dialog.show()
+    }
+
+    override fun onBackPressed() {
+        dialog.hide()
+        finish()
+        super.onBackPressed()
     }
 }
