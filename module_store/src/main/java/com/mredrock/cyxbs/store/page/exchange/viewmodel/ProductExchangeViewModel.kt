@@ -1,17 +1,15 @@
 package com.mredrock.cyxbs.store.page.exchange.viewmodel
 
 import androidx.lifecycle.MutableLiveData
-import com.google.gson.Gson
 import com.mredrock.cyxbs.common.BaseApp.Companion.context
-import com.mredrock.cyxbs.common.bean.RedrockApiStatus
 import com.mredrock.cyxbs.common.network.ApiGenerator
+import com.mredrock.cyxbs.common.network.exception.RedrockApiException
 import com.mredrock.cyxbs.common.utils.extensions.*
 import com.mredrock.cyxbs.common.viewmodel.BaseViewModel
 import com.mredrock.cyxbs.store.bean.ExchangeState
 import com.mredrock.cyxbs.store.bean.ProductDetail
 import com.mredrock.cyxbs.store.network.ApiService
-import okhttp3.ResponseBody
-import retrofit2.HttpException
+import com.mredrock.cyxbs.store.utils.StoreType
 
 /**
  *    author : zz
@@ -26,7 +24,7 @@ class ProductExchangeViewModel : BaseViewModel() {
     val exchangeResult by lazy(LazyThreadSafetyMode.NONE) { MutableLiveData<ExchangeState>() }
 
     // 兑换失败
-    val exchangeError by lazy(LazyThreadSafetyMode.NONE) { MutableLiveData<String>() }
+    val exchangeError by lazy(LazyThreadSafetyMode.NONE) { MutableLiveData<Int>() }
 
     fun getProductDetail(id: String) {
         ApiGenerator.getApiService(ApiService::class.java)
@@ -50,17 +48,10 @@ class ProductExchangeViewModel : BaseViewModel() {
             .setSchedulers()
             .safeSubscribeBy(
                 onError = {
-                    if (it is HttpException) {
-                        // 在库存不足和邮票不够时接口都返回 http 的错误码 500 导致回调到 onError 方法 所以这里手动拿到返回的 bean 类
-                        val responseBody: ResponseBody? = it.response()?.errorBody()
-                        val code = it.response()?.code()//返回的code 如果为500即为余额不足/库存不足
-                        if (code == 500) {
-                            val gson = Gson()
-                            val exchangeState = gson.fromJson(responseBody?.string(), RedrockApiStatus::class.java)
-                            exchangeError.postValue(exchangeState.info)
-                        } else {
-                            exchangeError.postValue(it.message())
-                        }
+                    if (it is RedrockApiException) { // 学长封装的错误, 用于请求虽然成功, 但 statue 不为 10000 时
+                        exchangeError.postValue(it.status) // 这里包括了 http 的请求成功的情况, 包含库存不足和积分不够
+                    }else {
+                        exchangeError.postValue(StoreType.ExchangeError.OTHER_ERROR) // 这里是其他网络错误
                     }
                 },
                 onNext = {
