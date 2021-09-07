@@ -17,7 +17,7 @@
     <color name="common_white_background">#000000</color>
     <color name="common_white_font_color">#ffffff</color>
     <!--    启动页颜色-->
-    <color name="common_start_page_white_color">#CCCCCC</color>
+    <color name="common_start_page_white_color">#333333</color>
     <color name="common_transparent_background">#00000000</color>
 
 
