@@ -13,6 +13,10 @@ import com.mredrock.cyxbs.common.config.APP_UPDATE_SERVICE
 import com.mredrock.cyxbs.common.config.updateFile
 import com.mredrock.cyxbs.api.update.AppUpdateStatus
 import com.mredrock.cyxbs.api.update.IAppUpdateService
+import com.mredrock.cyxbs.common.BaseApp
+import com.mredrock.cyxbs.common.config.FIRST_TIME_OPEN
+import com.mredrock.cyxbs.common.utils.extensions.defaultSharedPreferences
+import com.mredrock.cyxbs.common.utils.extensions.editor
 import com.mredrock.cyxbs.common.utils.extensions.toast
 import com.mredrock.cyxbs.common.utils.extensions.uri
 import com.mredrock.cyxbs.update.component.AppUpdateDownloadService
@@ -43,6 +47,11 @@ internal class AppUpdateService : IAppUpdateService {
                         Manifest.permission.WRITE_EXTERNAL_STORAGE)
                         .subscribe { granted ->
                             if (granted == true) {
+                                //更新标志
+                                BaseApp.context.defaultSharedPreferences.editor {
+                                    putBoolean(FIRST_TIME_OPEN, false)
+                                    commit()
+                                }
                                 downloadUpdate(activity)
                             } else {
                                 activity.toast("没有赋予权限就不能更新哦")
