@@ -441,7 +441,6 @@ open class DynamicFragment : BaseViewModelFragment<DynamicListViewModel>(), Even
         vf_hot_search.stopFlipping()
     }
 
-    @SuppressLint("NotifyDataSetChanged")
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         when (requestCode) {
             // 从动态详细返回
