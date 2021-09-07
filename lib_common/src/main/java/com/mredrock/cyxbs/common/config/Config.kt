@@ -112,6 +112,8 @@ const val COURSE_POS_TO_MAP = "COURSE_POS_TO_MAP"
 //qa进入回答列表传入的问题id的key
 const val QA_PARAM_QUESTION_ID = "question_id"
 
+//第一次安装的标志，默认或者更新之后就会置为true
+const val FIRST_TIME_OPEN = "first_time_open"
 
 //统一拦截的HTTP状态码
 const val TOKEN_EXPIRE = 403//token过期
