@@ -4,5 +4,4 @@ apply from: config
 // 公用库请不要添加到这里
 dependencies {
     implementation project(':lib_account:api_account')
-    implementation "com.google.android.material:material:1.4.0"
 }
