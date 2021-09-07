@@ -142,14 +142,12 @@
                 android:alpha="0.7"
                 android:textColor="@color/store_stamp_center_get_remind"
                 android:textSize="12dp"
-                android:visibility="invisible"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintStart_toStartOf="@+id/store_iv_stamp_center_stamp_bg"
                 app:layout_constraintTop_toBottomOf="@+id/store_fl_stamp_number_layout"
                 app:layout_constraintVertical_bias="0.41000003"
                 tools:ignore="SpUsage"
-                tools:visibility="visible"
-                tools:text="快去做任务吧"/>
+                tools:text="你还有待领取的商品，请尽快领取"/>
 
         </androidx.constraintlayout.widget.ConstraintLayout>
 

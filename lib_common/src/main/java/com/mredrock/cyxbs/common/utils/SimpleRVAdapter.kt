@@ -146,6 +146,24 @@ class SimpleRvAdapter : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
     }
 
     /**
+     * 得到 I 类型的 Item
+     *
+     * 内部是用 try catch 抓强转报错实现的, 可能效率有点低, 但一般一个 Adapter 的 item 类型不会有很多,
+     * 暂时想不到好方法可以代替
+     *
+     * @throws RuntimeException 找不到该类型的 Item 报错
+     */
+    fun <I : Item<*>> getItem(): I {
+        mLayoutIdWithCallback.forEach {
+            try {
+                return it.value.item as I
+            } catch (e: ClassCastException) { }
+        }
+        throw RuntimeException("$mRvAdapterName: " +
+                "Adapter 中不存在该类型的 item")
+    }
+
+    /**
      * notifyDataSetChanged() 永远的神(但不建议使用)
      *
      * **NOTE:** 请在你**修改了**所有 Item 的 getItemCount() 后调用

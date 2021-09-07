@@ -25,11 +25,9 @@ import kotlinx.android.synthetic.main.course_fragment_course.*
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
 
-
 /**
  * Created by anriku on 2018/8/14.
  */
-
 class CourseFragment : BaseFragment(), EventBusLifecycleSubscriber {
 
     override val openStatistics: Boolean
@@ -111,8 +109,6 @@ class CourseFragment : BaseFragment(), EventBusLifecycleSubscriber {
             }
         }
 
-
-
         mCoursesViewModel.nowWeek.value?.let {
             if (it != mWeek || !mCoursesViewModel.isFirstLoadItemAnim) {
                 scheduleView.layoutAnimation = null
@@ -120,8 +116,16 @@ class CourseFragment : BaseFragment(), EventBusLifecycleSubscriber {
                 mCoursesViewModel.isFirstLoadItemAnim = !mCoursesViewModel.isFirstLoadItemAnim
             }
         }
-        mCoursesViewModel.notifyCourseDataChange.observe(viewLifecycleOwner, Observer {
-            scheduleView.notifyDataChange()
+        mCoursesViewModel.notifyCourseDataChange.observe(viewLifecycleOwner, object : Observer<Unit> {
+            override fun onChanged(t: Unit?) {
+                scheduleView.notifyDataChange()
+                /*
+                * 这里出现重复调用的问题, 在取得数据后就取消观察, 如果不取消, 将会重复刷新
+                * @author 985892345
+                * @time 2021/9/6 18:40
+                * */
+                mCoursesViewModel.notifyCourseDataChange.removeObserver(this)
+            }
         })
     }
 

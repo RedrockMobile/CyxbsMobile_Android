@@ -132,7 +132,6 @@ open class DynamicFragment : BaseViewModelFragment<DynamicListViewModel>(), Even
         viewModel.getAllCirCleData("问答圈", "test1")
         dynamicListRvAdapter =
             DynamicAdapter(this.requireContext()) { dynamic, view ->
-                StoreTask.postTask(StoreTask.Task.SEE_DYNAMIC, dynamic.postId) // 浏览动态修改任务进度
                 DynamicDetailActivity.activityStart(this, view, dynamic)
             }.apply {
                 onShareClickListener = { dynamic, mode ->

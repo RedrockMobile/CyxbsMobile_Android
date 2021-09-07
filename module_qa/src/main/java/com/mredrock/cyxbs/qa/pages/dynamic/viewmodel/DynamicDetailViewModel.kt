@@ -66,6 +66,8 @@ open class DynamicDetailViewModel : BaseViewModel() {
             .safeSubscribeBy {
                 if (it == null) {
                     BaseApp.context.toast("帖子不存在或已删除")
+                }else {
+                    StoreTask.postTask(StoreTask.Task.SEE_DYNAMIC, postId)
                 }
                 dynamic.postValue(it)
             }

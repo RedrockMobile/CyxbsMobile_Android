@@ -69,9 +69,8 @@ class StoreCenterViewModel: BaseViewModel() {
      * ```
      * 1、因为 ViewPager2 需要设置预加载(不设置的话有点卡), 而 RecyclerView 有入场动画, 在设置了预加载后
      * 就会使 RecyclerView 的入场动画不在屏幕内就被加载
-     * 2、如果在 Fragment 的 onResume() 中再设置 RecyclerView 的 Adapter 会使加载的时间增长, 影响体验
+     * 2、如果在 Fragment 的 onResume() 中再设置 RecyclerView 的 Adapter 会使等待时间过长, 影响体验
      * ```
-     *
      */
     var loadStampTaskRecyclerView: (() -> Unit)? = null
 }

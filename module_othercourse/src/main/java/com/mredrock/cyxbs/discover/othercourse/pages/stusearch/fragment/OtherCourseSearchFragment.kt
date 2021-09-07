@@ -14,7 +14,6 @@ import com.mredrock.cyxbs.common.config.OTHERS_STU_NUM
 import com.mredrock.cyxbs.common.config.OTHERS_TEA_NAME
 import com.mredrock.cyxbs.common.config.OTHERS_TEA_NUM
 import com.mredrock.cyxbs.common.ui.BaseViewModelFragment
-import com.mredrock.cyxbs.common.utils.LogUtils
 import com.mredrock.cyxbs.common.utils.extensions.gone
 import com.mredrock.cyxbs.common.utils.extensions.startActivity
 import com.mredrock.cyxbs.common.utils.extensions.visible
@@ -95,10 +94,11 @@ abstract class OtherCourseSearchFragment<T : OtherCourseSearchViewModel> : BaseV
                     //这里是历史记录的点击位置
                     onTextClickListener = { history ->
                         if (history.verify != "") {
-                            if (history.type == STUDENT_TYPE)
+                            if (history.type == STUDENT_TYPE) {
                                 openCourseFragment(OTHERS_STU_NUM, history.verify)
-                            else
+                            }else {
                                 openCourseFragment(OTHERS_TEA_NUM, history.verify, history.info)
+                            }
                         } else {
                             //viewModel更新当前id
                             viewModel.curHistoryId = history.historyId
@@ -132,14 +132,10 @@ abstract class OtherCourseSearchFragment<T : OtherCourseSearchViewModel> : BaseV
                 }
             }
         }
-        //在滑动下拉课表容器it中添加整个课表
-        this.activity?.let {
-            it.supportFragmentManager.beginTransaction().replace(R.id.course_bottom_sheet_search, fragment).apply {
-                commit()
-            }
-            BottomSheetBehavior.from(it.course_bottom_sheet_search).state = BottomSheetBehavior.STATE_EXPANDED
-        }
-
+        /*
+        * 这里是点击 "历史记录" 然后的跳转
+        * */
+        requireActivity().supportFragmentManager.beginTransaction().replace(R.id.course_bottom_sheet_search, fragment).commit()
+        BottomSheetBehavior.from(requireActivity().course_bottom_sheet_search).state = BottomSheetBehavior.STATE_EXPANDED
     }
-
 }
