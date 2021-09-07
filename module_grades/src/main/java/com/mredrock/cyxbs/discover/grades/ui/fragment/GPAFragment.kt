@@ -7,6 +7,7 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
+import com.mredrock.cyxbs.common.utils.LogUtils
 import com.mredrock.cyxbs.discover.grades.R
 import com.mredrock.cyxbs.discover.grades.ui.expandableAdapter.GPAAdapter
 import com.mredrock.cyxbs.discover.grades.ui.viewModel.ContainerViewModel
@@ -45,6 +46,7 @@ class GPAFragment : Fragment() {
 
         viewModel.analyzeData.observe(viewLifecycleOwner, Observer {
             val context = context ?: return@Observer
+            if (it?.data == null) return@Observer
             adapter = GPAAdapter(context, hashMap, it.data)
             grades_rv.adapter = adapter
         })
