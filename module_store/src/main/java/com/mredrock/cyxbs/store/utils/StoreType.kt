@@ -52,7 +52,8 @@ class StoreType {
     }
 
     object ExchangeError { // 请求兑换时使用
-        const val OUT_OF_STOCK = "reduce goods error" // 库存不足
-        const val NOT_ENOUGH_MONEY = "Integral not enough" // 钱不够
+        const val OTHER_ERROR = -4734 // 其他错误, 乱打的数字防止出现重复
+        const val NOT_ENOUGH_MONEY = 50000 // 钱不够
+        const val OUT_OF_STOCK = 50001 // 库存不足
     }
 }

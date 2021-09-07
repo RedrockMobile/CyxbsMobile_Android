@@ -25,11 +25,9 @@ import kotlinx.android.synthetic.main.course_fragment_course.*
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
 
-
 /**
  * Created by anriku on 2018/8/14.
  */
-
 class CourseFragment : BaseFragment(), EventBusLifecycleSubscriber {
 
     override val openStatistics: Boolean
