@@ -33,7 +33,7 @@ class ContainerViewModel : BaseViewModel() {
     }
 
     //监听从bindactivity回来containerativity方便用户观看成绩则将bottom展开，如果是在本来在containeractivity则折叠
-    val bottomStateListener = MutableLiveData<Boolean>()
+    val bottomStateListener = MutableLiveData<Boolean?>()
 
     //当前采取的考试展示策略
     val nowStatus = MutableLiveData<Status>()
@@ -78,10 +78,21 @@ class ContainerViewModel : BaseViewModel() {
             .setSchedulers()
             .safeSubscribeBy(
                 onNext = {
-                    replaceBindFragmentToGPAFragment.postValue(true)
-                    bottomStateListener.postValue(true)
-                    BaseApp.context.toast(R.string.grades_bottom_sheet_bind_success)
-                    isAnimating = false
+                    apiService.getAnalyzeData()
+                        .setSchedulers()
+                        .safeSubscribeBy(
+                            onNext = {
+                                replaceBindFragmentToGPAFragment.value = true
+                                bottomStateListener.postValue(true)
+                                BaseApp.context.toast(R.string.grades_bottom_sheet_bind_success)
+                                isAnimating = false
+                            },
+                            onError = {
+                                replaceBindFragmentToGPAFragment.value = false
+                                BaseApp.context.toast(R.string.grades_bottom_sheet_bind_wrong)
+                                isAnimating = false
+                            }
+                        ).lifeCycle()
                 },
                 onError = {
                     //密码错误的话,会导致状态码为400，Retrofit无法回调onNext
@@ -90,11 +101,11 @@ class ContainerViewModel : BaseViewModel() {
                         val body = (it).response()?.errorBody() ?: return@safeSubscribeBy
                         val data = Gson().fromJson(body.string(), IdsStatus::class.java)
                         if (data.errorCode == ERROR) {
-                            replaceBindFragmentToGPAFragment.postValue(false)
+                            replaceBindFragmentToGPAFragment.value = false
                             BaseApp.context.toast(R.string.grades_bottom_sheet_bind_fail)
                         }
                     } else {
-                        replaceBindFragmentToGPAFragment.postValue(false)
+                        replaceBindFragmentToGPAFragment.value = false
                         BaseApp.context.toast("绑定ids失败")
                     }
                     isAnimating = false
@@ -115,14 +126,13 @@ class ContainerViewModel : BaseViewModel() {
             .setSchedulers()
             .safeSubscribeBy(
                 onNext = {
-                    replaceBindFragmentToGPAFragment.postValue(false)
                     bottomStateListener.postValue(true)
                     BaseApp.context.toast(R.string.grades_bottom_sheet_unbind_success)
                     onSuccess.invoke()
+                    isBinding.value = false
                 },
                 onError = {
-                    replaceBindFragmentToGPAFragment.postValue(false)
-                    BaseApp.context.toast(R.string.grades_bottom_sheet_unbind_success)
+                    BaseApp.context.toast(R.string.grades_bottom_sheet_unbind_fail)
                 }
             ).lifeCycle()
     }
@@ -137,6 +147,12 @@ class ContainerViewModel : BaseViewModel() {
 
     val replaceBindFragmentToGPAFragment: MutableLiveData<Boolean> = MutableLiveData()
 
+    /**
+     * 当前是否处于绑定状态
+     * 通过该LiveData改变按钮的点击事件
+     */
+    val isBinding = MutableLiveData<Boolean>()
+
     private val _analyzeData = MutableLiveData<GPAStatus>()
     val analyzeData: LiveData<GPAStatus>
         get() = _analyzeData
@@ -146,7 +162,8 @@ class ContainerViewModel : BaseViewModel() {
             .setSchedulers()
             .safeSubscribeBy(
                 onNext = {
-                    _analyzeData.postValue(it)
+                    _analyzeData.value = it
+                    isBinding.value = true
                 },
                 onError = {
                     //未绑定的话,会导致状态码为400，Retrofit无法回调onNext
@@ -157,6 +174,7 @@ class ContainerViewModel : BaseViewModel() {
                             // 防止后端返回的status不符合json格式报错
                             val gpaStatus = Gson().fromJson(errorBody, GPAStatus::class.java)
                             _analyzeData.postValue(gpaStatus)
+                            isBinding.value = false
                         }catch (e: Exception){
                             BaseApp.context.toast("加载绩点失败")
                         }
@@ -166,7 +184,7 @@ class ContainerViewModel : BaseViewModel() {
                             "{\"errcode\":\"10010\",\"errmessage\":\"errCode:114514 errMsg: runtime error: index out of range [-1]\"}"
                         val gpaStatus = Gson().fromJson(s, GPAStatus::class.java)
                         _analyzeData.postValue(gpaStatus)
-
+                        isBinding.value = false
                         BaseApp.context.toast("加载绩点失败")
                     }
                 }
