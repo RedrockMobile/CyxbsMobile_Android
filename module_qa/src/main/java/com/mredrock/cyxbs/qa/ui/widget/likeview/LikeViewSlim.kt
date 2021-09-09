@@ -5,6 +5,7 @@ import android.graphics.Canvas
 import android.os.Build
 import android.text.TextPaint
 import android.util.AttributeSet
+import android.util.Log
 import androidx.core.content.ContextCompat
 import com.mredrock.cyxbs.common.config.StoreTask
 import com.mredrock.cyxbs.common.network.ApiGenerator
@@ -63,7 +64,9 @@ class LikeViewSlim @JvmOverloads constructor(
     override fun onDraw(canvas: Canvas?) {
         val fontMetrics = textPaint.fontMetrics
         val offsetY: Float = (fontMetrics.bottom - fontMetrics.top) / 2 - fontMetrics.bottom
+        Log.e("wxtag","(LikeViewSlim.kt:68)->> ${this.hashCode()}重绘时候的${isPraised}")
         textPaint.color = if (isPraised) {
+
             //如果点过赞，就换做点赞后的颜色
             getColor(R.color.qa_praise_text_color)
         } else {
@@ -104,14 +107,15 @@ class LikeViewSlim @JvmOverloads constructor(
             // 如果map中没有记录，则新建
             this.praiseCount = praiseCount
             this.isPraised = isPraised
+            Log.e("wxtag","(LikeViewSlim.kt:127)->>${this.hashCode()}if this.isPraised${this.isPraised}")
             likeMap["$id-$model"] = Pair(this.praiseCount, this.isPraised)
         } else {
 
-            this.isPraised = likeMap["$id-$model"]?.second ?: false
+            this.isPraised = isPraised
             // 如果map中有记录是否点赞。则根据外部传来的真实点赞值（除了自己），加上自己是否点赞
             this.praiseCount =
                 praiseCount + (if (isPraised) -1 else 0) + (if (this.isPraised) 1 else 0) // likeMap["$id-$model"]?.first ?: 0
-
+            Log.e("wxtag","(LikeViewSlim.kt:127)->>${this.hashCode()}else this.isPraised${this.isPraised}")
             likeMap["$id-$model"] = Pair(this.praiseCount, this.isPraised)
         }
 
@@ -121,9 +125,9 @@ class LikeViewSlim @JvmOverloads constructor(
             observer["${this.id}-${this.model}"] = arrayListOf()
         }
         observer["${this.id}-${this.model}"]?.add(weakP!!)
-
+            Log.e("wxtag","(LikeViewSlim.kt:127)->>${this.hashCode()}registerLikeView完 this.isPraised${this.isPraised}")
         setCheckedWithoutAnimator(this.isPraised)
-        invalidate()
+        //invalidate()
     }
 
     // 根据id和model去map中寻找对应的“帖子/动态”点赞数和是否点赞
@@ -160,22 +164,26 @@ class LikeViewSlim @JvmOverloads constructor(
         val originIsPraised = isPraised
         val originPraiseCount = praiseCount
 
+      Log.e("wxtag","(LikeViewSlim.kt:164)->>$praiseCount ")
         sendBroadcast("$tmpId-$tmpModel")
 
         if (isLoading) return
         isLoading = true
-
+           Log.e("wxtag","(LikeViewSlim.kt:167)->> click(）方法执行")
         if (isPraised) {
             isPraised = false
+            Log.e("wxtag","(LikeViewSlim.kt:167)->> isPraised:true")
             praiseCount -= 1
             textPaint.color = getColor(R.color.qa_question_bottom_count_color)
         } else {
+            Log.e("wxtag","(LikeViewSlim.kt:167)->> isPraised:false")
             isPraised = true
             praiseCount += 1
             textPaint.color = getColor(R.color.qa_praise_text_color)
         }
 
         isChecked = isPraised
+        Log.e("wxtag","(LikeViewSlim.kt:167)->> $praiseCount")
         likeMap["$tmpId-$tmpModel"] = Pair(praiseCount, isPraised)
         invalidate()
         ApiGenerator.getApiService(ApiServiceNew::class.java)
@@ -183,12 +191,14 @@ class LikeViewSlim @JvmOverloads constructor(
             .checkError()
             .setSchedulers()
             .doOnError {
+                Log.e("wxtag","(LikeViewSlim.kt:167)->> doOnError ")
                 // 如果失败，则通知所有订阅了的view，回到原始状态
                 likeMap["$tmpId-$tmpModel"] = Pair(originPraiseCount, originIsPraised)
                 sendBroadcast("$tmpId-$tmpModel")
             }.doFinally {
                 isLoading = false
             }.safeSubscribeBy {
+                Log.e("wxtag","(LikeViewSlim.kt:167)->> safeSubscribeBy方法执行$praiseCount")
                 // 如果成功，则保持
                 sendBroadcast("$tmpId-$tmpModel")
 

@@ -1,5 +1,6 @@
 package com.mredrock.cyxbs.qa.pages.mine.ui.adapter
 
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -47,6 +48,7 @@ class MyCommentRvAdapter(
                     if (comment.postId == "0") {
                         BaseApp.context.toast("该评论已被删除")
                     } else {
+                        Log.e("wxtag","(MyCommentRvAdapter.kt:50)->> 执行跳转了嘛")
                         DynamicDetailActivity.activityStart(activity, comment.postId)
                     }
                 }
