@@ -1,6 +1,5 @@
 package com.mredrock.cyxbs.common.config
 
-import android.util.Log
 import androidx.core.content.edit
 import com.google.gson.Gson
 import com.mredrock.cyxbs.common.BaseApp.Companion.context
@@ -17,7 +16,6 @@ import retrofit2.http.FormUrlEncoded
 import retrofit2.http.POST
 import java.text.SimpleDateFormat
 import java.util.*
-
 
 /**
  * 邮票任务, 分别会跳转到不同模块中的界面, 而且完成任务后需要向后端发送进度(以任务名称为请求), 所以写在这里
@@ -51,7 +49,7 @@ object StoreTask {
         LOGIN_VOLUNTEER("绑定志愿者账号", TaskType.MORE)
     }
 
-    // 上一次发送任务的时间
+    // 上一次发送任务的时间, 用于清空每日任务
     private val lastSaveDate by lazy {
         val share = context.sharedPreferences(this::class.java.simpleName)
         share.getString("last_save_date", "")
@@ -59,6 +57,8 @@ object StoreTask {
 
     /**
      * 用于向后端发送任务更新的请求(接手改积分商城项目的后端老哥后面也承认任务进度该他们做)
+     *
+     * **NOTE:** 发一次请求则该任务进度自动加一, 我们不用管进度是否溢出, 因为后端在溢出时会在请求结果中返回错误
      *
      * [onlyTag] 为发送该类型任务的唯一标记, 比如我要看 5 个动态, 总不能让我看 5 个相同的就能得到积分,
      * 该形参就用于传入一个唯一的标记, 然后会自动判断是否发送过该标记的请求, 你只管在看了评论后调用该方法即可
