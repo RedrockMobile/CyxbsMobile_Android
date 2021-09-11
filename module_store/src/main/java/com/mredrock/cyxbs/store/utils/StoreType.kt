@@ -44,6 +44,10 @@ class StoreType {
                 StoreTask.Task.LOGIN_VOLUNTEER.title -> {
                     ARouter.getInstance().build(DISCOVER_VOLUNTEER).navigation()
                 }
+                /*
+                * 注意, 如果后面接手的学弟要添加新的任务, 目前(2021/9/11)对于任务进度是要我们自己完成后向后端发送请求的
+                * 发送请求的代码我已经封装进了 common 模块的 /config/StoreTask 中
+                * */
                 else -> {
                     context.toast("若点击无跳转，请向我们反馈，谢谢")
                 }
