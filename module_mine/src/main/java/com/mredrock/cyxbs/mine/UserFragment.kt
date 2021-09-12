@@ -58,7 +58,7 @@ class UserFragment : BaseViewModelFragment<UserViewModel>() {
             mine_main_store_test.setOnClickListener {
 //                Log.d("ggg","(UserFragment.kt:62)-->> 测试按钮点击")
                 doIfLogin { jump(STORE_ENTRY) }
-//                Log.d("ggg","(UserFragment.kt:64)-->> 测试按钮结束")
+                Log.d("ggg","(UserFragment.kt:64)-->> 测试按钮结束")
             }
             mine_main_tv_sign.setOnSingleClickListener { doIfLogin { startActivity<DailySignActivity>() } }
             mine_main_tv_dynamic_number.setOnSingleClickListener { doIfLogin { jump(QA_DYNAMIC_MINE) } }
