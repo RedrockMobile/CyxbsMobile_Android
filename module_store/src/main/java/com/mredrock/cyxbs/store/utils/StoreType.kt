@@ -56,8 +56,9 @@ class StoreType {
     }
 
     object ExchangeError { // 请求兑换时使用
-        const val OTHER_ERROR = -4734 // 其他错误, 乱打的数字防止出现重复
+        const val OTHER_ERROR = Int.MIN_VALUE // 其他错误, 乱打的数字防止出现重复
         const val NOT_ENOUGH_MONEY = 50000 // 钱不够
         const val OUT_OF_STOCK = 50001 // 库存不足
+        const val IS_PURCHASED = 50002 // 当商品为邮货时且已经购买过
     }
 }

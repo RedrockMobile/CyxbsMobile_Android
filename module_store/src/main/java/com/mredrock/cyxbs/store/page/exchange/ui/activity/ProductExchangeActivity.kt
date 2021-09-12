@@ -34,19 +34,19 @@ class ProductExchangeActivity : BaseViewModelActivity<ProductExchangeViewModel>(
     private lateinit var mData: ProductDetail // 记录该页面的商品数据, 用于之后的判断
     private var mShopId = "" //商品ID
     private var mStampCount = 0 //我的余额
-    private var mHasBought = false // 是否已经购买过, 只有邮货才有购买限制
+    private var mIsPurchased = false // 是否已经购买过, 只有邮货才有购买限制
 
     companion object {
 
         private const val INTENT_PRODUCT_ID = "id" // 商品 id
         private const val INTENT_STAMP_COUNT = "stampCount" // 邮票数量
-        private const val INTENT_HAS_BOUGHT = "hasBought" // 是否已经购买过了, 只有邮货才有购买限制
+        private const val INTENT_HAS_BOUGHT = "isPurchased" // 是否已经购买过了, 只有邮货才有购买限制
 
-        fun activityStart(context: Context, id: Int, stampCount: Int, hasBought: Boolean) {
+        fun activityStart(context: Context, id: Int, stampCount: Int, isPurchased: Boolean) {
             val intent = Intent(context, ProductExchangeActivity::class.java)
             intent.putExtra(INTENT_PRODUCT_ID, id)
             intent.putExtra(INTENT_STAMP_COUNT, stampCount)
-            intent.putExtra(INTENT_HAS_BOUGHT, hasBought)
+            intent.putExtra(INTENT_HAS_BOUGHT, isPurchased)
             context.startActivity(intent)
         }
     }
@@ -68,8 +68,8 @@ class ProductExchangeActivity : BaseViewModelActivity<ProductExchangeViewModel>(
     private fun initData() {
         mShopId = intent.getIntExtra(INTENT_PRODUCT_ID, 0).toString()
         mStampCount = intent.getIntExtra(INTENT_STAMP_COUNT, 0)
-        mHasBought = intent.getBooleanExtra(INTENT_HAS_BOUGHT, false)
-        if (mHasBought) { // 如果已经购买过
+        mIsPurchased = intent.getBooleanExtra(INTENT_HAS_BOUGHT, false)
+        if (mIsPurchased) { // 如果已经购买过
             dataBinding.storeBtnExchange.setBackgroundColor(getColor2(R.color.store_btn_ban_product_exchange))
         }
 
@@ -84,7 +84,7 @@ class ProductExchangeActivity : BaseViewModelActivity<ProductExchangeViewModel>(
         button.setOnSingleClickListener { finishAfterTransition() }
 
         dataBinding.storeBtnExchange.setOnSingleClickListener {
-            if (mHasBought) { // 如果已经购买过就禁止显示 diolog
+            if (mIsPurchased) { // 如果已经购买过就禁止显示 diolog
                 toast("每种商品只限领一次哦")
                 return@setOnSingleClickListener
             }
@@ -206,6 +206,13 @@ class ProductExchangeActivity : BaseViewModelActivity<ProductExchangeViewModel>(
                         onPositiveClick = { dismiss() },
                         dismissCallback = { dataBinding.storeBtnExchange.isClickable = true }
                     )
+                }
+                StoreType.ExchangeError.IS_PURCHASED -> {
+                    /*
+                    * 这里是不会触发的, 因为在之前就判断过是否已经购买而取消了 dialog
+                    * */
+                    toast("每种商品只限领一次哦")
+                    dataBinding.storeBtnExchange.isClickable = true
                 }
                 else -> {
                     toast("兑换请求异常")
