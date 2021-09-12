@@ -25,7 +25,9 @@ data class StampCenter(
         @SerializedName("type")
         val type: Int,
         @SerializedName("url")
-        val url: String
+        val url: String,
+        @SerializedName("is_purchased")
+        val isPurchased: Boolean
     ) : Serializable
 
     data class Task(
