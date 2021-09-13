@@ -588,6 +588,7 @@ class DynamicDetailActivity : BaseViewModelActivity<DynamicDetailViewModel>() {
             )
         }
         qa_iv_dynamic_praise_count_image.setOnSingleClickListener {
+          Log.e("wxtag","(DynamicDetailActivity.kt:591)->> 点赞按钮被点击")
             qa_iv_dynamic_praise_count_image.click()
         }
 
@@ -616,12 +617,15 @@ class DynamicDetailActivity : BaseViewModelActivity<DynamicDetailViewModel>() {
 
     @SuppressLint("SetTextI18n")
     private fun refreshDynamic() {
+      Log.e("wxtag","(DynamicDetailActivity.kt:620)->>  refreshDynamic")
         qa_iv_dynamic_avatar.setAvatarImageFromUrl(viewModel.dynamic.value?.avatar)
         qa_tv_dynamic_topic.text = "# " + viewModel.dynamic.value?.topic
         qa_tv_dynamic_nickname.text = viewModel.dynamic.value?.nickName
         qa_tv_dynamic_content.setContent(viewModel.dynamic.value?.content)
         qa_tv_dynamic_comment_count.text = viewModel.dynamic.value?.commentCount.toString()
         viewModel.dynamic.value?.let {
+            Log.e("wxtag","(DynamicDetailActivity.kt:620)->>  refreshDynamic${it.praiseCount}")
+            Log.e("wxtag","(DynamicDetailActivity.kt:620)->>  ${qa_iv_dynamic_praise_count_image.hashCode()}it.isPraised${ it.isPraised}")
             qa_iv_dynamic_praise_count_image.registerLikeView(
                 it.postId,
                 CommentConfig.PRAISE_MODEL_DYNAMIC,
