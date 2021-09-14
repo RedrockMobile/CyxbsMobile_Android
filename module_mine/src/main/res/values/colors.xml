@@ -1,4 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources xmlns:tools="http://schemas.android.com/tools">
 
+    <color name="mine_white">#FFFFFF</color>
+    <color name="mine_division_line">#15315BCC</color>
 </resources>

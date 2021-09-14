@@ -3,7 +3,13 @@
     package="com.mredrock.cyxbs.mine">
 
     <application android:theme="@style/AppTheme">
-        <activity android:name=".page.about.AgreementActivity"></activity>
+        <activity
+            android:name=".page.mine.ui.activity.IdentityActivity"
+            android:exported="true" />
+        <activity
+            android:name=".page.mine.ui.activity.MineActivity"
+            android:exported="true" />
+        <activity android:name=".page.about.AgreementActivity" />
         <activity android:name=".page.setting.SettingActivity" />
         <activity android:name=".page.security.activity.FindPasswordActivity" />
         <activity android:name=".page.security.activity.ForgetPasswordActivity" />
