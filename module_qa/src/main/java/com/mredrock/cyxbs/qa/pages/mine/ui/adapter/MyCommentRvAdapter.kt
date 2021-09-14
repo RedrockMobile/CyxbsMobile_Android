@@ -12,7 +12,7 @@ import com.mredrock.cyxbs.qa.beannew.CommentWrapper
 import com.mredrock.cyxbs.qa.component.recycler.BaseEndlessRvAdapter
 import com.mredrock.cyxbs.qa.component.recycler.BaseViewHolder
 import com.mredrock.cyxbs.qa.pages.dynamic.ui.activity.DynamicDetailActivity
-import com.mredrock.cyxbs.qa.pages.mine.ui.MyCommentActivity
+import com.mredrock.cyxbs.qa.pages.mine.ui.activity.MyCommentActivity
 import com.mredrock.cyxbs.qa.pages.mine.ui.adapter.viewholder.MyCommentViewHolder
 import com.mredrock.cyxbs.qa.pages.mine.viewmodel.MyCommentViewModel
 import kotlinx.android.synthetic.main.qa_activity_my_comment.*

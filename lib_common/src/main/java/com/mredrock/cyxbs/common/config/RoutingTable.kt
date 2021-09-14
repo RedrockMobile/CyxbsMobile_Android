@@ -68,6 +68,7 @@ const val QA_DYNAMIC_MINE = "/dynamic_mine/qa/entry"
 const val QA_MY_COMMENT = "/my_comment/qa/entry"
 const val QA_MY_IGNORE = "/my_ignore/qa/entry"
 const val QA_MY_PRAISE = "/my_praise/qa/entry"
+const val QA_DYNAMIC_MINE_FRAGMENT="/identity/mine/entry"
 
 // 迎新专题
 const val FRESHMAN_ENTRY = "/freshman/entry"
@@ -89,3 +90,4 @@ const val VOLUNTEER_SERVICE = "/volunteer/service"
 
 // module_store 邮票中心页
 const val STORE_ENTRY="/store/entry"
+

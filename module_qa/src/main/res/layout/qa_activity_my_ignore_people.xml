@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/common_white_background"
-    tools:context=".pages.mine.ui.MyIgnorePeopleActivity">
+    tools:context=".pages.mine.ui.activity.MyIgnorePeopleActivity">
 
     <include layout="@layout/qa_common_toolbar"
         android:id="@+id/qa_tb_activity_ignore"/>

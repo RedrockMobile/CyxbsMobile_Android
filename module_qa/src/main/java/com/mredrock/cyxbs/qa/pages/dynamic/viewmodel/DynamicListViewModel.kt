@@ -20,6 +20,7 @@ import com.mredrock.cyxbs.qa.pages.dynamic.model.TopicDataSet
 /**
  * rebuild by xgl 2021/2/13
  */
+
 open class DynamicListViewModel(kind: String) : BaseViewModel() {
     val dynamicList: LiveData<PagedList<Dynamic>>
     val networkState: LiveData<Int>

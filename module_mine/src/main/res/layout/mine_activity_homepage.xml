@@ -1,309 +1,318 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/iv_"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    tools:context=".page.mine.ui.activity.MineActivity">
+    xmlns:tools="http://schemas.android.com/tools">
 
-    <View
-        android:id="@+id/mine_v_division_line2"
-        android:layout_width="1dp"
-        android:layout_height="20dp"
-        android:layout_marginStart="3dp"
-        android:background="@color/mine_division_line"
-        app:layout_constraintBottom_toBottomOf="@+id/tv_grade"
-        app:layout_constraintStart_toEndOf="@+id/tv_grade"
-        app:layout_constraintTop_toTopOf="@+id/tv_grade"
-        app:layout_constraintVertical_bias="1.0" />
+    <data>
 
-    <View
-        android:id="@+id/mine_v_division_line"
-        android:layout_width="1dp"
-        android:layout_height="20dp"
-        android:layout_marginStart="3dp"
-        android:background="@color/mine_division_line"
-        app:layout_constraintBottom_toBottomOf="@+id/tv_grade"
-        app:layout_constraintStart_toEndOf="@+id/tv_grade"
-        app:layout_constraintTop_toTopOf="@+id/tv_grade"
-        app:layout_constraintVertical_bias="1.0" />
+    </data>
 
-    <ImageView
-        android:id="@+id/iv_mine_background"
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/iv_"
         android:layout_width="match_parent"
-        android:layout_height="217dp"
-        android:scaleType="fitXY"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:srcCompat="@drawable/mine_ic_iv_background_test" />
+        android:layout_height="match_parent"
+        tools:context=".page.mine.ui.activity.MineActivity">
 
-    <ImageView
-        android:id="@+id/bt_mine_back"
-        android:layout_width="7dp"
-        android:layout_height="16dp"
-        android:layout_marginStart="16dp"
-        android:layout_marginTop="60dp"
-        android:src="@drawable/mine_ic_bt_back_arrow"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        <View
+            android:id="@+id/mine_v_division_line2"
+            android:layout_width="1dp"
+            android:layout_height="20dp"
+            android:layout_marginStart="3dp"
+            android:background="@color/mine_division_line"
+            app:layout_constraintBottom_toBottomOf="@+id/tv_grade"
+            app:layout_constraintStart_toEndOf="@+id/tv_grade"
+            app:layout_constraintTop_toTopOf="@+id/tv_grade"
+            app:layout_constraintVertical_bias="1.0" />
 
-    <TextView
-        android:id="@+id/tv_mine"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="13dp"
-        android:text="个人主页"
-        android:textSize="16dp"
-        app:layout_constraintBottom_toBottomOf="@+id/bt_mine_back"
-        app:layout_constraintStart_toEndOf="@+id/bt_mine_back"
-        app:layout_constraintTop_toTopOf="@+id/bt_mine_back" />
+        <View
+            android:id="@+id/mine_v_division_line"
+            android:layout_width="1dp"
+            android:layout_height="20dp"
+            android:layout_marginStart="3dp"
+            android:background="@color/mine_division_line"
+            app:layout_constraintBottom_toBottomOf="@+id/tv_grade"
+            app:layout_constraintStart_toEndOf="@+id/tv_grade"
+            app:layout_constraintTop_toTopOf="@+id/tv_grade"
+            app:layout_constraintVertical_bias="1.0" />
 
-    <de.hdodenhof.circleimageview.CircleImageView
-        android:id="@+id/civ_head"
-        android:layout_width="97dp"
-        android:layout_height="97dp"
-        android:layout_marginStart="16dp"
-        android:src="@drawable/mine_ic_head_test"
-        app:layout_constraintBottom_toBottomOf="@+id/iv_mine_background"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/iv_mine_background"
-        app:layout_constraintVertical_bias="0.525" />
+        <ImageView
+            android:id="@+id/iv_mine_background"
+            android:layout_width="match_parent"
+            android:layout_height="217dp"
+            android:scaleType="fitXY"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:srcCompat="@drawable/mine_ic_iv_background_test" />
 
-    <TextView
+        <ImageView
+            android:id="@+id/bt_mine_back"
+            android:layout_width="7dp"
+            android:layout_height="16dp"
+            android:layout_marginStart="16dp"
+            android:layout_marginTop="60dp"
+            android:src="@drawable/mine_ic_bt_back_arrow"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
 
-        android:id="@+id/tv_name"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="4dp"
-        android:text="鱼鱼鱼鱼鱼鱼鱼鱼鱼鱼鱼"
-        android:textColor="@color/mine_white"
-        android:textSize="18dp"
-        app:layout_constraintBottom_toBottomOf="@+id/iv_mine_background"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.435"
-        app:layout_constraintStart_toEndOf="@+id/civ_head" />
-
-    <TextView
-        android:id="@+id/tv_fans_number"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="35dp"
-        android:text="12"
-        app:layout_constraintStart_toEndOf="@+id/civ_head"
-        tools:layout_editor_absoluteY="222dp" />
-
-    <TextView
-        android:id="@+id/tv_fans"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="粉丝"
-        app:layout_constraintEnd_toEndOf="@+id/tv_fans_number"
-        app:layout_constraintHorizontal_bias="0.0"
-        app:layout_constraintStart_toStartOf="@+id/tv_fans_number"
-        app:layout_constraintTop_toBottomOf="@+id/tv_fans_number" />
-
-    <TextView
-        android:id="@+id/tv_attention_number"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="60dp"
-        android:text="29"
-        app:layout_constraintStart_toEndOf="@+id/tv_fans_number"
-        tools:layout_editor_absoluteY="222dp" />
-
-    <TextView
-        android:id="@+id/tv_attention"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="关注"
-        app:layout_constraintEnd_toEndOf="@+id/tv_attention_number"
-        app:layout_constraintStart_toStartOf="@+id/tv_attention_number"
-        app:layout_constraintTop_toBottomOf="@+id/tv_attention_number" />
-
-    <TextView
-        android:id="@+id/tv_praise_number"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="60dp"
-        android:text="31"
-        app:layout_constraintStart_toEndOf="@+id/tv_attention_number"
-        tools:layout_editor_absoluteY="222dp" />
-
-    <TextView
-        android:id="@+id/tv_praise"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="获赞"
-        app:layout_constraintEnd_toEndOf="@+id/tv_praise_number"
-        app:layout_constraintStart_toStartOf="@+id/tv_praise_number"
-        app:layout_constraintTop_toBottomOf="@+id/tv_praise_number" />
-
-    <TextView
-        android:id="@+id/tv_id"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="16dp"
-        android:text="ID:"
-        app:layout_constraintStart_toStartOf="@+id/civ_head"
-        app:layout_constraintTop_toBottomOf="@+id/civ_head" />
-
-    <TextView
-        android:id="@+id/tv_id_number"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="4dp"
-        android:text="355533"
-        app:layout_constraintStart_toEndOf="@+id/tv_id"
-        tools:layout_editor_absoluteY="282dp" />
-
-    <ImageView
-        android:id="@+id/iv_edit"
-        android:layout_width="10dp"
-        android:layout_height="10dp"
-        android:layout_marginStart="25dp"
-        app:layout_constraintBottom_toBottomOf="@+id/tv_id_number"
-        app:layout_constraintStart_toEndOf="@+id/tv_id_number"
-        app:layout_constraintTop_toTopOf="@+id/tv_id_number"
-        app:srcCompat="@drawable/mine_ic_iv_edit_pencil" />
-
-    <TextView
-        android:id="@+id/tv_edit"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="4dp"
-        android:text="编辑信息"
-        android:textSize="8dp"
-        app:layout_constraintBottom_toBottomOf="@+id/iv_edit"
-        app:layout_constraintStart_toEndOf="@+id/iv_edit"
-        app:layout_constraintTop_toTopOf="@+id/iv_edit"
-        app:layout_constraintVertical_bias="0.0" />
-
-    <TextView
-        android:id="@+id/tv_grade"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="20dp"
-        android:text="2019"
-        app:layout_constraintStart_toStartOf="@+id/tv_id"
-        app:layout_constraintTop_toBottomOf="@+id/tv_id" />
-
-    <TextView
-        android:id="@+id/mine_textview13"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="3dp"
-        android:text="十三星座"
-        app:layout_constraintBottom_toBottomOf="@+id/v_division_line1"
-        app:layout_constraintStart_toEndOf="@+id/v_division_line1"
-        app:layout_constraintTop_toTopOf="@+id/v_division_line1"
-        app:layout_constraintVertical_bias="0.0" />
-
-    <View
-        android:id="@+id/v_division_line1"
-        android:layout_width="1dp"
-        android:layout_height="20dp"
-        android:layout_marginStart="3dp"
-        android:background="@color/mine_division_line"
-        app:layout_constraintBottom_toBottomOf="@+id/tv_grade"
-        app:layout_constraintStart_toEndOf="@+id/tv_grade"
-        app:layout_constraintTop_toTopOf="@+id/tv_grade"
-        app:layout_constraintVertical_bias="1.0" />
-
-
-    <View
-        android:id="@+id/v_division_line2"
-        android:layout_width="1dp"
-        android:layout_height="20dp"
-        android:layout_marginStart="3dp"
-        android:background="@color/mine_division_line"
-        app:layout_constraintBottom_toBottomOf="@+id/mine_textview13"
-        app:layout_constraintStart_toEndOf="@+id/mine_textview13"
-        app:layout_constraintTop_toTopOf="@+id/mine_textview13" />
-
-    <TextView
-        android:id="@+id/tv_sex"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="3dp"
-        android:text="X星人"
-        app:layout_constraintBottom_toBottomOf="@+id/v_division_line2"
-        app:layout_constraintStart_toEndOf="@+id/v_division_line2"
-        app:layout_constraintTop_toTopOf="@+id/v_division_line2"
-        app:layout_constraintVertical_bias="1.0" />
-
-    <TextView
-        android:id="@+id/tv_signature"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="4dp"
-        android:text="这是一条不普通的个性签名签名签名签名签名"
-        app:layout_constraintStart_toStartOf="@+id/tv_grade"
-        app:layout_constraintTop_toBottomOf="@+id/tv_grade" />
-
-    <ImageView
-        android:id="@+id/iv_nameplate1"
-        android:layout_width="95dp"
-        android:layout_height="30dp"
-        android:layout_marginTop="8dp"
-        app:layout_constraintStart_toStartOf="@+id/civ_head"
-        app:layout_constraintTop_toBottomOf="@+id/tv_signature"
-        app:srcCompat="@drawable/mine_ic_iv_nameplate_test" />
-
-    <ImageView
-        android:id="@+id/iv_nameplate2"
-        android:layout_width="95dp"
-        android:layout_height="30dp"
-        android:layout_marginStart="12dp"
-        android:layout_marginTop="8dp"
-        app:layout_constraintBottom_toBottomOf="@+id/iv_nameplate1"
-        app:layout_constraintStart_toEndOf="@+id/iv_nameplate1"
-        app:layout_constraintTop_toBottomOf="@+id/tv_signature"
-        app:srcCompat="@drawable/mine_ic_iv_nameplate_test" />
-
-    <ImageView
-        android:id="@+id/iv_nameplate3"
-        android:layout_width="95dp"
-        android:layout_height="30dp"
-        android:layout_marginStart="20dp"
-        android:layout_marginTop="8dp"
-        app:srcCompat="@drawable/mine_ic_iv_nameplate_test"
-        app:layout_constraintBottom_toBottomOf="@+id/iv_nameplate2"
-        app:layout_constraintStart_toEndOf="@+id/iv_nameplate2"
-        app:layout_constraintTop_toBottomOf="@+id/tv_signature" />
-
-    <com.google.android.material.tabs.TabLayout
-        android:id="@+id/mine_tablayout"
-        android:layout_width="409dp"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="22dp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.0"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/iv_nameplate2">
-
-        <com.google.android.material.tabs.TabItem
+        <TextView
+            android:id="@+id/tv_mine"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Monday" />
+            android:layout_marginStart="13dp"
+            android:text="个人主页"
+            android:textSize="16dp"
+            app:layout_constraintBottom_toBottomOf="@+id/bt_mine_back"
+            app:layout_constraintStart_toEndOf="@+id/bt_mine_back"
+            app:layout_constraintTop_toTopOf="@+id/bt_mine_back" />
 
-        <com.google.android.material.tabs.TabItem
+        <de.hdodenhof.circleimageview.CircleImageView
+            android:id="@+id/civ_head"
+            android:layout_width="97dp"
+            android:layout_height="97dp"
+            android:layout_marginStart="16dp"
+            android:src="@drawable/mine_ic_head_test"
+            app:layout_constraintBottom_toBottomOf="@+id/iv_mine_background"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/iv_mine_background"
+            app:layout_constraintVertical_bias="0.525" />
+
+        <TextView
+
+            android:id="@+id/tv_name"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Tuesday" />
+            android:layout_marginBottom="4dp"
+            android:text="鱼鱼鱼鱼鱼鱼鱼鱼鱼鱼鱼"
+            android:textColor="@color/mine_white"
+            android:textSize="18dp"
+            app:layout_constraintBottom_toBottomOf="@+id/iv_mine_background"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.435"
+            app:layout_constraintStart_toEndOf="@+id/civ_head" />
 
-        <com.google.android.material.tabs.TabItem
+        <TextView
+            android:id="@+id/tv_fans_number"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Wednesday" />
-    </com.google.android.material.tabs.TabLayout>
+            android:layout_marginStart="35dp"
+            android:text="12"
+            app:layout_constraintStart_toEndOf="@+id/civ_head"
+            app:layout_constraintTop_toTopOf="@+id/tv_attention_number" />
 
-    <androidx.viewpager2.widget.ViewPager2
-        android:layout_width="409dp"
-        android:layout_height="256dp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/mine_tablayout" />
-</androidx.constraintlayout.widget.ConstraintLayout>
+        <TextView
+            android:id="@+id/tv_fans"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="粉丝"
+            app:layout_constraintEnd_toEndOf="@+id/tv_fans_number"
+            app:layout_constraintHorizontal_bias="0.0"
+            app:layout_constraintStart_toStartOf="@+id/tv_fans_number"
+            app:layout_constraintTop_toBottomOf="@+id/tv_fans_number" />
+
+        <TextView
+            android:id="@+id/tv_attention_number"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="56dp"
+            android:layout_marginTop="9dp"
+            android:text="29"
+            app:layout_constraintStart_toEndOf="@+id/tv_fans_number"
+            app:layout_constraintTop_toBottomOf="@+id/tv_name" />
+
+        <TextView
+            android:id="@+id/tv_attention"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="关注"
+            app:layout_constraintEnd_toEndOf="@+id/tv_attention_number"
+            app:layout_constraintStart_toStartOf="@+id/tv_attention_number"
+            app:layout_constraintTop_toBottomOf="@+id/tv_attention_number" />
+
+        <TextView
+            android:id="@+id/tv_praise_number"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="60dp"
+            android:text="31"
+            app:layout_constraintStart_toEndOf="@+id/tv_attention_number"
+            app:layout_constraintTop_toTopOf="@+id/tv_attention_number" />
+
+        <TextView
+            android:id="@+id/tv_praise"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="获赞"
+            app:layout_constraintEnd_toEndOf="@+id/tv_praise_number"
+            app:layout_constraintStart_toStartOf="@+id/tv_praise_number"
+            app:layout_constraintTop_toBottomOf="@+id/tv_praise_number" />
+
+        <TextView
+            android:id="@+id/tv_id"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:text="ID:"
+            app:layout_constraintStart_toStartOf="@+id/civ_head"
+            app:layout_constraintTop_toBottomOf="@+id/civ_head" />
+
+        <TextView
+            android:id="@+id/tv_id_number"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="4dp"
+            android:text="355533"
+            app:layout_constraintStart_toEndOf="@+id/tv_id"
+            app:layout_constraintTop_toTopOf="@+id/tv_id" />
+
+        <ImageView
+            android:id="@+id/iv_edit"
+            android:layout_width="10dp"
+            android:layout_height="10dp"
+            android:layout_marginStart="25dp"
+            app:layout_constraintBottom_toBottomOf="@+id/tv_id_number"
+            app:layout_constraintStart_toEndOf="@+id/tv_id_number"
+            app:layout_constraintTop_toTopOf="@+id/tv_id_number"
+            app:srcCompat="@drawable/mine_ic_iv_edit_pencil" />
+
+        <TextView
+            android:id="@+id/tv_edit"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="4dp"
+            android:text="编辑信息"
+            android:textSize="8dp"
+            app:layout_constraintBottom_toBottomOf="@+id/iv_edit"
+            app:layout_constraintStart_toEndOf="@+id/iv_edit"
+            app:layout_constraintTop_toTopOf="@+id/iv_edit"
+            app:layout_constraintVertical_bias="0.0" />
+
+        <TextView
+            android:id="@+id/tv_grade"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="20dp"
+            android:text="2019"
+            app:layout_constraintStart_toStartOf="@+id/tv_id"
+            app:layout_constraintTop_toBottomOf="@+id/tv_id" />
+
+        <TextView
+            android:id="@+id/mine_textview13"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="3dp"
+            android:text="十三星座"
+            app:layout_constraintBottom_toBottomOf="@+id/v_division_line1"
+            app:layout_constraintStart_toEndOf="@+id/v_division_line1"
+            app:layout_constraintTop_toTopOf="@+id/v_division_line1"
+            app:layout_constraintVertical_bias="0.0" />
+
+        <View
+            android:id="@+id/v_division_line1"
+            android:layout_width="1dp"
+            android:layout_height="20dp"
+            android:layout_marginStart="3dp"
+            android:background="@color/mine_division_line"
+            app:layout_constraintBottom_toBottomOf="@+id/tv_grade"
+            app:layout_constraintStart_toEndOf="@+id/tv_grade"
+            app:layout_constraintTop_toTopOf="@+id/tv_grade"
+            app:layout_constraintVertical_bias="1.0" />
+
+
+        <View
+            android:id="@+id/v_division_line2"
+            android:layout_width="1dp"
+            android:layout_height="20dp"
+            android:layout_marginStart="3dp"
+            android:background="@color/mine_division_line"
+            app:layout_constraintBottom_toBottomOf="@+id/mine_textview13"
+            app:layout_constraintStart_toEndOf="@+id/mine_textview13"
+            app:layout_constraintTop_toTopOf="@+id/mine_textview13" />
+
+        <TextView
+            android:id="@+id/tv_sex"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="3dp"
+            android:text="X星人"
+            app:layout_constraintBottom_toBottomOf="@+id/v_division_line2"
+            app:layout_constraintStart_toEndOf="@+id/v_division_line2"
+            app:layout_constraintTop_toTopOf="@+id/v_division_line2"
+            app:layout_constraintVertical_bias="1.0" />
+
+        <TextView
+            android:id="@+id/tv_signature"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="4dp"
+            android:text="这是一条不普通的个性签名签名签名签名签名"
+            app:layout_constraintStart_toStartOf="@+id/tv_grade"
+            app:layout_constraintTop_toBottomOf="@+id/tv_grade" />
+
+        <ImageView
+            android:id="@+id/iv_nameplate1"
+            android:layout_width="95dp"
+            android:layout_height="30dp"
+            android:layout_marginTop="8dp"
+            app:layout_constraintStart_toStartOf="@+id/civ_head"
+            app:layout_constraintTop_toBottomOf="@+id/tv_signature"
+            app:srcCompat="@drawable/mine_ic_iv_nameplate_test" />
+
+        <ImageView
+            android:id="@+id/iv_nameplate2"
+            android:layout_width="95dp"
+            android:layout_height="30dp"
+            android:layout_marginStart="12dp"
+            android:layout_marginTop="8dp"
+            app:layout_constraintBottom_toBottomOf="@+id/iv_nameplate1"
+            app:layout_constraintStart_toEndOf="@+id/iv_nameplate1"
+            app:layout_constraintTop_toBottomOf="@+id/tv_signature"
+            app:srcCompat="@drawable/mine_ic_iv_nameplate_test" />
+
+        <ImageView
+            android:id="@+id/iv_nameplate3"
+            android:layout_width="95dp"
+            android:layout_height="30dp"
+            android:layout_marginStart="20dp"
+            android:layout_marginTop="8dp"
+            app:srcCompat="@drawable/mine_ic_iv_nameplate_test"
+            app:layout_constraintBottom_toBottomOf="@+id/iv_nameplate2"
+            app:layout_constraintStart_toEndOf="@+id/iv_nameplate2"
+            app:layout_constraintTop_toBottomOf="@+id/tv_signature" />
+
+        <com.google.android.material.tabs.TabLayout
+            android:id="@+id/mine_tablayout"
+            android:layout_width="409dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="22dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.0"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/iv_nameplate2">
+
+            <com.google.android.material.tabs.TabItem
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Monday" />
+
+            <com.google.android.material.tabs.TabItem
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Tuesday" />
+
+            <com.google.android.material.tabs.TabItem
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Wednesday" />
+        </com.google.android.material.tabs.TabLayout>
+
+        <androidx.viewpager2.widget.ViewPager2
+            android:id="@+id/vp2_mine"
+            android:layout_width="409dp"
+            android:layout_height="256dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/mine_tablayout" />
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</layout>

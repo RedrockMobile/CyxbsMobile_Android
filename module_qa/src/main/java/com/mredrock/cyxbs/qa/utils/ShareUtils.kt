@@ -138,6 +138,7 @@ object ShareUtils {
         params.putStringArrayList(QzoneShare.SHARE_TO_QQ_IMAGE_URL, imageUrl) //分享的图片URL
         tencent.shareToQzone(activity, params, QQUiListener())
 
+
         /*
         * 更新任务进度
         * 那个 QQUiListener 有问题, onComplete() 一直不回调, 在于产品沟通后最终以点击跳转为准

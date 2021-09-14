@@ -25,6 +25,7 @@ import com.mredrock.cyxbs.common.utils.extensions.setOnSingleClickListener
 import com.mredrock.cyxbs.common.utils.extensions.startActivity
 import com.mredrock.cyxbs.mine.page.about.AboutActivity
 import com.mredrock.cyxbs.mine.page.edit.EditInfoActivity
+import com.mredrock.cyxbs.mine.page.mine.ui.activity.MineActivity
 import com.mredrock.cyxbs.mine.page.security.util.Jump2QQHelper
 import com.mredrock.cyxbs.mine.page.setting.SettingActivity
 import com.mredrock.cyxbs.mine.page.sign.DailySignActivity
@@ -53,8 +54,9 @@ class UserFragment : BaseViewModelFragment<UserViewModel>() {
             mine_main_fm_about_us.setOnSingleClickListener { doIfLogin { startActivity<AboutActivity>() } }
             mine_main_fm_point_store.setOnSingleClickListener {
 //                Log.d("ggg","(UserFragment.kt:56)-->> 点击前")
-                doIfLogin { jump(STORE_ENTRY) }
+//                doIfLogin { jump(STORE_ENTRY) }
 //                Log.d("ggg","(UserFragment.kt:58)-->> 点击后")
+                startActivity<MineActivity>()
             }
             mine_main_store_test.setOnClickListener {
 //                Log.d("ggg","(UserFragment.kt:62)-->> 测试按钮点击")

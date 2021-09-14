@@ -35,7 +35,7 @@ import kotlinx.android.synthetic.main.qa_recycler_item_dynamic_header.view.*
  * @Description:
  * @Date: 2020/11/17 20:11
  */
-class DynamicAdapter(val context: Context, private val onItemClickEvent: (Dynamic, View) -> Unit) :
+class DynamicAdapter(val context: Context?, private val onItemClickEvent: (Dynamic, View) -> Unit) :
     BaseEndlessRvAdapter<Dynamic>(DIFF_CALLBACK) {
     companion object {
         @JvmStatic
