@@ -35,6 +35,8 @@ interface IUserStateService {
 
     fun isTouristMode(): Boolean
 
+    fun isExpired():Boolean
+
     fun isRefreshTokenExpired(): Boolean
 
     fun addOnStateChangedListener(listener: (state: UserState) -> Unit)
