@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources xmlns:tools="http://schemas.android.com/tools">
+    <string name="app_name">Handheld CQUPT</string>
+    <string name="common_course">Course</string>
+    <string name="common_qa">QA</string>
+    <string name="common_explore">Explore</string>
+    <string name="common_mine">Mine</string>
+
+    <string name="common_fab">RedRock</string>
+</resources>
