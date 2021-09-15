@@ -160,6 +160,7 @@ object ApiGenerator {
     //默认配置
     private fun OkHttpClient.Builder.defaultConfig() {
         this.connectTimeout(DEFAULT_TIME_OUT.toLong(), TimeUnit.SECONDS)
+        this.readTimeout(DEFAULT_TIME_OUT.toLong(), TimeUnit.SECONDS)
     }
 
 
