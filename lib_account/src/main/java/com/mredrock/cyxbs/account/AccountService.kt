@@ -20,6 +20,7 @@ import com.mredrock.cyxbs.common.service.ServiceManager
 import com.mredrock.cyxbs.api.electricity.IElectricityService
 import com.mredrock.cyxbs.main.MAIN_LOGIN
 import com.mredrock.cyxbs.api.volunteer.IVolunteerService
+import com.mredrock.cyxbs.common.BaseApp
 import com.mredrock.cyxbs.common.bean.RedrockApiWrapper
 import com.mredrock.cyxbs.common.config.*
 import com.mredrock.cyxbs.common.utils.extensions.*
@@ -73,10 +74,6 @@ internal class AccountService : IAccountService {
                 SP_KEY_USER_V2,
                 mUserInfoEncryption.encrypt(Gson().toJson(tokenWrapper))
             )
-            putLong(
-                SP_KEY_REFRESH_TOKEN_EXPIRED,
-                System.currentTimeMillis() + SP_REFRESH_DAY
-            )
         }
         //每次刷新的时候拿token请求一次个人信息，覆盖原来的
         ApiGenerator.getCommonApiService(ApiService::class.java)
@@ -96,7 +93,7 @@ internal class AccountService : IAccountService {
                 }
 
                 override fun onFailure(call: Call<RedrockApiWrapper<UserInfo>>, t: Throwable) {
-
+                    BaseApp.context.toast("个人信息无法更新")
                 }
 
             })
@@ -186,6 +183,16 @@ internal class AccountService : IAccountService {
 
         override fun isTouristMode(): Boolean = isTouristMode
 
+        override fun isExpired(): Boolean {
+            if (!isLogin()) {
+                return true
+            }
+            val curTime = System.currentTimeMillis()
+            val expiredTime = mContext.defaultSharedPreferences.getLong(SP_KEY_TOKEN_EXPIRED, 0)
+            //预留10s，防止一些奇怪的错误出现
+            return curTime - expiredTime >= 10000L
+        }
+
         override fun isRefreshTokenExpired(): Boolean {
             val curTime = System.currentTimeMillis()
             val expiredTime =
@@ -214,7 +221,6 @@ internal class AccountService : IAccountService {
                 notifyAllStateListeners(state)
             }
         }
-
         override fun refresh(onError: () -> Unit, action: (token: String) -> Unit) {
             val refreshToken = tokenWrapper?.refreshToken ?: return
             val response = ApiGenerator.getCommonApiService(ApiService::class.java)
@@ -242,6 +248,10 @@ internal class AccountService : IAccountService {
                     putLong(
                         SP_KEY_REFRESH_TOKEN_EXPIRED,
                         System.currentTimeMillis() + SP_REFRESH_DAY
+                    )
+                    putLong(
+                        SP_KEY_TOKEN_EXPIRED,
+                        System.currentTimeMillis() + SP_TOKEN_TIME
                     )
                 }
                 action.invoke(data.token)
@@ -306,6 +316,10 @@ internal class AccountService : IAccountService {
                         SP_KEY_REFRESH_TOKEN_EXPIRED,
                         System.currentTimeMillis() + SP_REFRESH_DAY
                     )
+                    putLong(
+                        SP_KEY_TOKEN_EXPIRED,
+                        System.currentTimeMillis() + SP_TOKEN_TIME
+                    )
                 }
             } else {
                 apiWrapper?.apply {
@@ -319,6 +333,7 @@ internal class AccountService : IAccountService {
                 putString(SP_KEY_USER_V2, "")
                 putString(SP_KEY_USER_INFO, "")
                 putLong(SP_KEY_REFRESH_TOKEN_EXPIRED, 0)
+                putLong(SP_KEY_TOKEN_EXPIRED, 0)
             }
             ServiceManager.getService(IElectricityService::class.java).clearSP()
             ServiceManager.getService(IVolunteerService::class.java).clearSP()

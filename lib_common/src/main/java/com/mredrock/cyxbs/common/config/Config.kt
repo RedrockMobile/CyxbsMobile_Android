@@ -36,6 +36,12 @@ const val SP_KEY_USER_V2 = "cyxbsmobile_user_v2"
 //User信息存储key
 const val SP_KEY_USER_INFO = "cyxbsmobile_user_info"
 
+//token失效时间
+const val SP_KEY_TOKEN_EXPIRED = "user_token_expired_time"
+
+//token 后端规定token2h过期，客户端规定1h55分过期，以防错误，时间戳
+const val SP_TOKEN_TIME = 6900000
+
 //refreshToken失效时间
 const val SP_KEY_REFRESH_TOKEN_EXPIRED = "user_refresh_token_expired_time"
 
