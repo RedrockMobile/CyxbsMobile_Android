@@ -62,11 +62,22 @@ internal class AccountService : IAccountService {
     override fun getUserTokenService(): IUserTokenService = mUserTokenSerVice
 
     private fun bind(tokenWrapper: TokenWrapper) {
-
+        //如果接口出问题，token or refreshToken为空就不要他被覆盖，以免出现未知的问题
         if(tokenWrapper.isEmptyData()){
             return
         }
         this.tokenWrapper = tokenWrapper
+        //每次刷新存储到本地
+        mContext.defaultSharedPreferences.editor {
+            putString(
+                SP_KEY_USER_V2,
+                mUserInfoEncryption.encrypt(Gson().toJson(tokenWrapper))
+            )
+            putLong(
+                SP_KEY_REFRESH_TOKEN_EXPIRED,
+                System.currentTimeMillis() + SP_REFRESH_DAY
+            )
+        }
         //每次刷新的时候拿token请求一次个人信息，覆盖原来的
         ApiGenerator.getCommonApiService(ApiService::class.java)
             .getUserInfo("Bearer ${tokenWrapper.token}")
@@ -207,7 +218,7 @@ internal class AccountService : IAccountService {
         override fun refresh(onError: () -> Unit, action: (token: String) -> Unit) {
             val refreshToken = tokenWrapper?.refreshToken ?: return
             val response = ApiGenerator.getCommonApiService(ApiService::class.java)
-                .refresh(RefreshParams(refreshToken)).execute()
+                .refresh(RefreshParams(refreshToken),mUserService.getStuNum()).execute()
             if (response.body() == null) {
                 //TODO: 与后端确认一下状态码
                 if (response.code() == 400) {//确定是因为refreshToken失效引起的刷新失败
