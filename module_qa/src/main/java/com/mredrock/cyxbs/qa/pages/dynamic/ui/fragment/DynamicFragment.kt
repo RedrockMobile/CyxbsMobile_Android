@@ -85,7 +85,6 @@ import kotlin.collections.ArrayList
 open class DynamicFragment : BaseViewModelFragment<DynamicListViewModel>(), EventBusLifecycleSubscriber {
     companion object {
         const val REQUEST_LIST_REFRESH_ACTIVITY = 0x1
-
         //R.string.qa_search_hot_word_key 长度
         const val HOT_WORD_HEAD_LENGTH = 6
     }

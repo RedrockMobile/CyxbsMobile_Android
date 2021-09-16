@@ -63,10 +63,8 @@ import kotlinx.android.synthetic.main.qa_recycler_item_dynamic_header.view.*
 @Route(path = QA_DYNAMIC_DETAIL)
 class DynamicDetailActivity : BaseViewModelActivity<DynamicDetailViewModel>() {
     companion object {
-
         // 有共享元素动画的启动，是从邮问主界面启动的
         fun activityStart(page: Any?, dynamicItem: View, data: Dynamic) {
-
             page.apply {
                 var activity: Activity? = null
                 var fragment: Fragment? = null
@@ -100,14 +98,12 @@ class DynamicDetailActivity : BaseViewModelActivity<DynamicDetailViewModel>() {
 
         // 根据postId启动,是从个人界面启动的
         fun activityStart(page: Any?, postId: String) {
-
             var activity: Activity? = null
             if (page is Fragment) {
                 activity = page.activity
             } else if (page is Activity) {
                 activity = page
             }
-
             activity.apply {
                 activity?.let {
                     val intent = Intent(context, DynamicDetailActivity::class.java)
@@ -118,7 +114,6 @@ class DynamicDetailActivity : BaseViewModelActivity<DynamicDetailViewModel>() {
                 }
             }
         }
-
         const val DYNAMIC_DELETE = "0"
         const val COMMENT_DELETE = "1"
     }
@@ -141,10 +136,7 @@ class DynamicDetailActivity : BaseViewModelActivity<DynamicDetailViewModel>() {
     private var haveShareItem = false
 
     private var dynamic: Dynamic? = null
-
     override fun getViewModelFactory() = DynamicDetailViewModel.Factory()
-
-
     private fun refreshCommentList() {
         viewModel.dynamic.value?.let {
             viewModel.refreshCommentList(it.postId, "-1")
@@ -252,40 +244,31 @@ class DynamicDetailActivity : BaseViewModelActivity<DynamicDetailViewModel>() {
         window.setBackgroundDrawableResource(android.R.color.transparent)
         super.onCreate(savedInstanceState)
         setContentView(R.layout.qa_activity_dynamic_detail)
-
         dynamic = intent.getParcelableExtra("dynamic")
-
         viewModel.position = -1
-
         intent.extras?.apply {
             if (!getBoolean("isFromReceive")) return@apply
             val postId = getString("id")
             intent.putExtra("post_id", postId)
         }
-
         isFromMine = intent.extras?.get("is_from_mine") as Boolean? ?: false
         LogUtils.d("is_from_mine", "isFromMine-->$isFromMine")
         commentListRvAdapter.isFromMine = isFromMine
-
         // 设置进入动画
         window.enterTransition = Slide(Gravity.END).apply { duration = animatorDuration }
         // 设置标题
         qa_tv_toolbar_title.text = resources.getText(R.string.qa_dynamic_detail_title_text)
         // 注册
         mTencent = Tencent.createInstance(CommentConfig.APP_ID, this)
-
         // 判断是否有共享元素
         haveShareItem = intent.getParcelableExtra<Dynamic>("dynamic") != null
-
         // 清空原来的评论显示
         viewModel.commentList.value = listOf()
-
         initChangeColorAnimator("#1D1D1D", "#000000")
         initObserve()
         initDynamic()
         initReplyList()
         initOnClickListener()
-
     }
 
     private fun initChangeColorAnimator(startColor: String, endColor: String) {
@@ -319,6 +302,7 @@ class DynamicDetailActivity : BaseViewModelActivity<DynamicDetailViewModel>() {
 
     private fun initOnClickListener() {
         qa_iv_my_comment_select_pic.setOnSingleClickListener {
+
             Intent(this, QuizActivity::class.java).apply {
                 putExtra("isComment", "1")
                 putExtra("postId", viewModel.dynamic.value?.postId)
@@ -339,6 +323,7 @@ class DynamicDetailActivity : BaseViewModelActivity<DynamicDetailViewModel>() {
             }
         }
         qa_iv_dynamic_comment_count.setOnSingleClickListener {
+
             KeyboardController.showInputKeyboard(this, qa_et_my_comment_reply)
             viewModel.replyInfo.value = ReplyInfo("", "", "")
         }

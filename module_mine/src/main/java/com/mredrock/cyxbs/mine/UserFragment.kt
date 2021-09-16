@@ -4,7 +4,6 @@ import android.annotation.SuppressLint
 import android.app.Activity
 import android.content.Intent
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -25,7 +24,7 @@ import com.mredrock.cyxbs.common.utils.extensions.setOnSingleClickListener
 import com.mredrock.cyxbs.common.utils.extensions.startActivity
 import com.mredrock.cyxbs.mine.page.about.AboutActivity
 import com.mredrock.cyxbs.mine.page.edit.EditInfoActivity
-import com.mredrock.cyxbs.mine.page.mine.ui.activity.MineActivity
+import com.mredrock.cyxbs.mine.page.mine.ui.activity.HomepageActivity
 import com.mredrock.cyxbs.mine.page.security.util.Jump2QQHelper
 import com.mredrock.cyxbs.mine.page.setting.SettingActivity
 import com.mredrock.cyxbs.mine.page.sign.DailySignActivity
@@ -56,7 +55,7 @@ class UserFragment : BaseViewModelFragment<UserViewModel>() {
 //                Log.d("ggg","(UserFragment.kt:56)-->> 点击前")
 //                doIfLogin { jump(STORE_ENTRY) }
 //                Log.d("ggg","(UserFragment.kt:58)-->> 点击后")
-                startActivity<MineActivity>()
+                startActivity<HomepageActivity>()
             }
             mine_main_store_test.setOnClickListener {
 //                Log.d("ggg","(UserFragment.kt:62)-->> 测试按钮点击")

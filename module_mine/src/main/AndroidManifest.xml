@@ -7,7 +7,7 @@
             android:name=".page.mine.ui.activity.IdentityActivity"
             android:exported="true" />
         <activity
-            android:name=".page.mine.ui.activity.MineActivity"
+            android:name=".page.mine.ui.activity.HomepageActivity"
             android:exported="true" />
         <activity android:name=".page.about.AgreementActivity" />
         <activity android:name=".page.setting.SettingActivity" />

@@ -4,6 +4,7 @@ import android.annotation.SuppressLint
 import android.content.Intent
 import android.graphics.Color
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -47,7 +48,7 @@ class MyDynamicFragment : BaseViewModelFragment<MyDynamicViewModel>() {
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View?=inflater.inflate(R.layout.qa_fragment_dynamic, container, false)
+    ): View?=inflater.inflate(R.layout.qa_fragment_mine_dynamic, container, false)
 
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
@@ -127,7 +128,7 @@ class MyDynamicFragment : BaseViewModelFragment<MyDynamicViewModel>() {
                     }
                 }
             }
-
+        Log.e("wxtag1","(MyDynamicFragment.kt:130)->${ qa_rv_my_dynamic} ")
         qa_rv_my_dynamic.adapter = dynamicListRvAdapter
         viewModel.deleteTips.observe {
             if (it == true)
@@ -162,14 +163,14 @@ class MyDynamicFragment : BaseViewModelFragment<MyDynamicViewModel>() {
             })
         }
 
-        qa_swl_my_dynamic.setOnRefreshListener {
-            if (!TopicDataSet.getOutCirCleDetailTime().isNullOrEmpty()) {
-                LogUtils.d("swipeOutTime", TopicDataSet.getOutCirCleDetailTime().toString())
-                TopicDataSet.getOutCirCleDetailTime()?.let { viewModel.getTopicMessages(it) }
-            }
-            viewModel.invalidateDynamicList()
-            viewModel.getMyCirCleData()
-        }
+//        qa_swl_my_dynamic.setOnRefreshListener {
+//            if (!TopicDataSet.getOutCirCleDetailTime().isNullOrEmpty()) {
+//                LogUtils.d("swipeOutTime", TopicDataSet.getOutCirCleDetailTime().toString())
+//                TopicDataSet.getOutCirCleDetailTime()?.let { viewModel.getTopicMessages(it) }
+//            }
+//            viewModel.invalidateDynamicList()
+//            viewModel.getMyCirCleData()
+//        }
     }
 
     private fun observeLoading(
@@ -195,14 +196,14 @@ class MyDynamicFragment : BaseViewModelFragment<MyDynamicViewModel>() {
             }
             when (it) {
                 NetworkState.LOADING -> {
-                    qa_swl_my_dynamic.isRefreshing = true
+                   // qa_swl_my_dynamic.isRefreshing = true
                     emptyRvAdapter.showHolder(3)
                 }
                 NetworkState.CANNOT_LOAD_WITHOUT_LOGIN -> {
-                    qa_swl_my_dynamic.isRefreshing = false
+                  //  qa_swl_my_dynamic.isRefreshing = false
                 }
                 else -> {
-                    qa_swl_my_dynamic.isRefreshing = false
+                  //  qa_swl_my_dynamic.isRefreshing = false
                     emptyRvAdapter.hideHolder()
                 }
             }

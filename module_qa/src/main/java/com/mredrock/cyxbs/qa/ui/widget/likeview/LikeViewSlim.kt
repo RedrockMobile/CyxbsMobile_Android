@@ -64,7 +64,7 @@ class LikeViewSlim @JvmOverloads constructor(
     override fun onDraw(canvas: Canvas?) {
         val fontMetrics = textPaint.fontMetrics
         val offsetY: Float = (fontMetrics.bottom - fontMetrics.top) / 2 - fontMetrics.bottom
-        Log.e("wxtag","(LikeViewSlim.kt:68)->> ${this.hashCode()}重绘时候的${isPraised}")
+
         textPaint.color = if (isPraised) {
 
             //如果点过赞，就换做点赞后的颜色
@@ -125,7 +125,7 @@ class LikeViewSlim @JvmOverloads constructor(
             observer["${this.id}-${this.model}"] = arrayListOf()
         }
         observer["${this.id}-${this.model}"]?.add(weakP!!)
-            Log.e("wxtag","(LikeViewSlim.kt:127)->>${this.hashCode()}registerLikeView完 this.isPraised${this.isPraised}")
+
         setCheckedWithoutAnimator(this.isPraised)
         //invalidate()
     }
