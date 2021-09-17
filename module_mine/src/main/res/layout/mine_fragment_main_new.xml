@@ -10,7 +10,7 @@
         android:id="@+id/mine_user_ll"
         android:layout_width="match_parent"
         android:layout_height="263dp"
-        android:background="@color/colorAccent"
+        android:background="@drawable/mine_bg_user_header"
         android:orientation="vertical"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -23,7 +23,7 @@
             android:layout_marginStart="17dp"
             android:layout_marginTop="61dp"
             android:layout_marginEnd="18dp"
-            android:background="@drawable/mine_shape_bg_cl_user_info">
+            android:background="@drawable/mine_bg_user_cl">
 
             <de.hdodenhof.circleimageview.CircleImageView
                 android:id="@+id/mine_user_avatar"
@@ -69,7 +69,7 @@
 
             <TextView
                 android:id="@+id/mine_user_tv_dynamic_number"
-                android:layout_width="25dp"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="20dp"
                 android:layout_marginBottom="52dp"
@@ -78,27 +78,29 @@
                 android:text="@string/mine_number_default"
                 android:textColor="#2A4E84"
                 android:textSize="25sp"
+                android:maxLines="1"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintStart_toStartOf="parent" />
 
             <TextView
                 android:id="@+id/mine_user_tv_comment_number"
-                android:layout_width="25dp"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="50dp"
+                android:layout_marginStart="48dp"
                 android:fontFamily="@font/impact_min"
                 android:gravity="center"
                 android:text="@string/mine_number_default"
                 android:textColor="#2A4E84"
                 android:textSize="25sp"
-
+                android:maxLines="1"
                 app:layout_constraintBottom_toBottomOf="@+id/mine_user_tv_dynamic_number"
                 app:layout_constraintStart_toEndOf="@+id/mine_user_tv_dynamic_number"
-                app:layout_constraintTop_toTopOf="@+id/mine_user_tv_dynamic_number" />
+                app:layout_constraintTop_toTopOf="@+id/mine_user_tv_dynamic_number"
+                app:layout_constraintVertical_bias="0.0" />
 
             <TextView
                 android:id="@+id/mine_user_tv_praise_number"
-                android:layout_width="25dp"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="50dp"
                 android:fontFamily="@font/impact_min"
@@ -106,7 +108,7 @@
                 android:text="@string/mine_number_default"
                 android:textColor="#2A4E84"
                 android:textSize="25sp"
-
+                android:maxLines="1"
                 app:layout_constraintBottom_toBottomOf="@+id/mine_user_tv_comment_number"
                 app:layout_constraintStart_toEndOf="@+id/mine_user_tv_comment_number"
                 app:layout_constraintTop_toTopOf="@+id/mine_user_tv_comment_number" />

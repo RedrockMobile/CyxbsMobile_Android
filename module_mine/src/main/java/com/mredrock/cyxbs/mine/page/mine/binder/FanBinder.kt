@@ -1,7 +1,7 @@
 package com.mredrock.cyxbs.mine.page.mine.binder
 
 import com.mredrock.cyxbs.mine.R
-import com.mredrock.cyxbs.mine.databinding.MineRecycleItemFunBinding
+import com.mredrock.cyxbs.mine.databinding.MineRecycleItemFanBinding
 
 /**
  * @class
@@ -9,12 +9,12 @@ import com.mredrock.cyxbs.mine.databinding.MineRecycleItemFunBinding
  * @data 2021/9/16
  * @description
  **/
-class FunBinder() : BaseDataBinder<MineRecycleItemFunBinding>() {
+class FanBinder() : BaseDataBinder<MineRecycleItemFanBinding>() {
     override fun layoutId(): Int {
         return R.layout.mine_recycle_item_fan
     }
 
-    override fun onBindViewHolder(binding: MineRecycleItemFunBinding) {
+    override fun onBindViewHolder(binding: MineRecycleItemFanBinding) {
         super.onBindViewHolder(binding)
     }
 }
