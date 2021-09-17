@@ -2,6 +2,7 @@ package com.mredrock.cyxbs.mine.page.about
 
 import com.mredrock.cyxbs.common.network.ApiGenerator
 import com.mredrock.cyxbs.common.network.CommonApiService
+import com.mredrock.cyxbs.common.utils.LogUtils
 import com.mredrock.cyxbs.common.utils.down.bean.DownMessageText
 import com.mredrock.cyxbs.common.utils.down.params.DownMessageParams
 import com.mredrock.cyxbs.common.utils.extensions.errorHandler
@@ -20,6 +21,7 @@ class AboutViewModel : BaseViewModel() {
 
     fun getFeatureIntro(packageName: String, successCallBack: () -> Unit, errorCallback: () -> Unit) {
         val time = System.currentTimeMillis()
+        LogUtils.d("qt", packageName)
         ApiGenerator.getCommonApiService(CommonApiService::class.java)
                 .getDownMessage(DownMessageParams(packageName))
                 .setSchedulers(observeOn = Schedulers.io())
@@ -34,6 +36,7 @@ class AboutViewModel : BaseViewModel() {
                         onExecuteOnceNext = {
                             featureIntroList.clear()
                             featureIntroList.addAll(it.data.textList)
+                            LogUtils.d("AboutViewModel",it.data.textList.toString()+"\n")
                             successCallBack()
                         },
                         onExecuteOnceError = {

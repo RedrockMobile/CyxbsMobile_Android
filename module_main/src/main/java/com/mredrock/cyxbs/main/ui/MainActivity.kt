@@ -27,7 +27,6 @@ import com.mredrock.cyxbs.common.mark.ActionLoginStatusSubscriber
 import com.mredrock.cyxbs.common.mark.EventBusLifecycleSubscriber
 import com.mredrock.cyxbs.common.service.ServiceManager
 import com.mredrock.cyxbs.common.ui.BaseViewModelActivity
-import com.mredrock.cyxbs.common.utils.LogUtils
 import com.mredrock.cyxbs.common.utils.debug
 import com.mredrock.cyxbs.common.utils.extensions.*
 import com.mredrock.cyxbs.main.MAIN_MAIN
@@ -47,12 +46,12 @@ import org.greenrobot.eventbus.ThreadMode
 
 @Route(path = MAIN_MAIN)
 class MainActivity : BaseViewModelActivity<MainViewModel>(),
-        EventBusLifecycleSubscriber, ActionLoginStatusSubscriber {
+    EventBusLifecycleSubscriber, ActionLoginStatusSubscriber {
 
 
     override val loginConfig = LoginConfig(
-            isWarnUser = false,
-            isCheckLogin = true
+        isWarnUser = false,
+        isCheckLogin = true
     )
 
     private lateinit var mainService: IMainService
@@ -66,7 +65,7 @@ class MainActivity : BaseViewModelActivity<MainViewModel>(),
 
     private lateinit var bottomSheetBehavior: BottomSheetBehavior<FrameLayout>
 
-    private lateinit var bottomHelper: BottomNavigationHelper
+    private var bottomHelper: BottomNavigationHelper? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         setTheme(R.style.MainActivityTheme)//恢复真正的主题，保证WindowBackground为主题色
@@ -89,9 +88,12 @@ class MainActivity : BaseViewModelActivity<MainViewModel>(),
             return
         }
         checkSplash()
-        InAppMessageManager.getInstance(BaseApp.context).showCardMessage(this, "课表主页面") {} //友盟插屏消息关闭之后调用，暂未写功能
+        InAppMessageManager.getInstance(BaseApp.context)
+            .showCardMessage(this, "课表主页面") {} //友盟插屏消息关闭之后调用，暂未写功能
         mainService = ServiceManager.getService(IMainService::class.java)//初始化主模块服务
-        viewModel.startPage.observe(this, Observer { starPage -> viewModel.initStartPage(starPage) })
+        viewModel.startPage.observe(
+            this,
+            Observer { starPage -> viewModel.initStartPage(starPage) })
         initUpdate()//初始化app更新服务
         initBottom()//初始化底部导航栏
         initBottomSheetBehavior()//初始化上拉容器BottomSheet课表
@@ -99,11 +101,16 @@ class MainActivity : BaseViewModelActivity<MainViewModel>(),
         if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.LOLLIPOP_MR1) {
             if (referrer != null && referrer?.toString() == "android-app://com.mredrock.cyxbs") {
                 //如果来自登陆界面，则进行是否设置密保的判断
-                viewModel.checkBindingEmail(ServiceManager.getService(IAccountService::class.java).getUserService().getStuNum()) {
+                viewModel.checkBindingEmail(
+                    ServiceManager.getService(IAccountService::class.java).getUserService()
+                        .getStuNum()
+                ) {
                     val bindingEmailDialog = Dialog(this, R.style.transparent_dialog)
                     bindingEmailDialog.setContentView(R.layout.main_dialog_bind_email)
-                    val confirm = bindingEmailDialog.findViewById<AppCompatButton>(R.id.main_bt_bind_email_confirm)
-                    val cancel = bindingEmailDialog.findViewById<AppCompatButton>(R.id.main_bt_bind_email_cancel)
+                    val confirm =
+                        bindingEmailDialog.findViewById<AppCompatButton>(R.id.main_bt_bind_email_confirm)
+                    val cancel =
+                        bindingEmailDialog.findViewById<AppCompatButton>(R.id.main_bt_bind_email_cancel)
                     confirm.setOnClickListener {
                         //跳转到修改密码界面
                         ARouter.getInstance().build(MINE_BIND_EMAIL).navigation()
@@ -141,9 +148,12 @@ class MainActivity : BaseViewModelActivity<MainViewModel>(),
          * 异常重启后fitsSystemWindows失效的问题
          */
 
-        course_bottom_sheet_content.topPadding = course_bottom_sheet_content.topPadding + getStatusBarHeight()
-        bottomSheetBehavior.peekHeight = bottomSheetBehavior.peekHeight + course_bottom_sheet_content.topPadding
-        bottomSheetBehavior.addBottomSheetCallback(object : BottomSheetBehavior.BottomSheetCallback() {
+        course_bottom_sheet_content.topPadding =
+            course_bottom_sheet_content.topPadding + getStatusBarHeight()
+        bottomSheetBehavior.peekHeight =
+            bottomSheetBehavior.peekHeight + course_bottom_sheet_content.topPadding
+        bottomSheetBehavior.addBottomSheetCallback(object :
+            BottomSheetBehavior.BottomSheetCallback() {
             override fun onSlide(bottomSheet: View, slideOffset: Float) {
                 mainService.obtainBottomSheetStateLiveData().value = slideOffset
                 if (main_view_pager.currentItem != 1 && slideOffset >= 0)
@@ -151,13 +161,16 @@ class MainActivity : BaseViewModelActivity<MainViewModel>(),
             }
 
             override fun onStateChanged(bottomSheet: View, newState: Int) {
-                if (!ServiceManager.getService(IAccountService::class.java).getVerifyService().isLogin() && newState == BottomSheetBehavior.STATE_DRAGGING) {
+                if (!ServiceManager.getService(IAccountService::class.java).getVerifyService()
+                        .isLogin() && newState == BottomSheetBehavior.STATE_DRAGGING
+                ) {
                     bottomSheetBehavior.state = BottomSheetBehavior.STATE_COLLAPSED
                     return
                 }
                 //如果是第一次进入展开则加载详细的课表子页
                 if (isLoadCourse && bottomSheetBehavior.state == BottomSheetBehavior.STATE_EXPANDED
-                        && lastState != BottomSheetBehavior.STATE_EXPANDED && !viewModel.isCourseDirectShow) {
+                    && lastState != BottomSheetBehavior.STATE_EXPANDED && !viewModel.isCourseDirectShow
+                ) {
                     EventBus.getDefault().post(LoadCourse())
                     isLoadCourse = false
                 }
@@ -187,31 +200,34 @@ class MainActivity : BaseViewModelActivity<MainViewModel>(),
         ll_nav_main_container.onTouch { _, _ -> }//防止穿透点击或者滑动，子View无法处理默认消耗
         //底部导航栏的控制初始化
         bottomHelper = BottomNavigationHelper(arrayOf(explore, qa, mine)) {
-            MobclickAgent.onEvent(this, CyxbsMob.Event.BOTTOM_TAB_CLICK, mutableMapOf(
+            MobclickAgent.onEvent(
+                this, CyxbsMob.Event.BOTTOM_TAB_CLICK, mutableMapOf(
                     Pair(CyxbsMob.Key.TAB_INDEX, it.toString())
-            ))
-            if (it == 1 && bottomHelper.peeCheckedItemPosition == 1)
+                )
+            )
+            if (it == 1 && bottomHelper?.peeCheckedItemPosition == 1)
                 EventBus.getDefault().post(RefreshQaEvent())
 
-            when(it){
-                0 ->{
+            when (it) {
+                0 -> {
                     bottomSheetBehavior.isHideable = false
                     //如果用户选择了点击App优先展示课表，会存在课表自动下滑的情况，需要加以判断
-                    if (bottomSheetBehavior.state == BottomSheetBehavior.STATE_HIDDEN){
+                    if (bottomSheetBehavior.state == BottomSheetBehavior.STATE_HIDDEN) {
                         bottomSheetBehavior.state = BottomSheetBehavior.STATE_COLLAPSED
                         //如果自邮问而来，则清除z轴高度
                         ll_nav_main_container.elevation = 0f
                     }
                 }
-                1->{
+                1 -> {
                     //切换到邮问时，bottomSheet变为隐藏，并添加z轴高度
                     bottomSheetBehavior.isHideable = true
                     bottomSheetBehavior.state = BottomSheetBehavior.STATE_HIDDEN
                     ll_nav_main_container.elevation = BaseApp.context.dp2px(4f).toFloat()
                     //点击Tab刷新邮问
-                    if (bottomHelper.peeCheckedItemPosition == 1) EventBus.getDefault().post(RefreshQaEvent())
+                    if (bottomHelper?.peeCheckedItemPosition == 1) EventBus.getDefault()
+                        .post(RefreshQaEvent())
                 }
-                2->{
+                2 -> {
                     bottomSheetBehavior.isHideable = false
                     bottomSheetBehavior.state = BottomSheetBehavior.STATE_COLLAPSED
                     ll_nav_main_container.elevation = 0f
@@ -239,14 +255,18 @@ class MainActivity : BaseViewModelActivity<MainViewModel>(),
         })
         //判断是否下载了Splash图，下载了就直接显示
         if (isDownloadSplash(this@MainActivity)) {
-            if (!ServiceManager.getService(IAccountService::class.java).getVerifyService().isLogin() && !ServiceManager.getService(IAccountService::class.java).getVerifyService().isTouristMode()) {
+            if (!ServiceManager.getService(IAccountService::class.java).getVerifyService()
+                    .isLogin() && !ServiceManager.getService(IAccountService::class.java)
+                    .getVerifyService().isTouristMode()
+            ) {
                 //表示，已经下载了，但是用户主动退出登录
                 //这里判断的依据是防止onCreate()加载了闪屏页fragment，onStart()跳转到登录Activity，MainActivity被销毁，fragment没有activity
                 return
             }
             main_activity_splash_viewStub.onTouch { _, _ -> }//防止穿透点击
             viewModel.splashVisibility.value = View.VISIBLE//显示闪屏页容器
-            supportFragmentManager.beginTransaction().replace(R.id.main_activity_splash_viewStub, SplashFragment()).commit()
+            supportFragmentManager.beginTransaction()
+                .replace(R.id.main_activity_splash_viewStub, SplashFragment()).commit()
         }
         //检查网络有没有闪屏页，有的话下载，下次显示
         viewModel.getStartPage()
@@ -257,15 +277,17 @@ class MainActivity : BaseViewModelActivity<MainViewModel>(),
         //取得是否优先显示课表的设置
         viewModel.isCourseDirectShow = defaultSharedPreferences.getBoolean(COURSE_SHOW_STATE, false)
         //如果为异常启动，则可以取得选中状态
-        bundle?.getInt(BOTTOM_SHEET_STATE)?.let { viewModel.isCourseDirectShow = it == BottomSheetBehavior.STATE_EXPANDED }
-        lastState = if (viewModel.isCourseDirectShow) BottomSheetBehavior.STATE_EXPANDED else BottomSheetBehavior.STATE_COLLAPSED
+        bundle?.getInt(BOTTOM_SHEET_STATE)
+            ?.let { viewModel.isCourseDirectShow = it == BottomSheetBehavior.STATE_EXPANDED }
+        lastState =
+            if (viewModel.isCourseDirectShow) BottomSheetBehavior.STATE_EXPANDED else BottomSheetBehavior.STATE_COLLAPSED
         val isShortcut = intent.action == FAST
         if ((viewModel.isCourseDirectShow || isShortcut) && isLoginElseTourist) {
             intent.action = ""
             bottomSheetBehavior.state = BottomSheetBehavior.STATE_EXPANDED
             ll_nav_main_container.translationY = 10000f
             val courseFragment = supportFragmentManager.findFragmentByTag(COURSE_ENTRY)
-                    ?: ServiceManager.getService(COURSE_ENTRY)
+                ?: ServiceManager.getService(COURSE_ENTRY)
             courseFragment.arguments = Bundle().apply { putString(COURSE_DIRECT_LOAD, TRUE) }
             //加载课表，并在滑动下拉课表容器中添加整个课表
             supportFragmentManager.commit {
@@ -276,7 +298,7 @@ class MainActivity : BaseViewModelActivity<MainViewModel>(),
             bottomSheetBehavior.state = BottomSheetBehavior.STATE_COLLAPSED
             //加载课表并给课表传递值，让它不要直接加载详细的课表，只用加载现在可见的头部就好
             val courseFragment = supportFragmentManager.findFragmentByTag(COURSE_ENTRY)
-                    ?: ServiceManager.getService(COURSE_ENTRY)
+                ?: ServiceManager.getService(COURSE_ENTRY)
             courseFragment.arguments = Bundle().apply { putString(COURSE_DIRECT_LOAD, FALSE) }
             supportFragmentManager.commit {
                 replace(R.id.course_bottom_sheet_content, courseFragment, COURSE_ENTRY)
@@ -284,13 +306,13 @@ class MainActivity : BaseViewModelActivity<MainViewModel>(),
             }
         }
         //加载发现
-        bottomHelper.selectTab(0)
+        bottomHelper?.selectTab(0)
     }
 
     override fun onSaveInstanceState(outState: Bundle) {
         super.onSaveInstanceState(outState)
         outState.putInt(BOTTOM_SHEET_STATE, bottomSheetBehavior.state)
-        outState.putInt(NAV_SELECT, bottomHelper.peeCheckedItemPosition)
+        bottomHelper?.peeCheckedItemPosition?.let { outState.putInt(NAV_SELECT, it) }
     }
 
     /**
@@ -299,7 +321,7 @@ class MainActivity : BaseViewModelActivity<MainViewModel>(),
      */
     override fun onRestoreInstanceState(savedInstanceState: Bundle) {
         super.onRestoreInstanceState(savedInstanceState)
-        bottomHelper.selectTab(savedInstanceState.getInt(NAV_SELECT))
+        bottomHelper?.selectTab(savedInstanceState.getInt(NAV_SELECT))
     }
 
     /**

@@ -43,7 +43,6 @@
 ## Gson
 -keep class com.google.gson.** {*;}
 -keep class com.google.**{*;}
--keep class sun.misc.Unsafe { *; }
 -keep class com.google.gson.stream.** { *; }
 -keep class com.google.gson.examples.android.model.** { *; }
 
@@ -65,17 +64,10 @@
    long producerIndex;
    long consumerIndex;
 }
--keepclassmembers class rx.internal.util.unsafe.BaseLinkedQueueProducerNodeRef {
-    rx.internal.util.atomic.LinkedQueueNode producerNode;
-}
--keepclassmembers class rx.internal.util.unsafe.BaseLinkedQueueConsumerNodeRef {
-    rx.internal.util.atomic.LinkedQueueNode consumerNode;
-}
 -dontwarn rx.internal.util.unsafe.**
 -keep class com.tbruyelle.rxpermissions2.** { *; }
 -keep interface com.tbruyelle.rxpermissions2.** { *; }
 -dontwarn io.rx_cache.internal.**
--keepclassmembers enum io.rx_cache.Source { *; }
 
 #ucrop
 -dontwarn com.yalantis.ucrop**
@@ -137,7 +129,13 @@
 #-------------------------------------------------------------------------
 
 #---------------------------------4.反射相关的类和方法-----------------------
+-keepclassmembernames class androidx.swiperefreshlayout.widget.SwipeRefreshLayout {
+    private int mTouchSlop; #原因在于 module_store 的 StoreCenterActivity 的 initRefreshLayout() 方法中
+}
 
+-keepclassmembernames class com.google.android.material.badge.BadgeDrawable {
+    private final float badgeRadius; #原因在于 module_store 的 StoreCenterActivity 的 initTabLayout() 方法中
+}
 
 
 #----------------------------------------------------------------------------
@@ -161,7 +159,6 @@
 
 #---------------------------------默认保留区---------------------------------
 -keep public class * extends android.app.Activity
--keep public class * extends android.app.AppCompatActivity
 -keep public class * extends androidx.appcompat.app.AppCompatActivity
 -keep public class * extends android.app.Application
 -keep public class * extends android.app.backup.BackupAgentHelper
@@ -175,7 +172,6 @@
 -keep public class * extends android.support.v4.**
 -keep public class * extends android.support.v7.**
 -keep public class * extends android.support.annotation.**
--keep public class com.android.vending.licensing.ILicensingService
 -keep class android.support.** {*;}
 -keep public class * implements java.lang.annotation.Annotation { *;}
 -keepclasseswithmembernames class * {
@@ -210,15 +206,9 @@
 #----------------------------------------------------------------------------
 
 #---------------------------------webview------------------------------------
--keepclassmembers class fqcn.of.javascript.interface.for.Webview {
-   public *;
-}
 -keepclassmembers class * extends android.webkit.WebViewClient {
    public void *(android.webkit.WebView, java.lang.String, android.graphics.Bitmap);
    public boolean *(android.webkit.WebView, java.lang.String);
-}
--keepclassmembers class * extends android.webkit.WebViewClient {
-   public void *(android.webkit.WebView, jav.lang.String);
 }
 #----------------------------------------------------------------------------
 #---------------------------------------------------------------------------------------------------
@@ -260,14 +250,6 @@ public static final int *;
 
 #-dontshrink 这行代码去除掉可以删去不用的包
 -keep,allowshrinking class com.umeng.message.* {
-    public <fields>;
-    public <methods>;
-}
--keep,allowshrinking class com.umeng.message.protobuffer.MessageResponse$PushResponse$Info {
-    public <fields>;
-    public <methods>;
-}
--keep,allowshrinking class com.umeng.message.protobuffer.MessageResponse$PushResponse$Info$Builder {
     public <fields>;
     public <methods>;
 }

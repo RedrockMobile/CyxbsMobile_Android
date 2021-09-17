@@ -7,7 +7,7 @@
     <!--    首页-->
     <!--TODO: 删除无用String-->
     <string name="mine_sign_name">签到</string>
-    <string name="mine_sing_successive_default">已连续签到--天</string>
+    <string name="mine_sing_successive_default">已连续签到 天</string>
     <string name="mine_question">提问</string>
     <string name="mine_answer">回答</string>
     <string name="mine_reply_to_comment">评论</string>
@@ -27,6 +27,7 @@
     <!--    编辑-->
     <string name="mine_nickname">昵称</string>
     <string name="mine_nickname_default">输入您的昵称</string>
+    <string name="mine_nickname_null">昵称不可为空哦</string>
     <string name="mine_introduce">个性签名</string>
     <string name="mine_introduce_default">输入个性签名</string>
     <string name="mine_qq">QQ</string>
@@ -85,7 +86,7 @@
     <string name="mine_about_legal">《掌上重邮用户使用条款》</string>
     <string name="mine_about_update">版本更新</string>
     <string name="mine_about_1">红岩网校工作站出品</string>
-    <string name="mine_about_copyright">CopyRight © 2015&#8211;2020 All Rights Reserved</string>
+    <string name="mine_about_copyright">CopyRight © 2015&#8211;2021 All Rights Reserved</string>
     <string name="mine_sign_store_back">store back</string>
 
     <!--密码与安全-->

@@ -25,7 +25,8 @@ class HackyViewPagerAdapter(private val picUrls: Array<String>?) : PagerAdapter(
     }
 
     override fun instantiateItem(container: ViewGroup, position: Int): Any {
-        val root = LayoutInflater.from(container.context).inflate(R.layout.qa_view_pager_item_view_image, container, false)
+        val root = LayoutInflater.from(container.context)
+            .inflate(R.layout.qa_view_pager_item_view_image, container, false)
         val photoView = root.findViewById<PhotoView>(R.id.pv_view_image)
         val url = picUrls?.get(position)
         photoView.setImageFromUrl(url)
@@ -38,7 +39,7 @@ class HackyViewPagerAdapter(private val picUrls: Array<String>?) : PagerAdapter(
             }
             true
         }
-        photoView.setOnPhotoTapListener { view, x, y ->
+        photoView.setOnPhotoTapListener { _, _, _ ->
             photoTapClick?.invoke()
         }
         container.addView(root)

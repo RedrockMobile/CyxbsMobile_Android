@@ -30,8 +30,8 @@
         android:background="@null"
         android:inputType="number"
         android:maxLines="1"
-        android:maxLength="3"
-        android:width="70dp"
+        android:maxLength="4"
+        android:width="80dp"
         app:layout_constraintBottom_toBottomOf="@+id/tv_bedroom_num_hint"
         app:layout_constraintStart_toEndOf="@+id/tv_bedroom_num_hint"
         app:layout_constraintTop_toTopOf="@+id/tv_bedroom_num_hint" />

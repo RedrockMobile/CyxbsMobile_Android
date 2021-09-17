@@ -1,10 +1,12 @@
 package com.mredrock.cyxbs.common.network
 
+import android.os.Handler
 import android.util.SparseArray
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
 import com.mredrock.cyxbs.api.account.IAccountService
 import com.mredrock.cyxbs.api.account.IUserStateService
+import com.mredrock.cyxbs.common.BaseApp
 import com.mredrock.cyxbs.common.BuildConfig
 import com.mredrock.cyxbs.common.bean.BackupUrlStatus
 import com.mredrock.cyxbs.common.bean.RedrockApiWrapper
@@ -15,12 +17,17 @@ import com.mredrock.cyxbs.common.config.getBaseUrl
 import com.mredrock.cyxbs.common.service.ServiceManager
 import com.mredrock.cyxbs.common.utils.LogUtils
 import com.mredrock.cyxbs.common.utils.extensions.takeIfNoException
+import com.mredrock.cyxbs.common.utils.extensions.toast
 import okhttp3.*
 import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit
 import retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory
 import retrofit2.converter.gson.GsonConverterFactory
 import java.util.concurrent.TimeUnit
+import android.os.Looper
+
+
+
 
 
 /**
@@ -146,6 +153,18 @@ object ApiGenerator {
                 val logging = HttpLoggingInterceptor()
                 logging.level = HttpLoggingInterceptor.Level.BODY
                 addInterceptor(logging)
+                //这里是在debug模式下方便开发人员简单确认 http 错误码 和 url(magipoke开始切的)
+                addInterceptor(Interceptor{
+                    val request = it.request()
+                    val response = it.proceed(request)
+                    if (!response.isSuccessful){
+                        response.close()
+                        Handler(Looper.getMainLooper()).post {
+                            BaseApp.context.toast("${response.code} ${request.url.toString().split("magipoke")[1]} ")
+                        }
+                    }
+                    response
+                })
             }
         }))
                 .addConverterFactory(GsonConverterFactory.create())
@@ -160,6 +179,7 @@ object ApiGenerator {
     //默认配置
     private fun OkHttpClient.Builder.defaultConfig() {
         this.connectTimeout(DEFAULT_TIME_OUT.toLong(), TimeUnit.SECONDS)
+        this.readTimeout(DEFAULT_TIME_OUT.toLong(), TimeUnit.SECONDS)
     }
 
 
@@ -277,16 +297,10 @@ object ApiGenerator {
         }
     }
 
-    //检查token是否过期
-    private fun isTokenExpired() = ServiceManager.getService(IAccountService::class.java).getVerifyService().isExpired()
-
-    //是否是游客模式
-    private fun isTouristMode() = ServiceManager.getService(IAccountService::class.java).getVerifyService().isTouristMode()
-
     class BackupInterceptor : Interceptor {
 
         private var useBackupUrl: Boolean = false
-        private var backupUrl: String = ""
+        private var backupUrl: String = getBaseUrlWithoutHttps()
 
         override fun intercept(chain: Interceptor.Chain): Response {
 
@@ -337,14 +351,25 @@ object ApiGenerator {
             val json = call.execute().body?.string()
             return try {
                 val backupUrlStatus = Gson().fromJson<RedrockApiWrapper<BackupUrlStatus>>(json, object : TypeToken<RedrockApiWrapper<BackupUrlStatus>>() {}.type)
-                backupUrlStatus.data.baseUrl
+                if (backupUrlStatus.data.baseUrl.isNullOrEmpty()) {
+                    getBaseUrlWithoutHttps()
+                }else{
+                    backupUrlStatus.data.baseUrl
+                }
             } catch (e: Exception) {
                 e.printStackTrace()
-                ""
+                getBaseUrlWithoutHttps()
             }
         }
 
 
     }
+    //获得没有 https://的地址提供给容灾使用
+    private fun getBaseUrlWithoutHttps() = getBaseUrl().subSequence(8, getBaseUrl().length).toString()
 
+    //是否是游客模式
+    private fun isTouristMode() = ServiceManager.getService(IAccountService::class.java).getVerifyService().isTouristMode()
+
+    //检查token是否过期
+    private fun isTokenExpired() = ServiceManager.getService(IAccountService::class.java).getVerifyService().isExpired()
 }

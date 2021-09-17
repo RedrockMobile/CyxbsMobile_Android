@@ -50,11 +50,8 @@ class BindActivity : BaseActivity() {
         viewModel.replaceBindFragmentToGPAFragment.observe(this, Observer {
             if (it == false) {
                 bubble()
-            }
-        })
-
-        viewModel.replaceBindFragmentToGPAFragment.observe(this, Observer {
-            if (it == true) {
+            } else {
+                // 注意 这里finish返回后viewModel被重建了
                 finish()
             }
         })

@@ -10,7 +10,7 @@
             <solid android:color="@color/common_start_page_white_color" />
         </shape>
     </item>
-    <item android:bottom="40dp">
+    <item android:bottom="0dp">
         <!--位置设置成底部-->
         <bitmap
             android:gravity="bottom"

@@ -17,14 +17,14 @@
         <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginStart="17dp"
+            android:layout_marginStart="10dp"
             android:layout_marginEnd="17dp"
             android:layout_marginBottom="10dp"
             android:orientation="horizontal">
 
             <ImageButton
                 android:id="@+id/qa_ib_toolbar_back"
-                android:layout_width="wrap_content"
+                android:layout_width="30dp"
                 android:layout_height="30dp"
                 android:layout_centerVertical="true"
                 android:layout_gravity="center_horizontal"

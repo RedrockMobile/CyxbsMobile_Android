@@ -1,6 +1,5 @@
 package com.mredrock.cyxbs.mine
 
-
 import android.annotation.SuppressLint
 import android.app.Activity
 import android.content.Intent
@@ -15,27 +14,29 @@ import androidx.core.util.Pair
 import androidx.lifecycle.Observer
 import com.alibaba.android.arouter.facade.annotation.Route
 import com.alibaba.android.arouter.launcher.ARouter
-import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.mredrock.cyxbs.api.account.IAccountService
 import com.mredrock.cyxbs.common.config.*
 import com.mredrock.cyxbs.common.service.ServiceManager
 import com.mredrock.cyxbs.common.ui.BaseViewModelFragment
-import com.mredrock.cyxbs.common.utils.extensions.*
+import com.mredrock.cyxbs.common.utils.extensions.doIfLogin
+import com.mredrock.cyxbs.common.utils.extensions.loadAvatar
+import com.mredrock.cyxbs.common.utils.extensions.setOnSingleClickListener
+import com.mredrock.cyxbs.common.utils.extensions.startActivity
 import com.mredrock.cyxbs.mine.page.about.AboutActivity
 import com.mredrock.cyxbs.mine.page.edit.EditInfoActivity
+import com.mredrock.cyxbs.mine.page.security.util.Jump2QQHelper
 import com.mredrock.cyxbs.mine.page.setting.SettingActivity
 import com.mredrock.cyxbs.mine.page.sign.DailySignActivity
-import com.mredrock.cyxbs.mine.util.apiService
 import kotlinx.android.synthetic.main.mine_fragment_main.*
 
 /**
  * Created by zzzia on 2018/8/14.
  * 我的 主界面Fragment
+ * 这个类的代码不要格式化了吧 否则initView里面的代码会很凌乱
  */
 @SuppressLint("SetTextI18n")
 @Route(path = MINE_ENTRY)
 class UserFragment : BaseViewModelFragment<UserViewModel>() {
-
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
@@ -46,24 +47,39 @@ class UserFragment : BaseViewModelFragment<UserViewModel>() {
     private fun initView() {
         //功能按钮
         context?.apply {
-            mine_main_btn_sign.setOnClickListener { doIfLogin { startActivity<DailySignActivity>() } }
-            mine_main_btn_sign.setOnClickListener { doIfLogin { startActivity<DailySignActivity>() } }
+            mine_main_btn_sign.setOnSingleClickListener { doIfLogin { startActivity<DailySignActivity>() } }
             mine_main_fm_setting.setOnSingleClickListener { doIfLogin { startActivity<SettingActivity>() } }
             mine_main_fm_about_us.setOnSingleClickListener { doIfLogin { startActivity<AboutActivity>() } }
-            mine_main_fm_point_store.setOnClickListener { doIfLogin { DailySignActivity.actionStart(this, BottomSheetBehavior.STATE_EXPANDED) } }
-            mine_main_tv_sign.setOnClickListener { doIfLogin { DailySignActivity.actionStart(this, BottomSheetBehavior.STATE_COLLAPSED) } }
+            mine_main_fm_point_store.setOnSingleClickListener {
+//                Log.d("ggg","(UserFragment.kt:56)-->> 点击前")
+                doIfLogin { jump(STORE_ENTRY) }
+//                Log.d("ggg","(UserFragment.kt:58)-->> 点击后")
+            }
+            mine_main_store_test.setOnClickListener {
+//                Log.d("ggg","(UserFragment.kt:62)-->> 测试按钮点击")
+                doIfLogin { jump(STORE_ENTRY) }
+//                Log.d("ggg","(UserFragment.kt:64)-->> 测试按钮结束")
+            }
+            mine_main_tv_sign.setOnSingleClickListener { doIfLogin { startActivity<DailySignActivity>() } }
             mine_main_tv_dynamic_number.setOnSingleClickListener { doIfLogin { jump(QA_DYNAMIC_MINE) } }
             mine_main_tv_dynamic.setOnSingleClickListener { doIfLogin { jump(QA_DYNAMIC_MINE) } }
             mine_main_tv_comment_number.setOnSingleClickListener { doIfLogin { jumpAndSaveTime(QA_MY_COMMENT, 1) } }
             mine_main_tv_praise_number.setOnSingleClickListener { doIfLogin { jumpAndSaveTime(QA_MY_PRAISE, 2) } }
             mine_main_tv_comment.setOnSingleClickListener { doIfLogin { jumpAndSaveTime(QA_MY_COMMENT, 1) } }
             mine_main_tv_praise.setOnSingleClickListener { doIfLogin { jumpAndSaveTime(QA_MY_PRAISE, 2) } }
-            mine_main_fm_feedback.setOnSingleClickListener { doIfLogin { jump(DISCOVER_TODO_FEED) } }
-            mine_main_cl_info_edit.setOnClickListener {
+            mine_main_fm_feedback.setOnSingleClickListener { doIfLogin { Jump2QQHelper.onFeedBackClick(this) } }
+            mine_main_cl_info_edit.setOnSingleClickListener {
                 doIfLogin {
                     startActivity(
-                            Intent(context, EditInfoActivity::class.java),
-                            ActivityOptionsCompat.makeSceneTransitionAnimation(context as Activity, Pair(mine_main_avatar, "avatar")).toBundle())
+                        Intent(
+                            context,
+                            EditInfoActivity::class.java
+                        ),
+                        ActivityOptionsCompat.makeSceneTransitionAnimation(
+                            context as Activity,
+                            Pair(mine_main_avatar, "avatar")
+                        ).toBundle()
+                    )
                 }
             }
         }
@@ -75,14 +91,22 @@ class UserFragment : BaseViewModelFragment<UserViewModel>() {
             mine_main_tv_sign.text = "已连续签到${it.serialDays}天 "
             if (it.isChecked) {
                 mine_main_btn_sign.apply {
-                    background = ResourcesCompat.getDrawable(resources, R.drawable.mine_bg_round_corner_grey, null)
+                    background = ResourcesCompat.getDrawable(
+                        resources,
+                        R.drawable.mine_bg_round_corner_grey,
+                        null
+                    )
                     text = "已签到"
                     setTextColor(ContextCompat.getColor(context, R.color.common_grey_button_text))
                 }
             } else {
                 mine_main_btn_sign.apply {
                     text = "签到"
-                    background = ResourcesCompat.getDrawable(resources, R.drawable.common_dialog_btn_positive_blue, null)
+                    background = ResourcesCompat.getDrawable(
+                        resources,
+                        R.drawable.common_dialog_btn_positive_blue,
+                        null
+                    )
                     setTextColor(ContextCompat.getColor(context, R.color.common_white_font_color))
                 }
             }
@@ -105,8 +129,18 @@ class UserFragment : BaseViewModelFragment<UserViewModel>() {
 
         viewModel.userUncheckCount.observe(viewLifecycleOwner, Observer {
             it?.let {
-                it.uncheckPraiseCount?.let { uncheckPraise -> viewModel.setViewWidthAndText(mine_main_tv_uncheck_praise_count, uncheckPraise) }
-                it.uncheckCommentCount?.let { uncheckComment -> viewModel.setViewWidthAndText(mine_main_tv_uncheck_comment_count, uncheckComment) }
+                it.uncheckPraiseCount?.let { uncheckPraise ->
+                    viewModel.setViewWidthAndText(
+                        mine_main_tv_uncheck_praise_count,
+                        uncheckPraise
+                    )
+                }
+                it.uncheckCommentCount?.let { uncheckComment ->
+                    viewModel.setViewWidthAndText(
+                        mine_main_tv_uncheck_comment_count,
+                        uncheckComment
+                    )
+                }
             }
         })
     }
@@ -128,18 +162,37 @@ class UserFragment : BaseViewModelFragment<UserViewModel>() {
     private fun refreshUserLayout() {
         val userService = ServiceManager.getService(IAccountService::class.java).getUserService()
         context?.loadAvatar(userService.getAvatarImgUrl(), mine_main_avatar)
-        mine_main_username.text = if (userService.getNickname().isBlank()) getString(R.string.mine_user_empty_username) else userService.getNickname()
-        mine_main_introduce.text = if (userService.getIntroduction().isBlank()) getString(R.string.mine_user_empty_introduce) else userService.getIntroduction()
+        mine_main_username.text =
+            if (userService.getNickname().isBlank()) getString(R.string.mine_user_empty_username)
+            else userService.getNickname()
+        mine_main_introduce.text =
+            if (userService.getIntroduction().isBlank()) getString(R.string.mine_user_empty_introduce)
+            else userService.getIntroduction()
+
+        if (userService.getNickname().isNotBlank() &&
+            userService.getIntroduction().isNotBlank() &&
+            userService.getQQ().isNotBlank() &&
+            userService.getPhone().isNotBlank()
+        ) {
+            // 当都不为空时, 说明已经设置了个人信息, 则提交积分商城任务进度, 后端已做重复处理
+            StoreTask.postTask(StoreTask.Task.EDIT_INFO, null)
+        }
     }
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? =
-            inflater.inflate(R.layout.mine_fragment_main, container, false)
+    override fun onCreateView(
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View? =
+        inflater.inflate(R.layout.mine_fragment_main, container, false)
 
     private fun jump(path: String) {
+//        Log.d("ggg","(UserFragment.kt:187)-->> 跳转前 path = $path")
         ARouter.getInstance().build(path).navigation()
+//        Log.d("ggg","(UserFragment.kt:189)-->> 跳转后 path = $path")
     }
 
-    private fun jumpAndSaveTime(path: String, type: Int){
+    private fun jumpAndSaveTime(path: String, type: Int) {
         viewModel.saveCheckTimeStamp(type)
         jump(path)
     }

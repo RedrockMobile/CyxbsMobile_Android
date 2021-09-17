@@ -14,7 +14,7 @@ import com.mredrock.cyxbs.volunteer.network.ApiService
  * Created by yyfbe, Date on 2020/9/3.
  */
 class VolunteerLoginViewModel : BaseViewModel() {
-    var loginCode = MutableLiveData<Int>()
+    var loginCode = MutableLiveData<Int?>()
     var volunteerTime = MutableLiveData<VolunteerTime>()
     fun login(account: String, encodingPassword: String, onError: () -> Unit) {
         ApiGenerator.getApiService(ApiService::class.java)

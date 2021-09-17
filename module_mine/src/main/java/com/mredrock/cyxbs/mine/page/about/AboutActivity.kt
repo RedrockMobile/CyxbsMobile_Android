@@ -100,20 +100,12 @@ class AboutActivity : BaseViewModelActivity<AboutViewModel>() {
     }
 
     private fun clickLegal() {
-        val tag = "legal"
-        if (supportFragmentManager.findFragmentByTag(tag) == null) {
-            CommonDialogFragment().apply {
-                initView(
-                        containerRes = R.layout.mine_layout_dialog_with_title_and_content,
-                        onPositiveClick = { dismiss() },
-                        positiveString = "我知道了",
-                        elseFunction = { rootView ->
-                            rootView.findViewById<TextView>(R.id.dialog_title).text = "使用条款"
-                            rootView.findViewById<TextView>(R.id.dialog_content).text = "版权归红岩网校工作站所有,感谢您的使用"
-                        }
-                )
-            }.show(supportFragmentManager, tag)
-        }
+        startActivity(
+            Intent(
+                this,
+                AgreementActivity::class.java
+            )
+        )
     }
 
     private fun setAppVersionName() {

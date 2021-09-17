@@ -40,6 +40,8 @@ import com.mredrock.cyxbs.discover.pages.discover.adapter.DiscoverMoreFunctionRv
 import com.mredrock.cyxbs.discover.utils.BannerAdapter
 import com.mredrock.cyxbs.discover.utils.MoreFunctionProvider
 import com.mredrock.cyxbs.api.volunteer.IVolunteerService
+import com.mredrock.cyxbs.common.BaseApp
+import com.mredrock.cyxbs.common.utils.extensions.toast
 import kotlinx.android.synthetic.main.discover_home_fragment.*
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
@@ -203,9 +205,7 @@ class DiscoverHomeFragment : BaseViewModelFragment<DiscoverHomeViewModel>(), Eve
                 (it.getSystemService(Context.WINDOW_SERVICE) as WindowManager).defaultDisplay.getSize(point)
                 ll_discover_feeds.minimumHeight = point.y - ll_discover_feeds.top
             }
-
         }
-
     }
 
     private fun addFeedFragment(fragment: Fragment) {

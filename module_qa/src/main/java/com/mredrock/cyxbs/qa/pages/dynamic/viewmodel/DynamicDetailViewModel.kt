@@ -4,6 +4,7 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import com.mredrock.cyxbs.common.BaseApp
+import com.mredrock.cyxbs.common.config.StoreTask
 import com.mredrock.cyxbs.common.network.ApiGenerator
 import com.mredrock.cyxbs.common.utils.extensions.mapOrThrowApiException
 import com.mredrock.cyxbs.common.utils.extensions.safeSubscribeBy
@@ -44,41 +45,48 @@ open class DynamicDetailViewModel : BaseViewModel() {
 
     val deleteDynamic = MutableLiveData<Boolean>()
 
+    /**
+     * bug修复代码
+     * @author wx
+     * @Date：2021/8/31
+     * 限制livedata的粘性事件  造成activity被finish
+     */
+    var isNeedFinish=false
+
     // commentId用于刷新后聚焦到某一个评论。
     fun refreshCommentList(postId: String, commentId: String) {
+        ApiGenerator.getApiService(ApiServiceNew::class.java)
+            .getPostInfo(postId)
+            .mapOrThrowApiException()
+            .setSchedulers()
+            .doOnSubscribe {
+            }
+            .doOnError {
+            }
+            .safeSubscribeBy {
+                if (it == null) {
+                    BaseApp.context.toast("帖子不存在或已删除")
+                }else {
+                    StoreTask.postTask(StoreTask.Task.SEE_DYNAMIC, postId)
+                }
+                dynamic.postValue(it)
+            }
 
         ApiGenerator.getApiService(ApiServiceNew::class.java)
-                .getPostInfo(postId)
-                .mapOrThrowApiException()
-                .setSchedulers()
-                .doOnSubscribe {
-                }
-                .doOnError {
-                }
-                .safeSubscribeBy {
-                    if (it == null){
-                        BaseApp.context.toast("帖子不存在或已删除")
-                    }
-                    dynamic.postValue(it)
-                }
-
-        ApiGenerator.getApiService(ApiServiceNew::class.java)
-                .getComment(postId)
-                .mapOrThrowApiException()
-                .setSchedulers()
-                .doOnSubscribe {
-                    loadStatus.postValue(NetworkState.LOADING)
-                }
-                .doOnError {
-                    loadStatus.value = NetworkState.FAILED
-                }
-                .safeSubscribeBy { list ->
-                    loadStatus.value = NetworkState.SUCCESSFUL
-                    commentList.postValue(list.reversed())
-                    position = findCommentByCommentId(list.reversed(), commentId)
-
-
-                }
+            .getComment(postId)
+            .mapOrThrowApiException()
+            .setSchedulers()
+            .doOnSubscribe {
+                loadStatus.postValue(NetworkState.LOADING)
+            }
+            .doOnError {
+                loadStatus.value = NetworkState.FAILED
+            }
+            .safeSubscribeBy { list ->
+                loadStatus.value = NetworkState.SUCCESSFUL
+                commentList.postValue(list.reversed())
+                position = findCommentByCommentId(list.reversed(), commentId)
+            }
     }
 
     // 回复后，滑动到刚刚回复的comment下
@@ -93,7 +101,7 @@ open class DynamicDetailViewModel : BaseViewModel() {
                 return i
             }
             // 如果回复是回复别人，则滚动到被回复的comment地方
-            if (dataList[i].replyList != null && dataList[i].replyList.isNotEmpty()) {
+            if (dataList[i].replyList.isNotEmpty()) {
                 for (j in dataList[i].replyList.indices) {
                     if (dataList[i].replyList[j].commentId == commentId) {
                         return i
@@ -110,90 +118,93 @@ open class DynamicDetailViewModel : BaseViewModel() {
             return
         }
         ApiGenerator.getApiService(ApiServiceNew::class.java)
-                .releaseComment(content.removeContinuousEnters(), postId, replyInfo.value?.replyId
-                        ?: "")
-                .mapOrThrowApiException()
-                .setSchedulers()
-                .doOnSubscribe {
-                    progressDialogEvent.value = ProgressDialogEvent.SHOW_NONCANCELABLE_DIALOG_EVENT
-                }
-                .doFinally {
-                    progressDialogEvent.value = ProgressDialogEvent.DISMISS_DIALOG_EVENT
-                }
-                .doOnError {
+            .releaseComment(
+                content.removeContinuousEnters(), postId, replyInfo.value?.replyId
+                    ?: ""
+            )
+            .mapOrThrowApiException()
+            .setSchedulers()
+            .doOnSubscribe {
+                progressDialogEvent.value = ProgressDialogEvent.SHOW_NONCANCELABLE_DIALOG_EVENT
+            }
+            .doFinally {
+                progressDialogEvent.value = ProgressDialogEvent.DISMISS_DIALOG_EVENT
+            }
+            .doOnError {
 
-                }
-                .safeSubscribeBy {
-                    commentReleaseResult.postValue(it)
-                }
+            }
+            .safeSubscribeBy {
+                commentReleaseResult.postValue(it)
+                StoreTask.postTask(StoreTask.Task.POST_COMMENT, null) // 更新发送评论的任务
+            }
     }
 
     fun deleteId(id: String, model: String) {
         ApiGenerator.getApiService(ApiServiceNew::class.java)
-                .deleteId(id, model)
-                .setSchedulers()
-                .doOnSubscribe {
-                    progressDialogEvent.value = ProgressDialogEvent.SHOW_NONCANCELABLE_DIALOG_EVENT
-                }
-                .doFinally {
-                    progressDialogEvent.value = ProgressDialogEvent.DISMISS_DIALOG_EVENT
-                }
-                .doOnError {
-                    when (model) {
-                        DynamicDetailActivity.DYNAMIC_DELETE -> {
-                            toastEvent.value = R.string.qa_delete_dynamic_failure
-                        }
-                        DynamicDetailActivity.COMMENT_DELETE -> {
-                            toastEvent.value = R.string.qa_delete_comment_failure
-                        }
+            .deleteId(id, model)
+            .setSchedulers()
+            .doOnSubscribe {
+                progressDialogEvent.value = ProgressDialogEvent.SHOW_NONCANCELABLE_DIALOG_EVENT
+            }
+            .doFinally {
+                progressDialogEvent.value = ProgressDialogEvent.DISMISS_DIALOG_EVENT
+            }
+            .doOnError {
+                when (model) {
+                    DynamicDetailActivity.DYNAMIC_DELETE -> {
+                        toastEvent.value = R.string.qa_delete_dynamic_failure
+                    }
+                    DynamicDetailActivity.COMMENT_DELETE -> {
+                        toastEvent.value = R.string.qa_delete_comment_failure
                     }
                 }
-                .safeSubscribeBy {
-                    refreshCommentList(dynamic.value?.postId ?: "0", "-1")
+            }
+            .safeSubscribeBy {
+                refreshCommentList(dynamic.value?.postId ?: "0", "-1")
 
-                    when (model) {
-                        DynamicDetailActivity.DYNAMIC_DELETE -> {
-                            deleteDynamic.postValue(true)
-                            toastEvent.value = R.string.qa_delete_dynamic_success
-                        }
-                        DynamicDetailActivity.COMMENT_DELETE -> {
-                            toastEvent.value = R.string.qa_delete_comment_success
-                        }
+                when (model) {
+                    DynamicDetailActivity.DYNAMIC_DELETE -> {
+                        isNeedFinish=true
+                        deleteDynamic.postValue(true)
+                        toastEvent.value = R.string.qa_delete_dynamic_success
+                    }
+                    DynamicDetailActivity.COMMENT_DELETE -> {
+                        toastEvent.value = R.string.qa_delete_comment_success
                     }
                 }
+            }
     }
-
     fun report(id: String, content: String, model: String) {
         ApiGenerator.getApiService(ApiServiceNew::class.java)
-                .report(id, CommentConfig.REPORT_DYNAMIC_MODEL, content)
-                .setSchedulers()
-                .doOnSubscribe {
-                    progressDialogEvent.value = ProgressDialogEvent.SHOW_NONCANCELABLE_DIALOG_EVENT
-                }
-                .doFinally {
-                    progressDialogEvent.value = ProgressDialogEvent.DISMISS_DIALOG_EVENT
-                }
-                .doOnError {
-                    when (model) {
-                        CommentConfig.REPORT_DYNAMIC_MODEL -> {
-                            toastEvent.value = R.string.qa_report_dynamic_failure
-                        }
-                        CommentConfig.REPORT_COMMENT_MODEL -> {
-                            toastEvent.value = R.string.qa_report_comment_failure
-                        }
+            .report(id, CommentConfig.REPORT_DYNAMIC_MODEL, content)
+            .setSchedulers()
+            .doOnSubscribe {
+                progressDialogEvent.value = ProgressDialogEvent.SHOW_NONCANCELABLE_DIALOG_EVENT
+            }
+            .doFinally {
+                progressDialogEvent.value = ProgressDialogEvent.DISMISS_DIALOG_EVENT
+            }
+            .doOnError {
+                when (model) {
+                    CommentConfig.REPORT_DYNAMIC_MODEL -> {
+                        toastEvent.value = R.string.qa_report_dynamic_failure
+                    }
+                    CommentConfig.REPORT_COMMENT_MODEL -> {
+                        toastEvent.value = R.string.qa_report_comment_failure
                     }
                 }
-                .safeSubscribeBy {
-                    if (it.status == 200)
-                        when (model) {
-                            CommentConfig.REPORT_DYNAMIC_MODEL -> {
-                                toastEvent.value = R.string.qa_report_dynamic_success
-                            }
-                            CommentConfig.REPORT_COMMENT_MODEL -> {
-                                toastEvent.value = R.string.qa_report_comment_success
-                            }
+            }
+            .safeSubscribeBy {
+                if (it.status == 200)
+                    when (model) {
+                        CommentConfig.REPORT_DYNAMIC_MODEL -> {
+                            toastEvent.value = R.string.qa_report_dynamic_success
                         }
-                }
+                        CommentConfig.REPORT_COMMENT_MODEL -> {
+                            toastEvent.value = R.string.qa_report_comment_success
+                        }
+                    }
+            }
     }
 
 

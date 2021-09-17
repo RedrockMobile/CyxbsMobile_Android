@@ -1,7 +1,7 @@
 package com.mredrock.cyxbs.qa.pages.search.room
 
 import androidx.room.*
-import com.mredrock.cyxbs.qa.bean.QAHistory
+import com.mredrock.cyxbs.qa.beannew.QAHistory
 import io.reactivex.Maybe
 
 /**

@@ -5,7 +5,6 @@
 
     <application
         android:name="com.mredrock.cyxbs.common.BaseApp"
-        android:label="@string/emptyroom_name"
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         tools:ignore="GoogleAppIndexingWarning">

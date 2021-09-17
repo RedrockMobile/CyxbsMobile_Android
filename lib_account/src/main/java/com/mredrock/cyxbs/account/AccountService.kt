@@ -1,31 +1,33 @@
 package com.mredrock.cyxbs.account
 
 import android.content.Context
-import android.util.Base64
 import androidx.annotation.MainThread
 import androidx.annotation.WorkerThread
 import com.afollestad.materialdialogs.MaterialDialog
 import com.alibaba.android.arouter.facade.annotation.Route
 import com.alibaba.android.arouter.launcher.ARouter
 import com.google.gson.Gson
+import com.google.gson.GsonBuilder
+import com.mredrock.cyxbs.account.bean.*
 import com.mredrock.cyxbs.account.bean.LoginParams
 import com.mredrock.cyxbs.account.bean.RefreshParams
 import com.mredrock.cyxbs.account.bean.TokenWrapper
-import com.mredrock.cyxbs.account.bean.User
 import com.mredrock.cyxbs.account.utils.UserInfoEncryption
 import com.mredrock.cyxbs.api.account.*
-import com.mredrock.cyxbs.common.config.IS_TOURIST
-import com.mredrock.cyxbs.common.config.SP_KEY_REFRESH_TOKEN_EXPIRED
-import com.mredrock.cyxbs.common.config.SP_KEY_USER_V2
-import com.mredrock.cyxbs.common.config.SP_REFRESH_DAY
 import com.mredrock.cyxbs.common.network.ApiGenerator
 import com.mredrock.cyxbs.common.network.exception.RedrockApiException
 import com.mredrock.cyxbs.common.service.ServiceManager
 import com.mredrock.cyxbs.api.electricity.IElectricityService
 import com.mredrock.cyxbs.main.MAIN_LOGIN
 import com.mredrock.cyxbs.api.volunteer.IVolunteerService
+import com.mredrock.cyxbs.common.BaseApp
+import com.mredrock.cyxbs.common.bean.RedrockApiWrapper
+import com.mredrock.cyxbs.common.config.*
 import com.mredrock.cyxbs.common.utils.extensions.*
+import retrofit2.Call
+import retrofit2.Callback
 import retrofit2.HttpException
+import retrofit2.Response
 
 /**
  * Created By jay68 on 2019-11-12.
@@ -43,7 +45,7 @@ internal class AccountService : IAccountService {
     private val mUserTokenSerVice: IUserTokenService = UserTokenSerVice()
     private val mUserInfoEncryption = UserInfoEncryption()
 
-    private var user: User? = null
+    private var user: UserInfo? = null
     private var tokenWrapper: TokenWrapper? = null
     private var isTouristMode = false
     private lateinit var mContext: Context
@@ -59,24 +61,56 @@ internal class AccountService : IAccountService {
 
     override fun getUserEditorService() = mUserEditorService
     override fun getUserTokenService(): IUserTokenService = mUserTokenSerVice
+
     private fun bind(tokenWrapper: TokenWrapper) {
-        //保证bind绑定的是有效的数据，避免被覆盖
-        if (tokenWrapper.isEmptyData()) {
+        //如果接口出问题，token or refreshToken为空就不要他被覆盖，以免出现未知的问题
+        if(tokenWrapper.isEmptyData()){
             return
         }
-        val encryptedUserJson = tokenWrapper.token.split(".")[0]
         this.tokenWrapper = tokenWrapper
-        this.user = User.fromJson(String(Base64.decode(encryptedUserJson, Base64.DEFAULT)))
+        //每次刷新存储到本地
+        mContext.defaultSharedPreferences.editor {
+            putString(
+                SP_KEY_USER_V2,
+                mUserInfoEncryption.encrypt(Gson().toJson(tokenWrapper))
+            )
+        }
+        //每次刷新的时候拿token请求一次个人信息，覆盖原来的
+        ApiGenerator.getCommonApiService(ApiService::class.java)
+            .getUserInfo("Bearer ${tokenWrapper.token}")
+            .enqueue(object: Callback<RedrockApiWrapper<UserInfo>> {
+                override fun onResponse(
+                    call: Call<RedrockApiWrapper<UserInfo>>,
+                    response: Response<RedrockApiWrapper<UserInfo>>
+                ) {
+                    val userInfo = response.body()?.data //如果为空就不更新
+                    userInfo?.let {
+                        mContext.defaultSharedPreferences.editor {
+                            putString(SP_KEY_USER_INFO, mUserInfoEncryption.encrypt(Gson().toJson(userInfo)))
+                        }
+                        this@AccountService.user = userInfo
+                    }
+                }
+
+                override fun onFailure(call: Call<RedrockApiWrapper<UserInfo>>, t: Throwable) {
+                    BaseApp.context.toast("个人信息无法更新")
+                }
+
+            })
+
+
+
     }
 
     inner class UserService : IUserService {
-        override fun getRedid() = user?.redid.orEmpty()
 
         override fun getStuNum() = user?.stuNum.orEmpty()
 
         override fun getNickname() = user?.nickname.orEmpty()
 
-        override fun getAvatarImgUrl() = user?.avatarImgUrl.orEmpty()
+        override fun getAvatarImgUrl() = user?.photoSrc.orEmpty()
+
+        override fun getPhotoThumbnailSrc() = user?.photoThumbnailSrc.orEmpty()
 
         override fun getIntroduction() = user?.introduction.orEmpty()
 
@@ -86,13 +120,14 @@ internal class AccountService : IAccountService {
 
         override fun getGender() = user?.gender.orEmpty()
 
-        override fun getIntegral() = user?.integral ?: 0
-
         override fun getRealName() = user?.realName.orEmpty()
 
-        override fun getCheckInDay() = user?.checkInDay ?: 0
-
         override fun getCollege() = user?.college.orEmpty()
+
+        //用于刷新个人信息，请在需要的地方调用
+        override fun refreshInfo() {
+            tokenWrapper?.let { bind(it) }
+        }
     }
 
     inner class UserEditorService : IUserEditorService {
@@ -101,7 +136,7 @@ internal class AccountService : IAccountService {
         }
 
         override fun setAvatarImgUrl(avatarImgUrl: String) {
-            user?.avatarImgUrl = avatarImgUrl
+            user?.photoSrc = avatarImgUrl
         }
 
         override fun setIntroduction(introduction: String) {
@@ -114,14 +149,6 @@ internal class AccountService : IAccountService {
 
         override fun setQQ(qq: String) {
             user?.qq = qq
-        }
-
-        override fun setIntegral(integral: Int) {
-            user?.integral = integral
-        }
-
-        override fun setCheckInDay(checkInDay: Int) {
-            user?.checkInDay = checkInDay
         }
     }
 
@@ -154,30 +181,39 @@ internal class AccountService : IAccountService {
 
         override fun isLogin() = tokenWrapper != null
 
+        override fun isTouristMode(): Boolean = isTouristMode
+
         override fun isExpired(): Boolean {
             if (!isLogin()) {
                 return true
             }
             val curTime = System.currentTimeMillis()
-            val expiredTime = takeIfNoException { user?.exp?.toLong() } ?: 0L
+            val expiredTime = mContext.defaultSharedPreferences.getLong(SP_KEY_TOKEN_EXPIRED, 0)
             //预留10s，防止一些奇怪的错误出现
-            return expiredTime * 1000 - curTime <= 10000L
+            return curTime - expiredTime >= 10000L
         }
-
-        override fun isTouristMode(): Boolean = isTouristMode
 
         override fun isRefreshTokenExpired(): Boolean {
             val curTime = System.currentTimeMillis()
-            val expiredTime = mContext.defaultSharedPreferences.getLong(SP_KEY_REFRESH_TOKEN_EXPIRED, 0)
+            val expiredTime =
+                mContext.defaultSharedPreferences.getLong(SP_KEY_REFRESH_TOKEN_EXPIRED, 0)
             //当前时间比预期过期时间快10s，就过期了
             return curTime - expiredTime >= 10000L
         }
 
         fun loginFromCache(context: Context) {
             val encryptedTokenJson = context.defaultSharedPreferences.getString(SP_KEY_USER_V2, "")
-            takeIfNoException { bind(TokenWrapper.fromJson(mUserInfoEncryption.decrypt(encryptedTokenJson))) }
+            val userInfo = context.defaultSharedPreferences.getString(SP_KEY_USER_INFO, "")
+            userInfo?.let {
+                user = GsonBuilder().create()
+                    .fromJson(mUserInfoEncryption.decrypt(userInfo), UserInfo::class.java)
+            }
+            tokenWrapper = TokenWrapper.fromJson(
+                mUserInfoEncryption.decrypt(
+                    encryptedTokenJson
+                )
+            )
             val state = when {
-                isExpired() -> IUserStateService.UserState.EXPIRED
                 isLogin() -> IUserStateService.UserState.LOGIN
                 else -> IUserStateService.UserState.NOT_LOGIN
             }
@@ -185,13 +221,13 @@ internal class AccountService : IAccountService {
                 notifyAllStateListeners(state)
             }
         }
-
         override fun refresh(onError: () -> Unit, action: (token: String) -> Unit) {
             val refreshToken = tokenWrapper?.refreshToken ?: return
-            val response = ApiGenerator.getCommonApiService(ApiService::class.java).refresh(RefreshParams(refreshToken)).execute()
+            val response = ApiGenerator.getCommonApiService(ApiService::class.java)
+                .refresh(RefreshParams(refreshToken),mUserService.getStuNum()).execute()
             if (response.body() == null) {
                 //TODO: 与后端确认一下状态码
-                if(response.code() == 400){//确定是因为refreshToken失效引起的刷新失败
+                if (response.code() == 400) {//确定是因为refreshToken失效引起的刷新失败
                     mContext.runOnUiThread {
                         toast(R.string.account_token_expired_tip)
                     }
@@ -209,8 +245,14 @@ internal class AccountService : IAccountService {
                     }
                 }
                 mContext.defaultSharedPreferences.editor {
-                    putString(SP_KEY_USER_V2, mUserInfoEncryption.encrypt(Gson().toJson(data)))
-                    putLong(SP_KEY_REFRESH_TOKEN_EXPIRED, System.currentTimeMillis() + SP_REFRESH_DAY)
+                    putLong(
+                        SP_KEY_REFRESH_TOKEN_EXPIRED,
+                        System.currentTimeMillis() + SP_REFRESH_DAY
+                    )
+                    putLong(
+                        SP_KEY_TOKEN_EXPIRED,
+                        System.currentTimeMillis() + SP_TOKEN_TIME
+                    )
                 }
                 action.invoke(data.token)
             }
@@ -245,7 +287,8 @@ internal class AccountService : IAccountService {
          */
         @WorkerThread
         override fun login(context: Context, uid: String, passwd: String) {
-            val response = ApiGenerator.getCommonApiService(ApiService::class.java).login(LoginParams(uid, passwd)).execute()
+            val response = ApiGenerator.getCommonApiService(ApiService::class.java)
+                .login(LoginParams(uid, passwd)).execute()
             //不同情况给用户不同的提示
             if (response.code() == 400) {
                 throw IllegalStateException("authentication error")
@@ -265,8 +308,18 @@ internal class AccountService : IAccountService {
                     }
                 }
                 context.defaultSharedPreferences.editor {
-                    putString(SP_KEY_USER_V2, mUserInfoEncryption.encrypt(Gson().toJson(apiWrapper.data)))
-                    putLong(SP_KEY_REFRESH_TOKEN_EXPIRED, System.currentTimeMillis() + SP_REFRESH_DAY)
+                    putString(
+                        SP_KEY_USER_V2,
+                        mUserInfoEncryption.encrypt(Gson().toJson(apiWrapper.data))
+                    )
+                    putLong(
+                        SP_KEY_REFRESH_TOKEN_EXPIRED,
+                        System.currentTimeMillis() + SP_REFRESH_DAY
+                    )
+                    putLong(
+                        SP_KEY_TOKEN_EXPIRED,
+                        System.currentTimeMillis() + SP_TOKEN_TIME
+                    )
                 }
             } else {
                 apiWrapper?.apply {
@@ -278,7 +331,9 @@ internal class AccountService : IAccountService {
         override fun logout(context: Context) {
             context.defaultSharedPreferences.editor {
                 putString(SP_KEY_USER_V2, "")
+                putString(SP_KEY_USER_INFO, "")
                 putLong(SP_KEY_REFRESH_TOKEN_EXPIRED, 0)
+                putLong(SP_KEY_TOKEN_EXPIRED, 0)
             }
             ServiceManager.getService(IElectricityService::class.java).clearSP()
             ServiceManager.getService(IVolunteerService::class.java).clearSP()

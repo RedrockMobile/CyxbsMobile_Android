@@ -26,7 +26,10 @@ class ViewImageActivity : AppCompatActivity() {
         private const val POSITION = "position"
 
         fun activityStart(context: Context, imgResUrls: Array<String>, position: Int) {
-            context.startActivity<ViewImageActivity>(IMG_RES_PATHS to imgResUrls, POSITION to position)
+            context.startActivity<ViewImageActivity>(
+                IMG_RES_PATHS to imgResUrls,
+                POSITION to position
+            )
         }
     }
 
@@ -47,7 +50,11 @@ class ViewImageActivity : AppCompatActivity() {
                 override fun onPageScrollStateChanged(state: Int) {
                 }
 
-                override fun onPageScrolled(position: Int, positionOffset: Float, positionOffsetPixels: Int) {
+                override fun onPageScrolled(
+                    position: Int,
+                    positionOffset: Float,
+                    positionOffsetPixels: Int
+                ) {
                 }
 
                 override fun onPageSelected(position: Int) {
@@ -63,30 +70,36 @@ class ViewImageActivity : AppCompatActivity() {
                     doPermissionAction(Manifest.permission.WRITE_EXTERNAL_STORAGE) {
                         doAfterGranted {
                             MaterialAlertDialogBuilder(this@ViewImageActivity)
-                                    .setTitle(getString(R.string.qa_pic_save_alert_dialog_title))
-                                    .setMessage(R.string.qa_pic_save_alert_dialog_message)
-                                    .setPositiveButton("确定") { dialog, _ ->
-                                        val name = System.currentTimeMillis().toString() + url.split('/').lastIndex.toString()
-                                        Schedulers.io().scheduleDirect {
-                                            this@ViewImageActivity.saveImage(bitmap, name)
-                                            MediaScannerConnection.scanFile(this@ViewImageActivity,
-                                                    arrayOf(Environment.getExternalStorageDirectory().toString() + DIR_PHOTO),
-                                                    arrayOf("image/jpeg"),
-                                                    null)
+                                .setTitle(getString(R.string.qa_pic_save_alert_dialog_title))
+                                .setMessage(R.string.qa_pic_save_alert_dialog_message)
+                                .setPositiveButton("确定") { dialog, _ ->
+                                    val name = System.currentTimeMillis()
+                                        .toString() + url.split('/').lastIndex.toString()
+                                    Schedulers.io().scheduleDirect {
+                                        this@ViewImageActivity.saveImage(bitmap, name)
+                                        MediaScannerConnection.scanFile(
+                                            this@ViewImageActivity,
+                                            arrayOf(
+                                                Environment.getExternalStorageDirectory()
+                                                    .toString() + DIR_PHOTO
+                                            ),
+                                            arrayOf("image/jpeg"),
+                                            null
+                                        )
 
-                                            runOnUiThread {
-                                                toast("图片保存于系统\"$DIR_PHOTO\"文件夹下哦")
-                                                dialog.dismiss()
-                                                setFullScreen()
-                                            }
-
+                                        runOnUiThread {
+                                            toast("图片保存于系统\"$DIR_PHOTO\"文件夹下哦")
+                                            dialog.dismiss()
+                                            setFullScreen()
                                         }
+
                                     }
-                                    .setNegativeButton("取消") { dialog, _ ->
-                                        dialog.dismiss()
-                                        setFullScreen()
-                                    }
-                                    .show()
+                                }
+                                .setNegativeButton("取消") { dialog, _ ->
+                                    dialog.dismiss()
+                                    setFullScreen()
+                                }
+                                .show()
                         }
                     }
                 }

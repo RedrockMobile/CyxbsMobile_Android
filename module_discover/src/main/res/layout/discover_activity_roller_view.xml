@@ -4,6 +4,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
+    android:fitsSystemWindows="true"
     tools:context=".pages.RollerViewActivity">
 
     <include layout="@layout/common_toolbar" />
@@ -11,6 +12,6 @@
     <WebView
         android:id="@+id/discover_web_view"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"></WebView>
+        android:layout_height="match_parent"/>
 
 </LinearLayout>

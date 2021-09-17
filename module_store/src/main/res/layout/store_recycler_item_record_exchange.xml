@@ -1,0 +1,94 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:tools="http://schemas.android.com/tools"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <data>
+
+        <variable
+            name="data"
+            type="com.mredrock.cyxbs.store.bean.ExchangeRecord" />
+    </data>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/store_layout_exchange_record"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="20dp"
+        android:layout_marginBottom="8dp">
+
+        <TextView
+            android:id="@+id/store_item_exchange_record_tv_event"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="15dp"
+            android:text="@{data.goodsName}"
+            android:textColor="@color/store_stamp_detail_common_title_text"
+            android:textSize="16sp"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            tools:text="兮哥哥的爱❤"/>
+
+        <TextView
+            android:id="@+id/store_item_exchange_record_tv_count"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="13dp"
+            android:layout_marginEnd="9dp"
+            android:fontFamily="@font/store_din_medium"
+            android:text="@{String.valueOf(data.goodsPrice)}"
+            android:textColor="@color/store_stamp_detail_record_reduce_count_text"
+            android:textSize="16sp"
+            app:layout_constraintRight_toLeftOf="@+id/store_iv_exchange_record_arrow_right"
+            app:layout_constraintTop_toTopOf="parent"
+            tools:text="-无价"/>
+
+        <ImageView
+            android:id="@+id/store_iv_exchange_record_arrow_right"
+            android:layout_width="6dp"
+            android:layout_height="11.57dp"
+            android:layout_marginTop="17.5dp"
+            android:layout_marginEnd="16dp"
+            android:clickable="false"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:srcCompat="@drawable/store_ic_arrow_right"
+            tools:ignore="ContentDescription" />
+
+        <TextView
+            android:id="@+id/store_item_exchange_record_tv_date"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="16dp"
+            android:layout_marginTop="8dp"
+            android:textColor="@color/store_stamp_detail_common_record_date_text"
+            android:textSize="12sp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/store_item_exchange_record_tv_event"
+            tools:text="2021.8.1"/>
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/store_btn_product_receive_tips"
+            android:layout_width="53dp"
+            android:layout_height="21dp"
+            android:layout_marginStart="5dp"
+            android:clickable="false"
+            android:alpha="0.8"
+            android:text="@string/store_product_unclaimed"
+            android:textColor="@color/store_stamp_detail_record_unreceived_tips_text"
+            android:textSize="10dp"
+            android:theme="@style/Theme.MaterialComponents"
+            android:insetTop="0dp"
+            android:insetBottom="0dp"
+            android:padding="0dp"
+            android:backgroundTint="@color/store_stamp_detail_record_unreceived_tips_background"
+            app:cornerRadius="11dp"
+            app:rippleColor="@android:color/transparent"
+            app:layout_constraintLeft_toRightOf="@+id/store_item_exchange_record_tv_event"
+            app:layout_constraintTop_toTopOf="parent"
+            tools:ignore="SmallSp,SpUsage"
+            style="@style/Widget.MaterialComponents.Button.UnelevatedButton"/>
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</layout>

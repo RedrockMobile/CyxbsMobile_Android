@@ -5,9 +5,6 @@
 
     <application>
         <activity
-            android:name=".pages.morefunction.MoreFunctionActivity"
-            android:launchMode="singleTop"></activity>
-        <activity
             android:name=".pages.RollerViewActivity"
             android:usesCleartextTraffic="true"
             tools:targetApi="m" />

@@ -27,10 +27,13 @@ import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.afollestad.materialdialogs.MaterialDialog
 import com.afollestad.materialdialogs.list.listItems
+import com.alibaba.android.arouter.facade.annotation.Route
 import com.mredrock.cyxbs.common.config.DIR_PHOTO
 import com.mredrock.cyxbs.common.service.ServiceManager
 import com.mredrock.cyxbs.api.account.IAccountService
 import com.mredrock.cyxbs.api.account.IUserService
+import com.mredrock.cyxbs.common.config.MINE_EDIT_INFO
+import com.mredrock.cyxbs.common.config.StoreTask
 import com.mredrock.cyxbs.common.ui.BaseViewModelActivity
 import com.mredrock.cyxbs.common.utils.extensions.*
 import com.mredrock.cyxbs.mine.R
@@ -49,6 +52,7 @@ import java.io.IOException
  * Created by zzzia on 2018/8/14.
  * 编辑个人信息
  */
+@Route(path = MINE_EDIT_INFO)
 class EditInfoActivity
     : BaseViewModelActivity<EditViewModel>() {
 
@@ -124,6 +128,7 @@ class EditInfoActivity
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
+        window.setBackgroundDrawableResource(android.R.color.transparent)
         super.onCreate(savedInstanceState)
         setContentView(R.layout.mine_activity_edit_info)
 
@@ -150,25 +155,29 @@ class EditInfoActivity
         refreshUserInfo()
 
         //点击更换头像
-        mine_edit_et_avatar.setOnClickListener { changeAvatar() }
+        mine_edit_et_avatar.setOnSingleClickListener { changeAvatar() }
         //需调用一次给textView赋值
         checkColorAndText()
-        mine_btn_info_save.setOnClickListener {
+        mine_btn_info_save.setOnSingleClickListener {
             saveInfo()
         }
         mine_btn_info_save.isClickable = false
 
-        mine_edit_iv_agreement.setOnClickListener {
+        mine_edit_iv_agreement.setOnSingleClickListener {
             showAgree()
         }
     }
 
     private fun refreshUserInfo() {
         loadAvatar(userService.getAvatarImgUrl(), mine_edit_et_avatar)
+
+        /*
+        * 如果返回的数据为空格，则表示数据为空，昵称除外
+        * */
         mine_et_nickname.setText(userService.getNickname())
-        mine_et_introduce.setText(userService.getIntroduction())
-        mine_et_qq.setText(userService.getQQ())
-        mine_et_phone.setText(userService.getPhone())
+        mine_et_introduce.setText(if (userService.getIntroduction().isBlank()) "" else userService.getIntroduction())
+        mine_et_qq.setText(if (userService.getQQ().isBlank()) "" else userService.getQQ())
+        mine_et_phone.setText(if (userService.getPhone().isBlank()) "" else userService.getPhone())
         mine_tv_college_concrete.text = userService.getCollege()
     }
 
@@ -184,6 +193,7 @@ class EditInfoActivity
             if (it) {
                 toast("更改资料成功")
                 checkColorAndText()
+                ServiceManager.getService(IAccountService::class.java).getUserService().refreshInfo()
             } else {
                 toast("上传资料失败")
             }
@@ -200,20 +210,25 @@ class EditInfoActivity
     }
 
     private fun saveInfo() {
-        val nickname = mine_et_nickname.text.toString() ?: ""
-        val introduction = mine_et_introduce.text.toString() ?: ""
-        val qq = mine_et_qq.text.toString() ?: ""
-        val phone = mine_et_phone.text.toString() ?: ""
+        /*
+        * 为什么这里会有一个空格,原因就在于后端不能保存长度为零的字符串，但是我们又想清空数据，所以就用空格来代替
+        * 注意请求数据时，如果数据为空格，即为空
+        * */
+        val nickname = mine_et_nickname.text.toString()
+        val introduction = if (mine_et_introduce.text.toString().isNotBlank()) mine_et_introduce.text.toString() else " "
+        val qq = if (mine_et_qq.text.toString().isNotBlank()) mine_et_qq.text.toString() else " "
+        val phone = if (mine_et_phone.text.toString().isNotBlank()) mine_et_phone.text.toString() else " "
 
         //数据没有改变，不进行网络请求
         if (!checkIfInfoChange()) {
             return
         }
 
-        if (nickname.isEmpty() || introduction.isEmpty() || qq.isEmpty() || phone.isEmpty()) {
-            toast("信息不能为空")
+        if(nickname.isBlank()){
+            toast(R.string.mine_nickname_null)
             return
         }
+
         viewModel.updateUserInfo(nickname, introduction, qq, phone)
     }
 

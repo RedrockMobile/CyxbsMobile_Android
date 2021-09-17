@@ -26,16 +26,12 @@ const val DISCOVER_VOLUNTEER_RECORD = "/volunteer/discover/record"
 const val DISCOVER_SCHOOL_CAR = "/school_car/discover/entry"
 const val DISCOVER_NEWS = "/news/discover/entry"
 const val DISCOVER_MORE_FUNCTION = "/more_function/discover/entry"
-const val DISCOVER_TODO_MAIN = "/todo/discover/entry"
 
 //志愿服务在发现页的展示信息
 const val DISCOVER_VOLUNTEER_FEED = "/volunteer/discover/feed"
 
 //查电费在发现页面的展示信息
 const val DISCOVER_ELECTRICITY_FEED = "/electricity/discover/feed"
-
-//todo在发现页面展示信息
-const val DISCOVER_TODO_FEED = "/todo/discover/feed"
 
 //教务新闻子项入口
 const val DISCOVER_NEWS_ITEM = "/news/discover/item"
@@ -46,6 +42,8 @@ const val MINE_CHECK_IN = "/check_in/mine/entry"
 const val MINE_FORGET_PASSWORD = "/forget_password/mine/entry"
 // 个人界面的绑定邮箱模块
 const val MINE_BIND_EMAIL = "/bind_email/mine/entry"
+// 个人界面的编辑个人信息界面
+const val MINE_EDIT_INFO = "/edit_info/mine/entry"
 
 // NoCourseInviteActivity
 const val COURSE_NO_COURSE_INVITE = "/course/no_course_invite_activity"
@@ -71,10 +69,6 @@ const val QA_MY_COMMENT = "/my_comment/qa/entry"
 const val QA_MY_IGNORE = "/my_ignore/qa/entry"
 const val QA_MY_PRAISE = "/my_praise/qa/entry"
 
-//todo模块
-//小组件用，增加todo
-const val TODO_ADD_TODO_BY_WIDGET = "/widget/todo/entry"
-
 // 迎新专题
 const val FRESHMAN_ENTRY = "/freshman/entry"
 
@@ -93,5 +87,5 @@ const val ELECTRICITY_SERVICE = "/electricity/service"
 //电费模块服务
 const val VOLUNTEER_SERVICE = "/volunteer/service"
 
-//todo模块服务
-const val TODO_SERVICE = "/todo/service"
+// module_store 邮票中心页
+const val STORE_ENTRY="/store/entry"

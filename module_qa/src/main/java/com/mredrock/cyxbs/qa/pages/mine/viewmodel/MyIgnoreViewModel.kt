@@ -1,9 +1,7 @@
 package com.mredrock.cyxbs.qa.pages.mine.viewmodel
 
 import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.Transformations
-import androidx.lifecycle.ViewModel
 import androidx.paging.LivePagedListBuilder
 import androidx.paging.PagedList
 import com.mredrock.cyxbs.common.BaseApp
@@ -21,7 +19,7 @@ import com.mredrock.cyxbs.qa.pages.mine.model.MyIgnoreDataSource
  * @date 2021-03-05
  * @author Sca RayleighZ
  */
-class MyIgnoreViewModel : BaseViewModel(){
+class MyIgnoreViewModel : BaseViewModel() {
     private val factory: MyIgnoreDataSource.Factory
     val ignoreList: LiveData<PagedList<Ignore>>
     val networkState: LiveData<Int>
@@ -29,15 +27,16 @@ class MyIgnoreViewModel : BaseViewModel(){
 
     init {
         val config = PagedList.Config.Builder()
-                .setEnablePlaceholders(false)
-                .setPrefetchDistance(3)
-                .setPageSize(6)
-                .setInitialLoadSizeHint(6)
-                .build()
+            .setEnablePlaceholders(false)
+            .setPrefetchDistance(3)
+            .setPageSize(6)
+            .setInitialLoadSizeHint(6)
+            .build()
         factory = MyIgnoreDataSource.Factory()
         ignoreList = LivePagedListBuilder<Int, Ignore>(factory, config).build()
 
-        networkState = Transformations.switchMap(factory.ignoreDataSourceLiveData) { it.networkState }
+        networkState =
+            Transformations.switchMap(factory.ignoreDataSourceLiveData) { it.networkState }
         initialLoad = Transformations.switchMap(factory.ignoreDataSourceLiveData) { it.initialLoad }
     }
 
@@ -45,18 +44,18 @@ class MyIgnoreViewModel : BaseViewModel(){
 
     fun retry() = factory.ignoreDataSourceLiveData.value?.retry()
 
-    fun antiIgnore(uid: String, onSuccess: ()->Unit){
+    fun antiIgnore(uid: String, onSuccess: () -> Unit) {
         ApiGenerator.getApiService(ApiServiceNew::class.java)
-                .cancelIgnoreUid(uid)
-                .doOnErrorWithDefaultErrorHandler { true }
-                .setSchedulers()
-                .safeSubscribeBy(
-                        onNext = {
-                            onSuccess()
-                        },
-                        onError = {
-                            BaseApp.context.toast(it.toString())
-                        }
-                )
+            .cancelIgnoreUid(uid)
+            .doOnErrorWithDefaultErrorHandler { true }
+            .setSchedulers()
+            .safeSubscribeBy(
+                onNext = {
+                    onSuccess()
+                },
+                onError = {
+                    BaseApp.context.toast(it.toString())
+                }
+            )
     }
 }

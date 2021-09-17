@@ -14,10 +14,14 @@ import kotlinx.android.synthetic.main.mine_list_item_feature_intro.view.*
  * copy from UserAgreementAdapter
  */
 
-class DynamicRVAdapter(private val list: List<DownMessageText>) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
+class DynamicRVAdapter(private val list: List<DownMessageText>) :
+    RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
-        return object : RecyclerView.ViewHolder(LayoutInflater.from(parent.context).inflate(R.layout.mine_list_item_feature_intro, parent, false)) {}
+        return object : RecyclerView.ViewHolder(
+            LayoutInflater.from(parent.context)
+                .inflate(R.layout.mine_list_item_feature_intro, parent, false)
+        ) {}
     }
 
     override fun getItemCount() = list.size
@@ -42,6 +46,11 @@ class DynamicRVAdapter(private val list: List<DownMessageText>) : RecyclerView.A
                     //ß这个字符是我在下发文档里面嵌入的标识符，表示需要加上双tab
                     mine_about_rv_title.text = list[position].title.replace("ß", "      ")
                     mine_about_rv_content.text = list[position].content.replace("ß", "      ")
+                    //后端返回数据出现问题，3.我的 这个DownMessageText item没有ß标识符，手动加上双tab
+                    if (list[position].title == "3.我的") {
+                        mine_about_rv_content.text =
+                            list[position].content.replace("优化了", "        优化了")
+                    }
                 }
             }
         }

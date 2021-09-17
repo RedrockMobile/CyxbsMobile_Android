@@ -5,10 +5,8 @@ import android.content.Context
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
-import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.recyclerview.widget.DiffUtil
 import com.mredrock.cyxbs.common.component.CyxbsToast
-import com.mredrock.cyxbs.common.utils.LogUtils
 import com.mredrock.cyxbs.common.utils.extensions.setAvatarImageFromUrl
 import com.mredrock.cyxbs.common.utils.extensions.setOnSingleClickListener
 import com.mredrock.cyxbs.qa.R
@@ -29,7 +27,6 @@ import com.mredrock.cyxbs.qa.ui.widget.NineGridView
 import com.mredrock.cyxbs.qa.ui.widget.OptionalPopWindow
 import com.mredrock.cyxbs.qa.ui.widget.ShareDialog
 import com.mredrock.cyxbs.qa.utils.dynamicTimeDescription
-import kotlinx.android.synthetic.main.qa_recycler_item_dynamic_header.*
 import kotlinx.android.synthetic.main.qa_recycler_item_dynamic_header.view.*
 
 /**
@@ -38,11 +35,13 @@ import kotlinx.android.synthetic.main.qa_recycler_item_dynamic_header.view.*
  * @Description:
  * @Date: 2020/11/17 20:11
  */
-class DynamicAdapter(val context: Context, private val onItemClickEvent: (Dynamic, View) -> Unit) : BaseEndlessRvAdapter<Dynamic>(DIFF_CALLBACK as DiffUtil.ItemCallback<Dynamic>) {
+class DynamicAdapter(val context: Context, private val onItemClickEvent: (Dynamic, View) -> Unit) :
+    BaseEndlessRvAdapter<Dynamic>(DIFF_CALLBACK) {
     companion object {
         @JvmStatic
         val DIFF_CALLBACK = object : DiffUtil.ItemCallback<Dynamic>() {
-            override fun areItemsTheSame(oldItem: Dynamic, newItem: Dynamic) = oldItem.postId == newItem.postId
+            override fun areItemsTheSame(oldItem: Dynamic, newItem: Dynamic) =
+                oldItem.postId == newItem.postId
 
             override fun areContentsTheSame(oldItem: Dynamic, newItem: Dynamic) = oldItem == newItem
         }
@@ -54,6 +53,7 @@ class DynamicAdapter(val context: Context, private val onItemClickEvent: (Dynami
 
     var curSharedItem: View? = null
     var curSharedDynamic: Dynamic? = null
+    var curSharedItemPosition: Int = 0
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int) = DynamicViewHolder(parent)
 
     override fun onBindViewHolder(holder: BaseViewHolder<Dynamic>, position: Int) {
@@ -63,16 +63,34 @@ class DynamicAdapter(val context: Context, private val onItemClickEvent: (Dynami
                 ShareDialog(context).apply {
                     initView(onCancelListener = View.OnClickListener {
                         dismiss()
-                    }, qqshare = View.OnClickListener {
-                        getItem(position)?.let { it1 -> onShareClickListener?.invoke(it1, QQ_FRIEND) }
+                    }, qqShare = View.OnClickListener {
+                        getItem(position)?.let { it1 ->
+                            onShareClickListener?.invoke(
+                                it1,
+                                QQ_FRIEND
+                            )
+                        }
                     }, qqZoneShare = View.OnClickListener {
                         getItem(position)?.let { it1 -> onShareClickListener?.invoke(it1, QQ_ZONE) }
                     }, weChatShare = View.OnClickListener {
-                        CyxbsToast.makeText(context, R.string.qa_share_wechat_text, Toast.LENGTH_SHORT).show()
+                        CyxbsToast.makeText(
+                            context,
+                            R.string.qa_share_wechat_text,
+                            Toast.LENGTH_SHORT
+                        ).show()
                     }, friendShipCircle = View.OnClickListener {
-                        CyxbsToast.makeText(context, R.string.qa_share_wechat_text, Toast.LENGTH_SHORT).show()
-                    }, copylink = View.OnClickListener {
-                        getItem(position)?.let { it1 -> onShareClickListener?.invoke(it1, COPY_LINK) }
+                        CyxbsToast.makeText(
+                            context,
+                            R.string.qa_share_wechat_text,
+                            Toast.LENGTH_SHORT
+                        ).show()
+                    }, copyLink = View.OnClickListener {
+                        getItem(position)?.let { it1 ->
+                            onShareClickListener?.invoke(
+                                it1,
+                                COPY_LINK
+                            )
+                        }
                     })
                 }.show()
             }
@@ -84,47 +102,58 @@ class DynamicAdapter(val context: Context, private val onItemClickEvent: (Dynami
                     if (dynamic.isSelf == 0) {
                         if (dynamic.isFollowTopic == 0) {
                             OptionalPopWindow.Builder().with(context)
-                                    .addOptionAndCallback(IGNORE) {
-                                        onPopWindowClickListener?.invoke(position, IGNORE, dynamic)
-                                    }.addOptionAndCallback(REPORT) {
-                                        onPopWindowClickListener?.invoke(position, REPORT, dynamic)
-                                    }.addOptionAndCallback(FOLLOW) {
-                                        onPopWindowClickListener?.invoke(position, FOLLOW, dynamic)
-                                    }.show(view, OptionalPopWindow.AlignMode.RIGHT, 0)
+                                .addOptionAndCallback(IGNORE) {
+                                    onPopWindowClickListener?.invoke(position, IGNORE, dynamic)
+                                }.addOptionAndCallback(REPORT) {
+                                    onPopWindowClickListener?.invoke(position, REPORT, dynamic)
+                                }.addOptionAndCallback(FOLLOW) {
+                                    onPopWindowClickListener?.invoke(position, FOLLOW, dynamic)
+                                }.show(view, OptionalPopWindow.AlignMode.RIGHT, 0)
                         } else {
                             OptionalPopWindow.Builder().with(context)
-                                    .addOptionAndCallback(IGNORE) {
-                                        onPopWindowClickListener?.invoke(position, IGNORE, dynamic)
-                                    }.addOptionAndCallback(REPORT) {
-                                        onPopWindowClickListener?.invoke(position, REPORT, dynamic)
-                                    }.addOptionAndCallback(UN_FOLLOW) {
-                                        onPopWindowClickListener?.invoke(position, UN_FOLLOW, dynamic)
-                                    }.show(view, OptionalPopWindow.AlignMode.RIGHT, 0)
+                                .addOptionAndCallback(IGNORE) {
+                                    onPopWindowClickListener?.invoke(position, IGNORE, dynamic)
+                                }.addOptionAndCallback(REPORT) {
+                                    onPopWindowClickListener?.invoke(position, REPORT, dynamic)
+                                }.addOptionAndCallback(UN_FOLLOW) {
+                                    onPopWindowClickListener?.invoke(position, UN_FOLLOW, dynamic)
+                                }.show(view, OptionalPopWindow.AlignMode.RIGHT, 0)
                         }
                     } else {
                         OptionalPopWindow.Builder().with(context)
-                                .addOptionAndCallback(DELETE) {
-                                    onPopWindowClickListener?.invoke(position, DELETE, dynamic)
-                                }.show(view, OptionalPopWindow.AlignMode.RIGHT, 0)
+                            .addOptionAndCallback(DELETE) {
+                                onPopWindowClickListener?.invoke(position, DELETE, dynamic)
+                            }.show(view, OptionalPopWindow.AlignMode.RIGHT, 0)
                     }
                 }
             }
         }
     }
 
-    override fun onItemClickListener(holder: BaseViewHolder<Dynamic>, position: Int, data: Dynamic) {
+    override fun onItemClickListener(
+        holder: BaseViewHolder<Dynamic>,
+        position: Int,
+        data: Dynamic
+    ) {
         super.onItemClickListener(holder, position, data)
         if (holder !is DynamicViewHolder) return
         curSharedDynamic = data
         curSharedItem = holder.itemView
-        onItemClickEvent.invoke(data, holder.itemView.findViewById<ConstraintLayout>(R.id.qa_ctl_dynamic))
+        curSharedItemPosition = position
+        onItemClickEvent.invoke(data, holder.itemView)
     }
 
-    class DynamicViewHolder(parent: ViewGroup) : BaseViewHolder<Dynamic>(parent, R.layout.qa_recycler_item_dynamic_header) {
+    class DynamicViewHolder(parent: ViewGroup) :
+        BaseViewHolder<Dynamic>(parent, R.layout.qa_recycler_item_dynamic_header) {
         override fun refresh(data: Dynamic?) {
             data ?: return
             itemView.apply {
-                qa_iv_dynamic_praise_count_image.registerLikeView(data.postId, CommentConfig.PRAISE_MODEL_DYNAMIC, data.isPraised, data.praiseCount)
+                qa_iv_dynamic_praise_count_image.registerLikeView(
+                    data.postId,
+                    CommentConfig.PRAISE_MODEL_DYNAMIC,
+                    data.isPraised,
+                    data.praiseCount
+                )
                 qa_iv_dynamic_praise_count_image.setOnSingleClickListener {
                     qa_iv_dynamic_praise_count_image.click()
                 }
@@ -133,28 +162,47 @@ class DynamicAdapter(val context: Context, private val onItemClickEvent: (Dynami
                 qa_tv_dynamic_nickname.text = data.nickName
                 qa_tv_dynamic_content.setContent(data.content)
                 qa_tv_dynamic_comment_count.text = data.commentCount.toString()
-                qa_tv_dynamic_publish_at.text = dynamicTimeDescription(System.currentTimeMillis(), data.publishTime * 1000)
+                qa_tv_dynamic_publish_at.text =
+                    dynamicTimeDescription(System.currentTimeMillis(), data.publishTime * 1000)
                 //解决图片错乱的问题
                 if (data.pics.isNullOrEmpty())
-                    qa_dynamic_nine_grid_view.setRectangleImages(emptyList(), NineGridView.MODE_IMAGE_THREE_SIZE)
+                    qa_dynamic_nine_grid_view.setRectangleImages(
+                        emptyList(),
+                        NineGridView.MODE_IMAGE_THREE_SIZE
+                    )
                 else {
                     data.pics.apply {
                         val tag = qa_dynamic_nine_grid_view.tag
                         if (null == tag || tag == this) {
                             val tagStore = qa_dynamic_nine_grid_view.tag
-                            qa_dynamic_nine_grid_view.setImages(this, NineGridView.MODE_IMAGE_THREE_SIZE, NineGridView.ImageMode.MODE_IMAGE_RECTANGLE)
+                            qa_dynamic_nine_grid_view.setImages(
+                                this,
+                                NineGridView.MODE_IMAGE_THREE_SIZE,
+                                NineGridView.ImageMode.MODE_IMAGE_RECTANGLE
+                            )
                             qa_dynamic_nine_grid_view.tag = tagStore
                         } else {
                             val tagStore = this
                             qa_dynamic_nine_grid_view.tag = null
-                            qa_dynamic_nine_grid_view.setRectangleImages(emptyList(), NineGridView.MODE_IMAGE_THREE_SIZE)
-                            qa_dynamic_nine_grid_view.setImages(this, NineGridView.MODE_IMAGE_THREE_SIZE, NineGridView.ImageMode.MODE_IMAGE_RECTANGLE)
+                            qa_dynamic_nine_grid_view.setRectangleImages(
+                                emptyList(),
+                                NineGridView.MODE_IMAGE_THREE_SIZE
+                            )
+                            qa_dynamic_nine_grid_view.setImages(
+                                this,
+                                NineGridView.MODE_IMAGE_THREE_SIZE,
+                                NineGridView.ImageMode.MODE_IMAGE_RECTANGLE
+                            )
                             qa_dynamic_nine_grid_view.tag = tagStore
                         }
                     }
                 }
                 qa_dynamic_nine_grid_view.setOnItemClickListener { _, index ->
-                    ViewImageActivity.activityStart(context, data.pics.map { it }.toTypedArray(), index)
+                    ViewImageActivity.activityStart(
+                        context,
+                        data.pics.map { it }.toTypedArray(),
+                        index
+                    )
                 }
             }
         }
