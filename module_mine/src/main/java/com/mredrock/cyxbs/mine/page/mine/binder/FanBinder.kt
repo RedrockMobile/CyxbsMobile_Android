@@ -9,7 +9,7 @@ import com.mredrock.cyxbs.mine.databinding.MineRecycleItemFanBinding
  * @data 2021/9/16
  * @description
  **/
-class FunBinder() : BaseDataBinder<MineRecycleItemFanBinding>() {
+class FanBinder() : BaseDataBinder<MineRecycleItemFanBinding>() {
     override fun layoutId(): Int {
         return R.layout.mine_recycle_item_fan
     }
