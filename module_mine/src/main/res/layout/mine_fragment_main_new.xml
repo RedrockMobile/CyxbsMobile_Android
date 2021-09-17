@@ -10,7 +10,6 @@
         android:id="@+id/mine_user_ll"
         android:layout_width="match_parent"
         android:layout_height="263dp"
-        android:background="@drawable/mine_bg_user_header"
         android:orientation="vertical"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -23,7 +22,7 @@
             android:layout_marginStart="17dp"
             android:layout_marginTop="61dp"
             android:layout_marginEnd="18dp"
-            android:background="@drawable/mine_bg_user_cl">
+            >
 
             <de.hdodenhof.circleimageview.CircleImageView
                 android:id="@+id/mine_user_avatar"

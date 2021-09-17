@@ -47,13 +47,13 @@
             android:layout_height="16dp"
             android:layout_marginStart="16dp"
             android:layout_marginTop="60dp"
-            android:src="@drawable/mine_ic_iv_back_black_arrow"
+            android:src="@drawable/mine_ic_bt_back_arrow"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
         <TextView
             android:id="@+id/tv_mine"
-            android:textColor="@color/common_grades_fragment_text_color_black2"
+            android:textColor="@color/mine_white"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="13dp"

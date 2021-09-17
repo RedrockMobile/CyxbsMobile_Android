@@ -82,11 +82,13 @@ class HomepageActivity : BaseViewModelActivity<MineViewModel>() {
             dataBinding.clPersonalInformation.alpha = (1-it)*alphaMineView
             dataBinding.clPersonalInformation.scaleX = (1-it)
             dataBinding.clPersonalInformation.scaleY=(1-it)
-            var alpha = (1-it*2)
-            if (alpha>0){
-                dataBinding.ivMineBackgroundNormal.alpha = (1-it)
-            }else{
+
+            var alpha = (1f-it*2)   //因为滑动过程中涉及到两种动画效果的变化  所以我就产生一个-1和+1 来完成两种动画
+            if (alpha<=0){
                 dataBinding.flBackground.alpha = -alpha
+            }else{
+                dataBinding.flBackground.alpha=0f
+                dataBinding.ivMineBackgroundNormal.alpha =alpha
             }
 
 
