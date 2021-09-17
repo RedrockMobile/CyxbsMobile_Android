@@ -29,6 +29,10 @@
     <string name="mine_nickname_default">输入您的昵称</string>
     <string name="mine_nickname_null">昵称不可为空哦</string>
     <string name="mine_introduce">个性签名</string>
+    <string name="mine_gender">性别</string>
+    <string name="mine_gender_default">请选择性别</string>
+    <string name="mine_birth">生日</string>
+    <string name="mine_birth_default">填写生日后会匹配出对应星座哦</string>
     <string name="mine_introduce_default">输入个性签名</string>
     <string name="mine_qq">QQ</string>
     <string name="mine_phone">电话</string>
@@ -38,6 +42,7 @@
     <string name="mine_info_contact">写下您的联系方式，便于我们与您联系</string>
     <string name="mine_exit_edit">退出编辑</string>
     <string name="mine_exit_edit_quest">你的资料还未保存，是否退出？</string>
+    <string name="mine_dialog_edit_ensure">确定</string>
     <!--    签到-->
     <string name="mine_sign_to_sign">签到</string>
     <string name="mine_sign_mon">周一</string>

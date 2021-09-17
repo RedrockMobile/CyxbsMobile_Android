@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="53dp"
+        android:orientation="horizontal">
+        <ImageButton
+            android:id="@+id/mine_fan_ib_back"
+            android:layout_width="7dp"
+            android:layout_height="16dp"
+            android:background="@drawable/mine_ic_arrow_fun"
+            android:layout_gravity="center_vertical"
+            android:layout_marginStart="17dp"/>
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="31dp"
+            android:text="详情"
+            android:textColor="#15315B"
+            android:textSize="22sp"
+            android:layout_marginStart="13dp"/>
+    </LinearLayout>
+
+    <com.google.android.material.tabs.TabLayout
+        android:id="@+id/mine_fan_tl"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:layout_marginTop="18dp"
+        android:backgroundTint="@android:color/transparent"
+        android:theme="@style/Theme.MaterialComponents"
+        app:tabGravity="fill"
+        app:tabIndicator="@drawable/mine_ic_tab_indicator"
+        app:tabIndicatorColor="@android:color/transparent"
+        app:tabIndicatorFullWidth="false"
+        app:tabIndicatorHeight="3dp"
+        app:tabMaxWidth="180dp"
+        app:tabMinWidth="160dp"
+        app:tabMode="fixed"
+        app:tabPaddingEnd="40dp"
+        app:tabPaddingStart="40dp"
+        app:tabRippleColor="@android:color/transparent"
+        app:tabTextAppearance="@style/tab_style"
+        app:tabTextColor="#15315B" />
+    <androidx.viewpager2.widget.ViewPager2
+        android:id="@+id/mine_fan_vp2"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@drawable/mine_shape_bg_user_fun_vp"/>
+
+</LinearLayout>

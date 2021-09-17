@@ -23,7 +23,7 @@
 
             <androidx.constraintlayout.widget.ConstraintLayout
                 android:layout_width="match_parent"
-                android:layout_height="600dp"
+                android:layout_height="747dp"
                 android:layout_marginStart="20dp"
                 android:layout_marginTop="20dp"
                 android:layout_marginEnd="20dp"
@@ -33,9 +33,10 @@
                 android:focusableInTouchMode="true">
 
                 <View
+                    android:id="@+id/mine_view2"
                     android:layout_width="0dp"
                     android:layout_height="1dp"
-                    android:layout_marginTop="12dp"
+                    android:layout_marginTop="8dp"
                     android:alpha="0.19"
                     android:background="@color/common_sever_view_color"
                     app:layout_constraintEnd_toStartOf="@+id/mine_guideline_left"
@@ -43,9 +44,10 @@
                     app:layout_constraintTop_toBottomOf="@+id/mine_et_introduce" />
 
                 <View
+                    android:id="@+id/mine_view6"
                     android:layout_width="0dp"
                     android:layout_height="1dp"
-                    android:layout_marginTop="11dp"
+                    android:layout_marginTop="8dp"
                     android:alpha="0.19"
                     android:background="@color/common_sever_view_color"
                     app:layout_constraintEnd_toStartOf="@+id/mine_guideline_left"
@@ -53,9 +55,10 @@
                     app:layout_constraintTop_toBottomOf="@+id/mine_et_phone" />
 
                 <View
+                    android:id="@+id/mine_view5"
                     android:layout_width="0dp"
                     android:layout_height="1dp"
-                    android:layout_marginTop="11dp"
+                    android:layout_marginTop="8dp"
                     android:alpha="0.19"
                     android:background="@color/common_sever_view_color"
                     app:layout_constraintEnd_toStartOf="@+id/mine_guideline_left"
@@ -63,9 +66,10 @@
                     app:layout_constraintTop_toBottomOf="@+id/mine_et_qq" />
 
                 <View
+                    android:id="@+id/mine_view"
                     android:layout_width="0dp"
                     android:layout_height="1dp"
-                    android:layout_marginTop="12dp"
+                    android:layout_marginTop="8dp"
                     android:alpha="0.19"
                     android:background="@color/common_sever_view_color"
                     app:layout_constraintEnd_toStartOf="@+id/mine_guideline_left"
@@ -95,29 +99,29 @@
                     android:id="@+id/mine_tv_nickname"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="20dp"
+                    android:layout_marginTop="34dp"
                     android:text="@string/mine_nickname"
                     android:textColor="@color/common_level_two_font_color"
                     android:textSize="15sp"
                     android:textStyle="bold"
-                    app:layout_constraintBottom_toTopOf="@+id/mine_tv_sign"
-                    app:layout_constraintStart_toStartOf="@+id/mine_tv_sign"
-                    app:layout_constraintTop_toTopOf="@+id/mine_edit_et_avatar" />
+                    app:layout_constraintStart_toStartOf="@+id/mine_guideline_right"
+                    app:layout_constraintTop_toBottomOf="@+id/mine_edit_et_avatar" />
 
                 <EditText
                     android:id="@+id/mine_et_nickname"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="15dp"
+                    android:layout_marginTop="13dp"
                     android:background="@null"
                     android:ellipsize="end"
                     android:hint="@string/mine_nickname_default"
                     android:inputType="text"
-                    android:maxLength="8"
+                    android:maxLength="10"
                     android:maxLines="1"
                     android:textColorHint="@color/common_alpha_forty_level_two_font_color"
                     android:textSize="15sp"
                     app:layout_constraintEnd_toStartOf="@+id/mine_guideline_left"
+                    app:layout_constraintHorizontal_bias="1.0"
                     app:layout_constraintStart_toStartOf="@+id/mine_tv_nickname"
                     app:layout_constraintTop_toBottomOf="@+id/mine_tv_nickname" />
 
@@ -125,19 +129,19 @@
                     android:id="@+id/mine_tv_sign"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
+                    android:layout_marginTop="17dp"
                     android:text="@string/mine_introduce"
                     android:textColor="@color/common_level_two_font_color"
                     android:textSize="15sp"
                     android:textStyle="bold"
-                    app:layout_constraintBottom_toTopOf="@+id/mine_tv_qq"
-                    app:layout_constraintStart_toStartOf="@+id/mine_tv_qq"
-                    app:layout_constraintTop_toBottomOf="@+id/mine_tv_nickname" />
+                    app:layout_constraintStart_toStartOf="@+id/mine_guideline_right"
+                    app:layout_constraintTop_toBottomOf="@+id/mine_view" />
 
                 <EditText
                     android:id="@+id/mine_et_introduce"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="15dp"
+                    android:layout_marginTop="13dp"
                     android:background="@null"
                     android:ellipsize="end"
                     android:hint="@string/mine_introduce_default"
@@ -152,21 +156,21 @@
 
                 <TextView
                     android:id="@+id/mine_tv_qq"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
+                    android:layout_width="25dp"
+                    android:layout_height="19dp"
+                    android:layout_marginTop="17dp"
                     android:text="@string/mine_qq"
                     android:textColor="@color/common_level_two_font_color"
                     android:textSize="15sp"
                     android:textStyle="bold"
-                    app:layout_constraintBottom_toTopOf="@+id/mine_tv_phone"
-                    app:layout_constraintStart_toStartOf="@+id/mine_tv_phone"
-                    app:layout_constraintTop_toBottomOf="@+id/mine_tv_sign" />
+                    app:layout_constraintStart_toStartOf="@+id/mine_guideline_right"
+                    app:layout_constraintTop_toBottomOf="@+id/mine_view4" />
 
                 <EditText
                     android:id="@+id/mine_et_qq"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="15dp"
+                    android:layout_marginTop="13dp"
                     android:background="@null"
                     android:ellipsize="end"
                     android:hint="@string/mine_info_default"
@@ -184,19 +188,19 @@
                     android:id="@+id/mine_tv_phone"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:layout_marginTop="17dp"
                     android:text="@string/mine_phone"
                     android:textColor="@color/common_level_two_font_color"
                     android:textSize="15sp"
                     android:textStyle="bold"
-                    app:layout_constraintBottom_toTopOf="@+id/mine_tv_college"
-                    app:layout_constraintStart_toStartOf="@+id/mine_tv_college"
-                    app:layout_constraintTop_toBottomOf="@+id/mine_tv_qq" />
+                    app:layout_constraintStart_toStartOf="@+id/mine_guideline_right"
+                    app:layout_constraintTop_toBottomOf="@+id/mine_view5" />
 
                 <EditText
                     android:id="@+id/mine_et_phone"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="15dp"
+                    android:layout_marginTop="13dp"
                     android:background="@null"
                     android:ellipsize="end"
                     android:hint="@string/mine_info_default"
@@ -212,40 +216,18 @@
                     app:layout_constraintTop_toBottomOf="@+id/mine_tv_phone" />
 
                 <TextView
-                    android:id="@+id/mine_tv_college"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="@string/mine_college"
-                    android:textColor="@color/common_level_two_font_color"
-                    android:textSize="15sp"
-                    android:textStyle="bold"
-                    app:layout_constraintBottom_toTopOf="@id/mine_btn_info_save"
-                    app:layout_constraintStart_toStartOf="@+id/mine_guideline_right"
-                    app:layout_constraintTop_toBottomOf="@+id/mine_tv_phone" />
-
-                <TextView
                     android:id="@+id/mine_tv_college_concrete"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
+                    android:layout_marginStart="16dp"
+                    android:layout_marginTop="20dp"
+                    android:gravity="start"
                     android:textColor="@color/common_level_two_font_color"
                     android:textSize="13sp"
-                    android:gravity="end"
-                    app:layout_constraintBottom_toBottomOf="@+id/mine_tv_college"
                     app:layout_constraintEnd_toStartOf="@+id/mine_guideline_left"
-                    app:layout_constraintStart_toEndOf="@+id/mine_tv_college"
-                    app:layout_constraintTop_toTopOf="@+id/mine_tv_college"
-                    tools:text="计算机科学与技术" />
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:alpha="0.29"
-                    android:text="@string/mine_info_contact"
-                    android:textColor="@color/common_level_two_font_color"
-                    android:textSize="11sp"
-                    app:layout_constraintBottom_toTopOf="@+id/mine_btn_info_save"
-                    app:layout_constraintEnd_toStartOf="@+id/mine_guideline_left"
-                    app:layout_constraintTop_toBottomOf="@+id/mine_tv_college_concrete" />
+                    app:layout_constraintStart_toStartOf="@+id/mine_guideline_right"
+                    app:layout_constraintTop_toBottomOf="@+id/mine_et_phone"
+                    tools:text="计算机科学与技术学院 / 人工智能学院" />
 
 
                 <androidx.constraintlayout.widget.Guideline
@@ -262,6 +244,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="end"
+                    android:layout_marginTop="58dp"
                     android:background="@drawable/mine_bg_round_corner_grey"
                     android:clickable="false"
                     android:minWidth="120dp"
@@ -269,7 +252,6 @@
                     android:text="@string/mine_info_save"
                     android:textColor="@color/common_grey_button_text"
                     android:textSize="@dimen/mine_main_medium"
-                    app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@+id/mine_tv_college_concrete" />
@@ -280,6 +262,85 @@
                     android:layout_height="wrap_content"
                     android:orientation="vertical"
                     app:layout_constraintGuide_begin="19dp" />
+
+                <TextView
+                    android:id="@+id/mine_tv_gender"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="17dp"
+                    android:text="@string/mine_gender"
+                    android:textColor="@color/common_level_two_font_color"
+                    android:textSize="15sp"
+                    android:textStyle="bold"
+                    app:layout_constraintStart_toStartOf="@+id/mine_guideline_right"
+                    app:layout_constraintTop_toBottomOf="@+id/mine_view2" />
+
+                <TextView
+                    android:id="@+id/mine_et_gender"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="13dp"
+                    android:background="@null"
+                    android:hint="@string/mine_gender_default"
+                    android:lines="1"
+                    android:maxLines="1"
+                    android:textColor="@color/common_level_two_font_color"
+                    android:textColorHint="@color/common_alpha_forty_level_two_font_color"
+                    android:textSize="15sp"
+                    app:layout_constraintEnd_toStartOf="@+id/mine_guideline_left"
+                    app:layout_constraintStart_toStartOf="@+id/mine_guideline_right"
+                    app:layout_constraintTop_toBottomOf="@+id/mine_tv_gender" />
+
+                <View
+                    android:id="@+id/mine_view3"
+                    android:layout_width="0dp"
+                    android:layout_height="1dp"
+                    android:layout_marginTop="8dp"
+                    android:alpha="0.19"
+                    android:background="@color/common_sever_view_color"
+                    app:layout_constraintEnd_toStartOf="@+id/mine_guideline_left"
+                    app:layout_constraintStart_toStartOf="@+id/mine_guideline_right"
+                    app:layout_constraintTop_toBottomOf="@+id/mine_et_gender" />
+
+                <TextView
+                    android:id="@+id/mine_tv_birth"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="17dp"
+                    android:text="@string/mine_birth"
+                    android:textColor="@color/common_level_two_font_color"
+                    android:textSize="15sp"
+                    android:textStyle="bold"
+                    app:layout_constraintStart_toStartOf="@+id/mine_guideline_right"
+                    app:layout_constraintTop_toBottomOf="@+id/mine_view3" />
+
+                <TextView
+                    android:id="@+id/mine_et_birth"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="13dp"
+                    android:background="@null"
+                    android:ellipsize="end"
+                    android:hint="@string/mine_birth_default"
+                    android:lines="1"
+                    android:maxLines="1"
+                    android:textColor="@color/common_level_two_font_color"
+                    android:textColorHint="@color/common_alpha_forty_level_two_font_color"
+                    android:textSize="15sp"
+                    app:layout_constraintEnd_toStartOf="@+id/mine_guideline_left"
+                    app:layout_constraintStart_toStartOf="@+id/mine_guideline_right"
+                    app:layout_constraintTop_toBottomOf="@+id/mine_tv_birth" />
+
+                <View
+                    android:id="@+id/mine_view4"
+                    android:layout_width="0dp"
+                    android:layout_height="1dp"
+                    android:layout_marginTop="8dp"
+                    android:alpha="0.19"
+                    android:background="@color/common_sever_view_color"
+                    app:layout_constraintEnd_toStartOf="@+id/mine_guideline_left"
+                    app:layout_constraintStart_toStartOf="@+id/mine_guideline_right"
+                    app:layout_constraintTop_toBottomOf="@+id/mine_et_birth" />
 
 
             </androidx.constraintlayout.widget.ConstraintLayout>
