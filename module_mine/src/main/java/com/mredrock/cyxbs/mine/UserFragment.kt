@@ -24,6 +24,7 @@ import com.mredrock.cyxbs.common.utils.extensions.setOnSingleClickListener
 import com.mredrock.cyxbs.common.utils.extensions.startActivity
 import com.mredrock.cyxbs.mine.page.about.AboutActivity
 import com.mredrock.cyxbs.mine.page.edit.EditInfoActivity
+import com.mredrock.cyxbs.mine.page.mine.ui.activity.HomepageActivity
 import com.mredrock.cyxbs.mine.page.security.util.Jump2QQHelper
 import com.mredrock.cyxbs.mine.page.setting.SettingActivity
 import com.mredrock.cyxbs.mine.page.sign.DailySignActivity
@@ -55,8 +56,6 @@ class UserFragment : BaseViewModelFragment<UserViewModel>() {
             mine_user_tv_comment.setOnSingleClickListener { doIfLogin { jumpAndSaveTime(QA_MY_COMMENT, 1) } }
             mine_user_tv_praise_number.setOnSingleClickListener { doIfLogin { jumpAndSaveTime(QA_MY_PRAISE, 2) } }
             mine_user_tv_praise.setOnSingleClickListener { doIfLogin { jumpAndSaveTime(QA_MY_PRAISE, 2) } }
-
-            mine_user_iv_center_notification
             mine_user_iv_center_stamp.setOnSingleClickListener { doIfLogin { jump(STORE_ENTRY) } }
             mine_user_iv_center_feedback.setOnSingleClickListener { doIfLogin { Jump2QQHelper.onFeedBackClick(this) } }
 
@@ -65,7 +64,7 @@ class UserFragment : BaseViewModelFragment<UserViewModel>() {
 
             mine_user_fm_about_us.setOnSingleClickListener { doIfLogin { startActivity<AboutActivity>() } }
             mine_user_fm_setting.setOnSingleClickListener { doIfLogin { startActivity<SettingActivity>() } }
-
+            mine_user_cl_info.setOnClickListener { doIfLogin { startActivity<HomepageActivity>() } }
             mine_user_avatar.setOnSingleClickListener {
                 doIfLogin {
                     startActivity(
@@ -146,6 +145,8 @@ class UserFragment : BaseViewModelFragment<UserViewModel>() {
                 }
             }
         })
+
+
     }
 
     override fun onResume() {

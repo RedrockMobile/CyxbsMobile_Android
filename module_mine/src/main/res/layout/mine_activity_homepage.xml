@@ -30,6 +30,16 @@
             app:layout_constraintTop_toTopOf="parent"
             app:srcCompat="@drawable/mine_ic_iv_background_test" />
 
+        <FrameLayout
+            android:alpha="0"
+            android:id="@+id/fl_background"
+            android:background="@color/mine_white"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            app:layout_constraintBottom_toTopOf="@+id/cl_personal_information"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="@+id/iv_mine_background_blur" />
 
         <ImageView
             android:id="@+id/bt_mine_back"
@@ -37,12 +47,13 @@
             android:layout_height="16dp"
             android:layout_marginStart="16dp"
             android:layout_marginTop="60dp"
-            android:src="@drawable/mine_ic_bt_back_arrow"
+            android:src="@drawable/mine_ic_iv_back_black_arrow"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
         <TextView
             android:id="@+id/tv_mine"
+            android:textColor="@color/common_grades_fragment_text_color_black2"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="13dp"
@@ -79,14 +90,13 @@
                 android:layout_height="400dp" />
 
 
+            <com.google.android.material.tabs.TabLayout
+                android:id="@+id/mine_tablayout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@drawable/mine_shape_ll_background" />
 
-                <com.google.android.material.tabs.TabLayout
-                    android:id="@+id/mine_tablayout"
-                    android:background="@drawable/mine_shape_ll_background"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content" />
-
-                <androidx.viewpager2.widget.ViewPager2
+            <androidx.viewpager2.widget.ViewPager2
                     android:id="@+id/vp2_mine"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent" />

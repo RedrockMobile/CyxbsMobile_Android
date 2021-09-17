@@ -82,7 +82,13 @@ class HomepageActivity : BaseViewModelActivity<MineViewModel>() {
             dataBinding.clPersonalInformation.alpha = (1-it)*alphaMineView
             dataBinding.clPersonalInformation.scaleX = (1-it)
             dataBinding.clPersonalInformation.scaleY=(1-it)
-            dataBinding.ivMineBackgroundNormal.alpha = (1-it)
+            var alpha = (1-it*2)
+            if (alpha>0){
+                dataBinding.ivMineBackgroundNormal.alpha = (1-it)
+            }else{
+                dataBinding.flBackground.alpha = -alpha
+            }
+
 
         }
     }
