@@ -2,6 +2,7 @@ package com.mredrock.cyxbs.qa.pages.dynamic.ui.adapter
 
 
 import android.content.Context
+import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
@@ -102,28 +103,32 @@ class DynamicAdapter(val context: Context?, private val onItemClickEvent: (Dynam
                     if (dynamic.isSelf == 0) {
                         if (dynamic.isFollowTopic == 0) {
                             OptionalPopWindow.Builder().with(context)
-                                .addOptionAndCallback(IGNORE) {
+                                .addOptionAndCallback(IGNORE,R.layout.qa_popupwindow_option_bottom) {
                                     onPopWindowClickListener?.invoke(position, IGNORE, dynamic)
-                                }.addOptionAndCallback(REPORT) {
+                                }.addOptionAndCallback(REPORT,R.layout.qa_popupwindow_option_bottom) {
                                     onPopWindowClickListener?.invoke(position, REPORT, dynamic)
-                                }.addOptionAndCallback(FOLLOW) {
+                                }.addOptionAndCallback(FOLLOW,R.layout.qa_popupwindow_option_bottom) {
                                     onPopWindowClickListener?.invoke(position, FOLLOW, dynamic)
-                                }.show(view, OptionalPopWindow.AlignMode.RIGHT, 0)
+                                }.showFromBottom(LayoutInflater.from(context).inflate(
+                                    R.layout.qa_fragment_dynamic,null,false))
                         } else {
                             OptionalPopWindow.Builder().with(context)
-                                .addOptionAndCallback(IGNORE) {
+                                .addOptionAndCallback(IGNORE,R.layout.qa_popupwindow_option_bottom) {
                                     onPopWindowClickListener?.invoke(position, IGNORE, dynamic)
-                                }.addOptionAndCallback(REPORT) {
+                                }.addOptionAndCallback(REPORT,R.layout.qa_popupwindow_option_bottom) {
                                     onPopWindowClickListener?.invoke(position, REPORT, dynamic)
-                                }.addOptionAndCallback(UN_FOLLOW) {
+                                }.addOptionAndCallback(UN_FOLLOW,R.layout.qa_popupwindow_option_bottom) {
                                     onPopWindowClickListener?.invoke(position, UN_FOLLOW, dynamic)
-                                }.show(view, OptionalPopWindow.AlignMode.RIGHT, 0)
+                                }.showFromBottom(LayoutInflater.from(context).inflate(
+                                    R.layout.qa_fragment_dynamic,null,false))
                         }
                     } else {
                         OptionalPopWindow.Builder().with(context)
-                            .addOptionAndCallback(DELETE) {
+                            .addOptionAndCallback(DELETE,R.layout.qa_popupwindow_option_bottom) {
                                 onPopWindowClickListener?.invoke(position, DELETE, dynamic)
-                            }.show(view, OptionalPopWindow.AlignMode.RIGHT, 0)
+                            }.showFromBottom(
+                                LayoutInflater.from(context).inflate(
+                                R.layout.qa_fragment_dynamic,null,false))
                     }
                 }
             }

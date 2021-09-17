@@ -1,4 +1,4 @@
-<resources>
+<resources xmlns:tools="http://schemas.android.com/tools">
 
     <!-- Base application theme. -->
 
@@ -14,6 +14,10 @@
     </style>
     <style name="transparent_dialog" parent="Theme.AppCompat.Dialog">
         <item name="android:windowBackground">@null</item>
+    </style>
+
+    <style name="tab_style" tools:ignore="ResourceName">
+        <item name="android:textSize">18sp</item>
     </style>
 
 </resources>

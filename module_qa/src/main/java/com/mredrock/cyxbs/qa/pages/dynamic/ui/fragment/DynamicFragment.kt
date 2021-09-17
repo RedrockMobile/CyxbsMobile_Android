@@ -9,10 +9,7 @@ import android.view.ViewGroup
 import android.os.Handler
 import android.util.Log
 import android.view.*
-import android.widget.RelativeLayout
-import android.widget.TextView
-import android.widget.Toast
-import android.widget.ViewFlipper
+import android.widget.*
 import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -422,7 +419,6 @@ open class DynamicFragment : BaseViewModelFragment<DynamicListViewModel>(), Even
     }
 
 
-
     private fun getTextView(info: String): TextView {
         return TextView(context).apply {
             text = info
@@ -462,7 +458,10 @@ open class DynamicFragment : BaseViewModelFragment<DynamicListViewModel>(), Even
                                     it.commentCount
                                 this.findViewById<TextView>(R.id.qa_tv_dynamic_comment_count).text =
                                     it.commentCount.toString()
-                                dynamicListRvAdapter.notifyItemChanged(dynamicListRvAdapter.curSharedItemPosition, "")
+                                dynamicListRvAdapter.notifyItemChanged(
+                                    dynamicListRvAdapter.curSharedItemPosition,
+                                    ""
+                                )
                             }
                         }
                     }
@@ -490,5 +489,4 @@ open class DynamicFragment : BaseViewModelFragment<DynamicListViewModel>(), Even
         else
             qa_rv_dynamic_List.smoothScrollToPosition(0)
     }
-
 }
