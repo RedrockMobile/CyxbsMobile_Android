@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <data>
+        <variable
+            name="data"
+            type="com.mredrock.cyxbs.mine.page.mine.binder.FunBinder" />
+    </data>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <de.hdodenhof.circleimageview.CircleImageView
+            android:id="@+id/mine_user_item_iv_avatar"
+            android:layout_width="42dp"
+            android:layout_height="42dp"
+            android:layout_marginStart="16dp"
+            android:layout_marginTop="25dp"
+            android:src="#C4C4C4"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <TextView
+            android:id="@+id/mine_textview2"
+            android:layout_width="wrap_content"
+            android:layout_height="22dp"
+            android:layout_marginStart="13dp"
+            android:layout_marginTop="24dp"
+            android:text="鱼鱼鱼鱼鱼鱼鱼鱼鱼鱼"
+            android:textColor="#15315B"
+            android:textSize="16sp"
+            app:layout_constraintStart_toEndOf="@+id/mine_user_item_iv_avatar"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <TextView
+            android:id="@+id/mine_textview3"
+            android:layout_width="wrap_content"
+            android:layout_height="17dp"
+            android:layout_marginStart="13dp"
+            android:layout_marginTop="1dp"
+            android:text="这是一条签名签名去啊就基督教..."
+            android:textSize="12sp"
+            android:textColor="#6615315B"
+            app:layout_constraintStart_toEndOf="@+id/mine_user_item_iv_avatar"
+            app:layout_constraintTop_toBottomOf="@+id/mine_textview2" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</layout>

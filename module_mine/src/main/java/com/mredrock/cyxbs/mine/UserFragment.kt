@@ -102,7 +102,7 @@ class UserFragment : BaseViewModelFragment<UserViewModel>() {
                     text = "签到"
                     background = ResourcesCompat.getDrawable(
                         resources,
-                        R.drawable.mine_bg_user_btn_sign,
+                        R.drawable.mine_shape_bg_user_btn_sign,
                         null
                     )
                     setTextColor(ContextCompat.getColor(context, R.color.common_white_font_color))

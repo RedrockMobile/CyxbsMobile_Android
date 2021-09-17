@@ -12,7 +12,6 @@ import android.widget.PopupWindow
 import android.widget.TextView
 import androidx.core.content.ContextCompat
 import androidx.core.view.children
-import androidx.core.view.marginTop
 import com.mredrock.cyxbs.common.BaseApp
 import com.mredrock.cyxbs.common.utils.extensions.dp2px
 import com.mredrock.cyxbs.qa.R
@@ -148,7 +147,7 @@ class OptionalPopWindow private constructor(val context: Context?) : PopupWindow
             }
 
             context?.let {
-                mainView!!.background = ContextCompat.getDrawable(it,R.drawable.qa_bg_popwindow_bottom)
+                mainView!!.background = ContextCompat.getDrawable(it,R.drawable.qa_shape_bg_popwindow_bottom)
             }
             (mainView!! as LinearLayout).getChildAt(0).apply {
                 setPadding(paddingLeft,paddingTop+context.dp2px(14f),paddingRight,paddingBottom)
