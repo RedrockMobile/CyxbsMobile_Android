@@ -3,16 +3,38 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_marginLeft="16dp"
-    android:layout_marginRight="16dp"
-    android:layout_marginTop="10dp"
+    android:paddingTop="10dp"
     android:layout_height="wrap_content">
+    <RelativeLayout
+        android:paddingTop="15dp"
+        android:id="@+id/rl_menu_view"
+        android:alpha="0"
+        android:background="#474A50"
+        android:gravity="center"
+        android:layout_gravity="center"
+        android:layout_width="192dp"
+        android:layout_height="125dp">
+        <ImageView
+            android:id="@+id/iv_item_setting"
+            android:background="@drawable/mine_ic_item_identity_setting"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"/>
+        <TextView
+            android:layout_marginLeft="10dp"
+            android:layout_marginTop="2dp"
+            android:layout_toRightOf="@id/iv_item_setting"
+            android:text="设置"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"/>
+    </RelativeLayout>
 
     <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/cl_content_view"
         android:layout_width="match_parent"
         android:layout_height="125dp"
+        android:layout_marginLeft="16dp"
+        android:layout_marginRight="16dp"
         android:background="@drawable/mine_ic_item_background">
-
 
         <TextView
             android:id="@+id/tv_item_identity_name"
@@ -44,25 +66,7 @@
             app:layout_constraintTop_toBottomOf="@+id/tv_item_identity" />
     </androidx.constraintlayout.widget.ConstraintLayout>
 
-<RelativeLayout
-    android:background="#474A50"
-    android:gravity="center"
-    android:layout_gravity="center"
-    android:layout_width="192dp"
-    android:layout_height="125dp">
-    <ImageView
-        android:id="@+id/iv_item_setting"
-        android:background="@drawable/mine_ic_item_identity_setting"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"/>
-    <TextView
-        android:layout_marginLeft="10dp"
-        android:layout_marginTop="2dp"
-       android:layout_toRightOf="@id/iv_item_setting"
-        android:text="设置"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"/>
-</RelativeLayout>
+
 
 
 

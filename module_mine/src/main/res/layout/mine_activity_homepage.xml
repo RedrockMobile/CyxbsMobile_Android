@@ -97,6 +97,7 @@
                 android:background="@drawable/mine_shape_ll_background" />
 
             <androidx.viewpager2.widget.ViewPager2
+                    android:background="@color/mine_white"
                     android:id="@+id/vp2_mine"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent" />
