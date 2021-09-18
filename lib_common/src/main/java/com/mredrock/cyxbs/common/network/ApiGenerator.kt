@@ -160,7 +160,7 @@ object ApiGenerator {
                     if (!response.isSuccessful){
                         response.close()
                         Handler(Looper.getMainLooper()).post {
-                            BaseApp.context.toast("${response.code} ${request.url.toString().split("magipoke")[1]} ")
+                            BaseApp.context.toast("${response.code} ${request.url} ")
                         }
                     }
                     response
