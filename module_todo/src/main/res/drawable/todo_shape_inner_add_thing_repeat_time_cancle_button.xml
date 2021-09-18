@@ -3,5 +3,5 @@
     xmlns:tools="http://schemas.android.com/tools"
     tools:ignore="MissingDefaultResource">
     <corners android:radius="20dp" />
-    <solid android:color="@color/todo_inner_add_thing_repeat_time_canlce" />
+    <solid android:color="@color/todo_inner_add_thing_repeat_time_cancel" />
 </shape>

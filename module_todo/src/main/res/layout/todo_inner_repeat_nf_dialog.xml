@@ -87,7 +87,7 @@
             android:background="@drawable/todo_shape_inner_add_thing_repeat_time_cancle_button"
             android:gravity="center"
             android:text="取消"
-            android:textColor="@color/todo_inner_add_thing_repeat_time_canlce_text_color"
+            android:textColor="@color/todo_inner_add_thing_repeat_time_cancel_text_color"
             android:textSize="18sp" />
 
         <androidx.appcompat.widget.AppCompatButton

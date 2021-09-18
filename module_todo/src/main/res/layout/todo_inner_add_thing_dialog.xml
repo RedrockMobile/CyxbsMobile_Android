@@ -114,7 +114,8 @@
             android:id="@+id/todo_inner_add_rv_thing_repeat_list"
             android:layout_width="match_parent"
             android:layout_height="36dp"
-            android:layout_marginStart="18dp"
+            android:layout_marginStart="16dp"
+            android:layout_marginEnd="16dp"
             tools:listitem="@layout/todo_rv_item_repeat_select_auto_warp_item"
             android:layout_marginTop="14dp" />
 
@@ -135,7 +136,7 @@
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
 
-            <com.super_rabbit.wheel_picker.WheelPicker
+            <com.aigestudio.wheelpicker.WheelPicker
                 android:id="@+id/todo_inner_add_thing_first"
                 android:layout_width="wrap_content"
                 android:visibility="gone"
@@ -144,11 +145,13 @@
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintStart_toEndOf="@+id/todo_iv_inner_add_thing_repeat_time_index"
                 app:layout_constraintTop_toTopOf="parent"
-                app:selectedTextColor="@color/todo_check_line_color"
-                app:textSize="16sp"
-                app:wheelItemCount="7" />
+                app:wheel_atmospheric="true"
+                app:wheel_cyclic="true"
+                app:wheel_item_text_color="@color/todo_check_line_color"
+                app:wheel_item_text_size="16sp"
+                app:wheel_visible_item_count="7" />
 
-            <com.super_rabbit.wheel_picker.WheelPicker
+            <com.aigestudio.wheelpicker.WheelPicker
                 android:id="@+id/todo_inner_add_thing_second"
                 android:layout_width="wrap_content"
                 android:layout_height="194dp"
@@ -157,11 +160,13 @@
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintStart_toEndOf="@+id/todo_inner_add_thing_first"
                 app:layout_constraintTop_toTopOf="parent"
-                app:selectedTextColor="@color/todo_check_line_color"
-                app:textSize="16sp"
-                app:wheelItemCount="7" />
+                app:wheel_atmospheric="true"
+                app:wheel_cyclic="true"
+                app:wheel_item_text_color="@color/todo_check_line_color"
+                app:wheel_item_text_size="16sp"
+                app:wheel_visible_item_count="7" />
 
-            <com.super_rabbit.wheel_picker.WheelPicker
+            <com.aigestudio.wheelpicker.WheelPicker
                 android:id="@+id/todo_inner_add_thing_third"
                 android:layout_width="wrap_content"
                 android:layout_height="194dp"
@@ -170,9 +175,11 @@
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintStart_toEndOf="@+id/todo_inner_add_thing_second"
                 app:layout_constraintTop_toTopOf="parent"
-                app:selectedTextColor="@color/todo_check_line_color"
-                app:textSize="16sp"
-                app:wheelItemCount="7" />
+                app:wheel_atmospheric="true"
+                app:wheel_cyclic="true"
+                app:wheel_item_text_color="@color/todo_check_line_color"
+                app:wheel_item_text_size="16sp"
+                app:wheel_visible_item_count="7" />
 
             <androidx.appcompat.widget.AppCompatImageView
                 android:id="@+id/todo_iv_add_repeat"
@@ -195,14 +202,14 @@
         android:layout_marginTop="37dp">
 
         <androidx.appcompat.widget.AppCompatTextView
-            android:id="@+id/todo_inner_add_thing_repeat_time_cancle"
+            android:id="@+id/todo_inner_add_thing_repeat_time_cancel"
             android:layout_width="120dp"
             android:layout_height="40dp"
             android:background="@drawable/todo_shape_inner_add_thing_repeat_time_cancle_button"
             android:gravity="center"
             android:text="取消"
             android:visibility="gone"
-            android:textColor="@color/todo_inner_add_thing_repeat_time_canlce_text_color"
+            android:textColor="@color/todo_inner_add_thing_repeat_time_cancel_text_color"
             android:textSize="18sp"
             app:layout_constraintEnd_toStartOf="@+id/todo_inner_add_thing_repeat_time_confirm"
             app:layout_constraintHorizontal_bias="0.5"
@@ -221,7 +228,7 @@
             android:textSize="18sp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.5"
-            app:layout_constraintStart_toEndOf="@+id/todo_inner_add_thing_repeat_time_cancle"
+            app:layout_constraintStart_toEndOf="@+id/todo_inner_add_thing_repeat_time_cancel"
             app:layout_constraintTop_toTopOf="parent" />
     </androidx.constraintlayout.widget.ConstraintLayout>
 </androidx.appcompat.widget.LinearLayoutCompat>

@@ -6,8 +6,8 @@
     <color name="todo_inner_add_thing_nf_tv_unclick_color">#802A4E84</color>
     <color name="todo_inner_add_thing_nf_tv_click_color">#66DFDFE3</color>
     <color name="todo_inner_add_thing_repeat_time_item_shape_color">#5E5E5E</color>
-    <color name="todo_inner_add_thing_repeat_time_canlce">#80484A4D</color>
-    <color name="todo_inner_add_thing_repeat_time_canlce_text_color">#66F0F0F2</color>
+    <color name="todo_inner_add_thing_repeat_time_cancel">#80484A4D</color>
+    <color name="todo_inner_add_thing_repeat_time_cancel_text_color">#66F0F0F2</color>
     <color name="todo_inner_hint_color">#A0EDF4FD</color>
     <color name="todo_inner_add_thing_repeat_time_confirm_text_color">#FFFFFF</color>
     <color name="todo_inner_detail_line_color">#102A4E84</color>

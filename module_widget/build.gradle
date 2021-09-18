@@ -1,5 +1,4 @@
 apply from: config
-apply plugin: 'kotlin-android'
 
 // 这里只添加确认模块独用库，添加请之前全局搜索，是否已经依赖
 // 公用库请不要添加到这里
@@ -9,8 +8,4 @@ dependencies {
     implementation 'androidx.palette:palette:1.0.0'
     implementation 'com.jaredrummler:colorpicker:1.0.2'
     implementation 'com.squareup.retrofit2:converter-scalars:2.7.2'
-    implementation 'androidx.appcompat:appcompat:1.3.1'
-    implementation 'com.google.android.material:material:1.4.0'
-    implementation "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version"
-    implementation 'androidx.constraintlayout:constraintlayout:2.0.4'
 }

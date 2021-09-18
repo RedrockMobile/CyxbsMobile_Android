@@ -2,6 +2,7 @@ include ':lib_protocol:api_protocol'
 include ':lib_protocol'
 include ':module_volunteer:api_volunteer'
 include ':module_electricity:api_electricity'
+include ':module_todo:api_todo'
 include ':module_main:api_main'
 include ':lib_update:api_update'
 include ':lib_account:api_account'
@@ -13,4 +14,4 @@ include ':module_app', ':lib_common', ':module_main', ':lib_account', ':lib_upda
         ':module_calendar', ':module_electricity', ':module_emptyroom',
         ':module_grades', ':module_volunteer', ':module_schoolcar',
         ':module_news', ':module_widget', ':module_redrock_home',
-        ':module_store'
+        ':module_store', ':module_todo'

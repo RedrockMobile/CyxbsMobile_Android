@@ -46,9 +46,9 @@ val weekStringList = listOf(
  * 不重复不提醒       -> 返回""
  */
 fun repeatMode2RemindTime(remindMode: RemindMode): String {
-    LogUtils.d("RayleighZ","remindMode = $remindMode")
+    LogUtils.d("RayleighZ", "remindMode = $remindMode")
     if (remindMode.notifyDateTime.isNullOrEmpty() && remindMode.repeatMode == RemindMode.NONE) {
-        LogUtils.d("RayleighZ","handle todo")
+        LogUtils.d("RayleighZ", "handle todo")
         return ""
     }
 
@@ -67,14 +67,14 @@ fun repeatMode2RemindTime(remindMode: RemindMode): String {
         }"
     }
 
-    fun getTrueRemindDay(calendar: Calendar): String{
-        val notifyCandler = getNotifyDayCandler(remindMode)
-        return if (calendar.timeInMillis < notifyCandler.timeInMillis){
-            "${calendar.get(Calendar.MONTH) + 1}月${calendar.get(Calendar.DAY_OF_MONTH)}日 $remindTime"
-        } else {
-            "${calendar.get(Calendar.MONTH) + 1}月${calendar.get(Calendar.DAY_OF_MONTH)}日 $remindTime"
-        }
-    }
+//    fun getTrueRemindDay(calendar: Calendar): String {
+//        val notifyCandler = getNotifyDayCandler(remindMode)
+//        return if (calendar.timeInMillis < notifyCandler.timeInMillis) {
+//            "${calendar.get(Calendar.MONTH) + 1}月${calendar.get(Calendar.DAY_OF_MONTH)}日 $remindTime"
+//        } else {
+//            "${calendar.get(Calendar.MONTH) + 1}月${calendar.get(Calendar.DAY_OF_MONTH)}日 $remindTime"
+//        }
+//    }
 
     when (remindMode.repeatMode) {
         RemindMode.DAY -> {
@@ -169,7 +169,8 @@ fun getNextNotifyDay(remindMode: RemindMode): DateBeen {
     )
 }
 
-fun getThisYearDateSting(): ArrayList<DateBeen> {
+//返回未来四年的年份数据
+fun getYearDateSting(): ArrayList<ArrayList<DateBeen>> {
     val dateArrayJson =
         BaseApp.context.defaultSharedPreferences.getString(TODO_WEEK_MONTH_ARRAY, "")
     val thisYear = Calendar.getInstance().apply {
@@ -181,34 +182,43 @@ fun getThisYearDateSting(): ArrayList<DateBeen> {
         val calendar = Calendar.getInstance()
         calendar.set(Calendar.MONTH, 0)
         calendar.set(Calendar.DAY_OF_MONTH, 1)
-        val dateBeanArray = ArrayList<DateBeen>()
-        for (day in 0 until calendar.getActualMaximum(Calendar.DAY_OF_YEAR)) {
-            dateBeanArray.add(
-                DateBeen(
-                    calendar.get(Calendar.MONTH) + 1,
-                    calendar.get(Calendar.DAY_OF_MONTH),
-                    calendar.get(Calendar.DAY_OF_WEEK)
+        val dateBeanArrayAsFourYears = ArrayList<ArrayList<DateBeen>>()
+        for (i in 0..4) {
+            //未来四年
+            val dateBeanArray = ArrayList<DateBeen>()
+            for (day in 0 until calendar.getActualMaximum(Calendar.DAY_OF_YEAR)) {
+                dateBeanArray.add(
+                    DateBeen(
+                        calendar.get(Calendar.MONTH) + 1,
+                        calendar.get(Calendar.DAY_OF_MONTH),
+                        calendar.get(Calendar.DAY_OF_WEEK)
+                    )
                 )
-            )
-            calendar.add(Calendar.DAY_OF_YEAR, 1)
+                calendar.add(Calendar.DAY_OF_YEAR, 1)
+            }
+            dateBeanArrayAsFourYears.add(dateBeanArray)
+            //后置一年
+            calendar.add(Calendar.YEAR, 1)
+            calendar.set(Calendar.MONTH, 0)
+            calendar.set(Calendar.DAY_OF_MONTH, 1)
         }
-        val arrayJson = Gson().toJson(dateBeanArray)
+        val arrayJson = Gson().toJson(dateBeanArrayAsFourYears)
         BaseApp.context.defaultSharedPreferences
             .editor {
                 putString(TODO_WEEK_MONTH_ARRAY, arrayJson)
             }
         val todayCalendar = Calendar.getInstance()
-        dateBeanArray.subList(0, todayCalendar.get(Calendar.DAY_OF_YEAR) - 1).clear()
-        return dateBeanArray
+        dateBeanArrayAsFourYears[0].subList(0, todayCalendar.get(Calendar.DAY_OF_YEAR) - 1).clear()
+        return dateBeanArrayAsFourYears
     } else {
         //使用本地缓存
         val list = Gson().fromJson(
             dateArrayJson,
-            object : TypeToken<ArrayList<DateBeen>>() {}.type
-        ) as ArrayList<DateBeen>
+            object : TypeToken<ArrayList<ArrayList<DateBeen>>>() {}.type
+        ) as ArrayList<ArrayList<DateBeen>>
         val todayCalendar = Calendar.getInstance()
         LogUtils.d("RayleighZ", "${todayCalendar.get(Calendar.DAY_OF_YEAR)}")
-        list.subList(0, todayCalendar.get(Calendar.DAY_OF_YEAR) - 1).clear()
+        list[0].subList(0, todayCalendar.get(Calendar.DAY_OF_YEAR) - 1).clear()
         return list
     }
 }
@@ -281,7 +291,7 @@ fun numToString(num: Int): String = if (num < 10) "0$num" else num.toString()
 
 fun numToString(num: String): String = if (Integer.parseInt(num) < 10) "0$num" else num
 
-private fun getNotifyDayCandler(remindMode: RemindMode): Calendar{
+private fun getNotifyDayCandler(remindMode: RemindMode): Calendar {
     //提醒那一天的日历
     val remindDateCalender = Calendar.getInstance()
     //这里可以保证已经是可以解析的了
@@ -290,4 +300,15 @@ private fun getNotifyDayCandler(remindMode: RemindMode): Calendar{
     val remindDate = format.parse(remindMode.notifyDateTime)
     remindDateCalender.time = remindDate
     return remindDateCalender
+}
+
+//返回后面的四年
+fun getNextForYears(): List<String> {
+    val thisYear = Calendar.getInstance().get(Calendar.YEAR)
+    return listOf(
+        thisYear.toString(),
+        (thisYear + 1).toString(),
+        (thisYear + 2).toString(),
+        (thisYear + 3).toString()
+    )
 }

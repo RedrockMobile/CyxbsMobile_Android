@@ -11,8 +11,8 @@ import com.alibaba.android.arouter.facade.annotation.Route
 import com.cyxbsmobile_single.module_todo.R
 import com.cyxbsmobile_single.module_todo.adapter.TodoFeedAdapter
 import com.cyxbsmobile_single.module_todo.model.bean.TodoItemWrapper
+import com.cyxbsmobile_single.module_todo.ui.AddItemDialog
 import com.cyxbsmobile_single.module_todo.ui.activity.WidgetAddTodoActivity
-import com.cyxbsmobile_single.module_todo.ui.dialog.AddItemDialog
 import com.cyxbsmobile_single.module_todo.ui.widget.TodoWidget
 import com.cyxbsmobile_single.module_todo.viewmodel.TodoViewModel
 import com.mredrock.cyxbs.common.BaseApp

@@ -153,7 +153,6 @@ class DoubleListFoldRvAdapter(
 
     //检查是否需要缺省图
     private fun checkEmptyItem(needShow: Boolean) {
-        LogUtils.d("RayG", "checkEmpty")
         if (showType == THREE)
             return
         if (uncheckedArray.size == 0 && !isAddedUpEmpty) {

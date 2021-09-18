@@ -10,7 +10,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.cyxbsmobile_single.module_todo.R
 import com.cyxbsmobile_single.module_todo.adapter.RepeatInnerAdapter
 import com.cyxbsmobile_single.module_todo.model.bean.Todo
-import com.cyxbsmobile_single.module_todo.ui.dialog.AddItemDialog
+import com.cyxbsmobile_single.module_todo.ui.AddItemDialog
 import com.cyxbsmobile_single.module_todo.util.remindMode2RemindList
 import com.cyxbsmobile_single.module_todo.util.setMargin
 import com.cyxbsmobile_single.module_todo.viewmodel.TodoDetailViewModel
@@ -109,7 +109,7 @@ class TodoDetailActivity : BaseViewModelActivity<TodoDetailViewModel>() {
                 setAsSinglePicker()
                 todo_tv_set_repeat_time.text = "设置重复提醒"
                 setMargin(todo_tv_set_repeat_time, left = BaseApp.context.dip(15))
-                showRepeatModePicker()
+                showRepeatDatePicker()
                 resetAllRepeatMode(todo)
             }.show()
         }
