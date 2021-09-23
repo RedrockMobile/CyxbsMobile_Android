@@ -5,6 +5,7 @@ import android.widget.CheckedTextView
 import android.widget.ImageView
 import android.widget.Switch
 import android.widget.TextView
+import com.google.android.material.tabs.TabLayout
 
 
 class SkinItem(private val view: View?, private val attrs: List<SkinAttr>?) {
@@ -41,7 +42,24 @@ class SkinItem(private val view: View?, private val attrs: List<SkinAttr>?) {
                     }
                 }
 
+                "textColorHint" -> {
+                    if (view is TextView) {
+                        view.setHintTextColor(
+                                SkinManager.getColor(resName, resId)
+                        )
+                    }
+                }
+
+
                 "src" -> {
+                    if (view is ImageView) {
+                        view.setImageDrawable(
+                                SkinManager.getDrawable(resName, resId)
+                        )
+                    }
+                }
+
+                "srcCompat" -> {
                     if (view is ImageView) {
                         view.setImageDrawable(
                                 SkinManager.getDrawable(resName, resId)
@@ -57,21 +75,27 @@ class SkinItem(private val view: View?, private val attrs: List<SkinAttr>?) {
 
                 //主页底部的icon
                 "drawableTop" -> {
-                    if (view is CheckedTextView){
-                        val drawable = SkinManager.getDrawable(resName,resId)
+                    if (view is CheckedTextView) {
+                        val drawable = SkinManager.getDrawable(resName, resId)
                         drawable?.setBounds(0, 0, drawable.minimumWidth, drawable.minimumHeight)
-                        view.setCompoundDrawables(null,drawable,null,null)
+                        view.setCompoundDrawables(null, drawable, null, null)
                     }
                 }
 
                 "drawableStart" -> {
-                    if (view is TextView){
-                        val drawable = SkinManager.getDrawable(resName,resId)
+                    if (view is TextView) {
+                        val drawable = SkinManager.getDrawable(resName, resId)
                         drawable?.setBounds(0, 0, drawable.minimumWidth, drawable.minimumHeight)
-                        view.setCompoundDrawables(drawable,null,null,null)
+                        view.setCompoundDrawables(drawable, null, null, null)
                     }
                 }
 
+                "tabIndicatorColor" -> {
+                    if (view is TabLayout)
+                    {
+                        view.setSelectedTabIndicatorColor(SkinManager.getColor(resName,resId))
+                    }
+                }
             }
 
         }

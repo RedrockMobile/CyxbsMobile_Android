@@ -6,6 +6,7 @@ import android.graphics.Paint
 import android.graphics.RectF
 import android.util.AttributeSet
 import android.view.View
+import com.mredrock.cyxbs.common.skin.SkinManager
 import com.mredrock.cyxbs.common.utils.extensions.dip
 import com.mredrock.cyxbs.course.R
 import java.text.SimpleDateFormat
@@ -64,7 +65,7 @@ class TimeIdentificationView : View {
 
         val typeArray = context.obtainStyledAttributes(attrs, R.styleable.TimeIdentificationView,
                 R.attr.TimeIdentificationViewStyle, 0)
-        color = typeArray.getColor(R.styleable.TimeIdentificationView_color, 0x2A4E84)
+        color = SkinManager.getColor("levelFourFontColor",R.color.levelFourFontColor)
         typeArray.recycle()
         paint = Paint().apply {
             color = this@TimeIdentificationView.color

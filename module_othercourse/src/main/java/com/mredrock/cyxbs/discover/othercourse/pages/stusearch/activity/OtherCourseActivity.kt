@@ -4,6 +4,7 @@ import android.os.Bundle
 import com.alibaba.android.arouter.facade.annotation.Route
 import com.google.android.material.tabs.TabLayoutMediator
 import com.mredrock.cyxbs.common.config.DISCOVER_OTHER_COURSE
+import com.mredrock.cyxbs.common.skin.SkinManager
 import com.mredrock.cyxbs.common.ui.BaseViewModelActivity
 import com.mredrock.cyxbs.discover.othercourse.OtherCourseViewPagerAdapter
 import com.mredrock.cyxbs.discover.othercourse.R
@@ -30,6 +31,16 @@ class OtherCourseActivity : BaseViewModelActivity<OtherCourseViewModel>() {
         common_toolbar.setTitleLocationAtLeft(false)
 
         vp_other_course.adapter = OtherCourseViewPagerAdapter(this, listOf(otherCourseStuSearchFragment, otherCourseTeacherSearchFragment))
+        tl_other_course.setTabTextColors(SkinManager.getColor("common_alpha_level_two_font_color",
+        R.color.common_alpha_level_two_font_color),SkinManager.getColor("common_level_two_font_color",
+        R.color.common_level_two_font_color))
+        SkinManager.addSkinUpdateListener(object : SkinManager.SkinUpdateListener{
+            override fun onSkinUpdate() {
+                tl_other_course.setTabTextColors(SkinManager.getColor("common_alpha_level_two_font_color",
+                        R.color.common_alpha_level_two_font_color),SkinManager.getColor("common_level_two_font_color",
+                        R.color.common_level_two_font_color))
+            }
+        })
         TabLayoutMediator(tl_other_course, vp_other_course) { tab, position ->
             when (position) {
                 0 -> tab.text = "同学课表"

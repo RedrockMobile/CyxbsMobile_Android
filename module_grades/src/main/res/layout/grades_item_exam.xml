@@ -47,7 +47,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginEnd="30dp"
-        android:textColor="@color/common_grades_item_day_remain"
+        android:textColor="@color/common_grades_today_exam"
         android:textSize="13sp"
         app:layout_constraintBottom_toBottomOf="@+id/tv_exam_day_of_week"
         app:layout_constraintRight_toLeftOf="@id/gl_exam_end_guideline"

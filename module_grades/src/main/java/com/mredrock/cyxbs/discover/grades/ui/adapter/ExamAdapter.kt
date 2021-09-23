@@ -5,6 +5,7 @@ import android.content.Context
 import android.graphics.Color
 import androidx.core.content.res.ResourcesCompat
 import androidx.core.text.isDigitsOnly
+import com.mredrock.cyxbs.common.skin.SkinManager
 import com.mredrock.cyxbs.common.utils.LogUtils
 import com.mredrock.cyxbs.common.utils.SchoolCalendar
 import com.mredrock.cyxbs.discover.grades.R
@@ -70,19 +71,19 @@ class ExamAdapter(val context: Context,
                                 when {
                                     distance == 0 -> {
                                         holder.itemView.grades_distance.text = "今天考试"
-                                        holder.itemView.grades_distance.setTextColor(Color.parseColor("#3A39D3"))
+                                        holder.itemView.grades_distance.setTextColor(SkinManager.getColor("common_grades_today_exam",R.color.common_grades_today_exam))
                                     }
                                     distance > 0 -> {
                                         holder.itemView.grades_distance.text = "还剩${distance}天考试"
-                                        holder.itemView.grades_distance.setTextColor(Color.parseColor("#3A39D3"))
+                                        holder.itemView.grades_distance.setTextColor(SkinManager.getColor("common_grades_today_exam",R.color.common_grades_today_exam))
                                     }
                                     distance == -1 -> {
                                         holder.itemView.grades_distance.text = "考试已结束"
-                                        holder.itemView.grades_distance.setTextColor(Color.parseColor("#2A4E84"))
+                                        holder.itemView.grades_distance.setTextColor(SkinManager.getColor("common_grades_exam_end",R.color.common_grades_exam_end))
                                     }
                                     distance == -2 -> {
                                         holder.itemView.grades_distance.text = "暂时无法获取到考试天数"
-                                        holder.itemView.grades_distance.setTextColor(Color.parseColor("#2A4E84"))
+                                        holder.itemView.grades_distance.setTextColor(SkinManager.getColor("common_grades_exam_end",R.color.common_grades_exam_end))
                                     }
                                 }
                                 holder.itemView.tv_exam_kind.text = it.type ?: ""

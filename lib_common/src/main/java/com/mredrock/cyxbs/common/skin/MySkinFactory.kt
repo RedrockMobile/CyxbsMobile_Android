@@ -114,7 +114,10 @@ class MySkinFactory : LayoutInflater.Factory {
     private fun isSupportedAttr(attributeName: String): Boolean {
         return "background" == attributeName
                 || "textColor" == attributeName
+                || "textColorHint" == attributeName
+                || "tabIndicatorColor" == attributeName
                 || "src" == attributeName
+                || "srcCompat" == attributeName
                 || "track" == attributeName
                 || "drawableTop" == attributeName
                 || "drawableStart" == attributeName

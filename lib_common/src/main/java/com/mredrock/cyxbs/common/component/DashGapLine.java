@@ -14,6 +14,9 @@ import android.view.ViewGroup;
 
 import androidx.annotation.Nullable;
 
+import com.mredrock.cyxbs.common.R;
+import com.mredrock.cyxbs.common.skin.SkinManager;
+
 import static com.mredrock.cyxbs.common.utils.extensions.ContextKt.dp2px;
 
 
@@ -28,8 +31,8 @@ public class DashGapLine extends View {
     private int radius = (int) dp2px(getContext(),7);
 
     private boolean lineVisible = true;
-    private int defaultCircleColor = Color.parseColor("#2921D1");
-    private int defaultGapColor = Color.parseColor("#2921D1");
+    private int defaultCircleColor = SkinManager.INSTANCE.getColor("common_grades_dash_gap_line_color", R.color.common_grades_dash_gap_line_color);
+    private int defaultGapColor = SkinManager.INSTANCE.getColor("common_grades_dash_gap_line_color", R.color.common_grades_dash_gap_line_color);;
 
 
     public DashGapLine(Context context) {
