@@ -7,6 +7,14 @@
     <color name="todo_inner_add_thing_nf_tv_click_color">#66DFDFE3</color>
     <color name="todo_inner_add_thing_repeat_time_item_shape_color">#5E5E5E</color>
     <color name="todo_inner_add_thing_repeat_time_cancel">#80484A4D</color>
+    <!--    选择年份点击之后的item的shape的颜色-->
+    <color name="todo_add_todo_year_clicked_color">#222222</color>
+    <!--    选择年份未点击的item的shape的颜色-->
+    <color name="todo_add_todo_year_default_color">#323232</color>
+    <!--    选择年份的时候, 未选中时字的颜色-->
+    <color name="todo_add_todo_choose_year_text_default_color">#838385</color>
+    <!--    选择年份的时候, 选中时的字的颜色-->
+    <color name="todo_add_todo_choose_year_text_chosen_color">#F0F0F2</color>
     <color name="todo_inner_add_thing_repeat_time_cancel_text_color">#66F0F0F2</color>
     <color name="todo_inner_hint_color">#A0EDF4FD</color>
     <color name="todo_inner_add_thing_repeat_time_confirm_text_color">#FFFFFF</color>

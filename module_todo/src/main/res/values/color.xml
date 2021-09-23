@@ -11,6 +11,10 @@
     <color name="todo_add_todo_year_clicked_color">#EDF4FD</color>
     <!--    选择年份未点击的item的shape的颜色-->
     <color name="todo_add_todo_year_default_color">#F6F9FE</color>
+    <!--    选择年份的时候, 未选中时字的颜色-->
+    <color name="todo_add_todo_choose_year_text_default_color">#9CA9BD</color>
+    <!--    选择年份的时候, 选中时的字的颜色-->
+    <color name="todo_add_todo_choose_year_text_chosen_color">#15315B</color>
     <color name="todo_inner_add_thing_repeat_time_cancel">#E6EFFC</color>
     <color name="todo_inner_add_thing_repeat_time_cancel_text_color">#7CA3DF</color>
     <color name="todo_inner_hint_color">#A0EDF4FD</color>

@@ -1,5 +1,6 @@
 package com.cyxbsmobile_single.module_todo.adapter
 
+import android.graphics.Typeface
 import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.RecyclerView
 import com.cyxbsmobile_single.module_todo.R
@@ -13,8 +14,7 @@ import kotlinx.android.synthetic.main.todo_rv_item_choose_year.view.*
 class ChooseYearAdapter(
     val stringArray: ArrayList<String>,
     private val onItemClick: (year: Int) -> Unit
-) :
-    SimpleTextAdapter(stringArray, R.layout.todo_rv_item_choose_year) {
+) : SimpleTextAdapter(stringArray, R.layout.todo_rv_item_choose_year) {
 
     var curSelPosition: Int = 0
 
@@ -22,14 +22,37 @@ class ChooseYearAdapter(
         //默认第一年展示
         holder.itemView.apply {
             todo_tv_year.apply {
+
+                if (position == curSelPosition) {
+                    background =
+                        ContextCompat.getDrawable(
+                            context,
+                            R.drawable.todo_shape_clicked_choose_years
+                        )
+                    todo_tv_year.setTextColor(
+                        ContextCompat.getColor(
+                            context,
+                            R.color.todo_add_todo_choose_year_text_chosen_color
+                        )
+                    )
+                    todo_tv_year.typeface = Typeface.defaultFromStyle(Typeface.BOLD)
+                } else {
+                    background =
+                        ContextCompat.getDrawable(
+                            context,
+                            R.drawable.todo_shape_default_choose_years
+                        )
+                    todo_tv_year.setTextColor(
+                        ContextCompat.getColor(
+                            context,
+                            R.color.todo_add_todo_choose_year_text_default_color
+                        )
+                    )
+                    todo_tv_year.typeface = Typeface.defaultFromStyle(Typeface.NORMAL)
+                }
+
                 pressToZoomOut()
                 text = stringArray[position]
-                background =
-                    if (position == curSelPosition)
-                        ContextCompat.getDrawable(context, R.drawable.todo_shape_clicked_choose_years)
-                    else
-                        ContextCompat.getDrawable(context, R.drawable.todo_shape_default_choose_years)
-
                 setOnClickListener {
                     //更改背景颜色
                     curSelPosition = position
