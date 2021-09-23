@@ -3,16 +3,11 @@ package com.cyxbsmobile_single.module_todo.ui.fragment
 import android.content.ComponentName
 import android.content.Intent
 import android.os.Bundle
-import android.view.LayoutInflater
 import android.view.View
-import android.view.ViewGroup
-import android.view.ViewManager
 import com.alibaba.android.arouter.facade.annotation.Route
 import com.cyxbsmobile_single.module_todo.R
 import com.cyxbsmobile_single.module_todo.adapter.TodoFeedAdapter
-import com.cyxbsmobile_single.module_todo.model.bean.TodoItemWrapper
-import com.cyxbsmobile_single.module_todo.ui.AddItemDialog
-import com.cyxbsmobile_single.module_todo.ui.activity.WidgetAddTodoActivity
+import com.cyxbsmobile_single.module_todo.ui.dialog.AddItemDialog
 import com.cyxbsmobile_single.module_todo.ui.widget.TodoWidget
 import com.cyxbsmobile_single.module_todo.viewmodel.TodoViewModel
 import com.mredrock.cyxbs.common.BaseApp
