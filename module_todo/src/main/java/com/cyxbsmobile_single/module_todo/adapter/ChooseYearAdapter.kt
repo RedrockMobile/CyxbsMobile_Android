@@ -11,7 +11,7 @@ import kotlinx.android.synthetic.main.todo_rv_item_choose_year.view.*
  * Time: 2021-09-17 9:08
  */
 class ChooseYearAdapter(
-    private val stringArray: ArrayList<String>,
+    val stringArray: ArrayList<String>,
     private val onItemClick: (year: Int) -> Unit
 ) :
     SimpleTextAdapter(stringArray, R.layout.todo_rv_item_choose_year) {

@@ -4,7 +4,6 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
-import com.cyxbsmobile_single.module_todo.R
 
 /**
  * Author: RayleighZ
@@ -23,14 +22,14 @@ abstract class SimpleTextAdapter(private val dataList: ArrayList<String>, val re
     }
 
     fun addString(value: String) {
-        if (!dataListCopy.contains(value)){
+        if (!dataListCopy.contains(value)) {
             dataListCopy.add(0, value)
             refreshList()
-            dataList.add(0,value)
+            dataList.add(0, value)
         }
     }
 
-    fun removeAll(){
+    fun removeAll() {
         dataListCopy.clear()
         refreshList()
         dataList.clear()
@@ -42,7 +41,7 @@ abstract class SimpleTextAdapter(private val dataList: ArrayList<String>, val re
         diffRes.dispatchUpdatesTo(this)
     }
 
-    fun resetAll(newList: List<String>){
+    fun resetAll(newList: List<String>) {
         dataListCopy.clear()
         dataListCopy.addAll(newList)
         refreshList()
@@ -57,7 +56,8 @@ abstract class SimpleTextAdapter(private val dataList: ArrayList<String>, val re
 
         override fun getNewListSize(): Int = dataListCopy.size
 
-        override fun areItemsTheSame(oldItemPosition: Int, newItemPosition: Int): Boolean = true
+        override fun areItemsTheSame(oldItemPosition: Int, newItemPosition: Int): Boolean =
+            dataList[oldItemPosition] == dataListCopy[newItemPosition]
 
         override fun areContentsTheSame(oldItemPosition: Int, newItemPosition: Int): Boolean =
             dataList[oldItemPosition] == dataListCopy[newItemPosition]

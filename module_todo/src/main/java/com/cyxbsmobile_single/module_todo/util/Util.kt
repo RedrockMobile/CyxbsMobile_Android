@@ -39,6 +39,14 @@ val weekStringList = listOf(
     "日"
 )
 
+fun repeatString2Num(repeatString: String): Int = when (repeatString) {
+    "每天" -> RemindMode.DAY
+    "每年" -> RemindMode.YEAR
+    "每周" -> RemindMode.WEEK
+    "每月" -> RemindMode.MONTH
+    else -> RemindMode.NONE
+}
+
 /**
  * 根据remindMode生成提醒日期
  * 仅重复不提醒       -> 返回下一次提醒当天的凌晨00:00

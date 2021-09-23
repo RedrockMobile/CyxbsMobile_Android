@@ -329,7 +329,7 @@ class DynamicDetailActivity : BaseViewModelActivity<DynamicDetailViewModel>() {
             }
         }
 
-        qa_ib_toolbar_back.setOnSingleClickListener {
+        qa_ib_toolbar_back.setOnClickListener {
             onBackPressed()
         }
 
