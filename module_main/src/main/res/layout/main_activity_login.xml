@@ -197,8 +197,7 @@
         android:layout_height="16dp"
         android:layout_marginStart="16dp"
         android:text="@string/main_user_agreement"
-        android:textColor="@color/common_log_in_to_the_gray_font_below"
-        android:textSize="12sp"
+        style="@style/main_user_agreement"
         app:layout_constraintBottom_toBottomOf="@+id/lav_login_check"
         app:layout_constraintStart_toEndOf="@+id/lav_login_check"
         app:layout_constraintTop_toTopOf="@+id/lav_login_check" />

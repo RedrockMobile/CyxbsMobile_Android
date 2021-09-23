@@ -13,8 +13,8 @@
     <!--    用户协议dialog相关颜色-->
     <!--    商品兑换界面Dialog按钮颜色-->
     <color name="main_dialog_btn_positive">#4A44E4</color>
-    <color name="main_dialog_btn_negative">#C3D4EE</color>
-    <color name="main_dialog_tv">#15315B</color>
-    <color name="main_dialog_tv_negative">#7CA3DF</color>
-    <color name="main_dialog_tv_tips">#2A4E84</color>
+    <color name="main_dialog_btn_negative">#4E4E4E</color>
+    <color name="main_dialog_tv">#F0F0F2</color>
+    <color name="main_dialog_tv_negative">#F0F0F2</color>
+    <color name="main_dialog_tv_tips">#F0F0F2</color>
 </resources>
