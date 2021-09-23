@@ -18,6 +18,7 @@ import androidx.lifecycle.Observer
 import com.alibaba.android.arouter.facade.annotation.Route
 import com.mredrock.cyxbs.common.component.CommonDialogFragment
 import com.mredrock.cyxbs.common.config.MINE_CHECK_IN
+import com.mredrock.cyxbs.common.skin.SkinManager
 import com.mredrock.cyxbs.common.ui.BaseViewModelActivity
 import com.mredrock.cyxbs.common.utils.extensions.toast
 import com.mredrock.cyxbs.mine.R
@@ -157,8 +158,8 @@ class DailySignActivity : BaseViewModelActivity<DailyViewModel>() {
         } else {
             mine_daily_sign.apply {
                 isClickable = true
-                background = ResourcesCompat.getDrawable(resources, R.drawable.common_dialog_btn_positive_blue, null)
-                setTextColor(ContextCompat.getColor(context, R.color.common_white_font_color))
+                    background = SkinManager.getDrawable("common_dialog_btn_positive_blue", R.drawable.common_dialog_btn_positive_blue)
+                setTextColor(SkinManager.getColor("common_white_font_color", R.color.common_white_font_color))
                 text = "签到"
             }
         }
@@ -186,13 +187,16 @@ class DailySignActivity : BaseViewModelActivity<DailyViewModel>() {
         for (i in 0..6) {
             when {
                 state[i] == ImageState.IMAGE_BLUE -> {
-                    imageViewResArr[i].setImageResource(R.drawable.mine_shape_circle_src_activity_sign)
+                    imageViewResArr[i].setImageDrawable(SkinManager.getDrawable("mine_shape_circle_src_activity_sign",
+                            R.drawable.mine_shape_circle_src_activity_sign))
                 }
                 state[i] == ImageState.IMAGE_DIAMOND -> {
-                    imageViewResArr[i].setImageResource(R.drawable.mine_ic_sign_diamond)
+                    imageViewResArr[i].setImageDrawable(SkinManager.getDrawable("mine_ic_sign_diamond",
+                            R.drawable.mine_ic_sign_diamond))
                 }
                 else -> {
-                    imageViewResArr[i].setImageResource(R.drawable.mine_shape_circle_src_activity_sign_grey)
+                    imageViewResArr[i].setImageDrawable(SkinManager.getDrawable("mine_shape_circle_src_activity_sign_grey",
+                            R.drawable.mine_shape_circle_src_activity_sign_grey))
                 }
             }
         }
@@ -228,13 +232,13 @@ class DailySignActivity : BaseViewModelActivity<DailyViewModel>() {
     private fun setDividerColor(i: Int, color: ColorState) {
         when (color) {
             ColorState.COLOR_GREY -> {
-                dividerResArr[i].color.color = ContextCompat.getColor(this, R.color.common_mine_sign_divider_grey)
+                dividerResArr[i].color.color = SkinManager.getColor("common_mine_sign_divider_grey", R.color.common_mine_sign_divider_grey)
             }
             ColorState.COLOR_BLUE -> {
-                dividerResArr[i].color.color = ContextCompat.getColor(this, R.color.common_mine_sign_divider_blue)
+                dividerResArr[i].color.color = SkinManager.getColor("common_mine_sign_divider_grey", R.color.common_mine_sign_divider_blue)
             }
             else -> {
-                dividerResArr[i].color.color = ContextCompat.getColor(this, R.color.common_mine_sign_divider_blue_light)
+                dividerResArr[i].color.color = SkinManager.getColor("common_mine_sign_divider_grey", R.color.common_mine_sign_divider_blue_light)
             }
         }
     }

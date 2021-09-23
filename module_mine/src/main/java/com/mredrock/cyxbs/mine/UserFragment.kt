@@ -17,6 +17,7 @@ import com.alibaba.android.arouter.launcher.ARouter
 import com.mredrock.cyxbs.api.account.IAccountService
 import com.mredrock.cyxbs.common.config.*
 import com.mredrock.cyxbs.common.service.ServiceManager
+import com.mredrock.cyxbs.common.skin.SkinManager
 import com.mredrock.cyxbs.common.ui.BaseViewModelFragment
 import com.mredrock.cyxbs.common.utils.extensions.doIfLogin
 import com.mredrock.cyxbs.common.utils.extensions.loadAvatar
@@ -99,17 +100,16 @@ class UserFragment : BaseViewModelFragment<UserViewModel>() {
                         null
                     )
                     text = "已签到"
-                    setTextColor(ContextCompat.getColor(context, R.color.common_grey_button_text))
+                    setTextColor(SkinManager.getColor("common_grey_button_text", R.color.common_grey_button_text))
                 }
             } else {
                 mine_main_btn_sign.apply {
                     text = "签到"
-                    background = ResourcesCompat.getDrawable(
-                        resources,
-                        R.drawable.common_dialog_btn_positive_blue,
-                        null
+                    background = SkinManager.getDrawable(
+                        "common_dialog_btn_positive_blue",
+                        R.drawable.common_dialog_btn_positive_blue
                     )
-                    setTextColor(ContextCompat.getColor(context, R.color.common_white_font_color))
+                    setTextColor(SkinManager.getColor("common_white_font_color", R.color.common_white_font_color))
                 }
             }
         })
