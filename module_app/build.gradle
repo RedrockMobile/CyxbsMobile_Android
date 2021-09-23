@@ -173,6 +173,7 @@ dependencies {
         implementation project(':module_widget')
         implementation project(':module_redrock_home')
         implementation project(':module_store')
+        implementation project(':module_skin')
     }
     kapt deps.arouter.compiler
     implementation(deps.hotfix.runtime) {

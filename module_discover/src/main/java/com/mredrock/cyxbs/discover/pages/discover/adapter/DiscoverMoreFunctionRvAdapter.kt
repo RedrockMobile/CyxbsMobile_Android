@@ -1,11 +1,18 @@
 package com.mredrock.cyxbs.discover.pages.discover.adapter
 
+import android.content.Context
+import android.graphics.drawable.Drawable
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
+import com.mredrock.cyxbs.common.skin.MySkinFactory
+import com.mredrock.cyxbs.common.skin.SkinAttr
+import com.mredrock.cyxbs.common.skin.SkinItem
+import com.mredrock.cyxbs.common.skin.SkinManager
+import com.mredrock.cyxbs.common.ui.BaseActivity
 import com.mredrock.cyxbs.common.utils.extensions.pressToZoomOut
 import com.mredrock.cyxbs.discover.R
 import com.mredrock.cyxbs.common.utils.extensions.*
@@ -14,7 +21,7 @@ import com.mredrock.cyxbs.common.utils.extensions.*
 /**
  * Created by yyfbe, Date on 2020/8/14.
  */
-class DiscoverMoreFunctionRvAdapter(private val picUrls: List<Int>, private val texts: List<String>, private val onItemClick: (pos: Int) -> Unit) : RecyclerView.Adapter<DiscoverMoreFunctionRvAdapter.MoreFunctionViewHolder>() {
+class DiscoverMoreFunctionRvAdapter(private val context:Context, private val picUrls: MutableList<Drawable?>, private val texts: List<String>, private val onItemClick: (pos: Int) -> Unit) : RecyclerView.Adapter<DiscoverMoreFunctionRvAdapter.MoreFunctionViewHolder>() {
 
 
     class MoreFunctionViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
@@ -31,11 +38,19 @@ class DiscoverMoreFunctionRvAdapter(private val picUrls: List<Int>, private val 
 
     override fun onBindViewHolder(holder: MoreFunctionViewHolder, position: Int) {
         holder.itemView.setOnSingleClickListener {
-            it?.pressToZoomOut()
+            it.pressToZoomOut()
             onItemClick(position)
         }
-        holder.functionImageView.setImageResource(picUrls[position])
+        holder.functionImageView.setImageDrawable(picUrls[position])
         holder.functionTextView.text = texts[position]
+        val mSkinFactory =(context as BaseActivity).getSkinFactory()
+        mSkinFactory?.addViewAttr(holder.functionImageView,context,"AppCompatImageView","src")
+
     }
 
+    fun notifyData(newPicUrls: List<Drawable?>){
+        picUrls.clear()
+        picUrls.addAll(newPicUrls)
+        notifyDataSetChanged()
+    }
 }

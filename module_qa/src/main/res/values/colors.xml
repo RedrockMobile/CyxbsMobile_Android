@@ -122,4 +122,7 @@
     <color name="qa_praise_text_color">#3D35E1</color>
     <!--    展开按钮的颜色-->
     <color name="qa_tv_expand_text_color">#3E75BF</color>
+
+    <color name="qa_ring_color">#323FD9</color>
+
 </resources>

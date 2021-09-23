@@ -20,6 +20,7 @@ import android.widget.LinearLayout
 import android.widget.TextView
 import androidx.core.content.ContextCompat
 import androidx.core.view.children
+import com.mredrock.cyxbs.common.skin.SkinManager
 import com.mredrock.cyxbs.course.R
 import com.mredrock.cyxbs.course.utils.createCornerBackground
 import kotlin.math.pow
@@ -133,7 +134,7 @@ class ScheduleView : ViewGroup {
         mTouchViewColor = typeArray.getColor(R.styleable.ScheduleView_touchViewColor, Color.parseColor("#bdc3c7"))
         mHeightAtLowDpi = typeArray.getDimensionPixelSize(R.styleable.ScheduleView_heightAtLowDpi, context.dip(620f))
         mTouchViewDrawableResId = typeArray.getResourceId(R.styleable.ScheduleView_touchViewDrawable, 0)
-        mHighlightColor = typeArray.getColor(R.styleable.ScheduleView_highlightColor, Color.parseColor("#FFFBEB"))
+        mHighlightColor = SkinManager.getColor("common_course_identifies_the_current_shadow_color",R.color.common_course_identifies_the_current_shadow_color)
         mNoCourseDrawableResId = typeArray.getResourceId(R.styleable.ScheduleView_noCourseDrawable, 0)
         mEmptyText = typeArray.getString(R.styleable.ScheduleView_emptyText)
         mEmptyTextSize = typeArray.getDimensionPixelSize(R.styleable.ScheduleView_emptyTextSize, context.sp(12))
@@ -146,6 +147,22 @@ class ScheduleView : ViewGroup {
         setWillNotDraw(false)
         layoutTransition = layoutTransition()
         layoutAnimation = LayoutAnimationController(AnimationUtils.loadAnimation(context, R.anim.course_item_show_anim))
+        mPaint = Paint().apply {
+            color = mHighlightColor
+            isAntiAlias = true
+            isDither = true
+            style = Paint.Style.FILL
+        }
+        SkinManager.addSkinUpdateListener(object : SkinManager.SkinUpdateListener{
+            override fun onSkinUpdate() {
+                setHighlightColor(SkinManager.getColor("common_course_identifies_the_current_shadow_color",R.color.common_course_identifies_the_current_shadow_color))
+            }
+
+        })
+    }
+
+    fun setHighlightColor(newColor: Int){
+        mHighlightColor = newColor
         mPaint = Paint().apply {
             color = mHighlightColor
             isAntiAlias = true

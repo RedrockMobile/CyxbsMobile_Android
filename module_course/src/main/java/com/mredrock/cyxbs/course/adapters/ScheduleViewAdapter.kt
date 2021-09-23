@@ -11,6 +11,7 @@ import androidx.core.content.ContextCompat
 import com.mredrock.cyxbs.common.config.CyxbsMob
 import com.mredrock.cyxbs.common.config.DEFAULT_PREFERENCE_FILENAME
 import com.mredrock.cyxbs.common.config.SP_SHOW_MODE
+import com.mredrock.cyxbs.common.skin.SkinManager
 import com.mredrock.cyxbs.common.utils.ClassRoomParse
 import com.mredrock.cyxbs.common.utils.LogUtils
 import com.mredrock.cyxbs.common.utils.SchoolCalendar
@@ -52,17 +53,17 @@ class ScheduleViewAdapter(private val mActivity: Activity,
     private val mShowModel = mActivity.sharedPreferences(DEFAULT_PREFERENCE_FILENAME).getBoolean(SP_SHOW_MODE, true)
     private lateinit var mSchedulesArray: Array<Array<MutableList<Course>?>>
 
-    private val mCoursesColors by lazy(LazyThreadSafetyMode.NONE) {
-        intArrayOf(ContextCompat.getColor(mActivity, R.color.common_morning_course_color),
-                ContextCompat.getColor(mActivity, R.color.common_afternoon_course_color),
-                ContextCompat.getColor(mActivity, R.color.common_evening_course_color),
-                ContextCompat.getColor(mActivity, R.color.courseCoursesOther))
-    }
-    private val mCoursesTextColors by lazy(LazyThreadSafetyMode.NONE) {
-        intArrayOf(ContextCompat.getColor(mActivity, R.color.common_morning_course_text_color),
-                ContextCompat.getColor(mActivity, R.color.common_afternoon_course_text_color),
-                ContextCompat.getColor(mActivity, R.color.common_evening_course_text_color))
-    }
+    private val mCoursesColors
+        get() = intArrayOf(SkinManager.getColor("common_morning_course_color", R.color.common_morning_course_color),
+                SkinManager.getColor("common_afternoon_course_color", R.color.common_afternoon_course_color),
+                SkinManager.getColor("common_evening_course_color", R.color.common_evening_course_color),
+                SkinManager.getColor("courseCoursesOther", R.color.courseCoursesOther))
+
+    private val mCoursesTextColors
+        get() = intArrayOf(SkinManager.getColor("common_morning_course_text_color", R.color.common_morning_course_text_color),
+                SkinManager.getColor("common_afternoon_course_text_color", R.color.common_afternoon_course_text_color),
+                SkinManager.getColor("common_evening_course_text_color", R.color.common_evening_course_text_color))
+
 
     private val mDialogHelper: ScheduleDetailBottomSheetDialogHelper by lazy(LazyThreadSafetyMode.NONE) {
         ScheduleDetailBottomSheetDialogHelper(mActivity)
@@ -228,10 +229,29 @@ class ScheduleViewAdapter(private val mActivity: Activity,
                 top.text = course.course
                 bottom.text = course.classroom
             }
-            top.setTextColor(ContextCompat.getColor(mActivity, R.color.common_level_two_font_color))
-            bottom.setTextColor(ContextCompat.getColor(mActivity, R.color.common_level_two_font_color))
+            top.setTextColor(SkinManager.getColor("common_level_two_font_color", R.color.common_level_two_font_color))
+            bottom.setTextColor(SkinManager.getColor("common_level_two_font_color", R.color.common_level_two_font_color))
             mAffairBackground.visibility = View.VISIBLE
         }
+
+        SkinManager.addSkinUpdateListener(object : SkinManager.SkinUpdateListener {
+            override fun onSkinUpdate() {
+                if (course.customType == Course.COURSE) {
+                    background.background = createCornerBackground(mCoursesColors[index], mActivity.resources.getDimension(R.dimen.course_course_item_radius))
+                    if (itemCount > 1) {
+                        tag.background = createCornerBackground(mCoursesTextColors[course.hashLesson / 2], mActivity.resources.getDimension(R.dimen.course_schedule_tag_radius))
+                    }
+                    top.setTextColor(mCoursesTextColors[index])
+                    bottom.setTextColor(mCoursesTextColors[index])
+                } else {
+                    if (mShowModel) {
+                        top.setTextColor(SkinManager.getColor("common_level_two_font_color", R.color.common_level_two_font_color))
+                        bottom.setTextColor(SkinManager.getColor("common_level_two_font_color", R.color.common_level_two_font_color))
+                    }
+                }
+            }
+        })
+
     }
 
 

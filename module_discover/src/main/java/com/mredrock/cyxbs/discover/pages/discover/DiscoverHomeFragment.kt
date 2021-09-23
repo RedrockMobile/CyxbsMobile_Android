@@ -2,6 +2,7 @@ package com.mredrock.cyxbs.discover.pages.discover
 
 import android.content.Context
 import android.graphics.Point
+import android.graphics.drawable.Drawable
 import android.os.Build
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -39,8 +40,7 @@ import com.mredrock.cyxbs.discover.pages.discover.adapter.DiscoverMoreFunctionRv
 import com.mredrock.cyxbs.discover.utils.BannerAdapter
 import com.mredrock.cyxbs.discover.utils.MoreFunctionProvider
 import com.mredrock.cyxbs.api.volunteer.IVolunteerService
-import com.mredrock.cyxbs.common.BaseApp
-import com.mredrock.cyxbs.common.utils.extensions.toast
+import com.mredrock.cyxbs.common.skin.SkinManager
 import kotlinx.android.synthetic.main.discover_home_fragment.*
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
@@ -151,12 +151,7 @@ class DiscoverHomeFragment : BaseViewModelFragment<DiscoverHomeViewModel>(), Eve
             text = info
             maxLines = 1
             overScrollMode = OVER_SCROLL_IF_CONTENT_SCROLLS
-
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-                setTextColor(context.resources.getColor(R.color.common_menu_font_color_found, context.theme))
-            } else {
-                setTextColor(ContextCompat.getColor(context, R.color.common_menu_font_color_found))
-            }
+            setTextColor(SkinManager.getColor("common_menu_font_color_found",R.color.common_menu_font_color_found))
             textSize = 15f
             setOnSingleClickListener {
                 ARouter.getInstance().build(DISCOVER_NEWS_ITEM).withString("id", id).navigation()
@@ -174,13 +169,21 @@ class DiscoverHomeFragment : BaseViewModelFragment<DiscoverHomeViewModel>(), Eve
             layoutManager = LinearLayoutManager(context).apply {
                 orientation = LinearLayoutManager.HORIZONTAL
             }
-            adapter = DiscoverMoreFunctionRvAdapter(picUrls, texts) {
+            adapter = DiscoverMoreFunctionRvAdapter(context, picUrls as MutableList<Drawable?>, texts) {
                 if (it == functions.size - 1) {
                     CyxbsToast.makeText(context, R.string.discover_more_function_notice_text, Toast.LENGTH_SHORT).show()
                 } else {
                     functions[it].activityStarter.startActivity(context)
                 }
             }
+            //RecyclerView中icon需要单独添加换肤监听
+            SkinManager.addSkinUpdateListener(object  : SkinManager.SkinUpdateListener{
+                override fun onSkinUpdate() {
+                    val newPicUrls = MoreFunctionProvider.functions.map { it.resource }
+                    (adapter as DiscoverMoreFunctionRvAdapter).notifyData(newPicUrls)
+                }
+
+            })
             this.addOnScrollListener(object : RecyclerView.OnScrollListener() {
                 override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
                     super.onScrolled(recyclerView, dx, dy)
@@ -192,6 +195,8 @@ class DiscoverHomeFragment : BaseViewModelFragment<DiscoverHomeViewModel>(), Eve
             })
         }
     }
+
+
 
     private fun initFeeds() {
         addFeedFragment(ServiceManager.getService(IElectricityService::class.java).getElectricityFeed())

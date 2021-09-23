@@ -125,6 +125,7 @@
                             app:layout_constraintEnd_toEndOf="parent"
                             app:layout_constraintHorizontal_bias="0.5"
                             app:layout_constraintStart_toStartOf="parent"
+                            android:textColor="@color/levelFourFontColor"
                             app:layout_constraintTop_toTopOf="parent"
                             tools:text="8:00-9:40" />
 
@@ -153,6 +154,7 @@
                                 android:gravity="center"
                                 android:singleLine="true"
                                 android:text="@{coursesViewModel.nowCoursePlace}"
+                                android:textColor="@color/levelFourFontColor"
                                 tools:text="综合实验楼" />
 
                         </LinearLayout>

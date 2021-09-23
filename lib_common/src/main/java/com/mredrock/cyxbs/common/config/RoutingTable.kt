@@ -89,3 +89,6 @@ const val VOLUNTEER_SERVICE = "/volunteer/service"
 
 // module_store 邮票中心页
 const val STORE_ENTRY="/store/entry"
+
+//换肤
+const val SKIN_ENTRY = "/skin/entry"

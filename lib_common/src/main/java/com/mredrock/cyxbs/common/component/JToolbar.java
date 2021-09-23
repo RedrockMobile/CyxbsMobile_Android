@@ -13,6 +13,7 @@ import androidx.appcompat.widget.Toolbar;
 import androidx.core.content.ContextCompat;
 
 import com.mredrock.cyxbs.common.R;
+import com.mredrock.cyxbs.common.skin.SkinManager;
 import com.mredrock.cyxbs.common.utils.extensions.ContextKt;
 
 import java.lang.reflect.Field;
@@ -59,11 +60,7 @@ public class JToolbar extends Toolbar {
         super.setTitle(title);
         mTitleTextView = getTitleTv("mTitleTextView");
         if (mTitleTextView != null) {
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-                mTitleTextView.setTextColor(getContext().getColor(R.color.common_level_two_font_color));
-            } else {
-                mTitleTextView.setTextColor(ContextCompat.getColor(getContext(), R.color.common_level_two_font_color));
-            }
+            mTitleTextView.setTextColor(SkinManager.INSTANCE.getColor("common_level_two_font_color",R.color.common_level_two_font_color));
         }
     }
 

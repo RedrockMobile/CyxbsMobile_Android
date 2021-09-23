@@ -144,7 +144,7 @@
         app:layout_constraintBottom_toBottomOf="@id/qa_iv_dynamic_comment_count"
         app:layout_constraintEnd_toStartOf="@+id/qa_iv_dynamic_comment_count"
         app:layout_constraintTop_toTopOf="@+id/qa_iv_dynamic_comment_count"
-        app:ringColor="#323FD9" />
+        app:ringColor="@color/qa_ring_color" />
 
     <androidx.appcompat.widget.AppCompatImageView
         android:id="@+id/qa_iv_dynamic_comment_count"

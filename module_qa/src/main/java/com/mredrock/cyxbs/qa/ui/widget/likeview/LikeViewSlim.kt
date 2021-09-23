@@ -8,6 +8,7 @@ import android.util.AttributeSet
 import androidx.core.content.ContextCompat
 import com.mredrock.cyxbs.common.config.StoreTask
 import com.mredrock.cyxbs.common.network.ApiGenerator
+import com.mredrock.cyxbs.common.skin.SkinManager
 import com.mredrock.cyxbs.common.utils.extensions.*
 import com.mredrock.cyxbs.qa.R
 import com.mredrock.cyxbs.qa.network.ApiServiceNew
@@ -65,10 +66,13 @@ class LikeViewSlim @JvmOverloads constructor(
         val offsetY: Float = (fontMetrics.bottom - fontMetrics.top) / 2 - fontMetrics.bottom
         textPaint.color = if (isPraised) {
             //如果点过赞，就换做点赞后的颜色
-            getColor(R.color.qa_praise_text_color)
+            SkinManager.getColor("qa_praise_text_color", R.color.qa_praise_text_color)
         } else {
-            getColor(R.color.qa_question_bottom_count_color)
+            SkinManager.getColor("qa_question_bottom_count_color", R.color.qa_question_bottom_count_color)
         }
+        setDefaultIcon(SkinManager.getDrawable("qa_ic_answer_list_praise", R.drawable.qa_ic_answer_list_praise))
+        setCheckedIcon(SkinManager.getDrawable("qa_ic_answer_list_praised", R.drawable.qa_ic_answer_list_praised))
+        setRingColor(SkinManager.getColor("qa_ring_color", R.color.qa_ring_color))
         canvas?.drawText(
             praiseCount.toString(),
             width / 2f + context.dp2px(18f),
@@ -168,11 +172,11 @@ class LikeViewSlim @JvmOverloads constructor(
         if (isPraised) {
             isPraised = false
             praiseCount -= 1
-            textPaint.color = getColor(R.color.qa_question_bottom_count_color)
+            textPaint.color = SkinManager.getColor("qa_question_bottom_count_color", R.color.qa_question_bottom_count_color)
         } else {
             isPraised = true
             praiseCount += 1
-            textPaint.color = getColor(R.color.qa_praise_text_color)
+            textPaint.color = SkinManager.getColor("qa_praise_text_color", R.color.qa_praise_text_color)
         }
 
         isChecked = isPraised
@@ -200,12 +204,5 @@ class LikeViewSlim @JvmOverloads constructor(
             }
     }
 
-    private fun getColor(res: Int): Int {
-        return if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-            resources.getColor(res, null)
-        } else {
-            ContextCompat.getColor(context,res)
-        }
-    }
 
 }

@@ -24,6 +24,7 @@ import com.mredrock.cyxbs.common.utils.extensions.setOnSingleClickListener
 import com.mredrock.cyxbs.common.utils.extensions.startActivity
 import com.mredrock.cyxbs.mine.page.about.AboutActivity
 import com.mredrock.cyxbs.mine.page.edit.EditInfoActivity
+import com.mredrock.cyxbs.mine.page.lab.LabActivity
 import com.mredrock.cyxbs.mine.page.security.util.Jump2QQHelper
 import com.mredrock.cyxbs.mine.page.setting.SettingActivity
 import com.mredrock.cyxbs.mine.page.sign.DailySignActivity
@@ -68,6 +69,7 @@ class UserFragment : BaseViewModelFragment<UserViewModel>() {
             mine_main_tv_comment.setOnSingleClickListener { doIfLogin { jumpAndSaveTime(QA_MY_COMMENT, 1) } }
             mine_main_tv_praise.setOnSingleClickListener { doIfLogin { jumpAndSaveTime(QA_MY_PRAISE, 2) } }
             mine_main_fm_feedback.setOnSingleClickListener { doIfLogin { Jump2QQHelper.onFeedBackClick(this) } }
+            mine_main_tv_lab.setOnSingleClickListener { doIfLogin { startActivity<LabActivity>() } }
             mine_main_cl_info_edit.setOnSingleClickListener {
                 doIfLogin {
                     startActivity(

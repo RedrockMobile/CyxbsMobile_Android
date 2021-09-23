@@ -6,6 +6,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.BaseAdapter
 import androidx.core.content.ContextCompat
+import com.mredrock.cyxbs.common.skin.SkinManager
 import com.mredrock.cyxbs.course.R
 import kotlinx.android.synthetic.main.course_grid_course_time_item.view.*
 import java.util.*
@@ -25,12 +26,22 @@ class TimeRealityAdapter(private val dayOfWeekList: Array<String>, private val d
             course_tv_week_day.text = dayOfWeekList[position]
             course_tv_day_of_month.text = dayOfMonthList[position]
             val dayOfWeek = if (calendar[Calendar.DAY_OF_WEEK] == 1) 6 else calendar[Calendar.DAY_OF_WEEK] - 2
-            val color = if (dayOfWeek == position&&this@TimeRealityAdapter.position!=null)
+            val color = if (dayOfWeek == position && this@TimeRealityAdapter.position != null)
                 ContextCompat.getColor(parent.context, R.color.common_discover_academic_online_colors)
             else
-                ContextCompat.getColor(parent.context, R.color.common_level_one_font_color)
+                SkinManager.getColor("common_level_one_font_color", R.color.common_level_one_font_color)
             course_tv_week_day.setTextColor(color)
             course_tv_day_of_month.setTextColor(color)
+            SkinManager.addSkinUpdateListener(object : SkinManager.SkinUpdateListener{
+                override fun onSkinUpdate() {
+                    val newColor = if (dayOfWeek == position && this@TimeRealityAdapter.position != null)
+                        ContextCompat.getColor(parent.context, R.color.common_discover_academic_online_colors)
+                    else
+                        SkinManager.getColor("common_level_one_font_color", R.color.common_level_one_font_color)
+                    course_tv_week_day.setTextColor(newColor)
+                    course_tv_day_of_month.setTextColor(newColor)
+                }
+            })
         }
         return viewHolder.view
     }

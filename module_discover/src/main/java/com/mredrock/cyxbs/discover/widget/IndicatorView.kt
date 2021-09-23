@@ -6,6 +6,7 @@ import android.graphics.Canvas
 import android.graphics.Paint
 import android.util.AttributeSet
 import android.view.View
+import com.mredrock.cyxbs.common.skin.SkinManager
 import com.mredrock.cyxbs.discover.R
 
 /**
@@ -17,21 +18,33 @@ class IndicatorView(context: Context?, attrs: AttributeSet?, defStyleAttr: Int) 
         val ta = context?.obtainStyledAttributes(attrs, R.styleable.IndicatorView)
         if (ta != null) {
             multiple = ta.getFloat(R.styleable.IndicatorView_progressMultiple, 0f)
-            underColor = ta.getColor(R.styleable.IndicatorView_underColor, DEFAULT_UNDER_COLOR)
-            progressColor = ta.getColor(R.styleable.IndicatorView_underColor, DEFAULT_PROGRESS_COLOR)
+            underColor = under_color
+            progressColor = progress_color
             endRadius = ta.getFloat(R.styleable.IndicatorView_endRadius, DEFAULT_RADIUS)
         }
         ta?.recycle()
+        SkinManager.addSkinUpdateListener(object :SkinManager.SkinUpdateListener{
+            override fun onSkinUpdate() {
+                if (ta != null){
+                    underColor = under_color
+                    progressColor = progress_color
+                }
+            }
+
+        })
     }
 
     private var multiple = 0.5f
-    private var underColor = DEFAULT_UNDER_COLOR
-    private var progressColor = DEFAULT_PROGRESS_COLOR
+    private var underColor = under_color
+    private var progressColor = progress_color
     private var endRadius = 0f
 
     companion object {
-        const val DEFAULT_UNDER_COLOR = 0xff97B7F0.toInt()
-        const val DEFAULT_PROGRESS_COLOR = 0xff2923D2.toInt()
+        val under_color
+            get() = SkinManager.getColor("common_indicator_under_color", R.color.common_indicator_under_color)
+
+        val progress_color
+            get() = SkinManager.getColor("common_indicator_progress_color", R.color.common_indicator_progress_color)
 
         //dp
         const val DEFAULT_HEIGHT = 50
@@ -53,13 +66,15 @@ class IndicatorView(context: Context?, attrs: AttributeSet?, defStyleAttr: Int) 
     private var last = 0f
 
     //底部颜色
-    private val paintUnder = Paint().apply {
+    private val paintUnder
+            get() = Paint().apply {
         color = underColor
         isAntiAlias = true
     }
 
     //滑动的颜色
-    private val paintProgress = Paint().apply {
+    private val paintProgress
+            get() = Paint().apply {
         color = progressColor
         isAntiAlias = true
     }

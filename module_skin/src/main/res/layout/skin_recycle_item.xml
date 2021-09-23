@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:layout_marginLeft="10dp"
+    android:layout_marginRight="10dp"
+    android:layout_marginBottom="12dp"
+    android:gravity="center"
+    android:orientation="vertical">
+
+
+    <com.mredrock.cyxbs.skin.component.RoundRectImageView
+        android:id="@+id/skin_iv_recycle_item"
+        android:layout_width="150dp"
+        android:layout_height="200dp"
+        android:scaleType="centerCrop" />
+
+    <TextView
+        android:id="@+id/skin_tv_name_item"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="5dp"
+        android:text="经典皮肤"
+        android:textColor="@color/common_level_two_font_color"
+        android:textSize="17sp" />
+
+    <TextView
+        android:id="@+id/skin_tv_price_item"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="3dp"
+        android:text="免费"
+        android:textColor="@color/common_level_three_font_color" />
+
+    <Button
+        android:id="@+id/skin_btn_use_item"
+        android:layout_width="wrap_content"
+        android:layout_height="35dp"
+        android:layout_marginTop="10dp"
+        android:background="@drawable/common_dialog_btn_positive_blue"
+        android:text="使用"
+        android:textColor="@color/common_white_font_color" />
+</LinearLayout>

@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical"
+    tools:context=".page.lab.LabActivity">
+
+    <include
+        android:id="@+id/lab_toolbar"
+        layout="@layout/common_toolbar" />
+
+    <FrameLayout
+        android:id="@+id/mine_lab_fl_skin"
+        android:layout_width="match_parent"
+        android:layout_height="36dp"
+        android:layout_marginTop="12.5dp"
+        >
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:layout_marginStart="16dp"
+            android:text="@string/mine_skin"
+            android:textColor="@color/common_level_three_font_color"
+            android:textSize="15sp" />
+
+        <ImageView
+            android:layout_width="6dp"
+            android:layout_height="12.5dp"
+            android:layout_gravity="end|center_vertical"
+            android:layout_marginEnd="25.5dp"
+            android:src="@drawable/mine_ic_arrow_right" />
+    </FrameLayout>
+</LinearLayout>

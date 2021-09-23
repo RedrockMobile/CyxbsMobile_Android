@@ -313,6 +313,29 @@
                 android:src="@drawable/mine_ic_arrow_right" />
         </FrameLayout>
 
+        <FrameLayout
+            android:id="@+id/mine_main_tv_lab"
+            android:layout_width="match_parent"
+            android:layout_height="36dp"
+            android:layout_marginTop="12.5dp">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:layout_marginStart="16dp"
+                android:text="@string/mine_lab"
+                android:textColor="@color/common_level_three_font_color"
+                android:textSize="15sp" />
+
+            <ImageView
+                android:layout_width="6dp"
+                android:layout_height="12.5dp"
+                android:layout_gravity="end|center_vertical"
+                android:layout_marginEnd="25.5dp"
+                android:src="@drawable/mine_ic_arrow_right" />
+        </FrameLayout>
+
         <Space
             android:layout_width="match_parent"
             android:layout_height="100dp" />

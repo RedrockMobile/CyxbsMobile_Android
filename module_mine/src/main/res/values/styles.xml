@@ -15,5 +15,8 @@
     <style name="transparent_dialog" parent="Theme.AppCompat.Dialog">
         <item name="android:windowBackground">@null</item>
     </style>
-
+    <declare-styleable name="mine_round_angle_image_view">
+        <attr name="mine_round_width" format="dimension" />
+        <attr name="mine_round_height" format="dimension" />
+    </declare-styleable>
 </resources>

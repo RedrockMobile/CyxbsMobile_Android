@@ -101,6 +101,7 @@
     <color name="common_grey_button_text">#C3C0C1</color>
     <color name="common_grey_text">#C4C2C2</color>
     <color name="common_switch_off">#5A5A5A</color>
+    <color name="common_switch_on">#2921D1</color>
 
     <!--    tab_layout颜色-->
     <color name="common_mine_tab_layout_text_unselected">#9AF0F0F2</color>

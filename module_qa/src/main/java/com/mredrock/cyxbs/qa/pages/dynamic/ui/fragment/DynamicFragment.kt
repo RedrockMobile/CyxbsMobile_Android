@@ -28,6 +28,7 @@ import com.mredrock.cyxbs.common.config.StoreTask
 import com.mredrock.cyxbs.common.event.RefreshQaEvent
 import com.mredrock.cyxbs.common.mark.EventBusLifecycleSubscriber
 import com.mredrock.cyxbs.common.service.ServiceManager
+import com.mredrock.cyxbs.common.skin.SkinManager
 import com.mredrock.cyxbs.common.ui.BaseViewModelFragment
 import com.mredrock.cyxbs.common.utils.extensions.doIfLogin
 import com.mredrock.cyxbs.common.utils.extensions.dp2px
@@ -431,7 +432,7 @@ open class DynamicFragment : BaseViewModelFragment<DynamicListViewModel>(), Even
             maxEms = 15
             overScrollMode = View.OVER_SCROLL_IF_CONTENT_SCROLLS
             alpha = 0.51f
-            setTextColor(ContextCompat.getColor(context, R.color.common_level_two_font_color))
+            setTextColor(SkinManager.getColor("common_level_two_font_color", R.color.common_level_two_font_color))
             textSize = 14f
         }
     }

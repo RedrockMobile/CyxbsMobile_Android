@@ -34,6 +34,9 @@
 
     <color name="common_course_delete_button_text_color">#7CA3DF</color>
 
+    <!--    主页发现栏滑块颜色-->
+    <color name="common_indicator_under_color">#ff97B7F0</color>
+    <color name="common_indicator_progress_color">#ff2923D2</color>
 
     <!--    底部tab未聚焦字体颜色-->
     <color name="common_un_focused_font_color">#AABCD8</color>
@@ -118,6 +121,7 @@
     <color name="common_grey_button_text">#C3C0C1</color>
     <color name="common_grey_text">#C4C2C2</color>
     <color name="common_switch_off">#C3D4EE</color>
+    <color name="common_switch_on">#2921D1</color>
 
     <!--    tab_layout颜色-->
     <color name="common_mine_tab_layout_text_unselected">#8f15315B</color>

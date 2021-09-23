@@ -8,6 +8,7 @@ import android.os.Bundle
 import android.view.View
 import android.widget.FrameLayout
 import androidx.appcompat.widget.AppCompatButton
+import androidx.core.content.res.ResourcesCompat
 import androidx.fragment.app.commit
 import androidx.lifecycle.Observer
 import com.alibaba.android.arouter.facade.annotation.Route
@@ -26,6 +27,7 @@ import com.mredrock.cyxbs.common.event.RefreshQaEvent
 import com.mredrock.cyxbs.common.mark.ActionLoginStatusSubscriber
 import com.mredrock.cyxbs.common.mark.EventBusLifecycleSubscriber
 import com.mredrock.cyxbs.common.service.ServiceManager
+import com.mredrock.cyxbs.common.skin.SkinManager
 import com.mredrock.cyxbs.common.ui.BaseViewModelActivity
 import com.mredrock.cyxbs.common.utils.debug
 import com.mredrock.cyxbs.common.utils.extensions.*

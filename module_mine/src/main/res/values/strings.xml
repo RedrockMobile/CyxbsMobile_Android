@@ -16,6 +16,8 @@
     <string name="mine_show_schedule_first_launch">启动APP时最先显示课表页面</string>
     <string name="mine_custom_icon">自定义桌面小图标</string>
     <string name="mine_feedback_suggestion">意见与反馈</string>
+    <string name="mine_lab">掌邮实验室</string>
+    <string name="mine_skin">换肤</string>
     <string name="mine_security">账号与安全</string>
     <string name="mine_about_redrock">红岩网校</string>
     <string name="mine_about">关于掌邮</string>
@@ -135,4 +137,7 @@
     <string name="mine_string_about_us">关于我们</string>
     <string name="mine_string_setting">设置</string>
     <string name="mine_string_score_store">积分商城</string>
+    <string name="mine_lab_tv_title">提示</string>
+    <string name="mine_lab_tv_content">欢迎来到掌邮实验室，这里将会提供一些有趣好玩的功能，当然，这些功能可能还不稳定，欢迎大家随时反馈~</string>
+    <string name="mine_lab_tv_positive">我明白了</string>
 </resources>
