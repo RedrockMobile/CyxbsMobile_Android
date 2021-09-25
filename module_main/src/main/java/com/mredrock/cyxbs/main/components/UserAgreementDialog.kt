@@ -1,5 +1,6 @@
 package com.mredrock.cyxbs.main.components
 
+import android.content.Intent
 import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
 import android.os.Bundle
@@ -21,13 +22,14 @@ import androidx.core.content.ContextCompat
 import androidx.fragment.app.DialogFragment
 import androidx.fragment.app.FragmentManager
 import com.mredrock.cyxbs.main.R
+import com.mredrock.cyxbs.main.ui.UserAgreementActivity
 import com.tencent.bugly.Bugly.applicationContext
 
 /**
  * Author by OkAndGreat，Date on 2021/9/23.
  * 点击用户协议弹出的dialog
  */
-class UserAgreementDialog private constructor() : DialogFragment() {
+class UserAgreementDialog : DialogFragment() {
 
     companion object {
         fun show(
@@ -68,7 +70,7 @@ class UserAgreementDialog private constructor() : DialogFragment() {
         val dm = DisplayMetrics()
         activity?.windowManager?.defaultDisplay?.getMetrics(dm)
         dialog?.window?.setLayout(
-            (dm.widthPixels * 0.75).toInt(),
+            (dm.widthPixels * 0.83).toInt(),
             ViewGroup.LayoutParams.WRAP_CONTENT
         )
         //点击其它区域不关闭dialog
@@ -91,19 +93,15 @@ class UserAgreementDialog private constructor() : DialogFragment() {
         }
 
         val spannableString = SpannableStringBuilder()
-        spannableString.append("友友，欢迎使用掌上重邮！在您使用掌上重邮前，请认真阅读《用户协议》和《隐私权政策》，它们将帮助您了解我们所采集的个人信息与用途的对应关系。如您同意，请点击下方按钮开始接受我们的服务。")
+        spannableString.append("友友，欢迎使用掌上重邮！在您使用掌上重邮前，请认真阅读《用户协议》和《隐私权政策》，它们将帮助您了解我们所采集的个人信息与用途的对应关系。如您同意，请点击下方同意并继续按钮开始接受我们的服务。")
         //解决文字点击后变色
         tvUserAgreeDetail.highlightColor =
             ContextCompat.getColor(applicationContext, android.R.color.transparent)
         //设置用户协议和隐私权政策点击事件
         val userAgreementClickSpan = object : ClickableSpan() {
             override fun onClick(widget: View) {
-                //TODO:跳转到用户协议页面
-                Toast.makeText(
-                    applicationContext,
-                    "onUserAgreementClickSpanClicked",
-                    Toast.LENGTH_SHORT
-                ).show()
+                val intent = Intent(applicationContext, UserAgreementActivity::class.java)
+                startActivity(intent)
             }
 
             override fun updateDrawState(ds: TextPaint) {

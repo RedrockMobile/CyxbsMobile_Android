@@ -194,7 +194,7 @@
     <TextView
         android:id="@+id/main_user_agreement"
         android:layout_width="wrap_content"
-        android:layout_height="16dp"
+        android:layout_height="wrap_content"
         android:layout_marginStart="16dp"
         android:text="@string/main_user_agreement"
         style="@style/main_user_agreement"

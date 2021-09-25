@@ -17,4 +17,7 @@
     <color name="main_dialog_tv">#15315B</color>
     <color name="main_dialog_tv_negative">#7CA3DF</color>
     <color name="main_dialog_tv_tips">#2A4E84</color>
+
+    <!--    用户协议页面颜色值-->
+    <color name="main_user_agree_toolbar">#15315B</color>
 </resources>

@@ -135,8 +135,8 @@ class LoginActivity : BaseViewModelActivity<LoginViewModel>(), EventBusLifecycle
         //设置用户协议和隐私权政策点击事件
         val userAgreementClickSpan = object : ClickableSpan() {
             override fun onClick(widget: View) {
-                //TODO:跳转到用户协议页面
-                showUserAgreement()
+                val intent = Intent(this@LoginActivity,UserAgreementActivity::class.java)
+                startActivity(intent)
             }
 
             override fun updateDrawState(ds: TextPaint) {
@@ -170,6 +170,8 @@ class LoginActivity : BaseViewModelActivity<LoginViewModel>(), EventBusLifecycle
 
         main_user_agreement.text = spannableString
         main_user_agreement.movementMethod = LinkMovementMethod.getInstance()
+
+
     }
 
     private fun loginAction() {
@@ -218,24 +220,6 @@ class LoginActivity : BaseViewModelActivity<LoginViewModel>(), EventBusLifecycle
     }
 
     private fun showUserAgreement() {
-//        val materialDialog = Dialog(this)
-//        val view = LayoutInflater.from(this).inflate(
-//            R.layout.main_user_agreement_dialog,
-//            materialDialog.window?.decorView as ViewGroup,
-//            false
-//        )
-//        materialDialog.setContentView(view)
-//        materialDialog.window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
-//        val userAgreementAdapter = UserAgreementAdapter(viewModel.userAgreementList)
-//        view.rv_content.adapter = userAgreementAdapter
-//        view.rv_content.layoutManager = LinearLayoutManager(this@LoginActivity)
-//        if (viewModel.userAgreementList.isNotEmpty()) view.loader.visibility = View.GONE
-//        materialDialog.show()
-//        viewModel.getUserAgreement {
-//            userAgreementAdapter.notifyDataSetChanged()
-//            view.loader.visibility = View.GONE
-//        }
-
         UserAgreementDialog.show(
             supportFragmentManager,
             onNegativeClick = {

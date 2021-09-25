@@ -17,4 +17,7 @@
     <color name="main_dialog_tv">#F0F0F2</color>
     <color name="main_dialog_tv_negative">#F0F0F2</color>
     <color name="main_dialog_tv_tips">#F0F0F2</color>
+
+    <!--    用户协议页面颜色值-->
+    <color name="main_user_agree_toolbar">#F0F0F2</color>
 </resources>
