@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/cl_content_view"
+    android:layout_toRightOf="@+id/ll_mine_statu_item"
+    android:layout_width="match_parent"
+    android:layout_height="125dp"
+    android:layout_marginTop="10dp"
+    android:layout_marginLeft="16dp"
+    android:layout_marginRight="16dp"
+    android:background="@drawable/mine_ic_item_background">>
+
+
+
+        <TextView
+            android:id="@+id/tv_item_identity_name"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="16dp"
+            android:layout_marginTop="16dp"
+            android:text="红岩网校工作站"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <TextView
+            android:id="@+id/tv_item_identity"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:text="干事"
+            app:layout_constraintStart_toStartOf="@+id/tv_item_identity_name"
+            app:layout_constraintTop_toBottomOf="@+id/tv_item_identity_name" />
+
+        <TextView
+            android:id="@+id/tv_item_identity_time"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:layout_marginEnd="36dp"
+            android:text="2018.4.28-2020.5.29"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/tv_item_identity" />
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+
+
+

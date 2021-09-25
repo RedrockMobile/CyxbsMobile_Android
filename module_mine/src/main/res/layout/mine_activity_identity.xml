@@ -1,87 +1,121 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    tools:context=".page.mine.ui.activity.IdentityActivity">
+    xmlns:tools="http://schemas.android.com/tools">
 
-    <ImageView
-        android:id="@+id/mine_imageview"
-        android:layout_width="7dp"
-        android:layout_height="16dp"
-        android:layout_marginStart="17dp"
-        android:layout_marginTop="60dp"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:srcCompat="@drawable/mine_ic_iv_back_black_arrow" />
+    <data>
 
-    <TextView
-        android:id="@+id/tv_identity"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="13dp"
-        android:text="身份设置"
-        android:textSize="15dp"
-        app:layout_constraintBottom_toBottomOf="@+id/mine_imageview"
-        app:layout_constraintStart_toEndOf="@+id/mine_imageview"
-        app:layout_constraintTop_toTopOf="@+id/mine_imageview" />
+    </data>
 
-    <RelativeLayout
-        android:id="@+id/mine_relativelayout"
-        android:layout_width="0dp"
-        android:layout_height="125dp"
-        android:layout_marginLeft="16dp"
-        android:layout_marginTop="48dp"
-        android:layout_marginRight="16dp"
-        android:background="@drawable/mine_ic_rl_background"
-        android:gravity="center"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/tv_identity">
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/ll_statu"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        tools:context=".page.mine.ui.activity.IdentityActivity">
+
+        <ImageView
+            android:id="@+id/mine_imageview"
+            android:layout_width="7dp"
+            android:layout_height="16dp"
+            android:layout_marginStart="17dp"
+            android:layout_marginTop="60dp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:srcCompat="@drawable/mine_ic_iv_back_black_arrow" />
 
         <TextView
-            android:id="@+id/mine_textview2"
+            android:id="@+id/tv_identity"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="17dp"
-            android:layout_marginRight="17dp"
-            android:text="长按下方身份牌并拖动到此处，即可在昵称后面展示你的专属身份！"
-            android:textSize="14dp" />
-    </RelativeLayout>
+            android:layout_marginStart="13dp"
+            android:text="身份设置"
+            android:textSize="15dp"
+            app:layout_constraintBottom_toBottomOf="@+id/mine_imageview"
+            app:layout_constraintStart_toEndOf="@+id/mine_imageview"
+            app:layout_constraintTop_toTopOf="@+id/mine_imageview" />
 
-    <com.google.android.material.tabs.TabLayout
-        android:id="@+id/mine_tablayout2"
-        android:layout_width="409dp"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="27dp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/mine_relativelayout">
+        <RelativeLayout
+            android:id="@+id/mine_relativelayout"
+            android:layout_width="0dp"
+            android:layout_height="125dp"
+            android:layout_marginLeft="16dp"
+            android:layout_marginTop="48dp"
+            android:layout_marginRight="16dp"
+            android:background="@drawable/mine_ic_rl_background"
+            android:gravity="center"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/tv_identity">
 
-        <com.google.android.material.tabs.TabItem
-            android:layout_width="wrap_content"
+            <TextView
+                android:id="@+id/mine_textview2"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="17dp"
+                android:layout_marginRight="17dp"
+                android:text="长按下方身份牌并拖动到此处，即可在昵称后面展示你的专属身份！"
+                android:textSize="14dp" />
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:visibility="gone"
+                xmlns:android="http://schemas.android.com/apk/res/android"
+                xmlns:app="http://schemas.android.com/apk/res-auto"
+                xmlns:tools="http://schemas.android.com/tools"
+                android:id="@+id/cl_content_view"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="@drawable/mine_ic_item_background">>
+
+
+
+                <TextView
+                    android:id="@+id/tv_item_identity_name"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="16dp"
+                    android:layout_marginTop="16dp"
+                    android:text="红岩网校工作站"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+                <TextView
+                    android:id="@+id/tv_item_identity"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="16dp"
+                    android:text="干事"
+                    app:layout_constraintStart_toStartOf="@+id/tv_item_identity_name"
+                    app:layout_constraintTop_toBottomOf="@+id/tv_item_identity_name" />
+
+                <TextView
+                    android:id="@+id/tv_item_identity_time"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="8dp"
+                    android:layout_marginEnd="36dp"
+                    android:text="2018.4.28-2020.5.29"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/tv_item_identity" />
+            </androidx.constraintlayout.widget.ConstraintLayout>
+        </RelativeLayout>
+
+        <com.google.android.material.tabs.TabLayout
+            android:id="@+id/mine_tab_status"
+            android:layout_width="409dp"
             android:layout_height="wrap_content"
-            android:text="Monday" />
+            android:layout_marginTop="27dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/mine_relativelayout"></com.google.android.material.tabs.TabLayout>
 
-        <com.google.android.material.tabs.TabItem
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Tuesday" />
-
-        <com.google.android.material.tabs.TabItem
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Wednesday" />
-    </com.google.android.material.tabs.TabLayout>
-
-    <androidx.viewpager2.widget.ViewPager2
-        android:layout_width="409dp"
-        android:layout_height="403dp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/mine_tablayout2" />
+        <androidx.viewpager2.widget.ViewPager2
+            android:id="@+id/vp_status"
+            android:layout_width="409dp"
+            android:layout_height="403dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/mine_tab_status" />
 
 
-</androidx.constraintlayout.widget.ConstraintLayout>
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</layout>

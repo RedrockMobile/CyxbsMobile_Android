@@ -1,6 +1,8 @@
 package com.mredrock.cyxbs.mine.page.mine.adapter
 
 import android.content.Context
+import android.content.Intent
+import android.provider.ContactsContract
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.MotionEvent
@@ -8,6 +10,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.mredrock.cyxbs.mine.R
+import com.mredrock.cyxbs.mine.page.mine.ui.activity.IdentityActivity
 import com.mredrock.cyxbs.mine.page.mine.widget.SlideLayout
 import java.math.MathContext
 
@@ -25,7 +28,7 @@ class IdentityAdapter(val list:List<String>,val context: Context) : RecyclerView
         val convertView = LayoutInflater.from(context).inflate(R.layout.mine_slide_identity_item, parent, false) as SlideLayout
         convertView.setOnStateChangeListenter(MyOnStateChangeListenter())
             val vh = VH(convertView)
-          //  vh.contentView.setOnClickListener(this)
+            vh.menuView.setOnClickListener(this)
         return vh
     }
 
@@ -55,8 +58,8 @@ class IdentityAdapter(val list:List<String>,val context: Context) : RecyclerView
     }
 
     override fun onClick(v: View) {
-//        val slideLayout = v.getParent() as SlideLayout
-//        slideLayout.closeMenu()
+        val intent = Intent(context,IdentityActivity::class.java)
+        context.startActivity(intent)
     }
 
 
