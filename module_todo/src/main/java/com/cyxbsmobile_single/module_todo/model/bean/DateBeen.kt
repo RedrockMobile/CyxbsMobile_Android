@@ -17,7 +17,9 @@ data class DateBeen(
     @SerializedName("week")
     val week: Int,
     @SerializedName("type")
-    var type: Int = NORMAL
+    var type: Int = NORMAL,
+    @SerializedName("year")
+    val year: Int
 ): Serializable{
     companion object{
         const val EMPTY = 0

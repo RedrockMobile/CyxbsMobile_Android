@@ -16,9 +16,9 @@
         android:layout_height="wrap_content">
 
         <TextView
-            android:id="@+id/todo_inner_add_thing_cancel"
+            android:id="@+id/todo_tv_add_thing_cancel"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_height="21dp"
             android:layout_gravity="left"
             android:layout_marginStart="15dp"
             android:layout_marginTop="1dp"
@@ -28,7 +28,7 @@
             android:textStyle="normal" />
 
         <TextView
-            android:id="@+id/todo_thing_add_thing_save"
+            android:id="@+id/todo_tv_add_thing_save"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="right"

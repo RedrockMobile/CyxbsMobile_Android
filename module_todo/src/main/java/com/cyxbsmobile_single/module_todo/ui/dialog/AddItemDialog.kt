@@ -38,14 +38,13 @@ class AddItemDialog(context: Context, val onConfirm: (Todo) -> Unit) :
 
     private val todo by lazy { Todo.generateEmptyTodo() }
 
+    private val dateBeenStringList by lazy { ArrayList<List<String>>() }
+
     private val chooseYearAdapter by lazy {
         ChooseYearAdapter(
-            ArrayList(getNextForYears())
+            ArrayList(getNextFourYears())
         ) {
-            //配置第一个日期时间选择器
-            todo_inner_add_thing_first.data = dateBeenList[it - Calendar.getInstance().get(Calendar.YEAR)].map { dateBeen ->
-                "${dateBeen.month}月${numToString(dateBeen.day)}日 周${weekStringList[dateBeen.week - 1]}"
-            }
+            todo_inner_add_thing_first.data = dateBeenStringList[it]
         }
     }
 
@@ -107,6 +106,7 @@ class AddItemDialog(context: Context, val onConfirm: (Todo) -> Unit) :
             //首先，添加点击事件
             initClick()
         }
+        LogUtils.d("Kying-Star", dateBeenList.toString())
     }
 
 
@@ -130,6 +130,14 @@ class AddItemDialog(context: Context, val onConfirm: (Todo) -> Unit) :
         todo_inner_add_thing_repeat_time_cancel.setOnClickListener { onCancelClick() }
         //删除提醒时间的点击事件
         todo_tv_del_notify_time.setOnClickListener { onDelClick() }
+        //保存逻辑
+        todo_tv_add_thing_save.setOnClickListener {
+            todo.title = todo_et_todo_title.text.toString()
+            onConfirm(todo)
+            hide()
+        }
+        //取消逻辑
+        todo_tv_add_thing_cancel.setOnClickListener { hide() }
     }
 
     //当从detail界面过来复用的时候，提供一个接口来重置todo的提醒模式
@@ -138,32 +146,36 @@ class AddItemDialog(context: Context, val onConfirm: (Todo) -> Unit) :
         isFromDetail = true
     }
 
-    private fun onConfirmClick(){
-        if (isFromDetail){
+    private fun onConfirmClick() {
+        if (isFromDetail) {
             onConfirm(todo)
             hide()
             return
         }
-        if (curOperate == NOTIFY){
+        if (curOperate == NOTIFY) {
             addNotify()
         }
         hideWheel()
     }
 
-    private fun onCancelClick(){
-        when(curOperate){
-            NOTIFY -> { todo.remindMode.notifyDateTime = "" }//判定为在添加提醒
+    private fun onCancelClick() {
+        when (curOperate) {
+            NOTIFY -> {
+                todo.remindMode.notifyDateTime = ""
+            }//判定为在添加提醒
             REPEAT -> {
                 val remindDate = todo.remindMode.notifyDateTime
                 todo.remindMode = RemindMode.generateDefaultRemindMode()
                 todo.remindMode.notifyDateTime = remindDate
             }//因为已经添加了提醒，这里就直接隐藏轮子
-            else -> { hideWheel() }
+            else -> {
+                hideWheel()
+            }
         }
         hideWheel()
     }
 
-    private fun onDelClick(){
+    private fun onDelClick() {
         todo.remindMode.notifyDateTime = ""
         todo_tv_set_notify_time.text = "设置提醒时间"
     }
@@ -183,34 +195,38 @@ class AddItemDialog(context: Context, val onConfirm: (Todo) -> Unit) :
         todo_inner_add_rv_thing_repeat_list.layoutManager = LinearLayoutManager(context).apply {
             orientation = LinearLayoutManager.HORIZONTAL
         }
-        //配置仨时间选择器（默认展示今年）
-        for (i in 0 .. 2){
-            //增加占位
-            dateBeenList[0].add(0, DateBeen(0,0,0, DateBeen.EMPTY))
-        }
-        //增加今日标识
-        dateBeenList[0][3].type = DateBeen.TODAY
-        todo_inner_add_thing_first.data = dateBeenList[0].map { dateBeen ->
-            when {
-                dateBeen.month == 0 -> {
-                    ""
-                }
-                dateBeen.day == -1 -> {
-                    "今天"
-                }
-                else -> {
-                    "${dateBeen.month}月${numToString(dateBeen.day)}日 周${weekStringList[dateBeen.week - 1]}"
-                }
+
+        dateBeenList[0][0].type = DateBeen.TODAY
+        for (yearIndex in 0..3) {
+            //配置仨时间选择器（默认展示今年）
+            for (i in 0..2) {
+                //增加占位
+                dateBeenList[yearIndex].add(DateBeen(0, 0, 1, DateBeen.EMPTY, 0))
             }
+            dateBeenStringList.add(dateBeenList[yearIndex].map { dateBeen ->
+                when (dateBeen.type) {
+                    DateBeen.EMPTY -> {
+                        ""
+                    }
+                    DateBeen.TODAY -> {
+                        "今天"
+                    }
+                    else -> {
+                        "${dateBeen.month}月${numToString(dateBeen.day)}日 周${weekStringList[dateBeen.week - 1]}"
+                    }
+                }
+            })
         }
+        todo_inner_add_thing_first.data = dateBeenStringList[0]
+        todo_inner_add_thing_first.selectedItemPosition = 3
         todo_inner_add_thing_first.setOnItemSelectedListener { _, data, _ ->
-            if (data == ""){
+            if (data == "") {
                 todo_inner_add_thing_second.data = emptyList<String>()
                 todo_inner_add_thing_third.data = emptyList<String>()
             }
         }
-        todo_inner_add_thing_second.data = IntArray(24){ it }.toList()
-        todo_inner_add_thing_third.data = IntArray(60){ it }.toList()
+        todo_inner_add_thing_second.data = IntArray(24) { it }.toList()
+        todo_inner_add_thing_third.data = IntArray(60) { it }.toList()
     }
 
     fun showRepeatDatePicker() {
@@ -246,11 +262,9 @@ class AddItemDialog(context: Context, val onConfirm: (Todo) -> Unit) :
         todo_inner_add_rv_thing_repeat_list.layoutManager = LinearLayoutManager(context).apply {
             orientation = LinearLayoutManager.HORIZONTAL
         }
-        LogUtils.d("RayleighZ","setAdapter")
 
         //监听选择的重复类型
         todo_inner_add_thing_first.setOnItemSelectedListener { _, data, _ ->
-            LogUtils.d("RayleighZ", "when changed, data = $data")
             when (data) {
                 "每天" -> changeRepeatType2EveryDay()
                 "每周" -> changeRepeatType2EveryWeek()
@@ -271,32 +285,33 @@ class AddItemDialog(context: Context, val onConfirm: (Todo) -> Unit) :
     }
 
     private fun changeRepeatType2EveryMonth() {
-        todo_inner_add_thing_second.data = IntArray(31){ it + 1 }.toList()
+        todo_inner_add_thing_second.data = IntArray(31) { it + 1 }.toList()
         todo_inner_add_thing_third.data = emptyList<String>()
     }
 
     private fun changeRepeatType2EveryYear() {
-        todo_inner_add_thing_second.data = IntArray(12){ it + 1 }.toList()
-        todo_inner_add_thing_third.data = IntArray(31){ it + 1 }.toList()
+        todo_inner_add_thing_second.data = IntArray(12) { it + 1 }.toList()
+        todo_inner_add_thing_third.data = IntArray(31) { it + 1 }.toList()
         todo_inner_add_thing_second.setOnItemSelectedListener { _, data, _ ->
             //date就是月份，这里就根据月份获得这个月的天数
             val calendar = Calendar.getInstance()
             calendar.set(Calendar.MONTH, Integer.parseInt(data.toString()) - 1)
             todo_inner_add_thing_third.data =
-                IntArray(calendar.getActualMaximum(Calendar.DAY_OF_MONTH)){ it + 1 }.toList()
+                IntArray(calendar.getActualMaximum(Calendar.DAY_OF_MONTH)) { it + 1 }.toList()
         }
     }
 
     //增加提醒日期
     private fun addNotify() {
         val curSelectYear = chooseYearAdapter.stringArray[chooseYearAdapter.curSelPosition]
-        val date = dateBeenList[chooseYearAdapter.curSelPosition][todo_inner_add_thing_first.curPos()]
-        if (date.type == DateBeen.EMPTY){
+        val date =
+            dateBeenList[chooseYearAdapter.curSelPosition][todo_inner_add_thing_first.curPos()]
+        if (date.type == DateBeen.EMPTY) {
             //如果是用来占位的，就不增加进去
             return
         }
-        val hour = todo_inner_add_thing_second.data[todo_inner_add_thing_second.curPos()] as String
-        val min = todo_inner_add_thing_third.data[todo_inner_add_thing_third.curPos()] as String
+        val hour = todo_inner_add_thing_second.data[todo_inner_add_thing_second.curPos()].toString()
+        val min = todo_inner_add_thing_third.data[todo_inner_add_thing_third.curPos()].toString()
         todo.remindMode.notifyDateTime = "${curSelectYear}年${date.month}月${date.day}日${
             numToString(hour)
         }:${
@@ -316,8 +331,10 @@ class AddItemDialog(context: Context, val onConfirm: (Todo) -> Unit) :
         }
 
         //首先判断重复类型是否冲突
-        val repeatType = repeatString2Num(todo_inner_add_thing_first
-            .data[todo_inner_add_thing_first.curPos()].toString())
+        val repeatType = repeatString2Num(
+            todo_inner_add_thing_first
+                .data[todo_inner_add_thing_first.curPos()].toString()
+        )
         if (
             repeatType == todo.remindMode.repeatMode ||
             todo.remindMode.repeatMode == RemindMode.NONE
@@ -325,46 +342,44 @@ class AddItemDialog(context: Context, val onConfirm: (Todo) -> Unit) :
             //判断为类型不冲突
             todo.remindMode.repeatMode = repeatType
             val repeatString =
-            when (todo.remindMode.repeatMode) {
-                RemindMode.DAY -> {//每天
-                    //不需要进行啥操作
-                    "每天"
-                }
-                RemindMode.WEEK -> {//周
-                    //添加新的周
-                    todo.remindMode.week.addWithoutRepeat(
-                        0,
-                        todo_inner_add_thing_second.curPos() + 1
-                    )
-                    LogUtils.d("RayleighZ","week index = ${todo_inner_add_thing_second.curPos()}")
-                    "周${weekStringList[todo_inner_add_thing_second.curPos()]}"
-                }
-                RemindMode.MONTH -> {
-                    todo.remindMode.day.addWithoutRepeat(
-                        0,
-                        todo_inner_add_thing_second.curPos() + 1
-                    )
-                    "每月${todo_inner_add_thing_second.curPos() + 1}日"
-                }
-                RemindMode.YEAR -> {
-                    todo.remindMode.date.addWithoutRepeat(
-                        0,
-                        "${
+                when (todo.remindMode.repeatMode) {
+                    RemindMode.DAY -> {//每天
+                        //不需要进行啥操作
+                        "每天"
+                    }
+                    RemindMode.WEEK -> {//周
+                        //添加新的周
+                        todo.remindMode.week.addWithoutRepeat(
+                            0,
                             todo_inner_add_thing_second.curPos() + 1
-                        }.${
+                        )
+                        "周${weekStringList[todo_inner_add_thing_second.curPos()]}"
+                    }
+                    RemindMode.MONTH -> {
+                        todo.remindMode.day.addWithoutRepeat(
+                            0,
+                            todo_inner_add_thing_second.curPos() + 1
+                        )
+                        "每月${todo_inner_add_thing_second.curPos() + 1}日"
+                    }
+                    RemindMode.YEAR -> {
+                        todo.remindMode.date.addWithoutRepeat(
+                            0,
+                            "${
+                                todo_inner_add_thing_second.curPos() + 1
+                            }.${
+                                todo_inner_add_thing_third.curPos() + 1
+                            }"
+                        )
+                        "每年${
+                            todo_inner_add_thing_second.curPos() + 1
+                        }月${
                             todo_inner_add_thing_third.curPos() + 1
-                        }"
-                    )
-                    "每年${
-                        todo_inner_add_thing_second.curPos() + 1
-                    }月${
-                        todo_inner_add_thing_third.curPos() + 1
-                    }日"
+                        }日"
+                    }
+                    else -> ""
                 }
-                else -> ""
-            }
             repeatTimeAdapter.addString(repeatString)
-            LogUtils.d("RayleighZ", "repeatString = $repeatString")
             todo_inner_add_rv_thing_repeat_list.scrollToPosition(0)
         } else {
             BaseApp.context.toast("掌友，只能选择一种重复模式哦！")
@@ -407,6 +422,7 @@ class AddItemDialog(context: Context, val onConfirm: (Todo) -> Unit) :
             return
         }
         curOperate = targetStatus
+        hideKeyboard(context, todo_et_todo_title)
         onDiff()
     }
 
@@ -428,17 +444,17 @@ class AddItemDialog(context: Context, val onConfirm: (Todo) -> Unit) :
         isFromDetail = true
     }
 
-    private fun WheelPicker.gone(){
+    private fun WheelPicker.gone() {
         data = emptyList<Int>()
         visibility = View.GONE
     }
 
-    private fun WheelPicker.visible(){
+    private fun WheelPicker.visible() {
         data = emptyList<Int>()
         visibility = View.VISIBLE
     }
 
-    private fun WheelPicker.curPos(): Int{
+    private fun WheelPicker.curPos(): Int {
         return when {
             data.size == 0 -> {
                 0

@@ -54,7 +54,6 @@ fun repeatString2Num(repeatString: String): Int = when (repeatString) {
  * 不重复不提醒       -> 返回""
  */
 fun repeatMode2RemindTime(remindMode: RemindMode): String {
-    LogUtils.d("RayleighZ", "remindMode = $remindMode")
     if (remindMode.notifyDateTime.isNullOrEmpty() && remindMode.repeatMode == RemindMode.NONE) {
         LogUtils.d("RayleighZ", "handle todo")
         return ""
@@ -165,7 +164,7 @@ fun repeatMode2RemindTime(remindMode: RemindMode): String {
 fun getNextNotifyDay(remindMode: RemindMode): DateBeen {
     val repeatString = repeatMode2RemindTime(remindMode)
     //表示永远不会提醒
-    if (repeatString == "") return DateBeen(0, 0, 0)
+    if (repeatString == "") return DateBeen(0, 0, 0, 0, 0)
 
     val date = SimpleDateFormat("MM月dd日 hh:mm", Locale.CHINA).parse(repeatString)
     val calendar = Calendar.getInstance()
@@ -173,7 +172,9 @@ fun getNextNotifyDay(remindMode: RemindMode): DateBeen {
     return DateBeen(
         calendar.get(Calendar.MONTH) + 1,
         calendar.get(Calendar.DAY_OF_MONTH),
-        calendar.get(Calendar.DAY_OF_WEEK)
+        calendar.get(Calendar.DAY_OF_WEEK),
+        DateBeen.NORMAL,
+        calendar.get(Calendar.YEAR)
     )
 }
 
@@ -185,7 +186,7 @@ fun getYearDateSting(): ArrayList<ArrayList<DateBeen>> {
         time = Date(System.currentTimeMillis())
     }.get(Calendar.YEAR)
     val listYear = BaseApp.context.defaultSharedPreferences.getInt(TODO_YEAR_OF_WEEK_MONTH_ARRAY, 0)
-    if (dateArrayJson == "" || dateArrayJson == null || thisYear == listYear) {
+    if (dateArrayJson == "" || dateArrayJson == null || thisYear == listYear || true) {
         //认定本地还没有对于日期，星期数的缓存，则生成一份
         val calendar = Calendar.getInstance()
         calendar.set(Calendar.MONTH, 0)
@@ -197,16 +198,17 @@ fun getYearDateSting(): ArrayList<ArrayList<DateBeen>> {
             for (day in 0 until calendar.getActualMaximum(Calendar.DAY_OF_YEAR)) {
                 dateBeanArray.add(
                     DateBeen(
-                        calendar.get(Calendar.MONTH) + 1,
-                        calendar.get(Calendar.DAY_OF_MONTH),
-                        calendar.get(Calendar.DAY_OF_WEEK)
+                        month = calendar.get(Calendar.MONTH) + 1,
+                        day = calendar.get(Calendar.DAY_OF_MONTH),
+                        week = getRealWeek(calendar.get(Calendar.DAY_OF_WEEK)),
+                        type = DateBeen.NORMAL,
+                        year = calendar.get(Calendar.YEAR)
                     )
                 )
                 calendar.add(Calendar.DAY_OF_YEAR, 1)
             }
             dateBeanArrayAsFourYears.add(dateBeanArray)
             //后置一年
-            calendar.add(Calendar.YEAR, 1)
             calendar.set(Calendar.MONTH, 0)
             calendar.set(Calendar.DAY_OF_MONTH, 1)
         }
@@ -311,7 +313,7 @@ private fun getNotifyDayCandler(remindMode: RemindMode): Calendar {
 }
 
 //返回后面的四年
-fun getNextForYears(): List<String> {
+fun getNextFourYears(): List<String> {
     val thisYear = Calendar.getInstance().get(Calendar.YEAR)
     return listOf(
         thisYear.toString(),
@@ -320,3 +322,8 @@ fun getNextForYears(): List<String> {
         (thisYear + 3).toString()
     )
 }
+
+private fun getRealWeek(rawWeekNum: Int): Int =
+    if (rawWeekNum == 1)
+        7
+    else rawWeekNum - 1

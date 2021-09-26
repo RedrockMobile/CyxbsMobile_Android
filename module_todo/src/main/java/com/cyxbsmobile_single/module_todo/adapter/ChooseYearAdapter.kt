@@ -57,7 +57,7 @@ class ChooseYearAdapter(
                     //更改背景颜色
                     curSelPosition = position
                     //回到年份
-                    onItemClick(Integer.parseInt(stringArray[position]))
+                    onItemClick(curSelPosition)
                     notifyDataSetChanged()
                 }
             }
