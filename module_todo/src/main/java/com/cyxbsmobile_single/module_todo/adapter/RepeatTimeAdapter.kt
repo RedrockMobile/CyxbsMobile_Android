@@ -10,7 +10,7 @@ import kotlinx.android.synthetic.main.todo_rv_item_repeat_select_auto_warp_item.
  */
 @Suppress("UNCHECKED_CAST")
 class RepeatTimeAdapter(private val dataList: ArrayList<String>, private val onCancel: (Int)->Unit) :
-    SimpleTextAdapter(dataList, R.layout.todo_rv_item_repeat_select_auto_warp_item) {
+    SimpleTextAdapter(dataList, R.layout.todo_rv_item_repeat_time_item) {
 
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
         holder.itemView.apply {

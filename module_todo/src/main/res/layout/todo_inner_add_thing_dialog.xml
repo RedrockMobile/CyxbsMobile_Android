@@ -127,7 +127,7 @@
             android:layout_height="36dp"
             android:layout_marginStart="16dp"
             android:layout_marginEnd="16dp"
-            tools:listitem="@layout/todo_rv_item_repeat_select_auto_warp_item"
+            tools:listitem="@layout/todo_rv_item_repeat_time_item"
             android:layout_marginTop="14dp" />
 
         <androidx.constraintlayout.widget.ConstraintLayout
