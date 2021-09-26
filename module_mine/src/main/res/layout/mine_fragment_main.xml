@@ -74,7 +74,7 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="17dp"
             android:layout_marginEnd="17dp"
-            android:background="@drawable/mine_shape_round_corner_main">
+            android:background="@drawable/mine_shape_round_corner_main_background">
 
             <TextView
                 android:id="@+id/mine_main_tv_sign"

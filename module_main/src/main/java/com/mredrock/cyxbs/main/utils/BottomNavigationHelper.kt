@@ -2,7 +2,9 @@ package com.mredrock.cyxbs.main.utils
 
 import android.animation.ValueAnimator
 import android.widget.CheckedTextView
+import com.mredrock.cyxbs.common.skin.SkinManager
 import com.mredrock.cyxbs.common.utils.extensions.onClick
+import com.mredrock.cyxbs.main.R
 
 /**
  * @author  Jovines
@@ -30,6 +32,18 @@ class BottomNavigationHelper(private val tabList: Array<CheckedTextView>,
                 }
             }
         }
+        SkinManager.addSkinUpdateListener(object : SkinManager.SkinUpdateListener{
+            override fun onSkinUpdate() {
+                for (value in tabList) {
+                        if (value.isChecked) {
+                            value.setTextColor(SkinManager.getColor("common_focused_font_color", R.color.common_focused_font_color))
+                        } else{
+                            value.setTextColor(SkinManager.getColor("common_un_focused_font_color", R.color.common_un_focused_font_color))
+                        }
+
+                }
+            }
+        })
     }
 
     /**
@@ -40,6 +54,7 @@ class BottomNavigationHelper(private val tabList: Array<CheckedTextView>,
         for ((p, value) in tabList.withIndex()) {
             if (p != i) {
                 value.isChecked = false
+                value.setTextColor(SkinManager.getColor("common_un_focused_font_color", R.color.common_un_focused_font_color))
                 value.animate().setDuration(animationDuration).scaleX(1f).scaleY(1f)
             }
         }
@@ -48,6 +63,7 @@ class BottomNavigationHelper(private val tabList: Array<CheckedTextView>,
     fun selectTab(i: Int) {
         //将当前tab点击状态设置为true
         tabList[i].isChecked = true
+        tabList[i].setTextColor(SkinManager.getColor("common_focused_font_color", R.color.common_focused_font_color))
         //增加点击动画
         ValueAnimator.ofFloat(1f,1.1f).apply {
             duration = animationDuration

@@ -5,6 +5,7 @@ import android.widget.CheckedTextView
 import android.widget.ImageView
 import android.widget.Switch
 import android.widget.TextView
+import androidx.appcompat.widget.AppCompatEditText
 import com.google.android.material.tabs.TabLayout
 
 
@@ -39,6 +40,8 @@ class SkinItem(private val view: View?, private val attrs: List<SkinAttr>?) {
                         view.setTextColor(
                                 SkinManager.getColor(resName, resId)
                         )
+                    } else if (view is AppCompatEditText) {
+                        view.setTextColor(SkinManager.getColor(resName, resId))
                     }
                 }
 
@@ -91,9 +94,8 @@ class SkinItem(private val view: View?, private val attrs: List<SkinAttr>?) {
                 }
 
                 "tabIndicatorColor" -> {
-                    if (view is TabLayout)
-                    {
-                        view.setSelectedTabIndicatorColor(SkinManager.getColor(resName,resId))
+                    if (view is TabLayout) {
+                        view.setSelectedTabIndicatorColor(SkinManager.getColor(resName, resId))
                     }
                 }
             }

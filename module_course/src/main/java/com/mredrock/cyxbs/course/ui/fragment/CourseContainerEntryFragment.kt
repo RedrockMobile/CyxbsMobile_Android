@@ -15,20 +15,17 @@ import androidx.transition.Slide
 import androidx.transition.TransitionManager
 import androidx.transition.TransitionSet
 import com.alibaba.android.arouter.facade.annotation.Route
+import com.mredrock.cyxbs.api.account.IAccountService
+import com.mredrock.cyxbs.api.account.IUserStateService
+import com.mredrock.cyxbs.api.main.IMainService
 import com.mredrock.cyxbs.common.bean.WidgetCourse
 import com.mredrock.cyxbs.common.component.CyxbsToast
 import com.mredrock.cyxbs.common.config.*
 import com.mredrock.cyxbs.common.event.*
 import com.mredrock.cyxbs.common.mark.EventBusLifecycleSubscriber
 import com.mredrock.cyxbs.common.service.ServiceManager
-import com.mredrock.cyxbs.api.account.IAccountService
-import com.mredrock.cyxbs.api.account.IUserStateService
-import com.mredrock.cyxbs.api.main.IMainService
 import com.mredrock.cyxbs.common.ui.BaseViewModelFragment
-import com.mredrock.cyxbs.common.utils.extensions.gone
-import com.mredrock.cyxbs.common.utils.extensions.invisible
-import com.mredrock.cyxbs.common.utils.extensions.pressToZoomOut
-import com.mredrock.cyxbs.common.utils.extensions.visible
+import com.mredrock.cyxbs.common.utils.extensions.*
 import com.mredrock.cyxbs.course.R
 import com.mredrock.cyxbs.course.adapters.ScheduleVPAdapter
 import com.mredrock.cyxbs.course.databinding.CourseFragmentCourseContainerBinding
@@ -47,7 +44,6 @@ import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
 import java.util.*
-import com.mredrock.cyxbs.common.utils.extensions.*
 
 
 /**
@@ -427,6 +423,7 @@ class CourseContainerEntryFragment : BaseViewModelFragment<CoursesViewModel>(),
         //如果周数选择没有显示就对最近课表和周数做透明度变换
         course_current_course_container.visibility = View.VISIBLE
         course_current_course_container.alpha = 1 - state
+        fl_background.alpha = state
         //对周数选择做透明度变换
         course_current_course_week_select_container.alpha = state
         //如果课表子页还没有加载，则不显示周数

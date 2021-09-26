@@ -213,7 +213,8 @@
 
     <!--课表背景-->
     <color name="common_curriculum_background_color">#ffffff</color>
-
+    <!--    个人页签到那一块背景-->
+    <color name="common_mine_background">#ffffff</color>
     <!--事务备忘条纹-->
     <color name="common_transaction_background_stripe_color">#FFE4E7EC</color>
 

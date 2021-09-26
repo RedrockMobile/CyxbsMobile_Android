@@ -17,7 +17,7 @@
         android:gravity="center"
         android:text="@string/common_explore"
         android:textAlignment="center"
-        android:textColor="@color/main_selector_main_bottom_navigation_text"
+        android:textColor="@color/common_un_focused_font_color"
         android:textSize="@dimen/main_bottom_text_size" />
 
     <CheckedTextView
@@ -30,7 +30,7 @@
         android:gravity="center"
         android:text="@string/common_qa"
         android:textAlignment="center"
-        android:textColor="@color/main_selector_main_bottom_navigation_text"
+        android:textColor="@color/common_un_focused_font_color"
         android:textSize="@dimen/main_bottom_text_size" />
 
     <CheckedTextView
@@ -43,7 +43,7 @@
         android:gravity="center"
         android:text="@string/common_mine"
         android:textAlignment="center"
-        android:textColor="@color/main_selector_main_bottom_navigation_text"
+        android:textColor="@color/common_un_focused_font_color"
         android:textSize="@dimen/main_bottom_text_size" />
 
 </LinearLayout>

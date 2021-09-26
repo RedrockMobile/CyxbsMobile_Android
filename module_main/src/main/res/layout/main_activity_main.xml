@@ -12,7 +12,7 @@
         android:layout_height="match_parent"
         android:animateLayoutChanges="true"
         android:fitsSystemWindows="true"
-        tools:background="@color/common_window_background"
+        android:background="@drawable/common_shape_activity_background"
         tools:context=".ui.MainActivity">
 
         <androidx.viewpager2.widget.ViewPager2
