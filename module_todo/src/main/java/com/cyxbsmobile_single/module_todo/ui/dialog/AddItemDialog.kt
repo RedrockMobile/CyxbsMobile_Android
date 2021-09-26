@@ -19,7 +19,9 @@ import com.cyxbsmobile_single.module_todo.util.*
 import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.mredrock.cyxbs.common.BaseApp
 import com.mredrock.cyxbs.common.utils.LogUtils
+import com.mredrock.cyxbs.common.utils.extensions.dip
 import com.mredrock.cyxbs.common.utils.extensions.toast
+import kotlinx.android.synthetic.main.todo_activity_inner_detail.*
 import kotlinx.android.synthetic.main.todo_inner_add_thing_dialog.*
 import java.util.*
 import kotlin.collections.ArrayList
@@ -402,7 +404,25 @@ class AddItemDialog(context: Context, val onConfirm: (Todo) -> Unit) :
     }
 
     //设置为只有单个选择（重复或者提醒时间）
-    fun setAsSinglePicker() {
+    fun setAsSinglePicker(curOperate: CurOperate) {
+        this.curOperate = curOperate
+        setMargin(todo_tv_set_repeat_time, left = BaseApp.context.dip(15))
+        when (curOperate){
+            REPEAT -> {
+                todo_tv_set_repeat_time.text = "设置重复提醒"
+                todo_inner_add_rv_thing_repeat_list.adapter = repeatTimeAdapter
+            }
+            NOTIFY -> {
+                todo_tv_set_repeat_time.text = "设置提醒时间"
+                todo_inner_add_rv_thing_repeat_list.adapter = chooseYearAdapter
+            }
+            else -> {
+                todo_tv_set_repeat_time.text = "设置重复提醒"
+                todo_inner_add_rv_thing_repeat_list.adapter = repeatTimeAdapter
+            }
+        }
+        //统一配置layoutManager
+        todo_inner_add_rv_thing_repeat_list.layoutManager = LinearLayoutManager(context)
         todo_inner_add_thing_header.visibility = View.GONE
         todo_et_todo_title.visibility = View.GONE
         todo_iv_add_bell.visibility = View.GONE
@@ -440,6 +460,7 @@ class AddItemDialog(context: Context, val onConfirm: (Todo) -> Unit) :
                 }
             })
         }
+        LogUtils.d("RayleighZ", "repeatAdapter list = ${repeatTimeAdapter.dataListCopy}")
         this.todo.remindMode = todo.remindMode
         isFromDetail = true
     }
