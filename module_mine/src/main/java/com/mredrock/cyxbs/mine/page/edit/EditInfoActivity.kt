@@ -15,6 +15,7 @@ import android.os.Environment
 import android.provider.MediaStore
 import android.text.Editable
 import android.text.TextWatcher
+import android.util.Log
 import android.view.*
 import android.view.inputmethod.InputMethodManager
 import android.widget.EditText
@@ -510,6 +511,7 @@ class EditInfoActivity
             SELECT_PICTURE -> {
                 val uri = data?.data
                 if (uri != null) {
+           Log.e("wxtag","(EditInfoActivity.kt:514)->>相册逻辑 ")
                     startCropActivity(uri)
                 } else {
                     toast("无法识别该图像")
