@@ -69,7 +69,6 @@ class TodoViewModel : BaseViewModel() {
                 wrapperList.add(TodoItemWrapper.titleWrapper("待办"))
                 wrapperList.add(TodoItemWrapper.titleWrapper("已完成"))
             }
-            LogUtils.d("Gibson", "aGibson")
             onLoadSuccess.invoke()
         }
     }

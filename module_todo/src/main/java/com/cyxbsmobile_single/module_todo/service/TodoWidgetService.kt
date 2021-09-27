@@ -1,6 +1,5 @@
 package com.cyxbsmobile_single.module_todo.service
 
-import android.app.PendingIntent
 import android.content.Intent
 import android.widget.RemoteViews
 import android.widget.RemoteViewsService
@@ -8,16 +7,11 @@ import com.cyxbsmobile_single.module_todo.R
 import com.cyxbsmobile_single.module_todo.model.TodoModel
 import com.cyxbsmobile_single.module_todo.model.bean.RemindMode
 import com.cyxbsmobile_single.module_todo.model.bean.Todo
-import com.cyxbsmobile_single.module_todo.model.database.TodoDatabase
 import com.cyxbsmobile_single.module_todo.ui.widget.TodoWidget
 import com.cyxbsmobile_single.module_todo.util.repeatMode2RemindTime
 import com.google.gson.Gson
-import com.google.gson.reflect.TypeToken
 import com.mredrock.cyxbs.common.BaseApp
 import com.mredrock.cyxbs.common.utils.LogUtils
-import com.mredrock.cyxbs.common.utils.extensions.defaultSharedPreferences
-import com.mredrock.cyxbs.common.utils.extensions.safeSubscribeBy
-import com.mredrock.cyxbs.common.utils.extensions.setSchedulers
 
 /**
  * @date 2021-08-18
@@ -35,14 +29,14 @@ class TodoWidgetService : RemoteViewsService() {
         private var todoList: List<Todo> = emptyList()
 
         override fun onCreate() {
-            TodoModel.INSTANCE.queryByIsDone(0){
+            TodoModel.INSTANCE.queryByIsDone(0) {
                 todoList = it
             }
         }
 
         override fun onDataSetChanged() {
             //从room中加载尚未完成的todo
-            TodoModel.INSTANCE.queryByIsDone(0){
+            TodoModel.INSTANCE.queryByIsDone(0) {
                 todoList = it
             }
         }
@@ -73,7 +67,7 @@ class TodoWidgetService : RemoteViewsService() {
             if (position in todoList.indices) {
                 val curTodo = todoList[position]
                 listItem.setTextViewText(R.id.todo_tv_widget_todo_title, curTodo.title)
-                if (curTodo.remindMode.repeatMode == RemindMode.NONE){
+                if (curTodo.remindMode.repeatMode == RemindMode.NONE) {
                     listItem.setTextViewText(
                         R.id.todo_widget_notify_time,
                         ""

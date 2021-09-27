@@ -25,13 +25,14 @@ import kotlinx.android.synthetic.main.todo_rv_item_todo.view.*
 @Route(path = DISCOVER_TODO_MAIN)
 class TodoInnerMainActivity : BaseViewModelActivity<TodoViewModel>() {
 
-    companion object var CHANGED_FLAG = false
+    //在详情页面是否有做出修改的flag
+    companion object var changedFlag = false
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.todo_activity_inner_main)
-        CHANGED_FLAG = false
+        changedFlag = false
         viewModel.initDataList {
             onDateLoaded()
         }
@@ -39,7 +40,7 @@ class TodoInnerMainActivity : BaseViewModelActivity<TodoViewModel>() {
 
     override fun onResume() {
         super.onResume()
-        if (CHANGED_FLAG){
+        if (changedFlag){
             //私以为都在子线程进行，不会ANR
             viewModel.initDataList {
                 onDateLoaded()
@@ -86,13 +87,13 @@ class TodoInnerMainActivity : BaseViewModelActivity<TodoViewModel>() {
                         todo_fl_todo_back.setOnClickListener {
                             wrapper.todo?.let {
                                 TodoDetailActivity.startActivity(it, this@TodoInnerMainActivity)
-                                CHANGED_FLAG = true
+                                changedFlag = true
                             }
                         }
                         todo_tv_todo_title.setOnClickListener{
                             wrapper.todo?.let {
                                 TodoDetailActivity.startActivity(it, this@TodoInnerMainActivity)
-                                CHANGED_FLAG = true
+                                changedFlag = true
                             }
                         }
                         todo_fl_del.visibility = View.VISIBLE

@@ -403,11 +403,9 @@ class QuizActivity : BaseViewModelActivity<QuizViewModel>() {
                 childView[currentTypeIndex - 1].isChecked = true
             }
         }
-        LogUtils.d("Gibson", "when load, draft = $draft, image")
         if (!draft.images.isNullOrEmpty()) {
             viewModel.setImageList(arrayListOf<String>().apply { addAll(draft.images) })
         } else {//表示草稿中并没有图像，就直接清空
-            LogUtils.d("Gibson", "refresh imageList")
             viewModel.imageLiveData.value = null
         }
     }

@@ -114,6 +114,11 @@ class AddItemDialog(context: Context, val onConfirm: (Todo) -> Unit) :
 
     private fun initClick() {
 
+        //先配置manager
+        todo_inner_add_rv_thing_repeat_list.layoutManager = LinearLayoutManager(context).apply {
+            orientation = LinearLayoutManager.HORIZONTAL
+        }
+
         //设置添加提醒日期的点击事件
         todo_tv_set_notify_time.setOnClickListener {
             whenStatusDifDoAndChangeStatus(NOTIFY) { showNotifyDatePicker() }
@@ -194,9 +199,6 @@ class AddItemDialog(context: Context, val onConfirm: (Todo) -> Unit) :
 
         //配置年份选择Adapter
         todo_inner_add_rv_thing_repeat_list.adapter = chooseYearAdapter
-        todo_inner_add_rv_thing_repeat_list.layoutManager = LinearLayoutManager(context).apply {
-            orientation = LinearLayoutManager.HORIZONTAL
-        }
 
         dateBeenList[0][0].type = DateBeen.TODAY
         for (yearIndex in 0..3) {
@@ -214,7 +216,11 @@ class AddItemDialog(context: Context, val onConfirm: (Todo) -> Unit) :
                         "今天"
                     }
                     else -> {
-                        "${dateBeen.month}月${numToString(dateBeen.day)}日 周${weekStringList[dateBeen.week - 1]}"
+                        "${dateBeen.month}月${
+                            numToString(dateBeen.day)
+                        }日 周${
+                            weekStringList[dateBeen.week - 1]
+                        }"
                     }
                 }
             })
@@ -261,9 +267,6 @@ class AddItemDialog(context: Context, val onConfirm: (Todo) -> Unit) :
         //更换Adapter
         repeatTimeAdapter.removeAll()
         todo_inner_add_rv_thing_repeat_list.adapter = repeatTimeAdapter
-        todo_inner_add_rv_thing_repeat_list.layoutManager = LinearLayoutManager(context).apply {
-            orientation = LinearLayoutManager.HORIZONTAL
-        }
 
         //监听选择的重复类型
         todo_inner_add_thing_first.setOnItemSelectedListener { _, data, _ ->
@@ -411,6 +414,7 @@ class AddItemDialog(context: Context, val onConfirm: (Todo) -> Unit) :
             REPEAT -> {
                 todo_tv_set_repeat_time.text = "设置重复提醒"
                 todo_inner_add_rv_thing_repeat_list.adapter = repeatTimeAdapter
+                repeatTimeAdapter.notifyDataSetChanged()
             }
             NOTIFY -> {
                 todo_tv_set_repeat_time.text = "设置提醒时间"
@@ -419,10 +423,9 @@ class AddItemDialog(context: Context, val onConfirm: (Todo) -> Unit) :
             else -> {
                 todo_tv_set_repeat_time.text = "设置重复提醒"
                 todo_inner_add_rv_thing_repeat_list.adapter = repeatTimeAdapter
+                repeatTimeAdapter.notifyDataSetChanged()
             }
         }
-        //统一配置layoutManager
-        todo_inner_add_rv_thing_repeat_list.layoutManager = LinearLayoutManager(context)
         todo_inner_add_thing_header.visibility = View.GONE
         todo_et_todo_title.visibility = View.GONE
         todo_iv_add_bell.visibility = View.GONE

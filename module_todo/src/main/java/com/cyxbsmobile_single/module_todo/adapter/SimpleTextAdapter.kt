@@ -4,6 +4,7 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
+import com.mredrock.cyxbs.common.utils.LogUtils
 
 /**
  * Author: RayleighZ
@@ -18,6 +19,7 @@ abstract class SimpleTextAdapter(private val dataList: ArrayList<String>, val re
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
         val view = LayoutInflater.from(parent.context)
             .inflate(resId, parent, false)
+        LogUtils.d("RayleighZ","SimpleTextAdapter OnCreateViewHolder")
         return object : RecyclerView.ViewHolder(view) {}
     }
 
@@ -49,7 +51,10 @@ abstract class SimpleTextAdapter(private val dataList: ArrayList<String>, val re
         dataList.addAll(newList)
     }
 
-    override fun getItemCount(): Int = dataListCopy.size
+    override fun getItemCount(): Int {
+        LogUtils.d("KyingStar", "itemCount = ${dataListCopy.size}")
+        return dataListCopy.size
+    }
 
     inner class DiffCallBack : DiffUtil.Callback() {
         override fun getOldListSize(): Int = dataList.size

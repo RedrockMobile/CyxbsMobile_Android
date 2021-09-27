@@ -24,11 +24,12 @@ import io.reactivex.Observable
 /**
  * Author: RayleighZ
  * Time: 2021-08-29 0:08
+ * Describe: Todo模块封装的用于维持本地和远程数据库同步的module
  */
 class TodoModel {
     companion object {
         val INSTANCE by lazy { TodoModel() }
-        val apiGenerator by lazy { ApiGenerator.getApiService(Api::class.java) }
+        val apiGenerator: Api by lazy { ApiGenerator.getApiService(Api::class.java) }
     }
 
     val todoList by lazy { ArrayList<Todo>() }
@@ -128,9 +129,9 @@ class TodoModel {
                     )
                 ).setSchedulers()
                     .safeSubscribeBy(
-                        onNext = {
-                            setLastSyncTime(it.data.syncTime)
-                            setLastModifyTime(it.data.syncTime)
+                        onNext = { syncTime ->
+                            setLastSyncTime(syncTime.data.syncTime)
+                            setLastModifyTime(syncTime.data.syncTime)
                         },
                         onError = {
                             //缓存为本地修改
@@ -172,18 +173,18 @@ class TodoModel {
         }
     }
 
-    fun getLastModifyTime(): Long =
+    private fun getLastModifyTime(): Long =
         BaseApp.context.defaultSharedPreferences.getLong(TODO_LAST_MODIFY_TIME, 0L)
 
-    fun getLastSyncTime(): Long =
+    private fun getLastSyncTime(): Long =
         BaseApp.context.defaultSharedPreferences.getLong(TODO_LAST_SYNC_TIME, 0L)
 
-    fun setLastModifyTime(modifyTime: Long) = BaseApp.context.defaultSharedPreferences.editor {
+    private fun setLastModifyTime(modifyTime: Long) = BaseApp.context.defaultSharedPreferences.editor {
         putLong(TODO_LAST_MODIFY_TIME, modifyTime)
         commit()
     }
 
-    fun setLastSyncTime(syncTime: Long) = BaseApp.context.defaultSharedPreferences.editor {
+    private fun setLastSyncTime(syncTime: Long) = BaseApp.context.defaultSharedPreferences.editor {
         putLong(TODO_LAST_SYNC_TIME, syncTime)
         commit()
     }
@@ -209,7 +210,7 @@ class TodoModel {
             .setSchedulers()
             .safeSubscribeBy(
                 onNext = {
-                    if(lastSyncTime == 0L){
+                    if (lastSyncTime == 0L) {
                         apiGenerator.queryAllTodo()
                             .setSchedulers()
                             .safeSubscribeBy(
@@ -227,7 +228,7 @@ class TodoModel {
                                                 .insertTodoList(list)
                                         }
                                         .setSchedulers()
-                                        .safeSubscribeBy {  }
+                                        .safeSubscribeBy { }
                                 }
                             )
                     } else {

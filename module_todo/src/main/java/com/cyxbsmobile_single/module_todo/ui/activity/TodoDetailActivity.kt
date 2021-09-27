@@ -91,9 +91,10 @@ class TodoDetailActivity : BaseViewModelActivity<TodoDetailViewModel>() {
                 todo_tv_inner_detail_time.text = todo.remindMode.notifyDateTime
                 changeModifyStatus()
             }.apply {
-                resetNotifyTime(todo)
                 setAsSinglePicker(AddItemDialog.CurOperate.NOTIFY)
                 showNotifyDatePicker()
+                //此方法应当在show之后执行，不然的话rv加载不出来
+                resetNotifyTime(todo)
             }.show()
         }
 
@@ -104,9 +105,10 @@ class TodoDetailActivity : BaseViewModelActivity<TodoDetailViewModel>() {
                 todo.remindMode = it.remindMode
                 changeModifyStatus()
             }.apply {
-                resetAllRepeatMode(todo)
                 setAsSinglePicker(AddItemDialog.CurOperate.REPEAT)
                 showRepeatDatePicker()
+                //此方法应当在show之后执行，不然的话rv加载不出来
+                resetAllRepeatMode(todo)
             }.show()
         }
 

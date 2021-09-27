@@ -167,7 +167,6 @@ public class LikeView extends View implements Checkable {
     protected void onDraw(Canvas canvas) {
         super.onDraw(canvas);
         canvas.translate(mCenterX, mCenterY);//使坐标原点在canvas中心位置
-        Log.d("Gibson", mCurrentState + "");
         switch (mCurrentState) {
             case State.HEART_VIEW:
                 drawInnerShape(canvas, mCurrentRadius, isChecked);

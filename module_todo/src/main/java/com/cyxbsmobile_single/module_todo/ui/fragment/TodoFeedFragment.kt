@@ -48,7 +48,6 @@ class TodoFeedFragment: BaseFeedFragment<TodoViewModel>() {
         onLeftIconClick {
             AddItemDialog(requireContext()){ todo ->
                 viewModel.addTodo(todo){
-                    LogUtils.d("Gibson", "on feed refresh")
                     refresh()
                 }
             }.show()
