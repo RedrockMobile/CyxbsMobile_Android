@@ -12,16 +12,13 @@ import com.cyxbsmobile_single.module_todo.adapter.RepeatInnerAdapter
 import com.cyxbsmobile_single.module_todo.model.bean.Todo
 import com.cyxbsmobile_single.module_todo.ui.dialog.AddItemDialog
 import com.cyxbsmobile_single.module_todo.util.remindMode2RemindList
-import com.cyxbsmobile_single.module_todo.util.setMargin
 import com.cyxbsmobile_single.module_todo.viewmodel.TodoDetailViewModel
 import com.google.gson.Gson
 import com.mredrock.cyxbs.common.BaseApp
 import com.mredrock.cyxbs.common.ui.BaseViewModelActivity
 import com.mredrock.cyxbs.common.utils.LogUtils
-import com.mredrock.cyxbs.common.utils.extensions.dip
 import com.mredrock.cyxbs.common.utils.extensions.toast
 import kotlinx.android.synthetic.main.todo_activity_inner_detail.*
-import kotlinx.android.synthetic.main.todo_inner_add_thing_dialog.*
 
 class TodoDetailActivity : BaseViewModelActivity<TodoDetailViewModel>() {
 

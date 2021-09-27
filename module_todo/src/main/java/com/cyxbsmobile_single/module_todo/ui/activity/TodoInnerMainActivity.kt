@@ -26,7 +26,7 @@ import kotlinx.android.synthetic.main.todo_rv_item_todo.view.*
 class TodoInnerMainActivity : BaseViewModelActivity<TodoViewModel>() {
 
     //在详情页面是否有做出修改的flag
-    companion object var changedFlag = false
+    companion object private var changedFlag = false
 
 
     override fun onCreate(savedInstanceState: Bundle?) {

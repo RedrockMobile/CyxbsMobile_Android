@@ -22,7 +22,7 @@ import com.mredrock.cyxbs.common.utils.LogUtils
 import com.mredrock.cyxbs.common.utils.extensions.dip
 import com.mredrock.cyxbs.common.utils.extensions.toast
 import kotlinx.android.synthetic.main.todo_activity_inner_detail.*
-import kotlinx.android.synthetic.main.todo_inner_add_thing_dialog.*
+import kotlinx.android.synthetic.main.todo_dialog_add_todo.*
 import java.util.*
 import kotlin.collections.ArrayList
 
@@ -101,14 +101,13 @@ class AddItemDialog(context: Context, val onConfirm: (Todo) -> Unit) :
 
     init {
         val dialogView =
-            LayoutInflater.from(context).inflate(R.layout.todo_inner_add_thing_dialog, null, false)
+            LayoutInflater.from(context).inflate(R.layout.todo_dialog_add_todo, null, false)
         setContentView(dialogView)
 
         dialogView?.apply {
             //首先，添加点击事件
             initClick()
         }
-        LogUtils.d("Kying-Star", dateBeenList.toString())
     }
 
 
@@ -139,6 +138,11 @@ class AddItemDialog(context: Context, val onConfirm: (Todo) -> Unit) :
         todo_tv_del_notify_time.setOnClickListener { onDelClick() }
         //保存逻辑
         todo_tv_add_thing_save.setOnClickListener {
+            //如果没输入标题，就ban掉
+            if (todo_et_todo_title.text.toString().isEmpty()){
+                BaseApp.context.toast("掌友，标题不能为空哦")
+                return@setOnClickListener
+            }
             todo.title = todo_et_todo_title.text.toString()
             onConfirm(todo)
             hide()
@@ -154,13 +158,15 @@ class AddItemDialog(context: Context, val onConfirm: (Todo) -> Unit) :
     }
 
     private fun onConfirmClick() {
+        if (curOperate == NOTIFY) {
+            addNotify()
+            repeatTimeAdapter.removeAll()
+            todo_rv_inner_detail_repeat_time.adapter = repeatTimeAdapter
+        }
         if (isFromDetail) {
             onConfirm(todo)
             hide()
             return
-        }
-        if (curOperate == NOTIFY) {
-            addNotify()
         }
         hideWheel()
     }
@@ -265,7 +271,6 @@ class AddItemDialog(context: Context, val onConfirm: (Todo) -> Unit) :
         }
 
         //更换Adapter
-        repeatTimeAdapter.removeAll()
         todo_inner_add_rv_thing_repeat_list.adapter = repeatTimeAdapter
 
         //监听选择的重复类型
