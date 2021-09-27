@@ -73,7 +73,9 @@
                     android:layout_height="1dp"
                     android:background="@color/qa_mine_common_divide_line" />
 
-                <include layout="@layout/qa_recycler_item_circle_square" />
+                <include
+                    android:id="@+id/qa_circle_detail_header"
+                    layout="@layout/qa_recycler_item_circle_square" />
 
             </com.google.android.material.appbar.CollapsingToolbarLayout>
         </com.google.android.material.appbar.AppBarLayout>

@@ -22,10 +22,10 @@ class FanFragment : BaseViewModelFragment<FanViewModel>() {
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
-        initView()
+        initRecycler()
     }
 
-    private fun initView(){
+    private fun initRecycler(){
         mine_fan_rv.adapter
     }
 }

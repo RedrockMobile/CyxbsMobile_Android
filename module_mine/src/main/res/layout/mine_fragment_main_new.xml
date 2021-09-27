@@ -10,167 +10,175 @@
         android:id="@+id/mine_user_ll"
         android:layout_width="match_parent"
         android:layout_height="263dp"
+        android:background="@drawable/mine_ic_user_header"
         android:orientation="vertical"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent">
 
-        <androidx.constraintlayout.widget.ConstraintLayout
-            android:id="@+id/mine_user_cl_info"
+        <androidx.cardview.widget.CardView
             android:layout_width="match_parent"
-            android:layout_height="208dp"
+            android:layout_height="wrap_content"
             android:layout_marginStart="17dp"
             android:layout_marginTop="61dp"
             android:layout_marginEnd="18dp"
-            >
+            app:cardElevation="6dp"
+            app:cardCornerRadius="10dp">
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:id="@+id/mine_user_cl_info"
+                android:layout_width="match_parent"
+                android:layout_height="208dp"
+                android:background="@drawable/mine_ic_user_cl">
 
-            <de.hdodenhof.circleimageview.CircleImageView
-                android:id="@+id/mine_user_avatar"
-                android:layout_width="64dp"
-                android:layout_height="64dp"
-                android:layout_marginStart="13dp"
-                android:layout_marginTop="36dp"
-                android:src="@drawable/common_default_avatar"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent" />
+                <de.hdodenhof.circleimageview.CircleImageView
+                    android:id="@+id/mine_user_avatar"
+                    android:layout_width="64dp"
+                    android:layout_height="64dp"
+                    android:layout_marginStart="13dp"
+                    android:layout_marginTop="36dp"
+                    android:src="@drawable/common_default_avatar"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
 
-            <TextView
-                android:id="@+id/mine_user_username"
-                android:layout_width="0dp"
-                android:layout_height="31dp"
-                android:layout_marginStart="7dp"
-                android:layout_marginTop="44dp"
-                android:layout_marginEnd="28dp"
-                android:ellipsize="end"
-                android:lines="1"
-                android:maxLines="1"
-                android:text="鱼鱼鱼鱼鱼鱼鱼鱼鱼鱼"
-                android:textColor="#15315B"
-                android:textSize="22sp"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintHorizontal_bias="0.0"
-                app:layout_constraintStart_toEndOf="@+id/mine_user_avatar"
-                app:layout_constraintTop_toTopOf="parent" />
+                <TextView
+                    android:id="@+id/mine_user_username"
+                    android:layout_width="0dp"
+                    android:layout_height="31dp"
+                    android:layout_marginStart="7dp"
+                    android:layout_marginTop="44dp"
+                    android:layout_marginEnd="28dp"
+                    android:ellipsize="end"
+                    android:lines="1"
+                    android:maxLines="1"
+                    android:text="鱼鱼鱼鱼鱼鱼鱼鱼鱼鱼"
+                    android:textColor="#15315B"
+                    android:textSize="22sp"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintHorizontal_bias="0.0"
+                    app:layout_constraintStart_toEndOf="@+id/mine_user_avatar"
+                    app:layout_constraintTop_toTopOf="parent" />
 
-            <TextView
-                android:id="@+id/mine_user_introduce"
-                android:layout_width="0dp"
-                android:layout_height="30dp"
-                android:layout_marginStart="7dp"
-                android:layout_marginTop="1dp"
-                android:layout_marginEnd="11dp"
-                android:text="这是一条不普通的个性签名这是一条不普通的给"
-                android:textColor="#CC15315B"
-                android:textSize="13sp"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toEndOf="@+id/mine_user_avatar"
-                app:layout_constraintTop_toBottomOf="@+id/mine_user_username" />
+                <TextView
+                    android:id="@+id/mine_user_introduce"
+                    android:layout_width="0dp"
+                    android:layout_height="30dp"
+                    android:layout_marginStart="7dp"
+                    android:layout_marginTop="1dp"
+                    android:layout_marginEnd="11dp"
+                    android:text="这是一条不普通的个性签名这是一条不普通的给"
+                    android:textColor="#CC15315B"
+                    android:textSize="13sp"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toEndOf="@+id/mine_user_avatar"
+                    app:layout_constraintTop_toBottomOf="@+id/mine_user_username" />
 
-            <TextView
-                android:id="@+id/mine_user_tv_dynamic_number"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="20dp"
-                android:layout_marginBottom="52dp"
-                android:fontFamily="@font/impact_min"
-                android:gravity="center"
-                android:text="@string/mine_number_default"
-                android:textColor="#2A4E84"
-                android:textSize="25sp"
-                android:maxLines="1"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintStart_toStartOf="parent" />
+                <TextView
+                    android:id="@+id/mine_user_tv_dynamic_number"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="20dp"
+                    android:layout_marginBottom="52dp"
+                    android:fontFamily="@font/impact_min"
+                    android:gravity="center"
+                    android:text="@string/mine_number_default"
+                    android:textColor="#2A4E84"
+                    android:textSize="25sp"
+                    android:maxLines="1"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintStart_toStartOf="parent" />
 
-            <TextView
-                android:id="@+id/mine_user_tv_comment_number"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="48dp"
-                android:fontFamily="@font/impact_min"
-                android:gravity="center"
-                android:text="@string/mine_number_default"
-                android:textColor="#2A4E84"
-                android:textSize="25sp"
-                android:maxLines="1"
-                app:layout_constraintBottom_toBottomOf="@+id/mine_user_tv_dynamic_number"
-                app:layout_constraintStart_toEndOf="@+id/mine_user_tv_dynamic_number"
-                app:layout_constraintTop_toTopOf="@+id/mine_user_tv_dynamic_number"
-                app:layout_constraintVertical_bias="0.0" />
+                <TextView
+                    android:id="@+id/mine_user_tv_comment_number"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="48dp"
+                    android:fontFamily="@font/impact_min"
+                    android:gravity="center"
+                    android:text="@string/mine_number_default"
+                    android:textColor="#2A4E84"
+                    android:textSize="25sp"
+                    android:maxLines="1"
+                    app:layout_constraintBottom_toBottomOf="@+id/mine_user_tv_dynamic_number"
+                    app:layout_constraintStart_toEndOf="@+id/mine_user_tv_dynamic_number"
+                    app:layout_constraintTop_toTopOf="@+id/mine_user_tv_dynamic_number"
+                    app:layout_constraintVertical_bias="0.0" />
 
-            <TextView
-                android:id="@+id/mine_user_tv_praise_number"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="50dp"
-                android:fontFamily="@font/impact_min"
-                android:gravity="center"
-                android:text="@string/mine_number_default"
-                android:textColor="#2A4E84"
-                android:textSize="25sp"
-                android:maxLines="1"
-                app:layout_constraintBottom_toBottomOf="@+id/mine_user_tv_comment_number"
-                app:layout_constraintStart_toEndOf="@+id/mine_user_tv_comment_number"
-                app:layout_constraintTop_toTopOf="@+id/mine_user_tv_comment_number" />
+                <TextView
+                    android:id="@+id/mine_user_tv_praise_number"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="50dp"
+                    android:fontFamily="@font/impact_min"
+                    android:gravity="center"
+                    android:text="@string/mine_number_default"
+                    android:textColor="#2A4E84"
+                    android:textSize="25sp"
+                    android:maxLines="1"
+                    app:layout_constraintBottom_toBottomOf="@+id/mine_user_tv_comment_number"
+                    app:layout_constraintStart_toEndOf="@+id/mine_user_tv_comment_number"
+                    app:layout_constraintTop_toTopOf="@+id/mine_user_tv_comment_number" />
 
-            <TextView
-                android:id="@+id/mine_user_tv_dynamic"
-                android:layout_width="wrap_content"
-                android:layout_height="17dp"
-                android:layout_marginTop="3dp"
-                android:text="动态"
-                android:textColor="#B315315B"
-                android:textSize="14sp"
-                app:layout_constraintEnd_toEndOf="@+id/mine_user_tv_dynamic_number"
-                app:layout_constraintStart_toStartOf="@+id/mine_user_tv_dynamic_number"
-                app:layout_constraintTop_toBottomOf="@+id/mine_user_tv_dynamic_number" />
+                <TextView
+                    android:id="@+id/mine_user_tv_dynamic"
+                    android:layout_width="wrap_content"
+                    android:layout_height="17dp"
+                    android:layout_marginTop="3dp"
+                    android:text="动态"
+                    android:textColor="#B315315B"
+                    android:textSize="14sp"
+                    app:layout_constraintEnd_toEndOf="@+id/mine_user_tv_dynamic_number"
+                    app:layout_constraintStart_toStartOf="@+id/mine_user_tv_dynamic_number"
+                    app:layout_constraintTop_toBottomOf="@+id/mine_user_tv_dynamic_number" />
 
-            <TextView
-                android:id="@+id/mine_user_tv_comment"
-                android:layout_width="wrap_content"
-                android:layout_height="17dp"
-                android:layout_marginTop="3dp"
-                android:text="评论"
-                android:textColor="#B315315B"
-                android:textSize="14sp"
-                app:layout_constraintEnd_toEndOf="@+id/mine_user_tv_comment_number"
-                app:layout_constraintStart_toStartOf="@+id/mine_user_tv_comment_number"
-                app:layout_constraintTop_toBottomOf="@+id/mine_user_tv_comment_number" />
+                <TextView
+                    android:id="@+id/mine_user_tv_comment"
+                    android:layout_width="wrap_content"
+                    android:layout_height="17dp"
+                    android:layout_marginTop="3dp"
+                    android:text="评论"
+                    android:textColor="#B315315B"
+                    android:textSize="14sp"
+                    app:layout_constraintEnd_toEndOf="@+id/mine_user_tv_comment_number"
+                    app:layout_constraintStart_toStartOf="@+id/mine_user_tv_comment_number"
+                    app:layout_constraintTop_toBottomOf="@+id/mine_user_tv_comment_number" />
 
-            <TextView
-                android:id="@+id/mine_user_tv_praise"
-                android:layout_width="wrap_content"
-                android:layout_height="17dp"
-                android:layout_marginTop="3dp"
-                android:text="获赞"
-                android:textColor="#B315315B"
-                android:textSize="14sp"
-                app:layout_constraintEnd_toEndOf="@+id/mine_user_tv_praise_number"
-                app:layout_constraintStart_toStartOf="@+id/mine_user_tv_praise_number"
-                app:layout_constraintTop_toBottomOf="@+id/mine_user_tv_praise_number" />
+                <TextView
+                    android:id="@+id/mine_user_tv_praise"
+                    android:layout_width="wrap_content"
+                    android:layout_height="17dp"
+                    android:layout_marginTop="3dp"
+                    android:text="获赞"
+                    android:textColor="#B315315B"
+                    android:textSize="14sp"
+                    app:layout_constraintEnd_toEndOf="@+id/mine_user_tv_praise_number"
+                    app:layout_constraintStart_toStartOf="@+id/mine_user_tv_praise_number"
+                    app:layout_constraintTop_toBottomOf="@+id/mine_user_tv_praise_number" />
 
-            <TextView
-                android:id="@+id/mine_user_tv_unchecked_comment"
-                android:layout_width="7dp"
-                android:layout_height="7dp"
-                android:background="@drawable/mine_shape_bg_point_unchecked"
-                android:visibility="gone"
-                app:layout_constraintBottom_toBottomOf="@+id/mine_user_tv_comment_number"
-                app:layout_constraintStart_toEndOf="@+id/mine_user_tv_comment_number"
-                app:layout_constraintTop_toTopOf="@+id/mine_user_tv_comment_number"
-                app:layout_constraintVertical_bias="0.08" />
+                <TextView
+                    android:id="@+id/mine_user_tv_unchecked_comment"
+                    android:layout_width="7dp"
+                    android:layout_height="7dp"
+                    android:background="@drawable/mine_shape_bg_point_unchecked"
+                    android:visibility="gone"
+                    app:layout_constraintBottom_toBottomOf="@+id/mine_user_tv_comment_number"
+                    app:layout_constraintStart_toEndOf="@+id/mine_user_tv_comment_number"
+                    app:layout_constraintTop_toTopOf="@+id/mine_user_tv_comment_number"
+                    app:layout_constraintVertical_bias="0.08" />
 
-            <TextView
-                android:id="@+id/mine_user_tv_unchecked_praise"
-                android:layout_width="7dp"
-                android:layout_height="7dp"
-                android:background="@drawable/mine_shape_bg_point_unchecked"
-                android:visibility="gone"
-                app:layout_constraintBottom_toBottomOf="@+id/mine_user_tv_praise_number"
-                app:layout_constraintStart_toEndOf="@+id/mine_user_tv_praise_number"
-                app:layout_constraintTop_toTopOf="@+id/mine_user_tv_praise_number"
-                app:layout_constraintVertical_bias="0.08" />
+                <TextView
+                    android:id="@+id/mine_user_tv_unchecked_praise"
+                    android:layout_width="7dp"
+                    android:layout_height="7dp"
+                    android:background="@drawable/mine_shape_bg_point_unchecked"
+                    android:visibility="gone"
+                    app:layout_constraintBottom_toBottomOf="@+id/mine_user_tv_praise_number"
+                    app:layout_constraintStart_toEndOf="@+id/mine_user_tv_praise_number"
+                    app:layout_constraintTop_toTopOf="@+id/mine_user_tv_praise_number"
+                    app:layout_constraintVertical_bias="0.08" />
 
-        </androidx.constraintlayout.widget.ConstraintLayout>
+            </androidx.constraintlayout.widget.ConstraintLayout>
+        </androidx.cardview.widget.CardView>
+
     </LinearLayout>
 
     <LinearLayout

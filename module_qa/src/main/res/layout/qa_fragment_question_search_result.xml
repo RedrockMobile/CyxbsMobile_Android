@@ -65,41 +65,38 @@
             </com.google.android.material.appbar.CollapsingToolbarLayout>
         </com.google.android.material.appbar.AppBarLayout>
 
-        <androidx.constraintlayout.widget.ConstraintLayout
+        <LinearLayout
             android:id="@+id/qa_knowledge_cs_two"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
+            android:layout_height="wrap_content"
             android:orientation="vertical"
             app:layout_behavior="@string/appbar_scrolling_view_behavior">
 
-
-            <androidx.appcompat.widget.AppCompatTextView
-                android:id="@+id/qa_tv_contract_content"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="16dp"
-                android:layout_marginTop="25dp"
-                android:layout_marginBottom="20dp"
-                android:text="相关动态"
-                android:textColor="@color/common_level_two_font_color"
-                android:textSize="18sp"
-                android:textStyle="bold"
+            <com.google.android.material.tabs.TabLayout
+                android:id="@+id/qa_tl_contract_content"
+                android:layout_width="match_parent"
+                android:layout_height="50dp"
+                android:layout_marginStart="30dp"
+                android:backgroundTint="@android:color/transparent"
+                android:theme="@style/Theme.MaterialComponents"
+                app:tabGravity="fill"
+                app:tabIndicator="@drawable/qa_ic_search_indicator"
+                app:tabIndicatorColor="@android:color/transparent"
+                app:tabIndicatorFullWidth="false"
+                app:tabIndicatorHeight="3dp"
+                app:tabMode="scrollable"
+                app:tabRippleColor="@android:color/transparent"
+                app:tabTextAppearance="@style/tab_style"
+                app:tabTextColor="#15315B"
                 app:layout_constraintLeft_toLeftOf="@id/qa_knowledge_cs_two"
                 app:layout_constraintTop_toTopOf="@id/qa_knowledge_cs_two" />
 
-            <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
-                android:id="@+id/swipe_refresh_layout_searching"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_marginTop="60dp"
-                app:layout_constraintTop_toBottomOf="@id/qa_tv_contract_content">
 
-                <androidx.recyclerview.widget.RecyclerView
-                    android:id="@+id/rv_searched_question"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content" />
-            </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
-        </androidx.constraintlayout.widget.ConstraintLayout>
+            <androidx.viewpager2.widget.ViewPager2
+                android:id="@+id/qa_vp_search_result"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"/>
+        </LinearLayout>
 
     </androidx.coordinatorlayout.widget.CoordinatorLayout>
 </LinearLayout>

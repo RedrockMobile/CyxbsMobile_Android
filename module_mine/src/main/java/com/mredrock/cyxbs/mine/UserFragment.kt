@@ -15,6 +15,7 @@ import androidx.lifecycle.Observer
 import com.alibaba.android.arouter.facade.annotation.Route
 import com.alibaba.android.arouter.launcher.ARouter
 import com.mredrock.cyxbs.api.account.IAccountService
+import com.mredrock.cyxbs.common.BaseApp
 import com.mredrock.cyxbs.common.config.*
 import com.mredrock.cyxbs.common.service.ServiceManager
 import com.mredrock.cyxbs.common.ui.BaseViewModelFragment
@@ -167,10 +168,10 @@ class UserFragment : BaseViewModelFragment<UserViewModel>() {
         val userService = ServiceManager.getService(IAccountService::class.java).getUserService()
         context?.loadAvatar(userService.getAvatarImgUrl(), mine_user_avatar)
         mine_user_username.text =
-            if (userService.getNickname().isBlank()) getString(R.string.mine_user_empty_username)
+            if (userService.getNickname().isBlank()) BaseApp.context.getString(R.string.mine_user_empty_username)
             else userService.getNickname()
         mine_user_introduce.text =
-            if (userService.getIntroduction().isBlank()) getString(R.string.mine_user_empty_introduce)
+            if (userService.getIntroduction().isBlank()) BaseApp.context.getString(R.string.mine_user_empty_introduce)
             else userService.getIntroduction()
 
         if (userService.getNickname().isNotBlank() &&

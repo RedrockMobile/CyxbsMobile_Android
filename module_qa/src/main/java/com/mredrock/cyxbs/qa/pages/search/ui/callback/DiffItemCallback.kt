@@ -1,7 +1,7 @@
-package com.mredrock.cyxbs.mine.page.mine.callback
+package com.mredrock.cyxbs.qa.pages.search.ui.callback
 
 import androidx.recyclerview.widget.DiffUtil
-import com.mredrock.cyxbs.mine.page.mine.binder.BaseDataBinder
+import com.mredrock.cyxbs.qa.pages.search.ui.binder.BaseDataBinder
 
 class DiffItemCallback<T: BaseDataBinder<*>> : DiffUtil.ItemCallback<T>() {
     override fun areItemsTheSame(oldItem: T, newItem: T): Boolean {

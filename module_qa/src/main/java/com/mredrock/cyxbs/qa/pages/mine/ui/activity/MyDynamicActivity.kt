@@ -1,6 +1,5 @@
 package com.mredrock.cyxbs.qa.pages.mine.ui.activity
 
-import android.annotation.SuppressLint
 import android.content.Intent
 import android.graphics.Color
 import android.os.Bundle
@@ -10,7 +9,6 @@ import androidx.recyclerview.widget.RecyclerView
 import com.alibaba.android.arouter.facade.annotation.Route
 import com.mredrock.cyxbs.common.config.QA_DYNAMIC_MINE
 import com.mredrock.cyxbs.common.ui.BaseViewModelActivity
-import com.mredrock.cyxbs.common.utils.LogUtils
 import com.mredrock.cyxbs.common.utils.extensions.setOnSingleClickListener
 import com.mredrock.cyxbs.qa.R
 import com.mredrock.cyxbs.qa.beannew.Dynamic
@@ -19,15 +17,12 @@ import com.mredrock.cyxbs.qa.config.CommentConfig
 import com.mredrock.cyxbs.qa.config.CommentConfig.SHARE_URL
 import com.mredrock.cyxbs.qa.config.RequestResultCode.DYNAMIC_DETAIL_REQUEST
 import com.mredrock.cyxbs.qa.network.NetworkState
-import com.mredrock.cyxbs.qa.pages.dynamic.model.TopicDataSet
 import com.mredrock.cyxbs.qa.pages.dynamic.ui.activity.DynamicDetailActivity
 import com.mredrock.cyxbs.qa.pages.dynamic.ui.adapter.DynamicAdapter
-import com.mredrock.cyxbs.qa.pages.dynamic.viewmodel.DynamicListViewModel
 import com.mredrock.cyxbs.qa.pages.mine.viewmodel.MyDynamicViewModel
 import com.mredrock.cyxbs.qa.ui.adapter.EmptyRvAdapter
 import com.mredrock.cyxbs.qa.ui.adapter.FooterRvAdapter
 import com.mredrock.cyxbs.qa.ui.widget.QaDialog
-import com.mredrock.cyxbs.qa.ui.widget.QaReportDialog
 import com.mredrock.cyxbs.qa.utils.ClipboardController
 import com.mredrock.cyxbs.qa.utils.ShareUtils
 import com.tencent.tauth.Tencent
@@ -38,12 +33,13 @@ import kotlinx.android.synthetic.main.qa_common_toolbar.*
 class MyDynamicActivity : BaseViewModelActivity<MyDynamicViewModel>() {
 
     private var isRvAtTop = true
-    private var isSendDynamic = false
-    private lateinit var dynamicListRvAdapter: DynamicAdapter
+    private var mTencent: Tencent? = null
+    lateinit var dynamicListRvAdapter: DynamicAdapter
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.qa_activity_my_dynamic)
+        mTencent = Tencent.createInstance(CommentConfig.APP_ID, this)
         initView()
         initDynamics()
     }
@@ -57,7 +53,6 @@ class MyDynamicActivity : BaseViewModelActivity<MyDynamicViewModel>() {
     }
 
     private fun initDynamics() {
-        val mTencent = Tencent.createInstance(CommentConfig.APP_ID, this)
         dynamicListRvAdapter =
             DynamicAdapter(this) { dynamic, view ->
                 DynamicDetailActivity.activityStart(this, view, dynamic)
@@ -66,30 +61,12 @@ class MyDynamicActivity : BaseViewModelActivity<MyDynamicViewModel>() {
                 onShareClickListener = { dynamic, mode ->
                     val url = "${SHARE_URL}dynamic?id=${dynamic.postId}"
                     when (mode) {
-                        CommentConfig.QQ_FRIEND -> {
-                            val pic = if (dynamic.pics.isNullOrEmpty()) "" else dynamic.pics[0]
-                            mTencent?.let { it1 ->
-                                ShareUtils.qqShare(
-                                    it1,
-                                    this@MyDynamicActivity,
-                                    dynamic.topic,
-                                    dynamic.content,
-                                    url,
-                                    pic
-                                )
-                            }
+                        CommentConfig.QQ_FRIEND ->{
+                            val pic = if(dynamic.pics.isNullOrEmpty()) "" else dynamic.pics[0]
+                            mTencent?.let { it1 -> ShareUtils.qqShare(it1, this@MyDynamicActivity, dynamic.topic, dynamic.content, url, pic) }
                         }
                         CommentConfig.QQ_ZONE ->
-                            mTencent?.let { it1 ->
-                                ShareUtils.qqQzoneShare(
-                                    it1,
-                                    this@MyDynamicActivity,
-                                    dynamic.topic,
-                                    dynamic.content,
-                                    url,
-                                    ArrayList(dynamic.pics)
-                                )
-                            }
+                            mTencent?.let { it1 -> ShareUtils.qqQzoneShare(it1, this@MyDynamicActivity, dynamic.topic, dynamic.content, url, ArrayList(dynamic.pics)) }
                         CommentConfig.COPY_LINK -> {
                             ClipboardController.copyText(this@MyDynamicActivity, url)
                         }
@@ -97,22 +74,9 @@ class MyDynamicActivity : BaseViewModelActivity<MyDynamicViewModel>() {
                 }
                 onPopWindowClickListener = { _, string, dynamic ->
                     when (string) {
-                        CommentConfig.IGNORE -> {
-                            viewModel.ignore(dynamic)
-                        }
-                        CommentConfig.REPORT -> {
-                            QaReportDialog(this@MyDynamicActivity).apply {
-                                show { reportContent ->
-                                    viewModel.report(dynamic, reportContent)
-                                }
-                            }.show()
-                        }
                         CommentConfig.DELETE -> {
                             this@MyDynamicActivity.let { it1 ->
-                                QaDialog.show(
-                                    it1,
-                                    resources.getString(R.string.qa_dialog_tip_delete_comment_text),
-                                    {}) {
+                                QaDialog.show(it1, resources.getString(R.string.qa_dialog_tip_delete_comment_text), {}) {
                                     viewModel.deleteId(dynamic.postId, "0")
                                 }
                             }
@@ -121,11 +85,6 @@ class MyDynamicActivity : BaseViewModelActivity<MyDynamicViewModel>() {
                 }
             }
 
-        qa_rv_my_dynamic.adapter = dynamicListRvAdapter
-        viewModel.deleteTips.observe {
-            if (it == true)
-                viewModel.invalidateDynamicList()
-        }
         val footerRvAdapter = FooterRvAdapter { viewModel.retry() }
         val emptyRvAdapter = EmptyRvAdapter(getString(R.string.qa_question_list_empty_hint))
         val adapterWrapper = RvAdapterWrapper(
@@ -133,16 +92,7 @@ class MyDynamicActivity : BaseViewModelActivity<MyDynamicViewModel>() {
             emptyAdapter = emptyRvAdapter,
             footerAdapter = footerRvAdapter
         )
-        val linearLayoutManager = LinearLayoutManager(this)
-        linearLayoutManager.orientation = LinearLayoutManager.HORIZONTAL
 
-        //获取用户进入圈子详情退出的时间，去请求从而刷新未读消息
-        if (!TopicDataSet.getOutCirCleDetailTime().isNullOrEmpty()) {
-            LogUtils.d("outTime", TopicDataSet.getOutCirCleDetailTime().toString())
-            TopicDataSet.getOutCirCleDetailTime()?.let { viewModel.getTopicMessages(it) }
-        }
-
-        observeLoading(dynamicListRvAdapter, footerRvAdapter, emptyRvAdapter)
         qa_rv_my_dynamic.apply {
             layoutManager = LinearLayoutManager(context)
             adapter = adapterWrapper
@@ -154,21 +104,21 @@ class MyDynamicActivity : BaseViewModelActivity<MyDynamicViewModel>() {
             })
         }
 
+        observeLoading(dynamicListRvAdapter, footerRvAdapter, emptyRvAdapter)
+
         qa_swl_my_dynamic.setOnRefreshListener {
-            if (!TopicDataSet.getOutCirCleDetailTime().isNullOrEmpty()) {
-                LogUtils.d("swipeOutTime", TopicDataSet.getOutCirCleDetailTime().toString())
-                TopicDataSet.getOutCirCleDetailTime()?.let { viewModel.getTopicMessages(it) }
-            }
             viewModel.invalidateDynamicList()
-            viewModel.getMyCirCleData()
+        }
+
+        viewModel.deleteTips.observe {
+            if (it == true)
+                viewModel.invalidateDynamicList()
         }
     }
 
-    private fun observeLoading(
-        dynamicListRvAdapter: DynamicAdapter,
-        footerRvAdapter: FooterRvAdapter,
-        emptyRvAdapter: EmptyRvAdapter
-    ): DynamicListViewModel = viewModel.apply {
+    fun observeLoading(dynamicListRvAdapter: DynamicAdapter,
+                       footerRvAdapter: FooterRvAdapter,
+                       emptyRvAdapter: EmptyRvAdapter): MyDynamicViewModel = viewModel.apply {
         dynamicList.observe {
             dynamicListRvAdapter.submitList(it)
         }
@@ -179,12 +129,6 @@ class MyDynamicActivity : BaseViewModelActivity<MyDynamicViewModel>() {
         }
 
         initialLoad.observe {
-            when (it) {
-                NetworkState.SUCCESSFUL ->
-                    isSendDynamic = true
-                NetworkState.FAILED ->
-                    isSendDynamic = false
-            }
             when (it) {
                 NetworkState.LOADING -> {
                     qa_swl_my_dynamic.isRefreshing = true
@@ -201,19 +145,17 @@ class MyDynamicActivity : BaseViewModelActivity<MyDynamicViewModel>() {
         }
     }
 
-    @SuppressLint("NotifyDataSetChanged")
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
-        if (requestCode == DYNAMIC_DETAIL_REQUEST) {
+        if (requestCode == DYNAMIC_DETAIL_REQUEST){
             dynamicListRvAdapter.curSharedItem?.apply {
                 val dynamic = data?.getParcelableExtra<Dynamic>("refresh_dynamic")
                 dynamic?.let {
                     dynamicListRvAdapter.curSharedDynamic?.commentCount = dynamic.commentCount
-                    this.findViewById<TextView>(R.id.qa_tv_dynamic_comment_count).text =
-                        it.commentCount.toString()
+                    this.findViewById<TextView>(R.id.qa_tv_dynamic_comment_count).text = it.commentCount.toString()
                 }
             }
-            dynamicListRvAdapter.notifyItemChanged(dynamicListRvAdapter.curSharedItemPosition, "")
+            dynamicListRvAdapter.notifyDataSetChanged()
         }
     }
 }

@@ -7,6 +7,7 @@ import android.os.Bundle
 import android.view.inputmethod.EditorInfo
 import android.view.inputmethod.InputMethodManager
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.FragmentTransaction
 import com.mredrock.cyxbs.common.config.CyxbsMob
 import com.mredrock.cyxbs.common.mark.EventBusLifecycleSubscriber
 import com.mredrock.cyxbs.common.ui.BaseViewModelActivity
@@ -104,9 +105,10 @@ class SearchActivity : BaseViewModelActivity<SearchViewModel>(), EventBusLifecyc
 
     //根据搜索词切换到QuestionSearchedFragment
     private fun turnToResult(keyWord: String) {
-        val bundle = Bundle()
+        val bundle = Bundle().apply {
+            putString(QuestionSearchedFragment.SEARCH_KEY, keyWord)
+        }
         val curFragment = supportFragmentManager.findFragmentById(R.id.fcv_question_search)
-        bundle.putString(QuestionSearchedFragment.SEARCH_KEY, keyWord)
         if (curFragment is QuestionSearchedFragment) {
             curFragment.refreshSearchKey(keyWord)
             curFragment.arguments = bundle
@@ -114,7 +116,9 @@ class SearchActivity : BaseViewModelActivity<SearchViewModel>(), EventBusLifecyc
         } else {
             questionSearchedFragment.arguments = bundle
             supportFragmentManager.beginTransaction()
-                .replace(R.id.fcv_question_search, questionSearchedFragment).commit()
+                .replace(R.id.fcv_question_search, questionSearchedFragment)
+                .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE)
+                .commit()
         }
         (getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager).hideSoftInputFromWindow(
             currentFocus?.windowToken,

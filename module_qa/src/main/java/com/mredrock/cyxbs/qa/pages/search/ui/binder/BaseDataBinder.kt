@@ -1,16 +1,16 @@
-package com.mredrock.cyxbs.mine.page.mine.binder
+package com.mredrock.cyxbs.qa.pages.search.ui.binder
 
 import androidx.databinding.ViewDataBinding
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.LifecycleRegistry
-import com.mredrock.cyxbs.mine.BR
+import com.mredrock.cyxbs.qa.BR
 
 abstract class BaseDataBinder<T : ViewDataBinding> : ClickBinder(){
 
     private val variableId = BR.data
 
-    open val itemId:String? = null
+    open val itemId:String = ""
 
     var binding: T? = null
 
@@ -44,8 +44,6 @@ abstract class BaseDataBinder<T : ViewDataBinding> : ClickBinder(){
     protected open fun onUnbindViewHolder(){}
 
     abstract fun layoutId(): Int
-
-    abstract fun areContentTheSame(): Boolean
 
     /**
      * 为 Binder 绑定生命周期，在 {@link Lifecycle.Event#ON_RESUME} 时响应

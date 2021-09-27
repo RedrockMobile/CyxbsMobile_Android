@@ -10,11 +10,17 @@ import com.mredrock.cyxbs.mine.databinding.MineRecycleItemFanBinding
  * @description
  **/
 class FanBinder() : BaseDataBinder<MineRecycleItemFanBinding>() {
+    override val itemId = ""
+
     override fun layoutId(): Int {
         return R.layout.mine_recycle_item_fan
     }
 
     override fun onBindViewHolder(binding: MineRecycleItemFanBinding) {
         super.onBindViewHolder(binding)
+    }
+
+    override fun areContentTheSame(): Boolean {
+        return false
     }
 }

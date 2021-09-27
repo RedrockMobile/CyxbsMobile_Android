@@ -12,6 +12,7 @@ import com.mredrock.cyxbs.common.viewmodel.BaseViewModel
 import com.mredrock.cyxbs.qa.R
 import com.mredrock.cyxbs.qa.beannew.Dynamic
 import com.mredrock.cyxbs.qa.beannew.Knowledge
+import com.mredrock.cyxbs.qa.beannew.UserInfo
 import com.mredrock.cyxbs.qa.config.CommentConfig
 import com.mredrock.cyxbs.qa.network.ApiServiceNew
 import com.mredrock.cyxbs.qa.pages.search.model.SearchQuestionDataSource
@@ -24,6 +25,7 @@ class QuestionSearchedViewModel(var searchKey: String) : BaseViewModel() {
 
     val questionList: LiveData<PagedList<Dynamic>>
     var knowledge = MutableLiveData<List<Knowledge>>()
+    var userList = MutableLiveData<List<UserInfo.Data.User>>()
 
 
     val ignorePeople = MutableLiveData<Boolean>()//屏蔽
@@ -120,13 +122,24 @@ class QuestionSearchedViewModel(var searchKey: String) : BaseViewModel() {
             .setSchedulers()
             .safeSubscribeBy {
                 if (it.isNotEmpty()) {
-                    LogUtils.d("zt", "5")
                     isKnowledge = true
                     knowledge.value = it
                 } else {
-                    LogUtils.d("zt", "6")
                     isKnowledge = false
+                    knowledge.value = listOf()
                 }
+            }
+    }
+
+    fun getUsers(content: String){
+        ApiGenerator.getApiService(ApiServiceNew::class.java)
+            .getSearchUsers(content)
+            .mapOrThrowApiException()
+            .setSchedulers()
+            .doOnError {
+            }
+            .safeSubscribeBy {
+                userList.value = it.data.users
             }
     }
 }

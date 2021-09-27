@@ -64,6 +64,9 @@ interface ApiServiceNew {
         @Query("size") size: Int
     ): Observable<RedrockApiWrapper<List<Knowledge>>>
 
+    @GET("")
+    fun getSearchUsers(content: String):Observable<RedrockApiWrapper<UserInfo>>
+
     @GET("/magipoke-loop/ground/getUnreadCount")
     fun getTopicMessage(@Query("last") last: String): Observable<RedrockApiWrapper<List<TopicMessage>>>
 

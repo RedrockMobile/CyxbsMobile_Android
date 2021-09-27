@@ -1,12 +1,13 @@
-package com.mredrock.cyxbs.mine.page.mine.adapter
+package com.mredrock.cyxbs.qa.pages.search.ui.adapter
 
 import android.view.ViewGroup
 import androidx.databinding.ViewDataBinding
 import androidx.recyclerview.widget.AsyncListDiffer
 import androidx.recyclerview.widget.RecyclerView
-import com.mredrock.cyxbs.mine.page.mine.callback.DiffItemCallback
-import com.mredrock.cyxbs.mine.page.mine.extention.inflateDataBinding
-import com.mredrock.cyxbs.mine.page.mine.binder.BaseDataBinder
+import com.mredrock.cyxbs.qa.pages.search.ui.binder.BaseDataBinder
+import com.mredrock.cyxbs.qa.pages.search.ui.callback.DiffItemCallback
+import com.mredrock.cyxbs.qa.pages.search.ui.extention.inflateDataBinding
+
 
 /**
  * @class
