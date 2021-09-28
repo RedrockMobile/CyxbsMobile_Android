@@ -1,8 +1,5 @@
 package com.cyxbsmobile_single.module_todo.ui.activity
 
-import android.animation.ObjectAnimator
-import android.animation.ValueAnimator
-import android.graphics.Color
 import android.os.Bundle
 import android.view.View
 import androidx.core.content.ContextCompat
@@ -15,7 +12,6 @@ import com.cyxbsmobile_single.module_todo.adapter.DoubleListFoldRvAdapter.ShowTy
 import com.cyxbsmobile_single.module_todo.adapter.slide_callback.SlideCallback
 import com.cyxbsmobile_single.module_todo.ui.dialog.AddItemDialog
 import com.cyxbsmobile_single.module_todo.util.setMargin
-import com.cyxbsmobile_single.module_todo.util.xFold180
 import com.cyxbsmobile_single.module_todo.viewmodel.TodoViewModel
 import com.mredrock.cyxbs.common.BaseApp
 import com.mredrock.cyxbs.common.config.DISCOVER_TODO_MAIN
@@ -30,8 +26,7 @@ import kotlinx.android.synthetic.main.todo_rv_item_todo.view.*
 class TodoInnerMainActivity : BaseViewModelActivity<TodoViewModel>() {
 
     //在详情页面是否有做出修改的flag
-    companion object private var changedFlag = false
-
+    private var changedFlag = false
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -44,7 +39,7 @@ class TodoInnerMainActivity : BaseViewModelActivity<TodoViewModel>() {
 
     override fun onResume() {
         super.onResume()
-        if (changedFlag){
+        if (changedFlag) {
             //私以为都在子线程进行，不会ANR
             viewModel.initDataList {
                 onDateLoaded()
@@ -54,7 +49,12 @@ class TodoInnerMainActivity : BaseViewModelActivity<TodoViewModel>() {
 
     private fun changeItemToChecked(itemView: View) {
         itemView.apply {
-            todo_tv_todo_title.setTextColor(Color.parseColor("#6615315B"))
+            todo_tv_todo_title.setTextColor(
+                ContextCompat.getColor(
+                    context,
+                    R.color.todo_item_checked_color
+                )
+            )
             todo_iv_check.visibility = View.VISIBLE
         }
     }
@@ -66,7 +66,7 @@ class TodoInnerMainActivity : BaseViewModelActivity<TodoViewModel>() {
         val callback = SlideCallback()
 
         todo_inner_home_bar_add.setOnClickListener {
-            AddItemDialog(this){
+            AddItemDialog(this) {
                 adapter.addTodo(it)
             }.show()
         }
@@ -94,7 +94,7 @@ class TodoInnerMainActivity : BaseViewModelActivity<TodoViewModel>() {
                                 changedFlag = true
                             }
                         }
-                        todo_tv_todo_title.setOnClickListener{
+                        todo_tv_todo_title.setOnClickListener {
                             wrapper.todo?.let {
                                 TodoDetailActivity.startActivity(it, this@TodoInnerMainActivity)
                                 changedFlag = true
@@ -102,21 +102,35 @@ class TodoInnerMainActivity : BaseViewModelActivity<TodoViewModel>() {
                         }
                         todo_fl_del.visibility = View.VISIBLE
                         todo_fl_del.setOnClickListener {
-                            if (todo_cl_item_main.translationX != 0f){
+                            if (todo_cl_item_main.translationX != 0f) {
                                 adapter.delItem(wrapper)
                                 LogUtils.d("RayJoe", "position = $pos")
                             }
                         }
 
-                        todo_cl_item_main.setBackgroundColor(ContextCompat.getColor(this@TodoInnerMainActivity, R.color.common_white_background))
+                        todo_cl_item_main.setBackgroundColor(
+                            ContextCompat.getColor(
+                                this@TodoInnerMainActivity,
+                                R.color.common_white_background
+                            )
+                        )
 
                         if (wrapper.todo?.remindMode?.notifyDateTime == "") {
                             //判断为没有设置提醒，也没有设置重复
                             //调整上下宽高
-                            setMargin(todo_tv_todo_title, top = BaseApp.context.dip(29), bottom = BaseApp.context.dip(29))
+                            setMargin(
+                                todo_tv_todo_title,
+                                top = BaseApp.context.dip(29),
+                                bottom = BaseApp.context.dip(29)
+                            )
                         } else {
-                            setMargin(todo_tv_todo_title, top = BaseApp.context.dip(18), bottom = BaseApp.context.dip(40))
+                            setMargin(
+                                todo_tv_todo_title,
+                                top = BaseApp.context.dip(18),
+                                bottom = BaseApp.context.dip(40)
+                            )
                         }
+
 
                         todo_iv_todo_item.setOnClickListener {
                             wrapper.todo?.apply {

@@ -163,12 +163,7 @@ class DoubleListFoldRvAdapter(
             if (needShow) {
                 refreshList()
             }
-            LogUtils.d(
-                "TestRay",
-                "new size = ${wrapperCopyList.size}, old size = ${todoItemWrapperArrayList.size}, needShow = $needShow"
-            )
             todoItemWrapperArrayList.add(1, upEmptyHolder)
-            LogUtils.d("RayG", "checkEmpty1")
         }
         if (checkedArray.size == 0 && !isAddedDownEmpty) {
             //如果已经莫得已完成事项了，将下部替换为缺省图
@@ -178,7 +173,6 @@ class DoubleListFoldRvAdapter(
                 refreshList()
             }
             todoItemWrapperArrayList.add(downEmptyHolder)
-            LogUtils.d("RayG", "checkEmpty2")
         }
 
         if (uncheckedArray.size != 0 && isAddedUpEmpty) {
@@ -188,7 +182,6 @@ class DoubleListFoldRvAdapter(
             }
             todoItemWrapperArrayList.remove(upEmptyHolder)
             isAddedUpEmpty = false
-            LogUtils.d("RayG", "checkEmpty3")
         }
 
         if (checkedArray.size != 0 && isAddedDownEmpty) {
@@ -198,7 +191,6 @@ class DoubleListFoldRvAdapter(
             }
             todoItemWrapperArrayList.remove(downEmptyHolder)
             isAddedDownEmpty = false
-            LogUtils.d("RayG", "checkEmpty4")
         }
     }
 

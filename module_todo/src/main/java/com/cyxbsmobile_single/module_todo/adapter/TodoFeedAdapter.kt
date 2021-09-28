@@ -13,6 +13,7 @@ import com.cyxbsmobile_single.module_todo.ui.activity.TodoDetailActivity
 import com.cyxbsmobile_single.module_todo.viewmodel.TodoViewModel
 import com.mredrock.cyxbs.common.ui.BaseFeedFragment
 import com.mredrock.cyxbs.common.utils.LogUtils
+import com.mredrock.cyxbs.common.utils.extensions.pressToZoomOut
 import com.mredrock.cyxbs.common.utils.extensions.setOnSingleClickListener
 import kotlinx.android.synthetic.main.todo_fragment_feed.view.*
 import kotlinx.android.synthetic.main.todo_rv_item_todo.view.*
@@ -64,7 +65,7 @@ class TodoFeedAdapter(private val todoViewModel: TodoViewModel) :
                                     TodoDetailActivity.startActivity(it, context)
                                 }
                             }
-
+                            
                             todo_iv_todo_item.setOnSingleClickListener {
                                 todo_iv_check.visibility = View.VISIBLE
                                 checkImageBoomAnime.addUpdateListener {
