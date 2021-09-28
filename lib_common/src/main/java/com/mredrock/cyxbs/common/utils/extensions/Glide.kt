@@ -1,10 +1,14 @@
 package com.mredrock.cyxbs.common.utils.extensions
 
 import android.content.Context
+import android.graphics.Bitmap
+import android.graphics.drawable.Drawable
 import android.widget.ImageView
 import androidx.annotation.DrawableRes
 import com.bumptech.glide.Glide
 import com.bumptech.glide.request.RequestOptions
+import com.bumptech.glide.request.target.CustomTarget
+import com.bumptech.glide.request.transition.Transition
 import com.mredrock.cyxbs.common.R
 import com.mredrock.cyxbs.common.config.BASE_NORMAL_IMG_URL
 
@@ -38,6 +42,29 @@ fun Context.loadAvatar(url: String?,
                        @DrawableRes placeholder: Int = R.drawable.common_default_avatar,
                        @DrawableRes error: Int = R.drawable.common_default_avatar) {
     loadRedrockImage(url, imageView, placeholder, error)
+}
+
+fun Context.loadBitmap(rowUrl:String?,doBitmap:(Bitmap)->Unit){
+    val url = when {
+        rowUrl.isNullOrEmpty() -> {
+            return
+        }
+        rowUrl.startsWith("http://") || rowUrl.startsWith("https://") -> rowUrl
+        else -> BASE_NORMAL_IMG_URL + rowUrl
+    }
+    Glide.with(this)
+        .asBitmap()
+        .load(url)
+        .into(object:CustomTarget<Bitmap>(){
+            override fun onResourceReady(resource: Bitmap, transition: Transition<in Bitmap>?) {
+                doBitmap(resource)
+            }
+
+            override fun onLoadCleared(placeholder: Drawable?) {
+
+            }
+
+        })
 }
 
 fun ImageView.setImageFromUrl(url: String?) = context.loadRedrockImage(url, this)
