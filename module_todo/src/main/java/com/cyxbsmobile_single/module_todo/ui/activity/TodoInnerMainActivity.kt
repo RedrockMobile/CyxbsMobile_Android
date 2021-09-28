@@ -90,13 +90,19 @@ class TodoInnerMainActivity : BaseViewModelActivity<TodoViewModel>() {
                     view.apply {
                         todo_fl_todo_back.setOnClickListener {
                             wrapper.todo?.let {
-                                TodoDetailActivity.startActivity(it, this@TodoInnerMainActivity)
+                                TodoDetailActivity.startActivity(
+                                    it,
+                                    this@TodoInnerMainActivity
+                                )
                                 changedFlag = true
                             }
                         }
                         todo_tv_todo_title.setOnClickListener {
                             wrapper.todo?.let {
-                                TodoDetailActivity.startActivity(it, this@TodoInnerMainActivity)
+                                TodoDetailActivity.startActivity(
+                                    it,
+                                    this@TodoInnerMainActivity
+                                )
                                 changedFlag = true
                             }
                         }

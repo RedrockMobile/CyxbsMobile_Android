@@ -1,10 +1,13 @@
 package com.cyxbsmobile_single.module_todo.ui.activity
 
+import android.app.Activity
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.view.View
+import androidx.core.app.ActivityOptionsCompat
 import androidx.core.content.ContextCompat
+import androidx.core.util.Pair
 import androidx.core.widget.addTextChangedListener
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.cyxbsmobile_single.module_todo.R
@@ -27,7 +30,21 @@ class TodoDetailActivity : BaseViewModelActivity<TodoDetailViewModel>() {
     private var backTime = 2
 
     companion object {
-        fun startActivity(todo: Todo, context: Context) {
+        fun startActivity(todo: Todo, context: Context, activity: Activity, checkView: View, title: View) {
+            val sharePair1 = Pair(checkView as View, "check")
+            val sharePair2 = Pair(title as View, "title")
+            val bundle =
+                ActivityOptionsCompat.makeSceneTransitionAnimation(activity, sharePair1, sharePair2)
+                    .toBundle()
+            context.startActivity(
+                Intent(context, TodoDetailActivity::class.java).apply {
+                    putExtra("todo", Gson().toJson(todo))
+                },
+                bundle
+            )
+        }
+
+        fun startActivity(todo: Todo, context: Context){
             context.startActivity(
                 Intent(context, TodoDetailActivity::class.java).apply {
                     putExtra("todo", Gson().toJson(todo))
@@ -37,6 +54,9 @@ class TodoDetailActivity : BaseViewModelActivity<TodoDetailViewModel>() {
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
+        //配置Window的背景颜色，使得共享动画时颜色正常
+        //一定要放在onCreate之前，不然在共享动画时没有效果
+        window.setBackgroundDrawableResource(android.R.color.transparent)
         super.onCreate(savedInstanceState)
         setContentView(R.layout.todo_activity_inner_detail)
         todo = Gson().fromJson(intent.getStringExtra("todo"), Todo::class.java)
@@ -71,7 +91,7 @@ class TodoDetailActivity : BaseViewModelActivity<TodoDetailViewModel>() {
     }
 
     private fun initClick() {
-        todo_inner_detail_header.setOnClickListener {
+        todo_inner_detail_back.setOnClickListener {
             finish()
         }
 

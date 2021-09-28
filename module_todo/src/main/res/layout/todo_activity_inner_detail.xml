@@ -31,6 +31,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="right"
+            android:clickable="false"
             android:layout_marginEnd="15dp"
             android:layout_marginTop="15dp"
             android:visibility="gone"
@@ -50,13 +51,22 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
 
-        <androidx.appcompat.widget.AppCompatImageView
+        <com.cyxbsmobile_single.module_todo.component.CheckLineView
             android:id="@+id/todo_iv_todo_item"
-            android:layout_width="wrap_content"
+            android:layout_width="23dp"
             android:layout_height="23dp"
             android:src="@drawable/todo_ic_detail_check_eclipse"
             android:layout_marginStart="15dp"
             app:layout_constraintStart_toStartOf="parent"
+            android:transitionName="check"
+            android:alpha="0.46"
+            app:checked_line_color="@color/todo_check_line_color"
+            app:unchecked_line_color="@color/todo_check_line_color"
+            app:with_check_line="false"
+            app:start_angle="0"
+            app:left_radius="10.5dp"
+            app:checked_line_width="2dp"
+            app:uncheck_line_width="2dp"
             app:layout_constraintTop_toTopOf="@+id/todo_tv_todo_title"/>
 
         <androidx.appcompat.widget.AppCompatImageView
@@ -65,6 +75,7 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="5dp"
             android:layout_marginBottom="3dp"
+            android:visibility="gone"
             android:src="@drawable/todo_ic_detail_check"
             app:layout_constraintBottom_toBottomOf="@+id/todo_iv_todo_item"
             app:layout_constraintStart_toStartOf="@+id/todo_iv_todo_item"
@@ -81,6 +92,7 @@
             android:gravity="center_vertical"
             android:inputType="textMultiLine"
             android:paddingEnd="1dp"
+            android:transitionName="title"
             android:textColor="@color/todo_check_line_color"
             android:textSize="18sp"
             app:layout_constraintBottom_toBottomOf="parent"

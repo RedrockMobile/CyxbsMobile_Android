@@ -1,4 +1,5 @@
 <vector xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:width="13dp"
     android:height="13dp"
     android:viewportWidth="13"
@@ -8,5 +9,6 @@
       android:strokeAlpha="0.46"
       android:fillColor="@color/todo_check_line_color"
       android:fillType="evenOdd"
-      android:fillAlpha="0.46"/>
+      android:fillAlpha="0.46"
+      tools:ignore="VectorRaster" />
 </vector>

@@ -28,7 +28,7 @@ class CheckLineView @JvmOverloads constructor(
             strokeCap = Paint.Cap.ROUND
         }
     }
-    private val startAngle = 40f//左侧圆圈的起始角度
+    private var startAngle = 40f//左侧圆圈的起始角度
     private var curAnimeProcess = 0f//当前动画的进度，0~200，其中0~100表示圆圈的绘制，100~200表示线的绘制
     private var checkedColor = 0
     private var uncheckedColor = 0
@@ -41,6 +41,7 @@ class CheckLineView @JvmOverloads constructor(
     private var firstEndOfAnime = true
     private var uncheckLineWidth = 0f
     private var checkedLineWidth = 0f
+    private var withCheckLine = true
 
     init {
         val typeArray = context.obtainStyledAttributes(attrs, R.styleable.CheckLineView)
@@ -58,6 +59,10 @@ class CheckLineView @JvmOverloads constructor(
             typeArray.getDimension(R.styleable.CheckLineView_uncheck_line_width, 1.5f)
         checkedLineWidth =
             typeArray.getDimension(R.styleable.CheckLineView_checked_line_width, 1.2f)
+        withCheckLine =
+            typeArray.getBoolean(R.styleable.CheckLineView_with_check_line, true)
+        startAngle =
+            typeArray.getFloat(R.styleable.CheckLineView_start_angle, 40f)
         setStatusWithoutAnime(isChecked)
         typeArray.recycle()
         paint.style = Paint.Style.STROKE
@@ -76,15 +81,17 @@ class CheckLineView @JvmOverloads constructor(
                     //如果已经check
                     drawLeftArc(100f, canvas)
                     //绘制左侧划线
-                    canvas.drawLine(
-                        leftRadius * 2 + paint.strokeWidth / 2f,
-                        leftRadius + paint.strokeWidth / 2f,
-                        (leftRadius * 2 + paint.strokeWidth / 2f) +
-                                (width.toFloat() - leftRadius * 2 + paint.strokeWidth / 2f)
-                                * (curAnimeProcess - 100) / 100,
-                        leftRadius,
-                        paint
-                    )
+                    if (withCheckLine){
+                        canvas.drawLine(
+                            leftRadius * 2 + paint.strokeWidth / 2f,
+                            leftRadius + paint.strokeWidth / 2f,
+                            (leftRadius * 2 + paint.strokeWidth / 2f) +
+                                    (width.toFloat() - leftRadius * 2 + paint.strokeWidth / 2f)
+                                    * (curAnimeProcess - 100) / 100,
+                            leftRadius,
+                            paint
+                        )
+                    }
                 } else {
                     //如果尚未check（走到这个逻辑里多半是默认加载为没有check）
                     paint.color = uncheckedColor

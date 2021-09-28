@@ -23,7 +23,7 @@ import com.mredrock.cyxbs.common.utils.LogUtils
 class TodoFeedFragment: BaseFeedFragment<TodoViewModel>() {
     override var hasTopSplitLine = false
 
-    private val todoAdapter by lazy { TodoFeedAdapter(viewModel) }
+    private val todoAdapter by lazy { TodoFeedAdapter(viewModel, requireActivity()) }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)

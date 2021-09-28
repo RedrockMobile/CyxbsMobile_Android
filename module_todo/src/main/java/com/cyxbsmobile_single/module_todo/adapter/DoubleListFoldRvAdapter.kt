@@ -4,6 +4,8 @@ import android.animation.ObjectAnimator
 import android.content.ComponentName
 import android.content.Intent
 import android.graphics.Color
+import android.text.Editable
+import android.text.SpannableStringBuilder
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -252,7 +254,7 @@ class DoubleListFoldRvAdapter(
                 itemView.apply {
                     curWrapper.todo?.let { todo ->
                         todo_fl_del.visibility = View.GONE
-                        todo_tv_todo_title.text = todo.title
+                        todo_tv_todo_title.setText(todo.title)
                         todo_tv_notify_time.text = repeatMode2RemindTime(todo.remindMode)
                         todo_tv_todo_title.setOnClickListener { }//防止穿透点击
                         if (todo.remindMode.notifyDateTime == ""){

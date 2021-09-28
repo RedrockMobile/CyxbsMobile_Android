@@ -19,7 +19,7 @@
             android:layout_width="0dp"
             android:layout_height="19dp"
             android:layout_marginStart="16dp"
-            app:is_checked="true"
+            android:transitionName="check"
             app:unchecked_line_color="@color/todo_feed_check_eclipse_color"
             app:checked_line_color="@color/todo_check_line_color"
             app:uncheck_line_width="1.5dp"
@@ -36,12 +36,13 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="3.5dp"
             android:layout_marginBottom="3dp"
+            android:visibility="gone"
             android:src="@drawable/todo_ic_right"
             app:layout_constraintBottom_toBottomOf="@+id/todo_iv_todo_item"
             app:layout_constraintStart_toStartOf="@+id/todo_iv_todo_item"
             app:layout_constraintTop_toTopOf="@+id/todo_iv_todo_item" />
 
-        <androidx.appcompat.widget.AppCompatTextView
+        <androidx.appcompat.widget.AppCompatEditText
             android:id="@+id/todo_tv_todo_title"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -51,8 +52,11 @@
             android:lines="1"
             android:paddingEnd="1dp"
             android:singleLine="true"
+            android:background="@null"
             android:layout_marginStart="50dp"
             android:layout_marginEnd="15dp"
+            android:cursorVisible="false"
+            android:focusable="false"
             android:textColor="@color/todo_check_line_color"
             android:textSize="15sp"
             app:layout_constraintHorizontal_bias="0.0"
@@ -60,6 +64,7 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
+            android:transitionName="title"
             tools:text="复习高数1145141919114514191911451419191145141919" />
 
         <androidx.appcompat.widget.AppCompatImageView

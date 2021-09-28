@@ -22,7 +22,7 @@
             app:unchecked_line_color="@color/todo_inner_check_eclipse_color"
             app:checked_line_color="@color/todo_inner_checked_line_color"
             app:checked_line_width="2dp"
-            app:is_checked="true"
+            android:transitionName="check"
             app:layout_constraintBottom_toBottomOf="@+id/todo_tv_todo_title"
             app:layout_constraintEnd_toEndOf="@+id/todo_tv_todo_title"
             app:layout_constraintStart_toStartOf="parent"
@@ -36,12 +36,13 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="5dp"
             android:layout_marginBottom="3dp"
+            android:visibility="gone"
             android:src="@drawable/todo_ic_detail_check"
             app:layout_constraintBottom_toBottomOf="@+id/todo_iv_todo_item"
             app:layout_constraintStart_toStartOf="@+id/todo_iv_todo_item"
             app:layout_constraintTop_toTopOf="@+id/todo_iv_todo_item" />
 
-        <androidx.appcompat.widget.AppCompatTextView
+        <androidx.appcompat.widget.AppCompatEditText
             android:id="@+id/todo_tv_todo_title"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -52,6 +53,9 @@
             android:ellipsize="end"
             android:height="25dp"
             android:gravity="center_vertical"
+            android:cursorVisible="false"
+            android:focusable="false"
+            android:background="@null"
             android:paddingEnd="1dp"
             android:textColor="@color/todo_check_line_color"
             android:textSize="18sp"
@@ -101,7 +105,7 @@
 
     <FrameLayout
         android:id="@+id/todo_fl_del"
-        android:layout_width="80dp"
+         android:layout_width="80dp"
         android:layout_height="match_parent"
         android:layout_gravity="end"
         android:background="@color/todo_item_del_red"

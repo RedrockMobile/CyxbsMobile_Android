@@ -1,6 +1,7 @@
 package com.cyxbsmobile_single.module_todo.adapter
 
 import android.animation.ValueAnimator
+import android.app.Activity
 import android.content.Context
 import android.view.LayoutInflater
 import android.view.View
@@ -8,12 +9,10 @@ import android.view.ViewGroup
 import android.view.animation.OvershootInterpolator
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.cyxbsmobile_single.module_todo.R
-import com.cyxbsmobile_single.module_todo.adapter.DoubleListFoldRvAdapter.ShowType.*
+import com.cyxbsmobile_single.module_todo.adapter.DoubleListFoldRvAdapter.ShowType.THREE
 import com.cyxbsmobile_single.module_todo.ui.activity.TodoDetailActivity
 import com.cyxbsmobile_single.module_todo.viewmodel.TodoViewModel
 import com.mredrock.cyxbs.common.ui.BaseFeedFragment
-import com.mredrock.cyxbs.common.utils.LogUtils
-import com.mredrock.cyxbs.common.utils.extensions.pressToZoomOut
 import com.mredrock.cyxbs.common.utils.extensions.setOnSingleClickListener
 import kotlinx.android.synthetic.main.todo_fragment_feed.view.*
 import kotlinx.android.synthetic.main.todo_rv_item_todo.view.*
@@ -22,7 +21,7 @@ import kotlinx.android.synthetic.main.todo_rv_item_todo.view.*
  * Author: RayleighZ
  * Time: 2021-08-02 11:18
  */
-class TodoFeedAdapter(private val todoViewModel: TodoViewModel) :
+class TodoFeedAdapter(private val todoViewModel: TodoViewModel, private val activity: Activity) :
     BaseFeedFragment.Adapter() {
 
     private lateinit var feedView: View
@@ -49,10 +48,14 @@ class TodoFeedAdapter(private val todoViewModel: TodoViewModel) :
                 todo_rv_todo_list.visibility = View.VISIBLE
                 todo_tv_feed_empty_notify.visibility = View.GONE
                 //这里可以保证，viewModel和adapter的list是同一个引用，可以保证操作的同步性
-                val adapter = DoubleListFoldRvAdapter(todoViewModel.uncheckTodoList, THREE, R.layout.todo_rv_item_todo)
+                val adapter = DoubleListFoldRvAdapter(
+                    todoViewModel.uncheckTodoList,
+                    THREE,
+                    R.layout.todo_rv_item_todo
+                )
                 adapter.onBindView = { view, _, viewType, wrapper ->
                     //此处不可能出现title，但为了稳一波，还是加上了判断
-                    if (viewType == DoubleListFoldRvAdapter.TODO){
+                    if (viewType == DoubleListFoldRvAdapter.TODO) {
                         view.apply {
                             todo_fl_todo_back.setOnClickListener {
                                 wrapper.todo?.let {
@@ -60,12 +63,12 @@ class TodoFeedAdapter(private val todoViewModel: TodoViewModel) :
                                 }
                             }
 
-                            todo_tv_todo_title.setOnClickListener{
+                            todo_tv_todo_title.setOnClickListener {
                                 wrapper.todo?.let {
                                     TodoDetailActivity.startActivity(it, context)
                                 }
                             }
-                            
+
                             todo_iv_todo_item.setOnSingleClickListener {
                                 todo_iv_check.visibility = View.VISIBLE
                                 checkImageBoomAnime.addUpdateListener {
@@ -73,9 +76,9 @@ class TodoFeedAdapter(private val todoViewModel: TodoViewModel) :
                                     todo_iv_check.scaleY = it.animatedValue as Float
                                 }
                                 checkImageBoomAnime.start()
-                                todo_iv_todo_item.setStatusWithAnime(isChecked = true){
+                                todo_iv_todo_item.setStatusWithAnime(isChecked = true) {
                                     adapter.checkItemAndPopUp(wrapper)
-                                    if (adapter.itemCount == 0){
+                                    if (adapter.itemCount == 0) {
                                         //如果所有条目都下去了
                                         changeToEmpty()
                                     }
@@ -91,7 +94,7 @@ class TodoFeedAdapter(private val todoViewModel: TodoViewModel) :
     }
 
     //转换为没有代办的情况
-    private fun changeToEmpty(){
+    private fun changeToEmpty() {
         feedView.apply {
             todo_rv_todo_list.visibility = View.GONE
             todo_tv_feed_empty_notify.visibility = View.VISIBLE

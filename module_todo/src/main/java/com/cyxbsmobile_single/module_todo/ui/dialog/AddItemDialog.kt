@@ -161,7 +161,7 @@ class AddItemDialog(context: Context, val onConfirm: (Todo) -> Unit) :
         if (curOperate == NOTIFY) {
             addNotify()
             repeatTimeAdapter.removeAll()
-            todo_rv_inner_detail_repeat_time.adapter = repeatTimeAdapter
+            todo_inner_add_rv_thing_repeat_list.adapter = repeatTimeAdapter
         }
         if (isFromDetail) {
             onConfirm(todo)
