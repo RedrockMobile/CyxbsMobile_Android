@@ -1,5 +1,6 @@
 package com.cyxbsmobile_single.module_todo.adapter
 
+import android.animation.ObjectAnimator
 import android.content.ComponentName
 import android.content.Intent
 import android.graphics.Color
@@ -201,11 +202,19 @@ class DoubleListFoldRvAdapter(
         }
     }
 
-    fun changeFoldStatus() {
+    fun changeFoldStatus(hideIcon: View) {
         if (isShowItem) {
             foldItem()
+            ObjectAnimator.ofFloat(hideIcon, "rotationX", 0f, 180f).apply {
+                repeatCount = 0
+                start()
+            }
         } else {
             showItem()
+            ObjectAnimator.ofFloat(hideIcon, "rotationX", 180f, 0f).apply {
+                repeatCount = 0
+                start()
+            }
         }
         isShowItem = !isShowItem
     }
@@ -241,6 +250,7 @@ class DoubleListFoldRvAdapter(
         when (curWrapper.viewType) {
             TITLE -> {
                 itemView.todo_tv_item_title.text = curWrapper.title
+                itemView.todo_iv_hide_list.visibility = if (position != 0){ View.VISIBLE } else { View.GONE }
             }
 
             TODO -> {

@@ -1,5 +1,7 @@
 package com.cyxbsmobile_single.module_todo.ui.activity
 
+import android.animation.ObjectAnimator
+import android.animation.ValueAnimator
 import android.graphics.Color
 import android.os.Bundle
 import android.view.View
@@ -13,6 +15,7 @@ import com.cyxbsmobile_single.module_todo.adapter.DoubleListFoldRvAdapter.ShowTy
 import com.cyxbsmobile_single.module_todo.adapter.slide_callback.SlideCallback
 import com.cyxbsmobile_single.module_todo.ui.dialog.AddItemDialog
 import com.cyxbsmobile_single.module_todo.util.setMargin
+import com.cyxbsmobile_single.module_todo.util.xFold180
 import com.cyxbsmobile_single.module_todo.viewmodel.TodoViewModel
 import com.mredrock.cyxbs.common.BaseApp
 import com.mredrock.cyxbs.common.config.DISCOVER_TODO_MAIN
@@ -20,6 +23,7 @@ import com.mredrock.cyxbs.common.ui.BaseViewModelActivity
 import com.mredrock.cyxbs.common.utils.LogUtils
 import com.mredrock.cyxbs.common.utils.extensions.dip
 import kotlinx.android.synthetic.main.todo_activity_inner_main.*
+import kotlinx.android.synthetic.main.todo_rv_item_title.view.*
 import kotlinx.android.synthetic.main.todo_rv_item_todo.view.*
 
 @Route(path = DISCOVER_TODO_MAIN)
@@ -75,7 +79,7 @@ class TodoInnerMainActivity : BaseViewModelActivity<TodoViewModel>() {
                 DoubleListFoldRvAdapter.TITLE -> {
                     if (pos != 0) {//确定是已完成事项的title
                         view.setOnClickListener {
-                            adapter.changeFoldStatus()
+                            adapter.changeFoldStatus(view.todo_iv_hide_list)
                         }
                     } else {
                         view.isClickable = false
