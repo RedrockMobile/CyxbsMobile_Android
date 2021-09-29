@@ -8,5 +8,8 @@
 
     <color name="electricity_info_hint_text">#b2e2ff</color>
     <color name="electricity_info_value">#5a99f7</color>
-
+    <color name="electricity_tv_feed_fee">#2A4E84</color>
+    <color name="electricity_tv_feed_fee_content">#112C57</color>
+    <color name="electricity_room_num_set_text">#112C57</color>
+    <color name="electricity_room_num_divide">#2A4E84</color>
 </resources>

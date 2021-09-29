@@ -17,6 +17,7 @@ import com.bumptech.glide.load.model.GlideUrl
 import com.davemorrissey.labs.subscaleview.ImageSource
 import com.davemorrissey.labs.subscaleview.SubsamplingScaleImageView
 import com.mredrock.cyxbs.common.BaseApp
+import com.mredrock.cyxbs.common.skin.SkinManager
 import com.mredrock.cyxbs.common.utils.extensions.dp2px
 import com.mredrock.cyxbs.common.utils.extensions.gone
 import com.mredrock.cyxbs.common.utils.extensions.visible
@@ -310,7 +311,9 @@ class MapLayout : FrameLayout, View.OnClickListener {
      */
     fun addIcon(bean: IconBean) {
         val icon = ImageView(context)
-        icon.setImageResource(R.drawable.map_ic_local)
+        icon.setImageDrawable(SkinManager.getDrawable(
+                "map_ic_local", R.drawable.map_ic_local
+        ))
         icon.tag = bean
         val screenPoint = subsamplingScaleImageView.sourceToViewCoord(bean.sx, bean.sy)
         if (screenPoint != null) {

@@ -7,8 +7,10 @@
         <activity
             android:name=".pages.stusearch.activity.OtherCourseActivity"
             android:windowSoftInputMode="adjustPan"
-            android:launchMode="singleTop" />
-        <activity android:name=".pages.stulist.StuListActivity" />
+            android:launchMode="singleTop"
+            android:theme="@style/AppTheme.Skin"/>
+        <activity android:name=".pages.stulist.StuListActivity"
+            android:theme="@style/AppTheme.Skin"/>
     </application>
 
 </manifest>

@@ -3,15 +3,14 @@ package com.mredrock.cyxbs.mine.page.setting
 import android.content.Intent
 import android.graphics.Color
 import android.os.Bundle
-import androidx.core.content.ContextCompat
 import com.alibaba.android.arouter.launcher.ARouter
 import com.mredrock.cyxbs.api.account.IAccountService
 import com.mredrock.cyxbs.common.BaseApp
 import com.mredrock.cyxbs.common.BaseApp.Companion.context
 import com.mredrock.cyxbs.common.component.CommonDialogFragment
 import com.mredrock.cyxbs.common.config.*
-import com.mredrock.cyxbs.common.network.ApiGenerator
 import com.mredrock.cyxbs.common.service.ServiceManager
+import com.mredrock.cyxbs.common.skin.SkinManager
 import com.mredrock.cyxbs.common.ui.BaseActivity
 import com.mredrock.cyxbs.common.utils.extensions.*
 import com.mredrock.cyxbs.main.MAIN_LOGIN
@@ -20,7 +19,6 @@ import com.mredrock.cyxbs.mine.page.security.activity.SecurityActivity
 import com.mredrock.cyxbs.mine.util.apiService
 import com.mredrock.cyxbs.mine.util.ui.WarningDialog
 import kotlinx.android.synthetic.main.mine_activity_setting.*
-import kotlinx.android.synthetic.main.mine_activity_tablayout_my_product.view.*
 
 class SettingActivity : BaseActivity() {
 
@@ -30,15 +28,16 @@ class SettingActivity : BaseActivity() {
 
         //初始化toolbar
 
-        mine_setting_toolbar.toolbar.apply {
+        common_toolbar.apply {
             setTitleLocationAtLeft(false)
-            setBackgroundColor(ContextCompat.getColor(this@SettingActivity, R.color.common_mine_setting_common_back_color))
             initWithSplitLine(
                     "设置",
                     withSplitLine = true,
                     titleOnLeft = false
             )
         }
+        mine_setting_switch.thumbDrawable = SkinManager.getDrawable("mine_bg_thumb",R.drawable.mine_bg_thumb)
+        mine_setting_switch.trackDrawable = SkinManager.getDrawable("mine_shape_switch_track",R.drawable.mine_shape_switch_track)
         //启动App优先显示课表
         mine_setting_switch.setOnCheckedChangeListener { _, isChecked ->
             defaultSharedPreferences.editor {

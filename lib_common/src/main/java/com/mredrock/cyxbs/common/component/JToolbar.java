@@ -53,6 +53,7 @@ public class JToolbar extends Toolbar {
         paint.setColor(R.color.common_default_divide_line_color);
         paint.setAlpha(25);
         paint.setStrokeWidth(ContextKt.dp2px(context, 1));
+        SkinManager.INSTANCE.addSkinUpdateListener(this::invalidate);
     }
 
     @Override
@@ -89,7 +90,9 @@ public class JToolbar extends Toolbar {
             field.setAccessible(true);
             TextView view = (TextView) field.get(this);
             view.getPaint().setFakeBoldText(true);
-            view.setTextColor(R.color.common_level_two_font_color);
+            view.setTextColor(SkinManager.INSTANCE.getColor(
+                    "common_level_two_font_color",R.color.common_level_two_font_color
+            ));
             return view;
         } catch (Exception e) {
             e.printStackTrace();

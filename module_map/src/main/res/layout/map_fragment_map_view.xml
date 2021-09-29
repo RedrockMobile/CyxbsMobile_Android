@@ -45,6 +45,7 @@
                     android:id="@+id/map_tv_map_view_my_favorite"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:textColor="@color/common_level_two_font_color"
                     android:layout_marginTop="6dp"
                     android:text="@string/map_place_map_view_my_favorite"
                     android:textSize="11sp" />

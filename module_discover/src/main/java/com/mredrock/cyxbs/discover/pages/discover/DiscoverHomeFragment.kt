@@ -41,6 +41,7 @@ import com.mredrock.cyxbs.discover.utils.BannerAdapter
 import com.mredrock.cyxbs.discover.utils.MoreFunctionProvider
 import com.mredrock.cyxbs.api.volunteer.IVolunteerService
 import com.mredrock.cyxbs.common.skin.SkinManager
+import com.mredrock.cyxbs.discover.bean.NewsListItem
 import kotlinx.android.synthetic.main.discover_home_fragment.*
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
@@ -56,7 +57,8 @@ class DiscoverHomeFragment : BaseViewModelFragment<DiscoverHomeViewModel>(), Eve
     companion object {
         const val DISCOVER_FUNCTION_RV_STATE = "discover_function_rv_state"
     }
-
+    //用于换肤时缓存
+    private  var jwNewsCache : List<NewsListItem>? = null
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         return inflater.inflate(R.layout.discover_home_fragment, container, false)
     }
@@ -124,6 +126,7 @@ class DiscoverHomeFragment : BaseViewModelFragment<DiscoverHomeViewModel>(), Eve
     private fun initJwNews(viewFlipper: ViewFlipper, frameLayout: FrameLayout) {
         viewModel.jwNews.observe {
             if (it != null) {
+                jwNewsCache = it
                 viewFlipper.removeAllViews()
                 for (item in it) {
                     viewFlipper.addView(getTextView(item.title, item.id))
@@ -131,7 +134,18 @@ class DiscoverHomeFragment : BaseViewModelFragment<DiscoverHomeViewModel>(), Eve
                 vf_jwzx_detail.startFlipping()
             }
         }
-
+        SkinManager.addSkinUpdateListener(object :SkinManager.SkinUpdateListener{
+            override fun onSkinUpdate() {
+                if (jwNewsCache != null && context != null) {
+                    viewFlipper.stopFlipping()
+                    viewFlipper.removeAllViews()
+                    for (item in jwNewsCache!!) {
+                        viewFlipper.addView(getTextView(item.title, item.id))
+                    }
+                    vf_jwzx_detail.startFlipping()
+                }
+            }
+        })
         viewFlipper.setOnSingleClickListener {
             ARouter.getInstance().build(DISCOVER_NEWS_ITEM).withString("id", viewFlipper.focusedChild.tag as String).navigation()
         }

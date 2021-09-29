@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="utf-8"?>
+<selector xmlns:android="http://schemas.android.com/apk/res/android">
+    <!--    用于换肤占位背景-->
+    <solid android:color="#ffffff" />
+</selector>

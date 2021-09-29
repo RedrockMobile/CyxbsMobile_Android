@@ -254,7 +254,7 @@
                                 android:paddingEnd="16dp"
                                 android:paddingBottom="8dp"
                                 android:text="@string/course_back_now_week"
-                                android:textColor="@color/common_white_font_color"
+                                android:textColor="@color/common_course_affair_modify_tv_color"
                                 android:textSize="13sp"
                                 app:layout_constraintBottom_toBottomOf="parent"
                                 app:layout_constraintEnd_toEndOf="parent"

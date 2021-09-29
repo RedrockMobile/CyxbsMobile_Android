@@ -8,6 +8,7 @@ import android.graphics.RectF
 import android.util.AttributeSet
 import android.util.DisplayMetrics
 import android.view.View
+import com.mredrock.cyxbs.common.skin.SkinManager
 import com.mredrock.cyxbs.common.utils.extensions.dip
 import com.mredrock.cyxbs.course.R
 import kotlin.math.max
@@ -42,7 +43,8 @@ internal class AffairBackgroundView : View {
     ) {
         val typeArray = context.obtainStyledAttributes(attrs, R.styleable.AffairBackgroundView,
                 R.attr.ScheduleViewStyle, 0)
-        paint.color = typeArray.getColor(R.styleable.AffairBackgroundView_backgroundStripeColor, 0xFFE4E7EC.toInt())
+        paint.color = SkinManager.getColor("common_transaction_background_stripe_color",
+        R.color.common_transaction_background_stripe_color)
         typeArray.recycle()
         init()
     }

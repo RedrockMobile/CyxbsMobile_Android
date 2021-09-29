@@ -25,7 +25,7 @@
             android:layout_height="wrap_content"
             android:fontFamily="@font/impact_min"
             android:layout_gravity="center"
-            android:textColor="@color/levelFourFontColor"
+            android:textColor="@color/volunteer_feed_total_time_color"
             tools:text="18"
             tools:targetApi="o" />
     </FrameLayout>

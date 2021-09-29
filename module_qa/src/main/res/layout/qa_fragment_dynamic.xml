@@ -10,6 +10,7 @@
     tools:context=".pages.dynamic.ui.fragment.DynamicFragment">
 
     <com.google.android.material.appbar.AppBarLayout
+        android:id="@+id/qa_appbar_dynamic"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="76dp"
@@ -40,6 +41,7 @@
                 android:id="@+id/qa_rv_circles_List"
                 android:layout_width="match_parent"
                 android:layout_height="110dp"
+                app:layout_collapseMode="parallax"
                 android:paddingBottom="0dp"
                 tools:listitem="@layout/qa_recycler_item_circles" />
 
@@ -57,7 +59,7 @@
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@color/common_window_background">
+        android:background="@color/qa_search_background">
 
         <RelativeLayout
             android:id="@+id/rl_qa_hot_search"

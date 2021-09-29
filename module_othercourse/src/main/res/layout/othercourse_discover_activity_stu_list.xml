@@ -14,7 +14,8 @@
     <androidx.coordinatorlayout.widget.CoordinatorLayout
         android:fitsSystemWindows="true"
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        android:background="@drawable/common_shape_activity_background">
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:orientation="vertical"

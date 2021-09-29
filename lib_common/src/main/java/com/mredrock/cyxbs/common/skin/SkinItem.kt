@@ -93,6 +93,13 @@ class SkinItem(private val view: View?, private val attrs: List<SkinAttr>?) {
                     }
                 }
 
+                "drawableEnd" -> {
+                    if (view is TextView) {
+                        val drawable = SkinManager.getDrawable(resName, resId)
+                        drawable?.setBounds(0, 0, drawable.minimumWidth, drawable.minimumHeight)
+                        view.setCompoundDrawables(null, null, drawable, null)
+                    }
+                }
                 "tabIndicatorColor" -> {
                     if (view is TabLayout) {
                         view.setSelectedTabIndicatorColor(SkinManager.getColor(resName, resId))

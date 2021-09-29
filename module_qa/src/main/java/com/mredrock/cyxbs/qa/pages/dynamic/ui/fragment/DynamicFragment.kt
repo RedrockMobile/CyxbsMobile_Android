@@ -1,30 +1,27 @@
 package com.mredrock.cyxbs.qa.pages.dynamic.ui.fragment
 
-import android.annotation.SuppressLint
 import android.content.Intent
 import android.os.Bundle
+import android.os.Handler
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.os.Handler
-import android.util.Log
-import android.view.*
+import android.view.Window
+import android.view.WindowManager
 import android.widget.RelativeLayout
 import android.widget.TextView
 import android.widget.Toast
 import android.widget.ViewFlipper
-import androidx.core.content.ContextCompat
-import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.alibaba.android.arouter.facade.annotation.Route
+import com.google.android.material.appbar.AppBarLayout
 import com.google.android.material.appbar.CollapsingToolbarLayout
 import com.mredrock.cyxbs.api.account.IAccountService
 import com.mredrock.cyxbs.common.BaseApp
 import com.mredrock.cyxbs.common.component.CyxbsToast
 import com.mredrock.cyxbs.common.config.CyxbsMob
 import com.mredrock.cyxbs.common.config.QA_ENTRY
-import com.mredrock.cyxbs.common.config.StoreTask
 import com.mredrock.cyxbs.common.event.RefreshQaEvent
 import com.mredrock.cyxbs.common.mark.EventBusLifecycleSubscriber
 import com.mredrock.cyxbs.common.service.ServiceManager
@@ -66,14 +63,9 @@ import com.mredrock.cyxbs.qa.utils.ClipboardController
 import com.mredrock.cyxbs.qa.utils.ShareUtils
 import com.tencent.tauth.Tencent
 import com.umeng.analytics.MobclickAgent
-import kotlinx.android.synthetic.main.qa_dialog_report.*
-import kotlinx.android.synthetic.main.qa_dialog_report.view.*
 import kotlinx.android.synthetic.main.qa_fragment_dynamic.*
-import kotlinx.android.synthetic.main.qa_recycler_item_dynamic_header.view.*
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
-import java.util.*
-import kotlin.collections.ArrayList
 
 
 /**
@@ -300,6 +292,11 @@ open class DynamicFragment : BaseViewModelFragment<DynamicListViewModel>(), Even
             viewModel.invalidateDynamicList()
             viewModel.getMyCirCleData()
         }
+        qa_appbar_dynamic.addOnOffsetChangedListener(AppBarLayout.OnOffsetChangedListener { appBarLayout, verticalOffset ->
+            //AppBarLayout总的距离px
+            val totalScrollRange = appBarLayout.totalScrollRange
+            qa_appbar_dynamic.alpha = ((verticalOffset + totalScrollRange).toFloat() / totalScrollRange)
+        })
     }
 
     private fun refreshTopicMessage() {

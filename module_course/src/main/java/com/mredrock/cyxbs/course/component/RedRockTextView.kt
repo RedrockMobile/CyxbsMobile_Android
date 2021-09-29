@@ -7,6 +7,7 @@ import android.graphics.Rect
 import android.util.AttributeSet
 import android.view.ViewGroup
 import androidx.appcompat.widget.AppCompatTextView
+import com.mredrock.cyxbs.common.skin.SkinManager
 import com.mredrock.cyxbs.course.R
 
 /**
@@ -61,7 +62,8 @@ class RedRockTextView : AppCompatTextView {
             invalidate()
         }
 
-    var selectColor = 0xffffff
+    var selectColor = SkinManager.getColor("common_level_one_font_color",
+            R.color.common_level_one_font_color)
 
     constructor(context: Context) : super(context) {
         initRedRockTextView()
@@ -82,7 +84,8 @@ class RedRockTextView : AppCompatTextView {
         mOrientation = typedArray.getInt(R.styleable.RedRockTextView_orientation, HORIZONTAL)
         offsetBetweenText = typedArray.getDimensionPixelSize(R.styleable.RedRockTextView_offsetBetweenText,
                 0)
-        selectColor = typedArray.getColor(R.styleable.RedRockTextView_selectedColor, 0xffffff)
+        selectColor = SkinManager.getColor("common_level_one_font_color",
+                R.color.common_level_one_font_color)
         typedArray.recycle()
 
         initRedRockTextView()
@@ -91,9 +94,7 @@ class RedRockTextView : AppCompatTextView {
 
     private fun initRedRockTextView() {
         //set Paint's color
-        val drawableState = drawableState
-        mPaint.color = textColors.getColorForState(drawableState, 0)
-
+        mPaint.color = selectColor
         //getTextSize
         mPaint.textSize = textSize
         selectTextPaint.set(mPaint)

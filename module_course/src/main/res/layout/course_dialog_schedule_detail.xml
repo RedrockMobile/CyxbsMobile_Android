@@ -2,6 +2,7 @@
 <com.mredrock.cyxbs.course.component.ScheduleDetailView xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:id="@+id/schedule_detail_view"
+    android:background="@drawable/course_selector_schedule_detail_background"
     android:layout_height="wrap_content">
 
 </com.mredrock.cyxbs.course.component.ScheduleDetailView>

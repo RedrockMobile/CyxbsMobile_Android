@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="utf-8"?>
+<shape xmlns:android="http://schemas.android.com/apk/res/android">
+    <!--    换肤用，没想到更好的办法，先用一个drawable占位-->
+    <solid android:color="#00ffffff" />
+</shape>

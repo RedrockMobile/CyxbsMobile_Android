@@ -5,6 +5,7 @@ import android.graphics.Canvas
 import android.graphics.Color
 import android.graphics.Paint
 import android.util.AttributeSet
+import com.mredrock.cyxbs.common.skin.SkinManager
 import com.mredrock.cyxbs.common.utils.extensions.dip
 import com.mredrock.cyxbs.course.R
 
@@ -29,8 +30,10 @@ class SimpleDotsView : ScheduleDetailView.DotsView {
     private var mDotRadius = context.dip(4)
     private var mFirstDotLeftMargin: Int = 0
     private val mDotsColors: IntArray by lazy {
-        intArrayOf(Color.parseColor("#788EFA"),
-                Color.GRAY)
+        intArrayOf(SkinManager.getColor("common_course_affair_dots_select_color",
+        R.color.common_course_affair_dots_select_color),
+                SkinManager.getColor("common_course_affair_dots_un_select_color",
+                        R.color.common_course_affair_dots_un_select_color))
     }
     private var currentFocusDot: Int = 0
 

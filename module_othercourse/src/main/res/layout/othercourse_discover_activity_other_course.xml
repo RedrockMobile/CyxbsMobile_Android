@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.coordinatorlayout.widget.CoordinatorLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
@@ -10,26 +9,35 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:background="@drawable/common_shape_activity_background"
         android:orientation="vertical">
 
-        <include layout="@layout/common_toolbar" />
-
-        <com.google.android.material.tabs.TabLayout
-            android:id="@+id/tl_other_course"
+        <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="50dp"
-            android:background="@drawable/othercourse_shape_tab_shape"
-            app:tabTextAppearance="@style/tab_style"
-            app:tabRippleColor="@color/common_transparent_background"
-            app:tabBackground="@color/common_transparent_background"
-            app:tabTextColor="@color/common_alpha_level_two_font_color"
-            app:tabSelectedTextColor="@color/common_level_two_font_color"
-            app:tabGravity="fill"
-            app:tabIndicatorHeight="3dp"
-            app:tabIndicatorColor="@color/common_mine_tab_layout_indicator_color"
-            app:tabIndicator="@drawable/othercourse_ic_tab_indicator"
-            app:tabIndicatorFullWidth="false"
-            app:tabMode="fixed" />
+            android:layout_height="wrap_content"
+            android:background="@drawable/othercourse_shape_toolbar_tablayout_background_skin"
+            android:orientation="vertical">
+
+            <include layout="@layout/common_toolbar" />
+
+            <com.google.android.material.tabs.TabLayout
+                android:id="@+id/tl_other_course"
+                android:layout_width="match_parent"
+                android:layout_height="50dp"
+                android:background="@drawable/othercourse_shape_tab_shape"
+                app:tabBackground="@color/common_transparent_background"
+                app:tabGravity="fill"
+                app:tabIndicator="@drawable/othercourse_ic_tab_indicator"
+                app:tabIndicatorColor="@color/common_mine_tab_layout_indicator_color"
+                app:tabIndicatorFullWidth="false"
+                app:tabIndicatorHeight="3dp"
+                app:tabMode="fixed"
+                app:tabRippleColor="@color/common_transparent_background"
+                app:tabSelectedTextColor="@color/common_level_two_font_color"
+                app:tabTextAppearance="@style/tab_style"
+                app:tabTextColor="@color/common_alpha_level_two_font_color" />
+
+        </LinearLayout>
 
         <androidx.viewpager2.widget.ViewPager2
             android:id="@+id/vp_other_course"
@@ -41,8 +49,8 @@
         android:id="@+id/course_bottom_sheet_search"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        app:behavior_hideable="true"
         android:paddingTop="30dp"
+        app:behavior_hideable="true"
         app:behavior_peekHeight="0dp"
         app:layout_behavior="@string/bottom_sheet_behavior">
 

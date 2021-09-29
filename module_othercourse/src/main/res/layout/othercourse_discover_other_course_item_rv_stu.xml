@@ -50,6 +50,7 @@
         android:layout_height="wrap_content"
         android:layout_marginEnd="15dp"
         tools:text="2018214306"
+        android:textColor="@color/common_other_course_tv_stu_num"
         app:layout_constraintTop_toTopOf="@+id/discover_other_course_item_select_name"
         app:layout_constraintBottom_toBottomOf="@+id/discover_other_course_item_select_name"
         app:layout_constraintStart_toEndOf="@+id/discover_other_course_item_select_name"

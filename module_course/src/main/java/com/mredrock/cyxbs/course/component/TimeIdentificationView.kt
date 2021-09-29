@@ -41,7 +41,8 @@ class TimeIdentificationView : View {
     private var percentage: Float = 0f
 
     //标识的颜色
-    private var color = 0x2A4E84
+    private var color = SkinManager.getColor("common_course_time_identification_color",
+            R.color.common_course_time_identification_color)
 
     //单位是dp
     private val horizontalLineLength = 25
@@ -65,7 +66,8 @@ class TimeIdentificationView : View {
 
         val typeArray = context.obtainStyledAttributes(attrs, R.styleable.TimeIdentificationView,
                 R.attr.TimeIdentificationViewStyle, 0)
-        color = SkinManager.getColor("levelFourFontColor",R.color.levelFourFontColor)
+        color = SkinManager.getColor("common_course_time_identification_color",
+                R.color.common_course_time_identification_color)
         typeArray.recycle()
         paint = Paint().apply {
             color = this@TimeIdentificationView.color

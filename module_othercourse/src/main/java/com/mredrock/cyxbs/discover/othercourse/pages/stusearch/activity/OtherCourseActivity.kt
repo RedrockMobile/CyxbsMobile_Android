@@ -27,9 +27,11 @@ class OtherCourseActivity : BaseViewModelActivity<OtherCourseViewModel>() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.othercourse_discover_activity_other_course)
-        common_toolbar.initWithSplitLine("查课表", false)
-        common_toolbar.setTitleLocationAtLeft(false)
-
+        common_toolbar.apply {
+            initWithSplitLine("查课表", false)
+            navigationIcon = SkinManager.getDrawable("common_ic_back", R.drawable.common_ic_back)
+            setTitleLocationAtLeft(false)
+        }
         vp_other_course.adapter = OtherCourseViewPagerAdapter(this, listOf(otherCourseStuSearchFragment, otherCourseTeacherSearchFragment))
         tl_other_course.setTabTextColors(SkinManager.getColor("common_alpha_level_two_font_color",
         R.color.common_alpha_level_two_font_color),SkinManager.getColor("common_level_two_font_color",

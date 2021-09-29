@@ -49,7 +49,7 @@ class WeekBackgroundView : View {
     }
 
     private fun setGround() {
-        foreground = SkinManager.getColor("levelFourFontColor", R.color.levelFourFontColor)
+        foreground = SkinManager.getColor("common_course_identifies_the_current_color", R.color.common_course_identifies_the_current_color)
         bottomBackground = SkinManager.getColor("common_course_identifies_the_current_shadow_color", R.color.common_course_identifies_the_current_shadow_color)
         backgroundPaint.apply {
             color = bottomBackground

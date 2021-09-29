@@ -76,4 +76,25 @@
         <item name="l_pp_checkBox_tick_width" format="dimension">2dp</item><!--勾勾的线条宽度-->
     </style>
 
+    <!--    所有带toolbar的换肤activity必须使用此主题，保证toolbar颜色正确-->
+    <style name="AppTheme.Skin" parent="Theme.AppCompat.DayNight.NoActionBar" tools:ignore="ResourceName">
+        <!-- Customize your theme here. -->
+        <item name="colorPrimary">@color/common_theme_skin</item>
+        <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
+        <item name="colorAccent">@color/colorAccent</item>
+        <!--        透明状态栏-->
+        <item name="statusBarBackground">@color/common_transparent_background</item>
+        <!--        Transition转场动画，暂未启用-->
+        <item name="android:windowEnterTransition">@transition/common_fade</item>
+        <item name="android:windowExitTransition">@transition/common_fade</item>
+        <item name="android:windowSharedElementEnterTransition">@transition/common_app_transaction
+        </item>
+        <item name="android:windowSharedElementExitTransition">@transition/common_app_transaction
+        </item>
+        <item name="actionMenuTextColor">@color/common_level_two_font_color</item>
+        <!--   Material Dialog color-->
+        <item name="md_color_title">@color/common_level_three_font_color</item>
+        <item name="md_color_content">@color/levelFourFontColor</item>
+        <item name="md_color_button_text">@color/common_level_two_font_color</item>
+    </style>
 </resources>

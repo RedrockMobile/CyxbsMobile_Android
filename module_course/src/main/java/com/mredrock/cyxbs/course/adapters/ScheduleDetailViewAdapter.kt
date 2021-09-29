@@ -16,6 +16,7 @@ import com.mredrock.cyxbs.common.component.RedRockAutoWarpView
 import com.mredrock.cyxbs.common.config.COURSE_POS_TO_MAP
 import com.mredrock.cyxbs.common.config.DISCOVER_MAP
 import com.mredrock.cyxbs.common.network.ApiGenerator
+import com.mredrock.cyxbs.common.skin.SkinManager
 import com.mredrock.cyxbs.common.utils.Num2CN
 import com.mredrock.cyxbs.common.utils.extensions.errorHandler
 import com.mredrock.cyxbs.common.utils.extensions.setSchedulers
@@ -159,13 +160,16 @@ class ScheduleDetailViewAdapter(private val mDialog: Dialog, private val mSchedu
             val value = object : RedRockAutoWarpView.Adapter() {
                 override fun getItemCount(): Int = 2
                 override fun getItemView(position: Int): View? = TextView(context).apply {
-                    setTextColor(ContextCompat.getColor(context, R.color.common_level_two_font_color))
+                    setTextColor(SkinManager.getColor("common_level_two_font_color", R.color.common_level_two_font_color))
                     textSize = 13f
                     when (position) {
                         0 -> {
                             //教室名跳转到对应地图
                             text = itemViewInfo.classroom
-                            setCompoundDrawablesWithIntrinsicBounds(0,0,R.drawable.course_ic_test_temp,0)
+                            setCompoundDrawablesWithIntrinsicBounds(null,null,SkinManager.getDrawable(
+                                    "course_ic_test_temp",
+                                    R.drawable.course_ic_test_temp
+                            ),null)
                             setOnSingleClickListener {
                                 //跳转到对应Map位置
                                 ARouter.getInstance().build(DISCOVER_MAP).withString(COURSE_POS_TO_MAP, itemViewInfo.classroom).navigation()

@@ -28,6 +28,7 @@ class IndicatorView(context: Context?, attrs: AttributeSet?, defStyleAttr: Int) 
                 if (ta != null){
                     underColor = under_color
                     progressColor = progress_color
+                    invalidate()
                 }
             }
 
