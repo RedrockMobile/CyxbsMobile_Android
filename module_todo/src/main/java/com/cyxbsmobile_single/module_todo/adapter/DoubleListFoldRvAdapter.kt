@@ -17,6 +17,7 @@ import com.cyxbsmobile_single.module_todo.model.TodoModel
 import com.cyxbsmobile_single.module_todo.model.bean.Todo
 import com.cyxbsmobile_single.module_todo.model.bean.TodoItemWrapper
 import com.cyxbsmobile_single.module_todo.ui.widget.TodoWidget
+import com.cyxbsmobile_single.module_todo.util.getColor
 import com.cyxbsmobile_single.module_todo.util.isOutOfTime
 import com.cyxbsmobile_single.module_todo.util.repeatMode2RemindTime
 import com.mredrock.cyxbs.common.BaseApp
@@ -253,13 +254,8 @@ class DoubleListFoldRvAdapter(
                         val uncheckColor = todo_iv_todo_item.uncheckedColor
                         if (isOutOfTime(todo)) {
                             //置红
-                            //TODO：理论上左侧的clv的颜色和字体颜色不同，这里需要更换颜色
-                            val redColor = ContextCompat.getColor(
-                                context,
-                                R.color.todo_item_del_red
-                            )
-                            todo_tv_item_title.setTextColor(redColor)
-                            todo_iv_todo_item.uncheckedColor = redColor
+                            todo_tv_item_title.setTextColor(getColor(R.color.todo_item_del_red))
+                            todo_iv_todo_item.uncheckedColor = getColor(R.color.todo_item_del_red_46_alpha)
                             hideNotifyTime(this)
                         } else {
                             //恢复为正常形态

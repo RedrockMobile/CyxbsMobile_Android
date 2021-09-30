@@ -1,12 +1,15 @@
 package com.cyxbsmobile_single.module_todo.viewmodel
 
+import com.cyxbsmobile_single.module_todo.R
 import com.cyxbsmobile_single.module_todo.model.TodoModel
 import com.cyxbsmobile_single.module_todo.model.bean.RemindMode
 import com.cyxbsmobile_single.module_todo.model.bean.RepeatBean
 import com.cyxbsmobile_single.module_todo.model.bean.Todo
 import com.cyxbsmobile_single.module_todo.model.bean.TodoItemWrapper
 import com.cyxbsmobile_single.module_todo.model.database.TodoDatabase
+import com.cyxbsmobile_single.module_todo.util.getString
 import com.cyxbsmobile_single.module_todo.util.needTodayDone
+import com.mredrock.cyxbs.common.BaseApp
 import com.mredrock.cyxbs.common.utils.ExecuteOnceObserver
 import com.mredrock.cyxbs.common.utils.LogUtils
 import com.mredrock.cyxbs.common.utils.extensions.safeSubscribeBy
@@ -57,17 +60,17 @@ class TodoViewModel : BaseViewModel() {
                     else uncheckTodoList.add(TodoItemWrapper.todoWrapper(todo))
                 }
                 todoList.addAll(it)
-                wrapperList.add(TodoItemWrapper.titleWrapper("待办"))
+                wrapperList.add(TodoItemWrapper.titleWrapper(getString(R.string.todo_string_uncheck)))
                 for (todoWrapper in uncheckTodoList) {
                     wrapperList.add(todoWrapper)
                 }
-                wrapperList.add(TodoItemWrapper.titleWrapper("已完成"))
+                wrapperList.add(TodoItemWrapper.titleWrapper(getString(R.string.todo_string_checked)))
                 for (todoWrapper in checkedTodoList) {
                     wrapperList.add(todoWrapper)
                 }
             } else {
-                wrapperList.add(TodoItemWrapper.titleWrapper("待办"))
-                wrapperList.add(TodoItemWrapper.titleWrapper("已完成"))
+                wrapperList.add(TodoItemWrapper.titleWrapper(getString(R.string.todo_string_uncheck)))
+                wrapperList.add(TodoItemWrapper.titleWrapper(getString(R.string.todo_string_checked)))
             }
             onLoadSuccess.invoke()
         }

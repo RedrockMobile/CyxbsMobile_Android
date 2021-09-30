@@ -4,6 +4,7 @@ import android.content.Context
 import android.view.View
 import android.view.ViewGroup
 import android.view.inputmethod.InputMethodManager
+import androidx.core.content.ContextCompat
 import androidx.core.view.marginBottom
 import androidx.core.view.marginLeft
 import androidx.core.view.marginRight
@@ -342,3 +343,7 @@ fun isOutOfTime(todo: Todo): Boolean{
 
     return date.time <= System.currentTimeMillis()
 }
+
+fun getString(id: Int): String = BaseApp.context.getString(id)
+
+fun getColor(id: Int): Int = ContextCompat.getColor(BaseApp.context, id)
