@@ -3,9 +3,6 @@ package com.cyxbsmobile_single.module_todo.adapter
 import android.animation.ObjectAnimator
 import android.content.ComponentName
 import android.content.Intent
-import android.graphics.Color
-import android.text.Editable
-import android.text.SpannableStringBuilder
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -17,19 +14,13 @@ import com.cyxbsmobile_single.module_todo.adapter.DoubleListFoldRvAdapter.ShowTy
 import com.cyxbsmobile_single.module_todo.adapter.DoubleListFoldRvAdapter.ShowType.THREE
 import com.cyxbsmobile_single.module_todo.adapter.slide_callback.SlideCallback
 import com.cyxbsmobile_single.module_todo.model.TodoModel
-import com.cyxbsmobile_single.module_todo.model.bean.RemindMode
 import com.cyxbsmobile_single.module_todo.model.bean.Todo
 import com.cyxbsmobile_single.module_todo.model.bean.TodoItemWrapper
-import com.cyxbsmobile_single.module_todo.model.database.TodoDatabase
 import com.cyxbsmobile_single.module_todo.ui.widget.TodoWidget
+import com.cyxbsmobile_single.module_todo.util.isOutOfTime
 import com.cyxbsmobile_single.module_todo.util.repeatMode2RemindTime
 import com.mredrock.cyxbs.common.BaseApp
-import com.mredrock.cyxbs.common.utils.ExecuteOnceObserver
 import com.mredrock.cyxbs.common.utils.LogUtils
-import com.mredrock.cyxbs.common.utils.extensions.safeSubscribeBy
-import com.mredrock.cyxbs.common.utils.extensions.setSchedulers
-import com.mredrock.cyxbs.common.utils.extensions.toast
-import io.reactivex.Observable
 import kotlinx.android.synthetic.main.todo_rv_item_empty.view.*
 import kotlinx.android.synthetic.main.todo_rv_item_title.view.*
 import kotlinx.android.synthetic.main.todo_rv_item_todo.view.*
@@ -132,7 +123,7 @@ class DoubleListFoldRvAdapter(
     fun delItem(wrapper: TodoItemWrapper) {
         wrapper.todo?.let { todo ->
             if (todo.isChecked == 1) checkedArray.remove(wrapper) else uncheckedArray.remove(wrapper)
-            TodoModel.INSTANCE.delTodo(todo.todoId){
+            TodoModel.INSTANCE.delTodo(todo.todoId) {
                 wrapperCopyList.remove(wrapper)
                 refreshList()
                 todoItemWrapperArrayList.remove(wrapper)
@@ -215,7 +206,7 @@ class DoubleListFoldRvAdapter(
 
     fun addTodo(todo: Todo) {
         TodoModel.INSTANCE
-            .addTodo(todo){
+            .addTodo(todo) {
                 //逻辑放在这里的目的是为了更新todo的id
                 LogUtils.d("RayJoe", "add one item")
                 todo.todoId = it
@@ -244,7 +235,11 @@ class DoubleListFoldRvAdapter(
         when (curWrapper.viewType) {
             TITLE -> {
                 itemView.todo_tv_item_title.text = curWrapper.title
-                itemView.todo_iv_hide_list.visibility = if (position != 0){ View.VISIBLE } else { View.GONE }
+                itemView.todo_iv_hide_list.visibility = if (position != 0) {
+                    View.VISIBLE
+                } else {
+                    View.GONE
+                }
             }
 
             TODO -> {
@@ -253,24 +248,59 @@ class DoubleListFoldRvAdapter(
                 }
                 itemView.apply {
                     curWrapper.todo?.let { todo ->
+                        //判断是否过期
+                        //首先缓存一份左侧check圆圈的颜色，方便在else分支恢复
+                        val uncheckColor = todo_iv_todo_item.uncheckedColor
+                        if (isOutOfTime(todo)) {
+                            //置红
+                            //TODO：理论上左侧的clv的颜色和字体颜色不同，这里需要更换颜色
+                            val redColor = ContextCompat.getColor(
+                                context,
+                                R.color.todo_item_del_red
+                            )
+                            todo_tv_item_title.setTextColor(redColor)
+                            todo_iv_todo_item.uncheckedColor = redColor
+                            hideNotifyTime(this)
+                        } else {
+                            //恢复为正常形态
+                            todo_tv_item_title.setTextColor(
+                                ContextCompat.getColor(
+                                    context,
+                                    R.color.todo_check_line_color
+                                )
+                            )
+                            todo_iv_todo_item.uncheckedColor = uncheckColor
+                        }
+
                         todo_fl_del.visibility = View.GONE
                         todo_tv_todo_title.setText(todo.title)
                         todo_tv_notify_time.text = repeatMode2RemindTime(todo.remindMode)
                         todo_tv_todo_title.setOnClickListener { }//防止穿透点击
-                        if (todo.remindMode.notifyDateTime == ""){
-                            todo_tv_notify_time.visibility = View.GONE
-                            todo_iv_bell.visibility = View.GONE
+                        //如果莫得提醒时间，就不显示闹钟和提醒日期
+                        if (todo.remindMode.notifyDateTime == "") {
+                            hideNotifyTime(this)
                         } else {
-                            todo_tv_notify_time.visibility = View.VISIBLE
-                            todo_iv_bell.visibility = View.VISIBLE
+                            showNotifyTime(this)
                         }
+                        //重置todo侧滑状态
                         todo_iv_todo_item.setStatusWithoutAnime(todo.isChecked == 1)
+                        //根据是否check，加载不同状态的todo
                         if (todo.isChecked == 1) {
-                            todo_tv_todo_title.setTextColor(ContextCompat.getColor(context, R.color.todo_item_checked_color))
+                            todo_tv_todo_title.setTextColor(
+                                ContextCompat.getColor(
+                                    context,
+                                    R.color.todo_item_checked_color
+                                )
+                            )
                             todo_iv_check.visibility = View.VISIBLE
                         } else {
                             todo_iv_check.visibility = View.GONE
-                            todo_tv_todo_title.setTextColor(ContextCompat.getColor(context, R.color.todo_check_line_color))
+                            todo_tv_todo_title.setTextColor(
+                                ContextCompat.getColor(
+                                    context,
+                                    R.color.todo_check_line_color
+                                )
+                            )
                         }
                     }
                 }
@@ -301,7 +331,7 @@ class DoubleListFoldRvAdapter(
             val oldItem = oldList[oldItemPosition]
             val newItem = newList[newItemPosition]
             return if (oldItem.viewType == newItem.viewType) {
-                return when(oldItem.viewType){
+                return when (oldItem.viewType) {
                     TITLE -> {
                         oldItem.title == newItem.title
                     }
@@ -311,7 +341,6 @@ class DoubleListFoldRvAdapter(
                     }
 
                     EMPTY -> {
-                        LogUtils.d("RayG", "EMPTY judge")
                         oldItem === newItem
                     }
 
@@ -348,7 +377,7 @@ class DoubleListFoldRvAdapter(
 
     private fun updateTodo(todo: Todo?) {
         todo?.let {
-            TodoModel.INSTANCE.updateTodo(todo){ }
+            TodoModel.INSTANCE.updateTodo(todo) { }
         }
     }
 
@@ -381,6 +410,20 @@ class DoubleListFoldRvAdapter(
             THREE -> {
                 wrapperCopyList.size.coerceAtMost(3)
             }
+        }
+    }
+
+    private fun hideNotifyTime(itemView: View) {
+        itemView.apply {
+            todo_tv_notify_time.visibility = View.GONE
+            todo_iv_bell.visibility = View.GONE
+        }
+    }
+
+    private fun showNotifyTime(itemView: View) {
+        itemView.apply {
+            todo_tv_notify_time.visibility = View.VISIBLE
+            todo_iv_bell.visibility = View.VISIBLE
         }
     }
 }

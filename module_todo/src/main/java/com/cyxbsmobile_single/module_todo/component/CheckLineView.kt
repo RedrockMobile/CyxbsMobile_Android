@@ -10,6 +10,7 @@ import android.util.AttributeSet
 import android.view.View
 import androidx.core.animation.doOnEnd
 import com.cyxbsmobile_single.module_todo.R
+import com.mredrock.cyxbs.common.initUMeng
 import com.mredrock.cyxbs.common.utils.extensions.dip
 
 
@@ -30,8 +31,8 @@ class CheckLineView @JvmOverloads constructor(
     }
     private var startAngle = 40f//左侧圆圈的起始角度
     private var curAnimeProcess = 0f//当前动画的进度，0~200，其中0~100表示圆圈的绘制，100~200表示线的绘制
-    private var checkedColor = 0
-    private var uncheckedColor = 0
+    var checkedColor = 0
+    var uncheckedColor = 0
     private var leftRadius = 0f
     private var isChecked = false
     private var sweepAngle = 0f

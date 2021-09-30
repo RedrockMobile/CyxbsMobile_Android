@@ -10,6 +10,7 @@ import androidx.core.view.marginRight
 import androidx.core.view.marginTop
 import com.cyxbsmobile_single.module_todo.model.bean.DateBeen
 import com.cyxbsmobile_single.module_todo.model.bean.RemindMode
+import com.cyxbsmobile_single.module_todo.model.bean.Todo
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
 import com.mredrock.cyxbs.common.BaseApp
@@ -19,6 +20,7 @@ import com.mredrock.cyxbs.common.utils.LogUtils
 import com.mredrock.cyxbs.common.utils.extensions.defaultSharedPreferences
 import com.mredrock.cyxbs.common.utils.extensions.editor
 import com.mredrock.cyxbs.common.utils.extensions.toast
+import java.text.DateFormat
 import java.text.SimpleDateFormat
 import java.util.*
 import kotlin.collections.ArrayList
@@ -166,6 +168,7 @@ fun getNextNotifyDay(remindMode: RemindMode): DateBeen {
     //表示永远不会提醒
     if (repeatString == "") return DateBeen(0, 0, 0, 0, 0)
 
+    //这里已经是经过处理的提醒时间，所以是不含年份的
     val date = SimpleDateFormat("MM月dd日 hh:mm", Locale.CHINA).parse(repeatString)
     val calendar = Calendar.getInstance()
     calendar.time = date
@@ -186,7 +189,7 @@ fun getYearDateSting(): ArrayList<ArrayList<DateBeen>> {
         time = Date(System.currentTimeMillis())
     }.get(Calendar.YEAR)
     val listYear = BaseApp.context.defaultSharedPreferences.getInt(TODO_YEAR_OF_WEEK_MONTH_ARRAY, 0)
-    if (dateArrayJson == "" || dateArrayJson == null || thisYear == listYear || true) {
+    if (dateArrayJson == "" || dateArrayJson == null || thisYear == listYear) {
         //认定本地还没有对于日期，星期数的缓存，则生成一份
         val calendar = Calendar.getInstance()
         calendar.set(Calendar.MONTH, 0)
@@ -327,3 +330,15 @@ private fun getRealWeek(rawWeekNum: Int): Int =
     if (rawWeekNum == 1)
         7
     else rawWeekNum - 1
+
+//判断用户设置的提醒是否过期
+fun isOutOfTime(todo: Todo): Boolean{
+    val repeatString = repeatMode2RemindTime(todo.remindMode)
+    //表示永远不会提醒
+    if (repeatString == "") return false
+
+    //这里已经是经过处理的提醒时间，所以是不含年份的
+    val date = SimpleDateFormat("MM月dd日 hh:mm", Locale.CHINA).parse(repeatString)
+
+    return date.time <= System.currentTimeMillis()
+}
