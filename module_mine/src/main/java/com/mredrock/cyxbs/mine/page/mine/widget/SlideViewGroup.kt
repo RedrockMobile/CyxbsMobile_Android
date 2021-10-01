@@ -1,14 +1,19 @@
 package com.mredrock.cyxbs.mine.page.mine.widget
 
+import android.animation.ValueAnimator
 import android.content.Context
 import android.util.AttributeSet
 import android.util.Log
+import android.view.MotionEvent
 import android.view.View
+import android.view.animation.OvershootInterpolator
 import android.widget.LinearLayout
+import androidx.core.animation.addListener
 import androidx.core.view.NestedScrollingParent2
 import androidx.core.view.NestedScrollingParentHelper
 import androidx.core.view.ViewCompat
 import androidx.viewpager2.widget.ViewPager2
+import com.mredrock.cyxbs.common.utils.extensions.dp2px
 import com.mredrock.cyxbs.mine.R
 
 class SlideViewGroup @JvmOverloads constructor(
@@ -17,7 +22,12 @@ class SlideViewGroup @JvmOverloads constructor(
     defStyleAttr: Int = 0
 ): LinearLayout(context, attrs, defStyleAttr), NestedScrollingParent2 {
 
+    /**
+     * 嵌套滑动的速度
+     */
+    private var slideVelocity = 0f
 
+    private var isExecuteAnimation = false
     private val mNestedScrollingParentHelper = NestedScrollingParentHelper(this)
     private var mTopView //头部view
             : View? = null
@@ -74,13 +84,34 @@ class SlideViewGroup @JvmOverloads constructor(
     }
 
     override fun onStopNestedScroll(target: View, type: Int) {
-        mNestedScrollingParentHelper.onStopNestedScroll(target, type)
+
+        Log.e("wxtagxx","(SlideViewGroup.kt:79)->>停止滑动$type scrollY$scrollY velocity$slideVelocity mCanScrollDistance$mCanScrollDistance")
+        if(scrollY!=mCanScrollDistance.toInt()&&scrollY!=0){
+
+            if (slideVelocity==0f&&type==1){
+                Log.e("wxtagxx","(SlideViewGroup.kt:86)->> 上")
+                onStopAnimator()
+            }
+            else if (type==0&&slideVelocity==0f){
+                Log.e("wxtagxx","(SlideViewGroup.kt:86)->> 下")
+                onStopAnimator()
+            }
+        }
+
+
+        slideVelocity=0f
+
+
+      //  mNestedScrollingParentHelper.onStopNestedScroll(target, type)
     }
 
     /**
      * 嵌套滑动时，如果父View处理了fling,那子view就没有办法处理fling了，所以这里要返回为false
      */
     override fun onNestedPreFling(target: View, velocityX: Float, velocityY: Float): Boolean {
+        valueAnimator?.cancel()
+        slideVelocity  = velocityY
+
         return false
     }
 
@@ -105,35 +136,42 @@ class SlideViewGroup @JvmOverloads constructor(
         super.onMeasure(widthMeasureSpec, heightMeasureSpec)
         //ViewPager修改后的高度= 总高度-TabLayout高度
         val lp = mViewPager!!.layoutParams
-       Log.e("wxtag","(SlideViewGroup.kt:111)->> 高度前${lp.height}")
         lp.height = measuredHeight - mNavView!!.measuredHeight*3
-        Log.e("wxtag","(SlideViewGroup.kt:111)->> 高度后${lp.height}")
         mViewPager!!.layoutParams = lp
         //因为ViewPager修改了高度，所以需要重新测量
         super.onMeasure(widthMeasureSpec, heightMeasureSpec)
-        Log.e("wxtag","(SlideViewGroup.kt:111)->>  super.onMeasure后${lp.height}")
+
     }
 
 
     override fun onSizeChanged(w: Int, h: Int, oldw: Int, oldh: Int) {
         mCanScrollDistance =
-            (mTopView!!.measuredHeight - 300).toFloat() //getResources().getDimension(R.dimen.normal_title_height);
+            (mTopView!!.measuredHeight - context.dp2px(85f)).toFloat() //getResources().getDimension(R.dimen.normal_title_height);
 
     }
 
+    var proportion = 0f
     override fun scrollTo(x: Int, y: Int) {
         var y = y
-        if (y < 0) {
+
+        if (y < 0&&!isExecuteAnimation) {
             y = 0
         }
-        Log.d("view", "移动的位置" + getY())
-        if (y > mCanScrollDistance) {
+        if (y > mCanScrollDistance&&!isExecuteAnimation) {
             y = mCanScrollDistance.toInt()
+
         }
         if (mScrollChangeListener != null) {
             //  Log.d("测试","移动的位置"+mCanScrollDistance);
-            mScrollChangeListener!!.invoke(y / mCanScrollDistance)
+                if (y>=mCanScrollDistance){
+                    proportion = 1f
+                }else{
+
+                    proportion = y / mCanScrollDistance
+                }
+            mScrollChangeListener!!.invoke( proportion)
         }
+        Log.e("wxtahhg","(SlideViewGroup.kt:128)->>滑动时候的y值$y ")
         if (scrollY != y) super.scrollTo(x, y)
     }
 
@@ -144,22 +182,54 @@ class SlideViewGroup @JvmOverloads constructor(
 
 
 
-//        /**
-//         * 移动监听
-//         *
-//         * @param moveRatio 移动比例
-//         */
-//        fun onScroll(moveRatio: Float)
-
-
+        /**
+         * 移动监听
+         *
+         * @param moveRatio 移动比例
+         */
     fun setScrollChangeListener(scrollChangeListener: (moveRatio: Float) -> Unit) {
         scrollChangeListener.also { mScrollChangeListener = it }
     }
 
+    var valueAnimator:ValueAnimator?=null
+    /**
+     * 上滑825 下滑0
+     */
+    fun onStopAnimator(){
+            valueAnimator?.cancel()
+        if (scrollY>=mCanScrollDistance*2/5){   //完全上滑
+           valueAnimator = ValueAnimator.ofInt(scrollY,mCanScrollDistance.toInt())
+        }else{   //完全下滑
+             valueAnimator = ValueAnimator.ofInt(scrollY,0)
+        }
+        valueAnimator?.duration = 500
+        valueAnimator?.interpolator = OvershootInterpolator()
+        valueAnimator?.addUpdateListener {
+            scrollTo(0,it.animatedValue as Int)
+        }
+        valueAnimator?.addListener(
+            onCancel = {
+                isExecuteAnimation=false
+            },
+            onStart = {
+                isExecuteAnimation = true
+            },
+            onEnd = {
+                isExecuteAnimation = false
+            }
+
+        )
+
+         valueAnimator?.start()
 
 
 
+    }
 
+    override fun onTouchEvent(event: MotionEvent?): Boolean {
+        valueAnimator?.cancel()
+        return super.onTouchEvent(event)
+    }
 
 
 

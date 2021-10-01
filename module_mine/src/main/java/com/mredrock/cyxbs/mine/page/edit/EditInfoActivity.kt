@@ -50,6 +50,12 @@ import java.io.File
 import java.io.IOException
 import java.text.SimpleDateFormat
 import java.util.*
+import android.graphics.BitmapFactory
+
+import android.content.res.Resources
+
+
+
 
 
 /**
@@ -84,7 +90,6 @@ class EditInfoActivity
         override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
             checkColorAndText()
         }
-
     }
 
     /**
@@ -462,6 +467,7 @@ class EditInfoActivity
     private fun startCropActivity(uri: Uri) {
         val uCrop = UCrop.of(uri, Uri.fromFile(destinationFile))
         val options = UCrop.Options()
+        options.setCropGridStrokeWidth(5)
         options.setCompressionFormat(Bitmap.CompressFormat.PNG)
         options.setCompressionQuality(100)
         options.setLogoColor(ContextCompat.getColor(this, R.color.common_level_two_font_color))
@@ -520,7 +526,7 @@ class EditInfoActivity
             }
             UCrop.REQUEST_CROP -> {
                 if (data != null) {
-                    uploadImage(data)
+                   uploadImage(data)
                 } else {
                     toast("未知错误，请重试")
                 }
@@ -544,4 +550,7 @@ class EditInfoActivity
             view.loader.visibility = View.GONE
         }
     }
+
+
+
 }

@@ -6,4 +6,5 @@
         android:topRightRadius="20dp"/>
     <solid
         android:color="#FFFFFF"/>
+
 </shape>

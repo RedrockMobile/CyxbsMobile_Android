@@ -3,4 +3,5 @@
 
     <color name="mine_white">#FFFFFF</color>
     <color name="mine_division_line">#15315BCC</color>
+    <color name="mine_black">#15315B</color>
 </resources>
