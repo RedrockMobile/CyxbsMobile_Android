@@ -261,7 +261,6 @@ fun repeatMode2RemindTime(remindMode: RemindMode): String {
         val remindDateCalender = Calendar.getInstance()
         //这里可以保证已经是可以解析的了
         val format = SimpleDateFormat("yy年MM月dd日hh:mm", Locale.CHINA)
-        LogUtils.d("RayleighZ", "notifyTime = ${remindMode.notifyDateTime}")
         val remindDate = format.parse(remindMode.notifyDateTime)
         remindDateCalender.time = remindDate
         "${remindDateCalender.get(Calendar.HOUR_OF_DAY)}:${remindDateCalender.get(Calendar.MINUTE)}"
@@ -322,7 +321,6 @@ fun repeatMode2RemindTime(remindMode: RemindMode): String {
             val remindDateCalender = Calendar.getInstance()
             //这里可以保证已经是可以解析的了
             val format = SimpleDateFormat("yy年MM月dd日hh:mm", Locale.CHINA)
-            LogUtils.d("RayleighZ", "notifyTime = ${remindMode.notifyDateTime}")
             val remindDate = format.parse(remindMode.notifyDateTime)
             remindDateCalender.time = remindDate
             return "${remindDateCalender.get(Calendar.MONTH) + 1}月${remindDateCalender.get(Calendar.DAY_OF_MONTH)}日 $remindTime"

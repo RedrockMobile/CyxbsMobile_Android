@@ -19,7 +19,6 @@ abstract class SimpleTextAdapter(private val dataList: ArrayList<String>, val re
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
         val view = LayoutInflater.from(parent.context)
             .inflate(resId, parent, false)
-        LogUtils.d("RayleighZ","SimpleTextAdapter OnCreateViewHolder")
         return object : RecyclerView.ViewHolder(view) {}
     }
 

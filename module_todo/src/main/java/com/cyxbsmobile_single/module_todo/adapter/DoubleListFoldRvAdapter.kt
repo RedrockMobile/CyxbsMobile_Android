@@ -63,6 +63,8 @@ class DoubleListFoldRvAdapter(
     private val upEmptyHolder by lazy { TodoItemWrapper(EMPTY, title = "1") }
     private val downEmptyHolder by lazy { TodoItemWrapper(EMPTY, title = "2") }
 
+    //左侧check圆圈的颜色，因为里外两个adapter的颜色不同，所以需要缓存一份
+    private var uncheckColor = 0
     //真正用于展示的list，会动态的增减
     private var wrapperCopyList: ArrayList<TodoItemWrapper> =
         todoItemWrapperArrayList.clone() as ArrayList<TodoItemWrapper>
@@ -249,54 +251,40 @@ class DoubleListFoldRvAdapter(
                 }
                 itemView.apply {
                     curWrapper.todo?.let { todo ->
-                        //判断是否过期
-                        //首先缓存一份左侧check圆圈的颜色，方便在else分支恢复
-                        val uncheckColor = todo_iv_todo_item.uncheckedColor
-                        if (isOutOfTime(todo)) {
-                            //置红
-                            todo_tv_item_title.setTextColor(getColor(R.color.todo_item_del_red))
-                            todo_iv_todo_item.uncheckedColor = getColor(R.color.todo_item_del_red_46_alpha)
-                            hideNotifyTime(this)
-                        } else {
-                            //恢复为正常形态
-                            todo_tv_item_title.setTextColor(
-                                ContextCompat.getColor(
-                                    context,
-                                    R.color.todo_check_line_color
-                                )
-                            )
-                            todo_iv_todo_item.uncheckedColor = uncheckColor
-                        }
-
+                        //重置todo的代办情况，并且不添加动画
+                        todo_iv_todo_item.setStatusWithoutAnime(todo.isChecked == 1)
                         todo_fl_del.visibility = View.GONE
                         todo_tv_todo_title.setText(todo.title)
                         todo_tv_notify_time.text = repeatMode2RemindTime(todo.remindMode)
                         todo_tv_todo_title.setOnClickListener { }//防止穿透点击
                         //如果莫得提醒时间，就不显示闹钟和提醒日期
-                        if (todo.remindMode.notifyDateTime == "") {
+                        if (todo.remindMode.notifyDateTime == "" || isOutOfTime(todo)) {
                             hideNotifyTime(this)
                         } else {
                             showNotifyTime(this)
                         }
-                        //重置todo侧滑状态
-                        todo_iv_todo_item.setStatusWithoutAnime(todo.isChecked == 1)
                         //根据是否check，加载不同状态的todo
                         if (todo.isChecked == 1) {
-                            todo_tv_todo_title.setTextColor(
-                                ContextCompat.getColor(
-                                    context,
-                                    R.color.todo_item_checked_color
-                                )
-                            )
+                            todo_tv_todo_title.setTextColor(getColor(R.color.todo_item_checked_color))
                             todo_iv_check.visibility = View.VISIBLE
                         } else {
                             todo_iv_check.visibility = View.GONE
-                            todo_tv_todo_title.setTextColor(
-                                ContextCompat.getColor(
-                                    context,
-                                    R.color.todo_check_line_color
+                            //判断是否过期
+                            uncheckColor = todo_iv_todo_item.uncheckedColor
+                            if (isOutOfTime(todo)) {
+                                //置红
+                                todo_tv_todo_title.setTextColor(getColor(R.color.todo_item_del_red))
+                                todo_iv_todo_item.uncheckedColor = getColor(R.color.todo_item_del_red_46_alpha)
+                            } else {
+                                //恢复为正常形态
+                                todo_tv_todo_title.setTextColor(
+                                    ContextCompat.getColor(
+                                        context,
+                                        R.color.todo_check_line_color
+                                    )
                                 )
-                            )
+                                todo_iv_todo_item.uncheckedColor = uncheckColor
+                            }
                         }
                     }
                 }

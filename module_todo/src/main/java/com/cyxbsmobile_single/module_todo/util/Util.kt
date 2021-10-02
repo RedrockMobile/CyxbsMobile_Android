@@ -17,11 +17,9 @@ import com.google.gson.reflect.TypeToken
 import com.mredrock.cyxbs.common.BaseApp
 import com.mredrock.cyxbs.common.config.TODO_WEEK_MONTH_ARRAY
 import com.mredrock.cyxbs.common.config.TODO_YEAR_OF_WEEK_MONTH_ARRAY
-import com.mredrock.cyxbs.common.utils.LogUtils
 import com.mredrock.cyxbs.common.utils.extensions.defaultSharedPreferences
 import com.mredrock.cyxbs.common.utils.extensions.editor
 import com.mredrock.cyxbs.common.utils.extensions.toast
-import java.text.DateFormat
 import java.text.SimpleDateFormat
 import java.util.*
 import kotlin.collections.ArrayList
@@ -58,7 +56,6 @@ fun repeatString2Num(repeatString: String): Int = when (repeatString) {
  */
 fun repeatMode2RemindTime(remindMode: RemindMode): String {
     if (remindMode.notifyDateTime.isNullOrEmpty() && remindMode.repeatMode == RemindMode.NONE) {
-        LogUtils.d("RayleighZ", "handle todo")
         return ""
     }
 
@@ -155,7 +152,6 @@ fun repeatMode2RemindTime(remindMode: RemindMode): String {
             val remindDateCalender = Calendar.getInstance()
             //这里可以保证已经是可以解析的了
             val format = SimpleDateFormat("yy年MM月dd日hh:mm", Locale.CHINA)
-            LogUtils.d("RayleighZ", "notifyTime = ${remindMode.notifyDateTime}")
             val remindDate = format.parse(remindMode.notifyDateTime)
             remindDateCalender.time = remindDate
             return "${remindDateCalender.get(Calendar.MONTH) + 1}月${remindDateCalender.get(Calendar.DAY_OF_MONTH)}日 $remindTime"
@@ -231,7 +227,6 @@ fun getYearDateSting(): ArrayList<ArrayList<DateBeen>> {
             object : TypeToken<ArrayList<ArrayList<DateBeen>>>() {}.type
         ) as ArrayList<ArrayList<DateBeen>>
         val todayCalendar = Calendar.getInstance()
-        LogUtils.d("RayleighZ", "${todayCalendar.get(Calendar.DAY_OF_YEAR)}")
         list[0].subList(0, todayCalendar.get(Calendar.DAY_OF_YEAR) - 1).clear()
         return list
     }
@@ -310,7 +305,6 @@ private fun getNotifyDayCandler(remindMode: RemindMode): Calendar {
     val remindDateCalender = Calendar.getInstance()
     //这里可以保证已经是可以解析的了
     val format = SimpleDateFormat("yy年MM月dd日hh:mm", Locale.CHINA)
-    LogUtils.d("RayleighZ", "notifyTime = ${remindMode.notifyDateTime}")
     val remindDate = format.parse(remindMode.notifyDateTime)
     remindDateCalender.time = remindDate
     return remindDateCalender
@@ -333,14 +327,16 @@ private fun getRealWeek(rawWeekNum: Int): Int =
     else rawWeekNum - 1
 
 //判断用户设置的提醒是否过期
-fun isOutOfTime(todo: Todo): Boolean{
+fun isOutOfTime(todo: Todo): Boolean {
     val repeatString = repeatMode2RemindTime(todo.remindMode)
     //表示永远不会提醒
     if (repeatString == "") return false
-
+    //能够走到这里，前四位一定是年份，就可以直接sub前四位下来
+    val repeatYear = todo.remindMode.notifyDateTime?.subSequence(0, 4) 
+        ?:
+    Calendar.getInstance().get(Calendar.YEAR).toString()
     //这里已经是经过处理的提醒时间，所以是不含年份的
-    val date = SimpleDateFormat("MM月dd日 hh:mm", Locale.CHINA).parse(repeatString)
-
+    val date = SimpleDateFormat("yyyyMM月dd日 hh:mm", Locale.CHINA).parse(repeatYear.toString() + repeatString)
     return date.time <= System.currentTimeMillis()
 }
 

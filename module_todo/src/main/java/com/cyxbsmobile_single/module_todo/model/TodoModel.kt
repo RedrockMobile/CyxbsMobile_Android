@@ -46,6 +46,7 @@ class TodoModel {
                 .subscribe(
                     ExecuteOnceObserver(
                         onExecuteOnceNext = {
+                            LogUtils.d("RayleighZ", "TodoList = $it")
                             onSuccess(it)
                         }
                     )
@@ -111,7 +112,6 @@ class TodoModel {
     }
 
     fun addTodo(todo: Todo, onSuccess: (todoId: Long) -> Unit) {
-        LogUtils.d("RayleighZ", "todo = $todo")
         val syncTime = getLastSyncTime()
         TodoDatabase.INSTANCE.todoDao()
             .insertTodo(todo)

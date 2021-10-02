@@ -11,6 +11,7 @@ import com.cyxbsmobile_single.module_todo.adapter.DoubleListFoldRvAdapter
 import com.cyxbsmobile_single.module_todo.adapter.DoubleListFoldRvAdapter.ShowType.NORMAL
 import com.cyxbsmobile_single.module_todo.adapter.slide_callback.SlideCallback
 import com.cyxbsmobile_single.module_todo.ui.dialog.AddItemDialog
+import com.cyxbsmobile_single.module_todo.util.isOutOfTime
 import com.cyxbsmobile_single.module_todo.util.setMargin
 import com.cyxbsmobile_single.module_todo.viewmodel.TodoViewModel
 import com.mredrock.cyxbs.common.BaseApp
@@ -121,32 +122,33 @@ class TodoInnerMainActivity : BaseViewModelActivity<TodoViewModel>() {
                             )
                         )
 
-                        if (wrapper.todo?.remindMode?.notifyDateTime == "") {
-                            //判断为没有设置提醒，也没有设置重复
-                            //调整上下宽高
-                            setMargin(
-                                todo_tv_todo_title,
-                                top = BaseApp.context.dip(29),
-                                bottom = BaseApp.context.dip(29)
-                            )
-                        } else {
-                            setMargin(
-                                todo_tv_todo_title,
-                                top = BaseApp.context.dip(18),
-                                bottom = BaseApp.context.dip(40)
-                            )
-                        }
+                        wrapper.todo?.let { todo ->
+                            if (todo.remindMode.notifyDateTime == "" || isOutOfTime(todo)) {
+                                //没有提醒，或者已经过时，就调整margin
+                                setMargin(
+                                    todo_tv_todo_title,
+                                    top = BaseApp.context.dip(29),
+                                    bottom = BaseApp.context.dip(29)
+                                )
+                            } else {
+                                setMargin(
+                                    todo_tv_todo_title,
+                                    top = BaseApp.context.dip(18),
+                                    bottom = BaseApp.context.dip(40)
+                                )
+                            }
 
 
-                        todo_iv_todo_item.setOnClickListener {
-                            wrapper.todo?.apply {
-                                if (isChecked == 0) {
-                                    todo_iv_todo_item.setStatusWithAnime(true) {
-                                        adapter.checkItemAndSwap(wrapper)
-                                        changeItemToChecked(view)
+                            todo_iv_todo_item.setOnClickListener {
+                                wrapper.todo?.apply {
+                                    if (isChecked == 0) {
+                                        todo_iv_todo_item.setStatusWithAnime(true) {
+                                            adapter.checkItemAndSwap(wrapper)
+                                            changeItemToChecked(view)
+                                        }
+                                    } else {
+                                        todo_iv_todo_item.isClickable = false
                                     }
-                                } else {
-                                    todo_iv_todo_item.isClickable = false
                                 }
                             }
                         }

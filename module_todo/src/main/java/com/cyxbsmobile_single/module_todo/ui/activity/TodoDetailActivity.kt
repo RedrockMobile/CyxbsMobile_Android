@@ -63,8 +63,6 @@ class TodoDetailActivity : BaseViewModelActivity<TodoDetailViewModel>() {
         //这里反序列化两次是为了防止内外拿到同一个引用
         viewModel.rawTodo = Gson().fromJson(intent.getStringExtra("todo"), Todo::class.java)
 
-        LogUtils.d("RayleighZ", " todo = $todo")
-
         initView()
 
         initClick()

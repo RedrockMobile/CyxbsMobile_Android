@@ -468,7 +468,6 @@ class AddItemDialog(context: Context, val onConfirm: (Todo) -> Unit) :
                 }
             })
         }
-        LogUtils.d("RayleighZ", "repeatAdapter list = ${repeatTimeAdapter.dataListCopy}")
         this.todo.remindMode = todo.remindMode
         isFromDetail = true
     }
