@@ -112,9 +112,11 @@ class HomepageActivity : BaseViewModelActivity<MineViewModel>() {
             dataBinding.clPersonalInformation.scaleX = (1 - it)
             dataBinding.clPersonalInformation.scaleY = (1 - it)
             var alpha = (1f - it * 2)   //因为滑动过程中涉及到两种动画效果的变化  所以我就产生一个-1和+1 从+1到—1
+
             tabChange(alpha)
-            if (alpha <= 0) {
+            if (alpha < 0) {
                 if (dataBinding.tvMine.text == "个人主页") {
+                    dataBinding.ivMineBackgroundNormal.alpha =0f
                     dataBinding.btMineBack.setImageResource(R.drawable.mine_ic_iv_back_black_arrow)
                     dataBinding.tvMine.text = "鱼鱼鱼鱼鱼鱼鱼鱼鱼"
                     dataBinding.tvMine.setTextColor(getResources().getColor(R.color.mine_black))
@@ -131,6 +133,7 @@ class HomepageActivity : BaseViewModelActivity<MineViewModel>() {
                 }
                 dataBinding.flBackground.alpha = 0f
                 dataBinding.ivMineBackgroundNormal.alpha = alpha
+
                 dataBinding.btMineBack.alpha = alpha
                 dataBinding.tvMine.alpha = alpha
                 dataBinding.flLine.alpha = alpha
@@ -301,13 +304,15 @@ var isSetBackground = false
      * 这一个方法用于改变在滑动的过程中 tab的变化过程
      */
     fun tabChange(pregress: Float) {
-
-        if (pregress == -1f) {
+        Log.e("wxtagbb","(HomepageActivity.kt:305)->>$pregress  isSetBackground$isSetBackground")
+        if (pregress == -1f&&!isSetBackground) {
+            Log.e("wxtagmm","(HomepageActivity.kt:311)->上 ")
             isSetBackground = true
             dataBinding.mineTablayout.background =
                 resources.getDrawable(R.drawable.mine_layer_list_shape_shadow)
         }
         if (isSetBackground&&pregress>-1f){
+           Log.e("wxtagmm","(HomepageActivity.kt:311)->>下 ")
             dataBinding.mineTablayout.background =
                 resources.getDrawable(R.drawable.mine_shape_ll_background)
             isSetBackground=false

@@ -21,14 +21,16 @@ class IdentityAdapter(val list:List<String>,val context: Context) : RecyclerView
 
     class VH(itemView: View):RecyclerView.ViewHolder(itemView){
         val contentView = itemView.findViewById<View>(R.id.cl_content_view)
-        val menuView = itemView.findViewById<View>(R.id.rl_menu_view)
+        val menuViewdelete = itemView.findViewById<View>(R.id.rl_menu_view)
+        val menuViewSetting  = itemView.findViewById<View>(R.id.rl_menu_setting)
+
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): VH {
         val convertView = LayoutInflater.from(context).inflate(R.layout.mine_slide_identity_item, parent, false) as SlideLayout
         convertView.setOnStateChangeListenter(MyOnStateChangeListenter())
             val vh = VH(convertView)
-            vh.menuView.setOnClickListener(this)
+            vh.menuViewSetting.setOnClickListener(this)
         return vh
     }
 

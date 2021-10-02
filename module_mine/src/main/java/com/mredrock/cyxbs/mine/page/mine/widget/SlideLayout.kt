@@ -10,6 +10,7 @@ import android.view.View
 import android.widget.FrameLayout
 import android.widget.Scroller
 import androidx.constraintlayout.helper.widget.MotionEffect.TAG
+import androidx.core.graphics.alpha
 import androidx.lifecycle.MutableLiveData
 import com.mredrock.cyxbs.common.utils.extensions.dp2px
 
@@ -25,10 +26,13 @@ constructor(context: Context,
     private var contentView: View? = null
 
     /**
-     * 侧滑需要展示的view
+     * 侧滑需要展示的设置view
      */
-    private var menuView: View? = null
-
+    private var menuViewSetting: View? = null
+    /**
+     * 侧滑需要展示的删除view
+     */
+private var menuViewDelete:View? = null
     /**
      * 滚动者
      */
@@ -40,9 +44,14 @@ constructor(context: Context,
     private var contentWidth = 0
 
     /**
-     * 侧滑view的宽
+     * 侧滑设置view的宽
      */
-    private var menuWidth = 0
+    private var menuSettingWidth = 0
+
+    /**
+     * 侧滑删除View的宽
+     */
+    private var menuDeleteWidth = 0
 
     private var viewHeight //他们的高都是相同的
             = 0
@@ -57,8 +66,10 @@ constructor(context: Context,
     init {
         scroller = Scroller(context)
         x.observeForever {
-          percentage =it/ menuWidth
-            menuView?.alpha = percentage
+          percentage =it/ menuSettingWidth
+
+            menuViewSetting?.alpha = percentage
+            menuViewDelete?.alpha = percentage
 
         }
     }
@@ -68,8 +79,9 @@ constructor(context: Context,
      */
     override fun onFinishInflate() {
         super.onFinishInflate()
-        contentView = getChildAt(1)
-        menuView = getChildAt(0)
+        contentView = getChildAt(2)
+        menuViewDelete = getChildAt(1)
+        menuViewSetting = getChildAt(0)
     }
 
 
@@ -81,15 +93,17 @@ constructor(context: Context,
      */
     override fun onMeasure(widthMeasureSpec: Int, heightMeasureSpec: Int) {
         super.onMeasure(widthMeasureSpec, heightMeasureSpec)
-        contentWidth = contentView!!.getMeasuredWidth()
-        menuWidth = menuView!!.measuredWidth-context.dp2px(16f)*2
+        contentWidth = contentView!!.measuredWidth
+        menuSettingWidth = menuViewSetting!!.measuredWidth-context.dp2px(16f)*2
+        menuDeleteWidth = menuViewDelete!!.measuredWidth-context.dp2px(16f)*2
         viewHeight = measuredHeight
     }
 
     override fun onLayout(changed: Boolean, left: Int, top: Int, right: Int, bottom: Int) {
         super.onLayout(changed, left, top, right, bottom)
         //指定菜单的位置
-        menuView!!.layout(contentWidth, 0, contentWidth + menuWidth+context.dp2px(16f)*2, viewHeight)
+        menuViewSetting!!.layout(contentWidth, 0, contentWidth + menuSettingWidth+context.dp2px(16f)*2, viewHeight)
+       menuViewDelete!!.layout(contentWidth + menuSettingWidth, 0, contentWidth + menuSettingWidth+menuDeleteWidth+context.dp2px(16f)*2, viewHeight)//layout(contentWidth + menuSettingWidth+context.dp2px(16f)*2, 0, contentWidth + menuSettingWidth+context.dp2px(16f)*2+menuDeleteWidth, viewHeight)
     }
 
     private var startX = 0f
@@ -99,27 +113,29 @@ constructor(context: Context,
     private var downY = 0f
 
     override fun onTouchEvent(event: MotionEvent): Boolean {
-        super.onTouchEvent(event)
-
+        if (isOpen) {
+            //水平方向滑动
+            //响应侧滑
+            //反拦截-事件给SlideLayout
+            parent.requestDisallowInterceptTouchEvent(true)
+        }
         when(event.action){
             MotionEvent.ACTION_DOWN->{
                 //1.按下记录坐标
                 //1.按下记录坐标
                 downX = event.x.also { startX = it }
                 downY = event.y.also { startY = it }
-               // Log.e(SlideLayout.TAG, "SlideLayout-onTouchEvent-ACTION_DOWN")
+
+
             }
             MotionEvent.ACTION_MOVE->{
-             //   Log.e(SlideLayout.TAG, "SlideLayout-onTouchEvent-ACTION_MOVE")
                 //2.记录结束值
                 //2.记录结束值
                 val endX = event.x
                 val endY = event.y
                 //3.计算偏移量
                 //3.计算偏移量
-                val distanceX = endX - startX
-
-
+                val distanceX = (endX - startX)*2
                 var toScrollX = (scrollX - distanceX).toInt()
                 if (toScrollX < 0) {
                     toScrollX = 0
@@ -127,23 +143,20 @@ constructor(context: Context,
                         return false
                     }
 
-                } else if (toScrollX > menuWidth) {
-                    toScrollX = menuWidth
+                } else if (toScrollX > menuSettingWidth+menuDeleteWidth) {
+                    toScrollX = menuSettingWidth+menuDeleteWidth
                 }
-
                 scrollTo(toScrollX, scrollY)
                 if (scrollX!=0){
-                   Log.e("wxtag","(SlideLayout.kt:123)->>观察了 ")
                     x.value =scrollX.toFloat()
                 }
-
                 startX = event.x
                 startY = event.y
                 //在X轴和Y轴滑动的距离
                 //在X轴和Y轴滑动的距离
                 val DX = Math.abs(endX - downX)
                 val DY = Math.abs(endY - downY)
-                if (DX > DY && DX > 8) {
+                if ( DX > 8||isOpen) {
                     //水平方向滑动
                     //响应侧滑
                     //反拦截-事件给SlideLayout
@@ -152,8 +165,7 @@ constructor(context: Context,
             }
             MotionEvent.ACTION_UP->{
                 val totalScrollX = scrollX //偏移量
-
-                if (totalScrollX < menuWidth / 2) {
+                if (totalScrollX < (menuSettingWidth+menuDeleteWidth )/ 2) {
                     //关闭Menu
                     closeMenu()
                 } else {
@@ -165,7 +177,7 @@ constructor(context: Context,
                // Log.e(SlideLayout.TAG, "SlideLayout-onTouchEvent-ACTION_UP")
                 val totalScrollX = scrollX //偏移量
 
-                if (totalScrollX < menuWidth / 2) {
+                if (totalScrollX < (menuSettingWidth+menuDeleteWidth) / 2) {
                     //关闭Menu
                     closeMenu()
                 } else {
@@ -174,6 +186,7 @@ constructor(context: Context,
                 }
             }
         }
+        super.onTouchEvent(event)
       return  true
     }
 
@@ -184,7 +197,7 @@ constructor(context: Context,
     fun openMenu() {
         isOpen = true
         //--->menuWidth
-        val distanceX = menuWidth - scrollX
+        val distanceX = menuSettingWidth+menuDeleteWidth - scrollX
         scroller!!.startScroll(scrollX, scrollY, distanceX, scrollY)
         invalidate() //强制刷新
         if (onStateChangeListenter != null) {
@@ -197,6 +210,7 @@ constructor(context: Context,
      */
     fun closeMenu() {
         isOpen=false
+        menuViewSetting?.alpha = 0f//防止快速滑动的时候 数据不连续 造成透明度未完全的bug
         //--->0
         val distanceX = 0 - scrollX
 
@@ -217,6 +231,7 @@ constructor(context: Context,
              */
             if (scrollX!=0){
                 x.value =scrollX.toFloat()
+
                 if (scrollX<=2){  //防止最后观察的值里面缺少零  造成透明度不完全的bug
                     x.value=0f
                 }
@@ -233,12 +248,19 @@ constructor(context: Context,
      * @return
      */
     override fun onInterceptTouchEvent(event: MotionEvent): Boolean {
+        if (isOpen) {
+            //水平方向滑动
+            //响应侧滑
+            //反拦截-事件给SlideLayout
+            parent.requestDisallowInterceptTouchEvent(true)
+        }
         var intercept = false
         when (event.action) {
             MotionEvent.ACTION_DOWN -> {
+
                 run {
-                    startX = event.x
-                    downX = startX
+                    downX = event.x.also { startX = it }
+                    downY = event.y.also { startY = it }
                 }
 
                 if (onStateChangeListenter != null) {
@@ -246,6 +268,7 @@ constructor(context: Context,
                 }
             }
             MotionEvent.ACTION_MOVE -> {
+
                 //2.记录结束值
                 val endX = event.x
                 val endY = event.y
@@ -254,7 +277,7 @@ constructor(context: Context,
                 startX = event.x
                 //在X轴和Y轴滑动的距离
                 val DX: Float = Math.abs(endX - downX)
-                if (DX > 8) {
+                if (DX > 1) {
                     intercept = true
                 }
             }
