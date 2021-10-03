@@ -4,6 +4,9 @@
 
     <application android:theme="@style/AppTheme">
         <activity
+            android:name=".ui.PrivacyActivity"
+            android:exported="true" />
+        <activity
             android:name=".ui.UserAgreementActivity"
             android:exported="true" />
         <activity

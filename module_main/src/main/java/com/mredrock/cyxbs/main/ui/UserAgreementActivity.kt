@@ -16,7 +16,7 @@ class UserAgreementActivity : BaseViewModelActivity<LoginViewModel>() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.main_activity_user_agreement)
 
-        main_user_agreement_back.setOnClickListener {
+        main_user_privacy_back.setOnClickListener {
             finish()
         }
 

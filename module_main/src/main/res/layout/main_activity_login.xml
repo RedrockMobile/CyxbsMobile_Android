@@ -193,14 +193,14 @@
 
     <TextView
         android:id="@+id/main_user_agreement"
+        style="@style/main_user_agreement"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="16dp"
+        android:layout_marginTop="32dp"
         android:text="@string/main_user_agreement"
-        style="@style/main_user_agreement"
-        app:layout_constraintBottom_toBottomOf="@+id/lav_login_check"
         app:layout_constraintStart_toEndOf="@+id/lav_login_check"
-        app:layout_constraintTop_toTopOf="@+id/lav_login_check" />
+        app:layout_constraintTop_toBottomOf="@+id/et_password_container" />
 
     <com.airbnb.lottie.LottieAnimationView
         android:layout_width="match_parent"

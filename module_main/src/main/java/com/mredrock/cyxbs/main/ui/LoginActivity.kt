@@ -40,6 +40,7 @@ import com.mredrock.cyxbs.main.R
 import com.mredrock.cyxbs.main.bean.LoginFailEvent
 import com.mredrock.cyxbs.main.components.UserAgreementDialog
 import com.mredrock.cyxbs.main.viewmodel.LoginViewModel
+import com.tencent.bugly.Bugly
 import kotlinx.android.synthetic.main.main_activity_login.*
 import kotlinx.android.synthetic.main.main_user_agreement_dialog.view.*
 import org.greenrobot.eventbus.Subscribe
@@ -117,13 +118,9 @@ class LoginActivity : BaseViewModelActivity<LoginViewModel>(), EventBusLifecycle
             ARouter.getInstance().build(MINE_FORGET_PASSWORD).navigation()
         }
 
-        //如果是第一次使用app，自动打开用户协议页面
+        //如果是第一次使用app并且没有同意过用户协议，自动打开用户协议页面
         if (BaseApp.context.defaultSharedPreferences.getBoolean(FIRST_TIME_OPEN, true)) {
             showUserAgreement()
-            BaseApp.context.defaultSharedPreferences.editor {
-                putBoolean(FIRST_TIME_OPEN, false)
-                commit()
-            }
         }
 
         //设置用户协议和隐私政策的文字
@@ -148,8 +145,8 @@ class LoginActivity : BaseViewModelActivity<LoginViewModel>(), EventBusLifecycle
         }
         val privacyClickSpan = object : ClickableSpan() {
             override fun onClick(widget: View) {
-                //TODO:跳转到隐私界面
-                showUserAgreement()
+                val intent = Intent(this@LoginActivity, PrivacyActivity::class.java)
+                startActivity(intent)
             }
 
             override fun updateDrawState(ds: TextPaint) {
@@ -228,6 +225,10 @@ class LoginActivity : BaseViewModelActivity<LoginViewModel>(), EventBusLifecycle
             },
             onPositiveClick = {
                 dismiss()
+                BaseApp.context.defaultSharedPreferences.editor {
+                    putBoolean(FIRST_TIME_OPEN, false)
+                    commit()
+                }
             }
         )
     }

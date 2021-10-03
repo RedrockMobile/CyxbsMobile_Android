@@ -22,6 +22,7 @@ import androidx.core.content.ContextCompat
 import androidx.fragment.app.DialogFragment
 import androidx.fragment.app.FragmentManager
 import com.mredrock.cyxbs.main.R
+import com.mredrock.cyxbs.main.ui.PrivacyActivity
 import com.mredrock.cyxbs.main.ui.UserAgreementActivity
 import com.tencent.bugly.Bugly.applicationContext
 
@@ -113,9 +114,8 @@ class UserAgreementDialog : DialogFragment() {
         }
         val privacyClickSpan = object : ClickableSpan() {
             override fun onClick(widget: View) {
-                //TODO:跳转到隐私界面
-                Toast.makeText(applicationContext, "onPrivacyClickSpanClicked", Toast.LENGTH_SHORT)
-                    .show()
+                val intent = Intent(applicationContext, PrivacyActivity::class.java)
+                startActivity(intent)
             }
 
             override fun updateDrawState(ds: TextPaint) {
