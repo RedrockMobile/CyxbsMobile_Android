@@ -99,13 +99,14 @@
             android:orientation="horizontal"
             app:layout_constraintGuide_percent="0.84" />
 
-        <Button
+        <androidx.appcompat.widget.AppCompatButton
             android:id="@+id/btn_question"
             android:layout_width="155dp"
             android:layout_height="39dp"
             android:background="@drawable/mine_shape_edit_btn_bg"
             android:text="@string/mine_feedback_center_btn_tv"
             android:textColor="#FFFFFF"
+            style="@style/Widget.AppCompat.Button.Borderless"
             android:textSize="18sp"
             app:layout_constraintEnd_toEndOf="@+id/mine_linearlayout"
             app:layout_constraintStart_toStartOf="@+id/mine_linearlayout"
