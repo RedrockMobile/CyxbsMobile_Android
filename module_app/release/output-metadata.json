@@ -1,0 +1,20 @@
+{
+  "version": 1,
+  "artifactType": {
+    "type": "APK",
+    "kind": "Directory"
+  },
+  "applicationId": "com.mredrock.cyxbs",
+  "variantName": "release",
+  "elements": [
+    {
+      "type": "SINGLE",
+      "filters": [],
+      "properties": [],
+      "versionCode": 71,
+      "versionName": "6.3.2",
+      "enabled": true,
+      "outputFile": "module_app-release.apk"
+    }
+  ]
+}

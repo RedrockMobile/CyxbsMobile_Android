@@ -10,6 +10,7 @@ import com.google.android.material.chip.Chip
 import com.mredrock.cyxbs.common.ui.BaseMVPVMActivity
 import com.mredrock.cyxbs.common.utils.extensions.setOnSingleClickListener
 import com.mredrock.cyxbs.common.utils.extensions.toast
+import com.mredrock.cyxbs.common.viewmodel.event.ProgressDialogEvent
 import com.mredrock.cyxbs.common.viewmodel.event.SingleLiveEvent
 import com.mredrock.cyxbs.mine.R
 import com.mredrock.cyxbs.mine.databinding.MineActivityFeedbackEditBinding
@@ -139,9 +140,6 @@ class FeedbackEditActivity :
      */
     override fun initListener() {
         binding?.apply {
-            fabCenterBack.setOnSingleClickListener {
-                onBackPressed()
-            }
 
             mineButton.setOnSingleClickListener {
                 if (label == "NONE") {
@@ -164,6 +162,7 @@ class FeedbackEditActivity :
                     toast("描述信息不能为空哦")
                     return@setOnSingleClickListener
                 }
+                vm?.progressDialogEvent?.value = ProgressDialogEvent.SHOW_NONCANCELABLE_DIALOG_EVENT
                 vm?.uris?.value?.let {
                     if (vm?.picCount?.value ?: 0 != 0) {
                         val files = it.map { FileUtils.uri2File(this@FeedbackEditActivity,it) }

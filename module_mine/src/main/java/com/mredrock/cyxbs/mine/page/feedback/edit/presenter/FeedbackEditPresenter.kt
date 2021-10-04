@@ -17,6 +17,7 @@ import com.mredrock.cyxbs.common.utils.extensions.getRequestBody
 import com.mredrock.cyxbs.common.utils.extensions.safeSubscribeBy
 import com.mredrock.cyxbs.common.utils.extensions.setSchedulers
 import com.mredrock.cyxbs.common.utils.extensions.toast
+import com.mredrock.cyxbs.common.viewmodel.event.ProgressDialogEvent
 import com.mredrock.cyxbs.mine.R
 import com.mredrock.cyxbs.mine.base.presenter.BasePresenter
 import com.mredrock.cyxbs.mine.page.feedback.adapter.rv.RvBinder
@@ -84,6 +85,7 @@ class FeedbackEditPresenter(val activity:Activity) : BasePresenter<FeedbackEditV
                 },
                 onComplete = {
                     vm?.sendFinishEvent()
+                    vm?.progressDialogEvent?.value = ProgressDialogEvent.DISMISS_DIALOG_EVENT
                 })
     }
 
