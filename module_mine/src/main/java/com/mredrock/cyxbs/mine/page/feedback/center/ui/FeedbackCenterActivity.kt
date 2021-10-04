@@ -71,6 +71,9 @@ class FeedbackCenterActivity :
      */
     override fun initListener() {
         binding?.apply {
+            fabCenterBack.setOnSingleClickListener {
+                onBackPressed()
+            }
             btnQuestion.setOnClickListener {
                 startActivity<FeedbackEditActivity>()
             }

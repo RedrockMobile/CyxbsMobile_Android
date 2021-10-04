@@ -17,6 +17,7 @@ import com.mredrock.cyxbs.mine.page.feedback.adapter.rv.RvAdapter
 import com.mredrock.cyxbs.mine.page.feedback.edit.presenter.FeedbackEditPresenter
 import com.mredrock.cyxbs.mine.page.feedback.edit.viewmodel.FeedbackEditViewModel
 import com.mredrock.cyxbs.mine.page.feedback.utils.CHOOSE_FEED_BACK_PIC
+import com.mredrock.cyxbs.mine.page.feedback.utils.FileUtils
 import com.mredrock.cyxbs.mine.page.feedback.utils.selectImageFromAlbum
 import com.mredrock.cyxbs.mine.page.feedback.utils.setSelectedPhotos
 import java.io.File
@@ -138,6 +139,10 @@ class FeedbackEditActivity :
      */
     override fun initListener() {
         binding?.apply {
+            fabCenterBack.setOnSingleClickListener {
+                onBackPressed()
+            }
+
             mineButton.setOnSingleClickListener {
                 if (label == "NONE") {
                     toast("必须筛选一个标签")
@@ -161,7 +166,7 @@ class FeedbackEditActivity :
                 }
                 vm?.uris?.value?.let {
                     if (vm?.picCount?.value ?: 0 != 0) {
-                        val files = it.map { uri2File(it) }
+                        val files = it.map { FileUtils.uri2File(this@FeedbackEditActivity,it) }
                         presenter?.postFeedbackInfo(
                             productId = "1",
                             type = label,
@@ -188,20 +193,4 @@ class FeedbackEditActivity :
 
         binding?.includeToolBar?.btnBack?.setOnSingleClickListener { finish() }
     }
-
-    private fun uri2File(uri: Uri): File {
-        var ima: String = ""
-        val proj = arrayOf<String>(MediaStore.Images.Media.DATA)
-        val actualimagecursor = this.managedQuery(uri, proj, null, null, null)
-        if (actualimagecursor == null) {
-            ima = uri.path
-        } else {
-            val index = actualimagecursor.getColumnIndexOrThrow(MediaStore.Images.Media.DATA)
-            actualimagecursor.moveToFirst()
-            ima = actualimagecursor.getString(index)
-        }
-        return File(ima)
-    }
-
-
 }

@@ -47,7 +47,14 @@ object BindingAdapters {
     ) {
         url ?: return
         if (!url.matches(Regex("http.+"))) return
-        Glide.with(imageView).load(url).placeholder(placeholder).error(error).into(imageView)
+
+        Log.d("sss", "localImage:${url.toString()} ")
+        Glide.with(imageView.context)
+            .load(url)
+            .placeholder(placeholder)
+            .skipMemoryCache(true)
+            .into(imageView)
+//            .error(error)
     }
 
     @JvmStatic
@@ -58,7 +65,10 @@ object BindingAdapters {
     ) {
         imageView ?: return
         imageUri ?: return
-        Glide.with(imageView).load(imageUri).into(imageView)
+        Log.d("sss", "localImage:${imageUri.toString()} ")
+        Glide.with(imageView.context)
+            .load(imageUri)
+            .into(imageView)
     }
 
     @JvmStatic
@@ -71,9 +81,9 @@ object BindingAdapters {
     ) {
         textView ?: return
         stateColor ?: return
-        if (stateColor == false){
+        if (stateColor == false) {
             colorFalse?.let { textView.setTextColor(it) }
-        }else{
+        } else {
             colorTrue?.let { textView.setTextColor(it) }
         }
 

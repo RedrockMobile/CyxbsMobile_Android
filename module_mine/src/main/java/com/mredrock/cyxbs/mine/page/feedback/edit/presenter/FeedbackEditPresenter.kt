@@ -63,7 +63,6 @@ class FeedbackEditPresenter(val activity:Activity) : BasePresenter<FeedbackEditV
             put("title", titleRB)
             put("content", contentRB)
         }
-        Log.d("sss", "postFeedbackInfo: ${file.toString()}")
         val fileBody = if (file.isNotEmpty()){
             (file.indices).map {
                 MultipartBody.Part.createFormData("file", file[it].name, file[it].getRequestBody())
@@ -77,12 +76,11 @@ class FeedbackEditPresenter(val activity:Activity) : BasePresenter<FeedbackEditV
             .doOnError { }
             .safeSubscribeBy(
                 onNext = {
-                    Log.d("sss", "fetch:${it.code} ${it.info} ")
+//                    Log.d("sss", "fetch:${it.code} ${it.info} ")
                     BaseApp.context.toast("提交成功  我们会在十四个工作日内回复")
                 },
                 onError = {
                     BaseApp.context.toast("网络请求失败")
-                    Log.d("sss", "initListener: ${it.message}${it.cause}")
                 },
                 onComplete = {
                     vm?.sendFinishEvent()

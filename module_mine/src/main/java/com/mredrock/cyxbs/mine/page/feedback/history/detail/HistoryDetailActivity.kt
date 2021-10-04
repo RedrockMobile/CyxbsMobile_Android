@@ -1,5 +1,6 @@
 package com.mredrock.cyxbs.mine.page.feedback.history.detail
 
+import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.recyclerview.widget.GridLayoutManager
 import com.mredrock.cyxbs.common.utils.extensions.setOnSingleClickListener
@@ -68,6 +69,7 @@ class HistoryDetailActivity :
      */
     private fun observeReplyBannerUrl(replyPicUrls: LiveData<List<String>>) {
         replyPicUrls.observe({lifecycle}) {
+            Log.d("sss", "observeReplyBannerUrl:${it[0]}  ${it[1]} ")
             replyBannerRvAdapter.submitList(it)
         }
     }
