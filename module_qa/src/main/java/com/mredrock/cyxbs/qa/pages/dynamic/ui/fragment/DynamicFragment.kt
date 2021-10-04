@@ -7,12 +7,14 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.os.Handler
+import android.util.Log
 import android.view.*
 import android.widget.RelativeLayout
 import android.widget.TextView
 import android.widget.Toast
 import android.widget.ViewFlipper
 import androidx.core.content.ContextCompat
+import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.alibaba.android.arouter.facade.annotation.Route
@@ -22,6 +24,7 @@ import com.mredrock.cyxbs.common.BaseApp
 import com.mredrock.cyxbs.common.component.CyxbsToast
 import com.mredrock.cyxbs.common.config.CyxbsMob
 import com.mredrock.cyxbs.common.config.QA_ENTRY
+import com.mredrock.cyxbs.common.config.StoreTask
 import com.mredrock.cyxbs.common.event.RefreshQaEvent
 import com.mredrock.cyxbs.common.mark.EventBusLifecycleSubscriber
 import com.mredrock.cyxbs.common.service.ServiceManager
@@ -131,7 +134,6 @@ open class DynamicFragment : BaseViewModelFragment<DynamicListViewModel>(), Even
             DynamicAdapter(this.requireContext()) { dynamic, view ->
                 DynamicDetailActivity.activityStart(this, view, dynamic)
             }.apply {
-
                 onShareClickListener = { dynamic, mode ->
                     val url = "${CommentConfig.SHARE_URL}dynamic?id=${dynamic.postId}"
                     when (mode) {
@@ -274,6 +276,13 @@ open class DynamicFragment : BaseViewModelFragment<DynamicListViewModel>(), Even
 
         observeLoading(dynamicListRvAdapter, footerRvAdapter, emptyRvAdapter)
         qa_rv_dynamic_List.apply {
+            val animator = itemAnimator // 取消 RecyclerView 刷新的动画, 因为会出现图片闪动问题
+            if (animator != null) {
+                animator.changeDuration = 0
+                animator.removeDuration = 0
+                animator.moveDuration = 0
+                animator.addDuration = 0
+            }
             layoutManager = LinearLayoutManager(context)
             adapter = adapterWrapper
             addOnScrollListener(object : RecyclerView.OnScrollListener() {
@@ -432,7 +441,6 @@ open class DynamicFragment : BaseViewModelFragment<DynamicListViewModel>(), Even
         vf_hot_search.stopFlipping()
     }
 
-    @SuppressLint("NotifyDataSetChanged")
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         when (requestCode) {
             // 从动态详细返回
@@ -449,13 +457,17 @@ open class DynamicFragment : BaseViewModelFragment<DynamicListViewModel>(), Even
                     dynamicListRvAdapter.curSharedItem?.apply {
                         val dynamic = data?.getParcelableExtra<Dynamic>("refresh_dynamic")
                         dynamic?.let {
-                            dynamicListRvAdapter.curSharedDynamic?.commentCount =
-                                dynamic.commentCount
-                            this.findViewById<TextView>(R.id.qa_tv_dynamic_comment_count).text =
-                                it.commentCount.toString()
+                            // 进行判断，如果返回的数据评论数和当前的不一样才回去刷新列表
+                            if (dynamicListRvAdapter.curSharedDynamic?.commentCount != it.commentCount) {
+                                dynamicListRvAdapter.curSharedDynamic?.commentCount =
+                                    it.commentCount
+                                this.findViewById<TextView>(R.id.qa_tv_dynamic_comment_count).text =
+                                    it.commentCount.toString()
+                                dynamicListRvAdapter.notifyItemChanged(dynamicListRvAdapter.curSharedItemPosition, "")
+                            }
                         }
                     }
-                    dynamicListRvAdapter.notifyDataSetChanged()
+//                    dynamicListRvAdapter.notifyDataSetChanged()
                 }
             }
             // 从发动态返回

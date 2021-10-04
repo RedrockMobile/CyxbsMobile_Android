@@ -5,14 +5,12 @@ import android.graphics.BitmapFactory
 import android.os.Environment
 import androidx.lifecycle.MutableLiveData
 import com.google.gson.Gson
-import com.mredrock.cyxbs.common.BaseApp
+import com.mredrock.cyxbs.common.BaseApp.Companion.context
 import com.mredrock.cyxbs.common.config.DIR_PHOTO
+import com.mredrock.cyxbs.common.config.StoreTask
 import com.mredrock.cyxbs.common.network.ApiGenerator
 import com.mredrock.cyxbs.common.utils.LogUtils
-import com.mredrock.cyxbs.common.utils.extensions.mapOrThrowApiException
-import com.mredrock.cyxbs.common.utils.extensions.safeSubscribeBy
-import com.mredrock.cyxbs.common.utils.extensions.setSchedulers
-import com.mredrock.cyxbs.common.utils.extensions.toast
+import com.mredrock.cyxbs.common.utils.extensions.*
 import com.mredrock.cyxbs.common.viewmodel.BaseViewModel
 import com.mredrock.cyxbs.common.viewmodel.event.ProgressDialogEvent
 import com.mredrock.cyxbs.common.viewmodel.event.SingleLiveEvent
@@ -128,7 +126,7 @@ class QuizViewModel : BaseViewModel() {
             .doOnError { throwable ->
                 isReleaseSuccess = false
                 throwable?.let { e ->
-                    BaseApp.context.toast(e.toString())
+                    context.toast(e.toString())
                 }
                 backAndRefreshPreActivityEvent.value = true
             }
@@ -136,6 +134,8 @@ class QuizViewModel : BaseViewModel() {
                 isReleaseSuccess = true
                 toastEvent.value = R.string.qa_release_dynamic_success
                 backAndRefreshPreActivityEvent.value = true
+
+                StoreTask.postTask(StoreTask.Task.PUBLISH_DYNAMIC, null) // 更新发布动态的任务
             }
     }
 
@@ -270,6 +270,8 @@ class QuizViewModel : BaseViewModel() {
             .safeSubscribeBy {
                 toastEvent.value = R.string.qa_release_comment_success
                 finishReleaseCommentEvent.value = true
+
+                StoreTask.postTask(StoreTask.Task.POST_COMMENT, null) // 更新发送评论的任务
             }
     }
 

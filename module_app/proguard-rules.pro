@@ -129,7 +129,13 @@
 #-------------------------------------------------------------------------
 
 #---------------------------------4.反射相关的类和方法-----------------------
+-keepclassmembernames class androidx.swiperefreshlayout.widget.SwipeRefreshLayout {
+    private int mTouchSlop; #原因在于 module_store 的 StoreCenterActivity 的 initRefreshLayout() 方法中
+}
 
+-keepclassmembernames class com.google.android.material.badge.BadgeDrawable {
+    private final float badgeRadius; #原因在于 module_store 的 StoreCenterActivity 的 initTabLayout() 方法中
+}
 
 
 #----------------------------------------------------------------------------

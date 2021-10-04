@@ -5,9 +5,7 @@ import android.content.Intent
 import android.content.res.Configuration
 import android.os.Bundle
 import android.view.View
-import android.webkit.WebChromeClient
 import android.webkit.WebSettings
-import android.webkit.WebViewClient
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentTransaction
@@ -24,7 +22,9 @@ import com.mredrock.cyxbs.common.bean.LoginConfig
 import com.mredrock.cyxbs.common.config.DISCOVER_GRADES
 import com.mredrock.cyxbs.common.service.ServiceManager
 import com.mredrock.cyxbs.common.ui.BaseActivity
+import com.mredrock.cyxbs.common.utils.LogUtils
 import com.mredrock.cyxbs.common.utils.extensions.pressToZoomOut
+import com.mredrock.cyxbs.common.utils.extensions.setOnSingleClickListener
 import com.mredrock.cyxbs.discover.grades.R
 import com.mredrock.cyxbs.discover.grades.bean.Exam
 import com.mredrock.cyxbs.discover.grades.bean.analyze.isSuccessful
@@ -121,11 +121,6 @@ class ContainerActivity : BaseActivity() {
     }
 
     private fun initObserver() {
-        viewModel.replaceBindFragmentToGPAFragment.observe(this@ContainerActivity, Observer {
-            if (it == true) {
-                viewModel.getAnalyzeData()
-            }
-        })
         viewModel.bottomStateListener.observe(this@ContainerActivity, Observer {
             if (it == true) {
                 val behavior = BottomSheetBehavior.from(fl_grades_bottom_sheet)
@@ -136,18 +131,42 @@ class ContainerActivity : BaseActivity() {
         viewModel.analyzeData.observe(this@ContainerActivity, Observer {
             if (it != null && it.isSuccessful) {
                 if (typeOfFragment != IS_GPA_FRAGMENT) {
+                    // 绑定成功，可解除绑定
                     typeOfFragment = IS_GPA_FRAGMENT
-                    tv_grades_no_bind.visibility = View.INVISIBLE
+                    tv_grades_no_bind.text = getString(R.string.grades_unbind_stdNum)
                     replaceFragment(GPAFragment())
                 }
             } else {
                 if (typeOfFragment != IS_BIND_FRAGMENT) {
+                    // 未绑定
                     typeOfFragment = IS_BIND_FRAGMENT
-                    tv_grades_no_bind.visibility = View.VISIBLE
+                    tv_grades_no_bind.text = getString(R.string.grades_no_bind_stdNum)
                     replaceFragment(NoBindFragment())
                 }
             }
 
+        })
+        // 监听isBinding的变化 改变按钮点击事件
+        viewModel.isBinding.observe(this, Observer {
+            if (it) {
+                // 当前已绑定账号，点击解绑
+                tv_grades_no_bind.setOnSingleClickListener {
+                    // 解除绑定按钮的点击事件
+                    viewModel.unbindIds {
+                        // 解绑成功后的操作
+                        tv_grades_no_bind.text = getString(R.string.grades_no_bind_stdNum)
+                        typeOfFragment = IS_BIND_FRAGMENT
+                        replaceFragment(NoBindFragment())
+                    }
+                }
+            } else {
+                // 当前未绑定账号，点击前往绑定账号界面
+                tv_grades_no_bind.setOnSingleClickListener { v ->
+                    v.pressToZoomOut()
+                    val intent = Intent(this, BindActivity::class.java)
+                    this.startActivity(intent)
+                }
+            }
         })
     }
 
@@ -202,11 +221,6 @@ class ContainerActivity : BaseActivity() {
         Glide.with(BaseApp.context).load(user.getAvatarImgUrl()).into(parent.iv_grades_avatar)
         parent.tv_grades_stuNum.text = user.getStuNum()
         parent.tv_grades_name.text = user.getRealName()
-        tv_grades_no_bind.setOnClickListener {
-            it.pressToZoomOut()
-            val intent = Intent(this, BindActivity::class.java)
-            this.startActivity(intent)
-        }
     }
 
     private fun replaceFragment(fragment: Fragment) {

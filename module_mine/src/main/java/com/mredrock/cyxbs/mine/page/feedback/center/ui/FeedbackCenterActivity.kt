@@ -82,6 +82,7 @@ class FeedbackCenterActivity :
                     this@FeedbackCenterActivity
                 )
             }
+            fabCenterBack.setOnSingleClickListener { finish() }
         }
     }
 

@@ -6,6 +6,7 @@ import com.mredrock.cyxbs.common.network.CommonApiService
 import com.mredrock.cyxbs.common.service.ServiceManager
 import com.mredrock.cyxbs.api.account.IAccountService
 import com.mredrock.cyxbs.api.account.IUserService
+import com.mredrock.cyxbs.common.config.StoreTask
 import com.mredrock.cyxbs.common.utils.down.bean.DownMessageText
 import com.mredrock.cyxbs.common.utils.down.params.DownMessageParams
 import com.mredrock.cyxbs.common.utils.extensions.errorHandler
@@ -38,7 +39,7 @@ class EditViewModel : BaseViewModel() {
                        , photoSrc: String = userService.getAvatarImgUrl()) {
 
 
-        apiService.updateUserInfo(nickname, introduction, qq, phone, photoThumbnailSrc, photoSrc)
+        apiService.updateUserInfo(nickname, introduction, qq, phone, photoSrc)
                 .normalStatus(this)
                 .observeOn(Schedulers.io())
                 .map {
@@ -56,8 +57,11 @@ class EditViewModel : BaseViewModel() {
                     it
                 }
                 .observeOn(AndroidSchedulers.mainThread())
-                .safeSubscribeBy(
-                )
+                .safeSubscribeBy {
+                    if (nickname.isNotBlank() && introduction.isNotBlank() && qq.isNotBlank() && phone.isNotBlank()) {
+                        StoreTask.postTask(StoreTask.Task.EDIT_INFO, null)
+                    }
+                }
                 .lifeCycle()
     }
 

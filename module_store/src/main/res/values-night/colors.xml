@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!--    邮票商城界面泛用式分割线颜色-->
+    <color name="store_common_divide_line">#1A2A4E84</color>
+
+    <!--    邮票商城界面通用标题颜色-->
+    <color name="store_common_title">#CCDFDFE3</color>
+
+    <!--    邮票中心界面颜色-->
+    <color name="store_stamp_center_background">#000000</color>
+    <color name="store_stamp_center_my_stamp_character">#FFFFFF</color>
+    <color name="store_stamp_center_my_stamp_number">#FFFFFF</color>
+    <color name="store_stamp_center_get_remind">#FFFFFF</color>
+    <color name="store_stamp_center_tabLayout_text">#F0F0F2</color>
+    <color name="store_stamp_center_tabLayout_tab_badge">#6D68FF</color>
+    <color name="store_stamp_center_cardView_background">#1D1D1D</color>
+    <color name="store_stamp_center_left_top_stamp_bg">#4DF0F0F2</color>
+    <color name="store_stamp_center_left_top_stamp_text">#E9F2FB</color>
+    <color name="store_stamp_center_detail">#FFFFFF</color>
+    <!--邮票中心界面的邮票小店-->
+    <color name="store_small_shop_cardView_bg">#2D2D2D</color>
+    <color name="store_small_shop_product_name">#F0F0F2</color>
+    <color name="store_small_shop_product_stock">#F0F0F2</color>
+    <color name="store_small_shop_price">#5177FF</color>
+    <color name="store_small_shop_product_exchange">#FFFFFF</color>
+    <color name="store_small_shop_title">#F0F0F2</color>
+    <color name="store_small_shop_hint">#F0F0F2</color>
+    <color name="store_small_shop_btn_exchange">#4A44E4</color>
+    <!--邮票中心界面的邮票任务-->
+    <color name="store_stamp_task_name">#F0F0F2</color>
+    <color name="store_stamp_task_detail">#F0F0F2</color>
+    <color name="store_stamp_task_progress_text">#7D8AFF</color>
+    <color name="store_stamp_task_progress_trackColor">#33E5E5E5</color>
+    <color name="store_stamp_task_progress_indicatorColor">#7D8AFF</color>
+    <color name="store_stamp_task_go_btn_bg">#4A44E4</color>
+    <color name="store_stamp_task_go_btn_bg_ok">#C1C1C1</color>
+    <color name="store_stamp_task_go_btn_text">#FFFFFF</color>
+    <color name="store_stamp_task_title">#F0F0F2</color>
+
+    <!--    邮票明细界面相关颜色-->
+    <color name="store_stamp_detail_common_title_text">#F0F0F2</color>
+    <color name="store_stamp_detail_common_record_date_text">#66F0F0F2</color>
+    <color name="store_stamp_detail_common_null_record_text">#FFFFFF</color>
+    <color name="store_stamp_detail_tabLayout_unselected_title">#CCF0F0F2</color>
+    <color name="store_stamp_detail_tabLayout_selected_title">#778EFF</color>
+    <color name="store_stamp_detail_record_reduce_count_text">#4B66F0</color>
+    <color name="store_stamp_detail_record_unreceived_tips_background">#484848</color>
+    <color name="store_stamp_detail_record_unreceived_tips_text">#94A6C4</color>
+    <color name="store_stamp_detail_get_increase_count_text">#FFA92F</color>
+
+    <!--    商品兑换界面相关颜色-->
+    <color name="store_btn_product_exchange">#4841E2</color>
+    <color name="store_btn_ban_product_exchange">#AABBFF</color>
+    <color name="store_balance">#66F0F0F2</color>
+    <color name="store_exchange_detail_">#66F0F0F2</color>
+    <color name="store_product_exchange_price">#5177FF</color>
+    <color name="store_product_describe">#CCF0F0F2</color>
+    <color name="store_product_prescription">#CCF0F0F2</color>
+    <color name="store_equity_description_title">#BFF0F0F2</color>
+    <color name="store_product_stock">#66F0F0F2</color>
+    <color name="store_equity_description">#4DF0F0F2</color>
+    <color name="store_product_exchange_bg">#000000</color>
+    <color name="store_full_screen_pic_indicator_color">#ffffff</color>
+
+
+    <!--    兑换详细界面相关颜色-->
+    <color name="store_exchange_detail_order">#E6FFFFFF</color>
+    <color name="store_exchange_detail_common_text">#CCF0F0F2</color>
+    <color name="store_exchange_detail_bg">#000000</color>
+
+    <!--    任务进度条颜色-->
+    <color name="store_indicator_under">#97b7f0</color>
+    <color name="store_indicator_top">#2923d2</color>
+
+    <!--    商品图片滑动进度圆点颜色-->
+    <color name="store_progress_dot_unselected">#C4C4C4</color>
+    <color name="store_progress_dot_selected">#FFFFFF</color>
+
+    <!--    商品兑换界面Dialog按钮颜色-->
+    <color name="store_exchange_dialog_btn_positive">#4A44E4</color>
+    <color name="store_exchange_dialog_btn_negative">#4E4E4E</color>
+    <color name="store_exchange_dialog_tv_tips">#F0F0F2</color>
+
+</resources>

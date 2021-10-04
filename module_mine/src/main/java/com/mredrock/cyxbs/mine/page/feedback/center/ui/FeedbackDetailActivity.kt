@@ -1,6 +1,7 @@
 package com.mredrock.cyxbs.mine.page.feedback.center.ui
 
 import android.os.Bundle
+import android.webkit.WebSettings
 import com.mredrock.cyxbs.common.ui.BaseActivity
 import com.mredrock.cyxbs.mine.databinding.MineActivityFeedbackDetailBinding
 class FeedbackDetailActivity : BaseActivity() {
@@ -11,17 +12,23 @@ class FeedbackDetailActivity : BaseActivity() {
         binding = MineActivityFeedbackDetailBinding.inflate(layoutInflater)
         setContentView(binding.root)
         binding.apply {
-            tvEditToolbar.text = intent.getStringExtra("title")
+            includeToolBar.tvTitle.text = intent.getStringExtra("title")
             tvDetailContent.apply {
                 val setting = settings
                 setting.apply {
                     javaScriptEnabled = true
+                    domStorageEnabled = true
                     useWideViewPort = true
-                    allowFileAccess = true
-                    defaultTextEncodingName = "utf-8";
+                    loadWithOverviewMode = true
+                    setSupportZoom(true)
+                    builtInZoomControls = true
+                    displayZoomControls = false
+                    mixedContentMode = WebSettings.MIXED_CONTENT_ALWAYS_ALLOW
+                    mediaPlaybackRequiresUserGesture = false
                 }
                 loadDataWithBaseURL(null, intent.getStringExtra("content"), "text/html", "utf-8", null)
             }
+            binding.includeToolBar.btnBack.setOnClickListener { finish() }
         }
     }
 }

@@ -25,11 +25,9 @@ import kotlinx.android.synthetic.main.course_fragment_course.*
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
 
-
 /**
  * Created by anriku on 2018/8/14.
  */
-
 class CourseFragment : BaseFragment(), EventBusLifecycleSubscriber {
 
     override val openStatistics: Boolean
@@ -111,8 +109,6 @@ class CourseFragment : BaseFragment(), EventBusLifecycleSubscriber {
             }
         }
 
-
-
         mCoursesViewModel.nowWeek.value?.let {
             if (it != mWeek || !mCoursesViewModel.isFirstLoadItemAnim) {
                 scheduleView.layoutAnimation = null
@@ -120,9 +116,8 @@ class CourseFragment : BaseFragment(), EventBusLifecycleSubscriber {
                 mCoursesViewModel.isFirstLoadItemAnim = !mCoursesViewModel.isFirstLoadItemAnim
             }
         }
-        mCoursesViewModel.notifyCourseDataChange.observe(viewLifecycleOwner, Observer {
-            scheduleView.notifyDataChange()
-        })
+        mCoursesViewModel.notifyCourseDataChange.observe(viewLifecycleOwner,
+             Observer{ scheduleView.notifyDataChange() })
     }
 
     override fun onResume() {

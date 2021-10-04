@@ -24,5 +24,7 @@ fun initBugly(context: Context): () -> Unit = {
     Bugly.init(context, BuildConfig.BUGLY_APP_ID, false, strategy)
     if (BuildConfig.DEBUG) {
         CrashReport.setUserSceneTag(context, 83913)
+    } else {
+        CrashReport.setUserSceneTag(context, 202291)
     }
 }

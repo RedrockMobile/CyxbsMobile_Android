@@ -30,8 +30,17 @@ const val USER_INFO_ENCRYPT_VERSION = 1
 
 const val IS_TOURIST = "is_tourist"
 
-//User信息存储key
+//UserToken信息存储key
 const val SP_KEY_USER_V2 = "cyxbsmobile_user_v2"
+
+//User信息存储key
+const val SP_KEY_USER_INFO = "cyxbsmobile_user_info"
+
+//token失效时间
+const val SP_KEY_TOKEN_EXPIRED = "user_token_expired_time"
+
+//token 后端规定token2h过期，客户端规定1h55分过期，以防错误，时间戳
+const val SP_TOKEN_TIME = 6900000
 
 //refreshToken失效时间
 const val SP_KEY_REFRESH_TOKEN_EXPIRED = "user_refresh_token_expired_time"
@@ -109,6 +118,8 @@ const val COURSE_POS_TO_MAP = "COURSE_POS_TO_MAP"
 //qa进入回答列表传入的问题id的key
 const val QA_PARAM_QUESTION_ID = "question_id"
 
+//第一次安装的标志，默认或者更新之后就会置为true
+const val FIRST_TIME_OPEN = "first_time_open"
 
 //统一拦截的HTTP状态码
 const val TOKEN_EXPIRE = 403//token过期

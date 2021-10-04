@@ -2,8 +2,6 @@ package com.mredrock.cyxbs.mine.page.sign
 
 import android.animation.ObjectAnimator
 import android.annotation.SuppressLint
-import android.content.Context
-import android.content.Intent
 import android.graphics.Color
 import android.os.Build
 import android.os.Bundle
@@ -18,24 +16,16 @@ import androidx.core.content.ContextCompat
 import androidx.core.content.res.ResourcesCompat
 import androidx.lifecycle.Observer
 import com.alibaba.android.arouter.facade.annotation.Route
-import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.mredrock.cyxbs.common.component.CommonDialogFragment
 import com.mredrock.cyxbs.common.config.MINE_CHECK_IN
 import com.mredrock.cyxbs.common.ui.BaseViewModelActivity
-import com.mredrock.cyxbs.common.utils.extensions.dp2px
-import com.mredrock.cyxbs.common.utils.extensions.invisible
 import com.mredrock.cyxbs.common.utils.extensions.toast
-import com.mredrock.cyxbs.common.utils.extensions.visible
 import com.mredrock.cyxbs.mine.R
 import com.mredrock.cyxbs.mine.network.model.Product
 import com.mredrock.cyxbs.mine.network.model.ScoreStatus
-import com.mredrock.cyxbs.mine.page.myproduct.MyProductActivity
-import com.mredrock.cyxbs.mine.util.ui.ProductAdapter
 import com.mredrock.cyxbs.mine.util.widget.*
 import kotlinx.android.synthetic.main.mine_activity_daily_sign.*
-import kotlinx.android.synthetic.main.mine_layout_store_sign.*
 import kotlin.math.abs
-
 
 /**
  * Created by zzzia on 2018/8/14.
@@ -46,51 +36,36 @@ import kotlin.math.abs
 class DailySignActivity : BaseViewModelActivity<DailyViewModel>() {
 
     private var objectAnimator: ObjectAnimator? = null
-    private var onStartBottomStatus = BottomSheetBehavior.STATE_COLLAPSED
-    private var requestPointStore = false
 
     private val dividerResArr: Array<Stick> by lazy {
         arrayOf(mine_daily_v_divider_mon_tue,
-                mine_daily_v_divider_tue_wed,
-                mine_daily_v_divider_wed_thurs,
-                mine_daily_v_divider_thurs_fri,
-                mine_daily_v_divider_fri_sat,
-                mine_daily_v_divider_sat_sun)
+            mine_daily_v_divider_tue_wed,
+            mine_daily_v_divider_wed_thurs,
+            mine_daily_v_divider_thurs_fri,
+            mine_daily_v_divider_fri_sat,
+            mine_daily_v_divider_sat_sun)
     }
     private val imageViewResArr: Array<ImageView> by lazy {
         arrayOf(mine_daily_iv_mon,
-                mine_daily_iv_tue,
-                mine_daily_iv_wed,
-                mine_daily_iv_thurs,
-                mine_daily_iv_fri,
-                mine_daily_iv_sat,
-                mine_daily_iv_sun)
+            mine_daily_iv_tue,
+            mine_daily_iv_wed,
+            mine_daily_iv_thurs,
+            mine_daily_iv_fri,
+            mine_daily_iv_sat,
+            mine_daily_iv_sun)
     }
     private val spaceResArr: Array<Space> by lazy {
         arrayOf(mine_daily_space_mon,
-                mine_daily_space_tue,
-                mine_daily_space_wed,
-                mine_daily_space_thurs,
-                mine_daily_space_fri,
-                mine_daily_space_sat,
-                mine_daily_space_sun)
+            mine_daily_space_tue,
+            mine_daily_space_wed,
+            mine_daily_space_thurs,
+            mine_daily_space_fri,
+            mine_daily_space_sat,
+            mine_daily_space_sun)
     }
     private val weekGenerator: WeekGenerator by lazy {
         WeekGenerator()
     }
-
-    private val adapter: ProductAdapter by lazy {
-        ProductAdapter()
-    }
-
-    companion object{
-        fun actionStart(context: Context, bottomSheetStatus: Int){
-            val intent = Intent(context, DailySignActivity::class.java)
-            intent.putExtra("status", bottomSheetStatus)
-            context.startActivity(intent)
-        }
-    }
-
 
     //通过一个标志位，来判断刷新divider的时候是否需要动画，
     //当为true时，表明用户点击了签到按钮导致的UI刷新，这时候需要动画，
@@ -99,16 +74,10 @@ class DailySignActivity : BaseViewModelActivity<DailyViewModel>() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        intent?.apply {
-            onStartBottomStatus = getIntExtra("status", BottomSheetBehavior.STATE_COLLAPSED)
-            requestPointStore = onStartBottomStatus == BottomSheetBehavior.STATE_EXPANDED
-        }
         setTransparent(window)
         setContentView(R.layout.mine_activity_daily_sign)
         common_toolbar.initWithSplitLine("", false)
         initView()
-        initAdapter()
-        dealBottomSheet()
         initData()
     }
 
@@ -137,39 +106,18 @@ class DailySignActivity : BaseViewModelActivity<DailyViewModel>() {
     //ViewModel观察和网络请求
     private fun initData() {
         viewModel.loadAllData()
-        viewModel.loadProduct()
         viewModel.status.observe(this, Observer {
             refreshUI(it)
-        })
-        viewModel.products.observe(this, Observer {
-
-            if (it == null || it.isEmpty()) {
-                return@Observer
-            }
-
-            adapter.submitList(it)
         })
         viewModel.isInVacation.observe(this, Observer {
             if (it == true) {
                 toast("寒暑假不可签到")
             }
         })
-        viewModel.exchangeEvent.observe(this, Observer {
-            if (it == true) {
-                toast("兑换成功， 如果是实体物品，请携带相关证件前往红岩网校工作站领取奖品")
-            } else {
-                toast("兑换失败")
-            }
-        })
     }
 
     private fun initView() {
         mine_daily_sign.setOnClickListener { checkIn() }
-        mine_store_rv.addItemDecoration(SpaceDecoration(dp2px(8f)))
-        mine_store_my_product.setOnClickListener {
-            startActivity<MyProductActivity>()
-            overridePendingTransition(R.anim.common_slide_in_from_bottom_with_bezier, R.anim.common_scale_fade_out_with_bezier)
-        }
     }
 
     /**
@@ -199,7 +147,6 @@ class DailySignActivity : BaseViewModelActivity<DailyViewModel>() {
         } else {
             mine_daily_tv_ranking.text = "寒暑假不可签到呢(●'ᴗ'σ)σணღ*"
         }
-        mine_store_tv_integral.text = "${scoreStatus.integral}"
         if (scoreStatus.isChecked or !scoreStatus.canCheckIn) {
             mine_daily_sign.apply {
                 isClickable = false
@@ -228,33 +175,6 @@ class DailySignActivity : BaseViewModelActivity<DailyViewModel>() {
     private fun checkIn() {
         isChecking = true
         viewModel.checkIn()
-    }
-
-    private fun dealBottomSheet() {
-        val behavior = BottomSheetBehavior.from(mine_sign_fl)
-        mine_store_arrow_left.setOnClickListener {
-            behavior.state = BottomSheetBehavior.STATE_COLLAPSED
-        }
-        behavior.state = onStartBottomStatus//设置bottomSheet的展开状态
-        behavior.peekHeight = dp2px(95f + 30f)
-        behavior.addBottomSheetCallback(object : BottomSheetBehavior.BottomSheetCallback() {
-            override fun onSlide(p0: View, p1: Float) {
-                mine_store_arrow_left.alpha = p1
-                mine_store_my_product.alpha = p1
-                mine_store_line.alpha = 1 - p1
-                mine_store_tv_title.x = mine_store_arrow_left.x + p1 * dp2px(15f) + dp2px(17f)
-            }
-
-            override fun onStateChanged(p0: View, p1: Int) {
-                if (p1 == BottomSheetBehavior.STATE_COLLAPSED) {
-                    mine_store_arrow_left.invisible()
-                    mine_store_my_product.invisible()
-                } else {
-                    mine_store_arrow_left.visible()
-                    mine_store_my_product.visible()
-                }
-            }
-        })
     }
 
     /**
@@ -316,72 +236,6 @@ class DailySignActivity : BaseViewModelActivity<DailyViewModel>() {
             else -> {
                 dividerResArr[i].color.color = ContextCompat.getColor(this, R.color.common_mine_sign_divider_blue_light)
             }
-        }
-    }
-
-    //设置商品展示的Adapter，同时设置监听，弹出DialogFragment
-    private fun initAdapter() {
-        val click: ((Product, Int) -> Unit)? = { product, position ->
-            val integral = viewModel.status.value?.integral
-
-            integral?.let {
-                //防止商品积分为空，同时需处理积分为小数的情况
-                val productIntegral = if (product.integral.isEmpty()) 0 else product.integral.toFloat().toInt()
-                //判断用户积分是否大于物品所需积分数 && 物品剩余数大于0
-                if (integral >= productIntegral && product.count > 0) {
-                    val tag = "exchange"
-                    if (supportFragmentManager.findFragmentByTag(tag) == null) {
-                        CommonDialogFragment().apply {
-                            initView(
-                                    containerRes = R.layout.mine_layout_dialog_exchange,
-                                    positiveString = "确认兑换",
-                                    onPositiveClick = {
-                                        viewModel.exchangeProduct(product, position)
-                                        dismiss()
-                                    },
-                                    onNegativeClick = { dismiss() },
-                                    elseFunction = {
-                                        val str = "这将消耗您的${product.integral}个积分，仍然要兑换吗？"
-                                        it.findViewById<TextView>(R.id.mine_tv_exchange_for_sure_content).text = str
-                                    }
-                            )
-                        }.show(supportFragmentManager, tag)
-                    }
-                } else {
-                    val tag = "lack of integral"
-                    //防止连续两次快速点击两次重复创建相同tag的DialogFragment
-                    if (supportFragmentManager.findFragmentByTag(tag) == null) {
-                        CommonDialogFragment().apply {
-                            initView(
-                                    containerRes = R.layout.mine_layout_dialog_exchange,
-                                    positiveString = "确认",
-                                    onPositiveClick = { dismiss() },
-                                    elseFunction = {
-                                        //区分是积分不足还是物品剩余数为0
-                                        if (product.count <= 0) {
-                                            it.findViewById<TextView>(R.id.mine_tv_exchange_for_sure_content).text = "物品被抢光了，明天再来吧"
-                                        } else {
-                                            it.findViewById<TextView>(R.id.mine_tv_exchange_for_sure_content).text = "积分不足"
-                                        }
-                                    }
-                            )
-                        }.show(supportFragmentManager, tag)
-                    }
-                }
-            }
-        }
-        adapter.setOnExChangeClick(click)
-        mine_store_rv.adapter = adapter
-
-    }
-
-
-    override fun onBackPressed() {
-        val behavior = BottomSheetBehavior.from(mine_sign_fl)
-        if (behavior.state == BottomSheetBehavior.STATE_EXPANDED && !requestPointStore) {
-            behavior.state = BottomSheetBehavior.STATE_COLLAPSED
-        } else {
-            super.onBackPressed()
         }
     }
 }

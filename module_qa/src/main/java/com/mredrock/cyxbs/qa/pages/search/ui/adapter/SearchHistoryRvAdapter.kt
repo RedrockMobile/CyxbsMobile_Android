@@ -26,8 +26,7 @@ class SearchHistoryRvAdapter(
         }
         holder.itemView.iv_history_delete.setOnSingleClickListener {
             val pos = holder.adapterPosition
-            dataList.removeAt(pos)
-            notifyDataSetChanged()
+            removeAtAndNotify(pos)
             onCleanIconClick(pos)
         }
     }

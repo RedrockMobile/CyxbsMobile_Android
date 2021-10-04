@@ -77,6 +77,7 @@ class FeedbackEditActivity :
                 adapter = rvPicAdapter
                 layoutManager = GridLayoutManager(this@FeedbackEditActivity, 3)
             }
+            includeToolBar.tvTitle.text = resources.getText(R.string.mine_feedback_toolbar_title)
         }
     }
 
@@ -184,6 +185,8 @@ class FeedbackEditActivity :
         binding?.chipGroup?.setOnCheckedChangeListener { group, checkedId ->
             label = findViewById<Chip>(checkedId).text as String
         }
+
+        binding?.includeToolBar?.btnBack?.setOnSingleClickListener { finish() }
     }
 
     private fun uri2File(uri: Uri): File {

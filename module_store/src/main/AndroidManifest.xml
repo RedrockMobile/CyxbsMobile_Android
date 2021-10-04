@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    package="com.mredrock.cyxbs.store">
+
+    <application
+        android:theme="@style/AppTheme">
+        <activity
+            android:name=".page.center.ui.activity.StoreCenterActivity"
+            android:theme="@style/AppTheme_NoSplitMotionEvent"/>
+        <activity
+            android:name=".page.record.ui.activity.ExchangeDetailActivity"
+            android:theme="@style/AppTheme_NoSplitMotionEvent"/>
+        <activity
+            android:name=".page.record.ui.activity.StampDetailActivity"
+            android:theme="@style/AppTheme_NoSplitMotionEvent"/>
+        <activity
+            android:name=".page.exchange.ui.activity.ProductExchangeActivity"
+            android:theme="@style/AppTheme_NoSplitMotionEvent"/>
+        <activity
+            android:name=".page.qa.ui.activity.QaActivity"
+            android:theme="@style/AppTheme_NoSplitMotionEvent"/>
+        <activity
+            android:name=".ui.activity.PhotoActivity" />
+    </application>
+
+</manifest>

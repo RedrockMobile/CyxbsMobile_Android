@@ -42,11 +42,13 @@ class HistoryDetailActivity :
             adapter = replyBannerRvAdapter
             layoutManager = GridLayoutManager(this@HistoryDetailActivity, 3)
         }
+
+        binding?.includeToolBar?.tvTitle?.text = resources.getString(R.string.mine_feedback_center_history_icon)
     }
 
     override fun initListener() {
         binding?.apply {
-            includeToolBar.fabBack.setOnSingleClickListener {
+            includeToolBar.btnBack.setOnSingleClickListener {
                 finish()
             }
         }

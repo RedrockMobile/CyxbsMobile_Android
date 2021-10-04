@@ -86,13 +86,4 @@ class ReplyDetailAdapter(
     ) {
         onReplyInnerLongClickEvent.invoke(data, itemView)
     }
-
-    override fun refreshData(dataCollection: Collection<Comment>) {
-        notifyItemRangeRemoved(0, dataList.size)
-        dataList.clear()
-        dataList.addAll(dataCollection)
-        notifyItemRangeInserted(0, dataList.size)
-    }
-
-
 }

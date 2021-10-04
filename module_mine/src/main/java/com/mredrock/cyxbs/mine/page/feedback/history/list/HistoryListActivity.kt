@@ -47,6 +47,8 @@ class HistoryListActivity :
             layoutManager = LinearLayoutManager(this@HistoryListActivity)
         }
 
+        binding?.includeToolBar?.tvTitle?.text = resources.getText(R.string.mine_feedback_toolbar_text)
+
     }
 
     /**
@@ -72,7 +74,7 @@ class HistoryListActivity :
         )
 
         //返回键的点击监听
-        binding?.includeToolBar?.fabBack?.setOnSingleClickListener {
+        binding?.includeToolBar?.btnBack?.setOnSingleClickListener {
             finish()
         }
     }

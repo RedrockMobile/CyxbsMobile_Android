@@ -1,0 +1,111 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources xmlns:tools="http://schemas.android.com/tools">
+
+    <declare-styleable name="TextRollView" tools:ignore="ResourceName">
+        <attr name="view_textSize" format="dimension"/>
+        <attr name="view_textColor" format="color"/>
+        <!--由于 getFont() 方法只支持 API28 以上, 所以字体只能放到 assets 文件夹中.
+            要使用该属性, 请填入 assets 下的路径(如: font/store_my_stamp_number.ttf)-->
+        <attr name="view_textFontFromAssets" format="string"/>
+    </declare-styleable>
+
+    <declare-styleable name="SlideShow" tools:ignore="ResourceName">
+        <!--设置内部 View 的宽度，用于设置了 BaseImgAdapter、BaseViewAdapter 后使用-->
+        <attr name="slide_viewWidth" format="dimension">
+            <enum name="fill_parent" value="-1" />
+            <enum name="match_parent" value="-1" />
+            <enum name="wrap_content" value="-2" />
+        </attr>
+
+        <!--设置内部 View 的高度，用于设置了 BaseImgAdapter、BaseViewAdapter 后使用-->
+        <attr name="slide_viewHeight" format="dimension">
+            <enum name="fill_parent" value="-1" />
+            <enum name="match_parent" value="-1" />
+            <enum name="wrap_content" value="-2" />
+        </attr>
+
+        <!--设置内部 View 的间距-->
+        <attr name="slide_viewMargin" format="dimension"  />
+
+        <!--注意：如果在水平滑动时 viewWidth 不为 match_parent 或者设置了 slide_outPageInterval，那么设置 viewMarginHorizontal 将无效，
+        用于设置了 BaseImgAdapter、BaseViewAdapter 后使用-->
+        <attr name="slide_viewMarginHorizontal" format="dimension"  />
+
+        <!--注意：如果在垂直滑动时 viewHeight 不为 match_parent 或者设置了 slide_outPageInterval，那么设置 viewMarginVertical 将无效，
+        用于设置了 BaseImgAdapter、BaseViewAdapter 后使用-->
+        <attr name="slide_viewMarginVertical" format="dimension" />
+
+        <attr name="slide_imgRadius" format="dimension"/>
+        <attr name="slide_imgLeftTopRadius" format="dimension"/>
+        <attr name="slide_imgRightTopRadius" format="dimension"/>
+        <attr name="slide_imgLeftBottomRadius" format="dimension"/>
+        <attr name="slide_imgRightBottomRadius" format="dimension"/>
+
+        <attr name="slide_imgDefaultColor" format="color"/>
+
+        <attr name="slide_backgroundColor" format="color"/>
+
+        <!--设置内部 ViewPager2 的 orientation-->
+        <attr name="slide_orientation" format="enum">
+            <enum name="horizontal" value="0"/>
+            <enum name="vertical" value="1"/>
+        </attr>
+
+        <!--设置 ViewPager2 内部相邻页面的边距。
+            Orientation 为水平时设置左右的间隔，垂直时设置上下的间隔。-->
+        <attr name="slide_adjacentPageInterval" format="dimension"/>
+        <!--设置 ViewPager2 内部页面与外部页面的边距。
+
+            注意：slide_outPageInterval 必须大于 slide_adjacentPageInterval 的一半。
+
+            注意：设置该值后，slide_imgMarginHorizontal 或者 slide_imgMarginVertical 将无效-->
+        <attr name="slide_outPageInterval" format="dimension"/>
+
+        <!--是否显示指示器, 默认显示, 如果没显示可能是你没有设置 indicators_style-->
+        <attr name="Indicators_isShow" format="boolean"/>
+        <!--指示器圆点半径大小-->
+        <attr name="indicators_circleRadius" format="dimension"/>
+        <!--指示器圆点颜色-->
+        <attr name="indicators_circleColor" format="color"/>
+        <!--指示器两个圆点间的距离值-->
+        <attr name="indicators_intervalMargin" format="dimension"/>
+        <!--指示器圆点背景颜色-->
+        <attr name="indicators_backgroundCircleColor" format="color"/>
+        <!--指示器横幅最小边的宽度(就是指示器在底部是的高度), 改变此值可以改变小圆点高度-->
+        <attr name="indicators_wrapWidth" format="dimension"/>
+        <!--指示器横幅背景颜色-->
+        <attr name="indicators_backgroundColor" format="color"/>
+        <!--指示器样式, 默认为 no_show-->
+        <attr name="indicators_style">
+            <!--不显示-->
+            <enum name="no_show" value="-1"/>
+            <!--接入 IIndicator 接口自己写的指示器，并使用 SlideShow#setYourIndicators() 方法-->
+            <enum name="self_view" value="0"/>
+            <!--继承于 AbstractIndicatorsView 抽象类自己写的指示器，并使用 SlideShow#setYourIndicators() 方法-->
+            <enum name="extend_abstract_indicators" value="1"/>
+            <!--一个简单的平滑指示器-->
+            <enum name="move" value="2"/>
+            <!--一个带有放大动画指示器-->
+            <enum name="zoom" value="3"/>
+            <!--(强烈推荐)一个带有水滴动画的指示器-->
+            <enum name="water_drop" value="4"/>
+            <!--一个无动画的指示器，直接闪现过去-->
+            <enum name="flash" value="5"/>
+        </attr>
+        <!--指示器横幅位置-->
+        <attr name="indicators_outerGravity">
+            <flag name="top" value="0x1" />
+            <flag name="bottom" value="0x2" />
+            <flag name="left" value="0x4" />
+            <flag name="right" value="0x10" />
+            <flag name="vertical_center" value="0x14" />
+            <flag name="horizontal_center" value="0x3" />
+        </attr>
+        <!--指示器圆点位置-->
+        <attr name="indicators_innerGravity">
+            <flag name="front" value="0x1" />
+            <flag name="back" value="0x2" />
+            <flag name="center" value="0x3" />
+        </attr>
+    </declare-styleable>
+</resources>

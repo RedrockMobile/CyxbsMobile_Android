@@ -1,0 +1,129 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+        <variable
+            name="shop"
+            type="com.mredrock.cyxbs.store.bean.StampCenter.Shop" />
+    </data>
+
+    <!--FrameLayout 用于加上视觉要的卡片虚影-->
+    <FrameLayout
+        android:id="@+id/store_fl_stamp_small_shop_background"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@drawable/store_shape_stamp_center_product">
+
+        <!--下面这个 CardView 用于裁剪成圆角-->
+        <androidx.cardview.widget.CardView
+            android:id="@+id/store_cv_stamp_small_shop"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="3.5dp"
+            app:cardBackgroundColor="@color/store_small_shop_cardView_bg"
+            app:cardCornerRadius="8dp"
+            app:cardElevation="0dp"
+            tools:ignore="PxUsage">
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <ImageView
+                    android:id="@+id/store_iv_small_shop_product"
+                    android:layout_width="match_parent"
+                    android:layout_height="0dp"
+                    android:scaleType="centerCrop"
+                    app:layout_constraintDimensionRatio="12:10"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+                    tools:ignore="ContentDescription" />
+
+                <TextView
+                    android:id="@+id/store_tv_small_shop_product_name"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="10dp"
+                    android:layout_marginStart="12dp"
+                    android:text="@{shop.title}"
+                    android:textColor="@color/store_small_shop_product_name"
+                    android:textSize="14sp"
+                    android:textStyle="bold"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/store_iv_small_shop_product"
+                    tools:ignore="HardcodedText"
+                    tools:text="兮哥哥的爱❤"/>
+
+                <TextView
+                    android:id="@+id/store_tv_small_shop_product_stock"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="12dp"
+                    android:layout_marginTop="2dp"
+                    android:alpha="0.4"
+                    android:text="@{`库存: `+shop.amount}"
+                    android:textColor="@color/store_small_shop_product_stock"
+                    android:textSize="11sp"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/store_tv_small_shop_product_name"
+                    tools:ignore="HardcodedText,SmallSp"
+                    tools:text="库存: 无穷大"/>
+
+                <ImageView
+                    android:id="@+id/store_iv_small_shop_stamp"
+                    android:layout_width="18dp"
+                    android:layout_height="18dp"
+                    android:layout_marginStart="12dp"
+                    android:layout_marginTop="10dp"
+                    android:layout_marginBottom="16dp"
+                    android:src="@drawable/store_ic_stamp"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/store_tv_small_shop_product_stock"
+                    app:layout_constraintVertical_bias="1.0"
+                    tools:ignore="ContentDescription" />
+
+                <TextView
+                    android:id="@+id/store_tv_small_shop_price"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="4dp"
+                    android:layout_marginTop="1dp"
+                    android:gravity="bottom"
+                    android:text="@{String.valueOf(shop.price)}"
+                    android:textColor="@color/store_small_shop_price"
+                    android:textSize="14sp"
+                    app:layout_constraintStart_toEndOf="@+id/store_iv_small_shop_stamp"
+                    app:layout_constraintTop_toTopOf="@+id/store_iv_small_shop_stamp"
+                    tools:ignore="HardcodedText"
+                    tools:text="无价"/>
+
+                <!--设置了整个 CardView 的点击事件, 所以这里设置 clickable 为 false-->
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/store_tv_small_shop_product_exchange"
+                    android:layout_width="48dp"
+                    android:layout_height="26dp"
+                    android:layout_marginEnd="12dp"
+                    android:layout_marginBottom="12dp"
+                    android:theme="@style/Theme.MaterialComponents"
+                    android:insetTop="0dp"
+                    android:insetBottom="0dp"
+                    android:padding="0dp"
+                    android:text="兑换"
+                    android:textColor="@color/store_small_shop_product_exchange"
+                    android:textSize="14dp"
+                    android:clickable="false"
+                    app:cornerRadius="28dp"
+                    app:backgroundTint="@color/store_small_shop_btn_exchange"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    tools:ignore="HardcodedText,SpUsage"
+                    style="@style/Widget.MaterialComponents.Button.UnelevatedButton"/>
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
+        </androidx.cardview.widget.CardView>
+    </FrameLayout>
+</layout>

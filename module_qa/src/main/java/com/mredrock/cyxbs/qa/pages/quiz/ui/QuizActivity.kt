@@ -247,7 +247,7 @@ class QuizActivity : BaseViewModelActivity<QuizViewModel>() {
             if (index == nine_grid_view.childCount - 1) {
                 //如果达到选择图片的上限，就ban掉不允许添加图片
                 if (nine_grid_view.childCount <= MAX_SELECTABLE_IMAGE_COUNT) {
-                    this@QuizActivity.selectImageFromAlbum(MAX_SELECTABLE_IMAGE_COUNT)
+                    this@QuizActivity.selectImageFromAlbum(MAX_SELECTABLE_IMAGE_COUNT - nine_grid_view.childCount + 1)
                 } else {
                     BaseApp.context.toast("已达图片数上限")
                 }

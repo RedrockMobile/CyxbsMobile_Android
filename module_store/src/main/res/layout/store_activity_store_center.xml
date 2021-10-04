@@ -1,0 +1,221 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/store_stamp_center_background"
+    android:clipChildren="false"
+    android:orientation="vertical"
+    tools:context="com.mredrock.cyxbs.store.page.center.ui.activity.StoreCenterActivity">
+
+    <include
+        android:id="@+id/store_toolbar_stamp_detail"
+        layout="@layout/store_common_toolbar_no_line" />
+
+    <TextView
+        android:id="@+id/store_tv_stamp_center_title"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="7dp"
+        android:text="@string/store_stamp_center"
+        android:textColor="@color/store_common_title"
+        android:textSize="22sp"
+        android:textStyle="bold"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintHorizontal_bias="0.09867"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.067" />
+
+    <TextView
+        android:id="@+id/store_tv_stamp_number_left_top"
+        android:layout_width="wrap_content"
+        android:layout_height="27dp"
+        android:layout_marginEnd="16dp"
+        android:paddingStart="12dp"
+        android:paddingEnd="12dp"
+        android:background="@drawable/store_shape_stamp_center_right_top_stamp_bg"
+        android:gravity="center_vertical"
+        android:fontFamily="@font/store_din_medium"
+        android:textColor="@color/store_stamp_center_left_top_stamp_text"
+        android:textSize="19dp"
+        app:drawableStartCompat="@drawable/store_ic_stamp"
+        app:layout_constraintBottom_toBottomOf="@+id/store_tv_stamp_center_title"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/store_tv_stamp_center_title"
+        tools:ignore="SpUsage"
+        tools:text=" 9999999999999999999"/>
+
+    <com.mredrock.cyxbs.store.utils.widget.SlideUpLayout
+        android:id="@+id/store_slideUpLayout_stamp_center"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginTop="92dp"
+        android:clipChildren="false"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="160dp"
+            android:clipChildren="false">
+
+            <ImageView
+                android:id="@+id/store_iv_stamp_center_stamp_bg"
+                android:layout_width="0dp"
+                android:layout_height="0dp"
+                android:layout_marginStart="16dp"
+                android:layout_marginEnd="16dp"
+                android:scaleType="fitXY"
+                android:src="@drawable/store_ic_bg_stamp_center_my_stamp"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                tools:ignore="ContentDescription" />
+
+            <TextView
+                android:id="@+id/store_textview"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="16dp"
+                android:layout_marginTop="43dp"
+                android:text="@string/store_stamp_center_my_stamp"
+                android:textColor="@color/store_stamp_center_my_stamp_character"
+                android:textSize="12dp"
+                app:layout_constraintBottom_toTopOf="@+id/store_fl_stamp_number_layout"
+                app:layout_constraintStart_toStartOf="@+id/store_iv_stamp_center_stamp_bg"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintVertical_bias="0.25"
+                tools:ignore="SpUsage" />
+
+            <TextView
+                android:id="@+id/store_tv_stamp_center_detail"
+                android:layout_width="34dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="10dp"
+                android:alpha="0.7"
+                android:gravity="center"
+                android:text="@string/store_stamp_center_detail"
+                android:textColor="@color/store_stamp_center_detail"
+                android:textSize="10dp"
+                app:drawableStartCompat="@drawable/store_ic_stamp_center_detail"
+                app:layout_constraintBottom_toBottomOf="@+id/store_textview"
+                app:layout_constraintStart_toEndOf="@+id/store_textview"
+                app:layout_constraintTop_toTopOf="@+id/store_textview"
+                tools:ignore="HardcodedText,SpUsage" />
+
+            <!--因为需要放大背景的邮票图片, 所以在父 View 开启了
+                clipChildren="false", 这个属性也会使 TextRollView
+                在滚动时一样不被裁剪, 所以需要添加一个 Layout 在外面对
+                TextRollView 绘出边界的区域进行裁剪-->
+            <FrameLayout
+                android:id="@+id/store_fl_stamp_number_layout"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="12dp"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintStart_toStartOf="@+id/store_iv_stamp_center_stamp_bg"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintVertical_bias="0.60">
+
+                <com.mredrock.cyxbs.store.utils.widget.TextRollView
+                    android:id="@+id/store_tv_stamp_number"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    app:view_textColor="@color/store_stamp_center_my_stamp_number"
+                    app:view_textFontFromAssets="font/store_my_stamp_number.ttf"
+                    app:view_textSize="48dp"
+                    tools:ignore="HardcodedText,SpUsage" />
+
+            </FrameLayout>
+
+            <TextView
+                android:id="@+id/store_tv_stamp_center_hint"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="16dp"
+                android:alpha="0.7"
+                android:textColor="@color/store_stamp_center_get_remind"
+                android:textSize="12dp"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintStart_toStartOf="@+id/store_iv_stamp_center_stamp_bg"
+                app:layout_constraintTop_toBottomOf="@+id/store_fl_stamp_number_layout"
+                app:layout_constraintVertical_bias="0.41000003"
+                tools:ignore="SpUsage"
+                tools:text="你还有待领取的商品，请尽快领取"/>
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical">
+
+            <com.google.android.material.tabs.TabLayout
+                android:id="@+id/store_tl_stamp_center"
+                android:layout_width="match_parent"
+                android:layout_height="50dp"
+                android:layout_marginTop="10dp"
+                android:backgroundTint="@android:color/transparent"
+                android:theme="@style/Theme.MaterialComponents"
+                app:tabGravity="fill"
+                app:tabIndicator="@drawable/store_ic_tab_indicator"
+                app:tabIndicatorColor="@android:color/transparent"
+                app:tabIndicatorFullWidth="false"
+                app:tabIndicatorHeight="3dp"
+                app:tabMaxWidth="180dp"
+                app:tabMinWidth="160dp"
+                app:tabMode="fixed"
+                app:tabPaddingEnd="40dp"
+                app:tabPaddingStart="40dp"
+                app:tabRippleColor="@android:color/transparent"
+                app:tabTextAppearance="@style/tab_style"
+                app:tabTextColor="@color/store_stamp_center_tabLayout_text" />
+
+            <androidx.cardview.widget.CardView
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                app:cardBackgroundColor="@color/store_stamp_center_cardView_background"
+                app:cardCornerRadius="16dp"
+                app:cardElevation="1dp"
+                app:cardMaxElevation="6dp"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="@+id/store_tl_stamp_center"
+                app:layout_constraintStart_toStartOf="@+id/store_tl_stamp_center"
+                app:layout_constraintTop_toBottomOf="@+id/store_tl_stamp_center">
+
+                <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
+                    android:id="@+id/store_refreshLayout_stamp_center"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:paddingBottom="8dp"
+                    android:paddingTop="2dp">
+
+                    <androidx.viewpager2.widget.ViewPager2
+                        android:id="@+id/store_vp_stamp_center"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent" />
+
+                </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
+
+            </androidx.cardview.widget.CardView>
+
+        </LinearLayout>
+
+    </com.mredrock.cyxbs.store.utils.widget.SlideUpLayout>
+
+    <!--下面的 View 用于遮挡底部 CardView 的圆角-->
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="8dp"
+        android:background="@color/store_stamp_center_cardView_background"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

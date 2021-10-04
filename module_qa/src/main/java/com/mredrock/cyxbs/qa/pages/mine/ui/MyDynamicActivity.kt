@@ -213,7 +213,7 @@ class MyDynamicActivity : BaseViewModelActivity<MyDynamicViewModel>() {
                         it.commentCount.toString()
                 }
             }
-            dynamicListRvAdapter.notifyDataSetChanged()
+            dynamicListRvAdapter.notifyItemChanged(dynamicListRvAdapter.curSharedItemPosition, "")
         }
     }
 }

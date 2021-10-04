@@ -10,46 +10,40 @@
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:background="@color/mine_feedback_bg_color"
         android:fillViewport="true"
-        android:background="@color/mine_feedback_bg_color">
+        android:fitsSystemWindows="true">
 
         <RelativeLayout
             android:id="@+id/mine_relativelayout2"
             android:layout_width="match_parent"
-            android:layout_height="80dp"
+            android:layout_height="wrap_content"
             android:orientation="horizontal"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent">
 
-            <View
-                android:id="@+id/v_underline"
-                android:layout_width="match_parent"
-                android:layout_height="1dp"
-                android:layout_alignParentBottom="true"
-                android:background="@color/mine_feedback_divider_color" />
-
-            <com.google.android.material.floatingactionbutton.FloatingActionButton
+            <ImageButton
                 android:id="@+id/fab_center_back"
-                android:layout_width="wrap_content"
-                android:layout_height="match_parent"
-                android:layout_alignParentBottom="true"
+                android:layout_width="27dp"
+                android:layout_height="27dp"
+                android:layout_alignParentStart="true"
+                android:layout_centerInParent="true"
+                android:layout_gravity="center_vertical"
                 android:layout_marginStart="8dp"
                 android:layout_marginBottom="3dp"
-                android:background="@color/common_transparent_background"
-                android:backgroundTint="@color/common_transparent_background"
+                android:background="?attr/selectableItemBackgroundBorderless"
                 android:contentDescription="@string/mine_stamp_back_iv"
-                app:borderWidth="0dp"
-                app:elevation="0dp"
-                app:fabCustomSize="40dp"
-                app:pressedTranslationZ="13dp"
+                android:padding="3dp"
+                android:scaleType="fitCenter"
                 app:srcCompat="@drawable/mine_ic_center_back" />
 
             <TextView
                 android:id="@+id/tv_edit_toolbar"
                 android:layout_width="wrap_content"
                 android:layout_height="40dp"
-                android:layout_alignParentBottom="true"
+                android:layout_centerVertical="true"
+                android:layout_gravity="center_vertical"
                 android:layout_marginStart="0dp"
                 android:layout_marginBottom="3dp"
                 android:layout_toEndOf="@id/fab_center_back"
@@ -59,40 +53,44 @@
                 android:textSize="22sp"
                 android:textStyle="bold" />
 
-            <ImageView
+            <ImageButton
                 android:id="@+id/iv_history"
                 android:layout_width="wrap_content"
                 android:layout_height="40dp"
                 android:layout_alignParentEnd="true"
-                android:layout_alignParentBottom="true"
+                android:layout_centerVertical="true"
+                android:layout_gravity="end"
                 android:layout_marginEnd="16dp"
                 android:layout_marginBottom="3dp"
+                android:background="?attr/selectableItemBackgroundBorderless"
                 android:contentDescription="@string/mine_feedback_center_history_icon"
                 android:gravity="center_vertical"
                 android:src="@drawable/mine_ic_feedback_center_history" />
 
         </RelativeLayout>
 
-        <androidx.constraintlayout.widget.Guideline
-            android:id="@+id/mine_guideline22"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            app:layout_constraintGuide_percent="0.18" />
-
         <TextView
             android:id="@+id/tv_normal_question"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="16dp"
+            android:layout_marginTop="24dp"
             android:text="@string/mine_feedback_center_normal_question"
             android:textColor="@color/mine_feedback_center_normal_question"
             android:textSize="20sp"
             android:textStyle="bold"
-            app:layout_constraintBottom_toTopOf="@+id/mine_guideline22"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0"
-            app:layout_constraintStart_toStartOf="parent" />
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/v_underline" />
+
+        <View
+            android:id="@+id/v_underline"
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:layout_alignParentBottom="true"
+            android:background="@color/mine_feedback_divider_color"
+            app:layout_constraintTop_toBottomOf="@id/mine_relativelayout2" />
 
         <androidx.constraintlayout.widget.Guideline
             android:id="@+id/mine_guideline23"
@@ -148,7 +146,7 @@
             app:layout_constraintBottom_toTopOf="@+id/mine_guideline23"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="@+id/mine_guideline22" />
+            app:layout_constraintTop_toBottomOf="@+id/tv_normal_question" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

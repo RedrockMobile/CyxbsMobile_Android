@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:paddingStart="16dp"
+    android:paddingEnd="16dp">
+
+    <ImageView
+        android:id="@+id/store_iv_fragment_stamp_task"
+        android:layout_width="157dp"
+        android:layout_height="96dp"
+        android:layout_marginTop="100dp"
+        android:scaleType="fitXY"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:ignore="ContentDescription"
+        tools:src="@drawable/store_ic_no_internet"/>
+
+    <TextView
+        android:id="@+id/store_tv_fragment_stamp_task"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="18dp"
+        android:textColor="@color/store_stamp_detail_common_null_record_text"
+        android:textSize="12sp"
+        app:layout_constraintEnd_toEndOf="@+id/store_iv_fragment_stamp_task"
+        app:layout_constraintStart_toStartOf="@+id/store_iv_fragment_stamp_task"
+        app:layout_constraintTop_toBottomOf="@+id/store_iv_fragment_stamp_task" />
+
+    <!--这个背景只是用的 tools:listitem 属性, 只是起展示作用, 方便你寻找-->
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/store_rv_fragment_stamp_task"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:background="@color/store_stamp_center_cardView_background"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:listitem="@layout/store_recycler_item_stamp_task_list"/>
+
+</androidx.constraintlayout.widget.ConstraintLayout>

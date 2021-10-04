@@ -45,15 +45,14 @@ class EmptyRoomViewModel : BaseViewModel() {
         }
         status.value = LOADING
         d?.dispose()
-        d = apiService.getEmptyRooms(week, weekday, building, tag)
+        d = apiService.getEmpyRooms(week, weekday, building, tag)
                 .delay(300, TimeUnit.MILLISECONDS)
-                .mapOrThrowApiException()
                 .setSchedulers()
                 .safeSubscribeBy(
                         onNext = {
                             status.value = FINISH
                             val converter = EmptyConverter()
-                            converter.setEmptyData(it)
+                            converter.setEmptyData(it.data)
                             rooms.value = converter.convert()
                         },
                         onError = {

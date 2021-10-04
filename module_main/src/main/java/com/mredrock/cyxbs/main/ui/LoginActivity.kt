@@ -20,14 +20,19 @@ import com.alibaba.android.arouter.facade.annotation.Autowired
 import com.alibaba.android.arouter.facade.annotation.Route
 import com.alibaba.android.arouter.launcher.ARouter
 import com.mredrock.cyxbs.api.account.IAccountService
+import com.mredrock.cyxbs.common.BaseApp
 import com.mredrock.cyxbs.common.bean.LoginConfig
 import com.mredrock.cyxbs.common.component.CyxbsToast
 import com.mredrock.cyxbs.common.config.ACTIVITY_CLASS
+import com.mredrock.cyxbs.common.config.FIRST_TIME_OPEN
 import com.mredrock.cyxbs.common.config.IS_EXIT_LOGIN
 import com.mredrock.cyxbs.common.config.MINE_FORGET_PASSWORD
 import com.mredrock.cyxbs.common.mark.EventBusLifecycleSubscriber
 import com.mredrock.cyxbs.common.service.ServiceManager
+import com.mredrock.cyxbs.common.ui.BaseActivity
 import com.mredrock.cyxbs.common.ui.BaseViewModelActivity
+import com.mredrock.cyxbs.common.utils.extensions.defaultSharedPreferences
+import com.mredrock.cyxbs.common.utils.extensions.editor
 import com.mredrock.cyxbs.main.MAIN_LOGIN
 import com.mredrock.cyxbs.main.R
 import com.mredrock.cyxbs.main.adapter.UserAgreementAdapter
@@ -85,19 +90,7 @@ class LoginActivity : BaseViewModelActivity<LoginViewModel>(), EventBusLifecycle
             }
         }
         main_user_agreement.setOnClickListener {
-            val materialDialog = Dialog(this)
-            val view = LayoutInflater.from(this).inflate(R.layout.main_user_agreement_dialog, materialDialog.window?.decorView as ViewGroup, false)
-            materialDialog.setContentView(view)
-            materialDialog.window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
-            val userAgreementAdapter = UserAgreementAdapter(viewModel.userAgreementList)
-            view.rv_content.adapter = userAgreementAdapter
-            view.rv_content.layoutManager = LinearLayoutManager(this@LoginActivity)
-            if (viewModel.userAgreementList.isNotEmpty()) view.loader.visibility = View.GONE
-            materialDialog.show()
-            viewModel.getUserAgreement {
-                userAgreementAdapter.notifyDataSetChanged()
-                view.loader.visibility = View.GONE
-            }
+            showUserAgreement()
         }
         tv_tourist_mode_enter.setOnClickListener {
             if (!viewModel.userAgreementIsCheck) {
@@ -121,6 +114,15 @@ class LoginActivity : BaseViewModelActivity<LoginViewModel>(), EventBusLifecycle
         //跳转到忘记密码模块
         tv_main_forget_password.setOnClickListener {
             ARouter.getInstance().build(MINE_FORGET_PASSWORD).navigation()
+        }
+
+        //上线需要
+        if (BaseApp.context.defaultSharedPreferences.getBoolean(FIRST_TIME_OPEN, true)){
+            showUserAgreement()
+            BaseApp.context.defaultSharedPreferences.editor {
+                putBoolean(FIRST_TIME_OPEN, false)
+                commit()
+            }
         }
     }
 
@@ -169,6 +171,22 @@ class LoginActivity : BaseViewModelActivity<LoginViewModel>(), EventBusLifecycle
                 View.VISIBLE -> View.GONE
                 else -> View.VISIBLE
             }
+        }
+    }
+
+    private fun showUserAgreement(){
+        val materialDialog = Dialog(this)
+        val view = LayoutInflater.from(this).inflate(R.layout.main_user_agreement_dialog, materialDialog.window?.decorView as ViewGroup, false)
+        materialDialog.setContentView(view)
+        materialDialog.window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
+        val userAgreementAdapter = UserAgreementAdapter(viewModel.userAgreementList)
+        view.rv_content.adapter = userAgreementAdapter
+        view.rv_content.layoutManager = LinearLayoutManager(this@LoginActivity)
+        if (viewModel.userAgreementList.isNotEmpty()) view.loader.visibility = View.GONE
+        materialDialog.show()
+        viewModel.getUserAgreement {
+            userAgreementAdapter.notifyDataSetChanged()
+            view.loader.visibility = View.GONE
         }
     }
 
