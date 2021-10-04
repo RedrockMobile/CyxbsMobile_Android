@@ -17,6 +17,7 @@ import com.google.gson.reflect.TypeToken
 import com.mredrock.cyxbs.common.BaseApp
 import com.mredrock.cyxbs.common.config.TODO_WEEK_MONTH_ARRAY
 import com.mredrock.cyxbs.common.config.TODO_YEAR_OF_WEEK_MONTH_ARRAY
+import com.mredrock.cyxbs.common.utils.LogUtils
 import com.mredrock.cyxbs.common.utils.extensions.defaultSharedPreferences
 import com.mredrock.cyxbs.common.utils.extensions.editor
 import com.mredrock.cyxbs.common.utils.extensions.toast
@@ -330,9 +331,10 @@ private fun getRealWeek(rawWeekNum: Int): Int =
 fun isOutOfTime(todo: Todo): Boolean {
     val repeatString = repeatMode2RemindTime(todo.remindMode)
     //表示永远不会提醒
-    if (repeatString == "") return false
+    if (todo.remindMode.notifyDateTime.isNullOrEmpty())return false
+    LogUtils.d("RayleighZ", "notifyDateTime = ${todo.remindMode.notifyDateTime}")
     //能够走到这里，前四位一定是年份，就可以直接sub前四位下来
-    val repeatYear = todo.remindMode.notifyDateTime?.subSequence(0, 4) 
+    val repeatYear = todo.remindMode.notifyDateTime?.subSequence(0, 4)
         ?:
     Calendar.getInstance().get(Calendar.YEAR).toString()
     //这里已经是经过处理的提醒时间，所以是不含年份的

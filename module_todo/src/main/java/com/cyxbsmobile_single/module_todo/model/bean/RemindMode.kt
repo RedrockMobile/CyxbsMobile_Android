@@ -18,7 +18,7 @@ data class RemindMode(
     var week: ArrayList<Int>,
     @SerializedName("day")
     var day: ArrayList<Int>,
-    @SerializedName("notify_date_time")
+    @SerializedName("notify_datetime")
     var notifyDateTime: String?
 ): Serializable{
     companion object{

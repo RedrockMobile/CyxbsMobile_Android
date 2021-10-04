@@ -46,7 +46,6 @@ class TodoModel {
                 .subscribe(
                     ExecuteOnceObserver(
                         onExecuteOnceNext = {
-                            LogUtils.d("RayleighZ", "TodoList = $it")
                             onSuccess(it)
                         }
                     )
@@ -215,20 +214,27 @@ class TodoModel {
                             .setSchedulers()
                             .safeSubscribeBy(
                                 onNext = { inner ->
-                                    //排一下序
-                                    inner.data.todoArray = inner.data.todoArray.sorted()
-                                    onSuccess(inner.data.todoArray)
-                                    setLastModifyTime(inner.data.syncTime)
-                                    setLastSyncTime(inner.data.syncTime)
-                                    //Insert到本地数据库
-                                    Observable.just(inner.data.todoArray)
-                                        .map { list ->
-                                            TodoDatabase.INSTANCE
-                                                .todoDao()
-                                                .insertTodoList(list)
+                                    if (inner.data.todoArray.isNullOrEmpty()){
+                                        //如果拿到的是空的，会直接执行onError
+                                        onError.invoke()
+                                    } else {
+                                        //排一下序
+                                        inner.data.todoArray?.let { todoArray ->
+                                            inner.data.todoArray = todoArray.sorted()
+                                            onSuccess(todoArray)
+                                            setLastModifyTime(inner.data.syncTime)
+                                            setLastSyncTime(inner.data.syncTime)
+                                            //Insert到本地数据库
+                                            Observable.just(todoArray)
+                                                .map { list ->
+                                                    TodoDatabase.INSTANCE
+                                                        .todoDao()
+                                                        .insertTodoList(list)
+                                                }
+                                                .setSchedulers()
+                                                .safeSubscribeBy { }
                                         }
-                                        .setSchedulers()
-                                        .safeSubscribeBy { }
+                                    }
                                 }
                             )
                     } else {
@@ -280,7 +286,7 @@ class TodoModel {
                                         },
 
                                         onError = {
-
+                                            onError.invoke()
                                         }
                                     )
                             } else {
@@ -312,7 +318,9 @@ class TodoModel {
                         }.setSchedulers()
                         .safeSubscribeBy { }
                     todoList.clear()
-                    todoList.addAll(it.data.todoArray)
+                    it.data.todoArray?.let { list ->
+                        todoList.addAll(list)
+                    }
                     //本地需要做一次排序
                     todoList.sort()
                     onSuccess.invoke(todoList.toList())
