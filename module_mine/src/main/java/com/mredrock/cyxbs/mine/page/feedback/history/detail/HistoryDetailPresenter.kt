@@ -25,13 +25,16 @@ class HistoryDetailPresenter(private val id: Long, private val isReply: Boolean)
                 it.data
             }.safeSubscribeBy(
                 onNext = {
-                    vm?.setIsReply(false)
                     vm?.setFeedback(Feedback(DateUtils.strToLong(it.feedback.updatedAt),
                         it.feedback.title,
                         it.feedback.content,
                         it.feedback.type.replace("\n", ""),
                         it.feedback.pictures ?: listOf()))
-                    val last = it.reply ?: return@safeSubscribeBy
+                    val last = it.reply
+                    if (last == null){
+                        vm?.setIsReply(false)
+                        return@safeSubscribeBy
+                    }
                     //val last = it.reply?.last() ?: return@safeSubscribeBy
                     vm?.setIsReply(true)
                     vm?.setReply(Reply(DateUtils.strToLong(it.feedback.updatedAt),last.content,last.urls))
