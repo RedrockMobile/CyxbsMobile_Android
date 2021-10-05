@@ -31,6 +31,7 @@ import com.mredrock.cyxbs.common.utils.extensions.*
 import com.mredrock.cyxbs.mine.R
 import com.mredrock.cyxbs.mine.page.mine.widget.BlurBitmap
 import com.yalantis.ucrop.UCrop
+import kotlinx.android.synthetic.main.mine_activity_homepage_head.view.*
 import java.io.File
 import java.io.IOException
 
@@ -86,6 +87,16 @@ class HomepageActivity : BaseViewModelActivity<MineViewModel>() {
 
     fun initData() {
         alphaMineView = dataBinding.clPersonalInformation.alpha
+
+        viewModel._userInfo.observeForever {
+            dataBinding.clPersonalInformation.tv_id_number.text = it.data.uid.toString()
+            dataBinding.clPersonalInformation.tv_grade.text = it.data.grade.toString()
+            dataBinding.clPersonalInformation.mine_tv_constellation.text = it.data.constellation
+            dataBinding.clPersonalInformation.tv_sex.text = it.data.gender
+            dataBinding.clPersonalInformation.tv_signature.text = it.data.introduction
+        }
+
+        viewModel.getUserInfo()
     }
 
 
@@ -99,6 +110,8 @@ class HomepageActivity : BaseViewModelActivity<MineViewModel>() {
         TabLayoutMediator(dataBinding.mineTablayout, dataBinding.vp2Mine, true) { tab, position ->
             tab.text = tabNames[position]
         }.attach()
+
+
     }
 
 

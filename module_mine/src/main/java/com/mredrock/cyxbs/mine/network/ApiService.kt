@@ -220,4 +220,18 @@ interface ApiService {
     //仿ping接口，用于检测magipoke系列接口状态
     @GET("magipoke/ping")
     fun pingMagipoke(): Observable<RedrockApiStatus>
+
+    /**
+     * 查询用户信息
+     */
+        @GET("/magipoke/person/info")
+    fun getPersonInfo(@Query("redid")redId:String):Observable<RedrockApiWrapper<UserInfo>>
+    /**
+     * 查询用户信息
+     */
+    @GET("/magipoke/person/info")
+    fun getPersonInfo():Observable<UserInfo>
+
+
+
 }
