@@ -226,11 +226,19 @@ interface ApiService {
      */
         @GET("/magipoke/person/info")
     fun getPersonInfo(@Query("redid")redId:String):Observable<RedrockApiWrapper<UserInfo>>
+
     /**
      * 查询用户信息
      */
     @GET("/magipoke/person/info")
     fun getPersonInfo():Observable<UserInfo>
+
+    /**
+     * 更新个人用户界面的背景图片
+     */
+    @Multipart
+    @PUT("/magipoke/person/background_url")
+    fun changePersonalBackground(@Part file:MultipartBody.Part): Observable<RedrockApiStatus>
 
 
 

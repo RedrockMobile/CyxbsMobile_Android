@@ -2,6 +2,7 @@ package com.mredrock.cyxbs.mine.page.mine.ui.activity
 
 
 import android.Manifest
+import android.animation.Animator
 import android.annotation.SuppressLint
 import android.app.Activity
 import android.content.Intent
@@ -17,12 +18,20 @@ import com.mredrock.cyxbs.mine.page.mine.adapter.MineAdapter
 import com.mredrock.cyxbs.mine.page.mine.ui.fragment.IdentityFragment
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
+import android.graphics.drawable.Drawable
 import android.net.Uri
 import android.os.Environment
 import android.provider.MediaStore
+import android.view.View
+import android.view.ViewAnimationUtils.createCircularReveal
 import androidx.core.content.ContextCompat
 import com.afollestad.materialdialogs.MaterialDialog
 import com.afollestad.materialdialogs.list.listItems
+import com.bumptech.glide.Glide
+import com.bumptech.glide.RequestBuilder
+import com.bumptech.glide.request.RequestListener
+import com.bumptech.glide.request.target.CustomTarget
+import com.bumptech.glide.request.transition.Transition
 import com.mredrock.cyxbs.api.account.IAccountService
 import com.mredrock.cyxbs.api.account.IUserService
 import com.mredrock.cyxbs.common.config.DIR_PHOTO
@@ -30,8 +39,13 @@ import com.mredrock.cyxbs.common.service.ServiceManager
 import com.mredrock.cyxbs.common.utils.extensions.*
 import com.mredrock.cyxbs.mine.R
 import com.mredrock.cyxbs.mine.page.mine.widget.BlurBitmap
+
+
+import com.mredrock.cyxbs.store.utils.transformer.ScaleInTransformer
+
 import com.yalantis.ucrop.UCrop
 import kotlinx.android.synthetic.main.mine_activity_homepage_head.view.*
+import okhttp3.MultipartBody
 import java.io.File
 import java.io.IOException
 
@@ -60,6 +74,10 @@ class HomepageActivity : BaseViewModelActivity<MineViewModel>() {
     private var mFinalBitmap: Bitmap? = null
 
     /**
+     * 用户的昵称
+     */
+    private var nickname = "鱼鱼鱼鱼鱼鱼鱼鱼鱼"
+    /**
      * 相册图片的地址
      */
     private val fileDir by lazy {
@@ -81,7 +99,7 @@ class HomepageActivity : BaseViewModelActivity<MineViewModel>() {
         initData()
         initView()
         initListener()
-        initBlurBitmap(null)
+
     }
 
 
@@ -91,9 +109,19 @@ class HomepageActivity : BaseViewModelActivity<MineViewModel>() {
         viewModel._userInfo.observeForever {
             dataBinding.clPersonalInformation.tv_id_number.text = it.data.uid.toString()
             dataBinding.clPersonalInformation.tv_grade.text = it.data.grade.toString()
-            dataBinding.clPersonalInformation.mine_tv_constellation.text = it.data.constellation
+            if (it.data.constellation.equals("")){
+                dataBinding.clPersonalInformation.mine_tv_constellation.text="十三星座"
+            }else{
+                dataBinding.clPersonalInformation.mine_tv_constellation.text = it.data.constellation
+            }
+
             dataBinding.clPersonalInformation.tv_sex.text = it.data.gender
+            nickname =  it.data.nickname
+            dataBinding.clPersonalInformation.tv_name.text = nickname
             dataBinding.clPersonalInformation.tv_signature.text = it.data.introduction
+        loadBitmap(it.data.backgroundUrl){
+            initBlurBitmap(it)
+        }
         }
 
         viewModel.getUserInfo()
@@ -107,6 +135,8 @@ class HomepageActivity : BaseViewModelActivity<MineViewModel>() {
         val identityFragment = IdentityFragment()
         val list = arrayListOf<Fragment>(dynamicFragment, identityFragment)
         dataBinding.vp2Mine.adapter = MineAdapter(this, list)
+        dataBinding.vp2Mine.
+            setPageTransformer(ScaleInTransformer())
         TabLayoutMediator(dataBinding.mineTablayout, dataBinding.vp2Mine, true) { tab, position ->
             tab.text = tabNames[position]
         }.attach()
@@ -131,7 +161,7 @@ class HomepageActivity : BaseViewModelActivity<MineViewModel>() {
                 if (dataBinding.tvMine.text == "个人主页") {
                     dataBinding.ivMineBackgroundNormal.alpha =0f
                     dataBinding.btMineBack.setImageResource(R.drawable.mine_ic_iv_back_black_arrow)
-                    dataBinding.tvMine.text = "鱼鱼鱼鱼鱼鱼鱼鱼鱼"
+                    dataBinding.tvMine.text = nickname
                     dataBinding.tvMine.setTextColor(getResources().getColor(R.color.mine_black))
                 }
                 dataBinding.tvMine.alpha = -alpha
@@ -139,7 +169,7 @@ class HomepageActivity : BaseViewModelActivity<MineViewModel>() {
                 dataBinding.btMineBack.alpha = -alpha
                 dataBinding.ivMineBackgroundBlur.alpha = 1f + alpha
             } else {
-                if (dataBinding.tvMine.text == "鱼鱼鱼鱼鱼鱼鱼鱼鱼") {
+                if (dataBinding.tvMine.text == nickname) {
                     dataBinding.tvMine.text = "个人主页"
                     dataBinding.btMineBack.setImageResource(R.drawable.mine_ic_bt_back_arrow)
                     dataBinding.tvMine.setTextColor(getResources().getColor(R.color.mine_white))
@@ -155,6 +185,15 @@ class HomepageActivity : BaseViewModelActivity<MineViewModel>() {
         dataBinding.ivMineBackgroundNormal.setOnClickListener {
             changeBackground()
         }
+
+        viewModel._isChangeSuccess.observeForever {
+            if (it==true){
+                toast("恭喜切换背景图片成功!")
+            }else{
+                toast("抱歉 似乎出了一点小问题!")
+            }
+        }
+
     }
 
 
@@ -172,9 +211,37 @@ class HomepageActivity : BaseViewModelActivity<MineViewModel>() {
             mFinalBitmap = BlurBitmap.blur(this, mTempBitmap!!)
         }
 
-        // 填充模糊后的图像和原图
-        dataBinding.ivMineBackgroundBlur?.setImageBitmap(mFinalBitmap)
-        dataBinding.ivMineBackgroundNormal.setImageBitmap(mTempBitmap)
+      loadBacgroundAnmator()
+
+
+    }
+
+    /**
+     * 背景图片的加载动画
+     */
+    fun loadBacgroundAnmator(){
+        val p= createCircularReveal(
+            dataBinding.ivMineBackgroundNormal, 0, 0, 0f, dataBinding.ivMineBackgroundNormal.height.toFloat()*1.4f)
+        p.duration = 750
+        p.addListener(object : Animator.AnimatorListener{
+            override fun onAnimationStart(animation: Animator?) {
+                dataBinding.ivMineBackgroundNormal.setImageBitmap(mTempBitmap)
+            }
+
+            override fun onAnimationEnd(animation: Animator?) {
+                dataBinding.ivMineBackgroundBlur?.setImageBitmap(mFinalBitmap)
+            }
+
+            override fun onAnimationCancel(animation: Animator?) {
+
+            }
+
+            override fun onAnimationRepeat(animation: Animator?) {
+
+            }
+
+        })
+        p.start()
     }
 
 
@@ -279,9 +346,9 @@ class HomepageActivity : BaseViewModelActivity<MineViewModel>() {
         }
 
         try {
-//            val fileBody = MultipartBody.Part.createFormData("fold", destinationFile.name, destinationFile.getRequestBody())
-//            val numBody = userService.getStuNum().toRequestBody("multipart/form-data".toMediaTypeOrNull())
-//            viewModel.uploadAvatar(numBody, fileBody)
+
+            val fileBody = MultipartBody.Part.createFormData("pic", destinationFile.name, destinationFile.getRequestBody())
+           viewModel.changePersonalBackground(fileBody)
         } catch (e: IOException) {
             e.printStackTrace()
             toast("图片加载失败")
@@ -317,42 +384,38 @@ var isSetBackground = false
      * 这一个方法用于改变在滑动的过程中 tab的变化过程
      */
     fun tabChange(pregress: Float) {
-        Log.e("wxtagbb","(HomepageActivity.kt:305)->>$pregress  isSetBackground$isSetBackground")
+
         if (pregress == -1f&&!isSetBackground) {
-            Log.e("wxtagmm","(HomepageActivity.kt:311)->上 ")
+
             isSetBackground = true
             dataBinding.mineTablayout.background =
                 resources.getDrawable(R.drawable.mine_layer_list_shape_shadow)
         }
         if (isSetBackground&&pregress>-1f){
-           Log.e("wxtagmm","(HomepageActivity.kt:311)->>下 ")
+
             dataBinding.mineTablayout.background =
                 resources.getDrawable(R.drawable.mine_shape_ll_background)
             isSetBackground=false
         }
 
-//        if (pregress >= 0) {
-////            x= dp2px((1-pregress)*4).toFloat()
-//////          Log.e("wxtaddg","(HomepageActivity.kt:311)->>x=$x ")
-////        val p=    dataBinding.mineTablayout.background
-////
-//////            dataBinding.mineTablayout.background = s
-////            val s= dataBinding.mineTablayout.layoutParams//LinearLayout.LayoutParams(dataBinding.mineTablayout.width,dataBinding.btMineBack.height+x)
-////          dataBinding.mineTablayout.bottomPadding = x.toInt()
-////          //  dataBinding.mineTablayout.layoutParams = s
-////            if (x>=3.5){
-////                dataBinding.mineTablayout.background = resources.getDrawable(R.drawable.mine_shape_shadow)
-////            }
-////            val p = dataBinding.mineTablayout.background as GradientDrawable
-////            val v = arrayListOf(1f,1f,1f,1f)
-////            p.cornerRadius = v
-////            p.cornerRadius = dp2px(20f)*(1-pregress)
-////            dataBinding.mineTablayout.background = p
-////        }else{
-////
-////        }
-//
-//        }
+    }
 
+    /**
+     * 加载网络请求的Bitmap图片出来
+     */
+    fun loadBitmap(url: String, success: (Bitmap) -> Unit){
+        Glide.with(this) // context，可添加到参数中
+            .asBitmap()
+            .load(url)
+            .into(object : CustomTarget<Bitmap>() {
+                override fun onResourceReady(resource: Bitmap, transition: Transition<in Bitmap>?) {
+                    // 成功返回 Bitmap
+                    success.invoke(resource)
+                }
+
+                override fun onLoadCleared(placeholder: Drawable?) {
+                    initBlurBitmap(null)
+                }
+            })
     }
 }

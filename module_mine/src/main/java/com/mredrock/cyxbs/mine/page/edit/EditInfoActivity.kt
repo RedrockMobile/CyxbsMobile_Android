@@ -499,6 +499,7 @@ class EditInfoActivity
 
         try {
             val fileBody = MultipartBody.Part.createFormData("fold", destinationFile.name, destinationFile.getRequestBody())
+
             val numBody = userService.getStuNum().toRequestBody("multipart/form-data".toMediaTypeOrNull())
             viewModel.uploadAvatar(numBody, fileBody)
         } catch (e: IOException) {
