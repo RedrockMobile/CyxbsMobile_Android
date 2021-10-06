@@ -5,13 +5,18 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
+import android.widget.ImageView
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
-import com.mredrock.cyxbs.common.utils.extensions.setImageFromUrl
-import com.mredrock.cyxbs.common.utils.extensions.setOnSingleClickListener
+import com.mredrock.cyxbs.common.BaseApp
+import com.mredrock.cyxbs.common.config.COURSE_SHOW_STATE
+import com.mredrock.cyxbs.common.skin.SkinManager
+import com.mredrock.cyxbs.common.utils.extensions.*
 import com.mredrock.cyxbs.skin.R
 import com.mredrock.cyxbs.skin.bean.SkinInfo
 import com.mredrock.cyxbs.skin.component.RoundRectImageView
+import com.mredrock.cyxbs.skin.widget.SwitchPlus
+import kotlinx.android.synthetic.main.skin_recycle_item.*
 import kotlinx.android.synthetic.main.skin_recycle_item.view.*
 
 class SkinRvAdapter(val context: Context, private val mList: MutableList<SkinInfo.Data>) : RecyclerView.Adapter<SkinRvAdapter.ViewHolder>() {
@@ -19,10 +24,10 @@ class SkinRvAdapter(val context: Context, private val mList: MutableList<SkinInf
     private var onItemClickListener: OnItemClickListener? = null
 
     inner class ViewHolder(view: View) : RecyclerView.ViewHolder(view) {
-        val imageView: RoundRectImageView = view.skin_iv_recycle_item
+        val imageView: ImageView = view.skin_iv_recycle_item
         val mNameTextView: TextView = view.skin_tv_name_item
         val mPriceTextView: TextView = view.skin_tv_price_item
-        val button: Button = view.skin_btn_use_item
+        val switch: SwitchPlus = view.skin_switch_use_item
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
@@ -40,10 +45,26 @@ class SkinRvAdapter(val context: Context, private val mList: MutableList<SkinInf
         holder.imageView.setImageFromUrl(skinBean.skinCover)
         holder.mNameTextView.text = skinBean.skinName
         holder.mPriceTextView.text = skinBean.skinPrice
-        holder.button.setOnSingleClickListener {
+        holder.switch.thumbDrawable = SkinManager.getDrawable("skin_selector_thumb", R.drawable.skin_selector_thumb)
+        holder.switch.trackDrawable = SkinManager.getDrawable("skin_selector_switch_track", R.drawable.skin_selector_switch_track)
+        holder.switch.setOnSingleClickListener {
             onItemClickListener?.onItemClick(position)
         }
-
+        SkinManager.addSkinUpdateListener(object : SkinManager.SkinUpdateListener {
+            override fun onSkinUpdate() {
+                holder.switch.thumbDrawable = SkinManager.getDrawable("skin_selector_thumb", R.drawable.skin_selector_thumb)
+                holder.switch.trackDrawable = SkinManager.getDrawable("skin_selector_switch_track", R.drawable.skin_selector_switch_track)
+                holder.switch.isChecked = context.sharedPreferences("skin").getInt("now_skin",0) == position
+            }
+        })
+        holder.switch.setOnCheckedChangeListener { _, isChecked ->
+            context.sharedPreferences("skin").editor {
+                if (isChecked) {
+                    putInt("now_skin", position)
+                }
+            }
+        }
+        holder.switch.isChecked = context.sharedPreferences("skin").getInt("now_skin",0) == position
     }
 
 

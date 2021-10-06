@@ -18,6 +18,7 @@ import com.mredrock.cyxbs.common.service.ServiceManager
 import com.mredrock.cyxbs.api.update.AppUpdateStatus
 import com.mredrock.cyxbs.api.update.IAppUpdateService
 import com.mredrock.cyxbs.common.BaseApp
+import com.mredrock.cyxbs.common.skin.SkinManager
 import com.mredrock.cyxbs.common.ui.BaseViewModelActivity
 import com.mredrock.cyxbs.common.utils.extensions.toast
 import com.mredrock.cyxbs.common.utils.getAppVersionName
@@ -34,10 +35,10 @@ class AboutActivity : BaseViewModelActivity<AboutViewModel>() {
         setContentView(R.layout.mine_activity_about)
 
         common_toolbar.apply {
-            setBackgroundColor(ContextCompat.getColor(this@AboutActivity, R.color.common_window_background))
+            setBackgroundColor(SkinManager.getColor("common_window_background", R.color.common_window_background))
             initWithSplitLine("关于我们",
-                    false,
-                    R.drawable.mine_ic_arrow_left)
+                    false)
+            navigationIcon = SkinManager.getDrawable("mine_ic_arrow_left", R.drawable.mine_ic_arrow_left)
             setTitleLocationAtLeft(false)
         }
         setAppVersionName()
@@ -101,10 +102,10 @@ class AboutActivity : BaseViewModelActivity<AboutViewModel>() {
 
     private fun clickLegal() {
         startActivity(
-            Intent(
-                this,
-                AgreementActivity::class.java
-            )
+                Intent(
+                        this,
+                        AgreementActivity::class.java
+                )
         )
     }
 

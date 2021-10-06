@@ -235,10 +235,10 @@ class DailySignActivity : BaseViewModelActivity<DailyViewModel>() {
                 dividerResArr[i].color.color = SkinManager.getColor("common_mine_sign_divider_grey", R.color.common_mine_sign_divider_grey)
             }
             ColorState.COLOR_BLUE -> {
-                dividerResArr[i].color.color = SkinManager.getColor("common_mine_sign_divider_grey", R.color.common_mine_sign_divider_blue)
+                dividerResArr[i].color.color = SkinManager.getColor("common_mine_sign_divider_blue", R.color.common_mine_sign_divider_blue)
             }
             else -> {
-                dividerResArr[i].color.color = SkinManager.getColor("common_mine_sign_divider_grey", R.color.common_mine_sign_divider_blue_light)
+                dividerResArr[i].color.color = SkinManager.getColor("common_mine_sign_divider_blue_light", R.color.common_mine_sign_divider_blue_light)
             }
         }
     }

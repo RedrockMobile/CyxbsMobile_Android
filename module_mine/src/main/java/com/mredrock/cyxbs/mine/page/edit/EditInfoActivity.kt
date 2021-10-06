@@ -33,13 +33,14 @@ import com.mredrock.cyxbs.common.service.ServiceManager
 import com.mredrock.cyxbs.api.account.IAccountService
 import com.mredrock.cyxbs.api.account.IUserService
 import com.mredrock.cyxbs.common.config.MINE_EDIT_INFO
-import com.mredrock.cyxbs.common.config.StoreTask
+import com.mredrock.cyxbs.common.skin.SkinManager
 import com.mredrock.cyxbs.common.ui.BaseViewModelActivity
 import com.mredrock.cyxbs.common.utils.extensions.*
 import com.mredrock.cyxbs.mine.R
 import com.mredrock.cyxbs.mine.util.ui.DynamicRVAdapter
 import com.yalantis.ucrop.UCrop
 import kotlinx.android.synthetic.main.mine_activity_edit_info.*
+import kotlinx.android.synthetic.main.mine_fragment_main.*
 import kotlinx.android.synthetic.main.mine_layout_dialog_recyclerview_dynamic.view.*
 import okhttp3.MediaType.Companion.toMediaTypeOrNull
 import okhttp3.MultipartBody
@@ -86,14 +87,14 @@ class EditInfoActivity
         if (checkIfInfoChange()) {
             mine_btn_info_save.apply {
                 setTextColor(ContextCompat.getColor(context, R.color.common_white_font_color))
-                background = ResourcesCompat.getDrawable(resources, R.drawable.common_dialog_btn_positive_blue, null)
+                background = SkinManager.getDrawable("common_dialog_btn_positive_blue", R.drawable.common_dialog_btn_positive_blue)
                 text = "保存"
                 isClickable = true
             }
         } else {
             mine_btn_info_save.apply {
                 setTextColor(ContextCompat.getColor(context, R.color.common_grey_button_text))
-                background = ResourcesCompat.getDrawable(resources, R.drawable.mine_bg_round_corner_grey, null)
+                background = SkinManager.getDrawable("mine_bg_round_corner_grey", R.drawable.mine_bg_round_corner_grey)
                 text = "已保存"
                 isClickable = false
             }
@@ -105,24 +106,24 @@ class EditInfoActivity
         mine_tv_nickname.text = "昵称(${nickname.length}/8)"
         mine_tv_sign.text = "个性签名(${introduction.length}/20)"
         if (nickname != userForTemporal.getNickname()) {
-            mine_et_nickname.setTextColor(ContextCompat.getColor(this, R.color.common_level_two_font_color))
+            mine_et_nickname.setTextColor(SkinManager.getColor("common_level_two_font_color", R.color.common_level_two_font_color))
         } else {
-            mine_et_nickname.setTextColor(ContextCompat.getColor(this, R.color.common_grey_text))
+            mine_et_nickname.setTextColor(SkinManager.getColor("common_grey_text", R.color.common_grey_text))
         }
         if (introduction != userForTemporal.getIntroduction()) {
-            mine_et_introduce.setTextColor(ContextCompat.getColor(this, R.color.common_level_two_font_color))
+            mine_et_introduce.setTextColor(SkinManager.getColor("common_level_two_font_color", R.color.common_level_two_font_color))
         } else {
-            mine_et_introduce.setTextColor(ContextCompat.getColor(this, R.color.common_grey_text))
+            mine_et_introduce.setTextColor(SkinManager.getColor("common_grey_text", R.color.common_grey_text))
         }
         if (qq != userForTemporal.getQQ()) {
-            mine_et_qq.setTextColor(ContextCompat.getColor(this, R.color.common_level_two_font_color))
+            mine_et_qq.setTextColor(SkinManager.getColor("common_level_two_font_color", R.color.common_level_two_font_color))
         } else {
-            mine_et_qq.setTextColor(ContextCompat.getColor(this, R.color.common_grey_text))
+            mine_et_qq.setTextColor(SkinManager.getColor("common_grey_text", R.color.common_grey_text))
         }
         if (phone != userForTemporal.getPhone()) {
-            mine_et_phone.setTextColor(ContextCompat.getColor(this, R.color.common_level_two_font_color))
+            mine_et_phone.setTextColor(SkinManager.getColor("common_level_two_font_color", R.color.common_level_two_font_color))
         } else {
-            mine_et_phone.setTextColor(ContextCompat.getColor(this, R.color.common_grey_text))
+            mine_et_phone.setTextColor(SkinManager.getColor("common_grey_text", R.color.common_grey_text))
         }
     }
 
@@ -133,13 +134,14 @@ class EditInfoActivity
         setContentView(R.layout.mine_activity_edit_info)
 
         common_toolbar.apply {
-            setBackgroundColor(ContextCompat.getColor(this@EditInfoActivity, R.color.common_window_background))
+            setBackgroundColor(SkinManager.getColor("common_window_background", R.color.common_window_background))
             initWithSplitLine("资料编辑",
                     false,
                     R.drawable.mine_ic_arrow_left,
                     View.OnClickListener {
                         finishAfterTransition()
                     })
+            navigationIcon = SkinManager.getDrawable("mine_ic_arrow_left", R.drawable.mine_ic_arrow_left)
             setTitleLocationAtLeft(true)
         }
 
@@ -169,7 +171,12 @@ class EditInfoActivity
     }
 
     private fun refreshUserInfo() {
-        loadAvatar(userService.getAvatarImgUrl(), mine_edit_et_avatar)
+        if (userService.getAvatarImgUrl().isEmpty()) {
+            mine_edit_et_avatar.setImageDrawable(SkinManager.getDrawable("common_default_avatar", R.drawable.common_default_avatar))
+        } else {
+            loadAvatar(userService.getAvatarImgUrl(), mine_edit_et_avatar)
+        }
+
 
         /*
         * 如果返回的数据为空格，则表示数据为空，昵称除外
@@ -201,7 +208,12 @@ class EditInfoActivity
 
         viewModel.upLoadImageEvent.observe(this, Observer {
             if (it) {
-                loadAvatar(ServiceManager.getService(IAccountService::class.java).getUserService().getAvatarImgUrl(), mine_edit_et_avatar)
+                val url = ServiceManager.getService(IAccountService::class.java).getUserService().getAvatarImgUrl()
+                if (url.isEmpty()) {
+                    mine_edit_et_avatar.setImageDrawable(SkinManager.getDrawable("common_default_avatar", R.drawable.common_default_avatar))
+                } else {
+                    loadAvatar(url, mine_edit_et_avatar)
+                }
                 toast("修改头像成功")
             } else {
                 toast("修改头像失败")

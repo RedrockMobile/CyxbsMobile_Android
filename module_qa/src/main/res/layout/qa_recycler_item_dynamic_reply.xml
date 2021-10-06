@@ -28,7 +28,7 @@
         android:layout_width="30dp"
         android:layout_height="30dp"
         android:scaleType="centerCrop"
-        android:src="@drawable/common_default_avatar"
+        tools:src="@drawable/common_default_avatar"
         app:layout_constraintStart_toEndOf="@id/qa_gl_reply_start"
         app:layout_constraintTop_toTopOf="parent" />
 
@@ -54,7 +54,6 @@
         android:layout_marginStart="10dp"
         android:layout_marginTop="5dp"
         android:textColor="@color/qa_dynamic_time_text_color"
-
         android:textSize="10sp"
         app:layout_constraintStart_toEndOf="@+id/qa_iv_reply_avatar"
         app:layout_constraintTop_toBottomOf="@+id/qa_tv_reply_nickname"

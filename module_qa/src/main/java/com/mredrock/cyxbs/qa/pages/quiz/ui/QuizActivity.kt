@@ -22,6 +22,7 @@ import com.google.android.material.chip.ChipGroup
 import com.mredrock.cyxbs.common.BaseApp
 import com.mredrock.cyxbs.common.component.CyxbsToast
 import com.mredrock.cyxbs.common.config.QA_QUIZ
+import com.mredrock.cyxbs.common.skin.SkinManager
 import com.mredrock.cyxbs.common.ui.BaseViewModelActivity
 import com.mredrock.cyxbs.common.utils.LogUtils
 import com.mredrock.cyxbs.common.utils.extensions.*
@@ -174,13 +175,9 @@ class QuizActivity : BaseViewModelActivity<QuizViewModel>() {
             text?.let {
                 qa_tv_edit_num.text = "${text.length}/$MAX_CONTENT_SIZE"
                 if (text.length in 1..MAX_CONTENT_SIZE) {
-                    qa_tv_toolbar_right.setBackgroundResource(
-                        qa_shape_send_dynamic_btn_blue_background
-                    )
+                    qa_tv_toolbar_right.background = SkinManager.getDrawable("qa_shape_send_dynamic_btn_blue_background", qa_shape_send_dynamic_btn_blue_background)
                 } else {
-                    qa_tv_toolbar_right.setBackgroundResource(
-                        qa_shape_send_dynamic_btn_grey_background
-                    )
+                    qa_tv_toolbar_right.background = SkinManager.getDrawable("qa_shape_send_dynamic_btn_grey_background", qa_shape_send_dynamic_btn_grey_background)
                 }
             }
         }
@@ -242,7 +239,7 @@ class QuizActivity : BaseViewModelActivity<QuizViewModel>() {
 
     private fun initImageAddView() {
         nine_grid_view.addView(
-            ContextCompat.getDrawable(this, qa_ic_add_photo)?.let { createImageViewFromVector(it) })
+            SkinManager.getDrawable("qa_ic_add_photo", qa_ic_add_photo)?.let { createImageViewFromVector(it) })
         nine_grid_view.setOnItemClickListener { _, index ->
             if (index == nine_grid_view.childCount - 1) {
                 //如果达到选择图片的上限，就ban掉不允许添加图片
@@ -346,9 +343,9 @@ class QuizActivity : BaseViewModelActivity<QuizViewModel>() {
     }
 
     private fun createImageViewFromVector(drawable: Drawable) = RectangleView(this).apply {
-        scaleType = ImageView.ScaleType.CENTER
+        scaleType = ImageView.ScaleType.CENTER_CROP
         background =
-            ContextCompat.getDrawable(this@QuizActivity, qa_shape_quiz_select_pic_empty_background)
+                SkinManager.getDrawable("qa_shape_quiz_select_pic_empty_background", qa_shape_quiz_select_pic_empty_background)
         setImageDrawable(drawable)
     }
 

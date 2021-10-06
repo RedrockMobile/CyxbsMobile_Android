@@ -23,6 +23,7 @@ import com.amap.api.maps.model.MyLocationStyle
 import com.amap.api.maps.utils.overlay.SmoothMoveMarker
 import com.mredrock.cyxbs.common.config.DISCOVER_SCHOOL_CAR
 import com.mredrock.cyxbs.common.config.END_POINT_REDROCK_PROD
+import com.mredrock.cyxbs.common.skin.SkinManager
 import com.mredrock.cyxbs.common.ui.BaseActivity
 import com.mredrock.cyxbs.common.utils.LogUtils
 import com.mredrock.cyxbs.common.utils.extensions.defaultSharedPreferences
@@ -134,6 +135,7 @@ class SchoolCarActivity : BaseActivity(), View.OnClickListener {
         cv_positioning.setOnClickListener(this)
         iv_cooperation_logo.setOnClickListener(this)
         iv_back.setOnClickListener(this)
+        jc_schoolCar.setCardBackgroundColor(SkinManager.getColor("schoolcar_JCard_white_background",R.color.schoolcar_JCard_white_background))
         jc_schoolCar.setShadow(false, false, false, false)
         //如果用户同意定位权限，则开启定位和初始化定位用到的类
         if (ifLocation) {

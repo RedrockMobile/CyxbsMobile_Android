@@ -5,7 +5,7 @@
     android:id="@+id/container"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/common_white_background"
+    android:background="@drawable/common_shape_white_activity_background"
     tools:context="com.mredrock.cyxbs.discover.schoolcar.SchoolCarActivity"
     >
 

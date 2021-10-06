@@ -21,6 +21,7 @@ import com.mredrock.cyxbs.common.BaseApp
 import com.mredrock.cyxbs.common.bean.LoginConfig
 import com.mredrock.cyxbs.common.config.DISCOVER_GRADES
 import com.mredrock.cyxbs.common.service.ServiceManager
+import com.mredrock.cyxbs.common.skin.SkinManager
 import com.mredrock.cyxbs.common.ui.BaseActivity
 import com.mredrock.cyxbs.common.utils.LogUtils
 import com.mredrock.cyxbs.common.utils.extensions.pressToZoomOut
@@ -78,8 +79,8 @@ class ContainerActivity : BaseActivity() {
         setContentView(R.layout.grades_activity_container)
         common_toolbar.apply {
             setBackgroundColor(
-                ContextCompat.getColor(
-                    this@ContainerActivity,
+                SkinManager.getColor(
+                    "common_mine_sign_store_bg",
                     R.color.common_mine_sign_store_bg
                 )
             )

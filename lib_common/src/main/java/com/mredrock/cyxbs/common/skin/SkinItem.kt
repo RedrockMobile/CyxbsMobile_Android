@@ -1,10 +1,7 @@
 package com.mredrock.cyxbs.common.skin
 
 import android.view.View
-import android.widget.CheckedTextView
-import android.widget.ImageView
-import android.widget.Switch
-import android.widget.TextView
+import android.widget.*
 import androidx.appcompat.widget.AppCompatEditText
 import com.google.android.material.tabs.TabLayout
 
@@ -47,6 +44,11 @@ class SkinItem(private val view: View?, private val attrs: List<SkinAttr>?) {
 
                 "textColorHint" -> {
                     if (view is TextView) {
+                        view.setHintTextColor(
+                                SkinManager.getColor(resName, resId)
+                        )
+                    }
+                    if (view is EditText) {
                         view.setHintTextColor(
                                 SkinManager.getColor(resName, resId)
                         )

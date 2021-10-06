@@ -3,7 +3,7 @@
     package="com.mredrock.cyxbs.skin">
 
     <application>
-        <activity android:name=".ui.activity.MainActivity" />
+        <activity android:name=".ui.activity.MainActivity" android:theme="@style/AppTheme.Skin" />
     </application>
 
 </manifest>

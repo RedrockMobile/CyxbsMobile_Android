@@ -28,6 +28,7 @@ import com.mredrock.cyxbs.qa.ui.widget.OptionalPopWindow
 import com.mredrock.cyxbs.qa.ui.widget.ShareDialog
 import com.mredrock.cyxbs.qa.utils.dynamicTimeDescription
 import kotlinx.android.synthetic.main.qa_recycler_item_dynamic_header.view.*
+import kotlinx.android.synthetic.main.qa_recycler_item_dynamic_reply.view.*
 
 /**
  * @Author: xgl

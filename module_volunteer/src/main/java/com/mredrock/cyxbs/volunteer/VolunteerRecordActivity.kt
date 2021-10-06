@@ -9,6 +9,7 @@ import com.alibaba.android.arouter.launcher.ARouter
 import com.google.gson.Gson
 import com.mredrock.cyxbs.common.config.DISCOVER_VOLUNTEER
 import com.mredrock.cyxbs.common.config.DISCOVER_VOLUNTEER_RECORD
+import com.mredrock.cyxbs.common.skin.SkinManager
 import com.mredrock.cyxbs.common.ui.BaseViewModelActivity
 import com.mredrock.cyxbs.common.utils.extensions.startActivity
 import com.mredrock.cyxbs.volunteer.adapter.VolunteerMainFragmentAdapter
@@ -54,7 +55,10 @@ class VolunteerRecordActivity : BaseViewModelActivity<VolunteerRecordViewModel>(
         vp_volunteer_category.adapter = VolunteerMainFragmentAdapter(supportFragmentManager, listOf(volunteerRecordFragment, VolunteerAffairFragment()), listOf(getString(R.string.volunteer_string_tab_record), getString(R.string.volunteer_string_tab_activity)))
         tl_volunteer_category.setupWithViewPager(vp_volunteer_category)
         tl_volunteer_category.setSelectedTabIndicator(R.drawable.volunteer_ic_question_tab_indicator)
-
+        tl_volunteer_category.setTabTextColors(
+                SkinManager.getColor("volunteer_tab_unselected_color", R.color.volunteer_tab_unselected_color),
+                SkinManager.getColor("volunteer_tab_selected_color", R.color.volunteer_tab_selected_color)
+        )
         iv_back.setOnClickListener { finish() }
         tv_volunteer_logout.setOnClickListener {
             LogoutDialog.show(this , {} , {

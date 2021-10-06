@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="emptyroom_JCard_background">#F8F9FC</color>
+    <color name="emptyroom_JCard_bottom_background">#F8F9FC</color>
+    <color name="emptyroom_tv_building">#5E5E5E</color>
+    <color name="emptyroom_transaction_heading">#122D55</color>
+</resources>

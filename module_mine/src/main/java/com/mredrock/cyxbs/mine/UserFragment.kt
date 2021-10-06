@@ -8,8 +8,6 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.core.app.ActivityOptionsCompat
-import androidx.core.content.ContextCompat
-import androidx.core.content.res.ResourcesCompat
 import androidx.core.util.Pair
 import androidx.lifecycle.Observer
 import com.alibaba.android.arouter.facade.annotation.Route
@@ -94,10 +92,9 @@ class UserFragment : BaseViewModelFragment<UserViewModel>() {
             mine_main_tv_sign.text = "已连续签到${it.serialDays}天 "
             if (it.isChecked) {
                 mine_main_btn_sign.apply {
-                    background = ResourcesCompat.getDrawable(
-                        resources,
-                        R.drawable.mine_bg_round_corner_grey,
-                        null
+                    background = SkinManager.getDrawable(
+                        "mine_bg_round_corner_grey",
+                        R.drawable.mine_bg_round_corner_grey
                     )
                     text = "已签到"
                     setTextColor(SkinManager.getColor("common_grey_button_text", R.color.common_grey_button_text))
@@ -163,7 +160,11 @@ class UserFragment : BaseViewModelFragment<UserViewModel>() {
     //刷新和User信息有关的界面
     private fun refreshUserLayout() {
         val userService = ServiceManager.getService(IAccountService::class.java).getUserService()
-        context?.loadAvatar(userService.getAvatarImgUrl(), mine_main_avatar)
+        if (userService.getAvatarImgUrl().isEmpty()) {
+            mine_main_avatar.setImageDrawable(SkinManager.getDrawable("common_default_avatar", R.drawable.common_default_avatar))
+        } else {
+            context?.loadAvatar(userService.getAvatarImgUrl(), mine_main_avatar)
+        }
         mine_main_username.text =
             if (userService.getNickname().isBlank()) getString(R.string.mine_user_empty_username)
             else userService.getNickname()

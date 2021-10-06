@@ -83,6 +83,7 @@
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
         <item name="colorAccent">@color/colorAccent</item>
         <!--        透明状态栏-->
+        <item name="android:windowBackground">@color/common_transparent_background</item>
         <item name="statusBarBackground">@color/common_transparent_background</item>
         <!--        Transition转场动画，暂未启用-->
         <item name="android:windowEnterTransition">@transition/common_fade</item>

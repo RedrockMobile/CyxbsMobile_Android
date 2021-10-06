@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!--    二级字体颜色-->
+    <color name="news_level_two_font_color">#112C57</color>
+    <color name="news_text_color_normal">#294169</color>
+</resources>

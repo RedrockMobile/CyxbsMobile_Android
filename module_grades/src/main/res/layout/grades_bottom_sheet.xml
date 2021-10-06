@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/common_secondary_window_background"
+    android:background="@color/grades_bottom_sheet"
     android:clickable="true"
     android:focusable="true">
 
@@ -77,7 +77,7 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="8dp"
             android:layout_marginEnd="20dp"
-            android:background="@drawable/grades_exam_shape_round"
+            android:background="@drawable/grades_shape_bottom_sheet"
             android:paddingStart="10dp"
             android:paddingTop="5dp"
             android:paddingEnd="10dp"

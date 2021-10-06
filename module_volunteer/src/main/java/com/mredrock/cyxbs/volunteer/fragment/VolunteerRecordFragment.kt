@@ -18,6 +18,7 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.mredrock.cyxbs.common.mark.EventBusLifecycleSubscriber
+import com.mredrock.cyxbs.common.skin.SkinManager
 import com.mredrock.cyxbs.common.ui.BaseFragment
 import com.mredrock.cyxbs.common.utils.extensions.dp2px
 import com.mredrock.cyxbs.volunteer.R
@@ -298,7 +299,7 @@ class VolunteerRecordFragment : BaseFragment(), EventBusLifecycleSubscriber, Vie
         val textView = TextView(context)
         context ?: return textView
         textView.textSize = context!!.dp2px(5f).toFloat()
-        textView.setTextColor(ContextCompat.getColor(context!!, R.color.common_level_three_font_color))
+        textView.setTextColor(SkinManager.getColor("common_level_three_font_color", R.color.common_level_three_font_color))
         return textView
     }
 }

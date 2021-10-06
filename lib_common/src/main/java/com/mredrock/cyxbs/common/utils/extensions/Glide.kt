@@ -7,6 +7,7 @@ import com.bumptech.glide.Glide
 import com.bumptech.glide.request.RequestOptions
 import com.mredrock.cyxbs.common.R
 import com.mredrock.cyxbs.common.config.BASE_NORMAL_IMG_URL
+import com.mredrock.cyxbs.common.skin.SkinManager
 
 
 /**
@@ -42,4 +43,10 @@ fun Context.loadAvatar(url: String?,
 
 fun ImageView.setImageFromUrl(url: String?) = context.loadRedrockImage(url, this)
 
-fun ImageView.setAvatarImageFromUrl(url: String?) = context.loadAvatar(url, this)
+fun ImageView.setAvatarImageFromUrl(url: String?) {
+    if (url.isNullOrEmpty()) {
+        this.setImageDrawable(SkinManager.getDrawable("common_default_avatar", R.drawable.common_default_avatar))
+    } else {
+        context.loadAvatar(url, this)
+    }
+}

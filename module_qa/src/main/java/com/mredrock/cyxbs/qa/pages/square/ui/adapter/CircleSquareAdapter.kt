@@ -10,6 +10,7 @@ import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.mredrock.cyxbs.common.BaseApp.Companion.context
+import com.mredrock.cyxbs.common.skin.SkinManager
 import com.mredrock.cyxbs.common.utils.extensions.setAvatarImageFromUrl
 import com.mredrock.cyxbs.qa.R
 import com.mredrock.cyxbs.qa.beannew.Topic
@@ -68,13 +69,15 @@ class CircleSquareAdapter :
                 if (item._isFollow == 1) {
                     item._isFollow = 0
                     circleConcern.text = "+关注"
-                    circleConcern.background = context.getDrawable(
+                    circleConcern.background = SkinManager.getDrawable(
+                            "qa_shape_send_dynamic_btn_blue_background",
                         R.drawable.qa_shape_send_dynamic_btn_blue_background
                     )
                 } else {
                     item._isFollow = 1
                     circleConcern.text = "已关注"
-                    circleConcern.background = context.getDrawable(
+                    circleConcern.background = SkinManager.getDrawable(
+                            "qa_shape_send_dynamic_btn_grey_background",
                         R.drawable.qa_shape_send_dynamic_btn_grey_background
                     )
                 }
@@ -91,13 +94,15 @@ class CircleSquareAdapter :
             data?._isFollow?.let {
                 if (it == 1) {
                     circleConcern.text = "已关注"
-                    circleConcern.background = context.getDrawable(
-                        R.drawable.qa_shape_send_dynamic_btn_grey_background
+                    circleConcern.background = SkinManager.getDrawable(
+                            "qa_shape_send_dynamic_btn_grey_background",
+                            R.drawable.qa_shape_send_dynamic_btn_grey_background
                     )
                 } else {
                     circleConcern.text = "+关注"
-                    circleConcern.background = context.getDrawable(
-                        R.drawable.qa_shape_send_dynamic_btn_blue_background
+                    circleConcern.background = SkinManager.getDrawable(
+                            "qa_shape_send_dynamic_btn_blue_background",
+                            R.drawable.qa_shape_send_dynamic_btn_blue_background
                     )
                 }
             }

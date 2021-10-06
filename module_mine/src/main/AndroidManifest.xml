@@ -20,13 +20,15 @@
         <activity
             android:name=".page.edit.EditInfoActivity"
             android:launchMode="singleTop"
-            android:screenOrientation="portrait" />
+            android:screenOrientation="portrait"
+            android:theme="@style/AppTheme.Skin"/>
         <activity
             android:name=".page.sign.DailySignActivity"
             android:launchMode="singleTop" />
         <activity
             android:name=".page.about.AboutActivity"
-            android:launchMode="singleTop" />
+            android:launchMode="singleTop"
+            android:theme="@style/AppTheme.Skin"/>
         <activity
             android:name="com.yalantis.ucrop.UCropActivity"
             android:screenOrientation="portrait"

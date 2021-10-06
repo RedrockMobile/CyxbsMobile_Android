@@ -2,6 +2,7 @@ package com.mredrock.cyxbs.common.skin
 
 import android.content.Context
 import android.content.SharedPreferences.Editor
+import com.mredrock.cyxbs.common.utils.extensions.sharedPreferences
 import java.lang.reflect.InvocationTargetException
 import java.lang.reflect.Method
 
@@ -9,27 +10,34 @@ import java.lang.reflect.Method
  * 保存换肤数据
  */
 object SPUtil {
-    private const val FILE_NAME = "user_data" //  用户sp文件
+    private const val FILE_NAME = "skin" //  用户sp文件
     fun put(
             context: Context?,
             key: String?,
             `object`: Any
     ) {
         val sp =
-                context!!.getSharedPreferences(FILE_NAME, Context.MODE_PRIVATE)
+                context!!.sharedPreferences(FILE_NAME)
         val editor = sp.edit()
-        if (`object` is String) {
-            editor.putString(key, `object`)
-        } else if (`object` is Int) {
-            editor.putInt(key, `object`)
-        } else if (`object` is Boolean) {
-            editor.putBoolean(key, `object`)
-        } else if (`object` is Float) {
-            editor.putFloat(key, `object`)
-        } else if (`object` is Long) {
-            editor.putLong(key, `object`)
-        } else {
-            editor.putString(key, `object`.toString())
+        when (`object`) {
+            is String -> {
+                editor.putString(key, `object`)
+            }
+            is Int -> {
+                editor.putInt(key, `object`)
+            }
+            is Boolean -> {
+                editor.putBoolean(key, `object`)
+            }
+            is Float -> {
+                editor.putFloat(key, `object`)
+            }
+            is Long -> {
+                editor.putLong(key, `object`)
+            }
+            else -> {
+                editor.putString(key, `object`.toString())
+            }
         }
         SharedPreferencesCompat.apply(editor)
     }
@@ -51,18 +59,24 @@ object SPUtil {
                 FILE_NAME,
                 Context.MODE_PRIVATE
         )
-        if (defaultObject is String) {
-            return sp.getString(key, defaultObject as String?)
-        } else if (defaultObject is Int) {
-            return sp.getInt(key, (defaultObject as Int?)!!)
-        } else if (defaultObject is Boolean) {
-            return sp.getBoolean(key, (defaultObject as Boolean?)!!)
-        } else if (defaultObject is Float) {
-            return sp.getFloat(key, (defaultObject as Float?)!!)
-        } else if (defaultObject is Long) {
-            return sp.getLong(key, (defaultObject as Long?)!!)
+        when (defaultObject) {
+            is String -> {
+                return sp.getString(key, defaultObject as String?)
+            }
+            is Int -> {
+                return sp.getInt(key, (defaultObject as Int?)!!)
+            }
+            is Boolean -> {
+                return sp.getBoolean(key, (defaultObject as Boolean?)!!)
+            }
+            is Float -> {
+                return sp.getFloat(key, (defaultObject as Float?)!!)
+            }
+            is Long -> {
+                return sp.getLong(key, (defaultObject as Long?)!!)
+            }
+            else -> return null
         }
-        return null
     }
 
     /**

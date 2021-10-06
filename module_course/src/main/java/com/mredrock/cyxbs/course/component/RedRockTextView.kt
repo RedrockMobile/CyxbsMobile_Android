@@ -86,6 +86,14 @@ class RedRockTextView : AppCompatTextView {
                 0)
         selectColor = SkinManager.getColor("common_level_one_font_color",
                 R.color.common_level_one_font_color)
+        SkinManager.addSkinUpdateListener(object : SkinManager.SkinUpdateListener {
+            override fun onSkinUpdate() {
+                selectColor = SkinManager.getColor("common_level_one_font_color",
+                        R.color.common_level_one_font_color)
+                initRedRockTextView()
+                invalidate()
+            }
+        })
         typedArray.recycle()
 
         initRedRockTextView()

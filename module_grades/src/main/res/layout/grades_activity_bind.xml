@@ -24,7 +24,7 @@
         android:layout_marginStart="15dp"
         android:layout_marginTop="150dp"
         android:text="@string/grades_bottom_sheet_bind_title"
-        android:textColor="@color/common_level_two_font_color"
+        android:textColor="@color/grades_bind_title"
         android:textSize="18sp"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />

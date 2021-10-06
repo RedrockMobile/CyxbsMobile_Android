@@ -5,6 +5,6 @@
     <color name="volunteer_tab_unselected_color">#15315B</color>
     <color name="volunteer_tab_selected_color">#15315B</color>
     <color name="volunteer_feed_total_time_color">#2A4E84</color>
-
+    <color name="volunteer_pop_window_color">#ffffff</color>
 
 </resources>

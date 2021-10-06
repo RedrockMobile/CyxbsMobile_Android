@@ -17,11 +17,13 @@ import com.google.android.material.tabs.TabLayout
 import com.mredrock.cyxbs.common.BaseApp
 import com.mredrock.cyxbs.common.component.CyxbsToast
 import com.mredrock.cyxbs.common.config.DISCOVER_EMPTY_ROOM
+import com.mredrock.cyxbs.common.skin.SkinManager
 import com.mredrock.cyxbs.common.ui.BaseViewModelActivity
 import com.mredrock.cyxbs.common.utils.LogUtils
 import com.mredrock.cyxbs.common.utils.SchoolCalendar
 import com.mredrock.cyxbs.common.utils.extensions.dip
 import com.mredrock.cyxbs.common.utils.extensions.gone
+import com.mredrock.cyxbs.common.utils.extensions.setOnSingleClickListener
 import com.mredrock.cyxbs.common.utils.extensions.visible
 import com.mredrock.cyxbs.discover.emptyroom.R
 import com.mredrock.cyxbs.discover.emptyroom.ui.adapter.EmptyRoomResultAdapter
@@ -36,8 +38,6 @@ import com.mredrock.cyxbs.discover.emptyroom.viewmodel.EmptyRoomViewModel.Compan
 import com.mredrock.cyxbs.discover.emptyroom.viewmodel.EmptyRoomViewModel.Companion.LOADING
 import kotlinx.android.synthetic.main.emptyroom_activity_empty_room.*
 import java.util.*
-import com.mredrock.cyxbs.common.utils.extensions.*
-
 
 
 @Route(path = DISCOVER_EMPTY_ROOM)
@@ -67,12 +67,24 @@ class EmptyRoomActivity : BaseViewModelActivity<EmptyRoomViewModel>(), OnItemSel
         initQueryingAnimator()
         initRv()
         initTab()
+        initJCard()
         ib_emptyroom_back.setOnSingleClickListener {
             finish()
         }
     }
 
+    private fun initJCard() {
+        jc_content.setCardBackgroundColor(SkinManager.getColor("emptyroom_JCard_background", R.color.emptyroom_JCard_background))
+        jc_content.shadowColor = SkinManager.getColor("emptyroom_JCard_background", R.color.emptyroom_JCard_background)
+        jc_building.setCardBackgroundColor(SkinManager.getColor("emptyroom_JCard_bottom_background", R.color.emptyroom_JCard_bottom_background))
+        jc_building.shadowColor = SkinManager.getColor("emptyroom_JCard_bottom_background", R.color.emptyroom_JCard_bottom_background)
+    }
+
     private fun initTab() {
+        tl_building.setTabTextColors(
+                SkinManager.getColor("common_level_one_font_color", R.color.common_level_one_font_color),
+                SkinManager.getColor("common_level_one_font_color", R.color.common_level_one_font_color)
+        )
         tl_building.apply {
             addTab(tl_building.newTab().setText("二教"), false)
             addTab(tl_building.newTab().setText("三教"), false)
@@ -97,10 +109,10 @@ class EmptyRoomActivity : BaseViewModelActivity<EmptyRoomViewModel>(), OnItemSel
                     val textView = TextView(applicationContext)
                     textView.paint.isFakeBoldText = true
 
-                    val drawable: Drawable? = ContextCompat.getDrawable(BaseApp.context, R.drawable.emptyroom_shape_query_item)
+                    val drawable: Drawable? = SkinManager.getDrawable("emptyroom_shape_query_item", R.drawable.emptyroom_shape_query_item)
                     textView.background = drawable
                     textView.text = p0.text
-                    textView.setTextColor(Color.parseColor("#112C54"))
+                    textView.setTextColor(SkinManager.getColor("common_level_one_font_color", R.color.common_level_one_font_color))
                     textView.gravity = Gravity.CENTER
 //                    textView.setPadding(dip(15),dip(3),dip(15),dip(3))
 //                    textView.layoutParams = ViewGroup.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT,ViewGroup.LayoutParams.WRAP_CONTENT)
@@ -193,13 +205,13 @@ class EmptyRoomActivity : BaseViewModelActivity<EmptyRoomViewModel>(), OnItemSel
 
                     override fun onBindView(textView: TextView, displayValue: String, selected: Boolean, position: Int) {
                         super.onBindView(textView, displayValue, selected, position)
-                        val drawable = if (selected) ContextCompat.getDrawable(BaseApp.context, R.drawable.emptyroom_shape_query_item) else null
+                        val drawable = if (selected) SkinManager.getDrawable("emptyroom_shape_query_item", R.drawable.emptyroom_shape_query_item) else null
 //                        var color =  1
                         if (selected) {
-                            textView.setTextColor(ContextCompat.getColor(this@EmptyRoomActivity, R.color.common_transaction_heading))
+                            textView.setTextColor(SkinManager.getColor("emptyroom_transaction_heading", R.color.emptyroom_transaction_heading))
                             textView.paint.isFakeBoldText = true
                         } else {
-                            textView.setTextColor(ContextCompat.getColor(this@EmptyRoomActivity, R.color.common_level_two_font_color))
+                            textView.setTextColor(SkinManager.getColor("common_level_two_font_color", R.color.common_level_two_font_color))
                             textView.paint.isFakeBoldText = false
                         }
                         textView.gravity = Gravity.CENTER

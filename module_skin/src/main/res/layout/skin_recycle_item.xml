@@ -1,43 +1,60 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="wrap_content"
-    android:layout_height="wrap_content"
-    android:layout_marginLeft="10dp"
-    android:layout_marginRight="10dp"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="198dp"
+    android:layout_marginLeft="16dp"
+    android:layout_marginRight="16dp"
     android:layout_marginBottom="12dp"
+    android:background="@drawable/skin_shape_round_corner_background"
     android:gravity="center"
     android:orientation="vertical">
 
 
     <com.mredrock.cyxbs.skin.component.RoundRectImageView
         android:id="@+id/skin_iv_recycle_item"
-        android:layout_width="150dp"
-        android:layout_height="200dp"
-        android:scaleType="centerCrop" />
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:scaleType="centerCrop"
+        android:background="@drawable/skin_shape_round_corner_background"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 
     <TextView
         android:id="@+id/skin_tv_name_item"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginStart="20dp"
         android:layout_marginTop="5dp"
         android:text="经典皮肤"
-        android:textColor="@color/common_level_two_font_color"
-        android:textSize="17sp" />
+        android:textColor="@color/common_level_three_font_color"
+        android:textSize="16sp"
+        android:textStyle="bold"
+        app:layout_constraintBottom_toTopOf="@id/skin_tv_price_item"
+        app:layout_constraintStart_toStartOf="parent" />
 
     <TextView
         android:id="@+id/skin_tv_price_item"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="3dp"
         android:text="免费"
-        android:textColor="@color/common_level_three_font_color" />
+        android:textColor="@color/levelFourFontColor"
+        android:textSize="12sp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="@id/skin_tv_name_item"
+        android:layout_marginBottom="20dp"/>
 
-    <Button
-        android:id="@+id/skin_btn_use_item"
+    <com.mredrock.cyxbs.skin.widget.SwitchPlus
+        android:id="@+id/skin_switch_use_item"
         android:layout_width="wrap_content"
-        android:layout_height="35dp"
-        android:layout_marginTop="10dp"
-        android:background="@drawable/common_dialog_btn_positive_blue"
-        android:text="使用"
-        android:textColor="@color/common_white_font_color" />
-</LinearLayout>
+        android:layout_height="wrap_content"
+        android:layout_gravity="end"
+        android:layout_marginEnd="16dp"
+        android:thumb="@drawable/skin_selector_thumb"
+        android:track="@drawable/skin_selector_switch_track"
+        app:layout_constraintBottom_toBottomOf="@id/skin_tv_price_item"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="@id/skin_tv_name_item" />
+</androidx.constraintlayout.widget.ConstraintLayout>

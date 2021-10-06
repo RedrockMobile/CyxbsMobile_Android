@@ -26,6 +26,7 @@ import com.google.android.material.appbar.AppBarLayout
 import com.mredrock.cyxbs.common.BaseApp.Companion.context
 import com.mredrock.cyxbs.common.component.CyxbsToast
 import com.mredrock.cyxbs.common.config.QA_DYNAMIC_DETAIL
+import com.mredrock.cyxbs.common.skin.SkinManager
 import com.mredrock.cyxbs.common.ui.BaseViewModelActivity
 import com.mredrock.cyxbs.common.utils.LogUtils
 import com.mredrock.cyxbs.common.utils.extensions.*
@@ -442,13 +443,13 @@ class DynamicDetailActivity : BaseViewModelActivity<DynamicDetailViewModel>() {
             it?.apply {
                 qa_btn_my_comment_send.background =
                     if (length == 0) {
-                        ContextCompat.getDrawable(
-                            this@DynamicDetailActivity,
+                        SkinManager.getDrawable(
+                            "qa_shape_send_dynamic_btn_grey_background",
                             R.drawable.qa_shape_send_dynamic_btn_grey_background
                         )
                     } else {
-                        ContextCompat.getDrawable(
-                            this@DynamicDetailActivity,
+                        SkinManager.getDrawable(
+                            "qa_shape_send_dynamic_btn_blue_background",
                             R.drawable.qa_shape_send_dynamic_btn_blue_background
                         )
                     }

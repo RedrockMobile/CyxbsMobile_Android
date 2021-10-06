@@ -8,7 +8,8 @@
             android:launchMode="singleTop" />
         <activity
             android:name=".VolunteerRecordActivity"
-            android:launchMode="singleTop" />
+            android:launchMode="singleTop"
+            android:theme="@style/AppTheme.Skin"/>
     </application>
 
 </manifest>

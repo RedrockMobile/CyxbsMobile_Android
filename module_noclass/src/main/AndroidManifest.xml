@@ -6,7 +6,8 @@
         <activity
             android:name="com.mredrock.cyxbs.discover.noclass.pages.noclass.NoClassActivity"
             android:windowSoftInputMode="adjustNothing"
-            android:launchMode="singleTop"/>
+            android:launchMode="singleTop"
+            android:theme="@style/AppTheme.Skin"/>
         <activity android:name=".pages.stuselect.NoClassStuSelectActivity"
             android:theme="@style/Transparent"/>
     </application>

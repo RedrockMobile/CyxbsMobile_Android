@@ -33,7 +33,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="21dp"
                 android:alpha="0.7"
-                android:textColor="@color/common_level_two_font_color"
+                android:textColor="@color/news_level_two_font_color"
                 android:textSize="13sp"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
@@ -45,7 +45,7 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="8dp"
-                android:textColor="@color/common_mine_about_text_color_normal"
+                android:textColor="@color/news_text_color_normal"
                 android:textSize="18sp"
                 android:textStyle="bold"
                 app:layout_constraintEnd_toEndOf="parent"
@@ -69,7 +69,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:lineSpacingMultiplier="1.25"
-                    android:textColor="@color/common_level_two_font_color"
+                    android:textColor="@color/news_level_two_font_color"
                     tools:text="会议内容会议章程会议流程大会总结，会议内容会议章程会议流程大会总结会议内容会议章程会议流程大会总结。会议内容会议章程会议流程大会总结会议内容会议章程会议流程大会总结会议内容会议章程会议流程大会总结会议内容会议章程会议流程大会总结会议内容会议章程会议流程大会总结" />
 
             </LinearLayout>

@@ -121,6 +121,7 @@ class MySkinFactory : LayoutInflater.Factory {
                 || "track" == attributeName
                 || "drawableTop" == attributeName
                 || "drawableStart" == attributeName
+                || "drawableEnd" == attributeName
     }
 
     fun apply() {

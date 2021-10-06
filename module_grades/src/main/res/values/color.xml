@@ -1,4 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-
+    <color name="grades_bind_title">#112C57</color>
+    <color name="grades_bottom_sheet">#F8F9FC</color>
 </resources>

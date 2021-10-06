@@ -124,7 +124,7 @@ object SkinManager {
     }
 
     fun init(context: Context) {
-        /** 这里直接 = cotext就行，不用context.什么什么的那个 */
+        /** 这里直接 = context就行，不用context.什么什么的那个 */
         this.context = context
         val skinPath = SPUtil[context, KEY, ""] as String
         isExternalSkin = !TextUtils.isEmpty(skinPath)

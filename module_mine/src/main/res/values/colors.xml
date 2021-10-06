@@ -1,4 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources xmlns:tools="http://schemas.android.com/tools">
-
+    <color name="mine_lab_tv_title">#2A4E84</color>
+    <color name="mine_lab_tv_content">#2A4E84</color>
+    <color name="mine_lab_bottom_background">#ffffff</color>
+    <color name="mine_lab_tv_item_title">#15315B</color>
+    <color name="mine_lab_tv_item_content">#2A4E84</color>
 </resources>

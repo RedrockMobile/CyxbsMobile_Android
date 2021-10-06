@@ -51,11 +51,11 @@ class ExamAdapter(val context: Context,
                 list[position - 1].let { it ->
                     it.let {
                         if (it.week?.toInt() != 0) {
-                            val drawableTime = ResourcesCompat.getDrawable(context.resources, R.drawable.grades_time, null)
+                            val drawableTime = SkinManager.getDrawable("grades_time", R.drawable.grades_time)
                             drawableTime?.setBounds(0, 0, 30, 30)
                             holder.itemView.tv_exam_month.setCompoundDrawables(drawableTime, null, null, null)
 
-                            val drawableLocation = ResourcesCompat.getDrawable(context.resources, R.drawable.grades_exam_location, null)
+                            val drawableLocation = SkinManager.getDrawable("grades_exam_location", R.drawable.grades_exam_location)
                             drawableLocation?.setBounds(0, 0, 30, 30)
                             holder.itemView.tv_exam_location.setCompoundDrawables(drawableLocation, null, null, null)
                             var schoolCalendar: SchoolCalendar? = null

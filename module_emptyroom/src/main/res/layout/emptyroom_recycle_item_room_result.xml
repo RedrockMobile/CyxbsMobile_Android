@@ -22,7 +22,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="8dp"
-            android:textColor="#5E5E5E"
+            android:textColor="@color/emptyroom_tv_building"
             android:textSize="15sp"
             android:textStyle="bold"
             tools:text="一楼" />

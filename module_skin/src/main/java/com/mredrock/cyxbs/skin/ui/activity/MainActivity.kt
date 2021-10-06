@@ -4,16 +4,19 @@ import android.Manifest
 import android.os.Bundle
 import android.view.View
 import androidx.lifecycle.Observer
-import androidx.recyclerview.widget.GridLayoutManager
+import androidx.recyclerview.widget.LinearLayoutManager
 import com.alibaba.android.arouter.facade.annotation.Route
 import com.mredrock.cyxbs.common.config.SKIN_ENTRY
 import com.mredrock.cyxbs.common.skin.SkinManager
 import com.mredrock.cyxbs.common.ui.BaseViewModelActivity
 import com.mredrock.cyxbs.common.utils.extensions.doPermissionAction
+import com.mredrock.cyxbs.common.utils.extensions.sharedPreferences
 import com.mredrock.cyxbs.skin.R
+import com.mredrock.cyxbs.skin.bean.SkinInfo
 import com.mredrock.cyxbs.skin.ui.adapter.SkinRvAdapter
 import com.mredrock.cyxbs.skin.viewmodel.SkinViewModel
 import kotlinx.android.synthetic.main.skin_main.*
+import kotlinx.android.synthetic.main.skin_recycle_item.*
 
 /**
  * Created by LinTong
@@ -26,17 +29,22 @@ class MainActivity : BaseViewModelActivity<SkinViewModel>(), View.OnClickListene
     private var skinPath2 //皮肤包路径2
             : String? = null
     private lateinit var adapter: SkinRvAdapter
+    private val skinData = mutableListOf<SkinInfo.Data>()
+    private lateinit var lastData: SkinInfo.Data
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.skin_main)
+        lastData = SkinInfo.Data("", "", "敬请期待", " ", "--", "1",1,"","","")
         adapter = SkinRvAdapter(this, mutableListOf())
-        skin_rv.layoutManager = GridLayoutManager(this,2)
+        skin_rv.layoutManager = LinearLayoutManager(this)
 //        skin_rv.adapter = adapter
         viewModel.init()
-        viewModel.skinInfo.observe(this, Observer {data ->
-            val skinData = data.skin_data
-            adapter.notifyList(skinData)
-            skin_rv.adapter = adapter
+        viewModel.skinInfo.observe(this, Observer { data ->
+            if (data != null) {
+                addLastData(data)
+                adapter.notifyList(skinData)
+                skin_rv.adapter = adapter
+            }
         })
 
         btn_default.setOnClickListener(this)
@@ -73,5 +81,11 @@ class MainActivity : BaseViewModelActivity<SkinViewModel>(), View.OnClickListene
                 SkinManager.loadSkin(skinPath)
             }
         }
+    }
+
+    fun addLastData(skinData: List<SkinInfo.Data>) {
+        this.skinData.clear()
+        this.skinData.addAll(skinData)
+        this.skinData.add(lastData)
     }
 }

@@ -24,6 +24,7 @@ import com.mredrock.cyxbs.common.config.*
 import com.mredrock.cyxbs.common.event.*
 import com.mredrock.cyxbs.common.mark.EventBusLifecycleSubscriber
 import com.mredrock.cyxbs.common.service.ServiceManager
+import com.mredrock.cyxbs.common.skin.SkinManager
 import com.mredrock.cyxbs.common.ui.BaseViewModelFragment
 import com.mredrock.cyxbs.common.utils.extensions.*
 import com.mredrock.cyxbs.course.R
@@ -380,7 +381,6 @@ class CourseContainerEntryFragment : BaseViewModelFragment<CoursesViewModel>(),
 
         course_tv_which_week.setOnSingleClickListener { isShow() }
         course_this_week_tips.setOnSingleClickListener { isShow() }
-
         course_header_back.setOnSingleClickListener {
             TransitionManager.beginDelayedTransition(
                 fl,

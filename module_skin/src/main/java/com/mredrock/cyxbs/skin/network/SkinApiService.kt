@@ -11,6 +11,6 @@ import retrofit2.http.GET
  */
 interface SkinApiService {
 
-    @GET("/magipoke-stumap/basic")
-    fun getSkinInfo(): Observable<RedrockApiWrapper<SkinInfo>>
+    @GET("/magipoke-theme/theme")
+    fun getSkinInfo(): Observable<RedrockApiWrapper<List<SkinInfo.Data>>>
 }

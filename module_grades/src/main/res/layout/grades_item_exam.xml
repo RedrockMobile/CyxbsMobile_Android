@@ -100,7 +100,7 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="18dp"
             android:layout_marginTop="6dp"
-            android:drawableStart="@drawable/grades_time"
+            tools:drawableStart="@drawable/grades_time"
             android:drawablePadding="10dp"
             android:textColor="@color/common_grades_fragment_text_color_black2"
             android:textSize="14sp"
