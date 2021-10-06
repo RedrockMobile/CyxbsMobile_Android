@@ -34,7 +34,7 @@ class SmallShopProductItem(
                 oldData.id == newData.id // 这个是判断新旧数据中 张三 是否是 张三 (可以点进去看注释)
             },
             isSameData = { oldData, newData ->
-                oldData == newData // 这个是判断
+                oldData == newData // 这个是判断其他数据是否相等
             })
     }
 
