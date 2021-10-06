@@ -175,12 +175,10 @@ class EmptyRoomActivity : BaseViewModelActivity<EmptyRoomViewModel>(), OnItemSel
         //删除"整学期"
         list.removeAt(0)
         //修正week值
-        week = if (week > list.size) 0 else week - 1
+        week = if (week > list.size || week < 0) 0 else week - 1
         repeat(week) { list.removeAt(0) }
         multi_selector_week.setDisplayValues(list)
         weekApi = IntArray(list.size)
-        //这里是，初始值相差2
-        week += 2
         repeat(list.size) { weekApi[it] = ++week }
     }
 
