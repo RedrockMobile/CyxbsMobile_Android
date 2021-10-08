@@ -185,8 +185,8 @@
         android:textColorHint="@color/todo_inner_add_thing_et_hint_color" />
 
     <View
-        android:layout_width="0dp"
         android:layout_height="0dp"
+        android:layout_width="0dp"
         android:layout_weight="1"/>
     <androidx.appcompat.widget.AppCompatTextView
         android:id="@+id/todo_tv_inner_detail_del_todo"

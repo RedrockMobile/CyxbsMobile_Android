@@ -5,6 +5,7 @@ import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.view.View
+import android.view.WindowManager
 import androidx.core.app.ActivityOptionsCompat
 import androidx.core.content.ContextCompat
 import androidx.core.util.Pair
@@ -57,6 +58,7 @@ class TodoDetailActivity : BaseViewModelActivity<TodoDetailViewModel>() {
         //配置Window的背景颜色，使得共享动画时颜色正常
         //一定要放在onCreate之前，不然在共享动画时没有效果
         window.setBackgroundDrawableResource(android.R.color.transparent)
+        window.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_PAN)
         super.onCreate(savedInstanceState)
         setContentView(R.layout.todo_activity_inner_detail)
         todo = Gson().fromJson(intent.getStringExtra("todo"), Todo::class.java)
