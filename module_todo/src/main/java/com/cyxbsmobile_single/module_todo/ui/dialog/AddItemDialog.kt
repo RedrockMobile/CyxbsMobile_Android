@@ -414,8 +414,10 @@ class AddItemDialog(context: Context, val onConfirm: (Todo) -> Unit) :
                     }
                     else -> ""
                 }
-            repeatTimeAdapter.addString(repeatString)
-            todo_inner_add_rv_thing_repeat_list.scrollToPosition(0)
+            if (repeatString != ""){
+                repeatTimeAdapter.addString(repeatString)
+                todo_inner_add_rv_thing_repeat_list.scrollToPosition(0)
+            }
         } else {
             BaseApp.context.toast("掌友，只能选择一种重复模式哦！")
         }
