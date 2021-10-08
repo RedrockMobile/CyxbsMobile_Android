@@ -149,12 +149,8 @@ class TodoDetailActivity : BaseViewModelActivity<TodoDetailViewModel>() {
             //改变todo的check状态
             todo.isChecked = 1 - todo.isChecked
             changeModifyStatus()
-            //防止暴击，在todo更新成功之间不允许再一次点击
-            it.isClickable = false
-            viewModel.updateTodo(todo) {
-                setCheckedStatus()
-                it.isClickable = true
-            }
+            backTime = 2
+            setCheckedStatus()
         }
     }
 
