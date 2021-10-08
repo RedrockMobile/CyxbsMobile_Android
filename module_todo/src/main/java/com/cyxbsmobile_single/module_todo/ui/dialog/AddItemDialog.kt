@@ -46,9 +46,28 @@ class AddItemDialog(context: Context, val onConfirm: (Todo) -> Unit) :
         ChooseYearAdapter(
             ArrayList(getNextFourYears())
         ) {
-            todo.remindMode.notifyDateTime = "${it + Calendar.getInstance().get(Calendar.YEAR)}年1月1日00:00"
-            todo_tv_set_notify_time.text = "1月1日00:00"
-            todo_inner_add_thing_first.data = dateBeenStringList[it]
+            if (it != 0){
+                todo.remindMode.notifyDateTime = "${it + Calendar.getInstance().get(Calendar.YEAR)}年1月1日00:00"
+                todo_tv_set_notify_time.text = "1月1日00:00"
+                todo_inner_add_thing_first.data = dateBeenStringList[it]
+            } else {
+                val calendar = Calendar.getInstance().apply {
+                    add(Calendar.MINUTE, 5)
+                }
+                val notifyString = "${
+                    calendar.get(Calendar.MONTH) + 1
+                }月${
+                    calendar.get(Calendar.DAY_OF_MONTH)
+                }日${
+                    numToString(calendar.get(Calendar.HOUR_OF_DAY))
+                }:${
+                    numToString(calendar.get(Calendar.MINUTE))
+                }"
+                todo.remindMode.notifyDateTime = "${
+                    calendar.get(Calendar.YEAR)
+                }年$notifyString"
+                todo_tv_set_notify_time.text = notifyString
+            }
         }
     }
 
@@ -213,7 +232,7 @@ class AddItemDialog(context: Context, val onConfirm: (Todo) -> Unit) :
         }
 
         val notifyString = "${
-            calendar.get(Calendar.MONTH)
+            calendar.get(Calendar.MONTH) + 1
         }月${
             calendar.get(Calendar.DAY_OF_MONTH)
         }日${

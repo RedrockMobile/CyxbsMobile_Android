@@ -152,8 +152,8 @@ fun repeatMode2RemindTime(remindMode: RemindMode): String {
             //走到这里可以保证是存在notifyDateTime的
             val remindDateCalender = Calendar.getInstance()
             //这里可以保证已经是可以解析的了
-            val format = SimpleDateFormat("yy年MM月dd日hh:mm", Locale.CHINA)
-            val remindDate = format.parse(remindMode.notifyDateTime)
+            val remindDate =
+                remindMode.notifyDateTime?.let { formatDateWithTryCatch("yy年MM月dd日hh:mm", it) }
             remindDateCalender.time = remindDate
             return "${remindDateCalender.get(Calendar.MONTH) + 1}月${remindDateCalender.get(Calendar.DAY_OF_MONTH)}日 $remindTime"
         }
@@ -167,7 +167,7 @@ fun getNextNotifyDay(remindMode: RemindMode): DateBeen {
     if (repeatString == "") return DateBeen(0, 0, 0, 0, 0)
 
     //这里已经是经过处理的提醒时间，所以是不含年份的
-    val date = SimpleDateFormat("MM月dd日 hh:mm", Locale.CHINA).parse(repeatString)
+    val date = formatDateWithTryCatch("MM月dd日 hh:mm", repeatString)
     val calendar = Calendar.getInstance()
     calendar.time = date
     return DateBeen(
@@ -305,8 +305,7 @@ private fun getNotifyDayCandler(remindMode: RemindMode): Calendar {
     //提醒那一天的日历
     val remindDateCalender = Calendar.getInstance()
     //这里可以保证已经是可以解析的了
-    val format = SimpleDateFormat("yy年MM月dd日hh:mm", Locale.CHINA)
-    val remindDate = format.parse(remindMode.notifyDateTime)
+    val remindDate = remindMode.notifyDateTime?.let { formatDateWithTryCatch("yy年MM月dd日hh:mm", it) }
     remindDateCalender.time = remindDate
     return remindDateCalender
 }
@@ -332,16 +331,26 @@ fun isOutOfTime(todo: Todo): Boolean {
     val repeatString = repeatMode2RemindTime(todo.remindMode)
     //表示永远不会提醒
     if (todo.remindMode.notifyDateTime.isNullOrEmpty())return false
-    LogUtils.d("RayleighZ", "notifyDateTime = ${todo.remindMode.notifyDateTime}")
     //能够走到这里，前四位一定是年份，就可以直接sub前四位下来
     val repeatYear = todo.remindMode.notifyDateTime?.subSequence(0, 4)
         ?:
     Calendar.getInstance().get(Calendar.YEAR).toString()
     //这里已经是经过处理的提醒时间，所以是不含年份的
-    val date = SimpleDateFormat("yyyyMM月dd日 hh:mm", Locale.CHINA).parse(repeatYear.toString() + repeatString)
+    val date = formatDateWithTryCatch("yyyyMM月dd日 hh:mm", repeatYear.toString() + repeatString)
     return date.time <= System.currentTimeMillis()
 }
 
 fun getString(id: Int): String = BaseApp.context.getString(id)
 
 fun getColor(id: Int): Int = ContextCompat.getColor(BaseApp.context, id)
+
+fun formatDateWithTryCatch(format: String, raw: String): Date{
+    var date = Date(System.currentTimeMillis())
+    try {
+        date = SimpleDateFormat(format, Locale.CHINA).parse(raw)
+    } catch (e: Exception){
+        e.printStackTrace()
+    } finally {
+        return date
+    }
+}
