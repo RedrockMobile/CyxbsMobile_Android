@@ -23,14 +23,14 @@ import com.mredrock.cyxbs.common.utils.extensions.dip
 import com.mredrock.cyxbs.common.utils.extensions.toast
 import kotlinx.android.synthetic.main.todo_activity_inner_detail.*
 import kotlinx.android.synthetic.main.todo_dialog_add_todo.*
+import kotlinx.android.synthetic.main.todo_rv_item_todo.*
 import java.util.*
 import kotlin.collections.ArrayList
 
 /**
  * Author: RayleighZ
  * Time: 2021-09-18 8:50
- * 旧版本的dialog写的时候脑子不清醒
- * 故重构
+ * 增加todo用dialog
  */
 class AddItemDialog(context: Context, val onConfirm: (Todo) -> Unit) :
     BottomSheetDialog(context, R.style.BottomSheetDialogTheme) {
@@ -46,6 +46,8 @@ class AddItemDialog(context: Context, val onConfirm: (Todo) -> Unit) :
         ChooseYearAdapter(
             ArrayList(getNextFourYears())
         ) {
+            todo.remindMode.notifyDateTime = "${it + Calendar.getInstance().get(Calendar.YEAR)}年1月1日00:00"
+            todo_tv_set_notify_time.text = "1月1日00:00"
             todo_inner_add_thing_first.data = dateBeenStringList[it]
         }
     }
@@ -139,7 +141,7 @@ class AddItemDialog(context: Context, val onConfirm: (Todo) -> Unit) :
         //保存逻辑
         todo_tv_add_thing_save.setOnClickListener {
             //如果没输入标题，就ban掉
-            if (todo_et_todo_title.text.toString().isEmpty()){
+            if (todo_et_todo_title.text.toString().isEmpty()) {
                 BaseApp.context.toast("掌友，标题不能为空哦")
                 return@setOnClickListener
             }
@@ -205,6 +207,26 @@ class AddItemDialog(context: Context, val onConfirm: (Todo) -> Unit) :
 
         //配置年份选择Adapter
         todo_inner_add_rv_thing_repeat_list.adapter = chooseYearAdapter
+        //默认提醒时间设置为当前时间的五分钟后
+        val calendar = Calendar.getInstance().apply {
+            add(Calendar.MINUTE, 5)
+        }
+
+        val notifyString = "${
+            calendar.get(Calendar.MONTH)
+        }月${
+            calendar.get(Calendar.DAY_OF_MONTH)
+        }日${
+            numToString(calendar.get(Calendar.HOUR_OF_DAY))
+        }:${
+            numToString(calendar.get(Calendar.MINUTE))
+        }"
+
+        todo_tv_set_notify_time.text = notifyString
+
+        todo.remindMode.notifyDateTime = "${
+            calendar.get(Calendar.YEAR)
+        }年$notifyString"
 
         dateBeenList[0][0].type = DateBeen.TODAY
         for (yearIndex in 0..3) {
@@ -237,6 +259,9 @@ class AddItemDialog(context: Context, val onConfirm: (Todo) -> Unit) :
             if (data == "") {
                 todo_inner_add_thing_second.data = emptyList<String>()
                 todo_inner_add_thing_third.data = emptyList<String>()
+            } else {
+                todo_inner_add_thing_second.data = IntArray(24) { it }.toList()
+                todo_inner_add_thing_third.data = IntArray(60) { it }.toList()
             }
         }
         todo_inner_add_thing_second.data = IntArray(24) { it }.toList()
@@ -415,7 +440,7 @@ class AddItemDialog(context: Context, val onConfirm: (Todo) -> Unit) :
     fun setAsSinglePicker(curOperate: CurOperate) {
         this.curOperate = curOperate
         setMargin(todo_tv_set_repeat_time, left = BaseApp.context.dip(15))
-        when (curOperate){
+        when (curOperate) {
             REPEAT -> {
                 todo_tv_set_repeat_time.text = "设置重复提醒"
                 todo_inner_add_rv_thing_repeat_list.adapter = repeatTimeAdapter
