@@ -61,6 +61,8 @@ class TodoModel {
                     .updateTodo(todo)
             }.setSchedulers().safeSubscribeBy {
                 onSuccess.invoke()
+                //更新本地修改时间
+                setLastModifyTime(System.currentTimeMillis())
             }
         apiGenerator.pushTodo(
             TodoListPushWrapper(

@@ -15,6 +15,8 @@ import com.cyxbsmobile_single.module_todo.model.bean.Todo
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
 import com.mredrock.cyxbs.common.BaseApp
+import com.mredrock.cyxbs.common.config.TODO_ALREADY_ADDED
+import com.mredrock.cyxbs.common.config.TODO_ALREADY_ADDED_DATE
 import com.mredrock.cyxbs.common.config.TODO_WEEK_MONTH_ARRAY
 import com.mredrock.cyxbs.common.config.TODO_YEAR_OF_WEEK_MONTH_ARRAY
 import com.mredrock.cyxbs.common.utils.LogUtils
@@ -240,6 +242,39 @@ fun needTodayDone(remindMode: RemindMode): Boolean {
     return nextDay.day == calendar.get(Calendar.DAY_OF_MONTH) && nextDay.month == calendar.get(
         Calendar.MONTH
     ) + 1
+}
+
+fun needTodayAddIn(todo: Todo): Boolean{
+    //首先需要判断是不是今天需要处理的代办
+    if (needTodayDone(todo.remindMode)){
+        //如果是今天要处理的，需要校验今天是不是已经被添加过一次了
+        //如果是，就不再添加
+        val lastAddedTime = BaseApp.context.defaultSharedPreferences.getInt(TODO_ALREADY_ADDED_DATE, 0)
+        val calendar = Calendar.getInstance()
+        if (lastAddedTime == calendar.get(Calendar.DAY_OF_YEAR)){
+            //确定今天已经添加进去过一次了，就不用再添加一次了
+            return false
+        }
+        //更新本地缓存的时间
+        BaseApp.context.defaultSharedPreferences.editor {
+            putInt(TODO_ALREADY_ADDED_DATE, calendar.get(Calendar.DAY_OF_YEAR))
+        }
+        val lastAddedTodoIdListJson = BaseApp.context.defaultSharedPreferences.getString(TODO_ALREADY_ADDED, "[]")
+        val idArrayList = Gson().fromJson<ArrayList<Long>>(lastAddedTodoIdListJson, object : TypeToken<ArrayList<Int>>() {}.type)
+        return if (idArrayList.contains(todo.todoId)){
+            false
+        } else {
+            idArrayList.add(todo.todoId)
+            BaseApp.context.defaultSharedPreferences.editor {
+                putString(TODO_ALREADY_ADDED, Gson().toJson(idArrayList))
+                commit()
+            }
+            true
+        }
+    } else {
+        //压根没到重复的那天，就不添加了
+        return false
+    }
 }
 
 fun setMargin(

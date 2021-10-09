@@ -129,6 +129,10 @@ const val TODO_LAST_MODIFY_TIME = "todo_last_modify_time"
 const val TODO_OFFLINE_MODIFY_LIST = "todo_offline_modify_list"
 //todo模块本地删除的todo的id列表
 const val TODO_OFFLINE_DEL_LIST = "todo_offline_del_list"
+//todo模块本地缓存已经添加过一次的todo
+const val TODO_ALREADY_ADDED = "todo_already_added"
+//todo模块本地缓存的todo的时间
+const val TODO_ALREADY_ADDED_DATE = "todo_already_added_date"
 
 //第一次安装的标志，默认或者更新之后就会置为true
 const val FIRST_TIME_OPEN = "first_time_open"

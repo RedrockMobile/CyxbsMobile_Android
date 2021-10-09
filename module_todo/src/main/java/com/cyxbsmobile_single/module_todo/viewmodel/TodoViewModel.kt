@@ -8,6 +8,7 @@ import com.cyxbsmobile_single.module_todo.model.bean.Todo
 import com.cyxbsmobile_single.module_todo.model.bean.TodoItemWrapper
 import com.cyxbsmobile_single.module_todo.model.database.TodoDatabase
 import com.cyxbsmobile_single.module_todo.util.getString
+import com.cyxbsmobile_single.module_todo.util.needTodayAddIn
 import com.cyxbsmobile_single.module_todo.util.needTodayDone
 import com.mredrock.cyxbs.common.BaseApp
 import com.mredrock.cyxbs.common.utils.ExecuteOnceObserver
@@ -49,7 +50,8 @@ class TodoViewModel : BaseViewModel() {
                     //下面的逻辑是：如果到达了todo重复提醒的下一次的那一天，则将todo设定为尚未完成
                     if (todo.remindMode.repeatMode != RemindMode.NONE) {
                         LogUtils.d("RayleighZ", "todo info \n $todo \n ${needTodayDone(todo.remindMode)}")
-                        if (needTodayDone(todo.remindMode)) {
+                        if (needTodayAddIn(todo)) {
+                            //这里需要判断今天是不是已经添加进来一次了
                             todo.isChecked = 0
                         }
                     }
