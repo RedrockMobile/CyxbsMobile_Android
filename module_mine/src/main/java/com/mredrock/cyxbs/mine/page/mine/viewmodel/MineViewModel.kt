@@ -27,7 +27,7 @@ class MineViewModel: BaseViewModel() {
             .doOnErrorWithDefaultErrorHandler { true }
             .safeSubscribeBy(
                 onNext = {
-
+                   Log.e("wxtasadasg","(MineViewModel.kt:30)->>成功了 ")
                     _userInfo.postValue(it)
                 },
                 onError = {

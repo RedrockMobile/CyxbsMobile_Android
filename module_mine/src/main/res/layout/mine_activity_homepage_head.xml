@@ -10,11 +10,11 @@
 
     <FrameLayout
 
-        android:alpha="0.85"
         android:id="@+id/fl_head_background"
         android:layout_width="match_parent"
         android:layout_height="220dp"
         android:layout_marginTop="48dp"
+        android:alpha="0.85"
         android:background="@drawable/mine_shape_ll_background"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
@@ -22,11 +22,11 @@
         app:layout_constraintTop_toTopOf="parent" />
 
     <TextView
-
+        android:gravity="center"
         android:id="@+id/tv_name"
-        android:layout_width="wrap_content"
+        android:textSize="18dp"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginStart="80dp"
         android:text="鱼鱼鱼鱼鱼鱼鱼鱼鱼鱼鱼"
         android:textColor="@color/mine_white"
         app:layout_constraintBottom_toTopOf="@+id/fl_head_background"
@@ -46,7 +46,9 @@
 
 
      <TextView
+         android:textSize="17dp"
             android:id="@+id/tv_fans_number"
+         android:textColor="#15315B"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="35dp"
@@ -54,15 +56,14 @@
             app:layout_constraintStart_toEndOf="@+id/civ_head"
             app:layout_constraintTop_toTopOf="@+id/tv_attention_number" />
 
-        <TextView
-            android:id="@+id/tv_fans"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="粉丝"
-            app:layout_constraintEnd_toEndOf="@+id/tv_fans_number"
-            app:layout_constraintHorizontal_bias="0.0"
-            app:layout_constraintStart_toStartOf="@+id/tv_fans_number"
-            app:layout_constraintTop_toBottomOf="@+id/tv_fans_number" />
+    <TextView
+        android:id="@+id/tv_fans"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="粉丝"
+        app:layout_constraintEnd_toEndOf="@+id/tv_fans_number"
+        app:layout_constraintStart_toStartOf="@+id/tv_fans_number"
+        app:layout_constraintTop_toBottomOf="@+id/tv_fans_number" />
 
         <TextView
             android:id="@+id/tv_attention_number"
@@ -71,6 +72,8 @@
             android:layout_marginStart="56dp"
             android:layout_marginTop="9dp"
             android:text="29"
+            android:textSize="17dp"
+            android:textColor="#15315B"
             app:layout_constraintStart_toEndOf="@+id/tv_fans_number"
             app:layout_constraintTop_toBottomOf="@+id/tv_name" />
 
@@ -89,6 +92,8 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="60dp"
             android:text="31"
+            android:textSize="17dp"
+            android:textColor="#15315B"
             app:layout_constraintStart_toEndOf="@+id/tv_attention_number"
             app:layout_constraintTop_toTopOf="@+id/tv_attention_number" />
 
@@ -107,6 +112,8 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="16dp"
             android:text="ID:"
+            android:textColor="#CC152338"
+            android:textSize="15dp"
             app:layout_constraintStart_toStartOf="@+id/civ_head"
             app:layout_constraintTop_toBottomOf="@+id/civ_head" />
 
@@ -116,30 +123,33 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="4dp"
             android:text="355533"
+            android:textColor="#CC152338"
+            android:textSize="15dp"
             app:layout_constraintStart_toEndOf="@+id/tv_id"
             app:layout_constraintTop_toTopOf="@+id/tv_id" />
 
         <ImageView
             android:id="@+id/iv_edit"
-            android:layout_width="10dp"
-            android:layout_height="10dp"
+            android:layout_width="13dp"
+            android:textSize="10dp"
+            android:layout_height="13dp"
             android:layout_marginStart="25dp"
             app:layout_constraintBottom_toBottomOf="@+id/tv_id_number"
             app:layout_constraintStart_toEndOf="@+id/tv_id_number"
             app:layout_constraintTop_toTopOf="@+id/tv_id_number"
             app:srcCompat="@drawable/mine_ic_iv_edit_pencil" />
 
-        <TextView
-            android:id="@+id/tv_edit"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="4dp"
-            android:text="编辑信息"
-            android:textSize="8dp"
-            app:layout_constraintBottom_toBottomOf="@+id/iv_edit"
-            app:layout_constraintStart_toEndOf="@+id/iv_edit"
-            app:layout_constraintTop_toTopOf="@+id/iv_edit"
-            app:layout_constraintVertical_bias="0.0" />
+    <TextView
+        android:id="@+id/tv_edit"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="编辑信息"
+
+        android:textSize="12dp"
+android:layout_marginLeft="4dp"
+        app:layout_constraintBottom_toBottomOf="@+id/iv_edit"
+        app:layout_constraintStart_toEndOf="@+id/iv_edit"
+        app:layout_constraintTop_toTopOf="@+id/iv_edit" />
 
         <TextView
             android:id="@+id/tv_grade"
@@ -147,6 +157,7 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="20dp"
             android:text="2019"
+            android:textColor="#CC152338"
             app:layout_constraintStart_toStartOf="@+id/tv_id"
             app:layout_constraintTop_toBottomOf="@+id/tv_id" />
 
@@ -156,6 +167,7 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="3dp"
             android:text="十三星座"
+            android:textColor="#CC152338"
             app:layout_constraintBottom_toBottomOf="@+id/v_division_line1"
             app:layout_constraintStart_toEndOf="@+id/v_division_line1"
             app:layout_constraintTop_toTopOf="@+id/v_division_line1"
@@ -165,8 +177,9 @@
             android:id="@+id/v_division_line1"
             android:layout_width="1dp"
             android:layout_height="20dp"
+
             android:layout_marginStart="3dp"
-            android:background="@color/mine_division_line"
+            android:background="#000000"
             app:layout_constraintBottom_toBottomOf="@+id/tv_grade"
             app:layout_constraintStart_toEndOf="@+id/tv_grade"
             app:layout_constraintTop_toTopOf="@+id/tv_grade"
@@ -178,7 +191,8 @@
             android:layout_width="1dp"
             android:layout_height="20dp"
             android:layout_marginStart="3dp"
-            android:background="@color/mine_division_line"
+
+            android:background="#CC152338"
             app:layout_constraintBottom_toBottomOf="@+id/mine_tv_constellation"
             app:layout_constraintStart_toEndOf="@+id/mine_tv_constellation"
             app:layout_constraintTop_toTopOf="@+id/mine_tv_constellation" />
@@ -189,6 +203,7 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="3dp"
             android:text="X星人"
+            android:textColor="#CC152338"
             app:layout_constraintBottom_toBottomOf="@+id/v_division_line2"
             app:layout_constraintStart_toEndOf="@+id/v_division_line2"
             app:layout_constraintTop_toTopOf="@+id/v_division_line2"
@@ -199,6 +214,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="4dp"
+            android:textColor="#B315315C"
             android:text="这是一条不普通的个性签名签名签名签名签名"
             app:layout_constraintStart_toStartOf="@+id/tv_grade"
             app:layout_constraintTop_toBottomOf="@+id/tv_grade" />
@@ -249,7 +265,8 @@
         android:layout_width="1dp"
         android:layout_height="20dp"
         android:layout_marginStart="3dp"
-        android:background="@color/mine_division_line"
+
+        android:background="#CC152338"
         app:layout_constraintBottom_toBottomOf="@+id/tv_grade"
         app:layout_constraintStart_toEndOf="@+id/tv_grade"
         app:layout_constraintTop_toTopOf="@+id/tv_grade"

@@ -241,5 +241,40 @@ interface ApiService {
     fun changePersonalBackground(@Part file:MultipartBody.Part): Observable<RedrockApiStatus>
 
 
+    /**
+     * 获取认证身份
+     */
+
+    @GET("/magipoke-identity/GetAuthentication")
+    fun getAuthenticationStatus()
+
+    /**
+     * 获取个性身份
+     */
+    @GET("/magipoke-identity/GetCustomization")
+    fun getCustomization()
+
+    /**
+     * 获取全部身份
+     */
+    @GET("/magipoke-identity/GetAllIdentify")
+    fun getAllIdentify()
+
+    /**
+     * 上传动态的展示身份
+     */
+    @GET("/magipoke-identity/UploadDisplayIdentity")
+    fun uploadDisplayIdentity()
+
+    /**
+     * 删除身份
+     */
+    @GET("/magipoke-identity/DeleteIdentity")
+    fun deleteIdentity()
+    /**
+     * 更新动态信息
+     */
+    @PUT("/magipoke-loop/post/dynamic")
+    fun  update()
 
 }

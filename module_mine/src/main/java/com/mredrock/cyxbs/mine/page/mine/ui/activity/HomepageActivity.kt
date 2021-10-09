@@ -85,11 +85,14 @@ class HomepageActivity : BaseViewModelActivity<MineViewModel>() {
             .append(DIR_PHOTO)
             .toString()
     }
+
     private val userService: IUserService by lazy {
         ServiceManager.getService(IAccountService::class.java).getUserService()
     }
     private val SELECT_PICTURE = 1
+
     private val SELECT_CAMERA = 2
+
     private val cameraImageFile by lazy { File(fileDir + File.separator + System.currentTimeMillis() + ".png") }
     private val destinationFile by lazy { File(fileDir + File.separator + userService.getStuNum() + ".png") }
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -105,7 +108,6 @@ class HomepageActivity : BaseViewModelActivity<MineViewModel>() {
 
     fun initData() {
         alphaMineView = dataBinding.clPersonalInformation.alpha
-
         viewModel._userInfo.observeForever {
             dataBinding.clPersonalInformation.tv_id_number.text = it.data.uid.toString()
             dataBinding.clPersonalInformation.tv_grade.text = it.data.grade.toString()
@@ -114,7 +116,6 @@ class HomepageActivity : BaseViewModelActivity<MineViewModel>() {
             }else{
                 dataBinding.clPersonalInformation.mine_tv_constellation.text = it.data.constellation
             }
-
             dataBinding.clPersonalInformation.tv_sex.text = it.data.gender
             nickname =  it.data.nickname
             dataBinding.clPersonalInformation.tv_name.text = nickname
@@ -122,8 +123,8 @@ class HomepageActivity : BaseViewModelActivity<MineViewModel>() {
         loadBitmap(it.data.backgroundUrl){
             initBlurBitmap(it)
         }
-        }
 
+        }
         viewModel.getUserInfo()
     }
 

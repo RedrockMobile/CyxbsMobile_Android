@@ -63,7 +63,7 @@
                 android:id="@+id/cl_content_view"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:background="@drawable/mine_ic_item_background">>
+                android:background="@drawable/mine_ic_item_background">
 
 
 
@@ -100,21 +100,43 @@
 
         <com.google.android.material.tabs.TabLayout
             android:id="@+id/mine_tab_status"
-            android:layout_width="409dp"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="27dp"
+            android:background="@drawable/mine_layer_list_statu_ll_background"
+            android:theme="@style/Theme.MaterialComponents"
+            app:tabGravity="fill"
+            app:tabTextColor="@color/mine_black"
+            app:tabIndicator="@drawable/mine_ic_tab_indicator"
+            app:tabIndicatorColor="@android:color/transparent"
+            app:tabIndicatorFullWidth="false"
+            app:tabIndicatorHeight="3dp"
+            app:tabMaxWidth="180dp"
+            app:tabMinWidth="160dp"
+            app:tabMode="fixed"
+            app:tabPaddingEnd="40dp"
+            app:tabPaddingStart="40dp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/mine_relativelayout"></com.google.android.material.tabs.TabLayout>
-
-        <androidx.viewpager2.widget.ViewPager2
-            android:id="@+id/vp_status"
-            android:layout_width="409dp"
-            android:layout_height="403dp"
-            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/mine_relativelayout"/>
+        <View
+            android:id="@+id/view_line"
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="#2A4E841A"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/mine_tab_status" />
+
+        <androidx.viewpager2.widget.ViewPager2
+            android:id="@+id/vp_status"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:background="#FFFFFF"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/view_line" />
 
 
     </androidx.constraintlayout.widget.ConstraintLayout>

@@ -60,7 +60,7 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="13dp"
             android:text="个人主页"
-            android:textSize="16dp"
+            android:textSize="18dp"
             app:layout_constraintBottom_toBottomOf="@+id/bt_mine_back"
             app:layout_constraintStart_toEndOf="@+id/bt_mine_back"
             app:layout_constraintTop_toTopOf="@+id/bt_mine_back" />
