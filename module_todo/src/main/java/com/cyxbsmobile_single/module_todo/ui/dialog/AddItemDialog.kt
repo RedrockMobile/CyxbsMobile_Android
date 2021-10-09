@@ -252,7 +252,7 @@ class AddItemDialog(context: Context, val onConfirm: (Todo) -> Unit) :
             //配置仨时间选择器（默认展示今年）
             for (i in 0..2) {
                 //增加占位
-                dateBeenList[yearIndex].add(DateBeen(0, 0, 1, DateBeen.EMPTY, 0))
+                dateBeenList[yearIndex].add(DateBeen(0, 0, 1, DateBeen.EMPTY))
             }
             dateBeenStringList.add(dateBeenList[yearIndex].map { dateBeen ->
                 when (dateBeen.type) {

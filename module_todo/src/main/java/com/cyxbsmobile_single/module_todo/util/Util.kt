@@ -164,7 +164,7 @@ fun repeatMode2RemindTime(remindMode: RemindMode): String {
 fun getNextNotifyDay(remindMode: RemindMode): DateBeen {
     val repeatString = repeatMode2RemindTime(remindMode)
     //表示永远不会提醒
-    if (repeatString == "") return DateBeen(0, 0, 0, 0, 0)
+    if (repeatString == "") return DateBeen(0, 0, 0, 0)
 
     //这里已经是经过处理的提醒时间，所以是不含年份的
     val date = formatDateWithTryCatch("MM月dd日 hh:mm", repeatString)
@@ -174,8 +174,7 @@ fun getNextNotifyDay(remindMode: RemindMode): DateBeen {
         calendar.get(Calendar.MONTH) + 1,
         calendar.get(Calendar.DAY_OF_MONTH),
         calendar.get(Calendar.DAY_OF_WEEK),
-        DateBeen.NORMAL,
-        calendar.get(Calendar.YEAR)
+        DateBeen.NORMAL
     )
 }
 
@@ -202,8 +201,7 @@ fun getYearDateSting(): ArrayList<ArrayList<DateBeen>> {
                         month = calendar.get(Calendar.MONTH) + 1,
                         day = calendar.get(Calendar.DAY_OF_MONTH),
                         week = getRealWeek(calendar.get(Calendar.DAY_OF_WEEK)),
-                        type = DateBeen.NORMAL,
-                        year = calendar.get(Calendar.YEAR)
+                        type = DateBeen.NORMAL
                     )
                 )
                 calendar.add(Calendar.DAY_OF_YEAR, 1)
@@ -238,10 +236,10 @@ fun needTodayDone(remindMode: RemindMode): Boolean {
     calendar.time = Date(System.currentTimeMillis())
 
     val nextDay = getNextNotifyDay(remindMode)
-
+    LogUtils.d("RayleighZ", "nextDay = $nextDay")
     return nextDay.day == calendar.get(Calendar.DAY_OF_MONTH) && nextDay.month == calendar.get(
         Calendar.MONTH
-    )
+    ) + 1
 }
 
 fun setMargin(
