@@ -11,6 +11,8 @@ import androidx.lifecycle.ViewModelProvider
 import com.mredrock.cyxbs.common.component.CyxbsToast
 import com.mredrock.cyxbs.common.viewmodel.BaseViewModel
 import com.mredrock.cyxbs.common.viewmodel.event.ProgressDialogEvent
+import okhttp3.MultipartBody
+import retrofit2.http.Part
 import java.lang.reflect.ParameterizedType
 
 /**
@@ -61,6 +63,8 @@ abstract class BaseViewModelActivity<T : BaseViewModel> : BaseActivity() {
         it ?: return@Observer
         onChange(it)
     })
+
+
 
     override fun onDestroy() {
         super.onDestroy()

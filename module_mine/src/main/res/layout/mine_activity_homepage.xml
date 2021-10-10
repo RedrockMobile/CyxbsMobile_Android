@@ -9,6 +9,7 @@
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
+        android:background="@color/mine_white"
         android:layout_height="match_parent">
         <ImageView
             android:id="@+id/iv_mine_background_blur"
@@ -31,11 +32,12 @@
             app:srcCompat="@drawable/mine_ic_iv_background_test" />
 
         <FrameLayout
-            android:alpha="0"
             android:id="@+id/fl_background"
-            android:background="@color/mine_white"
             android:layout_width="match_parent"
             android:layout_height="0dp"
+            android:layout_marginBottom="40dp"
+            android:alpha="0"
+            android:background="@color/mine_white"
             app:layout_constraintBottom_toTopOf="@+id/cl_personal_information"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
@@ -87,14 +89,42 @@
             <View
                 android:id="@+id/sl_top_view"
                 android:layout_width="match_parent"
-                android:layout_height="400dp" />
+                android:layout_height="385dp" />
 
 
-            <com.google.android.material.tabs.TabLayout
-                android:id="@+id/mine_tablayout"
+
+                <com.google.android.material.tabs.TabLayout
+                    android:id="@+id/mine_tablayout"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="@drawable/mine_shape_ll_background"
+                    android:theme="@style/Theme.MaterialComponents"
+                    app:tabGravity="fill"
+                    app:tabTextColor="@color/mine_black"
+                    app:tabIndicator="@drawable/mine_ic_tab_indicator"
+                    app:tabIndicatorColor="@android:color/transparent"
+                    app:tabIndicatorFullWidth="false"
+                    app:tabIndicatorHeight="3dp"
+                    app:tabMaxWidth="180dp"
+                    app:tabMinWidth="160dp"
+                    app:tabMode="fixed"
+                    app:tabPaddingEnd="40dp"
+                    app:tabPaddingStart="40dp"
+                    />
+
+
+            <FrameLayout
+
+                android:background="@color/mine_white"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:background="@drawable/mine_shape_ll_background" />
+                android:layout_height="5dp">
+<!--只加一个view的背景  由于颜色会被穿透过去 所以再包了一层-->
+                <View
+                    android:id="@+id/fl_line"
+                    android:background="#2A4E841A"
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"/>
+            </FrameLayout>
 
             <androidx.viewpager2.widget.ViewPager2
                     android:background="@color/mine_white"

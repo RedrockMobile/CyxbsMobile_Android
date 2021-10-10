@@ -151,7 +151,7 @@
             app:layout_constraintTop_toBottomOf="@+id/tv_id" />
 
         <TextView
-            android:id="@+id/mine_textview13"
+            android:id="@+id/mine_tv_constellation"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="3dp"
@@ -179,9 +179,9 @@
             android:layout_height="20dp"
             android:layout_marginStart="3dp"
             android:background="@color/mine_division_line"
-            app:layout_constraintBottom_toBottomOf="@+id/mine_textview13"
-            app:layout_constraintStart_toEndOf="@+id/mine_textview13"
-            app:layout_constraintTop_toTopOf="@+id/mine_textview13" />
+            app:layout_constraintBottom_toBottomOf="@+id/mine_tv_constellation"
+            app:layout_constraintStart_toEndOf="@+id/mine_tv_constellation"
+            app:layout_constraintTop_toTopOf="@+id/mine_tv_constellation" />
 
         <TextView
             android:id="@+id/tv_sex"
