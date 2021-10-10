@@ -44,10 +44,13 @@ abstract class BaseDynamicFragment : BaseFragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        initView()
         initData()
     }
 
-    abstract fun initData()
+    open fun initView(){}
+
+    open fun initData(){}
 
     abstract fun getLayoutId(): Int
 

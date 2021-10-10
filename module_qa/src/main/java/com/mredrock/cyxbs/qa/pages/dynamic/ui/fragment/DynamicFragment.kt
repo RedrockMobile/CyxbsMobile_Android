@@ -49,8 +49,6 @@ import org.greenrobot.eventbus.ThreadMode
 @Route(path = QA_ENTRY)
 class DynamicFragment : BaseDynamicFragment(), EventBusLifecycleSubscriber {
 
-    private var canSendDynamic = false
-
     private lateinit var circlesAdapter: CirclesAdapter
 
     private val recommendFragment = RecommendDynamicFragment()
@@ -67,25 +65,13 @@ class DynamicFragment : BaseDynamicFragment(), EventBusLifecycleSubscriber {
     override fun getLayoutId() = R.layout.qa_fragment_dynamic
 
     private fun initObserve() {
-//        viewModel.initialLoad.observe(viewLifecycleOwner, Observer {
-//            when (it) {
-//                NetworkState.SUCCESSFUL ->
-//                    canSendDynamic = true
-//                NetworkState.FAILED ->
-//                    canSendDynamic = false
-//            }
-//        })
 
         viewModel.myCircle.observe(viewLifecycleOwner, Observer {
-
             circlesAdapter.addCircleData(it)
-
         })
 
         viewModel.topicMessageList.observe(viewLifecycleOwner, Observer {
-
             circlesAdapter.addTopicMessageData(it)
-
         })
     }
 
@@ -176,12 +162,7 @@ class DynamicFragment : BaseDynamicFragment(), EventBusLifecycleSubscriber {
 
     private fun initClick() {
         qa_bt_to_quiz.setOnSingleClickListener {
-            if (canSendDynamic)
                 turnToQuiz()
-            else {
-                CyxbsToast.makeText(this.activity, R.string.qa_server_go_out, Toast.LENGTH_SHORT)
-                    .show()
-            }
         }
     }
 

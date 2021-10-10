@@ -24,6 +24,7 @@
             android:layout_marginEnd="18dp"
             app:cardElevation="6dp"
             app:cardCornerRadius="10dp">
+
             <androidx.constraintlayout.widget.ConstraintLayout
                 android:id="@+id/mine_user_cl_info"
                 android:layout_width="match_parent"
@@ -80,10 +81,10 @@
                     android:layout_marginBottom="52dp"
                     android:fontFamily="@font/impact_min"
                     android:gravity="center"
+                    android:maxLines="1"
                     android:text="@string/mine_number_default"
                     android:textColor="#2A4E84"
                     android:textSize="25sp"
-                    android:maxLines="1"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintStart_toStartOf="parent" />
 
@@ -94,10 +95,10 @@
                     android:layout_marginStart="48dp"
                     android:fontFamily="@font/impact_min"
                     android:gravity="center"
+                    android:maxLines="1"
                     android:text="@string/mine_number_default"
                     android:textColor="#2A4E84"
                     android:textSize="25sp"
-                    android:maxLines="1"
                     app:layout_constraintBottom_toBottomOf="@+id/mine_user_tv_dynamic_number"
                     app:layout_constraintStart_toEndOf="@+id/mine_user_tv_dynamic_number"
                     app:layout_constraintTop_toTopOf="@+id/mine_user_tv_dynamic_number"
@@ -110,10 +111,10 @@
                     android:layout_marginStart="50dp"
                     android:fontFamily="@font/impact_min"
                     android:gravity="center"
+                    android:maxLines="1"
                     android:text="@string/mine_number_default"
                     android:textColor="#2A4E84"
                     android:textSize="25sp"
-                    android:maxLines="1"
                     app:layout_constraintBottom_toBottomOf="@+id/mine_user_tv_comment_number"
                     app:layout_constraintStart_toEndOf="@+id/mine_user_tv_comment_number"
                     app:layout_constraintTop_toTopOf="@+id/mine_user_tv_comment_number" />

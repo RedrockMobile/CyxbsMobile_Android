@@ -3,6 +3,7 @@ package com.mredrock.cyxbs.qa.pages.search.ui.fragment
 import android.annotation.SuppressLint
 import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -26,6 +27,7 @@ import com.mredrock.cyxbs.qa.pages.dynamic.ui.adapter.DynamicAdapter
 import com.mredrock.cyxbs.qa.pages.quiz.ui.QuizActivity
 import com.mredrock.cyxbs.qa.pages.search.model.SearchQuestionDataSource
 import com.mredrock.cyxbs.qa.pages.search.ui.adapter.SearchNoResultAdapter
+import com.mredrock.cyxbs.qa.pages.search.ui.callback.IKeyProvider
 import com.mredrock.cyxbs.qa.pages.search.viewmodel.QuestionSearchedViewModel
 import com.mredrock.cyxbs.qa.ui.adapter.FooterRvAdapter
 import com.mredrock.cyxbs.qa.ui.widget.QaDialog
@@ -44,8 +46,10 @@ import kotlinx.android.synthetic.main.qa_fragment_question_search_result_dynamic
  * @description
  **/
 class RelateDynamicFragment : BaseResultFragment() {
+    //QQ分享相关
     private var mTencent: Tencent? = null
 
+    //搜索内容
     private var searchKey = ""
     private lateinit var dynamicListRvAdapter: DynamicAdapter
     var emptyRvAdapter: SearchNoResultAdapter? = null
@@ -54,11 +58,11 @@ class RelateDynamicFragment : BaseResultFragment() {
     override fun getViewModelFactory() = QuestionSearchedViewModel.Factory(searchKey)
 
     override fun initData() {
+        //获取搜索内容
+        searchKey = (requireActivity() as IKeyProvider).getKey()
+
         initDynamic()
         initObserve()
-        arguments?.let {
-            searchKey = it.getString("searchKey", "")
-        }
         mTencent = Tencent.createInstance(CommentConfig.APP_ID, this.requireContext())
         viewModel.isCreateOver.observe(viewLifecycleOwner, {
             if (it != null) {
@@ -171,14 +175,19 @@ class RelateDynamicFragment : BaseResultFragment() {
     }
 
     private fun initObserve() {
+        //动态数据
         viewModel.questionList.observe(viewLifecycleOwner, {
             dynamicListRvAdapter.submitList(it)
         })
+
+
         viewModel.networkState.observe(viewLifecycleOwner, {
             it?.run {
                 footerRvAdapter?.refreshData(listOf(this))
             }
         })
+
+        //首次加载状态的监听
         viewModel.initialLoad.observe(viewLifecycleOwner, {
             when (it) {
                 NetworkState.LOADING -> {

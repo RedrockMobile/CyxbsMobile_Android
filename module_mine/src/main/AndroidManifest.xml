@@ -16,6 +16,7 @@
         <activity android:name=".page.security.activity.BindEmailActivity" />
         <activity android:name=".page.security.activity.SetPasswordProtectActivity" />
         <activity android:name=".page.security.activity.ChangePasswordActivity" />
+        <activity android:name=".page.mine.ui.activity.FanActivity"/>
         <activity
             android:name=".page.security.activity.SecurityActivity"
             android:theme="@style/AppTheme.NoActionBar" />

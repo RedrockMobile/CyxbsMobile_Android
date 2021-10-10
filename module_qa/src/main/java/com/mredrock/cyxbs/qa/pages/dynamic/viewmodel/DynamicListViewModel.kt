@@ -47,10 +47,10 @@ open class DynamicListViewModel : BaseViewModel() {
             .setInitialLoadSizeHint(6)
             .build()
         recommendFactory = DynamicDataSource.Factory("main")
-        focusFactory = DynamicDataSource.Factory("main")
+        focusFactory = DynamicDataSource.Factory("focus")
 
         recommendList = LivePagedListBuilder<Int, Dynamic>(recommendFactory, config).build()
-        focusList = LivePagedListBuilder<Int, Dynamic>(recommendFactory, config).build()
+        focusList = LivePagedListBuilder<Int, Dynamic>(focusFactory, config).build()
 
         recommendNetworkState =
             Transformations.switchMap(recommendFactory.dynamicDataSourceLiveData) { it.networkState }
@@ -58,9 +58,9 @@ open class DynamicListViewModel : BaseViewModel() {
             Transformations.switchMap(recommendFactory.dynamicDataSourceLiveData) { it.initialLoad }
 
         focusNetworkState =
-            Transformations.switchMap(recommendFactory.dynamicDataSourceLiveData) { it.networkState }
+            Transformations.switchMap(focusFactory.dynamicDataSourceLiveData) { it.networkState }
         focusInitialLoad =
-            Transformations.switchMap(recommendFactory.dynamicDataSourceLiveData) { it.initialLoad }
+            Transformations.switchMap(focusFactory.dynamicDataSourceLiveData) { it.initialLoad }
     }
 
     fun getMyCirCleData() {

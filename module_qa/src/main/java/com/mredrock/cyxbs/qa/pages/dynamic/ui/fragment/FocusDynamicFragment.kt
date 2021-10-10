@@ -6,6 +6,7 @@ import android.view.Window
 import android.view.WindowManager
 import android.widget.TextView
 import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import com.mredrock.cyxbs.common.BaseApp
 import com.mredrock.cyxbs.qa.R
 import com.mredrock.cyxbs.qa.beannew.Dynamic
@@ -29,10 +30,10 @@ import kotlinx.android.synthetic.main.qa_fragment_dynamic_recommend.*
 import kotlinx.android.synthetic.main.qa_fragment_question_search_result.*
 
 /**
- * @class
+ * @class FocusDynamicFragment
  * @author YYQF
  * @data 2021/9/24
- * @description
+ * @description 邮问关注动态页
  **/
 class FocusDynamicFragment : BaseDynamicFragment() {
 
@@ -142,16 +143,28 @@ class FocusDynamicFragment : BaseDynamicFragment() {
                 animator.moveDuration = 0
                 animator.addDuration = 0
             }
-            layoutManager = LinearLayoutManager(context)
+            val linearLayoutManager = LinearLayoutManager(context)
+            layoutManager = linearLayoutManager
             adapter = RvAdapterWrapper(
                 normalAdapter = dynamicListRvAdapter,
                 emptyAdapter = emptyRvAdapter,
                 footerAdapter = footerRvAdapter
             )
+            /**
+             * 解决嵌套滑动中RecyclerView滑到顶部时不能立刻左右滑动, 因为RecyclerView的惯性滑动还在继续
+             */
+            addOnScrollListener(object : RecyclerView.OnScrollListener() {
+                override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
+                    super.onScrolled(recyclerView, dx, dy)
+                    if (linearLayoutManager.findFirstCompletelyVisibleItemPosition() == 0) {
+                        stopScroll()
+                    }
+                }
+            })
         }
 
         qa_srl_focus.setOnRefreshListener {
-            viewModel.invalidateRecommendList()
+            viewModel.invalidateFocusList()
             viewModel.getMyCirCleData()
         }
     }

@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<layout xmlns:android="http://schemas.android.com/apk/res/android"
+<layout xmlns:tools="http://schemas.android.com/tools"
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <data>
@@ -13,7 +14,7 @@
         android:layout_height="wrap_content">
 
         <de.hdodenhof.circleimageview.CircleImageView
-            android:id="@+id/mine_user_item_iv_avatar"
+            android:id="@+id/mine_fan_item_iv_avatar"
             android:layout_width="42dp"
             android:layout_height="42dp"
             android:layout_marginStart="16dp"
@@ -23,7 +24,7 @@
             app:layout_constraintTop_toTopOf="parent" />
 
         <TextView
-            android:id="@+id/mine_textview2"
+            android:id="@+id/mine_fan_item_tv_nickname"
             android:layout_width="wrap_content"
             android:layout_height="22dp"
             android:layout_marginStart="13dp"
@@ -31,11 +32,11 @@
             android:text="鱼鱼鱼鱼鱼鱼鱼鱼鱼鱼"
             android:textColor="#15315B"
             android:textSize="16sp"
-            app:layout_constraintStart_toEndOf="@+id/mine_user_item_iv_avatar"
+            app:layout_constraintStart_toEndOf="@+id/mine_fan_item_iv_avatar"
             app:layout_constraintTop_toTopOf="parent" />
 
         <TextView
-            android:id="@+id/mine_textview3"
+            android:id="@+id/mine_fan_item_tv_introduction"
             android:layout_width="wrap_content"
             android:layout_height="17dp"
             android:layout_marginStart="13dp"
@@ -43,8 +44,24 @@
             android:text="这是一条签名签名去啊就基督教..."
             android:textSize="12sp"
             android:textColor="#6615315B"
-            app:layout_constraintStart_toEndOf="@+id/mine_user_item_iv_avatar"
-            app:layout_constraintTop_toBottomOf="@+id/mine_textview2" />
+            app:layout_constraintStart_toEndOf="@+id/mine_fan_item_iv_avatar"
+            app:layout_constraintTop_toBottomOf="@+id/mine_fan_item_tv_nickname" />
+
+        <TextView
+            android:id="@+id/mine_fan_item_tv_focus"
+            android:layout_width="wrap_content"
+            android:layout_height="25dp"
+            android:layout_marginEnd="17dp"
+            android:paddingStart="14dp"
+            android:paddingEnd="14dp"
+            android:text="+关注"
+            android:textColor="#FFFFFF"
+            android:textSize="13sp"
+            android:gravity="center"
+            android:background="@drawable/mine_shape_tv_unfocus"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="@+id/mine_fan_item_tv_nickname" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

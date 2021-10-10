@@ -21,16 +21,16 @@ import kotlinx.android.synthetic.main.mine_activity_fan.*
  * @description
  **/
 class FanActivity : BaseActivity() {
-    private var userId = 0;
+    private var redId = "";
 
     private val userService: IUserService by lazy {
         ServiceManager.getService(IAccountService::class.java).getUserService()
     }
 
     companion object {
-        fun activityStart(activity: Activity, userId: Int) {
+        fun activityStart(activity: Activity, redid: String) {
             activity.startActivity(Intent(activity, FanActivity::class.java).apply {
-                putExtra("userId", userId)
+                putExtra("redid", redid)
             })
         }
     }
@@ -38,45 +38,32 @@ class FanActivity : BaseActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.mine_activity_fan)
-        userId = intent.getIntExtra("userId", 0)
+        redId = intent.getStringExtra("redid")
         initPager()
     }
 
     private fun initPager() {
         mine_fan_vp2.apply {
+            val bundle = Bundle().apply { putString("redid",redId) }
             adapter = FanPagerAdapter(this@FanActivity).apply {
-                addFragment(FanFragment())
-                addFragment(FollowFragment())
-            }
-
-            //viewpager切换动画
-            setPageTransformer { view, position ->
-                if (position < -1 || position > 1) {
-                    view.alpha = 0f
-                } else if (position > 0) {
-                    view.apply {
-                        scaleX = 0.4f * (position - 1 / 2f) * (position - 1 / 2f) + 0.9f
-                        scaleY = 0.4f * (position - 1 / 2f) * (position - 1 / 2f) + 0.9f
-                    }
-                } else {
-                    view.apply {
-                        scaleX = 0.4f * (-position - 1 / 2f) * (-position - 1 / 2f) + 0.9f
-                        scaleY = 0.4f * (-position - 1 / 2f) * (-position - 1 / 2f) + 0.9f
-                    }
-                }
+                addFragment(FanFragment().apply {
+                    arguments = bundle
+                })
+                addFragment(FollowFragment().apply {
+                    arguments = bundle
+                })
             }
         }
 
         TabLayoutMediator(mine_fan_tl, mine_fan_vp2) { tab, position ->
-//            when (position) {
-//                0 -> tab.text =
-//                    if (userId == userService.getUid()) "我的粉丝"
-//                    else "Ta的粉丝"
-//                1 -> tab.text =
-//                    if (userId == userService.getUid()) "我的关注"
-//                    else "Ta的关注"
-//            }
+            when (position) {
+                0 -> tab.text =
+                    if (redId == userService.getRedid()) "我的粉丝"
+                    else "Ta的粉丝"
+                1 -> tab.text =
+                    if (redId == userService.getRedid()) "我的关注"
+                    else "Ta的关注"
+            }
         }.attach()
-
     }
 }

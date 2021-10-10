@@ -6,7 +6,7 @@
     <data>
         <variable
             name="data"
-            type="com.mredrock.cyxbs.qa.pages.search.ui.binder.RelateUserBinder" />
+            type="com.mredrock.cyxbs.mine.page.mine.binder.FollowBinder" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -14,29 +14,29 @@
         android:layout_height="wrap_content">
 
         <de.hdodenhof.circleimageview.CircleImageView
-            android:id="@+id/qa_iv_search_user_avatar"
+            android:id="@+id/mine_follow_item_iv_avatar"
             android:layout_width="42dp"
             android:layout_height="42dp"
             android:layout_marginStart="16dp"
-            android:layout_marginTop="16dp"
-            android:src="@drawable/common_default_avatar"
+            android:layout_marginTop="25dp"
+            android:src="#C4C4C4"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
         <TextView
-            android:id="@+id/qa_tv_search_user_nickname"
+            android:id="@+id/mine_follow_item_tv_nickname"
             android:layout_width="wrap_content"
             android:layout_height="22dp"
             android:layout_marginStart="13dp"
-            android:layout_marginTop="18dp"
+            android:layout_marginTop="24dp"
             android:text="鱼鱼鱼鱼鱼鱼鱼鱼鱼鱼"
             android:textColor="#15315B"
             android:textSize="16sp"
-            app:layout_constraintStart_toEndOf="@+id/qa_iv_search_user_avatar"
+            app:layout_constraintStart_toEndOf="@+id/mine_follow_item_iv_avatar"
             app:layout_constraintTop_toTopOf="parent" />
 
         <TextView
-            android:id="@+id/qa_tv_search_user_introduction"
+            android:id="@+id/mine_follow_item_tv_introduction"
             android:layout_width="wrap_content"
             android:layout_height="17dp"
             android:layout_marginStart="13dp"
@@ -44,24 +44,24 @@
             android:text="这是一条签名签名去啊就基督教..."
             android:textSize="12sp"
             android:textColor="#6615315B"
-            app:layout_constraintStart_toEndOf="@+id/qa_iv_search_user_avatar"
-            app:layout_constraintTop_toBottomOf="@+id/qa_tv_search_user_nickname" />
+            app:layout_constraintStart_toEndOf="@+id/mine_follow_item_iv_avatar"
+            app:layout_constraintTop_toBottomOf="@+id/mine_follow_item_tv_nickname" />
 
         <TextView
-            android:id="@+id/qa_tv_search_user_focus"
+            android:id="@+id/mine_follow_item_tv_focus"
             android:layout_width="wrap_content"
             android:layout_height="25dp"
             android:layout_marginEnd="17dp"
-            android:background="@drawable/qa_shape_tv_search_focused"
-            android:text="互相关注"
             android:paddingStart="14dp"
             android:paddingEnd="14dp"
-            android:gravity="center"
-            android:textColor="#94A6C4"
+            android:text="+关注"
+            android:textColor="#FFFFFF"
             android:textSize="13sp"
-            app:layout_constraintBottom_toBottomOf="@+id/qa_iv_search_user_avatar"
+            android:gravity="center"
+            android:background="@drawable/mine_shape_tv_unfocus"
+            app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toTopOf="@+id/qa_iv_search_user_avatar" />
+            app:layout_constraintTop_toTopOf="@+id/mine_follow_item_tv_nickname" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>
