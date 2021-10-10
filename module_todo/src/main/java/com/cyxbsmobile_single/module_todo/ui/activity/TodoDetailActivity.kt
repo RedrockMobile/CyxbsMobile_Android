@@ -1,14 +1,11 @@
 package com.cyxbsmobile_single.module_todo.ui.activity
 
-import android.app.Activity
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.view.View
 import android.view.WindowManager
-import androidx.core.app.ActivityOptionsCompat
 import androidx.core.content.ContextCompat
-import androidx.core.util.Pair
 import androidx.core.widget.addTextChangedListener
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.cyxbsmobile_single.module_todo.R
@@ -20,7 +17,6 @@ import com.cyxbsmobile_single.module_todo.viewmodel.TodoDetailViewModel
 import com.google.gson.Gson
 import com.mredrock.cyxbs.common.BaseApp
 import com.mredrock.cyxbs.common.ui.BaseViewModelActivity
-import com.mredrock.cyxbs.common.utils.LogUtils
 import com.mredrock.cyxbs.common.utils.extensions.toast
 import kotlinx.android.synthetic.main.todo_activity_inner_detail.*
 
@@ -31,20 +27,6 @@ class TodoDetailActivity : BaseViewModelActivity<TodoDetailViewModel>() {
     private var backTime = 2
 
     companion object {
-        fun startActivity(todo: Todo, context: Context, activity: Activity, checkView: View, title: View) {
-            val sharePair1 = Pair(checkView as View, "check")
-            val sharePair2 = Pair(title as View, "title")
-            val bundle =
-                ActivityOptionsCompat.makeSceneTransitionAnimation(activity, sharePair1, sharePair2)
-                    .toBundle()
-            context.startActivity(
-                Intent(context, TodoDetailActivity::class.java).apply {
-                    putExtra("todo", Gson().toJson(todo))
-                },
-                bundle
-            )
-        }
-
         fun startActivity(todo: Todo, context: Context){
             context.startActivity(
                 Intent(context, TodoDetailActivity::class.java).apply {

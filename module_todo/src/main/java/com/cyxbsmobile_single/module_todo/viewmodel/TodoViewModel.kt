@@ -64,13 +64,9 @@ class TodoViewModel : BaseViewModel() {
                 }
                 todoList.addAll(it)
                 wrapperList.add(TodoItemWrapper.titleWrapper(getString(R.string.todo_string_uncheck)))
-                for (todoWrapper in uncheckTodoList) {
-                    wrapperList.add(todoWrapper)
-                }
+                wrapperList.addAll(uncheckTodoList)
                 wrapperList.add(TodoItemWrapper.titleWrapper(getString(R.string.todo_string_checked)))
-                for (todoWrapper in checkedTodoList) {
-                    wrapperList.add(todoWrapper)
-                }
+                wrapperList.addAll(checkedTodoList)
             } else {
                 wrapperList.add(TodoItemWrapper.titleWrapper(getString(R.string.todo_string_uncheck)))
                 wrapperList.add(TodoItemWrapper.titleWrapper(getString(R.string.todo_string_checked)))

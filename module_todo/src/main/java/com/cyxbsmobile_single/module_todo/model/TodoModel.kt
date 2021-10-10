@@ -61,8 +61,6 @@ class TodoModel {
                     .updateTodo(todo)
             }.setSchedulers().safeSubscribeBy {
                 onSuccess.invoke()
-                //更新本地修改时间
-                setLastModifyTime(System.currentTimeMillis())
             }
         apiGenerator.pushTodo(
             TodoListPushWrapper(
@@ -172,6 +170,9 @@ class TodoModel {
             putString(key, Gson().toJson(arrayList))
             commit()
         }
+        //更新本地修改时间
+        setLastModifyTime(114514L)
+        LogUtils.d("SyncTest", "syncTime = ${getLastSyncTime()}, modifyTime = ${getLastModifyTime()}")
     }
 
     private fun getLastModifyTime(): Long =
@@ -206,12 +207,14 @@ class TodoModel {
         onConflict: (() -> Unit)? = null
     ) {
         val lastModifyTime = getLastModifyTime()
-        val lastSyncTime = getLastModifyTime()
+        val lastSyncTime = getLastSyncTime()
         apiGenerator.getLastSyncTime()
             .setSchedulers()
             .safeSubscribeBy(
                 onNext = {
-                    if (lastSyncTime == 0L) {
+                    val remoteSyncTime = it.data.syncTime
+                    if (lastSyncTime == 0L){
+                        //本地数据库没有记录的情况
                         apiGenerator.queryAllTodo()
                             .setSchedulers()
                             .safeSubscribeBy(
@@ -240,9 +243,9 @@ class TodoModel {
                                 }
                             )
                     } else {
-                        val remoteSyncTime = it.data.syncTime
-                        if (lastSyncTime == remoteSyncTime) {
-                            //两端数据同步，不需要拉取，可以使用本地数据
+                        //本地数据库有记录
+                        if (lastSyncTime == remoteSyncTime){
+                            //本地数据库和远程同步时间相同，可以相信本地数据库
                             TodoDatabase.INSTANCE.todoDao()
                                 .queryAllTodo()
                                 .toObservable()
@@ -254,15 +257,18 @@ class TodoModel {
                                         }
                                     )
                                 )
-
-                            //这时需要比较是否存在本地修改，如果存在本地修改，则需要将本地修改重传
-                            if (lastModifyTime != lastSyncTime) {
+                            //如果存在本地修改，需要重传
+                            if (lastModifyTime != lastSyncTime){
                                 resendModifyList(TodoListPushWrapper.NONE_FORCE)
                             }
                         } else {
-                            //两端数据不同步，需要判断是否存在本地修改
-                            if (lastModifyTime == lastSyncTime) {
+                            //存在另一台设备的数据贡献
+                            if (lastModifyTime == lastSyncTime){
                                 //不存在本地修改，以远程为主
+                                getAllTodoFromNet { todoList ->
+                                    onSuccess.invoke(todoList)
+                                }
+                                //获取修改，更新本地数据库
                                 apiGenerator.queryChangedTodo(lastSyncTime)
                                     .setSchedulers()
                                     .safeSubscribeBy(
@@ -271,7 +277,7 @@ class TodoModel {
                                             Observable.just(wrapper.data.todoList)
                                                 .map { list ->
                                                     TodoDatabase.INSTANCE
-                                                        .todoDao().updateTodoList(list)
+                                                        .todoDao().insertTodoList(list)
                                                 }.setSchedulers().safeSubscribeBy { }
                                             //删除本地
                                             Observable.fromArray(wrapper.data.delTodoArray)
@@ -292,7 +298,6 @@ class TodoModel {
                                         }
                                     )
                             } else {
-                                //冲突了
                                 onConflict?.invoke()
                             }
                         }
@@ -304,7 +309,7 @@ class TodoModel {
             )
     }
 
-    private fun getAllTodoFromNet(onSuccess: (todoList: List<Todo>) -> Unit) {
+    private fun getAllTodoFromNet(withDatabaseSync : Boolean = false, onSuccess: (todoList: List<Todo>) -> Unit) {
         apiGenerator
             .queryAllTodo()
             .setSchedulers()
@@ -312,13 +317,15 @@ class TodoModel {
                 onNext = {
                     setLastSyncTime(it.data.syncTime)
                     //本地数据库全部覆盖
-                    Observable.just(it.data.todoArray)
-                        .map { list ->
-                            TodoDatabase.INSTANCE
-                                .todoDao()
-                                .insertTodoList(list)
-                        }.setSchedulers()
-                        .safeSubscribeBy { }
+                    if (withDatabaseSync){
+                        Observable.just(it.data.todoArray)
+                            .map { list ->
+                                TodoDatabase.INSTANCE
+                                    .todoDao()
+                                    .insertTodoList(list)
+                            }.setSchedulers()
+                            .safeSubscribeBy { }
+                    }
                     todoList.clear()
                     it.data.todoArray?.let { list ->
                         todoList.addAll(list)
@@ -352,12 +359,36 @@ class TodoModel {
                     syncTime = syncTime
                 )
 
+                LogUtils.d("Shit", "resend")
+
+                apiGenerator.delTodo(
+                    DelPushWrapper(
+                        delList,
+                        getLastSyncTime()
+                    )
+                ).setSchedulers()
+                    .safeSubscribeBy(
+                        onNext = { syncTime ->
+                            LogUtils.d("Shit", "resend on del, sync = ${syncTime.data.syncTime}")
+
+                            setLastSyncTime(syncTime.data.syncTime)
+                            setLastModifyTime(syncTime.data.syncTime)
+                            //制空离线修改
+                            addOffLineModifyTodo(type = DEL)
+                            addOffLineModifyTodo(type = CHANGE)
+                        },
+                        onError = {
+                            BaseApp.context.toast("本地删除重传失败")
+                        }
+                    )
+
                 apiGenerator.pushTodo(pushWrapper)
                     .setSchedulers()
                     .safeSubscribeBy(
-                        onNext = {
-                            setLastSyncTime(it.data.syncTime)
-                            setLastModifyTime(it.data.syncTime)
+                        onNext = { syncTime ->
+                            LogUtils.d("Shit", "resend on push, sync = ${syncTime.data.syncTime}")
+                            setLastSyncTime(syncTime.data.syncTime)
+                            setLastModifyTime(syncTime.data.syncTime)
                             //制空离线修改
                             addOffLineModifyTodo(type = DEL)
                             addOffLineModifyTodo(type = CHANGE)

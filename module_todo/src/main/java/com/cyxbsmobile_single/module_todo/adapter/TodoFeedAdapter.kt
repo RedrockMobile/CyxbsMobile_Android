@@ -13,6 +13,7 @@ import com.cyxbsmobile_single.module_todo.adapter.DoubleListFoldRvAdapter.ShowTy
 import com.cyxbsmobile_single.module_todo.ui.activity.TodoDetailActivity
 import com.cyxbsmobile_single.module_todo.viewmodel.TodoViewModel
 import com.mredrock.cyxbs.common.ui.BaseFeedFragment
+import com.mredrock.cyxbs.common.utils.LogUtils
 import com.mredrock.cyxbs.common.utils.extensions.setOnSingleClickListener
 import kotlinx.android.synthetic.main.todo_fragment_feed.view.*
 import kotlinx.android.synthetic.main.todo_rv_item_todo.view.*
@@ -42,6 +43,7 @@ class TodoFeedAdapter(private val todoViewModel: TodoViewModel, private val acti
 
     fun refresh() {
         feedView.apply {
+            LogUtils.d("Gibson", "uncheckTodoList = ${todoViewModel.uncheckTodoList}")
             if (todoViewModel.uncheckTodoList.isNullOrEmpty()) {
                 changeToEmpty()
             } else {
