@@ -68,6 +68,9 @@ class OptionalPopWindow private constructor(val context: Context?) : PopupWindow
                 optionalPopWindow!!.dismiss()
                 onClickCallback()
             }
+            view.findViewById<TextView>(R.id.qa_popwindow_tv_edit).setOnClickListener {
+
+            }
             childCount++
             (mainView as LinearLayout).addView(view)
             (mainView as LinearLayout).invalidate()

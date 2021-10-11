@@ -67,14 +67,7 @@ class DynamicFragment : BaseDynamicFragment(), EventBusLifecycleSubscriber {
     override fun getLayoutId() = R.layout.qa_fragment_dynamic
 
     private fun initObserve() {
-//        viewModel.initialLoad.observe(viewLifecycleOwner, Observer {
-//            when (it) {
-//                NetworkState.SUCCESSFUL ->
-//                    canSendDynamic = true
-//                NetworkState.FAILED ->
-//                    canSendDynamic = false
-//            }
-//        })
+
 
         viewModel.myCircle.observe(viewLifecycleOwner, Observer {
 

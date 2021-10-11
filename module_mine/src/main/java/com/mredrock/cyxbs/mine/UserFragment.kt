@@ -65,7 +65,7 @@ class UserFragment : BaseViewModelFragment<UserViewModel>() {
 
             mine_user_fm_about_us.setOnSingleClickListener { doIfLogin { startActivity<AboutActivity>() } }
             mine_user_fm_setting.setOnSingleClickListener { doIfLogin { startActivity<SettingActivity>() } }
-            mine_user_cl_info.setOnClickListener { doIfLogin { startActivity<HomepageActivity>() } }
+            mine_user_cl_info.setOnClickListener { doIfLogin { HomepageActivity.startHomePageActivity(null,context as Activity) } }
             mine_user_avatar.setOnSingleClickListener {
                 doIfLogin {
                     startActivity(

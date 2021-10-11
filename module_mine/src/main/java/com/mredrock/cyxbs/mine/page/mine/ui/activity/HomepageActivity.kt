@@ -35,6 +35,7 @@ import com.bumptech.glide.request.transition.Transition
 import com.mredrock.cyxbs.api.account.IAccountService
 import com.mredrock.cyxbs.api.account.IUserService
 import com.mredrock.cyxbs.common.config.DIR_PHOTO
+import com.mredrock.cyxbs.common.config.QA_DYNAMIC_MINE_FRAGMENT
 import com.mredrock.cyxbs.common.service.ServiceManager
 import com.mredrock.cyxbs.common.utils.extensions.*
 import com.mredrock.cyxbs.mine.R
@@ -78,6 +79,17 @@ class HomepageActivity : BaseViewModelActivity<MineViewModel>() {
      */
     private var nickname = "鱼鱼鱼鱼鱼鱼鱼鱼鱼"
     /**
+     * redid
+     */
+    private var redid:String? = null
+
+    /**
+     * 身份的Fragemnt
+     */
+    private val identityFragment by lazy {
+      IdentityFragment()
+    }
+    /**
      * 相册图片的地址
      */
     private val fileDir by lazy {
@@ -110,30 +122,46 @@ class HomepageActivity : BaseViewModelActivity<MineViewModel>() {
         alphaMineView = dataBinding.clPersonalInformation.alpha
         viewModel._userInfo.observeForever {
             dataBinding.clPersonalInformation.tv_id_number.text = it.data.uid.toString()
-            dataBinding.clPersonalInformation.tv_grade.text = it.data.grade.toString()
+            dataBinding.clPersonalInformation.tv_grade.text = it.data.grade
             if (it.data.constellation.equals("")){
                 dataBinding.clPersonalInformation.mine_tv_constellation.text="十三星座"
             }else{
                 dataBinding.clPersonalInformation.mine_tv_constellation.text = it.data.constellation
             }
             dataBinding.clPersonalInformation.tv_sex.text = it.data.gender
-            nickname =  it.data.nickname
-            dataBinding.clPersonalInformation.tv_name.text = nickname
+            dataBinding.clPersonalInformation.tv_name.text = it.data.nickname
             dataBinding.clPersonalInformation.tv_signature.text = it.data.introduction
+            nickname =  it.data.nickname
+          it.data.redid.let {
+              identityFragment.onSuccesss(it)
+          }
         loadBitmap(it.data.backgroundUrl){
             initBlurBitmap(it)
         }
-
         }
-        viewModel.getUserInfo()
+       getUserInfo(intent)
     }
 
+
+
+
+
+    fun getUserInfo(data: Intent?){
+        redid = data?.getStringExtra("redid")
+        if (redid!=null){
+            viewModel.getUserInfo(redid)
+            dataBinding.clPersonalInformation.mine_tv_concern.visible()
+        }else{
+            dataBinding.clPersonalInformation.mine_tv_concern.visibility = View.INVISIBLE
+            viewModel.getUserInfo(null)
+        }
+
+    }
 
     fun initView() {
         val tabNames = listOf<String>("我的动态", "我的身份")
         val dynamicFragment =
-            ARouter.getInstance().build("/identity/mine/entry").navigation() as Fragment
-        val identityFragment = IdentityFragment()
+            ARouter.getInstance().build(QA_DYNAMIC_MINE_FRAGMENT).navigation() as Fragment
         val list = arrayListOf<Fragment>(dynamicFragment, identityFragment)
         dataBinding.vp2Mine.adapter = MineAdapter(this, list)
         dataBinding.vp2Mine.
@@ -299,6 +327,11 @@ class HomepageActivity : BaseViewModelActivity<MineViewModel>() {
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
+//      Log.e("wxtasadasg","(HomepageActivity.kt:329)->>Activity被回调 ")
+//        if (resultCode==200){
+//            getUserInfo(data)
+//        }
+
         if (resultCode != Activity.RESULT_OK) return
         if (resultCode == UCrop.RESULT_ERROR && data != null) handleCropError(data)
 
@@ -418,5 +451,22 @@ var isSetBackground = false
                     initBlurBitmap(null)
                 }
             })
+    }
+
+
+    companion object{
+        fun startHomePageActivity(redid:String?,activity: Activity){
+            val intent = Intent(activity,HomepageActivity::class.java)
+            intent.putExtra("redid",redid)
+            activity.startActivity(intent)
+        }
+
+    }
+
+    /**
+     * 获取redid的接口
+     */
+    interface onGetRedid {
+        fun onSuccesss(redid: String)
     }
 }

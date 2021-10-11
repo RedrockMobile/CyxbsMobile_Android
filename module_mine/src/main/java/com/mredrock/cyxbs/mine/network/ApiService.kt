@@ -225,7 +225,7 @@ interface ApiService {
      * 查询用户信息
      */
         @GET("/magipoke/person/info")
-    fun getPersonInfo(@Query("redid")redId:String):Observable<RedrockApiWrapper<UserInfo>>
+    fun getPersonInfo(@Query("redid")redId:String):Observable<UserInfo>
 
     /**
      * 查询用户信息
@@ -246,31 +246,31 @@ interface ApiService {
      */
 
     @GET("/magipoke-identity/GetAuthentication")
-    fun getAuthenticationStatus()
+    fun getAuthenticationStatus( @Query("id") redId: String?):Observable<AuthenticationStatus>
 
     /**
      * 获取个性身份
      */
     @GET("/magipoke-identity/GetCustomization")
-    fun getCustomization()
+    fun getCustomization(@Query("id") redId: String):Observable<AuthenticationStatus>
 
     /**
      * 获取全部身份
      */
     @GET("/magipoke-identity/GetAllIdentify")
-    fun getAllIdentify()
+    fun getAllIdentify(@Query("id") redId: String):Observable<AuthenticationStatus>
 
     /**
      * 上传动态的展示身份
      */
     @GET("/magipoke-identity/UploadDisplayIdentity")
-    fun uploadDisplayIdentity()
+    fun uploadDisplayIdentity(@Query("identityId")identityId:String): Observable<RedrockApiStatus>
 
     /**
      * 删除身份
      */
     @GET("/magipoke-identity/DeleteIdentity")
-    fun deleteIdentity()
+    fun deleteIdentity(@Query("identityId")identityId:String): Observable<RedrockApiStatus>
     /**
      * 更新动态信息
      */

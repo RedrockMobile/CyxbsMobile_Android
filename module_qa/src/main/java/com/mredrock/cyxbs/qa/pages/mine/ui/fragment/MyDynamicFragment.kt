@@ -120,6 +120,7 @@ class MyDynamicFragment : BaseViewModelFragment<MyDynamicViewModel>() {
         )
 
         observeLoading(dynamicListRvAdapter, footerRvAdapter, emptyRvAdapter)
+
         qa_rv_my_dynamic.apply {
             layoutManager = LinearLayoutManager(context)
             adapter = adapterWrapper

@@ -2,6 +2,7 @@ package com.mredrock.cyxbs.qa.pages.dynamic.ui.adapter
 
 
 import android.content.Context
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -100,7 +101,9 @@ class DynamicAdapter(val context: Context?, private val onItemClickEvent: (Dynam
             }
             qa_iv_dynamic_more_tips_clicked.setOnSingleClickListener { view ->
                 getItem(position)?.let { dynamic ->
+                    Log.e("wxtasdag","(DynamicAdapter.kt:104)->>${dynamic.isFollowTopic} ")
                     if (dynamic.isSelf == 0) {
+                       Log.e("wxtasdag","(DynamicAdapter.kt:104)->>${dynamic.isFollowTopic} ")
                         if (dynamic.isFollowTopic == 0) {
                             OptionalPopWindow.Builder().with(context)
                                 .addOptionAndCallback(IGNORE,R.layout.qa_popupwindow_option_bottom) {
@@ -123,12 +126,18 @@ class DynamicAdapter(val context: Context?, private val onItemClickEvent: (Dynam
                                     R.layout.qa_fragment_dynamic,null,false))
                         }
                     } else {
+
                         OptionalPopWindow.Builder().with(context)
                             .addOptionAndCallback(DELETE,R.layout.qa_popupwindow_option_bottom) {
+
                                 onPopWindowClickListener?.invoke(position, DELETE, dynamic)
                             }.showFromBottom(
                                 LayoutInflater.from(context).inflate(
                                 R.layout.qa_fragment_dynamic,null,false))
+
+
+
+
                     }
                 }
             }
