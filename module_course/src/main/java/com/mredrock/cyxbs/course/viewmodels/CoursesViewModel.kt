@@ -1,6 +1,5 @@
 package com.mredrock.cyxbs.course.viewmodels
 
-import android.util.Log
 import android.view.View
 import androidx.annotation.WorkerThread
 import androidx.databinding.ObservableField
@@ -16,7 +15,6 @@ import com.mredrock.cyxbs.common.config.WIDGET_COURSE
 import com.mredrock.cyxbs.common.event.CurrentDateInformationEvent
 import com.mredrock.cyxbs.common.network.ApiGenerator
 import com.mredrock.cyxbs.common.utils.ClassRoomParse
-import com.mredrock.cyxbs.common.utils.LogUtils
 import com.mredrock.cyxbs.common.utils.Num2CN
 import com.mredrock.cyxbs.common.utils.SchoolCalendar
 import com.mredrock.cyxbs.common.utils.extensions.defaultSharedPreferences

@@ -20,7 +20,6 @@ import kotlinx.android.synthetic.main.qa_popwindow_option_normal.view.*
  * created by zhangzhe, SpreadWater
  * 2020/12/4
  */
-
 class OptionalPopWindow private constructor(val context: Context?) : PopupWindow(context) {
 
     companion object {

@@ -7,14 +7,12 @@ import android.view.inputmethod.InputMethodManager
 import android.widget.Toast
 import androidx.core.view.iterator
 import com.alibaba.android.arouter.facade.annotation.Route
-import com.alibaba.android.arouter.launcher.ARouter
-import com.google.gson.Gson
 import com.mredrock.cyxbs.common.component.CyxbsToast
 import com.mredrock.cyxbs.common.config.DISCOVER_VOLUNTEER
-import com.mredrock.cyxbs.common.config.DISCOVER_VOLUNTEER_RECORD
 import com.mredrock.cyxbs.common.ui.BaseViewModelActivity
 import com.mredrock.cyxbs.common.utils.extensions.gone
 import com.mredrock.cyxbs.common.utils.extensions.invisible
+import com.mredrock.cyxbs.common.utils.extensions.setOnSingleClickListener
 import com.mredrock.cyxbs.common.utils.extensions.visible
 import com.mredrock.cyxbs.volunteer.event.VolunteerLoginEvent
 import com.mredrock.cyxbs.volunteer.viewmodel.VolunteerLoginViewModel
@@ -37,10 +35,10 @@ class VolunteerLoginActivity : BaseViewModelActivity<VolunteerLoginViewModel>() 
         super.onCreate(savedInstanceState)
         setContentView(R.layout.volunteer_activity_login)
         initObserve()
-        btn_volunteer_login.setOnClickListener {
+        btn_volunteer_login.setOnSingleClickListener {
             loginAction()
         }
-        iv_back.setOnClickListener { finish() }
+        iv_back.setOnSingleClickListener { finish() }
         useSoftKeyboard()
     }
 
