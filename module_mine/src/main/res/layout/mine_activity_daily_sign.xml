@@ -50,14 +50,14 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="4dp"
+            android:paddingEnd="40dp"
             android:text="@string/mine_sign_week_default"
             android:textColor="@color/common_white_font_color"
             android:textSize="34sp"
             android:textStyle="bold"
             app:layout_constraintStart_toStartOf="@+id/mine_daily_tv_year"
             app:layout_constraintTop_toBottomOf="@+id/mine_daily_tv_year"
-            android:paddingEnd="40dp"
-            tools:text="xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"/>
+            tools:text="xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx" />
 
 
         <ImageView

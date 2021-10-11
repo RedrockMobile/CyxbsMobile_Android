@@ -11,6 +11,7 @@ import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.mredrock.cyxbs.common.BaseApp
 import com.mredrock.cyxbs.common.BaseApp.Companion.context
+import com.mredrock.cyxbs.common.skin.SkinManager
 import com.mredrock.cyxbs.common.ui.BaseViewModelActivity
 import com.mredrock.cyxbs.common.utils.extensions.setOnSingleClickListener
 import com.mredrock.cyxbs.qa.R
@@ -78,9 +79,9 @@ class CircleSquareActivity : BaseViewModelActivity<CircleSquareViewModel>() {
             setResult(NEED_REFRESH_RESULT)
             onBackPressed()
         }
+        qa_ib_toolbar_back.setImageDrawable(SkinManager.getDrawable("qa_ic_arrow_left",R.drawable.qa_ic_arrow_left))
         qa_tv_toolbar_title.text = resources.getText(R.string.qa_square_title)
-        qa_circle_square_toolbar.background =
-            ContextCompat.getDrawable(context, R.color.qa_circle_toolbar_back_color)
+        qa_circle_square_toolbar.setBackgroundColor( SkinManager.getColor("qa_circle_toolbar_back_color", R.color.qa_circle_toolbar_back_color))
     }
 
     private fun initView() {

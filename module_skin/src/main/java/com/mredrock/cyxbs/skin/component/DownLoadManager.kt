@@ -1,11 +1,12 @@
 package com.mredrock.cyxbs.skin.component
 
 import android.content.Context
+import android.util.Log
 import okhttp3.*
-import java.io.File
-import java.io.FileOutputStream
-import java.io.IOException
-import java.io.InputStream
+import java.io.*
+import java.net.HttpURLConnection
+import java.net.MalformedURLException
+import java.net.URL
 
 /**
  * Created by LinTong on 2021/10/6
@@ -13,12 +14,13 @@ import java.io.InputStream
  */
 object DownLoadManager {
     //    所有的皮肤包id与名字在这里列出
-    val allSkinName = mapOf(Pair(1, "国庆专题"))
+    const val NATIONAL_DAY = 1
+    val allSkinName = mapOf(Pair(NATIONAL_DAY, "NationalDay.skin"))
     private val okHttpClient = OkHttpClient()
 
     /**
      * @param url 下载连接
-     * @param saveDir 储存下载文件的SDCard目录
+     * @param saveDir 储存下载文件的目录
      * @param listener 下载监听
      */
     fun download(context: Context, url: String, fileName: String, listener: OnDownloadListener) {
@@ -27,7 +29,7 @@ object DownLoadManager {
             override fun onFailure(call: Call, e: IOException) {
                 // 下载失败
                 listener.onDownloadFailed()
-
+                e.printStackTrace()
             }
 
             override fun onResponse(call: Call, response: Response) {
@@ -38,20 +40,21 @@ object DownLoadManager {
                 // 储存下载文件的目录
                 val savePath = context.cacheDir.absolutePath
                 try {
-                    input = response.body?.byteStream()
-                    val total: Long = response.body?.contentLength() ?: 0
+                    val result = response.body
+                    input = result?.byteStream()
+                    val total: Long = result?.contentLength() ?: 0
                     val file = File(savePath, fileName)
                     fos = FileOutputStream(file)
                     var sum: Long = 0
                     if (input != null) {
                         len = input.read(buf)
                         while (len != -1) {
-                            len = input.read(buf)
                             fos.write(buf, 0, len)
                             sum += len
                             val progress = (sum * 1.0f / total * 100).toInt()
                             // 下载中
                             listener.onDownloading(progress)
+                            len = input.read(buf)
                         }
                     }
                     fos.flush()
@@ -59,6 +62,7 @@ object DownLoadManager {
                     listener.onDownloadSuccess()
                 } catch (e: Exception) {
                     listener.onDownloadFailed()
+                    e.printStackTrace()
                 } finally {
                     try {
                         input?.close()
@@ -71,37 +75,37 @@ object DownLoadManager {
                 }
             }
         })
-    }
+}
 
-    public interface OnDownloadListener {
-        /**
-         * 下载成功
-         */
-        fun onDownloadSuccess()
-
-        /**
-         * @param progress
-         * 下载进度
-         */
-        fun onDownloading(progress: Int)
-
-        /**
-         * 下载失败
-         */
-        fun onDownloadFailed()
-    }
+public interface OnDownloadListener {
+    /**
+     * 下载成功
+     */
+    fun onDownloadSuccess()
 
     /**
-     * 判断文件是否存在
+     * @param progress
+     * 下载进度
      */
-    private fun fileIsExists(strFile: String?): Boolean {
-        try {
-            if (!File(strFile).exists()) {
-                return false
-            }
-        } catch (e: Exception) {
+    fun onDownloading(progress: Int)
+
+    /**
+     * 下载失败
+     */
+    fun onDownloadFailed()
+}
+
+/**
+ * 判断文件是否存在
+ */
+ fun fileIsExists(strFile: String?): Boolean {
+    try {
+        if (!File(strFile).exists()) {
             return false
         }
-        return true
+    } catch (e: Exception) {
+        return false
     }
+    return true
+}
 }

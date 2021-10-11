@@ -11,6 +11,11 @@ import java.lang.reflect.Method
  */
 object SPUtil {
     private const val FILE_NAME = "skin" //  用户sp文件
+
+    /**
+     *    这样封装一次put多个文件时会有较大性能问题，所以只允许单次put
+     */
+
     fun put(
             context: Context?,
             key: String?,

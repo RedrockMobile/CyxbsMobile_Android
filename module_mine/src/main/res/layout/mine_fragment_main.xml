@@ -26,10 +26,10 @@
                 android:layout_marginTop="40dp"
                 android:layout_marginBottom="20dp"
                 android:scaleType="centerCrop"
-                tools:src="@drawable/mine_avatar_default_img"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent" />
+                app:layout_constraintTop_toTopOf="parent"
+                tools:src="@drawable/mine_avatar_default_img" />
 
             <TextView
                 android:id="@+id/mine_main_username"
@@ -96,14 +96,14 @@
                 android:layout_height="28dp"
                 android:layout_gravity="center"
                 android:layout_marginEnd="14dp"
-                tools:background="@drawable/mine_bg_round_corner_grey"
-                android:text="@string/mine_sign_name"
                 android:padding="0dp"
+                android:text="@string/mine_sign_name"
                 android:textColor="@color/common_grey_button_text"
                 android:textSize="13sp"
                 app:layout_constraintBottom_toBottomOf="@+id/mine_main_tv_sign"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toTopOf="@+id/mine_main_tv_sign" />
+                app:layout_constraintTop_toTopOf="@+id/mine_main_tv_sign"
+                tools:background="@drawable/mine_bg_round_corner_grey" />
 
             <TextView
                 android:id="@+id/mine_main_tv_dynamic_number"
@@ -269,7 +269,7 @@
         </FrameLayout>
 
         <FrameLayout
-            android:id="@+id/mine_main_fm_about_us"
+            android:id="@+id/mine_main_tv_lab"
             android:layout_width="match_parent"
             android:layout_height="36dp"
             android:layout_marginTop="12.5dp">
@@ -279,7 +279,7 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_vertical"
                 android:layout_marginStart="16dp"
-                android:text="@string/mine_string_about_us"
+                android:text="@string/mine_lab"
                 android:textColor="@color/common_level_three_font_color"
                 android:textSize="15sp" />
 
@@ -290,6 +290,7 @@
                 android:layout_marginEnd="25.5dp"
                 android:src="@drawable/mine_ic_arrow_right" />
         </FrameLayout>
+
 
         <FrameLayout
             android:id="@+id/mine_main_fm_feedback"
@@ -315,7 +316,7 @@
         </FrameLayout>
 
         <FrameLayout
-            android:id="@+id/mine_main_tv_lab"
+            android:id="@+id/mine_main_fm_about_us"
             android:layout_width="match_parent"
             android:layout_height="36dp"
             android:layout_marginTop="12.5dp">
@@ -325,7 +326,7 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_vertical"
                 android:layout_marginStart="16dp"
-                android:text="@string/mine_lab"
+                android:text="@string/mine_string_about_us"
                 android:textColor="@color/common_level_three_font_color"
                 android:textSize="15sp" />
 

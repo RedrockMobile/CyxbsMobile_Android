@@ -11,10 +11,11 @@
 
     <androidx.appcompat.widget.AppCompatImageView
         android:id="@+id/qa_iv_add_circles"
-        android:layout_width="40dp"
+        android:layout_width="52dp"
         android:layout_height="40dp"
         android:layout_marginStart="28dp"
-        android:background="@drawable/qa_ic_no_circles_add"
+        android:src="@drawable/qa_ic_no_circles_add"
+        android:scaleType="centerInside"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />

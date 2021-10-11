@@ -16,7 +16,7 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:srcCompat="@drawable/mine_ic_dialog" />
+        android:src="@drawable/mine_ic_dialog" />
 
     <TextView
         android:id="@+id/mine_tv_dialog_warning_title"
@@ -26,7 +26,7 @@
         android:layout_marginTop="22dp"
         android:layout_marginEnd="90dp"
         android:text="@string/mine_security_dialog_tip"
-        android:textColor="@color/common_level_two_font_color"
+        android:textColor="@color/mine_level_two_font_color"
         android:textSize="18sp"
         android:textStyle="bold"
         app:layout_constraintEnd_toEndOf="parent"
@@ -41,7 +41,7 @@
         android:layout_marginEnd="12dp"
         android:layout_marginTop="10dp"
         android:text="@string/mine_security_please_set_protect_or_bind_email"
-        android:textColor="@color/levelFourFontColor"
+        android:textColor="@color/mine_level_four_font_color"
         android:textSize="12sp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"

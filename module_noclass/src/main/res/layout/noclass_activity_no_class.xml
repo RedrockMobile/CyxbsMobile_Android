@@ -46,6 +46,7 @@
                 android:paddingBottom="12dp"
                 android:singleLine="true"
                 android:textColor="@color/common_level_two_font_color"
+                android:textColorHint="@color/common_main_activity_login_et_hint_color"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/noclass_include" />
@@ -53,12 +54,11 @@
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/noclass_rv"
                 android:layout_width="match_parent"
-                android:layout_marginTop="2dp"
                 android:layout_height="0dp"
+                android:layout_marginTop="2dp"
                 app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/et_noclass_add_classmate">
-
-            </androidx.recyclerview.widget.RecyclerView>
+                app:layout_constraintTop_toBottomOf="@+id/et_noclass_add_classmate"
+                tools:listitem="@layout/noclass_item_stu"/>
 
             <Button
                 android:id="@+id/noclass_btn_query"

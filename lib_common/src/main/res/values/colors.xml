@@ -233,6 +233,8 @@
     <!--    发现教务在线颜色-->
     <color name="common_discover_academic_online_colors">#ffffff</color>
     <color name="common_discover_academic_online_colors_background">#AFD2FB</color>
+    <!--弹窗字体颜色-->
+    <color name="common_toast_tv_colors">#ffffff</color>
     <!--    发现菜单字体颜色-->
     <color name="common_menu_font_color_found">#15315B</color>
     <!--    发现菜单字体颜色-->

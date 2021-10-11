@@ -10,5 +10,5 @@
     android:paddingBottom="9dp"
     android:gravity="center"
     android:background="@drawable/common_shape_cyxbs_toast"
-    android:textColor="@color/common_discover_academic_online_colors"
+    android:textColor="@color/common_toast_tv_colors"
     tools:text="自定义Toast" />

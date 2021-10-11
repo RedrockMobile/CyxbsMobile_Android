@@ -10,6 +10,7 @@ import android.util.AttributeSet
 import android.view.MotionEvent
 import androidx.core.content.ContextCompat
 import androidx.core.graphics.drawable.toBitmap
+import com.mredrock.cyxbs.common.skin.SkinManager
 import com.mredrock.cyxbs.common.utils.extensions.dp2px
 import com.mredrock.cyxbs.discover.map.R
 
@@ -22,10 +23,12 @@ import com.mredrock.cyxbs.discover.map.R
 class SearchEditText : androidx.appcompat.widget.AppCompatEditText {
 
     private val clearBitmap: Bitmap by lazy {
-        resources.getDrawable(R.drawable.map_ic_search_clear, null).toBitmap()
+        SkinManager.getDrawable("map_ic_search_clear", R.drawable.map_ic_search_clear)!!.toBitmap()
     }
     private val searchBitmap: Bitmap by lazy {
-        imageScale(resources.getDrawable(R.drawable.map_ic_search_edit_text_icon, null).toBitmap(), 40, 40)
+        imageScale(SkinManager.getDrawable(
+                "map_ic_search_edit_text_icon",
+                R.drawable.map_ic_search_edit_text_icon)!!.toBitmap(), 40, 40)
     }
 
     private var isEmpty = true

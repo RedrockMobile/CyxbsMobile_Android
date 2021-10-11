@@ -136,7 +136,7 @@
     <string name="mine_security_out_of_date_or_wrong">验证码有误或过期，请重新获取</string>
     <string name="mine_string_about_us">关于我们</string>
     <string name="mine_string_setting">设置</string>
-    <string name="mine_string_score_store">积分商城</string>
+    <string name="mine_string_score_store">邮票中心</string>
     <string name="mine_lab_tv_title">提示</string>
     <string name="mine_lab_tv_content">欢迎来到掌邮实验室，这里将会提供一些有趣好玩的功能，当然，这些功能可能还不稳定，欢迎大家随时反馈~</string>
     <string name="mine_lab_tv_positive">我明白了</string>

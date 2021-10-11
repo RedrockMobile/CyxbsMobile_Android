@@ -39,7 +39,7 @@
                     android:id="@+id/map_iv_map_view_my_favorite"
                     android:layout_width="23dp"
                     android:layout_height="17dp"
-                    app:srcCompat="@drawable/map_ic_my_favorate" />
+                    android:src="@drawable/map_ic_my_favorate" />
 
                 <TextView
                     android:id="@+id/map_tv_map_view_my_favorite"

@@ -21,6 +21,7 @@ import com.mredrock.cyxbs.common.config.STU_NAME_LIST
 import com.mredrock.cyxbs.common.config.STU_NUM_LIST
 import com.mredrock.cyxbs.common.service.ServiceManager
 import com.mredrock.cyxbs.api.account.IAccountService
+import com.mredrock.cyxbs.common.skin.SkinManager
 import com.mredrock.cyxbs.common.ui.BaseViewModelActivity
 import com.mredrock.cyxbs.common.utils.extensions.getScreenHeight
 import com.mredrock.cyxbs.common.utils.extensions.getScreenWidth
@@ -56,6 +57,7 @@ class NoClassActivity : BaseViewModelActivity<NoClassViewModel>() {
         setContentView(R.layout.noclass_activity_no_class)
 
         common_toolbar.initWithSplitLine("没课约")
+        common_toolbar.navigationIcon = SkinManager.getDrawable("common_ic_back", R.drawable.common_ic_back)
         mStuList = ArrayList()
         initStuList()
         initBtn()

@@ -2,9 +2,9 @@ package com.mredrock.cyxbs.mine.page.lab
 
 import android.os.Bundle
 import android.view.View
-import androidx.recyclerview.widget.GridLayoutManager
 import com.alibaba.android.arouter.launcher.ARouter
 import com.mredrock.cyxbs.common.config.SKIN_ENTRY
+import com.mredrock.cyxbs.common.skin.SkinManager
 import com.mredrock.cyxbs.common.ui.BaseActivity
 import com.mredrock.cyxbs.common.utils.extensions.doIfLogin
 import com.mredrock.cyxbs.common.utils.extensions.setOnSingleClickListener
@@ -28,6 +28,7 @@ class LabActivity : BaseActivity() {
                     View.OnClickListener {
                         finishAfterTransition()
                     })
+            navigationIcon = SkinManager.getDrawable("mine_ic_arrow_left", R.drawable.mine_ic_arrow_left)
         }
         LabDialog.show(this)
     }

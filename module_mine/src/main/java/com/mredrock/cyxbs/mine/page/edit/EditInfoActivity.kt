@@ -93,7 +93,7 @@ class EditInfoActivity
             }
         } else {
             mine_btn_info_save.apply {
-                setTextColor(ContextCompat.getColor(context, R.color.common_grey_button_text))
+                setTextColor(SkinManager.getColor("common_grey_button_text", R.color.common_grey_button_text))
                 background = SkinManager.getDrawable("mine_bg_round_corner_grey", R.drawable.mine_bg_round_corner_grey)
                 text = "已保存"
                 isClickable = false

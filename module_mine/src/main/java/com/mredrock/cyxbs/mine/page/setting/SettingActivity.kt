@@ -35,6 +35,7 @@ class SettingActivity : BaseActivity() {
                     withSplitLine = true,
                     titleOnLeft = false
             )
+            navigationIcon = SkinManager.getDrawable("common_ic_back", R.drawable.common_ic_back)
         }
         mine_setting_switch.thumbDrawable = SkinManager.getDrawable("mine_bg_thumb",R.drawable.mine_bg_thumb)
         mine_setting_switch.trackDrawable = SkinManager.getDrawable("mine_shape_switch_track",R.drawable.mine_shape_switch_track)
@@ -84,6 +85,7 @@ class SettingActivity : BaseActivity() {
                                     },
                                     onPositiveClick = {
                                         cleanAppWidgetCache()
+                                        SkinManager.restoreDefaultTheme()
                                         //清除user信息，必须要在LoginStateChangeEvent之前
                                         ServiceManager.getService(IAccountService::class.java).getVerifyService().logout(BaseApp.context)
                                         //清空activity栈
@@ -103,6 +105,7 @@ class SettingActivity : BaseActivity() {
                         containerRes = R.layout.mine_layout_dialog_logout,
                         onPositiveClick = {
                             cleanAppWidgetCache()
+                            SkinManager.restoreDefaultTheme()
                             //清除user信息，必须要在LoginStateChangeEvent之前
                             ServiceManager.getService(IAccountService::class.java).getVerifyService().logout(BaseApp.context)
                             //清空activity栈

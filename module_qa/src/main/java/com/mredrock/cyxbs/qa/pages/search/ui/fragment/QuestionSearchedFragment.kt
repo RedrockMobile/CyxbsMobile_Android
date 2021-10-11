@@ -9,11 +9,11 @@ import android.view.View
 import android.view.ViewGroup
 import android.view.WindowManager
 import android.widget.TextView
-import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.android.flexbox.FlexWrap
 import com.google.android.flexbox.FlexboxLayoutManager
 import com.mredrock.cyxbs.common.BaseApp
+import com.mredrock.cyxbs.common.skin.SkinManager
 import com.mredrock.cyxbs.common.ui.BaseViewModelFragment
 import com.mredrock.cyxbs.common.utils.extensions.doIfLogin
 import com.mredrock.cyxbs.common.utils.extensions.gone
@@ -49,7 +49,6 @@ import com.mredrock.cyxbs.qa.utils.ShareUtils
 import com.mredrock.cyxbs.qa.utils.isNullOrEmpty
 import com.tencent.tauth.Tencent
 import kotlinx.android.synthetic.main.qa_fragment_question_search_result.*
-import kotlinx.android.synthetic.main.qa_recycler_knowledge_detail.*
 
 /**
  * Created by yyfbe, Date on 2020/8/13.
@@ -132,8 +131,8 @@ class QuestionSearchedFragment : BaseViewModelFragment<QuestionSearchedViewModel
                     if (SEARCH_RESULT) {
                         qa_tv_contract_content.visibility = View.VISIBLE
                         this.context?.apply {
-                            rv_searched_question.background = ContextCompat.getDrawable(
-                                this,
+                            rv_searched_question.background = SkinManager.getDrawable(
+                                "qa_shape_comment_header_background",
                                 R.drawable.qa_shape_comment_header_background
                             )
                         }

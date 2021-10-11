@@ -1,6 +1,7 @@
 package com.mredrock.cyxbs.skin.viewmodel
 
 import android.content.Context
+import android.util.Log
 import androidx.lifecycle.MutableLiveData
 import com.mredrock.cyxbs.common.network.ApiGenerator
 import com.mredrock.cyxbs.common.skin.SkinManager
@@ -26,6 +27,8 @@ class SkinViewModel : BaseViewModel() {
 
     //网络请求失败，使用本地缓存
     val loadFail = MutableLiveData<Boolean>()
+
+    val downloadFail = MutableLiveData<Boolean>()
     fun init() {
 
         /**
@@ -36,8 +39,8 @@ class SkinViewModel : BaseViewModel() {
          * 获得地图基本信息，地点坐标等
          */
 
-//        skinApiService.getSkinInfo()//网络请求替换为：apiService.getMapInfo()
-        skinApiService.getSkinInfo()
+        TestData.getSkinInfo()//网络请求替换为：apiService.getMapInfo()
+//        skinApiService.getSkinInfo()
                 .setSchedulers()
                 .doOnErrorWithDefaultErrorHandler {
                     //使用缓存数据
@@ -48,33 +51,42 @@ class SkinViewModel : BaseViewModel() {
                     loadFail.postValue(true)
                     true
                 }
-                .safeSubscribeBy(
-                        onNext = {
-                            skinInfo.value = (it.data as ArrayList<SkinInfo.Data>?)!!
-                            SkinDataCache.saveSkinInfo(it.data)
-                        },
-                        onError = { it.printStackTrace() }
-                )
-
+                .safeSubscribeBy {
+                    skinInfo.value = (it.data as ArrayList<SkinInfo.Data>?)!!
+                    SkinDataCache.saveSkinInfo(it.data)
+                }
                 .lifeCycle()
-        skinInfo
     }
 
-    fun downloadSkin(context: Context, url: String, id: Int) {
-        val fileName = DownLoadManager.allSkinName[id] ?: ""
-        DownLoadManager.download(context, url, fileName, object : DownLoadManager.OnDownloadListener {
-            override fun onDownloadSuccess() {
+    fun downloadSkin(context: Context, url: String, fileName: String) {
+        if (fileName.isEmpty() || url.isEmpty())
+        {
+            SkinManager.restoreDefaultTheme()
+            return
+        }
+        if (DownLoadManager.fileIsExists("/sdcard/Download/testskin.skin"))
+        {
+            SkinManager.loadSkin("/sdcard/Download/testskin.skin")
+            return
+        }
+        try {
+            DownLoadManager.download(context, url, fileName, object : DownLoadManager.OnDownloadListener {
+                override fun onDownloadSuccess() {
+                    SkinManager.loadSkin("${context.cacheDir.absolutePath}/$fileName")
+                }
 
-            }
+                override fun onDownloading(progress: Int) {
+                    Log.d("lintong", progress.toString())
+                }
 
-            override fun onDownloading(progress: Int) {
+                override fun onDownloadFailed() {
+                    Log.d("lintong", "2")
+                }
 
-            }
+            })
+        } catch (e:IllegalArgumentException){
+            downloadFail.postValue(true)
+        }
 
-            override fun onDownloadFailed() {
-
-            }
-
-        })
     }
 }

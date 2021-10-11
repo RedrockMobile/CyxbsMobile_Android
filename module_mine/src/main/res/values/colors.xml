@@ -5,4 +5,8 @@
     <color name="mine_lab_bottom_background">#ffffff</color>
     <color name="mine_lab_tv_item_title">#15315B</color>
     <color name="mine_lab_tv_item_content">#2A4E84</color>
+    <!--    二级字体颜色-->
+    <color name="mine_level_two_font_color">#112C57</color>
+    <!--    四级字体颜色-->
+    <color name="mine_level_four_font_color" tools:ignore="DuplicateDefinition,ResourceName">#2A4E84</color>
 </resources>

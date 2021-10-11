@@ -88,6 +88,7 @@ class ContainerActivity : BaseActivity() {
                 "考试与成绩",
                 false
             )
+            navigationIcon = SkinManager.getDrawable("common_ic_back",R.drawable.common_ic_back)
             setTitleLocationAtLeft(true)
         }
         viewModel = ViewModelProvider(this@ContainerActivity).get(ContainerViewModel::class.java)

@@ -78,6 +78,7 @@ class DailySignActivity : BaseViewModelActivity<DailyViewModel>() {
         setTransparent(window)
         setContentView(R.layout.mine_activity_daily_sign)
         common_toolbar.initWithSplitLine("", false)
+        common_toolbar.navigationIcon = SkinManager.getDrawable("common_ic_back", R.drawable.common_ic_back)
         initView()
         initData()
     }

@@ -40,8 +40,8 @@ class UserFragment : BaseViewModelFragment<UserViewModel>() {
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
-        addObserver()
         initView()
+        addObserver()
     }
 
     private fun initView() {
@@ -83,6 +83,14 @@ class UserFragment : BaseViewModelFragment<UserViewModel>() {
                     )
                 }
             }
+        }
+        mine_main_btn_sign.apply {
+            text = "签到"
+            background = SkinManager.getDrawable(
+                    "common_dialog_btn_positive_blue",
+                    R.drawable.common_dialog_btn_positive_blue
+            )
+            setTextColor(SkinManager.getColor("common_white_font_color", R.color.common_white_font_color))
         }
     }
 

@@ -15,6 +15,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.StringRes;
 
 import com.mredrock.cyxbs.common.R;
+import com.mredrock.cyxbs.common.skin.SkinManager;
 
 public class CyxbsToast {
     public static Toast makeText(Context context, @StringRes int resId, int duration)
@@ -31,7 +32,8 @@ public class CyxbsToast {
         View v = inflate.inflate(R.layout.common_cyxbs_toast, null);
         TextView tv = (TextView) v.findViewById(R.id.tv_cyxbs_toast);
         tv.setText(text);
-
+        tv.setBackground(SkinManager.INSTANCE.getDrawable("common_shape_cyxbs_toast",R.drawable.common_shape_cyxbs_toast));
+        tv.setTextColor(SkinManager.INSTANCE.getColor("common_toast_tv_colors",R.color.common_toast_tv_colors));
         WindowManager wm = (WindowManager) context.getSystemService(Context.WINDOW_SERVICE);
         Display display = wm.getDefaultDisplay();
         Point point = new Point();
