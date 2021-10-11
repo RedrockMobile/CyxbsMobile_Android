@@ -35,6 +35,14 @@ interface ApiServiceNew {
         size: Int = 6
     ): Observable<RedrockApiWrapper<List<Dynamic>>>
 
+    @GET("/magipoke-loop/post/dynamic/focus")
+    fun getFocusDynamicList(
+        @Query("page")
+        page: Int,
+        @Query("size")
+        size: Int = 6
+    ): Observable<RedrockApiWrapper<List<Dynamic>>>
+
     @GET("/magipoke-loop/ground/getFollowedTopic")
     fun getFollowedTopic(): Observable<RedrockApiWrapper<List<Topic>>>
 
@@ -64,8 +72,12 @@ interface ApiServiceNew {
         @Query("size") size: Int
     ): Observable<RedrockApiWrapper<List<Knowledge>>>
 
-    @GET("")
-    fun getSearchUsers(content: String):Observable<RedrockApiWrapper<UserInfo>>
+    @GET("/magipoke-loop/search/user")
+    fun getSearchUsers(@Query("key") key: String):Observable<RedrockApiWrapper<List<UserBrief>>>
+
+    @FormUrlEncoded
+    @POST("/magipoke-loop/user/focus")
+    fun changeFocusStatus(@Field("redid") redid: String):Observable<RedrockApiStatus>
 
     @GET("/magipoke-loop/ground/getUnreadCount")
     fun getTopicMessage(@Query("last") last: String): Observable<RedrockApiWrapper<List<TopicMessage>>>
@@ -83,7 +95,9 @@ interface ApiServiceNew {
     @POST("/magipoke-loop/post/releaseDynamic")
     @Multipart
     fun releaseDynamic(@Part parts: List<MultipartBody.Part>): Observable<RedrockApiWrapper<DynamicReleaseResult>>
-
+    @PUT("/magipoke-loop/post/dynamic")
+    @Multipart
+    fun modificationDynamic(@Part parts: List<MultipartBody.Part>): Observable<DynamicReleaseResult>
     @POST("/magipoke-loop/comment/releaseComment")
     @Multipart
     fun releaseComment(@Part parts: List<MultipartBody.Part>): Observable<RedrockApiWrapper<CommentReleaseResult>>

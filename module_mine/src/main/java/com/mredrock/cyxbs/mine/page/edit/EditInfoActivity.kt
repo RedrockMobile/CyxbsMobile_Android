@@ -147,11 +147,11 @@ class EditInfoActivity
         } else {
             mine_et_gender.setTextColor(ContextCompat.getColor(this, R.color.common_grey_text))
         }
-//        if (birth != userForTemporal.getBirth()){
-//            mine_et_birth.setTextColor(ContextCompat.getColor(this, R.color.common_level_two_font_color))
-//        } else {
-//            mine_et_birth.setTextColor(ContextCompat.getColor(this, R.color.common_grey_text))
-//        }
+        if (birth != userForTemporal.getBirth()){
+            mine_et_birth.setTextColor(ContextCompat.getColor(this, R.color.common_level_two_font_color))
+        } else {
+            mine_et_birth.setTextColor(ContextCompat.getColor(this, R.color.common_grey_text))
+        }
     }
 
 
@@ -165,9 +165,9 @@ class EditInfoActivity
             initWithSplitLine("资料编辑",
                     false,
                     R.drawable.mine_ic_arrow_left,
-                    View.OnClickListener {
-                        finishAfterTransition()
-                    })
+                {
+                    finishAfterTransition()
+                })
             setTitleLocationAtLeft(true)
         }
 
@@ -206,8 +206,9 @@ class EditInfoActivity
         mine_et_introduce.setText(if (userService.getIntroduction().isBlank()) "" else userService.getIntroduction())
         mine_et_qq.setText(if (userService.getQQ().isBlank()) "" else userService.getQQ())
         mine_et_phone.setText(if (userService.getPhone().isBlank()) "" else userService.getPhone())
-        mine_tv_college_concrete.text = userService.getCollege()
         mine_et_gender.text = userService.getGender()
+        mine_et_birth.text = userService.getBirth()
+        mine_tv_college_concrete.text = userService.getCollege()
     }
 
     private fun initListener(){
@@ -227,7 +228,7 @@ class EditInfoActivity
                 .setLineSpacingMultiplier(2.5f)
                 .setOutSideCancelable(false)
                 .setSelectOptions(genderIndex)
-                .build<String>()
+                .build()
 
             pvGender.setPicker(genderList)
             val dialog = pvGender.dialog
@@ -250,6 +251,7 @@ class EditInfoActivity
             }
             pvGender.show()
         }
+
         mine_et_birth.setOnClickListener {
             val currentBirth = Calendar.getInstance().apply {
                 set(2002,8,14)
@@ -343,6 +345,8 @@ class EditInfoActivity
         val introduction = if (mine_et_introduce.text.toString().isNotBlank()) mine_et_introduce.text.toString() else " "
         val qq = if (mine_et_qq.text.toString().isNotBlank()) mine_et_qq.text.toString() else " "
         val phone = if (mine_et_phone.text.toString().isNotBlank()) mine_et_phone.text.toString() else " "
+        val gender = if (mine_et_gender.text.toString().isNotBlank()) mine_et_gender.text.toString() else " "
+        val birthday = if (mine_et_birth.text.toString().isNotBlank()) mine_et_birth.text.toString() else " "
 
         //数据没有改变，不进行网络请求
         if (!checkIfInfoChange()) {
@@ -354,7 +358,7 @@ class EditInfoActivity
             return
         }
 
-        viewModel.updateUserInfo(nickname, introduction, qq, phone)
+        viewModel.updateUserInfo(nickname, introduction, qq, phone, gender, birthday)
     }
 
     private fun checkIfInfoChange(): Boolean {
@@ -368,7 +372,9 @@ class EditInfoActivity
         if (nickname == userService.getNickname() &&
                 introduction == userService.getIntroduction() &&
                 qq == userService.getQQ() &&
-                phone == userService.getPhone()) {
+                phone == userService.getPhone() &&
+                gender == userService.getGender() &&
+                birth == userService.getBirth()) {
             return false
         }
         return true

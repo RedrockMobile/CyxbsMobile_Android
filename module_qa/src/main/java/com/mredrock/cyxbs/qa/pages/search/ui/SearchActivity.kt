@@ -16,6 +16,7 @@ import com.mredrock.cyxbs.qa.R
 import com.mredrock.cyxbs.qa.beannew.QAHistory
 import com.mredrock.cyxbs.qa.config.RequestResultCode.ClickKnowledge
 import com.mredrock.cyxbs.qa.event.QASearchEvent
+import com.mredrock.cyxbs.qa.pages.search.ui.callback.IKeyProvider
 import com.mredrock.cyxbs.qa.pages.search.ui.fragment.QuestionSearchedFragment
 import com.mredrock.cyxbs.qa.pages.search.ui.fragment.QuestionSearchingFragment
 import com.mredrock.cyxbs.qa.pages.search.viewmodel.SearchViewModel
@@ -27,7 +28,7 @@ import org.greenrobot.eventbus.ThreadMode
 /**
  * Created by yyfbe, Date on 2020/8/12.
  */
-class SearchActivity : BaseViewModelActivity<SearchViewModel>(), EventBusLifecycleSubscriber {
+class SearchActivity : BaseViewModelActivity<SearchViewModel>(), EventBusLifecycleSubscriber,IKeyProvider {
     private val questionSearchingFragment: QuestionSearchingFragment by lazy(LazyThreadSafetyMode.NONE) { QuestionSearchingFragment() }
     private val questionSearchedFragment: QuestionSearchedFragment by lazy(LazyThreadSafetyMode.NONE) { QuestionSearchedFragment() }
 
@@ -147,4 +148,6 @@ class SearchActivity : BaseViewModelActivity<SearchViewModel>(), EventBusLifecyc
             finish()
         }
     }
+
+    override fun getKey() = searchText
 }

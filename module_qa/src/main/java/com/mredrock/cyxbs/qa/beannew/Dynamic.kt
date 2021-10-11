@@ -29,6 +29,10 @@ data class Dynamic(
 
     @SerializedName("topic")
     val topic: String = "",
+
+    @SerializedName("identity_pic")
+    val identityPic: String = "",
+
     @SerializedName("publish_time")
     val publishTime: Long = 0L,
 
@@ -66,6 +70,7 @@ data class Dynamic(
         parcel.readInt(),
         parcel.readInt(),
         parcel.readString(),
+        parcel.readString(),
         parcel.readLong(),
         parcel.readString(),
         parcel.readString(),
@@ -85,6 +90,7 @@ data class Dynamic(
         parcel.writeInt(isSelf)
         parcel.writeInt(praiseCount)
         parcel.writeString(topic)
+        parcel.writeString(identityPic)
         parcel.writeLong(publishTime)
         parcel.writeString(uid)
         parcel.writeString(content)

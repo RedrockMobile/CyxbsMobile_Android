@@ -1,5 +1,6 @@
 package com.mredrock.cyxbs.common.utils.extensions
 
+import android.util.Log
 import com.mredrock.cyxbs.common.bean.RedrockApiStatus
 import com.mredrock.cyxbs.common.bean.RedrockApiWrapper
 import com.mredrock.cyxbs.common.bean.isSuccessful

@@ -19,7 +19,7 @@
             android:layout_height="42dp"
             android:layout_marginStart="16dp"
             android:layout_marginTop="16dp"
-            android:src="#C4C4C4"
+            android:src="@drawable/common_default_avatar"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
@@ -49,11 +49,13 @@
 
         <TextView
             android:id="@+id/qa_tv_search_user_focus"
-            android:layout_width="80dp"
+            android:layout_width="wrap_content"
             android:layout_height="25dp"
             android:layout_marginEnd="17dp"
             android:background="@drawable/qa_shape_tv_search_focused"
             android:text="互相关注"
+            android:paddingStart="14dp"
+            android:paddingEnd="14dp"
             android:gravity="center"
             android:textColor="#94A6C4"
             android:textSize="13sp"

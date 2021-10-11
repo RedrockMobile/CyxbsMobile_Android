@@ -1,5 +1,6 @@
 package com.mredrock.cyxbs.qa.pages.dynamic.model
 
+import android.util.Log
 import androidx.lifecycle.MutableLiveData
 import androidx.paging.DataSource
 import androidx.paging.PageKeyedDataSource
@@ -36,73 +37,117 @@ class DynamicDataSource(private val kind: String) : PageKeyedDataSource<Int, Dyn
         }
         //此处是接口设计时没有考虑太好，个人dynamic接口与其他的dynamic接口分开了
         //故需要做一次判断，如果将来有可能可以合并两个接口以减少冗余
-        if (kind == "mine") {
-            ApiGenerator.getApiService(ApiServiceNew::class.java)
-                .getUserDynamic(1, params.requestedLoadSize)
-                .mapOrThrowApiException()
-                .setSchedulers()
-                .doOnSubscribe { initialLoad.postValue(NetworkState.LOADING) }
-                .doOnError {
-                    initialLoad.value = NetworkState.FAILED
-                    failedRequest = { loadInitial(params, callback) }
-                }
-                .safeSubscribeBy { list ->
-                    initialLoad.value = NetworkState.SUCCESSFUL
-                    val nextPageKey = 2.takeUnless { (list.size < params.requestedLoadSize) }
-                    callback.onResult(list, 1, nextPageKey)
-                }
-            return
+        when(kind){
+            "mine" -> {
+                ApiGenerator.getApiService(ApiServiceNew::class.java)
+                    .getUserDynamic(1, params.requestedLoadSize)
+                    .mapOrThrowApiException()
+                    .setSchedulers()
+                    .doOnSubscribe { initialLoad.postValue(NetworkState.LOADING) }
+                    .doOnError {
+                        initialLoad.value = NetworkState.FAILED
+                        failedRequest = { loadInitial(params, callback) }
+                    }
+                    .safeSubscribeBy { list ->
+                        initialLoad.value = NetworkState.SUCCESSFUL
+                        val nextPageKey = 2.takeUnless { (list.size < params.requestedLoadSize) }
+                        callback.onResult(list, 1, nextPageKey)
+                    }
+            }
+
+            "main" -> {
+                ApiGenerator.getApiService(ApiServiceNew::class.java)
+                    .getDynamicList(kind, 1, params.requestedLoadSize)
+                    .mapOrThrowApiException()
+                    .setSchedulers()
+                    .doOnSubscribe { initialLoad.postValue(NetworkState.LOADING) }
+                    .doOnError {
+                        Log.d("TAG","(DynamicDataSource.kt:65)->$it")
+                        initialLoad.value = NetworkState.FAILED
+                        failedRequest = { loadInitial(params, callback) }
+                    }
+                    .safeSubscribeBy { list ->
+                        initialLoad.value = NetworkState.SUCCESSFUL
+                        val nextPageKey = 2.takeUnless { (list.size < params.requestedLoadSize) }
+                        callback.onResult(list, 1, nextPageKey)
+                    }
+            }
+
+            else -> {
+                ApiGenerator.getApiService(ApiServiceNew::class.java)
+                    .getFocusDynamicList(1, params.requestedLoadSize)
+                    .mapOrThrowApiException()
+                    .setSchedulers()
+                    .doOnSubscribe { initialLoad.postValue(NetworkState.LOADING) }
+                    .doOnError {
+                        initialLoad.value = NetworkState.FAILED
+                        failedRequest = { loadInitial(params, callback) }
+                    }
+                    .safeSubscribeBy { list ->
+                        initialLoad.value = NetworkState.SUCCESSFUL
+                        val nextPageKey = 2.takeUnless { (list.size < params.requestedLoadSize) }
+                        callback.onResult(list, 1, nextPageKey)
+                    }
+            }
         }
-        ApiGenerator.getApiService(ApiServiceNew::class.java)
-            .getDynamicList(kind, 1, params.requestedLoadSize)
-            .mapOrThrowApiException()
-            .setSchedulers()
-            .doOnSubscribe { initialLoad.postValue(NetworkState.LOADING) }
-            .doOnError {
-                initialLoad.value = NetworkState.FAILED
-                failedRequest = { loadInitial(params, callback) }
-            }
-            .safeSubscribeBy { list ->
-                initialLoad.value = NetworkState.SUCCESSFUL
-                val nextPageKey = 2.takeUnless { (list.size < params.requestedLoadSize) }
-                callback.onResult(list, 1, nextPageKey)
-            }
     }
 
     override fun loadAfter(params: LoadParams<Int>, callback: LoadCallback<Int, Dynamic>) {
-        if (kind == "mine") {
-            ApiGenerator.getApiService(ApiServiceNew::class.java)
-                .getUserDynamic(params.key, params.requestedLoadSize)
-                .mapOrThrowApiException()
-                .setSchedulers()
-                .doOnSubscribe { initialLoad.postValue(NetworkState.LOADING) }
-                .doOnError {
-                    initialLoad.value = NetworkState.FAILED
-                    failedRequest = { loadAfter(params, callback) }
-                }
-                .safeSubscribeBy { list ->
-                    initialLoad.value = NetworkState.SUCCESSFUL
-                    val adjacentPageKey =
-                        (params.key + 1).takeUnless { list.size < params.requestedLoadSize }
-                    callback.onResult(list, adjacentPageKey)
-                }
-            return
+        when (kind) {
+            "mine" -> {
+                ApiGenerator.getApiService(ApiServiceNew::class.java)
+                    .getUserDynamic(params.key, params.requestedLoadSize)
+                    .mapOrThrowApiException()
+                    .setSchedulers()
+                    .doOnSubscribe { networkState.postValue(NetworkState.LOADING) }
+                    .doOnError {
+                        networkState.value = NetworkState.FAILED
+                        failedRequest = { loadAfter(params, callback) }
+                    }
+                    .safeSubscribeBy { list ->
+                        networkState.value = NetworkState.SUCCESSFUL
+                        val adjacentPageKey =
+                            (params.key + 1).takeUnless { list.size < params.requestedLoadSize }
+                        callback.onResult(list, adjacentPageKey)
+                    }
+            }
+
+            "main" -> {
+                ApiGenerator.getApiService(ApiServiceNew::class.java)
+                    .getDynamicList(kind, 1, params.requestedLoadSize)
+                    .mapOrThrowApiException()
+                    .setSchedulers()
+                    .doOnSubscribe { networkState.postValue(NetworkState.LOADING) }
+                    .doOnError {
+                        networkState.value = NetworkState.FAILED
+                        failedRequest = { loadAfter(params, callback) }
+                    }
+                    .safeSubscribeBy { list ->
+                        networkState.value = NetworkState.SUCCESSFUL
+                        val adjacentPageKey =
+                            (params.key + 1).takeUnless { list.size < params.requestedLoadSize }
+                        callback.onResult(list, adjacentPageKey)
+                    }
+            }
+
+            else -> {
+                ApiGenerator.getApiService(ApiServiceNew::class.java)
+                    .getFocusDynamicList(1, params.requestedLoadSize)
+                    .mapOrThrowApiException()
+                    .setSchedulers()
+                    .doOnSubscribe { networkState.postValue(NetworkState.LOADING) }
+                    .doOnError {
+                        networkState.value = NetworkState.FAILED
+                        failedRequest = { loadAfter(params, callback) }
+                    }
+                    .safeSubscribeBy { list ->
+                        networkState.value = NetworkState.SUCCESSFUL
+                        val adjacentPageKey =
+                            (params.key + 1).takeUnless { list.size < params.requestedLoadSize }
+                        callback.onResult(list, adjacentPageKey)
+                    }
+            }
         }
-        ApiGenerator.getApiService(ApiServiceNew::class.java)
-            .getDynamicList(kind, params.key, params.requestedLoadSize)
-            .mapOrThrowApiException()
-            .setSchedulers()
-            .doOnSubscribe { networkState.postValue(NetworkState.LOADING) }
-            .doOnError {
-                networkState.value = NetworkState.FAILED
-                failedRequest = { loadAfter(params, callback) }
-            }
-            .safeSubscribeBy { list ->
-                networkState.value = NetworkState.SUCCESSFUL
-                val adjacentPageKey =
-                    (params.key + 1).takeUnless { list.size < params.requestedLoadSize }
-                callback.onResult(list, adjacentPageKey)
-            }
     }
 
     fun retry() {

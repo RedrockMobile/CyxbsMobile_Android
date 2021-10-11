@@ -45,8 +45,6 @@ abstract class BaseDataBinder<T : ViewDataBinding> : ClickBinder(){
 
     abstract fun layoutId(): Int
 
-    abstract fun areContentTheSame(): Boolean
-
     /**
      * 为 Binder 绑定生命周期，在 {@link Lifecycle.Event#ON_RESUME} 时响应
      */

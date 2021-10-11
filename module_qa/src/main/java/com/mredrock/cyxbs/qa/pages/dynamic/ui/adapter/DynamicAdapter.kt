@@ -127,9 +127,8 @@ class DynamicAdapter(val context: Context?, private val onItemClickEvent: (Dynam
                         }
                     } else {
 
-                        OptionalPopWindow.Builder().with(context)
+                        OptionalPopWindow.Builder().with(context).addDynamicData(getItem(position))
                             .addOptionAndCallback(DELETE,R.layout.qa_popupwindow_option_bottom) {
-
                                 onPopWindowClickListener?.invoke(position, DELETE, dynamic)
                             }.showFromBottom(
                                 LayoutInflater.from(context).inflate(
@@ -149,6 +148,7 @@ class DynamicAdapter(val context: Context?, private val onItemClickEvent: (Dynam
         position: Int,
         data: Dynamic
     ) {
+
         super.onItemClickListener(holder, position, data)
         if (holder !is DynamicViewHolder) return
         curSharedDynamic = data

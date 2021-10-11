@@ -2,10 +2,12 @@ package com.mredrock.cyxbs.qa.pages.dynamic.ui.fragment
 
 import android.content.Intent
 import android.os.Handler
+import android.util.Log
 import android.view.Window
 import android.view.WindowManager
 import android.widget.TextView
 import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import com.mredrock.cyxbs.common.BaseApp
 import com.mredrock.cyxbs.qa.R
 import com.mredrock.cyxbs.qa.beannew.Dynamic
@@ -28,10 +30,10 @@ import kotlinx.android.synthetic.main.qa_fragment_dynamic_recommend.*
 import kotlinx.android.synthetic.main.qa_fragment_question_search_result.*
 
 /**
- * @class
+ * @class RecommendDynamicFragment
  * @author YYQF
  * @data 2021/9/24
- * @description
+ * @description 邮问推荐动态页
  **/
 class RecommendDynamicFragment : BaseDynamicFragment() {
 
@@ -40,6 +42,18 @@ class RecommendDynamicFragment : BaseDynamicFragment() {
     private lateinit var dynamicListRvAdapter: DynamicAdapter
     val footerRvAdapter = FooterRvAdapter { viewModel.retryRecommend() }
     val emptyRvAdapter = EmptyRvAdapter(BaseApp.context.getString(R.string.qa_question_list_empty_hint))
+
+    override fun initView() {
+        /*
+        * 官方刷新控件不能修改偏移的误差值, 在左右滑动时与 ViewPager2 出现滑动冲突问题
+        * 修改 mTouchSlop 可以修改允许的滑动偏移值, 原因可以看 SwipeRefreshLayout 的 1081 行
+        * */
+        try {
+            val field = qa_srl_recommend.javaClass.getDeclaredField("mTouchSlop")
+            field.isAccessible = true
+            field.set(qa_srl_recommend, 220)
+        }catch (e: Exception) { }
+    }
 
     override fun initData() {
         mTencent = Tencent.createInstance(CommentConfig.APP_ID, this.requireContext())
@@ -141,12 +155,27 @@ class RecommendDynamicFragment : BaseDynamicFragment() {
                 animator.moveDuration = 0
                 animator.addDuration = 0
             }
-            layoutManager = LinearLayoutManager(context)
+            val linearLayoutManager = LinearLayoutManager(context)
+            layoutManager = linearLayoutManager
             adapter = RvAdapterWrapper(
                 normalAdapter = dynamicListRvAdapter,
                 emptyAdapter = emptyRvAdapter,
                 footerAdapter = footerRvAdapter
             )
+            /**
+             * 解决嵌套滑动中RecyclerView滑到顶部时不能立刻左右滑动, 因为RecyclerView的惯性滑动还在继续
+             */
+            addOnScrollListener(object : RecyclerView.OnScrollListener() {
+                override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
+                    super.onScrolled(recyclerView, dx, dy)
+                    if (linearLayoutManager.findFirstCompletelyVisibleItemPosition() == 0||
+                            dynamicListRvAdapter.itemCount == 1
+                    ) {
+                        Log.d("TAG","(RecommendDynamicFragment.kt:174)->1111111111")
+                        stopScroll()
+                    }
+                }
+            })
         }
 
         qa_srl_recommend.setOnRefreshListener {

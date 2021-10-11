@@ -73,7 +73,6 @@ class CoverHeaderBehavior(context: Context, attr: AttributeSet) : CoordinatorLay
          */
         if (!isLayout && maxTransY > 0) {
             child.translationY = maxTransY
-            Log.d("TAG","(CoverHeaderBehavior.kt:72)->${maxTransY}")
             isLayout = true
         }
         return super.onLayoutChild(parent, child, layoutDirection)
@@ -104,6 +103,8 @@ class CoverHeaderBehavior(context: Context, attr: AttributeSet) : CoordinatorLay
         stopAutoScroll()
         //滑动之后的translationY
         transY = child.translationY - dy
+        if(transY == maxTransY){
+        }
         when{
             //手指向上滑动
             dy > 0 -> {
@@ -136,9 +137,9 @@ class CoverHeaderBehavior(context: Context, attr: AttributeSet) : CoordinatorLay
                 }
             }
         }
-        child.apply {
-            layout(left,top,right,bottom)
-        }
+//        child.apply {
+//            layout(left,top,right,bottom)
+//        }
     }
 
     override fun onStopNestedScroll(
@@ -179,4 +180,5 @@ class CoverHeaderBehavior(context: Context, attr: AttributeSet) : CoordinatorLay
             }
         }
     }
+    
 }

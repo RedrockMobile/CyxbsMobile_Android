@@ -10,10 +10,10 @@ import com.mredrock.cyxbs.common.ui.BaseFragment
 import com.mredrock.cyxbs.qa.pages.search.viewmodel.QuestionSearchedViewModel
 
 /**
- * @class
+ * @class BaseResultFragment
  * @author YYQF
  * @data 2021/9/24
- * @description
+ * @description 搜索动态/用户结果页的基类
  **/
 abstract class BaseResultFragment : BaseFragment() {
 
@@ -34,7 +34,7 @@ abstract class BaseResultFragment : BaseFragment() {
 
     abstract fun getViewModelFactory(): ViewModelProvider.Factory
 
-    abstract fun initData()
+    open fun initData(){}
 
     abstract fun getLayoutId(): Int
 

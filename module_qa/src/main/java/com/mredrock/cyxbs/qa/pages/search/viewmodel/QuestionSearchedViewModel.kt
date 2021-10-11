@@ -1,10 +1,10 @@
 package com.mredrock.cyxbs.qa.pages.search.viewmodel
 
+import android.util.Log
 import androidx.lifecycle.*
 import androidx.paging.LivePagedListBuilder
 import androidx.paging.PagedList
 import com.mredrock.cyxbs.common.network.ApiGenerator
-import com.mredrock.cyxbs.common.utils.LogUtils
 import com.mredrock.cyxbs.common.utils.extensions.mapOrThrowApiException
 import com.mredrock.cyxbs.common.utils.extensions.safeSubscribeBy
 import com.mredrock.cyxbs.common.utils.extensions.setSchedulers
@@ -12,9 +12,10 @@ import com.mredrock.cyxbs.common.viewmodel.BaseViewModel
 import com.mredrock.cyxbs.qa.R
 import com.mredrock.cyxbs.qa.beannew.Dynamic
 import com.mredrock.cyxbs.qa.beannew.Knowledge
-import com.mredrock.cyxbs.qa.beannew.UserInfo
+import com.mredrock.cyxbs.qa.beannew.UserBrief
 import com.mredrock.cyxbs.qa.config.CommentConfig
 import com.mredrock.cyxbs.qa.network.ApiServiceNew
+import com.mredrock.cyxbs.qa.network.NetworkState
 import com.mredrock.cyxbs.qa.pages.search.model.SearchQuestionDataSource
 
 
@@ -25,14 +26,14 @@ class QuestionSearchedViewModel(var searchKey: String) : BaseViewModel() {
 
     val questionList: LiveData<PagedList<Dynamic>>
     var knowledge = MutableLiveData<List<Knowledge>>()
-    var userList = MutableLiveData<List<UserInfo.Data.User>>()
-
+    var userList = MutableLiveData<List<UserBrief>>()
 
     val ignorePeople = MutableLiveData<Boolean>()//屏蔽
     val deleteTips = MutableLiveData<Boolean>()//删除动态
 
     val networkState: LiveData<Int>
     val initialLoad: LiveData<Int>
+    val userNetworkState = MutableLiveData<Int>()
 
     var isCreateOver: LiveData<Boolean>//判断是否网络请求参数完成
     var isKnowledge: Boolean = false//判断知识库的结果的有无
@@ -131,15 +132,31 @@ class QuestionSearchedViewModel(var searchKey: String) : BaseViewModel() {
             }
     }
 
-    fun getUsers(content: String){
+    fun getUsers(key: String){
         ApiGenerator.getApiService(ApiServiceNew::class.java)
-            .getSearchUsers(content)
+            .getSearchUsers(key)
             .mapOrThrowApiException()
             .setSchedulers()
+            .doOnSubscribe { userNetworkState.value = NetworkState.LOADING }
             .doOnError {
+                toastEvent.value = R.string.qa_search_no_user
+                userNetworkState.value = NetworkState.FAILED
             }
             .safeSubscribeBy {
-                userList.value = it.data.users
+                userList.value = it
+                userNetworkState.value = NetworkState.SUCCESSFUL
+            }
+    }
+
+    fun changeFocusStatus(redid: String){
+        ApiGenerator.getApiService(ApiServiceNew::class.java)
+            .changeFocusStatus(redid)
+            .setSchedulers()
+            .doOnError {
+
+            }
+            .safeSubscribeBy {
+
             }
     }
 }

@@ -2,19 +2,14 @@ package com.mredrock.cyxbs.qa.pages.search.ui.fragment
 
 import android.content.Context
 import android.os.Bundle
-import android.view.LayoutInflater
 import android.view.View
-import android.view.ViewGroup
-import androidx.lifecycle.Observer
 import com.google.android.flexbox.FlexWrap
 import com.google.android.flexbox.FlexboxLayoutManager
 import com.google.android.material.tabs.TabLayoutMediator
 import com.mredrock.cyxbs.common.BaseApp
-import com.mredrock.cyxbs.common.ui.BaseViewModelFragment
 import com.mredrock.cyxbs.common.utils.extensions.gone
 import com.mredrock.cyxbs.qa.DynamicPagerAdapter
 import com.mredrock.cyxbs.qa.R
-import com.mredrock.cyxbs.qa.beannew.Knowledge
 import com.mredrock.cyxbs.qa.pages.search.ui.adapter.SearchKnowledgeAdapter
 import com.mredrock.cyxbs.qa.pages.search.ui.adapter.SearchResultHeaderAdapter
 import com.mredrock.cyxbs.qa.pages.search.viewmodel.QuestionSearchedViewModel
@@ -102,12 +97,8 @@ class QuestionSearchedFragment : BaseResultFragment() {
 
     private fun initPager(){
         qa_vp_search_result.adapter = DynamicPagerAdapter(requireActivity()).apply {
-            addFragment(RelateDynamicFragment()).apply {
-                arguments = Bundle().apply { putString("searchKey",searchKey) }
-            }
-            addFragment(RelateUserFragment()).apply {
-                arguments = Bundle().apply { putString("searchKey",searchKey) }
-            }
+            addFragment(RelateDynamicFragment())
+            addFragment(RelateUserFragment())
         }
         TabLayoutMediator(qa_tl_contract_content,qa_vp_search_result){ tab,position ->
             when(position){

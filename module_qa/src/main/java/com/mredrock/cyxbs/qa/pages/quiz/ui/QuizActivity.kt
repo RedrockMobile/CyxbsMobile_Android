@@ -4,19 +4,25 @@ import android.annotation.SuppressLint
 import android.app.Activity
 import android.app.ProgressDialog
 import android.content.Intent
+import android.graphics.Bitmap
 import android.graphics.drawable.Drawable
 import android.net.Uri
 import android.os.Build
 import android.os.Bundle
 import android.text.InputFilter
+import android.util.Log
 import android.view.KeyEvent
 import android.view.View
 import android.widget.ImageView
+import android.widget.TextView
 import android.widget.Toast
 import androidx.core.content.ContextCompat
 import androidx.core.widget.doOnTextChanged
 import androidx.fragment.app.Fragment
 import com.alibaba.android.arouter.facade.annotation.Route
+import com.bumptech.glide.Glide
+import com.bumptech.glide.request.target.CustomTarget
+import com.bumptech.glide.request.transition.Transition
 import com.google.android.material.chip.Chip
 import com.google.android.material.chip.ChipGroup
 import com.mredrock.cyxbs.common.BaseApp
@@ -28,6 +34,7 @@ import com.mredrock.cyxbs.common.utils.extensions.*
 import com.mredrock.cyxbs.mine.network.model.DynamicDraft
 import com.mredrock.cyxbs.qa.R
 import com.mredrock.cyxbs.qa.R.drawable.*
+import com.mredrock.cyxbs.qa.beannew.Dynamic
 import com.mredrock.cyxbs.qa.config.RequestResultCode.NEED_REFRESH_RESULT
 import com.mredrock.cyxbs.qa.pages.quiz.QuizViewModel
 import com.mredrock.cyxbs.qa.pages.square.ui.activity.CircleDetailActivity
@@ -55,6 +62,7 @@ class QuizActivity : BaseViewModelActivity<QuizViewModel>() {
         }
     }
 
+    private var isModificationDynamic = false
     private var progressDialog: ProgressDialog? = null
     private var topicType: String = ""
     private val exitDialog by lazy { createExitDialog() }
@@ -65,6 +73,9 @@ class QuizActivity : BaseViewModelActivity<QuizViewModel>() {
     private var postId = ""
     private var currentTypeIndex = 0
     private val topicMap = HashMap<String, String>()
+    private  val data by lazy {
+        intent.getParcelableExtra<Dynamic>("dynamic")
+    }
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.qa_activity_quiz)
@@ -121,8 +132,36 @@ class QuizActivity : BaseViewModelActivity<QuizViewModel>() {
             progressDialog?.dismiss()
             finish()
         }
-    }
 
+
+initDynamicData()
+
+    }
+        fun initDynamicData(){
+
+            if (data!=null){
+                    isModificationDynamic=true
+                qa_edt_quiz_content.setText(data.content, TextView.BufferType.EDITABLE)
+                val chipGroup = findViewById<ChipGroup>(R.id.qa_layout_quiz_tag)
+                val childView = Array(chipGroup.childCount) { chipGroup.getChildAt(it) as Chip }
+                val type = data.topic
+                if (type.isNotEmpty()) {
+                    //避免空指针
+                    topicType = type
+                    if (topicMap[type]?.isNotEmpty() == true) {
+                        currentTypeIndex = topicMap[type]?.toInt()!!
+                        childView[currentTypeIndex - 1].isChecked = true
+                    }
+                }
+                LogUtils.d("Gibson", "when load, draft = $data, image")
+                if (!data.pics.isNullOrEmpty()) {
+                    viewModel.setImageList(arrayListOf<String>().apply { addAll(data.pics) })
+                } else {//表示草稿中并没有图像，就直接清空
+                    LogUtils.d("Gibson", "refresh imageList")
+                    viewModel.imageLiveData.value = null
+                }
+            }
+        }
 
     //发布页标签单选
     @SuppressLint("SetTextI18n")
@@ -226,7 +265,12 @@ class QuizActivity : BaseViewModelActivity<QuizViewModel>() {
                     ) {
                         progressDialog?.show()
                         viewModel.deleteDraft()
-                        viewModel.submitDynamic()
+                        if (data!=null){
+
+                            viewModel.submitDynamic(isModificationDynamic,data.postId)
+                        }else{
+                            viewModel.submitDynamic(isModificationDynamic,null)
+                        }
                     }
                 } else {
                     if (qa_edt_quiz_content.text.toString().isBlank()) {
@@ -242,7 +286,8 @@ class QuizActivity : BaseViewModelActivity<QuizViewModel>() {
 
     private fun initImageAddView() {
         nine_grid_view.addView(
-            ContextCompat.getDrawable(this, qa_ic_add_photo)?.let { createImageViewFromVector(it) })
+            ContextCompat.getDrawable(this, qa_ic_add_photo)?.let {
+                createImageViewFromVector(it) })
         nine_grid_view.setOnItemClickListener { _, index ->
             if (index == nine_grid_view.childCount - 1) {
                 //如果达到选择图片的上限，就ban掉不允许添加图片
@@ -252,6 +297,7 @@ class QuizActivity : BaseViewModelActivity<QuizViewModel>() {
                     BaseApp.context.toast("已达图片数上限")
                 }
             } else {
+
                 ViewImageCropActivity.activityStartForResult(
                     this@QuizActivity, viewModel.tryEditImg(index)
                         ?: return@setOnItemClickListener
@@ -291,6 +337,7 @@ class QuizActivity : BaseViewModelActivity<QuizViewModel>() {
             selectedImageFiles.asSequence()
                 .filterIndexed { index, _ -> index >= nine_grid_view.childCount - 1 }
                 .forEach {
+
                     if (it.isNotEmpty()) {
                         nine_grid_view.addView(
                             createImageView(Uri.parse(it)),
@@ -355,12 +402,22 @@ class QuizActivity : BaseViewModelActivity<QuizViewModel>() {
 
     private fun createImageView(uri: Uri) = RectangleView(this).apply {
         scaleType = ImageView.ScaleType.CENTER_CROP
+        Log.e("wdasdasxtag","(QuizActivity.kt:336)->>图片地址$uri ")
         val bitMap = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            Log.e("wdasdasxtag","(QuizActivity.kt:400)->>.bmSizeStandardizing ")
             uri.bmSizeStandardizing(context = this.context)
         } else {
             TODO("VERSION.SDK_INT < O")
         }
-        setImageBitmap(bitMap)
+        if(bitMap==null){
+            loadBitmap(uri.toString()){
+                setImageBitmap(it)
+            }
+        }else{
+
+            setImageBitmap(bitMap)
+        }
+        Log.e("wdasdasxtag","(QuizActivity.kt:400)->>.bmSizeStandardizing ${bitMap}")
     }
 
     override fun onKeyDown(keyCode: Int, event: KeyEvent?): Boolean {
@@ -382,6 +439,7 @@ class QuizActivity : BaseViewModelActivity<QuizViewModel>() {
         progressDialog?.show()
         viewModel.updateDraftItem(draftId, qa_edt_quiz_content.text.toString(), topicType)
     }
+
 
 
     private fun loadDraft(draft: DynamicDraft) {
@@ -441,5 +499,24 @@ class QuizActivity : BaseViewModelActivity<QuizViewModel>() {
     override fun onBackPressed() {
         setResult(-1, Intent().apply { putExtra("text", qa_edt_quiz_content.text.toString()) })
         super.onBackPressed()
+    }
+
+    /**
+     * 加载网络请求的Bitmap图片出来
+     */
+    fun loadBitmap(url: String, success: (Bitmap) -> Unit){
+        Glide.with(this) // context，可添加到参数中
+            .asBitmap()
+            .load(url)
+            .into(object : CustomTarget<Bitmap>() {
+                override fun onResourceReady(resource: Bitmap, transition: Transition<in Bitmap>?) {
+                    // 成功返回 Bitmap
+                    success.invoke(resource)
+                }
+
+                override fun onLoadCleared(placeholder: Drawable?) {
+
+                }
+            })
     }
 }
