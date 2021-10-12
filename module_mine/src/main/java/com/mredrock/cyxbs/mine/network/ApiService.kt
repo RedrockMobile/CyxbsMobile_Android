@@ -236,6 +236,15 @@ interface ApiService {
     @GET("magipoke/ping")
     fun pingMagipoke(): Observable<RedrockApiStatus>
 
+    @FormUrlEncoded
+    @POST("/magipoke-loop/user/focus")
+    fun changeFocusStatus(@Field("redid") redid: String):Observable<RedrockApiStatus>
+
+    @GET("/magipoke-loop/user/fans")
+    fun getFans(@Query("redid") redid: String):Observable<RedrockApiWrapper<List<Fan>>>
+
+    @GET("/magipoke-loop/user/follows")
+    fun getFollows(@Query("redid") redid: String):Observable<RedrockApiWrapper<List<Fan>>>
     /**
      * 查询用户信息
      */
