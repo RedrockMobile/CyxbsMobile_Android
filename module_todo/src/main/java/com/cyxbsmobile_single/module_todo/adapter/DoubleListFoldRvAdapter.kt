@@ -97,7 +97,6 @@ class DoubleListFoldRvAdapter(
 
     //内部check, 将条目置换到下面
     fun checkItemAndSwap(wrapper: TodoItemWrapper) {
-        LogUtils.d("RayZY", "checkedTopMark = $checkedTopMark")
         wrapperCopyList.remove(wrapper)
         wrapper.todo?.isChecked = 1
         wrapperCopyList.add(checkedTopMark - 1, wrapper)
@@ -152,7 +151,7 @@ class DoubleListFoldRvAdapter(
     private fun checkEmptyItem(needShow: Boolean) {
         if (showType == THREE)
             return
-        if (uncheckedArray.size == 0 && !isAddedUpEmpty) {
+        if (uncheckedArray.isNullOrEmpty() && !isAddedUpEmpty) {
             //已经莫得待办事项了，将上部更替为缺省图
             isAddedUpEmpty = true
             wrapperCopyList.add(1, upEmptyHolder)
@@ -161,7 +160,7 @@ class DoubleListFoldRvAdapter(
             }
             todoItemWrapperArrayList.add(1, upEmptyHolder)
         }
-        if (checkedArray.size == 0 && !isAddedDownEmpty) {
+        if (checkedArray.isNullOrEmpty() && !isAddedDownEmpty) {
             //如果已经莫得已完成事项了，将下部替换为缺省图
             isAddedDownEmpty = true
             wrapperCopyList.add(downEmptyHolder)
@@ -171,7 +170,7 @@ class DoubleListFoldRvAdapter(
             todoItemWrapperArrayList.add(downEmptyHolder)
         }
 
-        if (uncheckedArray.size != 0 && isAddedUpEmpty) {
+        if (uncheckedArray.isNotEmpty() && isAddedUpEmpty) {
             wrapperCopyList.remove(upEmptyHolder)
             if (needShow) {
                 refreshList()
@@ -180,7 +179,7 @@ class DoubleListFoldRvAdapter(
             isAddedUpEmpty = false
         }
 
-        if (checkedArray.size != 0 && isAddedDownEmpty) {
+        if (checkedArray.isNotEmpty() && isAddedDownEmpty) {
             wrapperCopyList.remove(downEmptyHolder)
             if (needShow) {
                 refreshList()
@@ -211,7 +210,6 @@ class DoubleListFoldRvAdapter(
         TodoModel.INSTANCE
             .addTodo(todo) {
                 //逻辑放在这里的目的是为了更新todo的id
-                LogUtils.d("RayJoe", "add one item")
                 todo.todoId = it
                 val wrapper = TodoItemWrapper.todoWrapper(todo)
                 uncheckedArray.add(wrapper)

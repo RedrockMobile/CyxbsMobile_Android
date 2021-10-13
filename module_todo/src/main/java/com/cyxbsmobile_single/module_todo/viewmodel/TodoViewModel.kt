@@ -49,7 +49,6 @@ class TodoViewModel : BaseViewModel() {
                 for (todo in it) {
                     //下面的逻辑是：如果到达了todo重复提醒的下一次的那一天，则将todo设定为尚未完成
                     if (todo.remindMode.repeatMode != RemindMode.NONE) {
-                        LogUtils.d("RayleighZ", "todo info \n $todo \n ${needTodayDone(todo.remindMode)}")
                         if (needTodayAddIn(todo)) {
                             //这里需要判断今天是不是已经添加进来一次了
                             todo.isChecked = 0

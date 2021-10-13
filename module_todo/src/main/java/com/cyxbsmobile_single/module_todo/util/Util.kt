@@ -238,7 +238,6 @@ fun needTodayDone(remindMode: RemindMode): Boolean {
     calendar.time = Date(System.currentTimeMillis())
 
     val nextDay = getNextNotifyDay(remindMode)
-    LogUtils.d("RayleighZ", "nextDay = $nextDay")
     return nextDay.day == calendar.get(Calendar.DAY_OF_MONTH) && nextDay.month == calendar.get(
         Calendar.MONTH
     ) + 1

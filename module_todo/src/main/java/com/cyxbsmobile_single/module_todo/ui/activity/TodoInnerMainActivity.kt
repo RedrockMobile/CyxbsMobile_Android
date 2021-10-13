@@ -61,7 +61,6 @@ class TodoInnerMainActivity : BaseViewModelActivity<TodoViewModel>() {
     }
 
     private fun onDateLoaded() {
-        LogUtils.d("RayJoe", "${viewModel.wrapperList}")
         val adapter =
             DoubleListFoldRvAdapter(viewModel.wrapperList, NORMAL, R.layout.todo_rv_item_todo_inner)
         val callback = SlideCallback()
@@ -111,7 +110,6 @@ class TodoInnerMainActivity : BaseViewModelActivity<TodoViewModel>() {
                         todo_fl_del.setOnClickListener {
                             if (todo_cl_item_main.translationX != 0f) {
                                 adapter.delItem(wrapper)
-                                LogUtils.d("RayJoe", "position = $pos")
                             }
                         }
 
