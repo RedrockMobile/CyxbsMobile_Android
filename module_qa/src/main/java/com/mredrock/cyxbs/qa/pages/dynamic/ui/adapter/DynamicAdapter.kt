@@ -2,6 +2,7 @@ package com.mredrock.cyxbs.qa.pages.dynamic.ui.adapter
 
 
 import android.content.Context
+import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
@@ -121,9 +122,12 @@ class DynamicAdapter(val context: Context?, private val onItemClickEvent: (Dynam
                         }
                     } else {
                         OptionalPopWindow.Builder().with(context)
-                            .addOptionAndCallback(DELETE) {
+                            .addDynamicData(dynamic)
+                            .addOptionAndCallback(DELETE,R.layout.qa_popupwindow_option_bottom) {
                                 onPopWindowClickListener?.invoke(position, DELETE, dynamic)
-                            }.show(view, OptionalPopWindow.AlignMode.RIGHT, 0)
+                            }.showFromBottom(LayoutInflater.from(context).inflate(
+                                R.layout.qa_fragment_dynamic,null,false
+                            ))
                     }
                 }
             }
