@@ -23,7 +23,6 @@ class MineViewModel: BaseViewModel() {
     val redrockApiStatusDelete = MutableLiveData<RedrockApiStatus>()
 
    fun  getUserInfo(redid:String?){
-
       Log.e("wxtasadasg","(MineViewModel.kt:26)->>调用了网络请求吗$redid ")
        if (redid!=null){
            apiService.getPersonInfo(redid)
@@ -43,9 +42,8 @@ class MineViewModel: BaseViewModel() {
                )
                .lifeCycle()
        }else{
-           apiService.getPersonInfo()
+           apiService.getPersonInfo(redid)
                .setSchedulers()
-
                .doOnErrorWithDefaultErrorHandler { true }
                .safeSubscribeBy(
                    onNext = {

@@ -62,6 +62,9 @@ class QuizActivity : BaseViewModelActivity<QuizViewModel>() {
         }
     }
 
+    /**
+     * 是否时要修改动态
+     */
     private var isModificationDynamic = false
     private var progressDialog: ProgressDialog? = null
     private var topicType: String = ""
@@ -134,7 +137,7 @@ class QuizActivity : BaseViewModelActivity<QuizViewModel>() {
         }
 
 
-initDynamicData()
+        initDynamicData()
 
     }
         fun initDynamicData(){
@@ -289,6 +292,7 @@ initDynamicData()
             ContextCompat.getDrawable(this, qa_ic_add_photo)?.let {
                 createImageViewFromVector(it) })
         nine_grid_view.setOnItemClickListener { _, index ->
+       Log.e("nine_grid_view","(QuizActivity.kt:295)->>点击时间 index$index ")
             if (index == nine_grid_view.childCount - 1) {
                 //如果达到选择图片的上限，就ban掉不允许添加图片
                 if (nine_grid_view.childCount <= MAX_SELECTABLE_IMAGE_COUNT) {
@@ -327,9 +331,10 @@ initDynamicData()
                             Uri.parse(selectedImageFiles[i])
                                 .bmSizeStandardizing(context = this.applicationContext)
                         )
-                    } else
+                    } else{
 
                         viewModel.checkInvalid(false)
+                    }
                 } else viewModel.checkInvalid(true)
 
             }
@@ -417,7 +422,7 @@ initDynamicData()
 
             setImageBitmap(bitMap)
         }
-        Log.e("wdasdasxtag","(QuizActivity.kt:400)->>.bmSizeStandardizing ${bitMap}")
+
     }
 
     override fun onKeyDown(keyCode: Int, event: KeyEvent?): Boolean {

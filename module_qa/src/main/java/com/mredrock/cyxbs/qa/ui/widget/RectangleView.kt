@@ -51,7 +51,7 @@ class RectangleView @JvmOverloads constructor(
 
     override fun setImageURI(uri: Uri?) {
         super.setImageURI(uri)
-        bitmap = drawable?.toBitmap()
+      bitmap = drawable?.toBitmap()
     }
 
     /**

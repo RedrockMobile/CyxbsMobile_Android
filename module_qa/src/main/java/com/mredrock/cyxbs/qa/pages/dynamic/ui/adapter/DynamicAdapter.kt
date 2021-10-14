@@ -2,8 +2,6 @@ package com.mredrock.cyxbs.qa.pages.dynamic.ui.adapter
 
 
 import android.content.Context
-import android.util.Log
-import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
@@ -101,42 +99,31 @@ class DynamicAdapter(val context: Context?, private val onItemClickEvent: (Dynam
             }
             qa_iv_dynamic_more_tips_clicked.setOnSingleClickListener { view ->
                 getItem(position)?.let { dynamic ->
-                    Log.e("wxtasdag","(DynamicAdapter.kt:104)->>${dynamic.isFollowTopic} ")
                     if (dynamic.isSelf == 0) {
-                       Log.e("wxtasdag","(DynamicAdapter.kt:104)->>${dynamic.isFollowTopic} ")
                         if (dynamic.isFollowTopic == 0) {
                             OptionalPopWindow.Builder().with(context)
-                                .addOptionAndCallback(IGNORE,R.layout.qa_popupwindow_option_bottom) {
+                                .addOptionAndCallback(IGNORE) {
                                     onPopWindowClickListener?.invoke(position, IGNORE, dynamic)
-                                }.addOptionAndCallback(REPORT,R.layout.qa_popupwindow_option_bottom) {
+                                }.addOptionAndCallback(REPORT) {
                                     onPopWindowClickListener?.invoke(position, REPORT, dynamic)
-                                }.addOptionAndCallback(FOLLOW,R.layout.qa_popupwindow_option_bottom) {
+                                }.addOptionAndCallback(FOLLOW) {
                                     onPopWindowClickListener?.invoke(position, FOLLOW, dynamic)
-                                }.showFromBottom(LayoutInflater.from(context).inflate(
-                                    R.layout.qa_fragment_dynamic,null,false))
+                                }.show(view, OptionalPopWindow.AlignMode.RIGHT, 0)
                         } else {
                             OptionalPopWindow.Builder().with(context)
-                                .addOptionAndCallback(IGNORE,R.layout.qa_popupwindow_option_bottom) {
+                                .addOptionAndCallback(IGNORE) {
                                     onPopWindowClickListener?.invoke(position, IGNORE, dynamic)
-                                }.addOptionAndCallback(REPORT,R.layout.qa_popupwindow_option_bottom) {
+                                }.addOptionAndCallback(REPORT) {
                                     onPopWindowClickListener?.invoke(position, REPORT, dynamic)
-                                }.addOptionAndCallback(UN_FOLLOW,R.layout.qa_popupwindow_option_bottom) {
+                                }.addOptionAndCallback(UN_FOLLOW) {
                                     onPopWindowClickListener?.invoke(position, UN_FOLLOW, dynamic)
-                                }.showFromBottom(LayoutInflater.from(context).inflate(
-                                    R.layout.qa_fragment_dynamic,null,false))
+                                }.show(view, OptionalPopWindow.AlignMode.RIGHT, 0)
                         }
                     } else {
-
-                        OptionalPopWindow.Builder().with(context).addDynamicData(getItem(position))
-                            .addOptionAndCallback(DELETE,R.layout.qa_popupwindow_option_bottom) {
+                        OptionalPopWindow.Builder().with(context)
+                            .addOptionAndCallback(DELETE) {
                                 onPopWindowClickListener?.invoke(position, DELETE, dynamic)
-                            }.showFromBottom(
-                                LayoutInflater.from(context).inflate(
-                                R.layout.qa_fragment_dynamic,null,false))
-
-
-
-
+                            }.show(view, OptionalPopWindow.AlignMode.RIGHT, 0)
                     }
                 }
             }
@@ -148,7 +135,6 @@ class DynamicAdapter(val context: Context?, private val onItemClickEvent: (Dynam
         position: Int,
         data: Dynamic
     ) {
-
         super.onItemClickListener(holder, position, data)
         if (holder !is DynamicViewHolder) return
         curSharedDynamic = data

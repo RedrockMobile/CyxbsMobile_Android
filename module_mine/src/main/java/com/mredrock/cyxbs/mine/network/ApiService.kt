@@ -245,26 +245,12 @@ interface ApiService {
 
     @GET("/magipoke-loop/user/follows")
     fun getFollows(@Query("redid") redid: String):Observable<RedrockApiWrapper<List<Fan>>>
-    /**
-     * 查询用户信息
-     */
-        @GET("/magipoke/person/info")
-    fun getPersonInfo(@Query("redid")redId:String):Observable<UserInfo>
-    @FormUrlEncoded
-    @POST("/magipoke-loop/user/focus")
-    fun changeFocusStatus(@Field("redid") redid: String):Observable<RedrockApiStatus>
-
-    @GET("/magipoke-loop/user/fans")
-    fun getFans(@Query("redid") redid: String):Observable<RedrockApiWrapper<List<Fan>>>
-
-    @GET("/magipoke-loop/user/follows")
-    fun getFollows(@Query("redid") redid: String):Observable<RedrockApiWrapper<List<Fan>>>
 
     /**
      * 查询用户信息
      */
     @GET("/magipoke/person/info")
-    fun getPersonInfo():Observable<UserInfo>
+    fun getPersonInfo(@Query("redid") redid: String?):Observable<UserInfo>
 
     /**
      * 更新个人用户界面的背景图片
