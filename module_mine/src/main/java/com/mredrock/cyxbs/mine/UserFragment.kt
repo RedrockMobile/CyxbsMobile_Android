@@ -28,6 +28,7 @@ import com.mredrock.cyxbs.mine.page.about.AboutActivity
 import com.mredrock.cyxbs.mine.page.edit.EditInfoActivity
 import com.mredrock.cyxbs.mine.page.mine.ui.activity.FanActivity
 import com.mredrock.cyxbs.mine.page.mine.ui.activity.HomepageActivity
+import com.mredrock.cyxbs.mine.page.mine.ui.activity.IdentityActivity
 import com.mredrock.cyxbs.mine.page.security.util.Jump2QQHelper
 import com.mredrock.cyxbs.mine.page.setting.SettingActivity
 import com.mredrock.cyxbs.mine.page.sign.DailySignActivity
@@ -52,7 +53,6 @@ class UserFragment : BaseViewModelFragment<UserViewModel>() {
     private fun initView() {
         //功能按钮
         context?.apply {
-
             mine_user_tv_dynamic_number.setOnSingleClickListener { doIfLogin { jump(QA_DYNAMIC_MINE) } }
             mine_user_tv_dynamic.setOnSingleClickListener { doIfLogin { jump(QA_DYNAMIC_MINE) } }
             mine_user_tv_comment_number.setOnSingleClickListener { doIfLogin { jumpAndSaveTime(QA_MY_COMMENT, 1) } }
@@ -67,7 +67,9 @@ class UserFragment : BaseViewModelFragment<UserViewModel>() {
 
             mine_user_fm_about_us.setOnSingleClickListener { doIfLogin { startActivity<AboutActivity>() } }
             mine_user_fm_setting.setOnSingleClickListener { doIfLogin { startActivity<SettingActivity>() } }
-            mine_user_cl_info.setOnClickListener { doIfLogin { startActivity<HomepageActivity>() } }
+            mine_user_cl_info.setOnClickListener { doIfLogin { HomepageActivity.startHomePageActivity(null,context as Activity) }
+                }
+
             mine_user_iv_center_notification.setOnClickListener { FanActivity.activityStart(requireActivity(),
             ServiceManager.getService(IAccountService::class.java).getUserService().getRedid()) }
 

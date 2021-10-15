@@ -18,7 +18,7 @@ data class Data(
     @SerializedName("grade")
     val grade: String,
     @SerializedName("identityies")
-    val identityies: Any,
+    val identityies: List<String>,
     @SerializedName("introduction")
     val introduction: String,
     @SerializedName("isSelf")

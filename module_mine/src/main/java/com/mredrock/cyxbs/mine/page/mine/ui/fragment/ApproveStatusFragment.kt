@@ -22,7 +22,9 @@ import com.mredrock.cyxbs.mine.network.model.AuthenticationStatus
 import com.mredrock.cyxbs.mine.page.mine.helper.StatuItemTouchHelper
 
 
-class ApproveStatusFragment(val redid:String) : BaseViewModelFragment<IdentityViewModel>(){
+class ApproveStatusFragment(
+    val redid:String
+    ) : BaseViewModelFragment<IdentityViewModel>(){
 
 
     override fun onCreateView(
@@ -54,5 +56,9 @@ class ApproveStatusFragment(val redid:String) : BaseViewModelFragment<IdentityVi
         }
 
     }
+
+
+
+
 
 }

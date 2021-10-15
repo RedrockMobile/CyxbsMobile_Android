@@ -54,9 +54,10 @@ class IdentityFragment(
 
     fun initListener(){
         (context as HomepageActivity).viewModel.
-           redrockApiStatusDelete.observeForever {
+           redRockApiStatusDelete.observeForever {
                activity?.toast("删除身份成功!")
            }
+
     }
 
     fun initData(view:View){
@@ -75,8 +76,6 @@ class IdentityFragment(
          * 身份信息发生错误的情况
          */
         viewModel.onErrorAction.observeForever {
-
-
             view.rv_identity.adapter = context?.let {
                  it -> IdentityAdapter(list, it, redid,false)
             }

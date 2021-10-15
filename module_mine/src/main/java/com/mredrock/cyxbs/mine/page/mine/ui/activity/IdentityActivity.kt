@@ -48,8 +48,5 @@ class IdentityActivity : BaseViewModelActivity<IdentityViewModel>() {
             tab.text = tabNames[position]
         }.attach()
 
-
-
-
     }
 }

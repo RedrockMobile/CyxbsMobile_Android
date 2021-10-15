@@ -25,9 +25,7 @@ import retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory
 import retrofit2.converter.gson.GsonConverterFactory
 import java.util.concurrent.TimeUnit
 import android.os.Looper
-
-
-
+import android.util.Log
 
 
 /**
@@ -314,6 +312,8 @@ object ApiGenerator {
                 chain.proceed(chain.request())
             }
 
+            Log.e("网络请求","(ApiGenerator.kt:317)->>对象${response} ")
+            Log.e("网络请求","(ApiGenerator.kt:317)->>token${token} ")
             if (response?.isSuccessful == true) {
                 return response
             }
@@ -323,7 +323,7 @@ object ApiGenerator {
             backupUrl = getBackupUrl()
             // 约定给的backupUrl不带https前缀，加上
             if ("https://$backupUrl" != getBaseUrl()) {
-                useBackupUrl = true
+                useBackupUrl =false //true
                 // 重新请求并返回
                 return useBackupUrl(chain)
             }

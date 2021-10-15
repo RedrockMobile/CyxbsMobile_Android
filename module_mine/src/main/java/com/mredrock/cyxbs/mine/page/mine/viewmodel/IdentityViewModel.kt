@@ -47,15 +47,15 @@ class IdentityViewModel: BaseViewModel()  {
             .doOnErrorWithDefaultErrorHandler { true }
             .safeSubscribeBy(
                 onNext = {
-
+                    Log.e("wxtasadasgd","(MineViewModel.kt:30)->>成功了$it ")
                    customization.value = it
 
                 },
                 onError = {
-                    Log.e("wxtasadasg","(MineViewModel.kt:30)->>失败了$it ")
+                    Log.e("wxtasadasgd","(MineViewModel.kt:30)->>失败了$it ")
                 },
                 onComplete = {
-                    Log.e("wxtasadasg","(MineViewModel.kt:30)-> onComplete ")
+                    Log.e("wxtasadasgd","(MineViewModel.kt:30)-> onComplete ")
                 }
             )
             .lifeCycle()

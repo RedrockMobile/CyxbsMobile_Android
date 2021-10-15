@@ -6,13 +6,11 @@ import android.util.AttributeSet
 import android.util.Log
 import android.view.MotionEvent
 import android.view.View
+import android.view.ViewGroup
 import android.view.animation.OvershootInterpolator
 import android.widget.LinearLayout
 import androidx.core.animation.addListener
-import androidx.core.view.NestedScrollingChild
-import androidx.core.view.NestedScrollingParent2
-import androidx.core.view.NestedScrollingParentHelper
-import androidx.core.view.ViewCompat
+import androidx.core.view.*
 import androidx.recyclerview.widget.RecyclerView
 import androidx.viewpager2.widget.ViewPager2
 import com.mredrock.cyxbs.common.utils.extensions.dp2px
@@ -55,7 +53,7 @@ class SlideViewGroup @JvmOverloads constructor(
      * 父控件接受嵌套滑动，不管是手势滑动还是fling 父控件都接受
      */
     override fun onStartNestedScroll(child: View, target: View, axes: Int, type: Int): Boolean {
-        childNestedScrollingChild = target as RecyclerView
+        childNestedScrollingChild = target  as RecyclerView
         valueAnimator?.cancel()
         return axes and ViewCompat.SCROLL_AXIS_VERTICAL != 0
     }
@@ -219,6 +217,7 @@ class SlideViewGroup @JvmOverloads constructor(
          valueAnimator?.start()
     }
     override fun onTouchEvent(event: MotionEvent): Boolean {
+
         when(event.action){
             MotionEvent.ACTION_DOWN->{
                 valueAnimator?.cancel()
@@ -239,6 +238,7 @@ class SlideViewGroup @JvmOverloads constructor(
     }
 
     override fun onInterceptTouchEvent(event: MotionEvent): Boolean {
+
         when(event.action){
             MotionEvent.ACTION_DOWN->{
                 valueAnimator?.cancel()

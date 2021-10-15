@@ -18,9 +18,9 @@ class MineViewModel: BaseViewModel() {
 
 
     val _userInfo = MutableLiveData<UserInfo>()
-
+    val _isUserInfoFail  =MutableLiveData<Boolean>()
     val _isChangeSuccess = MutableLiveData<Boolean>()
-    val redrockApiStatusDelete = MutableLiveData<RedrockApiStatus>()
+    val redRockApiStatusDelete = MutableLiveData<RedrockApiStatus>()
 
    fun  getUserInfo(redid:String?){
       Log.e("wxtasadasg","(MineViewModel.kt:26)->>调用了网络请求吗$redid ")
@@ -30,14 +30,15 @@ class MineViewModel: BaseViewModel() {
                .doOnErrorWithDefaultErrorHandler { true }
                .safeSubscribeBy(
                    onNext = {
-                       Log.e("wxtasadasg","(MineViewModel.kt:30)->>成功了 ")
-                       _userInfo.postValue(it)
+                       Log.e("wxtasadasg","(MineViewModel.kt:26)->>成共了嘛 ")
+                       _userInfo.value=it
                    },
                    onError = {
-                       Log.e("wxtasadasg","(MineViewModel.kt:30)->>失败了$it ")
+                       Log.e("wxtasadasg","(MineViewModel.kt:26)->>失败了")
+                       _isUserInfoFail.value=true
                    },
                    onComplete = {
-                       Log.e("wxtasadasg","(MineViewModel.kt:30)-> onComplete ")
+
                    }
                )
                .lifeCycle()
@@ -48,10 +49,11 @@ class MineViewModel: BaseViewModel() {
                .safeSubscribeBy(
                    onNext = {
                        Log.e("wxtasadasg","(MineViewModel.kt:30)->>成功了 ")
-                       _userInfo.postValue(it)
+                       _userInfo.value=it
                    },
                    onError = {
-                       Log.e("wxtasadasg","(MineViewModel.kt:30)->>失败了$it ")
+                       Log.e("wxtasadasg","(MineViewModel.kt:30)->>失败了 ")
+                       _isUserInfoFail.value=true
                    },
                    onComplete = {
                        Log.e("wxtasadasg","(MineViewModel.kt:30)-> onComplete ")
@@ -87,7 +89,7 @@ class MineViewModel: BaseViewModel() {
             .doOnErrorWithDefaultErrorHandler { true }
             .safeSubscribeBy(
                 onNext = {
-                    redrockApiStatusDelete.value = it
+                    redRockApiStatusDelete.value = it
 
                 },
                 onError = {
