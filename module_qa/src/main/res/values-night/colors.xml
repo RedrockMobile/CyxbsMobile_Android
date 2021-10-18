@@ -124,4 +124,6 @@
     <color name="qa_tv_expand_text_color">#838384</color>
     <color name="qa_tv_no_user">#FFFFFF</color>
     <color name="qa_text_tab">#F0F0F2</color>
+    <color name="qa_bg_dialog_bottom">#2C2C2C</color>
+    <color name="qa_bg_dialog_bottom_text">#DFDFE3</color>
 </resources>

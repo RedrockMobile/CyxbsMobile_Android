@@ -22,7 +22,7 @@ import com.mredrock.cyxbs.qa.pages.quiz.ui.QuizActivity
 import kotlinx.android.synthetic.main.qa_popwindow_option_normal.view.*
 
 /**
- * created by zhangzhe, SpreadWater
+ * created by zhangzhe, SpreadWater,YYQF
  * 2020/12/4
  */
 class OptionalPopWindow private constructor(val context: Context?) : PopupWindow(context) {
