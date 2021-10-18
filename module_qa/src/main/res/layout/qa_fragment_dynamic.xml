@@ -87,7 +87,7 @@
             app:tabMode="scrollable"
             app:tabRippleColor="@android:color/transparent"
             app:tabTextAppearance="@style/tab_style"
-            app:tabTextColor="#15315B"
+            app:tabTextColor="@color/qa_text_tab"
             app:layout_constraintLeft_toLeftOf="@id/qa_knowledge_cs_two"
             app:layout_constraintTop_toTopOf="@id/qa_knowledge_cs_two"
             android:layout_marginStart="10dp"/>

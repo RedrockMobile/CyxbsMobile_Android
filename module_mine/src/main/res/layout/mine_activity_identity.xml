@@ -11,6 +11,7 @@
         android:id="@+id/ll_statu"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:background="@color/mine_bg_personal_info"
         tools:context=".page.mine.ui.activity.IdentityActivity">
 
         <ImageView
@@ -30,6 +31,7 @@
             android:layout_marginStart="13dp"
             android:text="身份设置"
             android:textSize="15dp"
+            android:textColor="@color/mine_text_setting"
             app:layout_constraintBottom_toBottomOf="@+id/mine_imageview"
             app:layout_constraintStart_toEndOf="@+id/mine_imageview"
             app:layout_constraintTop_toTopOf="@+id/mine_imageview" />
@@ -54,7 +56,8 @@
                 android:layout_marginLeft="17dp"
                 android:layout_marginRight="17dp"
                 android:text="长按下方身份牌并拖动到此处，即可在昵称后面展示你的专属身份！"
-                android:textSize="14dp" />
+                android:textSize="14dp"
+                android:textColor="@color/mine_tv_personal_edit"/>
             <androidx.constraintlayout.widget.ConstraintLayout
                 android:visibility="gone"
                 xmlns:android="http://schemas.android.com/apk/res/android"
@@ -103,6 +106,8 @@
             android:layout_width="409dp"
             android:layout_height="wrap_content"
             android:layout_marginTop="27dp"
+            app:tabTextColor="@color/mine_text_setting"
+            android:background="@color/mine_bg_vp_fan"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/mine_relativelayout"></com.google.android.material.tabs.TabLayout>
@@ -111,6 +116,7 @@
             android:id="@+id/vp_status"
             android:layout_width="409dp"
             android:layout_height="403dp"
+            android:background="@color/mine_bg_vp_fan"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"

@@ -27,7 +27,7 @@
             android:layout_height="17dp"
             android:layout_marginTop="10dp"
             android:text="快去搜索发现可爱的挚友吧..."
-            android:textColor="#112C54"
+            android:textColor="@color/mine_text_empty_fan"
             android:textSize="12sp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"

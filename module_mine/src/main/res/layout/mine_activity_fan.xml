@@ -20,7 +20,7 @@
             android:layout_width="wrap_content"
             android:layout_height="31dp"
             android:text="详情"
-            android:textColor="#15315B"
+            android:textColor="@color/mine_text_fan_head"
             android:textSize="22sp"
             android:layout_marginStart="13dp"/>
     </LinearLayout>
@@ -44,7 +44,7 @@
         app:tabPaddingStart="40dp"
         app:tabRippleColor="@android:color/transparent"
         app:tabTextAppearance="@style/tab_style"
-        app:tabTextColor="#15315B" />
+        app:tabTextColor="@color/mine_text_fan_head" />
     <androidx.viewpager2.widget.ViewPager2
         android:id="@+id/mine_fan_vp2"
         android:layout_width="match_parent"

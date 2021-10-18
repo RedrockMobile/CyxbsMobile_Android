@@ -7,6 +7,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import androidx.recyclerview.widget.DiffUtil
+import com.bumptech.glide.Glide
 import com.mredrock.cyxbs.common.component.CyxbsToast
 import com.mredrock.cyxbs.common.utils.extensions.setAvatarImageFromUrl
 import com.mredrock.cyxbs.common.utils.extensions.setOnSingleClickListener
@@ -169,6 +170,7 @@ class DynamicAdapter(val context: Context?, private val onItemClickEvent: (Dynam
                 qa_tv_dynamic_comment_count.text = data.commentCount.toString()
                 qa_tv_dynamic_publish_at.text =
                     dynamicTimeDescription(System.currentTimeMillis(), data.publishTime * 1000)
+                Glide.with(context).load(data.identityPic).into(qa_iv_dynamic_identity)
                 //解决图片错乱的问题
                 if (data.pics.isNullOrEmpty())
                     qa_dynamic_nine_grid_view.setRectangleImages(

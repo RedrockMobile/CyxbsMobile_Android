@@ -135,6 +135,7 @@
         android:id="@+id/qa_iv_dynamic_praise_count_image"
         android:layout_width="40dp"
         android:layout_height="wrap_content"
+        android:layout_marginEnd="8dp"
         app:checkedColor="#323FD9"
         app:checkedLikeIconRes="@drawable/qa_ic_answer_list_praised"
         app:cirRadius="14dp"
@@ -195,4 +196,14 @@
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/qa_iv_dynamic_praise_count_image" />
+
+    <ImageView
+        android:id="@+id/qa_iv_dynamic_identity"
+        android:layout_width="wrap_content"
+        android:layout_height="19dp"
+        android:layout_marginStart="7dp"
+        android:scaleType="centerInside"
+        app:layout_constraintBottom_toTopOf="@+id/qa_tv_dynamic_publish_at"
+        app:layout_constraintStart_toEndOf="@+id/qa_tv_dynamic_nickname"
+        app:layout_constraintTop_toTopOf="@+id/qa_tv_dynamic_nickname" />
 </androidx.constraintlayout.widget.ConstraintLayout>

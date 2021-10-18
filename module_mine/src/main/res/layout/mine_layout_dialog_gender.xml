@@ -9,7 +9,6 @@
         android:id="@+id/optionspicker"
         android:layout_width="fill_parent"
         android:layout_height="185dp"
-        android:background="#FFFFFF"
         android:gravity="center"
         android:minHeight="150dp"
         android:orientation="horizontal"

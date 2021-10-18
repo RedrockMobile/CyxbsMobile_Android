@@ -1,5 +1,6 @@
 package com.mredrock.cyxbs.qa.pages.dynamic.behavior
 
+import android.animation.ValueAnimator
 import android.content.Context
 import android.util.AttributeSet
 import android.util.Log
@@ -46,7 +47,7 @@ class CoverHeaderBehavior(context: Context, attr: AttributeSet) : CoordinatorLay
         override fun run() {
             scroller?.let {
                 if (it.computeScrollOffset()){ // 如果已经计算过滑动偏移值
-                    contentView.translationY = it.currY.toFloat()
+                    contentView.translationY = it.currY.toFloat() 
                     // 让View在下一次绘制时执行定义好的Runnable
                     ViewCompat.postOnAnimation(contentView, this)
                 }
