@@ -45,7 +45,8 @@ class MyDynamicFragment : BaseViewModelFragment<MyDynamicViewModel>() {
         initDynamics()
     }
 
-    private fun initDynamics() {
+   fun initDynamics() {
+
         val mTencent = Tencent.createInstance(CommentConfig.APP_ID, context)
         dynamicListRvAdapter =
             DynamicAdapter(context) { dynamic, view ->
@@ -166,6 +167,9 @@ class MyDynamicFragment : BaseViewModelFragment<MyDynamicViewModel>() {
             }
         }
     }
+
+
+
 }
 
 

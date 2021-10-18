@@ -24,6 +24,7 @@ import android.provider.MediaStore
 import android.view.MotionEvent
 import android.view.View
 import android.view.ViewAnimationUtils.createCircularReveal
+import android.widget.ImageView
 import androidx.core.content.ContextCompat
 import com.afollestad.materialdialogs.MaterialDialog
 import com.afollestad.materialdialogs.list.listItems
@@ -38,10 +39,12 @@ import com.mredrock.cyxbs.common.service.ServiceManager
 import com.mredrock.cyxbs.common.utils.extensions.*
 import com.mredrock.cyxbs.mine.R
 import com.mredrock.cyxbs.mine.databinding.MineActivityHomepageBinding
+import com.mredrock.cyxbs.mine.network.model.UserInfo
 import com.mredrock.cyxbs.mine.page.mine.widget.BlurBitmap
 import com.mredrock.cyxbs.store.utils.transformer.ScaleInTransformer
 import com.yalantis.ucrop.UCrop
 import kotlinx.android.synthetic.main.mine_activity_homepage_head.view.*
+import kotlinx.android.synthetic.main.mine_layout_dialog_gender.view.*
 import okhttp3.MultipartBody
 import java.io.File
 import java.io.IOException
@@ -99,7 +102,9 @@ class HomepageActivity : BaseViewModelActivity<MineViewModel>() {
      * 是否需要刷新
      */
     private var isNeedRefresh=true
-    private val userService: IUserService by lazy {
+
+    val imageViewList by lazy {  mutableListOf<ImageView>(dataBinding.clPersonalInformation.iv_nameplate1,dataBinding.clPersonalInformation.iv_nameplate2,dataBinding.clPersonalInformation.iv_nameplate3)}
+        private val userService: IUserService by lazy {
         ServiceManager.getService(IAccountService::class.java).getUserService()
     }
     private val SELECT_PICTURE = 1
@@ -120,9 +125,9 @@ class HomepageActivity : BaseViewModelActivity<MineViewModel>() {
 
 
     fun initData() {
-
         alphaMineView = dataBinding.clPersonalInformation.alpha
         viewModel._userInfo.observeForever {
+            initSatu(it)
             dataBinding.clPersonalInformation.tv_id_number.text = it.data.uid.toString()
             dataBinding.clPersonalInformation.tv_grade.text = it.data.grade
             if (it.data.constellation.equals("")){
@@ -135,7 +140,9 @@ class HomepageActivity : BaseViewModelActivity<MineViewModel>() {
             dataBinding.clPersonalInformation.tv_signature.text = it.data.introduction
             nickname =  it.data.nickname
           it.data.redid.let {
+
               identityFragment.onSuccesss(it)
+              dataBinding.vp2Mine. setOffscreenPageLimit(2)
           }
         loadBitmap(it.data.backgroundUrl){
             initBlurBitmap(it)
@@ -150,7 +157,13 @@ class HomepageActivity : BaseViewModelActivity<MineViewModel>() {
 
     }
 
+        fun initSatu(user:UserInfo){
+            user.data.identityies.forEachIndexed{
+                    index, s ->
+                loadRedrockImage(s,imageViewList[index])
+            }
 
+        }
 
 
 
@@ -172,6 +185,7 @@ class HomepageActivity : BaseViewModelActivity<MineViewModel>() {
             ARouter.getInstance().build(QA_DYNAMIC_MINE_FRAGMENT).navigation() as Fragment
         val list = arrayListOf<Fragment>(dynamicFragment, identityFragment)
         dataBinding.vp2Mine.adapter = MineAdapter(this, list)
+
         dataBinding.vp2Mine.
             setPageTransformer(ScaleInTransformer())
         TabLayoutMediator(dataBinding.mineTablayout, dataBinding.vp2Mine, true) { tab, position ->
@@ -233,6 +247,7 @@ class HomepageActivity : BaseViewModelActivity<MineViewModel>() {
         }
             dataBinding.srlRefresh.setOnRefreshListener {
                 getUserInfo(intent)
+
             }
         viewModel._isUserInfoFail.observeForever {
             if (it==true){
@@ -242,6 +257,9 @@ class HomepageActivity : BaseViewModelActivity<MineViewModel>() {
             }
         }
 
+        dataBinding.clPersonalInformation.setOnClickListener {
+
+        }
     }
 
 

@@ -48,6 +48,7 @@
             app:layout_constraintTop_toBottomOf="@+id/tv_identity">
 
             <TextView
+                android:layout_centerVertical="true"
                 android:id="@+id/mine_fan_item_tv_nickname"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -55,6 +56,7 @@
                 android:layout_marginRight="17dp"
                 android:text="长按下方身份牌并拖动到此处，即可在昵称后面展示你的专属身份！"
                 android:textSize="14dp" />
+
             <androidx.constraintlayout.widget.ConstraintLayout
 
                 xmlns:android="http://schemas.android.com/apk/res/android"
@@ -64,6 +66,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:background="@drawable/mine_ic_item_background">
+
                 <TextView
                     android:id="@+id/tv_item_identity_name"
                     android:layout_width="wrap_content"
@@ -73,6 +76,7 @@
                     android:text="红岩网校工作站"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent" />
+
                 <TextView
                     android:id="@+id/tv_item_identity"
                     android:layout_width="wrap_content"

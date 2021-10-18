@@ -79,11 +79,7 @@ class OptionalPopWindow private constructor(val context: Context?) : PopupWindow
                 intent.putExtra("dynamic",data)
                 context?.startActivity(intent)
             }
-            view.findViewById<TextView>(R.id.qa_popwindow_tv_edit).setOnClickListener {
-                val intent = Intent(context,QuizActivity::class.java)
-                intent.putExtra("dynamic",data)
-                context?.startActivity(intent)
-            }
+
             childCount++
             (mainView as LinearLayout).addView(view)
             (mainView as LinearLayout).invalidate()

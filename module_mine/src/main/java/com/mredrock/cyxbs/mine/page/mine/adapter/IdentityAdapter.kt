@@ -3,6 +3,7 @@ package com.mredrock.cyxbs.mine.page.mine.adapter
 import android.content.Context
 import android.content.Intent
 import android.graphics.Bitmap
+import android.graphics.Typeface
 import android.graphics.drawable.BitmapDrawable
 import android.graphics.drawable.Drawable
 import android.provider.ContactsContract
@@ -22,6 +23,7 @@ import com.mredrock.cyxbs.mine.network.model.AuthenticationStatus
 import com.mredrock.cyxbs.mine.page.mine.ui.activity.HomepageActivity
 import com.mredrock.cyxbs.mine.page.mine.ui.activity.IdentityActivity
 import com.mredrock.cyxbs.mine.page.mine.widget.SlideLayout
+import com.mredrock.cyxbs.mine.util.widget.loadBitmap
 import java.math.MathContext
 
 class IdentityAdapter(val list:List<AuthenticationStatus.Data>, val context: Context,val redid:String?,val isother:Boolean) : RecyclerView.Adapter<RecyclerView.ViewHolder>(),View.OnClickListener {
@@ -61,7 +63,7 @@ class IdentityAdapter(val list:List<AuthenticationStatus.Data>, val context: Con
                 activity.viewModel.deleteStatus(list[(vh as VH).layoutPosition].id)
             }
             vh.menuViewSetting.setOnClickListener(this)
-
+            initTypeface(vh)
         }else if (isother){
             //用户访问别人的情况
             val convertView = LayoutInflater.from(context).inflate(R.layout.mine_default_identity_item, parent, false)
@@ -121,26 +123,12 @@ class IdentityAdapter(val list:List<AuthenticationStatus.Data>, val context: Con
     }
 
 
-    /**
-     * 加载网络请求的Bitmap图片出来
-     */
-    fun loadBitmap(url: String, success: (Bitmap) -> Unit){
-        Glide.with(context) // context，可添加到参数中
-            .asBitmap()
-            .load(url)
-            .into(object : CustomTarget<Bitmap>() {
-                override fun onResourceReady(resource: Bitmap, transition: Transition<in Bitmap>?) {
-                    // 成功返回 Bitmap
-                    success.invoke(resource)
-                }
 
-                override fun onLoadCleared(placeholder: Drawable?) {
-
-                }
-            })
-    }
-
-
+            fun initTypeface(vh:VH){
+                vh.statuNameView.setTypeface(Typeface.createFromAsset(context.assets,"YouSheBiaoTiHei-2.ttf"))
+                vh.statuView.setTypeface(Typeface.createFromAsset(context.assets,"YouSheBiaoTiHei-2.ttf"))
+                vh.timeView.setTypeface(Typeface.createFromAsset(context.assets,"YouSheBiaoTiHei-2.ttf"))
+            }
 
 
 }

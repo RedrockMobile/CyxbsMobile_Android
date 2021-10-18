@@ -69,6 +69,7 @@
             app:layout_constraintTop_toTopOf="@+id/bt_mine_back" />
 
         <include
+            android:clickable="true"
             android:id="@+id/cl_personal_information"
             layout="@layout/mine_activity_homepage_head"
             android:layout_height="wrap_content"

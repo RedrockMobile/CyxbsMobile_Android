@@ -27,48 +27,47 @@ import kotlinx.android.synthetic.main.mine_fragment_identify.view.*
 
 class IdentityFragment(
 
-): BaseViewModelFragment<IdentityViewModel>(), onGetRedid {
+) : BaseViewModelFragment<IdentityViewModel>(), onGetRedid {
 
 
-
-
-    private var redid:String?=null
+    private var redid: String? = null
 
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View?{
+    ): View? {
         initListener()
         val view = inflater.inflate(R.layout.mine_fragment_identify, container, false)
-            initData(view)
+        initData(view)
 
         return view
     }
 
 
-
     override fun onSuccesss(redid: String) {
-       this.redid= redid
+        this.redid = redid
     }
 
-    fun initListener(){
-        (context as HomepageActivity).viewModel.
-           redRockApiStatusDelete.observeForever {
-               activity?.toast("删除身份成功!")
-           }
+    fun initListener() {
+        (context as HomepageActivity).viewModel.redRockApiStatusDelete.observeForever {
+            activity?.toast("删除身份成功!")
+        }
 
     }
 
-    fun initData(view:View){
+    fun initData(view: View) {
         val list = mutableListOf<AuthenticationStatus.Data>()
-     viewModel.getAllIdentify(redid)
+        viewModel.getAllIdentify(redid)
         viewModel.allIdentifies.observeForever {
-            it.data.forEach {
+            it.data.authentication.forEach {
+                list.add(it)
+            }
+            it.data.customization.forEach {
                 list.add(it)
             }
             view.rv_identity.adapter = context?.let {
-                redid?.let { it1 -> IdentityAdapter(list, it, it1,false) }
+                redid?.let { it1 -> IdentityAdapter(list, it, it1, false) }
             }
             view.rv_identity.layoutManager = LinearLayoutManager(context)
         }
@@ -76,8 +75,8 @@ class IdentityFragment(
          * 身份信息发生错误的情况
          */
         viewModel.onErrorAction.observeForever {
-            view.rv_identity.adapter = context?.let {
-                 it -> IdentityAdapter(list, it, redid,false)
+            view.rv_identity.adapter = context?.let { it ->
+                IdentityAdapter(list, it, redid, false)
             }
             view.rv_identity.layoutManager = LinearLayoutManager(context)
         }
