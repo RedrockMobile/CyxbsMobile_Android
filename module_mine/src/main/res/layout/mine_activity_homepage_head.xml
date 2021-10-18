@@ -5,28 +5,43 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-
     android:layout_height="wrap_content">
 
-    <FrameLayout
 
-        android:alpha="0.85"
+    <FrameLayout
         android:id="@+id/fl_head_background"
         android:layout_width="match_parent"
         android:layout_height="220dp"
         android:layout_marginTop="48dp"
-        android:background="@color/mine_bg_personal_info"
+        android:alpha="0.85"
+        android:background="@drawable/mine_shape_ll_background"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="parent" >
+
+
+    </FrameLayout>
 
     <TextView
-
-        android:id="@+id/tv_name"
-        android:layout_width="wrap_content"
+        android:id="@+id/mine_tv_concern"
+        android:layout_width="62dp"
         android:layout_height="wrap_content"
-        android:layout_marginStart="80dp"
+        android:layout_marginTop="20dp"
+        android:text="关注"
+        android:height="24dp"
+        android:gravity="center"
+        android:textColor="#FFFFFF"
+        android:background="@drawable/mine_shape_concern_background"
+        app:layout_constraintEnd_toEndOf="@+id/tv_praise"
+        app:layout_constraintStart_toStartOf="@+id/tv_praise"
+        app:layout_constraintTop_toBottomOf="@+id/tv_praise" />
+    <TextView
+        android:gravity="center"
+        android:id="@+id/tv_name"
+        android:textSize="18dp"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
         android:text="鱼鱼鱼鱼鱼鱼鱼鱼鱼鱼鱼"
         android:textColor="@color/mine_white"
         app:layout_constraintBottom_toTopOf="@+id/fl_head_background"
@@ -51,6 +66,7 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="35dp"
             android:text="12"
+            android:textSize="17dp"
             android:textColor="@color/mine_text_setting"
             app:layout_constraintStart_toEndOf="@+id/civ_head"
             app:layout_constraintTop_toTopOf="@+id/tv_attention_number" />
@@ -62,7 +78,6 @@
             android:text="粉丝"
             android:textColor="@color/mine_tv_personal_count_bottom"
             app:layout_constraintEnd_toEndOf="@+id/tv_fans_number"
-            app:layout_constraintHorizontal_bias="0.0"
             app:layout_constraintStart_toStartOf="@+id/tv_fans_number"
             app:layout_constraintTop_toBottomOf="@+id/tv_fans_number" />
 
@@ -73,6 +88,7 @@
             android:layout_marginStart="56dp"
             android:layout_marginTop="9dp"
             android:text="29"
+            android:textSize="17dp"
             android:textColor="@color/mine_text_setting"
             app:layout_constraintStart_toEndOf="@+id/tv_fans_number"
             app:layout_constraintTop_toBottomOf="@+id/tv_name" />
@@ -94,6 +110,7 @@
             android:layout_marginStart="60dp"
             android:text="31"
             android:textColor="@color/mine_text_setting"
+            android:textSize="17dp"
             app:layout_constraintStart_toEndOf="@+id/tv_attention_number"
             app:layout_constraintTop_toTopOf="@+id/tv_attention_number" />
 
@@ -114,6 +131,7 @@
             android:layout_marginTop="16dp"
             android:text="ID:"
             android:textColor="@color/mine_tv_personal_uid"
+            android:textSize="15dp"
             app:layout_constraintStart_toStartOf="@+id/civ_head"
             app:layout_constraintTop_toBottomOf="@+id/civ_head" />
 
@@ -124,13 +142,15 @@
             android:layout_marginStart="4dp"
             android:text="355533"
             android:textColor="@color/mine_tv_personal_uid"
+            android:textSize="15dp"
             app:layout_constraintStart_toEndOf="@+id/tv_id"
             app:layout_constraintTop_toTopOf="@+id/tv_id" />
 
         <ImageView
             android:id="@+id/iv_edit"
-            android:layout_width="10dp"
-            android:layout_height="10dp"
+            android:layout_width="13dp"
+            android:textSize="10dp"
+            android:layout_height="13dp"
             android:layout_marginStart="25dp"
             app:layout_constraintBottom_toBottomOf="@+id/tv_id_number"
             app:layout_constraintStart_toEndOf="@+id/tv_id_number"
@@ -147,8 +167,7 @@
             android:textColor="@color/mine_tv_personal_edit"
             app:layout_constraintBottom_toBottomOf="@+id/iv_edit"
             app:layout_constraintStart_toEndOf="@+id/iv_edit"
-            app:layout_constraintTop_toTopOf="@+id/iv_edit"
-            app:layout_constraintVertical_bias="0.0" />
+            app:layout_constraintTop_toTopOf="@+id/iv_edit" />
 
         <TextView
             android:id="@+id/tv_grade"

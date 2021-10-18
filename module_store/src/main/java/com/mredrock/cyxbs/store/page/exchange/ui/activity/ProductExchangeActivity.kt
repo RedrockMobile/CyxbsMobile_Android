@@ -19,6 +19,7 @@ import com.mredrock.cyxbs.store.page.exchange.viewmodel.ProductExchangeViewModel
 import com.mredrock.cyxbs.store.ui.activity.PhotoActivity
 import com.mredrock.cyxbs.store.ui.fragment.ExchangeDialog
 import com.mredrock.cyxbs.store.utils.StoreType
+import com.mredrock.cyxbs.store.utils.getColor2
 import com.mredrock.cyxbs.store.utils.transformer.AlphaTransformer
 import com.mredrock.cyxbs.store.utils.transformer.ScaleInTransformer
 
@@ -31,20 +32,21 @@ class ProductExchangeActivity : BaseViewModelActivity<ProductExchangeViewModel>(
 
     private lateinit var dataBinding: StoreActivityProductExchangeBinding
     private lateinit var mData: ProductDetail // 记录该页面的商品数据, 用于之后的判断
-    private var mId = "" //商品ID
+    private var mShopId = "" //商品ID
     private var mStampCount = 0 //我的余额
-    private var mImageList = ArrayList<String>()
-    private var mIsAllowClick = true // 是否允许兑换按钮点击
+    private var mIsPurchased = false // 是否已经购买过, 只有邮货才有购买限制
 
     companion object {
 
         private const val INTENT_PRODUCT_ID = "id" // 商品 id
         private const val INTENT_STAMP_COUNT = "stampCount" // 邮票数量
+        private const val INTENT_HAS_BOUGHT = "isPurchased" // 是否已经购买过了, 只有邮货才有购买限制
 
-        fun activityStart(context: Context, id: Int, stampCount: Int) {
+        fun activityStart(context: Context, id: Int, stampCount: Int, isPurchased: Boolean) {
             val intent = Intent(context, ProductExchangeActivity::class.java)
             intent.putExtra(INTENT_PRODUCT_ID, id)
             intent.putExtra(INTENT_STAMP_COUNT, stampCount)
+            intent.putExtra(INTENT_HAS_BOUGHT, isPurchased)
             context.startActivity(intent)
         }
     }
@@ -64,12 +66,16 @@ class ProductExchangeActivity : BaseViewModelActivity<ProductExchangeViewModel>(
     }
 
     private fun initData() {
-        mId = intent.getIntExtra(INTENT_PRODUCT_ID, 0).toString()
+        mShopId = intent.getIntExtra(INTENT_PRODUCT_ID, 0).toString()
         mStampCount = intent.getIntExtra(INTENT_STAMP_COUNT, 0)
+        mIsPurchased = intent.getBooleanExtra(INTENT_HAS_BOUGHT, false)
+        if (mIsPurchased) { // 如果已经购买过
+            dataBinding.storeBtnExchange.setBackgroundColor(getColor2(R.color.store_btn_ban_product_exchange))
+        }
 
         dataBinding.storeTvUserStampCount.text = mStampCount.toString()
 
-        viewModel.getProductDetail(mId) // 请求商品详细页数据
+        viewModel.getProductDetail(mShopId) // 请求商品详细页数据
     }
 
     private fun initJump() {
@@ -78,25 +84,27 @@ class ProductExchangeActivity : BaseViewModelActivity<ProductExchangeViewModel>(
         button.setOnSingleClickListener { finishAfterTransition() }
 
         dataBinding.storeBtnExchange.setOnSingleClickListener {
-            if (mIsAllowClick) {
-                it.isClickable = false // 在继续显示 dialog 期间禁止用户点击
-                ExchangeDialog.show(
-                    supportFragmentManager,
-                    null,
-                    type = ExchangeDialog.DialogType.TWO_BUTTON,
-                    exchangeTips = "确认要用${dataBinding.storeTvExchangeDetailPrice.text}" +
-                            "邮票兑换${dataBinding.storeTvProductName.text}吗？",
-                    onPositiveClick = {
-                        viewModel.getExchangeResult(mId) // 请求用户是否能购买
-                        dismiss()
-                    },
-                    onNegativeClick = {
-                        dismiss()
-                        it.isClickable = true
-                    },
-                    cancelCallback = { it.isClickable = true }
-                )
+            if (mIsPurchased) { // 如果已经购买过就禁止显示 diolog
+                toast("每种商品只限领一次哦")
+                return@setOnSingleClickListener
             }
+            it.isClickable = false // 在继续显示 dialog 期间禁止用户点击
+            ExchangeDialog.show(
+                supportFragmentManager,
+                null,
+                type = ExchangeDialog.DialogType.TWO_BUTTON,
+                exchangeTips = "确认要用${dataBinding.storeTvExchangeDetailPrice.text}" +
+                        "邮票兑换${dataBinding.storeTvProductName.text}吗？",
+                onPositiveClick = {
+                    viewModel.getExchangeResult(mShopId) // 请求用户是否能购买
+                    dismiss()
+                },
+                onNegativeClick = {
+                    dismiss()
+                    it.isClickable = true
+                },
+                cancelCallback = { it.isClickable = true }
+            )
         }
     }
 
@@ -121,11 +129,8 @@ class ProductExchangeActivity : BaseViewModelActivity<ProductExchangeViewModel>(
                                 "2、在法律允许的范围内，本活动的最终解释权归红岩网校工作站所有。"
                 }
             }
-            //设置轮播图UrlList
-            mImageList.clear()
-            mImageList.addAll(it.urls)
             //初始化轮播图
-            initSlideShow()
+            initSlideShow(it.urls)
             //保存
             mData = it
         }
@@ -202,6 +207,13 @@ class ProductExchangeActivity : BaseViewModelActivity<ProductExchangeViewModel>(
                         dismissCallback = { dataBinding.storeBtnExchange.isClickable = true }
                     )
                 }
+                StoreType.ExchangeError.IS_PURCHASED -> {
+                    /*
+                    * 这里是不会触发的, 因为在之前就判断过是否已经购买而取消了 dialog
+                    * */
+                    toast("每种商品只限领一次哦")
+                    dataBinding.storeBtnExchange.isClickable = true
+                }
                 else -> {
                     toast("兑换请求异常")
                     dataBinding.storeBtnExchange.isClickable = true
@@ -210,13 +222,13 @@ class ProductExchangeActivity : BaseViewModelActivity<ProductExchangeViewModel>(
         }
     }
 
-    private fun initSlideShow() {
+    private fun initSlideShow(imgUrls: List<String>) {
         if (!dataBinding.storeSlideShowExchangeProductImage.hasBeenSetAdapter()) {
             dataBinding.storeSlideShowExchangeProductImage
                 .addTransformer(ScaleInTransformer())
                 .addTransformer(AlphaTransformer())
                 .openCirculateEnabled()
-                .setImgAdapter(mImageList,
+                .setImgAdapter(imgUrls,
                     create = { holder ->
                         holder.view.setOnSingleClickListener {
                             // 装扮详情点击图片的元素共享动画
@@ -229,7 +241,7 @@ class ProductExchangeActivity : BaseViewModelActivity<ProductExchangeViewModel>(
                                 )
 
                             PhotoActivity.activityStart(
-                                this, mImageList,
+                                this, ArrayList(imgUrls),
                                 // 因为开启了循环滑动, 所以必须使用 getRealPosition() 得到你所看到的位置
                                 dataBinding
                                     .storeSlideShowExchangeProductImage
@@ -242,7 +254,7 @@ class ProductExchangeActivity : BaseViewModelActivity<ProductExchangeViewModel>(
                         imageView.setImageFromUrl(data)
                     })
         } else {
-            dataBinding.storeSlideShowExchangeProductImage.notifyImgDataChange(mImageList)
+            dataBinding.storeSlideShowExchangeProductImage.notifyImgDataChange(imgUrls)
         }
     }
 

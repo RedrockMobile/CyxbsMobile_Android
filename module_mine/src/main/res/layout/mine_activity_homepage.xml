@@ -6,7 +6,10 @@
     <data>
 
     </data>
-
+<androidx.swiperefreshlayout.widget.SwipeRefreshLayout
+    android:id="@+id/srl_refresh"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:background="@color/mine_white"
@@ -60,7 +63,7 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="13dp"
             android:text="个人主页"
-            android:textSize="16dp"
+            android:textSize="18dp"
             app:layout_constraintBottom_toBottomOf="@+id/bt_mine_back"
             app:layout_constraintStart_toEndOf="@+id/bt_mine_back"
             app:layout_constraintTop_toTopOf="@+id/bt_mine_back" />
@@ -137,4 +140,5 @@
 
 
     </androidx.constraintlayout.widget.ConstraintLayout>
+</androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
 </layout>

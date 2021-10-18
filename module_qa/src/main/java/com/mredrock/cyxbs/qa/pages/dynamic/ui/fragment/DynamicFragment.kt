@@ -167,9 +167,11 @@ class DynamicFragment : BaseDynamicFragment(), EventBusLifecycleSubscriber {
     }
 
     private fun turnToQuiz() {
-        context?.doIfLogin("提问") {
+       context?.doIfLogin("提问") {
+
             QuizActivity.activityStart(this, "发动态", REQUEST_LIST_REFRESH_ACTIVITY)
             MobclickAgent.onEvent(context, CyxbsMob.Event.CLICK_ASK)
+
         }
     }
 

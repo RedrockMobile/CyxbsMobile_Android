@@ -31,7 +31,6 @@
             android:layout_marginStart="13dp"
             android:text="身份设置"
             android:textSize="15dp"
-            android:textColor="@color/mine_text_setting"
             app:layout_constraintBottom_toBottomOf="@+id/mine_imageview"
             app:layout_constraintStart_toEndOf="@+id/mine_imageview"
             app:layout_constraintTop_toTopOf="@+id/mine_imageview" />
@@ -59,16 +58,14 @@
                 android:textSize="14dp"
                 android:textColor="@color/mine_tv_personal_edit"/>
             <androidx.constraintlayout.widget.ConstraintLayout
-                android:visibility="gone"
+
                 xmlns:android="http://schemas.android.com/apk/res/android"
                 xmlns:app="http://schemas.android.com/apk/res-auto"
                 xmlns:tools="http://schemas.android.com/tools"
                 android:id="@+id/cl_content_view"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:background="@drawable/mine_ic_item_background">>
-
-
+                android:background="@drawable/mine_ic_item_background">
 
                 <TextView
                     android:id="@+id/tv_item_identity_name"
@@ -103,24 +100,43 @@
 
         <com.google.android.material.tabs.TabLayout
             android:id="@+id/mine_tab_status"
-            android:layout_width="409dp"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="27dp"
             app:tabTextColor="@color/mine_text_setting"
             android:background="@color/mine_bg_vp_fan"
+            android:theme="@style/Theme.MaterialComponents"
+            app:tabGravity="fill"
+            app:tabIndicator="@drawable/mine_ic_tab_indicator"
+            app:tabIndicatorColor="@android:color/transparent"
+            app:tabIndicatorFullWidth="false"
+            app:tabIndicatorHeight="3dp"
+            app:tabMaxWidth="180dp"
+            app:tabMinWidth="160dp"
+            app:tabMode="fixed"
+            app:tabPaddingEnd="40dp"
+            app:tabPaddingStart="40dp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/mine_relativelayout"></com.google.android.material.tabs.TabLayout>
-
-        <androidx.viewpager2.widget.ViewPager2
-            android:id="@+id/vp_status"
-            android:layout_width="409dp"
-            android:layout_height="403dp"
-            android:background="@color/mine_bg_vp_fan"
-            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/mine_relativelayout"/>
+        <View
+            android:id="@+id/view_line"
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="#2A4E841A"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/mine_tab_status" />
+
+        <androidx.viewpager2.widget.ViewPager2
+            android:id="@+id/vp_status"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:background="#FFFFFF"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/view_line" />
 
 
     </androidx.constraintlayout.widget.ConstraintLayout>

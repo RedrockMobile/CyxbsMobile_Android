@@ -4,6 +4,11 @@ import android.animation.Animator
 import android.animation.ValueAnimator
 
 import android.content.Context
+import android.content.res.Resources
+import android.graphics.Bitmap
+import android.graphics.Color
+import android.graphics.drawable.BitmapDrawable
+import android.graphics.drawable.Drawable
 import android.util.Log
 import android.view.*
 import android.widget.*
@@ -15,11 +20,19 @@ import com.mredrock.cyxbs.mine.R
 
 import com.mredrock.cyxbs.mine.page.mine.ui.activity.IdentityActivity
 import android.widget.LinearLayout
+import androidx.constraintlayout.widget.ConstraintLayout
+import androidx.core.content.res.ResourcesCompat
 import androidx.core.view.get
+import com.bumptech.glide.Glide
+import com.bumptech.glide.request.target.CustomTarget
+import com.bumptech.glide.request.transition.Transition
+import com.mredrock.cyxbs.mine.network.model.AuthenticationStatus
+import com.mredrock.cyxbs.mine.util.ColorUntil
+import org.w3c.dom.Text
 import java.util.ArrayList
 
 
-class StatusAdapter(val list: MutableList<String>, val context: Context) :
+class StatusAdapter(val list: MutableList<AuthenticationStatus.Data>, val context: Context) :
     RecyclerView.Adapter<StatusAdapter.VH>(), View.OnTouchListener, View.OnLongClickListener {
 
     val activity = context as IdentityActivity
@@ -44,19 +57,30 @@ class StatusAdapter(val list: MutableList<String>, val context: Context) :
     }
 
     override fun onBindViewHolder(holder: VH, position: Int) {
-holder.view.setTag(position)
+             holder.view.setTag(position)
+        loadBitmap(list[position].background){
+            holder.contentView.background =  BitmapDrawable(context.resources,it)
+        }
+        holder.positionView.text = list[position].position
+        holder.nameView.text = list[position].form
+        holder.timeView.text = list[position].date
     }
-    val sss = TextView(context)
+
     override fun getItemCount() = list.size
     class VH(val view: View) : RecyclerView.ViewHolder(view) {
-        val v = view.findViewById<View>(R.id.ll_mine_statu_item)
+        val contentView = view.findViewById<ConstraintLayout>(R.id.cl_content_view)
+     val nameView = view.findViewById<TextView>(R.id.tv_item_identity_name)
+       val positionView = view.findViewById<TextView>(R.id.tv_item_identity)
+        val timeView = view.findViewById<TextView>(R.id.tv_item_identity_time)
     }
 
     var distance = 0f
+    var rawY=0f
     override fun onTouch(v: View, event: MotionEvent): Boolean {
         when (event.action) {
             MotionEvent.ACTION_DOWN -> {
                 distance = event.y
+                rawY=event.rawY
             }
             MotionEvent.ACTION_MOVE -> {
 
@@ -64,16 +88,24 @@ holder.view.setTag(position)
                     "wxtagd",
                     "(StatusAdapter.kt:50)->>event.rawY${event.rawY} event.y${event.y}  item?.y${item?.y}event.rawY-s${event.rawY - distance}"
                 )
+                Log.e(
+                    "wxtagdd",
+                    "(StatusAdapter.kt:50)->>distance${event.rawY}  activity.dataBinding.mineRelativelayout${ activity.dataBinding.mineRelativelayout.top}"
+                )
+                val centerPoint = activity.dataBinding.mineRelativelayout.top+activity.dataBinding.mineRelativelayout.height/2
+                loadAnimator((event.rawY-centerPoint)/(rawY-centerPoint))
                 item?.y = event.rawY - distance
 
             }
             MotionEvent.ACTION_UP -> {
+
                 if (event.rawY>=800){  //设置身份失败的动画
                     upAnimatorback(v,event.rawY - distance)
                 }else{  //设置身份成功的动画
                     upAnmatiorSet(v,event.rawY - distance)
                 }
-
+                activity.dataBinding.mineRelativelayout.background = ResourcesCompat.getDrawable(
+                    activity.resources, R.drawable.mine_ic_rl_background ,null)
             }
             MotionEvent.ACTION_CANCEL -> {
 
@@ -99,6 +131,8 @@ holder.view.setTag(position)
         copyItem(v.height, v.width, x, starty)
         v.alpha=0f
 
+        activity.dataBinding.mineRelativelayout.background = ResourcesCompat.getDrawable(
+            activity.resources, R.drawable.mine_ic_iv_statu_background, null)
         return true
     }
 
@@ -118,6 +152,10 @@ holder.view.setTag(position)
               animator.duration = 800
               animator.addUpdateListener {
                   item?.y = it.animatedValue as Float
+                  Log.e("wxtsdsdsag","(StatusAdapter.kt:185)->> ")
+                  activity.dataBinding.clContentView.scaleX=(it.animatedValue as Float/starty)
+                  activity.dataBinding.clContentView.scaleY=(it.animatedValue as Float/starty)
+                  activity.dataBinding.clContentView.alpha=(it.animatedValue as Float/starty)
               }
         animator.addListener(object : Animator.AnimatorListener {
             override fun onAnimationStart(animation: Animator) {
@@ -178,5 +216,30 @@ holder.view.setTag(position)
         })
         animator.start()
 
+    }
+        fun loadAnimator(porpation:Float){
+            activity.dataBinding.clContentView.scaleX=porpation
+            activity.dataBinding.clContentView.scaleY=porpation
+            activity.dataBinding.clContentView.alpha=porpation
+        }
+
+
+    /**
+     * 加载网络请求的Bitmap图片出来
+     */
+    fun loadBitmap(url: String, success: (Bitmap) -> Unit){
+        Glide.with(context) // context，可添加到参数中
+            .asBitmap()
+            .load(url)
+            .into(object : CustomTarget<Bitmap>() {
+                override fun onResourceReady(resource: Bitmap, transition: Transition<in Bitmap>?) {
+                    // 成功返回 Bitmap
+                    success.invoke(resource)
+                }
+
+                override fun onLoadCleared(placeholder: Drawable?) {
+
+                }
+            })
     }
 }

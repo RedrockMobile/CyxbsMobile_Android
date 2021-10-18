@@ -16,9 +16,9 @@ data class Data(
     @SerializedName("gender")
     val gender: String,
     @SerializedName("grade")
-    val grade: Double,
-    @SerializedName("identities")
-    val identities: List<Any>,
+    val grade: String,
+    @SerializedName("identityies")
+    val identityies: List<String>,
     @SerializedName("introduction")
     val introduction: String,
     @SerializedName("isSelf")
@@ -26,17 +26,17 @@ data class Data(
     @SerializedName("nickname")
     val nickname: String,
     @SerializedName("phone")
-    val phone: Double,
+    val phone: String,
+    @SerializedName("photo_src")
+    val photoSrc: String,
     @SerializedName("photo_thumbnail_src")
     val photoThumbnailSrc: String,
-    @SerializedName("photo_url")
-    val photoUrl: String,
     @SerializedName("qq")
-    val qq: Double,
+    val qq: String,
     @SerializedName("redid")
     val redid: String,
-    @SerializedName("stuNum")
-    val stuNum: Double,
+    @SerializedName("stunum")
+    val stunum: String,
     @SerializedName("uid")
-    val uid: Double
-): Serializable
+    val uid: Int
+) : Serializable

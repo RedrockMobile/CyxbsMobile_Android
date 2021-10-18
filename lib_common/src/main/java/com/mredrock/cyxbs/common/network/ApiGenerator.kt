@@ -121,24 +121,24 @@ object ApiGenerator {
      */
     fun registerNetSettings(uniqueNum: Int, retrofitConfig: ((Retrofit.Builder) -> Retrofit.Builder)? = null, okHttpClientConfig: ((OkHttpClient.Builder) -> OkHttpClient.Builder)? = null, tokenNeeded: Boolean) {
         retrofitMap.put(uniqueNum, Retrofit.Builder()
-            //对传入的retrofitConfig配置
-            .apply {
-                if (retrofitConfig == null)
-                    this.defaultConfig()
-                else
-                    retrofitConfig.invoke(this)
-            }
-            //对传入的okHttpClientConfig配置
-            .configRetrofitBuilder {
-                it.apply {
-                    if (tokenNeeded && !isTouristMode())
-                        configureTokenOkHttp()
-                    if (okHttpClientConfig == null)
+                //对传入的retrofitConfig配置
+                .apply {
+                    if (retrofitConfig == null)
                         this.defaultConfig()
                     else
-                        okHttpClientConfig.invoke(it)
-                }.build()
-            }.build())
+                        retrofitConfig.invoke(this)
+                }
+                //对传入的okHttpClientConfig配置
+                .configRetrofitBuilder {
+                    it.apply {
+                        if (tokenNeeded && !isTouristMode())
+                            configureTokenOkHttp()
+                        if (okHttpClientConfig == null)
+                            this.defaultConfig()
+                        else
+                            okHttpClientConfig.invoke(it)
+                    }.build()
+                }.build())
     }
 
     //以下是retrofit基本配置
@@ -165,8 +165,8 @@ object ApiGenerator {
                 })
             }
         }))
-            .addConverterFactory(GsonConverterFactory.create())
-            .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
+                .addConverterFactory(GsonConverterFactory.create())
+                .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
     }
 
     //默认配置
@@ -189,7 +189,7 @@ object ApiGenerator {
              * 一旦切换，只有重启app才能切回来（因为如果请求得到的url不是原来的@{link getBaseUrl()}，则切换到新的url，而以后访问都用这个新的url了）
              * 放在tokenInterceptor上游的理由是：因为那里面还有token刷新机制，无法判断是否真正是因为服务器的原因请求失败
              */
-//            interceptors().add(BackupInterceptor())
+            interceptors().add(BackupInterceptor())
         }.build()
     }
 
@@ -201,7 +201,7 @@ object ApiGenerator {
              * 一旦切换，只有重启app才能切回来（因为如果请求得到的url不是原来的@{link getBaseUrl()}，则切换到新的url，而以后访问都用这个新的url了）
              * 放在tokenInterceptor上游的理由是：因为那里面还有token刷新机制，无法判断是否真正是因为服务器的原因请求失败
              */
-//            interceptors().add(BackupInterceptor())
+            interceptors().add(BackupInterceptor())
 
 
             interceptors().add(Interceptor {
@@ -269,14 +269,14 @@ object ApiGenerator {
         if (refreshToken.isNotEmpty() && (isTokenExpired() || response?.code == 403)) {
             takeIfNoException {
                 ServiceManager.getService(IAccountService::class.java).getVerifyService().refresh(
-                    onError = {
-                        response?.close()
-                    },
-                    action = { s: String ->
-                        response?.close()
+                        onError = {
+                            response?.close()
+                        },
+                        action = { s: String ->
+                            response?.close()
 //                            BaseApp.context.toast("用户认证刷新成功")
-                        response = proceedPoxyWithTryCatch { chain.run { proceed(chain.request().newBuilder().header("Authorization", "Bearer $s").build()) } }
-                    }
+                            response = proceedPoxyWithTryCatch { chain.run { proceed(chain.request().newBuilder().header("Authorization", "Bearer $s").build()) } }
+                        }
                 )
             }
 
@@ -312,7 +312,8 @@ object ApiGenerator {
                 chain.proceed(chain.request())
             }
 
-           Log.e("wxtag接口测试","(ApiGenerator.kt:317)->>${response} ")
+            Log.e("网络请求","(ApiGenerator.kt:317)->>对象${response} ")
+            Log.e("网络请求","(ApiGenerator.kt:317)->>token${token} ")
             if (response?.isSuccessful == true) {
                 return response
             }
@@ -322,7 +323,7 @@ object ApiGenerator {
             backupUrl = getBackupUrl()
             // 约定给的backupUrl不带https前缀，加上
             if ("https://$backupUrl" != getBaseUrl()) {
-                useBackupUrl = false//true
+                useBackupUrl =false //true
                 // 重新请求并返回
                 return useBackupUrl(chain)
             }
@@ -333,10 +334,10 @@ object ApiGenerator {
 
         private fun useBackupUrl(chain: Interceptor.Chain): Response {
             val newUrl: HttpUrl = chain.request().url
-                .newBuilder()
-                .scheme("https")
-                .host(backupUrl)
-                .build()
+                    .newBuilder()
+                    .scheme("https")
+                    .host(backupUrl)
+                    .build()
             val builder: Request.Builder = chain.request().newBuilder()
             return chain.proceed(builder.url(newUrl).build())
         }
@@ -344,8 +345,8 @@ object ApiGenerator {
         private fun getBackupUrl(): String {
             val okHttpClient = OkHttpClient()
             val request: Request = Request.Builder()
-                .url(BASE_NORMAL_BACKUP_GET)
-                .build()
+                    .url(BASE_NORMAL_BACKUP_GET)
+                    .build()
             val call = okHttpClient.newCall(request)
             val json = call.execute().body?.string()
             return try {

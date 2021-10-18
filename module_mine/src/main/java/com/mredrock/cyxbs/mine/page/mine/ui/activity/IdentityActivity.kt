@@ -26,6 +26,9 @@ import kotlinx.android.synthetic.main.mine_activity_identity.*
 class IdentityActivity : BaseViewModelActivity<IdentityViewModel>() {
 
     lateinit var dataBinding: MineActivityIdentityBinding
+    val redid by lazy {
+        intent.getStringExtra("redid")
+    }
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         dataBinding = MineActivityIdentityBinding.inflate(layoutInflater)
@@ -37,16 +40,13 @@ class IdentityActivity : BaseViewModelActivity<IdentityViewModel>() {
 
     fun initView(){
         val tabNames= listOf<String>("认证身份","个性身份")
-        val approveStatusFragment = ApproveStatusFragment()
-        val personalityStatusFragment = PersonalityStatusFragment()
+        val approveStatusFragment = ApproveStatusFragment(redid)
+        val personalityStatusFragment = PersonalityStatusFragment(redid)
         val list = arrayListOf<Fragment>(approveStatusFragment,personalityStatusFragment)
         dataBinding.vpStatus.adapter= MineAdapter(this,list)
         TabLayoutMediator(dataBinding.mineTabStatus, dataBinding.vpStatus,true) { tab, position ->
             tab.text = tabNames[position]
         }.attach()
-
-
-
 
     }
 }

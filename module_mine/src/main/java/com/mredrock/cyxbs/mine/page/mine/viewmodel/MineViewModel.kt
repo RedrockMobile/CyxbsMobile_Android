@@ -3,6 +3,7 @@ package com.mredrock.cyxbs.mine.page.mine.viewmodel
 import android.util.Log
 import android.widget.Toast
 import androidx.lifecycle.MutableLiveData
+import com.mredrock.cyxbs.common.bean.RedrockApiStatus
 import com.mredrock.cyxbs.common.utils.extensions.doOnErrorWithDefaultErrorHandler
 import com.mredrock.cyxbs.common.utils.extensions.mapOrThrowApiException
 import com.mredrock.cyxbs.common.utils.extensions.safeSubscribeBy
@@ -17,27 +18,50 @@ class MineViewModel: BaseViewModel() {
 
 
     val _userInfo = MutableLiveData<UserInfo>()
-
+    val _isUserInfoFail  =MutableLiveData<Boolean>()
     val _isChangeSuccess = MutableLiveData<Boolean>()
+    val redRockApiStatusDelete = MutableLiveData<RedrockApiStatus>()
 
+   fun  getUserInfo(redid:String?){
+      Log.e("wxtasadasg","(MineViewModel.kt:26)->>调用了网络请求吗$redid ")
+       if (redid!=null){
+           apiService.getPersonInfo(redid)
+               .setSchedulers()
+               .doOnErrorWithDefaultErrorHandler { true }
+               .safeSubscribeBy(
+                   onNext = {
+                       Log.e("wxtasadasg","(MineViewModel.kt:26)->>成共了嘛 ")
+                       _userInfo.value=it
+                   },
+                   onError = {
+                       Log.e("wxtasadasg","(MineViewModel.kt:26)->>失败了")
+                       _isUserInfoFail.value=true
+                   },
+                   onComplete = {
 
-   fun  getUserInfo(){
-        apiService.getPersonInfo()
-            .setSchedulers()
-            .doOnErrorWithDefaultErrorHandler { true }
-            .safeSubscribeBy(
-                onNext = {
+                   }
+               )
+               .lifeCycle()
+       }else{
+           apiService.getPersonInfo(redid)
+               .setSchedulers()
+               .doOnErrorWithDefaultErrorHandler { true }
+               .safeSubscribeBy(
+                   onNext = {
+                       Log.e("wxtasadasg","(MineViewModel.kt:30)->>成功了 ")
+                       _userInfo.value=it
+                   },
+                   onError = {
+                       Log.e("wxtasadasg","(MineViewModel.kt:30)->>失败了 ")
+                       _isUserInfoFail.value=true
+                   },
+                   onComplete = {
+                       Log.e("wxtasadasg","(MineViewModel.kt:30)-> onComplete ")
+                   }
+               )
+               .lifeCycle()
+       }
 
-                    _userInfo.postValue(it)
-                },
-                onError = {
-
-                },
-                onComplete = {
-
-                }
-            )
-            .lifeCycle()
     }
 
     fun changePersonalBackground(@Part file: MultipartBody.Part){
@@ -59,6 +83,24 @@ class MineViewModel: BaseViewModel() {
             .lifeCycle()
     }
 
+    fun deleteStatus(identityId:String){
+        apiService.deleteIdentity(identityId)
+            .setSchedulers()
+            .doOnErrorWithDefaultErrorHandler { true }
+            .safeSubscribeBy(
+                onNext = {
+                    redRockApiStatusDelete.value = it
 
+                },
+                onError = {
+                    Log.e("wxtasadasdasdasg","(MineViewModel.kt:30)->身份接口失败了 ")
+                },
+                onComplete = {
+                    Log.e("wxtasadasdasdasg","(MineViewModel.kt:30)->身份接口 完成了")
+
+                }
+            )
+            .lifeCycle()
+    }
 
 }

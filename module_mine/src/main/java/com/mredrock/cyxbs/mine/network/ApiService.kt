@@ -250,7 +250,7 @@ interface ApiService {
      * 查询用户信息
      */
     @GET("/magipoke/person/info")
-    fun getPersonInfo():Observable<UserInfo>
+    fun getPersonInfo(@Query("redid") redid: String?):Observable<UserInfo>
 
     /**
      * 更新个人用户界面的背景图片
@@ -258,5 +258,42 @@ interface ApiService {
     @Multipart
     @PUT("/magipoke/person/background_url")
     fun changePersonalBackground(@Part file:MultipartBody.Part): Observable<RedrockApiStatus>
+
+
+    /**
+     * 获取认证身份
+     */
+
+    @GET("/magipoke-identity/GetAuthentication")
+    fun getAuthenticationStatus( @Query("id") redId: String?):Observable<AuthenticationStatus>
+
+    /**
+     * 获取个性身份
+     */
+    @GET("/magipoke-identity/GetCustomization")
+    fun getCustomization(@Query("id") redId: String):Observable<AuthenticationStatus>
+
+    /**
+     * 获取全部身份
+     */
+    @GET("/magipoke-identity/GetAllIdentify")
+    fun getAllIdentify(@Query("id") redId: String):Observable<AuthenticationStatus>
+
+    /**
+     * 上传动态的展示身份
+     */
+    @GET("/magipoke-identity/UploadDisplayIdentity")
+    fun uploadDisplayIdentity(@Query("identityId")identityId:String): Observable<RedrockApiStatus>
+
+    /**
+     * 删除身份
+     */
+    @GET("/magipoke-identity/DeleteIdentity")
+    fun deleteIdentity(@Query("identityId")identityId:String): Observable<RedrockApiStatus>
+    /**
+     * 更新动态信息
+     */
+    @PUT("/magipoke-loop/post/dynamic")
+    fun  update()
 
 }

@@ -77,37 +77,109 @@ class QuizViewModel : BaseViewModel() {
         getDraft()
     }
 
-    fun submitDynamic() {
-        val builder = MultipartBody.Builder()
-            .setType(MultipartBody.FORM)
-            .addFormDataPart("content", content.removeContinuousEnters())
-            .addFormDataPart("topic_id", type)
-        if (!imageLiveData.value.isNullOrEmpty()) {
-            Observable.fromArray(imageLiveData.value)
-                .setSchedulers()
-                .map {
-                    it.map { path ->
-                        LogUtils.d("Gibson", "file name = $path")
-                        fileCaster(path)
-                    }
-                }
-                .safeSubscribeBy {
-                    it?.let { list ->
-                        list.forEachIndexed { index, pair ->
-                            val suffix =
-                                pair.first.name.substring(pair.first.name.lastIndexOf(".") + 1)
-                            val imageBody =
-                                pair.first.asRequestBody("image/$suffix".toMediaTypeOrNull())
-                            val name = "photo" + (index + 1)
-                            builder.addFormDataPart(name, pair.first.name, imageBody)
+    /**
+     * @param isModificationDynamic 表示是否是要对动态进行修改
+     */
+    fun submitDynamic(isModificationDynamic:Boolean,postId: String?) {
+
+        if (!isModificationDynamic){
+            val builder = MultipartBody.Builder()
+                .setType(MultipartBody.FORM)
+                .addFormDataPart("content", content.removeContinuousEnters())
+                .addFormDataPart("topic_id", type)
+            if (!imageLiveData.value.isNullOrEmpty()) {
+                Observable.fromArray(imageLiveData.value)
+                    .setSchedulers()
+                    .map {
+                        it.map { path ->
+                            LogUtils.d("Gibson", "file name = $path")
+                            fileCaster(path)
                         }
-                        sendDynamicRequest(parts = builder.build().parts, filePairs = list)
+                    }
+                    .safeSubscribeBy {
+                        it?.let { list ->
+                            list.forEachIndexed { index, pair ->
+                                val suffix =
+                                    pair.first.name.substring(pair.first.name.lastIndexOf(".") + 1)
+                                val imageBody =
+                                    pair.first.asRequestBody("image/$suffix".toMediaTypeOrNull())
+                                val name = "photo" + (index + 1)
+                                builder.addFormDataPart(name, pair.first.name, imageBody)
+                            }
+                            sendDynamicRequest(parts = builder.build().parts, filePairs = list)
+                        }
+                    }
+            } else {
+                //不含图片的情况
+                sendDynamicRequest(parts = builder.build().parts, filePairs = null)
+            }
+        }else{
+            /**
+             * //对动态做出修改的情况
+             */
+            val builder = MultipartBody.Builder()
+                .setType(MultipartBody.FORM)
+                . addFormDataPart("post_id", postId!!)
+                .addFormDataPart("content", content.removeContinuousEnters())
+                .addFormDataPart("topic_id", type)
+            if (!imageLiveData.value.isNullOrEmpty()) {
+                Observable.fromArray(imageLiveData.value)
+                    .setSchedulers()
+                    .map {
+                        it.map { path ->
+                            LogUtils.d("Gibson", "file name = $path")
+                            fileCaster(path)
+                        }
+                    }
+                    .safeSubscribeBy {
+                        it?.let { list ->
+                            list.forEachIndexed { index, pair ->
+                                val suffix =
+                                    pair.first.name.substring(pair.first.name.lastIndexOf(".") + 1)
+                                val imageBody =
+                                    pair.first.asRequestBody("image/$suffix".toMediaTypeOrNull())
+                                val name = "photo" + (index + 1)
+                                builder.addFormDataPart(name, pair.first.name, imageBody)
+                            }
+                            sendModificationRequest(parts = builder.build().parts, filePairs = list)
+                        }
+                    }
+            } else {
+                //不含图片的情况
+                sendModificationRequest(parts = builder.build().parts, filePairs = null)
+            }
+
+
+
+        }
+    }
+
+    private fun sendModificationRequest(parts: List<MultipartBody.Part>, filePairs: List<Pair<File, Boolean>>?) {
+        ApiGenerator.getApiService(ApiServiceNew::class.java)
+            .modificationDynamic(parts)
+            //.mapOrThrowApiException()
+            .setSchedulers()
+            .doFinally {
+                filePairs?.forEach { pair ->
+                    if (pair.second && pair.first.exists()) {
+                        pair.first.delete()
                     }
                 }
-        } else {
-            //不含图片的情况
-            sendDynamicRequest(parts = builder.build().parts, filePairs = null)
-        }
+            }
+            .doOnError { throwable ->
+                isReleaseSuccess = false
+                throwable?.let { e ->
+                    context.toast(e.toString())
+                }
+                backAndRefreshPreActivityEvent.value = true
+            }
+            .safeSubscribeBy {
+                isReleaseSuccess = true
+                toastEvent.value = R.string.qa_release_dynamic_success
+                backAndRefreshPreActivityEvent.value = true
+
+                StoreTask.postTask(StoreTask.Task.PUBLISH_DYNAMIC, null) // 更新发布动态的任务
+            }
     }
 
     //暂时想不出太好的解耦合方案，这里设计的不太好，可能需要重构

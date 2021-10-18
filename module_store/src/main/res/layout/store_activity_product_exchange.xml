@@ -16,7 +16,7 @@
 
         <include
             android:id="@+id/store_toolbar_store_product_detail"
-            layout="@layout/store_common_toolbar" />
+            layout="@layout/store_common_toolbar"/>
 
         <TextView
             android:id="@+id/store_tv_product_detail_title"

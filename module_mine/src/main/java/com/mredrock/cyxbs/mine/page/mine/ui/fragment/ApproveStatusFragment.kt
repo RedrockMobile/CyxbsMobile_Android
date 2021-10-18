@@ -18,10 +18,13 @@ import kotlinx.android.synthetic.main.mine_fragment_approve.view.*
 import kotlinx.android.synthetic.main.mine_fragment_identify.view.*
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.RecyclerView
+import com.mredrock.cyxbs.mine.network.model.AuthenticationStatus
 import com.mredrock.cyxbs.mine.page.mine.helper.StatuItemTouchHelper
 
 
-class ApproveStatusFragment : BaseViewModelFragment<IdentityViewModel>(){
+class ApproveStatusFragment(
+    val redid:String
+    ) : BaseViewModelFragment<IdentityViewModel>(){
 
 
     override fun onCreateView(
@@ -29,21 +32,33 @@ class ApproveStatusFragment : BaseViewModelFragment<IdentityViewModel>(){
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-       val view =  inflater.inflate(R.layout.mine_fragment_approve,container,false)
-        val list = mutableListOf<String>("dsa","sdad","djasdas","dsa","sdad","djasdas")
-        view.rv_approve.adapter = context?.let {
-            StatusAdapter(list, it) }
-        view.rv_approve.layoutManager = LinearLayoutManager(context)
 
-//        //创建helper对象
-//        //创建helper对象
-//        val itemTouchHelper = ItemTouchHelper(StatuItemTouchHelper())
-//        //关联recyclerView
-//        //关联recyclerView
-//        itemTouchHelper.attachToRecyclerView(view.rv_approve)
+       val view =  inflater.inflate(R.layout.mine_fragment_approve,container,false)
+
+        initData(view)
+
+
 
         return view
     }
+
+
+    fun initData(view:View){
+        viewModel.getAuthenticationStatus(redid)
+        val list = mutableListOf<AuthenticationStatus.Data>()
+        viewModel.authenticationStatus.observeForever {
+            it.data.forEach {
+                list.add(it)
+            }
+            view.rv_approve.adapter = context?.let {
+                StatusAdapter(list, it) }
+            view.rv_approve.layoutManager = LinearLayoutManager(context)
+        }
+
+    }
+
+
+
 
 
 }

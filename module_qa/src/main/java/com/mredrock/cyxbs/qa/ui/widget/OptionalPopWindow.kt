@@ -4,8 +4,10 @@ import android.animation.ValueAnimator
 import android.annotation.SuppressLint
 import android.app.Activity
 import android.content.Context
+import android.content.Intent
 import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
+import android.util.Log
 import android.view.*
 import android.widget.LinearLayout
 import android.widget.PopupWindow
@@ -15,14 +17,17 @@ import androidx.core.view.children
 import com.mredrock.cyxbs.common.BaseApp
 import com.mredrock.cyxbs.common.utils.extensions.dp2px
 import com.mredrock.cyxbs.qa.R
+import com.mredrock.cyxbs.qa.beannew.Dynamic
+import com.mredrock.cyxbs.qa.pages.quiz.ui.QuizActivity
 import kotlinx.android.synthetic.main.qa_popwindow_option_normal.view.*
 
 /**
  * created by zhangzhe, SpreadWater
  * 2020/12/4
  */
-
 class OptionalPopWindow private constructor(val context: Context?) : PopupWindow(context) {
+
+
 
     companion object {
         private val TAG = OptionalPopWindow::class.java.name
@@ -42,6 +47,7 @@ class OptionalPopWindow private constructor(val context: Context?) : PopupWindow
     }
 
     class Builder {
+        private var data:Dynamic?=null
         private var optionalPopWindow: OptionalPopWindow? = null
         var context: Context? = null
         private var mainView: View? = null
@@ -68,12 +74,29 @@ class OptionalPopWindow private constructor(val context: Context?) : PopupWindow
                 optionalPopWindow!!.dismiss()
                 onClickCallback()
             }
+            view.findViewById<TextView>(R.id.qa_popwindow_tv_edit).setOnClickListener {
+                val intent = Intent(context,QuizActivity::class.java)
+                intent.putExtra("dynamic",data)
+                context?.startActivity(intent)
+            }
+            view.findViewById<TextView>(R.id.qa_popwindow_tv_edit).setOnClickListener {
+                val intent = Intent(context,QuizActivity::class.java)
+                intent.putExtra("dynamic",data)
+                context?.startActivity(intent)
+            }
             childCount++
             (mainView as LinearLayout).addView(view)
             (mainView as LinearLayout).invalidate()
             return this
         }
 
+        /**
+         * 为了拿到动态的数据
+         */
+        fun addDynamicData(data:Dynamic?): Builder {
+            this.data = data
+            return this
+        }
         /**
          * 显示弹窗
          * @param view 要展示在哪个view的下面？
@@ -116,6 +139,8 @@ class OptionalPopWindow private constructor(val context: Context?) : PopupWindow
                     -(View.MeasureSpec.getSize(width) - view.width) / 2
                 }
             }
+
+
 
             // 如果是正中间，则修改Y坐标为正中间
             var offsetYt = offsetY
@@ -202,5 +227,6 @@ class OptionalPopWindow private constructor(val context: Context?) : PopupWindow
         animator.duration = 360
         animator.start()
     }
+
 
 }
