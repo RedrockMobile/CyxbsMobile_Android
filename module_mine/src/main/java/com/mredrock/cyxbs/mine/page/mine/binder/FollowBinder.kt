@@ -3,6 +3,7 @@ package com.mredrock.cyxbs.mine.page.mine.binder
 import android.view.View
 import androidx.core.content.ContextCompat
 import com.bumptech.glide.Glide
+import com.mredrock.cyxbs.common.utils.extensions.gone
 import com.mredrock.cyxbs.mine.R
 import com.mredrock.cyxbs.mine.databinding.MineRecycleItemFanBinding
 import com.mredrock.cyxbs.mine.databinding.MineRecycleItemFollowBinding
@@ -15,6 +16,7 @@ import com.mredrock.cyxbs.mine.network.model.Fan
  * @description
  **/
 class FollowBinder(private val fan: Fan,
+                   private val isSelf: Boolean,
                    private var onFocusClick:((view: View, user:Fan)->Unit)? = null)
     : BaseDataBinder<MineRecycleItemFollowBinding>() {
 
@@ -33,17 +35,21 @@ class FollowBinder(private val fan: Fan,
                 .placeholder(R.drawable.common_default_avatar)
                 .into(mineFollowItemIvAvatar)
 
-            mineFollowItemTvFocus.background = ContextCompat
-                .getDrawable(root.context, R.drawable.mine_shape_tv_focused)
+            if (!isSelf){
+                mineFollowItemTvFocus.gone()
+            }else {
+                mineFollowItemTvFocus.background = ContextCompat
+                    .getDrawable(root.context, R.drawable.mine_shape_tv_focused)
 
-            if (fan.isFocus) {
-                mineFollowItemTvFocus.text = "互相关注"
-            } else {
-                mineFollowItemTvFocus.text = "已关注"
-            }
+                if (fan.isFocus) {
+                    mineFollowItemTvFocus.text = "互相关注"
+                } else {
+                    mineFollowItemTvFocus.text = "已关注"
+                }
 
-            mineFollowItemTvFocus.setOnClickListener {
-                onFocusClick?.invoke(it,fan)
+                mineFollowItemTvFocus.setOnClickListener {
+                    onFocusClick?.invoke(it,fan)
+                }
             }
         }
     }

@@ -26,7 +26,7 @@
             android:layout_width="wrap_content"
             android:layout_height="17dp"
             android:layout_marginTop="10dp"
-            android:text="关注你的人正在山上..."
+            android:text="暂时没有人关注他呢..."
             android:textColor="@color/mine_text_empty_fan"
             android:textSize="12sp"
             app:layout_constraintEnd_toEndOf="parent"

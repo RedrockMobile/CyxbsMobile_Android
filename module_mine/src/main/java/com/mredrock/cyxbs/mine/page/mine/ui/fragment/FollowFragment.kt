@@ -7,7 +7,10 @@ import android.view.ViewGroup
 import android.widget.TextView
 import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.mredrock.cyxbs.api.account.IAccountService
+import com.mredrock.cyxbs.common.service.ServiceManager
 import com.mredrock.cyxbs.common.ui.BaseViewModelFragment
+import com.mredrock.cyxbs.common.utils.extensions.toast
 import com.mredrock.cyxbs.mine.R
 import com.mredrock.cyxbs.mine.network.NetworkState
 import com.mredrock.cyxbs.mine.page.mine.adapter.DataBindingAdapter
@@ -25,6 +28,7 @@ class FollowFragment : BaseViewModelFragment<FollowViewModel>() {
 
     private var redId = ""
     private lateinit var userAdapter: DataBindingAdapter
+    private var isSelf: Boolean = false
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -34,6 +38,12 @@ class FollowFragment : BaseViewModelFragment<FollowViewModel>() {
         arguments?.let {
             redId = it.getString("redid").orEmpty()
         }
+
+        if (redId ==
+            ServiceManager.getService(IAccountService::class.java).getUserService().getRedid()){
+            isSelf = true
+        }
+
         return inflater.inflate(R.layout.mine_fragment_follow, container, false)
     }
 
@@ -49,7 +59,7 @@ class FollowFragment : BaseViewModelFragment<FollowViewModel>() {
                 when (it.size) {
                     0 -> add(EmptyFollowBinder())
                     else -> for (fan in it) {
-                        add(FollowBinder(fan) { view, user ->
+                        add(FollowBinder(fan,isSelf) { view, user ->
                             viewModel.changeFocusStatus(user.redid)
                             (view as TextView).apply {
                                 if (text == "+关注") {
@@ -59,6 +69,7 @@ class FollowFragment : BaseViewModelFragment<FollowViewModel>() {
                                             R.drawable.mine_shape_tv_focused
                                         )
                                     text = if (user.isFocus) "互相关注" else " 已关注"
+                                    context.toast(R.string.mine_person_focus_success)
                                 }else{
                                     background = ContextCompat
                                         .getDrawable(
@@ -66,6 +77,8 @@ class FollowFragment : BaseViewModelFragment<FollowViewModel>() {
                                             R.drawable.mine_shape_tv_unfocus
                                         )
                                     text = "+关注"
+                                    context.toast(R.string.mine_person_unfocus_success)
+
                                 }
                             }
                         })
