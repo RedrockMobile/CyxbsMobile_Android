@@ -6,94 +6,94 @@
     <data>
 
     </data>
-<androidx.swiperefreshlayout.widget.SwipeRefreshLayout
-    android:id="@+id/srl_refresh"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent">
-    <androidx.constraintlayout.widget.ConstraintLayout
+    <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
+        android:id="@+id/srl_refresh"
         android:layout_width="match_parent"
-        android:background="@color/mine_white"
         android:layout_height="match_parent">
-        <ImageView
-            android:id="@+id/iv_mine_background_blur"
+        <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
-            android:layout_height="400dp"
-            android:scaleType="fitXY"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            app:srcCompat="@drawable/mine_ic_iv_background_test" />
-
-        <ImageView
-            android:id="@+id/iv_mine_background_normal"
-            android:layout_width="match_parent"
-            android:layout_height="400dp"
-            android:scaleType="fitXY"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            app:srcCompat="@drawable/mine_ic_iv_background_test" />
-
-        <FrameLayout
-            android:id="@+id/fl_background"
-            android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:layout_marginBottom="40dp"
-            android:alpha="0"
             android:background="@color/mine_white"
-            app:layout_constraintBottom_toTopOf="@+id/cl_personal_information"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="@+id/iv_mine_background_blur" />
-
-        <ImageView
-            android:id="@+id/bt_mine_back"
-            android:layout_width="7dp"
-            android:layout_height="16dp"
-            android:layout_marginStart="16dp"
-            android:layout_marginTop="60dp"
-            android:src="@drawable/mine_ic_iv_back_black_arrow"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
-
-        <TextView
-            android:id="@+id/tv_mine"
-            android:textColor="@color/mine_white"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="13dp"
-            android:text="个人主页"
-            android:textSize="18dp"
-            app:layout_constraintBottom_toBottomOf="@+id/bt_mine_back"
-            app:layout_constraintStart_toEndOf="@+id/bt_mine_back"
-            app:layout_constraintTop_toTopOf="@+id/bt_mine_back" />
-
-        <include
-            android:clickable="true"
-            android:id="@+id/cl_personal_information"
-            layout="@layout/mine_activity_homepage_head"
-            android:layout_height="wrap_content"
-            android:layout_width="match_parent"
-            app:layout_constraintBottom_toBottomOf="@+id/iv_mine_background_normal"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.05"
-            app:layout_constraintStart_toStartOf="parent" />
-
-
-        <com.mredrock.cyxbs.mine.page.mine.widget.SlideViewGroup
-            android:id="@+id/svg_mine"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:orientation="vertical"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="@+id/iv_mine_background_normal">
-
-            <View
-                android:id="@+id/sl_top_view"
+            android:layout_height="match_parent">
+            <ImageView
+                android:id="@+id/iv_mine_background_blur"
                 android:layout_width="match_parent"
-                android:layout_height="385dp" />
+                android:layout_height="400dp"
+                android:scaleType="fitXY"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:srcCompat="@drawable/mine_ic_iv_background_test" />
+
+            <ImageView
+                android:id="@+id/iv_mine_background_normal"
+                android:layout_width="match_parent"
+                android:layout_height="400dp"
+                android:scaleType="fitXY"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:srcCompat="@drawable/mine_ic_iv_background_test" />
+
+            <FrameLayout
+                android:id="@+id/fl_background"
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_marginBottom="40dp"
+                android:alpha="0"
+                android:background="@color/mine_white"
+                app:layout_constraintBottom_toTopOf="@+id/cl_personal_information"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="@+id/iv_mine_background_blur" />
+
+            <ImageView
+                android:id="@+id/bt_mine_back"
+                android:layout_width="7dp"
+                android:layout_height="16dp"
+                android:layout_marginStart="16dp"
+                android:layout_marginTop="60dp"
+                android:src="@drawable/mine_ic_bt_back_arrow"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <TextView
+                android:id="@+id/tv_mine"
+                android:textColor="@color/mine_white"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="13dp"
+                android:text="个人主页"
+                android:textSize="18dp"
+                app:layout_constraintBottom_toBottomOf="@+id/bt_mine_back"
+                app:layout_constraintStart_toEndOf="@+id/bt_mine_back"
+                app:layout_constraintTop_toTopOf="@+id/bt_mine_back" />
+
+            <include
+                android:clickable="true"
+                android:id="@+id/cl_personal_information"
+                layout="@layout/mine_activity_homepage_head"
+                android:layout_height="wrap_content"
+                android:layout_width="match_parent"
+                app:layout_constraintBottom_toBottomOf="@+id/iv_mine_background_normal"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.05"
+                app:layout_constraintStart_toStartOf="parent" />
+
+
+            <com.mredrock.cyxbs.mine.page.mine.widget.SlideViewGroup
+                android:id="@+id/svg_mine"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="vertical"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="@+id/iv_mine_background_normal">
+
+                <View
+                    android:id="@+id/sl_top_view"
+                    android:layout_width="match_parent"
+                    android:layout_height="385dp" />
 
 
 
@@ -104,7 +104,7 @@
                     android:background="@drawable/mine_shape_ll_background"
                     android:theme="@style/Theme.MaterialComponents"
                     app:tabGravity="fill"
-                    app:tabTextColor="@color/mine_text_setting"
+                    app:tabTextColor="@color/mine_black"
                     app:tabIndicator="@drawable/mine_ic_tab_indicator"
                     app:tabIndicatorColor="@android:color/transparent"
                     app:tabIndicatorFullWidth="false"
@@ -114,32 +114,32 @@
                     app:tabMode="fixed"
                     app:tabPaddingEnd="40dp"
                     app:tabPaddingStart="40dp"
-                    android:backgroundTint="@color/mine_bg_vp_fan"/>
+                    />
 
 
-            <FrameLayout
+                <FrameLayout
 
-                android:background="@color/mine_bg_vp_fan"
-                android:layout_width="match_parent"
-                android:layout_height="5dp">
-<!--只加一个view的背景  由于颜色会被穿透过去 所以再包了一层-->
-                <View
-                    android:id="@+id/fl_line"
-                    android:background="#2A4E841A"
+                    android:background="@color/mine_white"
                     android:layout_width="match_parent"
-                    android:layout_height="1dp"/>
-            </FrameLayout>
+                    android:layout_height="5dp">
+                    <!--只加一个view的背景  由于颜色会被穿透过去 所以再包了一层-->
+                    <View
+                        android:id="@+id/fl_line"
+                        android:background="#2A4E841A"
+                        android:layout_width="match_parent"
+                        android:layout_height="1dp"/>
+                </FrameLayout>
 
-            <androidx.viewpager2.widget.ViewPager2
-                    android:background="@color/mine_bg_vp_fan"
+                <androidx.viewpager2.widget.ViewPager2
+                    android:background="@color/mine_white"
                     android:id="@+id/vp2_mine"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent" />
 
 
-        </com.mredrock.cyxbs.mine.page.mine.widget.SlideViewGroup>
+            </com.mredrock.cyxbs.mine.page.mine.widget.SlideViewGroup>
 
 
-    </androidx.constraintlayout.widget.ConstraintLayout>
-</androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
+        </androidx.constraintlayout.widget.ConstraintLayout>
+    </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
 </layout>
