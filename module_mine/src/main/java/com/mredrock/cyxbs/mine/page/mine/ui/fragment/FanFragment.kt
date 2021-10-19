@@ -7,7 +7,10 @@ import android.view.ViewGroup
 import android.widget.TextView
 import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.mredrock.cyxbs.api.account.IAccountService
+import com.mredrock.cyxbs.common.service.ServiceManager
 import com.mredrock.cyxbs.common.ui.BaseViewModelFragment
+import com.mredrock.cyxbs.common.utils.extensions.toast
 import com.mredrock.cyxbs.mine.R
 import com.mredrock.cyxbs.mine.network.NetworkState
 import com.mredrock.cyxbs.mine.page.mine.adapter.DataBindingAdapter
@@ -27,6 +30,7 @@ class FanFragment : BaseViewModelFragment<FanViewModel>() {
 
     private var redId = ""
     private lateinit var userAdapter: DataBindingAdapter
+    private var isSelf: Boolean = false
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -36,6 +40,12 @@ class FanFragment : BaseViewModelFragment<FanViewModel>() {
         arguments?.let {
             redId = it.getString("redid").orEmpty()
         }
+
+        if (redId ==
+            ServiceManager.getService(IAccountService::class.java).getUserService().getRedid()){
+            isSelf = true
+        }
+
         return inflater.inflate(R.layout.mine_fragment_fan, container, false)
     }
 
@@ -51,7 +61,7 @@ class FanFragment : BaseViewModelFragment<FanViewModel>() {
                 when (it.size) {
                     0 -> add(EmptyFanBinder())
                     else -> for (fan in it) {
-                        add(FanBinder(fan) { view, user ->
+                        add(FanBinder(fan,isSelf) { view, user ->
                             viewModel.changeFocusStatus(user.redid)
                             (view as TextView).apply {
                                 if (text == "+关注") {
@@ -61,6 +71,8 @@ class FanFragment : BaseViewModelFragment<FanViewModel>() {
                                             R.drawable.mine_shape_tv_focused
                                         )
                                     text = "互相关注"
+                                    context.toast(R.string.mine_person_focus_success)
+
                                 }else{
                                     background = ContextCompat
                                         .getDrawable(
@@ -68,6 +80,8 @@ class FanFragment : BaseViewModelFragment<FanViewModel>() {
                                             R.drawable.mine_shape_tv_unfocus
                                         )
                                     text = "+关注"
+                                    context.toast(R.string.mine_person_unfocus_success)
+
                                 }
                             }
                         })

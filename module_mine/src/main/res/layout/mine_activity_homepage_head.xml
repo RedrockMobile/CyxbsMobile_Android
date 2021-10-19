@@ -61,24 +61,25 @@
 
 
      <TextView
-         android:textSize="17dp"
             android:id="@+id/tv_fans_number"
-         android:textColor="#15315B"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="35dp"
             android:text="12"
+            android:textSize="17dp"
+            android:textColor="@color/mine_text_setting"
             app:layout_constraintStart_toEndOf="@+id/civ_head"
             app:layout_constraintTop_toTopOf="@+id/tv_attention_number" />
 
-    <TextView
-        android:id="@+id/tv_fans"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="粉丝"
-        app:layout_constraintEnd_toEndOf="@+id/tv_fans_number"
-        app:layout_constraintStart_toStartOf="@+id/tv_fans_number"
-        app:layout_constraintTop_toBottomOf="@+id/tv_fans_number" />
+        <TextView
+            android:id="@+id/tv_fans"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="粉丝"
+            android:textColor="@color/mine_tv_personal_count_bottom"
+            app:layout_constraintEnd_toEndOf="@+id/tv_fans_number"
+            app:layout_constraintStart_toStartOf="@+id/tv_fans_number"
+            app:layout_constraintTop_toBottomOf="@+id/tv_fans_number" />
 
         <TextView
             android:id="@+id/tv_attention_number"
@@ -88,7 +89,7 @@
             android:layout_marginTop="9dp"
             android:text="29"
             android:textSize="17dp"
-            android:textColor="#15315B"
+            android:textColor="@color/mine_text_setting"
             app:layout_constraintStart_toEndOf="@+id/tv_fans_number"
             app:layout_constraintTop_toBottomOf="@+id/tv_name" />
 
@@ -97,6 +98,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="关注"
+            android:textColor="@color/mine_tv_personal_count_bottom"
             app:layout_constraintEnd_toEndOf="@+id/tv_attention_number"
             app:layout_constraintStart_toStartOf="@+id/tv_attention_number"
             app:layout_constraintTop_toBottomOf="@+id/tv_attention_number" />
@@ -107,8 +109,8 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="60dp"
             android:text="31"
+            android:textColor="@color/mine_text_setting"
             android:textSize="17dp"
-            android:textColor="#15315B"
             app:layout_constraintStart_toEndOf="@+id/tv_attention_number"
             app:layout_constraintTop_toTopOf="@+id/tv_attention_number" />
 
@@ -117,6 +119,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="获赞"
+            android:textColor="@color/mine_tv_personal_count_bottom"
             app:layout_constraintEnd_toEndOf="@+id/tv_praise_number"
             app:layout_constraintStart_toStartOf="@+id/tv_praise_number"
             app:layout_constraintTop_toBottomOf="@+id/tv_praise_number" />
@@ -127,7 +130,7 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="16dp"
             android:text="ID:"
-            android:textColor="#CC152338"
+            android:textColor="@color/mine_tv_personal_uid"
             android:textSize="15dp"
             app:layout_constraintStart_toStartOf="@+id/civ_head"
             app:layout_constraintTop_toBottomOf="@+id/civ_head" />
@@ -138,7 +141,7 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="4dp"
             android:text="355533"
-            android:textColor="#CC152338"
+            android:textColor="@color/mine_tv_personal_uid"
             android:textSize="15dp"
             app:layout_constraintStart_toEndOf="@+id/tv_id"
             app:layout_constraintTop_toTopOf="@+id/tv_id" />
@@ -154,17 +157,17 @@
             app:layout_constraintTop_toTopOf="@+id/tv_id_number"
             app:srcCompat="@drawable/mine_ic_iv_edit_pencil" />
 
-    <TextView
-        android:id="@+id/tv_edit"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="编辑信息"
-
-        android:textSize="12dp"
-android:layout_marginLeft="4dp"
-        app:layout_constraintBottom_toBottomOf="@+id/iv_edit"
-        app:layout_constraintStart_toEndOf="@+id/iv_edit"
-        app:layout_constraintTop_toTopOf="@+id/iv_edit" />
+        <TextView
+            android:id="@+id/tv_edit"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="4dp"
+            android:text="编辑信息"
+            android:textSize="8dp"
+            android:textColor="@color/mine_tv_personal_edit"
+            app:layout_constraintBottom_toBottomOf="@+id/iv_edit"
+            app:layout_constraintStart_toEndOf="@+id/iv_edit"
+            app:layout_constraintTop_toTopOf="@+id/iv_edit" />
 
         <TextView
             android:id="@+id/tv_grade"
@@ -172,7 +175,7 @@ android:layout_marginLeft="4dp"
             android:layout_height="wrap_content"
             android:layout_marginTop="20dp"
             android:text="2019"
-            android:textColor="#CC152338"
+            android:textColor="@color/mine_tv_personal_count_bottom"
             app:layout_constraintStart_toStartOf="@+id/tv_id"
             app:layout_constraintTop_toBottomOf="@+id/tv_id" />
 
@@ -182,7 +185,7 @@ android:layout_marginLeft="4dp"
             android:layout_height="wrap_content"
             android:layout_marginStart="3dp"
             android:text="十三星座"
-            android:textColor="#CC152338"
+            android:textColor="@color/mine_tv_personal_count_bottom"
             app:layout_constraintBottom_toBottomOf="@+id/v_division_line1"
             app:layout_constraintStart_toEndOf="@+id/v_division_line1"
             app:layout_constraintTop_toTopOf="@+id/v_division_line1"
@@ -192,9 +195,8 @@ android:layout_marginLeft="4dp"
             android:id="@+id/v_division_line1"
             android:layout_width="1dp"
             android:layout_height="20dp"
-
             android:layout_marginStart="3dp"
-            android:background="#000000"
+            android:background="@color/mine_division_line"
             app:layout_constraintBottom_toBottomOf="@+id/tv_grade"
             app:layout_constraintStart_toEndOf="@+id/tv_grade"
             app:layout_constraintTop_toTopOf="@+id/tv_grade"
@@ -206,8 +208,7 @@ android:layout_marginLeft="4dp"
             android:layout_width="1dp"
             android:layout_height="20dp"
             android:layout_marginStart="3dp"
-
-            android:background="#CC152338"
+            android:background="@color/mine_tv_personal_count_bottom"
             app:layout_constraintBottom_toBottomOf="@+id/mine_tv_constellation"
             app:layout_constraintStart_toEndOf="@+id/mine_tv_constellation"
             app:layout_constraintTop_toTopOf="@+id/mine_tv_constellation" />
@@ -218,7 +219,7 @@ android:layout_marginLeft="4dp"
             android:layout_height="wrap_content"
             android:layout_marginStart="3dp"
             android:text="X星人"
-            android:textColor="#CC152338"
+            android:textColor="@color/mine_tv_personal_uid"
             app:layout_constraintBottom_toBottomOf="@+id/v_division_line2"
             app:layout_constraintStart_toEndOf="@+id/v_division_line2"
             app:layout_constraintTop_toTopOf="@+id/v_division_line2"
@@ -229,7 +230,7 @@ android:layout_marginLeft="4dp"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="4dp"
-            android:textColor="#B315315C"
+            android:textColor="@color/mine_tv_personal_count_bottom"
             android:text="这是一条不普通的个性签名签名签名签名签名"
             app:layout_constraintStart_toStartOf="@+id/tv_grade"
             app:layout_constraintTop_toBottomOf="@+id/tv_grade" />
@@ -280,8 +281,7 @@ android:layout_marginLeft="4dp"
         android:layout_width="1dp"
         android:layout_height="20dp"
         android:layout_marginStart="3dp"
-
-        android:background="#CC152338"
+        android:background="@color/mine_tv_personal_count_bottom"
         app:layout_constraintBottom_toBottomOf="@+id/tv_grade"
         app:layout_constraintStart_toEndOf="@+id/tv_grade"
         app:layout_constraintTop_toTopOf="@+id/tv_grade"

@@ -1,12 +1,12 @@
 package com.mredrock.cyxbs.mine.page.mine.viewmodel
 
-import android.util.Log
 import androidx.lifecycle.MutableLiveData
 import com.mredrock.cyxbs.common.network.ApiGenerator
 import com.mredrock.cyxbs.common.utils.extensions.mapOrThrowApiException
 import com.mredrock.cyxbs.common.utils.extensions.safeSubscribeBy
 import com.mredrock.cyxbs.common.utils.extensions.setSchedulers
 import com.mredrock.cyxbs.common.viewmodel.BaseViewModel
+import com.mredrock.cyxbs.mine.R
 import com.mredrock.cyxbs.mine.network.ApiService
 import com.mredrock.cyxbs.mine.network.NetworkState
 import com.mredrock.cyxbs.mine.network.model.Fan
@@ -25,10 +25,9 @@ class FanViewModel : BaseViewModel() {
             .changeFocusStatus(redid)
             .setSchedulers()
             .doOnError {
-
+                toastEvent.value = R.string.mine_person_change_focus_status_failed
             }
             .safeSubscribeBy {
-
             }
     }
 

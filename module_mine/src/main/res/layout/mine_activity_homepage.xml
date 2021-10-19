@@ -52,7 +52,7 @@
             android:layout_height="16dp"
             android:layout_marginStart="16dp"
             android:layout_marginTop="60dp"
-            android:src="@drawable/mine_ic_bt_back_arrow"
+            android:src="@drawable/mine_ic_iv_back_black_arrow"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
@@ -104,7 +104,7 @@
                     android:background="@drawable/mine_shape_ll_background"
                     android:theme="@style/Theme.MaterialComponents"
                     app:tabGravity="fill"
-                    app:tabTextColor="@color/mine_black"
+                    app:tabTextColor="@color/mine_text_setting"
                     app:tabIndicator="@drawable/mine_ic_tab_indicator"
                     app:tabIndicatorColor="@android:color/transparent"
                     app:tabIndicatorFullWidth="false"
@@ -114,12 +114,12 @@
                     app:tabMode="fixed"
                     app:tabPaddingEnd="40dp"
                     app:tabPaddingStart="40dp"
-                    />
+                    android:backgroundTint="@color/mine_bg_vp_fan"/>
 
 
             <FrameLayout
 
-                android:background="@color/mine_white"
+                android:background="@color/mine_bg_vp_fan"
                 android:layout_width="match_parent"
                 android:layout_height="5dp">
 <!--只加一个view的背景  由于颜色会被穿透过去 所以再包了一层-->
@@ -131,7 +131,7 @@
             </FrameLayout>
 
             <androidx.viewpager2.widget.ViewPager2
-                    android:background="@color/mine_white"
+                    android:background="@color/mine_bg_vp_fan"
                     android:id="@+id/vp2_mine"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent" />

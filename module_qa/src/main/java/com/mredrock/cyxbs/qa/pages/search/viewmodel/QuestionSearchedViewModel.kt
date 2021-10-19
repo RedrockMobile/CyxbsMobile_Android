@@ -1,6 +1,5 @@
 package com.mredrock.cyxbs.qa.pages.search.viewmodel
 
-import android.util.Log
 import androidx.lifecycle.*
 import androidx.paging.LivePagedListBuilder
 import androidx.paging.PagedList
@@ -153,7 +152,7 @@ class QuestionSearchedViewModel(var searchKey: String) : BaseViewModel() {
             .changeFocusStatus(redid)
             .setSchedulers()
             .doOnError {
-
+                toastEvent.value = R.string.qa_person_change_focus_status_failed
             }
             .safeSubscribeBy {
 
