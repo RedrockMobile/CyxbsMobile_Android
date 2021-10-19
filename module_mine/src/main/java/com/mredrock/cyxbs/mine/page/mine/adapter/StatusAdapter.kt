@@ -63,13 +63,13 @@ class StatusAdapter(
         convertView.setOnTouchListener(this)
         convertView.setOnLongClickListener(this)
         val vh = VH(convertView)
-        //  vh.setIsRecyclable(false)
+
         initTypeface(vh)
         return vh
     }
 
     override fun onBindViewHolder(holder: VH, position: Int) {
-        holder.view.setTag(position)
+        holder.view.tag = list[position].id
         loadBitmap(list[position].background) {
             holder.contentView.background = BitmapDrawable(context?.resources, it)
         }
@@ -147,7 +147,7 @@ class StatusAdapter(
         v.getLocationOnScreen(location)
         val x = location[0].toFloat() // view距离 屏幕左边的距离（即x轴方向）
         starty = location[1].toFloat() // view距离 屏幕顶边的距离（即y轴方向）
-        copyItem(v.height, v.width, x, starty, v.tag.toString().toInt(),v)
+        copyItem(v.height, v.width, x, starty,v)
         item?.background = v.background
         v.alpha = 0f
         activity.dataBinding.mineRelativelayout.background = ResourcesCompat.getDrawable(
@@ -157,7 +157,7 @@ class StatusAdapter(
     }
 
 
-    fun copyItem(height: Int, width: Int, x: Float, y: Float, postion: Int,v:View) {
+    fun copyItem(height: Int, width: Int, x: Float, y: Float, v:View) {
         item =
             LayoutInflater.from(activity).inflate(R.layout.mine_recycler_item_statu, null) as View
 
@@ -249,15 +249,23 @@ class StatusAdapter(
             override fun onAnimationEnd(animation: Animator) {
                 (v.parent as ViewGroup).removeView(v)
                 val activity = context
-                activity.dataBinding.llStatu.removeView(item)
+
                 item = null
                 activity.dataBinding.clContentView.scaleX = 1f
                 activity.dataBinding.clContentView.scaleY = 1f
-                activity.dataBinding.clContentView.alpha = 1f
+
                 activity.dataBinding.clContentView.visible()
-                val status = list[longView?.tag.toString().toInt()]
-                activity.viewModel.updateStatus(status.id, status.type, redid)
-                Log.e("wxtadsgdgdg", "(IdentityActivity.kt:74)->> 身份设置有效果吗id=${status.id}")
+                list.forEach {
+                    if (it.id == v.tag.toString()){
+                        activity.viewModel.updateStatus(it.id,it.type, redid)
+                    }
+                }
+                activity.viewModel.isFinsh.observeForever {
+                    activity.dataBinding.llStatu.removeView(item)
+                    activity.dataBinding.clContentView.alpha = 1f
+                }
+
+                Log.e("wxtadsgdgdg", "(IdentityActivity.kt:74)->> 身份设置有效果吗id=${v.tag.toString()}")
 
 
             }

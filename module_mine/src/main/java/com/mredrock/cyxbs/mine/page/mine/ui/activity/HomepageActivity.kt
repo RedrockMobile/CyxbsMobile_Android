@@ -247,7 +247,7 @@ class HomepageActivity : BaseViewModelActivity<MineViewModel>() {
         }
             dataBinding.srlRefresh.setOnRefreshListener {
                 getUserInfo(intent)
-
+                identityFragment.refresh()
             }
         viewModel._isUserInfoFail.observeForever {
             if (it==true){

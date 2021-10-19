@@ -78,7 +78,7 @@ class IdentityActivity : BaseViewModelActivity<IdentityViewModel>() {
             loadBitmap(it.data.background){
                 dataBinding.clContentView.background= BitmapDrawable(context.resources,it)
             }
-            dataBinding.clContentView.alpha=1f
+         //   dataBinding.clContentView.alpha=1f
         }
     }
 }

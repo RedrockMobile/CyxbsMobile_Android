@@ -35,8 +35,6 @@ class IdentityViewModel: BaseViewModel()  {
                 onNext = {
                     Log.e("身份设置","(MineViewModel.kt:30)->>修改身份的网络请求$it ")
                        authenticationStatus.value=it
-
-
                 },
                 onError = {
                     Log.e("身份设置","(MineViewModel.kt:30)->>失败了$it ")
@@ -97,7 +95,7 @@ class IdentityViewModel: BaseViewModel()  {
 
 
 
-    fun updateStatus(identityId:String,type:String,redid: String){
+    fun updateStatus(identityId:String?,type:String?,redid: String){
         apiService.uploadDisplayIdentity(identityId)
             .setSchedulers()
             .doOnErrorWithDefaultErrorHandler { true }
@@ -111,7 +109,7 @@ class IdentityViewModel: BaseViewModel()  {
                     }else{
                         getAuthenticationStatus(redid)
                     }
-                    getShowIdentify(redid)
+                   getShowIdentify(redid)
                 },
                 onError = {
                     Log.e("wxtasadasdasdasg","(MineViewModel.kt:30)->身份接口失败了$it ")

@@ -52,6 +52,7 @@ class IdentityFragment(
     fun initListener() {
         (context as HomepageActivity).viewModel.redRockApiStatusDelete.observeForever {
             activity?.toast("删除身份成功!")
+            viewModel.getAllIdentify(redid)
         }
 
     }
@@ -80,6 +81,10 @@ class IdentityFragment(
             }
             view.rv_identity.layoutManager = LinearLayoutManager(context)
         }
+    }
+
+    fun refresh(){
+        viewModel.getAllIdentify(redid)
     }
 
 
