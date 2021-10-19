@@ -1,31 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
-
-<androidx.appcompat.widget.LinearLayoutCompat android:layout_width="match_parent"
+<TextView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/qa_popwindow_tv_option"
+    android:layout_width="match_parent"
     android:layout_height="wrap_content"
+    android:gravity="center"
     android:orientation="vertical"
-    xmlns:android="http://schemas.android.com/apk/res/android">
-    <TextView
-        xmlns:android="http://schemas.android.com/apk/res/android"
-        android:id="@+id/qa_popwindow_tv_option"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="文本"
-        android:textColor="@color/qa_bg_dialog_bottom_text"
-        android:textSize="18sp"
-        android:paddingTop="22dp"
-        android:gravity="center">
-    </TextView>
+    android:paddingTop="22dp"
+    android:text="文本"
+    android:textColor="@color/qa_bg_dialog_bottom_text"
+    android:textSize="18sp">
+</TextView>
 
-    <TextView
-        xmlns:android="http://schemas.android.com/apk/res/android"
-        android:id="@+id/qa_popwindow_tv_edit"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="编辑"
-        android:textColor="@color/qa_bg_dialog_bottom_text"
-        android:textSize="18sp"
-        android:paddingTop="22dp"
-        android:gravity="center">
-    </TextView>
-</androidx.appcompat.widget.LinearLayoutCompat>
 
