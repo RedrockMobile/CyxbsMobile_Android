@@ -21,16 +21,18 @@ import kotlinx.android.synthetic.main.mine_activity_fan.*
  * @description
  **/
 class FanActivity : BaseActivity() {
-    private var redId = "";
+    private var redId = ""
+    private var pageIndex = 0
 
     private val userService: IUserService by lazy {
         ServiceManager.getService(IAccountService::class.java).getUserService()
     }
 
     companion object {
-        fun activityStart(activity: Activity, redid: String) {
+        fun activityStart(activity: Activity, redid: String, pageIndex: Int = 0) {
             activity.startActivity(Intent(activity, FanActivity::class.java).apply {
                 putExtra("redid", redid)
+                putExtra("pageIndex", pageIndex)
             })
         }
     }
@@ -39,12 +41,18 @@ class FanActivity : BaseActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.mine_activity_fan)
         redId = intent.getStringExtra("redid")
+
+        pageIndex =
+            if (intent.getIntExtra("pageIndex", 0) in 0..1)
+                intent.getIntExtra("pageIndex", 0)
+            else 0
+
         initPager()
     }
 
     private fun initPager() {
         mine_fan_vp2.apply {
-            val bundle = Bundle().apply { putString("redid",redId) }
+            val bundle = Bundle().apply { putString("redid", redId) }
             adapter = FanPagerAdapter(this@FanActivity).apply {
                 addFragment(FanFragment().apply {
                     arguments = bundle
@@ -65,5 +73,7 @@ class FanActivity : BaseActivity() {
                     else "Ta的关注"
             }
         }.attach()
+
+        mine_fan_vp2.currentItem = pageIndex
     }
 }
