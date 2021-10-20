@@ -17,6 +17,7 @@ import com.mredrock.cyxbs.mine.page.mine.adapter.DataBindingAdapter
 import com.mredrock.cyxbs.mine.page.mine.binder.BaseDataBinder
 import com.mredrock.cyxbs.mine.page.mine.binder.EmptyFanBinder
 import com.mredrock.cyxbs.mine.page.mine.binder.FanBinder
+import com.mredrock.cyxbs.mine.page.mine.ui.activity.HomepageActivity
 import com.mredrock.cyxbs.mine.page.mine.viewmodel.FanViewModel
 import kotlinx.android.synthetic.main.mine_fragment_fan.*
 
@@ -61,30 +62,35 @@ class FanFragment : BaseViewModelFragment<FanViewModel>() {
                 when (it.size) {
                     0 -> add(EmptyFanBinder())
                     else -> for (fan in it) {
-                        add(FanBinder(fan,isSelf) { view, user ->
-                            viewModel.changeFocusStatus(user.redid)
-                            (view as TextView).apply {
-                                if (text == "+关注") {
-                                    background = ContextCompat
-                                        .getDrawable(
-                                            requireContext(),
-                                            R.drawable.mine_shape_tv_focused
-                                        )
-                                    text = "互相关注"
-                                    context.toast(R.string.mine_person_focus_success)
+                        add(FanBinder(fan,isSelf,
+                            onFocusClick = { view, user ->
+                                viewModel.changeFocusStatus(user.redid)
+                                (view as TextView).apply {
+                                    if (text == "+关注") {
+                                        background = ContextCompat
+                                            .getDrawable(
+                                                requireContext(),
+                                                R.drawable.mine_shape_tv_focused
+                                            )
+                                        text = "互相关注"
+                                        context.toast(R.string.mine_person_focus_success)
 
-                                }else{
-                                    background = ContextCompat
-                                        .getDrawable(
-                                            requireContext(),
-                                            R.drawable.mine_shape_tv_unfocus
-                                        )
-                                    text = "+关注"
-                                    context.toast(R.string.mine_person_unfocus_success)
+                                    }else{
+                                        background = ContextCompat
+                                            .getDrawable(
+                                                requireContext(),
+                                                R.drawable.mine_shape_tv_unfocus
+                                            )
+                                        text = "+关注"
+                                        context.toast(R.string.mine_person_unfocus_success)
 
+                                    }
                                 }
+                            },
+                            onAvatarClick = {
+                               HomepageActivity.startHomePageActivity(it,requireActivity())
                             }
-                        })
+                        ))
                     }
                 }
             })

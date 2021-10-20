@@ -15,10 +15,12 @@ import com.mredrock.cyxbs.mine.network.model.Fan
  * @data 2021/9/16
  * @description
  **/
-class FollowBinder(private val fan: Fan,
-                   private val isSelf: Boolean,
-                   private var onFocusClick:((view: View, user:Fan)->Unit)? = null)
-    : BaseDataBinder<MineRecycleItemFollowBinding>() {
+class FollowBinder(
+    private val fan: Fan,
+    private val isSelf: Boolean,
+    private var onFocusClick: ((view: View, user: Fan) -> Unit)? = null,
+    private var onAvatarClick: ((redid: String) -> Unit)? = null
+) : BaseDataBinder<MineRecycleItemFollowBinding>() {
 
     override val itemId
         get() = fan.redid
@@ -35,9 +37,9 @@ class FollowBinder(private val fan: Fan,
                 .placeholder(R.drawable.common_default_avatar)
                 .into(mineFollowItemIvAvatar)
 
-            if (!isSelf){
+            if (!isSelf) {
                 mineFollowItemTvFocus.gone()
-            }else {
+            } else {
                 mineFollowItemTvFocus.background = ContextCompat
                     .getDrawable(root.context, R.drawable.mine_shape_tv_focused)
 
@@ -48,7 +50,11 @@ class FollowBinder(private val fan: Fan,
                 }
 
                 mineFollowItemTvFocus.setOnClickListener {
-                    onFocusClick?.invoke(it,fan)
+                    onFocusClick?.invoke(it, fan)
+                }
+
+                mineFollowItemIvAvatar.setOnClickListener {
+                    onAvatarClick?.invoke(fan.redid)
                 }
             }
         }
