@@ -1,5 +1,6 @@
 package com.mredrock.cyxbs.mine.page.mine.binder
 
+import android.content.Intent
 import android.view.View
 import androidx.core.content.ContextCompat
 import com.bumptech.glide.Glide
@@ -7,6 +8,7 @@ import com.mredrock.cyxbs.common.utils.extensions.gone
 import com.mredrock.cyxbs.mine.R
 import com.mredrock.cyxbs.mine.databinding.MineRecycleItemFanBinding
 import com.mredrock.cyxbs.mine.network.model.Fan
+import com.mredrock.cyxbs.mine.page.mine.ui.activity.HomepageActivity
 
 /**
  * @class
@@ -14,10 +16,12 @@ import com.mredrock.cyxbs.mine.network.model.Fan
  * @data 2021/9/16
  * @description
  **/
-class FanBinder(private val fan: Fan,
-                private val isSelf: Boolean,
-                private var onFocusClick:((view: View, user:Fan)->Unit)? = null)
-    : BaseDataBinder<MineRecycleItemFanBinding>() {
+class FanBinder(
+    private val fan: Fan,
+    private val isSelf: Boolean,
+    private var onFocusClick: ((view: View, user: Fan) -> Unit)? = null,
+    private var onAvatarClick: ((redid: String) -> Unit)? = null
+) : BaseDataBinder<MineRecycleItemFanBinding>() {
 
     override val itemId
         get() = fan.redid
@@ -34,7 +38,7 @@ class FanBinder(private val fan: Fan,
                 .placeholder(R.drawable.common_default_avatar)
                 .into(mineFanItemIvAvatar)
 
-            if (!isSelf){
+            if (!isSelf) {
                 mineFanItemTvFocus.gone()
             } else {
                 if (fan.isFocus) {
@@ -48,7 +52,11 @@ class FanBinder(private val fan: Fan,
                 }
 
                 mineFanItemTvFocus.setOnClickListener {
-                    onFocusClick?.invoke(it,fan)
+                    onFocusClick?.invoke(it, fan)
+                }
+
+                mineFanItemIvAvatar.setOnClickListener {
+                    onAvatarClick?.invoke(fan.redid)
                 }
             }
 

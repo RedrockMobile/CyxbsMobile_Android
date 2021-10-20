@@ -15,6 +15,7 @@ import com.mredrock.cyxbs.mine.R
 import com.mredrock.cyxbs.mine.network.NetworkState
 import com.mredrock.cyxbs.mine.page.mine.adapter.DataBindingAdapter
 import com.mredrock.cyxbs.mine.page.mine.binder.*
+import com.mredrock.cyxbs.mine.page.mine.ui.activity.HomepageActivity
 import com.mredrock.cyxbs.mine.page.mine.viewmodel.FollowViewModel
 import kotlinx.android.synthetic.main.mine_fragment_follow.*
 
@@ -59,7 +60,8 @@ class FollowFragment : BaseViewModelFragment<FollowViewModel>() {
                 when (it.size) {
                     0 -> add(EmptyFollowBinder())
                     else -> for (fan in it) {
-                        add(FollowBinder(fan,isSelf) { view, user ->
+                        add(FollowBinder(fan,isSelf,
+                        onFocusClick = { view, user ->
                             viewModel.changeFocusStatus(user.redid)
                             (view as TextView).apply {
                                 if (text == "+关注") {
@@ -81,7 +83,10 @@ class FollowFragment : BaseViewModelFragment<FollowViewModel>() {
 
                                 }
                             }
-                        })
+                        },
+                        onAvatarClick = {
+                            HomepageActivity.startHomePageActivity(it,requireActivity())
+                        }))
                     }
                 }
             })
