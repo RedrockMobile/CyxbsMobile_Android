@@ -93,7 +93,7 @@ class MineViewModel: BaseViewModel() {
 
                 },
                 onError = {
-                    Log.e("wxtasadasdasdasg","(MineViewModel.kt:30)->身份接口失败了 ")
+                    Log.e("wxtasadasdasdasg","(MineViewModel.kt:30)->删除$it ")
                 },
                 onComplete = {
                     Log.e("wxtasadasdasdasg","(MineViewModel.kt:30)->身份接口 完成了")

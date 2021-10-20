@@ -74,6 +74,8 @@
                     android:layout_marginStart="16dp"
                     android:layout_marginTop="16dp"
                     android:text="红岩网校工作站"
+                    android:textSize="23dp"
+                    android:textColor="#F3FEFF"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent" />
 
@@ -83,10 +85,14 @@
                     android:layout_height="wrap_content"
                     android:layout_marginTop="16dp"
                     android:text="干事"
+                    android:textColor="#F3FEFF"
+                    android:textSize="18dp"
                     app:layout_constraintStart_toStartOf="@+id/tv_item_identity_name"
                     app:layout_constraintTop_toBottomOf="@+id/tv_item_identity_name" />
 
                 <TextView
+                    android:textSize="18dp"
+                    android:textColor="#F3FEFF"
                     android:id="@+id/tv_item_identity_time"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"

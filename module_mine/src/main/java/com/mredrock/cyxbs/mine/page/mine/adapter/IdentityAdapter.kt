@@ -25,6 +25,23 @@ import com.mredrock.cyxbs.mine.page.mine.ui.activity.IdentityActivity
 import com.mredrock.cyxbs.mine.page.mine.widget.SlideLayout
 import com.mredrock.cyxbs.mine.util.widget.loadBitmap
 import java.math.MathContext
+import android.text.Spanned
+
+import android.graphics.Color
+
+import android.text.style.ForegroundColorSpan
+
+import android.text.SpannableString
+import android.text.TextPaint
+import android.text.method.LinkMovementMethod
+import android.text.style.ClickableSpan
+import com.alibaba.android.arouter.launcher.ARouter
+import com.mredrock.cyxbs.common.config.STORE_ENTRY
+import kotlinx.android.synthetic.main.mine_activity_homepage_head.view.*
+import kotlinx.android.synthetic.main.mine_default_identity_item.view.*
+import java.util.regex.Matcher
+import java.util.regex.Pattern
+
 
 class IdentityAdapter(val list:List<AuthenticationStatus.Data>, val context: Context,val redid:String?,val isother:Boolean) : RecyclerView.Adapter<RecyclerView.ViewHolder>(),View.OnClickListener {
 
@@ -67,11 +84,13 @@ class IdentityAdapter(val list:List<AuthenticationStatus.Data>, val context: Con
         }else if (isother){
             //用户访问别人的情况
             val convertView = LayoutInflater.from(context).inflate(R.layout.mine_default_identity_item, parent, false)
+            initspannableString(convertView.mine_textview4)
             vh = noDataVH(convertView)
       }else{
          Log.e("ddaswxtag","(IdentityAdapter.kt:70)->>错误情况的1的 ")
           //错误情况
             val convertView = LayoutInflater.from(context).inflate(R.layout.mine_default_identity_item, parent, false)
+            initspannableString(convertView.mine_textview4)
             vh = noDataVH(convertView)
         }
         return vh!!
@@ -131,4 +150,21 @@ class IdentityAdapter(val list:List<AuthenticationStatus.Data>, val context: Con
             }
 
 
+    fun initspannableString(v:TextView){
+        val spannableString = SpannableString(context.resources.getString(R.string.mine_lack_text))
+        val p = Pattern.compile("邮票商城")
+        v.movementMethod = LinkMovementMethod.getInstance();
+        val m= p.matcher(spannableString)
+        while (m.find()) {
+            val start = m.start()
+            val end = m.end()
+            spannableString.setSpan(object :ClickableSpan(){
+                override fun onClick(widget: View) {
+                        ARouter.getInstance().build(STORE_ENTRY).navigation()
+                }
+            },start, end, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE)
+        }
+        v.text = spannableString
+
+    }
 }

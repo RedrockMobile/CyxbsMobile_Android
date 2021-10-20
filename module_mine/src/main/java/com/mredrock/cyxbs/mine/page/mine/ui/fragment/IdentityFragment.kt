@@ -31,7 +31,7 @@ class IdentityFragment(
 
 
     private var redid: String? = null
-
+    private var isSelf=true
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -45,8 +45,9 @@ class IdentityFragment(
     }
 
 
-    override fun onSuccesss(redid: String) {
+    override fun onSuccesss(redid: String,isself:Boolean) {
         this.redid = redid
+        this.isSelf=isSelf
     }
 
     fun initListener() {
