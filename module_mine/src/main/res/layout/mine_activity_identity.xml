@@ -11,7 +11,6 @@
         android:id="@+id/ll_statu"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="@color/mine_bg_personal_info"
         tools:context=".page.mine.ui.activity.IdentityActivity">
 
         <ImageView
@@ -49,14 +48,15 @@
             app:layout_constraintTop_toBottomOf="@+id/tv_identity">
 
             <TextView
+                android:layout_centerVertical="true"
                 android:id="@+id/mine_fan_item_tv_nickname"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="17dp"
                 android:layout_marginRight="17dp"
                 android:text="长按下方身份牌并拖动到此处，即可在昵称后面展示你的专属身份！"
-                android:textSize="14dp"
-                android:textColor="@color/mine_tv_personal_edit"/>
+                android:textSize="14dp" />
+
             <androidx.constraintlayout.widget.ConstraintLayout
 
                 xmlns:android="http://schemas.android.com/apk/res/android"
@@ -103,10 +103,10 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="27dp"
-            app:tabTextColor="@color/mine_text_setting"
-            android:background="@color/mine_bg_vp_fan"
+            android:background="@drawable/mine_layer_list_statu_ll_background"
             android:theme="@style/Theme.MaterialComponents"
             app:tabGravity="fill"
+            app:tabTextColor="@color/mine_black"
             app:tabIndicator="@drawable/mine_ic_tab_indicator"
             app:tabIndicatorColor="@android:color/transparent"
             app:tabIndicatorFullWidth="false"

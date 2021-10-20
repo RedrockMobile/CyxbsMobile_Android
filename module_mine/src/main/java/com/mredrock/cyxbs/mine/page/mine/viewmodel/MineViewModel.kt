@@ -27,7 +27,7 @@ class MineViewModel: BaseViewModel() {
        if (redid!=null){
            apiService.getPersonInfo(redid)
                .setSchedulers()
-               .doOnErrorWithDefaultErrorHandler { true }
+              // .doOnErrorWithDefaultErrorHandler { true }
                .safeSubscribeBy(
                    onNext = {
                        Log.e("wxtasadasg","(MineViewModel.kt:26)->>成共了嘛 ")

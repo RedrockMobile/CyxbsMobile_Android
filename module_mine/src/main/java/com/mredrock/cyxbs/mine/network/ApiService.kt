@@ -263,7 +263,6 @@ interface ApiService {
     /**
      * 获取认证身份
      */
-
     @GET("/magipoke-identity/GetAuthentication")
     fun getAuthenticationStatus( @Query("id") redId: String?):Observable<AuthenticationStatus>
 
@@ -277,13 +276,14 @@ interface ApiService {
      * 获取全部身份
      */
     @GET("/magipoke-identity/GetAllIdentify")
-    fun getAllIdentify(@Query("id") redId: String):Observable<AuthenticationStatus>
+    fun getAllIdentify(@Query("id") redId: String?):Observable<AllStatus>
 
     /**
      * 上传动态的展示身份
      */
-    @GET("/magipoke-identity/UploadDisplayIdentity")
-    fun uploadDisplayIdentity(@Query("identityId")identityId:String): Observable<RedrockApiStatus>
+    @FormUrlEncoded
+    @POST("/magipoke-identity/UploadDisplayIdentity")
+    fun uploadDisplayIdentity(@Field("identityId")identityId:String): Observable<RedrockApiStatus>
 
     /**
      * 删除身份
@@ -296,4 +296,11 @@ interface ApiService {
     @PUT("/magipoke-loop/post/dynamic")
     fun  update()
 
+
+    /**
+     * 获取用户展示的身份
+     */
+    @GET("/magipoke-identity/GetShowIdentify")
+    fun getShowIdentify(@Query("id")id:String):Observable<PersonalStatu>
 }
+
