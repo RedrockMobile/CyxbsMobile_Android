@@ -37,12 +37,12 @@ import kotlinx.android.synthetic.main.qa_recycler_item_dynamic_header.view.*
  * @Date: 2020/11/17 20:11
  */
 class DynamicAdapter(val context: Context?, private val onItemClickEvent: (Dynamic, View) -> Unit) :
-    BaseEndlessRvAdapter<Dynamic>(DIFF_CALLBACK) {
+        BaseEndlessRvAdapter<Dynamic>(DIFF_CALLBACK) {
     companion object {
         @JvmStatic
         val DIFF_CALLBACK = object : DiffUtil.ItemCallback<Dynamic>() {
             override fun areItemsTheSame(oldItem: Dynamic, newItem: Dynamic) =
-                oldItem.postId == newItem.postId
+                    oldItem.postId == newItem.postId
 
             override fun areContentsTheSame(oldItem: Dynamic, newItem: Dynamic) = oldItem == newItem
         }
@@ -62,34 +62,34 @@ class DynamicAdapter(val context: Context?, private val onItemClickEvent: (Dynam
         holder.itemView.apply {
             qa_iv_dynamic_share.setOnSingleClickListener {
                 ShareDialog(context).apply {
-                    initView(onCancelListener = View.OnClickListener {
+                    initView(onCancelListener = {
                         dismiss()
-                    }, qqShare = View.OnClickListener {
+                    }, qqShare = {
                         getItem(position)?.let { it1 ->
                             onShareClickListener?.invoke(
-                                it1,
-                                QQ_FRIEND
+                                    it1,
+                                    QQ_FRIEND
                             )
                         }
-                    }, qqZoneShare = View.OnClickListener {
+                    }, qqZoneShare = {
                         getItem(position)?.let { it1 -> onShareClickListener?.invoke(it1, QQ_ZONE) }
-                    }, weChatShare = View.OnClickListener {
+                    }, weChatShare = {
                         CyxbsToast.makeText(
-                            context,
-                            R.string.qa_share_wechat_text,
-                            Toast.LENGTH_SHORT
+                                context,
+                                R.string.qa_share_wechat_text,
+                                Toast.LENGTH_SHORT
                         ).show()
-                    }, friendShipCircle = View.OnClickListener {
+                    }, friendShipCircle = {
                         CyxbsToast.makeText(
-                            context,
-                            R.string.qa_share_wechat_text,
-                            Toast.LENGTH_SHORT
+                                context,
+                                R.string.qa_share_wechat_text,
+                                Toast.LENGTH_SHORT
                         ).show()
-                    }, copyLink = View.OnClickListener {
+                    }, copyLink = {
                         getItem(position)?.let { it1 ->
                             onShareClickListener?.invoke(
-                                it1,
-                                COPY_LINK
+                                    it1,
+                                    COPY_LINK
                             )
                         }
                     })
@@ -103,31 +103,31 @@ class DynamicAdapter(val context: Context?, private val onItemClickEvent: (Dynam
                     if (dynamic.isSelf == 0) {
                         if (dynamic.isFollowTopic == 0) {
                             OptionalPopWindow.Builder().with(context)
-                                .addOptionAndCallback(IGNORE) {
-                                    onPopWindowClickListener?.invoke(position, IGNORE, dynamic)
-                                }.addOptionAndCallback(REPORT) {
-                                    onPopWindowClickListener?.invoke(position, REPORT, dynamic)
-                                }.addOptionAndCallback(FOLLOW) {
-                                    onPopWindowClickListener?.invoke(position, FOLLOW, dynamic)
-                                }.show(view, OptionalPopWindow.AlignMode.RIGHT, 0)
+                                    .addOptionAndCallback(IGNORE) {
+                                        onPopWindowClickListener?.invoke(position, IGNORE, dynamic)
+                                    }.addOptionAndCallback(REPORT) {
+                                        onPopWindowClickListener?.invoke(position, REPORT, dynamic)
+                                    }.addOptionAndCallback(FOLLOW) {
+                                        onPopWindowClickListener?.invoke(position, FOLLOW, dynamic)
+                                    }.show(view, OptionalPopWindow.AlignMode.RIGHT, 0)
                         } else {
                             OptionalPopWindow.Builder().with(context)
-                                .addOptionAndCallback(IGNORE) {
-                                    onPopWindowClickListener?.invoke(position, IGNORE, dynamic)
-                                }.addOptionAndCallback(REPORT) {
-                                    onPopWindowClickListener?.invoke(position, REPORT, dynamic)
-                                }.addOptionAndCallback(UN_FOLLOW) {
-                                    onPopWindowClickListener?.invoke(position, UN_FOLLOW, dynamic)
-                                }.show(view, OptionalPopWindow.AlignMode.RIGHT, 0)
+                                    .addOptionAndCallback(IGNORE) {
+                                        onPopWindowClickListener?.invoke(position, IGNORE, dynamic)
+                                    }.addOptionAndCallback(REPORT) {
+                                        onPopWindowClickListener?.invoke(position, REPORT, dynamic)
+                                    }.addOptionAndCallback(UN_FOLLOW) {
+                                        onPopWindowClickListener?.invoke(position, UN_FOLLOW, dynamic)
+                                    }.show(view, OptionalPopWindow.AlignMode.RIGHT, 0)
                         }
                     } else {
                         OptionalPopWindow.Builder().with(context)
-                            .addDynamicData(dynamic)
-                            .addOptionAndCallback(DELETE,R.layout.qa_popupwindow_option_bottom) {
-                                onPopWindowClickListener?.invoke(position, DELETE, dynamic)
-                            }.showFromBottom(LayoutInflater.from(context).inflate(
-                                R.layout.qa_fragment_dynamic,null,false
-                            ))
+                                .addDynamicData(dynamic)
+                                .addOptionAndCallback(DELETE,R.layout.qa_popupwindow_option_bottom) {
+                                    onPopWindowClickListener?.invoke(position, DELETE, dynamic)
+                                }.showFromBottom(LayoutInflater.from(context).inflate(
+                                        R.layout.qa_fragment_dynamic,null,false
+                                ))
                     }
                 }
             }
@@ -135,9 +135,9 @@ class DynamicAdapter(val context: Context?, private val onItemClickEvent: (Dynam
     }
 
     override fun onItemClickListener(
-        holder: BaseViewHolder<Dynamic>,
-        position: Int,
-        data: Dynamic
+            holder: BaseViewHolder<Dynamic>,
+            position: Int,
+            data: Dynamic
     ) {
         super.onItemClickListener(holder, position, data)
         if (holder !is DynamicViewHolder) return
@@ -148,15 +148,15 @@ class DynamicAdapter(val context: Context?, private val onItemClickEvent: (Dynam
     }
 
     class DynamicViewHolder(parent: ViewGroup) :
-        BaseViewHolder<Dynamic>(parent, R.layout.qa_recycler_item_dynamic_header) {
+            BaseViewHolder<Dynamic>(parent, R.layout.qa_recycler_item_dynamic_header) {
         override fun refresh(data: Dynamic?) {
             data ?: return
             itemView.apply {
                 qa_iv_dynamic_praise_count_image.registerLikeView(
-                    data.postId,
-                    CommentConfig.PRAISE_MODEL_DYNAMIC,
-                    data.isPraised,
-                    data.praiseCount
+                        data.postId,
+                        CommentConfig.PRAISE_MODEL_DYNAMIC,
+                        data.isPraised,
+                        data.praiseCount
                 )
                 qa_iv_dynamic_praise_count_image.setOnSingleClickListener {
                     qa_iv_dynamic_praise_count_image.click()
@@ -167,12 +167,12 @@ class DynamicAdapter(val context: Context?, private val onItemClickEvent: (Dynam
                 qa_tv_dynamic_content.setContent(data.content)
                 qa_tv_dynamic_comment_count.text = data.commentCount.toString()
                 qa_tv_dynamic_publish_at.text =
-                    dynamicTimeDescription(System.currentTimeMillis(), data.publishTime * 1000)
+                        dynamicTimeDescription(System.currentTimeMillis(), data.publishTime * 1000)
                 //解决图片错乱的问题
                 if (data.pics.isNullOrEmpty())
                     qa_dynamic_nine_grid_view.setRectangleImages(
-                        emptyList(),
-                        NineGridView.MODE_IMAGE_THREE_SIZE
+                            emptyList(),
+                            NineGridView.MODE_IMAGE_THREE_SIZE
                     )
                 else {
                     data.pics.apply {
@@ -180,22 +180,22 @@ class DynamicAdapter(val context: Context?, private val onItemClickEvent: (Dynam
                         if (null == tag || tag == this) {
                             val tagStore = qa_dynamic_nine_grid_view.tag
                             qa_dynamic_nine_grid_view.setImages(
-                                this,
-                                NineGridView.MODE_IMAGE_THREE_SIZE,
-                                NineGridView.ImageMode.MODE_IMAGE_RECTANGLE
+                                    this,
+                                    NineGridView.MODE_IMAGE_THREE_SIZE,
+                                    NineGridView.ImageMode.MODE_IMAGE_RECTANGLE
                             )
                             qa_dynamic_nine_grid_view.tag = tagStore
                         } else {
                             val tagStore = this
                             qa_dynamic_nine_grid_view.tag = null
                             qa_dynamic_nine_grid_view.setRectangleImages(
-                                emptyList(),
-                                NineGridView.MODE_IMAGE_THREE_SIZE
+                                    emptyList(),
+                                    NineGridView.MODE_IMAGE_THREE_SIZE
                             )
                             qa_dynamic_nine_grid_view.setImages(
-                                this,
-                                NineGridView.MODE_IMAGE_THREE_SIZE,
-                                NineGridView.ImageMode.MODE_IMAGE_RECTANGLE
+                                    this,
+                                    NineGridView.MODE_IMAGE_THREE_SIZE,
+                                    NineGridView.ImageMode.MODE_IMAGE_RECTANGLE
                             )
                             qa_dynamic_nine_grid_view.tag = tagStore
                         }
@@ -203,9 +203,9 @@ class DynamicAdapter(val context: Context?, private val onItemClickEvent: (Dynam
                 }
                 qa_dynamic_nine_grid_view.setOnItemClickListener { _, index ->
                     ViewImageActivity.activityStart(
-                        context,
-                        data.pics.map { it }.toTypedArray(),
-                        index
+                            context,
+                            data.pics.map { it }.toTypedArray(),
+                            index
                     )
                 }
             }

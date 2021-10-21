@@ -48,7 +48,7 @@ data class Dynamic(
     @SerializedName("pics")
     var pics: List<String> = mutableListOf()
 
-) : Parcelable {
+) : Parcelable, Message() {
     var isPraised
         get() = _isPraised == 1
         set(value) = when {

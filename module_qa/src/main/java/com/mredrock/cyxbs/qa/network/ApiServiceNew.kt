@@ -32,8 +32,10 @@ interface ApiServiceNew {
         @Query("page")
         page: Int,
         @Query("size")
-        size: Int = 6
-    ): Observable<RedrockApiWrapper<List<Dynamic>>>
+        size: Int = 6,
+        @Header("App-Version")
+        versionCode: Long = 0L
+    ): Observable<RedrockApiWrapper<Array<MessageWrapper>>>
 
     @GET("/magipoke-loop/post/dynamic/focus")
     fun getFocusDynamicList(

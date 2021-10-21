@@ -18,7 +18,7 @@ import com.mredrock.cyxbs.qa.config.CommentConfig.SHARE_URL
 import com.mredrock.cyxbs.qa.config.RequestResultCode.DYNAMIC_DETAIL_REQUEST
 import com.mredrock.cyxbs.qa.network.NetworkState
 import com.mredrock.cyxbs.qa.pages.dynamic.ui.activity.DynamicDetailActivity
-import com.mredrock.cyxbs.qa.pages.dynamic.ui.adapter.DynamicAdapter
+import com.mredrock.cyxbs.qa.pages.dynamic.ui.adapter.HybridAdapter
 import com.mredrock.cyxbs.qa.pages.mine.viewmodel.MyDynamicViewModel
 import com.mredrock.cyxbs.qa.ui.adapter.EmptyRvAdapter
 import com.mredrock.cyxbs.qa.ui.adapter.FooterRvAdapter
@@ -34,7 +34,7 @@ class MyDynamicActivity : BaseViewModelActivity<MyDynamicViewModel>() {
 
     private var isRvAtTop = true
     private var mTencent: Tencent? = null
-    lateinit var dynamicListRvAdapter: DynamicAdapter
+    lateinit var dynamicListRvAdapter: HybridAdapter
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -54,7 +54,7 @@ class MyDynamicActivity : BaseViewModelActivity<MyDynamicViewModel>() {
 
     private fun initDynamics() {
         dynamicListRvAdapter =
-            DynamicAdapter(this) { dynamic, view ->
+            HybridAdapter(this) { dynamic, view ->
                 DynamicDetailActivity.activityStart(this, view, dynamic)
             }.apply {
 
@@ -116,9 +116,9 @@ class MyDynamicActivity : BaseViewModelActivity<MyDynamicViewModel>() {
         }
     }
 
-    fun observeLoading(dynamicListRvAdapter: DynamicAdapter,
-                       footerRvAdapter: FooterRvAdapter,
-                       emptyRvAdapter: EmptyRvAdapter): MyDynamicViewModel = viewModel.apply {
+    private fun observeLoading(dynamicListRvAdapter: HybridAdapter,
+                               footerRvAdapter: FooterRvAdapter,
+                               emptyRvAdapter: EmptyRvAdapter): MyDynamicViewModel = viewModel.apply {
         dynamicList.observe {
             dynamicListRvAdapter.submitList(it)
         }

@@ -9,9 +9,7 @@ import com.mredrock.cyxbs.common.utils.extensions.safeSubscribeBy
 import com.mredrock.cyxbs.common.utils.extensions.setSchedulers
 import com.mredrock.cyxbs.common.viewmodel.BaseViewModel
 import com.mredrock.cyxbs.qa.R
-import com.mredrock.cyxbs.qa.beannew.Dynamic
-import com.mredrock.cyxbs.qa.beannew.Topic
-import com.mredrock.cyxbs.qa.beannew.TopicMessage
+import com.mredrock.cyxbs.qa.beannew.*
 import com.mredrock.cyxbs.qa.config.CommentConfig
 import com.mredrock.cyxbs.qa.network.ApiServiceNew
 import com.mredrock.cyxbs.qa.pages.dynamic.model.DynamicDataSource
@@ -24,11 +22,11 @@ open class DynamicListViewModel : BaseViewModel() {
     private val recommendFactory: DynamicDataSource.Factory
     private val focusFactory: DynamicDataSource.Factory
 
-    val recommendList: LiveData<PagedList<Dynamic>>
+    val recommendList: LiveData<PagedList<Message>>
     val recommendNetworkState: LiveData<Int>
     val recommendInitialLoad: LiveData<Int>
 
-    val focusList: LiveData<PagedList<Dynamic>>
+    val focusList: LiveData<PagedList<Message>>
     val focusNetworkState: LiveData<Int>
     val focusInitialLoad: LiveData<Int>
 
@@ -49,8 +47,8 @@ open class DynamicListViewModel : BaseViewModel() {
         recommendFactory = DynamicDataSource.Factory("main")
         focusFactory = DynamicDataSource.Factory("focus")
 
-        recommendList = LivePagedListBuilder<Int, Dynamic>(recommendFactory, config).build()
-        focusList = LivePagedListBuilder<Int, Dynamic>(focusFactory, config).build()
+        recommendList = LivePagedListBuilder(recommendFactory, config).build()
+        focusList = LivePagedListBuilder(focusFactory, config).build()
 
         recommendNetworkState =
             Transformations.switchMap(recommendFactory.dynamicDataSourceLiveData) { it.networkState }
