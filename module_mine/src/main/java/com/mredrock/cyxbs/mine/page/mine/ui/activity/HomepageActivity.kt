@@ -35,6 +35,7 @@ import com.bumptech.glide.request.transition.Transition
 import com.mredrock.cyxbs.api.account.IAccountService
 import com.mredrock.cyxbs.api.account.IUserService
 import com.mredrock.cyxbs.common.config.DIR_PHOTO
+import com.mredrock.cyxbs.common.config.MineAndQa
 import com.mredrock.cyxbs.common.config.QA_DYNAMIC_MINE_FRAGMENT
 import com.mredrock.cyxbs.common.config.QA_MY_PRAISE
 import com.mredrock.cyxbs.common.service.ServiceManager
@@ -187,13 +188,17 @@ class HomepageActivity : BaseViewModelActivity<MineViewModel>() {
 
 
     fun getUserInfo(data: Intent?) {
-        redid = data?.getStringExtra("redid")
+        if(redid==null){
+            redid = data?.getStringExtra("redid")
+        }
         if (redid != null) {   //他人访问的情况
             viewModel.getUserInfo(redid)
             dataBinding.clPersonalInformation.mine_tv_concern.visible()
+            MineAndQa.refreshListener?.onRefresh(redid)
         } else {//自己访问的情况
             dataBinding.clPersonalInformation.mine_tv_concern.visibility = View.INVISIBLE
             viewModel.getUserInfo(null)
+            MineAndQa.refreshListener?.onRefresh(null)
         }
 
     }
@@ -204,7 +209,7 @@ class HomepageActivity : BaseViewModelActivity<MineViewModel>() {
             ARouter.getInstance().build(QA_DYNAMIC_MINE_FRAGMENT).navigation() as Fragment
         val list = arrayListOf<Fragment>(dynamicFragment, identityFragment)
         dataBinding.vp2Mine.adapter = MineAdapter(this, list)
-
+        dataBinding.vp2Mine.offscreenPageLimit=2
         dataBinding.vp2Mine.setPageTransformer(ScaleInTransformer())
         TabLayoutMediator(dataBinding.mineTablayout, dataBinding.vp2Mine, true) { tab, position ->
             tab.text = tabNames[position]

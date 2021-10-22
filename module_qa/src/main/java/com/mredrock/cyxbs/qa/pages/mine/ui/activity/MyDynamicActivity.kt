@@ -39,6 +39,7 @@ class MyDynamicActivity : BaseViewModelActivity<MyDynamicViewModel>() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.qa_activity_my_dynamic)
+        viewModel.getDynamicData(null)
         mTencent = Tencent.createInstance(CommentConfig.APP_ID, this)
         initView()
         initDynamics()
@@ -53,6 +54,7 @@ class MyDynamicActivity : BaseViewModelActivity<MyDynamicViewModel>() {
     }
 
     private fun initDynamics() {
+
         dynamicListRvAdapter =
             DynamicAdapter(this) { dynamic, view ->
                 DynamicDetailActivity.activityStart(this, view, dynamic)

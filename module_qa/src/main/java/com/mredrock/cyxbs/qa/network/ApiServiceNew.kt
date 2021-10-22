@@ -207,6 +207,15 @@ interface ApiServiceNew {
         @Query("size") size: Int
     ): Observable<RedrockApiWrapper<List<Dynamic>>>
 
+    /**
+     * 获取指定用户的动态
+     */
+    @GET("/magipoke-loop/post/dynamic/user")
+    fun getPersoalDynamic(
+        @Query("reid") redid:String?,
+        @Query("page") page: Int,
+        @Query("size") size: Int
+    ): Observable<RedrockApiWrapper<List<Dynamic>>>
     /*
     获取草稿
      */
