@@ -37,13 +37,14 @@ import android.text.method.LinkMovementMethod
 import android.text.style.ClickableSpan
 import com.alibaba.android.arouter.launcher.ARouter
 import com.mredrock.cyxbs.common.config.STORE_ENTRY
+import com.mredrock.cyxbs.common.utils.extensions.toast
 import kotlinx.android.synthetic.main.mine_activity_homepage_head.view.*
 import kotlinx.android.synthetic.main.mine_default_identity_item.view.*
 import java.util.regex.Matcher
 import java.util.regex.Pattern
 
 
-class IdentityAdapter(val list:List<AuthenticationStatus.Data>, val context: Context,val redid:String?,val isother:Boolean) : RecyclerView.Adapter<RecyclerView.ViewHolder>(),View.OnClickListener {
+class IdentityAdapter(val list:List<AuthenticationStatus.Data>, val context: Context,val redid:String?,val isSelf:Boolean) : RecyclerView.Adapter<RecyclerView.ViewHolder>(),View.OnClickListener {
 
     private var slideLayout: SlideLayout? = null
 
@@ -70,18 +71,22 @@ class IdentityAdapter(val list:List<AuthenticationStatus.Data>, val context: Con
         Log.e("ddaswxtag","(IdentityAdapter.kt:70)->>onCreateViewHolder ")
 
         var vh:RecyclerView.ViewHolder?=null
-        if (list.size!=0&&!isother){
+        if (list.size!=0&&isSelf){
             //用户自己查看自己的情况
             val convertView = LayoutInflater.from(context).inflate(R.layout.mine_slide_identity_item, parent, false) as SlideLayout
             convertView.setOnStateChangeListenter(MyOnStateChangeListenter())
            vh = VH(convertView)
             vh.menuViewdelete.setOnClickListener{
+                if(isSelf){
                     val activity = context as HomepageActivity
-                activity.viewModel.deleteStatus(list[(vh as VH).layoutPosition].id)
+                    activity.viewModel.deleteStatus(list[(vh as VH).layoutPosition].id)
+                }else{
+                    context.toast("不可以对别人的身份动手动脚哦！")
+                }
             }
             vh.menuViewSetting.setOnClickListener(this)
             initTypeface(vh)
-        }else if (isother){
+        }else if (!isSelf){
             //用户访问别人的情况
             val convertView = LayoutInflater.from(context).inflate(R.layout.mine_default_identity_item, parent, false)
             initspannableString(convertView.mine_textview4)
@@ -136,9 +141,14 @@ class IdentityAdapter(val list:List<AuthenticationStatus.Data>, val context: Con
     }
 
     override fun onClick(v: View) {
-        val intent = Intent(context,IdentityActivity::class.java)
-        intent.putExtra("redid",redid)
-        context.startActivity(intent)
+        if(isSelf){
+            val intent = Intent(context,IdentityActivity::class.java)
+            intent.putExtra("redid",redid)
+            context.startActivity(intent)
+        }else{
+            context.toast("不可以对别人的身份动手动脚哦！")
+        }
+
     }
 
 

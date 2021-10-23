@@ -48,6 +48,8 @@ class IdentityFragment(
     override fun onSuccesss(redid: String,isself:Boolean) {
         this.redid = redid
         this.isSelf=isSelf
+      Log.e("wxtag自我刷新","(IdentityFragment.kt:51)->> redid$redid")
+        refresh()
     }
 
     fun initListener() {
@@ -60,6 +62,7 @@ class IdentityFragment(
 
     fun initData(view: View) {
         val list = mutableListOf<AuthenticationStatus.Data>()
+        Log.e("wxtag自我刷新","初始化的时候->> redid$redid")
         viewModel.getAllIdentify(redid)
         viewModel.allIdentifies.observeForever {
             it.data.authentication.forEach {
@@ -69,7 +72,7 @@ class IdentityFragment(
                 list.add(it)
             }
             view.rv_identity.adapter = context?.let {
-                redid?.let { it1 -> IdentityAdapter(list, it, it1, false) }
+                redid?.let { it1 -> IdentityAdapter(list, it, it1, isSelf) }
             }
             view.rv_identity.layoutManager = LinearLayoutManager(context)
         }
@@ -85,6 +88,7 @@ class IdentityFragment(
     }
 
     fun refresh(){
+        Log.e("wxtag自我刷新","refresh()->> redid$redid")
         viewModel.getAllIdentify(redid)
     }
 

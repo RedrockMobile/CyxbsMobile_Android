@@ -288,8 +288,9 @@ interface ApiService {
     /**
      * 删除身份
      */
+    @FormUrlEncoded
     @POST("/magipoke-identity/DeleteIdentity")
-    fun deleteIdentity(@Query("identityId")identityId:String): Observable<RedrockApiStatus>
+    fun deleteIdentity(@Field("identityId")identityId:String): Observable<RedrockApiStatus>
     /**
      * 更新动态信息
      */

@@ -160,9 +160,11 @@ class HomepageActivity : BaseViewModelActivity<MineViewModel>() {
             dataBinding.clPersonalInformation.tv_name.text = it.data.nickname
             dataBinding.clPersonalInformation.tv_signature.text = it.data.introduction
             nickname = it.data.nickname
-            isNeedRefresh=it.data.isSelf
+            isNeedRefresh=false
+            isSelf=it.data.isSelf
             it.data.redid.let {
-                identityFragment.onSuccesss(it,isNeedRefresh)
+                identityFragment.onSuccesss(it,isSelf)
+
                 dataBinding.vp2Mine.offscreenPageLimit = 2
                 redid = it
             }
@@ -200,6 +202,7 @@ class HomepageActivity : BaseViewModelActivity<MineViewModel>() {
             viewModel.getUserInfo(null)
             MineAndQa.refreshListener?.onRefresh(null)
         }
+
 
     }
 
@@ -270,7 +273,7 @@ class HomepageActivity : BaseViewModelActivity<MineViewModel>() {
         }
         dataBinding.srlRefresh.setOnRefreshListener {
             getUserInfo(intent)
-            identityFragment.refresh()
+         //   identityFragment.refresh()
         }
         viewModel._isUserInfoFail.observeForever {
             if (it == true) {
