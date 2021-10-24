@@ -143,6 +143,7 @@ class QuizActivity : BaseViewModelActivity<QuizViewModel>() {
         fun initDynamicData(){
             if (data!=null){
                     isModificationDynamic=true
+                Log.e("wxtag动态","(QuizActivity.kt:146)->>${data.pics} ")
                 qa_edt_quiz_content.setText(data.content, TextView.BufferType.EDITABLE)
                 val chipGroup = findViewById<ChipGroup>(R.id.qa_layout_quiz_tag)
                 val childView = Array(chipGroup.childCount) { chipGroup.getChildAt(it) as Chip }
@@ -157,11 +158,12 @@ class QuizActivity : BaseViewModelActivity<QuizViewModel>() {
                 }
                 LogUtils.d("Gibson", "when load, draft = $data, image")
                 if (!data.pics.isNullOrEmpty()) {
-
                     viewModel.setImageList(arrayListOf<String>().apply { addAll(data.pics) })
+                    Log.e("wxtag动态","(QuizActivity.kt:146)->>图片赋值${viewModel.imageLiveData} ")
                 } else {//表示草稿中并没有图像，就直接清空
                     LogUtils.d("Gibson", "refresh imageList")
                     viewModel.imageLiveData.value = null
+                    Log.e("wxtag动态","(QuizActivity.kt:146)->>图片复制为空 ")
                 }
             }
         }
