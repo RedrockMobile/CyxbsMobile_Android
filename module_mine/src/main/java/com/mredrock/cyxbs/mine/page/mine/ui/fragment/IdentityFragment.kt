@@ -67,7 +67,6 @@ class IdentityFragment(
 
     fun initData(view: View) {
         val list = mutableListOf<AuthenticationStatus.Data>()
-        Log.e("wxtag自我刷新","初始化的时候->> redid$redid")
         viewModel.getAllIdentify(redid)
         viewModel.allIdentifies.observeForever {
             list.clear()
@@ -107,7 +106,6 @@ class IdentityFragment(
     }
 
     fun refresh(){
-        Log.e("wxtag自我刷新","refresh()->> redid$redid")
         viewModel.getAllIdentify(redid)
     }
 

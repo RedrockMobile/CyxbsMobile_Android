@@ -101,14 +101,7 @@ class StatusAdapter(
                 rawY = event.rawY
             }
             MotionEvent.ACTION_MOVE -> {
-                Log.e(
-                    "wxtagd",
-                    "(StatusAdapter.kt:50)->>event.rawY${event.rawY} event.y${event.y}  item?.y${item?.y}event.rawY-s${event.rawY - distance}"
-                )
-                Log.e(
-                    "wxtagdd",
-                    "(StatusAdapter.kt:50)->>distance${event.rawY}  activity.dataBinding.mineRelativelayout${activity.dataBinding.mineRelativelayout.top}"
-                )
+
                 if (isLongClick) {
 
                     val centerPoint =
@@ -193,7 +186,6 @@ class StatusAdapter(
         animatorBack?.duration = 800
         animatorBack?.addUpdateListener {
             item?.y = it.animatedValue as Float
-            Log.e("wxtsdsdsag", "(StatusAdapter.kt:185)->> ")
             activity.dataBinding.clContentView.scaleX = (it.animatedValue as Float / starty)
             activity.dataBinding.clContentView.scaleY = (it.animatedValue as Float / starty)
             activity.dataBinding.clContentView.alpha = (it.animatedValue as Float / starty)
@@ -235,7 +227,6 @@ class StatusAdapter(
         animatorSuccess?.duration = 800
         animatorSuccess?.addUpdateListener {
             item?.y = it.animatedValue as Float
-            Log.e("wxtsdsdsag", "(StatusAdapter.kt:185)->>${(it.animatedValue as Float / starty)} ")
             activity.dataBinding.clContentView.scaleX = (it.animatedValue as Float / starty)
             activity.dataBinding.clContentView.scaleY = (it.animatedValue as Float / starty)
             activity.dataBinding.clContentView.alpha = (it.animatedValue as Float / starty)
@@ -265,7 +256,6 @@ class StatusAdapter(
                     activity.dataBinding.clContentView.alpha = 1f
                 }
 
-                Log.e("wxtadsgdgdg", "(IdentityActivity.kt:74)->> 身份设置有效果吗id=${v.tag.toString()}")
 
 
             }
@@ -284,10 +274,7 @@ class StatusAdapter(
 
     fun loadAnimator(porpation: Float) {
 
-        Log.e(
-            "wxtsdsdsagsd",
-            "(StatusAdapter.kt:185)->>$porpation alph=${activity.dataBinding.clContentView.alpha}  visible=${activity.dataBinding.clContentView.visibility}"
-        )
+
         activity.dataBinding.clContentView.scaleX = porpation
         activity.dataBinding.clContentView.scaleY = porpation
         activity.dataBinding.clContentView.alpha = porpation

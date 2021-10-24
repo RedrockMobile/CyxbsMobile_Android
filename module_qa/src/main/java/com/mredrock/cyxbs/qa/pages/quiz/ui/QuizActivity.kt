@@ -141,7 +141,6 @@ class QuizActivity : BaseViewModelActivity<QuizViewModel>() {
 
     }
         fun initDynamicData(){
-
             if (data!=null){
                     isModificationDynamic=true
                 qa_edt_quiz_content.setText(data.content, TextView.BufferType.EDITABLE)

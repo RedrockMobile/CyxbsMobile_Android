@@ -174,7 +174,6 @@ class HomepageActivity : BaseViewModelActivity<MineViewModel>() {
             }
             dataBinding.srlRefresh.isRefreshing = false
 
-            Log.e("wxtadasg", "(HomepageActivity.kt:144)->>${it.data.identityies} ")
             loadAvatar(it.data.photoSrc, dataBinding.clPersonalInformation.civ_head)
 
         }
@@ -361,12 +360,10 @@ dataBinding.btMineBack.setOnClickListener {
         p.duration = 750
         p.addListener(object : Animator.AnimatorListener {
             override fun onAnimationStart(animation: Animator?) {
-                Log.e("wxtagdasdassdsad", "(HomepageActivity.kt:278)->动画开始> ")
                 dataBinding.ivMineBackgroundNormal.setImageBitmap(mTempBitmap)
             }
 
             override fun onAnimationEnd(animation: Animator?) {
-                Log.e("wxtagdasdassdsad", "(HomepageActivity.kt:278)->动画结束 ")
                 dataBinding.ivMineBackgroundBlur?.setImageBitmap(mFinalBitmap)
             }
 
@@ -448,7 +445,6 @@ dataBinding.btMineBack.setOnClickListener {
             SELECT_PICTURE -> {
                 val uri = data?.data
                 if (uri != null) {
-                    Log.e("wxtag", "(EditInfoActivity.kt:514)->>相册逻辑 ")
                     startCropActivity(uri)
                 } else {
                     toast("无法识别该图像")
@@ -597,19 +593,14 @@ dataBinding.btMineBack.setOnClickListener {
             }
         }
         distance = ev.y - downY
-        Log.e(
-            "wxtagdasdas",
-            "(HomepageActivity.kt:507)->>downY=${downY},ev.y=${ev.y},distance =$distance"
-        )
+
         if (isNeedRefresh && distance > 80f) {
-            Log.e("wxtagdasdas", "srlRefresh分发")
             distance = 0f
             return dataBinding.srlRefresh.dispatchTouchEvent(ev)
         } else if (abs(distance) < 8f) {
             distance = 0f
             return super.dispatchTouchEvent(ev)
         }
-        Log.e("wxtagdasdas", "svgMine分发")
         return dataBinding.svgMine.dispatchTouchEvent(ev)
     }
 

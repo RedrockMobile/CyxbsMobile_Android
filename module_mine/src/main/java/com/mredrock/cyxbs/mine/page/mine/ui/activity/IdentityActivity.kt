@@ -71,14 +71,12 @@ class IdentityActivity : BaseViewModelActivity<IdentityViewModel>() {
     }
     fun initLisener(){
         viewModel.showStatu.observeForever {
-           Log.e("wxtadsgdgdg","(IdentityActivity.kt:74)->> 身份设置有效果吗id=${it.data.id}")
             dataBinding.tvItemIdentityName.text=it.data.form
             dataBinding.tvItemIdentity.text = it.data.position
             dataBinding.tvItemIdentityTime.text = it.data.date
             loadBitmap(it.data.background){
                 dataBinding.clContentView.background= BitmapDrawable(context.resources,it)
             }
-         //   dataBinding.clContentView.alpha=1f
         }
         dataBinding.mineImageview.setOnClickListener {
             onBackPressed()

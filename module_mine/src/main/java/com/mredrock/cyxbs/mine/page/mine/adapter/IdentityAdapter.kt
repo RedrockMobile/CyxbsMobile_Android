@@ -54,7 +54,6 @@ class IdentityAdapter(val list:List<AuthenticationStatus.Data>, val context: Con
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
-        Log.e("ddaswxtag","(IdentityAdapter.kt:70)->>onCreateViewHolder ")
 
         var vh:RecyclerView.ViewHolder?=null
         if (list.size!=0){
@@ -81,7 +80,6 @@ class IdentityAdapter(val list:List<AuthenticationStatus.Data>, val context: Con
             initspannableString(convertView.mine_textview4)
             vh = noDataVH(convertView)
       }else{
-         Log.e("ddaswxtag","(IdentityAdapter.kt:70)->>错误情况的1的 ")
           //错误情况
             val convertView = LayoutInflater.from(context).inflate(R.layout.mine_default_identity_item, parent, false)
             initspannableString(convertView.mine_textview4)
@@ -94,7 +92,7 @@ class IdentityAdapter(val list:List<AuthenticationStatus.Data>, val context: Con
         if (holder is IdentityAdapter.VH){
             holder.timeView.text  = list[position].date
             holder.statuNameView.text = list[position].form
-            holder.statuNameView.text = list[position].position
+            holder.statuView.text = list[position].position
             loadBitmap(list[position].background){
                 holder.contentView.background =  BitmapDrawable(context.resources,it)
             }
@@ -102,7 +100,6 @@ class IdentityAdapter(val list:List<AuthenticationStatus.Data>, val context: Con
     }
 
     override fun getItemCount():Int{
-        Log.e("ddaswxtag","(IdentityAdapter.kt:70)->>getItemCount ")
         if (list.size==0){
             return 1
         }else{

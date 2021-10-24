@@ -312,8 +312,6 @@ object ApiGenerator {
                 chain.proceed(chain.request())
             }
 
-            Log.e("网络请求","(ApiGenerator.kt:317)->>对象${response} ")
-            Log.e("网络请求","(ApiGenerator.kt:317)->>token${token} ")
             if (response?.isSuccessful == true) {
                 return response
             }

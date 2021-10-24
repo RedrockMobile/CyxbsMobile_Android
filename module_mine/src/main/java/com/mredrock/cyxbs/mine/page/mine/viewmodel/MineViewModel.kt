@@ -24,18 +24,16 @@ class MineViewModel: BaseViewModel() {
     val redRockApiStatusDelete = MutableLiveData<RedrockApiStatus>()
        val _PersonalCont=MutableLiveData<PersonalCount>()
    fun  getUserInfo(redid:String?){
-      Log.e("wxtasadasg","(MineViewModel.kt:26)->>调用了网络请求吗$redid ")
        if (redid!=null){
            apiService.getPersonInfo(redid)
                .setSchedulers()
                .doOnErrorWithDefaultErrorHandler { true }
                .safeSubscribeBy(
                    onNext = {
-                       Log.e("wxtasadasg","(MineViewModel.kt:26)->>成共了嘛 ")
                        _userInfo.value=it
                    },
                    onError = {
-                       Log.e("wxtasadasg","(MineViewModel.kt:26)->>失败了")
+
                        _isUserInfoFail.value=true
                    },
                    onComplete = {
@@ -49,15 +47,15 @@ class MineViewModel: BaseViewModel() {
                .doOnErrorWithDefaultErrorHandler { true }
                .safeSubscribeBy(
                    onNext = {
-                       Log.e("wxtasadasg","(MineViewModel.kt:30)->>成功了 ")
+
                        _userInfo.value=it
                    },
                    onError = {
-                       Log.e("wxtasadasg","(MineViewModel.kt:30)->>失败了 ")
+
                        _isUserInfoFail.value=true
                    },
                    onComplete = {
-                       Log.e("wxtasadasg","(MineViewModel.kt:30)-> onComplete ")
+
                    }
                )
                .lifeCycle()
@@ -85,20 +83,20 @@ class MineViewModel: BaseViewModel() {
     }
 
     fun deleteStatus(identityId:String){
-       Log.e("wxtag删除身份","(MineViewModel.kt:87)->> id=$identityId")
+
         apiService.deleteIdentity(identityId)
             .setSchedulers()
             .doOnErrorWithDefaultErrorHandler { true }
             .safeSubscribeBy(
                 onNext = {
                     redRockApiStatusDelete.value = it
-                    Log.e("wxtag删除身份","(MineViewModel.kt:87)->> 删除身份成功")
+
                 },
                 onError = {
-                    Log.e("wxtasadasdasdasg","(MineViewModel.kt:30)->删除$it ")
+
                 },
                 onComplete = {
-                    Log.e("wxtasadasdasdasg","(MineViewModel.kt:30)->身份接口 完成了")
+
 
                 }
             )
@@ -117,7 +115,6 @@ class MineViewModel: BaseViewModel() {
 
                 },
                 onComplete = {
-
 
                 }
             )
