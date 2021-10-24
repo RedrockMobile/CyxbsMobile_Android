@@ -258,7 +258,7 @@ class DynamicDetailActivity : BaseViewModelActivity<DynamicDetailViewModel>() {
         viewModel.position = -1
 
         intent.extras?.apply {
-            if (!getBoolean("isFromReceive")) return@apply
+            if (!getBoolean("is_from_receive")) return@apply
             val postId = getString("id")
             intent.putExtra("post_id", postId)
         }

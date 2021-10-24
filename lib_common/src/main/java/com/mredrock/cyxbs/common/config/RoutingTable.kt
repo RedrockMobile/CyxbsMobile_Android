@@ -75,6 +75,8 @@ const val QA_MY_IGNORE = "/my_ignore/qa/entry"
 const val QA_MY_PRAISE = "/my_praise/qa/entry"
 
 //todo模块
+//跳转到TODO的详情页
+const val TODO_TODO_DETAIL = "/todo/todo_detail/entry"
 //小组件用，增加todo
 const val TODO_ADD_TODO_BY_WIDGET = "/widget/todo/entry"
 

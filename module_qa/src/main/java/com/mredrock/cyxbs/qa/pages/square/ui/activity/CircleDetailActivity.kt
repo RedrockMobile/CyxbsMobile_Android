@@ -81,7 +81,7 @@ class CircleDetailActivity : BaseViewModelActivity<CircleDetailViewModel>() {
         fun activityStartFormQuiz(activity: Activity, circleId: String) {
             val intent = Intent(activity, CircleDetailActivity::class.java)
             intent.putExtra("id", circleId)
-            intent.putExtra("isFromReceive", true)
+            intent.putExtra("is_from_receive", true)
             activity.startActivity(intent)
         }
     }
@@ -131,7 +131,7 @@ class CircleDetailActivity : BaseViewModelActivity<CircleDetailViewModel>() {
             if (id <= 0) {
                 return@apply
             }
-            isFormReceive = getBoolean("isFromReceive")
+            isFormReceive = getBoolean("is_from_receive")
             if (!isFormReceive) return@apply
             //下面的代码只会在前端跳转时执行
             ApiGenerator.getApiService(ApiServiceNew::class.java)

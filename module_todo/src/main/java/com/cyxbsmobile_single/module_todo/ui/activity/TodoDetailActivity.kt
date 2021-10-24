@@ -8,18 +8,22 @@ import android.view.WindowManager
 import androidx.core.content.ContextCompat
 import androidx.core.widget.addTextChangedListener
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.alibaba.android.arouter.facade.annotation.Route
 import com.cyxbsmobile_single.module_todo.R
 import com.cyxbsmobile_single.module_todo.adapter.RepeatInnerAdapter
+import com.cyxbsmobile_single.module_todo.model.TodoModel
 import com.cyxbsmobile_single.module_todo.model.bean.Todo
 import com.cyxbsmobile_single.module_todo.ui.dialog.AddItemDialog
 import com.cyxbsmobile_single.module_todo.util.remindMode2RemindList
 import com.cyxbsmobile_single.module_todo.viewmodel.TodoDetailViewModel
 import com.google.gson.Gson
 import com.mredrock.cyxbs.common.BaseApp
+import com.mredrock.cyxbs.common.config.TODO_TODO_DETAIL
 import com.mredrock.cyxbs.common.ui.BaseViewModelActivity
 import com.mredrock.cyxbs.common.utils.extensions.toast
 import kotlinx.android.synthetic.main.todo_activity_inner_detail.*
 
+@Route(path = TODO_TODO_DETAIL)
 class TodoDetailActivity : BaseViewModelActivity<TodoDetailViewModel>() {
 
     lateinit var todo: Todo
@@ -27,11 +31,11 @@ class TodoDetailActivity : BaseViewModelActivity<TodoDetailViewModel>() {
     private var backTime = 2
 
     companion object {
-        fun startActivity(todo: Todo, context: Context){
+        fun startActivity(todo: Todo, context: Context) {
             context.startActivity(
-                Intent(context, TodoDetailActivity::class.java).apply {
-                    putExtra("todo", Gson().toJson(todo))
-                }
+                    Intent(context, TodoDetailActivity::class.java).apply {
+                        putExtra("todo", Gson().toJson(todo))
+                    }
             )
         }
     }
@@ -43,13 +47,36 @@ class TodoDetailActivity : BaseViewModelActivity<TodoDetailViewModel>() {
         window.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_PAN)
         super.onCreate(savedInstanceState)
         setContentView(R.layout.todo_activity_inner_detail)
-        todo = Gson().fromJson(intent.getStringExtra("todo"), Todo::class.java)
-        //这里反序列化两次是为了防止内外拿到同一个引用
-        viewModel.rawTodo = Gson().fromJson(intent.getStringExtra("todo"), Todo::class.java)
+        //下面的逻辑是为了处理端内跳转
+        fun initTodo(){
+            //这里反序列化两次是为了防止内外拿到同一个引用
+            viewModel.rawTodo = Gson().fromJson(intent.getStringExtra("todo"), Todo::class.java)
 
-        initView()
+            initView()
 
-        initClick()
+            initClick()
+        }
+        if (intent.getBooleanExtra("is_from_receive", false)) {
+            //如果来自端内跳转, 则重新加载todo
+            val todoId = intent.getStringExtra("todo_id").toString().toLong()
+            if (todoId <= 0){
+                BaseApp.context.toast("没有这条代办的信息哦")
+                finish()
+            }
+            TodoModel.INSTANCE.getTodoById(todoId,
+                    onSuccess = {
+                        todo = it
+                        initTodo()
+                    },
+                    onError = {
+                        BaseApp.context.toast("没有这条代办的信息哦")
+                    }
+            )
+        } else {
+            todo = Gson().fromJson(intent.getStringExtra("todo"), Todo::class.java)
+
+            initTodo()
+        }
     }
 
     private fun initView() {
@@ -141,16 +168,16 @@ class TodoDetailActivity : BaseViewModelActivity<TodoDetailViewModel>() {
     private fun changeModifyStatus() {
         viewModel.judgeChange(todo)
         todo_thing_detail_save.visibility =
-            if (viewModel.isChanged) View.VISIBLE
-            else View.GONE
+                if (viewModel.isChanged) View.VISIBLE
+                else View.GONE
 
     }
 
     private fun changeModifyStatus(isChanged: Boolean) {
         viewModel.isChanged = isChanged
         todo_thing_detail_save.visibility =
-            if (viewModel.isChanged) View.VISIBLE
-            else View.GONE
+                if (viewModel.isChanged) View.VISIBLE
+                else View.GONE
     }
 
     override fun onBackPressed() {
@@ -169,8 +196,8 @@ class TodoDetailActivity : BaseViewModelActivity<TodoDetailViewModel>() {
     private fun setCheckedStatus() {
         todo_iv_check.visibility = if (todo.isChecked == 1) View.VISIBLE else View.GONE
         todo_tv_todo_title.setTextColor(
-            if (todo.isChecked == 1) ContextCompat.getColor(this, R.color.todo_item_checked_color)
-            else ContextCompat.getColor(this, R.color.todo_check_line_color)
+                if (todo.isChecked == 1) ContextCompat.getColor(this, R.color.todo_item_checked_color)
+                else ContextCompat.getColor(this, R.color.todo_check_line_color)
         )
     }
 }

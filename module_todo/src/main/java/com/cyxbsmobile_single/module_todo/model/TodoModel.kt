@@ -1,5 +1,6 @@
 package com.cyxbsmobile_single.module_todo.model
 
+import android.util.Log
 import androidx.sqlite.db.SimpleSQLiteQuery
 import com.cyxbsmobile_single.module_todo.model.TodoModel.ModifyType.CHANGE
 import com.cyxbsmobile_single.module_todo.model.TodoModel.ModifyType.DEL
@@ -108,6 +109,19 @@ class TodoModel {
                     addOffLineModifyTodo(todoId, DEL)
                 }
             )
+    }
+
+    fun getTodoById(todoId: Long, onSuccess: (todo: Todo) -> Unit, onError: () -> Unit){
+        TodoDatabase.INSTANCE.todoDao()
+                .queryTodoById(todoId)
+                .toObservable()
+                .setSchedulers()
+                .safeSubscribeBy(
+                        onNext = onSuccess,
+                        onError = {
+                            onError.invoke()
+                        }
+                )
     }
 
     fun addTodo(todo: Todo, onSuccess: (todoId: Long) -> Unit) {

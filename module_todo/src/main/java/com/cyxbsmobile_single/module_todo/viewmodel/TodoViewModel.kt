@@ -46,6 +46,7 @@ class TodoViewModel : BaseViewModel() {
             uncheckTodoList.clear()
             todoList.clear()
             if (!it.isNullOrEmpty()) {
+                LogUtils.d("RayleighZ", "todoList = $it")
                 for (todo in it) {
                     //下面的逻辑是：如果到达了todo重复提醒的下一次的那一天，则将todo设定为尚未完成
                     if (todo.remindMode.repeatMode != RemindMode.NONE) {

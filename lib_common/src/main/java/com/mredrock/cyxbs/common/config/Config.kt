@@ -140,3 +140,9 @@ const val FIRST_TIME_OPEN = "first_time_open"
 //统一拦截的HTTP状态码
 const val TOKEN_EXPIRE = 403//token过期
 const val SUCCESS = 200//正常
+
+//友盟推送build_id合集
+//邮问部分
+const val UMENG_BUILD_ID_QA = 1
+//todo部分
+const val UMENG_BUILD_ID_TODO = 2
