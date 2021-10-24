@@ -77,7 +77,7 @@ class IdentityAdapter(val list:List<AuthenticationStatus.Data>, val context: Con
         }else if (!isSelf){
             //用户访问别人的情况
             val convertView = LayoutInflater.from(context).inflate(R.layout.mine_default_identity_item, parent, false)
-            initspannableString(convertView.mine_textview4)
+           convertView.findViewById<TextView>(R.id.mine_textview4).text="没有身份就是他的身份..."
             vh = noDataVH(convertView)
       }else{
           //错误情况

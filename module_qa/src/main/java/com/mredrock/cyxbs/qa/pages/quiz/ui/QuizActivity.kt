@@ -157,6 +157,7 @@ class QuizActivity : BaseViewModelActivity<QuizViewModel>() {
                 }
                 LogUtils.d("Gibson", "when load, draft = $data, image")
                 if (!data.pics.isNullOrEmpty()) {
+
                     viewModel.setImageList(arrayListOf<String>().apply { addAll(data.pics) })
                 } else {//表示草稿中并没有图像，就直接清空
                     LogUtils.d("Gibson", "refresh imageList")

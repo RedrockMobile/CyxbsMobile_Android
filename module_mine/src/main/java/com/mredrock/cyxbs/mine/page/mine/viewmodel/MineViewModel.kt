@@ -4,11 +4,14 @@ import android.util.Log
 import android.widget.Toast
 import androidx.lifecycle.MutableLiveData
 import com.mredrock.cyxbs.common.bean.RedrockApiStatus
+import com.mredrock.cyxbs.common.network.ApiGenerator
 import com.mredrock.cyxbs.common.utils.extensions.doOnErrorWithDefaultErrorHandler
 import com.mredrock.cyxbs.common.utils.extensions.mapOrThrowApiException
 import com.mredrock.cyxbs.common.utils.extensions.safeSubscribeBy
 import com.mredrock.cyxbs.common.utils.extensions.setSchedulers
 import com.mredrock.cyxbs.common.viewmodel.BaseViewModel
+import com.mredrock.cyxbs.mine.R
+import com.mredrock.cyxbs.mine.network.ApiService
 import com.mredrock.cyxbs.mine.network.model.PersonalCount
 import com.mredrock.cyxbs.mine.network.model.UserInfo
 import com.mredrock.cyxbs.mine.util.apiService
@@ -89,6 +92,7 @@ class MineViewModel: BaseViewModel() {
             .doOnErrorWithDefaultErrorHandler { true }
             .safeSubscribeBy(
                 onNext = {
+                   Log.e("wxtag身份","(MineViewModel.kt:92)->>删除身份成功 ")
                     redRockApiStatusDelete.value = it
 
                 },
@@ -120,4 +124,18 @@ class MineViewModel: BaseViewModel() {
             )
             .lifeCycle()
     }
+
+    fun changeFocusStatus(redid: String?){
+        ApiGenerator.getApiService(ApiService::class.java)
+            .changeFocusStatus(redid)
+            .setSchedulers()
+            .doOnError {
+                toastEvent.value = R.string.mine_person_change_focus_status_failed
+
+            }
+            .safeSubscribeBy {
+
+            }
+    }
+
 }

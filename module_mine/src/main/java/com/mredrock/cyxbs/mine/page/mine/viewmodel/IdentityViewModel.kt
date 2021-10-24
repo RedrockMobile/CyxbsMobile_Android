@@ -64,14 +64,16 @@ class IdentityViewModel: BaseViewModel()  {
 
         apiService.getAllIdentify(redid)
             .setSchedulers()
-            .doOnErrorWithDefaultErrorHandler { true }
+          .doOnErrorWithDefaultErrorHandler { true }
             .safeSubscribeBy(
                 onNext = {
+                Log.e("wxtag身份","(IdentityViewModel.kt:70)->> 获取身份成功")
                  allIdentifies.value = it
 
                 },
                 onError = {
-                onErrorAction.value="没有身份就是它的身份"
+                    Log.e("wxtag身份","(IdentityViewModel.kt:70)->> 获取身份失败$it")
+             onErrorAction.value="没有身份就是它的身份"
                 },
                 onComplete = {
 

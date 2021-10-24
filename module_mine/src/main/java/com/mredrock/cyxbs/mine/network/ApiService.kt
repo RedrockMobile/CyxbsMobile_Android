@@ -238,7 +238,7 @@ interface ApiService {
 
     @FormUrlEncoded
     @POST("/magipoke-loop/user/focus")
-    fun changeFocusStatus(@Field("redid") redid: String):Observable<RedrockApiStatus>
+    fun changeFocusStatus(@Field("redid") redid: String?):Observable<RedrockApiStatus>
 
     @GET("/magipoke-loop/user/fans")
     fun getFans(@Query("redid") redid: String):Observable<RedrockApiWrapper<List<Fan>>>

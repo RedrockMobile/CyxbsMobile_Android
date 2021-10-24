@@ -25,6 +25,7 @@ import android.view.MotionEvent
 import android.view.View
 import android.view.ViewAnimationUtils.createCircularReveal
 import android.widget.ImageView
+import android.widget.TextView
 import androidx.core.content.ContextCompat
 import com.afollestad.materialdialogs.MaterialDialog
 import com.afollestad.materialdialogs.list.listItems
@@ -150,6 +151,7 @@ class HomepageActivity : BaseViewModelActivity<MineViewModel>() {
         alphaMineView = dataBinding.clPersonalInformation.alpha
         viewModel._userInfo.observeForever {
             initSatu(it)
+            changeAttention(it)
             dataBinding.clPersonalInformation.tv_id_number.text = it.data.uid.toString()
             dataBinding.clPersonalInformation.tv_grade.text = it.data.grade
             if (it.data.constellation.equals("")) {
@@ -173,7 +175,6 @@ class HomepageActivity : BaseViewModelActivity<MineViewModel>() {
                 initBlurBitmap(it)
             }
             dataBinding.srlRefresh.isRefreshing = false
-
             loadAvatar(it.data.photoSrc, dataBinding.clPersonalInformation.civ_head)
 
         }
@@ -185,7 +186,25 @@ class HomepageActivity : BaseViewModelActivity<MineViewModel>() {
         user.data.identityies.forEachIndexed { index, s ->
             loadRedrockImage(s, imageViewList[index])
         }
+    }
 
+    fun changeAttention(data:UserInfo){
+        if (data.data.isSelf){
+            dataBinding.clPersonalInformation.mine_tv_concern.visibility=View.INVISIBLE
+        }else{
+            dataBinding.clPersonalInformation.mine_tv_concern.visibility=View.VISIBLE
+            if (data.data.isFocus){
+                if (data.data.isBefocused){
+                    dataBinding.clPersonalInformation.mine_tv_concern.text="互相关注"
+                }else{
+                    dataBinding.clPersonalInformation.mine_tv_concern.text="已关注"
+                }
+            }
+        }
+        dataBinding.clPersonalInformation.mine_tv_concern.setOnClickListener {
+                viewModel.changeFocusStatus(redid)
+                getUserInfo(intent)
+        }
     }
 
 
@@ -195,10 +214,9 @@ class HomepageActivity : BaseViewModelActivity<MineViewModel>() {
         }
         if (redid != null) {   //他人访问的情况
             viewModel.getUserInfo(redid)
-            dataBinding.clPersonalInformation.mine_tv_concern.visible()
+
             MineAndQa.refreshListener?.onRefresh(redid)
         } else {//自己访问的情况
-            dataBinding.clPersonalInformation.mine_tv_concern.visibility = View.INVISIBLE
             viewModel.getUserInfo(null)
             MineAndQa.refreshListener?.onRefresh(null)
         }
