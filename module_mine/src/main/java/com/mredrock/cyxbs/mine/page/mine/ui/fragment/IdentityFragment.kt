@@ -8,6 +8,9 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.view.animation.AnimationUtils
+import android.view.animation.LayoutAnimationController
+import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.bumptech.glide.Glide
 import com.bumptech.glide.request.target.CustomTarget
@@ -18,10 +21,13 @@ import com.mredrock.cyxbs.mine.R
 import com.mredrock.cyxbs.mine.network.model.AuthenticationStatus
 import com.mredrock.cyxbs.mine.network.model.Status
 import com.mredrock.cyxbs.mine.page.mine.adapter.IdentityAdapter
+import com.mredrock.cyxbs.mine.page.mine.adapter.StatusAdapter
+import com.mredrock.cyxbs.mine.page.mine.callback.DiffCallBack
 import com.mredrock.cyxbs.mine.page.mine.ui.activity.HomepageActivity
 import com.mredrock.cyxbs.mine.page.mine.ui.activity.HomepageActivity.onGetRedid
 import com.mredrock.cyxbs.mine.page.mine.ui.fragment.IdentityFragment.*
 import com.mredrock.cyxbs.mine.page.mine.viewmodel.IdentityViewModel
+import kotlinx.android.synthetic.main.mine_fragment_approve.view.*
 import kotlinx.android.synthetic.main.mine_fragment_identify.*
 import kotlinx.android.synthetic.main.mine_fragment_identify.view.*
 
@@ -29,7 +35,7 @@ class IdentityFragment(
 
 ) : BaseViewModelFragment<IdentityViewModel>(), onGetRedid {
 
-
+    var oldList=mutableListOf<AuthenticationStatus.Data>()
     private var redid: String? = null
     private var isSelf=true
     override fun onCreateView(
@@ -57,7 +63,6 @@ class IdentityFragment(
             activity?.toast("删除身份成功!")
             viewModel.getAllIdentify(redid)
         }
-
     }
 
     fun initData(view: View) {
@@ -65,23 +70,37 @@ class IdentityFragment(
         Log.e("wxtag自我刷新","初始化的时候->> redid$redid")
         viewModel.getAllIdentify(redid)
         viewModel.allIdentifies.observeForever {
+            list.clear()
             it.data.authentication.forEach {
                 list.add(it)
             }
             it.data.customization.forEach {
                 list.add(it)
             }
-            view.rv_identity.adapter = context?.let {
-                redid?.let { it1 -> IdentityAdapter(list, it, it1, isSelf) }
+            if (view.rv_identity.adapter==null){
+                view.rv_identity.adapter = context?.let {
+                    redid?.let { it1 -> IdentityAdapter(list, it, it1, isSelf) }
+                }
+                view.rv_identity.layoutAnimation=//入场动画
+                    LayoutAnimationController(
+                        AnimationUtils.loadAnimation(context,R.anim.rv_load_anim)
+                    )
+                view.rv_identity.layoutManager = LinearLayoutManager(context)
+            }else{
+                val diffResult = DiffUtil.calculateDiff(DiffCallBack(oldList, list), true)
+                (view.rv_identity.adapter as StatusAdapter).list=list
+                diffResult.dispatchUpdatesTo(view.rv_approve.adapter as StatusAdapter)
             }
-            view.rv_identity.layoutManager = LinearLayoutManager(context)
+            oldList.clear()
+            oldList = list
+
         }
         /**
          * 身份信息发生错误的情况
          */
         viewModel.onErrorAction.observeForever {
             view.rv_identity.adapter = context?.let { it ->
-                IdentityAdapter(list, it, redid, false)
+                IdentityAdapter(list, it, redid, isSelf)
             }
             view.rv_identity.layoutManager = LinearLayoutManager(context)
         }

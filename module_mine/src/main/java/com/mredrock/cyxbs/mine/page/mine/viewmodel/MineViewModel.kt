@@ -9,6 +9,7 @@ import com.mredrock.cyxbs.common.utils.extensions.mapOrThrowApiException
 import com.mredrock.cyxbs.common.utils.extensions.safeSubscribeBy
 import com.mredrock.cyxbs.common.utils.extensions.setSchedulers
 import com.mredrock.cyxbs.common.viewmodel.BaseViewModel
+import com.mredrock.cyxbs.mine.network.model.PersonalCount
 import com.mredrock.cyxbs.mine.network.model.UserInfo
 import com.mredrock.cyxbs.mine.util.apiService
 import okhttp3.MultipartBody
@@ -21,13 +22,13 @@ class MineViewModel: BaseViewModel() {
     val _isUserInfoFail  =MutableLiveData<Boolean>()
     val _isChangeSuccess = MutableLiveData<Boolean>()
     val redRockApiStatusDelete = MutableLiveData<RedrockApiStatus>()
-
+       val _PersonalCont=MutableLiveData<PersonalCount>()
    fun  getUserInfo(redid:String?){
       Log.e("wxtasadasg","(MineViewModel.kt:26)->>调用了网络请求吗$redid ")
        if (redid!=null){
            apiService.getPersonInfo(redid)
                .setSchedulers()
-              // .doOnErrorWithDefaultErrorHandler { true }
+               .doOnErrorWithDefaultErrorHandler { true }
                .safeSubscribeBy(
                    onNext = {
                        Log.e("wxtasadasg","(MineViewModel.kt:26)->>成共了嘛 ")
@@ -84,13 +85,14 @@ class MineViewModel: BaseViewModel() {
     }
 
     fun deleteStatus(identityId:String){
+       Log.e("wxtag删除身份","(MineViewModel.kt:87)->> id=$identityId")
         apiService.deleteIdentity(identityId)
             .setSchedulers()
             .doOnErrorWithDefaultErrorHandler { true }
             .safeSubscribeBy(
                 onNext = {
                     redRockApiStatusDelete.value = it
-
+                    Log.e("wxtag删除身份","(MineViewModel.kt:87)->> 删除身份成功")
                 },
                 onError = {
                     Log.e("wxtasadasdasdasg","(MineViewModel.kt:30)->删除$it ")
@@ -103,4 +105,22 @@ class MineViewModel: BaseViewModel() {
             .lifeCycle()
     }
 
+    fun getPersonalCount(redid: String?){
+        apiService.getPersonalCount(redid)
+            .setSchedulers()
+            .doOnErrorWithDefaultErrorHandler { true }
+            .safeSubscribeBy(
+                onNext = {
+                   _PersonalCont.value=it
+                },
+                onError = {
+
+                },
+                onComplete = {
+
+
+                }
+            )
+            .lifeCycle()
+    }
 }

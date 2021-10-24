@@ -80,5 +80,9 @@ class IdentityActivity : BaseViewModelActivity<IdentityViewModel>() {
             }
          //   dataBinding.clContentView.alpha=1f
         }
+        dataBinding.mineImageview.setOnClickListener {
+            onBackPressed()
+        }
     }
+
 }

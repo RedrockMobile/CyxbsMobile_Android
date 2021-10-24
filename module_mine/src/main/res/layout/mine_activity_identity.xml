@@ -29,7 +29,8 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="13dp"
             android:text="身份设置"
-            android:textSize="15dp"
+            android:textSize="20dp"
+            android:textColor="#15315B"
             app:layout_constraintBottom_toBottomOf="@+id/mine_imageview"
             app:layout_constraintStart_toEndOf="@+id/mine_imageview"
             app:layout_constraintTop_toTopOf="@+id/mine_imageview" />

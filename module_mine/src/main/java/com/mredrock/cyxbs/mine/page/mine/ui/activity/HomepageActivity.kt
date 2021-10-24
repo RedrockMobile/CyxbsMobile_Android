@@ -48,6 +48,7 @@ import com.mredrock.cyxbs.mine.page.mine.widget.BlurBitmap
 import com.mredrock.cyxbs.store.utils.transformer.ScaleInTransformer
 import com.yalantis.ucrop.UCrop
 import kotlinx.android.synthetic.main.mine_activity_homepage_head.view.*
+import kotlinx.android.synthetic.main.mine_fragment_main.view.*
 import kotlinx.android.synthetic.main.mine_layout_dialog_gender.view.*
 import okhttp3.MultipartBody
 import java.io.File
@@ -164,9 +165,9 @@ class HomepageActivity : BaseViewModelActivity<MineViewModel>() {
             isSelf=it.data.isSelf
             it.data.redid.let {
                 identityFragment.onSuccesss(it,isSelf)
-
                 dataBinding.vp2Mine.offscreenPageLimit = 2
                 redid = it
+                viewModel.getPersonalCount(redid)
             }
             loadBitmap(it.data.backgroundUrl) {
                 initBlurBitmap(it)
@@ -260,10 +261,18 @@ class HomepageActivity : BaseViewModelActivity<MineViewModel>() {
 
             }
         }
+        viewModel. _PersonalCont.observeForever {
+            dataBinding.clPersonalInformation.tv_fans_number.text= it.data.fans.toString()
+            dataBinding.clPersonalInformation.tv_attention_number.text=it.data.follows.toString()
+            dataBinding.clPersonalInformation.tv_praise_number.text=it.data.praise.toString()
+
+        }
         dataBinding.ivMineBackgroundNormal.setOnClickListener {
             changeBackground()
         }
-
+dataBinding.btMineBack.setOnClickListener {
+    onBackPressed()
+}
         viewModel._isChangeSuccess.observeForever {
             if (it == true) {
                 toast("恭喜切换背景图片成功!")
@@ -273,7 +282,7 @@ class HomepageActivity : BaseViewModelActivity<MineViewModel>() {
         }
         dataBinding.srlRefresh.setOnRefreshListener {
             getUserInfo(intent)
-         //   identityFragment.refresh()
+          identityFragment.refresh()
         }
         viewModel._isUserInfoFail.observeForever {
             if (it == true) {

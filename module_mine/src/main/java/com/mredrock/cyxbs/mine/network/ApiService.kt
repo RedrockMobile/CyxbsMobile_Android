@@ -303,5 +303,11 @@ interface ApiService {
      */
     @GET("/magipoke-identity/GetShowIdentify")
     fun getShowIdentify(@Query("id")id:String):Observable<PersonalStatu>
+
+    /**
+     * 获取粉丝 关注 点赞数量接口
+     */
+    @GET("magipoke-loop/user/getUserCount")
+    fun getPersonalCount(@Query("redid")redid: String?):Observable<PersonalCount>
 }
 
