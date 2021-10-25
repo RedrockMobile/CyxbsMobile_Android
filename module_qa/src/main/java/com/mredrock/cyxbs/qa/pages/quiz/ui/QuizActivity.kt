@@ -79,6 +79,7 @@ class QuizActivity : BaseViewModelActivity<QuizViewModel>() {
     private  val data by lazy {
         intent.getParcelableExtra<Dynamic>("dynamic")
     }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.qa_activity_quiz)
@@ -99,7 +100,7 @@ class QuizActivity : BaseViewModelActivity<QuizViewModel>() {
 
         initToolbar()
         initImageAddView()
-        initTypeSelector()
+
         viewModel.draft.observe { draft ->
             if (draft != null) {
                 loadDraft(draft)
@@ -138,40 +139,22 @@ class QuizActivity : BaseViewModelActivity<QuizViewModel>() {
 
 
         initDynamicData()
-
+        initTypeSelector()
     }
+
+
         fun initDynamicData(){
             if (data!=null){
                     isModificationDynamic=true
-                Log.e("wxtag动态","(QuizActivity.kt:146)->>${data.pics} ")
                 qa_edt_quiz_content.setText(data.content, TextView.BufferType.EDITABLE)
-                val chipGroup = findViewById<ChipGroup>(R.id.qa_layout_quiz_tag)
-                val childView = Array(chipGroup.childCount) { chipGroup.getChildAt(it) as Chip }
-                val type = data.topic
-                if (type.isNotEmpty()) {
-                    //避免空指针
-                    topicType = type
-                    if (topicMap[type]?.isNotEmpty() == true) {
-                        currentTypeIndex = topicMap[type]?.toInt()!!
-                        childView[currentTypeIndex - 1].isChecked = true
-                    }
-                }
-                LogUtils.d("Gibson", "when load, draft = $data, image")
-                if (!data.pics.isNullOrEmpty()) {
-                    viewModel.setImageList(arrayListOf<String>().apply { addAll(data.pics) })
-                    Log.e("wxtag动态","(QuizActivity.kt:146)->>图片赋值${viewModel.imageLiveData} ")
-                } else {//表示草稿中并没有图像，就直接清空
-                    LogUtils.d("Gibson", "refresh imageList")
-                    viewModel.imageLiveData.value = null
-                    Log.e("wxtag动态","(QuizActivity.kt:146)->>图片复制为空 ")
-                }
             }
         }
 
     //发布页标签单选
     @SuppressLint("SetTextI18n")
     private fun initTypeSelector() {
-        viewModel.getAllCirCleData()
+
+        viewModel.getAllCirCleData(isModificationDynamic)
         viewModel.getImageLimits()
         viewModel.allCircle.observe {
             if (!it.isNullOrEmpty()) {
@@ -374,8 +357,11 @@ class QuizActivity : BaseViewModelActivity<QuizViewModel>() {
                 }
                 val imageListAbsolutePath = ArrayList<String>()
                 imageListUri.forEach {
+                    Log.e("wxtag动态","(QuizActivity.kt:146)->>图库中拿出来的图片url${it} ")
+                    Log.e("wxtag动态","(QuizActivity.kt:146)->>图库中拿出来的图片处理一下${ Uri.parse(it).getAbsolutePath(this)} ")
                     imageListAbsolutePath.add(
                         Uri.parse(it).getAbsolutePath(this)
+
                     )
                 }
                 //为再次进入图库保存以前添加的图片，进行的逻辑

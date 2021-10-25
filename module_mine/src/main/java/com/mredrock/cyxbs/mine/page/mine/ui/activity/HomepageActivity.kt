@@ -212,7 +212,6 @@ class HomepageActivity : BaseViewModelActivity<MineViewModel>() {
         }
         if (redid != null) {   //他人访问的情况
             viewModel.getUserInfo(redid)
-
             MineAndQa.refreshListener?.onRefresh(redid)
         } else {//自己访问的情况
             viewModel.getUserInfo(null)
@@ -543,9 +542,7 @@ dataBinding.btMineBack.setOnClickListener {
      * 这一个方法用于改变在滑动的过程中 tab的变化过程
      */
     fun tabChange(pregress: Float) {
-
         if (pregress == -1f && !isSetBackground) {
-
             isSetBackground = true
             dataBinding.mineTablayout.background =
                 resources.getDrawable(R.drawable.mine_layer_list_shape_shadow)
@@ -556,9 +553,7 @@ dataBinding.btMineBack.setOnClickListener {
                 resources.getDrawable(R.drawable.mine_shape_ll_background)
             isSetBackground = false
         }
-
     }
-
     /**
      * 加载网络请求的Bitmap图片出来
      */
@@ -571,7 +566,6 @@ dataBinding.btMineBack.setOnClickListener {
                     // 成功返回 Bitmap
                     success.invoke(resource)
                 }
-
                 override fun onLoadCleared(placeholder: Drawable?) {
                     initBlurBitmap(null)
                 }
@@ -585,9 +579,7 @@ dataBinding.btMineBack.setOnClickListener {
             intent.putExtra("redid", redid)
             activity.startActivity(intent)
         }
-
     }
-
     /**
      * 获取redid的接口
      */

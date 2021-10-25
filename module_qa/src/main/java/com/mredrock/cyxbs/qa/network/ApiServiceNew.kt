@@ -96,8 +96,10 @@ interface ApiServiceNew {
     @Multipart
     fun releaseDynamic(@Part parts: List<MultipartBody.Part>): Observable<RedrockApiWrapper<DynamicReleaseResult>>
     @PUT("/magipoke-loop/post/dynamic")
+
     @Multipart
     fun modificationDynamic(@Part parts: List<MultipartBody.Part>): Observable<DynamicReleaseResult>
+
     @POST("/magipoke-loop/comment/releaseComment")
     @Multipart
     fun releaseComment(@Part parts: List<MultipartBody.Part>): Observable<RedrockApiWrapper<CommentReleaseResult>>

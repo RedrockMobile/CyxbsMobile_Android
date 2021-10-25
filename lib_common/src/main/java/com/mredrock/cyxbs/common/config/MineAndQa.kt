@@ -12,7 +12,6 @@ object MineAndQa {
 
     var refreshListener:RefreshListener?=null
 
-
     interface RefreshListener{
         fun onRefresh(redid:String?)
     }

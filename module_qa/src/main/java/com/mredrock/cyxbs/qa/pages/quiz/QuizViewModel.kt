@@ -64,7 +64,7 @@ class QuizViewModel : BaseViewModel() {
         imageLiveData.value = imageList
     }
 
-    fun getAllCirCleData() {
+    fun getAllCirCleData(isModificationDynamic:Boolean) {
         val topicList = ArrayList<Topic>()
         val map: Map<String?, *>? = TopicDataSet.getAllTopic()
         if (!map.isNullOrEmpty()) {
@@ -75,7 +75,10 @@ class QuizViewModel : BaseViewModel() {
             }
             allCircle.value = topicList
         }
-        getDraft()
+        if (!isModificationDynamic){
+
+            getDraft()
+        }
     }
 
     /**
@@ -94,6 +97,7 @@ class QuizViewModel : BaseViewModel() {
                     .map {
                         it.map { path ->
                             LogUtils.d("Gibson", "file name = $path")
+                            Log.e("wxtag动态","(QuizActivity.kt:146)->>正常准备存存储图片path=$path")
                             fileCaster(path)
                         }
                     }
@@ -129,7 +133,7 @@ class QuizViewModel : BaseViewModel() {
                     .map {
                         it.map { path ->
                             LogUtils.d("Gibson", "file name = $path")
-                            Log.e("wxtag动态","(QuizActivity.kt:146)->>准备存存储图片path=$path")
+                            Log.e("wxtag动态","(QuizActivity.kt:146)->>修改存存储图片path=$path")
                             fileCaster(path)
                         }
                     }
