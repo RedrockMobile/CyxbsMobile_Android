@@ -255,6 +255,9 @@ class TodoModel {
                             .setSchedulers()
                             .safeSubscribeBy(
                                 onNext = { inner ->
+                                    //首先同步本地syncTime
+                                    setLastModifyTime(inner.data.syncTime)
+                                    setLastSyncTime(inner.data.syncTime)
                                     if (inner.data.todoArray.isNullOrEmpty()) {
                                         //如果拿到的是空的，会直接执行onError
                                         onError.invoke()
@@ -263,8 +266,6 @@ class TodoModel {
                                         inner.data.todoArray?.let { todoArray ->
                                             inner.data.todoArray = todoArray.sorted()
                                             onSuccess(todoArray)
-                                            setLastModifyTime(inner.data.syncTime)
-                                            setLastSyncTime(inner.data.syncTime)
                                             //Insert到本地数据库
                                             Observable.just(todoArray)
                                                 .map { list ->

@@ -105,8 +105,17 @@ class TodoDetailActivity : BaseViewModelActivity<TodoDetailViewModel>() {
         }
 
         todo_tv_inner_detail_del_todo.setOnClickListener {
-            viewModel.delTodo(todo) {
-                finish()
+            if (viewModel.isChanged) {
+                backTime--
+                if (backTime == 0) {
+                    super.onBackPressed()
+                } else {
+                    BaseApp.context.toast("你的修改未保存")
+                }
+            } else {
+                viewModel.delTodo(todo) {
+                    finish()
+                }
             }
         }
 
