@@ -44,7 +44,7 @@ class MyDynamicViewModel : BaseViewModel(){
             Transformations.switchMap(factory.dynamicDataSourceLiveData) { it.initialLoad }
 
     }
-
+    fun getDynamicData(redid:String?){}
     fun deleteId(id: String, model: String) {
         ApiGenerator.getApiService(ApiServiceNew::class.java)
             .deleteId(id, model)

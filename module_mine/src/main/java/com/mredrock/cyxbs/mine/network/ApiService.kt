@@ -238,7 +238,7 @@ interface ApiService {
 
     @FormUrlEncoded
     @POST("/magipoke-loop/user/focus")
-    fun changeFocusStatus(@Field("redid") redid: String):Observable<RedrockApiStatus>
+    fun changeFocusStatus(@Field("redid") redid: String?):Observable<RedrockApiStatus>
 
     @GET("/magipoke-loop/user/fans")
     fun getFans(@Query("redid") redid: String):Observable<RedrockApiWrapper<List<Fan>>>
@@ -283,13 +283,14 @@ interface ApiService {
      */
     @FormUrlEncoded
     @POST("/magipoke-identity/UploadDisplayIdentity")
-    fun uploadDisplayIdentity(@Field("identityId")identityId:String): Observable<RedrockApiStatus>
+    fun uploadDisplayIdentity(@Field("identityId")identityId:String?): Observable<RedrockApiStatus>
 
     /**
      * 删除身份
      */
-    @GET("/magipoke-identity/DeleteIdentity")
-    fun deleteIdentity(@Query("identityId")identityId:String): Observable<RedrockApiStatus>
+    @FormUrlEncoded
+    @POST("/magipoke-identity/DeleteIdentity")
+    fun deleteIdentity(@Field("identityId")identityId:String): Observable<RedrockApiStatus>
     /**
      * 更新动态信息
      */
@@ -302,5 +303,11 @@ interface ApiService {
      */
     @GET("/magipoke-identity/GetShowIdentify")
     fun getShowIdentify(@Query("id")id:String):Observable<PersonalStatu>
+
+    /**
+     * 获取粉丝 关注 点赞数量接口
+     */
+    @GET("magipoke-loop/user/getUserCount")
+    fun getPersonalCount(@Query("redid")redid: String?):Observable<PersonalCount>
 }
 

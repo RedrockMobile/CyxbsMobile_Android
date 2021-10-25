@@ -17,7 +17,7 @@ import com.mredrock.cyxbs.qa.network.NetworkState
 /**
  * Created By jay68 on 2018/9/20.
  */
-class DynamicDataSource(private val kind: String) : PageKeyedDataSource<Int, Dynamic>() {
+class DynamicDataSource(private val kind: String,private val redid: String?) : PageKeyedDataSource<Int, Dynamic>() {
     val networkState = MutableLiveData<Int>()
     val initialLoad = MutableLiveData<Int>()
 
@@ -41,6 +41,23 @@ class DynamicDataSource(private val kind: String) : PageKeyedDataSource<Int, Dyn
             "mine" -> {
                 ApiGenerator.getApiService(ApiServiceNew::class.java)
                     .getUserDynamic(1, params.requestedLoadSize)
+                    .mapOrThrowApiException()
+                    .setSchedulers()
+                    .doOnSubscribe { initialLoad.postValue(NetworkState.LOADING) }
+                    .doOnError {
+                        initialLoad.value = NetworkState.FAILED
+                        failedRequest = { loadInitial(params, callback) }
+                    }
+                    .safeSubscribeBy { list ->
+                        initialLoad.value = NetworkState.SUCCESSFUL
+                        val nextPageKey = 2.takeUnless { (list.size < params.requestedLoadSize) }
+                        callback.onResult(list, 1, nextPageKey)
+                    }
+            }
+
+            "personal" -> {
+                ApiGenerator.getApiService(ApiServiceNew::class.java)
+                    .getPersoalDynamic(redid, 1,6)
                     .mapOrThrowApiException()
                     .setSchedulers()
                     .doOnSubscribe { initialLoad.postValue(NetworkState.LOADING) }
@@ -111,7 +128,23 @@ class DynamicDataSource(private val kind: String) : PageKeyedDataSource<Int, Dyn
                         callback.onResult(list, adjacentPageKey)
                     }
             }
-
+            "personal" -> {
+                ApiGenerator.getApiService(ApiServiceNew::class.java)
+                    .getPersoalDynamic(redid, params.key, params.requestedLoadSize)
+                    .mapOrThrowApiException()
+                    .setSchedulers()
+                    .doOnSubscribe { networkState.postValue(NetworkState.LOADING) }
+                    .doOnError {
+                        networkState.value = NetworkState.FAILED
+                        failedRequest = { loadAfter(params, callback) }
+                    }
+                    .safeSubscribeBy { list ->
+                        networkState.value = NetworkState.SUCCESSFUL
+                        val adjacentPageKey =
+                            (params.key + 1).takeUnless { list.size < params.requestedLoadSize }
+                        callback.onResult(list, adjacentPageKey)
+                    }
+            }
             "main" -> {
                 ApiGenerator.getApiService(ApiServiceNew::class.java)
                     .getDynamicList(kind, 1, params.requestedLoadSize)
@@ -156,11 +189,12 @@ class DynamicDataSource(private val kind: String) : PageKeyedDataSource<Int, Dyn
 
     override fun loadBefore(params: LoadParams<Int>, callback: LoadCallback<Int, Dynamic>) = Unit
 
-    class Factory(private val kind: String) : DataSource.Factory<Int, Dynamic>() {
+    class Factory(private val kind: String,val redid:String?=null) : DataSource.Factory<Int, Dynamic>() {
         val dynamicDataSourceLiveData = MutableLiveData<DynamicDataSource>()
 
         override fun create(): DynamicDataSource {
-            val dynamicDataSource = DynamicDataSource(kind)
+
+            val dynamicDataSource = DynamicDataSource(kind,redid)
             dynamicDataSourceLiveData.postValue(dynamicDataSource)
             return dynamicDataSource
         }

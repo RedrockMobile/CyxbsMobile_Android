@@ -49,7 +49,6 @@ class ApproveStatusFragment(
     fun initData(view:View) {
         viewModel.getAuthenticationStatus(redid)
         viewModel.authenticationStatus.observeForever{
-            Log.e("身份设ds置ds", "(ApproveStatusFragment.kt:63)->>身份刷新dd ")
             val list = mutableListOf<AuthenticationStatus.Data>()
             it?.data!!.forEach {
                 list.add(it)

@@ -306,14 +306,12 @@ object ApiGenerator {
             if (useBackupUrl) {
                 return useBackupUrl(chain)
             }
-
+        Log.e("token", token)
             // 正常请求，照理说应该进入tokenInterceptor
             val response = proceedPoxyWithTryCatch {
                 chain.proceed(chain.request())
             }
 
-            Log.e("网络请求","(ApiGenerator.kt:317)->>对象${response} ")
-            Log.e("网络请求","(ApiGenerator.kt:317)->>token${token} ")
             if (response?.isSuccessful == true) {
                 return response
             }

@@ -146,4 +146,5 @@
     <string name="mine_person_unfocus_success">取关成功</string>
 <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="mine_lack_text">欸,您暂时还没有任何身份,可以前往“重邮帮”小程序通过”身份有证”申请身份,或者前往 邮票商城 兑换个性化身份</string>
 </resources>

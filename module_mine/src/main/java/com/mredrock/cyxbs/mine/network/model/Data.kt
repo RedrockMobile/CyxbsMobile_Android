@@ -13,6 +13,10 @@ data class Data(
     val college: String,
     @SerializedName("constellation")
     val constellation: String,
+    @SerializedName("isBefocused")
+    val isBefocused:Boolean,
+    @SerializedName("isFocus")
+    val isFocus:Boolean,
     @SerializedName("gender")
     val gender: String,
     @SerializedName("grade")

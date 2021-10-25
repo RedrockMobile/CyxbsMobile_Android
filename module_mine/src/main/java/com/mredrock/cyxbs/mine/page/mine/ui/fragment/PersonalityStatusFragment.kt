@@ -40,7 +40,6 @@ class PersonalityStatusFragment(
     fun initData(view: View) {
         viewModel.getCustomization(redid)
         viewModel.customization.observeForever {
-            Log.e("身份设ds置", "(ApproveStatusFragment.kt:63)->>身份刷新回调了")
             val list = mutableListOf<AuthenticationStatus.Data>()
             it.data.forEach {
                 list.add(it)
@@ -51,7 +50,6 @@ class PersonalityStatusFragment(
                 view.rv_personal.adapter = adapter
                 view.rv_personal.layoutManager = LinearLayoutManager(context)
             } else {
-              Log.e("身份设ds置", "(ApproveStatusFragment.kt:63)->>身份刷新dd ${list.toString()}")
                 val diffResult = DiffUtil.calculateDiff(DiffCallBack(oldList, list))
                 adapter!!.list = list
              diffResult.dispatchUpdatesTo(adapter!!)
