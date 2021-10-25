@@ -3,6 +3,7 @@ package com.mredrock.cyxbs.mine.page.mine.ui.activity
 import android.app.Activity
 import android.content.Intent
 import android.os.Bundle
+import com.alibaba.android.arouter.facade.annotation.Autowired
 import com.google.android.material.tabs.TabLayoutMediator
 import com.mredrock.cyxbs.api.account.IAccountService
 import com.mredrock.cyxbs.api.account.IUserService
@@ -21,6 +22,7 @@ import kotlinx.android.synthetic.main.mine_activity_fan.*
  * @description
  **/
 class FanActivity : BaseActivity() {
+
     private var redId = ""
     private var pageIndex = 0
 

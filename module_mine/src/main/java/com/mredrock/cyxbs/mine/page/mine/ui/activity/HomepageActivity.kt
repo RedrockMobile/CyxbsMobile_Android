@@ -28,12 +28,15 @@ import android.widget.ImageView
 import androidx.core.content.ContextCompat
 import com.afollestad.materialdialogs.MaterialDialog
 import com.afollestad.materialdialogs.list.listItems
+import com.alibaba.android.arouter.facade.annotation.Route
 import com.bumptech.glide.Glide
 import com.bumptech.glide.request.target.CustomTarget
 import com.bumptech.glide.request.transition.Transition
 import com.mredrock.cyxbs.api.account.IAccountService
 import com.mredrock.cyxbs.api.account.IUserService
 import com.mredrock.cyxbs.common.config.DIR_PHOTO
+import com.mredrock.cyxbs.common.config.MINE_PERSON_PAGE
+import com.mredrock.cyxbs.common.config.QA_DYNAMIC_MINE
 import com.mredrock.cyxbs.common.config.QA_DYNAMIC_MINE_FRAGMENT
 import com.mredrock.cyxbs.common.service.ServiceManager
 import com.mredrock.cyxbs.common.utils.extensions.*
@@ -50,7 +53,7 @@ import java.io.File
 import java.io.IOException
 import kotlin.math.abs
 
-
+@Route(path = MINE_PERSON_PAGE)
 class HomepageActivity : BaseViewModelActivity<MineViewModel>() {
 
 
@@ -169,6 +172,7 @@ class HomepageActivity : BaseViewModelActivity<MineViewModel>() {
 
     fun getUserInfo(data: Intent?){
         redid = data?.getStringExtra("redid")
+        Log.d("TAG","(HomepageActivity.kt:175)->$redid")
         if (redid!=null){
             viewModel.getUserInfo(redid)
             dataBinding.clPersonalInformation.mine_tv_concern.visible()

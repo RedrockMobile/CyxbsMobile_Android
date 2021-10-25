@@ -8,7 +8,9 @@ import android.view.WindowManager
 import android.widget.TextView
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.alibaba.android.arouter.launcher.ARouter
 import com.mredrock.cyxbs.common.BaseApp
+import com.mredrock.cyxbs.common.config.MINE_PERSON_PAGE
 import com.mredrock.cyxbs.qa.R
 import com.mredrock.cyxbs.qa.beannew.Dynamic
 import com.mredrock.cyxbs.qa.component.recycler.RvAdapterWrapper
@@ -144,6 +146,11 @@ class RecommendDynamicFragment : BaseDynamicFragment() {
                             }
                         }
                     }
+                }
+                onAvatarClickListener = {
+                    ARouter.getInstance().build(MINE_PERSON_PAGE)
+                        .withString("redid",it)
+                        .navigation()
                 }
             }
 

@@ -2,12 +2,15 @@ package com.mredrock.cyxbs.qa.pages.dynamic.ui.fragment
 
 import android.content.Intent
 import android.os.Handler
+import android.util.Log
 import android.view.Window
 import android.view.WindowManager
 import android.widget.TextView
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.alibaba.android.arouter.launcher.ARouter
 import com.mredrock.cyxbs.common.BaseApp
+import com.mredrock.cyxbs.common.config.MINE_PERSON_PAGE
 import com.mredrock.cyxbs.qa.R
 import com.mredrock.cyxbs.qa.beannew.Dynamic
 import com.mredrock.cyxbs.qa.component.recycler.RvAdapterWrapper
@@ -40,7 +43,7 @@ class FocusDynamicFragment : BaseDynamicFragment() {
     private var mTencent: Tencent? = null
 
     private lateinit var dynamicListRvAdapter: DynamicAdapter
-    val footerRvAdapter = FooterRvAdapter { viewModel.retryRecommend() }
+    val footerRvAdapter = FooterRvAdapter { viewModel.retryFocus() }
     val emptyRvAdapter = EmptyRvAdapter(BaseApp.context.getString(R.string.qa_question_list_empty_hint))
 
     override fun initData() {
@@ -132,6 +135,11 @@ class FocusDynamicFragment : BaseDynamicFragment() {
                             }
                         }
                     }
+                }
+                onAvatarClickListener = {
+                    ARouter.getInstance().build(MINE_PERSON_PAGE)
+                        .withString("redid",it)
+                        .navigation()
                 }
             }
 

@@ -5,6 +5,8 @@ import android.content.Context
 import android.util.AttributeSet
 import android.util.Log
 import android.view.View
+import android.view.animation.BounceInterpolator
+import android.view.animation.OvershootInterpolator
 import android.widget.OverScroller
 import androidx.coordinatorlayout.widget.CoordinatorLayout
 import androidx.core.view.ViewCompat
@@ -162,7 +164,7 @@ class CoverHeaderBehavior(context: Context, attr: AttributeSet) : CoordinatorLay
 
     private fun startAutoScroll(current: Int, target: Int, duration: Int){
         if (scroller == null){
-            scroller = OverScroller(contentView.context)
+            scroller = OverScroller(contentView.context,OvershootInterpolator())
         }
         scroller?.let {
             if (it.isFinished){

@@ -6,6 +6,7 @@ import android.content.Intent
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ImageView
 import android.widget.Toast
 import androidx.recyclerview.widget.DiffUtil
 import com.bumptech.glide.Glide
@@ -55,6 +56,7 @@ class DynamicAdapter(val context: Context?, private val onItemClickEvent: (Dynam
     var onShareClickListener: ((Dynamic, String) -> Unit)? = null
     var onTopicListener: ((String, View) -> Unit)? = null
     var onPopWindowClickListener: ((Int, String, Dynamic) -> Unit)? = null
+    var onAvatarClickListener: ((redid: String)->Unit)? = null
 
     var curSharedItem: View? = null
     var curSharedDynamic: Dynamic? = null
@@ -158,6 +160,9 @@ class DynamicAdapter(val context: Context?, private val onItemClickEvent: (Dynam
         curSharedItem = holder.itemView
         curSharedItemPosition = position
         onItemClickEvent.invoke(data, holder.itemView)
+        holder.itemView.findViewById<ImageView>(R.id.qa_iv_dynamic_avatar).setOnClickListener {
+            onAvatarClickListener?.invoke(data.uid)
+        }
     }
 
     class DynamicViewHolder(parent: ViewGroup) :
