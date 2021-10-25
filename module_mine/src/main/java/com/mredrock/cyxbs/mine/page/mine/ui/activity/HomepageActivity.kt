@@ -30,15 +30,13 @@ import androidx.core.content.ContextCompat
 import com.afollestad.materialdialogs.MaterialDialog
 import com.afollestad.materialdialogs.list.listItems
 import com.alibaba.android.arouter.facade.annotation.Autowired
+import com.alibaba.android.arouter.facade.annotation.Route
 import com.bumptech.glide.Glide
 import com.bumptech.glide.request.target.CustomTarget
 import com.bumptech.glide.request.transition.Transition
 import com.mredrock.cyxbs.api.account.IAccountService
 import com.mredrock.cyxbs.api.account.IUserService
-import com.mredrock.cyxbs.common.config.DIR_PHOTO
-import com.mredrock.cyxbs.common.config.MineAndQa
-import com.mredrock.cyxbs.common.config.QA_DYNAMIC_MINE_FRAGMENT
-import com.mredrock.cyxbs.common.config.QA_MY_PRAISE
+import com.mredrock.cyxbs.common.config.*
 import com.mredrock.cyxbs.common.service.ServiceManager
 import com.mredrock.cyxbs.common.utils.extensions.*
 import com.mredrock.cyxbs.mine.R
@@ -56,7 +54,7 @@ import java.io.File
 import java.io.IOException
 import kotlin.math.abs
 
-
+@Route(path = MINE_PERSON_PAGE)
 class HomepageActivity : BaseViewModelActivity<MineViewModel>() {
 
     /**
