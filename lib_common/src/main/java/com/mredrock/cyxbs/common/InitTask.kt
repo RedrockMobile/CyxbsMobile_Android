@@ -97,6 +97,8 @@ fun initUMeng(context: Context) {
                     else -> null
                 }
 
+                LogUtils.d("RayleighZ","get the message")
+
                 //写出7个问号我很抱歉，但是用?.let会爆warning
                 return builder
                         ?.setContentTitle(msg.title)

@@ -20,6 +20,7 @@ import com.google.gson.Gson
 import com.mredrock.cyxbs.common.BaseApp
 import com.mredrock.cyxbs.common.config.TODO_TODO_DETAIL
 import com.mredrock.cyxbs.common.ui.BaseViewModelActivity
+import com.mredrock.cyxbs.common.utils.LogUtils
 import com.mredrock.cyxbs.common.utils.extensions.toast
 import kotlinx.android.synthetic.main.todo_activity_inner_detail.*
 
@@ -101,21 +102,21 @@ class TodoDetailActivity : BaseViewModelActivity<TodoDetailViewModel>() {
 
     private fun initClick() {
         todo_inner_detail_back.setOnClickListener {
-            finish()
-        }
-
-        todo_tv_inner_detail_del_todo.setOnClickListener {
             if (viewModel.isChanged) {
                 backTime--
                 if (backTime == 0) {
-                    super.onBackPressed()
+                    finish()
                 } else {
                     BaseApp.context.toast("你的修改未保存")
                 }
             } else {
-                viewModel.delTodo(todo) {
-                    finish()
-                }
+                finish()
+            }
+        }
+
+        todo_tv_inner_detail_del_todo.setOnClickListener {
+            viewModel.delTodo(todo) {
+                finish()
             }
         }
 
