@@ -237,6 +237,7 @@
 
         <ImageView
             android:id="@+id/iv_nameplate1"
+            android:visibility="invisible"
             android:layout_width="95dp"
             android:layout_height="30dp"
             android:layout_marginTop="8dp"
@@ -247,6 +248,7 @@
         <ImageView
             android:id="@+id/iv_nameplate2"
             android:layout_width="95dp"
+            android:visibility="invisible"
             android:layout_height="30dp"
             android:layout_marginStart="12dp"
             android:layout_marginTop="8dp"
@@ -258,6 +260,7 @@
         <ImageView
             android:id="@+id/iv_nameplate3"
             android:layout_width="95dp"
+            android:visibility="invisible"
             android:layout_height="30dp"
             android:layout_marginStart="20dp"
             android:layout_marginTop="8dp"

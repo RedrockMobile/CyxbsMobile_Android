@@ -53,8 +53,8 @@ class IdentityFragment(
 
     override fun onSuccesss(redid: String,isself:Boolean) {
         this.redid = redid
-        this.isSelf=isSelf
-      Log.e("wxtag自我刷新","(IdentityFragment.kt:51)->> redid$redid")
+        this.isSelf=isself
+      Log.e("wxtag自我刷新","(IdentityFragment.kt:51)->> redid$redid isself=$isSelf")
         refresh()
     }
 

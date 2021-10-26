@@ -214,7 +214,7 @@ interface ApiServiceNew {
      */
     @GET("/magipoke-loop/post/dynamic/user")
     fun getPersoalDynamic(
-        @Query("reid") redid:String?,
+        @Query("redid") redid:String?,
         @Query("page") page: Int,
         @Query("size") size: Int
     ): Observable<RedrockApiWrapper<List<Dynamic>>>

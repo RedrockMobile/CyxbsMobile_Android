@@ -183,6 +183,7 @@ class HomepageActivity : BaseViewModelActivity<MineViewModel>() {
     fun initSatu(user: UserInfo) {
         user.data.identityies.forEachIndexed { index, s ->
             loadRedrockImage(s, imageViewList[index])
+            imageViewList[index].visibility=View.VISIBLE
         }
     }
 
