@@ -33,7 +33,7 @@ class MyDynamicFragment : BaseViewModelFragment<MyDynamicViewModel>(),MineAndQa.
     private var isRvAtTop = true
     private var isSendDynamic = false
     private lateinit var dynamicListRvAdapter: DynamicAdapter
-
+    private var redid:String?=null
     init {
         MineAndQa.refreshListener=this
     }
@@ -47,7 +47,9 @@ class MyDynamicFragment : BaseViewModelFragment<MyDynamicViewModel>(),MineAndQa.
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
+        Log.e("wxtag跨模块刷新","(MyDynamicFragment.kt:177)->> onActivityCreated=redid=$redid")
 
+        viewModel.getDynamicData(redid)
         initDynamics()
     }
 
@@ -144,16 +146,16 @@ class MyDynamicFragment : BaseViewModelFragment<MyDynamicViewModel>(),MineAndQa.
         footerRvAdapter: FooterRvAdapter,
         emptyRvAdapter: EmptyRvAdapter
     ): MyDynamicViewModel = viewModel.apply {
-        dynamicList.observe {
+        dynamicList?.observe {
             dynamicListRvAdapter.submitList(it)
         }
-        networkState.observe {
+        networkState?.observe {
             it?.run {
                 footerRvAdapter.refreshData(listOf(this))
             }
         }
 
-        initialLoad.observe {
+        initialLoad?.observe {
             when (it) {
                 NetworkState.SUCCESSFUL ->
                     isSendDynamic = true
@@ -174,8 +176,9 @@ class MyDynamicFragment : BaseViewModelFragment<MyDynamicViewModel>(),MineAndQa.
     }
 
     override fun onRefresh(redid: String?) {
-     Log.e("wxtag跨模块刷新","(MyDynamicFragment.kt:177)->> onRefresh回调")
-        viewModel.getDynamicData(redid)
+        this.redid=redid
+     Log.e("wxtag跨模块刷新","(MyDynamicFragment.kt:177)->> onRefresh回调redid=$redid")
+        //viewModel.getDynamicData(redid)
     }
 
 

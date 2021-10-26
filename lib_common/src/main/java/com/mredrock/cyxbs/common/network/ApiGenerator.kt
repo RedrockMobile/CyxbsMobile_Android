@@ -311,7 +311,7 @@ object ApiGenerator {
             val response = proceedPoxyWithTryCatch {
                 chain.proceed(chain.request())
             }
-
+            Log.e("网络请求", response.toString())
             if (response?.isSuccessful == true) {
                 return response
             }

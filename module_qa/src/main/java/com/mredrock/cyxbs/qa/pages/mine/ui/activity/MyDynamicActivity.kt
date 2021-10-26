@@ -121,16 +121,16 @@ class MyDynamicActivity : BaseViewModelActivity<MyDynamicViewModel>() {
     fun observeLoading(dynamicListRvAdapter: DynamicAdapter,
                        footerRvAdapter: FooterRvAdapter,
                        emptyRvAdapter: EmptyRvAdapter): MyDynamicViewModel = viewModel.apply {
-        dynamicList.observe {
+        dynamicList?.observe {
             dynamicListRvAdapter.submitList(it)
         }
-        networkState.observe {
+        networkState?.observe {
             it?.run {
                 footerRvAdapter.refreshData(listOf(this))
             }
         }
 
-        initialLoad.observe {
+        initialLoad?.observe {
             when (it) {
                 NetworkState.LOADING -> {
                     qa_swl_my_dynamic.isRefreshing = true

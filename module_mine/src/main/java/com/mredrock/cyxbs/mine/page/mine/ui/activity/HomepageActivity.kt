@@ -138,8 +138,8 @@ class HomepageActivity : BaseViewModelActivity<MineViewModel>() {
         super.onCreate(savedInstanceState)
         dataBinding = MineActivityHomepageBinding.inflate(layoutInflater)
         setContentView(dataBinding.root)
-        initData()
         initView()
+        initData()
         initListener()
         dataBinding.srlRefresh.isMotionEventSplittingEnabled = false
     }
@@ -209,6 +209,8 @@ class HomepageActivity : BaseViewModelActivity<MineViewModel>() {
     fun getUserInfo(data: Intent?) {
         if(redid==null){
             redid = data?.getStringExtra("redid")
+
+          Log.e("wxtagredid","(HomepageActivity.kt:213)->>拿到的redid=${redid} ")
         }
         if (redid != null) {   //他人访问的情况
             viewModel.getUserInfo(redid)
