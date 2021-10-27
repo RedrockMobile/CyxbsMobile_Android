@@ -221,20 +221,20 @@ interface ApiServiceNew {
     /*
     获取草稿
      */
-    @POST("https://be-prod.redrock.team/magipoke-draft/new/getDraft")
+    @POST("/magipoke-draft/new/getDraft")
     fun getDraft(): Observable<RedrockApiWrapper<DynamicDraft>>
 
     /*
     上传或者更新草稿
      */
-    @POST("https://be-prod.redrock.team/magipoke-draft/new/addDraft")
+    @POST("/magipoke-draft/new/addDraft")
     @Multipart
     fun updateDraft(@Part parts: List<MultipartBody.Part>): Observable<RedrockApiStatus>
 
     /*
     删除草稿
      */
-    @POST("https://be-prod.redrock.team/magipoke-draft/new/delDraft")
+    @POST("/magipoke-draft/new/delDraft")
     fun deleteDraft(): Observable<RedrockApiStatus>
 
 
