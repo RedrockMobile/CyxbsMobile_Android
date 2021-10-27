@@ -49,7 +49,13 @@ class AddItemDialog(context: Context, val onConfirm: (Todo) -> Unit) :
             if (it != 0){
                 todo.remindMode.notifyDateTime = "${it + Calendar.getInstance().get(Calendar.YEAR)}年1月1日00:00"
                 todo_tv_set_notify_time.text = "1月1日00:00"
-                todo_inner_add_thing_first.data = dateBeenStringList[it]
+                val cacheList = ArrayList(dateBeenStringList[it])
+                for (i in dateBeenStringList[it].indices){
+                    cacheList[i] = dateBeenStringList[it][(i + 1) % dateBeenStringList[it].size]
+                }
+                todo_inner_add_thing_second.data = IntArray(24) { (it + 1) % 24 }.toList()
+                todo_inner_add_thing_third.data = IntArray(60) { (it + 1) % 60 }.toList()
+                todo_inner_add_thing_first.data = cacheList
             } else {
                 val calendar = Calendar.getInstance().apply {
                     add(Calendar.MINUTE, 5)
@@ -231,15 +237,11 @@ class AddItemDialog(context: Context, val onConfirm: (Todo) -> Unit) :
             add(Calendar.MINUTE, 5)
         }
 
-        val notifyString = "${
-            calendar.get(Calendar.MONTH) + 1
-        }月${
-            calendar.get(Calendar.DAY_OF_MONTH)
-        }日${
-            numToString(calendar.get(Calendar.HOUR_OF_DAY))
-        }:${
-            numToString(calendar.get(Calendar.MINUTE))
-        }"
+        val curHour = calendar.get(Calendar.HOUR_OF_DAY)
+        val curMin = calendar.get(Calendar.MINUTE)
+        val curMonth = calendar.get(Calendar.MONTH) + 1
+        val curDay = calendar.get(Calendar.DAY_OF_MONTH)
+        val notifyString = "${curMonth}月${curDay}日${numToString(curHour)}:${numToString(curMin)}"
 
         todo_tv_set_notify_time.text = notifyString
 
@@ -272,19 +274,25 @@ class AddItemDialog(context: Context, val onConfirm: (Todo) -> Unit) :
                 }
             })
         }
-        todo_inner_add_thing_first.data = dateBeenStringList[0]
-        todo_inner_add_thing_first.selectedItemPosition = 3
         todo_inner_add_thing_first.setOnItemSelectedListener { _, data, _ ->
             if (data == "") {
                 todo_inner_add_thing_second.data = emptyList<String>()
                 todo_inner_add_thing_third.data = emptyList<String>()
             } else {
-                todo_inner_add_thing_second.data = IntArray(24) { it }.toList()
-                todo_inner_add_thing_third.data = IntArray(60) { it }.toList()
+                todo_inner_add_thing_second.data = IntArray(24) { (it + 1) % 24 }.toList()
+                todo_inner_add_thing_third.data = IntArray(60) { (it + 1) % 60 }.toList()
             }
         }
-        todo_inner_add_thing_second.data = IntArray(24) { it }.toList()
-        todo_inner_add_thing_third.data = IntArray(60) { it }.toList()
+        val cacheList = ArrayList(dateBeenStringList[0])
+        LogUtils.d("RayleighZ", "size = ${dateBeenStringList[0].size}")
+        for (i in dateBeenStringList[0].indices){
+            LogUtils.d("RayleighZ", "i = $i, use ${dateBeenStringList[0][(i + 1) % dateBeenStringList[0].size]} cover ${dateBeenStringList[0][i]}")
+            cacheList[i] = dateBeenStringList[0][(i + 1) % dateBeenStringList[0].size]
+        }
+        todo_inner_add_thing_first.data = cacheList
+        todo_inner_add_thing_second.data = IntArray(24) { (it + curHour) % 24 + 1 }.toList()
+        todo_inner_add_thing_third.data = IntArray(60) { (it + curMin) % 60 + 1 }.toList()
+        LogUtils.d("RayleighZ", "cur remind hour: $curHour, min: $curMin")
     }
 
     fun showRepeatDatePicker() {
@@ -507,7 +515,7 @@ class AddItemDialog(context: Context, val onConfirm: (Todo) -> Unit) :
             repeatTimeAdapter.resetAll(remindMode2RemindList(todo.remindMode).map {
                 if (todo.remindMode.repeatMode == RemindMode.WEEK) {
                     //如果你要问这里是为什么
-                    //视觉图无脑每周一和周一切换我也没办法
+                    //视觉图每周一和周一切换我也没办法
                     return@map it.subSequence(1, it.length).toString()
                 } else {
                     return@map it
