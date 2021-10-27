@@ -34,6 +34,7 @@ class MyDynamicFragment : BaseViewModelFragment<MyDynamicViewModel>(),MineAndQa.
     private var isSendDynamic = false
     private lateinit var dynamicListRvAdapter: DynamicAdapter
     private var redid:String?=null
+    private var isCreated=false
     init {
         MineAndQa.refreshListener=this
     }
@@ -48,7 +49,7 @@ class MyDynamicFragment : BaseViewModelFragment<MyDynamicViewModel>(),MineAndQa.
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
         Log.e("wxtag跨模块刷新","(MyDynamicFragment.kt:177)->> onActivityCreated=redid=$redid")
-
+isCreated=true
         viewModel.getDynamicData(redid)
         initDynamics()
     }
@@ -178,7 +179,9 @@ class MyDynamicFragment : BaseViewModelFragment<MyDynamicViewModel>(),MineAndQa.
     override fun onRefresh(redid: String?) {
         this.redid=redid
      Log.e("wxtag跨模块刷新","(MyDynamicFragment.kt:177)->> onRefresh回调redid=$redid")
-        //viewModel.getDynamicData(redid)
+        if (isCreated){//避免造成viewmodel没有实例化而报错
+            viewModel.getDynamicData(redid)
+        }
     }
 
 
