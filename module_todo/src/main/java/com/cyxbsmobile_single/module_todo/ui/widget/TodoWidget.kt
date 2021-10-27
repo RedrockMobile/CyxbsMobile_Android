@@ -101,10 +101,14 @@ class TodoWidget : AppWidgetProvider() {
         val manager = AppWidgetManager.getInstance(context)
         val componentName = ComponentName(context, TodoWidget::class.java)
         val remoteView = initRemoteView(context)
-        manager.updateAppWidget(componentName, remoteView)
-        manager.notifyAppWidgetViewDataChanged(
-            manager.getAppWidgetIds(componentName),
-            R.id.todo_lv_widget_todo_list
-        )
+        TodoModel.INSTANCE.queryByIsDone(0){
+            TodoWidgetService.todoList.clear()
+            TodoWidgetService.todoList.addAll(it)
+            manager.updateAppWidget(componentName, remoteView)
+            manager.notifyAppWidgetViewDataChanged(
+                manager.getAppWidgetIds(componentName),
+                R.id.todo_lv_widget_todo_list
+            )
+        }
     }
 }

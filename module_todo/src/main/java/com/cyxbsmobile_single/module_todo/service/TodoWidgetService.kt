@@ -16,11 +16,15 @@ import com.mredrock.cyxbs.common.utils.LogUtils
 /**
  * @date 2021-08-18
  * @author Sca RayleighZ
+ * @describe 小组件中RemoteView的Adapter
  */
 class TodoWidgetService : RemoteViewsService() {
 
+    companion object{
+        val todoList: ArrayList<Todo> = ArrayList()
+    }
+
     override fun onGetViewFactory(intent: Intent?): RemoteViewsFactory {
-        LogUtils.d("MasterRay", "factory init")
         return TodoWidgetFactory()
     }
 
@@ -29,16 +33,11 @@ class TodoWidgetService : RemoteViewsService() {
         private var todoList: List<Todo> = emptyList()
 
         override fun onCreate() {
-            TodoModel.INSTANCE.queryByIsDone(0) {
-                todoList = it
-            }
+            todoList = TodoWidgetService.todoList
         }
 
         override fun onDataSetChanged() {
-            //从room中加载尚未完成的todo
-            TodoModel.INSTANCE.queryByIsDone(0) {
-                todoList = it
-            }
+            todoList = TodoWidgetService.todoList
         }
 
         override fun onDestroy() {
@@ -49,6 +48,7 @@ class TodoWidgetService : RemoteViewsService() {
 
         override fun getViewAt(position: Int): RemoteViews {
             val listItem = RemoteViews(baseContext.packageName, R.layout.todo_widget_todo_list_item)
+            LogUtils.d("RayleighZ", "position = $position")
             listItem.setOnClickFillInIntent(
                 R.id.todo_ll_widget_back,
                 Intent(BaseApp.context, TodoWidget::class.java).apply {

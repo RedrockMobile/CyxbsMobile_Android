@@ -227,12 +227,17 @@ class TodoModel {
     }
 
     fun queryByIsDone(isDone: Int, onSuccess: (todoList: List<Todo>) -> Unit) {
+        //粘性事件处理
+        var firstTimeGet = true
         TodoDatabase.INSTANCE.todoDao()
             .queryTodoByWeatherDone(isDone)
             .toObservable()
             .setSchedulers()
             .safeSubscribeBy {
-                onSuccess(it)
+                if (firstTimeGet){
+                    onSuccess(it)
+                    firstTimeGet = false
+                }
             }
     }
 
