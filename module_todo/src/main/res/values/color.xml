@@ -40,4 +40,8 @@
     <color name="todo_widget_back_color">#FFFFFF</color>
     <!--    小组件item前置圈的颜色-->
     <color name="todo_widget_check_cycle">#7515315B</color>
+    <!--    小组件item的提醒时间的颜色-->
+    <color name="todo_widget_nf_time_color">#5015315b</color>
+    <!--    增加todo dialog删除提醒时间按钮的颜色-->
+    <color name="todo_add_dialog_del_color">#7CA3DF</color>
 </resources>
