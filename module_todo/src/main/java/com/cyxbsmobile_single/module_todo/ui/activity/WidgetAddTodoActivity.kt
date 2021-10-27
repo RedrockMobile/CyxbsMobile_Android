@@ -12,7 +12,6 @@ import com.cyxbsmobile_single.module_todo.ui.dialog.AddItemDialog
 import com.cyxbsmobile_single.module_todo.ui.widget.TodoWidget
 import com.mredrock.cyxbs.common.BaseApp
 import com.mredrock.cyxbs.common.config.TODO_ADD_TODO_BY_WIDGET
-import com.mredrock.cyxbs.common.utils.LogUtils
 
 //这里不使用BaseActivity的原因是需要设置成透明的theme
 @Route(path = TODO_ADD_TODO_BY_WIDGET)
@@ -36,12 +35,12 @@ class WidgetAddTodoActivity : AppCompatActivity() {
                 }
         }.apply {
             setOnKeyListener { _, keyCode, event ->
-                LogUtils.d("RayleighZ", "attach key event")
-                if (keyCode == KeyEvent.KEYCODE_BACK && event.action == KeyEvent.ACTION_DOWN) {
-                        hide()
-                        finish()
-                    }
-                true
+                val needDone = keyCode == KeyEvent.KEYCODE_BACK && event.action == KeyEvent.ACTION_DOWN
+                if (needDone) {
+                    hide()
+                    finish()
+                }
+                needDone
             }
         }
         dialog.show()
