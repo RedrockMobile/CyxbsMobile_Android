@@ -67,17 +67,11 @@ class TodoWidgetService : RemoteViewsService() {
             if (position in todoList.indices) {
                 val curTodo = todoList[position]
                 listItem.setTextViewText(R.id.todo_tv_widget_todo_title, curTodo.title)
-                if (curTodo.remindMode.repeatMode == RemindMode.NONE) {
-                    listItem.setTextViewText(
-                        R.id.todo_widget_notify_time,
-                        ""
-                    )
-                } else {
-                    listItem.setTextViewText(
-                        R.id.todo_widget_notify_time,
-                        repeatMode2RemindTime(curTodo.remindMode)
-                    )
-                }
+                LogUtils.d("RayleighZ", "todo = $curTodo")
+                listItem.setTextViewText(
+                    R.id.todo_widget_notify_time,
+                    repeatMode2RemindTime(curTodo.remindMode)
+                )
             }
             return listItem
         }
