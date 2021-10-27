@@ -32,4 +32,8 @@
     <color name="todo_inner_check_eclipse_color">#75F0F0F2</color>
     <color name="todo_inner_checked_line_color">#868689</color>
     <color name="todo_ic_back_color">#FFFFFF</color>
+    <!--    小组件背景的颜色-->
+    <color name="todo_widget_back_color">#1D1D1D</color>
+    <!--    小组件item前置圈的颜色-->
+    <color name="todo_widget_check_cycle">#CC2CDEFF</color>
 </resources>
