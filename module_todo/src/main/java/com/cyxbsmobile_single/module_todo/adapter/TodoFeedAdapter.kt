@@ -35,9 +35,9 @@ class TodoFeedAdapter(private val todoViewModel: TodoViewModel, private val acti
 
     override fun onCreateView(context: Context, parent: ViewGroup): View {
         feedView = LayoutInflater.from(context).inflate(R.layout.todo_fragment_feed, parent, false)
-        todoViewModel.initDataList {
-            refresh()
-        }
+        todoViewModel.initDataList(
+            onLoadSuccess = { refresh() }
+        )
         return feedView
     }
 

@@ -1,6 +1,5 @@
 package com.cyxbsmobile_single.module_todo.model
 
-import android.util.Log
 import androidx.sqlite.db.SimpleSQLiteQuery
 import com.cyxbsmobile_single.module_todo.model.TodoModel.ModifyType.CHANGE
 import com.cyxbsmobile_single.module_todo.model.TodoModel.ModifyType.DEL
@@ -26,6 +25,17 @@ import io.reactivex.Observable
  * Author: RayleighZ
  * Time: 2021-08-29 0:08
  * Describe: Todo模块封装的用于维持本地和远程数据库同步的module
+ * 多设备同步逻辑->
+ * 最初功能设计的时候，提出了多设备同步的问题，主体处理逻辑如下
+ * do 拉取todo
+ *      if 本地同步时间和远程修改时间不相等
+ *          if 本地存在离线修改
+ *              多设备存档冲突，需要向用户展示，让用户选择冲突存档中的某一个
+ *          else 本地不存在离线修改
+ *              下载远程修改，同步到本地数据库，并更新本地的同步时间
+ *      else 修改时间相同
+ *          两端数据完全同步，不需要做出任何拉取
+ * done
  */
 class TodoModel {
     companion object {
@@ -36,22 +46,28 @@ class TodoModel {
     val todoList by lazy { ArrayList<Todo>() }
 
     //获取todolist
-    fun getTodoList(onSuccess: (todoList: List<Todo>) -> Unit) {
+    fun getTodoList(
+        onSuccess: (todoList: List<Todo>) -> Unit,
+        onConflict: ((remoteSyncTime: Long, localSyncTime: Long) -> Unit)? = null
+    ) {
         //首先试图从远程获取todo
-        getFromNet(onSuccess, onError = {
-            //G了之后, 从本地数据库拿
-            TodoDatabase.INSTANCE.todoDao()
-                .queryAllTodo()
-                .toObservable()
-                .setSchedulers()
-                .subscribe(
-                    ExecuteOnceObserver(
-                        onExecuteOnceNext = {
-                            onSuccess(it)
-                        }
+        getFromNet(
+            onSuccess, onError = {
+                //G了之后, 从本地数据库拿
+                TodoDatabase.INSTANCE.todoDao()
+                    .queryAllTodo()
+                    .toObservable()
+                    .setSchedulers()
+                    .subscribe(
+                        ExecuteOnceObserver(
+                            onExecuteOnceNext = {
+                                onSuccess(it)
+                            }
+                        )
                     )
-                )
-        })
+            },
+            onConflict = onConflict
+        )
     }
 
     fun updateTodo(todo: Todo, onSuccess: () -> Unit) {
@@ -111,17 +127,17 @@ class TodoModel {
             )
     }
 
-    fun getTodoById(todoId: Long, onSuccess: (todo: Todo) -> Unit, onError: () -> Unit){
+    fun getTodoById(todoId: Long, onSuccess: (todo: Todo) -> Unit, onError: () -> Unit) {
         TodoDatabase.INSTANCE.todoDao()
-                .queryTodoById(todoId)
-                .toObservable()
-                .setSchedulers()
-                .safeSubscribeBy(
-                        onNext = onSuccess,
-                        onError = {
-                            onError.invoke()
-                        }
-                )
+            .queryTodoById(todoId)
+            .toObservable()
+            .setSchedulers()
+            .safeSubscribeBy(
+                onNext = onSuccess,
+                onError = {
+                    onError.invoke()
+                }
+            )
     }
 
     fun addTodo(todo: Todo, onSuccess: (todoId: Long) -> Unit) {
@@ -174,16 +190,20 @@ class TodoModel {
     private fun addOffLineModifyTodo(id: Long = -1, type: ModifyType) {
         //如果是离线删除，还需要查找离线修改的id数组里是否有已经离线删除的todo
         //如果就，需要在离线修改的todo列表中删除对应的id
-        if (type == DEL){
+        if (type == DEL) {
             //首先获取本地的离线修改todo列表
             val localChangeArray = Gson()
                 .fromJson<ArrayList<Long>>(
-                    BaseApp.context.defaultSharedPreferences.getString(TODO_OFFLINE_MODIFY_LIST, "[]"),
+                    BaseApp.context.defaultSharedPreferences.getString(
+                        TODO_OFFLINE_MODIFY_LIST,
+                        "[]"
+                    ),
                     object : TypeToken<ArrayList<Long>>() {}.type
                 )
             localChangeArray.remove(id)
             BaseApp.context.defaultSharedPreferences.editor {
-                putString(TODO_OFFLINE_DEL_LIST,
+                putString(
+                    TODO_OFFLINE_DEL_LIST,
                     Gson().toJson(localChangeArray)
                 )
             }
@@ -234,7 +254,7 @@ class TodoModel {
             .toObservable()
             .setSchedulers()
             .safeSubscribeBy {
-                if (firstTimeGet){
+                if (firstTimeGet) {
                     onSuccess(it)
                     firstTimeGet = false
                 }
@@ -244,14 +264,15 @@ class TodoModel {
     private fun getFromNet(
         onSuccess: (todoList: List<Todo>) -> Unit,
         onError: () -> Unit,
-        onConflict: (() -> Unit)? = null
+        onConflict: ((remoteTime: Long, localTime: Long) -> Unit)? = null
     ) {
         val lastModifyTime = getLastModifyTime()
         val lastSyncTime = getLastSyncTime()
-        apiGenerator.getLastSyncTime()
+        apiGenerator.getLastSyncTime(lastSyncTime)
             .setSchedulers()
             .safeSubscribeBy(
                 onNext = {
+                    LogUtils.d("RayleighZ", "Sync Success")
                     val remoteSyncTime = it.data.syncTime
                     if (lastSyncTime == 0L) {
                         //本地数据库没有记录
@@ -260,7 +281,7 @@ class TodoModel {
                             .setSchedulers()
                             .safeSubscribeBy(
                                 onNext = { inner ->
-                                    //首先同步本地syncTime
+                                    //同步本地syncTime
                                     setLastModifyTime(inner.data.syncTime)
                                     setLastSyncTime(inner.data.syncTime)
                                     if (inner.data.todoArray.isNullOrEmpty()) {
@@ -301,7 +322,7 @@ class TodoModel {
                                 )
                             //如果存在本地修改，需要重传
                             if (lastModifyTime != lastSyncTime) {
-                                resendModifyList(TodoListPushWrapper.NONE_FORCE)
+                                resendModifyList()
                             }
                         } else {
                             //存在另一台设备的数据贡献
@@ -340,18 +361,20 @@ class TodoModel {
                                         }
                                     )
                             } else {
-                                onConflict?.invoke()
+                                //此时说明存在冲突，需要展示
+                                onConflict?.invoke(remoteSyncTime, lastSyncTime)
                             }
                         }
                     }
                 },
                 onError = {
+                    LogUtils.d("RayleighZ", it.toString())
                     onError.invoke()
                 }
             )
     }
 
-    private fun getAllTodoFromNet(
+    fun getAllTodoFromNet(
         withDatabaseSync: Boolean = false,
         onSuccess: (todoList: List<Todo>) -> Unit
     ) {
@@ -365,6 +388,10 @@ class TodoModel {
                     if (withDatabaseSync) {
                         Observable.just(it.data.todoArray)
                             .map { list ->
+
+                                TodoDatabase.INSTANCE.todoDao()
+                                    .deleteAllTodo()
+
                                 TodoDatabase.INSTANCE
                                     .todoDao()
                                     .insertTodoList(list)
@@ -386,7 +413,7 @@ class TodoModel {
             )
     }
 
-    private fun resendModifyList(isForce: Int) {
+    private fun resendModifyList() {
         val delList = getOfflineModifyTodo(DEL)
         val changedIdList = getOfflineModifyTodo(CHANGE).toString()
         val syncTime = getLastSyncTime()
@@ -401,7 +428,7 @@ class TodoModel {
                     //构建重传PUSH
                     val pushWrapper = TodoListPushWrapper(
                         todoList = it,
-                        force = isForce,
+                        force = TodoListPushWrapper.NONE_FORCE,
                         firsPush = isFirstPush,
                         syncTime = syncTime
                     )
@@ -444,5 +471,37 @@ class TodoModel {
                     LogUtils.d("RayleighZ", "resend error = $it")
                 }
             )
+    }
+
+    //强制重传所有的todo
+    fun forcePush(onSuccess: () -> Unit) {
+        //拿到本地的所有todo
+        TodoDatabase.INSTANCE.todoDao()
+            .queryAllTodo()
+            .toObservable()
+            .setSchedulers()
+            .safeSubscribeBy {
+                //重传所有todo
+                apiGenerator.pushTodo(
+                    TodoListPushWrapper(
+                        it,
+                        getLastSyncTime(),
+                        TodoListPushWrapper.IS_FORCE,
+                        1
+                    )
+                )
+                    .setSchedulers()
+                    .safeSubscribeBy(
+                        onNext = { syncTime ->
+                            onSuccess.invoke()
+                            setLastModifyTime(syncTime.data.syncTime)
+                            setLastSyncTime(syncTime.data.syncTime)
+                        },
+                        onError = {
+                            //提示用户强制上传失败
+                            BaseApp.context.toast("强制上传失败 :(")
+                        }
+                    )
+            }
     }
 }

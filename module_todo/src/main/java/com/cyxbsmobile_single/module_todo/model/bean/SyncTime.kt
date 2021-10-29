@@ -9,5 +9,7 @@ import java.io.Serializable
  */
 data class SyncTime(
     @SerializedName("sync_time")
-    val syncTime: Long
+    val syncTime: Long,
+    @SerializedName("is_sync_time_exist")
+    val isSyncTimeExit: Boolean
 ): Serializable

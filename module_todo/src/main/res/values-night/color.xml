@@ -40,4 +40,7 @@
     <color name="todo_widget_nf_time_color">#66F0F0F2</color>
     <!--    增加todo dialog删除提醒时间按钮的颜色-->
     <color name="todo_add_dialog_del_color">#838385</color>
+
+    <!--    当todo本地和远程的仓库冲突时，提醒用的按钮的颜色-->
+    <color name="todo_on_conflict_button_color">#2CDEFF</color>
 </resources>

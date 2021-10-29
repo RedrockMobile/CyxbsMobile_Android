@@ -38,8 +38,10 @@ interface Api {
      * 获取最后修改的时间戳
      */
     @GET("/magipoke-todo/sync-time")
-    fun getLastSyncTime():
-            Observable<RedrockApiWrapper<SyncTime>>
+    fun getLastSyncTime(
+        @Query("sync_time")
+        sync_time: Long
+    ): Observable<RedrockApiWrapper<SyncTime>>
 
     /**
      * 删除todo
