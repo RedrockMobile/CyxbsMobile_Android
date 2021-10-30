@@ -12,6 +12,7 @@ import com.cyxbsmobile_single.module_todo.R
 import com.cyxbsmobile_single.module_todo.model.TodoModel
 import com.mredrock.cyxbs.common.BaseApp
 import com.mredrock.cyxbs.common.ui.BaseFeedFragment
+import com.mredrock.cyxbs.common.utils.extensions.append
 import com.mredrock.cyxbs.common.utils.extensions.appendln
 import kotlinx.android.synthetic.main.todo_fragment_on_confilt.view.*
 import java.text.SimpleDateFormat
@@ -37,8 +38,8 @@ class TodoConflictAdapter(
             //加载todo
             val spannableString = SpannableString("掌友，你的云同步存档 ")
             val format = SimpleDateFormat("yyyy-MM-dd hh:mm", Locale.CHINA)
-            val remoteTime = format.format(Date(remoteSyncTime))
-            val localTime = format.format(Date(localSyncTime))
+            val remoteTime = format.format(Date(remoteSyncTime * 1000))
+            val localTime = format.format(Date(localSyncTime * 1000))
             val sb = SpannableStringBuilder()
             val conflictSpan = ForegroundColorSpan(
                 ContextCompat.getColor(
@@ -54,11 +55,11 @@ class TodoConflictAdapter(
                 )
             )
 
-            sb.appendln("掌友，你的云同步存档 ", normalSpan)
-            sb.appendln(remoteTime, conflictSpan)
-            sb.appendln(" 和本地存档 ", normalSpan)
-            sb.appendln(localTime, conflictSpan)
-            sb.appendln("存在冲突，请选择一个存档予以保留", normalSpan)
+            sb.append("掌友，你的云同步存档 ", normalSpan)
+            sb.append(remoteTime, conflictSpan)
+            sb.append(" 和本地存档 ", normalSpan)
+            sb.append(localTime, conflictSpan)
+            sb.append("存在冲突，请选择一个存档予以保留", normalSpan)
 
             todo_tv_fragment_conflict_show.text = sb
 

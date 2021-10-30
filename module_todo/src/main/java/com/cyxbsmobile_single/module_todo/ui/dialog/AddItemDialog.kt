@@ -292,7 +292,6 @@ class AddItemDialog(context: Context, val onConfirm: (Todo) -> Unit) :
         todo_inner_add_thing_first.data = cacheList
         todo_inner_add_thing_second.data = IntArray(24) { (it + curHour) % 24 + 1 }.toList()
         todo_inner_add_thing_third.data = IntArray(60) { (it + curMin) % 60 + 1 }.toList()
-        LogUtils.d("RayleighZ", "cur remind hour: $curHour, min: $curMin")
     }
 
     fun showRepeatDatePicker() {
