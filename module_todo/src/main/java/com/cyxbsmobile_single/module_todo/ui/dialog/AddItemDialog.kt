@@ -44,37 +44,63 @@ class AddItemDialog(context: Context, val onConfirm: (Todo) -> Unit) :
     private val chooseYearAdapter by lazy {
         ChooseYearAdapter(
             ArrayList(getNextFourYears())
-        ) {
-            if (it != 0) {
+        ) { currentYearOffset ->
+            if (currentYearOffset != 0) {
                 todo.remindMode.notifyDateTime =
-                    "${it + Calendar.getInstance().get(Calendar.YEAR)}年1月1日00:00"
+                    "${currentYearOffset + Calendar.getInstance().get(Calendar.YEAR)}年1月1日00:00"
                 todo_tv_set_notify_time.text = "1月1日00:00"
-                val cacheList = ArrayList(dateBeenStringList[it])
-                for (i in dateBeenStringList[it].indices) {
-                    cacheList[i] = dateBeenStringList[it][(i + 1) % dateBeenStringList[it].size]
+                val cacheList = ArrayList(dateBeenStringList[currentYearOffset])
+                for (i in dateBeenStringList[currentYearOffset].indices) {
+                    cacheList[i] =
+                        dateBeenStringList[currentYearOffset][(i + 1) % dateBeenStringList[currentYearOffset].size]
                 }
-                todo_inner_add_thing_second.data = IntArray(24) { (it + 1) % 24 }.toList()
-                todo_inner_add_thing_third.data = IntArray(60) { (it + 1) % 60 }.toList()
+                todo_inner_add_thing_second.data = IntArray(24) { (it + 1) % 24 + 1 }.toList()
+                todo_inner_add_thing_third.data = IntArray(60) { (it + 1) % 60 + 1}.toList()
                 todo_inner_add_thing_first.data = cacheList
             } else {
                 val calendar = Calendar.getInstance().apply {
                     add(Calendar.MINUTE, 5)
                 }
+
+                val curHour = calendar.get(Calendar.HOUR_OF_DAY)
+                val curMin = calendar.get(Calendar.MINUTE)
+
                 val notifyString = "${
                     calendar.get(Calendar.MONTH) + 1
                 }月${
                     calendar.get(Calendar.DAY_OF_MONTH)
                 }日${
-                    numToString(calendar.get(Calendar.HOUR_OF_DAY))
+                    numToString(curHour)
                 }:${
-                    numToString(calendar.get(Calendar.MINUTE))
+                    numToString(curMin)
                 }"
+                //重置时间选择器为5分钟之后
+                setToNext5Min()
                 todo.remindMode.notifyDateTime = "${
                     calendar.get(Calendar.YEAR)
                 }年$notifyString"
                 todo_tv_set_notify_time.text = notifyString
             }
         }
+    }
+
+    private fun setToNext5Min(yearOffset: Int = 0) {
+        todo_inner_add_thing_first.data = emptyList<String>()
+        todo_inner_add_thing_second.data = emptyList<String>()
+        val calendar = Calendar.getInstance().apply {
+            add(Calendar.MINUTE, 5)
+        }
+
+        val curHour = calendar.get(Calendar.HOUR_OF_DAY)
+        val curMin = calendar.get(Calendar.MINUTE)
+
+        val cacheList = ArrayList(dateBeenStringList[yearOffset])
+        for (i in dateBeenStringList[yearOffset].indices) {
+            cacheList[i] = dateBeenStringList[0][(i + 1) % dateBeenStringList[0].size]
+        }
+        todo_inner_add_thing_first.data = cacheList
+        todo_inner_add_thing_second.data = IntArray(24) { (it + curHour) % 24 + 1 }.toList()
+        todo_inner_add_thing_third.data = IntArray(60) { (it + curMin) % 60 + 1 }.toList()
     }
 
     private val repeatTimeAdapter by lazy {
@@ -283,13 +309,8 @@ class AddItemDialog(context: Context, val onConfirm: (Todo) -> Unit) :
                 todo_inner_add_thing_third.data = IntArray(60) { (it + 1) % 60 + 1 }.toList()
             }
         }
-        val cacheList = ArrayList(dateBeenStringList[0])
-        for (i in dateBeenStringList[0].indices) {
-            cacheList[i] = dateBeenStringList[0][(i + 1) % dateBeenStringList[0].size]
-        }
-        todo_inner_add_thing_first.data = cacheList
-        todo_inner_add_thing_second.data = IntArray(24) { (it + curHour) % 24 + 1 }.toList()
-        todo_inner_add_thing_third.data = IntArray(60) { (it + curMin) % 60 + 1 }.toList()
+        //设置时间选择器为5分钟之后
+        setToNext5Min()
     }
 
     fun showRepeatDatePicker() {
@@ -365,15 +386,19 @@ class AddItemDialog(context: Context, val onConfirm: (Todo) -> Unit) :
         val curSelectYear = chooseYearAdapter.stringArray[chooseYearAdapter.curSelPosition]
         var date =
             todo_inner_add_thing_first.data[todo_inner_add_thing_first.curPos()].toString()
-        if (date == "") {
-            //如果是用来占位的，就不增加进去
-            return
-        } else if (date == "今天") {
-            //如果是今天，就一定是dateBeenList此年的第一个date
-            val curDate = dateBeenList[0][0]
-            date = "${curDate.month}月${curDate.day}日"
-        } else {
-            date = date.subSequence(0, date.length - 3).toString()
+        date = when (date) {
+            "" -> {
+                //如果是用来占位的，就不增加进去
+                return
+            }
+            "今天" -> {
+                //如果是今天，就一定是dateBeenList此年的第一个date
+                val curDate = dateBeenList[0][0]
+                "${curDate.month}月${curDate.day}日"
+            }
+            else -> {
+                date.subSequence(0, date.length - 3).toString()
+            }
         }
         val hour = todo_inner_add_thing_second.data[todo_inner_add_thing_second.curPos()].toString()
         val min = todo_inner_add_thing_third.data[todo_inner_add_thing_third.curPos()].toString()
