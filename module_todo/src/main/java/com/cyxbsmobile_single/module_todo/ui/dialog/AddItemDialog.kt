@@ -18,7 +18,6 @@ import com.cyxbsmobile_single.module_todo.ui.dialog.AddItemDialog.CurOperate.*
 import com.cyxbsmobile_single.module_todo.util.*
 import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.mredrock.cyxbs.common.BaseApp
-import com.mredrock.cyxbs.common.utils.LogUtils
 import com.mredrock.cyxbs.common.utils.extensions.dip
 import com.mredrock.cyxbs.common.utils.extensions.toast
 import kotlinx.android.synthetic.main.todo_activity_inner_detail.*
@@ -405,6 +404,8 @@ class AddItemDialog(context: Context, val onConfirm: (Todo) -> Unit) :
         ) {
             //判断为类型不冲突
             todo.remindMode.repeatMode = repeatType
+            val secondPos = todo_inner_add_thing_second.curPos() + 1
+            val thirdPos = todo_inner_add_thing_third.curPos() + 1
             val repeatString =
                 when (todo.remindMode.repeatMode) {
                     RemindMode.DAY -> {//每天
@@ -415,31 +416,23 @@ class AddItemDialog(context: Context, val onConfirm: (Todo) -> Unit) :
                         //添加新的周
                         todo.remindMode.week.addWithoutRepeat(
                             0,
-                            todo_inner_add_thing_second.curPos() + 1
+                            secondPos
                         )
                         "周${weekStringList[todo_inner_add_thing_second.curPos()]}"
                     }
                     RemindMode.MONTH -> {
                         todo.remindMode.day.addWithoutRepeat(
                             0,
-                            todo_inner_add_thing_second.curPos() + 1
+                            secondPos
                         )
-                        "每月${todo_inner_add_thing_second.curPos() + 1}日"
+                        "每月${secondPos}日"
                     }
                     RemindMode.YEAR -> {
                         todo.remindMode.date.addWithoutRepeat(
                             0,
-                            "${
-                                todo_inner_add_thing_second.curPos() + 1
-                            }.${
-                                todo_inner_add_thing_third.curPos() + 1
-                            }"
+                            "${secondPos}.${thirdPos}"
                         )
-                        "每年${
-                            todo_inner_add_thing_second.curPos() + 1
-                        }月${
-                            todo_inner_add_thing_third.curPos() + 1
-                        }日"
+                        "每年${secondPos}月${thirdPos}日"
                     }
                     else -> ""
                 }
