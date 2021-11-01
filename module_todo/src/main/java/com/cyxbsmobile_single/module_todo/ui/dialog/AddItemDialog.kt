@@ -46,11 +46,12 @@ class AddItemDialog(context: Context, val onConfirm: (Todo) -> Unit) :
         ChooseYearAdapter(
             ArrayList(getNextFourYears())
         ) {
-            if (it != 0){
-                todo.remindMode.notifyDateTime = "${it + Calendar.getInstance().get(Calendar.YEAR)}年1月1日00:00"
+            if (it != 0) {
+                todo.remindMode.notifyDateTime =
+                    "${it + Calendar.getInstance().get(Calendar.YEAR)}年1月1日00:00"
                 todo_tv_set_notify_time.text = "1月1日00:00"
                 val cacheList = ArrayList(dateBeenStringList[it])
-                for (i in dateBeenStringList[it].indices){
+                for (i in dateBeenStringList[it].indices) {
                     cacheList[i] = dateBeenStringList[it][(i + 1) % dateBeenStringList[it].size]
                 }
                 todo_inner_add_thing_second.data = IntArray(24) { (it + 1) % 24 }.toList()
@@ -279,14 +280,12 @@ class AddItemDialog(context: Context, val onConfirm: (Todo) -> Unit) :
                 todo_inner_add_thing_second.data = emptyList<String>()
                 todo_inner_add_thing_third.data = emptyList<String>()
             } else {
-                todo_inner_add_thing_second.data = IntArray(24) { (it + 1) % 24 }.toList()
-                todo_inner_add_thing_third.data = IntArray(60) { (it + 1) % 60 }.toList()
+                todo_inner_add_thing_second.data = IntArray(24) { (it + 1) % 24 + 1 }.toList()
+                todo_inner_add_thing_third.data = IntArray(60) { (it + 1) % 60 + 1 }.toList()
             }
         }
         val cacheList = ArrayList(dateBeenStringList[0])
-        LogUtils.d("RayleighZ", "size = ${dateBeenStringList[0].size}")
-        for (i in dateBeenStringList[0].indices){
-            LogUtils.d("RayleighZ", "i = $i, use ${dateBeenStringList[0][(i + 1) % dateBeenStringList[0].size]} cover ${dateBeenStringList[0][i]}")
+        for (i in dateBeenStringList[0].indices) {
             cacheList[i] = dateBeenStringList[0][(i + 1) % dateBeenStringList[0].size]
         }
         todo_inner_add_thing_first.data = cacheList
@@ -365,24 +364,28 @@ class AddItemDialog(context: Context, val onConfirm: (Todo) -> Unit) :
     //增加提醒日期
     private fun addNotify() {
         val curSelectYear = chooseYearAdapter.stringArray[chooseYearAdapter.curSelPosition]
-        val date =
-            dateBeenList[chooseYearAdapter.curSelPosition][todo_inner_add_thing_first.curPos()]
-        if (date.type == DateBeen.EMPTY) {
+        var date =
+            todo_inner_add_thing_first.data[todo_inner_add_thing_first.curPos()].toString()
+        if (date == "") {
             //如果是用来占位的，就不增加进去
             return
+        } else if (date == "今天") {
+            //如果是今天，就一定是dateBeenList此年的第一个date
+            val curDate = dateBeenList[0][0]
+            date = "${curDate.month}月${curDate.day}日"
+        } else {
+            date = date.subSequence(0, date.length - 3).toString()
         }
         val hour = todo_inner_add_thing_second.data[todo_inner_add_thing_second.curPos()].toString()
         val min = todo_inner_add_thing_third.data[todo_inner_add_thing_third.curPos()].toString()
-        todo.remindMode.notifyDateTime = "${curSelectYear}年${date.month}月${date.day}日${
-            numToString(hour)
-        }:${
-            numToString(min)
-        }"
-        val dateWithoutWeek = "${
-            date.month
-        }月${
-            date.day
-        }日${numToString(hour)}:${numToString(min)}"
+        todo.remindMode.notifyDateTime =
+            "${curSelectYear}年${date}${
+                numToString(hour)
+            }:${
+                numToString(min)
+            }"
+        val dateWithoutWeek =
+            "${date}${numToString(hour)}:${numToString(min)}"
         todo_tv_set_notify_time.text = dateWithoutWeek
     }
 
@@ -440,7 +443,7 @@ class AddItemDialog(context: Context, val onConfirm: (Todo) -> Unit) :
                     }
                     else -> ""
                 }
-            if (repeatString != ""){
+            if (repeatString != "") {
                 repeatTimeAdapter.addString(repeatString)
                 todo_inner_add_rv_thing_repeat_list.scrollToPosition(0)
             }
