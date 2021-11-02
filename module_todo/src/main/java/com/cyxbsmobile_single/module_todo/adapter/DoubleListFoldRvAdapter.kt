@@ -63,8 +63,6 @@ class DoubleListFoldRvAdapter(
     private val upEmptyHolder by lazy { TodoItemWrapper(EMPTY, title = "1") }
     private val downEmptyHolder by lazy { TodoItemWrapper(EMPTY, title = "2") }
 
-    //左侧check圆圈的颜色，因为里外两个adapter的颜色不同，所以需要缓存一份
-    private var uncheckColor = 0
     //真正用于展示的list，会动态的增减
     private var wrapperCopyList: ArrayList<TodoItemWrapper> =
         todoItemWrapperArrayList.clone() as ArrayList<TodoItemWrapper>
@@ -268,7 +266,10 @@ class DoubleListFoldRvAdapter(
                         } else {
                             todo_iv_check.visibility = View.GONE
                             //判断是否过期
-                            uncheckColor = todo_iv_todo_item.uncheckedColor
+                            //左侧check圆圈的颜色，因为里外两个adapter的颜色不同，所以需要缓存一份
+                            LogUtils.d("RayleighZ", "cur todo = ${todo.title}")
+                            LogUtils.d("RayleighZ", "uncheckColor before = ${todo_iv_todo_item.uncheckedColor}")
+                            val uncheckColor: Int = todo_iv_todo_item.uncheckedColor
                             if (isOutOfTime(todo)) {
                                 //置红
                                 todo_tv_todo_title.setTextColor(getColor(R.color.todo_item_del_red))
@@ -281,6 +282,7 @@ class DoubleListFoldRvAdapter(
                                         R.color.todo_check_line_color
                                     )
                                 )
+                                LogUtils.d("RayleighZ", "uncheckColor = ${todo_iv_todo_item.uncheckedColor}")
                                 todo_iv_todo_item.uncheckedColor = uncheckColor
                             }
                         }
