@@ -1,13 +1,14 @@
 package com.cyxbsmobile_single.module_todo.service
 
 import android.content.Intent
+import android.view.View
 import android.widget.RemoteViews
 import android.widget.RemoteViewsService
+import androidx.core.content.ContextCompat
 import com.cyxbsmobile_single.module_todo.R
-import com.cyxbsmobile_single.module_todo.model.TodoModel
-import com.cyxbsmobile_single.module_todo.model.bean.RemindMode
 import com.cyxbsmobile_single.module_todo.model.bean.Todo
 import com.cyxbsmobile_single.module_todo.ui.widget.TodoWidget
+import com.cyxbsmobile_single.module_todo.util.isOutOfTime
 import com.cyxbsmobile_single.module_todo.util.repeatMode2RemindTime
 import com.google.gson.Gson
 import com.mredrock.cyxbs.common.BaseApp
@@ -20,7 +21,7 @@ import com.mredrock.cyxbs.common.utils.LogUtils
  */
 class TodoWidgetService : RemoteViewsService() {
 
-    companion object{
+    companion object {
         val todoList: ArrayList<Todo> = ArrayList()
     }
 
@@ -66,12 +67,34 @@ class TodoWidgetService : RemoteViewsService() {
             )
             if (position in todoList.indices) {
                 val curTodo = todoList[position]
+                //过期判断
+                if (isOutOfTime(curTodo)) {
+                    //如果过期，则标红
+                    listItem.setImageViewResource(
+                        R.id.todo_iv_widget_check,
+                        R.drawable.todo_ic_detail_check_eclipse_out_date
+                    )
+                    listItem.setTextColor(
+                        R.id.todo_tv_widget_todo_title,
+                        ContextCompat.getColor(BaseApp.context, R.color.todo_item_del_red)
+                    )
+                    listItem.setTextViewText(R.id.todo_widget_notify_time, "")
+                } else {
+                    //恢复为普通状态
+                    listItem.setImageViewResource(
+                        R.id.todo_iv_widget_check,
+                        R.drawable.todo_ic_detail_check_eclipse
+                    )
+                    listItem.setTextColor(
+                        R.id.todo_tv_widget_todo_title,
+                        ContextCompat.getColor(BaseApp.context, R.color.common_level_one_font_color)
+                    )
+                    listItem.setTextViewText(
+                        R.id.todo_widget_notify_time,
+                        repeatMode2RemindTime(curTodo.remindMode)
+                    )
+                }
                 listItem.setTextViewText(R.id.todo_tv_widget_todo_title, curTodo.title)
-                LogUtils.d("RayleighZ", "todo = $curTodo")
-                listItem.setTextViewText(
-                    R.id.todo_widget_notify_time,
-                    repeatMode2RemindTime(curTodo.remindMode)
-                )
             }
             return listItem
         }

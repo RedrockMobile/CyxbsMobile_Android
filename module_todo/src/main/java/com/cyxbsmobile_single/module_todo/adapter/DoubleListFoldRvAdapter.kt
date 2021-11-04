@@ -267,8 +267,6 @@ class DoubleListFoldRvAdapter(
                             todo_iv_check.visibility = View.GONE
                             //判断是否过期
                             //左侧check圆圈的颜色，因为里外两个adapter的颜色不同，所以需要缓存一份
-                            LogUtils.d("RayleighZ", "cur todo = ${todo.title}")
-                            LogUtils.d("RayleighZ", "uncheckColor before = ${todo_iv_todo_item.uncheckedColor}")
                             val uncheckColor: Int = todo_iv_todo_item.uncheckedColor
                             if (isOutOfTime(todo)) {
                                 //置红
@@ -282,7 +280,6 @@ class DoubleListFoldRvAdapter(
                                         R.color.todo_check_line_color
                                     )
                                 )
-                                LogUtils.d("RayleighZ", "uncheckColor = ${todo_iv_todo_item.uncheckedColor}")
                                 todo_iv_todo_item.uncheckedColor = uncheckColor
                             }
                         }
