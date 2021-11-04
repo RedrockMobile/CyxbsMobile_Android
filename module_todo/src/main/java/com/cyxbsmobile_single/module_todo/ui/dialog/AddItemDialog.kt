@@ -54,8 +54,8 @@ class AddItemDialog(context: Context, val onConfirm: (Todo) -> Unit) :
                     cacheList[i] =
                         dateBeenStringList[currentYearOffset][(i + 1) % dateBeenStringList[currentYearOffset].size]
                 }
-                todo_inner_add_thing_second.data = IntArray(24) { (it + 1) % 24 + 1 }.toList()
-                todo_inner_add_thing_third.data = IntArray(60) { (it + 1) % 60 + 1}.toList()
+                todo_inner_add_thing_second.data = IntArray(24) { (it + 1) % 24 }.toList()
+                todo_inner_add_thing_third.data = IntArray(60) { (it + 1) % 60 }.toList()
                 todo_inner_add_thing_first.data = cacheList
             } else {
                 val calendar = Calendar.getInstance().apply {
@@ -99,8 +99,8 @@ class AddItemDialog(context: Context, val onConfirm: (Todo) -> Unit) :
             cacheList[i] = dateBeenStringList[0][(i + 1) % dateBeenStringList[0].size]
         }
         todo_inner_add_thing_first.data = cacheList
-        todo_inner_add_thing_second.data = IntArray(24) { (it + curHour) % 24 + 1 }.toList()
-        todo_inner_add_thing_third.data = IntArray(60) { (it + curMin) % 60 + 1 }.toList()
+        todo_inner_add_thing_second.data = IntArray(24) { (it + curHour) % 24 }.toList()
+        todo_inner_add_thing_third.data = IntArray(60) { (it + curMin) % 60 }.toList()
     }
 
     private val repeatTimeAdapter by lazy {
@@ -307,8 +307,8 @@ class AddItemDialog(context: Context, val onConfirm: (Todo) -> Unit) :
                 todo_inner_add_thing_second.data = emptyList<String>()
                 todo_inner_add_thing_third.data = emptyList<String>()
             } else {
-                todo_inner_add_thing_second.data = IntArray(24) { (it + 1) % 24 + 1 }.toList()
-                todo_inner_add_thing_third.data = IntArray(60) { (it + 1) % 60 + 1 }.toList()
+                todo_inner_add_thing_second.data = IntArray(24) { (it + 1) % 24 }.toList()
+                todo_inner_add_thing_third.data = IntArray(60) { (it + 1) % 60 }.toList()
             }
         }
         //设置时间选择器为5分钟之后
