@@ -1,6 +1,8 @@
 package com.cyxbsmobile_single.module_todo.ui.dialog
 
 import android.content.Context
+import android.os.Bundle
+import android.util.DisplayMetrics
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -16,9 +18,12 @@ import com.cyxbsmobile_single.module_todo.model.bean.RemindMode
 import com.cyxbsmobile_single.module_todo.model.bean.Todo
 import com.cyxbsmobile_single.module_todo.ui.dialog.AddItemDialog.CurOperate.*
 import com.cyxbsmobile_single.module_todo.util.*
+import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.mredrock.cyxbs.common.BaseApp
+import com.mredrock.cyxbs.common.utils.LogUtils
 import com.mredrock.cyxbs.common.utils.extensions.dip
+import com.mredrock.cyxbs.common.utils.extensions.px2dip
 import com.mredrock.cyxbs.common.utils.extensions.toast
 import kotlinx.android.synthetic.main.todo_activity_inner_detail.*
 import kotlinx.android.synthetic.main.todo_dialog_add_todo.*
@@ -165,6 +170,14 @@ class AddItemDialog(context: Context, val onConfirm: (Todo) -> Unit) :
 
 
     private fun initClick() {
+        window?.apply {
+            val view = findViewById<View>(com.google.android.material.R.id.design_bottom_sheet)
+            val bottomSheet = BottomSheetBehavior.from(view)
+            val dm = DisplayMetrics()
+            windowManager.defaultDisplay.getMetrics(dm)
+            //保证展示完全
+            bottomSheet.peekHeight = dm.heightPixels
+        }
 
         //先配置manager
         todo_inner_add_rv_thing_repeat_list.layoutManager = LinearLayoutManager(context).apply {

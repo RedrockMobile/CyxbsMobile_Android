@@ -36,6 +36,8 @@ class WidgetAddTodoActivity : AppCompatActivity() {
         }.apply {
             //点击外部不允许hide
             setCanceledOnTouchOutside(false)
+            //禁止用户手动拖拽关闭
+            setCancelable(false)
             setOnKeyListener { _, keyCode, event ->
                 val needDone = keyCode == KeyEvent.KEYCODE_BACK && event.action == KeyEvent.ACTION_DOWN
                 if (needDone) {
