@@ -177,17 +177,17 @@ class TodoDetailActivity : BaseViewModelActivity<TodoDetailViewModel>() {
 
     private fun changeModifyStatus() {
         viewModel.judgeChange(todo)
-        todo_thing_detail_save.visibility =
-                if (viewModel.isChanged) View.VISIBLE
-                else View.GONE
+        todo_thing_detail_save.text =
+                if (viewModel.isChanged) "保存"
+                else ""
 
     }
 
     private fun changeModifyStatus(isChanged: Boolean) {
         viewModel.isChanged = isChanged
-        todo_thing_detail_save.visibility =
-                if (viewModel.isChanged) View.VISIBLE
-                else View.GONE
+        todo_thing_detail_save.text =
+            if (viewModel.isChanged) "保存"
+            else ""
     }
 
     override fun onBackPressed() {
