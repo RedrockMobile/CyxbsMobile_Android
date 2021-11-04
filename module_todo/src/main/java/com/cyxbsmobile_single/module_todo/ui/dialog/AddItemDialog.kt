@@ -228,6 +228,8 @@ class AddItemDialog(context: Context, val onConfirm: (Todo) -> Unit) :
         when (curOperate) {
             NOTIFY -> {
                 todo.remindMode.notifyDateTime = ""
+                todo_tv_set_notify_time.text = getString(R.string.todo_inner_add_thing_nf_text)
+                todo_inner_add_rv_thing_repeat_list.adapter = ChooseYearAdapter(ArrayList()){  }
             }//判定为在添加提醒
             REPEAT -> {
                 val remindDate = todo.remindMode.notifyDateTime
