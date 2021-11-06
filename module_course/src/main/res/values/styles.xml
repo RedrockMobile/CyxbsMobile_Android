@@ -23,4 +23,17 @@
 
 
 
+    <!-- Base application theme. -->
+    <style name="widget_Theme" parent="Theme.MaterialComponents.Dialog" >
+        <item name="android:windowAnimationStyle">@style/Animation.Design.BottomSheetDialog</item>
+        <item name="android:windowFrame">@null</item>
+        <!-- 边框 -->
+        <item name="android:windowNoTitle">true</item>
+        <!-- 无标题 -->
+        <item name="android:windowBackground">@android:color/transparent</item>
+        <!-- 背景透明 -->
+    </style>
+
+
+
 </resources>
