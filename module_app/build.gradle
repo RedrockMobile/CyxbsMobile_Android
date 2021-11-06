@@ -170,7 +170,7 @@ dependencies {
         implementation project(':module_schoolcar')
         implementation project(':module_volunteer')
         implementation project(':module_mine')
-        implementation project(':module_widget')
+        //implementation project(':module_widget')
         implementation project(':module_redrock_home')
         implementation project(':module_store')
     }

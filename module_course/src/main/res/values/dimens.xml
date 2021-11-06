@@ -28,4 +28,16 @@
     <dimen name="course_top_distance">15dp</dimen>
     <dimen name="course_edit_affair_button_circle">20dp</dimen>
     <dimen name="course_item_gap">2dp</dimen>
+
+
+
+
+    <dimen name="widget_day_of_week_text_size">12sp</dimen>
+    <!--    课表item大小,记得要改同时改-->
+    <dimen name="widget_course_item_height">90dp</dimen>
+    <dimen name="widget_course_item_height_half">45dp</dimen>
+
+    <dimen name="widget_course_text_size">9sp</dimen>
+    <dimen name="widget_course_margin">4dp</dimen>
+    <dimen name="widget_day_of_week_height">45dp</dimen>
 </resources>
