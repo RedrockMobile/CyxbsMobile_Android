@@ -9,9 +9,12 @@ import java.io.File
 const val DIR = "/cyxbs"
 const val DIR_PHOTO = "/cyxbs/photo"
 const val DIR_FILE = "/cyxbs/file"
+const val DIR_LOG = "/cyxbs/log"
 const val PREF_USER_LEARNED_DRAWER = "navigation_drawer_learned"
 const val PREF_USER_LOGIN_ALREADY = "login_already"
 const val STATE_SELECTED_POSITION = "selected_navigation_drawer_position"
+
+const val OKHTTP_LOCAL_LOG = "cyxbs.log"
 
 val dataFilePath = android.os.Environment.getExternalStorageDirectory().toString() + "/" + "Android/data/com.mredrock.cyxbs/"
 val updateFilePath = android.os.Environment.getExternalStorageDirectory().toString() + "/" + "Download/"
