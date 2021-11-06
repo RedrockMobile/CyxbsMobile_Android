@@ -143,7 +143,7 @@ class ChangePasswordActivity : BaseViewModelActivity<ChangePasswordViewModel>() 
                 mine_bt_security_change_password_confirm.background = ContextCompat.getDrawable(this, R.drawable.mine_shape_security_next_btn)
             }
             TYPE_COLOR_NIGHT_BUTTON -> {
-                mine_bt_security_change_password_confirm.background = ContextCompat.getDrawable(this, R.drawable.mine_shape_round_cornor_purple_blue)
+                mine_bt_security_change_password_confirm.background = ContextCompat.getDrawable(this, R.drawable.mine_shape_round_corner_purple_blue)
             }
         }
     }
@@ -339,7 +339,7 @@ class ChangePasswordActivity : BaseViewModelActivity<ChangePasswordViewModel>() 
                     mine_security_firstinput_password.text?.let {
                         if (isFromLogin) {
                             if (code != -1) {
-                                if (it.length in 6.0..16.0) {
+                                if (it.length.toDouble() in 6.0..16.0) {
                                     //字数格式要求满足的情况下进行网络请求
                                     viewModel.resetPasswordFromLogin(stuNum, mine_security_firstinput_password.text.toString(), code)
                                     mine_tv_security_tip_line1.visibility = View.GONE
@@ -350,7 +350,7 @@ class ChangePasswordActivity : BaseViewModelActivity<ChangePasswordViewModel>() 
                                 BaseApp.context.toast("后端返回的认证码存在问题，修改失败")
                             }
                         } else {
-                            if (it.length in 6.0..16.0) {
+                            if (it.length.toDouble() in 6.0..16.0) {
                                 //字数格式要求满足的情况下进行网络请求
                                 viewModel.newPassWordInput(originPassword, mine_security_firstinput_password.text.toString())
                                 mine_tv_security_tip_line1.visibility = View.GONE

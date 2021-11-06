@@ -116,7 +116,7 @@ class FindPasswordActivity : BaseViewModelActivity<FindPasswordViewModel>() {
                                 if (s?.length !in 5..6) {
                                     button.background = ContextCompat.getDrawable(context, R.drawable.mine_shape_round_corner_light_blue)
                                 } else {
-                                    button.background = ContextCompat.getDrawable(context, R.drawable.mine_shape_round_cornor_purple_blue)
+                                    button.background = ContextCompat.getDrawable(context, R.drawable.mine_shape_round_corner_purple_blue)
                                 }
                             }
                         }
