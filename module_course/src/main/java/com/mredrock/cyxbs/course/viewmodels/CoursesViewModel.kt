@@ -340,9 +340,9 @@ class CoursesViewModel : BaseViewModel() {
                         if (it.isNotEmpty() && isGetOthers.get() == false) {
                             toastEvent.value = R.string.course_course_update_tips
                             context.defaultSharedPreferences.editor {
-                                //小部件缓存课表
+                                /*//小部件缓存课表
                                 putString(WIDGET_COURSE, Gson().toJson(coursesFromInternet))
-                                putBoolean(SP_WIDGET_NEED_FRESH, true)
+                                putBoolean(SP_WIDGET_NEED_FRESH, true)*/
                                 //储存课表版本
                                 putString("${COURSE_VERSION}${mUserNum}", coursesFromInternet.version)
                             }
@@ -415,9 +415,9 @@ class CoursesViewModel : BaseViewModel() {
                 .subscribe(ExecuteOnceObserver(onExecuteOnceNext = { affairsCourse ->
                     affairsCourse ?: return@ExecuteOnceObserver
                     context.defaultSharedPreferences.editor {
-                        //小部件缓存事务
+                        /*//小部件缓存事务
                         putString(WIDGET_AFFAIR, Gson().toJson(affairsCourse))
-                        putBoolean(SP_WIDGET_NEED_FRESH, true)
+                        putBoolean(SP_WIDGET_NEED_FRESH, true)*/
                     }
                     EventBus.getDefault().post(AffairFromInternetEvent(affairsCourse))
                     affairs.addAll(affairsCourse)

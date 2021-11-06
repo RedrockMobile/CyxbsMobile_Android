@@ -118,9 +118,9 @@ class SettingActivity : BaseActivity() {
     }
 
     private fun cleanAppWidgetCache() {
-        context?.defaultSharedPreferences?.editor {
+       /* context?.defaultSharedPreferences?.editor {
             putString(WIDGET_COURSE, "")
             putBoolean(SP_WIDGET_NEED_FRESH, true)
-        }
+        }*/
     }
 }
