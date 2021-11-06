@@ -1,15 +1,15 @@
-package com.mredrock.cyxbs.course.widget.page
+package com.mredrock.cyxbs.widget.widget.page
 
 import android.content.Intent
 import android.os.Bundle
 import com.alibaba.android.arouter.facade.annotation.Route
 import com.mredrock.cyxbs.common.config.WIDGET_SETTING
 import com.mredrock.cyxbs.common.ui.BaseActivity
-import com.mredrock.cyxbs.course.R
-import com.mredrock.cyxbs.course.widget.page.little.LittleConfigActivity
-import com.mredrock.cyxbs.course.widget.page.normal.NormalConfigActivity
-import com.mredrock.cyxbs.course.widget.page.trans.TransConfigActivity
-import kotlinx.android.synthetic.main.course_activity_config.*
+import com.mredrock.cyxbs.widget.R
+import com.mredrock.cyxbs.widget.widget.page.little.LittleConfigActivity
+import com.mredrock.cyxbs.widget.widget.page.normal.NormalConfigActivity
+import com.mredrock.cyxbs.widget.widget.page.trans.TransConfigActivity
+import kotlinx.android.synthetic.main.widget_activity_config.*
 
 
 /**
@@ -21,7 +21,7 @@ class ConfigActivity : BaseActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.course_activity_config)
+        setContentView(R.layout.widget_activity_config)
 
         common_toolbar.init("控件选择")
 

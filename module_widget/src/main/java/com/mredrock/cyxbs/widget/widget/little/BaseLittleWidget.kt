@@ -1,4 +1,4 @@
-package com.mredrock.cyxbs.course.widget.little
+package com.mredrock.cyxbs.widget.widget.little
 
 import android.appwidget.AppWidgetManager
 import android.appwidget.AppWidgetProvider
@@ -12,9 +12,8 @@ import androidx.annotation.LayoutRes
 import com.alibaba.android.arouter.launcher.ARouter
 import com.mredrock.cyxbs.main.MAIN_MAIN
 import com.mredrock.cyxbs.common.event.WidgetCourseEvent
-import com.mredrock.cyxbs.common.utils.extensions.safeSubscribeBy
-import com.mredrock.cyxbs.course.bean.CourseStatus
-import com.mredrock.cyxbs.course.utils.*
+import com.mredrock.cyxbs.widget.bean.CourseStatus
+import com.mredrock.cyxbs.widget.util.*
 import org.greenrobot.eventbus.EventBus
 import java.util.*
 
@@ -95,33 +94,36 @@ abstract class BaseLittleWidget : AppWidgetProvider() {
 
     //获取正常显示的下一节课
     fun refresh(context: Context) {
+        try {//catch异常，避免课表挂了之后这边跟着挂
             saveDayOffset(context, 0)//重置天数偏移
-            val observer =
-                getTodayCourse(context)
-                .safeSubscribeBy {list->
-                    var isFound = false
-                    list.forEach {
-                        val endCalendar = getStartCalendarByNum(it.hash_lesson)
-                        //如果今天还有下一节课，显示下一节
-                        if (Calendar.getInstance() < endCalendar) {
-                            show(context, it, formatTime(getStartCalendarByNum(it.hash_lesson)))
-                            return@forEach
-                        }
-                        isFound = true
-                    }
+            val list = getTodayCourse(context)
+                    ?: getErrorCourseList()
 
-                    if (isFound) {//今天有课，但是上完了
-                        //新策略：显示明天第一节
-                        showTomorrowCourse(context)
-                    } else {//今天没有课
-                        if (isNight()) {//如果在晚上，显示明天课程
-                            showTomorrowCourse(context)
-                        } else {
-                            //白天显示今天无课
-                            show(context, null)
-                        }
-                    }
+            var isFound = false
+            list.forEach {
+                val endCalendar = getStartCalendarByNum(it.hash_lesson)
+                //如果今天还有下一节课，显示下一节
+                if (Calendar.getInstance() < endCalendar) {
+                    show(context, it, formatTime(getStartCalendarByNum(it.hash_lesson)))
+                    return
                 }
+                isFound = true
+            }
+
+            if (isFound) {//今天有课，但是上完了
+                //新策略：显示明天第一节
+                showTomorrowCourse(context)
+            } else {//今天没有课
+                if (isNight()) {//如果在晚上，显示明天课程
+                    showTomorrowCourse(context)
+                } else {
+                    //白天显示今天无课
+                    show(context, null)
+                }
+            }
+        }catch (e:Exception){
+            e.printStackTrace()
+        }
     }
 
     private fun showTomorrowCourse(context: Context) {
@@ -129,15 +131,14 @@ abstract class BaseLittleWidget : AppWidgetProvider() {
 
         val tomorrowCalendar = Calendar.getInstance()
         tomorrowCalendar.set(Calendar.DAY_OF_YEAR, tomorrowCalendar.get(Calendar.DAY_OF_YEAR) + 1)
-        val tomorrowList = getCourseByCalendar(context, tomorrowCalendar).safeSubscribeBy {tomorrowList->
-            if (tomorrowList == null) {//数据出错
-                show(context, getErrorCourseList().first(), "掌上重邮")
-            } else {
-                if (tomorrowList.isEmpty()) {//明日无课
-                    show(context, getNoCourse(), "明日课程")
-                } else {//显示明天第一节课
-                    show(context, tomorrowList.first(), "明日：" + formatTime(getStartCalendarByNum(tomorrowList.first().hash_lesson)))
-                }
+        val tomorrowList = getCourseByCalendar(context, tomorrowCalendar)
+        if (tomorrowList == null) {//数据出错
+            show(context, getErrorCourseList().first(), "掌上重邮")
+        } else {
+            if (tomorrowList.isEmpty()) {//明日无课
+                show(context, getNoCourse(), "明日课程")
+            } else {//显示明天第一节课
+                show(context, tomorrowList.first(), "明日：" + formatTime(getStartCalendarByNum(tomorrowList.first().hash_lesson)))
             }
         }
     }
@@ -151,19 +152,20 @@ abstract class BaseLittleWidget : AppWidgetProvider() {
         calendar.set(Calendar.DATE, calendar.get(Calendar.DATE) + dayOffset)
 
         //拿到当前课程的上一个课程
-        val list = getCourseByCalendar(context, calendar).safeSubscribeBy {list->
-            var courseStatus: CourseStatus.Course? = null
-            list.forEach {
-                if (hash_lesson > it.hash_lesson) {
-                    courseStatus = it
-                }
+        val list = getCourseByCalendar(context, calendar)
+                ?: getErrorCourseList()
+
+        var courseStatus: CourseStatus.Course? = null
+        list.forEach {
+            if (hash_lesson > it.hash_lesson) {
+                courseStatus = it
             }
-            if (courseStatus != null) {
-                val beforeTitle = if (dayOffset == 1) "明日：" else ""
-                show(context, courseStatus, beforeTitle + formatTime(getStartCalendarByNum(courseStatus!!.hash_lesson)))
-            } else {
-                Toast.makeText(context, "没有上一节课了~", Toast.LENGTH_SHORT).show()
-            }
+        }
+        if (courseStatus != null) {
+            val beforeTitle = if (dayOffset == 1) "明日：" else ""
+            show(context, courseStatus, beforeTitle + formatTime(getStartCalendarByNum(courseStatus!!.hash_lesson)))
+        } else {
+            Toast.makeText(context, "没有上一节课了~", Toast.LENGTH_SHORT).show()
         }
     }
 
@@ -176,15 +178,15 @@ abstract class BaseLittleWidget : AppWidgetProvider() {
         calendar.set(Calendar.DATE, calendar.get(Calendar.DATE) + dayOffset)
 
         //拿到最后一节
-        val list = getCourseByCalendar(context, calendar).safeSubscribeBy {list->
-            list.forEach {
-                if (hash_lesson < it.hash_lesson) {
-                    val beforeTitle = if (dayOffset == 1) "明日：" else ""
-                    show(context, it, beforeTitle + formatTime(getStartCalendarByNum(it.hash_lesson)))
-                    return@forEach
-                }
+        val list = getCourseByCalendar(context, calendar)
+                ?: getErrorCourseList()
+        list.forEach {
+            if (hash_lesson < it.hash_lesson) {
+                val beforeTitle = if (dayOffset == 1) "明日：" else ""
+                show(context, it, beforeTitle + formatTime(getStartCalendarByNum(it.hash_lesson)))
+                return
             }
-            Toast.makeText(context, "没有下一节课了~", Toast.LENGTH_SHORT).show()
         }
+        Toast.makeText(context, "没有下一节课了~", Toast.LENGTH_SHORT).show()
     }
 }

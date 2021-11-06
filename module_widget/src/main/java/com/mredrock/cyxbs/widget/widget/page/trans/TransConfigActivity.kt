@@ -1,4 +1,4 @@
-package com.mredrock.cyxbs.course.widget.page.trans
+package com.mredrock.cyxbs.widget.widget.page.trans
 
 import android.graphics.Color
 import android.os.Bundle
@@ -12,9 +12,9 @@ import android.widget.Toast
 import com.jaredrummler.android.colorpicker.ColorPickerDialog
 import com.jaredrummler.android.colorpicker.ColorPickerDialogListener
 import com.mredrock.cyxbs.common.ui.BaseActivity
-import com.mredrock.cyxbs.course.R
-import com.mredrock.cyxbs.course.widget.little.LittleTransWidget
-import kotlinx.android.synthetic.main.course_activity_trans_config.*
+import com.mredrock.cyxbs.widget.R
+import com.mredrock.cyxbs.widget.widget.little.LittleTransWidget
+import kotlinx.android.synthetic.main.widget_activity_trans_config.*
 
 
 /**
@@ -31,7 +31,7 @@ class TransConfigActivity : BaseActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.course_activity_trans_config)
+        setContentView(R.layout.widget_activity_trans_config)
 
         common_toolbar.init("主题设置")
 

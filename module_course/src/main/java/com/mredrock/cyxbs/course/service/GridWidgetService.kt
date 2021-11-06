@@ -8,11 +8,14 @@ import com.mredrock.cyxbs.common.BaseApp.Companion.context
 import com.mredrock.cyxbs.common.utils.ClassRoomParse
 import com.mredrock.cyxbs.common.utils.Num2CN
 import com.mredrock.cyxbs.common.utils.SchoolCalendar
+import com.mredrock.cyxbs.common.utils.extensions.setSchedulers
 import com.mredrock.cyxbs.course.R
 import com.mredrock.cyxbs.course.bean.CourseStatus
 import com.mredrock.cyxbs.course.database.ScheduleDatabase
 import com.mredrock.cyxbs.course.network.AffairMapToCourse
 import com.mredrock.cyxbs.course.network.Course
+import com.mredrock.cyxbs.course.utils.courseAdapter
+import com.mredrock.cyxbs.course.utils.db
 import io.reactivex.Observable
 import io.reactivex.rxkotlin.zipWith
 import java.util.*
@@ -20,10 +23,6 @@ import java.util.*
 
 class GridWidgetService : RemoteViewsService() {
     companion object {
-
-        private val db: ScheduleDatabase? by lazy(mode = LazyThreadSafetyMode.NONE) {
-            ScheduleDatabase.getDatabase(context, false, "")
-        }
 
         private val courses = object : ArrayList<Course>() {
             override fun addAll(elements: Collection<Course>): Boolean {
@@ -58,7 +57,8 @@ class GridWidgetService : RemoteViewsService() {
             }
 
             db?.apply {
-                val subscribe = courseDao().queryAllCourses()
+                val subscribe = courseDao()
+                    .queryAllCourses()
                     .toObservable()
                     .zipWith(affairDao().queryAllAffairs().toObservable().map(AffairMapToCourse()))
                     .map {
@@ -165,31 +165,6 @@ class GridWidgetService : RemoteViewsService() {
                 return subscribe
             }
             return null
-        }
-
-
-        private fun courseAdapter(course: Course): CourseStatus.Course {
-            return with(course) {
-                CourseStatus.Course(
-                    hashDay,
-                    hashLesson,
-                    hashLesson,
-                    day,
-                    lesson,
-                    this.course,
-                    courseNum,
-                    teacher,
-                    classroom,
-                    rawWeek,
-                    weekModel,
-                    weekBegin,
-                    weekEnd,
-                    type,
-                    period,
-                    week,
-                    customType
-                )
-            }
         }
     }
 

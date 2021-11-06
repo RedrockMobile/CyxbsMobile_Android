@@ -1,4 +1,4 @@
-package com.mredrock.cyxbs.course.widget.normal
+package com.mredrock.cyxbs.widget.widget.normal
 
 import android.appwidget.AppWidgetManager
 import android.appwidget.AppWidgetManager.OPTION_APPWIDGET_MIN_HEIGHT
@@ -17,10 +17,9 @@ import com.mredrock.cyxbs.common.bean.WidgetCourse
 import com.mredrock.cyxbs.common.component.CyxbsToast
 import com.mredrock.cyxbs.common.utils.extensions.defaultSharedPreferences
 import com.mredrock.cyxbs.common.utils.extensions.editor
-import com.mredrock.cyxbs.common.utils.extensions.safeSubscribeBy
-import com.mredrock.cyxbs.course.R
-import com.mredrock.cyxbs.course.bean.CourseStatus
-import com.mredrock.cyxbs.course.utils.*
+import com.mredrock.cyxbs.widget.R
+import com.mredrock.cyxbs.widget.bean.CourseStatus
+import com.mredrock.cyxbs.widget.util.*
 import java.util.*
 import kotlin.collections.ArrayList
 
@@ -45,11 +44,7 @@ class NormalWidget : AppWidgetProvider() {
         //用于保存每一条刷新的课程，多个方法都要使用，若非静态，其他方法无法调用到正确数据
     }
 
-    override fun onUpdate(
-        context: Context,
-        appWidgetManager: AppWidgetManager,
-        appWidgetIds: IntArray,
-    ) {
+    override fun onUpdate(context: Context, appWidgetManager: AppWidgetManager, appWidgetIds: IntArray) {
         super.onUpdate(context, appWidgetManager, appWidgetIds)
         context.defaultSharedPreferences.editor {
             putInt(shareName, 0)
@@ -57,15 +52,10 @@ class NormalWidget : AppWidgetProvider() {
         fresh(context, 0)
     }
 
-    override fun onAppWidgetOptionsChanged(
-        context: Context,
-        appWidgetManager: AppWidgetManager,
-        appWidgetId: Int,
-        newOptions: Bundle,
-    ) {
+    override fun onAppWidgetOptionsChanged(context: Context, appWidgetManager: AppWidgetManager, appWidgetId: Int, newOptions: Bundle) {
         super.onAppWidgetOptionsChanged(context, appWidgetManager, appWidgetId, newOptions)
         val minHeight = newOptions.getInt(OPTION_APPWIDGET_MIN_HEIGHT)
-        val rv = RemoteViews(context.packageName, R.layout.course_normal)
+        val rv = RemoteViews(context.packageName, R.layout.widget_normal)
         when {
             minHeight <= 100 -> setTextMaxLines(rv, 2)
             minHeight <= 110 -> setTextMaxLines(rv, 3)
@@ -116,8 +106,7 @@ class NormalWidget : AppWidgetProvider() {
             }
         }
         if (intent.action == "btn.start.com") {
-            list = gson.fromJson(context.defaultSharedPreferences.getString(courseData, ""),
-                object : TypeToken<ArrayList<CourseStatus.Course>>() {}.type)
+            list = gson.fromJson(context.defaultSharedPreferences.getString(courseData, ""), object : TypeToken<ArrayList<CourseStatus.Course>>() {}.type)
             val newList = mutableListOf<WidgetCourse.DataBean>()
             list.forEach {
                 newList.add(changeCourseToWidgetCourse(it))
@@ -177,16 +166,17 @@ class NormalWidget : AppWidgetProvider() {
      * 刷新，传入offsetTime作为今天的偏移量
      */
     private fun fresh(context: Context, offsetTime: Int) {
-        val rv = RemoteViews(context.packageName, R.layout.course_normal)
-        initView(rv, context)
-        calendar.set(Calendar.DATE, calendar.get(Calendar.DATE) + offsetTime)
-        //获取数据
-        getCourseByCalendar(context, calendar).safeSubscribeBy {
-            list = it
+        try {//catch异常，避免课表挂了之后这边跟着挂
+            val rv = RemoteViews(context.packageName, R.layout.widget_normal)
+            initView(rv, context)
+            calendar.set(Calendar.DATE, calendar.get(Calendar.DATE) + offsetTime)
+            //获取数据
+            list = getCourseByCalendar(context, calendar)
+                    ?: getErrorCourseList()
+
+
             //显示星期几
-            val text =
-                if (Calendar.getInstance()[Calendar.DAY_OF_WEEK] == calendar[Calendar.DAY_OF_WEEK]) "今" else getWeekDayChineseName(
-                    calendar.get(Calendar.DAY_OF_WEEK))
+            val text = if (Calendar.getInstance()[Calendar.DAY_OF_WEEK] == calendar[Calendar.DAY_OF_WEEK]) "今" else getWeekDayChineseName(calendar.get(Calendar.DAY_OF_WEEK))
             rv.setTextViewText(R.id.widget_normal_title, text)
 
             //显示课程
@@ -196,10 +186,7 @@ class NormalWidget : AppWidgetProvider() {
                     rv.setTextViewText(getCourseId(num), course.course)
                     rv.setTextViewText(getRoomId(num), filterClassRoom(course.classroom!!))
                     rv.setOnClickPendingIntent(getLayoutId(num),
-                        getClickPendingIntent(context,
-                            getLayoutId(num),
-                            "btn.start.com",
-                            javaClass))
+                            getClickPendingIntent(context, getLayoutId(num), "btn.start.com", javaClass))
                 } else if (course.period == 3) {
                     setMoreView(num, rv, course, context)
 
@@ -216,7 +203,7 @@ class NormalWidget : AppWidgetProvider() {
                 rv.setTextViewText(getCourseId(num), "")
                 rv.setTextViewText(getRoomId(num), "")
                 rv.setOnClickPendingIntent(getLayoutId(num),
-                    getClickPendingIntent(context, getLayoutId(num), "", javaClass))
+                        getClickPendingIntent(context, getLayoutId(num), "", javaClass))
             }
 
             //设置前后按钮操作
@@ -226,22 +213,19 @@ class NormalWidget : AppWidgetProvider() {
             context.defaultSharedPreferences.editor {
                 putString(courseData, gson.toJson(list))
             }
+        } catch (e: Exception) {
+            e.printStackTrace()
         }
     }
 
-    private fun setMoreView(
-        num: Int,
-        rv: RemoteViews,
-        course: CourseStatus.Course,
-        context: Context,
-    ) {
+    private fun setMoreView(num: Int, rv: RemoteViews, course: CourseStatus.Course, context: Context) {
         val moreViewNum = (num + 1) / 2
         hideNormalLayout(moreViewNum, rv)
         rv.setViewVisibility(getMoreContentId(moreViewNum), View.VISIBLE)
         rv.setTextViewText(getMoreCourseId(moreViewNum), course.course)
         rv.setTextViewText(getMoreRoomId(moreViewNum), filterClassRoom(course.classroom!!))
         rv.setOnClickPendingIntent(getMoreContentId(moreViewNum),
-            getClickPendingIntent(context, getLayoutId(num), "btn.start.com", javaClass))
+                getClickPendingIntent(context, getLayoutId(num), "btn.start.com", javaClass))
     }
 
     private fun initView(rv: RemoteViews, context: Context) {
@@ -249,7 +233,7 @@ class NormalWidget : AppWidgetProvider() {
             rv.setTextViewText(getCourseId(i), "")
             rv.setTextViewText(getRoomId(i), "")
             rv.setOnClickPendingIntent(getLayoutId(i),
-                getClickPendingIntent(context, getLayoutId(i), "", javaClass))
+                    getClickPendingIntent(context, getLayoutId(i), "", javaClass))
             rv.setViewVisibility(getCourseId(i), View.VISIBLE)
             rv.setViewVisibility(getRoomId(i), View.VISIBLE)
             rv.setViewVisibility(getLayoutId(i), View.VISIBLE)
@@ -293,11 +277,11 @@ class NormalWidget : AppWidgetProvider() {
 
     private fun addClickPendingIntent(rv: RemoteViews, context: Context) {
         rv.setOnClickPendingIntent(R.id.widget_normal_title,
-            getClickPendingIntent(context, R.id.widget_normal_title, "btn.text.com", javaClass))
+                getClickPendingIntent(context, R.id.widget_normal_title, "btn.text.com", javaClass))
         rv.setOnClickPendingIntent(R.id.widget_normal_front,
-            getClickPendingIntent(context, R.id.widget_normal_front, "btn.text.com", javaClass))
+                getClickPendingIntent(context, R.id.widget_normal_front, "btn.text.com", javaClass))
         rv.setOnClickPendingIntent(R.id.widget_normal_back,
-            getClickPendingIntent(context, R.id.widget_normal_back, "btn.text.com", javaClass))
+                getClickPendingIntent(context, R.id.widget_normal_back, "btn.text.com", javaClass))
     }
 
     private fun show(remoteViews: RemoteViews, context: Context) {

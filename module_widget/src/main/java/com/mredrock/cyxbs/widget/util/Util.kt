@@ -1,4 +1,4 @@
-package com.mredrock.cyxbs.course.utils
+package com.mredrock.cyxbs.widget.util
 
 import android.app.PendingIntent
 import android.appwidget.AppWidgetManager
@@ -9,20 +9,19 @@ import android.os.Bundle
 import android.widget.Toast
 import androidx.annotation.IdRes
 import com.alibaba.android.arouter.launcher.ARouter
+import com.google.gson.Gson
 import com.mredrock.cyxbs.common.BaseApp.Companion.context
 import com.mredrock.cyxbs.common.bean.WidgetCourse
 import com.mredrock.cyxbs.common.component.CyxbsToast
 import com.mredrock.cyxbs.main.MAIN_MAIN
+import com.mredrock.cyxbs.common.config.WIDGET_COURSE
 import com.mredrock.cyxbs.common.event.WidgetCourseEvent
 import com.mredrock.cyxbs.common.service.ServiceManager
 import com.mredrock.cyxbs.api.account.IAccountService
 import com.mredrock.cyxbs.common.utils.SchoolCalendar
 import com.mredrock.cyxbs.common.utils.extensions.defaultSharedPreferences
 import com.mredrock.cyxbs.common.utils.extensions.editor
-import com.mredrock.cyxbs.course.bean.CourseStatus
-import com.mredrock.cyxbs.course.database.ScheduleDatabase
-import com.mredrock.cyxbs.course.network.Course
-import io.reactivex.Observable
+import com.mredrock.cyxbs.widget.bean.CourseStatus
 import org.greenrobot.eventbus.EventBus
 import java.text.SimpleDateFormat
 import java.util.*
@@ -39,82 +38,21 @@ const val EmptyCourseObject = -1
 /**
  * 获得今天得课程list信息
  */
-fun getTodayCourse(context: Context): Observable<ArrayList<CourseStatus.Course>> {
+fun getTodayCourse(context: Context): List<CourseStatus.Course>? {
     return getCourseByCalendar(context, Calendar.getInstance())
 }
 
-val db: ScheduleDatabase? by lazy(mode = LazyThreadSafetyMode.NONE) {
-    ScheduleDatabase.getDatabase(context, false, "")
-}
-
-fun courseAdapter(course: Course): CourseStatus.Course {
-    return with(course) {
-        CourseStatus.Course(
-            hashDay,
-            hashLesson,
-            hashLesson,
-            day,
-            lesson,
-            this.course,
-            courseNum,
-            teacher,
-            classroom,
-            rawWeek,
-            weekModel,
-            weekBegin,
-            weekEnd,
-            type,
-            period,
-            week,
-            customType
-        )
-    }
-}
-
-fun getCourseByCalendar(context: Context, calendar: Calendar): Observable<ArrayList<CourseStatus.Course>>{
-    db?.apply {
-         return courseDao().queryAllCourses()
-            .toObservable()
-            .map {
-                it.map {it2->
-                    courseAdapter(it2)
-                }
-            }.map {course->
-                val week = SchoolCalendar().weekOfTerm
-                /*
-                * 转换表，老外从周日开始计数,orz
-                * 7 1 2 3 4 5 6 老外
-                * 1 2 3 4 5 6 7 Calendar.DAY_OF_WEEK
-                * 6 0 1 2 3 4 5 需要的结果(hash_day)
-                * */
-                val hash_day = (calendar.get(Calendar.DAY_OF_WEEK) + 5) % 7
-
-                val list = ArrayList<CourseStatus.Course>()
-                course.forEach {
-                    if (it.hash_day == hash_day && it.week!!.contains(week)) {
-                        list.add(it)
-                    }
-                }
-                list.sortBy { it.hash_lesson }
-                list
-            }
-    }
-    return Observable.create{
-        getErrorCourseList()
-    }
-
-    //before
-
-    /*val json = context.defaultSharedPreferences.getString(WIDGET_COURSE, "")
+fun getCourseByCalendar(context: Context, calendar: Calendar): ArrayList<CourseStatus.Course>? {
+    val json = context.defaultSharedPreferences.getString(WIDGET_COURSE, "")
     val course = Gson().fromJson<CourseStatus>(json, CourseStatus::class.java) ?: return null
     if (course.data == null) return null
     val week = SchoolCalendar().weekOfTerm
-    *//*
+    /*
     * 转换表，老外从周日开始计数,orz
     * 7 1 2 3 4 5 6 老外
     * 1 2 3 4 5 6 7 Calendar.DAY_OF_WEEK
     * 6 0 1 2 3 4 5 需要的结果(hash_day)
-    * *//*
+    * */
     val hash_day = (calendar.get(Calendar.DAY_OF_WEEK) + 5) % 7
 
     val list = ArrayList<CourseStatus.Course>()
@@ -125,7 +63,7 @@ fun getCourseByCalendar(context: Context, calendar: Calendar): Observable<ArrayL
         }
     }
     list.sortBy { it.hash_lesson }
-    return list*/
+    return list
 }
 
 fun getErrorCourseList(): ArrayList<CourseStatus.Course> {
@@ -176,6 +114,39 @@ fun isNight(): Boolean {
     return calendar.get(Calendar.HOUR_OF_DAY) > 19
 }
 
+/**
+ * hash_lesson == 0 第1节 返回8:00
+ */
+fun getStartCalendarByNum(hash_lesson: Int): Calendar {
+    val calendar = Calendar.getInstance()
+    when (hash_lesson) {
+        0 -> {
+            calendar.set(Calendar.HOUR_OF_DAY, 8)
+            calendar.set(Calendar.MINUTE, 0)
+        }
+        1 -> {
+            calendar.set(Calendar.HOUR_OF_DAY, 10)
+            calendar.set(Calendar.MINUTE, 15)
+        }
+        2 -> {
+            calendar.set(Calendar.HOUR_OF_DAY, 14)
+            calendar.set(Calendar.MINUTE, 0)
+        }
+        3 -> {
+            calendar.set(Calendar.HOUR_OF_DAY, 16)
+            calendar.set(Calendar.MINUTE, 15)
+        }
+        4 -> {
+            calendar.set(Calendar.HOUR_OF_DAY, 19)
+            calendar.set(Calendar.MINUTE, 0)
+        }
+        5 -> {
+            calendar.set(Calendar.HOUR_OF_DAY, 20)
+            calendar.set(Calendar.MINUTE, 50)
+        }
+    }
+    return calendar
+}
 
 fun getWeekDayChineseName(weekDay: Int): String {
     return when (weekDay) {
