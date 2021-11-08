@@ -4,6 +4,7 @@ import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
 import android.provider.MediaStore
+import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.recyclerview.widget.GridLayoutManager
 import com.google.android.material.chip.Chip
@@ -140,7 +141,6 @@ class FeedbackEditActivity :
      */
     override fun initListener() {
         binding?.apply {
-
             mineButton.setOnSingleClickListener {
                 if (label == "NONE") {
                     toast("必须筛选一个标签")

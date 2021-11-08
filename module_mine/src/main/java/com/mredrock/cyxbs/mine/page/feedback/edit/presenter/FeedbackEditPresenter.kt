@@ -77,7 +77,6 @@ class FeedbackEditPresenter(val activity:Activity) : BasePresenter<FeedbackEditV
             .doOnError { }
             .safeSubscribeBy(
                 onNext = {
-//                    Log.d("sss", "fetch:${it.code} ${it.info} ")
                     BaseApp.context.toast("提交成功  我们会在十四个工作日内回复")
                 },
                 onError = {
@@ -85,7 +84,6 @@ class FeedbackEditPresenter(val activity:Activity) : BasePresenter<FeedbackEditV
                 },
                 onComplete = {
                     vm?.sendFinishEvent()
-                    vm?.progressDialogEvent?.value = ProgressDialogEvent.DISMISS_DIALOG_EVENT
                 })
     }
 

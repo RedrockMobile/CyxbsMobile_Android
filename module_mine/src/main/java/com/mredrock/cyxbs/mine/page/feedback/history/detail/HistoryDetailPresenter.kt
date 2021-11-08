@@ -1,6 +1,7 @@
 package com.mredrock.cyxbs.mine.page.feedback.history.detail
 
 import android.util.Log
+import android.widget.Toast
 import com.mredrock.cyxbs.common.BaseApp
 import com.mredrock.cyxbs.common.utils.extensions.safeSubscribeBy
 import com.mredrock.cyxbs.common.utils.extensions.setSchedulers
@@ -25,7 +26,8 @@ class HistoryDetailPresenter(private val id: Long, private val isReply: Boolean)
         api.getDetailFeedback("1", id.toString()).setSchedulers()
             .map {
                 it.data
-            }.safeSubscribeBy(
+            }
+            .safeSubscribeBy(
                 onNext = {
                     vm?.setFeedback(Feedback(DateUtils.strToLong(it.feedback.updatedAt),
                         it.feedback.title,
@@ -37,13 +39,13 @@ class HistoryDetailPresenter(private val id: Long, private val isReply: Boolean)
                         vm?.setIsReply(false)
                         return@safeSubscribeBy
                     }
-                    //val last = it.reply?.last() ?: return@safeSubscribeBy
-                    vm?.setIsReply(true)
-                    vm?.setReply(Reply(DateUtils.strToLong(it.feedback.updatedAt),last.content,last.urls))
+                    vm?.setIsReply(it.feedback.replied)
+                    vm?.setReply(Reply(DateUtils.strToLong(it.feedback.updatedAt),last.content,last.urls?: listOf()))
+                    vm?.setReplyPicUrls(last.urls?: listOf())
                 },
                 onComplete = {},
                 onError = {
-                    BaseApp.context.toast("出问题啦~ ${it.message}")
+                    Toast.makeText(BaseApp.context, "出错啦！${it.message}", Toast.LENGTH_SHORT).show()
                 }
             )
     }

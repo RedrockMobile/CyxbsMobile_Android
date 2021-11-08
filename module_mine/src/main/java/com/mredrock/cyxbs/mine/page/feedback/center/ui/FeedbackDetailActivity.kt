@@ -18,7 +18,6 @@ class FeedbackDetailActivity : BaseActivity() {
                 setting.apply {
                     javaScriptEnabled = true
                     domStorageEnabled = true
-                    useWideViewPort = true
                     loadWithOverviewMode = true
                     setSupportZoom(true)
                     builtInZoomControls = true

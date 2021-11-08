@@ -69,7 +69,6 @@ class HistoryDetailActivity :
      */
     private fun observeReplyBannerUrl(replyPicUrls: LiveData<List<String>>) {
         replyPicUrls.observe({lifecycle}) {
-            Log.d("sss", "observeReplyBannerUrl:${it[0]}  ${it[1]} ")
             replyBannerRvAdapter.submitList(it)
         }
     }

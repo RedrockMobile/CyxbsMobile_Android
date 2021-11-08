@@ -62,5 +62,5 @@ data class Reply(
     @SerializedName("UpdatedAt")
     val updatedAt: String,
     @SerializedName("urls")
-    val urls: List<String>
+    val urls: List<String>?
 )
