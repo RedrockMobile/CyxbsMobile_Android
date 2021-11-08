@@ -1,5 +1,6 @@
 package com.mredrock.cyxbs.main.ui
 
+import android.Manifest
 import android.content.Context
 import android.content.Intent
 import android.graphics.Color
@@ -33,6 +34,7 @@ import com.mredrock.cyxbs.common.mark.EventBusLifecycleSubscriber
 import com.mredrock.cyxbs.common.service.ServiceManager
 import com.mredrock.cyxbs.common.ui.BaseViewModelActivity
 import com.mredrock.cyxbs.common.utils.extensions.defaultSharedPreferences
+import com.mredrock.cyxbs.common.utils.extensions.doPermissionAction
 import com.mredrock.cyxbs.common.utils.extensions.editor
 import com.mredrock.cyxbs.common.utils.extensions.toast
 import com.mredrock.cyxbs.main.MAIN_LOGIN
@@ -122,6 +124,9 @@ class LoginActivity : BaseViewModelActivity<LoginViewModel>(), EventBusLifecycle
         if (BaseApp.context.defaultSharedPreferences.getBoolean(FIRST_TIME_OPEN, true)) {
             showUserAgreement()
         }
+
+        //为了LogLocal实现请求本地存储
+        doPermissionAction(Manifest.permission.WRITE_EXTERNAL_STORAGE) { }
 
         //设置用户协议和隐私政策的文字
         val spannableString = SpannableStringBuilder()
