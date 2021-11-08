@@ -302,6 +302,13 @@ object ApiGenerator {
 
         override fun intercept(chain: Interceptor.Chain): Response {
 
+            //如果程序位于debug中，则不增加容灾逻辑
+            if(BuildConfig.DEBUG){
+                val response = proceedPoxyWithTryCatch {
+                    chain.proceed(chain.request())
+                }
+                return response!!
+            }
             // 如果切换过url，则直接用这个url请求
             if (useBackupUrl) {
                 return useBackupUrl(chain)
@@ -327,7 +334,6 @@ object ApiGenerator {
                 // 重新请求并返回
                 return useBackupUrl(chain)
             }
-
 
             return response!!
         }
