@@ -137,7 +137,9 @@ object ApiGenerator {
                         if (okHttpClientConfig == null)
                             this.defaultConfig()
                         else
-                            okHttpClientConfig.invoke(it)
+                            okHttpClientConfig.invoke(
+                                it.addInterceptor(BackupInterceptor())
+                            )
                     }.build()
                 }.build())
     }
