@@ -157,19 +157,21 @@ object ApiGenerator {
                 logging.level = HttpLoggingInterceptor.Level.BODY
                 addInterceptor(logging)
                 //这里是在debug模式下方便开发人员简单确认 http 错误码 和 url(magipoke开始切的)
-                addInterceptor(Interceptor{
-                    val request = it.request()
-                    Log.d("OKHTTP","OKHTTP${request.body}")
+                if (BuildConfig.DEBUG){
+                    addInterceptor(Interceptor{
+                        val request = it.request()
+                        Log.d("OKHTTP","OKHTTP${request.body}")
 
-                    val response = it.proceed(request)
-                    if (!response.isSuccessful){
-                        response.close()
-                        Handler(Looper.getMainLooper()).post {
-                            BaseApp.context.toast("${response.code} ${request.url} ")
+                        val response = it.proceed(request)
+                        if (!response.isSuccessful){
+                            response.close()
+                            Handler(Looper.getMainLooper()).post {
+                                BaseApp.context.toast("${response.code} ${request.url} ")
+                            }
                         }
-                    }
-                    response
-                })
+                        response
+                    })
+                }
         }))
                 .addConverterFactory(GsonConverterFactory.create())
                 .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
