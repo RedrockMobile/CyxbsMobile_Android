@@ -4,11 +4,15 @@ import android.util.Log
 import android.widget.Toast
 import androidx.lifecycle.MutableLiveData
 import com.mredrock.cyxbs.common.bean.RedrockApiStatus
+import com.mredrock.cyxbs.common.network.ApiGenerator
 import com.mredrock.cyxbs.common.utils.extensions.doOnErrorWithDefaultErrorHandler
 import com.mredrock.cyxbs.common.utils.extensions.mapOrThrowApiException
 import com.mredrock.cyxbs.common.utils.extensions.safeSubscribeBy
 import com.mredrock.cyxbs.common.utils.extensions.setSchedulers
 import com.mredrock.cyxbs.common.viewmodel.BaseViewModel
+import com.mredrock.cyxbs.mine.R
+import com.mredrock.cyxbs.mine.network.ApiService
+import com.mredrock.cyxbs.mine.network.model.PersonalCount
 import com.mredrock.cyxbs.mine.network.model.UserInfo
 import com.mredrock.cyxbs.mine.util.apiService
 import okhttp3.MultipartBody
@@ -21,20 +25,19 @@ class MineViewModel: BaseViewModel() {
     val _isUserInfoFail  =MutableLiveData<Boolean>()
     val _isChangeSuccess = MutableLiveData<Boolean>()
     val redRockApiStatusDelete = MutableLiveData<RedrockApiStatus>()
-
+       val _PersonalCont=MutableLiveData<PersonalCount>()
+    val _redRockApiChangeUsercount = MutableLiveData<RedrockApiStatus>()
    fun  getUserInfo(redid:String?){
-      Log.e("wxtasadasg","(MineViewModel.kt:26)->>调用了网络请求吗$redid ")
        if (redid!=null){
            apiService.getPersonInfo(redid)
                .setSchedulers()
                .doOnErrorWithDefaultErrorHandler { true }
                .safeSubscribeBy(
                    onNext = {
-                       Log.e("wxtasadasg","(MineViewModel.kt:26)->>成共了嘛 ")
                        _userInfo.value=it
                    },
                    onError = {
-                       Log.e("wxtasadasg","(MineViewModel.kt:26)->>失败了")
+
                        _isUserInfoFail.value=true
                    },
                    onComplete = {
@@ -48,15 +51,15 @@ class MineViewModel: BaseViewModel() {
                .doOnErrorWithDefaultErrorHandler { true }
                .safeSubscribeBy(
                    onNext = {
-                       Log.e("wxtasadasg","(MineViewModel.kt:30)->>成功了 ")
+
                        _userInfo.value=it
                    },
                    onError = {
-                       Log.e("wxtasadasg","(MineViewModel.kt:30)->>失败了 ")
+
                        _isUserInfoFail.value=true
                    },
                    onComplete = {
-                       Log.e("wxtasadasg","(MineViewModel.kt:30)-> onComplete ")
+
                    }
                )
                .lifeCycle()
@@ -84,23 +87,56 @@ class MineViewModel: BaseViewModel() {
     }
 
     fun deleteStatus(identityId:String){
+
         apiService.deleteIdentity(identityId)
             .setSchedulers()
             .doOnErrorWithDefaultErrorHandler { true }
             .safeSubscribeBy(
                 onNext = {
+                   Log.e("wxtag身份","(MineViewModel.kt:92)->>删除身份成功 ")
                     redRockApiStatusDelete.value = it
 
                 },
                 onError = {
-                    Log.e("wxtasadasdasdasg","(MineViewModel.kt:30)->身份接口失败了 ")
+
                 },
                 onComplete = {
-                    Log.e("wxtasadasdasdasg","(MineViewModel.kt:30)->身份接口 完成了")
+
 
                 }
             )
             .lifeCycle()
+    }
+
+    fun getPersonalCount(redid: String?){
+        apiService.getPersonalCount(redid)
+            .setSchedulers()
+            .doOnErrorWithDefaultErrorHandler { true }
+            .safeSubscribeBy(
+                onNext = {
+                   _PersonalCont.value=it
+                },
+                onError = {
+
+                },
+                onComplete = {
+
+                }
+            )
+            .lifeCycle()
+    }
+
+    fun changeFocusStatus(redid: String?){
+        ApiGenerator.getApiService(ApiService::class.java)
+            .changeFocusStatus(redid)
+            .setSchedulers()
+            .doOnError {
+                toastEvent.value = R.string.mine_person_change_focus_status_failed
+
+            }
+            .safeSubscribeBy {
+                _redRockApiChangeUsercount.value=it
+            }
     }
 
 }

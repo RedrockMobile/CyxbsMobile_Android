@@ -53,9 +53,7 @@ import java.util.*
 import android.graphics.BitmapFactory
 
 import android.content.res.Resources
-
-
-
+import com.contrarywind.view.WheelView
 
 
 /**
@@ -228,6 +226,16 @@ class EditInfoActivity
                 .setLineSpacingMultiplier(2.5f)
                 .setOutSideCancelable(false)
                 .setSelectOptions(genderIndex)
+                .setOutSideCancelable(true)
+                .setTextColorCenter(ContextCompat.getColor(this,
+                    R.color.mine_tv_dialog_text_center))
+                .setTextColorOut(ContextCompat.getColor(this,
+                    R.color.mine_tv_dialog_text_out))
+                .setBgColor(ContextCompat.getColor(this,
+                    R.color.mine_bg_dialog_edit))
+                .setDividerType(WheelView.DividerType.WRAP)
+                .setDividerColor(ContextCompat.getColor(this,
+                    R.color.mine_bg_dialog_edit))
                 .build()
 
             pvGender.setPicker(genderList)
@@ -276,6 +284,15 @@ class EditInfoActivity
                 .setLabel("","月","日","","","")
                 .setType(booleanArrayOf(true,true,true,false,false,false))
                 .setLineSpacingMultiplier(2.0f)
+                .setTextColorCenter(ContextCompat.getColor(this,
+                    R.color.mine_tv_dialog_text_center))
+                .setTextColorOut(ContextCompat.getColor(this,
+                    R.color.mine_tv_dialog_text_out))
+                .setBgColor(ContextCompat.getColor(this,
+                    R.color.mine_bg_dialog_edit))
+                .setDividerType(WheelView.DividerType.WRAP)
+                .setDividerColor(ContextCompat.getColor(this,
+                    R.color.mine_bg_dialog_edit))
                 .build()
 
             val dialog = pvBirth.dialog

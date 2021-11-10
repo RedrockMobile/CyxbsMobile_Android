@@ -4,7 +4,10 @@
     <corners
         android:topLeftRadius="20dp"
         android:topRightRadius="20dp"/>
+    <padding
+        android:bottom="1dp"
+        />
     <solid
-        android:color="#FFFFFF"/>
+        android:color="@color/mine_bg_personal_info"/>
 
 </shape>

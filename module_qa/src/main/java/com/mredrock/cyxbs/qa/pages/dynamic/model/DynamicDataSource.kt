@@ -27,7 +27,7 @@ import javax.net.ssl.X509TrustManager
 /**
  * Created By jay68 on 2018/9/20.
  */
-class DynamicDataSource(private val kind: String) : PageKeyedDataSource<Int, Message>() {
+class DynamicDataSource(private val kind: String,private val redid: String?) : PageKeyedDataSource<Int, Message>() {
     val networkState = MutableLiveData<Int>()
     val initialLoad = MutableLiveData<Int>()
 
@@ -64,6 +64,7 @@ class DynamicDataSource(private val kind: String) : PageKeyedDataSource<Int, Mes
             initialLoad.postValue(NetworkState.CANNOT_LOAD_WITHOUT_LOGIN)
             return
         }
+        Log.e("wxtag跨模块刷新","(DynamicDataSource.kt:59)->> loadInitial kind=$kind")
         //此处是接口设计时没有考虑太好，个人dynamic接口与其他的dynamic接口分开了
         //故需要做一次判断，如果将来有可能可以合并两个接口以减少冗余
         when (kind) {
@@ -84,6 +85,26 @@ class DynamicDataSource(private val kind: String) : PageKeyedDataSource<Int, Mes
                     }
             }
 
+            "personal" -> {
+              Log.e("wxtag跨模块刷新","(DynamicDataSource.kt:59)->> 执行正确")
+                ApiGenerator.getApiService(ApiServiceNew::class.java)
+                    .getPersoalDynamic(redid, 1,6)
+                    .mapOrThrowApiException()
+                    .setSchedulers()
+                    .doOnSubscribe { initialLoad.postValue(NetworkState.LOADING) }
+                    .doOnError {
+                        Log.e("wxtag跨模块刷新","(DynamicDataSource.kt:59)->> 出错了$it")
+                        initialLoad.value = NetworkState.FAILED
+                        failedRequest = { loadInitial(params, callback) }
+                    }
+                    .safeSubscribeBy { list ->
+                        Log.e("wxtag跨模块刷新","(DynamicDataSource.kt:59)->> 执行正确list=$list")
+                        initialLoad.value = NetworkState.SUCCESSFUL
+                        val nextPageKey = 2.takeUnless { (list.size < params.requestedLoadSize) }
+                        callback.onResult(list, 1, nextPageKey)
+                    }
+            }
+
             "main" -> {
                 //这里是针对首页获取动态，需要启用混合类型反序列化策略
                 ApiGenerator.getApiService(QA_GET_DYNAMIC_LIST, ApiServiceNew::class.java)
@@ -92,6 +113,7 @@ class DynamicDataSource(private val kind: String) : PageKeyedDataSource<Int, Mes
                     .setSchedulers()
                     .doOnSubscribe { initialLoad.postValue(NetworkState.LOADING) }
                     .doOnError {
+                        Log.d("TAG","(DynamicDataSource.kt:65)->$it")
                         initialLoad.value = NetworkState.FAILED
                         failedRequest = { loadInitial(params, callback) }
                     }
@@ -122,6 +144,7 @@ class DynamicDataSource(private val kind: String) : PageKeyedDataSource<Int, Mes
     }
 
     override fun loadAfter(params: LoadParams<Int>, callback: LoadCallback<Int, Message>) {
+        Log.e("wxtag跨模块刷新","(DynamicDataSource.kt:59)->> loadAfter kind=$kind")
         when (kind) {
             "mine" -> {
                 ApiGenerator.getApiService(ApiServiceNew::class.java)
@@ -140,7 +163,24 @@ class DynamicDataSource(private val kind: String) : PageKeyedDataSource<Int, Mes
                         callback.onResult(list, adjacentPageKey)
                     }
             }
-
+            "personal" -> {
+                Log.e("wxtag跨模块刷新","(DynamicDataSource.kt:59)->> 执行正确")
+                ApiGenerator.getApiService(ApiServiceNew::class.java)
+                    .getPersoalDynamic(redid, params.key, params.requestedLoadSize)
+                    .mapOrThrowApiException()
+                    .setSchedulers()
+                    .doOnSubscribe { networkState.postValue(NetworkState.LOADING) }
+                    .doOnError {
+                        networkState.value = NetworkState.FAILED
+                        failedRequest = { loadAfter(params, callback) }
+                    }
+                    .safeSubscribeBy { list ->
+                        networkState.value = NetworkState.SUCCESSFUL
+                        val adjacentPageKey =
+                            (params.key + 1).takeUnless { list.size < params.requestedLoadSize }
+                        callback.onResult(list, adjacentPageKey)
+                    }
+            }
             "main" -> {
                 ApiGenerator.getApiService(QA_GET_DYNAMIC_LIST, ApiServiceNew::class.java)
                     .getDynamicList(kind, params.key, params.requestedLoadSize, 77)
@@ -185,11 +225,12 @@ class DynamicDataSource(private val kind: String) : PageKeyedDataSource<Int, Mes
 
     override fun loadBefore(params: LoadParams<Int>, callback: LoadCallback<Int, Message>) = Unit
 
-    class Factory(private val kind: String) : DataSource.Factory<Int, Message>() {
+    class Factory(private val kind: String,val redid:String?=null) : DataSource.Factory<Int, Message>() {
         val dynamicDataSourceLiveData = MutableLiveData<DynamicDataSource>()
 
         override fun create(): DynamicDataSource {
-            val dynamicDataSource = DynamicDataSource(kind)
+            Log.e("wxtag跨模块刷新","(MyDynamicFragment.kt:177)->> create():redid=$redid 还有kind=$kind")
+            val dynamicDataSource = DynamicDataSource(kind,redid)
             dynamicDataSourceLiveData.postValue(dynamicDataSource)
             return dynamicDataSource
         }

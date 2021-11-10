@@ -5,6 +5,7 @@ import android.util.Log
 import android.widget.TextView
 import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.mredrock.cyxbs.common.utils.extensions.toast
 import com.mredrock.cyxbs.qa.R
 import com.mredrock.cyxbs.qa.beannew.UserBrief
 import com.mredrock.cyxbs.qa.network.NetworkState
@@ -58,6 +59,7 @@ class RelateUserFragment : BaseResultFragment() {
                                                 R.drawable.qa_shape_tv_search_focused
                                             )
                                         text = if (user.isFocus) "互相关注" else " 已关注"
+                                        context.toast(R.string.qa_person_focus_success)
                                     }else{
                                         background = ContextCompat
                                             .getDrawable(
@@ -65,6 +67,7 @@ class RelateUserFragment : BaseResultFragment() {
                                                 R.drawable.qa_shape_tv_search_unfocused
                                             )
                                         text = "+关注"
+                                        context.toast(R.string.qa_person_unfocus_success)
                                     }
                                 }
                             }))

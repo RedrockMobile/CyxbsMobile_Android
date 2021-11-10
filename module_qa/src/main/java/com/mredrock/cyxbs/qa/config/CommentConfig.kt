@@ -14,6 +14,7 @@ object CommentConfig {
     const val REPLY = "回复"
     const val COPY = "复制"
     const val DELETE = "删除"
+    const val EDIT = "编辑"
     const val FOLLOW = "关注圈子"
     const val UN_FOLLOW = "取消圈子关注"
     const val REPORT_DYNAMIC_MODEL = "0"

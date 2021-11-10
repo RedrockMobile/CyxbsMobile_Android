@@ -3,6 +3,7 @@ package com.mredrock.cyxbs.qa.pages.quiz
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import android.os.Environment
+import android.util.Log
 import androidx.lifecycle.MutableLiveData
 import com.google.gson.Gson
 import com.mredrock.cyxbs.common.BaseApp.Companion.context
@@ -63,7 +64,7 @@ class QuizViewModel : BaseViewModel() {
         imageLiveData.value = imageList
     }
 
-    fun getAllCirCleData() {
+    fun getAllCirCleData(isModificationDynamic:Boolean) {
         val topicList = ArrayList<Topic>()
         val map: Map<String?, *>? = TopicDataSet.getAllTopic()
         if (!map.isNullOrEmpty()) {
@@ -74,7 +75,10 @@ class QuizViewModel : BaseViewModel() {
             }
             allCircle.value = topicList
         }
-        getDraft()
+        if (!isModificationDynamic){
+
+            getDraft()
+        }
     }
 
     /**
@@ -93,6 +97,7 @@ class QuizViewModel : BaseViewModel() {
                     .map {
                         it.map { path ->
                             LogUtils.d("Gibson", "file name = $path")
+                            Log.e("wxtag动态","(QuizActivity.kt:146)->>正常准备存存储图片path=$path")
                             fileCaster(path)
                         }
                     }
@@ -128,6 +133,7 @@ class QuizViewModel : BaseViewModel() {
                     .map {
                         it.map { path ->
                             LogUtils.d("Gibson", "file name = $path")
+                            Log.e("wxtag动态","(QuizActivity.kt:146)->>修改存存储图片path=$path")
                             fileCaster(path)
                         }
                     }
@@ -141,6 +147,7 @@ class QuizViewModel : BaseViewModel() {
                                 val name = "photo" + (index + 1)
                                 builder.addFormDataPart(name, pair.first.name, imageBody)
                             }
+                            Log.e("wxtag动态","(QuizActivity.kt:146)->>图片list=$list ")
                             sendModificationRequest(parts = builder.build().parts, filePairs = list)
                         }
                     }
@@ -168,6 +175,7 @@ class QuizViewModel : BaseViewModel() {
             }
             .doOnError { throwable ->
                 isReleaseSuccess = false
+                Log.e("wxtag动态","(QuizActivity.kt:146)->>动态发送错误$throwable ")
                 throwable?.let { e ->
                     context.toast(e.toString())
                 }

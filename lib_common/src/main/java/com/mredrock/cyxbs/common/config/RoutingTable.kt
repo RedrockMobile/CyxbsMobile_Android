@@ -44,6 +44,8 @@ const val MINE_FORGET_PASSWORD = "/forget_password/mine/entry"
 const val MINE_BIND_EMAIL = "/bind_email/mine/entry"
 // 个人界面的编辑个人信息界面
 const val MINE_EDIT_INFO = "/edit_info/mine/entry"
+//个人界面的个人主页
+const val MINE_PERSON_PAGE = "/person_page/mine/entry"
 
 // NoCourseInviteActivity
 const val COURSE_NO_COURSE_INVITE = "/course/no_course_invite_activity"

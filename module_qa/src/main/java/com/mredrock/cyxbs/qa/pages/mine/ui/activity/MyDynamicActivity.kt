@@ -39,6 +39,7 @@ class MyDynamicActivity : BaseViewModelActivity<MyDynamicViewModel>() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.qa_activity_my_dynamic)
+        viewModel.getDynamicData(null)
         mTencent = Tencent.createInstance(CommentConfig.APP_ID, this)
         initView()
         initDynamics()
@@ -53,6 +54,7 @@ class MyDynamicActivity : BaseViewModelActivity<MyDynamicViewModel>() {
     }
 
     private fun initDynamics() {
+
         dynamicListRvAdapter =
             HybridAdapter(this) { dynamic, view ->
                 DynamicDetailActivity.activityStart(this, view, dynamic)
@@ -116,19 +118,19 @@ class MyDynamicActivity : BaseViewModelActivity<MyDynamicViewModel>() {
         }
     }
 
-    private fun observeLoading(dynamicListRvAdapter: HybridAdapter,
-                               footerRvAdapter: FooterRvAdapter,
-                               emptyRvAdapter: EmptyRvAdapter): MyDynamicViewModel = viewModel.apply {
-        dynamicList.observe {
+    fun observeLoading(dynamicListRvAdapter: HybridAdapter,
+                       footerRvAdapter: FooterRvAdapter,
+                       emptyRvAdapter: EmptyRvAdapter): MyDynamicViewModel = viewModel.apply {
+        dynamicList?.observe {
             dynamicListRvAdapter.submitList(it)
         }
-        networkState.observe {
+        networkState?.observe {
             it?.run {
                 footerRvAdapter.refreshData(listOf(this))
             }
         }
 
-        initialLoad.observe {
+        initialLoad?.observe {
             when (it) {
                 NetworkState.LOADING -> {
                     qa_swl_my_dynamic.isRefreshing = true

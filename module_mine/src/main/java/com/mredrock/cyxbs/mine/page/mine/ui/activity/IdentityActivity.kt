@@ -1,5 +1,7 @@
 package com.mredrock.cyxbs.mine.page.mine.ui.activity
 
+import android.graphics.Typeface
+import android.graphics.drawable.BitmapDrawable
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
@@ -12,6 +14,7 @@ import android.widget.TextView
 import androidx.fragment.app.Fragment
 import com.alibaba.android.arouter.launcher.ARouter
 import com.google.android.material.tabs.TabLayoutMediator
+import com.mredrock.cyxbs.common.BaseApp.Companion.context
 import com.mredrock.cyxbs.common.ui.BaseViewModelActivity
 import com.mredrock.cyxbs.mine.R
 import com.mredrock.cyxbs.mine.databinding.MineActivityHomepageBinding
@@ -21,6 +24,8 @@ import com.mredrock.cyxbs.mine.page.mine.ui.fragment.ApproveStatusFragment
 import com.mredrock.cyxbs.mine.page.mine.ui.fragment.IdentityFragment
 import com.mredrock.cyxbs.mine.page.mine.ui.fragment.PersonalityStatusFragment
 import com.mredrock.cyxbs.mine.page.mine.viewmodel.IdentityViewModel
+import com.mredrock.cyxbs.mine.util.widget.loadBitmap
+import com.mredrock.cyxbs.store.utils.transformer.ScaleInTransformer
 import kotlinx.android.synthetic.main.mine_activity_identity.*
 
 class IdentityActivity : BaseViewModelActivity<IdentityViewModel>() {
@@ -34,6 +39,8 @@ class IdentityActivity : BaseViewModelActivity<IdentityViewModel>() {
         dataBinding = MineActivityIdentityBinding.inflate(layoutInflater)
         setContentView(dataBinding.root)
         initView()
+        initData()
+        initLisener()
     }
 
 
@@ -44,9 +51,36 @@ class IdentityActivity : BaseViewModelActivity<IdentityViewModel>() {
         val personalityStatusFragment = PersonalityStatusFragment(redid)
         val list = arrayListOf<Fragment>(approveStatusFragment,personalityStatusFragment)
         dataBinding.vpStatus.adapter= MineAdapter(this,list)
+
+
+        dataBinding.vpStatus.
+        setPageTransformer(ScaleInTransformer())
+        dataBinding.vpStatus.offscreenPageLimit = 2
         TabLayoutMediator(dataBinding.mineTabStatus, dataBinding.vpStatus,true) { tab, position ->
             tab.text = tabNames[position]
         }.attach()
 
     }
+
+    fun initData(){
+        viewModel.getShowIdentify(redid)
+        dataBinding.tvItemIdentityName.setTypeface(Typeface.createFromAsset(assets,"YouSheBiaoTiHei-2.ttf"))
+        dataBinding.tvItemIdentity.setTypeface(Typeface.createFromAsset(assets,"YouSheBiaoTiHei-2.ttf"))
+        dataBinding.tvItemIdentityTime.setTypeface(Typeface.createFromAsset(assets,"YouSheBiaoTiHei-2.ttf"))
+
+    }
+    fun initLisener(){
+        viewModel.showStatu.observeForever {
+            dataBinding.tvItemIdentityName.text=it.data.form
+            dataBinding.tvItemIdentity.text = it.data.position
+            dataBinding.tvItemIdentityTime.text = it.data.date
+            loadBitmap(it.data.background){
+                dataBinding.clContentView.background= BitmapDrawable(context.resources,it)
+            }
+        }
+        dataBinding.mineImageview.setOnClickListener {
+            onBackPressed()
+        }
+    }
+
 }

@@ -1,9 +1,12 @@
 package com.mredrock.cyxbs.qa.pages.dynamic.behavior
 
+import android.animation.ValueAnimator
 import android.content.Context
 import android.util.AttributeSet
 import android.util.Log
 import android.view.View
+import android.view.animation.BounceInterpolator
+import android.view.animation.OvershootInterpolator
 import android.widget.OverScroller
 import androidx.coordinatorlayout.widget.CoordinatorLayout
 import androidx.core.view.ViewCompat
@@ -46,7 +49,7 @@ class CoverHeaderBehavior(context: Context, attr: AttributeSet) : CoordinatorLay
         override fun run() {
             scroller?.let {
                 if (it.computeScrollOffset()){ // 如果已经计算过滑动偏移值
-                    contentView.translationY = it.currY.toFloat()
+                    contentView.translationY = it.currY.toFloat() 
                     // 让View在下一次绘制时执行定义好的Runnable
                     ViewCompat.postOnAnimation(contentView, this)
                 }
@@ -161,7 +164,7 @@ class CoverHeaderBehavior(context: Context, attr: AttributeSet) : CoordinatorLay
 
     private fun startAutoScroll(current: Int, target: Int, duration: Int){
         if (scroller == null){
-            scroller = OverScroller(contentView.context)
+            scroller = OverScroller(contentView.context,OvershootInterpolator())
         }
         scroller?.let {
             if (it.isFinished){

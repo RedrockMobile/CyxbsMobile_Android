@@ -133,54 +133,58 @@
 
     <com.mredrock.cyxbs.qa.ui.widget.likeview.LikeViewSlim
         android:id="@+id/qa_iv_dynamic_praise_count_image"
-        android:layout_width="40dp"
+        android:layout_width="20dp"
         android:layout_height="wrap_content"
+        android:layout_marginTop="21dp"
+        android:layout_marginEnd="9dp"
         app:checkedColor="#323FD9"
-        app:checkedLikeIconRes="@drawable/qa_ic_answer_list_praised"
-        app:cirRadius="14dp"
+        app:checkedLikeIconRes="@drawable/qa_ic_answer_list_praised_new"
+        app:cirRadius="12dp"
         app:cycleTime="1000"
         app:defaultColor="@color/qa_likeview_color"
-        app:defaultLikeIconRes="@drawable/qa_ic_answer_list_praise"
-        app:layout_constraintBottom_toBottomOf="@id/qa_iv_dynamic_comment_count"
+        app:defaultLikeIconRes="@drawable/qa_ic_answer_list_praise_new"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintCircleRadius="5dp"
         app:layout_constraintEnd_toStartOf="@+id/qa_iv_dynamic_comment_count"
-        app:layout_constraintTop_toTopOf="@+id/qa_iv_dynamic_comment_count"
+        app:layout_constraintTop_toBottomOf="@+id/qa_dynamic_nine_grid_view"
         app:ringColor="#323FD9" />
 
     <androidx.appcompat.widget.AppCompatImageView
         android:id="@+id/qa_iv_dynamic_comment_count"
-        android:layout_width="20dp"
-        android:layout_height="18dp"
+        android:layout_width="22dp"
+        android:layout_height="21dp"
+        android:layout_marginTop="20dp"
         android:layout_marginEnd="8dp"
         android:background="@drawable/qa_ic_dynamic_comment"
-        android:textColor="@color/qa_question_bottom_count_color"
-        app:layout_constraintBottom_toBottomOf="@+id/qa_tv_dynamic_comment_count"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toStartOf="@+id/qa_tv_dynamic_comment_count"
-        app:layout_constraintTop_toTopOf="@+id/qa_tv_dynamic_comment_count" />
+        app:layout_constraintTop_toBottomOf="@+id/qa_dynamic_nine_grid_view" />
 
     <androidx.appcompat.widget.AppCompatTextView
         android:id="@+id/qa_tv_dynamic_comment_count"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginTop="19dp"
         android:layout_marginEnd="12dp"
         android:text="201"
         android:textColor="@color/qa_question_bottom_count_color"
         android:textSize="11sp"
-        app:layout_constraintBottom_toBottomOf="@+id/qa_iv_dynamic_share"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toStartOf="@+id/qa_iv_dynamic_share"
-        app:layout_constraintTop_toTopOf="@+id/qa_iv_dynamic_share" />
+        app:layout_constraintTop_toBottomOf="@+id/qa_dynamic_nine_grid_view"
+        app:layout_constraintVertical_bias="0.52" />
 
     <androidx.appcompat.widget.AppCompatImageView
         android:id="@+id/qa_iv_dynamic_share"
-        android:layout_width="21dp"
-        android:layout_height="17dp"
+        android:layout_width="23dp"
+        android:layout_height="20dp"
         android:layout_marginTop="20dp"
-        android:layout_marginEnd="10dp"
+        android:layout_marginEnd="8dp"
         android:background="@drawable/qa_ic_dynamic_share_new"
         android:drawablePadding="4dp"
         android:gravity="center_vertical"
-        android:textColor="@color/qa_question_bottom_count_color"
-        android:textSize="11sp"
         android:scaleType="centerInside"
+        android:textSize="11sp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toStartOf="@id/qa_gl_dynamic_end"
         app:layout_constraintTop_toBottomOf="@+id/qa_dynamic_nine_grid_view"
@@ -195,4 +199,14 @@
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/qa_iv_dynamic_praise_count_image" />
+
+    <ImageView
+        android:id="@+id/qa_iv_dynamic_identity"
+        android:layout_width="wrap_content"
+        android:layout_height="19dp"
+        android:layout_marginStart="7dp"
+        android:scaleType="centerInside"
+        app:layout_constraintBottom_toTopOf="@+id/qa_tv_dynamic_publish_at"
+        app:layout_constraintStart_toEndOf="@+id/qa_tv_dynamic_nickname"
+        app:layout_constraintTop_toTopOf="@+id/qa_tv_dynamic_nickname" />
 </androidx.constraintlayout.widget.ConstraintLayout>

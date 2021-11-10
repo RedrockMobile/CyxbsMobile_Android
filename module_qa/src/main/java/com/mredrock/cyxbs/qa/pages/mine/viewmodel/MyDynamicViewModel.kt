@@ -1,5 +1,6 @@
 package com.mredrock.cyxbs.qa.pages.mine.viewmodel
 
+import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.Transformations
@@ -20,31 +21,37 @@ import com.mredrock.cyxbs.qa.pages.dynamic.model.DynamicDataSource
  * @author Sca RayleighZ
  */
 class MyDynamicViewModel : BaseViewModel(){
-    private val factory: DynamicDataSource.Factory
+    private var factory: DynamicDataSource.Factory?=null
 
-    val dynamicList: LiveData<PagedList<Message>>
-    val networkState: LiveData<Int>
-    val initialLoad: LiveData<Int>
+    var dynamicList: LiveData<PagedList<Message>>?=null
+    var networkState: LiveData<Int>?=null
+    var initialLoad: LiveData<Int>?=null
 
     val ignorePeople = MutableLiveData<Boolean>()
-    val deleteTips = MutableLiveData<Boolean>()
+    var deleteTips = MutableLiveData<Boolean>()
 
-    init {
+
+    fun getDynamicData(redid:String?){
+        Log.e("wxtag跨模块刷新","(MyDynamicFragment.kt:177)->> getDynamicDataredid=$redid")
         val config = PagedList.Config.Builder()
             .setEnablePlaceholders(false)
             .setPrefetchDistance(3)
             .setPageSize(6)
             .setInitialLoadSizeHint(6)
             .build()
-        factory = DynamicDataSource.Factory("mine")
-        dynamicList = LivePagedListBuilder(factory, config).build()
+        if(redid==null){
+            factory = DynamicDataSource.Factory("mine")
+        }else{
+            factory = DynamicDataSource.Factory("personal",redid)
+        }
+
+        dynamicList = LivePagedListBuilder<Int, Dynamic>(factory!!, config).build()
         networkState =
-            Transformations.switchMap(factory.dynamicDataSourceLiveData) { it.networkState }
+            Transformations.switchMap(factory!!.dynamicDataSourceLiveData) { it.networkState }
         initialLoad =
-            Transformations.switchMap(factory.dynamicDataSourceLiveData) { it.initialLoad }
+            Transformations.switchMap(factory!!.dynamicDataSourceLiveData) { it.initialLoad }
 
     }
-
     fun deleteId(id: String, model: String) {
         ApiGenerator.getApiService(ApiServiceNew::class.java)
             .deleteId(id, model)
@@ -58,7 +65,7 @@ class MyDynamicViewModel : BaseViewModel(){
             }
     }
 
-    fun invalidateDynamicList() = dynamicList.value?.dataSource?.invalidate()
+    fun invalidateDynamicList() = dynamicList?.value?.dataSource?.invalidate()
 
-    fun retry() = factory.dynamicDataSourceLiveData.value?.retry()
+    fun retry() = factory?.dynamicDataSourceLiveData?.value?.retry()
 }

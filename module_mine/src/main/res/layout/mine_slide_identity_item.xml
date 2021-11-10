@@ -39,9 +39,9 @@
         android:layout_height="125dp">
         <ImageView
             android:id="@+id/iv_item_delete"
-            android:background="@drawable/mine_ic_item_identity_setting"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"/>
+            android:background="@drawable/mine_ic_item_identity_delete"
+            android:layout_width="22dp"
+            android:layout_height="23dp"/>
         <TextView
             android:layout_marginLeft="10dp"
             android:layout_marginTop="2dp"
@@ -60,21 +60,26 @@
         android:background="@drawable/mine_ic_item_background">
 
         <TextView
+            android:textColor="#F3FEFF"
             android:id="@+id/tv_item_identity_name"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="16dp"
             android:layout_marginTop="16dp"
             android:text="红岩网校工作站"
+            android:textSize="23dp"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
         <TextView
+
             android:id="@+id/tv_item_identity"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="16dp"
             android:text="干事"
+            android:textColor="#F3FEFF"
+            android:textSize="18dp"
             app:layout_constraintStart_toStartOf="@+id/tv_item_identity_name"
             app:layout_constraintTop_toBottomOf="@+id/tv_item_identity_name" />
 
@@ -83,14 +88,11 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="8dp"
+            android:textSize="18dp"
+            android:textColor="#F3FEFF"
             android:layout_marginEnd="36dp"
             android:text="2018.4.28-2020.5.29"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/tv_item_identity" />
     </androidx.constraintlayout.widget.ConstraintLayout>
-
-
-
-
-
 </com.mredrock.cyxbs.mine.page.mine.widget.SlideLayout>

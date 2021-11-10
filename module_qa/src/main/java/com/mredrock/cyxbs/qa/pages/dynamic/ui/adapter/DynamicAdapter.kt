@@ -2,11 +2,14 @@ package com.mredrock.cyxbs.qa.pages.dynamic.ui.adapter
 
 
 import android.content.Context
+import android.content.Intent
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ImageView
 import android.widget.Toast
 import androidx.recyclerview.widget.DiffUtil
+import com.bumptech.glide.Glide
 import com.mredrock.cyxbs.common.component.CyxbsToast
 import com.mredrock.cyxbs.common.utils.extensions.setAvatarImageFromUrl
 import com.mredrock.cyxbs.common.utils.extensions.setOnSingleClickListener
@@ -17,12 +20,14 @@ import com.mredrock.cyxbs.qa.component.recycler.BaseViewHolder
 import com.mredrock.cyxbs.qa.config.CommentConfig
 import com.mredrock.cyxbs.qa.config.CommentConfig.COPY_LINK
 import com.mredrock.cyxbs.qa.config.CommentConfig.DELETE
+import com.mredrock.cyxbs.qa.config.CommentConfig.EDIT
 import com.mredrock.cyxbs.qa.config.CommentConfig.FOLLOW
 import com.mredrock.cyxbs.qa.config.CommentConfig.IGNORE
 import com.mredrock.cyxbs.qa.config.CommentConfig.QQ_FRIEND
 import com.mredrock.cyxbs.qa.config.CommentConfig.QQ_ZONE
 import com.mredrock.cyxbs.qa.config.CommentConfig.REPORT
 import com.mredrock.cyxbs.qa.config.CommentConfig.UN_FOLLOW
+import com.mredrock.cyxbs.qa.pages.quiz.ui.QuizActivity
 import com.mredrock.cyxbs.qa.ui.activity.ViewImageActivity
 import com.mredrock.cyxbs.qa.ui.widget.NineGridView
 import com.mredrock.cyxbs.qa.ui.widget.OptionalPopWindow
@@ -51,6 +56,7 @@ class DynamicAdapter(val context: Context?, private val onItemClickEvent: (Dynam
     var onShareClickListener: ((Dynamic, String) -> Unit)? = null
     var onTopicListener: ((String, View) -> Unit)? = null
     var onPopWindowClickListener: ((Int, String, Dynamic) -> Unit)? = null
+    var onAvatarClickListener: ((redid: String)->Unit)? = null
 
     var curSharedItem: View? = null
     var curSharedDynamic: Dynamic? = null
@@ -103,31 +109,40 @@ class DynamicAdapter(val context: Context?, private val onItemClickEvent: (Dynam
                     if (dynamic.isSelf == 0) {
                         if (dynamic.isFollowTopic == 0) {
                             OptionalPopWindow.Builder().with(context)
-                                    .addOptionAndCallback(IGNORE) {
-                                        onPopWindowClickListener?.invoke(position, IGNORE, dynamic)
-                                    }.addOptionAndCallback(REPORT) {
-                                        onPopWindowClickListener?.invoke(position, REPORT, dynamic)
-                                    }.addOptionAndCallback(FOLLOW) {
-                                        onPopWindowClickListener?.invoke(position, FOLLOW, dynamic)
-                                    }.show(view, OptionalPopWindow.AlignMode.RIGHT, 0)
+                                .addOptionAndCallback(IGNORE,R.layout.qa_popupwindow_option_bottom) {
+                                    onPopWindowClickListener?.invoke(position, IGNORE, dynamic)
+                                }.addOptionAndCallback(REPORT,R.layout.qa_popupwindow_option_bottom) {
+                                    onPopWindowClickListener?.invoke(position, REPORT, dynamic)
+                                }.addOptionAndCallback(FOLLOW,R.layout.qa_popupwindow_option_bottom) {
+                                    onPopWindowClickListener?.invoke(position, FOLLOW, dynamic)
+                                }.showFromBottom(LayoutInflater.from(context).inflate(
+                                    R.layout.qa_fragment_dynamic,null,false
+                                ))
                         } else {
                             OptionalPopWindow.Builder().with(context)
-                                    .addOptionAndCallback(IGNORE) {
-                                        onPopWindowClickListener?.invoke(position, IGNORE, dynamic)
-                                    }.addOptionAndCallback(REPORT) {
-                                        onPopWindowClickListener?.invoke(position, REPORT, dynamic)
-                                    }.addOptionAndCallback(UN_FOLLOW) {
-                                        onPopWindowClickListener?.invoke(position, UN_FOLLOW, dynamic)
-                                    }.show(view, OptionalPopWindow.AlignMode.RIGHT, 0)
+                                .addOptionAndCallback(IGNORE,R.layout.qa_popupwindow_option_bottom) {
+                                    onPopWindowClickListener?.invoke(position, IGNORE, dynamic)
+                                }.addOptionAndCallback(REPORT,R.layout.qa_popupwindow_option_bottom) {
+                                    onPopWindowClickListener?.invoke(position, REPORT, dynamic)
+                                }.addOptionAndCallback(UN_FOLLOW,R.layout.qa_popupwindow_option_bottom) {
+                                    onPopWindowClickListener?.invoke(position, UN_FOLLOW, dynamic)
+                                }.showFromBottom(LayoutInflater.from(context).inflate(
+                                    R.layout.qa_fragment_dynamic,null,false
+                                ))
                         }
                     } else {
                         OptionalPopWindow.Builder().with(context)
-                                .addDynamicData(dynamic)
-                                .addOptionAndCallback(DELETE,R.layout.qa_popupwindow_option_bottom) {
-                                    onPopWindowClickListener?.invoke(position, DELETE, dynamic)
-                                }.showFromBottom(LayoutInflater.from(context).inflate(
-                                        R.layout.qa_fragment_dynamic,null,false
-                                ))
+                            .addOptionAndCallback(DELETE,R.layout.qa_popupwindow_option_bottom) {
+                                onPopWindowClickListener?.invoke(position, DELETE, dynamic)
+                            }
+                            .addOptionAndCallback(EDIT,R.layout.qa_popupwindow_option_bottom) {
+                                val intent = Intent(context, QuizActivity::class.java)
+                                intent.putExtra("dynamic",dynamic)
+                                context?.startActivity(intent)
+                            }
+                            .showFromBottom(LayoutInflater.from(context).inflate(
+                                R.layout.qa_fragment_dynamic,null,false
+                            ))
                     }
                 }
             }
@@ -145,6 +160,9 @@ class DynamicAdapter(val context: Context?, private val onItemClickEvent: (Dynam
         curSharedItem = holder.itemView
         curSharedItemPosition = position
         onItemClickEvent.invoke(data, holder.itemView)
+        holder.itemView.findViewById<ImageView>(R.id.qa_iv_dynamic_avatar).setOnClickListener {
+            onAvatarClickListener?.invoke(data.uid)
+        }
     }
 
     class DynamicViewHolder(parent: ViewGroup) :
@@ -167,7 +185,8 @@ class DynamicAdapter(val context: Context?, private val onItemClickEvent: (Dynam
                 qa_tv_dynamic_content.setContent(data.content)
                 qa_tv_dynamic_comment_count.text = data.commentCount.toString()
                 qa_tv_dynamic_publish_at.text =
-                        dynamicTimeDescription(System.currentTimeMillis(), data.publishTime * 1000)
+                    dynamicTimeDescription(System.currentTimeMillis(), data.publishTime * 1000)
+                Glide.with(context).load(data.identityPic).into(qa_iv_dynamic_identity)
                 //解决图片错乱的问题
                 if (data.pics.isNullOrEmpty())
                     qa_dynamic_nine_grid_view.setRectangleImages(

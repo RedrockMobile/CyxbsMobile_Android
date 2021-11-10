@@ -98,8 +98,10 @@ interface ApiServiceNew {
     @Multipart
     fun releaseDynamic(@Part parts: List<MultipartBody.Part>): Observable<RedrockApiWrapper<DynamicReleaseResult>>
     @PUT("/magipoke-loop/post/dynamic")
+
     @Multipart
     fun modificationDynamic(@Part parts: List<MultipartBody.Part>): Observable<DynamicReleaseResult>
+
     @POST("/magipoke-loop/comment/releaseComment")
     @Multipart
     fun releaseComment(@Part parts: List<MultipartBody.Part>): Observable<RedrockApiWrapper<CommentReleaseResult>>
@@ -209,23 +211,32 @@ interface ApiServiceNew {
         @Query("size") size: Int
     ): Observable<RedrockApiWrapper<List<Dynamic>>>
 
+    /**
+     * 获取指定用户的动态
+     */
+    @GET("/magipoke-loop/post/dynamic/user")
+    fun getPersoalDynamic(
+        @Query("redid") redid:String?,
+        @Query("page") page: Int,
+        @Query("size") size: Int
+    ): Observable<RedrockApiWrapper<List<Dynamic>>>
     /*
     获取草稿
      */
-    @POST("https://be-prod.redrock.team/magipoke-draft/new/getDraft")
+    @POST("/magipoke-draft/new/getDraft")
     fun getDraft(): Observable<RedrockApiWrapper<DynamicDraft>>
 
     /*
     上传或者更新草稿
      */
-    @POST("https://be-prod.redrock.team/magipoke-draft/new/addDraft")
+    @POST("/magipoke-draft/new/addDraft")
     @Multipart
     fun updateDraft(@Part parts: List<MultipartBody.Part>): Observable<RedrockApiStatus>
 
     /*
     删除草稿
      */
-    @POST("https://be-prod.redrock.team/magipoke-draft/new/delDraft")
+    @POST("/magipoke-draft/new/delDraft")
     fun deleteDraft(): Observable<RedrockApiStatus>
 
 

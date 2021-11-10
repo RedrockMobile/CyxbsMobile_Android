@@ -7,7 +7,9 @@ import com.mredrock.cyxbs.common.utils.extensions.doOnErrorWithDefaultErrorHandl
 import com.mredrock.cyxbs.common.utils.extensions.safeSubscribeBy
 import com.mredrock.cyxbs.common.utils.extensions.setSchedulers
 import com.mredrock.cyxbs.common.viewmodel.BaseViewModel
+import com.mredrock.cyxbs.mine.network.model.AllStatus
 import com.mredrock.cyxbs.mine.network.model.AuthenticationStatus
+import com.mredrock.cyxbs.mine.network.model.PersonalStatu
 import com.mredrock.cyxbs.mine.network.model.Status
 import com.mredrock.cyxbs.mine.page.mine.ui.activity.HomepageActivity
 import com.mredrock.cyxbs.mine.util.apiService
@@ -18,67 +20,62 @@ class IdentityViewModel: BaseViewModel()  {
 
     val authenticationStatus = MutableLiveData<AuthenticationStatus>()
     val customization = MutableLiveData<AuthenticationStatus>()
-    val allIdentifies = MutableLiveData<AuthenticationStatus>()
+    val allIdentifies = MutableLiveData<AllStatus>()
     val  redrockApiStatusUpdate = MutableLiveData<RedrockApiStatus>()
-
+    val showStatu=MutableLiveData<PersonalStatu>()
     val onErrorAction =MutableLiveData<String>()
+
+    val isFinsh = MutableLiveData<Boolean>()
     fun getAuthenticationStatus(redid:String){
         apiService.getAuthenticationStatus(redid)
             .setSchedulers()
             .doOnErrorWithDefaultErrorHandler { true }
             .safeSubscribeBy(
-                onNext = {
-              authenticationStatus.value=it
 
+                onNext = {
+                       authenticationStatus.value=it
                 },
                 onError = {
-                    Log.e("wxtasadasg","(MineViewModel.kt:30)->>失败了$it ")
                 },
                 onComplete = {
-                    Log.e("wxtasadasg","(MineViewModel.kt:30)-> onComplete ")
                 }
             )
             .lifeCycle()
     }
 
     fun getCustomization(redid:String){
-        apiService.getAuthenticationStatus(redid)
+        apiService.getCustomization(redid)
             .setSchedulers()
             .doOnErrorWithDefaultErrorHandler { true }
             .safeSubscribeBy(
                 onNext = {
-                    Log.e("wxtasadasgd","(MineViewModel.kt:30)->>成功了$it ")
                    customization.value = it
 
                 },
                 onError = {
-                    Log.e("wxtasadasgd","(MineViewModel.kt:30)->>失败了$it ")
                 },
                 onComplete = {
-                    Log.e("wxtasadasgd","(MineViewModel.kt:30)-> onComplete ")
                 }
             )
             .lifeCycle()
     }
 
     fun getAllIdentify(redid:String?){
-        Log.e("wxtasadasdasdasg","(MineViewModel.kt:30)->身份接口方法 ")
 
-        apiService.getAuthenticationStatus(redid)
+        apiService.getAllIdentify(redid)
             .setSchedulers()
-            .doOnErrorWithDefaultErrorHandler { true }
+          .doOnErrorWithDefaultErrorHandler { true }
             .safeSubscribeBy(
                 onNext = {
-                    Log.e("wxtasadasdasdasg","(MineViewModel.kt:30)->身份接口正常了")
+                Log.e("wxtag身份","(IdentityViewModel.kt:70)->> 获取身份成功")
                  allIdentifies.value = it
 
                 },
                 onError = {
-                    Log.e("wxtasadasdasdasg","(MineViewModel.kt:30)-发生了错误")
-                onErrorAction.value="没有身份就是它的身份"
+                    Log.e("wxtag身份","(IdentityViewModel.kt:70)->> 获取身份失败$it")
+             onErrorAction.value="没有身份就是它的身份"
                 },
                 onComplete = {
-                    Log.e("wxtasadasdasdasg","(MineViewModel.kt:30)->身份接口 完成了")
 
                 }
             )
@@ -90,24 +87,49 @@ class IdentityViewModel: BaseViewModel()  {
 
 
 
-    fun updateStatus(identityId:String){
+    fun updateStatus(identityId:String?,type:String?,redid: String){
         apiService.uploadDisplayIdentity(identityId)
             .setSchedulers()
             .doOnErrorWithDefaultErrorHandler { true }
             .safeSubscribeBy(
                 onNext = {
-                    redrockApiStatusUpdate.value = it
+                    redrockApiStatusUpdate.value=it
+                    if (type.equals("个性身份")){
+                        getCustomization(redid)
 
+                    }else{
+                        getAuthenticationStatus(redid)
+                    }
+                   getShowIdentify(redid)
                 },
                 onError = {
-                    Log.e("wxtasadasdasdasg","(MineViewModel.kt:30)->身份接口失败了 ")
                 },
                 onComplete = {
-                    Log.e("wxtasadasdasdasg","(MineViewModel.kt:30)->身份接口 完成了")
 
                 }
             )
             .lifeCycle()
     }
+
+
+    fun getShowIdentify(id:String){
+        apiService.getShowIdentify(id)
+            .setSchedulers()
+            .doOnErrorWithDefaultErrorHandler { true }
+            .safeSubscribeBy(
+                onNext = {
+                showStatu.value=it
+                },
+                onError = {
+
+                },
+                onComplete = {
+
+
+                }
+            )
+            .lifeCycle()
+    }
+
 
 }

@@ -238,7 +238,7 @@ interface ApiService {
 
     @FormUrlEncoded
     @POST("/magipoke-loop/user/focus")
-    fun changeFocusStatus(@Field("redid") redid: String):Observable<RedrockApiStatus>
+    fun changeFocusStatus(@Field("redid") redid: String?):Observable<RedrockApiStatus>
 
     @GET("/magipoke-loop/user/fans")
     fun getFans(@Query("redid") redid: String):Observable<RedrockApiWrapper<List<Fan>>>
@@ -263,7 +263,6 @@ interface ApiService {
     /**
      * 获取认证身份
      */
-
     @GET("/magipoke-identity/GetAuthentication")
     fun getAuthenticationStatus( @Query("id") redId: String?):Observable<AuthenticationStatus>
 
@@ -277,23 +276,38 @@ interface ApiService {
      * 获取全部身份
      */
     @GET("/magipoke-identity/GetAllIdentify")
-    fun getAllIdentify(@Query("id") redId: String):Observable<AuthenticationStatus>
+    fun getAllIdentify(@Query("id") redId: String?):Observable<AllStatus>
 
     /**
      * 上传动态的展示身份
      */
-    @GET("/magipoke-identity/UploadDisplayIdentity")
-    fun uploadDisplayIdentity(@Query("identityId")identityId:String): Observable<RedrockApiStatus>
+    @FormUrlEncoded
+    @POST("/magipoke-identity/UploadDisplayIdentity")
+    fun uploadDisplayIdentity(@Field("identityId")identityId:String?): Observable<RedrockApiStatus>
 
     /**
      * 删除身份
      */
-    @GET("/magipoke-identity/DeleteIdentity")
-    fun deleteIdentity(@Query("identityId")identityId:String): Observable<RedrockApiStatus>
+    @FormUrlEncoded
+    @POST("/magipoke-identity/DeleteIdentity")
+    fun deleteIdentity(@Field("identityId")identityId:String): Observable<RedrockApiStatus>
     /**
      * 更新动态信息
      */
     @PUT("/magipoke-loop/post/dynamic")
     fun  update()
 
+
+    /**
+     * 获取用户展示的身份
+     */
+    @GET("/magipoke-identity/GetShowIdentify")
+    fun getShowIdentify(@Query("id")id:String):Observable<PersonalStatu>
+
+    /**
+     * 获取粉丝 关注 点赞数量接口
+     */
+    @GET("magipoke-loop/user/getUserCount")
+    fun getPersonalCount(@Query("redid")redid: String?):Observable<PersonalCount>
 }
+

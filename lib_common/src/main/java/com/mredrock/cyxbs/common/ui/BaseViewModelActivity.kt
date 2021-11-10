@@ -72,4 +72,7 @@ abstract class BaseViewModelActivity<T : BaseViewModel> : BaseActivity() {
             progressDialog?.dismiss()
         }
     }
+
+
+
 }

@@ -3,12 +3,14 @@ package com.mredrock.cyxbs.qa.pages.mine.ui.fragment
 
 
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.alibaba.android.arouter.facade.annotation.Route
+import com.mredrock.cyxbs.common.config.MineAndQa
 import com.mredrock.cyxbs.common.config.QA_DYNAMIC_MINE_FRAGMENT
 import com.mredrock.cyxbs.common.ui.BaseViewModelFragment
 import com.mredrock.cyxbs.qa.R
@@ -28,11 +30,15 @@ import com.tencent.tauth.Tencent
 import kotlinx.android.synthetic.main.qa_activity_my_dynamic.*
 
 @Route(path = QA_DYNAMIC_MINE_FRAGMENT)
-class MyDynamicFragment : BaseViewModelFragment<MyDynamicViewModel>() {
+class MyDynamicFragment : BaseViewModelFragment<MyDynamicViewModel>(),MineAndQa.RefreshListener {
     private var isRvAtTop = true
     private var isSendDynamic = false
     private lateinit var dynamicListRvAdapter: HybridAdapter
-
+    private var redid:String?=null
+    private var isCreated=false
+    init {
+        MineAndQa.refreshListener=this
+    }
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -43,10 +49,13 @@ class MyDynamicFragment : BaseViewModelFragment<MyDynamicViewModel>() {
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
+        Log.e("wxtag跨模块刷新","(MyDynamicFragment.kt:177)->> onActivityCreated=redid=$redid")
+isCreated=true
+        viewModel.getDynamicData(redid)
         initDynamics()
     }
 
-    private fun initDynamics() {
+   fun initDynamics() {
         val mTencent = Tencent.createInstance(CommentConfig.APP_ID, context)
         dynamicListRvAdapter =
             HybridAdapter(context) { dynamic, view ->
@@ -139,16 +148,16 @@ class MyDynamicFragment : BaseViewModelFragment<MyDynamicViewModel>() {
         footerRvAdapter: FooterRvAdapter,
         emptyRvAdapter: EmptyRvAdapter
     ): MyDynamicViewModel = viewModel.apply {
-        dynamicList.observe {
+        dynamicList?.observe {
             dynamicListRvAdapter.submitList(it)
         }
-        networkState.observe {
+        networkState?.observe {
             it?.run {
                 footerRvAdapter.refreshData(listOf(this))
             }
         }
 
-        initialLoad.observe {
+        initialLoad?.observe {
             when (it) {
                 NetworkState.SUCCESSFUL ->
                     isSendDynamic = true
@@ -167,6 +176,16 @@ class MyDynamicFragment : BaseViewModelFragment<MyDynamicViewModel>() {
             }
         }
     }
+
+    override fun onRefresh(redid: String?) {
+        this.redid=redid
+     Log.e("wxtag跨模块刷新","(MyDynamicFragment.kt:177)->> onRefresh回调redid=$redid")
+        if (isCreated){//避免造成viewmodel没有实例化而报错
+            viewModel.getDynamicData(redid)
+        }
+    }
+
+
 }
 
 
