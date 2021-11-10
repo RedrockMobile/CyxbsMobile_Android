@@ -10,6 +10,7 @@ import com.mredrock.cyxbs.common.bean.RedrockApiWrapper
 import com.mredrock.cyxbs.common.config.QA_GET_DYNAMIC_LIST
 import com.mredrock.cyxbs.common.config.getBaseUrl
 import com.mredrock.cyxbs.common.network.ApiGenerator
+import com.mredrock.cyxbs.common.network.temp.SSLSocketClient
 import com.mredrock.cyxbs.common.service.ServiceManager
 import com.mredrock.cyxbs.common.utils.LogUtils
 import com.mredrock.cyxbs.common.utils.extensions.mapOrThrowApiException
@@ -21,6 +22,7 @@ import com.mredrock.cyxbs.qa.network.ApiServiceNew
 import com.mredrock.cyxbs.qa.network.NetworkState
 import com.mredrock.cyxbs.qa.network.type_adapter.HybridTypeAdapter
 import retrofit2.converter.gson.GsonConverterFactory
+import javax.net.ssl.X509TrustManager
 
 /**
  * Created By jay68 on 2018/9/20.
@@ -90,12 +92,10 @@ class DynamicDataSource(private val kind: String) : PageKeyedDataSource<Int, Mes
                     .setSchedulers()
                     .doOnSubscribe { initialLoad.postValue(NetworkState.LOADING) }
                     .doOnError {
-                        LogUtils.d("RayleighZ", "error = $it, stack info = ${it.printStackTrace()}")
                         initialLoad.value = NetworkState.FAILED
                         failedRequest = { loadInitial(params, callback) }
                     }
                     .safeSubscribeBy { list ->
-                        LogUtils.d("RayleighZ", "on success, list = $list")
                         initialLoad.value = NetworkState.SUCCESSFUL
                         val nextPageKey = 2.takeUnless { (list.size < params.requestedLoadSize) }
                         callback.onResult(list.map { it.data }, 1, nextPageKey)
@@ -109,7 +109,6 @@ class DynamicDataSource(private val kind: String) : PageKeyedDataSource<Int, Mes
                     .setSchedulers()
                     .doOnSubscribe { initialLoad.postValue(NetworkState.LOADING) }
                     .doOnError {
-                        LogUtils.d("RayleighZ", "error = ${it.message}")
                         initialLoad.value = NetworkState.FAILED
                         failedRequest = { loadInitial(params, callback) }
                     }
@@ -143,18 +142,16 @@ class DynamicDataSource(private val kind: String) : PageKeyedDataSource<Int, Mes
             }
 
             "main" -> {
-                ApiGenerator.getApiService(ApiServiceNew::class.java)
-                    .getDynamicList(kind, 1, params.requestedLoadSize, 77)
+                ApiGenerator.getApiService(QA_GET_DYNAMIC_LIST, ApiServiceNew::class.java)
+                    .getDynamicList(kind, params.key, params.requestedLoadSize, 77)
                     .mapOrThrowApiException()
                     .setSchedulers()
                     .doOnSubscribe { networkState.postValue(NetworkState.LOADING) }
                     .doOnError {
                         networkState.value = NetworkState.FAILED
-                        LogUtils.d("RayleighZ", "error = ${it.message}")
                         failedRequest = { loadAfter(params, callback) }
                     }
                     .safeSubscribeBy { list ->
-                        LogUtils.d("RayleighZ", "on success, list = $list")
                         networkState.value = NetworkState.SUCCESSFUL
                         val adjacentPageKey =
                             (params.key + 1).takeUnless { list.size < params.requestedLoadSize }

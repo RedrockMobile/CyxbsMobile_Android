@@ -18,6 +18,7 @@ import com.mredrock.cyxbs.qa.network.NetworkState
 import com.mredrock.cyxbs.qa.pages.dynamic.model.TopicDataSet
 import com.mredrock.cyxbs.qa.pages.dynamic.ui.activity.DynamicDetailActivity
 import com.mredrock.cyxbs.qa.pages.dynamic.ui.adapter.HybridAdapter
+import com.mredrock.cyxbs.qa.pages.dynamic.ui.adapter.HybridRvAdapterWrapper
 import com.mredrock.cyxbs.qa.pages.square.ui.activity.CircleDetailActivity
 import com.mredrock.cyxbs.qa.ui.adapter.EmptyRvAdapter
 import com.mredrock.cyxbs.qa.ui.adapter.FooterRvAdapter
@@ -157,7 +158,7 @@ class RecommendDynamicFragment : BaseDynamicFragment() {
             }
             val linearLayoutManager = LinearLayoutManager(context)
             layoutManager = linearLayoutManager
-            adapter = RvAdapterWrapper(
+            adapter = HybridRvAdapterWrapper(
                 normalAdapter = dynamicListRvAdapter,
                 emptyAdapter = emptyRvAdapter,
                 footerAdapter = footerRvAdapter

@@ -56,11 +56,9 @@ class HybridTypeAdapter : JsonDeserializer<RedrockApiWrapper<Array<MessageWrappe
             }
 
             messageList.add(messageWrapper)
-            LogUtils.d("RayleighZ", "messageWrapper = $messageWrapper")
         }
 
         //打包成RedrockApiWrapper
-        LogUtils.d("RayleighZ", "my list = $messageList")
         return RedrockApiWrapper(messageList.toTypedArray())
     }
 

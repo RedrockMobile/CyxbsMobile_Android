@@ -1,13 +1,14 @@
 package com.mredrock.cyxbs.qa.pages.dynamic.ui.fragment
 
 import android.content.Intent
-import android.os.Handler
+import android.view.ViewGroup
 import android.view.Window
 import android.view.WindowManager
 import android.widget.TextView
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.mredrock.cyxbs.common.BaseApp
+import com.mredrock.cyxbs.common.utils.LogUtils
 import com.mredrock.cyxbs.qa.R
 import com.mredrock.cyxbs.qa.beannew.Dynamic
 import com.mredrock.cyxbs.qa.component.recycler.RvAdapterWrapper
@@ -17,6 +18,7 @@ import com.mredrock.cyxbs.qa.network.NetworkState
 import com.mredrock.cyxbs.qa.pages.dynamic.model.TopicDataSet
 import com.mredrock.cyxbs.qa.pages.dynamic.ui.activity.DynamicDetailActivity
 import com.mredrock.cyxbs.qa.pages.dynamic.ui.adapter.HybridAdapter
+import com.mredrock.cyxbs.qa.pages.dynamic.ui.adapter.HybridRvAdapterWrapper
 import com.mredrock.cyxbs.qa.pages.square.ui.activity.CircleDetailActivity
 import com.mredrock.cyxbs.qa.ui.adapter.EmptyRvAdapter
 import com.mredrock.cyxbs.qa.ui.adapter.FooterRvAdapter
@@ -169,7 +171,7 @@ class FocusDynamicFragment : BaseDynamicFragment() {
         }
     }
 
-    private fun initObserve(){
+    private fun initObserve() {
         observeLoading()
 
         viewModel.ignorePeople.observe(viewLifecycleOwner, {

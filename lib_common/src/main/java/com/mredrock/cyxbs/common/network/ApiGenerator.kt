@@ -26,6 +26,8 @@ import retrofit2.converter.gson.GsonConverterFactory
 import java.util.concurrent.TimeUnit
 import android.os.Looper
 import android.util.Log
+import com.mredrock.cyxbs.common.network.temp.SSLSocketClient
+import javax.net.ssl.X509TrustManager
 
 
 /**
@@ -178,6 +180,9 @@ object ApiGenerator {
     private fun OkHttpClient.Builder.defaultConfig() {
         this.connectTimeout(DEFAULT_TIME_OUT.toLong(), TimeUnit.SECONDS)
         this.readTimeout(DEFAULT_TIME_OUT.toLong(), TimeUnit.SECONDS)
+        //不开启CA证书校验
+        this.sslSocketFactory(SSLSocketClient.getSSLSocketFactory(), SSLSocketClient.getTrustManager()[0] as X509TrustManager)
+        this.hostnameVerifier(SSLSocketClient.getHostnameVerifier())
     }
 
 
