@@ -1,19 +1,18 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.swiperefreshlayout.widget.SwipeRefreshLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/qa_hot_last_swipe_refresh_layout"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
-    <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
-        android:id="@+id/qa_hot_last_swipe_refresh_layout"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent">
 
-        <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/qa_rv_circle_detail_last_hot"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:background="@color/qa_item_back_color"
-            tools:listitem="@layout/qa_recycler_item_dynamic_header" />
-    </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
-</LinearLayout>
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/qa_rv_circle_detail_last_hot"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/qa_item_back_color"
+        tools:listitem="@layout/qa_recycler_item_dynamic_header" />
+</androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
+
+
+
