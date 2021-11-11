@@ -39,13 +39,13 @@ class MyDynamicViewModel : BaseViewModel(){
             .setPageSize(6)
             .setInitialLoadSizeHint(6)
             .build()
-        if(redid==null){
-            factory = DynamicDataSource.Factory("mine")
+        factory = if(redid==null){
+            DynamicDataSource.Factory("mine")
         }else{
-            factory = DynamicDataSource.Factory("personal",redid)
+            DynamicDataSource.Factory("personal",redid)
         }
 
-        dynamicList = LivePagedListBuilder<Int, Dynamic>(factory!!, config).build()
+        dynamicList = LivePagedListBuilder(factory!!, config).build()
         networkState =
             Transformations.switchMap(factory!!.dynamicDataSourceLiveData) { it.networkState }
         initialLoad =

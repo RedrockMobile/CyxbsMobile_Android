@@ -1,5 +1,6 @@
 package com.mredrock.cyxbs.qa.pages.dynamic.model
 
+import android.util.Log
 import androidx.lifecycle.MutableLiveData
 import androidx.paging.DataSource
 import androidx.paging.PageKeyedDataSource
@@ -10,7 +11,6 @@ import com.mredrock.cyxbs.common.bean.RedrockApiWrapper
 import com.mredrock.cyxbs.common.config.QA_GET_DYNAMIC_LIST
 import com.mredrock.cyxbs.common.config.getBaseUrl
 import com.mredrock.cyxbs.common.network.ApiGenerator
-import com.mredrock.cyxbs.common.network.temp.SSLSocketClient
 import com.mredrock.cyxbs.common.service.ServiceManager
 import com.mredrock.cyxbs.common.utils.LogUtils
 import com.mredrock.cyxbs.common.utils.extensions.mapOrThrowApiException

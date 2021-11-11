@@ -5,15 +5,13 @@ import android.content.Intent
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ImageView
 import android.widget.Toast
 import androidx.recyclerview.widget.DiffUtil
-import com.alibaba.android.arouter.launcher.ARouter
-import com.alibaba.sdk.android.httpdns.probe.IPProbeService
 import com.bumptech.glide.Glide
 import com.mredrock.cyxbs.api.protocol.api.IProtocolService
 import com.mredrock.cyxbs.common.component.CyxbsToast
 import com.mredrock.cyxbs.common.service.ServiceManager
-import com.mredrock.cyxbs.common.utils.LogUtils
 import com.mredrock.cyxbs.common.utils.extensions.setAvatarImageFromUrl
 import com.mredrock.cyxbs.common.utils.extensions.setImageFromUrl
 import com.mredrock.cyxbs.common.utils.extensions.setOnSingleClickListener
@@ -57,6 +55,7 @@ class HybridAdapter(val context: Context?, private val onItemClickEvent: (Dynami
     var onShareClickListener: ((Dynamic, String) -> Unit)? = null
     var onTopicListener: ((String, View) -> Unit)? = null
     var onPopWindowClickListener: ((Int, String, Dynamic) -> Unit)? = null
+    var onAvatarClickListener: ((redid: String) -> Unit)? = null
 
     var curSharedItem: View? = null
     var curSharedDynamic: Dynamic? = null
@@ -65,8 +64,12 @@ class HybridAdapter(val context: Context?, private val onItemClickEvent: (Dynami
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): BaseViewHolder<Message> {
         return when (viewType) {
             normalFlag -> DynamicViewHolder(parent)
-            h5Flag -> { H5DynamicViewHolder(parent) }
-            else -> { DynamicViewHolder(parent) }
+            h5Flag -> {
+                H5DynamicViewHolder(parent)
+            }
+            else -> {
+                DynamicViewHolder(parent)
+            }
         }
     }
 
@@ -85,7 +88,6 @@ class HybridAdapter(val context: Context?, private val onItemClickEvent: (Dynami
                 h5Flag
             }
         } ?: normalFlag
-
 
 
     override fun onBindViewHolder(holder: BaseViewHolder<Message>, position: Int) {
@@ -137,47 +139,91 @@ class HybridAdapter(val context: Context?, private val onItemClickEvent: (Dynami
                 if (dynamic.isSelf == 0) {
                     if (dynamic.isFollowTopic == 0) {
                         OptionalPopWindow.Builder().with(context)
-                            .addOptionAndCallback(CommentConfig.IGNORE,R.layout.qa_popupwindow_option_bottom) {
-                                onPopWindowClickListener?.invoke(position,
-                                    CommentConfig.IGNORE, dynamic)
-                            }.addOptionAndCallback(CommentConfig.REPORT,R.layout.qa_popupwindow_option_bottom) {
-                                onPopWindowClickListener?.invoke(position,
-                                    CommentConfig.REPORT, dynamic)
-                            }.addOptionAndCallback(CommentConfig.FOLLOW,R.layout.qa_popupwindow_option_bottom) {
-                                onPopWindowClickListener?.invoke(position,
-                                    CommentConfig.FOLLOW, dynamic)
-                            }.showFromBottom(LayoutInflater.from(context).inflate(
-                                R.layout.qa_fragment_dynamic,null,false
-                            ))
+                            .addOptionAndCallback(
+                                CommentConfig.IGNORE,
+                                R.layout.qa_popupwindow_option_bottom
+                            ) {
+                                onPopWindowClickListener?.invoke(
+                                    position,
+                                    CommentConfig.IGNORE, dynamic
+                                )
+                            }.addOptionAndCallback(
+                                CommentConfig.REPORT,
+                                R.layout.qa_popupwindow_option_bottom
+                            ) {
+                                onPopWindowClickListener?.invoke(
+                                    position,
+                                    CommentConfig.REPORT, dynamic
+                                )
+                            }.addOptionAndCallback(
+                                CommentConfig.FOLLOW,
+                                R.layout.qa_popupwindow_option_bottom
+                            ) {
+                                onPopWindowClickListener?.invoke(
+                                    position,
+                                    CommentConfig.FOLLOW, dynamic
+                                )
+                            }.showFromBottom(
+                                LayoutInflater.from(context).inflate(
+                                    R.layout.qa_fragment_dynamic, null, false
+                                )
+                            )
                     } else {
                         OptionalPopWindow.Builder().with(context)
-                            .addOptionAndCallback(CommentConfig.IGNORE,R.layout.qa_popupwindow_option_bottom) {
-                                onPopWindowClickListener?.invoke(position,
-                                    CommentConfig.IGNORE, dynamic)
-                            }.addOptionAndCallback(CommentConfig.REPORT,R.layout.qa_popupwindow_option_bottom) {
-                                onPopWindowClickListener?.invoke(position,
-                                    CommentConfig.REPORT, dynamic)
-                            }.addOptionAndCallback(CommentConfig.UN_FOLLOW,R.layout.qa_popupwindow_option_bottom) {
-                                onPopWindowClickListener?.invoke(position,
-                                    CommentConfig.UN_FOLLOW, dynamic)
-                            }.showFromBottom(LayoutInflater.from(context).inflate(
-                                R.layout.qa_fragment_dynamic,null,false
-                            ))
+                            .addOptionAndCallback(
+                                CommentConfig.IGNORE,
+                                R.layout.qa_popupwindow_option_bottom
+                            ) {
+                                onPopWindowClickListener?.invoke(
+                                    position,
+                                    CommentConfig.IGNORE, dynamic
+                                )
+                            }.addOptionAndCallback(
+                                CommentConfig.REPORT,
+                                R.layout.qa_popupwindow_option_bottom
+                            ) {
+                                onPopWindowClickListener?.invoke(
+                                    position,
+                                    CommentConfig.REPORT, dynamic
+                                )
+                            }.addOptionAndCallback(
+                                CommentConfig.UN_FOLLOW,
+                                R.layout.qa_popupwindow_option_bottom
+                            ) {
+                                onPopWindowClickListener?.invoke(
+                                    position,
+                                    CommentConfig.UN_FOLLOW, dynamic
+                                )
+                            }.showFromBottom(
+                                LayoutInflater.from(context).inflate(
+                                    R.layout.qa_fragment_dynamic, null, false
+                                )
+                            )
                     }
                 } else {
                     OptionalPopWindow.Builder().with(context)
-                        .addOptionAndCallback(CommentConfig.DELETE,R.layout.qa_popupwindow_option_bottom) {
-                            onPopWindowClickListener?.invoke(position,
-                                CommentConfig.DELETE, dynamic)
+                        .addOptionAndCallback(
+                            CommentConfig.DELETE,
+                            R.layout.qa_popupwindow_option_bottom
+                        ) {
+                            onPopWindowClickListener?.invoke(
+                                position,
+                                CommentConfig.DELETE, dynamic
+                            )
                         }
-                        .addOptionAndCallback(CommentConfig.EDIT,R.layout.qa_popupwindow_option_bottom) {
+                        .addOptionAndCallback(
+                            CommentConfig.EDIT,
+                            R.layout.qa_popupwindow_option_bottom
+                        ) {
                             val intent = Intent(context, QuizActivity::class.java)
-                            intent.putExtra("dynamic",dynamic)
+                            intent.putExtra("dynamic", dynamic)
                             context?.startActivity(intent)
                         }
-                        .showFromBottom(LayoutInflater.from(context).inflate(
-                            R.layout.qa_fragment_dynamic,null,false
-                        ))
+                        .showFromBottom(
+                            LayoutInflater.from(context).inflate(
+                                R.layout.qa_fragment_dynamic, null, false
+                            )
+                        )
                 }
             }
         }
@@ -203,9 +249,14 @@ class HybridAdapter(val context: Context?, private val onItemClickEvent: (Dynami
             curSharedItem = holder.itemView
             curSharedItemPosition = position
             onItemClickEvent.invoke(data, holder.itemView)
+            holder.itemView.findViewById<ImageView>(R.id.qa_iv_dynamic_avatar).setOnClickListener {
+                onAvatarClickListener?.invoke(data.uid)
+            }
         } else if (data is H5Dynamic) {
             //跳转到web容器
-            ServiceManager.getService(IProtocolService::class.java).jump(data.linkUrl)
+            data.linkUrl?.let { url ->
+                ServiceManager.getService(IProtocolService::class.java).jump(url)
+            }
         }
 
     }
@@ -214,7 +265,7 @@ class HybridAdapter(val context: Context?, private val onItemClickEvent: (Dynami
         BaseViewHolder<Message>(parent, R.layout.qa_recycler_item_dynamic_header) {
         override fun refresh(data: Message?) {
             data ?: return
-            if (data is Dynamic){
+            if (data is Dynamic) {
                 itemView.apply {
                     qa_iv_dynamic_praise_count_image.registerLikeView(
                         data.postId,
@@ -281,7 +332,7 @@ class HybridAdapter(val context: Context?, private val onItemClickEvent: (Dynami
     class H5DynamicViewHolder(parent: ViewGroup) :
         BaseViewHolder<Message>(parent, R.layout.qa_recycler_item_h5_dynamic) {
         override fun refresh(data: Message?) {
-            if (data is H5Dynamic){
+            if (data is H5Dynamic) {
                 itemView.apply {
                     qa_iv_dynamic_h5_avatar.setAvatarImageFromUrl(data.avatar)
                     qa_tv_recycler_item_h5_nickname.text = data.nickName
