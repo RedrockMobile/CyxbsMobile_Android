@@ -176,6 +176,10 @@ class HomepageActivity : BaseViewModelActivity<MineViewModel>() {
             loadAvatar(it.data.photoSrc, dataBinding.clPersonalInformation.civ_head)
 
         }
+
+        viewModel._redRockApiChangeUsercount.observeForever {
+            viewModel.getPersonalCount(redid)
+        }
         getUserInfo(intent)
 
     }
@@ -200,10 +204,7 @@ class HomepageActivity : BaseViewModelActivity<MineViewModel>() {
                 }
             }
         }
-        dataBinding.clPersonalInformation.mine_tv_concern.setOnClickListener {
-                viewModel.changeFocusStatus(redid)
-                getUserInfo(intent)
-        }
+
     }
 
 
@@ -282,6 +283,10 @@ class HomepageActivity : BaseViewModelActivity<MineViewModel>() {
             dataBinding.clPersonalInformation.tv_fans_number.text= it.data.fans.toString()
             dataBinding.clPersonalInformation.tv_attention_number.text=it.data.follows.toString()
             dataBinding.clPersonalInformation.tv_praise_number.text=it.data.praise.toString()
+
+        }
+        dataBinding.clPersonalInformation.mine_tv_concern.setOnClickListener {
+            viewModel.changeFocusStatus(redid)
 
         }
         dataBinding.ivMineBackgroundNormal.setOnClickListener {

@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="todo_add_time_back_ic_color">#C4C4C4</color>
+    <color name="todo_add_todo_back_color">#2D2D2D</color>
+    <color name="todo_add_todo_choose_year_text_chosen_color">#F0F0F2</color>
+    <color name="todo_add_todo_choose_year_text_default_color">#838385</color>
+    <color name="todo_add_todo_title_hint_color">#85F0F0F2</color>
+    <color name="todo_add_todo_year_clicked_color">#222222</color>
+    <color name="todo_add_todo_year_default_color">#323232</color>
+    <color name="todo_check_line_color">#F0F0F2</color>
+    <color name="todo_feed_check_eclipse_color">#8AF0F0F2</color>
+    <color name="todo_feed_divide_line_color">#802D2D2D</color>
+    <color name="todo_ic_back_color">#FFFFFF</color>
+    <color name="todo_inner_add_save_text_color">#2CDEFF</color>
+    <color name="todo_inner_add_thing_et_hint_color">#CCDFDFE3</color>
+    <color name="todo_inner_add_thing_et_shape_color">#C51F1F1F</color>
+    <color name="todo_inner_add_thing_nf_tv_click_color">#66DFDFE3</color>
+    <color name="todo_inner_add_thing_nf_tv_unclick_color">#802A4E84</color>
+    <color name="todo_inner_add_thing_repeat_time_cancel">#80484A4D</color>
+    <color name="todo_inner_add_thing_repeat_time_cancel_text_color">#66F0F0F2</color>
+    <color name="todo_inner_add_thing_repeat_time_confirm_text_color">#FFFFFF</color>
+    <color name="todo_inner_add_thing_repeat_time_item_shape_color">#5E5E5E</color>
+    <color name="todo_inner_check_eclipse_color">#75F0F0F2</color>
+    <color name="todo_inner_checked_line_color">#868689</color>
+    <color name="todo_inner_detail_edittext_line_color">#20F8F9FC</color>
+    <color name="todo_inner_detail_line_color">#102A4E84</color>
+    <color name="todo_inner_hint_color">#A0EDF4FD</color>
+    <color name="todo_item_checked_color">#33F0F0F2</color>
+    <color name="todo_item_del_red">#FF6262</color>
+    <color name="todo_item_inner_nf_time_color">#99F0F0F2</color>
+    <color name="todo_item_nf_time_color">#58DFDFE3</color>
+</resources>

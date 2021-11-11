@@ -475,9 +475,9 @@ class DynamicDetailActivity : BaseViewModelActivity<DynamicDetailViewModel>() {
             viewModel.dynamic.value?.let { dynamic ->
                 ShareDialog(view.context).apply {
                     val url = "${CommentConfig.SHARE_URL}dynamic?id=${dynamic.postId}"
-                    initView(onCancelListener = View.OnClickListener {
+                    initView(onCancelListener = {
                         dismiss()
-                    }, qqShare = View.OnClickListener {
+                    }, qqShare = {
                         val pic = if (dynamic.pics.isNullOrEmpty()) "" else dynamic.pics[0]
                         mTencent?.let { it1 ->
                             ShareUtils.qqShare(
@@ -489,7 +489,7 @@ class DynamicDetailActivity : BaseViewModelActivity<DynamicDetailViewModel>() {
                                 pic
                             )
                         }
-                    }, qqZoneShare = View.OnClickListener {
+                    }, qqZoneShare = {
                         mTencent?.let { it1 ->
                             ShareUtils.qqQzoneShare(
                                 it1,
@@ -501,21 +501,21 @@ class DynamicDetailActivity : BaseViewModelActivity<DynamicDetailViewModel>() {
                             )
                         }
 
-                    }, weChatShare = View.OnClickListener {
+                    }, weChatShare = {
                         CyxbsToast.makeText(
                             context,
                             R.string.qa_share_wechat_text,
                             Toast.LENGTH_SHORT
                         ).show()
 
-                    }, friendShipCircle = View.OnClickListener {
+                    }, friendShipCircle = {
                         CyxbsToast.makeText(
                             context,
                             R.string.qa_share_wechat_text,
                             Toast.LENGTH_SHORT
                         ).show()
 
-                    }, copyLink = View.OnClickListener {
+                    }, copyLink = {
                         ClipboardController.copyText(this@DynamicDetailActivity, url)
                     })
                 }.show()
@@ -661,6 +661,7 @@ class DynamicDetailActivity : BaseViewModelActivity<DynamicDetailViewModel>() {
             }
         }
         val data = Intent()
+
         data.putExtra("refresh_dynamic", viewModel.dynamic.value)
         setResult(-1, data)
     }

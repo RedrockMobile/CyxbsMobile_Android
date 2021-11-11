@@ -26,6 +26,7 @@ class MineViewModel: BaseViewModel() {
     val _isChangeSuccess = MutableLiveData<Boolean>()
     val redRockApiStatusDelete = MutableLiveData<RedrockApiStatus>()
        val _PersonalCont=MutableLiveData<PersonalCount>()
+    val _redRockApiChangeUsercount = MutableLiveData<RedrockApiStatus>()
    fun  getUserInfo(redid:String?){
        if (redid!=null){
            apiService.getPersonInfo(redid)
@@ -134,7 +135,7 @@ class MineViewModel: BaseViewModel() {
 
             }
             .safeSubscribeBy {
-
+                _redRockApiChangeUsercount.value=it
             }
     }
 

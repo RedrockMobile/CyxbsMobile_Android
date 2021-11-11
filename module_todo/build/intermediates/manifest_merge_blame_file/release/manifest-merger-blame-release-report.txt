@@ -1,0 +1,70 @@
+1<?xml version="1.0" encoding="utf-8"?>
+2<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+3    package="com.cyxbsmobile_single.module_todo" >
+4
+5    <uses-sdk
+6        android:minSdkVersion="21"
+6-->C:\Users\32261\Desktop\Cyxbs\CyxbsMobile_Android\module_todo\src\main\AndroidManifest.xml
+7        android:targetSdkVersion="26" />
+7-->C:\Users\32261\Desktop\Cyxbs\CyxbsMobile_Android\module_todo\src\main\AndroidManifest.xml
+8
+9    <application>
+9-->C:\Users\32261\Desktop\Cyxbs\CyxbsMobile_Android\module_todo\src\main\AndroidManifest.xml:5:5-34:19
+10        <activity android:name="com.cyxbsmobile_single.module_todo.ui.activity.TodoDetailActivity" />
+10-->C:\Users\32261\Desktop\Cyxbs\CyxbsMobile_Android\module_todo\src\main\AndroidManifest.xml:6:9-67
+10-->C:\Users\32261\Desktop\Cyxbs\CyxbsMobile_Android\module_todo\src\main\AndroidManifest.xml:6:19-65
+11        <activity
+11-->C:\Users\32261\Desktop\Cyxbs\CyxbsMobile_Android\module_todo\src\main\AndroidManifest.xml:7:9-10:60
+12            android:name="com.cyxbsmobile_single.module_todo.ui.activity.WidgetAddTodoActivity"
+12-->C:\Users\32261\Desktop\Cyxbs\CyxbsMobile_Android\module_todo\src\main\AndroidManifest.xml:8:13-62
+13            android:launchMode="singleInstance"
+13-->C:\Users\32261\Desktop\Cyxbs\CyxbsMobile_Android\module_todo\src\main\AndroidManifest.xml:9:13-48
+14            android:theme="@style/todo_TranslucentStyle" />
+14-->C:\Users\32261\Desktop\Cyxbs\CyxbsMobile_Android\module_todo\src\main\AndroidManifest.xml:10:13-57
+15        <activity android:name="com.cyxbsmobile_single.module_todo.ui.activity.TodoInnerMainActivity" />
+15-->C:\Users\32261\Desktop\Cyxbs\CyxbsMobile_Android\module_todo\src\main\AndroidManifest.xml:11:9-71
+15-->C:\Users\32261\Desktop\Cyxbs\CyxbsMobile_Android\module_todo\src\main\AndroidManifest.xml:11:19-68
+16
+17        <!-- todoList相关小组件 -->
+18        <receiver
+18-->C:\Users\32261\Desktop\Cyxbs\CyxbsMobile_Android\module_todo\src\main\AndroidManifest.xml:15:9-29:20
+19            android:name="com.cyxbsmobile_single.module_todo.ui.widget.TodoWidget"
+19-->C:\Users\32261\Desktop\Cyxbs\CyxbsMobile_Android\module_todo\src\main\AndroidManifest.xml:16:13-49
+20            android:label="邮子清单" >
+20-->C:\Users\32261\Desktop\Cyxbs\CyxbsMobile_Android\module_todo\src\main\AndroidManifest.xml:17:13-33
+21            <intent-filter>
+21-->C:\Users\32261\Desktop\Cyxbs\CyxbsMobile_Android\module_todo\src\main\AndroidManifest.xml:18:13-24:29
+22                <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
+22-->C:\Users\32261\Desktop\Cyxbs\CyxbsMobile_Android\module_todo\src\main\AndroidManifest.xml:19:17-84
+22-->C:\Users\32261\Desktop\Cyxbs\CyxbsMobile_Android\module_todo\src\main\AndroidManifest.xml:19:25-81
+23                <action android:name="cyxbs.widget.todo.refresh" />
+23-->C:\Users\32261\Desktop\Cyxbs\CyxbsMobile_Android\module_todo\src\main\AndroidManifest.xml:20:17-68
+23-->C:\Users\32261\Desktop\Cyxbs\CyxbsMobile_Android\module_todo\src\main\AndroidManifest.xml:20:25-65
+24                <action android:name="cyxbs.widget.todo.add" />
+24-->C:\Users\32261\Desktop\Cyxbs\CyxbsMobile_Android\module_todo\src\main\AndroidManifest.xml:21:17-63
+24-->C:\Users\32261\Desktop\Cyxbs\CyxbsMobile_Android\module_todo\src\main\AndroidManifest.xml:21:25-61
+25                <action android:name="cyxbs.widget.todo.jump" />
+25-->C:\Users\32261\Desktop\Cyxbs\CyxbsMobile_Android\module_todo\src\main\AndroidManifest.xml:22:17-65
+25-->C:\Users\32261\Desktop\Cyxbs\CyxbsMobile_Android\module_todo\src\main\AndroidManifest.xml:22:25-62
+26                <action android:name="cyxbs.widget.todo.check" />
+26-->C:\Users\32261\Desktop\Cyxbs\CyxbsMobile_Android\module_todo\src\main\AndroidManifest.xml:23:17-65
+26-->C:\Users\32261\Desktop\Cyxbs\CyxbsMobile_Android\module_todo\src\main\AndroidManifest.xml:23:25-63
+27            </intent-filter>
+28
+29            <meta-data
+29-->C:\Users\32261\Desktop\Cyxbs\CyxbsMobile_Android\module_todo\src\main\AndroidManifest.xml:26:13-28:64
+30                android:name="android.appwidget.provider"
+30-->C:\Users\32261\Desktop\Cyxbs\CyxbsMobile_Android\module_todo\src\main\AndroidManifest.xml:27:17-58
+31                android:resource="@xml/todo_widget_provider" />
+31-->C:\Users\32261\Desktop\Cyxbs\CyxbsMobile_Android\module_todo\src\main\AndroidManifest.xml:28:17-61
+32        </receiver>
+33
+34        <service
+34-->C:\Users\32261\Desktop\Cyxbs\CyxbsMobile_Android\module_todo\src\main\AndroidManifest.xml:31:9-33:72
+35            android:name="com.cyxbsmobile_single.module_todo.service.TodoWidgetService"
+35-->C:\Users\32261\Desktop\Cyxbs\CyxbsMobile_Android\module_todo\src\main\AndroidManifest.xml:32:13-54
+36            android:permission="android.permission.BIND_REMOTEVIEWS" />
+36-->C:\Users\32261\Desktop\Cyxbs\CyxbsMobile_Android\module_todo\src\main\AndroidManifest.xml:33:13-69
+37    </application>
+38
+39</manifest>

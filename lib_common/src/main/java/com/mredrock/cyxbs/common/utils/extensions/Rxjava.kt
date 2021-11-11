@@ -8,6 +8,7 @@ import com.mredrock.cyxbs.common.network.exception.DefaultErrorHandler
 import com.mredrock.cyxbs.common.network.exception.ErrorHandler
 import com.mredrock.cyxbs.common.network.exception.RedrockApiException
 import com.mredrock.cyxbs.common.network.exception.RedrockApiIllegalStateException
+import com.mredrock.cyxbs.common.utils.LogUtils
 import io.reactivex.Observable
 import io.reactivex.Scheduler
 import io.reactivex.android.schedulers.AndroidSchedulers

@@ -12,9 +12,9 @@ import com.mredrock.cyxbs.common.utils.extensions.setSchedulers
 import com.mredrock.cyxbs.common.viewmodel.BaseViewModel
 import com.mredrock.cyxbs.qa.R
 import com.mredrock.cyxbs.qa.beannew.Dynamic
+import com.mredrock.cyxbs.qa.beannew.Message
 import com.mredrock.cyxbs.qa.network.ApiServiceNew
 import com.mredrock.cyxbs.qa.pages.dynamic.model.DynamicDataSource
-import com.mredrock.cyxbs.qa.pages.dynamic.viewmodel.DynamicListViewModel
 
 /**
  * @date 2021-02-23
@@ -23,7 +23,7 @@ import com.mredrock.cyxbs.qa.pages.dynamic.viewmodel.DynamicListViewModel
 class MyDynamicViewModel : BaseViewModel(){
     private var factory: DynamicDataSource.Factory?=null
 
-    var dynamicList: LiveData<PagedList<Dynamic>>?=null
+    var dynamicList: LiveData<PagedList<Message>>?=null
     var networkState: LiveData<Int>?=null
     var initialLoad: LiveData<Int>?=null
 
@@ -39,13 +39,13 @@ class MyDynamicViewModel : BaseViewModel(){
             .setPageSize(6)
             .setInitialLoadSizeHint(6)
             .build()
-        if(redid==null){
-            factory = DynamicDataSource.Factory("mine")
+        factory = if(redid==null){
+            DynamicDataSource.Factory("mine")
         }else{
-            factory = DynamicDataSource.Factory("personal",redid)
+            DynamicDataSource.Factory("personal",redid)
         }
 
-        dynamicList = LivePagedListBuilder<Int, Dynamic>(factory!!, config).build()
+        dynamicList = LivePagedListBuilder(factory!!, config).build()
         networkState =
             Transformations.switchMap(factory!!.dynamicDataSourceLiveData) { it.networkState }
         initialLoad =
