@@ -1,6 +1,7 @@
 package com.mredrock.cyxbs.qa.pages.dynamic.ui.adapter
 
 import android.content.Context
+import android.content.Intent
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -8,6 +9,7 @@ import android.widget.Toast
 import androidx.recyclerview.widget.DiffUtil
 import com.alibaba.android.arouter.launcher.ARouter
 import com.alibaba.sdk.android.httpdns.probe.IPProbeService
+import com.bumptech.glide.Glide
 import com.mredrock.cyxbs.api.protocol.api.IProtocolService
 import com.mredrock.cyxbs.common.component.CyxbsToast
 import com.mredrock.cyxbs.common.service.ServiceManager
@@ -23,6 +25,7 @@ import com.mredrock.cyxbs.qa.beannew.MessageWrapper
 import com.mredrock.cyxbs.qa.component.recycler.BaseEndlessRvAdapter
 import com.mredrock.cyxbs.qa.component.recycler.BaseViewHolder
 import com.mredrock.cyxbs.qa.config.CommentConfig
+import com.mredrock.cyxbs.qa.pages.quiz.ui.QuizActivity
 import com.mredrock.cyxbs.qa.ui.activity.ViewImageActivity
 import com.mredrock.cyxbs.qa.ui.widget.NineGridView
 import com.mredrock.cyxbs.qa.ui.widget.OptionalPopWindow
@@ -123,10 +126,7 @@ class HybridAdapter(val context: Context?, private val onItemClickEvent: (Dynami
                             Toast.LENGTH_SHORT
                         ).show()
                     }, copyLink = {
-                        onShareClickListener?.invoke(
-                            dynamic,
-                            CommentConfig.COPY_LINK
-                        )
+                        onShareClickListener?.invoke(dynamic, CommentConfig.COPY_LINK)
                     })
                 }.show()
             }
@@ -137,64 +137,47 @@ class HybridAdapter(val context: Context?, private val onItemClickEvent: (Dynami
                 if (dynamic.isSelf == 0) {
                     if (dynamic.isFollowTopic == 0) {
                         OptionalPopWindow.Builder().with(context)
-                            .addOptionAndCallback(CommentConfig.IGNORE) {
-                                onPopWindowClickListener?.invoke(
-                                    position,
-                                    CommentConfig.IGNORE,
-                                    dynamic
-                                )
-                            }.addOptionAndCallback(CommentConfig.REPORT) {
-                                onPopWindowClickListener?.invoke(
-                                    position,
-                                    CommentConfig.REPORT,
-                                    dynamic
-                                )
-                            }.addOptionAndCallback(CommentConfig.FOLLOW) {
-                                onPopWindowClickListener?.invoke(
-                                    position,
-                                    CommentConfig.FOLLOW,
-                                    dynamic
-                                )
-                            }.show(view, OptionalPopWindow.AlignMode.RIGHT, 0)
+                            .addOptionAndCallback(CommentConfig.IGNORE,R.layout.qa_popupwindow_option_bottom) {
+                                onPopWindowClickListener?.invoke(position,
+                                    CommentConfig.IGNORE, dynamic)
+                            }.addOptionAndCallback(CommentConfig.REPORT,R.layout.qa_popupwindow_option_bottom) {
+                                onPopWindowClickListener?.invoke(position,
+                                    CommentConfig.REPORT, dynamic)
+                            }.addOptionAndCallback(CommentConfig.FOLLOW,R.layout.qa_popupwindow_option_bottom) {
+                                onPopWindowClickListener?.invoke(position,
+                                    CommentConfig.FOLLOW, dynamic)
+                            }.showFromBottom(LayoutInflater.from(context).inflate(
+                                R.layout.qa_fragment_dynamic,null,false
+                            ))
                     } else {
                         OptionalPopWindow.Builder().with(context)
-                            .addOptionAndCallback(CommentConfig.IGNORE) {
-                                onPopWindowClickListener?.invoke(
-                                    position,
-                                    CommentConfig.IGNORE,
-                                    dynamic
-                                )
-                            }.addOptionAndCallback(CommentConfig.REPORT) {
-                                onPopWindowClickListener?.invoke(
-                                    position,
-                                    CommentConfig.REPORT,
-                                    dynamic
-                                )
-                            }.addOptionAndCallback(CommentConfig.UN_FOLLOW) {
-                                onPopWindowClickListener?.invoke(
-                                    position,
-                                    CommentConfig.UN_FOLLOW,
-                                    dynamic
-                                )
-                            }.show(view, OptionalPopWindow.AlignMode.RIGHT, 0)
+                            .addOptionAndCallback(CommentConfig.IGNORE,R.layout.qa_popupwindow_option_bottom) {
+                                onPopWindowClickListener?.invoke(position,
+                                    CommentConfig.IGNORE, dynamic)
+                            }.addOptionAndCallback(CommentConfig.REPORT,R.layout.qa_popupwindow_option_bottom) {
+                                onPopWindowClickListener?.invoke(position,
+                                    CommentConfig.REPORT, dynamic)
+                            }.addOptionAndCallback(CommentConfig.UN_FOLLOW,R.layout.qa_popupwindow_option_bottom) {
+                                onPopWindowClickListener?.invoke(position,
+                                    CommentConfig.UN_FOLLOW, dynamic)
+                            }.showFromBottom(LayoutInflater.from(context).inflate(
+                                R.layout.qa_fragment_dynamic,null,false
+                            ))
                     }
                 } else {
                     OptionalPopWindow.Builder().with(context)
-                        .addDynamicData(dynamic)
-                        .addOptionAndCallback(
-                            CommentConfig.DELETE,
-                            R.layout.qa_popupwindow_option_bottom
-                        ) {
-                            onPopWindowClickListener?.invoke(
-                                position,
-                                CommentConfig.DELETE,
-                                dynamic
-                            )
-                        }.showFromBottom(
-                            LayoutInflater.from(context).inflate(
-                                R.layout.qa_fragment_dynamic, null, false
-                            )
-                        )
+                        .addOptionAndCallback(CommentConfig.DELETE,R.layout.qa_popupwindow_option_bottom) {
+                            onPopWindowClickListener?.invoke(position,
+                                CommentConfig.DELETE, dynamic)
+                        }
+                        .addOptionAndCallback(CommentConfig.EDIT,R.layout.qa_popupwindow_option_bottom) {
+                            val intent = Intent(context, QuizActivity::class.java)
+                            intent.putExtra("dynamic",dynamic)
+                            context?.startActivity(intent)
+                        }
+                        .showFromBottom(LayoutInflater.from(context).inflate(
+                            R.layout.qa_fragment_dynamic,null,false
+                        ))
                 }
             }
         }
@@ -231,68 +214,65 @@ class HybridAdapter(val context: Context?, private val onItemClickEvent: (Dynami
         BaseViewHolder<Message>(parent, R.layout.qa_recycler_item_dynamic_header) {
         override fun refresh(data: Message?) {
             data ?: return
-            if (data is Dynamic) {
-                refreshNormalDynamic(data)
-            }
-        }
-
-        private fun refreshNormalDynamic(data: Dynamic) {
-            itemView.apply {
-                qa_iv_dynamic_praise_count_image.registerLikeView(
-                    data.postId,
-                    CommentConfig.PRAISE_MODEL_DYNAMIC,
-                    data.isPraised,
-                    data.praiseCount
-                )
-                qa_iv_dynamic_praise_count_image.setOnSingleClickListener {
-                    qa_iv_dynamic_praise_count_image.click()
-                }
-                qa_iv_dynamic_avatar.setAvatarImageFromUrl(data.avatar)
-                qa_tv_dynamic_topic.text = "# " + data.topic
-                qa_tv_dynamic_nickname.text = data.nickName
-                qa_tv_dynamic_content.setContent(data.content)
-                qa_tv_dynamic_comment_count.text = data.commentCount.toString()
-                qa_tv_dynamic_publish_at.text =
-                    dynamicTimeDescription(System.currentTimeMillis(), data.publishTime * 1000)
-                //解决图片错乱的问题
-                if (data.pics.isNullOrEmpty())
-                    qa_dynamic_nine_grid_view.setRectangleImages(
-                        emptyList(),
-                        NineGridView.MODE_IMAGE_THREE_SIZE
+            if (data is Dynamic){
+                itemView.apply {
+                    qa_iv_dynamic_praise_count_image.registerLikeView(
+                        data.postId,
+                        CommentConfig.PRAISE_MODEL_DYNAMIC,
+                        data.isPraised,
+                        data.praiseCount
                     )
-                else {
-                    data.pics.apply {
-                        val tag = qa_dynamic_nine_grid_view.tag
-                        if (null == tag || tag == this) {
-                            val tagStore = qa_dynamic_nine_grid_view.tag
-                            qa_dynamic_nine_grid_view.setImages(
-                                this,
-                                NineGridView.MODE_IMAGE_THREE_SIZE,
-                                NineGridView.ImageMode.MODE_IMAGE_RECTANGLE
-                            )
-                            qa_dynamic_nine_grid_view.tag = tagStore
-                        } else {
-                            val tagStore = this
-                            qa_dynamic_nine_grid_view.tag = null
-                            qa_dynamic_nine_grid_view.setRectangleImages(
-                                emptyList(),
-                                NineGridView.MODE_IMAGE_THREE_SIZE
-                            )
-                            qa_dynamic_nine_grid_view.setImages(
-                                this,
-                                NineGridView.MODE_IMAGE_THREE_SIZE,
-                                NineGridView.ImageMode.MODE_IMAGE_RECTANGLE
-                            )
-                            qa_dynamic_nine_grid_view.tag = tagStore
+                    qa_iv_dynamic_praise_count_image.setOnSingleClickListener {
+                        qa_iv_dynamic_praise_count_image.click()
+                    }
+                    qa_iv_dynamic_avatar.setAvatarImageFromUrl(data.avatar)
+                    qa_tv_dynamic_topic.text = "# " + data.topic
+                    qa_tv_dynamic_nickname.text = data.nickName
+                    qa_tv_dynamic_content.setContent(data.content)
+                    qa_tv_dynamic_comment_count.text = data.commentCount.toString()
+                    qa_tv_dynamic_publish_at.text =
+                        dynamicTimeDescription(System.currentTimeMillis(), data.publishTime * 1000)
+                    Glide.with(context).load(data.identityPic).into(qa_iv_dynamic_identity)
+                    //解决图片错乱的问题
+                    if (data.pics.isNullOrEmpty())
+                        qa_dynamic_nine_grid_view.setRectangleImages(
+                            emptyList(),
+                            NineGridView.MODE_IMAGE_THREE_SIZE
+                        )
+                    else {
+                        data.pics.apply {
+                            val tag = qa_dynamic_nine_grid_view.tag
+                            if (null == tag || tag == this) {
+                                val tagStore = qa_dynamic_nine_grid_view.tag
+                                qa_dynamic_nine_grid_view.setImages(
+                                    this,
+                                    NineGridView.MODE_IMAGE_THREE_SIZE,
+                                    NineGridView.ImageMode.MODE_IMAGE_RECTANGLE
+                                )
+                                qa_dynamic_nine_grid_view.tag = tagStore
+                            } else {
+                                val tagStore = this
+                                qa_dynamic_nine_grid_view.tag = null
+                                qa_dynamic_nine_grid_view.setRectangleImages(
+                                    emptyList(),
+                                    NineGridView.MODE_IMAGE_THREE_SIZE
+                                )
+                                qa_dynamic_nine_grid_view.setImages(
+                                    this,
+                                    NineGridView.MODE_IMAGE_THREE_SIZE,
+                                    NineGridView.ImageMode.MODE_IMAGE_RECTANGLE
+                                )
+                                qa_dynamic_nine_grid_view.tag = tagStore
+                            }
                         }
                     }
-                }
-                qa_dynamic_nine_grid_view.setOnItemClickListener { _, index ->
-                    ViewImageActivity.activityStart(
-                        context,
-                        data.pics.map { it }.toTypedArray(),
-                        index
-                    )
+                    qa_dynamic_nine_grid_view.setOnItemClickListener { _, index ->
+                        ViewImageActivity.activityStart(
+                            context,
+                            data.pics.map { it }.toTypedArray(),
+                            index
+                        )
+                    }
                 }
             }
         }
