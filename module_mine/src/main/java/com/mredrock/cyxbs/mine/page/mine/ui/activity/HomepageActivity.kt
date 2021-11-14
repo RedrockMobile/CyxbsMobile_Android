@@ -212,8 +212,6 @@ class HomepageActivity : BaseViewModelActivity<MineViewModel>() {
     fun getUserInfo(data: Intent?) {
         if (redid == null) {
             redid = data?.getStringExtra("redid")
-
-            Log.e("wxtagredid", "(HomepageActivity.kt:213)->>拿到的redid=${redid} ")
         }
         if (redid != null) {   //他人访问的情况
             viewModel.getUserInfo(redid)
@@ -358,7 +356,7 @@ class HomepageActivity : BaseViewModelActivity<MineViewModel>() {
     fun initBlurBitmap(bitmap: Bitmap?) {
         if (bitmap == null) {
             mTempBitmap =
-                BitmapFactory.decodeResource(getResources(), R.drawable.mine_ic_iv_background_test)
+                BitmapFactory.decodeResource(resources, R.drawable.mine_ic_iv_background)
             mFinalBitmap = BlurBitmap.blur(this, mTempBitmap!!)
         } else {
             mTempBitmap = bitmap

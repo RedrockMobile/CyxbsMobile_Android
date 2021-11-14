@@ -81,12 +81,12 @@ class DynamicDataSource(private val kind: String,private val redid: String?) : P
                     .safeSubscribeBy { list ->
                         initialLoad.value = NetworkState.SUCCESSFUL
                         val nextPageKey = 2.takeUnless { (list.size < params.requestedLoadSize) }
-                        callback.onResult(list.map { it.data }, 1, nextPageKey)
+                        callback.onResult(list.map { it }, 1, nextPageKey)
                     }
             }
 
             "personal" -> {
-              Log.e("wxtag跨模块刷新","(DynamicDataSource.kt:59)->> 执行正确")
+
                 ApiGenerator.getApiService(ApiServiceNew::class.java)
                     .getPersoalDynamic(redid, 1,6)
                     .mapOrThrowApiException()
@@ -98,7 +98,7 @@ class DynamicDataSource(private val kind: String,private val redid: String?) : P
                         failedRequest = { loadInitial(params, callback) }
                     }
                     .safeSubscribeBy { list ->
-                        Log.e("wxtag跨模块刷新","(DynamicDataSource.kt:59)->> 执行正确list=$list")
+
                         initialLoad.value = NetworkState.SUCCESSFUL
                         val nextPageKey = 2.takeUnless { (list.size < params.requestedLoadSize) }
                         callback.onResult(list, 1, nextPageKey)
@@ -113,7 +113,7 @@ class DynamicDataSource(private val kind: String,private val redid: String?) : P
                     .setSchedulers()
                     .doOnSubscribe { initialLoad.postValue(NetworkState.LOADING) }
                     .doOnError {
-                        Log.d("TAG","(DynamicDataSource.kt:65)->$it")
+
                         initialLoad.value = NetworkState.FAILED
                         failedRequest = { loadInitial(params, callback) }
                     }
@@ -144,7 +144,7 @@ class DynamicDataSource(private val kind: String,private val redid: String?) : P
     }
 
     override fun loadAfter(params: LoadParams<Int>, callback: LoadCallback<Int, Message>) {
-        Log.e("wxtag跨模块刷新","(DynamicDataSource.kt:59)->> loadAfter kind=$kind")
+
         when (kind) {
             "mine" -> {
                 ApiGenerator.getApiService(ApiServiceNew::class.java)
@@ -164,7 +164,7 @@ class DynamicDataSource(private val kind: String,private val redid: String?) : P
                     }
             }
             "personal" -> {
-                Log.e("wxtag跨模块刷新","(DynamicDataSource.kt:59)->> 执行正确")
+
                 ApiGenerator.getApiService(ApiServiceNew::class.java)
                     .getPersoalDynamic(redid, params.key, params.requestedLoadSize)
                     .mapOrThrowApiException()
@@ -229,7 +229,7 @@ class DynamicDataSource(private val kind: String,private val redid: String?) : P
         val dynamicDataSourceLiveData = MutableLiveData<DynamicDataSource>()
 
         override fun create(): DynamicDataSource {
-            Log.e("wxtag跨模块刷新","(MyDynamicFragment.kt:177)->> create():redid=$redid 还有kind=$kind")
+
             val dynamicDataSource = DynamicDataSource(kind,redid)
             dynamicDataSourceLiveData.postValue(dynamicDataSource)
             return dynamicDataSource
