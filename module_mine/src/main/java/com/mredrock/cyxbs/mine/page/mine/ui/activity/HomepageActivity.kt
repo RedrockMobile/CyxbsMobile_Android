@@ -72,7 +72,8 @@ class HomepageActivity : BaseViewModelActivity<MineViewModel>() {
     /**
      * 是否是本人访问个人中心
      */
-    private var isSelf=true
+    private var isSelf = true
+
     /**
      * 原始图片   关于个人主页背景图片的高斯模糊实现  我是采用的两种图片重合的形式
      * 后面一张全部模糊 只是改变前面一张的透明度 就可以达到动态的模糊效果
@@ -161,10 +162,10 @@ class HomepageActivity : BaseViewModelActivity<MineViewModel>() {
             dataBinding.clPersonalInformation.tv_name.text = it.data.nickname
             dataBinding.clPersonalInformation.tv_signature.text = it.data.introduction
             nickname = it.data.nickname
-            isNeedRefresh=false
-            isSelf=it.data.isSelf
+            isNeedRefresh = false
+            isSelf = it.data.isSelf
             it.data.redid.let {
-                identityFragment.onSuccesss(it,isSelf)
+                identityFragment.onSuccesss(it, isSelf)
                 dataBinding.vp2Mine.offscreenPageLimit = 2
                 redid = it
                 viewModel.getPersonalCount(redid)
@@ -187,20 +188,20 @@ class HomepageActivity : BaseViewModelActivity<MineViewModel>() {
     fun initSatu(user: UserInfo) {
         user.data.identityies.forEachIndexed { index, s ->
             loadRedrockImage(s, imageViewList[index])
-            imageViewList[index].visibility=View.VISIBLE
+            imageViewList[index].visibility = View.VISIBLE
         }
     }
 
-    fun changeAttention(data:UserInfo){
-        if (data.data.isSelf){
-            dataBinding.clPersonalInformation.mine_tv_concern.visibility=View.INVISIBLE
-        }else{
-            dataBinding.clPersonalInformation.mine_tv_concern.visibility=View.VISIBLE
-            if (data.data.isFocus){
-                if (data.data.isBefocused){
-                    dataBinding.clPersonalInformation.mine_tv_concern.text="互相关注"
-                }else{
-                    dataBinding.clPersonalInformation.mine_tv_concern.text="已关注"
+    fun changeAttention(data: UserInfo) {
+        if (data.data.isSelf) {
+            dataBinding.clPersonalInformation.mine_tv_concern.visibility = View.INVISIBLE
+        } else {
+            dataBinding.clPersonalInformation.mine_tv_concern.visibility = View.VISIBLE
+            if (data.data.isFocus) {
+                if (data.data.isBefocused) {
+                    dataBinding.clPersonalInformation.mine_tv_concern.text = "互相关注"
+                } else {
+                    dataBinding.clPersonalInformation.mine_tv_concern.text = "已关注"
                 }
             }
         }
@@ -209,10 +210,10 @@ class HomepageActivity : BaseViewModelActivity<MineViewModel>() {
 
 
     fun getUserInfo(data: Intent?) {
-        if(redid==null){
+        if (redid == null) {
             redid = data?.getStringExtra("redid")
 
-          Log.e("wxtagredid","(HomepageActivity.kt:213)->>拿到的redid=${redid} ")
+            Log.e("wxtagredid", "(HomepageActivity.kt:213)->>拿到的redid=${redid} ")
         }
         if (redid != null) {   //他人访问的情况
             viewModel.getUserInfo(redid)
@@ -231,7 +232,7 @@ class HomepageActivity : BaseViewModelActivity<MineViewModel>() {
             ARouter.getInstance().build(QA_DYNAMIC_MINE_FRAGMENT).navigation() as Fragment
         val list = arrayListOf<Fragment>(dynamicFragment, identityFragment)
         dataBinding.vp2Mine.adapter = MineAdapter(this, list)
-        dataBinding.vp2Mine.offscreenPageLimit=2
+        dataBinding.vp2Mine.offscreenPageLimit = 2
         dataBinding.vp2Mine.setPageTransformer(ScaleInTransformer())
         TabLayoutMediator(dataBinding.mineTablayout, dataBinding.vp2Mine, true) { tab, position ->
             tab.text = tabNames[position]
@@ -279,10 +280,10 @@ class HomepageActivity : BaseViewModelActivity<MineViewModel>() {
 
             }
         }
-        viewModel. _PersonalCont.observeForever {
-            dataBinding.clPersonalInformation.tv_fans_number.text= it.data.fans.toString()
-            dataBinding.clPersonalInformation.tv_attention_number.text=it.data.follows.toString()
-            dataBinding.clPersonalInformation.tv_praise_number.text=it.data.praise.toString()
+        viewModel._PersonalCont.observeForever {
+            dataBinding.clPersonalInformation.tv_fans_number.text = it.data.fans.toString()
+            dataBinding.clPersonalInformation.tv_attention_number.text = it.data.follows.toString()
+            dataBinding.clPersonalInformation.tv_praise_number.text = it.data.praise.toString()
 
         }
         dataBinding.clPersonalInformation.mine_tv_concern.setOnClickListener {
@@ -292,9 +293,9 @@ class HomepageActivity : BaseViewModelActivity<MineViewModel>() {
         dataBinding.ivMineBackgroundNormal.setOnClickListener {
             changeBackground()
         }
-dataBinding.btMineBack.setOnClickListener {
-    onBackPressed()
-}
+        dataBinding.btMineBack.setOnClickListener {
+            onBackPressed()
+        }
         viewModel._isChangeSuccess.observeForever {
             if (it == true) {
                 toast("恭喜切换背景图片成功!")
@@ -304,7 +305,7 @@ dataBinding.btMineBack.setOnClickListener {
         }
         dataBinding.srlRefresh.setOnRefreshListener {
             getUserInfo(intent)
-          identityFragment.refresh()
+            identityFragment.refresh()
         }
         viewModel._isUserInfoFail.observeForever {
             if (it == true) {
@@ -562,6 +563,7 @@ dataBinding.btMineBack.setOnClickListener {
             isSetBackground = false
         }
     }
+
     /**
      * 加载网络请求的Bitmap图片出来
      */
@@ -574,6 +576,7 @@ dataBinding.btMineBack.setOnClickListener {
                     // 成功返回 Bitmap
                     success.invoke(resource)
                 }
+
                 override fun onLoadCleared(placeholder: Drawable?) {
                     initBlurBitmap(null)
                 }
@@ -588,11 +591,12 @@ dataBinding.btMineBack.setOnClickListener {
             activity.startActivity(intent)
         }
     }
+
     /**
      * 获取redid的接口
      */
     interface onGetRedid {
-        fun onSuccesss(redid: String,isSelf:Boolean)
+        fun onSuccesss(redid: String, isSelf: Boolean)
     }
 
     var downY = 0f
