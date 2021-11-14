@@ -81,7 +81,7 @@ class DynamicDataSource(private val kind: String,private val redid: String?) : P
                     .safeSubscribeBy { list ->
                         initialLoad.value = NetworkState.SUCCESSFUL
                         val nextPageKey = 2.takeUnless { (list.size < params.requestedLoadSize) }
-                        callback.onResult(list, 1, nextPageKey)
+                        callback.onResult(list.map { it.data }, 1, nextPageKey)
                     }
             }
 
