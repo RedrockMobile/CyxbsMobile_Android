@@ -19,7 +19,8 @@ import com.mredrock.cyxbs.qa.config.RequestResultCode.DYNAMIC_DETAIL_REQUEST
 import com.mredrock.cyxbs.qa.network.NetworkState
 import com.mredrock.cyxbs.qa.pages.dynamic.model.TopicDataSet
 import com.mredrock.cyxbs.qa.pages.dynamic.ui.activity.DynamicDetailActivity
-import com.mredrock.cyxbs.qa.pages.dynamic.ui.adapter.DynamicAdapter
+import com.mredrock.cyxbs.qa.pages.dynamic.ui.adapter.HybridAdapter
+import com.mredrock.cyxbs.qa.pages.dynamic.ui.adapter.HybridRvAdapterWrapper
 import com.mredrock.cyxbs.qa.pages.square.ui.activity.CircleDetailActivity
 import com.mredrock.cyxbs.qa.ui.adapter.EmptyRvAdapter
 import com.mredrock.cyxbs.qa.ui.adapter.FooterRvAdapter
@@ -41,7 +42,7 @@ class RecommendDynamicFragment : BaseDynamicFragment() {
 
     private var mTencent: Tencent? = null
 
-    private lateinit var dynamicListRvAdapter: DynamicAdapter
+    private lateinit var dynamicListRvAdapter: HybridAdapter
     val footerRvAdapter = FooterRvAdapter { viewModel.retryRecommend() }
     val emptyRvAdapter = EmptyRvAdapter(BaseApp.context.getString(R.string.qa_question_list_empty_hint))
 
@@ -67,7 +68,7 @@ class RecommendDynamicFragment : BaseDynamicFragment() {
 
     private fun initDynamics() {
         dynamicListRvAdapter =
-            DynamicAdapter(this.requireContext()) { dynamic, view ->
+            HybridAdapter(this.requireContext()) { dynamic, view ->
                 DynamicDetailActivity.activityStart(this, view, dynamic)
             }.apply {
 
@@ -164,7 +165,7 @@ class RecommendDynamicFragment : BaseDynamicFragment() {
             }
             val linearLayoutManager = LinearLayoutManager(context)
             layoutManager = linearLayoutManager
-            adapter = RvAdapterWrapper(
+            adapter = HybridRvAdapterWrapper(
                 normalAdapter = dynamicListRvAdapter,
                 emptyAdapter = emptyRvAdapter,
                 footerAdapter = footerRvAdapter

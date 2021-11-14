@@ -19,6 +19,7 @@ import com.mredrock.cyxbs.qa.config.CommentConfig
 import com.mredrock.cyxbs.qa.network.NetworkState
 import com.mredrock.cyxbs.qa.pages.dynamic.ui.activity.DynamicDetailActivity
 import com.mredrock.cyxbs.qa.pages.dynamic.ui.adapter.DynamicAdapter
+import com.mredrock.cyxbs.qa.pages.dynamic.ui.adapter.HybridAdapter
 import com.mredrock.cyxbs.qa.pages.mine.viewmodel.MyDynamicViewModel
 import com.mredrock.cyxbs.qa.ui.adapter.EmptyRvAdapter
 import com.mredrock.cyxbs.qa.ui.adapter.FooterRvAdapter
@@ -32,7 +33,7 @@ import kotlinx.android.synthetic.main.qa_activity_my_dynamic.*
 class MyDynamicFragment : BaseViewModelFragment<MyDynamicViewModel>(),MineAndQa.RefreshListener {
     private var isRvAtTop = true
     private var isSendDynamic = false
-    private lateinit var dynamicListRvAdapter: DynamicAdapter
+    private lateinit var dynamicListRvAdapter: HybridAdapter
     private var redid:String?=null
     private var isCreated=false
     init {
@@ -57,7 +58,7 @@ isCreated=true
    fun initDynamics() {
         val mTencent = Tencent.createInstance(CommentConfig.APP_ID, context)
         dynamicListRvAdapter =
-            DynamicAdapter(context) { dynamic, view ->
+            HybridAdapter(context) { dynamic, view ->
                 DynamicDetailActivity.activityStart(this, view, dynamic)
             }.apply {
 
@@ -143,7 +144,7 @@ isCreated=true
     }
 
     private fun observeLoading(
-        dynamicListRvAdapter: DynamicAdapter,
+        dynamicListRvAdapter: HybridAdapter,
         footerRvAdapter: FooterRvAdapter,
         emptyRvAdapter: EmptyRvAdapter
     ): MyDynamicViewModel = viewModel.apply {
