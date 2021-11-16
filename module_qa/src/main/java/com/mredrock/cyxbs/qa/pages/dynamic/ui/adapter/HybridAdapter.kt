@@ -12,6 +12,7 @@ import com.bumptech.glide.Glide
 import com.mredrock.cyxbs.api.protocol.api.IProtocolService
 import com.mredrock.cyxbs.common.component.CyxbsToast
 import com.mredrock.cyxbs.common.service.ServiceManager
+import com.mredrock.cyxbs.common.utils.LogUtils
 import com.mredrock.cyxbs.common.utils.extensions.setAvatarImageFromUrl
 import com.mredrock.cyxbs.common.utils.extensions.setImageFromUrl
 import com.mredrock.cyxbs.common.utils.extensions.setOnSingleClickListener
@@ -97,6 +98,7 @@ class HybridAdapter(val context: Context?, private val onItemClickEvent: (Dynami
             if (data is Dynamic) {
                 initDynamicItem(this, data, position)
             } else if (data is H5Dynamic) {
+                holder.refresh(data)
                 initH5Item(this, data, position)
             }
         }
@@ -332,6 +334,7 @@ class HybridAdapter(val context: Context?, private val onItemClickEvent: (Dynami
     class H5DynamicViewHolder(parent: ViewGroup) :
         BaseViewHolder<Message>(parent, R.layout.qa_recycler_item_h5_dynamic) {
         override fun refresh(data: Message?) {
+            LogUtils.d("Ryzen", "$data")
             if (data is H5Dynamic) {
                 itemView.apply {
                     qa_iv_dynamic_h5_avatar.setAvatarImageFromUrl(data.avatar)
