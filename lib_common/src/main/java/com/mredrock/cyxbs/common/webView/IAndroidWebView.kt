@@ -21,7 +21,7 @@ abstract class IAndroidWebView(
     private val lToast:(String) -> Unit = {}
     ) : WebViewBaseCallBack {
 
-    var music: String? = null
+    var onLoadStr: String? = null
     var sensorIDs: ArrayList<Int> = ArrayList()
 
     //调用这个方法来保存图片
@@ -38,8 +38,8 @@ abstract class IAndroidWebView(
      * @musicJs 播放音乐的Js命令
      */
     @JavascriptInterface
-    open fun initMusic(musicJs: String) {
-        music = musicJs
+    open fun onLoad(onLoadJs: String) {
+        onLoadStr = onLoadJs
     }
 
     /**

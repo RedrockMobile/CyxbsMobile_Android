@@ -15,10 +15,10 @@ import com.mredrock.cyxbs.common.component.CyxbsToast
  * 其余参考RollerViewActivity实现
  * 一定要调用init方法
  */
-class LiteJsWebView(context: Context?, attrs: AttributeSet?, defStyleAttr: Int) :
-    WebView(context, attrs, defStyleAttr) {
-    constructor(context: Context?) : this(context, null, 0)
-    constructor(context: Context?, attrs: AttributeSet?) : this(context, attrs, 0)
+class LiteJsWebView : WebView {
+    constructor(context: Context?, attrs: AttributeSet?, defStyleAttr: Int):super(context,attrs,defStyleAttr)
+    constructor(context: Context?,attrs: AttributeSet?):super(context,attrs)
+    constructor(context: Context?):super(context)
 
     @SuppressLint("SetJavaScriptEnabled")
     fun init(

@@ -70,7 +70,7 @@ class RollerViewActivity : BaseActivity() {
             discover_web_view.init(this)
         }
         //加载网页
-        discover_web_view.loadUrl(url)
+        discover_web_view.loadUrl("http://anonym.ink:3000/happyweb2android")
         //设置几个webview的监听
         discover_web_view.webChromeClient = object : WebChromeClient() {
             //加载的时候会拿到网页的标签页名字
@@ -118,7 +118,7 @@ class RollerViewActivity : BaseActivity() {
     private fun initBgm() {
         //使用Web端传入的js命令
         discover_web_view.post {
-            discover_web_view.evaluateJavascript(webApi?.music) { }
+            discover_web_view.evaluateJavascript(webApi?.onLoadStr) { }
         }
     }
 
