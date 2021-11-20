@@ -18,14 +18,4 @@
         android:layout_height="match_parent"
         android:layout_below="@id/discover_web_tb"
         android:background="@color/common_white_background" />
-    <ProgressBar
-        android:id="@+id/discover_web_progressbar"
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:indeterminate="true"
-        android:max="100"
-        android:layout_below="@id/discover_web_tb"
-        android:background="@color/common_white_background"
-        android:backgroundTintMode="src_in"
-        android:indeterminateTint="@color/common_blue_button" />
 </RelativeLayout>

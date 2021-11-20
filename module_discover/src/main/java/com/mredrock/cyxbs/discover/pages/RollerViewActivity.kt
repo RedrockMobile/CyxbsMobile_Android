@@ -54,7 +54,6 @@ class RollerViewActivity : BaseActivity() {
         //如果是DEBUG就开启webview的debug
         if (BuildConfig.DEBUG) WebView.setWebContentsDebuggingEnabled(true)
 
-        discover_web_progressbar.visibility = View.VISIBLE
         val url = intent.getStringExtra("URL")
 
         webApi = WebViewFactory(url,handler, {
@@ -74,13 +73,6 @@ class RollerViewActivity : BaseActivity() {
         discover_web_view.loadUrl(url)
         //设置几个webview的监听
         discover_web_view.webChromeClient = object : WebChromeClient() {
-            override fun onProgressChanged(view: WebView, newProgress: Int) {
-                super.onProgressChanged(view, newProgress)
-                if (newProgress >= 100) {
-                    discover_web_progressbar.visibility = View.GONE
-                }
-            }
-
             //加载的时候会拿到网页的标签页名字
             override fun onReceivedTitle(view: WebView?, title: String) {
                 //拿到web的标题，并设置,可以判断是否使用后端下发的标题

@@ -56,7 +56,7 @@ class LiteJsWebView(context: Context?, attrs: AttributeSet?, defStyleAttr: Int) 
             mediaPlaybackRequiresUserGesture = false
         }
         //加载js文件的
-        this.addJavascriptInterface(androidWebView, androidWebView::class.simpleName)
+        this.addJavascriptInterface(androidWebView,androidWebView::class.simpleName)
     }
 
 }
