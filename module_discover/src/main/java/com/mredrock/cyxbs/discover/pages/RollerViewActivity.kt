@@ -70,7 +70,7 @@ class RollerViewActivity : BaseActivity() {
             discover_web_view.init(this)
         }
         //加载网页
-        discover_web_view.loadUrl("http://anonym.ink:3000/happyweb2android")
+        discover_web_view.loadUrl(url)
         //设置几个webview的监听
         discover_web_view.webChromeClient = object : WebChromeClient() {
             //加载的时候会拿到网页的标签页名字
