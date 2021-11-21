@@ -25,9 +25,8 @@ import retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory
 import retrofit2.converter.gson.GsonConverterFactory
 import java.util.concurrent.TimeUnit
 import android.os.Looper
-
-
-
+import android.util.Log
+import com.mredrock.cyxbs.common.utils.LogLocal
 
 
 /**
@@ -138,7 +137,9 @@ object ApiGenerator {
                         if (okHttpClientConfig == null)
                             this.defaultConfig()
                         else
-                            okHttpClientConfig.invoke(it)
+                            okHttpClientConfig.invoke(
+                                it.addInterceptor(BackupInterceptor())
+                            )
                     }.build()
                 }.build())
     }
@@ -149,23 +150,30 @@ object ApiGenerator {
      */
     private fun Retrofit.Builder.configRetrofitBuilder(client: ((OkHttpClient.Builder) -> OkHttpClient)): Retrofit.Builder {
         return this.client(client.invoke(OkHttpClient().newBuilder().apply {
-            if (BuildConfig.DEBUG) {
-                val logging = HttpLoggingInterceptor()
+                val logging = HttpLoggingInterceptor(object:HttpLoggingInterceptor.Logger{
+                    override fun log(message: String) {
+                        Log.d("OKHTTP","OKHTTP$message")
+                        LogLocal.log("OKHTTP","OKHTTP$message")
+                    }
+                })
                 logging.level = HttpLoggingInterceptor.Level.BODY
                 addInterceptor(logging)
                 //这里是在debug模式下方便开发人员简单确认 http 错误码 和 url(magipoke开始切的)
-                addInterceptor(Interceptor{
-                    val request = it.request()
-                    val response = it.proceed(request)
-                    if (!response.isSuccessful){
-                        response.close()
-                        Handler(Looper.getMainLooper()).post {
-                            BaseApp.context.toast("${response.code} ${request.url} ")
+                if (BuildConfig.DEBUG){
+                    addInterceptor(Interceptor{
+                        val request = it.request()
+                        Log.d("OKHTTP","OKHTTP${request.body}")
+
+                        val response = it.proceed(request)
+                        if (!response.isSuccessful){
+                            response.close()
+                            Handler(Looper.getMainLooper()).post {
+                                BaseApp.context.toast("${response.code} ${request.url} ")
+                            }
                         }
-                    }
-                    response
-                })
-            }
+                        response
+                    })
+                }
         }))
                 .addConverterFactory(GsonConverterFactory.create())
                 .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
