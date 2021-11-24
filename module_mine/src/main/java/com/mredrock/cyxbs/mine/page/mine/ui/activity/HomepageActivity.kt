@@ -301,8 +301,10 @@ class HomepageActivity : BaseViewModelActivity<MineViewModel>() {
         dataBinding.ivMineBackgroundNormal.setOnClickListener {
             if(isSelf){
                 changeBackground()
+            }else{
+
+                toast("不可以对别人的背景图片动手动脚哦!")
             }
-            toast("不可以对别人的背景图片动手动脚哦!")
         }
         dataBinding.btMineBack.setOnClickListener {
             onBackPressed()
@@ -338,8 +340,13 @@ class HomepageActivity : BaseViewModelActivity<MineViewModel>() {
             redid?.let { it1 -> FanActivity.activityStart(this, it1, TO_ATTENTION) }
         }
         dataBinding.clPersonalInformation.tv_edit.setOnClickListener {
-            val intent = Intent(this, EditInfoActivity::class.java)
-            startActivity(intent)
+            if (isSelf){
+
+                val intent = Intent(this, EditInfoActivity::class.java)
+                startActivity(intent)
+            }else{
+                toast("不可以对别人的背景图片动手动脚哦!")
+            }
         }
         dataBinding.clPersonalInformation.tv_fans_number.setOnClickListener {
             redid?.let { it1 -> FanActivity.activityStart(this, it1, TO_FANS) }
@@ -348,14 +355,28 @@ class HomepageActivity : BaseViewModelActivity<MineViewModel>() {
             redid?.let { it1 -> FanActivity.activityStart(this, it1, TO_ATTENTION) }
         }
         dataBinding.clPersonalInformation.iv_edit.setOnClickListener {
-            val intent = Intent(this, EditInfoActivity::class.java)
-            startActivity(intent)
+            if (isSelf){
+                val intent = Intent(this, EditInfoActivity::class.java)
+                startActivity(intent)
+            }else{
+                toast("不可以对别人的背景图片动手动脚哦!")
+            }
         }
         dataBinding.clPersonalInformation.tv_praise.setOnClickListener {
-            ARouter.getInstance().build(QA_MY_PRAISE).navigation()
+            if (isSelf){
+                ARouter.getInstance().build(QA_MY_PRAISE).navigation()
+            }else{
+                toast("不可以查看别人的获赞信息哦!")
+            }
+
         }
         dataBinding.clPersonalInformation.tv_praise_number.setOnClickListener {
-            ARouter.getInstance().build(QA_MY_PRAISE).navigation()
+            if (isSelf){
+                ARouter.getInstance().build(QA_MY_PRAISE).navigation()
+            }else{
+                toast("不可以查看别人的获赞信息哦!")
+            }
+
         }
         dataBinding.btMineBack.setOnClickListener {
             onBackPressed()
@@ -635,8 +656,5 @@ class HomepageActivity : BaseViewModelActivity<MineViewModel>() {
         return dataBinding.svgMine.dispatchTouchEvent(ev)
     }
 
-    override fun onResume() {
-        super.onResume()
-        getUserInfo(intent)
-    }
+
 }
