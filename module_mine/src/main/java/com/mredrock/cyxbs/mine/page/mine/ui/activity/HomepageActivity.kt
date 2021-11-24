@@ -139,7 +139,7 @@ class HomepageActivity : BaseViewModelActivity<MineViewModel>() {
         super.onCreate(savedInstanceState)
         dataBinding = MineActivityHomepageBinding.inflate(layoutInflater)
         setContentView(dataBinding.root)
-        initView()
+
         initData()
         initListener()
         dataBinding.srlRefresh.isMotionEventSplittingEnabled = false
@@ -168,6 +168,7 @@ class HomepageActivity : BaseViewModelActivity<MineViewModel>() {
                 identityFragment.onSuccesss(it, isSelf)
                 dataBinding.vp2Mine.offscreenPageLimit = 2
                 redid = it
+                Log.i("redid","别人的redid"+redid);
                 viewModel.getPersonalCount(redid)
             }
             loadBitmap(it.data.backgroundUrl) {
@@ -180,6 +181,7 @@ class HomepageActivity : BaseViewModelActivity<MineViewModel>() {
 
         viewModel._redRockApiChangeUsercount.observeForever {
             viewModel.getPersonalCount(redid)
+            getUserInfo(intent)
         }
         getUserInfo(intent)
 
@@ -193,11 +195,13 @@ class HomepageActivity : BaseViewModelActivity<MineViewModel>() {
     }
 
     fun changeAttention(data: UserInfo) {
+        Log.i("测试","是不是自己"+data.data.isSelf);
         if (data.data.isSelf) {
             dataBinding.clPersonalInformation.mine_tv_concern.visibility = View.INVISIBLE
         } else {
             dataBinding.clPersonalInformation.mine_tv_concern.visibility = View.VISIBLE
             if (data.data.isFocus) {
+                Log.i("测试","有没有被关注"+data.data.isBefocused);
                 if (data.data.isBefocused) {
                     dataBinding.clPersonalInformation.mine_tv_concern.text = "互相关注"
                 } else {
@@ -214,9 +218,11 @@ class HomepageActivity : BaseViewModelActivity<MineViewModel>() {
             redid = data?.getStringExtra("redid")
         }
         if (redid != null) {   //他人访问的情况
+            initView("他")
             viewModel.getUserInfo(redid)
             MineAndQa.refreshListener?.onRefresh(redid)
         } else {//自己访问的情况
+            initView("我")
             viewModel.getUserInfo(null)
             MineAndQa.refreshListener?.onRefresh(null)
         }
@@ -224,8 +230,12 @@ class HomepageActivity : BaseViewModelActivity<MineViewModel>() {
 
     }
 
-    fun initView() {
-        val tabNames = listOf<String>("我的动态", "我的身份")
+    fun initView(status:String) {
+
+
+
+      val       tabNames = listOf<String>(status+"的动态",status+ "的身份")
+
         val dynamicFragment =
             ARouter.getInstance().build(QA_DYNAMIC_MINE_FRAGMENT).navigation() as Fragment
         val list = arrayListOf<Fragment>(dynamicFragment, identityFragment)
@@ -285,11 +295,14 @@ class HomepageActivity : BaseViewModelActivity<MineViewModel>() {
 
         }
         dataBinding.clPersonalInformation.mine_tv_concern.setOnClickListener {
+            Log.i("关注测试","redid"+redid);
             viewModel.changeFocusStatus(redid)
-
         }
         dataBinding.ivMineBackgroundNormal.setOnClickListener {
-            changeBackground()
+            if(isSelf){
+                changeBackground()
+            }
+            toast("不可以对别人的背景图片动手动脚哦!")
         }
         dataBinding.btMineBack.setOnClickListener {
             onBackPressed()
@@ -622,4 +635,8 @@ class HomepageActivity : BaseViewModelActivity<MineViewModel>() {
         return dataBinding.svgMine.dispatchTouchEvent(ev)
     }
 
+    override fun onResume() {
+        super.onResume()
+        getUserInfo(intent)
+    }
 }

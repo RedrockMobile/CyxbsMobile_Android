@@ -23,4 +23,5 @@
     <color name="mine_tv_personal_uid">#CC15315B</color>
     <color name="mine_tv_personal_edit">#6615315B</color>
     <color name="mine_bg_personal_info">#FBFCFF</color>
+    <color name="mine_dynamic">#FFFFFF</color>
 </resources>

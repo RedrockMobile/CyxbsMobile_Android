@@ -19,4 +19,5 @@
     <color name="mine_tv_personal_edit">#66F0F0F2</color>
     <color name="mine_bg_personal_info">#000000</color>
     <color name="qa_bg_dialog_bottom">#FFFFFF</color>
+    <color name="mine_dynamic">#1D1D1D</color>
 </resources>

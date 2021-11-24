@@ -8,6 +8,7 @@
     </data>
     <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
         android:id="@+id/srl_refresh"
+
         android:layout_width="match_parent"
         android:layout_height="match_parent">
         <androidx.constraintlayout.widget.ConstraintLayout
@@ -40,7 +41,7 @@
                 android:layout_height="0dp"
                 android:layout_marginBottom="40dp"
                 android:alpha="0"
-                android:background="@color/mine_white"
+                android:background="@color/mine_dynamic"
                 app:layout_constraintBottom_toTopOf="@+id/cl_personal_information"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
@@ -99,9 +100,9 @@
 
                 <com.google.android.material.tabs.TabLayout
                     android:id="@+id/mine_tablayout"
+                    android:background="@color/mine_dynamic"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:background="@drawable/mine_shape_ll_background"
                     android:theme="@style/Theme.MaterialComponents"
                     app:tabGravity="fill"
                     app:tabTextColor="@color/mine_black"
@@ -118,8 +119,7 @@
 
 
                 <FrameLayout
-
-                    android:background="@color/mine_white"
+                    android:background="@color/mine_dynamic"
                     android:layout_width="match_parent"
                     android:layout_height="5dp">
                     <!--只加一个view的背景  由于颜色会被穿透过去 所以再包了一层-->

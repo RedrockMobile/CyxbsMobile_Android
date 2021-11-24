@@ -63,7 +63,7 @@ class IdentityAdapter(val list:List<AuthenticationStatus.Data>, val context: Con
            vh = VH(convertView)
             vh.menuViewdelete.setOnClickListener{
                 if(isSelf){
-                    MineDialog.show(context,"确定要删除这条动态吗",{},{
+                    MineDialog.show(context,"确定要删除这个身份吗",{},{
                         val activity = context as HomepageActivity
                         activity.viewModel.deleteStatus(list[(vh as VH).layoutPosition].id)
                     })
@@ -147,7 +147,7 @@ class IdentityAdapter(val list:List<AuthenticationStatus.Data>, val context: Con
 
     fun initspannableString(v:TextView){
         val spannableString = SpannableString(context.resources.getString(R.string.mine_lack_text))
-        val p = Pattern.compile("邮票商城")
+        val p = Pattern.compile("邮票中心")
         v.movementMethod = LinkMovementMethod.getInstance();
         val m= p.matcher(spannableString)
         while (m.find()) {

@@ -35,7 +35,7 @@
         android:background="#ED535C"
         android:gravity="center"
         android:layout_gravity="center"
-        android:layout_width="149dp"
+        android:layout_width="130dp"
         android:layout_height="125dp">
         <ImageView
             android:id="@+id/iv_item_delete"
