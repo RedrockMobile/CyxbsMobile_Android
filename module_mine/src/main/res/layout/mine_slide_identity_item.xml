@@ -3,10 +3,10 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:paddingTop="10dp"
+    android:paddingTop="18dp"
     android:layout_height="wrap_content">
     <RelativeLayout
-        android:paddingTop="15dp"
+        android:paddingTop="29dp"
         android:id="@+id/rl_menu_setting"
         android:alpha="0"
         android:background="#474A50"
@@ -17,19 +17,21 @@
         <ImageView
             android:id="@+id/iv_item_setting"
             android:background="@drawable/mine_ic_item_identity_setting"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"/>
+            android:layout_width="26dp"
+            android:layout_height="27dp"/>
         <TextView
             android:layout_marginLeft="10dp"
-            android:layout_marginTop="2dp"
+            android:layout_marginTop="3dp"
             android:layout_toRightOf="@id/iv_item_setting"
             android:text="设置"
+            android:gravity="bottom"
+            android:textColor="@color/common_grades_activity_tl_white"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"/>
     </RelativeLayout>
 
     <RelativeLayout
-        android:paddingTop="15dp"
+        android:paddingTop="28dp"
         android:id="@+id/rl_menu_view"
         android:alpha="0"
         android:background="#ED535C"
@@ -41,23 +43,32 @@
             android:id="@+id/iv_item_delete"
             android:background="@drawable/mine_ic_item_identity_delete"
             android:layout_width="22dp"
-            android:layout_height="23dp"/>
+            android:layout_height="22dp"/>
         <TextView
             android:layout_marginLeft="10dp"
             android:layout_marginTop="2dp"
             android:layout_toRightOf="@id/iv_item_delete"
             android:text="删除"
+            android:textColor="@color/common_grades_activity_tl_white"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"/>
     </RelativeLayout>
 
-    <androidx.constraintlayout.widget.ConstraintLayout
+    <androidx.cardview.widget.CardView
         android:id="@+id/cl_content_view"
+        app:cardElevation="20dp"
+        app:cardMaxElevation="20dp"
         android:layout_width="match_parent"
         android:layout_height="125dp"
         android:layout_marginLeft="16dp"
         android:layout_marginRight="16dp"
         android:background="@drawable/mine_ic_item_background">
+
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+    >
 
         <TextView
             android:textColor="#F3FEFF"
@@ -95,4 +106,5 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/tv_item_identity" />
     </androidx.constraintlayout.widget.ConstraintLayout>
+    </androidx.cardview.widget.CardView>
 </com.mredrock.cyxbs.mine.page.mine.widget.SlideLayout>

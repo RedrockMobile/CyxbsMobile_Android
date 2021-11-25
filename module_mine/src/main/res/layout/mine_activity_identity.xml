@@ -10,6 +10,7 @@
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/ll_statu"
         android:layout_width="match_parent"
+
         android:layout_height="match_parent"
         tools:context=".page.mine.ui.activity.IdentityActivity">
 
@@ -136,7 +137,7 @@
 
         <androidx.viewpager2.widget.ViewPager2
             android:id="@+id/vp_status"
-            android:layout_marginTop="15dp"
+            android:paddingTop="15dp"
             android:layout_width="match_parent"
             android:layout_height="0dp"
             android:background="@color/mine_dynamic"

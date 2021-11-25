@@ -126,13 +126,12 @@
                     <!--只加一个view的背景  由于颜色会被穿透过去 所以再包了一层-->
                     <View
                         android:id="@+id/fl_line"
-                        android:background="#0D15315B"
+                        android:background="#2A4E841A"
                         android:layout_width="match_parent"
                         android:layout_height="1dp"/>
                 </FrameLayout>
 
                 <androidx.viewpager2.widget.ViewPager2
-                    android:layout_marginTop="15dp"
                     android:background="@color/mine_dynamic"
                     android:id="@+id/vp2_mine"
                     android:layout_width="match_parent"
