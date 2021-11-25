@@ -16,11 +16,9 @@
         app:srcCompat="@drawable/mine_ic_iv_default_img" />
 
     <TextView
-
         android:id="@+id/mine_textview4"
-        android:layout_width="wrap_content"
+        android:layout_width="300dp"
         android:layout_height="wrap_content"
-
         android:layout_marginTop="20dp"
         app:layout_constraintEnd_toEndOf="@+id/mine_imageview2"
         app:layout_constraintStart_toStartOf="@+id/mine_imageview2"

@@ -106,7 +106,7 @@ class IdentityFragment(
     }
 
     fun refresh(){
-        viewModel.getAllIdentify(redid)
+      viewModel.getAllIdentify(redid)
     }
 
 

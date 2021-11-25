@@ -118,7 +118,7 @@ class HomepageActivity : BaseViewModelActivity<MineViewModel>() {
      */
     private var isNeedRefresh = true
 
-
+    var tabNames = listOf<String>("我的动态", "我的身份")
     val imageViewList by lazy {
         mutableListOf<ImageView>(
             dataBinding.clPersonalInformation.iv_nameplate1,
@@ -139,7 +139,7 @@ class HomepageActivity : BaseViewModelActivity<MineViewModel>() {
         super.onCreate(savedInstanceState)
         dataBinding = MineActivityHomepageBinding.inflate(layoutInflater)
         setContentView(dataBinding.root)
-
+        initView()
         initData()
         initListener()
         dataBinding.srlRefresh.isMotionEventSplittingEnabled = false
@@ -152,7 +152,7 @@ class HomepageActivity : BaseViewModelActivity<MineViewModel>() {
             initSatu(it)
             changeAttention(it)
             dataBinding.clPersonalInformation.tv_id_number.text = it.data.uid.toString()
-            dataBinding.clPersonalInformation.tv_grade.text = it.data.grade
+            dataBinding.clPersonalInformation.tv_grade.text = it.data.grade+"级"
             if (it.data.constellation.equals("")) {
                 dataBinding.clPersonalInformation.mine_tv_constellation.text = "十三星座"
             } else {
@@ -168,7 +168,7 @@ class HomepageActivity : BaseViewModelActivity<MineViewModel>() {
                 identityFragment.onSuccesss(it, isSelf)
                 dataBinding.vp2Mine.offscreenPageLimit = 2
                 redid = it
-                Log.i("redid","别人的redid"+redid);
+                Log.i("redid", "别人的redid" + redid);
                 viewModel.getPersonalCount(redid)
             }
             loadBitmap(it.data.backgroundUrl) {
@@ -176,7 +176,7 @@ class HomepageActivity : BaseViewModelActivity<MineViewModel>() {
             }
             dataBinding.srlRefresh.isRefreshing = false
             loadAvatar(it.data.photoSrc, dataBinding.clPersonalInformation.civ_head)
-
+            initTab()
         }
 
         viewModel._redRockApiChangeUsercount.observeForever {
@@ -194,14 +194,27 @@ class HomepageActivity : BaseViewModelActivity<MineViewModel>() {
         }
     }
 
+    fun initTab() {
+        if (isSelf) {
+            tabNames = listOf<String>("我的动态", "我的身份")
+
+        } else {
+            tabNames = listOf<String>("他的动态", "他的身份")
+
+        }
+        TabLayoutMediator(dataBinding.mineTablayout, dataBinding.vp2Mine, true) { tab, position ->
+            tab.text = tabNames[position]
+        }.attach()
+    }
+
     fun changeAttention(data: UserInfo) {
-        Log.i("测试","是不是自己"+data.data.isSelf);
+        Log.i("测试", "是不是自己" + data.data.isSelf);
         if (data.data.isSelf) {
             dataBinding.clPersonalInformation.mine_tv_concern.visibility = View.INVISIBLE
         } else {
             dataBinding.clPersonalInformation.mine_tv_concern.visibility = View.VISIBLE
             if (data.data.isFocus) {
-                Log.i("测试","有没有被关注"+data.data.isBefocused);
+                Log.i("测试", "有没有被关注" + data.data.isBefocused);
                 if (data.data.isBefocused) {
                     dataBinding.clPersonalInformation.mine_tv_concern.text = "互相关注"
                 } else {
@@ -216,13 +229,14 @@ class HomepageActivity : BaseViewModelActivity<MineViewModel>() {
     fun getUserInfo(data: Intent?) {
         if (redid == null) {
             redid = data?.getStringExtra("redid")
+
         }
         if (redid != null) {   //他人访问的情况
-            initView("他")
+
             viewModel.getUserInfo(redid)
             MineAndQa.refreshListener?.onRefresh(redid)
         } else {//自己访问的情况
-            initView("我")
+
             viewModel.getUserInfo(null)
             MineAndQa.refreshListener?.onRefresh(null)
         }
@@ -230,23 +244,13 @@ class HomepageActivity : BaseViewModelActivity<MineViewModel>() {
 
     }
 
-    fun initView(status:String) {
-
-
-
-      val       tabNames = listOf<String>(status+"的动态",status+ "的身份")
-
+    fun initView() {
         val dynamicFragment =
             ARouter.getInstance().build(QA_DYNAMIC_MINE_FRAGMENT).navigation() as Fragment
         val list = arrayListOf<Fragment>(dynamicFragment, identityFragment)
         dataBinding.vp2Mine.adapter = MineAdapter(this, list)
         dataBinding.vp2Mine.offscreenPageLimit = 2
         dataBinding.vp2Mine.setPageTransformer(ScaleInTransformer())
-        TabLayoutMediator(dataBinding.mineTablayout, dataBinding.vp2Mine, true) { tab, position ->
-            tab.text = tabNames[position]
-        }.attach()
-
-
     }
 
 
@@ -267,7 +271,7 @@ class HomepageActivity : BaseViewModelActivity<MineViewModel>() {
                     dataBinding.ivMineBackgroundNormal.alpha = 0f
                     dataBinding.btMineBack.setImageResource(R.drawable.mine_ic_iv_back_black_arrow)
                     dataBinding.tvMine.text = nickname
-                    dataBinding.tvMine.setTextColor(getResources().getColor(R.color.mine_black))
+                    dataBinding.tvMine.setTextColor(resources.getColor(R.color.mine_black))
                 }
                 dataBinding.tvMine.alpha = -alpha
                 dataBinding.flBackground.alpha = -alpha
@@ -277,7 +281,7 @@ class HomepageActivity : BaseViewModelActivity<MineViewModel>() {
                 if (dataBinding.tvMine.text == nickname) {
                     dataBinding.tvMine.text = "个人主页"
                     dataBinding.btMineBack.setImageResource(R.drawable.mine_ic_bt_back_arrow)
-                    dataBinding.tvMine.setTextColor(getResources().getColor(R.color.mine_white))
+                    dataBinding.tvMine.setTextColor(resources.getColor(R.color.mine_white))
                 }
                 dataBinding.flBackground.alpha = 0f
                 dataBinding.ivMineBackgroundNormal.alpha = alpha
@@ -295,13 +299,13 @@ class HomepageActivity : BaseViewModelActivity<MineViewModel>() {
 
         }
         dataBinding.clPersonalInformation.mine_tv_concern.setOnClickListener {
-            Log.i("关注测试","redid"+redid);
+            Log.i("关注测试", "redid" + redid);
             viewModel.changeFocusStatus(redid)
         }
         dataBinding.ivMineBackgroundNormal.setOnClickListener {
-            if(isSelf){
+            if (isSelf) {
                 changeBackground()
-            }else{
+            } else {
 
                 toast("不可以对别人的背景图片动手动脚哦!")
             }
@@ -340,12 +344,12 @@ class HomepageActivity : BaseViewModelActivity<MineViewModel>() {
             redid?.let { it1 -> FanActivity.activityStart(this, it1, TO_ATTENTION) }
         }
         dataBinding.clPersonalInformation.tv_edit.setOnClickListener {
-            if (isSelf){
+            if (isSelf) {
 
                 val intent = Intent(this, EditInfoActivity::class.java)
                 startActivity(intent)
-            }else{
-                toast("不可以对别人的背景图片动手动脚哦!")
+            } else {
+                toast("不可以对别人资料动手动脚哦!")
             }
         }
         dataBinding.clPersonalInformation.tv_fans_number.setOnClickListener {
@@ -355,25 +359,25 @@ class HomepageActivity : BaseViewModelActivity<MineViewModel>() {
             redid?.let { it1 -> FanActivity.activityStart(this, it1, TO_ATTENTION) }
         }
         dataBinding.clPersonalInformation.iv_edit.setOnClickListener {
-            if (isSelf){
+            if (isSelf) {
                 val intent = Intent(this, EditInfoActivity::class.java)
                 startActivity(intent)
-            }else{
-                toast("不可以对别人的背景图片动手动脚哦!")
+            } else {
+                toast("不可以对别人的资料动手动脚哦!")
             }
         }
         dataBinding.clPersonalInformation.tv_praise.setOnClickListener {
-            if (isSelf){
+            if (isSelf) {
                 ARouter.getInstance().build(QA_MY_PRAISE).navigation()
-            }else{
+            } else {
                 toast("不可以查看别人的获赞信息哦!")
             }
 
         }
         dataBinding.clPersonalInformation.tv_praise_number.setOnClickListener {
-            if (isSelf){
+            if (isSelf) {
                 ARouter.getInstance().build(QA_MY_PRAISE).navigation()
-            }else{
+            } else {
                 toast("不可以查看别人的获赞信息哦!")
             }
 
@@ -583,17 +587,20 @@ class HomepageActivity : BaseViewModelActivity<MineViewModel>() {
      * 这一个方法用于改变在滑动的过程中 tab的变化过程
      */
     fun tabChange(pregress: Float) {
-        if (pregress == -1f && !isSetBackground) {
-            isSetBackground = true
-            dataBinding.mineTablayout.background =
-                resources.getDrawable(R.drawable.mine_layer_list_shape_shadow)
-        }
-        if (isSetBackground && pregress > -1f) {
+        if(!(this.applicationContext.resources.configuration.uiMode == 0x21)) {
+            if (pregress == -1f && !isSetBackground) {
+                isSetBackground = true
+                dataBinding.mineTablayout.background =
+                    resources.getDrawable(R.drawable.mine_layer_list_shape_shadow)
+            }
+            if (isSetBackground && pregress > -1f) {
 
-            dataBinding.mineTablayout.background =
-                resources.getDrawable(R.drawable.mine_shape_ll_background)
-            isSetBackground = false
+                dataBinding.mineTablayout.background =
+                    resources.getDrawable(R.drawable.mine_shape_ll_background)
+                isSetBackground = false
+            }
         }
+
     }
 
     /**
@@ -656,5 +663,9 @@ class HomepageActivity : BaseViewModelActivity<MineViewModel>() {
         return dataBinding.svgMine.dispatchTouchEvent(ev)
     }
 
+    override fun onResume() {
+        super.onResume()
+        viewModel.getUserInfo(redid)
+    }
 
 }

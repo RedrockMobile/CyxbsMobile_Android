@@ -81,6 +81,9 @@ class IdentityActivity : BaseViewModelActivity<IdentityViewModel>() {
         dataBinding.mineImageview.setOnClickListener {
             onBackPressed()
         }
+        dataBinding.tvIdentity.setOnClickListener {
+            onBackPressed()
+        }
     }
 
 }

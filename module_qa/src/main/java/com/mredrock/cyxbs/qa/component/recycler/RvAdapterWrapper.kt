@@ -1,5 +1,6 @@
 package com.mredrock.cyxbs.qa.component.recycler
 
+import android.util.Log
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 
@@ -52,6 +53,7 @@ open class RvAdapterWrapper(normalAdapter: RecyclerView.Adapter<out RecyclerView
     }
 
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) = when (getItemViewType(position)) {
+
         TYPE_HEADER -> headerAdapter!!.onBindViewHolder(holder, position)
         TYPE_NORMAL -> normalAdapter.onBindViewHolder(holder, position - normalPositionStart)
         TYPE_EMPTY -> emptyAdapter!!.onBindViewHolder(holder, position - footerPositionStart)

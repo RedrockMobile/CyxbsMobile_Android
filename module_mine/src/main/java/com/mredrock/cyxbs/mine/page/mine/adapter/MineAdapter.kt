@@ -1,7 +1,7 @@
 package com.mredrock.cyxbs.mine.page.mine.adapter
 
 
-import android.content.Context
+
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentActivity
 
@@ -11,6 +11,6 @@ class MineAdapter(context: FragmentActivity,val list: List<Fragment>): FragmentS
 
     override fun getItemCount()=list.size
 
-    override fun createFragment(position: Int)=list.get(position) as Fragment
+    override fun createFragment(position: Int)= list[position]
 
 }
