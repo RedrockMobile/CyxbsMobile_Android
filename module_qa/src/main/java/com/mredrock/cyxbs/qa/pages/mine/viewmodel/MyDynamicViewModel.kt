@@ -32,7 +32,6 @@ class MyDynamicViewModel : BaseViewModel(){
 
 
     fun getDynamicData(redid:String?){
-        Log.e("wxtag跨模块刷新","(MyDynamicFragment.kt:177)->> getDynamicDataredid=$redid")
         val config = PagedList.Config.Builder()
             .setEnablePlaceholders(false)
             .setPrefetchDistance(3)
