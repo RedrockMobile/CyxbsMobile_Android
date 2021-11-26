@@ -9,6 +9,8 @@ import android.text.TextPaint
 import android.util.AttributeSet
 import androidx.appcompat.widget.AppCompatImageView
 import androidx.core.graphics.drawable.toBitmap
+import com.bumptech.glide.load.resource.gif.GifDrawable
+import com.mredrock.cyxbs.common.utils.LogUtils
 
 
 class RectangleView @JvmOverloads constructor(
@@ -62,6 +64,13 @@ class RectangleView @JvmOverloads constructor(
         if (null == bitmap) {
             super.onDraw(canvas)
         } else {
+            if (drawable is GifDrawable){
+                (drawable as GifDrawable)
+                val gifDrawable = drawable as GifDrawable
+                if (gifDrawable.isRunning){
+                    gifDrawable.stop()
+                }
+            }
             bitmap?.let {
                 if (width > 20 && height > 20) {
                     path.moveTo(20f, 0f)
