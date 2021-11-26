@@ -28,7 +28,7 @@
             android:id="@+id/tv_identity"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginStart="13dp"
+           android:paddingLeft="13dp"
             android:text="身份设置"
             android:textSize="20dp"
             android:textColor="@color/mine_black"

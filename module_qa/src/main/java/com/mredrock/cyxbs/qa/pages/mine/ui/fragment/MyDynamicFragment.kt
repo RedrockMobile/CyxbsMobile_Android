@@ -19,6 +19,7 @@ import com.mredrock.cyxbs.qa.network.NetworkState
 import com.mredrock.cyxbs.qa.pages.dynamic.ui.activity.DynamicDetailActivity
 import com.mredrock.cyxbs.qa.pages.dynamic.ui.adapter.DynamicAdapter
 import com.mredrock.cyxbs.qa.pages.dynamic.ui.adapter.HybridAdapter
+import com.mredrock.cyxbs.qa.pages.mine.ui.adapter.MyDynamicAdapter
 import com.mredrock.cyxbs.qa.pages.mine.viewmodel.MyDynamicViewModel
 import com.mredrock.cyxbs.qa.ui.adapter.EmptyRvAdapter
 import com.mredrock.cyxbs.qa.ui.adapter.FooterRvAdapter
@@ -122,7 +123,7 @@ class MyDynamicFragment : BaseViewModelFragment<MyDynamicViewModel>(), MineAndQa
         }
 
         val footerRvAdapter = FooterRvAdapter { viewModel.retry() }
-        val emptyRvAdapter = EmptyRvAdapter(getString(R.string.qa_question_list_empty_hint))
+        val emptyRvAdapter = MyDynamicAdapter(getString(R.string.qa_question_list_empty_hint))
         val adapterWrapper = RvAdapterWrapper(
             normalAdapter = dynamicListRvAdapter,
             emptyAdapter = emptyRvAdapter,
@@ -146,7 +147,7 @@ class MyDynamicFragment : BaseViewModelFragment<MyDynamicViewModel>(), MineAndQa
     private fun observeLoading(
         dynamicListRvAdapter: HybridAdapter,
         footerRvAdapter: FooterRvAdapter,
-        emptyRvAdapter: EmptyRvAdapter
+        emptyRvAdapter: MyDynamicAdapter
     ): MyDynamicViewModel = viewModel.apply {
         dynamicList?.observe {
             dynamicListRvAdapter.submitList(it)

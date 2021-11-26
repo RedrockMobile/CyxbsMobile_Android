@@ -1,5 +1,6 @@
 package com.mredrock.cyxbs.mine.page.mine.widget
 
+import android.animation.ValueAnimator
 import android.content.ContentValues.TAG
 import android.content.Context
 import android.graphics.Canvas
@@ -7,6 +8,7 @@ import android.util.AttributeSet
 import android.util.Log
 import android.view.MotionEvent
 import android.view.View
+import android.view.animation.OvershootInterpolator
 import android.widget.FrameLayout
 import android.widget.Scroller
 import androidx.constraintlayout.helper.widget.MotionEffect.TAG
@@ -218,6 +220,9 @@ private var menuViewDelete:View? = null
     fun closeMenu() {
         isOpen=false
         menuViewSetting?.alpha = 0f//防止快速滑动的时候 数据不连续 造成透明度未完全的bug
+
+          val s = ValueAnimator.ofFloat(0f,2f)
+        s.interpolator = OvershootInterpolator()
         //--->0
         val distanceX = 0 - scrollX
         Log.i("开关","关闭需要移动的距离"+distanceX)
@@ -226,6 +231,7 @@ private var menuViewDelete:View? = null
         if (onStateChangeListenter != null) {
             onStateChangeListenter?.onClose(this)
         }
+
     }
 
 

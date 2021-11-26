@@ -12,7 +12,7 @@
         android:layout_width="match_parent"
         android:layout_height="220dp"
         android:layout_marginTop="48dp"
-        android:alpha="0.9"
+        android:alpha="0.95"
         android:background="@drawable/mine_shape_ll_background"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
@@ -45,12 +45,12 @@
 
     <de.hdodenhof.circleimageview.CircleImageView
         android:id="@+id/civ_head"
-app:civ_border_width="1dp"
-        app:civ_border_color="@color/common_grades_activity_tl_white"
         android:layout_width="97dp"
         android:layout_height="97dp"
         android:layout_marginStart="16dp"
         android:src="@drawable/mine_ic_head_test"
+        app:civ_border_color="@color/common_grades_activity_tl_white"
+        app:civ_border_width="2dp"
         app:layout_constraintBottom_toTopOf="@+id/fl_head_background"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="@+id/fl_head_background" />
