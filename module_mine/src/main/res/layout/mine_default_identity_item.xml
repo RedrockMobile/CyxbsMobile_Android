@@ -13,7 +13,7 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:srcCompat="@drawable/mine_ic_iv_default_img" />
+        app:srcCompat="@drawable/mine_ic_iv_default_homepage" />
 
     <TextView
         android:gravity="center"
