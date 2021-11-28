@@ -24,7 +24,11 @@ class IdentityViewModel: BaseViewModel()  {
     val  redrockApiStatusUpdate = MutableLiveData<RedrockApiStatus>()
     val showStatu=MutableLiveData<PersonalStatu>()
     val onErrorAction =MutableLiveData<String>()
-var isUpdata=false
+
+    /**
+     * 这个变量作为一个标记位 为了消除粘性事件带来的bug
+     */
+    var isUpdata=false
     val isFinsh = MutableLiveData<Boolean>()
     fun getAuthenticationStatus(redid:String){
         apiService.getAuthenticationStatus(redid)

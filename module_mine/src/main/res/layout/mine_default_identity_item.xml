@@ -21,6 +21,7 @@
         android:layout_width="300dp"
         android:layout_height="wrap_content"
         android:layout_marginTop="20dp"
+        android:text="你还没有获得相应的身份哦"
         app:layout_constraintEnd_toEndOf="@+id/mine_imageview2"
         app:layout_constraintStart_toStartOf="@+id/mine_imageview2"
         app:layout_constraintTop_toBottomOf="@+id/mine_imageview2" />

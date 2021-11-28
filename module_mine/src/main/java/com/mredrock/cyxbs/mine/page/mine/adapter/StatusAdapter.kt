@@ -12,6 +12,7 @@ import android.graphics.drawable.BitmapDrawable
 import android.graphics.drawable.Drawable
 import android.util.Log
 import android.view.*
+import android.view.animation.OvershootInterpolator
 import android.widget.*
 import androidx.recyclerview.widget.RecyclerView
 
@@ -31,6 +32,7 @@ import com.bumptech.glide.request.transition.Transition
 import com.mredrock.cyxbs.common.utils.extensions.invisible
 import com.mredrock.cyxbs.mine.network.model.AuthenticationStatus
 import com.mredrock.cyxbs.mine.util.ColorUntil
+import kotlinx.android.synthetic.main.mine_default_identity_item.view.*
 import org.w3c.dom.Text
 import java.util.ArrayList
 
@@ -40,7 +42,7 @@ class StatusAdapter(
     val context: Context?,
     val redid: String
 ) :
-    RecyclerView.Adapter<StatusAdapter.VH>(), View.OnTouchListener, View.OnLongClickListener {
+    RecyclerView.Adapter<RecyclerView.ViewHolder>(), View.OnTouchListener, View.OnLongClickListener {
 
     val activity = context as IdentityActivity
 
@@ -58,37 +60,61 @@ class StatusAdapter(
      * 是否时长按
      */
     var isLongClick = false
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): StatusAdapter.VH {
-        val convertView =
-            LayoutInflater.from(context).inflate(R.layout.mine_recycler_item_statu, parent, false)
-        convertView.setOnTouchListener(this)
-        convertView.setOnLongClickListener(this)
-        val vh = VH(convertView)
 
-        initTypeface(vh)
-        return vh
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
+        Log.i("缺省页面"," onCreateViewHolder")
+        var vh:RecyclerView.ViewHolder?=null
+        if (list.size!=0){
+
+            val convertView =
+                LayoutInflater.from(context).inflate(R.layout.mine_recycler_item_statu, parent, false)
+            convertView.setOnTouchListener(this)
+            convertView.setOnLongClickListener(this)
+            vh = VH(convertView)
+            initTypeface(vh)
+        }else{
+            Log.i("缺省页面"," onCreateViewHolder")
+            val convertView = LayoutInflater.from(context).inflate(R.layout.mine_default_identity_item, parent, false)
+            vh = IdentityAdapter.noDataVH(convertView)
+        }
+
+        return vh!!
     }
 
-    override fun onBindViewHolder(holder: VH, position: Int) {
-        holder.view.tag = list[position].id
-        loadBitmap(list[position].background) {
-            holder.contentView.background = BitmapDrawable(context?.resources, it)
-        }
-        holder.positionView.text = list[position].position
-        holder.nameView.text = list[position].form
-        holder.timeView.text = list[position].date
-        if (holder.view.alpha !== 1f) {
-            holder.view.alpha = 1f
+    override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
+        if (holder is VH){
+
+            holder.view.tag = list[position].id
+            loadBitmap(list[position].background) {
+                holder.contentView.background = BitmapDrawable(context?.resources, it)
+            }
+            holder.positionView.text = list[position].position
+            holder.nameView.text = list[position].form
+            holder.timeView.text = list[position].date
+            if (holder.view.alpha !== 1f) {
+                holder.view.alpha = 1f
+            }
         }
     }
 
-    override fun getItemCount() = list.size
+    override fun getItemCount() :Int
+    {
+        if (list.size==0){
+            return 1
+        }else{
+            return list.size
+        }
+    }
+    class noDataVH(itemView: View):RecyclerView.ViewHolder(itemView)
     class VH(val view: View) : RecyclerView.ViewHolder(view) {
         val contentView = view.findViewById<ConstraintLayout>(R.id.cl_content_view)
         val nameView = view.findViewById<TextView>(R.id.tv_item_identity_name)
         val positionView = view.findViewById<TextView>(R.id.tv_item_identity)
         val timeView = view.findViewById<TextView>(R.id.tv_item_identity_time)
     }
+
+
+
 
     var distance = 0f
     var rawY = 0f
@@ -154,7 +180,6 @@ class StatusAdapter(
     fun copyItem(height: Int, width: Int, x: Float, y: Float, v:View) {
         item =
             LayoutInflater.from(activity).inflate(R.layout.mine_recycler_item_statu, null) as View
-
         initCopyItem( item,v)
         item?.y = y
         item?.x = x
@@ -185,6 +210,7 @@ class StatusAdapter(
     fun upAnimatorback(v: View, currentY: Float) {
         animatorBack = ValueAnimator.ofFloat(currentY, starty) as ValueAnimator
         animatorBack?.duration = 800
+        animatorBack?.interpolator=OvershootInterpolator()
         animatorBack?.addUpdateListener {
             item?.y = it.animatedValue as Float
             activity.dataBinding.clContentView.scaleX = (it.animatedValue as Float / starty)
@@ -225,6 +251,7 @@ class StatusAdapter(
             currentY,
             activity.dataBinding.mineRelativelayout.top.toFloat()
         ) as ValueAnimator
+        animatorSuccess?.interpolator=OvershootInterpolator()
         animatorSuccess?.duration = 800
         animatorSuccess?.addUpdateListener {
             item?.y = it.animatedValue as Float
@@ -255,7 +282,6 @@ class StatusAdapter(
                 }
                 activity.viewModel.isFinsh.observeForever {
                     if (activity.viewModel.isUpdata){
-
                         Log.i("身份设置","item.name="+ item!!.findViewById<TextView>(R.id.tv_item_identity).text+"it"+it)
                         Log.i("身份设置","cl"+activity.dataBinding.tvItemIdentity.text)
                         activity.dataBinding.llStatu.removeView(item)

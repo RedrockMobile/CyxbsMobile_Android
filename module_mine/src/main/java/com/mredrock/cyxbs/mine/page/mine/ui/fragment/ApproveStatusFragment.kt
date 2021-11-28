@@ -55,17 +55,19 @@ class ApproveStatusFragment(
             }
 
             if (view.rv_approve.adapter == null) {
-                view.rv_approve.adapter = context?.let {
+                Log.i("缺省页面","null执行了吗")
+                view.rv_approve.adapter = requireContext().let {
                     StatusAdapter(list, it, redid)
                 }
                 view.rv_approve.layoutAnimation=//入场动画
                     LayoutAnimationController(
                         AnimationUtils.loadAnimation(context,R.anim.rv_load_anim)
                     )
+                Log.i("缺省页面","view.rv_approve.layoutManager")
                 view.rv_approve.layoutManager = LinearLayoutManager(context)
             } else {
                 val diffResult = DiffUtil.calculateDiff(DiffCallBack(oldList, list), true)
-                (view.rv_approve.adapter as StatusAdapter).list=list
+              (view.rv_approve.adapter as StatusAdapter).list=list
                 diffResult.dispatchUpdatesTo(view.rv_approve.adapter as StatusAdapter)
 
             }

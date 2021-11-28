@@ -45,13 +45,8 @@ class IdentityAdapter(val list:List<AuthenticationStatus.Data>, val context: Con
         val timeView = itemView.findViewById<TextView>(R.id.tv_item_identity_time)
     }
 
-    class noDataVH(itemView: View):RecyclerView.ViewHolder(itemView){
+    class noDataVH(itemView: View):RecyclerView.ViewHolder(itemView)
 
-    }
-
-    class noNetworkVh(itemView: View):RecyclerView.ViewHolder(itemView){
-
-    }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
 

@@ -78,7 +78,7 @@ class IdentityActivity : BaseViewModelActivity<IdentityViewModel>() {
                 dataBinding.clContentView.background= BitmapDrawable(context.resources,it)
             }
             Log.i("身份设置","initLisener"+it.data.position)
-           viewModel.isFinsh.value=true
+            viewModel.isFinsh.value=true
             viewModel.isUpdata=false
         }
         dataBinding.mineImageview.setOnClickListener {
