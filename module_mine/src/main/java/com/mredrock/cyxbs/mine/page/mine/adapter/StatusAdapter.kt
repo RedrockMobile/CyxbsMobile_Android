@@ -30,6 +30,7 @@ import com.bumptech.glide.Glide
 import com.bumptech.glide.request.target.CustomTarget
 import com.bumptech.glide.request.transition.Transition
 import com.mredrock.cyxbs.common.utils.extensions.invisible
+import com.mredrock.cyxbs.common.utils.extensions.toast
 import com.mredrock.cyxbs.mine.network.model.AuthenticationStatus
 import com.mredrock.cyxbs.mine.util.ColorUntil
 import kotlinx.android.synthetic.main.mine_default_identity_item.view.*
@@ -75,7 +76,7 @@ class StatusAdapter(
         }else{
             Log.i("缺省页面"," onCreateViewHolder")
             val convertView = LayoutInflater.from(context).inflate(R.layout.mine_default_identity_item, parent, false)
-            vh = IdentityAdapter.noDataVH(convertView)
+            vh = noDataVH(convertView)
         }
 
         return vh!!
@@ -83,8 +84,7 @@ class StatusAdapter(
 
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
         if (holder is VH){
-
-            holder.view.tag = list[position].id
+            holder.view.tag = list[position].islate
             loadBitmap(list[position].background) {
                 holder.contentView.background = BitmapDrawable(context?.resources, it)
             }
@@ -138,8 +138,11 @@ class StatusAdapter(
                 }
             }
             MotionEvent.ACTION_UP -> {
-                if (event.rawY >= 800) {  //设置身份失败的动画
+                if (event.rawY >= 800||v.tag==true) {  //设置身份失败的动画
                     upAnimatorback(v, event.rawY - distance)
+                    if (v.tag==true){
+                        context?.toast("对不起,你的身份已经过期啦!")
+                    }
                 } else {  //设置身份成功的动画
                     upAnmatiorSet(v, event.rawY - distance)
                 }
@@ -159,6 +162,11 @@ class StatusAdapter(
      * 被长按的view
      */
     var longView: View? = null
+
+    /**
+     *
+     */
+    var isOutOfdate=false
     override fun onLongClick(v: View?): Boolean {
         isLongClick = true
         longView = v

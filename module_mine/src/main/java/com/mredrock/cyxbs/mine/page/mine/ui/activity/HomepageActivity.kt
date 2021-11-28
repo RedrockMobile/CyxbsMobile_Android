@@ -340,6 +340,7 @@ class HomepageActivity : BaseViewModelActivity<MineViewModel>() {
                 toast("服务器似乎出了一点小问题")
                 initBlurBitmap(null)
             }
+           initTab()
         }
         //此处点击事件监听不可删除  为了防止发生穿透点击
         dataBinding.clPersonalInformation.setOnClickListener {
