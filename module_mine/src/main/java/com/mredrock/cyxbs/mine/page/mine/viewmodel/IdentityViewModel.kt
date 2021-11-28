@@ -24,7 +24,7 @@ class IdentityViewModel: BaseViewModel()  {
     val  redrockApiStatusUpdate = MutableLiveData<RedrockApiStatus>()
     val showStatu=MutableLiveData<PersonalStatu>()
     val onErrorAction =MutableLiveData<String>()
-
+var isUpdata=false
     val isFinsh = MutableLiveData<Boolean>()
     fun getAuthenticationStatus(redid:String){
         apiService.getAuthenticationStatus(redid)
@@ -105,7 +105,7 @@ class IdentityViewModel: BaseViewModel()  {
                 onError = {
                 },
                 onComplete = {
-
+                        isUpdata=true
                 }
             )
             .lifeCycle()
@@ -118,6 +118,7 @@ class IdentityViewModel: BaseViewModel()  {
             .doOnErrorWithDefaultErrorHandler { true }
             .safeSubscribeBy(
                 onNext = {
+                    Log.i("身份设置","getShowIdentify")
                 showStatu.value=it
                 },
                 onError = {

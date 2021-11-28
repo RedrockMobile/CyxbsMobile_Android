@@ -53,7 +53,7 @@ class PersonalityStatusFragment(
                 val diffResult = DiffUtil.calculateDiff(DiffCallBack(oldList, list))
                 adapter!!.list = list
              diffResult.dispatchUpdatesTo(adapter!!)
-                viewModel.isFinsh.value=true
+                //viewModel.isFinsh.value=true
             }
             oldList.clear()
             oldList=list

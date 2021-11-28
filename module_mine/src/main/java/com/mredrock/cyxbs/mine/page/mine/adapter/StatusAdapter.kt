@@ -28,6 +28,7 @@ import androidx.core.view.get
 import com.bumptech.glide.Glide
 import com.bumptech.glide.request.target.CustomTarget
 import com.bumptech.glide.request.transition.Transition
+import com.mredrock.cyxbs.common.utils.extensions.invisible
 import com.mredrock.cyxbs.mine.network.model.AuthenticationStatus
 import com.mredrock.cyxbs.mine.util.ColorUntil
 import org.w3c.dom.Text
@@ -234,26 +235,34 @@ class StatusAdapter(
         }
         animatorSuccess?.addListener(object : Animator.AnimatorListener {
             override fun onAnimationStart(animation: Animator) {
-
+               // (item as View).alpha=0.5f
             }
 
             override fun onAnimationEnd(animation: Animator) {
                 (v.parent as ViewGroup).removeView(v)
                 val activity = context
-
-                item = null
+              //  activity.dataBinding.clContentView.alpha = 1f
+                //activity.dataBinding.llStatu.removeView(item)
+              //  item = null
                 activity.dataBinding.clContentView.scaleX = 1f
                 activity.dataBinding.clContentView.scaleY = 1f
 
-                activity.dataBinding.clContentView.visible()
+                activity.dataBinding.clContentView.invisible()
                 list.forEach {
                     if (it.id == v.tag.toString()){
                         activity.viewModel.updateStatus(it.id,it.type, redid)
                     }
                 }
                 activity.viewModel.isFinsh.observeForever {
-                    activity.dataBinding.llStatu.removeView(item)
-                    activity.dataBinding.clContentView.alpha = 1f
+                    if (activity.viewModel.isUpdata){
+
+                        Log.i("身份设置","item.name="+ item!!.findViewById<TextView>(R.id.tv_item_identity).text+"it"+it)
+                        Log.i("身份设置","cl"+activity.dataBinding.tvItemIdentity.text)
+                        activity.dataBinding.llStatu.removeView(item)
+                        activity.dataBinding.clContentView.visible()
+                        activity.dataBinding.clContentView.alpha = 1f
+                    }
+                    //item = null
                 }
 
 
