@@ -1,5 +1,6 @@
 package com.mredrock.cyxbs.mine.page.mine.widget
 
+import android.animation.ValueAnimator
 import android.content.ContentValues.TAG
 import android.content.Context
 import android.graphics.Canvas
@@ -7,6 +8,7 @@ import android.util.AttributeSet
 import android.util.Log
 import android.view.MotionEvent
 import android.view.View
+import android.view.animation.OvershootInterpolator
 import android.widget.FrameLayout
 import android.widget.Scroller
 import androidx.constraintlayout.helper.widget.MotionEffect.TAG
@@ -62,6 +64,11 @@ private var menuViewDelete:View? = null
      */
     private var x=MutableLiveData<Float>()
 
+    /**
+     * 上下的偏移量 为了让三个item保持在同一水平线上
+     */
+    private var verticalOffset=0
+
     private var isOpen = false
     init {
         scroller = Scroller(context)
@@ -96,14 +103,15 @@ private var menuViewDelete:View? = null
         contentWidth = contentView!!.measuredWidth
         menuSettingWidth = menuViewSetting!!.measuredWidth-context.dp2px(16f)*2
         menuDeleteWidth = menuViewDelete!!.measuredWidth-context.dp2px(16f)*2
-        viewHeight = measuredHeight
+        viewHeight = contentView!!.measuredHeight
+        verticalOffset=(measuredHeight-viewHeight)/2
     }
 
     override fun onLayout(changed: Boolean, left: Int, top: Int, right: Int, bottom: Int) {
         super.onLayout(changed, left, top, right, bottom)
         //指定菜单的位置
-        menuViewSetting!!.layout(contentWidth, 0, contentWidth + menuSettingWidth+context.dp2px(16f)*2, viewHeight)
-       menuViewDelete!!.layout(contentWidth + menuSettingWidth, 0, contentWidth + menuSettingWidth+menuDeleteWidth+context.dp2px(16f)*2, viewHeight)//layout(contentWidth + menuSettingWidth+context.dp2px(16f)*2, 0, contentWidth + menuSettingWidth+context.dp2px(16f)*2+menuDeleteWidth, viewHeight)
+        menuViewSetting!!.layout(contentWidth, verticalOffset, contentWidth + menuSettingWidth+context.dp2px(16f)*2, viewHeight+verticalOffset)
+       menuViewDelete!!.layout(contentWidth + menuSettingWidth, verticalOffset, contentWidth + menuSettingWidth+menuDeleteWidth+context.dp2px(16f)*2, viewHeight+verticalOffset)//layout(contentWidth + menuSettingWidth+context.dp2px(16f)*2, 0, contentWidth + menuSettingWidth+context.dp2px(16f)*2+menuDeleteWidth, viewHeight)
     }
 
     private var startX = 0f
@@ -198,6 +206,7 @@ private var menuViewDelete:View? = null
         isOpen = true
         //--->menuWidth
         val distanceX = menuSettingWidth+menuDeleteWidth - scrollX
+        Log.i("开关","打开需要移动的距离"+distanceX)
         scroller!!.startScroll(scrollX, scrollY, distanceX, scrollY)
         invalidate() //强制刷新
         if (onStateChangeListenter != null) {
@@ -211,14 +220,18 @@ private var menuViewDelete:View? = null
     fun closeMenu() {
         isOpen=false
         menuViewSetting?.alpha = 0f//防止快速滑动的时候 数据不连续 造成透明度未完全的bug
+
+          val s = ValueAnimator.ofFloat(0f,2f)
+        s.interpolator = OvershootInterpolator()
         //--->0
         val distanceX = 0 - scrollX
-
+        Log.i("开关","关闭需要移动的距离"+distanceX)
         scroller!!.startScroll(scrollX, scrollY, distanceX, scrollY)
         invalidate() //强制刷新
         if (onStateChangeListenter != null) {
             onStateChangeListenter?.onClose(this)
         }
+
     }
 
 

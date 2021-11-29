@@ -5,7 +5,7 @@
     <!--    问题item的昵称颜色-->
     <color name="qa_question_item_nickname_color">#0B2551</color>
     <!--    问题item的下面的各类数字颜色-->
-    <color name="qa_question_bottom_count_color">#2A4E84</color>
+    <color name="qa_question_bottom_count_color">#97A0B0</color>
     <!--    问题item的分割线颜色-->
     <color name="qa_question_recycler_item_divide_line_color">#E2E8EE</color>
     <!--    评论list背景颜色-->

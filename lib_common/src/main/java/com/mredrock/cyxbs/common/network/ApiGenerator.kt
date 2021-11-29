@@ -307,6 +307,7 @@ object ApiGenerator {
                 val response = proceedPoxyWithTryCatch {
                     chain.proceed(chain.request())
                 }
+                Log.e("网络请求", response.toString())
                 return response!!
             }
             // 如果切换过url，则直接用这个url请求

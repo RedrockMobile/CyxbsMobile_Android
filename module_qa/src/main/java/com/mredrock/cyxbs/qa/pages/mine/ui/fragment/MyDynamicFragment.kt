@@ -1,4 +1,3 @@
-
 package com.mredrock.cyxbs.qa.pages.mine.ui.fragment
 
 
@@ -20,6 +19,7 @@ import com.mredrock.cyxbs.qa.network.NetworkState
 import com.mredrock.cyxbs.qa.pages.dynamic.ui.activity.DynamicDetailActivity
 import com.mredrock.cyxbs.qa.pages.dynamic.ui.adapter.DynamicAdapter
 import com.mredrock.cyxbs.qa.pages.dynamic.ui.adapter.HybridAdapter
+import com.mredrock.cyxbs.qa.pages.mine.ui.adapter.MyDynamicAdapter
 import com.mredrock.cyxbs.qa.pages.mine.viewmodel.MyDynamicViewModel
 import com.mredrock.cyxbs.qa.ui.adapter.EmptyRvAdapter
 import com.mredrock.cyxbs.qa.ui.adapter.FooterRvAdapter
@@ -30,14 +30,15 @@ import com.tencent.tauth.Tencent
 import kotlinx.android.synthetic.main.qa_activity_my_dynamic.*
 
 @Route(path = QA_DYNAMIC_MINE_FRAGMENT)
-class MyDynamicFragment : BaseViewModelFragment<MyDynamicViewModel>(),MineAndQa.RefreshListener {
+class MyDynamicFragment : BaseViewModelFragment<MyDynamicViewModel>(), MineAndQa.RefreshListener {
     private var isRvAtTop = true
     private var isSendDynamic = false
     private lateinit var dynamicListRvAdapter: HybridAdapter
-    private var redid:String?=null
-    private var isCreated=false
+    private var redid: String? = null
+    private var isCreated = false
+
     init {
-        MineAndQa.refreshListener=this
+        MineAndQa.refreshListener = this
     }
 
     override fun onCreateView(
@@ -49,13 +50,13 @@ class MyDynamicFragment : BaseViewModelFragment<MyDynamicViewModel>(),MineAndQa.
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
-        Log.e("wxtag跨模块刷新","(MyDynamicFragment.kt:177)->> onActivityCreated=redid=$redid")
-isCreated=true
+       Log.i("性能测试","onActivityCreated被调用")
+        isCreated = true
         viewModel.getDynamicData(redid)
         initDynamics()
     }
 
-   fun initDynamics() {
+    fun initDynamics() {
         val mTencent = Tencent.createInstance(CommentConfig.APP_ID, context)
         dynamicListRvAdapter =
             HybridAdapter(context) { dynamic, view ->
@@ -122,7 +123,7 @@ isCreated=true
         }
 
         val footerRvAdapter = FooterRvAdapter { viewModel.retry() }
-        val emptyRvAdapter = EmptyRvAdapter(getString(R.string.qa_question_list_empty_hint))
+        val emptyRvAdapter = MyDynamicAdapter(getString(R.string.qa_question_list_empty_hint))
         val adapterWrapper = RvAdapterWrapper(
             normalAdapter = dynamicListRvAdapter,
             emptyAdapter = emptyRvAdapter,
@@ -146,7 +147,7 @@ isCreated=true
     private fun observeLoading(
         dynamicListRvAdapter: HybridAdapter,
         footerRvAdapter: FooterRvAdapter,
-        emptyRvAdapter: EmptyRvAdapter
+        emptyRvAdapter: MyDynamicAdapter
     ): MyDynamicViewModel = viewModel.apply {
         dynamicList?.observe {
             dynamicListRvAdapter.submitList(it)
@@ -178,9 +179,9 @@ isCreated=true
     }
 
     override fun onRefresh(redid: String?) {
-        this.redid=redid
-     Log.e("wxtag跨模块刷新","(MyDynamicFragment.kt:177)->> onRefresh回调redid=$redid")
-        if (isCreated){//避免造成viewmodel没有实例化而报错
+        this.redid = redid
+        Log.e("wxtag跨模块刷新", "(MyDynamicFragment.kt:177)->> onRefresh回调redid=$redid")
+        if (isCreated) {//避免造成viewmodel没有实例化而报错
             viewModel.getDynamicData(redid)
         }
     }

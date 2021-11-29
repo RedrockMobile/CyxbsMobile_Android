@@ -3,96 +3,112 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:paddingTop="10dp"
-    android:layout_height="wrap_content">
+    android:layout_height="145dp">
+
     <RelativeLayout
-        android:paddingTop="15dp"
         android:id="@+id/rl_menu_setting"
+        android:layout_width="192dp"
+        android:layout_height="125dp"
+
         android:alpha="0"
         android:background="#474A50"
-        android:gravity="center"
-        android:layout_gravity="center"
-        android:layout_width="192dp"
-        android:layout_height="125dp">
+        android:gravity="center">
+
         <ImageView
             android:id="@+id/iv_item_setting"
-            android:background="@drawable/mine_ic_item_identity_setting"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"/>
+            android:layout_width="26dp"
+            android:layout_height="27dp"
+            android:layout_centerVertical="true"
+            android:layout_marginEnd="6dp"
+            android:background="@drawable/mine_ic_item_identity_setting" />
+
         <TextView
-            android:layout_marginLeft="10dp"
-            android:layout_marginTop="2dp"
-            android:layout_toRightOf="@id/iv_item_setting"
-            android:text="设置"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"/>
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_marginEnd="21dp"
+            android:layout_toRightOf="@id/iv_item_setting"
+            android:gravity="bottom"
+            android:text="设置"
+            android:textColor="@color/common_grades_activity_tl_white" />
     </RelativeLayout>
 
     <RelativeLayout
-        android:paddingTop="15dp"
         android:id="@+id/rl_menu_view"
+        android:layout_width="130dp"
+        android:layout_height="125dp"
         android:alpha="0"
         android:background="#ED535C"
-        android:gravity="center"
-        android:layout_gravity="center"
-        android:layout_width="149dp"
-        android:layout_height="125dp">
+        android:gravity="center">
         <ImageView
             android:id="@+id/iv_item_delete"
-            android:background="@drawable/mine_ic_item_identity_delete"
             android:layout_width="22dp"
-            android:layout_height="23dp"/>
+            android:layout_height="22dp"
+            android:layout_marginLeft="17dp"
+            android:layout_centerVertical="true"
+            android:background="@drawable/mine_ic_item_identity_delete" />
+
         <TextView
-            android:layout_marginLeft="10dp"
-            android:layout_marginTop="2dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="7dp"
             android:layout_toRightOf="@id/iv_item_delete"
             android:text="删除"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"/>
+            android:textColor="@color/common_grades_activity_tl_white" />
     </RelativeLayout>
 
-    <androidx.constraintlayout.widget.ConstraintLayout
-        android:id="@+id/cl_content_view"
+    <androidx.cardview.widget.CardView
         android:layout_width="match_parent"
         android:layout_height="125dp"
+        android:layout_gravity="center"
         android:layout_marginLeft="16dp"
         android:layout_marginRight="16dp"
-        android:background="@drawable/mine_ic_item_background">
+        android:background="@color/common_grades_activity_tl_white"
+        app:cardElevation="6dp">
 
-        <TextView
-            android:textColor="#F3FEFF"
-            android:id="@+id/tv_item_identity_name"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="16dp"
-            android:layout_marginTop="16dp"
-            android:text="红岩网校工作站"
-            android:textSize="23dp"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
 
-        <TextView
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/cl_content_view"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@drawable/mine_ic_item_background">
 
-            android:id="@+id/tv_item_identity"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="16dp"
-            android:text="干事"
-            android:textColor="#F3FEFF"
-            android:textSize="18dp"
-            app:layout_constraintStart_toStartOf="@+id/tv_item_identity_name"
-            app:layout_constraintTop_toBottomOf="@+id/tv_item_identity_name" />
+            <TextView
+                android:id="@+id/tv_item_identity_name"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="16dp"
+                android:layout_marginTop="16dp"
+                android:text="红岩网校工作站"
+                android:textColor="#F3FEFF"
+                android:textSize="23dp"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
 
-        <TextView
-            android:id="@+id/tv_item_identity_time"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="8dp"
-            android:textSize="18dp"
-            android:textColor="#F3FEFF"
-            android:layout_marginEnd="36dp"
-            android:text="2018.4.28-2020.5.29"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/tv_item_identity" />
-    </androidx.constraintlayout.widget.ConstraintLayout>
+            <TextView
+
+                android:id="@+id/tv_item_identity"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                android:text="干事"
+                android:textColor="#F3FEFF"
+                android:textSize="18dp"
+                app:layout_constraintStart_toStartOf="@+id/tv_item_identity_name"
+                app:layout_constraintTop_toBottomOf="@+id/tv_item_identity_name" />
+
+            <TextView
+                android:id="@+id/tv_item_identity_time"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:layout_marginEnd="36dp"
+                android:text="2018.4.28-2020.5.29"
+                android:textColor="#F3FEFF"
+                android:textSize="18dp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/tv_item_identity" />
+        </androidx.constraintlayout.widget.ConstraintLayout>
+    </androidx.cardview.widget.CardView>
 </com.mredrock.cyxbs.mine.page.mine.widget.SlideLayout>

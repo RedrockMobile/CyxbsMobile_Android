@@ -46,14 +46,14 @@ class PersonalityStatusFragment(
             }
 
             if (view.rv_personal?.adapter == null) {
+                Log.i("缺省页面","null执行了吗")
                 adapter = StatusAdapter(list, context, redid)
                 view.rv_personal.adapter = adapter
                 view.rv_personal.layoutManager = LinearLayoutManager(context)
             } else {
                 val diffResult = DiffUtil.calculateDiff(DiffCallBack(oldList, list))
                 adapter!!.list = list
-             diffResult.dispatchUpdatesTo(adapter!!)
-                viewModel.isFinsh.value=true
+                diffResult.dispatchUpdatesTo(adapter!!)
             }
             oldList.clear()
             oldList=list

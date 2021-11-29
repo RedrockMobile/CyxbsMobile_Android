@@ -10,6 +10,7 @@
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/ll_statu"
         android:layout_width="match_parent"
+
         android:layout_height="match_parent"
         tools:context=".page.mine.ui.activity.IdentityActivity">
 
@@ -27,10 +28,10 @@
             android:id="@+id/tv_identity"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginStart="13dp"
+           android:paddingLeft="13dp"
             android:text="身份设置"
             android:textSize="20dp"
-            android:textColor="#15315B"
+            android:textColor="@color/mine_black"
             app:layout_constraintBottom_toBottomOf="@+id/mine_imageview"
             app:layout_constraintStart_toEndOf="@+id/mine_imageview"
             app:layout_constraintTop_toTopOf="@+id/mine_imageview" />
@@ -55,14 +56,13 @@
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="17dp"
                 android:layout_marginRight="17dp"
-                android:text="长按下方身份牌并拖动到此处，即可在昵称后面展示你的专属身份！"
+                android:textColor="@color/mine_black"
+                android:text="@string/mine_status_message"
                 android:textSize="14dp" />
 
             <androidx.constraintlayout.widget.ConstraintLayout
 
-                xmlns:android="http://schemas.android.com/apk/res/android"
-                xmlns:app="http://schemas.android.com/apk/res-auto"
-                xmlns:tools="http://schemas.android.com/tools"
+
                 android:id="@+id/cl_content_view"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
@@ -121,8 +121,11 @@
             app:tabMaxWidth="180dp"
             app:tabMinWidth="160dp"
             app:tabMode="fixed"
+            app:tabPaddingBottom="-10dp"
+            android:textSize="30dp"
             app:tabPaddingEnd="40dp"
             app:tabPaddingStart="40dp"
+            app:tabTextAppearance="@style/tab_style"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/mine_relativelayout"/>
@@ -137,9 +140,10 @@
 
         <androidx.viewpager2.widget.ViewPager2
             android:id="@+id/vp_status"
+            android:paddingTop="15dp"
             android:layout_width="match_parent"
             android:layout_height="0dp"
-            android:background="#FFFFFF"
+            android:background="@color/mine_dynamic"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"

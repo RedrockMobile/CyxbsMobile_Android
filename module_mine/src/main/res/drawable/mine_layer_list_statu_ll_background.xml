@@ -43,7 +43,7 @@
     </item>
     <item>
         <shape>
-            <solid android:color="#FFFFFF" />
+            <solid android:color="@color/mine_dynamic" />
             <corners    android:topLeftRadius="20dp"
                 android:topRightRadius="20dp"/>
         </shape>

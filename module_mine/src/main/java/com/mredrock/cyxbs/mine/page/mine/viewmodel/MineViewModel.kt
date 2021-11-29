@@ -73,6 +73,7 @@ class MineViewModel: BaseViewModel() {
             .doOnErrorWithDefaultErrorHandler { true }
             .safeSubscribeBy(
                 onNext = {
+                    Log.i("背景图片",it.status.toString())
                     _isChangeSuccess.value =true
 
                 },
@@ -87,7 +88,6 @@ class MineViewModel: BaseViewModel() {
     }
 
     fun deleteStatus(identityId:String){
-
         apiService.deleteIdentity(identityId)
             .setSchedulers()
             .doOnErrorWithDefaultErrorHandler { true }

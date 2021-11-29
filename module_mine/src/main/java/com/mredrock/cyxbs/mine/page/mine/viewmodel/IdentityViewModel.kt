@@ -25,6 +25,10 @@ class IdentityViewModel: BaseViewModel()  {
     val showStatu=MutableLiveData<PersonalStatu>()
     val onErrorAction =MutableLiveData<String>()
 
+    /**
+     * 这个变量作为一个标记位 为了消除粘性事件带来的bug
+     */
+    var isUpdata=false
     val isFinsh = MutableLiveData<Boolean>()
     fun getAuthenticationStatus(redid:String){
         apiService.getAuthenticationStatus(redid)
@@ -105,7 +109,7 @@ class IdentityViewModel: BaseViewModel()  {
                 onError = {
                 },
                 onComplete = {
-
+                        isUpdata=true
                 }
             )
             .lifeCycle()
@@ -118,6 +122,7 @@ class IdentityViewModel: BaseViewModel()  {
             .doOnErrorWithDefaultErrorHandler { true }
             .safeSubscribeBy(
                 onNext = {
+                    Log.i("身份设置","getShowIdentify")
                 showStatu.value=it
                 },
                 onError = {

@@ -2,6 +2,7 @@ package com.mredrock.cyxbs.qa.ui.widget.likeview
 
 import android.content.Context
 import android.graphics.Canvas
+import android.graphics.Color
 import android.os.Build
 import android.text.TextPaint
 import android.util.AttributeSet
@@ -46,7 +47,8 @@ class LikeViewSlim @JvmOverloads constructor(
     private val textPaint = TextPaint()
 
     init {
-        textPaint.textSize = context.sp(11).toFloat()
+        textPaint.textSize = context.sp(14).toFloat()
+
         textPaint.isAntiAlias = true
     }
 
