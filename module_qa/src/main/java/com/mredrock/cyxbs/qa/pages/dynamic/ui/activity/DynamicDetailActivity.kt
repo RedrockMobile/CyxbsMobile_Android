@@ -12,6 +12,7 @@ import android.os.Bundle
 import android.transition.Slide
 import android.util.Log
 import android.view.Gravity
+import android.view.LayoutInflater
 import android.view.View
 import android.widget.Toast
 import androidx.coordinatorlayout.widget.CoordinatorLayout
@@ -22,6 +23,7 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.alibaba.android.arouter.facade.annotation.Route
+import com.bumptech.glide.Glide
 import com.google.android.material.appbar.AppBarLayout
 import com.mredrock.cyxbs.common.BaseApp.Companion.context
 import com.mredrock.cyxbs.common.component.CyxbsToast
@@ -528,16 +530,16 @@ class DynamicDetailActivity : BaseViewModelActivity<DynamicDetailViewModel>() {
             viewModel.replyInfo.value = ReplyInfo("", "", "")
 
             val optionPopWindow = OptionalPopWindow.Builder().with(this)
-                .addOptionAndCallback(CommentConfig.REPLY) {
+                .addOptionAndCallback(CommentConfig.REPLY,R.layout.qa_popupwindow_option_bottom) {
                     KeyboardController.showInputKeyboard(this, qa_et_my_comment_reply)
                     viewModel.replyInfo.value = ReplyInfo("", "", "")
-                }.addOptionAndCallback(CommentConfig.COPY) {
+                }.addOptionAndCallback(CommentConfig.COPY,R.layout.qa_popupwindow_option_bottom) {
                     viewModel.dynamic.value?.let {
                         ClipboardController.copyText(this, it.content)
                     }
                 }
             if (viewModel.dynamic.value?.isSelf == 1) { // 如果帖子是自己的，则可以删除
-                optionPopWindow.addOptionAndCallback(CommentConfig.DELETE) {
+                optionPopWindow.addOptionAndCallback(CommentConfig.DELETE,R.layout.qa_popupwindow_option_bottom) {
                     QaDialog.show(
                         this,
                         resources.getString(R.string.qa_dialog_tip_delete_dynamic_text),
@@ -548,7 +550,7 @@ class DynamicDetailActivity : BaseViewModelActivity<DynamicDetailViewModel>() {
                     }
                 }
             } else { // 如果是别人的帖子，则可以举报
-                optionPopWindow.addOptionAndCallback(CommentConfig.REPORT) {
+                optionPopWindow.addOptionAndCallback(CommentConfig.REPORT,R.layout.qa_popupwindow_option_bottom) {
                     QaReportDialog(this).apply {
                         show { reportContent ->
                             viewModel.dynamic.value?.let { dynamic ->
@@ -562,7 +564,7 @@ class DynamicDetailActivity : BaseViewModelActivity<DynamicDetailViewModel>() {
                     }.show()
                 }
             }
-            optionPopWindow.show(it, OptionalPopWindow.AlignMode.RIGHT, 0)
+            this.contentView?.let { it1 -> optionPopWindow.showFromBottom(it1) }
         }
         dynamic?.let {
             qa_iv_dynamic_praise_count_image.registerLikeView(
@@ -573,7 +575,6 @@ class DynamicDetailActivity : BaseViewModelActivity<DynamicDetailViewModel>() {
             )
         }
         qa_iv_dynamic_praise_count_image.setOnSingleClickListener {
-          Log.e("wxtag","(DynamicDetailActivity.kt:591)->> 点赞按钮被点击")
             qa_iv_dynamic_praise_count_image.click()
         }
 
@@ -602,25 +603,22 @@ class DynamicDetailActivity : BaseViewModelActivity<DynamicDetailViewModel>() {
 
     @SuppressLint("SetTextI18n")
     private fun refreshDynamic() {
-      Log.e("wxtag","(DynamicDetailActivity.kt:620)->>  refreshDynamic")
-        qa_iv_dynamic_avatar.setAvatarImageFromUrl(viewModel.dynamic.value?.avatar)
-        qa_tv_dynamic_topic.text = "# " + viewModel.dynamic.value?.topic
-        qa_tv_dynamic_nickname.text = viewModel.dynamic.value?.nickName
-        qa_tv_dynamic_content.setContent(viewModel.dynamic.value?.content)
-        qa_tv_dynamic_comment_count.text = viewModel.dynamic.value?.commentCount.toString()
-        viewModel.dynamic.value?.let {
-            Log.e("wxtag","(DynamicDetailActivity.kt:620)->>  refreshDynamic${it.praiseCount}")
-            Log.e("wxtag","(DynamicDetailActivity.kt:620)->>  ${qa_iv_dynamic_praise_count_image.hashCode()}it.isPraised${ it.isPraised}")
+
+        viewModel.dynamic.value?.apply {
+            Glide.with(context).load(identityPic).into(qa_iv_dynamic_identity)
+            qa_iv_dynamic_avatar.setAvatarImageFromUrl(avatar)
+            qa_tv_dynamic_topic.text = "# $topic"
+            qa_tv_dynamic_nickname.text = nickName
+            qa_tv_dynamic_content.setContent(content)
+            qa_tv_dynamic_comment_count.text = commentCount.toString()
             qa_iv_dynamic_praise_count_image.registerLikeView(
-                it.postId,
+                postId,
                 CommentConfig.PRAISE_MODEL_DYNAMIC,
-                it.isPraised,
-                it.praiseCount
+                isPraised,
+                praiseCount
             )
-        }
-        viewModel.dynamic.value?.let {
             qa_tv_dynamic_publish_at.text =
-                dynamicTimeDescription(System.currentTimeMillis(), it.publishTime * 1000)
+                dynamicTimeDescription(System.currentTimeMillis(), publishTime * 1000)
         }
         if (viewModel.dynamic.value?.pics.isNullOrEmpty())
             qa_dynamic_nine_grid_view.setRectangleImages(

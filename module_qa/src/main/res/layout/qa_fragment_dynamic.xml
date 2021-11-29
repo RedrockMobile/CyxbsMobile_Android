@@ -14,6 +14,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical"
+        android:background="@drawable/qa_ic_header"
         app:layout_behavior="com.mredrock.cyxbs.qa.pages.dynamic.behavior.HeaderBehavior">
 
         <RelativeLayout
@@ -102,7 +103,8 @@
         android:layout_width="60dp"
         android:layout_height="60dp"
         android:layout_gravity="bottom|right"
-        android:layout_marginEnd="20dp"
-        android:layout_marginBottom="120dp"
-        android:background="@drawable/qa_ic_send_dynamic" />
+        android:layout_marginEnd="11dp"
+        android:layout_marginBottom="140dp"
+        android:src="@drawable/qa_ic_send_dynamic"
+        android:scaleType="centerInside"/>
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

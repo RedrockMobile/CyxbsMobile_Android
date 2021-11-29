@@ -16,20 +16,14 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent">
 
-        <androidx.cardview.widget.CardView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="17dp"
-            android:layout_marginTop="61dp"
-            android:layout_marginEnd="18dp"
-            app:cardElevation="6dp"
-            app:cardCornerRadius="10dp">
-
             <androidx.constraintlayout.widget.ConstraintLayout
                 android:id="@+id/mine_user_cl_info"
                 android:layout_width="match_parent"
                 android:layout_height="208dp"
-                android:background="@drawable/mine_ic_user_cl">
+                android:layout_marginStart="17dp"
+                android:layout_marginTop="61dp"
+                android:layout_marginEnd="18dp"
+                android:background="@drawable/mine_ic_01">
 
                 <de.hdodenhof.circleimageview.CircleImageView
                     android:id="@+id/mine_user_avatar"
@@ -43,15 +37,15 @@
 
                 <TextView
                     android:id="@+id/mine_user_username"
-                    android:layout_width="0dp"
+                    android:layout_width="wrap_content"
                     android:layout_height="31dp"
                     android:layout_marginStart="7dp"
-                    android:layout_marginTop="44dp"
+                    android:layout_marginTop="40dp"
                     android:layout_marginEnd="28dp"
                     android:ellipsize="end"
                     android:lines="1"
                     android:maxLines="1"
-                    android:text="鱼鱼鱼鱼鱼鱼鱼鱼鱼鱼"
+                    android:text="鱼鱼鱼鱼鱼鱼鱼鱼"
                     android:textColor="@color/mine_text_nickname"
                     android:textSize="22sp"
                     app:layout_constraintEnd_toEndOf="parent"
@@ -61,7 +55,7 @@
 
                 <TextView
                     android:id="@+id/mine_user_introduce"
-                    android:layout_width="0dp"
+                    android:layout_width="195dp"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="7dp"
                     android:layout_marginTop="1dp"
@@ -69,7 +63,9 @@
                     android:text="这是一条不普通的个性签名这是一条不普通的给"
                     android:textColor="@color/mine_text_introduction"
                     android:textSize="13sp"
+                    android:maxLines="2"
                     app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintHorizontal_bias="0.0"
                     app:layout_constraintStart_toEndOf="@+id/mine_user_avatar"
                     app:layout_constraintTop_toBottomOf="@+id/mine_user_username" />
 
@@ -177,8 +173,20 @@
                     app:layout_constraintTop_toTopOf="@+id/mine_user_tv_praise_number"
                     app:layout_constraintVertical_bias="0.08" />
 
+                <ImageButton
+                    android:id="@+id/mine_user_ib_arrow"
+                    android:layout_width="15dp"
+                    android:layout_height="15dp"
+                    android:layout_marginTop="57dp"
+                    android:layout_marginEnd="15dp"
+                    android:background="?android:attr/selectableItemBackgroundBorderless"
+                    android:src="@drawable/mine_ic_arrow_right"
+                    android:scaleType="center"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
+
             </androidx.constraintlayout.widget.ConstraintLayout>
-        </androidx.cardview.widget.CardView>
+
 
     </LinearLayout>
 
@@ -197,19 +205,19 @@
 
             <ImageView
                 android:id="@+id/mine_user_iv_center_notification"
-                android:layout_width="41dp"
-                android:layout_height="40.84dp"
+                android:layout_width="50dp"
+                android:layout_height="50dp"
                 android:layout_marginStart="51dp"
-                android:layout_marginTop="24dp"
+                android:layout_marginTop="30dp"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
                 app:srcCompat="@drawable/mine_ic_notification_center" />
 
             <ImageView
                 android:id="@+id/mine_user_iv_center_stamp"
-                android:layout_width="39.6dp"
-                android:layout_height="39.1dp"
-                android:layout_marginTop="25dp"
+                android:layout_width="50dp"
+                android:layout_height="50dp"
+                android:layout_marginTop="30dp"
                 app:layout_constraintEnd_toStartOf="@+id/mine_user_iv_center_feedback"
                 app:layout_constraintStart_toEndOf="@+id/mine_user_iv_center_notification"
                 app:layout_constraintTop_toTopOf="parent"
@@ -217,12 +225,13 @@
 
             <ImageView
                 android:id="@+id/mine_user_iv_center_feedback"
-                android:layout_width="39.6dp"
-                android:layout_height="38dp"
-                android:layout_marginTop="25dp"
+                android:layout_width="50dp"
+                android:layout_height="50dp"
+                android:layout_marginTop="30dp"
                 android:layout_marginEnd="51dp"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
+                android:scaleType="fitXY"
                 app:srcCompat="@drawable/mine_ic_feedback_center" />
 
             <TextView
@@ -277,13 +286,15 @@
                 app:layout_constraintTop_toTopOf="parent" />
         </androidx.constraintlayout.widget.ConstraintLayout>
 
-        <FrameLayout
+        <androidx.cardview.widget.CardView
             android:layout_width="match_parent"
             android:layout_height="58dp"
             android:layout_marginStart="16dp"
             android:layout_marginTop="36dp"
             android:layout_marginEnd="16dp"
-            android:background="@drawable/mine_shape_bg_user_sign">
+            android:background="@drawable/mine_shape_bg_user_sign"
+            app:cardCornerRadius="8dp"
+            app:cardElevation="1dp">
 
             <TextView
                 android:id="@+id/mine_user_tv_sign"
@@ -310,7 +321,7 @@
                 android:text="签到"
                 android:textColor="#FFFFFF"
                 android:textSize="14sp" />
-        </FrameLayout>
+        </androidx.cardview.widget.CardView>
 
         <FrameLayout
             android:id="@+id/mine_user_fm_about_us"
