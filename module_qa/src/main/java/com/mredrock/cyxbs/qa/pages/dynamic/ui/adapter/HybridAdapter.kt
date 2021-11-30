@@ -2,6 +2,7 @@ package com.mredrock.cyxbs.qa.pages.dynamic.ui.adapter
 
 import android.content.Context
 import android.content.Intent
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -138,6 +139,7 @@ class HybridAdapter(val context: Context?, private val onItemClickEvent: (Dynami
                 dynamic.topic.let { it1 -> onTopicListener?.invoke(it1, it) }
             }
             qa_iv_dynamic_more_tips_clicked.setOnSingleClickListener { view ->
+                Log.i("点击事件","点击事件出发了"+dynamic.isSelf)
                 if (dynamic.isSelf == 0) {
                     if (dynamic.isFollowTopic == 0) {
                         OptionalPopWindow.Builder().with(context)

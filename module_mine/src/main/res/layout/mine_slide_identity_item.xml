@@ -23,6 +23,7 @@
             android:background="@drawable/mine_ic_item_identity_setting" />
 
         <TextView
+            android:id="@+id/tv_item_setting"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_centerVertical="true"

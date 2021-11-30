@@ -182,7 +182,7 @@
         android:layout_marginTop="20dp"
         android:gravity="center"
         android:text="2019级"
-        android:textColor="#CC15315B"
+        android:textColor="@color/mine_tv_personal_uid"
         android:textSize="15dp"
         app:layout_constraintStart_toStartOf="@+id/tv_id"
         app:layout_constraintTop_toBottomOf="@+id/tv_id" />
@@ -194,7 +194,7 @@
         android:layout_marginStart="8dp"
         android:gravity="center"
         android:text="十三星座"
-        android:textColor="#CC15315B"
+        android:textColor="@color/mine_tv_personal_uid"
         android:textSize="15dp"
         app:layout_constraintStart_toEndOf="@+id/v_division_line1"
         app:layout_constraintTop_toTopOf="@+id/tv_grade" />
@@ -239,7 +239,7 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="4dp"
         android:text="这是一条不普通的个性签名签名签名签名签名"
-        android:textColor="#8015315B"
+        android:textColor="@color/mine_tv_signature"
         app:layout_constraintStart_toStartOf="@+id/tv_grade"
         app:layout_constraintTop_toBottomOf="@+id/tv_grade" />
 

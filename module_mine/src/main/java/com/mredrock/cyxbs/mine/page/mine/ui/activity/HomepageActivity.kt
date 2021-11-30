@@ -213,6 +213,7 @@ class HomepageActivity : BaseViewModelActivity<MineViewModel>() {
     }
 
 
+    @SuppressLint("ResourceAsColor")
     fun changeAttention(data: UserInfo) {
         Log.i("测试", "是不是自己" + data.data.isSelf);
         if (data.data.isSelf) {
@@ -228,8 +229,14 @@ class HomepageActivity : BaseViewModelActivity<MineViewModel>() {
                 }
             }else{
                 dataBinding.clPersonalInformation.mine_tv_concern.text = "关注"
-                bg4.setColor(Color.parseColor("#4841E2"))
 
+                if(this.applicationContext.resources.configuration.uiMode == 0x21){
+                    bg4.setColor(Color.parseColor("#5A5A5A"))
+                }else{
+
+                   bg4.setColor(R.color.mine_tv_concern)
+                }
+                dataBinding.clPersonalInformation.mine_tv_concern.background=bg4
             }
         }
 
