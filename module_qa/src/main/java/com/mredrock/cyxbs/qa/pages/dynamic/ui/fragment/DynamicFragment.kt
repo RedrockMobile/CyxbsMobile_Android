@@ -1,8 +1,11 @@
 package com.mredrock.cyxbs.qa.pages.dynamic.ui.fragment
 
+import android.animation.ObjectAnimator
 import android.content.Intent
+import android.graphics.Color
 import android.os.Handler
 import android.util.Log
+import android.view.LayoutInflater
 import android.view.View
 import android.view.Window
 import android.view.WindowManager
@@ -15,6 +18,7 @@ import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.alibaba.android.arouter.facade.annotation.Route
+import com.google.android.material.tabs.TabLayout
 import com.google.android.material.tabs.TabLayoutMediator
 import com.mredrock.cyxbs.common.component.CyxbsToast
 import com.mredrock.cyxbs.common.config.CyxbsMob
@@ -23,6 +27,7 @@ import com.mredrock.cyxbs.common.event.RefreshQaEvent
 import com.mredrock.cyxbs.common.mark.EventBusLifecycleSubscriber
 import com.mredrock.cyxbs.common.utils.extensions.doIfLogin
 import com.mredrock.cyxbs.common.utils.extensions.setOnSingleClickListener
+import com.mredrock.cyxbs.common.utils.extensions.sp
 import com.mredrock.cyxbs.qa.R
 import com.mredrock.cyxbs.qa.config.RequestResultCode.NEED_REFRESH_RESULT
 import com.mredrock.cyxbs.qa.pages.dynamic.model.TopicDataSet
@@ -82,7 +87,7 @@ class DynamicFragment : BaseDynamicFragment(), EventBusLifecycleSubscriber {
             if (topic.topicId == "0") {
                 CircleSquareActivity.activityStartFromDynamic(this)
             } else {
-                CircleDetailActivity.activityStartFromCircle(this, view,topic)
+                CircleDetailActivity.activityStartFromCircle(this, view, topic)
             }
         }, this)
 
@@ -162,12 +167,12 @@ class DynamicFragment : BaseDynamicFragment(), EventBusLifecycleSubscriber {
 
     private fun initClick() {
         qa_bt_to_quiz.setOnSingleClickListener {
-                turnToQuiz()
+            turnToQuiz()
         }
     }
 
     private fun turnToQuiz() {
-       context?.doIfLogin("提问") {
+        context?.doIfLogin("提问") {
 
             QuizActivity.activityStart(this, "发动态", REQUEST_LIST_REFRESH_ACTIVITY)
             MobclickAgent.onEvent(context, CyxbsMob.Event.CLICK_ASK)
@@ -180,12 +185,60 @@ class DynamicFragment : BaseDynamicFragment(), EventBusLifecycleSubscriber {
             addFragment(recommendFragment)
             addFragment(focusFragment)
         }
-        TabLayoutMediator(qa_tl_dynamic,qa_vp_dynamic){ tab, position ->
-            when(position){
+
+        qa_tl_dynamic.addOnTabSelectedListener(object : TabLayout.OnTabSelectedListener {
+            override fun onTabSelected(tab: TabLayout.Tab) {
+
+                val textView = if (tab.customView != null) {
+                    tab.customView as TextView
+                } else {
+                    (LayoutInflater.from(requireContext()).inflate(
+                        R.layout.qa_layout_tab, null, false
+                    ) as TextView)
+                        .also {
+                            tab.customView = it
+                        }
+                }
+
+                textView.apply {
+                    text = tab.text
+                    setTextColor(Color.parseColor("#15315B"))
+                }
+
+
+            }
+
+            override fun onTabUnselected(tab: TabLayout.Tab) {
+                val textView = if (tab.customView != null) {
+                    tab.customView as TextView
+                } else {
+                    (LayoutInflater.from(requireContext()).inflate(
+                        R.layout.qa_layout_tab, null, false
+                    ) as TextView)
+                        .also {
+                            tab.customView = it
+                        }
+                }
+
+                textView.setTextColor(Color.parseColor("#CC15315B"))
+
+            }
+
+            override fun onTabReselected(tab: TabLayout.Tab?) {
+            }
+        })
+
+        TabLayoutMediator(qa_tl_dynamic, qa_vp_dynamic) { tab, position ->
+            when (position) {
                 0 -> tab.text = "推荐"
                 1 -> tab.text = "关注"
             }
         }.attach()
+
+        qa_tl_dynamic.apply {
+            getTabAt(1)?.select()
+            getTabAt(0)?.select()
+        }
     }
 
     private fun invalidateDynamicList() {
@@ -215,7 +268,8 @@ class DynamicFragment : BaseDynamicFragment(), EventBusLifecycleSubscriber {
     }
 
     @Subscribe(threadMode = ThreadMode.MAIN, sticky = true)
-    open fun refreshQuestionList(event: RefreshQaEvent) {}
+    open fun refreshQuestionList(event: RefreshQaEvent) {
+    }
 //        if (isRvAtTop) {
 //            viewModel.apply {
 //                invalidateFocusList()
