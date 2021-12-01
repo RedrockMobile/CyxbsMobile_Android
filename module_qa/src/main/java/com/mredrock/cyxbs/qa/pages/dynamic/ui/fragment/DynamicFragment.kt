@@ -186,48 +186,6 @@ class DynamicFragment : BaseDynamicFragment(), EventBusLifecycleSubscriber {
             addFragment(focusFragment)
         }
 
-        qa_tl_dynamic.addOnTabSelectedListener(object : TabLayout.OnTabSelectedListener {
-            override fun onTabSelected(tab: TabLayout.Tab) {
-
-                val textView = if (tab.customView != null) {
-                    tab.customView as TextView
-                } else {
-                    (LayoutInflater.from(requireContext()).inflate(
-                        R.layout.qa_layout_tab, null, false
-                    ) as TextView)
-                        .also {
-                            tab.customView = it
-                        }
-                }
-
-                textView.apply {
-                    text = tab.text
-                    setTextColor(Color.parseColor("#15315B"))
-                }
-
-
-            }
-
-            override fun onTabUnselected(tab: TabLayout.Tab) {
-                val textView = if (tab.customView != null) {
-                    tab.customView as TextView
-                } else {
-                    (LayoutInflater.from(requireContext()).inflate(
-                        R.layout.qa_layout_tab, null, false
-                    ) as TextView)
-                        .also {
-                            tab.customView = it
-                        }
-                }
-
-                textView.setTextColor(Color.parseColor("#CC15315B"))
-
-            }
-
-            override fun onTabReselected(tab: TabLayout.Tab?) {
-            }
-        })
-
         TabLayoutMediator(qa_tl_dynamic, qa_vp_dynamic) { tab, position ->
             when (position) {
                 0 -> tab.text = "推荐"
@@ -235,10 +193,6 @@ class DynamicFragment : BaseDynamicFragment(), EventBusLifecycleSubscriber {
             }
         }.attach()
 
-        qa_tl_dynamic.apply {
-            getTabAt(1)?.select()
-            getTabAt(0)?.select()
-        }
     }
 
     private fun invalidateDynamicList() {

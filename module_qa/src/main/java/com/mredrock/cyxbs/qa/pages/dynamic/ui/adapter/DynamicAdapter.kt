@@ -3,6 +3,7 @@ package com.mredrock.cyxbs.qa.pages.dynamic.ui.adapter
 
 import android.content.Context
 import android.content.Intent
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -146,6 +147,9 @@ class DynamicAdapter(val context: Context?, private val onItemClickEvent: (Dynam
                     }
                 }
             }
+            qa_iv_dynamic_avatar.setOnClickListener {
+                getItem(position)?.uid?.let { uid -> onAvatarClickListener?.invoke(uid) }
+            }
         }
     }
 
@@ -160,9 +164,6 @@ class DynamicAdapter(val context: Context?, private val onItemClickEvent: (Dynam
         curSharedItem = holder.itemView
         curSharedItemPosition = position
         onItemClickEvent.invoke(data, holder.itemView)
-        holder.itemView.findViewById<ImageView>(R.id.qa_iv_dynamic_avatar).setOnClickListener {
-            onAvatarClickListener?.invoke(data.uid)
-        }
     }
 
     class DynamicViewHolder(parent: ViewGroup) :

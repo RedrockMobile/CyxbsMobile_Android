@@ -179,7 +179,6 @@ class RecommendDynamicFragment : BaseDynamicFragment() {
                     if (linearLayoutManager.findFirstCompletelyVisibleItemPosition() == 0||
                             dynamicListRvAdapter.itemCount == 1
                     ) {
-                        Log.d("TAG","(RecommendDynamicFragment.kt:174)->1111111111")
                         stopScroll()
                     }
                 }
