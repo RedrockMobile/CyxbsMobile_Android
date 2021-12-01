@@ -83,13 +83,12 @@ private var menuViewDelete:View? = null
         scroller = Scroller(context)
         x.observeForever {
           percentage =it/ (menuSettingWidth+menuDeleteWidth)
-                Log.i("滑动优化","percentage"+percentage)
             menuViewSetting?.alpha = percentage
             menuViewDelete?.alpha = percentage*1.5f
-            settingView?.scaleX=percentage
-            settingView?.scaleY=percentage
-            settingTextView?.scaleY=percentage
-            settingTextView?.scaleX=percentage
+            if(percentage>0.3){
+                settingView?.scaleX=percentage
+                settingView?.scaleY=percentage
+            }
         }
     }
 
@@ -101,8 +100,8 @@ private var menuViewDelete:View? = null
         contentView = getChildAt(2)
         menuViewDelete = getChildAt(1)
         menuViewSetting = getChildAt(0)
-        settingView=menuViewSetting?.findViewById(R.id.iv_item_setting)
-        settingTextView=menuViewSetting?.findViewById(R.id.tv_item_setting)
+        settingView=menuViewSetting?.findViewById(R.id.rl_menu_setting)
+     //   settingTextView=menuViewSetting?.findViewById(R.id.tv_item_setting)
     }
 
 
