@@ -15,6 +15,7 @@ import androidx.constraintlayout.helper.widget.MotionEffect.TAG
 import androidx.core.graphics.alpha
 import androidx.lifecycle.MutableLiveData
 import com.mredrock.cyxbs.common.utils.extensions.dp2px
+import com.mredrock.cyxbs.mine.R
 
 class SlideLayout @JvmOverloads
 constructor(context: Context,
@@ -27,6 +28,14 @@ constructor(context: Context,
      */
     private var contentView: View? = null
 
+    /**
+     * 设置图标view
+     */
+    private var settingView:View?=null
+    /**
+     * 设置图标的文字
+     */
+    private var settingTextView:View?=null
     /**
      * 侧滑需要展示的设置view
      */
@@ -73,11 +82,13 @@ private var menuViewDelete:View? = null
     init {
         scroller = Scroller(context)
         x.observeForever {
-          percentage =it/ menuSettingWidth
-
+          percentage =it/ (menuSettingWidth+menuDeleteWidth)
             menuViewSetting?.alpha = percentage
-            menuViewDelete?.alpha = percentage
-
+            menuViewDelete?.alpha = percentage*1.5f
+            if(percentage>0.3){
+                settingView?.scaleX=percentage
+                settingView?.scaleY=percentage
+            }
         }
     }
 
@@ -89,6 +100,8 @@ private var menuViewDelete:View? = null
         contentView = getChildAt(2)
         menuViewDelete = getChildAt(1)
         menuViewSetting = getChildAt(0)
+        settingView=menuViewSetting?.findViewById(R.id.rl_menu_setting)
+     //   settingTextView=menuViewSetting?.findViewById(R.id.tv_item_setting)
     }
 
 
@@ -155,6 +168,7 @@ private var menuViewDelete:View? = null
                     toScrollX = menuSettingWidth+menuDeleteWidth
                 }
                 scrollTo(toScrollX, scrollY)
+
                 if (scrollX!=0){
                     x.value =scrollX.toFloat()
                 }
@@ -170,6 +184,7 @@ private var menuViewDelete:View? = null
                     //反拦截-事件给SlideLayout
                     parent.requestDisallowInterceptTouchEvent(true)
                 }
+
             }
             MotionEvent.ACTION_UP->{
                 val totalScrollX = scrollX //偏移量
@@ -249,7 +264,6 @@ private var menuViewDelete:View? = null
                     x.value=0f
                 }
             }
-
             invalidate()
         }
     }

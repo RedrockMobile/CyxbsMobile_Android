@@ -92,6 +92,7 @@
 
                 <View
                     android:id="@+id/sl_top_view"
+                    android:background="#00000033"
                     android:layout_width="match_parent"
                     android:layout_height="385dp" />
 

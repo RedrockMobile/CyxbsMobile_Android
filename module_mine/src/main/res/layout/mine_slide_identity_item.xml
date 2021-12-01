@@ -5,15 +5,18 @@
     android:layout_width="match_parent"
     android:layout_height="145dp">
 
-    <RelativeLayout
-        android:id="@+id/rl_menu_setting"
+    <FrameLayout
+        android:id="@+id/rl_menu_setting_fr"
         android:layout_width="192dp"
         android:layout_height="125dp"
-
-        android:alpha="0"
         android:background="#474A50"
-        android:gravity="center">
-
+        android:alpha="0"
+       >
+        <RelativeLayout
+            android:id="@+id/rl_menu_setting"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:gravity="center">
         <ImageView
             android:id="@+id/iv_item_setting"
             android:layout_width="26dp"
@@ -21,8 +24,8 @@
             android:layout_centerVertical="true"
             android:layout_marginEnd="6dp"
             android:background="@drawable/mine_ic_item_identity_setting" />
-
         <TextView
+            android:id="@+id/tv_item_setting"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_centerVertical="true"
@@ -31,7 +34,8 @@
             android:gravity="bottom"
             android:text="设置"
             android:textColor="@color/common_grades_activity_tl_white" />
-    </RelativeLayout>
+        </RelativeLayout>
+    </FrameLayout>
 
     <RelativeLayout
         android:id="@+id/rl_menu_view"
@@ -47,7 +51,6 @@
             android:layout_marginLeft="17dp"
             android:layout_centerVertical="true"
             android:background="@drawable/mine_ic_item_identity_delete" />
-
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"

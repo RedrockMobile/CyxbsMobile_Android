@@ -163,10 +163,7 @@ class StatusAdapter(
      */
     var longView: View? = null
 
-    /**
-     *
-     */
-    var isOutOfdate=false
+
     override fun onLongClick(v: View?): Boolean {
         isLongClick = true
         longView = v
