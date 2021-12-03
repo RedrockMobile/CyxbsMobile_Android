@@ -6,7 +6,7 @@
     android:layout_height="match_parent"
     android:fitsSystemWindows="false"
     android:orientation="vertical"
-    tools:background="@color/common_window_background"
+    android:background="@drawable/qa_ic_header"
     tools:context=".pages.dynamic.ui.fragment.DynamicFragment">
 
     <LinearLayout

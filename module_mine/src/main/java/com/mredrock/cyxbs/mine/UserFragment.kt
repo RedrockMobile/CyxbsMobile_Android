@@ -71,9 +71,6 @@ class UserFragment : BaseViewModelFragment<UserViewModel>() {
             mine_user_cl_info.setOnClickListener { doIfLogin { HomepageActivity.startHomePageActivity(null,context as Activity) }
                 }
 
-            mine_user_iv_center_notification.setOnClickListener { FanActivity.activityStart(requireActivity(),
-            ServiceManager.getService(IAccountService::class.java).getUserService().getRedid()) }
-
             mine_user_avatar.setOnSingleClickListener {
                 doIfLogin {
                     startActivity(
