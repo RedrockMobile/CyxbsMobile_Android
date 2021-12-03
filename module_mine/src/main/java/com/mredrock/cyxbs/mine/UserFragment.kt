@@ -55,7 +55,7 @@ class UserFragment : BaseViewModelFragment<UserViewModel>() {
         context?.apply {
             mine_user_tv_dynamic_number.setOnSingleClickListener { doIfLogin { jump(QA_DYNAMIC_MINE) } }
             mine_user_tv_dynamic.setOnSingleClickListener { doIfLogin { jump(QA_DYNAMIC_MINE) } }
-            mine_user_ib_arrow.setOnSingleClickListener { doIfLogin { jump(QA_DYNAMIC_MINE) } }
+            mine_user_ib_arrow.setOnSingleClickListener { doIfLogin { HomepageActivity.startHomePageActivity(null,context as Activity) } }
             mine_user_tv_comment_number.setOnSingleClickListener { doIfLogin { jumpAndSaveTime(QA_MY_COMMENT, 1) } }
             mine_user_tv_comment.setOnSingleClickListener { doIfLogin { jumpAndSaveTime(QA_MY_COMMENT, 1) } }
             mine_user_tv_praise_number.setOnSingleClickListener { doIfLogin { jumpAndSaveTime(QA_MY_PRAISE, 2) } }
@@ -69,7 +69,7 @@ class UserFragment : BaseViewModelFragment<UserViewModel>() {
             mine_user_fm_about_us.setOnSingleClickListener { doIfLogin { startActivity<AboutActivity>() } }
             mine_user_fm_setting.setOnSingleClickListener { doIfLogin { startActivity<SettingActivity>() } }
             mine_user_cl_info.setOnClickListener { doIfLogin { HomepageActivity.startHomePageActivity(null,context as Activity) }
-                }
+            }
 
             mine_user_avatar.setOnSingleClickListener {
                 doIfLogin {

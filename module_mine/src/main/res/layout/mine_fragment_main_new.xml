@@ -3,7 +3,9 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical">
+    android:fitsSystemWindows="true"
+    android:orientation="vertical"
+    android:background="@color/mine_bg_user_header">
 
     <FrameLayout
         android:layout_width="match_parent"
@@ -279,15 +281,14 @@
                 app:layout_constraintTop_toTopOf="parent" />
         </androidx.constraintlayout.widget.ConstraintLayout>
 
-        <androidx.cardview.widget.CardView
+        <FrameLayout
             android:layout_width="match_parent"
             android:layout_height="58dp"
             android:layout_marginStart="16dp"
             android:layout_marginTop="36dp"
             android:layout_marginEnd="16dp"
             android:background="@drawable/mine_shape_bg_user_sign"
-            app:cardCornerRadius="8dp"
-            app:cardElevation="1dp">
+            android:translationZ="1dp">
 
             <TextView
                 android:id="@+id/mine_user_tv_sign"
@@ -314,7 +315,7 @@
                 android:text="签到"
                 android:textColor="#FFFFFF"
                 android:textSize="14sp" />
-        </androidx.cardview.widget.CardView>
+        </FrameLayout>
 
         <FrameLayout
             android:id="@+id/mine_user_fm_about_us"
