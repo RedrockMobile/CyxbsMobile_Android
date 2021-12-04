@@ -55,6 +55,7 @@ class UserFragment : BaseViewModelFragment<UserViewModel>() {
         context?.apply {
             mine_user_tv_dynamic_number.setOnSingleClickListener { doIfLogin { jump(QA_DYNAMIC_MINE) } }
             mine_user_tv_dynamic.setOnSingleClickListener { doIfLogin { jump(QA_DYNAMIC_MINE) } }
+            mine_user_ib_arrow.setOnSingleClickListener { doIfLogin { HomepageActivity.startHomePageActivity(null,context as Activity) } }
             mine_user_tv_comment_number.setOnSingleClickListener { doIfLogin { jumpAndSaveTime(QA_MY_COMMENT, 1) } }
             mine_user_tv_comment.setOnSingleClickListener { doIfLogin { jumpAndSaveTime(QA_MY_COMMENT, 1) } }
             mine_user_tv_praise_number.setOnSingleClickListener { doIfLogin { jumpAndSaveTime(QA_MY_PRAISE, 2) } }
@@ -68,7 +69,7 @@ class UserFragment : BaseViewModelFragment<UserViewModel>() {
             mine_user_fm_about_us.setOnSingleClickListener { doIfLogin { startActivity<AboutActivity>() } }
             mine_user_fm_setting.setOnSingleClickListener { doIfLogin { startActivity<SettingActivity>() } }
             mine_user_cl_info.setOnClickListener { doIfLogin { HomepageActivity.startHomePageActivity(null,context as Activity) }
-                }
+            }
 
             mine_user_iv_center_notification.setOnClickListener { FanActivity.activityStart(requireActivity(),
             ServiceManager.getService(IAccountService::class.java).getUserService().getRedid()) }
@@ -119,6 +120,7 @@ class UserFragment : BaseViewModelFragment<UserViewModel>() {
         viewModel.userCount.observe(viewLifecycleOwner, Observer {
             it?.let {
                 //可能会出现部分number为负数的情况，客户端需要处理（虽然是后端的锅）
+                Log.d("TAG","(UserFragment.kt:122)->${it.dynamicCount},${it.commentCount},${it.praiseCount}")
                 viewModel.judgeChangedAndSetText(mine_user_tv_dynamic_number, it.dynamicCount)
                 viewModel.judgeChangedAndSetText(mine_user_tv_comment_number, it.commentCount)
                 viewModel.judgeChangedAndSetText(mine_user_tv_praise_number, it.praiseCount)

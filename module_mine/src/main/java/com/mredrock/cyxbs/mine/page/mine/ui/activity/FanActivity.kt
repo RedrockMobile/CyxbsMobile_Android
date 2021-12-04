@@ -3,7 +3,6 @@ package com.mredrock.cyxbs.mine.page.mine.ui.activity
 import android.app.Activity
 import android.content.Intent
 import android.os.Bundle
-import com.alibaba.android.arouter.facade.annotation.Autowired
 import com.google.android.material.tabs.TabLayoutMediator
 import com.mredrock.cyxbs.api.account.IAccountService
 import com.mredrock.cyxbs.api.account.IUserService
@@ -50,6 +49,7 @@ class FanActivity : BaseActivity() {
             else 0
 
         initPager()
+        initListener()
     }
 
     private fun initPager() {
@@ -77,5 +77,11 @@ class FanActivity : BaseActivity() {
         }.attach()
 
         mine_fan_vp2.currentItem = pageIndex
+    }
+
+    private fun initListener(){
+        mine_fan_btn_back.setOnClickListener {
+            finish()
+        }
     }
 }

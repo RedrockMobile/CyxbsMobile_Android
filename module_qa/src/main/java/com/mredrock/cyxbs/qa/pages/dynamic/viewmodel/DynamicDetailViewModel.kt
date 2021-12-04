@@ -1,5 +1,6 @@
 package com.mredrock.cyxbs.qa.pages.dynamic.viewmodel
 
+import android.util.Log
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider

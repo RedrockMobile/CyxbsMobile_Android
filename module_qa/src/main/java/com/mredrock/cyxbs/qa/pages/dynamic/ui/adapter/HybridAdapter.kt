@@ -230,6 +230,9 @@ class HybridAdapter(val context: Context?, private val onItemClickEvent: (Dynami
                         )
                 }
             }
+            qa_iv_dynamic_avatar.setOnClickListener {
+                onAvatarClickListener?.invoke(dynamic.uid)
+            }
         }
     }
 
@@ -253,9 +256,6 @@ class HybridAdapter(val context: Context?, private val onItemClickEvent: (Dynami
             curSharedItem = holder.itemView
             curSharedItemPosition = position
             onItemClickEvent.invoke(data, holder.itemView)
-            holder.itemView.findViewById<ImageView>(R.id.qa_iv_dynamic_avatar).setOnClickListener {
-                onAvatarClickListener?.invoke(data.uid)
-            }
         } else if (data is H5Dynamic) {
             //跳转到web容器
             data.linkUrl?.let { url ->

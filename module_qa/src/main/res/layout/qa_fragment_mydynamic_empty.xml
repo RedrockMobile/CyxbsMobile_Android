@@ -121,7 +121,7 @@
             android:layout_width="167dp"
             android:layout_height="127dp"
             android:layout_gravity="center_horizontal"
-            android:src="@drawable/qa_ic_question_my" />
+            android:src="@drawable/qa_ic_question_no_question_or_answer" />
 
         <TextView
             android:id="@+id/tv_hint"
