@@ -24,7 +24,7 @@ class DataBindingAdapter(val layoutManager: RecyclerView.LayoutManager) : Recycl
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): DataBindingViewHolder {
 
-        return DataBindingViewHolder(parent.inflateDataBinding(viewType)).apply {
+        return DataBindingViewHolder(parent.inflateDataBinding(mAsyncListChange.currentList[viewType].layoutId())).apply {
             itemView.setOnClickListener {
                 mCurrBinder?.onClick(it)
             }
@@ -58,8 +58,7 @@ class DataBindingAdapter(val layoutManager: RecyclerView.LayoutManager) : Recycl
     }
 
     override fun getItemViewType(position: Int): Int {
-        val binder = mAsyncListChange.currentList[position]
-        return binder.layoutId()
+        return position
     }
 
     override fun getItemCount(): Int = mAsyncListChange.currentList.size

@@ -45,21 +45,21 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginLeft="8dp"
-        android:layout_marginTop="24dp"
+        android:layout_marginTop="30dp"
         android:textColor="@color/qa_item_square_title_color"
         android:textSize="15sp"
         android:textStyle="bold"
+        android:transitionName="topicItem_Tv"
         app:layout_constraintLeft_toRightOf="@id/iv_circle_square"
         app:layout_constraintTop_toTopOf="parent"
-        tools:text="高级学术交流中心"
-        android:transitionName="topicItem_Tv"/>
+        tools:text="高级学术交流中心" />
 
     <TextView
         android:id="@+id/tv_circle_square_person_number"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="8dp"
-        android:layout_marginTop="9.5dp"
+        android:layout_marginTop="2dp"
         android:layout_marginBottom="4.5dp"
         android:textColor="@color/qa_circle_square_person_number_color"
         android:textSize="11sp"

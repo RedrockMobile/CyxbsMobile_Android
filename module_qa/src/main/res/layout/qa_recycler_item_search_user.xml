@@ -11,7 +11,8 @@
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        android:background="@color/qa_search_header_color">
 
         <de.hdodenhof.circleimageview.CircleImageView
             android:id="@+id/qa_iv_search_user_avatar"
@@ -37,13 +38,14 @@
 
         <TextView
             android:id="@+id/qa_tv_search_user_introduction"
-            android:layout_width="wrap_content"
+            android:layout_width="230dp"
             android:layout_height="17dp"
             android:layout_marginStart="13dp"
             android:layout_marginTop="1dp"
+            android:maxLines="1"
             android:text="这是一条签名签名去啊就基督教..."
-            android:textSize="12sp"
             android:textColor="#6615315B"
+            android:textSize="12sp"
             app:layout_constraintStart_toEndOf="@+id/qa_iv_search_user_avatar"
             app:layout_constraintTop_toBottomOf="@+id/qa_tv_search_user_nickname" />
 
@@ -53,10 +55,10 @@
             android:layout_height="25dp"
             android:layout_marginEnd="17dp"
             android:background="@drawable/qa_shape_tv_search_focused"
-            android:text="互相关注"
+            android:gravity="center"
             android:paddingStart="14dp"
             android:paddingEnd="14dp"
-            android:gravity="center"
+            android:text="互相关注"
             android:textColor="#94A6C4"
             android:textSize="13sp"
             app:layout_constraintBottom_toBottomOf="@+id/qa_iv_search_user_avatar"

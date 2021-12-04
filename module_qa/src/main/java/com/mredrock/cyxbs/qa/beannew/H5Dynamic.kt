@@ -13,5 +13,8 @@ data class H5Dynamic(
         @SerializedName("pic")
         val pic: String,
         @SerializedName("link_url")
-        val linkUrl: String?
+        val linkUrl: String?,
+        @SerializedName("publish_time")
+        val publishTime: Long
+
 ): Serializable, Message()

@@ -24,9 +24,6 @@ open class ClickBinder : OnViewClickListener {
         if (mOnClickListener != null){
             mOnClickListener?.invoke(view,any)
         }
-        else {
-            if (BuildConfig.DEBUG) throw NullPointerException("OnClick事件未绑定!")
-        }
     }
 
     override fun onLongClick(view: View) {
@@ -36,9 +33,6 @@ open class ClickBinder : OnViewClickListener {
     override fun onLongClick(view: View, any: Any?) {
         if (mOnLongClickListener != null){
             mOnLongClickListener?.invoke(view,any)
-        }
-        else {
-            if (BuildConfig.DEBUG) throw NullPointerException("OnLongClick事件未绑定!")
         }
     }
 }

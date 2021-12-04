@@ -1,5 +1,6 @@
 package com.mredrock.cyxbs.qa.pages.search.ui.binder
 
+import android.util.Log
 import androidx.databinding.ViewDataBinding
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleOwner
@@ -14,17 +15,11 @@ abstract class BaseDataBinder<T : ViewDataBinding> : ClickBinder(){
 
     var binding: T? = null
 
-    fun bindDataBinding(dataBinding: ViewDataBinding){
-        if (this.binding == dataBinding) return
-        onUnbindViewHolder()
+    fun bindDataBinding(dataBinding: ViewDataBinding,position: Int? = null){
+        Log.d("TAG","(BaseDataBinder.kt:19)->position = $position ; nickname = ${getName()}")
         this.binding = dataBinding as T
         dataBinding.setVariable(variableId,this)
-        if (dataBinding.root.context is LifecycleOwner){
-            dataBinding.lifecycleOwner = dataBinding.root.context as LifecycleOwner
-        }else {
-            dataBinding.lifecycleOwner = AlwaysActiveLifecycleOwner()
-        }
-        onBindViewHolder(dataBinding)
+        onBindViewHolder(dataBinding,position)
         // 及时更新绑定数据的View
         dataBinding.executePendingBindings()
     }
@@ -39,7 +34,7 @@ abstract class BaseDataBinder<T : ViewDataBinding> : ClickBinder(){
         }
     }
 
-    protected open fun onBindViewHolder(binding: T){}
+    protected open fun onBindViewHolder(binding: T,position: Int?){}
 
     protected open fun onUnbindViewHolder(){}
 
@@ -56,4 +51,6 @@ abstract class BaseDataBinder<T : ViewDataBinding> : ClickBinder(){
             }
         }
     }
+
+    open fun getName():String? = null
 }

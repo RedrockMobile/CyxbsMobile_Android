@@ -9,7 +9,8 @@
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        android:background="@color/qa_answer_list_adopted_background_color">
 
         <ImageView
             android:id="@+id/qa_iv_search_no_user"

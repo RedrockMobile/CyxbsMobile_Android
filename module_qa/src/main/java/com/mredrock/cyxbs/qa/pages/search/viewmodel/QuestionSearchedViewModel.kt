@@ -1,5 +1,6 @@
 package com.mredrock.cyxbs.qa.pages.search.viewmodel
 
+import android.util.Log
 import androidx.lifecycle.*
 import androidx.paging.LivePagedListBuilder
 import androidx.paging.PagedList

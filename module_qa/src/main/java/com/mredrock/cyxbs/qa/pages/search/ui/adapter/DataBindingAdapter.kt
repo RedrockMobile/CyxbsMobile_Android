@@ -1,5 +1,6 @@
 package com.mredrock.cyxbs.qa.pages.search.ui.adapter
 
+import android.util.Log
 import android.view.ViewGroup
 import androidx.databinding.ViewDataBinding
 import androidx.recyclerview.widget.AsyncListDiffer
@@ -32,13 +33,12 @@ class DataBindingAdapter(val layoutManager: RecyclerView.LayoutManager) : Recycl
         }
     }
 
-
     class DataBindingViewHolder(private val dataBinding: ViewDataBinding) : RecyclerView.ViewHolder(dataBinding.root) {
         var mCurrBinder: BaseDataBinder<ViewDataBinding>? = null
 
-        fun bindData(binder: BaseDataBinder<ViewDataBinding>){
+        fun bindData(binder: BaseDataBinder<ViewDataBinding>,position: Int){
             if (mCurrBinder == binder) close()
-            binder.bindDataBinding(dataBinding)
+            binder.bindDataBinding(dataBinding,position)
             mCurrBinder = binder
         }
 
@@ -51,7 +51,8 @@ class DataBindingAdapter(val layoutManager: RecyclerView.LayoutManager) : Recycl
     override fun onBindViewHolder(holder: DataBindingViewHolder, position: Int) {
         val binder = mAsyncListChange.currentList[position]
         holder.itemView.tag = binder.layoutId()
-        holder.bindData(binder as BaseDataBinder<ViewDataBinding>)
+        holder.bindData(binder as BaseDataBinder<ViewDataBinding>,position)
+        Log.d("TAG","(DataBindingAdapter.kt:55)->position = $position ; nickname = ${binder.getName()}")
     }
 
     fun notifyAdapterChanged(binders: List<BaseDataBinder<*>>){
@@ -59,8 +60,7 @@ class DataBindingAdapter(val layoutManager: RecyclerView.LayoutManager) : Recycl
     }
 
     override fun getItemViewType(position: Int): Int {
-        val binder = mAsyncListChange.currentList[position]
-        return binder.layoutId()
+        return mAsyncListChange.currentList[position].layoutId()
     }
 
     override fun getItemCount(): Int = mAsyncListChange.currentList.size

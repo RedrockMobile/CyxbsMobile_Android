@@ -10,6 +10,7 @@
     <FrameLayout
         android:layout_width="match_parent"
         android:layout_height="300dp"
+        android:layout_marginTop="-22dp"
         android:layout_marginStart="-25dp"
         android:layout_marginEnd="-25dp"
         android:background="@drawable/mine_ic_info_header">
@@ -35,9 +36,9 @@
 
             <TextView
                 android:id="@+id/mine_user_username"
-                android:layout_width="wrap_content"
+                android:layout_width="180dp"
                 android:layout_height="31dp"
-                android:layout_marginStart="7dp"
+                android:layout_marginStart="12dp"
                 android:layout_marginTop="54dp"
                 android:layout_marginEnd="28dp"
                 android:ellipsize="end"
@@ -55,7 +56,7 @@
                 android:id="@+id/mine_user_introduce"
                 android:layout_width="195dp"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="7dp"
+                android:layout_marginStart="12dp"
                 android:layout_marginTop="1dp"
                 android:layout_marginEnd="11dp"
                 android:maxLines="2"
@@ -179,7 +180,7 @@
                 android:layout_marginEnd="23dp"
                 android:background="?android:attr/selectableItemBackgroundBorderless"
                 android:scaleType="centerInside"
-                android:src="@drawable/mine_ic_arrow_right"
+                android:src="@drawable/mine_ic_arrow_user"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
 
@@ -204,6 +205,7 @@
                 android:layout_height="50dp"
                 android:layout_marginStart="51dp"
                 android:layout_marginTop="30dp"
+                android:scaleType="centerCrop"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
                 app:srcCompat="@drawable/mine_ic_notification_center" />
@@ -213,6 +215,7 @@
                 android:layout_width="50dp"
                 android:layout_height="50dp"
                 android:layout_marginTop="30dp"
+                android:scaleType="centerCrop"
                 app:layout_constraintEnd_toStartOf="@+id/mine_user_iv_center_feedback"
                 app:layout_constraintStart_toEndOf="@+id/mine_user_iv_center_notification"
                 app:layout_constraintTop_toTopOf="parent"
@@ -224,7 +227,7 @@
                 android:layout_height="50dp"
                 android:layout_marginTop="30dp"
                 android:layout_marginEnd="51dp"
-                android:scaleType="fitXY"
+                android:scaleType="centerCrop"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
                 app:srcCompat="@drawable/mine_ic_feedback_center" />
@@ -336,7 +339,7 @@
                 android:layout_height="12dp"
                 android:layout_gravity="end|center_vertical"
                 android:layout_marginEnd="17dp"
-                android:src="@drawable/mine_ic_arrow_right" />
+                android:src="@drawable/mine_ic_arrow_setting" />
         </FrameLayout>
 
         <FrameLayout
@@ -358,7 +361,7 @@
                 android:layout_height="12dp"
                 android:layout_gravity="end|center_vertical"
                 android:layout_marginEnd="17dp"
-                android:src="@drawable/mine_ic_arrow_right" />
+                android:src="@drawable/mine_ic_arrow_setting" />
         </FrameLayout>
 
     </LinearLayout>

@@ -8,8 +8,10 @@ data class UserBrief(
     val avatar: String,
     @SerializedName("nickname")
     val nickname: String,
-    @SerializedName("isFocus")
+    @SerializedName("is_focus")
     val isFocus: Boolean,
+    @SerializedName("is_be_focused")
+    val isBeFocused: Boolean,
     @SerializedName("introduction")
     val introduction: String,
     @SerializedName("stuNum")

@@ -119,12 +119,11 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="16dp"
-        android:layout_marginTop="10dp"
+        android:layout_marginTop="3.5dp"
         android:paddingTop="5dp"
-        android:paddingEnd="15dp"
         android:paddingBottom="5dp"
         android:textColor="@color/qa_tv_mydynamic_frgament"
-        android:textSize="15sp"
+        android:textSize="13sp"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/qa_dynamic_nine_grid_view"
         tools:text="@string/qa_recycler_item_dynamic_label" />
@@ -170,7 +169,7 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toStartOf="@+id/qa_iv_dynamic_share"
         app:layout_constraintTop_toBottomOf="@+id/qa_dynamic_nine_grid_view"
-        app:layout_constraintVertical_bias="0.52" />
+        app:layout_constraintVertical_bias="0.51" />
 
     <androidx.appcompat.widget.AppCompatImageView
         android:id="@+id/qa_iv_dynamic_share"

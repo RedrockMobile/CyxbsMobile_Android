@@ -7,7 +7,7 @@
     <!--    问题item的下面的各类数字颜色-->
     <color name="qa_question_bottom_count_color">#97A0B0</color>
     <!--    问题item的分割线颜色-->
-    <color name="qa_question_recycler_item_divide_line_color">#E2E8EE</color>
+    <color name="qa_question_recycler_item_divide_line_color">#4DE2E8EE</color>
     <!--    评论list背景颜色-->
     <color name="qa_comment_list_background_color">#f6fafd</color>
     <!--    评论底部背景颜色-->
@@ -23,7 +23,9 @@
     <!--    回答的点赞颜色-->
     <color name="qa_answer_praise_count_color">#AABCD8</color>
     <!--   邮问搜索-->
-    <color name="qa_search_layout_color">#ffffff</color>
+    <color name="qa_search_header_color">#FCFDFF</color>
+    <color name="qa_search_layout_color">#B3E8F0FC</color>
+    <color name="qa_search_color">#CCFFFFFF</color>
     <color name="qa_answer_praised_count_color">#4841E2</color>
     <!--    RecyclerView加载时的holder颜色-->
     <color name="qa_question_item_empty_holder_color">#E6E6E6</color>
@@ -66,7 +68,7 @@
     <color name="qa_question_tab_indicator_color">#1ad0f2</color>
     <color name="qa_tab_selected_color">#15315B</color>
     <color name="qa_tab_unselected_color">#15315B</color>
-    <color name="qa_item_back_color">#FFFFFF</color>
+    <color name="qa_item_back_color">#FCFDFF</color>
     <color name="qa_item_square_describe_color">#15315B</color>
     <color name="qa_item_square_title_color">#15315B</color>
 
@@ -88,6 +90,7 @@
     <color name="qa_reply_bottom_sheet_edittext_text_color">#15315B</color>
     <color name="qa_reply_bottom_sheet_edittext_hint_color">#94A6C4</color>
     <color name="qa_dynamic_detail_title_text_color">#F0F0F2</color>
+    <color name="qa_circle_label_color">#CC15315B</color>
     <color name="qa_circle_label_text_color">#15315B</color>
     <!--    回复详细显示“回复”文字的header的背景颜色-->
     <color name="qa_reply_detail_header_background_color">#F0F0F0</color>
@@ -101,7 +104,7 @@
     <!--    圈子广场无关注的背景颜色 -->
     <color name="qa_circle_empty_back_color">#FFFFFF</color>
     <!--    QA个人界面泛用式分割线颜色-->
-    <color name="qa_mine_common_divide_line">#E2E8EE</color>
+    <color name="qa_mine_common_divide_line">#1A2A4E84</color>
     <color name="qa_dialog_report_cancel_text_color">#FFFFFF</color>
     <color name="qa_dialog_share_cancel_text_color">#94A6C4</color>
     <color name="qa_item_no_circles_text_color">#556C89</color>
@@ -127,5 +130,7 @@
     <color name="qa_text_tab">#15315B</color>
     <color name="qa_bg_dialog_bottom">#FFFFFF</color>
     <color name="qa_bg_dialog_bottom_text">#15315B</color>
-    <color name="qa_tv_mydynamic_frgament">#B3255295</color>
+    <color name="qa_tv_mydynamic_frgament">#99255295</color>
+    <color name="qa_tv_unfocus">#FFFFFF</color>
+    <color name="qa_tv_focus">#66585F6A</color>
 </resources>

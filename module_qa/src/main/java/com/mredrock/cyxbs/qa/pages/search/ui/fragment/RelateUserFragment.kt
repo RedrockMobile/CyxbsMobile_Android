@@ -5,6 +5,8 @@ import android.util.Log
 import android.widget.TextView
 import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.alibaba.android.arouter.launcher.ARouter
+import com.mredrock.cyxbs.common.config.MINE_PERSON_PAGE
 import com.mredrock.cyxbs.common.utils.extensions.toast
 import com.mredrock.cyxbs.qa.R
 import com.mredrock.cyxbs.qa.beannew.UserBrief
@@ -47,30 +49,38 @@ class RelateUserFragment : BaseResultFragment() {
                     0 -> add(RelateNoUserBinder())
                     else -> {
                         for (user in it) {
-                            add(RelateUserBinder(user,onFocusClick = { view, user ->
-                                //请求关注/取关接口
-                                viewModel.changeFocusStatus(user.redid)
-                                //改变关注按钮的样式
-                                (view as TextView).apply {
-                                    if (text == "+关注") {
-                                        background = ContextCompat
-                                            .getDrawable(
-                                                requireContext(),
-                                                R.drawable.qa_shape_tv_search_focused
-                                            )
-                                        text = if (user.isFocus) "互相关注" else " 已关注"
-                                        context.toast(R.string.qa_person_focus_success)
-                                    }else{
-                                        background = ContextCompat
-                                            .getDrawable(
-                                                requireContext(),
-                                                R.drawable.qa_shape_tv_search_unfocused
-                                            )
-                                        text = "+关注"
-                                        context.toast(R.string.qa_person_unfocus_success)
-                                    }
-                                }
-                            }))
+                            add(
+                                RelateUserBinder(user,
+                                    onFocusClick = { view, user ->
+                                        //请求关注/取关接口
+                                        viewModel.changeFocusStatus(user.redid)
+                                        //改变关注按钮的样式
+                                        (view as TextView).apply {
+                                            if (text == "+关注") {
+                                                background = ContextCompat
+                                                    .getDrawable(
+                                                        requireContext(),
+                                                        R.drawable.qa_shape_tv_search_focused
+                                                    )
+                                                text = if (user.isBeFocused) "互相关注" else " 已关注"
+                                                context.toast(R.string.qa_person_focus_success)
+                                            } else {
+                                                background = ContextCompat
+                                                    .getDrawable(
+                                                        requireContext(),
+                                                        R.drawable.qa_shape_tv_search_unfocused
+                                                    )
+                                                text = "+关注"
+                                                context.toast(R.string.qa_person_unfocus_success)
+                                            }
+                                        }
+                                    },
+                                    onAvatarClick = {
+                                        ARouter.getInstance().build(MINE_PERSON_PAGE)
+                                            .withString("redid", it)
+                                            .navigation()
+                                    })
+                            )
                         }
                     }
                 }

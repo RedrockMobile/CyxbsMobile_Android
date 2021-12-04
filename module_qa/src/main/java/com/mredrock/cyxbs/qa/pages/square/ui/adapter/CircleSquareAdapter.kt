@@ -1,6 +1,7 @@
 package com.mredrock.cyxbs.qa.pages.square.ui.adapter
 
 import android.annotation.SuppressLint
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -60,7 +61,8 @@ class CircleSquareAdapter :
         init {
             // 在ViewHolder中设置点击事件，减少性能损耗
             itemView.setOnClickListener {
-                itemClick?.invoke(getItem(adapterPosition), it)
+                Log.d("TAG","(CircleSquareAdapter.kt:64)->${getItem(adapterPosition)}")
+                itemClick?.invoke(getItem(layoutPosition), it)
             }
             circleConcern.setOnClickListener {
                 val item = getItem(adapterPosition)

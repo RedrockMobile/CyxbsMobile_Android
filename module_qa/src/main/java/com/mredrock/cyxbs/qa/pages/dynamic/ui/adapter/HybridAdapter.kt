@@ -342,6 +342,8 @@ class HybridAdapter(val context: Context?, private val onItemClickEvent: (Dynami
                     qa_iv_dynamic_h5_avatar.setAvatarImageFromUrl(data.avatar)
                     qa_tv_recycler_item_h5_nickname.text = data.nickName
                     qa_iv_h5_dynamic_pic.setImageFromUrl(data.pic)
+                    qa_tv_h5_dynamic_publish_at.text = dynamicTimeDescription(
+                        System.currentTimeMillis(), data.publishTime * 1000)
                 }
             }
         }

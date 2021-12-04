@@ -9,7 +9,7 @@
     android:layout_marginTop="10dp"
     android:layout_marginLeft="16dp"
     android:layout_marginRight="16dp"
-    android:background="@drawable/mine_ic_item_background">>
+    android:background="@drawable/mine_ic_item_background">
 
 
 

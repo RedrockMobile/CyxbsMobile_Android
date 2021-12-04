@@ -68,10 +68,10 @@ class UserFragment : BaseViewModelFragment<UserViewModel>() {
 
             mine_user_fm_about_us.setOnSingleClickListener { doIfLogin { startActivity<AboutActivity>() } }
             mine_user_fm_setting.setOnSingleClickListener { doIfLogin { startActivity<SettingActivity>() } }
-            mine_user_cl_info.setOnClickListener { doIfLogin { HomepageActivity.startHomePageActivity(null,context as Activity) }
+            mine_user_cl_info.setOnSingleClickListener { doIfLogin { HomepageActivity.startHomePageActivity(null,context as Activity) }
             }
 
-            mine_user_iv_center_notification.setOnClickListener { FanActivity.activityStart(requireActivity(),
+            mine_user_iv_center_notification.setOnSingleClickListener { FanActivity.activityStart(requireActivity(),
             ServiceManager.getService(IAccountService::class.java).getUserService().getRedid()) }
 
             mine_user_avatar.setOnSingleClickListener {

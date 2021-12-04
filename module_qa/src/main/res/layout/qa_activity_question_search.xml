@@ -4,6 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@color/qa_search_header_color"
     tools:context=".pages.search.ui.SearchActivity">
 
     <RelativeLayout
@@ -13,7 +14,7 @@
         android:layout_marginStart="39dp"
         android:layout_marginTop="60dp"
         android:layout_marginEnd="16dp"
-        android:background="@drawable/qa_shape_question_search_background"
+        android:background="@drawable/qa_shape_question_search_concrete_background"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toEndOf="@+id/qa_iv_search_back"

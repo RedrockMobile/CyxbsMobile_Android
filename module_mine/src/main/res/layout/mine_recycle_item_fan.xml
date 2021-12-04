@@ -37,10 +37,11 @@
 
         <TextView
             android:id="@+id/mine_fan_item_tv_introduction"
-            android:layout_width="wrap_content"
+            android:layout_width="230dp"
             android:layout_height="17dp"
             android:layout_marginStart="13dp"
             android:layout_marginTop="1dp"
+            android:maxLines="1"
             android:text="这是一条签名签名去啊就基督教..."
             android:textSize="12sp"
             android:textColor="#6615315B"

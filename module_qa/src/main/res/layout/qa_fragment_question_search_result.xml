@@ -27,7 +27,8 @@
                 <androidx.constraintlayout.widget.ConstraintLayout
                     android:id="@+id/qa_search_cs_one"
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent">
+                    android:layout_height="match_parent"
+                    android:background="@color/qa_search_header_color">
 
                     <androidx.appcompat.widget.AppCompatTextView
                         android:id="@+id/qa_tv_knowledge"
@@ -72,25 +73,30 @@
             android:orientation="vertical"
             app:layout_behavior="@string/appbar_scrolling_view_behavior">
 
-            <com.google.android.material.tabs.TabLayout
-                android:id="@+id/qa_tl_contract_content"
+            <androidx.cardview.widget.CardView
                 android:layout_width="match_parent"
-                android:layout_height="50dp"
-                android:layout_marginStart="30dp"
-                android:backgroundTint="@android:color/transparent"
-                android:theme="@style/Theme.MaterialComponents"
-                app:tabGravity="fill"
-                app:tabIndicator="@drawable/qa_ic_search_indicator"
-                app:tabIndicatorColor="@android:color/transparent"
-                app:tabIndicatorFullWidth="false"
-                app:tabIndicatorHeight="3dp"
-                app:tabMode="scrollable"
-                app:tabRippleColor="@android:color/transparent"
-                app:tabTextAppearance="@style/tab_style"
-                app:tabTextColor="@color/qa_text_tab"
-                app:layout_constraintLeft_toLeftOf="@id/qa_knowledge_cs_two"
-                app:layout_constraintTop_toTopOf="@id/qa_knowledge_cs_two" />
-
+                android:layout_height="wrap_content"
+                app:cardElevation="2dp"
+                app:cardCornerRadius="8dp">
+                <com.google.android.material.tabs.TabLayout
+                    android:id="@+id/qa_tl_contract_content"
+                    android:layout_width="match_parent"
+                    android:layout_height="50dp"
+                    android:layout_marginStart="30dp"
+                    android:theme="@style/Theme.MaterialComponents"
+                    android:background="@color/qa_search_header_color"
+                    app:tabGravity="fill"
+                    app:tabIndicator="@drawable/qa_ic_search_indicator"
+                    app:tabIndicatorColor="@android:color/transparent"
+                    app:tabIndicatorFullWidth="false"
+                    app:tabIndicatorHeight="3dp"
+                    app:tabMode="scrollable"
+                    app:tabRippleColor="@android:color/transparent"
+                    app:tabTextAppearance="@style/tab_style"
+                    app:tabTextColor="@color/qa_text_tab"
+                    app:layout_constraintLeft_toLeftOf="@id/qa_knowledge_cs_two"
+                    app:layout_constraintTop_toTopOf="@id/qa_knowledge_cs_two" />
+            </androidx.cardview.widget.CardView>
 
             <androidx.viewpager2.widget.ViewPager2
                 android:id="@+id/qa_vp_search_result"
