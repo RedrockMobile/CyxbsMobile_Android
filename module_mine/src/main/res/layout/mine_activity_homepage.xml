@@ -101,9 +101,8 @@
                 <com.google.android.material.tabs.TabLayout
                     android:id="@+id/mine_tablayout"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
+                    android:layout_height="56dp"
                     android:background="@drawable/mine_shape_ll_background"
-                    android:elevation="0.6dp"
                     android:paddingBottom="1dp"
                     android:textSize="30dp"
                     android:theme="@style/Theme.MaterialComponents"
@@ -115,7 +114,7 @@
                     app:tabMaxWidth="180dp"
                     app:tabMinWidth="160dp"
                     app:tabMode="fixed"
-                    app:tabPaddingBottom="-10dp"
+                    app:tabPaddingBottom="-20dp"
                     app:tabPaddingEnd="40dp"
                     app:tabPaddingStart="40dp"
                     app:tabTextAppearance="@style/tab_style"
@@ -126,7 +125,6 @@
 
 
                 <androidx.viewpager2.widget.ViewPager2
-                   android:paddingTop="20dp"
                     android:background="@color/mine_dynamic"
                     android:id="@+id/vp2_mine"
                     android:layout_width="match_parent"
