@@ -97,6 +97,8 @@
                 app:layout_constraintTop_toTopOf="@id/qa_cs_layout"
                 app:tabBackground="@color/common_transparent_background"
                 app:tabGravity="fill"
+                app:tabMinWidth="40dp"
+                app:tabContentStart="17dp"
                 app:tabIndicator="@drawable/qa_ic_tab_indicator"
                 app:tabIndicatorColor="@color/common_mine_tab_layout_indicator_color"
                 app:tabIndicatorFullWidth="false"
