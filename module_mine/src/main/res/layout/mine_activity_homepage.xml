@@ -129,7 +129,7 @@
                     <!--只加一个view的背景  由于颜色会被穿透过去 所以再包了一层-->
                     <View
                         android:id="@+id/fl_line"
-                        android:background="#1A2A4E84"
+                        android:background="@color/mine_homepage_line_background"
                         android:layout_width="match_parent"
                         android:layout_height="1dp"/>
                 </FrameLayout>

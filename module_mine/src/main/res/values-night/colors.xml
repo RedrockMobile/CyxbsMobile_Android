@@ -22,4 +22,6 @@
     <color name="mine_black">#F0F0F2</color>
     <color name="mine_tv_signature">#80F0F0F2</color>
     <color name="mine_bg_user_header">#000101</color>
+    <color name="mine_white">#1D1D1D</color>
+    <color name="mine_homepage_line_background">#4A5066</color>
 </resources>
