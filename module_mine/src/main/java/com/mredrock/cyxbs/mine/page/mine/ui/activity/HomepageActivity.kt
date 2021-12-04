@@ -48,6 +48,7 @@ import com.mredrock.cyxbs.mine.page.edit.EditInfoActivity
 import com.mredrock.cyxbs.mine.page.mine.widget.BlurBitmap
 import com.mredrock.cyxbs.store.utils.transformer.ScaleInTransformer
 import com.yalantis.ucrop.UCrop
+import kotlinx.android.synthetic.main.mine_activity_homepage.view.*
 import kotlinx.android.synthetic.main.mine_activity_homepage_head.view.*
 import kotlinx.android.synthetic.main.mine_fragment_main.view.*
 import kotlinx.android.synthetic.main.mine_layout_dialog_gender.view.*
@@ -291,6 +292,7 @@ class HomepageActivity : BaseViewModelActivity<MineViewModel>() {
                     dataBinding.btMineBack.setImageResource(R.drawable.mine_ic_iv_back_black_arrow)
                     dataBinding.tvMine.text = nickname
                     dataBinding.tvMine.setTextColor(resources.getColor(R.color.mine_black))
+                    dataBinding.flTabLine.gone()
                 }
                 dataBinding.tvMine.alpha = -alpha
                 dataBinding.flBackground.alpha = -alpha
@@ -301,13 +303,15 @@ class HomepageActivity : BaseViewModelActivity<MineViewModel>() {
                     dataBinding.tvMine.text = "个人主页"
                     dataBinding.btMineBack.setImageResource(R.drawable.mine_ic_bt_back_arrow)
                     dataBinding.tvMine.setTextColor(resources.getColor(R.color.mine_white))
+
+                    dataBinding.flTabLine.visible()
                 }
                 dataBinding.flBackground.alpha = 0f
                 dataBinding.ivMineBackgroundNormal.alpha = alpha
 
                 dataBinding.btMineBack.alpha = alpha
                 dataBinding.tvMine.alpha = alpha
-               // dataBinding.flLine.alpha = alpha
+               dataBinding.flLine.alpha = alpha
 
             }
         }
