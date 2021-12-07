@@ -9,6 +9,6 @@ class DiffItemCallback<T: BaseDataBinder<*>> : DiffUtil.ItemCallback<T>() {
     }
 
     override fun areContentsTheSame(oldItem: T, newItem: T): Boolean {
-        return oldItem.hashCode() == newItem.hashCode()
+        return oldItem.areContentsTheSame(newItem)
     }
 }

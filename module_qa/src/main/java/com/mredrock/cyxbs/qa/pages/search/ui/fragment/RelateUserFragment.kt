@@ -107,7 +107,7 @@ class RelateUserFragment : BaseResultFragment() {
     }
 
     private fun initRecycler() {
-        userAdapter = DataBindingAdapter(LinearLayoutManager(requireContext()))
+        userAdapter = DataBindingAdapter()
 
         qa_rv_search_user.apply {
             adapter = userAdapter

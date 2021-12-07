@@ -17,7 +17,7 @@ import com.mredrock.cyxbs.mine.page.mine.ui.activity.HomepageActivity
  * @description
  **/
 class FanBinder(
-    private val fan: Fan,
+    val fan: Fan,
     private val isSelf: Boolean,
     private var onFocusClick: ((view: View, user: Fan) -> Unit)? = null,
     private var onAvatarClick: ((redid: String) -> Unit)? = null
@@ -59,8 +59,14 @@ class FanBinder(
                     onAvatarClick?.invoke(fan.redid)
                 }
             }
+        }
+    }
 
-
+    override fun areContentsTheSame(binder: BaseDataBinder<*>): Boolean {
+        return if (binder !is FanBinder){
+            false
+        }else {
+            fan == binder.fan
         }
     }
 }

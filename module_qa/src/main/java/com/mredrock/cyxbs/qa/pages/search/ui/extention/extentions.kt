@@ -21,7 +21,7 @@ fun ViewGroup.inflateDataBinding(@LayoutRes resId: Int): ViewDataBinding {
 
 fun createBindingAdapter(recyclerView: RecyclerView, layoutManager: RecyclerView.LayoutManager): DataBindingAdapter {
     recyclerView.layoutManager = layoutManager
-    val mAdapter = DataBindingAdapter(layoutManager)
+    val mAdapter = DataBindingAdapter()
     recyclerView.adapter = mAdapter
     // 处理RecyclerView的触发回调
     recyclerView.addOnAttachStateChangeListener(object : View.OnAttachStateChangeListener{

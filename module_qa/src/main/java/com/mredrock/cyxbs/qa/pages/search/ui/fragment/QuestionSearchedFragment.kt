@@ -84,12 +84,12 @@ class QuestionSearchedFragment : BaseResultFragment() {
                     adapterKnowledge.addData(it1)
                 }
 
-                qa_line.visibility = View.VISIBLE
+//                qa_line.visibility = View.VISIBLE
                 qa_rv_knowledge.visibility = View.VISIBLE
                 qa_tv_knowledge.visibility = View.VISIBLE
             } else {
                 qa_rv_knowledge.gone()
-                qa_line.gone()
+//                qa_line.gone()
                 qa_tv_knowledge.gone()
             }
         })

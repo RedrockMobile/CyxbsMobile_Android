@@ -22,11 +22,12 @@
 
         <androidx.appcompat.widget.AppCompatImageView
             android:id="@+id/iv_question_searching"
-            android:layout_width="22.5dp"
-            android:layout_height="20dp"
+            android:layout_width="19dp"
+            android:layout_height="19dp"
             android:layout_alignParentStart="true"
             android:layout_centerVertical="true"
             android:layout_marginStart="17dp"
+            android:scaleType="centerInside"
             android:src="@drawable/qa_ic_search" />
 
         <androidx.appcompat.widget.AppCompatEditText
@@ -41,7 +42,6 @@
             android:imeOptions="actionSearch"
             android:inputType="text"
             android:paddingStart="10dp"
-            android:selectAllOnFocus="true"
             android:singleLine="true"
             android:textColor="@color/common_level_three_font_color"
             android:textColorHint="@color/qa_common_hint_text_color"
@@ -58,10 +58,11 @@
         app:layout_constraintTop_toTopOf="@+id/rl_question_searching">
 
         <androidx.appcompat.widget.AppCompatImageView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_width="12dp"
+            android:layout_height="24dp"
+            android:scaleType="centerInside"
             android:layout_centerInParent="true"
-            android:src="@drawable/common_ic_back" />
+            android:src="@drawable/qa_ic_arrow_left" />
     </RelativeLayout>
 
 

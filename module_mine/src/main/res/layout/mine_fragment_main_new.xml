@@ -191,6 +191,7 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:elevation="12dp"
         android:layout_marginTop="-55dp"
         android:background="@drawable/mine_shape_bg_user"
         android:orientation="vertical">
@@ -201,21 +202,21 @@
 
             <ImageView
                 android:id="@+id/mine_user_iv_center_notification"
-                android:layout_width="50dp"
-                android:layout_height="50dp"
+                android:layout_width="43dp"
+                android:layout_height="41dp"
                 android:layout_marginStart="51dp"
                 android:layout_marginTop="30dp"
-                android:scaleType="centerCrop"
+                android:scaleType="centerInside"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
                 app:srcCompat="@drawable/mine_ic_notification_center" />
 
             <ImageView
                 android:id="@+id/mine_user_iv_center_stamp"
-                android:layout_width="50dp"
-                android:layout_height="50dp"
+                android:layout_width="41dp"
+                android:layout_height="40dp"
                 android:layout_marginTop="30dp"
-                android:scaleType="centerCrop"
+                android:scaleType="centerInside"
                 app:layout_constraintEnd_toStartOf="@+id/mine_user_iv_center_feedback"
                 app:layout_constraintStart_toEndOf="@+id/mine_user_iv_center_notification"
                 app:layout_constraintTop_toTopOf="parent"
@@ -223,11 +224,11 @@
 
             <ImageView
                 android:id="@+id/mine_user_iv_center_feedback"
-                android:layout_width="50dp"
-                android:layout_height="50dp"
+                android:layout_width="41dp"
+                android:layout_height="40dp"
                 android:layout_marginTop="30dp"
                 android:layout_marginEnd="51dp"
-                android:scaleType="centerCrop"
+                android:scaleType="centerInside"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
                 app:srcCompat="@drawable/mine_ic_feedback_center" />
@@ -284,14 +285,15 @@
                 app:layout_constraintTop_toTopOf="parent" />
         </androidx.constraintlayout.widget.ConstraintLayout>
 
-        <FrameLayout
+        <androidx.cardview.widget.CardView
             android:layout_width="match_parent"
             android:layout_height="58dp"
             android:layout_marginStart="16dp"
             android:layout_marginTop="36dp"
             android:layout_marginEnd="16dp"
-            android:background="@drawable/mine_shape_bg_user_sign"
-            android:translationZ="1dp">
+            app:cardElevation="6dp"
+            app:cardCornerRadius="8dp"
+            android:background="@drawable/mine_shape_bg_user_sign">
 
             <TextView
                 android:id="@+id/mine_user_tv_sign"
@@ -318,7 +320,7 @@
                 android:text="签到"
                 android:textColor="#FFFFFF"
                 android:textSize="14sp" />
-        </FrameLayout>
+        </androidx.cardview.widget.CardView>
 
         <FrameLayout
             android:id="@+id/mine_user_fm_about_us"
@@ -331,14 +333,16 @@
                 android:layout_height="22dp"
                 android:layout_marginStart="16dp"
                 android:text="关于我们"
+                android:textStyle="bold"
                 android:textColor="@color/mine_text_setting"
                 android:textSize="16sp" />
 
             <ImageView
-                android:layout_width="6dp"
-                android:layout_height="12dp"
+                android:layout_width="8dp"
+                android:layout_height="16dp"
                 android:layout_gravity="end|center_vertical"
                 android:layout_marginEnd="17dp"
+                android:scaleType="centerInside"
                 android:src="@drawable/mine_ic_arrow_setting" />
         </FrameLayout>
 
@@ -353,14 +357,16 @@
                 android:layout_height="22dp"
                 android:layout_marginStart="16dp"
                 android:text="设置"
+                android:textStyle="bold"
                 android:textColor="@color/mine_text_setting"
                 android:textSize="16sp" />
 
             <ImageView
-                android:layout_width="6dp"
-                android:layout_height="12dp"
+                android:layout_width="8dp"
+                android:layout_height="16dp"
                 android:layout_gravity="end|center_vertical"
                 android:layout_marginEnd="17dp"
+                android:scaleType="centerInside"
                 android:src="@drawable/mine_ic_arrow_setting" />
         </FrameLayout>
 

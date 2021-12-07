@@ -22,6 +22,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="10dp"
+        android:layout_marginTop="4dp"
         android:textColor="@color/qa_dynamic_nickname_text_color"
         android:textSize="13sp"
         app:layout_constraintStart_toEndOf="@+id/qa_circle_iv_my_comment_item_avatar"
@@ -32,11 +33,11 @@
         android:id="@+id/qa_tv_my_comment_item_tip_and_date"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginStart="10dp"
         android:text="@string/qa_my_comment_reply_your_comment"
         android:textColor="@color/qa_reply_detail_date_text_color"
         android:textSize="11sp"
-        app:layout_constraintBottom_toBottomOf="@+id/qa_circle_iv_my_comment_item_avatar"
-        app:layout_constraintStart_toStartOf="@+id/qa_tv_my_comment_item_nickname"
+        app:layout_constraintStart_toEndOf="@+id/qa_circle_iv_my_comment_item_avatar"
         app:layout_constraintTop_toBottomOf="@+id/qa_tv_my_comment_item_nickname" />
 
     <androidx.appcompat.widget.AppCompatTextView

@@ -15,7 +15,7 @@ import com.mredrock.cyxbs.qa.databinding.QaRecyclerItemSearchUserBinding
  * @description
  **/
 class RelateUserBinder(
-    private val user: UserBrief,
+    val user: UserBrief,
     //关注按钮点击事件
     private var onFocusClick: ((view: View, user: UserBrief) -> Unit)? = null,
     private var onAvatarClick: ((redid: String) -> Unit)? = null
@@ -26,10 +26,8 @@ class RelateUserBinder(
     override val itemId: String
         get() = user.redid
 
-    override fun onBindViewHolder(binding: QaRecyclerItemSearchUserBinding,position:Int?) {
-        super.onBindViewHolder(binding,position)
-        Log.d("TAG","(RelateUserBinder.kt:19)->position = $position ; nickname = ${getName()}")
-
+    override fun onBindViewHolder(binding: QaRecyclerItemSearchUserBinding) {
+        super.onBindViewHolder(binding)
         binding.apply {
             Glide.with(root.context)
                 .load(user.avatar)
@@ -65,7 +63,15 @@ class RelateUserBinder(
         }
     }
 
-    override fun getName(): String? {
+    override fun getName(): String {
         return user.nickname
+    }
+
+    override fun areContentsTheSame(binder: BaseDataBinder<*>): Boolean {
+        return if (binder !is RelateUserBinder){
+            false
+        }else {
+            user == binder.user
+        }
     }
 }

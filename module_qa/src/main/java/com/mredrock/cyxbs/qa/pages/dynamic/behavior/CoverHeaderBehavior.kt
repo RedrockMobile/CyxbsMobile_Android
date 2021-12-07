@@ -1,11 +1,8 @@
 package com.mredrock.cyxbs.qa.pages.dynamic.behavior
 
-import android.animation.ValueAnimator
 import android.content.Context
 import android.util.AttributeSet
-import android.util.Log
 import android.view.View
-import android.view.animation.BounceInterpolator
 import android.view.animation.OvershootInterpolator
 import android.widget.OverScroller
 import androidx.coordinatorlayout.widget.CoordinatorLayout
@@ -21,6 +18,7 @@ import com.mredrock.cyxbs.qa.R
 
 //手指向下滑动dy<0,手指向上滑动dy>0
 class CoverHeaderBehavior(context: Context, attr: AttributeSet) : CoordinatorLayout.Behavior<View>(context,attr) {
+
     //child的translationY可移动距离，即为上方圈子RecyclerView的高度
     private var headerHeight = 0
 
@@ -140,9 +138,6 @@ class CoverHeaderBehavior(context: Context, attr: AttributeSet) : CoordinatorLay
                 }
             }
         }
-//        child.apply {
-//            layout(left,top,right,bottom)
-//        }
     }
 
     override fun onStopNestedScroll(
@@ -152,7 +147,6 @@ class CoverHeaderBehavior(context: Context, attr: AttributeSet) : CoordinatorLay
         type: Int
     ) {
         super.onStopNestedScroll(coordinatorLayout, child, target, type)
-        stopAutoScroll()
 
         //结束滑动后，再滑动动距离最近的边界
         if(child.translationY < minTransY + headerHeight * 0.5){

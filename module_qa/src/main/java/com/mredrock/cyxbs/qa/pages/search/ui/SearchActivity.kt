@@ -71,6 +71,7 @@ class SearchActivity : BaseViewModelActivity<SearchViewModel>(), EventBusLifecyc
                         v.text = searchHint
                         searchText = searchHint
                         turnToResult(searchHint)
+                        et_question_search.setSelection(v.text.lastIndex)
                         viewModel.insert(QAHistory(v.text.toString(), System.currentTimeMillis()))
                     } else {
                         longToast(getString(R.string.qa_search_empty_content))

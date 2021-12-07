@@ -61,6 +61,7 @@
                         android:layout_height="1dp"
                         android:layout_marginTop="25dp"
                         android:background="@color/qa_mine_common_divide_line"
+                        android:visibility="gone"
                         app:layout_constraintTop_toBottomOf="@id/qa_rv_knowledge" />
                 </androidx.constraintlayout.widget.ConstraintLayout>
             </com.google.android.material.appbar.CollapsingToolbarLayout>
@@ -76,15 +77,14 @@
             <androidx.cardview.widget.CardView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                app:cardElevation="2dp"
-                app:cardCornerRadius="8dp">
+                app:cardElevation="8dp">
                 <com.google.android.material.tabs.TabLayout
                     android:id="@+id/qa_tl_contract_content"
                     android:layout_width="match_parent"
                     android:layout_height="50dp"
                     android:layout_marginStart="30dp"
                     android:theme="@style/Theme.MaterialComponents"
-                    android:background="@color/qa_search_header_color"
+                    android:background="@drawable/qa_shape_bg_tab_searched"
                     app:tabGravity="fill"
                     app:tabIndicator="@drawable/qa_ic_search_indicator"
                     app:tabIndicatorColor="@android:color/transparent"
@@ -100,6 +100,7 @@
 
             <androidx.viewpager2.widget.ViewPager2
                 android:id="@+id/qa_vp_search_result"
+                android:layout_marginTop="16dp"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"/>
         </LinearLayout>

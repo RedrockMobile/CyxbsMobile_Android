@@ -17,13 +17,13 @@
         android:alpha="0.67"
         android:singleLine="true"
         android:textColor="@color/qa_search_history_text_color"
-        android:textSize="15sp"
+        android:textSize="17sp"
         tools:text="没有人比我更懂" />
 
     <androidx.appcompat.widget.AppCompatImageView
         android:id="@+id/iv_history_delete"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="17dp"
+        android:layout_height="19dp"
         android:layout_gravity="end"
         android:src="@drawable/qa_ic_search_history_delete" />
 

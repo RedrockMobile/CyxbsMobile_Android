@@ -152,7 +152,7 @@
         android:layout_height="21dp"
         android:layout_marginTop="20dp"
         android:layout_marginEnd="8dp"
-        android:background="@drawable/qa_ic_dynamic_comment"
+        android:src="@drawable/qa_ic_dynamic_comment"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toStartOf="@+id/qa_tv_dynamic_comment_count"
         app:layout_constraintTop_toBottomOf="@+id/qa_dynamic_nine_grid_view" />
@@ -177,7 +177,7 @@
         android:layout_height="20dp"
         android:layout_marginTop="20dp"
         android:layout_marginEnd="8dp"
-        android:background="@drawable/qa_ic_dynamic_share_new"
+        android:src="@drawable/qa_ic_dynamic_share_new"
         android:drawablePadding="4dp"
         android:gravity="center_vertical"
         android:scaleType="centerInside"

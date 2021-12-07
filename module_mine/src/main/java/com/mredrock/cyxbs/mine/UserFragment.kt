@@ -94,7 +94,7 @@ class UserFragment : BaseViewModelFragment<UserViewModel>() {
     @SuppressLint("SetTextI18n")
     private fun addObserver() {
         viewModel.status.observe(viewLifecycleOwner, Observer {
-            mine_user_tv_sign.text = "已连续签到${it.serialDays}天 "
+            mine_user_tv_sign.text = "已连续签到 ${it.serialDays} 天 "
             if (it.isChecked) {
                 mine_user_btn_sign.apply {
                     background = ResourcesCompat.getDrawable(

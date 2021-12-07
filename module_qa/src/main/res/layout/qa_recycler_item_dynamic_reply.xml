@@ -52,9 +52,8 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="10dp"
-        android:layout_marginTop="5dp"
-        android:textColor="@color/qa_dynamic_time_text_color"
 
+        android:textColor="@color/qa_dynamic_time_text_color"
         android:textSize="10sp"
         app:layout_constraintStart_toEndOf="@+id/qa_iv_reply_avatar"
         app:layout_constraintTop_toBottomOf="@+id/qa_tv_reply_nickname"
