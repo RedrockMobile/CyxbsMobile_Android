@@ -631,13 +631,15 @@ class HomepageActivity : BaseViewModelActivity<MineViewModel>() {
         if(!(this.applicationContext.resources.configuration.uiMode == 0x21)) {
             if (pregress == -1f && !isSetBackground) {
                 isSetBackground = true
-//                dataBinding.mineTablayout.background =
-//                    resources.getDrawable(R.drawable.mine_layer_list_shape_shadow)
+                dataBinding.mineTablayout.background =
+                    resources.getDrawable(R.drawable.mine_layer_list_shape_shadow)
+              dataBinding.mineTablayout.elevation=this.px2dip(300)
+                dataBinding.vp2Mine.elevation=this.px2dip(0)
             }
             if (isSetBackground && pregress > -1f) {
-
                 dataBinding.mineTablayout.background =
                     resources.getDrawable(R.drawable.mine_shape_ll_background)
+           dataBinding.vp2Mine.elevation=this.px2dip(300)
                 isSetBackground = false
             }
         }
