@@ -6,14 +6,17 @@
     <data>
 
     </data>
+
     <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
         android:id="@+id/srl_refresh"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
+
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
-            android:background="@color/mine_white"
-            android:layout_height="match_parent">
+            android:layout_height="match_parent"
+            android:background="@color/mine_white">
+
             <ImageView
                 android:id="@+id/iv_mine_background_blur"
                 android:layout_width="match_parent"
@@ -31,16 +34,16 @@
                 android:scaleType="centerCrop"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent"
-                />
+                app:layout_constraintTop_toTopOf="parent" />
 
             <FrameLayout
                 android:id="@+id/fl_background"
-                android:background="@color/mine_dynamic"
                 android:layout_width="match_parent"
                 android:layout_height="0dp"
                 android:layout_marginBottom="40dp"
                 android:alpha="0"
+                android:background="@color/mine_dynamic"
+                android:elevation="0.01dp"
                 app:layout_constraintBottom_toTopOf="@+id/cl_personal_information"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
@@ -52,28 +55,31 @@
                 android:layout_height="18dp"
                 android:layout_marginStart="16dp"
                 android:layout_marginTop="60dp"
+                android:elevation="0.01dp"
                 android:src="@drawable/mine_ic_bt_back_arrow"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
 
             <TextView
                 android:id="@+id/tv_mine"
-                android:textColor="@color/mine_white"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:paddingLeft="13dp"
                 android:text="个人主页"
+                android:textColor="@color/mine_white"
                 android:textSize="18dp"
+                android:textStyle="bold"
+                android:elevation="0.01dp"
                 app:layout_constraintBottom_toBottomOf="@+id/bt_mine_back"
                 app:layout_constraintStart_toEndOf="@+id/bt_mine_back"
                 app:layout_constraintTop_toTopOf="@+id/bt_mine_back" />
 
             <include
-                android:clickable="true"
                 android:id="@+id/cl_personal_information"
                 layout="@layout/mine_activity_homepage_head"
-                android:layout_height="wrap_content"
                 android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:clickable="true"
                 app:layout_constraintBottom_toBottomOf="@+id/iv_mine_background_normal"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintHorizontal_bias="0.05"
@@ -92,17 +98,17 @@
 
                 <View
                     android:id="@+id/sl_top_view"
-                    android:background="#00000033"
                     android:layout_width="match_parent"
-                    android:layout_height="385dp" />
-
+                    android:layout_height="385dp"
+                    android:background="#00000033" />
 
 
                 <com.google.android.material.tabs.TabLayout
                     android:id="@+id/mine_tablayout"
                     android:layout_width="match_parent"
-                    android:layout_height="50dp"
+                    android:layout_height="65dp"
                     android:background="@drawable/mine_shape_ll_background"
+                    android:elevation="5dp"
                     android:paddingBottom="1dp"
                     android:textSize="30dp"
                     android:theme="@style/Theme.MaterialComponents"
@@ -114,32 +120,31 @@
                     app:tabMaxWidth="180dp"
                     app:tabMinWidth="160dp"
                     app:tabMode="fixed"
-                    app:tabPaddingBottom="-20dp"
+                    app:tabPaddingBottom="-14dp"
                     app:tabPaddingEnd="40dp"
                     app:tabPaddingStart="40dp"
                     app:tabTextAppearance="@style/tab_style"
-                    app:tabTextColor="@color/mine_black"
-                    />
+                    app:tabTextColor="@color/mine_black" />
 
                 <FrameLayout
                     android:id="@+id/fl_tab_line"
-                    android:background="@color/mine_white"
                     android:layout_width="match_parent"
-                    android:layout_height="1dp">
+                    android:layout_height="1dp"
+                    android:background="@color/mine_white">
                     <!--只加一个view的背景  由于颜色会被穿透过去 所以再包了一层-->
                     <View
                         android:id="@+id/fl_line"
-                        android:background="@color/mine_homepage_line_background"
                         android:layout_width="match_parent"
-                        android:layout_height="1dp"/>
+                        android:layout_height="1dp"
+                        android:background="@color/mine_homepage_line_background" />
                 </FrameLayout>
 
 
                 <androidx.viewpager2.widget.ViewPager2
-                    android:background="@color/mine_dynamic"
                     android:id="@+id/vp2_mine"
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent" />
+                    android:layout_height="match_parent"
+                    android:background="@color/mine_dynamic" />
 
 
             </com.mredrock.cyxbs.mine.page.mine.widget.SlideViewGroup>

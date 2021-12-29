@@ -631,8 +631,8 @@ class HomepageActivity : BaseViewModelActivity<MineViewModel>() {
         if(!(this.applicationContext.resources.configuration.uiMode == 0x21)) {
             if (pregress == -1f && !isSetBackground) {
                 isSetBackground = true
-                dataBinding.mineTablayout.background =
-                    resources.getDrawable(R.drawable.mine_layer_list_shape_shadow)
+//                dataBinding.mineTablayout.background =
+//                    resources.getDrawable(R.drawable.mine_layer_list_shape_shadow)
             }
             if (isSetBackground && pregress > -1f) {
 
