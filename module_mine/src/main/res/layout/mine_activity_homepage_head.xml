@@ -11,7 +11,7 @@
         android:id="@+id/fl_head_background"
         android:layout_width="match_parent"
         android:layout_height="220dp"
-        android:layout_marginTop="44dp"
+        android:layout_marginTop="49dp"
         android:alpha="0.95"
         android:background="@drawable/mine_shape_ll_background"
         app:layout_constraintEnd_toEndOf="parent"

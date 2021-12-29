@@ -30,6 +30,7 @@ import com.mredrock.cyxbs.mine.page.mine.viewmodel.IdentityViewModel
 import kotlinx.android.synthetic.main.mine_fragment_approve.view.*
 import kotlinx.android.synthetic.main.mine_fragment_identify.*
 import kotlinx.android.synthetic.main.mine_fragment_identify.view.*
+import java.lang.Exception
 
 class IdentityFragment(
 
@@ -55,7 +56,12 @@ class IdentityFragment(
         this.redid = redid
         this.isSelf=isself
       Log.e("wxtag自我刷新","(IdentityFragment.kt:51)->> redid$redid isself=$isSelf")
-        refresh()
+        try {
+
+            refresh()
+        }catch (e:Exception){
+            e.printStackTrace()
+        }
     }
 
     fun initListener() {

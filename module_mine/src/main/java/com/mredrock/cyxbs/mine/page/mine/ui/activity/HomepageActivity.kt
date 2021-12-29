@@ -121,6 +121,12 @@ class HomepageActivity : BaseViewModelActivity<MineViewModel>() {
      */
     private var isNeedRefresh = true
 
+    /**
+     * 是否是女生
+     *
+     */
+    var isGirl:String="男"
+
     var tabNames = listOf<String>("我的动态", "我的身份")
     val imageViewList by lazy {
         mutableListOf<ImageView>(
@@ -167,6 +173,7 @@ class HomepageActivity : BaseViewModelActivity<MineViewModel>() {
             nickname = it.data.nickname
             isNeedRefresh = false
             isSelf = it.data.isSelf
+            isGirl=it.data.gender
             it.data.redid.let {
                 identityFragment.onSuccesss(it, isSelf)
                 dataBinding.vp2Mine.offscreenPageLimit = 2
@@ -201,7 +208,11 @@ class HomepageActivity : BaseViewModelActivity<MineViewModel>() {
         if (isSelf) {
             tabNames = listOf<String>("我的动态", "我的身份")
         } else {
-            tabNames = listOf<String>("他的动态", "他的身份")
+            if (isGirl == "男"){
+                tabNames = listOf<String>("他的动态", "他的身份")
+            }else{
+                tabNames = listOf<String>("她的动态", "她的身份")
+            }
             dataBinding.clPersonalInformation.iv_edit.alpha=0f
             dataBinding.clPersonalInformation.tv_edit.alpha=0f
         }
