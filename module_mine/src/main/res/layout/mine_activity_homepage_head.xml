@@ -11,9 +11,9 @@
         android:id="@+id/fl_head_background"
         android:layout_width="match_parent"
         android:layout_height="220dp"
-        android:layout_marginTop="48dp"
+        android:layout_marginTop="49dp"
         android:alpha="0.95"
-        android:background="@drawable/mine_shape_ll_background"
+        android:background="@drawable/mine_shape_ll_heed_background"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
@@ -22,26 +22,31 @@
     <TextView
         android:id="@+id/mine_tv_concern"
         android:layout_width="62dp"
+
         android:layout_height="wrap_content"
         android:layout_marginTop="20dp"
+        android:layout_marginEnd="16dp"
         android:height="30dp"
         android:background="@drawable/mine_shape_concern_background"
         android:gravity="center"
         android:text="关注"
         android:textColor="#FFFFFF"
-        app:layout_constraintEnd_toEndOf="@+id/tv_praise"
-        app:layout_constraintStart_toStartOf="@+id/tv_praise"
+        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/tv_praise" />
 
     <TextView
+        android:textStyle="bold"
         android:id="@+id/tv_name"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
+        android:layout_marginStart="26dp"
+        android:layout_marginBottom="4dp"
         android:text="鱼鱼鱼鱼鱼鱼鱼鱼鱼鱼鱼"
         android:textColor="@color/mine_white"
         android:textSize="20dp"
         app:layout_constraintBottom_toTopOf="@+id/fl_head_background"
-        app:layout_constraintStart_toStartOf="@+id/tv_fans" />
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/civ_head" />
 
     <de.hdodenhof.circleimageview.CircleImageView
         android:id="@+id/civ_head"
@@ -50,7 +55,7 @@
         android:layout_marginStart="16dp"
         android:src="@drawable/mine_ic_head_test"
         app:civ_border_color="@color/common_grades_activity_tl_white"
-        app:civ_border_width="2dp"
+        app:civ_border_width="1dp"
         app:layout_constraintBottom_toTopOf="@+id/fl_head_background"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="@+id/fl_head_background" />
@@ -72,22 +77,22 @@
         android:id="@+id/tv_fans"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="32dp"
         android:text="粉丝"
         android:textColor="@color/mine_tv_personal_count_bottom"
-        app:layout_constraintStart_toEndOf="@+id/civ_head"
+        android:textSize="14dp"
+        app:layout_constraintStart_toStartOf="@+id/tv_name"
         app:layout_constraintTop_toBottomOf="@+id/tv_fans_number" />
 
     <TextView
         android:id="@+id/tv_attention_number"
         android:layout_width="70dp"
         android:layout_height="wrap_content"
-        android:layout_marginStart="26dp"
         android:layout_marginTop="9dp"
         android:gravity="center"
         android:text="29"
         android:textColor="@color/mine_text_setting"
         android:textSize="17dp"
+        app:layout_constraintEnd_toStartOf="@+id/tv_praise_number"
         app:layout_constraintStart_toEndOf="@+id/tv_fans_number"
         app:layout_constraintTop_toBottomOf="@+id/tv_name" />
 
@@ -97,6 +102,7 @@
         android:layout_height="wrap_content"
         android:gravity="center"
         android:text="关注"
+        android:textSize="14dp"
         android:textColor="@color/mine_tv_personal_count_bottom"
         app:layout_constraintEnd_toEndOf="@+id/tv_attention_number"
         app:layout_constraintStart_toStartOf="@+id/tv_attention_number"
@@ -106,14 +112,12 @@
         android:id="@+id/tv_praise_number"
         android:layout_width="70dp"
         android:layout_height="wrap_content"
-        android:layout_marginStart="25dp"
-        android:layout_marginEnd="10dp"
+        android:layout_marginEnd="28dp"
         android:gravity="center"
         android:text="31"
         android:textColor="@color/mine_text_setting"
         android:textSize="17dp"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toEndOf="@+id/tv_attention_number"
         app:layout_constraintTop_toTopOf="@+id/tv_attention_number" />
 
     <TextView
@@ -122,6 +126,7 @@
         android:layout_height="wrap_content"
         android:gravity="center"
         android:text="获赞"
+        android:textSize="14dp"
         android:textColor="@color/mine_tv_personal_count_bottom"
         app:layout_constraintEnd_toEndOf="@+id/tv_praise_number"
         app:layout_constraintStart_toStartOf="@+id/tv_praise_number"
@@ -170,7 +175,7 @@
         android:gravity="center"
         android:text="编辑信息"
         android:textColor="@color/mine_tv_personal_edit"
-        android:textSize="10dp"
+        android:textSize="12dp"
         app:layout_constraintBottom_toBottomOf="@+id/iv_edit"
         app:layout_constraintStart_toEndOf="@+id/iv_edit"
         app:layout_constraintTop_toTopOf="@+id/iv_edit" />

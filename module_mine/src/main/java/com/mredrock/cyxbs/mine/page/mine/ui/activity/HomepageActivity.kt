@@ -48,6 +48,7 @@ import com.mredrock.cyxbs.mine.page.edit.EditInfoActivity
 import com.mredrock.cyxbs.mine.page.mine.widget.BlurBitmap
 import com.mredrock.cyxbs.store.utils.transformer.ScaleInTransformer
 import com.yalantis.ucrop.UCrop
+import kotlinx.android.synthetic.main.mine_activity_homepage.view.*
 import kotlinx.android.synthetic.main.mine_activity_homepage_head.view.*
 import kotlinx.android.synthetic.main.mine_fragment_main.view.*
 import kotlinx.android.synthetic.main.mine_layout_dialog_gender.view.*
@@ -120,6 +121,12 @@ class HomepageActivity : BaseViewModelActivity<MineViewModel>() {
      */
     private var isNeedRefresh = true
 
+    /**
+     * 是否是女生
+     *
+     */
+    var isGirl:String="男"
+
     var tabNames = listOf<String>("我的动态", "我的身份")
     val imageViewList by lazy {
         mutableListOf<ImageView>(
@@ -166,6 +173,7 @@ class HomepageActivity : BaseViewModelActivity<MineViewModel>() {
             nickname = it.data.nickname
             isNeedRefresh = false
             isSelf = it.data.isSelf
+            isGirl=it.data.gender
             it.data.redid.let {
                 identityFragment.onSuccesss(it, isSelf)
                 dataBinding.vp2Mine.offscreenPageLimit = 2
@@ -200,7 +208,11 @@ class HomepageActivity : BaseViewModelActivity<MineViewModel>() {
         if (isSelf) {
             tabNames = listOf<String>("我的动态", "我的身份")
         } else {
-            tabNames = listOf<String>("他的动态", "他的身份")
+            if (isGirl == "男"){
+                tabNames = listOf<String>("他的动态", "他的身份")
+            }else{
+                tabNames = listOf<String>("她的动态", "她的身份")
+            }
             dataBinding.clPersonalInformation.iv_edit.alpha=0f
             dataBinding.clPersonalInformation.tv_edit.alpha=0f
         }
@@ -291,6 +303,7 @@ class HomepageActivity : BaseViewModelActivity<MineViewModel>() {
                     dataBinding.btMineBack.setImageResource(R.drawable.mine_ic_iv_back_black_arrow)
                     dataBinding.tvMine.text = nickname
                     dataBinding.tvMine.setTextColor(resources.getColor(R.color.mine_black))
+                    dataBinding.flTabLine.gone()
                 }
                 dataBinding.tvMine.alpha = -alpha
                 dataBinding.flBackground.alpha = -alpha
@@ -301,13 +314,15 @@ class HomepageActivity : BaseViewModelActivity<MineViewModel>() {
                     dataBinding.tvMine.text = "个人主页"
                     dataBinding.btMineBack.setImageResource(R.drawable.mine_ic_bt_back_arrow)
                     dataBinding.tvMine.setTextColor(resources.getColor(R.color.mine_white))
+
+                    dataBinding.flTabLine.visible()
                 }
                 dataBinding.flBackground.alpha = 0f
                 dataBinding.ivMineBackgroundNormal.alpha = alpha
 
                 dataBinding.btMineBack.alpha = alpha
                 dataBinding.tvMine.alpha = alpha
-               // dataBinding.flLine.alpha = alpha
+               dataBinding.flLine.alpha = alpha
 
             }
         }
@@ -342,6 +357,7 @@ class HomepageActivity : BaseViewModelActivity<MineViewModel>() {
         dataBinding.srlRefresh.setOnRefreshListener {
             getUserInfo(intent)
             identityFragment.refresh()
+            MineAndQa.refreshListener?.onRefresh(redid)
         }
         viewModel._isUserInfoFail.observeForever {
             if (it == true) {
@@ -617,11 +633,13 @@ class HomepageActivity : BaseViewModelActivity<MineViewModel>() {
                 isSetBackground = true
                 dataBinding.mineTablayout.background =
                     resources.getDrawable(R.drawable.mine_layer_list_shape_shadow)
+              dataBinding.mineTablayout.elevation=this.px2dip(300)
+                dataBinding.vp2Mine.elevation=this.px2dip(0)
             }
             if (isSetBackground && pregress > -1f) {
-
                 dataBinding.mineTablayout.background =
                     resources.getDrawable(R.drawable.mine_shape_ll_background)
+           dataBinding.vp2Mine.elevation=this.px2dip(300)
                 isSetBackground = false
             }
         }

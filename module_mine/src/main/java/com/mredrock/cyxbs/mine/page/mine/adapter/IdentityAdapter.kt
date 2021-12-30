@@ -51,7 +51,7 @@ class IdentityAdapter(val list:List<AuthenticationStatus.Data>, val context: Con
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
 
         var vh:RecyclerView.ViewHolder?=null
-        if (list.size!=0){
+        if (list.isNotEmpty()){
             //用户自己查看自己的情况
             val convertView = LayoutInflater.from(context).inflate(R.layout.mine_slide_identity_item, parent, false) as SlideLayout
             convertView.setOnStateChangeListenter(MyOnStateChangeListenter())
@@ -95,10 +95,11 @@ class IdentityAdapter(val list:List<AuthenticationStatus.Data>, val context: Con
     }
 
     override fun getItemCount():Int{
-        if (list.size==0){
-            return 1
+
+        return if (list.isEmpty()){
+            1
         }else{
-            return list.size
+            list.size
         }
     }
 

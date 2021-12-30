@@ -180,9 +180,9 @@ class MyDynamicFragment : BaseViewModelFragment<MyDynamicViewModel>(), MineAndQa
 
     override fun onRefresh(redid: String?) {
         this.redid = redid
-        Log.e("wxtag跨模块刷新", "(MyDynamicFragment.kt:177)->> onRefresh回调redid=$redid")
         if (isCreated) {//避免造成viewmodel没有实例化而报错
             viewModel.getDynamicData(redid)
+            initDynamics()
         }
     }
 

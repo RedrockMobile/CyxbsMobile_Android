@@ -68,7 +68,7 @@
         android:layout_marginLeft="16dp"
         android:layout_marginRight="16dp"
         android:background="@color/common_grades_activity_tl_white"
-        app:cardElevation="6dp">
+        app:cardElevation="3dp">
 
 
         <androidx.constraintlayout.widget.ConstraintLayout

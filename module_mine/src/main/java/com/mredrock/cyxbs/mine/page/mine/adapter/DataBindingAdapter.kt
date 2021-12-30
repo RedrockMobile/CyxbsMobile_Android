@@ -20,7 +20,7 @@ class DataBindingAdapter(val layoutManager: RecyclerView.LayoutManager) : Recycl
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): DataBindingViewHolder {
 
-        return DataBindingViewHolder(parent.inflateDataBinding(mAsyncListChange.currentList[viewType].layoutId()))
+        return DataBindingViewHolder(parent.inflateDataBinding(viewType))
     }
 
     class DataBindingViewHolder(private val dataBinding: ViewDataBinding) : RecyclerView.ViewHolder(dataBinding.root) {
