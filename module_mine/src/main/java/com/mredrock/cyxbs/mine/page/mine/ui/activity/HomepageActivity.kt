@@ -198,7 +198,7 @@ class HomepageActivity : BaseViewModelActivity<MineViewModel>() {
     }
 
     fun initSatu(user: UserInfo) {
-        user.data.identityies.forEachIndexed { index, s ->
+        user.data.identityies?.forEachIndexed { index, s ->
             loadRedrockImage(s, imageViewList[index])
             imageViewList[index].visibility = View.VISIBLE
         }
@@ -373,10 +373,12 @@ class HomepageActivity : BaseViewModelActivity<MineViewModel>() {
         }
 
         dataBinding.clPersonalInformation.tv_fans.setOnClickListener {
+            Log.i("点击事件","测试点击事件f粉丝tv_fan")
             redid?.let { it1 -> FanActivity.activityStart(this, it1, TO_FANS) }
         }
 
         dataBinding.clPersonalInformation.tv_attention.setOnClickListener {
+            Log.i("点击事件","测试点击事件粉丝tv_attention")
             redid?.let { it1 -> FanActivity.activityStart(this, it1, TO_ATTENTION) }
         }
         dataBinding.clPersonalInformation.tv_edit.setOnClickListener {
