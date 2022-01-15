@@ -389,6 +389,12 @@ class AddItemDialog(context: Context, val onConfirm: (Todo) -> Unit) :
         todo_inner_add_thing_second.data = IntArray(12) { it + 1 }.toList()
         todo_inner_add_thing_third.data = IntArray(31) { it + 1 }.toList()
         todo_inner_add_thing_second.setOnItemSelectedListener { _, data, _ ->
+            //暴力处理String转Integer的错乱问题
+            for (c in data.toString()) {
+                if (!c.isDigit()){
+                    return@setOnItemSelectedListener
+                }
+            }
             //date就是月份，这里就根据月份获得这个月的天数
             val calendar = Calendar.getInstance()
             calendar.set(Calendar.MONTH, Integer.parseInt(data.toString()) - 1)

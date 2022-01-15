@@ -383,9 +383,8 @@ fun formatDateWithTryCatch(format: String, raw: String): Date{
         date = SimpleDateFormat(format, Locale.CHINA).parse(raw)
     } catch (e: Exception){
         e.printStackTrace()
-    } finally {
-        return date
     }
+    return date
 }
 
 fun parseIntWithTryCatch(s: String): Int?{
