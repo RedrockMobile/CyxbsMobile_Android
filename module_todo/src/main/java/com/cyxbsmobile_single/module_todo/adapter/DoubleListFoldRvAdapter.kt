@@ -122,7 +122,7 @@ class DoubleListFoldRvAdapter(
 
     fun delItem(wrapper: TodoItemWrapper) {
         wrapper.todo?.let { todo ->
-            if (todo.isChecked == 1) checkedArray.remove(wrapper) else uncheckedArray.remove(wrapper)
+            if (todo.getIsChecked()) checkedArray.remove(wrapper) else uncheckedArray.remove(wrapper)
             TodoModel.INSTANCE.delTodo(todo.todoId) {
                 wrapperCopyList.remove(wrapper)
                 refreshList()
@@ -248,7 +248,7 @@ class DoubleListFoldRvAdapter(
                 itemView.apply {
                     curWrapper.todo?.let { todo ->
                         //重置todo的代办情况，并且不添加动画
-                        todo_iv_todo_item.setStatusWithoutAnime(todo.isChecked == 1)
+                        todo_iv_todo_item.setStatusWithoutAnime(todo.getIsChecked())
                         todo_fl_del.visibility = View.GONE
                         todo_tv_todo_title.setText(todo.title)
                         todo_tv_notify_time.text = repeatMode2RemindTime(todo.remindMode)
@@ -260,7 +260,7 @@ class DoubleListFoldRvAdapter(
                             showNotifyTime(this)
                         }
                         //根据是否check，加载不同状态的todo
-                        if (todo.isChecked == 1) {
+                        if (todo.getIsChecked()) {
                             todo_tv_todo_title.setTextColor(getColor(R.color.todo_item_checked_color))
                             todo_iv_check.visibility = View.VISIBLE
                         } else {
@@ -369,7 +369,7 @@ class DoubleListFoldRvAdapter(
         for (wrapper in wrapperCopyList) {
             if (wrapper.viewType == TODO) {
                 wrapper.todo?.let {
-                    if (it.isChecked == 1) {
+                    if (it.getIsChecked()) {
                         checkedArray.add(wrapper)
                     } else {
                         uncheckedArray.add(wrapper)

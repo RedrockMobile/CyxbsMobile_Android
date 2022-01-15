@@ -43,4 +43,8 @@ data class Todo(
     override fun compareTo(other: Todo): Int {
         return (this.lastModifyTime - other.lastModifyTime).toInt()
     }
+
+    fun getIsChecked():Boolean{
+        return isChecked == 1
+    }
 }

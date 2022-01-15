@@ -33,9 +33,9 @@ class TodoInnerMainActivity : BaseViewModelActivity<TodoViewModel>() {
         setContentView(R.layout.todo_activity_inner_main)
         changedFlag = false
         viewModel.initDataList(
-            onLoadSuccess = {
-                onDateLoaded()
-            }
+                onLoadSuccess = {
+                    onDateLoaded()
+                }
         )
     }
 
@@ -44,9 +44,9 @@ class TodoInnerMainActivity : BaseViewModelActivity<TodoViewModel>() {
         if (changedFlag) {
             //私以为都在子线程进行，不会ANR
             viewModel.initDataList(
-                onLoadSuccess = {
-                    onDateLoaded()
-                }
+                    onLoadSuccess = {
+                        onDateLoaded()
+                    }
             )
         }
     }
@@ -54,10 +54,10 @@ class TodoInnerMainActivity : BaseViewModelActivity<TodoViewModel>() {
     private fun changeItemToChecked(itemView: View) {
         itemView.apply {
             todo_tv_todo_title.setTextColor(
-                ContextCompat.getColor(
-                    context,
-                    R.color.todo_item_checked_color
-                )
+                    ContextCompat.getColor(
+                            context,
+                            R.color.todo_item_checked_color
+                    )
             )
             todo_iv_check.visibility = View.VISIBLE
         }
@@ -65,7 +65,7 @@ class TodoInnerMainActivity : BaseViewModelActivity<TodoViewModel>() {
 
     private fun onDateLoaded() {
         val adapter =
-            DoubleListFoldRvAdapter(viewModel.wrapperList, NORMAL, R.layout.todo_rv_item_todo_inner)
+                DoubleListFoldRvAdapter(viewModel.wrapperList, NORMAL, R.layout.todo_rv_item_todo_inner)
         val callback = SlideCallback()
 
         todo_inner_home_bar_add.setOnClickListener {
@@ -94,8 +94,8 @@ class TodoInnerMainActivity : BaseViewModelActivity<TodoViewModel>() {
                         todo_fl_todo_back.setOnClickListener {
                             wrapper.todo?.let {
                                 TodoDetailActivity.startActivity(
-                                    it,
-                                    this@TodoInnerMainActivity
+                                        it,
+                                        this@TodoInnerMainActivity
                                 )
                                 changedFlag = true
                             }
@@ -103,8 +103,8 @@ class TodoInnerMainActivity : BaseViewModelActivity<TodoViewModel>() {
                         todo_tv_todo_title.setOnClickListener {
                             wrapper.todo?.let {
                                 TodoDetailActivity.startActivity(
-                                    it,
-                                    this@TodoInnerMainActivity
+                                        it,
+                                        this@TodoInnerMainActivity
                                 )
                                 changedFlag = true
                             }
@@ -117,25 +117,25 @@ class TodoInnerMainActivity : BaseViewModelActivity<TodoViewModel>() {
                         }
 
                         todo_cl_item_main.setBackgroundColor(
-                            ContextCompat.getColor(
-                                this@TodoInnerMainActivity,
-                                R.color.common_white_background
-                            )
+                                ContextCompat.getColor(
+                                        this@TodoInnerMainActivity,
+                                        R.color.common_white_background
+                                )
                         )
 
                         wrapper.todo?.let { todo ->
                             if (todo.remindMode.notifyDateTime == "" || isOutOfTime(todo)) {
                                 //没有提醒，或者已经过时，就调整margin
                                 setMargin(
-                                    todo_tv_todo_title,
-                                    top = BaseApp.context.dip(29),
-                                    bottom = BaseApp.context.dip(29)
+                                        todo_tv_todo_title,
+                                        top = BaseApp.context.dip(29),
+                                        bottom = BaseApp.context.dip(29)
                                 )
                             } else {
                                 setMargin(
-                                    todo_tv_todo_title,
-                                    top = BaseApp.context.dip(18),
-                                    bottom = BaseApp.context.dip(40)
+                                        todo_tv_todo_title,
+                                        top = BaseApp.context.dip(18),
+                                        bottom = BaseApp.context.dip(40)
                                 )
                             }
 

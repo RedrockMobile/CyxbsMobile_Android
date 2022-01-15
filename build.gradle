@@ -21,8 +21,8 @@ buildscript {
         maven { url 'https://maven.aliyun.com/repository/public' }
         maven { url 'https://maven.aliyun.com/repository/google' }
 
-
-        maven { url 'https://dl.bintray.com/umsdk/release' }
+        // 2021年5月6日之后，umeng移至maven center
+        maven { url 'https://repo1.maven.org/maven2/' }
         maven { url 'https://dl.google.com/dl/android/maven2' }
         flatDir {
             dirs 'libs' //this way we can find the .aar file in libs folder
@@ -52,8 +52,9 @@ allprojects {
         maven { url 'https://maven.aliyun.com/repository/public' }
         maven { url 'https://maven.aliyun.com/repository/google' }
 
+        // 2021年5月6日之后，umeng移至maven center
+        maven { url 'https://repo1.maven.org/maven2/' }
         maven { url 'https://jitpack.io' }
-        maven { url 'https://dl.bintray.com/umsdk/release' }
         flatDir {
             dirs 'libs' //this way we can find the .aar file in libs folder
         }

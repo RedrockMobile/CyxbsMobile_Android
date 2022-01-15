@@ -51,7 +51,7 @@ class TodoViewModel : BaseViewModel() {
                                 todo.isChecked = 0
                             }
                         }
-                        if (todo.isChecked == 1) checkedTodoList.add(
+                        if (todo.getIsChecked()) checkedTodoList.add(
                             TodoItemWrapper.todoWrapper(
                                 todo
                             )

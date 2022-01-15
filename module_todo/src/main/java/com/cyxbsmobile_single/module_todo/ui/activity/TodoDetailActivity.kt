@@ -41,6 +41,18 @@ class TodoDetailActivity : BaseViewModelActivity<TodoDetailViewModel>() {
         }
     }
 
+
+    //统一处理此条todo的点击事件（试图修改）
+    //如果已经完成，则不handle这次点击事件
+    private fun onClickProxy(view: View, onClick: (View) -> Unit) {
+        if (todo.getIsChecked()){
+            //已经check，不允许修改
+            BaseApp.context.toast(getString(R.string.todo_string_cant_modify))
+        } else {
+            onClick.invoke(view)
+        }
+    }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         //配置Window的背景颜色，使得共享动画时颜色正常
         //一定要放在onCreate之前，不然在共享动画时没有效果
@@ -115,37 +127,43 @@ class TodoDetailActivity : BaseViewModelActivity<TodoDetailViewModel>() {
         }
 
         todo_tv_inner_detail_del_todo.setOnClickListener {
-            viewModel.delTodo(todo) {
-                finish()
+            onClickProxy(it){
+                viewModel.delTodo(todo) {
+                    finish()
+                }
             }
         }
 
         todo_tv_inner_detail_time.setOnClickListener {
-            backTime = 2
-            AddItemDialog(context = this) {
-                todo.remindMode.notifyDateTime = it.remindMode.notifyDateTime
-                todo_tv_inner_detail_time.text = todo.remindMode.notifyDateTime
-                changeModifyStatus()
-            }.apply {
-                setAsSinglePicker(AddItemDialog.CurOperate.NOTIFY)
-                showNotifyDatePicker()
-                //此方法应当在show之后执行，不然的话rv加载不出来
-                resetNotifyTime(todo)
-            }.show()
+            onClickProxy(it){
+                backTime = 2
+                AddItemDialog(context = this) { todo ->
+                    todo.remindMode.notifyDateTime = todo.remindMode.notifyDateTime
+                    todo_tv_inner_detail_time.text = todo.remindMode.notifyDateTime
+                    changeModifyStatus()
+                }.apply {
+                    setAsSinglePicker(AddItemDialog.CurOperate.NOTIFY)
+                    showNotifyDatePicker()
+                    //此方法应当在show之后执行，不然的话rv加载不出来
+                    resetNotifyTime(todo)
+                }.show()
+            }
         }
 
         repeatAdapter = RepeatInnerAdapter(ArrayList(remindMode2RemindList(todo.remindMode))) {
-            backTime = 2
-            AddItemDialog(context = this) {
-                repeatAdapter.resetAll(remindMode2RemindList(it.remindMode))
-                todo.remindMode = it.remindMode
-                changeModifyStatus()
-            }.apply {
-                setAsSinglePicker(AddItemDialog.CurOperate.REPEAT)
-                showRepeatDatePicker()
-                //此方法应当在show之后执行，不然的话rv加载不出来
-                resetAllRepeatMode(todo)
-            }.show()
+            onClickProxy(it){
+                backTime = 2
+                AddItemDialog(context = this) { todo ->
+                    repeatAdapter.resetAll(remindMode2RemindList(todo.remindMode))
+                    todo.remindMode = todo.remindMode
+                    changeModifyStatus()
+                }.apply {
+                    setAsSinglePicker(AddItemDialog.CurOperate.REPEAT)
+                    showRepeatDatePicker()
+                    //此方法应当在show之后执行，不然的话rv加载不出来
+                    resetAllRepeatMode(todo)
+                }.show()
+            }
         }
 
         todo_rv_inner_detail_repeat_time.adapter = repeatAdapter
@@ -204,9 +222,11 @@ class TodoDetailActivity : BaseViewModelActivity<TodoDetailViewModel>() {
     }
 
     private fun setCheckedStatus() {
-        todo_iv_check.visibility = if (todo.isChecked == 1) View.VISIBLE else View.GONE
+        //设置备注et是否可以点击
+        todo_inner_detail_remark_ed.isEnabled = !todo.getIsChecked()
+        todo_iv_check.visibility = if (todo.getIsChecked()) View.VISIBLE else View.GONE
         todo_tv_todo_title.setTextColor(
-                if (todo.isChecked == 1) ContextCompat.getColor(this, R.color.todo_item_checked_color)
+                if (todo.getIsChecked()) ContextCompat.getColor(this, R.color.todo_item_checked_color)
                 else ContextCompat.getColor(this, R.color.todo_check_line_color)
         )
     }
