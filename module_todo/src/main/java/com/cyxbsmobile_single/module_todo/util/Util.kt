@@ -9,6 +9,7 @@ import androidx.core.view.marginBottom
 import androidx.core.view.marginLeft
 import androidx.core.view.marginRight
 import androidx.core.view.marginTop
+import com.airbnb.lottie.parser.IntegerParser
 import com.cyxbsmobile_single.module_todo.model.bean.DateBeen
 import com.cyxbsmobile_single.module_todo.model.bean.RemindMode
 import com.cyxbsmobile_single.module_todo.model.bean.Todo
@@ -385,4 +386,14 @@ fun formatDateWithTryCatch(format: String, raw: String): Date{
     } finally {
         return date
     }
+}
+
+fun parseIntWithTryCatch(s: String): Int?{
+    var res: Int? = null
+    try {
+        res = Integer.parseInt(s)
+    } catch (e: NumberFormatException){
+        e.printStackTrace()
+    }
+    return res
 }

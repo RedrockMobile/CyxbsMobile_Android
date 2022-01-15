@@ -365,6 +365,7 @@ class AddItemDialog(context: Context, val onConfirm: (Todo) -> Unit) :
                 "每周" -> changeRepeatType2EveryWeek()
                 "每月" -> changeRepeatType2EveryMonth()
                 "每年" -> changeRepeatType2EveryYear()
+                "" -> changeRepeatType2EveryDay()
             }
         }
     }
@@ -458,7 +459,7 @@ class AddItemDialog(context: Context, val onConfirm: (Todo) -> Unit) :
                             0,
                             secondPos
                         )
-                        "周${weekStringList[todo_inner_add_thing_second.curPos()]}"
+                        "周${weekStringList[todo_inner_add_thing_second.curPos() % 7]}"
                     }
                     RemindMode.MONTH -> {
                         todo.remindMode.day.addWithoutRepeat(
