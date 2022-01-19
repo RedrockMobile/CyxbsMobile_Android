@@ -70,6 +70,10 @@ class CoverHeaderBehavior(context: Context, attr: AttributeSet) : CoordinatorLay
         minTransY = circlesRv.top.toFloat()
         maxTransY = circlesRv.bottom.toFloat()
 
+        val lp = contentView.layoutParams as CoordinatorLayout.LayoutParams
+        lp.bottomMargin = headerHeight
+        contentView.layoutParams = lp
+
         /**
          * 页面会被多次布局，本方法会被多次调用，而第一次调用时变量并未被初始化，故加入maxTransY > 0判断
          * 变量是否已被初始化

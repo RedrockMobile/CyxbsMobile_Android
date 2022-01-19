@@ -69,7 +69,7 @@
     <LinearLayout
         android:id="@+id/rl_tab_view_pager"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="wrap_content"
         android:background="@drawable/qa_shape_comment_header_background"
         android:orientation="vertical"
         app:layout_behavior="com.mredrock.cyxbs.qa.pages.dynamic.behavior.CoverHeaderBehavior">
