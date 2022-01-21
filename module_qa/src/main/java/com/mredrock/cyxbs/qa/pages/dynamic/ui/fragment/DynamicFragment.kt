@@ -1,33 +1,22 @@
 package com.mredrock.cyxbs.qa.pages.dynamic.ui.fragment
 
-import android.animation.ObjectAnimator
 import android.content.Intent
-import android.graphics.Color
-import android.os.Handler
-import android.util.Log
-import android.view.LayoutInflater
 import android.view.View
-import android.view.Window
-import android.view.WindowManager
 import android.widget.RelativeLayout
 import android.widget.TextView
-import android.widget.Toast
 import android.widget.ViewFlipper
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.alibaba.android.arouter.facade.annotation.Route
-import com.google.android.material.tabs.TabLayout
 import com.google.android.material.tabs.TabLayoutMediator
-import com.mredrock.cyxbs.common.component.CyxbsToast
 import com.mredrock.cyxbs.common.config.CyxbsMob
 import com.mredrock.cyxbs.common.config.QA_ENTRY
 import com.mredrock.cyxbs.common.event.RefreshQaEvent
 import com.mredrock.cyxbs.common.mark.EventBusLifecycleSubscriber
 import com.mredrock.cyxbs.common.utils.extensions.doIfLogin
 import com.mredrock.cyxbs.common.utils.extensions.setOnSingleClickListener
-import com.mredrock.cyxbs.common.utils.extensions.sp
 import com.mredrock.cyxbs.qa.R
 import com.mredrock.cyxbs.qa.config.RequestResultCode.NEED_REFRESH_RESULT
 import com.mredrock.cyxbs.qa.pages.dynamic.model.TopicDataSet
@@ -39,8 +28,6 @@ import com.mredrock.cyxbs.qa.pages.square.ui.activity.CircleDetailActivity
 import com.mredrock.cyxbs.qa.pages.square.ui.activity.CircleSquareActivity
 import com.umeng.analytics.MobclickAgent
 import kotlinx.android.synthetic.main.qa_fragment_dynamic.*
-import kotlinx.android.synthetic.main.qa_fragment_dynamic_focus.*
-import kotlinx.android.synthetic.main.qa_fragment_dynamic_recommend.*
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
 
