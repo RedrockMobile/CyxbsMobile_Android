@@ -4,9 +4,11 @@ import android.content.Context
 import android.util.AttributeSet
 import android.view.View
 import android.view.animation.OvershootInterpolator
+import android.widget.LinearLayout
 import android.widget.OverScroller
 import androidx.coordinatorlayout.widget.CoordinatorLayout
 import androidx.core.view.ViewCompat
+import androidx.core.view.marginBottom
 import com.mredrock.cyxbs.qa.R
 
 /**
