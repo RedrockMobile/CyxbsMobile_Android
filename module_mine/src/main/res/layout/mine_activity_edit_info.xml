@@ -90,7 +90,7 @@
                     android:id="@+id/mine_edit_iv_agreement"
                     android:layout_width="17dp"
                     android:layout_height="17dp"
-                    android:src="@drawable/mine_iv_avatar_question_mask"
+                    android:src="@drawable/mine_ic_avatar_question_mask"
                     app:layout_constraintBottom_toBottomOf="@+id/mine_edit_et_avatar"
                     app:layout_constraintEnd_toStartOf="@+id/mine_guideline_left"
                     app:layout_constraintTop_toTopOf="@+id/mine_edit_et_avatar" />

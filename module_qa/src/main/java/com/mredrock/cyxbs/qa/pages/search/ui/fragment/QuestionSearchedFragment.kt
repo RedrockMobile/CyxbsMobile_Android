@@ -8,7 +8,7 @@ import com.google.android.flexbox.FlexboxLayoutManager
 import com.google.android.material.tabs.TabLayoutMediator
 import com.mredrock.cyxbs.common.BaseApp
 import com.mredrock.cyxbs.common.utils.extensions.gone
-import com.mredrock.cyxbs.qa.DynamicPagerAdapter
+import com.mredrock.cyxbs.qa.pages.dynamic.ui.adapter.DynamicPagerAdapter
 import com.mredrock.cyxbs.qa.R
 import com.mredrock.cyxbs.qa.pages.search.ui.adapter.SearchKnowledgeAdapter
 import com.mredrock.cyxbs.qa.pages.search.ui.adapter.SearchResultHeaderAdapter
