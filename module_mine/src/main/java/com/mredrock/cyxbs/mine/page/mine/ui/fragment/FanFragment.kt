@@ -60,7 +60,7 @@ class FanFragment : BaseViewModelFragment<FanViewModel>() {
         viewModel.fanList.observe(viewLifecycleOwner, {
             userAdapter.notifyAdapterChanged(mutableListOf<BaseDataBinder<*>>().apply {
                 when (it.size) {
-                    0 -> add(EmptyFanBinder())
+                    0 -> add(EmptyFanBinder(isSelf))
                     else -> for (fan in it) {
                         add(FanBinder(fan,isSelf,
                             onFocusClick = { view, user ->
@@ -99,7 +99,7 @@ class FanFragment : BaseViewModelFragment<FanViewModel>() {
         viewModel.fanNetWorkState.observe(viewLifecycleOwner,{
             if (it == NetworkState.FAILED){
                 userAdapter.notifyAdapterChanged(mutableListOf<BaseDataBinder<*>>().apply {
-                    add(EmptyFanBinder())
+                    add(EmptyFanBinder(isSelf))
                 })
             }
 

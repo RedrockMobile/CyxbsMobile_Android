@@ -58,7 +58,7 @@ class FollowFragment : BaseViewModelFragment<FollowViewModel>() {
         viewModel.followList.observe(viewLifecycleOwner, {
             userAdapter.notifyAdapterChanged(mutableListOf<BaseDataBinder<*>>().apply {
                 when (it.size) {
-                    0 -> add(EmptyFollowBinder())
+                    0 -> add(EmptyFollowBinder(isSelf))
                     else -> for (fan in it) {
                         add(FollowBinder(fan,isSelf,
                         onFocusClick = { view, user ->
@@ -95,7 +95,7 @@ class FollowFragment : BaseViewModelFragment<FollowViewModel>() {
         viewModel.followNetWorkState.observe(viewLifecycleOwner,{
             if (it == NetworkState.FAILED){
                 userAdapter.notifyAdapterChanged(mutableListOf<BaseDataBinder<*>>().apply {
-                    add(EmptyFollowBinder())
+                    add(EmptyFollowBinder(isSelf))
                 })
             }
 

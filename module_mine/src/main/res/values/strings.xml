@@ -144,7 +144,12 @@
     <string name="mine_person_focus_success">关注成功</string>
     <string name="mine_person_change_focus_status_failed">操作失败</string>
     <string name="mine_person_unfocus_success">取关成功</string>
-<!-- TODO: Remove or change this placeholder text -->
+    <string name="mine_person_fan_empty_self">暂时没有人关注你呢...</string>
+    <string name="mine_person_fan_empty">暂时没有人关注他呢...</string>
+    <string name="mine_person_focus_empty_self">你还没有关注任何掌友...</string>
+    <string name="mine_person_focus_empty">他还没有关注任何掌友...</string>
+
+    <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="mine_lack_text">欸,您暂时还没有任何身份,可以前往“重邮帮”小程序通过”身份有证”申请身份,或者前往 邮票中心 兑换个性化身份</string>
     <string name="mine_status_message">长按下方身份牌并拖动到此处，即可在昵称后面展示你的专属身份！</string>
