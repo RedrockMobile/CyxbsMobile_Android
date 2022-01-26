@@ -7,5 +7,5 @@
     android:minResizeHeight="40dp"
     android:previewImage="@drawable/course_ic_normal_example"
     android:resizeMode="horizontal|vertical"
-    android:updatePeriodMillis="3600000"
+    android:updatePeriodMillis="1000"
     android:widgetCategory="home_screen" />
