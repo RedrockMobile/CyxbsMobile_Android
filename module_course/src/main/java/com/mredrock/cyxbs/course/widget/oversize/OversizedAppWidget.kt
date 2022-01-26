@@ -27,7 +27,7 @@ class OversizedAppWidget : AppWidgetProvider() {
     override fun onUpdate(
         context: Context,
         appWidgetManager: AppWidgetManager,
-        appWidgetIds: IntArray,
+        appWidgetIds: IntArray
     ) {
         for (appWidgetId in appWidgetIds) {
             updateAppWidget(context, appWidgetManager, appWidgetId)
@@ -38,7 +38,7 @@ class OversizedAppWidget : AppWidgetProvider() {
         context: Context,
         appWidgetManager: AppWidgetManager,
         appWidgetId: Int,
-        newOptions: Bundle?,
+        newOptions: Bundle?
     ) {
         updateAppWidget(context, appWidgetManager, appWidgetId)
     }
@@ -78,7 +78,7 @@ class OversizedAppWidget : AppWidgetProvider() {
 internal fun updateAppWidget(
     context: Context,
     appWidgetManager: AppWidgetManager,
-    appWidgetId: Int,
+    appWidgetId: Int
 ) {
     val remoteViews = RemoteViews(context.packageName, R.layout.course_oversized_app_widget)
     val weekDay = Calendar.getInstance()[Calendar.DAY_OF_WEEK]

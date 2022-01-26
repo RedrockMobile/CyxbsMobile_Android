@@ -48,7 +48,7 @@ class NormalWidget : AppWidgetProvider() {
     override fun onUpdate(
         context: Context,
         appWidgetManager: AppWidgetManager,
-        appWidgetIds: IntArray,
+        appWidgetIds: IntArray
     ) {
         super.onUpdate(context, appWidgetManager, appWidgetIds)
         context.defaultSharedPreferences.editor {
@@ -61,7 +61,7 @@ class NormalWidget : AppWidgetProvider() {
         context: Context,
         appWidgetManager: AppWidgetManager,
         appWidgetId: Int,
-        newOptions: Bundle,
+        newOptions: Bundle
     ) {
         super.onAppWidgetOptionsChanged(context, appWidgetManager, appWidgetId, newOptions)
         val minHeight = newOptions.getInt(OPTION_APPWIDGET_MIN_HEIGHT)
@@ -233,7 +233,7 @@ class NormalWidget : AppWidgetProvider() {
         num: Int,
         rv: RemoteViews,
         course: CourseStatus.Course,
-        context: Context,
+        context: Context
     ) {
         val moreViewNum = (num + 1) / 2
         hideNormalLayout(moreViewNum, rv)
