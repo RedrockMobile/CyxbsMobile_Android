@@ -386,13 +386,3 @@ fun formatDateWithTryCatch(format: String, raw: String): Date{
     }
     return date
 }
-
-fun parseIntWithTryCatch(s: String): Int?{
-    var res: Int? = null
-    try {
-        res = Integer.parseInt(s)
-    } catch (e: NumberFormatException){
-        e.printStackTrace()
-    }
-    return res
-}
