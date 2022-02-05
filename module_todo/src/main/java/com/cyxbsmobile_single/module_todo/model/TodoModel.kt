@@ -414,58 +414,65 @@ class TodoModel {
     }
 
     private fun resendModifyList() {
+        LogUtils.d("Slayer", "resend")
         val delList = getOfflineModifyTodo(DEL)
         val changedIdList = getOfflineModifyTodo(CHANGE).toString()
         val syncTime = getLastSyncTime()
         val isFirstPush = if (syncTime == 0L) 1 else 0
-        val rawQuery = SimpleSQLiteQuery("SELECT * FROM todo_list WHERE todoId in $changedIdList")
+        LogUtils.d("Slayer", "SQL = SELECT * FROM todo_list WHERE todoId in (${changedIdList.subSequence(1, changedIdList.length - 1)})")
+        val rawQuery = SimpleSQLiteQuery("SELECT * FROM todo_list WHERE todoId in (${changedIdList.subSequence(1, changedIdList.length - 1)})")
         TodoDatabase.INSTANCE
             .todoDao().queryTodoByIdList(rawQuery)
             .toObservable().setSchedulers()
             .safeSubscribeBy(
                 onNext = {
                     LogUtils.d("RayleighZ", "offline todo list = $it")
-                    //构建重传PUSH
-                    val pushWrapper = TodoListPushWrapper(
-                        todoList = it,
-                        force = TodoListPushWrapper.NONE_FORCE,
-                        firsPush = isFirstPush,
-                        syncTime = syncTime
-                    )
-
-                    apiGenerator.delTodo(
-                        DelPushWrapper(
-                            delList,
-                            getLastSyncTime()
-                        )
-                    ).setSchedulers()
-                        .safeSubscribeBy(
-                            onNext = { syncTime ->
-                                setLastSyncTime(syncTime.data.syncTime)
-                                setLastModifyTime(syncTime.data.syncTime)
-                                //制空离线修改
-                                addOffLineModifyTodo(type = DEL)
-                                addOffLineModifyTodo(type = CHANGE)
-                            },
-                            onError = {
-                                BaseApp.context.toast("本地删除重传失败")
-                            }
+                    if (it.isNotEmpty()){
+                        //构建重传PUSH
+                        val pushWrapper = TodoListPushWrapper(
+                                todoList = it,
+                                force = TodoListPushWrapper.NONE_FORCE,
+                                firsPush = isFirstPush,
+                                syncTime = syncTime
                         )
 
-                    apiGenerator.pushTodo(pushWrapper)
-                        .setSchedulers()
-                        .safeSubscribeBy(
-                            onNext = { syncTime ->
-                                setLastSyncTime(syncTime.data.syncTime)
-                                setLastModifyTime(syncTime.data.syncTime)
-                                //制空离线修改
-                                addOffLineModifyTodo(type = DEL)
-                                addOffLineModifyTodo(type = CHANGE)
-                            },
-                            onError = {
-                                BaseApp.context.toast("本地修改重传失败")
-                            }
-                        )
+                        apiGenerator.pushTodo(pushWrapper)
+                                .setSchedulers()
+                                .safeSubscribeBy(
+                                        onNext = { syncTime ->
+                                            setLastSyncTime(syncTime.data.syncTime)
+                                            setLastModifyTime(syncTime.data.syncTime)
+                                            //制空离线修改
+                                            addOffLineModifyTodo(type = DEL)
+                                            addOffLineModifyTodo(type = CHANGE)
+                                        },
+                                        onError = {
+                                            BaseApp.context.toast("本地修改重传失败")
+                                        }
+                                )
+                    }
+
+
+                    if(delList.isNotEmpty()){
+                        apiGenerator.delTodo(
+                                DelPushWrapper(
+                                        delList,
+                                        getLastSyncTime()
+                                )
+                        ).setSchedulers()
+                                .safeSubscribeBy(
+                                        onNext = { syncTime ->
+                                            setLastSyncTime(syncTime.data.syncTime)
+                                            setLastModifyTime(syncTime.data.syncTime)
+                                            //制空离线修改
+                                            addOffLineModifyTodo(type = DEL)
+                                            addOffLineModifyTodo(type = CHANGE)
+                                        },
+                                        onError = {
+                                            BaseApp.context.toast("本地删除重传失败")
+                                        }
+                                )
+                    }
                 },
                 onError = {
                     LogUtils.d("RayleighZ", "resend error = $it")
