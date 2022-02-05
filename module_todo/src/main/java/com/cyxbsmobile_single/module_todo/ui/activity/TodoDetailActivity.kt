@@ -1,5 +1,6 @@
 package com.cyxbsmobile_single.module_todo.ui.activity
 
+import android.content.ComponentName
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
@@ -14,6 +15,7 @@ import com.cyxbsmobile_single.module_todo.adapter.RepeatInnerAdapter
 import com.cyxbsmobile_single.module_todo.model.TodoModel
 import com.cyxbsmobile_single.module_todo.model.bean.Todo
 import com.cyxbsmobile_single.module_todo.ui.dialog.AddItemDialog
+import com.cyxbsmobile_single.module_todo.ui.widget.TodoWidget
 import com.cyxbsmobile_single.module_todo.util.remindMode2RemindList
 import com.cyxbsmobile_single.module_todo.viewmodel.TodoDetailViewModel
 import com.google.gson.Gson
@@ -45,7 +47,7 @@ class TodoDetailActivity : BaseViewModelActivity<TodoDetailViewModel>() {
     //统一处理此条todo的点击事件（试图修改）
     //如果已经完成，则不handle这次点击事件
     private fun onClickProxy(view: View, onClick: (View) -> Unit) {
-        if (todo.getIsChecked()){
+        if (todo.getIsChecked()) {
             //已经check，不允许修改
             BaseApp.context.toast(getString(R.string.todo_string_cant_modify))
         } else {
@@ -61,7 +63,7 @@ class TodoDetailActivity : BaseViewModelActivity<TodoDetailViewModel>() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.todo_activity_inner_detail)
         //下面的逻辑是为了处理端内跳转
-        fun initTodo(){
+        fun initTodo() {
             //这里反序列化两次是为了防止内外拿到同一个引用
             viewModel.rawTodo = Gson().fromJson(intent.getStringExtra("todo"), Todo::class.java)
 
@@ -72,7 +74,7 @@ class TodoDetailActivity : BaseViewModelActivity<TodoDetailViewModel>() {
         if (intent.getBooleanExtra("is_from_receive", false)) {
             //如果来自端内跳转, 则重新加载todo
             val todoId = intent.getStringExtra("todo_id").toString().toLong()
-            if (todoId <= 0){
+            if (todoId <= 0) {
                 BaseApp.context.toast("没有这条代办的信息哦")
                 finish()
             }
@@ -127,15 +129,20 @@ class TodoDetailActivity : BaseViewModelActivity<TodoDetailViewModel>() {
         }
 
         todo_tv_inner_detail_del_todo.setOnClickListener {
-            onClickProxy(it){
+            onClickProxy(it) {
                 viewModel.delTodo(todo) {
+                    this.sendBroadcast(
+                            Intent("cyxbs.widget.todo.refresh").apply {
+                                component = ComponentName(BaseApp.context, TodoWidget::class.java)
+                            }
+                    )
                     finish()
                 }
             }
         }
 
         todo_tv_inner_detail_time.setOnClickListener {
-            onClickProxy(it){
+            onClickProxy(it) {
                 backTime = 2
                 AddItemDialog(context = this) { todo ->
                     todo.remindMode.notifyDateTime = todo.remindMode.notifyDateTime
@@ -151,7 +158,7 @@ class TodoDetailActivity : BaseViewModelActivity<TodoDetailViewModel>() {
         }
 
         repeatAdapter = RepeatInnerAdapter(ArrayList(remindMode2RemindList(todo.remindMode))) {
-            onClickProxy(it){
+            onClickProxy(it) {
                 backTime = 2
                 AddItemDialog(context = this) { todo ->
                     repeatAdapter.resetAll(remindMode2RemindList(todo.remindMode))
@@ -175,6 +182,11 @@ class TodoDetailActivity : BaseViewModelActivity<TodoDetailViewModel>() {
             todo.detail = todo_inner_detail_remark_ed.text.toString()
             todo.lastModifyTime = System.currentTimeMillis()
             viewModel.updateTodo(todo) {
+                this.sendBroadcast(
+                        Intent("cyxbs.widget.todo.refresh").apply {
+                            component = ComponentName(BaseApp.context, TodoWidget::class.java)
+                        }
+                )
                 finish()
             }
         }
@@ -204,8 +216,8 @@ class TodoDetailActivity : BaseViewModelActivity<TodoDetailViewModel>() {
     private fun changeModifyStatus(isChanged: Boolean) {
         viewModel.isChanged = isChanged
         todo_thing_detail_save.text =
-            if (viewModel.isChanged) "保存"
-            else ""
+                if (viewModel.isChanged) "保存"
+                else ""
     }
 
     override fun onBackPressed() {
