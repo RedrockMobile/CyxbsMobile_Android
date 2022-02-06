@@ -172,7 +172,7 @@ class HomepageActivity : BaseViewModelActivity<MineViewModel>() {
             dataBinding.clPersonalInformation.tv_signature.text = it.data.introduction
             nickname = it.data.nickname
             isNeedRefresh = false
-            isSelf = it.data.isSelf
+            isSelf = it.data.is_self
             isGirl=it.data.gender
             it.data.redid.let {
                 identityFragment.onSuccesss(it, isSelf)
@@ -227,8 +227,8 @@ class HomepageActivity : BaseViewModelActivity<MineViewModel>() {
 
     @SuppressLint("ResourceAsColor")
     fun changeAttention(data: UserInfo) {
-        Log.i("测试", "是不是自己" + data.data.isSelf);
-        if (data.data.isSelf) {
+        Log.i("测试", "是不是自己" + data.data.is_self);
+        if (data.data.is_self) {
             dataBinding.clPersonalInformation.mine_tv_concern.visibility = View.INVISIBLE
         } else {
             dataBinding.clPersonalInformation.mine_tv_concern.visibility = View.VISIBLE

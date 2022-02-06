@@ -25,8 +25,8 @@ data class Data(
     val identityies: List<String>,
     @SerializedName("introduction")
     val introduction: String,
-    @SerializedName("isSelf")
-    val isSelf: Boolean,
+    @SerializedName("is_self")
+    val is_self: Boolean,
     @SerializedName("nickname")
     val nickname: String,
     @SerializedName("phone")
