@@ -2,6 +2,7 @@
 
 package com.mredrock.cyxbs.main.ui
 
+import android.Manifest
 import android.app.Dialog
 import android.content.Intent
 import android.os.Bundle
@@ -72,6 +73,9 @@ class MainActivity : BaseViewModelActivity<MainViewModel>(),
         super.onCreate(savedInstanceState)
         // 暂时不要在mainActivity里面使用dataBinding，会有一个量级较大的闪退
         setContentView(R.layout.main_activity_main)
+
+        //为了LogLocal实现请求本地存储
+        doPermissionAction(Manifest.permission.WRITE_EXTERNAL_STORAGE) { }
     }
 
 

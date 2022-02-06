@@ -34,7 +34,7 @@ open class AnswerTextWatcher(private val tipOF: ObservableField<String>, val but
                 }
                 else -> {
                     tipOF.set("")
-                    button.background = ContextCompat.getDrawable(context, R.drawable.mine_shape_round_cornor_purple_blue)
+                    button.background = ContextCompat.getDrawable(context, R.drawable.mine_shape_round_corner_purple_blue)
                 }
             }
         }
