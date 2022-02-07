@@ -85,6 +85,7 @@ class StatusAdapter(
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
         if (holder is VH){
             holder.view.tag = list[position].id
+            holder.view.setTag(holder.view.id, list[position].islate)
             loadBitmap(list[position].background) {
                 holder.contentView.background = BitmapDrawable(context?.resources, it)
             }
@@ -138,9 +139,10 @@ class StatusAdapter(
                 }
             }
             MotionEvent.ACTION_UP -> {
-                if (event.rawY >= 800||v.tag==true) {  //设置身份失败的动画
+
+                if (event.rawY >= 800||v.getTag(v.id)==true) {  //设置身份失败的动画
                     upAnimatorback(v, event.rawY - distance)
-                    if (v.tag==true){
+                    if (v.getTag(v.id)==true){
                         context?.toast("对不起,你的身份已经过期啦!")
                     }
                 } else {  //设置身份成功的动画
