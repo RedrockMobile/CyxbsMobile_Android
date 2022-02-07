@@ -65,25 +65,27 @@ class IdentityViewModel: BaseViewModel()  {
     }
 
     fun getAllIdentify(redid:String?){
+        redid?.let {
 
-        apiService.getAllIdentify(redid)
-            .setSchedulers()
-          .doOnErrorWithDefaultErrorHandler { true }
-            .safeSubscribeBy(
-                onNext = {
-                Log.e("wxtag身份","(IdentityViewModel.kt:70)->> 获取身份成功")
-                 allIdentifies.value = it
+            apiService.getAllIdentify(it)
+                .setSchedulers()
+                .doOnErrorWithDefaultErrorHandler { true }
+                .safeSubscribeBy(
+                    onNext = {
+                        Log.e("wxtag身份","(IdentityViewModel.kt:70)->> 获取身份成功")
+                        allIdentifies.value = it
 
-                },
-                onError = {
-                    Log.e("wxtag身份","(IdentityViewModel.kt:70)->> 获取身份失败$it")
-             onErrorAction.value="没有身份就是它的身份"
-                },
-                onComplete = {
+                    },
+                    onError = {
+                        Log.e("wxtag身份","(IdentityViewModel.kt:70)->> 获取身份失败$it")
+                        onErrorAction.value="没有身份就是它的身份"
+                    },
+                    onComplete = {
 
-                }
-            )
-            .lifeCycle()
+                    }
+                )
+                .lifeCycle()
+        }
 
     }
 

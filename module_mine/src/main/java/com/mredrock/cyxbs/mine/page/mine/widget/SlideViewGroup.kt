@@ -146,7 +146,7 @@ class SlideViewGroup @JvmOverloads constructor(
         super.onMeasure(widthMeasureSpec, heightMeasureSpec)
         //ViewPager修改后的高度= 总高度-TabLayout高度
         val lp = mViewPager!!.layoutParams
-        lp.height = measuredHeight - mNavView!!.measuredHeight*3+20
+        lp.height = measuredHeight - mNavView!!.measuredHeight*3+150
         mViewPager!!.layoutParams = lp
         //因为ViewPager修改了高度，所以需要重新测量
         super.onMeasure(widthMeasureSpec, heightMeasureSpec)
