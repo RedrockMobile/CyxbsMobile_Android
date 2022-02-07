@@ -708,9 +708,6 @@ class HomepageActivity : BaseViewModelActivity<MineViewModel>() {
         return dataBinding.svgMine.dispatchTouchEvent(ev)
     }
 
-    override fun onResume() {
-        super.onResume()
-        viewModel.getUserInfo(redid)
-    }
+
 
 }
