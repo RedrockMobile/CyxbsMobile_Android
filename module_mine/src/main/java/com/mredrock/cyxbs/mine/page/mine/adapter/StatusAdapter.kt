@@ -84,7 +84,7 @@ class StatusAdapter(
 
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
         if (holder is VH){
-            holder.view.tag = list[position].islate
+            holder.view.tag = list[position].id
             loadBitmap(list[position].background) {
                 holder.contentView.background = BitmapDrawable(context?.resources, it)
             }
@@ -281,7 +281,10 @@ class StatusAdapter(
 
                 activity.dataBinding.clContentView.invisible()
                 list.forEach {
+                    Log.e("身份设置","身份的轮询"+it.id)
+                    Log.e("身份设置","身份的轮询"+v.tag.toString())
                     if (it.id == v.tag.toString()){
+
                         activity.viewModel.updateStatus(it.id,it.type, redid)
                     }
                 }

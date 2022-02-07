@@ -39,12 +39,11 @@ class PersonalityStatusFragment(
     }
     fun initData(view: View) {
         viewModel.getCustomization(redid)
-        viewModel.customization.observeForever {
+        viewModel.customization.observeForever { it ->
             val list = mutableListOf<AuthenticationStatus.Data>()
             it.data.forEach {
                 list.add(it)
             }
-
             if (view.rv_personal?.adapter == null) {
                 Log.i("缺省页面","null执行了吗")
                 adapter = StatusAdapter(list, context, redid)
