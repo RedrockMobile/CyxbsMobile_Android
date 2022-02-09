@@ -1,7 +1,6 @@
 package com.mredrock.cyxbs.mine
 
 import android.animation.ValueAnimator
-import android.util.Log
 import android.view.View
 import android.view.animation.DecelerateInterpolator
 import android.widget.TextView
@@ -87,16 +86,26 @@ class UserViewModel : BaseViewModel() {
             )
     }
 
-    fun getUserUncheckCount(type: Int) {
+    fun getUserUncheckedPraiseCount() {
         val sp = BaseApp.context.defaultSharedPreferences
-        val lastCheckTimeStamp = if (type == 1) sp.getLong(UNCHECK_COMMENT_KEY, 0L) else sp.getLong(
-            UNCHECK_PRAISE_KEY,
-            0L
-        )
-        apiService.getUncheckCount(
-            lastCheckTimeStamp,
-            type
-        )
+        val lastCheckTimeStamp = sp.getLong(UNCHECK_PRAISE_KEY, 0L)
+        apiService.getUncheckedPraiseCount(lastCheckTimeStamp)
+            .setSchedulers()
+            .doOnErrorWithDefaultErrorHandler { true }
+            .safeSubscribeBy(
+                onNext = {
+                    _userUncheckCount.postValue(it.data)
+                },
+                onError = {
+//                    BaseApp.context.toast("获取评论等信息异常")
+                }
+            )
+    }
+
+    fun getUserUncheckedCommentCount() {
+        val sp = BaseApp.context.defaultSharedPreferences
+        val lastCheckTimeStamp = sp.getLong(UNCHECK_COMMENT_KEY, 0L)
+        apiService.getUncheckedCommentCount(lastCheckTimeStamp)
             .setSchedulers()
             .doOnErrorWithDefaultErrorHandler { true }
             .safeSubscribeBy(

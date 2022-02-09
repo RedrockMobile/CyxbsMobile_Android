@@ -1,6 +1,5 @@
 package com.mredrock.cyxbs.qa.pages.dynamic.viewmodel
 
-import android.util.Log
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
@@ -22,7 +21,6 @@ import com.mredrock.cyxbs.qa.beannew.ReplyInfo
 import com.mredrock.cyxbs.qa.config.CommentConfig
 import com.mredrock.cyxbs.qa.network.ApiServiceNew
 import com.mredrock.cyxbs.qa.network.NetworkState
-import com.mredrock.cyxbs.qa.pages.dynamic.ui.activity.DynamicDetailActivity
 import com.mredrock.cyxbs.qa.utils.removeContinuousEnters
 
 /**
@@ -140,9 +138,9 @@ open class DynamicDetailViewModel : BaseViewModel() {
             }
     }
 
-    fun deleteId(id: String, model: String) {
+    fun deleteDynamic(id: String) {
         ApiGenerator.getApiService(ApiServiceNew::class.java)
-            .deleteId(id, model)
+            .deleteDynamic(id)
             .setSchedulers()
             .doOnSubscribe {
                 progressDialogEvent.value = ProgressDialogEvent.SHOW_NONCANCELABLE_DIALOG_EVENT
@@ -151,33 +149,37 @@ open class DynamicDetailViewModel : BaseViewModel() {
                 progressDialogEvent.value = ProgressDialogEvent.DISMISS_DIALOG_EVENT
             }
             .doOnError {
-                when (model) {
-                    DynamicDetailActivity.DYNAMIC_DELETE -> {
-                        toastEvent.value = R.string.qa_delete_dynamic_failure
-                    }
-                    DynamicDetailActivity.COMMENT_DELETE -> {
-                        toastEvent.value = R.string.qa_delete_comment_failure
-                    }
-                }
+                toastEvent.value = R.string.qa_delete_dynamic_failure
+            }
+            .safeSubscribeBy {
+                isNeedFinish=true
+                deleteDynamic.postValue(true)
+                toastEvent.value = R.string.qa_delete_dynamic_success
+            }
+    }
+
+    fun deleteComment(id: String) {
+        ApiGenerator.getApiService(ApiServiceNew::class.java)
+            .deleteComment(id)
+            .setSchedulers()
+            .doOnSubscribe {
+                progressDialogEvent.value = ProgressDialogEvent.SHOW_NONCANCELABLE_DIALOG_EVENT
+            }
+            .doFinally {
+                progressDialogEvent.value = ProgressDialogEvent.DISMISS_DIALOG_EVENT
+            }
+            .doOnError {
+                toastEvent.value = R.string.qa_delete_comment_failure
             }
             .safeSubscribeBy {
                 refreshCommentList(dynamic.value?.postId ?: "0", "-1")
-
-                when (model) {
-                    DynamicDetailActivity.DYNAMIC_DELETE -> {
-                        isNeedFinish=true
-                        deleteDynamic.postValue(true)
-                        toastEvent.value = R.string.qa_delete_dynamic_success
-                    }
-                    DynamicDetailActivity.COMMENT_DELETE -> {
-                        toastEvent.value = R.string.qa_delete_comment_success
-                    }
-                }
+                toastEvent.value = R.string.qa_delete_comment_success
             }
     }
-    fun report(id: String, content: String, model: String) {
+
+    fun reportDynamic(id: String, content: String) {
         ApiGenerator.getApiService(ApiServiceNew::class.java)
-            .report(id, CommentConfig.REPORT_DYNAMIC_MODEL, content)
+            .reportDynamic(id,content)
             .setSchedulers()
             .doOnSubscribe {
                 progressDialogEvent.value = ProgressDialogEvent.SHOW_NONCANCELABLE_DIALOG_EVENT
@@ -186,28 +188,32 @@ open class DynamicDetailViewModel : BaseViewModel() {
                 progressDialogEvent.value = ProgressDialogEvent.DISMISS_DIALOG_EVENT
             }
             .doOnError {
-                when (model) {
-                    CommentConfig.REPORT_DYNAMIC_MODEL -> {
-                        toastEvent.value = R.string.qa_report_dynamic_failure
-                    }
-                    CommentConfig.REPORT_COMMENT_MODEL -> {
-                        toastEvent.value = R.string.qa_report_comment_failure
-                    }
-                }
+                toastEvent.value = R.string.qa_report_dynamic_failure
             }
             .safeSubscribeBy {
                 if (it.status == 200)
-                    when (model) {
-                        CommentConfig.REPORT_DYNAMIC_MODEL -> {
-                            toastEvent.value = R.string.qa_report_dynamic_success
-                        }
-                        CommentConfig.REPORT_COMMENT_MODEL -> {
-                            toastEvent.value = R.string.qa_report_comment_success
-                        }
-                    }
+                    toastEvent.value = R.string.qa_report_dynamic_success
             }
     }
 
+    fun reportComment(id: String, content: String) {
+        ApiGenerator.getApiService(ApiServiceNew::class.java)
+            .reportComment(id,content)
+            .setSchedulers()
+            .doOnSubscribe {
+                progressDialogEvent.value = ProgressDialogEvent.SHOW_NONCANCELABLE_DIALOG_EVENT
+            }
+            .doFinally {
+                progressDialogEvent.value = ProgressDialogEvent.DISMISS_DIALOG_EVENT
+            }
+            .doOnError {
+                toastEvent.value = R.string.qa_report_comment_failure
+            }
+            .safeSubscribeBy {
+                if (it.status == 200)
+                    toastEvent.value = R.string.qa_report_comment_success
+            }
+    }
 
     class Factory : ViewModelProvider.Factory {
 

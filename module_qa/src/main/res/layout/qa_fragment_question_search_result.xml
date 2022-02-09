@@ -74,17 +74,18 @@
             android:orientation="vertical"
             app:layout_behavior="@string/appbar_scrolling_view_behavior">
 
-            <androidx.cardview.widget.CardView
+            <FrameLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                app:cardElevation="8dp">
+                android:elevation="8dp"
+                android:background="@drawable/qa_shape_bg_tab_searched">
                 <com.google.android.material.tabs.TabLayout
                     android:id="@+id/qa_tl_contract_content"
                     android:layout_width="match_parent"
                     android:layout_height="50dp"
                     android:layout_marginStart="30dp"
-                    android:theme="@style/Theme.MaterialComponents"
                     android:background="@drawable/qa_shape_bg_tab_searched"
+                    android:theme="@style/Theme.MaterialComponents"
                     app:tabGravity="fill"
                     app:tabIndicator="@drawable/qa_ic_search_indicator"
                     app:tabIndicatorColor="@android:color/transparent"
@@ -96,7 +97,7 @@
                     app:tabTextColor="@color/qa_text_tab"
                     app:layout_constraintLeft_toLeftOf="@id/qa_knowledge_cs_two"
                     app:layout_constraintTop_toTopOf="@id/qa_knowledge_cs_two" />
-            </androidx.cardview.widget.CardView>
+            </FrameLayout>
 
             <androidx.viewpager2.widget.ViewPager2
                 android:id="@+id/qa_vp_search_result"

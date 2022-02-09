@@ -17,11 +17,9 @@ import com.mredrock.cyxbs.qa.component.recycler.RvAdapterWrapper
 import com.mredrock.cyxbs.qa.config.CommentConfig
 import com.mredrock.cyxbs.qa.network.NetworkState
 import com.mredrock.cyxbs.qa.pages.dynamic.ui.activity.DynamicDetailActivity
-import com.mredrock.cyxbs.qa.pages.dynamic.ui.adapter.DynamicAdapter
 import com.mredrock.cyxbs.qa.pages.dynamic.ui.adapter.HybridAdapter
 import com.mredrock.cyxbs.qa.pages.mine.ui.adapter.MyDynamicAdapter
 import com.mredrock.cyxbs.qa.pages.mine.viewmodel.MyDynamicViewModel
-import com.mredrock.cyxbs.qa.ui.adapter.EmptyRvAdapter
 import com.mredrock.cyxbs.qa.ui.adapter.FooterRvAdapter
 import com.mredrock.cyxbs.qa.ui.widget.QaDialog
 import com.mredrock.cyxbs.qa.utils.ClipboardController
@@ -108,7 +106,7 @@ class MyDynamicFragment : BaseViewModelFragment<MyDynamicViewModel>(), MineAndQa
                                         it,
                                         resources.getString(R.string.qa_dialog_tip_delete_comment_text),
                                         {}) {
-                                        viewModel.deleteId(dynamic.postId, "0")
+                                        viewModel.deleteDynamic(dynamic.postId)
                                     }
                                 }
                             }

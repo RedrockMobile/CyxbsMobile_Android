@@ -1,6 +1,5 @@
 package com.mredrock.cyxbs.qa.pages.mine.viewmodel
 
-import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.Transformations
@@ -11,7 +10,6 @@ import com.mredrock.cyxbs.common.utils.extensions.safeSubscribeBy
 import com.mredrock.cyxbs.common.utils.extensions.setSchedulers
 import com.mredrock.cyxbs.common.viewmodel.BaseViewModel
 import com.mredrock.cyxbs.qa.R
-import com.mredrock.cyxbs.qa.beannew.Dynamic
 import com.mredrock.cyxbs.qa.beannew.Message
 import com.mredrock.cyxbs.qa.network.ApiServiceNew
 import com.mredrock.cyxbs.qa.pages.dynamic.model.DynamicDataSource
@@ -51,9 +49,9 @@ class MyDynamicViewModel : BaseViewModel(){
             Transformations.switchMap(factory!!.dynamicDataSourceLiveData) { it.initialLoad }
 
     }
-    fun deleteId(id: String, model: String) {
+    fun deleteDynamic(id: String) {
         ApiGenerator.getApiService(ApiServiceNew::class.java)
-            .deleteId(id, model)
+            .deleteDynamic(id)
             .setSchedulers()
             .doOnError {
                 toastEvent.value = R.string.qa_delete_dynamic_failure

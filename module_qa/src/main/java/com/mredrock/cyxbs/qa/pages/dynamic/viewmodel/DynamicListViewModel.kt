@@ -151,7 +151,7 @@ open class DynamicListViewModel : BaseViewModel() {
 
     fun report(dynamic: Dynamic, content: String) {
         ApiGenerator.getApiService(ApiServiceNew::class.java)
-            .report(dynamic.postId, CommentConfig.REPORT_DYNAMIC_MODEL, content)
+            .reportDynamic(dynamic.postId,content)
             .setSchedulers()
             .doOnError {
                 toastEvent.value = R.string.qa_report_dynamic_failure
@@ -162,9 +162,9 @@ open class DynamicListViewModel : BaseViewModel() {
             }
     }
 
-    fun deleteId(id: String, model: String) {
+    fun deleteDynamic(id: String) {
         ApiGenerator.getApiService(ApiServiceNew::class.java)
-            .deleteId(id, model)
+            .deleteDynamic(id)
             .setSchedulers()
             .doOnError {
                 toastEvent.value = R.string.qa_delete_dynamic_failure

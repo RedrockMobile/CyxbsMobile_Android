@@ -108,7 +108,7 @@ class DynamicDataSource(private val kind: String,private val redid: String?) : P
             "main" -> {
                 //这里是针对首页获取动态，需要启用混合类型反序列化策略
                 ApiGenerator.getApiService(QA_GET_DYNAMIC_LIST, ApiServiceNew::class.java)
-                    .getDynamicList(kind, 1, params.requestedLoadSize, 77)//测试用版本号
+                    .getDynamicList(1, params.requestedLoadSize, 77)//测试用版本号
                     .mapOrThrowApiException()
                     .setSchedulers()
                     .doOnSubscribe { initialLoad.postValue(NetworkState.LOADING) }
@@ -183,7 +183,7 @@ class DynamicDataSource(private val kind: String,private val redid: String?) : P
             }
             "main" -> {
                 ApiGenerator.getApiService(QA_GET_DYNAMIC_LIST, ApiServiceNew::class.java)
-                    .getDynamicList(kind, params.key, params.requestedLoadSize, 77)
+                    .getDynamicList(params.key, params.requestedLoadSize, 77)
                     .mapOrThrowApiException()
                     .setSchedulers()
                     .doOnSubscribe { networkState.postValue(NetworkState.LOADING) }

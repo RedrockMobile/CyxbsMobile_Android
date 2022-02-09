@@ -1,8 +1,6 @@
 package com.mredrock.cyxbs.qa.pages.dynamic.ui.fragment
 
 import android.content.Intent
-import android.os.Handler
-import android.util.Log
 import android.view.Window
 import android.view.WindowManager
 import android.widget.TextView
@@ -13,7 +11,6 @@ import com.mredrock.cyxbs.common.BaseApp
 import com.mredrock.cyxbs.common.config.MINE_PERSON_PAGE
 import com.mredrock.cyxbs.qa.R
 import com.mredrock.cyxbs.qa.beannew.Dynamic
-import com.mredrock.cyxbs.qa.component.recycler.RvAdapterWrapper
 import com.mredrock.cyxbs.qa.config.CommentConfig
 import com.mredrock.cyxbs.qa.config.RequestResultCode.DYNAMIC_DETAIL_REQUEST
 import com.mredrock.cyxbs.qa.network.NetworkState
@@ -142,7 +139,7 @@ class RecommendDynamicFragment : BaseDynamicFragment() {
                                     it1,
                                     resources.getString(R.string.qa_dialog_tip_delete_comment_text),
                                     {}) {
-                                    viewModel.deleteId(dynamic.postId, "0")
+                                    viewModel.deleteDynamic(dynamic.postId)
                                 }
                             }
                         }

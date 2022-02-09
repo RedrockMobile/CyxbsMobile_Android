@@ -12,7 +12,6 @@ import android.os.Bundle
 import android.transition.Slide
 import android.util.Log
 import android.view.Gravity
-import android.view.LayoutInflater
 import android.view.View
 import android.widget.Toast
 import androidx.coordinatorlayout.widget.CoordinatorLayout
@@ -172,7 +171,7 @@ class DynamicDetailActivity : BaseViewModelActivity<DynamicDetailViewModel>() {
                         this,
                         resources.getString(R.string.qa_dialog_tip_delete_comment_text),
                         {}) {
-                        viewModel.deleteId(comment.commentId, COMMENT_DELETE)
+                        viewModel.deleteComment(comment.commentId)
                     }
                 }
             }
@@ -180,10 +179,9 @@ class DynamicDetailActivity : BaseViewModelActivity<DynamicDetailViewModel>() {
                 optionPopWindow.addOptionAndCallback(CommentConfig.REPORT) {
                     QaReportDialog(this).apply {
                         show { reportContent ->
-                            viewModel.report(
+                            viewModel.reportComment(
                                 comment.commentId,
                                 reportContent,
-                                CommentConfig.REPORT_COMMENT_MODEL
                             )
                         }
                     }.show()
@@ -210,7 +208,7 @@ class DynamicDetailActivity : BaseViewModelActivity<DynamicDetailViewModel>() {
                         this,
                         resources.getString(R.string.qa_dialog_tip_delete_comment_text),
                         {}) {
-                        viewModel.deleteId(comment.commentId, COMMENT_DELETE)
+                        viewModel.deleteComment(comment.commentId)
                     }
                 }
             }
@@ -219,10 +217,9 @@ class DynamicDetailActivity : BaseViewModelActivity<DynamicDetailViewModel>() {
                 optionPopWindow.addOptionAndCallback(CommentConfig.REPORT) {
                     QaReportDialog(this).apply {
                         show { reportContent ->
-                            viewModel.report(
+                            viewModel.reportComment(
                                 comment.commentId,
                                 reportContent,
-                                CommentConfig.REPORT_COMMENT_MODEL
                             )
                         }
                     }.show()
@@ -545,7 +542,7 @@ class DynamicDetailActivity : BaseViewModelActivity<DynamicDetailViewModel>() {
                         resources.getString(R.string.qa_dialog_tip_delete_dynamic_text),
                         {}) {
                         viewModel.dynamic.value?.let { dynamic ->
-                            viewModel.deleteId(dynamic.postId, DYNAMIC_DELETE)
+                            viewModel.deleteDynamic(dynamic.postId)
                         }
                     }
                 }
@@ -554,10 +551,9 @@ class DynamicDetailActivity : BaseViewModelActivity<DynamicDetailViewModel>() {
                     QaReportDialog(this).apply {
                         show { reportContent ->
                             viewModel.dynamic.value?.let { dynamic ->
-                                viewModel.report(
+                                viewModel.reportDynamic(
                                     dynamic.postId,
                                     reportContent,
-                                    CommentConfig.REPORT_DYNAMIC_MODEL
                                 )
                             }
                         }

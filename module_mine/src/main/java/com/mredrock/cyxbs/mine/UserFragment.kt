@@ -17,22 +17,18 @@ import com.alibaba.android.arouter.facade.annotation.Route
 import com.alibaba.android.arouter.launcher.ARouter
 import com.mredrock.cyxbs.api.account.IAccountService
 import com.mredrock.cyxbs.common.BaseApp
+import com.mredrock.cyxbs.common.component.CyxbsToast
 import com.mredrock.cyxbs.common.config.*
 import com.mredrock.cyxbs.common.service.ServiceManager
 import com.mredrock.cyxbs.common.ui.BaseViewModelFragment
-import com.mredrock.cyxbs.common.utils.extensions.doIfLogin
-import com.mredrock.cyxbs.common.utils.extensions.loadAvatar
-import com.mredrock.cyxbs.common.utils.extensions.setOnSingleClickListener
-import com.mredrock.cyxbs.common.utils.extensions.startActivity
+import com.mredrock.cyxbs.common.utils.extensions.*
 import com.mredrock.cyxbs.mine.page.about.AboutActivity
 import com.mredrock.cyxbs.mine.page.edit.EditInfoActivity
 import com.mredrock.cyxbs.mine.page.mine.ui.activity.FanActivity
 import com.mredrock.cyxbs.mine.page.mine.ui.activity.HomepageActivity
-import com.mredrock.cyxbs.mine.page.mine.ui.activity.IdentityActivity
 import com.mredrock.cyxbs.mine.page.security.util.Jump2QQHelper
 import com.mredrock.cyxbs.mine.page.setting.SettingActivity
 import com.mredrock.cyxbs.mine.page.sign.DailySignActivity
-import kotlinx.android.synthetic.main.mine_fragment_main.*
 import kotlinx.android.synthetic.main.mine_fragment_main_new.*
 
 /**
@@ -71,8 +67,8 @@ class UserFragment : BaseViewModelFragment<UserViewModel>() {
             mine_user_cl_info.setOnSingleClickListener { doIfLogin { HomepageActivity.startHomePageActivity(null,context as Activity) }
             }
 
-            mine_user_iv_center_notification.setOnSingleClickListener { FanActivity.activityStart(requireActivity(),
-            ServiceManager.getService(IAccountService::class.java).getUserService().getRedid()) }
+            mine_user_iv_center_notification.setOnSingleClickListener { toast(R.string.mine_person_empty_notification) }
+            mine_user_tv_center_notification.setOnSingleClickListener { toast(R.string.mine_person_empty_notification) }
 
             mine_user_avatar.setOnSingleClickListener {
                 doIfLogin {
@@ -129,8 +125,8 @@ class UserFragment : BaseViewModelFragment<UserViewModel>() {
 //                viewModel.setLeftMargin(mine_main_tv_uncheck_comment_count, it.commentCount)
 //                viewModel.setLeftMargin(mine_main_tv_uncheck_praise_count, it.praiseCount)
                 //在这里再请求unChecked的红点仅仅是为了好看，让动画显得更加流畅
-                viewModel.getUserUncheckCount(1)
-                viewModel.getUserUncheckCount(2)
+                viewModel.getUserUncheckedCommentCount()
+                viewModel.getUserUncheckedPraiseCount()
             }
         })
 

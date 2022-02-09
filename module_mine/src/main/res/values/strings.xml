@@ -148,6 +148,7 @@
     <string name="mine_person_fan_empty">暂时没有人关注他呢...</string>
     <string name="mine_person_focus_empty_self">你还没有关注任何掌友...</string>
     <string name="mine_person_focus_empty">他还没有关注任何掌友...</string>
+    <string name="mine_person_empty_notification">消息中心正在搭建，待开放ing</string>
 
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>

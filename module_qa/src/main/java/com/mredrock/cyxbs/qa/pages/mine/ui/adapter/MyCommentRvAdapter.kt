@@ -58,7 +58,7 @@ class MyCommentRvAdapter(
                 }
                 qa_like_view_my_comment_item_praise.setOnClickListener {
                     //执行点赞
-                    viewModel.praise(comment.commentId) {
+                    viewModel.praiseComment(comment.commentId) {
                         //改变状态
                         qa_like_view_my_comment_item_praise.isChecked =
                             !qa_like_view_my_comment_item_praise.isChecked

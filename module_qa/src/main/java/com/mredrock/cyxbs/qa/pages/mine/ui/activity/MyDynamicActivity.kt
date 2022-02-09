@@ -79,7 +79,7 @@ class MyDynamicActivity : BaseViewModelActivity<MyDynamicViewModel>() {
                         CommentConfig.DELETE -> {
                             this@MyDynamicActivity.let { it1 ->
                                 QaDialog.show(it1, resources.getString(R.string.qa_dialog_tip_delete_comment_text), {}) {
-                                    viewModel.deleteId(dynamic.postId, "0")
+                                    viewModel.deleteDynamic(dynamic.postId)
                                 }
                             }
                         }

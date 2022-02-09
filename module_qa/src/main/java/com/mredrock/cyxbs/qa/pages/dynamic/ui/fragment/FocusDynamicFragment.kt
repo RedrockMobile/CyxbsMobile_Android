@@ -1,9 +1,6 @@
 package com.mredrock.cyxbs.qa.pages.dynamic.ui.fragment
 
 import android.content.Intent
-import android.os.Handler
-import android.util.Log
-import android.view.ViewGroup
 import android.view.Window
 import android.view.WindowManager
 import android.widget.TextView
@@ -12,7 +9,6 @@ import androidx.recyclerview.widget.RecyclerView
 import com.alibaba.android.arouter.launcher.ARouter
 import com.mredrock.cyxbs.common.BaseApp
 import com.mredrock.cyxbs.common.config.MINE_PERSON_PAGE
-import com.mredrock.cyxbs.common.utils.LogUtils
 import com.mredrock.cyxbs.qa.R
 import com.mredrock.cyxbs.qa.beannew.Dynamic
 import com.mredrock.cyxbs.qa.component.recycler.RvAdapterWrapper
@@ -22,7 +18,6 @@ import com.mredrock.cyxbs.qa.network.NetworkState
 import com.mredrock.cyxbs.qa.pages.dynamic.model.TopicDataSet
 import com.mredrock.cyxbs.qa.pages.dynamic.ui.activity.DynamicDetailActivity
 import com.mredrock.cyxbs.qa.pages.dynamic.ui.adapter.HybridAdapter
-import com.mredrock.cyxbs.qa.pages.dynamic.ui.adapter.HybridRvAdapterWrapper
 import com.mredrock.cyxbs.qa.pages.square.ui.activity.CircleDetailActivity
 import com.mredrock.cyxbs.qa.ui.adapter.EmptyRvAdapter
 import com.mredrock.cyxbs.qa.ui.adapter.FooterRvAdapter
@@ -133,7 +128,7 @@ class FocusDynamicFragment : BaseDynamicFragment() {
                                     it1,
                                     resources.getString(R.string.qa_dialog_tip_delete_comment_text),
                                     {}) {
-                                    viewModel.deleteId(dynamic.postId, "0")
+                                    viewModel.deleteDynamic(dynamic.postId)
                                 }
                             }
                         }

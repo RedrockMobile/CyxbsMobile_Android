@@ -1,6 +1,5 @@
 package com.mredrock.cyxbs.qa.pages.search.viewmodel
 
-import android.util.Log
 import androidx.lifecycle.*
 import androidx.paging.LivePagedListBuilder
 import androidx.paging.PagedList
@@ -12,7 +11,6 @@ import com.mredrock.cyxbs.common.viewmodel.BaseViewModel
 import com.mredrock.cyxbs.qa.R
 import com.mredrock.cyxbs.qa.beannew.Dynamic
 import com.mredrock.cyxbs.qa.beannew.Knowledge
-import com.mredrock.cyxbs.qa.beannew.Message
 import com.mredrock.cyxbs.qa.beannew.UserBrief
 import com.mredrock.cyxbs.qa.config.CommentConfig
 import com.mredrock.cyxbs.qa.network.ApiServiceNew
@@ -93,7 +91,7 @@ class QuestionSearchedViewModel(var searchKey: String) : BaseViewModel() {
 
     fun report(dynamic: Dynamic, content: String) {
         ApiGenerator.getApiService(ApiServiceNew::class.java)
-            .report(dynamic.postId, CommentConfig.REPORT_DYNAMIC_MODEL, content)
+            .reportDynamic(dynamic.postId,content)
             .setSchedulers()
             .doOnError {
                 toastEvent.value = R.string.qa_report_dynamic_failure
@@ -104,9 +102,9 @@ class QuestionSearchedViewModel(var searchKey: String) : BaseViewModel() {
             }
     }
 
-    fun deleteId(id: String, model: String) {
+    fun deleteDynamic(id: String) {
         ApiGenerator.getApiService(ApiServiceNew::class.java)
-            .deleteId(id, model)
+            .deleteDynamic(id)
             .setSchedulers()
             .doOnError {
                 toastEvent.value = R.string.qa_delete_dynamic_failure

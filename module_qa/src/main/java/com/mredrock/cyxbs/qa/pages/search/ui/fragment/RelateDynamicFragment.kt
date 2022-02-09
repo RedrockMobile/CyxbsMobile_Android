@@ -2,20 +2,10 @@ package com.mredrock.cyxbs.qa.pages.search.ui.fragment
 
 import android.annotation.SuppressLint
 import android.content.Intent
-import android.os.Bundle
-import android.util.Log
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
 import android.view.WindowManager
 import android.widget.TextView
-import androidx.core.content.ContextCompat
-import androidx.lifecycle.Observer
-import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.mredrock.cyxbs.common.ui.BaseViewModelFragment
 import com.mredrock.cyxbs.common.utils.extensions.doIfLogin
-import com.mredrock.cyxbs.common.utils.extensions.gone
 import com.mredrock.cyxbs.qa.R
 import com.mredrock.cyxbs.qa.beannew.Dynamic
 import com.mredrock.cyxbs.qa.component.recycler.RvAdapterWrapper
@@ -145,7 +135,7 @@ class RelateDynamicFragment : BaseResultFragment() {
                                 it1,
                                 resources.getString(R.string.qa_dialog_tip_delete_comment_text),
                                 {}) {
-                                viewModel.deleteId(dynamic.postId, "0")
+                                viewModel.deleteDynamic(dynamic.postId)
                             }
                         }
                     }
