@@ -29,7 +29,7 @@ public class Indicators {
             EXTEND_ABSTRACT_INDICATORS,
             MOVE,
             ZOOM,
-            //WATER_DROP,
+            Style.WATER_DROP,
             FLASH,
     })
     public @interface Style {

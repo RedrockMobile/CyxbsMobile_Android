@@ -2,31 +2,19 @@ package com.mredrock.cyxbs.mine.page.mine.ui.activity
 
 import android.graphics.Typeface
 import android.graphics.drawable.BitmapDrawable
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
-import android.view.Gravity
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
-import android.widget.LinearLayout
-import android.widget.TextView
 import androidx.fragment.app.Fragment
-import com.alibaba.android.arouter.launcher.ARouter
 import com.google.android.material.tabs.TabLayoutMediator
 import com.mredrock.cyxbs.common.BaseApp.Companion.context
 import com.mredrock.cyxbs.common.ui.BaseViewModelActivity
-import com.mredrock.cyxbs.mine.R
-import com.mredrock.cyxbs.mine.databinding.MineActivityHomepageBinding
 import com.mredrock.cyxbs.mine.databinding.MineActivityIdentityBinding
 import com.mredrock.cyxbs.mine.page.mine.adapter.MineAdapter
 import com.mredrock.cyxbs.mine.page.mine.ui.fragment.ApproveStatusFragment
-import com.mredrock.cyxbs.mine.page.mine.ui.fragment.IdentityFragment
 import com.mredrock.cyxbs.mine.page.mine.ui.fragment.PersonalityStatusFragment
 import com.mredrock.cyxbs.mine.page.mine.viewmodel.IdentityViewModel
 import com.mredrock.cyxbs.mine.util.widget.loadBitmap
-import com.mredrock.cyxbs.store.utils.transformer.ScaleInTransformer
-import kotlinx.android.synthetic.main.mine_activity_identity.*
+import com.mredrock.cyxbs.mine.util.transformer.ScaleInTransformer
 
 class IdentityActivity : BaseViewModelActivity<IdentityViewModel>() {
 

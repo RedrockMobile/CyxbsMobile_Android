@@ -27,11 +27,9 @@ import android.view.MotionEvent
 import android.view.View
 import android.view.ViewAnimationUtils.createCircularReveal
 import android.widget.ImageView
-import android.widget.TextView
 import androidx.core.content.ContextCompat
 import com.afollestad.materialdialogs.MaterialDialog
 import com.afollestad.materialdialogs.list.listItems
-import com.alibaba.android.arouter.facade.annotation.Autowired
 import com.alibaba.android.arouter.facade.annotation.Route
 import com.bumptech.glide.Glide
 import com.bumptech.glide.request.target.CustomTarget
@@ -46,7 +44,7 @@ import com.mredrock.cyxbs.mine.databinding.MineActivityHomepageBinding
 import com.mredrock.cyxbs.mine.network.model.UserInfo
 import com.mredrock.cyxbs.mine.page.edit.EditInfoActivity
 import com.mredrock.cyxbs.mine.page.mine.widget.BlurBitmap
-import com.mredrock.cyxbs.store.utils.transformer.ScaleInTransformer
+import com.mredrock.cyxbs.mine.util.transformer.ScaleInTransformer
 import com.yalantis.ucrop.UCrop
 import kotlinx.android.synthetic.main.mine_activity_homepage.view.*
 import kotlinx.android.synthetic.main.mine_activity_homepage_head.view.*
