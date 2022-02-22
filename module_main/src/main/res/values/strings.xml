@@ -16,10 +16,10 @@
     <string name="main_grade_short_name">考试</string>
     <string name="main_shortcut_cancel">暂时无法使用哦</string>
 
-    <string name="main_user_agreement">同意《掌上重邮用户协议》</string>
+    <string name="main_user_agreement">同意《用户协议》和《隐私权政策》</string>
     <string name="main_user_agreement_title">请先同意用户协议吧</string>
     <string name="main_login_error_prompt">登录失败，请检查一下用户名和密码是否正确</string>
-    <string name="main_welcome_speech_2">您好，欢迎来到掌上重邮！</string>
+    <string name="main_welcome_speech_2">您好鸭，欢迎来到掌上重邮~</string>
     <string name="main_main_welcome_speech_1">登录</string>
 
     <string name="main_tourist_mode">没有学号么？</string>
