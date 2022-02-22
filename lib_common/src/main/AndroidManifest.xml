@@ -32,7 +32,12 @@
     <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
     <uses-permission android:name="android.permission.REQUEST_IGNORE_BATTERY_OPTIMIZATIONS" />
     <uses-permission android:name="android.permission.REQUEST_INSTALL_PACKAGES" />
-
+    <!-- 陀螺仪 -->
+    <uses-feature android:name="android.hardware.sensor.gyroscope"
+        android:required="false" />
+    <!-- 加速器 -->
+    <uses-feature android:name="android.hardware.sensor.accelerometer"
+        android:required="false" />
     <!--    弹窗权限-->
     <uses-permission android:name="android.permission.SYSTEM_ALERT_WINDOW" />
 

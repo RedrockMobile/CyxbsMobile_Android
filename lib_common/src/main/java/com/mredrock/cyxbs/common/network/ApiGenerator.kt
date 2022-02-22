@@ -26,6 +26,7 @@ import retrofit2.converter.gson.GsonConverterFactory
 import java.util.concurrent.TimeUnit
 import android.os.Looper
 import android.util.Log
+import com.mredrock.cyxbs.common.utils.LogLocal
 
 
 /**
@@ -136,7 +137,9 @@ object ApiGenerator {
                         if (okHttpClientConfig == null)
                             this.defaultConfig()
                         else
-                            okHttpClientConfig.invoke(it)
+                            okHttpClientConfig.invoke(
+                                it.addInterceptor(BackupInterceptor())
+                            )
                     }.build()
                 }.build())
     }
@@ -147,23 +150,30 @@ object ApiGenerator {
      */
     private fun Retrofit.Builder.configRetrofitBuilder(client: ((OkHttpClient.Builder) -> OkHttpClient)): Retrofit.Builder {
         return this.client(client.invoke(OkHttpClient().newBuilder().apply {
-            if (BuildConfig.DEBUG) {
-                val logging = HttpLoggingInterceptor()
+                val logging = HttpLoggingInterceptor(object:HttpLoggingInterceptor.Logger{
+                    override fun log(message: String) {
+                        Log.d("OKHTTP","OKHTTP$message")
+                        LogLocal.log("OKHTTP","OKHTTP$message")
+                    }
+                })
                 logging.level = HttpLoggingInterceptor.Level.BODY
                 addInterceptor(logging)
                 //这里是在debug模式下方便开发人员简单确认 http 错误码 和 url(magipoke开始切的)
-                addInterceptor(Interceptor{
-                    val request = it.request()
-                    val response = it.proceed(request)
-                    if (!response.isSuccessful){
-                        response.close()
-                        Handler(Looper.getMainLooper()).post {
-                            BaseApp.context.toast("${response.code} ${request.url} ")
+                if (BuildConfig.DEBUG){
+                    addInterceptor(Interceptor{
+                        val request = it.request()
+                        Log.d("OKHTTP","OKHTTP${request.body}")
+
+                        val response = it.proceed(request)
+                        if (!response.isSuccessful){
+                            response.close()
+                            Handler(Looper.getMainLooper()).post {
+                                BaseApp.context.toast("${response.code} ${request.url} ")
+                            }
                         }
-                    }
-                    response
-                })
-            }
+                        response
+                    })
+                }
         }))
                 .addConverterFactory(GsonConverterFactory.create())
                 .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
@@ -302,24 +312,16 @@ object ApiGenerator {
 
         override fun intercept(chain: Interceptor.Chain): Response {
 
-            //如果程序位于debug中，则不增加容灾逻辑
-            if(BuildConfig.DEBUG){
-                val response = proceedPoxyWithTryCatch {
-                    chain.proceed(chain.request())
-                }
-                Log.e("网络请求", response.toString())
-                return response!!
-            }
             // 如果切换过url，则直接用这个url请求
             if (useBackupUrl) {
                 return useBackupUrl(chain)
             }
-        Log.e("token", token)
+
             // 正常请求，照理说应该进入tokenInterceptor
             val response = proceedPoxyWithTryCatch {
                 chain.proceed(chain.request())
             }
-            Log.e("网络请求", response.toString())
+
             if (response?.isSuccessful == true) {
                 return response
             }
@@ -329,10 +331,11 @@ object ApiGenerator {
             backupUrl = getBackupUrl()
             // 约定给的backupUrl不带https前缀，加上
             if ("https://$backupUrl" != getBaseUrl()) {
-                useBackupUrl =false //true
+                useBackupUrl = true
                 // 重新请求并返回
                 return useBackupUrl(chain)
             }
+
 
             return response!!
         }

@@ -143,7 +143,7 @@ class ChangePasswordActivity : BaseViewModelActivity<ChangePasswordViewModel>() 
                 mine_bt_security_change_password_confirm.background = ContextCompat.getDrawable(this, R.drawable.mine_shape_security_next_btn)
             }
             TYPE_COLOR_NIGHT_BUTTON -> {
-                mine_bt_security_change_password_confirm.background = ContextCompat.getDrawable(this, R.drawable.mine_shape_round_cornor_purple_blue)
+                mine_bt_security_change_password_confirm.background = ContextCompat.getDrawable(this, R.drawable.mine_shape_round_corner_purple_blue)
             }
         }
     }
