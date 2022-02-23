@@ -74,6 +74,6 @@ data class UserInfo(
 
     //年级
     @SerializedName("grade")
-    var grade: Int? = 0,
+    var grade: Int? = 0
 
 ) : Serializable

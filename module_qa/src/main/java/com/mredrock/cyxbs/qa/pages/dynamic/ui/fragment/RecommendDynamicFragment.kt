@@ -4,6 +4,7 @@ import android.content.Intent
 import android.view.Window
 import android.view.WindowManager
 import android.widget.TextView
+import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.alibaba.android.arouter.launcher.ARouter
@@ -191,12 +192,12 @@ class RecommendDynamicFragment : BaseDynamicFragment() {
     private fun initObserve(){
         observeLoading()
 
-        viewModel.ignorePeople.observe(viewLifecycleOwner, {
+        viewModel.ignorePeople.observe(viewLifecycleOwner, Observer{
             if (it == true)
                 viewModel.invalidateRecommendList()
         })
 
-        viewModel.deleteTips.observe(viewLifecycleOwner, {
+        viewModel.deleteTips.observe(viewLifecycleOwner, Observer{
             if (it == true)
                 viewModel.invalidateRecommendList()
         })
@@ -204,17 +205,17 @@ class RecommendDynamicFragment : BaseDynamicFragment() {
 
      private fun observeLoading() = viewModel.apply {
 
-        recommendList.observe(viewLifecycleOwner, {
+        recommendList.observe(viewLifecycleOwner, Observer{
             dynamicListRvAdapter.submitList(it)
         })
 
-        recommendNetworkState.observe(viewLifecycleOwner, {
+        recommendNetworkState.observe(viewLifecycleOwner, Observer{
             it?.run {
                 footerRvAdapter.refreshData(listOf(this))
             }
         })
 
-        recommendInitialLoad.observe(viewLifecycleOwner, {
+        recommendInitialLoad.observe(viewLifecycleOwner, Observer{
             when (it) {
                 NetworkState.LOADING -> {
                     qa_srl_recommend.isRefreshing = true

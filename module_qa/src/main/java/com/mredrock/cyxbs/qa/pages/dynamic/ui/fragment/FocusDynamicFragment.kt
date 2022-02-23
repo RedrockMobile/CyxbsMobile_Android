@@ -4,6 +4,7 @@ import android.content.Intent
 import android.view.Window
 import android.view.WindowManager
 import android.widget.TextView
+import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.alibaba.android.arouter.launcher.ARouter
@@ -178,29 +179,29 @@ class FocusDynamicFragment : BaseDynamicFragment() {
     private fun initObserve() {
         observeLoading()
 
-        viewModel.ignorePeople.observe(viewLifecycleOwner, {
+        viewModel.ignorePeople.observe(viewLifecycleOwner, Observer{
             if (it == true)
                 viewModel.invalidateFocusList()
         })
 
-        viewModel.deleteTips.observe(viewLifecycleOwner, {
+        viewModel.deleteTips.observe(viewLifecycleOwner, Observer{
             if (it == true)
                 viewModel.invalidateFocusList()
         })
     }
 
     private fun observeLoading() = viewModel.apply {
-        focusList.observe(viewLifecycleOwner, {
+        focusList.observe(viewLifecycleOwner, Observer{
             dynamicListRvAdapter.submitList(it)
         })
 
-        focusNetworkState.observe(viewLifecycleOwner, {
+        focusNetworkState.observe(viewLifecycleOwner, Observer{
             it?.run {
                 footerRvAdapter.refreshData(listOf(this))
             }
         })
 
-        focusInitialLoad.observe(viewLifecycleOwner, {
+        focusInitialLoad.observe(viewLifecycleOwner, Observer{
             when (it) {
                 NetworkState.LOADING -> {
                     qa_srl_focus.isRefreshing = true

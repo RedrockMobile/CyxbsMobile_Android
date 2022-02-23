@@ -6,6 +6,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
 import androidx.core.content.ContextCompat
+import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.mredrock.cyxbs.api.account.IAccountService
 import com.mredrock.cyxbs.common.service.ServiceManager
@@ -57,7 +58,7 @@ class FanFragment : BaseViewModelFragment<FanViewModel>() {
     }
 
     private fun initObserve() {
-        viewModel.fanList.observe(viewLifecycleOwner, {
+        viewModel.fanList.observe(viewLifecycleOwner, Observer{
             userAdapter.notifyAdapterChanged(mutableListOf<BaseDataBinder<*>>().apply {
                 when (it.size) {
                     0 -> add(EmptyFanBinder(isSelf))
@@ -96,7 +97,7 @@ class FanFragment : BaseViewModelFragment<FanViewModel>() {
             })
         })
 
-        viewModel.fanNetWorkState.observe(viewLifecycleOwner,{
+        viewModel.fanNetWorkState.observe(viewLifecycleOwner, Observer{
             if (it == NetworkState.FAILED){
                 userAdapter.notifyAdapterChanged(mutableListOf<BaseDataBinder<*>>().apply {
                     add(EmptyFanBinder(isSelf))

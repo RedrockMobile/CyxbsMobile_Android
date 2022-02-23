@@ -163,7 +163,7 @@ class EditInfoActivity
             initWithSplitLine("资料编辑",
                     false,
                     R.drawable.mine_ic_arrow_left,
-                {
+                View.OnClickListener{
                     finishAfterTransition()
                 })
             setTitleLocationAtLeft(true)

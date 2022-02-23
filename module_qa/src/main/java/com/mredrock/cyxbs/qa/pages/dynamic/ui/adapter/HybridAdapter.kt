@@ -109,28 +109,28 @@ class HybridAdapter(val context: Context?, private val onItemClickEvent: (Dynami
         itemView.apply {
             qa_iv_dynamic_share.setOnSingleClickListener {
                 ShareDialog(context).apply {
-                    initView(onCancelListener = {
+                    initView(onCancelListener = View.OnClickListener{
                         dismiss()
-                    }, qqShare = {
+                    }, qqShare = View.OnClickListener{
                         onShareClickListener?.invoke(
                             dynamic,
                             CommentConfig.QQ_FRIEND
                         )
-                    }, qqZoneShare = {
+                    }, qqZoneShare = View.OnClickListener{
                         onShareClickListener?.invoke(dynamic, CommentConfig.QQ_ZONE)
-                    }, weChatShare = {
+                    }, weChatShare = View.OnClickListener{
                         CyxbsToast.makeText(
                             context,
                             R.string.qa_share_wechat_text,
                             Toast.LENGTH_SHORT
                         ).show()
-                    }, friendShipCircle = {
+                    }, friendShipCircle = View.OnClickListener{
                         CyxbsToast.makeText(
                             context,
                             R.string.qa_share_wechat_text,
                             Toast.LENGTH_SHORT
                         ).show()
-                    }, copyLink = {
+                    }, copyLink = View.OnClickListener{
                         onShareClickListener?.invoke(dynamic, CommentConfig.COPY_LINK)
                     })
                 }.show()

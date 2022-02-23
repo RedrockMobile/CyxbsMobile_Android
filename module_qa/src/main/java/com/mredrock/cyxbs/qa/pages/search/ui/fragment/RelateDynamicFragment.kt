@@ -4,6 +4,7 @@ import android.annotation.SuppressLint
 import android.content.Intent
 import android.view.WindowManager
 import android.widget.TextView
+import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.mredrock.cyxbs.common.utils.extensions.doIfLogin
 import com.mredrock.cyxbs.qa.R
@@ -54,7 +55,7 @@ class RelateDynamicFragment : BaseResultFragment() {
         initDynamic()
         initObserve()
         mTencent = Tencent.createInstance(CommentConfig.APP_ID, this.requireContext())
-        viewModel.isCreateOver.observe(viewLifecycleOwner, {
+        viewModel.isCreateOver.observe(viewLifecycleOwner, Observer{
             if (it != null) {
                 if (it) {
                     //加载完成
@@ -166,19 +167,19 @@ class RelateDynamicFragment : BaseResultFragment() {
 
     private fun initObserve() {
         //动态数据
-        viewModel.questionList.observe(viewLifecycleOwner, {
+        viewModel.questionList.observe(viewLifecycleOwner, Observer{
             dynamicListRvAdapter.submitList(it)
         })
 
 
-        viewModel.networkState.observe(viewLifecycleOwner, {
+        viewModel.networkState.observe(viewLifecycleOwner, Observer{
             it?.run {
                 footerRvAdapter?.refreshData(listOf(this))
             }
         })
 
         //首次加载状态的监听
-        viewModel.initialLoad.observe(viewLifecycleOwner, {
+        viewModel.initialLoad.observe(viewLifecycleOwner, Observer{
             when (it) {
                 NetworkState.LOADING -> {
                     qa_srl_search_dynamic.isRefreshing = true
@@ -205,11 +206,11 @@ class RelateDynamicFragment : BaseResultFragment() {
             viewModel.invalidateSearchQuestionList()
         }
 
-        viewModel.deleteTips.observe(viewLifecycleOwner, {
+        viewModel.deleteTips.observe(viewLifecycleOwner, Observer{
             if (it == true)
                 viewModel.invalidateSearchQuestionList()
         })
-        viewModel.ignorePeople.observe(viewLifecycleOwner, {
+        viewModel.ignorePeople.observe(viewLifecycleOwner, Observer{
             if (it == true)
                 viewModel.invalidateSearchQuestionList()
         })

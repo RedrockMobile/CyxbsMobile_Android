@@ -69,30 +69,30 @@ class DynamicAdapter(val context: Context?, private val onItemClickEvent: (Dynam
         holder.itemView.apply {
             qa_iv_dynamic_share.setOnSingleClickListener {
                 ShareDialog(context).apply {
-                    initView(onCancelListener = {
+                    initView(onCancelListener = View.OnClickListener{
                         dismiss()
-                    }, qqShare = {
+                    }, qqShare = View.OnClickListener{
                         getItem(position)?.let { it1 ->
                             onShareClickListener?.invoke(
                                     it1,
                                     QQ_FRIEND
                             )
                         }
-                    }, qqZoneShare = {
+                    }, qqZoneShare = View.OnClickListener{
                         getItem(position)?.let { it1 -> onShareClickListener?.invoke(it1, QQ_ZONE) }
-                    }, weChatShare = {
+                    }, weChatShare = View.OnClickListener{
                         CyxbsToast.makeText(
                                 context,
                                 R.string.qa_share_wechat_text,
                                 Toast.LENGTH_SHORT
                         ).show()
-                    }, friendShipCircle = {
+                    }, friendShipCircle = View.OnClickListener{
                         CyxbsToast.makeText(
                                 context,
                                 R.string.qa_share_wechat_text,
                                 Toast.LENGTH_SHORT
                         ).show()
-                    }, copyLink = {
+                    }, copyLink = View.OnClickListener{
                         getItem(position)?.let { it1 ->
                             onShareClickListener?.invoke(
                                     it1,

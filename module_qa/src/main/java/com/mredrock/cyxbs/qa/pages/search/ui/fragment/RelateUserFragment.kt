@@ -4,6 +4,7 @@ import android.os.Bundle
 import android.util.Log
 import android.widget.TextView
 import androidx.core.content.ContextCompat
+import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.alibaba.android.arouter.launcher.ARouter
 import com.mredrock.cyxbs.common.config.MINE_PERSON_PAGE
@@ -42,7 +43,7 @@ class RelateUserFragment : BaseResultFragment() {
     }
 
     private fun initObserve() {
-        viewModel.userList.observe(viewLifecycleOwner, {
+        viewModel.userList.observe(viewLifecycleOwner, Observer{
             userAdapter.notifyAdapterChanged(mutableListOf<BaseDataBinder<*>>().apply {
                 when (it.size) {
                     //如果size为0展示缺省页
@@ -87,7 +88,7 @@ class RelateUserFragment : BaseResultFragment() {
             })
         })
 
-        viewModel.userNetworkState.observe(viewLifecycleOwner, {
+        viewModel.userNetworkState.observe(viewLifecycleOwner, Observer{
             //请求失败展示缺省页
             if (it == NetworkState.FAILED) {
                 userAdapter.notifyAdapterChanged(mutableListOf<BaseDataBinder<*>>().apply {

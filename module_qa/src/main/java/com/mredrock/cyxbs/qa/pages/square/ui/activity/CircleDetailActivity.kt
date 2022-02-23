@@ -216,7 +216,7 @@ class CircleDetailActivity : BaseViewModelActivity<CircleDetailViewModel>() {
             val url = "${CommentConfig.SHARE_URL}quanzi?id=${topic.topicId}"
             ShareDialog(it.context).apply {
                 initView(
-                    qqShare = {
+                    qqShare = View.OnClickListener{
                         mTencent?.let { it1 ->
                             ShareUtils.qqShare(
                                 it1,
@@ -228,7 +228,7 @@ class CircleDetailActivity : BaseViewModelActivity<CircleDetailViewModel>() {
                             )
                         }
                     },
-                    qqZoneShare = {
+                    qqZoneShare = View.OnClickListener{
                         val topicArray = ArrayList<String>()//写出这样的代码，我很抱歉，可惜腾讯要的是ArrayList
                         topicArray.add(topic.topicLogo)
                         mTencent?.let { it1 ->
@@ -241,7 +241,7 @@ class CircleDetailActivity : BaseViewModelActivity<CircleDetailViewModel>() {
                                 topicArray
                             )
                         }
-                    }, weChatShare = {
+                    }, weChatShare = View.OnClickListener{
                         CyxbsToast.makeText(
                             context,
                             R.string.qa_share_wechat_text,
@@ -249,7 +249,7 @@ class CircleDetailActivity : BaseViewModelActivity<CircleDetailViewModel>() {
                         )
                             .show()
 
-                    }, friendShipCircle = {
+                    }, friendShipCircle = View.OnClickListener{
                         CyxbsToast.makeText(
                             context,
                             R.string.qa_share_wechat_text,
@@ -257,9 +257,9 @@ class CircleDetailActivity : BaseViewModelActivity<CircleDetailViewModel>() {
                         )
                             .show()
 
-                    }, copyLink = {
+                    }, copyLink = View.OnClickListener{
                         ClipboardController.copyText(this@CircleDetailActivity, url)
-                    }, onCancelListener = {
+                    }, onCancelListener = View.OnClickListener{
                         dismiss()
                     })
             }.show()

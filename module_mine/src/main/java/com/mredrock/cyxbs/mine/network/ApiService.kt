@@ -227,13 +227,13 @@ interface   ApiService {
     // 获取用户未读消息数-点赞
     @GET("/magipoke-loop/user/uncheckedCount/praise")
     fun getUncheckedPraiseCount(
-        @Query("time") timeStamp: Long,
+        @Query("time") timeStamp: Long
     ): Observable<RedrockApiWrapper<UserUncheckCount>>
 
     // 获取用户未读消息数-评论
     @GET("/magipoke-loop/user/uncheckedCount/comment")
     fun getUncheckedCommentCount(
-        @Query("time") timeStamp: Long,
+        @Query("time") timeStamp: Long
     ): Observable<RedrockApiWrapper<UserUncheckCount>>
 
     // 关注/取关用户

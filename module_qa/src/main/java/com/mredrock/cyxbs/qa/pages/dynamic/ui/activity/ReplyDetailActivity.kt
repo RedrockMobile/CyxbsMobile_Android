@@ -202,7 +202,7 @@ class ReplyDetailActivity : BaseViewModelActivity<DynamicDetailViewModel>() {
                             show { reportContent ->
                                 viewModel.reportComment(
                                     comment.commentId,
-                                    reportContent,
+                                    reportContent
                                 )
                             }
                         }.show()

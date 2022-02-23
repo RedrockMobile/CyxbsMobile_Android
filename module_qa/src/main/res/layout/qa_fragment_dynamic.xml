@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
@@ -9,104 +10,119 @@
     android:background="@drawable/qa_ic_header"
     tools:context=".pages.dynamic.ui.fragment.DynamicFragment">
 
-    <LinearLayout
-        android:id="@+id/qa_ll_header"
+    <View
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="vertical"
+        android:layout_height="0dp"
         android:background="@drawable/qa_ic_header"
-        app:layout_behavior="com.mredrock.cyxbs.qa.pages.dynamic.behavior.HeaderBehavior">
+        app:layout_constraintDimensionRatio="1.21"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 
-        <RelativeLayout
-            android:id="@+id/rl_qa_hot_search"
+    <RelativeLayout
+        android:id="@+id/rl_qa_hot_search"
+        android:layout_width="match_parent"
+        android:layout_height="38dp"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="20dp"
+        android:layout_marginEnd="16dp"
+        android:background="@drawable/qa_shape_question_search_background"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toTopOf="@id/qa_dynamic_coordinator">
+
+        <androidx.appcompat.widget.AppCompatImageView
+            android:id="@+id/iv_question_search"
+            android:layout_width="19dp"
+            android:layout_height="19dp"
+            android:layout_alignParentStart="true"
+            android:layout_centerVertical="true"
+            android:layout_marginStart="17dp"
+            android:src="@drawable/qa_ic_search" />
+
+        <ViewFlipper
+            android:id="@+id/vf_hot_search"
             android:layout_width="match_parent"
-            android:layout_height="38dp"
-            android:layout_marginStart="16dp"
-            android:layout_marginTop="20dp"
-            android:layout_marginEnd="16dp"
-            android:layout_marginBottom="20dp"
-            android:background="@drawable/qa_shape_question_search_background">
+            android:layout_height="30dp"
+            android:layout_centerVertical="true"
+            android:layout_gravity="center_vertical|start"
+            android:layout_marginStart="10dp"
+            android:layout_marginEnd="14dp"
+            android:layout_toEndOf="@id/iv_question_search"
+            android:paddingTop="5dp"
+            android:paddingBottom="5dp"
+            android:textColor="@color/qa_tv_search_color"
+            android:textSize="14sp" />
+    </RelativeLayout>
 
-            <androidx.appcompat.widget.AppCompatImageView
-                android:id="@+id/iv_question_search"
-                android:layout_width="19dp"
-                android:layout_height="19dp"
-                android:layout_alignParentStart="true"
-                android:layout_centerVertical="true"
-                android:layout_marginStart="17dp"
-                android:src="@drawable/qa_ic_search" />
-
-            <ViewFlipper
-                android:id="@+id/vf_hot_search"
-                android:layout_width="match_parent"
-                android:layout_height="30dp"
-                android:layout_centerVertical="true"
-                android:layout_gravity="center_vertical|start"
-                android:layout_marginStart="10dp"
-                android:layout_marginEnd="14dp"
-                android:layout_toEndOf="@id/iv_question_search"
-                android:paddingTop="5dp"
-                android:paddingBottom="5dp"
-                android:textColor="@color/qa_tv_search_color"
-                android:textSize="14sp" />
-        </RelativeLayout>
-
-        <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/qa_rv_circles_List"
-            android:layout_width="match_parent"
-            android:layout_height="130dp"
-            tools:listitem="@layout/qa_recycler_item_circles" />
-
-        <View
-            android:id="@+id/view_divide"
-            android:layout_width="match_parent"
-            android:layout_height="1dp"
-            android:layout_gravity="bottom"
-            android:layout_marginBottom="20dp"
-            android:background="@color/qa_mine_common_divide_line" />
-    </LinearLayout>
-
-    <LinearLayout
-        android:id="@+id/rl_tab_view_pager"
+    <androidx.coordinatorlayout.widget.CoordinatorLayout
+        android:id="@+id/qa_dynamic_coordinator"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@drawable/qa_shape_comment_header_background"
+        android:layout_marginTop="20dp"
         android:orientation="vertical"
-        app:layout_behavior="com.mredrock.cyxbs.qa.pages.dynamic.behavior.CoverHeaderBehavior">
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/rl_qa_hot_search">
 
-        <com.google.android.material.tabs.TabLayout
-            android:id="@+id/qa_tl_dynamic"
+        <LinearLayout
+            android:id="@+id/qa_ll_header"
             android:layout_width="match_parent"
-            android:layout_height="50dp"
-            android:backgroundTint="@android:color/transparent"
-            android:theme="@style/Theme.MaterialComponents"
-            app:tabMinWidth="40dp"
-            app:tabContentStart="17dp"
-            app:tabGravity="start"
-            app:tabIndicator="@drawable/qa_ic_search_indicator"
-            app:tabIndicatorColor="@android:color/transparent"
-            app:tabIndicatorFullWidth="false"
-            app:tabIndicatorHeight="3dp"
-            app:tabMode="scrollable"
-            app:tabRippleColor="@android:color/transparent"
-            app:tabTextAppearance="@style/tab_style"
-            app:tabTextColor="@color/common_mine_tab_layout_text_unselected"
-            app:tabSelectedTextColor="@color/qa_text_tab"
-            app:layout_constraintLeft_toLeftOf="@id/qa_knowledge_cs_two"
-            app:layout_constraintTop_toTopOf="@id/qa_knowledge_cs_two" />
-        <androidx.viewpager2.widget.ViewPager2
-            android:id="@+id/qa_vp_dynamic"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"/>
-    </LinearLayout>
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            app:layout_behavior="com.mredrock.cyxbs.qa.pages.dynamic.behavior.HeaderBehavior">
 
-    <androidx.appcompat.widget.AppCompatImageView
-        android:id="@+id/qa_bt_to_quiz"
-        android:layout_width="70dp"
-        android:layout_height="70dp"
-        android:layout_gravity="bottom|right"
-        android:layout_marginEnd="11dp"
-        android:layout_marginBottom="140dp"
-        android:src="@drawable/qa_ic_send_dynamic"
-        android:scaleType="centerCrop"/>
-</androidx.coordinatorlayout.widget.CoordinatorLayout>
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/qa_rv_circles_List"
+                android:layout_width="match_parent"
+                android:layout_height="130dp"
+                tools:listitem="@layout/qa_recycler_item_circles" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/rl_tab_view_pager"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@drawable/qa_shape_comment_header_background"
+            android:orientation="vertical"
+            app:layout_behavior="com.mredrock.cyxbs.qa.pages.dynamic.behavior.CoverHeaderBehavior">
+
+            <com.google.android.material.tabs.TabLayout
+                android:id="@+id/qa_tl_dynamic"
+                android:layout_width="match_parent"
+                android:layout_height="50dp"
+                android:backgroundTint="@android:color/transparent"
+                android:theme="@style/Theme.MaterialComponents"
+                app:layout_constraintLeft_toLeftOf="@id/qa_knowledge_cs_two"
+                app:layout_constraintTop_toTopOf="@id/qa_knowledge_cs_two"
+                app:tabContentStart="17dp"
+                app:tabGravity="start"
+                app:tabIndicator="@drawable/qa_ic_search_indicator"
+                app:tabIndicatorColor="@android:color/transparent"
+                app:tabIndicatorFullWidth="false"
+                app:tabIndicatorHeight="3dp"
+                app:tabMinWidth="40dp"
+                app:tabMode="scrollable"
+                app:tabRippleColor="@android:color/transparent"
+                app:tabSelectedTextColor="@color/qa_text_tab"
+                app:tabTextAppearance="@style/tab_style"
+                app:tabTextColor="@color/common_mine_tab_layout_text_unselected" />
+
+            <androidx.viewpager2.widget.ViewPager2
+                android:id="@+id/qa_vp_dynamic"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" />
+        </LinearLayout>
+
+        <androidx.appcompat.widget.AppCompatImageView
+            android:id="@+id/qa_bt_to_quiz"
+            android:layout_width="70dp"
+            android:layout_height="70dp"
+            android:layout_gravity="bottom|right"
+            android:layout_marginEnd="11dp"
+            android:layout_marginBottom="140dp"
+            android:scaleType="centerCrop"
+            android:src="@drawable/qa_ic_send_dynamic" />
+    </androidx.coordinatorlayout.widget.CoordinatorLayout>
+</androidx.constraintlayout.widget.ConstraintLayout>

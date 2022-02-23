@@ -3,6 +3,7 @@ package com.mredrock.cyxbs.qa.pages.search.ui.fragment
 import android.content.Context
 import android.os.Bundle
 import android.view.View
+import androidx.lifecycle.Observer
 import com.google.android.flexbox.FlexWrap
 import com.google.android.flexbox.FlexboxLayoutManager
 import com.google.android.material.tabs.TabLayoutMediator
@@ -69,7 +70,7 @@ class QuestionSearchedFragment : BaseResultFragment() {
     override fun getLayoutId() = R.layout.qa_fragment_question_search_result
 
     private fun initObserve(){
-        viewModel.knowledge.observe(viewLifecycleOwner, {
+        viewModel.knowledge.observe(viewLifecycleOwner, Observer{
             if (!it.isNullOrEmpty()) {
                 val adapterKnowledge = SearchKnowledgeAdapter(qa_rv_knowledge)
                 val adapterSearchResultHeader =

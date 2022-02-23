@@ -181,7 +181,7 @@ class DynamicDetailActivity : BaseViewModelActivity<DynamicDetailViewModel>() {
                         show { reportContent ->
                             viewModel.reportComment(
                                 comment.commentId,
-                                reportContent,
+                                reportContent
                             )
                         }
                     }.show()
@@ -219,7 +219,7 @@ class DynamicDetailActivity : BaseViewModelActivity<DynamicDetailViewModel>() {
                         show { reportContent ->
                             viewModel.reportComment(
                                 comment.commentId,
-                                reportContent,
+                                reportContent
                             )
                         }
                     }.show()
@@ -474,9 +474,9 @@ class DynamicDetailActivity : BaseViewModelActivity<DynamicDetailViewModel>() {
             viewModel.dynamic.value?.let { dynamic ->
                 ShareDialog(view.context).apply {
                     val url = "${CommentConfig.SHARE_URL}dynamic?id=${dynamic.postId}"
-                    initView(onCancelListener = {
+                    initView(onCancelListener = View.OnClickListener{
                         dismiss()
-                    }, qqShare = {
+                    }, qqShare = View.OnClickListener{
                         val pic = if (dynamic.pics.isNullOrEmpty()) "" else dynamic.pics[0]
                         mTencent?.let { it1 ->
                             ShareUtils.qqShare(
@@ -488,7 +488,7 @@ class DynamicDetailActivity : BaseViewModelActivity<DynamicDetailViewModel>() {
                                 pic
                             )
                         }
-                    }, qqZoneShare = {
+                    }, qqZoneShare = View.OnClickListener{
                         mTencent?.let { it1 ->
                             ShareUtils.qqQzoneShare(
                                 it1,
@@ -500,21 +500,21 @@ class DynamicDetailActivity : BaseViewModelActivity<DynamicDetailViewModel>() {
                             )
                         }
 
-                    }, weChatShare = {
+                    }, weChatShare = View.OnClickListener{
                         CyxbsToast.makeText(
                             context,
                             R.string.qa_share_wechat_text,
                             Toast.LENGTH_SHORT
                         ).show()
 
-                    }, friendShipCircle = {
+                    }, friendShipCircle = View.OnClickListener{
                         CyxbsToast.makeText(
                             context,
                             R.string.qa_share_wechat_text,
                             Toast.LENGTH_SHORT
                         ).show()
 
-                    }, copyLink = {
+                    }, copyLink = View.OnClickListener{
                         ClipboardController.copyText(this@DynamicDetailActivity, url)
                     })
                 }.show()
@@ -553,7 +553,7 @@ class DynamicDetailActivity : BaseViewModelActivity<DynamicDetailViewModel>() {
                             viewModel.dynamic.value?.let { dynamic ->
                                 viewModel.reportDynamic(
                                     dynamic.postId,
-                                    reportContent,
+                                    reportContent
                                 )
                             }
                         }
