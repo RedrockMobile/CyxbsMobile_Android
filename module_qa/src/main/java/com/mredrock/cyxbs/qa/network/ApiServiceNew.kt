@@ -89,7 +89,6 @@ interface ApiServiceNew {
 
     //删除动态
     @DELETE("/magipoke-loop/post")
-    @FormUrlEncoded
     fun deleteDynamic(@Field("id") id: String): Observable<RedrockApiStatus>
 
     //获取某个动态的评论(旧)
@@ -185,6 +184,7 @@ interface ApiServiceNew {
     @POST("/magipoke-loop/user/focus")
     fun changeFocusStatus(@Field("redid") redid: String):Observable<RedrockApiStatus>
 
+    @PUT("/magipoke-loop/post/dynamic")
     @Multipart
     fun modificationDynamic(@Part parts: List<MultipartBody.Part>): Observable<DynamicReleaseResult>
 
