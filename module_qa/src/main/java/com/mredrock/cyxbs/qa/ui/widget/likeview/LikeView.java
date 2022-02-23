@@ -11,6 +11,7 @@ import android.graphics.Paint;
 import android.graphics.RectF;
 import android.graphics.drawable.Drawable;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.util.TypedValue;
 import android.view.View;
 import android.view.animation.LinearInterpolator;
@@ -19,6 +20,7 @@ import android.widget.Checkable;
 
 import androidx.annotation.Nullable;
 
+import com.mredrock.cyxbs.common.utils.LogUtils;
 import com.mredrock.cyxbs.qa.R;
 
 import java.util.Random;

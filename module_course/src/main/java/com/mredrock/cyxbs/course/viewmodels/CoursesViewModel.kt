@@ -29,7 +29,7 @@ import com.mredrock.cyxbs.course.network.AffairMapToCourse
 import com.mredrock.cyxbs.course.network.Course
 import com.mredrock.cyxbs.course.network.CourseApiService
 import com.mredrock.cyxbs.course.network.CourseApiWrapper
-import com.mredrock.cyxbs.course.rxjava.ExecuteOnceObserver
+import com.mredrock.cyxbs.common.utils.ExecuteOnceObserver
 import com.mredrock.cyxbs.course.ui.fragment.CourseContainerEntryFragment
 import com.mredrock.cyxbs.course.utils.CourseTimeParse
 import com.mredrock.cyxbs.course.utils.getNowCourse
@@ -412,7 +412,8 @@ class CoursesViewModel : BaseViewModel() {
                 }
                 .map { it.data?.let { it1 -> AffairMapToCourse().apply(it1) } }
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(ExecuteOnceObserver(onExecuteOnceNext = { affairsCourse ->
+                .subscribe(
+                    ExecuteOnceObserver(onExecuteOnceNext = { affairsCourse ->
                     affairsCourse ?: return@ExecuteOnceObserver
                     context.defaultSharedPreferences.editor {
                         //小部件缓存事务
@@ -426,7 +427,8 @@ class CoursesViewModel : BaseViewModel() {
                 },
                         onExecuteOnFinal = {
                             isGetAllData(AFFAIR_TAG)
-                        }))
+                        })
+                )
     }
 
     /**

@@ -121,9 +121,31 @@ const val COURSE_POS_TO_MAP = "COURSE_POS_TO_MAP"
 //qa进入回答列表传入的问题id的key
 const val QA_PARAM_QUESTION_ID = "question_id"
 
+//todo模块存储提醒日期+星期数
+const val TODO_WEEK_MONTH_ARRAY = "todo_week_moth_array"
+const val TODO_YEAR_OF_WEEK_MONTH_ARRAY = "todo_year_of_week_moth_array"
+//todo模块的上次同步时间本地缓存
+const val TODO_LAST_SYNC_TIME = "todo_last_sync_time"
+//todo模块本地的最后修改时间
+const val TODO_LAST_MODIFY_TIME = "todo_last_modify_time"
+//todo模块本地修改的todo的id列表
+const val TODO_OFFLINE_MODIFY_LIST = "todo_offline_modify_list"
+//todo模块本地删除的todo的id列表
+const val TODO_OFFLINE_DEL_LIST = "todo_offline_del_list"
+//todo模块本地缓存已经添加过一次的todo
+const val TODO_ALREADY_ADDED = "todo_already_added"
+//todo模块本地缓存的todo的时间
+const val TODO_ALREADY_ADDED_DATE = "todo_already_added_date"
+
 //第一次安装的标志，默认或者更新之后就会置为true
 const val FIRST_TIME_OPEN = "first_time_open"
 
 //统一拦截的HTTP状态码
 const val TOKEN_EXPIRE = 403//token过期
 const val SUCCESS = 200//正常
+
+//友盟推送build_id合集
+//邮问部分
+const val UMENG_BUILD_ID_QA = 1
+//todo部分
+const val UMENG_BUILD_ID_TODO = 2

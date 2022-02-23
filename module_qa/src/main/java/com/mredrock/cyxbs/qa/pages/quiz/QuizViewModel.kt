@@ -87,7 +87,6 @@ class QuizViewModel : BaseViewModel() {
                 .setSchedulers()
                 .map {
                     it.map { path ->
-                        LogUtils.d("Gibson", "file name = $path")
                         fileCaster(path)
                     }
                 }
@@ -162,7 +161,6 @@ class QuizViewModel : BaseViewModel() {
                 toastEvent.value = R.string.qa_get_draft_failure
             }
             .safeSubscribeBy {
-                LogUtils.d("Gibson", it.toString())
                 //后端返回的json的images可能是[""]，会引起fileNotFind，这里要进行一次过滤
                 //判空的原因是后端还有可能返回的是null，不加就会空指针
                 val newList = it.images?.filter { path ->
@@ -189,7 +187,6 @@ class QuizViewModel : BaseViewModel() {
     }
 
     fun updateDraftItem(flag: String, content: String, type: String) {
-        LogUtils.d("Gibson", "flag = $flag, content = $content")
         val builder = MultipartBody.Builder()
             .setType(MultipartBody.FORM)
             .addFormDataPart("flag", flag)

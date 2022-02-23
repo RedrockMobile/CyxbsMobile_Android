@@ -14,6 +14,8 @@ import com.mredrock.cyxbs.common.service.ServiceManager
 import com.mredrock.cyxbs.api.account.IAccountService
 import com.mredrock.cyxbs.api.account.IUserStateService
 import com.mredrock.cyxbs.api.protocol.api.IProtocolService
+import com.mredrock.cyxbs.common.config.UMENG_BUILD_ID_QA
+import com.mredrock.cyxbs.common.config.UMENG_BUILD_ID_TODO
 import com.mredrock.cyxbs.common.utils.LogUtils
 import com.mredrock.cyxbs.common.utils.debug
 import com.mredrock.cyxbs.common.utils.extensions.runOnUiThread
@@ -83,20 +85,29 @@ fun initUMeng(context: Context) {
         }
 
         val messageHandler: UmengMessageHandler = object : UmengMessageHandler() {
-            override fun getNotification(context: Context, msg: UMessage): Notification {
-                return when (msg.builder_id) {
-                    1 -> {
-                        val builder = NotificationCompat.Builder(BaseApp.context, "qa_channel")
-                        builder.setContentTitle(msg.title)
-                                .setContentText(msg.text)
-                                .setSmallIcon(R.drawable.common_ic_app_notifacation)
-                                .setPriority(NotificationCompat.PRIORITY_MAX)
-                                .setTicker(msg.ticker)
-                                .setAutoCancel(true)
-                        builder.build()
+            override fun getNotification(context: Context, msg: UMessage): Notification? {
+                val builder = when (msg.builder_id) {
+                    UMENG_BUILD_ID_QA -> {
+                        NotificationCompat.Builder(BaseApp.context, "qa_channel")
                     }
-                    else -> super.getNotification(context, msg)
+
+                    UMENG_BUILD_ID_TODO -> {
+                        NotificationCompat.Builder(BaseApp.context, "todo_channel")
+                    }
+                    else -> null
                 }
+
+                LogUtils.d("RayleighZ","get the message")
+
+                //写出7个问号我很抱歉，但是用?.let会爆warning
+                return builder
+                        ?.setContentTitle(msg.title)
+                        ?.setContentText(msg.text)
+                        ?.setSmallIcon(R.drawable.common_ic_app_notifacation)
+                        ?.setPriority(NotificationCompat.PRIORITY_MAX)
+                        ?.setTicker(msg.ticker)
+                        ?.setAutoCancel(true)
+                        ?.build()
             }
         }
         val notificationClickHandler: UmengNotificationClickHandler = object : UmengNotificationClickHandler() {
@@ -104,7 +115,6 @@ fun initUMeng(context: Context) {
                 val data = JsonParser.parseString(msg.custom).asJsonObject
                 data.get("uri")?.let {
                     ServiceManager.getService(IProtocolService::class.java).jump(it.asString)
-
                 }
             }
         }

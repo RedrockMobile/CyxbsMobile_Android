@@ -312,7 +312,6 @@
                 android:layout_marginEnd="25.5dp"
                 android:src="@drawable/mine_ic_arrow_right" />
         </FrameLayout>
-
         <Space
             android:layout_width="match_parent"
             android:layout_height="100dp" />

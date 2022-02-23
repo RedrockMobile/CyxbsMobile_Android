@@ -25,7 +25,7 @@ import com.mredrock.cyxbs.course.component.SimpleDotsView
 import com.mredrock.cyxbs.course.event.DeleteAffairEvent
 import com.mredrock.cyxbs.course.network.Course
 import com.mredrock.cyxbs.course.network.CourseApiService
-import com.mredrock.cyxbs.course.rxjava.ExecuteOnceObserver
+import com.mredrock.cyxbs.common.utils.ExecuteOnceObserver
 import com.mredrock.cyxbs.course.ui.activity.AffairEditActivity
 import com.mredrock.cyxbs.course.utils.CourseTimeParse
 import com.mredrock.cyxbs.course.utils.affairFilter

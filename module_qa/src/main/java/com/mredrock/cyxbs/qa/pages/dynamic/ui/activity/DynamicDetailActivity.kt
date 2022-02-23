@@ -258,7 +258,7 @@ class DynamicDetailActivity : BaseViewModelActivity<DynamicDetailViewModel>() {
         viewModel.position = -1
 
         intent.extras?.apply {
-            if (!getBoolean("isFromReceive")) return@apply
+            if (!getBoolean("is_from_receive")) return@apply
             val postId = getString("id")
             intent.putExtra("post_id", postId)
         }
@@ -329,7 +329,7 @@ class DynamicDetailActivity : BaseViewModelActivity<DynamicDetailViewModel>() {
             }
         }
 
-        qa_ib_toolbar_back.setOnSingleClickListener {
+        qa_ib_toolbar_back.setOnClickListener {
             onBackPressed()
         }
 

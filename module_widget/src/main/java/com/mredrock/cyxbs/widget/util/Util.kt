@@ -10,6 +10,7 @@ import android.widget.Toast
 import androidx.annotation.IdRes
 import com.alibaba.android.arouter.launcher.ARouter
 import com.google.gson.Gson
+import com.google.gson.reflect.TypeToken
 import com.mredrock.cyxbs.common.BaseApp.Companion.context
 import com.mredrock.cyxbs.common.bean.WidgetCourse
 import com.mredrock.cyxbs.common.component.CyxbsToast
@@ -18,10 +19,16 @@ import com.mredrock.cyxbs.common.config.WIDGET_COURSE
 import com.mredrock.cyxbs.common.event.WidgetCourseEvent
 import com.mredrock.cyxbs.common.service.ServiceManager
 import com.mredrock.cyxbs.api.account.IAccountService
+import com.mredrock.cyxbs.common.BaseApp
+import com.mredrock.cyxbs.common.config.TODO_WEEK_MONTH_ARRAY
+import com.mredrock.cyxbs.common.utils.LogUtils
 import com.mredrock.cyxbs.common.utils.SchoolCalendar
 import com.mredrock.cyxbs.common.utils.extensions.defaultSharedPreferences
 import com.mredrock.cyxbs.common.utils.extensions.editor
+import com.mredrock.cyxbs.common.utils.extensions.toast
 import com.mredrock.cyxbs.widget.bean.CourseStatus
+import com.mredrock.cyxbs.widget.bean.DateBeen
+import com.mredrock.cyxbs.widget.bean.RemindMode
 import org.greenrobot.eventbus.EventBus
 import java.text.SimpleDateFormat
 import java.util.*

@@ -12,7 +12,7 @@ import retrofit2.http.*
 /**
  * Created by zia on 2018/8/15.
  */
-interface ApiService {
+interface   ApiService {
 
     /**
      * 上传头像

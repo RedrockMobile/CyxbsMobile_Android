@@ -164,6 +164,7 @@ dependencies {
         implementation project(':module_othercourse')
         implementation project(':module_calendar')
         implementation project(':module_electricity')
+        implementation project(':module_todo')
         implementation project(':module_emptyroom')
         implementation project(':module_grades')
         implementation project(':module_news')
