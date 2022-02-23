@@ -1,15 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="wrap_content"
-    android:layout_height="wrap_content"
-    android:orientation="vertical">
-
-    <TextView
-        android:id="@+id/qa_popwindow_tv_option"
-        android:layout_width="132dp"
-        android:layout_height="29dp"
-        android:background="#00ffffff"
-        android:gravity="center_horizontal|center_vertical"
-        android:text="文本"
-        android:textColor="@color/common_level_one_font_color" />
-</LinearLayout>
+<TextView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/qa_popwindow_tv_option"
+    android:layout_width="132dp"
+    android:layout_height="29dp"
+    android:background="#00ffffff"
+    android:gravity="center_horizontal|center_vertical"
+    android:text="文本"
+    android:textColor="@color/common_level_one_font_color">
+</TextView>

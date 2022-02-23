@@ -86,10 +86,10 @@ class CircleSquareActivity : BaseViewModelActivity<CircleSquareViewModel>() {
     private fun initView() {
         adapter = CircleSquareAdapter().apply {
             // 设置item点击事件
-            itemClick = { topic, view ->
+            itemClick = { topic, _ ->
                 clickTopic = topic
                 CircleDetailActivity
-                    .activityStartFromSquare(this@CircleSquareActivity, view, topic)
+                    .activityStartFromSquare(this@CircleSquareActivity,topic)
             }
             // 设置关注按钮点击事件
             concernClick = { topicName, state ->

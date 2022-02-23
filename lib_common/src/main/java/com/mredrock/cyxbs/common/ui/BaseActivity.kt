@@ -65,12 +65,15 @@ abstract class BaseActivity : AppCompatActivity() {
     override fun setContentView(view: View?) { super.setContentView(view); notificationInit() }
     override fun setContentView(layoutResID: Int) { super.setContentView(layoutResID);notificationInit() }
     private fun notificationInit() {
-        val verifyService = ServiceManager.getService(IAccountService::class.java).getVerifyService()
-        if (this is ActionLoginStatusSubscriber) {
-            if (verifyService.isLogin()) initOnLoginMode(baseBundle)
-            if (verifyService.isTouristMode()) initOnTouristMode(baseBundle)
-            if (verifyService.isLogin() || verifyService.isTouristMode()) initPage(verifyService.isLogin(), baseBundle)
-        }
+
+            val verifyService = ServiceManager.getService(IAccountService::class.java).getVerifyService()
+            if (this is ActionLoginStatusSubscriber) {
+                if (verifyService.isLogin()) initOnLoginMode(baseBundle)
+                if (verifyService.isTouristMode()) initOnTouristMode(baseBundle)
+                if (verifyService.isLogin() || verifyService.isTouristMode()) initPage(verifyService.isLogin(), baseBundle)
+            }
+
+
     }
 
     private fun initFlag() {

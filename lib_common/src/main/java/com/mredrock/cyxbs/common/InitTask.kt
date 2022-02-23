@@ -147,6 +147,6 @@ fun initUMeng(context: Context) {
             LogUtils.d("UM设备测试信息：", msg)
         }
     } catch (e: Throwable) {
-        e.printStackTrace()
+        //e.printStackTrace()
     }
 }

@@ -29,6 +29,10 @@
     <string name="mine_nickname_default">输入您的昵称</string>
     <string name="mine_nickname_null">昵称不可为空哦</string>
     <string name="mine_introduce">个性签名</string>
+    <string name="mine_gender">性别</string>
+    <string name="mine_gender_default">请选择性别</string>
+    <string name="mine_birth">生日</string>
+    <string name="mine_birth_default">填写生日后会匹配出对应星座哦</string>
     <string name="mine_introduce_default">输入个性签名</string>
     <string name="mine_qq">QQ</string>
     <string name="mine_phone">电话</string>
@@ -38,6 +42,7 @@
     <string name="mine_info_contact">写下您的联系方式，便于我们与您联系</string>
     <string name="mine_exit_edit">退出编辑</string>
     <string name="mine_exit_edit_quest">你的资料还未保存，是否退出？</string>
+    <string name="mine_dialog_edit_ensure">确定</string>
     <!--    签到-->
     <string name="mine_sign_to_sign">签到</string>
     <string name="mine_sign_mon">周一</string>
@@ -135,4 +140,18 @@
     <string name="mine_string_about_us">关于我们</string>
     <string name="mine_string_setting">设置</string>
     <string name="mine_string_score_store">积分商城</string>
+
+    <string name="mine_person_focus_success">关注成功</string>
+    <string name="mine_person_change_focus_status_failed">操作失败</string>
+    <string name="mine_person_unfocus_success">取关成功</string>
+    <string name="mine_person_fan_empty_self">暂时没有人关注你呢...</string>
+    <string name="mine_person_fan_empty">暂时没有人关注他呢...</string>
+    <string name="mine_person_focus_empty_self">你还没有关注任何掌友...</string>
+    <string name="mine_person_focus_empty">他还没有关注任何掌友...</string>
+    <string name="mine_person_empty_notification">消息中心正在搭建，待开放ing</string>
+
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="mine_lack_text">欸,您暂时还没有任何身份,可以前往“重邮帮”小程序通过”身份有证”申请身份,或者前往 邮票中心 兑换个性化身份</string>
+    <string name="mine_status_message">长按下方身份牌并拖动到此处，即可在昵称后面展示你的专属身份！</string>
 </resources>

@@ -7,7 +7,7 @@ import com.mredrock.cyxbs.common.utils.extensions.visible
 import com.mredrock.cyxbs.qa.R
 import com.mredrock.cyxbs.qa.component.recycler.BaseRvAdapter
 import com.mredrock.cyxbs.qa.component.recycler.BaseViewHolder
-import kotlinx.android.synthetic.main.qa_item_search_no_result.view.*
+import kotlinx.android.synthetic.main.qa_recycler_item_search_no_result.view.*
 
 
 /**
@@ -53,7 +53,7 @@ class SearchNoResultAdapter(private val hint: String, private val onItemClick: (
     }
 
     class EmptyViewHolder(private val hint: String, parent: ViewGroup) :
-        BaseViewHolder<Int>(parent, R.layout.qa_item_search_no_result) {
+        BaseViewHolder<Int>(parent, R.layout.qa_recycler_item_search_no_result) {
         override fun refresh(data: Int?) {
             when (data) {
                 INITIAL -> {

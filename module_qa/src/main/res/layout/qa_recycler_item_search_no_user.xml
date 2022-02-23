@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+
+    </data>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/qa_search_header_color">
+
+        <ImageView
+            android:id="@+id/qa_iv_search_no_user"
+            android:layout_width="189dp"
+            android:layout_height="144dp"
+            android:scaleType="centerInside"
+            android:src="@drawable/qa_ic_question_no_question_or_answer"
+            android:layout_marginTop="80dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <TextView
+            android:id="@+id/qa_tv_search_no_user"
+            android:layout_width="wrap_content"
+            android:layout_height="17dp"
+            android:layout_marginTop="10dp"
+            android:text="去发现第一个有趣的人吧~"
+            android:textColor="@color/qa_tv_no_user"
+            android:textSize="12sp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/qa_iv_search_no_user" />
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</layout>

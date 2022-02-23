@@ -26,7 +26,9 @@
     <!--    回答的点赞颜色-->
     <color name="qa_answer_praise_count_color">#AABCD8</color>
     <!--   邮问搜索-->
-    <color name="qa_search_layout_color">#1F1F1F</color>
+    <color name="qa_search_header_color">#1D1D1D</color>
+    <color name="qa_search_layout_color">#4DFFFFFF</color>
+    <color name="qa_search_color">#4DFFFFFF</color>
     <color name="qa_answer_praised_count_color">#4841E2</color>
     <!--    RecyclerView加载时的holder颜色-->
     <color name="qa_question_item_empty_holder_color">#5A5A5A</color>
@@ -122,4 +124,11 @@
     <color name="qa_praise_text_color">#2CDEFF</color>
     <!--    展开按钮的颜色-->
     <color name="qa_tv_expand_text_color">#838384</color>
+    <color name="qa_tv_no_user">#FFFFFF</color>
+    <color name="qa_text_tab">#F0F0F2</color>
+    <color name="qa_bg_dialog_bottom">#2C2C2C</color>
+    <color name="qa_bg_dialog_bottom_text">#DFDFE3</color>
+    <color name="qa_tv_mydynamic_frgament">#B3CBD3DF</color>
+    <color name="qa_tv_unfocus">#FFFFFF</color>
+    <color name="qa_tv_focus">#94A6C4</color>
 </resources>

@@ -10,6 +10,11 @@
         <!-- 切记不要将这个设置为空来优化UI绘制,否则某些activity动画会透视到桌面，
                 但是应该除了main其他的activity都可以去掉这个置为@null-->
         <item name="android:windowBackground">@drawable/main_shape_activity_window_background</item>
+<!--        沉浸状态栏-->
+        <item name="android:windowTranslucentNavigation">true</item>
+        <item name="android:windowTranslucentStatus">true</item>
+        <!-- 设置statusBarColor 为透明-->
+        <item name="android:statusBarColor">@android:color/transparent</item>
     </style>
 
     <style name="LoginTextInputStyle" parent="AppTheme" >

@@ -21,6 +21,10 @@ interface IUserService {
 
     fun getCollege(): String
 
+    fun getBirth(): String
+
+    fun getRedid(): String
+
     //用于刷新个人信息，请在需要的地方调用
     fun refreshInfo()
 }

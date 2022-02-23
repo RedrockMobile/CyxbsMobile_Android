@@ -4,23 +4,29 @@ import android.animation.ValueAnimator
 import android.annotation.SuppressLint
 import android.app.Activity
 import android.content.Context
+import android.content.Intent
 import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
+import android.util.Log
 import android.view.*
 import android.widget.LinearLayout
 import android.widget.PopupWindow
 import android.widget.TextView
+import androidx.core.content.ContextCompat
 import androidx.core.view.children
 import com.mredrock.cyxbs.common.BaseApp
 import com.mredrock.cyxbs.common.utils.extensions.dp2px
 import com.mredrock.cyxbs.qa.R
+import com.mredrock.cyxbs.qa.beannew.Dynamic
+import com.mredrock.cyxbs.qa.pages.quiz.ui.QuizActivity
 import kotlinx.android.synthetic.main.qa_popwindow_option_normal.view.*
 
 /**
- * created by zhangzhe, SpreadWater
+ * created by zhangzhe, SpreadWater,YYQF
  * 2020/12/4
  */
 class OptionalPopWindow private constructor(val context: Context?) : PopupWindow(context) {
+
 
     companion object {
         private val TAG = OptionalPopWindow::class.java.name
@@ -44,22 +50,27 @@ class OptionalPopWindow private constructor(val context: Context?) : PopupWindow
         var context: Context? = null
         private var mainView: View? = null
         private var childCount = 0
+
         @SuppressLint("InflateParams")
         fun with(context: Context): Builder {
             optionalPopWindow = OptionalPopWindow(context)
             this.context = context
             mainView =
-                LayoutInflater.from(context).inflate(R.layout.qa_popwindow_options, null, false)
+                LayoutInflater.from(context)
+                    .inflate(R.layout.qa_popwindow_options_normal, null, false)
             return this
         }
 
         @SuppressLint("InflateParams")
-        fun addOptionAndCallback(optionText: String, onClickCallback: () -> Unit): Builder {
+        fun addOptionAndCallback(
+            optionText: String, optionResId: Int = R.layout.qa_popwindow_option_normal,
+            onClickCallback: () -> Unit
+        ): Builder {
             if (context == null || optionalPopWindow == null) {
                 throw IllegalStateException("$TAG Can't add option without context!")
             }
             val view = LayoutInflater.from(context)
-                .inflate(R.layout.qa_popwindow_option_normal, null, false)
+                .inflate(optionResId, null, false)
             view.findViewById<TextView>(R.id.qa_popwindow_tv_option).text = optionText
             view.findViewById<TextView>(R.id.qa_popwindow_tv_option).setOnClickListener {
                 optionalPopWindow!!.dismiss()
@@ -114,6 +125,7 @@ class OptionalPopWindow private constructor(val context: Context?) : PopupWindow
                 }
             }
 
+
             // 如果是正中间，则修改Y坐标为正中间
             var offsetYt = offsetY
             if (alignMode == AlignMode.CENTER) {
@@ -121,18 +133,63 @@ class OptionalPopWindow private constructor(val context: Context?) : PopupWindow
             }
 
             // 显示弹窗
-            optionalPopWindow!!.showAsDropDown(view, offsetXt, offsetYt, Gravity.START)
-            if (needWindowAlphaChange)
-                optionalPopWindow!!.showBackgroundAnimator()
-            optionalPopWindow!!.setOnDismissListener {
+            optionalPopWindow!!.apply {
+                showAsDropDown(view, offsetXt, offsetYt, Gravity.START)
+
                 if (needWindowAlphaChange)
-                    optionalPopWindow!!.hideBackgroundAnimator()
+                    showBackgroundAnimator()
+
+                setOnDismissListener {
+                    if (needWindowAlphaChange)
+                        optionalPopWindow!!.hideBackgroundAnimator()
+                }
             }
 
         }
+
+        /**
+         * 从底部显示弹窗
+         */
+        fun showFromBottom(rootView: View) {
+            if (optionalPopWindow == null || mainView == null || context == null || childCount == 0) {
+                throw IllegalStateException("$TAG IllegalState!")
+            }
+
+            context?.let {
+                mainView!!.background =
+                    ContextCompat.getDrawable(it, R.drawable.qa_shape_bg_popwindow_bottom)
+            }
+            (mainView!! as LinearLayout).getChildAt(0).apply {
+                setPadding(
+                    paddingLeft,
+                    paddingTop + context.dp2px(14f),
+                    paddingRight,
+                    paddingBottom
+                )
+            }
+            (mainView!! as LinearLayout).getChildAt(childCount - 1).apply {
+                setPadding(
+                    paddingLeft,
+                    paddingTop,
+                    paddingRight,
+                    paddingBottom + context.dp2px(43f)
+                )
+            }
+            optionalPopWindow!!.contentView = mainView
+
+            //显示弹窗
+            optionalPopWindow!!.apply {
+                animationStyle = R.style.BottomInAndOutStyle
+                width = ViewGroup.LayoutParams.MATCH_PARENT
+                showAtLocation(rootView, Gravity.BOTTOM, 0, 0)
+                showBackgroundAnimator()
+                setOnDismissListener {
+                    hideBackgroundAnimator()
+                }
+            }
+        }
     }
-
-
+    
     private fun setWindowBackgroundAlpha(alpha: Float) {
         if (context is Activity) {
             val window: Window = context.window
@@ -146,7 +203,7 @@ class OptionalPopWindow private constructor(val context: Context?) : PopupWindow
      * 窗口显示，窗口背景透明度渐变动画
      */
     private fun showBackgroundAnimator() {
-        val animator = ValueAnimator.ofFloat(1.0f, 0.5f)
+        val animator = ValueAnimator.ofFloat(1.0f, 0.7f)
         animator.addUpdateListener { animation ->
             val alpha = animation.animatedValue as Float
             setWindowBackgroundAlpha(alpha)
@@ -156,7 +213,7 @@ class OptionalPopWindow private constructor(val context: Context?) : PopupWindow
     }
 
     private fun hideBackgroundAnimator() {
-        val animator = ValueAnimator.ofFloat(0.5f, 1.0f)
+        val animator = ValueAnimator.ofFloat(0.7f, 1.0f)
         animator.addUpdateListener { animation ->
             val alpha = animation.animatedValue as Float
             setWindowBackgroundAlpha(alpha)
@@ -164,5 +221,4 @@ class OptionalPopWindow private constructor(val context: Context?) : PopupWindow
         animator.duration = 360
         animator.start()
     }
-
 }

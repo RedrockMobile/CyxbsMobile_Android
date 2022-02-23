@@ -15,12 +15,11 @@ import android.os.Environment
 import android.provider.MediaStore
 import android.text.Editable
 import android.text.TextWatcher
-import android.view.LayoutInflater
-import android.view.MotionEvent
-import android.view.View
-import android.view.ViewGroup
+import android.view.*
 import android.view.inputmethod.InputMethodManager
 import android.widget.EditText
+import android.widget.FrameLayout
+import android.widget.TextView
 import androidx.core.content.ContextCompat
 import androidx.core.content.res.ResourcesCompat
 import androidx.lifecycle.Observer
@@ -28,12 +27,15 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.afollestad.materialdialogs.MaterialDialog
 import com.afollestad.materialdialogs.list.listItems
 import com.alibaba.android.arouter.facade.annotation.Route
+import com.bigkoo.pickerview.builder.OptionsPickerBuilder
+import com.bigkoo.pickerview.builder.TimePickerBuilder
+import com.bigkoo.pickerview.view.OptionsPickerView
+import com.bigkoo.pickerview.view.TimePickerView
 import com.mredrock.cyxbs.common.config.DIR_PHOTO
 import com.mredrock.cyxbs.common.service.ServiceManager
 import com.mredrock.cyxbs.api.account.IAccountService
 import com.mredrock.cyxbs.api.account.IUserService
 import com.mredrock.cyxbs.common.config.MINE_EDIT_INFO
-import com.mredrock.cyxbs.common.config.StoreTask
 import com.mredrock.cyxbs.common.ui.BaseViewModelActivity
 import com.mredrock.cyxbs.common.utils.extensions.*
 import com.mredrock.cyxbs.mine.R
@@ -46,6 +48,12 @@ import okhttp3.MultipartBody
 import okhttp3.RequestBody.Companion.toRequestBody
 import java.io.File
 import java.io.IOException
+import java.text.SimpleDateFormat
+import java.util.*
+import android.graphics.BitmapFactory
+
+import android.content.res.Resources
+import com.contrarywind.view.WheelView
 
 
 /**
@@ -58,6 +66,12 @@ class EditInfoActivity
 
     private val SELECT_PICTURE = 1
     private val SELECT_CAMERA = 2
+
+    private lateinit var pvGender: OptionsPickerView<String>
+    private var genderIndex = 0
+    private val genderList = mutableListOf("男","女","X星人")
+
+    private lateinit var pvBirth: TimePickerView
 
 
     private val userService: IUserService by lazy {
@@ -74,7 +88,6 @@ class EditInfoActivity
         override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
             checkColorAndText()
         }
-
     }
 
     /**
@@ -102,7 +115,10 @@ class EditInfoActivity
         val introduction = mine_et_introduce.text.toString()
         val qq = mine_et_qq.text.toString()
         val phone = mine_et_phone.text.toString()
-        mine_tv_nickname.text = "昵称(${nickname.length}/8)"
+        val gender = mine_et_gender.text.toString()
+        val birth = mine_et_birth.text.toString()
+
+        mine_tv_nickname.text = "昵称(${nickname.length}/10)"
         mine_tv_sign.text = "个性签名(${introduction.length}/20)"
         if (nickname != userForTemporal.getNickname()) {
             mine_et_nickname.setTextColor(ContextCompat.getColor(this, R.color.common_level_two_font_color))
@@ -124,6 +140,16 @@ class EditInfoActivity
         } else {
             mine_et_phone.setTextColor(ContextCompat.getColor(this, R.color.common_grey_text))
         }
+        if (gender != userForTemporal.getGender()){
+            mine_et_gender.setTextColor(ContextCompat.getColor(this, R.color.common_level_two_font_color))
+        } else {
+            mine_et_gender.setTextColor(ContextCompat.getColor(this, R.color.common_grey_text))
+        }
+        if (birth != userForTemporal.getBirth()){
+            mine_et_birth.setTextColor(ContextCompat.getColor(this, R.color.common_level_two_font_color))
+        } else {
+            mine_et_birth.setTextColor(ContextCompat.getColor(this, R.color.common_grey_text))
+        }
     }
 
 
@@ -137,9 +163,9 @@ class EditInfoActivity
             initWithSplitLine("资料编辑",
                     false,
                     R.drawable.mine_ic_arrow_left,
-                    View.OnClickListener {
-                        finishAfterTransition()
-                    })
+                {
+                    finishAfterTransition()
+                })
             setTitleLocationAtLeft(true)
         }
 
@@ -148,7 +174,7 @@ class EditInfoActivity
 
         initViewAndData()
 
-        setTextChangeListener()
+        initListener()
     }
 
     private fun initViewAndData() {
@@ -178,7 +204,123 @@ class EditInfoActivity
         mine_et_introduce.setText(if (userService.getIntroduction().isBlank()) "" else userService.getIntroduction())
         mine_et_qq.setText(if (userService.getQQ().isBlank()) "" else userService.getQQ())
         mine_et_phone.setText(if (userService.getPhone().isBlank()) "" else userService.getPhone())
+        mine_et_gender.text = userService.getGender()
+        mine_et_birth.text = userService.getBirth()
         mine_tv_college_concrete.text = userService.getCollege()
+    }
+
+    private fun initListener(){
+        setTextChangeListener()
+        mine_et_gender.setOnClickListener {
+            pvGender = OptionsPickerBuilder(this){ p1, _, _, _ ->
+                genderIndex = p1
+                mine_et_gender.text = genderList[genderIndex]
+            }
+                .setLayoutRes(R.layout.mine_layout_dialog_gender){
+                    it.findViewById<TextView>(R.id.mine_tv_dialog_ensure).setOnClickListener {
+                        pvGender.returnData()
+                        pvGender.dismiss()
+                    }
+            }
+                .setContentTextSize(16)
+                .setLineSpacingMultiplier(2.5f)
+                .setOutSideCancelable(false)
+                .setSelectOptions(genderIndex)
+                .setOutSideCancelable(true)
+                .setTextColorCenter(ContextCompat.getColor(this,
+                    R.color.mine_tv_dialog_text_center))
+                .setTextColorOut(ContextCompat.getColor(this,
+                    R.color.mine_tv_dialog_text_out))
+                .setBgColor(ContextCompat.getColor(this,
+                    R.color.mine_bg_dialog_edit))
+                .setDividerType(WheelView.DividerType.WRAP)
+                .setDividerColor(ContextCompat.getColor(this,
+                    R.color.mine_bg_dialog_edit))
+                .build()
+
+            pvGender.setPicker(genderList)
+            val dialog = pvGender.dialog
+            if (dialog != null){
+                val params = FrameLayout.LayoutParams(
+                    FrameLayout.LayoutParams.MATCH_PARENT,
+                    FrameLayout.LayoutParams.WRAP_CONTENT, Gravity.BOTTOM)
+                    .apply {
+                        leftMargin = 0
+                        rightMargin = 0
+                    }
+                pvGender.dialogContainerLayout.layoutParams = params
+
+                val window = dialog.window
+                window?.apply {
+                    setWindowAnimations(com.bigkoo.pickerview.R.style.picker_view_slide_anim)
+                    setGravity(Gravity.BOTTOM)
+                    setDimAmount(0.3f)
+                }
+            }
+            pvGender.show()
+        }
+
+        mine_et_birth.setOnClickListener {
+            val currentBirth = Calendar.getInstance().apply {
+                set(2002,8,14)
+            }
+
+            val currentTime = Calendar.getInstance()
+            val startTime = Calendar.getInstance().apply {
+                set(1901,1,1)
+            }
+            pvBirth = TimePickerBuilder(this){ date,view ->
+                mine_et_birth.text = getDate(date)
+            }
+                .setLayoutRes(R.layout.mine_layout_dialog_birth){
+                    it.findViewById<TextView>(R.id.mine_tv_dialog_ensure).setOnClickListener {
+                        pvBirth.returnData()
+                        pvBirth.dismiss()
+                    }
+                }
+                .setDate(currentBirth)
+                .setRangDate(startTime,currentTime)
+                .setContentTextSize(18)
+                .setLabel("","月","日","","","")
+                .setType(booleanArrayOf(true,true,true,false,false,false))
+                .setLineSpacingMultiplier(2.0f)
+                .setTextColorCenter(ContextCompat.getColor(this,
+                    R.color.mine_tv_dialog_text_center))
+                .setTextColorOut(ContextCompat.getColor(this,
+                    R.color.mine_tv_dialog_text_out))
+                .setBgColor(ContextCompat.getColor(this,
+                    R.color.mine_bg_dialog_edit))
+                .setDividerType(WheelView.DividerType.WRAP)
+                .setDividerColor(ContextCompat.getColor(this,
+                    R.color.mine_bg_dialog_edit))
+                .build()
+
+            val dialog = pvBirth.dialog
+            if (dialog != null){
+                val params = FrameLayout.LayoutParams(
+                    FrameLayout.LayoutParams.MATCH_PARENT,
+                    FrameLayout.LayoutParams.WRAP_CONTENT, Gravity.BOTTOM)
+                    .apply {
+                        leftMargin = 0
+                        rightMargin = 0
+                    }
+                pvBirth.dialogContainerLayout.layoutParams = params
+
+                val window = dialog.window
+                window?.apply {
+                    setWindowAnimations(com.bigkoo.pickerview.R.style.picker_view_slide_anim)
+                    setGravity(Gravity.BOTTOM)
+                    setDimAmount(0.3f)
+                }
+            }
+            pvBirth.show()
+        }
+    }
+
+    @SuppressLint("SimpleDateFormat")
+    private fun getDate(date: Date): String{
+        val format = SimpleDateFormat("yyyy-MM-dd")
+        return format.format(date)
     }
 
     private fun setTextChangeListener() {
@@ -186,6 +328,8 @@ class EditInfoActivity
         mine_et_introduce.addTextChangedListener(watcher)
         mine_et_qq.addTextChangedListener(watcher)
         mine_et_phone.addTextChangedListener(watcher)
+        mine_et_gender.addTextChangedListener(watcher)
+        mine_et_birth.addTextChangedListener(watcher)
     }
 
     private fun initObserver() {
@@ -218,6 +362,8 @@ class EditInfoActivity
         val introduction = if (mine_et_introduce.text.toString().isNotBlank()) mine_et_introduce.text.toString() else " "
         val qq = if (mine_et_qq.text.toString().isNotBlank()) mine_et_qq.text.toString() else " "
         val phone = if (mine_et_phone.text.toString().isNotBlank()) mine_et_phone.text.toString() else " "
+        val gender = if (mine_et_gender.text.toString().isNotBlank()) mine_et_gender.text.toString() else " "
+        val birthday = if (mine_et_birth.text.toString().isNotBlank()) mine_et_birth.text.toString() else " "
 
         //数据没有改变，不进行网络请求
         if (!checkIfInfoChange()) {
@@ -229,7 +375,7 @@ class EditInfoActivity
             return
         }
 
-        viewModel.updateUserInfo(nickname, introduction, qq, phone)
+        viewModel.updateUserInfo(nickname, introduction, qq, phone, gender, birthday)
     }
 
     private fun checkIfInfoChange(): Boolean {
@@ -237,12 +383,15 @@ class EditInfoActivity
         val introduction = mine_et_introduce.text.toString()
         val qq = mine_et_qq.text.toString()
         val phone = mine_et_phone.text.toString()
-
+        val gender = mine_et_gender.text.toString()
+        val birth = mine_et_birth.text.toString()
 
         if (nickname == userService.getNickname() &&
                 introduction == userService.getIntroduction() &&
                 qq == userService.getQQ() &&
-                phone == userService.getPhone()) {
+                phone == userService.getPhone() &&
+                gender == userService.getGender() &&
+                birth == userService.getBirth()) {
             return false
         }
         return true
@@ -341,6 +490,7 @@ class EditInfoActivity
     private fun startCropActivity(uri: Uri) {
         val uCrop = UCrop.of(uri, Uri.fromFile(destinationFile))
         val options = UCrop.Options()
+        options.setCropGridStrokeWidth(5)
         options.setCompressionFormat(Bitmap.CompressFormat.PNG)
         options.setCompressionQuality(100)
         options.setLogoColor(ContextCompat.getColor(this, R.color.common_level_two_font_color))
@@ -372,6 +522,7 @@ class EditInfoActivity
 
         try {
             val fileBody = MultipartBody.Part.createFormData("fold", destinationFile.name, destinationFile.getRequestBody())
+
             val numBody = userService.getStuNum().toRequestBody("multipart/form-data".toMediaTypeOrNull())
             viewModel.uploadAvatar(numBody, fileBody)
         } catch (e: IOException) {
@@ -399,7 +550,7 @@ class EditInfoActivity
             }
             UCrop.REQUEST_CROP -> {
                 if (data != null) {
-                    uploadImage(data)
+                   uploadImage(data)
                 } else {
                     toast("未知错误，请重试")
                 }
@@ -423,4 +574,7 @@ class EditInfoActivity
             view.loader.visibility = View.GONE
         }
     }
+
+
+
 }
