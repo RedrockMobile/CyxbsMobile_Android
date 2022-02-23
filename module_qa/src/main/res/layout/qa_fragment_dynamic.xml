@@ -64,7 +64,7 @@
         android:orientation="vertical"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/rl_qa_hot_search">
+        app:layout_constraintTop_toBottomOf="@id/rl_qa_hot_search" >
 
         <LinearLayout
             android:id="@+id/qa_ll_header"
