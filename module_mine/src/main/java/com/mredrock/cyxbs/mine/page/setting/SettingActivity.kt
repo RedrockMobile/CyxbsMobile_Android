@@ -1,7 +1,6 @@
 package com.mredrock.cyxbs.mine.page.setting
 
 import android.content.Intent
-import android.graphics.Color
 import android.os.Bundle
 import androidx.core.content.ContextCompat
 import com.alibaba.android.arouter.launcher.ARouter
@@ -10,7 +9,6 @@ import com.mredrock.cyxbs.common.BaseApp
 import com.mredrock.cyxbs.common.BaseApp.Companion.context
 import com.mredrock.cyxbs.common.component.CommonDialogFragment
 import com.mredrock.cyxbs.common.config.*
-import com.mredrock.cyxbs.common.network.ApiGenerator
 import com.mredrock.cyxbs.common.service.ServiceManager
 import com.mredrock.cyxbs.common.ui.BaseActivity
 import com.mredrock.cyxbs.common.utils.extensions.*
@@ -19,6 +17,7 @@ import com.mredrock.cyxbs.mine.R
 import com.mredrock.cyxbs.mine.page.security.activity.SecurityActivity
 import com.mredrock.cyxbs.mine.util.apiService
 import com.mredrock.cyxbs.mine.util.ui.WarningDialog
+import io.reactivex.disposables.Disposable
 import kotlinx.android.synthetic.main.mine_activity_setting.*
 import kotlinx.android.synthetic.main.mine_activity_tablayout_my_product.view.*
 
@@ -49,8 +48,7 @@ class SettingActivity : BaseActivity() {
                 }
             }
         }
-        mine_setting_switch.isChecked = context?.defaultSharedPreferences?.getBoolean(COURSE_SHOW_STATE, false)
-                ?: false
+        mine_setting_switch.isChecked = context.defaultSharedPreferences.getBoolean(COURSE_SHOW_STATE, false)
 
         //自定义桌面小组件
         mine_setting_fm_edit_widget.setOnClickListener {
@@ -65,8 +63,13 @@ class SettingActivity : BaseActivity() {
         mine_setting_btn_exit.setOnClickListener { doIfLogin { onExitClick() } }
     }
 
+    /**
+     * 退出时的网络请求，用于在 activity onDestroy() 时及时取消
+     */
+    private var mExitDisposable: Disposable? = null
+
     private fun onExitClick() {
-        apiService.pingMagipoke()
+        mExitDisposable = apiService.pingMagipoke()
                 .setSchedulers()
                 .doOnErrorWithDefaultErrorHandler { true }
                 .safeSubscribeBy(
@@ -96,6 +99,11 @@ class SettingActivity : BaseActivity() {
                 )
     }
 
+    override fun onDestroy() {
+        super.onDestroy()
+        mExitDisposable?.dispose() // 取消网络请求
+    }
+
     private fun doExit(){
         val tag = "exit"
         if (this.supportFragmentManager.findFragmentByTag(tag) == null) {
@@ -118,7 +126,7 @@ class SettingActivity : BaseActivity() {
     }
 
     private fun cleanAppWidgetCache() {
-        context?.defaultSharedPreferences?.editor {
+        context.defaultSharedPreferences.editor {
             putString(WIDGET_COURSE, "")
             putBoolean(SP_WIDGET_NEED_FRESH, true)
         }
