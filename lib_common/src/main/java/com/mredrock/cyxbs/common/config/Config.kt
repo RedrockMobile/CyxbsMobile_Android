@@ -122,8 +122,9 @@ const val COURSE_POS_TO_MAP = "COURSE_POS_TO_MAP"
 const val QA_PARAM_QUESTION_ID = "question_id"
 
 //todo模块存储提醒日期+星期数
-const val TODO_WEEK_MONTH_ARRAY = "todo_week_moth_array"
-const val TODO_YEAR_OF_WEEK_MONTH_ARRAY = "todo_year_of_week_moth_array"
+const val TODO_WEEK_MONTH_ARRAY = "todo_week_month_array"
+//todo模块缓存了未来四年的年月份json，用于提供用户选择提醒日期，下面的是这四年的起始年份
+const val TODO_START_YEAR_OF_WEEK_MONTH_ARRAY = "todo_year_of_week_moth_array"
 //todo模块的上次同步时间本地缓存
 const val TODO_LAST_SYNC_TIME = "todo_last_sync_time"
 //todo模块本地的最后修改时间

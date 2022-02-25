@@ -9,7 +9,6 @@ import androidx.core.view.marginBottom
 import androidx.core.view.marginLeft
 import androidx.core.view.marginRight
 import androidx.core.view.marginTop
-import com.airbnb.lottie.parser.IntegerParser
 import com.cyxbsmobile_single.module_todo.model.bean.DateBeen
 import com.cyxbsmobile_single.module_todo.model.bean.RemindMode
 import com.cyxbsmobile_single.module_todo.model.bean.Todo
@@ -19,8 +18,7 @@ import com.mredrock.cyxbs.common.BaseApp
 import com.mredrock.cyxbs.common.config.TODO_ALREADY_ADDED
 import com.mredrock.cyxbs.common.config.TODO_ALREADY_ADDED_DATE
 import com.mredrock.cyxbs.common.config.TODO_WEEK_MONTH_ARRAY
-import com.mredrock.cyxbs.common.config.TODO_YEAR_OF_WEEK_MONTH_ARRAY
-import com.mredrock.cyxbs.common.utils.LogUtils
+import com.mredrock.cyxbs.common.config.TODO_START_YEAR_OF_WEEK_MONTH_ARRAY
 import com.mredrock.cyxbs.common.utils.extensions.defaultSharedPreferences
 import com.mredrock.cyxbs.common.utils.extensions.editor
 import com.mredrock.cyxbs.common.utils.extensions.toast
@@ -188,9 +186,9 @@ fun getYearDateSting(): ArrayList<ArrayList<DateBeen>> {
     val thisYear = Calendar.getInstance().apply {
         time = Date(System.currentTimeMillis())
     }.get(Calendar.YEAR)
-    val listYear = BaseApp.context.defaultSharedPreferences.getInt(TODO_YEAR_OF_WEEK_MONTH_ARRAY, 0)
-    if (dateArrayJson == "" || dateArrayJson == null || thisYear == listYear) {
-        //认定本地还没有对于日期，星期数的缓存，则生成一份
+    val listYear = BaseApp.context.defaultSharedPreferences.getInt(TODO_START_YEAR_OF_WEEK_MONTH_ARRAY, 0)
+    if (dateArrayJson == "" || dateArrayJson == null || thisYear != listYear) {
+        //认定本地还没有对于日期，星期数的缓存，或者缓存已经过期（即过了一年），则生成一份
         val calendar = Calendar.getInstance()
         calendar.set(Calendar.MONTH, 0)
         calendar.set(Calendar.DAY_OF_MONTH, 1)
@@ -217,7 +215,10 @@ fun getYearDateSting(): ArrayList<ArrayList<DateBeen>> {
         val arrayJson = Gson().toJson(dateBeanArrayAsFourYears)
         BaseApp.context.defaultSharedPreferences
             .editor {
+                //更新缓存的未来四年数组
                 putString(TODO_WEEK_MONTH_ARRAY, arrayJson)
+                //更新缓存的未来四年的数组的起始年份
+                putInt(TODO_START_YEAR_OF_WEEK_MONTH_ARRAY, thisYear)
             }
         val todayCalendar = Calendar.getInstance()
         dateBeanArrayAsFourYears[0].subList(0, todayCalendar.get(Calendar.DAY_OF_YEAR) - 1).clear()
