@@ -15,7 +15,6 @@ import com.mredrock.cyxbs.common.bean.isSuccessful
 import com.mredrock.cyxbs.common.component.CyxbsToast
 import com.mredrock.cyxbs.common.network.ApiGenerator
 import com.mredrock.cyxbs.common.network.CommonApiService
-import com.mredrock.cyxbs.common.utils.LogUtils
 import com.mredrock.cyxbs.common.utils.down.params.DownMessageParams
 import com.mredrock.cyxbs.common.utils.extensions.*
 import com.mredrock.cyxbs.common.viewmodel.BaseViewModel
@@ -139,36 +138,46 @@ class MapViewModel : BaseViewModel() {
          * 获得地图基本信息，地点坐标等
          */
         mapApiService.getMapInfo()//网络请求替换为：apiService.getMapInfo()
-                .setSchedulers()
-                .doOnErrorWithDefaultErrorHandler {
-                    MapToast.makeText(BaseApp.context, R.string.map_network_connect_error, Toast.LENGTH_SHORT).show()
-                    //使用缓存数据
-                    val mapInfoStore = DataSet.getMapInfo()
-                    if (mapInfoStore != null) {
-                        mapInfo.postValue(mapInfoStore)
-                    }
-                    loadFail.postValue(true)
-                    true
+            .setSchedulers()
+            .mapOrThrowApiException()
+            .doOnErrorWithDefaultErrorHandler {
+                MapToast.makeText(
+                    BaseApp.context,
+                    R.string.map_network_connect_error,
+                    Toast.LENGTH_SHORT
+                ).show()
+                //使用缓存数据
+                val mapInfoStore = DataSet.getMapInfo()
+                if (mapInfoStore != null) {
+                    mapInfo.postValue(mapInfoStore!!)
                 }
-                .safeSubscribeBy {
-                    mapInfo.value = it.data
-                    DataSet.saveMapInfo(it.data)
-                }.lifeCycle()
+                loadFail.postValue(true)
+                true
+            }
+            .safeSubscribeBy {
+                mapInfo.value = it
+                DataSet.saveMapInfo(it)
+            }.lifeCycle()
         mapApiService.getButtonInfo()
-                .setSchedulers()
-                .doOnErrorWithDefaultErrorHandler {
-                    MapToast.makeText(BaseApp.context, R.string.map_network_connect_error, Toast.LENGTH_SHORT).show()
-                    //使用缓存数据
-                    val buttonInfoStore = DataSet.getButtonInfo()
-                    if (buttonInfoStore != null) {
-                        buttonInfo.postValue(buttonInfoStore)
-                    }
-                    true
+            .setSchedulers()
+            .mapOrThrowApiException()
+            .doOnErrorWithDefaultErrorHandler {
+                MapToast.makeText(
+                    BaseApp.context,
+                    R.string.map_network_connect_error,
+                    Toast.LENGTH_SHORT
+                ).show()
+                //使用缓存数据
+                val buttonInfoStore = DataSet.getButtonInfo()
+                if (buttonInfoStore != null) {
+                    buttonInfo.postValue(buttonInfoStore!!)
                 }
-                .safeSubscribeBy {
-                    buttonInfo.postValue(it.data)
-                    DataSet.saveButtonInfo(it.data)
-                }.lifeCycle()
+                true
+            }
+            .safeSubscribeBy {
+                buttonInfo.postValue(it)
+                DataSet.saveButtonInfo(it)
+            }.lifeCycle()
         /**
          * 刷新收藏列表
          */
@@ -183,40 +192,45 @@ class MapViewModel : BaseViewModel() {
      */
     fun getPlaceDetails(placeId: String, showBottomSheetAfterSuccess: Boolean) {
         mapApiService.getPlaceDetails(placeId)
-                .setSchedulers()
-                .doOnErrorWithDefaultErrorHandler {
-                    MapToast.makeText(BaseApp.context, R.string.map_network_connect_error, Toast.LENGTH_SHORT).show()
+            .setSchedulers()
+            .mapOrThrowApiException()
+            .doOnErrorWithDefaultErrorHandler {
+                MapToast.makeText(
+                    BaseApp.context,
+                    R.string.map_network_connect_error,
+                    Toast.LENGTH_SHORT
+                ).show()
 
-                    //有缓存则使用缓存（上面和下面的逻辑基本和这里是一样的，所有缓存在DataSet里
-                    //去掉有DataSet的语句就是基本的业务逻辑了（逻辑就很清晰了））
-                    val t = DataSet.getPlaceDetails(placeId)
-                    if (t != null) {
-                        showingPlaceId = placeId
-                        placeDetails.postValue(t)
-                        if (bottomSheetStatus.value == BottomSheetBehavior.STATE_HIDDEN) {
-                            bottomSheetStatus.postValue(BottomSheetBehavior.STATE_COLLAPSED)
-                        }
-                        if (showBottomSheetAfterSuccess) {
-                            bottomSheetStatus.postValue(BottomSheetBehavior.STATE_EXPANDED)
-                        }
-                    } else {
-                        bottomSheetStatus.postValue(BottomSheetBehavior.STATE_HIDDEN)
-                    }
-
-                    true
-                }
-                .safeSubscribeBy() {
+                //有缓存则使用缓存（上面和下面的逻辑基本和这里是一样的，所有缓存在DataSet里
+                //去掉有DataSet的语句就是基本的业务逻辑了（逻辑就很清晰了））
+                val t = DataSet.getPlaceDetails(placeId)
+                if (t != null) {
                     showingPlaceId = placeId
-                    placeDetails.postValue(it.data)
+                    placeDetails.postValue(t!!)
                     if (bottomSheetStatus.value == BottomSheetBehavior.STATE_HIDDEN) {
                         bottomSheetStatus.postValue(BottomSheetBehavior.STATE_COLLAPSED)
                     }
-                    DataSet.savePlaceDetails(it.data, placeId)
-
                     if (showBottomSheetAfterSuccess) {
                         bottomSheetStatus.postValue(BottomSheetBehavior.STATE_EXPANDED)
                     }
-                }.lifeCycle()
+                } else {
+                    bottomSheetStatus.postValue(BottomSheetBehavior.STATE_HIDDEN)
+                }
+
+                true
+            }
+            .safeSubscribeBy() {
+                showingPlaceId = placeId
+                placeDetails.postValue(it)
+                if (bottomSheetStatus.value == BottomSheetBehavior.STATE_HIDDEN) {
+                    bottomSheetStatus.postValue(BottomSheetBehavior.STATE_COLLAPSED)
+                }
+                DataSet.savePlaceDetails(it, placeId)
+
+                if (showBottomSheetAfterSuccess) {
+                    bottomSheetStatus.postValue(BottomSheetBehavior.STATE_EXPANDED)
+                }
+            }.lifeCycle()
     }
 
     /**
@@ -225,58 +239,67 @@ class MapViewModel : BaseViewModel() {
      */
     fun refreshCollectList(showCollectedPlace: Boolean) {
         mapApiService.getCollect()
-                .setSchedulers()
-                .doOnErrorWithDefaultErrorHandler {
-                    val list = DataSet.getCollect()
-                    if (list != null) {
-                        collectList.postValue(list)
-                    }
-                    if (collectList.value?.size == 0) {
-                        MapToast.makeText(BaseApp.context, R.string.map_favorite_empty, Toast.LENGTH_SHORT).show()
-                    } else {
-                        if (showCollectedPlace) {
-                            val listTmp = mutableListOf<String>()
-                            if (list != null) {
-                                listTmp.addAll(list.map { t -> t.placeId })
-                            }
-                            showSomePlaceIconById.value = listTmp
-                        }
-                    }
-
-                    true
+            .setSchedulers()
+            .mapOrThrowApiException()
+            .doOnErrorWithDefaultErrorHandler {
+                val list = DataSet.getCollect()
+                if (list != null) {
+                    collectList.postValue(list!!)
                 }
-                .safeSubscribeBy {
-                    /**
-                     * 同步服务端与缓存。因为之前是可以取placeNickname的所以这里还可以简化，
-                     * 但保留功能扩展性，而且本来这里数据量很小，故下列代码也可以接受
-                     */
-                    it.data.placeIdList.forEach { item ->
-                        DataSet.addCollect(item)
-                    }
-
-                    DataSet.getCollect()?.forEach { t ->
-                        var existInServer = false
-                        for (i in it.data.placeIdList) {
-                            if (t.placeId == i) {
-                                existInServer = true
-                                break
-                            }
+                if (collectList.value?.size == 0) {
+                    MapToast.makeText(
+                        BaseApp.context,
+                        R.string.map_favorite_empty,
+                        Toast.LENGTH_SHORT
+                    ).show()
+                } else {
+                    if (showCollectedPlace) {
+                        val listTmp = mutableListOf<String>()
+                        if (list != null) {
+                            listTmp.addAll(list.map { t -> t.placeId })
                         }
-                        if (!existInServer) {
-                            DataSet.deleteCollect(t.placeId)
+                        showSomePlaceIconById.value = listTmp
+                    }
+                }
+
+                true
+            }
+            .safeSubscribeBy {
+                /**
+                 * 同步服务端与缓存。因为之前是可以取placeNickname的所以这里还可以简化，
+                 * 但保留功能扩展性，而且本来这里数据量很小，故下列代码也可以接受
+                 */
+                it.placeIdList.forEach { item ->
+                    DataSet.addCollect(item)
+                }
+
+                DataSet.getCollect()?.forEach { t ->
+                    var existInServer = false
+                    for (i in it.placeIdList) {
+                        if (t.placeId == i) {
+                            existInServer = true
+                            break
                         }
                     }
-
-                    collectList.value = DataSet.getCollect()
-
-                    if (collectList.value?.size == 0) {
-                        MapToast.makeText(BaseApp.context, R.string.map_favorite_empty, Toast.LENGTH_SHORT).show()
-                    } else {
-                        if (showCollectedPlace) {
-                            showSomePlaceIconById.value = it.data.placeIdList
-                        }
+                    if (!existInServer) {
+                        DataSet.deleteCollect(t.placeId)
                     }
-                }.lifeCycle()
+                }
+
+                collectList.value = DataSet.getCollect()
+
+                if (collectList.value?.size == 0) {
+                    MapToast.makeText(
+                        BaseApp.context,
+                        R.string.map_favorite_empty,
+                        Toast.LENGTH_SHORT
+                    ).show()
+                } else {
+                    if (showCollectedPlace) {
+                        showSomePlaceIconById.value = it.placeIdList
+                    }
+                }
+            }.lifeCycle()
     }
 
     /**
@@ -294,23 +317,35 @@ class MapViewModel : BaseViewModel() {
 
         if (notExist) {
             mapApiService.addCollect(id)
-                    .setSchedulers()
-                    .doOnErrorWithDefaultErrorHandler {
-                        MapToast.makeText(BaseApp.context, R.string.map_network_connect_error, Toast.LENGTH_SHORT).show()
-                        ProgressDialog.hide()
-                        refreshCollectList(true)
-                        true
+                .setSchedulers()
+                .doOnErrorWithDefaultErrorHandler {
+                    MapToast.makeText(
+                        BaseApp.context,
+                        R.string.map_network_connect_error,
+                        Toast.LENGTH_SHORT
+                    ).show()
+                    ProgressDialog.hide()
+                    refreshCollectList(true)
+                    true
+                }
+                .safeSubscribeBy {
+                    if (it.isSuccessful) {
+                        DataSet.addCollect(FavoritePlace(placeNickname, id))
+                        MapToast.makeText(
+                            BaseApp.context,
+                            R.string.map_collect_success,
+                            Toast.LENGTH_SHORT
+                        ).show()
+                    } else {
+                        MapToast.makeText(
+                            BaseApp.context,
+                            R.string.map_network_connect_error,
+                            Toast.LENGTH_SHORT
+                        ).show()
                     }
-                    .safeSubscribeBy {
-                        if (it.isSuccessful) {
-                            DataSet.addCollect(FavoritePlace(placeNickname, id))
-                            MapToast.makeText(BaseApp.context, R.string.map_collect_success, Toast.LENGTH_SHORT).show()
-                        } else {
-                            MapToast.makeText(BaseApp.context, R.string.map_network_connect_error, Toast.LENGTH_SHORT).show()
-                        }
-                        ProgressDialog.hide()
-                        refreshCollectList(true)
-                    }.lifeCycle()
+                    ProgressDialog.hide()
+                    refreshCollectList(true)
+                }.lifeCycle()
         } else {
             DataSet.addCollect(FavoritePlace(placeNickname, id))
             ProgressDialog.hide()
@@ -325,22 +360,30 @@ class MapViewModel : BaseViewModel() {
      */
     fun deleteCollect(id: String) {
         mapApiService.deleteCollect(id.toInt())
-                .setSchedulers()
-                .doOnErrorWithDefaultErrorHandler {
-                    MapToast.makeText(BaseApp.context, R.string.map_network_connect_error, Toast.LENGTH_SHORT).show()
-                    ProgressDialog.hide()
-                    refreshCollectList(true)
-                    true
+            .setSchedulers()
+            .doOnErrorWithDefaultErrorHandler {
+                MapToast.makeText(
+                    BaseApp.context,
+                    R.string.map_network_connect_error,
+                    Toast.LENGTH_SHORT
+                ).show()
+                ProgressDialog.hide()
+                refreshCollectList(true)
+                true
+            }
+            .safeSubscribeBy {
+                if (it.isSuccessful) {
+                    DataSet.deleteCollect(id)
+                } else {
+                    MapToast.makeText(
+                        BaseApp.context,
+                        R.string.map_network_connect_error,
+                        Toast.LENGTH_SHORT
+                    ).show()
                 }
-                .safeSubscribeBy {
-                    if (it.isSuccessful) {
-                        DataSet.deleteCollect(id)
-                    } else {
-                        MapToast.makeText(BaseApp.context, R.string.map_network_connect_error, Toast.LENGTH_SHORT).show()
-                    }
-                    ProgressDialog.hide()
-                    refreshCollectList(true)
-                }.lifeCycle()
+                ProgressDialog.hide()
+                refreshCollectList(true)
+            }.lifeCycle()
 
     }
 
@@ -359,26 +402,27 @@ class MapViewModel : BaseViewModel() {
      */
     fun getPlaceSearch(openString: String?) {
         mapApiService.placeSearch(openString ?: "-1")
-                .setSchedulers()
-                .doOnErrorWithDefaultErrorHandler {
-                    true
+            .setSchedulers()
+            .doOnErrorWithDefaultErrorHandler {
+                true
+            }
+            .safeSubscribeBy {
+                // 这里手动判断 statue，不使用 mapOrThrowApiException()
+                if (it.status == 200) {
+                    openId.value = it.data.placeId
+                    getPlaceDetails(it.data.placeId, false)
+                    bottomSheetStatus.value = BottomSheetBehavior.STATE_COLLAPSED
                 }
-                .safeSubscribeBy {
-                    if (it.status == 200) {
-                        openId.value = it.data.placeId
-                        getPlaceDetails(it.data.placeId, false)
-                        bottomSheetStatus.value = BottomSheetBehavior.STATE_COLLAPSED
+                if (it.status == 500) {
+                    if (openString == null) {
+                        openId.value = PLACE_SEARCH_NULL
+                    } else {
+                        openId.value = PLACE_SEARCH_500
                     }
-                    if (it.status == 500) {
-                        if (openString == null) {
-                            openId.value = PLACE_SEARCH_NULL
-                        } else {
-                            openId.value = PLACE_SEARCH_500
-                        }
-                        getPlaceDetails(mapInfo.value!!.openSiteId.toString(), false)
-                        bottomSheetStatus.value = BottomSheetBehavior.STATE_COLLAPSED
-                    }
-                }.lifeCycle()
+                    getPlaceDetails(mapInfo.value!!.openSiteId.toString(), false)
+                    bottomSheetStatus.value = BottomSheetBehavior.STATE_COLLAPSED
+                }
+            }.lifeCycle()
     }
 
     /**
@@ -388,14 +432,18 @@ class MapViewModel : BaseViewModel() {
      */
     fun addHot(placeId: String) {
         mapApiService.addHot(placeId.toInt()).setSchedulers()
-                .doOnErrorWithDefaultErrorHandler {
-                    true
+            .doOnErrorWithDefaultErrorHandler {
+                true
+            }
+            .safeSubscribeBy {
+                if (!it.isSuccessful) {
+                    MapToast.makeText(
+                        BaseApp.context,
+                        BaseApp.context.getString(R.string.map_add_hot_failed),
+                        Toast.LENGTH_SHORT
+                    ).show()
                 }
-                .safeSubscribeBy {
-                    if (!it.isSuccessful) {
-                        MapToast.makeText(BaseApp.context, BaseApp.context.getString(R.string.map_add_hot_failed), Toast.LENGTH_SHORT).show()
-                    }
-                }.lifeCycle()
+            }.lifeCycle()
     }
 
     /**
@@ -404,14 +452,14 @@ class MapViewModel : BaseViewModel() {
 
     private fun getVrUrl() {
         ApiGenerator.getCommonApiService(CommonApiService::class.java)
-                .getDownMessage(DownMessageParams(DOWN_MESSAGE_NAME))
-                .setSchedulers()
-                .mapOrThrowApiException()
-                .safeSubscribeBy {
-                    if (!it.textList.isNullOrEmpty()) {
-                        vrUrl = it.textList[0].content
-                    }
+            .getDownMessage(DownMessageParams(DOWN_MESSAGE_NAME))
+            .setSchedulers()
+            .mapOrThrowApiException()
+            .safeSubscribeBy {
+                if (!it.textList.isNullOrEmpty()) {
+                    vrUrl = it.textList[0].content
                 }
+            }
 
     }
 
@@ -426,35 +474,42 @@ class MapViewModel : BaseViewModel() {
         val pictureTotal = fileList.size
         var uploadSuccessCount = 0
         var uploadFailedCount = 0
-        for (i in fileList.indices){
+        for (i in fileList.indices) {
             val file = fileList[i]
-            val requestFile: RequestBody = RequestBody.create("image/jpeg".toMediaTypeOrNull(), file)
+            val requestFile: RequestBody =
+                RequestBody.create("image/jpeg".toMediaTypeOrNull(), file)
             val fileName: String = System.currentTimeMillis().toString() + "${i}.jpg"
-            val body: MultipartBody.Part = MultipartBody.Part.createFormData("file", fileName, requestFile)
+            val body: MultipartBody.Part =
+                MultipartBody.Part.createFormData("file", fileName, requestFile)
             val params: MutableMap<String, Int> = HashMap()
             params["place_id"] = showingPlaceId.toInt()
 
             mapApiService.uploadPicture(body, params)
-                    .setSchedulers()
-                    .doFinally {
-                        if(uploadFailedCount + uploadSuccessCount == pictureTotal){
-                            ProgressDialog.hide()
-                            MapDialogTips.show(context, context.resources.getString(R.string.map_upload_picture_success_title), context.resources.getString(R.string.map_upload_picture_success_content) + "\n上传成功数量：$uploadSuccessCount\n上传失败数量：$uploadFailedCount", true, object : OnSelectListenerTips {
+                .setSchedulers()
+                .doFinally {
+                    if (uploadFailedCount + uploadSuccessCount == pictureTotal) {
+                        ProgressDialog.hide()
+                        MapDialogTips.show(
+                            context,
+                            context.resources.getString(R.string.map_upload_picture_success_title),
+                            context.resources.getString(R.string.map_upload_picture_success_content) + "\n上传成功数量：$uploadSuccessCount\n上传失败数量：$uploadFailedCount",
+                            true,
+                            object : OnSelectListenerTips {
                                 override fun onPositive() {}
                             })
-                        }
                     }
-                    .doOnErrorWithDefaultErrorHandler {
-                        uploadFailedCount ++
-                        true
+                }
+                .doOnErrorWithDefaultErrorHandler {
+                    uploadFailedCount++
+                    true
+                }
+                .safeSubscribeBy {
+                    if (it.isSuccessful) {
+                        uploadSuccessCount++
+                    } else {
+                        uploadFailedCount++
                     }
-                    .safeSubscribeBy {
-                        if (it.isSuccessful) {
-                            uploadSuccessCount ++
-                        } else {
-                            uploadFailedCount ++
-                        }
-                    }.lifeCycle()
+                }.lifeCycle()
         }
 
     }
@@ -466,16 +521,16 @@ class MapViewModel : BaseViewModel() {
 
     fun selectPic(activity: Activity) {
         LPhotoHelper.Builder()
-                .maxChooseCount(9) //最多选几个
-                .columnsNumber(3) //每行显示几列图片
-                .imageType(LPPImageType.ofAll()) // 文件类型
-                .pauseOnScroll(false) // 是否滑动暂停加载图片显示
-                .isSingleChoose(false) // 是否是单选
-                .isOpenLastAlbum(false) // 是否直接打开最后一次选择的相册
-                .selectedPhotos(ArrayList())
-                .theme(R.style.common_LPhotoTheme)
-                .build()
-                .start(activity, PICTURE_SELECT)
+            .maxChooseCount(9) //最多选几个
+            .columnsNumber(3) //每行显示几列图片
+            .imageType(LPPImageType.ofAll()) // 文件类型
+            .pauseOnScroll(false) // 是否滑动暂停加载图片显示
+            .isSingleChoose(false) // 是否是单选
+            .isOpenLastAlbum(false) // 是否直接打开最后一次选择的相册
+            .selectedPhotos(ArrayList())
+            .theme(R.style.common_LPhotoTheme)
+            .build()
+            .start(activity, PICTURE_SELECT)
     }
 
     /**
@@ -485,9 +540,13 @@ class MapViewModel : BaseViewModel() {
      * @param fragment 供requireSharePermission方法使用
      */
 
-    fun sharePicture(context: Context, fragment: Fragment){
+    fun sharePicture(context: Context, fragment: Fragment) {
         context.doIfLogin("分享") {
-            fragment.doPermissionAction(Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.CAMERA) {
+            fragment.doPermissionAction(
+                Manifest.permission.READ_EXTERNAL_STORAGE,
+                Manifest.permission.WRITE_EXTERNAL_STORAGE,
+                Manifest.permission.CAMERA
+            ) {
                 reason = BaseApp.context.resources.getString(R.string.map_require_permission_tips)
                 doAfterGranted {
                     requireSharePermission(context, fragment)
@@ -509,22 +568,30 @@ class MapViewModel : BaseViewModel() {
     private fun requireSharePermission(context: Context, fragment: Fragment) {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             if (BaseApp.context.checkSelfPermission(Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED ||
-                    BaseApp.context.checkSelfPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED ||
-                    BaseApp.context.checkSelfPermission(Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED
+                BaseApp.context.checkSelfPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED ||
+                BaseApp.context.checkSelfPermission(Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED
             ) {
-                CyxbsToast.makeText(BaseApp.context, BaseApp.context.resources.getString(R.string.map_no_permission_store), Toast.LENGTH_LONG).show()
+                CyxbsToast.makeText(
+                    BaseApp.context,
+                    BaseApp.context.resources.getString(R.string.map_no_permission_store),
+                    Toast.LENGTH_LONG
+                ).show()
                 return
             }
         }
         context.let {
-            MapDialog.show(it, BaseApp.context.resources.getString(R.string.map_share_picture_title), BaseApp.context.resources.getString(R.string.map_share_picture), object : OnSelectListener {
-                override fun onDeny() {
-                }
+            MapDialog.show(
+                it,
+                BaseApp.context.resources.getString(R.string.map_share_picture_title),
+                BaseApp.context.resources.getString(R.string.map_share_picture),
+                object : OnSelectListener {
+                    override fun onDeny() {
+                    }
 
-                override fun onPositive() {
-                    fragment.activity?.let { it1 -> selectPic(it1) }
-                }
-            })
+                    override fun onPositive() {
+                        fragment.activity?.let { it1 -> selectPic(it1) }
+                    }
+                })
         }
     }
 

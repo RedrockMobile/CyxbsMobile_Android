@@ -1,17 +1,9 @@
 package com.mredrock.cyxbs.discover.map.ui.fragment.inner
 
-import android.Manifest
-import android.app.Activity
-import android.content.Intent
-import android.content.pm.PackageManager
-import android.database.Cursor
-import android.os.Build
 import android.os.Bundle
-import android.provider.MediaStore
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Toast
 import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
@@ -19,11 +11,8 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.android.flexbox.FlexWrap
 import com.google.android.flexbox.FlexboxLayoutManager
 import com.google.android.material.bottomsheet.BottomSheetBehavior
-import com.mredrock.cyxbs.common.BaseApp
-import com.mredrock.cyxbs.common.component.CyxbsToast
 import com.mredrock.cyxbs.common.ui.BaseFragment
 import com.mredrock.cyxbs.common.utils.extensions.doIfLogin
-import com.mredrock.cyxbs.common.utils.extensions.doPermissionAction
 import com.mredrock.cyxbs.common.utils.extensions.gone
 import com.mredrock.cyxbs.common.utils.extensions.visible
 import com.mredrock.cyxbs.discover.map.R
@@ -34,9 +23,6 @@ import com.mredrock.cyxbs.discover.map.ui.adapter.DetailAttributeRvAdapter
 import com.mredrock.cyxbs.discover.map.ui.adapter.DetailTagRvAdapter
 import com.mredrock.cyxbs.discover.map.util.BannerPageTransformer
 import com.mredrock.cyxbs.discover.map.viewmodel.MapViewModel
-import com.mredrock.cyxbs.discover.map.widget.MapDialog
-import com.mredrock.cyxbs.discover.map.widget.OnSelectListener
-import com.mredrock.cyxbs.discover.map.widget.ProgressDialog
 import kotlinx.android.synthetic.main.map_fragment_place_detail_container.*
 
 

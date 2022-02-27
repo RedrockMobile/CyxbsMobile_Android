@@ -9,6 +9,7 @@ import static com.mredrock.cyxbs.store.utils.widget.slideshow.indicators.utils.I
 import static com.mredrock.cyxbs.store.utils.widget.slideshow.indicators.utils.Indicators.Style.MOVE;
 import static com.mredrock.cyxbs.store.utils.widget.slideshow.indicators.utils.Indicators.Style.NO_SHOW;
 import static com.mredrock.cyxbs.store.utils.widget.slideshow.indicators.utils.Indicators.Style.SELF_VIEW;
+import static com.mredrock.cyxbs.store.utils.widget.slideshow.indicators.utils.Indicators.Style.WATER_DROP;
 import static com.mredrock.cyxbs.store.utils.widget.slideshow.indicators.utils.Indicators.Style.ZOOM;
 import static java.lang.annotation.RetentionPolicy.SOURCE;
 
@@ -29,7 +30,7 @@ public class Indicators {
             EXTEND_ABSTRACT_INDICATORS,
             MOVE,
             ZOOM,
-            Style.WATER_DROP,
+            WATER_DROP,
             FLASH,
     })
     public @interface Style {
