@@ -6,6 +6,7 @@ import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
 import android.os.Environment
+import android.util.Log
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
 import com.bumptech.glide.Glide
@@ -33,6 +34,7 @@ class ViewImageCropActivity : AppCompatActivity() {
             imgResPath: String,
             resultCode: Int = DEFAULT_RESULT_CODE
         ) {
+           Log.e("wxdasdastag","(ViewImageCropActivity.kt:36)->>url${imgResPath} ")
             context.startActivityForResult<ViewImageCropActivity>(
                 resultCode,
                 IMG_RES_PATH to imgResPath,

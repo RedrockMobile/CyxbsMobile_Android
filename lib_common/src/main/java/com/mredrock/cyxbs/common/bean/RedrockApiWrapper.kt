@@ -24,4 +24,4 @@ class RedrockApiWrapper<T>(val data: T) : RedrockApiStatus()
 /**
  * 一些后端接口给10000
  */
-val RedrockApiStatus.isSuccessful get() = (status == 200 || status == 10000)
+val RedrockApiStatus.isSuccessful get() = (status == 200 || status == 10000 || status == 0)

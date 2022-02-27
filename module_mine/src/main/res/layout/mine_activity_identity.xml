@@ -1,0 +1,154 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+
+    </data>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/ll_statu"
+        android:layout_width="match_parent"
+
+        android:layout_height="match_parent"
+        tools:context=".page.mine.ui.activity.IdentityActivity">
+
+        <ImageView
+            android:id="@+id/mine_imageview"
+            android:layout_width="7dp"
+            android:layout_height="16dp"
+            android:layout_marginStart="17dp"
+            android:layout_marginTop="60dp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:srcCompat="@drawable/mine_ic_iv_back_black_arrow" />
+
+        <TextView
+            android:id="@+id/tv_identity"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+           android:paddingLeft="13dp"
+            android:text="身份设置"
+            android:textSize="20dp"
+            android:textColor="@color/mine_black"
+            app:layout_constraintBottom_toBottomOf="@+id/mine_imageview"
+            app:layout_constraintStart_toEndOf="@+id/mine_imageview"
+            app:layout_constraintTop_toTopOf="@+id/mine_imageview" />
+
+        <RelativeLayout
+            android:id="@+id/mine_relativelayout"
+            android:layout_width="0dp"
+            android:layout_height="125dp"
+            android:layout_marginLeft="16dp"
+            android:layout_marginTop="48dp"
+            android:layout_marginRight="16dp"
+            android:background="@drawable/mine_ic_rl_background"
+            android:gravity="center"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/tv_identity">
+
+            <TextView
+                android:layout_centerVertical="true"
+                android:id="@+id/mine_fan_item_tv_nickname"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="17dp"
+                android:layout_marginRight="17dp"
+                android:textColor="@color/mine_black"
+                android:text="@string/mine_status_message"
+                android:textSize="14dp" />
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+
+
+                android:id="@+id/cl_content_view"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="@drawable/mine_ic_item_background">
+
+                <TextView
+                    android:id="@+id/tv_item_identity_name"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="16dp"
+                    android:layout_marginTop="16dp"
+                    android:text="红岩网校工作站"
+                    android:textSize="23dp"
+                    android:textColor="#F3FEFF"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+                <TextView
+                    android:id="@+id/tv_item_identity"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="16dp"
+                    android:text="干事"
+                    android:textColor="#F3FEFF"
+                    android:textSize="18dp"
+                    app:layout_constraintStart_toStartOf="@+id/tv_item_identity_name"
+                    app:layout_constraintTop_toBottomOf="@+id/tv_item_identity_name" />
+
+                <TextView
+                    android:textSize="18dp"
+                    android:textColor="#F3FEFF"
+                    android:id="@+id/tv_item_identity_time"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="8dp"
+                    android:layout_marginEnd="36dp"
+                    android:text="2018.4.28-2020.5.29"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/tv_item_identity" />
+            </androidx.constraintlayout.widget.ConstraintLayout>
+        </RelativeLayout>
+
+        <com.google.android.material.tabs.TabLayout
+            android:id="@+id/mine_tab_status"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="27dp"
+            android:background="@drawable/mine_layer_list_statu_ll_background"
+            android:theme="@style/Theme.MaterialComponents"
+            app:tabGravity="fill"
+            app:tabTextColor="@color/mine_black"
+            app:tabIndicator="@drawable/mine_ic_tab_indicator"
+            app:tabIndicatorColor="@android:color/transparent"
+            app:tabIndicatorFullWidth="false"
+            app:tabIndicatorHeight="3dp"
+            app:tabMaxWidth="180dp"
+            app:tabMinWidth="160dp"
+            app:tabMode="fixed"
+            app:tabPaddingBottom="-10dp"
+            android:textSize="30dp"
+            app:tabPaddingEnd="40dp"
+            app:tabPaddingStart="40dp"
+            app:tabTextAppearance="@style/tab_style"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/mine_relativelayout"/>
+        <View
+            android:id="@+id/view_line"
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="#2A4E841A"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/mine_tab_status" />
+
+        <androidx.viewpager2.widget.ViewPager2
+            android:id="@+id/vp_status"
+            android:paddingTop="15dp"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:background="@color/mine_dynamic"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/view_line" />
+
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</layout>

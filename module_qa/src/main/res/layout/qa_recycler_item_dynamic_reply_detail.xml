@@ -46,7 +46,6 @@
         android:singleLine="false"
         android:textColor="@color/qa_dynamic_time_text_color"
         android:textSize="11sp"
-        app:layout_constraintBottom_toBottomOf="@+id/qa_iv_reply_detail_avatar"
         app:layout_constraintStart_toStartOf="@+id/qa_tv_reply_detail_nickname"
         app:layout_constraintTop_toBottomOf="@+id/qa_tv_reply_detail_nickname"
         tools:text="2016-9-12" />
@@ -70,26 +69,27 @@
         android:layout_width="44dp"
         android:layout_height="44dp"
         android:layout_marginStart="16dp"
-        android:layout_marginTop="16dp"
         android:scaleType="centerCrop"
         android:src="@drawable/common_default_avatar"
+        app:layout_constraintBottom_toBottomOf="@+id/qa_tv_reply_detail_date"
         app:layout_constraintStart_toEndOf="@id/qa_gl_reply_detail_start"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="@+id/qa_tv_reply_detail_nickname" />
 
     <TextView
         android:id="@+id/qa_tv_reply_detail_nickname"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="10dp"
+        android:layout_marginTop="22dp"
         android:layout_toEndOf="@id/qa_iv_reply_detail_avatar"
+        android:maxEms="10"
+        android:singleLine="true"
         android:textColor="@color/qa_dynamic_nickname_text_color"
         android:textSize="13sp"
         android:textStyle="bold"
-        android:maxEms="10"
-        android:singleLine="true"
         app:layout_constraintBottom_toTopOf="@+id/qa_tv_reply_detail_date"
         app:layout_constraintStart_toEndOf="@id/qa_iv_reply_detail_avatar"
-        app:layout_constraintTop_toTopOf="@+id/qa_iv_reply_detail_avatar"
+        app:layout_constraintTop_toTopOf="parent"
         tools:text="那个男人" />
 
     <androidx.appcompat.widget.AppCompatTextView
@@ -115,11 +115,11 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         app:checkedColor="#323FD9"
-        app:checkedLikeIconRes="@drawable/qa_ic_answer_list_praised"
-        app:cirRadius="14dp"
+        app:checkedLikeIconRes="@drawable/qa_ic_answer_list_praised_new"
+        app:cirRadius="12dp"
         app:cycleTime="1000"
         app:defaultColor="#ffcccccc"
-        app:defaultLikeIconRes="@drawable/qa_ic_answer_list_praise"
+        app:defaultLikeIconRes="@drawable/qa_ic_answer_list_praise_new"
         app:layout_constraintBottom_toBottomOf="@+id/qa_tv_reply_detail_nickname"
         app:layout_constraintEnd_toStartOf="@+id/qa_gl_reply_detail_end"
         app:layout_constraintTop_toTopOf="@+id/qa_tv_reply_detail_nickname"

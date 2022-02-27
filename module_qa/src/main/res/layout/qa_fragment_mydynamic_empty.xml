@@ -1,0 +1,136 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_gravity="center"
+    android:paddingBottom="80dp">
+
+    <!--以下是初始化加载时显示的holder-->
+    <com.mredrock.cyxbs.common.component.JCardViewPlus
+        android:id="@+id/card_holder"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="5dp"
+        android:layout_marginEnd="5dp"
+        android:visibility="gone"
+        app:cardBackgroundColor="@color/qa_question_item_shadow_color"
+        app:horizontalContentPadding="16dp"
+        app:shadowColor="@color/qa_question_item_shadow_color"
+        app:shadowRadius="10dp"
+        app:verticalContentPadding="20dp">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <de.hdodenhof.circleimageview.CircleImageView
+                    android:id="@+id/civ"
+                    android:layout_width="30dp"
+                    android:layout_height="30dp"
+                    android:layout_centerVertical="true"
+                    android:scaleType="centerCrop"
+                    android:src="@color/qa_question_item_empty_holder_color" />
+
+                <View
+                    android:id="@+id/top"
+                    android:layout_width="40dp"
+                    android:layout_height="13dp"
+                    android:layout_marginStart="7dp"
+                    android:layout_toEndOf="@id/civ"
+                    android:background="@color/qa_question_item_empty_holder_color" />
+
+                <View
+                    android:layout_width="61dp"
+                    android:layout_height="11dp"
+                    android:layout_below="@id/top"
+                    android:layout_alignStart="@id/top"
+                    android:layout_marginTop="6dp"
+                    android:background="@color/qa_question_item_empty_holder_color" />
+
+                <View
+                    android:layout_width="51dp"
+                    android:layout_height="13dp"
+                    android:layout_alignParentEnd="true"
+                    android:layout_centerVertical="true"
+                    android:background="@color/qa_question_item_empty_holder_color" />
+            </RelativeLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:weightSum="9">
+
+                <View
+                    android:layout_width="0dp"
+                    android:layout_height="17dp"
+                    android:layout_marginTop="10dp"
+                    android:layout_weight="5"
+                    android:background="@color/qa_question_item_empty_holder_color" />
+            </LinearLayout>
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="14dp"
+                android:layout_marginTop="7dp"
+                android:background="@color/qa_question_item_empty_holder_color" />
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="14dp"
+                android:layout_marginTop="7dp"
+                android:background="@color/qa_question_item_empty_holder_color" />
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="14dp"
+                android:layout_marginTop="7dp"
+                android:background="@color/qa_question_item_empty_holder_color" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:weightSum="4">
+
+                <View
+                    android:layout_width="0dp"
+                    android:layout_height="14dp"
+                    android:layout_marginTop="10dp"
+                    android:layout_weight="1"
+                    android:background="@color/qa_question_item_empty_holder_color" />
+            </LinearLayout>
+        </LinearLayout>
+    </com.mredrock.cyxbs.common.component.JCardViewPlus>
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginTop="80dp"
+        android:orientation="vertical">
+
+        <ImageView
+            android:id="@+id/iv_hint"
+            android:layout_width="167dp"
+            android:layout_height="127dp"
+            android:layout_gravity="center_horizontal"
+            android:src="@drawable/qa_ic_question_no_question_or_answer" />
+
+        <TextView
+            android:id="@+id/tv_hint"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginTop="17dp"
+            android:text="@string/qa_question_list_empty_hint"
+            android:textColor="@color/common_level_two_font_color"
+            android:textSize="12sp" />
+    </LinearLayout>
+</FrameLayout>

@@ -1,5 +1,6 @@
 package com.mredrock.cyxbs.qa.pages.mine.ui.adapter
 
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -11,7 +12,7 @@ import com.mredrock.cyxbs.qa.beannew.CommentWrapper
 import com.mredrock.cyxbs.qa.component.recycler.BaseEndlessRvAdapter
 import com.mredrock.cyxbs.qa.component.recycler.BaseViewHolder
 import com.mredrock.cyxbs.qa.pages.dynamic.ui.activity.DynamicDetailActivity
-import com.mredrock.cyxbs.qa.pages.mine.ui.MyCommentActivity
+import com.mredrock.cyxbs.qa.pages.mine.ui.activity.MyCommentActivity
 import com.mredrock.cyxbs.qa.pages.mine.ui.adapter.viewholder.MyCommentViewHolder
 import com.mredrock.cyxbs.qa.pages.mine.viewmodel.MyCommentViewModel
 import kotlinx.android.synthetic.main.qa_activity_my_comment.*
@@ -47,6 +48,7 @@ class MyCommentRvAdapter(
                     if (comment.postId == "0") {
                         BaseApp.context.toast("该评论已被删除")
                     } else {
+                        Log.e("wxtag","(MyCommentRvAdapter.kt:50)->> 执行跳转了嘛")
                         DynamicDetailActivity.activityStart(activity, comment.postId)
                     }
                 }
@@ -56,7 +58,7 @@ class MyCommentRvAdapter(
                 }
                 qa_like_view_my_comment_item_praise.setOnClickListener {
                     //执行点赞
-                    viewModel.praise(comment.commentId) {
+                    viewModel.praiseComment(comment.commentId) {
                         //改变状态
                         qa_like_view_my_comment_item_praise.isChecked =
                             !qa_like_view_my_comment_item_praise.isChecked

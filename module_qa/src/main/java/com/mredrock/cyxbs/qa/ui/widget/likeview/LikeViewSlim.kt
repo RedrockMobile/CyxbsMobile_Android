@@ -5,11 +5,13 @@ import android.graphics.Canvas
 import android.os.Build
 import android.text.TextPaint
 import android.util.AttributeSet
+import android.util.Log
 import androidx.core.content.ContextCompat
 import com.mredrock.cyxbs.common.config.StoreTask
 import com.mredrock.cyxbs.common.network.ApiGenerator
 import com.mredrock.cyxbs.common.utils.extensions.*
 import com.mredrock.cyxbs.qa.R
+import com.mredrock.cyxbs.qa.config.CommentConfig
 import com.mredrock.cyxbs.qa.network.ApiServiceNew
 import java.lang.ref.WeakReference
 
@@ -45,7 +47,8 @@ class LikeViewSlim @JvmOverloads constructor(
     private val textPaint = TextPaint()
 
     init {
-        textPaint.textSize = context.sp(11).toFloat()
+        textPaint.textSize = context.sp(14).toFloat()
+
         textPaint.isAntiAlias = true
     }
 
@@ -63,7 +66,9 @@ class LikeViewSlim @JvmOverloads constructor(
     override fun onDraw(canvas: Canvas?) {
         val fontMetrics = textPaint.fontMetrics
         val offsetY: Float = (fontMetrics.bottom - fontMetrics.top) / 2 - fontMetrics.bottom
+
         textPaint.color = if (isPraised) {
+
             //如果点过赞，就换做点赞后的颜色
             getColor(R.color.qa_praise_text_color)
         } else {
@@ -107,11 +112,10 @@ class LikeViewSlim @JvmOverloads constructor(
             likeMap["$id-$model"] = Pair(this.praiseCount, this.isPraised)
         } else {
 
-            this.isPraised = likeMap["$id-$model"]?.second ?: false
+            this.isPraised = isPraised
             // 如果map中有记录是否点赞。则根据外部传来的真实点赞值（除了自己），加上自己是否点赞
             this.praiseCount =
                 praiseCount + (if (isPraised) -1 else 0) + (if (this.isPraised) 1 else 0) // likeMap["$id-$model"]?.first ?: 0
-
             likeMap["$id-$model"] = Pair(this.praiseCount, this.isPraised)
         }
 
@@ -123,7 +127,7 @@ class LikeViewSlim @JvmOverloads constructor(
         observer["${this.id}-${this.model}"]?.add(weakP!!)
 
         setCheckedWithoutAnimator(this.isPraised)
-        invalidate()
+        //invalidate()
     }
 
     // 根据id和model去map中寻找对应的“帖子/动态”点赞数和是否点赞
@@ -164,7 +168,6 @@ class LikeViewSlim @JvmOverloads constructor(
 
         if (isLoading) return
         isLoading = true
-
         if (isPraised) {
             isPraised = false
             praiseCount -= 1
@@ -178,8 +181,17 @@ class LikeViewSlim @JvmOverloads constructor(
         isChecked = isPraised
         likeMap["$tmpId-$tmpModel"] = Pair(praiseCount, isPraised)
         invalidate()
-        ApiGenerator.getApiService(ApiServiceNew::class.java)
-            .praise(tmpId, tmpModel)
+        when(tmpModel) {
+            CommentConfig.PRAISE_MODEL_DYNAMIC ->
+                ApiGenerator.getApiService(ApiServiceNew::class.java)
+                    .praiseDynamic(tmpId)
+            CommentConfig.PRAISE_MODEL_COMMENT ->
+                ApiGenerator.getApiService(ApiServiceNew::class.java)
+                    .praiseComment(tmpId)
+            //应该加个异常处理
+            else -> ApiGenerator.getApiService(ApiServiceNew::class.java)
+                .praiseDynamic(tmpId)
+        }
             .checkError()
             .setSchedulers()
             .doOnError {
@@ -193,9 +205,9 @@ class LikeViewSlim @JvmOverloads constructor(
                 sendBroadcast("$tmpId-$tmpModel")
 
                 /*
-                * (这个自定义 View 不是我写的)
-                * 在网络请求成功后向后端发送请求更新任务进度
-                * */
+                 * (这个自定义 View 不是我写的)
+                 * 在网络请求成功后向后端发送请求更新任务进度
+                 */
                 StoreTask.postTask(StoreTask.Task.GIVE_A_LIKE, tmpId)
             }
     }

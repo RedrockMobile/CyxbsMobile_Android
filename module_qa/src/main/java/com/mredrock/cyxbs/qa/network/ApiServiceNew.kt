@@ -12,8 +12,61 @@ import retrofit2.http.*
  * Created By zhangzhe 2020/12/1
  */
 interface ApiServiceNew {
-    //圈子详情里面的最新和热门帖子的接口
-    @GET("/magipoke-loop/post/getLoopPage")
+    //获取单个动态信息
+    @GET("/magipoke-loop/post")
+    fun getPostInfo(
+        @Query("id")
+        postId: String
+    ): Observable<RedrockApiWrapper<Dynamic>>
+
+    /**
+     * 发布动态
+     * params存一个<"id", "帖子id">的键值对MutableMap<String, String>
+     *     example:
+     *         val params: MutableMap<String, Int> = HashMap()
+     *         params["id"] = "帖子id"
+     * parts存一个MultipartBody.Part
+     *     example:
+     *
+     */
+    @POST("/magipoke-loop/post")
+    @Multipart
+    fun releaseDynamic(@Part parts: List<MultipartBody.Part>): Observable<RedrockApiWrapper<DynamicReleaseResult>>
+
+//    //更新动态信息
+//    @PUT("/magipoke-loop/post")
+//    @FormUrlEncoded
+
+    //获取首页动态
+    @GET("/magipoke-loop/post/homepage")
+    fun getDynamicList(
+        @Query("page")
+        page: Int,
+        @Query("size")
+        size: Int = 6,
+        @Header("App-Version")
+        versionCode: Long = 0L
+    ): Observable<RedrockApiWrapper<Array<MessageWrapper>>>
+
+    //获取关注的人的动态
+    @GET("/magipoke-loop/post/focus")
+    fun getFocusDynamicList(
+        @Query("page")
+        page: Int,
+        @Query("size")
+        size: Int = 6
+    ): Observable<RedrockApiWrapper<List<Dynamic>>>
+
+    //获取指定用户的动态
+    @GET("/magipoke-loop/post/user")
+    fun getPersoalDynamic(
+        @Query("redid") redid:String?,
+        @Query("page") page: Int,
+        @Query("size") size: Int
+    ): Observable<RedrockApiWrapper<List<Dynamic>>>
+
+    //获取某个圈子详情里面的最新和热门动态
+    @GET("/magipoke-loop/post/ground")
     fun getCircleDynamicList(
         @Query("loop")
         loop: Int,
@@ -25,31 +78,86 @@ interface ApiServiceNew {
         type: String
     ): Observable<RedrockApiWrapper<List<Dynamic>>>
 
-    @GET("/magipoke-loop/post/getMainPage")
-    fun getDynamicList(
-        @Query("type")
-        type: String,
+    //举报动态
+    @POST("/magipoke-loop/report/post")
+    @FormUrlEncoded
+    fun reportDynamic(
+        @Field("id")
+        id: String,
+        @Field("content") content: String
+    ): Observable<RedrockApiStatus>
+
+    //删除动态
+    @DELETE("/magipoke-loop/post")
+    fun deleteDynamic(@Field("id") id: String): Observable<RedrockApiStatus>
+
+    //获取某个动态的评论(旧)
+    @GET("/magipoke-loop/getallcomment")
+    fun getComment(
+        @Query("post_id")
+        postId: String
+    ): Observable<RedrockApiWrapper<List<Comment>>>
+
+    // TODO: 获取 某个动态的评论 或 某个评论的评论(分页)
+    @GET("/magipoke-loop/comment")
+    fun getComment(
+        @Query("target_id")
+        postId: String,
+        @Query("comment_type")
+        commentType: Int,
         @Query("page")
         page: Int,
         @Query("size")
-        size: Int = 6
-    ): Observable<RedrockApiWrapper<List<Dynamic>>>
+        size: Int
+    ): Observable<RedrockApiWrapper<List<Comment>>>
 
-    @GET("/magipoke-loop/ground/getFollowedTopic")
-    fun getFollowedTopic(): Observable<RedrockApiWrapper<List<Topic>>>
+    //发布评论
+    @POST("/magipoke-loop/comment")
+    @Multipart
+    fun releaseComment(@Part parts: List<MultipartBody.Part>): Observable<RedrockApiWrapper<CommentReleaseResult>>
 
-    @POST("/magipoke-loop/ground/getTopicGround")
+    //删除某个动态的评论
+    @DELETE("/magipoke-loop/comment")
     @FormUrlEncoded
+    fun deleteComment(@Field("id") id: String): Observable<RedrockApiStatus>
+
+    //举报评论
+    @POST("/magipoke-loop/report/comment")
+    @FormUrlEncoded
+    fun reportComment(
+        @Field("id")
+        id: String,
+        @Field("content") content: String
+    ): Observable<RedrockApiStatus>
+
+    //获取所有圈子广场
+    @GET("/magipoke-loop/ground/all")
     fun getTopicGround(
-        @Field("topic_name")
-        topic_name: String, @Field("instruction")
+        @Query("topic_name")
+        topic_name: String,
+        @Query("instruction")
         instruction: String
     ): Observable<RedrockApiWrapper<List<Topic>>>
 
-    @GET("/magipoke-loop/search/getSearchHotWord")
+    //获取所有关注的圈子广场
+    @GET("/magipoke-loop/ground/follow")
+    fun getFollowedTopic(): Observable<RedrockApiWrapper<List<Topic>>>
+
+    //关注/取关一个圈子广场
+    @POST("/magipoke-loop/ground/follow")
+    @FormUrlEncoded
+    fun followTopicGround(@Field("topic_name") topicName: String): Observable<RedrockApiStatus>
+
+    //获取关注的圈子广场的未读信息
+    @GET("/magipoke-loop/ground/unreadCount")
+    fun getTopicMessage(@Query("last") last: String): Observable<RedrockApiWrapper<List<TopicMessage>>>
+
+    //获取全部搜索热词
+    @GET("/magipoke-loop/search/hotWord")
     fun getSearchHotWord(): Observable<RedrockApiWrapper<SearchHotWord>>
 
-    @GET("/magipoke-loop/search/searchPost")
+    //搜索帖子
+    @GET("/magipoke-loop/search/post")
     fun getSearchResult(
         @Query("key")
         searchContent: String,
@@ -57,35 +165,31 @@ interface ApiServiceNew {
         @Query("size") size: Int
     ): Observable<RedrockApiWrapper<List<Dynamic>>>
 
-    @GET("/magipoke-loop/search/searchKnowledge")
+    //搜索知识库
+    @GET("/magipoke-loop/search/knowledge")
     fun getSearchKnowledge(
         @Query("key") searchKey: String,
         @Query("page") page: Int,
         @Query("size") size: Int
     ): Observable<RedrockApiWrapper<List<Knowledge>>>
 
-    @GET("/magipoke-loop/ground/getUnreadCount")
-    fun getTopicMessage(@Query("last") last: String): Observable<RedrockApiWrapper<List<TopicMessage>>>
+    //搜索用户
+    @GET("/magipoke-loop/search/user")
+    fun getSearchUsers(@Query("key") key: String):Observable<RedrockApiWrapper<List<UserBrief>>>
 
-    /**
-     * params存一个<"id", "帖子id">的键值对MutableMap<String, String>
-     *     example:
-     *         val params: MutableMap<String, Int> = HashMap()
-     *         params["id"] = "帖子id"
-     * parts存一个MultipartBody.Part
-     *     example:
-     *
-     */
+    //搜索所有的东西
 
-    @POST("/magipoke-loop/post/releaseDynamic")
+
+    @FormUrlEncoded
+    @POST("/magipoke-loop/user/focus")
+    fun changeFocusStatus(@Field("redid") redid: String):Observable<RedrockApiStatus>
+
+    @PUT("/magipoke-loop/post/dynamic")
     @Multipart
-    fun releaseDynamic(@Part parts: List<MultipartBody.Part>): Observable<RedrockApiWrapper<DynamicReleaseResult>>
+    fun modificationDynamic(@Part parts: List<MultipartBody.Part>): Observable<DynamicReleaseResult>
 
-    @POST("/magipoke-loop/comment/releaseComment")
-    @Multipart
-    fun releaseComment(@Part parts: List<MultipartBody.Part>): Observable<RedrockApiWrapper<CommentReleaseResult>>
-
-    @POST("/magipoke-loop/comment/releaseComment")
+    // 发布评论
+    @POST("/magipoke-loop/comment")
     @FormUrlEncoded
     fun releaseComment(
         @Field("content")
@@ -96,90 +200,59 @@ interface ApiServiceNew {
         replyId: String
     ): Observable<RedrockApiWrapper<CommentReleaseResult>>
 
-    @POST("/magipoke-loop/comment/praise")
+    // 点赞动态
+    @POST("/magipoke-loop/praise/post")
     @FormUrlEncoded
-    fun praise(
+    fun praiseDynamic(
         @Field("id")
-        replyId: String, @Field("model") model: String
+        replyId: String
     ): Observable<RedrockApiStatus>
 
-    @POST("/magipoke-loop/ignore/addIgnoreUid")
+    // 点赞评论
+    @POST("/magipoke-loop/praise/comment")
     @FormUrlEncoded
-    fun ignoreUid(
-        @Field("uid")
-        uid: String
+    fun praiseComment(
+        @Field("id")
+        replyId: String
     ): Observable<RedrockApiStatus>
 
-    @POST("/magipoke-loop/ignore/cancelIgnoreUid")
+    // 屏蔽用户
+    @POST("/magipoke-loop/ignore")
+    @FormUrlEncoded
+    fun ignoreUid(@Field("uid") uid: String): Observable<RedrockApiStatus>
+
+    // 取消屏蔽用户
+    @DELETE("/magipoke-loop/ignore")
     @FormUrlEncoded
     fun cancelIgnoreUid(
         @Field("uid")
         uid: String
     ): Observable<RedrockApiStatus>
 
-    @POST("/magipoke-loop/ground/followTopicGround")
+    // 获取全部被屏蔽的用户
+    @GET("/magipoke-loop/user/ignore")
+    fun getIgnoreUid(
+        @Field("page") page: Int,
+        @Field("size") size: Int
+    ): Observable<RedrockApiWrapper<List<Ignore>>>
+
+    // 获取用户收到的评论回复
     @FormUrlEncoded
-    fun followTopicGround(
-        @Field("topic_name") topicName: String
-    ): Observable<RedrockApiStatus>
-
-    @POST("/magipoke-loop/comment/report")
-    @FormUrlEncoded
-    fun report(
-        @Field("id")
-        id: String, @Field("model") model: String, @Field("content") content: String
-    ): Observable<RedrockApiStatus>
-
-    @POST("/magipoke-loop/comment/deleteId")
-    @FormUrlEncoded
-    fun deleteId(
-        @Field("id")
-        id: String,
-        @Field("model")
-        model: String
-    ): Observable<RedrockApiStatus>
-
-    @GET("/magipoke-loop/comment/getallcomment")
-    fun getComment(
-        @Query("post_id")
-        postId: String
-    ): Observable<RedrockApiWrapper<List<Comment>>>
-
-    @GET("/magipoke-loop/post/getPostInfo")
-    fun getPostInfo(
-        @Query("id")
-        postId: String
-    ): Observable<RedrockApiWrapper<Dynamic>>
-
-    /**
-     * 获取用户收到的回复
-     */
-    @FormUrlEncoded
-    @POST("/magipoke-loop/user/replyme")
+    @POST("/magipoke-loop/user/comment/me")
     fun getUserReplay(
         @Field("page") page: Int,
         @Field("size") size: Int
     ): Observable<RedrockApiWrapper<List<CommentWrapper>>>
 
-    /**
-     * 获取用户收到的点赞
-     */
+    // 获取用户收到的点赞
     @FormUrlEncoded
-    @POST("/magipoke-loop/user/praisedme")
+    @POST("/magipoke-loop/user/praise/me")
     fun getUserPraise(
         @Field("page") page: Int,
         @Field("size") size: Int
     ): Observable<RedrockApiWrapper<List<Praise>>>
 
-    /**
-     * 获取被屏蔽的用户
-     */
-    @FormUrlEncoded
-    @POST("/magipoke-loop/user/getIgnoreUid")
-    fun getIgnoreUid(
-        @Field("page") page: Int,
-        @Field("size") size: Int
-    ): Observable<RedrockApiWrapper<List<Ignore>>>
+
 
     /**
      * 获取用户动态
@@ -193,20 +266,20 @@ interface ApiServiceNew {
     /*
     获取草稿
      */
-    @POST("magipoke-draft/new/getDraft")
+    @POST("/magipoke-draft/new/getDraft")
     fun getDraft(): Observable<RedrockApiWrapper<DynamicDraft>>
 
     /*
     上传或者更新草稿
      */
-    @POST("magipoke-draft/new/addDraft")
+    @POST("/magipoke-draft/new/addDraft")
     @Multipart
     fun updateDraft(@Part parts: List<MultipartBody.Part>): Observable<RedrockApiStatus>
 
     /*
     删除草稿
      */
-    @POST("magipoke-draft/new/delDraft")
+    @POST("/magipoke-draft/new/delDraft")
     fun deleteDraft(): Observable<RedrockApiStatus>
 
 

@@ -49,6 +49,8 @@ const val MINE_FORGET_PASSWORD = "/forget_password/mine/entry"
 const val MINE_BIND_EMAIL = "/bind_email/mine/entry"
 // 个人界面的编辑个人信息界面
 const val MINE_EDIT_INFO = "/edit_info/mine/entry"
+//个人界面的个人主页
+const val MINE_PERSON_PAGE = "/person_page/mine/entry"
 
 // NoCourseInviteActivity
 const val COURSE_NO_COURSE_INVITE = "/course/no_course_invite_activity"
@@ -73,6 +75,7 @@ const val QA_DYNAMIC_MINE = "/dynamic_mine/qa/entry"
 const val QA_MY_COMMENT = "/my_comment/qa/entry"
 const val QA_MY_IGNORE = "/my_ignore/qa/entry"
 const val QA_MY_PRAISE = "/my_praise/qa/entry"
+const val QA_DYNAMIC_MINE_FRAGMENT="/identity/mine/entry"
 
 //todo模块
 //跳转到TODO的详情页
@@ -103,3 +106,4 @@ const val STORE_ENTRY="/store/entry"
 
 //todo模块服务
 const val TODO_SERVICE = "/todo/service"
+

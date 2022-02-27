@@ -7,6 +7,7 @@ import android.os.Bundle
 import android.view.inputmethod.EditorInfo
 import android.view.inputmethod.InputMethodManager
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.FragmentTransaction
 import com.mredrock.cyxbs.common.config.CyxbsMob
 import com.mredrock.cyxbs.common.mark.EventBusLifecycleSubscriber
 import com.mredrock.cyxbs.common.ui.BaseViewModelActivity
@@ -15,6 +16,7 @@ import com.mredrock.cyxbs.qa.R
 import com.mredrock.cyxbs.qa.beannew.QAHistory
 import com.mredrock.cyxbs.qa.config.RequestResultCode.ClickKnowledge
 import com.mredrock.cyxbs.qa.event.QASearchEvent
+import com.mredrock.cyxbs.qa.pages.search.ui.callback.IKeyProvider
 import com.mredrock.cyxbs.qa.pages.search.ui.fragment.QuestionSearchedFragment
 import com.mredrock.cyxbs.qa.pages.search.ui.fragment.QuestionSearchingFragment
 import com.mredrock.cyxbs.qa.pages.search.viewmodel.SearchViewModel
@@ -26,7 +28,7 @@ import org.greenrobot.eventbus.ThreadMode
 /**
  * Created by yyfbe, Date on 2020/8/12.
  */
-class SearchActivity : BaseViewModelActivity<SearchViewModel>(), EventBusLifecycleSubscriber {
+class SearchActivity : BaseViewModelActivity<SearchViewModel>(), EventBusLifecycleSubscriber,IKeyProvider {
     private val questionSearchingFragment: QuestionSearchingFragment by lazy(LazyThreadSafetyMode.NONE) { QuestionSearchingFragment() }
     private val questionSearchedFragment: QuestionSearchedFragment by lazy(LazyThreadSafetyMode.NONE) { QuestionSearchedFragment() }
 
@@ -69,6 +71,7 @@ class SearchActivity : BaseViewModelActivity<SearchViewModel>(), EventBusLifecyc
                         v.text = searchHint
                         searchText = searchHint
                         turnToResult(searchHint)
+                        et_question_search.setSelection(v.text.lastIndex)
                         viewModel.insert(QAHistory(v.text.toString(), System.currentTimeMillis()))
                     } else {
                         longToast(getString(R.string.qa_search_empty_content))
@@ -104,9 +107,10 @@ class SearchActivity : BaseViewModelActivity<SearchViewModel>(), EventBusLifecyc
 
     //根据搜索词切换到QuestionSearchedFragment
     private fun turnToResult(keyWord: String) {
-        val bundle = Bundle()
+        val bundle = Bundle().apply {
+            putString(QuestionSearchedFragment.SEARCH_KEY, keyWord)
+        }
         val curFragment = supportFragmentManager.findFragmentById(R.id.fcv_question_search)
-        bundle.putString(QuestionSearchedFragment.SEARCH_KEY, keyWord)
         if (curFragment is QuestionSearchedFragment) {
             curFragment.refreshSearchKey(keyWord)
             curFragment.arguments = bundle
@@ -114,7 +118,9 @@ class SearchActivity : BaseViewModelActivity<SearchViewModel>(), EventBusLifecyc
         } else {
             questionSearchedFragment.arguments = bundle
             supportFragmentManager.beginTransaction()
-                .replace(R.id.fcv_question_search, questionSearchedFragment).commit()
+                .replace(R.id.fcv_question_search, questionSearchedFragment)
+                .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE)
+                .commit()
         }
         (getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager).hideSoftInputFromWindow(
             currentFocus?.windowToken,
@@ -143,4 +149,6 @@ class SearchActivity : BaseViewModelActivity<SearchViewModel>(), EventBusLifecyc
             finish()
         }
     }
+
+    override fun getKey() = searchText
 }

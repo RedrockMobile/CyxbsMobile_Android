@@ -1,6 +1,7 @@
 package com.mredrock.cyxbs.account
 
 import android.content.Context
+import android.util.Log
 import androidx.annotation.MainThread
 import androidx.annotation.WorkerThread
 import com.afollestad.materialdialogs.MaterialDialog
@@ -94,6 +95,7 @@ internal class AccountService : IAccountService {
 
                 override fun onFailure(call: Call<RedrockApiWrapper<UserInfo>>, t: Throwable) {
                     BaseApp.context.toast("个人信息无法更新")
+                    Log.d("TAG","(AccountService.kt:98)->$t")
                 }
 
             })
@@ -114,15 +116,19 @@ internal class AccountService : IAccountService {
 
         override fun getIntroduction() = user?.introduction.orEmpty()
 
-        override fun getPhone() = user?.phone.orEmpty()
+        override fun getPhone() = user?.phone.toString()
 
-        override fun getQQ() = user?.qq.orEmpty()
+        override fun getQQ() = user?.qq.toString()
 
         override fun getGender() = user?.gender.orEmpty()
 
         override fun getRealName() = user?.realName.orEmpty()
 
         override fun getCollege() = user?.college.orEmpty()
+
+        override fun getBirth() = user?.birthDay.orEmpty()
+
+        override fun getRedid() = user?.redId.orEmpty()
 
         //用于刷新个人信息，请在需要的地方调用
         override fun refreshInfo() {

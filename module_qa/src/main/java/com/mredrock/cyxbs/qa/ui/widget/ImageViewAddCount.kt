@@ -8,6 +8,7 @@ import android.graphics.Paint
 import android.graphics.RectF
 import android.text.TextPaint
 import android.util.AttributeSet
+import de.hdodenhof.circleimageview.CircleImageView
 
 /**
  * @Author: xgl
@@ -16,7 +17,7 @@ import android.util.AttributeSet
  * @Date: 2020/11/19 12:48
  */
 class ImageViewAddCount(context: Context?, attrs: AttributeSet?) :
-    androidx.appcompat.widget.AppCompatImageView(context!!, attrs) {
+    CircleImageView(context!!, attrs) {
     private var paint: Paint = Paint()
     private var textPaint: TextPaint? = null
 

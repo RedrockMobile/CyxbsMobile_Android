@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:orientation="vertical">
+
+    <androidx.appcompat.widget.AppCompatImageView
+        android:id="@+id/todo_rv_item_iv_empty"
+        android:layout_width="233dp"
+        android:layout_height="130dp"
+        android:layout_marginTop="30dp"
+        android:layout_gravity="center_horizontal"
+        android:src="@drawable/todo_ic_empty1"/>
+
+    <TextView
+        android:id="@+id/todo_rv_item_tv_empty"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:layout_marginBottom="60dp"
+        android:textSize="12sp"
+        android:text="@string/todo_string_empty_uncheck_notify"
+        android:layout_gravity="center_horizontal"/>
+</LinearLayout>

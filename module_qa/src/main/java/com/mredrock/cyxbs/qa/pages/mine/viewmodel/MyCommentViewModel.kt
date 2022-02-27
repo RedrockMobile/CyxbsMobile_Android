@@ -46,9 +46,9 @@ class MyCommentViewModel : BaseViewModel() {
 
     fun retry() = factory.cwListDataSource.value?.retry()
 
-    fun praise(id: String, onSuccess: () -> Unit) {
+    fun praiseComment(id: String, onSuccess: () -> Unit) {
         ApiGenerator.getApiService(ApiServiceNew::class.java)
-            .praise(id, "2")//model确定为对评论进行点赞
+            .praiseComment(id)
             .setSchedulers()
             .doOnErrorWithDefaultErrorHandler { true }
             .safeSubscribeBy(

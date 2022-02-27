@@ -9,9 +9,7 @@ import com.mredrock.cyxbs.common.utils.extensions.safeSubscribeBy
 import com.mredrock.cyxbs.common.utils.extensions.setSchedulers
 import com.mredrock.cyxbs.common.viewmodel.BaseViewModel
 import com.mredrock.cyxbs.qa.R
-import com.mredrock.cyxbs.qa.beannew.Dynamic
-import com.mredrock.cyxbs.qa.beannew.Topic
-import com.mredrock.cyxbs.qa.beannew.TopicMessage
+import com.mredrock.cyxbs.qa.beannew.*
 import com.mredrock.cyxbs.qa.config.CommentConfig
 import com.mredrock.cyxbs.qa.network.ApiServiceNew
 import com.mredrock.cyxbs.qa.pages.dynamic.model.DynamicDataSource
@@ -20,15 +18,23 @@ import com.mredrock.cyxbs.qa.pages.dynamic.model.TopicDataSet
 /**
  * rebuild by xgl 2021/2/13
  */
-open class DynamicListViewModel(kind: String) : BaseViewModel() {
-    val dynamicList: LiveData<PagedList<Dynamic>>
-    val networkState: LiveData<Int>
-    val initialLoad: LiveData<Int>
-    var hotWords = MutableLiveData<List<String>>()
-    var myCircle = MutableLiveData<List<Topic>>()
-    private val factory: DynamicDataSource.Factory
+open class DynamicListViewModel : BaseViewModel() {
+    private val recommendFactory: DynamicDataSource.Factory
+    private val focusFactory: DynamicDataSource.Factory
+
+    val recommendList: LiveData<PagedList<Message>>
+    val recommendNetworkState: LiveData<Int>
+    val recommendInitialLoad: LiveData<Int>
+
+    val focusList: LiveData<PagedList<Message>>
+    val focusNetworkState: LiveData<Int>
+    val focusInitialLoad: LiveData<Int>
+
     val ignorePeople = MutableLiveData<Boolean>()
     val deleteTips = MutableLiveData<Boolean>()
+
+    var hotWords = MutableLiveData<List<String>>()
+    var myCircle = MutableLiveData<List<Topic>>()
     val topicMessageList = MutableLiveData<List<TopicMessage>>()
 
     init {
@@ -38,12 +44,21 @@ open class DynamicListViewModel(kind: String) : BaseViewModel() {
             .setPageSize(6)
             .setInitialLoadSizeHint(6)
             .build()
-        factory = DynamicDataSource.Factory(kind)
-        dynamicList = LivePagedListBuilder<Int, Dynamic>(factory, config).build()
-        networkState =
-            Transformations.switchMap(factory.dynamicDataSourceLiveData) { it.networkState }
-        initialLoad =
-            Transformations.switchMap(factory.dynamicDataSourceLiveData) { it.initialLoad }
+        recommendFactory = DynamicDataSource.Factory("main")
+        focusFactory = DynamicDataSource.Factory("focus")
+
+        recommendList = LivePagedListBuilder(recommendFactory, config).build()
+        focusList = LivePagedListBuilder(focusFactory, config).build()
+
+        recommendNetworkState =
+            Transformations.switchMap(recommendFactory.dynamicDataSourceLiveData) { it.networkState }
+        recommendInitialLoad =
+            Transformations.switchMap(recommendFactory.dynamicDataSourceLiveData) { it.initialLoad }
+
+        focusNetworkState =
+            Transformations.switchMap(focusFactory.dynamicDataSourceLiveData) { it.networkState }
+        focusInitialLoad =
+            Transformations.switchMap(focusFactory.dynamicDataSourceLiveData) { it.initialLoad }
     }
 
     fun getMyCirCleData() {
@@ -85,49 +100,6 @@ open class DynamicListViewModel(kind: String) : BaseViewModel() {
             }
     }
 
-    fun ignore(dynamic: Dynamic) {
-        ApiGenerator.getApiService(ApiServiceNew::class.java)
-            .ignoreUid(dynamic.uid)
-            .setSchedulers()
-            .doOnError {
-                toastEvent.value = R.string.qa_ignore_dynamic_failure
-            }
-            .safeSubscribeBy {
-                if (it.status == 200) {
-                    toastEvent.value = R.string.qa_ignore_dynamic_success
-                    ignorePeople.value = true
-                }
-            }
-
-    }
-
-
-    fun report(dynamic: Dynamic, content: String) {
-        ApiGenerator.getApiService(ApiServiceNew::class.java)
-            .report(dynamic.postId, CommentConfig.REPORT_DYNAMIC_MODEL, content)
-            .setSchedulers()
-            .doOnError {
-                toastEvent.value = R.string.qa_report_dynamic_failure
-            }
-            .safeSubscribeBy {
-                if (it.status == 200)
-                    toastEvent.value = R.string.qa_report_dynamic_success
-            }
-    }
-
-    fun deleteId(id: String, model: String) {
-        ApiGenerator.getApiService(ApiServiceNew::class.java)
-            .deleteId(id, model)
-            .setSchedulers()
-            .doOnError {
-                toastEvent.value = R.string.qa_delete_dynamic_failure
-            }
-            .safeSubscribeBy {
-                deleteTips.value = true
-                toastEvent.value = R.string.qa_delete_dynamic_success
-            }
-    }
-
     fun getScrollerText() {
         ApiGenerator.getApiService(ApiServiceNew::class.java)
             .getSearchHotWord()
@@ -156,22 +128,67 @@ open class DynamicListViewModel(kind: String) : BaseViewModel() {
                 }
                 //刷新数据
                 getMyCirCleData()
-                invalidateDynamicList()
+                invalidateRecommendList()
+                invalidateFocusList()
             }
     }
 
-    fun invalidateDynamicList() = dynamicList.value?.dataSource?.invalidate()
-
-    fun retry() = factory.dynamicDataSourceLiveData.value?.retry()
-
-    class Factory(private val kind: String) : ViewModelProvider.Factory {
-        override fun <T : ViewModel> create(modelClass: Class<T>): T {
-            @Suppress("UNCHECKED_CAST")
-            if (modelClass.isAssignableFrom(DynamicListViewModel::class.java)) {
-                return DynamicListViewModel(kind) as T
-            } else {
-                throw IllegalArgumentException("ViewModel Not Found.")
+    fun ignore(dynamic: Dynamic) {
+        ApiGenerator.getApiService(ApiServiceNew::class.java)
+            .ignoreUid(dynamic.uid)
+            .setSchedulers()
+            .doOnError {
+                toastEvent.value = R.string.qa_ignore_dynamic_failure
             }
-        }
+            .safeSubscribeBy {
+                if (it.status == 200) {
+                    toastEvent.value = R.string.qa_ignore_dynamic_success
+                    ignorePeople.value = true
+                }
+            }
+
     }
+
+    fun report(dynamic: Dynamic, content: String) {
+        ApiGenerator.getApiService(ApiServiceNew::class.java)
+            .reportDynamic(dynamic.postId,content)
+            .setSchedulers()
+            .doOnError {
+                toastEvent.value = R.string.qa_report_dynamic_failure
+            }
+            .safeSubscribeBy {
+                if (it.status == 200)
+                    toastEvent.value = R.string.qa_report_dynamic_success
+            }
+    }
+
+    fun deleteDynamic(id: String) {
+        ApiGenerator.getApiService(ApiServiceNew::class.java)
+            .deleteDynamic(id)
+            .setSchedulers()
+            .doOnError {
+                toastEvent.value = R.string.qa_delete_dynamic_failure
+            }
+            .safeSubscribeBy {
+                deleteTips.value = true
+                toastEvent.value = R.string.qa_delete_dynamic_success
+            }
+    }
+
+    fun invalidateRecommendList() = recommendList.value?.dataSource?.invalidate()
+    fun invalidateFocusList() = focusList.value?.dataSource?.invalidate()
+
+    fun retryRecommend() = recommendFactory.dynamicDataSourceLiveData.value?.retry()
+    fun retryFocus() = focusFactory.dynamicDataSourceLiveData.value?.retry()
+
+//    class Factory(private val kind: String) : ViewModelProvider.Factory {
+//        override fun <T : ViewModel> create(modelClass: Class<T>): T {
+//            @Suppress("UNCHECKED_CAST")
+//            if (modelClass.isAssignableFrom(DynamicListViewModel::class.java)) {
+//                return DynamicListViewModel(kind) as T
+//            } else {
+//                throw IllegalArgumentException("ViewModel Not Found.")
+//            }
+//        }
+//    }
 }

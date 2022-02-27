@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <data>
+
+    </data>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <ImageView
+            android:id="@+id/mine_iv_empty_user"
+            android:layout_width="189dp"
+            android:layout_height="144dp"
+            android:scaleType="centerInside"
+            android:src="@drawable/mine_ic_empty_fan"
+            android:layout_marginTop="73dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <TextView
+            android:id="@+id/mine_tv_empty_user"
+            android:layout_width="wrap_content"
+            android:layout_height="17dp"
+            android:layout_marginTop="10dp"
+            android:text="暂时没有人关注他呢..."
+            android:textColor="@color/mine_text_empty_fan"
+            android:textSize="12sp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/mine_iv_empty_user" />
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</layout>

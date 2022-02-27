@@ -22,6 +22,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="10dp"
+        android:layout_marginTop="4dp"
         android:textColor="@color/qa_dynamic_nickname_text_color"
         android:textSize="13sp"
         app:layout_constraintStart_toEndOf="@+id/qa_circle_iv_my_comment_item_avatar"
@@ -32,11 +33,11 @@
         android:id="@+id/qa_tv_my_comment_item_tip_and_date"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginStart="10dp"
         android:text="@string/qa_my_comment_reply_your_comment"
         android:textColor="@color/qa_reply_detail_date_text_color"
         android:textSize="11sp"
-        app:layout_constraintBottom_toBottomOf="@+id/qa_circle_iv_my_comment_item_avatar"
-        app:layout_constraintStart_toStartOf="@+id/qa_tv_my_comment_item_nickname"
+        app:layout_constraintStart_toEndOf="@+id/qa_circle_iv_my_comment_item_avatar"
         app:layout_constraintTop_toBottomOf="@+id/qa_tv_my_comment_item_nickname" />
 
     <androidx.appcompat.widget.AppCompatTextView
@@ -90,20 +91,20 @@
         app:layout_constraintBottom_toTopOf="@+id/qa_view_comment_divide_line"
         app:layout_constraintStart_toStartOf="@+id/qa_tv_my_comment_item_comment"
         app:layout_constraintTop_toBottomOf="@+id/qa_tv_my_comment_from"
-        app:srcCompat="@drawable/qa_ic_dynamic_comment_count" />
+        app:srcCompat="@drawable/qa_ic_dynamic_comment" />
 
     <com.mredrock.cyxbs.qa.ui.widget.likeview.LikeView
         android:id="@+id/qa_like_view_my_comment_item_praise"
         android:layout_width="40dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="16dp"
-        android:layout_marginBottom="6dp"
+        android:layout_marginBottom="5dp"
         app:checkedColor="#323FD9"
-        app:checkedLikeIconRes="@drawable/qa_ic_answer_list_praised"
-        app:cirRadius="14dp"
+        app:checkedLikeIconRes="@drawable/qa_ic_answer_list_praised_new"
+        app:cirRadius="11dp"
         app:cycleTime="1000"
         app:defaultColor="@color/qa_likeview_color"
-        app:defaultLikeIconRes="@drawable/qa_ic_answer_list_praise"
+        app:defaultLikeIconRes="@drawable/qa_ic_answer_list_praise_new"
         app:layout_constraintBottom_toBottomOf="@id/qa_iv_my_comment_item_reply"
         app:layout_constraintStart_toEndOf="@+id/qa_iv_my_comment_item_reply"
         app:layout_constraintTop_toTopOf="@+id/qa_iv_my_comment_item_reply"

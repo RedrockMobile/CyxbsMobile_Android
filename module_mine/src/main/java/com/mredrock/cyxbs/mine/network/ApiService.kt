@@ -19,27 +19,35 @@ interface   ApiService {
      */
     @Multipart
     @POST("magipoke/person/upload/avatar")
-    fun uploadSocialImg(@Part("stunum") stunum: RequestBody,
-                        @Part file: MultipartBody.Part): Observable<RedrockApiWrapper<UploadImgResponse>>
+    fun uploadSocialImg(
+        @Part("stunum") stunum: RequestBody,
+        @Part file: MultipartBody.Part
+    ): Observable<RedrockApiWrapper<UploadImgResponse>>
 
     /**
      * 上传用户信息
      */
     @FormUrlEncoded
-    @POST("/magipoke/Person/SetInfo")
-    fun updateUserInfo(@Field("nickname") nickname: String,
-                       @Field("introduction") introduction: String,
-                       @Field("qq") qq: String,
-                       @Field("phone") phone: String,
-                       @Field("photo_src") photo_src: String): Observable<RedrockApiStatus>
+    @PUT("/magipoke/person/info")
+    fun updateUserInfo(
+        @Field("nickname") nickname: String,
+        @Field("introduction") introduction: String,
+        @Field("qq") qq: String,
+        @Field("phone") phone: String,
+        @Field("photo_src") photo_src: String,
+        @Field("gender") gender: String,
+        @Field("birthday") birthday: String
+    ): Observable<RedrockApiStatus>
 
     /**
      * 上传图片
      */
     @FormUrlEncoded
     @POST("/magipoke/Person/SetInfo")
-    fun updateUserImage(@Field("photo_thumbnail_src") photo_thumbnail_src: String,
-                        @Field("photo_src") photo_src: String): Observable<RedrockApiStatus>
+    fun updateUserImage(
+        @Field("photo_thumbnail_src") photo_thumbnail_src: String,
+        @Field("photo_src") photo_src: String
+    ): Observable<RedrockApiStatus>
 
     /**
      * 签到部分
@@ -73,8 +81,9 @@ interface   ApiService {
     @FormUrlEncoded
     @POST("/user-secret/user/password/personal")
     fun resetPassword(
-            @Field("origin_password") origin_password: String,
-            @Field("new_password") new_password: String): Observable<RedrockApiStatus>
+        @Field("origin_password") origin_password: String,
+        @Field("new_password") new_password: String
+    ): Observable<RedrockApiStatus>
 
     /**
      * 修改密码
@@ -83,9 +92,9 @@ interface   ApiService {
     @FormUrlEncoded
     @POST("/user-secret/user/password/valid")
     fun resetPasswordFromLogin(
-            @Field("stu_num") stu_num: String,
-            @Field("new_password") new_password: String,
-            @Field("code") code: Int
+        @Field("stu_num") stu_num: String,
+        @Field("new_password") new_password: String,
+        @Field("code") code: Int
     ): Observable<RedrockApiStatus>
 
     /**
@@ -95,8 +104,9 @@ interface   ApiService {
     @FormUrlEncoded
     @POST("/user-secret/user/bind/question")
     fun setSecurityQuestionAnswer(
-            @Field("id") id: Int, //问题的id
-            @Field("content") content: String): Observable<RedrockApiStatus>//答案的主体内容
+        @Field("id") id: Int, //问题的id
+        @Field("content") content: String
+    ): Observable<RedrockApiStatus>//答案的主体内容
 
     /**
      * 获取所有的密保问题
@@ -111,7 +121,8 @@ interface   ApiService {
     @FormUrlEncoded
     @POST("/user-secret/user/bind/email/code")
     fun getEmailCode(
-            @Field("email") email: String): Observable<RedrockApiWrapper<EmailCode>>
+        @Field("email") email: String
+    ): Observable<RedrockApiWrapper<EmailCode>>
 
     /**
      * 验证Email验证码
@@ -120,8 +131,9 @@ interface   ApiService {
     @FormUrlEncoded
     @POST("/user-secret/user/bind/email")
     fun confirmEmailCode(
-            @Field("email") email: String, //问题的id
-            @Field("code") code: String): Observable<RedrockApiStatus>
+        @Field("email") email: String, //问题的id
+        @Field("code") code: String
+    ): Observable<RedrockApiStatus>
 
     /**
      * 向绑定的邮箱发送找回密码用的验证码
@@ -130,7 +142,7 @@ interface   ApiService {
     @FormUrlEncoded
     @POST("/user-secret/user/valid/email/code")
     fun getEmailFindPasswordCode(
-            @Field("stu_num") stu_num: String
+        @Field("stu_num") stu_num: String
     ): Observable<RedrockApiWrapper<ConfirmCode>>
 
     /**
@@ -143,9 +155,9 @@ interface   ApiService {
     @FormUrlEncoded
     @POST("/user-secret/user/valid/email")
     fun confirmCodeWithoutLogin(
-            @Field("stu_num") stu_num: String,
-            @Field("email") email: String,
-            @Field("code") code: Int
+        @Field("stu_num") stu_num: String,
+        @Field("email") email: String,
+        @Field("code") code: Int
     ): Observable<RedrockApiWrapper<ConfirmQuestion>>
 
     /**
@@ -155,7 +167,8 @@ interface   ApiService {
      */
     @FormUrlEncoded
     @POST("/user-secret/user/bind/email/detail")
-    fun getUserEmail(@Field("stu_num") stu_num: String
+    fun getUserEmail(
+        @Field("stu_num") stu_num: String
     ): Observable<RedrockApiWrapper<Email>>
 
     /**
@@ -163,7 +176,8 @@ interface   ApiService {
      */
     @FormUrlEncoded
     @POST("/user-secret/user/bind/question/detail")
-    fun getUserQuestion(@Field("stu_num") stu_num: String
+    fun getUserQuestion(
+        @Field("stu_num") stu_num: String
     ): Observable<RedrockApiWrapper<List<SecurityQuestion>>>
 
     /**
@@ -172,9 +186,9 @@ interface   ApiService {
     @FormUrlEncoded
     @POST("/user-secret/user/valid/question")
     fun confirmAnswer(
-            @Field("stu_num") stu_num: String,
-            @Field("question_id") question_id: Int,
-            @Field("content") content: String
+        @Field("stu_num") stu_num: String,
+        @Field("question_id") question_id: Int,
+        @Field("content") content: String
     ): Observable<RedrockApiWrapper<ConfirmQuestion>>
 
     /*
@@ -183,7 +197,8 @@ interface   ApiService {
     @FormUrlEncoded
     @POST("/user-secret/user/judge/password")
     fun originPassWordCheck(
-            @Field("password") password: String): Observable<RedrockApiStatus>
+        @Field("password") password: String
+    ): Observable<RedrockApiStatus>
 
     /**
      * 检查是否绑定信息
@@ -199,25 +214,83 @@ interface   ApiService {
     @POST("/user-secret/user/judge/origin")
     fun checkDefaultPassword(@Field("stu_num") stu_num: String): Observable<RedrockApiStatus>
 
+    //仿ping接口，用于检测magipoke系列接口状态
+    @GET("magipoke/ping")
+    fun pingMagipoke(): Observable<RedrockApiStatus>
+
     /**
      * 获取用户的动态、评论、获赞数
      */
     @GET("/magipoke-loop/user/getUserCount")
-    fun getUserCount():Observable<RedrockApiWrapper<UserCount>>
+    fun getUserCount(): Observable<RedrockApiWrapper<UserCount>>
 
-    /**
-     * 获取未查看的评论和点赞数
-     * Tip: 此处是静态请求，不能使用@Field注解
-     * type = 1:评论
-     * type = 2:点赞
-     */
-    @GET("/magipoke-loop/user/uncheckedMessage")
-    fun getUncheckCount(
-            @Query("time") timeStamp: Long,
-            @Query("type") type: Int
-    ):Observable<RedrockApiWrapper<UserUncheckCount>>
+    // 获取用户未读消息数-点赞
+    @GET("/magipoke-loop/user/uncheckedCount/praise")
+    fun getUncheckedPraiseCount(
+        @Query("time") timeStamp: Long
+    ): Observable<RedrockApiWrapper<UserUncheckCount>>
 
-    //仿ping接口，用于检测magipoke系列接口状态
-    @GET("magipoke/ping")
-    fun pingMagipoke(): Observable<RedrockApiStatus>
+    // 获取用户未读消息数-评论
+    @GET("/magipoke-loop/user/uncheckedCount/comment")
+    fun getUncheckedCommentCount(
+        @Query("time") timeStamp: Long
+    ): Observable<RedrockApiWrapper<UserUncheckCount>>
+
+    // 关注/取关用户
+    @FormUrlEncoded
+    @POST("/magipoke-loop/focus")
+    fun changeFocusStatus(@Field("redid") redid: String?):Observable<RedrockApiStatus>
+
+    // 获取全部粉丝信息
+    @GET("/magipoke-loop/focus/fan")
+    fun getFans(@Query("redid") redid: String):Observable<RedrockApiWrapper<List<Fan>>>
+
+    // 获取全部关注的人的信息
+    @GET("/magipoke-loop/focus/follow")
+    fun getFollows(@Query("redid") redid: String):Observable<RedrockApiWrapper<List<Fan>>>
+
+    // 查询用户信息
+    @GET("/magipoke/person/info")
+    fun getPersonInfo(@Query("redid") redid: String?):Observable<UserInfo>
+
+    // 更新用户个人主页的背景图片
+    @Multipart
+    @PUT("/magipoke/person/background_url")
+    fun changePersonalBackground(@Part file:MultipartBody.Part): Observable<RedrockApiStatus>
+
+    // 获取用户认证身份
+    @GET("/magipoke-identity/GetAuthentication")
+    fun getAuthenticationStatus( @Query("id") redId: String?):Observable<AuthenticationStatus>
+
+    // 获取用户个性身份
+    @GET("/magipoke-identity/GetCustomization")
+    fun getCustomization(@Query("id") redId: String):Observable<AuthenticationStatus>
+
+    // 获取用户全部身份
+    @GET("/magipoke-identity/GetAllIdentify")
+    fun getAllIdentify(@Query("id") redId: String?):Observable<AllStatus>
+
+    // 上传在用户自己发布的动态的展示身份
+    @FormUrlEncoded
+    @POST("/magipoke-identity/UploadDisplayIdentity")
+    fun uploadDisplayIdentity(@Field("identityId")identityId:String?): Observable<RedrockApiStatus>
+
+    // 删除身份
+    @FormUrlEncoded
+    @POST("/magipoke-identity/DeleteIdentity")
+    fun deleteIdentity(@Field("identityId")identityId:String): Observable<RedrockApiStatus>
+
+    // 更新动态信息
+    @PUT("/magipoke-loop/post")
+    @FormUrlEncoded
+    fun update()
+
+    // 获取用户展示的身份
+    @GET("/magipoke-identity/GetShowIdentify")
+    fun getShowIdentify(@Query("id")id:String):Observable<PersonalStatu>
+
+    // 获取动态、评论、获赞、粉丝、关注数接口
+    @GET("magipoke-loop/user/count")
+    fun getPersonalCount(@Query("redid")redid: String?):Observable<PersonalCount>
 }
+
