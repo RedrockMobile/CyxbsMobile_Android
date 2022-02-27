@@ -199,6 +199,15 @@ class TodoDetailActivity : BaseViewModelActivity<TodoDetailViewModel>() {
         todo_iv_todo_item.setOnClickListener {
             //改变todo的check状态
             todo.isChecked = 1 - todo.isChecked
+            if (todo.getIsChecked()){
+                if (todo.repeatStatus == Todo.SET_UNCHECK_BY_REPEAT){
+                    todo.repeatStatus = Todo.CHECKED_AFTER_REPEAT
+                }
+            } else {
+                if (todo.repeatStatus == Todo.CHECKED_AFTER_REPEAT){
+                    todo.repeatStatus = Todo.SET_UNCHECK_BY_REPEAT
+                }
+            }
             changeModifyStatus()
             backTime = 2
             setCheckedStatus()

@@ -43,7 +43,7 @@ class TodoModel {
         val apiGenerator: Api by lazy { ApiGenerator.getApiService(Api::class.java) }
     }
 
-    val todoList by lazy { ArrayList<Todo>() }
+    private val todoList by lazy { ArrayList<Todo>() }
 
     //获取todolist
     fun getTodoList(
@@ -70,14 +70,14 @@ class TodoModel {
         )
     }
 
-    fun updateTodo(todo: Todo, onSuccess: () -> Unit) {
+    fun updateTodo(todo: Todo, onSuccess: (() -> Unit)? = null) {
         val syncTime = getLastSyncTime()
         Observable.just(todo)
             .map {
                 TodoDatabase.INSTANCE.todoDao()
                     .updateTodo(todo)
             }.setSchedulers().safeSubscribeBy {
-                onSuccess.invoke()
+                onSuccess?.invoke()
             }
         apiGenerator.pushTodo(
             TodoListPushWrapper(
@@ -138,6 +138,16 @@ class TodoModel {
                     onError.invoke()
                 }
             )
+    }
+
+    fun getTodoByIdList(idList: List<Long>, onSuccess: (todo: List<Todo>) -> Unit){
+        val rawQuery = SimpleSQLiteQuery("SELECT * FROM todo_list WHERE todoId in (${idList.toString().subSequence(1, idList.toString().length - 1)})")
+        TodoDatabase.INSTANCE
+                .todoDao().queryTodoByIdList(rawQuery)
+                .toObservable().setSchedulers()
+                .safeSubscribeBy {
+                    onSuccess(it)
+                }
     }
 
     fun addTodo(todo: Todo, onSuccess: (todoId: Long) -> Unit) {

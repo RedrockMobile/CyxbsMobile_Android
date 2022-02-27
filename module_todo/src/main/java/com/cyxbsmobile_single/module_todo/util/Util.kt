@@ -1,6 +1,7 @@
 package com.cyxbsmobile_single.module_todo.util
 
 import android.content.Context
+import android.util.Log
 import android.view.View
 import android.view.ViewGroup
 import android.view.inputmethod.InputMethodManager
@@ -9,19 +10,22 @@ import androidx.core.view.marginBottom
 import androidx.core.view.marginLeft
 import androidx.core.view.marginRight
 import androidx.core.view.marginTop
+import com.cyxbsmobile_single.module_todo.model.TodoModel
 import com.cyxbsmobile_single.module_todo.model.bean.DateBeen
 import com.cyxbsmobile_single.module_todo.model.bean.RemindMode
 import com.cyxbsmobile_single.module_todo.model.bean.Todo
+import com.cyxbsmobile_single.module_todo.model.bean.Todo.Companion.NONE_WITH_REPEAT
+import com.cyxbsmobile_single.module_todo.model.database.TodoDatabase
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
 import com.mredrock.cyxbs.common.BaseApp
-import com.mredrock.cyxbs.common.config.TODO_ALREADY_ADDED
-import com.mredrock.cyxbs.common.config.TODO_ALREADY_ADDED_DATE
+import com.mredrock.cyxbs.common.config.TODO_NEED_REPEAT_BUT_ALREADY_CHECKED
+import com.mredrock.cyxbs.common.config.TODO_ALREADY_CHECKED_DATE
 import com.mredrock.cyxbs.common.config.TODO_WEEK_MONTH_ARRAY
 import com.mredrock.cyxbs.common.config.TODO_START_YEAR_OF_WEEK_MONTH_ARRAY
-import com.mredrock.cyxbs.common.utils.extensions.defaultSharedPreferences
-import com.mredrock.cyxbs.common.utils.extensions.editor
-import com.mredrock.cyxbs.common.utils.extensions.toast
+import com.mredrock.cyxbs.common.utils.LogUtils
+import com.mredrock.cyxbs.common.utils.extensions.*
+import io.reactivex.Observable
 import java.text.SimpleDateFormat
 import java.util.*
 import kotlin.collections.ArrayList
@@ -245,36 +249,43 @@ fun needTodayDone(remindMode: RemindMode): Boolean {
     ) + 1
 }
 
-fun needTodayAddIn(todo: Todo): Boolean{
-    //首先需要判断是不是今天需要处理的代办
-    if (needTodayDone(todo.remindMode)){
-        //如果是今天要处理的，需要校验今天是不是已经被添加过一次了
-        //如果是，就不再添加
-        val lastAddedTime = BaseApp.context.defaultSharedPreferences.getInt(TODO_ALREADY_ADDED_DATE, 0)
-        val calendar = Calendar.getInstance()
-        if (lastAddedTime == calendar.get(Calendar.DAY_OF_YEAR)){
-            //确定今天已经添加进去过一次了，就不用再添加一次了
-            return false
-        }
-        //更新本地缓存的时间
-        BaseApp.context.defaultSharedPreferences.editor {
-            putInt(TODO_ALREADY_ADDED_DATE, calendar.get(Calendar.DAY_OF_YEAR))
-        }
-        val lastAddedTodoIdListJson = BaseApp.context.defaultSharedPreferences.getString(TODO_ALREADY_ADDED, "[]")
+fun setRepeatTodoList(idList : List<Long>){
+    LogUtils.d("Slayer", "added list = $idList")
+    BaseApp.context.defaultSharedPreferences.editor {
+        //更新idList
+        putString(TODO_NEED_REPEAT_BUT_ALREADY_CHECKED, Gson().toJson(idList))
+        //更新时间
+        putInt(TODO_ALREADY_CHECKED_DATE,Calendar.getInstance().get(Calendar.DAY_OF_YEAR) )
+        commit()
+    }
+}
+fun resetRepeatStatus(){
+    val lastAddedListTime = BaseApp.context.defaultSharedPreferences.getInt(TODO_ALREADY_CHECKED_DATE, -1)
+    val calendar = Calendar.getInstance()
+    if (lastAddedListTime != calendar.get(Calendar.DAY_OF_YEAR) && lastAddedListTime != -1){
+        //名单已经过期，需要还原repeatStatus
+        val lastAddedTodoIdListJson = BaseApp.context.defaultSharedPreferences.getString(TODO_NEED_REPEAT_BUT_ALREADY_CHECKED, "[]")
+        LogUtils.d("Slayer", "trigger reset")
         val idArrayList = Gson().fromJson<ArrayList<Long>>(lastAddedTodoIdListJson, object : TypeToken<ArrayList<Int>>() {}.type)
-        return if (idArrayList.contains(todo.todoId)){
-            false
-        } else {
-            idArrayList.add(todo.todoId)
-            BaseApp.context.defaultSharedPreferences.editor {
-                putString(TODO_ALREADY_ADDED, Gson().toJson(idArrayList))
-                commit()
+        TodoModel.INSTANCE.getTodoByIdList(idArrayList){
+            it.forEach{ todo ->
+                todo.repeatStatus = NONE_WITH_REPEAT
             }
-            true
+
+            Observable.just(it)
+                    .map { list ->
+                        TodoDatabase.INSTANCE.todoDao()
+                                .updateTodoList(list)
+                    }.setSchedulers().safeSubscribeBy {
+
+                    }
         }
-    } else {
-        //压根没到重复的那天，就不添加了
-        return false
+
+        BaseApp.context.defaultSharedPreferences.editor {
+            //更新idList
+            putString(TODO_NEED_REPEAT_BUT_ALREADY_CHECKED, "[]")
+            commit()
+        }
     }
 }
 
