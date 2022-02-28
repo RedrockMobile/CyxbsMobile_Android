@@ -22,11 +22,15 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.alibaba.android.arouter.facade.annotation.Route
+import com.alibaba.android.arouter.launcher.ARouter
 import com.bumptech.glide.Glide
 import com.google.android.material.appbar.AppBarLayout
+import com.mredrock.cyxbs.api.account.IAccountService
 import com.mredrock.cyxbs.common.BaseApp.Companion.context
 import com.mredrock.cyxbs.common.component.CyxbsToast
+import com.mredrock.cyxbs.common.config.MINE_PERSON_PAGE
 import com.mredrock.cyxbs.common.config.QA_DYNAMIC_DETAIL
+import com.mredrock.cyxbs.common.service.ServiceManager
 import com.mredrock.cyxbs.common.ui.BaseViewModelActivity
 import com.mredrock.cyxbs.common.utils.LogUtils
 import com.mredrock.cyxbs.common.utils.extensions.*
@@ -329,6 +333,12 @@ class DynamicDetailActivity : BaseViewModelActivity<DynamicDetailViewModel>() {
         qa_coordinatorlayout.onReplyCancelEvent = {
             viewModel.replyInfo.value = ReplyInfo("", "", "")
             KeyboardController.hideInputKeyboard(this, qa_et_my_comment_reply)
+        }
+        qa_iv_dynamic_avatar.setOnClickListener {
+            ARouter.getInstance().build(MINE_PERSON_PAGE)
+                .withString("redid",
+                    dynamic?.uid)
+                .navigation()
         }
     }
 

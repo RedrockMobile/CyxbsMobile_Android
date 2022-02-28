@@ -8,6 +8,8 @@ import android.view.ViewGroup
 import android.widget.TextView
 import androidx.fragment.app.activityViewModels
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.alibaba.android.arouter.launcher.ARouter
+import com.mredrock.cyxbs.common.config.MINE_PERSON_PAGE
 import com.mredrock.cyxbs.common.ui.BaseViewModelFragment
 import com.mredrock.cyxbs.qa.R
 import com.mredrock.cyxbs.qa.beannew.Dynamic
@@ -115,6 +117,11 @@ abstract class BaseCircleDetailFragment<T : CircleDetailViewModel> : BaseViewMod
                         }
                     }
                 }
+            }
+            onAvatarClickListener = {
+                ARouter.getInstance().build(MINE_PERSON_PAGE)
+                    .withString("redid", it)
+                    .navigation()
             }
         }
         activityViewModels<CircleDetailViewModel>().value.followStateChangedMarkObservableByFragment.observe {

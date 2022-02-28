@@ -1,9 +1,9 @@
 package com.mredrock.cyxbs.qa.pages.search.ui.binder
 
-import android.util.Log
 import android.view.View
 import androidx.core.content.ContextCompat
 import com.bumptech.glide.Glide
+import com.mredrock.cyxbs.common.utils.extensions.gone
 import com.mredrock.cyxbs.qa.R
 import com.mredrock.cyxbs.qa.beannew.UserBrief
 import com.mredrock.cyxbs.qa.databinding.QaRecyclerItemSearchUserBinding
@@ -16,6 +16,7 @@ import com.mredrock.cyxbs.qa.databinding.QaRecyclerItemSearchUserBinding
  **/
 class RelateUserBinder(
     val user: UserBrief,
+    val itemIsSelf: Boolean,
     //关注按钮点击事件
     private var onFocusClick: ((view: View, user: UserBrief) -> Unit)? = null,
     private var onAvatarClick: ((redid: String) -> Unit)? = null
@@ -36,29 +37,33 @@ class RelateUserBinder(
             qaTvSearchUserNickname.text = user.nickname
             qaTvSearchUserIntroduction.text = user.introduction
 
-            if (user.isFocus) {
-                with(qaTvSearchUserFocus){
-                    text = if (user.isBeFocused) "互相关注" else "已关注"
-                    setTextColor(ContextCompat.getColor(context,R.color.qa_tv_focus))
-                    background = ContextCompat
-                        .getDrawable(root.context, R.drawable.qa_shape_tv_search_focused)
+            if (itemIsSelf){
+                qaTvSearchUserFocus.gone()
+            }else {
+                if (user.isFocus) {
+                    with(qaTvSearchUserFocus) {
+                        text = if (user.isBeFocused) "互相关注" else "已关注"
+                        setTextColor(ContextCompat.getColor(context, R.color.qa_tv_focus))
+                        background = ContextCompat
+                            .getDrawable(root.context, R.drawable.qa_shape_tv_search_focused)
+                    }
+
+                } else {
+                    with(qaTvSearchUserFocus) {
+                        text = "+关注"
+                        setTextColor(ContextCompat.getColor(context, R.color.qa_tv_unfocus))
+                        background = ContextCompat
+                            .getDrawable(root.context, R.drawable.qa_shape_tv_search_unfocused)
+                    }
                 }
 
-            } else {
-                with(qaTvSearchUserFocus){
-                    text = "+关注"
-                    setTextColor(ContextCompat.getColor(context,R.color.qa_tv_unfocus))
-                    background = ContextCompat
-                        .getDrawable(root.context, R.drawable.qa_shape_tv_search_unfocused)
+                qaTvSearchUserFocus.setOnClickListener {
+                    onFocusClick?.invoke(it, user)
                 }
-            }
 
-            qaTvSearchUserFocus.setOnClickListener {
-                onFocusClick?.invoke(it, user)
-            }
-
-            qaIvSearchUserAvatar.setOnClickListener {
-                onAvatarClick?.invoke(user.redid)
+                qaIvSearchUserAvatar.setOnClickListener {
+                    onAvatarClick?.invoke(user.redid)
+                }
             }
         }
     }
