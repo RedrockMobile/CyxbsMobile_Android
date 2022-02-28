@@ -6,6 +6,8 @@ import android.view.WindowManager
 import android.widget.TextView
 import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.alibaba.android.arouter.launcher.ARouter
+import com.mredrock.cyxbs.common.config.MINE_PERSON_PAGE
 import com.mredrock.cyxbs.common.utils.extensions.doIfLogin
 import com.mredrock.cyxbs.qa.R
 import com.mredrock.cyxbs.qa.beannew.Dynamic
@@ -141,6 +143,11 @@ class RelateDynamicFragment : BaseResultFragment() {
                         }
                     }
                 }
+            }
+            onAvatarClickListener = {
+                ARouter.getInstance().build(MINE_PERSON_PAGE)
+                    .withString("redid", it)
+                    .navigation()
             }
         }
         emptyRvAdapter = SearchNoResultAdapter(getString(R.string.qa_search_no_result)) {
