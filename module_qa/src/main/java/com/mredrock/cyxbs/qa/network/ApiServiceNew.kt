@@ -89,7 +89,7 @@ interface ApiServiceNew {
 
     //删除动态
     @DELETE("/magipoke-loop/post")
-    fun deleteDynamic(@Field("id") id: String): Observable<RedrockApiStatus>
+    fun deleteDynamic(@Query("id") id: String): Observable<RedrockApiStatus>
 
     //获取某个动态的评论(旧)
     @GET("/magipoke-loop/getallcomment")

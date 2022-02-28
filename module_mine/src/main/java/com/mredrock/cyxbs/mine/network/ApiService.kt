@@ -12,16 +12,16 @@ import retrofit2.http.*
 /**
  * Created by zia on 2018/8/15.
  */
-interface   ApiService {
+interface ApiService {
 
     /**
      * 上传头像
      */
     @Multipart
-    @POST("magipoke/person/upload/avatar")
+    @PUT("magipoke/person/upload/avatar")
     fun uploadSocialImg(
         @Part("stunum") stunum: RequestBody,
-        @Part file: MultipartBody.Part
+        @Part fold: MultipartBody.Part
     ): Observable<RedrockApiWrapper<UploadImgResponse>>
 
     /**
@@ -239,46 +239,46 @@ interface   ApiService {
     // 关注/取关用户
     @FormUrlEncoded
     @POST("/magipoke-loop/focus")
-    fun changeFocusStatus(@Field("redid") redid: String?):Observable<RedrockApiStatus>
+    fun changeFocusStatus(@Field("redid") redid: String?): Observable<RedrockApiStatus>
 
     // 获取全部粉丝信息
     @GET("/magipoke-loop/focus/fan")
-    fun getFans(@Query("redid") redid: String):Observable<RedrockApiWrapper<List<Fan>>>
+    fun getFans(@Query("redid") redid: String): Observable<RedrockApiWrapper<List<Fan>>>
 
     // 获取全部关注的人的信息
     @GET("/magipoke-loop/focus/follow")
-    fun getFollows(@Query("redid") redid: String):Observable<RedrockApiWrapper<List<Fan>>>
+    fun getFollows(@Query("redid") redid: String): Observable<RedrockApiWrapper<List<Fan>>>
 
     // 查询用户信息
     @GET("/magipoke/person/info")
-    fun getPersonInfo(@Query("redid") redid: String?):Observable<UserInfo>
+    fun getPersonInfo(@Query("redid") redid: String?): Observable<UserInfo>
 
     // 更新用户个人主页的背景图片
     @Multipart
     @PUT("/magipoke/person/background_url")
-    fun changePersonalBackground(@Part file:MultipartBody.Part): Observable<RedrockApiStatus>
+    fun changePersonalBackground(@Part file: MultipartBody.Part): Observable<RedrockApiStatus>
 
     // 获取用户认证身份
     @GET("/magipoke-identity/GetAuthentication")
-    fun getAuthenticationStatus( @Query("id") redId: String?):Observable<AuthenticationStatus>
+    fun getAuthenticationStatus(@Query("id") redId: String?): Observable<AuthenticationStatus>
 
     // 获取用户个性身份
     @GET("/magipoke-identity/GetCustomization")
-    fun getCustomization(@Query("id") redId: String):Observable<AuthenticationStatus>
+    fun getCustomization(@Query("id") redId: String): Observable<AuthenticationStatus>
 
     // 获取用户全部身份
     @GET("/magipoke-identity/GetAllIdentify")
-    fun getAllIdentify(@Query("id") redId: String?):Observable<AllStatus>
+    fun getAllIdentify(@Query("id") redId: String?): Observable<AllStatus>
 
     // 上传在用户自己发布的动态的展示身份
     @FormUrlEncoded
     @POST("/magipoke-identity/UploadDisplayIdentity")
-    fun uploadDisplayIdentity(@Field("identityId")identityId:String?): Observable<RedrockApiStatus>
+    fun uploadDisplayIdentity(@Field("identityId") identityId: String?): Observable<RedrockApiStatus>
 
     // 删除身份
     @FormUrlEncoded
     @POST("/magipoke-identity/DeleteIdentity")
-    fun deleteIdentity(@Field("identityId")identityId:String): Observable<RedrockApiStatus>
+    fun deleteIdentity(@Field("identityId") identityId: String): Observable<RedrockApiStatus>
 
     // 更新动态信息
     @PUT("/magipoke-loop/post")
@@ -287,10 +287,10 @@ interface   ApiService {
 
     // 获取用户展示的身份
     @GET("/magipoke-identity/GetShowIdentify")
-    fun getShowIdentify(@Query("id")id:String):Observable<PersonalStatu>
+    fun getShowIdentify(@Query("id") id: String): Observable<PersonalStatu>
 
     // 获取动态、评论、获赞、粉丝、关注数接口
     @GET("magipoke-loop/user/count")
-    fun getPersonalCount(@Query("redid")redid: String?):Observable<PersonalCount>
+    fun getPersonalCount(@Query("redid") redid: String?): Observable<PersonalCount>
 }
 

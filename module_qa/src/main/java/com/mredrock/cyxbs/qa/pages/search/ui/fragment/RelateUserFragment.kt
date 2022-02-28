@@ -7,7 +7,9 @@ import androidx.core.content.ContextCompat
 import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.alibaba.android.arouter.launcher.ARouter
+import com.mredrock.cyxbs.api.account.IAccountService
 import com.mredrock.cyxbs.common.config.MINE_PERSON_PAGE
+import com.mredrock.cyxbs.common.service.ServiceManager
 import com.mredrock.cyxbs.common.utils.extensions.toast
 import com.mredrock.cyxbs.qa.R
 import com.mredrock.cyxbs.qa.beannew.UserBrief
@@ -30,14 +32,14 @@ class RelateUserFragment : BaseResultFragment() {
 
     //搜索内容
     private var searchKey = ""
-
+    private lateinit var myRedid: String
     override fun getViewModelFactory() = QuestionSearchedViewModel.Factory(searchKey)
-
     private lateinit var userAdapter: DataBindingAdapter
 
     override fun initData() {
         //获取搜索内容
         searchKey = (requireActivity() as IKeyProvider).getKey()
+        myRedid = ServiceManager.getService(IAccountService::class.java).getUserService().getRedid()
         initObserve()
         initRecycler()
     }
@@ -51,7 +53,7 @@ class RelateUserFragment : BaseResultFragment() {
                     else -> {
                         for (user in it) {
                             add(
-                                RelateUserBinder(user,
+                                RelateUserBinder(user,user.redid == myRedid,
                                     onFocusClick = { view, user ->
                                         //请求关注/取关接口
                                         viewModel.changeFocusStatus(user.redid)
