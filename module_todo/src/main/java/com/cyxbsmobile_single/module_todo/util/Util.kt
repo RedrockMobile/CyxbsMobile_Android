@@ -1,7 +1,6 @@
 package com.cyxbsmobile_single.module_todo.util
 
 import android.content.Context
-import android.util.Log
 import android.view.View
 import android.view.ViewGroup
 import android.view.inputmethod.InputMethodManager
@@ -19,11 +18,10 @@ import com.cyxbsmobile_single.module_todo.model.database.TodoDatabase
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
 import com.mredrock.cyxbs.common.BaseApp
-import com.mredrock.cyxbs.common.config.TODO_NEED_REPEAT_BUT_ALREADY_CHECKED
-import com.mredrock.cyxbs.common.config.TODO_ALREADY_CHECKED_DATE
+import com.mredrock.cyxbs.common.config.TODO_REPEAT_TODO_ID_LIST
+import com.mredrock.cyxbs.common.config.TODO_REPEAT_TODO_ID_LIST_DATE
 import com.mredrock.cyxbs.common.config.TODO_WEEK_MONTH_ARRAY
 import com.mredrock.cyxbs.common.config.TODO_START_YEAR_OF_WEEK_MONTH_ARRAY
-import com.mredrock.cyxbs.common.utils.LogUtils
 import com.mredrock.cyxbs.common.utils.extensions.*
 import io.reactivex.Observable
 import java.text.SimpleDateFormat
@@ -250,22 +248,20 @@ fun needTodayDone(remindMode: RemindMode): Boolean {
 }
 
 fun setRepeatTodoList(idList : List<Long>){
-    LogUtils.d("Slayer", "added list = $idList")
     BaseApp.context.defaultSharedPreferences.editor {
         //更新idList
-        putString(TODO_NEED_REPEAT_BUT_ALREADY_CHECKED, Gson().toJson(idList))
+        putString(TODO_REPEAT_TODO_ID_LIST, Gson().toJson(idList))
         //更新时间
-        putInt(TODO_ALREADY_CHECKED_DATE,Calendar.getInstance().get(Calendar.DAY_OF_YEAR) )
+        putInt(TODO_REPEAT_TODO_ID_LIST_DATE,Calendar.getInstance().get(Calendar.DAY_OF_YEAR) )
         commit()
     }
 }
 fun resetRepeatStatus(){
-    val lastAddedListTime = BaseApp.context.defaultSharedPreferences.getInt(TODO_ALREADY_CHECKED_DATE, -1)
+    val lastAddedListTime = BaseApp.context.defaultSharedPreferences.getInt(TODO_REPEAT_TODO_ID_LIST_DATE, -1)
     val calendar = Calendar.getInstance()
     if (lastAddedListTime != calendar.get(Calendar.DAY_OF_YEAR) && lastAddedListTime != -1){
         //名单已经过期，需要还原repeatStatus
-        val lastAddedTodoIdListJson = BaseApp.context.defaultSharedPreferences.getString(TODO_NEED_REPEAT_BUT_ALREADY_CHECKED, "[]")
-        LogUtils.d("Slayer", "trigger reset")
+        val lastAddedTodoIdListJson = BaseApp.context.defaultSharedPreferences.getString(TODO_REPEAT_TODO_ID_LIST, "[]")
         val idArrayList = Gson().fromJson<ArrayList<Long>>(lastAddedTodoIdListJson, object : TypeToken<ArrayList<Int>>() {}.type)
         TodoModel.INSTANCE.getTodoByIdList(idArrayList){
             it.forEach{ todo ->
@@ -283,7 +279,7 @@ fun resetRepeatStatus(){
 
         BaseApp.context.defaultSharedPreferences.editor {
             //更新idList
-            putString(TODO_NEED_REPEAT_BUT_ALREADY_CHECKED, "[]")
+            putString(TODO_REPEAT_TODO_ID_LIST, "[]")
             commit()
         }
     }

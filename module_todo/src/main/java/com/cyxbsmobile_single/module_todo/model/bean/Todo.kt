@@ -2,10 +2,7 @@ package com.cyxbsmobile_single.module_todo.model.bean
 
 import androidx.room.Entity
 import androidx.room.PrimaryKey
-import androidx.room.TypeConverter
-import com.google.gson.Gson
 import com.google.gson.annotations.SerializedName
-import com.mredrock.cyxbs.common.utils.LogUtils
 import java.io.Serializable
 
 /**
@@ -55,12 +52,12 @@ data class Todo(
         return isChecked == 1
     }
 
+    //这个地方比较捞，data class写在主构造里面的属性不好加set和get，故出此下策
     fun checked(){
         if (repeatStatus == SET_UNCHECK_BY_REPEAT){
             repeatStatus = CHECKED_AFTER_REPEAT
         }
         isChecked = 1
-        LogUtils.d("Slayer", "set checked $this")
     }
 
     fun uncheck(){

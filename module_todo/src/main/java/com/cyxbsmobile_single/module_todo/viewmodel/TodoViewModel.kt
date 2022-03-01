@@ -3,7 +3,6 @@ package com.cyxbsmobile_single.module_todo.viewmodel
 import com.cyxbsmobile_single.module_todo.R
 import com.cyxbsmobile_single.module_todo.model.TodoModel
 import com.cyxbsmobile_single.module_todo.model.bean.RemindMode
-import com.cyxbsmobile_single.module_todo.model.bean.RepeatBean
 import com.cyxbsmobile_single.module_todo.model.bean.Todo
 import com.cyxbsmobile_single.module_todo.model.bean.Todo.Companion.CHECKED_AFTER_REPEAT
 import com.cyxbsmobile_single.module_todo.model.bean.Todo.Companion.SET_UNCHECK_BY_REPEAT
@@ -12,7 +11,6 @@ import com.cyxbsmobile_single.module_todo.util.getString
 import com.cyxbsmobile_single.module_todo.util.needTodayDone
 import com.cyxbsmobile_single.module_todo.util.resetRepeatStatus
 import com.cyxbsmobile_single.module_todo.util.setRepeatTodoList
-import com.mredrock.cyxbs.common.utils.LogUtils
 import com.mredrock.cyxbs.common.viewmodel.BaseViewModel
 
 /**
@@ -32,9 +30,6 @@ class TodoViewModel : BaseViewModel() {
 
     //原生的所有todo
     val todoList by lazy { ArrayList<Todo>() }
-
-    //需要重复提醒的todo的索引列表
-    val repeatList by lazy { ArrayList<RepeatBean>() }
 
     //从数据库加载数据
     fun initDataList(
@@ -56,12 +51,10 @@ class TodoViewModel : BaseViewModel() {
                                 if (needTodayDone(todo.remindMode)) {
                                     //只有当todo本身是完成过的，并且不是在重复添加之后再完成的，才会被添加进待办事项
                                     repeatTodoIdList.add(todo.todoId)
-                                    LogUtils.d("Slayer", "before todo = $todo")
                                     if (todo.repeatStatus != CHECKED_AFTER_REPEAT) {
                                         todo.isChecked = 0
                                         todo.repeatStatus = SET_UNCHECK_BY_REPEAT
                                         TodoModel.INSTANCE.updateTodo(todo)
-                                        LogUtils.d("Slayer", "after todo = $todo")
                                     }
                                 }
                             }

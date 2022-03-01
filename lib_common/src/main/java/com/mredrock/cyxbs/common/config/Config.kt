@@ -133,10 +133,10 @@ const val TODO_LAST_MODIFY_TIME = "todo_last_modify_time"
 const val TODO_OFFLINE_MODIFY_LIST = "todo_offline_modify_list"
 //todo模块本地删除的todo的id列表
 const val TODO_OFFLINE_DEL_LIST = "todo_offline_del_list"
-//todo模块本地缓存需要重复的todo中，已经完成过一次的todo
-const val TODO_NEED_REPEAT_BUT_ALREADY_CHECKED = "todo_already_checked"
-//todo模块TODO_ALREADY_ADDED存储的JSON的对应时间
-const val TODO_ALREADY_CHECKED_DATE = "todo_already_added_date"
+//todo模块本地缓存当天需要重复的todo的id
+const val TODO_REPEAT_TODO_ID_LIST = "todo_repeat_id"
+//todo模块TODO_REPEAT_TODO_ID_LIST存储的id数组对应的时间(今年的第几天)
+const val TODO_REPEAT_TODO_ID_LIST_DATE = "todo_repeat_todo_id_list_date"
 
 //第一次安装的标志，默认或者更新之后就会置为true
 const val FIRST_TIME_OPEN = "first_time_open"

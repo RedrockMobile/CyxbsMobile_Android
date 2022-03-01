@@ -424,7 +424,6 @@ class TodoModel {
     }
 
     private fun resendModifyList() {
-        LogUtils.d("Slayer", "resend")
         val delList = getOfflineModifyTodo(DEL)
         val changedIdList = getOfflineModifyTodo(CHANGE).toString()
         val syncTime = getLastSyncTime()
