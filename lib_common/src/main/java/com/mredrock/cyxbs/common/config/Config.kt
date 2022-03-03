@@ -123,8 +123,9 @@ const val COURSE_POS_TO_MAP = "COURSE_POS_TO_MAP"
 const val QA_PARAM_QUESTION_ID = "question_id"
 
 //todo模块存储提醒日期+星期数
-const val TODO_WEEK_MONTH_ARRAY = "todo_week_moth_array"
-const val TODO_YEAR_OF_WEEK_MONTH_ARRAY = "todo_year_of_week_moth_array"
+const val TODO_WEEK_MONTH_ARRAY = "todo_week_month_array"
+//todo模块缓存了未来四年的年月份json，用于提供用户选择提醒日期，下面的是这四年的起始年份
+const val TODO_START_YEAR_OF_WEEK_MONTH_ARRAY = "todo_year_of_week_moth_array"
 //todo模块的上次同步时间本地缓存
 const val TODO_LAST_SYNC_TIME = "todo_last_sync_time"
 //todo模块本地的最后修改时间
@@ -133,10 +134,10 @@ const val TODO_LAST_MODIFY_TIME = "todo_last_modify_time"
 const val TODO_OFFLINE_MODIFY_LIST = "todo_offline_modify_list"
 //todo模块本地删除的todo的id列表
 const val TODO_OFFLINE_DEL_LIST = "todo_offline_del_list"
-//todo模块本地缓存已经添加过一次的todo
-const val TODO_ALREADY_ADDED = "todo_already_added"
-//todo模块本地缓存的todo的时间
-const val TODO_ALREADY_ADDED_DATE = "todo_already_added_date"
+//todo模块本地缓存当天需要重复的todo的id
+const val TODO_REPEAT_TODO_ID_LIST = "todo_repeat_id"
+//todo模块TODO_REPEAT_TODO_ID_LIST存储的id数组对应的时间(今年的第几天)
+const val TODO_REPEAT_TODO_ID_LIST_DATE = "todo_repeat_todo_id_list_date"
 
 //第一次安装的标志，默认或者更新之后就会置为true
 const val FIRST_TIME_OPEN = "first_time_open"
