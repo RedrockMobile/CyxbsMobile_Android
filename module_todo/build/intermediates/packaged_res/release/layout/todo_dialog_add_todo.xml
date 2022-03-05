@@ -87,6 +87,7 @@
             android:id="@+id/todo_tv_del_notify_time"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:textColor="@color/todo_add_dialog_del_color"
             android:paddingEnd="15dp"
             android:text="删除"/>
     </androidx.appcompat.widget.LinearLayoutCompat>

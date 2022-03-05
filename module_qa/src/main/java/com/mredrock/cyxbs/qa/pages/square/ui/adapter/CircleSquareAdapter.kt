@@ -34,7 +34,7 @@ class CircleSquareAdapter :
     /**
      * 关注按钮点击方法回调
      */
-    var concernClick: ((String, Boolean) -> Unit)? = null
+    var concernClick: ((Topic, Boolean) -> Unit)? = null
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         val view = LayoutInflater.from(parent.context)
@@ -80,7 +80,7 @@ class CircleSquareAdapter :
                         R.drawable.qa_shape_send_dynamic_btn_grey_background
                     )
                 }
-                concernClick?.invoke(item.topicName, item._isFollow == 0)
+                concernClick?.invoke(item, item._isFollow == 0)
             }
         }
 

@@ -12,9 +12,7 @@
             android:name="com.cyxbsmobile_single.module_todo.ui.activity.WidgetAddTodoActivity"
             android:launchMode="singleInstance"
             android:theme="@style/todo_TranslucentStyle" />
-        <activity android:name="com.cyxbsmobile_single.module_todo.ui.activity.TodoInnerMainActivity" />
-
-        <!-- todoList相关小组件 -->
+        <activity android:name="com.cyxbsmobile_single.module_todo.ui.activity.TodoInnerMainActivity" /> <!-- todoList相关小组件 -->
         <receiver
             android:name="com.cyxbsmobile_single.module_todo.ui.widget.TodoWidget"
             android:label="邮子清单" >

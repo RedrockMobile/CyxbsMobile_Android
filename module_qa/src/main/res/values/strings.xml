@@ -1,139 +1,138 @@
 <resources>
-    <string name="qa_question_list_empty_hint">还没有动态哦~</string>
-    <string name="qa_comment_list_empty_hint">还没有回复哦~</string>
-    <string name="qa_loading_error">加载出错了，点击重试吧~</string>
-    <string name="qa_question_from_mine_loading_error">无法识别问题,可能问题已过期</string>
-    <string name="qa_answer_from_mine_loading_error">无法识别回答,可能回答已过期</string>
-    <string name="qa_loading_from_mine_unknown_error">未知错误</string>
-    <string name="qa_answer_reply_hint">回复</string>
-    <string name="qa_answer_reply_count">%1$s条回复</string>
-    <string name="qa_answer_photo_count">查看%1$s张照片</string>
-    <string name="qa_answer_list_accepted">已解决</string>
-    <string name="qa_answer_list_no_answer_hint">还没有回答哦~</string>
-    <string name="qa_comment_list_comment_count">评论（%1$s）</string>
-    <string name="qa_comment_list_comment_loading_hint">努力加载中，请不要多次点击哦~</string>
-    <string name="qa_comment_dialog_error_input_hint">请先输入有效内容哦~</string>
-    <string name="qa_service_error_hint">服务器错误，请稍后再试，或您已执行该操作</string>
-    <string name="qa_question_ignore_success">已忽略该问题</string>
-    <string name="qa_quiz_dialog_next">发布</string>
-    <string name="qa_quiz_content_hint">分享你的新鲜事~</string>
-    <string name="qa_quiz_dialog_sure">确定</string>
-    <string name="qa_common_dialog_exit">保存</string>
-    <string name="qa_quiz_hint_title_empty">圈子不能为空哦~</string>
-    <string name="qa_hint_content_empty">内容不能为空哦~</string>
-    <string name="qa_quiz_save_failed">抱歉暂时没有存入草稿箱呢…</string>
-    <string name="qa_quiz_update_failed">抱歉暂时没有更新草稿箱呢…</string>
-    <string name="qa_quiz_save_success">成功存入草稿箱~</string>
-    <string name="qa_quiz_update_success">成功更新草稿箱~</string>
-    <string name="qa_answer_load_draft_question_failed">问题加载失败</string>
-    <string name="qa_quiz_dialog_submit">发布</string>
-    <string name="qa_answer_question_title">提供帮助</string>
-    <string name="qa_hint_report_success">举报成功，会尽快为您处理</string>
-    <string name="qa_crop">裁剪</string>
-    <string name="qa_crop_delete">删除</string>
-    <string name="qa_fragment_head_title">邮问</string>
-    <string name="qa_fragment_head_give_question">去提问</string>
-    <string name="qa_comment_new_comment_text_view_hint">发布评论</string>
-    <string name="qa_answer_btn_text">回答</string>
-    <string name="qa_quiz_dialog_cancel_text">取消</string>
-    <string name="qa_reward_set_title_text">积分设置</string>
-    <string name="qa_question_report_text">举报该问题</string>
-    <string name="qa_answer_report_text">举报该回答</string>
-    <string name="qa_comment_report_text">举报该评论</string>
-    <string name="qa_quiz_toolbar_title_text">发布动态</string>
-    <string name="qa_quiz_dialog_exit_text">是否保存草稿</string>
-    <string name="qa_answer_dialog_exit_text">退 出 回 答</string>
-    <string name="qa_report_dialog_cancel_text">取消</string>
-    <string name="qa_release_dynamic_success">发布动态成功</string>
-    <string name="qa_release_comment_success">发布评论成功</string>
-    <string name="qa_comment_list_no_comment_hint">还没有评论哦~</string>
-    <string name="qa_comment_list_no_more_comment">没有更多内容了～</string>
-    <string name="qa_answer_show_question">查看问题</string>
-    <string name="qa_quiz_title_text_size_toast">已达最多字数</string>
-    <string name="qa_comment_anonymous_text">匿名用户</string>
-    <string name="qa_pic_save_alert_dialog_title">是否保存</string>
-    <string name="qa_pic_save_alert_dialog_message">这张图片将保存到手机</string>
-    <string name="qa_release_dynamic_failure">发布动态失败</string>
-    <string name="qa_release_comment_failure">发布评论失败</string>
-    <string name="qa_answer_adopted_other_answer">你已采纳其他回答~</string>
-    <string name="qa_question_search_cancel">取消</string>
-    <string name="qa_search_history">历史记录</string>
-    <string name="qa_search_clean_history_all">清除全部</string>
-    <string name="qa_search_no_result">没有相关动态~</string>
-    <string name="qa_search_no_user">没有相关用户~</string>
-    <string name="qa_search_result_related">相关知识</string>
-    <string name="qa_search_empty_content">搜索内容为空，请重新编辑~</string>
-    <string name="qa_search_hot_word_key">大家都在搜:</string>
-    <string name="qa_quiz_type_empty">类型不能为空哦～</string>
-    <string name="qa_search_ed_hint_text">搜索你想知道的</string>
-    <string name="qa_reply_et_hint_text">说点什么吧，万一火了呢</string>
-    <string name="qa_report_hint_text">150字以内(选填)</string>
-    <string name="qa_dynamic_detail_title_text">详情</string>
-    <string name="qa_ignore_dynamic_success">屏蔽成功</string>
-    <string name="qa_ignore_dynamic_failure">屏蔽失败</string>
-    <string name="qa_report_dynamic_success">举报动态成功</string>
-    <string name="qa_report_dynamic_failure">举报动态失败</string>
-    <string name="qa_report_comment_success">举报评论成功</string>
-    <string name="qa_report_comment_failure">举报评论失败</string>
-    <string name="qa_follow_circle">关注圈子成功</string>
-    <string name="qa_unfollow_circle">取消关注圈子成功</string>
-    <string name="qa_follow_circle_failure">关注圈子失败</string>
-    <string name="qa_draft_dialog_no_save">不保存</string>
-    <string name="qa_draft_dialog_cancel">取消</string>
-    <string name="qa_edit_dynamic_num">0/500</string>
-    <string name="qa_choose_one_circle">请选择一个圈子</string>
-    <string name="qa_dynamic_recommend">推荐</string>
-    <string name="qa_my_follow_circle">我的关注</string>
-    <string name="qa_recycler_item_dynamic_name">刘童鞋</string>
-    <string name="qa_recycler_item_dynamic_time">2019.8.22</string>
-    <string name="qa_recycler_item_dynamic_label">#校园周边</string>
-    <string name="qa_recycler_item_anti_ignore">取消屏蔽</string>
-    <string name="qa_question_hot">热门解答</string>
-    <string name="qa_answer_list_accept">采纳</string>
-    <string name="qa_search_knowledge_from_where">来源：%1$s</string>
+    <string name="qa_question_list_empty_hint" translatable="false">还没有动态哦~</string>
+    <string name="qa_comment_list_empty_hint" translatable="false">还没有回复哦~</string>
+    <string name="qa_loading_error" translatable="false">加载出错了，点击重试吧~</string>
+    <string name="qa_question_from_mine_loading_error" translatable="false">无法识别问题,可能问题已过期</string>
+    <string name="qa_answer_from_mine_loading_error" translatable="false">无法识别回答,可能回答已过期</string>
+    <string name="qa_loading_from_mine_unknown_error" translatable="false">未知错误</string>
+    <string name="qa_answer_reply_hint" translatable="false">回复</string>
+    <string name="qa_answer_reply_count" translatable="false">%1$s条回复</string>
+    <string name="qa_answer_photo_count" translatable="false">查看%1$s张照片</string>
+    <string name="qa_answer_list_accepted" translatable="false">已解决</string>
+    <string name="qa_answer_list_no_answer_hint" translatable="false">还没有回答哦~</string>
+    <string name="qa_comment_list_comment_count" translatable="false">评论（%1$s）</string>
+    <string name="qa_comment_list_comment_loading_hint" translatable="false">努力加载中，请不要多次点击哦~</string>
+    <string name="qa_comment_dialog_error_input_hint" translatable="false">请先输入有效内容哦~</string>
+    <string name="qa_service_error_hint" translatable="false">服务器错误，请稍后再试，或您已执行该操作</string>
+    <string name="qa_question_ignore_success" translatable="false">已忽略该问题</string>
+    <string name="qa_quiz_dialog_next" translatable="false">发布</string>
+    <string name="qa_quiz_content_hint" translatable="false">分享你的新鲜事~</string>
+    <string name="qa_quiz_dialog_sure" translatable="false">确定</string>
+    <string name="qa_common_dialog_exit" translatable="false">保存</string>
+    <string name="qa_quiz_hint_title_empty" translatable="false">圈子不能为空哦~</string>
+    <string name="qa_hint_content_empty" translatable="false">内容不能为空哦~</string>
+    <string name="qa_quiz_save_failed" translatable="false">抱歉暂时没有存入草稿箱呢…</string>
+    <string name="qa_quiz_update_failed" translatable="false">抱歉暂时没有更新草稿箱呢…</string>
+    <string name="qa_quiz_save_success" translatable="false">成功存入草稿箱~</string>
+    <string name="qa_quiz_update_success" translatable="false">成功更新草稿箱~</string>
+    <string name="qa_answer_load_draft_question_failed" translatable="false">问题加载失败</string>
+    <string name="qa_quiz_dialog_submit" translatable="false">发布</string>
+    <string name="qa_answer_question_title" translatable="false">提供帮助</string>
+    <string name="qa_hint_report_success" translatable="false">举报成功，会尽快为您处理</string>
+    <string name="qa_crop" translatable="false">裁剪</string>
+    <string name="qa_crop_delete" translatable="false">删除</string>
+    <string name="qa_fragment_head_title" translatable="false">邮问</string>
+    <string name="qa_fragment_head_give_question" translatable="false">去提问</string>
+    <string name="qa_comment_new_comment_text_view_hint" translatable="false">发布评论</string>
+    <string name="qa_answer_btn_text" translatable="false">回答</string>
+    <string name="qa_quiz_dialog_cancel_text" translatable="false">取消</string>
+    <string name="qa_reward_set_title_text" translatable="false">积分设置</string>
+    <string name="qa_question_report_text" translatable="false">举报该问题</string>
+    <string name="qa_answer_report_text" translatable="false">举报该回答</string>
+    <string name="qa_comment_report_text" translatable="false">举报该评论</string>
+    <string name="qa_quiz_toolbar_title_text" translatable="false">发布动态</string>
+    <string name="qa_quiz_dialog_exit_text" translatable="false">是否保存草稿</string>
+    <string name="qa_answer_dialog_exit_text" translatable="false">退 出 回 答</string>
+    <string name="qa_report_dialog_cancel_text" translatable="false">取消</string>
+    <string name="qa_release_dynamic_success" translatable="false">发布动态成功</string>
+    <string name="qa_release_comment_success" translatable="false">发布评论成功</string>
+    <string name="qa_comment_list_no_comment_hint" translatable="false">还没有评论哦~</string>
+    <string name="qa_comment_list_no_more_comment" translatable="false">没有更多内容了～</string>
+    <string name="qa_answer_show_question" translatable="false">查看问题</string>
+    <string name="qa_quiz_title_text_size_toast" translatable="false">已达最多字数</string>
+    <string name="qa_comment_anonymous_text" translatable="false">匿名用户</string>
+    <string name="qa_pic_save_alert_dialog_title" translatable="false">是否保存</string>
+    <string name="qa_pic_save_alert_dialog_message" translatable="false">这张图片将保存到手机</string>
+    <string name="qa_release_dynamic_failure" translatable="false">发布动态失败</string>
+    <string name="qa_release_comment_failure" translatable="false">发布评论失败</string>
+    <string name="qa_answer_adopted_other_answer" translatable="false">你已采纳其他回答~</string>
+    <string name="qa_question_search_cancel" translatable="false">取消</string>
+    <string name="qa_search_history" translatable="false">历史记录</string>
+    <string name="qa_search_clean_history_all" translatable="false">清除全部</string>
+    <string name="qa_search_no_result" translatable="false">没有相关动态~</string>
+    <string name="qa_search_no_user" translatable="false">没有相关用户~</string>
+    <string name="qa_search_result_related" translatable="false">相关知识</string>
+    <string name="qa_search_empty_content" translatable="false">搜索内容为空，请重新编辑~</string>
+    <string name="qa_search_hot_word_key" translatable="false">大家都在搜:</string>
+    <string name="qa_quiz_type_empty" translatable="false">类型不能为空哦～</string>
+    <string name="qa_search_ed_hint_text" translatable="false">搜索你想知道的</string>
+    <string name="qa_reply_et_hint_text" translatable="false">说点什么吧，万一火了呢</string>
+    <string name="qa_report_hint_text" translatable="false">150字以内(选填)</string>
+    <string name="qa_dynamic_detail_title_text" translatable="false">详情</string>
+    <string name="qa_ignore_dynamic_success" translatable="false">屏蔽成功</string>
+    <string name="qa_ignore_dynamic_failure" translatable="false">屏蔽失败</string>
+    <string name="qa_report_dynamic_success" translatable="false">举报动态成功</string>
+    <string name="qa_report_dynamic_failure" translatable="false">举报动态失败</string>
+    <string name="qa_report_comment_success" translatable="false">举报评论成功</string>
+    <string name="qa_report_comment_failure" translatable="false">举报评论失败</string>
+    <string name="qa_follow_circle" translatable="false">关注圈子成功</string>
+    <string name="qa_unfollow_circle" translatable="false">取消关注圈子成功</string>
+    <string name="qa_draft_dialog_no_save" translatable="false">不保存</string>
+    <string name="qa_draft_dialog_cancel" translatable="false">取消</string>
+    <string name="qa_edit_dynamic_num" translatable="false">0/500</string>
+    <string name="qa_choose_one_circle" translatable="false">请选择一个圈子</string>
+    <string name="qa_dynamic_recommend" translatable="false">推荐</string>
+    <string name="qa_my_follow_circle" translatable="false">我的关注</string>
+    <string name="qa_recycler_item_dynamic_name" translatable="false">刘童鞋</string>
+    <string name="qa_recycler_item_dynamic_time" translatable="false">2019.8.22</string>
+    <string name="qa_recycler_item_dynamic_label" translatable="false">#校园周边</string>
+    <string name="qa_recycler_item_anti_ignore" translatable="false">取消屏蔽</string>
+    <string name="qa_question_hot" translatable="false">热门解答</string>
+    <string name="qa_answer_list_accept" translatable="false">采纳</string>
+    <string name="qa_search_knowledge_from_where" translatable="false">来源：%1$s</string>
     <string-array name="qa_title_type">
         <item>问题</item>
         <item>回答</item>
         <item>评论</item>
     </string-array>
 
-    <string name="qa_dialog_tip_positive_text">确定</string>
-    <string name="qa_dialog_tip_deny_text">取消</string>
-    <string name="qa_dialog_tip_delete_dynamic_text">确定删除此条动态</string>
-    <string name="qa_dialog_tip_delete_comment_text">确定删除此条动态</string>
-    <string name="qa_dialog_tip_report_text">填写举报理由</string>
-    <string name="qa_cancel_circle_failure">取消关注圈子失败</string>
-    <string name="qa_cancel_circle">取消关注圈子成功</string>
-    <string name="qa_get_circle_data_failure">获取圈子信息失败</string>
-    <string name="qa_delete_dynamic_failure">删除动态失败</string>
-    <string name="qa_delete_comment_failure">删除评论失败</string>
-    <string name="qa_dialog_cancel">取消</string>
-    <string name="qa_dialog_share_text">分享</string>
-    <string name="qa_delete_dynamic_success">删除动态成功</string>
-    <string name="qa_delete_comment_success">删除评论成功</string>
+    <string name="qa_dialog_tip_positive_text" translatable="false">确定</string>
+    <string name="qa_dialog_tip_deny_text" translatable="false">取消</string>
+    <string name="qa_dialog_tip_delete_dynamic_text" translatable="false">确定删除此条动态</string>
+    <string name="qa_dialog_tip_delete_comment_text" translatable="false">确定删除此条动态</string>
+    <string name="qa_dialog_tip_report_text" translatable="false">填写举报理由</string>
+    <string name="qa_cancel_circle_failure" translatable="false">取消关注圈子失败</string>
+    <string name="qa_cancel_circle" translatable="false">取消关注圈子成功</string>
+    <string name="qa_get_circle_data_failure" translatable="false">获取圈子信息失败</string>
+    <string name="qa_delete_dynamic_failure" translatable="false">删除动态失败</string>
+    <string name="qa_delete_comment_failure" translatable="false">删除评论失败</string>
+    <string name="qa_dialog_cancel" translatable="false">取消</string>
+    <string name="qa_dialog_share_text" translatable="false">分享</string>
+    <string name="qa_delete_dynamic_success" translatable="false">删除动态成功</string>
+    <string name="qa_delete_comment_success" translatable="false">删除评论成功</string>
 
-    <string name="qa_topic_message_failure">获取未读圈子消息失败</string>
-    <string name="qa_reply_detail_title_text">回复</string>
-    <string name="qa_reply_detail_show_detail_text">查看对话</string>
-    <string name="qa_server_go_out">信息加载完成后，才能够发动态</string>
-    <string name="qa_dialog_share_qq">QQ</string>
-    <string name="qa_dialog_share_friend_circle">朋友圈</string>
-    <string name="qa_dialog_share_wechat_friend">微信好友</string>
-    <string name="qa_dialog_share_copy_link">复制链接</string>
-    <string name="qa_dialog_share_qqzone">QQ空间</string>
-    <string name="qa_share_wechat_text">微信权限,我们正在争取中</string>
-    <string name="qa_dialog_report_text">举报字数已到达150字</string>
-    <string name="qa_my_comment_reply_your_comment">回复了你的评论</string>
-    <string name="qa_my_comment_no_reply">暂时还没有回复哦</string>
-    <string name="qa_square_title">圈子广场</string>
-    <string name="qa_save_draft_success">保存草稿成功</string>
-    <string name="qa_save_draft_failure">保存草稿失败</string>
-    <string name="qa_get_draft_failure">获取草稿失败</string>
-    <string name="qa_choose_image_tips">请重新选择图片，一次性只能够发布8张图片</string>
-    <string name="qa_delete_draft">删除草稿失败</string>
-    <string name="qa_item_no_circle_text">发现你喜欢的圈子~</string>
+    <string name="qa_topic_message_failure" translatable="false">获取未读圈子消息失败</string>
+    <string name="qa_reply_detail_title_text" translatable="false">回复</string>
+    <string name="qa_reply_detail_show_detail_text" translatable="false">查看对话</string>
+    <string name="qa_server_go_out" translatable="false">信息加载完成后，才能够发动态</string>
+    <string name="qa_dialog_share_qq" translatable="false">QQ</string>
+    <string name="qa_dialog_share_friend_circle" translatable="false">朋友圈</string>
+    <string name="qa_dialog_share_wechat_friend" translatable="false">微信好友</string>
+    <string name="qa_dialog_share_copy_link" translatable="false">复制链接</string>
+    <string name="qa_dialog_share_qqzone" translatable="false">QQ空间</string>
+    <string name="qa_share_wechat_text" translatable="false">微信权限,我们正在争取中</string>
+    <string name="qa_dialog_report_text" translatable="false">举报字数已到达150字</string>
+    <string name="qa_my_comment_reply_your_comment" translatable="false">回复了你的评论</string>
+    <string name="qa_my_comment_no_reply" translatable="false">暂时还没有回复哦</string>
+    <string name="qa_square_title" translatable="false">圈子广场</string>
+    <string name="qa_save_draft_success" translatable="false">保存草稿成功</string>
+    <string name="qa_save_draft_failure" translatable="false">保存草稿失败</string>
+    <string name="qa_get_draft_failure" translatable="false">获取草稿失败</string>
+    <string name="qa_choose_image_tips" translatable="false">请重新选择图片，一次性只能够发布8张图片</string>
+    <string name="qa_delete_draft" translatable="false">删除草稿失败</string>
+    <string name="qa_item_no_circle_text" translatable="false">发现你喜欢的圈子~</string>
 
-    <string name="qa_person_focus_success">关注成功</string>
-    <string name="qa_person_change_focus_status_failed">操作失败</string>
-    <string name="qa_person_unfocus_success">取关成功</string>
+    <string name="qa_person_focus_success" translatable="false">关注成功</string>
+    <string name="qa_person_change_focus_status_failed" translatable="false">操作失败</string>
+    <string name="qa_person_unfocus_success" translatable="false">取关成功</string>
 </resources>

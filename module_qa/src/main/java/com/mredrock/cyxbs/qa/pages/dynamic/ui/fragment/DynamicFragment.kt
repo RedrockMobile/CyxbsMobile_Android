@@ -74,7 +74,7 @@ class DynamicFragment : BaseDynamicFragment(), EventBusLifecycleSubscriber {
             if (topic.topicId == "0") {
                 CircleSquareActivity.activityStartFromDynamic(this)
             } else {
-                CircleDetailActivity.activityStartFromCircle(this, view, topic)
+                CircleDetailActivity.activityStartFromCircle(this, topic)
             }
         }, this)
 

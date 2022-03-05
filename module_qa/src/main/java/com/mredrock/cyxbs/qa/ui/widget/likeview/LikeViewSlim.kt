@@ -76,7 +76,7 @@ class LikeViewSlim @JvmOverloads constructor(
         }
         canvas?.drawText(
             praiseCount.toString(),
-            width / 2f + context.dp2px(18f),
+            width / 2f + context.dp2px(14f),
             height / 2f + offsetY,
             textPaint
         )

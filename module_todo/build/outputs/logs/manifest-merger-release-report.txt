@@ -1,83 +1,83 @@
 -- Merging decision tree log ---
 manifest
-ADDED from C:\Users\32261\Desktop\Cyxbs\CyxbsMobile_Android\module_todo\src\main\AndroidManifest.xml:2:1-36:12
-INJECTED from C:\Users\32261\Desktop\Cyxbs\CyxbsMobile_Android\module_todo\src\main\AndroidManifest.xml:2:1-36:12
-INJECTED from C:\Users\32261\Desktop\Cyxbs\CyxbsMobile_Android\module_todo\src\main\AndroidManifest.xml:2:1-36:12
+ADDED from A:\Android_Studio\Project\Cyxbs\master\CyxbsMobile_Android\module_todo\src\main\AndroidManifest.xml:2:1-33:12
+INJECTED from A:\Android_Studio\Project\Cyxbs\master\CyxbsMobile_Android\module_todo\src\main\AndroidManifest.xml:2:1-33:12
+INJECTED from A:\Android_Studio\Project\Cyxbs\master\CyxbsMobile_Android\module_todo\src\main\AndroidManifest.xml:2:1-33:12
 	package
-		ADDED from C:\Users\32261\Desktop\Cyxbs\CyxbsMobile_Android\module_todo\src\main\AndroidManifest.xml:3:5-49
-		INJECTED from C:\Users\32261\Desktop\Cyxbs\CyxbsMobile_Android\module_todo\src\main\AndroidManifest.xml
-		INJECTED from C:\Users\32261\Desktop\Cyxbs\CyxbsMobile_Android\module_todo\src\main\AndroidManifest.xml
+		ADDED from A:\Android_Studio\Project\Cyxbs\master\CyxbsMobile_Android\module_todo\src\main\AndroidManifest.xml:3:5-49
+		INJECTED from A:\Android_Studio\Project\Cyxbs\master\CyxbsMobile_Android\module_todo\src\main\AndroidManifest.xml
+		INJECTED from A:\Android_Studio\Project\Cyxbs\master\CyxbsMobile_Android\module_todo\src\main\AndroidManifest.xml
 	xmlns:android
-		ADDED from C:\Users\32261\Desktop\Cyxbs\CyxbsMobile_Android\module_todo\src\main\AndroidManifest.xml:2:11-69
+		ADDED from A:\Android_Studio\Project\Cyxbs\master\CyxbsMobile_Android\module_todo\src\main\AndroidManifest.xml:2:11-69
 application
-ADDED from C:\Users\32261\Desktop\Cyxbs\CyxbsMobile_Android\module_todo\src\main\AndroidManifest.xml:5:5-34:19
+ADDED from A:\Android_Studio\Project\Cyxbs\master\CyxbsMobile_Android\module_todo\src\main\AndroidManifest.xml:5:5-31:19
 activity#com.cyxbsmobile_single.module_todo.ui.activity.TodoDetailActivity
-ADDED from C:\Users\32261\Desktop\Cyxbs\CyxbsMobile_Android\module_todo\src\main\AndroidManifest.xml:6:9-67
+ADDED from A:\Android_Studio\Project\Cyxbs\master\CyxbsMobile_Android\module_todo\src\main\AndroidManifest.xml:6:9-68
 	android:name
-		ADDED from C:\Users\32261\Desktop\Cyxbs\CyxbsMobile_Android\module_todo\src\main\AndroidManifest.xml:6:19-65
+		ADDED from A:\Android_Studio\Project\Cyxbs\master\CyxbsMobile_Android\module_todo\src\main\AndroidManifest.xml:6:19-65
 activity#com.cyxbsmobile_single.module_todo.ui.activity.WidgetAddTodoActivity
-ADDED from C:\Users\32261\Desktop\Cyxbs\CyxbsMobile_Android\module_todo\src\main\AndroidManifest.xml:7:9-10:60
+ADDED from A:\Android_Studio\Project\Cyxbs\master\CyxbsMobile_Android\module_todo\src\main\AndroidManifest.xml:7:9-10:60
 	android:launchMode
-		ADDED from C:\Users\32261\Desktop\Cyxbs\CyxbsMobile_Android\module_todo\src\main\AndroidManifest.xml:9:13-48
+		ADDED from A:\Android_Studio\Project\Cyxbs\master\CyxbsMobile_Android\module_todo\src\main\AndroidManifest.xml:9:13-48
 	android:theme
-		ADDED from C:\Users\32261\Desktop\Cyxbs\CyxbsMobile_Android\module_todo\src\main\AndroidManifest.xml:10:13-57
+		ADDED from A:\Android_Studio\Project\Cyxbs\master\CyxbsMobile_Android\module_todo\src\main\AndroidManifest.xml:10:13-57
 	android:name
-		ADDED from C:\Users\32261\Desktop\Cyxbs\CyxbsMobile_Android\module_todo\src\main\AndroidManifest.xml:8:13-62
+		ADDED from A:\Android_Studio\Project\Cyxbs\master\CyxbsMobile_Android\module_todo\src\main\AndroidManifest.xml:8:13-62
 activity#com.cyxbsmobile_single.module_todo.ui.activity.TodoInnerMainActivity
-ADDED from C:\Users\32261\Desktop\Cyxbs\CyxbsMobile_Android\module_todo\src\main\AndroidManifest.xml:11:9-71
+ADDED from A:\Android_Studio\Project\Cyxbs\master\CyxbsMobile_Android\module_todo\src\main\AndroidManifest.xml:11:9-71
 	android:name
-		ADDED from C:\Users\32261\Desktop\Cyxbs\CyxbsMobile_Android\module_todo\src\main\AndroidManifest.xml:11:19-68
+		ADDED from A:\Android_Studio\Project\Cyxbs\master\CyxbsMobile_Android\module_todo\src\main\AndroidManifest.xml:11:19-68
 receiver#com.cyxbsmobile_single.module_todo.ui.widget.TodoWidget
-ADDED from C:\Users\32261\Desktop\Cyxbs\CyxbsMobile_Android\module_todo\src\main\AndroidManifest.xml:15:9-29:20
+ADDED from A:\Android_Studio\Project\Cyxbs\master\CyxbsMobile_Android\module_todo\src\main\AndroidManifest.xml:12:9-26:20
 	android:label
-		ADDED from C:\Users\32261\Desktop\Cyxbs\CyxbsMobile_Android\module_todo\src\main\AndroidManifest.xml:17:13-33
+		ADDED from A:\Android_Studio\Project\Cyxbs\master\CyxbsMobile_Android\module_todo\src\main\AndroidManifest.xml:14:13-33
 	android:name
-		ADDED from C:\Users\32261\Desktop\Cyxbs\CyxbsMobile_Android\module_todo\src\main\AndroidManifest.xml:16:13-49
+		ADDED from A:\Android_Studio\Project\Cyxbs\master\CyxbsMobile_Android\module_todo\src\main\AndroidManifest.xml:13:13-49
 intent-filter#action:name:android.appwidget.action.APPWIDGET_UPDATE+action:name:cyxbs.widget.todo.add+action:name:cyxbs.widget.todo.check+action:name:cyxbs.widget.todo.jump+action:name:cyxbs.widget.todo.refresh
-ADDED from C:\Users\32261\Desktop\Cyxbs\CyxbsMobile_Android\module_todo\src\main\AndroidManifest.xml:18:13-24:29
+ADDED from A:\Android_Studio\Project\Cyxbs\master\CyxbsMobile_Android\module_todo\src\main\AndroidManifest.xml:15:13-21:29
 action#android.appwidget.action.APPWIDGET_UPDATE
-ADDED from C:\Users\32261\Desktop\Cyxbs\CyxbsMobile_Android\module_todo\src\main\AndroidManifest.xml:19:17-84
+ADDED from A:\Android_Studio\Project\Cyxbs\master\CyxbsMobile_Android\module_todo\src\main\AndroidManifest.xml:16:17-84
 	android:name
-		ADDED from C:\Users\32261\Desktop\Cyxbs\CyxbsMobile_Android\module_todo\src\main\AndroidManifest.xml:19:25-81
+		ADDED from A:\Android_Studio\Project\Cyxbs\master\CyxbsMobile_Android\module_todo\src\main\AndroidManifest.xml:16:25-81
 action#cyxbs.widget.todo.refresh
-ADDED from C:\Users\32261\Desktop\Cyxbs\CyxbsMobile_Android\module_todo\src\main\AndroidManifest.xml:20:17-68
+ADDED from A:\Android_Studio\Project\Cyxbs\master\CyxbsMobile_Android\module_todo\src\main\AndroidManifest.xml:17:17-68
 	android:name
-		ADDED from C:\Users\32261\Desktop\Cyxbs\CyxbsMobile_Android\module_todo\src\main\AndroidManifest.xml:20:25-65
+		ADDED from A:\Android_Studio\Project\Cyxbs\master\CyxbsMobile_Android\module_todo\src\main\AndroidManifest.xml:17:25-65
 action#cyxbs.widget.todo.add
-ADDED from C:\Users\32261\Desktop\Cyxbs\CyxbsMobile_Android\module_todo\src\main\AndroidManifest.xml:21:17-63
+ADDED from A:\Android_Studio\Project\Cyxbs\master\CyxbsMobile_Android\module_todo\src\main\AndroidManifest.xml:18:17-64
 	android:name
-		ADDED from C:\Users\32261\Desktop\Cyxbs\CyxbsMobile_Android\module_todo\src\main\AndroidManifest.xml:21:25-61
+		ADDED from A:\Android_Studio\Project\Cyxbs\master\CyxbsMobile_Android\module_todo\src\main\AndroidManifest.xml:18:25-61
 action#cyxbs.widget.todo.jump
-ADDED from C:\Users\32261\Desktop\Cyxbs\CyxbsMobile_Android\module_todo\src\main\AndroidManifest.xml:22:17-65
+ADDED from A:\Android_Studio\Project\Cyxbs\master\CyxbsMobile_Android\module_todo\src\main\AndroidManifest.xml:19:17-65
 	android:name
-		ADDED from C:\Users\32261\Desktop\Cyxbs\CyxbsMobile_Android\module_todo\src\main\AndroidManifest.xml:22:25-62
+		ADDED from A:\Android_Studio\Project\Cyxbs\master\CyxbsMobile_Android\module_todo\src\main\AndroidManifest.xml:19:25-62
 action#cyxbs.widget.todo.check
-ADDED from C:\Users\32261\Desktop\Cyxbs\CyxbsMobile_Android\module_todo\src\main\AndroidManifest.xml:23:17-65
+ADDED from A:\Android_Studio\Project\Cyxbs\master\CyxbsMobile_Android\module_todo\src\main\AndroidManifest.xml:20:17-66
 	android:name
-		ADDED from C:\Users\32261\Desktop\Cyxbs\CyxbsMobile_Android\module_todo\src\main\AndroidManifest.xml:23:25-63
+		ADDED from A:\Android_Studio\Project\Cyxbs\master\CyxbsMobile_Android\module_todo\src\main\AndroidManifest.xml:20:25-63
 meta-data#android.appwidget.provider
-ADDED from C:\Users\32261\Desktop\Cyxbs\CyxbsMobile_Android\module_todo\src\main\AndroidManifest.xml:26:13-28:64
+ADDED from A:\Android_Studio\Project\Cyxbs\master\CyxbsMobile_Android\module_todo\src\main\AndroidManifest.xml:23:13-25:64
 	android:resource
-		ADDED from C:\Users\32261\Desktop\Cyxbs\CyxbsMobile_Android\module_todo\src\main\AndroidManifest.xml:28:17-61
+		ADDED from A:\Android_Studio\Project\Cyxbs\master\CyxbsMobile_Android\module_todo\src\main\AndroidManifest.xml:25:17-61
 	android:name
-		ADDED from C:\Users\32261\Desktop\Cyxbs\CyxbsMobile_Android\module_todo\src\main\AndroidManifest.xml:27:17-58
+		ADDED from A:\Android_Studio\Project\Cyxbs\master\CyxbsMobile_Android\module_todo\src\main\AndroidManifest.xml:24:17-58
 service#com.cyxbsmobile_single.module_todo.service.TodoWidgetService
-ADDED from C:\Users\32261\Desktop\Cyxbs\CyxbsMobile_Android\module_todo\src\main\AndroidManifest.xml:31:9-33:72
+ADDED from A:\Android_Studio\Project\Cyxbs\master\CyxbsMobile_Android\module_todo\src\main\AndroidManifest.xml:28:9-30:72
 	android:permission
-		ADDED from C:\Users\32261\Desktop\Cyxbs\CyxbsMobile_Android\module_todo\src\main\AndroidManifest.xml:33:13-69
+		ADDED from A:\Android_Studio\Project\Cyxbs\master\CyxbsMobile_Android\module_todo\src\main\AndroidManifest.xml:30:13-69
 	android:name
-		ADDED from C:\Users\32261\Desktop\Cyxbs\CyxbsMobile_Android\module_todo\src\main\AndroidManifest.xml:32:13-54
+		ADDED from A:\Android_Studio\Project\Cyxbs\master\CyxbsMobile_Android\module_todo\src\main\AndroidManifest.xml:29:13-54
 uses-sdk
-INJECTED from C:\Users\32261\Desktop\Cyxbs\CyxbsMobile_Android\module_todo\src\main\AndroidManifest.xml reason: use-sdk injection requested
-INJECTED from C:\Users\32261\Desktop\Cyxbs\CyxbsMobile_Android\module_todo\src\main\AndroidManifest.xml
-INJECTED from C:\Users\32261\Desktop\Cyxbs\CyxbsMobile_Android\module_todo\src\main\AndroidManifest.xml
-INJECTED from C:\Users\32261\Desktop\Cyxbs\CyxbsMobile_Android\module_todo\src\main\AndroidManifest.xml
-INJECTED from C:\Users\32261\Desktop\Cyxbs\CyxbsMobile_Android\module_todo\src\main\AndroidManifest.xml
+INJECTED from A:\Android_Studio\Project\Cyxbs\master\CyxbsMobile_Android\module_todo\src\main\AndroidManifest.xml reason: use-sdk injection requested
+INJECTED from A:\Android_Studio\Project\Cyxbs\master\CyxbsMobile_Android\module_todo\src\main\AndroidManifest.xml
+INJECTED from A:\Android_Studio\Project\Cyxbs\master\CyxbsMobile_Android\module_todo\src\main\AndroidManifest.xml
+INJECTED from A:\Android_Studio\Project\Cyxbs\master\CyxbsMobile_Android\module_todo\src\main\AndroidManifest.xml
+INJECTED from A:\Android_Studio\Project\Cyxbs\master\CyxbsMobile_Android\module_todo\src\main\AndroidManifest.xml
 	android:targetSdkVersion
-		INJECTED from C:\Users\32261\Desktop\Cyxbs\CyxbsMobile_Android\module_todo\src\main\AndroidManifest.xml
-		ADDED from C:\Users\32261\Desktop\Cyxbs\CyxbsMobile_Android\module_todo\src\main\AndroidManifest.xml
-		INJECTED from C:\Users\32261\Desktop\Cyxbs\CyxbsMobile_Android\module_todo\src\main\AndroidManifest.xml
+		INJECTED from A:\Android_Studio\Project\Cyxbs\master\CyxbsMobile_Android\module_todo\src\main\AndroidManifest.xml
+		ADDED from A:\Android_Studio\Project\Cyxbs\master\CyxbsMobile_Android\module_todo\src\main\AndroidManifest.xml
+		INJECTED from A:\Android_Studio\Project\Cyxbs\master\CyxbsMobile_Android\module_todo\src\main\AndroidManifest.xml
 	android:minSdkVersion
-		INJECTED from C:\Users\32261\Desktop\Cyxbs\CyxbsMobile_Android\module_todo\src\main\AndroidManifest.xml
-		ADDED from C:\Users\32261\Desktop\Cyxbs\CyxbsMobile_Android\module_todo\src\main\AndroidManifest.xml
-		INJECTED from C:\Users\32261\Desktop\Cyxbs\CyxbsMobile_Android\module_todo\src\main\AndroidManifest.xml
+		INJECTED from A:\Android_Studio\Project\Cyxbs\master\CyxbsMobile_Android\module_todo\src\main\AndroidManifest.xml
+		ADDED from A:\Android_Studio\Project\Cyxbs\master\CyxbsMobile_Android\module_todo\src\main\AndroidManifest.xml
+		INJECTED from A:\Android_Studio\Project\Cyxbs\master\CyxbsMobile_Android\module_todo\src\main\AndroidManifest.xml

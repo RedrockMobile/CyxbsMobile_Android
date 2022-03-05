@@ -34,9 +34,7 @@
             android:clickable="false"
             android:layout_marginEnd="15dp"
             android:layout_marginTop="15dp"
-            android:visibility="gone"
             android:layout_marginBottom="4.5dp"
-            android:text="保存"
             android:textColor="@color/todo_inner_add_save_text_color"
             android:textSize="20sp"
             android:textStyle="normal" />
