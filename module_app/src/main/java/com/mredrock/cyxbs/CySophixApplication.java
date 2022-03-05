@@ -3,7 +3,6 @@ package com.mredrock.cyxbs;
 import android.content.Context;
 
 import androidx.annotation.Keep;
-import androidx.multidex.MultiDex;
 
 import com.taobao.sophix.SophixApplication;
 import com.taobao.sophix.SophixEntry;
@@ -27,7 +26,6 @@ public class CySophixApplication extends SophixApplication {
     @Override
     protected void attachBaseContext(Context base) {
         super.attachBaseContext(base);
-        MultiDex.install(this);
         initSophix();
     }
 

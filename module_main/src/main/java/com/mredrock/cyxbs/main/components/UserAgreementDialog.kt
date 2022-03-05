@@ -17,14 +17,12 @@ import android.view.ViewGroup
 import android.view.Window
 import android.widget.Button
 import android.widget.TextView
-import android.widget.Toast
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.DialogFragment
 import androidx.fragment.app.FragmentManager
 import com.mredrock.cyxbs.main.R
 import com.mredrock.cyxbs.main.ui.PrivacyActivity
 import com.mredrock.cyxbs.main.ui.UserAgreementActivity
-import com.tencent.bugly.Bugly.applicationContext
 
 /**
  * Author by OkAndGreat，Date on 2021/9/23.
@@ -97,11 +95,11 @@ class UserAgreementDialog : DialogFragment() {
         spannableString.append("友友，欢迎使用掌上重邮！在您使用掌上重邮前，请认真阅读《用户协议》和《隐私权政策》，它们将帮助您了解我们所采集的个人信息与用途的对应关系。如您同意，请点击下方同意并继续按钮开始接受我们的服务。")
         //解决文字点击后变色
         tvUserAgreeDetail.highlightColor =
-            ContextCompat.getColor(applicationContext, android.R.color.transparent)
+            ContextCompat.getColor(requireContext(), android.R.color.transparent)
         //设置用户协议和隐私权政策点击事件
         val userAgreementClickSpan = object : ClickableSpan() {
             override fun onClick(widget: View) {
-                val intent = Intent(applicationContext, UserAgreementActivity::class.java)
+                val intent = Intent(requireContext(), UserAgreementActivity::class.java)
                 startActivity(intent)
             }
 
@@ -114,7 +112,7 @@ class UserAgreementDialog : DialogFragment() {
         }
         val privacyClickSpan = object : ClickableSpan() {
             override fun onClick(widget: View) {
-                val intent = Intent(applicationContext, PrivacyActivity::class.java)
+                val intent = Intent(context, PrivacyActivity::class.java)
                 startActivity(intent)
             }
 

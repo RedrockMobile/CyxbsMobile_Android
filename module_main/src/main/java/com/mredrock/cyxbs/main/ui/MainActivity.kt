@@ -18,7 +18,6 @@ import com.mredrock.cyxbs.api.account.IAccountService
 import com.mredrock.cyxbs.api.main.IMainService
 import com.mredrock.cyxbs.api.update.AppUpdateStatus
 import com.mredrock.cyxbs.api.update.IAppUpdateService
-import com.mredrock.cyxbs.common.BaseApp
 import com.mredrock.cyxbs.common.bean.LoginConfig
 import com.mredrock.cyxbs.common.config.*
 import com.mredrock.cyxbs.common.event.LoadCourse
@@ -30,15 +29,13 @@ import com.mredrock.cyxbs.common.service.ServiceManager
 import com.mredrock.cyxbs.common.ui.BaseViewModelActivity
 import com.mredrock.cyxbs.common.utils.debug
 import com.mredrock.cyxbs.common.utils.extensions.*
-import com.mredrock.cyxbs.main.MAIN_MAIN
+import com.mredrock.cyxbs.api.main.MAIN_MAIN
 import com.mredrock.cyxbs.main.R
 import com.mredrock.cyxbs.main.adapter.MainAdapter
 import com.mredrock.cyxbs.main.components.DebugDataDialog
 import com.mredrock.cyxbs.main.utils.BottomNavigationHelper
 import com.mredrock.cyxbs.main.utils.isDownloadSplash
 import com.mredrock.cyxbs.main.viewmodel.MainViewModel
-import com.umeng.analytics.MobclickAgent
-import com.umeng.message.inapp.InAppMessageManager
 import kotlinx.android.synthetic.main.main_activity_main.*
 import kotlinx.android.synthetic.main.main_bottom_nav.*
 import org.greenrobot.eventbus.EventBus
@@ -92,8 +89,9 @@ class MainActivity : BaseViewModelActivity<MainViewModel>(),
             return
         }
         checkSplash()
-        InAppMessageManager.getInstance(BaseApp.context)
-            .showCardMessage(this, "课表主页面") {} //友盟插屏消息关闭之后调用，暂未写功能
+        // 暂时注释友盟
+//        InAppMessageManager.getInstance(com.mredrock.cyxbs.BaseApp.context)
+//            .showCardMessage(this, "课表主页面") {} //友盟插屏消息关闭之后调用，暂未写功能
         mainService = ServiceManager.getService(IMainService::class.java)//初始化主模块服务
         viewModel.startPage.observe(
             this,
@@ -204,11 +202,12 @@ class MainActivity : BaseViewModelActivity<MainViewModel>(),
         ll_nav_main_container.onTouch { _, _ -> }//防止穿透点击或者滑动，子View无法处理默认消耗
         //底部导航栏的控制初始化
         bottomHelper = BottomNavigationHelper(arrayOf(explore, qa, mine)) {
-            MobclickAgent.onEvent(
-                this, CyxbsMob.Event.BOTTOM_TAB_CLICK, mutableMapOf(
-                    Pair(CyxbsMob.Key.TAB_INDEX, it.toString())
-                )
-            )
+            // 暂时注释友盟
+//            MobclickAgent.onEvent(
+//                this, CyxbsMob.Event.BOTTOM_TAB_CLICK, mutableMapOf(
+//                    Pair(CyxbsMob.Key.TAB_INDEX, it.toString())
+//                )
+//            )
             if (it == 1 && bottomHelper?.peeCheckedItemPosition == 1)
                 EventBus.getDefault().post(RefreshQaEvent())
 
@@ -226,7 +225,7 @@ class MainActivity : BaseViewModelActivity<MainViewModel>(),
                     //切换到邮问时，bottomSheet变为隐藏，并添加z轴高度
                     bottomSheetBehavior.isHideable = true
                     bottomSheetBehavior.state = BottomSheetBehavior.STATE_HIDDEN
-                    ll_nav_main_container.elevation = BaseApp.context.dp2px(4f).toFloat()
+                    ll_nav_main_container.elevation = dp2px(4f).toFloat()
                     //点击Tab刷新邮问
                     if (bottomHelper?.peeCheckedItemPosition == 1) EventBus.getDefault()
                         .post(RefreshQaEvent())

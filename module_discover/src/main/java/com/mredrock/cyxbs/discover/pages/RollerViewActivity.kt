@@ -8,7 +8,7 @@ import android.media.MediaScannerConnection
 import android.os.*
 import android.view.KeyEvent
 import android.view.KeyEvent.KEYCODE_BACK
-import android.view.View
+import android.view.ViewGroup
 import android.webkit.*
 import android.widget.Toast
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
@@ -18,13 +18,15 @@ import com.mredrock.cyxbs.common.config.DIR_PHOTO
 import com.mredrock.cyxbs.common.ui.BaseActivity
 import com.mredrock.cyxbs.common.utils.extensions.*
 import com.mredrock.cyxbs.common.webView.IAndroidWebView
+import com.mredrock.cyxbs.common.webView.LiteJsWebView
 import com.mredrock.cyxbs.discover.R
 import com.mredrock.cyxbs.discover.network.RollerViewInfo
 import com.mredrock.cyxbs.common.webView.WebViewBaseCallBack
 import com.mredrock.cyxbs.discover.pages.discover.webView.WebViewFactory
-import kotlinx.android.synthetic.main.discover_activity_roller_view.*
 
 class RollerViewActivity : BaseActivity() {
+
+    private val mWebView by R.id.discover_web_view.view<LiteJsWebView>()
 
     private val handler = object : Handler(Looper.getMainLooper()) {
         override fun handleMessage(msg: Message) {
@@ -58,8 +60,8 @@ class RollerViewActivity : BaseActivity() {
 
         webApi = WebViewFactory(url,handler, {
             //这里是调用的Js的传进来的Js代码
-            discover_web_view.post {
-                discover_web_view.evaluateJavascript(it) { }
+            mWebView.post {
+                mWebView.evaluateJavascript(it) { }
             }
         },
             {
@@ -67,12 +69,12 @@ class RollerViewActivity : BaseActivity() {
             }).produce()
 
         webApi?.apply {
-            discover_web_view.init(this)
+            mWebView.init(this)
         }
         //加载网页
-        discover_web_view.loadUrl(url)
+        mWebView.loadUrl(url)
         //设置几个webview的监听
-        discover_web_view.webChromeClient = object : WebChromeClient() {
+        mWebView.webChromeClient = object : WebChromeClient() {
             //加载的时候会拿到网页的标签页名字
             override fun onReceivedTitle(view: WebView?, title: String) {
                 //拿到web的标题，并设置,可以判断是否使用后端下发的标题
@@ -84,7 +86,7 @@ class RollerViewActivity : BaseActivity() {
                 super.onReceivedTitle(view, title)
             }
         }
-        discover_web_view.webViewClient = object : WebViewClient() {
+        mWebView.webViewClient = object : WebViewClient() {
             override fun shouldOverrideUrlLoading(view: WebView, url: String): Boolean {
                 view.loadUrl(url)
                 return super.shouldOverrideUrlLoading(view, url)
@@ -100,7 +102,7 @@ class RollerViewActivity : BaseActivity() {
             }
         }
         //长按处理各种信息
-        discover_web_view.setOnLongClickListener { view ->
+        mWebView.setOnLongClickListener { view ->
             val result = (view as WebView).hitTestResult
             val type = result.type
 
@@ -117,8 +119,8 @@ class RollerViewActivity : BaseActivity() {
 
     private fun initBgm() {
         //使用Web端传入的js命令
-        discover_web_view.post {
-            discover_web_view.evaluateJavascript(webApi?.onLoadStr) { }
+        mWebView.post {
+            mWebView.evaluateJavascript(webApi?.onLoadStr) { }
         }
     }
 
@@ -141,7 +143,7 @@ class RollerViewActivity : BaseActivity() {
                         val value = object : SensorEventListener {
                             override fun onSensorChanged(event: SensorEvent) {
                                 //调用Js代码，把参数传过去
-                                discover_web_view.evaluateJavascript("window.gyroscope('${event.values[0]}','${event.values[1]}','${event.values[2]}')") {
+                                mWebView.evaluateJavascript("window.gyroscope('${event.values[0]}','${event.values[1]}','${event.values[2]}')") {
 
                                 }
                             }
@@ -160,7 +162,7 @@ class RollerViewActivity : BaseActivity() {
                         val value = object : SensorEventListener {
                             override fun onSensorChanged(event: SensorEvent) {
                                 //调用Js代码，把参数传过去
-                                discover_web_view.evaluateJavascript("window.accelerometer('${event.values[0]}','${event.values[1]}','${event.values[2]}')") {
+                                mWebView.evaluateJavascript("window.accelerometer('${event.values[0]}','${event.values[1]}','${event.values[2]}')") {
                                 }
                             }
 
@@ -210,8 +212,8 @@ class RollerViewActivity : BaseActivity() {
 
     //处理返回键，如果是还有历史记录就直接在webView返回
     override fun onKeyDown(keyCode: Int, event: KeyEvent?): Boolean {
-        if (keyCode == KEYCODE_BACK && discover_web_view.canGoBack()) {
-            discover_web_view.goBack()
+        if (keyCode == KEYCODE_BACK && mWebView.canGoBack()) {
+            mWebView.goBack()
             return true
         }
         return super.onKeyDown(keyCode, event)
@@ -219,14 +221,14 @@ class RollerViewActivity : BaseActivity() {
 
     override fun onResume() {
         super.onResume()
-        discover_web_view.resumeTimers()
+        mWebView.resumeTimers()
         callback?.webViewResume()
     }
 
     override fun onPause() {
         callback?.webViewPause()
         //为什么不用webView的onPause(),因为pauseTimers()停止更加强硬，避免出现无法预料的问题
-        discover_web_view.pauseTimers()
+        mWebView.pauseTimers()
         if (sensorEventListeners?.size != 0) {
             sensorEventListeners?.forEach {
                 sm?.unregisterListener(it)
@@ -237,8 +239,7 @@ class RollerViewActivity : BaseActivity() {
 
     override fun onDestroy() {
         callback?.webViewDestroy()
-        root_web_ll.removeView(discover_web_view)
-        discover_web_view.destroy()
+        mWebView.destroy()
         super.onDestroy()
     }
 

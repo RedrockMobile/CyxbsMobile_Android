@@ -37,8 +37,10 @@ import com.mredrock.cyxbs.common.utils.extensions.setOnSingleClickListener
 /**
  * Created by anriku on 2018/8/21.
  */
-class ScheduleDetailViewAdapter(private val mDialog: Dialog, private val mSchedules: List<Course>) :
-        ScheduleDetailView.Adapter {
+class ScheduleDetailViewAdapter(
+    private val mDialog: Dialog,
+    private val mSchedules: List<Course>
+) : ScheduleDetailView.Adapter {
 
     private val dayOfWeek = listOf("周一", "周二", "周三", "周四", "周五", "周六", "周日")
     private val courseOfDay = listOf("一二节课", "三四节课", "五六节课", "七八节课", "九十节课", "十一十二节课")
@@ -99,16 +101,20 @@ class ScheduleDetailViewAdapter(private val mDialog: Dialog, private val mSchedu
             }
             acb_delete.setOnSingleClickListener {
                 mCourseApiService.deleteAffair(itemViewInfo.courseId.toString())
-                        .setSchedulers()
-                        .errorHandler()
-                        .affairFilter()
-                        .subscribe(ExecuteOnceObserver(onExecuteOnceNext = {
-                            it.apply {
-                                //用于更新UI
-                                EventBus.getDefault().post(DeleteAffairEvent())
-                                CyxbsToast.makeText(context, R.string.course_transaction_deleted_successfully, Toast.LENGTH_SHORT).show()
-                            }
-                        }))
+                    .setSchedulers()
+                    .errorHandler()
+                    .affairFilter()
+                    .subscribe(ExecuteOnceObserver(onExecuteOnceNext = {
+                        it.apply {
+                            //用于更新UI
+                            EventBus.getDefault().post(DeleteAffairEvent())
+                            CyxbsToast.makeText(
+                                context,
+                                R.string.course_transaction_deleted_successfully,
+                                Toast.LENGTH_SHORT
+                            ).show()
+                        }
+                    }))
                 mDialog.dismiss()
             }
         }
@@ -130,16 +136,24 @@ class ScheduleDetailViewAdapter(private val mDialog: Dialog, private val mSchedu
             lastWeek = it
         }
         weekGroup.forEach {
-            tvCourseWeekTextBuilder.append(if (it.size == 1) {
-                Num2CN.number2ChineseNumber(it.first().toLong())
-            } else {
-                "${Num2CN.number2ChineseNumber(it.first().toLong())} 至 ${Num2CN.number2ChineseNumber(it.last().toLong())}"
-            })
-            tvCourseWeekTextBuilder.append(if (it == weekGroup.last()) {
-                "周"
-            } else {
-                ","
-            })
+            tvCourseWeekTextBuilder.append(
+                if (it.size == 1) {
+                    Num2CN.number2ChineseNumber(it.first().toLong())
+                } else {
+                    "${
+                        Num2CN.number2ChineseNumber(
+                            it.first().toLong()
+                        )
+                    } 至 ${Num2CN.number2ChineseNumber(it.last().toLong())}"
+                }
+            )
+            tvCourseWeekTextBuilder.append(
+                if (it == weekGroup.last()) {
+                    "周"
+                } else {
+                    ","
+                }
+            )
         }
         tvCourseWeekTextBuilder.append("   ")
         tvCourseWeekTextBuilder.append(dayOfWeek[itemViewInfo.hashDay])
@@ -159,16 +173,28 @@ class ScheduleDetailViewAdapter(private val mDialog: Dialog, private val mSchedu
             val value = object : RedRockAutoWarpView.Adapter() {
                 override fun getItemCount(): Int = 2
                 override fun getItemView(position: Int): View? = TextView(context).apply {
-                    setTextColor(ContextCompat.getColor(context, R.color.common_level_two_font_color))
+                    setTextColor(
+                        ContextCompat.getColor(
+                            context,
+                            R.color.common_level_two_font_color
+                        )
+                    )
                     textSize = 13f
                     when (position) {
                         0 -> {
                             //教室名跳转到对应地图
                             text = itemViewInfo.classroom
-                            setCompoundDrawablesWithIntrinsicBounds(0,0,R.drawable.course_ic_test_temp,0)
+                            setCompoundDrawablesWithIntrinsicBounds(
+                                0,
+                                0,
+                                R.drawable.course_ic_test_temp,
+                                0
+                            )
                             setOnSingleClickListener {
                                 //跳转到对应Map位置
-                                ARouter.getInstance().build(DISCOVER_MAP).withString(COURSE_POS_TO_MAP, itemViewInfo.classroom).navigation()
+                                ARouter.getInstance().build(DISCOVER_MAP)
+                                    .withString(COURSE_POS_TO_MAP, itemViewInfo.classroom)
+                                    .navigation()
                             }
                         }
                         1 -> text = itemViewInfo.teacher
@@ -177,8 +203,10 @@ class ScheduleDetailViewAdapter(private val mDialog: Dialog, private val mSchedu
             }
             tv_course_classroom.adapter = value
             tv_course_time.apply {
-                val courseTimeParse = CourseTimeParse(itemViewInfo.hashLesson * 2, itemViewInfo.period)
-                text = """${itemViewInfo.day}  ${courseTimeParse.parseStartCourseTime()}-${courseTimeParse.parseEndCourseTime()}""".trimIndent()
+                val courseTimeParse =
+                    CourseTimeParse(itemViewInfo.hashLesson * 2, itemViewInfo.period)
+                text =
+                    """${itemViewInfo.day}  ${courseTimeParse.parseStartCourseTime()}-${courseTimeParse.parseEndCourseTime()}""".trimIndent()
             }
             tv_course_type.apply { text = itemViewInfo.type }
             tv_course_week.apply { text = itemViewInfo.rawWeek }

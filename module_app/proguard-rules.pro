@@ -10,24 +10,117 @@
 #-------------------------------------------------------------------------
 
 #---------------------------------2.第三方包-------------------------------
--keep class com.bigkoo.pikerview.**{ *;}
+##
+## 注意：
+## 1、混淆文档必须以官方为准，请不要随便找篇博客就抄下来
+## 2、请一定要标注好 lib 的名字，和它的项目地址
+## 3、有些 lib 的 README 中没有写混淆规则，单可能它写在了项目文件里，请仔细搜索下名字带有 proguard 的文件
+##
 
-## EventBus
--keepclassmembers class ** {
+## EventBus https://github.com/greenrobot/EventBus
+-keepattributes *Annotation*
+-keepclassmembers class * {
     @org.greenrobot.eventbus.Subscribe <methods>;
 }
 -keep enum org.greenrobot.eventbus.ThreadMode { *; }
-    # Only required if you use AsyncExecutor
--keepclassmembers class * extends org.greenrobot.eventbus.util.ThrowableFailureEvent {
+-keepclassmembers class org.greenrobot.eventbus.util.ThrowableFailureEvent {
     <init>(java.lang.Throwable);
 }
+-keep class org.greenrobot.eventbus.android.AndroidComponentsImpl
 
-## ARouter
+# ===============
+
+# Glide https://github.com/bumptech/glide
+-keep public class * implements com.bumptech.glide.module.GlideModule
+-keep class * extends com.bumptech.glide.module.AppGlideModule {
+ <init>(...);
+}
+-keep public enum com.bumptech.glide.load.ImageHeaderParser$** {
+  **[] $VALUES;
+  public *;
+}
+-keep class com.bumptech.glide.load.data.ParcelFileDescriptorRewinder$InternalRewinder {
+  *** rewind();
+}
+
+# ===============
+
+# Retrofit https://github.com/square/retrofit
+-keepattributes Signature, InnerClasses, EnclosingMethod
+-keepattributes RuntimeVisibleAnnotations, RuntimeVisibleParameterAnnotations
+-keepattributes AnnotationDefault
+-keepclassmembers,allowshrinking,allowobfuscation interface * {
+    @retrofit2.http.* <methods>;
+}
+-dontwarn org.codehaus.mojo.animal_sniffer.IgnoreJRERequirement
+-dontwarn javax.annotation.**
+-dontwarn kotlin.Unit
+-dontwarn retrofit2.KotlinExtensions
+-dontwarn retrofit2.KotlinExtensions.*
+-if interface * { @retrofit2.http.* <methods>; }
+-keep,allowobfuscation interface <1>
+-keep,allowobfuscation,allowshrinking interface retrofit2.Call
+-keep,allowobfuscation,allowshrinking class retrofit2.Response
+-keep,allowobfuscation,allowshrinking class kotlin.coroutines.Continuation
+
+# ===============
+
+## OkHttp https://github.com/square/okhttp
+-dontwarn javax.annotation.**
+-adaptresourcefilenames okhttp3/internal/publicsuffix/PublicSuffixDatabase.gz
+-dontwarn org.codehaus.mojo.animal_sniffer.*
+-dontwarn okhttp3.internal.platform.**
+-dontwarn org.conscrypt.**
+-dontwarn org.bouncycastle.**
+-dontwarn org.openjsse.**
+# 下面这个是 OkHttp 依赖的 Okio
+-dontwarn org.codehaus.mojo.animal_sniffer.*
+
+# ===============
+
+## Rxjava3 https://github.com/ReactiveX/RxJava
+-dontwarn java.util.concurrent.Flow*
+
+# ===============
+
+## Gson https://github.com/google/gson/tree/master/examples/android-proguard-example
+-keepattributes Signature
+-keepattributes *Annotation*
+-dontwarn sun.misc.**
+-keep class com.google.gson.examples.android.model.** { <fields>; }
+-keep class * extends com.google.gson.TypeAdapter
+-keep class * implements com.google.gson.TypeAdapterFactory
+-keep class * implements com.google.gson.JsonSerializer
+-keep class * implements com.google.gson.JsonDeserializer
+-keepclassmembers,allowobfuscation class * {
+  @com.google.gson.annotations.SerializedName <fields>;
+}
+-keep,allowobfuscation,allowshrinking class com.google.gson.reflect.TypeToken
+-keep,allowobfuscation,allowshrinking class * extends com.google.gson.reflect.TypeToken
+
+# ===============
+
+## Bugly https://bugly.qq.com/docs/
+-dontwarn com.tencent.bugly.**
+-keep public class com.tencent.bugly.**{*;}
+
+# ===============
+
+## ARouter https://github.com/alibaba/ARouter
 -keep public class com.alibaba.android.arouter.routes.**{*;}
 -keep public class com.alibaba.android.arouter.facade.**{*;}
 -keep class * implements com.alibaba.android.arouter.facade.template.ISyringe{*;}
 -keep interface * implements com.alibaba.android.arouter.facade.template.IProvider
 -keep class * implements com.alibaba.android.arouter.facade.template.IProvider
+
+# ===============
+
+
+
+
+
+
+
 
 ## hotfix
 -keep class com.taobao.sophix.**{*;}
@@ -36,27 +129,7 @@
 #防止inline
 -dontoptimize
 
-## Bugly
--dontwarn com.tencent.bugly.**
--keep public class com.tencent.bugly.**{*;}
 
-## Gson
--keep class com.google.gson.** {*;}
--keep class com.google.**{*;}
--keep class com.google.gson.stream.** { *; }
--keep class com.google.gson.examples.android.model.** { *; }
-
-# Glide
--keep public class * implements com.bumptech.glide.module.GlideModule
--keep public class * extends com.bumptech.glide.module.AppGlideModule
--keep public enum com.bumptech.glide.load.ImageHeaderParser$** {
-  **[] $VALUES;
-  public *;
-}
-
-# Retrofit2
--dontwarn retrofit2.**
--keep class retrofit2.** { *; }
 
 # Rx
 -dontwarn sun.misc.**
@@ -77,14 +150,7 @@
 #nineoldandroids
 -keep class com.nineoldandroids.** { *; }
 
-# OkHttp3
--dontwarn okio.**
--dontwarn javax.annotation.**
--keepnames class okhttp3.internal.publicsuffix.PublicSuffixDatabase
--dontwarn org.codehaus.mojo.animal_sniffer.*
--dontwarn okhttp3.internal.platform.ConscryptPlatform
--dontwarn javax.lang.model.element.**
--dontwarn javax.xml.stream.**
+
 
 # renderscript
 -keep class android.support.v8.renderscript.** { *; }
@@ -129,12 +195,19 @@
 #-------------------------------------------------------------------------
 
 #---------------------------------4.反射相关的类和方法-----------------------
+##
+## 注意：
+## 1、请一定要写好模块位置和原因，原因请精确到某个方法
+##
+
+# 模块：module_store，原因：StoreCenterActivity 的 initRefreshLayout() 方法中
 -keepclassmembernames class androidx.swiperefreshlayout.widget.SwipeRefreshLayout {
-    private int mTouchSlop; #原因在于 module_store 的 StoreCenterActivity 的 initRefreshLayout() 方法中
+    private int mTouchSlop;
 }
 
+# 模块：module_store，原因：StoreCenterActivity 的 initTabLayout() 方法中
 -keepclassmembernames class com.google.android.material.badge.BadgeDrawable {
-    private final float badgeRadius; #原因在于 module_store 的 StoreCenterActivity 的 initTabLayout() 方法中
+    private final float badgeRadius;
 }
 
 

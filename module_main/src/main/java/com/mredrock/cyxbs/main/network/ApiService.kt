@@ -3,7 +3,7 @@ package com.mredrock.cyxbs.main.network
 import com.mredrock.cyxbs.common.bean.RedrockApiWrapper
 import com.mredrock.cyxbs.main.bean.BindingResponse
 import com.mredrock.cyxbs.main.bean.StartPage
-import io.reactivex.Observable
+import io.reactivex.rxjava3.core.Observable
 import retrofit2.http.Field
 import retrofit2.http.FormUrlEncoded
 import retrofit2.http.GET

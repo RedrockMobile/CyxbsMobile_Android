@@ -7,6 +7,7 @@ import android.graphics.drawable.GradientDrawable
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.TextView
 import androidx.core.content.ContextCompat
 import com.mredrock.cyxbs.common.utils.SchoolCalendar
 import com.mredrock.cyxbs.common.utils.extensions.setOnSingleClickListener
@@ -14,29 +15,34 @@ import com.mredrock.cyxbs.course.R
 import com.mredrock.cyxbs.course.component.ScheduleView
 import com.mredrock.cyxbs.course.network.Course
 import com.mredrock.cyxbs.course.ui.NoCourseInviteDetailBottomSheetDialogHelper
-import kotlinx.android.synthetic.main.course_no_course_invite_item.view.*
 import java.util.*
 
 /**
  * Created by anriku on 2018/10/6.
  */
 
-class NoCourseInviteScheduleViewAdapter(private val mContext: Context,
-                                        private val mNowWeek: Int,
-                                        private val mCoursesMap: Map<Int, List<Course>>,
-                                        private val mNameList: List<String>) : ScheduleView.Adapter() {
+class NoCourseInviteScheduleViewAdapter(
+    private val mContext: Context,
+    private val mNowWeek: Int,
+    private val mCoursesMap: Map<Int, List<Course>>,
+    private val mNameList: List<String>
+) : ScheduleView.Adapter() {
 
     private val mCoursesColors by lazy(LazyThreadSafetyMode.NONE) {
-        intArrayOf(ContextCompat.getColor(mContext, R.color.common_morning_course_color),
-                ContextCompat.getColor(mContext, R.color.common_afternoon_course_color),
-                ContextCompat.getColor(mContext, R.color.common_evening_course_color),
-                ContextCompat.getColor(mContext, R.color.courseCoursesOther))
+        intArrayOf(
+            ContextCompat.getColor(mContext, R.color.common_morning_course_color),
+            ContextCompat.getColor(mContext, R.color.common_afternoon_course_color),
+            ContextCompat.getColor(mContext, R.color.common_evening_course_color),
+            ContextCompat.getColor(mContext, R.color.courseCoursesOther)
+        )
     }
 
     private val mCoursesTextColors by lazy(LazyThreadSafetyMode.NONE) {
-        intArrayOf(ContextCompat.getColor(mContext, R.color.common_morning_course_text_color),
-                ContextCompat.getColor(mContext, R.color.common_afternoon_course_text_color),
-                ContextCompat.getColor(mContext, R.color.common_evening_course_text_color))
+        intArrayOf(
+            ContextCompat.getColor(mContext, R.color.common_morning_course_text_color),
+            ContextCompat.getColor(mContext, R.color.common_afternoon_course_text_color),
+            ContextCompat.getColor(mContext, R.color.common_evening_course_text_color)
+        )
     }
 
     // 获取对应位置有课的学生的名字在mNameList中的index
@@ -44,7 +50,9 @@ class NoCourseInviteScheduleViewAdapter(private val mContext: Context,
 
     // 用于存储对应课表没有课的学生的名字
     private val mCommonNoCoursesNames = Array(12) { arrayOfNulls<MutableList<String>>(7) }
-    private val mNoCourseInviteDetailDialogHelper: NoCourseInviteDetailBottomSheetDialogHelper by lazy(LazyThreadSafetyMode.NONE) {
+    private val mNoCourseInviteDetailDialogHelper: NoCourseInviteDetailBottomSheetDialogHelper by lazy(
+        LazyThreadSafetyMode.NONE
+    ) {
         NoCourseInviteDetailBottomSheetDialogHelper(mContext)
     }
 
@@ -115,11 +123,17 @@ class NoCourseInviteScheduleViewAdapter(private val mContext: Context,
                 stringBuilder.append("\n")
             }
         }
-        view.tv_name_list.text = stringBuilder.toString()
-        view.tv_name_list.setTextColor(mCoursesTextColors[row / 4])
-        view.cv.background = createBackground(mCoursesColors[row / 4])
+        val textView = view.findViewById<TextView>(R.id.tv_name_list)
+        textView.text = stringBuilder.toString()
+        textView.setTextColor(mCoursesTextColors[row / 4])
+        view.findViewById<ViewGroup>(R.id.ll_root).background = createBackground(mCoursesColors[row / 4])
         view.setOnSingleClickListener {
-            mNoCourseInviteDetailDialogHelper.showDialog(row, column, getNoCourseLength(row, column), nameList)
+            mNoCourseInviteDetailDialogHelper.showDialog(
+                row,
+                column,
+                getNoCourseLength(row, column),
+                nameList
+            )
         }
         return view
     }
@@ -132,7 +146,16 @@ class NoCourseInviteScheduleViewAdapter(private val mContext: Context,
     private fun createBackground(rgb: Int): Drawable {
         val drawable = GradientDrawable()
         val courseCorner = mContext.resources.getDimension(R.dimen.course_course_item_radius)
-        drawable.cornerRadii = floatArrayOf(courseCorner, courseCorner, courseCorner, courseCorner, courseCorner, courseCorner, courseCorner, courseCorner)
+        drawable.cornerRadii = floatArrayOf(
+            courseCorner,
+            courseCorner,
+            courseCorner,
+            courseCorner,
+            courseCorner,
+            courseCorner,
+            courseCorner,
+            courseCorner
+        )
         drawable.setColor(rgb)
         return drawable
     }
@@ -148,7 +171,12 @@ class NoCourseInviteScheduleViewAdapter(private val mContext: Context,
         return if ((row and 1) == 1) {
             1
         } else {
-            if (arrayOf(mCommonNoCoursesNames[row + 1][column]).contentEquals(arrayOf(mCommonNoCoursesNames[row][column]))) {
+            if (arrayOf(mCommonNoCoursesNames[row + 1][column]).contentEquals(
+                    arrayOf(
+                        mCommonNoCoursesNames[row][column]
+                    )
+                )
+            ) {
                 2
             } else {
                 1

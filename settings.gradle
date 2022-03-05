@@ -1,17 +1,26 @@
-include ':lib_protocol:api_protocol'
-include ':lib_protocol'
-include ':module_volunteer:api_volunteer'
-include ':module_electricity:api_electricity'
-include ':module_todo:api_todo'
-include ':module_main:api_main'
-include ':lib_update:api_update'
-include ':lib_account:api_account'
-
-include ':photolibrary-2.5'
-include ':module_app', ':lib_common', ':module_main', ':lib_account', ':lib_update',   //特殊模块
-        ':module_course', ':module_qa', ':module_discover', ':module_mine', //主业务模块
-        ':module_othercourse', ':module_noclass', ':module_map',
-        ':module_calendar', ':module_electricity', ':module_emptyroom',
-        ':module_grades', ':module_volunteer', ':module_schoolcar',
-        ':module_news', ':module_widget', ':module_redrock_home',
-        ':module_store', ':module_todo'
+include ':lib_account', ':lib_account:api_account'
+include ':lib_common'
+include ':lib_protocol', ':lib_protocol:api_protocol'
+include ':lib_update', ':lib_update:api_update'
+include ':module_app'
+include ':module_calendar'
+include ':module_course'
+include ':module_discover'
+include ':module_electricity', ':module_electricity:api_electricity'
+include ':module_emptyroom'
+include ':module_grades'
+include ':module_main', ':module_main:api_main'
+include ':module_map'
+include ':module_mine'
+include ':module_news'
+include ':module_noclass'
+include ':module_othercourse'
+include ':module_qa'
+include ':module_redrock_home'
+include ':module_schoolcar'
+include ':module_store'
+include ':module_todo', ':module_todo:api_todo'
+include ':module_volunteer', ':module_volunteer:api_volunteer'
+include ':module_widget'
+//include ':photolibrary-2.5'
+// 请按字母排序添加，且子模块添加到后面

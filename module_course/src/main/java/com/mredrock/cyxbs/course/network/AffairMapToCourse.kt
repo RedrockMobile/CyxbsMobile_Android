@@ -1,7 +1,7 @@
 package com.mredrock.cyxbs.course.network
 
 import com.mredrock.cyxbs.common.utils.LogUtils
-import io.reactivex.functions.Function
+import io.reactivex.rxjava3.functions.Function
 
 
 /**

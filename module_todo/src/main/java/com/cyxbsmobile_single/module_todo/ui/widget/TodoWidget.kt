@@ -13,12 +13,8 @@ import com.cyxbsmobile_single.module_todo.model.TodoModel
 import com.cyxbsmobile_single.module_todo.model.bean.Todo
 import com.cyxbsmobile_single.module_todo.service.TodoWidgetService
 import com.cyxbsmobile_single.module_todo.ui.activity.TodoDetailActivity
-import com.cyxbsmobile_single.module_todo.ui.activity.TodoInnerMainActivity
 import com.google.gson.Gson
-import com.mredrock.cyxbs.common.BaseApp
 import com.mredrock.cyxbs.common.config.TODO_ADD_TODO_BY_WIDGET
-import com.mredrock.cyxbs.common.utils.LogUtils
-import com.mredrock.cyxbs.common.utils.extensions.defaultSharedPreferences
 
 
 /**

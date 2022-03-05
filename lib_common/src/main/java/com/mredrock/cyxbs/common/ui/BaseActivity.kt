@@ -1,5 +1,6 @@
 package com.mredrock.cyxbs.common.ui
 
+import android.annotation.SuppressLint
 import android.app.Activity
 import android.content.pm.ActivityInfo
 import android.graphics.Color
@@ -8,21 +9,21 @@ import android.os.Bundle
 import android.os.PersistableBundle
 import android.view.Menu
 import android.view.View
+import androidx.annotation.CallSuper
 import androidx.annotation.DrawableRes
 import androidx.appcompat.app.AppCompatActivity
 import com.mredrock.cyxbs.api.account.IAccountService
-import com.mredrock.cyxbs.common.BaseApp
 import com.mredrock.cyxbs.common.R
 import com.mredrock.cyxbs.common.bean.LoginConfig
 import com.mredrock.cyxbs.common.component.JToolbar
 import com.mredrock.cyxbs.common.mark.ActionLoginStatusSubscriber
 import com.mredrock.cyxbs.common.mark.EventBusLifecycleSubscriber
 import com.mredrock.cyxbs.common.service.ServiceManager
+import com.mredrock.cyxbs.common.utils.BindView
 import com.mredrock.cyxbs.common.utils.LogUtils
 import com.mredrock.cyxbs.common.utils.extensions.getDarkModeStatus
 import com.mredrock.cyxbs.common.utils.extensions.startActivity
 import com.mredrock.cyxbs.common.utils.extensions.startLoginActivity
-import com.umeng.message.PushAgent
 import kotlinx.android.synthetic.main.common_toolbar.*
 import org.greenrobot.eventbus.EventBus
 
@@ -51,12 +52,16 @@ abstract class BaseActivity : AppCompatActivity() {
     private var baseBundle: Bundle? = null
 
 
+    @SuppressLint("SourceLockedOrientationActivity")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         baseBundle = savedInstanceState
-        // 禁用横屏，现目前不需要横屏，防止发送一些错误
+        // 禁用横屏，现目前不需要横屏，防止发送一些错误，
+        // 如果要适配横屏，掌邮会有很多不规范的地方，尤其是 Fragment 那块没办法，学长们遗留下来的代码太多了
         requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_PORTRAIT
-        PushAgent.getInstance(BaseApp.context).onAppStart()
+
+        // 下面这个为友盟，暂时注释
+//        PushAgent.getInstance(com.mredrock.cyxbs.BaseApp.context).onAppStart()
         initFlag()
         lifeCycleLog("onCreate")
     }
@@ -92,7 +97,7 @@ abstract class BaseActivity : AppCompatActivity() {
                                     View.SYSTEM_UI_FLAG_LAYOUT_STABLE
                 }
             }
-            Build.VERSION.SDK_INT >= 21 -> {
+            else -> {
                 //设置decorView的布局设置为全屏，并维持布局稳定
                 window.decorView.systemUiVisibility = View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN or View.SYSTEM_UI_FLAG_LAYOUT_STABLE
                 window.statusBarColor = Color.TRANSPARENT
@@ -105,7 +110,8 @@ abstract class BaseActivity : AppCompatActivity() {
         startActivity<T>(*params)
     }
 
-    val common_toolbar get() = toolbar
+    @Deprecated("老学长的远古遗留代码，经过几次迭代后，不建议再使用")
+    val common_toolbar by R.id.toolbar.view<JToolbar>()
 
     var menu: Menu? = null
         private set
@@ -192,11 +198,13 @@ abstract class BaseActivity : AppCompatActivity() {
         }
     }
 
+    @CallSuper
     override fun onSaveInstanceState(outState: Bundle) {
         super.onSaveInstanceState(outState)
         lifeCycleLog("onSaveInstanceState")
     }
 
+    @CallSuper
     override fun onRestoreInstanceState(savedInstanceState: Bundle?, persistentState: PersistableBundle?) {
         super.onRestoreInstanceState(savedInstanceState, persistentState)
         lifeCycleLog("onRestoreInstanceState")
@@ -222,4 +230,18 @@ abstract class BaseActivity : AppCompatActivity() {
             ))
         }
     }
+
+    /**
+     * 在简单界面，使用这种方式来得到 View，避免使用 DataBinding 大材小用
+     * ```
+     * 使用方法：
+     *    val mTvNum: TextView by R.id.xxx.view()
+     * or
+     *    val mTvNum by R.id.xxx.view<TextView>()
+     *
+     * 方便程度比较：
+     *    kt 插件(被废弃) > 属性代理 > ButterKnife(被废弃) > DataBinding > ViewBinding
+     * ```
+     */
+    protected fun <T: View> Int.view() = BindView<T>(this, { window.decorView }, lifecycle)
 }

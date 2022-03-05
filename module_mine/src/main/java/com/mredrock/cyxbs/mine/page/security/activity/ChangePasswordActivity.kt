@@ -103,7 +103,7 @@ class ChangePasswordActivity : BaseViewModelActivity<ChangePasswordViewModel>() 
                 changeButtonColorType(TYPE_COLOR_LIGHT_BUTTON)
                 setToolBar(TYPE_NEW_PASSWORD)
                 //将此处的学号更新为自外界传递进来的学号
-                stuNum = intent.getStringExtra("stuNumber")
+                stuNum = intent.getStringExtra("stuNumber")!!
                 code = intent.getIntExtra("code", -1)
                 isFromLogin = true
                 initEvent()
@@ -347,7 +347,7 @@ class ChangePasswordActivity : BaseViewModelActivity<ChangePasswordViewModel>() 
                                     mine_tv_security_tip_line1.visibility = View.VISIBLE
                                 }
                             } else {
-                                BaseApp.context.toast("后端返回的认证码存在问题，修改失败")
+                                BaseApp.appContext.toast("后端返回的认证码存在问题，修改失败")
                             }
                         } else {
                             if (it.length.toDouble() in 6.0..16.0) {

@@ -3,7 +3,7 @@ package com.mredrock.cyxbs.discover.othercourse.room
 import androidx.room.Dao
 import androidx.room.Insert
 import androidx.room.Query
-import io.reactivex.Flowable
+import io.reactivex.rxjava3.core.Flowable
 
 @Dao
 interface HistoryDao {

@@ -9,7 +9,6 @@ import androidx.core.content.ContextCompat
 import androidx.core.view.get
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
-import com.mredrock.cyxbs.common.BaseApp.Companion.context
 import com.mredrock.cyxbs.common.ui.BaseActivity
 import com.mredrock.cyxbs.common.utils.extensions.toast
 import com.mredrock.cyxbs.discover.grades.R
@@ -44,7 +43,7 @@ class BindActivity : BaseActivity() {
                 KeyboardUtil.closeKeybord(this)
                 viewModel.bindIds(ids, password) { bubble() }
             } else {
-                context.toast("请输入统一认证码和密码哟")
+                toast("请输入统一认证码和密码哟")
             }
         }
         viewModel.replaceBindFragmentToGPAFragment.observe(this, Observer {
@@ -65,7 +64,7 @@ class BindActivity : BaseActivity() {
                         viewModel.bindIds(ids, password) { bubble() }
                         true
                     } else {
-                        context.toast("请输入统一认证码和密码哟")
+                        toast("请输入统一认证码和密码哟")
                         false
                     }
                 }

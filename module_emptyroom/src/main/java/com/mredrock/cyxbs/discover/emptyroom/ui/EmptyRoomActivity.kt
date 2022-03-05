@@ -14,7 +14,6 @@ import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.alibaba.android.arouter.facade.annotation.Route
 import com.google.android.material.tabs.TabLayout
-import com.mredrock.cyxbs.common.BaseApp
 import com.mredrock.cyxbs.common.component.CyxbsToast
 import com.mredrock.cyxbs.common.config.DISCOVER_EMPTY_ROOM
 import com.mredrock.cyxbs.common.ui.BaseViewModelActivity
@@ -97,7 +96,7 @@ class EmptyRoomActivity : BaseViewModelActivity<EmptyRoomViewModel>(), OnItemSel
                     val textView = TextView(applicationContext)
                     textView.paint.isFakeBoldText = true
 
-                    val drawable: Drawable? = ContextCompat.getDrawable(BaseApp.context, R.drawable.emptyroom_shape_query_item)
+                    val drawable: Drawable? = ContextCompat.getDrawable(this@EmptyRoomActivity, R.drawable.emptyroom_shape_query_item)
                     textView.background = drawable
                     textView.text = p0.text
                     textView.setTextColor(Color.parseColor("#112C54"))
@@ -191,7 +190,7 @@ class EmptyRoomActivity : BaseViewModelActivity<EmptyRoomViewModel>(), OnItemSel
 
                     override fun onBindView(textView: TextView, displayValue: String, selected: Boolean, position: Int) {
                         super.onBindView(textView, displayValue, selected, position)
-                        val drawable = if (selected) ContextCompat.getDrawable(BaseApp.context, R.drawable.emptyroom_shape_query_item) else null
+                        val drawable = if (selected) ContextCompat.getDrawable(this@EmptyRoomActivity, R.drawable.emptyroom_shape_query_item) else null
 //                        var color =  1
                         if (selected) {
                             textView.setTextColor(ContextCompat.getColor(this@EmptyRoomActivity, R.color.common_transaction_heading))

@@ -1,14 +1,9 @@
-apply from: config
-
-// 这里只添加确认模块独用库，添加请之前全局搜索，是否已经依赖
-// 公用库请不要添加到这里
+/*
+* 这里只添加确认模块独用库，添加请之前全局搜索，是否已经依赖
+* 公用库请不要添加到这里
+* */
 dependencies {
     implementation project(':lib_account:api_account')
     implementation project(':module_main:api_main')
-
-}
-android {
-    defaultConfig {
-        vectorDrawables.useSupportLibrary = true
-    }
+    implementation 'com.super_rabbit.wheel_picker:NumberPicker:1.0.1'
 }

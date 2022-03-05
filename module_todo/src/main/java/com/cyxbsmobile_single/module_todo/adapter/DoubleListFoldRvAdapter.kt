@@ -21,7 +21,6 @@ import com.cyxbsmobile_single.module_todo.util.getColor
 import com.cyxbsmobile_single.module_todo.util.isOutOfTime
 import com.cyxbsmobile_single.module_todo.util.repeatMode2RemindTime
 import com.mredrock.cyxbs.common.BaseApp
-import com.mredrock.cyxbs.common.utils.LogUtils
 import kotlinx.android.synthetic.main.todo_rv_item_empty.view.*
 import kotlinx.android.synthetic.main.todo_rv_item_title.view.*
 import kotlinx.android.synthetic.main.todo_rv_item_todo.view.*
@@ -215,8 +214,8 @@ class DoubleListFoldRvAdapter(
                 refreshList()
                 todoItemWrapperArrayList.add(1, wrapper)
                 checkEmptyItem(true)
-                BaseApp.context.sendBroadcast(Intent("cyxbs.widget.todo.refresh").apply {
-                    component = ComponentName(BaseApp.context, TodoWidget::class.java)
+                BaseApp.appContext.sendBroadcast(Intent("cyxbs.widget.todo.refresh").apply {
+                    component = ComponentName(BaseApp.appContext, TodoWidget::class.java)
                 })
             }
     }

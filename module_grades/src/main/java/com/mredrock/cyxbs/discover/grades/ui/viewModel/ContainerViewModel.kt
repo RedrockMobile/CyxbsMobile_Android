@@ -10,11 +10,7 @@ import androidx.lifecycle.MutableLiveData
 import com.google.gson.Gson
 import com.mredrock.cyxbs.common.BaseApp
 import com.mredrock.cyxbs.common.network.ApiGenerator
-import com.mredrock.cyxbs.common.utils.LogUtils
-import com.mredrock.cyxbs.common.utils.extensions.doOnErrorWithDefaultErrorHandler
-import com.mredrock.cyxbs.common.utils.extensions.safeSubscribeBy
-import com.mredrock.cyxbs.common.utils.extensions.setSchedulers
-import com.mredrock.cyxbs.common.utils.extensions.toast
+import com.mredrock.cyxbs.common.utils.extensions.*
 import com.mredrock.cyxbs.common.viewmodel.BaseViewModel
 import com.mredrock.cyxbs.discover.grades.R
 import com.mredrock.cyxbs.discover.grades.bean.Exam
@@ -23,7 +19,7 @@ import com.mredrock.cyxbs.discover.grades.bean.IdsStatus
 import com.mredrock.cyxbs.discover.grades.bean.Status
 import com.mredrock.cyxbs.discover.grades.bean.analyze.GPAStatus
 import com.mredrock.cyxbs.discover.grades.network.ApiService
-import io.reactivex.Observable
+import io.reactivex.rxjava3.core.Observable
 import retrofit2.HttpException
 
 class ContainerViewModel : BaseViewModel() {
@@ -49,12 +45,13 @@ class ContainerViewModel : BaseViewModel() {
         val reExam = apiService.getReExam(stuNum)
         Observable.merge(exam, reExam)
             .setSchedulers()
+            .mapOrThrowApiException()
             .doOnErrorWithDefaultErrorHandler {
                 toastEvent.value = R.string.grades_no_exam_history
                 false
             }
             .safeSubscribeBy {
-                examData.value = it.data
+                examData.value = it
             }.lifeCycle()
     }
 
@@ -84,12 +81,12 @@ class ContainerViewModel : BaseViewModel() {
                             onNext = {
                                 replaceBindFragmentToGPAFragment.value = true
                                 bottomStateListener.postValue(true)
-                                BaseApp.context.toast(R.string.grades_bottom_sheet_bind_success)
+                                BaseApp.appContext.toast(R.string.grades_bottom_sheet_bind_success)
                                 isAnimating = false
                             },
                             onError = {
                                 replaceBindFragmentToGPAFragment.value = false
-                                BaseApp.context.toast(R.string.grades_bottom_sheet_bind_wrong)
+                                BaseApp.appContext.toast(R.string.grades_bottom_sheet_bind_wrong)
                                 isAnimating = false
                             }
                         ).lifeCycle()
@@ -97,16 +94,17 @@ class ContainerViewModel : BaseViewModel() {
                 onError = {
                     //密码错误的话,会导致状态码为400，Retrofit无法回调onNext
                     //详见：https://www.cnblogs.com/fuyaozhishang/p/8607706.html
+                    // todo 以后学弟重构的话，记得让后端该下逻辑
                     if (it is HttpException && it.code() == 400) {
                         val body = (it).response()?.errorBody() ?: return@safeSubscribeBy
                         val data = Gson().fromJson(body.string(), IdsStatus::class.java)
                         if (data.errorCode == ERROR) {
                             replaceBindFragmentToGPAFragment.value = false
-                            BaseApp.context.toast(R.string.grades_bottom_sheet_bind_fail)
+                            BaseApp.appContext.toast(R.string.grades_bottom_sheet_bind_fail)
                         }
                     } else {
                         replaceBindFragmentToGPAFragment.value = false
-                        BaseApp.context.toast("绑定ids失败")
+                        BaseApp.appContext.toast("绑定ids失败")
                     }
                     isAnimating = false
                 }
@@ -127,12 +125,12 @@ class ContainerViewModel : BaseViewModel() {
             .safeSubscribeBy(
                 onNext = {
                     bottomStateListener.postValue(true)
-                    BaseApp.context.toast(R.string.grades_bottom_sheet_unbind_success)
+                    BaseApp.appContext.toast(R.string.grades_bottom_sheet_unbind_success)
                     onSuccess.invoke()
                     isBinding.value = false
                 },
                 onError = {
-                    BaseApp.context.toast(R.string.grades_bottom_sheet_unbind_fail)
+                    BaseApp.appContext.toast(R.string.grades_bottom_sheet_unbind_fail)
                 }
             ).lifeCycle()
     }
@@ -176,7 +174,7 @@ class ContainerViewModel : BaseViewModel() {
                             _analyzeData.postValue(gpaStatus)
                             isBinding.value = false
                         }catch (e: Exception){
-                            BaseApp.context.toast("加载绩点失败")
+                            BaseApp.appContext.toast("加载绩点失败")
                         }
                     } else {
                         //此时说明是一些其他的错误
@@ -185,7 +183,7 @@ class ContainerViewModel : BaseViewModel() {
                         val gpaStatus = Gson().fromJson(s, GPAStatus::class.java)
                         _analyzeData.postValue(gpaStatus)
                         isBinding.value = false
-                        BaseApp.context.toast("加载绩点失败")
+                        BaseApp.appContext.toast("加载绩点失败")
                     }
                 }
             ).lifeCycle()
@@ -195,9 +193,8 @@ class ContainerViewModel : BaseViewModel() {
     fun getStatus() {
         apiService.getNowStatus()
             .setSchedulers()
-            .doOnErrorWithDefaultErrorHandler { true }
             .safeSubscribeBy {
-                it?.data?.let { status ->
+                it.data.let { status ->
                     nowStatus.postValue(status)
                 }
             }

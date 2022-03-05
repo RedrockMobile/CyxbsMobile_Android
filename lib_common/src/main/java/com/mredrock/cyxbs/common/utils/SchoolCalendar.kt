@@ -1,6 +1,6 @@
 package com.mredrock.cyxbs.common.utils
 
-import com.mredrock.cyxbs.common.BaseApp.Companion.context
+import com.mredrock.cyxbs.common.BaseApp
 import com.mredrock.cyxbs.common.utils.extensions.defaultSharedPreferences
 import java.text.ParseException
 import java.text.SimpleDateFormat
@@ -16,7 +16,7 @@ open class SchoolCalendar {
 
     constructor() {
         // 鄙人认为，在这个时候，我们有必要去更新一下firstDay
-        val first = context.defaultSharedPreferences.getLong(FIRST_DAY, firstDay.timeInMillis)
+        val first = BaseApp.appContext.defaultSharedPreferences.getLong(FIRST_DAY, firstDay.timeInMillis)
         firstDay.timeZone = TimeZone.getTimeZone("GMT+8:00")
         firstDay.timeInMillis = first
         calendar = GregorianCalendar()

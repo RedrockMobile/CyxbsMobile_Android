@@ -5,10 +5,8 @@ import android.content.Intent
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.WindowManager
-import android.widget.PopupWindow
 import androidx.core.content.ContextCompat
 import androidx.databinding.DataBindingUtil
-import com.mredrock.cyxbs.common.BaseApp
 import com.mredrock.cyxbs.common.ui.BaseViewModelActivity
 import com.mredrock.cyxbs.common.utils.extensions.setOnSingleClickListener
 import com.mredrock.cyxbs.common.utils.extensions.toast
@@ -74,7 +72,7 @@ class SetPasswordProtectActivity : BaseViewModelActivity<SetPasswordProtectViewM
                 selQuestionDialog.show()
                 setBackGroundShadowOrShadow()
             } else {
-                BaseApp.context.toast("正在执行网络请求，请稍候")
+                toast("正在执行网络请求，请稍候")
             }
         }
 

@@ -4,7 +4,6 @@ import android.app.Dialog
 import android.content.Context
 import android.view.Gravity
 import android.widget.TextView
-import com.mredrock.cyxbs.common.BaseApp
 import com.mredrock.cyxbs.common.ui.BaseActivity
 import com.mredrock.cyxbs.common.utils.extensions.toast
 import com.mredrock.cyxbs.mine.R
@@ -16,7 +15,7 @@ import com.mredrock.cyxbs.mine.page.security.activity.FindPasswordActivity.Compa
  * Author: RayleighZ
  * Time: 2020-11-03 2:34
  */
-class ChooseFindTypeDialog(context: Context?, theme: Int) : Dialog(context, theme) {
+class ChooseFindTypeDialog(context: Context, theme: Int) : Dialog(context, theme) {
     companion object {
         //此处函数将来可以优化，目前必须要传递一个学号进来
         fun showDialog(context: Context?, hasEmailBinding: Boolean, hasSecurityQuestion: Boolean, activity: BaseActivity, isFromLogin: Boolean, stuNumber: String) {
@@ -40,7 +39,7 @@ class ChooseFindTypeDialog(context: Context?, theme: Int) : Dialog(context, them
                     chooseFindTypeDialog.dismiss()
                 } else {
                     //弹出toast提示没有进行密码绑定
-                    BaseApp.context.toast("您好像还没有绑定邮箱")
+                    context.toast("您好像还没有绑定邮箱")
                 }
             }
             tvProtect.setOnClickListener {
@@ -56,7 +55,7 @@ class ChooseFindTypeDialog(context: Context?, theme: Int) : Dialog(context, them
                     activity.finish()
                     chooseFindTypeDialog.dismiss()
                 } else {
-                    BaseApp.context.toast("您好像还没有设置密保问题")
+                    context.toast("您好像还没有设置密保问题")
                 }
             }
             chooseFindTypeDialog.show()

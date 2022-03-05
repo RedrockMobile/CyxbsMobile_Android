@@ -1,0 +1,4 @@
+apply from: config
+dependencies {
+    api 'com.google.android:flexbox:2.0.1'
+}

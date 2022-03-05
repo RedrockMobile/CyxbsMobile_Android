@@ -6,7 +6,7 @@ import android.os.Environment
 import android.util.Log
 import androidx.lifecycle.MutableLiveData
 import com.google.gson.Gson
-import com.mredrock.cyxbs.common.BaseApp.Companion.context
+import com.mredrock.cyxbs.common.BaseApp
 import com.mredrock.cyxbs.common.config.DIR_PHOTO
 import com.mredrock.cyxbs.common.config.StoreTask
 import com.mredrock.cyxbs.common.network.ApiGenerator
@@ -22,7 +22,7 @@ import com.mredrock.cyxbs.qa.network.ApiServiceNew
 import com.mredrock.cyxbs.qa.pages.dynamic.model.TopicDataSet
 import com.mredrock.cyxbs.qa.utils.isNullOrEmpty
 import com.mredrock.cyxbs.qa.utils.removeContinuousEnters
-import io.reactivex.Observable
+import io.reactivex.rxjava3.core.Observable
 import okhttp3.MediaType.Companion.toMediaTypeOrNull
 import okhttp3.MultipartBody
 import okhttp3.RequestBody.Companion.asRequestBody
@@ -92,7 +92,7 @@ class QuizViewModel : BaseViewModel() {
                 .addFormDataPart("content", content.removeContinuousEnters())
                 .addFormDataPart("topic_id", type)
             if (!imageLiveData.value.isNullOrEmpty()) {
-                Observable.fromArray(imageLiveData.value)
+                Observable.fromArray(imageLiveData.value!!)
                     .setSchedulers()
                     .map {
                         it.map { path ->
@@ -128,7 +128,7 @@ class QuizViewModel : BaseViewModel() {
                 .addFormDataPart("content", content.removeContinuousEnters())
                 .addFormDataPart("topic_id", type)
             if (!imageLiveData.value.isNullOrEmpty()) {
-                Observable.fromArray(imageLiveData.value)
+                Observable.fromArray(imageLiveData.value!!)
                     .setSchedulers()
                     .map {
                         it.map { path ->
@@ -176,8 +176,8 @@ class QuizViewModel : BaseViewModel() {
             .doOnError { throwable ->
                 isReleaseSuccess = false
                 Log.e("wxtag动态","(QuizActivity.kt:146)->>动态发送错误$throwable ")
-                throwable?.let { e ->
-                    context.toast(e.toString())
+                throwable.let { e ->
+                    BaseApp.appContext.toast(e.toString())
                 }
                 backAndRefreshPreActivityEvent.value = true
             }
@@ -205,9 +205,7 @@ class QuizViewModel : BaseViewModel() {
             }
             .doOnError { throwable ->
                 isReleaseSuccess = false
-                throwable?.let { e ->
-                    context.toast(e.toString())
-                }
+                toast(throwable.toString())
                 backAndRefreshPreActivityEvent.value = true
             }
             .safeSubscribeBy {

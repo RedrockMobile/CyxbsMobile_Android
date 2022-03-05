@@ -10,11 +10,9 @@ import androidx.appcompat.widget.AppCompatTextView
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
-import com.mredrock.cyxbs.common.BaseApp.Companion.context
 import com.mredrock.cyxbs.common.utils.extensions.setAvatarImageFromUrl
 import com.mredrock.cyxbs.qa.R
 import com.mredrock.cyxbs.qa.beannew.Topic
-import com.mredrock.cyxbs.qa.pages.square.ui.activity.CircleSquareActivity
 import de.hdodenhof.circleimageview.CircleImageView
 
 /**
@@ -48,7 +46,7 @@ class CircleSquareAdapter :
 
     @SuppressLint("SetTextI18n", "UseCompatLoadingForDrawables")
     inner class ViewHolder constructor(itemView: View) : RecyclerView.ViewHolder(itemView) {
-
+        val context = itemView.context
         // 找到控件，这里没用dataBinding，会增加编译时间
         private val circleAvatar: CircleImageView = itemView.findViewById(R.id.iv_circle_square)
         private val circleName: TextView = itemView.findViewById(R.id.tv_circle_square_name)

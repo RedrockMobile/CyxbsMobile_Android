@@ -18,7 +18,6 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.bottomsheet.BottomSheetBehavior
-import com.mredrock.cyxbs.common.BaseApp
 import com.mredrock.cyxbs.common.ui.BaseFragment
 import com.mredrock.cyxbs.common.utils.extensions.*
 import com.mredrock.cyxbs.discover.map.R
@@ -97,8 +96,8 @@ class MapViewFragment : BaseFragment() {
              */
             if (data.pictureVersion != version && path != null && fileIsExists(path)) {
                 context?.let {
-                    UpdateMapDialog.show(it, BaseApp.context.getString(R.string.map_update_title),
-                            BaseApp.context.getString(R.string.map_update_message),
+                    UpdateMapDialog.show(it, requireContext().getString(R.string.map_update_title),
+                        requireContext().getString(R.string.map_update_message),
                             object : OnUpdateSelectListener {
                                 override fun onDeny() {
                                     map_layout.setUrl("noUpdate")
@@ -241,7 +240,7 @@ class MapViewFragment : BaseFragment() {
                 }
                 animator.start()
                 map_iv_lock.setImageResource(R.drawable.map_ic_unlock)
-                MapToast.makeText(BaseApp.context, R.string.map_unlock, Toast.LENGTH_SHORT).show()
+                MapToast.makeText(requireContext(), R.string.map_unlock, Toast.LENGTH_SHORT).show()
                 viewModel.isLock.value = false
                 map_layout.setIsLock(false)
             }
@@ -262,7 +261,7 @@ class MapViewFragment : BaseFragment() {
                     }
                     animator.start()
                     map_iv_lock.setImageResource(R.drawable.map_ic_unlock)
-                    MapToast.makeText(BaseApp.context, R.string.map_unlock, Toast.LENGTH_SHORT).show()
+                    MapToast.makeText(requireContext(), R.string.map_unlock, Toast.LENGTH_SHORT).show()
                     viewModel.isLock.value = false
                     map_layout.setIsLock(false)
                 }
@@ -276,7 +275,7 @@ class MapViewFragment : BaseFragment() {
                 }
                 animator.start()
                 map_iv_lock.setImageResource(R.drawable.map_ic_lock)
-                MapToast.makeText(BaseApp.context, R.string.map_lock, Toast.LENGTH_SHORT).show()
+                MapToast.makeText(requireContext(), R.string.map_lock, Toast.LENGTH_SHORT).show()
                 viewModel.isLock.value = true
                 map_layout.setIsLock(true)
             }

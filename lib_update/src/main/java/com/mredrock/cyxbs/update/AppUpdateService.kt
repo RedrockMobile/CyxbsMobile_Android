@@ -22,9 +22,9 @@ import com.mredrock.cyxbs.common.utils.extensions.uri
 import com.mredrock.cyxbs.update.component.AppUpdateDownloadService
 import com.mredrock.cyxbs.update.component.PackageInstallsFragment
 import com.mredrock.cyxbs.update.model.AppUpdateModel
-import com.tbruyelle.rxpermissions2.RxPermissions
-import io.reactivex.Observable
-import io.reactivex.subjects.PublishSubject
+import com.tbruyelle.rxpermissions3.RxPermissions
+import io.reactivex.rxjava3.core.Observable
+import io.reactivex.rxjava3.subjects.PublishSubject
 
 /**
  * Create By Hosigus at 2020/5/2
@@ -48,7 +48,7 @@ internal class AppUpdateService : IAppUpdateService {
                         .subscribe { granted ->
                             if (granted == true) {
                                 //更新标志
-                                BaseApp.context.defaultSharedPreferences.editor {
+                                BaseApp.appContext.defaultSharedPreferences.editor {
                                     putBoolean(FIRST_TIME_OPEN, false)
                                     commit()
                                 }

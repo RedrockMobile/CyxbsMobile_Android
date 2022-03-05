@@ -26,7 +26,7 @@ class SecurityActivityViewModel : BaseViewModel() {
         )
                 .setSchedulers()
                 .doOnErrorWithDefaultErrorHandler {
-                    BaseApp.context.toast("对不起，获取是否绑定邮箱和密保失败，错误原因:$it")
+                    BaseApp.appContext.toast("对不起，获取是否绑定邮箱和密保失败，错误原因:$it")
                     true
                 }
                 .safeSubscribeBy {

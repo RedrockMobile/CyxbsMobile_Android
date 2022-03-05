@@ -3,7 +3,7 @@ package com.mredrock.cyxbs.discover.network
 import com.mredrock.cyxbs.common.bean.RedrockApiWrapper
 import com.mredrock.cyxbs.discover.API_ROLLER_VIEW
 import com.mredrock.cyxbs.discover.bean.NewsListItem
-import io.reactivex.Observable
+import io.reactivex.rxjava3.core.Observable
 import retrofit2.http.GET
 import retrofit2.http.Query
 

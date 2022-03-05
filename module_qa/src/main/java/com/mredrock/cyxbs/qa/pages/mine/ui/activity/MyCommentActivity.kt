@@ -7,7 +7,6 @@ import androidx.core.content.ContextCompat
 import androidx.core.widget.addTextChangedListener
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.alibaba.android.arouter.facade.annotation.Route
-import com.mredrock.cyxbs.common.BaseApp
 import com.mredrock.cyxbs.common.config.QA_MY_COMMENT
 import com.mredrock.cyxbs.common.ui.BaseViewModelActivity
 import com.mredrock.cyxbs.common.utils.extensions.setOnSingleClickListener
@@ -22,7 +21,6 @@ import com.mredrock.cyxbs.qa.pages.quiz.ui.QuizActivity
 import com.mredrock.cyxbs.qa.ui.adapter.EmptyRvAdapter
 import com.mredrock.cyxbs.qa.ui.adapter.FooterRvAdapter
 import com.mredrock.cyxbs.qa.utils.KeyboardController
-import kotlinx.android.synthetic.main.qa_activity_dynamic_detail.*
 import kotlinx.android.synthetic.main.qa_activity_my_comment.*
 import kotlinx.android.synthetic.main.qa_activity_my_comment.qa_btn_my_comment_send
 import kotlinx.android.synthetic.main.qa_activity_my_comment.qa_et_my_comment_reply
@@ -120,7 +118,7 @@ class MyCommentActivity : BaseViewModelActivity<MyCommentViewModel>() {
         qa_btn_my_comment_send.setOnClickListener {
             curReplyComment?.let {
                 viewModel.reply(it, qa_et_my_comment_reply.text.toString()) {
-                    BaseApp.context.toast("评论成功")
+                    toast("评论成功")
                     qa_cl_my_comment_reply.visibility = View.GONE
                     KeyboardController.hideInputKeyboard(this, qa_et_my_comment_reply)
                 }

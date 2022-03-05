@@ -5,7 +5,7 @@ ext.gradle_plugins = '4.0.1'
 /**********************************构建版本**************************************/
 def build_versions = [:]
 build_versions.min_sdk = 21
-build_versions.target_sdk = 26
+build_versions.target_sdk = 31
 build_versions.compile_sdk = 28
 build_versions.build_tools = '29.0.2'
 ext.build_versions = build_versions
@@ -37,9 +37,6 @@ def version_lifecycle = '2.2.0'
 
 def version_room = '2.2.5'
 def version_paging = '2.1.2'
-def version_workmanager = '2.3.4'
-//dagger
-def version_dagger = '2.16'
 //permission
 def version_rxpermissions = '0.10.2'
 //umeng
@@ -128,22 +125,22 @@ paging.runtime = "androidx.paging:paging-runtime:$version_paging"
 paging.rxjava = "androidx.paging:paging-rxjava2:$version_paging"
 deps.paging = paging
 
-def workmanager = [:]
-workmanager.runtime = "androidx.work:work-runtime:$version_workmanager"
-workmanager.rxjava = "androidx.work:work-rxjava2:$version_workmanager"
-deps.workmanager = workmanager
+//def workmanager = [:]
+//workmanager.runtime = "androidx.work:work-runtime:$version_workmanager"
+//workmanager.rxjava = "androidx.work:work-rxjava2:$version_workmanager"
+//deps.workmanager = workmanager
 
-def databinding = [:]
-databinding.compiler = "androidx.databinding:databinding-compiler:1.0.0"
-deps.databinding = databinding
+//def databinding = [:]
+//databinding.compiler = "androidx.databinding:databinding-compiler:1.0.0"
+//deps.databinding = databinding
 
-def dagger = [:]
-dagger.runtime = "com.google.dagger:dagger:$version_dagger"
-dagger.compiler = "com.google.dagger:dagger-compiler:$version_dagger"
-dagger.android = "com.google.dagger:dagger-android:$version_dagger"
-dagger.android_support = "com.google.dagger:dagger-android-support:$version_dagger"
-dagger.android_processor = "com.google.dagger:dagger-android-processor:$version_dagger"
-deps.dagger = dagger
+//def dagger = [:]
+//dagger.runtime = "com.google.dagger:dagger:$version_dagger"
+//dagger.compiler = "com.google.dagger:dagger-compiler:$version_dagger"
+//dagger.android = "com.google.dagger:dagger-android:$version_dagger"
+//dagger.android_support = "com.google.dagger:dagger-android-support:$version_dagger"
+//dagger.android_processor = "com.google.dagger:dagger-android-processor:$version_dagger"
+//deps.dagger = dagger
 
 def rxpermissions = [:]
 rxpermissions.runtime = "com.github.tbruyelle:rxpermissions:$version_rxpermissions"

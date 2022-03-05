@@ -31,7 +31,7 @@ class PlaceDetailBottomSheetFragment : BaseFragment() {
     private lateinit var mBinding: MapFragmentPlaceDetailContainerBinding
     private var isFavoritePlace = false
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
-                              savedInstanceState: Bundle?): View? {
+                              savedInstanceState: Bundle?): View {
         mBinding = DataBindingUtil.inflate(inflater, R.layout.map_fragment_place_detail_container, container, false)
 //        mBinding.lifecycleOwner = viewLifecycleOwner
         return mBinding.root

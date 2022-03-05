@@ -7,7 +7,7 @@ import androidx.lifecycle.MutableLiveData
 import com.google.gson.Gson
 import com.google.gson.GsonBuilder
 import com.google.gson.reflect.TypeToken
-import com.mredrock.cyxbs.common.BaseApp.Companion.context
+import com.mredrock.cyxbs.common.BaseApp
 import com.mredrock.cyxbs.common.config.COURSE_VERSION
 import com.mredrock.cyxbs.common.config.SP_WIDGET_NEED_FRESH
 import com.mredrock.cyxbs.common.config.WIDGET_AFFAIR
@@ -17,10 +17,6 @@ import com.mredrock.cyxbs.common.network.ApiGenerator
 import com.mredrock.cyxbs.common.utils.ClassRoomParse
 import com.mredrock.cyxbs.common.utils.Num2CN
 import com.mredrock.cyxbs.common.utils.SchoolCalendar
-import com.mredrock.cyxbs.common.utils.extensions.defaultSharedPreferences
-import com.mredrock.cyxbs.common.utils.extensions.editor
-import com.mredrock.cyxbs.common.utils.extensions.errorHandler
-import com.mredrock.cyxbs.common.utils.extensions.setSchedulers
 import com.mredrock.cyxbs.common.viewmodel.BaseViewModel
 import com.mredrock.cyxbs.course.R
 import com.mredrock.cyxbs.course.database.ScheduleDatabase
@@ -30,12 +26,16 @@ import com.mredrock.cyxbs.course.network.Course
 import com.mredrock.cyxbs.course.network.CourseApiService
 import com.mredrock.cyxbs.course.network.CourseApiWrapper
 import com.mredrock.cyxbs.common.utils.ExecuteOnceObserver
+import com.mredrock.cyxbs.common.utils.extensions.defaultSharedPreferences
+import com.mredrock.cyxbs.common.utils.extensions.editor
+import com.mredrock.cyxbs.common.utils.extensions.errorHandler
+import com.mredrock.cyxbs.common.utils.extensions.setSchedulers
 import com.mredrock.cyxbs.course.ui.fragment.CourseContainerEntryFragment
 import com.mredrock.cyxbs.course.utils.CourseTimeParse
 import com.mredrock.cyxbs.course.utils.getNowCourse
 import com.mredrock.cyxbs.course.utils.getTodayCourse
-import io.reactivex.android.schedulers.AndroidSchedulers
-import io.reactivex.schedulers.Schedulers
+import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
+import io.reactivex.rxjava3.schedulers.Schedulers
 import org.greenrobot.eventbus.EventBus
 import java.util.*
 
@@ -170,7 +170,7 @@ class CoursesViewModel : BaseViewModel() {
     var isFirstLoadItemAnim = true
 
     private val mCoursesDatabase: ScheduleDatabase? by lazy(LazyThreadSafetyMode.NONE) {
-        ScheduleDatabase.getDatabase(context, isGetOthers.get()!!, mUserNum)
+        ScheduleDatabase.getDatabase(BaseApp.appContext, isGetOthers.get()!!, mUserNum)
     }
     private val mCourseApiService: CourseApiService by lazy(LazyThreadSafetyMode.NONE) {
         ApiGenerator.getApiService(CourseApiService::class.java)
@@ -339,7 +339,7 @@ class CoursesViewModel : BaseViewModel() {
                         updateNowWeek(coursesFromInternet.nowWeek)//涉及到UI操作，所以在UI线程
                         if (it.isNotEmpty() && isGetOthers.get() == false) {
                             toastEvent.value = R.string.course_course_update_tips
-                            context.defaultSharedPreferences.editor {
+                            BaseApp.appContext.defaultSharedPreferences.editor {
                                 //小部件缓存课表
                                 putString(WIDGET_COURSE, Gson().toJson(coursesFromInternet))
                                 putBoolean(SP_WIDGET_NEED_FRESH, true)
@@ -369,7 +369,7 @@ class CoursesViewModel : BaseViewModel() {
     @WorkerThread
     private fun courseAbnormalErrorHandling(coursesFromInternet: CourseApiWrapper<List<Course>>) =
             coursesFromInternet.data?.let { notNullCourses ->
-                val courseVersion = context.defaultSharedPreferences.getString("${COURSE_VERSION}${mUserNum}", "")
+                val courseVersion = BaseApp.appContext.defaultSharedPreferences.getString("${COURSE_VERSION}${mUserNum}", "")
                 //写这个主要是为了优化下，不至于每次都要序列化两个list的course
                 val compareClassScheduleStrings = fun(a: List<Course>, b: List<Course>): Boolean {
                     //对使用@Expose进行标记了的字段进行序列化对比
@@ -415,7 +415,7 @@ class CoursesViewModel : BaseViewModel() {
                 .subscribe(
                     ExecuteOnceObserver(onExecuteOnceNext = { affairsCourse ->
                     affairsCourse ?: return@ExecuteOnceObserver
-                    context.defaultSharedPreferences.editor {
+                        BaseApp.appContext.defaultSharedPreferences.editor {
                         //小部件缓存事务
                         putString(WIDGET_AFFAIR, Gson().toJson(affairsCourse))
                         putBoolean(SP_WIDGET_NEED_FRESH, true)
@@ -502,7 +502,7 @@ class CoursesViewModel : BaseViewModel() {
         // 也依次类推。
         firstDay.add(Calendar.DATE, -((networkNowWeek - 1) * 7 + (firstDay.get(Calendar.DAY_OF_WEEK) + 5) % 7))
         // 更新第一天
-        context.defaultSharedPreferences.editor {
+        BaseApp.appContext.defaultSharedPreferences.editor {
             putLong(SchoolCalendar.FIRST_DAY, firstDay.timeInMillis)
         }
         schoolCalendarUpdated.value = true

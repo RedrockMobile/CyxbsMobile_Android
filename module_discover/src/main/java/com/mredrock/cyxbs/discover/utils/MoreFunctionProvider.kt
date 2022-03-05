@@ -2,10 +2,10 @@ package com.mredrock.cyxbs.discover.utils
 
 import android.content.Context
 import com.alibaba.android.arouter.launcher.ARouter
-import com.mredrock.cyxbs.common.BaseApp
 import com.mredrock.cyxbs.common.config.*
 import com.mredrock.cyxbs.common.service.ServiceManager
 import com.mredrock.cyxbs.api.account.IAccountService
+import com.mredrock.cyxbs.common.BaseApp
 import com.mredrock.cyxbs.common.utils.extensions.defaultSharedPreferences
 import com.mredrock.cyxbs.discover.R
 import java.lang.ref.SoftReference
@@ -52,7 +52,7 @@ object MoreFunctionProvider {
     }
 
     private fun getHomePageFunctionsFromSp(): List<Int> {
-        val context = BaseApp.context
+        val context = BaseApp.appContext
         val list = mutableListOf<Int>()
         context.defaultSharedPreferences.apply {
             list.add(getInt(HOME_PAGE_FUNCTION_1, 2))

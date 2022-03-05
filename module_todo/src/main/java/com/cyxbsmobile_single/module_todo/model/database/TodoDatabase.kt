@@ -4,7 +4,7 @@ import androidx.room.*
 import com.cyxbsmobile_single.module_todo.model.bean.RemindMode
 import com.cyxbsmobile_single.module_todo.model.bean.Todo
 import com.google.gson.Gson
-import com.mredrock.cyxbs.common.BaseApp.Companion.context
+import com.mredrock.cyxbs.common.BaseApp
 
 /**
  * Author: RayleighZ
@@ -18,7 +18,7 @@ abstract class TodoDatabase : RoomDatabase() {
     companion object {
         val INSTANCE: TodoDatabase by lazy {
             Room.databaseBuilder(
-                context,
+                BaseApp.appContext,
                 TodoDatabase::class.java, "todo_database"
             ).fallbackToDestructiveMigration().build()
         }

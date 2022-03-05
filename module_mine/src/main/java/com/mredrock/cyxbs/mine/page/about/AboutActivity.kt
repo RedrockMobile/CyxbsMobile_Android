@@ -1,6 +1,5 @@
 package com.mredrock.cyxbs.mine.page.about
 
-import android.R.attr
 import android.app.Dialog
 import android.content.Intent
 import android.graphics.Color
@@ -10,15 +9,12 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.TextView
 import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.mredrock.cyxbs.common.component.CommonDialogFragment
 import com.mredrock.cyxbs.common.config.APP_WEBSITE
 import com.mredrock.cyxbs.common.service.ServiceManager
 import com.mredrock.cyxbs.api.update.AppUpdateStatus
 import com.mredrock.cyxbs.api.update.IAppUpdateService
-import com.mredrock.cyxbs.common.BaseApp
 import com.mredrock.cyxbs.common.ui.BaseViewModelActivity
 import com.mredrock.cyxbs.common.utils.extensions.toast
 import com.mredrock.cyxbs.common.utils.getAppVersionName
@@ -28,11 +24,8 @@ import kotlinx.android.synthetic.main.mine_activity_about.*
 import kotlinx.android.synthetic.main.mine_layout_dialog_recyclerview_dynamic.view.*
 import android.os.StrictMode
 
-import android.os.Build
 import android.os.StrictMode.VmPolicy
-import anet.channel.util.Utils.context
 
-import android.R.attr.path
 import android.os.Environment
 import android.widget.Toast
 import com.mredrock.cyxbs.common.component.CyxbsToast
@@ -103,7 +96,7 @@ class AboutActivity : BaseViewModelActivity<AboutViewModel>() {
                     },
                     errorCallback = {
                         materialDialog.dismiss()
-                        BaseApp.context.toast("获取失败")
+                        toast("获取失败")
                     }
             )
         }

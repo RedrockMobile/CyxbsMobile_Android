@@ -3,8 +3,8 @@ package com.cyxbsmobile_single.module_todo.model.database
 import androidx.room.*
 import androidx.sqlite.db.SupportSQLiteQuery
 import com.cyxbsmobile_single.module_todo.model.bean.Todo
-import io.reactivex.Flowable
-import io.reactivex.Single
+import io.reactivex.rxjava3.core.Flowable
+import io.reactivex.rxjava3.core.Single
 
 /**
  * Author: RayleighZ

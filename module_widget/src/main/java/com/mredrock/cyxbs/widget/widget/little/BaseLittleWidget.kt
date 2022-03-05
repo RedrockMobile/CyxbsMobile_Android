@@ -10,7 +10,7 @@ import android.widget.Toast
 import androidx.annotation.IdRes
 import androidx.annotation.LayoutRes
 import com.alibaba.android.arouter.launcher.ARouter
-import com.mredrock.cyxbs.main.MAIN_MAIN
+import com.mredrock.cyxbs.api.main.MAIN_MAIN
 import com.mredrock.cyxbs.common.event.WidgetCourseEvent
 import com.mredrock.cyxbs.widget.bean.CourseStatus
 import com.mredrock.cyxbs.widget.util.*

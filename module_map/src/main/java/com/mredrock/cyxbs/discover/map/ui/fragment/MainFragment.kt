@@ -9,7 +9,6 @@ import androidx.core.widget.doOnTextChanged
 import androidx.fragment.app.FragmentManager
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
-import com.mredrock.cyxbs.common.BaseApp
 import com.mredrock.cyxbs.common.ui.BaseFragment
 import com.mredrock.cyxbs.discover.map.R
 import com.mredrock.cyxbs.discover.map.ui.fragment.inner.MapViewFragment
@@ -85,7 +84,7 @@ class MainFragment : BaseFragment() {
         })
 
         viewModel.mapInfo.observe(viewLifecycleOwner, Observer { t ->
-            map_et_search.hintString = BaseApp.context.getString(R.string.map_search_hint) + if (t.hotWord == "") BaseApp.context.getString(R.string.map_search_hint_default_place_name) else t.hotWord
+            map_et_search.hintString = getString(R.string.map_search_hint) + if (t.hotWord == "") getString(R.string.map_search_hint_default_place_name) else t.hotWord
         })
 
         /**

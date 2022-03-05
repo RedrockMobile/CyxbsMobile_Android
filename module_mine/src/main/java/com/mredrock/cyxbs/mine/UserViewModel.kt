@@ -8,7 +8,6 @@ import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import com.mredrock.cyxbs.api.account.IAccountService
-import com.mredrock.cyxbs.common.BaseApp
 import com.mredrock.cyxbs.common.service.ServiceManager
 import com.mredrock.cyxbs.common.utils.extensions.*
 import com.mredrock.cyxbs.common.viewmodel.BaseViewModel
@@ -81,13 +80,13 @@ class UserViewModel : BaseViewModel() {
                     _userCount.postValue(it.data)
                 },
                 onError = {
-                    BaseApp.context.toast("获取动态等信息异常")
+                    toast("获取动态等信息异常")
                 }
             )
     }
 
     fun getUserUncheckedPraiseCount() {
-        val sp = BaseApp.context.defaultSharedPreferences
+        val sp = appContext.defaultSharedPreferences
         val lastCheckTimeStamp = sp.getLong(UNCHECK_PRAISE_KEY, 0L)
         apiService.getUncheckedPraiseCount(lastCheckTimeStamp)
             .setSchedulers()
@@ -103,7 +102,7 @@ class UserViewModel : BaseViewModel() {
     }
 
     fun getUserUncheckedCommentCount() {
-        val sp = BaseApp.context.defaultSharedPreferences
+        val sp = appContext.defaultSharedPreferences
         val lastCheckTimeStamp = sp.getLong(UNCHECK_COMMENT_KEY, 0L)
         apiService.getUncheckedCommentCount(lastCheckTimeStamp)
             .setSchedulers()
@@ -183,7 +182,7 @@ class UserViewModel : BaseViewModel() {
             }
         }
         val lp = textView.layoutParams as ConstraintLayout.LayoutParams
-        lp.leftMargin = BaseApp.context.dip(leftMargin)
+        lp.leftMargin = appContext.dip(leftMargin)
         textView.layoutParams = lp
     }
 
@@ -195,7 +194,7 @@ class UserViewModel : BaseViewModel() {
     }
 
     fun saveCheckTimeStamp(type: Int) {
-        BaseApp.context.defaultSharedPreferences.editor {
+        appContext.defaultSharedPreferences.editor {
             if (type == 1) {//刷新未读回复数的本地记录时间戳
                 putLong(UNCHECK_COMMENT_KEY, System.currentTimeMillis() / 1000)
             } else if (type == 2) {//刷新点赞数的本地记录时间戳
@@ -210,6 +209,6 @@ class UserViewModel : BaseViewModel() {
      */
     fun clearUser() {
         ServiceManager.getService(IAccountService::class.java).getVerifyService()
-            .logout(BaseApp.context)
+            .logout(appContext)
     }
 }

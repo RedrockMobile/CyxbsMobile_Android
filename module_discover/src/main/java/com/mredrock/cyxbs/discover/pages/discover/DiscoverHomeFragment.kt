@@ -9,10 +9,7 @@ import android.view.View
 import android.view.View.OVER_SCROLL_IF_CONTENT_SCROLLS
 import android.view.ViewGroup
 import android.view.WindowManager
-import android.widget.FrameLayout
-import android.widget.TextView
-import android.widget.Toast
-import android.widget.ViewFlipper
+import android.widget.*
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -40,9 +37,7 @@ import com.mredrock.cyxbs.discover.pages.discover.adapter.DiscoverMoreFunctionRv
 import com.mredrock.cyxbs.discover.utils.BannerAdapter
 import com.mredrock.cyxbs.discover.utils.MoreFunctionProvider
 import com.mredrock.cyxbs.api.volunteer.IVolunteerService
-import com.mredrock.cyxbs.common.BaseApp
-import com.mredrock.cyxbs.common.utils.extensions.toast
-import kotlinx.android.synthetic.main.discover_home_fragment.*
+import com.mredrock.cyxbs.discover.widget.IndicatorView
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
 
@@ -58,6 +53,14 @@ class DiscoverHomeFragment : BaseViewModelFragment<DiscoverHomeViewModel>(), Eve
         const val DISCOVER_FUNCTION_RV_STATE = "discover_function_rv_state"
     }
 
+    private val mTvDay by R.id.tv_day.view<TextView>()
+    private val mIvCheckIn by R.id.iv_check_in.view<ImageView>()
+    private val mRvDiscoverMore by R.id.rv_discover_more_function.view<RecyclerView>()
+    private val mVpBanner by R.id.vp_discover_home.view<ViewPager2>()
+    private val mLlDiscoverFeed by R.id.ll_discover_feeds.view<LinearLayout>()
+    private val mVfJwNews by R.id.vf_jwzx_detail.view<ViewFlipper>()
+    private val mIndicator by R.id.indicator_view_discover.view<IndicatorView>()
+
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         return inflater.inflate(R.layout.discover_home_fragment, container, false)
     }
@@ -69,10 +72,11 @@ class DiscoverHomeFragment : BaseViewModelFragment<DiscoverHomeViewModel>(), Eve
         if (savedInstanceState == null) {
             initFeeds()
         }
-        initJwNews(vf_jwzx_detail, fl_discover_home_jwnews)
+        val flJwNews = view.findViewById<FrameLayout>(R.id.fl_discover_home_jwnews)
+        initJwNews(mVfJwNews, flJwNews)
         initViewPager()
         viewModel.getRollInfo()
-        iv_check_in.setOnSingleClickListener {
+        mIvCheckIn.setOnSingleClickListener {
             context?.doIfLogin("签到") {
                 ARouter.getInstance().build(MINE_CHECK_IN).navigation()
             }
@@ -85,17 +89,17 @@ class DiscoverHomeFragment : BaseViewModelFragment<DiscoverHomeViewModel>(), Eve
         initFunctions()
         viewModel.startSwitchViewPager()
         if (viewModel.functionRvState != null) {
-            rv_discover_more_function.layoutManager?.onRestoreInstanceState(viewModel.functionRvState)
+            mRvDiscoverMore.layoutManager?.onRestoreInstanceState(viewModel.functionRvState)
         }
 
     }
 
     //加载轮播图
     private fun initViewPager() {
-        vp_discover_home.registerOnPageChangeCallback(object : ViewPager2.OnPageChangeCallback() {
+        mVpBanner.registerOnPageChangeCallback(object : ViewPager2.OnPageChangeCallback() {
             override fun onPageScrollStateChanged(state: Int) {
                 if (state == ViewPager2.SCROLL_STATE_DRAGGING || state == ViewPager2.SCROLL_STATE_SETTLING)
-                    vp_discover_home.adapter?.notifyDataSetChanged()
+                    mVpBanner.adapter?.notifyDataSetChanged()
                 super.onPageScrollStateChanged(state)
             }
 
@@ -104,10 +108,10 @@ class DiscoverHomeFragment : BaseViewModelFragment<DiscoverHomeViewModel>(), Eve
                 viewModel.scrollFlag = false
             }
         })
-        vp_discover_home?.adapter = context?.let { BannerAdapter(it, vp_discover_home) }
+        mVpBanner.adapter = context?.let { BannerAdapter(it, mVpBanner) }
         viewModel.viewPagerInfo.observe {
             if (it != null && context != null) {
-                (vp_discover_home?.adapter as BannerAdapter).apply {
+                (mVpBanner.adapter as BannerAdapter).apply {
                     urlList.clear()
                     urlList.addAll(it)
                     notifyDataSetChanged()
@@ -116,7 +120,7 @@ class DiscoverHomeFragment : BaseViewModelFragment<DiscoverHomeViewModel>(), Eve
         }
         viewModel.viewPagerTurner.observe {
             if (viewModel.scrollFlag) {
-                vp_discover_home.currentItem += 1
+                mVpBanner.currentItem += 1
             }
             viewModel.scrollFlag = true
         }
@@ -129,7 +133,7 @@ class DiscoverHomeFragment : BaseViewModelFragment<DiscoverHomeViewModel>(), Eve
                 for (item in it) {
                     viewFlipper.addView(getTextView(item.title, item.id))
                 }
-                vf_jwzx_detail.startFlipping()
+                viewFlipper.startFlipping()
             }
         }
 
@@ -170,7 +174,7 @@ class DiscoverHomeFragment : BaseViewModelFragment<DiscoverHomeViewModel>(), Eve
         val functions = MoreFunctionProvider.functions
         val picUrls = functions.map { it.resource }
         val texts = functions.map { getString(it.title) }
-        rv_discover_more_function.apply {
+        mRvDiscoverMore.apply {
             SpacesHorizontalItemDecoration(context.dp2px(50F)).attach(this)
             layoutManager = LinearLayoutManager(context).apply {
                 orientation = LinearLayoutManager.HORIZONTAL
@@ -188,7 +192,7 @@ class DiscoverHomeFragment : BaseViewModelFragment<DiscoverHomeViewModel>(), Eve
                     val offset = computeHorizontalScrollOffset().toFloat()
                     val range = computeHorizontalScrollRange().toFloat()
                     val extent = computeHorizontalScrollExtent().toFloat()
-                    indicator_view_discover.doMove(offset / (range - extent))
+                    mIndicator.doMove(offset / (range - extent))
                 }
             })
         }
@@ -199,11 +203,11 @@ class DiscoverHomeFragment : BaseViewModelFragment<DiscoverHomeViewModel>(), Eve
         addFeedFragment(ServiceManager.getService(IElectricityService::class.java).getElectricityFeed())
         addFeedFragment(ServiceManager.getService(IVolunteerService::class.java).getVolunteerFeed())
         //处理手机屏幕过长导致feed无法填充满下方的情况
-        ll_discover_feeds.post {
+        mLlDiscoverFeed.post {
             context?.let {
                 val point = Point()
                 (it.getSystemService(Context.WINDOW_SERVICE) as WindowManager).defaultDisplay.getSize(point)
-                ll_discover_feeds.minimumHeight = point.y - ll_discover_feeds.top
+                mLlDiscoverFeed.minimumHeight = point.y - mLlDiscoverFeed.top
             }
         }
     }
@@ -215,15 +219,15 @@ class DiscoverHomeFragment : BaseViewModelFragment<DiscoverHomeViewModel>(), Eve
 
     @Subscribe(threadMode = ThreadMode.MAIN, sticky = true)
     fun onGetData(dataEvent: CurrentDateInformationEvent) {
-        tv_day.text = dataEvent.time
+        mTvDay.text = dataEvent.time
     }
 
 
     override fun onPause() {
         super.onPause()
-        vf_jwzx_detail.stopFlipping()
+        mVfJwNews.stopFlipping()
         viewModel.stopPageTurner()
-        viewModel.functionRvState = rv_discover_more_function.layoutManager?.onSaveInstanceState()
+        viewModel.functionRvState = mRvDiscoverMore.layoutManager?.onSaveInstanceState()
     }
 
 }

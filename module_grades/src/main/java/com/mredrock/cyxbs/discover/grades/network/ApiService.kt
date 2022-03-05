@@ -7,7 +7,7 @@ import com.mredrock.cyxbs.discover.grades.bean.IdsBean
 import com.mredrock.cyxbs.discover.grades.bean.IdsStatus
 import com.mredrock.cyxbs.discover.grades.bean.Status
 import com.mredrock.cyxbs.discover.grades.bean.analyze.GPAStatus
-import io.reactivex.Observable
+import io.reactivex.rxjava3.core.Observable
 import retrofit2.http.*
 
 /**

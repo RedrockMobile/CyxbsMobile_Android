@@ -1,7 +1,7 @@
 package com.mredrock.cyxbs.main.network
 
-import io.reactivex.Observer
-import io.reactivex.disposables.Disposable
+import io.reactivex.rxjava3.core.Observer
+import io.reactivex.rxjava3.disposables.Disposable
 
 
 /**
@@ -14,10 +14,12 @@ import io.reactivex.disposables.Disposable
  *
  * Created by anriku on 2018/9/18.
  */
-class ExecuteOnceObserver<T>(val onExecuteOnceNext: (T) -> Unit = {},
-                             val onExecuteOnceComplete: () -> Unit = {},
-                             val onExecuteOnceError: (Throwable) -> Unit = {},
-                             val onExecuteOnFinal:()->Unit={}) : Observer<T> {
+class ExecuteOnceObserver<T : Any>(
+    val onExecuteOnceNext: (T) -> Unit = {},
+    val onExecuteOnceComplete: () -> Unit = {},
+    val onExecuteOnceError: (Throwable) -> Unit = {},
+    val onExecuteOnFinal: () -> Unit = {}
+) : Observer<T> {
 
     private var mDisposable: Disposable? = null
 
@@ -46,5 +48,4 @@ class ExecuteOnceObserver<T>(val onExecuteOnceNext: (T) -> Unit = {},
     override fun onError(e: Throwable) {
         onExecuteOnceError(e)
     }
-
 }

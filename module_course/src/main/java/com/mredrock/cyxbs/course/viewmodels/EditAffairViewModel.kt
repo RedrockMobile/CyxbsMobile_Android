@@ -2,13 +2,11 @@ package com.mredrock.cyxbs.course.viewmodels
 
 import android.widget.Toast
 import androidx.lifecycle.MutableLiveData
-import com.mredrock.cyxbs.common.BaseApp.Companion.context
 import com.mredrock.cyxbs.common.component.CyxbsToast
 import com.mredrock.cyxbs.common.network.ApiGenerator
 import com.mredrock.cyxbs.common.service.ServiceManager
 import com.mredrock.cyxbs.api.account.IAccountService
-import com.mredrock.cyxbs.common.utils.extensions.errorHandler
-import com.mredrock.cyxbs.common.utils.extensions.setSchedulers
+import com.mredrock.cyxbs.common.BaseApp
 import com.mredrock.cyxbs.common.viewmodel.BaseViewModel
 import com.mredrock.cyxbs.course.R
 import com.mredrock.cyxbs.course.event.AddAffairEvent
@@ -17,6 +15,8 @@ import com.mredrock.cyxbs.course.network.AffairHelper
 import com.mredrock.cyxbs.course.network.Course
 import com.mredrock.cyxbs.course.network.CourseApiService
 import com.mredrock.cyxbs.common.utils.ExecuteOnceObserver
+import com.mredrock.cyxbs.common.utils.extensions.errorHandler
+import com.mredrock.cyxbs.common.utils.extensions.setSchedulers
 import com.mredrock.cyxbs.course.ui.activity.AffairEditActivity
 import com.mredrock.cyxbs.course.utils.affairFilter
 import org.greenrobot.eventbus.EventBus
@@ -32,22 +32,22 @@ class EditAffairViewModel : BaseViewModel() {
 
     // 周一到周日的字符串数组
     val dayOfWeekArray: Array<String> by lazy(LazyThreadSafetyMode.NONE) {
-        context.resources.getStringArray(R.array.course_course_day_of_week_strings)
+        BaseApp.appContext.resources.getStringArray(R.array.course_course_day_of_week_strings)
     }
 
     // 周数对应的字符串数组
     val weekArray: Array<String> by lazy(LazyThreadSafetyMode.NONE) {
-        context.resources.getStringArray(R.array.course_course_weeks_strings)
+        BaseApp.appContext.resources.getStringArray(R.array.course_course_weeks_strings)
     }
 
     //具体上课时间字符串
     val timeArray: Array<String> by lazy(LazyThreadSafetyMode.NONE) {
-        context.resources.getStringArray(R.array.course_time_select_strings)
+        BaseApp.appContext.resources.getStringArray(R.array.course_time_select_strings)
     }
 
     // 提醒对应的字符串数组
     val remindArray: Array<String> by lazy(LazyThreadSafetyMode.NONE) {
-        context.resources.getStringArray(R.array.course_remind_strings)
+        BaseApp.appContext.resources.getStringArray(R.array.course_remind_strings)
     }
 
     // 进行事务提交网络请求网络请求
@@ -107,11 +107,11 @@ class EditAffairViewModel : BaseViewModel() {
                 mPostWeeks.add(passedWeekPosition)
             }
             setTimeSelected(mutableListOf(passedTimePosition))
-            selectedRemindString.value = context.resources.getString(R.string.course_remind_select)
+            selectedRemindString.value = BaseApp.appContext.resources.getString(R.string.course_remind_select)
         } else if (passedAffairInfo != null) {
             setPassedAffairInfo()
         } else {
-            selectedRemindString.value = context.resources.getString(R.string.course_remind_select)
+            selectedRemindString.value = BaseApp.appContext.resources.getString(R.string.course_remind_select)
         }
     }
 
@@ -138,7 +138,7 @@ class EditAffairViewModel : BaseViewModel() {
                         it.apply {
                             //这里没有直接使用BaseViewModel里面的toastEvent
                             //因为在弹出时有可能toastEvent中持有的context已经回收，会出现无法弹出的情况
-                            CyxbsToast.makeText(context, R.string.course_add_transaction_as_a_reminder, Toast.LENGTH_SHORT).show()
+                            CyxbsToast.makeText(BaseApp.appContext, R.string.course_add_transaction_as_a_reminder, Toast.LENGTH_SHORT).show()
                             // 更新课表
                             EventBus.getDefault().post(AddAffairEvent())
                         }
@@ -152,7 +152,7 @@ class EditAffairViewModel : BaseViewModel() {
                     .subscribe(ExecuteOnceObserver(onExecuteOnceNext = {
                         it.apply {
                             // 更新课表
-                            CyxbsToast.makeText(context, R.string.course_modify_transaction_successful, Toast.LENGTH_SHORT).show()
+                            CyxbsToast.makeText(BaseApp.appContext, R.string.course_modify_transaction_successful, Toast.LENGTH_SHORT).show()
                             EventBus.getDefault().post(ModifyAffairEvent())
                         }
                     }))
@@ -225,7 +225,7 @@ class EditAffairViewModel : BaseViewModel() {
         // 对提醒时间重现
         val remindTime = passedAffairInfo?.affairTime
         if (remindTime == null) {
-            selectedRemindString.value = context.resources.getString(R.string.course_remind_select)
+            selectedRemindString.value = BaseApp.appContext.resources.getString(R.string.course_remind_select)
         } else {
             setRemindSelectString(getRemindPosition(remindTime.toInt()))
         }

@@ -12,7 +12,6 @@ import androidx.viewpager.widget.ViewPager
 import com.bumptech.glide.Glide
 import com.bumptech.glide.request.target.SimpleTarget
 import com.bumptech.glide.request.transition.Transition
-import com.mredrock.cyxbs.common.BaseApp
 import com.mredrock.cyxbs.common.utils.extensions.doPermissionAction
 import com.mredrock.cyxbs.common.utils.extensions.setFullScreen
 import com.mredrock.cyxbs.common.utils.extensions.startActivity
@@ -79,7 +78,7 @@ class ShowPictureActivity : AppCompatActivity() {
 
                         (this@ShowPictureActivity as AppCompatActivity).doPermissionAction(Manifest.permission.WRITE_EXTERNAL_STORAGE) {
                             doAfterGranted {
-                                Glide.with(BaseApp.context).asBitmap().load(url).into(object : SimpleTarget<Bitmap>() {
+                                Glide.with(this@ShowPictureActivity).asBitmap().load(url).into(object : SimpleTarget<Bitmap>() {
                                     override fun onResourceReady(resource: Bitmap, transition: Transition<in Bitmap>?) {
                                         saveImage(resource)
                                     }
@@ -124,15 +123,18 @@ class ShowPictureActivity : AppCompatActivity() {
     }
 
     private fun saveImage(resource: Bitmap) {
-        val file = File(BaseApp.context.externalMediaDirs[0]?.absolutePath
+        val file = File(
+            externalMediaDirs[0]?.absolutePath
                 + File.separator
                 + "Map"
                 + File.separator
                 + System.currentTimeMillis()
                 + ".jpg")
         val parentDir = file.parentFile
-        if (parentDir.exists()) parentDir.delete()
-        parentDir.mkdir()
+        if (parentDir != null) {
+            if (parentDir.exists()) parentDir.delete()
+            parentDir.mkdir()
+        }
         file.createNewFile()
         val fos = FileOutputStream(file)
         resource.compress(Bitmap.CompressFormat.JPEG, 100, fos)
@@ -147,7 +149,7 @@ class ShowPictureActivity : AppCompatActivity() {
         val f = File(imagePath)
         val contentUri = Uri.fromFile(f)
         mediaScanIntent.data = contentUri
-        BaseApp.context.sendBroadcast(mediaScanIntent)
+        sendBroadcast(mediaScanIntent)
     }
 
 }

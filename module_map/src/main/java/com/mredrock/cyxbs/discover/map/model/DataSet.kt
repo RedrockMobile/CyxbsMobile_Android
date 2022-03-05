@@ -15,7 +15,7 @@ import com.mredrock.cyxbs.discover.map.bean.*
 
 
 object DataSet {
-    private val sharedPreferences by lazy { BaseApp.context.sharedPreferences("map_cache") }
+    private val sharedPreferences by lazy { BaseApp.appContext.sharedPreferences("map_cache") }
     private val gson = Gson()
 
     fun saveMapInfo(mapInfo: MapInfo) {

@@ -1,7 +1,6 @@
 package com.cyxbsmobile_single.module_todo.ui.dialog
 
 import android.content.Context
-import android.os.Bundle
 import android.util.DisplayMetrics
 import android.view.LayoutInflater
 import android.view.View
@@ -20,10 +19,7 @@ import com.cyxbsmobile_single.module_todo.ui.dialog.AddItemDialog.CurOperate.*
 import com.cyxbsmobile_single.module_todo.util.*
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.bottomsheet.BottomSheetDialog
-import com.mredrock.cyxbs.common.BaseApp
-import com.mredrock.cyxbs.common.utils.LogUtils
 import com.mredrock.cyxbs.common.utils.extensions.dip
-import com.mredrock.cyxbs.common.utils.extensions.px2dip
 import com.mredrock.cyxbs.common.utils.extensions.toast
 import kotlinx.android.synthetic.main.todo_activity_inner_detail.*
 import kotlinx.android.synthetic.main.todo_dialog_add_todo.*
@@ -206,7 +202,7 @@ class AddItemDialog(context: Context, val onConfirm: (Todo) -> Unit) :
         todo_tv_add_thing_save.setOnClickListener {
             //如果没输入标题，就ban掉
             if (todo_et_todo_title.text.toString().isEmpty()) {
-                BaseApp.context.toast("掌友，标题不能为空哦")
+                context.toast("掌友，标题不能为空哦")
                 return@setOnClickListener
             }
             todo.title = todo_et_todo_title.text.toString()
@@ -488,7 +484,7 @@ class AddItemDialog(context: Context, val onConfirm: (Todo) -> Unit) :
                 todo_inner_add_rv_thing_repeat_list.scrollToPosition(0)
             }
         } else {
-            BaseApp.context.toast("掌友，只能选择一种重复模式哦！")
+            context.toast("掌友，只能选择一种重复模式哦！")
         }
     }
 
@@ -510,7 +506,7 @@ class AddItemDialog(context: Context, val onConfirm: (Todo) -> Unit) :
     //设置为只有单个选择（重复或者提醒时间）
     fun setAsSinglePicker(curOperate: CurOperate) {
         this.curOperate = curOperate
-        setMargin(todo_tv_set_repeat_time, left = BaseApp.context.dip(15))
+        setMargin(todo_tv_set_repeat_time, left = context.dip(15))
         when (curOperate) {
             REPEAT -> {
                 todo_tv_set_repeat_time.text = "设置重复提醒"

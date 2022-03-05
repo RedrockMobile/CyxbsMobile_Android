@@ -142,7 +142,7 @@ class MapViewModel : BaseViewModel() {
             .mapOrThrowApiException()
             .doOnErrorWithDefaultErrorHandler {
                 MapToast.makeText(
-                    BaseApp.context,
+                    BaseApp.appContext,
                     R.string.map_network_connect_error,
                     Toast.LENGTH_SHORT
                 ).show()
@@ -163,7 +163,7 @@ class MapViewModel : BaseViewModel() {
             .mapOrThrowApiException()
             .doOnErrorWithDefaultErrorHandler {
                 MapToast.makeText(
-                    BaseApp.context,
+                    BaseApp.appContext,
                     R.string.map_network_connect_error,
                     Toast.LENGTH_SHORT
                 ).show()
@@ -196,7 +196,7 @@ class MapViewModel : BaseViewModel() {
             .mapOrThrowApiException()
             .doOnErrorWithDefaultErrorHandler {
                 MapToast.makeText(
-                    BaseApp.context,
+                    BaseApp.appContext,
                     R.string.map_network_connect_error,
                     Toast.LENGTH_SHORT
                 ).show()
@@ -248,7 +248,7 @@ class MapViewModel : BaseViewModel() {
                 }
                 if (collectList.value?.size == 0) {
                     MapToast.makeText(
-                        BaseApp.context,
+                        BaseApp.appContext,
                         R.string.map_favorite_empty,
                         Toast.LENGTH_SHORT
                     ).show()
@@ -290,7 +290,7 @@ class MapViewModel : BaseViewModel() {
 
                 if (collectList.value?.size == 0) {
                     MapToast.makeText(
-                        BaseApp.context,
+                        BaseApp.appContext,
                         R.string.map_favorite_empty,
                         Toast.LENGTH_SHORT
                     ).show()
@@ -320,7 +320,7 @@ class MapViewModel : BaseViewModel() {
                 .setSchedulers()
                 .doOnErrorWithDefaultErrorHandler {
                     MapToast.makeText(
-                        BaseApp.context,
+                        BaseApp.appContext,
                         R.string.map_network_connect_error,
                         Toast.LENGTH_SHORT
                     ).show()
@@ -332,13 +332,13 @@ class MapViewModel : BaseViewModel() {
                     if (it.isSuccessful) {
                         DataSet.addCollect(FavoritePlace(placeNickname, id))
                         MapToast.makeText(
-                            BaseApp.context,
+                            BaseApp.appContext,
                             R.string.map_collect_success,
                             Toast.LENGTH_SHORT
                         ).show()
                     } else {
                         MapToast.makeText(
-                            BaseApp.context,
+                            BaseApp.appContext,
                             R.string.map_network_connect_error,
                             Toast.LENGTH_SHORT
                         ).show()
@@ -363,7 +363,7 @@ class MapViewModel : BaseViewModel() {
             .setSchedulers()
             .doOnErrorWithDefaultErrorHandler {
                 MapToast.makeText(
-                    BaseApp.context,
+                    BaseApp.appContext,
                     R.string.map_network_connect_error,
                     Toast.LENGTH_SHORT
                 ).show()
@@ -376,7 +376,7 @@ class MapViewModel : BaseViewModel() {
                     DataSet.deleteCollect(id)
                 } else {
                     MapToast.makeText(
-                        BaseApp.context,
+                        BaseApp.appContext,
                         R.string.map_network_connect_error,
                         Toast.LENGTH_SHORT
                     ).show()
@@ -438,8 +438,8 @@ class MapViewModel : BaseViewModel() {
             .safeSubscribeBy {
                 if (!it.isSuccessful) {
                     MapToast.makeText(
-                        BaseApp.context,
-                        BaseApp.context.getString(R.string.map_add_hot_failed),
+                        BaseApp.appContext,
+                        BaseApp.appContext.getString(R.string.map_add_hot_failed),
                         Toast.LENGTH_SHORT
                     ).show()
                 }
@@ -547,7 +547,7 @@ class MapViewModel : BaseViewModel() {
                 Manifest.permission.WRITE_EXTERNAL_STORAGE,
                 Manifest.permission.CAMERA
             ) {
-                reason = BaseApp.context.resources.getString(R.string.map_require_permission_tips)
+                reason = BaseApp.appContext.resources.getString(R.string.map_require_permission_tips)
                 doAfterGranted {
                     requireSharePermission(context, fragment)
                 }
@@ -567,13 +567,13 @@ class MapViewModel : BaseViewModel() {
      */
     private fun requireSharePermission(context: Context, fragment: Fragment) {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-            if (BaseApp.context.checkSelfPermission(Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED ||
-                BaseApp.context.checkSelfPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED ||
-                BaseApp.context.checkSelfPermission(Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED
+            if (BaseApp.appContext.checkSelfPermission(Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED ||
+                BaseApp.appContext.checkSelfPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED ||
+                BaseApp.appContext.checkSelfPermission(Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED
             ) {
                 CyxbsToast.makeText(
-                    BaseApp.context,
-                    BaseApp.context.resources.getString(R.string.map_no_permission_store),
+                    BaseApp.appContext,
+                    BaseApp.appContext.resources.getString(R.string.map_no_permission_store),
                     Toast.LENGTH_LONG
                 ).show()
                 return
@@ -582,8 +582,8 @@ class MapViewModel : BaseViewModel() {
         context.let {
             MapDialog.show(
                 it,
-                BaseApp.context.resources.getString(R.string.map_share_picture_title),
-                BaseApp.context.resources.getString(R.string.map_share_picture),
+                BaseApp.appContext.resources.getString(R.string.map_share_picture_title),
+                BaseApp.appContext.resources.getString(R.string.map_share_picture),
                 object : OnSelectListener {
                     override fun onDeny() {
                     }

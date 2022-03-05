@@ -7,7 +7,6 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.LinearLayout
 import androidx.recyclerview.widget.RecyclerView
-import com.mredrock.cyxbs.common.BaseApp
 import com.mredrock.cyxbs.common.utils.extensions.dp2px
 import com.mredrock.cyxbs.common.utils.extensions.getScreenWidth
 import com.mredrock.cyxbs.common.utils.extensions.setAvatarImageFromUrl
@@ -139,12 +138,13 @@ class CirclesAdapter(
     //保证单页可以显示4.5个圈子的ViewHolder
     class CircleListViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         init {
-            val width = BaseApp.context.getScreenWidth()//单位为px
+            val context = itemView.context
+            val width = context.getScreenWidth()//单位为px
             val wishWidth = width.toFloat() / 4.5//希望View达到的宽度
-            val rawWidth = BaseApp.context.dp2px(70f)//内部ImageView的宽度，理解为最低宽度
+            val rawWidth = context.dp2px(70f)//内部ImageView的宽度，理解为最低宽度
             if (wishWidth >= rawWidth) {//保证这样除以之后的宽度大于77dp，防止view显示不全或者太挤
                 val leftPadding = (wishWidth - rawWidth) / 2//期望情况下的padding
-                val topPadding = BaseApp.context.dp2px(10f)
+                val topPadding = context.dp2px(10f)
                 itemView.setPadding(leftPadding.toInt(), topPadding, leftPadding.toInt(), 0)
             }
         }

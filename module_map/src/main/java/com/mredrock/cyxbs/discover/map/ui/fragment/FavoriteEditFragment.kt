@@ -7,7 +7,6 @@ import android.view.ViewGroup
 import android.widget.Toast
 import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.ViewModelProvider
-import com.mredrock.cyxbs.common.BaseApp
 import com.mredrock.cyxbs.common.ui.BaseFragment
 import com.mredrock.cyxbs.discover.map.R
 import com.mredrock.cyxbs.discover.map.component.MapToast
@@ -46,7 +45,7 @@ class FavoriteEditFragment : BaseFragment() {
                     override fun onPositive() {
                         viewModel.fragmentFavoriteEditIsShowing.value = false
                         viewModel.deleteCollect(viewModel.showingPlaceId)
-                        ProgressDialog.show(requireActivity(), BaseApp.context.getString(R.string.map_please_a_moment_text), BaseApp.context.getString(R.string.map_collect_cancelling), false)
+                        ProgressDialog.show(requireActivity(), getString(R.string.map_please_a_moment_text), getString(R.string.map_collect_cancelling), false)
 
                     }
                 })
@@ -55,11 +54,11 @@ class FavoriteEditFragment : BaseFragment() {
         map_tv_favorite_accept.setOnSingleClickListener {
             if (map_et_favorite_nickname.length() != 0) {
                 viewModel.fragmentFavoriteEditIsShowing.value = false
-                ProgressDialog.show(requireActivity(), BaseApp.context.getString(R.string.map_please_a_moment_text), BaseApp.context.getString(R.string.map_collect_adding), false)
+                ProgressDialog.show(requireActivity(), getString(R.string.map_please_a_moment_text), getString(R.string.map_collect_adding), false)
 
                 viewModel.addCollect(map_et_favorite_nickname.text.toString(), viewModel.showingPlaceId)
             } else {
-                MapToast.makeText(BaseApp.context, R.string.map_favorite_edit_length_not_enough, Toast.LENGTH_SHORT).show()
+                MapToast.makeText(requireContext(), R.string.map_favorite_edit_length_not_enough, Toast.LENGTH_SHORT).show()
             }
         }
 

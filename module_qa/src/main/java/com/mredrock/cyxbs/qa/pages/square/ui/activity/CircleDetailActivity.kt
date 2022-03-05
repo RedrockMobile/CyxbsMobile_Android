@@ -9,14 +9,11 @@ import android.view.Gravity
 import android.view.View
 import android.widget.Toast
 import androidx.core.app.ActivityCompat.startActivityForResult
-import androidx.core.app.ActivityOptionsCompat
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import com.alibaba.android.arouter.facade.annotation.Route
 import com.google.android.material.tabs.TabLayoutMediator
-import com.mredrock.cyxbs.common.BaseApp
-import com.mredrock.cyxbs.common.BaseApp.Companion.context
 import com.mredrock.cyxbs.common.component.CyxbsToast
 import com.mredrock.cyxbs.common.config.QA_CIRCLE_DETAIL
 import com.mredrock.cyxbs.common.network.ApiGenerator
@@ -51,7 +48,7 @@ class CircleDetailActivity : BaseViewModelActivity<CircleDetailViewModel>() {
         private var startPosition = 0
         fun activityStartFromSquare(activity: BaseActivity, data: Topic) {
             activity.let {
-                val intent = Intent(context, CircleDetailActivity::class.java)
+                val intent = Intent(it, CircleDetailActivity::class.java)
                 it.window.exitTransition = Slide(Gravity.START).apply { duration = 500 }
                 startPosition = RESULT_CODE
                 startActivityForResult(activity, intent, RESULT_CODE,null)
@@ -61,7 +58,7 @@ class CircleDetailActivity : BaseViewModelActivity<CircleDetailViewModel>() {
         fun activityStartFromCircle(fragment: Fragment, topicItemView: View, data: Topic) {
             fragment.apply {
                 activity?.let {
-                    val intent = Intent(BaseApp.context, CircleDetailActivity::class.java)
+                    val intent = Intent(it, CircleDetailActivity::class.java)
                     intent.putExtra("topicItem", data)
                     it.window.exitTransition = Slide(Gravity.START).apply { duration = 500 }
                     startPosition = DYNAMIC_DETAIL_REQUEST
@@ -128,13 +125,13 @@ class CircleDetailActivity : BaseViewModelActivity<CircleDetailViewModel>() {
                         if (topic._isFollow == 1) {
                             btn_circle_square_concern.text = "已关注"
                             btn_circle_square_concern.background = ContextCompat.getDrawable(
-                                context,
+                                this@CircleDetailActivity,
                                 R.drawable.qa_shape_send_dynamic_btn_grey_background
                             )
                         } else {
                             btn_circle_square_concern.text = "+关注"
                             btn_circle_square_concern.background = ContextCompat.getDrawable(
-                                context,
+                                this@CircleDetailActivity,
                                 R.drawable.qa_shape_send_dynamic_btn_blue_background
                             )
                         }
@@ -150,7 +147,7 @@ class CircleDetailActivity : BaseViewModelActivity<CircleDetailViewModel>() {
                         initObserve()
                     },
                     onError = {
-                        context.toast("获取圈子信息失败")
+                        toast("获取圈子信息失败")
                     }
                 )
         }
@@ -216,7 +213,7 @@ class CircleDetailActivity : BaseViewModelActivity<CircleDetailViewModel>() {
             val url = "${CommentConfig.SHARE_URL}quanzi?id=${topic.topicId}"
             ShareDialog(it.context).apply {
                 initView(
-                    qqShare = View.OnClickListener{
+                    qqShare = {
                         mTencent?.let { it1 ->
                             ShareUtils.qqShare(
                                 it1,
@@ -228,7 +225,7 @@ class CircleDetailActivity : BaseViewModelActivity<CircleDetailViewModel>() {
                             )
                         }
                     },
-                    qqZoneShare = View.OnClickListener{
+                    qqZoneShare = {
                         val topicArray = ArrayList<String>()//写出这样的代码，我很抱歉，可惜腾讯要的是ArrayList
                         topicArray.add(topic.topicLogo)
                         mTencent?.let { it1 ->
@@ -241,7 +238,7 @@ class CircleDetailActivity : BaseViewModelActivity<CircleDetailViewModel>() {
                                 topicArray
                             )
                         }
-                    }, weChatShare = View.OnClickListener{
+                    }, weChatShare = {
                         CyxbsToast.makeText(
                             context,
                             R.string.qa_share_wechat_text,
@@ -249,7 +246,7 @@ class CircleDetailActivity : BaseViewModelActivity<CircleDetailViewModel>() {
                         )
                             .show()
 
-                    }, friendShipCircle = View.OnClickListener{
+                    }, friendShipCircle = {
                         CyxbsToast.makeText(
                             context,
                             R.string.qa_share_wechat_text,
@@ -257,9 +254,9 @@ class CircleDetailActivity : BaseViewModelActivity<CircleDetailViewModel>() {
                         )
                             .show()
 
-                    }, copyLink = View.OnClickListener{
+                    }, copyLink = {
                         ClipboardController.copyText(this@CircleDetailActivity, url)
-                    }, onCancelListener = View.OnClickListener{
+                    }, onCancelListener = {
                         dismiss()
                     })
             }.show()
@@ -269,7 +266,7 @@ class CircleDetailActivity : BaseViewModelActivity<CircleDetailViewModel>() {
     @SuppressLint("SetTextI18n", "UseCompatLoadingForDrawables")
     private fun initView() {
         if (!isFormReceive) {
-            topic = intent.getParcelableExtra("topicItem")
+            topic = intent.getParcelableExtra("topicItem")!!
             viewModel.topicId = topic.topicId.toInt()
             iv_circle_square.setAvatarImageFromUrl(topic.topicLogo)
             tv_circle_square_name.text = topic.topicName
@@ -279,11 +276,11 @@ class CircleDetailActivity : BaseViewModelActivity<CircleDetailViewModel>() {
             if (topic._isFollow == 1) {
                 btn_circle_square_concern.text = "已关注"
                 btn_circle_square_concern.background =
-                    context.getDrawable(R.drawable.qa_shape_send_dynamic_btn_grey_background)
+                    getDrawable(R.drawable.qa_shape_send_dynamic_btn_grey_background)
             } else {
                 btn_circle_square_concern.text = "+关注"
                 btn_circle_square_concern.background =
-                    context.getDrawable(R.drawable.qa_shape_send_dynamic_btn_blue_background)
+                    getDrawable(R.drawable.qa_shape_send_dynamic_btn_blue_background)
             }
         }
     }

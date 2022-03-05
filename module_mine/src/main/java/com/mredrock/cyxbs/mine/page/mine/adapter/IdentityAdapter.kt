@@ -88,7 +88,7 @@ class IdentityAdapter(val list:List<AuthenticationStatus.Data>, val context: Con
             holder.timeView.text  = list[position].date
             holder.statuNameView.text = list[position].form
             holder.statuView.text = list[position].position
-            loadBitmap(list[position].background){
+            loadBitmap(holder.itemView.context, list[position].background){
                 holder.contentView.background =  BitmapDrawable(context.resources,it)
             }
         }

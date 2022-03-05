@@ -10,10 +10,8 @@ import android.view.ViewGroup
 import androidx.core.content.ContextCompat
 import com.cyxbsmobile_single.module_todo.R
 import com.cyxbsmobile_single.module_todo.model.TodoModel
-import com.mredrock.cyxbs.common.BaseApp
 import com.mredrock.cyxbs.common.ui.BaseFeedFragment
 import com.mredrock.cyxbs.common.utils.extensions.append
-import com.mredrock.cyxbs.common.utils.extensions.appendln
 import kotlinx.android.synthetic.main.todo_fragment_on_confilt.view.*
 import java.text.SimpleDateFormat
 import java.util.*
@@ -43,14 +41,14 @@ class TodoConflictAdapter(
             val sb = SpannableStringBuilder()
             val conflictSpan = ForegroundColorSpan(
                 ContextCompat.getColor(
-                    BaseApp.context,
+                    context,
                     R.color.todo_on_conflict_button_color
                 )
             )
 
             val normalSpan = ForegroundColorSpan(
                 ContextCompat.getColor(
-                    BaseApp.context,
+                    context,
                     R.color.common_level_three_font_color
                 )
             )

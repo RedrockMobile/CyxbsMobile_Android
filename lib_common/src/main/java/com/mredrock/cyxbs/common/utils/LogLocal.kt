@@ -5,12 +5,9 @@ import android.annotation.SuppressLint
 import android.content.pm.PackageManager
 import android.os.*
 import android.util.Log
-import androidx.annotation.RequiresApi
 import com.mredrock.cyxbs.common.BaseApp
 import com.mredrock.cyxbs.common.config.DIR_LOG
 import com.mredrock.cyxbs.common.config.OKHTTP_LOCAL_LOG
-import java.io.File
-import java.io.FileOutputStream
 import java.util.*
 
 @SuppressLint("StaticFieldLeak")
@@ -33,8 +30,8 @@ object LogLocal {
 
     fun log(tag: String = "tag", msg: String, throwable: Throwable? = null) {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-            if (BaseApp.context.checkSelfPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED &&
-                BaseApp.context.checkSelfPermission(Manifest.permission.READ_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED
+            if (BaseApp.appContext.checkSelfPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED &&
+                BaseApp.appContext.checkSelfPermission(Manifest.permission.READ_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED
             ) {
                 val message = Message()
                 message.what = 0

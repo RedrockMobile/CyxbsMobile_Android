@@ -2,7 +2,6 @@ package com.mredrock.cyxbs.mine.page.security.activity
 
 import android.content.Intent
 import android.os.Bundle
-import com.mredrock.cyxbs.common.BaseApp
 import com.mredrock.cyxbs.common.ui.BaseViewModelActivity
 import com.mredrock.cyxbs.common.utils.extensions.setOnSingleClickListener
 import com.mredrock.cyxbs.common.utils.extensions.toast
@@ -26,7 +25,7 @@ class SecurityActivity : BaseViewModelActivity<SecurityActivityViewModel>() {
         setSupportActionBar(findViewById(R.id.toolbar))
         viewModel.checkBinding {
             if (!viewModel.netRequestSuccess)
-                BaseApp.context.toast("绑定信息请求失败")
+                toast("绑定信息请求失败")
         }
         mine_ll_change_binding_mail.setOnSingleClickListener {//绑定邮箱
             if (viewModel.canClick) {
@@ -64,9 +63,9 @@ class SecurityActivity : BaseViewModelActivity<SecurityActivityViewModel>() {
 
     private fun showRequestResult() {
         if (viewModel.netRequestSuccess)
-            BaseApp.context.toast("正在请求是否绑定信息，请稍候")
+            toast("正在请求是否绑定信息，请稍候")
         else
-            BaseApp.context.toast("绑定信息请求失败，无法使用此功能")
+            toast("绑定信息请求失败，无法使用此功能")
     }
 
     override fun onResume() {

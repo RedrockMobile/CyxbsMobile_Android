@@ -50,6 +50,7 @@ class RecordViewModel : BaseViewModel() {
                     mExchangeRecord.postValue(it)
                 }
             )
+            .lifeCycle()
     }
 
     private var nowPage = 1
@@ -72,6 +73,7 @@ class RecordViewModel : BaseViewModel() {
                     mFirstPageStampGetRecord.postValue(it)
                 }
             )
+            .lifeCycle()
     }
 
     fun getNextPageGetRecord() {
@@ -97,5 +99,6 @@ class RecordViewModel : BaseViewModel() {
                     mNestPageGetRecordIsSuccessful.postValue(false)
                 }
             )
+            .lifeCycle()
     }
 }

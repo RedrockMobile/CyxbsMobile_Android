@@ -7,7 +7,6 @@ import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.flexbox.FlexWrap
 import com.google.android.flexbox.FlexboxLayoutManager
-import com.mredrock.cyxbs.common.BaseApp
 import com.mredrock.cyxbs.qa.R
 import com.mredrock.cyxbs.qa.beannew.Knowledge
 import com.mredrock.cyxbs.qa.config.RequestResultCode.ClickKnowledge
@@ -37,7 +36,7 @@ class SearchResultHeaderAdapter(
         val viewHolder = holder as ViewHolder
         viewHolder.baseTitle.text = knowledge?.title
         viewHolder.baseDetail.text = knowledge?.description
-        val flexBoxManager = FlexboxLayoutManager(BaseApp.context)
+        val flexBoxManager = FlexboxLayoutManager(holder.itemView.context)
         flexBoxManager.flexWrap = FlexWrap.WRAP
 
         viewHolder.cancelImage.setOnClickListener {

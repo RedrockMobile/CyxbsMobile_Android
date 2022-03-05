@@ -7,12 +7,12 @@ import com.mredrock.cyxbs.common.utils.extensions.doOnErrorWithDefaultErrorHandl
 import com.mredrock.cyxbs.common.utils.extensions.mapOrThrowApiException
 import com.mredrock.cyxbs.common.utils.extensions.setSchedulers
 import com.mredrock.cyxbs.common.viewmodel.BaseViewModel
-import io.reactivex.Observable
+import io.reactivex.rxjava3.core.Observable
 
 /**
  * Created by zia on 2018/8/26.
  */
-fun <T> Observable<RedrockApiWrapper<T>>.normalWrapper(viewModel: BaseViewModel): Observable<T> =
+fun <T: Any> Observable<RedrockApiWrapper<T>>.normalWrapper(viewModel: BaseViewModel): Observable<T> =
         mapOrThrowApiException()
                 .setSchedulers()
                 .doOnErrorWithDefaultErrorHandler { false }

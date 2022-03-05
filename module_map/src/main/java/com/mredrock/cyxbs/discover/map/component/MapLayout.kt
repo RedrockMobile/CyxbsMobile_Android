@@ -16,7 +16,6 @@ import android.widget.Toast
 import com.bumptech.glide.load.model.GlideUrl
 import com.davemorrissey.labs.subscaleview.ImageSource
 import com.davemorrissey.labs.subscaleview.SubsamplingScaleImageView
-import com.mredrock.cyxbs.common.BaseApp
 import com.mredrock.cyxbs.common.utils.extensions.dp2px
 import com.mredrock.cyxbs.common.utils.extensions.gone
 import com.mredrock.cyxbs.common.utils.extensions.visible
@@ -126,7 +125,7 @@ class MapLayout : FrameLayout, View.OnClickListener {
             override fun onUrlGet() {
                 when (url) {
                     "loadFail" -> {
-                        MapToast.makeText(context, BaseApp.context.getString(R.string.map_use_local_map_data), Toast.LENGTH_SHORT).show()
+                        MapToast.makeText(context, context.getString(R.string.map_use_local_map_data), Toast.LENGTH_SHORT).show()
                         val path = DataSet.getPath()
                         try {
                             if (path != null && File(path).exists()) {
@@ -247,7 +246,7 @@ class MapLayout : FrameLayout, View.OnClickListener {
         subsamplingScaleImageView.setOnClickListener {
             var count = 0
             if (isLock) {
-                MapToast.makeText(context, BaseApp.context.getString(R.string.map_please_unlock), Toast.LENGTH_SHORT).show()
+                MapToast.makeText(context, context.getString(R.string.map_please_unlock), Toast.LENGTH_SHORT).show()
                 return@setOnClickListener
             }
             iconList.forEach { icon ->

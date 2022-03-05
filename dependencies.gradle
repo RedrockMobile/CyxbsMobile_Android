@@ -1,0 +1,105 @@
+dependencies {
+    // 单元测试，但目前掌邮没有单元测试
+    testImplementation 'junit:junit:4.13.2'
+    androidTestImplementation 'androidx.test.ext:junit:1.1.3'
+    androidTestImplementation 'androidx.test.espresso:espresso-core:3.4.0'
+
+    implementation fileTree(include: ['*.jar'], dir: 'libs')
+    if (project.name != "lib_common")
+        implementation project(':lib_common')
+
+    /*
+    * 注意事项：
+    * 1、这里是给全部 module_ 开头的添加的依赖
+    * 2、不要随意添加第三方库进来
+    * 3、如果要添加什么新的官方库，添加方式必须以官方为准，且给出官方地址，不要随意看到谁写的博文就随意添加
+    * 4、尽量不要导入 alpha 版本，因为这些版本很容易就直接删方法
+    * */
+
+
+    // 官方控件库
+    implementation 'androidx.constraintlayout:constraintlayout:2.1.2'
+    implementation 'androidx.recyclerview:recyclerview:1.2.1'
+    implementation 'androidx.cardview:cardview:1.0.0'
+    implementation 'androidx.viewpager2:viewpager2:1.0.0'
+    implementation 'com.google.android.material:material:1.4.0'
+
+    // 官方 KTX 扩展库
+    // 概览里面给出的KTX，https://developer.android.google.cn/kotlin/ktx?hl=zh_cn
+    implementation "androidx.core:core-ktx:1.7.0"
+    implementation "androidx.collection:collection-ktx:1.2.0"
+    implementation "androidx.fragment:fragment-ktx:1.4.1"
+    implementation "androidx.navigation:navigation-runtime-ktx:2.4.1"
+    implementation "androidx.navigation:navigation-fragment-ktx:2.4.1"
+    implementation "androidx.navigation:navigation-ui-ktx:2.4.1"
+    implementation "androidx.room:room-ktx:2.4.2"
+    implementation "androidx.work:work-runtime-ktx:2.7.1"
+    // 其他KTX，https://developer.android.google.cn/kotlin/ktx/extensions-list?hl=zh_cn
+    implementation "androidx.activity:activity-ktx:1.4.0"
+
+    // Lifecycle https://developer.android.google.cn/jetpack/androidx/releases/lifecycle
+    def lifecycle_version = "2.4.1"
+    implementation "androidx.lifecycle:lifecycle-viewmodel-ktx:$lifecycle_version"
+    implementation "androidx.lifecycle:lifecycle-viewmodel-compose:$lifecycle_version"
+    implementation "androidx.lifecycle:lifecycle-livedata-ktx:$lifecycle_version"
+    implementation "androidx.lifecycle:lifecycle-runtime-ktx:$lifecycle_version"
+    implementation "androidx.lifecycle:lifecycle-viewmodel-savedstate:$lifecycle_version"
+    implementation "androidx.lifecycle:lifecycle-common-java8:$lifecycle_version"
+    implementation "androidx.lifecycle:lifecycle-service:$lifecycle_version"
+    implementation "androidx.lifecycle:lifecycle-process:$lifecycle_version"
+    implementation "androidx.lifecycle:lifecycle-reactivestreams-ktx:$lifecycle_version"
+
+    // Eventbus https://github.com/greenrobot/EventBus
+    implementation "org.greenrobot:eventbus:3.3.1"
+
+    // Glide https://github.com/bumptech/glide
+    implementation 'com.github.bumptech.glide:glide:4.13.0'
+    kapt 'com.github.bumptech.glide:compiler:4.13.0'
+
+    // Retrofit https://github.com/square/retrofit
+    def retrofit_version = "2.9.0"
+    implementation "com.squareup.retrofit2:retrofit:$retrofit_version"
+    implementation "com.squareup.retrofit2:converter-gson:$retrofit_version"
+    // 官方文档在这里面 https://github.com/square/retrofit/tree/master/retrofit-adapters
+    implementation "com.squareup.retrofit2:adapter-rxjava3:$retrofit_version"
+
+    // OkHttp https://github.com/square/okhttp
+    def okhttp_version = "4.9.3"
+    implementation "com.squareup.okhttp3:okhttp:$okhttp_version"
+    implementation "com.squareup.okhttp3:logging-interceptor:$okhttp_version"
+
+    // Rxjava3 https://github.com/ReactiveX/RxJava
+    implementation "io.reactivex.rxjava3:rxjava:3.1.3"
+    implementation "io.reactivex.rxjava3:rxandroid:3.0.0"
+    implementation "io.reactivex.rxjava3:rxkotlin:3.0.1"
+
+    // Gson https://github.com/google/gson
+    implementation 'com.google.code.gson:gson:2.9.0'
+
+    // Room https://developer.android.google.cn/jetpack/androidx/releases/room?hl=zh_cn
+    def room_version = "2.4.1"
+    implementation "androidx.room:room-runtime:$room_version"
+    kapt "androidx.room:room-compiler:$room_version"
+    implementation "androidx.room:room-rxjava3:$room_version"
+    implementation "androidx.room:room-paging:$room_version"
+
+    // Paging https://developer.android.google.cn/jetpack/androidx/releases/paging?hl=zh_cn
+    def paging_version = "3.1.0"
+    implementation "androidx.paging:paging-runtime:$paging_version"
+    implementation "androidx.paging:paging-rxjava3:$paging_version"
+
+    // RxPermissions https://github.com/tbruyelle/RxPermissions
+    implementation 'com.github.tbruyelle:rxpermissions:0.12'
+
+    // lottie https://lottiefiles.com/blog/working-with-lottie/getting-started-with-lottie-animations-in-android-app
+    implementation "com.airbnb.android:lottie:4.1.0"
+
+    // PhotoView https://github.com/Baseflow/PhotoView
+    implementation 'com.github.chrisbanes:PhotoView:2.3.0'
+
+    // MaterialDialog https://github.com/afollestad/material-dialogs
+    implementation 'com.afollestad.material-dialogs:core:3.3.0'
+
+    // 协程 https://developer.android.com/kotlin/coroutines
+    implementation 'org.jetbrains.kotlinx:kotlinx-coroutines-android:1.6.0-native-mt'
+}

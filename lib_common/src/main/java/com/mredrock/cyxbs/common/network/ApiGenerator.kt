@@ -6,7 +6,6 @@ import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
 import com.mredrock.cyxbs.api.account.IAccountService
 import com.mredrock.cyxbs.api.account.IUserStateService
-import com.mredrock.cyxbs.common.BaseApp
 import com.mredrock.cyxbs.common.BuildConfig
 import com.mredrock.cyxbs.common.bean.BackupUrlStatus
 import com.mredrock.cyxbs.common.bean.RedrockApiWrapper
@@ -17,16 +16,17 @@ import com.mredrock.cyxbs.common.config.getBaseUrl
 import com.mredrock.cyxbs.common.service.ServiceManager
 import com.mredrock.cyxbs.common.utils.LogUtils
 import com.mredrock.cyxbs.common.utils.extensions.takeIfNoException
-import com.mredrock.cyxbs.common.utils.extensions.toast
 import okhttp3.*
 import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit
-import retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory
 import retrofit2.converter.gson.GsonConverterFactory
 import java.util.concurrent.TimeUnit
 import android.os.Looper
 import android.util.Log
+import com.mredrock.cyxbs.common.BaseApp
 import com.mredrock.cyxbs.common.utils.LogLocal
+import com.mredrock.cyxbs.common.utils.extensions.toast
+import retrofit2.adapter.rxjava3.RxJava3CallAdapterFactory
 
 
 /**
@@ -168,7 +168,7 @@ object ApiGenerator {
                         if (!response.isSuccessful){
                             response.close()
                             Handler(Looper.getMainLooper()).post {
-                                BaseApp.context.toast("${response.code} ${request.url} ")
+                                BaseApp.appContext.toast("${response.code} ${request.url} ")
                             }
                         }
                         response
@@ -176,7 +176,7 @@ object ApiGenerator {
                 }
         }))
                 .addConverterFactory(GsonConverterFactory.create())
-                .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
+                .addCallAdapterFactory(RxJava3CallAdapterFactory.create())
     }
 
     //默认配置
