@@ -4,6 +4,7 @@ import com.alibaba.android.arouter.facade.enums.RouteType;
 import com.alibaba.android.arouter.facade.model.RouteMeta;
 import com.alibaba.android.arouter.facade.template.IRouteGroup;
 import com.cyxbsmobile_single.module_todo.service.TodoService;
+import com.cyxbsmobile_single.module_todo.ui.activity.TodoDetailActivity;
 import com.cyxbsmobile_single.module_todo.ui.activity.TodoInnerMainActivity;
 import com.cyxbsmobile_single.module_todo.ui.fragment.TodoFeedFragment;
 import java.lang.Override;
@@ -18,5 +19,6 @@ public class ARouter$$Group$$todo implements IRouteGroup {
     atlas.put("/todo/discover/entry", RouteMeta.build(RouteType.ACTIVITY, TodoInnerMainActivity.class, "/todo/discover/entry", "todo", null, -1, -2147483648));
     atlas.put("/todo/discover/feed", RouteMeta.build(RouteType.FRAGMENT, TodoFeedFragment.class, "/todo/discover/feed", "todo", null, -1, -2147483648));
     atlas.put("/todo/service", RouteMeta.build(RouteType.PROVIDER, TodoService.class, "/todo/service", "todo", null, -1, -2147483648));
+    atlas.put("/todo/todo_detail/entry", RouteMeta.build(RouteType.ACTIVITY, TodoDetailActivity.class, "/todo/todo_detail/entry", "todo", null, -1, -2147483648));
   }
 }

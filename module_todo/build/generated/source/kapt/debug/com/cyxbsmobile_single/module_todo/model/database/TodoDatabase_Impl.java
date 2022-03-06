@@ -30,9 +30,9 @@ public final class TodoDatabase_Impl extends TodoDatabase {
     final SupportSQLiteOpenHelper.Callback _openCallback = new RoomOpenHelper(configuration, new RoomOpenHelper.Delegate(8) {
       @Override
       public void createAllTables(SupportSQLiteDatabase _db) {
-        _db.execSQL("CREATE TABLE IF NOT EXISTS `todo_list` (`todoId` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `title` TEXT NOT NULL, `detail` TEXT NOT NULL, `isChecked` INTEGER NOT NULL, `remindMode` TEXT NOT NULL, `lastModifyTime` INTEGER NOT NULL)");
+        _db.execSQL("CREATE TABLE IF NOT EXISTS `todo_list` (`todoId` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `title` TEXT NOT NULL, `detail` TEXT NOT NULL, `isChecked` INTEGER NOT NULL, `remindMode` TEXT NOT NULL, `lastModifyTime` INTEGER NOT NULL, `repeatStatus` INTEGER NOT NULL)");
         _db.execSQL("CREATE TABLE IF NOT EXISTS room_master_table (id INTEGER PRIMARY KEY,identity_hash TEXT)");
-        _db.execSQL("INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, '90b94b42950a052c05f1e2e78f565511')");
+        _db.execSQL("INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, '7bc1bcf956f747e614671d105e44fec7')");
       }
 
       @Override
@@ -76,13 +76,14 @@ public final class TodoDatabase_Impl extends TodoDatabase {
 
       @Override
       protected RoomOpenHelper.ValidationResult onValidateSchema(SupportSQLiteDatabase _db) {
-        final HashMap<String, TableInfo.Column> _columnsTodoList = new HashMap<String, TableInfo.Column>(6);
+        final HashMap<String, TableInfo.Column> _columnsTodoList = new HashMap<String, TableInfo.Column>(7);
         _columnsTodoList.put("todoId", new TableInfo.Column("todoId", "INTEGER", true, 1, null, TableInfo.CREATED_FROM_ENTITY));
         _columnsTodoList.put("title", new TableInfo.Column("title", "TEXT", true, 0, null, TableInfo.CREATED_FROM_ENTITY));
         _columnsTodoList.put("detail", new TableInfo.Column("detail", "TEXT", true, 0, null, TableInfo.CREATED_FROM_ENTITY));
         _columnsTodoList.put("isChecked", new TableInfo.Column("isChecked", "INTEGER", true, 0, null, TableInfo.CREATED_FROM_ENTITY));
         _columnsTodoList.put("remindMode", new TableInfo.Column("remindMode", "TEXT", true, 0, null, TableInfo.CREATED_FROM_ENTITY));
         _columnsTodoList.put("lastModifyTime", new TableInfo.Column("lastModifyTime", "INTEGER", true, 0, null, TableInfo.CREATED_FROM_ENTITY));
+        _columnsTodoList.put("repeatStatus", new TableInfo.Column("repeatStatus", "INTEGER", true, 0, null, TableInfo.CREATED_FROM_ENTITY));
         final HashSet<TableInfo.ForeignKey> _foreignKeysTodoList = new HashSet<TableInfo.ForeignKey>(0);
         final HashSet<TableInfo.Index> _indicesTodoList = new HashSet<TableInfo.Index>(0);
         final TableInfo _infoTodoList = new TableInfo("todo_list", _columnsTodoList, _foreignKeysTodoList, _indicesTodoList);
@@ -94,7 +95,7 @@ public final class TodoDatabase_Impl extends TodoDatabase {
         }
         return new RoomOpenHelper.ValidationResult(true, null);
       }
-    }, "90b94b42950a052c05f1e2e78f565511", "6c80d66fd22df090b29c8ba7c89c0fc9");
+    }, "7bc1bcf956f747e614671d105e44fec7", "773a1d913241717acb1e090fabd5f597");
     final SupportSQLiteOpenHelper.Configuration _sqliteConfig = SupportSQLiteOpenHelper.Configuration.builder(configuration.context)
         .name(configuration.name)
         .callback(_openCallback)

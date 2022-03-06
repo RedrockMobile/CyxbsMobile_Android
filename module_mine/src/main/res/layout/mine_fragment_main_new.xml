@@ -122,9 +122,10 @@
                 android:layout_marginBottom="22dp"
                 android:text="动态"
                 android:textColor="@color/mine_text_count_bottom"
-                android:textSize="14sp"
+                android:textSize="14dp"
                 app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintStart_toStartOf="parent" />
+                app:layout_constraintStart_toStartOf="parent"
+                tools:ignore="SpUsage" />
 
             <TextView
                 android:id="@+id/mine_user_tv_comment"
@@ -134,9 +135,10 @@
                 android:layout_marginBottom="22dp"
                 android:text="评论"
                 android:textColor="@color/mine_text_count_bottom"
-                android:textSize="14sp"
+                android:textSize="14dp"
                 app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintStart_toEndOf="@+id/mine_user_tv_dynamic" />
+                app:layout_constraintStart_toEndOf="@+id/mine_user_tv_dynamic"
+                tools:ignore="SpUsage" />
 
             <TextView
                 android:id="@+id/mine_user_tv_praise"
@@ -146,9 +148,10 @@
                 android:layout_marginBottom="22dp"
                 android:text="获赞"
                 android:textColor="@color/mine_text_count_bottom"
-                android:textSize="14sp"
+                android:textSize="14dp"
                 app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintStart_toEndOf="@+id/mine_user_tv_comment" />
+                app:layout_constraintStart_toEndOf="@+id/mine_user_tv_comment"
+                tools:ignore="SpUsage" />
 
             <TextView
                 android:id="@+id/mine_user_tv_unchecked_comment"

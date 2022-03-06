@@ -105,6 +105,7 @@ class UserViewModel : BaseViewModel() {
     fun getUserUncheckedCommentCount() {
         val sp = BaseApp.context.defaultSharedPreferences
         val lastCheckTimeStamp = sp.getLong(UNCHECK_COMMENT_KEY, 0L)
+        if (lastCheckTimeStamp == 0L) return
         apiService.getUncheckedCommentCount(lastCheckTimeStamp)
             .setSchedulers()
             .doOnErrorWithDefaultErrorHandler { true }

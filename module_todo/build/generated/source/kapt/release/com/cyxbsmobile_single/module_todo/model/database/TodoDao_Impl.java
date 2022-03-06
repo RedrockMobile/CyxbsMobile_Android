@@ -43,7 +43,7 @@ public final class TodoDao_Impl implements TodoDao {
     this.__insertionAdapterOfTodo = new EntityInsertionAdapter<Todo>(__db) {
       @Override
       public String createQuery() {
-        return "INSERT OR REPLACE INTO `todo_list` (`todoId`,`title`,`detail`,`isChecked`,`remindMode`,`lastModifyTime`) VALUES (nullif(?, 0),?,?,?,?,?)";
+        return "INSERT OR REPLACE INTO `todo_list` (`todoId`,`title`,`detail`,`isChecked`,`remindMode`,`lastModifyTime`,`repeatStatus`) VALUES (nullif(?, 0),?,?,?,?,?,?)";
       }
 
       @Override
@@ -68,12 +68,13 @@ public final class TodoDao_Impl implements TodoDao {
           stmt.bindString(5, _tmp);
         }
         stmt.bindLong(6, value.getLastModifyTime());
+        stmt.bindLong(7, value.getRepeatStatus());
       }
     };
     this.__updateAdapterOfTodo = new EntityDeletionOrUpdateAdapter<Todo>(__db) {
       @Override
       public String createQuery() {
-        return "UPDATE OR ABORT `todo_list` SET `todoId` = ?,`title` = ?,`detail` = ?,`isChecked` = ?,`remindMode` = ?,`lastModifyTime` = ? WHERE `todoId` = ?";
+        return "UPDATE OR ABORT `todo_list` SET `todoId` = ?,`title` = ?,`detail` = ?,`isChecked` = ?,`remindMode` = ?,`lastModifyTime` = ?,`repeatStatus` = ? WHERE `todoId` = ?";
       }
 
       @Override
@@ -98,7 +99,8 @@ public final class TodoDao_Impl implements TodoDao {
           stmt.bindString(5, _tmp);
         }
         stmt.bindLong(6, value.getLastModifyTime());
-        stmt.bindLong(7, value.getTodoId());
+        stmt.bindLong(7, value.getRepeatStatus());
+        stmt.bindLong(8, value.getTodoId());
       }
     };
     this.__preparedStmtOfDeleteAllTodo = new SharedSQLiteStatement(__db) {
@@ -215,6 +217,7 @@ public final class TodoDao_Impl implements TodoDao {
           final int _cursorIndexOfIsChecked = CursorUtil.getColumnIndexOrThrow(_cursor, "isChecked");
           final int _cursorIndexOfRemindMode = CursorUtil.getColumnIndexOrThrow(_cursor, "remindMode");
           final int _cursorIndexOfLastModifyTime = CursorUtil.getColumnIndexOrThrow(_cursor, "lastModifyTime");
+          final int _cursorIndexOfRepeatStatus = CursorUtil.getColumnIndexOrThrow(_cursor, "repeatStatus");
           final List<Todo> _result = new ArrayList<Todo>(_cursor.getCount());
           while(_cursor.moveToNext()) {
             final Todo _item;
@@ -232,7 +235,9 @@ public final class TodoDao_Impl implements TodoDao {
             _tmpRemindMode = __convert.string2RemindMode(_tmp);
             final long _tmpLastModifyTime;
             _tmpLastModifyTime = _cursor.getLong(_cursorIndexOfLastModifyTime);
-            _item = new Todo(_tmpTodoId,_tmpTitle,_tmpDetail,_tmpIsChecked,_tmpRemindMode,_tmpLastModifyTime);
+            final int _tmpRepeatStatus;
+            _tmpRepeatStatus = _cursor.getInt(_cursorIndexOfRepeatStatus);
+            _item = new Todo(_tmpTodoId,_tmpTitle,_tmpDetail,_tmpIsChecked,_tmpRemindMode,_tmpLastModifyTime,_tmpRepeatStatus);
             _result.add(_item);
           }
           return _result;
@@ -265,6 +270,7 @@ public final class TodoDao_Impl implements TodoDao {
           final int _cursorIndexOfIsChecked = CursorUtil.getColumnIndexOrThrow(_cursor, "isChecked");
           final int _cursorIndexOfRemindMode = CursorUtil.getColumnIndexOrThrow(_cursor, "remindMode");
           final int _cursorIndexOfLastModifyTime = CursorUtil.getColumnIndexOrThrow(_cursor, "lastModifyTime");
+          final int _cursorIndexOfRepeatStatus = CursorUtil.getColumnIndexOrThrow(_cursor, "repeatStatus");
           final Todo _result;
           if(_cursor.moveToFirst()) {
             final long _tmpTodoId;
@@ -281,7 +287,9 @@ public final class TodoDao_Impl implements TodoDao {
             _tmpRemindMode = __convert.string2RemindMode(_tmp);
             final long _tmpLastModifyTime;
             _tmpLastModifyTime = _cursor.getLong(_cursorIndexOfLastModifyTime);
-            _result = new Todo(_tmpTodoId,_tmpTitle,_tmpDetail,_tmpIsChecked,_tmpRemindMode,_tmpLastModifyTime);
+            final int _tmpRepeatStatus;
+            _tmpRepeatStatus = _cursor.getInt(_cursorIndexOfRepeatStatus);
+            _result = new Todo(_tmpTodoId,_tmpTitle,_tmpDetail,_tmpIsChecked,_tmpRemindMode,_tmpLastModifyTime,_tmpRepeatStatus);
           } else {
             _result = null;
           }
@@ -315,6 +323,7 @@ public final class TodoDao_Impl implements TodoDao {
           final int _cursorIndexOfIsChecked = CursorUtil.getColumnIndexOrThrow(_cursor, "isChecked");
           final int _cursorIndexOfRemindMode = CursorUtil.getColumnIndexOrThrow(_cursor, "remindMode");
           final int _cursorIndexOfLastModifyTime = CursorUtil.getColumnIndexOrThrow(_cursor, "lastModifyTime");
+          final int _cursorIndexOfRepeatStatus = CursorUtil.getColumnIndexOrThrow(_cursor, "repeatStatus");
           final List<Todo> _result = new ArrayList<Todo>(_cursor.getCount());
           while(_cursor.moveToNext()) {
             final Todo _item;
@@ -332,7 +341,9 @@ public final class TodoDao_Impl implements TodoDao {
             _tmpRemindMode = __convert.string2RemindMode(_tmp);
             final long _tmpLastModifyTime;
             _tmpLastModifyTime = _cursor.getLong(_cursorIndexOfLastModifyTime);
-            _item = new Todo(_tmpTodoId,_tmpTitle,_tmpDetail,_tmpIsChecked,_tmpRemindMode,_tmpLastModifyTime);
+            final int _tmpRepeatStatus;
+            _tmpRepeatStatus = _cursor.getInt(_cursorIndexOfRepeatStatus);
+            _item = new Todo(_tmpTodoId,_tmpTitle,_tmpDetail,_tmpIsChecked,_tmpRemindMode,_tmpLastModifyTime,_tmpRepeatStatus);
             _result.add(_item);
           }
           return _result;
@@ -378,6 +389,7 @@ public final class TodoDao_Impl implements TodoDao {
     final int _cursorIndexOfIsChecked = cursor.getColumnIndex("isChecked");
     final int _cursorIndexOfRemindMode = cursor.getColumnIndex("remindMode");
     final int _cursorIndexOfLastModifyTime = cursor.getColumnIndex("lastModifyTime");
+    final int _cursorIndexOfRepeatStatus = cursor.getColumnIndex("repeatStatus");
     final long _tmpTodoId;
     if (_cursorIndexOfTodoId == -1) {
       _tmpTodoId = 0;
@@ -416,7 +428,13 @@ public final class TodoDao_Impl implements TodoDao {
     } else {
       _tmpLastModifyTime = cursor.getLong(_cursorIndexOfLastModifyTime);
     }
-    _entity = new Todo(_tmpTodoId,_tmpTitle,_tmpDetail,_tmpIsChecked,_tmpRemindMode,_tmpLastModifyTime);
+    final int _tmpRepeatStatus;
+    if (_cursorIndexOfRepeatStatus == -1) {
+      _tmpRepeatStatus = 0;
+    } else {
+      _tmpRepeatStatus = cursor.getInt(_cursorIndexOfRepeatStatus);
+    }
+    _entity = new Todo(_tmpTodoId,_tmpTitle,_tmpDetail,_tmpIsChecked,_tmpRemindMode,_tmpLastModifyTime,_tmpRepeatStatus);
     return _entity;
   }
 }

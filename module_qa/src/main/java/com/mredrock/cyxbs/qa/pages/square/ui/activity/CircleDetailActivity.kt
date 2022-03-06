@@ -5,6 +5,7 @@ import android.app.Activity
 import android.content.Intent
 import android.os.Bundle
 import android.transition.Slide
+import android.util.Log
 import android.view.Gravity
 import android.view.View
 import android.widget.Toast
@@ -52,13 +53,14 @@ class CircleDetailActivity : BaseViewModelActivity<CircleDetailViewModel>() {
         fun activityStartFromSquare(activity: BaseActivity, data: Topic) {
             activity.let {
                 val intent = Intent(context, CircleDetailActivity::class.java)
+                intent.putExtra("topicItem", data)
                 it.window.exitTransition = Slide(Gravity.START).apply { duration = 500 }
                 startPosition = RESULT_CODE
                 startActivityForResult(activity, intent, RESULT_CODE,null)
             }
         }
 
-        fun activityStartFromCircle(fragment: Fragment, topicItemView: View, data: Topic) {
+        fun activityStartFromCircle(fragment: Fragment, data: Topic) {
             fragment.apply {
                 activity?.let {
                     val intent = Intent(BaseApp.context, CircleDetailActivity::class.java)

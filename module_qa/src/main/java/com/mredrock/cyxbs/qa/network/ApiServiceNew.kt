@@ -118,7 +118,6 @@ interface ApiServiceNew {
 
     //删除某个动态的评论
     @DELETE("/magipoke-loop/comment")
-    @FormUrlEncoded
     fun deleteComment(@Field("id") id: String): Observable<RedrockApiStatus>
 
     //举报评论
@@ -144,7 +143,8 @@ interface ApiServiceNew {
     fun getFollowedTopic(): Observable<RedrockApiWrapper<List<Topic>>>
 
     //关注/取关一个圈子广场
-    @POST("/magipoke-loop/ground/follow")
+    // todo 使用的老接口，因为新接口改成了传入 topic_id，但在有些地方只能得到 topic_name，之后让后端改吧
+    @POST("/magipoke-loop/ground/followTopicGround")
     @FormUrlEncoded
     fun followTopicGround(@Field("topic_name") topicName: String): Observable<RedrockApiStatus>
 
@@ -223,17 +223,16 @@ interface ApiServiceNew {
 
     // 取消屏蔽用户
     @DELETE("/magipoke-loop/ignore")
-    @FormUrlEncoded
     fun cancelIgnoreUid(
         @Field("uid")
         uid: String
     ): Observable<RedrockApiStatus>
 
     // 获取全部被屏蔽的用户
-    @GET("/magipoke-loop/user/ignore")
+    @GET("/magipoke-loop/ignore")
     fun getIgnoreUid(
-        @Field("page") page: Int,
-        @Field("size") size: Int
+        @Query("page") page: Int,
+        @Query("size") size: Int
     ): Observable<RedrockApiWrapper<List<Ignore>>>
 
     // 获取用户收到的评论回复

@@ -1552,6 +1552,7 @@ int color switch_thumb_normal_material_dark 0x0
 int color switch_thumb_normal_material_light 0x0
 int color test_mtrl_calendar_day 0x0
 int color test_mtrl_calendar_day_selected 0x0
+int color todo_add_dialog_del_color 0x0
 int color todo_add_time_back_ic_color 0x0
 int color todo_add_todo_back_color 0x0
 int color todo_add_todo_choose_year_text_chosen_color 0x0
@@ -1583,6 +1584,10 @@ int color todo_item_del_red 0x0
 int color todo_item_del_red_46_alpha 0x0
 int color todo_item_inner_nf_time_color 0x0
 int color todo_item_nf_time_color 0x0
+int color todo_on_conflict_button_color 0x0
+int color todo_widget_back_color 0x0
+int color todo_widget_check_cycle 0x0
+int color todo_widget_nf_time_color 0x0
 int color tooltip_background_dark 0x0
 int color tooltip_background_light 0x0
 int color ucrop_color_active_aspect_ratio 0x0
@@ -2286,6 +2291,7 @@ int drawable todo_ic_del 0x0
 int drawable todo_ic_detail_back 0x0
 int drawable todo_ic_detail_check 0x0
 int drawable todo_ic_detail_check_eclipse 0x0
+int drawable todo_ic_detail_check_eclipse_out_date 0x0
 int drawable todo_ic_empty1 0x0
 int drawable todo_ic_empty2 0x0
 int drawable todo_ic_hide_list 0x0
@@ -2302,6 +2308,7 @@ int drawable todo_shape_inner_add_thing_ev 0x0
 int drawable todo_shape_inner_add_thing_repeat_select_time_background 0x0
 int drawable todo_shape_inner_add_thing_repeat_time_cancle_button 0x0
 int drawable todo_shape_inner_add_thing_shape_confirm_button 0x0
+int drawable todo_shape_on_conflict 0x0
 int drawable todo_shape_widget_back_ground 0x0
 int drawable tooltip_frame_dark 0x0
 int drawable tooltip_frame_light 0x0
@@ -2772,6 +2779,8 @@ int id time 0x0
 int id title 0x0
 int id titleDividerNoCustom 0x0
 int id title_template 0x0
+int id todo_btn_fragment_conflict_local 0x0
+int id todo_btn_fragment_conflict_remote 0x0
 int id todo_cl_item_main 0x0
 int id todo_et_todo_title 0x0
 int id todo_fl_del 0x0
@@ -2817,6 +2826,7 @@ int id todo_tv_add_thing_cancel 0x0
 int id todo_tv_add_thing_save 0x0
 int id todo_tv_del_notify_time 0x0
 int id todo_tv_feed_empty_notify 0x0
+int id todo_tv_fragment_conflict_show 0x0
 int id todo_tv_inner_detail_del_todo 0x0
 int id todo_tv_inner_detail_time 0x0
 int id todo_tv_item_title 0x0
@@ -3087,6 +3097,7 @@ int layout todo_activity_widget_add_todo 0x0
 int layout todo_dialog_add_todo 0x0
 int layout todo_dialog_bottom_sheet_container 0x0
 int layout todo_fragment_feed 0x0
+int layout todo_fragment_on_confilt 0x0
 int layout todo_rv_item_choose_year 0x0
 int layout todo_rv_item_empty 0x0
 int layout todo_rv_item_repeat_time_item 0x0
@@ -3244,9 +3255,12 @@ int string todo_inner_add_thing_et_hint 0x0
 int string todo_inner_add_thing_nf_text 0x0
 int string todo_inner_add_thing_repeat_time_text 0x0
 int string todo_inner_detail_remark_hint_text 0x0
+int string todo_string_cant_modify 0x0
 int string todo_string_checked 0x0
+int string todo_string_cloud_file 0x0
 int string todo_string_empty_todo_notify 0x0
 int string todo_string_empty_uncheck_notify 0x0
+int string todo_string_local_file 0x0
 int string todo_string_uncheck 0x0
 int string ucrop_crop 0x0
 int string ucrop_error_input_data_is_absent 0x0

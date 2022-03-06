@@ -1553,6 +1553,7 @@ color switch_thumb_normal_material_dark
 color switch_thumb_normal_material_light
 color test_mtrl_calendar_day
 color test_mtrl_calendar_day_selected
+color todo_add_dialog_del_color
 color todo_add_time_back_ic_color
 color todo_add_todo_back_color
 color todo_add_todo_choose_year_text_chosen_color
@@ -1584,6 +1585,10 @@ color todo_item_del_red
 color todo_item_del_red_46_alpha
 color todo_item_inner_nf_time_color
 color todo_item_nf_time_color
+color todo_on_conflict_button_color
+color todo_widget_back_color
+color todo_widget_check_cycle
+color todo_widget_nf_time_color
 color tooltip_background_dark
 color tooltip_background_light
 color ucrop_color_active_aspect_ratio
@@ -2287,6 +2292,7 @@ drawable todo_ic_del
 drawable todo_ic_detail_back
 drawable todo_ic_detail_check
 drawable todo_ic_detail_check_eclipse
+drawable todo_ic_detail_check_eclipse_out_date
 drawable todo_ic_empty1
 drawable todo_ic_empty2
 drawable todo_ic_hide_list
@@ -2303,6 +2309,7 @@ drawable todo_shape_inner_add_thing_ev
 drawable todo_shape_inner_add_thing_repeat_select_time_background
 drawable todo_shape_inner_add_thing_repeat_time_cancle_button
 drawable todo_shape_inner_add_thing_shape_confirm_button
+drawable todo_shape_on_conflict
 drawable todo_shape_widget_back_ground
 drawable tooltip_frame_dark
 drawable tooltip_frame_light
@@ -2773,6 +2780,8 @@ id time
 id title
 id titleDividerNoCustom
 id title_template
+id todo_btn_fragment_conflict_local
+id todo_btn_fragment_conflict_remote
 id todo_cl_item_main
 id todo_et_todo_title
 id todo_fl_del
@@ -2818,6 +2827,7 @@ id todo_tv_add_thing_cancel
 id todo_tv_add_thing_save
 id todo_tv_del_notify_time
 id todo_tv_feed_empty_notify
+id todo_tv_fragment_conflict_show
 id todo_tv_inner_detail_del_todo
 id todo_tv_inner_detail_time
 id todo_tv_item_title
@@ -3088,6 +3098,7 @@ layout todo_activity_widget_add_todo
 layout todo_dialog_add_todo
 layout todo_dialog_bottom_sheet_container
 layout todo_fragment_feed
+layout todo_fragment_on_confilt
 layout todo_rv_item_choose_year
 layout todo_rv_item_empty
 layout todo_rv_item_repeat_time_item
@@ -3245,9 +3256,12 @@ string todo_inner_add_thing_et_hint
 string todo_inner_add_thing_nf_text
 string todo_inner_add_thing_repeat_time_text
 string todo_inner_detail_remark_hint_text
+string todo_string_cant_modify
 string todo_string_checked
+string todo_string_cloud_file
 string todo_string_empty_todo_notify
 string todo_string_empty_uncheck_notify
+string todo_string_local_file
 string todo_string_uncheck
 string ucrop_crop
 string ucrop_error_input_data_is_absent

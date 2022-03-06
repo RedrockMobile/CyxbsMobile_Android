@@ -106,7 +106,7 @@ dependencies {
     //bugly
     api deps.bugly.crashreport
     api deps.bugly.nativecrashreport
-    api deps.bugly.crashreport_upgrade
+//    api deps.bugly.crashreport_upgrade
 
     // walle
     api deps.walle.runtime

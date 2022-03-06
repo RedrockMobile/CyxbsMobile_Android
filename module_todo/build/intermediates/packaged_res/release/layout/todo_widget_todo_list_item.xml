@@ -35,7 +35,7 @@
         android:layout_height="18dp"
         android:textSize="13sp"
         android:layout_marginStart="26dp"
-        android:textColor="#5015315b"
+        android:textColor="@color/todo_widget_nf_time_color"
         tools:text="8月2日 12:00"/>
 
 </LinearLayout>

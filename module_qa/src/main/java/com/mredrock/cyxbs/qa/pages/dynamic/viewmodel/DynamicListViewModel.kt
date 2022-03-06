@@ -3,6 +3,7 @@ package com.mredrock.cyxbs.qa.pages.dynamic.viewmodel
 import androidx.lifecycle.*
 import androidx.paging.LivePagedListBuilder
 import androidx.paging.PagedList
+import com.mredrock.cyxbs.common.bean.isSuccessful
 import com.mredrock.cyxbs.common.network.ApiGenerator
 import com.mredrock.cyxbs.common.utils.extensions.mapOrThrowApiException
 import com.mredrock.cyxbs.common.utils.extensions.safeSubscribeBy
@@ -114,8 +115,15 @@ open class DynamicListViewModel : BaseViewModel() {
         ApiGenerator.getApiService(ApiServiceNew::class.java)
             .followTopicGround(topicName)
             .setSchedulers()
+            .doOnError {
+                if (followState) {
+                    toast("取消关注失败")
+                } else {
+                    toast("关注失败")
+                }
+            }
             .safeSubscribeBy {
-                if (it.status == 200) {
+                if (it.isSuccessful) {
                     if (followState) {
                         //如果处于关注状态,点击之后是取消关注
                         toastEvent.value = R.string.qa_unfollow_circle
@@ -124,7 +132,11 @@ open class DynamicListViewModel : BaseViewModel() {
                         toastEvent.value = R.string.qa_follow_circle
                     }
                 } else {
-                    toastEvent.value = R.string.qa_follow_circle
+                    if (followState) {
+                        toast("取消关注失败")
+                    } else {
+                        toast("关注失败")
+                    }
                 }
                 //刷新数据
                 getMyCirCleData()
