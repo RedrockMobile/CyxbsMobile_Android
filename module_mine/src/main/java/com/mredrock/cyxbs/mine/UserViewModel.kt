@@ -89,6 +89,7 @@ class UserViewModel : BaseViewModel() {
     fun getUserUncheckedPraiseCount() {
         val sp = BaseApp.context.defaultSharedPreferences
         val lastCheckTimeStamp = sp.getLong(UNCHECK_PRAISE_KEY, 0L)
+        if (lastCheckTimeStamp == 0L) return
         apiService.getUncheckedPraiseCount(lastCheckTimeStamp)
             .setSchedulers()
             .doOnErrorWithDefaultErrorHandler { true }
