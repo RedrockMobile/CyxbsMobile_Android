@@ -35,10 +35,6 @@ class MyDynamicFragment : BaseViewModelFragment<MyDynamicViewModel>(), MineAndQa
     private var redid: String? = null
     private var isCreated = false
 
-    init {
-        MineAndQa.refreshListener = this
-    }
-
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -52,6 +48,16 @@ class MyDynamicFragment : BaseViewModelFragment<MyDynamicViewModel>(), MineAndQa
         isCreated = true
         viewModel.getDynamicData(redid)
         initDynamics()
+    }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        MineAndQa.refreshListener = this
+    }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        MineAndQa.refreshListener = null
     }
 
     fun initDynamics() {
