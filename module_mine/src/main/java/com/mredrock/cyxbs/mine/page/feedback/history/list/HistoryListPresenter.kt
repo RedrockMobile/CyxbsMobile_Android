@@ -1,6 +1,6 @@
 package com.mredrock.cyxbs.mine.page.feedback.history.list
 
-import android.util.Log
+import android.widget.Toast
 import com.mredrock.cyxbs.common.BaseApp
 import com.mredrock.cyxbs.common.utils.extensions.safeSubscribeBy
 import com.mredrock.cyxbs.common.utils.extensions.setSchedulers
@@ -8,6 +8,7 @@ import com.mredrock.cyxbs.common.utils.extensions.toast
 import com.mredrock.cyxbs.mine.page.feedback.api
 import com.mredrock.cyxbs.mine.page.feedback.base.presenter.BasePresenter
 import com.mredrock.cyxbs.mine.page.feedback.history.list.bean.History
+import com.mredrock.cyxbs.mine.page.feedback.network.bean.HistoryFeedback
 import com.mredrock.cyxbs.mine.page.feedback.utils.DateUtils
 import com.mredrock.cyxbs.mine.page.feedback.utils.change
 import com.mredrock.cyxbs.mine.page.feedback.utils.getPointStateSharedPreference
@@ -20,24 +21,29 @@ import com.mredrock.cyxbs.mine.page.feedback.utils.getPointStateSharedPreference
 class HistoryListPresenter : BasePresenter<HistoryListViewModel>() {
     override fun fetch() {
 
-        api.getHistoryFeedback("1")
+        val list = api.getHistoryFeedback("1")
             .setSchedulers()
             .map {
-                it.data.feedbacks
-            }.map { it ->
+                it.data?.feedbacks ?: listOf()
+            }
+            .map { it ->
                 it.map {
                     val timePill = DateUtils.strToLong(it.createdAt)
-                    it.updatedAt
-                    History(it.title,
+                    History(
+                        it.title,
                         timePill,
                         it.replied,
                         getState(it.replied, it.iD, it.updatedAt),
                         it.iD,
-                        it.updatedAt)
+                        it.updatedAt
+                    )
                 }
             }
+            .switchIfEmpty {
+                emptyList<HistoryFeedback.Data.Feedback>()
+            }
             .safeSubscribeBy(onError = {
-                                       BaseApp.context.toast("出问题啦~ ${it.message}")
+                BaseApp.context.toast("出问题啦~ ${it.message}")
             },
                 onComplete = {
                 }, onNext = {

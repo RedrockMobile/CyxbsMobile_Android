@@ -11,14 +11,14 @@ data class HistoryFeedback(
     @SerializedName("code")
     val code: Int,
     @SerializedName("data")
-    val `data`: Data,
+    val `data`: Data?,
     @SerializedName("info")
     val info: String
 )
 
 data class Data(
     @SerializedName("feedbacks")
-    val feedbacks: List<Feedback>,
+    val feedbacks: List<Feedback>?,
     @SerializedName("total")
     val total: Int
 )

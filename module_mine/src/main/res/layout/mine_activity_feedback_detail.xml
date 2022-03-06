@@ -39,7 +39,7 @@
 <!--            app:layout_constraintStart_toStartOf="parent"-->
 <!--            app:layout_constraintTop_toBottomOf="@+id/mine_relativelayout2" />-->
 
-        <WebView
+        <com.mredrock.cyxbs.common.webView.LiteJsWebView
             android:id="@+id/tv_detail_content"
             android:layout_width="0dp"
             android:layout_height="0dp"
