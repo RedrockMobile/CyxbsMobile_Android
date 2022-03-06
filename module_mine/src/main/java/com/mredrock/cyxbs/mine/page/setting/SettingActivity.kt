@@ -61,7 +61,6 @@ class SettingActivity : BaseActivity() {
         mine_setting_fm_security.setOnClickListener { doIfLogin { startActivity<SecurityActivity>() } }
         //屏蔽此人
         mine_setting_fm_shield_person.setOnClickListener { doIfLogin { ARouter.getInstance().build(QA_MY_IGNORE).navigation() } }
-        mine_setting_fm_test.setOnClickListener{startActivity<FeedbackCenterActivity>()}
         //退出登录
         mine_setting_btn_exit.setOnClickListener { doIfLogin { onExitClick() } }
     }
