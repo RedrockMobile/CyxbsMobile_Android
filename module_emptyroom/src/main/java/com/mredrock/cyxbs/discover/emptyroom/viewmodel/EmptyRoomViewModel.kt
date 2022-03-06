@@ -10,7 +10,7 @@ import com.mredrock.cyxbs.common.viewmodel.BaseViewModel
 import com.mredrock.cyxbs.discover.emptyroom.bean.EmptyRoom
 import com.mredrock.cyxbs.discover.emptyroom.network.ApiService
 import com.mredrock.cyxbs.discover.emptyroom.utils.EmptyConverter
-import io.reactivex.disposables.Disposable
+import io.reactivex.rxjava3.disposables.Disposable
 import java.util.concurrent.TimeUnit
 
 

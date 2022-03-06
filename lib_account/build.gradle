@@ -7,4 +7,5 @@ dependencies {
     implementation project(':lib_account:api_account')
     implementation project(":module_electricity:api_electricity")
     implementation project(":module_main:api_main")
+    implementation project(":module_volunteer:api_volunteer")
 }

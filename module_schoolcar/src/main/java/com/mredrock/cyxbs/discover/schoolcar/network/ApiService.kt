@@ -1,7 +1,7 @@
 package com.mredrock.cyxbs.discover.schoolcar.network
 
 import com.mredrock.cyxbs.discover.schoolcar.bean.SchoolCarLocation
-import io.reactivex.Observable
+import io.reactivex.rxjava3.core.Observable
 import retrofit2.http.Field
 import retrofit2.http.FormUrlEncoded
 import retrofit2.http.Header

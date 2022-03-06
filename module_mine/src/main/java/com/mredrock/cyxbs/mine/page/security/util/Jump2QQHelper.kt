@@ -41,7 +41,7 @@ class Jump2QQHelper {
             if (!joinQQGroup("DXvamN9Ox1Kthaab1N_0w7s5N3aUYVIf", context)) {
                 val clipboard = context.getSystemService(AppCompatActivity.CLIPBOARD_SERVICE) as ClipboardManager
                 val data = ClipData.newPlainText("QQ Group", "570919844")
-                clipboard.primaryClip = data
+                clipboard.setPrimaryClip(data)
                 CyxbsToast.makeText(context, "抱歉，由于您未安装手机QQ或版本不支持，无法跳转至掌邮bug反馈群。" + "已将群号复制至您的手机剪贴板，请您手动添加", Toast.LENGTH_SHORT).show()
             }
         }

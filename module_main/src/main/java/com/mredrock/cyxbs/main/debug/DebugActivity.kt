@@ -62,7 +62,7 @@ class DebugActivity : BaseActivity() {
         // 创建普通字符型ClipData
         val mClipData = ClipData.newPlainText("Label", deviceId.text)
         // 将ClipData内容放到系统剪贴板里。
-        cm?.primaryClip = mClipData
+        cm?.setPrimaryClip(mClipData)
         CyxbsToast.makeText(this, "复制成功", Toast.LENGTH_SHORT).show()
     }
 }

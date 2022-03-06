@@ -56,7 +56,7 @@ class RollerViewActivity : BaseActivity() {
         //如果是DEBUG就开启webview的debug
         if (BuildConfig.DEBUG) WebView.setWebContentsDebuggingEnabled(true)
 
-        val url = intent.getStringExtra("URL")
+        val url = intent.getStringExtra("URL")!!
 
         webApi = WebViewFactory(url,handler, {
             //这里是调用的Js的传进来的Js代码
@@ -81,7 +81,7 @@ class RollerViewActivity : BaseActivity() {
                 if (title != "") {
                     common_toolbar.init(title)
                 } else {
-                    common_toolbar.init(intent.getStringExtra("Key"))
+                    common_toolbar.init(intent.getStringExtra("Key")!!)
                 }
                 super.onReceivedTitle(view, title)
             }
@@ -120,7 +120,7 @@ class RollerViewActivity : BaseActivity() {
     private fun initBgm() {
         //使用Web端传入的js命令
         mWebView.post {
-            mWebView.evaluateJavascript(webApi?.onLoadStr) { }
+            mWebView.evaluateJavascript(webApi?.onLoadStr!!) { }
         }
     }
 

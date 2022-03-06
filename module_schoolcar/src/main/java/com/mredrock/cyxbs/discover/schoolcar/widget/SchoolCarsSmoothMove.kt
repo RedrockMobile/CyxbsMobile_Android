@@ -14,7 +14,7 @@ import com.mredrock.cyxbs.common.utils.extensions.setSchedulers
 import com.mredrock.cyxbs.discover.schoolcar.Interface.SchoolCarInterface
 import com.mredrock.cyxbs.discover.schoolcar.SchoolCarActivity
 import com.mredrock.cyxbs.discover.schoolcar.network.ApiService
-import io.reactivex.disposables.Disposable
+import io.reactivex.rxjava3.disposables.Disposable
 import kotlinx.android.synthetic.main.activity_schoolcar.*
 import okio.ByteString
 import java.io.UnsupportedEncodingException

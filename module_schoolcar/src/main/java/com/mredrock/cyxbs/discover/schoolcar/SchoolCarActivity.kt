@@ -32,10 +32,10 @@ import com.mredrock.cyxbs.discover.schoolcar.bean.SchoolCarLocation
 import com.mredrock.cyxbs.discover.schoolcar.widget.ExploreSchoolCarDialog
 import com.mredrock.cyxbs.discover.schoolcar.widget.SchoolCarsSmoothMove
 import com.mredrock.cyxbs.schoolcar.R
-import io.reactivex.Observable
-import io.reactivex.Observer
-import io.reactivex.android.schedulers.AndroidSchedulers
-import io.reactivex.disposables.Disposable
+import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
+import io.reactivex.rxjava3.core.Observable
+import io.reactivex.rxjava3.core.Observer
+import io.reactivex.rxjava3.disposables.Disposable
 import kotlinx.android.synthetic.main.activity_schoolcar.*
 import java.io.File
 import java.util.concurrent.TimeUnit
@@ -316,6 +316,7 @@ class SchoolCarActivity : BaseActivity(), View.OnClickListener {
     }
 
     override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<out String>, grantResults: IntArray) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults)
         var hasPermissionsDismiss = false
 
         if (requestCode == mRequestCode) {

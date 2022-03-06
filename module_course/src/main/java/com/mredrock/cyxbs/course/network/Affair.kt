@@ -66,7 +66,7 @@ class Affair {
         constructor(parcel: Parcel) {
             classX = parcel.readInt()
             day = parcel.readInt()
-            parcel.readList(week, null)
+            parcel.readList(week!!, null)
         }
 
         constructor(classX: Int = 0, day: Int = 0, week: List<Int>? = null) {

@@ -164,8 +164,8 @@ open class Course() : Parcelable {
         weekEnd = parcel.readInt()
         type = parcel.readString()
         period = parcel.readInt()
-        parcel.readList(week, null)
-        parcel.readTypedList(affairDates, Affair.Date.CREATOR)
+        parcel.readList(week!!, null)
+        parcel.readTypedList(affairDates!!, Affair.Date.CREATOR)
     }
 
 

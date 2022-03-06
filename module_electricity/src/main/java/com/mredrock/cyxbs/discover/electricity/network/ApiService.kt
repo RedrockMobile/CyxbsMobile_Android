@@ -1,7 +1,7 @@
 package com.mredrock.cyxbs.discover.electricity.network
 
 import com.mredrock.cyxbs.discover.electricity.bean.ElectricityInfo
-import io.reactivex.Observable
+import io.reactivex.rxjava3.core.Observable
 import retrofit2.http.Field
 import retrofit2.http.FormUrlEncoded
 import retrofit2.http.POST
