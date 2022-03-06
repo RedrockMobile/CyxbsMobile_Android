@@ -182,7 +182,7 @@ class HomepageActivity : BaseViewModelActivity<MineViewModel>() {
             isSelf = it.data.is_self
             isGirl=it.data.gender
             it.data.redid.let {
-                identityFragment.onSuccesss(it, isSelf)
+                identityFragment.onSuccess(it, isSelf)
                 dataBinding.vp2Mine.offscreenPageLimit = 2
                 redid = it
                 viewModel.getPersonalCount(redid)
@@ -685,35 +685,7 @@ class HomepageActivity : BaseViewModelActivity<MineViewModel>() {
     /**
      * 获取redid的接口
      */
-    interface onGetRedid {
-        fun onSuccesss(redid: String, isSelf: Boolean)
+    interface OnGetRedid {
+        fun onSuccess(redid: String, isSelf: Boolean)
     }
-//
-//    var downY = 0f
-//    var distance = 0f
-//
-//    /**
-//     * 刷新滑动与左右滑动事件的处理
-//     */
-//    override fun dispatchTouchEvent(ev: MotionEvent): Boolean {
-//
-//        when (ev.action) {
-//            MotionEvent.ACTION_DOWN -> {
-//                downY = ev.y
-//            }
-//        }
-//        distance = ev.y - downY
-//
-//        if (isNeedRefresh && distance > 80f) {
-//            distance = 0f
-//            return dataBinding.srlRefresh.dispatchTouchEvent(ev)
-//        } else if (abs(distance) < 8f) {
-//            distance = 0f
-//            return super.dispatchTouchEvent(ev)
-//        }
-//        return dataBinding.svgMine.dispatchTouchEvent(ev)
-//    }
-//
-//
-
 }
