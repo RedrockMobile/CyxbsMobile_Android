@@ -5,11 +5,18 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:fitsSystemWindows="true"
-    android:orientation="vertical"
-    android:background="@drawable/qa_ic_header"
     tools:context=".pages.dynamic.ui.fragment.DynamicFragment">
 
+    <!--填充状态栏高度-->
+    <com.mredrock.cyxbs.qa.widget.StatusBar
+        android:id="@+id/qa_statusBar"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"/>
+
+    <!--用于显示顶部背景的 View-->
     <View
         android:layout_width="match_parent"
         android:layout_height="0dp"
@@ -29,8 +36,7 @@
         android:background="@drawable/qa_shape_question_search_background"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintBottom_toTopOf="@id/qa_dynamic_coordinator">
+        app:layout_constraintTop_toBottomOf="@id/qa_statusBar">
 
         <androidx.appcompat.widget.AppCompatImageView
             android:id="@+id/iv_question_search"
@@ -59,12 +65,12 @@
     <androidx.coordinatorlayout.widget.CoordinatorLayout
         android:id="@+id/qa_dynamic_coordinator"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="0dp"
         android:layout_marginTop="20dp"
-        android:orientation="vertical"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/rl_qa_hot_search" >
+        app:layout_constraintTop_toBottomOf="@id/rl_qa_hot_search">
 
         <LinearLayout
             android:id="@+id/qa_ll_header"
@@ -112,14 +118,14 @@
             <androidx.viewpager2.widget.ViewPager2
                 android:id="@+id/qa_vp_dynamic"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content" />
+                android:layout_height="match_parent" />
         </LinearLayout>
 
         <androidx.appcompat.widget.AppCompatImageView
             android:id="@+id/qa_bt_to_quiz"
             android:layout_width="70dp"
             android:layout_height="70dp"
-            android:layout_gravity="bottom|right"
+            android:layout_gravity="bottom|end"
             android:layout_marginEnd="11dp"
             android:layout_marginBottom="140dp"
             android:scaleType="centerCrop"
