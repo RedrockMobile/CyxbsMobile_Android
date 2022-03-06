@@ -18,6 +18,6 @@ internal interface ApiService {
     @POST("/magipoke/token/refresh")
     fun refresh(@Body refreshParams: RefreshParams,@Header("STU-NUM") stu:String): Call<RedrockApiWrapper<TokenWrapper>>
 
-    @POST("/magipoke/Person/Search")
+    @GET("/magipoke/person/info")
     fun getUserInfo(@Header("Authorization") token: String): Call<RedrockApiWrapper<UserInfo>>
 }

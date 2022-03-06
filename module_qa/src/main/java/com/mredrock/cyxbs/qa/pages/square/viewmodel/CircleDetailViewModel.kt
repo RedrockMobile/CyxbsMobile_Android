@@ -3,6 +3,7 @@ package com.mredrock.cyxbs.qa.pages.square.viewmodel
 import androidx.lifecycle.*
 import androidx.paging.LivePagedListBuilder
 import androidx.paging.PagedList
+import com.mredrock.cyxbs.common.bean.isSuccessful
 import com.mredrock.cyxbs.common.network.ApiGenerator
 import com.mredrock.cyxbs.common.utils.extensions.safeSubscribeBy
 import com.mredrock.cyxbs.common.utils.extensions.setSchedulers
@@ -71,7 +72,7 @@ open class CircleDetailViewModel(kind: String, loop: Int) : BaseViewModel() {
 
     fun report(dynamic: Dynamic, content: String) {
         ApiGenerator.getApiService(ApiServiceNew::class.java)
-            .report(dynamic.postId, CommentConfig.REPORT_DYNAMIC_MODEL, content)
+            .reportDynamic(dynamic.postId,content)
             .setSchedulers()
             .doOnError {
                 toastEvent.value = R.string.qa_report_dynamic_failure
@@ -82,9 +83,9 @@ open class CircleDetailViewModel(kind: String, loop: Int) : BaseViewModel() {
             }
     }
 
-    fun deleteId(id: String, model: String) {
+    fun deleteDynamic(id: String) {
         ApiGenerator.getApiService(ApiServiceNew::class.java)
-            .deleteId(id, model)
+            .deleteDynamic(id)
             .setSchedulers()
             .doOnError {
                 toastEvent.value = R.string.qa_delete_dynamic_failure
@@ -99,14 +100,27 @@ open class CircleDetailViewModel(kind: String, loop: Int) : BaseViewModel() {
         ApiGenerator.getApiService(ApiServiceNew::class.java)
             .followTopicGround(topicName)
             .setSchedulers()
+            .doOnError {
+                if (followState) {
+                    toast("取消关注失败")
+                } else {
+                    toast("关注失败")
+                }
+            }
             .safeSubscribeBy {
-                if (it.status == 200) {
+                if (it.isSuccessful) {
                     if (followState) {
                         //如果处于关注状态,点击之后是取消关注
                         toastEvent.value = R.string.qa_unfollow_circle
                     } else {
                         //如果处于未关注状态,点击之后是关注
                         toastEvent.value = R.string.qa_follow_circle
+                    }
+                } else {
+                    if (followState) {
+                        toast("取消关注失败")
+                    } else {
+                        toast("关注失败")
                     }
                 }
             }

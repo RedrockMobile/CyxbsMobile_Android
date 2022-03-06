@@ -11,7 +11,6 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:animateLayoutChanges="true"
-        android:fitsSystemWindows="true"
         tools:background="@color/common_window_background"
         tools:context=".ui.MainActivity">
 
@@ -19,6 +18,7 @@
             android:id="@+id/main_view_pager"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
+            android:layout_marginBottom="60dp"
             app:layout_behavior="@string/appbar_scrolling_view_behavior" />
 
         <androidx.fragment.app.FragmentContainerView

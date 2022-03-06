@@ -44,6 +44,10 @@ class StoreType {
                 StoreTask.Task.LOGIN_VOLUNTEER.title -> {
                     ARouter.getInstance().build(DISCOVER_VOLUNTEER).navigation()
                 }
+                /*
+                * 注意, 如果后面接手的学弟要添加新的任务, 目前(2021/9/11)对于任务进度是要我们自己完成后向后端发送请求的
+                * 发送请求的代码我已经封装进了 common 模块的 /config/StoreTask 中
+                * */
                 else -> {
                     context.toast("若点击无跳转，请向我们反馈，谢谢")
                 }
@@ -52,8 +56,9 @@ class StoreType {
     }
 
     object ExchangeError { // 请求兑换时使用
-        const val OTHER_ERROR = -4734 // 其他错误, 乱打的数字防止出现重复
+        const val OTHER_ERROR = Int.MIN_VALUE // 其他错误, 乱打的数字防止出现重复
         const val NOT_ENOUGH_MONEY = 50000 // 钱不够
         const val OUT_OF_STOCK = 50001 // 库存不足
+        const val IS_PURCHASED = 50002 // 当商品为邮货时且已经购买过
     }
 }

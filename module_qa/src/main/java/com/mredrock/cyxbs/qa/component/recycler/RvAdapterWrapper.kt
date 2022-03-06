@@ -1,12 +1,13 @@
 package com.mredrock.cyxbs.qa.component.recycler
 
+import android.util.Log
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 
 /**
  * Created By jay68 on 2018/8/26.
  */
-class RvAdapterWrapper(normalAdapter: RecyclerView.Adapter<out RecyclerView.ViewHolder>,
+open class RvAdapterWrapper(normalAdapter: RecyclerView.Adapter<out RecyclerView.ViewHolder>,
                        headerAdapter: RecyclerView.Adapter<out RecyclerView.ViewHolder>? = null,
                        footerAdapter: RecyclerView.Adapter<out RecyclerView.ViewHolder>? = null,
                        emptyAdapter: RecyclerView.Adapter<out RecyclerView.ViewHolder>? = null) :
@@ -31,8 +32,8 @@ class RvAdapterWrapper(normalAdapter: RecyclerView.Adapter<out RecyclerView.View
         emptyAdapter?.registerAdapterDataObserver(AdapterDataObserver(TYPE_EMPTY))
     }
 
-    private val normalPositionStart get() = headerAdapter.getItemCountOrDefault()
-    private val footerPositionStart get() = normalPositionStart + normalAdapter.itemCount
+    val normalPositionStart get() = headerAdapter.getItemCountOrDefault()
+    val footerPositionStart get() = normalPositionStart + normalAdapter.itemCount
 
     private fun RecyclerView.Adapter<out RecyclerView.ViewHolder>?.getItemCountOrDefault(default: Int = 0) = this?.itemCount
             ?: default
@@ -52,6 +53,7 @@ class RvAdapterWrapper(normalAdapter: RecyclerView.Adapter<out RecyclerView.View
     }
 
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) = when (getItemViewType(position)) {
+
         TYPE_HEADER -> headerAdapter!!.onBindViewHolder(holder, position)
         TYPE_NORMAL -> normalAdapter.onBindViewHolder(holder, position - normalPositionStart)
         TYPE_EMPTY -> emptyAdapter!!.onBindViewHolder(holder, position - footerPositionStart)

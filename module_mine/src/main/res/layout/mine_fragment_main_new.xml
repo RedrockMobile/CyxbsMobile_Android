@@ -1,0 +1,377 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:fitsSystemWindows="true"
+    android:orientation="vertical"
+    android:background="@color/mine_bg_user_header">
+
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="300dp"
+        android:layout_marginTop="-22dp"
+        android:layout_marginStart="-25dp"
+        android:layout_marginEnd="-25dp"
+        android:background="@drawable/mine_ic_info_header">
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/mine_user_cl_info"
+            android:layout_width="match_parent"
+            android:layout_height="208dp"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginStart="25dp"
+            android:layout_marginTop="40dp"
+            android:layout_marginEnd="25dp">
+
+            <de.hdodenhof.circleimageview.CircleImageView
+                android:id="@+id/mine_user_avatar"
+                android:layout_width="64dp"
+                android:layout_height="64dp"
+                android:layout_marginStart="28dp"
+                android:layout_marginTop="50dp"
+                android:src="@drawable/common_default_avatar"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <TextView
+                android:id="@+id/mine_user_username"
+                android:layout_width="180dp"
+                android:layout_height="31dp"
+                android:layout_marginStart="12dp"
+                android:layout_marginTop="54dp"
+                android:layout_marginEnd="28dp"
+                android:ellipsize="end"
+                android:lines="1"
+                android:maxLines="1"
+                android:text="鱼鱼鱼鱼鱼鱼鱼鱼"
+                android:textColor="@color/mine_text_nickname"
+                android:textSize="22sp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.0"
+                app:layout_constraintStart_toEndOf="@+id/mine_user_avatar"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <TextView
+                android:id="@+id/mine_user_introduce"
+                android:layout_width="195dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="12dp"
+                android:layout_marginTop="1dp"
+                android:layout_marginEnd="11dp"
+                android:maxLines="2"
+                android:text="这是一条不普通的个性签名这是一条不普通的给"
+                android:textColor="@color/mine_text_introduction"
+                android:textSize="13sp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.0"
+                app:layout_constraintStart_toEndOf="@+id/mine_user_avatar"
+                app:layout_constraintTop_toBottomOf="@+id/mine_user_username" />
+
+            <TextView
+                android:id="@+id/mine_user_tv_dynamic_number"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="40dp"
+                android:fontFamily="@font/impact_min"
+                android:gravity="center"
+                android:maxLines="1"
+                android:text="@string/mine_number_default"
+                android:textColor="@color/mine_text_count"
+                android:textSize="25sp"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="@+id/mine_user_tv_dynamic"
+                app:layout_constraintStart_toStartOf="@+id/mine_user_tv_dynamic" />
+
+            <TextView
+                android:id="@+id/mine_user_tv_comment_number"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="1dp"
+                android:fontFamily="@font/impact_min"
+                android:gravity="center"
+                android:maxLines="1"
+                android:text="@string/mine_number_default"
+                android:textColor="@color/mine_text_count"
+                android:textSize="25sp"
+                app:layout_constraintBottom_toTopOf="@+id/mine_user_tv_comment"
+                app:layout_constraintEnd_toEndOf="@+id/mine_user_tv_comment"
+                app:layout_constraintStart_toStartOf="@+id/mine_user_tv_comment" />
+
+            <TextView
+                android:id="@+id/mine_user_tv_praise_number"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="1dp"
+                android:fontFamily="@font/impact_min"
+                android:gravity="center"
+                android:maxLines="1"
+                android:text="@string/mine_number_default"
+                android:textColor="@color/mine_text_count"
+                android:textSize="25sp"
+                app:layout_constraintBottom_toTopOf="@+id/mine_user_tv_praise"
+                app:layout_constraintEnd_toEndOf="@+id/mine_user_tv_praise"
+                app:layout_constraintStart_toStartOf="@+id/mine_user_tv_praise" />
+
+            <TextView
+                android:id="@+id/mine_user_tv_dynamic"
+                android:layout_width="wrap_content"
+                android:layout_height="17dp"
+                android:layout_marginStart="28dp"
+                android:layout_marginBottom="22dp"
+                android:text="动态"
+                android:textColor="@color/mine_text_count_bottom"
+                android:textSize="14dp"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                tools:ignore="SpUsage" />
+
+            <TextView
+                android:id="@+id/mine_user_tv_comment"
+                android:layout_width="wrap_content"
+                android:layout_height="17dp"
+                android:layout_marginStart="34dp"
+                android:layout_marginBottom="22dp"
+                android:text="评论"
+                android:textColor="@color/mine_text_count_bottom"
+                android:textSize="14dp"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintStart_toEndOf="@+id/mine_user_tv_dynamic"
+                tools:ignore="SpUsage" />
+
+            <TextView
+                android:id="@+id/mine_user_tv_praise"
+                android:layout_width="wrap_content"
+                android:layout_height="17dp"
+                android:layout_marginStart="34dp"
+                android:layout_marginBottom="22dp"
+                android:text="获赞"
+                android:textColor="@color/mine_text_count_bottom"
+                android:textSize="14dp"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintStart_toEndOf="@+id/mine_user_tv_comment"
+                tools:ignore="SpUsage" />
+
+            <TextView
+                android:id="@+id/mine_user_tv_unchecked_comment"
+                android:layout_width="7dp"
+                android:layout_height="7dp"
+                android:background="@drawable/mine_shape_bg_point_unchecked"
+                android:visibility="gone"
+                app:layout_constraintBottom_toBottomOf="@+id/mine_user_tv_comment_number"
+                app:layout_constraintStart_toEndOf="@+id/mine_user_tv_comment_number"
+                app:layout_constraintTop_toTopOf="@+id/mine_user_tv_comment_number"
+                app:layout_constraintVertical_bias="0.08" />
+
+            <TextView
+                android:id="@+id/mine_user_tv_unchecked_praise"
+                android:layout_width="7dp"
+                android:layout_height="7dp"
+                android:background="@drawable/mine_shape_bg_point_unchecked"
+                android:visibility="gone"
+                app:layout_constraintBottom_toBottomOf="@+id/mine_user_tv_praise_number"
+                app:layout_constraintStart_toEndOf="@+id/mine_user_tv_praise_number"
+                app:layout_constraintTop_toTopOf="@+id/mine_user_tv_praise_number"
+                app:layout_constraintVertical_bias="0.08" />
+
+            <ImageButton
+                android:id="@+id/mine_user_ib_arrow"
+                android:layout_width="20dp"
+                android:layout_height="20dp"
+                android:layout_marginTop="70dp"
+                android:layout_marginEnd="23dp"
+                android:background="?android:attr/selectableItemBackgroundBorderless"
+                android:scaleType="centerInside"
+                android:src="@drawable/mine_ic_arrow_user"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+    </FrameLayout>
+
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:elevation="12dp"
+        android:layout_marginTop="-55dp"
+        android:background="@drawable/mine_shape_bg_user"
+        android:orientation="vertical">
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <ImageView
+                android:id="@+id/mine_user_iv_center_notification"
+                android:layout_width="43dp"
+                android:layout_height="41dp"
+                android:layout_marginStart="51dp"
+                android:layout_marginTop="30dp"
+                android:scaleType="centerInside"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:srcCompat="@drawable/mine_ic_notification_center" />
+
+            <ImageView
+                android:id="@+id/mine_user_iv_center_stamp"
+                android:layout_width="41dp"
+                android:layout_height="40dp"
+                android:layout_marginTop="30dp"
+                android:scaleType="centerInside"
+                app:layout_constraintEnd_toStartOf="@+id/mine_user_iv_center_feedback"
+                app:layout_constraintStart_toEndOf="@+id/mine_user_iv_center_notification"
+                app:layout_constraintTop_toTopOf="parent"
+                app:srcCompat="@drawable/mine_ic_stamp_center" />
+
+            <ImageView
+                android:id="@+id/mine_user_iv_center_feedback"
+                android:layout_width="41dp"
+                android:layout_height="40dp"
+                android:layout_marginTop="30dp"
+                android:layout_marginEnd="51dp"
+                android:scaleType="centerInside"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:srcCompat="@drawable/mine_ic_feedback_center" />
+
+            <TextView
+                android:id="@+id/mine_user_tv_center_notification"
+                android:layout_width="wrap_content"
+                android:layout_height="20dp"
+                android:layout_marginTop="8dp"
+                android:text="消息中心"
+                android:textColor="@color/mine_text_setting"
+                android:textSize="14sp"
+                app:layout_constraintEnd_toEndOf="@+id/mine_user_iv_center_notification"
+                app:layout_constraintStart_toStartOf="@+id/mine_user_iv_center_notification"
+                app:layout_constraintTop_toBottomOf="@+id/mine_user_iv_center_notification" />
+
+            <TextView
+                android:id="@+id/mine_user_tv_center_stamp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="邮票中心"
+                android:textColor="@color/mine_text_setting"
+                android:textSize="14sp"
+                app:layout_constraintBottom_toBottomOf="@+id/mine_user_tv_center_notification"
+                app:layout_constraintEnd_toEndOf="@+id/mine_user_iv_center_stamp"
+                app:layout_constraintStart_toStartOf="@+id/mine_user_iv_center_stamp"
+                app:layout_constraintTop_toTopOf="@+id/mine_user_tv_center_notification" />
+
+            <TextView
+                android:id="@+id/mine_user_tv_center_feedback"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="反馈中心"
+                android:textColor="@color/mine_text_setting"
+                android:textSize="14sp"
+                app:layout_constraintBottom_toBottomOf="@+id/mine_user_tv_center_stamp"
+                app:layout_constraintEnd_toEndOf="@+id/mine_user_iv_center_feedback"
+                app:layout_constraintStart_toStartOf="@+id/mine_user_iv_center_feedback"
+                app:layout_constraintTop_toTopOf="@+id/mine_user_tv_center_stamp" />
+
+            <TextView
+                android:id="@+id/mine_user_tv_unchecked_notification_count"
+                android:layout_width="15dp"
+                android:layout_height="15dp"
+                android:layout_marginStart="88dp"
+                android:layout_marginTop="14dp"
+                android:background="@drawable/mine_shape_bg_point_unchecked"
+                android:gravity="center"
+                android:text="99"
+                android:textColor="#FFFFFF"
+                android:textSize="8sp"
+                android:visibility="gone"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+        <FrameLayout
+            android:layout_width="match_parent"
+            android:layout_height="58dp"
+            android:layout_marginStart="16dp"
+            android:layout_marginTop="36dp"
+            android:layout_marginEnd="16dp"
+            android:elevation="8dp"
+            android:background="@drawable/mine_shape_bg_user_sign">
+
+            <TextView
+                android:id="@+id/mine_user_tv_sign"
+                android:layout_width="wrap_content"
+                android:layout_height="22dp"
+                android:layout_gravity="start|center_vertical"
+                android:layout_marginStart="16dp"
+                android:text="已连续签到 0 天"
+                android:textColor="@color/mine_text_sign"
+                android:textSize="16sp" />
+
+            <TextView
+                android:id="@+id/mine_user_btn_sign"
+                android:layout_width="wrap_content"
+                android:layout_height="26dp"
+                android:layout_gravity="end|center_vertical"
+                android:layout_marginEnd="16dp"
+                android:background="@drawable/mine_shape_bg_user_btn_sign"
+                android:gravity="center"
+                android:paddingStart="10dp"
+                android:paddingTop="3dp"
+                android:paddingEnd="10dp"
+                android:paddingBottom="3dp"
+                android:text="签到"
+                android:textColor="#FFFFFF"
+                android:textSize="14sp" />
+        </FrameLayout>
+
+        <FrameLayout
+            android:id="@+id/mine_user_fm_about_us"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="38dp">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="22dp"
+                android:layout_marginStart="16dp"
+                android:text="关于我们"
+                android:textStyle="bold"
+                android:textColor="@color/mine_text_setting"
+                android:textSize="16sp" />
+
+            <ImageView
+                android:layout_width="8dp"
+                android:layout_height="16dp"
+                android:layout_gravity="end|center_vertical"
+                android:layout_marginEnd="17dp"
+                android:scaleType="centerInside"
+                android:src="@drawable/mine_ic_arrow_setting" />
+        </FrameLayout>
+
+        <FrameLayout
+            android:id="@+id/mine_user_fm_setting"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="24dp">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="22dp"
+                android:layout_marginStart="16dp"
+                android:text="设置"
+                android:textStyle="bold"
+                android:textColor="@color/mine_text_setting"
+                android:textSize="16sp" />
+
+            <ImageView
+                android:layout_width="8dp"
+                android:layout_height="16dp"
+                android:layout_gravity="end|center_vertical"
+                android:layout_marginEnd="17dp"
+                android:scaleType="centerInside"
+                android:src="@drawable/mine_ic_arrow_setting" />
+        </FrameLayout>
+
+    </LinearLayout>
+
+</LinearLayout>

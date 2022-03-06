@@ -3,10 +3,9 @@
     package="com.mredrock.cyxbs.widget">
 
     <application android:theme="@style/AppTheme">
-        <activity android:name=".widget.page.normal.NormalSelectActivity"
-            android:theme="@style/widget_Theme">
-
-        </activity>
+        <activity
+            android:name=".widget.page.normal.NormalSelectActivity"
+            android:theme="@style/widget_Theme"/>
         <activity android:name=".widget.page.ConfigActivity" />
         <activity
             android:name=".widget.page.trans.TransConfigActivity"
@@ -50,9 +49,7 @@
 
         <service
             android:name=".service.GridWidgetService"
-            android:permission="android.permission.BIND_REMOTEVIEWS">
-
-        </service>
+            android:permission="android.permission.BIND_REMOTEVIEWS"/>
 
         <receiver
             android:name=".widget.oversize.OversizedAppWidget"

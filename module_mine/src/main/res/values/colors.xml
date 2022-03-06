@@ -47,28 +47,31 @@
     <color name="mine_feedback_detail_content_tv">#15315B</color>
 
 
-
-    <!--    feedback-->
-    <color name="mine_feedback_toolbar_text_color">#15315B</color>
-    <color name="mine_feedback_divider_color">#E3E8F0</color>
-    <color name="mine_feedback_bg_color_reply">#E8F0FC</color>
-    <color name="mine_feedback_recycle_item_title_color">#15315B</color>
-    <color name="mine_feedback_recycle_item_data_color">#677895</color>
-    <color name="mine_feedback_bg_color_not_reply">#FFE8E5</color>
-    <color name="mine_feedback_cards_background_color">#FFFFFF</color>
-    <color name="mine_feedback_cards_title_color">#15315B</color>
-    <color name="mine_feedback_cards_content_text_color">#15315B</color>
-    <color name="mine_feedback_label_text_color">#7A99CC</color>
-    <color name="mine_feedback_reply_date_text_color">#15315B</color>
-    <color name="mine_feedback_label_bg_color">#E8F0FC</color>
-    <color name="mine_feedback_no_reply_content_color">#112C54</color>
-    <color name="mine_feedback_not_reply_color">#FFE8E5</color>
-    <color name="mine_feedback_recycle_item_text_color">#7A99CC</color>
-    <color name="mine_feedback_recycle_item_dividor_color">#E6ECF5</color>
-    <color name="mine_feedback_add_bg_color">#F7FAFF</color>
-    <color name="mine_feedback_add_fill_color">#E1EBFA</color>
-    <color name="mine_feedback_history_icon_color">#15315B</color>
-    <color name="mine_feedback_edit_underline_color">#2A4E84</color>
-    <color name="mine_feedback_bg_color">#F8F9FC</color>
-    <color name="mine_feedback_history_list_not_reply_bg_color">#FF9180</color>
+    <color name="mine_white">#FFFFFF</color>
+    <color name="mine_division_line">#15315BCC</color>
+    <color name="mine_black">#15315B</color>
+    <color name="mine_bg_user">#FCFDFF</color>
+    <color name="mine_text_nickname">#15315B</color>
+    <color name="mine_text_introduction">#CC15315B</color>
+    <color name="mine_text_count">#2A4E84</color>
+    <color name="mine_text_count_bottom">#B315315B</color>
+    <color name="mine_bg_sign">#FFFFFF</color>
+    <color name="mine_text_sign">#15315B</color>
+    <color name="mine_text_setting">#15315B</color>
+    <color name="mine_text_fan_head">#15315B</color>
+    <color name="mine_text_tab">#15315B</color>
+    <color name="mine_bg_vp_fan">#FFFFFF</color>
+    <color name="mine_text_empty_fan">#112C54</color>
+    <color name="mine_bg_dialog_edit">#FFFFFF</color>
+    <color name="mine_tv_dialog_text_center">#15315B</color>
+    <color name="mine_tv_dialog_text_out">#3C3131</color>
+    <color name="mine_tv_personal_count_bottom">#B315315B</color>
+    <color name="mine_tv_personal_uid">#CC15315B</color>
+    <color name="mine_tv_personal_edit">#6615315B</color>
+    <color name="mine_bg_personal_info">#FBFCFF</color>
+    <color name="mine_dynamic">#FFFFFF</color>
+    <color name="mine_tv_signature">#8015315B</color>
+    <color name="mine_bg_user_header">#F5F7FF</color>
+    <color name="mine_et_hint_text">#6615315B</color>
+    <color name="mine_homepage_line_background">#1A2A4E84</color>
 </resources>

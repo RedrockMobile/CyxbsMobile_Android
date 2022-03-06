@@ -27,4 +27,10 @@
     <string name="discover_detail_more_function">敬请期待</string>
     <string name="discover_more_function_notice_text">更多功能，敬请期待</string>
     <string name="discover_news_jwzx">教务在线</string>
+
+    <string name="discover_title_todo">邮子清单</string>
+    <string name="discover_detail_todo">待办事项</string>
+
+    <string name="discover_pic_save_alert_dialog_title">是否保存</string>
+    <string name="discover_pic_save_alert_dialog_message">这张图片将保存到手机</string>
 </resources>

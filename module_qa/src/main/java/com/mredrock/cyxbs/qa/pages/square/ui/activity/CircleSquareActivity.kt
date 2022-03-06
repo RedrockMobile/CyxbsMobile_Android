@@ -4,6 +4,7 @@ import android.annotation.SuppressLint
 import android.app.Activity
 import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
@@ -86,15 +87,15 @@ class CircleSquareActivity : BaseViewModelActivity<CircleSquareViewModel>() {
     private fun initView() {
         adapter = CircleSquareAdapter().apply {
             // 设置item点击事件
-            itemClick = { topic, view ->
+            itemClick = { topic, _ ->
                 clickTopic = topic
                 CircleDetailActivity
-                    .activityStartFromSquare(this@CircleSquareActivity, view, topic)
+                    .activityStartFromSquare(this@CircleSquareActivity,topic)
             }
             // 设置关注按钮点击事件
-            concernClick = { topicName, state ->
+            concernClick = { topic, state ->
                 // 发送关注圈子的POST请求
-                viewModel.followTopic(topicName, state)
+                viewModel.followTopic(topic.topicName, state)
             }
         }
         rv_circle_square.layoutManager = LinearLayoutManager(context)

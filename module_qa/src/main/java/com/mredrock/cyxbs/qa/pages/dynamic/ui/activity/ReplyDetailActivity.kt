@@ -191,10 +191,7 @@ class ReplyDetailActivity : BaseViewModelActivity<DynamicDetailViewModel>() {
                             this,
                             resources.getString(R.string.qa_dialog_tip_delete_comment_text),
                             {}) {
-                            viewModel.deleteId(
-                                comment.commentId,
-                                DynamicDetailActivity.COMMENT_DELETE
-                            )
+                            viewModel.deleteComment(comment.commentId)
                         }
                     }
                 }
@@ -203,10 +200,9 @@ class ReplyDetailActivity : BaseViewModelActivity<DynamicDetailViewModel>() {
                     optionPopWindow.addOptionAndCallback(CommentConfig.REPORT) {
                         QaReportDialog(this).apply {
                             show { reportContent ->
-                                viewModel.report(
+                                viewModel.reportComment(
                                     comment.commentId,
-                                    reportContent,
-                                    CommentConfig.REPORT_COMMENT_MODEL
+                                    reportContent
                                 )
                             }
                         }.show()

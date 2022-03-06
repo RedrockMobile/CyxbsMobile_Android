@@ -16,7 +16,7 @@ import com.mredrock.cyxbs.course.event.ModifyAffairEvent
 import com.mredrock.cyxbs.course.network.AffairHelper
 import com.mredrock.cyxbs.course.network.Course
 import com.mredrock.cyxbs.course.network.CourseApiService
-import com.mredrock.cyxbs.course.rxjava.ExecuteOnceObserver
+import com.mredrock.cyxbs.common.utils.ExecuteOnceObserver
 import com.mredrock.cyxbs.course.ui.activity.AffairEditActivity
 import com.mredrock.cyxbs.course.utils.affairFilter
 import org.greenrobot.eventbus.EventBus

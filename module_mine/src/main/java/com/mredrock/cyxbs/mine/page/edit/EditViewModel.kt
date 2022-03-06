@@ -1,5 +1,6 @@
 package com.mredrock.cyxbs.mine.page.edit
 
+import android.util.Log
 import androidx.lifecycle.MutableLiveData
 import com.mredrock.cyxbs.common.network.ApiGenerator
 import com.mredrock.cyxbs.common.network.CommonApiService
@@ -14,6 +15,7 @@ import com.mredrock.cyxbs.common.utils.extensions.mapOrThrowApiException
 import com.mredrock.cyxbs.common.utils.extensions.safeSubscribeBy
 import com.mredrock.cyxbs.common.utils.extensions.setSchedulers
 import com.mredrock.cyxbs.common.viewmodel.BaseViewModel
+import com.mredrock.cyxbs.mine.R
 import com.mredrock.cyxbs.mine.util.apiService
 import com.mredrock.cyxbs.mine.util.extension.normalStatus
 import com.mredrock.cyxbs.mine.util.widget.ExecuteOnceObserver
@@ -35,11 +37,10 @@ class EditViewModel : BaseViewModel() {
     val upLoadImageEvent = MutableLiveData<Boolean>()
 
     fun updateUserInfo(nickname: String, introduction: String, qq: String, phone: String
-                       , photoThumbnailSrc: String = userService.getAvatarImgUrl()
-                       , photoSrc: String = userService.getAvatarImgUrl()) {
+                       , gender: String, birthday: String
+                       , photoUrl: String = userService.getAvatarImgUrl()) {
 
-
-        apiService.updateUserInfo(nickname, introduction, qq, phone, photoSrc)
+        apiService.updateUserInfo(nickname, introduction, qq, phone, photoUrl, gender, birthday)
                 .normalStatus(this)
                 .observeOn(Schedulers.io())
                 .map {

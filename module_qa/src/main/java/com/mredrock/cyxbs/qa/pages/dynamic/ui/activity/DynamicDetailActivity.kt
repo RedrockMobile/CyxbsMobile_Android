@@ -22,10 +22,15 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.alibaba.android.arouter.facade.annotation.Route
+import com.alibaba.android.arouter.launcher.ARouter
+import com.bumptech.glide.Glide
 import com.google.android.material.appbar.AppBarLayout
+import com.mredrock.cyxbs.api.account.IAccountService
 import com.mredrock.cyxbs.common.BaseApp.Companion.context
 import com.mredrock.cyxbs.common.component.CyxbsToast
+import com.mredrock.cyxbs.common.config.MINE_PERSON_PAGE
 import com.mredrock.cyxbs.common.config.QA_DYNAMIC_DETAIL
+import com.mredrock.cyxbs.common.service.ServiceManager
 import com.mredrock.cyxbs.common.ui.BaseViewModelActivity
 import com.mredrock.cyxbs.common.utils.LogUtils
 import com.mredrock.cyxbs.common.utils.extensions.*
@@ -63,10 +68,8 @@ import kotlinx.android.synthetic.main.qa_recycler_item_dynamic_header.view.*
 @Route(path = QA_DYNAMIC_DETAIL)
 class DynamicDetailActivity : BaseViewModelActivity<DynamicDetailViewModel>() {
     companion object {
-
         // 有共享元素动画的启动，是从邮问主界面启动的
         fun activityStart(page: Any?, dynamicItem: View, data: Dynamic) {
-
             page.apply {
                 var activity: Activity? = null
                 var fragment: Fragment? = null
@@ -100,14 +103,12 @@ class DynamicDetailActivity : BaseViewModelActivity<DynamicDetailViewModel>() {
 
         // 根据postId启动,是从个人界面启动的
         fun activityStart(page: Any?, postId: String) {
-
             var activity: Activity? = null
             if (page is Fragment) {
                 activity = page.activity
             } else if (page is Activity) {
                 activity = page
             }
-
             activity.apply {
                 activity?.let {
                     val intent = Intent(context, DynamicDetailActivity::class.java)
@@ -118,7 +119,6 @@ class DynamicDetailActivity : BaseViewModelActivity<DynamicDetailViewModel>() {
                 }
             }
         }
-
         const val DYNAMIC_DELETE = "0"
         const val COMMENT_DELETE = "1"
     }
@@ -141,10 +141,7 @@ class DynamicDetailActivity : BaseViewModelActivity<DynamicDetailViewModel>() {
     private var haveShareItem = false
 
     private var dynamic: Dynamic? = null
-
     override fun getViewModelFactory() = DynamicDetailViewModel.Factory()
-
-
     private fun refreshCommentList() {
         viewModel.dynamic.value?.let {
             viewModel.refreshCommentList(it.postId, "-1")
@@ -178,7 +175,7 @@ class DynamicDetailActivity : BaseViewModelActivity<DynamicDetailViewModel>() {
                         this,
                         resources.getString(R.string.qa_dialog_tip_delete_comment_text),
                         {}) {
-                        viewModel.deleteId(comment.commentId, COMMENT_DELETE)
+                        viewModel.deleteComment(comment.commentId)
                     }
                 }
             }
@@ -186,10 +183,9 @@ class DynamicDetailActivity : BaseViewModelActivity<DynamicDetailViewModel>() {
                 optionPopWindow.addOptionAndCallback(CommentConfig.REPORT) {
                     QaReportDialog(this).apply {
                         show { reportContent ->
-                            viewModel.report(
+                            viewModel.reportComment(
                                 comment.commentId,
-                                reportContent,
-                                CommentConfig.REPORT_COMMENT_MODEL
+                                reportContent
                             )
                         }
                     }.show()
@@ -216,7 +212,7 @@ class DynamicDetailActivity : BaseViewModelActivity<DynamicDetailViewModel>() {
                         this,
                         resources.getString(R.string.qa_dialog_tip_delete_comment_text),
                         {}) {
-                        viewModel.deleteId(comment.commentId, COMMENT_DELETE)
+                        viewModel.deleteComment(comment.commentId)
                     }
                 }
             }
@@ -225,10 +221,9 @@ class DynamicDetailActivity : BaseViewModelActivity<DynamicDetailViewModel>() {
                 optionPopWindow.addOptionAndCallback(CommentConfig.REPORT) {
                     QaReportDialog(this).apply {
                         show { reportContent ->
-                            viewModel.report(
+                            viewModel.reportComment(
                                 comment.commentId,
-                                reportContent,
-                                CommentConfig.REPORT_COMMENT_MODEL
+                                reportContent
                             )
                         }
                     }.show()
@@ -252,40 +247,31 @@ class DynamicDetailActivity : BaseViewModelActivity<DynamicDetailViewModel>() {
         window.setBackgroundDrawableResource(android.R.color.transparent)
         super.onCreate(savedInstanceState)
         setContentView(R.layout.qa_activity_dynamic_detail)
-
         dynamic = intent.getParcelableExtra("dynamic")
-
         viewModel.position = -1
-
         intent.extras?.apply {
-            if (!getBoolean("isFromReceive")) return@apply
+            if (!getBoolean("is_from_receive")) return@apply
             val postId = getString("id")
             intent.putExtra("post_id", postId)
         }
-
         isFromMine = intent.extras?.get("is_from_mine") as Boolean? ?: false
         LogUtils.d("is_from_mine", "isFromMine-->$isFromMine")
         commentListRvAdapter.isFromMine = isFromMine
-
         // 设置进入动画
         window.enterTransition = Slide(Gravity.END).apply { duration = animatorDuration }
         // 设置标题
         qa_tv_toolbar_title.text = resources.getText(R.string.qa_dynamic_detail_title_text)
         // 注册
         mTencent = Tencent.createInstance(CommentConfig.APP_ID, this)
-
         // 判断是否有共享元素
         haveShareItem = intent.getParcelableExtra<Dynamic>("dynamic") != null
-
         // 清空原来的评论显示
         viewModel.commentList.value = listOf()
-
         initChangeColorAnimator("#1D1D1D", "#000000")
         initObserve()
         initDynamic()
         initReplyList()
         initOnClickListener()
-
     }
 
     private fun initChangeColorAnimator(startColor: String, endColor: String) {
@@ -319,6 +305,7 @@ class DynamicDetailActivity : BaseViewModelActivity<DynamicDetailViewModel>() {
 
     private fun initOnClickListener() {
         qa_iv_my_comment_select_pic.setOnSingleClickListener {
+
             Intent(this, QuizActivity::class.java).apply {
                 putExtra("isComment", "1")
                 putExtra("postId", viewModel.dynamic.value?.postId)
@@ -329,7 +316,7 @@ class DynamicDetailActivity : BaseViewModelActivity<DynamicDetailViewModel>() {
             }
         }
 
-        qa_ib_toolbar_back.setOnSingleClickListener {
+        qa_ib_toolbar_back.setOnClickListener {
             onBackPressed()
         }
 
@@ -339,12 +326,19 @@ class DynamicDetailActivity : BaseViewModelActivity<DynamicDetailViewModel>() {
             }
         }
         qa_iv_dynamic_comment_count.setOnSingleClickListener {
+
             KeyboardController.showInputKeyboard(this, qa_et_my_comment_reply)
             viewModel.replyInfo.value = ReplyInfo("", "", "")
         }
         qa_coordinatorlayout.onReplyCancelEvent = {
             viewModel.replyInfo.value = ReplyInfo("", "", "")
             KeyboardController.hideInputKeyboard(this, qa_et_my_comment_reply)
+        }
+        qa_iv_dynamic_avatar.setOnClickListener {
+            ARouter.getInstance().build(MINE_PERSON_PAGE)
+                .withString("redid",
+                    dynamic?.uid)
+                .navigation()
         }
     }
 
@@ -490,9 +484,9 @@ class DynamicDetailActivity : BaseViewModelActivity<DynamicDetailViewModel>() {
             viewModel.dynamic.value?.let { dynamic ->
                 ShareDialog(view.context).apply {
                     val url = "${CommentConfig.SHARE_URL}dynamic?id=${dynamic.postId}"
-                    initView(onCancelListener = View.OnClickListener {
+                    initView(onCancelListener = View.OnClickListener{
                         dismiss()
-                    }, qqShare = View.OnClickListener {
+                    }, qqShare = View.OnClickListener{
                         val pic = if (dynamic.pics.isNullOrEmpty()) "" else dynamic.pics[0]
                         mTencent?.let { it1 ->
                             ShareUtils.qqShare(
@@ -504,7 +498,7 @@ class DynamicDetailActivity : BaseViewModelActivity<DynamicDetailViewModel>() {
                                 pic
                             )
                         }
-                    }, qqZoneShare = View.OnClickListener {
+                    }, qqZoneShare = View.OnClickListener{
                         mTencent?.let { it1 ->
                             ShareUtils.qqQzoneShare(
                                 it1,
@@ -516,21 +510,21 @@ class DynamicDetailActivity : BaseViewModelActivity<DynamicDetailViewModel>() {
                             )
                         }
 
-                    }, weChatShare = View.OnClickListener {
+                    }, weChatShare = View.OnClickListener{
                         CyxbsToast.makeText(
                             context,
                             R.string.qa_share_wechat_text,
                             Toast.LENGTH_SHORT
                         ).show()
 
-                    }, friendShipCircle = View.OnClickListener {
+                    }, friendShipCircle = View.OnClickListener{
                         CyxbsToast.makeText(
                             context,
                             R.string.qa_share_wechat_text,
                             Toast.LENGTH_SHORT
                         ).show()
 
-                    }, copyLink = View.OnClickListener {
+                    }, copyLink = View.OnClickListener{
                         ClipboardController.copyText(this@DynamicDetailActivity, url)
                     })
                 }.show()
@@ -543,41 +537,40 @@ class DynamicDetailActivity : BaseViewModelActivity<DynamicDetailViewModel>() {
             viewModel.replyInfo.value = ReplyInfo("", "", "")
 
             val optionPopWindow = OptionalPopWindow.Builder().with(this)
-                .addOptionAndCallback(CommentConfig.REPLY) {
+                .addOptionAndCallback(CommentConfig.REPLY,R.layout.qa_popupwindow_option_bottom) {
                     KeyboardController.showInputKeyboard(this, qa_et_my_comment_reply)
                     viewModel.replyInfo.value = ReplyInfo("", "", "")
-                }.addOptionAndCallback(CommentConfig.COPY) {
+                }.addOptionAndCallback(CommentConfig.COPY,R.layout.qa_popupwindow_option_bottom) {
                     viewModel.dynamic.value?.let {
                         ClipboardController.copyText(this, it.content)
                     }
                 }
             if (viewModel.dynamic.value?.isSelf == 1) { // 如果帖子是自己的，则可以删除
-                optionPopWindow.addOptionAndCallback(CommentConfig.DELETE) {
+                optionPopWindow.addOptionAndCallback(CommentConfig.DELETE,R.layout.qa_popupwindow_option_bottom) {
                     QaDialog.show(
                         this,
                         resources.getString(R.string.qa_dialog_tip_delete_dynamic_text),
                         {}) {
                         viewModel.dynamic.value?.let { dynamic ->
-                            viewModel.deleteId(dynamic.postId, DYNAMIC_DELETE)
+                            viewModel.deleteDynamic(dynamic.postId)
                         }
                     }
                 }
             } else { // 如果是别人的帖子，则可以举报
-                optionPopWindow.addOptionAndCallback(CommentConfig.REPORT) {
+                optionPopWindow.addOptionAndCallback(CommentConfig.REPORT,R.layout.qa_popupwindow_option_bottom) {
                     QaReportDialog(this).apply {
                         show { reportContent ->
                             viewModel.dynamic.value?.let { dynamic ->
-                                viewModel.report(
+                                viewModel.reportDynamic(
                                     dynamic.postId,
-                                    reportContent,
-                                    CommentConfig.REPORT_DYNAMIC_MODEL
+                                    reportContent
                                 )
                             }
                         }
                     }.show()
                 }
             }
-            optionPopWindow.show(it, OptionalPopWindow.AlignMode.RIGHT, 0)
+            this.contentView?.let { it1 -> optionPopWindow.showFromBottom(it1) }
         }
         dynamic?.let {
             qa_iv_dynamic_praise_count_image.registerLikeView(
@@ -616,22 +609,22 @@ class DynamicDetailActivity : BaseViewModelActivity<DynamicDetailViewModel>() {
 
     @SuppressLint("SetTextI18n")
     private fun refreshDynamic() {
-        qa_iv_dynamic_avatar.setAvatarImageFromUrl(viewModel.dynamic.value?.avatar)
-        qa_tv_dynamic_topic.text = "# " + viewModel.dynamic.value?.topic
-        qa_tv_dynamic_nickname.text = viewModel.dynamic.value?.nickName
-        qa_tv_dynamic_content.setContent(viewModel.dynamic.value?.content)
-        qa_tv_dynamic_comment_count.text = viewModel.dynamic.value?.commentCount.toString()
-        viewModel.dynamic.value?.let {
+
+        viewModel.dynamic.value?.apply {
+            Glide.with(context).load(identityPic).into(qa_iv_dynamic_identity)
+            qa_iv_dynamic_avatar.setAvatarImageFromUrl(avatar)
+            qa_tv_dynamic_topic.text = "# $topic"
+            qa_tv_dynamic_nickname.text = nickName
+            qa_tv_dynamic_content.setContent(content)
+            qa_tv_dynamic_comment_count.text = commentCount.toString()
             qa_iv_dynamic_praise_count_image.registerLikeView(
-                it.postId,
+                postId,
                 CommentConfig.PRAISE_MODEL_DYNAMIC,
-                it.isPraised,
-                it.praiseCount
+                isPraised,
+                praiseCount
             )
-        }
-        viewModel.dynamic.value?.let {
             qa_tv_dynamic_publish_at.text =
-                dynamicTimeDescription(System.currentTimeMillis(), it.publishTime * 1000)
+                dynamicTimeDescription(System.currentTimeMillis(), publishTime * 1000)
         }
         if (viewModel.dynamic.value?.pics.isNullOrEmpty())
             qa_dynamic_nine_grid_view.setRectangleImages(
@@ -672,6 +665,7 @@ class DynamicDetailActivity : BaseViewModelActivity<DynamicDetailViewModel>() {
             }
         }
         val data = Intent()
+
         data.putExtra("refresh_dynamic", viewModel.dynamic.value)
         setResult(-1, data)
     }

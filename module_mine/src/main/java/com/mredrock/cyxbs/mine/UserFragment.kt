@@ -4,6 +4,7 @@ import android.annotation.SuppressLint
 import android.app.Activity
 import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -15,19 +16,20 @@ import androidx.lifecycle.Observer
 import com.alibaba.android.arouter.facade.annotation.Route
 import com.alibaba.android.arouter.launcher.ARouter
 import com.mredrock.cyxbs.api.account.IAccountService
+import com.mredrock.cyxbs.common.BaseApp
+import com.mredrock.cyxbs.common.component.CyxbsToast
 import com.mredrock.cyxbs.common.config.*
 import com.mredrock.cyxbs.common.service.ServiceManager
 import com.mredrock.cyxbs.common.ui.BaseViewModelFragment
-import com.mredrock.cyxbs.common.utils.extensions.doIfLogin
-import com.mredrock.cyxbs.common.utils.extensions.loadAvatar
-import com.mredrock.cyxbs.common.utils.extensions.setOnSingleClickListener
-import com.mredrock.cyxbs.common.utils.extensions.startActivity
+import com.mredrock.cyxbs.common.utils.extensions.*
 import com.mredrock.cyxbs.mine.page.about.AboutActivity
 import com.mredrock.cyxbs.mine.page.edit.EditInfoActivity
-import com.mredrock.cyxbs.mine.page.feedback.center.ui.FeedbackCenterActivity
+import com.mredrock.cyxbs.mine.page.mine.ui.activity.FanActivity
+import com.mredrock.cyxbs.mine.page.mine.ui.activity.HomepageActivity
+import com.mredrock.cyxbs.mine.page.security.util.Jump2QQHelper
 import com.mredrock.cyxbs.mine.page.setting.SettingActivity
 import com.mredrock.cyxbs.mine.page.sign.DailySignActivity
-import kotlinx.android.synthetic.main.mine_fragment_main.*
+import kotlinx.android.synthetic.main.mine_fragment_main_new.*
 
 /**
  * Created by zzzia on 2018/8/14.
@@ -47,54 +49,28 @@ class UserFragment : BaseViewModelFragment<UserViewModel>() {
     private fun initView() {
         //功能按钮
         context?.apply {
-            mine_main_btn_sign.setOnSingleClickListener { doIfLogin { startActivity<DailySignActivity>() } }
-            mine_main_fm_setting.setOnSingleClickListener { doIfLogin { startActivity<SettingActivity>() } }
-            mine_main_fm_about_us.setOnSingleClickListener { doIfLogin { startActivity<AboutActivity>() } }
-            mine_main_fm_point_store.setOnSingleClickListener {
-//                Log.d("ggg","(UserFragment.kt:56)-->> 点击前")
-                doIfLogin { jump(STORE_ENTRY) }
-//                Log.d("ggg","(UserFragment.kt:58)-->> 点击后")
+            mine_user_tv_dynamic_number.setOnSingleClickListener { doIfLogin { jump(QA_DYNAMIC_MINE) } }
+            mine_user_tv_dynamic.setOnSingleClickListener { doIfLogin { jump(QA_DYNAMIC_MINE) } }
+            mine_user_ib_arrow.setOnSingleClickListener { doIfLogin { HomepageActivity.startHomePageActivity(null,context as Activity) } }
+            mine_user_tv_comment_number.setOnSingleClickListener { doIfLogin { jumpAndSaveTime(QA_MY_COMMENT, 1) } }
+            mine_user_tv_comment.setOnSingleClickListener { doIfLogin { jumpAndSaveTime(QA_MY_COMMENT, 1) } }
+            mine_user_tv_praise_number.setOnSingleClickListener { doIfLogin { jumpAndSaveTime(QA_MY_PRAISE, 2) } }
+            mine_user_tv_praise.setOnSingleClickListener { doIfLogin { jumpAndSaveTime(QA_MY_PRAISE, 2) } }
+            mine_user_iv_center_stamp.setOnSingleClickListener { doIfLogin { jump(STORE_ENTRY) } }
+            mine_user_iv_center_feedback.setOnSingleClickListener { doIfLogin { Jump2QQHelper.onFeedBackClick(this) } }
+
+            mine_user_tv_sign.setOnSingleClickListener { doIfLogin { startActivity<DailySignActivity>() } }
+            mine_user_btn_sign.setOnSingleClickListener { doIfLogin { startActivity<DailySignActivity>() } }
+
+            mine_user_fm_about_us.setOnSingleClickListener { doIfLogin { startActivity<AboutActivity>() } }
+            mine_user_fm_setting.setOnSingleClickListener { doIfLogin { startActivity<SettingActivity>() } }
+            mine_user_cl_info.setOnSingleClickListener { doIfLogin { HomepageActivity.startHomePageActivity(null,context as Activity) }
             }
-            mine_main_store_test.setOnClickListener {
-//                Log.d("ggg","(UserFragment.kt:62)-->> 测试按钮点击")
-                doIfLogin { jump(STORE_ENTRY) }
-//                Log.d("ggg","(UserFragment.kt:64)-->> 测试按钮结束")
-            }
-            mine_main_tv_sign.setOnSingleClickListener { doIfLogin { startActivity<DailySignActivity>() } }
-            mine_main_tv_dynamic_number.setOnSingleClickListener { doIfLogin { jump(QA_DYNAMIC_MINE) } }
-            mine_main_tv_dynamic.setOnSingleClickListener { doIfLogin { jump(QA_DYNAMIC_MINE) } }
-            mine_main_tv_comment_number.setOnSingleClickListener {
-                doIfLogin {
-                    jumpAndSaveTime(QA_MY_COMMENT,
-                        1)
-                }
-            }
-            mine_main_tv_praise_number.setOnSingleClickListener {
-                doIfLogin {
-                    jumpAndSaveTime(QA_MY_PRAISE,
-                        2)
-                }
-            }
-            mine_main_tv_comment.setOnSingleClickListener {
-                doIfLogin {
-                    jumpAndSaveTime(QA_MY_COMMENT,
-                        1)
-                }
-            }
-            mine_main_tv_praise.setOnSingleClickListener {
-                doIfLogin {
-                    jumpAndSaveTime(QA_MY_PRAISE,
-                        2)
-                }
-            }
-            /*mine_main_fm_feedback.setOnSingleClickListener { doIfLogin { Jump2QQHelper.onFeedBackClick(this) } }*/
-            mine_main_fm_feedback.setOnSingleClickListener {
-                doIfLogin {
-                    startActivity(Intent(context,
-                        FeedbackCenterActivity::class.java))
-                }
-            }
-            mine_main_cl_info_edit.setOnClickListener {
+
+            mine_user_iv_center_notification.setOnSingleClickListener { toast(R.string.mine_person_empty_notification) }
+            mine_user_tv_center_notification.setOnSingleClickListener { toast(R.string.mine_person_empty_notification) }
+
+            mine_user_avatar.setOnSingleClickListener {
                 doIfLogin {
                     startActivity(
                         Intent(
@@ -103,7 +79,7 @@ class UserFragment : BaseViewModelFragment<UserViewModel>() {
                         ),
                         ActivityOptionsCompat.makeSceneTransitionAnimation(
                             context as Activity,
-                            Pair(mine_main_avatar, "avatar")
+                            Pair(mine_user_avatar, "avatar")
                         ).toBundle()
                     )
                 }
@@ -114,9 +90,9 @@ class UserFragment : BaseViewModelFragment<UserViewModel>() {
     @SuppressLint("SetTextI18n")
     private fun addObserver() {
         viewModel.status.observe(viewLifecycleOwner, Observer {
-            mine_main_tv_sign.text = "已连续签到${it.serialDays}天 "
+            mine_user_tv_sign.text = "已连续签到 ${it.serialDays} 天 "
             if (it.isChecked) {
-                mine_main_btn_sign.apply {
+                mine_user_btn_sign.apply {
                     background = ResourcesCompat.getDrawable(
                         resources,
                         R.drawable.mine_bg_round_corner_grey,
@@ -126,11 +102,11 @@ class UserFragment : BaseViewModelFragment<UserViewModel>() {
                     setTextColor(ContextCompat.getColor(context, R.color.common_grey_button_text))
                 }
             } else {
-                mine_main_btn_sign.apply {
+                mine_user_btn_sign.apply {
                     text = "签到"
                     background = ResourcesCompat.getDrawable(
                         resources,
-                        R.drawable.common_dialog_btn_positive_blue,
+                        R.drawable.mine_shape_bg_user_btn_sign,
                         null
                     )
                     setTextColor(ContextCompat.getColor(context, R.color.common_white_font_color))
@@ -140,16 +116,17 @@ class UserFragment : BaseViewModelFragment<UserViewModel>() {
         viewModel.userCount.observe(viewLifecycleOwner, Observer {
             it?.let {
                 //可能会出现部分number为负数的情况，客户端需要处理（虽然是后端的锅）
-                viewModel.judgeChangedAndSetText(mine_main_tv_dynamic_number, it.dynamicCount)
-                viewModel.judgeChangedAndSetText(mine_main_tv_comment_number, it.commentCount)
-                viewModel.judgeChangedAndSetText(mine_main_tv_praise_number, it.praiseCount)
-                //由于视觉给的字体不是等宽的，其中数字"1"的宽度明显小于其他数字的宽度，要对此进行单独的处理
-                //基本规则是：基础距离是17dp，非1字体+15dp，1则+12dp
-                viewModel.setLeftMargin(mine_main_tv_uncheck_comment_count, it.commentCount)
-                viewModel.setLeftMargin(mine_main_tv_uncheck_praise_count, it.praiseCount)
+                Log.d("TAG","(UserFragment.kt:122)->${it.dynamicCount},${it.commentCount},${it.praiseCount}")
+                viewModel.judgeChangedAndSetText(mine_user_tv_dynamic_number, it.dynamicCount)
+                viewModel.judgeChangedAndSetText(mine_user_tv_comment_number, it.commentCount)
+                viewModel.judgeChangedAndSetText(mine_user_tv_praise_number, it.praiseCount)
+//                //由于视觉给的字体不是等宽的，其中数字"1"的宽度明显小于其他数字的宽度，要对此进行单独的处理
+//                //基本规则是：基础距离是17dp，非1字体+15dp，1则+12dp
+//                viewModel.setLeftMargin(mine_main_tv_uncheck_comment_count, it.commentCount)
+//                viewModel.setLeftMargin(mine_main_tv_uncheck_praise_count, it.praiseCount)
                 //在这里再请求unChecked的红点仅仅是为了好看，让动画显得更加流畅
-                viewModel.getUserUncheckCount(1)
-                viewModel.getUserUncheckCount(2)
+                viewModel.getUserUncheckedCommentCount()
+                viewModel.getUserUncheckedPraiseCount()
             }
         })
 
@@ -157,18 +134,25 @@ class UserFragment : BaseViewModelFragment<UserViewModel>() {
             it?.let {
                 it.uncheckPraiseCount?.let { uncheckPraise ->
                     viewModel.setViewWidthAndText(
-                        mine_main_tv_uncheck_praise_count,
+                        mine_user_tv_unchecked_notification_count,
+                        99
+                    )
+
+                    viewModel.setViewWidthAndText(
+                        mine_user_tv_unchecked_praise,
                         uncheckPraise
                     )
                 }
                 it.uncheckCommentCount?.let { uncheckComment ->
                     viewModel.setViewWidthAndText(
-                        mine_main_tv_uncheck_comment_count,
+                        mine_user_tv_unchecked_comment,
                         uncheckComment
                     )
                 }
             }
         })
+
+
     }
 
     override fun onResume() {
@@ -187,14 +171,12 @@ class UserFragment : BaseViewModelFragment<UserViewModel>() {
     //刷新和User信息有关的界面
     private fun refreshUserLayout() {
         val userService = ServiceManager.getService(IAccountService::class.java).getUserService()
-        context?.loadAvatar(userService.getAvatarImgUrl(), mine_main_avatar)
-        mine_main_username.text =
-            if (userService.getNickname().isBlank()) getString(R.string.mine_user_empty_username)
+        context?.loadAvatar(userService.getAvatarImgUrl(), mine_user_avatar)
+        mine_user_username.text =
+            if (userService.getNickname().isBlank()) BaseApp.context.getString(R.string.mine_user_empty_username)
             else userService.getNickname()
-        mine_main_introduce.text =
-            if (userService.getIntroduction()
-                    .isBlank()
-            ) getString(R.string.mine_user_empty_introduce)
+        mine_user_introduce.text =
+            if (userService.getIntroduction().isBlank()) BaseApp.context.getString(R.string.mine_user_empty_introduce)
             else userService.getIntroduction()
 
         if (userService.getNickname().isNotBlank() &&
@@ -210,14 +192,12 @@ class UserFragment : BaseViewModelFragment<UserViewModel>() {
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
-        savedInstanceState: Bundle?,
+        savedInstanceState: Bundle?
     ): View? =
-        inflater.inflate(R.layout.mine_fragment_main, container, false)
+        inflater.inflate(R.layout.mine_fragment_main_new, container, false)
 
     private fun jump(path: String) {
-//        Log.d("ggg","(UserFragment.kt:187)-->> 跳转前 path = $path")
         ARouter.getInstance().build(path).navigation()
-//        Log.d("ggg","(UserFragment.kt:189)-->> 跳转后 path = $path")
     }
 
     private fun jumpAndSaveTime(path: String, type: Int) {

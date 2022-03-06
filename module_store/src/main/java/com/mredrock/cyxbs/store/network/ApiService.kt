@@ -42,4 +42,8 @@ interface ApiService {
         @Query("page") page: Int,
         @Query("size") size: Int
     ): Observable<RedrockApiWrapper<List<StampGetRecord>>>
+
+
+
+
 }

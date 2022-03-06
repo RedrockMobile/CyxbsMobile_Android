@@ -7,6 +7,9 @@ import android.view.ViewGroup
 import android.widget.FrameLayout
 import android.widget.ImageView
 import androidx.core.view.forEach
+import com.bumptech.glide.Glide
+import com.bumptech.glide.request.RequestOptions
+import com.mredrock.cyxbs.common.config.BASE_NORMAL_IMG_URL
 import com.mredrock.cyxbs.common.utils.extensions.*
 import com.mredrock.cyxbs.qa.R
 
@@ -170,6 +173,7 @@ class NineGridView(context: Context, attrs: AttributeSet?, defStyleAttr: Int) :
                 context.loadRedrockImage(urls[i], this@apply)
             }, childCount)
         }
+
     }
 
     fun setImages(urls: List<String>, countSize: Int, imageShape: ImageMode) {
@@ -232,3 +236,5 @@ class NineGridView(context: Context, attrs: AttributeSet?, defStyleAttr: Int) :
         }
     }
 }
+
+

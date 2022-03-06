@@ -1,6 +1,7 @@
 package com.mredrock.cyxbs.qa.pages.square.ui.adapter
 
 import android.annotation.SuppressLint
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -33,7 +34,7 @@ class CircleSquareAdapter :
     /**
      * 关注按钮点击方法回调
      */
-    var concernClick: ((String, Boolean) -> Unit)? = null
+    var concernClick: ((Topic, Boolean) -> Unit)? = null
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         val view = LayoutInflater.from(parent.context)
@@ -60,7 +61,8 @@ class CircleSquareAdapter :
         init {
             // 在ViewHolder中设置点击事件，减少性能损耗
             itemView.setOnClickListener {
-                itemClick?.invoke(getItem(adapterPosition), it)
+                Log.d("TAG","(CircleSquareAdapter.kt:64)->${getItem(adapterPosition)}")
+                itemClick?.invoke(getItem(layoutPosition), it)
             }
             circleConcern.setOnClickListener {
                 val item = getItem(adapterPosition)
@@ -78,7 +80,7 @@ class CircleSquareAdapter :
                         R.drawable.qa_shape_send_dynamic_btn_grey_background
                     )
                 }
-                concernClick?.invoke(item.topicName, item._isFollow == 0)
+                concernClick?.invoke(item, item._isFollow == 0)
             }
         }
 

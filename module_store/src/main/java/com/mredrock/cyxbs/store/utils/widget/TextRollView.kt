@@ -6,7 +6,6 @@ import android.graphics.Canvas
 import android.graphics.Paint
 import android.graphics.Typeface
 import android.util.AttributeSet
-import android.util.Log
 import android.view.View
 import android.view.animation.AccelerateDecelerateInterpolator
 import androidx.core.animation.addListener
@@ -50,12 +49,14 @@ class TextRollView(
                         mNewTextList.addAll(mLastText.chunked(1))
                         mOldTextList.clear()
                         mOldTextList.addAll(mNewTextList)
+                        mDiffZero = 0
                     },
                     onCancel = {
                         mNewTextList.clear()
                         mNewTextList.addAll(mLastText.chunked(1))
                         mOldTextList.clear()
                         mOldTextList.addAll(mNewTextList)
+                        mDiffZero = 0
                     },
                     onChange = {
                         mRadio = it
@@ -146,7 +147,9 @@ class TextRollView(
             isAntiAlias = true
             textSize = size
             this.color = color
-            typeface = Typeface.createFromAsset(context.assets, font)
+            if (font != null) {
+                typeface = Typeface.createFromAsset(context.assets, font)
+            }
         }
         mOneTextWidth = mTextPaint.measureText("0")
         val fm = mTextPaint.fontMetrics

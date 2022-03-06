@@ -3,10 +3,10 @@
     package="com.mredrock.cyxbs.qa">
 
     <application android:theme="@style/AppTheme">
-        <activity android:name=".pages.mine.ui.MyPraiseActivity"></activity>
-        <activity android:name=".pages.mine.ui.MyCommentActivity" />
-        <activity android:name=".pages.mine.ui.MyIgnorePeopleActivity" />
-        <activity android:name=".pages.mine.ui.MyDynamicActivity" />
+        <activity android:name=".pages.mine.ui.activity.MyPraiseActivity"></activity>
+        <activity android:name=".pages.mine.ui.activity.MyCommentActivity" />
+        <activity android:name=".pages.mine.ui.activity.MyIgnorePeopleActivity" />
+        <activity android:name=".pages.mine.ui.activity.MyDynamicActivity" />
         <activity
             android:name=".pages.dynamic.ui.activity.ReplyDetailActivity"
             android:launchMode="singleTop" />

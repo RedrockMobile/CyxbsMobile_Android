@@ -69,6 +69,8 @@
         </androidx.constraintlayout.widget.ConstraintLayout>
 
 
+        <!--点击事件需要设置在外部的frameLayout上-->
+
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -218,8 +220,6 @@
                 app:layout_constraintStart_toStartOf="@+id/mine_main_tv_praise_number" />
         </androidx.constraintlayout.widget.ConstraintLayout>
 
-        <!--点击事件需要设置在外部的frameLayout上-->
-
         <FrameLayout
             android:id="@+id/mine_main_fm_point_store"
             android:layout_width="match_parent"
@@ -312,7 +312,6 @@
                 android:layout_marginEnd="25.5dp"
                 android:src="@drawable/mine_ic_arrow_right" />
         </FrameLayout>
-
         <Space
             android:layout_width="match_parent"
             android:layout_height="100dp" />

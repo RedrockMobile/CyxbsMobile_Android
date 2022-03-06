@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:fitsSystemWindows="true"
-    tools:context=".pages.mine.ui.MyCommentActivity">
+    tools:context=".pages.mine.ui.activity.MyCommentActivity">
 
     <include
         android:id="@+id/qa_tb_my_comment"

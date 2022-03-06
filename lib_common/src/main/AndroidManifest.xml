@@ -32,16 +32,17 @@
     <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
     <uses-permission android:name="android.permission.REQUEST_IGNORE_BATTERY_OPTIMIZATIONS" />
     <uses-permission android:name="android.permission.REQUEST_INSTALL_PACKAGES" />
-
+    <!-- 陀螺仪 -->
+    <uses-feature android:name="android.hardware.sensor.gyroscope"
+        android:required="false" />
+    <!-- 加速器 -->
+    <uses-feature android:name="android.hardware.sensor.accelerometer"
+        android:required="false" />
     <!--    弹窗权限-->
     <uses-permission android:name="android.permission.SYSTEM_ALERT_WINDOW" />
 
     <application>
-<!--        <service-->
-<!--            android:name="com.mredrock.cyxbs.update.component.AppUpdateDownloadService"-->
-<!--            android:enabled="true"-->
-<!--            android:exported="true" />-->
-
+        <!--下面这个不能动，这个与 bugly 和拍照有关-->
         <provider
             android:name="androidx.core.content.FileProvider"
             android:authorities="${applicationId}.fileProvider"

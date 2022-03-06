@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="256dp"
+    android:layout_height="157dp"
+    android:layout_marginLeft="30dp"
+    android:layout_marginRight="30dp"
+    android:background="@drawable/qa_shape_dialog_tip_background"
+    app:layout_constraintBottom_toBottomOf="parent"
+    app:layout_constraintEnd_toEndOf="parent"
+    app:layout_constraintStart_toStartOf="parent"
+    app:layout_constraintTop_toTopOf="parent">
+
+    <TextView
+        android:id="@+id/qa_tv_tip_text"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="76dp"
+        android:layout_marginTop="29dp"
+        android:layout_marginEnd="76dp"
+        android:gravity="center_horizontal"
+        android:textColor="@color/qa_dialog_tip_text_color"
+        android:textSize="11sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:text="确定删除此条评论" />
+
+    <TextView
+        android:id="@+id/qa_tv_tip_deny"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="28dp"
+        android:layout_marginTop="25dp"
+        android:layout_marginEnd="25dp"
+        android:layout_marginBottom="27dp"
+        android:background="@drawable/qa_shape_dialog_tip_deny"
+        android:text="@string/qa_dialog_tip_deny_text"
+        android:textColor="@color/common_white_font_color"
+        android:textSize="15sp"
+        android:gravity="center"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toStartOf="@+id/qa_tv_tip_positive"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/qa_view" />
+
+    <TextView
+        android:id="@+id/qa_tv_tip_positive"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="25dp"
+        android:layout_marginEnd="28dp"
+        android:layout_marginBottom="27dp"
+        android:background="@drawable/qa_shape_dialog_tip_positive"
+        android:text="@string/qa_dialog_tip_positive_text"
+        android:gravity="center"
+        android:textColor="@color/map_dialog_tip_positive_text_color"
+        android:textSize="15sp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/qa_tv_tip_deny"
+        app:layout_constraintTop_toBottomOf="@+id/qa_view" />
+
+    <View
+        android:id="@+id/qa_view"
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:layout_marginTop="29dp"
+        android:background="@color/qa_dialog_tip_div_view_background_color"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/qa_tv_tip_text" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

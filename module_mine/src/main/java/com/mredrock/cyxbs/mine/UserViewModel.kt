@@ -86,16 +86,28 @@ class UserViewModel : BaseViewModel() {
             )
     }
 
-    fun getUserUncheckCount(type: Int) {
+    fun getUserUncheckedPraiseCount() {
         val sp = BaseApp.context.defaultSharedPreferences
-        val lastCheckTimeStamp = if (type == 1) sp.getLong(UNCHECK_COMMENT_KEY, 0L) else sp.getLong(
-            UNCHECK_PRAISE_KEY,
-            0L
-        )
-        apiService.getUncheckCount(
-            lastCheckTimeStamp,
-            type
-        )
+        val lastCheckTimeStamp = sp.getLong(UNCHECK_PRAISE_KEY, 0L)
+        if (lastCheckTimeStamp == 0L) return
+        apiService.getUncheckedPraiseCount(lastCheckTimeStamp)
+            .setSchedulers()
+            .doOnErrorWithDefaultErrorHandler { true }
+            .safeSubscribeBy(
+                onNext = {
+                    _userUncheckCount.postValue(it.data)
+                },
+                onError = {
+//                    BaseApp.context.toast("获取评论等信息异常")
+                }
+            )
+    }
+
+    fun getUserUncheckedCommentCount() {
+        val sp = BaseApp.context.defaultSharedPreferences
+        val lastCheckTimeStamp = sp.getLong(UNCHECK_COMMENT_KEY, 0L)
+        if (lastCheckTimeStamp == 0L) return
+        apiService.getUncheckedCommentCount(lastCheckTimeStamp)
             .setSchedulers()
             .doOnErrorWithDefaultErrorHandler { true }
             .safeSubscribeBy(
@@ -142,21 +154,7 @@ class UserViewModel : BaseViewModel() {
         val text = getNumber(count)
         if (textView.text == text) return
         textView.visibility = View.VISIBLE
-        textView.text = text
-        val width = when {
-            count > 99 -> {
-                26.5f
-            }
-            count in 10..99 -> {
-                21.3f
-            }
-            else -> {
-                16f
-            }
-        }
-        val lp = textView.layoutParams as ConstraintLayout.LayoutParams
-        lp.width = BaseApp.context.dip(width)
-        textView.layoutParams = lp
+
         //加上一个逐渐变大弹出的动画
         val animator = ValueAnimator.ofFloat(0f, 1f)
         animator.duration = 200

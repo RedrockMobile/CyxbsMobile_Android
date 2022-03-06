@@ -28,7 +28,6 @@ class QaActivity : BaseActivity() {
             ?: ServiceManager.getService(QA_ENTRY)
         supportFragmentManager.commit {
             replace(R.id.store_fragment_qa, qaFragment, QA_ENTRY)
-            show(qaFragment)
         }
     }
 }
