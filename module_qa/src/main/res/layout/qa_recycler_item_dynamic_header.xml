@@ -89,21 +89,20 @@
         android:gravity="start"
         android:textColor="@color/qa_dynamic_content_text_color"
         android:textSize="16sp"
+        app:ep_contract_color="@color/qa_tv_expand_text_color"
+        app:ep_contract_text="折叠"
+        app:ep_expand_color="@color/qa_tv_expand_text_color"
+        app:ep_expand_text="展开"
+        app:ep_max_line="4"
+        app:ep_need_animation="true"
+        app:ep_need_contract="true"
+        app:ep_need_link="false"
+        app:ep_need_mention="false"
         app:layout_constraintEnd_toStartOf="@id/qa_gl_dynamic_end"
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toEndOf="@id/qa_gl_dynamic_start"
         app:layout_constraintTop_toBottomOf="@id/qa_iv_dynamic_avatar"
-        tools:text="约不约约不约约不约约不约约不约约不约约不约约不约约不约约不不约约不约约不约约不约约不约约不约约不约约不约约不不约约不约约不约约不约约不约约不约约不约约不约约不不约约不约约不约约不约约不约约不约约不约约不约约不约约不约约不约约不约约不约约不约约不约约不约约不约约不约约不约"
-        app:ep_max_line="4"
-        app:ep_need_animation="true"
-        app:ep_need_contract="true"
-        app:ep_expand_color="@color/qa_tv_expand_text_color"
-        app:ep_contract_color="@color/qa_tv_expand_text_color"
-        app:ep_need_link="false"
-        app:ep_need_mention="false"
-        app:ep_contract_text="折叠"
-        app:ep_expand_text="展开"
-        />
+        tools:text="约不约约不约约不约约不约约不约约不约约不约约不约约不约约不不约约不约约不约约不约约不约约不约约不约约不约约不不约约不约约不约约不约约不约约不约约不约约不约约不不约约不约约不约约不约约不约约不约约不约约不约约不约约不约约不约约不约约不约约不约约不约约不约约不约约不约约不约" />
 
     <com.mredrock.cyxbs.qa.ui.widget.NineGridView
         android:id="@+id/qa_dynamic_nine_grid_view"
@@ -128,64 +127,63 @@
         app:layout_constraintTop_toBottomOf="@+id/qa_dynamic_nine_grid_view"
         tools:text="@string/qa_recycler_item_dynamic_label" />
 
-    <com.mredrock.cyxbs.qa.ui.widget.likeview.LikeViewSlim
-        android:id="@+id/qa_iv_dynamic_praise_count_image"
-        android:layout_width="20dp"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="21dp"
-        android:layout_marginEnd="9dp"
-        app:checkedColor="#323FD9"
-        app:checkedLikeIconRes="@drawable/qa_ic_answer_list_praised_new"
-        app:cirRadius="12dp"
-        app:cycleTime="1000"
-        app:defaultColor="@color/qa_likeview_color"
-        app:defaultLikeIconRes="@drawable/qa_ic_answer_list_praise_new"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintCircleRadius="5dp"
-        app:layout_constraintEnd_toStartOf="@+id/qa_iv_dynamic_comment_count"
-        app:layout_constraintTop_toBottomOf="@+id/qa_dynamic_nine_grid_view"
-        app:ringColor="#323FD9" />
-
-    <androidx.appcompat.widget.AppCompatImageView
-        android:id="@+id/qa_iv_dynamic_comment_count"
-        android:layout_width="22dp"
-        android:layout_height="21dp"
-        android:layout_marginTop="20dp"
-        android:layout_marginEnd="4dp"
-        android:src="@drawable/qa_ic_dynamic_comment"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toStartOf="@+id/qa_tv_dynamic_comment_count"
-        app:layout_constraintTop_toBottomOf="@+id/qa_dynamic_nine_grid_view" />
-
-    <androidx.appcompat.widget.AppCompatTextView
-        android:id="@+id/qa_tv_dynamic_comment_count"
+    <!--这个LinearLayout是为了设置clipChildren属性，让点赞的文章能完全绘制-->
+    <LinearLayout
+        android:id="@+id/qa_ll_praise_parent"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="19dp"
-        android:layout_marginEnd="12dp"
-        android:text="201"
-        android:textColor="@color/qa_question_bottom_count_color"
-        android:textSize="14sp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toStartOf="@+id/qa_iv_dynamic_share"
-        app:layout_constraintTop_toBottomOf="@+id/qa_dynamic_nine_grid_view"
-        app:layout_constraintVertical_bias="0.51" />
-
-    <androidx.appcompat.widget.AppCompatImageView
-        android:id="@+id/qa_iv_dynamic_share"
-        android:layout_width="23dp"
-        android:layout_height="20dp"
-        android:layout_marginTop="20dp"
-        android:layout_marginEnd="8dp"
-        android:src="@drawable/qa_ic_dynamic_share_new"
-        android:drawablePadding="4dp"
+        android:orientation="horizontal"
         android:gravity="center_vertical"
-        android:scaleType="centerInside"
-        android:textSize="11sp"
+        android:clipChildren="false"
+        android:layout_marginTop="20dp"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toStartOf="@id/qa_gl_dynamic_end"
-        app:layout_constraintTop_toBottomOf="@+id/qa_dynamic_nine_grid_view"
-        tools:text="201" />
+        app:layout_constraintEnd_toStartOf="@+id/qa_gl_dynamic_end"
+        app:layout_constraintTop_toBottomOf="@+id/qa_dynamic_nine_grid_view">
+
+        <com.mredrock.cyxbs.qa.ui.widget.likeview.LikeViewSlim
+            android:id="@+id/qa_iv_dynamic_praise_count_image"
+            android:layout_width="20dp"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="9dp"
+            app:checkedColor="#323FD9"
+            app:checkedLikeIconRes="@drawable/qa_ic_answer_list_praised_new"
+            app:cirRadius="12dp"
+            app:cycleTime="1000"
+            app:defaultColor="@color/qa_likeview_color"
+            app:defaultLikeIconRes="@drawable/qa_ic_answer_list_praise_new"
+            app:ringColor="#323FD9" />
+
+        <androidx.appcompat.widget.AppCompatImageView
+            android:id="@+id/qa_iv_dynamic_comment_count"
+            android:layout_width="22dp"
+            android:layout_height="21dp"
+            android:layout_marginEnd="4dp"
+            android:src="@drawable/qa_ic_dynamic_comment"/>
+
+        <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/qa_tv_dynamic_comment_count"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="12dp"
+            android:text="201"
+            android:textColor="@color/qa_question_bottom_count_color"
+            android:textSize="14sp"/>
+
+        <androidx.appcompat.widget.AppCompatImageView
+            android:id="@+id/qa_iv_dynamic_share"
+            android:layout_width="23dp"
+            android:layout_height="20dp"
+            android:layout_marginEnd="8dp"
+            android:drawablePadding="4dp"
+            android:gravity="center_vertical"
+            android:scaleType="centerInside"
+            android:src="@drawable/qa_ic_dynamic_share_new"
+            android:textSize="11sp"
+            tools:text="201" />
+
+    </LinearLayout>
+
+
 
     <androidx.appcompat.widget.AppCompatImageView
         android:layout_width="match_parent"
@@ -195,7 +193,7 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/qa_iv_dynamic_praise_count_image" />
+        app:layout_constraintTop_toBottomOf="@id/qa_ll_praise_parent" />
 
     <ImageView
         android:id="@+id/qa_iv_dynamic_identity"
