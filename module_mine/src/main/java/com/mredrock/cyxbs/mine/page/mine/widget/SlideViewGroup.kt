@@ -45,7 +45,6 @@ class SlideViewGroup @JvmOverloads constructor(
 
     init {
         mViewPager = findViewById(R.id.vp2_mine)
-        Log.i("x","onStartNestedScroll")
     }
 
     private var childNestedScrollingChild:RecyclerView? = null
