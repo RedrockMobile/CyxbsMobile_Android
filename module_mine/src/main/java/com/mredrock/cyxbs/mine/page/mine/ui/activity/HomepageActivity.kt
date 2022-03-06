@@ -319,7 +319,7 @@ class HomepageActivity : BaseViewModelActivity<MineViewModel>() {
                 if (dataBinding.tvMine.text == nickname) {
                     dataBinding.tvMine.text = "个人主页"
                     dataBinding.btMineBack.setImageResource(R.drawable.mine_ic_bt_back_arrow)
-                    dataBinding.tvMine.setTextColor(ContextCompat.getColor(this, R.color.mine_white))
+                    dataBinding.tvMine.setTextColor(Color.WHITE)
 
                     dataBinding.flTabLine.visible()
                 }
