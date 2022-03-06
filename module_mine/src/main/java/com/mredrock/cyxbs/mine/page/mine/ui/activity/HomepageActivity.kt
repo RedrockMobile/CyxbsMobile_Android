@@ -23,11 +23,11 @@ import android.graphics.drawable.GradientDrawable
 import android.net.Uri
 import android.os.Environment
 import android.provider.MediaStore
-import android.view.MotionEvent
 import android.view.View
 import android.view.ViewAnimationUtils.createCircularReveal
 import android.widget.ImageView
 import androidx.core.content.ContextCompat
+import androidx.core.content.res.ResourcesCompat
 import com.afollestad.materialdialogs.MaterialDialog
 import com.afollestad.materialdialogs.list.listItems
 import com.alibaba.android.arouter.facade.annotation.Route
@@ -46,14 +46,10 @@ import com.mredrock.cyxbs.mine.page.edit.EditInfoActivity
 import com.mredrock.cyxbs.mine.page.mine.widget.BlurBitmap
 import com.mredrock.cyxbs.mine.util.transformer.ScaleInTransformer
 import com.yalantis.ucrop.UCrop
-import kotlinx.android.synthetic.main.mine_activity_homepage.view.*
 import kotlinx.android.synthetic.main.mine_activity_homepage_head.view.*
-import kotlinx.android.synthetic.main.mine_fragment_main.view.*
-import kotlinx.android.synthetic.main.mine_layout_dialog_gender.view.*
 import okhttp3.MultipartBody
 import java.io.File
 import java.io.IOException
-import kotlin.math.abs
 
 @Route(path = MINE_PERSON_PAGE)
 class HomepageActivity : BaseViewModelActivity<MineViewModel>() {
@@ -126,7 +122,7 @@ class HomepageActivity : BaseViewModelActivity<MineViewModel>() {
     var isGirl:String="男"
 
     var tabNames = listOf<String>("我的动态", "我的身份")
-    val imageViewList by lazy {
+    val imageViewList by lazyUnlock {
         mutableListOf<ImageView>(
             dataBinding.clPersonalInformation.iv_nameplate1,
             dataBinding.clPersonalInformation.iv_nameplate2,
@@ -140,16 +136,29 @@ class HomepageActivity : BaseViewModelActivity<MineViewModel>() {
 
     private val SELECT_CAMERA = 2
 
-    private val cameraImageFile by lazy { File(fileDir + File.separator + System.currentTimeMillis() + ".png") }
-    private val destinationFile by lazy { File(fileDir + File.separator + userService.getStuNum() + ".png") }
+    private val cameraImageFile by lazyUnlock { File(fileDir + File.separator + System.currentTimeMillis() + ".png") }
+    private val destinationFile by lazyUnlock { File(fileDir + File.separator + userService.getStuNum() + ".png") }
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         dataBinding = MineActivityHomepageBinding.inflate(layoutInflater)
         setContentView(dataBinding.root)
+        initRefreshLayout()
         initView()
         initData()
         initListener()
-        dataBinding.srlRefresh.isMotionEventSplittingEnabled = false
+    }
+
+    private fun initRefreshLayout() {
+        /*
+        * 官方刷新控件不能修改偏移的误差值, 在左右滑动时与 ViewPager2 出现滑动冲突问题
+        * 修改 mTouchSlop 可以修改允许的滑动偏移值, 原因可以看 SwipeRefreshLayout 的 1081 行
+        * */
+        try {
+            val field = dataBinding.srlRefresh.javaClass.getDeclaredField("mTouchSlop")
+            field.isAccessible = true
+            field.set(dataBinding.srlRefresh, 220)
+        } catch (e: Exception) {
+        }
     }
 
 
@@ -176,7 +185,6 @@ class HomepageActivity : BaseViewModelActivity<MineViewModel>() {
                 identityFragment.onSuccesss(it, isSelf)
                 dataBinding.vp2Mine.offscreenPageLimit = 2
                 redid = it
-                Log.i("redid", "别人的redid" + redid);
                 viewModel.getPersonalCount(redid)
             }
             loadBitmap(it.data.backgroundUrl) {
@@ -300,7 +308,7 @@ class HomepageActivity : BaseViewModelActivity<MineViewModel>() {
                     dataBinding.ivMineBackgroundNormal.alpha = 0f
                     dataBinding.btMineBack.setImageResource(R.drawable.mine_ic_iv_back_black_arrow)
                     dataBinding.tvMine.text = nickname
-                    dataBinding.tvMine.setTextColor(resources.getColor(R.color.mine_black))
+                    dataBinding.tvMine.setTextColor(ContextCompat.getColor(this, R.color.mine_black))
                     dataBinding.flTabLine.gone()
                 }
                 dataBinding.tvMine.alpha = -alpha
@@ -311,7 +319,7 @@ class HomepageActivity : BaseViewModelActivity<MineViewModel>() {
                 if (dataBinding.tvMine.text == nickname) {
                     dataBinding.tvMine.text = "个人主页"
                     dataBinding.btMineBack.setImageResource(R.drawable.mine_ic_bt_back_arrow)
-                    dataBinding.tvMine.setTextColor(resources.getColor(R.color.mine_white))
+                    dataBinding.tvMine.setTextColor(ContextCompat.getColor(this, R.color.mine_white))
 
                     dataBinding.flTabLine.visible()
                 }
@@ -632,13 +640,13 @@ class HomepageActivity : BaseViewModelActivity<MineViewModel>() {
             if (pregress == -1f && !isSetBackground) {
                 isSetBackground = true
                 dataBinding.mineTablayout.background =
-                    resources.getDrawable(R.drawable.mine_layer_list_shape_shadow)
+                    ResourcesCompat.getDrawable(resources, R.drawable.mine_layer_list_shape_shadow, theme)
               dataBinding.mineTablayout.elevation=this.px2dip(300)
                 dataBinding.vp2Mine.elevation=this.px2dip(0)
             }
             if (isSetBackground && pregress > -1f) {
                 dataBinding.mineTablayout.background =
-                    resources.getDrawable(R.drawable.mine_shape_ll_background)
+                    ResourcesCompat.getDrawable(resources, R.drawable.mine_shape_ll_background, theme)
            dataBinding.vp2Mine.elevation=this.px2dip(300)
                 isSetBackground = false
             }
@@ -680,32 +688,32 @@ class HomepageActivity : BaseViewModelActivity<MineViewModel>() {
     interface onGetRedid {
         fun onSuccesss(redid: String, isSelf: Boolean)
     }
-
-    var downY = 0f
-    var distance = 0f
-
-    /**
-     * 刷新滑动与左右滑动事件的处理
-     */
-    override fun dispatchTouchEvent(ev: MotionEvent): Boolean {
-
-        when (ev.action) {
-            MotionEvent.ACTION_DOWN -> {
-                downY = ev.y
-            }
-        }
-        distance = ev.y - downY
-
-        if (isNeedRefresh && distance > 80f) {
-            distance = 0f
-            return dataBinding.srlRefresh.dispatchTouchEvent(ev)
-        } else if (abs(distance) < 8f) {
-            distance = 0f
-            return super.dispatchTouchEvent(ev)
-        }
-        return dataBinding.svgMine.dispatchTouchEvent(ev)
-    }
-
-
+//
+//    var downY = 0f
+//    var distance = 0f
+//
+//    /**
+//     * 刷新滑动与左右滑动事件的处理
+//     */
+//    override fun dispatchTouchEvent(ev: MotionEvent): Boolean {
+//
+//        when (ev.action) {
+//            MotionEvent.ACTION_DOWN -> {
+//                downY = ev.y
+//            }
+//        }
+//        distance = ev.y - downY
+//
+//        if (isNeedRefresh && distance > 80f) {
+//            distance = 0f
+//            return dataBinding.srlRefresh.dispatchTouchEvent(ev)
+//        } else if (abs(distance) < 8f) {
+//            distance = 0f
+//            return super.dispatchTouchEvent(ev)
+//        }
+//        return dataBinding.svgMine.dispatchTouchEvent(ev)
+//    }
+//
+//
 
 }

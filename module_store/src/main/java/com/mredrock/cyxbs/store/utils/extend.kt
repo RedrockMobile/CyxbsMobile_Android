@@ -1,9 +1,8 @@
 package com.mredrock.cyxbs.store.utils
 
-import android.content.res.Resources
 import androidx.annotation.ColorRes
 import androidx.core.content.ContextCompat
-import com.mredrock.cyxbs.common.BaseApp.Companion.context
+import com.mredrock.cyxbs.common.BaseApp
 
 /**
  * ...
@@ -16,7 +15,7 @@ internal fun Int.dp2px(): Int {
 }
 
 internal fun Int.dp2pxF(): Float {
-    return Resources.getSystem().displayMetrics.density * this
+    return BaseApp.context.resources.displayMetrics.density * this
 }
 
 internal fun Float.dp2px(): Int {
@@ -24,12 +23,12 @@ internal fun Float.dp2px(): Int {
 }
 
 internal fun Float.dp2pxF(): Float {
-    return Resources.getSystem().displayMetrics.density * this
+    return BaseApp.context.resources.displayMetrics.density * this
 }
 
 /**
  * 写个 2 是为了与 context 中的 getColor() 同名方法区分
  */
 internal fun getColor2(@ColorRes colorId: Int): Int {
-    return ContextCompat.getColor(context, colorId)
+    return ContextCompat.getColor(BaseApp.context, colorId)
 }
