@@ -1,5 +1,5 @@
 // todo 这里是给所有子模块配置，包括 module_、lib_、api_
-apply plugin: 'kotlin-android'
+apply plugin: 'org.jetbrains.kotlin.android'
 apply plugin: 'kotlin-kapt'
 // 该插件已经被废弃，项目中也禁止再使用直接通过 id 来获取 view
 apply plugin: 'kotlin-android-extensions'
@@ -9,7 +9,6 @@ interface Func {
 }
 
 void setModule(Func closure) {
-    println "123"
     if (project.name.matches("module_.+")) closure.func()
 }
 
@@ -32,7 +31,7 @@ if (project.name == "module_app") {
 }
 
 android {
-    compileSdk build_versions.target_sdk
+    compileSdkVersion build_versions.target_sdk
 
     defaultConfig {
         minSdkVersion build_versions.min_sdk
@@ -97,7 +96,7 @@ dependencies {
     /*
     * todo
     *  1、这里是给所有子模块配置依赖，包括 module_、lib_、api_
-    *  2、如果只有你自己的模块需要单独的依赖，请添加到你自己模块的 build.gradle 中
+    *  2、如果只有你自己的模块需要单独的依赖，请添加到你自己模块的 build.gradle.kts 中
     *  3、如果以后引入一些特殊的依赖，比如：bugly 这种，只需要给 module_app 单独添加即可
     * */
 
@@ -135,4 +134,8 @@ setModule {
 setLib {
     // todo 这里是给 lib_ 配置依赖
     apply from: "$rootDir/dependencies.gradle"
+}
+
+setApi{
+    //implementation "com.alibaba:arouter-api:1.5.2"
 }

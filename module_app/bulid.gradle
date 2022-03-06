@@ -1,9 +1,6 @@
 apply plugin: "walle"
 apply from: "andresguard.gradle"
 apply from: "redex.gradle"
-
-println "app============================"
-
 android {
     defaultConfig {
         applicationId "com.mredrock.cyxbs"

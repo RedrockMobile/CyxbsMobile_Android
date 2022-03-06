@@ -1,3 +1,22 @@
+pluginManagement {
+    repositories {
+        gradlePluginPortal()
+        google()
+        mavenCentral()
+    }
+}
+dependencyResolutionManagement {
+    repositoriesMode.set(RepositoriesMode.FAIL_ON_PROJECT_REPOS)
+    repositories {
+        // 以下两行代码相当于有了 google() jcenter() mavenCentral()，使用国内的阿里镜像
+        maven { url 'https://maven.aliyun.com/repository/public' }
+        maven { url 'https://maven.aliyun.com/repository/google' }
+        maven { url 'https://jitpack.io' }
+
+        google()
+        mavenCentral()
+    }
+}
 include ':lib_account', ':lib_account:api_account'
 include ':lib_common'
 include ':lib_protocol', ':lib_protocol:api_protocol'
@@ -24,3 +43,4 @@ include ':module_volunteer', ':module_volunteer:api_volunteer'
 include ':module_widget'
 //include ':photolibrary-2.5'
 // 请按字母排序添加，且子模块添加到后面
+includeBuild 'build_logic'
