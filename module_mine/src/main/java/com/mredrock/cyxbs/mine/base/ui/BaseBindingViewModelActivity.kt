@@ -1,12 +1,9 @@
-package com.mredrock.cyxbs.common.ui
+package com.mredrock.cyxbs.mine.base.ui
 
-import android.app.Activity
 import android.os.Bundle
-import androidx.activity.ComponentActivity
 import androidx.databinding.DataBindingUtil
 import androidx.databinding.ViewDataBinding
-import androidx.lifecycle.LifecycleOwner
-import androidx.viewbinding.ViewBinding
+import com.mredrock.cyxbs.common.ui.BaseViewModelActivity
 import com.mredrock.cyxbs.common.viewmodel.BaseViewModel
 
 /**

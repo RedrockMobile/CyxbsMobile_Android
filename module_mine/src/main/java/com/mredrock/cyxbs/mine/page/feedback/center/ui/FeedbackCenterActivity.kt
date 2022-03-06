@@ -3,7 +3,7 @@ package com.mredrock.cyxbs.mine.page.feedback.center.ui
 import android.content.Intent
 import android.view.View
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.mredrock.cyxbs.common.ui.BaseMVPVMActivity
+import com.mredrock.cyxbs.mine.base.ui.BaseMVPVMActivity
 import com.mredrock.cyxbs.common.utils.extensions.setOnSingleClickListener
 import com.mredrock.cyxbs.mine.R
 import com.mredrock.cyxbs.mine.databinding.MineActivityFeedbackCenterBinding
@@ -11,7 +11,6 @@ import com.mredrock.cyxbs.mine.page.feedback.center.adapter.FeedbackCenterAdapte
 import com.mredrock.cyxbs.mine.page.feedback.center.presenter.FeedbackCenterPresenter
 import com.mredrock.cyxbs.mine.page.feedback.center.viewmodel.FeedbackCenterViewModel
 import com.mredrock.cyxbs.mine.page.feedback.edit.ui.FeedbackEditActivity
-import com.mredrock.cyxbs.mine.page.feedback.center.ui.FeedbackDetailActivity
 import com.mredrock.cyxbs.mine.page.feedback.history.list.HistoryListActivity
 import com.mredrock.cyxbs.mine.page.security.util.Jump2QQHelper
 

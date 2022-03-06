@@ -1,4 +1,4 @@
-package com.mredrock.cyxbs.common.ui
+package com.mredrock.cyxbs.mine.base.ui
 
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -7,11 +7,8 @@ import android.view.ViewGroup
 import androidx.databinding.DataBindingUtil
 import androidx.databinding.ViewDataBinding
 import androidx.lifecycle.LifecycleObserver
-import androidx.lifecycle.ViewModelProvider
 import com.mredrock.cyxbs.common.viewmodel.BaseViewModel
 import com.mredrock.cyxbs.mine.base.presenter.BasePresenter
-import com.mredrock.cyxbs.mine.base.ui.IView
-import java.lang.reflect.ParameterizedType
 
 /**
  *@author ZhiQiang Tu
@@ -23,7 +20,7 @@ import java.lang.reflect.ParameterizedType
  * 注意这个ViewModel获取的是Activity的Context，其使用情况是创建共享activity内的ViewModel
  */
 abstract class BaseMVPVMFragment<VM : BaseViewModel, T : ViewDataBinding, P : BasePresenter<*>> :
-    BaseBindingSharedVMFragment<VM,T>(), IView {
+    BaseBindingSharedVMFragment<VM, T>(), IView {
     protected var presenter: P? = null
 
 

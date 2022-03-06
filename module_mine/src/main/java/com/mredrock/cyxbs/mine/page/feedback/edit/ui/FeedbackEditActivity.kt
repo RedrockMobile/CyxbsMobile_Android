@@ -3,12 +3,10 @@ package com.mredrock.cyxbs.mine.page.feedback.edit.ui
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
-import android.provider.MediaStore
-import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.recyclerview.widget.GridLayoutManager
 import com.google.android.material.chip.Chip
-import com.mredrock.cyxbs.common.ui.BaseMVPVMActivity
+import com.mredrock.cyxbs.mine.base.ui.BaseMVPVMActivity
 import com.mredrock.cyxbs.common.utils.extensions.setOnSingleClickListener
 import com.mredrock.cyxbs.common.utils.extensions.toast
 import com.mredrock.cyxbs.common.viewmodel.event.ProgressDialogEvent
@@ -22,7 +20,6 @@ import com.mredrock.cyxbs.mine.page.feedback.utils.CHOOSE_FEED_BACK_PIC
 import com.mredrock.cyxbs.mine.page.feedback.utils.FileUtils
 import com.mredrock.cyxbs.mine.page.feedback.utils.selectImageFromAlbum
 import com.mredrock.cyxbs.mine.page.feedback.utils.setSelectedPhotos
-import java.io.File
 import java.util.*
 
 /**
@@ -121,14 +118,11 @@ class FeedbackEditActivity :
         uris.observe({ lifecycle }) {
             val list = presenter?.getBinderList(it,
                 { view, i ->
-                    toast("内容被点击")
                 }, { view, i ->
-                    toast("删除被点击")
                     presenter?.removePic(i)
                 }, { view, i ->
                     val list = ArrayList(viewModel?.uris?.value)
                     setSelectedPhotos(list)
-                    toast("添加按钮被点击")
                     this@FeedbackEditActivity.selectImageFromAlbum(3)
                 }
             )

@@ -3,9 +3,12 @@
     package="com.mredrock.cyxbs.mine">
 
     <application android:theme="@style/AppTheme">
-        <activity android:name=".page.feedback.center.ui.FeedbackDetailActivity"/>
-        <activity android:name=".page.feedback.edit.ui.FeedbackEditActivity"/>
         <activity android:name=".page.feedback.center.ui.FeedbackCenterActivity"/>
+        <activity android:name=".page.feedback.center.ui.FeedbackDetailActivity"/>
+        <activity android:name=".page.feedback.history.detail.HistoryDetailActivity" />
+        <activity android:name=".page.feedback.edit.ui.FeedbackEditActivity"/>
+        <activity android:name=".page.feedback.history.list.HistoryListActivity" />
+
         <activity android:name=".page.about.AgreementActivity"></activity>
         <activity
             android:name=".page.mine.ui.activity.IdentityActivity"
@@ -13,7 +16,6 @@
         <activity
             android:name=".page.mine.ui.activity.HomepageActivity"
             android:exported="true" />
-        <activity android:name=".page.about.AgreementActivity" />
         <activity android:name=".page.setting.SettingActivity" />
         <activity android:name=".page.security.activity.FindPasswordActivity" />
         <activity android:name=".page.security.activity.ForgetPasswordActivity" />
@@ -24,9 +26,6 @@
         <activity
             android:name=".page.security.activity.SecurityActivity"
             android:theme="@style/AppTheme.NoActionBar" />
-        <activity
-            android:name=".page.myproduct.MyProductActivity"
-            android:launchMode="singleTop" />
         <activity
             android:name=".page.edit.EditInfoActivity"
             android:launchMode="singleTop"

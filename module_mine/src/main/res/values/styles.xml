@@ -1,4 +1,4 @@
-<resources>
+<resources xmlns:tools="http://schemas.android.com/tools">
 
     <!-- Base application theme. -->
 
@@ -16,7 +16,7 @@
         <item name="android:windowBackground">@null</item>
     </style>
 
-    <style name="Widget.MaterialComponents.Chip.MyChoice" parent="Base.Widget.MaterialComponents.Chip">
+    <style name="Widget.MaterialComponents.Chip.MyChoice" parent="Base.Widget.MaterialComponents.Chip" tools:ignore="ResourceName">
         <item name="android:checkable">true</item>
 
         <item name="chipIconVisible">false</item>

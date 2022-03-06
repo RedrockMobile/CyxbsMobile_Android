@@ -2,9 +2,6 @@ package com.mredrock.cyxbs.mine.base.presenter
 
 import androidx.lifecycle.*
 import com.mredrock.cyxbs.common.viewmodel.BaseViewModel
-import com.mredrock.cyxbs.common.viewmodel.IVM
-import com.taobao.agoo.IRegister
-import java.lang.ref.WeakReference
 
 /**
  *@author ZhiQiang Tu
@@ -15,7 +12,7 @@ import java.lang.ref.WeakReference
 /**
  *  Presenter的基类，内部自动获取了ViewModel的实例
  */
-abstract class BasePresenter</*V : IView,*/ VM : IVM> : LifecycleObserver,IPresenter<VM>{
+abstract class BasePresenter<VM : BaseViewModel> : LifecycleObserver,IPresenter<VM>{
     protected var vm: VM? = null
 
     /*protected var view: WeakReference<V>? = null
@@ -33,7 +30,7 @@ abstract class BasePresenter</*V : IView,*/ VM : IVM> : LifecycleObserver,IPrese
      * @see com.mredrock.cyxbs.common.ui.BaseMVPVMFragment
      * @see com.mredrock.cyxbs.common.ui.BaseMVPVMActivity
      */
-    override fun onAttachVM(vm: IVM) {
+    override fun onAttachVM(vm: BaseViewModel) {
         this.vm = vm as VM
     }
 

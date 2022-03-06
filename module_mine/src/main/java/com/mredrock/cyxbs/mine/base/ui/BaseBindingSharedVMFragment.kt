@@ -1,4 +1,4 @@
-package com.mredrock.cyxbs.common.ui
+package com.mredrock.cyxbs.mine.base.ui
 
 import android.app.ProgressDialog
 import android.os.Bundle
@@ -10,9 +10,9 @@ import androidx.databinding.DataBindingUtil
 import androidx.databinding.ViewDataBinding
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.Observer
-import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import com.mredrock.cyxbs.common.component.CyxbsToast
+import com.mredrock.cyxbs.common.ui.BaseFragment
 import com.mredrock.cyxbs.common.viewmodel.BaseViewModel
 import com.mredrock.cyxbs.common.viewmodel.event.ProgressDialogEvent
 import java.lang.reflect.ParameterizedType

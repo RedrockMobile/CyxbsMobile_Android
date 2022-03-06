@@ -1,11 +1,11 @@
-package com.mredrock.cyxbs.common.ui
+package com.mredrock.cyxbs.mine.base.ui
 
 import android.os.Bundle
 import androidx.databinding.DataBindingUtil
 import androidx.databinding.ViewDataBinding
+import com.mredrock.cyxbs.common.ui.BaseViewModelActivity
 import com.mredrock.cyxbs.common.viewmodel.BaseViewModel
 import com.mredrock.cyxbs.mine.base.presenter.BasePresenter
-import com.mredrock.cyxbs.mine.base.ui.IView
 
 /**
  *@author ZhiQiang Tu
@@ -35,7 +35,7 @@ abstract class BaseMVPVMActivity<VM : BaseViewModel, T : ViewDataBinding, P : Ba
         //建立联系
         //LiveData+Lifecycle的作用下已经不需要view了
 //        presenter?.onAttachView(this)
-        presenter?.onAttachVM(viewModel)
+        presenter?.onAttachVM(viewModel )
         //双向关联成功
 
         //添加生命周期的监听

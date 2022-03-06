@@ -19,17 +19,6 @@ import com.mredrock.cyxbs.mine.page.feedback.utils.getPointStateSharedPreference
  */
 class HistoryListPresenter : BasePresenter<HistoryListViewModel>() {
     override fun fetch() {
-        /*
-         val defaultHistoryList = getDefaultHistoryList()
-         //获取状态
-         defaultHistoryList.forEachIndexed { index, it ->
-             val state = getState(it)
-             defaultHistoryList[index].isRead = state
-         }
-         //对list进行排序
-         val sortedList = sortHistoryList(defaultHistoryList)
-         vm?.setListData(sortedList)
-         */
 
         api.getHistoryFeedback("1")
             .setSchedulers()
@@ -51,7 +40,6 @@ class HistoryListPresenter : BasePresenter<HistoryListViewModel>() {
                                        BaseApp.context.toast("出问题啦~ ${it.message}")
             },
                 onComplete = {
-                    Log.e("TAG", "complete")
                 }, onNext = {
                     val sortHistoryList = sortHistoryList(it)
                     vm?.setListData(sortHistoryList)
