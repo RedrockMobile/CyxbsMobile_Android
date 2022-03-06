@@ -2,27 +2,37 @@ package com.mredrock.cyxbs.discover.pages
 
 import android.Manifest
 import android.annotation.SuppressLint
+import android.app.DownloadManager
 import android.content.Context
-import android.hardware.*
+import android.content.Intent
+import android.hardware.Sensor
+import android.hardware.SensorEvent
+import android.hardware.SensorEventListener
+import android.hardware.SensorManager
 import android.media.MediaScannerConnection
+import android.net.Uri
 import android.os.*
 import android.view.KeyEvent
 import android.view.KeyEvent.KEYCODE_BACK
-import android.view.View
-import android.webkit.*
+import android.view.MotionEvent
+import android.webkit.WebChromeClient
+import android.webkit.WebView
+import android.webkit.WebViewClient
 import android.widget.Toast
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
-import com.mredrock.cyxbs.common.component.CyxbsToast
 import com.mredrock.cyxbs.common.BuildConfig
+import com.mredrock.cyxbs.common.component.CyxbsToast
 import com.mredrock.cyxbs.common.config.DIR_PHOTO
 import com.mredrock.cyxbs.common.ui.BaseActivity
+import com.mredrock.cyxbs.common.utils.LogUtils
 import com.mredrock.cyxbs.common.utils.extensions.*
 import com.mredrock.cyxbs.common.webView.IAndroidWebView
+import com.mredrock.cyxbs.common.webView.WebViewBaseCallBack
 import com.mredrock.cyxbs.discover.R
 import com.mredrock.cyxbs.discover.network.RollerViewInfo
-import com.mredrock.cyxbs.common.webView.WebViewBaseCallBack
 import com.mredrock.cyxbs.discover.pages.discover.webView.WebViewFactory
 import kotlinx.android.synthetic.main.discover_activity_roller_view.*
+
 
 class RollerViewActivity : BaseActivity() {
 
@@ -56,15 +66,18 @@ class RollerViewActivity : BaseActivity() {
 
         val url = intent.getStringExtra("URL")
 
-        webApi = WebViewFactory(url,handler, {
-            //这里是调用的Js的传进来的Js代码
-            discover_web_view.post {
-                discover_web_view.evaluateJavascript(it) { }
-            }
-        },
-            {
-                CyxbsToast.makeText(this, it, Toast.LENGTH_SHORT).show()
-            }).produce()
+        webApi = url?.let {
+            WebViewFactory(
+                it,handler, {
+                    //这里是调用的Js的传进来的Js代码
+                    discover_web_view.post {
+                        discover_web_view.evaluateJavascript(it) { }
+                    }
+                },
+                {
+                    CyxbsToast.makeText(this, it, Toast.LENGTH_SHORT).show()
+                }).produce()
+        }
 
         webApi?.apply {
             discover_web_view.init(this)
@@ -79,7 +92,7 @@ class RollerViewActivity : BaseActivity() {
                 if (title != "") {
                     common_toolbar.init(title)
                 } else {
-                    common_toolbar.init(intent.getStringExtra("Key"))
+                    intent.getStringExtra("Key")?.let { common_toolbar.init(it) }
                 }
                 super.onReceivedTitle(view, title)
             }
@@ -99,6 +112,14 @@ class RollerViewActivity : BaseActivity() {
                 initSensor()
             }
         }
+        discover_web_view.setDownloadListener { url, userAgent, contentDisposition, mimetype, contentLength ->
+            val request = DownloadManager.Request(Uri.parse(url))
+            request.allowScanningByMediaScanner()
+            request.setNotificationVisibility(DownloadManager.Request.VISIBILITY_VISIBLE_NOTIFY_COMPLETED)
+            request.setDestinationInExternalPublicDir(Environment.DIRECTORY_DOWNLOADS, "DownloadFile.pdf")
+            val dm = baseContext.getSystemService(DOWNLOAD_SERVICE) as DownloadManager
+            dm.enqueue(request)
+        }
         //长按处理各种信息
         discover_web_view.setOnLongClickListener { view ->
             val result = (view as WebView).hitTestResult
@@ -109,16 +130,35 @@ class RollerViewActivity : BaseActivity() {
                 WebView.HitTestResult.IMAGE_TYPE -> {
                     val imgUrl = result.extra
                 }
+                //如果是长按超链接就跳转
+                WebView.HitTestResult.SRC_ANCHOR_TYPE -> {
+                    val intent = Intent(Intent.ACTION_VIEW,Uri.parse(result.extra))
+                    startActivity(intent)
+                    return@setOnLongClickListener true
+                }
             }
             true
         }
+        //这里为什么要用onTouch，因为clickListener收不到，需要提示用户超链接需要长按进入
+        discover_web_view.onTouch { view, motionEvent ->
+            when(motionEvent.action){
+                MotionEvent.ACTION_DOWN ->{
+                    val result = (view as WebView).hitTestResult
+                    when(result.type){
+                        WebView.HitTestResult.SRC_ANCHOR_TYPE -> {
+                            toast("长按即可跳转到浏览器打开")
+                        }
+                    }
+                }
+            }
 
+        }
     }
 
     private fun initBgm() {
         //使用Web端传入的js命令
         discover_web_view.post {
-            discover_web_view.evaluateJavascript(webApi?.onLoadStr) { }
+            webApi?.onLoadStr?.let { discover_web_view.evaluateJavascript(it) { } }
         }
     }
 
