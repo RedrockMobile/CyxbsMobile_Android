@@ -281,7 +281,6 @@ interface ApiService {
 
     // 更新动态信息
     @PUT("/magipoke-loop/post")
-    @FormUrlEncoded
     fun update()
 
     // 获取用户展示的身份

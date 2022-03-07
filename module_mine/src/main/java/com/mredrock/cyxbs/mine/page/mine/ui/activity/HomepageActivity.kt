@@ -7,7 +7,6 @@ import android.annotation.SuppressLint
 import android.app.Activity
 import android.content.Intent
 import android.os.Bundle
-import android.util.Log
 import androidx.fragment.app.Fragment
 import com.mredrock.cyxbs.common.ui.BaseViewModelActivity
 import com.mredrock.cyxbs.mine.page.mine.viewmodel.MineViewModel
@@ -28,6 +27,7 @@ import android.view.View
 import android.view.ViewAnimationUtils.createCircularReveal
 import android.widget.ImageView
 import androidx.core.content.ContextCompat
+import androidx.core.content.res.ResourcesCompat
 import com.afollestad.materialdialogs.MaterialDialog
 import com.afollestad.materialdialogs.list.listItems
 import com.alibaba.android.arouter.facade.annotation.Route
@@ -46,10 +46,7 @@ import com.mredrock.cyxbs.mine.page.edit.EditInfoActivity
 import com.mredrock.cyxbs.mine.page.mine.widget.BlurBitmap
 import com.mredrock.cyxbs.mine.util.transformer.ScaleInTransformer
 import com.yalantis.ucrop.UCrop
-import kotlinx.android.synthetic.main.mine_activity_homepage.view.*
 import kotlinx.android.synthetic.main.mine_activity_homepage_head.view.*
-import kotlinx.android.synthetic.main.mine_fragment_main.view.*
-import kotlinx.android.synthetic.main.mine_layout_dialog_gender.view.*
 import okhttp3.MultipartBody
 import java.io.File
 import java.io.IOException
@@ -108,7 +105,7 @@ class HomepageActivity : BaseViewModelActivity<MineViewModel>() {
     /**
      * 相册图片的地址
      */
-    private val fileDir by lazy {
+    private val fileDir by lazyUnlock {
         StringBuilder(Environment.getExternalStorageDirectory().path)
             .append(DIR_PHOTO)
             .toString()
@@ -126,7 +123,7 @@ class HomepageActivity : BaseViewModelActivity<MineViewModel>() {
     var isGirl:String="男"
 
     var tabNames = listOf<String>("我的动态", "我的身份")
-    val imageViewList by lazy {
+    val imageViewList by lazyUnlock {
         mutableListOf<ImageView>(
             dataBinding.clPersonalInformation.iv_nameplate1,
             dataBinding.clPersonalInformation.iv_nameplate2,
@@ -140,8 +137,8 @@ class HomepageActivity : BaseViewModelActivity<MineViewModel>() {
 
     private val SELECT_CAMERA = 2
 
-    private val cameraImageFile by lazy { File(fileDir + File.separator + System.currentTimeMillis() + ".png") }
-    private val destinationFile by lazy { File(fileDir + File.separator + userService.getStuNum() + ".png") }
+    private val cameraImageFile by lazyUnlock { File(fileDir + File.separator + System.currentTimeMillis() + ".png") }
+    private val destinationFile by lazyUnlock { File(fileDir + File.separator + userService.getStuNum() + ".png") }
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         dataBinding = MineActivityHomepageBinding.inflate(layoutInflater)
@@ -149,9 +146,7 @@ class HomepageActivity : BaseViewModelActivity<MineViewModel>() {
         initView()
         initData()
         initListener()
-        dataBinding.srlRefresh.isMotionEventSplittingEnabled = false
     }
-
 
     fun initData() {
         alphaMineView = dataBinding.clPersonalInformation.alpha
@@ -173,10 +168,9 @@ class HomepageActivity : BaseViewModelActivity<MineViewModel>() {
             isSelf = it.data.is_self
             isGirl=it.data.gender
             it.data.redid.let {
-                identityFragment.onSuccesss(it, isSelf)
+                identityFragment.onSuccess(it, isSelf)
                 dataBinding.vp2Mine.offscreenPageLimit = 2
                 redid = it
-                Log.i("redid", "别人的redid" + redid);
                 viewModel.getPersonalCount(redid)
             }
             loadBitmap(it.data.backgroundUrl) {
@@ -225,7 +219,6 @@ class HomepageActivity : BaseViewModelActivity<MineViewModel>() {
 
     @SuppressLint("ResourceAsColor")
     fun changeAttention(data: UserInfo) {
-        Log.i("测试", "是不是自己" + data.data.is_self);
         if (data.data.is_self) {
             dataBinding.clPersonalInformation.mine_tv_concern.visibility = View.INVISIBLE
         } else {
@@ -245,10 +238,7 @@ class HomepageActivity : BaseViewModelActivity<MineViewModel>() {
                 }
             }else{
                 dataBinding.clPersonalInformation.mine_tv_concern.text = "关注"
-
                     bg4.setColor(Color.parseColor("#4841E2"))
-
-
             }
         }
 
@@ -269,8 +259,6 @@ class HomepageActivity : BaseViewModelActivity<MineViewModel>() {
             viewModel.getUserInfo(null)
             MineAndQa.refreshListener?.onRefresh(null)
         }
-
-
     }
 
     fun initView() {
@@ -300,7 +288,7 @@ class HomepageActivity : BaseViewModelActivity<MineViewModel>() {
                     dataBinding.ivMineBackgroundNormal.alpha = 0f
                     dataBinding.btMineBack.setImageResource(R.drawable.mine_ic_iv_back_black_arrow)
                     dataBinding.tvMine.text = nickname
-                    dataBinding.tvMine.setTextColor(resources.getColor(R.color.mine_black))
+                    dataBinding.tvMine.setTextColor(ContextCompat.getColor(this, R.color.mine_black))
                     dataBinding.flTabLine.gone()
                 }
                 dataBinding.tvMine.alpha = -alpha
@@ -311,8 +299,7 @@ class HomepageActivity : BaseViewModelActivity<MineViewModel>() {
                 if (dataBinding.tvMine.text == nickname) {
                     dataBinding.tvMine.text = "个人主页"
                     dataBinding.btMineBack.setImageResource(R.drawable.mine_ic_bt_back_arrow)
-                    dataBinding.tvMine.setTextColor(resources.getColor(R.color.mine_white))
-
+                    dataBinding.tvMine.setTextColor(Color.WHITE)
                     dataBinding.flTabLine.visible()
                 }
                 dataBinding.flBackground.alpha = 0f
@@ -320,7 +307,7 @@ class HomepageActivity : BaseViewModelActivity<MineViewModel>() {
 
                 dataBinding.btMineBack.alpha = alpha
                 dataBinding.tvMine.alpha = alpha
-               dataBinding.flLine.alpha = alpha
+                dataBinding.flLine.alpha = alpha
 
             }
         }
@@ -331,14 +318,12 @@ class HomepageActivity : BaseViewModelActivity<MineViewModel>() {
 
         }
         dataBinding.clPersonalInformation.mine_tv_concern.setOnClickListener {
-            Log.i("关注测试", "redid" + redid);
             viewModel.changeFocusStatus(redid)
         }
         dataBinding.ivMineBackgroundNormal.setOnClickListener {
             if (isSelf) {
                 changeBackground()
             } else {
-
                 toast("不可以对别人的背景图片动手动脚哦!")
             }
         }
@@ -371,12 +356,10 @@ class HomepageActivity : BaseViewModelActivity<MineViewModel>() {
         }
 
         dataBinding.clPersonalInformation.tv_fans.setOnClickListener {
-            Log.i("点击事件","测试点击事件f粉丝tv_fan")
             redid?.let { it1 -> FanActivity.activityStart(this, it1, TO_FANS) }
         }
 
         dataBinding.clPersonalInformation.tv_attention.setOnClickListener {
-            Log.i("点击事件","测试点击事件粉丝tv_attention")
             redid?.let { it1 -> FanActivity.activityStart(this, it1, TO_ATTENTION) }
         }
         dataBinding.clPersonalInformation.tv_edit.setOnClickListener {
@@ -431,7 +414,6 @@ class HomepageActivity : BaseViewModelActivity<MineViewModel>() {
      * 分别初始化模糊和正常的Bitmap图片
      */
     fun initBlurBitmap(bitmap: Bitmap?) {
-        Log.i("背景图片","位图是否为空"+bitmap)
         if (bitmap == null) {
             mTempBitmap =
                 BitmapFactory.decodeResource(resources, R.drawable.mine_ic_iv_background)
@@ -632,13 +614,13 @@ class HomepageActivity : BaseViewModelActivity<MineViewModel>() {
             if (pregress == -1f && !isSetBackground) {
                 isSetBackground = true
                 dataBinding.mineTablayout.background =
-                    resources.getDrawable(R.drawable.mine_layer_list_shape_shadow)
+                    ResourcesCompat.getDrawable(resources, R.drawable.mine_layer_list_shape_shadow, theme)
               dataBinding.mineTablayout.elevation=this.px2dip(300)
                 dataBinding.vp2Mine.elevation=this.px2dip(0)
             }
             if (isSetBackground && pregress > -1f) {
                 dataBinding.mineTablayout.background =
-                    resources.getDrawable(R.drawable.mine_shape_ll_background)
+                    ResourcesCompat.getDrawable(resources, R.drawable.mine_shape_ll_background, theme)
            dataBinding.vp2Mine.elevation=this.px2dip(300)
                 isSetBackground = false
             }
@@ -677,8 +659,8 @@ class HomepageActivity : BaseViewModelActivity<MineViewModel>() {
     /**
      * 获取redid的接口
      */
-    interface onGetRedid {
-        fun onSuccesss(redid: String, isSelf: Boolean)
+    interface OnGetRedid {
+        fun onSuccess(redid: String, isSelf: Boolean)
     }
 
     var downY = 0f
@@ -686,6 +668,8 @@ class HomepageActivity : BaseViewModelActivity<MineViewModel>() {
 
     /**
      * 刷新滑动与左右滑动事件的处理
+     * todo 这是为了解决刷新控件的滑动冲突，但耦合性太高了，代码也比较 (，
+     *  我实在是改不了，因为界面过于耦合，建议你们重构，使用 store 模块里的 SlideUpLayout 或者 协调者布局（协调者布局也比较耦合）
      */
     override fun dispatchTouchEvent(ev: MotionEvent): Boolean {
 
@@ -696,7 +680,7 @@ class HomepageActivity : BaseViewModelActivity<MineViewModel>() {
         }
         distance = ev.y - downY
 
-        if (isNeedRefresh && distance > 80f) {
+        if (isNeedRefresh && distance > 100f) {
             distance = 0f
             return dataBinding.srlRefresh.dispatchTouchEvent(ev)
         } else if (abs(distance) < 8f) {
@@ -705,7 +689,4 @@ class HomepageActivity : BaseViewModelActivity<MineViewModel>() {
         }
         return dataBinding.svgMine.dispatchTouchEvent(ev)
     }
-
-
-
 }

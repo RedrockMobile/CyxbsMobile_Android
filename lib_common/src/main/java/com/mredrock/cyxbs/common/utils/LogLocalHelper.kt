@@ -18,7 +18,7 @@ class LogLocalHelper(
     init {
         //创建文件夹
         if (!file.exists()) {
-            file.mkdir()
+            file.mkdirs()
         }
         //删缓存
         remake()

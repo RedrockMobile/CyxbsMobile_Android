@@ -9,19 +9,21 @@ import androidx.core.view.marginBottom
 import androidx.core.view.marginLeft
 import androidx.core.view.marginRight
 import androidx.core.view.marginTop
+import com.cyxbsmobile_single.module_todo.model.TodoModel
 import com.cyxbsmobile_single.module_todo.model.bean.DateBeen
 import com.cyxbsmobile_single.module_todo.model.bean.RemindMode
 import com.cyxbsmobile_single.module_todo.model.bean.Todo
+import com.cyxbsmobile_single.module_todo.model.bean.Todo.Companion.NONE_WITH_REPEAT
+import com.cyxbsmobile_single.module_todo.model.database.TodoDatabase
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
 import com.mredrock.cyxbs.common.BaseApp
-import com.mredrock.cyxbs.common.config.TODO_ALREADY_ADDED
-import com.mredrock.cyxbs.common.config.TODO_ALREADY_ADDED_DATE
+import com.mredrock.cyxbs.common.config.TODO_REPEAT_TODO_ID_LIST
+import com.mredrock.cyxbs.common.config.TODO_REPEAT_TODO_ID_LIST_DATE
 import com.mredrock.cyxbs.common.config.TODO_WEEK_MONTH_ARRAY
-import com.mredrock.cyxbs.common.config.TODO_YEAR_OF_WEEK_MONTH_ARRAY
-import com.mredrock.cyxbs.common.utils.extensions.defaultSharedPreferences
-import com.mredrock.cyxbs.common.utils.extensions.editor
-import com.mredrock.cyxbs.common.utils.extensions.toast
+import com.mredrock.cyxbs.common.config.TODO_START_YEAR_OF_WEEK_MONTH_ARRAY
+import com.mredrock.cyxbs.common.utils.extensions.*
+import io.reactivex.Observable
 import java.text.SimpleDateFormat
 import java.util.*
 import kotlin.collections.ArrayList
@@ -93,7 +95,7 @@ fun repeatMode2RemindTime(remindMode: RemindMode): String {
         RemindMode.MONTH -> {
             remindMode.day.sort()
             if (remindMode.day.last() > 31) {
-                BaseApp.appContext.toast("提醒日期错误")
+                BaseApp.context.toast("提醒日期错误")
                 return "提醒日期错误"
             }
             repeat(12) {
@@ -182,13 +184,13 @@ fun getNextNotifyDay(remindMode: RemindMode): DateBeen {
 //返回未来四年的年份数据
 fun getYearDateSting(): ArrayList<ArrayList<DateBeen>> {
     val dateArrayJson =
-        BaseApp.appContext.defaultSharedPreferences.getString(TODO_WEEK_MONTH_ARRAY, "")
+        BaseApp.context.defaultSharedPreferences.getString(TODO_WEEK_MONTH_ARRAY, "")
     val thisYear = Calendar.getInstance().apply {
         time = Date(System.currentTimeMillis())
     }.get(Calendar.YEAR)
-    val listYear = BaseApp.appContext.defaultSharedPreferences.getInt(TODO_YEAR_OF_WEEK_MONTH_ARRAY, 0)
-    if (dateArrayJson == "" || dateArrayJson == null || thisYear == listYear) {
-        //认定本地还没有对于日期，星期数的缓存，则生成一份
+    val listYear = BaseApp.context.defaultSharedPreferences.getInt(TODO_START_YEAR_OF_WEEK_MONTH_ARRAY, 0)
+    if (dateArrayJson == "" || dateArrayJson == null || thisYear != listYear) {
+        //认定本地还没有对于日期，星期数的缓存，或者缓存已经过期（即过了一年），则生成一份
         val calendar = Calendar.getInstance()
         calendar.set(Calendar.MONTH, 0)
         calendar.set(Calendar.DAY_OF_MONTH, 1)
@@ -213,9 +215,12 @@ fun getYearDateSting(): ArrayList<ArrayList<DateBeen>> {
             calendar.set(Calendar.DAY_OF_MONTH, 1)
         }
         val arrayJson = Gson().toJson(dateBeanArrayAsFourYears)
-        BaseApp.appContext.defaultSharedPreferences
+        BaseApp.context.defaultSharedPreferences
             .editor {
+                //更新缓存的未来四年数组
                 putString(TODO_WEEK_MONTH_ARRAY, arrayJson)
+                //更新缓存的未来四年的数组的起始年份
+                putInt(TODO_START_YEAR_OF_WEEK_MONTH_ARRAY, thisYear)
             }
         val todayCalendar = Calendar.getInstance()
         dateBeanArrayAsFourYears[0].subList(0, todayCalendar.get(Calendar.DAY_OF_YEAR) - 1).clear()
@@ -242,36 +247,41 @@ fun needTodayDone(remindMode: RemindMode): Boolean {
     ) + 1
 }
 
-fun needTodayAddIn(todo: Todo): Boolean{
-    //首先需要判断是不是今天需要处理的代办
-    if (needTodayDone(todo.remindMode)){
-        //如果是今天要处理的，需要校验今天是不是已经被添加过一次了
-        //如果是，就不再添加
-        val lastAddedTime = BaseApp.appContext.defaultSharedPreferences.getInt(TODO_ALREADY_ADDED_DATE, 0)
-        val calendar = Calendar.getInstance()
-        if (lastAddedTime == calendar.get(Calendar.DAY_OF_YEAR)){
-            //确定今天已经添加进去过一次了，就不用再添加一次了
-            return false
-        }
-        //更新本地缓存的时间
-        BaseApp.appContext.defaultSharedPreferences.editor {
-            putInt(TODO_ALREADY_ADDED_DATE, calendar.get(Calendar.DAY_OF_YEAR))
-        }
-        val lastAddedTodoIdListJson = BaseApp.appContext.defaultSharedPreferences.getString(TODO_ALREADY_ADDED, "[]")
+fun setRepeatTodoList(idList : List<Long>){
+    BaseApp.context.defaultSharedPreferences.editor {
+        //更新idList
+        putString(TODO_REPEAT_TODO_ID_LIST, Gson().toJson(idList))
+        //更新时间
+        putInt(TODO_REPEAT_TODO_ID_LIST_DATE,Calendar.getInstance().get(Calendar.DAY_OF_YEAR) )
+        commit()
+    }
+}
+fun resetRepeatStatus(){
+    val lastAddedListTime = BaseApp.context.defaultSharedPreferences.getInt(TODO_REPEAT_TODO_ID_LIST_DATE, -1)
+    val calendar = Calendar.getInstance()
+    if (lastAddedListTime != calendar.get(Calendar.DAY_OF_YEAR) && lastAddedListTime != -1){
+        //名单已经过期，需要还原repeatStatus
+        val lastAddedTodoIdListJson = BaseApp.context.defaultSharedPreferences.getString(TODO_REPEAT_TODO_ID_LIST, "[]")
         val idArrayList = Gson().fromJson<ArrayList<Long>>(lastAddedTodoIdListJson, object : TypeToken<ArrayList<Int>>() {}.type)
-        return if (idArrayList.contains(todo.todoId)){
-            false
-        } else {
-            idArrayList.add(todo.todoId)
-            BaseApp.appContext.defaultSharedPreferences.editor {
-                putString(TODO_ALREADY_ADDED, Gson().toJson(idArrayList))
-                commit()
+        TodoModel.INSTANCE.getTodoByIdList(idArrayList){
+            it.forEach{ todo ->
+                todo.repeatStatus = NONE_WITH_REPEAT
             }
-            true
+
+            Observable.just(it)
+                    .map { list ->
+                        TodoDatabase.INSTANCE.todoDao()
+                                .updateTodoList(list)
+                    }.setSchedulers().safeSubscribeBy {
+
+                    }
         }
-    } else {
-        //压根没到重复的那天，就不添加了
-        return false
+
+        BaseApp.context.defaultSharedPreferences.editor {
+            //更新idList
+            putString(TODO_REPEAT_TODO_ID_LIST, "[]")
+            commit()
+        }
     }
 }
 
@@ -371,9 +381,9 @@ fun isOutOfTime(todo: Todo): Boolean {
     return date.time <= System.currentTimeMillis()
 }
 
-fun getString(id: Int): String = BaseApp.appContext.getString(id)
+fun getString(id: Int): String = BaseApp.context.getString(id)
 
-fun getColor(id: Int): Int = ContextCompat.getColor(BaseApp.appContext.context, id)
+fun getColor(id: Int): Int = ContextCompat.getColor(BaseApp.context, id)
 
 fun formatDateWithTryCatch(format: String, raw: String): Date{
     var date = Date(System.currentTimeMillis())

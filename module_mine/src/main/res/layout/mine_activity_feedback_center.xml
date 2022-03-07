@@ -1,0 +1,153 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+
+    </data>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/mine_feedback_bg_color"
+        android:fillViewport="true"
+        android:fitsSystemWindows="true">
+
+        <RelativeLayout
+            android:id="@+id/mine_relativelayout2"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent">
+
+            <ImageButton
+                android:id="@+id/fab_center_back"
+                android:layout_width="27dp"
+                android:layout_height="27dp"
+                android:layout_alignParentStart="true"
+                android:layout_centerInParent="true"
+                android:layout_gravity="center_vertical"
+                android:layout_marginStart="8dp"
+                android:layout_marginBottom="3dp"
+                android:background="?attr/selectableItemBackgroundBorderless"
+                android:contentDescription="@string/mine_stamp_back_iv"
+                android:padding="3dp"
+                android:scaleType="fitCenter"
+                app:srcCompat="@drawable/mine_ic_center_back" />
+
+            <TextView
+                android:id="@+id/tv_edit_toolbar"
+                android:layout_width="wrap_content"
+                android:layout_height="40dp"
+                android:layout_centerVertical="true"
+                android:layout_gravity="center_vertical"
+                android:layout_marginStart="0dp"
+                android:layout_marginBottom="3dp"
+                android:layout_toEndOf="@id/fab_center_back"
+                android:gravity="center_vertical"
+                android:text="@string/mine_feedback_center_toolbar_title"
+                android:textColor="@color/mine_goods_toolbar_title_tv"
+                android:textSize="22sp"
+                android:textStyle="bold" />
+
+            <ImageButton
+                android:id="@+id/iv_history"
+                android:layout_width="wrap_content"
+                android:layout_height="40dp"
+                android:layout_alignParentEnd="true"
+                android:layout_centerVertical="true"
+                android:layout_gravity="end"
+                android:layout_marginEnd="16dp"
+                android:layout_marginBottom="3dp"
+                android:background="?attr/selectableItemBackgroundBorderless"
+                android:contentDescription="@string/mine_feedback_center_history_icon"
+                android:gravity="center_vertical"
+                android:src="@drawable/mine_ic_feedback_center_history" />
+
+        </RelativeLayout>
+
+        <TextView
+            android:id="@+id/tv_normal_question"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="16dp"
+            android:layout_marginTop="24dp"
+            android:text="@string/mine_feedback_center_normal_question"
+            android:textColor="@color/mine_feedback_center_normal_question"
+            android:textSize="20sp"
+            android:textStyle="bold"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/v_underline" />
+
+        <View
+            android:id="@+id/v_underline"
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:layout_alignParentBottom="true"
+            android:background="@color/mine_feedback_divider_color"
+            app:layout_constraintTop_toBottomOf="@id/mine_relativelayout2" />
+
+        <androidx.constraintlayout.widget.Guideline
+            android:id="@+id/mine_guideline23"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            app:layout_constraintGuide_percent="0.84" />
+
+        <androidx.appcompat.widget.AppCompatButton
+            android:id="@+id/btn_question"
+            android:layout_width="155dp"
+            android:layout_height="39dp"
+            android:background="@drawable/mine_shape_edit_btn_bg"
+            android:text="@string/mine_feedback_center_btn_tv"
+            android:textColor="#FFFFFF"
+            style="@style/Widget.AppCompat.Button.Borderless"
+            android:textSize="18sp"
+            app:layout_constraintEnd_toEndOf="@+id/mine_linearlayout"
+            app:layout_constraintStart_toStartOf="@+id/mine_linearlayout"
+            app:layout_constraintTop_toTopOf="@+id/mine_guideline23"
+            tools:ignore="TouchTargetSizeCheck" />
+
+        <LinearLayout
+            android:id="@+id/mine_linearlayout"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/btn_question">
+
+            <TextView
+                android:id="@+id/tv_qq_one"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/mine_feedback_center_qq_tv"
+                android:textColor="#ABBCDB"
+                android:textSize="11sp" />
+
+            <TextView
+                android:id="@+id/tv_qq_two"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/mine_feedback_center_qq_num"
+                android:textColor="#0BCCF0"
+                android:textSize="11sp" />
+        </LinearLayout>
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/mine_recyclerview"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            app:layout_constraintBottom_toTopOf="@+id/mine_guideline23"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/tv_normal_question" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</layout>

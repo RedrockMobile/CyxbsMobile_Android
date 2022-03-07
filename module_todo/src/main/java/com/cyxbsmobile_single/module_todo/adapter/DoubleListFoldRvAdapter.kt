@@ -95,12 +95,12 @@ class DoubleListFoldRvAdapter(
     //内部check, 将条目置换到下面
     fun checkItemAndSwap(wrapper: TodoItemWrapper) {
         wrapperCopyList.remove(wrapper)
-        wrapper.todo?.isChecked = 1
+        wrapper.todo?.checked()
         wrapperCopyList.add(checkedTopMark - 1, wrapper)
         refreshList()
         //同步修改todoItemWrapperArrayList
         todoItemWrapperArrayList.remove(wrapper)
-        wrapper.todo?.isChecked = 1
+        wrapper.todo?.checked()
         todoItemWrapperArrayList.add(checkedTopMark - 1, wrapper)
         //更新database中的todo
         updateTodo(wrapper.todo)
@@ -112,7 +112,7 @@ class DoubleListFoldRvAdapter(
     //feed处的check, check之后将条目上浮
     fun checkItemAndPopUp(wrapperTodo: TodoItemWrapper) {
         wrapperCopyList.remove(wrapperTodo)
-        wrapperTodo.todo?.isChecked = 1
+        wrapperTodo.todo?.checked()
         refreshList()
         todoItemWrapperArrayList.remove(wrapperTodo)
         //更新database中的todo
@@ -357,7 +357,7 @@ class DoubleListFoldRvAdapter(
 
     private fun updateTodo(todo: Todo?) {
         todo?.let {
-            TodoModel.INSTANCE.updateTodo(todo) { }
+            TodoModel.INSTANCE.updateTodo(todo)
         }
     }
 

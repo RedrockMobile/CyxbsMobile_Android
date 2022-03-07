@@ -35,6 +35,7 @@ public class LikeView extends View implements Checkable {
      * 圆最大半径（心形）
      */
     private float mRadius;
+
     /**
      * View选中用时
      */

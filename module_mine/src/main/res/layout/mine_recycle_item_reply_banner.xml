@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <data>
+        <variable
+            name="url"
+            type="String" />
+    </data>
+<FrameLayout
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:padding="3dp">
+    <androidx.cardview.widget.CardView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:cardCornerRadius="@dimen/mine_feedback_banner_radius"
+        app:cardElevation="@dimen/mine_shop_card_elevation">
+
+        <com.mredrock.cyxbs.mine.page.feedback.widget.SquareImageView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:scaleType="centerCrop"
+            app:netImage="@{url}"
+            app:error="@{@drawable/mine_ic_feedback_reply_image_holder}"
+            app:placeholder="@{@drawable/mine_ic_feedback_reply_image_holder}"
+            app:srcCompat="@drawable/mine_ic_feedback_reply_image_holder"/>
+
+    </androidx.cardview.widget.CardView>
+</FrameLayout>
+</layout>

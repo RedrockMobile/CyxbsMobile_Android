@@ -4,11 +4,9 @@ import android.content.Context
 import android.util.AttributeSet
 import android.view.View
 import android.view.animation.OvershootInterpolator
-import android.widget.LinearLayout
 import android.widget.OverScroller
 import androidx.coordinatorlayout.widget.CoordinatorLayout
 import androidx.core.view.ViewCompat
-import androidx.core.view.marginBottom
 import com.mredrock.cyxbs.qa.R
 
 /**
@@ -64,11 +62,11 @@ class CoverHeaderBehavior(context: Context, attr: AttributeSet) : CoordinatorLay
         layoutDirection: Int
     ): Boolean {
         contentView = child
-        val circlesRv = parent.findViewById<View>(R.id.qa_rv_circles_List)
+        val circlesLayout = parent.findViewById<View>(R.id.qa_ll_header)
 
-        headerHeight = circlesRv.bottom - circlesRv.top
-        minTransY = circlesRv.top.toFloat()
-        maxTransY = circlesRv.bottom.toFloat()
+        headerHeight = circlesLayout.bottom - circlesLayout.top
+        minTransY = circlesLayout.top.toFloat()
+        maxTransY = circlesLayout.bottom.toFloat()
 
         /**
          * 页面会被多次布局，本方法会被多次调用，而第一次调用时变量并未被初始化，故加入maxTransY > 0判断

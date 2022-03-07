@@ -102,7 +102,6 @@
                 android:layout_gravity="end|center_vertical"
                 android:layout_marginEnd="16dp"/>
         </FrameLayout>
-
         <Button
             android:id="@+id/mine_setting_btn_exit"
             style="?android:attr/borderlessButtonStyle"

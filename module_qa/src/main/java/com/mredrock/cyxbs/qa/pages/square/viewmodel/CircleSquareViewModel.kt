@@ -2,7 +2,10 @@ package com.mredrock.cyxbs.qa.pages.square.viewmodel
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
+import com.mredrock.cyxbs.common.BaseApp
+import com.mredrock.cyxbs.common.bean.isSuccessful
 import com.mredrock.cyxbs.common.network.ApiGenerator
+import com.mredrock.cyxbs.common.utils.extensions.doOnErrorWithDefaultErrorHandler
 import com.mredrock.cyxbs.common.utils.extensions.mapOrThrowApiException
 import com.mredrock.cyxbs.common.utils.extensions.safeSubscribeBy
 import com.mredrock.cyxbs.common.utils.extensions.setSchedulers
@@ -45,9 +48,16 @@ class CircleSquareViewModel : BaseViewModel() {
         ApiGenerator.getApiService(ApiServiceNew::class.java)
             .followTopicGround(topicName)
             .setSchedulers()
+            .doOnError {
+                if (isFollowing) {
+                    toast("取消关注失败")
+                } else {
+                    toast("关注失败")
+                }
+            }
             .safeSubscribeBy {
-                if (it.status == 200) {
-                    // 请求成功
+                // 请求成功
+                if (it.isSuccessful) {
                     if (isFollowing) {
                         //如果处于关注状态,点击之后是取消关注
                         toastEvent.value = R.string.qa_unfollow_circle
@@ -56,9 +66,12 @@ class CircleSquareViewModel : BaseViewModel() {
                         toastEvent.value = R.string.qa_follow_circle
                     }
                 } else {
-                    toastEvent.value = R.string.qa_follow_circle
+                    if (isFollowing) {
+                        toast("取消关注失败")
+                    } else {
+                        toast("关注失败")
+                    }
                 }
             }
     }
-
 }

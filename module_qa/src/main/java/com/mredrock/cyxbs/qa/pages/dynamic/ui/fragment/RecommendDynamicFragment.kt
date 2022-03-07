@@ -108,7 +108,6 @@ class RecommendDynamicFragment : BaseDynamicFragment() {
                     TopicDataSet.getTopicData(topic)?.let {
                         CircleDetailActivity.activityStartFromCircle(
                             this@RecommendDynamicFragment,
-                            view,
                             it
                         )
                     }

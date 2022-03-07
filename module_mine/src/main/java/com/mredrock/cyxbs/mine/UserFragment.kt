@@ -16,12 +16,16 @@ import androidx.lifecycle.Observer
 import com.alibaba.android.arouter.facade.annotation.Route
 import com.alibaba.android.arouter.launcher.ARouter
 import com.mredrock.cyxbs.api.account.IAccountService
+import com.mredrock.cyxbs.common.BaseApp
+import com.mredrock.cyxbs.common.component.CyxbsToast
 import com.mredrock.cyxbs.common.config.*
 import com.mredrock.cyxbs.common.service.ServiceManager
 import com.mredrock.cyxbs.common.ui.BaseViewModelFragment
 import com.mredrock.cyxbs.common.utils.extensions.*
 import com.mredrock.cyxbs.mine.page.about.AboutActivity
 import com.mredrock.cyxbs.mine.page.edit.EditInfoActivity
+import com.mredrock.cyxbs.mine.page.feedback.center.ui.FeedbackCenterActivity
+import com.mredrock.cyxbs.mine.page.mine.ui.activity.FanActivity
 import com.mredrock.cyxbs.mine.page.mine.ui.activity.HomepageActivity
 import com.mredrock.cyxbs.mine.page.security.util.Jump2QQHelper
 import com.mredrock.cyxbs.mine.page.setting.SettingActivity
@@ -54,7 +58,7 @@ class UserFragment : BaseViewModelFragment<UserViewModel>() {
             mine_user_tv_praise_number.setOnSingleClickListener { doIfLogin { jumpAndSaveTime(QA_MY_PRAISE, 2) } }
             mine_user_tv_praise.setOnSingleClickListener { doIfLogin { jumpAndSaveTime(QA_MY_PRAISE, 2) } }
             mine_user_iv_center_stamp.setOnSingleClickListener { doIfLogin { jump(STORE_ENTRY) } }
-            mine_user_iv_center_feedback.setOnSingleClickListener { doIfLogin { Jump2QQHelper.onFeedBackClick(this) } }
+            mine_user_iv_center_feedback.setOnSingleClickListener { doIfLogin { startActivity(Intent(this,FeedbackCenterActivity::class.java)) } }
 
             mine_user_tv_sign.setOnSingleClickListener { doIfLogin { startActivity<DailySignActivity>() } }
             mine_user_btn_sign.setOnSingleClickListener { doIfLogin { startActivity<DailySignActivity>() } }
@@ -170,10 +174,10 @@ class UserFragment : BaseViewModelFragment<UserViewModel>() {
         val userService = ServiceManager.getService(IAccountService::class.java).getUserService()
         context?.loadAvatar(userService.getAvatarImgUrl(), mine_user_avatar)
         mine_user_username.text =
-            if (userService.getNickname().isBlank()) getString(R.string.mine_user_empty_username)
+            if (userService.getNickname().isBlank()) BaseApp.context.getString(R.string.mine_user_empty_username)
             else userService.getNickname()
         mine_user_introduce.text =
-            if (userService.getIntroduction().isBlank()) getString(R.string.mine_user_empty_introduce)
+            if (userService.getIntroduction().isBlank()) BaseApp.context.getString(R.string.mine_user_empty_introduce)
             else userService.getIntroduction()
 
         if (userService.getNickname().isNotBlank() &&

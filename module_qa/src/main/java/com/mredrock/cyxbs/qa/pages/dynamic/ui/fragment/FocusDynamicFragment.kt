@@ -1,6 +1,7 @@
 package com.mredrock.cyxbs.qa.pages.dynamic.ui.fragment
 
 import android.content.Intent
+import android.util.Log
 import android.view.Window
 import android.view.WindowManager
 import android.widget.TextView
@@ -97,7 +98,6 @@ class FocusDynamicFragment : BaseDynamicFragment() {
                     TopicDataSet.getTopicData(topic)?.let {
                         CircleDetailActivity.activityStartFromCircle(
                             this@FocusDynamicFragment,
-                            view,
                             it
                         )
                     }

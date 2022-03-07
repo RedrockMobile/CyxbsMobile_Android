@@ -1,27 +1,19 @@
 package com.mredrock.cyxbs.common.viewmodel
 
-import android.content.Context
 import androidx.annotation.CallSuper
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import com.mredrock.cyxbs.common.BaseApp
-import com.mredrock.cyxbs.common.utils.extensions.longToast
-import com.mredrock.cyxbs.common.utils.extensions.toast
 import com.mredrock.cyxbs.common.viewmodel.event.ProgressDialogEvent
 import com.mredrock.cyxbs.common.viewmodel.event.SingleLiveEvent
-import io.reactivex.rxjava3.disposables.Disposable
+import io.reactivex.disposables.Disposable
 
 /**
  * Created By jay68 on 2018/8/23.
  */
 open class BaseViewModel : ViewModel() {
-
-    val appContext: Context
-        get() = BaseApp.appContext
-
-    val toastEvent: MutableLiveData<Int> by lazy { SingleLiveEvent() }
-    val longToastEvent: MutableLiveData<Int> by lazy { SingleLiveEvent() }
-    val progressDialogEvent: MutableLiveData<ProgressDialogEvent> by lazy { SingleLiveEvent() }
+    val toastEvent: MutableLiveData<Int> by lazy { SingleLiveEvent<Int>() }
+    val longToastEvent: MutableLiveData<Int> by lazy { SingleLiveEvent<Int>() }
+    val progressDialogEvent: MutableLiveData<ProgressDialogEvent> by lazy { SingleLiveEvent<ProgressDialogEvent>() }
 
     private val disposables: MutableList<Disposable> = mutableListOf()
 
@@ -49,10 +41,10 @@ open class BaseViewModel : ViewModel() {
     }
 
     protected fun toast(s: CharSequence) {
-        BaseApp.appContext.toast(s)
+        BaseApp.context.toast(s)
     }
 
     protected fun toastLong(s: CharSequence) {
-        BaseApp.appContext.longToast(s)
+        BaseApp.context.longToast(s)
     }
 }

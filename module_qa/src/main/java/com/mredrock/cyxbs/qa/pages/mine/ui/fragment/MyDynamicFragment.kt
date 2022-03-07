@@ -36,7 +36,14 @@ class MyDynamicFragment : BaseViewModelFragment<MyDynamicViewModel>(), MineAndQa
     private var isCreated = false
 
     init {
+        // todo 这样写有些问题，留给你们改了
         MineAndQa.refreshListener = this
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        // todo 这样写有些问题，留给你们改了
+        MineAndQa.refreshListener = null
     }
 
     override fun onCreateView(
@@ -48,10 +55,14 @@ class MyDynamicFragment : BaseViewModelFragment<MyDynamicViewModel>(), MineAndQa
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
-       Log.i("性能测试","onActivityCreated被调用")
         isCreated = true
         viewModel.getDynamicData(redid)
         initDynamics()
+    }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        isCreated = false
     }
 
     fun initDynamics() {

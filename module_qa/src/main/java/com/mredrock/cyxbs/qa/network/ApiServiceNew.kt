@@ -118,8 +118,7 @@ interface ApiServiceNew {
 
     //删除某个动态的评论
     @DELETE("/magipoke-loop/comment")
-    @FormUrlEncoded
-    fun deleteComment(@Field("id") id: String): Observable<RedrockApiStatus>
+    fun deleteComment(@Query("id") id: String): Observable<RedrockApiStatus>
 
     //举报评论
     @POST("/magipoke-loop/report/comment")
@@ -179,11 +178,12 @@ interface ApiServiceNew {
 
     //搜索所有的东西
 
-
+    // 关注/取关用户
     @FormUrlEncoded
-    @POST("/magipoke-loop/user/focus")
+    @POST("/magipoke-loop/focus")
     fun changeFocusStatus(@Field("redid") redid: String):Observable<RedrockApiStatus>
 
+    // todo 更新动态旧接口
     @PUT("/magipoke-loop/post/dynamic")
     @Multipart
     fun modificationDynamic(@Part parts: List<MultipartBody.Part>): Observable<DynamicReleaseResult>
@@ -223,33 +223,30 @@ interface ApiServiceNew {
 
     // 取消屏蔽用户
     @DELETE("/magipoke-loop/ignore")
-    @FormUrlEncoded
     fun cancelIgnoreUid(
-        @Field("uid")
+        @Query("uid")
         uid: String
     ): Observable<RedrockApiStatus>
 
     // 获取全部被屏蔽的用户
-    @GET("/magipoke-loop/user/ignore")
+    @GET("/magipoke-loop/ignore")
     fun getIgnoreUid(
-        @Field("page") page: Int,
-        @Field("size") size: Int
+        @Query("page") page: Int,
+        @Query("size") size: Int
     ): Observable<RedrockApiWrapper<List<Ignore>>>
 
     // 获取用户收到的评论回复
-    @FormUrlEncoded
-    @POST("/magipoke-loop/user/comment/me")
+    @GET("/magipoke-loop/user/comment/me")
     fun getUserReplay(
-        @Field("page") page: Int,
-        @Field("size") size: Int
+        @Query("page") page: Int,
+        @Query("size") size: Int
     ): Observable<RedrockApiWrapper<List<CommentWrapper>>>
 
     // 获取用户收到的点赞
-    @FormUrlEncoded
-    @POST("/magipoke-loop/user/praise/me")
+    @GET("/magipoke-loop/user/praise/me")
     fun getUserPraise(
-        @Field("page") page: Int,
-        @Field("size") size: Int
+        @Query("page") page: Int,
+        @Query("size") size: Int
     ): Observable<RedrockApiWrapper<List<Praise>>>
 
 
