@@ -66,7 +66,7 @@ class MyDynamicFragment : BaseViewModelFragment<MyDynamicViewModel>(), MineAndQa
     }
 
     fun initDynamics() {
-        val mTencent = Tencent.createInstance(CommentConfig.APP_ID, context)
+        val mTencent = Tencent.createInstance(CommentConfig.APP_ID, requireContext())
         dynamicListRvAdapter =
             HybridAdapter(context) { dynamic, view ->
                 DynamicDetailActivity.activityStart(this, view, dynamic)
@@ -189,7 +189,9 @@ class MyDynamicFragment : BaseViewModelFragment<MyDynamicViewModel>(), MineAndQa
 
     override fun onRefresh(redid: String?) {
         this.redid = redid
+        Log.d("(MyDynamicFragment.kt:->187)","$isCreated")
         if (isCreated) {//避免造成viewmodel没有实例化而报错
+            Log.d("(MyDynamicFragment.kt:->188)","refresh")
             viewModel.getDynamicData(redid)
             initDynamics()
         }

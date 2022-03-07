@@ -232,12 +232,18 @@ class DynamicDetailActivity : BaseViewModelActivity<DynamicDetailViewModel>() {
             optionPopWindow.show(itemView, OptionalPopWindow.AlignMode.CENTER, 0)
 
         },
-        onMoreReplyClickEvent = { commentId ->
-            ReplyDetailActivity.activityStart(
-                this,
-                commentId,
-                null
-            )
+        onMoreReplyClickEvent = {
+            //无三级评论，删除二级评论长按逻辑
+//            ReplyDetailActivity.activityStart(
+//                this,
+//                commentId,
+//                null
+//            )
+        },
+        onAvatarClickEvent = {
+            ARouter.getInstance().build(MINE_PERSON_PAGE)
+                .withString("redid", it)
+                .navigation()
         }
     )
 
