@@ -178,11 +178,12 @@ interface ApiServiceNew {
 
     //搜索所有的东西
 
-
+    // 关注/取关用户
     @FormUrlEncoded
-    @POST("/magipoke-loop/user/focus")
+    @POST("/magipoke-loop/focus")
     fun changeFocusStatus(@Field("redid") redid: String):Observable<RedrockApiStatus>
 
+    // todo 更新动态旧接口
     @PUT("/magipoke-loop/post/dynamic")
     @Multipart
     fun modificationDynamic(@Part parts: List<MultipartBody.Part>): Observable<DynamicReleaseResult>
