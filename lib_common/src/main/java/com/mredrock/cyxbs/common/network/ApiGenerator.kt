@@ -284,7 +284,7 @@ object ApiGenerator {
                         },
                         action = { s: String ->
                             response?.close()
-//                            BaseApp.context.toast("用户认证刷新成功")
+//                            appContext.toast("用户认证刷新成功")
                             response = proceedPoxyWithTryCatch { chain.run { proceed(chain.request().newBuilder().header("Authorization", "Bearer $s").build()) } }
                         }
                 )

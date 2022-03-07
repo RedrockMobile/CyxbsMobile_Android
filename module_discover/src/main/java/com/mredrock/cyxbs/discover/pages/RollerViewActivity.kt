@@ -83,7 +83,7 @@ class RollerViewActivity : BaseActivity() {
             discover_web_view.init(this)
         }
         //加载网页
-        discover_web_view.loadUrl(url)
+        discover_web_view.loadUrl(url.toString())
         //设置几个webview的监听
         discover_web_view.webChromeClient = object : WebChromeClient() {
             //加载的时候会拿到网页的标签页名字
@@ -277,7 +277,6 @@ class RollerViewActivity : BaseActivity() {
 
     override fun onDestroy() {
         callback?.webViewDestroy()
-        root_web_ll.removeView(discover_web_view)
         discover_web_view.destroy()
         super.onDestroy()
     }

@@ -72,7 +72,7 @@ class RightTopDrawableLayout @JvmOverloads constructor(
         this.iconClicked = listener
     }
 
-    override fun dispatchDraw(canvas: Canvas?) {
+    override fun dispatchDraw(canvas: Canvas) {
         super.dispatchDraw(canvas)
         setPadding(0, dpToFloat(3f).toInt(), dpToFloat(3f).toInt(), 0)
         rightTopDrawable?.setBounds((width - rightTopDrawableSize).toInt(),

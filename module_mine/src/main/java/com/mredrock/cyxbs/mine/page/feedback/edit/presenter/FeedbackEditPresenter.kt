@@ -13,6 +13,7 @@ import android.widget.CompoundButton
 import androidx.annotation.RequiresApi
 import com.google.android.material.chip.Chip
 import com.mredrock.cyxbs.common.BaseApp
+import com.mredrock.cyxbs.common.BaseApp.Companion.appContext
 import com.mredrock.cyxbs.common.utils.extensions.getRequestBody
 import com.mredrock.cyxbs.common.utils.extensions.safeSubscribeBy
 import com.mredrock.cyxbs.common.utils.extensions.setSchedulers
@@ -77,10 +78,10 @@ class FeedbackEditPresenter(val activity:Activity) : BasePresenter<FeedbackEditV
             .doOnError { }
             .safeSubscribeBy(
                 onNext = {
-                    BaseApp.context.toast("提交成功  我们会在十四个工作日内回复")
+                    appContext.toast("提交成功  我们会在十四个工作日内回复")
                 },
                 onError = {
-                    BaseApp.context.toast("网络请求失败")
+                    appContext.toast("网络请求失败")
                 },
                 onComplete = {
                     vm?.sendFinishEvent()

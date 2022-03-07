@@ -17,16 +17,16 @@ import com.cyxbsmobile_single.module_todo.model.bean.Todo.Companion.NONE_WITH_RE
 import com.cyxbsmobile_single.module_todo.model.database.TodoDatabase
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
-import com.mredrock.cyxbs.common.BaseApp
+import com.mredrock.cyxbs.common.BaseApp.Companion.appContext
 import com.mredrock.cyxbs.common.config.TODO_REPEAT_TODO_ID_LIST
 import com.mredrock.cyxbs.common.config.TODO_REPEAT_TODO_ID_LIST_DATE
 import com.mredrock.cyxbs.common.config.TODO_WEEK_MONTH_ARRAY
 import com.mredrock.cyxbs.common.config.TODO_START_YEAR_OF_WEEK_MONTH_ARRAY
 import com.mredrock.cyxbs.common.utils.extensions.*
-import io.reactivex.Observable
-import java.text.SimpleDateFormat
 import java.util.*
 import kotlin.collections.ArrayList
+import io.reactivex.rxjava3.core.Observable
+import java.text.SimpleDateFormat
 
 /**
  * @date 2021-08-14
@@ -95,7 +95,7 @@ fun repeatMode2RemindTime(remindMode: RemindMode): String {
         RemindMode.MONTH -> {
             remindMode.day.sort()
             if (remindMode.day.last() > 31) {
-                BaseApp.context.toast("提醒日期错误")
+                appContext.toast("提醒日期错误")
                 return "提醒日期错误"
             }
             repeat(12) {
@@ -184,11 +184,11 @@ fun getNextNotifyDay(remindMode: RemindMode): DateBeen {
 //返回未来四年的年份数据
 fun getYearDateSting(): ArrayList<ArrayList<DateBeen>> {
     val dateArrayJson =
-        BaseApp.context.defaultSharedPreferences.getString(TODO_WEEK_MONTH_ARRAY, "")
+        appContext.defaultSharedPreferences.getString(TODO_WEEK_MONTH_ARRAY, "")
     val thisYear = Calendar.getInstance().apply {
         time = Date(System.currentTimeMillis())
     }.get(Calendar.YEAR)
-    val listYear = BaseApp.context.defaultSharedPreferences.getInt(TODO_START_YEAR_OF_WEEK_MONTH_ARRAY, 0)
+    val listYear = appContext.defaultSharedPreferences.getInt(TODO_START_YEAR_OF_WEEK_MONTH_ARRAY, 0)
     if (dateArrayJson == "" || dateArrayJson == null || thisYear != listYear) {
         //认定本地还没有对于日期，星期数的缓存，或者缓存已经过期（即过了一年），则生成一份
         val calendar = Calendar.getInstance()
@@ -215,7 +215,7 @@ fun getYearDateSting(): ArrayList<ArrayList<DateBeen>> {
             calendar.set(Calendar.DAY_OF_MONTH, 1)
         }
         val arrayJson = Gson().toJson(dateBeanArrayAsFourYears)
-        BaseApp.context.defaultSharedPreferences
+        appContext.defaultSharedPreferences
             .editor {
                 //更新缓存的未来四年数组
                 putString(TODO_WEEK_MONTH_ARRAY, arrayJson)
@@ -248,7 +248,7 @@ fun needTodayDone(remindMode: RemindMode): Boolean {
 }
 
 fun setRepeatTodoList(idList : List<Long>){
-    BaseApp.context.defaultSharedPreferences.editor {
+    appContext.defaultSharedPreferences.editor {
         //更新idList
         putString(TODO_REPEAT_TODO_ID_LIST, Gson().toJson(idList))
         //更新时间
@@ -257,11 +257,11 @@ fun setRepeatTodoList(idList : List<Long>){
     }
 }
 fun resetRepeatStatus(){
-    val lastAddedListTime = BaseApp.context.defaultSharedPreferences.getInt(TODO_REPEAT_TODO_ID_LIST_DATE, -1)
+    val lastAddedListTime = appContext.defaultSharedPreferences.getInt(TODO_REPEAT_TODO_ID_LIST_DATE, -1)
     val calendar = Calendar.getInstance()
     if (lastAddedListTime != calendar.get(Calendar.DAY_OF_YEAR) && lastAddedListTime != -1){
         //名单已经过期，需要还原repeatStatus
-        val lastAddedTodoIdListJson = BaseApp.context.defaultSharedPreferences.getString(TODO_REPEAT_TODO_ID_LIST, "[]")
+        val lastAddedTodoIdListJson = appContext.defaultSharedPreferences.getString(TODO_REPEAT_TODO_ID_LIST, "[]")
         val idArrayList = Gson().fromJson<ArrayList<Long>>(lastAddedTodoIdListJson, object : TypeToken<ArrayList<Int>>() {}.type)
         TodoModel.INSTANCE.getTodoByIdList(idArrayList){
             it.forEach{ todo ->
@@ -277,7 +277,7 @@ fun resetRepeatStatus(){
                     }
         }
 
-        BaseApp.context.defaultSharedPreferences.editor {
+        appContext.defaultSharedPreferences.editor {
             //更新idList
             putString(TODO_REPEAT_TODO_ID_LIST, "[]")
             commit()
@@ -381,9 +381,9 @@ fun isOutOfTime(todo: Todo): Boolean {
     return date.time <= System.currentTimeMillis()
 }
 
-fun getString(id: Int): String = BaseApp.context.getString(id)
+fun getString(id: Int): String = appContext.getString(id)
 
-fun getColor(id: Int): Int = ContextCompat.getColor(BaseApp.context, id)
+fun getColor(id: Int): Int = ContextCompat.getColor(appContext, id)
 
 fun formatDateWithTryCatch(format: String, raw: String): Date{
     var date = Date(System.currentTimeMillis())

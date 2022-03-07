@@ -32,4 +32,8 @@
 
     </style>
 
+    <style name="tab_style" tools:ignore="ResourceName">
+        <item name="android:textSize">18sp</item>
+    </style>
+
 </resources>

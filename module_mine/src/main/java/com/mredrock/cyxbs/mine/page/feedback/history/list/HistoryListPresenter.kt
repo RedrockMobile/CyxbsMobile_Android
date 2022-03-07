@@ -2,6 +2,7 @@ package com.mredrock.cyxbs.mine.page.feedback.history.list
 
 import android.widget.Toast
 import com.mredrock.cyxbs.common.BaseApp
+import com.mredrock.cyxbs.common.BaseApp.Companion.appContext
 import com.mredrock.cyxbs.common.utils.extensions.safeSubscribeBy
 import com.mredrock.cyxbs.common.utils.extensions.setSchedulers
 import com.mredrock.cyxbs.common.utils.extensions.toast
@@ -43,7 +44,7 @@ class HistoryListPresenter : BasePresenter<HistoryListViewModel>() {
                 emptyList<HistoryFeedback.Data.Feedback>()
             }
             .safeSubscribeBy(onError = {
-                BaseApp.context.toast("出问题啦~ ${it.message}")
+                appContext.toast("出问题啦~ ${it.message}")
             },
                 onComplete = {
                 }, onNext = {
@@ -129,7 +130,7 @@ class HistoryListPresenter : BasePresenter<HistoryListViewModel>() {
     //数据保存工具类
     fun savedState(data: History) {
         if (data.replyOrNot) {
-            val pointSP = BaseApp.context.getPointStateSharedPreference()
+            val pointSP = appContext.getPointStateSharedPreference()
             pointSP?.change {
                 putString(data.id.toString(), data.updateTime)
             }
@@ -138,7 +139,7 @@ class HistoryListPresenter : BasePresenter<HistoryListViewModel>() {
 
     private fun getState(replyOrNot: Boolean, id: Long, updateTime: String): Boolean {
         return if (replyOrNot) {
-            val pointSP = BaseApp.context.getPointStateSharedPreference()
+            val pointSP = appContext.getPointStateSharedPreference()
             pointSP?.getString(id.toString(), "") == updateTime
         } else {
             true

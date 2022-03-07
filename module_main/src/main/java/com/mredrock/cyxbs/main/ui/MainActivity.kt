@@ -90,7 +90,7 @@ class MainActivity : BaseViewModelActivity<MainViewModel>(),
         }
         checkSplash()
         // 暂时注释友盟
-//        InAppMessageManager.getInstance(com.mredrock.cyxbs.BaseApp.context)
+//        InAppMessageManager.getInstance(com.mredrock.cyxbs.appContext)
 //            .showCardMessage(this, "课表主页面") {} //友盟插屏消息关闭之后调用，暂未写功能
         mainService = ServiceManager.getService(IMainService::class.java)//初始化主模块服务
         viewModel.startPage.observe(

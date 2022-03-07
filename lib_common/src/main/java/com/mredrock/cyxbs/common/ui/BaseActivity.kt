@@ -61,7 +61,7 @@ abstract class BaseActivity : AppCompatActivity() {
         requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_PORTRAIT
 
         // 下面这个为友盟，暂时注释
-//        PushAgent.getInstance(com.mredrock.cyxbs.BaseApp.context).onAppStart()
+//        PushAgent.getInstance(com.mredrock.cyxbs.appContext).onAppStart()
         initFlag()
         lifeCycleLog("onCreate")
     }

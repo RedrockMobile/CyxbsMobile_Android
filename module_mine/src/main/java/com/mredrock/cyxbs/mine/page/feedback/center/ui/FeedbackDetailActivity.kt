@@ -25,7 +25,7 @@ class FeedbackDetailActivity : BaseActivity() {
                     mixedContentMode = WebSettings.MIXED_CONTENT_ALWAYS_ALLOW
                     mediaPlaybackRequiresUserGesture = false
                 }
-                loadDataWithBaseURL(null, intent.getStringExtra("content"), "text/html", "utf-8", null)
+                loadDataWithBaseURL(null, intent.getStringExtra("content").toString(), "text/html", "utf-8", null)
             }
             binding.includeToolBar.btnBack.setOnClickListener { finish() }
         }

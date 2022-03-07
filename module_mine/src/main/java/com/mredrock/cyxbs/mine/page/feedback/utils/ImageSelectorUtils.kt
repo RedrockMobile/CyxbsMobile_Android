@@ -21,7 +21,7 @@ fun AppCompatActivity.selectImageFromAlbum(maxCount: Int) {
         doAfterGranted {
             LPhotoHelper.Builder()
                 .maxChooseCount(maxCount) //最多选几个
-                .selectedPhotos(selectedPics)
+                .selectedPhotos(selectedPics?.map { it.path } as? java.util.ArrayList<String>)
                 .columnsNumber(3) //每行显示几列图片
                 .imageType(LPPImageType.ofAll()) // 文件类型
                 .pauseOnScroll(false) // 是否滑动暂停加载图片显示
