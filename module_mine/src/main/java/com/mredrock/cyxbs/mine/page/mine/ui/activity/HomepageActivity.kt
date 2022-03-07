@@ -51,6 +51,7 @@ import kotlinx.android.synthetic.main.mine_activity_homepage_head.view.*
 import okhttp3.MultipartBody
 import java.io.File
 import java.io.IOException
+import java.lang.Exception
 import kotlin.math.abs
 
 @Route(path = MINE_PERSON_PAGE)
@@ -424,8 +425,11 @@ class HomepageActivity : BaseViewModelActivity<MineViewModel>() {
             mTempBitmap = bitmap
             mFinalBitmap = BlurBitmap.blur(this, mTempBitmap!!)
         }
-
-        loadBacgroundAnmator()
+        try {
+            loadBacgroundAnmator()
+        }catch (e:Exception){
+            e.printStackTrace()
+        }
 
 
     }
@@ -692,16 +696,7 @@ class HomepageActivity : BaseViewModelActivity<MineViewModel>() {
         return dataBinding.svgMine.dispatchTouchEvent(ev)
     }
 
-    /**
-     * 修复在@HomePageActivity 界面切换深色模式 重新启动Activity资源不完全的bug
-     * 导致部分资源获取不到
-     * 手动全部重启
-     */
-    override fun onConfigurationChanged(newConfig: Configuration) {
-        super.onConfigurationChanged(newConfig)
-        this.finish()
-        startHomePageActivity(redid,this)
-    }
+
 
 
 }

@@ -59,6 +59,7 @@ class MyDynamicViewModel : BaseViewModel(){
             .safeSubscribeBy {
                 deleteTips.value = true
                 toastEvent.value = R.string.qa_delete_dynamic_success
+
             }
     }
 
