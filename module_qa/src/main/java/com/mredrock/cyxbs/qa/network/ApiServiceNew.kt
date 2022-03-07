@@ -235,19 +235,17 @@ interface ApiServiceNew {
     ): Observable<RedrockApiWrapper<List<Ignore>>>
 
     // 获取用户收到的评论回复
-    @FormUrlEncoded
-    @POST("/magipoke-loop/user/comment/me")
+    @GET("/magipoke-loop/user/comment/me")
     fun getUserReplay(
-        @Field("page") page: Int,
-        @Field("size") size: Int
+        @Query("page") page: Int,
+        @Query("size") size: Int
     ): Observable<RedrockApiWrapper<List<CommentWrapper>>>
 
     // 获取用户收到的点赞
-    @FormUrlEncoded
-    @POST("/magipoke-loop/user/praise/me")
+    @GET("/magipoke-loop/user/praise/me")
     fun getUserPraise(
-        @Field("page") page: Int,
-        @Field("size") size: Int
+        @Query("page") page: Int,
+        @Query("size") size: Int
     ): Observable<RedrockApiWrapper<List<Praise>>>
 
 

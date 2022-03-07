@@ -1,0 +1,302 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+
+        <import
+            alias="DateUtils"
+            type="com.mredrock.cyxbs.mine.page.feedback.utils.DateUtils" />
+
+        <variable
+            name="vm"
+            type="com.mredrock.cyxbs.mine.page.feedback.history.detail.HistoryDetailViewModel" />
+    </data>
+
+    <androidx.core.widget.NestedScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/mine_feedback_bg_color"
+        android:fillViewport="true"
+        tools:context=".page.feedback.history.detail.HistoryDetailActivity">
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:fitsSystemWindows="true">
+
+            <include
+                android:id="@+id/include_tool_bar"
+                layout="@layout/mine_layout_history_toolbar"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/mine_feedback_toolbar_height"
+                android:orientation="horizontal"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <View
+                android:id="@+id/mine_view"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/mine_feedback_divider_dimension"
+                android:layout_marginTop="@dimen/mine_feedback_toolbar_divider_margin_dimension"
+                android:background="@color/mine_feedback_divider_color"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/include_tool_bar" />
+
+            <androidx.appcompat.widget.AppCompatTextView
+                android:id="@+id/tv_date"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/mine_feedback_feedback_date_text_margin"
+                android:text="@{DateUtils.longToDate(`yyyy/MM/dd HH:mm`,vm.feedback.date)}"
+                android:textColor="@color/mine_feedback_toolbar_text_color"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/mine_view"
+                tools:text="@string/mine_feedback_recycle_item_test_date" />
+
+            <androidx.cardview.widget.CardView
+                android:id="@+id/cv_feedback"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/mine_feedback_cards_horizontal_margins"
+                android:layout_marginTop="@dimen/mine_feedback_cards_margin_top_dimension"
+                android:layout_marginEnd="@dimen/mine_feedback_cards_horizontal_margins"
+                android:background="@color/mine_feedback_cards_background_color"
+                app:cardCornerRadius="@dimen/mine_feedback_cards_radius"
+                app:cardElevation="@dimen/mine_feedback_banner_elevation"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/tv_date">
+
+                <androidx.appcompat.widget.LinearLayoutCompat
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:orientation="vertical"
+                    android:paddingStart="@dimen/mine_feedback_cards_horizontal_paddings"
+                    android:paddingTop="@dimen/mine_feedback_cards_vertical_paddings"
+                    android:paddingEnd="@dimen/mine_feedback_cards_horizontal_margins"
+                    android:paddingBottom="@dimen/mine_feedback_cards_vertical_paddings">
+
+
+                    <androidx.appcompat.widget.AppCompatTextView
+                        android:id="@+id/tv_feedback_title"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@{vm.feedback.title}"
+                        android:textColor="@color/mine_feedback_cards_title_color"
+                        android:textSize="@dimen/mine_feedback_cards_title_text_size"
+                        android:textStyle="bold"
+                        tools:text="@string/mine_feedback_cards_title" />
+
+                    <androidx.appcompat.widget.AppCompatTextView
+                        android:id="@+id/tv_content"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="@dimen/mine_feedback_cards_content_margin_top"
+                        android:text="@{vm.feedback.content}"
+                        android:textColor="@color/mine_feedback_cards_content_text_color"
+                        android:textSize="@dimen/mine_feedback_cards_content_text_size"
+                        tools:text="@string/mine_feedback_feedback_content_text" />
+
+                    <androidx.constraintlayout.widget.ConstraintLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="@dimen/mine_feedback_banner_marigin_top_dimension"
+                        android:orientation="horizontal"
+                        app:showView="@{vm.feedback.urls.size() > 0}"
+                        >
+
+                        <androidx.cardview.widget.CardView
+                            android:id="@+id/cv_card_1"
+                            android:layout_width="0dp"
+                            android:layout_height="0dp"
+                            android:layout_gravity="start"
+                            app:cardCornerRadius="@dimen/mine_feedback_banner_radius"
+                            app:cardElevation="@dimen/mine_feedback_banner_elevation"
+                            app:layout_constraintBottom_toBottomOf="parent"
+                            app:layout_constraintDimensionRatio="h,1:1"
+                            app:layout_constraintEnd_toStartOf="@id/cv_card_2"
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintTop_toTopOf="parent">
+
+                            <androidx.appcompat.widget.AppCompatImageView
+                                android:id="@+id/iv_feedback_pic_1"
+                                android:layout_width="match_parent"
+                                android:layout_height="match_parent"
+                                android:scaleType="centerCrop"
+                                app:error="@{@drawable/mine_ic_feedback_feedback_image_holder}"
+                                app:netImage="@{vm.feedback.urls.size() > 0 ? vm.feedback.urls.get(0) : `NULL`}"
+                                app:placeholder="@{@drawable/mine_ic_feedback_feedback_image_holder}"
+                                app:showView="@{vm.feedback.urls.size() > 0}"
+                                app:srcCompat="@drawable/mine_ic_feedback_feedback_image_holder">
+
+                            </androidx.appcompat.widget.AppCompatImageView>
+
+                        </androidx.cardview.widget.CardView>
+
+                        <androidx.cardview.widget.CardView
+                            android:id="@+id/cv_card_2"
+                            android:layout_width="0dp"
+                            android:layout_height="0dp"
+                            android:layout_gravity="center"
+                            android:layout_marginStart="@dimen/mine_feedback_banner_interval"
+                            app:cardCornerRadius="@dimen/mine_feedback_banner_radius"
+                            app:cardElevation="@dimen/mine_feedback_banner_elevation"
+                            app:layout_constraintBottom_toBottomOf="parent"
+                            app:layout_constraintDimensionRatio="h,1:1"
+                            app:layout_constraintEnd_toStartOf="@id/cv_card_3"
+                            app:layout_constraintStart_toEndOf="@id/cv_card_1"
+                            app:layout_constraintTop_toTopOf="parent">
+
+                            <androidx.appcompat.widget.AppCompatImageView
+                                android:id="@+id/iv_feedback_pic_2"
+                                android:layout_width="match_parent"
+                                android:layout_height="match_parent"
+                                android:scaleType="centerCrop"
+                                app:error="@{@drawable/mine_ic_feedback_feedback_image_holder}"
+                                app:netImage="@{vm.feedback.urls.size() > 1 ? vm.feedback.urls.get(1) : `NULL`}"
+                                app:placeholder="@{@drawable/mine_ic_feedback_feedback_image_holder}"
+                                app:showView="@{vm.feedback.urls.size() > 1}"
+                                app:srcCompat="@drawable/mine_ic_feedback_feedback_image_holder" />
+
+                        </androidx.cardview.widget.CardView>
+
+                        <androidx.cardview.widget.CardView
+                            android:id="@+id/cv_card_3"
+                            android:layout_width="0dp"
+                            android:layout_height="0dp"
+                            android:layout_gravity="end"
+                            android:layout_marginStart="@dimen/mine_feedback_banner_interval"
+                            app:cardCornerRadius="@dimen/mine_feedback_banner_radius"
+                            app:cardElevation="@dimen/mine_feedback_banner_elevation"
+                            app:layout_constraintBottom_toBottomOf="parent"
+                            app:layout_constraintDimensionRatio="h,1:1"
+                            app:layout_constraintEnd_toEndOf="parent"
+                            app:layout_constraintStart_toEndOf="@id/cv_card_2"
+                            app:layout_constraintTop_toTopOf="parent"
+                            app:srcCompat="@drawable/mine_ic_feedback_feedback_image_holder">
+
+                            <androidx.appcompat.widget.AppCompatImageView
+                                android:id="@+id/iv_feedback_pic_3"
+                                android:layout_width="match_parent"
+                                android:layout_height="match_parent"
+                                android:scaleType="centerCrop"
+                                app:error="@{@drawable/mine_ic_feedback_feedback_image_holder}"
+                                app:netImage="@{vm.feedback.urls.size() > 2 ? vm.feedback.urls.get(2) : `NULL`}"
+                                app:placeholder="@{@drawable/mine_ic_feedback_feedback_image_holder}"
+                                app:showView="@{vm.feedback.urls.size() > 2}"
+                                app:srcCompat="@drawable/mine_ic_feedback_feedback_image_holder" />
+                        </androidx.cardview.widget.CardView>
+
+                    </androidx.constraintlayout.widget.ConstraintLayout>
+
+
+                    <androidx.appcompat.widget.AppCompatTextView
+                        android:id="@+id/tv_feedback_label"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="@dimen/mine_feedback_label_text_margin_top"
+                        android:background="@drawable/mine_shape_feedback_label_bg"
+                        android:clickable="false"
+                        android:paddingStart="10dp"
+                        android:paddingTop="4dp"
+                        android:paddingEnd="10dp"
+                        android:paddingBottom="4dp"
+                        android:text="@{@string/mine_feedback_label_text(vm.feedback.label)}"
+                        android:textColor="@color/mine_feedback_label_text_color"
+                        tools:text="@string/mine_feedback_label_text" />
+
+
+                </androidx.appcompat.widget.LinearLayoutCompat>
+
+            </androidx.cardview.widget.CardView>
+
+            <androidx.appcompat.widget.AppCompatTextView
+                android:id="@+id/tv_reply_date"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/mine_feedback_reply_date_margin_top"
+                android:text="@{DateUtils.longToDate(`yyyy/MM/dd HH:mm`,vm.reply.date)}"
+                android:textColor="@color/mine_feedback_reply_date_text_color"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/cv_feedback"
+                app:showView="@{vm.isReply}"
+                tools:text="@string/mine_feedback_reply_date_test_text" />
+
+            <androidx.cardview.widget.CardView
+                android:id="@+id/cv_reply"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/mine_feedback_reply_card_horizontal_margin"
+                android:layout_marginTop="@dimen/mine_feedback_reply_card_margin_top"
+                android:layout_marginEnd="@dimen/mine_feedback_reply_card_horizontal_margin"
+                app:cardCornerRadius="@dimen/mine_feedback_cards_radius"
+                app:cardElevation="@dimen/mine_feedback_banner_elevation"
+                app:layout_constraintTop_toBottomOf="@id/tv_reply_date"
+                app:showView="@{vm.isReply}">
+
+                <androidx.appcompat.widget.LinearLayoutCompat
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:orientation="vertical"
+                    android:paddingStart="@dimen/mine_feedback_reply_card_horizontal_padding"
+                    android:paddingTop="@dimen/mine_feedback_reply_card_vertical_padding"
+                    android:paddingEnd="@dimen/mine_feedback_reply_card_horizontal_padding"
+                    android:paddingBottom="@dimen/mine_feedback_reply_card_vertical_padding">
+
+                    <androidx.appcompat.widget.AppCompatTextView
+                        android:id="@+id/tv_reply_content"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@{@string/mine_feedback_reply_content_text(vm.reply.content)}"
+                        android:textColor="@color/mine_feedback_cards_content_text_color"
+                        tools:text="@string/mine_feedback_reply_content_text" />
+
+                    <androidx.recyclerview.widget.RecyclerView
+                        android:id="@+id/rv_reply_banner"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="10dp"
+                        tools:listitem="@layout/mine_recycle_item_reply_banner" />
+
+                </androidx.appcompat.widget.LinearLayoutCompat>
+
+            </androidx.cardview.widget.CardView>
+
+            <androidx.appcompat.widget.AppCompatImageView
+                android:id="@+id/iv_none_reply"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="60dp"
+                app:layout_constraintDimensionRatio="w,122.9:110.09"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/tv_reply_date"
+                app:showView="@{!vm.isReply}"
+                app:srcCompat="@drawable/mine_ic_feedback_none_reply_image" />
+
+            <androidx.appcompat.widget.AppCompatTextView
+                android:id="@+id/tv_none_reply"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal|bottom"
+                android:layout_marginTop="16dp"
+                android:text="@string/mine_feedback_none_reply_text_content"
+                android:textColor="@color/mine_feedback_no_reply_content_color"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/iv_none_reply"
+                app:showView="@{!vm.isReply}" />
+
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+
+    </androidx.core.widget.NestedScrollView>
+
+</layout>

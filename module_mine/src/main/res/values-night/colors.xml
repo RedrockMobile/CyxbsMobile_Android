@@ -25,4 +25,77 @@
     <color name="mine_et_hint_text">#66DFDFE3</color>
     <color name="mine_white">#1D1D1D</color>
     <color name="mine_homepage_line_background">#4A5066</color>
+
+
+    <!--    反馈编辑页颜色-->
+    <color name="mine_feedback_edit_bg">#2D2D2D</color>
+    <!--    反馈添加标题颜色hint-->
+    <color name="mine_feedback_edit_title_hint">#66F0F0F2</color>
+    <!--    反馈添加标题颜色-->
+    <color name="mine_feedback_edit_title">#F0F0F2</color>
+    <!--    反馈内容描述颜色hint-->
+    <color name="mine_feedback_edit_description_hint">#66F0F0F2</color>
+    <!--    反馈内容描述颜色-->
+    <color name="mine_feedback_edit_description">#F0F0F2</color>
+    <!--    反馈图片文字颜色-->
+    <color name="mine_feedback_edit_pic">#99DFDFE3</color>
+    <!--    chip选中背景颜色-->
+    <color name="mine_edit_chip_selected">#4D4841E2</color>
+    <!--    chip选中背景颜色二-->
+    <color name="mine_edit_chip_selected_two">#4D5D5DF7</color>
+    <!--    chip边缘颜色-->
+    <color name="mine_edit_chip_border">#5C5CF6</color>
+    <!--    chip边缘未选中颜色-->
+    <color name="mine_edit_chip_border_un">#7E7E80</color>
+    <!--    chip字体选中颜色-->
+    <color name="mine_edit_chip_tv">#4F4AE9</color>
+    <!--    chip字体未选中颜色-->
+    <color name="mine_edit_chip_tv_un">#80DFDFE3</color>
+
+
+    <!--    意见与反馈主界面颜色-->
+    <!--    历史反馈图标颜色-->
+    <color name="mine_feedback_center_history">#FFFFFF</color>
+    <!--    常见问题颜色-->
+    <color name="mine_feedback_center_normal_question">#F0F0F2</color>
+    <!--    下划线第一条-->
+    <color name="mine_feedback_edit_underline">#4DF8F9FC</color>
+    <!--    记录字数的颜色-->
+    <color name="mine_feedback_edit_num">#B3DFDFE3</color>
+    <!--    主界面顶部邮票中心颜色-->
+    <color name="mine_center_toolbar_title">#DFDFE3</color>
+    <!--    顶部详情标题颜色-->
+    <color name="mine_goods_toolbar_title_tv">#DFDFE3</color>
+    <!--    item的题目颜色-->
+    <color name="mine_item_center_title">#DFDFE3</color>
+    <!--    item的下划线颜色-->
+    <color name="mine_item_v_underline">#F8F9FC</color>
+    <!--    详情页内容颜色-->
+    <color name="mine_feedback_detail_content_tv">#F0F0F2</color>
+
+    <!--    feedback-->
+    <color name="mine_feedback_toolbar_text_color">#F0F0F2</color>
+    <color name="mine_feedback_divider_color">#303031</color>
+    <color name="mine_feedback_recycle_item_title_color">#F0F0F2</color>
+    <color name="mine_feedback_recycle_item_data_color">#A5A5A8</color>
+    <color name="mine_feedback_bg_color_not_reply">#0BCCF0</color>
+    <color name="mine_feedback_bg_color_reply">#5A5A5A</color>
+    <color name="mine_feedback_cards_background_color">#FFFFFF</color>
+    <color name="mine_feedback_cards_title_color">#F0F0F2</color>
+    <color name="mine_feedback_cards_content_text_color">#F0F0F2</color>
+    <color name="mine_feedback_label_text_color">#000101</color>
+    <color name="mine_feedback_reply_date_text_color">#F0F0F2</color>
+    <color name="mine_feedback_label_bg_color">#5A5A5A</color>
+    <color name="mine_feedback_no_reply_content_color">#DFDFE3</color>
+    <color name="mine_feedback_not_reply_color">#FFE8E5</color>
+    <color name="mine_feedback_recycle_item_text_color">#000101</color>
+    <color name="mine_feedback_recycle_item_dividor_color">#333333</color>
+    <color name="mine_feedback_add_bg_color">#313131</color>
+    <color name="mine_feedback_add_fill_color">#202020</color>
+    <color name="mine_feedback_history_icon_color">#E5E5E5</color>
+    <color name="mine_feedback_edit_underline_color">#DFDFE3</color>
+    <color name="mine_feedback_bg_color">#000000</color>
+    <color name="mine_feedback_history_list_not_reply_bg_color">#2B263F</color>
+
+
 </resources>
