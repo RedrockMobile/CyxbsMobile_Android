@@ -43,10 +43,6 @@ class SlideViewGroup @JvmOverloads constructor(
      */
     private var mCanScrollDistance = 0f
 
-    init {
-        mViewPager = findViewById(R.id.vp2_mine)
-    }
-
     private var childNestedScrollingChild:RecyclerView? = null
 
     /**
@@ -61,6 +57,8 @@ class SlideViewGroup @JvmOverloads constructor(
     override fun onNestedScrollAccepted(child: View, target: View, axes: Int, type: Int) {
         valueAnimator?.cancel()
         mNestedScrollingParentHelper.onNestedScrollAccepted(child, target, axes, type)
+        Log.d("ggg", "(SlideViewGroup.kt:60)-->> " +
+                "onNestedScrollAccepted")
     }
 
 
