@@ -1,11 +1,18 @@
 package com.mredrock.cyxbs.qa.pages.search.ui.fragment
 
 import android.annotation.SuppressLint
+import android.content.Context
 import android.content.Intent
+import android.os.Bundle
+import android.util.Log
+import android.view.LayoutInflater
+import android.view.View
+import android.view.ViewGroup
 import android.view.WindowManager
 import android.widget.TextView
 import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.viewpager2.widget.ViewPager2
 import com.alibaba.android.arouter.launcher.ARouter
 import com.mredrock.cyxbs.common.config.MINE_PERSON_PAGE
 import com.mredrock.cyxbs.common.utils.extensions.doIfLogin
@@ -29,6 +36,7 @@ import com.mredrock.cyxbs.qa.utils.ClipboardController
 import com.mredrock.cyxbs.qa.utils.ShareUtils
 import com.mredrock.cyxbs.qa.utils.isNullOrEmpty
 import com.tencent.tauth.Tencent
+import kotlinx.android.synthetic.*
 import kotlinx.android.synthetic.main.qa_fragment_question_search_result.*
 import kotlinx.android.synthetic.main.qa_fragment_question_search_result_dynamic.*
 
@@ -38,7 +46,20 @@ import kotlinx.android.synthetic.main.qa_fragment_question_search_result_dynamic
  * @data 2021/9/26
  * @description
  **/
-class RelateDynamicFragment : BaseResultFragment() {
+class RelateDynamicFragment private constructor(): BaseResultFragment() {
+    companion object {
+        @Volatile
+        private var _INSTANCE:RelateDynamicFragment? =null
+
+        @JvmStatic
+        @Synchronized
+        fun getInstance(): RelateDynamicFragment {
+            if (_INSTANCE == null){
+                _INSTANCE = RelateDynamicFragment()
+            }
+            return _INSTANCE!!
+        }
+    }
     //QQ分享相关
     private var mTencent: Tencent? = null
 
@@ -47,6 +68,15 @@ class RelateDynamicFragment : BaseResultFragment() {
     private lateinit var dynamicListRvAdapter: DynamicAdapter
     var emptyRvAdapter: SearchNoResultAdapter? = null
     var footerRvAdapter: FooterRvAdapter? = null
+
+    private var initailed = false
+    //解决思路同 @{RelateUserFragment}
+    fun refreshKey(){
+        if (initailed){
+            searchKey = (requireActivity() as IKeyProvider).getKey()
+            viewModel.getQuestions(searchKey)
+        }
+    }
 
     override fun getViewModelFactory() = QuestionSearchedViewModel.Factory(searchKey)
 
@@ -73,6 +103,7 @@ class RelateDynamicFragment : BaseResultFragment() {
                 }
             }
         })
+        initailed = true
     }
 
     override fun getLayoutId() = R.layout.qa_fragment_question_search_result_dynamic
@@ -254,5 +285,10 @@ class RelateDynamicFragment : BaseResultFragment() {
                 }
             }
         }
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        _INSTANCE = null
     }
 }
