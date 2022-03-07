@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="utf-8"?>
+<selector xmlns:android="http://schemas.android.com/apk/res/android">
+       <item android:drawable="@drawable/mine_shape_edit_chip_selected" android:state_enabled="true" android:state_selected="true"/>
+       <item android:color = "#00000000" android:state_enabled="true"/>
+</selector>

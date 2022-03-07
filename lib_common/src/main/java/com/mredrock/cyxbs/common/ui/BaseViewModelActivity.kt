@@ -45,6 +45,7 @@ abstract class BaseViewModelActivity<T : BaseViewModel> : BaseActivity() {
                 //确保只有一个对话框会被弹出
                 if (it != ProgressDialogEvent.DISMISS_DIALOG_EVENT && progressDialog?.isShowing != true) {
                     progressDialog = progressDialog ?: initProgressBar()
+                    if (it == ProgressDialogEvent.SHOW_NONCANCELABLE_DIALOG_EVENT) progressDialog?.setCancelable(false)
                     progressDialog?.show()
                 } else if (it == ProgressDialogEvent.DISMISS_DIALOG_EVENT && progressDialog?.isShowing != false) {
                     progressDialog?.dismiss()
