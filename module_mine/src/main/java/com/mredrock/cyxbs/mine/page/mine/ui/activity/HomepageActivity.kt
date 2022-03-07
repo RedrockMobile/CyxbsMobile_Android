@@ -6,6 +6,7 @@ import android.animation.Animator
 import android.annotation.SuppressLint
 import android.app.Activity
 import android.content.Intent
+import android.content.res.Configuration
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import com.mredrock.cyxbs.common.ui.BaseViewModelActivity
@@ -191,6 +192,7 @@ class HomepageActivity : BaseViewModelActivity<MineViewModel>() {
     }
 
     fun initSatu(user: UserInfo) {
+
         user.data.identityies?.forEachIndexed { index, s ->
             loadRedrockImage(s, imageViewList[index])
             imageViewList[index].visibility = View.VISIBLE
@@ -700,4 +702,17 @@ class HomepageActivity : BaseViewModelActivity<MineViewModel>() {
         }
         return dataBinding.svgMine.dispatchTouchEvent(ev)
     }
+
+    /**
+     * 修复在@HomePageActivity 界面切换深色模式 重新启动Activity资源不完全的bug
+     * 导致部分资源获取不到
+     * 手动全部重启
+     */
+    override fun onConfigurationChanged(newConfig: Configuration) {
+        super.onConfigurationChanged(newConfig)
+        this.finish()
+        startHomePageActivity(redid,this)
+    }
+
+
 }
