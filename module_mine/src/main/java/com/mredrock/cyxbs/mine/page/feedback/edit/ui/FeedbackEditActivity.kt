@@ -165,7 +165,7 @@ class FeedbackEditActivity :
                             type = label,
                             title = etEditTitle.text.toString(),
                             content = etEditDescription.text.toString(),
-                            files
+                            file = files
                         )
                     } else {
                         presenter?.postFeedbackInfo(
@@ -173,7 +173,7 @@ class FeedbackEditActivity :
                             type = label,
                             title = etEditTitle.text.toString(),
                             content = etEditDescription.text.toString(),
-                            listOf()
+                            file = listOf()
                         )
                     }
                 }

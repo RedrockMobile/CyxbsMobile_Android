@@ -22,7 +22,7 @@ interface ApiService {
     @POST("/feedback-center/feedback/create")
     fun postFeedbackInfo(
         @PartMap() partMap: Map<String, @JvmSuppressWildcards RequestBody>,
-        @Part file: List<MultipartBody.Part>?,
+        @Part file: List<MultipartBody.Part>?
     ): Observable<FeedbackResponse>
 
     @GET("/feedback-center/feedback/list")
@@ -31,7 +31,7 @@ interface ApiService {
     @GET("/feedback-center/feedback/view")
     fun getDetailFeedback(
         @Query("product_id") productId: String,
-        @Query("feedback_id") feedbackId: String,
+        @Query("feedback_id") feedbackId: String
     ): Observable<HistoryDetail>
 
 }
