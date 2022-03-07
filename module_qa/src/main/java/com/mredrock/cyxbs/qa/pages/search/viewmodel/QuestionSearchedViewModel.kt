@@ -24,8 +24,8 @@ import com.mredrock.cyxbs.qa.pages.search.model.SearchQuestionDataSource
 class QuestionSearchedViewModel(var searchKey: String) : BaseViewModel() {
 
     val questionList: LiveData<PagedList<Dynamic>>
-    var knowledge = MutableLiveData<List<Knowledge>>()
-    var userList = MutableLiveData<List<UserBrief>>()
+    val knowledge = MutableLiveData<List<Knowledge>>()
+    val userList = MutableLiveData<List<UserBrief>>()
 
     val ignorePeople = MutableLiveData<Boolean>()//屏蔽
     val deleteTips = MutableLiveData<Boolean>()//删除动态
@@ -34,11 +34,11 @@ class QuestionSearchedViewModel(var searchKey: String) : BaseViewModel() {
     val initialLoad: LiveData<Int>
     val userNetworkState = MutableLiveData<Int>()
 
-    var isCreateOver: LiveData<Boolean>//判断是否网络请求参数完成
+    val isCreateOver: LiveData<Boolean>//判断是否网络请求参数完成
     var isKnowledge: Boolean = false//判断知识库的结果的有无
 
 
-    private val factory: SearchQuestionDataSource.Factory
+    private var factory: SearchQuestionDataSource.Factory
 
     init {
         val config = PagedList.Config.Builder()
@@ -55,6 +55,14 @@ class QuestionSearchedViewModel(var searchKey: String) : BaseViewModel() {
             Transformations.switchMap(factory.searchQuestionDataSourceLiveData) { it.initialLoad }
         isCreateOver =
             Transformations.switchMap(factory.searchQuestionDataSourceLiveData) { it.isCreateOver }
+    }
+
+    fun getQuestions(key: String){
+        searchKey = key
+        //刷新factory里面的key值
+        factory.refreshKey(key)
+        //声明dataSource为过时，这样就会重新获取对应的dataSource进行分页加载
+        factory.searchQuestionDataSourceLiveData.value?.invalidate()
     }
 
     fun retry() = factory.searchQuestionDataSourceLiveData.value?.retry()

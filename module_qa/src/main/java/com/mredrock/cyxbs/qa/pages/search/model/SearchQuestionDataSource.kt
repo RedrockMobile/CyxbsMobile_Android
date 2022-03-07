@@ -86,8 +86,12 @@ class SearchQuestionDataSource(private val kind: String) : PageKeyedDataSource<I
 
     override fun loadBefore(params: LoadParams<Int>, callback: LoadCallback<Int, Dynamic>) = Unit
 
-    class Factory(private val key: String) : DataSource.Factory<Int, Dynamic>() {
+    class Factory(private var key:String) : DataSource.Factory<Int, Dynamic>() {
         val searchQuestionDataSourceLiveData = MutableLiveData<SearchQuestionDataSource>()
+
+        fun refreshKey(newKey:String){
+            key = newKey
+        }
 
         override fun create(): SearchQuestionDataSource {
             val searchQuestionDataSource = SearchQuestionDataSource(key)

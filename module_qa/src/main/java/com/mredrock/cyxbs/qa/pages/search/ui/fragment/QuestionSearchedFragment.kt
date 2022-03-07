@@ -69,8 +69,8 @@ class QuestionSearchedFragment : BaseResultFragment() {
 
     override fun getLayoutId() = R.layout.qa_fragment_question_search_result
 
-    private fun initObserve(){
-        viewModel.knowledge.observe(viewLifecycleOwner, Observer{
+    private fun initObserve() {
+        viewModel.knowledge.observe(viewLifecycleOwner, Observer {
             if (!it.isNullOrEmpty()) {
                 val adapterKnowledge = SearchKnowledgeAdapter(qa_rv_knowledge)
                 val adapterSearchResultHeader =
@@ -97,12 +97,27 @@ class QuestionSearchedFragment : BaseResultFragment() {
     }
 
     private fun initPager(){
+        //这个VP2的Adapter内其实是一个RecyclerView Adapter。
+        //但是这里使用的FragmentStateAdapter，这个Adapter需要传入一个FragmentActivity。
+        //既然传入那必然是有一定的用途的。
+
+        //当有fragment的时候他会往fragmentManger里面存储，然后当下一次去使用VP2的收，先会去寻找是否fragmentManager里面有对应的fragment
+        //如果我们的Manager内部有对应的fragment就不会从我们的Adapter里面获取。
+        //具体可自行分析FragmentStateAdapter源码 ensureFragment以及restoreState (VP2版本1.0.0)
+
+        //上述的缓存会导致VP2一直无法刷新，VP2的每个Fragment都是上一次使用过的。
+        //尝试将我们的item从回退栈里面移除，but会报错，原因是我们已经使用了fragmentManager进行了transaction操作。
+        //简而言之，我已经在干活了你别来烦我。
         qa_vp_search_result.adapter = DynamicPagerAdapter(requireActivity()).apply {
-            addFragment(RelateDynamicFragment())
-            addFragment(RelateUserFragment())
+            addFragment(RelateDynamicFragment.getInstance())
+            addFragment(RelateUserFragment.getInstance())
         }
-        TabLayoutMediator(qa_tl_contract_content,qa_vp_search_result){ tab,position ->
-            when(position){
+        //刷新数据
+        RelateUserFragment.getInstance().refreshKey()
+        //刷新数据
+        RelateDynamicFragment.getInstance().refreshKey()
+        TabLayoutMediator(qa_tl_contract_content, qa_vp_search_result) { tab, position ->
+            when (position) {
                 0 -> tab.text = "内容"
                 1 -> tab.text = "用户"
             }
