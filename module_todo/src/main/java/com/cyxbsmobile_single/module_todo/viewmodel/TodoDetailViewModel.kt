@@ -2,11 +2,7 @@ package com.cyxbsmobile_single.module_todo.viewmodel
 
 import com.cyxbsmobile_single.module_todo.model.TodoModel
 import com.cyxbsmobile_single.module_todo.model.bean.Todo
-import com.cyxbsmobile_single.module_todo.model.database.TodoDatabase
-import com.mredrock.cyxbs.common.utils.extensions.safeSubscribeBy
-import com.mredrock.cyxbs.common.utils.extensions.setSchedulers
 import com.mredrock.cyxbs.common.viewmodel.BaseViewModel
-import io.reactivex.Observable
 
 /**
  * Author: RayleighZ

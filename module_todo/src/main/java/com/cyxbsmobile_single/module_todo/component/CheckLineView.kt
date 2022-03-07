@@ -10,8 +10,6 @@ import android.util.AttributeSet
 import android.view.View
 import androidx.core.animation.doOnEnd
 import com.cyxbsmobile_single.module_todo.R
-import com.mredrock.cyxbs.common.initUMeng
-import com.mredrock.cyxbs.common.utils.extensions.dip
 
 
 /**

@@ -560,12 +560,12 @@ class HomepageActivity : BaseViewModelActivity<MineViewModel>() {
 
     private fun uploadImage(result: Intent) {
         val resultUri = UCrop.getOutput(result)
-        val bitmap = BitmapFactory.decodeStream(contentResolver.openInputStream(resultUri))
-        initBlurBitmap(bitmap)
         if (resultUri == null) {
             toast("无法获得裁剪结果")
             return
         }
+        val bitmap = BitmapFactory.decodeStream(contentResolver.openInputStream(resultUri))
+        initBlurBitmap(bitmap)
 
         try {
 

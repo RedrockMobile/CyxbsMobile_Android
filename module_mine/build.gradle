@@ -13,4 +13,5 @@ dependencies {
     implementation 'com.contrarywind:Android-PickerView:4.1.9'
     implementation 'com.kyleduo.switchbutton:library:2.0.0'
     implementation 'de.hdodenhof:circleimageview:3.1.0'
+    implementation 'com.github.yalantis:ucrop:2.2.1'
 }

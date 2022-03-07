@@ -56,7 +56,7 @@ import com.mredrock.cyxbs.common.utils.extensions.*
 @Route(path = COURSE_ENTRY)
 class CourseContainerEntryFragment : BaseViewModelFragment<CoursesViewModel>(),
     IUserStateService.StateListener, EventBusLifecycleSubscriber {
-    override val openStatistics: Boolean
+    val openStatistics: Boolean
         get() = false
 
     private var courseState = CourseState.OrdinaryCourse

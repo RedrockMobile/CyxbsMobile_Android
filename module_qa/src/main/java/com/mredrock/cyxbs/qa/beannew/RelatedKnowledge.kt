@@ -15,7 +15,8 @@ class RelatedKnowledge(
 ) : Parcelable {
     constructor(parcel: Parcel) : this(
             parcel.readInt(),
-            parcel.readString()) {
+        parcel.readString().toString()
+    ) {
     }
 
     override fun writeToParcel(parcel: Parcel, flags: Int) {

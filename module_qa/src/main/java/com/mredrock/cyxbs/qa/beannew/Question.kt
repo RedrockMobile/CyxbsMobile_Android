@@ -66,18 +66,18 @@ data class Question(@SerializedName("reward")
     constructor(parcel: Parcel) : this(
             parcel.readInt(),
             parcel.readInt(),
-            parcel.readString(),
-            parcel.readString(),
-            parcel.readString(),
-            parcel.readString(),
-            parcel.readString(),
-            parcel.readString(),
-            parcel.readString(),
+        parcel.readString().toString(),
+        parcel.readString().toString(),
+        parcel.readString().toString(),
+        parcel.readString().toString(),
+        parcel.readString().toString(),
+        parcel.readString().toString(),
+        parcel.readString().toString(),
             parcel.readInt(),
-            parcel.readString(),
+        parcel.readString().toString(),
             parcel.readInt(),
-            parcel.readString(),
-            parcel.readString(),
+        parcel.readString().toString(),
+        parcel.readString().toString(),
             _isSelf = parcel.readInt()) {
         parcel.readStringList(photoUrl)
     }
