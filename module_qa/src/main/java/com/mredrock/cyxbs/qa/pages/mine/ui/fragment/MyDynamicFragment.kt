@@ -127,10 +127,8 @@ class MyDynamicFragment : BaseViewModelFragment<MyDynamicViewModel>(), MineAndQa
             }
         qa_rv_my_dynamic.adapter = dynamicListRvAdapter
         viewModel.deleteTips.observe {
-            if (it == true){
+            if (it == true)
                 viewModel.invalidateDynamicList()
-                onRefresh(redid)
-            }
         }
 
         val footerRvAdapter = FooterRvAdapter { viewModel.retry() }
