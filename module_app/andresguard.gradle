@@ -1,6 +1,10 @@
 apply plugin: 'AndResGuard'
-
+def isWindows() {
+    return org.gradle.internal.os.OperatingSystem.current().isWindows()
+}
 andResGuard {
+    use7zip = isWindows()
+
     // mappingFile = file("./resource_mapping.txt")
     mappingFile = null
     use7zip = true
@@ -31,8 +35,10 @@ andResGuard {
             "resources.arsc"
     ]
     sevenzip {
-        artifact = 'com.tencent.mm:SevenZip:1.2.17'
-        //path = "/usr/local/bin/7za"
+        if (isWindows()) {
+            artifact = 'com.tencent.mm:SevenZip:1.2.21'
+            //path = "/usr/local/bin/7za"
+        }
     }
 
     /**

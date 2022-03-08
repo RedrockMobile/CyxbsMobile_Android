@@ -17,11 +17,12 @@ dependencyResolutionManagement {
         mavenCentral()
     }
 }
+includeBuild 'build_logic'
+include ':module_app'
 include ':lib_account', ':lib_account:api_account'
 include ':lib_common'
 include ':lib_protocol', ':lib_protocol:api_protocol'
 include ':lib_update', ':lib_update:api_update'
-include ':module_app'
 include ':module_calendar'
 include ':module_course'
 include ':module_discover'
@@ -29,8 +30,8 @@ include ':module_electricity', ':module_electricity:api_electricity'
 include ':module_emptyroom'
 include ':module_grades'
 include ':module_main', ':module_main:api_main'
-include ':module_map'
 include ':module_mine'
+include ':module_map'
 include ':module_news'
 include ':module_noclass'
 include ':module_othercourse'
@@ -43,4 +44,3 @@ include ':module_volunteer', ':module_volunteer:api_volunteer'
 include ':module_widget'
 //include ':photolibrary-2.5'
 // 请按字母排序添加，且子模块添加到后面
-includeBuild 'build_logic'

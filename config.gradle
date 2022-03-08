@@ -20,14 +20,10 @@ void setApi(Func closure) {
     if (project.name.matches("api_.+")) closure.func()
 }
 
-if (project.name == "module_app") {
+if (isSingleModuleDebug.toBoolean()) {
     apply plugin: 'com.android.application'
 } else {
-    if (isSingleModuleDebug.toBoolean()) {
-        apply plugin: 'com.android.application'
-    } else {
-        apply plugin: 'com.android.library'
-    }
+    apply plugin: 'com.android.library'
 }
 
 android {

@@ -22,6 +22,7 @@ import android.graphics.drawable.GradientDrawable
 import android.net.Uri
 import android.os.Environment
 import android.provider.MediaStore
+import android.util.Log
 import android.view.MotionEvent
 import android.view.View
 import android.view.ViewAnimationUtils.createCircularReveal
@@ -254,13 +255,11 @@ class HomepageActivity : BaseViewModelActivity<MineViewModel>() {
         if (redid != null) {   //他人访问的情况
 
             viewModel.getUserInfo(redid)
-            Log.d("(MyDynamicFragment.kt:->54)","2")
             MineAndQa.refreshListener?.onRefresh(redid)
         } else {//自己访问的情况
 
             viewModel.getUserInfo(null)
             MineAndQa.refreshListener?.onRefresh(null)
-            Log.d("(HomepageActivity.kt:->269)","${MineAndQa.refreshListener}")
 
         }
     }

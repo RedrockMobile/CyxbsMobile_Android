@@ -1,4 +1,9 @@
-apply plugin: "walle"
+apply plugin: "com.android.application"
+apply plugin: "org.jetbrains.kotlin.jvm"
+apply plugin: 'kotlin-android-extensions'
+apply plugin: 'kotlin-kapt'
+
+apply plugin: 'walle'
 apply from: "andresguard.gradle"
 apply from: "redex.gradle"
 android {
@@ -52,9 +57,11 @@ android {
     // https://blog.csdn.net/berber78/article/details/60766091
     lintOptions {
         abortOnError false
-        disable 'InvalidPackage'
+        /*disable 'InvalidPackage'
         checkReleaseBuilds false
+        baseline file("lint-baseline.xml")*/
     }
+
 
     packagingOptions {
         exclude 'LICENSE.txt'
@@ -95,27 +102,25 @@ dependencies {
     implementation project(':lib_account:api_account')
     implementation project(':lib_protocol:api_protocol')
 
-    if (!isSingleModuleDebug.toBoolean()) {
-        implementation project(':module_main')
-        implementation project(':module_course')
-        implementation project(':module_qa')
-        implementation project(':module_discover')
-        implementation project(':module_noclass')
-        implementation project(':module_map')
-        implementation project(':module_othercourse')
-        implementation project(':module_calendar')
-        implementation project(':module_electricity')
-        implementation project(':module_todo')
-        implementation project(':module_emptyroom')
-        implementation project(':module_grades')
-        implementation project(':module_news')
-        implementation project(':module_schoolcar')
-        implementation project(':module_volunteer')
-        implementation project(':module_mine')
-        implementation project(':module_widget')
-        implementation project(':module_redrock_home')
-        implementation project(':module_store')
-    }
+    runtimeOnly project(':module_main')
+    runtimeOnly project(':module_course')
+    runtimeOnly project(':module_qa')
+    runtimeOnly project(':module_discover')
+    runtimeOnly project(':module_noclass')
+    runtimeOnly project(':module_map')
+    runtimeOnly project(':module_othercourse')
+    runtimeOnly project(':module_calendar')
+    runtimeOnly project(':module_electricity')
+    runtimeOnly project(':module_todo')
+    runtimeOnly project(':module_emptyroom')
+    runtimeOnly project(':module_grades')
+    runtimeOnly project(':module_news')
+    runtimeOnly project(':module_schoolcar')
+    runtimeOnly project(':module_volunteer')
+    runtimeOnly project(':module_mine')
+    runtimeOnly project(':module_widget')
+    runtimeOnly project(':module_redrock_home')
+    runtimeOnly project(':module_store')
     // Bugly https://bugly.qq.com/docs/
     // 其中 latest.release 指代最新 Bugly SDK 版本号
     // Bugly 有如下功能：1、检测 bug；2、弹 dialog 强制用户升级

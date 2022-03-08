@@ -12,7 +12,6 @@ buildscript {
         maven { url 'https://jitpack.io' }
     }
     dependencies {
-        classpath 'com.android.tools.build:gradle:7.1.1'
         classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:1.6.10"
 
         // ARouter https://github.com/alibaba/ARouter
@@ -36,7 +35,11 @@ plugins {
 }
 
 apply plugin: "com.alibaba.arouter"
-
 apply from: "secret.gradle"
 apply from: "versions.gradle"
+
+task clean(type:Delete){
+    delete rootProject.buildDir
+}
+
 

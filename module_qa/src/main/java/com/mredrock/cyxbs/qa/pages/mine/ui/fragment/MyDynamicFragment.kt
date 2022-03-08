@@ -189,9 +189,7 @@ class MyDynamicFragment : BaseViewModelFragment<MyDynamicViewModel>(), MineAndQa
 
     override fun onRefresh(redid: String?) {
         this.redid = redid
-        Log.d("(MyDynamicFragment.kt:->187)","$isCreated")
         if (isCreated) {//避免造成viewmodel没有实例化而报错
-            Log.d("(MyDynamicFragment.kt:->188)","refresh")
             viewModel.getDynamicData(redid)
             initDynamics()
         }
