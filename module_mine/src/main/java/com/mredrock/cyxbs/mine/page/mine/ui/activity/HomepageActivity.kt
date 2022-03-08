@@ -706,12 +706,10 @@ class HomepageActivity : BaseViewModelActivity<MineViewModel>() {
     /**
      * 修复在@HomePageActivity 界面切换深色模式 重新启动Activity资源不完全的bug
      * 导致部分资源获取不到
-     * 手动全部重启
      */
     override fun onConfigurationChanged(newConfig: Configuration) {
         super.onConfigurationChanged(newConfig)
-        this.finish()
-        startHomePageActivity(redid,this)
+        finish()
     }
 
 
