@@ -29,7 +29,8 @@ class CommentListAdapter(
     private val onReplyInnerClickEvent: (comment: Comment) -> Unit,
     private val onItemLongClickEvent: (comment: Comment, view: View) -> Unit,
     private val onReplyInnerLongClickEvent: (comment: Comment, view: View) -> Unit,
-    private val onMoreReplyClickEvent: (replyList: String) -> Unit
+    private val onMoreReplyClickEvent: (replyList: String) -> Unit,
+    private val onAvatarClickEvent: (uid: String) -> Unit
 ) : BaseRvAdapter<Comment>() {
 
     //是否从个人界面进入的动态详情界面
@@ -68,6 +69,9 @@ class CommentListAdapter(
                 qa_tv_reply_content.setContent(data.content)
                 qa_iv_reply_praise_count_image.isChecked = data.isPraised
                 qa_iv_reply_avatar.setAvatarImageFromUrl(data.avatar)
+                qa_iv_reply_avatar.setOnClickListener {
+                    onAvatarClickEvent(data.uid)
+                }
                 if (data.pics.isNullOrEmpty())
                     qa_reply_nine_grid_view.setRectangleImages(
                         emptyList(),
@@ -114,6 +118,7 @@ class CommentListAdapter(
                             onReplyInnerClickEvent,
                             onReplyInnerLongClickEvent,
                             {},
+                            onAvatarClickEvent,
                             isFromMine
                         )
                 }

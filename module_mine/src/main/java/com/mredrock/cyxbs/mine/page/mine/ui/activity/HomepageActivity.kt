@@ -148,6 +148,7 @@ class HomepageActivity : BaseViewModelActivity<MineViewModel>() {
         initListener()
     }
 
+
     fun initData() {
         alphaMineView = dataBinding.clPersonalInformation.alpha
         viewModel._userInfo.observeForever {
@@ -253,11 +254,14 @@ class HomepageActivity : BaseViewModelActivity<MineViewModel>() {
         if (redid != null) {   //他人访问的情况
 
             viewModel.getUserInfo(redid)
+            Log.d("(MyDynamicFragment.kt:->54)","2")
             MineAndQa.refreshListener?.onRefresh(redid)
         } else {//自己访问的情况
 
             viewModel.getUserInfo(null)
             MineAndQa.refreshListener?.onRefresh(null)
+            Log.d("(HomepageActivity.kt:->269)","${MineAndQa.refreshListener}")
+
         }
     }
 
@@ -265,11 +269,18 @@ class HomepageActivity : BaseViewModelActivity<MineViewModel>() {
         val dynamicFragment =
             ARouter.getInstance().build(QA_DYNAMIC_MINE_FRAGMENT).navigation() as Fragment
         val list = arrayListOf<Fragment>(dynamicFragment, identityFragment)
+        if (dynamicFragment is MineAndQa.RefreshListener) {
+            MineAndQa.refreshListener = dynamicFragment
+        }
         dataBinding.vp2Mine.adapter = MineAdapter(this, list)
         dataBinding.vp2Mine.offscreenPageLimit = 2
         dataBinding.vp2Mine.setPageTransformer(ScaleInTransformer())
     }
 
+    override fun onDestroy() {
+        super.onDestroy()
+        MineAndQa.refreshListener = null
+    }
 
     @SuppressLint("ResourceAsColor")
     fun initListener() {
