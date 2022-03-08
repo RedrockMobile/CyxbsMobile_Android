@@ -7,6 +7,8 @@ import android.view.View
 import android.view.ViewGroup
 import android.view.animation.AnimationUtils
 import android.view.animation.LayoutAnimationController
+import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.ViewModelProviders
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.mredrock.cyxbs.common.ui.BaseViewModelFragment
@@ -102,7 +104,11 @@ class IdentityFragment(
     }
 
     fun refresh(){
-      viewModel.getAllIdentify(redid)
+        try {
+            viewModel.getAllIdentify(redid)
+        }catch (e:Exception){
+           e.printStackTrace()
+        }
     }
 
 
