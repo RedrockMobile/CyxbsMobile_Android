@@ -2,9 +2,7 @@ package com.mredrock.cyxbs.init
 
 import android.app.Application
 import com.alibaba.android.arouter.launcher.ARouter
-import com.mredrock.cyxbs.api.protocol.api.IProtocolService
 import com.mredrock.cyxbs.common.BuildConfig
-import com.mredrock.cyxbs.common.service.ServiceManager
 
 /**
  * ...

@@ -20,6 +20,7 @@ import com.mredrock.cyxbs.discover.map.viewmodel.MapViewModel
 import com.mredrock.cyxbs.discover.map.widget.GlideProgressDialog
 import com.mredrock.cyxbs.discover.map.widget.ProgressDialog
 import kotlinx.android.synthetic.main.map_activity_map.*
+import top.limuyang2.photolibrary.LPhotoHelper
 import java.io.File
 
 /**

@@ -69,7 +69,7 @@ class RoundRectImageView : AppCompatImageView {
         path.lineTo(roundWidth.toFloat(), 0f)
         path.arcTo(RectF(0f, 0f, (roundWidth * 2).toFloat(), (roundHeight * 2).toFloat()), -90f, -90f)
         path.close()
-        canvas.drawPath(path, paint)
+        paint?.let { canvas.drawPath(path, it) }
     }
 
     private fun drawLiftDown(canvas: Canvas) {
@@ -79,7 +79,7 @@ class RoundRectImageView : AppCompatImageView {
         path.lineTo(roundWidth.toFloat(), height.toFloat())
         path.arcTo(RectF(0f, (height - roundHeight * 2).toFloat(), (roundWidth * 2).toFloat(), height.toFloat()), 90f, 90f)
         path.close()
-        canvas.drawPath(path, paint)
+        paint?.let { canvas.drawPath(path, it) }
     }
 
     private fun drawRightDown(canvas: Canvas) {
@@ -89,7 +89,7 @@ class RoundRectImageView : AppCompatImageView {
         path.lineTo(width.toFloat(), height - roundHeight.toFloat())
         path.arcTo(RectF((width - roundWidth * 2).toFloat(), (height - roundHeight * 2).toFloat(), width.toFloat(), height.toFloat()), -0f, 90f)
         path.close()
-        canvas.drawPath(path, paint)
+        paint?.let { canvas.drawPath(path, it) }
     }
 
     private fun drawRightUp(canvas: Canvas) {
@@ -99,6 +99,6 @@ class RoundRectImageView : AppCompatImageView {
         path.lineTo(width - roundWidth.toFloat(), 0f)
         path.arcTo(RectF((width - roundWidth * 2).toFloat(), 0f, width.toFloat(), (roundHeight * 2).toFloat()), -90f, 90f)
         path.close()
-        canvas.drawPath(path, paint)
+        paint?.let { canvas.drawPath(path, it) }
     }
 }

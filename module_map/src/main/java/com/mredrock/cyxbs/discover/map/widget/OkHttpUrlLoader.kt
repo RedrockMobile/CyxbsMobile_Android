@@ -1,6 +1,5 @@
 package com.mredrock.cyxbs.discover.map.widget
 
-import com.bumptech.glide.integration.okhttp3.OkHttpStreamFetcher
 import com.bumptech.glide.load.Options
 import com.bumptech.glide.load.model.GlideUrl
 import com.bumptech.glide.load.model.ModelLoader
@@ -12,7 +11,7 @@ import okhttp3.OkHttpClient
 import java.io.InputStream
 
 class OkHttpUrlLoader // Public API.
-(private val client: Call.Factory?) : ModelLoader<GlideUrl?, InputStream> {
+(private val client: Call.Factory) : ModelLoader<GlideUrl?, InputStream> {
 
     /**
      * The default factory for [OkHttpUrlLoader]s.
@@ -21,7 +20,7 @@ class OkHttpUrlLoader // Public API.
     class Factory
     /**
      * Constructor for a new Factory that runs requests using a static singleton client.
-     */ @JvmOverloads constructor(private val client: Call.Factory? = internalClient) : ModelLoaderFactory<GlideUrl, InputStream> {
+     */ @JvmOverloads constructor(private val client: Call.Factory = internalClient!!) : ModelLoaderFactory<GlideUrl, InputStream> {
         override fun build(multiFactory: MultiModelLoaderFactory): OkHttpUrlLoader {
             return OkHttpUrlLoader(client)
         }
@@ -56,7 +55,7 @@ class OkHttpUrlLoader // Public API.
     }
 
     override fun buildLoadData(model: GlideUrl, width: Int, height: Int, options: Options): LoadData<InputStream>? {
-        return LoadData(model!!, OkHttpStreamFetcher(client, model))
+        return LoadData(model, OkHttpStreamFetcher(client, model))
     }
 
 }

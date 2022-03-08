@@ -24,7 +24,7 @@ apply from: lib
 
 android {
     compileSdkVersion build_versions.compile_sdk
-    buildToolsVersion build_versions.build_tools
+    //buildToolsVersion build_versions.build_tools
 
     defaultConfig {
         minSdkVersion build_versions.min_sdk

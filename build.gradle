@@ -5,15 +5,7 @@ buildscript {
         config = "$rootDir/config.gradle"
     }
 
-    repositories {
-        // 以下两行代码相当于有了 google() jcenter() mavenCentral()，使用国内的阿里镜像
-        maven { url 'https://maven.aliyun.com/repository/public' }
-        maven { url 'https://maven.aliyun.com/repository/google' }
-        maven { url 'https://jitpack.io' }
-    }
     dependencies {
-        classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:1.6.10"
-
         // ARouter https://github.com/alibaba/ARouter
         // 可以去插件中搜索 ARouter Helper，用于实现一些快捷跳转的操作
         classpath "com.alibaba:arouter-register:1.0.2"
@@ -31,7 +23,6 @@ plugins {
     id 'com.android.application' version '7.1.2' apply false
     id 'com.android.library' version '7.1.2' apply false
     id 'org.jetbrains.kotlin.android' version '1.6.10' apply false
-    //id 'com.alibaba.arouter' apply false
 }
 
 apply plugin: "com.alibaba.arouter"

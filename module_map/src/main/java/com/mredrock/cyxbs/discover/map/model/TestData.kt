@@ -7,7 +7,7 @@ import com.mredrock.cyxbs.discover.map.bean.ButtonInfo
 import com.mredrock.cyxbs.discover.map.bean.FavoritePlace
 import com.mredrock.cyxbs.discover.map.bean.MapInfo
 import com.mredrock.cyxbs.discover.map.bean.PlaceDetails
-import io.reactivex.Observable
+import io.reactivex.rxjava3.core.Observable
 
 /**
  *@author zhangzhe

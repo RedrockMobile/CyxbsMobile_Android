@@ -13,7 +13,7 @@ void setModule(Func closure) {
 }
 
 void setLib(Func closure) {
-    if (project.name.matches("lib.+")) closure.func()
+    if (project.name.matches("lib_.+")) closure.func()
 }
 
 void setApi(Func closure) {
@@ -117,12 +117,8 @@ dependencies {
 }
 
 setModule {
-    println "module"
     // todo 这里是给 module_ 配置依赖
     apply from: "$rootDir/dependencies.gradle"
-
-
-
     // 似乎是一个选择本地图片的第三方库
 //        implementation project(path: ':photolibrary-2.5')
 }
@@ -134,4 +130,5 @@ setLib {
 
 setApi{
     //implementation "com.alibaba:arouter-api:1.5.2"
+    apply from: "${rootDir}/api_config.gradle"
 }
