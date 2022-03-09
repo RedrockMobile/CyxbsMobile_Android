@@ -19,6 +19,7 @@
         android:networkSecurityConfig="@xml/network_security"
         android:usesCleartextTraffic="true"
         tools:replace="networkSecurityConfig"
+        android:requestLegacyExternalStorage="true"
         tools:targetApi="n">
 
         <!--Bugly-->

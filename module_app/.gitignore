@@ -2,3 +2,4 @@
 /build
 /api_*/build
 release
+lint-baseline.xml

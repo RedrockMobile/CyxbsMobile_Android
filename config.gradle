@@ -35,11 +35,7 @@ android {
 
     packagingOptions {
         jniLibs {
-            excludes += [
-                    'lib/*/libRSSupport.so',
-                    'lib/*/librsjni.so',
-                    'lib/*/librsjni_androidx.so',
-            ]
+
         }
     }
 
@@ -66,6 +62,8 @@ android {
         secret.buildConfigField.forEach({ k, v ->
             buildConfigField("String", k, v)
         })
+
+        multiDexEnabled true
     }
 
     compileOptions {
