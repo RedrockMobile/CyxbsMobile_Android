@@ -1,0 +1,844 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<issues format="6" by="lint 7.1.2" type="baseline" client="gradle" dependencies="false" name="AGP (7.1.2)" variant="all" version="7.1.2">
+
+    <issue
+        id="CustomViewStyleable"
+        message="By convention, the custom view (`RoundRectImageView`) and the declare-styleable (`MapRoundAngleImageView`) should have the same name (various editor features rely on this convention)"
+        errorLine1="            val a = context.obtainStyledAttributes(attrs, R.styleable.MapRoundAngleImageView)"
+        errorLine2="                                                          ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/java/com/mredrock/cyxbs/discover/map/component/RoundRectImageView.kt"
+            line="37"
+            column="59"/>
+    </issue>
+
+    <issue
+        id="UseRequireInsteadOfGet"
+        message="Use requireContext() instead of context!!"
+        errorLine1="            MapDialog.show(context!!, &quot;提示&quot;, resources.getString(R.string.map_search_history_clear_tip), object : OnSelectListener {"
+        errorLine2="                           ~~~~~~~~~">
+        <location
+            file="src/main/java/com/mredrock/cyxbs/discover/map/ui/fragment/inner/search/SearchHistoryFragment.kt"
+            line="44"
+            column="28"/>
+    </issue>
+
+    <issue
+        id="SpUsage"
+        message="Should use &quot;`sp`&quot; instead of &quot;`dp`&quot; for text sizes"
+        errorLine1="        android:textSize=&quot;12dp&quot;"
+        errorLine2="        ~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/layout/map_recycle_item_detail_attribute.xml"
+            line="24"
+            column="9"/>
+    </issue>
+
+    <issue
+        id="SpUsage"
+        message="Should use &quot;`sp`&quot; instead of &quot;`dp`&quot; for text sizes"
+        errorLine1="        android:textSize=&quot;13dp&quot;"
+        errorLine2="        ~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/layout/map_recycle_item_detail_tag.xml"
+            line="24"
+            column="9"/>
+    </issue>
+
+    <issue
+        id="SwitchIntDef"
+        message="Switch statement on an `int` with known associated constant missing case `BottomSheetBehavior.STATE_COLLAPSED`, `BottomSheetBehavior.STATE_DRAGGING`, `BottomSheetBehavior.STATE_EXPANDED`, `BottomSheetBehavior.STATE_HALF_EXPANDED`, `BottomSheetBehavior.STATE_SETTLING`"
+        errorLine1="                when (newState) {"
+        errorLine2="                ~~~~">
+        <location
+            file="src/main/java/com/mredrock/cyxbs/discover/map/ui/fragment/inner/MapViewFragment.kt"
+            line="296"
+            column="17"/>
+    </issue>
+
+    <issue
+        id="UseCompatLoadingForDrawables"
+        message="Use `ResourcesCompat.getDrawable()`"
+        errorLine1="        resources.getDrawable(R.drawable.map_ic_search_clear, null).toBitmap()"
+        errorLine2="        ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/java/com/mredrock/cyxbs/discover/map/component/FavoriteEditText.kt"
+            line="23"
+            column="9"/>
+    </issue>
+
+    <issue
+        id="UseCompatLoadingForDrawables"
+        message="Use `ResourcesCompat.getDrawable()`"
+        errorLine1="        resources.getDrawable(R.drawable.map_ic_search_clear, null).toBitmap()"
+        errorLine2="        ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/java/com/mredrock/cyxbs/discover/map/component/SearchEditText.kt"
+            line="25"
+            column="9"/>
+    </issue>
+
+    <issue
+        id="UseCompatLoadingForDrawables"
+        message="Use `ResourcesCompat.getDrawable()`"
+        errorLine1="        imageScale(resources.getDrawable(R.drawable.map_ic_search_edit_text_icon, null).toBitmap(), 40, 40)"
+        errorLine2="                   ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/java/com/mredrock/cyxbs/discover/map/component/SearchEditText.kt"
+            line="28"
+            column="20"/>
+    </issue>
+
+    <issue
+        id="NotifyDataSetChanged"
+        message="It will always be more efficient to use more specific change events if you can. Rely on `notifyDataSetChanged` as a last resort."
+        errorLine1="            allPictureAdapter.notifyDataSetChanged()"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/java/com/mredrock/cyxbs/discover/map/ui/fragment/AllPictureFragment.kt"
+            line="107"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="NotifyDataSetChanged"
+        message="It will always be more efficient to use more specific change events if you can. Rely on `notifyDataSetChanged` as a last resort."
+        errorLine1="        notifyDataSetChanged()"
+        errorLine2="        ~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/java/com/mredrock/cyxbs/discover/map/ui/adapter/AllPictureRvAdapter.kt"
+            line="45"
+            column="9"/>
+    </issue>
+
+    <issue
+        id="NotifyDataSetChanged"
+        message="It will always be more efficient to use more specific change events if you can. Rely on `notifyDataSetChanged` as a last resort."
+        errorLine1="        notifyDataSetChanged()"
+        errorLine2="        ~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/java/com/mredrock/cyxbs/discover/map/ui/adapter/FavoriteListAdapter.kt"
+            line="38"
+            column="9"/>
+    </issue>
+
+    <issue
+        id="NotifyDataSetChanged"
+        message="It will always be more efficient to use more specific change events if you can. Rely on `notifyDataSetChanged` as a last resort."
+        errorLine1="                        tagAdapter.notifyDataSetChanged()"
+        errorLine2="                        ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/java/com/mredrock/cyxbs/discover/map/ui/fragment/inner/PlaceDetailBottomSheetFragment.kt"
+            line="93"
+            column="25"/>
+    </issue>
+
+    <issue
+        id="NotifyDataSetChanged"
+        message="It will always be more efficient to use more specific change events if you can. Rely on `notifyDataSetChanged` as a last resort."
+        errorLine1="                            attributeAdapter.notifyDataSetChanged()"
+        errorLine2="                            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/java/com/mredrock/cyxbs/discover/map/ui/fragment/inner/PlaceDetailBottomSheetFragment.kt"
+            line="98"
+            column="29"/>
+    </issue>
+
+    <issue
+        id="NotifyDataSetChanged"
+        message="It will always be more efficient to use more specific change events if you can. Rely on `notifyDataSetChanged` as a last resort."
+        errorLine1="                            attributeAdapter.notifyDataSetChanged()"
+        errorLine2="                            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/java/com/mredrock/cyxbs/discover/map/ui/fragment/inner/PlaceDetailBottomSheetFragment.kt"
+            line="101"
+            column="29"/>
+    </issue>
+
+    <issue
+        id="NotifyDataSetChanged"
+        message="It will always be more efficient to use more specific change events if you can. Rely on `notifyDataSetChanged` as a last resort."
+        errorLine1="            notifyDataSetChanged()"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/java/com/mredrock/cyxbs/discover/map/ui/adapter/SearchHistoryAdapter.kt"
+            line="44"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="NotifyDataSetChanged"
+        message="It will always be more efficient to use more specific change events if you can. Rely on `notifyDataSetChanged` as a last resort."
+        errorLine1="                    adapter.notifyDataSetChanged()"
+        errorLine2="                    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/java/com/mredrock/cyxbs/discover/map/ui/fragment/inner/search/SearchHistoryFragment.kt"
+            line="51"
+            column="21"/>
+    </issue>
+
+    <issue
+        id="NotifyDataSetChanged"
+        message="It will always be more efficient to use more specific change events if you can. Rely on `notifyDataSetChanged` as a last resort."
+        errorLine1="        adapter.notifyDataSetChanged()"
+        errorLine2="        ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/java/com/mredrock/cyxbs/discover/map/ui/fragment/inner/search/SearchHistoryFragment.kt"
+            line="68"
+            column="9"/>
+    </issue>
+
+    <issue
+        id="NotifyDataSetChanged"
+        message="It will always be more efficient to use more specific change events if you can. Rely on `notifyDataSetChanged` as a last resort."
+        errorLine1="                        notifyDataSetChanged()"
+        errorLine2="                        ~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/java/com/mredrock/cyxbs/discover/map/ui/adapter/SearchResultAdapter.kt"
+            line="37"
+            column="25"/>
+    </issue>
+
+    <issue
+        id="NotifyDataSetChanged"
+        message="It will always be more efficient to use more specific change events if you can. Rely on `notifyDataSetChanged` as a last resort."
+        errorLine1="                        notifyDataSetChanged()"
+        errorLine2="                        ~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/java/com/mredrock/cyxbs/discover/map/ui/adapter/SearchResultAdapter.kt"
+            line="42"
+            column="25"/>
+    </issue>
+
+    <issue
+        id="NotifyDataSetChanged"
+        message="It will always be more efficient to use more specific change events if you can. Rely on `notifyDataSetChanged` as a last resort."
+        errorLine1="                            notifyDataSetChanged()"
+        errorLine2="                            ~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/java/com/mredrock/cyxbs/discover/map/ui/adapter/SearchResultAdapter.kt"
+            line="49"
+            column="29"/>
+    </issue>
+
+    <issue
+        id="NotifyDataSetChanged"
+        message="It will always be more efficient to use more specific change events if you can. Rely on `notifyDataSetChanged` as a last resort."
+        errorLine1="        notifyDataSetChanged()"
+        errorLine2="        ~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/java/com/mredrock/cyxbs/discover/map/ui/adapter/SymbolRvAdapter.kt"
+            line="112"
+            column="9"/>
+    </issue>
+
+    <issue
+        id="Recycle"
+        message="This `TypedArray` should be recycled after use with `#recycle()`"
+        errorLine1="            val a = context.obtainStyledAttributes(attrs, R.styleable.MapRoundAngleImageView)"
+        errorLine2="                            ~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/java/com/mredrock/cyxbs/discover/map/component/RoundRectImageView.kt"
+            line="37"
+            column="29"/>
+    </issue>
+
+    <issue
+        id="UseCompoundDrawables"
+        message="This tag and its children can be replaced by one `&lt;TextView/>` and a compound drawable"
+        errorLine1="            &lt;LinearLayout"
+        errorLine2="             ~~~~~~~~~~~~">
+        <location
+            file="src/main/res/layout/map_fragment_map_view.xml"
+            line="22"
+            column="14"/>
+    </issue>
+
+    <issue
+        id="Overdraw"
+        message="Possible overdraw: Root element paints background `@color/common_white_background` with a theme that also paints a background (inferred theme is `@android:style/Theme.Holo`)"
+        errorLine1="    android:background=&quot;@color/common_white_background&quot;"
+        errorLine2="    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/layout/map_activity_map.xml"
+            line="6"
+            column="5"/>
+    </issue>
+
+    <issue
+        id="Overdraw"
+        message="Possible overdraw: Root element paints background `#000` with a theme that also paints a background (inferred theme is `@android:style/Theme.Holo`)"
+        errorLine1="    android:background=&quot;#000&quot;"
+        errorLine2="    ~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/layout/map_activity_show_picture.xml"
+            line="6"
+            column="5"/>
+    </issue>
+
+    <issue
+        id="Overdraw"
+        message="Possible overdraw: Root element paints background `@color/map_all_picture_background` with a theme that also paints a background (inferred theme is `@android:style/Theme.Holo`)"
+        errorLine1="    android:background=&quot;@color/map_all_picture_background&quot;>"
+        errorLine2="    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/layout/map_fragment_all_picture.xml"
+            line="9"
+            column="5"/>
+    </issue>
+
+    <issue
+        id="Overdraw"
+        message="Possible overdraw: Root element paints background `@color/map_search_background_color` with a theme that also paints a background (inferred theme is `@android:style/Theme.Holo`)"
+        errorLine1="    android:background=&quot;@color/map_search_background_color&quot;"
+        errorLine2="    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/layout/map_fragment_search_history.xml"
+            line="7"
+            column="5"/>
+    </issue>
+
+    <issue
+        id="Overdraw"
+        message="Possible overdraw: Root element paints background `@color/map_search_background_color` with a theme that also paints a background (inferred theme is `@android:style/Theme.Holo`)"
+        errorLine1="    android:background=&quot;@color/map_search_background_color&quot;"
+        errorLine2="    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/layout/map_fragment_search_result.xml"
+            line="7"
+            column="5"/>
+    </issue>
+
+    <issue
+        id="UnusedResources"
+        message="The resource `R.dimen.map_title_text_size` appears to be unused"
+        errorLine1="    &lt;dimen name=&quot;map_title_text_size&quot;>21sp&lt;/dimen>"
+        errorLine2="           ~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/dimens.xml"
+            line="4"
+            column="12"/>
+    </issue>
+
+    <issue
+        id="UnusedResources"
+        message="The resource `R.dimen.map_favorite_cancel_favorite_text_size` appears to be unused"
+        errorLine1="    &lt;dimen name=&quot;map_favorite_cancel_favorite_text_size&quot;>13sp&lt;/dimen>"
+        errorLine2="           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/dimens.xml"
+            line="9"
+            column="12"/>
+    </issue>
+
+    <issue
+        id="UnusedResources"
+        message="The resource `R.dimen.map_favorite_recommend_text_size` appears to be unused"
+        errorLine1="    &lt;dimen name=&quot;map_favorite_recommend_text_size&quot;>16sp&lt;/dimen>"
+        errorLine2="           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/dimens.xml"
+            line="12"
+            column="12"/>
+    </issue>
+
+    <issue
+        id="UnusedResources"
+        message="The resource `R.layout.map_banner_item_detail` appears to be unused"
+        errorLine1="&lt;FrameLayout xmlns:android=&quot;http://schemas.android.com/apk/res/android&quot;"
+        errorLine2="^">
+        <location
+            file="src/main/res/layout/map_banner_item_detail.xml"
+            line="2"
+            column="1"/>
+    </issue>
+
+    <issue
+        id="UnusedResources"
+        message="The resource `R.drawable.map_ic_camera` appears to be unused"
+        errorLine1="&lt;vector xmlns:android=&quot;http://schemas.android.com/apk/res/android&quot;"
+        errorLine2="^">
+        <location
+            file="src/main/res/drawable/map_ic_camera.xml"
+            line="1"
+            column="1"/>
+    </issue>
+
+    <issue
+        id="UnusedResources"
+        message="The resource `R.drawable.map_ic_cancel` appears to be unused"
+        errorLine1="&lt;vector xmlns:android=&quot;http://schemas.android.com/apk/res/android&quot;"
+        errorLine2="^">
+        <location
+            file="src/main/res/drawable/map_ic_cancel.xml"
+            line="1"
+            column="1"/>
+    </issue>
+
+    <issue
+        id="UnusedResources"
+        message="The resource `R.drawable.map_ic_favorite` appears to be unused"
+        errorLine1="&lt;vector xmlns:android=&quot;http://schemas.android.com/apk/res/android&quot;"
+        errorLine2="^">
+        <location
+            file="src/main/res/drawable/map_ic_favorite.xml"
+            line="1"
+            column="1"/>
+    </issue>
+
+    <issue
+        id="UnusedResources"
+        message="The resource `R.drawable.map_ic_my_favorite` appears to be unused">
+        <location
+            file="src/main/res/drawable-hdpi/map_ic_my_favorite.webp"/>
+    </issue>
+
+    <issue
+        id="UnusedResources"
+        message="The resource `R.drawable.map_ic_next` appears to be unused"
+        errorLine1="&lt;vector xmlns:android=&quot;http://schemas.android.com/apk/res/android&quot;"
+        errorLine2="^">
+        <location
+            file="src/main/res/drawable/map_ic_next.xml"
+            line="1"
+            column="1"/>
+    </issue>
+
+    <issue
+        id="UnusedResources"
+        message="The resource `R.drawable.map_ic_no_select` appears to be unused"
+        errorLine1="&lt;vector xmlns:android=&quot;http://schemas.android.com/apk/res/android&quot;"
+        errorLine2="^">
+        <location
+            file="src/main/res/drawable/map_ic_no_select.xml"
+            line="1"
+            column="1"/>
+    </issue>
+
+    <issue
+        id="UnusedResources"
+        message="The resource `R.drawable.map_ic_search` appears to be unused"
+        errorLine1="&lt;vector xmlns:android=&quot;http://schemas.android.com/apk/res/android&quot;"
+        errorLine2="^">
+        <location
+            file="src/main/res/drawable/map_ic_search.xml"
+            line="1"
+            column="1"/>
+    </issue>
+
+    <issue
+        id="UnusedResources"
+        message="The resource `R.drawable.map_ic_search_black` appears to be unused"
+        errorLine1="&lt;vector xmlns:android=&quot;http://schemas.android.com/apk/res/android&quot;"
+        errorLine2="^">
+        <location
+            file="src/main/res/drawable/map_ic_search_black.xml"
+            line="1"
+            column="1"/>
+    </issue>
+
+    <issue
+        id="UnusedResources"
+        message="The resource `R.drawable.map_ic_select` appears to be unused"
+        errorLine1="&lt;vector xmlns:android=&quot;http://schemas.android.com/apk/res/android&quot;"
+        errorLine2="^">
+        <location
+            file="src/main/res/drawable/map_ic_select.xml"
+            line="1"
+            column="1"/>
+    </issue>
+
+    <issue
+        id="UnusedResources"
+        message="The resource `R.string.map_title` appears to be unused"
+        errorLine1="    &lt;string name=&quot;map_title&quot;>掌邮地图&lt;/string>"
+        errorLine2="            ~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/strings.xml"
+            line="3"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="UnusedResources"
+        message="The resource `R.string.map_no_save` appears to be unused"
+        errorLine1="    &lt;string name=&quot;map_no_save&quot;>本地无地点缓存&lt;/string>"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/strings.xml"
+            line="18"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="UnusedResources"
+        message="The resource `R.string.map_upload_picture_failed_network` appears to be unused"
+        errorLine1="    &lt;string name=&quot;map_upload_picture_failed_network&quot;>上传失败，网络似乎有问题&lt;/string>"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/strings.xml"
+            line="33"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="UnusedResources"
+        message="The resource `R.string.map_upload_picture_failed_server` appears to be unused"
+        errorLine1="    &lt;string name=&quot;map_upload_picture_failed_server&quot;>上传失败，服务器错误&lt;/string>"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/strings.xml"
+            line="34"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="UnusedResources"
+        message="The resource `R.string.map_picture_loading` appears to be unused"
+        errorLine1="    &lt;string name=&quot;map_picture_loading&quot;>图片加载中&lt;/string>"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/strings.xml"
+            line="43"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="UselessParent"
+        message="This `FrameLayout` layout or its `LinearLayout` parent is unnecessary; transfer the `background` attribute to the other view"
+        errorLine1="        &lt;FrameLayout"
+        errorLine2="         ~~~~~~~~~~~">
+        <location
+            file="src/main/res/layout/map_fragment_place_detail_container.xml"
+            line="20"
+            column="10"/>
+    </issue>
+
+    <issue
+        id="IconLocation"
+        message="Found bitmap drawable `res/drawable/map_ic_detail_more.png` in densityless folder">
+        <location
+            file="src/main/res/drawable/map_ic_detail_more.png"/>
+    </issue>
+
+    <issue
+        id="IconLocation"
+        message="Found bitmap drawable `res/drawable/map_ic_hot.png` in densityless folder">
+        <location
+            file="src/main/res/drawable/map_ic_hot.png"/>
+    </issue>
+
+    <issue
+        id="IconLocation"
+        message="Found bitmap drawable `res/drawable/map_ic_my_favorate.png` in densityless folder">
+        <location
+            file="src/main/res/drawable/map_ic_my_favorate.png"/>
+    </issue>
+
+    <issue
+        id="IconLocation"
+        message="Found bitmap drawable `res/drawable/map_ic_search_edit_text_icon.png` in densityless folder">
+        <location
+            file="src/main/res/drawable/map_ic_search_edit_text_icon.png"/>
+    </issue>
+
+    <issue
+        id="IconDensities"
+        message="Missing the following drawables in `drawable-hdpi`: map_shape_favorite_list.xml (found in drawable-xxhdpi)">
+        <location
+            file="src/main/res/drawable-hdpi"/>
+    </issue>
+
+    <issue
+        id="IconDensities"
+        message="Missing the following drawables in `drawable-mdpi`: map_ic_search_new.png, map_shape_favorite_list.xml">
+        <location
+            file="src/main/res/drawable-mdpi"/>
+    </issue>
+
+    <issue
+        id="IconDensities"
+        message="Missing the following drawables in `drawable-xhdpi`: map_ic_search_new.png, map_shape_favorite_list.xml">
+        <location
+            file="src/main/res/drawable-xhdpi"/>
+    </issue>
+
+    <issue
+        id="IconDensities"
+        message="Missing the following drawables in `drawable-xxhdpi`: map_ic_search_new.png (found in drawable-hdpi)">
+        <location
+            file="src/main/res/drawable-xxhdpi"/>
+    </issue>
+
+    <issue
+        id="ClickableViewAccessibility"
+        message="Custom view `ClickView` overrides `onTouchEvent` but not `performClick`"
+        errorLine1="    override fun onTouchEvent(event: MotionEvent): Boolean {"
+        errorLine2="                 ~~~~~~~~~~~~">
+        <location
+            file="src/main/java/com/mredrock/cyxbs/discover/map/component/ClickView.kt"
+            line="30"
+            column="18"/>
+    </issue>
+
+    <issue
+        id="ClickableViewAccessibility"
+        message="Custom view `FavoriteEditText` overrides `onTouchEvent` but not `performClick`"
+        errorLine1="    override fun onTouchEvent(event: MotionEvent?): Boolean {"
+        errorLine2="                 ~~~~~~~~~~~~">
+        <location
+            file="src/main/java/com/mredrock/cyxbs/discover/map/component/FavoriteEditText.kt"
+            line="107"
+            column="18"/>
+    </issue>
+
+    <issue
+        id="ClickableViewAccessibility"
+        message="Custom view `SearchEditText` overrides `onTouchEvent` but not `performClick`"
+        errorLine1="    override fun onTouchEvent(event: MotionEvent?): Boolean {"
+        errorLine2="                 ~~~~~~~~~~~~">
+        <location
+            file="src/main/java/com/mredrock/cyxbs/discover/map/component/SearchEditText.kt"
+            line="107"
+            column="18"/>
+    </issue>
+
+    <issue
+        id="ContentDescription"
+        message="Missing `contentDescription` attribute on image"
+        errorLine1="    &lt;ImageView"
+        errorLine2="     ~~~~~~~~~">
+        <location
+            file="src/main/res/layout/map_fragment_all_picture.xml"
+            line="11"
+            column="6"/>
+    </issue>
+
+    <issue
+        id="ContentDescription"
+        message="Missing `contentDescription` attribute on image"
+        errorLine1="    &lt;ImageView"
+        errorLine2="     ~~~~~~~~~">
+        <location
+            file="src/main/res/layout/map_fragment_all_picture.xml"
+            line="37"
+            column="6"/>
+    </issue>
+
+    <issue
+        id="ContentDescription"
+        message="Missing `contentDescription` attribute on image"
+        errorLine1="                &lt;ImageView"
+        errorLine2="                 ~~~~~~~~~">
+        <location
+            file="src/main/res/layout/map_fragment_map_view.xml"
+            line="38"
+            column="18"/>
+    </issue>
+
+    <issue
+        id="ContentDescription"
+        message="Missing `contentDescription` attribute on image"
+        errorLine1="                        &lt;ImageView"
+        errorLine2="                         ~~~~~~~~~">
+        <location
+            file="src/main/res/layout/map_fragment_place_detail_container.xml"
+            line="90"
+            column="26"/>
+    </issue>
+
+    <issue
+        id="ContentDescription"
+        message="Missing `contentDescription` attribute on image"
+        errorLine1="                        &lt;ImageView"
+        errorLine2="                         ~~~~~~~~~">
+        <location
+            file="src/main/res/layout/map_fragment_place_detail_container.xml"
+            line="188"
+            column="26"/>
+    </issue>
+
+    <issue
+        id="ContentDescription"
+        message="Missing `contentDescription` attribute on image"
+        errorLine1="                        &lt;ImageView"
+        errorLine2="                         ~~~~~~~~~">
+        <location
+            file="src/main/res/layout/map_fragment_place_detail_container.xml"
+            line="220"
+            column="26"/>
+    </issue>
+
+    <issue
+        id="ContentDescription"
+        message="Missing `contentDescription` attribute on image"
+        errorLine1="    &lt;ImageView"
+        errorLine2="     ~~~~~~~~~">
+        <location
+            file="src/main/res/layout/map_recycle_item_search_history.xml"
+            line="27"
+            column="6"/>
+    </issue>
+
+    <issue
+        id="ContentDescription"
+        message="Missing `contentDescription` attribute on image"
+        errorLine1="    &lt;ImageView"
+        errorLine2="     ~~~~~~~~~">
+        <location
+            file="src/main/res/layout/map_recycle_item_search_result.xml"
+            line="26"
+            column="6"/>
+    </issue>
+
+    <issue
+        id="ContentDescription"
+        message="Missing `contentDescription` attribute on image"
+        errorLine1="    &lt;ImageView"
+        errorLine2="     ~~~~~~~~~">
+        <location
+            file="src/main/res/layout/map_recycle_item_symbol_places.xml"
+            line="24"
+            column="6"/>
+    </issue>
+
+    <issue
+        id="KeyboardInaccessibleWidget"
+        message="&apos;clickable&apos; attribute found, please also add &apos;focusable&apos;"
+        errorLine1="    android:clickable=&quot;true&quot;>"
+        errorLine2="    ~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/layout/map_recycle_item_favorite_list.xml"
+            line="8"
+            column="5"/>
+    </issue>
+
+    <issue
+        id="KeyboardInaccessibleWidget"
+        message="&apos;clickable&apos; attribute found, please also add &apos;focusable&apos;"
+        errorLine1="    android:clickable=&quot;true&quot;>"
+        errorLine2="    ~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/layout/map_recycle_item_search_history.xml"
+            line="8"
+            column="5"/>
+    </issue>
+
+    <issue
+        id="KeyboardInaccessibleWidget"
+        message="&apos;clickable&apos; attribute found, please also add &apos;focusable&apos;"
+        errorLine1="    android:clickable=&quot;true&quot;>"
+        errorLine2="    ~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/layout/map_recycle_item_search_result.xml"
+            line="8"
+            column="5"/>
+    </issue>
+
+    <issue
+        id="HardcodedText"
+        message="Hardcoded string &quot;取消&quot;, should use `@string` resource"
+        errorLine1="        android:text=&quot;取消&quot;"
+        errorLine2="        ~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/layout/map_dialog_choose.xml"
+            line="50"
+            column="9"/>
+    </issue>
+
+    <issue
+        id="HardcodedText"
+        message="Hardcoded string &quot;确定&quot;, should use `@string` resource"
+        errorLine1="        android:text=&quot;确定&quot;"
+        errorLine2="        ~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/layout/map_dialog_choose.xml"
+            line="67"
+            column="9"/>
+    </issue>
+
+    <issue
+        id="HardcodedText"
+        message="Hardcoded string &quot;确定&quot;, should use `@string` resource"
+        errorLine1="        android:text=&quot;确定&quot;"
+        errorLine2="        ~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/layout/map_dialog_tips.xml"
+            line="50"
+            column="9"/>
+    </issue>
+
+    <issue
+        id="HardcodedText"
+        message="Hardcoded string &quot;收藏为&quot;, should use `@string` resource"
+        errorLine1="                android:text=&quot;收藏为&quot;"
+        errorLine2="                ~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/layout/map_fragment_favorite_edit.xml"
+            line="54"
+            column="17"/>
+    </issue>
+
+    <issue
+        id="RtlSymmetry"
+        message="When you define `paddingStart` you should probably also define `paddingEnd` for right-to-left symmetry"
+        errorLine1="                            android:paddingStart=&quot;10dp&quot;"
+        errorLine2="                            ~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/layout/map_fragment_place_detail_container.xml"
+            line="94"
+            column="29"/>
+    </issue>
+
+    <issue
+        id="RtlSymmetry"
+        message="When you define `paddingStart` you should probably also define `paddingEnd` for right-to-left symmetry"
+        errorLine1="    android:paddingStart=&quot;14dp&quot;>"
+        errorLine2="    ~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/layout/map_recycle_item_symbol_places.xml"
+            line="6"
+            column="5"/>
+    </issue>
+
+    <issue
+        id="RtlHardcoded"
+        message="Consider replacing `android:layout_marginLeft` with `android:layout_marginStart=&quot;6dp&quot;` to better support right-to-left layouts"
+        errorLine1="        android:layout_marginLeft=&quot;6dp&quot;"
+        errorLine2="        ~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/layout/map_fragment_all_picture.xml"
+            line="15"
+            column="9"/>
+    </issue>
+
+    <issue
+        id="RtlHardcoded"
+        message="Consider replacing `android:layout_marginLeft` with `android:layout_marginStart=&quot;16dp&quot;` to better support right-to-left layouts"
+        errorLine1="                    android:layout_marginLeft=&quot;16dp&quot;"
+        errorLine2="                    ~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/layout/map_fragment_map_view.xml"
+            line="90"
+            column="21"/>
+    </issue>
+
+    <issue
+        id="RtlHardcoded"
+        message="Consider replacing `android:layout_marginRight` with `android:layout_marginEnd=&quot;16dp&quot;` to better support right-to-left layouts"
+        errorLine1="                    android:layout_marginRight=&quot;16dp&quot;"
+        errorLine2="                    ~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/layout/map_fragment_map_view.xml"
+            line="102"
+            column="21"/>
+    </issue>
+
+    <issue
+        id="RtlEnabled"
+        message="The project references RTL attributes, but does not explicitly enable or disable RTL support with `android:supportsRtl` in the manifest">
+        <location
+            file="src/main/AndroidManifest.xml"/>
+    </issue>
+
+</issues>

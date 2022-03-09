@@ -29,6 +29,21 @@ if (isSingleModuleDebug.toBoolean()) {
 android {
     compileSdkVersion build_versions.target_sdk
 
+    lint {
+        baseline = file("lint-baseline.xml")
+    }
+
+    packagingOptions {
+        jniLibs {
+            excludes += [
+                    'lib/*/libRSSupport.so',
+                    'lib/*/librsjni.so',
+                    'lib/*/librsjni_androidx.so',
+            ]
+        }
+    }
+
+
     defaultConfig {
         minSdkVersion build_versions.min_sdk
         targetSdkVersion build_versions.target_sdk
@@ -128,7 +143,7 @@ setLib {
     apply from: "$rootDir/dependencies.gradle"
 }
 
-setApi{
+setApi {
     //implementation "com.alibaba:arouter-api:1.5.2"
     apply from: "${rootDir}/api_config.gradle"
 }

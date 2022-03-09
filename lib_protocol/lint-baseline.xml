@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<issues format="6" by="lint 7.1.2" type="baseline" client="gradle" dependencies="false" name="AGP (7.1.2)" variant="all" version="7.1.2">
+
+    <issue
+        id="UseCompoundDrawables"
+        message="This tag and its children can be replaced by one `&lt;TextView/>` and a compound drawable"
+        errorLine1="    &lt;LinearLayout"
+        errorLine2="     ~~~~~~~~~~~~">
+        <location
+            file="src/main/res/layout/protocol_activity_receive.xml"
+            line="13"
+            column="6"/>
+    </issue>
+
+    <issue
+        id="IconLocation"
+        message="Found bitmap drawable `res/drawable/ic_no_content_yet.png` in densityless folder">
+        <location
+            file="src/main/res/drawable/ic_no_content_yet.png"/>
+    </issue>
+
+    <issue
+        id="ContentDescription"
+        message="Missing `contentDescription` attribute on image"
+        errorLine1="        &lt;ImageView"
+        errorLine2="         ~~~~~~~~~">
+        <location
+            file="src/main/res/layout/protocol_activity_receive.xml"
+            line="20"
+            column="10"/>
+    </issue>
+
+</issues>

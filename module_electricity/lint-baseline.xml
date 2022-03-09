@@ -1,0 +1,286 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<issues format="6" by="lint 7.1.2" type="baseline" client="gradle" dependencies="false" name="AGP (7.1.2)" variant="all" version="7.1.2">
+
+    <issue
+        id="UnusedResources"
+        message="The resource `R.color.electricity_gray` appears to be unused"
+        errorLine1="    &lt;color name=&quot;electricity_gray&quot;>#999999&lt;/color>"
+        errorLine2="           ~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/colors.xml"
+            line="4"
+            column="12"/>
+    </issue>
+
+    <issue
+        id="UnusedResources"
+        message="The resource `R.color.electricity_gray_hint_text` appears to be unused"
+        errorLine1="    &lt;color name=&quot;electricity_gray_hint_text&quot;>#777777&lt;/color>"
+        errorLine2="           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/colors.xml"
+            line="5"
+            column="12"/>
+    </issue>
+
+    <issue
+        id="UnusedResources"
+        message="The resource `R.color.electricity_blue_hint_btn` appears to be unused"
+        errorLine1="    &lt;color name=&quot;electricity_blue_hint_btn&quot;>#7C9BFF&lt;/color>"
+        errorLine2="           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/colors.xml"
+            line="6"
+            column="12"/>
+    </issue>
+
+    <issue
+        id="UnusedResources"
+        message="The resource `R.color.electricity_hint_text` appears to be unused"
+        errorLine1="    &lt;color name=&quot;electricity_hint_text&quot;>#B346ACEB&lt;/color>"
+        errorLine2="           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/colors.xml"
+            line="7"
+            column="12"/>
+    </issue>
+
+    <issue
+        id="UnusedResources"
+        message="The resource `R.color.electricity_info_hint_text` appears to be unused"
+        errorLine1="    &lt;color name=&quot;electricity_info_hint_text&quot;>#b2e2ff&lt;/color>"
+        errorLine2="           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/colors.xml"
+            line="9"
+            column="12"/>
+    </issue>
+
+    <issue
+        id="UnusedResources"
+        message="The resource `R.color.electricity_info_value` appears to be unused"
+        errorLine1="    &lt;color name=&quot;electricity_info_value&quot;>#5a99f7&lt;/color>"
+        errorLine2="           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/colors.xml"
+            line="10"
+            column="12"/>
+    </issue>
+
+    <issue
+        id="UnusedResources"
+        message="The resource `R.string.electricity_set_dormitory` appears to be unused"
+        errorLine1="    &lt;string name=&quot;electricity_set_dormitory&quot;>设置寝室&lt;/string>"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/strings.xml"
+            line="2"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="UnusedResources"
+        message="The resource `R.string.electricity_dormitory_building` appears to be unused"
+        errorLine1="    &lt;string name=&quot;electricity_dormitory_building&quot;>请选择楼栋数&lt;/string>"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/strings.xml"
+            line="3"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="UnusedResources"
+        message="The resource `R.string.electricity_dormitory_room` appears to be unused"
+        errorLine1="    &lt;string name=&quot;electricity_dormitory_room&quot;>寝室号（三位数）&lt;/string>"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/strings.xml"
+            line="4"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="UnusedResources"
+        message="The resource `R.string.electricity_info_zero` appears to be unused"
+        errorLine1="    &lt;string name=&quot;electricity_info_zero&quot;>00&lt;/string>"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/strings.xml"
+            line="6"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="UnusedResources"
+        message="The resource `R.string.electricity_info_cost` appears to be unused"
+        errorLine1="    &lt;string name=&quot;electricity_info_cost&quot;>费用/本月&lt;/string>"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/strings.xml"
+            line="8"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="UnusedResources"
+        message="The resource `R.string.electricity_info_avg` appears to be unused"
+        errorLine1="    &lt;string name=&quot;electricity_info_avg&quot;>日均量/度&lt;/string>"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/strings.xml"
+            line="9"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="UnusedResources"
+        message="The resource `R.string.electricity_info_start` appears to be unused"
+        errorLine1="    &lt;string name=&quot;electricity_info_start&quot;>电起度/度&lt;/string>"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/strings.xml"
+            line="10"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="UnusedResources"
+        message="The resource `R.string.electricity_info_end` appears to be unused"
+        errorLine1="    &lt;string name=&quot;electricity_info_end&quot;>电止度/度&lt;/string>"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/strings.xml"
+            line="11"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="UnusedResources"
+        message="The resource `R.string.electricity_info_free` appears to be unused"
+        errorLine1="    &lt;string name=&quot;electricity_info_free&quot;>月优惠量/度&lt;/string>"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/strings.xml"
+            line="12"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="UnusedResources"
+        message="The resource `R.string.electricity_notice_hint1` appears to be unused"
+        errorLine1="    &lt;string name=&quot;electricity_notice_hint1&quot;>抄表日期： &lt;/string>"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/strings.xml"
+            line="14"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="UnusedResources"
+        message="The resource `R.string.electricity_notice_hint2` appears to be unused"
+        errorLine1="    &lt;string name=&quot;electricity_notice_hint2&quot;>用电过程中，如需查询请致电：023&amp;#8211;62487902&lt;/string>"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/strings.xml"
+            line="15"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="UnusedResources"
+        message="The resource `R.string.electricity_notice_error` appears to be unused"
+        errorLine1="    &lt;string name=&quot;electricity_notice_error&quot;>信息不完整或不正确&lt;/string>"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/strings.xml"
+            line="16"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="UnusedResources"
+        message="The resource `R.string.electricity_electric_view_hint` appears to be unused"
+        errorLine1="    &lt;string name=&quot;electricity_electric_view_hint&quot;>余额/量&lt;/string>"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/strings.xml"
+            line="17"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="UnusedResources"
+        message="The resource `R.string.electricity_electric_view_hint_money` appears to be unused"
+        errorLine1="    &lt;string name=&quot;electricity_electric_view_hint_money&quot;>元&lt;/string>"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/strings.xml"
+            line="18"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="UnusedResources"
+        message="The resource `R.string.electricity_free_count` appears to be unused"
+        errorLine1="    &lt;string name=&quot;electricity_free_count&quot;>（每月有一定免费额度）&lt;/string>"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/strings.xml"
+            line="22"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="TypographyEllipsis"
+        message="Replace &quot;...&quot; with ellipsis character (…, &amp;#8230;) ?"
+        errorLine1="    &lt;string name=&quot;electricity_searching&quot;>查询中...&lt;/string>"
+        errorLine2="                                         ~~~~~~">
+        <location
+            file="src/main/res/values/strings.xml"
+            line="24"
+            column="42"/>
+    </issue>
+
+    <issue
+        id="IconMissingDensityFolder"
+        message="Missing density variation folders in `E:\RedRock\CyxbsMobile_Android\module_electricity\src\main\res`: drawable-hdpi, drawable-mdpi, drawable-xxhdpi">
+        <location
+            file="src/main/res"/>
+    </issue>
+
+    <issue
+        id="HardcodedText"
+        message="Hardcoded string &quot;宿舍号：&quot;, should use `@string` resource"
+        errorLine1="        android:text=&quot;宿舍号：&quot;"
+        errorLine2="        ~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/layout/electricity_dialog_dormitory_select.xml"
+            line="15"
+            column="9"/>
+    </issue>
+
+    <issue
+        id="HardcodedText"
+        message="Hardcoded string &quot;应缴/本月&quot;, should use `@string` resource"
+        errorLine1="            android:text=&quot;应缴/本月&quot;"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/layout/electricity_discover_feed.xml"
+            line="29"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="HardcodedText"
+        message="Hardcoded string &quot;使用度数/本月&quot;, should use `@string` resource"
+        errorLine1="            android:text=&quot;使用度数/本月&quot;"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/layout/electricity_discover_feed.xml"
+            line="53"
+            column="13"/>
+    </issue>
+
+</issues>

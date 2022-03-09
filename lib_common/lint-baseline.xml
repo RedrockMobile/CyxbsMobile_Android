@@ -1,0 +1,3529 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<issues format="6" by="lint 7.1.2" type="baseline" client="gradle" dependencies="false" name="AGP (7.1.2)" variant="all" version="7.1.2">
+
+    <issue
+        id="OnClick"
+        message="Corresponding method handler &apos;`public void onCancel(android.view.View)`&apos; not found"
+        errorLine1="            android:onClick=&quot;onCancel&quot;"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/layout/umeng_socialize_share.xml"
+            line="28"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="UseGetLayoutInflater"
+        message="Use of LayoutInflater.from(Context) detected. Consider using layoutInflater instead"
+        errorLine1="            v.findViewById&lt;FrameLayout>(R.id.common_dialog_container).addView(LayoutInflater.from(context).inflate(it, null))"
+        errorLine2="                                                                              ~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/java/com/mredrock/cyxbs/common/component/CommonDialogFragment.kt"
+            line="56"
+            column="79"/>
+    </issue>
+
+    <issue
+        id="ScopedStorage"
+        message="WRITE_EXTERNAL_STORAGE no longer provides write access when targeting Android 10+"
+        errorLine1="    &lt;uses-permission android:name=&quot;android.permission.WRITE_EXTERNAL_STORAGE&quot; />"
+        errorLine2="                                   ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/AndroidManifest.xml"
+            line="17"
+            column="36"/>
+    </issue>
+
+    <issue
+        id="MissingDefaultResource"
+        message="The dimen &quot;image_size&quot; in values-sw360dp has no declaration in the base `values` folder; this can lead to crashes when the resource is queried in a configuration that does not match this qualifier"
+        errorLine1="    &lt;dimen name=&quot;image_size&quot;>96dp&lt;/dimen>"
+        errorLine2="           ~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values-sw360dp/dimens.xml"
+            line="3"
+            column="12"/>
+    </issue>
+
+    <issue
+        id="MissingDefaultResource"
+        message="The dimen &quot;image_size&quot; in values-sw480dp has no declaration in the base `values` folder; this can lead to crashes when the resource is queried in a configuration that does not match this qualifier"
+        errorLine1="    &lt;dimen name=&quot;image_size&quot;>100dp&lt;/dimen>"
+        errorLine2="           ~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values-sw480dp/dimens.xml"
+            line="3"
+            column="12"/>
+    </issue>
+
+    <issue
+        id="MissingDefaultResource"
+        message="The dimen &quot;image_size&quot; in values-sw720dp has no declaration in the base `values` folder; this can lead to crashes when the resource is queried in a configuration that does not match this qualifier"
+        errorLine1="    &lt;dimen name=&quot;image_size&quot;>120dp&lt;/dimen>"
+        errorLine2="           ~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values-sw720dp/dimens.xml"
+            line="3"
+            column="12"/>
+    </issue>
+
+    <issue
+        id="MissingDefaultResource"
+        message="The dimen &quot;space_size&quot; in values-sw360dp has no declaration in the base `values` folder; this can lead to crashes when the resource is queried in a configuration that does not match this qualifier"
+        errorLine1="    &lt;dimen name=&quot;space_size&quot;>2dp&lt;/dimen>"
+        errorLine2="           ~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values-sw360dp/dimens.xml"
+            line="4"
+            column="12"/>
+    </issue>
+
+    <issue
+        id="MissingDefaultResource"
+        message="The dimen &quot;space_size&quot; in values-sw480dp has no declaration in the base `values` folder; this can lead to crashes when the resource is queried in a configuration that does not match this qualifier"
+        errorLine1="    &lt;dimen name=&quot;space_size&quot;>2dp&lt;/dimen>"
+        errorLine2="           ~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values-sw480dp/dimens.xml"
+            line="4"
+            column="12"/>
+    </issue>
+
+    <issue
+        id="MissingDefaultResource"
+        message="The dimen &quot;space_size&quot; in values-sw720dp has no declaration in the base `values` folder; this can lead to crashes when the resource is queried in a configuration that does not match this qualifier"
+        errorLine1="    &lt;dimen name=&quot;space_size&quot;>3dp&lt;/dimen>"
+        errorLine2="           ~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values-sw720dp/dimens.xml"
+            line="4"
+            column="12"/>
+    </issue>
+
+    <issue
+        id="MissingDefaultResource"
+        message="The dimen &quot;folder_cover_size&quot; in values-sw360dp has no declaration in the base `values` folder; this can lead to crashes when the resource is queried in a configuration that does not match this qualifier"
+        errorLine1="    &lt;dimen name=&quot;folder_cover_size&quot;>72dp&lt;/dimen>"
+        errorLine2="           ~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values-sw360dp/dimens.xml"
+            line="5"
+            column="12"/>
+    </issue>
+
+    <issue
+        id="MissingDefaultResource"
+        message="The dimen &quot;folder_cover_size&quot; in values-sw480dp has no declaration in the base `values` folder; this can lead to crashes when the resource is queried in a configuration that does not match this qualifier"
+        errorLine1="    &lt;dimen name=&quot;folder_cover_size&quot;>72dp&lt;/dimen>"
+        errorLine2="           ~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values-sw480dp/dimens.xml"
+            line="5"
+            column="12"/>
+    </issue>
+
+    <issue
+        id="MissingDefaultResource"
+        message="The dimen &quot;folder_cover_size&quot; in values-sw720dp has no declaration in the base `values` folder; this can lead to crashes when the resource is queried in a configuration that does not match this qualifier"
+        errorLine1="    &lt;dimen name=&quot;folder_cover_size&quot;>82dp&lt;/dimen>"
+        errorLine2="           ~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values-sw720dp/dimens.xml"
+            line="5"
+            column="12"/>
+    </issue>
+
+    <issue
+        id="InflateParams"
+        message="Avoid passing `null` as the view root (needed to resolve layout parameters on the inflated layout&apos;s root element)"
+        errorLine1="        View v = inflate.inflate(R.layout.common_cyxbs_toast, null);"
+        errorLine2="                                                              ~~~~">
+        <location
+            file="src/main/java/com/mredrock/cyxbs/common/component/CyxbsToast.java"
+            line="31"
+            column="63"/>
+    </issue>
+
+    <issue
+        id="VectorRaster"
+        message="Limit vector icons sizes to 200×200 to keep icon drawing fast; see https://developer.android.com/studio/write/vector-asset-studio#when for more"
+        errorLine1="    android:width=&quot;819dp&quot;"
+        errorLine2="                   ~~~~~">
+        <location
+            file="src/main/res/drawable/common_ic_app_logo.xml"
+            line="2"
+            column="20"/>
+    </issue>
+
+    <issue
+        id="UsingOnClickInXml"
+        message="Use databinding or explicit wiring of click listener in code"
+        errorLine1="            android:onClick=&quot;onCancel&quot;"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/layout/umeng_socialize_oauth_dialog.xml"
+            line="28"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="UsingOnClickInXml"
+        message="Use databinding or explicit wiring of click listener in code"
+        errorLine1="            android:onClick=&quot;onCancel&quot;"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/layout/umeng_socialize_share.xml"
+            line="28"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="MissingTranslation"
+        message="&quot;umeng_socialize_sharetosina&quot; is not translated in &quot;en&quot; (English)"
+        errorLine1="    &lt;string name=&quot;umeng_socialize_sharetosina&quot;>分享到新浪微博&lt;/string>"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/umeng_socialize_shareview_strings.xml"
+            line="3"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="MissingTranslation"
+        message="&quot;umeng_socialize_sharetodouban&quot; is not translated in &quot;en&quot; (English)"
+        errorLine1="    &lt;string name=&quot;umeng_socialize_sharetodouban&quot;>分享到豆瓣&lt;/string>"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/umeng_socialize_shareview_strings.xml"
+            line="4"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="MissingTranslation"
+        message="&quot;umeng_socialize_sharetorenren&quot; is not translated in &quot;en&quot; (English)"
+        errorLine1="    &lt;string name=&quot;umeng_socialize_sharetorenren&quot;>分享到人人网&lt;/string>"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/umeng_socialize_shareview_strings.xml"
+            line="5"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="MissingTranslation"
+        message="&quot;umeng_socialize_sharetotencent&quot; is not translated in &quot;en&quot; (English)"
+        errorLine1="    &lt;string name=&quot;umeng_socialize_sharetotencent&quot;>分享到腾讯微博&lt;/string>"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/umeng_socialize_shareview_strings.xml"
+            line="7"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="MissingTranslation"
+        message="&quot;umeng_socialize_sharetotwitter&quot; is not translated in &quot;en&quot; (English)"
+        errorLine1="    &lt;string name=&quot;umeng_socialize_sharetotwitter&quot;>分享到twitter&lt;/string>"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/umeng_socialize_shareview_strings.xml"
+            line="8"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="MissingTranslation"
+        message="&quot;umeng_socialize_sharetolinkin&quot; is not translated in &quot;en&quot; (English)"
+        errorLine1="    &lt;string name=&quot;umeng_socialize_sharetolinkin&quot;>分享到领英&lt;/string>"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/umeng_socialize_shareview_strings.xml"
+            line="9"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="GetInstance"
+        message="`Cipher.getInstance` should not be called without setting the encryption mode and padding"
+        errorLine1="        val cipher = Cipher.getInstance(&quot;AES&quot;)"
+        errorLine2="                                         ~~~">
+        <location
+            file="src/main/java/com/mredrock/cyxbs/common/utils/encrypt/LogLocalAES.kt"
+            line="12"
+            column="42"/>
+    </issue>
+
+    <issue
+        id="GetInstance"
+        message="`Cipher.getInstance` should not be called without setting the encryption mode and padding"
+        errorLine1="        val cipher = Cipher.getInstance(&quot;AES&quot;)"
+        errorLine2="                                         ~~~">
+        <location
+            file="src/main/java/com/mredrock/cyxbs/common/utils/encrypt/LogLocalAES.kt"
+            line="29"
+            column="42"/>
+    </issue>
+
+    <issue
+        id="GetInstance"
+        message="`Cipher.getInstance` should not be called without setting the encryption mode and padding"
+        errorLine1="            Cipher cipher = Cipher.getInstance(&quot;AES&quot;);"
+        errorLine2="                                               ~~~~~">
+        <location
+            file="src/main/java/com/mredrock/cyxbs/common/utils/encrypt/SerialAESEncryptor.java"
+            line="21"
+            column="48"/>
+    </issue>
+
+    <issue
+        id="GetInstance"
+        message="`Cipher.getInstance` should not be called without setting the encryption mode and padding"
+        errorLine1="            Cipher cipher = Cipher.getInstance(&quot;AES&quot;);"
+        errorLine2="                                               ~~~~~">
+        <location
+            file="src/main/java/com/mredrock/cyxbs/common/utils/encrypt/SerialAESEncryptor.java"
+            line="33"
+            column="48"/>
+    </issue>
+
+    <issue
+        id="HardwareIds"
+        message="Using `SERIAL` to get device identifiers is not recommended"
+        errorLine1="        String key = Build.SERIAL;"
+        errorLine2="                           ~~~~~~">
+        <location
+            file="src/main/java/com/mredrock/cyxbs/common/utils/encrypt/SerialAESEncryptor.java"
+            line="42"
+            column="28"/>
+    </issue>
+
+    <issue
+        id="NotifyDataSetChanged"
+        message="It will always be more efficient to use more specific change events if you can. Rely on `notifyDataSetChanged` as a last resort."
+        errorLine1="        notifyDataSetChanged()"
+        errorLine2="        ~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/java/com/mredrock/cyxbs/common/utils/SimpleRVAdapter.kt"
+            line="179"
+            column="9"/>
+    </issue>
+
+    <issue
+        id="MergeRootFrame"
+        message="This `&lt;FrameLayout>` can be replaced with a `&lt;merge>` tag"
+        errorLine1="&lt;FrameLayout xmlns:android=&quot;http://schemas.android.com/apk/res/android&quot;"
+        errorLine2="^">
+        <location
+            file="src/main/res/layout/common_activity_photo_viewer.xml"
+            line="2"
+            column="1"/>
+    </issue>
+
+    <issue
+        id="Overdraw"
+        message="Possible overdraw: Root element paints background `@color/levelFourFontColor` with a theme that also paints a background (inferred theme is `@android:style/Theme.Holo`)"
+        errorLine1="    android:background=&quot;@color/levelFourFontColor&quot;"
+        errorLine2="    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/layout/common_splite_line.xml"
+            line="5"
+            column="5"/>
+    </issue>
+
+    <issue
+        id="Overdraw"
+        message="Possible overdraw: Root element paints background `#D4E0E5` with a theme that also paints a background (inferred theme is `@android:style/Theme.Holo`)"
+        errorLine1="    android:background=&quot;#D4E0E5&quot;>"
+        errorLine2="    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/layout/umeng_socialize_oauth_dialog.xml"
+            line="5"
+            column="5"/>
+    </issue>
+
+    <issue
+        id="Overdraw"
+        message="Possible overdraw: Root element paints background `#D4E0E5` with a theme that also paints a background (inferred theme is `@android:style/Theme.Holo`)"
+        errorLine1="    android:background=&quot;#D4E0E5&quot;"
+        errorLine2="    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/layout/umeng_socialize_share.xml"
+            line="5"
+            column="5"/>
+    </issue>
+
+    <issue
+        id="UnusedResources"
+        message="The resource `R.color.common_secondary_window_background` appears to be unused"
+        errorLine1="    &lt;color name=&quot;common_secondary_window_background&quot;>#F8F9FC&lt;/color>"
+        errorLine2="           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/colors.xml"
+            line="13"
+            column="12"/>
+    </issue>
+
+    <issue
+        id="UnusedResources"
+        message="The resource `R.color.common_chosen_background` appears to be unused"
+        errorLine1="    &lt;color name=&quot;common_chosen_background&quot;>#E5EAF2&lt;/color>"
+        errorLine2="           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/colors.xml"
+            line="14"
+            column="12"/>
+    </issue>
+
+    <issue
+        id="UnusedResources"
+        message="The resource `R.color.common_start_page_white_color` appears to be unused"
+        errorLine1="    &lt;color name=&quot;common_start_page_white_color&quot;>#ffffff&lt;/color>"
+        errorLine2="           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/colors.xml"
+            line="20"
+            column="12"/>
+    </issue>
+
+    <issue
+        id="UnusedResources"
+        message="The resource `R.color.common_level_one_font_color` appears to be unused"
+        errorLine1="    &lt;color name=&quot;common_level_one_font_color&quot;>#112C54&lt;/color>"
+        errorLine2="           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/colors.xml"
+            line="26"
+            column="12"/>
+    </issue>
+
+    <issue
+        id="UnusedResources"
+        message="The resource `R.color.common_course_delete_button_text_color` appears to be unused"
+        errorLine1="    &lt;color name=&quot;common_course_delete_button_text_color&quot;>#7CA3DF&lt;/color>"
+        errorLine2="           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/colors.xml"
+            line="34"
+            column="12"/>
+    </issue>
+
+    <issue
+        id="UnusedResources"
+        message="The resource `R.color.common_un_focused_font_color` appears to be unused"
+        errorLine1="    &lt;color name=&quot;common_un_focused_font_color&quot;>#AABCD8&lt;/color>"
+        errorLine2="           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/colors.xml"
+            line="38"
+            column="12"/>
+    </issue>
+
+    <issue
+        id="UnusedResources"
+        message="The resource `R.color.common_focused_font_color` appears to be unused"
+        errorLine1="    &lt;color name=&quot;common_focused_font_color&quot;>#2923D2&lt;/color>"
+        errorLine2="           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/colors.xml"
+            line="40"
+            column="12"/>
+    </issue>
+
+    <issue
+        id="UnusedResources"
+        message="The resource `R.color.common_alpha_level_two_font_color` appears to be unused"
+        errorLine1="    &lt;color name=&quot;common_alpha_level_two_font_color&quot;>#9915315B&lt;/color>"
+        errorLine2="           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/colors.xml"
+            line="43"
+            column="12"/>
+    </issue>
+
+    <issue
+        id="UnusedResources"
+        message="The resource `R.color.common_alpha_forty_level_two_font_color` appears to be unused"
+        errorLine1="    &lt;color name=&quot;common_alpha_forty_level_two_font_color&quot;>#7015315B&lt;/color>"
+        errorLine2="           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/colors.xml"
+            line="46"
+            column="12"/>
+    </issue>
+
+    <issue
+        id="UnusedResources"
+        message="The resource `R.color.common_photo_select_status_color` appears to be unused"
+        errorLine1="    &lt;color name=&quot;common_photo_select_status_color&quot;>#788EFA&lt;/color>"
+        errorLine2="           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/colors.xml"
+            line="49"
+            column="12"/>
+    </issue>
+
+    <issue
+        id="UnusedResources"
+        message="The resource `R.color.common_course_table_drag_indicator_block_color` appears to be unused"
+        errorLine1="    &lt;color name=&quot;common_course_table_drag_indicator_block_color&quot;>#E2EDFB&lt;/color>"
+        errorLine2="           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/colors.xml"
+            line="52"
+            column="12"/>
+    </issue>
+
+    <issue
+        id="UnusedResources"
+        message="The resource `R.color.common_course_identifies_the_current_shadow_color` appears to be unused"
+        errorLine1="    &lt;color name=&quot;common_course_identifies_the_current_shadow_color&quot;>#93E8F0FC"
+        errorLine2="           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/colors.xml"
+            line="54"
+            column="12"/>
+    </issue>
+
+    <issue
+        id="UnusedResources"
+        message="The resource `R.color.common_morning_course_color` appears to be unused"
+        errorLine1="    &lt;color name=&quot;common_morning_course_color&quot;>#F9E7D8&lt;/color>"
+        errorLine2="           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/colors.xml"
+            line="57"
+            column="12"/>
+    </issue>
+
+    <issue
+        id="UnusedResources"
+        message="The resource `R.color.common_afternoon_course_color` appears to be unused"
+        errorLine1="    &lt;color name=&quot;common_afternoon_course_color&quot;>#F9E3E4&lt;/color>"
+        errorLine2="           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/colors.xml"
+            line="58"
+            column="12"/>
+    </issue>
+
+    <issue
+        id="UnusedResources"
+        message="The resource `R.color.common_evening_course_color` appears to be unused"
+        errorLine1="    &lt;color name=&quot;common_evening_course_color&quot;>#DDE3F8&lt;/color>"
+        errorLine2="           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/colors.xml"
+            line="59"
+            column="12"/>
+    </issue>
+
+    <issue
+        id="UnusedResources"
+        message="The resource `R.color.common_morning_course_text_color` appears to be unused"
+        errorLine1="    &lt;color name=&quot;common_morning_course_text_color&quot;>#FF8015&lt;/color>"
+        errorLine2="           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/colors.xml"
+            line="61"
+            column="12"/>
+    </issue>
+
+    <issue
+        id="UnusedResources"
+        message="The resource `R.color.common_afternoon_course_text_color` appears to be unused"
+        errorLine1="    &lt;color name=&quot;common_afternoon_course_text_color&quot;>#FF6262&lt;/color>"
+        errorLine2="           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/colors.xml"
+            line="62"
+            column="12"/>
+    </issue>
+
+    <issue
+        id="UnusedResources"
+        message="The resource `R.color.common_evening_course_text_color` appears to be unused"
+        errorLine1="    &lt;color name=&quot;common_evening_course_text_color&quot;>#4066EA&lt;/color>"
+        errorLine2="           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/colors.xml"
+            line="63"
+            column="12"/>
+    </issue>
+
+    <issue
+        id="UnusedResources"
+        message="The resource `R.color.common_memo_gray_stripes` appears to be unused"
+        errorLine1="    &lt;color name=&quot;common_memo_gray_stripes&quot;>#E8EBEF&lt;/color>"
+        errorLine2="           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/colors.xml"
+            line="66"
+            column="12"/>
+    </issue>
+
+    <issue
+        id="UnusedResources"
+        message="The resource `R.color.common_course_affair_you_might_recycle_item_background_color` appears to be unused"
+        errorLine1="    &lt;color name=&quot;common_course_affair_you_might_recycle_item_background_color&quot;>"
+        errorLine2="           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/colors.xml"
+            line="68"
+            column="12"/>
+    </issue>
+
+    <issue
+        id="UnusedResources"
+        message="The resource `R.color.common_course_edit_affair_start_color_transparency` appears to be unused"
+        errorLine1="    &lt;color name=&quot;common_course_edit_affair_start_color_transparency&quot;>"
+        errorLine2="           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/colors.xml"
+            line="73"
+            column="12"/>
+    </issue>
+
+    <issue
+        id="UnusedResources"
+        message="The resource `R.color.common_course_edit_affair_start_color` appears to be unused"
+        errorLine1="    &lt;color name=&quot;common_course_edit_affair_start_color&quot;>#6B65EF&lt;/color>"
+        errorLine2="           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/colors.xml"
+            line="76"
+            column="12"/>
+    </issue>
+
+    <issue
+        id="UnusedResources"
+        message="The resource `R.color.common_discovery_jwzx_background` appears to be unused"
+        errorLine1="    &lt;color name=&quot;common_discovery_jwzx_background&quot;>#AFD2FB&lt;/color>"
+        errorLine2="           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/colors.xml"
+            line="79"
+            column="12"/>
+    </issue>
+
+    <issue
+        id="UnusedResources"
+        message="The resource `R.color.common_button_gradient_start_color` appears to be unused"
+        errorLine1="    &lt;color name=&quot;common_button_gradient_start_color&quot;>#4841E2&lt;/color>"
+        errorLine2="           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/colors.xml"
+            line="83"
+            column="12"/>
+    </issue>
+
+    <issue
+        id="UnusedResources"
+        message="The resource `R.color.common_button_gradient_end_color` appears to be unused"
+        errorLine1="    &lt;color name=&quot;common_button_gradient_end_color&quot;>#5D5DF7&lt;/color>"
+        errorLine2="           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/colors.xml"
+            line="85"
+            column="12"/>
+    </issue>
+
+    <issue
+        id="UnusedResources"
+        message="The resource `R.color.common_course_affair_delete_button_background_color` appears to be unused"
+        errorLine1="    &lt;color name=&quot;common_course_affair_delete_button_background_color&quot;>#E6EFFC"
+        errorLine2="           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/colors.xml"
+            line="88"
+            column="12"/>
+    </issue>
+
+    <issue
+        id="UnusedResources"
+        message="The resource `R.color.common_course_affair_modify_button_gradient_start_color` appears to be unused"
+        errorLine1="    &lt;color name=&quot;common_course_affair_modify_button_gradient_start_color&quot;>#2921D1"
+        errorLine2="           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/colors.xml"
+            line="92"
+            column="12"/>
+    </issue>
+
+    <issue
+        id="UnusedResources"
+        message="The resource `R.color.common_course_affair_modify_button_gradient_end_color` appears to be unused"
+        errorLine1="    &lt;color name=&quot;common_course_affair_modify_button_gradient_end_color&quot;>#5D5DF7"
+        errorLine2="           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/colors.xml"
+            line="94"
+            column="12"/>
+    </issue>
+
+    <issue
+        id="UnusedResources"
+        message="The resource `R.color.common_transaction_heading` appears to be unused"
+        errorLine1="    &lt;color name=&quot;common_transaction_heading&quot;>#122D55&lt;/color>"
+        errorLine2="           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/colors.xml"
+            line="98"
+            column="12"/>
+    </issue>
+
+    <issue
+        id="UnusedResources"
+        message="The resource `R.color.common_select_font_color_for_transaction_weeks` appears to be unused"
+        errorLine1="    &lt;color name=&quot;common_select_font_color_for_transaction_weeks&quot;>#FFA192&lt;/color>"
+        errorLine2="           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/colors.xml"
+            line="100"
+            column="12"/>
+    </issue>
+
+    <issue
+        id="UnusedResources"
+        message="The resource `R.color.common_write_able_area_background_shallow` appears to be unused"
+        errorLine1="    &lt;color name=&quot;common_write_able_area_background_shallow&quot;>#EFF4FD&lt;/color>"
+        errorLine2="           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/colors.xml"
+            line="104"
+            column="12"/>
+    </issue>
+
+    <issue
+        id="UnusedResources"
+        message="The resource `R.color.common_write_able_area_background_dark` appears to be unused"
+        errorLine1="    &lt;color name=&quot;common_write_able_area_background_dark&quot;>#E8F0FC&lt;/color>"
+        errorLine2="           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/colors.xml"
+            line="105"
+            column="12"/>
+    </issue>
+
+    <issue
+        id="UnusedResources"
+        message="The resource `R.color.common_blue_sign_text_color` appears to be unused"
+        errorLine1="    &lt;color name=&quot;common_blue_sign_text_color&quot;>#839BFA&lt;/color>"
+        errorLine2="           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/colors.xml"
+            line="109"
+            column="12"/>
+    </issue>
+
+    <issue
+        id="UnusedResources"
+        message="The resource `R.color.common_sever_view_color` appears to be unused"
+        errorLine1="    &lt;color name=&quot;common_sever_view_color&quot;>#BDCCE5&lt;/color>"
+        errorLine2="           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/colors.xml"
+            line="111"
+            column="12"/>
+    </issue>
+
+    <issue
+        id="UnusedResources"
+        message="The resource `R.color.common_alpha_sever_view_color` appears to be unused"
+        errorLine1="    &lt;color name=&quot;common_alpha_sever_view_color&quot;>#39BDCCE5&lt;/color>"
+        errorLine2="           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/colors.xml"
+            line="112"
+            column="12"/>
+    </issue>
+
+    <issue
+        id="UnusedResources"
+        message="The resource `R.color.common_blue_button` appears to be unused"
+        errorLine1="    &lt;color name=&quot;common_blue_button&quot;>#2921D1&lt;/color>"
+        errorLine2="           ~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/colors.xml"
+            line="113"
+            column="12"/>
+    </issue>
+
+    <issue
+        id="UnusedResources"
+        message="The resource `R.color.common_grey_button` appears to be unused"
+        errorLine1="    &lt;color name=&quot;common_grey_button&quot;>#E1DFE0&lt;/color>"
+        errorLine2="           ~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/colors.xml"
+            line="116"
+            column="12"/>
+    </issue>
+
+    <issue
+        id="UnusedResources"
+        message="The resource `R.color.common_grey_button_text` appears to be unused"
+        errorLine1="    &lt;color name=&quot;common_grey_button_text&quot;>#C3C0C1&lt;/color>"
+        errorLine2="           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/colors.xml"
+            line="117"
+            column="12"/>
+    </issue>
+
+    <issue
+        id="UnusedResources"
+        message="The resource `R.color.common_grey_text` appears to be unused"
+        errorLine1="    &lt;color name=&quot;common_grey_text&quot;>#C4C2C2&lt;/color>"
+        errorLine2="           ~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/colors.xml"
+            line="118"
+            column="12"/>
+    </issue>
+
+    <issue
+        id="UnusedResources"
+        message="The resource `R.color.common_switch_off` appears to be unused"
+        errorLine1="    &lt;color name=&quot;common_switch_off&quot;>#C3D4EE&lt;/color>"
+        errorLine2="           ~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/colors.xml"
+            line="119"
+            column="12"/>
+    </issue>
+
+    <issue
+        id="UnusedResources"
+        message="The resource `R.color.common_mine_tab_layout_text_unselected` appears to be unused"
+        errorLine1="    &lt;color name=&quot;common_mine_tab_layout_text_unselected&quot;>#8f15315B&lt;/color>"
+        errorLine2="           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/colors.xml"
+            line="122"
+            column="12"/>
+    </issue>
+
+    <issue
+        id="UnusedResources"
+        message="The resource `R.color.common_mine_tab_layout_indicator_color` appears to be unused"
+        errorLine1="    &lt;color name=&quot;common_mine_tab_layout_indicator_color&quot;>#1AD0F2&lt;/color>"
+        errorLine2="           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/colors.xml"
+            line="123"
+            column="12"/>
+    </issue>
+
+    <issue
+        id="UnusedResources"
+        message="The resource `R.color.common_mine_about_text_color_normal` appears to be unused"
+        errorLine1="    &lt;color name=&quot;common_mine_about_text_color_normal&quot;>#294169&lt;/color>"
+        errorLine2="           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/colors.xml"
+            line="126"
+            column="12"/>
+    </issue>
+
+    <issue
+        id="UnusedResources"
+        message="The resource `R.color.common_mine_about_text_color_up_to_date` appears to be unused"
+        errorLine1="    &lt;color name=&quot;common_mine_about_text_color_up_to_date&quot;>#80294169&lt;/color>"
+        errorLine2="           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/colors.xml"
+            line="127"
+            column="12"/>
+    </issue>
+
+    <issue
+        id="UnusedResources"
+        message="The resource `R.color.common_mine_about_text_color_blue` appears to be unused"
+        errorLine1="    &lt;color name=&quot;common_mine_about_text_color_blue&quot;>#0BCCF0&lt;/color>"
+        errorLine2="           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/colors.xml"
+            line="128"
+            column="12"/>
+    </issue>
+
+    <issue
+        id="UnusedResources"
+        message="The resource `R.color.common_mine_sign_bg_grey` appears to be unused"
+        errorLine1="    &lt;color name=&quot;common_mine_sign_bg_grey&quot;>#E1E6F0&lt;/color>"
+        errorLine2="           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/colors.xml"
+            line="131"
+            column="12"/>
+    </issue>
+
+    <issue
+        id="UnusedResources"
+        message="The resource `R.color.common_mine_sign_divider_grey` appears to be unused"
+        errorLine1="    &lt;color name=&quot;common_mine_sign_divider_grey&quot;>#E1E6F0&lt;/color>"
+        errorLine2="           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/colors.xml"
+            line="132"
+            column="12"/>
+    </issue>
+
+    <issue
+        id="UnusedResources"
+        message="The resource `R.color.common_mine_sign_divider_blue` appears to be unused"
+        errorLine1="    &lt;color name=&quot;common_mine_sign_divider_blue&quot;>#3A35D2&lt;/color>"
+        errorLine2="           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/colors.xml"
+            line="133"
+            column="12"/>
+    </issue>
+
+    <issue
+        id="UnusedResources"
+        message="The resource `R.color.common_mine_sign_divider_blue_light` appears to be unused"
+        errorLine1="    &lt;color name=&quot;common_mine_sign_divider_blue_light&quot;>#B3E5FC&lt;/color>"
+        errorLine2="           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/colors.xml"
+            line="134"
+            column="12"/>
+    </issue>
+
+    <issue
+        id="UnusedResources"
+        message="The resource `R.color.common_mine_sign_integral_text` appears to be unused"
+        errorLine1="    &lt;color name=&quot;common_mine_sign_integral_text&quot;>#4841E2&lt;/color>"
+        errorLine2="           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/colors.xml"
+            line="135"
+            column="12"/>
+    </issue>
+
+    <issue
+        id="UnusedResources"
+        message="The resource `R.color.common_mine_sign_ring_blue` appears to be unused"
+        errorLine1="    &lt;color name=&quot;common_mine_sign_ring_blue&quot;>#3A35D2&lt;/color>"
+        errorLine2="           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/colors.xml"
+            line="136"
+            column="12"/>
+    </issue>
+
+    <issue
+        id="UnusedResources"
+        message="The resource `R.color.common_mine_sign_ring_outside` appears to be unused"
+        errorLine1="    &lt;color name=&quot;common_mine_sign_ring_outside&quot;>#ffffff&lt;/color>"
+        errorLine2="           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/colors.xml"
+            line="137"
+            column="12"/>
+    </issue>
+
+    <issue
+        id="UnusedResources"
+        message="The resource `R.color.common_mine_sign_bubble_text_color` appears to be unused"
+        errorLine1="    &lt;color name=&quot;common_mine_sign_bubble_text_color&quot;>#A24841E2&lt;/color>"
+        errorLine2="           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/colors.xml"
+            line="138"
+            column="12"/>
+    </issue>
+
+    <issue
+        id="UnusedResources"
+        message="The resource `R.color.common_mine_sign_integral_text_background` appears to be unused"
+        errorLine1="    &lt;color name=&quot;common_mine_sign_integral_text_background&quot;>#D4DAFF&lt;/color>"
+        errorLine2="           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/colors.xml"
+            line="139"
+            column="12"/>
+    </issue>
+
+    <issue
+        id="UnusedResources"
+        message="The resource `R.color.common_mine_sign_store_round_brown_background` appears to be unused"
+        errorLine1="    &lt;color name=&quot;common_mine_sign_store_round_brown_background&quot;>#F8E2DF&lt;/color>"
+        errorLine2="           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/colors.xml"
+            line="140"
+            column="12"/>
+    </issue>
+
+    <issue
+        id="UnusedResources"
+        message="The resource `R.color.common_mine_sign_store_line` appears to be unused"
+        errorLine1="    &lt;color name=&quot;common_mine_sign_store_line&quot;>#E2EDFB&lt;/color>"
+        errorLine2="           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/colors.xml"
+            line="141"
+            column="12"/>
+    </issue>
+
+    <issue
+        id="UnusedResources"
+        message="The resource `R.color.common_mine_sign_store_item_tv_integral` appears to be unused"
+        errorLine1="    &lt;color name=&quot;common_mine_sign_store_item_tv_integral&quot;>#3A34D2&lt;/color>"
+        errorLine2="           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/colors.xml"
+            line="142"
+            column="12"/>
+    </issue>
+
+    <issue
+        id="UnusedResources"
+        message="The resource `R.color.common_mine_sign_store_item_bg` appears to be unused"
+        errorLine1="    &lt;color name=&quot;common_mine_sign_store_item_bg&quot;>#F0F2FB&lt;/color>"
+        errorLine2="           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/colors.xml"
+            line="143"
+            column="12"/>
+    </issue>
+
+    <issue
+        id="UnusedResources"
+        message="The resource `R.color.common_mine_sign_store_bg` appears to be unused"
+        errorLine1="    &lt;color name=&quot;common_mine_sign_store_bg&quot;>#F8F9FC&lt;/color>"
+        errorLine2="           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/colors.xml"
+            line="144"
+            column="12"/>
+    </issue>
+
+    <issue
+        id="UnusedResources"
+        message="The resource `R.color.common_mine_sign_store_my_product_text_color` appears to be unused"
+        errorLine1="    &lt;color name=&quot;common_mine_sign_store_my_product_text_color&quot;>#FFA192&lt;/color>"
+        errorLine2="           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/colors.xml"
+            line="145"
+            column="12"/>
+    </issue>
+
+    <issue
+        id="UnusedResources"
+        message="The resource `R.color.common_mine_list_item_tv_disappear_at` appears to be unused"
+        errorLine1="    &lt;color name=&quot;common_mine_list_item_tv_disappear_at&quot;>#6C84AB&lt;/color>"
+        errorLine2="           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/colors.xml"
+            line="148"
+            column="12"/>
+    </issue>
+
+    <issue
+        id="UnusedResources"
+        message="The resource `R.color.common_mine_list_item_tv_content` appears to be unused"
+        errorLine1="    &lt;color name=&quot;common_mine_list_item_tv_content&quot;>#15315B&lt;/color>"
+        errorLine2="           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/colors.xml"
+            line="149"
+            column="12"/>
+    </issue>
+
+    <issue
+        id="UnusedResources"
+        message="The resource `R.color.common_mine_list_item_bg_brown` appears to be unused"
+        errorLine1="    &lt;color name=&quot;common_mine_list_item_bg_brown&quot;>#F7DAD7&lt;/color>"
+        errorLine2="           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/colors.xml"
+            line="150"
+            column="12"/>
+    </issue>
+
+    <issue
+        id="UnusedResources"
+        message="The resource `R.color.common_mine_list_item_btn_text_color_accept` appears to be unused"
+        errorLine1="    &lt;color name=&quot;common_mine_list_item_btn_text_color_accept&quot;>#FFA192&lt;/color>"
+        errorLine2="           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/colors.xml"
+            line="151"
+            column="12"/>
+    </issue>
+
+    <issue
+        id="UnusedResources"
+        message="The resource `R.color.common_mine_main_btn_gradient_start` appears to be unused"
+        errorLine1="    &lt;color name=&quot;common_mine_main_btn_gradient_start&quot;>#4841E2&lt;/color>"
+        errorLine2="           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/colors.xml"
+            line="154"
+            column="12"/>
+    </issue>
+
+    <issue
+        id="UnusedResources"
+        message="The resource `R.color.common_mine_main_btn_gradient_end` appears to be unused"
+        errorLine1="    &lt;color name=&quot;common_mine_main_btn_gradient_end&quot;>#5D5DF7&lt;/color>"
+        errorLine2="           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/colors.xml"
+            line="155"
+            column="12"/>
+    </issue>
+
+    <issue
+        id="UnusedResources"
+        message="The resource `R.color.common_mine_security_binding_tip` appears to be unused"
+        errorLine1="    &lt;color name=&quot;common_mine_security_binding_tip&quot;>#2A4E84&lt;/color>"
+        errorLine2="           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/colors.xml"
+            line="159"
+            column="12"/>
+    </issue>
+
+    <issue
+        id="UnusedResources"
+        message="The resource `R.color.common_mine_security_content_edt_hint_color` appears to be unused"
+        errorLine1="    &lt;color name=&quot;common_mine_security_content_edt_hint_color&quot;>#94A6C4&lt;/color>"
+        errorLine2="           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/colors.xml"
+            line="160"
+            column="12"/>
+    </issue>
+
+    <issue
+        id="UnusedResources"
+        message="The resource `R.color.common_mine_setting_common_back_color` appears to be unused"
+        errorLine1="    &lt;color name=&quot;common_mine_setting_common_back_color&quot;>#F1F3F8&lt;/color>"
+        errorLine2="           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/colors.xml"
+            line="163"
+            column="12"/>
+    </issue>
+
+    <issue
+        id="UnusedResources"
+        message="The resource `R.color.common_mine_security_question_edt_back_color` appears to be unused"
+        errorLine1="    &lt;color name=&quot;common_mine_security_question_edt_back_color&quot;>#E8F0FC&lt;/color>"
+        errorLine2="           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/colors.xml"
+            line="165"
+            column="12"/>
+    </issue>
+
+    <issue
+        id="UnusedResources"
+        message="The resource `R.color.common_mine_security_light_button_back_color` appears to be unused"
+        errorLine1="    &lt;color name=&quot;common_mine_security_light_button_back_color&quot;>#C3D4EE&lt;/color>"
+        errorLine2="           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/colors.xml"
+            line="166"
+            column="12"/>
+    </issue>
+
+    <issue
+        id="UnusedResources"
+        message="The resource `R.color.common_mine_security_password_front_icon_main` appears to be unused"
+        errorLine1="    &lt;color name=&quot;common_mine_security_password_front_icon_main&quot;>#15315b&lt;/color>"
+        errorLine2="           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/colors.xml"
+            line="167"
+            column="12"/>
+    </issue>
+
+    <issue
+        id="UnusedResources"
+        message="The resource `R.color.common_mine_security_password_front_icon_less` appears to be unused"
+        errorLine1="    &lt;color name=&quot;common_mine_security_password_front_icon_less&quot;>#db4f87&lt;/color>"
+        errorLine2="           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/colors.xml"
+            line="168"
+            column="12"/>
+    </issue>
+
+    <issue
+        id="UnusedResources"
+        message="The resource `R.color.common_mine_security_deep_back_color` appears to be unused"
+        errorLine1="    &lt;color name=&quot;common_mine_security_deep_back_color&quot;>#122d55&lt;/color>"
+        errorLine2="           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/colors.xml"
+            line="169"
+            column="12"/>
+    </issue>
+
+    <issue
+        id="UnusedResources"
+        message="The resource `R.color.common_mine_security_dialog_back_color` appears to be unused"
+        errorLine1="    &lt;color name=&quot;common_mine_security_dialog_back_color&quot;>#ffffff&lt;/color>"
+        errorLine2="           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/colors.xml"
+            line="170"
+            column="12"/>
+    </issue>
+
+    <issue
+        id="UnusedResources"
+        message="The resource `R.color.common_mine_security_two_front_color_64_percent` appears to be unused"
+        errorLine1="    &lt;color name=&quot;common_mine_security_two_front_color_64_percent&quot;>#A315315B&lt;/color>"
+        errorLine2="           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/colors.xml"
+            line="171"
+            column="12"/>
+    </issue>
+
+    <issue
+        id="UnusedResources"
+        message="The resource `R.color.common_mine_security_send_message_color` appears to be unused"
+        errorLine1="    &lt;color name=&quot;common_mine_security_send_message_color&quot;>#4B45E5&lt;/color>"
+        errorLine2="           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/colors.xml"
+            line="172"
+            column="12"/>
+    </issue>
+
+    <issue
+        id="UnusedResources"
+        message="The resource `R.color.common_mine_security_line_under_edit_text` appears to be unused"
+        errorLine1="    &lt;color name=&quot;common_mine_security_line_under_edit_text&quot;>#707070&lt;/color>"
+        errorLine2="           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/colors.xml"
+            line="173"
+            column="12"/>
+    </issue>
+
+    <issue
+        id="UnusedResources"
+        message="The resource `R.color.common_mine_main_common_blue` appears to be unused"
+        errorLine1="    &lt;color name=&quot;common_mine_main_common_blue&quot;>#E8F0FC&lt;/color>"
+        errorLine2="           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/colors.xml"
+            line="174"
+            column="12"/>
+    </issue>
+
+    <issue
+        id="UnusedResources"
+        message="The resource `R.color.common_grades_gpa_rv_list_round_corner_background` appears to be unused"
+        errorLine1="    &lt;color name=&quot;common_grades_gpa_rv_list_round_corner_background&quot;>#88E8F1FC"
+        errorLine2="           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/colors.xml"
+            line="177"
+            column="12"/>
+    </issue>
+
+    <issue
+        id="UnusedResources"
+        message="The resource `R.color.common_grades_item_cardView_bg` appears to be unused"
+        errorLine1="    &lt;color name=&quot;common_grades_item_cardView_bg&quot;>#E8F1FC&lt;/color>"
+        errorLine2="           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/colors.xml"
+            line="179"
+            column="12"/>
+    </issue>
+
+    <issue
+        id="UnusedResources"
+        message="The resource `R.color.common_grades_activity_tl_white` appears to be unused"
+        errorLine1="    &lt;color name=&quot;common_grades_activity_tl_white&quot;>#FFFFFF&lt;/color>"
+        errorLine2="           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/colors.xml"
+            line="180"
+            column="12"/>
+    </issue>
+
+    <issue
+        id="UnusedResources"
+        message="The resource `R.color.common_grades_activity_back_grey` appears to be unused"
+        errorLine1="    &lt;color name=&quot;common_grades_activity_back_grey&quot;>#D3D3D3&lt;/color>"
+        errorLine2="           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/colors.xml"
+            line="181"
+            column="12"/>
+    </issue>
+
+    <issue
+        id="UnusedResources"
+        message="The resource `R.color.common_grades_fragment_back_white` appears to be unused"
+        errorLine1="    &lt;color name=&quot;common_grades_fragment_back_white&quot;>#F6F6F6&lt;/color>"
+        errorLine2="           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/colors.xml"
+            line="182"
+            column="12"/>
+    </issue>
+
+    <issue
+        id="UnusedResources"
+        message="The resource `R.color.common_grades_fragment_text_color_black` appears to be unused"
+        errorLine1="    &lt;color name=&quot;common_grades_fragment_text_color_black&quot;>#333333&lt;/color>"
+        errorLine2="           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/colors.xml"
+            line="183"
+            column="12"/>
+    </issue>
+
+    <issue
+        id="UnusedResources"
+        message="The resource `R.color.common_grades_fragment_text_color_black2` appears to be unused"
+        errorLine1="    &lt;color name=&quot;common_grades_fragment_text_color_black2&quot;>#666666&lt;/color>"
+        errorLine2="           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/colors.xml"
+            line="184"
+            column="12"/>
+    </issue>
+
+    <issue
+        id="UnusedResources"
+        message="The resource `R.color.common_grades_fragment_text_color_black3` appears to be unused"
+        errorLine1="    &lt;color name=&quot;common_grades_fragment_text_color_black3&quot;>#A12A4E84&lt;/color>"
+        errorLine2="           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/colors.xml"
+            line="185"
+            column="12"/>
+    </issue>
+
+    <issue
+        id="UnusedResources"
+        message="The resource `R.color.common_grades_fragment_item_back_grey` appears to be unused"
+        errorLine1="    &lt;color name=&quot;common_grades_fragment_item_back_grey&quot;>#E4E4E4&lt;/color>"
+        errorLine2="           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/colors.xml"
+            line="186"
+            column="12"/>
+    </issue>
+
+    <issue
+        id="UnusedResources"
+        message="The resource `R.color.common_grades_item_divide` appears to be unused"
+        errorLine1="    &lt;color name=&quot;common_grades_item_divide&quot;>#15315B&lt;/color>"
+        errorLine2="           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/colors.xml"
+            line="187"
+            column="12"/>
+    </issue>
+
+    <issue
+        id="UnusedResources"
+        message="The resource `R.color.common_grades_item_day_remain` appears to be unused"
+        errorLine1="    &lt;color name=&quot;common_grades_item_day_remain&quot;>#3A39D3&lt;/color>"
+        errorLine2="           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/colors.xml"
+            line="188"
+            column="12"/>
+    </issue>
+
+    <issue
+        id="UnusedResources"
+        message="The resource `R.color.common_grades_bottom_sheet_shadow` appears to be unused"
+        errorLine1="    &lt;color name=&quot;common_grades_bottom_sheet_shadow&quot;>#205369BC&lt;/color>"
+        errorLine2="           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/colors.xml"
+            line="189"
+            column="12"/>
+    </issue>
+
+    <issue
+        id="UnusedResources"
+        message="The resource `R.color.common_grades_gpa_normal_font_color` appears to be unused"
+        errorLine1="    &lt;color name=&quot;common_grades_gpa_normal_font_color&quot;>#15315B&lt;/color>"
+        errorLine2="           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/colors.xml"
+            line="191"
+            column="12"/>
+    </issue>
+
+    <issue
+        id="UnusedResources"
+        message="The resource `R.color.common_grades_gpa_line_color` appears to be unused"
+        errorLine1="    &lt;color name=&quot;common_grades_gpa_line_color&quot;>#2921D1&lt;/color>"
+        errorLine2="           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/colors.xml"
+            line="194"
+            column="12"/>
+    </issue>
+
+    <issue
+        id="UnusedResources"
+        message="The resource `R.color.common_grades_gpa_dash_color` appears to be unused"
+        errorLine1="    &lt;color name=&quot;common_grades_gpa_dash_color&quot;>#2915315B&lt;/color>"
+        errorLine2="           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/colors.xml"
+            line="195"
+            column="12"/>
+    </issue>
+
+    <issue
+        id="UnusedResources"
+        message="The resource `R.color.common_grades_gpa_text_color` appears to be unused"
+        errorLine1="    &lt;color name=&quot;common_grades_gpa_text_color&quot;>#A415315B&lt;/color>"
+        errorLine2="           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/colors.xml"
+            line="196"
+            column="12"/>
+    </issue>
+
+    <issue
+        id="UnusedResources"
+        message="The resource `R.color.common_grades_gpa_circle_inside_color` appears to be unused"
+        errorLine1="    &lt;color name=&quot;common_grades_gpa_circle_inside_color&quot;>#FFFFFFFF&lt;/color>"
+        errorLine2="           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/colors.xml"
+            line="197"
+            column="12"/>
+    </issue>
+
+    <issue
+        id="UnusedResources"
+        message="The resource `R.color.common_grades_gpa_gradient_bottom_color` appears to be unused"
+        errorLine1="    &lt;color name=&quot;common_grades_gpa_gradient_bottom_color&quot;>#66FFFFFF&lt;/color>"
+        errorLine2="           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/colors.xml"
+            line="198"
+            column="12"/>
+    </issue>
+
+    <issue
+        id="UnusedResources"
+        message="The resource `R.color.common_grades_gpa_gradient_top_color` appears to be unused"
+        errorLine1="    &lt;color name=&quot;common_grades_gpa_gradient_top_color&quot;>#44A19EFF&lt;/color>"
+        errorLine2="           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/colors.xml"
+            line="199"
+            column="12"/>
+    </issue>
+
+    <issue
+        id="UnusedResources"
+        message="The resource `R.color.common_grades_gpa_child_bottom_line` appears to be unused"
+        errorLine1="    &lt;color name=&quot;common_grades_gpa_child_bottom_line&quot;>#162A4E84&lt;/color>"
+        errorLine2="           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/colors.xml"
+            line="200"
+            column="12"/>
+    </issue>
+
+    <issue
+        id="UnusedResources"
+        message="The resource `R.color.common_no_class_select_student_page_background` appears to be unused"
+        errorLine1="    &lt;color name=&quot;common_no_class_select_student_page_background&quot;>#ffffff"
+        errorLine2="           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/colors.xml"
+            line="206"
+            column="12"/>
+    </issue>
+
+    <issue
+        id="UnusedResources"
+        message="The resource `R.color.common_curriculum_background_color` appears to be unused"
+        errorLine1="    &lt;color name=&quot;common_curriculum_background_color&quot;>#ffffff&lt;/color>"
+        errorLine2="           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/colors.xml"
+            line="210"
+            column="12"/>
+    </issue>
+
+    <issue
+        id="UnusedResources"
+        message="The resource `R.color.common_transaction_background_stripe_color` appears to be unused"
+        errorLine1="    &lt;color name=&quot;common_transaction_background_stripe_color&quot;>#FFE4E7EC&lt;/color>"
+        errorLine2="           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/colors.xml"
+            line="213"
+            column="12"/>
+    </issue>
+
+    <issue
+        id="UnusedResources"
+        message="The resource `R.color.common_main_bottom_tab_un_select` appears to be unused"
+        errorLine1="    &lt;color name=&quot;common_main_bottom_tab_un_select&quot;>#a9bbd7&lt;/color>"
+        errorLine2="           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/colors.xml"
+            line="215"
+            column="12"/>
+    </issue>
+
+    <issue
+        id="UnusedResources"
+        message="The resource `R.color.common_othercourse_common_hint_text_color` appears to be unused"
+        errorLine1="    &lt;color name=&quot;common_othercourse_common_hint_text_color&quot;>#94A6C4&lt;/color>"
+        errorLine2="           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/colors.xml"
+            line="218"
+            column="12"/>
+    </issue>
+
+    <issue
+        id="UnusedResources"
+        message="The resource `R.color.common_othercourse_shape_back_color` appears to be unused"
+        errorLine1="    &lt;color name=&quot;common_othercourse_shape_back_color&quot;>#94A6C4&lt;/color>"
+        errorLine2="           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/colors.xml"
+            line="219"
+            column="12"/>
+    </issue>
+
+    <issue
+        id="UnusedResources"
+        message="The resource `R.color.common_othercourse_history_back_color` appears to be unused"
+        errorLine1="    &lt;color name=&quot;common_othercourse_history_back_color&quot;>#acE8F0FC&lt;/color>"
+        errorLine2="           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/colors.xml"
+            line="220"
+            column="12"/>
+    </issue>
+
+    <issue
+        id="UnusedResources"
+        message="The resource `R.color.common_discover_academic_online_colors_background` appears to be unused"
+        errorLine1="    &lt;color name=&quot;common_discover_academic_online_colors_background&quot;>#AFD2FB&lt;/color>"
+        errorLine2="           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/colors.xml"
+            line="223"
+            column="12"/>
+    </issue>
+
+    <issue
+        id="UnusedResources"
+        message="The resource `R.color.common_menu_font_color_found` appears to be unused"
+        errorLine1="    &lt;color name=&quot;common_menu_font_color_found&quot;>#15315B&lt;/color>"
+        errorLine2="           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/colors.xml"
+            line="225"
+            column="12"/>
+    </issue>
+
+    <issue
+        id="UnusedResources"
+        message="The resource `R.color.common_discovery_function_item_color` appears to be unused"
+        errorLine1="    &lt;color name=&quot;common_discovery_function_item_color&quot;>#15315B&lt;/color>"
+        errorLine2="           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/colors.xml"
+            line="227"
+            column="12"/>
+    </issue>
+
+    <issue
+        id="UnusedResources"
+        message="The resource `R.color.common_check_in_prompt_color` appears to be unused"
+        errorLine1="    &lt;color name=&quot;common_check_in_prompt_color&quot;>#d4daff&lt;/color>"
+        errorLine2="           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/colors.xml"
+            line="230"
+            column="12"/>
+    </issue>
+
+    <issue
+        id="UnusedResources"
+        message="The resource `R.color.common_about_colors_declared_below` appears to be unused"
+        errorLine1="    &lt;color name=&quot;common_about_colors_declared_below&quot;>#64294169&lt;/color>"
+        errorLine2="           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/colors.xml"
+            line="233"
+            column="12"/>
+    </issue>
+
+    <issue
+        id="UnusedResources"
+        message="The resource `R.color.common_add_transaction_to_the_timetable_click_color` appears to be unused"
+        errorLine1="    &lt;color name=&quot;common_add_transaction_to_the_timetable_click_color&quot;>#E9EDF2&lt;/color>"
+        errorLine2="           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/colors.xml"
+            line="235"
+            column="12"/>
+    </issue>
+
+    <issue
+        id="UnusedResources"
+        message="The resource `R.color.common_log_in_to_the_gray_font_below` appears to be unused"
+        errorLine1="    &lt;color name=&quot;common_log_in_to_the_gray_font_below&quot;>#ABBCD8&lt;/color>"
+        errorLine2="           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/colors.xml"
+            line="237"
+            column="12"/>
+    </issue>
+
+    <issue
+        id="UnusedResources"
+        message="The resource `R.color.common_log_in_by_tourist_text_enter_color` appears to be unused"
+        errorLine1="    &lt;color name=&quot;common_log_in_by_tourist_text_enter_color&quot;>#2A4E84&lt;/color>"
+        errorLine2="           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/colors.xml"
+            line="240"
+            column="12"/>
+    </issue>
+
+    <issue
+        id="UnusedResources"
+        message="The resource `R.color.common_course_end_of_light` appears to be unused"
+        errorLine1="    &lt;color name=&quot;common_course_end_of_light&quot;>#006B65EF&lt;/color>"
+        errorLine2="           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/colors.xml"
+            line="242"
+            column="12"/>
+    </issue>
+
+    <issue
+        id="UnusedResources"
+        message="The resource `R.color.common_course_affair_add_background` appears to be unused"
+        errorLine1="    &lt;color name=&quot;common_course_affair_add_background&quot;>#F2F3F7&lt;/color>"
+        errorLine2="           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/colors.xml"
+            line="245"
+            column="12"/>
+    </issue>
+
+    <issue
+        id="UnusedResources"
+        message="The resource `R.color.common_course_affair_bubble_color` appears to be unused"
+        errorLine1="    &lt;color name=&quot;common_course_affair_bubble_color&quot;>#DFE6FF&lt;/color>"
+        errorLine2="           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/colors.xml"
+            line="248"
+            column="12"/>
+    </issue>
+
+    <issue
+        id="UnusedResources"
+        message="The resource `R.color.common_transaction_add_page_warp_item_text_color` appears to be unused"
+        errorLine1="    &lt;color name=&quot;common_transaction_add_page_warp_item_text_color&quot;>#15315B&lt;/color>"
+        errorLine2="           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/colors.xml"
+            line="252"
+            column="12"/>
+    </issue>
+
+    <issue
+        id="UnusedResources"
+        message="The resource `R.color.common_transaction_completion_edit_view_color` appears to be unused"
+        errorLine1="    &lt;color name=&quot;common_transaction_completion_edit_view_color&quot;>#15315B&lt;/color>"
+        errorLine2="           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/colors.xml"
+            line="254"
+            column="12"/>
+    </issue>
+
+    <issue
+        id="UnusedResources"
+        message="The resource `R.color.common_main_activity_login_et_edited_color` appears to be unused"
+        errorLine1="    &lt;color name=&quot;common_main_activity_login_et_edited_color&quot;>#333333&lt;/color>"
+        errorLine2="           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/colors.xml"
+            line="256"
+            column="12"/>
+    </issue>
+
+    <issue
+        id="UnusedResources"
+        message="The resource `R.color.common_main_activity_login_et_hint_color` appears to be unused"
+        errorLine1="    &lt;color name=&quot;common_main_activity_login_et_hint_color&quot;>#999999&lt;/color>"
+        errorLine2="           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/colors.xml"
+            line="258"
+            column="12"/>
+    </issue>
+
+    <issue
+        id="UnusedResources"
+        message="The resource `R.color.common_volunteer_record_item_cardView_bg` appears to be unused"
+        errorLine1="    &lt;color name=&quot;common_volunteer_record_item_cardView_bg&quot;>#E8F1FC&lt;/color>"
+        errorLine2="           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/colors.xml"
+            line="261"
+            column="12"/>
+    </issue>
+
+    <issue
+        id="UnusedResources"
+        message="The resource `R.color.common_volunteer_affair_sign_up_end_t0` appears to be unused"
+        errorLine1="    &lt;color name=&quot;common_volunteer_affair_sign_up_end_t0&quot;>#FF6262&lt;/color>"
+        errorLine2="           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/colors.xml"
+            line="262"
+            column="12"/>
+    </issue>
+
+    <issue
+        id="UnusedResources"
+        message="The resource `R.color.common_volunteer_affair_sign_up_end_t1` appears to be unused"
+        errorLine1="    &lt;color name=&quot;common_volunteer_affair_sign_up_end_t1&quot;>#3A39D3&lt;/color>"
+        errorLine2="           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/colors.xml"
+            line="263"
+            column="12"/>
+    </issue>
+
+    <issue
+        id="UnusedResources"
+        message="The resource `R.color.common_volunteer_dialog_transparent` appears to be unused"
+        errorLine1="    &lt;color name=&quot;common_volunteer_dialog_transparent&quot;>#000000&lt;/color>"
+        errorLine2="           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/colors.xml"
+            line="264"
+            column="12"/>
+    </issue>
+
+    <issue
+        id="UnusedResources"
+        message="The resource `R.color.common_volunteer_dialog_second_text` appears to be unused"
+        errorLine1="    &lt;color name=&quot;common_volunteer_dialog_second_text&quot;>#2A4E84&lt;/color>"
+        errorLine2="           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/colors.xml"
+            line="265"
+            column="12"/>
+    </issue>
+
+    <issue
+        id="UnusedResources"
+        message="The resource `R.color.common_volunteer_record_item_value` appears to be unused"
+        errorLine1="    &lt;color name=&quot;common_volunteer_record_item_value&quot;>#2A4E84&lt;/color>"
+        errorLine2="           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/colors.xml"
+            line="267"
+            column="12"/>
+    </issue>
+
+    <issue
+        id="UnusedResources"
+        message="The resource `R.color.common_volunteer_button_start_color` appears to be unused"
+        errorLine1="    &lt;color name=&quot;common_volunteer_button_start_color&quot;>#4841E2&lt;/color>"
+        errorLine2="           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/colors.xml"
+            line="269"
+            column="12"/>
+    </issue>
+
+    <issue
+        id="UnusedResources"
+        message="The resource `R.color.common_volunteer_button_end_color` appears to be unused"
+        errorLine1="    &lt;color name=&quot;common_volunteer_button_end_color&quot;>#5D5DF7&lt;/color>"
+        errorLine2="           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/colors.xml"
+            line="270"
+            column="12"/>
+    </issue>
+
+    <issue
+        id="UnusedResources"
+        message="The resource `R.color.common_volunteer_button_negative_color` appears to be unused"
+        errorLine1="    &lt;color name=&quot;common_volunteer_button_negative_color&quot;>#C3D4EE&lt;/color>"
+        errorLine2="           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/colors.xml"
+            line="271"
+            column="12"/>
+    </issue>
+
+    <issue
+        id="UnusedResources"
+        message="The resource `R.color.common_volunteer_cancel_text_color` appears to be unused"
+        errorLine1="    &lt;color name=&quot;common_volunteer_cancel_text_color&quot;>#FFFFFF&lt;/color>"
+        errorLine2="           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/colors.xml"
+            line="273"
+            column="12"/>
+    </issue>
+
+    <issue
+        id="UnusedResources"
+        message="The resource `R.color.common_volunteer_sign_up_way` appears to be unused"
+        errorLine1="    &lt;color name=&quot;common_volunteer_sign_up_way&quot;>#3A39D3&lt;/color>"
+        errorLine2="           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/colors.xml"
+            line="274"
+            column="12"/>
+    </issue>
+
+    <issue
+        id="UnusedResources"
+        message="The resource `R.color.common_volunteer_main_vp_background` appears to be unused"
+        errorLine1="    &lt;color name=&quot;common_volunteer_main_vp_background&quot;>#f8f9fc&lt;/color>"
+        errorLine2="           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/colors.xml"
+            line="275"
+            column="12"/>
+    </issue>
+
+    <issue
+        id="UnusedResources"
+        message="The resource `R.color.common_volunteer_affair_detail_divide_line` appears to be unused"
+        errorLine1="    &lt;color name=&quot;common_volunteer_affair_detail_divide_line&quot;>#2A4E84&lt;/color>"
+        errorLine2="           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/colors.xml"
+            line="276"
+            column="12"/>
+    </issue>
+
+    <issue
+        id="UnusedResources"
+        message="The resource `R.color.map_search_text_color` appears to be unused"
+        errorLine1="    &lt;color name=&quot;map_search_text_color&quot; tools:ignore=&quot;ResourceName&quot;>#16305C&lt;/color>"
+        errorLine2="           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/colors.xml"
+            line="279"
+            column="12"/>
+    </issue>
+
+    <issue
+        id="UnusedResources"
+        message="The resource `R.color.map_search_text_color_hint` appears to be unused"
+        errorLine1="    &lt;color name=&quot;map_search_text_color_hint&quot; tools:ignore=&quot;ResourceName&quot;>#94969E&lt;/color>"
+        errorLine2="           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/colors.xml"
+            line="281"
+            column="12"/>
+    </issue>
+
+    <issue
+        id="UnusedResources"
+        message="The resource `R.color.map_search_edit_text_background` appears to be unused"
+        errorLine1="    &lt;color name=&quot;map_search_edit_text_background&quot; tools:ignore=&quot;ResourceName&quot;>#F0F4FD&lt;/color>"
+        errorLine2="           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/colors.xml"
+            line="283"
+            column="12"/>
+    </issue>
+
+    <issue
+        id="UnusedResources"
+        message="The resource `R.color.map_title_text_color` appears to be unused"
+        errorLine1="    &lt;color name=&quot;map_title_text_color&quot; tools:ignore=&quot;ResourceName&quot;>#15315B&lt;/color>"
+        errorLine2="           ~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/colors.xml"
+            line="285"
+            column="12"/>
+    </issue>
+
+    <issue
+        id="UnusedResources"
+        message="The resource `R.color.map_table_drag_indicator_block_color` appears to be unused"
+        errorLine1="    &lt;color name=&quot;map_table_drag_indicator_block_color&quot; tools:ignore=&quot;ResourceName&quot;>#E2EDFB&lt;/color>"
+        errorLine2="           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/colors.xml"
+            line="287"
+            column="12"/>
+    </issue>
+
+    <issue
+        id="UnusedResources"
+        message="The resource `R.color.map_ic_favorite_color` appears to be unused"
+        errorLine1="    &lt;color name=&quot;map_ic_favorite_color&quot; tools:ignore=&quot;ResourceName&quot;>#94A6C4&lt;/color>"
+        errorLine2="           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/colors.xml"
+            line="289"
+            column="12"/>
+    </issue>
+
+    <issue
+        id="UnusedResources"
+        message="The resource `R.color.map_text_detail_more_color` appears to be unused"
+        errorLine1="    &lt;color name=&quot;map_text_detail_more_color&quot; tools:ignore=&quot;ResourceName&quot;>#ABBBD7&lt;/color>"
+        errorLine2="           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/colors.xml"
+            line="291"
+            column="12"/>
+    </issue>
+
+    <issue
+        id="UnusedResources"
+        message="The resource `R.color.map_text_detail_share` appears to be unused"
+        errorLine1="    &lt;color name=&quot;map_text_detail_share&quot; tools:ignore=&quot;ResourceName&quot;>#23477F&lt;/color>"
+        errorLine2="           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/colors.xml"
+            line="293"
+            column="12"/>
+    </issue>
+
+    <issue
+        id="UnusedResources"
+        message="The resource `R.color.map_text_symbol` appears to be unused"
+        errorLine1="    &lt;color name=&quot;map_text_symbol&quot; tools:ignore=&quot;ResourceName&quot;>#0E2A54&lt;/color>"
+        errorLine2="           ~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/colors.xml"
+            line="295"
+            column="12"/>
+    </issue>
+
+    <issue
+        id="UnusedResources"
+        message="The resource `R.color.map_symbol_select` appears to be unused"
+        errorLine1="    &lt;color name=&quot;map_symbol_select&quot; tools:ignore=&quot;ResourceName&quot;>#E8F0FC&lt;/color>"
+        errorLine2="           ~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/colors.xml"
+            line="297"
+            column="12"/>
+    </issue>
+
+    <issue
+        id="UnusedResources"
+        message="The resource `R.color.map_text_symbol_select` appears to be unused"
+        errorLine1="    &lt;color name=&quot;map_text_symbol_select&quot; tools:ignore=&quot;ResourceName&quot;>#2A4E84&lt;/color>"
+        errorLine2="           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/colors.xml"
+            line="299"
+            column="12"/>
+    </issue>
+
+    <issue
+        id="UnusedResources"
+        message="The resource `R.color.map_text_detail_attribute` appears to be unused"
+        errorLine1="    &lt;color name=&quot;map_text_detail_attribute&quot; tools:ignore=&quot;ResourceName&quot;>#778AA9&lt;/color>"
+        errorLine2="           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/colors.xml"
+            line="302"
+            column="12"/>
+    </issue>
+
+    <issue
+        id="UnusedResources"
+        message="The resource `R.color.map_text_detail_tag` appears to be unused"
+        errorLine1="    &lt;color name=&quot;map_text_detail_tag&quot; tools:ignore=&quot;ResourceName&quot;>#234780&lt;/color>"
+        errorLine2="           ~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/colors.xml"
+            line="304"
+            column="12"/>
+    </issue>
+
+    <issue
+        id="UnusedResources"
+        message="The resource `R.color.map_text_favorite_item` appears to be unused"
+        errorLine1="    &lt;color name=&quot;map_text_favorite_item&quot; tools:ignore=&quot;ResourceName&quot;>#253E65&lt;/color>"
+        errorLine2="           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/colors.xml"
+            line="307"
+            column="12"/>
+    </issue>
+
+    <issue
+        id="UnusedResources"
+        message="The resource `R.color.map_pop_up_window_favorite_background_color` appears to be unused"
+        errorLine1="    &lt;color name=&quot;map_pop_up_window_favorite_background_color&quot; tools:ignore=&quot;ResourceName&quot;>#FFFFFF"
+        errorLine2="           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/colors.xml"
+            line="309"
+            column="12"/>
+    </issue>
+
+    <issue
+        id="UnusedResources"
+        message="The resource `R.color.map_favorite_edit_background_color` appears to be unused"
+        errorLine1="    &lt;color name=&quot;map_favorite_edit_background_color&quot; tools:ignore=&quot;ResourceName&quot;>#FFFFFF&lt;/color>"
+        errorLine2="           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/colors.xml"
+            line="311"
+            column="12"/>
+    </issue>
+
+    <issue
+        id="UnusedResources"
+        message="The resource `R.color.map_favorite_accept_text_color` appears to be unused"
+        errorLine1="    &lt;color name=&quot;map_favorite_accept_text_color&quot; tools:ignore=&quot;ResourceName&quot;>#234780&lt;/color>"
+        errorLine2="           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/colors.xml"
+            line="313"
+            column="12"/>
+    </issue>
+
+    <issue
+        id="UnusedResources"
+        message="The resource `R.color.map_favorite_cancel_text_color` appears to be unused"
+        errorLine1="    &lt;color name=&quot;map_favorite_cancel_text_color&quot; tools:ignore=&quot;ResourceName&quot;>#778AA9&lt;/color>"
+        errorLine2="           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/colors.xml"
+            line="314"
+            column="12"/>
+    </issue>
+
+    <issue
+        id="UnusedResources"
+        message="The resource `R.color.map_favorite_place_name_text_color` appears to be unused"
+        errorLine1="    &lt;color name=&quot;map_favorite_place_name_text_color&quot; tools:ignore=&quot;ResourceName&quot;>#15305C&lt;/color>"
+        errorLine2="           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/colors.xml"
+            line="315"
+            column="12"/>
+    </issue>
+
+    <issue
+        id="UnusedResources"
+        message="The resource `R.color.map_favorite_change_color` appears to be unused"
+        errorLine1="    &lt;color name=&quot;map_favorite_change_color&quot; tools:ignore=&quot;ResourceName&quot;>#234780&lt;/color>"
+        errorLine2="           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/colors.xml"
+            line="316"
+            column="12"/>
+    </issue>
+
+    <issue
+        id="UnusedResources"
+        message="The resource `R.color.map_favorite_recommend_color` appears to be unused"
+        errorLine1="    &lt;color name=&quot;map_favorite_recommend_color&quot; tools:ignore=&quot;ResourceName&quot;>#778AA9&lt;/color>"
+        errorLine2="           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/colors.xml"
+            line="317"
+            column="12"/>
+    </issue>
+
+    <issue
+        id="UnusedResources"
+        message="The resource `R.color.map_favorite_cancel_favorite_text_color` appears to be unused"
+        errorLine1="    &lt;color name=&quot;map_favorite_cancel_favorite_text_color&quot; tools:ignore=&quot;ResourceName&quot;>#01CAF0"
+        errorLine2="           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/colors.xml"
+            line="318"
+            column="12"/>
+    </issue>
+
+    <issue
+        id="UnusedResources"
+        message="The resource `R.color.map_detail_place_nickname_text_color` appears to be unused"
+        errorLine1="    &lt;color name=&quot;map_detail_place_nickname_text_color&quot; tools:ignore=&quot;ResourceName&quot;>#47DAFA&lt;/color>"
+        errorLine2="           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/colors.xml"
+            line="320"
+            column="12"/>
+    </issue>
+
+    <issue
+        id="UnusedResources"
+        message="The resource `R.color.map_detail_place_more_text_color` appears to be unused"
+        errorLine1="    &lt;color name=&quot;map_detail_place_more_text_color&quot; tools:ignore=&quot;ResourceName&quot;>#16305C&lt;/color>"
+        errorLine2="           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/colors.xml"
+            line="321"
+            column="12"/>
+    </issue>
+
+    <issue
+        id="UnusedResources"
+        message="The resource `R.color.map_search_history_text_color` appears to be unused"
+        errorLine1="    &lt;color name=&quot;map_search_history_text_color&quot; tools:ignore=&quot;ResourceName&quot;>#778AA9&lt;/color>"
+        errorLine2="           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/colors.xml"
+            line="323"
+            column="12"/>
+    </issue>
+
+    <issue
+        id="UnusedResources"
+        message="The resource `R.color.map_search_clear_text_color` appears to be unused"
+        errorLine1="    &lt;color name=&quot;map_search_clear_text_color&quot; tools:ignore=&quot;ResourceName&quot;>#ABBCD8&lt;/color>"
+        errorLine2="           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/colors.xml"
+            line="324"
+            column="12"/>
+    </issue>
+
+    <issue
+        id="UnusedResources"
+        message="The resource `R.color.map_search_background_color` appears to be unused"
+        errorLine1="    &lt;color name=&quot;map_search_background_color&quot; tools:ignore=&quot;ResourceName&quot;>#FFFFFF&lt;/color>"
+        errorLine2="           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/colors.xml"
+            line="325"
+            column="12"/>
+    </issue>
+
+    <issue
+        id="UnusedResources"
+        message="The resource `R.color.map_search_result_item_text_color` appears to be unused"
+        errorLine1="    &lt;color name=&quot;map_search_result_item_text_color&quot; tools:ignore=&quot;ResourceName&quot;>#234780&lt;/color>"
+        errorLine2="           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/colors.xml"
+            line="328"
+            column="12"/>
+    </issue>
+
+    <issue
+        id="UnusedResources"
+        message="The resource `R.color.map_search_history_item_text_color` appears to be unused"
+        errorLine1="    &lt;color name=&quot;map_search_history_item_text_color&quot; tools:ignore=&quot;ResourceName&quot;>#23477F&lt;/color>"
+        errorLine2="           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/colors.xml"
+            line="329"
+            column="12"/>
+    </issue>
+
+    <issue
+        id="UnusedResources"
+        message="The resource `R.color.map_dialog_tip_background_color` appears to be unused"
+        errorLine1="    &lt;color name=&quot;map_dialog_tip_background_color&quot; tools:ignore=&quot;ResourceName&quot;>#FFFFFF&lt;/color>"
+        errorLine2="           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/colors.xml"
+            line="331"
+            column="12"/>
+    </issue>
+
+    <issue
+        id="UnusedResources"
+        message="The resource `R.color.map_dialog_tip_title_color` appears to be unused"
+        errorLine1="    &lt;color name=&quot;map_dialog_tip_title_color&quot; tools:ignore=&quot;ResourceName&quot;>#15305C&lt;/color>"
+        errorLine2="           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/colors.xml"
+            line="332"
+            column="12"/>
+    </issue>
+
+    <issue
+        id="UnusedResources"
+        message="The resource `R.color.map_dialog_tip_text_color` appears to be unused"
+        errorLine1="    &lt;color name=&quot;map_dialog_tip_text_color&quot; tools:ignore=&quot;ResourceName&quot;>#132F5B&lt;/color>"
+        errorLine2="           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/colors.xml"
+            line="333"
+            column="12"/>
+    </issue>
+
+    <issue
+        id="UnusedResources"
+        message="The resource `R.color.map_dialog_tip_deny_text_color` appears to be unused"
+        errorLine1="    &lt;color name=&quot;map_dialog_tip_deny_text_color&quot; tools:ignore=&quot;ResourceName&quot;>#86AAE3&lt;/color>"
+        errorLine2="           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/colors.xml"
+            line="334"
+            column="12"/>
+    </issue>
+
+    <issue
+        id="UnusedResources"
+        message="The resource `R.color.map_dialog_tip_deny_background_color` appears to be unused"
+        errorLine1="    &lt;color name=&quot;map_dialog_tip_deny_background_color&quot; tools:ignore=&quot;ResourceName&quot;>#E7EFFD&lt;/color>"
+        errorLine2="           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/colors.xml"
+            line="335"
+            column="12"/>
+    </issue>
+
+    <issue
+        id="UnusedResources"
+        message="The resource `R.color.map_dialog_tip_positive_text_color` appears to be unused"
+        errorLine1="    &lt;color name=&quot;map_dialog_tip_positive_text_color&quot; tools:ignore=&quot;ResourceName&quot;>#FFFFFF&lt;/color>"
+        errorLine2="           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/colors.xml"
+            line="336"
+            column="12"/>
+    </issue>
+
+    <issue
+        id="UnusedResources"
+        message="The resource `R.color.map_dialog_tip_positive_background_color` appears to be unused"
+        errorLine1="    &lt;color name=&quot;map_dialog_tip_positive_background_color&quot; tools:ignore=&quot;ResourceName&quot;>#4B44E5"
+        errorLine2="           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/colors.xml"
+            line="337"
+            column="12"/>
+    </issue>
+
+    <issue
+        id="UnusedResources"
+        message="The resource `R.color.map_all_picture_text` appears to be unused"
+        errorLine1="    &lt;color name=&quot;map_all_picture_text&quot; tools:ignore=&quot;ResourceName&quot;>#16315C&lt;/color>"
+        errorLine2="           ~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/colors.xml"
+            line="341"
+            column="12"/>
+    </issue>
+
+    <issue
+        id="UnusedResources"
+        message="The resource `R.color.map_all_picture_background` appears to be unused"
+        errorLine1="    &lt;color name=&quot;map_all_picture_background&quot; tools:ignore=&quot;ResourceName&quot;>#FFFFFF&lt;/color>"
+        errorLine2="           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/colors.xml"
+            line="342"
+            column="12"/>
+    </issue>
+
+    <issue
+        id="UnusedResources"
+        message="The resource `R.color.map_all_picture_text_share` appears to be unused"
+        errorLine1="    &lt;color name=&quot;map_all_picture_text_share&quot; tools:ignore=&quot;ResourceName&quot;>#02CAF0&lt;/color>"
+        errorLine2="           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/colors.xml"
+            line="343"
+            column="12"/>
+    </issue>
+
+    <issue
+        id="UnusedResources"
+        message="The resource `R.color.map_all_picture_text_no_more` appears to be unused"
+        errorLine1="    &lt;color name=&quot;map_all_picture_text_no_more&quot; tools:ignore=&quot;ResourceName&quot;>#ABBCD8&lt;/color>"
+        errorLine2="           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/colors.xml"
+            line="344"
+            column="12"/>
+    </issue>
+
+    <issue
+        id="UnusedResources"
+        message="The resource `R.color.map_divider_color` appears to be unused"
+        errorLine1="    &lt;color name=&quot;map_divider_color&quot; tools:ignore=&quot;ResourceName&quot;>#EFF3FD&lt;/color>"
+        errorLine2="           ~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/colors.xml"
+            line="346"
+            column="12"/>
+    </issue>
+
+    <issue
+        id="UnusedResources"
+        message="The resource `R.color.map_main_background` appears to be unused"
+        errorLine1="    &lt;color name=&quot;map_main_background&quot; tools:ignore=&quot;ResourceName&quot;>#FFFFFF&lt;/color>"
+        errorLine2="           ~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/colors.xml"
+            line="347"
+            column="12"/>
+    </issue>
+
+    <issue
+        id="UnusedResources"
+        message="The resource `R.color.map_detail_background` appears to be unused"
+        errorLine1="    &lt;color name=&quot;map_detail_background&quot; tools:ignore=&quot;ResourceName&quot;>#FFFFFF&lt;/color>"
+        errorLine2="           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/colors.xml"
+            line="348"
+            column="12"/>
+    </issue>
+
+    <issue
+        id="UnusedResources"
+        message="The resource `R.color.map_dialog_transparent` appears to be unused"
+        errorLine1="    &lt;color name=&quot;map_dialog_transparent&quot; tools:ignore=&quot;ResourceName&quot;>#00000000&lt;/color>"
+        errorLine2="           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/colors.xml"
+            line="349"
+            column="12"/>
+    </issue>
+
+    <issue
+        id="UnusedResources"
+        message="The resource `R.color.map_download_progressbar_background` appears to be unused"
+        errorLine1="    &lt;color name=&quot;map_download_progressbar_background&quot; tools:ignore=&quot;ResourceName&quot;>#E7EFFD&lt;/color>"
+        errorLine2="           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/colors.xml"
+            line="350"
+            column="12"/>
+    </issue>
+
+    <issue
+        id="UnusedResources"
+        message="The resource `R.color.map_download_progressbar` appears to be unused"
+        errorLine1="    &lt;color name=&quot;map_download_progressbar&quot; tools:ignore=&quot;ResourceName&quot;>#4B44E5&lt;/color>"
+        errorLine2="           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/colors.xml"
+            line="351"
+            column="12"/>
+    </issue>
+
+    <issue
+        id="UnusedResources"
+        message="The resource `R.color.map_download_text` appears to be unused"
+        errorLine1="    &lt;color name=&quot;map_download_text&quot; tools:ignore=&quot;ResourceName&quot;>#132F5B&lt;/color>"
+        errorLine2="           ~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/colors.xml"
+            line="352"
+            column="12"/>
+    </issue>
+
+    <issue
+        id="UnusedResources"
+        message="The resource `R.drawable.common_back` appears to be unused"
+        errorLine1="&lt;vector xmlns:android=&quot;http://schemas.android.com/apk/res/android&quot;"
+        errorLine2="^">
+        <location
+            file="src/main/res/drawable/common_back.xml"
+            line="1"
+            column="1"/>
+    </issue>
+
+    <issue
+        id="UnusedResources"
+        message="The resource `R.color.common_default_text_color` appears to be unused"
+        errorLine1="&lt;selector xmlns:android=&quot;http://schemas.android.com/apk/res/android&quot;>"
+        errorLine2="^">
+        <location
+            file="src/main/res/color/common_default_text_color.xml"
+            line="2"
+            column="1"/>
+    </issue>
+
+    <issue
+        id="UnusedResources"
+        message="The resource `R.anim.common_fade_in` appears to be unused"
+        errorLine1="&lt;alpha xmlns:android=&quot;http://schemas.android.com/apk/res/android&quot;"
+        errorLine2="^">
+        <location
+            file="src/main/res/anim/common_fade_in.xml"
+            line="2"
+            column="1"/>
+    </issue>
+
+    <issue
+        id="UnusedResources"
+        message="The resource `R.anim.common_fade_out` appears to be unused"
+        errorLine1="&lt;alpha xmlns:android=&quot;http://schemas.android.com/apk/res/android&quot;"
+        errorLine2="^">
+        <location
+            file="src/main/res/anim/common_fade_out.xml"
+            line="2"
+            column="1"/>
+    </issue>
+
+    <issue
+        id="UnusedResources"
+        message="The resource `R.color.common_folder_text_color` appears to be unused"
+        errorLine1="&lt;selector xmlns:android=&quot;http://schemas.android.com/apk/res/android&quot;>"
+        errorLine2="^">
+        <location
+            file="src/main/res/color/common_folder_text_color.xml"
+            line="2"
+            column="1"/>
+    </issue>
+
+    <issue
+        id="UnusedResources"
+        message="The resource `R.drawable.common_ic_app_logo` appears to be unused"
+        errorLine1="&lt;vector xmlns:android=&quot;http://schemas.android.com/apk/res/android&quot;"
+        errorLine2="^">
+        <location
+            file="src/main/res/drawable/common_ic_app_logo.xml"
+            line="1"
+            column="1"/>
+    </issue>
+
+    <issue
+        id="UnusedResources"
+        message="The resource `R.drawable.common_ic_app_notifacation` appears to be unused"
+        errorLine1="&lt;vector xmlns:android=&quot;http://schemas.android.com/apk/res/android&quot;"
+        errorLine2="^">
+        <location
+            file="src/main/res/drawable-anydpi-v24/common_ic_app_notifacation.xml"
+            line="1"
+            column="1"/>
+    </issue>
+
+    <issue
+        id="UnusedResources"
+        message="The resource `R.drawable.common_ic_asy` appears to be unused">
+        <location
+            file="src/main/res/drawable/common_ic_asy.png"/>
+    </issue>
+
+    <issue
+        id="UnusedResources"
+        message="The resource `R.drawable.common_ic_empty_holder` appears to be unused">
+        <location
+            file="src/main/res/drawable/common_ic_empty_holder.webp"/>
+    </issue>
+
+    <issue
+        id="UnusedResources"
+        message="The resource `R.anim.common_interpolator` appears to be unused"
+        errorLine1="&lt;pathInterpolator xmlns:android=&quot;http://schemas.android.com/apk/res/android&quot;"
+        errorLine2="^">
+        <location
+            file="src/main/res/anim/common_interpolator.xml"
+            line="2"
+            column="1"/>
+    </issue>
+
+    <issue
+        id="UnusedResources"
+        message="The resource `R.anim.common_interpolator_2` appears to be unused"
+        errorLine1="&lt;pathInterpolator xmlns:android=&quot;http://schemas.android.com/apk/res/android&quot;"
+        errorLine2="^">
+        <location
+            file="src/main/res/anim/common_interpolator_2.xml"
+            line="2"
+            column="1"/>
+    </issue>
+
+    <issue
+        id="UnusedResources"
+        message="The resource `R.anim.common_interpolator_3` appears to be unused"
+        errorLine1="&lt;pathInterpolator xmlns:android=&quot;http://schemas.android.com/apk/res/android&quot;"
+        errorLine2="^">
+        <location
+            file="src/main/res/anim/common_interpolator_3.xml"
+            line="2"
+            column="1"/>
+    </issue>
+
+    <issue
+        id="UnusedResources"
+        message="The resource `R.anim.common_scale_fade_in_with_bezier` appears to be unused"
+        errorLine1="&lt;set xmlns:android=&quot;http://schemas.android.com/apk/res/android&quot;"
+        errorLine2="^">
+        <location
+            file="src/main/res/anim/common_scale_fade_in_with_bezier.xml"
+            line="2"
+            column="1"/>
+    </issue>
+
+    <issue
+        id="UnusedResources"
+        message="The resource `R.anim.common_scale_fade_out_with_bezier` appears to be unused"
+        errorLine1="&lt;set xmlns:android=&quot;http://schemas.android.com/apk/res/android&quot;"
+        errorLine2="^">
+        <location
+            file="src/main/res/anim/common_scale_fade_out_with_bezier.xml"
+            line="3"
+            column="1"/>
+    </issue>
+
+    <issue
+        id="UnusedResources"
+        message="The resource `R.drawable.common_shape_button` appears to be unused"
+        errorLine1="&lt;shape xmlns:android=&quot;http://schemas.android.com/apk/res/android&quot;"
+        errorLine2="^">
+        <location
+            file="src/main/res/drawable/common_shape_button.xml"
+            line="2"
+            column="1"/>
+    </issue>
+
+    <issue
+        id="UnusedResources"
+        message="The resource `R.drawable.common_shape_tip` appears to be unused"
+        errorLine1="&lt;shape xmlns:android=&quot;http://schemas.android.com/apk/res/android&quot;"
+        errorLine2="^">
+        <location
+            file="src/main/res/drawable/common_shape_tip.xml"
+            line="2"
+            column="1"/>
+    </issue>
+
+    <issue
+        id="UnusedResources"
+        message="The resource `R.anim.common_slide_fade_out_to_bottom_with_bezier` appears to be unused"
+        errorLine1="&lt;set xmlns:android=&quot;http://schemas.android.com/apk/res/android&quot;"
+        errorLine2="^">
+        <location
+            file="src/main/res/anim/common_slide_fade_out_to_bottom_with_bezier.xml"
+            line="2"
+            column="1"/>
+    </issue>
+
+    <issue
+        id="UnusedResources"
+        message="The resource `R.anim.common_slide_in_from_bottom_with_bezier` appears to be unused"
+        errorLine1="&lt;set xmlns:android=&quot;http://schemas.android.com/apk/res/android&quot;"
+        errorLine2="^">
+        <location
+            file="src/main/res/anim/common_slide_in_from_bottom_with_bezier.xml"
+            line="2"
+            column="1"/>
+    </issue>
+
+    <issue
+        id="UnusedResources"
+        message="The resource `R.drawable.common_text_indicator` appears to be unused">
+        <location
+            file="src/main/res/drawable/common_text_indicator.png"/>
+    </issue>
+
+    <issue
+        id="UnusedResources"
+        message="The resource `R.layout.common_toolbar` appears to be unused"
+        errorLine1="&lt;com.google.android.material.appbar.AppBarLayout xmlns:android=&quot;http://schemas.android.com/apk/res/android&quot;"
+        errorLine2="^">
+        <location
+            file="src/main/res/layout/common_toolbar.xml"
+            line="2"
+            column="1"/>
+    </issue>
+
+    <issue
+        id="UnusedResources"
+        message="The resource `R.drawable.common_toolbar_background` appears to be unused"
+        errorLine1="&lt;shape xmlns:android=&quot;http://schemas.android.com/apk/res/android&quot;"
+        errorLine2="^">
+        <location
+            file="src/main/res/drawable/common_toolbar_background.xml"
+            line="2"
+            column="1"/>
+    </issue>
+
+    <issue
+        id="UnusedResources"
+        message="The resource `R.anim.common_translate_left_in` appears to be unused"
+        errorLine1="&lt;translate xmlns:android=&quot;http://schemas.android.com/apk/res/android&quot;"
+        errorLine2="^">
+        <location
+            file="src/main/res/anim/common_translate_left_in.xml"
+            line="2"
+            column="1"/>
+    </issue>
+
+    <issue
+        id="UnusedResources"
+        message="The resource `R.anim.common_translate_left_out` appears to be unused"
+        errorLine1="&lt;translate xmlns:android=&quot;http://schemas.android.com/apk/res/android&quot;"
+        errorLine2="^">
+        <location
+            file="src/main/res/anim/common_translate_left_out.xml"
+            line="2"
+            column="1"/>
+    </issue>
+
+    <issue
+        id="UnusedResources"
+        message="The resource `R.anim.common_translate_right_in` appears to be unused"
+        errorLine1="&lt;translate xmlns:android=&quot;http://schemas.android.com/apk/res/android&quot;"
+        errorLine2="^">
+        <location
+            file="src/main/res/anim/common_translate_right_in.xml"
+            line="2"
+            column="1"/>
+    </issue>
+
+    <issue
+        id="UnusedResources"
+        message="The resource `R.anim.common_translate_right_out` appears to be unused"
+        errorLine1="&lt;translate xmlns:android=&quot;http://schemas.android.com/apk/res/android&quot;"
+        errorLine2="^">
+        <location
+            file="src/main/res/anim/common_translate_right_out.xml"
+            line="2"
+            column="1"/>
+    </issue>
+
+    <issue
+        id="UnusedResources"
+        message="The resource `R.dimen.image_size` appears to be unused"
+        errorLine1="    &lt;dimen name=&quot;image_size&quot;>96dp&lt;/dimen>"
+        errorLine2="           ~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values-sw360dp/dimens.xml"
+            line="3"
+            column="12"/>
+    </issue>
+
+    <issue
+        id="UnusedResources"
+        message="The resource `R.dimen.space_size` appears to be unused"
+        errorLine1="    &lt;dimen name=&quot;space_size&quot;>2dp&lt;/dimen>"
+        errorLine2="           ~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values-sw360dp/dimens.xml"
+            line="4"
+            column="12"/>
+    </issue>
+
+    <issue
+        id="UnusedResources"
+        message="The resource `R.dimen.folder_cover_size` appears to be unused"
+        errorLine1="    &lt;dimen name=&quot;folder_cover_size&quot;>72dp&lt;/dimen>"
+        errorLine2="           ~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values-sw360dp/dimens.xml"
+            line="5"
+            column="12"/>
+    </issue>
+
+    <issue
+        id="UnusedResources"
+        message="The resource `R.dimen.common_corner_radius` appears to be unused"
+        errorLine1="    &lt;dimen name=&quot;common_corner_radius&quot; tools:ignore=&quot;ResourceName&quot;>16dp&lt;/dimen>"
+        errorLine2="           ~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/dimens.xml"
+            line="7"
+            column="12"/>
+    </issue>
+
+    <issue
+        id="UnusedResources"
+        message="The resource `R.layout.socialize_share_menu_item` appears to be unused"
+        errorLine1="&lt;LinearLayout xmlns:android=&quot;http://schemas.android.com/apk/res/android&quot;"
+        errorLine2="^">
+        <location
+            file="src/main/res/layout/socialize_share_menu_item.xml"
+            line="2"
+            column="1"/>
+    </issue>
+
+    <issue
+        id="UnusedResources"
+        message="The resource `R.string.app_name` appears to be unused"
+        errorLine1="    &lt;string name=&quot;app_name&quot; >掌上重邮&lt;/string>"
+        errorLine2="            ~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/strings.xml"
+            line="3"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="UnusedResources"
+        message="The resource `R.string.common_course` appears to be unused"
+        errorLine1="    &lt;string name=&quot;common_course&quot;>课表&lt;/string>"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/strings.xml"
+            line="5"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="UnusedResources"
+        message="The resource `R.string.common_qa` appears to be unused"
+        errorLine1="    &lt;string name=&quot;common_qa&quot;>邮问&lt;/string>"
+        errorLine2="            ~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/strings.xml"
+            line="6"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="UnusedResources"
+        message="The resource `R.string.common_explore` appears to be unused"
+        errorLine1="    &lt;string name=&quot;common_explore&quot;>发现&lt;/string>"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/strings.xml"
+            line="7"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="UnusedResources"
+        message="The resource `R.string.common_mine` appears to be unused"
+        errorLine1="    &lt;string name=&quot;common_mine&quot;>我的&lt;/string>"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/strings.xml"
+            line="8"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="UnusedResources"
+        message="The resource `R.string.common_fab` appears to be unused"
+        errorLine1="    &lt;string name=&quot;common_fab&quot;>红岩网校&lt;/string>"
+        errorLine2="            ~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/strings.xml"
+            line="10"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="UnusedResources"
+        message="The resource `R.style.AppTheme_FullScreen` appears to be unused"
+        errorLine1="    &lt;style name=&quot;AppTheme.FullScreen&quot; parent=&quot;AppTheme&quot; tools:ignore=&quot;ResourceName&quot;>"
+        errorLine2="           ~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/styles.xml"
+            line="27"
+            column="12"/>
+    </issue>
+
+    <issue
+        id="UnusedResources"
+        message="The resource `R.style.common_LPhotoTheme` appears to be unused"
+        errorLine1="    &lt;style name=&quot;common_LPhotoTheme&quot; parent=&quot;LPhotoTheme&quot;>"
+        errorLine2="           ~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/styles.xml"
+            line="49"
+            column="12"/>
+    </issue>
+
+    <issue
+        id="UnusedResources"
+        message="The resource `R.drawable.umeng_socialize_back_icon` appears to be unused">
+        <location
+            file="src/main/res/drawable/umeng_socialize_back_icon.png"/>
+    </issue>
+
+    <issue
+        id="UnusedResources"
+        message="The resource `R.drawable.umeng_socialize_btn_bg` appears to be unused"
+        errorLine1="&lt;shape android:shape=&quot;rectangle&quot;"
+        errorLine2="^">
+        <location
+            file="src/main/res/drawable/umeng_socialize_btn_bg.xml"
+            line="2"
+            column="1"/>
+    </issue>
+
+    <issue
+        id="UnusedResources"
+        message="The resource `R.drawable.umeng_socialize_copy` appears to be unused">
+        <location
+            file="src/main/res/drawable/umeng_socialize_copy.png"/>
+    </issue>
+
+    <issue
+        id="UnusedResources"
+        message="The resource `R.drawable.umeng_socialize_copyurl` appears to be unused">
+        <location
+            file="src/main/res/drawable/umeng_socialize_copyurl.png"/>
+    </issue>
+
+    <issue
+        id="UnusedResources"
+        message="The resource `R.drawable.umeng_socialize_delete` appears to be unused">
+        <location
+            file="src/main/res/drawable/umeng_socialize_delete.png"/>
+    </issue>
+
+    <issue
+        id="UnusedResources"
+        message="The resource `R.drawable.umeng_socialize_edit_bg` appears to be unused"
+        errorLine1="&lt;shape android:shape=&quot;rectangle&quot;"
+        errorLine2="^">
+        <location
+            file="src/main/res/drawable/umeng_socialize_edit_bg.xml"
+            line="2"
+            column="1"/>
+    </issue>
+
+    <issue
+        id="UnusedResources"
+        message="The resource `R.drawable.umeng_socialize_fav` appears to be unused">
+        <location
+            file="src/main/res/drawable/umeng_socialize_fav.png"/>
+    </issue>
+
+    <issue
+        id="UnusedResources"
+        message="The resource `R.drawable.umeng_socialize_menu_default` appears to be unused">
+        <location
+            file="src/main/res/drawable/umeng_socialize_menu_default.png"/>
+    </issue>
+
+    <issue
+        id="UnusedResources"
+        message="The resource `R.drawable.umeng_socialize_more` appears to be unused">
+        <location
+            file="src/main/res/drawable/umeng_socialize_more.png"/>
+    </issue>
+
+    <issue
+        id="UnusedResources"
+        message="The resource `R.layout.umeng_socialize_oauth_dialog` appears to be unused"
+        errorLine1="&lt;RelativeLayout xmlns:android=&quot;http://schemas.android.com/apk/res/android&quot;"
+        errorLine2="^">
+        <location
+            file="src/main/res/layout/umeng_socialize_oauth_dialog.xml"
+            line="2"
+            column="1"/>
+    </issue>
+
+    <issue
+        id="UnusedResources"
+        message="The resource `R.drawable.umeng_socialize_qq` appears to be unused">
+        <location
+            file="src/main/res/drawable/umeng_socialize_qq.png"/>
+    </issue>
+
+    <issue
+        id="UnusedResources"
+        message="The resource `R.drawable.umeng_socialize_qzone` appears to be unused">
+        <location
+            file="src/main/res/drawable/umeng_socialize_qzone.png"/>
+    </issue>
+
+    <issue
+        id="UnusedResources"
+        message="The resource `R.layout.umeng_socialize_share` appears to be unused"
+        errorLine1="&lt;RelativeLayout xmlns:android=&quot;http://schemas.android.com/apk/res/android&quot;"
+        errorLine2="^">
+        <location
+            file="src/main/res/layout/umeng_socialize_share.xml"
+            line="2"
+            column="1"/>
+    </issue>
+
+    <issue
+        id="UnusedResources"
+        message="The resource `R.drawable.umeng_socialize_share_music` appears to be unused">
+        <location
+            file="src/main/res/drawable/umeng_socialize_share_music.png"/>
+    </issue>
+
+    <issue
+        id="UnusedResources"
+        message="The resource `R.drawable.umeng_socialize_share_video` appears to be unused">
+        <location
+            file="src/main/res/drawable/umeng_socialize_share_video.png"/>
+    </issue>
+
+    <issue
+        id="UnusedResources"
+        message="The resource `R.drawable.umeng_socialize_share_web` appears to be unused">
+        <location
+            file="src/main/res/drawable/umeng_socialize_share_web.png"/>
+    </issue>
+
+    <issue
+        id="UnusedResources"
+        message="The resource `R.string.umeng_socialize_sharetosina` appears to be unused"
+        errorLine1="    &lt;string name=&quot;umeng_socialize_sharetosina&quot;>分享到新浪微博&lt;/string>"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/umeng_socialize_shareview_strings.xml"
+            line="3"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="UnusedResources"
+        message="The resource `R.string.umeng_socialize_sharetodouban` appears to be unused"
+        errorLine1="    &lt;string name=&quot;umeng_socialize_sharetodouban&quot;>分享到豆瓣&lt;/string>"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/umeng_socialize_shareview_strings.xml"
+            line="4"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="UnusedResources"
+        message="The resource `R.string.umeng_socialize_sharetorenren` appears to be unused"
+        errorLine1="    &lt;string name=&quot;umeng_socialize_sharetorenren&quot;>分享到人人网&lt;/string>"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/umeng_socialize_shareview_strings.xml"
+            line="5"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="UnusedResources"
+        message="The resource `R.string.umeng_socialize_sharetotencent` appears to be unused"
+        errorLine1="    &lt;string name=&quot;umeng_socialize_sharetotencent&quot;>分享到腾讯微博&lt;/string>"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/umeng_socialize_shareview_strings.xml"
+            line="7"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="UnusedResources"
+        message="The resource `R.string.umeng_socialize_sharetotwitter` appears to be unused"
+        errorLine1="    &lt;string name=&quot;umeng_socialize_sharetotwitter&quot;>分享到twitter&lt;/string>"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/umeng_socialize_shareview_strings.xml"
+            line="8"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="UnusedResources"
+        message="The resource `R.string.umeng_socialize_sharetolinkin` appears to be unused"
+        errorLine1="    &lt;string name=&quot;umeng_socialize_sharetolinkin&quot;>分享到领英&lt;/string>"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/umeng_socialize_shareview_strings.xml"
+            line="9"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="UnusedResources"
+        message="The resource `R.drawable.umeng_socialize_sina` appears to be unused">
+        <location
+            file="src/main/res/drawable/umeng_socialize_sina.png"/>
+    </issue>
+
+    <issue
+        id="UnusedResources"
+        message="The resource `R.style.umeng_socialize_popup_dialog` appears to be unused"
+        errorLine1="    &lt;style name=&quot;umeng_socialize_popup_dialog&quot; parent=&quot;@android:style/Theme.Dialog&quot;>"
+        errorLine2="           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/umeng_socialize_style.xml"
+            line="38"
+            column="12"/>
+    </issue>
+
+    <issue
+        id="UnusedResources"
+        message="The resource `R.style.Theme_UMDefault` appears to be unused"
+        errorLine1="    &lt;style name=&quot;Theme.UMDefault&quot; parent=&quot;android:style/Theme.NoTitleBar&quot;>&lt;/style>"
+        errorLine2="           ~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/umeng_socialize_style.xml"
+            line="55"
+            column="12"/>
+    </issue>
+
+    <issue
+        id="UnusedResources"
+        message="The resource `R.drawable.umeng_socialize_wechat` appears to be unused">
+        <location
+            file="src/main/res/drawable/umeng_socialize_wechat.png"/>
+    </issue>
+
+    <issue
+        id="UnusedResources"
+        message="The resource `R.drawable.umeng_socialize_wxcircle` appears to be unused">
+        <location
+            file="src/main/res/drawable/umeng_socialize_wxcircle.png"/>
+    </issue>
+
+    <issue
+        id="UselessParent"
+        message="This `LinearLayout` layout or its `RelativeLayout` parent is unnecessary; transfer the `background` attribute to the other view"
+        errorLine1="        &lt;LinearLayout"
+        errorLine2="         ~~~~~~~~~~~~">
+        <location
+            file="src/main/res/layout/umeng_socialize_oauth_dialog.xml"
+            line="108"
+            column="10"/>
+    </issue>
+
+    <issue
+        id="IconLocation"
+        message="Found bitmap drawable `res/drawable/common_ic_asy.png` in densityless folder">
+        <location
+            file="src/main/res/drawable/common_ic_asy.png"/>
+    </issue>
+
+    <issue
+        id="IconLocation"
+        message="Found bitmap drawable `res/drawable/common_ic_empty_holder.webp` in densityless folder">
+        <location
+            file="src/main/res/drawable/common_ic_empty_holder.webp"/>
+    </issue>
+
+    <issue
+        id="IconLocation"
+        message="Found bitmap drawable `res/drawable/common_text_indicator.png` in densityless folder">
+        <location
+            file="src/main/res/drawable/common_text_indicator.png"/>
+    </issue>
+
+    <issue
+        id="IconLocation"
+        message="Found bitmap drawable `res/drawable/umeng_socialize_back_icon.png` in densityless folder">
+        <location
+            file="src/main/res/drawable/umeng_socialize_back_icon.png"/>
+    </issue>
+
+    <issue
+        id="IconLocation"
+        message="Found bitmap drawable `res/drawable/umeng_socialize_copy.png` in densityless folder">
+        <location
+            file="src/main/res/drawable/umeng_socialize_copy.png"/>
+    </issue>
+
+    <issue
+        id="IconLocation"
+        message="Found bitmap drawable `res/drawable/umeng_socialize_copyurl.png` in densityless folder">
+        <location
+            file="src/main/res/drawable/umeng_socialize_copyurl.png"/>
+    </issue>
+
+    <issue
+        id="IconLocation"
+        message="Found bitmap drawable `res/drawable/umeng_socialize_delete.png` in densityless folder">
+        <location
+            file="src/main/res/drawable/umeng_socialize_delete.png"/>
+    </issue>
+
+    <issue
+        id="IconLocation"
+        message="Found bitmap drawable `res/drawable/umeng_socialize_fav.png` in densityless folder">
+        <location
+            file="src/main/res/drawable/umeng_socialize_fav.png"/>
+    </issue>
+
+    <issue
+        id="IconLocation"
+        message="Found bitmap drawable `res/drawable/umeng_socialize_menu_default.png` in densityless folder">
+        <location
+            file="src/main/res/drawable/umeng_socialize_menu_default.png"/>
+    </issue>
+
+    <issue
+        id="IconLocation"
+        message="Found bitmap drawable `res/drawable/umeng_socialize_more.png` in densityless folder">
+        <location
+            file="src/main/res/drawable/umeng_socialize_more.png"/>
+    </issue>
+
+    <issue
+        id="IconLocation"
+        message="Found bitmap drawable `res/drawable/umeng_socialize_qq.png` in densityless folder">
+        <location
+            file="src/main/res/drawable/umeng_socialize_qq.png"/>
+    </issue>
+
+    <issue
+        id="IconLocation"
+        message="Found bitmap drawable `res/drawable/umeng_socialize_qzone.png` in densityless folder">
+        <location
+            file="src/main/res/drawable/umeng_socialize_qzone.png"/>
+    </issue>
+
+    <issue
+        id="IconLocation"
+        message="Found bitmap drawable `res/drawable/umeng_socialize_share_music.png` in densityless folder">
+        <location
+            file="src/main/res/drawable/umeng_socialize_share_music.png"/>
+    </issue>
+
+    <issue
+        id="IconLocation"
+        message="Found bitmap drawable `res/drawable/umeng_socialize_share_video.png` in densityless folder">
+        <location
+            file="src/main/res/drawable/umeng_socialize_share_video.png"/>
+    </issue>
+
+    <issue
+        id="IconLocation"
+        message="Found bitmap drawable `res/drawable/umeng_socialize_share_web.png` in densityless folder">
+        <location
+            file="src/main/res/drawable/umeng_socialize_share_web.png"/>
+    </issue>
+
+    <issue
+        id="IconLocation"
+        message="Found bitmap drawable `res/drawable/umeng_socialize_sina.png` in densityless folder">
+        <location
+            file="src/main/res/drawable/umeng_socialize_sina.png"/>
+    </issue>
+
+    <issue
+        id="IconLocation"
+        message="Found bitmap drawable `res/drawable/umeng_socialize_wechat.png` in densityless folder">
+        <location
+            file="src/main/res/drawable/umeng_socialize_wechat.png"/>
+    </issue>
+
+    <issue
+        id="IconLocation"
+        message="Found bitmap drawable `res/drawable/umeng_socialize_wxcircle.png` in densityless folder">
+        <location
+            file="src/main/res/drawable/umeng_socialize_wxcircle.png"/>
+    </issue>
+
+    <issue
+        id="IconDensities"
+        message="Missing the following drawables in `drawable-hdpi`: common_default_avatar.webp, common_dialog_negative.webp, common_ic_back.webp">
+        <location
+            file="src/main/res/drawable-hdpi"/>
+    </issue>
+
+    <issue
+        id="IconDensities"
+        message="Missing the following drawables in `drawable-mdpi`: common_default_avatar.webp, common_dialog_negative.webp, common_ic_back.webp">
+        <location
+            file="src/main/res/drawable-mdpi"/>
+    </issue>
+
+    <issue
+        id="IconDensities"
+        message="Missing the following drawables in `drawable-xxhdpi`: common_default_avatar.webp, common_dialog_negative.webp, common_ic_back.webp">
+        <location
+            file="src/main/res/drawable-xxhdpi"/>
+    </issue>
+
+    <issue
+        id="TextFields"
+        message="This text field does not specify an `inputType`"
+        errorLine1="    &lt;EditText"
+        errorLine2="     ~~~~~~~~">
+        <location
+            file="src/main/res/layout/umeng_socialize_share.xml"
+            line="55"
+            column="6"/>
+    </issue>
+
+    <issue
+        id="SmallSp"
+        message="Avoid using sizes smaller than `11sp`: `8sp`"
+        errorLine1="                android:textSize=&quot;8sp&quot; />"
+        errorLine2="                ~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/layout/common_fragment_base_feed.xml"
+            line="44"
+            column="17"/>
+    </issue>
+
+    <issue
+        id="SmallSp"
+        message="Avoid using sizes smaller than `11sp`: `10sp`"
+        errorLine1="            android:textSize=&quot;10sp&quot;"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/layout/common_fragment_base_feed.xml"
+            line="57"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="Autofill"
+        message="Missing `autofillHints` attribute"
+        errorLine1="    &lt;EditText"
+        errorLine2="     ~~~~~~~~">
+        <location
+            file="src/main/res/layout/umeng_socialize_share.xml"
+            line="55"
+            column="6"/>
+    </issue>
+
+    <issue
+        id="ContentDescription"
+        message="Missing `contentDescription` attribute on image"
+        errorLine1="    &lt;ImageView"
+        errorLine2="     ~~~~~~~~~">
+        <location
+            file="src/main/res/layout/common_dialog.xml"
+            line="8"
+            column="6"/>
+    </issue>
+
+    <issue
+        id="ContentDescription"
+        message="Missing `contentDescription` attribute on image"
+        errorLine1="    &lt;ImageView"
+        errorLine2="     ~~~~~~~~~">
+        <location
+            file="src/main/res/layout/common_dialog.xml"
+            line="45"
+            column="6"/>
+    </issue>
+
+    <issue
+        id="ContentDescription"
+        message="Missing `contentDescription` attribute on image"
+        errorLine1="            &lt;ImageButton"
+        errorLine2="             ~~~~~~~~~~~">
+        <location
+            file="src/main/res/layout/umeng_socialize_oauth_dialog.xml"
+            line="31"
+            column="14"/>
+    </issue>
+
+    <issue
+        id="ContentDescription"
+        message="Missing `contentDescription` attribute on image"
+        errorLine1="            &lt;ImageButton"
+        errorLine2="             ~~~~~~~~~~~">
+        <location
+            file="src/main/res/layout/umeng_socialize_share.xml"
+            line="31"
+            column="14"/>
+    </issue>
+
+    <issue
+        id="ContentDescription"
+        message="Missing `contentDescription` attribute on image"
+        errorLine1="            &lt;ImageView"
+        errorLine2="             ~~~~~~~~~">
+        <location
+            file="src/main/res/layout/umeng_socialize_share.xml"
+            line="106"
+            column="14"/>
+    </issue>
+
+    <issue
+        id="ContentDescription"
+        message="Missing `contentDescription` attribute on image"
+        errorLine1="        &lt;ImageView"
+        errorLine2="         ~~~~~~~~~">
+        <location
+            file="src/main/res/layout/umeng_socialize_share.xml"
+            line="126"
+            column="10"/>
+    </issue>
+
+    <issue
+        id="HardcodedText"
+        message="Hardcoded string &quot;未知&quot;, should use `@string` resource"
+        errorLine1="        android:text=&quot;未知&quot;"
+        errorLine2="        ~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/layout/socialize_share_menu_item.xml"
+            line="22"
+            column="9"/>
+    </issue>
+
+    <issue
+        id="HardcodedText"
+        message="Hardcoded string &quot;分享&quot;, should use `@string` resource"
+        errorLine1="            android:text=&quot;分享&quot;"
+        errorLine2="            ~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/layout/umeng_socialize_oauth_dialog.xml"
+            line="50"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="HardcodedText"
+        message="Hardcoded string &quot;关注官方微博&quot;, should use `@string` resource"
+        errorLine1="            android:text=&quot;关注官方微博&quot;"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/layout/umeng_socialize_oauth_dialog.xml"
+            line="77"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="HardcodedText"
+        message="Hardcoded string &quot;分享&quot;, should use `@string` resource"
+        errorLine1="            android:text=&quot;分享&quot;"
+        errorLine2="            ~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/layout/umeng_socialize_share.xml"
+            line="50"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="HardcodedText"
+        message="Hardcoded string &quot;编辑分享内容&quot;, should use `@string` resource"
+        errorLine1="        android:hint=&quot;编辑分享内容&quot;"
+        errorLine2="        ~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/layout/umeng_socialize_share.xml"
+            line="66"
+            column="9"/>
+    </issue>
+
+    <issue
+        id="RelativeOverlap"
+        message="`@id/umeng_title` can overlap `@id/umeng_share_btn` if @id/umeng_title grows due to localized text expansion"
+        errorLine1="        &lt;TextView"
+        errorLine2="         ~~~~~~~~">
+        <location
+            file="src/main/res/layout/umeng_socialize_oauth_dialog.xml"
+            line="14"
+            column="10"/>
+    </issue>
+
+    <issue
+        id="RelativeOverlap"
+        message="`@id/umeng_title` can overlap `@id/umeng_share_btn` if @id/umeng_title grows due to localized text expansion"
+        errorLine1="        &lt;TextView"
+        errorLine2="         ~~~~~~~~">
+        <location
+            file="src/main/res/layout/umeng_socialize_share.xml"
+            line="15"
+            column="10"/>
+    </issue>
+
+    <issue
+        id="RtlSymmetry"
+        message="When you define `paddingRight` you should probably also define `paddingLeft` for right-to-left symmetry"
+        errorLine1="        android:paddingRight=&quot;15dp&quot;"
+        errorLine2="        ~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/layout/umeng_socialize_share.xml"
+            line="80"
+            column="9"/>
+    </issue>
+
+    <issue
+        id="RtlHardcoded"
+        message="Consider replacing `android:layout_marginLeft` with `android:layout_marginStart=&quot;15dp&quot;` to better support right-to-left layouts"
+        errorLine1="                android:layout_marginLeft=&quot;15dp&quot;"
+        errorLine2="                ~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/layout/umeng_socialize_oauth_dialog.xml"
+            line="37"
+            column="17"/>
+    </issue>
+
+    <issue
+        id="RtlHardcoded"
+        message="Consider replacing `android:layout_alignParentRight` with `android:layout_alignParentEnd=&quot;true&quot;` to better support right-to-left layouts"
+        errorLine1="            android:layout_alignParentRight=&quot;true&quot;"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/layout/umeng_socialize_oauth_dialog.xml"
+            line="45"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="RtlHardcoded"
+        message="Consider replacing `android:layout_marginRight` with `android:layout_marginEnd=&quot;10dp&quot;` to better support right-to-left layouts"
+        errorLine1="            android:layout_marginRight=&quot;10dp&quot;"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/layout/umeng_socialize_oauth_dialog.xml"
+            line="47"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="RtlHardcoded"
+        message="Consider replacing `android:layout_marginLeft` with `android:layout_marginStart=&quot;20dp&quot;` to better support right-to-left layouts"
+        errorLine1="            android:layout_marginLeft=&quot;20dp&quot;"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/layout/umeng_socialize_oauth_dialog.xml"
+            line="67"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="RtlHardcoded"
+        message="Consider replacing `android:layout_marginLeft` with `android:layout_marginStart=&quot;15dp&quot;` to better support right-to-left layouts"
+        errorLine1="            android:layout_marginLeft=&quot;15dp&quot;"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/layout/umeng_socialize_oauth_dialog.xml"
+            line="75"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="RtlHardcoded"
+        message="Consider replacing `android:layout_toRightOf` with `android:layout_toEndOf=&quot;@id/umeng_socialize_follow_check&quot;` to better support right-to-left layouts"
+        errorLine1="            android:layout_toRightOf=&quot;@id/umeng_socialize_follow_check&quot;"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/layout/umeng_socialize_oauth_dialog.xml"
+            line="76"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="RtlHardcoded"
+        message="Consider replacing `android:layout_marginLeft` with `android:layout_marginStart=&quot;15dp&quot;` to better support right-to-left layouts"
+        errorLine1="                android:layout_marginLeft=&quot;15dp&quot;"
+        errorLine2="                ~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/layout/umeng_socialize_share.xml"
+            line="35"
+            column="17"/>
+    </issue>
+
+    <issue
+        id="RtlHardcoded"
+        message="Consider replacing `android:layout_alignParentRight` with `android:layout_alignParentEnd=&quot;true&quot;` to better support right-to-left layouts"
+        errorLine1="            android:layout_alignParentRight=&quot;true&quot;"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/layout/umeng_socialize_share.xml"
+            line="45"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="RtlHardcoded"
+        message="Consider replacing `android:layout_alignRight` with `android:layout_alignEnd=&quot;@id/umeng_socialize_share_edittext&quot;` to better support right-to-left layouts"
+        errorLine1="        android:layout_alignRight=&quot;@id/umeng_socialize_share_edittext&quot;"
+        errorLine2="        ~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/layout/umeng_socialize_share.xml"
+            line="76"
+            column="9"/>
+    </issue>
+
+    <issue
+        id="RtlHardcoded"
+        message="Consider replacing `android:paddingRight` with `android:paddingEnd=&quot;15dp&quot;` to better support right-to-left layouts"
+        errorLine1="        android:paddingRight=&quot;15dp&quot;"
+        errorLine2="        ~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/layout/umeng_socialize_share.xml"
+            line="80"
+            column="9"/>
+    </issue>
+
+    <issue
+        id="RtlHardcoded"
+        message="Use &quot;`end`&quot; instead of &quot;`right`&quot; to ensure correct behavior in right-to-left locales"
+        errorLine1="        android:gravity=&quot;right&quot;"
+        errorLine2="                         ~~~~~">
+        <location
+            file="src/main/res/layout/umeng_socialize_share.xml"
+            line="81"
+            column="26"/>
+    </issue>
+
+    <issue
+        id="RtlHardcoded"
+        message="Consider replacing `android:layout_marginLeft` with `android:layout_marginStart=&quot;15dp&quot;` to better support right-to-left layouts"
+        errorLine1="            android:layout_marginLeft=&quot;15dp&quot;"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/layout/umeng_socialize_share.xml"
+            line="101"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="RtlHardcoded"
+        message="Consider replacing `android:layout_toRightOf` with `android:layout_toEndOf=&quot;@id/umeng_image_edge&quot;` to better support right-to-left layouts"
+        errorLine1="            android:layout_toRightOf=&quot;@id/umeng_image_edge&quot;"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/layout/umeng_socialize_share.xml"
+            line="117"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="RtlHardcoded"
+        message="Consider replacing `android:layout_marginLeft` with `android:layout_marginStart=&quot;40dp&quot;` to better support right-to-left layouts"
+        errorLine1="            android:layout_marginLeft=&quot;40dp&quot;"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/layout/umeng_socialize_share.xml"
+            line="118"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="RtlHardcoded"
+        message="Consider replacing `android:layout_alignRight` with `android:layout_alignEnd=&quot;@id/umeng_image_edge&quot;` to better support right-to-left layouts"
+        errorLine1="            android:layout_alignRight=&quot;@id/umeng_image_edge&quot;"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/layout/umeng_socialize_share.xml"
+            line="130"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="RtlHardcoded"
+        message="Consider replacing `android:layout_marginRight` with `android:layout_marginEnd=&quot;-10dp&quot;` to better support right-to-left layouts"
+        errorLine1="            android:layout_marginRight=&quot;-10dp&quot;"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/layout/umeng_socialize_share.xml"
+            line="132"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="RtlEnabled"
+        message="The project references RTL attributes, but does not explicitly enable or disable RTL support with `android:supportsRtl` in the manifest">
+        <location
+            file="src/main/AndroidManifest.xml"/>
+    </issue>
+
+</issues>
