@@ -15,7 +15,8 @@
             android:exported="true" />
         <activity
             android:name=".page.mine.ui.activity.HomepageActivity"
-            android:exported="true" />
+            android:exported="true"
+            android:configChanges="uiMode"/>
         <activity android:name=".page.setting.SettingActivity" />
         <activity android:name=".page.security.activity.FindPasswordActivity" />
         <activity android:name=".page.security.activity.ForgetPasswordActivity" />
