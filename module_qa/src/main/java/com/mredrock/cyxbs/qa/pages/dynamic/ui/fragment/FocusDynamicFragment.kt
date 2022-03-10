@@ -9,6 +9,7 @@ import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.alibaba.android.arouter.launcher.ARouter
+import com.mredrock.cyxbs.common.BaseApp.Companion.appContext
 import com.mredrock.cyxbs.common.config.MINE_PERSON_PAGE
 import com.mredrock.cyxbs.qa.R
 import com.mredrock.cyxbs.qa.beannew.Dynamic
@@ -43,7 +44,7 @@ class FocusDynamicFragment : BaseDynamicFragment() {
 
     private lateinit var dynamicListRvAdapter: HybridAdapter
     val footerRvAdapter = FooterRvAdapter { viewModel.retryFocus() }
-    val emptyRvAdapter = EmptyRvAdapter(getString(R.string.qa_question_list_empty_hint))
+    val emptyRvAdapter = EmptyRvAdapter(appContext.getString(R.string.qa_question_list_empty_hint))
 
     override fun initData() {
         mTencent = Tencent.createInstance(CommentConfig.APP_ID, this.requireContext())

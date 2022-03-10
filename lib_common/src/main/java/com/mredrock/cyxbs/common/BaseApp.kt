@@ -23,5 +23,6 @@ abstract class BaseApp : Application() {
 
     open fun initARouter() {
         ARouter.init(this)
+        ARouter.openLog()
     }
 }

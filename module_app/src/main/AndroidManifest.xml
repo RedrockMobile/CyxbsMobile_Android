@@ -22,6 +22,10 @@
         android:requestLegacyExternalStorage="true"
         tools:targetApi="n">
 
+
+        <uses-library android:name="org.apache.http.legacy" android:required="false" />
+
+
         <!--Bugly-->
         <!--以下注释 Bugly 是想提醒你：Bugly 官网说1.3.1及以上版本，可以不用进行以下配置-->
         <activity
