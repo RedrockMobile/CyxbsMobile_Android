@@ -176,7 +176,7 @@ object ApiGenerator {
                 }
         }))
                 .addConverterFactory(GsonConverterFactory.create())
-                .addCallAdapterFactory(RxJava3CallAdapterFactory.create())
+                .addCallAdapterFactory(RxJava3CallAdapterFactory.createSynchronous())
     }
 
     //默认配置

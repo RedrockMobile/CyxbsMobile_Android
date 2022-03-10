@@ -52,7 +52,7 @@ fun getRetrofit(): Retrofit {
     return Retrofit.Builder()
         .baseUrl(getMineBaseUrl())
         .addConverterFactory(GsonConverterFactory.create())
-        .addCallAdapterFactory(RxJava3CallAdapterFactory.create())
+        .addCallAdapterFactory(RxJava3CallAdapterFactory.createSynchronous())
         .client(client)
         .build()
 }

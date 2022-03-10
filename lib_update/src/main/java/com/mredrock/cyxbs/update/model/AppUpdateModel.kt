@@ -70,7 +70,7 @@ object AppUpdateModel {
     private fun getSecondUpdateRetrofit() = Retrofit.Builder()
         .baseUrl("http://hongyan.cqupt.edu.cn")
         .addConverterFactory(GsonConverterFactory.create())
-        .addCallAdapterFactory(RxJava3CallAdapterFactory.create())
+        .addCallAdapterFactory(RxJava3CallAdapterFactory.createSynchronous())
         .build()
 
 }
