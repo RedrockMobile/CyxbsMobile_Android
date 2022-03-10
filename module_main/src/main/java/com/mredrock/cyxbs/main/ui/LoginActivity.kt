@@ -125,8 +125,6 @@ class LoginActivity : BaseViewModelActivity<LoginViewModel>(), EventBusLifecycle
             showUserAgreement()
         }
 
-        //为了LogLocal实现请求本地存储
-        doPermissionAction(Manifest.permission.WRITE_EXTERNAL_STORAGE) { }
 
         //设置用户协议和隐私政策的文字
         val spannableString = SpannableStringBuilder()
