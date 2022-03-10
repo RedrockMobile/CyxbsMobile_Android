@@ -4,4 +4,10 @@
         <!--Bugly https://github.com/BuglyDevTeam/Bugly-Android-Demo-->
         <domain includeSubdomains="true">android.bugly.qq.com</domain>
     </domain-config>
+
+    <base-config cleartextTrafficPermitted="true" >
+        <trust-anchors>
+            <certificates src="system"/>
+        </trust-anchors>
+    </base-config>
 </network-security-config>
