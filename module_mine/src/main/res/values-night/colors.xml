@@ -1,6 +1,5 @@
-<?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="mine_bg_user">#2C2C2C</color>
+    <color name="mine_bg_user">#1D1D1D</color>
     <color name="mine_text_nickname">#FFFFFF</color>
     <color name="mine_text_introduction">#99FFFFFF</color>
     <color name="mine_text_count">#E5E9EF</color>
