@@ -1,4 +1,9 @@
-apply from : config
+plugins {
+    id "com.redrock.api"
+}
+
+//apply from: config
+
 dependencies {
 
 }
