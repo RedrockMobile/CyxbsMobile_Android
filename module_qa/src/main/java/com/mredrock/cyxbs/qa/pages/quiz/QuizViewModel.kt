@@ -124,7 +124,7 @@ class QuizViewModel : BaseViewModel() {
              */
             val builder = MultipartBody.Builder()
                 .setType(MultipartBody.FORM)
-                . addFormDataPart("post_id", postId!!)
+                .addFormDataPart("post_id", postId!!)
                 .addFormDataPart("content", content.removeContinuousEnters())
                 .addFormDataPart("topic_id", type)
             if (!imageLiveData.value.isNullOrEmpty()) {

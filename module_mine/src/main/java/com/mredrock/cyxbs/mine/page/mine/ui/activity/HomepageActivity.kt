@@ -6,8 +6,8 @@ import android.animation.Animator
 import android.annotation.SuppressLint
 import android.app.Activity
 import android.content.Intent
+import android.content.res.Configuration
 import android.os.Bundle
-import android.util.Log
 import androidx.fragment.app.Fragment
 import com.mredrock.cyxbs.common.ui.BaseViewModelActivity
 import com.mredrock.cyxbs.mine.page.mine.viewmodel.MineViewModel
@@ -23,6 +23,7 @@ import android.graphics.drawable.GradientDrawable
 import android.net.Uri
 import android.os.Environment
 import android.provider.MediaStore
+import android.view.MotionEvent
 import android.view.View
 import android.view.ViewAnimationUtils.createCircularReveal
 import android.widget.ImageView
@@ -52,6 +53,7 @@ import kotlinx.android.synthetic.main.mine_activity_homepage_head.view.*
 import okhttp3.MultipartBody
 import java.io.File
 import java.io.IOException
+import kotlin.math.abs
 
 @Route(path = MINE_PERSON_PAGE)
 class HomepageActivity : BaseViewModelActivity<MineViewModel>() {
@@ -106,7 +108,7 @@ class HomepageActivity : BaseViewModelActivity<MineViewModel>() {
     /**
      * 相册图片的地址
      */
-    private val fileDir by lazy {
+    private val fileDir by lazyUnlock {
         StringBuilder(Environment.getExternalStorageDirectory().path)
                 .append(DIR_PHOTO)
                 .toString()
@@ -144,23 +146,9 @@ class HomepageActivity : BaseViewModelActivity<MineViewModel>() {
         super.onCreate(savedInstanceState)
         dataBinding = MineActivityHomepageBinding.inflate(layoutInflater)
         setContentView(dataBinding.root)
-        initRefreshLayout()
         initView()
         initData()
         initListener()
-    }
-
-    private fun initRefreshLayout() {
-        /*
-        * 官方刷新控件不能修改偏移的误差值, 在左右滑动时与 ViewPager2 出现滑动冲突问题
-        * 修改 mTouchSlop 可以修改允许的滑动偏移值, 原因可以看 SwipeRefreshLayout 的 1081 行
-        * */
-        try {
-            val field = dataBinding.srlRefresh.javaClass.getDeclaredField("mTouchSlop")
-            field.isAccessible = true
-            field.set(dataBinding.srlRefresh, 220)
-        } catch (e: Exception) {
-        }
     }
 
 
@@ -184,7 +172,7 @@ class HomepageActivity : BaseViewModelActivity<MineViewModel>() {
             isSelf = it.data.is_self
             isGirl = it.data.gender
             it.data.redid.let {
-                identityFragment.onSuccesss(it, isSelf)
+                identityFragment.onSuccess(it, isSelf)
                 dataBinding.vp2Mine.offscreenPageLimit = 2
                 redid = it
                 viewModel.getPersonalCount(redid)
@@ -206,6 +194,7 @@ class HomepageActivity : BaseViewModelActivity<MineViewModel>() {
     }
 
     fun initSatu(user: UserInfo) {
+
         user.data.identityies?.forEachIndexed { index, s ->
             loadRedrockImage(s, imageViewList[index])
             imageViewList[index].visibility = View.VISIBLE
@@ -236,7 +225,6 @@ class HomepageActivity : BaseViewModelActivity<MineViewModel>() {
 
     @SuppressLint("ResourceAsColor")
     fun changeAttention(data: UserInfo) {
-        Log.i("测试", "是不是自己" + data.data.is_self);
         if (data.data.is_self) {
             dataBinding.clPersonalInformation.mine_tv_concern.visibility = View.INVISIBLE
         } else {
@@ -257,9 +245,7 @@ class HomepageActivity : BaseViewModelActivity<MineViewModel>() {
             } else {
                 dataBinding.clPersonalInformation.mine_tv_concern.text = "关注"
 
-                bg4.setColor(Color.parseColor("#4841E2"))
-
-
+                    bg4.setColor(Color.parseColor("#4841E2"))
             }
         }
 
@@ -279,20 +265,26 @@ class HomepageActivity : BaseViewModelActivity<MineViewModel>() {
 
             viewModel.getUserInfo(null)
             MineAndQa.refreshListener?.onRefresh(null)
+
         }
-
-
     }
 
     fun initView() {
         val dynamicFragment =
                 ARouter.getInstance().build(QA_DYNAMIC_MINE_FRAGMENT).navigation() as Fragment
         val list = arrayListOf<Fragment>(dynamicFragment, identityFragment)
+        if (dynamicFragment is MineAndQa.RefreshListener) {
+            MineAndQa.refreshListener = dynamicFragment
+        }
         dataBinding.vp2Mine.adapter = MineAdapter(this, list)
         dataBinding.vp2Mine.offscreenPageLimit = 2
         dataBinding.vp2Mine.setPageTransformer(ScaleInTransformer())
     }
 
+    override fun onDestroy() {
+        super.onDestroy()
+        MineAndQa.refreshListener = null
+    }
 
     @SuppressLint("ResourceAsColor")
     fun initListener() {
@@ -323,7 +315,6 @@ class HomepageActivity : BaseViewModelActivity<MineViewModel>() {
                     dataBinding.tvMine.text = "个人主页"
                     dataBinding.btMineBack.setImageResource(R.drawable.mine_ic_bt_back_arrow)
                     dataBinding.tvMine.setTextColor(Color.WHITE)
-
                     dataBinding.flTabLine.visible()
                 }
                 dataBinding.flBackground.alpha = 0f
@@ -342,14 +333,12 @@ class HomepageActivity : BaseViewModelActivity<MineViewModel>() {
 
         }
         dataBinding.clPersonalInformation.mine_tv_concern.setOnClickListener {
-            Log.i("关注测试", "redid" + redid);
             viewModel.changeFocusStatus(redid)
         }
         dataBinding.ivMineBackgroundNormal.setOnClickListener {
             if (isSelf) {
                 changeBackground()
             } else {
-
                 toast("不可以对别人的背景图片动手动脚哦!")
             }
         }
@@ -382,12 +371,10 @@ class HomepageActivity : BaseViewModelActivity<MineViewModel>() {
         }
 
         dataBinding.clPersonalInformation.tv_fans.setOnClickListener {
-            Log.i("点击事件", "测试点击事件f粉丝tv_fan")
             redid?.let { it1 -> FanActivity.activityStart(this, it1, TO_FANS) }
         }
 
         dataBinding.clPersonalInformation.tv_attention.setOnClickListener {
-            Log.i("点击事件", "测试点击事件粉丝tv_attention")
             redid?.let { it1 -> FanActivity.activityStart(this, it1, TO_ATTENTION) }
         }
         dataBinding.clPersonalInformation.tv_edit.setOnClickListener {
@@ -442,7 +429,6 @@ class HomepageActivity : BaseViewModelActivity<MineViewModel>() {
      * 分别初始化模糊和正常的Bitmap图片
      */
     fun initBlurBitmap(bitmap: Bitmap?) {
-        Log.i("背景图片", "位图是否为空" + bitmap)
         if (bitmap == null) {
             mTempBitmap =
                     BitmapFactory.decodeResource(resources, R.drawable.mine_ic_iv_background)
@@ -711,35 +697,45 @@ class HomepageActivity : BaseViewModelActivity<MineViewModel>() {
     /**
      * 获取redid的接口
      */
-    interface onGetRedid {
-        fun onSuccesss(redid: String, isSelf: Boolean)
+    interface OnGetRedid {
+        fun onSuccess(redid: String, isSelf: Boolean)
     }
-//
-//    var downY = 0f
-//    var distance = 0f
-//
-//    /**
-//     * 刷新滑动与左右滑动事件的处理
-//     */
-//    override fun dispatchTouchEvent(ev: MotionEvent): Boolean {
-//
-//        when (ev.action) {
-//            MotionEvent.ACTION_DOWN -> {
-//                downY = ev.y
-//            }
-//        }
-//        distance = ev.y - downY
-//
-//        if (isNeedRefresh && distance > 80f) {
-//            distance = 0f
-//            return dataBinding.srlRefresh.dispatchTouchEvent(ev)
-//        } else if (abs(distance) < 8f) {
-//            distance = 0f
-//            return super.dispatchTouchEvent(ev)
-//        }
-//        return dataBinding.svgMine.dispatchTouchEvent(ev)
-//    }
-//
-//
+
+    var downY = 0f
+    var distance = 0f
+
+    /**
+     * 刷新滑动与左右滑动事件的处理
+     * todo 这是为了解决刷新控件的滑动冲突，但耦合性太高了，代码也比较 (，
+     *  我实在是改不了，因为界面过于耦合，建议你们重构，使用 store 模块里的 SlideUpLayout 或者 协调者布局（协调者布局也比较耦合）
+     */
+    override fun dispatchTouchEvent(ev: MotionEvent): Boolean {
+
+        when (ev.action) {
+            MotionEvent.ACTION_DOWN -> {
+                downY = ev.y
+            }
+        }
+        distance = ev.y - downY
+
+        if (isNeedRefresh && distance > 100f) {
+            distance = 0f
+            return dataBinding.srlRefresh.dispatchTouchEvent(ev)
+        } else if (abs(distance) < 8f) {
+            distance = 0f
+            return super.dispatchTouchEvent(ev)
+        }
+        return dataBinding.svgMine.dispatchTouchEvent(ev)
+    }
+
+    /**
+     * 修复在@HomePageActivity 界面切换深色模式 重新启动Activity资源不完全的bug
+     * 导致部分资源获取不到
+     */
+    override fun onConfigurationChanged(newConfig: Configuration) {
+        super.onConfigurationChanged(newConfig)
+        finish()
+    }
+
 
 }

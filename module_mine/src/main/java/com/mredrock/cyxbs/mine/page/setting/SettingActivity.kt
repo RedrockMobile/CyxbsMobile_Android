@@ -14,6 +14,8 @@ import com.mredrock.cyxbs.common.ui.BaseActivity
 import com.mredrock.cyxbs.common.utils.extensions.*
 import com.mredrock.cyxbs.main.MAIN_LOGIN
 import com.mredrock.cyxbs.mine.R
+import com.mredrock.cyxbs.mine.page.feedback.center.ui.FeedbackCenterActivity
+import com.mredrock.cyxbs.mine.page.feedback.edit.ui.FeedbackEditActivity
 import com.mredrock.cyxbs.mine.page.security.activity.SecurityActivity
 import com.mredrock.cyxbs.mine.util.apiService
 import com.mredrock.cyxbs.mine.util.ui.WarningDialog

@@ -26,6 +26,7 @@ class ReplyListAdapter(
     private val onReplyInnerClickEvent: (comment: Comment) -> Unit,
     private val onReplyInnerLongClickEvent: (comment: Comment, itemView: View) -> Unit,
     var onMoreClickEvent: () -> Unit,
+    private val onAvatarClickEvent: (String) -> Unit,
     private val isFromMine: Boolean = false
 ) : BaseRvAdapter<Comment>() {
 
@@ -84,6 +85,9 @@ class ReplyListAdapter(
                     qa_iv_reply_inner_praise_count_image.click()
                 }
                 qa_iv_reply_inner_avatar.setAvatarImageFromUrl(data.avatar)
+                qa_iv_reply_inner_avatar.setOnClickListener {
+                    onAvatarClickEvent(data.uid)
+                }
             }
         }
     }

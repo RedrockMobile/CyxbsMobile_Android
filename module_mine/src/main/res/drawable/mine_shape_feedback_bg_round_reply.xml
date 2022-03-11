@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="utf-8"?>
+<shape xmlns:android="http://schemas.android.com/apk/res/android">
+    <corners android:radius="@dimen/mine_feedback_recycle_item_bg_corner_radius"/>
+    <solid android:color="@color/mine_feedback_bg_color_reply"/>
+</shape>

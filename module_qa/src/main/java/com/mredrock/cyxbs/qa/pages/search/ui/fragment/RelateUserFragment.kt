@@ -1,7 +1,5 @@
 package com.mredrock.cyxbs.qa.pages.search.ui.fragment
 
-import android.os.Bundle
-import android.util.Log
 import android.widget.TextView
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.Observer
@@ -12,7 +10,6 @@ import com.mredrock.cyxbs.common.config.MINE_PERSON_PAGE
 import com.mredrock.cyxbs.common.service.ServiceManager
 import com.mredrock.cyxbs.common.utils.extensions.toast
 import com.mredrock.cyxbs.qa.R
-import com.mredrock.cyxbs.qa.beannew.UserBrief
 import com.mredrock.cyxbs.qa.network.NetworkState
 import com.mredrock.cyxbs.qa.pages.search.ui.adapter.DataBindingAdapter
 import com.mredrock.cyxbs.qa.pages.search.ui.binder.BaseDataBinder
@@ -28,13 +25,40 @@ import kotlinx.android.synthetic.main.qa_fragment_question_search_result_user.*
  * @data 2021/9/26
  * @description 搜索用户结果页
  **/
-class RelateUserFragment : BaseResultFragment() {
+class RelateUserFragment private constructor() : BaseResultFragment() {
+    /**
+     * 声明fragment为局部单例，主要原因是Vp2的加载缓存的问题，详细可见 @{QuestionSearchedFragment}
+     */
+    companion object {
+        @Volatile
+        private var _INSTANCE: RelateUserFragment? = null
+
+        @Synchronized
+        @JvmStatic
+        fun getInstance(): RelateUserFragment {
+            if (_INSTANCE == null) {
+                _INSTANCE = RelateUserFragment()
+            }
+            return _INSTANCE!!
+        }
+
+    }
 
     //搜索内容
     private var searchKey = ""
     private lateinit var myRedid: String
     override fun getViewModelFactory() = QuestionSearchedViewModel.Factory(searchKey)
     private lateinit var userAdapter: DataBindingAdapter
+    //该fragment是否与activity进行了联动
+    private var initialed = false
+
+    fun refreshKey() {
+        //以此为判断标准的原因是，如果没有初始化fragment刷新数据会报错
+        if (initialed) {
+            searchKey = (requireActivity() as IKeyProvider).getKey()
+            viewModel.getUsers(searchKey)
+        }
+    }
 
     override fun initData() {
         //获取搜索内容
@@ -42,10 +66,11 @@ class RelateUserFragment : BaseResultFragment() {
         myRedid = ServiceManager.getService(IAccountService::class.java).getUserService().getRedid()
         initObserve()
         initRecycler()
+        initialed = true
     }
 
     private fun initObserve() {
-        viewModel.userList.observe(viewLifecycleOwner, Observer{
+        viewModel.userList.observe(viewLifecycleOwner, Observer {
             userAdapter.notifyAdapterChanged(mutableListOf<BaseDataBinder<*>>().apply {
                 when (it.size) {
                     //如果size为0展示缺省页
@@ -53,7 +78,7 @@ class RelateUserFragment : BaseResultFragment() {
                     else -> {
                         for (user in it) {
                             add(
-                                RelateUserBinder(user,user.redid == myRedid,
+                                RelateUserBinder(user, user.redid == myRedid,
                                     onFocusClick = { view, user ->
                                         //请求关注/取关接口
                                         viewModel.changeFocusStatus(user.redid)
@@ -90,7 +115,7 @@ class RelateUserFragment : BaseResultFragment() {
             })
         })
 
-        viewModel.userNetworkState.observe(viewLifecycleOwner, Observer{
+        viewModel.userNetworkState.observe(viewLifecycleOwner, Observer {
             //请求失败展示缺省页
             if (it == NetworkState.FAILED) {
                 userAdapter.notifyAdapterChanged(mutableListOf<BaseDataBinder<*>>().apply {
@@ -121,4 +146,9 @@ class RelateUserFragment : BaseResultFragment() {
     }
 
     override fun getLayoutId() = R.layout.qa_fragment_question_search_result_user
+
+    override fun onDestroy() {
+        super.onDestroy()
+        _INSTANCE = null
+    }
 }

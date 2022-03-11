@@ -35,6 +35,7 @@ import anet.channel.util.Utils.context
 import android.R.attr.path
 import android.os.Environment
 import android.widget.Toast
+import androidx.core.content.FileProvider
 import com.mredrock.cyxbs.common.component.CyxbsToast
 import com.mredrock.cyxbs.common.config.DIR_LOG
 import com.mredrock.cyxbs.common.config.OKHTTP_LOCAL_LOG
@@ -62,14 +63,15 @@ class AboutActivity : BaseViewModelActivity<AboutViewModel>() {
         mine_about_rl_share.setOnClickListener { onShareClick() }
         mine_about_rl_update.setOnClickListener { clickUpdate() }
         mine_about_rl_function.setOnClickListener { clickFeatureIntroduction() }
-        mine_about_tv_copy_right.setOnLongClickListener { clickLogLocal() }
+        mine_about_tv_copy_right.setOnLongClickListener {
+            clickLogLocal() }
     }
 
     private fun clickLogLocal():Boolean{
         val builder = VmPolicy.Builder()
         StrictMode.setVmPolicy(builder.build())
         builder.detectFileUriExposure()
-        val path = "${Environment.getExternalStorageDirectory()}$DIR_LOG/$OKHTTP_LOCAL_LOG"
+        val path = "${BaseApp.context.filesDir.absolutePath}${DIR_LOG}/$OKHTTP_LOCAL_LOG"
         val file = File(path)
         if (!file.exists()){
             CyxbsToast.makeText(this,"暂无log日志",Toast.LENGTH_SHORT).show()
@@ -78,7 +80,8 @@ class AboutActivity : BaseViewModelActivity<AboutViewModel>() {
         val intent = Intent(Intent.ACTION_SEND)
         intent.setPackage("com.tencent.mobileqq")
         intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK
-        intent.putExtra(Intent.EXTRA_STREAM, Uri.fromFile(file)) //传输图片或者文件 采用流的方式
+        val uri = FileProvider.getUriForFile(context,"com.mredrock.cyxbs.fileProvider",file)
+        intent.putExtra(Intent.EXTRA_STREAM,uri) //传输图片或者文件 采用流的方式
         intent.type = "*/*" //分享文件
         this.startActivity(Intent.createChooser(intent, "分享"))
         return false

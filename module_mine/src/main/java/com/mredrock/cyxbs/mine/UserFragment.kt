@@ -24,6 +24,7 @@ import com.mredrock.cyxbs.common.ui.BaseViewModelFragment
 import com.mredrock.cyxbs.common.utils.extensions.*
 import com.mredrock.cyxbs.mine.page.about.AboutActivity
 import com.mredrock.cyxbs.mine.page.edit.EditInfoActivity
+import com.mredrock.cyxbs.mine.page.feedback.center.ui.FeedbackCenterActivity
 import com.mredrock.cyxbs.mine.page.mine.ui.activity.FanActivity
 import com.mredrock.cyxbs.mine.page.mine.ui.activity.HomepageActivity
 import com.mredrock.cyxbs.mine.page.security.util.Jump2QQHelper
@@ -57,7 +58,7 @@ class UserFragment : BaseViewModelFragment<UserViewModel>() {
             mine_user_tv_praise_number.setOnSingleClickListener { doIfLogin { jumpAndSaveTime(QA_MY_PRAISE, 2) } }
             mine_user_tv_praise.setOnSingleClickListener { doIfLogin { jumpAndSaveTime(QA_MY_PRAISE, 2) } }
             mine_user_iv_center_stamp.setOnSingleClickListener { doIfLogin { jump(STORE_ENTRY) } }
-            mine_user_iv_center_feedback.setOnSingleClickListener { doIfLogin { Jump2QQHelper.onFeedBackClick(this) } }
+            mine_user_iv_center_feedback.setOnSingleClickListener { doIfLogin { startActivity(Intent(this,FeedbackCenterActivity::class.java)) } }
 
             mine_user_tv_sign.setOnSingleClickListener { doIfLogin { startActivity<DailySignActivity>() } }
             mine_user_btn_sign.setOnSingleClickListener { doIfLogin { startActivity<DailySignActivity>() } }

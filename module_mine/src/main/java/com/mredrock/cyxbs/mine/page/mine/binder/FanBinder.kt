@@ -1,6 +1,5 @@
 package com.mredrock.cyxbs.mine.page.mine.binder
 
-import android.content.Intent
 import android.view.View
 import androidx.core.content.ContextCompat
 import com.bumptech.glide.Glide
@@ -8,7 +7,6 @@ import com.mredrock.cyxbs.common.utils.extensions.gone
 import com.mredrock.cyxbs.mine.R
 import com.mredrock.cyxbs.mine.databinding.MineRecycleItemFanBinding
 import com.mredrock.cyxbs.mine.network.model.Fan
-import com.mredrock.cyxbs.mine.page.mine.ui.activity.HomepageActivity
 
 /**
  * @class
