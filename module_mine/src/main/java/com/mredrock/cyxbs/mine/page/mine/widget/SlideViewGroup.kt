@@ -38,6 +38,9 @@ class SlideViewGroup @JvmOverloads constructor(
             : ViewPager2? = null
     private var mScrollChangeListener: ((moveRatio: Float) -> Unit)? = null
 
+    //适配阴影的时候需要设置top_margin为负数，这时候需要额外增加height，此变量就发挥补充额外高度的作用
+    var offset = 0
+
     /**
      * 父控件可以滚动的距离
      */
@@ -137,7 +140,7 @@ class SlideViewGroup @JvmOverloads constructor(
         super.onMeasure(widthMeasureSpec, heightMeasureSpec)
         //ViewPager修改后的高度= 总高度-TabLayout高度
         val lp = mViewPager!!.layoutParams
-        lp.height = measuredHeight - mNavView!!.measuredHeight*3+150
+        lp.height = measuredHeight - mNavView!!.measuredHeight*3+150 + offset
         mViewPager!!.layoutParams = lp
         //因为ViewPager修改了高度，所以需要重新测量
         super.onMeasure(widthMeasureSpec, heightMeasureSpec)

@@ -25,6 +25,7 @@
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
+                android:foreground="@drawable/mine_shape_mine_background_black_foreground"
                 app:srcCompat="@drawable/mine_ic_iv_background" />
 
             <ImageView
@@ -104,9 +105,8 @@
                 <com.google.android.material.tabs.TabLayout
                     android:id="@+id/mine_tablayout"
                     android:layout_width="match_parent"
-                    android:layout_height="65dp"
+                    android:layout_height="64dp"
                     android:background="@drawable/mine_shape_ll_background"
-                    android:paddingBottom="1dp"
                     android:elevation="15dp"
                     android:outlineSpotShadowColor="#BEC5D0"
                     android:textSize="30dp"
