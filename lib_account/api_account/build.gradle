@@ -1,8 +1,7 @@
 plugins {
-    id "com.redrock.api"
+    id "com.redrock.cyxbs"
 }
 
-//apply from: config
 
 dependencies {
 

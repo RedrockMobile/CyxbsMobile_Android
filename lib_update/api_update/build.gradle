@@ -1,1 +1,3 @@
-apply from : config
+plugins {
+    id "com.redrock.cyxbs"
+}

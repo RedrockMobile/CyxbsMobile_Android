@@ -5,6 +5,8 @@ plugins {
     id("com.android.library")
 }
 
+
+
 android {
     compileSdk = versions.AGP.compileSdk
 
@@ -34,5 +36,5 @@ android {
 dependencies {
     implementation(versions.Dependencies.ARouter.api)
     implementation(versions.Dependencies.AndroidX.appcompat)
-    annotationProcessor(versions.Dependencies.ARouter.compiler)
+    kapt(versions.Dependencies.ARouter.compiler)
 }

@@ -1,6 +1,6 @@
-apply from: config
-
-println project.name
+plugins {
+    id "com.redrock.cyxbs"
+}
 
 dependencies {
     /*

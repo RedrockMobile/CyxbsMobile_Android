@@ -1,4 +1,9 @@
+import com.meituan.android.walle.Extension
+import ext.get
 import versions.AGP
+
+val isSingleModuleDebug: String by project
+
 
 plugins {
     kotlin("android")
@@ -8,8 +13,10 @@ plugins {
 }
 
 apply(plugin = "walle")
-apply(from = "andresguard.gradle")
-apply(from = "redex.gradle")
+apply(from = "$rootDir/build_logic/andresguard.gradle")
+apply(from = "$rootDir/build_logic/redex.gradle")
+apply(from = "$rootDir/build_logic/secret.gradle")
+
 
 
 android {
@@ -22,7 +29,7 @@ android {
         versionName = AGP.releaseVersionName
 
         ndk {
-            abiFilters.addAll(AGP.releaseAbiFilters)
+            abiFilters += AGP.releaseAbiFilters
         }
 
         dexOptions {
@@ -32,7 +39,10 @@ android {
 
         signingConfigs {
             create("config") {
-                // keyAlias = ext.properties["sign"]
+                keyAlias = project.ext["secret"]["sign"]["RELEASE_KEY_ALIAS"] as String
+                keyPassword = project.ext["secret"]["sign"]["RELEASE_KEY_PASSWORD"] as String
+                storePassword = project.ext["secret"]["sign"]["RELEASE_STORE_PASSWORD"] as String
+                storeFile = file("$rootDir/key-cyxbs")
             }
         }
 
@@ -42,9 +52,9 @@ android {
                 isZipAlignEnabled = false
                 isShrinkResources = false
 
-                // signingConfig signingConfigs.config
+                signingConfig = signingConfigs.getByName("config")
                 ndk {
-                    abiFilters.addAll(listOf("arm64-v8a"))
+                    abiFilters+=listOf("arm64-v8a")
                 }
             }
 
@@ -54,7 +64,7 @@ android {
                 isShrinkResources = true
                 proguardFiles(getDefaultProguardFile("proguard-android.txt"), "proguard-rules.pro")
 
-                //signingConfig signingConfigs . config
+                signingConfig = signingConfigs.getByName("config")
 
                 ndk {
                     // 修改安装包的架构要记得同步修改上面的 Bugly 的 ndk 依赖
@@ -68,11 +78,11 @@ android {
         lint {
             abortOnError = false
             baseline = file("lint-baseline.xml")
-            disable.addAll(listOf("TrustAllX509TrustManager"))
+            disable += listOf("TrustAllX509TrustManager")
         }
 
         packagingOptions {
-            jniLibs.excludes.addAll(
+            jniLibs.excludes +=
                 listOf(
                     "lib/armeabi/libAMapSDK_MAP_v6_9_4.so",
                     "lib/armeabi/libsophix.so",
@@ -82,11 +92,9 @@ android {
                     "lib/*/librsjni.so",
                     "lib/*/librsjni_androidx.so"
                 )
-            )
             //
             resources {
-                excludes.addAll(
-                    listOf(
+                excludes += listOf(
                         "LICENSE.txt",
                         "META-INF/DEPENDENCIES",
                         "META-INF/ASL2.0",
@@ -97,16 +105,23 @@ android {
                         "META-INF/MANIFEST.MF",
                         "META-INF/NOTICE.txt",
                         "META-INF/rxjava.properties"
-                    )
                 )
             }
+        }
+
+        (project.ext["secret"]["buildConfigField"] as Map<String, String>).forEach{ (k, v) ->
+            buildConfigField("String",k,v)
         }
 
     }
 }
 
-///
 
+configure<Extension> {
+    apkOutputFolder = file("${buildDir}/outputs/channels")
+    channelFile = file("$projectDir/channel")
+    apkFileNameFormat = "掌上重邮-\${channel}-\${buildType}-v\${versionName}-\${versionCode}.apk"
+}
 
 dependencies {
 
@@ -116,7 +131,7 @@ dependencies {
     implementation(project(":lib_protocol"))
     implementation(project(":lib_account:api_account"))
     implementation(project(":lib_protocol:api_protocol"))
-    //if (!isSingleModuleDebug.toBoolean()) {
+    if (!isSingleModuleDebug.toBoolean()) {
         implementation(project(":module_main"))
         implementation(project(":module_course"))
         implementation(project(":module_qa"))
@@ -136,7 +151,7 @@ dependencies {
         implementation(project(":module_widget"))
         implementation(project(":module_redrock_home"))
         implementation(project(":module_store"))
-    //}
+    }
     // Bugly https://bugly.qq.com/docs/
     // 其中 latest.release 指代最新 Bugly SDK 版本号
     // Bugly 有如下功能：1、检测 bug；2、弹 dialog 强制用户升级
@@ -152,7 +167,7 @@ dependencies {
     implementation("com.umeng.umsdk:common:9.4.4")// (必选)
     implementation("com.umeng.umsdk:asms:1.4.3")// asms包依赖必选
     implementation("com.umeng.umsdk:push:6.4.0") {
-        exclude(mapOf("module" to "utdid"))
+        exclude(module="utdid")
     }
 
     // Sophix https://help.aliyun.com/document_detail/61082.html

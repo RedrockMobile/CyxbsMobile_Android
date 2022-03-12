@@ -1,4 +1,7 @@
+import ext.get
+import gradle.kotlin.dsl.accessors._5f1ca56463bf479f6b23e95385818fdf.implementation
 import versions.AGP
+import versions.Dependencies
 
 plugins {
     kotlin("android")
@@ -6,6 +9,9 @@ plugins {
     id("kotlin-android-extensions")
     id("com.android.library")
 }
+
+apply(from="$rootDir/build_logic/dependencies.gradle")
+apply(from="$rootDir/build_logic/secret.gradle")
 
 android {
     compileSdk = AGP.compileSdk
@@ -34,15 +40,17 @@ android {
         kapt {
             // ARouter https://github.com/alibaba/ARouter
             arguments {
-                arg("AROUTER_MODULE_NAME", project.getName())
+                println(project.name)
+                println(name)
+                arg("AROUTER_MODULE_NAME", project.name)
             }
         }
 
         // 秘钥文件
-        //manifestPlaceholders = secret.manifestPlaceholders
-        /*secret.buildConfigField.forEach({ k, v ->
-            buildConfigField("String", k, v)
-        })*/
+        manifestPlaceholders += project.ext["secret"]["manifestPlaceholders"] as Map<String,String>
+        (project.ext["secret"]["buildConfigField"] as Map<String,String>).forEach{ (k, v) ->
+            buildConfigField("String",k,v)
+        }
     }
 
     compileOptions {
@@ -59,5 +67,10 @@ android {
     }
 }
 
-
+dependencies {
+    implementation(Dependencies.AndroidX.appcompat)
+    kapt(Dependencies.ARouter.compiler)
+    implementation(Dependencies.ARouter.api)
+    implementation("com.github.limuyang2:LPhotoPicker:2.6")
+}
 

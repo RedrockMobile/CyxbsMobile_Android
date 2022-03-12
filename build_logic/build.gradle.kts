@@ -1,25 +1,14 @@
-
 plugins {
-    `java-gradle-plugin`
     `kotlin-dsl`
-    `kotlin-dsl-precompiled-script-plugins`
 }
 
-repositories {
-    mavenCentral()
-    google()
-
-}
-
-/*dependencies {
-    implementation("com.android.library:com.android.library.gradle.plugin:7.1.2")
-    implementation("com.android.application:com.android.application.gradle.plugin:7.1.2")
-}*/
+apply(from="$rootDir/secret.gradle")
 
 dependencies {
     implementation("com.android.tools.build:gradle:7.1.2")
     implementation("org.jetbrains.kotlin:kotlin-gradle-plugin:1.6.10")
-    implementation("org.jetbrains.kotlin:kotlin-stdlib:1.6.10")
+    implementation(kotlin("stdlib-jdk8","1.6.10"))
+    implementation("com.meituan.android.walle:plugin:1.1.7")
 }
 
 

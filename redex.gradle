@@ -1,0 +1,24 @@
+//redex搭配AndResGuard使用,需要自己配一下redex环境
+project.afterEvaluate { project ->
+    android.applicationVariants.all { applicationVariant ->
+        def variantNameCapitalize = applicationVariant.name.capitalize()
+        def redexTaskName = "redex${variantNameCapitalize}"
+        def redexTask = project.task(redexTaskName) {
+            doLast {
+                println "begin redex"
+                applicationVariant.outputs.all { output ->
+                    def apk = output.outputFile
+                    println apk.path
+                    if (apk.name.endsWith(".apk")) {
+                        println "redex ${apk.path}"
+                        println "redex ${apk.path} -o ${apk.path.replace(".apk", ".apk")}".execute().text
+                    }
+                }
+            }
+        }
+        def resguard = project.tasks.getByName("resguard${variantNameCapitalize}")
+        if (resguard != null) {
+            resguard.dependsOn(redexTask)
+        }
+    }
+}
