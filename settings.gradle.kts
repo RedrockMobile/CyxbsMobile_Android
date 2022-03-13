@@ -1,5 +1,5 @@
 pluginManagement {
-    //includeBuild("build_logic")
+    includeBuild("build_logic")
     repositories {
         maven { url = uri("https://maven.aliyun.com/repository/public") }
         maven { url = uri("https://maven.aliyun.com/repository/google") }
@@ -12,6 +12,7 @@ pluginManagement {
     }
 }
 dependencyResolutionManagement {
+    //includeBuild("build_logic")
     repositoriesMode.set(RepositoriesMode.FAIL_ON_PROJECT_REPOS)
     repositories {
         // 以下两行代码相当于有了 google() jcenter() mavenCentral()，使用国内的阿里镜像

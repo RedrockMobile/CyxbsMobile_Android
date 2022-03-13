@@ -1,11 +1,12 @@
+import versions.`androidx-appcompat`
+import versions.aRouter
+
 plugins {
     kotlin("android")
     kotlin("kapt")
     id("kotlin-android-extensions")
     id("com.android.library")
 }
-
-
 
 android {
     compileSdk = versions.AGP.compileSdk
@@ -30,12 +31,10 @@ android {
     }
 
     kotlinOptions.jvmTarget = "1.8"
-
     dataBinding.isEnabled = true
 }
 
 dependencies {
-    implementation(versions.Dependencies.ARouter.api)
-    implementation(versions.Dependencies.AndroidX.appcompat)
-    kapt(versions.Dependencies.ARouter.compiler)
+    aRouter()
+    implementation(`androidx-appcompat`)
 }

@@ -1,9 +1,4 @@
 dependencies {
-    // 单元测试，但目前掌邮没有单元测试
-    testImplementation 'junit:junit:4.13.2'
-    androidTestImplementation 'androidx.test.ext:junit:1.1.3'
-    androidTestImplementation 'androidx.test.espresso:espresso-core:3.4.0'
-
     implementation fileTree(include: ['*.jar'], dir: 'libs')
     if (project.name != "lib_common")
         implementation project(':lib_common')
@@ -15,39 +10,6 @@ dependencies {
     * 3、如果要添加什么新的官方库，添加方式必须以官方为准，且给出官方地址，不要随意看到谁写的博文就随意添加
     * 4、尽量不要导入 alpha 版本，因为这些版本很容易就直接删方法
     * */
-
-
-    // 官方控件库
-    implementation 'androidx.constraintlayout:constraintlayout:2.1.2'
-    implementation 'androidx.recyclerview:recyclerview:1.2.1'
-    implementation 'androidx.cardview:cardview:1.0.0'
-    implementation 'androidx.viewpager2:viewpager2:1.0.0'
-    implementation 'com.google.android.material:material:1.4.0'
-
-    // 官方 KTX 扩展库
-    // 概览里面给出的KTX，https://developer.android.google.cn/kotlin/ktx?hl=zh_cn
-    implementation "androidx.core:core-ktx:1.7.0"
-    implementation "androidx.collection:collection-ktx:1.2.0"
-    implementation "androidx.fragment:fragment-ktx:1.4.1"
-    implementation "androidx.navigation:navigation-runtime-ktx:2.4.1"
-    implementation "androidx.navigation:navigation-fragment-ktx:2.4.1"
-    implementation "androidx.navigation:navigation-ui-ktx:2.4.1"
-    implementation "androidx.room:room-ktx:2.4.2"
-    implementation "androidx.work:work-runtime-ktx:2.7.1"
-    // 其他KTX，https://developer.android.google.cn/kotlin/ktx/extensions-list?hl=zh_cn
-    implementation "androidx.activity:activity-ktx:1.4.0"
-
-    // Lifecycle https://developer.android.google.cn/jetpack/androidx/releases/lifecycle
-    def lifecycle_version = "2.4.1"
-    implementation "androidx.lifecycle:lifecycle-viewmodel-ktx:$lifecycle_version"
-    implementation "androidx.lifecycle:lifecycle-viewmodel-compose:$lifecycle_version"
-    implementation "androidx.lifecycle:lifecycle-livedata-ktx:$lifecycle_version"
-    implementation "androidx.lifecycle:lifecycle-runtime-ktx:$lifecycle_version"
-    implementation "androidx.lifecycle:lifecycle-viewmodel-savedstate:$lifecycle_version"
-    implementation "androidx.lifecycle:lifecycle-common-java8:$lifecycle_version"
-    implementation "androidx.lifecycle:lifecycle-service:$lifecycle_version"
-    implementation "androidx.lifecycle:lifecycle-process:$lifecycle_version"
-    implementation "androidx.lifecycle:lifecycle-reactivestreams-ktx:$lifecycle_version"
 
     // Eventbus https://github.com/greenrobot/EventBus
     implementation "org.greenrobot:eventbus:3.3.1"
@@ -67,11 +29,6 @@ dependencies {
     def okhttp_version = "4.9.3"
     implementation "com.squareup.okhttp3:okhttp:$okhttp_version"
     implementation "com.squareup.okhttp3:logging-interceptor:$okhttp_version"
-
-    // Rxjava3 https://github.com/ReactiveX/RxJava
-    implementation "io.reactivex.rxjava3:rxjava:3.1.3"
-    implementation "io.reactivex.rxjava3:rxandroid:3.0.0"
-    implementation "io.reactivex.rxjava3:rxkotlin:3.0.1"
 
     // Gson https://github.com/google/gson
     implementation 'com.google.code.gson:gson:2.9.0'

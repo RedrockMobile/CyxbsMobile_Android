@@ -1,7 +1,6 @@
 import ext.get
 import gradle.kotlin.dsl.accessors._5f1ca56463bf479f6b23e95385818fdf.implementation
-import versions.AGP
-import versions.Dependencies
+import versions.*
 
 plugins {
     kotlin("android")
@@ -65,9 +64,8 @@ android {
 }
 
 dependencies {
-    implementation(Dependencies.AndroidX.appcompat)
-    kapt(Dependencies.ARouter.compiler)
-    implementation(Dependencies.ARouter.api)
-    implementation("com.github.limuyang2:LPhotoPicker:2.6")
+    aRouter()
+    implementation(`androidx-appcompat`)
+    implementation(lPhotoPicker)
 }
 

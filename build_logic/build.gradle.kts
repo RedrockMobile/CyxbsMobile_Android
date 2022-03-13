@@ -2,11 +2,6 @@ plugins {
     `kotlin-dsl`
 }
 
-/*buildscript {
-    apply(from="$rootDir/githook.gradle")
-    apply(from = "$rootDir/secret.gradle")
-}*/
-
 apply(from = "$rootDir/secret.gradle")
 
 
@@ -22,11 +17,3 @@ dependencies {
     implementation ("com.tencent.mm:AndResGuard-gradle-plugin:1.2.18")
 }
 
-
-//    `kotlin-dsl-base`
-//    `java-gradle-plugin`
-//    `kotlin-dsl-precompiled-script-plugins`
-//    `kotlin-dsl`
-//      kotlin("android") version "1.6.10" apply false
-//      kotlin("kapt") version "1.6.10" apply false
-//      id("com.android.library") version "7.1.2" apply false
