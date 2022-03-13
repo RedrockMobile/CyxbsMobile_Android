@@ -105,7 +105,7 @@ dependencies {
     /*
     * todo
     *  1、这里是给所有子模块配置依赖，包括 module_、lib_、api_
-    *  2、如果只有你自己的模块需要单独的依赖，请添加到你自己模块的 build.gradle.kts 中
+    *  2、如果只有你自己的模块需要单独的依赖，请添加到你自己模块的 build.gradle.kts.kts 中
     *  3、如果以后引入一些特殊的依赖，比如：bugly 这种，只需要给 module_app 单独添加即可
     * */
 

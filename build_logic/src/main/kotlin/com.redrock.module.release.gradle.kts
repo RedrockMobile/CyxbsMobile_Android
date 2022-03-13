@@ -12,7 +12,6 @@ plugins {
 }
 
 apply(from="$rootDir/build_logic/dependencies.gradle")
-apply(from="$rootDir/build_logic/secret.gradle")
 
 android {
     compileSdk = AGP.compileSdk
@@ -44,11 +43,8 @@ android {
                 arg("AROUTER_MODULE_NAME", project.name)
             }
         }
-
-
-        println(project.ext["secret"]["manifestPlaceholders"] as Map<String, Any>)
+        println(ext.hashCode())
         // 秘钥文件
-        //manifestPlaceholders
         manifestPlaceholders += (project.ext["secret"]["manifestPlaceholders"] as Map<String, Any>)
         (project.ext["secret"]["buildConfigField"] as Map<String,String>).forEach { (k, v) ->
             buildConfigField("String",k,v)

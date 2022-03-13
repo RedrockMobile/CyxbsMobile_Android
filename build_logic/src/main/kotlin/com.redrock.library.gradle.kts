@@ -11,7 +11,6 @@ plugins {
 }
 
 apply(from="$rootDir/build_logic/dependencies.gradle")
-apply(from="$rootDir/build_logic/secret.gradle")
 
 android {
     compileSdk = AGP.compileSdk
@@ -40,8 +39,6 @@ android {
         kapt {
             // ARouter https://github.com/alibaba/ARouter
             arguments {
-                println(project.name)
-                println(name)
                 arg("AROUTER_MODULE_NAME", project.name)
             }
         }

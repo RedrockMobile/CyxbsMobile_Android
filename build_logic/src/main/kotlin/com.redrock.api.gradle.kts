@@ -15,9 +15,10 @@ android {
         targetSdk = versions.AGP.targetSdk
         testInstrumentationRunner = versions.AGP.testInstrumentationRunner
 
-        javaCompileOptions {
-            annotationProcessorOptions {
-                arguments["AROUTER_MODULE_NAME"] = project.name
+        kapt {
+            // ARouter https://github.com/alibaba/ARouter
+            arguments {
+                arg("AROUTER_MODULE_NAME", project.name)
             }
         }
 

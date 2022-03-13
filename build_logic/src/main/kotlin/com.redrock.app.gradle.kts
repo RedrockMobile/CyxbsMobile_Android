@@ -15,7 +15,6 @@ plugins {
 apply(plugin = "walle")
 apply(from = "$rootDir/build_logic/andresguard.gradle")
 apply(from = "$rootDir/build_logic/redex.gradle")
-apply(from = "$rootDir/build_logic/secret.gradle")
 
 
 
@@ -42,7 +41,7 @@ android {
                 keyAlias = project.ext["secret"]["sign"]["RELEASE_KEY_ALIAS"] as String
                 keyPassword = project.ext["secret"]["sign"]["RELEASE_KEY_PASSWORD"] as String
                 storePassword = project.ext["secret"]["sign"]["RELEASE_STORE_PASSWORD"] as String
-                storeFile = file("$rootDir/key-cyxbs")
+                storeFile = file("$rootDir/build_logic/key-cyxbs")
             }
         }
 
@@ -68,7 +67,7 @@ android {
 
                 ndk {
                     // 修改安装包的架构要记得同步修改上面的 Bugly 的 ndk 依赖
-                    abiFilters.addAll(listOf("arm64-v8a"))
+                    abiFilters += listOf("arm64-v8a")
                 }
             }
         }
