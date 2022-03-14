@@ -21,6 +21,7 @@ import com.cyxbsmobile_single.module_todo.util.getColor
 import com.cyxbsmobile_single.module_todo.util.isOutOfTime
 import com.cyxbsmobile_single.module_todo.util.repeatMode2RemindTime
 import com.mredrock.cyxbs.common.BaseApp
+import com.mredrock.cyxbs.common.utils.LogUtils
 import kotlinx.android.synthetic.main.todo_rv_item_empty.view.*
 import kotlinx.android.synthetic.main.todo_rv_item_title.view.*
 import kotlinx.android.synthetic.main.todo_rv_item_todo.view.*
@@ -250,6 +251,7 @@ class DoubleListFoldRvAdapter(
                         todo_iv_todo_item.setStatusWithoutAnime(todo.getIsChecked())
                         todo_fl_del.visibility = View.GONE
                         todo_tv_todo_title.setText(todo.title)
+                        LogUtils.d("Slayer", "todo = $todo")
                         todo_tv_notify_time.text = repeatMode2RemindTime(todo.remindMode)
                         todo_tv_todo_title.setOnClickListener { }//防止穿透点击
                         //如果莫得提醒时间，就不显示闹钟和提醒日期

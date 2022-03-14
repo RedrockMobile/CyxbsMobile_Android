@@ -28,6 +28,7 @@ import android.view.MotionEvent
 import android.view.View
 import android.view.ViewAnimationUtils.createCircularReveal
 import android.widget.ImageView
+import android.widget.LinearLayout
 import androidx.core.content.ContextCompat
 import androidx.core.content.res.ResourcesCompat
 import com.afollestad.materialdialogs.MaterialDialog
@@ -48,6 +49,7 @@ import com.mredrock.cyxbs.mine.page.edit.EditInfoActivity
 import com.mredrock.cyxbs.mine.page.mine.widget.BlurBitmap
 import com.mredrock.cyxbs.mine.util.transformer.ScaleInTransformer
 import com.yalantis.ucrop.UCrop
+import kotlinx.android.synthetic.main.mine_activity_edit_info.*
 import kotlinx.android.synthetic.main.mine_activity_homepage_head.view.*
 import okhttp3.MultipartBody
 import java.io.File
@@ -109,8 +111,8 @@ class HomepageActivity : BaseViewModelActivity<MineViewModel>() {
      */
     private val fileDir by lazyUnlock {
         StringBuilder(Environment.getExternalStorageDirectory().path)
-            .append(DIR_PHOTO)
-            .toString()
+                .append(DIR_PHOTO)
+                .toString()
     }
 
     /**
@@ -122,14 +124,14 @@ class HomepageActivity : BaseViewModelActivity<MineViewModel>() {
      * 是否是女生
      *
      */
-    var isGirl:String="男"
+    var isGirl: String = "男"
 
     var tabNames = listOf<String>("我的动态", "我的身份")
     val imageViewList by lazyUnlock {
         mutableListOf<ImageView>(
-            dataBinding.clPersonalInformation.iv_nameplate1,
-            dataBinding.clPersonalInformation.iv_nameplate2,
-            dataBinding.clPersonalInformation.iv_nameplate3
+                dataBinding.clPersonalInformation.iv_nameplate1,
+                dataBinding.clPersonalInformation.iv_nameplate2,
+                dataBinding.clPersonalInformation.iv_nameplate3
         )
     }
     private val userService: IUserService by lazy {
@@ -157,7 +159,7 @@ class HomepageActivity : BaseViewModelActivity<MineViewModel>() {
             initSatu(it)
             changeAttention(it)
             dataBinding.clPersonalInformation.tv_id_number.text = it.data.uid.toString()
-            dataBinding.clPersonalInformation.tv_grade.text = it.data.grade+"级"
+            dataBinding.clPersonalInformation.tv_grade.text = it.data.grade + "级"
             if (it.data.constellation.equals("")) {
                 dataBinding.clPersonalInformation.mine_tv_constellation.text = "十三星座"
             } else {
@@ -169,7 +171,7 @@ class HomepageActivity : BaseViewModelActivity<MineViewModel>() {
             nickname = it.data.nickname
             isNeedRefresh = false
             isSelf = it.data.is_self
-            isGirl=it.data.gender
+            isGirl = it.data.gender
             it.data.redid.let {
                 identityFragment.onSuccess(it, isSelf)
                 dataBinding.vp2Mine.offscreenPageLimit = 2
@@ -204,19 +206,20 @@ class HomepageActivity : BaseViewModelActivity<MineViewModel>() {
         if (isSelf) {
             tabNames = listOf<String>("我的动态", "我的身份")
         } else {
-            if (isGirl == "男"){
+            if (isGirl == "男") {
                 tabNames = listOf<String>("他的动态", "他的身份")
-            }else{
+            } else {
                 tabNames = listOf<String>("她的动态", "她的身份")
             }
-            dataBinding.clPersonalInformation.iv_edit.alpha=0f
-            dataBinding.clPersonalInformation.tv_edit.alpha=0f
+            dataBinding.clPersonalInformation.iv_edit.alpha = 0f
+            dataBinding.clPersonalInformation.tv_edit.alpha = 0f
         }
         TabLayoutMediator(dataBinding.mineTablayout, dataBinding.vp2Mine, true) { tab, position ->
             tab.text = tabNames[position]
         }.attach()
     }
-    val  bg4 by lazy {
+
+    val bg4 by lazy {
         dataBinding.clPersonalInformation.mine_tv_concern.background as GradientDrawable
     }
 
@@ -229,9 +232,9 @@ class HomepageActivity : BaseViewModelActivity<MineViewModel>() {
             dataBinding.clPersonalInformation.mine_tv_concern.visibility = View.VISIBLE
             if (data.data.isFocus) {
 
-                if(this.applicationContext.resources.configuration.uiMode == 0x21){
+                if (this.applicationContext.resources.configuration.uiMode == 0x21) {
                     bg4.setColor(Color.parseColor("#CC5A5A5A"))
-                }else{
+                } else {
                     bg4.setColor(Color.parseColor("#E8F0FC"))
 
                 }
@@ -240,8 +243,9 @@ class HomepageActivity : BaseViewModelActivity<MineViewModel>() {
                 } else {
                     dataBinding.clPersonalInformation.mine_tv_concern.text = "已关注"
                 }
-            }else{
+            } else {
                 dataBinding.clPersonalInformation.mine_tv_concern.text = "关注"
+
                     bg4.setColor(Color.parseColor("#4841E2"))
             }
         }
@@ -268,7 +272,7 @@ class HomepageActivity : BaseViewModelActivity<MineViewModel>() {
 
     fun initView() {
         val dynamicFragment =
-            ARouter.getInstance().build(QA_DYNAMIC_MINE_FRAGMENT).navigation() as Fragment
+                ARouter.getInstance().build(QA_DYNAMIC_MINE_FRAGMENT).navigation() as Fragment
         val list = arrayListOf<Fragment>(dynamicFragment, identityFragment)
         if (dynamicFragment is MineAndQa.RefreshListener) {
             MineAndQa.refreshListener = dynamicFragment
@@ -360,7 +364,7 @@ class HomepageActivity : BaseViewModelActivity<MineViewModel>() {
                 toast("服务器似乎出了一点小问题")
                 initBlurBitmap(null)
             }
-           initTab()
+            initTab()
         }
         //此处点击事件监听不可删除  为了防止发生穿透点击
         dataBinding.clPersonalInformation.setOnClickListener {
@@ -428,7 +432,7 @@ class HomepageActivity : BaseViewModelActivity<MineViewModel>() {
     fun initBlurBitmap(bitmap: Bitmap?) {
         if (bitmap == null) {
             mTempBitmap =
-                BitmapFactory.decodeResource(resources, R.drawable.mine_ic_iv_background)
+                    BitmapFactory.decodeResource(resources, R.drawable.mine_ic_iv_background)
             mFinalBitmap = BlurBitmap.blur(this, mTempBitmap!!)
         } else {
             mTempBitmap = bitmap
@@ -445,11 +449,11 @@ class HomepageActivity : BaseViewModelActivity<MineViewModel>() {
      */
     fun loadBacgroundAnmator() {
         val p = createCircularReveal(
-            dataBinding.ivMineBackgroundNormal,
-            0,
-            0,
-            0f,
-            dataBinding.ivMineBackgroundNormal.height.toFloat() * 1.4f
+                dataBinding.ivMineBackgroundNormal,
+                0,
+                0,
+                0f,
+                dataBinding.ivMineBackgroundNormal.height.toFloat() * 1.4f
         )
         p.duration = 900
         p.addListener(object : Animator.AnimatorListener {
@@ -479,8 +483,8 @@ class HomepageActivity : BaseViewModelActivity<MineViewModel>() {
     fun changeBackground() {
         //获取权限
         doPermissionAction(
-            Manifest.permission.READ_EXTERNAL_STORAGE,
-            Manifest.permission.WRITE_EXTERNAL_STORAGE
+                Manifest.permission.READ_EXTERNAL_STORAGE,
+                Manifest.permission.WRITE_EXTERNAL_STORAGE
         ) {
             reason = "读取图片需要访问您的存储空间哦~"
             doAfterGranted {
@@ -582,9 +586,9 @@ class HomepageActivity : BaseViewModelActivity<MineViewModel>() {
         try {
 
             val fileBody = MultipartBody.Part.createFormData(
-                "pic",
-                destinationFile.name,
-                destinationFile.getRequestBody()
+                    "pic",
+                    destinationFile.name,
+                    destinationFile.getRequestBody()
             )
             viewModel.changePersonalBackground(fileBody)
         } catch (e: IOException) {
@@ -602,17 +606,17 @@ class HomepageActivity : BaseViewModelActivity<MineViewModel>() {
         options.setCompressionQuality(100)
         options.setLogoColor(ContextCompat.getColor(this, R.color.common_level_two_font_color))
         options.setToolbarColor(
-            ContextCompat.getColor(this, R.color.colorPrimaryDark)
+                ContextCompat.getColor(this, R.color.colorPrimaryDark)
         )
         options.setStatusBarColor(
-            ContextCompat.getColor(this, R.color.colorPrimaryDark)
+                ContextCompat.getColor(this, R.color.colorPrimaryDark)
         )
         uCrop.withOptions(options)
-            .withAspectRatio(
-                dataBinding.ivMineBackgroundNormal.width.toFloat(),
-                dataBinding.ivMineBackgroundNormal.height.toFloat()
-            )
-            .start(this)
+                .withAspectRatio(
+                        dataBinding.ivMineBackgroundNormal.width.toFloat(),
+                        dataBinding.ivMineBackgroundNormal.height.toFloat()
+                )
+                .start(this)
     }
 
 
@@ -621,23 +625,46 @@ class HomepageActivity : BaseViewModelActivity<MineViewModel>() {
     /**
      * 这一个方法用于改变在滑动的过程中 tab的变化过程
      */
-    fun tabChange(pregress: Float) {
-        if(!(this.applicationContext.resources.configuration.uiMode == 0x21)) {
-            if (pregress == -1f && !isSetBackground) {
-                isSetBackground = true
-                dataBinding.mineTablayout.background =
-                    ResourcesCompat.getDrawable(resources, R.drawable.mine_layer_list_shape_shadow, theme)
-              dataBinding.mineTablayout.elevation=this.px2dip(300)
-                dataBinding.vp2Mine.elevation=this.px2dip(0)
-            }
-            if (isSetBackground && pregress > -1f) {
-                dataBinding.mineTablayout.background =
-                    ResourcesCompat.getDrawable(resources, R.drawable.mine_shape_ll_background, theme)
-           dataBinding.vp2Mine.elevation=this.px2dip(300)
-                isSetBackground = false
-            }
+    fun tabChange(progress: Float) {
+        if (progress == -1f && !isSetBackground) {
+            isSetBackground = true
+            dataBinding.mineTablayout.background =
+                    ResourcesCompat.getDrawable(resources, R.drawable.mine_ic_list_shadow, theme)
+            dataBinding.mineTablayout.elevation = this.px2dip(300)
+            dataBinding.vp2Mine.elevation = this.px2dip(0)
+            setTopStatus()
         }
+        if (isSetBackground && progress > -1f) {
+            dataBinding.mineTablayout.background =
+                    ResourcesCompat.getDrawable(resources, R.drawable.mine_shape_ll_background, theme)
+            isSetBackground = false
+            setBottomStatus()
+            dataBinding.vp2Mine.elevation=this.px2dip(300)
+        }
+    }
 
+    private fun setTopStatus() {
+        dataBinding.mineTablayout.setPadding(0, 0, 0, this.dip(40))
+        val tabLp = dataBinding.mineTablayout.layoutParams
+        tabLp.height = this.dip(104)
+        dataBinding.mineTablayout.layoutParams = tabLp
+        val vpLp = dataBinding.vp2Mine.layoutParams as LinearLayout.LayoutParams
+        vpLp.topMargin = this.dip(-40)
+        dataBinding.vp2Mine.layoutParams = vpLp
+        dataBinding.svgMine.offset = this.dip(258)
+        dataBinding.vp2Mine.requestLayout()
+    }
+
+    private fun setBottomStatus() {
+        dataBinding.mineTablayout.setPadding(0, 0, 0, 0)
+        val tabLp = dataBinding.mineTablayout.layoutParams
+        tabLp.height = this.dip(64)
+        dataBinding.mineTablayout.layoutParams = tabLp
+        val vpLp = dataBinding.vp2Mine.layoutParams as LinearLayout.LayoutParams
+        vpLp.topMargin = this.dip(0)
+        dataBinding.svgMine.offset = 0
+        dataBinding.vp2Mine.layoutParams = vpLp
+        dataBinding.vp2Mine.requestLayout()
     }
 
     /**
@@ -645,18 +672,18 @@ class HomepageActivity : BaseViewModelActivity<MineViewModel>() {
      */
     fun loadBitmap(url: String, success: (Bitmap) -> Unit) {
         Glide.with(this) // context，可添加到参数中
-            .asBitmap()
-            .load(url)
-            .into(object : CustomTarget<Bitmap>() {
-                override fun onResourceReady(resource: Bitmap, transition: Transition<in Bitmap>?) {
-                    // 成功返回 Bitmap
-                    success.invoke(resource)
-                }
+                .asBitmap()
+                .load(url)
+                .into(object : CustomTarget<Bitmap>() {
+                    override fun onResourceReady(resource: Bitmap, transition: Transition<in Bitmap>?) {
+                        // 成功返回 Bitmap
+                        success.invoke(resource)
+                    }
 
-                override fun onLoadCleared(placeholder: Drawable?) {
-                    initBlurBitmap(null)
-                }
-            })
+                    override fun onLoadCleared(placeholder: Drawable?) {
+                        initBlurBitmap(null)
+                    }
+                })
     }
 
 

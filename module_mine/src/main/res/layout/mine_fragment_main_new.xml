@@ -290,19 +290,17 @@
 
         <FrameLayout
             android:layout_width="match_parent"
-            android:layout_height="58dp"
-            android:layout_marginStart="16dp"
-            android:layout_marginTop="36dp"
-            android:layout_marginEnd="16dp"
-            android:elevation="8dp"
-            android:background="@drawable/mine_shape_bg_user_sign">
+            android:layout_height="130dp"
+            android:layout_marginTop="10dp"
+            android:background="@drawable/mine_ic_check_bg">
 
             <TextView
                 android:id="@+id/mine_user_tv_sign"
                 android:layout_width="wrap_content"
                 android:layout_height="22dp"
+                android:layout_marginBottom="10dp"
                 android:layout_gravity="start|center_vertical"
-                android:layout_marginStart="16dp"
+                android:layout_marginStart="32dp"
                 android:text="已连续签到 0 天"
                 android:textColor="@color/mine_text_sign"
                 android:textSize="16sp" />
@@ -312,7 +310,8 @@
                 android:layout_width="wrap_content"
                 android:layout_height="26dp"
                 android:layout_gravity="end|center_vertical"
-                android:layout_marginEnd="16dp"
+                android:layout_marginEnd="32dp"
+                android:layout_marginBottom="10dp"
                 android:background="@drawable/mine_shape_bg_user_btn_sign"
                 android:gravity="center"
                 android:paddingStart="10dp"
@@ -328,7 +327,7 @@
             android:id="@+id/mine_user_fm_about_us"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="38dp">
+            android:layout_marginTop="2dp">
 
             <TextView
                 android:layout_width="wrap_content"

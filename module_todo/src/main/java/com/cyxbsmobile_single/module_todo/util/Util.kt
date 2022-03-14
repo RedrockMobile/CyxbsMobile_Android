@@ -22,6 +22,7 @@ import com.mredrock.cyxbs.common.config.TODO_REPEAT_TODO_ID_LIST
 import com.mredrock.cyxbs.common.config.TODO_REPEAT_TODO_ID_LIST_DATE
 import com.mredrock.cyxbs.common.config.TODO_WEEK_MONTH_ARRAY
 import com.mredrock.cyxbs.common.config.TODO_START_YEAR_OF_WEEK_MONTH_ARRAY
+import com.mredrock.cyxbs.common.utils.LogUtils
 import com.mredrock.cyxbs.common.utils.extensions.*
 import java.util.*
 import kotlin.collections.ArrayList
@@ -77,15 +78,6 @@ fun repeatMode2RemindTime(remindMode: RemindMode): String {
             )
         }"
     }
-
-//    fun getTrueRemindDay(calendar: Calendar): String {
-//        val notifyCandler = getNotifyDayCandler(remindMode)
-//        return if (calendar.timeInMillis < notifyCandler.timeInMillis) {
-//            "${calendar.get(Calendar.MONTH) + 1}月${calendar.get(Calendar.DAY_OF_MONTH)}日 $remindTime"
-//        } else {
-//            "${calendar.get(Calendar.MONTH) + 1}月${calendar.get(Calendar.DAY_OF_MONTH)}日 $remindTime"
-//        }
-//    }
 
     when (remindMode.repeatMode) {
         RemindMode.DAY -> {
@@ -156,7 +148,7 @@ fun repeatMode2RemindTime(remindMode: RemindMode): String {
             val remindDateCalender = Calendar.getInstance()
             //这里可以保证已经是可以解析的了
             val remindDate =
-                remindMode.notifyDateTime?.let { formatDateWithTryCatch("yy年MM月dd日hh:mm", it) }
+                remindMode.notifyDateTime?.let { formatDateWithTryCatch("yy年MM月dd日HH:mm", it) }
             remindDateCalender.time = remindDate
             return "${remindDateCalender.get(Calendar.MONTH) + 1}月${remindDateCalender.get(Calendar.DAY_OF_MONTH)}日 $remindTime"
         }
@@ -170,7 +162,7 @@ fun getNextNotifyDay(remindMode: RemindMode): DateBeen {
     if (repeatString == "") return DateBeen(0, 0, 0, 0)
 
     //这里已经是经过处理的提醒时间，所以是不含年份的
-    val date = formatDateWithTryCatch("MM月dd日 hh:mm", repeatString)
+    val date = formatDateWithTryCatch("MM月dd日 HH:mm", repeatString)
     val calendar = Calendar.getInstance()
     calendar.time = date
     return DateBeen(
@@ -346,7 +338,7 @@ private fun getNotifyDayCandler(remindMode: RemindMode): Calendar {
     //提醒那一天的日历
     val remindDateCalender = Calendar.getInstance()
     //这里可以保证已经是可以解析的了
-    val remindDate = remindMode.notifyDateTime?.let { formatDateWithTryCatch("yy年MM月dd日hh:mm", it) }
+    val remindDate = remindMode.notifyDateTime?.let { formatDateWithTryCatch("yy年MM月dd日HH:mm", it) }
     remindDateCalender.time = remindDate
     return remindDateCalender
 }
@@ -377,7 +369,7 @@ fun isOutOfTime(todo: Todo): Boolean {
         ?:
     Calendar.getInstance().get(Calendar.YEAR).toString()
     //这里已经是经过处理的提醒时间，所以是不含年份的
-    val date = formatDateWithTryCatch("yyyyMM月dd日 hh:mm", repeatYear.toString() + repeatString)
+    val date = formatDateWithTryCatch("yyyyMM月dd日 HH:mm", repeatYear.toString() + repeatString)
     return date.time <= System.currentTimeMillis()
 }
 
