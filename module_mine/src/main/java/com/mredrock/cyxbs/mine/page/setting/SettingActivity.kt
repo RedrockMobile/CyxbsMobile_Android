@@ -12,14 +12,12 @@ import com.mredrock.cyxbs.common.ui.BaseActivity
 import com.mredrock.cyxbs.common.utils.extensions.*
 import com.mredrock.cyxbs.api.main.MAIN_LOGIN
 import com.mredrock.cyxbs.mine.R
-import com.mredrock.cyxbs.mine.page.feedback.center.ui.FeedbackCenterActivity
-import com.mredrock.cyxbs.mine.page.feedback.edit.ui.FeedbackEditActivity
 import com.mredrock.cyxbs.mine.page.security.activity.SecurityActivity
 import com.mredrock.cyxbs.mine.util.apiService
 import com.mredrock.cyxbs.mine.util.ui.WarningDialog
 import io.reactivex.rxjava3.disposables.Disposable
+import kotlinx.android.synthetic.main.mine_activity_daily_sign.view.*
 import kotlinx.android.synthetic.main.mine_activity_setting.*
-import kotlinx.android.synthetic.main.mine_activity_tablayout_my_product.view.*
 
 class SettingActivity : BaseActivity() {
 
