@@ -41,7 +41,6 @@ import com.mredrock.cyxbs.main.bean.LoginFailEvent
 import com.mredrock.cyxbs.main.components.UserAgreementDialog
 import com.mredrock.cyxbs.main.viewmodel.LoginViewModel
 import kotlinx.android.synthetic.main.main_activity_login.*
-import kotlinx.android.synthetic.main.main_user_agreement_dialog.view.*
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
 

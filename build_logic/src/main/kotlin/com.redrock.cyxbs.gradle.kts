@@ -1,5 +1,5 @@
 val projectName: String = project.name
-apply(from="$rootDir/build_logic/secret.gradle")
+apply(from="$rootDir/build_logic/secret/secret.gradle")
 when {
     "module_app".toRegex().matches(projectName) -> {
         apply(plugin = "com.redrock.app")

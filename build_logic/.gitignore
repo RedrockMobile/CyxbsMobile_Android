@@ -1,4 +1,5 @@
 build
 .gradle
-secret.gradle
-key-cyxbs
+secret/secret.gradle
+secret/key-cyxbs
+secret

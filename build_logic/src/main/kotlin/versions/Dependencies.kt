@@ -5,19 +5,13 @@ package versions
 import org.gradle.kotlin.dsl.DependencyHandlerScope
 import org.gradle.kotlin.dsl.exclude
 
-const val aRouterVersion = "1.5.2"
-const val appCompat = "1.4.0"
-const val lifecycle = "2.4.1"
-const val retrofit = "2.9.0"
-const val room = "2.4.1"
-
 
 //ARouter
-const val `arouter-api` = "com.alibaba:arouter-api:$aRouterVersion"
-const val `arouter-compiler` = "com.alibaba:arouter-compiler:$aRouterVersion"
+const val `arouter-api` = "com.alibaba:arouter-api:1.5.2"
+const val `arouter-compiler` = "com.alibaba:arouter-compiler:1.5.2"
 
 //AndroidX
-const val `androidx-appcompat` = "androidx.appcompat:appcompat:$appCompat"
+const val `androidx-appcompat` = "androidx.appcompat:appcompat:1.4.0"
 
 //Test
 const val `testImpl-junit` = "junit:junit:4.13.2"
@@ -48,6 +42,7 @@ const val `rxjava3-kotlin` = "io.reactivex.rxjava3:rxkotlin:3.0.1"
 const val lPhotoPicker = "com.github.limuyang2:LPhotoPicker:2.6"
 
 //android官方基础库
+const val lifecycle = "2.4.1"
 val android = listOf(
     "androidx.constraintlayout:constraintlayout:2.1.2",
     "androidx.recyclerview:recyclerview:1.2.1",
@@ -85,6 +80,7 @@ const val `glide-common` = "com.github.bumptech.glide:glide:4.13.0"
 const val `glide-compiler` = "com.github.bumptech.glide:compiler:4.13.0"
 
 //Retrogit
+const val retrofit = "2.9.0"
 const val `retrofit-common` = "com.squareup.retrofit2:retrofit:$retrofit"
 const val `retrofit-converter` = "com.squareup.retrofit2:converter-gson:$retrofit"
 const val `retrofit-rxjava3` = "com.squareup.retrofit2:adapter-rxjava3:$retrofit"
@@ -95,7 +91,9 @@ const val `okhttp-intercepter` = "com.squareup.okhttp3:logging-interceptor:4.9.3
 
 //gson
 const val gson = "com.google.code.gson:gson:2.9.0"
+
 //room
+const val room = "2.4.1"
 const val `room-runtime` = "androidx.room:room-runtime:$room"
 const val `room-compiler` = "androidx.room:room-compiler:$room"
 const val `room-rxjava3` = "androidx.room:room-rxjava3:$room"

@@ -11,8 +11,8 @@ plugins {
     id("walle")
 }
 
-apply(from = "$rootDir/build_logic/andresguard.gradle")
-apply(from = "$rootDir/build_logic/redex.gradle")
+apply(from = "$rootDir/build_logic/script/andresguard.gradle")
+apply(from = "$rootDir/build_logic/script/redex.gradle")
 
 android {
     defaultConfig {
@@ -37,7 +37,7 @@ android {
                 keyAlias = project.ext["secret"]["sign"]["RELEASE_KEY_ALIAS"] as String
                 keyPassword = project.ext["secret"]["sign"]["RELEASE_KEY_PASSWORD"] as String
                 storePassword = project.ext["secret"]["sign"]["RELEASE_STORE_PASSWORD"] as String
-                storeFile = file("$rootDir/build_logic/key-cyxbs")
+                storeFile = file("$rootDir/build_logic/secret/key-cyxbs")
             }
         }
 
@@ -49,7 +49,7 @@ android {
 
                 signingConfig = signingConfigs.getByName("config")
                 ndk {
-                    abiFilters+=listOf("arm64-v8a")
+                    abiFilters += listOf("arm64-v8a")
                 }
             }
 
@@ -90,30 +90,39 @@ android {
             //
             resources {
                 excludes += listOf(
-                        "LICENSE.txt",
-                        "META-INF/DEPENDENCIES",
-                        "META-INF/ASL2.0",
-                        "META-INF/NOTICE",
-                        "META-INF/LICENSE",
-                        "META-INF/LICENSE.txt",
-                        "META-INF/services/javax.annotation.processing.Processor",
-                        "META-INF/MANIFEST.MF",
-                        "META-INF/NOTICE.txt",
-                        "META-INF/rxjava.properties"
+                    "LICENSE.txt",
+                    "META-INF/DEPENDENCIES",
+                    "META-INF/ASL2.0",
+                    "META-INF/NOTICE",
+                    "META-INF/LICENSE",
+                    "META-INF/LICENSE.txt",
+                    "META-INF/services/javax.annotation.processing.Processor",
+                    "META-INF/MANIFEST.MF",
+                    "META-INF/NOTICE.txt",
+                    "META-INF/rxjava.properties"
                 )
             }
         }
 
-        (project.ext["secret"]["buildConfigField"] as Map<String, String>).forEach{ (k, v) ->
-            buildConfigField("String",k,v)
+        (project.ext["secret"]["buildConfigField"] as Map<String, String>).forEach { (k, v) ->
+            buildConfigField("String", k, v)
         }
 
     }
 }
 
+kapt {
+    arguments {
+        arg("AROUTER_MODULE_NAME",project.name)
+    }
+}
+
 dependencies {
-    //引入所有的模块
-    includeAllModules()
+
+    //引入所有的module和lib模块
+    includeModulesAndLibs()
+    //引入所有的api模块
+    includeApis()
     //引入外部所需依赖
     includeDependencies()
 }
@@ -124,14 +133,14 @@ walle {
     apkFileNameFormat = "掌上重邮-\${channel}-\${buildType}-v\${versionName}-\${versionCode}.apk"
 }
 
-fun DependencyHandlerScope.includeAllModules() {
+fun DependencyHandlerScope.includeModulesAndLibs() {
     rootDir.listFiles()!!.filter {
-        it.isDirectory
-    }.filter {
-        "(lib_.+)|(module_.+)".toRegex().matches(it.name)
+        // 1.是文件夹
+        // 2.不是module_app
+        // 3.以lib_或者module_开头
+        it.isDirectory && it.name != "module_app" && "(lib_.+)|(module_.+)".toRegex().matches(it.name)
     }.onEach {
-        println(":${it.name}")
-        implementation(":${it.name}")
+        implementation(project(":${it.name}"))
     }
 }
 
@@ -144,3 +153,11 @@ fun DependencyHandlerScope.includeDependencies() {
     test()
     hotFix()
 }
+
+
+
+fun DependencyHandlerScope.includeApis(){
+    implementation( project(":lib_account:api_account"))
+    implementation (project(":lib_protocol:api_protocol"))
+}
+

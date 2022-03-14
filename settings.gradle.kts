@@ -27,21 +27,21 @@ dependencyResolutionManagement {
 
 //includeBuild("build_logic")
 
-rootDir.listFiles()
+rootDir.listFiles()!!
     //根路径下搜寻前缀为lib_和module_的文件夹
     .filter {
-        "(lib_.+)|(module_.+)".toRegex().matches(it.name)
+        it.isDirectory && "(lib_.+)|(module_.+)".toRegex().matches(it.name)
     }
     .onEach {
         include(":${it.name}")
     }
     //搜寻第二层路径
     .flatMap {
-        it.listFiles().toList()
+        it.listFiles()!!.toList()
     }
     //搜索前缀为api_的文件夹
     .filter {
-        "api_.+".toRegex().matches(it.name)
+        it.isDirectory && "api_.+".toRegex().matches(it.name)
     }
     .onEach {
         include(":${it.parentFile.name}:${it.name}")

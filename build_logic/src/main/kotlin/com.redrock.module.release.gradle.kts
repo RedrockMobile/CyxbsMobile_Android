@@ -11,8 +11,6 @@ plugins {
     id("com.android.library")
 }
 
-apply(from="$rootDir/build_logic/dependencies.gradle")
-
 android {
     compileSdk = AGP.compileSdk
 

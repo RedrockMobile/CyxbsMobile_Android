@@ -2,7 +2,7 @@ plugins {
     `kotlin-dsl`
 }
 
-apply(from = "$rootDir/secret.gradle")
+apply(from = "$rootDir/secret/secret.gradle")
 
 
 dependencies {

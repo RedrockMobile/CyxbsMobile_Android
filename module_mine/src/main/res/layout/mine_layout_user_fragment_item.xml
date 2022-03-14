@@ -14,8 +14,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:padding="1dp"
-        android:layout_centerVertical="true"
-        tools:src="@drawable/mine_ic_me_sign" />
+        android:layout_centerVertical="true" />
 
     <TextView
         android:id="@+id/mine_user_item_title"
