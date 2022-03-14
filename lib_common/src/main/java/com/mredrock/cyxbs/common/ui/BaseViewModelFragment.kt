@@ -56,8 +56,8 @@ abstract class BaseViewModelFragment<T : BaseViewModel> : BaseFragment() {
 
     protected open fun getViewModelFactory(): ViewModelProvider.Factory? = null
 
-    inline fun <T> LiveData<T>.observe(crossinline onChange: (T?) -> Unit) = observe(this@BaseViewModelFragment, Observer { onChange(value) })
-    inline fun <T> LiveData<T>.observeNotNull(crossinline onChange: (T) -> Unit) = observe(this@BaseViewModelFragment, Observer {
+    inline fun <T> LiveData<T>.observe(crossinline onChange: (T?) -> Unit) = observe(viewLifecycleOwner, Observer { onChange(value) })
+    inline fun <T> LiveData<T>.observeNotNull(crossinline onChange: (T) -> Unit) = observe(viewLifecycleOwner, Observer {
         it ?: return@Observer
         onChange(it)
     })

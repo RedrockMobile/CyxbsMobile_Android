@@ -9,12 +9,12 @@ plugins {
     id("com.android.library")
 }
 
-apply(from="$rootDir/build_logic/dependencies.gradle")
 
 android {
     compileSdk = AGP.compileSdk
 
     lint {
+        abortOnError = false
         baseline = file("lint-baseline.xml")
     }
 
@@ -64,8 +64,12 @@ android {
 }
 
 dependencies {
-    aRouter()
-    implementation(`androidx-appcompat`)
+    threeParty()
+    android()
+    test()
     implementation(lPhotoPicker)
+    if (project.name!="lib_common"){
+        implementation(project(":lib_common"))
+    }
 }
 

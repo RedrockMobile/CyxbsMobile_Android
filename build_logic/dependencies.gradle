@@ -1,7 +1,5 @@
 dependencies {
     implementation fileTree(include: ['*.jar'], dir: 'libs')
-    if (project.name != "lib_common")
-        implementation project(':lib_common')
 
     /*
     * 注意事项：

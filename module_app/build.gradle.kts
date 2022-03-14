@@ -165,5 +165,5 @@
 //}
 
 plugins {
-    id "com.redrock.cyxbs"
+    id ("com.redrock.cyxbs")
 }

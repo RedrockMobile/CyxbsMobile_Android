@@ -14,7 +14,7 @@ import com.mredrock.cyxbs.volunteer.network.ApiService
 class DiscoverVolunteerFeedViewModel : BaseViewModel() {
     val volunteerData = MutableLiveData<VolunteerTime?>()
     var isQuerying: Boolean = false
-    val loadFailed = SingleLiveEvent<Boolean>()
+    val loadFailed = SingleLiveEvent<Boolean?>()
     var isBind = false
 
     //是否用户主动退出

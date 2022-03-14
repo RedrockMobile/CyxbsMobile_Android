@@ -8,6 +8,9 @@ import org.gradle.kotlin.dsl.exclude
 const val aRouterVersion = "1.5.2"
 const val appCompat = "1.4.0"
 const val lifecycle = "2.4.1"
+const val retrofit = "2.9.0"
+const val room = "2.4.1"
+
 
 //ARouter
 const val `arouter-api` = "com.alibaba:arouter-api:$aRouterVersion"
@@ -33,7 +36,7 @@ const val `umeng-common` = "com.umeng.umsdk:common:9.4.4"
 const val `umeng-asms` = "com.umeng.umsdk:asms:1.4.3"
 const val `umeng-push` = "com.umeng.umsdk:push:6.4.0"
 
-//Sophics
+//Sophics热修复
 const val `sophics-android-hotfix` = "com.aliyun.ams:alicloud-android-hotfix:3.3.5"
 
 //Rxjava3
@@ -44,6 +47,7 @@ const val `rxjava3-kotlin` = "io.reactivex.rxjava3:rxkotlin:3.0.1"
 //LphotoPicker
 const val lPhotoPicker = "com.github.limuyang2:LPhotoPicker:2.6"
 
+//android官方基础库
 val android = listOf(
     "androidx.constraintlayout:constraintlayout:2.1.2",
     "androidx.recyclerview:recyclerview:1.2.1",
@@ -73,17 +77,138 @@ val android = listOf(
     "androidx.lifecycle:lifecycle-reactivestreams-ktx:$lifecycle",
 )
 
+//eventbug事件总线
+const val eventBus = "org.greenrobot:eventbus:3.3.1"
+
+//glide
+const val `glide-common` = "com.github.bumptech.glide:glide:4.13.0"
+const val `glide-compiler` = "com.github.bumptech.glide:compiler:4.13.0"
+
+//Retrogit
+const val `retrofit-common` = "com.squareup.retrofit2:retrofit:$retrofit"
+const val `retrofit-converter` = "com.squareup.retrofit2:converter-gson:$retrofit"
+const val `retrofit-rxjava3` = "com.squareup.retrofit2:adapter-rxjava3:$retrofit"
+
+//okhttp
+const val `okhttp-common` = "com.squareup.okhttp3:okhttp:4.9.3"
+const val `okhttp-intercepter` = "com.squareup.okhttp3:logging-interceptor:4.9.3"
+
+//gson
+const val gson = "com.google.code.gson:gson:2.9.0"
+//room
+const val `room-runtime` = "androidx.room:room-runtime:$room"
+const val `room-compiler` = "androidx.room:room-compiler:$room"
+const val `room-rxjava3` = "androidx.room:room-rxjava3:$room"
+const val `room-paging` = "androidx.room:room-paging:$room"
+//paging
+const val `paging-runtime` = "androidx.paging:paging-runtime:3.1.0"
+const val `paging-rxjava3` = "androidx.paging:paging-rxjava3:3.1.0"
+//rxPermission
+const val rxPermission  =  "com.github.tbruyelle:rxpermissions:0.12"
+//lottie
+const val lottie = "com.airbnb.android:lottie:4.1.0"
+//photoview
+const val photoView = "com.github.chrisbanes:PhotoView:2.3.0"
+//dialog
+const val dialog = "com.afollestad.material-dialogs:core:3.3.0"
+//coroutines
+const val coroutines = "org.jetbrains.kotlinx:kotlinx-coroutines-android:1.6.0-native-mt"
 
 
 
+fun DependencyHandlerScope.android(){
+    android.forEach {
+        "implementation"(it)
+    }
+}
 
 
+fun DependencyHandlerScope.threeParty(){
+    defaultNet()
+    glide()
+    aRouter()
+}
 
+fun DependencyHandlerScope.glide(){
+    "implementation"(`glide-common`)
+    "kapt"(`glide-compiler`)
+}
 
+fun DependencyHandlerScope.retrofit(){
+    "implementation"(`retrofit-common`)
+}
 
+fun DependencyHandlerScope.okhttp(){
+    "implementation"(`okhttp-common`)
+    "implementation"(`okhttp-intercepter`)
+}
 
+fun DependencyHandlerScope.gson(){
+    "implementation"(gson)
+}
 
+//Retrofit + Okhttp
+fun DependencyHandlerScope.netBase(){
+    retrofit()
+    okhttp()
+}
 
+//Retrofit + Okhttp + Gson + Rxjava3
+fun DependencyHandlerScope.defaultNet(){
+    netBase()
+    gson()
+    rxjava3()
+    "implementation" (`retrofit-rxjava3`)
+    "implementation"(`retrofit-converter`)
+}
+
+//room基本依赖
+fun DependencyHandlerScope.roomBase(){
+    "implementation"(`room-runtime`)
+    "kapt"(`room-compiler`)
+}
+//room + rxjava3 + paging
+fun DependencyHandlerScope.defaultRoom(){
+    roomBase()
+    paging()
+    rxjava3()
+    "implementation"(`room-rxjava3`)
+    "implementation"(`room-paging`)
+}
+//paging
+fun DependencyHandlerScope.paging(){
+    "implementation"(`paging-runtime`)
+}
+
+fun DependencyHandlerScope.rxPermission(){
+    "implementation"(rxPermission)
+}
+//paging +  rxjava3
+fun DependencyHandlerScope.`paging-rxjava3`(){
+    paging()
+    rxjava3()
+    "implementation"(`paging-rxjava3`)
+}
+
+fun DependencyHandlerScope.eventBus(){
+    "implementation"(eventBus)
+}
+
+fun DependencyHandlerScope.coroutines(){
+    "implementation"(coroutines)
+}
+
+fun DependencyHandlerScope.lottie(){
+    "implementation"(lottie)
+}
+
+fun DependencyHandlerScope.dialog(){
+    "implementation"(dialog)
+}
+
+fun DependencyHandlerScope.photoView(){
+    "implementation"(photoView)
+}
 
 // Bugly https://bugly.qq.com/docs/
 // 其中 latest.release 指代最新 Bugly SDK 版本号
@@ -113,13 +238,6 @@ fun DependencyHandlerScope.walle(){
 // 注意：请不要随意升级，请查看官方文档后进行升级，因为很可能改一些东西
 fun DependencyHandlerScope.hotFix(){
     "implementation"(`sophics-android-hotfix`)
-}
-
-
-fun DependencyHandlerScope.android(){
-    android.forEach {
-        "implementation"(it)
-    }
 }
 
 fun DependencyHandlerScope.aRouter() {

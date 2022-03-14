@@ -7,13 +7,12 @@ plugins {
     id("com.android.application")
 }
 
-apply(from="$rootDir/build_logic/dependencies.gradle")
-
 android {
     compileSdk = AGP.compileSdk
 
 
     lint {
+        abortOnError = false
         baseline = file("lint-baseline.xml")
     }
 
@@ -75,8 +74,11 @@ android {
 }
 
 dependencies {
-    aRouter()
+    test()
+    android()
+    threeParty()
     implementation (lPhotoPicker)
+    implementation(project(":lib_common"))
 //     上线之前如果需要检测是否有内存泄漏，直接解除注释，然后安装debug版本的掌邮
 //     就会附带一个LeakCanary的app来检测是否有内存泄漏
 //        debugImplementation 'com.squareup.leakcanary:leakcanary-android:2.2'

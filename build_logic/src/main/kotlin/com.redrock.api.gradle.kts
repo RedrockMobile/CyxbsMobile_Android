@@ -9,6 +9,10 @@ plugins {
 }
 
 android {
+
+    lint {
+        abortOnError = false
+    }
     compileSdk = versions.AGP.compileSdk
 
     defaultConfig {

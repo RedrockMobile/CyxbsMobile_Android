@@ -17,6 +17,7 @@ fun Activity.snackbar(str: String, LENGTH: Int = -1) {
     Snackbar.make(contentView!!, str, LENGTH).show()
 }
 
+@SuppressLint("WrongConstant")
 fun Fragment.snackbar(str: String, LENGTH: Int = -1) {
     com.google.android.material.snackbar.Snackbar.make(view!!, str, LENGTH).show()
 }

@@ -5,4 +5,3 @@ if(isSingleModuleDebug.toBoolean()){
 }else{
     apply(plugin = "com.redrock.module.release")
 }
-

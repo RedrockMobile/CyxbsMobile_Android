@@ -9,7 +9,7 @@ import com.mredrock.cyxbs.qa.beannew.QAHistory
 /**
  * Created by yyfbe, Date on 2020/8/16.
  */
-@Database(entities = [QAHistory::class], version = 1)
+@Database(entities = [QAHistory::class], version = 1, exportSchema = false)
 abstract class QASearchHistoryDatabase : RoomDatabase() {
     abstract fun getHistoryDao(): QAHistoryDao
 

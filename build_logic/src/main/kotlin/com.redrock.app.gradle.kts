@@ -130,6 +130,7 @@ fun DependencyHandlerScope.includeAllModules() {
     }.filter {
         "(lib_.+)|(module_.+)".toRegex().matches(it.name)
     }.onEach {
+        println(":${it.name}")
         implementation(":${it.name}")
     }
 }
