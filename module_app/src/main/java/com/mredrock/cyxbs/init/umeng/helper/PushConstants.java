@@ -1,6 +1,5 @@
 package com.mredrock.cyxbs.init.umeng.helper;
 
-import com.meituan.android.walle.WalleChannelReader;
 import com.mredrock.cyxbs.BuildConfig;
 import com.mredrock.cyxbs.common.BaseApp;
 
@@ -21,7 +20,7 @@ public class PushConstants {
     /**
      * 渠道名称，修改为您App的发布渠道名称
      */
-    public static final String CHANNEL = WalleChannelReader.getChannel(BaseApp.Companion.getAppContext(), "debug");
+    //public static final String CHANNEL = WalleChannelReader.getChannel(BaseApp.Companion.getAppContext(), "debug");
 
     /**
      * 小米后台APP对应的xiaomi id

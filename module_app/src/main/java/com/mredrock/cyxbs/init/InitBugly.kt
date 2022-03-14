@@ -2,7 +2,6 @@ package com.mredrock.cyxbs.init
 
 import android.app.Application
 import android.os.Process
-import com.meituan.android.walle.WalleChannelReader
 import com.mredrock.cyxbs.BuildConfig
 import com.mredrock.cyxbs.api.account.IAccountService
 import com.mredrock.cyxbs.common.service.ServiceManager
@@ -26,7 +25,7 @@ object InitBugly : IInit {
         val strategy = CrashReport.UserStrategy(application)
         strategy.appVersion = getAppVersionName(application)
         strategy.isUploadProcess = processName == null || processName == packageName
-        strategy.appChannel = WalleChannelReader.getChannel(application, "debug")
+        //strategy.appChannel = WalleChannelReader.getChannel(application, "debug")
         CrashReport.setUserId(ServiceManager.getService<IAccountService>().getUserService().getStuNum())
         Bugly.init(application, BuildConfig.BUGLY_APP_ID, false, strategy)
         if (BuildConfig.DEBUG) {

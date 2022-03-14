@@ -8,7 +8,7 @@ plugins {
     kotlin("kapt")
     id("kotlin-android-extensions")
     id("com.android.application")
-    id("walle")
+    //id("walle")
 }
 
 apply(from = "$rootDir/build_logic/script/andresguard.gradle")
@@ -127,11 +127,15 @@ dependencies {
     includeDependencies()
 }
 
-walle {
+
+//美团多渠道打包不兼容gradle 7.0
+//https://github.com/Meituan-Dianping/walle/issues/364
+
+/*walle {
     apkOutputFolder = file("${buildDir}/outputs/channels")
-    channelFile = file("$projectDir/channel")
+    channelFile = file("$rootDir/build_logic/channel")
     apkFileNameFormat = "掌上重邮-\${channel}-\${buildType}-v\${versionName}-\${versionCode}.apk"
-}
+}*/
 
 fun DependencyHandlerScope.includeModulesAndLibs() {
     rootDir.listFiles()!!.filter {
@@ -148,10 +152,10 @@ fun DependencyHandlerScope.includeDependencies() {
     bugly()
     rxjava3()
     umeng()
-    walle()
     aRouter()
     test()
     hotFix()
+    //walle()
 }
 
 
