@@ -26,7 +26,6 @@ import android.os.StrictMode
 
 import android.os.StrictMode.VmPolicy
 
-import android.os.Environment
 import android.widget.Toast
 import androidx.core.content.FileProvider
 import com.mredrock.cyxbs.common.component.CyxbsToast
@@ -64,7 +63,7 @@ class AboutActivity : BaseViewModelActivity<AboutViewModel>() {
         val builder = VmPolicy.Builder()
         StrictMode.setVmPolicy(builder.build())
         builder.detectFileUriExposure()
-        val path = "${BaseApp.context.filesDir.absolutePath}${DIR_LOG}/$OKHTTP_LOCAL_LOG"
+        val path = "${applicationContext.filesDir.absolutePath}${DIR_LOG}/$OKHTTP_LOCAL_LOG"
         val file = File(path)
         if (!file.exists()){
             CyxbsToast.makeText(this,"暂无log日志",Toast.LENGTH_SHORT).show()
@@ -73,7 +72,7 @@ class AboutActivity : BaseViewModelActivity<AboutViewModel>() {
         val intent = Intent(Intent.ACTION_SEND)
         intent.setPackage("com.tencent.mobileqq")
         intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK
-        val uri = FileProvider.getUriForFile(context,"com.mredrock.cyxbs.fileProvider",file)
+        val uri = FileProvider.getUriForFile(applicationContext,"com.mredrock.cyxbs.fileProvider",file)
         intent.putExtra(Intent.EXTRA_STREAM,uri) //传输图片或者文件 采用流的方式
         intent.type = "*/*" //分享文件
         this.startActivity(Intent.createChooser(intent, "分享"))
