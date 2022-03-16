@@ -201,7 +201,7 @@ class DynamicDataSource(private val kind: String,private val redid: String?) : P
 
             else -> {
                 ApiGenerator.getApiService(ApiServiceNew::class.java)
-                    .getFocusDynamicList(1, params.requestedLoadSize)
+                    .getFocusDynamicList(params.key, params.requestedLoadSize)
                     .mapOrThrowApiException()
                     .setSchedulers()
                     .doOnSubscribe { networkState.postValue(NetworkState.LOADING) }
