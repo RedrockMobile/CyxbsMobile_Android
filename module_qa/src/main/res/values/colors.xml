@@ -133,4 +133,8 @@
     <color name="qa_tv_mydynamic_frgament">#99255295</color>
     <color name="qa_tv_unfocus">#FFFFFF</color>
     <color name="qa_tv_focus">#66585F6A</color>
-</resources>
+    <color name="qa_btn_user_focus">#E8F0FC</color>
+    <color name="qa_btn_user_unfocus">#4A44E4</color>
+    <color name="qa_tv_user_focus">#94A6C4</color>
+    <color name="qa_tv_user_name">#15315B</color>
+    <color name="qa_tv_user_introduce">#6615315B</color></resources>
