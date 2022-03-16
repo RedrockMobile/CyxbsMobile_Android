@@ -164,5 +164,5 @@ open class BaseFragment : Fragment() {
      * ```
      */
     protected fun <T: View> Int.view() = BindView<T>(
-        this, { requireView() }, viewLifecycleOwner.lifecycle)
+        this, { requireView() }, { viewLifecycleOwner.lifecycle })
 }

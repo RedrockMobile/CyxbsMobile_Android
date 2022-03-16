@@ -35,19 +35,10 @@ class BindView<T: View>(
     @IdRes
     val resId: Int,
     private val rootView: () -> View,
-    lifecycle: Lifecycle
+    private val lifecycle: () -> Lifecycle
 ) : ReadOnlyProperty<Any, T> {
 
     private var mView: T? = null
-
-    init {
-        lifecycle.addObserver(object : LifecycleEventObserver {
-            override fun onStateChanged(source: LifecycleOwner, event: Lifecycle.Event) {
-                mView = null
-                lifecycle.removeObserver(this)
-            }
-        })
-    }
 
     override fun getValue(thisRef: Any, property: KProperty<*>): T {
         return mView ?: let {
@@ -57,6 +48,13 @@ class BindView<T: View>(
                     "该根布局中找不到名字为 R.id.${rootView.context.resources.getResourceEntryName(resId)} 的 id"
                 )
             mView = v
+            val life = lifecycle.invoke()
+            life.addObserver(object : LifecycleEventObserver {
+                override fun onStateChanged(source: LifecycleOwner, event: Lifecycle.Event) {
+                    mView = null
+                    life.removeObserver(this)
+                }
+            })
             return v
         }
     }
