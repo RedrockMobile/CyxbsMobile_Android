@@ -6,6 +6,7 @@ import android.appwidget.AppWidgetProvider
 import android.content.ComponentName
 import android.content.Context
 import android.content.Intent
+import android.os.Build
 import android.widget.RemoteViews
 import com.alibaba.android.arouter.launcher.ARouter
 import com.cyxbsmobile_single.module_todo.R
@@ -48,14 +49,14 @@ class TodoWidget : AppWidgetProvider() {
                 Intent(context, TodoWidget::class.java).apply {
                     action = "cyxbs.widget.todo.add"
                 },
-                PendingIntent.FLAG_UPDATE_CURRENT
+                getPendingIntentFlags()
             )
         )
         remoteView.setPendingIntentTemplate(R.id.todo_lv_widget_todo_list, PendingIntent.getBroadcast(
             context,
             0,
             Intent(context, TodoWidget::class.java),
-            PendingIntent.FLAG_UPDATE_CURRENT
+            getPendingIntentFlags()
         ))
         return remoteView
     }
@@ -107,4 +108,14 @@ class TodoWidget : AppWidgetProvider() {
             )
         }
     }
+    private fun getPendingIntentFlags(isMutable: Boolean = false) =
+        when {
+            isMutable && Build.VERSION.SDK_INT >= Build.VERSION_CODES.S ->
+                PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_MUTABLE
+
+            !isMutable && Build.VERSION.SDK_INT >= Build.VERSION_CODES.M ->
+                PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE
+
+            else -> PendingIntent.FLAG_UPDATE_CURRENT
+        }
 }
