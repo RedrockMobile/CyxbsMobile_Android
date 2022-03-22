@@ -31,7 +31,7 @@ class FeedbackCenterPresenter :
                     }
                 },
                 onError = {
-                    BaseApp.context.toast("网络请求失败")
+                    BaseApp.context.toast("网络异常")
                 },
                 onComplete = {
                 }

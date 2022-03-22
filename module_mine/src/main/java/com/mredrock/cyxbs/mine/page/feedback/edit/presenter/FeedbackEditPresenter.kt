@@ -74,13 +74,13 @@ class FeedbackEditPresenter(val activity:Activity) : BasePresenter<FeedbackEditV
         apiServiceNew.postFeedbackInfo(map,fileBody)
             .setSchedulers()
             .doOnSubscribe {}
-            .doOnError { }
             .safeSubscribeBy(
                 onNext = {
                     BaseApp.context.toast("提交成功  我们会在十四个工作日内回复")
                 },
                 onError = {
-                    BaseApp.context.toast("网络请求失败")
+                    BaseApp.context.toast("网络异常")
+                    vm?.sendFinishEvent()
                 },
                 onComplete = {
                     vm?.sendFinishEvent()
