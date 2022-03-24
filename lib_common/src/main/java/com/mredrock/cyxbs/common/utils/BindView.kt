@@ -51,8 +51,10 @@ class BindView<T: View>(
             val life = lifecycle.invoke()
             life.addObserver(object : LifecycleEventObserver {
                 override fun onStateChanged(source: LifecycleOwner, event: Lifecycle.Event) {
-                    mView = null
-                    life.removeObserver(this)
+                    if (source.lifecycle.currentState == Lifecycle.State.DESTROYED) {
+                        mView = null
+                        life.removeObserver(this)
+                    }
                 }
             })
             return v
