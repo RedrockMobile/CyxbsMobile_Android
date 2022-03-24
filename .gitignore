@@ -7,7 +7,7 @@
 .externalNativeBuild
 ./key-cyxbs
 local_helper
-build_logic/secret/secret.gradle
+secret.gradle
 ./hooks/cache
 /.idea/
 *.log

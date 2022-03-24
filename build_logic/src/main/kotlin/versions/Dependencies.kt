@@ -258,3 +258,8 @@ fun DependencyHandlerScope.test(){
     "androidTestImplementation"(`androidTestImpl-junit`)
     "androidTestImplementation"(`androidTestImpl-espresso`)
 }
+//google自动注册
+fun DependencyHandlerScope.autoService(){
+    "kapt"("com.google.auto.service:auto-service:1.0.1")
+    "compileOnly"("com.google.auto.service:auto-service:1.0.1")
+}

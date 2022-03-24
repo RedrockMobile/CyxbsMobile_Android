@@ -1,21 +1,29 @@
 package com.mredrock.cyxbs
 
+import android.app.ActivityManager
+import android.app.Application
+import android.os.Process
 import com.mredrock.cyxbs.common.BaseApp
-import com.mredrock.cyxbs.init.InitARouter
-import com.mredrock.cyxbs.init.InitBugly
-import com.mredrock.cyxbs.init.crash.InitCrash
-import com.mredrock.cyxbs.init.umeng.InitUMeng
-import com.taobao.sophix.SophixManager
-import io.reactivex.rxjava3.core.Observable
-import io.reactivex.rxjava3.schedulers.Schedulers
+import com.mredrock.cyxbs.spi.SdkInitializer
+import com.mredrock.cyxbs.spi.SdkManager
+import java.util.*
 
 /**
  * Created By jay68 on 2018/8/8.
  */
-class App : BaseApp() {
+class App : BaseApp(), SdkManager {
+
+    private val loader = ServiceLoader.load(SdkInitializer::class.java)
 
     override fun onCreate() {
         super.onCreate()
+        loader.filter {
+            isMainProcess()
+        }.forEach {
+            it.initialWithoutConstraint(this)
+        }
+
+
         /*initTasks()
         //若以后还会有这种非必须在application启动时初始化的第三方SDK请写在InitTask中然后添加到这里的just里面
         Observable.just(
@@ -24,7 +32,22 @@ class App : BaseApp() {
         SophixManager.getInstance().queryAndLoadNewPatch()*/
     }
 
-    private fun initTasks() {
+
+    override fun isMainProcess(): Boolean = getApplicationName() == applicationId()
+
+    private fun getApplicationName(): String? {
+        val am = applicationContext.getSystemService(ACTIVITY_SERVICE) as ActivityManager
+        return am.runningAppProcesses
+            .firstOrNull {
+                it.pid == Process.myPid()
+            }?.processName
+    }
+
+    override val application: Application
+        get() = this
+
+
+    /*private fun initTasks() {
         mInitTasks.forEach {
             it.init(this)
         }
@@ -35,5 +58,6 @@ class App : BaseApp() {
         InitUMeng,
         InitCrash,
         InitBugly
-    )
+    )*/
+
 }

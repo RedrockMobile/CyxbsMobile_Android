@@ -155,6 +155,7 @@ fun DependencyHandlerScope.includeDependencies() {
     aRouter()
     test()
     hotFix()
+    autoService()
     //walle()
 }
 
