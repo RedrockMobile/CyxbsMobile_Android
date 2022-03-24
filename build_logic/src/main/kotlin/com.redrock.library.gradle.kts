@@ -64,10 +64,11 @@ android {
 }
 
 dependencies {
-    threeParty()
+    //threeParty()
     android()
     test()
-    implementation(lPhotoPicker)
+    aRouter()
+    //implementation(lPhotoPicker)
     if (project.name!="lib_common"){
         implementation(project(":lib_common"))
     }

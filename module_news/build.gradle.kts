@@ -1,3 +1,4 @@
+import versions.defaultNet
 import versions.dialog
 import versions.rxPermission
 
@@ -12,4 +13,5 @@ dependencies {
     implementation("de.hdodenhof:circleimageview:3.1.0")
     dialog()
     rxPermission()
+    defaultNet()
 }

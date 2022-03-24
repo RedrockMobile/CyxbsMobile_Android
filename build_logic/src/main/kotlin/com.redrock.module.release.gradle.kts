@@ -76,8 +76,9 @@ android {
 dependencies {
     test()
     android()
-    threeParty()
-    implementation (lPhotoPicker)
+    aRouter()
+    //threeParty()
+    //implementation (lPhotoPicker)
     implementation(project(":lib_common"))
 
 //     上线之前如果需要检测是否有内存泄漏，直接解除注释，然后安装debug版本的掌邮

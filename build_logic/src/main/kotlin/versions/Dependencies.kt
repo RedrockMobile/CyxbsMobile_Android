@@ -6,7 +6,7 @@ import org.gradle.kotlin.dsl.DependencyHandlerScope
 import org.gradle.kotlin.dsl.exclude
 
 
-//ARouter https://github.com/alibaba/ARouter
+//ARouter
 const val `arouter-api` = "com.alibaba:arouter-api:1.5.2"
 const val `arouter-compiler` = "com.alibaba:arouter-compiler:1.5.2"
 
@@ -18,22 +18,22 @@ const val `testImpl-junit` = "junit:junit:4.13.2"
 const val `androidTestImpl-junit` = "androidx.test.ext:junit:1.1.3"
 const val `androidTestImpl-espresso` = "androidx.test.espresso:espresso-core:3.4.0"
 
-//Bugly https://bugly.qq.com/docs/
+//Bugly
 const val `bugly-native-crash-report` = "com.tencent.bugly:crashreport_upgrade:latest.release"
 const val `bugly-crash-report` = "com.tencent.bugly:crashreport_upgrade:latest.release"
 
-//美团多渠道打包 https://github.com/Meituan-Dianping/walle
+//美团多渠道打包
 const val `walle-library` = "com.meituan.android.walle:library:1.1.7"
 
-//umeng https://developer.umeng.com/docs/67966/detail/206987
+//umeng
 const val `umeng-common` = "com.umeng.umsdk:common:9.4.4"
 const val `umeng-asms` = "com.umeng.umsdk:asms:1.4.3"
 const val `umeng-push` = "com.umeng.umsdk:push:6.4.0"
 
-//Sophix热修复 https://help.aliyun.com/document_detail/61082.html
-const val `sophix-android-hotfix` = "com.aliyun.ams:alicloud-android-hotfix:3.3.5"
+//Sophics热修复
+const val `sophics-android-hotfix` = "com.aliyun.ams:alicloud-android-hotfix:3.3.5"
 
-//Rxjava3 https://github.com/ReactiveX/RxJava
+//Rxjava3
 const val `rxjava3-common` = "io.reactivex.rxjava3:rxjava:3.1.3"
 const val `rxjava3-android` = "io.reactivex.rxjava3:rxandroid:3.0.0"
 const val `rxjava3-kotlin` = "io.reactivex.rxjava3:rxkotlin:3.0.1"
@@ -41,7 +41,7 @@ const val `rxjava3-kotlin` = "io.reactivex.rxjava3:rxkotlin:3.0.1"
 //LphotoPicker
 const val lPhotoPicker = "com.github.limuyang2:LPhotoPicker:2.6"
 
-//android官方基础库 https://developer.android.google.cn/kotlin/ktx?hl=zh_cn
+//android官方基础库
 const val lifecycle = "2.4.1"
 val android = listOf(
     "androidx.constraintlayout:constraintlayout:2.1.2",
@@ -72,44 +72,44 @@ val android = listOf(
     "androidx.lifecycle:lifecycle-reactivestreams-ktx:$lifecycle",
 )
 
-//eventbug事件总线 https://github.com/greenrobot/EventBus
+//eventbug事件总线
 const val eventBus = "org.greenrobot:eventbus:3.3.1"
 
-//glide https://github.com/bumptech/glide
+//glide
 const val `glide-common` = "com.github.bumptech.glide:glide:4.13.0"
 const val `glide-compiler` = "com.github.bumptech.glide:compiler:4.13.0"
 
-//Retrogit https://github.com/square/retrofit
+//Retrogit
 const val retrofit = "2.9.0"
 const val `retrofit-common` = "com.squareup.retrofit2:retrofit:$retrofit"
 const val `retrofit-converter` = "com.squareup.retrofit2:converter-gson:$retrofit"
 const val `retrofit-rxjava3` = "com.squareup.retrofit2:adapter-rxjava3:$retrofit"
 
-//okhttp https://github.com/square/okhttp
+//okhttp
 const val `okhttp-common` = "com.squareup.okhttp3:okhttp:4.9.3"
 const val `okhttp-intercepter` = "com.squareup.okhttp3:logging-interceptor:4.9.3"
 
-//gson https://github.com/google/gson
+//gson
 const val gson = "com.google.code.gson:gson:2.9.0"
 
-//room https://developer.android.google.cn/jetpack/androidx/releases/room?hl=zh_cn
+//room
 const val room = "2.4.1"
 const val `room-runtime` = "androidx.room:room-runtime:$room"
 const val `room-compiler` = "androidx.room:room-compiler:$room"
 const val `room-rxjava3` = "androidx.room:room-rxjava3:$room"
 const val `room-paging` = "androidx.room:room-paging:$room"
-//paging https://developer.android.google.cn/jetpack/androidx/releases/paging?hl=zh_cn
+//paging
 const val `paging-runtime` = "androidx.paging:paging-runtime:3.1.0"
 const val `paging-rxjava3` = "androidx.paging:paging-rxjava3:3.1.0"
-//rxPermission https://github.com/tbruyelle/RxPermissions
+//rxPermission
 const val rxPermission  =  "com.github.tbruyelle:rxpermissions:0.12"
-//lottie https://lottiefiles.com/blog/working-with-lottie/getting-started-with-lottie-animations-in-android-app
+//lottie
 const val lottie = "com.airbnb.android:lottie:4.1.0"
-//photoview https://github.com/Baseflow/PhotoView
+//photoview
 const val photoView = "com.github.chrisbanes:PhotoView:2.3.0"
-//dialog https://github.com/afollestad/material-dialogs
+//dialog
 const val dialog = "com.afollestad.material-dialogs:core:3.3.0"
-//coroutines https://developer.android.com/kotlin/coroutines
+//coroutines
 const val coroutines = "org.jetbrains.kotlinx:kotlinx-coroutines-android:1.6.0-native-mt"
 
 
@@ -124,7 +124,6 @@ fun DependencyHandlerScope.android(){
 fun DependencyHandlerScope.threeParty(){
     defaultNet()
     glide()
-    aRouter()
 }
 
 fun DependencyHandlerScope.glide(){
@@ -179,6 +178,7 @@ fun DependencyHandlerScope.paging(){
 }
 
 fun DependencyHandlerScope.rxPermission(){
+    rxjava3()
     "implementation"(rxPermission)
 }
 //paging +  rxjava3
@@ -235,7 +235,7 @@ fun DependencyHandlerScope.walle(){
 // Sophix https://help.aliyun.com/document_detail/61082.html
 // 注意：请不要随意升级，请查看官方文档后进行升级，因为很可能改一些东西
 fun DependencyHandlerScope.hotFix(){
-    "implementation"(`sophix-android-hotfix`)
+    "implementation"(`sophics-android-hotfix`)
 }
 
 fun DependencyHandlerScope.aRouter() {
@@ -247,6 +247,10 @@ fun DependencyHandlerScope.rxjava3() {
     "implementation" (`rxjava3-kotlin`)
     "implementation"(`rxjava3-common`)
     "implementation"(`rxjava3-android`)
+}
+
+fun DependencyHandlerScope.lPhotoPicker(){
+    "implementation" (lPhotoPicker)
 }
 
 fun DependencyHandlerScope.test(){

@@ -1,7 +1,4 @@
-import versions.defaultRoom
-import versions.eventBus
-import versions.photoView
-import versions.roomBase
+import versions.*
 
 plugins {
     id("com.redrock.cyxbs")
@@ -14,4 +11,5 @@ dependencies {
     implementation("com.umeng.umsdk:common:9.1.0")
     defaultRoom()
     eventBus()
+    defaultNet()
 }

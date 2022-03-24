@@ -1,4 +1,6 @@
 import versions.dialog
+import versions.lPhotoPicker
+import versions.threeParty
 
 plugins {
     id("com.redrock.cyxbs")
@@ -15,4 +17,7 @@ dependencies {
     implementation("com.github.yalantis:ucrop:2.2.1")
 
     dialog()
+
+    threeParty()
+    lPhotoPicker()
 }
