@@ -54,4 +54,11 @@ public class CySophixApplication extends SophixApplication {
 //                })
                 .initialize();
     }
+
+    @Override
+    public void onCreate() {
+        super.onCreate();
+        SophixManager.getInstance().queryAndLoadNewPatch();
+    }
+
 }
