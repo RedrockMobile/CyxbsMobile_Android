@@ -27,7 +27,7 @@ const val `walle-library` = "com.meituan.android.walle:library:1.1.7"
 
 //umeng
 const val `umeng-common` = "com.umeng.umsdk:common:9.4.4"
-const val `umeng-asms` = "com.umeng.umsdk:asms:1.4.3"
+const val `umeng-asms` = "com.umeng.umsdk:asms:1.4.1"
 const val `umeng-push` = "com.umeng.umsdk:push:6.4.0"
 
 //Sophics热修复

@@ -18,7 +18,7 @@ import com.tencent.bugly.crashreport.CrashReport
  * @email 2767465918@qq.com
  * @date 2022/3/4 22:49
  */
-object InitBugly : IInit {
+object BuglyInitializer : SdkInitializer {
     override fun init(application: Application) {
         val packageName = application.packageName
         val processName = getProcessName(Process.myPid())

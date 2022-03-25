@@ -4,7 +4,7 @@ import android.app.ActivityManager
 import android.app.Application
 import android.os.Process
 import com.mredrock.cyxbs.common.BaseApp
-import com.mredrock.cyxbs.spi.SdkInitializer
+import com.mredrock.cyxbs.spi.SdkService
 import com.mredrock.cyxbs.spi.SdkManager
 import java.util.*
 
@@ -13,7 +13,7 @@ import java.util.*
  */
 class App : BaseApp(), SdkManager {
 
-    private val loader = ServiceLoader.load(SdkInitializer::class.java)
+    private val loader = ServiceLoader.load(SdkService::class.java)
 
     override fun onCreate() {
         super.onCreate()

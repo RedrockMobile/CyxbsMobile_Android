@@ -8,7 +8,7 @@ import android.os.Build
 import com.mredrock.cyxbs.common.BuildConfig
 import com.mredrock.cyxbs.common.ui.ExceptionActivity
 import com.mredrock.cyxbs.common.utils.LogUtils
-import com.mredrock.cyxbs.init.IInit
+import com.mredrock.cyxbs.init.SdkInitializer
 import java.io.PrintWriter
 import java.io.StringWriter
 
@@ -19,7 +19,7 @@ import java.io.StringWriter
  * @date 2022/3/4 21:39
  */
 @SuppressLint("StaticFieldLeak")
-object InitCrash : IInit, Thread.UncaughtExceptionHandler {
+object InitCrash : SdkInitializer, Thread.UncaughtExceptionHandler {
     private var defaultHandler: Thread.UncaughtExceptionHandler? = null
     private lateinit var context: Context
     private val deviceInfoMap = HashMap<String, String>()
