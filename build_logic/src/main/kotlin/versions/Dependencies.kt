@@ -28,7 +28,8 @@ const val `walle-library` = "com.meituan.android.walle:library:1.1.7"
 //umeng
 const val `umeng-common` = "com.umeng.umsdk:common:9.4.4"
 const val `umeng-asms` = "com.umeng.umsdk:asms:1.4.1"
-const val `umeng-push` = "com.umeng.umsdk:push:6.4.0"
+const val `umeng-push` = "com.umeng.umsdk:push:6.5.1"
+const val  `umemg-union` = "com.umeng.umsdk:union:1.3.0"
 
 //Sophics热修复
 const val `sophics-android-hotfix` = "com.aliyun.ams:alicloud-android-hotfix:3.3.5"
@@ -98,120 +99,128 @@ const val `room-runtime` = "androidx.room:room-runtime:$room"
 const val `room-compiler` = "androidx.room:room-compiler:$room"
 const val `room-rxjava3` = "androidx.room:room-rxjava3:$room"
 const val `room-paging` = "androidx.room:room-paging:$room"
+
 //paging
 const val `paging-runtime` = "androidx.paging:paging-runtime:3.1.0"
 const val `paging-rxjava3` = "androidx.paging:paging-rxjava3:3.1.0"
+
 //rxPermission
-const val rxPermission  =  "com.github.tbruyelle:rxpermissions:0.12"
+const val rxPermission = "com.github.tbruyelle:rxpermissions:0.12"
+
 //lottie
 const val lottie = "com.airbnb.android:lottie:4.1.0"
+
 //photoview
 const val photoView = "com.github.chrisbanes:PhotoView:2.3.0"
+
 //dialog
 const val dialog = "com.afollestad.material-dialogs:core:3.3.0"
+
 //coroutines
 const val coroutines = "org.jetbrains.kotlinx:kotlinx-coroutines-android:1.6.0-native-mt"
 
 
-
-fun DependencyHandlerScope.android(){
+fun DependencyHandlerScope.android() {
     android.forEach {
         "implementation"(it)
     }
 }
 
 
-fun DependencyHandlerScope.threeParty(){
+fun DependencyHandlerScope.threeParty() {
     defaultNet()
     glide()
 }
 
-fun DependencyHandlerScope.glide(){
+fun DependencyHandlerScope.glide() {
     "implementation"(`glide-common`)
     "kapt"(`glide-compiler`)
 }
 
-fun DependencyHandlerScope.retrofit(){
+fun DependencyHandlerScope.retrofit() {
     "implementation"(`retrofit-common`)
 }
 
-fun DependencyHandlerScope.okhttp(){
+fun DependencyHandlerScope.okhttp() {
     "implementation"(`okhttp-common`)
     "implementation"(`okhttp-intercepter`)
 }
 
-fun DependencyHandlerScope.gson(){
+fun DependencyHandlerScope.gson() {
     "implementation"(gson)
 }
 
 //Retrofit + Okhttp
-fun DependencyHandlerScope.netBase(){
+fun DependencyHandlerScope.netBase() {
     retrofit()
     okhttp()
 }
 
 //Retrofit + Okhttp + Gson + Rxjava3
-fun DependencyHandlerScope.defaultNet(){
+fun DependencyHandlerScope.defaultNet() {
     netBase()
     gson()
     rxjava3()
-    "implementation" (`retrofit-rxjava3`)
+    "implementation"(`retrofit-rxjava3`)
     "implementation"(`retrofit-converter`)
 }
 
 //room基本依赖
-fun DependencyHandlerScope.roomBase(){
+fun DependencyHandlerScope.roomBase() {
     "implementation"(`room-runtime`)
     "kapt"(`room-compiler`)
 }
+
 //room + rxjava3 + paging
-fun DependencyHandlerScope.defaultRoom(){
+fun DependencyHandlerScope.defaultRoom() {
     roomBase()
     paging()
     rxjava3()
     "implementation"(`room-rxjava3`)
     "implementation"(`room-paging`)
 }
+
 //paging
-fun DependencyHandlerScope.paging(){
+fun DependencyHandlerScope.paging() {
     "implementation"(`paging-runtime`)
 }
 
-fun DependencyHandlerScope.rxPermission(){
+fun DependencyHandlerScope.rxPermission() {
     rxjava3()
     "implementation"(rxPermission)
 }
+
 //paging +  rxjava3
-fun DependencyHandlerScope.`paging-rxjava3`(){
+fun DependencyHandlerScope.`paging-rxjava3`() {
     paging()
     rxjava3()
     "implementation"(`paging-rxjava3`)
 }
 
-fun DependencyHandlerScope.eventBus(){
+fun DependencyHandlerScope.eventBus() {
     "implementation"(eventBus)
 }
 
-fun DependencyHandlerScope.coroutines(){
+fun DependencyHandlerScope.coroutines() {
     "implementation"(coroutines)
 }
 
-fun DependencyHandlerScope.lottie(){
+fun DependencyHandlerScope.lottie() {
     "implementation"(lottie)
 }
 
-fun DependencyHandlerScope.dialog(){
+fun DependencyHandlerScope.dialog() {
     "implementation"(dialog)
 }
 
-fun DependencyHandlerScope.photoView(){
+fun DependencyHandlerScope.photoView() {
     "implementation"(photoView)
 }
 
 // Bugly https://bugly.qq.com/docs/
 // 其中 latest.release 指代最新 Bugly SDK 版本号
 // Bugly 有如下功能：1、检测 bug；2、弹 dialog 强制用户升级
-fun DependencyHandlerScope.bugly(){
+fun DependencyHandlerScope.bugly() {
     "implementation"(`bugly-crash-report`)
     "implementation"(`bugly-native-crash-report`)
 }
@@ -219,23 +228,35 @@ fun DependencyHandlerScope.bugly(){
 // 友盟 https://developer.umeng.com/docs/67966/detail/206987
 // 注意：请不要随意升级，请查看官方文档后进行升级（官方文档有旧文档可以进行比较），因为很可能改一些东西
 // 还有，目前掌邮只使用了友盟的推送服务，按照目前（22年）的官方命名叫 U-Push
-fun DependencyHandlerScope.umeng(){
+fun DependencyHandlerScope.umeng() {
+    common()
+    push()
+
+}
+
+fun DependencyHandlerScope.common() {
     "implementation"(`umeng-asms`)// (必选)
     "implementation"(`umeng-common`)// asms包依赖必选
-    "implementation"(`umeng-push`) {
-        exclude(module="utdid")
-    }
+}
+
+fun DependencyHandlerScope.push() {
+    "implementation"(`umeng-push`)
+    "implementation"(`umemg-union`)
 }
 
 // walle https://github.com/Meituan-Dianping/walle
-fun DependencyHandlerScope.walle(){
+fun DependencyHandlerScope.walle() {
     "implementation"(`walle-library`)
 }
 
 // Sophix https://help.aliyun.com/document_detail/61082.html
 // 注意：请不要随意升级，请查看官方文档后进行升级，因为很可能改一些东西
-fun DependencyHandlerScope.hotFix(){
-    "implementation"(`sophics-android-hotfix`)
+fun DependencyHandlerScope.hotFix() {
+    "implementation"(`sophics-android-hotfix`){
+        //与友盟push的utdid冲突，解决方案来源于官网
+        //https://help.aliyun.com/knowledge_detail/59152.html?spm=a2c4g.11186623.0.0.3afd33beEHM2GM
+        exclude(module="alicloud-android-utdid")
+    }
 }
 
 fun DependencyHandlerScope.aRouter() {
@@ -244,22 +265,23 @@ fun DependencyHandlerScope.aRouter() {
 }
 
 fun DependencyHandlerScope.rxjava3() {
-    "implementation" (`rxjava3-kotlin`)
+    "implementation"(`rxjava3-kotlin`)
     "implementation"(`rxjava3-common`)
     "implementation"(`rxjava3-android`)
 }
 
-fun DependencyHandlerScope.lPhotoPicker(){
-    "implementation" (lPhotoPicker)
+fun DependencyHandlerScope.lPhotoPicker() {
+    "implementation"(lPhotoPicker)
 }
 
-fun DependencyHandlerScope.test(){
+fun DependencyHandlerScope.test() {
     "testImplementation"(`testImpl-junit`)
     "androidTestImplementation"(`androidTestImpl-junit`)
     "androidTestImplementation"(`androidTestImpl-espresso`)
 }
+
 //google自动注册
-fun DependencyHandlerScope.autoService(){
+fun DependencyHandlerScope.autoService() {
     "kapt"("com.google.auto.service:auto-service:1.0.1")
     "compileOnly"("com.google.auto.service:auto-service:1.0.1")
 }
