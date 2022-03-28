@@ -16,9 +16,9 @@ import com.mredrock.cyxbs.common.component.CyxbsToast
  * 一定要调用init方法
  */
 class LiteJsWebView : WebView {
-    constructor(context: Context?, attrs: AttributeSet?, defStyleAttr: Int):super(context,attrs,defStyleAttr)
-    constructor(context: Context?,attrs: AttributeSet?):super(context,attrs)
-    constructor(context: Context?):super(context)
+    constructor(context: Context, attrs: AttributeSet?, defStyleAttr: Int):super(context,attrs,defStyleAttr)
+    constructor(context: Context,attrs: AttributeSet?):super(context,attrs)
+    constructor(context: Context):super(context)
 
     @SuppressLint("SetJavaScriptEnabled")
     fun init(
@@ -54,9 +54,10 @@ class LiteJsWebView : WebView {
             mixedContentMode = WebSettings.MIXED_CONTENT_ALWAYS_ALLOW
             //这里必须为false，因为他为true则必须等到用户交互之后才行
             mediaPlaybackRequiresUserGesture = false
+            allowFileAccess = false
         }
         //加载js文件的
-        this.addJavascriptInterface(androidWebView,androidWebView::class.simpleName)
+        this.addJavascriptInterface(androidWebView,androidWebView::class.simpleName!!)
     }
 
 }

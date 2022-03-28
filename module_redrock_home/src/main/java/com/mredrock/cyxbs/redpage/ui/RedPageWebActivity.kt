@@ -38,6 +38,7 @@ class RedPageWebActivity : BaseActivity() {
             javaScriptEnabled = true//支持js
             cacheMode = WebSettings.LOAD_CACHE_ELSE_NETWORK//不使用缓存
             javaScriptCanOpenWindowsAutomatically = true
+            allowFileAccess = false
         }
 
         wv_redPage.apply {
