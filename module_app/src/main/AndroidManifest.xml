@@ -1,43 +1,45 @@
-<?xml version="1.0" encoding="utf-8"?>
-<!--suppress ALL -->
+<?xml version="1.0" encoding="utf-8"?><!--suppress ALL -->
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     package="com.mredrock.cyxbs">
 
     <!--移除友盟的自启动功能 https://developer.umeng.com/docs/67966/detail/206987-->
-    <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED"
+    <uses-permission
+        android:name="android.permission.RECEIVE_BOOT_COMPLETED"
         tools:node="remove" />
 
-<!--    友盟统计分析权限-->
-    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"/>
-    <uses-permission android:name="android.permission.ACCESS_WIFI_STATE"/>
-    <uses-permission android:name="android.permission.READ_PHONE_STATE"/>
-    <uses-permission android:name="android.permission.INTERNET"/>
+    <!--    友盟"统计分析"所需权限-->
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
+    <uses-permission android:name="android.permission.READ_PHONE_STATE" />
+    <uses-permission android:name="android.permission.INTERNET" />
 
     <application
         android:name=".CySophixApplication"
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
+        android:networkSecurityConfig="@xml/network_security"
+        android:requestLegacyExternalStorage="true"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
-        android:networkSecurityConfig="@xml/network_security"
         android:usesCleartextTraffic="true"
         tools:replace="networkSecurityConfig"
-        android:requestLegacyExternalStorage="true"
         tools:targetApi="n">
 
 
-        <uses-library android:name="org.apache.http.legacy" android:required="false" />
+        <uses-library
+            android:name="org.apache.http.legacy"
+            android:required="false" />
 
 
         <!--Bugly-->
         <!--以下注释 Bugly 是想提醒你：Bugly 官网说1.3.1及以上版本，可以不用进行以下配置-->
         <activity
             android:name="com.tencent.bugly.beta.ui.BetaActivity"
-            android:exported="true"
             android:configChanges="keyboardHidden|orientation|screenSize|locale"
+            android:exported="true"
             android:theme="@android:style/Theme.Translucent" />
         <provider
             android:name="androidx.core.content.FileProvider"
@@ -52,9 +54,7 @@
         <!--Bugly End-->
 
 
-
         <!--友盟-->
-        <!--友盟因为过于麻烦，暂时关闭-->
         <!--移除友盟自带的关联启动-->
         <service
             android:name="com.taobao.accs.ChannelService"
@@ -64,6 +64,7 @@
             android:name="com.taobao.accs.data.MsgDistributeService"
             android:exported="false"
             tools:replace="android:exported" />
+
         <receiver
             android:name="com.taobao.accs.EventReceiver"
             android:exported="false"
@@ -72,6 +73,7 @@
             android:name="com.taobao.accs.ServiceReceiver"
             android:exported="false"
             tools:replace="android:exported" />
+
         <service
             android:name="org.android.agoo.accs.AgooService"
             android:exported="false"
@@ -84,6 +86,7 @@
             android:name="com.umeng.message.XiaomiIntentService"
             android:exported="false"
             tools:replace="android:exported" />
+
         <receiver
             android:name="com.taobao.agoo.AgooCommondReceiver"
             android:exported="false"

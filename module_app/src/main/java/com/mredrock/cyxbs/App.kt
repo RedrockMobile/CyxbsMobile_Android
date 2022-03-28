@@ -4,6 +4,7 @@ import android.app.ActivityManager
 import android.app.Application
 import android.os.Process
 import com.mredrock.cyxbs.common.BaseApp
+import com.mredrock.cyxbs.common.utils.LogUtils
 import com.mredrock.cyxbs.spi.SdkService
 import com.mredrock.cyxbs.spi.SdkManager
 import java.util.*
@@ -17,10 +18,13 @@ class App : BaseApp(), SdkManager {
 
     override fun onCreate() {
         super.onCreate()
-        loader.filter {
+
+        loader.takeIf {
             isMainProcess()
-        }.forEach {
-            it.initialWithoutConstraint(this)
+        }?.forEach {
+            it.onMainProcess(this)
+        } ?: loader.forEach {
+            it.onSdkProcess(this)
         }
 
 

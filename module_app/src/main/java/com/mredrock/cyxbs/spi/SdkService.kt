@@ -6,7 +6,8 @@ package com.mredrock.cyxbs.spi
  *@signature 我将追寻并获取我想要的答案
  */
 interface SdkService {
-    fun initialWithoutConstraint(manager: SdkManager) {}
-    fun initialWithPrivacyAgreed(manager: SdkManager) {}
-    fun initialWithPrivacyDenied(manager: SdkManager) {}
+    fun onMainProcess(manager: SdkManager) {}
+    fun onPrivacyAgreed(manager: SdkManager) {}
+    fun onPrivacyDenied(manager: SdkManager) {}
+    fun onSdkProcess(manager: SdkManager) {}
 }

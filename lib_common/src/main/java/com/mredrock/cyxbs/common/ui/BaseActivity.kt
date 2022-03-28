@@ -13,6 +13,7 @@ import androidx.annotation.CallSuper
 import androidx.annotation.DrawableRes
 import androidx.appcompat.app.AppCompatActivity
 import com.mredrock.cyxbs.api.account.IAccountService
+import com.mredrock.cyxbs.common.BaseApp
 import com.mredrock.cyxbs.common.R
 import com.mredrock.cyxbs.common.bean.LoginConfig
 import com.mredrock.cyxbs.common.component.JToolbar
@@ -59,8 +60,6 @@ abstract class BaseActivity : AppCompatActivity() {
         // 如果要适配横屏，掌邮会有很多不规范的地方，尤其是 Fragment 那块没办法，学长们遗留下来的代码太多了
         requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_PORTRAIT
 
-        // 下面这个为友盟，暂时注释
-//        PushAgent.getInstance(com.mredrock.cyxbs.appContext).onAppStart()
         initFlag()
         lifeCycleLog("onCreate")
     }

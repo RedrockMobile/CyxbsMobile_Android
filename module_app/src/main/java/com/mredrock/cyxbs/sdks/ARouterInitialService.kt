@@ -14,7 +14,7 @@ import com.mredrock.cyxbs.spi.SdkManager
 @AutoService(SdkService::class)
 class ARouterInitialService : SdkService {
 
-    override fun initialWithoutConstraint(manager: SdkManager) {
+    override fun onMainProcess(manager: SdkManager) {
         if (BuildConfig.DEBUG) {
             ARouter.openDebug()
             ARouter.openLog()
