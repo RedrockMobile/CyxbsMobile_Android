@@ -38,7 +38,7 @@
                 android:layout_height="match_parent"
                 android:visibility="visible" />
 
-            <WebView
+            <com.mredrock.cyxbs.common.webView.LiteJsWebView
                 android:id="@+id/wv_exam_main"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"

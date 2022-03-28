@@ -1,11 +1,8 @@
 package com.mredrock.cyxbs.mine.page.about
 
 import android.annotation.SuppressLint
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.webkit.WebChromeClient
 import android.webkit.WebSettings
-import android.webkit.WebView
 import com.mredrock.cyxbs.common.ui.BaseActivity
 import com.mredrock.cyxbs.mine.R
 import com.mredrock.cyxbs.mine.network.USER_AGREEMENT_URL

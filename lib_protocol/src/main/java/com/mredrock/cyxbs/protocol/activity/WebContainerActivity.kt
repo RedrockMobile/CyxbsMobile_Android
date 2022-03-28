@@ -48,8 +48,9 @@ class WebContainerActivity : BaseActivity() {
             displayZoomControls = false
             mixedContentMode = WebSettings.MIXED_CONTENT_ALWAYS_ALLOW
             mediaPlaybackRequiresUserGesture = false
+            allowFileAccess =false
         }
-        web_view.loadUrl(uri)
+        web_view.loadUrl(uri!!)
         web_view.webChromeClient = object : WebChromeClient() {
             override fun onProgressChanged(view: WebView, newProgress: Int) {
                 super.onProgressChanged(view, newProgress)

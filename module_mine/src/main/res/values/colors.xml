@@ -1,5 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+
+    <!--    从邮问偷来的颜色-->
+    <color name="mine_dialog_tip_background_color">#FFFFFF</color>
+    <color name="mine_dialog_tip_text_color">#0C3573</color>
+    <color name="mine_btn_positive_color">#C3D4EE</color>
+    <color name="mine_dialog_tip_div_view_background_color">#E2E8EE</color>
+
+
     <!--    反馈编辑页颜色-->
     <color name="mine_feedback_edit_bg">#FFFFFF</color>
     <!--    反馈添加标题颜色hint-->
