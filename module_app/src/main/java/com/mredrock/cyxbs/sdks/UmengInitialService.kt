@@ -1,14 +1,16 @@
 package com.mredrock.cyxbs.sdks
 
-import android.os.Process
+import android.util.Log
 import com.google.auto.service.AutoService
 import com.mredrock.cyxbs.BuildConfig
 import com.mredrock.cyxbs.common.utils.LogUtils
+import com.mredrock.cyxbs.common.utils.extensions.safeSubscribeBy
 import com.mredrock.cyxbs.spi.SdkService
 import com.mredrock.cyxbs.spi.SdkManager
 import com.umeng.commonsdk.UMConfigure
 import com.umeng.message.PushAgent
 import com.umeng.message.api.UPushRegisterCallback
+import io.reactivex.rxjava3.core.Observable
 import io.reactivex.rxjava3.kotlin.toObservable
 import io.reactivex.rxjava3.schedulers.Schedulers
 
@@ -26,17 +28,21 @@ class UmengInitialService : SdkService {
         if (BuildConfig.DEBUG) {
             UMConfigure.setLogEnabled(true)
         }
-
-        initUmengAnalyse(manager)
-        initUmengPush(manager)
-
+        Observable.just(Unit)
+            .subscribeOn(Schedulers.io())
+            .safeSubscribeBy {
+                initUmengAnalyse(manager)
+                initUmengPush(manager)
+            }
 
     }
 
     override fun onSdkProcess(manager: SdkManager) {
-        val context = manager.application.applicationContext
-
+        Log.e("TAG", "onSdkProcess: \ncurrentProcess${manager.currentProcessName()}\n" )
+        initUmengPush(manager)
     }
+
+    override fun isSdkProcess(manager: SdkManager): Boolean = manager.currentProcessName().endsWith(":channel")
 
     private fun initUmengPush(manager: SdkManager) {
         //预初始化
@@ -77,7 +83,6 @@ class UmengInitialService : SdkService {
                 )
             }
             .subscribeOn(Schedulers.io())
-            .observeOn(Schedulers.io())
             .subscribe()
     }
 

@@ -10,4 +10,5 @@ interface SdkService {
     fun onPrivacyAgreed(manager: SdkManager) {}
     fun onPrivacyDenied(manager: SdkManager) {}
     fun onSdkProcess(manager: SdkManager) {}
+    fun isSdkProcess(manager: SdkManager) = false
 }
