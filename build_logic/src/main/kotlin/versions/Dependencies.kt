@@ -19,8 +19,11 @@ const val `androidTestImpl-junit` = "androidx.test.ext:junit:1.1.3"
 const val `androidTestImpl-espresso` = "androidx.test.espresso:espresso-core:3.4.0"
 
 //Bugly
-const val `bugly-native-crash-report` = "com.tencent.bugly:crashreport_upgrade:latest.release"
-const val `bugly-crash-report` = "com.tencent.bugly:crashreport_upgrade:latest.release"
+const val `bugly-native-crash-report` = "com.tencent.bugly:nativecrashreport:3.9.2"
+//bugly-crash-report-upgrade内已经集成bugly-crash-report，所以如果需要集成bugly的crash-report和upgrade时，crash-report需要注释掉。
+//具体参考自官方文档 https://bugly.qq.com/docs/user-guide/instruction-manual-android-upgrade/?v=1.0.0   接入sdk时间2021-3-31
+const val `bugly-crash-report` = "com.tencent.bugly:crashreport:4.0.0"
+const val `bugly-crash-report-upgrade` = "com.tencent.bugly:crashreport_upgrade:1.5.23"
 
 //美团多渠道打包
 const val `walle-library` = "com.meituan.android.walle:library:1.1.7"
@@ -221,7 +224,7 @@ fun DependencyHandlerScope.photoView() {
 // 其中 latest.release 指代最新 Bugly SDK 版本号
 // Bugly 有如下功能：1、检测 bug；2、弹 dialog 强制用户升级
 fun DependencyHandlerScope.bugly() {
-    "implementation"(`bugly-crash-report`)
+    "implementation"(`bugly-crash-report-upgrade`)
     "implementation"(`bugly-native-crash-report`)
 }
 

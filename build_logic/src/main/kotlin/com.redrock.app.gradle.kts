@@ -162,7 +162,7 @@ fun DependencyHandlerScope.includeDependencies() {
 
 
 fun DependencyHandlerScope.includeApis(){
-    implementation( project(":lib_account:api_account"))
-    implementation (project(":lib_protocol:api_protocol"))
+    implementation(project(":lib_account:api_account"))
+    implementation(project(":lib_protocol:api_protocol"))
 }
 
