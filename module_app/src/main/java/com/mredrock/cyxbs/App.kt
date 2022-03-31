@@ -15,16 +15,16 @@ class App : BaseApp(), SdkManager {
 
     override fun onCreate() {
         super.onCreate()
-
+        //如果是在主进程，遍历所有的SdkService实现类的onMainProcess
         loader.takeIf {
             isMainProcess()
         }?.forEach {
             it.onMainProcess(this)
-        } ?: loader.filter {
+        } ?:
+        //如果是在子进程，通过isSdkProcess匹配对应SdkService实现类，最后调用onSdkProcess方法。
+        loader.firstOrNull {
             it.isSdkProcess(this)
-        }.forEach {
-            it.onSdkProcess(this)
-        }
+        }?.onSdkProcess(this)
 
     }
 
