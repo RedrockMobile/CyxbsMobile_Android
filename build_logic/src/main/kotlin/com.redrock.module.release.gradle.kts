@@ -1,4 +1,3 @@
-import com.android.build.gradle.internal.packaging.defaultExcludes
 import ext.get
 import org.gradle.api.JavaVersion
 import org.gradle.kotlin.dsl.kotlin
@@ -19,13 +18,6 @@ android {
         baseline = file("lint-baseline.xml")
     }
 
-    packagingOptions {
-        jniLibs {
-
-        }
-    }
-
-
     defaultConfig {
         minSdk = AGP.mineSdk
         targetSdk = AGP.targetSdk
@@ -35,18 +27,15 @@ android {
         renderscriptSupportModeEnabled = true
 
         testInstrumentationRunner = AGP.testInstrumentationRunner
-
-        kapt {
-            // ARouter https://github.com/alibaba/ARouter
-            arguments {
-                arg("AROUTER_MODULE_NAME", project.name)
-            }
-        }
         // 秘钥文件
         manifestPlaceholders += (project.ext["secret"]["manifestPlaceholders"] as Map<String, Any>)
-        (project.ext["secret"]["buildConfigField"] as Map<String,String>).forEach { (k, v) ->
-            buildConfigField("String",k,v)
+        (project.ext["secret"]["buildConfigField"] as Map<String, String>).forEach { (k, v) ->
+            buildConfigField("String", k, v)
         }
+    }
+
+    buildFeatures {
+        dataBinding = true
     }
 
     compileOptions {
@@ -58,18 +47,15 @@ android {
         jvmTarget = "1.8"
     }
 
-    buildFeatures {
-        dataBinding = true
-    }
-
     sourceSets {
-        named("main"){
+        named("main") {
             manifest {
                 srcFile("src/main/AndroidManifest.xml")
             }
-            packagingOptions.setExcludes(defaultExcludes + "debug/**")
         }
     }
+
+
 
 }
 
@@ -77,8 +63,6 @@ dependencies {
     test()
     android()
     aRouter()
-    //threeParty()
-    //implementation (lPhotoPicker)
     implementation(project(":lib_common"))
 
 //     上线之前如果需要检测是否有内存泄漏，直接解除注释，然后安装debug版本的掌邮
@@ -90,6 +74,13 @@ dependencies {
 //        debugImplementation 'com.github.whataa:pandora:androidx_v2.1.0'
 //        debugImplementation 'com.github.whataa:pandora-no-op:v2.1.0'
 
+}
+
+kapt {
+    // ARouter https://github.com/alibaba/ARouter
+    arguments {
+        arg("AROUTER_MODULE_NAME", project.name)
+    }
 }
 
 

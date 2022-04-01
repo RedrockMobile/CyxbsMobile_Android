@@ -1,3 +1,4 @@
+import ext.get
 import versions.*
 
 plugins {
@@ -10,18 +11,10 @@ plugins {
 android {
     compileSdk = AGP.compileSdk
 
-
     lint {
         abortOnError = false
         baseline = file("lint-baseline.xml")
     }
-
-    packagingOptions {
-        jniLibs {
-
-        }
-    }
-
 
     defaultConfig {
         minSdk = AGP.mineSdk
@@ -39,15 +32,15 @@ android {
         kapt {
             // ARouter https://github.com/alibaba/ARouter
             arguments {
-                arg("AROUTER_MODULE_NAME", project.getName())
+                arg("AROUTER_MODULE_NAME", project.name)
             }
         }
 
         // 秘钥文件
-        //manifestPlaceholders = secret.manifestPlaceholders
-        /*secret.buildConfigField.forEach({ k, v ->
-            buildConfigField("String", k, v)
-        })*/
+        manifestPlaceholders += (project.ext["secret"]["manifestPlaceholders"] as Map<String, Any>)
+        (project.ext["secret"]["buildConfigField"] as Map<String,String>).forEach { (k, v) ->
+            buildConfigField("String",k,v)
+        }
     }
 
     compileOptions {
@@ -64,9 +57,12 @@ android {
     }
 
     sourceSets {
-        create("main"){
+        named("main"){
             manifest {
-                srcFile("src/main/AndroidManifest.xml")
+                srcFile("src/main/module/AndroidManifest.xml")
+            }
+            java {
+               srcDir("src/main/module/java")
             }
         }
     }
@@ -76,8 +72,7 @@ android {
 dependencies {
     test()
     android()
-    threeParty()
-    implementation (lPhotoPicker)
+    aRouter()
     implementation(project(":lib_common"))
 //     上线之前如果需要检测是否有内存泄漏，直接解除注释，然后安装debug版本的掌邮
 //     就会附带一个LeakCanary的app来检测是否有内存泄漏
