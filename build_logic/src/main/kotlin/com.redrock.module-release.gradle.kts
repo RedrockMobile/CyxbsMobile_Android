@@ -1,17 +1,13 @@
-import ext.get
-import org.gradle.api.JavaVersion
 import org.gradle.kotlin.dsl.kotlin
 import versions.*
 
 plugins {
-    kotlin("android")
+    id("cyxbs.library-base")
     kotlin("kapt")
     id("kotlin-android-extensions")
-    id("com.android.library")
 }
 
 android {
-    compileSdk = AGP.compileSdk
 
     lint {
         abortOnError = false
@@ -19,43 +15,11 @@ android {
     }
 
     defaultConfig {
-        minSdk = AGP.mineSdk
-        targetSdk = AGP.targetSdk
 
         // 添加以下两句代码，这是 photolibrary 需要设置的东西
         renderscriptTargetApi = AGP.targetSdk  //版本号请与compileSdkVersion保持一致
         renderscriptSupportModeEnabled = true
-
-        testInstrumentationRunner = AGP.testInstrumentationRunner
-        // 秘钥文件
-        manifestPlaceholders += (project.ext["secret"]["manifestPlaceholders"] as Map<String, Any>)
-        (project.ext["secret"]["buildConfigField"] as Map<String, String>).forEach { (k, v) ->
-            buildConfigField("String", k, v)
-        }
     }
-
-    buildFeatures {
-        dataBinding = true
-    }
-
-    compileOptions {
-        sourceCompatibility = JavaVersion.VERSION_1_8
-        targetCompatibility = JavaVersion.VERSION_1_8
-    }
-
-    kotlinOptions {
-        jvmTarget = "1.8"
-    }
-
-    sourceSets {
-        named("main") {
-            manifest {
-                srcFile("src/main/AndroidManifest.xml")
-            }
-        }
-    }
-
-
 
 }
 

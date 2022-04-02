@@ -1,14 +1,10 @@
 import ext.get
 import versions.*
 
-val isSingleModuleDebug: String by project
-
 plugins {
-    kotlin("android")
+    id("cyxbs.application-base")
     kotlin("kapt")
     id("kotlin-android-extensions")
-    id("com.android.application")
-    //id("walle")
 }
 
 apply(from = "$rootDir/build_logic/script/andresguard.gradle")
@@ -16,10 +12,7 @@ apply(from = "$rootDir/build_logic/script/redex.gradle")
 
 android {
     defaultConfig {
-        compileSdk = AGP.compileSdk
         applicationId = AGP.releaseApplicationId
-        minSdk = AGP.mineSdk
-        targetSdk = AGP.targetSdk
         versionCode = AGP.releaseVersionCode
         versionName = AGP.releaseVersionName
 
@@ -27,10 +20,10 @@ android {
             abiFilters += AGP.releaseAbiFilters
         }
 
-        dexOptions {
+        /*dexOptions {
             preDexLibraries = true
             maxProcessCount = 8
-        }
+        }*/
 
         signingConfigs {
             create("config") {
@@ -68,8 +61,6 @@ android {
             }
         }
 
-        dataBinding.isEnabled = true
-
         lint {
             abortOnError = false
             baseline = file("lint-baseline.xml")
@@ -104,10 +95,6 @@ android {
             }
         }
 
-        (project.ext["secret"]["buildConfigField"] as Map<String, String>).forEach { (k, v) ->
-            buildConfigField("String", k, v)
-        }
-
     }
 }
 
@@ -126,16 +113,6 @@ dependencies {
     //引入外部所需依赖
     includeDependencies()
 }
-
-
-//美团多渠道打包不兼容gradle 7.0
-//https://github.com/Meituan-Dianping/walle/issues/364
-
-/*walle {
-    apkOutputFolder = file("${buildDir}/outputs/channels")
-    channelFile = file("$rootDir/build_logic/channel")
-    apkFileNameFormat = "掌上重邮-\${channel}-\${buildType}-v\${versionName}-\${versionCode}.apk"
-}*/
 
 fun DependencyHandlerScope.includeModulesAndLibs() {
     rootDir.listFiles()!!.filter {
@@ -158,8 +135,6 @@ fun DependencyHandlerScope.includeDependencies() {
     autoService()
     //walle()
 }
-
-
 
 fun DependencyHandlerScope.includeApis(){
     implementation(project(":lib_account:api_account"))
