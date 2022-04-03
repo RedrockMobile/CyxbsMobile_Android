@@ -21,3 +21,4 @@ dependencies {
     implementation("com.umeng.umsdk:common:9.1.0")
     implementation("com.github.yalantis:ucrop:2.2.1")
 }
+android.buildFeatures.dataBinding = true

@@ -17,3 +17,5 @@ dependencies {
     threeParty()
     compileOnly(`umeng-push`)
 }
+
+android.buildFeatures.dataBinding = true

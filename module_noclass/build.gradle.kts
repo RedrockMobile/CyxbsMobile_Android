@@ -11,3 +11,5 @@ dependencies {
     implementation(project(":lib_account:api_account"))
     defaultNet()
 }
+android.buildFeatures.dataBinding = true
+

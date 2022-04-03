@@ -11,3 +11,4 @@ dependencies {
     photoView()
     threeParty()
 }
+android.buildFeatures.dataBinding = true

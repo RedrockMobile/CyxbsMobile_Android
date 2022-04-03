@@ -8,3 +8,4 @@ dependencies {
     defaultNet()
     defaultRoom()
 }
+android.buildFeatures.dataBinding = true

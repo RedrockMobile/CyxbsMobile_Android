@@ -14,3 +14,5 @@ dependencies {
     rxPermission()
     dialog()
 }
+
+android.buildFeatures.dataBinding = true

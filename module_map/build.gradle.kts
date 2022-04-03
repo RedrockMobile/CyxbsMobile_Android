@@ -16,3 +16,4 @@ dependencies {
     threeParty()
     lPhotoPicker()
 }
+android.buildFeatures.dataBinding = true

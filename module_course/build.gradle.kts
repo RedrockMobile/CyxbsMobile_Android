@@ -13,3 +13,5 @@ dependencies {
     eventBus()
     defaultNet()
 }
+
+android.buildFeatures.dataBinding = true
