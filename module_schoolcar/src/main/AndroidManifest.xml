@@ -2,8 +2,11 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
           xmlns:tools="http://schemas.android.com/tools"
           package="com.mredrock.cyxbs.schoolcar">
-
-    <application tools:ignore="GoogleAppIndexingWarning">
+    <!-- https://source.android.com/devices/tech/debug/tagged-pointers -->
+    <application
+        android:allowNativeHeapPointerTagging="false"
+        tools:ignore="GoogleAppIndexingWarning"
+        tools:targetApi="r">
         <activity android:name="com.mredrock.cyxbs.discover.schoolcar.SchoolCarActivity"
             android:launchMode="singleTop"/>
         <meta-data

@@ -3,16 +3,15 @@ package com.mredrock.cyxbs.discover.schoolcar.widget
 import android.app.Activity
 import android.graphics.Bitmap
 import android.graphics.Color
-import com.amap.api.maps.AMap
-import com.amap.api.maps.model.BitmapDescriptorFactory
-import com.amap.api.maps.model.LatLng
-import com.amap.api.maps.model.PolylineOptions
-import com.amap.api.maps.utils.overlay.SmoothMoveMarker
+import android.util.ArrayMap
+import com.amap.api.maps.model.*
+import com.amap.api.maps.utils.overlay.MovingPointOverlay
 import com.mredrock.cyxbs.common.network.ApiGenerator
 import com.mredrock.cyxbs.common.utils.extensions.safeSubscribeBy
 import com.mredrock.cyxbs.common.utils.extensions.setSchedulers
 import com.mredrock.cyxbs.discover.schoolcar.Interface.SchoolCarInterface
 import com.mredrock.cyxbs.discover.schoolcar.SchoolCarActivity
+import com.mredrock.cyxbs.discover.schoolcar.bean.SchoolCar
 import com.mredrock.cyxbs.discover.schoolcar.network.ApiService
 import io.reactivex.rxjava3.disposables.Disposable
 import kotlinx.android.synthetic.main.activity_schoolcar.*
@@ -21,26 +20,26 @@ import java.io.UnsupportedEncodingException
 import java.security.MessageDigest
 import java.security.NoSuchAlgorithmException
 import java.util.*
+import kotlin.math.abs
 
 /**
  * Created by glossimar on 2018/9/12
  */
 
-class SchoolCarsSmoothMove(private val schoolCarActivity: SchoolCarActivity?, private val activity: Activity){
+class SchoolCarsSmoothMove(private val schoolCarActivity: SchoolCarActivity?, private val activity: Activity,private val bitmapChanges: List<Bitmap>){
     private lateinit var carInterface: SchoolCarInterface
 
-    //3辆校车的经纬度的List
-    private var smoothMoveList1: MutableList<LatLng> = mutableListOf()
-    private var smoothMoveList2: MutableList<LatLng> = mutableListOf()
-    private var smoothMoveList3: MutableList<LatLng> = mutableListOf()
+    //key:id value:type
+    private val carMap : ArrayMap<Int,SchoolCar> = ArrayMap()
+    private val apiService = ApiGenerator.getApiService(ApiService::class.java)
+    private var lastPostTime = System.currentTimeMillis()
     var disposable: Disposable? = null
     /**
      * 进行接口数据请求
      */
     fun loadCarLocation(ifAddTimer: Long) {
-        val apiService = ApiGenerator.getApiService(ApiService::class.java)
-
-        disposable = apiService.schoolcar("Redrock", md5Hex(System.currentTimeMillis().toString().substring(0, 10) + "." + "Redrock"),
+        disposable = apiService.schoolcar("Redrock",
+                md5Hex(System.currentTimeMillis().toString().substring(0, 10) + "." + "Redrock"),
                 System.currentTimeMillis().toString().substring(0, 10),
                 md5Hex((System.currentTimeMillis() - 1).toString().substring(0, 10)))
                 .setSchedulers()
@@ -48,125 +47,129 @@ class SchoolCarsSmoothMove(private val schoolCarActivity: SchoolCarActivity?, pr
                     activity.tv_carStatus.text = "校车好像失联了..."
                 },
                 onNext =  {
-                    carInterface.processLocationInfo(it, ifAddTimer)
-                    val location = it.data
-                    //现在最多三辆校车
-                    when (location.size) {
-                        0 -> {
-                            activity.tv_carStatus.text = "校车好像失联了..."
+                    activity.tv_carStatus.text = "校车运行中"
+                    lastPostTime = System.currentTimeMillis()
+                        //如果所有的数据都没有更新
+                        it.data.data.forEach {  data ->
+                            if(!carMap.contains(data.id)){
+                                val latLng = LatLng(data.lat,data.lon)
+                                val marker = buildMarker(data.id,data.type,latLng)
+                                marker?.let { marker ->
+                                    carMap[data.id] = SchoolCar(data.id,data.type,data.upDate,data.upDate,MovingPointOverlay(schoolCarActivity?.aMap,marker),marker,mutableListOf(latLng),getPolyline(data.type,latLng))
+                                }
+                                carMap[data.id]?.let { car -> smoothMove(car) }
+                            }else{
+                                //这里因为轮询是1s一次，所以说判断一下更新的时间，
+                                if(carMap[data.id]?.upDate != data.upDate){
+                                    carMap[data.id]?.upDate?.let { upDate ->
+                                        //将两次更新的时间差作为移动的时间
+                                        var mistime = upDate - data.upDate
+                                        carMap[data.id]?.upDate = data.upDate
+                                        carMap[data.id]?.latLngList?.add(LatLng(data.lat,data.lon))
+                                        mistime = abs(mistime)
+                                        mistime = if(mistime < 3) 3 else if( mistime > 15) 15 else mistime
+                                        carMap[data.id]?.let { car -> smoothMove(car,abs(mistime.toInt())) }
+                                    }
+                                }
+                            }
                         }
-                        1 -> {
-                            smoothMoveList1.add(LatLng(location[0].lat, location[0].lon))
+                        carInterface.processLocationInfo(it, ifAddTimer)
+                        activity.runOnUiThread {
+                            if (it.data.data.isEmpty()) {
+                                activity.tv_carStatus.text = "校车正在休息"
+                            }
                         }
-                        2 -> {
-                            smoothMoveList1.add(LatLng(location[0].lat, location[0].lon))
-                            smoothMoveList2.add(LatLng(location[1].lat, location[1].lon))
-                        }
-
-                        3 -> {
-                            smoothMoveList1.add(LatLng(location[0].lat, location[0].lon))
-                            smoothMoveList2.add(LatLng(location[1].lat, location[1].lon))
-                            smoothMoveList3.add(LatLng(location[2].lat, location[2].lon))
-                        }
-                    }
-                    activity.runOnUiThread {
-                        if (!checkTimeBeforeEnter()) {
-                            activity.tv_carStatus.text = "校车正在休息"
-                        }
-                    }
-
                 }
-                )
-
+            )
     }
 
     /**
      * 在地图上绘出校车轨迹
      */
-    private fun drawTraceLine(aMap: AMap?, smoothMoveList: MutableList<LatLng>) {
-        aMap!!.addPolyline(PolylineOptions()
-                .addAll(smoothMoveList.subList(0, smoothMoveList.size - 1))
-                .width(8f)
-                .color(Color.argb(255, 93, 152, 255)))
-
+    private fun drawTraceLine(car: SchoolCar) {
+        car.polyline?.points = car.latLngList
     }
 
-
-
-    /**
-     * 校车平滑移动时调用
-     */
-    fun smoothMove(smoothMoveMarkers: MutableList<SmoothMoveMarker>, bitmapChanged: Bitmap) {
-        if (smoothMoveList1.size > 0 || smoothMoveList2.size > 0) {
-            val smoothMarker = SmoothMoveMarker(schoolCarActivity?.aMap)
-            smoothMoveMarkers.add(smoothMarker)
-            val carAmount = smoothMoveMarkers.size - 1
-            smoothMoveMarkers[carAmount].setDescriptor(BitmapDescriptorFactory.fromBitmap(bitmapChanged))
-            if (smoothMoveList2.size > 3 || smoothMoveList1.size > 3) {
-                smoothMoveMarkers[carAmount].setPoints(getSmoothMoveList(carAmount).subList(getSmoothMoveList(carAmount).size - 3, getSmoothMoveList(carAmount).size - 1))
-            } else {
-                smoothMoveMarkers[carAmount].setPoints(getSmoothMoveList(carAmount).subList(getSmoothMoveList(carAmount).size - 1, getSmoothMoveList(carAmount).size - 1))
-            }
-            smoothMoveMarkers[carAmount].setTotalDuration(2)
-            drawTraceLine(schoolCarActivity?.aMap, getSmoothMoveList(carAmount))
-            smoothMoveMarkers[carAmount].startSmoothMove()
+    private fun smoothMove(car:SchoolCar, mistime:Int = 3) {
+        if (car.latLngList.size > 4) {
+            //停止上一次的移动，然后将上一次的位置加上之后再移动
+            car.smoothMarker.stopMove()
+            val list = car.latLngList.subList(car.latLngList.size - 4, car.latLngList.size - 1)
+            list[0] = car.smoothMarker.position
+            val smoothMarker = MovingPointOverlay(schoolCarActivity?.aMap,car.marker)
+            smoothMarker.setPoints(list)
+            smoothMarker.setTotalDuration(mistime)
+            smoothMarker.startSmoothMove()
+            drawTraceLine(car)
+            car.smoothMarker = smoothMarker
         }
-
+        //如果线路过长就删除一些
+        if (car.latLngList.size > 8){
+            car.latLngList.removeFirstOrNull()
+            car.latLngList.removeFirstOrNull()
+        }
     }
-
 
     fun setCarMapInterface(carMapInterface: SchoolCarInterface) {
         this.carInterface = carMapInterface
     }
 
     /**
-     * 获取储存当前校车经纬度的List
+     * 检查当前时间是否时校车运营时间
      */
-    private fun getSmoothMoveList(carID: Int): MutableList<LatLng> {
-        var smoothMoveList: MutableList<LatLng> = mutableListOf()
-        when (carID) {
-            0 -> {
-                smoothMoveList = smoothMoveList1
-                return smoothMoveList
-            }
-            1 -> {
-                smoothMoveList = smoothMoveList2
-                return smoothMoveList
-            }
-
-            2 -> {
-                smoothMoveList = smoothMoveList3
-                return smoothMoveList
-            }
-        }
-        return smoothMoveList
-    }
-
-    /**
-     * 检查当前时间是否时校车运营时间（ 11:30AM-2PM , 5PM-9PM)
-     */
-    private fun checkTimeBeforeEnter(): Boolean {
+    private fun checkTimeBeforeEnter(type:Int): Boolean {
         val calendar: Calendar = Calendar.getInstance()
         val hour: Int = calendar.get(Calendar.HOUR)
         val minute: Int = calendar.get(Calendar.MINUTE)
         val AM_PM: Int = calendar.get(Calendar.AM_PM)
-
-        if (AM_PM == Calendar.AM && hour == 11) {
-            if (minute >= 30) {
-                return true
+        return when(type){
+            0,1 -> {
+                if (AM_PM == Calendar.AM && hour == 7) {
+                    minute >= 30
+                } else if (AM_PM == Calendar.AM && hour > 7) {
+                    true
+                } else if(AM_PM == Calendar.PM && hour < 10){
+                    true
+                } else if(AM_PM == Calendar.PM && hour == 10){
+                    minute <= 30
+                } else {
+                    false
+                }
             }
-        } else if (AM_PM == Calendar.AM && hour > 11 && hour < 2) {
-            return true
-        } else if (AM_PM == Calendar.PM && hour >= 5 && hour < 9) {
-            return true
+            2 -> {
+                if (AM_PM == Calendar.AM && hour == 9) {
+                    minute >= 30
+                } else if (AM_PM == Calendar.AM && hour > 9) {
+                    true
+                } else if(AM_PM == Calendar.PM && hour == 1){
+                    minute >= 30
+                } else AM_PM == Calendar.PM && hour < 6 && hour > 1
+            }
+            3 -> {
+                AM_PM == Calendar.AM && hour >= 8 && hour <= 10
+            }
+            else -> false
         }
         return false
     }
 
+    private fun buildMarker(id:Int,type:Int,latLng:LatLng): Marker? {
+        val markerOption = MarkerOptions().icon(BitmapDescriptorFactory.fromBitmap(bitmapChanges[type]))
+        markerOption
+            .title("${id}号车")
+            .snippet("${type+1}号线路")
+            .anchor(0.5f,0.5f)
+            .position(latLng)
+        return schoolCarActivity?.aMap?.addMarker(markerOption)
+    }
+
     fun clearAllList() {
-        smoothMoveList3.clear()
-        smoothMoveList2.clear()
-        smoothMoveList1.clear()
+        carMap.iterator().forEach {
+            it.value.marker.remove()
+            it.value.polyline?.remove()
+        }
+        carMap.clear()
+
     }
 
     private fun md5Hex(s: String): String {
@@ -179,8 +182,47 @@ class SchoolCarsSmoothMove(private val schoolCarActivity: SchoolCarActivity?, pr
         } catch (e: UnsupportedEncodingException) {
             throw AssertionError(e)
         }
-
     }
+    private fun getPolyline(type: Int, latLng: LatLng): Polyline? {
+        return when(type){
+            0->{
+                schoolCarActivity?.aMap?.addPolyline(PolylineOptions()
+                    .setDottedLine(true)
+                    .width(8f)
+                    .color(Color.argb(255, 93, 152, 255))
+                    .add(latLng))
+            }
+            1->{
+                schoolCarActivity?.aMap?.addPolyline(PolylineOptions()
+                    .setDottedLine(true)
+                    .width(8f)
+                    .color(Color.argb(255, 93, 152, 255))
+                    .add(latLng))
+            }
+            2->{
+                schoolCarActivity?.aMap?.addPolyline(PolylineOptions()
+                    .setDottedLine(true)
+                    .width(8f)
+                    .color(Color.argb(255, 93, 152, 255))
+                    .add(latLng))
+            }
+            3->{
+                schoolCarActivity?.aMap?.addPolyline(PolylineOptions()
+                    .setDottedLine(true)
+                    .width(8f)
+                    .color(Color.argb(255, 93, 152, 255))
+                    .add(latLng))
+            }
+            else ->{
+                schoolCarActivity?.aMap?.addPolyline(PolylineOptions()
+                    .setDottedLine(true)
+                    .width(8f)
+                    .color(Color.argb(255, 93, 152, 255))
+                    .add(latLng))
+            }
+        }
+    }
+
 
 }
 

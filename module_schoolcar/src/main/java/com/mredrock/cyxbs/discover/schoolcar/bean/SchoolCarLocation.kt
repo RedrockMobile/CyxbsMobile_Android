@@ -1,5 +1,6 @@
 package com.mredrock.cyxbs.discover.schoolcar.bean
 
+import com.google.gson.annotations.SerializedName
 import java.io.Serializable
 
 /**
@@ -7,16 +8,14 @@ import java.io.Serializable
  */
 
 data class SchoolCarLocation(
-        val status: String = "",
-        val info: String = "",
-        val time: String = "",
         var data: List<Data>) : Serializable {
-
     inner class Data : Serializable {
         var lat: Double = 0.toDouble()
+        @SerializedName(value = "lng")
         var lon: Double = 0.toDouble()
-        var speed: Double = 0.toDouble()
         var id: Int = 0
-        var update_at: String = ""
+        var type:Int = 0
+        @SerializedName(value = "update_at")
+        var upDate: Long = 0L
     }
 }

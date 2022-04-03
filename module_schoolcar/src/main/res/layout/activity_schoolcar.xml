@@ -47,7 +47,7 @@
         android:layout_marginStart="16dp"
         android:layout_marginTop="11dp"
         android:gravity="center"
-        android:text="校车营运时间：11：00-14：30、17：00-21：00"
+        android:text=" "
         android:textColor="@color/common_level_two_font_color"
         android:textSize="13sp"
         app:layout_constraintLeft_toLeftOf="parent"
@@ -106,7 +106,6 @@
         app:cardElevation="0dp"
         app:layout_constraintBottom_toTopOf="@id/jc_schoolCar"
         app:layout_constraintRight_toRightOf="parent" />
-
     <ImageView
         android:layout_width="19dp"
         android:layout_height="25.8dp"
@@ -118,13 +117,13 @@
 
     <ImageView
         android:id="@+id/iv_cooperation_logo"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="46dp"
+        android:layout_width="38dp"
+        android:layout_height="23dp"
         android:layout_marginEnd="5dp"
-        android:src="@drawable/schoolcar_ic_school_car_search_orgnization_logo"
+        android:src="@drawable/schoolcar_ic_school_car_redrock_logo"
+        app:layout_constraintBottom_toBottomOf="@+id/iv_back"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="@+id/iv_back" />
 
     <ImageView
         android:id="@+id/iv_back"
