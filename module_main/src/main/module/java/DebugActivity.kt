@@ -1,3 +1,18 @@
+import android.content.ClipData
+import android.content.Context
+import android.os.Bundle
+import android.widget.TextView
+import android.widget.Toast
+import androidx.compose.ui.platform.ClipboardManager
+import androidx.lifecycle.Observer
+import com.mredrock.cyxbs.api.protocol.api.IProtocolService
+import com.mredrock.cyxbs.common.component.CyxbsToast
+import com.mredrock.cyxbs.common.config.DebugDataModel
+import com.mredrock.cyxbs.common.service.ServiceManager
+import com.mredrock.cyxbs.common.ui.BaseActivity
+import com.mredrock.cyxbs.main.R
+import kotlinx.android.synthetic.main.main_activity_debug.*
+
 class DebugActivity : BaseActivity() {
 
 

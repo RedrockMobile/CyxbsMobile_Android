@@ -49,32 +49,30 @@ const val lPhotoPicker = "com.github.limuyang2:LPhotoPicker:2.6"
 const val lifecycle = "2.4.1"
 val android = listOf(
     "androidx.constraintlayout:constraintlayout:2.1.2",
-    "androidx.recyclerview:recyclerview:1.2.1",
-    "androidx.cardview:cardview:1.0.0",
-    "androidx.viewpager2:viewpager2:1.0.0",
     "com.google.android.material:material:1.4.0",
 
     "androidx.core:core-ktx:1.7.0",
-    "androidx.collection:collection-ktx:1.2.0",
-    "androidx.fragment:fragment-ktx:1.4.1",
-    "androidx.navigation:navigation-runtime-ktx:2.4.1",
-    "androidx.navigation:navigation-fragment-ktx:2.4.1",
-    "androidx.navigation:navigation-ui-ktx:2.4.1",
-    "androidx.room:room-ktx:2.4.2",
-    "androidx.work:work-runtime-ktx:2.7.1",
     "androidx.activity:activity-ktx:1.4.0",
-
+    "androidx.fragment:fragment-ktx:1.4.1",
 
     "androidx.lifecycle:lifecycle-viewmodel-ktx:$lifecycle",
-    "androidx.lifecycle:lifecycle-viewmodel-compose:$lifecycle",
     "androidx.lifecycle:lifecycle-livedata-ktx:$lifecycle",
     "androidx.lifecycle:lifecycle-runtime-ktx:$lifecycle",
-    "androidx.lifecycle:lifecycle-viewmodel-savedstate:$lifecycle",
-    "androidx.lifecycle:lifecycle-common-java8:$lifecycle",
-    "androidx.lifecycle:lifecycle-service:$lifecycle",
-    "androidx.lifecycle:lifecycle-process:$lifecycle",
-    "androidx.lifecycle:lifecycle-reactivestreams-ktx:$lifecycle",
 )
+
+//"androidx.work:work-runtime-ktx:2.7.1",
+
+//    "androidx.navigation:navigation-runtime-ktx:2.4.1",
+//    "androidx.navigation:navigation-fragment-ktx:2.4.1",
+//    "androidx.navigation:navigation-ui-ktx:2.4.1",
+
+//"androidx.lifecycle:lifecycle-reactivestreams-ktx:$lifecycle",
+//"androidx.lifecycle:lifecycle-viewmodel-compose:$lifecycle",
+
+//    "androidx.room:room-ktx:2.4.2",
+
+
+
 
 //eventbug事件总线
 const val eventBus = "org.greenrobot:eventbus:3.3.1"

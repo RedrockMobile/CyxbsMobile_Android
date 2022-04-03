@@ -1,6 +1,7 @@
 package com.mredrock.cyxbs.api.account
 
 import android.content.Context
+import android.widget.Toast
 
 /**
  *@author ZhiQiang Tu
@@ -8,7 +9,9 @@ import android.content.Context
  *@signature 我将追寻并获取我想要的答案
  */
 class DefaultUserStateService : IUserStateService {
-    override fun askLogin(context: Context, reason: String) {}
+    override fun askLogin(context: Context, reason: String) {
+        Toast.makeText(context, reason, Toast.LENGTH_SHORT).show()
+    }
 
     override fun login(context: Context, uid: String, passwd: String) {}
 
