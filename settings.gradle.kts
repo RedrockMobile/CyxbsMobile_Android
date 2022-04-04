@@ -1,3 +1,7 @@
+val isFullModuleDebug:String by settings
+val ignoreModuleMode:String by settings
+val ignoreModule:String by settings
+
 pluginManagement {
     includeBuild("build_logic")
     repositories {
@@ -13,8 +17,12 @@ pluginManagement {
 }
 dependencyResolutionManagement {
     repositoriesMode.set(RepositoriesMode.FAIL_ON_PROJECT_REPOS)
+    components.all {
+        println(id)
+    }
     repositories {
         // 以下两行代码相当于有了 google() jcenter() mavenCentral()，使用国内的阿里镜像
+        maven { url = uri("$rootDir/maven") }
         maven { url = uri("https://maven.aliyun.com/repository/public") }
         maven { url = uri("https://maven.aliyun.com/repository/google") }
         maven { url = uri("https://repo1.maven.org/maven2/") }
@@ -31,6 +39,9 @@ rootDir.listFiles()!!
     //根路径下搜寻前缀为lib_和module_的文件夹
     .filter {
         it.isDirectory && "(lib_.+)|(module_.+)".toRegex().matches(it.name)
+    }
+    .filter {
+        !isFullModuleDebug.toBoolean() || it.name == "module_app"
     }
     .onEach {
         include(":${it.name}")

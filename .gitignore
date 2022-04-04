@@ -11,3 +11,4 @@ secret.gradle
 ./hooks/cache
 /.idea/
 *.log
+maven

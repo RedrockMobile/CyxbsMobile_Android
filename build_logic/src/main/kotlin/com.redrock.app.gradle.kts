@@ -1,6 +1,10 @@
 import ext.get
 import versions.*
 
+val isFullModuleDebug:String by project
+val ignoreModuleMode:String by project
+val ignoreModule:String by project
+
 plugins {
     id("cyxbs.application-base")
     kotlin("kapt")
@@ -109,13 +113,34 @@ kapt {
 }
 
 dependencies {
-    //引入所有的module和lib模块
-    includeModulesAndLibs()
+    if (isFullModuleDebug.toBoolean()){
+        moduleWithCache()
+    }else{
+        moduleWithoutCache()
+    }
+
     //引入外部所需依赖
-    includeDependencies()
+    bugly()
+    umeng()
+    hotFix()
+    aRouter()
+    test()
+    autoService()
 }
 
-fun DependencyHandlerScope.includeModulesAndLibs() {
+fun DependencyHandlerScope.moduleWithCache(){
+    rootDir.listFiles()!!.filter {
+        // 1.是文件夹
+        // 2.不是module_app
+        // 3.以lib_或者module_开头
+        it.isDirectory && it.name != "module_app" && "(lib_.+)|(module_.+)".toRegex().matches(it.name)
+    }.onEach {
+        implementation("com.mredrock.team:${it.name}:cache")
+    }
+}
+
+fun DependencyHandlerScope.moduleWithoutCache(){
+    //引入所有的module和lib模块
     rootDir.listFiles()!!.filter {
         // 1.是文件夹
         // 2.不是module_app
@@ -124,14 +149,6 @@ fun DependencyHandlerScope.includeModulesAndLibs() {
     }.onEach {
         implementation(project(":${it.name}"))
     }
-}
 
-fun DependencyHandlerScope.includeDependencies() {
-    bugly()
-    umeng()
-    hotFix()
-    aRouter()
-    test()
-    autoService()
 }
 

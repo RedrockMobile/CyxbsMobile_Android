@@ -7,7 +7,7 @@ when {
     "module_.+".toRegex().matches(projectName) -> {
         apply(plugin = "com.redrock.module")
     }
-    "lib_common" == projectName ->{
+    "lib_common" == projectName -> {
         apply(plugin = "com.redrock.lib-common")
     }
     "lib_.+".toRegex().matches(projectName) -> {
@@ -17,6 +17,8 @@ when {
         apply(plugin = "com.redrock.api")
     }
     else -> {
-        logger.log(LogLevel.ERROR,"出现未知类型模块:$projectName $projectDir\n请为该模块声明对应的依赖插件")
+        logger.log(LogLevel.ERROR, "出现未知类型模块:$projectName $projectDir\n请为该模块声明对应的依赖插件")
     }
 }
+if (projectName != "module_app") apply(plugin = "script.publications")
+

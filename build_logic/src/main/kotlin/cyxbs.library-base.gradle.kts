@@ -11,6 +11,10 @@ plugins {
 android {
     compileSdk = AGP.compileSdk
 
+    publishing {
+        singleVariant("debug")
+    }
+
     defaultConfig {
         minSdk = AGP.mineSdk
         targetSdk = AGP.targetSdk
