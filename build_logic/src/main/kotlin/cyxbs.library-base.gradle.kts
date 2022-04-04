@@ -1,12 +1,7 @@
 import ext.get
 import org.gradle.api.JavaVersion
-import org.gradle.kotlin.dsl.dependencies
 import org.gradle.kotlin.dsl.kotlin
-import org.gradle.kotlin.dsl.project
 import versions.AGP
-import versions.aRouter
-import versions.android
-import versions.test
 
 plugins {
     kotlin("android")
@@ -19,6 +14,12 @@ android {
     defaultConfig {
         minSdk = AGP.mineSdk
         targetSdk = AGP.targetSdk
+
+        splits {
+            density {
+
+            }
+        }
 
         testInstrumentationRunner = AGP.testInstrumentationRunner
         // 秘钥文件
