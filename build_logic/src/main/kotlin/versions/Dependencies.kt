@@ -11,7 +11,8 @@ const val `arouter-api` = "com.alibaba:arouter-api:1.5.2"
 const val `arouter-compiler` = "com.alibaba:arouter-compiler:1.5.2"
 
 //AndroidX
-const val `androidx-appcompat` = "androidx.appcompat:appcompat:1.4.0"
+const val appcompat = "1.4.0"
+const val `androidx-appcompat` = "androidx.appcompat:appcompat:$appcompat"
 
 //Test
 const val `testImpl-junit` = "junit:junit:4.13.2"
@@ -49,7 +50,10 @@ const val lPhotoPicker = "com.github.limuyang2:LPhotoPicker:2.6"
 const val lifecycle = "2.4.1"
 val android = listOf(
     "androidx.constraintlayout:constraintlayout:2.1.2",
+
     "com.google.android.material:material:1.4.0",
+
+    "androidx.appcompat:appcompat:$appcompat",
 
     "androidx.core:core-ktx:1.7.0",
     "androidx.activity:activity-ktx:1.4.0",

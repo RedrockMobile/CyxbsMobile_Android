@@ -13,6 +13,10 @@ dependencies {
     photoView()
     rxPermission()
     dialog()
+
+    api(`rxjava3-common`)
+    api(`rxjava3-kotlin`)
+    api(`rxjava3-android`)
 }
 
 android.buildFeatures.dataBinding = true

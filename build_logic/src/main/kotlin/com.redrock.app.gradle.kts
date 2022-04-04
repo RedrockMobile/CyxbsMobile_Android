@@ -109,11 +109,8 @@ kapt {
 }
 
 dependencies {
-
     //引入所有的module和lib模块
     includeModulesAndLibs()
-    //引入所有的api模块
-    includeApis()
     //引入外部所需依赖
     includeDependencies()
 }
@@ -131,17 +128,10 @@ fun DependencyHandlerScope.includeModulesAndLibs() {
 
 fun DependencyHandlerScope.includeDependencies() {
     bugly()
-    rxjava3()
     umeng()
+    hotFix()
     aRouter()
     test()
-    hotFix()
     autoService()
-    //walle()
-}
-
-fun DependencyHandlerScope.includeApis(){
-    implementation(project(":lib_account:api_account"))
-    implementation(project(":lib_protocol:api_protocol"))
 }
 

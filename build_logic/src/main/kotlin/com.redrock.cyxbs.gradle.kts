@@ -7,6 +7,9 @@ when {
     "module_.+".toRegex().matches(projectName) -> {
         apply(plugin = "com.redrock.module")
     }
+    "lib_common" == projectName ->{
+        apply(plugin = "com.redrock.lib-common")
+    }
     "lib_.+".toRegex().matches(projectName) -> {
         apply(plugin = "com.redrock.library")
     }

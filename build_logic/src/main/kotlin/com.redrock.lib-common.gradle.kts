@@ -1,3 +1,6 @@
+import org.gradle.kotlin.dsl.dependencies
+import org.gradle.kotlin.dsl.kotlin
+import org.gradle.kotlin.dsl.project
 import versions.*
 
 plugins {
@@ -24,11 +27,10 @@ android {
 }
 
 dependencies {
-    //threeParty()
     android()
+    api(`androidx-appcompat`)
     test()
     aRouter()
-    implementation(project(":lib_common"))
 }
 
 kapt {
@@ -37,4 +39,3 @@ kapt {
         arg("AROUTER_MODULE_NAME", project.name)
     }
 }
-

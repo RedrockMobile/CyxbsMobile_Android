@@ -2,7 +2,7 @@ package com.mredrock.cyxbs.sdks
 
 import com.alibaba.android.arouter.launcher.ARouter
 import com.google.auto.service.AutoService
-import com.mredrock.cyxbs.common.BuildConfig
+import com.mredrock.cyxbs.BuildConfig
 import com.mredrock.cyxbs.spi.SdkService
 import com.mredrock.cyxbs.spi.SdkManager
 
