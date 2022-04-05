@@ -17,7 +17,6 @@ if(isFullModuleDebugMode){
                 val isProjectIgnored = findInGradleProperties(name)
                 //如果当前project没有被加入黑名单，就进行依赖替换
                 if (!isProjectIgnored)  {
-                    println(name)
                     useTarget("com.mredrock.team:${name}:cache")
                 }
             }
