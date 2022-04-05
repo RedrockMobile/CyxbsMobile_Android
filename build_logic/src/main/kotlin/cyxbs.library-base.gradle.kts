@@ -19,12 +19,6 @@ android {
         minSdk = AGP.mineSdk
         targetSdk = AGP.targetSdk
 
-        splits {
-            density {
-
-            }
-        }
-
         testInstrumentationRunner = AGP.testInstrumentationRunner
         // 秘钥文件
         manifestPlaceholders += (project.ext["secret"]["manifestPlaceholders"] as Map<String, Any>)

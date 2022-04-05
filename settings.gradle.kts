@@ -1,7 +1,3 @@
-val isFullModuleDebug:String by settings
-val ignoreModuleMode:String by settings
-val ignoreModule:String by settings
-
 pluginManagement {
     includeBuild("build_logic")
     repositories {
@@ -17,9 +13,6 @@ pluginManagement {
 }
 dependencyResolutionManagement {
     repositoriesMode.set(RepositoriesMode.FAIL_ON_PROJECT_REPOS)
-    components.all {
-        println(id)
-    }
     repositories {
         // 以下两行代码相当于有了 google() jcenter() mavenCentral()，使用国内的阿里镜像
         maven { url = uri("$rootDir/maven") }
@@ -33,27 +26,34 @@ dependencyResolutionManagement {
     }
 }
 
-//includeBuild("build_logic")
-
-rootDir.listFiles()!!
-    //根路径下搜寻前缀为lib_和module_的文件夹
+//对文件夹进行遍历，深度为2
+rootDir.walk()
+    .maxDepth(2)
+        //过滤掉干扰文件夹
     .filter {
-        it.isDirectory && "(lib_.+)|(module_.+)".toRegex().matches(it.name)
+        val isDirectory = it.isDirectory
+        val isSubModule = file("$it/build.gradle").exists() || file("$it/build.gradle.kts").exists()
+        val isIndependentProject = file("$it/settings.gradle").exists() || file("$it/settings.gradle.kts").exists()
+        isDirectory  && isSubModule && !isIndependentProject
     }
+    //对module进行过滤
     .filter {
-        !isFullModuleDebug.toBoolean() || it.name == "module_app"
+        "(api_.+)|(module.+)|(lib.+)".toRegex().matches(it.name)
     }
-    .onEach {
-        include(":${it.name}")
+    //将file映射到相对路径
+    .map {
+        when {
+            it.name.startsWith("api_") -> {
+                val parentName = it.parentFile.name
+                val selfName = it.name
+                ":$parentName:$selfName"
+            }
+            else -> {
+                ":${it.name}"
+            }
+        }
     }
-    //搜寻第二层路径
-    .flatMap {
-        it.listFiles()!!.toList()
-    }
-    //搜索前缀为api_的文件夹
-    .filter {
-        it.isDirectory && "api_.+".toRegex().matches(it.name)
-    }
-    .onEach {
-        include(":${it.parentFile.name}:${it.name}")
+        //进行include
+    .forEach {
+        include(it)
     }
