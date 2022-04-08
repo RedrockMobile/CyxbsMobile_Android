@@ -7,6 +7,7 @@ import android.util.ArrayMap
 import com.amap.api.maps.model.*
 import com.amap.api.maps.utils.overlay.MovingPointOverlay
 import com.mredrock.cyxbs.common.network.ApiGenerator
+import com.mredrock.cyxbs.common.utils.LogUtils
 import com.mredrock.cyxbs.common.utils.extensions.safeSubscribeBy
 import com.mredrock.cyxbs.common.utils.extensions.setSchedulers
 import com.mredrock.cyxbs.discover.schoolcar.Interface.SchoolCarInterface
@@ -94,7 +95,7 @@ class SchoolCarsSmoothMove(private val schoolCarActivity: SchoolCarActivity?, pr
         if (car.latLngList.size > 4) {
             //停止上一次的移动，然后将上一次的位置加上之后再移动
             car.smoothMarker.stopMove()
-            val list = car.latLngList.subList(car.latLngList.size - 4, car.latLngList.size - 1)
+            val list = car.latLngList.subList(car.latLngList.size - 3, car.latLngList.size)
             list[0] = car.smoothMarker.position
             val smoothMarker = MovingPointOverlay(schoolCarActivity?.aMap,car.marker)
             smoothMarker.setPoints(list)

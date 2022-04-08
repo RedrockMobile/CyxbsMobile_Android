@@ -28,7 +28,7 @@ class MapStyleHelper(val context: Context) {
             builder.baseUrl(getBaseUrl())
         },tokenNeeded = true)
         val apiService = ApiGenerator.getApiService(0, MapService::class.java)
-        apiService.getMapRes("map_")
+        apiService.getMapRes("map_A")
                 .setSchedulers()
                 .safeSubscribeBy(onError = {
 
@@ -37,7 +37,7 @@ class MapStyleHelper(val context: Context) {
                     saveToDisk(it, style)
                     fileReady(callback)
                 }
-        apiService.getMapRes("map_")
+        apiService.getMapRes("map_B")
                 .setSchedulers()
                 .safeSubscribeBy {
                     saveToDisk(it, styleExtra)
