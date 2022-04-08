@@ -7,7 +7,7 @@
     android:orientation="horizontal"
     tools:context=".page.about.AgreementActivity">
 
-    <WebView
+    <com.mredrock.cyxbs.common.webView.LiteJsWebView
         android:id="@+id/mine_wv_agreement"
         android:layout_width="match_parent"
         android:layout_height="match_parent"/>

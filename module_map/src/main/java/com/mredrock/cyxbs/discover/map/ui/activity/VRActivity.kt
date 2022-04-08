@@ -12,6 +12,7 @@ import com.mredrock.cyxbs.common.ui.BaseActivity
 import com.mredrock.cyxbs.common.utils.extensions.defaultSharedPreferences
 import com.mredrock.cyxbs.common.utils.extensions.editor
 import com.mredrock.cyxbs.common.utils.extensions.startActivity
+import com.mredrock.cyxbs.common.webView.LiteJsWebView
 
 class VRActivity : BaseActivity() {
 
@@ -44,7 +45,7 @@ class VRActivity : BaseActivity() {
     override fun onStart() {
         super.onStart()
 
-        webView = WebView(this)
+        webView = LiteJsWebView(this)
         setContentView(webView)
 
         val dialog = ProgressDialog(this)

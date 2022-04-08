@@ -36,13 +36,13 @@
             android:background="#FFFFFF"
             android:visibility="gone" />
 
-        <WebView
+        <com.mredrock.cyxbs.common.webView.LiteJsWebView
             android:layout_gravity="center"
             android:id="@+id/wv_redPage"
             android:layout_height="match_parent"
             android:layout_width="match_parent">
 
-        </WebView>
+        </com.mredrock.cyxbs.common.webView.LiteJsWebView>
     </FrameLayout>
 </LinearLayout>
 

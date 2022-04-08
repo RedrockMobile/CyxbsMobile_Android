@@ -30,7 +30,7 @@
             android:layout_marginStart="13dp"
             android:layout_marginTop="24dp"
             android:text="鱼鱼鱼鱼鱼鱼鱼鱼鱼鱼"
-            android:textColor="#15315B"
+            android:textColor="@color/mine_tv_user_name"
             android:textSize="16sp"
             app:layout_constraintStart_toEndOf="@+id/mine_fan_item_iv_avatar"
             app:layout_constraintTop_toTopOf="parent" />
@@ -44,7 +44,7 @@
             android:maxLines="1"
             android:text="这是一条签名签名去啊就基督教..."
             android:textSize="12sp"
-            android:textColor="#6615315B"
+            android:textColor="@color/mine_tv_user_introduce"
             app:layout_constraintStart_toEndOf="@+id/mine_fan_item_iv_avatar"
             app:layout_constraintTop_toBottomOf="@+id/mine_fan_item_tv_nickname" />
 
@@ -56,7 +56,7 @@
             android:paddingStart="14dp"
             android:paddingEnd="14dp"
             android:text="+关注"
-            android:textColor="#FFFFFF"
+            android:textColor="@color/mine_tv_user_focus"
             android:textSize="13sp"
             android:gravity="center"
             android:background="@drawable/mine_shape_tv_unfocus"

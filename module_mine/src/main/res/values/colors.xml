@@ -106,4 +106,9 @@
     <color name="mine_feedback_edit_underline_color">#2A4E84</color>
     <color name="mine_feedback_bg_color">#F8F9FC</color>
     <color name="mine_feedback_history_list_not_reply_bg_color">#FF9180</color>
+    <color name="mine_btn_user_focus">#E8F0FC</color>
+    <color name="mine_btn_user_unfocus">#4A44E4</color>
+    <color name="mine_tv_user_focus">#94A6C4</color>
+    <color name="mine_tv_user_name">#15315B</color>
+    <color name="mine_tv_user_introduce">#6615315B</color>
 </resources>

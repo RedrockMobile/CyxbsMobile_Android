@@ -31,7 +31,7 @@
             android:layout_marginStart="13dp"
             android:layout_marginTop="18dp"
             android:text="鱼鱼鱼鱼鱼鱼鱼鱼鱼鱼"
-            android:textColor="#15315B"
+            android:textColor="@color/qa_tv_user_name"
             android:textSize="16sp"
             app:layout_constraintStart_toEndOf="@+id/qa_iv_search_user_avatar"
             app:layout_constraintTop_toTopOf="parent" />
@@ -44,7 +44,7 @@
             android:layout_marginTop="1dp"
             android:maxLines="1"
             android:text="这是一条签名签名去啊就基督教..."
-            android:textColor="#6615315B"
+            android:textColor="@color/qa_tv_user_introduce"
             android:textSize="12sp"
             app:layout_constraintStart_toEndOf="@+id/qa_iv_search_user_avatar"
             app:layout_constraintTop_toBottomOf="@+id/qa_tv_search_user_nickname" />
@@ -59,7 +59,7 @@
             android:paddingStart="14dp"
             android:paddingEnd="14dp"
             android:text="互相关注"
-            android:textColor="#94A6C4"
+            android:textColor="@color/qa_tv_user_focus"
             android:textSize="13sp"
             app:layout_constraintBottom_toBottomOf="@+id/qa_iv_search_user_avatar"
             app:layout_constraintEnd_toEndOf="parent"

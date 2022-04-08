@@ -257,7 +257,6 @@ class DynamicDetailActivity : BaseViewModelActivity<DynamicDetailViewModel>() {
             intent.putExtra("post_id", postId)
         }
         isFromMine = intent.extras?.get("is_from_mine") as Boolean? ?: false
-        LogUtils.d("is_from_mine", "isFromMine-->$isFromMine")
         commentListRvAdapter.isFromMine = isFromMine
         // 设置进入动画
         window.enterTransition = Slide(Gravity.END).apply { duration = animatorDuration }
@@ -338,8 +337,7 @@ class DynamicDetailActivity : BaseViewModelActivity<DynamicDetailViewModel>() {
         }
         qa_iv_dynamic_avatar.setOnClickListener {
             ARouter.getInstance().build(MINE_PERSON_PAGE)
-                .withString("redid",
-                    dynamic?.uid)
+                .withString("redid", viewModel.dynamic.value?.uid)
                 .navigation()
         }
     }
@@ -463,11 +461,9 @@ class DynamicDetailActivity : BaseViewModelActivity<DynamicDetailViewModel>() {
 
     private fun initDynamic() {
 
-
         // 设置behavior
         val layoutParams = qa_ll_reply.layoutParams as CoordinatorLayout.LayoutParams
         layoutParams.behavior = behavior
-
 
         if (dynamic == null) {
             dynamic = Dynamic().apply {
@@ -478,9 +474,8 @@ class DynamicDetailActivity : BaseViewModelActivity<DynamicDetailViewModel>() {
                 }
             }
         }
-        dynamic?.let {
-            viewModel.dynamic.value = it
-        }
+
+        viewModel.dynamic.value = dynamic!!
 
         qa_iv_dynamic_share.setOnSingleClickListener { view ->
             viewModel.dynamic.value?.let { dynamic ->
@@ -574,6 +569,7 @@ class DynamicDetailActivity : BaseViewModelActivity<DynamicDetailViewModel>() {
             }
             this.contentView?.let { it1 -> optionPopWindow.showFromBottom(it1) }
         }
+
         dynamic?.let {
             qa_iv_dynamic_praise_count_image.registerLikeView(
                 it.postId,
@@ -582,10 +578,10 @@ class DynamicDetailActivity : BaseViewModelActivity<DynamicDetailViewModel>() {
                 it.praiseCount
             )
         }
+
         qa_iv_dynamic_praise_count_image.setOnSingleClickListener {
             qa_iv_dynamic_praise_count_image.click()
         }
-
     }
 
     private fun initReplyList() {

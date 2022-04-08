@@ -24,6 +24,7 @@ class FeedbackDetailActivity : BaseActivity() {
                     displayZoomControls = false
                     mixedContentMode = WebSettings.MIXED_CONTENT_ALWAYS_ALLOW
                     mediaPlaybackRequiresUserGesture = false
+                    allowFileAccess = false
                 }
                 loadDataWithBaseURL(null, intent.getStringExtra("content").toString(), "text/html", "utf-8", null)
             }
