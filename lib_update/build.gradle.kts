@@ -1,3 +1,4 @@
+import versions.defaultNet
 import versions.dialog
 import versions.rxPermission
 
@@ -12,5 +13,6 @@ plugins {
 dependencies {
     implementation(project(":lib_update:api_update"))
     dialog()
+    defaultNet()
     rxPermission()
 }

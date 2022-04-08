@@ -4,7 +4,7 @@
 
     <application
         android:theme="@style/AppTheme"
-        android:name="debug.MainApplication">
+        android:name="MainApplication">
         <activity
             android:name=".ui.MainActivity"
             android:launchMode="singleTask" />

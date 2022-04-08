@@ -1,3 +1,4 @@
+import versions.defaultNet
 import versions.dialog
 
 plugins {
@@ -14,4 +15,5 @@ dependencies {
     implementation (project(":module_main:api_main"))
     implementation( project(":module_volunteer:api_volunteer"))
     dialog()
+    defaultNet()
 }

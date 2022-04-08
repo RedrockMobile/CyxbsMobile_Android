@@ -2,7 +2,6 @@
 
 package com.mredrock.cyxbs.main.ui
 
-import android.Manifest
 import android.app.Dialog
 import android.content.Intent
 import android.os.Bundle
@@ -30,12 +29,14 @@ import com.mredrock.cyxbs.common.ui.BaseViewModelActivity
 import com.mredrock.cyxbs.common.utils.debug
 import com.mredrock.cyxbs.common.utils.extensions.*
 import com.mredrock.cyxbs.api.main.MAIN_MAIN
+import com.mredrock.cyxbs.common.BaseApp
 import com.mredrock.cyxbs.main.R
 import com.mredrock.cyxbs.main.adapter.MainAdapter
 import com.mredrock.cyxbs.main.components.DebugDataDialog
 import com.mredrock.cyxbs.main.utils.BottomNavigationHelper
 import com.mredrock.cyxbs.main.utils.isDownloadSplash
 import com.mredrock.cyxbs.main.viewmodel.MainViewModel
+import com.umeng.message.PushAgent
 import kotlinx.android.synthetic.main.main_activity_main.*
 import kotlinx.android.synthetic.main.main_bottom_nav.*
 import org.greenrobot.eventbus.EventBus
@@ -66,6 +67,9 @@ class MainActivity : BaseViewModelActivity<MainViewModel>(),
     private var bottomHelper: BottomNavigationHelper? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
+        //友盟 应用活跃统计 理应在用户同意以后调用
+        PushAgent.getInstance(BaseApp.appContext).onAppStart()
+
         setTheme(R.style.MainActivityTheme)//恢复真正的主题，保证WindowBackground为主题色
         super.onCreate(savedInstanceState)
         // 暂时不要在mainActivity里面使用dataBinding，会有一个量级较大的闪退

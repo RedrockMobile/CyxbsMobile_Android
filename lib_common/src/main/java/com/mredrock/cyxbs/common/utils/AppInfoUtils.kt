@@ -19,8 +19,8 @@ fun getProcessName(pid: Int): String? {
     try {
         reader = BufferedReader(FileReader("/proc/$pid/cmdline"))
         var processName = reader.readLine()
-        if (!TextUtils.isEmpty(processName)) {
-            processName = processName.trim { it <= ' ' }
+        if (processName.isNotEmpty()) {
+            processName = processName.trim()
         }
         return processName
     } catch (throwable: Throwable) {

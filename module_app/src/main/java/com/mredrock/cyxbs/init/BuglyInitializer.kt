@@ -3,7 +3,7 @@ package com.mredrock.cyxbs.init
 import android.app.Application
 import android.os.Process
 import com.mredrock.cyxbs.BuildConfig
-import com.mredrock.cyxbs.api.account.IAccountService
+//import com.mredrock.cyxbs.api.account.IAccountService
 import com.mredrock.cyxbs.common.service.ServiceManager
 import com.mredrock.cyxbs.common.utils.getAppVersionName
 import com.mredrock.cyxbs.common.utils.getProcessName
@@ -18,7 +18,7 @@ import com.tencent.bugly.crashreport.CrashReport
  * @email 2767465918@qq.com
  * @date 2022/3/4 22:49
  */
-object InitBugly : IInit {
+object BuglyInitializer : SdkInitializer {
     override fun init(application: Application) {
         val packageName = application.packageName
         val processName = getProcessName(Process.myPid())
@@ -26,7 +26,7 @@ object InitBugly : IInit {
         strategy.appVersion = getAppVersionName(application)
         strategy.isUploadProcess = processName == null || processName == packageName
         //strategy.appChannel = WalleChannelReader.getChannel(application, "debug")
-        CrashReport.setUserId(ServiceManager.getService<IAccountService>().getUserService().getStuNum())
+        //CrashReport.setUserId(ServiceManager.getService<IAccountService>().getUserService().getStuNum())
         Bugly.init(application, BuildConfig.BUGLY_APP_ID, false, strategy)
         if (BuildConfig.DEBUG) {
             CrashReport.setUserSceneTag(application, 83913)

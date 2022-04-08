@@ -18,11 +18,5 @@ abstract class BaseApp : Application() {
     override fun onCreate() {
         super.onCreate()
         appContext = this
-        initARouter()
-    }
-
-    open fun initARouter() {
-        ARouter.init(this)
-        ARouter.openLog()
     }
 }

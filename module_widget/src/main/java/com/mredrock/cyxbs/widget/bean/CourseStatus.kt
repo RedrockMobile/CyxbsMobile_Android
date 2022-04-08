@@ -1,6 +1,5 @@
 package com.mredrock.cyxbs.widget.bean
 
-import androidx.room.Ignore
 import java.io.Serializable
 
 /**
@@ -10,10 +9,8 @@ class CourseStatus : Serializable {
 
 
     companion object {
-        @Ignore
         const val COURSE = 0
 
-        @Ignore
         const val AFFAIR = 1
     }
 

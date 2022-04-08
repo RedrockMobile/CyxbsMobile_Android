@@ -1,4 +1,5 @@
 import versions.eventBus
+import versions.threeParty
 
 /*
 * 这里只添加确认模块独用库，添加请之前全局搜索，是否已经依赖
@@ -12,5 +13,6 @@ dependencies {
     implementation(project(":module_volunteer:api_volunteer"))
     implementation(project(":module_todo:api_todo"))
     implementation(project(":lib_account:api_account"))
+    threeParty()
     eventBus()
 }

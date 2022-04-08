@@ -11,6 +11,9 @@ dependencies {
     dialog()
     paging()
     photoView()
+    threeParty()
+    lPhotoPicker()
+    defaultRoom()
     implementation("com.google.android:flexbox:2.0.1")
     implementation("de.hdodenhof:circleimageview:3.1.0")
     implementation("com.tencent.tauth:qqopensdk:3.52.0")
@@ -18,3 +21,4 @@ dependencies {
     implementation("com.umeng.umsdk:common:9.1.0")
     implementation("com.github.yalantis:ucrop:2.2.1")
 }
+android.buildFeatures.dataBinding = true

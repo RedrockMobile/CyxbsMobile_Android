@@ -9,6 +9,6 @@ import android.app.Application
  * @email 2767465918@qq.com
  * @date 2022/3/4 18:50
  */
-interface IInit {
+interface SdkInitializer {
     fun init(application: Application)
 }

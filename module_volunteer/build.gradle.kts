@@ -1,3 +1,4 @@
+import versions.defaultNet
 import versions.eventBus
 import versions.lottie
 
@@ -13,4 +14,5 @@ dependencies {
     implementation("com.madgag.spongycastle:pg:1.54.0.0")
     lottie()
     eventBus()
+    defaultNet()
 }

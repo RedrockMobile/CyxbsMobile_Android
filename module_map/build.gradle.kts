@@ -1,3 +1,7 @@
+import versions.defaultNet
+import versions.lPhotoPicker
+import versions.threeParty
+
 plugins {
     id("com.redrock.cyxbs")
 }
@@ -9,4 +13,7 @@ dependencies {
     * */
     implementation("com.google.android:flexbox:2.0.1")
     compileOnly ("com.davemorrissey.labs:subsampling-scale-image-view-androidx:3.10.0")
+    threeParty()
+    lPhotoPicker()
 }
+android.buildFeatures.dataBinding = true
