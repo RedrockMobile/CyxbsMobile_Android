@@ -28,7 +28,8 @@ const val `bugly-crash-report-upgrade` = "com.tencent.bugly:crashreport_upgrade:
 
 //美团多渠道打包
 const val `walle-library` = "com.meituan.android.walle:library:1.1.7"
-
+//腾讯多渠道打包
+const val `vasDolly-library` = "com.tencent.vasdolly:helper:3.0.4"
 //umeng
 const val `umeng-common` = "com.umeng.umsdk:common:9.4.4"
 const val `umeng-asms` = "com.umeng.umsdk:asms:1.4.1"
@@ -252,6 +253,9 @@ fun DependencyHandlerScope.push() {
 // walle https://github.com/Meituan-Dianping/walle
 fun DependencyHandlerScope.walle() {
     "implementation"(`walle-library`)
+}
+fun DependencyHandlerScope.vasDolly(){
+    "implementation"(`vasDolly-library`)
 }
 
 // Sophix https://help.aliyun.com/document_detail/61082.html

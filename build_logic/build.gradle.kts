@@ -13,7 +13,8 @@ dependencies {
     implementation("com.alibaba:arouter-register:1.0.2")
     // AndResGuard https://github.com/shwenzhang/AndResGuard
     implementation ("com.tencent.mm:AndResGuard-gradle-plugin:1.2.18")
-
+    // 腾讯多渠道打包
+    implementation("com.tencent.vasdolly:plugin:3.0.4")
     //美团多渠道打包不兼容gradle 7.0 而就目前而言，也只有单渠道，移除walle
     //implementation("com.meituan.android.walle:plugin:1.1.7")
 }
