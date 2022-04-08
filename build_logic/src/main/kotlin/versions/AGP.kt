@@ -8,8 +8,8 @@ object AGP {
 
 
     const val releaseApplicationId = "com.mredrock.cyxbs"
-    const val releaseVersionCode = 74 // 线上74，开发75
-    const val releaseVersionName = "6.4.1" // 线上6.4.1，开发6.4.2
+    const val releaseVersionCode = 75 // 线上75，开发76
+    const val releaseVersionName = "6.4.2" // 线上6.4.2，开发6.4.3
 
     val releaseAbiFilters = listOf("arm64-v8a")
 }
