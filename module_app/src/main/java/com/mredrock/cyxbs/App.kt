@@ -1,6 +1,7 @@
 package com.mredrock.cyxbs
 
 import android.app.Application
+import androidx.annotation.Keep
 import com.mredrock.cyxbs.common.BaseApp
 import com.mredrock.cyxbs.spi.SdkService
 import com.mredrock.cyxbs.spi.SdkManager
@@ -9,6 +10,7 @@ import java.util.*
 /**
  * Created By jay68 on 2018/8/8.
  */
+@Keep
 class App : BaseApp(), SdkManager {
 
     private val loader = ServiceLoader.load(SdkService::class.java)

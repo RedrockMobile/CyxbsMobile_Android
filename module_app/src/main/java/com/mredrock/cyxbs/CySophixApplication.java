@@ -17,6 +17,7 @@ import com.taobao.sophix.SophixManager;
  * 注意原先Application里不需要再重复初始化Sophix，并且需要避免混淆原先Application类。
  * 如有其它自定义改造，请咨询官方后妥善处理。
  */
+
 public class CySophixApplication extends SophixApplication {
     private final String TAG = "SophixStubApplication";
 

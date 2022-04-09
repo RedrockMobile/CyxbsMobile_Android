@@ -1,3 +1,9 @@
+#####################################################################
+#
+#   混淆文件因为模块下没有导包，所以会报错，但不影响
+#
+#####################################################################
+#noinspection ShrinkerUnresolvedReference
 #基线包使用，生成mapping.txtt
 -printmapping mapping.txt
 #补丁包使用，应用mapping.txt
@@ -20,6 +26,7 @@
 ## EventBus https://github.com/greenrobot/EventBus
 -keepattributes *Annotation*
 -keepclassmembers class * {
+    #noinspection ShrinkerUnresolvedReference
     @org.greenrobot.eventbus.Subscribe <methods>;
 }
 -keep enum org.greenrobot.eventbus.ThreadMode { *; }
@@ -93,6 +100,7 @@
 -keep class * implements com.google.gson.JsonSerializer
 -keep class * implements com.google.gson.JsonDeserializer
 -keepclassmembers,allowobfuscation class * {
+  #noinspection ShrinkerUnresolvedReference
   @com.google.gson.annotations.SerializedName <fields>;
 }
 -keep,allowobfuscation,allowshrinking class com.google.gson.reflect.TypeToken
@@ -123,6 +131,13 @@
 
 
 ## hotfix
+## Sophix https://help.aliyun.com/document_detail/61082.html
+#基线包使用，生成mapping.txt
+-printmapping mapping.txt
+#生成的mapping.txt在app/build/outputs/mapping/release路径下，移动到/app路径下
+#修复后的项目使用，保证混淆结果一致
+#-applymapping mapping.txt
+#hotfix
 -keep class com.taobao.sophix.**{*;}
 -keep class com.ta.utdid2.device.**{*;}
 -dontwarn com.alibaba.sdk.android.utils.**
@@ -130,6 +145,7 @@
 -dontoptimize
 
 
+# ===============
 
 # Rx
 -dontwarn sun.misc.**
@@ -143,6 +159,7 @@
 -dontwarn io.rx_cache.internal.**
 
 #ucrop
+#ucrop https://github.com/Yalantis/uCrop
 -dontwarn com.yalantis.ucrop**
 -keep class com.yalantis.ucrop** { *; }
 -keep interface com.yalantis.ucrop** { *; }
@@ -151,15 +168,20 @@
 -keep class com.nineoldandroids.** { *; }
 
 
+# ===============
 
 # renderscript
 -keep class android.support.v8.renderscript.** { *; }
 
 # 高德地图
+# 高德地图 https://lbs.amap.com/api/android-sdk/guide/create-project/dev-attention
 # 3D 地图
 -keep   class com.amap.api.maps.**{*;}
 -keep   class com.autonavi.**{*;}
 -keep   class com.amap.api.trace.**{*;}
+-keep class com.amap.api.maps.**{*;}
+-keep class com.autonavi.**{*;}
+-keep class com.amap.api.trace.**{*;}
 
 # 定位
 -keep class com.amap.api.location.**{*;}
@@ -255,10 +277,12 @@
     public static ** valueOf(java.lang.String);
 }
 -keepclasseswithmembers class * {
+    #noinspection ShrinkerUnresolvedReference
     public <init>(android.content.Context, android.util.AttributeSet);
     public <init>(android.content.Context, android.util.AttributeSet, int);
 }
 -keep class * implements android.os.Parcelable {
+  #noinspection ShrinkerUnresolvedReference
   public static final android.os.Parcelable$Creator *;
 }
 -keepclassmembers class * implements java.io.Serializable {
@@ -280,6 +304,7 @@
 
 #---------------------------------webview------------------------------------
 -keepclassmembers class * extends android.webkit.WebViewClient {
+   #noinspection ShrinkerUnresolvedReference
    public void *(android.webkit.WebView, java.lang.String, android.graphics.Bitmap);
    public boolean *(android.webkit.WebView, java.lang.String);
 }
@@ -304,6 +329,7 @@
 -keep class com.uc.** {*;}
 
 -keepclassmembers class * {
+   #noinspection ShrinkerUnresolvedReference
    public <init> (org.json.JSONObject);
 }
 -keepclassmembers enum * {
@@ -332,3 +358,4 @@ public static final int *;
 }
 -keep,allowshrinking class org.android.agoo.service.* {*;}
 -keep,allowshrinking class org.android.spdy.**{*;}
+
