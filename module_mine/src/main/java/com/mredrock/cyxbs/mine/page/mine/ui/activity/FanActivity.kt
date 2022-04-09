@@ -41,7 +41,7 @@ class FanActivity : BaseActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.mine_activity_fan)
-        redId = intent.getStringExtra("redid")
+        redId = intent.getStringExtra("redid")!!
 
         pageIndex =
             if (intent.getIntExtra("pageIndex", 0) in 0..1)

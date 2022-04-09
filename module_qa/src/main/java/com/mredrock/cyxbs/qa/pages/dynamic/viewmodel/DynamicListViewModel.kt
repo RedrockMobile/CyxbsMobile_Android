@@ -11,7 +11,6 @@ import com.mredrock.cyxbs.common.utils.extensions.setSchedulers
 import com.mredrock.cyxbs.common.viewmodel.BaseViewModel
 import com.mredrock.cyxbs.qa.R
 import com.mredrock.cyxbs.qa.beannew.*
-import com.mredrock.cyxbs.qa.config.CommentConfig
 import com.mredrock.cyxbs.qa.network.ApiServiceNew
 import com.mredrock.cyxbs.qa.pages.dynamic.model.DynamicDataSource
 import com.mredrock.cyxbs.qa.pages.dynamic.model.TopicDataSet

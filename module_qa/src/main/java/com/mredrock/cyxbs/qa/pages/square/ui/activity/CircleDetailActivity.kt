@@ -17,7 +17,7 @@ import androidx.lifecycle.ViewModelProvider
 import com.alibaba.android.arouter.facade.annotation.Route
 import com.google.android.material.tabs.TabLayoutMediator
 import com.mredrock.cyxbs.common.BaseApp
-import com.mredrock.cyxbs.common.BaseApp.Companion.context
+import com.mredrock.cyxbs.common.BaseApp.Companion.appContext
 import com.mredrock.cyxbs.common.component.CyxbsToast
 import com.mredrock.cyxbs.common.config.QA_CIRCLE_DETAIL
 import com.mredrock.cyxbs.common.network.ApiGenerator
@@ -52,7 +52,7 @@ class CircleDetailActivity : BaseViewModelActivity<CircleDetailViewModel>() {
         private var startPosition = 0
         fun activityStartFromSquare(activity: BaseActivity, data: Topic) {
             activity.let {
-                val intent = Intent(context, CircleDetailActivity::class.java)
+                val intent = Intent(appContext, CircleDetailActivity::class.java)
                 intent.putExtra("topicItem", data)
                 it.window.exitTransition = Slide(Gravity.START).apply { duration = 500 }
                 startPosition = RESULT_CODE
@@ -63,7 +63,7 @@ class CircleDetailActivity : BaseViewModelActivity<CircleDetailViewModel>() {
         fun activityStartFromCircle(fragment: Fragment, data: Topic) {
             fragment.apply {
                 activity?.let {
-                    val intent = Intent(BaseApp.context, CircleDetailActivity::class.java)
+                    val intent = Intent(appContext, CircleDetailActivity::class.java)
                     intent.putExtra("topicItem", data)
                     it.window.exitTransition = Slide(Gravity.START).apply { duration = 500 }
                     startPosition = DYNAMIC_DETAIL_REQUEST
@@ -130,13 +130,13 @@ class CircleDetailActivity : BaseViewModelActivity<CircleDetailViewModel>() {
                         if (topic._isFollow == 1) {
                             btn_circle_square_concern.text = "已关注"
                             btn_circle_square_concern.background = ContextCompat.getDrawable(
-                                context,
+                                appContext,
                                 R.drawable.qa_shape_send_dynamic_btn_grey_background
                             )
                         } else {
                             btn_circle_square_concern.text = "+关注"
                             btn_circle_square_concern.background = ContextCompat.getDrawable(
-                                context,
+                                appContext,
                                 R.drawable.qa_shape_send_dynamic_btn_blue_background
                             )
                         }
@@ -152,7 +152,7 @@ class CircleDetailActivity : BaseViewModelActivity<CircleDetailViewModel>() {
                         initObserve()
                     },
                     onError = {
-                        context.toast("获取圈子信息失败")
+                        appContext.toast("获取圈子信息失败")
                     }
                 )
         }
@@ -271,7 +271,7 @@ class CircleDetailActivity : BaseViewModelActivity<CircleDetailViewModel>() {
     @SuppressLint("SetTextI18n", "UseCompatLoadingForDrawables")
     private fun initView() {
         if (!isFormReceive) {
-            topic = intent.getParcelableExtra("topicItem")
+            topic = intent.getParcelableExtra<Topic>("topicItem")!!
             viewModel.topicId = topic.topicId.toInt()
             iv_circle_square.setAvatarImageFromUrl(topic.topicLogo)
             tv_circle_square_name.text = topic.topicName
@@ -281,11 +281,11 @@ class CircleDetailActivity : BaseViewModelActivity<CircleDetailViewModel>() {
             if (topic._isFollow == 1) {
                 btn_circle_square_concern.text = "已关注"
                 btn_circle_square_concern.background =
-                    context.getDrawable(R.drawable.qa_shape_send_dynamic_btn_grey_background)
+                    appContext.getDrawable(R.drawable.qa_shape_send_dynamic_btn_grey_background)
             } else {
                 btn_circle_square_concern.text = "+关注"
                 btn_circle_square_concern.background =
-                    context.getDrawable(R.drawable.qa_shape_send_dynamic_btn_blue_background)
+                    appContext.getDrawable(R.drawable.qa_shape_send_dynamic_btn_blue_background)
             }
         }
     }

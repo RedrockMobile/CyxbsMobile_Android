@@ -5,7 +5,7 @@ import android.content.DialogInterface
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
-import com.tbruyelle.rxpermissions2.RxPermissions
+import com.tbruyelle.rxpermissions3.RxPermissions
 
 /**
  * 简化运行时权限的操作
@@ -64,27 +64,33 @@ class PermissionActionBuilder {
     }
 }
 
-private fun requestPermission(rxPermissions: RxPermissions,
-                              builder: PermissionActionBuilder,
-                              vararg permissionsToRequest: String) =
-        rxPermissions.request(*permissionsToRequest).subscribe { granted ->
-            if (granted) {
-                builder.doAfterGranted()
-            } else {
-                builder.doAfterRefused?.invoke()
-            }
+private fun requestPermission(
+    rxPermissions: RxPermissions,
+    builder: PermissionActionBuilder,
+    vararg permissionsToRequest: String
+) =
+    rxPermissions.request(*permissionsToRequest).subscribe { granted ->
+        if (granted) {
+            builder.doAfterGranted()
+        } else {
+            builder.doAfterRefused?.invoke()
         }
+    }
 
-private fun performRequestPermission(context: Context,
-                                     rxPermissions: RxPermissions,
-                                     vararg permissionsRequired: String,
-                                     actionBuilder: PermissionActionBuilder.() -> Unit) {
+private fun performRequestPermission(
+    context: Context,
+    rxPermissions: RxPermissions,
+    vararg permissionsRequired: String,
+    actionBuilder: PermissionActionBuilder.() -> Unit
+) {
     val builder = PermissionActionBuilder().apply(actionBuilder)
     val permissionsToRequest = permissionsRequired.filterNot { rxPermissions.isGranted(it) }
 
     when {
-        context.sharedPreferences(builder.tag
-                ?: permissionsRequired.toString()).getBoolean("isNeverShow", false) -> Unit
+        context.sharedPreferences(
+            builder.tag
+                ?: permissionsRequired.toString()
+        ).getBoolean("isNeverShow", false) -> Unit
         permissionsToRequest.isEmpty() -> builder.doAfterGranted.invoke()
         builder.reason != null ->
             AlertDialog.Builder(context).apply {
@@ -94,8 +100,10 @@ private fun performRequestPermission(context: Context,
                 }
                 if (builder.isShowNeverNotice) {
                     setNegativeButton("不再提示") { _: DialogInterface, i: Int ->
-                        context.sharedPreferences(builder.tag
-                                ?: permissionsRequired.toString()).editor {
+                        context.sharedPreferences(
+                            builder.tag
+                                ?: permissionsRequired.toString()
+                        ).editor {
                             putBoolean("isNeverShow", true)
                         }
                     }
@@ -110,15 +118,31 @@ private fun performRequestPermission(context: Context,
     }
 }
 
-fun AppCompatActivity.doPermissionAction(vararg permissionsRequired: String,
-                                         actionBuilder: PermissionActionBuilder.() -> Unit) {
-    performRequestPermission(this, RxPermissions(this), *permissionsRequired, actionBuilder = actionBuilder)
+fun AppCompatActivity.doPermissionAction(
+    vararg permissionsRequired: String,
+    actionBuilder: PermissionActionBuilder.() -> Unit
+) {
+    performRequestPermission(
+        this,
+        RxPermissions(this),
+        *permissionsRequired,
+        actionBuilder = actionBuilder
+    )
 }
 
-fun Fragment.doPermissionAction(vararg permissionsRequired: String,
-                                actionBuilder: PermissionActionBuilder.() -> Unit) {
-    performRequestPermission(activity!!, RxPermissions(this), *permissionsRequired, actionBuilder = actionBuilder)
+fun Fragment.doPermissionAction(
+    vararg permissionsRequired: String,
+    actionBuilder: PermissionActionBuilder.() -> Unit
+) {
+    performRequestPermission(
+        activity!!,
+        RxPermissions(this),
+        *permissionsRequired,
+        actionBuilder = actionBuilder
+    )
 }
 
-fun AppCompatActivity.isPermissionGranted(permissions: String) = RxPermissions(this).isGranted(permissions)
+fun AppCompatActivity.isPermissionGranted(permissions: String) =
+    RxPermissions(this).isGranted(permissions)
+
 fun Fragment.isPermissionGranted(permissions: String) = RxPermissions(this).isGranted(permissions)

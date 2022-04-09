@@ -1,7 +1,6 @@
 package com.mredrock.cyxbs.store.page.exchange.viewmodel
 
 import androidx.lifecycle.MutableLiveData
-import com.mredrock.cyxbs.common.BaseApp.Companion.context
 import com.mredrock.cyxbs.common.network.ApiGenerator
 import com.mredrock.cyxbs.common.network.exception.RedrockApiException
 import com.mredrock.cyxbs.common.utils.extensions.*
@@ -33,12 +32,13 @@ class ProductExchangeViewModel : BaseViewModel() {
             .setSchedulers()
             .safeSubscribeBy(
                 onError = {
-                    context.toast("获取商品详情失败")
+                    toast("获取商品详情失败")
                 },
                 onNext = {
                     productDetail.postValue(it)
                 }
             )
+            .lifeCycle()
     }
 
     fun getExchangeResult(id: String) {
@@ -58,5 +58,6 @@ class ProductExchangeViewModel : BaseViewModel() {
                     exchangeResult.postValue(it)
                 }
             )
+            .lifeCycle()
     }
 }

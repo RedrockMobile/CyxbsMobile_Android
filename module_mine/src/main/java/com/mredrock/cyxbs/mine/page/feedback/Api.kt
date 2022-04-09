@@ -7,7 +7,7 @@ import com.mredrock.cyxbs.mine.page.feedback.network.bean.ApiService
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit
-import retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory
+import retrofit2.adapter.rxjava3.RxJava3CallAdapterFactory
 import retrofit2.converter.gson.GsonConverterFactory
 
 /**
@@ -52,7 +52,7 @@ fun getRetrofit(): Retrofit {
     return Retrofit.Builder()
         .baseUrl(getMineBaseUrl())
         .addConverterFactory(GsonConverterFactory.create())
-        .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
+        .addCallAdapterFactory(RxJava3CallAdapterFactory.createSynchronous())
         .client(client)
         .build()
 }

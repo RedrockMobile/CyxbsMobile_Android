@@ -28,7 +28,7 @@ class WidgetAddTodoActivity : AppCompatActivity() {
                     //通知小组件更新数据
                     this.sendBroadcast(
                         Intent("cyxbs.widget.todo.refresh").apply {
-                            component = ComponentName(BaseApp.context, TodoWidget::class.java)
+                            component = ComponentName(BaseApp.appContext, TodoWidget::class.java)
                         }
                     )
                     finish()

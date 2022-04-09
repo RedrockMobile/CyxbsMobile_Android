@@ -10,9 +10,9 @@ import com.mredrock.cyxbs.common.viewmodel.BaseViewModel
 import com.mredrock.cyxbs.qa.beannew.QAHistory
 import com.mredrock.cyxbs.qa.network.ApiServiceNew
 import com.mredrock.cyxbs.qa.pages.search.room.QASearchHistoryDatabase
-import io.reactivex.Observable
-import io.reactivex.ObservableOnSubscribe
-import io.reactivex.schedulers.Schedulers
+import io.reactivex.rxjava3.core.Observable
+import io.reactivex.rxjava3.core.ObservableOnSubscribe
+import io.reactivex.rxjava3.schedulers.Schedulers
 
 
 /**
@@ -23,7 +23,7 @@ class SearchViewModel : BaseViewModel() {
     val historyFromDB = MutableLiveData<MutableList<QAHistory>>()
     private val qaSearchHistoryDatabase: QASearchHistoryDatabase by lazy {
         QASearchHistoryDatabase.getDatabase(
-            BaseApp.context
+            BaseApp.appContext
         )
     }
     val searchHotWords = MutableLiveData<List<String>>()

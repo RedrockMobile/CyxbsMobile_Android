@@ -215,8 +215,8 @@ class DoubleListFoldRvAdapter(
                 refreshList()
                 todoItemWrapperArrayList.add(1, wrapper)
                 checkEmptyItem(true)
-                BaseApp.context.sendBroadcast(Intent("cyxbs.widget.todo.refresh").apply {
-                    component = ComponentName(BaseApp.context, TodoWidget::class.java)
+                BaseApp.appContext.sendBroadcast(Intent("cyxbs.widget.todo.refresh").apply {
+                    component = ComponentName(BaseApp.appContext, TodoWidget::class.java)
                 })
             }
     }

@@ -4,12 +4,10 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.Transformations
 import androidx.paging.LivePagedListBuilder
 import androidx.paging.PagedList
-import com.mredrock.cyxbs.common.BaseApp
 import com.mredrock.cyxbs.common.network.ApiGenerator
 import com.mredrock.cyxbs.common.utils.extensions.doOnErrorWithDefaultErrorHandler
 import com.mredrock.cyxbs.common.utils.extensions.safeSubscribeBy
 import com.mredrock.cyxbs.common.utils.extensions.setSchedulers
-import com.mredrock.cyxbs.common.utils.extensions.toast
 import com.mredrock.cyxbs.common.viewmodel.BaseViewModel
 import com.mredrock.cyxbs.qa.beannew.Ignore
 import com.mredrock.cyxbs.qa.network.ApiServiceNew
@@ -54,7 +52,7 @@ class MyIgnoreViewModel : BaseViewModel() {
                     onSuccess()
                 },
                 onError = {
-                    BaseApp.context.toast(it.toString())
+                    toast(it.toString())
                 }
             )
     }

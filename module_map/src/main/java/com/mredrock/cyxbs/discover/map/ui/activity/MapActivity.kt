@@ -1,13 +1,11 @@
 package com.mredrock.cyxbs.discover.map.ui.activity
 
-import android.annotation.SuppressLint
 import android.app.Activity
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
 import androidx.lifecycle.Observer
 import com.alibaba.android.arouter.facade.annotation.Route
-import com.mredrock.cyxbs.common.BaseApp
 import com.mredrock.cyxbs.common.config.COURSE_POS_TO_MAP
 import com.mredrock.cyxbs.common.config.DISCOVER_MAP
 import com.mredrock.cyxbs.common.ui.BaseViewModelActivity
@@ -50,7 +48,7 @@ class MapActivity : BaseViewModelActivity<MapViewModel>() {
          * 如果有保存路径且地图存在，则不展示dialog
          */
         if (path == null || !fileIsExists(path)) {
-            GlideProgressDialog.show(this, BaseApp.context.getString(R.string.map_download_title), BaseApp.context.getString(R.string.map_download_message), false)
+            GlideProgressDialog.show(this, getString(R.string.map_download_title), getString(R.string.map_download_message), false)
         }
 
         //初始化viewModel
@@ -136,9 +134,8 @@ class MapActivity : BaseViewModelActivity<MapViewModel>() {
         super.onDestroy()
     }
 
-    @SuppressLint("MissingSuperCall")
     override fun onSaveInstanceState(outState: Bundle) {
-        //super.onSaveInstanceState(outState)
+        super.onSaveInstanceState(outState)
     }
 
     //判断文件是否存在
@@ -174,7 +171,7 @@ class MapActivity : BaseViewModelActivity<MapViewModel>() {
              * 上传图片
              * 只需把路径列表pictureList传入，context传入即可
              */
-            ProgressDialog.show(this, BaseApp.context.resources.getString(R.string.map_upload_picture_running), BaseApp.context.resources.getString(R.string.map_please_a_moment_text), false)
+            ProgressDialog.show(this, getString(R.string.map_upload_picture_running), getString(R.string.map_please_a_moment_text), false)
             viewModel.uploadPicture(pictureListPath, this)
         }
     }

@@ -1,11 +1,9 @@
 package com.mredrock.cyxbs.mine.page.security.viewmodel
 
 import androidx.lifecycle.MutableLiveData
-import com.mredrock.cyxbs.common.BaseApp.Companion.context
 import com.mredrock.cyxbs.common.utils.extensions.doOnErrorWithDefaultErrorHandler
 import com.mredrock.cyxbs.common.utils.extensions.safeSubscribeBy
 import com.mredrock.cyxbs.common.utils.extensions.setSchedulers
-import com.mredrock.cyxbs.common.utils.extensions.toast
 import com.mredrock.cyxbs.common.viewmodel.BaseViewModel
 import com.mredrock.cyxbs.mine.util.apiService
 
@@ -37,7 +35,7 @@ class ChangePasswordViewModel : BaseViewModel() {
     fun originPassWordCheck(originPassword: String) {
         apiService.originPassWordCheck(originPassword)
                 .doOnErrorWithDefaultErrorHandler {
-                    context.toast(it.toString())
+                    toast(it.toString())
                     true
                 }
                 .setSchedulers()
@@ -51,7 +49,7 @@ class ChangePasswordViewModel : BaseViewModel() {
         apiService.resetPassword(origin_password, new_password)
                 .setSchedulers()
                 .doOnErrorWithDefaultErrorHandler {
-                    context.toast("对不起，目前无法修改密码，原因为:$it")
+                    toast("对不起，目前无法修改密码，原因为:$it")
                     true
                 }
                 .safeSubscribeBy {
@@ -63,17 +61,17 @@ class ChangePasswordViewModel : BaseViewModel() {
                         10002 -> {
                             inputNewPasswordCorrect.value = false
                             inputNewPasswordFormat = 10002
-                            context.toast("原密码错误！")
+                            toast("原密码错误！")
                         }
                         10004 -> {
                             inputNewPasswordCorrect.value = false
                             inputNewPasswordFormat = 10004
-                            context.toast("密码格式有问题！")
+                            toast("密码格式有问题！")
                         }
                         10020 -> {
                             inputNewPasswordCorrect.value = false
                             inputNewPasswordFormat = 10020
-                            context.toast("新旧密码重复！")
+                            toast("新旧密码重复！")
                         }
                     }
                 }
@@ -84,7 +82,7 @@ class ChangePasswordViewModel : BaseViewModel() {
         apiService.resetPasswordFromLogin(stu_num, new_password, code)
                 .setSchedulers()
                 .doOnErrorWithDefaultErrorHandler {
-                    context.toast(it.toString())
+                    toast(it.toString())
                     true
                 }
                 .safeSubscribeBy {
@@ -95,11 +93,11 @@ class ChangePasswordViewModel : BaseViewModel() {
                         }
                         10003 -> {
                             inputNewPasswordCorrect.value = false
-                            context.toast("后端返回的认证码存在问题，修改失败")
+                            toast("后端返回的认证码存在问题，修改失败")
                         }
                         10004 -> {
                             inputNewPasswordCorrect.value = false
-                            context.toast("密码格式有问题！")
+                            toast("密码格式有问题！")
                         }
                     }
                 }
@@ -110,7 +108,7 @@ class ChangePasswordViewModel : BaseViewModel() {
         apiService.checkBinding(stu_num)
                 .setSchedulers()
                 .doOnErrorWithDefaultErrorHandler {
-                    context.toast(it.toString())
+                    toast(it.toString())
                     true
                 }
                 .safeSubscribeBy {
@@ -120,7 +118,7 @@ class ChangePasswordViewModel : BaseViewModel() {
                         bindingPasswordProtect = it.data.question_is == 1
                         onSuccess()
                     } else {
-                        context.toast("检查绑定失败")
+                        toast("检查绑定失败")
                     }
                 }
     }
@@ -130,7 +128,7 @@ class ChangePasswordViewModel : BaseViewModel() {
         apiService.checkDefaultPassword(stu_num)
                 .setSchedulers()
                 .doOnErrorWithDefaultErrorHandler {
-                    context.toast(it.toString())
+                    toast(it.toString())
                     true
                 }
                 .safeSubscribeBy {

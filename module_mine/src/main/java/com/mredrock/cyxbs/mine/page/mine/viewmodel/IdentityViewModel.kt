@@ -13,7 +13,6 @@ import com.mredrock.cyxbs.mine.network.model.PersonalStatu
 import com.mredrock.cyxbs.mine.network.model.Status
 import com.mredrock.cyxbs.mine.page.mine.ui.activity.HomepageActivity
 import com.mredrock.cyxbs.mine.util.apiService
-import io.reactivex.Observable
 
 class IdentityViewModel: BaseViewModel()  {
 

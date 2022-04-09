@@ -30,7 +30,7 @@ import org.greenrobot.eventbus.ThreadMode
  */
 class CourseFragment : BaseFragment(), EventBusLifecycleSubscriber {
 
-    override val openStatistics: Boolean
+    val openStatistics: Boolean
         get() = false
 
     //当前课表页面代表的第几周[默认0 代表整学期，1代表第一周。。。。。。]

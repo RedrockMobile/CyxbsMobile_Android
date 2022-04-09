@@ -1,7 +1,6 @@
 package com.mredrock.cyxbs.account
 
 import android.content.Context
-import android.util.Log
 import androidx.annotation.MainThread
 import androidx.annotation.WorkerThread
 import com.afollestad.materialdialogs.MaterialDialog
@@ -19,7 +18,7 @@ import com.mredrock.cyxbs.common.network.ApiGenerator
 import com.mredrock.cyxbs.common.network.exception.RedrockApiException
 import com.mredrock.cyxbs.common.service.ServiceManager
 import com.mredrock.cyxbs.api.electricity.IElectricityService
-import com.mredrock.cyxbs.main.MAIN_LOGIN
+import com.mredrock.cyxbs.api.main.MAIN_LOGIN
 import com.mredrock.cyxbs.api.volunteer.IVolunteerService
 import com.mredrock.cyxbs.common.BaseApp
 import com.mredrock.cyxbs.common.bean.RedrockApiWrapper
@@ -35,10 +34,6 @@ import retrofit2.Response
  */
 @Route(path = ACCOUNT_SERVICE, name = ACCOUNT_SERVICE)
 internal class AccountService : IAccountService {
-    companion object {
-        @JvmStatic
-        val TAG = AccountService::class.java.name
-    }
 
     private val mUserService: IUserService = UserService()
     private val mUserStateService: IUserStateService = UserStateService()
@@ -94,8 +89,7 @@ internal class AccountService : IAccountService {
                 }
 
                 override fun onFailure(call: Call<RedrockApiWrapper<UserInfo>>, t: Throwable) {
-                    BaseApp.context.toast("个人信息无法更新")
-                    Log.d("TAG","(AccountService.kt:98)->$t")
+                    BaseApp.appContext.toast("个人信息无法更新")
                 }
 
             })

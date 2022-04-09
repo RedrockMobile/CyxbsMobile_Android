@@ -4,12 +4,10 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.Transformations
 import androidx.paging.LivePagedListBuilder
 import androidx.paging.PagedList
-import com.mredrock.cyxbs.common.BaseApp
 import com.mredrock.cyxbs.common.network.ApiGenerator
 import com.mredrock.cyxbs.common.utils.extensions.doOnErrorWithDefaultErrorHandler
 import com.mredrock.cyxbs.common.utils.extensions.safeSubscribeBy
 import com.mredrock.cyxbs.common.utils.extensions.setSchedulers
-import com.mredrock.cyxbs.common.utils.extensions.toast
 import com.mredrock.cyxbs.common.viewmodel.BaseViewModel
 import com.mredrock.cyxbs.qa.beannew.Comment
 import com.mredrock.cyxbs.qa.beannew.CommentWrapper
@@ -53,7 +51,7 @@ class MyCommentViewModel : BaseViewModel() {
             .doOnErrorWithDefaultErrorHandler { true }
             .safeSubscribeBy(
                 onError = {
-                    BaseApp.context.toast("点赞失败")
+                    toast("点赞失败")
                 },
                 onNext = {
                     onSuccess.invoke()
@@ -78,7 +76,7 @@ class MyCommentViewModel : BaseViewModel() {
             .doOnErrorWithDefaultErrorHandler { true }
             .safeSubscribeBy(
                 onError = {
-                    BaseApp.context.toast("评论失败o(*￣▽￣*)o")
+                    toast("评论失败o(*￣▽￣*)o")
                 },
                 onNext = {
                     onSuccess.invoke()

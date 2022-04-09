@@ -1,7 +1,6 @@
 package com.cyxbsmobile_single.module_todo.service
 
 import android.content.Intent
-import android.view.View
 import android.widget.RemoteViews
 import android.widget.RemoteViewsService
 import androidx.core.content.ContextCompat
@@ -11,7 +10,6 @@ import com.cyxbsmobile_single.module_todo.ui.widget.TodoWidget
 import com.cyxbsmobile_single.module_todo.util.isOutOfTime
 import com.cyxbsmobile_single.module_todo.util.repeatMode2RemindTime
 import com.google.gson.Gson
-import com.mredrock.cyxbs.common.BaseApp
 import com.mredrock.cyxbs.common.utils.LogUtils
 
 /**
@@ -52,7 +50,7 @@ class TodoWidgetService : RemoteViewsService() {
             LogUtils.d("RayleighZ", "position = $position")
             listItem.setOnClickFillInIntent(
                 R.id.todo_ll_widget_back,
-                Intent(BaseApp.context, TodoWidget::class.java).apply {
+                Intent(this@TodoWidgetService, TodoWidget::class.java).apply {
                     action = "cyxbs.widget.todo.jump"
                     putExtra("todo", Gson().toJson(todoList[position]))
                 }
@@ -60,7 +58,7 @@ class TodoWidgetService : RemoteViewsService() {
 
             listItem.setOnClickFillInIntent(
                 R.id.todo_iv_widget_check,
-                Intent(BaseApp.context, TodoWidget::class.java).apply {
+                Intent(this@TodoWidgetService, TodoWidget::class.java).apply {
                     action = "cyxbs.widget.todo.check"
                     putExtra("todo", Gson().toJson(todoList[position]))
                 }
@@ -76,7 +74,7 @@ class TodoWidgetService : RemoteViewsService() {
                     )
                     listItem.setTextColor(
                         R.id.todo_tv_widget_todo_title,
-                        ContextCompat.getColor(BaseApp.context, R.color.todo_item_del_red)
+                        ContextCompat.getColor(this@TodoWidgetService, R.color.todo_item_del_red)
                     )
                     listItem.setTextViewText(R.id.todo_widget_notify_time, "")
                 } else {
@@ -87,7 +85,7 @@ class TodoWidgetService : RemoteViewsService() {
                     )
                     listItem.setTextColor(
                         R.id.todo_tv_widget_todo_title,
-                        ContextCompat.getColor(BaseApp.context, R.color.common_level_one_font_color)
+                        ContextCompat.getColor(this@TodoWidgetService, R.color.common_level_one_font_color)
                     )
                     listItem.setTextViewText(
                         R.id.todo_widget_notify_time,

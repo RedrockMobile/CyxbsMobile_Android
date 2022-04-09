@@ -6,7 +6,6 @@ import androidx.databinding.DataBindingUtil
 import androidx.databinding.ObservableField
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.android.material.bottomsheet.BottomSheetBehavior
-import com.mredrock.cyxbs.common.BaseApp
 import com.mredrock.cyxbs.common.ui.BaseActivity
 import com.mredrock.cyxbs.discover.othercourse.R
 import com.mredrock.cyxbs.discover.othercourse.databinding.OthercourseDiscoverActivityStuListBinding
@@ -19,7 +18,7 @@ class StuListActivity : BaseActivity() {
     var title: ObservableField<String> = ObservableField("")
     lateinit var mDataBinding: OthercourseDiscoverActivityStuListBinding
     lateinit var bottomSheetBehavior: BottomSheetBehavior<FrameLayout>
-    val database: HistoryDatabase by lazy { HistoryDatabase.getDatabase(BaseApp.context) }
+    val database: HistoryDatabase by lazy { HistoryDatabase.getDatabase(this) }
     var historyId = -1
 
 

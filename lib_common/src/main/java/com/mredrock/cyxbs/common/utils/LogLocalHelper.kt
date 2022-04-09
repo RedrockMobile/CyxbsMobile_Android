@@ -23,7 +23,8 @@ class LogLocalHelper(
         //删缓存
         remake()
         //写入
-        out = FileOutputStream(File(filePath, fileName), true)
+        val file = File(filePath, fileName)
+        out = FileOutputStream(file, true)
         //加密
         try {
             val encrypt = LogLocalAES.encrypt("1234567890123456", "abcdefg")

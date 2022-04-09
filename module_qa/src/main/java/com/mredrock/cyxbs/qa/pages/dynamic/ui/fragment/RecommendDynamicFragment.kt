@@ -42,7 +42,7 @@ class RecommendDynamicFragment : BaseDynamicFragment() {
 
     private lateinit var dynamicListRvAdapter: HybridAdapter
     val footerRvAdapter = FooterRvAdapter { viewModel.retryRecommend() }
-    val emptyRvAdapter = EmptyRvAdapter(BaseApp.context.getString(R.string.qa_question_list_empty_hint))
+    val emptyRvAdapter = EmptyRvAdapter(BaseApp.appContext.getString(R.string.qa_question_list_empty_hint))
 
     override fun initView() {
         /*

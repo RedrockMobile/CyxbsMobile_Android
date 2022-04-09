@@ -1,11 +1,11 @@
 package com.mredrock.cyxbs.mine.util.widget
 
+import android.content.Context
 import android.graphics.Bitmap
 import android.graphics.drawable.Drawable
 import com.bumptech.glide.Glide
 import com.bumptech.glide.request.target.CustomTarget
 import com.bumptech.glide.request.transition.Transition
-import com.mredrock.cyxbs.common.BaseApp.Companion.context
 
 /**
  * @ClassName BitmapUntil
@@ -19,7 +19,7 @@ import com.mredrock.cyxbs.common.BaseApp.Companion.context
 /**
  * 加载网络请求的Bitmap图片出来
  */
-fun loadBitmap(url: String, success: (Bitmap) -> Unit){
+fun loadBitmap(context: Context, url: String, success: (Bitmap) -> Unit){
     Glide.with(context) // context，可添加到参数中
         .asBitmap()
         .load(url)

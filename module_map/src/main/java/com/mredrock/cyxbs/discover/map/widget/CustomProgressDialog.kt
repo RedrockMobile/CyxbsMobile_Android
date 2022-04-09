@@ -17,10 +17,10 @@ import com.mredrock.cyxbs.discover.map.R
 
 class CustomProgressDialog : Dialog {
 
-    constructor(context: Context?) : super(context) {
+    constructor(context: Context) : super(context) {
     }
 
-    constructor(context: Context?, theme: Int) : super(context, theme) {}
+    constructor(context: Context, theme: Int) : super(context, theme) {}
 
     override fun onWindowFocusChanged(hasFocus: Boolean) {
         if (customProgressDialog == null) {
@@ -64,7 +64,7 @@ class CustomProgressDialog : Dialog {
 
     companion object {
         private var customProgressDialog: CustomProgressDialog? = null
-        fun createDialog(context: Context?): CustomProgressDialog? {
+        fun createDialog(context: Context): CustomProgressDialog? {
             customProgressDialog = CustomProgressDialog(context, R.style.map_transparent_dialog)
             customProgressDialog?.setContentView(R.layout.map_dialog_download)
             customProgressDialog?.window?.attributes?.gravity = Gravity.CENTER

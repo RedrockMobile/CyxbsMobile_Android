@@ -3,6 +3,7 @@ package com.mredrock.cyxbs.mine.page.feedback.history.detail
 import android.util.Log
 import android.widget.Toast
 import com.mredrock.cyxbs.common.BaseApp
+import com.mredrock.cyxbs.common.BaseApp.Companion.appContext
 import com.mredrock.cyxbs.common.utils.extensions.safeSubscribeBy
 import com.mredrock.cyxbs.common.utils.extensions.setSchedulers
 import com.mredrock.cyxbs.common.utils.extensions.toast
@@ -45,7 +46,7 @@ class HistoryDetailPresenter(private val id: Long, private val isReply: Boolean)
                 },
                 onComplete = {},
                 onError = {
-                    Toast.makeText(BaseApp.context, "出错啦！${it.message}", Toast.LENGTH_SHORT).show()
+                    Toast.makeText(appContext, "出错啦！${it.message}", Toast.LENGTH_SHORT).show()
                 }
             )
     }

@@ -1,5 +1,4 @@
 <resources xmlns:tools="http://schemas.android.com/tools">
-
     <!--    从邮问偷的值-->
     <string name="mine_dialog_tip_deny_text" translatable="false">取消</string>
     <string name="mine_dialog_tip_positive_text" translatable="false">确定</string>

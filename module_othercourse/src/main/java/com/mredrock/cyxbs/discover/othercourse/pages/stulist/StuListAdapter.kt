@@ -21,8 +21,8 @@ import com.mredrock.cyxbs.discover.othercourse.R
 import com.mredrock.cyxbs.discover.othercourse.network.Person
 import com.mredrock.cyxbs.discover.othercourse.room.STUDENT_TYPE
 import com.mredrock.cyxbs.discover.othercourse.room.TEACHER_TYPE
-import io.reactivex.Observable
-import io.reactivex.schedulers.Schedulers
+import io.reactivex.rxjava3.core.Observable
+import io.reactivex.rxjava3.schedulers.Schedulers
 
 /**
  * Created by zxzhu

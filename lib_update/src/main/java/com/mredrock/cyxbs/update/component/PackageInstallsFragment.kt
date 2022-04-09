@@ -7,7 +7,7 @@ import android.os.Bundle
 import android.provider.Settings
 import androidx.annotation.RequiresApi
 import androidx.fragment.app.Fragment
-import io.reactivex.subjects.PublishSubject
+import io.reactivex.rxjava3.subjects.PublishSubject
 
 /**
  * Create By Hosigus at 2020/5/3

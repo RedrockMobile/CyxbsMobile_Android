@@ -1,5 +1,6 @@
 package com.mredrock.cyxbs.discover.schoolcar.Interface
 
+import com.mredrock.cyxbs.common.bean.RedrockApiWrapper
 import com.mredrock.cyxbs.discover.schoolcar.bean.SchoolCarLocation
 
 /**
@@ -7,5 +8,5 @@ import com.mredrock.cyxbs.discover.schoolcar.bean.SchoolCarLocation
  */
 
 interface SchoolCarInterface{
-    fun processLocationInfo(carLocationInfo: SchoolCarLocation, aLong: Long)
+    fun processLocationInfo(carLocationInfo: RedrockApiWrapper<SchoolCarLocation>, aLong: Long)
 }

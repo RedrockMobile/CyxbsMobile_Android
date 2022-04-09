@@ -77,7 +77,7 @@ class QuestionSearchedFragment : BaseResultFragment() {
                     SearchResultHeaderAdapter(adapterKnowledge, qa_rv_knowledge)
                 adapterKnowledge.searchResultHeaderAdapter = adapterSearchResultHeader
 
-                val flexBoxManager = FlexboxLayoutManager(BaseApp.context)
+                val flexBoxManager = FlexboxLayoutManager(BaseApp.appContext)
                 flexBoxManager.flexWrap = FlexWrap.WRAP
                 qa_rv_knowledge.layoutManager = flexBoxManager
                 qa_rv_knowledge.adapter = adapterKnowledge

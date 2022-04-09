@@ -1,5 +1,0 @@
-apply from: config
-
-dependencies {
-    implementation project(':lib_update:api_update')
-}

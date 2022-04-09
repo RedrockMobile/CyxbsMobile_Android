@@ -25,11 +25,9 @@ import com.bumptech.glide.request.target.CustomTarget
 import com.bumptech.glide.request.transition.Transition
 import com.google.android.material.chip.Chip
 import com.google.android.material.chip.ChipGroup
-import com.mredrock.cyxbs.common.BaseApp
 import com.mredrock.cyxbs.common.component.CyxbsToast
 import com.mredrock.cyxbs.common.config.QA_QUIZ
 import com.mredrock.cyxbs.common.ui.BaseViewModelActivity
-import com.mredrock.cyxbs.common.utils.LogUtils
 import com.mredrock.cyxbs.common.utils.extensions.*
 import com.mredrock.cyxbs.mine.network.model.DynamicDraft
 import com.mredrock.cyxbs.qa.R
@@ -85,16 +83,16 @@ class QuizActivity : BaseViewModelActivity<QuizViewModel>() {
         setContentView(R.layout.qa_activity_quiz)
         initEditListener()
         if (!intent.getStringExtra("isComment").isNullOrEmpty()) {
-            isComment = intent.getStringExtra("isComment")
+            isComment = intent.getStringExtra("isComment")!!
             if (!intent.getStringExtra("commentContent").isNullOrEmpty()) {
                 qa_edt_quiz_content.setText(intent.getStringExtra("commentContent"))
             }
             if (!intent.getStringExtra("replyId").isNullOrEmpty()) {
-                replyId = intent.getStringExtra("replyId")
+                replyId = intent.getStringExtra("replyId")!!
                 nine_grid_view.gone()
             }
             if (!intent.getStringExtra("postId").isNullOrEmpty()) {
-                postId = intent.getStringExtra("postId")
+                postId = intent.getStringExtra("postId")!!
             }
         }
 
@@ -146,7 +144,7 @@ class QuizActivity : BaseViewModelActivity<QuizViewModel>() {
         fun initDynamicData(){
             if (data!=null){
                     isModificationDynamic=true
-                qa_edt_quiz_content.setText(data.content, TextView.BufferType.EDITABLE)
+                qa_edt_quiz_content.setText(data!!.content, TextView.BufferType.EDITABLE)
             }
         }
 
@@ -254,8 +252,7 @@ class QuizActivity : BaseViewModelActivity<QuizViewModel>() {
                         progressDialog?.show()
                         viewModel.deleteDraft()
                         if (data!=null){
-
-                            viewModel.submitDynamic(isModificationDynamic,data.postId)
+                            viewModel.submitDynamic(isModificationDynamic, data!!.postId)
                         }else{
                             viewModel.submitDynamic(isModificationDynamic,null)
                         }
@@ -283,7 +280,7 @@ class QuizActivity : BaseViewModelActivity<QuizViewModel>() {
                 if (nine_grid_view.childCount <= MAX_SELECTABLE_IMAGE_COUNT) {
                     this@QuizActivity.selectImageFromAlbum(MAX_SELECTABLE_IMAGE_COUNT - nine_grid_view.childCount + 1)
                 } else {
-                    BaseApp.context.toast("已达图片数上限")
+                    toast("已达图片数上限")
                 }
             } else {
 
@@ -357,11 +354,8 @@ class QuizActivity : BaseViewModelActivity<QuizViewModel>() {
                 }
                 val imageListAbsolutePath = ArrayList<String>()
                 imageListUri.forEach {
-                    Log.e("wxtag动态","(QuizActivity.kt:146)->>图库中拿出来的图片url${it} ")
-                    Log.e("wxtag动态","(QuizActivity.kt:146)->>图库中拿出来的图片处理一下${ Uri.parse(it).getAbsolutePath(this)} ")
                     imageListAbsolutePath.add(
                         Uri.parse(it).getAbsolutePath(this)
-
                     )
                 }
                 //为再次进入图库保存以前添加的图片，进行的逻辑
@@ -377,10 +371,12 @@ class QuizActivity : BaseViewModelActivity<QuizViewModel>() {
                 viewModel.setImageList(viewModel.lastImageLiveData)
             }
             ViewImageCropActivity.DEFAULT_RESULT_CODE -> viewModel.setImageList(viewModel.imageLiveData.value!!.apply {
-                set(
-                    viewModel.editingImgPos,
-                    data.getStringExtra(ViewImageCropActivity.EXTRA_NEW_PATH)
-                )
+                data.getStringExtra(ViewImageCropActivity.EXTRA_NEW_PATH)?.let {
+                    set(
+                        viewModel.editingImgPos,
+                        it
+                    )
+                }
             })
         }
     }
@@ -395,19 +391,16 @@ class QuizActivity : BaseViewModelActivity<QuizViewModel>() {
 
     private fun createImageView(uri: Uri) = RectangleView(this).apply {
         scaleType = ImageView.ScaleType.CENTER_CROP
-        Log.e("wdasdasxtag","(QuizActivity.kt:336)->>图片地址$uri ")
         val bitMap = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            Log.e("wdasdasxtag","(QuizActivity.kt:400)->>.bmSizeStandardizing ")
             uri.bmSizeStandardizing(context = this.context)
         } else {
-            TODO("VERSION.SDK_INT < O")
+            null
         }
         if(bitMap==null){
             loadBitmap(uri.toString()){
                 setImageBitmap(it)
             }
         }else{
-
             setImageBitmap(bitMap)
         }
 
@@ -467,16 +460,16 @@ class QuizActivity : BaseViewModelActivity<QuizViewModel>() {
             saveText = "保存",
             noSaveText = "不保存",
             cancelText = "取消",
-            saveListener = View.OnClickListener {
+            saveListener = {
                 saveDraft()
                 dismiss()
             },
-            noSaveListener = View.OnClickListener {
+            noSaveListener = {
                 viewModel.deleteDraft()
                 dismiss()
                 finish()
             },
-            cancelListener = View.OnClickListener {
+            cancelListener = {
                 dismiss()
             })
     }

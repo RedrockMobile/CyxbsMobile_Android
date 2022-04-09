@@ -9,7 +9,6 @@ import com.bumptech.glide.request.target.CustomViewTarget
 import com.bumptech.glide.request.transition.Transition
 import com.davemorrissey.labs.subscaleview.ImageSource
 import com.davemorrissey.labs.subscaleview.SubsamplingScaleImageView
-import com.mredrock.cyxbs.common.BaseApp
 import com.mredrock.cyxbs.discover.map.R
 import com.mredrock.cyxbs.discover.map.component.MapToast
 import com.mredrock.cyxbs.discover.map.model.DataSet
@@ -33,7 +32,7 @@ class SubsamplingScaleImageViewTarget(val context: Context, view: SubsamplingSca
         val path = DataSet.getPath()
         if (path != null && fileIsExists(path)) {
             view.setImage(ImageSource.uri(Uri.fromFile(File(path))))
-            MapToast.makeText(context, BaseApp.context.getString(R.string.map_map_load_failed), Toast.LENGTH_SHORT).show()
+            MapToast.makeText(context, context.getString(R.string.map_map_load_failed), Toast.LENGTH_SHORT).show()
         } else {
             MapDialogTips.show(context, context.getString(R.string.map_map_load_failed_title_tip)
                     , context.getString(R.string.map_map_load_failed_message_tip)

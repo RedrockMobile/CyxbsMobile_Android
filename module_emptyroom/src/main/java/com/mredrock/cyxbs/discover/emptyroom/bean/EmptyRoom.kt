@@ -12,8 +12,8 @@ class EmptyRoom() : Parcelable {
     lateinit var emptyRooms: List<String>
 
     constructor(parcel: Parcel) : this() {
-        floor = parcel.readString()
-        emptyRooms = parcel.createStringArrayList()
+        floor = parcel.readString()!!
+        emptyRooms = parcel.createStringArrayList()!!
     }
 
     override fun writeToParcel(dest: Parcel, flags: Int) {

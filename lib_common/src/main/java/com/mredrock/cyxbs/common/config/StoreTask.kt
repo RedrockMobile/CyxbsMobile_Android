@@ -2,13 +2,13 @@ package com.mredrock.cyxbs.common.config
 
 import androidx.core.content.edit
 import com.google.gson.Gson
-import com.mredrock.cyxbs.common.BaseApp.Companion.context
+import com.mredrock.cyxbs.common.BaseApp
 import com.mredrock.cyxbs.common.bean.RedrockApiStatus
 import com.mredrock.cyxbs.common.network.ApiGenerator
 import com.mredrock.cyxbs.common.utils.extensions.safeSubscribeBy
 import com.mredrock.cyxbs.common.utils.extensions.setSchedulers
 import com.mredrock.cyxbs.common.utils.extensions.sharedPreferences
-import io.reactivex.Observable
+import io.reactivex.rxjava3.core.Observable
 import okhttp3.ResponseBody
 import retrofit2.HttpException
 import retrofit2.http.Field
@@ -51,7 +51,7 @@ object StoreTask {
 
     // 上一次发送任务的时间, 用于清空每日任务
     private val lastSaveDate by lazy {
-        val share = context.sharedPreferences(this::class.java.simpleName)
+        val share = BaseApp.appContext.sharedPreferences(this::class.java.simpleName)
         share.getString("last_save_date", "")
     }
 
@@ -70,7 +70,7 @@ object StoreTask {
         task: Task,
         onlyTag: String?
     ) {
-        val share = context.sharedPreferences(this::class.java.simpleName)
+        val share = BaseApp.appContext.sharedPreferences(this::class.java.simpleName)
         when (task.type) {
             TaskType.BASE -> { // Base 任务是每天刷新的, 不相等时就先清空所有本地保存的 sharedPreferences
                 val nowDate = SimpleDateFormat("yyyy.M.d", Locale.CHINA).format(Date())
@@ -102,7 +102,7 @@ object StoreTask {
     // 检查之前是否存在相同的 onlyTage
     private fun isAllowPost(title: String, onlyTag: String? = null): Boolean {
         if (onlyTag != null) {
-            val share = context.sharedPreferences(this::class.java.simpleName)
+            val share = BaseApp.appContext.sharedPreferences(this::class.java.simpleName)
             val s = share.getString("list_${title}", null)
             if (!s.isNullOrEmpty()) {
             val list = s.split("$%@")
@@ -128,6 +128,11 @@ object StoreTask {
                 onError = {
                     if (it is HttpException) {
                         // 在任务进度大于最大进度时, 后端返回 http 的错误码 500 导致回调到 onError 方法 所以这里手动拿到返回的 bean 类
+                        /*
+                        * todo 如果以后要改这里接口，我想说以下几点：
+                        *  1、把这个 http 的错误码 500 改成 200（这本来就是他们的不规范，我们端上也不好处理）；
+                        *  2、任务请求在我们端上点都不好做，希望能把逻辑写在后端
+                        * */
                         val responseBody: ResponseBody? = it.response()?.errorBody()
                         val code = it.response()?.code() // 返回的 code 如果为 500
                         if (code == 500) {

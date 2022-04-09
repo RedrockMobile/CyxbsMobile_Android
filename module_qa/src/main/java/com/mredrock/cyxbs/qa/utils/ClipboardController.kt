@@ -15,7 +15,7 @@ object ClipboardController {
     fun copyText(context: Context, content: String) {
         val cm: ClipboardManager = context.getSystemService(Context.CLIPBOARD_SERVICE) as ClipboardManager
         val mClipData = ClipData.newPlainText("", content)
-        cm.primaryClip = mClipData
+        cm.setPrimaryClip(mClipData)
         context.toast("已复制到剪切板")
     }
 }

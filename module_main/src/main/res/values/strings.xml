@@ -25,7 +25,7 @@
     <string name="main_tourist_mode">没有学号么？</string>
     <string name="main_tourist_mode_enter">游客模式吧</string>
     <string name="main_tourist_course_ask_login_text">登录后就可查看课表~</string>
-    <string name="main_umeng_push_device_id">友盟推送设备id：</string>
+    <string name="main_umeng_push_device_id" translatable="false">友盟推送设备id：</string>
     <string name="main_long_press_to_copy">长按复制</string>
     <string name="main_umeng_analyzes_device_data">友盟分析设备数据：</string>
     <string name="main_unified_protocol_jump">统一协议跳转</string>

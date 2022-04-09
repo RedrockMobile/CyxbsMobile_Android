@@ -33,8 +33,8 @@ import com.mredrock.cyxbs.discover.news.bean.NewsAttachment
 import com.mredrock.cyxbs.discover.news.utils.FileTypeHelper
 import com.mredrock.cyxbs.discover.news.utils.TimeFormatHelper
 import com.mredrock.cyxbs.discover.news.viewmodel.NewsItemViewModel
-import com.tbruyelle.rxpermissions2.RxPermissions
-import io.reactivex.android.schedulers.AndroidSchedulers
+import com.tbruyelle.rxpermissions3.RxPermissions
+import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
 import kotlinx.android.synthetic.main.news_activity_detail.*
 import java.io.File
 import java.util.regex.Matcher
@@ -215,9 +215,9 @@ class NewsItemActivity : BaseViewModelActivity<NewsItemViewModel>(), NewsItemVie
 
     }
 
-    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
+    override fun onCreateOptionsMenu(menu: Menu): Boolean {
         menuInflater.inflate(R.menu.news_menu, menu)
-        menu?.getItem(0)?.setOnMenuItemClickListener { _ ->
+        menu.getItem(0)?.setOnMenuItemClickListener { _ ->
             val items = viewModel.news.value?.files
             if (items == null) {
                 viewModel.toastEvent.value = R.string.news_init

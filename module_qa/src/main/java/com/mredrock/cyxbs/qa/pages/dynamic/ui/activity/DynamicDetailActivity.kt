@@ -25,12 +25,9 @@ import com.alibaba.android.arouter.facade.annotation.Route
 import com.alibaba.android.arouter.launcher.ARouter
 import com.bumptech.glide.Glide
 import com.google.android.material.appbar.AppBarLayout
-import com.mredrock.cyxbs.api.account.IAccountService
-import com.mredrock.cyxbs.common.BaseApp.Companion.context
 import com.mredrock.cyxbs.common.component.CyxbsToast
 import com.mredrock.cyxbs.common.config.MINE_PERSON_PAGE
 import com.mredrock.cyxbs.common.config.QA_DYNAMIC_DETAIL
-import com.mredrock.cyxbs.common.service.ServiceManager
 import com.mredrock.cyxbs.common.ui.BaseViewModelActivity
 import com.mredrock.cyxbs.common.utils.LogUtils
 import com.mredrock.cyxbs.common.utils.extensions.*
@@ -58,7 +55,6 @@ import com.tencent.tauth.Tencent
 import kotlinx.android.synthetic.main.qa_activity_dynamic_detail.*
 import kotlinx.android.synthetic.main.qa_common_toolbar.*
 import kotlinx.android.synthetic.main.qa_recycler_item_dynamic_header.*
-import kotlinx.android.synthetic.main.qa_recycler_item_dynamic_header.view.*
 
 
 /**
@@ -111,7 +107,7 @@ class DynamicDetailActivity : BaseViewModelActivity<DynamicDetailViewModel>() {
             }
             activity.apply {
                 activity?.let {
-                    val intent = Intent(context, DynamicDetailActivity::class.java)
+                    val intent = Intent(this, DynamicDetailActivity::class.java)
                     intent.putExtra("post_id", postId)
                     intent.putExtra("is_from_mine", true)
                     it.window.exitTransition = Slide(Gravity.START).apply { duration = 300 }
@@ -281,7 +277,7 @@ class DynamicDetailActivity : BaseViewModelActivity<DynamicDetailViewModel>() {
 
     private fun initChangeColorAnimator(startColor: String, endColor: String) {
         val isDarkMode =
-            context.resources.configuration.uiMode and Configuration.UI_MODE_NIGHT_MASK == Configuration.UI_MODE_NIGHT_YES
+            resources.configuration.uiMode and Configuration.UI_MODE_NIGHT_MASK == Configuration.UI_MODE_NIGHT_YES
         if (haveShareItem) {
             if (isDarkMode) {//如果是深色模式
                 //因为视觉图颜色不一样的缘故，这里要在转场动画的同时添加一个变色动画
@@ -303,7 +299,7 @@ class DynamicDetailActivity : BaseViewModelActivity<DynamicDetailViewModel>() {
         }
 
         if (viewModel.dynamic.value?.postId == "0") {
-            context.toast("帖子不存在或已删除")
+            toast("帖子不存在或已删除")
             return
         }
     }
@@ -457,7 +453,7 @@ class DynamicDetailActivity : BaseViewModelActivity<DynamicDetailViewModel>() {
     override fun onDestroy() {
         super.onDestroy()
         //修改详情的背景颜色
-        if (context.resources.configuration.uiMode and Configuration.UI_MODE_NIGHT_MASK == Configuration.UI_MODE_NIGHT_YES) {
+        if (resources.configuration.uiMode and Configuration.UI_MODE_NIGHT_MASK == Configuration.UI_MODE_NIGHT_YES) {
             val gd = qa_ctl_dynamic.background as GradientDrawable
             gd.setColor(Color.parseColor("#1D1D1D"))
         }
@@ -471,9 +467,9 @@ class DynamicDetailActivity : BaseViewModelActivity<DynamicDetailViewModel>() {
 
         if (dynamic == null) {
             dynamic = Dynamic().apply {
-                postId = intent.getStringExtra("post_id")
+                postId = intent.getStringExtra("post_id") ?: "0"
                 if (postId == "0") {
-                    context.toast("帖子不存在或已删除")
+                    toast("帖子不存在或已删除")
                     return
                 }
             }
@@ -485,9 +481,9 @@ class DynamicDetailActivity : BaseViewModelActivity<DynamicDetailViewModel>() {
             viewModel.dynamic.value?.let { dynamic ->
                 ShareDialog(view.context).apply {
                     val url = "${CommentConfig.SHARE_URL}dynamic?id=${dynamic.postId}"
-                    initView(onCancelListener = View.OnClickListener{
+                    initView(onCancelListener = {
                         dismiss()
-                    }, qqShare = View.OnClickListener{
+                    }, qqShare = {
                         val pic = if (dynamic.pics.isNullOrEmpty()) "" else dynamic.pics[0]
                         mTencent?.let { it1 ->
                             ShareUtils.qqShare(
@@ -499,7 +495,7 @@ class DynamicDetailActivity : BaseViewModelActivity<DynamicDetailViewModel>() {
                                 pic
                             )
                         }
-                    }, qqZoneShare = View.OnClickListener{
+                    }, qqZoneShare = {
                         mTencent?.let { it1 ->
                             ShareUtils.qqQzoneShare(
                                 it1,
@@ -511,21 +507,21 @@ class DynamicDetailActivity : BaseViewModelActivity<DynamicDetailViewModel>() {
                             )
                         }
 
-                    }, weChatShare = View.OnClickListener{
+                    }, weChatShare = {
                         CyxbsToast.makeText(
                             context,
                             R.string.qa_share_wechat_text,
                             Toast.LENGTH_SHORT
                         ).show()
 
-                    }, friendShipCircle = View.OnClickListener{
+                    }, friendShipCircle = {
                         CyxbsToast.makeText(
                             context,
                             R.string.qa_share_wechat_text,
                             Toast.LENGTH_SHORT
                         ).show()
 
-                    }, copyLink = View.OnClickListener{
+                    }, copyLink = {
                         ClipboardController.copyText(this@DynamicDetailActivity, url)
                     })
                 }.show()
@@ -613,7 +609,7 @@ class DynamicDetailActivity : BaseViewModelActivity<DynamicDetailViewModel>() {
     private fun refreshDynamic() {
 
         viewModel.dynamic.value?.apply {
-            Glide.with(context).load(identityPic).into(qa_iv_dynamic_identity)
+            Glide.with(this@DynamicDetailActivity).load(identityPic).into(qa_iv_dynamic_identity)
             qa_iv_dynamic_avatar.setAvatarImageFromUrl(avatar)
             qa_tv_dynamic_topic.text = "# $topic"
             qa_tv_dynamic_nickname.text = nickName

@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<issues format="6" by="lint 7.1.2" type="baseline" client="gradle" dependencies="false" name="AGP (7.1.2)" variant="all" version="7.1.2">
+
+    <issue
+        id="Overdraw"
+        message="Possible overdraw: Root element paints background `#C2463A` with a theme that also paints a background (inferred theme is `@android:style/Theme.Holo`)"
+        errorLine1="&lt;LinearLayout android:background=&quot;#C2463A&quot;"
+        errorLine2="              ~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/layout/redrock_home_redpage_activity_webview.xml"
+            line="2"
+            column="15"/>
+    </issue>
+
+</issues>

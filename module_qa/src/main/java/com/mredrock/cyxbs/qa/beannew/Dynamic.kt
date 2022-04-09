@@ -62,18 +62,18 @@ data class Dynamic(
         }
 
     constructor(parcel: Parcel) : this(
-        parcel.readString(),
+        parcel.readString().toString(),
         parcel.readInt(),
         parcel.readInt(),
-        parcel.readString(),
-        parcel.readString(),
+        parcel.readString().toString(),
+        parcel.readString().toString(),
         parcel.readInt(),
         parcel.readInt(),
-        parcel.readString(),
-        parcel.readString(),
+        parcel.readString().toString(),
+        parcel.readString().toString(),
         parcel.readLong(),
-        parcel.readString(),
-        parcel.readString(),
+        parcel.readString().toString(),
+        parcel.readString().toString(),
         parcel.readInt()
     ) {
         parcel.readStringList(pics)

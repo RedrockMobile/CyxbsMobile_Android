@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<issues format="6" by="lint 7.1.2" type="baseline" client="gradle" dependencies="false" name="AGP (7.1.2)" variant="all" version="7.1.2">
+
+    <issue
+        id="UnspecifiedImmutableFlag"
+        message="Missing `PendingIntent` mutability flag"
+        errorLine1="                .setDeleteIntent(PendingIntent.getService(this, 0, stopIntent, 0))"
+        errorLine2="                                                                               ~">
+        <location
+            file="src/main/java/com/mredrock/cyxbs/update/component/AppUpdateDownloadService.kt"
+            line="85"
+            column="80"/>
+    </issue>
+
+</issues>

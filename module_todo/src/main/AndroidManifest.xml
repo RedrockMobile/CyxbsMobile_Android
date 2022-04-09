@@ -11,7 +11,8 @@
         <activity android:name=".ui.activity.TodoInnerMainActivity" /> <!-- todoList相关小组件 -->
         <receiver
             android:name=".ui.widget.TodoWidget"
-            android:label="邮子清单">
+            android:label="邮子清单"
+            android:exported="true">
             <intent-filter>
                 <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
                 <action android:name="cyxbs.widget.todo.refresh" />

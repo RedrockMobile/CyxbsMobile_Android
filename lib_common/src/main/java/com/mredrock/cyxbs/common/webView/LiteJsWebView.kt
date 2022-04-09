@@ -31,7 +31,7 @@ class LiteJsWebView : WebView {
             },
             toast = {
                 //弹toast
-                CyxbsToast.makeText(BaseApp.context, it, Toast.LENGTH_SHORT).show()
+                CyxbsToast.makeText(BaseApp.appContext, it, Toast.LENGTH_SHORT).show()
             }
         )
     ) {
@@ -54,10 +54,9 @@ class LiteJsWebView : WebView {
             mixedContentMode = WebSettings.MIXED_CONTENT_ALWAYS_ALLOW
             //这里必须为false，因为他为true则必须等到用户交互之后才行
             mediaPlaybackRequiresUserGesture = false
-            allowFileAccess = false
         }
         //加载js文件的
-        this.addJavascriptInterface(androidWebView,androidWebView::class.simpleName!!)
+        this.addJavascriptInterface(androidWebView, androidWebView::class.simpleName.toString())
     }
 
 }

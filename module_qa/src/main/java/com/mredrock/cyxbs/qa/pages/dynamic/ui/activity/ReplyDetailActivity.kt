@@ -29,7 +29,7 @@ import com.mredrock.cyxbs.qa.ui.widget.OptionalPopWindow
 import com.mredrock.cyxbs.qa.ui.widget.QaDialog
 import com.mredrock.cyxbs.qa.ui.widget.QaReportDialog
 import com.mredrock.cyxbs.qa.utils.ClipboardController
-import io.reactivex.Observable
+import io.reactivex.rxjava3.core.Observable
 import kotlinx.android.synthetic.main.qa_activity_reply_detail.*
 import kotlinx.android.synthetic.main.qa_common_toolbar.*
 import kotlin.math.max
@@ -114,7 +114,7 @@ class ReplyDetailActivity : BaseViewModelActivity<DynamicDetailViewModel>() {
         setContentView(R.layout.qa_activity_reply_detail)
         window.enterTransition = Slide(Gravity.END).apply { duration = 500 }
         replyIdScreen = intent.getStringExtra("replyIdScreen")
-        commentId = intent.getStringExtra("commentId")
+        commentId = intent.getStringExtra("commentId").toString()
 
         initToolbar()
         initObserver()

@@ -1,6 +1,5 @@
 package com.mredrock.cyxbs.mine.page.about
 
-import android.R.attr
 import android.app.Dialog
 import android.content.Intent
 import android.graphics.Color
@@ -10,15 +9,12 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.TextView
 import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.mredrock.cyxbs.common.component.CommonDialogFragment
 import com.mredrock.cyxbs.common.config.APP_WEBSITE
 import com.mredrock.cyxbs.common.service.ServiceManager
 import com.mredrock.cyxbs.api.update.AppUpdateStatus
 import com.mredrock.cyxbs.api.update.IAppUpdateService
-import com.mredrock.cyxbs.common.BaseApp
 import com.mredrock.cyxbs.common.ui.BaseViewModelActivity
 import com.mredrock.cyxbs.common.utils.extensions.toast
 import com.mredrock.cyxbs.common.utils.getAppVersionName
@@ -28,12 +24,8 @@ import kotlinx.android.synthetic.main.mine_activity_about.*
 import kotlinx.android.synthetic.main.mine_layout_dialog_recyclerview_dynamic.view.*
 import android.os.StrictMode
 
-import android.os.Build
 import android.os.StrictMode.VmPolicy
-import anet.channel.util.Utils.context
 
-import android.R.attr.path
-import android.os.Environment
 import android.widget.Toast
 import androidx.core.content.FileProvider
 import com.mredrock.cyxbs.common.component.CyxbsToast
@@ -71,7 +63,7 @@ class AboutActivity : BaseViewModelActivity<AboutViewModel>() {
         val builder = VmPolicy.Builder()
         StrictMode.setVmPolicy(builder.build())
         builder.detectFileUriExposure()
-        val path = "${BaseApp.context.filesDir.absolutePath}${DIR_LOG}/$OKHTTP_LOCAL_LOG"
+        val path = "${applicationContext.filesDir.absolutePath}${DIR_LOG}/$OKHTTP_LOCAL_LOG"
         val file = File(path)
         if (!file.exists()){
             CyxbsToast.makeText(this,"暂无log日志",Toast.LENGTH_SHORT).show()
@@ -80,7 +72,7 @@ class AboutActivity : BaseViewModelActivity<AboutViewModel>() {
         val intent = Intent(Intent.ACTION_SEND)
         intent.setPackage("com.tencent.mobileqq")
         intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK
-        val uri = FileProvider.getUriForFile(context,"com.mredrock.cyxbs.fileProvider",file)
+        val uri = FileProvider.getUriForFile(applicationContext,"com.mredrock.cyxbs.fileProvider",file)
         intent.putExtra(Intent.EXTRA_STREAM,uri) //传输图片或者文件 采用流的方式
         intent.type = "*/*" //分享文件
         this.startActivity(Intent.createChooser(intent, "分享"))
@@ -106,7 +98,7 @@ class AboutActivity : BaseViewModelActivity<AboutViewModel>() {
                     },
                     errorCallback = {
                         materialDialog.dismiss()
-                        BaseApp.context.toast("获取失败")
+                        toast("获取失败")
                     }
             )
         }

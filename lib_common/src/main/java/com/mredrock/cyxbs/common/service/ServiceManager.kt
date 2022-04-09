@@ -19,6 +19,8 @@ object ServiceManager {
      */
     fun <T> getService(serviceClass: Class<T>): T = ARouter.getInstance().navigation(serviceClass)
 
+    inline fun <reified T> getService(): T = getService(T::class.java)
+
     /**
      * 通过Path搜索服务，当同一种类型的服务有多个实现时只能使用该方式获取
      *

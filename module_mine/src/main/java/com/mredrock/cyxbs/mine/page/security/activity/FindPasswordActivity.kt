@@ -75,7 +75,7 @@ class FindPasswordActivity : BaseViewModelActivity<FindPasswordViewModel>() {
         //首先判断是否是自登陆界面来到的这里，如果是，就刷新当前的stuNumber
         isFromLogin = intent.getBooleanExtra("is_from_login", false)
         if (isFromLogin) {
-            stuNumber = intent.getStringExtra("stu_number")
+            stuNumber = intent.getStringExtra("stu_number")!!
         }
         val type = intent.getIntExtra("type", FIND_PASSWORD_BY_SECURITY_QUESTION)//如果出错，则默认展示为按照密保问题进行找回密码
         //配置viewModel内部的学号

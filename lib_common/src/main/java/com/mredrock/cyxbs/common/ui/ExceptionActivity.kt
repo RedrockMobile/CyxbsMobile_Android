@@ -50,7 +50,7 @@ class ExceptionActivity : AppCompatActivity() {
             setNegativeButton("复制异常信息退出") { _: DialogInterface, i: Int ->
                 val message = "StackInfo:\n$stackInfo\ndeviceInfo:\n$deviceInfo"
                 val cm = this@ExceptionActivity.getSystemService(Context.CLIPBOARD_SERVICE) as ClipboardManager
-                cm.primaryClip = ClipData.newPlainText("exception trace stack", message)
+                cm.setPrimaryClip(ClipData.newPlainText("exception trace stack", message))
                 this@ExceptionActivity.finish()
                 Process.killProcess(Process.myPid())
                 exitProcess(1)

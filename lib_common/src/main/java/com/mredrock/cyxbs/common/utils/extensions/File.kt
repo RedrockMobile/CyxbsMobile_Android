@@ -13,7 +13,7 @@ import java.io.File
  */
 val File.uri: Uri
     get() = if (Build.VERSION.SDK_INT >= 24) {
-        FileProvider.getUriForFile(BaseApp.context, "com.mredrock.cyxbs.fileProvider", this)
+        FileProvider.getUriForFile(BaseApp.appContext, "com.mredrock.cyxbs.fileProvider", this)
     } else {
         Uri.fromFile(this)
     }

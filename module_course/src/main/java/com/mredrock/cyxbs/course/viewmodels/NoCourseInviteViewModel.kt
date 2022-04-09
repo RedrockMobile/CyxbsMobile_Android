@@ -9,7 +9,9 @@ import com.mredrock.cyxbs.common.utils.extensions.safeSubscribeBy
 import com.mredrock.cyxbs.common.utils.extensions.setSchedulers
 import com.mredrock.cyxbs.course.network.Course
 import com.mredrock.cyxbs.course.network.CourseApiService
-import io.reactivex.Observable
+import io.reactivex.rxjava3.core.Flowable.fromIterable
+import io.reactivex.rxjava3.core.Observable
+import io.reactivex.rxjava3.core.Observable.fromIterable
 
 /**
  * Created by anriku on 2018/10/2.
@@ -50,7 +52,7 @@ class NoCourseInviteViewModel(private val mStuNumList: List<String> = mutableLis
     class Factory(private val mStuNumList: List<String>, private val mNameList: List<String>) :
             ViewModelProvider.Factory {
 
-        override fun <T : ViewModel?> create(modelClass: Class<T>): T {
+        override fun <T : ViewModel> create(modelClass: Class<T>): T {
             return NoCourseInviteViewModel(mStuNumList, mNameList) as T
         }
     }

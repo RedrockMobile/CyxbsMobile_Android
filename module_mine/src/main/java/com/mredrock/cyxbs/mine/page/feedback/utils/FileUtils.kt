@@ -20,7 +20,7 @@ object FileUtils {
         val proj = arrayOf<String>(MediaStore.Images.Media.DATA)
         val actualImageCursor = activity.managedQuery(uri, proj, null, null, null)
         ima = if (actualImageCursor == null) {
-            uri.path
+            uri.path.toString()
         } else {
             val index = actualImageCursor.getColumnIndexOrThrow(MediaStore.Images.Media.DATA)
             actualImageCursor.moveToFirst()

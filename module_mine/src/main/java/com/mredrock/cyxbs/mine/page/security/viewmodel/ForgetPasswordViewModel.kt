@@ -1,7 +1,5 @@
 package com.mredrock.cyxbs.mine.page.security.viewmodel
 
-import android.util.Log
-import android.widget.Toast
 import androidx.lifecycle.MutableLiveData
 import com.mredrock.cyxbs.common.BaseApp
 import com.mredrock.cyxbs.common.utils.extensions.doOnErrorWithDefaultErrorHandler
@@ -31,7 +29,7 @@ class ForgetPasswordViewModel : BaseViewModel() {
         apiService.checkDefaultPassword(stu_num)
                 .setSchedulers()
                 .doOnErrorWithDefaultErrorHandler {
-                    BaseApp.context.toast(it.toString())
+                    BaseApp.appContext.toast(it.toString())
                     onError()
                     true
                 }
@@ -45,7 +43,7 @@ class ForgetPasswordViewModel : BaseViewModel() {
         apiService.checkBinding(stu_num)
                 .setSchedulers()
                 .doOnErrorWithDefaultErrorHandler {
-                    BaseApp.context.toast(it.toString())
+                    BaseApp.appContext.toast(it.toString())
                     true
                 }
                 .safeSubscribeBy {
@@ -55,7 +53,7 @@ class ForgetPasswordViewModel : BaseViewModel() {
                         bindingPasswordProtect.value = it.data.question_is == 1
                         onSucceed()
                     } else {
-                        BaseApp.context.toast("检查绑定失败")
+                        BaseApp.appContext.toast("检查绑定失败")
                     }
                 }
     }

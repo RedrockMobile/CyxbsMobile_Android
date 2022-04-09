@@ -13,7 +13,7 @@ import com.mredrock.cyxbs.discover.news.bean.NewsDetails
 import com.mredrock.cyxbs.discover.news.network.ApiService
 import com.mredrock.cyxbs.discover.news.network.download.DownloadManager
 import com.mredrock.cyxbs.discover.news.network.download.RedDownloadListener
-import com.tbruyelle.rxpermissions2.RxPermissions
+import com.tbruyelle.rxpermissions3.RxPermissions
 import java.io.File
 
 /**

@@ -16,11 +16,11 @@ import com.amap.api.location.AMapLocationListener
 import com.amap.api.maps.AMap
 import com.amap.api.maps.AMapUtils
 import com.amap.api.maps.CameraUpdateFactory
-import com.amap.api.maps.model.BitmapDescriptor
-import com.amap.api.maps.model.BitmapDescriptorFactory
-import com.amap.api.maps.model.LatLng
-import com.amap.api.maps.model.MyLocationStyle
-import com.amap.api.maps.utils.overlay.SmoothMoveMarker
+import com.amap.api.maps.MapsInitializer.updatePrivacyAgree
+import com.amap.api.maps.MapsInitializer.updatePrivacyShow
+import com.amap.api.maps.model.*
+import com.amap.api.maps.utils.overlay.MovingPointOverlay
+import com.mredrock.cyxbs.common.bean.RedrockApiWrapper
 import com.mredrock.cyxbs.common.config.DISCOVER_SCHOOL_CAR
 import com.mredrock.cyxbs.common.config.END_POINT_REDROCK_PROD
 import com.mredrock.cyxbs.common.ui.BaseActivity
@@ -32,10 +32,10 @@ import com.mredrock.cyxbs.discover.schoolcar.bean.SchoolCarLocation
 import com.mredrock.cyxbs.discover.schoolcar.widget.ExploreSchoolCarDialog
 import com.mredrock.cyxbs.discover.schoolcar.widget.SchoolCarsSmoothMove
 import com.mredrock.cyxbs.schoolcar.R
-import io.reactivex.Observable
-import io.reactivex.Observer
-import io.reactivex.android.schedulers.AndroidSchedulers
-import io.reactivex.disposables.Disposable
+import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
+import io.reactivex.rxjava3.core.Observable
+import io.reactivex.rxjava3.core.Observer
+import io.reactivex.rxjava3.disposables.Disposable
 import kotlinx.android.synthetic.main.activity_schoolcar.*
 import java.io.File
 import java.util.concurrent.TimeUnit
@@ -65,14 +65,12 @@ class SchoolCarActivity : BaseActivity(), View.OnClickListener {
     var ifLocation = true
     private var showCarIcon = false
     private var savedInstanceState: Bundle? = null
-    private lateinit var makerBitmap: Bitmap
+    private lateinit var makerBitmaps: List<Bitmap>
     private var smoothMoveData: SchoolCarsSmoothMove? = null
-    private lateinit var smoothMoveMarkers: MutableList<SmoothMoveMarker>
     private lateinit var locationClient: AMapLocationClient
     private var disposable: Disposable? = null
     private lateinit var dataList: List<SchoolCarLocation.Data>
     lateinit var aMap: AMap
-    private lateinit var smoothMarker: SmoothMoveMarker
     private lateinit var locationStyle: MyLocationStyle
 
 
@@ -95,13 +93,18 @@ class SchoolCarActivity : BaseActivity(), View.OnClickListener {
                 aMap.animateCamera(update)
             }
             cv_positioning -> {
-                val update = CameraUpdateFactory.newLatLngZoom(LatLng(29.531876, 106.606789), 17f)
+                val update =
+                if (aMap.myLocation.longitude != 0.0 || aMap.myLocation.latitude !== 0.0){
+                     CameraUpdateFactory.newLatLngZoom(LatLng(aMap.myLocation.latitude, aMap.myLocation.longitude), 17f)
+                }else{
+                    CameraUpdateFactory.newLatLngZoom(LatLng(29.531876, 106.606789), 17f)
+                }
                 aMap.animateCamera(update)
             }
             iv_cooperation_logo -> {
                 val intent = Intent()
                 intent.action = Intent.ACTION_VIEW
-                intent.data = Uri.parse("http://eini.cqupt.edu.cn/")
+                intent.data = Uri.parse("https://redrock.team/")
                 startActivity(intent)
             }
             iv_back -> {
@@ -116,6 +119,9 @@ class SchoolCarActivity : BaseActivity(), View.OnClickListener {
         setContentView(R.layout.activity_schoolcar)
         checkActivityPermission()
 //        if (checkActivityPermission()) {
+        //这里是用户协议申明同意
+        updatePrivacyShow(this, true, true)
+        updatePrivacyAgree(this,true)
             locationClient = AMapLocationClient(applicationContext)
             initView()
 //        }
@@ -143,12 +149,12 @@ class SchoolCarActivity : BaseActivity(), View.OnClickListener {
         }
         //初始化地图配置
         initAMap(ifLocation)
-        makerBitmap = getSmoothMakerBitmap()
-        smoothMoveData = SchoolCarsSmoothMove(this, this@SchoolCarActivity)
+        makerBitmaps = getSmoothMakerBitmaps()
+        smoothMoveData = SchoolCarsSmoothMove(this, this@SchoolCarActivity,makerBitmaps)
         smoothMoveData!!.setCarMapInterface(object : SchoolCarInterface {
             // 回调是否显示地图，和是否开启一个timer轮询接口
-            override fun processLocationInfo(carLocationInfo: SchoolCarLocation, aLong: Long) {
-                dataList = carLocationInfo.data
+            override fun processLocationInfo(carLocationInfo: RedrockApiWrapper<SchoolCarLocation>, aLong: Long) {
+                dataList = carLocationInfo.data.data
                 if (dataList[0] == null) {
                     ExploreSchoolCarDialog.show(this@SchoolCarActivity, LOST_SERVICES)
                     if (disposable != null) disposable!!.dispose()
@@ -157,26 +163,22 @@ class SchoolCarActivity : BaseActivity(), View.OnClickListener {
                 if (aLong == ADD_TIMER) {
                     timer("initView")
                 }
-                if (!showCarIcon && aLong == ADD_TIMER_AND_SHOW_MAP) {
+                if (aLong == ADD_TIMER_AND_SHOW_MAP) {
                     if (disposable != null) disposable!!.dispose()       //取消之前所有的轮询订阅
-                    showCarIcon = true
                     timer("showCarIcon")
                     LogUtils.d(TAG, "processLocationInfo: " + carLocationInfo.status)
-                    if (carLocationInfo.status == "200") {
+                    if (carLocationInfo.status == 200 ||carLocationInfo.status == 10000) {
                         initLocationType()
                     } else {
                         tv_carStatus.text = "校车好像失联了..."
                     }
                 }
-
-
             }
         })
         //进行一次接口数据请求
         smoothMoveData!!.loadCarLocation(ADD_TIMER)
 
         //完成后开始轮询并且显示地图
-        smoothMoveMarkers = mutableListOf()
         smoothMoveData!!.loadCarLocation(ADD_TIMER_AND_SHOW_MAP)
 
     }
@@ -196,7 +198,7 @@ class SchoolCarActivity : BaseActivity(), View.OnClickListener {
         }
         val styleExtra = File(parent, "style_extra.data")
         val style = File(parent, "style.data")
-        val customMapStyleOptions = com.amap.api.maps.model.CustomMapStyleOptions()
+        val customMapStyleOptions = CustomMapStyleOptions()
         customMapStyleOptions.apply {
             isEnable = true
             styleDataPath = style.absolutePath
@@ -207,7 +209,6 @@ class SchoolCarActivity : BaseActivity(), View.OnClickListener {
         //地图开始时显示的中心和缩放大小
         val update = CameraUpdateFactory.newLatLngZoom(LatLng(29.531876, 106.606789), 17f)
         aMap.animateCamera(update)
-        smoothMarker = SmoothMoveMarker(aMap)
     }
 
     fun initLocationType() {
@@ -247,34 +248,39 @@ class SchoolCarActivity : BaseActivity(), View.OnClickListener {
      * @param name 标识独立轮询
      */
     private fun timer(name: String) {
+
         Observable.interval(1, TimeUnit.SECONDS)
                 .doOnNext {
-                    for (i in smoothMoveMarkers.indices) smoothMoveMarkers[i].removeMarker()
-                    smoothMoveMarkers = mutableListOf()
-                    var i = 0
-                    while (i < dataList.size && dataList[i].lat != 0.0) {
-                        if (showCarIcon) {
-                            smoothMoveData!!.smoothMove(smoothMoveMarkers, makerBitmap)
-                        }
-                        i++
-                    }
                     smoothMoveData!!.loadCarLocation(NOT_ADD_TIMER)
-
                 }.observeOn(AndroidSchedulers.mainThread()).subscribe(object : Observer<Long> {
                     override fun onSubscribe(d: Disposable) {
                         disposable = d
                     }
 
-                    override fun onNext(t: Long) {}
+                    override fun onNext(t: Long) {
 
-                    override fun onError(e: Throwable) {}
+                    }
+
+                    override fun onError(e: Throwable) {
+
+                    }
 
                     override fun onComplete() {}
                 })
     }
 
-    private fun getSmoothMakerBitmap(): Bitmap {
-        var pointBitmap = BitmapFactory.decodeResource(this@SchoolCarActivity.resources, R.mipmap.schoolcar_ic_school_car)
+    private fun getSmoothMakerBitmaps():List<Bitmap>{
+        return buildList {
+            add(getSmoothMakerBitmap(BitmapFactory.decodeResource(this@SchoolCarActivity.resources, R.mipmap.schoolcar_ic_school_car)))
+            add(getSmoothMakerBitmap(BitmapFactory.decodeResource(this@SchoolCarActivity.resources, R.mipmap.schoolcar_ic_school_car)))
+            add(getSmoothMakerBitmap(BitmapFactory.decodeResource(this@SchoolCarActivity.resources, R.mipmap.schoolcar_ic_school_car)))
+            add(getSmoothMakerBitmap(BitmapFactory.decodeResource(this@SchoolCarActivity.resources, R.mipmap.schoolcar_ic_school_car)))
+        }
+    }
+
+
+    private fun getSmoothMakerBitmap(tempPointBitmap: Bitmap):Bitmap {
+        var pointBitmap = tempPointBitmap
         var width = pointBitmap.width
         var height = pointBitmap.height
         var scaleWidth = dp2px(22f) / width
@@ -316,6 +322,7 @@ class SchoolCarActivity : BaseActivity(), View.OnClickListener {
     }
 
     override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<out String>, grantResults: IntArray) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults)
         var hasPermissionsDismiss = false
 
         if (requestCode == mRequestCode) {
@@ -365,12 +372,18 @@ class SchoolCarActivity : BaseActivity(), View.OnClickListener {
                 LogUtils.d(TAG, "onRestart: not disposed!!!")
             }
         }
+        if (smoothMoveData != null) {
+            smoothMoveData!!.clearAllList()
+        }
     }
 
     override fun onResume() {
         super.onResume()
         mv_map.onResume()
-
+        if (smoothMoveData != null) {
+            smoothMoveData!!.clearAllList()
+            smoothMoveData!!.loadCarLocation(ADD_TIMER_AND_SHOW_MAP)
+        }
     }
 
     override fun onStop() {

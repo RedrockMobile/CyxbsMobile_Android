@@ -14,7 +14,6 @@ import com.cyxbsmobile_single.module_todo.ui.dialog.AddItemDialog
 import com.cyxbsmobile_single.module_todo.util.isOutOfTime
 import com.cyxbsmobile_single.module_todo.util.setMargin
 import com.cyxbsmobile_single.module_todo.viewmodel.TodoViewModel
-import com.mredrock.cyxbs.common.BaseApp
 import com.mredrock.cyxbs.common.config.DISCOVER_TODO_MAIN
 import com.mredrock.cyxbs.common.ui.BaseViewModelActivity
 import com.mredrock.cyxbs.common.utils.extensions.dip
@@ -128,14 +127,14 @@ class TodoInnerMainActivity : BaseViewModelActivity<TodoViewModel>() {
                                 //没有提醒，或者已经过时，就调整margin
                                 setMargin(
                                         todo_tv_todo_title,
-                                        top = BaseApp.context.dip(29),
-                                        bottom = BaseApp.context.dip(29)
+                                        top = dip(29),
+                                        bottom = dip(29)
                                 )
                             } else {
                                 setMargin(
                                         todo_tv_todo_title,
-                                        top = BaseApp.context.dip(18),
-                                        bottom = BaseApp.context.dip(40)
+                                        top = dip(18),
+                                        bottom = dip(40)
                                 )
                             }
 

@@ -17,12 +17,10 @@ import com.bumptech.glide.Glide
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.mredrock.cyxbs.api.account.IAccountService
 import com.mredrock.cyxbs.api.account.IUserService
-import com.mredrock.cyxbs.common.BaseApp
 import com.mredrock.cyxbs.common.bean.LoginConfig
 import com.mredrock.cyxbs.common.config.DISCOVER_GRADES
 import com.mredrock.cyxbs.common.service.ServiceManager
 import com.mredrock.cyxbs.common.ui.BaseActivity
-import com.mredrock.cyxbs.common.utils.LogUtils
 import com.mredrock.cyxbs.common.utils.extensions.pressToZoomOut
 import com.mredrock.cyxbs.common.utils.extensions.setOnSingleClickListener
 import com.mredrock.cyxbs.discover.grades.R
@@ -218,7 +216,7 @@ class ContainerActivity : BaseActivity() {
     }
 
     private fun initHeader() {
-        Glide.with(BaseApp.context).load(user.getAvatarImgUrl()).into(parent.iv_grades_avatar)
+        Glide.with(this).load(user.getAvatarImgUrl()).into(parent.iv_grades_avatar)
         parent.tv_grades_stuNum.text = user.getStuNum()
         parent.tv_grades_name.text = user.getRealName()
     }
@@ -260,7 +258,7 @@ class ContainerActivity : BaseActivity() {
         val stuNum = user.getStuNum()
         val uiType =
             if (
-                BaseApp.context.resources.configuration.uiMode
+                this.resources.configuration.uiMode
                 and Configuration.UI_MODE_NIGHT_MASK
                 == Configuration.UI_MODE_NIGHT_YES
             ) 1 else 0

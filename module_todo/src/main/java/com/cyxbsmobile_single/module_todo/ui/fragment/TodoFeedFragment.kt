@@ -11,7 +11,6 @@ import com.cyxbsmobile_single.module_todo.adapter.TodoFeedAdapter
 import com.cyxbsmobile_single.module_todo.ui.dialog.AddItemDialog
 import com.cyxbsmobile_single.module_todo.ui.widget.TodoWidget
 import com.cyxbsmobile_single.module_todo.viewmodel.TodoViewModel
-import com.mredrock.cyxbs.common.BaseApp
 import com.mredrock.cyxbs.common.config.DISCOVER_TODO_FEED
 import com.mredrock.cyxbs.common.ui.BaseFeedFragment
 
@@ -34,7 +33,7 @@ class TodoFeedFragment : BaseFeedFragment<TodoViewModel>() {
         todoAdapter.refresh()
         //发送广播通知小组件更新
         requireContext().sendBroadcast(Intent("cyxbs.widget.todo.refresh").apply {
-            component = ComponentName(BaseApp.context, TodoWidget::class.java)
+            component = ComponentName(requireContext(), TodoWidget::class.java)
         })
     }
 

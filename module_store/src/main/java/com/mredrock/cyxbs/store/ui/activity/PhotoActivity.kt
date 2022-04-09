@@ -19,6 +19,7 @@ import com.mredrock.cyxbs.common.utils.extensions.*
 import com.mredrock.cyxbs.store.R
 import com.mredrock.cyxbs.store.page.exchange.ui.activity.ProductExchangeActivity
 import com.mredrock.cyxbs.store.utils.widget.slideshow.SlideShow
+import io.reactivex.rxjava3.schedulers.Schedulers
 import kotlinx.android.synthetic.main.store_activity_photo.*
 import kotlin.concurrent.thread
 
@@ -118,7 +119,7 @@ class PhotoActivity : AppCompatActivity() {
                     .setMessage(R.string.store_pic_save_alert_dialog_message)
                     .setPositiveButton("确定") { dialog, _ ->
                         val name = "${System.currentTimeMillis()}${url.split('/').lastIndex}"
-                        io.reactivex.schedulers.Schedulers.io()
+                        Schedulers.io()
                             .scheduleDirect {
                                 this@PhotoActivity.saveImage(bitmap, name)
                                 android.media.MediaScannerConnection.scanFile(

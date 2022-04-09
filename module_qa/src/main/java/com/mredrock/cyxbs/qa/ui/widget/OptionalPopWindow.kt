@@ -4,21 +4,16 @@ import android.animation.ValueAnimator
 import android.annotation.SuppressLint
 import android.app.Activity
 import android.content.Context
-import android.content.Intent
 import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
-import android.util.Log
 import android.view.*
 import android.widget.LinearLayout
 import android.widget.PopupWindow
 import android.widget.TextView
 import androidx.core.content.ContextCompat
 import androidx.core.view.children
-import com.mredrock.cyxbs.common.BaseApp
 import com.mredrock.cyxbs.common.utils.extensions.dp2px
 import com.mredrock.cyxbs.qa.R
-import com.mredrock.cyxbs.qa.beannew.Dynamic
-import com.mredrock.cyxbs.qa.pages.quiz.ui.QuizActivity
 import kotlinx.android.synthetic.main.qa_popwindow_option_normal.view.*
 
 /**
@@ -112,7 +107,7 @@ class OptionalPopWindow private constructor(val context: Context?) : PopupWindow
                 AlignMode.RIGHT -> -(View.MeasureSpec.getSize(mainView!!.measuredWidth) - view.width)
                 AlignMode.CENTER -> {
                     //居中时需要遍历子view来提升宽度
-                    val width = BaseApp.context.dp2px(178f)
+                    val width = context!!.dp2px(178f)
                     mainView?.apply {
                         for (v in (this as LinearLayout).children) {
                             val lp =

@@ -7,7 +7,6 @@ import com.alibaba.android.arouter.launcher.ARouter
 import com.mredrock.cyxbs.api.protocol.PROTOCOL_SERVICE
 import com.mredrock.cyxbs.api.protocol.api.IProtocolService
 import com.mredrock.cyxbs.common.BaseApp
-import com.mredrock.cyxbs.common.utils.LogUtils
 import com.mredrock.cyxbs.protocol.activity.WebContainerActivity
 import com.mredrock.cyxbs.protocol.bean.UriBean
 
@@ -15,22 +14,20 @@ import com.mredrock.cyxbs.protocol.bean.UriBean
 @Route(path = PROTOCOL_SERVICE, name = PROTOCOL_SERVICE)
 class ProtocolService : IProtocolService {
 
-    var mScheme: String? = null
+    private var mScheme = "cyxbs"
 
     private var context: Context? = null
     override fun init(context: Context?) {
         this.context = context
     }
 
+    override fun getScheme() = mScheme
 
-    override fun register(schema: String) {
-        mScheme = schema
-    }
-
-    override fun getScheme() = mScheme ?: throw Exception("该app还未注册scheme")
-
+    /**
+     * 跳转到内部自带 WebContainerActivity，或者带有 mScheme 的链接，跳转到对应的界面
+     */
     override fun jump(uri: String) {
-        mScheme ?: throw NullPointerException("应用注册scheme不能为空")
+        mScheme
         val (scheme, host, path, queryMap) = parse(uri)
         when (scheme) {
             mScheme -> {
@@ -39,7 +36,7 @@ class ProtocolService : IProtocolService {
                 for (mutableEntry in queryMap) {
                     build.withString(mutableEntry.key, mutableEntry.value)
                 }
-                build.navigation(BaseApp.context)
+                build.navigation(BaseApp.appContext)
             }
             "http", "https" -> {
                 context?.let { WebContainerActivity.loadWebPage(it, uri) }

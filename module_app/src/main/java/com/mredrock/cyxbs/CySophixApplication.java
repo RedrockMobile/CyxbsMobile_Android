@@ -1,10 +1,11 @@
 package com.mredrock.cyxbs;
 
 import android.content.Context;
+import android.util.Log;
 
 import androidx.annotation.Keep;
-import androidx.multidex.MultiDex;
 
+import com.mredrock.cyxbs.common.utils.LogUtils;
 import com.taobao.sophix.SophixApplication;
 import com.taobao.sophix.SophixEntry;
 import com.taobao.sophix.SophixManager;
@@ -16,6 +17,7 @@ import com.taobao.sophix.SophixManager;
  * 注意原先Application里不需要再重复初始化Sophix，并且需要避免混淆原先Application类。
  * 如有其它自定义改造，请咨询官方后妥善处理。
  */
+
 public class CySophixApplication extends SophixApplication {
     private final String TAG = "SophixStubApplication";
 
@@ -27,7 +29,6 @@ public class CySophixApplication extends SophixApplication {
     @Override
     protected void attachBaseContext(Context base) {
         super.attachBaseContext(base);
-        MultiDex.install(this);
         initSophix();
     }
 
@@ -56,4 +57,11 @@ public class CySophixApplication extends SophixApplication {
 //                })
                 .initialize();
     }
+
+    @Override
+    public void onCreate() {
+        super.onCreate();
+        SophixManager.getInstance().queryAndLoadNewPatch();
+    }
+
 }

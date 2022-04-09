@@ -2,7 +2,7 @@ package com.mredrock.cyxbs.qa.pages.search.room
 
 import androidx.room.*
 import com.mredrock.cyxbs.qa.beannew.QAHistory
-import io.reactivex.Maybe
+import io.reactivex.rxjava3.core.Maybe
 
 /**
  * Created by yyfbe, Date on 2020/8/16.

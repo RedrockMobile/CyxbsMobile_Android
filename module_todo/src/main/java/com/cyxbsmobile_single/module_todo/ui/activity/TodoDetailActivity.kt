@@ -19,10 +19,8 @@ import com.cyxbsmobile_single.module_todo.ui.widget.TodoWidget
 import com.cyxbsmobile_single.module_todo.util.remindMode2RemindList
 import com.cyxbsmobile_single.module_todo.viewmodel.TodoDetailViewModel
 import com.google.gson.Gson
-import com.mredrock.cyxbs.common.BaseApp
 import com.mredrock.cyxbs.common.config.TODO_TODO_DETAIL
 import com.mredrock.cyxbs.common.ui.BaseViewModelActivity
-import com.mredrock.cyxbs.common.utils.LogUtils
 import com.mredrock.cyxbs.common.utils.extensions.toast
 import kotlinx.android.synthetic.main.todo_activity_inner_detail.*
 
@@ -49,7 +47,7 @@ class TodoDetailActivity : BaseViewModelActivity<TodoDetailViewModel>() {
     private fun onClickProxy(view: View, onClick: (View) -> Unit) {
         if (todo.getIsChecked()) {
             //已经check，不允许修改
-            BaseApp.context.toast(getString(R.string.todo_string_cant_modify))
+            toast(getString(R.string.todo_string_cant_modify))
         } else {
             onClick.invoke(view)
         }
@@ -75,7 +73,7 @@ class TodoDetailActivity : BaseViewModelActivity<TodoDetailViewModel>() {
             //如果来自端内跳转, 则重新加载todo
             val todoId = intent.getStringExtra("todo_id").toString().toLong()
             if (todoId <= 0) {
-                BaseApp.context.toast("没有这条代办的信息哦")
+                toast("没有这条代办的信息哦")
                 finish()
             }
             TodoModel.INSTANCE.getTodoById(todoId,
@@ -84,7 +82,7 @@ class TodoDetailActivity : BaseViewModelActivity<TodoDetailViewModel>() {
                         initTodo()
                     },
                     onError = {
-                        BaseApp.context.toast("没有这条代办的信息哦")
+                        toast("没有这条代办的信息哦")
                     }
             )
         } else {
@@ -121,7 +119,7 @@ class TodoDetailActivity : BaseViewModelActivity<TodoDetailViewModel>() {
                 if (backTime == 0) {
                     finish()
                 } else {
-                    BaseApp.context.toast("你的修改未保存")
+                    toast("你的修改未保存")
                 }
             } else {
                 finish()
@@ -133,7 +131,7 @@ class TodoDetailActivity : BaseViewModelActivity<TodoDetailViewModel>() {
                 viewModel.delTodo(todo) {
                     this.sendBroadcast(
                             Intent("cyxbs.widget.todo.refresh").apply {
-                                component = ComponentName(BaseApp.context, TodoWidget::class.java)
+                                component = ComponentName(this@TodoDetailActivity, TodoWidget::class.java)
                             }
                     )
                     finish()
@@ -184,7 +182,7 @@ class TodoDetailActivity : BaseViewModelActivity<TodoDetailViewModel>() {
             viewModel.updateTodo(todo) {
                 this.sendBroadcast(
                         Intent("cyxbs.widget.todo.refresh").apply {
-                            component = ComponentName(BaseApp.context, TodoWidget::class.java)
+                            component = ComponentName(this@TodoDetailActivity, TodoWidget::class.java)
                         }
                 )
                 finish()
@@ -235,7 +233,7 @@ class TodoDetailActivity : BaseViewModelActivity<TodoDetailViewModel>() {
             if (backTime == 0) {
                 super.onBackPressed()
             } else {
-                BaseApp.context.toast("你的修改未保存")
+                toast("你的修改未保存")
             }
         } else {
             super.onBackPressed()

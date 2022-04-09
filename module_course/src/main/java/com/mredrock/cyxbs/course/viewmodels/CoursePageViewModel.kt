@@ -52,7 +52,7 @@ class CoursePageViewModel(private val mWeek: Int) : ViewModel() {
     class DateViewModelFactory(private val mWeek: Int) : ViewModelProvider.Factory {
 
         @Suppress("UNCHECKED_CAST")
-        override fun <T : ViewModel?> create(modelClass: Class<T>): T {
+        override fun <T : ViewModel> create(modelClass: Class<T>): T {
             return CoursePageViewModel(mWeek) as T
         }
     }

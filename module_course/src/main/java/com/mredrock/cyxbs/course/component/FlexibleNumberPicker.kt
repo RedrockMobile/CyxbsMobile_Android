@@ -67,9 +67,9 @@ class FlexibleNumberPicker : NumberPicker {
         isSelectionDividerShow(mIsShowSelectionDivider)
         //this paint setting is to set the paint painting the EditText
         setSelectorWheelPaintColor()
-
+        //TODO 需要去除反射
         // Avoid Warning about reflection.
-        avoidWarningUsingReflection()
+//        avoidWarningUsingReflection()
     }
 
     override fun onLayout(changed: Boolean, left: Int, top: Int, right: Int, bottom: Int) {
@@ -161,7 +161,7 @@ class FlexibleNumberPicker : NumberPicker {
      * if you use the reflection, you will get a warning. But this isn't a good method for a long time.
      * So we should find a good method.
      */
-    @SuppressLint("PrivateApi", "DiscouragedPrivateApi")
+    /*@SuppressLint("PrivateApi", "DiscouragedPrivateApi")
     private fun avoidWarningUsingReflection() {
         try {
             val cls = Class.forName("android.app.ActivityThread")
@@ -174,5 +174,5 @@ class FlexibleNumberPicker : NumberPicker {
         } catch (e: Exception) {
             e.printStackTrace()
         }
-    }
+    }*/
 }

@@ -22,7 +22,7 @@ class BindEmailViewModel : BaseViewModel() {
         ApiGenerator.getApiService(ApiService::class.java)
                 .getEmailCode(email)
                 .doOnErrorWithDefaultErrorHandler {
-                    BaseApp.context.toast(it.toString())
+                    BaseApp.appContext.toast(it.toString())
                     true
                 }
                 .setSchedulers()
@@ -34,10 +34,10 @@ class BindEmailViewModel : BaseViewModel() {
                             onSuccess()
                         }
                         10022 -> {
-                            CyxbsToast.makeText(BaseApp.context, "邮箱格式信息错误", Toast.LENGTH_LONG).show()
+                            toastLong("邮箱格式信息错误")
                         }
                         10009 -> {
-                            CyxbsToast.makeText(BaseApp.context, "发送验证码邮件次数过多", Toast.LENGTH_LONG).show()
+                            toastLong("发送验证码邮件次数过多")
                         }
                     }
                 }.lifeCycle()
@@ -48,7 +48,7 @@ class BindEmailViewModel : BaseViewModel() {
                 .confirmEmailCode(email, code)
                 .setSchedulers()
                 .doOnErrorWithDefaultErrorHandler {
-                    BaseApp.context.toast(it.toString())
+                    toast(it.toString())
                     true
                 }
                 .safeSubscribeBy {
@@ -57,10 +57,10 @@ class BindEmailViewModel : BaseViewModel() {
                             mldConfirmIsSucceed.value = true
                         }
                         10007 -> {
-                            CyxbsToast.makeText(BaseApp.context, "验证码错误", Toast.LENGTH_LONG).show()
+                            toastLong("验证码错误")
                         }
                         else -> {
-                            CyxbsToast.makeText(BaseApp.context, "请求失败", Toast.LENGTH_LONG).show()
+                            toastLong("请求失败")
                         }
                     }
                 }.lifeCycle()

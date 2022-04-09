@@ -16,7 +16,7 @@ import com.mredrock.cyxbs.common.utils.extensions.setOnSingleClickListener
  */
 class WeekSelectRecAdapter(private val mPostWeeks: MutableList<Int>) : RedRockAutoWarpView.Adapter() {
 
-    private val mWeeks = BaseApp.context.resources.getStringArray(R.array.course_course_weeks_strings)
+    private val mWeeks = BaseApp.appContext.resources.getStringArray(R.array.course_course_weeks_strings)
 
     val checkBoxMap = HashMap<Int, CheckBox>()
 

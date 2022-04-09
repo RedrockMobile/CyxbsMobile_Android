@@ -3,13 +3,11 @@ package com.mredrock.cyxbs.qa.pages.dynamic.viewmodel
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
-import com.mredrock.cyxbs.common.BaseApp
 import com.mredrock.cyxbs.common.config.StoreTask
 import com.mredrock.cyxbs.common.network.ApiGenerator
 import com.mredrock.cyxbs.common.utils.extensions.mapOrThrowApiException
 import com.mredrock.cyxbs.common.utils.extensions.safeSubscribeBy
 import com.mredrock.cyxbs.common.utils.extensions.setSchedulers
-import com.mredrock.cyxbs.common.utils.extensions.toast
 import com.mredrock.cyxbs.common.viewmodel.BaseViewModel
 import com.mredrock.cyxbs.common.viewmodel.event.ProgressDialogEvent
 import com.mredrock.cyxbs.common.viewmodel.event.SingleLiveEvent
@@ -18,7 +16,6 @@ import com.mredrock.cyxbs.qa.beannew.Comment
 import com.mredrock.cyxbs.qa.beannew.CommentReleaseResult
 import com.mredrock.cyxbs.qa.beannew.Dynamic
 import com.mredrock.cyxbs.qa.beannew.ReplyInfo
-import com.mredrock.cyxbs.qa.config.CommentConfig
 import com.mredrock.cyxbs.qa.network.ApiServiceNew
 import com.mredrock.cyxbs.qa.network.NetworkState
 import com.mredrock.cyxbs.qa.utils.removeContinuousEnters
@@ -64,7 +61,7 @@ open class DynamicDetailViewModel : BaseViewModel() {
             }
             .safeSubscribeBy {
                 if (it == null) {
-                    BaseApp.context.toast("帖子不存在或已删除")
+                    toast("帖子不存在或已删除")
                 }else {
                     StoreTask.postTask(StoreTask.Task.SEE_DYNAMIC, postId)
                 }

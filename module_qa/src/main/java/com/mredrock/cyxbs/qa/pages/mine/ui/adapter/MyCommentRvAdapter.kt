@@ -5,7 +5,6 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
-import com.mredrock.cyxbs.common.BaseApp
 import com.mredrock.cyxbs.common.utils.extensions.toast
 import com.mredrock.cyxbs.qa.R
 import com.mredrock.cyxbs.qa.beannew.CommentWrapper
@@ -46,7 +45,7 @@ class MyCommentRvAdapter(
                 qa_cl_my_comment_item.setOnClickListener {
                     //执行跳转操作
                     if (comment.postId == "0") {
-                        BaseApp.context.toast("该评论已被删除")
+                        holder.itemView.context.toast("该评论已被删除")
                     } else {
                         Log.e("wxtag","(MyCommentRvAdapter.kt:50)->> 执行跳转了嘛")
                         DynamicDetailActivity.activityStart(activity, comment.postId)

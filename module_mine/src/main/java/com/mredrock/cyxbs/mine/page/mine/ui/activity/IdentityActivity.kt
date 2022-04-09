@@ -6,7 +6,6 @@ import android.os.Bundle
 import android.util.Log
 import androidx.fragment.app.Fragment
 import com.google.android.material.tabs.TabLayoutMediator
-import com.mredrock.cyxbs.common.BaseApp.Companion.context
 import com.mredrock.cyxbs.common.ui.BaseViewModelActivity
 import com.mredrock.cyxbs.mine.databinding.MineActivityIdentityBinding
 import com.mredrock.cyxbs.mine.page.mine.adapter.MineAdapter
@@ -20,7 +19,7 @@ class IdentityActivity : BaseViewModelActivity<IdentityViewModel>() {
 
     lateinit var dataBinding: MineActivityIdentityBinding
     val redid by lazy {
-        intent.getStringExtra("redid")
+        intent.getStringExtra("redid")!!
     }
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -34,7 +33,7 @@ class IdentityActivity : BaseViewModelActivity<IdentityViewModel>() {
 
 
     fun initView(){
-        val tabNames= listOf<String>("认证身份","个性身份")
+        val tabNames= listOf("认证身份","个性身份")
         val approveStatusFragment = ApproveStatusFragment(redid)
         val personalityStatusFragment = PersonalityStatusFragment(redid)
         val list = arrayListOf<Fragment>(approveStatusFragment,personalityStatusFragment)
@@ -62,8 +61,8 @@ class IdentityActivity : BaseViewModelActivity<IdentityViewModel>() {
             dataBinding.tvItemIdentityName.text=it.data.form
             dataBinding.tvItemIdentity.text = it.data.position
             dataBinding.tvItemIdentityTime.text = it.data.date
-            loadBitmap(it.data.background){
-                dataBinding.clContentView.background= BitmapDrawable(context.resources,it)
+            loadBitmap(this, it.data.background){
+                dataBinding.clContentView.background= BitmapDrawable(resources,it)
             }
             Log.i("身份设置","initLisener"+it.data.position)
             viewModel.isFinsh.value=true

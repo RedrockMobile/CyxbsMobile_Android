@@ -34,7 +34,7 @@ class VRActivity : BaseActivity() {
         if (intent.getStringExtra(VR_URL).isNullOrEmpty()) {
             url = defaultSharedPreferences.getString(VR_URL_SP, DEFAULT_VR_URL) ?: DEFAULT_VR_URL
         } else {
-            url = intent.getStringExtra(VR_URL)
+            url = intent.getStringExtra(VR_URL).toString()
             defaultSharedPreferences.editor {
                 putString(VR_URL_SP, url)
             }

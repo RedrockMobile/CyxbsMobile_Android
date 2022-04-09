@@ -8,7 +8,7 @@ import com.mredrock.cyxbs.common.utils.extensions.longToast
 import com.mredrock.cyxbs.common.utils.extensions.toast
 import com.mredrock.cyxbs.common.viewmodel.event.ProgressDialogEvent
 import com.mredrock.cyxbs.common.viewmodel.event.SingleLiveEvent
-import io.reactivex.disposables.Disposable
+import io.reactivex.rxjava3.disposables.Disposable
 
 /**
  * Created By jay68 on 2018/8/23.
@@ -44,10 +44,10 @@ open class BaseViewModel : ViewModel() {
     }
 
     protected fun toast(s: CharSequence) {
-        BaseApp.context.toast(s)
+        BaseApp.appContext.toast(s)
     }
 
     protected fun toastLong(s: CharSequence) {
-        BaseApp.context.longToast(s)
+        BaseApp.appContext.longToast(s)
     }
 }

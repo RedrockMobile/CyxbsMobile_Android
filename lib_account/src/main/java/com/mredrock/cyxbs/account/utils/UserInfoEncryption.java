@@ -32,7 +32,7 @@ public class UserInfoEncryption {
             isSupportEncrypt = false;
         }
         synchronized (UserInfoEncryption.class) {
-            int currentVersion = SharedPreferencesKt.getDefaultSharedPreferences(BaseApp.Companion.getContext()).getInt(ConfigKt.SP_KEY_ENCRYPT_VERSION_USER, 0);
+            int currentVersion = SharedPreferencesKt.getDefaultSharedPreferences(BaseApp.Companion.getAppContext()).getInt(ConfigKt.SP_KEY_ENCRYPT_VERSION_USER, 0);
             if (currentVersion < ConfigKt.USER_INFO_ENCRYPT_VERSION) {
                 onUpdate(currentVersion, ConfigKt.USER_INFO_ENCRYPT_VERSION);
             }
@@ -72,9 +72,9 @@ public class UserInfoEncryption {
      * @param ii new version
      */
     public void onUpdate(int i, int ii) {
-        SharedPreferences.Editor editor = BaseApp.Companion.getContext().getSharedPreferences(ConfigKt.DEFAULT_PREFERENCE_FILENAME, Context.MODE_PRIVATE).edit();
+        SharedPreferences.Editor editor = BaseApp.Companion.getAppContext().getSharedPreferences(ConfigKt.DEFAULT_PREFERENCE_FILENAME, Context.MODE_PRIVATE).edit();
         if (i == 0 && ii == 1) {
-            String unEncryptedJson = SharedPreferencesKt.sharedPreferences(BaseApp.Companion.getContext(), ConfigKt.DEFAULT_PREFERENCE_FILENAME).getString(ConfigKt.SP_KEY_USER_V2, "");
+            String unEncryptedJson = SharedPreferencesKt.sharedPreferences(BaseApp.Companion.getAppContext(), ConfigKt.DEFAULT_PREFERENCE_FILENAME).getString(ConfigKt.SP_KEY_USER_V2, "");
             if (!"".equals(unEncryptedJson)) {
                 String encryptedJson = encrypt(unEncryptedJson);
                 editor.putString(ConfigKt.SP_KEY_USER_V2, encryptedJson);

@@ -68,7 +68,7 @@
 
 
         <!-- 友盟推送基本配置 start-->
-        <service
+       <!-- <service
             android:name="com.taobao.accs.ChannelService"
             android:exported="true"
             android:process=":channel">
@@ -195,7 +195,7 @@
             android:authorities="${applicationId}.umeng.message"
             android:exported="false">
             <grant-uri-permission android:pathPattern=".*" />
-        </provider>
+        </provider>-->
         <!-- 友盟推送基本配置 end-->
 
     </application>

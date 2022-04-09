@@ -1,5 +1,6 @@
 package com.mredrock.cyxbs.qa.pages.mine.ui.adapter.viewholder
 
+import android.os.Build
 import android.view.View
 import com.mredrock.cyxbs.common.utils.extensions.setAvatarImageFromUrl
 import com.mredrock.cyxbs.qa.beannew.Praise
@@ -24,7 +25,11 @@ class MyPraiseViewHolder(item: View) : BaseViewHolder<Praise>(item) {
                         SimpleDateFormat("赞了你的评论      yyyy.MM.dd  HH:mm", Locale.getDefault())
                     }
                 val dateDecodeFormat =
-                    SimpleDateFormat("yyyy-MM-dd'T'hh:mm:ssXXX", Locale.getDefault())
+                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+                        SimpleDateFormat("yyyy-MM-dd'T'hh:mm:ssXXX", Locale.getDefault())
+                    } else {
+                        SimpleDateFormat("yyyy-MM-dd'T'hh:mm:ss", Locale.getDefault())
+                    }
                 val date = dateDecodeFormat.parse(time)
                 qa_circleimageview_my_praise_avatar.setAvatarImageFromUrl(avatar)
                 qa_tv_my_praise_nick_name.text = nickName

@@ -1,17 +1,15 @@
 package com.mredrock.cyxbs.discover.othercourse.pages.stusearch.viewmodel
 
-import android.util.Log
 import androidx.lifecycle.MutableLiveData
-import com.mredrock.cyxbs.common.BaseApp
-import com.mredrock.cyxbs.common.utils.LogUtils
+import com.mredrock.cyxbs.common.BaseApp.Companion.appContext
 import com.mredrock.cyxbs.common.utils.extensions.safeSubscribeBy
 import com.mredrock.cyxbs.common.utils.extensions.setSchedulers
 import com.mredrock.cyxbs.common.viewmodel.BaseViewModel
 import com.mredrock.cyxbs.discover.othercourse.network.Person
 import com.mredrock.cyxbs.discover.othercourse.room.History
 import com.mredrock.cyxbs.discover.othercourse.room.HistoryDatabase
-import io.reactivex.Observable
-import io.reactivex.schedulers.Schedulers
+import io.reactivex.rxjava3.core.Observable
+import io.reactivex.rxjava3.schedulers.Schedulers
 
 abstract class OtherCourseSearchViewModel : BaseViewModel() {
     var mList = MutableLiveData<List<Person>>()
@@ -19,7 +17,7 @@ abstract class OtherCourseSearchViewModel : BaseViewModel() {
     val mHistory = MutableLiveData<MutableList<History>>()
     //当前搜索对应的history的id
     var curHistoryId = -1
-    protected val database: HistoryDatabase by lazy { HistoryDatabase.getDatabase(BaseApp.context) }
+    protected val database: HistoryDatabase by lazy { HistoryDatabase.getDatabase(appContext) }
     abstract fun getPerson(str: String, fromHistory: Boolean? = false)
 
     abstract fun getHistory()

@@ -23,7 +23,6 @@ import com.alibaba.android.arouter.facade.annotation.Autowired
 import com.alibaba.android.arouter.facade.annotation.Route
 import com.alibaba.android.arouter.launcher.ARouter
 import com.mredrock.cyxbs.api.account.IAccountService
-import com.mredrock.cyxbs.common.BaseApp
 import com.mredrock.cyxbs.common.bean.LoginConfig
 import com.mredrock.cyxbs.common.component.CyxbsToast
 import com.mredrock.cyxbs.common.config.ACTIVITY_CLASS
@@ -36,15 +35,12 @@ import com.mredrock.cyxbs.common.ui.BaseViewModelActivity
 import com.mredrock.cyxbs.common.utils.extensions.defaultSharedPreferences
 import com.mredrock.cyxbs.common.utils.extensions.doPermissionAction
 import com.mredrock.cyxbs.common.utils.extensions.editor
-import com.mredrock.cyxbs.common.utils.extensions.toast
-import com.mredrock.cyxbs.main.MAIN_LOGIN
+import com.mredrock.cyxbs.api.main.MAIN_LOGIN
 import com.mredrock.cyxbs.main.R
 import com.mredrock.cyxbs.main.bean.LoginFailEvent
 import com.mredrock.cyxbs.main.components.UserAgreementDialog
 import com.mredrock.cyxbs.main.viewmodel.LoginViewModel
-import com.tencent.bugly.Bugly
 import kotlinx.android.synthetic.main.main_activity_login.*
-import kotlinx.android.synthetic.main.main_user_agreement_dialog.view.*
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
 
@@ -121,7 +117,7 @@ class LoginActivity : BaseViewModelActivity<LoginViewModel>(), EventBusLifecycle
         }
 
         //如果是第一次使用app并且没有同意过用户协议，自动打开用户协议页面
-        if (BaseApp.context.defaultSharedPreferences.getBoolean(FIRST_TIME_OPEN, true)) {
+        if (defaultSharedPreferences.getBoolean(FIRST_TIME_OPEN, true)) {
             showUserAgreement()
         }
 
@@ -228,7 +224,7 @@ class LoginActivity : BaseViewModelActivity<LoginViewModel>(), EventBusLifecycle
             },
             onPositiveClick = {
                 dismiss()
-                BaseApp.context.defaultSharedPreferences.editor {
+                defaultSharedPreferences.editor {
                     putBoolean(FIRST_TIME_OPEN, false)
                     commit()
                 }

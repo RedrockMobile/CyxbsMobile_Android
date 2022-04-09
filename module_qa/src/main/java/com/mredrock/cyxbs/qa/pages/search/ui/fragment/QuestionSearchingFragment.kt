@@ -7,7 +7,6 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.android.flexbox.FlexWrap
 import com.google.android.flexbox.FlexboxLayoutManager
-import com.mredrock.cyxbs.common.BaseApp
 import com.mredrock.cyxbs.common.ui.BaseViewModelFragment
 import com.mredrock.cyxbs.common.utils.extensions.gone
 import com.mredrock.cyxbs.common.utils.extensions.visible
@@ -74,7 +73,7 @@ class QuestionSearchingFragment : BaseViewModelFragment<SearchViewModel>() {
             viewModel.deleteAll()
         }
 
-        val flexBoxManager = FlexboxLayoutManager(BaseApp.context)
+        val flexBoxManager = FlexboxLayoutManager(context)
         flexBoxManager.flexWrap = FlexWrap.WRAP
         rv_hot_search_tab_list.layoutManager = flexBoxManager
         hotSearchAdapter = SearchHotRvAdapter {

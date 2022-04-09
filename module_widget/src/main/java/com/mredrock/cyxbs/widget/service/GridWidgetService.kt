@@ -2,19 +2,16 @@ package com.mredrock.cyxbs.widget.service
 
 import android.content.Context
 import android.content.Intent
-import android.util.Log
 import android.widget.RemoteViews
 import android.widget.RemoteViewsService
 import com.google.gson.Gson
 import com.mredrock.cyxbs.common.BaseApp
-import com.mredrock.cyxbs.common.BaseApp.Companion.context
 import com.mredrock.cyxbs.common.config.WIDGET_AFFAIR
 import com.mredrock.cyxbs.common.config.WIDGET_COURSE
 import com.mredrock.cyxbs.common.utils.ClassRoomParse
 import com.mredrock.cyxbs.common.utils.Num2CN
 import com.mredrock.cyxbs.common.utils.SchoolCalendar
 import com.mredrock.cyxbs.common.utils.extensions.defaultSharedPreferences
-import com.mredrock.cyxbs.common.utils.extensions.toast
 import com.mredrock.cyxbs.widget.R
 import com.mredrock.cyxbs.widget.bean.AffairStatus
 import com.mredrock.cyxbs.widget.bean.CourseStatus
@@ -31,9 +28,9 @@ class GridWidgetService : RemoteViewsService() {
 
         private fun makeSchedules(): Array<Array<MutableList<CourseStatus.Course>?>>? {
             val mSchedulesArray = Array(6) { arrayOfNulls<MutableList<CourseStatus.Course>>(7) }
-            val json = context.defaultSharedPreferences.getString(WIDGET_COURSE, "")
+            val json = BaseApp.appContext.defaultSharedPreferences.getString(WIDGET_COURSE, "")
             val courses = Gson().fromJson(json, CourseStatus::class.java)?.data ?: return null
-            val affairJson = context.defaultSharedPreferences.getString(WIDGET_AFFAIR, "")
+            val affairJson = BaseApp.appContext.defaultSharedPreferences.getString(WIDGET_AFFAIR, "")
             val affairs = Gson().fromJson(affairJson, AffairStatus::class.java) ?: return null
             val schoolCalendar = SchoolCalendar()
 

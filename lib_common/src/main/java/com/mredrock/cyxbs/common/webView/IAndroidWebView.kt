@@ -87,6 +87,6 @@ abstract class IAndroidWebView(
 
     @JavascriptInterface
     open fun isDark(): Boolean {
-        return BaseApp.context.applicationContext.resources.configuration.uiMode == 0x21
+        return BaseApp.appContext.applicationContext.resources.configuration.uiMode == 0x21
     }
 }

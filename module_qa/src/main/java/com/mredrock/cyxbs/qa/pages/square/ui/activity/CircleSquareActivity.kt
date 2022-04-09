@@ -10,8 +10,6 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.mredrock.cyxbs.common.BaseApp
-import com.mredrock.cyxbs.common.BaseApp.Companion.context
 import com.mredrock.cyxbs.common.ui.BaseViewModelActivity
 import com.mredrock.cyxbs.common.utils.extensions.setOnSingleClickListener
 import com.mredrock.cyxbs.qa.R
@@ -38,7 +36,7 @@ class CircleSquareActivity : BaseViewModelActivity<CircleSquareViewModel>() {
         fun activityStartFromDynamic(fragment: Fragment) {
             fragment.apply {
                 activity?.let {
-                    val intent = Intent(BaseApp.context, CircleSquareActivity::class.java)
+                    val intent = Intent(it, CircleSquareActivity::class.java)
                     startActivityForResult(intent, RequestResultCode.DYNAMIC_DETAIL_REQUEST)
                 }
             }
@@ -81,7 +79,7 @@ class CircleSquareActivity : BaseViewModelActivity<CircleSquareViewModel>() {
         }
         qa_tv_toolbar_title.text = resources.getText(R.string.qa_square_title)
         qa_circle_square_toolbar.background =
-            ContextCompat.getDrawable(context, R.color.qa_circle_toolbar_back_color)
+            ContextCompat.getDrawable(this, R.color.qa_circle_toolbar_back_color)
     }
 
     private fun initView() {
@@ -98,7 +96,7 @@ class CircleSquareActivity : BaseViewModelActivity<CircleSquareViewModel>() {
                 viewModel.followTopic(topic.topicName, state)
             }
         }
-        rv_circle_square.layoutManager = LinearLayoutManager(context)
+        rv_circle_square.layoutManager = LinearLayoutManager(this)
         rv_circle_square.adapter = adapter
         val divide = DividerItemDecoration(this, DividerItemDecoration.VERTICAL)
         ContextCompat.getDrawable(this, R.drawable.qa_shape_divide_line)?.let {

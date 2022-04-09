@@ -19,7 +19,7 @@ import com.mredrock.cyxbs.common.network.ApiGenerator
 import com.mredrock.cyxbs.common.utils.ExecuteOnceObserver
 import com.mredrock.cyxbs.common.utils.LogUtils
 import com.mredrock.cyxbs.common.utils.extensions.*
-import io.reactivex.Observable
+import io.reactivex.rxjava3.core.Observable
 
 /**
  * Author: RayleighZ
@@ -188,7 +188,7 @@ class TodoModel {
     private fun getOfflineModifyTodo(type: ModifyType): List<Long> {
         val key = if (type == CHANGE) TODO_OFFLINE_MODIFY_LIST else TODO_OFFLINE_DEL_LIST
         val json =
-            BaseApp.context.defaultSharedPreferences.getString(key, "[]")
+            BaseApp.appContext.defaultSharedPreferences.getString(key, "[]")
         return Gson().fromJson(json, object : TypeToken<List<Long>>() {}.type)
     }
 
@@ -204,14 +204,14 @@ class TodoModel {
             //首先获取本地的离线修改todo列表
             val localChangeArray = Gson()
                 .fromJson<ArrayList<Long>>(
-                    BaseApp.context.defaultSharedPreferences.getString(
+                    BaseApp.appContext.defaultSharedPreferences.getString(
                         TODO_OFFLINE_MODIFY_LIST,
                         "[]"
                     ),
                     object : TypeToken<ArrayList<Long>>() {}.type
                 )
             localChangeArray.remove(id)
-            BaseApp.context.defaultSharedPreferences.editor {
+            BaseApp.appContext.defaultSharedPreferences.editor {
                 putString(
                     TODO_OFFLINE_DEL_LIST,
                     Gson().toJson(localChangeArray)
@@ -220,18 +220,18 @@ class TodoModel {
         }
         val key = if (type == CHANGE) TODO_OFFLINE_MODIFY_LIST else TODO_OFFLINE_DEL_LIST
         if (id == -1L) {
-            BaseApp.context.defaultSharedPreferences.editor {
+            BaseApp.appContext.defaultSharedPreferences.editor {
                 putString(key, "[]")
                 commit()
             }
             return
         }
         val json =
-            BaseApp.context.defaultSharedPreferences.getString(key, "[]")
+            BaseApp.appContext.defaultSharedPreferences.getString(key, "[]")
         val arrayList: ArrayList<Long> =
             Gson().fromJson(json, object : TypeToken<ArrayList<Long>>() {}.type)
         arrayList.add(id)
-        BaseApp.context.defaultSharedPreferences.editor {
+        BaseApp.appContext.defaultSharedPreferences.editor {
             putString(key, Gson().toJson(arrayList))
             commit()
         }
@@ -240,18 +240,18 @@ class TodoModel {
     }
 
     private fun getLastModifyTime(): Long =
-        BaseApp.context.defaultSharedPreferences.getLong(TODO_LAST_MODIFY_TIME, 0L)
+        BaseApp.appContext.defaultSharedPreferences.getLong(TODO_LAST_MODIFY_TIME, 0L)
 
     private fun getLastSyncTime(): Long =
-        BaseApp.context.defaultSharedPreferences.getLong(TODO_LAST_SYNC_TIME, 0L)
+        BaseApp.appContext.defaultSharedPreferences.getLong(TODO_LAST_SYNC_TIME, 0L)
 
     private fun setLastModifyTime(modifyTime: Long) =
-        BaseApp.context.defaultSharedPreferences.editor {
+        BaseApp.appContext.defaultSharedPreferences.editor {
             putLong(TODO_LAST_MODIFY_TIME, modifyTime)
             commit()
         }
 
-    private fun setLastSyncTime(syncTime: Long) = BaseApp.context.defaultSharedPreferences.editor {
+    private fun setLastSyncTime(syncTime: Long) = BaseApp.appContext.defaultSharedPreferences.editor {
         putLong(TODO_LAST_SYNC_TIME, syncTime)
         commit()
     }
@@ -396,7 +396,7 @@ class TodoModel {
                     setLastSyncTime(it.data.syncTime)
                     //本地数据库全部覆盖
                     if (withDatabaseSync) {
-                        Observable.just(it.data.todoArray)
+                        Observable.just(it.data.todoArray ?: emptyList())
                             .map { list ->
 
                                 TodoDatabase.INSTANCE.todoDao()
@@ -418,7 +418,7 @@ class TodoModel {
                 },
 
                 onError = {
-                    BaseApp.context.toast("拉取数据失败，请检查网络状况")
+                    BaseApp.appContext.toast("拉取数据失败，请检查网络状况")
                 }
             )
     }
@@ -456,7 +456,7 @@ class TodoModel {
                                             addOffLineModifyTodo(type = CHANGE)
                                         },
                                         onError = {
-                                            BaseApp.context.toast("本地修改重传失败")
+                                            BaseApp.appContext.toast("本地修改重传失败")
                                         }
                                 )
                     }
@@ -478,7 +478,7 @@ class TodoModel {
                                             addOffLineModifyTodo(type = CHANGE)
                                         },
                                         onError = {
-                                            BaseApp.context.toast("本地删除重传失败")
+                                            BaseApp.appContext.toast("本地删除重传失败")
                                         }
                                 )
                     }
@@ -515,7 +515,7 @@ class TodoModel {
                         },
                         onError = {
                             //提示用户强制上传失败
-                            BaseApp.context.toast("强制上传失败 :(")
+                            BaseApp.appContext.toast("强制上传失败 :(")
                         }
                     )
             }

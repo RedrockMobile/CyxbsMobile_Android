@@ -13,7 +13,7 @@ class NameListRecAdapter(private val mPeople: List<String>) : RedRockAutoWarpVie
 
     override fun getItemCount(): Int = mPeople.size
 
-    override fun getItemId(): Int? {
+    override fun getItemId(): Int {
         return R.layout.course_name_list_rec_item
     }
 

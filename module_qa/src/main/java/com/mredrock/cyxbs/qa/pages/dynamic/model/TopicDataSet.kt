@@ -13,7 +13,7 @@ import com.mredrock.cyxbs.qa.beannew.Topic
  * @Date: 2020/12/21 23:32
  */
 object TopicDataSet {
-    private val sharedPreferences by lazy { BaseApp.context.sharedPreferences("topic") }
+    private val sharedPreferences by lazy { BaseApp.appContext.sharedPreferences("topic") }
     private val gson = Gson()
 
     fun storageTopicData(topic: Topic) {
