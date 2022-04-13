@@ -50,7 +50,7 @@ class QuizActivity : BaseViewModelActivity<QuizViewModel>() {
 
     companion object {
         // 允许发送动态的最大字数
-        const val MAX_CONTENT_SIZE = 500
+        const val MAX_CONTENT_SIZE = 1000
         const val MAX_SELECTABLE_IMAGE_COUNT = 8
         const val NOT_DRAFT = "0"
         const val UPDATE_DRAFT = "1"

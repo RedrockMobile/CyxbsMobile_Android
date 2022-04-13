@@ -1,5 +1,7 @@
 package com.mredrock.cyxbs.common.network
 
+import android.app.Application
+import android.content.pm.PackageManager
 import android.os.Handler
 import android.util.SparseArray
 import com.google.gson.Gson
@@ -23,6 +25,7 @@ import retrofit2.converter.gson.GsonConverterFactory
 import java.util.concurrent.TimeUnit
 import android.os.Looper
 import android.util.Log
+import androidx.core.content.PackageManagerCompat
 import com.mredrock.cyxbs.common.BaseApp
 import com.mredrock.cyxbs.common.utils.LogLocal
 import com.mredrock.cyxbs.common.utils.extensions.toast
@@ -150,13 +153,19 @@ object ApiGenerator {
      */
     private fun Retrofit.Builder.configRetrofitBuilder(client: ((OkHttpClient.Builder) -> OkHttpClient)): Retrofit.Builder {
         return this.client(client.invoke(OkHttpClient().newBuilder().apply {
-                val logging = HttpLoggingInterceptor(object:HttpLoggingInterceptor.Logger{
-                    override fun log(message: String) {
-                        Log.d("OKHTTP","OKHTTP$message")
-                        LogLocal.log("OKHTTP","OKHTTP$message")
-                    }
-                })
+                val logging = HttpLoggingInterceptor { message ->
+                    LogUtils.d("OKHTTP",message)
+                    LogLocal.log("OKHTTP", "OKHTTP$message")
+                }
                 logging.level = HttpLoggingInterceptor.Level.BODY
+                addInterceptor(Interceptor {
+                    val response = proceedPoxyWithTryCatch {
+                        it.proceed(it.request().newBuilder()
+                            .addHeader("APPVersion", BaseApp.version)
+                            .build()
+                        )}
+                    response!!
+                })
                 addInterceptor(logging)
                 //这里是在debug模式下方便开发人员简单确认 http 错误码 和 url(magipoke开始切的)
                 if (BuildConfig.DEBUG){
@@ -195,6 +204,10 @@ object ApiGenerator {
     private fun OkHttpClient.Builder.configureCommonOkHttp(): OkHttpClient {
         return this.apply {
             /**
+             * 发送版本号
+             */
+
+            /**
              * 连接失败时切换备用url的Interceptor
              * 一旦切换，只有重启app才能切回来（因为如果请求得到的url不是原来的@{link getBaseUrl()}，则切换到新的url，而以后访问都用这个新的url了）
              * 放在tokenInterceptor上游的理由是：因为那里面还有token刷新机制，无法判断是否真正是因为服务器的原因请求失败
@@ -206,6 +219,17 @@ object ApiGenerator {
     //带token请求的OkHttp配置
     private fun OkHttpClient.Builder.configureTokenOkHttp(): OkHttpClient {
         return this.apply {
+            /**
+             * 发送版本号
+             */
+            interceptors().add(Interceptor {
+                val response = proceedPoxyWithTryCatch {
+                    it.proceed(it.request().newBuilder()
+                        .addHeader("version", BaseApp.version)
+                        .build()
+                    )}
+                return@Interceptor response!!
+            })
             /**
              * 连接失败时切换备用url的Interceptor
              * 一旦切换，只有重启app才能切回来（因为如果请求得到的url不是原来的@{link getBaseUrl()}，则切换到新的url，而以后访问都用这个新的url了）

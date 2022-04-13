@@ -93,13 +93,19 @@ class SchoolCarActivity : BaseActivity(), View.OnClickListener {
                 aMap.animateCamera(update)
             }
             cv_positioning -> {
-                val update =
-                if (aMap.myLocation.longitude != 0.0 || aMap.myLocation.latitude !== 0.0){
-                     CameraUpdateFactory.newLatLngZoom(LatLng(aMap.myLocation.latitude, aMap.myLocation.longitude), 17f)
-                }else{
-                    CameraUpdateFactory.newLatLngZoom(LatLng(29.531876, 106.606789), 17f)
+                aMap.myLocation?.let { location->
+                    location.longitude?.let {
+                        location.latitude?.let {
+                            val update =
+                                if (aMap.myLocation.longitude != 0.0 || aMap.myLocation.latitude !== 0.0){
+                                    CameraUpdateFactory.newLatLngZoom(LatLng(aMap.myLocation.latitude, aMap.myLocation.longitude), 17f)
+                                }else{
+                                    CameraUpdateFactory.newLatLngZoom(LatLng(29.531876, 106.606789), 17f)
+                                }
+                            aMap.animateCamera(update)
+                        }
+                    }
                 }
-                aMap.animateCamera(update)
             }
             iv_cooperation_logo -> {
                 val intent = Intent()

@@ -5,6 +5,7 @@ import android.appwidget.AppWidgetManager
 import android.content.Context
 import android.content.Intent
 import android.net.Uri
+import android.os.Build
 import android.os.Bundle
 import android.widget.Toast
 import androidx.annotation.IdRes
@@ -182,7 +183,7 @@ fun getClickIntent(context: Context, widgetId: Int, viewId: Int, requestCode: In
     //放进需要设置的viewId
     bundle.putInt("Button", viewId)
     i.putExtras(bundle)
-    return PendingIntent.getBroadcast(context, requestCode, i, PendingIntent.FLAG_UPDATE_CURRENT)
+    return PendingIntent.getBroadcast(context, requestCode, i,getPendingIntentFlags())
 }
 
 fun formatTime(calendar: Calendar): String {
@@ -229,3 +230,15 @@ fun startOperation(dataBean: WidgetCourse.DataBean) {
         EventBus.getDefault().postSticky(WidgetCourseEvent(mutableListOf(dataBean)))
     }
 }
+private fun getPendingIntentFlags(isMutable: Boolean = false) =
+    when {
+        isMutable && Build.VERSION.SDK_INT >= Build.VERSION_CODES.S ->
+            PendingIntent.FLAG_MUTABLE
+        !isMutable && Build.VERSION.SDK_INT >= Build.VERSION_CODES.S ->
+            PendingIntent.FLAG_IMMUTABLE
+        isMutable && Build.VERSION.SDK_INT >= Build.VERSION_CODES.M ->
+            PendingIntent.FLAG_UPDATE_CURRENT
+        !isMutable && Build.VERSION.SDK_INT >= Build.VERSION_CODES.M ->
+            PendingIntent.FLAG_UPDATE_CURRENT
+        else -> PendingIntent.FLAG_UPDATE_CURRENT
+    }

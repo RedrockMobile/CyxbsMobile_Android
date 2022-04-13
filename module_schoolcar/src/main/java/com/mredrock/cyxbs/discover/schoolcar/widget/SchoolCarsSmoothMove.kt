@@ -56,9 +56,9 @@ class SchoolCarsSmoothMove(private val schoolCarActivity: SchoolCarActivity?, pr
                                 val latLng = LatLng(data.lat,data.lon)
                                 val marker = buildMarker(data.id,data.type,latLng)
                                 marker?.let { marker ->
-                                    carMap[data.id] = SchoolCar(data.id,data.type,data.upDate,data.upDate,MovingPointOverlay(schoolCarActivity?.aMap,marker),marker,mutableListOf(latLng),getPolyline(data.type,latLng))
+                                    val smoothMarker = MovingPointOverlay(schoolCarActivity?.aMap,marker)
+                                    carMap[data.id] = SchoolCar(data.id,data.type,data.upDate,data.upDate,smoothMarker,marker,mutableListOf(latLng,smoothMarker.position),getPolyline(data.type,latLng))
                                 }
-                                carMap[data.id]?.let { car -> smoothMove(car) }
                             }else{
                                 //这里因为轮询是1s一次，所以说判断一下更新的时间，
                                 if(carMap[data.id]?.upDate != data.upDate){
@@ -92,10 +92,10 @@ class SchoolCarsSmoothMove(private val schoolCarActivity: SchoolCarActivity?, pr
     }
 
     private fun smoothMove(car:SchoolCar, mistime:Int = 3) {
-        if (car.latLngList.size > 4) {
+        if (car.latLngList.size > 3) {
             //停止上一次的移动，然后将上一次的位置加上之后再移动
             car.smoothMarker.stopMove()
-            val list = car.latLngList.subList(car.latLngList.size - 3, car.latLngList.size)
+            val list = car.latLngList.subList(car.latLngList.size - 2, car.latLngList.size)
             list[0] = car.smoothMarker.position
             val smoothMarker = MovingPointOverlay(schoolCarActivity?.aMap,car.marker)
             smoothMarker.setPoints(list)
