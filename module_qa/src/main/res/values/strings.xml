@@ -79,7 +79,7 @@
     <string name="qa_unfollow_circle" translatable="false">取消关注圈子成功</string>
     <string name="qa_draft_dialog_no_save" translatable="false">不保存</string>
     <string name="qa_draft_dialog_cancel" translatable="false">取消</string>
-    <string name="qa_edit_dynamic_num" translatable="false">0/500</string>
+    <string name="qa_edit_dynamic_num" translatable="false">0/1000</string>
     <string name="qa_choose_one_circle" translatable="false">请选择一个圈子</string>
     <string name="qa_dynamic_recommend" translatable="false">推荐</string>
     <string name="qa_my_follow_circle" translatable="false">我的关注</string>

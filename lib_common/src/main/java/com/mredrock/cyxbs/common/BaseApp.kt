@@ -12,11 +12,16 @@ abstract class BaseApp : Application() {
     companion object {
         lateinit var appContext: Context
             private set
+        lateinit var version:String
+            private set
     }
 
     @CallSuper
     override fun onCreate() {
         super.onCreate()
         appContext = this
+        appContext.packageManager.getPackageInfo(appContext.packageName,0).let {
+            version = it.versionName
+        }
     }
 }

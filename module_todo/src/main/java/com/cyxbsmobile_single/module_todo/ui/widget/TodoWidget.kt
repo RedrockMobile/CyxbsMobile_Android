@@ -111,11 +111,13 @@ class TodoWidget : AppWidgetProvider() {
     private fun getPendingIntentFlags(isMutable: Boolean = false) =
         when {
             isMutable && Build.VERSION.SDK_INT >= Build.VERSION_CODES.S ->
-                PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_MUTABLE
-
+                PendingIntent.FLAG_MUTABLE
+            !isMutable && Build.VERSION.SDK_INT >= Build.VERSION_CODES.S ->
+                PendingIntent.FLAG_IMMUTABLE
+            isMutable && Build.VERSION.SDK_INT >= Build.VERSION_CODES.M ->
+                PendingIntent.FLAG_UPDATE_CURRENT
             !isMutable && Build.VERSION.SDK_INT >= Build.VERSION_CODES.M ->
-                PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE
-
+                PendingIntent.FLAG_UPDATE_CURRENT
             else -> PendingIntent.FLAG_UPDATE_CURRENT
         }
 }

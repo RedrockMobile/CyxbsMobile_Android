@@ -63,9 +63,11 @@ val android = listOf(
     "androidx.lifecycle:lifecycle-viewmodel-ktx:$lifecycle",
     "androidx.lifecycle:lifecycle-livedata-ktx:$lifecycle",
     "androidx.lifecycle:lifecycle-runtime-ktx:$lifecycle",
+    //解决PendingIntent对android12兼容问题
+    "androidx.work:work-runtime-ktx:2.7.1",
 )
 
-//"androidx.work:work-runtime-ktx:2.7.1",
+//,
 
 //    "androidx.navigation:navigation-runtime-ktx:2.4.1",
 //    "androidx.navigation:navigation-fragment-ktx:2.4.1",
