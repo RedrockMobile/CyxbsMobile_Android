@@ -167,7 +167,8 @@ fun getClickPendingIntent(context: Context, @IdRes resId: Int, action: String, c
     intent.setClass(context, clazz)
     intent.action = action
     intent.data = Uri.parse("id:$resId")
-    return PendingIntent.getBroadcast(context, 0, intent, 0)
+
+    return PendingIntent.getBroadcast(context, 0, intent, getPendingIntentFlags())
 }
 
 //给按钮返回PendingIntent
@@ -230,15 +231,15 @@ fun startOperation(dataBean: WidgetCourse.DataBean) {
         EventBus.getDefault().postSticky(WidgetCourseEvent(mutableListOf(dataBean)))
     }
 }
-private fun getPendingIntentFlags(isMutable: Boolean = false) =
+private fun getPendingIntentFlags(isMutable: Boolean = true) =
     when {
         isMutable && Build.VERSION.SDK_INT >= Build.VERSION_CODES.S ->
-            PendingIntent.FLAG_MUTABLE
+            PendingIntent.FLAG_MUTABLE or PendingIntent.FLAG_UPDATE_CURRENT
         !isMutable && Build.VERSION.SDK_INT >= Build.VERSION_CODES.S ->
-            PendingIntent.FLAG_IMMUTABLE
+            PendingIntent.FLAG_IMMUTABLE or PendingIntent.FLAG_CANCEL_CURRENT
         isMutable && Build.VERSION.SDK_INT >= Build.VERSION_CODES.M ->
             PendingIntent.FLAG_UPDATE_CURRENT
         !isMutable && Build.VERSION.SDK_INT >= Build.VERSION_CODES.M ->
-            PendingIntent.FLAG_UPDATE_CURRENT
+            PendingIntent.FLAG_CANCEL_CURRENT
         else -> PendingIntent.FLAG_UPDATE_CURRENT
     }
