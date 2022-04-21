@@ -1,77 +1,198 @@
 package com.mredrock.cyxbs.widget.widget.little
 
+import android.appwidget.AppWidgetManager
+import android.appwidget.AppWidgetProvider
+import android.content.ComponentName
 import android.content.Context
+import android.content.Intent
+import android.os.Process
+import android.util.Log
 import android.widget.RemoteViews
+import android.widget.Toast
+import com.alibaba.android.arouter.launcher.ARouter
+import com.mredrock.cyxbs.api.main.MAIN_MAIN
+import com.mredrock.cyxbs.common.event.WidgetCourseEvent
 import com.mredrock.cyxbs.widget.R
-import com.mredrock.cyxbs.widget.bean.CourseStatus
-import com.mredrock.cyxbs.widget.util.filterClassRoom
-import com.mredrock.cyxbs.widget.util.getClickPendingIntent
-import com.mredrock.cyxbs.widget.util.getWeekDayChineseName
-import com.mredrock.cyxbs.widget.util.saveHashLesson
+import com.mredrock.cyxbs.widget.util.*
+import com.mredrock.cyxbs.widget.widget.little.bean.LittleWidgetState
+import com.mredrock.cyxbs.widget.widget.little.bean.emptyLittleWidgetState
+import org.greenrobot.eventbus.EventBus
 import java.util.*
+import kotlin.properties.Delegates
 
 /**
  * Created by zia on 2018/10/10.
+ * rebuild by ZhiQiang Tu 2022/4/21
  * 小型部件，不透明
  */
-class LittleWidget : BaseLittleWidget() {
 
-    override fun getLayoutResId(): Int {
-        return R.layout.widget_little
+
+
+//必要数据
+private var todayClasses = listOf<LittleWidgetState>()
+private var index: Int by Delegates.observable(-1) { _, _, new ->
+    currentClass = if (new == -1) {  emptyLittleWidgetState() } else { todayClasses[new] }
+}
+private var currentClass: LittleWidgetState = emptyLittleWidgetState()
+
+//小组件会被多次初始化,也就是每次刷新LittleWidget对象都是重新new的，这些值是不会变动的,所以申明为顶层也不算太离谱。
+//id
+private val layoutId = R.layout.widget_little
+private val upId = R.id.widget_little_up
+private val downId = R.id.widget_little_down
+private val titleId = R.id.widget_little_title
+private val courseNameId = R.id.widget_little_courseName
+private val roomId = R.id.widget_little_room
+private val refreshId = R.id.widget_little_refresh
+
+//action
+private const val packageName = "com.mredrock.cyxbs.widget.widget.little.LittleWidget"
+private const val actionRefresh = "${packageName}.refresh"
+private const val actionUp = "${packageName}.up"
+private const val actionDown = "${packageName}.down"
+private const val actionStart = "${packageName}.start"
+private const val actionJump = "${packageName}.jump"
+private const val actionInit = "${packageName}.init"
+
+
+class LittleWidget : AppWidgetProvider() {
+
+    override fun onUpdate(
+        context: Context,
+        appWidgetManager: AppWidgetManager?,
+        appWidgetIds: IntArray?
+    ) {
+        initData(context)
+        refresh(context)
     }
 
-    override fun getShareName(): String {
-        return "widget_share_little"
+    private fun refreshRemoteView(
+        context: Context,
+        appWidgetManager: AppWidgetManager?,
+        appWidgetIds: IntArray?,
+        rv: RemoteViews
+    ) {
+        val manager = AppWidgetManager.getInstance(context)
+        val componentName = ComponentName(context, javaClass)
+        manager.updateAppWidget(componentName, rv)
     }
 
-    override fun getUpResId(): Int {
-        return R.id.widget_little_up
-    }
-
-    override fun getDownResId(): Int {
-        return R.id.widget_little_down
-    }
-
-    override fun getTitleResId(): Int {
-        return R.id.widget_little_title
-    }
-
-    override fun getCourseNameResId(): Int {
-        return R.id.widget_little_courseName
-    }
-
-    override fun getRoomResId(): Int {
-        return R.id.widget_little_room
-    }
-
-    override fun getRefreshResId(): Int {
-        return R.id.widget_little_refresh
-    }
-
-    override fun getRemoteViews(context: Context, courseStatus: CourseStatus.Course?, timeTv: String): RemoteViews {
-        val rv = RemoteViews(context.packageName, getLayoutResId())
-        rv.setOnClickPendingIntent(getUpResId(), getClickPendingIntent(context, getUpResId(), "btn.text.com", javaClass))
-        rv.setOnClickPendingIntent(getDownResId(), getClickPendingIntent(context, getDownResId(), "btn.text.com", javaClass))
-        rv.setOnClickPendingIntent(getRefreshResId(), getClickPendingIntent(context, getRefreshResId(), "btn.text.com", javaClass))
+    /**
+     * 重新new一个新的remoteView供给刷新界面
+     */
+    private fun initRemoteView(context: Context): RemoteViews {
+        val rv = RemoteViews(context.packageName, layoutId)
+        rv.setOnClickPendingIntent(
+            upId,
+            getClickPendingIntent(context, upId, actionUp, javaClass)
+        )
+        rv.setOnClickPendingIntent(
+            downId,
+            getClickPendingIntent(context, downId, actionDown, javaClass)
+        )
+        rv.setOnClickPendingIntent(
+            refreshId,
+            getClickPendingIntent(context, refreshId, actionRefresh, javaClass)
+        )
 
 
+        rv.setTextViewText(titleId, currentClass.title)
+        rv.setTextViewText(courseNameId, currentClass.courseName)
+        rv.setTextViewText(roomId, currentClass.classRoomNum)
 
-        if (courseStatus == null) {
-            rv.setTextViewText(getTitleResId(), getWeekDayChineseName(Calendar.getInstance().get(Calendar.DAY_OF_WEEK)))
-            rv.setTextViewText(getCourseNameResId(), "今天没有课~")
-            rv.setTextViewText(getRoomResId(), "")
-        } else {
-            //保存当前hash_lesson
-            saveHashLesson(context, courseStatus.hash_lesson, getShareName())
-            rv.setTextViewText(getTitleResId(), timeTv)
-            rv.setTextViewText(getCourseNameResId(), courseStatus.course)
-            rv.setTextViewText(getRoomResId(), filterClassRoom(courseStatus.classroom!!))
+        if (index != -1) {
             //有课的时候才能跳转
-            rv.setOnClickPendingIntent(getCourseNameResId(),
-                    getClickPendingIntent(context,getCourseNameResId(),"btn.start.com",javaClass))
-            rv.setOnClickPendingIntent(getRoomResId(),
-                    getClickPendingIntent(context,getRoomResId(),"btn.start.com",javaClass))
+            rv.setOnClickPendingIntent(
+                courseNameId,
+                getClickPendingIntent(context, courseNameId, actionStart, javaClass)
+            )
+            rv.setOnClickPendingIntent(
+                roomId,
+                getClickPendingIntent(context, roomId, actionStart, javaClass)
+            )
         }
         return rv
+
+    }
+
+    /**
+     * 初始化必要的数据
+     * 1.todayClasses -> 当天的所有课程
+     * 2.index        -> 当前应上课程在todayClasses的index
+     * 3.currentClass -> 当前应上的课程
+     */
+    private fun initData(context: Context) {
+
+        val list = getTodayCourse(context)
+            ?: getErrorCourseList()
+
+        todayClasses = list.map {
+            val title = formatTime(getStartCalendarByNum(it.hash_lesson))
+            val courseName = it.course!!
+            val roomId = filterClassRoom(it.classroom!!)
+            LittleWidgetState(title = title, courseName = courseName, classRoomNum = roomId)
+        }
+
+        //TODO 逻辑好像有点点问题
+        //寻找当下需要展示的课程的index，并依据index去实例化一个LittleWidgetState
+        index = list.indexOfFirst {
+            Calendar.getInstance() < getStartCalendarByNum(it.hash_lesson)
+        }
+
+        Log.e(
+            "TAG@initData",
+            Thread.currentThread().name + ":" + Process.myPid() + ":" + index + ":this" + hashCode()
+        )
+
+
+    }
+
+
+    override fun onReceive(context: Context, intent: Intent) {
+        super.onReceive(context, intent)
+        Log.e(
+            "TAG@onReceive",
+            Thread.currentThread().name + ":" + Process.myPid() + ":" + index + ":this" + hashCode()
+        )
+        when (intent.action) {
+            actionRefresh -> {
+                onUpdate(context, null, null)
+                Toast.makeText(context, "已刷新", Toast.LENGTH_SHORT).show()
+            }
+            actionUp -> {
+                if (index == -1) {
+                    Toast.makeText(context, "今天没课~", Toast.LENGTH_SHORT).show()
+                    return
+                }
+                if (index - 1 < 0) {
+                    Toast.makeText(context, "已经是第一节课了~", Toast.LENGTH_SHORT).show()
+                    return
+                }
+                index--
+                refresh(context)
+            }
+            actionDown -> {
+                if (index == -1) {
+                    Toast.makeText(context, "今天没课~", Toast.LENGTH_SHORT).show()
+                    return
+                }
+                if (index + 1 > todayClasses.size - 1) {
+                    Toast.makeText(context, "已近是最后一节课了~", Toast.LENGTH_SHORT).show()
+                    return
+                }
+                index++
+                refresh(context)
+            }
+            actionJump -> {
+                ARouter.getInstance().build(MAIN_MAIN).navigation()
+            }
+            actionInit ->{
+                onUpdate(context,null,null)
+            }
+        }
+    }
+
+    private fun refresh(context: Context) {
+        refreshRemoteView(context,null,null,initRemoteView(context))
     }
 }
