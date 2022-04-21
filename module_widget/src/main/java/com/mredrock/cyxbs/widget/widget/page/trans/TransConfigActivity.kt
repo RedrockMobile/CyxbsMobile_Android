@@ -1,5 +1,6 @@
 package com.mredrock.cyxbs.widget.widget.page.trans
 
+import android.content.Intent
 import android.graphics.Color
 import android.os.Bundle
 import android.text.Editable
@@ -11,6 +12,7 @@ import android.widget.TextView
 import android.widget.Toast
 import com.jaredrummler.android.colorpicker.ColorPickerDialog
 import com.jaredrummler.android.colorpicker.ColorPickerDialogListener
+import com.mredrock.cyxbs.common.BaseApp
 import com.mredrock.cyxbs.common.ui.BaseActivity
 import com.mredrock.cyxbs.widget.R
 import com.mredrock.cyxbs.widget.widget.little.LittleTransWidget
@@ -84,7 +86,9 @@ class TransConfigActivity : BaseActivity() {
                 this@apply.holderColor = holderColor
             }.save(this)
 
-            LittleTransWidget().refresh(this@TransConfigActivity)
+            BaseApp.appContext.sendBroadcast(Intent(this,LittleTransWidget::class.java).apply {
+                action = LittleTransWidget::class.java.canonicalName + ".init"
+            })
 
             Toast.makeText(this@TransConfigActivity, "已刷新", Toast.LENGTH_SHORT).show()
         }

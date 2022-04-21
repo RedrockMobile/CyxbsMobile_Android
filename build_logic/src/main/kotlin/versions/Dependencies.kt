@@ -127,11 +127,18 @@ const val dialog = "com.afollestad.material-dialogs:core:3.3.0"
 //coroutines
 const val coroutines = "org.jetbrains.kotlinx:kotlinx-coroutines-android:1.6.0-native-mt"
 
+//workManger
+const val workManager = "androidx.work:work-runtime-ktx:2.7.1"
+
 
 fun DependencyHandlerScope.android() {
     android.forEach {
         "implementation"(it)
     }
+}
+
+fun DependencyHandlerScope.workManager(){
+    "implementation"(workManager)
 }
 
 

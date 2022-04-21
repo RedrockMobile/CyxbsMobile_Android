@@ -133,6 +133,7 @@ dependencies {
     test()
     autoService()
     vasDolly()
+    workManager()
 }
 
 

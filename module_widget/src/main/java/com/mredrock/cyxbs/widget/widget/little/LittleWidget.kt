@@ -5,18 +5,14 @@ import android.appwidget.AppWidgetProvider
 import android.content.ComponentName
 import android.content.Context
 import android.content.Intent
-import android.os.Process
-import android.util.Log
 import android.widget.RemoteViews
 import android.widget.Toast
 import com.alibaba.android.arouter.launcher.ARouter
 import com.mredrock.cyxbs.api.main.MAIN_MAIN
-import com.mredrock.cyxbs.common.event.WidgetCourseEvent
 import com.mredrock.cyxbs.widget.R
 import com.mredrock.cyxbs.widget.util.*
 import com.mredrock.cyxbs.widget.widget.little.bean.LittleWidgetState
 import com.mredrock.cyxbs.widget.widget.little.bean.emptyLittleWidgetState
-import org.greenrobot.eventbus.EventBus
 import java.util.*
 import kotlin.properties.Delegates
 
@@ -47,11 +43,15 @@ private val refreshId = R.id.widget_little_refresh
 
 //action
 private const val packageName = "com.mredrock.cyxbs.widget.widget.little.LittleWidget"
+//供给用户的刷新事件
 private const val actionRefresh = "${packageName}.refresh"
+//供给用户的up事件
 private const val actionUp = "${packageName}.up"
+//供给用户的down事件
 private const val actionDown = "${packageName}.down"
+//供给用户的start事件
 private const val actionStart = "${packageName}.start"
-private const val actionJump = "${packageName}.jump"
+//提供给外部对该组件进行刷新的事件
 private const val actionInit = "${packageName}.init"
 
 
@@ -66,6 +66,16 @@ class LittleWidget : AppWidgetProvider() {
         refresh(context)
     }
 
+    /**
+     * 刷新小组件
+     */
+    private fun refresh(context: Context) {
+        refreshRemoteView(context,null,null,initRemoteView(context))
+    }
+
+    /**
+     * 返回新的RemoteView
+     */
     private fun refreshRemoteView(
         context: Context,
         appWidgetManager: AppWidgetManager?,
@@ -139,21 +149,10 @@ class LittleWidget : AppWidgetProvider() {
             Calendar.getInstance() < getStartCalendarByNum(it.hash_lesson)
         }
 
-        Log.e(
-            "TAG@initData",
-            Thread.currentThread().name + ":" + Process.myPid() + ":" + index + ":this" + hashCode()
-        )
-
-
     }
-
 
     override fun onReceive(context: Context, intent: Intent) {
         super.onReceive(context, intent)
-        Log.e(
-            "TAG@onReceive",
-            Thread.currentThread().name + ":" + Process.myPid() + ":" + index + ":this" + hashCode()
-        )
         when (intent.action) {
             actionRefresh -> {
                 onUpdate(context, null, null)
@@ -183,16 +182,12 @@ class LittleWidget : AppWidgetProvider() {
                 index++
                 refresh(context)
             }
-            actionJump -> {
+            actionStart -> {
                 ARouter.getInstance().build(MAIN_MAIN).navigation()
             }
             actionInit ->{
                 onUpdate(context,null,null)
             }
         }
-    }
-
-    private fun refresh(context: Context) {
-        refreshRemoteView(context,null,null,initRemoteView(context))
     }
 }
