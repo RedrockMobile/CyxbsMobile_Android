@@ -1,5 +1,4 @@
 import ext.get
-import gradle.kotlin.dsl.accessors._11b1f85c87a6b4d0c16534be4db6fa46.ext
 import org.gradle.api.JavaVersion
 import org.gradle.kotlin.dsl.kotlin
 import versions.AGP
@@ -48,7 +47,7 @@ android {
 
             ndk {
                 // 修改安装包的架构要记得同步修改上面的 Bugly 的 ndk 依赖
-                abiFilters += listOf("arm64-v8a","armeabi-v7a")
+                abiFilters += listOf("arm64-v8a","armeabi-v7a","x86","x86_64")
             }
         }
     }

@@ -69,11 +69,25 @@ class DiscoverHomeFragment : BaseViewModelFragment<DiscoverHomeViewModel>(), Eve
         }
         initJwNews(vf_jwzx_detail, fl_discover_home_jwnews)
         initViewPager()
+
+
+
+        initViewClickListener()
         viewModel.getRollInfo()
         iv_check_in.setOnSingleClickListener {
             context?.doIfLogin("签到") {
                 ARouter.getInstance().build(MINE_CHECK_IN).navigation()
             }
+        }
+    }
+
+    private fun initViewClickListener(){
+        iv_discover_msg.setOnClickListener {
+            //将msg View设置为有消息的状态
+            //iv_discover_msg.setBackgroundResource(R.drawable.discover_ic_home_has_msg)
+
+            //将msg View设置为没有消息的状态
+            iv_discover_msg.setBackgroundResource(R.drawable.discover_ic_home_msg)
         }
     }
 
@@ -96,6 +110,8 @@ class DiscoverHomeFragment : BaseViewModelFragment<DiscoverHomeViewModel>(), Eve
                     vp_discover_home.adapter?.notifyDataSetChanged()
                 super.onPageScrollStateChanged(state)
             }
+
+
 
             override fun onPageSelected(position: Int) {
                 super.onPageSelected(position)

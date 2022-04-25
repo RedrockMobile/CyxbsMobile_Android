@@ -43,6 +43,7 @@ const val DISCOVER_NEWS_ITEM = "/news/discover/item"
 
 //签到页
 const val MINE_CHECK_IN = "/check_in/mine/entry"
+
 // 个人界面的确认密码模块
 const val MINE_FORGET_PASSWORD = "/forget_password/mine/entry"
 // 个人界面的绑定邮箱模块

@@ -1,13 +1,14 @@
 package com.mredrock.cyxbs.common.network
 
-import android.app.Application
-import android.content.pm.PackageManager
 import android.os.Handler
+import android.os.Looper
+import android.util.Log
 import android.util.SparseArray
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
 import com.mredrock.cyxbs.api.account.IAccountService
 import com.mredrock.cyxbs.api.account.IUserStateService
+import com.mredrock.cyxbs.common.BaseApp
 import com.mredrock.cyxbs.common.BuildConfig
 import com.mredrock.cyxbs.common.bean.BackupUrlStatus
 import com.mredrock.cyxbs.common.bean.RedrockApiWrapper
@@ -16,20 +17,16 @@ import com.mredrock.cyxbs.common.config.SUCCESS
 import com.mredrock.cyxbs.common.config.TOKEN_EXPIRE
 import com.mredrock.cyxbs.common.config.getBaseUrl
 import com.mredrock.cyxbs.common.service.ServiceManager
+import com.mredrock.cyxbs.common.utils.LogLocal
 import com.mredrock.cyxbs.common.utils.LogUtils
 import com.mredrock.cyxbs.common.utils.extensions.takeIfNoException
+import com.mredrock.cyxbs.common.utils.extensions.toast
 import okhttp3.*
 import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit
+import retrofit2.adapter.rxjava3.RxJava3CallAdapterFactory
 import retrofit2.converter.gson.GsonConverterFactory
 import java.util.concurrent.TimeUnit
-import android.os.Looper
-import android.util.Log
-import androidx.core.content.PackageManagerCompat
-import com.mredrock.cyxbs.common.BaseApp
-import com.mredrock.cyxbs.common.utils.LogLocal
-import com.mredrock.cyxbs.common.utils.extensions.toast
-import retrofit2.adapter.rxjava3.RxJava3CallAdapterFactory
 
 
 /**
@@ -123,28 +120,34 @@ object ApiGenerator {
      * null-> 默认Timeout
      * @param tokenNeeded 是否需要添加token请求
      */
-    fun registerNetSettings(uniqueNum: Int, retrofitConfig: ((Retrofit.Builder) -> Retrofit.Builder)? = null, okHttpClientConfig: ((OkHttpClient.Builder) -> OkHttpClient.Builder)? = null, tokenNeeded: Boolean) {
+    fun registerNetSettings(
+        uniqueNum: Int,
+        retrofitConfig: ((Retrofit.Builder) -> Retrofit.Builder)? = null,
+        okHttpClientConfig: ((OkHttpClient.Builder) -> OkHttpClient.Builder)? = null,
+        tokenNeeded: Boolean
+    ) {
         retrofitMap.put(uniqueNum, Retrofit.Builder()
-                //对传入的retrofitConfig配置
-                .apply {
-                    if (retrofitConfig == null)
+            //对传入的retrofitConfig配置
+            .apply {
+                if (retrofitConfig == null)
+                    this.defaultConfig()
+                else
+                    retrofitConfig.invoke(this)
+            }
+            //对传入的okHttpClientConfig配置
+            .configRetrofitBuilder {
+                it.apply {
+                    if (tokenNeeded && !isTouristMode())
+                        configureTokenOkHttp()
+                    if (okHttpClientConfig == null)
                         this.defaultConfig()
                     else
-                        retrofitConfig.invoke(this)
-                }
-                //对传入的okHttpClientConfig配置
-                .configRetrofitBuilder {
-                    it.apply {
-                        if (tokenNeeded && !isTouristMode())
-                            configureTokenOkHttp()
-                        if (okHttpClientConfig == null)
-                            this.defaultConfig()
-                        else
-                            okHttpClientConfig.invoke(
-                                it.addInterceptor(BackupInterceptor())
-                            )
-                    }.build()
-                }.build())
+                        okHttpClientConfig.invoke(
+                            it.addInterceptor(BackupInterceptor())
+                        )
+                }.build()
+            }.build()
+        )
     }
 
     //以下是retrofit基本配置
@@ -153,39 +156,41 @@ object ApiGenerator {
      */
     private fun Retrofit.Builder.configRetrofitBuilder(client: ((OkHttpClient.Builder) -> OkHttpClient)): Retrofit.Builder {
         return this.client(client.invoke(OkHttpClient().newBuilder().apply {
-                val logging = HttpLoggingInterceptor { message ->
-                    LogUtils.d("OKHTTP",message)
-                    LogLocal.log("OKHTTP", "OKHTTP$message")
-                }
-                logging.level = HttpLoggingInterceptor.Level.BODY
-                addInterceptor(Interceptor {
-                    val response = proceedPoxyWithTryCatch {
-                        it.proceed(it.request().newBuilder()
+            val logging = HttpLoggingInterceptor { message ->
+                LogUtils.d("OKHTTP", message)
+                LogLocal.log("OKHTTP", "OKHTTP$message")
+            }
+            logging.level = HttpLoggingInterceptor.Level.BODY
+            addInterceptor(Interceptor {
+                val response = proceedPoxyWithTryCatch {
+                    it.proceed(
+                        it.request().newBuilder()
                             .addHeader("APPVersion", BaseApp.version)
                             .build()
-                        )}
-                    response!!
-                })
-                addInterceptor(logging)
-                //这里是在debug模式下方便开发人员简单确认 http 错误码 和 url(magipoke开始切的)
-                if (BuildConfig.DEBUG){
-                    addInterceptor(Interceptor{
-                        val request = it.request()
-                        Log.d("OKHTTP","OKHTTP${request.body}")
-
-                        val response = it.proceed(request)
-                        if (!response.isSuccessful){
-                            response.close()
-                            Handler(Looper.getMainLooper()).post {
-                                BaseApp.appContext.toast("${response.code} ${request.url} ")
-                            }
-                        }
-                        response
-                    })
+                    )
                 }
+                response!!
+            })
+            addInterceptor(logging)
+            //这里是在debug模式下方便开发人员简单确认 http 错误码 和 url(magipoke开始切的)
+            if (BuildConfig.DEBUG) {
+                addInterceptor(Interceptor {
+                    val request = it.request()
+                    Log.d("OKHTTP", "OKHTTP${request.body}")
+
+                    val response = it.proceed(request)
+                    if (!response.isSuccessful) {
+                        response.close()
+                        Handler(Looper.getMainLooper()).post {
+                            BaseApp.appContext.toast("${response.code} ${request.url} ")
+                        }
+                    }
+                    response
+                })
+            }
         }))
-                .addConverterFactory(GsonConverterFactory.create())
-                .addCallAdapterFactory(RxJava3CallAdapterFactory.createSynchronous())
+            .addConverterFactory(GsonConverterFactory.create())
+            .addCallAdapterFactory(RxJava3CallAdapterFactory.createSynchronous())
     }
 
     //默认配置
@@ -224,10 +229,12 @@ object ApiGenerator {
              */
             interceptors().add(Interceptor {
                 val response = proceedPoxyWithTryCatch {
-                    it.proceed(it.request().newBuilder()
-                        .addHeader("version", BaseApp.version)
-                        .build()
-                    )}
+                    it.proceed(
+                        it.request().newBuilder()
+                            .addHeader("version", BaseApp.version)
+                            .build()
+                    )
+                }
                 return@Interceptor response!!
             })
             /**
@@ -246,13 +253,18 @@ object ApiGenerator {
                  */
                 when {
                     refreshToken.isEmpty() || token.isEmpty() -> {
-                        token = ServiceManager.getService(IAccountService::class.java).getUserTokenService().getToken()
-                        refreshToken = ServiceManager.getService(IAccountService::class.java).getUserTokenService().getRefreshToken()
+                        token = ServiceManager.getService(IAccountService::class.java)
+                            .getUserTokenService().getToken()
+                        refreshToken = ServiceManager.getService(IAccountService::class.java)
+                            .getUserTokenService().getRefreshToken()
                         if (isTokenExpired()) {
                             checkRefresh(it, token)
                         } else {
                             proceedPoxyWithTryCatch {
-                                it.proceed(it.request().newBuilder().header("Authorization", "Bearer $token").build())
+                                it.proceed(
+                                    it.request().newBuilder()
+                                        .header("Authorization", "Bearer $token").build()
+                                )
                             }
                         }
                     }
@@ -260,7 +272,12 @@ object ApiGenerator {
                         checkRefresh(it, token)
                     }
                     else -> {
-                        val response = proceedPoxyWithTryCatch { it.proceed(it.request().newBuilder().header("Authorization", "Bearer $token").build()) }
+                        val response = proceedPoxyWithTryCatch {
+                            it.proceed(
+                                it.request().newBuilder().header("Authorization", "Bearer $token")
+                                    .build()
+                            )
+                        }
                         //此处拦截http状态码进行统一处理
                         response?.apply {
                             when (code) {
@@ -286,7 +303,11 @@ object ApiGenerator {
     @Synchronized
     private fun checkRefresh(chain: Interceptor.Chain, expiredToken: String): Response? {
 
-        var response = proceedPoxyWithTryCatch { chain.proceed(chain.request().newBuilder().header("Authorization", "Bearer $token").build()) }
+        var response = proceedPoxyWithTryCatch {
+            chain.proceed(
+                chain.request().newBuilder().header("Authorization", "Bearer $token").build()
+            )
+        }
         /**
          * 刷新token条件设置为，已有refreshToken，并且已经过期，也可以后端返回特定到token失效code
          * 当第一个过期token请求接口后，改变token和refreshToken，防止同步refreshToken失效
@@ -297,20 +318,34 @@ object ApiGenerator {
          */
         if (lastExpiredToken == expiredToken) {//认定已经刷新成功，直接返回新的请求
             response?.close()
-            return proceedPoxyWithTryCatch { chain.run { proceed(chain.request().newBuilder().header("Authorization", "Bearer $token").build()) } }
+            return proceedPoxyWithTryCatch {
+                chain.run {
+                    proceed(
+                        chain.request().newBuilder().header("Authorization", "Bearer $token")
+                            .build()
+                    )
+                }
+            }
         }
         lastExpiredToken = expiredToken
         if (refreshToken.isNotEmpty() && (isTokenExpired() || response?.code == 403)) {
             takeIfNoException {
                 ServiceManager.getService(IAccountService::class.java).getVerifyService().refresh(
-                        onError = {
-                            response?.close()
-                        },
-                        action = { s: String ->
-                            response?.close()
+                    onError = {
+                        response?.close()
+                    },
+                    action = { s: String ->
+                        response?.close()
 //                            appContext.toast("用户认证刷新成功")
-                            response = proceedPoxyWithTryCatch { chain.run { proceed(chain.request().newBuilder().header("Authorization", "Bearer $s").build()) } }
+                        response = proceedPoxyWithTryCatch {
+                            chain.run {
+                                proceed(
+                                    chain.request().newBuilder()
+                                        .header("Authorization", "Bearer $s").build()
+                                )
+                            }
                         }
+                    }
                 )
             }
 
@@ -366,10 +401,10 @@ object ApiGenerator {
 
         private fun useBackupUrl(chain: Interceptor.Chain): Response {
             val newUrl: HttpUrl = chain.request().url
-                    .newBuilder()
-                    .scheme("https")
-                    .host(backupUrl)
-                    .build()
+                .newBuilder()
+                .scheme("https")
+                .host(backupUrl)
+                .build()
             val builder: Request.Builder = chain.request().newBuilder()
             return chain.proceed(builder.url(newUrl).build())
         }
@@ -377,15 +412,18 @@ object ApiGenerator {
         private fun getBackupUrl(): String {
             val okHttpClient = OkHttpClient()
             val request: Request = Request.Builder()
-                    .url(BASE_NORMAL_BACKUP_GET)
-                    .build()
+                .url(BASE_NORMAL_BACKUP_GET)
+                .build()
             val call = okHttpClient.newCall(request)
             val json = call.execute().body?.string()
             return try {
-                val backupUrlStatus = Gson().fromJson<RedrockApiWrapper<BackupUrlStatus>>(json, object : TypeToken<RedrockApiWrapper<BackupUrlStatus>>() {}.type)
+                val backupUrlStatus = Gson().fromJson<RedrockApiWrapper<BackupUrlStatus>>(
+                    json,
+                    object : TypeToken<RedrockApiWrapper<BackupUrlStatus>>() {}.type
+                )
                 if (backupUrlStatus.data.baseUrl.isNullOrEmpty()) {
                     getBaseUrlWithoutHttps()
-                }else{
+                } else {
                     backupUrlStatus.data.baseUrl
                 }
             } catch (e: Exception) {
@@ -396,12 +434,16 @@ object ApiGenerator {
 
 
     }
+
     //获得没有 https://的地址提供给容灾使用
-    private fun getBaseUrlWithoutHttps() = getBaseUrl().subSequence(8, getBaseUrl().length).toString()
+    private fun getBaseUrlWithoutHttps() =
+        getBaseUrl().subSequence(8, getBaseUrl().length).toString()
 
     //是否是游客模式
-    private fun isTouristMode() = ServiceManager.getService(IAccountService::class.java).getVerifyService().isTouristMode()
+    private fun isTouristMode() =
+        ServiceManager.getService(IAccountService::class.java).getVerifyService().isTouristMode()
 
     //检查token是否过期
-    private fun isTokenExpired() = ServiceManager.getService(IAccountService::class.java).getVerifyService().isExpired()
+    private fun isTokenExpired() =
+        ServiceManager.getService(IAccountService::class.java).getVerifyService().isExpired()
 }

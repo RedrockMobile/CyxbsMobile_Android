@@ -13,7 +13,6 @@ import androidx.annotation.CallSuper
 import androidx.annotation.DrawableRes
 import androidx.appcompat.app.AppCompatActivity
 import com.mredrock.cyxbs.api.account.IAccountService
-import com.mredrock.cyxbs.common.BaseApp
 import com.mredrock.cyxbs.common.R
 import com.mredrock.cyxbs.common.bean.LoginConfig
 import com.mredrock.cyxbs.common.component.JToolbar
@@ -45,7 +44,7 @@ abstract class BaseActivity : AppCompatActivity() {
 
     // 默认不检查登陆
     protected open val loginConfig = LoginConfig(
-            isCheckLogin = false
+        isCheckLogin = false
     )
 
     // 只在这里做封装处理
@@ -64,17 +63,30 @@ abstract class BaseActivity : AppCompatActivity() {
         lifeCycleLog("onCreate")
     }
 
+
     // 在setContentView之后进行操作
-    override fun setContentView(view: View?) { super.setContentView(view); notificationInit() }
-    override fun setContentView(layoutResID: Int) { super.setContentView(layoutResID);notificationInit() }
+    override fun setContentView(view: View?) {
+        super.setContentView(view);
+        notificationInit()
+    }
+
+    override fun setContentView(layoutResID: Int) {
+        super.setContentView(layoutResID);
+        notificationInit()
+    }
+
     private fun notificationInit() {
 
-            val verifyService = ServiceManager.getService(IAccountService::class.java).getVerifyService()
-            if (this is ActionLoginStatusSubscriber) {
-                if (verifyService.isLogin()) initOnLoginMode(baseBundle)
-                if (verifyService.isTouristMode()) initOnTouristMode(baseBundle)
-                if (verifyService.isLogin() || verifyService.isTouristMode()) initPage(verifyService.isLogin(), baseBundle)
-            }
+        val verifyService =
+            ServiceManager.getService(IAccountService::class.java).getVerifyService()
+        if (this is ActionLoginStatusSubscriber) {
+            if (verifyService.isLogin()) initOnLoginMode(baseBundle)
+            if (verifyService.isTouristMode()) initOnTouristMode(baseBundle)
+            if (verifyService.isLogin() || verifyService.isTouristMode()) initPage(
+                verifyService.isLogin(),
+                baseBundle
+            )
+        }
 
 
     }
@@ -84,26 +96,31 @@ abstract class BaseActivity : AppCompatActivity() {
         when {
             Build.VERSION.SDK_INT >= 23 -> {
                 if (this.getDarkModeStatus()) {
-                    window.decorView.systemUiVisibility = View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN or View.SYSTEM_UI_FLAG_LAYOUT_STABLE
+                    window.decorView.systemUiVisibility =
+                        View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN or View.SYSTEM_UI_FLAG_LAYOUT_STABLE
                 } else {
                     window.decorView.systemUiVisibility =
                             //亮色模式状态栏
-                            View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR or
-                                    //设置decorView的布局设置为全屏
-                                    View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN or
-                                    //维持布局稳定，不会因为statusBar和虚拟按键的消失而移动view位置
-                                    View.SYSTEM_UI_FLAG_LAYOUT_STABLE
+                        View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR or
+                                //设置decorView的布局设置为全屏
+                                View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN or
+                                //维持布局稳定，不会因为statusBar和虚拟按键的消失而移动view位置
+                                View.SYSTEM_UI_FLAG_LAYOUT_STABLE
                 }
             }
             else -> {
                 //设置decorView的布局设置为全屏，并维持布局稳定
-                window.decorView.systemUiVisibility = View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN or View.SYSTEM_UI_FLAG_LAYOUT_STABLE
+                window.decorView.systemUiVisibility =
+                    View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN or View.SYSTEM_UI_FLAG_LAYOUT_STABLE
                 window.statusBarColor = Color.TRANSPARENT
             }
         }
     }
 
-    inline fun <reified T : Activity> startActivity(finish: Boolean = false, vararg params: Pair<String, Any?>) {
+    inline fun <reified T : Activity> startActivity(
+        finish: Boolean = false,
+        vararg params: Pair<String, Any?>
+    ) {
         if (finish) finish()
         startActivity<T>(*params)
     }
@@ -114,18 +131,25 @@ abstract class BaseActivity : AppCompatActivity() {
     var menu: Menu? = null
         private set
 
-    @Deprecated(message = "废弃，请使用initWithSplitLine()", replaceWith = ReplaceWith("JToolbar.initWithSplitLine()", "com.mredrock.cyxbs.common.ui"))
-    protected fun JToolbar.init(title: String,
-                                @DrawableRes icon: Int = R.drawable.common_ic_back,
-                                listener: View.OnClickListener? = View.OnClickListener { finish() }) {
+    @Deprecated(
+        message = "废弃，请使用initWithSplitLine()",
+        replaceWith = ReplaceWith("JToolbar.initWithSplitLine()", "com.mredrock.cyxbs.common.ui")
+    )
+    protected fun JToolbar.init(
+        title: String,
+        @DrawableRes icon: Int = R.drawable.common_ic_back,
+        listener: View.OnClickListener? = View.OnClickListener { finish() }
+    ) {
         withSplitLine(true)
         initInternal(title, icon, listener)
     }
 
-    private fun JToolbar.initInternal(title: String,
-                                      @DrawableRes icon: Int = R.drawable.common_ic_back,
-                                      listener: View.OnClickListener? = View.OnClickListener { finish() },
-                                      titleOnLeft: Boolean = true) {
+    private fun JToolbar.initInternal(
+        title: String,
+        @DrawableRes icon: Int = R.drawable.common_ic_back,
+        listener: View.OnClickListener? = View.OnClickListener { finish() },
+        titleOnLeft: Boolean = true
+    ) {
         this.title = title
         setSupportActionBar(this)
         setTitleLocationAtLeft(titleOnLeft)
@@ -137,11 +161,13 @@ abstract class BaseActivity : AppCompatActivity() {
         }
     }
 
-    protected fun JToolbar.initWithSplitLine(title: String,
-                                             withSplitLine: Boolean = true,
-                                             @DrawableRes icon: Int = R.drawable.common_ic_back,
-                                             listener: View.OnClickListener? = View.OnClickListener { finish() },
-                                             titleOnLeft: Boolean = true) {
+    protected fun JToolbar.initWithSplitLine(
+        title: String,
+        withSplitLine: Boolean = true,
+        @DrawableRes icon: Int = R.drawable.common_ic_back,
+        listener: View.OnClickListener? = View.OnClickListener { finish() },
+        titleOnLeft: Boolean = true
+    ) {
         setTitleLocationAtLeft(false)
         withSplitLine(withSplitLine)
         initInternal(title, icon, listener, titleOnLeft)
@@ -163,7 +189,9 @@ abstract class BaseActivity : AppCompatActivity() {
         if (this is EventBusLifecycleSubscriber) {
             EventBus.getDefault().register(this)
         }
-        if (!ServiceManager.getService(IAccountService::class.java).getVerifyService().isTouristMode()) {
+        if (!ServiceManager.getService(IAccountService::class.java).getVerifyService()
+                .isTouristMode()
+        ) {
             checkLoginStatus()
         }
         lifeCycleLog("onStart")
@@ -181,18 +209,21 @@ abstract class BaseActivity : AppCompatActivity() {
 
     override fun onStop() {
         super.onStop()
-        if (this is EventBusLifecycleSubscriber && EventBus.getDefault().isRegistered(this)) EventBus.getDefault().unregister(this)
+        if (this is EventBusLifecycleSubscriber && EventBus.getDefault()
+                .isRegistered(this)
+        ) EventBus.getDefault().unregister(this)
         lifeCycleLog("onStop")
     }
 
     override fun onDestroy() {
         super.onDestroy()
         lifeCycleLog("onDestroy")
-        val verifyService = ServiceManager.getService(IAccountService::class.java).getVerifyService()
+        val verifyService =
+            ServiceManager.getService(IAccountService::class.java).getVerifyService()
         if (this is ActionLoginStatusSubscriber) {
             if (verifyService.isLogin()) destroyOnLoginMode()
             if (verifyService.isTouristMode()) destroyOnTouristMode()
-            if (verifyService.isLogin()||verifyService.isTouristMode()) destroyPage(verifyService.isLogin())
+            if (verifyService.isLogin() || verifyService.isTouristMode()) destroyPage(verifyService.isLogin())
         }
     }
 
@@ -203,7 +234,10 @@ abstract class BaseActivity : AppCompatActivity() {
     }
 
     @CallSuper
-    override fun onRestoreInstanceState(savedInstanceState: Bundle?, persistentState: PersistableBundle?) {
+    override fun onRestoreInstanceState(
+        savedInstanceState: Bundle?,
+        persistentState: PersistableBundle?
+    ) {
         super.onRestoreInstanceState(savedInstanceState, persistentState)
         lifeCycleLog("onRestoreInstanceState")
     }
@@ -223,9 +257,11 @@ abstract class BaseActivity : AppCompatActivity() {
             startLoginActivity(loginConfig)
         } else if (userState.isLogin() && userState.isRefreshTokenExpired()) {
             userState.logout(this)
-            startLoginActivity(LoginConfig(
+            startLoginActivity(
+                LoginConfig(
                     warnMessage = "身份信息已过期，请重新登录"
-            ))
+                )
+            )
         }
     }
 
@@ -241,5 +277,5 @@ abstract class BaseActivity : AppCompatActivity() {
      *    kt 插件(被废弃) > 属性代理 > ButterKnife(被废弃) > DataBinding > ViewBinding
      * ```
      */
-    protected fun <T: View> Int.view() = BindView<T>(this, { window.decorView }, { lifecycle })
+    protected fun <T : View> Int.view() = BindView<T>(this, { window.decorView }, { lifecycle })
 }

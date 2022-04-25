@@ -41,13 +41,23 @@
             app:layout_constraintTop_toBottomOf="@+id/tv_day"
             tools:ignore="MissingConstraints" />
 
+        <ImageView
+            android:id="@+id/iv_discover_msg"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginRight="73dp"
+            android:background="@drawable/discover_ic_home_msg"
+            app:layout_constraintBottom_toBottomOf="@+id/tv_dis"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="@+id/tv_dis" />
+
         <androidx.appcompat.widget.AppCompatImageView
             android:id="@+id/iv_check_in"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginEnd="15dp"
             android:src="@drawable/discover_ic_check_in"
             app:layout_constraintBottom_toBottomOf="@+id/tv_dis"
+            android:layout_marginRight="16dp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="@+id/tv_dis"
             tools:ignore="ContentDescription,MissingConstraints" />
