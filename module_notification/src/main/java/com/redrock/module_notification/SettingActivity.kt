@@ -4,6 +4,7 @@ import android.os.Bundle
 import com.alibaba.android.arouter.facade.annotation.Route
 import com.mredrock.cyxbs.common.config.NOTIFICATION_SETTING
 import com.mredrock.cyxbs.common.ui.BaseActivity
+import kotlinx.android.synthetic.main.activity_setting.*
 
 /**
  * Author by OkAndGreat
@@ -17,5 +18,17 @@ class SettingActivity :BaseActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_setting)
+
+        initViewClickListener()
+    }
+
+    private fun initViewClickListener(){
+        notification_setting_switch_1.setOnClickListener {
+
+        }
+
+        notification_setting_switch_2.setOnClickListener {
+
+        }
     }
 }

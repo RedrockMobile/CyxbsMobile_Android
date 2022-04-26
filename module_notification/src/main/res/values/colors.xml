@@ -11,4 +11,6 @@
     <color name="notification_setting_toolbar">#112C54</color>
     <color name="notification_setting_main_bg">#F2F3F8</color>
     <color name="notification_setting_item_bg">#FFFFFF</color>
+
+    <color name="notification_back_detail_ripple">#F2F3F8</color>
 </resources>
