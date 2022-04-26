@@ -8,6 +8,9 @@
         android:name="android.permission.RECEIVE_BOOT_COMPLETED"
         tools:node="remove" />
 
+    <!-- workManager的加急任务在android12之前的版本是使用的前台服务实现,而android 8.0以后前台服务需要申明权限-->
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE"/>
+
     <!--    友盟"统计分析"所需权限-->
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
