@@ -56,6 +56,9 @@ class WidgetRefreshWork(private val context: Context, workerParams: WorkerParame
         return Result.success()
     }
 
+    /**
+     * 为了workManager expedited(加急任务)的向后兼容性,因为android 12版本以下的实现方案是采用的是前台服务。
+     */
     override suspend fun getForegroundInfo(): ForegroundInfo {
 
         return ForegroundInfo(WIDGET_UPDATA_NOTIFICATION_ID, createNotification())
@@ -84,6 +87,9 @@ class WidgetRefreshWork(private val context: Context, workerParams: WorkerParame
 
 const val littleWidgetPkg = "com.mredrock.cyxbs.widget.widget.little.LittleWidget"
 const val littleWidgetAction = "$littleWidgetPkg.init"
+const val littleWidgetTransPkg = "com.mredrock.cyxbs.widget.widget.little.LittleTransWidget"
+const val littleWidgetTransAction = "$littleWidgetTransPkg.init"
 val widgetList = mapOf(
-    littleWidgetAction to littleWidgetPkg
+    littleWidgetAction to littleWidgetPkg,
+    littleWidgetTransAction to littleWidgetPkg
 )

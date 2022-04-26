@@ -16,6 +16,8 @@ class App : BaseApp(), SdkManager {
 
     private val sdkLoader = ServiceLoader.load(SdkService::class.java)
     private val taskLoader = ServiceLoader.load(TaskService::class.java)
+    override val application: Application
+        get() = this
 
     override fun onCreate() {
         super.onCreate()
@@ -47,9 +49,5 @@ class App : BaseApp(), SdkManager {
             it.work()
         }
     }
-
-    override val application: Application
-        get() = this
-
 
 }

@@ -12,6 +12,7 @@ import com.mredrock.cyxbs.common.utils.getProcessName
  *@signature 我将追寻并获取我想要的答案
  */
 interface SdkManager {
+
     val application: Application
 
     fun isMainProcess(): Boolean  = currentProcessName() == applicationId()

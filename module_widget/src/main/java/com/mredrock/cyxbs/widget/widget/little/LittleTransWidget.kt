@@ -60,12 +60,11 @@ class LittleTransWidget : AppWidgetProvider() {
     override fun onReceive(context: Context, intent: Intent) {
         super.onReceive(context, intent)
         when (intent.action) {
-            actionStart ->{
+            actionStart -> {
 
             }
-            actionInit->{
-                Log.e("TAG", "update: " )
-                refresh(context)
+            actionInit -> {
+                onUpdate(context, null, null)
             }
         }
     }
