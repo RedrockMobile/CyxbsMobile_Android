@@ -7,18 +7,16 @@ import android.content.Context
 import android.content.Intent
 import android.graphics.Bitmap
 import android.graphics.Color
-import android.util.Log
 import android.util.TypedValue
 import android.view.View
 import android.widget.RemoteViews
+import android.widget.Toast
 import com.mredrock.cyxbs.widget.R
-import com.mredrock.cyxbs.widget.bean.CourseStatus
 import com.mredrock.cyxbs.widget.util.*
 import com.mredrock.cyxbs.widget.widget.little.bean.LittleWidgetState
 import com.mredrock.cyxbs.widget.widget.little.bean.emptyLittleWidgetState
 import com.mredrock.cyxbs.widget.widget.page.trans.TransConfig
 import java.util.*
-import kotlin.math.log
 
 /**
  * Created by zia on 2018/10/10.
@@ -34,17 +32,15 @@ private val refreshId = R.id.widget_little_title_trans
 private var hasClass = false
 private var currentClass: LittleWidgetState = emptyLittleWidgetState()
 
-//action
-private const val packageName = "com.mredrock.cyxbs.widget.widget.little.LittleTransWidget"
 
 //供给用户的刷新事件
-private const val actionRefresh = "${packageName}.refresh"
+private const val actionRefresh = "refresh"
 
 //供给用户的start事件
-private const val actionStart = "${packageName}.start"
+private const val actionStart = "start"
 
 //提供给外部对该组件进行刷新的事件
-private const val actionInit = "${packageName}.init"
+private const val actionFlush = "flush"
 
 class LittleTransWidget : AppWidgetProvider() {
 
@@ -63,7 +59,7 @@ class LittleTransWidget : AppWidgetProvider() {
             actionStart -> {
 
             }
-            actionInit -> {
+            actionFlush -> {
                 onUpdate(context, null, null)
             }
         }

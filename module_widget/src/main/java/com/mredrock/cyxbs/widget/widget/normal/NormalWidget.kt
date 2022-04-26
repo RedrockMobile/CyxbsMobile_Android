@@ -28,6 +28,8 @@ import kotlin.collections.ArrayList
  * 大课表
  *
  */
+private const val actionFlush = "flush"
+
 class NormalWidget : AppWidgetProvider() {
 
     private val shareName = "zscy_widget_normal"
@@ -44,7 +46,11 @@ class NormalWidget : AppWidgetProvider() {
         //用于保存每一条刷新的课程，多个方法都要使用，若非静态，其他方法无法调用到正确数据
     }
 
-    override fun onUpdate(context: Context, appWidgetManager: AppWidgetManager, appWidgetIds: IntArray) {
+    override fun onUpdate(
+        context: Context,
+        appWidgetManager: AppWidgetManager?,
+        appWidgetIds: IntArray?
+    ) {
         super.onUpdate(context, appWidgetManager, appWidgetIds)
         context.defaultSharedPreferences.editor {
             putInt(shareName, 0)
@@ -52,7 +58,12 @@ class NormalWidget : AppWidgetProvider() {
         fresh(context, 0)
     }
 
-    override fun onAppWidgetOptionsChanged(context: Context, appWidgetManager: AppWidgetManager, appWidgetId: Int, newOptions: Bundle) {
+    override fun onAppWidgetOptionsChanged(
+        context: Context,
+        appWidgetManager: AppWidgetManager,
+        appWidgetId: Int,
+        newOptions: Bundle
+    ) {
         super.onAppWidgetOptionsChanged(context, appWidgetManager, appWidgetId, newOptions)
         val minHeight = newOptions.getInt(OPTION_APPWIDGET_MIN_HEIGHT)
         val rv = RemoteViews(context.packageName, R.layout.widget_normal)
@@ -77,61 +88,69 @@ class NormalWidget : AppWidgetProvider() {
         if (data != null) {
             rId = data.schemeSpecificPart.toInt()
         }
-        if (intent.action == "btn.text.com") {
+        when (intent.action) {
+            "btn.text.com" -> {
 
-            val offsetTime = context.defaultSharedPreferences.getInt(shareName, 0)
+                val offsetTime = context.defaultSharedPreferences.getInt(shareName, 0)
 
-            when (rId) {
-                R.id.widget_normal_back -> {
-                    context.defaultSharedPreferences.editor {
-                        putInt(shareName, makeOffsetTime(offsetTime - 1))
+                when (rId) {
+                    R.id.widget_normal_back -> {
+                        context.defaultSharedPreferences.editor {
+                            putInt(shareName, makeOffsetTime(offsetTime - 1))
+                        }
+                        fresh(context, makeOffsetTime(offsetTime - 1))
                     }
-                    fresh(context, makeOffsetTime(offsetTime - 1))
-                }
-                R.id.widget_normal_front -> {
-                    context.defaultSharedPreferences.editor {
-                        putInt(shareName, makeOffsetTime(offsetTime + 1))
+                    R.id.widget_normal_front -> {
+                        context.defaultSharedPreferences.editor {
+                            putInt(shareName, makeOffsetTime(offsetTime + 1))
+                        }
+                        fresh(context, makeOffsetTime(offsetTime + 1))
                     }
-                    fresh(context, makeOffsetTime(offsetTime + 1))
-                }
-                R.id.widget_normal_title -> {
-                    context.defaultSharedPreferences.editor {
-                        putInt(shareName, 0)
+                    R.id.widget_normal_title -> {
+                        context.defaultSharedPreferences.editor {
+                            putInt(shareName, 0)
+                        }
+                        fresh(context, 0)
                     }
-                    fresh(context, 0)
+                }
+                if (isDoubleClick()) {
+                    CyxbsToast.makeText(context, "提示：点击星期返回今日", Toast.LENGTH_SHORT).show()
                 }
             }
-            if (isDoubleClick()) {
-                CyxbsToast.makeText(context, "提示：点击星期返回今日", Toast.LENGTH_SHORT).show()
-            }
-        }
-        if (intent.action == "btn.start.com") {
-            list = gson.fromJson(context.defaultSharedPreferences.getString(courseData, ""), object : TypeToken<ArrayList<CourseStatus.Course>>() {}.type)
-            val newList = mutableListOf<WidgetCourse.DataBean>()
-            list.forEach {
-                newList.add(changeCourseToWidgetCourse(it))
-            }
-            when (rId) {
-                R.id.widget_normal_layout1 -> {
-                    startOperation(newList.filter { it.hash_lesson == 0 }[0])
+            "btn.start.com" -> {
+                list = gson.fromJson(
+                    context.defaultSharedPreferences.getString(courseData, ""),
+                    object : TypeToken<ArrayList<CourseStatus.Course>>() {}.type
+                )
+                val newList = mutableListOf<WidgetCourse.DataBean>()
+                list.forEach {
+                    newList.add(changeCourseToWidgetCourse(it))
                 }
-                R.id.widget_normal_layout2 -> {
-                    startOperation(newList.filter { it.hash_lesson == 1 }[0])
+                when (rId) {
+                    R.id.widget_normal_layout1 -> {
+                        startOperation(newList.filter { it.hash_lesson == 0 }[0])
+                    }
+                    R.id.widget_normal_layout2 -> {
+                        startOperation(newList.filter { it.hash_lesson == 1 }[0])
+                    }
+                    R.id.widget_normal_layout3 -> {
+                        startOperation(newList.filter { it.hash_lesson == 2 }[0])
+                    }
+                    R.id.widget_normal_layout4 -> {
+                        startOperation(newList.filter { it.hash_lesson == 3 }[0])
+                    }
+                    R.id.widget_normal_layout5 -> {
+                        startOperation(newList.filter { it.hash_lesson == 4 }[0])
+                    }
+                    R.id.widget_normal_layout6 -> {
+                        startOperation(newList.filter { it.hash_lesson == 5 }[0])
+                    }
                 }
-                R.id.widget_normal_layout3 -> {
-                    startOperation(newList.filter { it.hash_lesson == 2 }[0])
-                }
-                R.id.widget_normal_layout4 -> {
-                    startOperation(newList.filter { it.hash_lesson == 3 }[0])
-                }
-                R.id.widget_normal_layout5 -> {
-                    startOperation(newList.filter { it.hash_lesson == 4 }[0])
-                }
-                R.id.widget_normal_layout6 -> {
-                    startOperation(newList.filter { it.hash_lesson == 5 }[0])
-                }
-            }
 
+            }
+            actionFlush -> {
+                onUpdate(context, null, null)
+            }
         }
     }
 
@@ -172,11 +191,14 @@ class NormalWidget : AppWidgetProvider() {
             calendar.set(Calendar.DATE, calendar.get(Calendar.DATE) + offsetTime)
             //获取数据
             list = getCourseByCalendar(context, calendar)
-                    ?: getErrorCourseList()
+                ?: getErrorCourseList()
 
 
             //显示星期几
-            val text = if (Calendar.getInstance()[Calendar.DAY_OF_WEEK] == calendar[Calendar.DAY_OF_WEEK]) "今" else getWeekDayChineseName(calendar.get(Calendar.DAY_OF_WEEK))
+            val text =
+                if (Calendar.getInstance()[Calendar.DAY_OF_WEEK] == calendar[Calendar.DAY_OF_WEEK]) "今" else getWeekDayChineseName(
+                    calendar.get(Calendar.DAY_OF_WEEK)
+                )
             rv.setTextViewText(R.id.widget_normal_title, text)
 
             //显示课程
@@ -185,8 +207,10 @@ class NormalWidget : AppWidgetProvider() {
                 if (course.period == 2) {
                     rv.setTextViewText(getCourseId(num), course.course)
                     rv.setTextViewText(getRoomId(num), filterClassRoom(course.classroom!!))
-                    rv.setOnClickPendingIntent(getLayoutId(num),
-                            getClickPendingIntent(context, getLayoutId(num), "btn.start.com", javaClass))
+                    rv.setOnClickPendingIntent(
+                        getLayoutId(num),
+                        getClickPendingIntent(context, getLayoutId(num), "btn.start.com", javaClass)
+                    )
                 } else if (course.period == 3) {
                     setMoreView(num, rv, course, context)
 
@@ -202,8 +226,10 @@ class NormalWidget : AppWidgetProvider() {
                 val num = it + 1
                 rv.setTextViewText(getCourseId(num), "")
                 rv.setTextViewText(getRoomId(num), "")
-                rv.setOnClickPendingIntent(getLayoutId(num),
-                        getClickPendingIntent(context, getLayoutId(num), "", javaClass))
+                rv.setOnClickPendingIntent(
+                    getLayoutId(num),
+                    getClickPendingIntent(context, getLayoutId(num), "", javaClass)
+                )
             }
 
             //设置前后按钮操作
@@ -218,22 +244,31 @@ class NormalWidget : AppWidgetProvider() {
         }
     }
 
-    private fun setMoreView(num: Int, rv: RemoteViews, course: CourseStatus.Course, context: Context) {
+    private fun setMoreView(
+        num: Int,
+        rv: RemoteViews,
+        course: CourseStatus.Course,
+        context: Context
+    ) {
         val moreViewNum = (num + 1) / 2
         hideNormalLayout(moreViewNum, rv)
         rv.setViewVisibility(getMoreContentId(moreViewNum), View.VISIBLE)
         rv.setTextViewText(getMoreCourseId(moreViewNum), course.course)
         rv.setTextViewText(getMoreRoomId(moreViewNum), filterClassRoom(course.classroom!!))
-        rv.setOnClickPendingIntent(getMoreContentId(moreViewNum),
-                getClickPendingIntent(context, getLayoutId(num), "btn.start.com", javaClass))
+        rv.setOnClickPendingIntent(
+            getMoreContentId(moreViewNum),
+            getClickPendingIntent(context, getLayoutId(num), "btn.start.com", javaClass)
+        )
     }
 
     private fun initView(rv: RemoteViews, context: Context) {
         for (i in 1..6) {
             rv.setTextViewText(getCourseId(i), "")
             rv.setTextViewText(getRoomId(i), "")
-            rv.setOnClickPendingIntent(getLayoutId(i),
-                    getClickPendingIntent(context, getLayoutId(i), "", javaClass))
+            rv.setOnClickPendingIntent(
+                getLayoutId(i),
+                getClickPendingIntent(context, getLayoutId(i), "", javaClass)
+            )
             rv.setViewVisibility(getCourseId(i), View.VISIBLE)
             rv.setViewVisibility(getRoomId(i), View.VISIBLE)
             rv.setViewVisibility(getLayoutId(i), View.VISIBLE)
@@ -276,12 +311,18 @@ class NormalWidget : AppWidgetProvider() {
     }
 
     private fun addClickPendingIntent(rv: RemoteViews, context: Context) {
-        rv.setOnClickPendingIntent(R.id.widget_normal_title,
-                getClickPendingIntent(context, R.id.widget_normal_title, "btn.text.com", javaClass))
-        rv.setOnClickPendingIntent(R.id.widget_normal_front,
-                getClickPendingIntent(context, R.id.widget_normal_front, "btn.text.com", javaClass))
-        rv.setOnClickPendingIntent(R.id.widget_normal_back,
-                getClickPendingIntent(context, R.id.widget_normal_back, "btn.text.com", javaClass))
+        rv.setOnClickPendingIntent(
+            R.id.widget_normal_title,
+            getClickPendingIntent(context, R.id.widget_normal_title, "btn.text.com", javaClass)
+        )
+        rv.setOnClickPendingIntent(
+            R.id.widget_normal_front,
+            getClickPendingIntent(context, R.id.widget_normal_front, "btn.text.com", javaClass)
+        )
+        rv.setOnClickPendingIntent(
+            R.id.widget_normal_back,
+            getClickPendingIntent(context, R.id.widget_normal_back, "btn.text.com", javaClass)
+        )
     }
 
     private fun show(remoteViews: RemoteViews, context: Context) {

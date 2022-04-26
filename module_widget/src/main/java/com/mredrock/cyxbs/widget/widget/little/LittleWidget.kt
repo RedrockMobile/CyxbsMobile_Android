@@ -42,17 +42,16 @@ private val roomId = R.id.widget_little_room
 private val refreshId = R.id.widget_little_refresh
 
 //action
-private const val packageName = "com.mredrock.cyxbs.widget.widget.little.LittleWidget"
 //供给用户的刷新事件
-private const val actionRefresh = "${packageName}.refresh"
+private const val actionRefresh = "refresh"
 //供给用户的up事件
-private const val actionUp = "${packageName}.up"
+private const val actionUp = "up"
 //供给用户的down事件
-private const val actionDown = "${packageName}.down"
+private const val actionDown = "down"
 //供给用户的start事件
-private const val actionStart = "${packageName}.start"
+private const val actionStart = "start"
 //提供给外部对该组件进行刷新的事件
-private const val actionInit = "${packageName}.init"
+private const val actionFlush = "flush"
 
 
 class LittleWidget : AppWidgetProvider() {
@@ -185,7 +184,7 @@ class LittleWidget : AppWidgetProvider() {
             actionStart -> {
                 ARouter.getInstance().build(MAIN_MAIN).navigation()
             }
-            actionInit ->{
+            actionFlush ->{
                 onUpdate(context,null,null)
             }
         }

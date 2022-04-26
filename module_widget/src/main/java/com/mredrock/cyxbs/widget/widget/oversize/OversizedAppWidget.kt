@@ -2,11 +2,13 @@ package com.mredrock.cyxbs.widget.widget.oversize
 
 import android.appwidget.AppWidgetManager
 import android.appwidget.AppWidgetProvider
+import android.content.ComponentName
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.view.View
 import android.widget.RemoteViews
+import android.widget.Toast
 import com.mredrock.cyxbs.common.utils.extensions.defaultSharedPreferences
 import com.mredrock.cyxbs.common.utils.extensions.editor
 import com.mredrock.cyxbs.widget.R
@@ -21,6 +23,9 @@ import java.util.*
 /**
  * 超大小部件
  */
+
+private const val actionFlush = "flush"
+
 class OversizedAppWidget : AppWidgetProvider() {
 
 
@@ -40,7 +45,7 @@ class OversizedAppWidget : AppWidgetProvider() {
         }
     }
 
-    override fun onReceive(context: Context?, intent: Intent?) {
+    override fun onReceive(context: Context, intent: Intent?) {
         super.onReceive(context, intent)
         intent ?: return
         when (intent.action) {
@@ -51,6 +56,11 @@ class OversizedAppWidget : AppWidgetProvider() {
                     startOperation(
                             changeCourseToWidgetCourse(courseStatusBean))
                 }
+            }
+            actionFlush ->{
+                val manager = AppWidgetManager.getInstance(context)
+                val ids = manager.getAppWidgetIds(ComponentName(context,OversizedAppWidget::class.java))
+                onUpdate(context, manager,ids)
             }
         }
     }

@@ -48,8 +48,8 @@ class WidgetRefreshWork(private val context: Context, workerParams: WorkerParame
 
     override suspend fun doWork(): Result {
         val ctx = context
-        widgetList.forEach { (action, pkg) ->
-            ctx.sendBroadcast(Intent(action).apply {
+        widgetList.forEach { pkg ->
+            ctx.sendBroadcast(Intent(actionFlush).apply {
                 component = ComponentName(ctx, pkg)
             })
         }
@@ -85,11 +85,14 @@ class WidgetRefreshWork(private val context: Context, workerParams: WorkerParame
 
 }
 
+const val actionFlush = "flush"
 const val littleWidgetPkg = "com.mredrock.cyxbs.widget.widget.little.LittleWidget"
-const val littleWidgetAction = "$littleWidgetPkg.init"
 const val littleWidgetTransPkg = "com.mredrock.cyxbs.widget.widget.little.LittleTransWidget"
-const val littleWidgetTransAction = "$littleWidgetTransPkg.init"
-val widgetList = mapOf(
-    littleWidgetAction to littleWidgetPkg,
-    littleWidgetTransAction to littleWidgetPkg
+const val normalWidget = "com.mredrock.cyxbs.widget.widget.normal.NormalWidget"
+const val oversizedAppWidget = "com.mredrock.cyxbs.widget.widget.oversize.OversizedAppWidget"
+val widgetList = listOf(
+    littleWidgetPkg,
+    littleWidgetTransPkg,
+    normalWidget,
+    oversizedAppWidget
 )
