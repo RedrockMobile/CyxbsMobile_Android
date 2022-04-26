@@ -136,8 +136,11 @@ dependencies {
     workManager()
 }
 
+val list1 = listOf("module_course","module_othercourse")
+
 
 fun DependencyHandlerScope.projects(){
+    println(list1)
     //引入所有的module和lib模块
     rootDir.listFiles()!!.filter {
         // 1.是文件夹

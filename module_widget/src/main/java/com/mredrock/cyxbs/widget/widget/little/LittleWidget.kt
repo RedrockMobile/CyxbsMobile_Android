@@ -187,6 +187,7 @@ class LittleWidget : AppWidgetProvider() {
             }
             actionInit ->{
                 onUpdate(context,null,null)
+                Toast.makeText(context, "刷新", Toast.LENGTH_SHORT).show()
             }
         }
     }

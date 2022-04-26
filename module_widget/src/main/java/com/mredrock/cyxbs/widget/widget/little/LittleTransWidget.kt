@@ -7,6 +7,7 @@ import android.content.Context
 import android.content.Intent
 import android.graphics.Bitmap
 import android.graphics.Color
+import android.util.Log
 import android.util.TypedValue
 import android.view.View
 import android.widget.RemoteViews
@@ -17,6 +18,7 @@ import com.mredrock.cyxbs.widget.widget.little.bean.LittleWidgetState
 import com.mredrock.cyxbs.widget.widget.little.bean.emptyLittleWidgetState
 import com.mredrock.cyxbs.widget.widget.page.trans.TransConfig
 import java.util.*
+import kotlin.math.log
 
 /**
  * Created by zia on 2018/10/10.
@@ -62,6 +64,7 @@ class LittleTransWidget : AppWidgetProvider() {
 
             }
             actionInit->{
+                Log.e("TAG", "update: " )
                 refresh(context)
             }
         }

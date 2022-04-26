@@ -1,11 +1,9 @@
 package com.mredrock.cyxbs.tasks
 
 import android.content.ComponentName
+import android.content.Context
 import android.content.Intent
-import androidx.work.PeriodicWorkRequestBuilder
-import androidx.work.WorkManager
-import androidx.work.Worker
-import androidx.work.WorkerParameters
+import androidx.work.*
 import com.google.auto.service.AutoService
 import com.mredrock.cyxbs.common.BaseApp
 import com.mredrock.cyxbs.spi.TaskService
@@ -22,24 +20,32 @@ class WidgetRefresher : TaskService {
     override fun work() {
         WorkManager.getInstance(BaseApp.appContext)
             .enqueue(
-                PeriodicWorkRequestBuilder<WidgetRefreshWork>(10.minutes.toJavaDuration()).build()
+                listOf(
+                    OneTimeWorkRequestBuilder<WidgetRefreshWork>().setExpedited(
+                        OutOfQuotaPolicy.RUN_AS_NON_EXPEDITED_WORK_REQUEST
+                    ).build(),
+                    PeriodicWorkRequestBuilder<WidgetRefreshWork>(15.minutes.toJavaDuration())
+                        .build(),
+                )
             )
 
     }
 }
 
-class WidgetRefreshWork(workerParams: WorkerParameters) : Worker(BaseApp.appContext, workerParams) {
+class WidgetRefreshWork(private val context: Context, workerParams: WorkerParameters) :
+    Worker(context, workerParams) {
     override fun doWork(): Result {
-        val ctx = BaseApp.appContext
+        val ctx = context
         widgetList.forEach { (action, pkg) ->
             ctx.sendBroadcast(Intent(action).apply {
-                component = ComponentName(ctx,pkg)
+                component = ComponentName(ctx, pkg)
             })
         }
         return Result.success()
     }
 
 }
+
 const val littleWidgetPkg = "com.mredrock.cyxbs.widget.widget.little.LittleWidget"
 const val littleWidgetAction = "$littleWidgetPkg.init"
 val widgetList = mapOf(
