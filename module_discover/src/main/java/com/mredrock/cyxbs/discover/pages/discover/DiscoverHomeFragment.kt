@@ -82,7 +82,8 @@ class DiscoverHomeFragment : BaseViewModelFragment<DiscoverHomeViewModel>(), Eve
         iv_discover_msg.setOnClickListener {
             //将msg View设置为有消息的状态
             //iv_discover_msg.setBackgroundResource(R.drawable.discover_ic_home_has_msg)
-            ARouter.getInstance().build(NOTIFICATION).navigation()
+//            ARouter.getInstance().build(NOTIFICATION_HOME).navigation()
+            ARouter.getInstance().build(NOTIFICATION_SETTING).navigation()
             //将msg View设置为没有消息的状态
             iv_discover_msg.setBackgroundResource(R.drawable.discover_ic_home_msg)
         }

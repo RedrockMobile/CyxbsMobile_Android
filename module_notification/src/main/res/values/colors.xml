@@ -7,4 +7,8 @@
     <color name="teal_700">#FF018786</color>
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
+
+    <color name="notification_setting_toolbar">#112C54</color>
+    <color name="notification_setting_main_bg">#F2F3F8</color>
+    <color name="notification_setting_item_bg">#FFFFFF</color>
 </resources>
