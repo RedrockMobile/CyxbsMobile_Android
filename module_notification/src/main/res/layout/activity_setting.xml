@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/notification_setting_main_bg">
+    android:background="@color/notification_base_main_bg">
 
     <RelativeLayout
         android:id="@+id/notification_rl_setting_back"
@@ -12,7 +12,7 @@
         android:layout_height="30dp"
         android:layout_marginStart="7dp"
         android:layout_marginTop="60dp"
-        android:background="@color/notification_back_detail_ripple"
+        android:background="@drawable/notification_back_ripple"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintTop_toTopOf="parent">
 
@@ -21,7 +21,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_centerInParent="true"
-            android:background="@drawable/ic_notification_setting_back"
+            android:background="@drawable/ic_notification_base_back"
             tools:ignore="ContentDescription" />
     </RelativeLayout>
 
@@ -32,7 +32,6 @@
         android:text="设置"
         android:layout_marginStart="37dp"
         android:textAppearance="@style/notification_toolbar_tv"
-        android:textColor="@color/notification_setting_toolbar"
         android:textStyle="bold"
         app:layout_constraintBottom_toBottomOf="@+id/notification_rl_setting_back"
         app:layout_constraintStart_toStartOf="parent"

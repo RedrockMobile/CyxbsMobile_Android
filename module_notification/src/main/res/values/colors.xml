@@ -8,9 +8,9 @@
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
 
-    <color name="notification_setting_toolbar">#112C54</color>
-    <color name="notification_setting_main_bg">#F2F3F8</color>
+    <color name="notification_base_main_bg">#F2F3F8</color>
     <color name="notification_setting_item_bg">#FFFFFF</color>
 
     <color name="notification_back_detail_ripple">#F2F3F8</color>
+    <color name="notification_home_popup_bg">#15315B14</color>
 </resources>
