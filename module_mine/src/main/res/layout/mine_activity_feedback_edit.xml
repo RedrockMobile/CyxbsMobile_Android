@@ -16,6 +16,7 @@
         android:id="@+id/mine_nestedscrollview"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:layout_marginTop="60dp"
         android:background="@color/mine_feedback_bg_color"
         android:fitsSystemWindows="true">
 

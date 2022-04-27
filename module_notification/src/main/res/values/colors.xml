@@ -12,5 +12,5 @@
     <color name="notification_setting_item_bg">#FFFFFF</color>
 
     <color name="notification_back_detail_ripple">#F2F3F8</color>
-    <color name="notification_home_popup_bg">#15315B14</color>
+    <color name="notification_home_popup_bg">#ECEFF2</color>
 </resources>
