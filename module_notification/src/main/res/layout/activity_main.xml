@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".ui.MainActivity">
+
     <RelativeLayout
         android:id="@+id/notification_rl_home_back"
         android:layout_width="30dp"
@@ -29,8 +29,8 @@
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="我的消息"
         android:layout_marginStart="37dp"
+        android:text="我的消息"
         android:textAppearance="@style/notification_toolbar_tv"
         android:textStyle="bold"
         app:layout_constraintBottom_toBottomOf="@+id/notification_rl_home_back"
@@ -42,11 +42,18 @@
         android:id="@+id/notification_rl_home_dots"
         android:layout_width="30dp"
         android:layout_height="30dp"
-        android:layout_marginEnd="16dp"
         android:layout_marginTop="60dp"
+        android:layout_marginEnd="16dp"
         android:background="@drawable/notification_back_ripple"
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toTopOf="parent">
+
+        <ImageView
+            android:id="@+id/notification_home_red_dots"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:background="@drawable/ic_notification_home_reddots" />
 
         <ImageView
             android:id="@+id/notification_home_dots"
@@ -57,4 +64,35 @@
             tools:ignore="ContentDescription" />
     </RelativeLayout>
 
-  </androidx.constraintlayout.widget.ConstraintLayout>
+    <com.google.android.material.tabs.TabLayout
+        android:id="@+id/notification_tl_stamp_center"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:layout_marginTop="102dp"
+        android:backgroundTint="@android:color/transparent"
+        android:theme="@style/Theme.MaterialComponents"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:tabGravity="fill"
+        app:tabIndicator="@drawable/notification_ic_tab_indicator"
+        app:tabIndicatorColor="@android:color/transparent"
+        app:tabIndicatorFullWidth="false"
+        app:tabIndicatorHeight="3dp"
+        app:tabMaxWidth="180dp"
+        app:tabMinWidth="160dp"
+        app:tabMode="fixed"
+        app:tabPaddingEnd="40dp"
+        app:tabPaddingStart="40dp"
+        app:tabRippleColor="@android:color/transparent"
+        app:tabTextAppearance="@style/tab_style"
+        app:tabTextColor="@color/notification_home_tabLayout_text" />
+
+    <androidx.viewpager2.widget.ViewPager2
+        android:id="@+id/notification_home_vp2"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginTop="152dp"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintTop_toTopOf="parent"/>
+
+</androidx.constraintlayout.widget.ConstraintLayout>

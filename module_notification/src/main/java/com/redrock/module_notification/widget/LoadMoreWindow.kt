@@ -1,4 +1,4 @@
-package com.redrock.module_notification.util
+package com.redrock.module_notification.widget
 
 import android.annotation.SuppressLint
 import android.content.Context
@@ -10,6 +10,7 @@ import android.view.Window
 import android.widget.PopupWindow
 import com.mredrock.cyxbs.common.utils.extensions.dp2px
 import com.redrock.module_notification.R
+import com.redrock.module_notification.util.changeWindowAlpha
 
 /**
  * Author by OkAndGreat
@@ -22,7 +23,6 @@ class LoadMoreWindow(
     layoutRes: Int,
     private val window: Window
 ) : PopupWindow() {
-
 
     init {
         window.changeWindowAlpha(0.7f)
@@ -39,6 +39,7 @@ class LoadMoreWindow(
         val itemView = contentView.findViewById<View>(itemViewRes)
         itemView.setOnClickListener {
             clickEvent.invoke()
+            dismiss()
         }
     }
 
