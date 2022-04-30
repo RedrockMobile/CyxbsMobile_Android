@@ -9,9 +9,12 @@
     <color name="white">#FFFFFFFF</color>
 
     <color name="notification_base_main_bg">#F2F3F8</color>
+    <color name="notification_base_tv">#112C54</color>
+
     <color name="notification_setting_item_bg">#FFFFFF</color>
 
-    <color name="notification_back_detail_ripple">#F2F3F8</color>
+    <color name="notification_back_detail_ripple">#FFFFFF</color>
+    <color name="notification_home_item_tv_time">#B315315B</color>
     <color name="notification_home_popup_bg">#ECEFF2</color>
     <color name="notification_home_tabLayout_text">#15315B</color>
 </resources>

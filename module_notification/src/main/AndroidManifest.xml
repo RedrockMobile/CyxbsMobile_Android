@@ -4,8 +4,8 @@
 
     <application
         android:theme="@style/AppTheme">
-        <activity android:name=".ui.MainActivity"/>
-        <activity android:name=".ui.SettingActivity"/>
+        <activity android:name=".ui.activity.MainActivity"/>
+        <activity android:name=".ui.activity.SettingActivity"/>
     </application>
 
 </manifest>

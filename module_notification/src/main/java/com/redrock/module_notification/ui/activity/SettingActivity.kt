@@ -1,4 +1,4 @@
-package com.redrock.module_notification.ui
+package com.redrock.module_notification.ui.activity
 
 import android.os.Bundle
 import com.alibaba.android.arouter.facade.annotation.Route

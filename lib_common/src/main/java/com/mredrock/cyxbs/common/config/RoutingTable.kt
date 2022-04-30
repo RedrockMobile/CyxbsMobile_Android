@@ -46,7 +46,6 @@ const val MINE_CHECK_IN = "/check_in/mine/entry"
 
 //通知页主页
 const val NOTIFICATION_HOME = "/notification/entry"
-
 //通知设置页
 const val NOTIFICATION_SETTING = "/notification/setting"
 

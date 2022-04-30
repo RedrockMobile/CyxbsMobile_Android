@@ -182,7 +182,7 @@ object ApiGenerator {
                     if (!response.isSuccessful) {
                         response.close()
                         Handler(Looper.getMainLooper()).post {
-                            BaseApp.appContext.toast("${response.code} ${request.url} ")
+                            //BaseApp.appContext.toast("${response.code} ${request.url} ")
                         }
                     }
                     response

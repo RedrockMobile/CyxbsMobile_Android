@@ -9,7 +9,7 @@ import androidx.viewpager2.adapter.FragmentStateAdapter
  * Date on 2022/4/27 17:29.
  *
  */
-class vp2Adapter(
+class NotificationVp2Adapter(
     fragmentActivity: FragmentActivity,
     private var fragmentList: List<Fragment>
 ) : FragmentStateAdapter(fragmentActivity) {

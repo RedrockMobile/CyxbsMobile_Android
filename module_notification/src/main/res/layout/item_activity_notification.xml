@@ -1,0 +1,98 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_marginRight="30dp"
+    android:layout_height="wrap_content">
+
+    <ImageView
+        android:id="@+id/item_activity_notification_iv_red_dot"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:background="@drawable/ic_notification_home_reddots"
+        app:layout_constraintBottom_toBottomOf="@+id/item_activity_notification_tv_title"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/item_activity_notification_tv_title" />
+
+    <TextView
+        android:id="@+id/item_activity_notification_tv_title"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="30dp"
+        android:layout_marginTop="25dp"
+        android:layout_marginEnd="30dp"
+        android:ellipsize="end"
+        android:maxEms="17"
+        android:singleLine="true"
+        android:text="需求好难写啊呜呜呜廖老师救救我救救我救救我救救我"
+        android:textColor="@color/notification_base_tv"
+        android:textSize="18sp"
+        android:textStyle="bold"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <de.hdodenhof.circleimageview.CircleImageView
+        android:id="@+id/item_activity_notification_iv_head"
+        android:layout_width="25dp"
+        android:layout_height="35dp"
+        android:layout_marginStart="30dp"
+        android:layout_marginTop="10dp"
+        android:src="@drawable/ic_sys_notification_headimg"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/item_activity_notification_tv_title" />
+
+    <TextView
+        android:id="@+id/item_activity_notification_tv_publisher"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="15dp"
+        android:layout_marginTop="12dp"
+        android:text="红岩一霸-廖俊枭"
+        android:textColor="@color/notification_base_tv"
+        android:textSize="12sp"
+        app:layout_constraintStart_toEndOf="@+id/item_activity_notification_iv_head"
+        app:layout_constraintTop_toBottomOf="@+id/item_activity_notification_tv_title" />
+
+    <TextView
+        android:id="@+id/item_activity_notification_tv_publish_time"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="15dp"
+        android:text="2022-3-12"
+        android:textColor="@color/notification_home_item_tv_time"
+        android:textSize="11sp"
+        app:layout_constraintStart_toEndOf="@+id/item_activity_notification_iv_head"
+        app:layout_constraintTop_toBottomOf="@+id/item_activity_notification_tv_publisher" />
+
+    <TextView
+        android:id="@+id/item_activity_notification_tv_content"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="30dp"
+        android:letterSpacing="0.03"
+        android:maxLines="4"
+        android:paddingRight="30dp"
+        android:layout_marginTop="52dp"
+        android:text="行不改名，坐不改姓，我就是你的廖老师行不改名，坐不改姓，我就是你的廖老师行不改名，坐不改姓，我就是你的廖老师行不改名，坐不改姓，我就是你的廖老师行不改名，坐不改姓，我就是你的廖老师行不改名，坐不改姓，我就是你的廖老师行不改名，坐不改姓，我就是你的廖老师行不改名，坐不改姓，我就是你的廖老师行不改名，坐不改姓，我就是你的廖老师"
+        android:textColor="@color/notification_base_tv"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/item_activity_notification_tv_title" />
+
+    <androidx.cardview.widget.CardView
+        android:layout_width="match_parent"
+        android:layout_height="193dp"
+        android:layout_marginTop="12dp"
+        app:cardCornerRadius="8dp"
+        android:layout_marginStart="30dp"
+        app:layout_constraintTop_toBottomOf="@id/item_activity_notification_tv_content">
+
+        <ImageView
+            android:id="@+id/item_activity_notification_iv_detail"
+            android:layout_width="match_parent"
+            android:scaleType="fitXY"
+            android:src="@drawable/ic_sys_notification_headimg"
+            android:layout_height="match_parent" />
+    </androidx.cardview.widget.CardView>
+
+</androidx.constraintlayout.widget.ConstraintLayout>

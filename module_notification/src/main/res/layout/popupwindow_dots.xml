@@ -67,8 +67,9 @@
             android:layout_marginStart="12dp"
             android:layout_width="18dp"
             android:layout_height="18dp"
-            android:src="@drawable/ic_notification_home_setting_normal"
+            android:src="@drawable/ic_notification_home_setting_red"
             android:layout_gravity="center" />
+
 
         <TextView
             android:layout_width="wrap_content"

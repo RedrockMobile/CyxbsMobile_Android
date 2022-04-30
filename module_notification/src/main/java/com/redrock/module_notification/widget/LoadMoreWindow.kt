@@ -9,6 +9,7 @@ import android.view.View
 import android.view.Window
 import android.widget.PopupWindow
 import com.mredrock.cyxbs.common.utils.extensions.dp2px
+import com.mredrock.cyxbs.common.utils.extensions.setOnSingleClickListener
 import com.redrock.module_notification.R
 import com.redrock.module_notification.util.changeWindowAlpha
 
@@ -37,7 +38,7 @@ class LoadMoreWindow(
 
     fun setOnItemClickListener(itemViewRes: Int, clickEvent: (() -> Unit)) {
         val itemView = contentView.findViewById<View>(itemViewRes)
-        itemView.setOnClickListener {
+        itemView.setOnSingleClickListener {
             clickEvent.invoke()
             dismiss()
         }
