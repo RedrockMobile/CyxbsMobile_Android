@@ -21,8 +21,11 @@ import androidx.viewpager2.widget.ViewPager2
 import com.alibaba.android.arouter.facade.annotation.Route
 import com.alibaba.android.arouter.launcher.ARouter
 import com.cyxbsmobile_single.api_todo.ITodoService
+import com.mredrock.cyxbs.api.electricity.IElectricityService
+import com.mredrock.cyxbs.api.volunteer.IVolunteerService
 import com.mredrock.cyxbs.common.component.CyxbsToast
 import com.mredrock.cyxbs.common.component.SpacesHorizontalItemDecoration
+import com.mredrock.cyxbs.common.config.*
 import com.mredrock.cyxbs.common.event.CurrentDateInformationEvent
 import com.mredrock.cyxbs.common.mark.EventBusLifecycleSubscriber
 import com.mredrock.cyxbs.common.service.ServiceManager
@@ -31,12 +34,9 @@ import com.mredrock.cyxbs.common.utils.extensions.doIfLogin
 import com.mredrock.cyxbs.common.utils.extensions.dp2px
 import com.mredrock.cyxbs.common.utils.extensions.setOnSingleClickListener
 import com.mredrock.cyxbs.discover.R
-import com.mredrock.cyxbs.api.electricity.IElectricityService
 import com.mredrock.cyxbs.discover.pages.discover.adapter.DiscoverMoreFunctionRvAdapter
 import com.mredrock.cyxbs.discover.utils.BannerAdapter
 import com.mredrock.cyxbs.discover.utils.MoreFunctionProvider
-import com.mredrock.cyxbs.api.volunteer.IVolunteerService
-import com.mredrock.cyxbs.common.config.*
 import kotlinx.android.synthetic.main.discover_home_fragment.*
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
@@ -48,12 +48,14 @@ import org.greenrobot.eventbus.ThreadMode
  */
 
 @Route(path = DISCOVER_ENTRY)
-class DiscoverHomeFragment : BaseViewModelFragment<DiscoverHomeViewModel>(), EventBusLifecycleSubscriber {
-    companion object {
-        const val DISCOVER_FUNCTION_RV_STATE = "discover_function_rv_state"
-    }
+class DiscoverHomeFragment : BaseViewModelFragment<DiscoverHomeViewModel>(),
+    EventBusLifecycleSubscriber {
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
+    override fun onCreateView(
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View? {
         return inflater.inflate(R.layout.discover_home_fragment, container, false)
     }
 
@@ -78,14 +80,16 @@ class DiscoverHomeFragment : BaseViewModelFragment<DiscoverHomeViewModel>(), Eve
         }
     }
 
-    private fun initViewClickListener(){
-        iv_discover_msg.setOnClickListener {
-            //将msg View设置为有消息的状态
-            //iv_discover_msg.setBackgroundResource(R.drawable.discover_ic_home_has_msg)
+    private fun initViewClickListener() {
+        activity?.doIfLogin {
+            iv_discover_msg.setOnClickListener {
+                //将msg View设置为有消息的状态
+                //iv_discover_msg.setBackgroundResource(R.drawable.discover_ic_home_has_msg)
 //            ARouter.getInstance().build(NOTIFICATION_HOME).navigation()
-            ARouter.getInstance().build(NOTIFICATION_SETTING).navigation()
-            //将msg View设置为没有消息的状态
-            iv_discover_msg.setBackgroundResource(R.drawable.discover_ic_home_msg)
+                ARouter.getInstance().build(NOTIFICATION_SETTING).navigation()
+                //将msg View设置为没有消息的状态
+                iv_discover_msg.setBackgroundResource(R.drawable.discover_ic_home_msg)
+            }
         }
     }
 
@@ -108,7 +112,6 @@ class DiscoverHomeFragment : BaseViewModelFragment<DiscoverHomeViewModel>(), Eve
                     vp_discover_home.adapter?.notifyDataSetChanged()
                 super.onPageScrollStateChanged(state)
             }
-
 
 
             override fun onPageSelected(position: Int) {
@@ -146,7 +149,8 @@ class DiscoverHomeFragment : BaseViewModelFragment<DiscoverHomeViewModel>(), Eve
         }
 
         viewFlipper.setOnSingleClickListener {
-            ARouter.getInstance().build(DISCOVER_NEWS_ITEM).withString("id", viewFlipper.focusedChild.tag as String).navigation()
+            ARouter.getInstance().build(DISCOVER_NEWS_ITEM)
+                .withString("id", viewFlipper.focusedChild.tag as String).navigation()
         }
 
         viewFlipper.setFlipInterval(6555)
@@ -166,7 +170,12 @@ class DiscoverHomeFragment : BaseViewModelFragment<DiscoverHomeViewModel>(), Eve
             overScrollMode = OVER_SCROLL_IF_CONTENT_SCROLLS
 
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-                setTextColor(context.resources.getColor(R.color.common_menu_font_color_found, context.theme))
+                setTextColor(
+                    context.resources.getColor(
+                        R.color.common_menu_font_color_found,
+                        context.theme
+                    )
+                )
             } else {
                 setTextColor(ContextCompat.getColor(context, R.color.common_menu_font_color_found))
             }
@@ -189,7 +198,11 @@ class DiscoverHomeFragment : BaseViewModelFragment<DiscoverHomeViewModel>(), Eve
             }
             adapter = DiscoverMoreFunctionRvAdapter(picUrls, texts) {
                 if (it == functions.size - 1) {
-                    CyxbsToast.makeText(context, R.string.discover_more_function_notice_text, Toast.LENGTH_SHORT).show()
+                    CyxbsToast.makeText(
+                        context,
+                        R.string.discover_more_function_notice_text,
+                        Toast.LENGTH_SHORT
+                    ).show()
                 } else {
                     functions[it].activityStarter.startActivity(context)
                 }
@@ -208,13 +221,17 @@ class DiscoverHomeFragment : BaseViewModelFragment<DiscoverHomeViewModel>(), Eve
 
     private fun initFeeds() {
         addFeedFragment(ServiceManager.getService(ITodoService::class.java).getTodoFeed())
-        addFeedFragment(ServiceManager.getService(IElectricityService::class.java).getElectricityFeed())
+        addFeedFragment(
+            ServiceManager.getService(IElectricityService::class.java).getElectricityFeed()
+        )
         addFeedFragment(ServiceManager.getService(IVolunteerService::class.java).getVolunteerFeed())
         //处理手机屏幕过长导致feed无法填充满下方的情况
         ll_discover_feeds.post {
             context?.let {
                 val point = Point()
-                (it.getSystemService(Context.WINDOW_SERVICE) as WindowManager).defaultDisplay.getSize(point)
+                (it.getSystemService(Context.WINDOW_SERVICE) as WindowManager).defaultDisplay.getSize(
+                    point
+                )
                 ll_discover_feeds.minimumHeight = point.y - ll_discover_feeds.top
             }
         }
