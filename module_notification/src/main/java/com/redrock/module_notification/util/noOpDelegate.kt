@@ -9,6 +9,48 @@ import java.lang.reflect.Proxy
  * 可以将接口不需要实现的交给此代理
  */
 
+/**
+使用实例：
+使用前：
+val lifecycleCallbacks =
+object : Application.ActivityLifecycleCallbacks{
+override fun onActivityCreated(activity: Activity, savedInstanceState: Bundle?) {
+TODO("Not yet implemented")
+}
+
+override fun onActivityStarted(activity: Activity) {
+TODO("Not yet implemented")
+}
+
+override fun onActivityResumed(activity: Activity) {
+TODO("Not yet implemented")
+}
+
+override fun onActivityPaused(activity: Activity) {
+TODO("Not yet implemented")
+}
+
+override fun onActivityStopped(activity: Activity) {
+TODO("Not yet implemented")
+}
+
+override fun onActivitySaveInstanceState(activity: Activity, outState: Bundle) {
+TODO("Not yet implemented")
+}
+
+override fun onActivityDestroyed(activity: Activity) {
+TODO("Not yet implemented")
+}
+}
+
+使用后：
+val lifecycleCallbacks =
+object : Application.ActivityLifecycleCallbacks by noOpDelegate() {
+override fun onActivityDestroyed(activity: Activity) {
+//to do:...}
+}
+ */
+
 internal inline fun <reified T : Any> noOpDelegate(): T = noOperationDelegate()
 
 internal inline fun <reified T : Any> noOperationDelegate(): T {
