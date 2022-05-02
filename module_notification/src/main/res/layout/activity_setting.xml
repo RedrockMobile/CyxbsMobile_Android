@@ -12,7 +12,7 @@
         android:layout_height="30dp"
         android:layout_marginStart="7dp"
         android:layout_marginTop="60dp"
-        android:background="@drawable/notification_back_ripple"
+        android:background="@drawable/notification_setting_back_ripple"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintTop_toTopOf="parent">
 

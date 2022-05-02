@@ -4,6 +4,7 @@ import android.content.Context
 import android.graphics.Point
 import android.os.Build
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.View.OVER_SCROLL_IF_CONTENT_SCROLLS
@@ -68,11 +69,10 @@ class DiscoverHomeFragment : BaseViewModelFragment<DiscoverHomeViewModel>(),
         }
         initJwNews(vf_jwzx_detail, fl_discover_home_jwnews)
         initViewPager()
+        initHasUnread()
 
-
-
-        initViewClickListener()
         viewModel.getRollInfo()
+        viewModel.getHasUnread()
         iv_check_in.setOnSingleClickListener {
             context?.doIfLogin("签到") {
                 ARouter.getInstance().build(MINE_CHECK_IN).navigation()
@@ -80,16 +80,23 @@ class DiscoverHomeFragment : BaseViewModelFragment<DiscoverHomeViewModel>(),
         }
     }
 
-    private fun initViewClickListener() {
+    private fun initHasUnread() {
+        //将msg View设置为没有消息的状态
+        iv_discover_msg.setBackgroundResource(R.drawable.discover_ic_home_msg)
         activity?.doIfLogin {
             iv_discover_msg.setOnClickListener {
-                //将msg View设置为有消息的状态
-                //iv_discover_msg.setBackgroundResource(R.drawable.discover_ic_home_has_msg)
 //            ARouter.getInstance().build(NOTIFICATION_HOME).navigation()
                 ARouter.getInstance().build(NOTIFICATION_SETTING).navigation()
-                //将msg View设置为没有消息的状态
-                iv_discover_msg.setBackgroundResource(R.drawable.discover_ic_home_msg)
             }
+        }
+        viewModel.hasUnread.observe {
+            Log.d(TAG, "initHasUnread: $it")
+            if (it == true)
+            //将msg View设置为有消息的状态
+            iv_discover_msg.setBackgroundResource(R.drawable.discover_ic_home_has_msg)
+            else
+            //将msg View设置为没有消息的状态
+                iv_discover_msg.setBackgroundResource(R.drawable.discover_ic_home_msg)
         }
     }
 
