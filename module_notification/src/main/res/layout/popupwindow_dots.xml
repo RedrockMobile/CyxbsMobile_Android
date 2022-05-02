@@ -64,6 +64,7 @@
         android:orientation="horizontal">
 
         <ImageView
+            android:id="@+id/notification_iv_popup_setting"
             android:layout_marginStart="12dp"
             android:layout_width="18dp"
             android:layout_height="18dp"

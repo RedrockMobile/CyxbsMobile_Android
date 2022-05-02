@@ -29,10 +29,17 @@ class SysNotificationFragment : BaseViewModelFragment<NotificationViewModel>() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         initRv()
+        initObserver()
     }
 
     private fun initRv() {
         notification_rv_sys.adapter = SystemNotificationRvAdapter()
         notification_rv_sys.layoutManager = LinearLayoutManager(this.context)
+    }
+
+    private fun initObserver(){
+        viewModel.systemMsg.observe{
+
+        }
     }
 }

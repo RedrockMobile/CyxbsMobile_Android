@@ -30,11 +30,18 @@ class ActivityNotificationFragment : BaseViewModelFragment<NotificationViewModel
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         initRv()
+        initObserver()
     }
 
     private fun initRv(){
         notification_rv_act.adapter = ActivityNotificationRvAdapter()
         notification_rv_act.layoutManager = LinearLayoutManager(this.context)
+    }
+
+    private fun initObserver(){
+        viewModel.activeMsg.observe{
+
+        }
     }
 
 }

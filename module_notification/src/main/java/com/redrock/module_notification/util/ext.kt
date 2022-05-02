@@ -2,6 +2,7 @@ package com.redrock.module_notification.util
 
 import android.animation.ValueAnimator
 import android.content.Context
+import android.content.SharedPreferences
 import android.view.Window
 import androidx.annotation.ColorRes
 import androidx.core.content.ContextCompat
@@ -14,7 +15,7 @@ import com.redrock.module_notification.util.Constant.NOTIFICATION_SP_FILE_NAME
  * 扩展函数类
  */
 
-val Context.NotificationSp
+val Context.NotificationSp: SharedPreferences
     get() = getSharedPreferences(NOTIFICATION_SP_FILE_NAME, Context.MODE_PRIVATE)
 
 internal fun Window.changeWindowAlpha(targetWindowAlpha: Float) {
