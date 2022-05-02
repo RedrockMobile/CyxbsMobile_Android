@@ -4,11 +4,11 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.mredrock.cyxbs.common.ui.BaseFragment
+import com.mredrock.cyxbs.common.ui.BaseViewModelFragment
 import com.redrock.module_notification.R
 import com.redrock.module_notification.adapter.SystemNotificationRvAdapter
+import com.redrock.module_notification.viewmodel.NotificationViewModel
 import kotlinx.android.synthetic.main.fragment_system_notification.*
 
 /**
@@ -16,14 +16,14 @@ import kotlinx.android.synthetic.main.fragment_system_notification.*
  * Date on 2022/4/27 17:32.
  *
  */
-class SysNotificationFragment : BaseFragment() {
+class SysNotificationFragment : BaseViewModelFragment<NotificationViewModel>() {
 
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        return inflater.inflate(R.layout.fragment_system_notification,container,false)
+        return inflater.inflate(R.layout.fragment_system_notification, container, false)
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -31,7 +31,7 @@ class SysNotificationFragment : BaseFragment() {
         initRv()
     }
 
-    private fun initRv(){
+    private fun initRv() {
         notification_rv_sys.adapter = SystemNotificationRvAdapter()
         notification_rv_sys.layoutManager = LinearLayoutManager(this.context)
     }

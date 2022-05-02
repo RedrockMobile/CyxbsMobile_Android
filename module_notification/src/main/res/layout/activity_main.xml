@@ -74,7 +74,7 @@
     </RelativeLayout>
 
     <com.google.android.material.tabs.TabLayout
-        android:id="@+id/notification_tl_stamp_center"
+        android:id="@+id/notification_home_tl"
         android:layout_width="match_parent"
         android:layout_height="50dp"
         android:layout_marginTop="102dp"
@@ -94,7 +94,7 @@
         app:tabPaddingStart="40dp"
         app:tabRippleColor="@android:color/transparent"
         app:tabTextAppearance="@style/tab_style"
-        app:tabTextColor="@color/notification_home_tabLayout_text" />
+        app:tabTextColor="@color/notification_home_tabLayout_text_selected" />
 
     <androidx.viewpager2.widget.ViewPager2
         android:id="@+id/notification_home_vp2"

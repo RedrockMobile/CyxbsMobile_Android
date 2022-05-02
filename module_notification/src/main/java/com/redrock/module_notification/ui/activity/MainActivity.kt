@@ -1,8 +1,11 @@
 package com.redrock.module_notification.ui.activity
 
+import android.content.res.ColorStateList
 import android.os.Bundle
 import android.view.Gravity
+import android.widget.TextView
 import com.alibaba.android.arouter.facade.annotation.Route
+import com.google.android.material.tabs.TabLayout
 import com.google.android.material.tabs.TabLayoutMediator
 import com.mredrock.cyxbs.common.config.NOTIFICATION_HOME
 import com.mredrock.cyxbs.common.ui.BaseViewModelActivity
@@ -13,6 +16,8 @@ import com.redrock.module_notification.R
 import com.redrock.module_notification.adapter.NotificationVp2Adapter
 import com.redrock.module_notification.ui.fragment.ActivityNotificationFragment
 import com.redrock.module_notification.ui.fragment.SysNotificationFragment
+import com.redrock.module_notification.util.myGetColor
+import com.redrock.module_notification.util.noOpDelegate
 import com.redrock.module_notification.viewmodel.NotificationViewModel
 import com.redrock.module_notification.widget.LoadMoreWindow
 import com.redrock.module_notification.widget.ScaleInTransformer
@@ -60,6 +65,7 @@ class MainActivity : BaseViewModelActivity<NotificationViewModel>() {
         )
         notification_home_vp2.setPageTransformer(ScaleInTransformer())
         notification_home_vp2.offscreenPageLimit = 1
+
     }
 
     private fun initTabLayout() {
@@ -68,9 +74,43 @@ class MainActivity : BaseViewModelActivity<NotificationViewModel>() {
             "活动通知"
         )
         TabLayoutMediator(
-            notification_tl_stamp_center,
+            notification_home_tl,
             notification_home_vp2
         ) { tab, position -> tab.text = tabs[position] }.attach()
+
+        val tab1 = notification_home_tl.getTabAt(0)
+        val tab2 = notification_home_tl.getTabAt(1)
+        TextView(this).apply {
+            textSize = 18F
+            setTextColor(ColorStateList.valueOf(myGetColor(R.color.notification_home_tabLayout_text_selected)))
+            gravity = Gravity.CENTER
+            text = tab1!!.text
+            tab1.customView = this
+        }
+        TextView(this).apply {
+            textSize = 18F
+            setTextColor(ColorStateList.valueOf(myGetColor(R.color.notification_home_tabLayout_text_unselect)))
+            gravity = Gravity.CENTER
+            text = tab2!!.text
+            tab2.customView = this
+        }
+
+        val onTabSelectedListener = object : TabLayout.OnTabSelectedListener by noOpDelegate() {
+            override fun onTabSelected(tab: TabLayout.Tab?) {
+                val customView = tab!!.customView
+
+                if (customView is TextView)
+                    customView.setTextColor(ColorStateList.valueOf(myGetColor(R.color.notification_home_tabLayout_text_selected)))
+            }
+
+            override fun onTabUnselected(tab: TabLayout.Tab?) {
+                val customView = tab!!.customView
+                if (customView is TextView)
+                    customView.setTextColor(ColorStateList.valueOf(myGetColor(R.color.notification_home_tabLayout_text_unselect)))
+            }
+        }
+
+        notification_home_tl.addOnTabSelectedListener(onTabSelectedListener)
 
     }
 }

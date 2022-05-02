@@ -3,6 +3,9 @@ package com.redrock.module_notification.util
 import android.animation.ValueAnimator
 import android.content.Context
 import android.view.Window
+import androidx.annotation.ColorRes
+import androidx.core.content.ContextCompat
+import com.mredrock.cyxbs.common.BaseApp
 import com.redrock.module_notification.util.Constant.NOTIFICATION_SP_FILE_NAME
 
 /**
@@ -12,9 +15,9 @@ import com.redrock.module_notification.util.Constant.NOTIFICATION_SP_FILE_NAME
  */
 
 val Context.NotificationSp
-get() = getSharedPreferences(NOTIFICATION_SP_FILE_NAME, Context.MODE_PRIVATE)
+    get() = getSharedPreferences(NOTIFICATION_SP_FILE_NAME, Context.MODE_PRIVATE)
 
-fun Window.changeWindowAlpha(targetWindowAlpha: Float){
+internal fun Window.changeWindowAlpha(targetWindowAlpha: Float) {
     val windowAttrs = attributes
     val curWindowAlpha = windowAttrs.alpha
 
@@ -28,5 +31,14 @@ fun Window.changeWindowAlpha(targetWindowAlpha: Float){
         attributes = windowAttrs
     }
     anim.start()
+}
+
+internal fun myGetColor(@ColorRes colorId: Int): Int {
+    return ContextCompat.getColor(BaseApp.appContext, colorId)
+}
+
+internal fun sp2px(spValue: Float): Float {
+    val fontScale = BaseApp.appContext.resources.displayMetrics.scaledDensity
+    return (spValue * fontScale + 0.5f)
 }
 
