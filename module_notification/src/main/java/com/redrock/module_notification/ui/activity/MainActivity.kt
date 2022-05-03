@@ -44,6 +44,8 @@ class MainActivity : BaseViewModelActivity<NotificationViewModel>() {
         initVp2()
         initTabLayout()
         initRedDots()
+        viewModel.getAllMsg()
+        viewModel.getHasUnread()
     }
 
     private fun initViewClickListener() {

@@ -141,10 +141,10 @@ object ApiGenerator {
                         configureTokenOkHttp()
                     if (okHttpClientConfig == null)
                         this.defaultConfig()
-                    else
-                        okHttpClientConfig.invoke(
-                            it.addInterceptor(BackupInterceptor())
-                        )
+                    //else
+//                        okHttpClientConfig.invoke(
+//                            it.addInterceptor(BackupInterceptor())
+//                        )
                 }.build()
             }.build()
         )
@@ -217,7 +217,7 @@ object ApiGenerator {
              * 一旦切换，只有重启app才能切回来（因为如果请求得到的url不是原来的@{link getBaseUrl()}，则切换到新的url，而以后访问都用这个新的url了）
              * 放在tokenInterceptor上游的理由是：因为那里面还有token刷新机制，无法判断是否真正是因为服务器的原因请求失败
              */
-            interceptors().add(BackupInterceptor())
+            //interceptors().add(BackupInterceptor())
         }.build()
     }
 
@@ -242,7 +242,8 @@ object ApiGenerator {
              * 一旦切换，只有重启app才能切回来（因为如果请求得到的url不是原来的@{link getBaseUrl()}，则切换到新的url，而以后访问都用这个新的url了）
              * 放在tokenInterceptor上游的理由是：因为那里面还有token刷新机制，无法判断是否真正是因为服务器的原因请求失败
              */
-            interceptors().add(BackupInterceptor())
+            //TODO 开启
+            //interceptors().add(BackupInterceptor())
 
 
             interceptors().add(Interceptor {
