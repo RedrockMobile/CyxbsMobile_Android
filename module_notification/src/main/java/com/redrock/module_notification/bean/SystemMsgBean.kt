@@ -11,14 +11,18 @@ import java.io.Serializable
 data class SystemMsgBean(
     @SerializedName("content")
     val content: String,
-    @SerializedName("data")
+    @SerializedName("date")
     val date: String,
     @SerializedName("has_read")
     val has_read: Boolean,
     @SerializedName("id")
     val id: Int,
+    @SerializedName("md")
+    val md: String,
     @SerializedName("pic_url")
     val pic_url: String,
+    @SerializedName("publish_time")
+    val publish_time: Long,
     @SerializedName("redirect_url")
     val redirect_url: String,
     @SerializedName("stu_num")
@@ -31,4 +35,4 @@ data class SystemMsgBean(
     val user_head_url: String,
     @SerializedName("user_name")
     val user_name: String
-): Serializable
+) : Serializable

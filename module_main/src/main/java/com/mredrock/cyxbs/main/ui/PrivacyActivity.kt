@@ -16,22 +16,9 @@ class PrivacyActivity : BaseActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.main_activity_privacy)
-        main_wv_privacy.settings.apply {
-            javaScriptEnabled = true
-            domStorageEnabled = true
-            useWideViewPort = true
-            loadWithOverviewMode = true
-            setSupportZoom(true)
-            builtInZoomControls = true
-            displayZoomControls = false
-            mixedContentMode = WebSettings.MIXED_CONTENT_ALWAYS_ALLOW
-            mediaPlaybackRequiresUserGesture = false
-        }
         main_wv_privacy.loadUrl(USER_AGREEMENT_URL)
 
-        main_user_privacy_back.setOnClickListener {
-            finish()
-        }
+        main_user_privacy_back.setOnClickListener { finish() }
 
         /**
          * 传值给前端让前端知晓用户是否处于黑夜模式从而页面黑夜适配

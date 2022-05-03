@@ -44,8 +44,7 @@ class MainActivity : BaseViewModelActivity<NotificationViewModel>() {
         initVp2()
         initTabLayout()
         initRedDots()
-        viewModel.getAllMsg()
-        viewModel.getHasUnread()
+
     }
 
     private fun initViewClickListener() {
@@ -86,7 +85,7 @@ class MainActivity : BaseViewModelActivity<NotificationViewModel>() {
         )
         notification_home_vp2.setPageTransformer(ScaleInTransformer())
         notification_home_vp2.offscreenPageLimit = 1
-
+        notification_home_vp2.isUserInputEnabled = false
     }
 
     @SuppressLint("InflateParams")

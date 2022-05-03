@@ -30,6 +30,9 @@ class SysNotificationFragment : BaseViewModelFragment<NotificationViewModel>() {
         super.onViewCreated(view, savedInstanceState)
         initRv()
         initObserver()
+
+        viewModel.getAllMsg()
+        viewModel.getHasUnread()
     }
 
     private fun initRv() {

@@ -1,18 +1,16 @@
 package com.redrock.module_notification.ui.fragment
 
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.mredrock.cyxbs.common.ui.BaseFragment
 import com.mredrock.cyxbs.common.ui.BaseViewModelFragment
 import com.redrock.module_notification.R
 import com.redrock.module_notification.adapter.ActivityNotificationRvAdapter
-import com.redrock.module_notification.adapter.SystemNotificationRvAdapter
 import com.redrock.module_notification.viewmodel.NotificationViewModel
 import kotlinx.android.synthetic.main.fragment_activity_notification.*
-import kotlinx.android.synthetic.main.fragment_system_notification.*
 
 /**
  * Author by OkAndGreat
@@ -20,6 +18,7 @@ import kotlinx.android.synthetic.main.fragment_system_notification.*
  *
  */
 class ActivityNotificationFragment : BaseViewModelFragment<NotificationViewModel>() {
+    private lateinit var adapter: ActivityNotificationRvAdapter
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -31,16 +30,20 @@ class ActivityNotificationFragment : BaseViewModelFragment<NotificationViewModel
         super.onViewCreated(view, savedInstanceState)
         initRv()
         initObserver()
+
+        viewModel.getAllMsg()
+        viewModel.getHasUnread()
     }
 
-    private fun initRv(){
-        notification_rv_act.adapter = ActivityNotificationRvAdapter()
+    private fun initRv() {
+        adapter = ActivityNotificationRvAdapter(listOf(),viewModel,requireActivity())
+        notification_rv_act.adapter = adapter
         notification_rv_act.layoutManager = LinearLayoutManager(this.context)
     }
 
-    private fun initObserver(){
-        viewModel.activeMsg.observe{
-
+    private fun initObserver() {
+        viewModel.activeMsg.observe {
+            adapter.changeAllData(it!!)
         }
     }
 

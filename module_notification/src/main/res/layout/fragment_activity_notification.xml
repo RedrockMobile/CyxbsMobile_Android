@@ -8,6 +8,7 @@
         android:id="@+id/notification_rv_act"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:overScrollMode="never"
         tools:listitem="@layout/item_activity_notification" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
