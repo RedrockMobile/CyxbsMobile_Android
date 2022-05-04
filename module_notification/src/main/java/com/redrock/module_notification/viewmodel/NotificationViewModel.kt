@@ -22,7 +22,7 @@ import com.redrock.module_notification.util.Constant.NOTIFICATION_LOG_TAG
 class NotificationViewModel : BaseViewModel() {
     val activeMsg = MutableLiveData<List<ActiveMsgBean>>()
     val systemMsg = MutableLiveData<List<SystemMsgBean>>()
-    val hasUnread = MutableLiveData<Boolean>()
+    private val hasUnread = MutableLiveData<Boolean>()
 
     private val retrofit by lazy { ApiGenerator.getApiService(ApiService::class.java) }
 
@@ -35,7 +35,7 @@ class NotificationViewModel : BaseViewModel() {
             .setSchedulers()
             .safeSubscribeBy(
                 onError = {
-                    Log.w(NOTIFICATION_LOG_TAG, "getAllMsg failed}")
+                    Log.w(NOTIFICATION_LOG_TAG, "getAllMsg failed")
                 },
                 onNext = {
                     Log.d(NOTIFICATION_LOG_TAG, "getAllMsg: $it")
@@ -94,10 +94,8 @@ class NotificationViewModel : BaseViewModel() {
             .safeSubscribeBy(
                 onError = {
                     Log.w(NOTIFICATION_LOG_TAG, "deleteMsg failed ")
-                    toast("改变消息已读状态失败")
                 },
                 onNext = {
-                    toast("改变消息已读状态成功")
                 }
             )
             .lifeCycle()

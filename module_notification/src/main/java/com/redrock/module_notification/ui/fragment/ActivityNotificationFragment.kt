@@ -20,6 +20,10 @@ import kotlinx.android.synthetic.main.fragment_activity_notification.*
 class ActivityNotificationFragment : BaseViewModelFragment<NotificationViewModel>() {
     private lateinit var adapter: ActivityNotificationRvAdapter
 
+    override var isOpenLifeCycleLog: Boolean
+        get() = true
+        set(value) {}
+
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -32,7 +36,6 @@ class ActivityNotificationFragment : BaseViewModelFragment<NotificationViewModel
         initObserver()
 
         viewModel.getAllMsg()
-        viewModel.getHasUnread()
     }
 
     private fun initRv() {
@@ -43,6 +46,7 @@ class ActivityNotificationFragment : BaseViewModelFragment<NotificationViewModel
 
     private fun initObserver() {
         viewModel.activeMsg.observe {
+            Log.d("wzt", "changeAllData: ")
             adapter.changeAllData(it!!)
         }
     }

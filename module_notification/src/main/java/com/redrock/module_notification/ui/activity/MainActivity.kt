@@ -8,6 +8,8 @@ import android.view.LayoutInflater
 import android.view.View
 import android.widget.ImageView
 import android.widget.TextView
+import androidx.fragment.app.Fragment
+import androidx.viewpager2.widget.ViewPager2
 import com.alibaba.android.arouter.facade.annotation.Route
 import com.alibaba.android.arouter.launcher.ARouter
 import com.google.android.material.tabs.TabLayout
@@ -21,6 +23,7 @@ import com.mredrock.cyxbs.common.utils.extensions.setOnSingleClickListener
 import com.mredrock.cyxbs.common.utils.extensions.toast
 import com.redrock.module_notification.R
 import com.redrock.module_notification.adapter.NotificationVp2Adapter
+import com.redrock.module_notification.bean.ChangeReadStatusToBean
 import com.redrock.module_notification.ui.fragment.ActivityNotificationFragment
 import com.redrock.module_notification.ui.fragment.SysNotificationFragment
 import com.redrock.module_notification.util.Constant.HAS_USER_ENTER_SETTING_PAGE
@@ -37,6 +40,10 @@ import kotlin.properties.Delegates
 @Route(path = NOTIFICATION_HOME)
 class MainActivity : BaseViewModelActivity<NotificationViewModel>() {
     private var popupWindow by Delegates.notNull<LoadMoreWindow>()
+    private var tab2View by Delegates.notNull<View>()
+    private lateinit var allUnreadActiveMsgIds: ArrayList<String>
+    private lateinit var sysFragment: SysNotificationFragment
+    private lateinit var activeFragment: Fragment
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
@@ -44,8 +51,12 @@ class MainActivity : BaseViewModelActivity<NotificationViewModel>() {
         initVp2()
         initTabLayout()
         initRedDots()
+        initObserver()
+
+        viewModel.getAllMsg()
 
     }
+
 
     private fun initViewClickListener() {
         notification_rl_home_back.setOnSingleClickListener { finish() }
@@ -56,7 +67,10 @@ class MainActivity : BaseViewModelActivity<NotificationViewModel>() {
         popupWindow = LoadMoreWindow(this, R.layout.popupwindow_dots, this.window)
 
         popupWindow.apply {
-            setOnItemClickListener(R.id.notification_ll_home_popup_fast_read) { toast("一键已读点击了") }
+            setOnItemClickListener(R.id.notification_ll_home_popup_fast_read) {
+                viewModel.changeMsgStatus(ChangeReadStatusToBean(allUnreadActiveMsgIds))
+                sysFragment.refreshAdapter()
+            }
             setOnItemClickListener(R.id.notification_ll_home_popup_delete_read) { toast("删除已读点击了") }
             setOnItemClickListener(R.id.notification_ll_home_popup_setting) {
                 ARouter.getInstance().build(NOTIFICATION_SETTING).navigation()
@@ -76,16 +90,30 @@ class MainActivity : BaseViewModelActivity<NotificationViewModel>() {
     }
 
     private fun initVp2() {
+        sysFragment = SysNotificationFragment()
+        activeFragment = ActivityNotificationFragment()
         notification_home_vp2.adapter = NotificationVp2Adapter(
-            this,
-            listOf(
-                SysNotificationFragment(),
-                ActivityNotificationFragment()
+            this, listOf(
+                sysFragment, activeFragment
             )
         )
         notification_home_vp2.setPageTransformer(ScaleInTransformer())
         notification_home_vp2.offscreenPageLimit = 1
         notification_home_vp2.isUserInputEnabled = false
+
+        notification_home_vp2.registerOnPageChangeCallback(object :
+            ViewPager2.OnPageChangeCallback() {
+            override fun onPageSelected(position: Int) {
+                when (position) {
+                    0 -> {
+                        notification_home_vp2.isUserInputEnabled = false
+                    }
+                    1 -> {
+                        notification_home_vp2.isUserInputEnabled = true
+                    }
+                }
+            }
+        })
     }
 
     @SuppressLint("InflateParams")
@@ -110,7 +138,7 @@ class MainActivity : BaseViewModelActivity<NotificationViewModel>() {
             text = tab1!!.text
             tab1.customView = this
         }
-        val tab2View = LayoutInflater.from(this).inflate(R.layout.item_tab, null)
+        tab2View = LayoutInflater.from(this).inflate(R.layout.item_tab, null)
         tab2!!.customView = tab2View
 
         val onTabSelectedListener = object : TabLayout.OnTabSelectedListener by noOpDelegate() {
@@ -126,11 +154,11 @@ class MainActivity : BaseViewModelActivity<NotificationViewModel>() {
 
             override fun onTabUnselected(tab: TabLayout.Tab?) {
                 val customView = tab!!.customView
-                if(customView is TextView)
+                if (customView is TextView)
                     customView.setTextColor(ColorStateList.valueOf(myGetColor(R.color.notification_home_tabLayout_text_unselect)))
                 else
-                customView!!.findViewById<TextView>(R.id.notification_tv_tl_tab)
-                    .setTextColor(ColorStateList.valueOf(myGetColor(R.color.notification_home_tabLayout_text_unselect)))
+                    customView!!.findViewById<TextView>(R.id.notification_tv_tl_tab)
+                        .setTextColor(ColorStateList.valueOf(myGetColor(R.color.notification_home_tabLayout_text_unselect)))
             }
         }
         notification_home_tl.addOnTabSelectedListener(onTabSelectedListener)
@@ -140,5 +168,28 @@ class MainActivity : BaseViewModelActivity<NotificationViewModel>() {
     private fun initRedDots() {
         if (NotificationSp.getBoolean(HAS_USER_ENTER_SETTING_PAGE, false))
             notification_home_red_dots.visibility = View.INVISIBLE
+    }
+
+    private fun initObserver() {
+        viewModel.systemMsg.observe {
+            allUnreadActiveMsgIds = ArrayList()
+            for (value in it!!) {
+                if (!value.has_read)
+                    allUnreadActiveMsgIds.add(value.id.toString())
+            }
+        }
+        viewModel.activeMsg.observe {
+            for (value in it!!) {
+                if (!value.has_read)
+                    tab2View.findViewById<View>(R.id.notification_iv_tl_red_dots).visibility =
+                        View.VISIBLE
+            }
+        }
+    }
+
+    //从webActivity返回时再请求一次 从而可以判断活动通知上的小红点是否可以消失
+    override fun onRestart() {
+        super.onRestart()
+        viewModel.getAllMsg()
     }
 }

@@ -2,6 +2,7 @@ package com.redrock.module_notification.adapter
 
 import android.annotation.SuppressLint
 import android.content.Context
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -21,7 +22,7 @@ import com.redrock.module_notification.viewmodel.NotificationViewModel
  * Date on 2022/4/30 15:09.
  */
 class SystemNotificationRvAdapter(
-    private var list: List<SystemMsgBean>,
+    var list: List<SystemMsgBean>,
     private var viewmodel: NotificationViewModel,
     private var context: Context,
     val onDelete: (Int) -> Unit

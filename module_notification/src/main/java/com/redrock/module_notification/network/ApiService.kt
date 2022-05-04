@@ -4,8 +4,8 @@ import com.mredrock.cyxbs.common.bean.RedrockApiWrapper
 import com.redrock.module_notification.bean.*
 import io.reactivex.rxjava3.core.Observable
 import retrofit2.http.Body
-import retrofit2.http.DELETE
 import retrofit2.http.GET
+import retrofit2.http.HTTP
 import retrofit2.http.PUT
 
 /**
@@ -30,7 +30,7 @@ interface ApiService {
     /**
      * 删除消息
      */
-    @DELETE("/message-system/user/msg")
+    @HTTP(method = "DELETE", path = "/message-system/user/msg", hasBody = true)
     fun deleteMsg(@Body deleteBody: DeleteMsgToBean):
             Observable<RedrockApiWrapper<DeleteMsgFromBean>>
 

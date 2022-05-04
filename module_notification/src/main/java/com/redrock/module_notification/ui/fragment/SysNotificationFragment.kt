@@ -1,7 +1,6 @@
 package com.redrock.module_notification.ui.fragment
 
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -9,10 +8,10 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.mredrock.cyxbs.common.ui.BaseViewModelFragment
 import com.redrock.module_notification.R
 import com.redrock.module_notification.adapter.SystemNotificationRvAdapter
+import com.redrock.module_notification.bean.DeleteMsgToBean
 import com.redrock.module_notification.bean.SystemMsgBean
 import com.redrock.module_notification.viewmodel.NotificationViewModel
 import kotlinx.android.synthetic.main.fragment_system_notification.*
-import java.util.*
 
 /**
  * Author by OkAndGreat
@@ -38,12 +37,13 @@ class SysNotificationFragment : BaseViewModelFragment<NotificationViewModel>() {
         initObserver()
 
         viewModel.getAllMsg()
-        viewModel.getHasUnread()
     }
 
     private fun initRv() {
         adapter = SystemNotificationRvAdapter(data, viewModel, requireContext()) {
+            viewModel.deleteMsg(DeleteMsgToBean(listOf(data[it].id.toString())))
             data.removeAt(it)
+            adapter.list = data
             adapter.notifyItemRemoved(it)
             notification_rv_sys.closeMenu()
         }
@@ -53,7 +53,26 @@ class SysNotificationFragment : BaseViewModelFragment<NotificationViewModel>() {
 
     private fun initObserver() {
         viewModel.systemMsg.observe {
-            adapter.changeAllData(it!!)
+            data = it as ArrayList<SystemMsgBean>
+            adapter.changeAllData(data)
         }
+    }
+
+//    internal fun deleteRvItems(ids: List<Int>) {
+//        for(id in ids){
+//            for(singleData in data){
+//                if(singleData.id == id){
+//                    data.remove()
+//                    adapter.list = data
+//                    adapter.notifyItemRemoved(value)
+//                    notification_rv_sys.closeMenu()
+//                }
+//            }
+//
+//        }
+//    }
+
+    internal fun refreshAdapter() {
+        adapter.notifyDataSetChanged()
     }
 }
