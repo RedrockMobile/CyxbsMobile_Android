@@ -31,6 +31,7 @@
         android:layout_height="wrap_content"
         android:text="设置"
         android:layout_marginStart="37dp"
+        android:textColor="@color/notification_base_tv"
         android:textAppearance="@style/notification_toolbar_tv"
         android:textStyle="bold"
         app:layout_constraintBottom_toBottomOf="@+id/notification_rl_setting_back"

@@ -1,21 +1,40 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
+    <style name="notification_setting_tips_tv">
 
+        <item name="android:textSize">
+            12sp
+        </item>
 
-<!--    <style name="notification_home_popup_tv">-->
+        <item name="android:textColor">
+            #8CF0F0F0
+        </item>
 
-<!--        <item name="android:textSize">-->
-<!--            14sp-->
-<!--        </item>-->
+    </style>
 
-<!--        <item name="android:letterSpacing">-->
-<!--            0.03-->
-<!--        </item>-->
+    <style name="notification_setting_tv">
 
-<!--        <item name="android:textColor">-->
-<!--            #F0F0F0-->
-<!--        </item>-->
+        <item name="android:textSize">
+            16sp
+        </item>
 
-<!--    </style>-->
+        <item name="android:textColor">
+            #F0F0F0
+        </item>
+
+    </style>
+
+    <style name="notification_toolbar_tv">
+
+        <item name="android:textSize">
+            22sp
+        </item>
+
+        <item name="android:textColor">
+            #F0F0F0
+        </item>
+
+    </style>
+
 </resources>

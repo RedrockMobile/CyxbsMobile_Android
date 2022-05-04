@@ -1,5 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-<!--    <color name="notification_back_detail_ripple">#000000</color>-->
+    <color name="notification_base_tv">#FFFFFF</color>
+    <color name="notification_base_main_bg">#000000</color>
+    <color name="notification_setting_back_detail_ripple">#000000</color>
+    <color name="notification_setting_item_bg">#2D2D2D</color>
+    <color name="notification_back_detail_ripple">#000000</color>
+    <color name="notification_home_tabLayout_text_selected">#F0F0F0</color>
+    <color name="notification_home_tabLayout_text_unselect">#8CF0F0F0</color>
+    <color name="notification_home_item_tv_time">#F0F0F0</color>
 </resources>
