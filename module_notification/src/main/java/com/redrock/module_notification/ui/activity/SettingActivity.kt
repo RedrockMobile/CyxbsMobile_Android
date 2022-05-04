@@ -1,6 +1,13 @@
 package com.redrock.module_notification.ui.activity
 
+import android.app.NotificationChannel
+import android.app.NotificationManager
+import android.app.PendingIntent
+import android.content.Intent
+import android.os.Build
 import android.os.Bundle
+import androidx.appcompat.app.AppCompatActivity
+import androidx.core.app.NotificationCompat
 import com.alibaba.android.arouter.facade.annotation.Route
 import com.mredrock.cyxbs.common.config.NOTIFICATION_SETTING
 import com.mredrock.cyxbs.common.ui.BaseActivity
@@ -38,6 +45,37 @@ class SettingActivity :BaseActivity() {
     }
 
     private fun initViewClickListener(){
+        notification_setting_test.setOnClickListener {
+            val manager =
+                getSystemService(NOTIFICATION_SERVICE) as NotificationManager
+
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                val channel =
+                    NotificationChannel("CyxbsSignNotification", "签到提醒", NotificationManager.IMPORTANCE_HIGH)
+                manager.createNotificationChannel(channel)
+            }
+
+
+            //为了版本兼容  选择V7包下的NotificationCompat进行构造
+            val builder = NotificationCompat.Builder(this, "CyxbsSignNotification")
+            //Ticker是状态栏显示的提示
+            builder.setTicker("打卡咯")
+            //第一行内容  通常作为通知栏标题
+            builder.setContentTitle("打卡提醒-已经过18点了你还没有打卡噢~~")
+            //第二行内容 通常是通知正文
+            builder.setContentText("可以在消息设置中关闭打卡呢~")
+            //可以点击通知栏的删除按钮删除
+            builder.setAutoCancel(true)
+            //系统状态栏显示的小图标
+            builder.setSmallIcon(R.drawable.common_ic_app_notifacation)
+            //下拉显示的大图标
+            val intent = Intent(this, this::class.java)
+            val pIntent = PendingIntent.getActivity(this, 1, intent, 0)
+            builder.setContentIntent(pIntent)
+            builder.setDefaults(NotificationCompat.DEFAULT_ALL)
+            val notification = builder.build()
+            manager.notify(1, notification)
+        }
         notification_setting_switch_1.setOnCheckedChangeListener{_, isChecked ->
             NotificationSp.editor {
                 if (isChecked) {

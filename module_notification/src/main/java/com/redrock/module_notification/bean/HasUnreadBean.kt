@@ -1,6 +1,7 @@
 package com.redrock.module_notification.bean
 
 import com.google.gson.annotations.SerializedName
+import java.io.Serializable
 
 /**
  * Author by OkAndGreat
@@ -10,4 +11,4 @@ import com.google.gson.annotations.SerializedName
 data class UnreadData(
     @SerializedName("has")
     val has: Boolean
-)
+) : Serializable

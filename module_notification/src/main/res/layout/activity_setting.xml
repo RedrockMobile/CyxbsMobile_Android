@@ -27,12 +27,13 @@
 
 
     <TextView
+        android:id="@+id/textView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="设置"
         android:layout_marginStart="37dp"
-        android:textColor="@color/notification_base_tv"
+        android:text="设置"
         android:textAppearance="@style/notification_toolbar_tv"
+        android:textColor="@color/notification_base_tv"
         android:textStyle="bold"
         app:layout_constraintBottom_toBottomOf="@+id/notification_rl_setting_back"
         app:layout_constraintStart_toStartOf="parent"
@@ -128,6 +129,16 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         tools:ignore="HardcodedText" />
+
+    <Button
+        android:id="@+id/notification_setting_test"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="测试"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>
