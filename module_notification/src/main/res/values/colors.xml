@@ -20,4 +20,5 @@
     <color name="notification_home_tabLayout_text_selected">#112C54</color>
     <color name="notification_home_tabLayout_text_unselect">#66142C52</color>
     <color name="notification_home_tablayout_badge">#FF6262</color>
+    <color name="notification_home_delete"> #4A44E4</color>
 </resources>

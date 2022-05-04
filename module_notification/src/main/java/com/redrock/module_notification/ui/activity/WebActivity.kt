@@ -21,9 +21,9 @@ class WebActivity : BaseActivity() {
         val url = intent.getStringExtra("URL")
 
         notification_detail_back.setOnClickListener { finish() }
+        url?.let { notification_wv.loadUrl(it) }
 
-        notification_wv.loadUrl("baidu.com")
-
+        notification_wv.init()
 
     }
 

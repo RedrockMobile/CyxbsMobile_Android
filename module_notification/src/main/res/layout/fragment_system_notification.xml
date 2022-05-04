@@ -4,7 +4,7 @@
     android:layout_height="match_parent"
     xmlns:tools="http://schemas.android.com/tools">
 
-  <androidx.recyclerview.widget.RecyclerView
+  <com.redrock.module_notification.widget.SwipeDeleteRecyclerView
       android:id="@+id/notification_rv_sys"
       android:layout_width="match_parent"
       android:layout_height="match_parent"

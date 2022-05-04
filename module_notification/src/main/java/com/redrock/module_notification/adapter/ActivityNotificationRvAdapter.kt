@@ -2,7 +2,6 @@ package com.redrock.module_notification.adapter
 
 import android.annotation.SuppressLint
 import android.content.Context
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -33,7 +32,7 @@ class ActivityNotificationRvAdapter(
         const val TYPE_SECOND = 2
     }
 
-    inner class BlankHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {}
+    inner class BlankHolder(itemView: View) : RecyclerView.ViewHolder(itemView)
     inner class InnerHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         val itemActivityNotificationIvRedDot: ImageView by lazy { itemView.findViewById(R.id.item_activity_notification_iv_red_dot) }
         val itemActivityNotificationTvTitle: TextView by lazy { itemView.findViewById(R.id.item_activity_notification_tv_title) }
