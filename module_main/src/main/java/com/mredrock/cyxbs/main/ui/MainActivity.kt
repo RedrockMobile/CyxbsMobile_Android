@@ -3,13 +3,17 @@
 package com.mredrock.cyxbs.main.ui
 
 import android.app.Dialog
+import android.content.Context
 import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import android.view.View
 import android.widget.FrameLayout
 import androidx.appcompat.widget.AppCompatButton
 import androidx.fragment.app.commit
 import androidx.lifecycle.Observer
+import androidx.work.OneTimeWorkRequestBuilder
+import androidx.work.WorkManager
 import com.alibaba.android.arouter.facade.annotation.Route
 import com.alibaba.android.arouter.launcher.ARouter
 import com.google.android.material.bottomsheet.BottomSheetBehavior
@@ -33,8 +37,11 @@ import com.mredrock.cyxbs.common.BaseApp
 import com.mredrock.cyxbs.main.R
 import com.mredrock.cyxbs.main.adapter.MainAdapter
 import com.mredrock.cyxbs.main.components.DebugDataDialog
+import com.mredrock.cyxbs.main.service.NotifySignWorker
 import com.mredrock.cyxbs.main.utils.BottomNavigationHelper
-import com.mredrock.cyxbs.main.utils.isDownloadSplash
+import com.mredrock.cyxbs.main.utils.Const.IS_SWITCH2_SELECT
+import com.mredrock.cyxbs.main.utils.Const.NOTIFY_TAG
+import com.mredrock.cyxbs.main.utils.NotificationSp
 import com.mredrock.cyxbs.main.viewmodel.MainViewModel
 import com.umeng.message.PushAgent
 import kotlinx.android.synthetic.main.main_activity_main.*
@@ -42,6 +49,9 @@ import kotlinx.android.synthetic.main.main_bottom_nav.*
 import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
+import java.io.File
+import java.util.*
+import java.util.concurrent.TimeUnit
 
 @Route(path = MAIN_MAIN)
 class MainActivity : BaseViewModelActivity<MainViewModel>(),
@@ -76,6 +86,18 @@ class MainActivity : BaseViewModelActivity<MainViewModel>(),
         setContentView(R.layout.main_activity_main)
     }
 
+    override fun onStart() {
+        super.onStart()
+        if(!NotificationSp.getBoolean(IS_SWITCH2_SELECT,false)) return
+        val workManager = WorkManager.getInstance(applicationContext)
+        val hour = Calendar.HOUR_OF_DAY
+//        val dailyWorkRequest = OneTimeWorkRequestBuilder<NotifySignWorker>()
+//            .setInitialDelay(timeDiff, TimeUnit.MILLISECONDS)
+//            .addTag(NOTIFY_TAG)
+//            .build()
+        //workManager.enqueue(NotifySignWorker(this,))
+
+    }
 
     override fun initPage(isLoginElseTourist: Boolean, savedInstanceState: Bundle?) {
         /**
@@ -345,5 +367,24 @@ class MainActivity : BaseViewModelActivity<MainViewModel>(),
         const val SPLASH_PHOTO_NAME = "splash_photo.jpg"
         const val SPLASH_PHOTO_LOCATION = "splash_store_location"
         const val FAST = "com.mredrock.cyxbs.action.COURSE"
+    }
+
+    fun isDownloadSplash(context: Context): Boolean {
+        return getSplashFile(context).exists()
+    }
+
+    fun getSplashFile(context: Context): File {
+        val appDir = getDir(context)//下载目录
+        val fileName = SPLASH_PHOTO_NAME
+        return File("$appDir/$fileName")
+    }
+
+    fun getDir(context: Context): File {
+        val pictureFolder = context.externalCacheDir
+        val appDir = File("$pictureFolder/$SPLASH_PHOTO_LOCATION")
+        if (!appDir.exists()) {
+            appDir.mkdirs()
+        }
+        return appDir
     }
 }

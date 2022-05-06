@@ -3,7 +3,6 @@ package com.redrock.module_notification.util
 /**
  * Author by OkAndGreat
  * Date on 2022/4/26 11:36.
- *
  */
 object Constant {
     //消息设置界面switch1是否选中的key
@@ -20,4 +19,7 @@ object Constant {
 
     //通知主页界面LoadMoreWindow是否应该显示红点（表示设置页面用户是否点进去过，若还没有就显示小红点）
     const val HAS_USER_ENTER_SETTING_PAGE = "has_user_enter_setting_page"
+
+    //提醒打卡的Worker
+    const val NOTIFY_TAG = "notify_tag"
 }

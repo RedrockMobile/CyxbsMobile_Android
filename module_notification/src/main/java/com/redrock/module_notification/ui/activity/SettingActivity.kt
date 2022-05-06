@@ -8,15 +8,20 @@ import android.os.Build
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.NotificationCompat
+import androidx.work.WorkManager
 import com.alibaba.android.arouter.facade.annotation.Route
 import com.mredrock.cyxbs.common.config.NOTIFICATION_SETTING
 import com.mredrock.cyxbs.common.ui.BaseActivity
 import com.mredrock.cyxbs.common.utils.extensions.editor
+import com.mredrock.cyxbs.mine.page.sign.DailySignActivity
 import com.redrock.module_notification.R
 import com.redrock.module_notification.util.Constant.IS_SWITCH1_SELECT
 import com.redrock.module_notification.util.Constant.IS_SWITCH2_SELECT
+import com.redrock.module_notification.util.Constant.NOTIFY_TAG
 import com.redrock.module_notification.util.NotificationSp
+import com.redrock.module_notification.widget.NotifySignWorker
 import kotlinx.android.synthetic.main.activity_setting.*
+import java.util.*
 import kotlin.properties.Delegates
 
 /**
@@ -69,7 +74,7 @@ class SettingActivity :BaseActivity() {
             //系统状态栏显示的小图标
             builder.setSmallIcon(R.drawable.common_ic_app_notifacation)
             //下拉显示的大图标
-            val intent = Intent(this, this::class.java)
+            val intent = Intent(this, DailySignActivity::class.java::class.java)
             val pIntent = PendingIntent.getActivity(this, 1, intent, 0)
             builder.setContentIntent(pIntent)
             builder.setDefaults(NotificationCompat.DEFAULT_ALL)
@@ -89,8 +94,11 @@ class SettingActivity :BaseActivity() {
         notification_setting_switch_2.setOnCheckedChangeListener{_, isChecked ->
             NotificationSp.editor {
                 if (isChecked) {
+                    val hour = Calendar.HOUR
+                    //if(hour < 18) WorkManager.getInstance(applicationContext).enqueue(NotifySignWorker(this))
                     putBoolean(IS_SWITCH2_SELECT, true)
                 } else {
+                    WorkManager.getInstance(applicationContext).cancelAllWorkByTag(NOTIFY_TAG)
                     putBoolean(IS_SWITCH2_SELECT, false)
                 }
             }

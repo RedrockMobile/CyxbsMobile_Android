@@ -9,7 +9,6 @@ import android.view.View
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.fragment.app.Fragment
-import androidx.viewpager2.widget.ViewPager2
 import com.alibaba.android.arouter.facade.annotation.Route
 import com.alibaba.android.arouter.launcher.ARouter
 import com.google.android.material.tabs.TabLayout
@@ -100,20 +99,6 @@ class MainActivity : BaseViewModelActivity<NotificationViewModel>() {
         notification_home_vp2.setPageTransformer(ScaleInTransformer())
         notification_home_vp2.offscreenPageLimit = 1
         notification_home_vp2.isUserInputEnabled = false
-
-        notification_home_vp2.registerOnPageChangeCallback(object :
-            ViewPager2.OnPageChangeCallback() {
-            override fun onPageSelected(position: Int) {
-                when (position) {
-                    0 -> {
-                        notification_home_vp2.isUserInputEnabled = false
-                    }
-                    1 -> {
-                        notification_home_vp2.isUserInputEnabled = true
-                    }
-                }
-            }
-        })
     }
 
     @SuppressLint("InflateParams")

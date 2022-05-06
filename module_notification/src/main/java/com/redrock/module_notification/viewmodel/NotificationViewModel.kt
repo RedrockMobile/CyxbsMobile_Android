@@ -94,6 +94,7 @@ class NotificationViewModel : BaseViewModel() {
             .safeSubscribeBy(
                 onError = {
                     Log.w(NOTIFICATION_LOG_TAG, "deleteMsg failed ")
+                    toast("改变消息已读状态失败")
                 },
                 onNext = {
                 }

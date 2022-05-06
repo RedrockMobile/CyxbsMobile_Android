@@ -2,6 +2,7 @@ package com.redrock.module_notification.adapter
 
 import android.annotation.SuppressLint
 import android.content.Context
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -84,6 +85,7 @@ class ActivityNotificationRvAdapter(
         if (holder is InnerHolder) {
             val data = list[position]
             if (data.has_read) holder.itemActivityNotificationIvRedDot.visibility = View.INVISIBLE
+            else holder.itemActivityNotificationIvRedDot.visibility = View.VISIBLE
             holder.itemActivityNotificationTvTitle.text = data.title
             holder.itemActivityNotificationTvPublisher.text = data.user_name
             holder.itemActivityNotificationTvPublishTime.text =

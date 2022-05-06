@@ -57,6 +57,7 @@ class DiscoverHomeFragment : BaseViewModelFragment<DiscoverHomeViewModel>(),
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
+
         return inflater.inflate(R.layout.discover_home_fragment, container, false)
     }
 
@@ -72,7 +73,6 @@ class DiscoverHomeFragment : BaseViewModelFragment<DiscoverHomeViewModel>(),
         initHasUnread()
 
         viewModel.getRollInfo()
-        viewModel.getHasUnread()
         iv_check_in.setOnSingleClickListener {
             context?.doIfLogin("签到") {
                 ARouter.getInstance().build(MINE_CHECK_IN).navigation()
@@ -104,6 +104,7 @@ class DiscoverHomeFragment : BaseViewModelFragment<DiscoverHomeViewModel>(),
     override fun onResume() {
         super.onResume()
         initFunctions()
+        viewModel.getHasUnread()
         viewModel.startSwitchViewPager()
         if (viewModel.functionRvState != null) {
             rv_discover_more_function.layoutManager?.onRestoreInstanceState(viewModel.functionRvState)
