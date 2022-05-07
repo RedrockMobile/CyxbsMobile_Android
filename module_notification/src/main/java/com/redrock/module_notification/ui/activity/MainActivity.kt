@@ -163,7 +163,7 @@ class MainActivity : BaseViewModelActivity<NotificationViewModel>() {
 
     private fun initObserver() {
         viewModel.systemMsg.observe {
-            allUnreadActiveMsgIds = ArrayList()
+            allUnreadSysMsgIds = ArrayList()
             for (value in it!!) {
                 if (!value.has_read) {
                     tab1View.findViewById<View>(R.id.notification_iv_tl_red_dots).visibility =
@@ -174,6 +174,7 @@ class MainActivity : BaseViewModelActivity<NotificationViewModel>() {
             }
         }
         viewModel.activeMsg.observe {
+            allUnreadActiveMsgIds = ArrayList()
             for (value in it!!) {
                 if (!value.has_read)
                     tab2View.findViewById<View>(R.id.notification_iv_tl_red_dots).visibility =

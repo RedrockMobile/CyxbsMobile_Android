@@ -16,6 +16,20 @@
         tools:ignore="ContentDescription" />
 
     <TextView
+        android:id="@+id/notification_tv_dialog_top_delete_content"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textColor="#4A44E4"
+        android:textSize="13sp"
+        android:gravity="center"
+        android:text="廖老师的八百学妹太厉害啦"
+        android:layout_marginRight="25dp"
+        android:layout_marginLeft="25dp"
+        app:layout_constraintBottom_toTopOf="@+id/notification_tv_dialog_delete_content"
+        tools:ignore="HardcodedText" />
+
+
+    <TextView
         android:id="@+id/notification_tv_dialog_delete_content"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"

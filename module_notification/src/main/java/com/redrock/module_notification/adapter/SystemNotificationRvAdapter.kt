@@ -10,7 +10,7 @@ import android.widget.TextView
 import androidx.fragment.app.FragmentActivity
 import androidx.recyclerview.widget.RecyclerView
 import com.mredrock.cyxbs.common.utils.extensions.setOnSingleClickListener
-import com.mredrock.cyxbs.common.utils.extensions.toast
+import com.mredrock.cyxbs.common.utils.extensions.visible
 import com.redrock.module_notification.R
 import com.redrock.module_notification.bean.ChangeReadStatusToBean
 import com.redrock.module_notification.bean.SystemMsgBean
@@ -18,6 +18,7 @@ import com.redrock.module_notification.ui.activity.WebActivity
 import com.redrock.module_notification.util.Date
 import com.redrock.module_notification.viewmodel.NotificationViewModel
 import com.redrock.module_notification.widget.DeleteDialog
+import kotlinx.android.synthetic.main.fragment_system_notification.*
 
 /**
  * Author by OkAndGreat
@@ -29,12 +30,14 @@ class SystemNotificationRvAdapter(
     private var context: Context,
     private var activity: FragmentActivity,
     private var rv: RecyclerView,
-    val onDelete: (Int) -> Unit,
+    val onDelete: (Int) -> Unit
 ) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
     companion object {
         const val TYPE_ONE = 1
         const val TYPE_SECOND = 2
     }
+
+    private var multiDeleteAdapter: SysNotifyMultiDeleteRvAdapter? = null
 
     inner class BlankHolder(itemView: View) : RecyclerView.ViewHolder(itemView)
     inner class InnerHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
@@ -83,7 +86,11 @@ class SystemNotificationRvAdapter(
                 WebActivity.startWebViewActivity(data.redirect_url, context)
             }
             holder.itemSysNotificationClMain.setOnLongClickListener {
-                rv.adapter = SysNotifyMultiDeleteRvAdapter(list,viewmodel,context,activity)
+                activity.notification_system_btn_negative.visible()
+                activity.notification_system_btn_positive.visible()
+                multiDeleteAdapter =
+                    SysNotifyMultiDeleteRvAdapter(list, viewmodel, context, activity)
+                rv.adapter = multiDeleteAdapter
                 true
             }
             holder.itemNotificationRlHomeDelete.setOnSingleClickListener {
@@ -93,7 +100,7 @@ class SystemNotificationRvAdapter(
                     DeleteDialog.show(
                         activity.supportFragmentManager,
                         null,
-                        exchangeTips = "这条消息未读\n确认删除此消息吗",
+                        tips = "这条消息未读\n确认删除此消息吗",
                         onPositiveClick = {
                             onDelete(holder.adapterPosition)
                             dismiss()
@@ -113,6 +120,7 @@ class SystemNotificationRvAdapter(
         notifyDataSetChanged()
     }
 
+    fun getSelectedItemInfos() = multiDeleteAdapter?.selectedItemInfos
 
     override fun getItemCount(): Int = list.size + 1
 

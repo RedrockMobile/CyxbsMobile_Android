@@ -10,7 +10,7 @@
         android:layout_height="wrap_content"
         android:layout_centerInParent="true"
         android:text="系统通知"
-        android:textColor="@color/notification_home_tabLayout_text_unselect"
+        android:textColor="@color/notification_home_tabLayout_text_selected"
         android:textSize="18sp"
         tools:ignore="HardcodedText" />
 

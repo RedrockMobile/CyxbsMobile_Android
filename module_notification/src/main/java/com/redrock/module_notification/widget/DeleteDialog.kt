@@ -26,7 +26,8 @@ class DeleteDialog private constructor() : DialogFragment() {
         fun show(
             supportFragmentManager: FragmentManager,
             tag: String?,
-            exchangeTips: String,
+            tips: String,
+            topTipsCnt: Int = 0,
             positiveString: String = "确定",
             negativeString: String = "取消",
             onPositiveClick: (DeleteDialog.() -> Unit)? = null, // 点击确认
@@ -34,8 +35,12 @@ class DeleteDialog private constructor() : DialogFragment() {
             dismissCallback: (() -> Unit)? = null, // 所有的取消 dialog 的回调, 包括调用 dismiss() 和 返回键
         ) {
             val dialog = DeleteDialog()
+            var topTips = ""
+            if (topTipsCnt != 0)
+                topTips = "选中的信息包含${topTipsCnt}条未读信息"
             dialog.initView(
-                exchangeTips,
+                tips,
+                topTips,
                 positiveString,
                 negativeString,
                 onPositiveClick,
@@ -45,7 +50,8 @@ class DeleteDialog private constructor() : DialogFragment() {
         }
     }
 
-    private var exchangeTips: String = ""
+    private var tips: String = ""
+    private var topTips: String? = ""
     private var positiveString: String = "确定"
     private var negativeString: String = "取消"
     private var onPositiveClick: (DeleteDialog.() -> Unit)? = null
@@ -54,7 +60,8 @@ class DeleteDialog private constructor() : DialogFragment() {
     private var cancelCallback: (() -> Unit)? = null
 
     private fun initView(
-        exchangeTips: String,
+        tips: String,
+        topTips: String? = null,
         positiveString: String = "确定",
         negativeString: String = "取消",
         onPositiveClick: (DeleteDialog.() -> Unit)? = null,
@@ -64,7 +71,8 @@ class DeleteDialog private constructor() : DialogFragment() {
     ): DeleteDialog {
         this.positiveString = positiveString
         this.negativeString = negativeString
-        this.exchangeTips = exchangeTips
+        this.tips = tips
+        this.topTips = topTips
         this.onPositiveClick = onPositiveClick
         this.onNegativeClick = onNegativeClick
         this.dismissCallback = dismissCallback
@@ -105,7 +113,10 @@ class DeleteDialog private constructor() : DialogFragment() {
         btnPositive.setOnSingleClickListener { onPositiveClick?.invoke(this) }
 
         val textView: TextView = view.findViewById(R.id.notification_tv_dialog_delete_content)
-        textView.text = exchangeTips
+        textView.text = tips
+
+        val textview2: TextView = view.findViewById(R.id.notification_tv_dialog_top_delete_content)
+        textview2.text = topTips
     }
 
     override fun onDismiss(dialog: DialogInterface) {

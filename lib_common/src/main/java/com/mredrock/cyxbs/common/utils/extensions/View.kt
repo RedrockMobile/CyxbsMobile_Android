@@ -51,6 +51,8 @@ fun View.setOnSingleClickListener(interval: Long = 500, click: (View) -> Unit) {
         it.setTag(R.id.common_view_click_time, System.currentTimeMillis())
     }
 }
+
+
 var View.leftPadding: Int
     inline get() = paddingLeft
     set(value) = setPadding(value, paddingTop, paddingRight, paddingBottom)
