@@ -11,6 +11,7 @@ import androidx.fragment.app.FragmentActivity
 import androidx.recyclerview.widget.RecyclerView
 import com.mredrock.cyxbs.common.utils.extensions.setOnSingleClickListener
 import com.mredrock.cyxbs.common.utils.extensions.visible
+import com.mredrock.cyxbs.common.utils.extensions.visibleWithAnim
 import com.redrock.module_notification.R
 import com.redrock.module_notification.bean.ChangeReadStatusToBean
 import com.redrock.module_notification.bean.SystemMsgBean
@@ -86,10 +87,9 @@ class SystemNotificationRvAdapter(
                 WebActivity.startWebViewActivity(data.redirect_url, context)
             }
             holder.itemSysNotificationClMain.setOnLongClickListener {
-                activity.notification_system_btn_negative.visible()
-                activity.notification_system_btn_positive.visible()
-                multiDeleteAdapter =
-                    SysNotifyMultiDeleteRvAdapter(list, viewmodel, context, activity)
+                activity.notification_system_btn_negative.visibleWithAnim()
+                activity.notification_system_btn_positive.visibleWithAnim()
+                multiDeleteAdapter = SysNotifyMultiDeleteRvAdapter(list)
                 rv.adapter = multiDeleteAdapter
                 true
             }

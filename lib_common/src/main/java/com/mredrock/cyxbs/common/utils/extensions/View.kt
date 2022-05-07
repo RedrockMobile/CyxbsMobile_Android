@@ -1,5 +1,6 @@
 package com.mredrock.cyxbs.common.utils.extensions
 
+import android.animation.ValueAnimator
 import android.annotation.SuppressLint
 import android.view.View
 import com.mredrock.cyxbs.common.R
@@ -19,10 +20,38 @@ fun View.invisible() {
     visibility = View.INVISIBLE
 }
 
+fun View.invisibleWithAnim(duration: Int = 300) {
+    val anim = ValueAnimator
+        .ofFloat(1f, 0f)
+        .setDuration(300)
+
+    anim.addUpdateListener {
+        val curVal = it.animatedValue as Float
+        this.alpha = curVal
+        if (curVal == 0f) this.visibility = View.INVISIBLE
+    }
+
+    anim.start()
+}
+
+fun View.visibleWithAnim(duration: Int = 300) {
+    visibility = View.VISIBLE
+    val anim = ValueAnimator
+        .ofFloat(0f, 1f)
+        .setDuration(300)
+
+    anim.addUpdateListener {
+        val curVal = it.animatedValue as Float
+        this.alpha = curVal
+    }
+
+    anim.start()
+}
+
 @SuppressLint("ClickableViewAccessibility")
 fun View.onTouch(
-        returnValue: Boolean = false,
-        handler: (v: View, event: android.view.MotionEvent) -> Unit
+    returnValue: Boolean = false,
+    handler: (v: View, event: android.view.MotionEvent) -> Unit
 ) {
     setOnTouchListener { v, event ->
         handler(v, event)
@@ -31,7 +60,7 @@ fun View.onTouch(
 }
 
 fun View.onClick(
-        handler: (v: View?) -> Unit
+    handler: (v: View?) -> Unit
 ) {
     setOnSingleClickListener { v ->
         handler(v)

@@ -1,12 +1,11 @@
 package com.redrock.module_notification.adapter
 
 import android.annotation.SuppressLint
-import android.content.Context
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
-import androidx.fragment.app.FragmentActivity
 import androidx.recyclerview.widget.RecyclerView
 import com.airbnb.lottie.LottieAnimationView
 import com.mredrock.cyxbs.common.utils.extensions.setOnSingleClickListener
@@ -14,19 +13,14 @@ import com.redrock.module_notification.R
 import com.redrock.module_notification.bean.SelectedItem
 import com.redrock.module_notification.bean.SystemMsgBean
 import com.redrock.module_notification.util.Date
-import com.redrock.module_notification.viewmodel.NotificationViewModel
 
 /**
  * Author by OkAndGreat
  * Date on 2022/5/7 16:37.
  *
  */
-class SysNotifyMultiDeleteRvAdapter(
-    private var list: List<SystemMsgBean>,
-    private var viewmodel: NotificationViewModel,
-    private var context: Context,
-    private var activity: FragmentActivity,
-) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
+class SysNotifyMultiDeleteRvAdapter(private var list: List<SystemMsgBean>) :
+    RecyclerView.Adapter<RecyclerView.ViewHolder>() {
     companion object {
         const val TYPE_ONE = 1
         const val TYPE_SECOND = 2
@@ -78,13 +72,13 @@ class SysNotifyMultiDeleteRvAdapter(
                 if (holder.isChecked) {
                     selectedItemInfos.ids.add(data.id.toString())
                     selectedItemInfos.positions.add(position)
-                    if(!data.has_read)
-                    selectedItemInfos.reads.add(data.has_read)
+                    if (!data.has_read)
+                        selectedItemInfos.reads.add(data.has_read)
                 } else {
                     selectedItemInfos.ids.remove(data.id.toString())
                     selectedItemInfos.positions.remove(position)
-                    if(!data.has_read)
-                    selectedItemInfos.reads.remove(data.has_read)
+                    if (!data.has_read)
+                        selectedItemInfos.reads.remove(data.has_read)
                 }
             }
             holder.itemSysNotificationSelect.addAnimatorUpdateListener {

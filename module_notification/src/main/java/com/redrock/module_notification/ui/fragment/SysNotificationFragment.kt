@@ -13,9 +13,11 @@ import com.redrock.module_notification.R
 import com.redrock.module_notification.adapter.SystemNotificationRvAdapter
 import com.redrock.module_notification.bean.DeleteMsgToBean
 import com.redrock.module_notification.bean.SystemMsgBean
+import com.redrock.module_notification.ui.activity.MainActivity
 import com.redrock.module_notification.viewmodel.NotificationViewModel
 import com.redrock.module_notification.widget.DeleteDialog
 import kotlinx.android.synthetic.main.fragment_system_notification.*
+import kotlin.concurrent.thread
 
 /**
  * Author by OkAndGreat
@@ -71,6 +73,20 @@ class SysNotificationFragment : BaseViewModelFragment<NotificationViewModel>() {
 
     private fun initObserver() {
         viewModel.systemMsg.observe {
+            var shouldNotifyActivityCancelRedDots = true
+            it?.let {
+                for (value in it) {
+                    if (!value.has_read)
+                        shouldNotifyActivityCancelRedDots = false
+                }
+            }
+            if (shouldNotifyActivityCancelRedDots) {
+                val activity = requireActivity()
+                if (activity is MainActivity) {
+                    activity.makeTabRedDotsInvisible(0)
+                }
+            }
+
             data = it as ArrayList<SystemMsgBean>
             adapter.changeAllData(data)
         }
@@ -105,10 +121,29 @@ class SysNotificationFragment : BaseViewModelFragment<NotificationViewModel>() {
                         requireActivity().notification_system_btn_positive?.invisible()
                         requireActivity().notification_rv_sys.adapter = adapter
 
+                        selectedItemInfos.positions.sort()
+
+                        //防止ConcurrentModificationException
+                        val deleteDataList = ArrayList<SystemMsgBean>()
+                        for (value in data) {
+                            for (id in selectedItemInfos.ids)
+                                if (id == value.id.toString()) {
+                                    deleteDataList.add(value)
+                                }
+                        }
+                        for(value in deleteDataList)
+                            data.remove(value)
+
+
                         for (position in selectedItemInfos.positions) {
-                            data.removeAt(position)
-                            adapter.list = data
                             adapter.notifyItemRemoved(position)
+                        }
+
+
+                        thread {
+                            Thread.sleep(500)
+                            //为了让删除了系统通知里面所有的已读消息时系统通知tab的小红点可以消息
+                            viewModel.getAllMsg()
                         }
 
                         dismiss()

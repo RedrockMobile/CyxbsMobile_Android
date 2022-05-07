@@ -17,10 +17,7 @@ import com.google.android.material.tabs.TabLayoutMediator
 import com.mredrock.cyxbs.common.config.NOTIFICATION_HOME
 import com.mredrock.cyxbs.common.config.NOTIFICATION_SETTING
 import com.mredrock.cyxbs.common.ui.BaseViewModelActivity
-import com.mredrock.cyxbs.common.utils.extensions.dp2px
-import com.mredrock.cyxbs.common.utils.extensions.editor
-import com.mredrock.cyxbs.common.utils.extensions.setOnSingleClickListener
-import com.mredrock.cyxbs.common.utils.extensions.toast
+import com.mredrock.cyxbs.common.utils.extensions.*
 import com.redrock.module_notification.R
 import com.redrock.module_notification.adapter.NotificationVp2Adapter
 import com.redrock.module_notification.bean.ChangeReadStatusToBean
@@ -45,6 +42,7 @@ class MainActivity : BaseViewModelActivity<NotificationViewModel>() {
 
     //所有还未读的活动通知消息的id 用来给一键已读使用
     private lateinit var allUnreadActiveMsgIds: ArrayList<String>
+
     //所有还未读的系统通知消息的id 用来给一键已读使用
     private lateinit var allUnreadSysMsgIds: ArrayList<String>
     private lateinit var sysFragment: SysNotificationFragment
@@ -180,6 +178,17 @@ class MainActivity : BaseViewModelActivity<NotificationViewModel>() {
                     tab2View.findViewById<View>(R.id.notification_iv_tl_red_dots).visibility =
                         View.VISIBLE
                 allUnreadActiveMsgIds.add(value.id.toString())
+            }
+        }
+    }
+
+    fun makeTabRedDotsInvisible(position: Int) {
+        when (position) {
+            0 -> {
+                tab1View.findViewById<View>(R.id.notification_iv_tl_red_dots).invisibleWithAnim()
+            }
+            1 -> {
+                tab2View.findViewById<View>(R.id.notification_iv_tl_red_dots).invisibleWithAnim()
             }
         }
     }

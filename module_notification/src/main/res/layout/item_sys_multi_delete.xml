@@ -9,8 +9,8 @@
 
     <com.airbnb.lottie.LottieAnimationView
         android:id="@+id/item_sys_notification_select"
-        android:layout_width="15dp"
-        android:layout_height="16dp"
+        android:layout_width="18dp"
+        android:layout_height="18dp"
         android:layout_marginTop="3dp"
         android:layout_marginStart="16dp"
         app:lottie_progress="0.39"
