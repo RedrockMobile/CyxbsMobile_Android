@@ -22,7 +22,7 @@ import com.redrock.module_notification.util.Constant.NOTIFICATION_LOG_TAG
 class NotificationViewModel : BaseViewModel() {
     val activeMsg = MutableLiveData<List<ActiveMsgBean>>()
     val systemMsg = MutableLiveData<List<SystemMsgBean>>()
-    private val hasUnread = MutableLiveData<Boolean>()
+    val checkInStatus = MutableLiveData<Boolean>()
 
     private val retrofit by lazy { ApiGenerator.getApiService(ApiService::class.java) }
 
@@ -46,24 +46,6 @@ class NotificationViewModel : BaseViewModel() {
             .lifeCycle()
     }
 
-    /**
-     * 获取是否有未读信息
-     */
-    fun getHasUnread() {
-        retrofit.getHashUnreadMsg()
-            .mapOrThrowApiException()
-            .setSchedulers()
-            .safeSubscribeBy(
-                onError = {
-                    Log.w(NOTIFICATION_LOG_TAG, "getHasUnread failed")
-                },
-                onNext = {
-                    Log.d(NOTIFICATION_LOG_TAG, "getHashUnreadMsg $it")
-                    hasUnread.value = it.has
-                }
-            )
-            .lifeCycle()
-    }
 
     /**
      * 删除消息
@@ -99,6 +81,17 @@ class NotificationViewModel : BaseViewModel() {
                 onNext = {
                 }
             )
+            .lifeCycle()
+    }
+
+    fun getCheckInStatus(){
+        ApiGenerator.getCommonApiService(ApiService::class.java)
+            .getCheckInStatus()
+            .mapOrThrowApiException()
+            .setSchedulers()
+            .safeSubscribeBy {
+                checkInStatus.value = it.isChecked
+            }
             .lifeCycle()
     }
 }

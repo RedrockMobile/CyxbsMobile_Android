@@ -25,11 +25,13 @@ import java.util.concurrent.TimeUnit
  */
 class NotifySignWorker(
     private val ctx: Context,
-    params: WorkerParameters,
-    private val isAnotherDay: Boolean = false
+    params: WorkerParameters
 ) : Worker(ctx, params) {
     override fun doWork(): Result {
         WorkManager.getInstance(applicationContext).cancelAllWorkByTag(NOTIFY_TAG)
+
+        val isNextDay = inputData.getBoolean("isNextDay", false)
+        val shouldNotify = inputData.getBoolean("shouldNotify", true)
 
         val currentDate = Calendar.getInstance()
         val dueDate = Calendar.getInstance()
@@ -40,7 +42,7 @@ class NotifySignWorker(
         dueDate.set(Calendar.SECOND, 0)
 
         //当前时间已经过了18点
-        if (dueDate.before(currentDate) or isAnotherDay) {
+        if (dueDate.before(currentDate) or isNextDay) {
             dueDate.add(Calendar.HOUR_OF_DAY, 24)
         }
 
@@ -53,14 +55,14 @@ class NotifySignWorker(
         WorkManager.getInstance(applicationContext)
             .enqueue(dailyWorkRequest)
 
-        if (Calendar.HOUR >= 18 && !isAnotherDay) {
+        if (Calendar.HOUR >= 18 && shouldNotify) {
             sendNotification(ctx)
         }
 
         return Result.success()
     }
 
-    fun sendNotification(ctx: Context) {
+    private fun sendNotification(ctx: Context) {
         val manager =
             ctx.getSystemService(AppCompatActivity.NOTIFICATION_SERVICE) as NotificationManager
 

@@ -6,12 +6,14 @@ import android.app.PendingIntent
 import android.content.Intent
 import android.os.Build
 import android.os.Bundle
-import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.NotificationCompat
+import androidx.work.Data
+import androidx.work.OneTimeWorkRequest
+import androidx.work.OneTimeWorkRequestBuilder
 import androidx.work.WorkManager
 import com.alibaba.android.arouter.facade.annotation.Route
 import com.mredrock.cyxbs.common.config.NOTIFICATION_SETTING
-import com.mredrock.cyxbs.common.ui.BaseActivity
+import com.mredrock.cyxbs.common.ui.BaseViewModelActivity
 import com.mredrock.cyxbs.common.utils.extensions.editor
 import com.mredrock.cyxbs.mine.page.sign.DailySignActivity
 import com.redrock.module_notification.R
@@ -19,6 +21,7 @@ import com.redrock.module_notification.util.Constant.IS_SWITCH1_SELECT
 import com.redrock.module_notification.util.Constant.IS_SWITCH2_SELECT
 import com.redrock.module_notification.util.Constant.NOTIFY_TAG
 import com.redrock.module_notification.util.NotificationSp
+import com.redrock.module_notification.viewmodel.NotificationViewModel
 import com.redrock.module_notification.widget.NotifySignWorker
 import kotlinx.android.synthetic.main.activity_setting.*
 import java.util.*
@@ -31,32 +34,47 @@ import kotlin.properties.Delegates
  */
 //考虑到通知设置页以后可能会有其它渠道进入，故配置一个路由
 @Route(path = NOTIFICATION_SETTING)
-class SettingActivity :BaseActivity() {
+class SettingActivity : BaseViewModelActivity<NotificationViewModel>() {
     private var switch1Checked by Delegates.notNull<Boolean>()
     private var switch2Checked by Delegates.notNull<Boolean>()
+    private var isSign = false
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_setting)
         initSwitch()
         initViewClickListener()
+        initSignObserver()
+        viewModel.getCheckInStatus()
     }
 
-    private fun initSwitch(){
-        switch1Checked = NotificationSp.getBoolean(IS_SWITCH1_SELECT,false)
-        switch2Checked = NotificationSp.getBoolean(IS_SWITCH2_SELECT,false)
+    private fun initSignObserver() {
+        viewModel.checkInStatus.observe {
+            it?.let {
+                isSign = it
+            }
+        }
+    }
+
+    private fun initSwitch() {
+        switch1Checked = NotificationSp.getBoolean(IS_SWITCH1_SELECT, false)
+        switch2Checked = NotificationSp.getBoolean(IS_SWITCH2_SELECT, false)
         notification_setting_switch_1.isChecked = switch1Checked
         notification_setting_switch_2.isChecked = switch2Checked
     }
 
-    private fun initViewClickListener(){
+    private fun initViewClickListener() {
         notification_setting_test.setOnClickListener {
             val manager =
                 getSystemService(NOTIFICATION_SERVICE) as NotificationManager
 
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
                 val channel =
-                    NotificationChannel("CyxbsSignNotification", "签到提醒", NotificationManager.IMPORTANCE_HIGH)
+                    NotificationChannel(
+                        "CyxbsSignNotification",
+                        "签到提醒",
+                        NotificationManager.IMPORTANCE_HIGH
+                    )
                 manager.createNotificationChannel(channel)
             }
 
@@ -81,7 +99,7 @@ class SettingActivity :BaseActivity() {
             val notification = builder.build()
             manager.notify(1, notification)
         }
-        notification_setting_switch_1.setOnCheckedChangeListener{_, isChecked ->
+        notification_setting_switch_1.setOnCheckedChangeListener { _, isChecked ->
             NotificationSp.editor {
                 if (isChecked) {
                     putBoolean(IS_SWITCH1_SELECT, true)
@@ -91,11 +109,46 @@ class SettingActivity :BaseActivity() {
             }
         }
 
-        notification_setting_switch_2.setOnCheckedChangeListener{_, isChecked ->
+        notification_setting_switch_2.setOnCheckedChangeListener { _, isChecked ->
             NotificationSp.editor {
                 if (isChecked) {
-                    val hour = Calendar.HOUR
-                    //if(hour < 18) WorkManager.getInstance(applicationContext).enqueue(NotifySignWorker(this))
+                    /**
+                     * 用户选择了签到不提醒到签到提醒的逻辑处理：
+                     * 如果已经签到&&时间小于18 shouldNotify false next day true
+                     * 已经签到&&时间大于等于18  shouldNotify false next day true
+                     * 没有签到&&时间小于18  shouldNotify false next day false
+                     * 没有签到&&时间大于等于18 shouldNotify true next day true
+                     */
+                    val workManager = WorkManager.getInstance(applicationContext)
+                    val hour = Calendar.HOUR_OF_DAY
+                    var data: Data by Delegates.notNull()
+                    var dailySignWorkRequest: OneTimeWorkRequest by Delegates.notNull()
+                    val dailySignWorkRequestBuilder =
+                        OneTimeWorkRequestBuilder<NotifySignWorker>().addTag(NOTIFY_TAG)
+
+                    if (isSign) {
+                        data = Data.Builder()
+                            .putBoolean("isNextDay", true)
+                            .putBoolean("shouldNotify", false)
+                            .build()
+                    } else {
+                        data = if (hour < 18) {
+                            Data.Builder()
+                                .putBoolean("isNextDay", false)
+                                .putBoolean("shouldNotify", false)
+                                .build()
+                        } else {
+                            Data.Builder()
+                                .putBoolean("isNextDay", true)
+                                .putBoolean("shouldNotify", true)
+                                .build()
+                        }
+                    }
+
+                    dailySignWorkRequest = dailySignWorkRequestBuilder
+                        .setInputData(data)
+                        .build()
+                    workManager.enqueue(dailySignWorkRequest)
                     putBoolean(IS_SWITCH2_SELECT, true)
                 } else {
                     WorkManager.getInstance(applicationContext).cancelAllWorkByTag(NOTIFY_TAG)

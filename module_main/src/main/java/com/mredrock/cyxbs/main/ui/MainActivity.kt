@@ -6,12 +6,13 @@ import android.app.Dialog
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
-import android.util.Log
 import android.view.View
 import android.widget.FrameLayout
 import androidx.appcompat.widget.AppCompatButton
 import androidx.fragment.app.commit
 import androidx.lifecycle.Observer
+import androidx.work.Data
+import androidx.work.OneTimeWorkRequest
 import androidx.work.OneTimeWorkRequestBuilder
 import androidx.work.WorkManager
 import com.alibaba.android.arouter.facade.annotation.Route
@@ -19,8 +20,10 @@ import com.alibaba.android.arouter.launcher.ARouter
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.mredrock.cyxbs.api.account.IAccountService
 import com.mredrock.cyxbs.api.main.IMainService
+import com.mredrock.cyxbs.api.main.MAIN_MAIN
 import com.mredrock.cyxbs.api.update.AppUpdateStatus
 import com.mredrock.cyxbs.api.update.IAppUpdateService
+import com.mredrock.cyxbs.common.BaseApp
 import com.mredrock.cyxbs.common.bean.LoginConfig
 import com.mredrock.cyxbs.common.config.*
 import com.mredrock.cyxbs.common.event.LoadCourse
@@ -32,8 +35,6 @@ import com.mredrock.cyxbs.common.service.ServiceManager
 import com.mredrock.cyxbs.common.ui.BaseViewModelActivity
 import com.mredrock.cyxbs.common.utils.debug
 import com.mredrock.cyxbs.common.utils.extensions.*
-import com.mredrock.cyxbs.api.main.MAIN_MAIN
-import com.mredrock.cyxbs.common.BaseApp
 import com.mredrock.cyxbs.main.R
 import com.mredrock.cyxbs.main.adapter.MainAdapter
 import com.mredrock.cyxbs.main.components.DebugDataDialog
@@ -51,11 +52,13 @@ import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
 import java.io.File
 import java.util.*
-import java.util.concurrent.TimeUnit
+import kotlin.properties.Delegates
 
 @Route(path = MAIN_MAIN)
 class MainActivity : BaseViewModelActivity<MainViewModel>(),
     EventBusLifecycleSubscriber, ActionLoginStatusSubscriber {
+
+    private var isSign = false
 
 
     override val loginConfig = LoginConfig(
@@ -84,19 +87,59 @@ class MainActivity : BaseViewModelActivity<MainViewModel>(),
         super.onCreate(savedInstanceState)
         // 暂时不要在mainActivity里面使用dataBinding，会有一个量级较大的闪退
         setContentView(R.layout.main_activity_main)
+        initSignObserver()
+        viewModel.getCheckInStatus()
     }
 
+    private fun initSignObserver() {
+        viewModel.checkInStatus.observe {
+            it?.let {
+                isSign = it
+            }
+        }
+    }
+
+    /**
+     * 大前提：用户允许签到提醒
+     * 如果已经签到&&时间小于18 shouldNotify false next day true
+     * 已经签到&&时间大于等于18  shouldNotify false next day true
+     * 没有签到&&时间小于18  shouldNotify false next day false
+     * 没有签到&&时间大于等于18 shouldNotify true next day true
+     */
     override fun onStart() {
         super.onStart()
-        if(!NotificationSp.getBoolean(IS_SWITCH2_SELECT,false)) return
+        //用户不允许提醒 直接返回
+        if (!NotificationSp.getBoolean(IS_SWITCH2_SELECT, false)) return
         val workManager = WorkManager.getInstance(applicationContext)
         val hour = Calendar.HOUR_OF_DAY
-//        val dailyWorkRequest = OneTimeWorkRequestBuilder<NotifySignWorker>()
-//            .setInitialDelay(timeDiff, TimeUnit.MILLISECONDS)
-//            .addTag(NOTIFY_TAG)
-//            .build()
-        //workManager.enqueue(NotifySignWorker(this,))
+        var data: Data by Delegates.notNull()
+        var dailySignWorkRequest: OneTimeWorkRequest by Delegates.notNull()
+        val dailySignWorkRequestBuilder =
+            OneTimeWorkRequestBuilder<NotifySignWorker>().addTag(NOTIFY_TAG)
 
+        if (isSign) {
+            data = Data.Builder()
+                .putBoolean("isNextDay", true)
+                .putBoolean("shouldNotify", false)
+                .build()
+        } else {
+            data = if (hour < 18) {
+                Data.Builder()
+                    .putBoolean("isNextDay", false)
+                    .putBoolean("shouldNotify", false)
+                    .build()
+            } else {
+                Data.Builder()
+                    .putBoolean("isNextDay", true)
+                    .putBoolean("shouldNotify", true)
+                    .build()
+            }
+        }
+
+        dailySignWorkRequest = dailySignWorkRequestBuilder
+            .setInputData(data)
+            .build()
+        workManager.enqueue(dailySignWorkRequest)
     }
 
     override fun initPage(isLoginElseTourist: Boolean, savedInstanceState: Bundle?) {

@@ -1,12 +1,10 @@
 package com.redrock.module_notification.network
 
 import com.mredrock.cyxbs.common.bean.RedrockApiWrapper
+import com.mredrock.cyxbs.mine.network.model.ScoreStatus
 import com.redrock.module_notification.bean.*
 import io.reactivex.rxjava3.core.Observable
-import retrofit2.http.Body
-import retrofit2.http.GET
-import retrofit2.http.HTTP
-import retrofit2.http.PUT
+import retrofit2.http.*
 
 /**
  * Author by OkAndGreat
@@ -14,12 +12,6 @@ import retrofit2.http.PUT
  *
  */
 interface ApiService {
-    /**
-     * 是否有未读信息
-     */
-    @GET("/message-system/user/msgHasRead")
-    fun getHashUnreadMsg(): Observable<RedrockApiWrapper<UnreadData>>
-
     /**
      * 获得所有信息
      * 包括活动信息和通知消息
@@ -40,4 +32,10 @@ interface ApiService {
     @PUT("/message-system/user/msgHasRead")
     fun changeMsgStatus(@Body changeBody: ChangeReadStatusToBean):
             Observable<RedrockApiWrapper<ChangeReadStatusFromBean>>
+
+    /**
+     * 检查是否签到
+     */
+    @POST("/magipoke-intergral/QA/User/getScoreStatus")
+    fun getCheckInStatus(): Observable<RedrockApiWrapper<ScoreStatus>>
 }
