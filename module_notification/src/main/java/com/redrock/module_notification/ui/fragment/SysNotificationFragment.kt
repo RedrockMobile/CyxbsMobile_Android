@@ -1,5 +1,6 @@
 package com.redrock.module_notification.ui.fragment
 
+import android.annotation.SuppressLint
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -40,15 +41,23 @@ class SysNotificationFragment : BaseViewModelFragment<NotificationViewModel>() {
     }
 
     private fun initRv() {
-        adapter = SystemNotificationRvAdapter(data, viewModel, requireContext()) {
-            viewModel.deleteMsg(DeleteMsgToBean(listOf(data[it].id.toString())))
-            data.removeAt(it)
-            adapter.list = data
-            adapter.notifyItemRemoved(it)
-            notification_rv_sys.closeMenu()
-        }
+        adapter =
+            SystemNotificationRvAdapter(
+                data,
+                viewModel,
+                requireContext(),
+                requireActivity(),
+                notification_rv_sys
+            ) {
+                viewModel.deleteMsg(DeleteMsgToBean(listOf(data[it].id.toString())))
+                data.removeAt(it)
+                adapter.list = data
+                adapter.notifyItemRemoved(it)
+                notification_rv_sys.closeMenu()
+            }
         notification_rv_sys.adapter = adapter
         notification_rv_sys.layoutManager = LinearLayoutManager(this.context)
+
     }
 
     private fun initObserver() {
@@ -58,20 +67,7 @@ class SysNotificationFragment : BaseViewModelFragment<NotificationViewModel>() {
         }
     }
 
-//    internal fun deleteRvItems(ids: List<Int>) {
-//        for(id in ids){
-//            for(singleData in data){
-//                if(singleData.id == id){
-//                    data.remove()
-//                    adapter.list = data
-//                    adapter.notifyItemRemoved(value)
-//                    notification_rv_sys.closeMenu()
-//                }
-//            }
-//
-//        }
-//    }
-
+    @SuppressLint("NotifyDataSetChanged")
     internal fun refreshAdapter() {
         adapter.notifyDataSetChanged()
     }

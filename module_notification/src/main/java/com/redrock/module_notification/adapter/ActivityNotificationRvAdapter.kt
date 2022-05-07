@@ -2,13 +2,13 @@ package com.redrock.module_notification.adapter
 
 import android.annotation.SuppressLint
 import android.content.Context
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
+import com.bumptech.glide.Glide
 import com.mredrock.cyxbs.common.utils.extensions.setOnSingleClickListener
 import com.redrock.module_notification.R
 import com.redrock.module_notification.bean.ActiveMsgBean
@@ -37,21 +37,9 @@ class ActivityNotificationRvAdapter(
     inner class InnerHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         val itemActivityNotificationIvRedDot: ImageView by lazy { itemView.findViewById(R.id.item_activity_notification_iv_red_dot) }
         val itemActivityNotificationTvTitle: TextView by lazy { itemView.findViewById(R.id.item_activity_notification_tv_title) }
-        val itemActivityNotificationIvHead: CircleImageView by lazy {
-            itemView.findViewById(
-                R.id.item_activity_notification_iv_head
-            )
-        }
-        val itemActivityNotificationTvPublisher: TextView by lazy {
-            itemView.findViewById(
-                R.id.item_activity_notification_tv_publisher
-            )
-        }
-        val itemActivityNotificationTvPublishTime: TextView by lazy {
-            itemView.findViewById(
-                R.id.item_activity_notification_tv_publish_time
-            )
-        }
+        val itemActivityNotificationIvHead: CircleImageView by lazy { itemView.findViewById(R.id.item_activity_notification_iv_head) }
+        val itemActivityNotificationTvPublisher: TextView by lazy { itemView.findViewById(R.id.item_activity_notification_tv_publisher) }
+        val itemActivityNotificationTvPublishTime: TextView by lazy { itemView.findViewById(R.id.item_activity_notification_tv_publish_time) }
         val itemActivityNotificationTvContent: TextView by lazy { itemView.findViewById(R.id.item_activity_notification_tv_content) }
         val itemActivityNotificationIvDetail: ImageView by lazy { itemView.findViewById(R.id.item_activity_notification_iv_detail) }
     }
@@ -90,6 +78,9 @@ class ActivityNotificationRvAdapter(
             holder.itemActivityNotificationTvPublisher.text = data.user_name
             holder.itemActivityNotificationTvPublishTime.text =
                 Date.getUnExactTime(data.publish_time)
+            holder.itemActivityNotificationTvContent.text = data.content
+            Glide.with(context).load(data.user_head_url).into(holder.itemActivityNotificationIvHead)
+            Glide.with(context).load(data.pic_url).into(holder.itemActivityNotificationIvDetail)
             holder.itemView.setOnSingleClickListener {
                 viewmodel.changeMsgStatus(ChangeReadStatusToBean(listOf(list[position].id.toString())))
                 holder.itemActivityNotificationIvRedDot.visibility = View.INVISIBLE

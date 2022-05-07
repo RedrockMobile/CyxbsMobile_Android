@@ -6,6 +6,7 @@ import android.app.Dialog
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import android.view.View
 import android.widget.FrameLayout
 import androidx.appcompat.widget.AppCompatButton
@@ -58,7 +59,8 @@ import kotlin.properties.Delegates
 class MainActivity : BaseViewModelActivity<MainViewModel>(),
     EventBusLifecycleSubscriber, ActionLoginStatusSubscriber {
 
-    private var isSign = false
+    //todo记得改为false
+    private var isSign = true
 
 
     override val loginConfig = LoginConfig(
@@ -88,13 +90,13 @@ class MainActivity : BaseViewModelActivity<MainViewModel>(),
         // 暂时不要在mainActivity里面使用dataBinding，会有一个量级较大的闪退
         setContentView(R.layout.main_activity_main)
         initSignObserver()
-        viewModel.getCheckInStatus()
     }
 
     private fun initSignObserver() {
         viewModel.checkInStatus.observe {
             it?.let {
                 isSign = it
+                Log.d("NotifySignWorker", "今日是否已经签到 : $it ")
             }
         }
     }
@@ -107,6 +109,7 @@ class MainActivity : BaseViewModelActivity<MainViewModel>(),
      * 没有签到&&时间大于等于18 shouldNotify true next day true
      */
     override fun onStart() {
+        viewModel.getCheckInStatus()
         super.onStart()
         //用户不允许提醒 直接返回
         if (!NotificationSp.getBoolean(IS_SWITCH2_SELECT, false)) return

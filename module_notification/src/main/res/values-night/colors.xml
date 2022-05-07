@@ -9,4 +9,8 @@
     <color name="notification_home_tabLayout_text_selected">#F0F0F0</color>
     <color name="notification_home_tabLayout_text_unselect">#8CF0F0F0</color>
     <color name="notification_home_item_tv_time">#F0F0F0</color>
+
+    <color name="notification_delete_dialog_tv_tips">#F0F0F2</color>
+    <color name="notification_delete_dialog_btn_negative">#4E4E4E</color>
+    <color name="notification_delete_dialog_btn_positive">#4A44E4</color>
 </resources>

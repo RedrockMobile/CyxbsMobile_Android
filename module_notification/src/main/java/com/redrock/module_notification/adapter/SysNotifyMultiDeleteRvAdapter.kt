@@ -9,27 +9,23 @@ import android.widget.ImageView
 import android.widget.TextView
 import androidx.fragment.app.FragmentActivity
 import androidx.recyclerview.widget.RecyclerView
+import com.airbnb.lottie.LottieAnimationView
 import com.mredrock.cyxbs.common.utils.extensions.setOnSingleClickListener
-import com.mredrock.cyxbs.common.utils.extensions.toast
 import com.redrock.module_notification.R
-import com.redrock.module_notification.bean.ChangeReadStatusToBean
 import com.redrock.module_notification.bean.SystemMsgBean
-import com.redrock.module_notification.ui.activity.WebActivity
 import com.redrock.module_notification.util.Date
 import com.redrock.module_notification.viewmodel.NotificationViewModel
-import com.redrock.module_notification.widget.DeleteDialog
 
 /**
  * Author by OkAndGreat
- * Date on 2022/4/30 15:09.
+ * Date on 2022/5/7 16:37.
+ *
  */
-class SystemNotificationRvAdapter(
-    var list: List<SystemMsgBean>,
+class SysNotifyMultiDeleteRvAdapter(
+    private var list: List<SystemMsgBean>,
     private var viewmodel: NotificationViewModel,
     private var context: Context,
     private var activity: FragmentActivity,
-    private var rv: RecyclerView,
-    val onDelete: (Int) -> Unit,
 ) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
     companion object {
         const val TYPE_ONE = 1
@@ -38,25 +34,20 @@ class SystemNotificationRvAdapter(
 
     inner class BlankHolder(itemView: View) : RecyclerView.ViewHolder(itemView)
     inner class InnerHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
-        val itemSysNotificationClMain: View by lazy { itemView.findViewById(R.id.item_sys_notification_cl_main) }
-        val itemSysNotificationIvRedDot: ImageView by lazy { itemView.findViewById(R.id.item_sys_notification_iv_red_dot) }
+        val itemSysNotificationSelect: LottieAnimationView by lazy { itemView.findViewById(R.id.item_sys_notification_select) }
         val itemSysNotificationTvTitle: TextView by lazy { itemView.findViewById(R.id.item_sys_notification_tv_title) }
         val itemSysNotificationTvContent: TextView by lazy { itemView.findViewById(R.id.item_sys_notification_tv_content) }
         val itemSysNotificationTvTime: TextView by lazy { itemView.findViewById(R.id.item_sys_notification_tv_time) }
-        val itemNotificationRlHomeDelete: View by lazy { itemView.findViewById(R.id.item_notification_rl_home_delete) }
     }
 
-    override fun onCreateViewHolder(
-        parent: ViewGroup,
-        viewType: Int
-    ): RecyclerView.ViewHolder {
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
         var holder: RecyclerView.ViewHolder? = null
 
         when (viewType) {
             TYPE_ONE -> {
                 holder = InnerHolder(
                     LayoutInflater.from(parent.context)
-                        .inflate(R.layout.item_sys_notification, parent, false)
+                        .inflate(R.layout.item_sys_multi_delete, parent, false)
                 )
             }
             TYPE_SECOND -> {
@@ -73,36 +64,11 @@ class SystemNotificationRvAdapter(
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
         if (holder is InnerHolder) {
             val data = list[position]
-            if (data.has_read) holder.itemSysNotificationIvRedDot.visibility = View.INVISIBLE
             holder.itemSysNotificationTvTitle.text = data.title
             holder.itemSysNotificationTvContent.text = data.content
             holder.itemSysNotificationTvTime.text = Date.getUnExactTime(data.publish_time)
-            holder.itemSysNotificationClMain.setOnClickListener {
-                viewmodel.changeMsgStatus(ChangeReadStatusToBean(listOf(list[position].id.toString())))
-                holder.itemSysNotificationIvRedDot.visibility = View.INVISIBLE
-                WebActivity.startWebViewActivity(data.redirect_url, context)
-            }
-            holder.itemSysNotificationClMain.setOnLongClickListener {
-                rv.adapter = SysNotifyMultiDeleteRvAdapter(list,viewmodel,context,activity)
-                true
-            }
-            holder.itemNotificationRlHomeDelete.setOnSingleClickListener {
-                if (data.has_read) {
-                    onDelete(holder.adapterPosition)
-                } else {
-                    DeleteDialog.show(
-                        activity.supportFragmentManager,
-                        null,
-                        exchangeTips = "这条消息未读\n确认删除此消息吗",
-                        onPositiveClick = {
-                            onDelete(holder.adapterPosition)
-                            dismiss()
-                        },
-                        onNegativeClick = {
-                            dismiss()
-                        }
-                    )
-                }
+            holder.itemSysNotificationSelect.setOnSingleClickListener {
+                holder.itemSysNotificationSelect.playAnimation()
             }
         }
     }
@@ -113,11 +79,10 @@ class SystemNotificationRvAdapter(
         notifyDataSetChanged()
     }
 
-
-    override fun getItemCount(): Int = list.size + 1
-
     override fun getItemViewType(position: Int): Int {
         return if (position == list.size) TYPE_SECOND
         else TYPE_ONE
     }
+
+    override fun getItemCount(): Int = list.size + 1
 }

@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
@@ -8,14 +9,15 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_centerInParent="true"
-        android:text="活动通知"
+        android:text="系统通知"
         android:textColor="@color/notification_home_tabLayout_text_unselect"
-        android:textSize="18sp" />
+        android:textSize="18sp"
+        tools:ignore="HardcodedText" />
 
     <ImageView
         android:id="@+id/notification_iv_tl_red_dots"
         android:layout_width="wrap_content"
-        android:layout_alignParentRight="true"
+        android:layout_alignParentEnd="true"
         android:visibility="invisible"
         android:layout_height="wrap_content"
         android:background="@drawable/ic_notification_home_reddots"/>

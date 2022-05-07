@@ -1,3 +1,4 @@
+import versions.lottie
 import versions.threeParty
 
 plugins {
@@ -8,6 +9,7 @@ dependencies {
     implementation(project(":lib_account:api_account"))
     implementation(project(":module_mine"))
     threeParty()
+    lottie()
     implementation("de.hdodenhof:circleimageview:3.1.0")
 
     //workmanager

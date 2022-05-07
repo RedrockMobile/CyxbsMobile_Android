@@ -6,12 +6,14 @@ import android.app.PendingIntent
 import android.content.Context
 import android.content.Intent
 import android.os.Build
+import android.util.Log
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.NotificationCompat
 import androidx.work.OneTimeWorkRequestBuilder
 import androidx.work.WorkManager
 import androidx.work.Worker
 import androidx.work.WorkerParameters
+import com.mredrock.cyxbs.common.utils.LogUtils
 import com.mredrock.cyxbs.mine.page.sign.DailySignActivity
 import com.redrock.module_notification.R
 import com.redrock.module_notification.util.Constant.NOTIFY_TAG
@@ -28,6 +30,7 @@ class NotifySignWorker(
     params: WorkerParameters
 ) : Worker(ctx, params) {
     override fun doWork(): Result {
+        Log.d("NotifySignWorker", "插入一条新打卡提醒任务 ")
         WorkManager.getInstance(applicationContext).cancelAllWorkByTag(NOTIFY_TAG)
 
         val isNextDay = inputData.getBoolean("isNextDay", false)

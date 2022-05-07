@@ -21,4 +21,8 @@
     <color name="notification_home_tabLayout_text_unselect">#66142C52</color>
     <color name="notification_home_tablayout_badge">#FF6262</color>
     <color name="notification_home_delete"> #4A44E4</color>
+
+    <color name="notification_delete_dialog_tv_tips">#15315B</color>
+    <color name="notification_delete_dialog_btn_negative">#C3D4EE</color>
+    <color name="notification_delete_dialog_btn_positive">#4A44E4</color>
 </resources>

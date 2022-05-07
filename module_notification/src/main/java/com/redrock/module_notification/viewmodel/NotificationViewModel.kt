@@ -54,15 +54,9 @@ class NotificationViewModel : BaseViewModel() {
         retrofit.deleteMsg(bean)
             .mapOrThrowApiException()
             .setSchedulers()
-            .safeSubscribeBy(
-                onError = {
-                    Log.w(NOTIFICATION_LOG_TAG, "deleteMsg failed ")
-                    toast("删除消息失败")
-                },
-                onNext = {
-                    toast("删除消息成功")
-                }
-            )
+            .safeSubscribeBy{
+                toast("删除消息成功")
+            }
             .lifeCycle()
     }
 
@@ -73,14 +67,7 @@ class NotificationViewModel : BaseViewModel() {
         retrofit.changeMsgStatus(bean)
             .mapOrThrowApiException()
             .setSchedulers()
-            .safeSubscribeBy(
-                onError = {
-                    Log.w(NOTIFICATION_LOG_TAG, "deleteMsg failed ")
-                    toast("改变消息已读状态失败")
-                },
-                onNext = {
-                }
-            )
+            .safeSubscribeBy{}
             .lifeCycle()
     }
 

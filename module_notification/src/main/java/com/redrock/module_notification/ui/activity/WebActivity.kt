@@ -15,6 +15,7 @@ import kotlinx.android.synthetic.main.activity_web.*
  *
  */
 
+//禁止跳转
 class myWebViewClient : WebViewClient() {
     @Deprecated("Deprecated in Java")
     override fun shouldOverrideUrlLoading(view: WebView?, url: String): Boolean {
