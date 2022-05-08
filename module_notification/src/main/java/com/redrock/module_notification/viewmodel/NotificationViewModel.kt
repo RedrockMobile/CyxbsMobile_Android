@@ -23,6 +23,8 @@ class NotificationViewModel : BaseViewModel() {
     val activeMsg = MutableLiveData<List<ActiveMsgBean>>()
     val systemMsg = MutableLiveData<List<SystemMsgBean>>()
     val checkInStatus = MutableLiveData<Boolean>()
+    val SysDotStatus = MutableLiveData<Boolean>()
+    val ActiveDotStatus = MutableLiveData<Boolean>()
 
     private val retrofit by lazy { ApiGenerator.getApiService(ApiService::class.java) }
 
@@ -54,7 +56,7 @@ class NotificationViewModel : BaseViewModel() {
         retrofit.deleteMsg(bean)
             .mapOrThrowApiException()
             .setSchedulers()
-            .safeSubscribeBy{
+            .safeSubscribeBy {
                 toast("删除消息成功")
             }
             .lifeCycle()
@@ -67,11 +69,11 @@ class NotificationViewModel : BaseViewModel() {
         retrofit.changeMsgStatus(bean)
             .mapOrThrowApiException()
             .setSchedulers()
-            .safeSubscribeBy{}
+            .safeSubscribeBy {}
             .lifeCycle()
     }
 
-    fun getCheckInStatus(){
+    fun getCheckInStatus() {
         ApiGenerator.getCommonApiService(ApiService::class.java)
             .getCheckInStatus()
             .mapOrThrowApiException()
@@ -80,5 +82,13 @@ class NotificationViewModel : BaseViewModel() {
                 checkInStatus.value = it.isChecked
             }
             .lifeCycle()
+    }
+
+    fun changeSysDotStatus(status: Boolean) {
+        SysDotStatus.value = status
+    }
+
+    fun changeActiveDotStatus(status: Boolean) {
+        ActiveDotStatus.value = status
     }
 }

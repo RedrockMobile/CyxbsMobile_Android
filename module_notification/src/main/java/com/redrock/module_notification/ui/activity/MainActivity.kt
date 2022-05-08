@@ -17,7 +17,10 @@ import com.google.android.material.tabs.TabLayoutMediator
 import com.mredrock.cyxbs.common.config.NOTIFICATION_HOME
 import com.mredrock.cyxbs.common.config.NOTIFICATION_SETTING
 import com.mredrock.cyxbs.common.ui.BaseViewModelActivity
-import com.mredrock.cyxbs.common.utils.extensions.*
+import com.mredrock.cyxbs.common.utils.extensions.dp2px
+import com.mredrock.cyxbs.common.utils.extensions.editor
+import com.mredrock.cyxbs.common.utils.extensions.invisibleWithAnim
+import com.mredrock.cyxbs.common.utils.extensions.setOnSingleClickListener
 import com.redrock.module_notification.R
 import com.redrock.module_notification.adapter.NotificationVp2Adapter
 import com.redrock.module_notification.bean.ChangeReadStatusToBean
@@ -28,6 +31,7 @@ import com.redrock.module_notification.util.NotificationSp
 import com.redrock.module_notification.util.myGetColor
 import com.redrock.module_notification.util.noOpDelegate
 import com.redrock.module_notification.viewmodel.NotificationViewModel
+import com.redrock.module_notification.widget.DeleteDialog
 import com.redrock.module_notification.widget.LoadMoreWindow
 import com.redrock.module_notification.widget.ScaleInTransformer
 import kotlinx.android.synthetic.main.activity_main.*
@@ -36,7 +40,6 @@ import kotlin.properties.Delegates
 
 @Route(path = NOTIFICATION_HOME)
 class MainActivity : BaseViewModelActivity<NotificationViewModel>() {
-    private var popupWindow by Delegates.notNull<LoadMoreWindow>()
     private var tab2View by Delegates.notNull<View>()
     private var tab1View by Delegates.notNull<View>()
 
@@ -47,6 +50,8 @@ class MainActivity : BaseViewModelActivity<NotificationViewModel>() {
     private lateinit var allUnreadSysMsgIds: ArrayList<String>
     private lateinit var sysFragment: SysNotificationFragment
     private lateinit var activeFragment: Fragment
+
+    //目前ViewPager处于哪个页面
     private var whichPageIsIn = 0
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -56,9 +61,12 @@ class MainActivity : BaseViewModelActivity<NotificationViewModel>() {
         initTabLayout()
         initSettingRedDots()
         initObserver()
+    }
 
+    override fun onStart() {
+        super.onStart()
+        //从webActivity返回时再请求一次 从而可以判断活动通知上的小红点是否可以消失
         viewModel.getAllMsg()
-
     }
 
 
@@ -68,18 +76,58 @@ class MainActivity : BaseViewModelActivity<NotificationViewModel>() {
     }
 
     private fun initPopupWindow() {
-        popupWindow = LoadMoreWindow(this, R.layout.popupwindow_dots, this.window)
+        var popupWindow by Delegates.notNull<LoadMoreWindow>()
+        when (whichPageIsIn) {
+            0 -> {
+                popupWindow = LoadMoreWindow(this, R.layout.popupwindow_dots_sys, this.window)
 
-        popupWindow.apply {
-            setOnItemClickListener(R.id.notification_ll_home_popup_fast_read) {
-                viewModel.changeMsgStatus(ChangeReadStatusToBean(allUnreadActiveMsgIds))
-                sysFragment.refreshAdapter()
+                popupWindow.apply {
+                    setOnItemClickListener(R.id.notification_ll_home_popup_fast_read_sys) {
+                        viewModel.changeMsgStatus(ChangeReadStatusToBean(allUnreadSysMsgIds))
+                        viewModel.getAllMsg()
+                        viewModel.changeSysDotStatus(false)
+                    }
+                    setOnItemClickListener(R.id.notification_ll_home_popup_delete_read_sys) {
+                        DeleteDialog.show(
+                            supportFragmentManager,
+                            null,
+                            tips = "确认要删除所有已读消息吗",
+                            onPositiveClick = {
+
+                                dismiss()
+                            },
+                            onNegativeClick = {
+                                dismiss()
+                            }
+                        )
+                    }
+                    setOnItemClickListener(R.id.notification_ll_home_popup_setting) {
+                        ARouter.getInstance().build(NOTIFICATION_SETTING).navigation()
+                        notification_home_red_dots.visibility = View.INVISIBLE
+                        NotificationSp.editor { putBoolean(HAS_USER_ENTER_SETTING_PAGE, true) }
+                    }
+                }
             }
-            setOnItemClickListener(R.id.notification_ll_home_popup_delete_read) { toast("删除已读点击了") }
-            setOnItemClickListener(R.id.notification_ll_home_popup_setting) {
-                ARouter.getInstance().build(NOTIFICATION_SETTING).navigation()
-                notification_home_red_dots.visibility = View.INVISIBLE
-                NotificationSp.editor { putBoolean(HAS_USER_ENTER_SETTING_PAGE, true) }
+            1 -> {
+                popupWindow = LoadMoreWindow(
+                    this,
+                    R.layout.popupwindow_dots_act,
+                    this.window,
+                    Height = dp2px(80.toFloat())
+                )
+
+                popupWindow.apply {
+                    setOnItemClickListener(R.id.notification_ll_home_popup_fast_read_act) {
+                        viewModel.changeMsgStatus(ChangeReadStatusToBean(allUnreadActiveMsgIds))
+                        viewModel.getAllMsg()
+                        viewModel.changeActiveDotStatus(false)
+                    }
+                    setOnItemClickListener(R.id.notification_ll_home_popup_setting) {
+                        ARouter.getInstance().build(NOTIFICATION_SETTING).navigation()
+                        notification_home_red_dots.visibility = View.INVISIBLE
+                        NotificationSp.editor { putBoolean(HAS_USER_ENTER_SETTING_PAGE, true) }
+                    }
+                }
             }
         }
 
@@ -193,9 +241,4 @@ class MainActivity : BaseViewModelActivity<NotificationViewModel>() {
         }
     }
 
-    //从webActivity返回时再请求一次 从而可以判断活动通知上的小红点是否可以消失
-    override fun onRestart() {
-        super.onRestart()
-        viewModel.getAllMsg()
-    }
 }

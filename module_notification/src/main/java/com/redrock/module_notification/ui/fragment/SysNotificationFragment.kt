@@ -2,11 +2,13 @@ package com.redrock.module_notification.ui.fragment
 
 import android.annotation.SuppressLint
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.fragment.app.activityViewModels
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.mredrock.cyxbs.common.ui.BaseViewModelFragment
+import com.mredrock.cyxbs.common.ui.BaseFragment
 import com.mredrock.cyxbs.common.utils.extensions.invisible
 import com.mredrock.cyxbs.common.utils.extensions.setOnSingleClickListener
 import com.redrock.module_notification.R
@@ -24,30 +26,22 @@ import kotlin.concurrent.thread
  * Date on 2022/4/27 17:32.
  *
  */
-class SysNotificationFragment : BaseViewModelFragment<NotificationViewModel>() {
-
-    override var isOpenLifeCycleLog: Boolean
-        get() = true
-        set(value) {}
+class SysNotificationFragment : BaseFragment() {
 
     private var data = ArrayList<SystemMsgBean>()
     private lateinit var adapter: SystemNotificationRvAdapter
+    val viewModel: NotificationViewModel by activityViewModels()
 
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
-        return inflater.inflate(R.layout.fragment_system_notification, container, false)
-    }
+    ): View? = inflater.inflate(R.layout.fragment_system_notification, container, false)
 
-    //为什么要在onResume里请求而不是onActivityCreated里面？
-    //因为需要从webviewActivity返回后更新一次数据
-    override fun onResume() {
-        super.onResume()
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
         initRv()
         initObserver()
-        viewModel.getAllMsg()
         initViewClickListener()
     }
 
@@ -72,7 +66,8 @@ class SysNotificationFragment : BaseViewModelFragment<NotificationViewModel>() {
     }
 
     private fun initObserver() {
-        viewModel.systemMsg.observe {
+        viewModel.systemMsg.observe(viewLifecycleOwner) {
+            Log.d(TAG, "systemMsg ")
             var shouldNotifyActivityCancelRedDots = true
             it?.let {
                 for (value in it) {
@@ -89,6 +84,19 @@ class SysNotificationFragment : BaseViewModelFragment<NotificationViewModel>() {
 
             data = it as ArrayList<SystemMsgBean>
             adapter.changeAllData(data)
+        }
+
+        viewModel.SysDotStatus.observe(viewLifecycleOwner) {
+            if (!it) {
+                for ((index, _) in data.withIndex()){
+                    data[index].has_read = true
+                }
+                val activity = requireActivity()
+                if (activity is MainActivity) {
+                    activity.makeTabRedDotsInvisible(0)
+                }
+                adapter.changeAllData(data)
+            }
         }
     }
 
@@ -131,7 +139,7 @@ class SysNotificationFragment : BaseViewModelFragment<NotificationViewModel>() {
                                     deleteDataList.add(value)
                                 }
                         }
-                        for(value in deleteDataList)
+                        for (value in deleteDataList)
                             data.remove(value)
 
 

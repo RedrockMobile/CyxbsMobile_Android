@@ -22,7 +22,9 @@ import com.redrock.module_notification.util.changeWindowAlpha
 class LoadMoreWindow(
     context: Context,
     layoutRes: Int,
-    private val window: Window
+    private val window: Window,
+    Width: Int = context.dp2px(120.toFloat()),
+    Height: Int = context.dp2px(120.toFloat())
 ) : PopupWindow() {
 
     init {
@@ -31,8 +33,8 @@ class LoadMoreWindow(
         isFocusable = true
         animationStyle = R.style.mypopwindow_anim_style
         setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
-        width = context.dp2px(120.toFloat())
-        height = context.dp2px(120.toFloat())
+        width = Width
+        height = Height
 
     }
 

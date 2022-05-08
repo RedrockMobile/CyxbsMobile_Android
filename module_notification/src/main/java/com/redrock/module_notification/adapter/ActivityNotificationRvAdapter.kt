@@ -79,8 +79,15 @@ class ActivityNotificationRvAdapter(
             holder.itemActivityNotificationTvPublishTime.text =
                 Date.getUnExactTime(data.publish_time)
             holder.itemActivityNotificationTvContent.text = data.content
-            Glide.with(context).load(data.user_head_url).into(holder.itemActivityNotificationIvHead)
-            Glide.with(context).load(data.pic_url).into(holder.itemActivityNotificationIvDetail)
+            Glide.with(context)
+                .load(data.user_head_url)
+                .placeholder(R.drawable.common_ic_place_holder)
+                .into(holder.itemActivityNotificationIvHead)
+            Glide
+                .with(context)
+                .load(data.pic_url)
+                .placeholder(R.drawable.common_ic_place_holder)
+                .into(holder.itemActivityNotificationIvDetail)
             holder.itemView.setOnSingleClickListener {
                 viewmodel.changeMsgStatus(ChangeReadStatusToBean(listOf(list[position].id.toString())))
                 holder.itemActivityNotificationIvRedDot.visibility = View.INVISIBLE
@@ -88,6 +95,7 @@ class ActivityNotificationRvAdapter(
             }
         }
     }
+
 
     @SuppressLint("NotifyDataSetChanged")
     fun changeAllData(newList: List<ActiveMsgBean>) {

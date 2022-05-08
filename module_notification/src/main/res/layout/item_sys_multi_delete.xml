@@ -19,7 +19,7 @@
         app:layout_constraintTop_toTopOf="@+id/item_sys_notification_tv_title"
         app:lottie_rawRes="@raw/lottie_multi_delete"/>
 
-    <TextView
+    <androidx.appcompat.widget.AppCompatTextView
         android:id="@+id/item_sys_notification_tv_title"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -36,7 +36,7 @@
         app:layout_constraintTop_toTopOf="parent"
         tools:ignore="HardcodedText" />
 
-    <TextView
+    <androidx.appcompat.widget.AppCompatTextView
         android:id="@+id/item_sys_notification_tv_content"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"

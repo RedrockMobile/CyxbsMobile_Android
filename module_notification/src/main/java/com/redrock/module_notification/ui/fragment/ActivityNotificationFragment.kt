@@ -4,10 +4,12 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.fragment.app.activityViewModels
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.mredrock.cyxbs.common.ui.BaseViewModelFragment
+import com.mredrock.cyxbs.common.ui.BaseFragment
 import com.redrock.module_notification.R
 import com.redrock.module_notification.adapter.ActivityNotificationRvAdapter
+import com.redrock.module_notification.bean.ActiveMsgBean
 import com.redrock.module_notification.ui.activity.MainActivity
 import com.redrock.module_notification.viewmodel.NotificationViewModel
 import kotlinx.android.synthetic.main.fragment_activity_notification.*
@@ -17,12 +19,11 @@ import kotlinx.android.synthetic.main.fragment_activity_notification.*
  * Date on 2022/4/27 17:32.
  *
  */
-class ActivityNotificationFragment : BaseViewModelFragment<NotificationViewModel>() {
+class ActivityNotificationFragment : BaseFragment() {
+    private var data = ArrayList<ActiveMsgBean>()
     private lateinit var adapter: ActivityNotificationRvAdapter
 
-    override var isOpenLifeCycleLog: Boolean
-        get() = true
-        set(value) {}
+    val viewModel: NotificationViewModel by activityViewModels()
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -30,11 +31,10 @@ class ActivityNotificationFragment : BaseViewModelFragment<NotificationViewModel
         savedInstanceState: Bundle?
     ): View? = inflater.inflate(R.layout.fragment_activity_notification, container, false)
 
-    override fun onResume() {
-        super.onResume()
-        initRv()
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
         initObserver()
-        viewModel.getAllMsg()
+        initRv()
     }
 
     private fun initRv() {
@@ -44,9 +44,10 @@ class ActivityNotificationFragment : BaseViewModelFragment<NotificationViewModel
     }
 
     private fun initObserver() {
-        viewModel.activeMsg.observe {
+        viewModel.activeMsg.observe(viewLifecycleOwner) {
             var shouldNotifyActivityCancelRedDots = true
             it?.let {
+                data = it as ArrayList<ActiveMsgBean>
                 for (value in it) {
                     if (!value.has_read)
                         shouldNotifyActivityCancelRedDots = false
@@ -60,6 +61,19 @@ class ActivityNotificationFragment : BaseViewModelFragment<NotificationViewModel
             }
             adapter.changeAllData(it!!)
         }
-    }
 
+        viewModel.ActiveDotStatus.observe(viewLifecycleOwner) {
+            if (!it) {
+                for ((index, _) in data.withIndex()){
+                    data[index].has_read = true
+                }
+                adapter.changeAllData(data)
+                val activity = requireActivity()
+                if (activity is MainActivity) {
+                    activity.makeTabRedDotsInvisible(1)
+                }
+            }
+        }
+
+    }
 }

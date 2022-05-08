@@ -10,7 +10,6 @@ import android.widget.TextView
 import androidx.fragment.app.FragmentActivity
 import androidx.recyclerview.widget.RecyclerView
 import com.mredrock.cyxbs.common.utils.extensions.setOnSingleClickListener
-import com.mredrock.cyxbs.common.utils.extensions.visible
 import com.mredrock.cyxbs.common.utils.extensions.visibleWithAnim
 import com.redrock.module_notification.R
 import com.redrock.module_notification.bean.ChangeReadStatusToBean

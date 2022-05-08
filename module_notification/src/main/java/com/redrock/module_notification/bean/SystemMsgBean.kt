@@ -14,7 +14,7 @@ data class SystemMsgBean(
     @SerializedName("date")
     val date: String,
     @SerializedName("has_read")
-    val has_read: Boolean,
+    var has_read: Boolean,
     @SerializedName("id")
     val id: Int,
     @SerializedName("md")
