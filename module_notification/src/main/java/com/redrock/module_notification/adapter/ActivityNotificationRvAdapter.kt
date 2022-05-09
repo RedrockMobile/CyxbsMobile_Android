@@ -91,6 +91,8 @@ class ActivityNotificationRvAdapter(
             holder.itemView.setOnSingleClickListener {
                 viewmodel.changeMsgStatus(ChangeReadStatusToBean(listOf(list[position].id.toString())))
                 holder.itemActivityNotificationIvRedDot.visibility = View.INVISIBLE
+                list[position].has_read = true
+                notifyItemChanged(position)
                 WebActivity.startWebViewActivity(data.redirect_url, context)
             }
         }

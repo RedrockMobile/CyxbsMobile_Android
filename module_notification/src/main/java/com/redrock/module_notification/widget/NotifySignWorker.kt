@@ -30,7 +30,6 @@ class NotifySignWorker(
     params: WorkerParameters
 ) : Worker(ctx, params) {
     override fun doWork(): Result {
-        Log.d("NotifySignWorker", "插入一条新打卡提醒任务 ")
         WorkManager.getInstance(applicationContext).cancelAllWorkByTag(NOTIFY_TAG)
 
         val isNextDay = inputData.getBoolean("isNextDay", false)

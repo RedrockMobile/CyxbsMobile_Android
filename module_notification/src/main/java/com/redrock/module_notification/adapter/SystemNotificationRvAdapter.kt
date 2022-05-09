@@ -83,6 +83,8 @@ class SystemNotificationRvAdapter(
             holder.itemSysNotificationClMain.setOnClickListener {
                 viewmodel.changeMsgStatus(ChangeReadStatusToBean(listOf(list[position].id.toString())))
                 holder.itemSysNotificationIvRedDot.visibility = View.INVISIBLE
+                list[position].has_read = true
+                notifyItemChanged(position)
                 WebActivity.startWebViewActivity(data.redirect_url, context)
             }
             holder.itemSysNotificationClMain.setOnLongClickListener {

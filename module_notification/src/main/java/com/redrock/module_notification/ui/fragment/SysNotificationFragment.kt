@@ -1,6 +1,7 @@
 package com.redrock.module_notification.ui.fragment
 
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -26,11 +27,15 @@ import kotlin.concurrent.thread
  */
 class SysNotificationFragment : BaseFragment() {
 
+    override var isOpenLifeCycleLog: Boolean
+        get() = true
+        set(value) {}
+
     private var data = ArrayList<SystemMsgBean>()
     private lateinit var adapter: SystemNotificationRvAdapter
 
     //所有已读的系统通知的消息的bean 用来给删除已读使用
-    private lateinit var allReadSysMsg: ArrayList<SystemMsgBean>
+    private var allReadSysMsg =  ArrayList<SystemMsgBean>()
     val viewModel: NotificationViewModel by activityViewModels()
 
     override fun onCreateView(
@@ -44,6 +49,11 @@ class SysNotificationFragment : BaseFragment() {
         initRv()
         initObserver()
         initViewClickListener()
+    }
+
+    override fun onResume() {
+        super.onResume()
+        viewModel.getAllMsg()
     }
 
     private fun initRv() {
@@ -68,7 +78,9 @@ class SysNotificationFragment : BaseFragment() {
 
     private fun initObserver() {
         viewModel.systemMsg.observe(viewLifecycleOwner) {
+            Log.d(TAG, "initObserver: systemMsg in $it")
             var shouldNotifyActivityCancelRedDots = true
+
             it?.let {
                 for (value in it) {
                     if (!value.has_read)

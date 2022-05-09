@@ -25,4 +25,6 @@
     <color name="notification_delete_dialog_tv_tips">#15315B</color>
     <color name="notification_delete_dialog_btn_negative">#C3D4EE</color>
     <color name="notification_delete_dialog_btn_positive">#4A44E4</color>
+
+    <color name="notification_popup_ripple">#777777</color>
 </resources>

@@ -3,6 +3,7 @@ package com.redrock.module_notification.ui.activity
 import android.annotation.SuppressLint
 import android.content.res.ColorStateList
 import android.os.Bundle
+import android.util.Log
 import android.view.Gravity
 import android.view.LayoutInflater
 import android.view.View
@@ -17,10 +18,7 @@ import com.google.android.material.tabs.TabLayoutMediator
 import com.mredrock.cyxbs.common.config.NOTIFICATION_HOME
 import com.mredrock.cyxbs.common.config.NOTIFICATION_SETTING
 import com.mredrock.cyxbs.common.ui.BaseViewModelActivity
-import com.mredrock.cyxbs.common.utils.extensions.dp2px
-import com.mredrock.cyxbs.common.utils.extensions.editor
-import com.mredrock.cyxbs.common.utils.extensions.invisibleWithAnim
-import com.mredrock.cyxbs.common.utils.extensions.setOnSingleClickListener
+import com.mredrock.cyxbs.common.utils.extensions.*
 import com.redrock.module_notification.R
 import com.redrock.module_notification.adapter.NotificationVp2Adapter
 import com.redrock.module_notification.bean.ChangeReadStatusToBean
@@ -56,7 +54,7 @@ class MainActivity : BaseViewModelActivity<NotificationViewModel>() {
     private var whichPageIsIn = 0
 
     //是否需要展示
-    val shouldShowRedDots = !NotificationSp.getBoolean(IS_SWITCH1_SELECT,false)
+    var shouldShowRedDots by Delegates.notNull<Boolean>()
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
@@ -71,6 +69,7 @@ class MainActivity : BaseViewModelActivity<NotificationViewModel>() {
         super.onStart()
         //从webActivity返回时再请求一次 从而可以判断活动通知上的小红点是否可以消失
         viewModel.getAllMsg()
+        shouldShowRedDots = NotificationSp.getBoolean(IS_SWITCH1_SELECT, true)
     }
 
 
@@ -129,7 +128,7 @@ class MainActivity : BaseViewModelActivity<NotificationViewModel>() {
                     setOnItemClickListener(R.id.notification_ll_home_popup_setting) {
                         ARouter.getInstance().build(NOTIFICATION_SETTING).navigation()
                         notification_home_red_dots.visibility = View.INVISIBLE
-                        NotificationSp.editor { putBoolean(HAS_USER_ENTER_SETTING_PAGE, true) }
+                        NotificationSp.editor { putBoolean(HAS_USER_ENTER_SETTING_PAGE, false) }
                     }
                 }
             }
@@ -187,6 +186,7 @@ class MainActivity : BaseViewModelActivity<NotificationViewModel>() {
         tab2View = LayoutInflater.from(this).inflate(R.layout.item_tab2, null)
         tab2?.customView = tab2View
 
+        //改变文字颜色
         val onTabSelectedListener = object : TabLayout.OnTabSelectedListener by noOpDelegate() {
             override fun onTabSelected(tab: TabLayout.Tab) {
                 val customView = tab.customView
@@ -217,8 +217,7 @@ class MainActivity : BaseViewModelActivity<NotificationViewModel>() {
             allUnreadSysMsgIds = ArrayList()
             for (value in it!!) {
                 if (!value.has_read && shouldShowRedDots) {
-                    tab1View.findViewById<View>(R.id.notification_iv_tl_red_dots).visibility =
-                        View.VISIBLE
+                    tab1View.findViewById<View>(R.id.notification_iv_tl_red_dots).visibleWithAnim()
                     allUnreadSysMsgIds.add(value.id.toString())
                 }
 

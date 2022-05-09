@@ -112,7 +112,7 @@ class MainActivity : BaseViewModelActivity<MainViewModel>(),
         viewModel.getCheckInStatus()
         super.onStart()
         //用户不允许提醒 直接返回
-        if (!NotificationSp.getBoolean(IS_SWITCH2_SELECT, false)) return
+        if (!NotificationSp.getBoolean(IS_SWITCH2_SELECT, true)) return
         val workManager = WorkManager.getInstance(applicationContext)
         val hour = Calendar.HOUR_OF_DAY
         var data: Data by Delegates.notNull()

@@ -91,7 +91,7 @@ class DiscoverHomeFragment : BaseViewModelFragment<DiscoverHomeViewModel>(),
             }
         }
         viewModel.hasUnread.observe {
-            val shouldShowRedDots = !requireActivity().NotificationSp.getBoolean(IS_SWITCH1_SELECT,false)
+            val shouldShowRedDots = requireActivity().NotificationSp.getBoolean(IS_SWITCH1_SELECT,true)
             if (it == true && shouldShowRedDots)
             //将msg View设置为有消息的状态
             iv_discover_msg.setBackgroundResource(R.drawable.discover_ic_home_has_msg)

@@ -57,8 +57,8 @@ class SettingActivity : BaseViewModelActivity<NotificationViewModel>() {
     }
 
     private fun initSwitch() {
-        switch1Checked = NotificationSp.getBoolean(IS_SWITCH1_SELECT, false)
-        switch2Checked = NotificationSp.getBoolean(IS_SWITCH2_SELECT, false)
+        switch1Checked = NotificationSp.getBoolean(IS_SWITCH1_SELECT, true)
+        switch2Checked = NotificationSp.getBoolean(IS_SWITCH2_SELECT, true)
         notification_setting_switch_1.isChecked = switch1Checked
         notification_setting_switch_2.isChecked = switch2Checked
     }
@@ -92,7 +92,7 @@ class SettingActivity : BaseViewModelActivity<NotificationViewModel>() {
             //系统状态栏显示的小图标
             builder.setSmallIcon(R.drawable.common_ic_app_notifacation)
             //下拉显示的大图标
-            val intent = Intent(this, DailySignActivity::class.java::class.java)
+            val intent = Intent(this, DailySignActivity::class.java)
             val pIntent = PendingIntent.getActivity(this, 1, intent, 0)
             builder.setContentIntent(pIntent)
             builder.setDefaults(NotificationCompat.DEFAULT_ALL)

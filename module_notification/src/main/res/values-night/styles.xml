@@ -37,5 +37,21 @@
 
     </style>
 
+    <style name="notification_home_popup_tv">
+
+        <item name="android:textSize">
+            14sp
+        </item>
+
+        <item name="android:letterSpacing">
+            0.03
+        </item>
+
+        <item name="android:textColor">
+            #F0F0F0
+        </item>
+
+    </style>
+
 
 </resources>
