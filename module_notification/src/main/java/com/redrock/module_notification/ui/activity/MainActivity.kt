@@ -27,6 +27,7 @@ import com.redrock.module_notification.bean.ChangeReadStatusToBean
 import com.redrock.module_notification.ui.fragment.ActivityNotificationFragment
 import com.redrock.module_notification.ui.fragment.SysNotificationFragment
 import com.redrock.module_notification.util.Constant.HAS_USER_ENTER_SETTING_PAGE
+import com.redrock.module_notification.util.Constant.IS_SWITCH1_SELECT
 import com.redrock.module_notification.util.NotificationSp
 import com.redrock.module_notification.util.myGetColor
 import com.redrock.module_notification.util.noOpDelegate
@@ -37,7 +38,7 @@ import com.redrock.module_notification.widget.ScaleInTransformer
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlin.properties.Delegates
 
-
+//TODO 小红点的展示逻辑太复杂了，容易出bug 考虑一下创建一个小红点的统一显示类
 @Route(path = NOTIFICATION_HOME)
 class MainActivity : BaseViewModelActivity<NotificationViewModel>() {
     private var tab2View by Delegates.notNull<View>()
@@ -53,6 +54,9 @@ class MainActivity : BaseViewModelActivity<NotificationViewModel>() {
 
     //目前ViewPager处于哪个页面
     private var whichPageIsIn = 0
+
+    //是否需要展示
+    val shouldShowRedDots = !NotificationSp.getBoolean(IS_SWITCH1_SELECT,false)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
@@ -93,7 +97,7 @@ class MainActivity : BaseViewModelActivity<NotificationViewModel>() {
                             null,
                             tips = "确认要删除所有已读消息吗",
                             onPositiveClick = {
-
+                                sysFragment.deleteAllReadMsg()
                                 dismiss()
                             },
                             onNegativeClick = {
@@ -208,10 +212,11 @@ class MainActivity : BaseViewModelActivity<NotificationViewModel>() {
     }
 
     private fun initObserver() {
+
         viewModel.systemMsg.observe {
             allUnreadSysMsgIds = ArrayList()
             for (value in it!!) {
-                if (!value.has_read) {
+                if (!value.has_read && shouldShowRedDots) {
                     tab1View.findViewById<View>(R.id.notification_iv_tl_red_dots).visibility =
                         View.VISIBLE
                     allUnreadSysMsgIds.add(value.id.toString())
@@ -222,7 +227,7 @@ class MainActivity : BaseViewModelActivity<NotificationViewModel>() {
         viewModel.activeMsg.observe {
             allUnreadActiveMsgIds = ArrayList()
             for (value in it!!) {
-                if (!value.has_read)
+                if (!value.has_read && shouldShowRedDots)
                     tab2View.findViewById<View>(R.id.notification_iv_tl_red_dots).visibility =
                         View.VISIBLE
                 allUnreadActiveMsgIds.add(value.id.toString())

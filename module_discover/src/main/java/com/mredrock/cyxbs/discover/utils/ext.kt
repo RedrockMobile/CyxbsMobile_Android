@@ -9,8 +9,5 @@ import android.content.SharedPreferences
  *
  */
 
-//消息模块的sp file name
-const val NOTIFICATION_SP_FILE_NAME = "notification_module_sp_file"
-
 val Context.NotificationSp: SharedPreferences
     get() = getSharedPreferences(NOTIFICATION_SP_FILE_NAME, Context.MODE_PRIVATE)

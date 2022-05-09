@@ -20,10 +20,10 @@ fun View.invisible() {
     visibility = View.INVISIBLE
 }
 
-fun View.invisibleWithAnim(duration: Int = 300) {
+fun View.invisibleWithAnim(duration: Long = 300) {
     val anim = ValueAnimator
         .ofFloat(1f, 0f)
-        .setDuration(300)
+        .setDuration(duration)
 
     anim.addUpdateListener {
         val curVal = it.animatedValue as Float
@@ -34,11 +34,11 @@ fun View.invisibleWithAnim(duration: Int = 300) {
     anim.start()
 }
 
-fun View.visibleWithAnim(duration: Int = 300) {
+fun View.visibleWithAnim(duration: Long = 300) {
     visibility = View.VISIBLE
     val anim = ValueAnimator
         .ofFloat(0f, 1f)
-        .setDuration(300)
+        .setDuration(duration)
 
     anim.addUpdateListener {
         val curVal = it.animatedValue as Float

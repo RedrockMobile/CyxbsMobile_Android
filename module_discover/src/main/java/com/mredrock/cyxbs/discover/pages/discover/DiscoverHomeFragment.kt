@@ -37,7 +37,9 @@ import com.mredrock.cyxbs.common.utils.extensions.setOnSingleClickListener
 import com.mredrock.cyxbs.discover.R
 import com.mredrock.cyxbs.discover.pages.discover.adapter.DiscoverMoreFunctionRvAdapter
 import com.mredrock.cyxbs.discover.utils.BannerAdapter
+import com.mredrock.cyxbs.discover.utils.IS_SWITCH1_SELECT
 import com.mredrock.cyxbs.discover.utils.MoreFunctionProvider
+import com.mredrock.cyxbs.discover.utils.NotificationSp
 import kotlinx.android.synthetic.main.discover_home_fragment.*
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
@@ -85,13 +87,12 @@ class DiscoverHomeFragment : BaseViewModelFragment<DiscoverHomeViewModel>(),
         iv_discover_msg.setBackgroundResource(R.drawable.discover_ic_home_msg)
         activity?.doIfLogin {
             iv_discover_msg.setOnClickListener {
-//            ARouter.getInstance().build(NOTIFICATION_HOME).navigation()
-                ARouter.getInstance().build(NOTIFICATION_SETTING).navigation()
+            ARouter.getInstance().build(NOTIFICATION_HOME).navigation()
             }
         }
         viewModel.hasUnread.observe {
-            Log.d(TAG, "initHasUnread: $it")
-            if (it == true)
+            val shouldShowRedDots = !requireActivity().NotificationSp.getBoolean(IS_SWITCH1_SELECT,false)
+            if (it == true && shouldShowRedDots)
             //将msg View设置为有消息的状态
             iv_discover_msg.setBackgroundResource(R.drawable.discover_ic_home_has_msg)
             else

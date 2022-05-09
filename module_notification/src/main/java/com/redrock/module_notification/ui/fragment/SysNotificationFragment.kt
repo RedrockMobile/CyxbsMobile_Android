@@ -1,8 +1,6 @@
 package com.redrock.module_notification.ui.fragment
 
-import android.annotation.SuppressLint
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -30,6 +28,9 @@ class SysNotificationFragment : BaseFragment() {
 
     private var data = ArrayList<SystemMsgBean>()
     private lateinit var adapter: SystemNotificationRvAdapter
+
+    //所有已读的系统通知的消息的bean 用来给删除已读使用
+    private lateinit var allReadSysMsg: ArrayList<SystemMsgBean>
     val viewModel: NotificationViewModel by activityViewModels()
 
     override fun onCreateView(
@@ -67,12 +68,13 @@ class SysNotificationFragment : BaseFragment() {
 
     private fun initObserver() {
         viewModel.systemMsg.observe(viewLifecycleOwner) {
-            Log.d(TAG, "systemMsg ")
             var shouldNotifyActivityCancelRedDots = true
             it?.let {
                 for (value in it) {
                     if (!value.has_read)
                         shouldNotifyActivityCancelRedDots = false
+                    else
+                        allReadSysMsg.add(value)
                 }
             }
             if (shouldNotifyActivityCancelRedDots) {
@@ -86,9 +88,10 @@ class SysNotificationFragment : BaseFragment() {
             adapter.changeAllData(data)
         }
 
+        //一键已读时会触发这个livedata 从而让系统通知上的小红点和系统通知里的fragment小红点取消
         viewModel.SysDotStatus.observe(viewLifecycleOwner) {
             if (!it) {
-                for ((index, _) in data.withIndex()){
+                for ((index, _) in data.withIndex()) {
                     data[index].has_read = true
                 }
                 val activity = requireActivity()
@@ -100,10 +103,17 @@ class SysNotificationFragment : BaseFragment() {
         }
     }
 
-    @SuppressLint("NotifyDataSetChanged")
-    internal fun refreshAdapter() {
-        adapter.notifyDataSetChanged()
+    fun deleteAllReadMsg(){
+        for(value in allReadSysMsg){
+            data.remove(value)
+            viewModel.deleteMsg(DeleteMsgToBean(listOf(value.id.toString())))
+            adapter.changeAllData(data)
+        }
+
+        //清空
+        allReadSysMsg = ArrayList()
     }
+
 
     private fun initViewClickListener() {
         notification_system_btn_negative.setOnSingleClickListener {
@@ -128,8 +138,6 @@ class SysNotificationFragment : BaseFragment() {
                         requireActivity().notification_system_btn_negative?.invisible()
                         requireActivity().notification_system_btn_positive?.invisible()
                         requireActivity().notification_rv_sys.adapter = adapter
-
-                        selectedItemInfos.positions.sort()
 
                         //防止ConcurrentModificationException
                         val deleteDataList = ArrayList<SystemMsgBean>()
