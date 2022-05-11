@@ -27,10 +27,6 @@ import kotlin.concurrent.thread
  */
 class SysNotificationFragment : BaseFragment() {
 
-    override var isOpenLifeCycleLog: Boolean
-        get() = true
-        set(value) {}
-
     private var data = ArrayList<SystemMsgBean>()
     private lateinit var adapter: SystemNotificationRvAdapter
 
@@ -101,7 +97,7 @@ class SysNotificationFragment : BaseFragment() {
         }
 
         //一键已读时会触发这个livedata 从而让系统通知上的小红点和系统通知里的fragment小红点取消
-        viewModel.SysDotStatus.observe(viewLifecycleOwner) {
+        viewModel.sysDotStatus.observe(viewLifecycleOwner) {
             if (!it) {
                 for ((index, _) in data.withIndex()) {
                     data[index].has_read = true
@@ -131,6 +127,7 @@ class SysNotificationFragment : BaseFragment() {
         notification_system_btn_negative.setOnSingleClickListener {
             it.invisible()
             notification_system_btn_positive.invisible()
+            viewModel.changePopUpWindowClickableStatus(true)
             notification_rv_sys.adapter = adapter
             viewModel.getAllMsg()
         }

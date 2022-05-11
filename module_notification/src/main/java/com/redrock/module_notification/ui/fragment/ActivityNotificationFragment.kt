@@ -62,7 +62,7 @@ class ActivityNotificationFragment : BaseFragment() {
             adapter.changeAllData(it!!)
         }
 
-        viewModel.ActiveDotStatus.observe(viewLifecycleOwner) {
+        viewModel.activeDotStatus.observe(viewLifecycleOwner) {
             if (!it) {
                 for ((index, _) in data.withIndex()){
                     data[index].has_read = true

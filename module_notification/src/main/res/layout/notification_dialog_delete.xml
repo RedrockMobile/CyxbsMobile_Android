@@ -2,8 +2,8 @@
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="300dp"
-    android:layout_height="178dp">
+    android:layout_width="255dp"
+    android:layout_height="167dp">
 
     <ImageView
         android:id="@+id/notification_iv_dialog_background"
@@ -47,7 +47,7 @@
 
     <com.google.android.material.button.MaterialButton
         android:id="@+id/notification_dialog_btn_negative"
-        android:layout_width="80dp"
+        android:layout_width="93dp"
         android:layout_height="34dp"
         android:layout_marginBottom="30dp"
         android:textColor="@color/common_white_font_color"
@@ -67,7 +67,7 @@
 
     <com.google.android.material.button.MaterialButton
         android:id="@+id/notification_dialog_btn_positive"
-        android:layout_width="80dp"
+        android:layout_width="93dp"
         android:layout_height="34dp"
         android:textColor="@color/common_white_font_color"
         android:textSize="14sp"

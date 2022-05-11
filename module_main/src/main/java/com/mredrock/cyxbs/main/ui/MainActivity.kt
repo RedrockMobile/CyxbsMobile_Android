@@ -59,8 +59,7 @@ import kotlin.properties.Delegates
 class MainActivity : BaseViewModelActivity<MainViewModel>(),
     EventBusLifecycleSubscriber, ActionLoginStatusSubscriber {
 
-    //todo记得改为false
-    private var isSign = true
+    private var isSign = false
 
 
     override val loginConfig = LoginConfig(
@@ -90,6 +89,7 @@ class MainActivity : BaseViewModelActivity<MainViewModel>(),
         // 暂时不要在mainActivity里面使用dataBinding，会有一个量级较大的闪退
         setContentView(R.layout.main_activity_main)
         initSignObserver()
+        viewModel.getCheckInStatus()
     }
 
     private fun initSignObserver() {

@@ -3,7 +3,6 @@ package com.redrock.module_notification.ui.activity
 import android.annotation.SuppressLint
 import android.content.res.ColorStateList
 import android.os.Bundle
-import android.util.Log
 import android.view.Gravity
 import android.view.LayoutInflater
 import android.view.View
@@ -153,7 +152,6 @@ class MainActivity : BaseViewModelActivity<NotificationViewModel>() {
             )
         )
         notification_home_vp2.setPageTransformer(ScaleInTransformer())
-        notification_home_vp2.offscreenPageLimit = 1
         notification_home_vp2.isUserInputEnabled = false
 
         notification_home_vp2.registerOnPageChangeCallback(object :
@@ -212,7 +210,6 @@ class MainActivity : BaseViewModelActivity<NotificationViewModel>() {
     }
 
     private fun initObserver() {
-
         viewModel.systemMsg.observe {
             allUnreadSysMsgIds = ArrayList()
             for (value in it!!) {
@@ -231,6 +228,9 @@ class MainActivity : BaseViewModelActivity<NotificationViewModel>() {
                         View.VISIBLE
                 allUnreadActiveMsgIds.add(value.id.toString())
             }
+        }
+        viewModel.popupWindowClickableStatus.observe {
+            it?.let { notification_rl_home_dots.isClickable = it }
         }
     }
 

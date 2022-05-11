@@ -8,6 +8,7 @@
     <com.redrock.module_notification.widget.SwipeDeleteRecyclerView
         android:id="@+id/notification_rv_sys"
         android:layout_width="match_parent"
+        android:layout_marginTop="10dp"
         android:layout_height="match_parent"
         android:overScrollMode="never"
         tools:listitem="@layout/item_sys_notification" />

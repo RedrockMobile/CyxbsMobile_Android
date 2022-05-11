@@ -23,8 +23,15 @@ class NotificationViewModel : BaseViewModel() {
     val activeMsg = MutableLiveData<List<ActiveMsgBean>>()
     val systemMsg = MutableLiveData<List<SystemMsgBean>>()
     val checkInStatus = MutableLiveData<Boolean>()
-    val SysDotStatus = MutableLiveData<Boolean>()
-    val ActiveDotStatus = MutableLiveData<Boolean>()
+
+    //通知tablayout系统通知小红点显示状态
+    val sysDotStatus = MutableLiveData<Boolean>()
+
+    //通知tablayout活动通知小红点显示状态
+    val activeDotStatus = MutableLiveData<Boolean>()
+
+    //通知popupwindow是否可以点击
+    val popupWindowClickableStatus = MutableLiveData<Boolean>()
 
     private val retrofit by lazy { ApiGenerator.getApiService(ApiService::class.java) }
 
@@ -73,6 +80,9 @@ class NotificationViewModel : BaseViewModel() {
             .lifeCycle()
     }
 
+    /**
+     * 获取签到状态信息
+     */
     fun getCheckInStatus() {
         ApiGenerator.getCommonApiService(ApiService::class.java)
             .getCheckInStatus()
@@ -84,11 +94,24 @@ class NotificationViewModel : BaseViewModel() {
             .lifeCycle()
     }
 
+    /**
+     * 通知改变tablayout系统通知小红点显示状态
+     */
     fun changeSysDotStatus(status: Boolean) {
-        SysDotStatus.value = status
+        sysDotStatus.value = status
     }
 
+    /**
+     * 通知改变tablayout活动通知小红点显示状态
+     */
     fun changeActiveDotStatus(status: Boolean) {
-        ActiveDotStatus.value = status
+        activeDotStatus.value = status
+    }
+
+    /**
+     * 通知改变popupwindow是否可以弹出
+     */
+    fun changePopUpWindowClickableStatus(status: Boolean) {
+        popupWindowClickableStatus.value = status
     }
 }

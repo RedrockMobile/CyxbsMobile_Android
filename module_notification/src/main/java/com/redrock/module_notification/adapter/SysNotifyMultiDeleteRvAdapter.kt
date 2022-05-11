@@ -1,13 +1,12 @@
 package com.redrock.module_notification.adapter
 
 import android.annotation.SuppressLint
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ImageView
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
-import com.airbnb.lottie.LottieAnimationView
 import com.mredrock.cyxbs.common.utils.extensions.setOnSingleClickListener
 import com.redrock.module_notification.R
 import com.redrock.module_notification.bean.SelectedItem
@@ -28,12 +27,10 @@ class SysNotifyMultiDeleteRvAdapter(private var list: List<SystemMsgBean>) :
 
     val selectedItemInfos = SelectedItem(ArrayList(), ArrayList(), ArrayList())
 
-    private val lottieProgress = 0.39f//点击同意用户协议时的动画的时间
-
     inner class BlankHolder(itemView: View) : RecyclerView.ViewHolder(itemView)
     inner class InnerHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         var isChecked = false
-        val itemSysNotificationSelect: LottieAnimationView by lazy { itemView.findViewById(R.id.item_sys_notification_select) }
+        val itemSysNotificationSelect: ImageView by lazy { itemView.findViewById(R.id.item_sys_notification_select) }
         val itemSysNotificationTvTitle: TextView by lazy { itemView.findViewById(R.id.item_sys_notification_tv_title) }
         val itemSysNotificationTvContent: TextView by lazy { itemView.findViewById(R.id.item_sys_notification_tv_content) }
         val itemSysNotificationTvTime: TextView by lazy { itemView.findViewById(R.id.item_sys_notification_tv_time) }
@@ -67,7 +64,6 @@ class SysNotifyMultiDeleteRvAdapter(private var list: List<SystemMsgBean>) :
             holder.itemSysNotificationTvContent.text = data.content
             holder.itemSysNotificationTvTime.text = Date.getUnExactTime(data.publish_time)
             holder.itemSysNotificationSelect.setOnSingleClickListener {
-                holder.itemSysNotificationSelect.playAnimation()
                 holder.isChecked = !holder.isChecked
                 if (holder.isChecked) {
                     selectedItemInfos.ids.add(data.id.toString())
@@ -80,14 +76,10 @@ class SysNotifyMultiDeleteRvAdapter(private var list: List<SystemMsgBean>) :
                     if (!data.has_read)
                         selectedItemInfos.reads.remove(data.has_read)
                 }
+                if (holder.isChecked) holder.itemSysNotificationSelect.setImageResource(R.drawable.ic_notification_select)
+                else holder.itemSysNotificationSelect.setImageResource(R.drawable.ic_notification_not_select)
             }
-            holder.itemSysNotificationSelect.addAnimatorUpdateListener {
-                if (it.animatedFraction == 1f && holder.isChecked) {
-                    holder.itemSysNotificationSelect.pauseAnimation()
-                } else if (it.animatedFraction >= lottieProgress && it.animatedFraction != 1f && !holder.isChecked) {
-                    holder.itemSysNotificationSelect.pauseAnimation()
-                }
-            }
+
         }
     }
 

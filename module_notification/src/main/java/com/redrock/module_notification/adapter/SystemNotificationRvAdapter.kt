@@ -92,6 +92,7 @@ class SystemNotificationRvAdapter(
                 activity.notification_system_btn_positive.visibleWithAnim()
                 multiDeleteAdapter = SysNotifyMultiDeleteRvAdapter(list)
                 rv.adapter = multiDeleteAdapter
+                viewmodel.changePopUpWindowClickableStatus(false)
                 true
             }
             holder.itemNotificationRlHomeDelete.setOnSingleClickListener {

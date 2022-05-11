@@ -2,6 +2,7 @@ package com.mredrock.cyxbs.common.utils.extensions
 
 import android.animation.ValueAnimator
 import android.annotation.SuppressLint
+import android.opengl.Visibility
 import android.view.View
 import com.mredrock.cyxbs.common.R
 
@@ -21,6 +22,8 @@ fun View.invisible() {
 }
 
 fun View.invisibleWithAnim(duration: Long = 300) {
+    if(visibility == View.INVISIBLE) return
+
     val anim = ValueAnimator
         .ofFloat(1f, 0f)
         .setDuration(duration)
@@ -35,6 +38,8 @@ fun View.invisibleWithAnim(duration: Long = 300) {
 }
 
 fun View.visibleWithAnim(duration: Long = 300) {
+    if(visibility == View.VISIBLE) return
+
     visibility = View.VISIBLE
     val anim = ValueAnimator
         .ofFloat(0f, 1f)

@@ -7,17 +7,16 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content">
 
-    <com.airbnb.lottie.LottieAnimationView
+    <ImageView
         android:id="@+id/item_sys_notification_select"
         android:layout_width="18dp"
         android:layout_height="18dp"
         android:layout_marginTop="3dp"
         android:layout_marginStart="16dp"
-        app:lottie_progress="0.39"
+        android:src="@drawable/ic_notification_not_select"
         app:layout_constraintBottom_toBottomOf="@+id/item_sys_notification_tv_title"
         app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintTop_toTopOf="@+id/item_sys_notification_tv_title"
-        app:lottie_rawRes="@raw/lottie_multi_delete"/>
+        app:layout_constraintTop_toTopOf="@+id/item_sys_notification_tv_title"/>
 
     <androidx.appcompat.widget.AppCompatTextView
         android:id="@+id/item_sys_notification_tv_title"
