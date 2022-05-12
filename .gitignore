@@ -11,4 +11,5 @@ secret.gradle
 ./hooks/cache
 /.idea/
 *.log
+**/lint-baseline.xml
 maven

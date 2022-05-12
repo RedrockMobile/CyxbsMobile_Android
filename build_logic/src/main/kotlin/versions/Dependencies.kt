@@ -1,4 +1,4 @@
-@file:SuppressWarnings("all")
+@file:Suppress("ObjectPropertyName")
 
 package versions
 
