@@ -3,6 +3,7 @@ package com.mredrock.cyxbs.sdks
 import android.util.Log
 import com.google.auto.service.AutoService
 import com.mredrock.cyxbs.BuildConfig
+import com.mredrock.cyxbs.common.BaseApp
 import com.mredrock.cyxbs.common.utils.LogUtils
 import com.mredrock.cyxbs.common.utils.extensions.safeSubscribeBy
 import com.mredrock.cyxbs.spi.SdkService
@@ -23,67 +24,65 @@ import io.reactivex.rxjava3.schedulers.Schedulers
 @AutoService(SdkService::class)
 class UmengInitialService : SdkService {
 
+    private val UMENG_CHANNEL = "official"
+
     override fun onMainProcess(manager: SdkManager) {
         //debug包开启log
         if (BuildConfig.DEBUG) {
             UMConfigure.setLogEnabled(true)
         }
-        Observable.just(Unit)
-            .subscribeOn(Schedulers.io())
-            .safeSubscribeBy {
-                initUmengAnalyse(manager)
-                initUmengPush(manager)
-            }
-
+        //预初始化 等待隐私策略同意后才进行真正的初始化
+        UMConfigure.preInit(BaseApp.appContext, BuildConfig.UM_APP_KEY, UMENG_CHANNEL)
     }
 
     override fun onSdkProcess(manager: SdkManager) {
-        Log.e("TAG", "onSdkProcess: \ncurrentProcess${manager.currentProcessName()}\n" )
+        Log.e("TAG", "onSdkProcess: \ncurrentProcess${manager.currentProcessName()}\n")
         initUmengPush(manager)
     }
 
-    override fun isSdkProcess(manager: SdkManager): Boolean = manager.currentProcessName().endsWith(":channel")
+    override fun isSdkProcess(manager: SdkManager): Boolean =
+        manager.currentProcessName().endsWith(":channel")
 
+    override fun onPrivacyAgreed(manager: SdkManager) {
+        Observable.just(Unit)
+            .subscribeOn(Schedulers.io())
+            .safeSubscribeBy {
+                initUmengPush(manager)
+                initUmengAnalyse(manager)
+            }
+    }
+
+    //注意sdk进程和main进程均需要初始化
     private fun initUmengPush(manager: SdkManager) {
-        //预初始化
         val context = manager.application.applicationContext
-        with(PushAgent.getInstance(context)) {
-            register(
-                object : UPushRegisterCallback {
-                    override fun onSuccess(deviceToken: String?) {
-                        //注册成功会返回deviceToken deviceToken是推送消息的唯一标志
-                        LogUtils.e(msg = "注册成功 deviceToken:$deviceToken")
-                    }
-
-                    override fun onFailure(errCode: String?, errDesc: String?) {
-                        LogUtils.e(msg = "注册失败 code:$errCode, desc:$errDesc")
-                    }
-
+        val agent = PushAgent.getInstance(context)
+        agent.register(
+            object : UPushRegisterCallback {
+                override fun onSuccess(deviceToken: String?) {
+                    //注册成功会返回deviceToken deviceToken是推送消息的唯一标志
+                    LogUtils.e(msg = "注册成功 deviceToken:$deviceToken")
                 }
-            )
-        }
 
+                override fun onFailure(errCode: String?, errDesc: String?) {
+                    LogUtils.e(msg = "注册失败 code:$errCode, desc:$errDesc")
+                }
 
+            }
+        )
     }
 
     private fun initUmengAnalyse(manager: SdkManager) {
         val context = manager.application.applicationContext
-        //预初始化
-        UMConfigure.preInit(context, BuildConfig.UM_APP_KEY, "official")
 
         //这段代码理应再用户隐私协议同意以后才执行的。现暂时搁置。
-        listOf(Unit).toObservable()
-            .map {
-                UMConfigure.init(
-                    context,
-                    BuildConfig.UM_APP_KEY,
-                    "official",
-                    UMConfigure.DEVICE_TYPE_PHONE,
-                    BuildConfig.UM_PUSH_SECRET
-                )
-            }
-            .subscribeOn(Schedulers.io())
-            .subscribe()
+        UMConfigure.init(
+            context,
+            BuildConfig.UM_APP_KEY,
+            UMENG_CHANNEL,
+            UMConfigure.DEVICE_TYPE_PHONE,
+            BuildConfig.UM_PUSH_SECRET
+        )
+
     }
 
 }

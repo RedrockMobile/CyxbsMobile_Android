@@ -1,6 +1,5 @@
 package com.mredrock.cyxbs.main.ui
 
-import android.Manifest
 import android.content.Context
 import android.content.Intent
 import android.graphics.Color
@@ -25,10 +24,6 @@ import com.alibaba.android.arouter.launcher.ARouter
 import com.mredrock.cyxbs.api.account.IAccountService
 import com.mredrock.cyxbs.common.bean.LoginConfig
 import com.mredrock.cyxbs.common.component.CyxbsToast
-import com.mredrock.cyxbs.common.config.ACTIVITY_CLASS
-import com.mredrock.cyxbs.common.config.FIRST_TIME_OPEN
-import com.mredrock.cyxbs.common.config.IS_EXIT_LOGIN
-import com.mredrock.cyxbs.common.config.MINE_FORGET_PASSWORD
 import com.mredrock.cyxbs.common.mark.EventBusLifecycleSubscriber
 import com.mredrock.cyxbs.common.service.ServiceManager
 import com.mredrock.cyxbs.common.ui.BaseViewModelActivity
@@ -36,6 +31,7 @@ import com.mredrock.cyxbs.common.utils.extensions.defaultSharedPreferences
 import com.mredrock.cyxbs.common.utils.extensions.doPermissionAction
 import com.mredrock.cyxbs.common.utils.extensions.editor
 import com.mredrock.cyxbs.api.main.MAIN_LOGIN
+import com.mredrock.cyxbs.common.config.*
 import com.mredrock.cyxbs.main.R
 import com.mredrock.cyxbs.main.bean.LoginFailEvent
 import com.mredrock.cyxbs.main.components.UserAgreementDialog
@@ -226,6 +222,7 @@ class LoginActivity : BaseViewModelActivity<LoginViewModel>(), EventBusLifecycle
                 dismiss()
                 defaultSharedPreferences.editor {
                     putBoolean(FIRST_TIME_OPEN, false)
+                    putBoolean(PRIVACY_AGREED,true)
                     commit()
                 }
             }

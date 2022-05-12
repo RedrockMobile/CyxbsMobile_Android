@@ -141,6 +141,8 @@ const val TODO_REPEAT_TODO_ID_LIST_DATE = "todo_repeat_todo_id_list_date"
 
 //第一次安装的标志，默认或者更新之后就会置为true
 const val FIRST_TIME_OPEN = "first_time_open"
+//隐私条例是否同意
+const val PRIVACY_AGREED = "privacy_agreed"
 
 //统一拦截的HTTP状态码
 const val TOKEN_EXPIRE = 403//token过期

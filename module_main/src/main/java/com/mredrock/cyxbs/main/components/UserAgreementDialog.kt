@@ -20,6 +20,7 @@ import android.widget.TextView
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.DialogFragment
 import androidx.fragment.app.FragmentManager
+import com.mredrock.cyxbs.common.BaseApp
 import com.mredrock.cyxbs.main.R
 import com.mredrock.cyxbs.main.ui.PrivacyActivity
 import com.mredrock.cyxbs.main.ui.UserAgreementActivity
@@ -85,10 +86,12 @@ class UserAgreementDialog : DialogFragment() {
 
         btnNegative.setOnClickListener {
             onNegativeClick?.invoke(this)
+            BaseApp.application.privacyDenied()
         }
 
         btnPositive.setOnClickListener {
             onPositiveClick?.invoke(this)
+            BaseApp.application.privacyAgree()
         }
 
         val spannableString = SpannableStringBuilder()
