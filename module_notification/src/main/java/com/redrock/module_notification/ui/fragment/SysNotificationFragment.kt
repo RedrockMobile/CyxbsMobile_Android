@@ -31,7 +31,7 @@ class SysNotificationFragment : BaseFragment() {
     private lateinit var adapter: SystemNotificationRvAdapter
 
     //所有已读的系统通知的消息的bean 用来给删除已读使用
-    private var allReadSysMsg =  ArrayList<SystemMsgBean>()
+    private var allReadSysMsg = ArrayList<SystemMsgBean>()
     val viewModel: NotificationViewModel by activityViewModels()
 
     override fun onCreateView(
@@ -63,6 +63,7 @@ class SysNotificationFragment : BaseFragment() {
             ) {
                 viewModel.deleteMsg(DeleteMsgToBean(listOf(data[it].id.toString())))
                 data.removeAt(it)
+                if (data.size == 0) viewModel.changeSysDotStatus(false)
                 adapter.list = data
                 adapter.notifyItemRemoved(it)
                 notification_rv_sys.closeMenu()
@@ -111,8 +112,8 @@ class SysNotificationFragment : BaseFragment() {
         }
     }
 
-    fun deleteAllReadMsg(){
-        for(value in allReadSysMsg){
+    fun deleteAllReadMsg() {
+        for (value in allReadSysMsg) {
             data.remove(value)
             viewModel.deleteMsg(DeleteMsgToBean(listOf(value.id.toString())))
             adapter.changeAllData(data)

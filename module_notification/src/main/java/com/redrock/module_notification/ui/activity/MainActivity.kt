@@ -36,6 +36,7 @@ import kotlinx.android.synthetic.main.activity_main.*
 import kotlin.properties.Delegates
 
 //TODO 小红点的展示逻辑太复杂了，容易出bug 考虑一下创建一个小红点的统一显示类
+//TODO 暂时没有考虑如果后端出问题了删除消息失败或者改变消息已读状态失败的处理
 @Route(path = NOTIFICATION_HOME)
 class MainActivity : BaseViewModelActivity<NotificationViewModel>() {
     private var tab2View by Delegates.notNull<View>()

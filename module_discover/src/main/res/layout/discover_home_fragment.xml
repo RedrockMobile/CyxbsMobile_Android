@@ -43,10 +43,10 @@
 
         <ImageView
             android:id="@+id/iv_discover_msg"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_width="24dp"
+            android:layout_height="20dp"
             android:layout_marginRight="73dp"
-            android:background="@drawable/discover_ic_home_msg"
+            android:background="@drawable/discover_ic_home_has_msg"
             app:layout_constraintBottom_toBottomOf="@+id/tv_dis"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="@+id/tv_dis" />
