@@ -62,9 +62,9 @@ android {
             }
 
             release {
-                isMinifyEnabled = true
-                isZipAlignEnabled = true
-                isShrinkResources = true
+                isMinifyEnabled = false
+                isZipAlignEnabled = false
+                isShrinkResources = false
                 proguardFiles(getDefaultProguardFile("proguard-android.txt"), "${rootDir}/build_logic/proguard-rules.pro")
 
                 signingConfig = signingConfigs.getByName("config")

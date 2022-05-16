@@ -1,40 +1,144 @@
 package com.mredrock.cyxbs.discover.schoolcar.widget
 
 import android.app.Activity
-import android.graphics.Bitmap
-import android.graphics.Color
+import android.graphics.*
 import android.util.ArrayMap
+import android.view.animation.LinearInterpolator
+import com.amap.api.maps.CameraUpdateFactory
 import com.amap.api.maps.model.*
+import com.amap.api.maps.model.animation.Animation
+import com.amap.api.maps.model.animation.ScaleAnimation
 import com.amap.api.maps.utils.overlay.MovingPointOverlay
 import com.mredrock.cyxbs.common.network.ApiGenerator
-import com.mredrock.cyxbs.common.utils.LogUtils
+import com.mredrock.cyxbs.common.utils.extensions.dp2px
 import com.mredrock.cyxbs.common.utils.extensions.safeSubscribeBy
 import com.mredrock.cyxbs.common.utils.extensions.setSchedulers
 import com.mredrock.cyxbs.discover.schoolcar.Interface.SchoolCarInterface
 import com.mredrock.cyxbs.discover.schoolcar.SchoolCarActivity
+import com.mredrock.cyxbs.discover.schoolcar.SchoolCarViewModel
 import com.mredrock.cyxbs.discover.schoolcar.bean.SchoolCar
+import com.mredrock.cyxbs.discover.schoolcar.bean.Station
 import com.mredrock.cyxbs.discover.schoolcar.network.ApiService
+import com.mredrock.cyxbs.schoolcar.R
 import io.reactivex.rxjava3.disposables.Disposable
-import kotlinx.android.synthetic.main.activity_schoolcar.*
 import okio.ByteString
 import java.io.UnsupportedEncodingException
 import java.security.MessageDigest
 import java.security.NoSuchAlgorithmException
-import java.util.*
 import kotlin.math.abs
+
 
 /**
  * Created by glossimar on 2018/9/12
  */
 
-class SchoolCarsSmoothMove(private val schoolCarActivity: SchoolCarActivity?, private val activity: Activity,private val bitmapChanges: List<Bitmap>){
+class SchoolCarsSmoothMove(
+    private val schoolCarActivity: SchoolCarActivity?,
+    private val activity: Activity,
+    private val vm: SchoolCarViewModel){
     private lateinit var carInterface: SchoolCarInterface
 
     //key:id value:type
     private val carMap : ArrayMap<Int,SchoolCar> = ArrayMap()
+    private val siteMap : ArrayMap<Int,List<Marker>> = ArrayMap()
+    private val markerToSite : ArrayMap<String,Station> = ArrayMap()
+    private val markerToCar : ArrayMap<String,Int> = ArrayMap()
+    private val lineToBackGroundMarker : ArrayMap<Int,Marker> = ArrayMap()
+    private val bitmapChanges: List<Bitmap> = getSmoothMakerBitmaps()
+    private val siteChanges: List<Bitmap> = getSiteMakerBitmaps()
+    private val markerBackGround: List<Bitmap> = getMarkerBackGroundBitmaps()
     private val apiService = ApiGenerator.getApiService(ApiService::class.java)
     private var lastPostTime = System.currentTimeMillis()
+    private var chooseMarker:Marker ?= null
     var disposable: Disposable? = null
+    private var line = -1
+    init {
+        buildBackGrounds()
+        schoolCarActivity?.aMap?.setOnMapClickListener {
+            chooseMarker?.hideInfoWindow()
+        }
+        schoolCarActivity?.aMap?.setOnMarkerClickListener {
+            chooseMarker = it
+            if (markerToCar.contains(it.id)) {
+                hideCheck()
+                markerToCar[it.id]?.let { car ->
+                    carMap[car]?.apply {
+                        vm.chooseCar(this.type)
+                        smoothBackgroundMarker.setVisible(true)
+                        backgroundMarker.isVisible = true
+                        backgroundMarker.setAnimation(getAnimation())
+                        backgroundMarker.startAnimation()
+                    }
+                }
+            }
+            if (markerToSite.contains(it.id)){
+                hideCheck()
+                markerToSite[it.id]?.id?.let { site -> vm.chooseSite(site) }
+                val index = if(line==-1) 0 else line+1
+                lineToBackGroundMarker[index]?.apply {
+                    position = LatLng(it.position.latitude,it.position.longitude)
+                    isVisible = true
+                    setAnimation(getAnimation())
+                    startAnimation()
+                }
+            }
+            it.showInfoWindow()
+            val camera = CameraUpdateFactory.newCameraPosition(CameraPosition(LatLng(it.position.latitude,it.position.longitude), 18F,0F,0F))
+            schoolCarActivity.aMap.animateCamera(camera)
+            return@setOnMarkerClickListener true
+        }
+
+        schoolCarActivity?.let { schoolCarActivity ->
+            vm.line.observe(schoolCarActivity){
+                line = it
+                if (siteMap.contains(line)) {
+                    siteMap.iterator().forEach { map ->
+                        if (map.key == line){
+                            siteMap[line]?.forEach { marker ->
+                                marker.setIcon(BitmapDescriptorFactory.fromBitmap(getSiteMakerBitmaps()[line+1]))
+                                marker.isVisible = true
+                            }
+                        }else{
+                            map.value.forEach { marker ->
+                                marker.isVisible = false
+                            }
+                        }
+                    }
+                }else{
+                    siteMap.iterator().forEach { map ->
+                        map.value.forEach { marker ->
+                            marker.setIcon(BitmapDescriptorFactory.fromBitmap(getSiteMakerBitmaps()[0]))
+                            marker.isVisible = true
+                        }
+                    }
+                }
+
+                carMap.iterator().forEach { map ->
+                    if (line == -1){
+                        map.value.marker.isVisible = true
+                    }else{
+                        map.value.marker.isVisible = map.value.type == line
+                    }
+                }
+            }
+
+            vm.mapInfo.observe(schoolCarActivity){ mapLines ->
+                mapLines.lines.forEach { lineInfo ->
+                    if (!siteMap.contains(lineInfo.id)) {
+                        siteMap[lineInfo.id] = buildList {
+                            lineInfo.stations.forEach { station ->
+                                val marker = buildSite(station.name,lineInfo.id, LatLng(station.lat,station.lng))
+                                marker?.let {
+                                    markerToSite[marker.id] = station
+                                    add(it)
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
     /**
      * 进行接口数据请求
      */
@@ -44,20 +148,22 @@ class SchoolCarsSmoothMove(private val schoolCarActivity: SchoolCarActivity?, pr
                 System.currentTimeMillis().toString().substring(0, 10),
                 md5Hex((System.currentTimeMillis() - 1).toString().substring(0, 10)))
                 .setSchedulers()
-                .safeSubscribeBy(onError = {
-                    activity.tv_carStatus.text = "校车好像失联了..."
-                },
+                .safeSubscribeBy(
                 onNext =  {
-                    activity.tv_carStatus.text = "校车运行中"
                     lastPostTime = System.currentTimeMillis()
                         //如果所有的数据都没有更新
                         it.data.data.forEach {  data ->
                             if(!carMap.contains(data.id)){
                                 val latLng = LatLng(data.lat,data.lon)
                                 val marker = buildMarker(data.id,data.type,latLng)
+                                val backgroundMarker = buildBackGround(data.type,data.lat,data.lon)
                                 marker?.let { marker ->
-                                    val smoothMarker = MovingPointOverlay(schoolCarActivity?.aMap,marker)
-                                    carMap[data.id] = SchoolCar(data.id,data.type,data.upDate,data.upDate,smoothMarker,marker,mutableListOf(latLng,smoothMarker.position),getPolyline(data.type,latLng))
+                                    backgroundMarker?.let {
+                                        markerToCar[marker.id] = data.id
+                                        val smoothMarker = MovingPointOverlay(schoolCarActivity?.aMap,marker)
+                                        val smoothBackgroundMarker = MovingPointOverlay(schoolCarActivity?.aMap,lineToBackGroundMarker[data.type])
+                                        carMap[data.id] = SchoolCar(data.id,data.type,data.upDate,data.upDate,smoothMarker,smoothBackgroundMarker,marker,backgroundMarker,mutableListOf(latLng,smoothMarker.position),getPolyline(data.type,latLng))
+                                    }
                                 }
                             }else{
                                 //这里因为轮询是1s一次，所以说判断一下更新的时间，
@@ -75,34 +181,46 @@ class SchoolCarsSmoothMove(private val schoolCarActivity: SchoolCarActivity?, pr
                             }
                         }
                         carInterface.processLocationInfo(it, ifAddTimer)
-                        activity.runOnUiThread {
-                            if (it.data.data.isEmpty()) {
-                                activity.tv_carStatus.text = "校车正在休息"
-                            }
-                        }
                 }
             )
     }
 
-    /**
-     * 在地图上绘出校车轨迹
-     */
-    private fun drawTraceLine(car: SchoolCar) {
-        car.polyline?.points = car.latLngList
+//    /**
+//     * 在地图上绘出校车轨迹
+//     */
+//    private fun drawTraceLine(car: SchoolCar) {
+//        car.polyline?.points = car.latLngList
+//    }
+
+    fun hideCheck(){
+        lineToBackGroundMarker.iterator().forEach {
+            it.value.isVisible = false
+        }
+        carMap.iterator().forEach {
+            it.value.backgroundMarker.isVisible = false
+            it.value.smoothBackgroundMarker.setVisible(false)
+        }
     }
 
     private fun smoothMove(car:SchoolCar, mistime:Int = 3) {
+        if (line != -1 && car.type != line) return
         if (car.latLngList.size > 3) {
             //停止上一次的移动，然后将上一次的位置加上之后再移动
             car.smoothMarker.stopMove()
+            car.smoothBackgroundMarker.stopMove()
             val list = car.latLngList.subList(car.latLngList.size - 2, car.latLngList.size)
             list[0] = car.smoothMarker.position
             val smoothMarker = MovingPointOverlay(schoolCarActivity?.aMap,car.marker)
+            val backgroundMoveMarker = MovingPointOverlay(schoolCarActivity?.aMap,car.backgroundMarker)
             smoothMarker.setPoints(list)
+            backgroundMoveMarker.setPoints(list)
             smoothMarker.setTotalDuration(mistime)
+            backgroundMoveMarker.setTotalDuration(mistime)
             smoothMarker.startSmoothMove()
-            drawTraceLine(car)
+            backgroundMoveMarker.startSmoothMove()
+//            drawTraceLine(car)
             car.smoothMarker = smoothMarker
+            car.smoothBackgroundMarker = backgroundMoveMarker
         }
         //如果线路过长就删除一些
         if (car.latLngList.size > 8){
@@ -115,49 +233,20 @@ class SchoolCarsSmoothMove(private val schoolCarActivity: SchoolCarActivity?, pr
         this.carInterface = carMapInterface
     }
 
-    /**
-     * 检查当前时间是否时校车运营时间
-     */
-    private fun checkTimeBeforeEnter(type:Int): Boolean {
-        val calendar: Calendar = Calendar.getInstance()
-        val hour: Int = calendar.get(Calendar.HOUR)
-        val minute: Int = calendar.get(Calendar.MINUTE)
-        val AM_PM: Int = calendar.get(Calendar.AM_PM)
-        return when(type){
-            0,1 -> {
-                if (AM_PM == Calendar.AM && hour == 7) {
-                    minute >= 30
-                } else if (AM_PM == Calendar.AM && hour > 7) {
-                    true
-                } else if(AM_PM == Calendar.PM && hour < 10){
-                    true
-                } else if(AM_PM == Calendar.PM && hour == 10){
-                    minute <= 30
-                } else {
-                    false
-                }
-            }
-            2 -> {
-                if (AM_PM == Calendar.AM && hour == 9) {
-                    minute >= 30
-                } else if (AM_PM == Calendar.AM && hour > 9) {
-                    true
-                } else if(AM_PM == Calendar.PM && hour == 1){
-                    minute >= 30
-                } else AM_PM == Calendar.PM && hour < 6 && hour > 1
-            }
-            3 -> {
-                AM_PM == Calendar.AM && hour >= 8 && hour <= 10
-            }
-            else -> false
-        }
-        return false
-    }
-
     private fun buildMarker(id:Int,type:Int,latLng:LatLng): Marker? {
         val markerOption = MarkerOptions().icon(BitmapDescriptorFactory.fromBitmap(bitmapChanges[type]))
         markerOption
             .title("${id}号车")
+            .snippet("${type+1}号线路")
+            .anchor(0.5f,0.5f)
+            .position(latLng)
+        return schoolCarActivity?.aMap?.addMarker(markerOption)
+    }
+
+    private fun buildSite(name:String,type:Int,latLng:LatLng): Marker? {
+        val markerOption = MarkerOptions().icon(BitmapDescriptorFactory.fromBitmap(siteChanges[0]))
+        markerOption
+            .title(name)
             .snippet("${type+1}号线路")
             .anchor(0.5f,0.5f)
             .position(latLng)
@@ -184,6 +273,68 @@ class SchoolCarsSmoothMove(private val schoolCarActivity: SchoolCarActivity?, pr
             throw AssertionError(e)
         }
     }
+
+    //获得车辆的图标样式
+    private fun getSmoothMakerBitmaps():List<Bitmap>{
+
+        return buildList {
+            schoolCarActivity?.let {
+                add(BitmapFactory.decodeResource(schoolCarActivity.resources, R.drawable.schoolcar_car_ic_car_1))
+                add(BitmapFactory.decodeResource(schoolCarActivity.resources, R.drawable.schoolcar_car_ic_car_2))
+                add(BitmapFactory.decodeResource(schoolCarActivity.resources, R.drawable.schoolcar_car_ic_car_3))
+                add(BitmapFactory.decodeResource(schoolCarActivity.resources, R.drawable.schoolcar_car_ic_car_4))
+                add(BitmapFactory.decodeResource(schoolCarActivity.resources, R.mipmap.schoolcar_ic_school_car))
+            }
+        }
+    }
+
+    //获得站点的图标样式
+    private fun getSiteMakerBitmaps():List<Bitmap>{
+        return buildList {
+            schoolCarActivity?.let {
+                add(BitmapFactory.decodeResource(schoolCarActivity.resources, R.drawable.schoolcar_car_ic_site_0))
+                add(BitmapFactory.decodeResource(schoolCarActivity.resources, R.drawable.schoolcar_car_ic_site_1))
+                add(BitmapFactory.decodeResource(schoolCarActivity.resources, R.drawable.schoolcar_car_ic_site_2))
+                add(BitmapFactory.decodeResource(schoolCarActivity.resources, R.drawable.schoolcar_car_ic_site_3))
+                add(BitmapFactory.decodeResource(schoolCarActivity.resources, R.drawable.schoolcar_car_ic_site_4))
+            }
+        }
+    }
+
+
+    private fun buildBackGrounds(){
+        for (i in 0..4){
+            lineToBackGroundMarker[i] = buildBackGround(line)
+        }
+    }
+
+    private fun buildBackGround(line:Int,lat:Double =29.531876 ,lng:Double = 106.606789):Marker?{
+            val index = if(line == -1) 0 else line+1
+            val markerOption = MarkerOptions().icon(BitmapDescriptorFactory.fromBitmap(markerBackGround[index]))
+            markerOption
+                .position(LatLng(lat,lng))
+                .anchor(0.5f,0.5f)
+            val marker = schoolCarActivity?.aMap?.addMarker(markerOption)
+            marker?.apply {
+                isClickable = false
+                isVisible = false
+            }
+            return marker
+    }
+
+    private fun getMarkerBackGroundBitmaps():List<Bitmap>{
+        return buildList {
+            schoolCarActivity?.let {
+                add(BitmapFactory.decodeResource(schoolCarActivity.resources, R.drawable.schoolcar_car_ic_background_0))
+                add(BitmapFactory.decodeResource(schoolCarActivity.resources, R.drawable.schoolcar_car_ic_background_1))
+                add(BitmapFactory.decodeResource(schoolCarActivity.resources, R.drawable.schoolcar_car_ic_background_2))
+                add(BitmapFactory.decodeResource(schoolCarActivity.resources, R.drawable.schoolcar_car_ic_background_3))
+                add(BitmapFactory.decodeResource(schoolCarActivity.resources, R.drawable.schoolcar_car_ic_background_4))
+            }
+        }
+    }
+
+    //获得路径颜色
     private fun getPolyline(type: Int, latLng: LatLng): Polyline? {
         return when(type){
             0->{
@@ -224,7 +375,12 @@ class SchoolCarsSmoothMove(private val schoolCarActivity: SchoolCarActivity?, pr
         }
     }
 
-
+    private fun getAnimation() = ScaleAnimation(0.8F,1F,0.8F,1F).apply {
+            setInterpolator(LinearInterpolator())
+            setDuration(3000)
+            repeatMode = Animation.REVERSE
+            repeatCount = Animation.INFINITE
+        }
 }
 
 

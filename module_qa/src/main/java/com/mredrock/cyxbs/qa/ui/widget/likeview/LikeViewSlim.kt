@@ -5,7 +5,6 @@ import android.graphics.Canvas
 import android.os.Build
 import android.text.TextPaint
 import android.util.AttributeSet
-import android.util.Log
 import androidx.core.content.ContextCompat
 import com.mredrock.cyxbs.common.config.StoreTask
 import com.mredrock.cyxbs.common.network.ApiGenerator
