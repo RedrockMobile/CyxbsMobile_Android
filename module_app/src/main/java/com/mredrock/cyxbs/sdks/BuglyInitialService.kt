@@ -14,7 +14,7 @@ import com.tencent.bugly.crashreport.CrashReport
  */
 @AutoService(SdkService::class)
 class BuglyInitialService : SdkService {
-    override fun onMainProcess(manager: SdkManager) {
+    private fun init(manager: SdkManager) {
 
         val appContext = manager.application.applicationContext
 
@@ -33,5 +33,10 @@ class BuglyInitialService : SdkService {
 
         //初始化bugly
         Bugly.init(appContext,BuildConfig.BUGLY_APP_ID,BuildConfig.DEBUG,strategy)
+    }
+
+    //bugly 会读取Android id
+    override fun onPrivacyAgreed(manager: SdkManager) {
+        init(manager)
     }
 }
