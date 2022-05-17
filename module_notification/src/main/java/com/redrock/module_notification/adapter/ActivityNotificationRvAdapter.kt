@@ -2,7 +2,6 @@ package com.redrock.module_notification.adapter
 
 import android.annotation.SuppressLint
 import android.content.Context
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -11,7 +10,6 @@ import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.mredrock.cyxbs.common.utils.extensions.setOnSingleClickListener
-import com.mredrock.cyxbs.mine.util.extension.log
 import com.redrock.module_notification.R
 import com.redrock.module_notification.bean.ActiveMsgBean
 import com.redrock.module_notification.bean.ChangeReadStatusToBean
@@ -90,19 +88,23 @@ class ActivityNotificationRvAdapter(
                 .placeholder(R.drawable.common_ic_place_holder)
                 .into(holder.itemActivityNotificationIvDetail)
             holder.itemView.setOnSingleClickListener {
-                viewmodel.changeMsgStatus(ChangeReadStatusToBean(listOf(list[position].id.toString())))
-                holder.itemActivityNotificationIvRedDot.visibility = View.INVISIBLE
-                list[position].has_read = true
-                notifyItemChanged(position)
+                viewmodel.changeMsgStatus(
+                    ChangeReadStatusToBean(listOf(list[position].id.toString())),
+                    //我们约定position >= 0 为系统通知的消息 <=0 为活动通知的消息
+                    -position
+                )
+                viewmodel.changeMsgReadStatus.value = -position
                 WebActivity.startWebViewActivity(data.redirect_url, context)
             }
         }
     }
 
+    fun setNewList(newList: List<ActiveMsgBean>) {
+        list = newList
+    }
 
     @SuppressLint("NotifyDataSetChanged")
     fun refreshAllData(newList: List<ActiveMsgBean>) {
-        Log.d("wzt", "refreshAllData: ${newList == list} ")
         list = newList
         notifyDataSetChanged()
     }

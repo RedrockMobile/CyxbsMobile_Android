@@ -17,7 +17,9 @@ import com.google.android.material.tabs.TabLayoutMediator
 import com.mredrock.cyxbs.common.config.NOTIFICATION_HOME
 import com.mredrock.cyxbs.common.config.NOTIFICATION_SETTING
 import com.mredrock.cyxbs.common.ui.BaseViewModelActivity
-import com.mredrock.cyxbs.common.utils.extensions.*
+import com.mredrock.cyxbs.common.utils.extensions.dp2px
+import com.mredrock.cyxbs.common.utils.extensions.editor
+import com.mredrock.cyxbs.common.utils.extensions.setOnSingleClickListener
 import com.redrock.module_notification.R
 import com.redrock.module_notification.adapter.NotificationVp2Adapter
 import com.redrock.module_notification.bean.ChangeReadStatusToBean
@@ -42,10 +44,10 @@ class MainActivity : BaseViewModelActivity<NotificationViewModel>() {
     private var tab1View by Delegates.notNull<View>()
 
     //所有还未读的活动通知消息的id 用来给一键已读使用
-    private lateinit var allUnreadActiveMsgIds: ArrayList<String>
+    private var allUnreadActiveMsgIds = ArrayList<String>()
 
     //所有还未读的系统通知消息的id 用来给一键已读使用
-    private lateinit var allUnreadSysMsgIds: ArrayList<String>
+    private var allUnreadSysMsgIds = ArrayList<String>()
     private lateinit var sysFragment: SysNotificationFragment
     private lateinit var activeFragment: Fragment
 
@@ -53,7 +55,7 @@ class MainActivity : BaseViewModelActivity<NotificationViewModel>() {
     private var whichPageIsIn = 0
 
     //是否需要展示
-    var shouldShowRedDots by Delegates.notNull<Boolean>()
+    private var shouldShowRedDots by Delegates.notNull<Boolean>()
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
@@ -66,9 +68,17 @@ class MainActivity : BaseViewModelActivity<NotificationViewModel>() {
 
     override fun onStart() {
         super.onStart()
-        //从webActivity返回时再请求一次 从而可以判断活动通知上的小红点是否可以消失
-        viewModel.getAllMsg()
+        //从webActivity判断活动通知上的小红点是否可以消失
         shouldShowRedDots = NotificationSp.getBoolean(IS_SWITCH1_SELECT, true)
+        if (shouldShowRedDots) {
+            if (allUnreadSysMsgIds.size != 0)
+                changeTabRedDotsVisibility(0, View.VISIBLE)
+            if (allUnreadActiveMsgIds.size != 0)
+                changeTabRedDotsVisibility(1, View.VISIBLE)
+        } else {
+            changeTabRedDotsVisibility(0, View.INVISIBLE)
+            changeTabRedDotsVisibility(1, View.INVISIBLE)
+        }
     }
 
 
@@ -90,7 +100,6 @@ class MainActivity : BaseViewModelActivity<NotificationViewModel>() {
                 popupWindow.apply {
                     setOnItemClickListener(R.id.notification_ll_home_popup_fast_read_sys) {
                         viewModel.changeMsgStatus(ChangeReadStatusToBean(allUnreadSysMsgIds))
-                        viewModel.getAllMsg()
                         viewModel.changeSysDotStatus(false)
                     }
                     setOnItemClickListener(R.id.notification_ll_home_popup_delete_read_sys) {
@@ -114,7 +123,7 @@ class MainActivity : BaseViewModelActivity<NotificationViewModel>() {
                     }
                 }
             }
-            
+
             1 -> {
                 popupWindow = LoadMoreWindow(
                     this,
@@ -126,13 +135,12 @@ class MainActivity : BaseViewModelActivity<NotificationViewModel>() {
                 popupWindow.apply {
                     setOnItemClickListener(R.id.notification_ll_home_popup_fast_read_act) {
                         viewModel.changeMsgStatus(ChangeReadStatusToBean(allUnreadActiveMsgIds))
-                        viewModel.getAllMsg()
                         viewModel.changeActiveDotStatus(false)
                     }
                     setOnItemClickListener(R.id.notification_ll_home_popup_setting) {
                         ARouter.getInstance().build(NOTIFICATION_SETTING).navigation()
                         notification_home_red_dots.visibility = View.INVISIBLE
-                        NotificationSp.editor { putBoolean(HAS_USER_ENTER_SETTING_PAGE, false) }
+                        NotificationSp.editor { putBoolean(HAS_USER_ENTER_SETTING_PAGE, true) }
                     }
                 }
             }
@@ -218,34 +226,74 @@ class MainActivity : BaseViewModelActivity<NotificationViewModel>() {
         viewModel.systemMsg.observe {
             allUnreadSysMsgIds = ArrayList()
             for (value in it!!) {
-                if (!value.has_read && shouldShowRedDots) {
-                    tab1View.findViewById<View>(R.id.notification_iv_tl_red_dots).visibleWithAnim()
+                if (!value.has_read) {
                     allUnreadSysMsgIds.add(value.id.toString())
+                    changeTabRedDotsVisibility(0, View.VISIBLE)
                 }
 
             }
         }
+
         viewModel.activeMsg.observe {
             allUnreadActiveMsgIds = ArrayList()
             for (value in it!!) {
-                if (!value.has_read && shouldShowRedDots)
-                    tab2View.findViewById<View>(R.id.notification_iv_tl_red_dots).visibility =
-                        View.VISIBLE
-                allUnreadActiveMsgIds.add(value.id.toString())
+                if (!value.has_read) {
+                    changeTabRedDotsVisibility(1, View.VISIBLE)
+                    allUnreadActiveMsgIds.add(value.id.toString())
+                }
+
             }
         }
+
         viewModel.popupWindowClickableStatus.observe {
             it?.let { notification_rl_home_dots.isClickable = it }
         }
+
+        viewModel.sysDotStatus.observe {
+            if (it == true)
+                changeTabRedDotsVisibility(0, View.VISIBLE)
+            else
+                changeTabRedDotsVisibility(0, View.INVISIBLE)
+        }
+        viewModel.activeDotStatus.observe {
+            if (it == true)
+                changeTabRedDotsVisibility(1, View.VISIBLE)
+            else
+                changeTabRedDotsVisibility(1, View.INVISIBLE)
+        }
+
     }
 
-    fun makeTabRedDotsInvisible(position: Int) {
+    fun removeUnreadSysMsgId(id: String) {
+        allUnreadSysMsgIds.remove(id)
+        if (allUnreadSysMsgIds.size == 0) {
+            changeTabRedDotsVisibility(0, View.INVISIBLE)
+        }
+
+    }
+
+    fun removeUnreadActiveMsgIds(id: String) {
+        allUnreadActiveMsgIds.remove(id)
+        if (allUnreadActiveMsgIds.size == 0) {
+            changeTabRedDotsVisibility(1, View.INVISIBLE)
+        }
+    }
+
+    //改变TabLayout小红点的显示状态
+    private fun changeTabRedDotsVisibility(position: Int, visibility: Int) {
+        if ((visibility != View.INVISIBLE) and (visibility != View.VISIBLE))
+            throw Exception("参数只可以是View.INVISIBLE 或者 View.VISIBLE！！！")
+        var vis = visibility
+        if (!shouldShowRedDots)
+            vis = View.INVISIBLE
         when (position) {
             0 -> {
-                tab1View.findViewById<View>(R.id.notification_iv_tl_red_dots).invisibleWithAnim()
+                tab1View.findViewById<View>(R.id.notification_iv_tl_red_dots).visibility =
+                    vis
             }
             1 -> {
-                tab2View.findViewById<View>(R.id.notification_iv_tl_red_dots).invisibleWithAnim()
+                tab2View.findViewById<View>(R.id.notification_iv_tl_red_dots).visibility =
+                    vis
             }
         }
     }

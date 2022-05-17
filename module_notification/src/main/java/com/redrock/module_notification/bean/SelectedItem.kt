@@ -7,6 +7,6 @@ package com.redrock.module_notification.bean
  */
 data class SelectedItem(
     val ids:ArrayList<String>,
-    val positions:ArrayList<Int>,
+    val position:ArrayList<Int>,
     val reads:ArrayList<Boolean>
 )

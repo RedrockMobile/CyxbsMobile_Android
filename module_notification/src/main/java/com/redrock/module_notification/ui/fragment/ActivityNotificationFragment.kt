@@ -1,7 +1,6 @@
 package com.redrock.module_notification.ui.fragment
 
 import android.os.Bundle
-import android.util.Log
 import android.view.View
 import androidx.fragment.app.activityViewModels
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -12,6 +11,7 @@ import com.redrock.module_notification.bean.ActiveMsgBean
 import com.redrock.module_notification.ui.activity.MainActivity
 import com.redrock.module_notification.viewmodel.NotificationViewModel
 import kotlinx.android.synthetic.main.fragment_activity_notification.*
+import kotlin.properties.Delegates
 
 /**
  * Author by OkAndGreat
@@ -21,13 +21,16 @@ import kotlinx.android.synthetic.main.fragment_activity_notification.*
 class ActivityNotificationFragment : BaseFragment() {
     private var data = ArrayList<ActiveMsgBean>()
     private lateinit var adapter: ActivityNotificationRvAdapter
+    //fragment对应的Activity
+    private var myActivity by Delegates.notNull<MainActivity>()
 
-    val viewModel: NotificationViewModel by activityViewModels()
+    private val viewModel: NotificationViewModel by activityViewModels()
 
     override var layoutRes: Int? = R.layout.fragment_activity_notification
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        myActivity = requireActivity() as MainActivity
         initObserver()
         initRv()
     }
@@ -40,34 +43,26 @@ class ActivityNotificationFragment : BaseFragment() {
 
     private fun initObserver() {
         viewModel.activeMsg.observe(viewLifecycleOwner) {
-            var shouldNotifyActivityCancelRedDots = true
-            it?.let {
-                data = it as ArrayList<ActiveMsgBean>
-                for (value in it) {
-                    if (!value.has_read)
-                        shouldNotifyActivityCancelRedDots = false
-                }
-            }
-            if (shouldNotifyActivityCancelRedDots) {
-                val activity = requireActivity()
-                if (activity is MainActivity) {
-                    activity.makeTabRedDotsInvisible(1)
-                }
-            }
+            data = it as ArrayList<ActiveMsgBean>
             adapter.refreshAllData(data)
         }
 
         viewModel.activeDotStatus.observe(viewLifecycleOwner) {
             if (!it) {
-                for ((index, _) in data.withIndex()){
+                for ((index, _) in data.withIndex()) {
                     data[index].has_read = true
                 }
                 adapter.refreshAllData(data)
-                val activity = requireActivity()
-                if (activity is MainActivity) {
-                    activity.makeTabRedDotsInvisible(1)
-                }
             }
+        }
+
+        //我们约定position >= 0 为系统通知的消息 <=0 为活动通知的消息
+        viewModel.changeMsgReadStatus.observe(viewLifecycleOwner) {
+            if (it > 0) return@observe
+            data[-it].has_read = true
+            adapter.setNewList(data)
+            adapter.notifyItemChanged(-it)
+            myActivity.removeUnreadActiveMsgIds(data[-it].id.toString())
         }
 
     }

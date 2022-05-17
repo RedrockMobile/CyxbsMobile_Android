@@ -25,7 +25,7 @@ class DeleteDialog private constructor() : DialogFragment() {
     companion object {
         fun show(
             supportFragmentManager: FragmentManager,
-            tag: String?,
+            tag: String? = null,
             tips: String,
             topTipsCnt: Int = 0,
             positiveString: String = "确定",

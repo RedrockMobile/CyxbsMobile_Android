@@ -25,7 +25,7 @@ import kotlinx.android.synthetic.main.fragment_system_notification.*
  * Date on 2022/4/30 15:09.
  */
 class SystemNotificationRvAdapter(
-    var list: List<SystemMsgBean>,
+    private var list: List<SystemMsgBean>,
     private var viewmodel: NotificationViewModel,
     private var context: Context,
     private var activity: FragmentActivity,
@@ -81,10 +81,10 @@ class SystemNotificationRvAdapter(
             holder.itemSysNotificationTvContent.text = data.content
             holder.itemSysNotificationTvTime.text = Date.getUnExactTime(data.publish_time)
             holder.itemSysNotificationClMain.setOnClickListener {
-                viewmodel.changeMsgStatus(ChangeReadStatusToBean(listOf(list[position].id.toString())))
-                holder.itemSysNotificationIvRedDot.visibility = View.INVISIBLE
-                list[position].has_read = true
-                notifyItemChanged(position)
+                viewmodel.changeMsgStatus(
+                    ChangeReadStatusToBean(listOf(list[position].id.toString())),
+                    position
+                )
                 WebActivity.startWebViewActivity(data.redirect_url, context)
             }
             holder.itemSysNotificationClMain.setOnLongClickListener {
@@ -122,6 +122,11 @@ class SystemNotificationRvAdapter(
         notifyDataSetChanged()
     }
 
+    fun setNewList(data: ArrayList<SystemMsgBean>) {
+        list = data
+    }
+
+    //获取多选状态时的选择的item的相关信息
     fun getSelectedItemInfos() = multiDeleteAdapter?.selectedItemInfos
 
     override fun getItemCount(): Int = list.size + 1

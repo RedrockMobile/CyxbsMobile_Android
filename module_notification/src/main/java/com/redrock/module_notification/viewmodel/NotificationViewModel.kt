@@ -7,7 +7,10 @@ import com.mredrock.cyxbs.common.utils.extensions.mapOrThrowApiException
 import com.mredrock.cyxbs.common.utils.extensions.safeSubscribeBy
 import com.mredrock.cyxbs.common.utils.extensions.setSchedulers
 import com.mredrock.cyxbs.common.viewmodel.BaseViewModel
-import com.redrock.module_notification.bean.*
+import com.redrock.module_notification.bean.ActiveMsgBean
+import com.redrock.module_notification.bean.ChangeReadStatusToBean
+import com.redrock.module_notification.bean.DeleteMsgToBean
+import com.redrock.module_notification.bean.SystemMsgBean
 import com.redrock.module_notification.network.ApiService
 import com.redrock.module_notification.util.Constant.NOTIFICATION_LOG_TAG
 
@@ -31,7 +34,7 @@ class NotificationViewModel : BaseViewModel() {
     val popupWindowClickableStatus = MutableLiveData<Boolean>()
 
     //改变消息已读状态的Status
-    val changeMsgStatus = MutableLiveData<ChangeReadStatusFromBean>()
+    val changeMsgReadStatus = MutableLiveData<Int>()
 
     private val retrofit by lazy { ApiGenerator.getApiService(ApiService::class.java) }
 
@@ -65,20 +68,22 @@ class NotificationViewModel : BaseViewModel() {
             .setSchedulers()
             .safeSubscribeBy {
                 toast("删除消息成功")
+                Log.d("wzt", "deleteMsg: ")
+
             }
             .lifeCycle()
     }
 
     /**
      * 改变消息已读状态
+     * 我们约定position >= 0 为系统通知的消息 <=0 为活动通知的消息
+     * 如果是null则是改变所有消息的可读状态
      */
-    fun changeMsgStatus(bean: ChangeReadStatusToBean) {
+    fun changeMsgStatus(bean: ChangeReadStatusToBean, position: Int? = null) {
         retrofit.changeMsgStatus(bean)
             .mapOrThrowApiException()
             .setSchedulers()
-            .safeSubscribeBy {
-                changeMsgStatus.value = it
-            }
+            .safeSubscribeBy {}
             .lifeCycle()
     }
 

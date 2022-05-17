@@ -1,10 +1,7 @@
 package com.redrock.module_notification.ui.fragment
 
 import android.os.Bundle
-import android.util.Log
-import android.view.LayoutInflater
 import android.view.View
-import android.view.ViewGroup
 import androidx.fragment.app.activityViewModels
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.mredrock.cyxbs.common.ui.BaseFragment
@@ -18,7 +15,7 @@ import com.redrock.module_notification.ui.activity.MainActivity
 import com.redrock.module_notification.viewmodel.NotificationViewModel
 import com.redrock.module_notification.widget.DeleteDialog
 import kotlinx.android.synthetic.main.fragment_system_notification.*
-import kotlin.concurrent.thread
+import kotlin.properties.Delegates
 
 /**
  * Author by OkAndGreat
@@ -29,15 +26,17 @@ class SysNotificationFragment : BaseFragment() {
 
     private var data = ArrayList<SystemMsgBean>()
     private lateinit var adapter: SystemNotificationRvAdapter
+    private var myActivity by Delegates.notNull<MainActivity>()
 
     //所有已读的系统通知的消息的bean 用来给删除已读使用
     private var allReadSysMsg = ArrayList<SystemMsgBean>()
-    val viewModel: NotificationViewModel by activityViewModels()
+    private val viewModel: NotificationViewModel by activityViewModels()
 
     override var layoutRes: Int? = R.layout.fragment_system_notification
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        myActivity = requireActivity() as MainActivity
         initRv()
         initObserver()
         initViewClickListener()
@@ -57,10 +56,10 @@ class SysNotificationFragment : BaseFragment() {
                 requireActivity(),
                 notification_rv_sys
             ) {
+                myActivity.removeUnreadSysMsgId(data[it].id.toString())
                 viewModel.deleteMsg(DeleteMsgToBean(listOf(data[it].id.toString())))
                 data.removeAt(it)
-                if (data.size == 0) viewModel.changeSysDotStatus(false)
-                adapter.list = data
+                adapter.setNewList(data)
                 adapter.notifyItemRemoved(it)
                 notification_rv_sys.closeMenu()
             }
@@ -71,40 +70,31 @@ class SysNotificationFragment : BaseFragment() {
 
     private fun initObserver() {
         viewModel.systemMsg.observe(viewLifecycleOwner) {
-            Log.d(TAG, "initObserver: systemMsg in $it")
-            var shouldNotifyActivityCancelRedDots = true
-
             it?.let {
                 for (value in it) {
-                    if (!value.has_read)
-                        shouldNotifyActivityCancelRedDots = false
-                    else
+                    if (value.has_read)
                         allReadSysMsg.add(value)
                 }
             }
-            if (shouldNotifyActivityCancelRedDots) {
-                val activity = requireActivity()
-                if (activity is MainActivity) {
-                    activity.makeTabRedDotsInvisible(0)
-                }
-            }
-
             data = it as ArrayList<SystemMsgBean>
             adapter.changeAllData(data)
         }
 
-        //一键已读时会触发这个livedata 从而让系统通知上的小红点和系统通知里的fragment小红点取消
         viewModel.sysDotStatus.observe(viewLifecycleOwner) {
             if (!it) {
                 for ((index, _) in data.withIndex()) {
                     data[index].has_read = true
                 }
-                val activity = requireActivity()
-                if (activity is MainActivity) {
-                    activity.makeTabRedDotsInvisible(0)
-                }
                 adapter.changeAllData(data)
             }
+        }
+
+        viewModel.changeMsgReadStatus.observe(viewLifecycleOwner) {
+            if (it < 0) return@observe
+            data[it].has_read = true
+            adapter.setNewList(data)
+            adapter.notifyItemChanged(it)
+            myActivity.removeUnreadSysMsgId(data[it].id.toString())
         }
     }
 
@@ -124,48 +114,34 @@ class SysNotificationFragment : BaseFragment() {
         notification_system_btn_negative.setOnSingleClickListener {
             it.invisible()
             notification_system_btn_positive.invisible()
+            //控制LoadMoreWindow是否可以打开
             viewModel.changePopUpWindowClickableStatus(true)
             notification_rv_sys.adapter = adapter
-            viewModel.getAllMsg()
         }
         notification_system_btn_positive.setOnSingleClickListener {
             val selectedItemInfos = adapter.getSelectedItemInfos()
             selectedItemInfos?.let {
                 DeleteDialog.show(
                     requireActivity().supportFragmentManager,
-                    null,
                     tips = "确认要删除选中${it.ids.size}条消息吗",
-                    it.reads.size,
-                    onNegativeClick = {
-                        dismiss()
-                    },
+                    topTipsCnt = it.reads.size,
+                    onNegativeClick = { dismiss() },
                     onPositiveClick = {
                         viewModel.deleteMsg(DeleteMsgToBean(selectedItemInfos.ids))
                         requireActivity().notification_system_btn_negative?.invisible()
                         requireActivity().notification_system_btn_positive?.invisible()
                         requireActivity().notification_rv_sys.adapter = adapter
 
-                        //防止ConcurrentModificationException
-                        val deleteDataList = ArrayList<SystemMsgBean>()
-                        for (value in data) {
-                            for (id in selectedItemInfos.ids)
-                                if (id == value.id.toString()) {
-                                    deleteDataList.add(value)
-                                }
+                        val deleteItems = ArrayList<SystemMsgBean>()
+                        for (position in selectedItemInfos.position) {
+                            deleteItems.add(data[position])
+                            myActivity.removeUnreadSysMsgId(data[position].id.toString())
                         }
-                        for (value in deleteDataList)
-                            data.remove(value)
 
-
-                        for (position in selectedItemInfos.positions) {
+                        for (value in deleteItems) {
+                            val position = data.indexOf(value)
+                            data.removeAt(position)
                             adapter.notifyItemRemoved(position)
-                        }
-
-
-                        thread {
-                            Thread.sleep(500)
-                            //为了让删除了系统通知里面所有的已读消息时系统通知tab的小红点可以消息
-                            viewModel.getAllMsg()
                         }
 
                         dismiss()

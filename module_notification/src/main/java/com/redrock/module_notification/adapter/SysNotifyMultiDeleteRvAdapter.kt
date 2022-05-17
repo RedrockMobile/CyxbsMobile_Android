@@ -1,6 +1,5 @@
 package com.redrock.module_notification.adapter
 
-import android.annotation.SuppressLint
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -67,26 +66,19 @@ class SysNotifyMultiDeleteRvAdapter(private var list: List<SystemMsgBean>) :
                 holder.isChecked = !holder.isChecked
                 if (holder.isChecked) {
                     selectedItemInfos.ids.add(data.id.toString())
-                    selectedItemInfos.positions.add(position)
+                    selectedItemInfos.position.add(position)
                     if (!data.has_read)
                         selectedItemInfos.reads.add(data.has_read)
                 } else {
                     selectedItemInfos.ids.remove(data.id.toString())
-                    selectedItemInfos.positions.remove(position)
+                    selectedItemInfos.position.remove(position)
                     if (!data.has_read)
                         selectedItemInfos.reads.remove(data.has_read)
                 }
                 if (holder.isChecked) holder.itemSysNotificationSelect.setImageResource(R.drawable.ic_notification_select)
                 else holder.itemSysNotificationSelect.setImageResource(R.drawable.ic_notification_not_select)
             }
-
         }
-    }
-
-    @SuppressLint("NotifyDataSetChanged")
-    fun changeAllData(newList: List<SystemMsgBean>) {
-        list = newList
-        notifyDataSetChanged()
     }
 
     override fun getItemViewType(position: Int): Int {
