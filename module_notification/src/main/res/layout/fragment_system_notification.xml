@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <com.redrock.module_notification.widget.SwipeDeleteRecyclerView
+        android:id="@+id/notification_rv_sys"
+        android:layout_width="match_parent"
+        android:layout_marginTop="10dp"
+        android:layout_height="match_parent"
+        android:overScrollMode="never"
+        tools:listitem="@layout/item_sys_notification" />
+
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/notification_system_btn_negative"
+        style="@style/Widget.MaterialComponents.Button.UnelevatedButton"
+        android:layout_width="120dp"
+        android:layout_height="40dp"
+        android:layout_gravity="bottom"
+        android:layout_marginStart="45dp"
+        android:layout_marginBottom="57dp"
+        android:insetTop="0dp"
+        android:insetBottom="0dp"
+        android:padding="0dp"
+        android:text="取消"
+        android:visibility="invisible"
+        android:textColor="@color/common_white_font_color"
+        android:textSize="15sp"
+        android:theme="@style/Theme.MaterialComponents"
+        app:backgroundTint="@color/notification_delete_dialog_btn_negative"
+        app:cornerRadius="26dp"
+        app:rippleColor="@android:color/transparent"
+        tools:text="取消"
+        tools:ignore="HardcodedText" />
+
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/notification_system_btn_positive"
+        style="@style/Widget.MaterialComponents.Button.UnelevatedButton"
+        android:layout_width="120dp"
+        android:layout_height="40dp"
+        android:layout_gravity="bottom|end"
+        android:layout_marginEnd="45dp"
+        android:layout_marginBottom="57dp"
+        android:insetTop="0dp"
+        android:insetBottom="0dp"
+        android:padding="0dp"
+        android:visibility="invisible"
+        android:text="删除"
+        android:textColor="@color/common_white_font_color"
+        android:textSize="14sp"
+        android:theme="@style/Theme.MaterialComponents"
+        app:backgroundTint="@color/notification_delete_dialog_btn_positive"
+        app:cornerRadius="26dp"
+        app:rippleColor="@android:color/transparent"
+        tools:text="删除"
+        tools:ignore="HardcodedText" />
+
+</FrameLayout>

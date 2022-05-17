@@ -1,5 +1,5 @@
 buildscript {
-//    apply(from= "$rootDir/build_logic/script/githook.gradle")
+    //    apply(from= "$rootDir/build_logic/script/githook.gradle")
 }
 
 val ignoreModuleMode:String by project

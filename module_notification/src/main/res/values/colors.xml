@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="purple_200">#FFBB86FC</color>
+    <color name="purple_500">#FF6200EE</color>
+    <color name="purple_700">#FF3700B3</color>
+    <color name="teal_200">#FF03DAC5</color>
+    <color name="teal_700">#FF018786</color>
+    <color name="black">#FF000000</color>
+    <color name="white">#FFFFFFFF</color>
+
+    <color name="notification_base_main_bg">#F2F3F8</color>
+    <color name="notification_base_tv">#112C54</color>
+
+    <color name="notification_setting_item_bg">#FFFFFF</color>
+
+    <color name="notification_back_detail_ripple">#FFFFFF</color>
+    <color name="notification_setting_back_detail_ripple">#F2F3F8</color>
+    <color name="notification_home_item_tv_time">#B315315B</color>
+    <color name="notification_home_popup_bg">#ECEFF2</color>
+    <color name="notification_home_tabLayout_text_selected">#112C54</color>
+    <color name="notification_home_tabLayout_text_unselect">#66142C52</color>
+    <color name="notification_home_tablayout_badge">#FF6262</color>
+    <color name="notification_home_delete"> #4A44E4</color>
+
+    <color name="notification_delete_dialog_tv_tips">#15315B</color>
+    <color name="notification_delete_dialog_btn_negative">#C3D4EE</color>
+    <color name="notification_delete_dialog_btn_positive">#4A44E4</color>
+
+    <color name="notification_popup_ripple">#777777</color>
+</resources>

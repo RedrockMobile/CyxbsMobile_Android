@@ -15,6 +15,7 @@ import com.mredrock.cyxbs.main.utils.deleteDir
 import com.mredrock.cyxbs.main.utils.downloadSplash
 import com.mredrock.cyxbs.main.utils.getSplashFile
 import com.mredrock.cyxbs.main.utils.isDownloadSplash
+import com.mredrock.cyxbs.mine.network.model.ScoreStatus
 import java.text.SimpleDateFormat
 import java.util.*
 
@@ -22,10 +23,23 @@ class MainViewModel : BaseViewModel() {
 
     val startPage: LiveData<StartPage?> = MutableLiveData()
 
+    val checkInStatus = MutableLiveData<Boolean>()
+
     val splashVisibility = MutableLiveData(View.GONE)
 
     //进入app是否直接显示课表
     var isCourseDirectShow = false
+
+    fun getCheckInStatus(){
+        ApiGenerator.getCommonApiService(ApiService::class.java)
+            .getCheckInStatus()
+            .mapOrThrowApiException()
+            .setSchedulers()
+            .safeSubscribeBy {
+                checkInStatus.value = it.isChecked
+            }
+            .lifeCycle()
+    }
 
     fun getStartPage() {
         ApiGenerator.getCommonApiService(ApiService::class.java)

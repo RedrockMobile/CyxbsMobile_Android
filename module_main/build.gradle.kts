@@ -12,6 +12,11 @@ dependencies {
     implementation(project(":lib_account:api_account"))
     implementation(project(":lib_update:api_update"))
     implementation(project(":lib_protocol:api_protocol"))
+    implementation(project(":module_mine"))
+    //workmanager
+    val work_version = "2.7.1"
+    implementation ("androidx.work:work-runtime:$work_version")
+    implementation ("androidx.work:work-runtime-ktx:$work_version")
     lottie()
     eventBus()
     threeParty()

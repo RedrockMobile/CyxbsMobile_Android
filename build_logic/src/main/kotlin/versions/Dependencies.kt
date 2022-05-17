@@ -81,7 +81,7 @@ val android = listOf(
 
 
 
-//eventbug事件总线
+//eventbus事件总线
 const val eventBus = "org.greenrobot:eventbus:3.3.1"
 
 //glide

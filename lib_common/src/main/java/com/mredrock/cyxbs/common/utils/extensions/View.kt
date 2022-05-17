@@ -1,6 +1,8 @@
 package com.mredrock.cyxbs.common.utils.extensions
 
+import android.animation.ValueAnimator
 import android.annotation.SuppressLint
+import android.opengl.Visibility
 import android.view.View
 import com.mredrock.cyxbs.common.R
 
@@ -19,10 +21,42 @@ fun View.invisible() {
     visibility = View.INVISIBLE
 }
 
+fun View.invisibleWithAnim(duration: Long = 300) {
+    if(visibility == View.INVISIBLE) return
+
+    val anim = ValueAnimator
+        .ofFloat(1f, 0f)
+        .setDuration(duration)
+
+    anim.addUpdateListener {
+        val curVal = it.animatedValue as Float
+        this.alpha = curVal
+        if (curVal == 0f) this.visibility = View.INVISIBLE
+    }
+
+    anim.start()
+}
+
+fun View.visibleWithAnim(duration: Long = 300) {
+    if(visibility == View.VISIBLE) return
+
+    visibility = View.VISIBLE
+    val anim = ValueAnimator
+        .ofFloat(0f, 1f)
+        .setDuration(duration)
+
+    anim.addUpdateListener {
+        val curVal = it.animatedValue as Float
+        this.alpha = curVal
+    }
+
+    anim.start()
+}
+
 @SuppressLint("ClickableViewAccessibility")
 fun View.onTouch(
-        returnValue: Boolean = false,
-        handler: (v: View, event: android.view.MotionEvent) -> Unit
+    returnValue: Boolean = false,
+    handler: (v: View, event: android.view.MotionEvent) -> Unit
 ) {
     setOnTouchListener { v, event ->
         handler(v, event)
@@ -31,7 +65,7 @@ fun View.onTouch(
 }
 
 fun View.onClick(
-        handler: (v: View?) -> Unit
+    handler: (v: View?) -> Unit
 ) {
     setOnSingleClickListener { v ->
         handler(v)
@@ -51,6 +85,8 @@ fun View.setOnSingleClickListener(interval: Long = 500, click: (View) -> Unit) {
         it.setTag(R.id.common_view_click_time, System.currentTimeMillis())
     }
 }
+
+
 var View.leftPadding: Int
     inline get() = paddingLeft
     set(value) = setPadding(value, paddingTop, paddingRight, paddingBottom)
