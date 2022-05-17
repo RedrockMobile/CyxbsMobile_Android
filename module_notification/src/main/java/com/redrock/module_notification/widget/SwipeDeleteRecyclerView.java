@@ -1,5 +1,6 @@
 package com.redrock.module_notification.widget;
 
+import android.animation.ValueAnimator;
 import android.content.Context;
 import android.graphics.Rect;
 import android.util.AttributeSet;
@@ -76,8 +77,8 @@ public class SwipeDeleteRecyclerView extends RecyclerView {
                 mPosition = pointToPosition(x, y);
                 // 获取触碰点所在的position
                 if (mPosition != INVALID_POSITION) {
-                    if(stateCallback != null)
-                    stateCallback.dragEnable(false);
+                    if (stateCallback != null)
+                        stateCallback.dragEnable(false);
                     View view = mFlingView;
                     // 获取触碰点所在的view
                     mFlingView = (ViewGroup) getChildAt(mPosition);
@@ -85,6 +86,16 @@ public class SwipeDeleteRecyclerView extends RecyclerView {
                     isTouchOpened = mFlingView == view && mFlingView.getScrollX() != 0;
                     // 这里判断一下如果之前触碰的view已经打开，而当前碰到的view不是那个view则立即关闭之前的view，此处并不需要担动画没完成冲突，因为之前已经abortAnimation
                     if (view != null && mFlingView != view && view.getScrollX() != 0) {
+                        ValueAnimator anim = ValueAnimator
+                                .ofInt(view.getScrollX(), 0)
+                                .setDuration(300);
+
+                        anim.addUpdateListener(animation -> {
+                            int curVal = (int) animation.getAnimatedValue();
+                            view.scrollTo(curVal, 0);
+                        });
+
+                        anim.start();
                         view.scrollTo(0, 0);
                         return true;
                     }
@@ -111,8 +122,8 @@ public class SwipeDeleteRecyclerView extends RecyclerView {
 
                     mIsSlide = true;
 
-                    if(stateCallback != null)
-                    stateCallback.dragEnable(false);
+                    if (stateCallback != null)
+                        stateCallback.dragEnable(false);
                     return true;
                 } else {
                     if (!isTouchOpened && stateCallback != null) {

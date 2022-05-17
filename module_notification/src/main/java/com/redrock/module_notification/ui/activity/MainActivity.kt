@@ -36,7 +36,6 @@ import com.redrock.module_notification.widget.ScaleInTransformer
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlin.properties.Delegates
 
-//TODO 使用Paging分页加载
 //TODO 使用payload部分刷新item
 //TODO 优化rv刷新
 @Route(path = NOTIFICATION_HOME)
