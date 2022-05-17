@@ -30,7 +30,7 @@ class NotificationViewModel : BaseViewModel() {
     //通知tablayout活动通知小红点显示状态
     val activeDotStatus = MutableLiveData<Boolean>()
 
-    //通知popupwindow是否可以点击
+    //通知popupwindow是否可以点击 当处于多选删除时不可以出现popupwindow
     val popupWindowClickableStatus = MutableLiveData<Boolean>()
 
     //改变消息已读状态的Status

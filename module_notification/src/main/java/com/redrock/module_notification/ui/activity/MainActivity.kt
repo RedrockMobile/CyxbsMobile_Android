@@ -9,7 +9,6 @@ import android.view.LayoutInflater
 import android.view.View
 import android.widget.ImageView
 import android.widget.TextView
-import androidx.fragment.app.Fragment
 import androidx.viewpager2.widget.ViewPager2
 import com.alibaba.android.arouter.facade.annotation.Route
 import com.alibaba.android.arouter.launcher.ARouter
@@ -39,6 +38,8 @@ import kotlinx.android.synthetic.main.activity_main.*
 import kotlin.properties.Delegates
 
 //TODO 使用Paging分页加载
+//TODO 使用payload部分刷新item
+//TODO 优化rv刷新
 @Route(path = NOTIFICATION_HOME)
 class MainActivity : BaseViewModelActivity<NotificationViewModel>() {
     private var tab2View by Delegates.notNull<View>()
@@ -49,8 +50,10 @@ class MainActivity : BaseViewModelActivity<NotificationViewModel>() {
 
     //所有还未读的系统通知消息的id 用来给一键已读使用
     private var allUnreadSysMsgIds = ArrayList<String>()
+
+    //Vp2下的俩个fragment的实例
     private lateinit var sysFragment: SysNotificationFragment
-    private lateinit var activeFragment: Fragment
+    private lateinit var activeFragment: ActivityNotificationFragment
 
     //目前ViewPager处于哪个页面
     private var whichPageIsIn = 0
@@ -69,7 +72,7 @@ class MainActivity : BaseViewModelActivity<NotificationViewModel>() {
 
     override fun onStart() {
         super.onStart()
-        //从webActivity判断活动通知上的小红点是否可以消失
+        //从webActivity返回时判断活动通知上的小红点是否可以消失
         shouldShowRedDots = NotificationSp.getBoolean(IS_SWITCH1_SELECT, true)
         if (shouldShowRedDots) {
             if (allUnreadSysMsgIds.size != 0)
@@ -192,7 +195,6 @@ class MainActivity : BaseViewModelActivity<NotificationViewModel>() {
         val tab2 = notification_home_tl.getTabAt(1)
 
         //设置俩个tab的自定义View
-
         tab1View = LayoutInflater.from(this).inflate(R.layout.item_tab1, null)
         tab1?.customView = tab1View
         tab2View = LayoutInflater.from(this).inflate(R.layout.item_tab2, null)
@@ -201,23 +203,19 @@ class MainActivity : BaseViewModelActivity<NotificationViewModel>() {
         //改变文字颜色
         val onTabSelectedListener = object : TabLayout.OnTabSelectedListener by noOpDelegate() {
             override fun onTabSelected(tab: TabLayout.Tab) {
-                val customView = tab.customView
-
-                customView?.findViewById<TextView>(R.id.notification_tv_tl_tab)
+                tab.customView?.findViewById<TextView>(R.id.notification_tv_tl_tab)
                     ?.setTextColor(ColorStateList.valueOf(myGetColor(R.color.notification_home_tabLayout_text_selected)))
             }
 
             override fun onTabUnselected(tab: TabLayout.Tab) {
-                val customView = tab.customView
-
-                customView?.findViewById<TextView>(R.id.notification_tv_tl_tab)
+                tab.customView?.findViewById<TextView>(R.id.notification_tv_tl_tab)
                     ?.setTextColor(ColorStateList.valueOf(myGetColor(R.color.notification_home_tabLayout_text_unselect)))
             }
         }
         notification_home_tl.addOnTabSelectedListener(onTabSelectedListener)
-
     }
 
+    //当且仅当第一次进入通知模板setting有红点出现
     private fun initSettingRedDots() {
         if (NotificationSp.getBoolean(HAS_USER_ENTER_SETTING_PAGE, false))
             notification_home_red_dots.visibility = View.INVISIBLE
@@ -250,6 +248,7 @@ class MainActivity : BaseViewModelActivity<NotificationViewModel>() {
             it?.let { notification_rl_home_dots.isClickable = it }
         }
 
+      //这里通过与Activity同一个viewmodel来与activity通信 控制activity上的TabLayout上的小红点的显示状态
         viewModel.sysDotStatus.observe {
             if (it == true)
                 changeTabRedDotsVisibility(0, View.VISIBLE)
@@ -266,13 +265,10 @@ class MainActivity : BaseViewModelActivity<NotificationViewModel>() {
     }
 
     fun removeUnreadSysMsgId(id: String) {
-        Log.d(TAG, "removeUnreadSysMsgId: size before ${allUnreadSysMsgIds.size}")
         allUnreadSysMsgIds.remove(id)
-        Log.d(TAG, "removeUnreadSysMsgId: size after ${allUnreadSysMsgIds.size}")
         if (allUnreadSysMsgIds.size == 0) {
             changeTabRedDotsVisibility(0, View.INVISIBLE)
         }
-
     }
 
     fun removeUnreadActiveMsgIds(id: String) {

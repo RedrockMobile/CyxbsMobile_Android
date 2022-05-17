@@ -19,11 +19,16 @@ import kotlin.properties.Delegates
  *
  */
 class ActivityNotificationFragment : BaseFragment() {
+    //页面数据
     private var data = ArrayList<ActiveMsgBean>()
+
+    //rv适配器
     private lateinit var adapter: ActivityNotificationRvAdapter
+
     //fragment对应的Activity
     private var myActivity by Delegates.notNull<MainActivity>()
 
+    //使用和Activity同一个Viewmodel来与activity通信
     private val viewModel: NotificationViewModel by activityViewModels()
 
     override var layoutRes: Int? = R.layout.fragment_activity_notification
@@ -48,6 +53,7 @@ class ActivityNotificationFragment : BaseFragment() {
         }
 
         viewModel.activeDotStatus.observe(viewLifecycleOwner) {
+            //当一键已读点击时会调用到这里，并且it会是false 此时需要把所有数据变为已读
             if (!it) {
                 for ((index, _) in data.withIndex()) {
                     data[index].has_read = true

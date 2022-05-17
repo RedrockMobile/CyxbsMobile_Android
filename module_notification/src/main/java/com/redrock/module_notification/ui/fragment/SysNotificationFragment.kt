@@ -23,13 +23,16 @@ import kotlin.properties.Delegates
  *
  */
 class SysNotificationFragment : BaseFragment() {
-
+    //页面数据
     private var data = ArrayList<SystemMsgBean>()
+    //rv的适配器
     private lateinit var adapter: SystemNotificationRvAdapter
+    //fragment对应的activity
     private var myActivity by Delegates.notNull<MainActivity>()
 
     //所有已读的系统通知的消息的bean 用来给删除已读使用
     private var allReadSysMsg = ArrayList<SystemMsgBean>()
+    //使用和Activity同一个Viewmodel来与activity通信
     private val viewModel: NotificationViewModel by activityViewModels()
 
     override var layoutRes: Int? = R.layout.fragment_system_notification
@@ -137,7 +140,6 @@ class SysNotificationFragment : BaseFragment() {
                             deleteItems.add(data[position])
                             myActivity.removeUnreadSysMsgId(data[position].id.toString())
                         }
-
                         for (value in deleteItems) {
                             val position = data.indexOf(value)
                             data.removeAt(position)
