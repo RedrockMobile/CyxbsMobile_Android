@@ -37,7 +37,7 @@ class NotificationViewModel : BaseViewModel() {
     val changeMsgReadStatus = MutableLiveData<Int>()
 
     //获取数据是否成功
-    val getMsgSuccess = MutableLiveData<Boolean>()
+    val getMsgSuccessful = MutableLiveData<Boolean>()
 
     private val retrofit by lazy { ApiGenerator.getApiService(ApiService::class.java) }
 
@@ -51,13 +51,13 @@ class NotificationViewModel : BaseViewModel() {
             .safeSubscribeBy(
                 onError = {
                     Log.w(NOTIFICATION_LOG_TAG, "getAllMsg failed")
-                    getMsgSuccess.value = false
+                    getMsgSuccessful.value = false
                 },
                 onNext = {
                     Log.d(NOTIFICATION_LOG_TAG, "getAllMsg: $it")
                     activeMsg.value = it.active_msg
                     systemMsg.value = it.system_msg
-                    getMsgSuccess.value = true
+                    getMsgSuccessful.value = true
                 }
             )
             .lifeCycle()

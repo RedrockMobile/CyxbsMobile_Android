@@ -3,7 +3,6 @@ package com.redrock.module_notification.ui.activity
 import android.annotation.SuppressLint
 import android.content.res.ColorStateList
 import android.os.Bundle
-import android.util.Log
 import android.view.Gravity
 import android.view.LayoutInflater
 import android.view.View
@@ -39,7 +38,6 @@ import kotlin.properties.Delegates
 
 //TODO 使用Paging分页加载
 //TODO 使用payload部分刷新item
-//TODO 无网络状态下的处理
 //TODO 优化rv刷新
 @Route(path = NOTIFICATION_HOME)
 class MainActivity : BaseViewModelActivity<NotificationViewModel>() {
@@ -242,7 +240,6 @@ class MainActivity : BaseViewModelActivity<NotificationViewModel>() {
                     changeTabRedDotsVisibility(1, View.VISIBLE)
                     allUnreadActiveMsgIds.add(value.id.toString())
                 }
-
             }
         }
 
@@ -250,7 +247,7 @@ class MainActivity : BaseViewModelActivity<NotificationViewModel>() {
             it?.let { notification_rl_home_dots.isClickable = it }
         }
 
-      //这里通过与Activity同一个viewmodel来与activity通信 控制activity上的TabLayout上的小红点的显示状态
+        //这里通过与Activity同一个viewmodel来与activity通信 控制activity上的TabLayout上的小红点的显示状态
         viewModel.sysDotStatus.observe {
             if (it == true)
                 changeTabRedDotsVisibility(0, View.VISIBLE)
@@ -266,7 +263,7 @@ class MainActivity : BaseViewModelActivity<NotificationViewModel>() {
 
     }
 
-    private fun initRefreshLayout(){
+    private fun initRefreshLayout() {
         notification_refresh.setOnRefreshListener {
             viewModel.getAllMsg()
         }

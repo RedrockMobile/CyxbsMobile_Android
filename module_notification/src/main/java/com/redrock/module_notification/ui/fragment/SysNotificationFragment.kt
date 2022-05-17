@@ -5,8 +5,10 @@ import android.view.View
 import androidx.fragment.app.activityViewModels
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.mredrock.cyxbs.common.ui.BaseFragment
+import com.mredrock.cyxbs.common.utils.extensions.gone
 import com.mredrock.cyxbs.common.utils.extensions.invisible
 import com.mredrock.cyxbs.common.utils.extensions.setOnSingleClickListener
+import com.mredrock.cyxbs.common.utils.extensions.visible
 import com.redrock.module_notification.R
 import com.redrock.module_notification.adapter.SystemNotificationRvAdapter
 import com.redrock.module_notification.bean.DeleteMsgToBean
@@ -25,13 +27,16 @@ import kotlin.properties.Delegates
 class SysNotificationFragment : BaseFragment() {
     //页面数据
     private var data = ArrayList<SystemMsgBean>()
+
     //rv的适配器
     private lateinit var adapter: SystemNotificationRvAdapter
+
     //fragment对应的activity
     private var myActivity by Delegates.notNull<MainActivity>()
 
     //所有已读的系统通知的消息的bean 用来给删除已读使用
     private var allReadSysMsg = ArrayList<SystemMsgBean>()
+
     //使用和Activity同一个Viewmodel来与activity通信
     private val viewModel: NotificationViewModel by activityViewModels()
 
@@ -43,11 +48,6 @@ class SysNotificationFragment : BaseFragment() {
         initRv()
         initObserver()
         initViewClickListener()
-    }
-
-    override fun onResume() {
-        super.onResume()
-        viewModel.getAllMsg()
     }
 
     private fun initRv() {
@@ -98,6 +98,16 @@ class SysNotificationFragment : BaseFragment() {
             adapter.setNewList(data)
             adapter.notifyItemChanged(it)
             myActivity.removeUnreadSysMsgId(data[it].id.toString())
+        }
+
+        viewModel.getMsgSuccessful.observe(viewLifecycleOwner) {
+            if (it == false) {
+                notification_ll_no_internet.visible()
+                notification_rv_sys.gone()
+            } else {
+                notification_ll_no_internet.gone()
+                notification_rv_sys.visible()
+            }
         }
     }
 

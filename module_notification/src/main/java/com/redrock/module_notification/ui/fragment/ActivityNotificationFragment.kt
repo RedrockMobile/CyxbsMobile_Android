@@ -5,6 +5,8 @@ import android.view.View
 import androidx.fragment.app.activityViewModels
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.mredrock.cyxbs.common.ui.BaseFragment
+import com.mredrock.cyxbs.common.utils.extensions.gone
+import com.mredrock.cyxbs.common.utils.extensions.visible
 import com.redrock.module_notification.R
 import com.redrock.module_notification.adapter.ActivityNotificationRvAdapter
 import com.redrock.module_notification.bean.ActiveMsgBean
@@ -71,5 +73,14 @@ class ActivityNotificationFragment : BaseFragment() {
             myActivity.removeUnreadActiveMsgIds(data[-it].id.toString())
         }
 
+        viewModel.getMsgSuccessful.observe(viewLifecycleOwner) {
+            if (it == false) {
+                notification_ll_no_internet.visible()
+                notification_rv_act.gone()
+            } else {
+                notification_rv_act.visible()
+                notification_ll_no_internet.gone()
+            }
+        }
     }
 }
