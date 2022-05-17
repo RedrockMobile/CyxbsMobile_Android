@@ -37,7 +37,6 @@ class LoadMoreWindow(
         setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
         width = Width
         height = Height
-
     }
 
     fun setOnItemClickListener(itemViewRes: Int, clickEvent: (() -> Unit)) {
@@ -51,5 +50,4 @@ class LoadMoreWindow(
         super.dismiss()
         window.changeWindowAlpha(1.0F)
     }
-
 }

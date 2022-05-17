@@ -33,6 +33,7 @@ import com.redrock.module_notification.viewmodel.NotificationViewModel
 import com.redrock.module_notification.widget.DeleteDialog
 import com.redrock.module_notification.widget.LoadMoreWindow
 import com.redrock.module_notification.widget.ScaleInTransformer
+import com.redrock.module_notification.widget.buildLoadMoreWindow
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlin.properties.Delegates
 
@@ -94,11 +95,11 @@ class MainActivity : BaseViewModelActivity<NotificationViewModel>() {
         var popupWindow by Delegates.notNull<LoadMoreWindow>()
         when (whichPageIsIn) {
             0 -> {
-                popupWindow = LoadMoreWindow(
-                    this,
-                    R.layout.popupwindow_dots_sys,
-                    this.window
-                )
+                popupWindow = buildLoadMoreWindow {
+                    context = this@MainActivity
+                    window = this@MainActivity.window
+                    layoutRes = R.layout.popupwindow_dots_sys
+                }
 
                 popupWindow.apply {
                     setOnItemClickListener(R.id.notification_ll_home_popup_fast_read_sys) {
@@ -128,12 +129,12 @@ class MainActivity : BaseViewModelActivity<NotificationViewModel>() {
             }
 
             1 -> {
-                popupWindow = LoadMoreWindow(
-                    this,
-                    R.layout.popupwindow_dots_act,
-                    this.window,
+                popupWindow = buildLoadMoreWindow {
+                    context = this@MainActivity
+                    window = this@MainActivity.window
+                    layoutRes = R.layout.popupwindow_dots_sys
                     Height = dp2px(80.toFloat())
-                )
+                }
 
                 popupWindow.apply {
                     setOnItemClickListener(R.id.notification_ll_home_popup_fast_read_act) {
