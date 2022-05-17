@@ -6,4 +6,4 @@ import com.mredrock.cyxbs.common.BaseApp
  * create by:Fxymine4ever
  * time: 2018/11/7
  */
-class App : BaseApp()
+abstract class App : BaseApp()

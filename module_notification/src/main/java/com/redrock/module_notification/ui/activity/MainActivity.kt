@@ -3,6 +3,7 @@ package com.redrock.module_notification.ui.activity
 import android.annotation.SuppressLint
 import android.content.res.ColorStateList
 import android.os.Bundle
+import android.util.Log
 import android.view.Gravity
 import android.view.LayoutInflater
 import android.view.View
@@ -37,7 +38,7 @@ import com.redrock.module_notification.widget.ScaleInTransformer
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlin.properties.Delegates
 
-
+//TODO 使用Paging分页加载
 @Route(path = NOTIFICATION_HOME)
 class MainActivity : BaseViewModelActivity<NotificationViewModel>() {
     private var tab2View by Delegates.notNull<View>()
@@ -265,7 +266,9 @@ class MainActivity : BaseViewModelActivity<NotificationViewModel>() {
     }
 
     fun removeUnreadSysMsgId(id: String) {
+        Log.d(TAG, "removeUnreadSysMsgId: size before ${allUnreadSysMsgIds.size}")
         allUnreadSysMsgIds.remove(id)
+        Log.d(TAG, "removeUnreadSysMsgId: size after ${allUnreadSysMsgIds.size}")
         if (allUnreadSysMsgIds.size == 0) {
             changeTabRedDotsVisibility(0, View.INVISIBLE)
         }

@@ -85,6 +85,7 @@ class SystemNotificationRvAdapter(
                     ChangeReadStatusToBean(listOf(list[position].id.toString())),
                     position
                 )
+                viewmodel.changeMsgReadStatus.value = position
                 WebActivity.startWebViewActivity(data.redirect_url, context)
             }
             holder.itemSysNotificationClMain.setOnLongClickListener {
