@@ -35,8 +35,7 @@ import com.redrock.module_notification.widget.ScaleInTransformer
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlin.properties.Delegates
 
-//TODO 小红点的展示逻辑太复杂了，容易出bug 考虑一下创建一个小红点的统一显示类
-//TODO 暂时没有考虑如果后端出问题了删除消息失败或者改变消息已读状态失败的处理
+
 @Route(path = NOTIFICATION_HOME)
 class MainActivity : BaseViewModelActivity<NotificationViewModel>() {
     private var tab2View by Delegates.notNull<View>()
@@ -82,7 +81,11 @@ class MainActivity : BaseViewModelActivity<NotificationViewModel>() {
         var popupWindow by Delegates.notNull<LoadMoreWindow>()
         when (whichPageIsIn) {
             0 -> {
-                popupWindow = LoadMoreWindow(this, R.layout.popupwindow_dots_sys, this.window)
+                popupWindow = LoadMoreWindow(
+                    this,
+                    R.layout.popupwindow_dots_sys,
+                    this.window
+                )
 
                 popupWindow.apply {
                     setOnItemClickListener(R.id.notification_ll_home_popup_fast_read_sys) {
@@ -111,6 +114,7 @@ class MainActivity : BaseViewModelActivity<NotificationViewModel>() {
                     }
                 }
             }
+            
             1 -> {
                 popupWindow = LoadMoreWindow(
                     this,

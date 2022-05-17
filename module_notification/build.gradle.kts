@@ -1,4 +1,3 @@
-import versions.lottie
 import versions.threeParty
 
 plugins {

@@ -1,9 +1,8 @@
 package com.redrock.module_notification.ui.fragment
 
 import android.os.Bundle
-import android.view.LayoutInflater
+import android.util.Log
 import android.view.View
-import android.view.ViewGroup
 import androidx.fragment.app.activityViewModels
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.mredrock.cyxbs.common.ui.BaseFragment
@@ -25,11 +24,7 @@ class ActivityNotificationFragment : BaseFragment() {
 
     val viewModel: NotificationViewModel by activityViewModels()
 
-    override fun onCreateView(
-        inflater: LayoutInflater,
-        container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View? = inflater.inflate(R.layout.fragment_activity_notification, container, false)
+    override var layoutRes: Int? = R.layout.fragment_activity_notification
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -38,7 +33,7 @@ class ActivityNotificationFragment : BaseFragment() {
     }
 
     private fun initRv() {
-        adapter = ActivityNotificationRvAdapter(listOf(), viewModel, requireActivity())
+        adapter = ActivityNotificationRvAdapter(data, viewModel, requireActivity())
         notification_rv_act.adapter = adapter
         notification_rv_act.layoutManager = LinearLayoutManager(this.context)
     }
@@ -59,7 +54,7 @@ class ActivityNotificationFragment : BaseFragment() {
                     activity.makeTabRedDotsInvisible(1)
                 }
             }
-            adapter.changeAllData(it!!)
+            adapter.refreshAllData(data)
         }
 
         viewModel.activeDotStatus.observe(viewLifecycleOwner) {
@@ -67,7 +62,7 @@ class ActivityNotificationFragment : BaseFragment() {
                 for ((index, _) in data.withIndex()){
                     data[index].has_read = true
                 }
-                adapter.changeAllData(data)
+                adapter.refreshAllData(data)
                 val activity = requireActivity()
                 if (activity is MainActivity) {
                     activity.makeTabRedDotsInvisible(1)

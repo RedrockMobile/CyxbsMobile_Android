@@ -15,7 +15,8 @@ import com.redrock.module_notification.util.Constant.NOTIFICATION_SP_FILE_NAME
  * 扩展函数类
  */
 
-val Context.NotificationSp: SharedPreferences
+//对Context类的扩展属性
+internal val Context.NotificationSp: SharedPreferences
     get() = getSharedPreferences(NOTIFICATION_SP_FILE_NAME, Context.MODE_PRIVATE)
 
 internal fun Window.changeWindowAlpha(targetWindowAlpha: Float) {

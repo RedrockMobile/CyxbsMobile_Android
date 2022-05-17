@@ -2,6 +2,7 @@ package com.redrock.module_notification.adapter
 
 import android.annotation.SuppressLint
 import android.content.Context
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -10,6 +11,7 @@ import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.mredrock.cyxbs.common.utils.extensions.setOnSingleClickListener
+import com.mredrock.cyxbs.mine.util.extension.log
 import com.redrock.module_notification.R
 import com.redrock.module_notification.bean.ActiveMsgBean
 import com.redrock.module_notification.bean.ChangeReadStatusToBean
@@ -83,8 +85,7 @@ class ActivityNotificationRvAdapter(
                 .load(data.user_head_url)
                 .placeholder(R.drawable.common_ic_place_holder)
                 .into(holder.itemActivityNotificationIvHead)
-            Glide
-                .with(context)
+            Glide.with(context)
                 .load(data.pic_url)
                 .placeholder(R.drawable.common_ic_place_holder)
                 .into(holder.itemActivityNotificationIvDetail)
@@ -100,7 +101,8 @@ class ActivityNotificationRvAdapter(
 
 
     @SuppressLint("NotifyDataSetChanged")
-    fun changeAllData(newList: List<ActiveMsgBean>) {
+    fun refreshAllData(newList: List<ActiveMsgBean>) {
+        Log.d("wzt", "refreshAllData: ${newList == list} ")
         list = newList
         notifyDataSetChanged()
     }

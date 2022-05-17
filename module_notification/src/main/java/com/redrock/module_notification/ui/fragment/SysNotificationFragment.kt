@@ -34,11 +34,7 @@ class SysNotificationFragment : BaseFragment() {
     private var allReadSysMsg = ArrayList<SystemMsgBean>()
     val viewModel: NotificationViewModel by activityViewModels()
 
-    override fun onCreateView(
-        inflater: LayoutInflater,
-        container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View? = inflater.inflate(R.layout.fragment_system_notification, container, false)
+    override var layoutRes: Int? = R.layout.fragment_system_notification
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)

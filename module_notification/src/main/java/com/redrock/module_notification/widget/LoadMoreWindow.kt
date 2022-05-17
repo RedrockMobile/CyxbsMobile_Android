@@ -8,6 +8,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.Window
 import android.widget.PopupWindow
+import androidx.annotation.LayoutRes
 import com.mredrock.cyxbs.common.utils.extensions.dp2px
 import com.mredrock.cyxbs.common.utils.extensions.setOnSingleClickListener
 import com.redrock.module_notification.R
@@ -20,8 +21,9 @@ import com.redrock.module_notification.util.changeWindowAlpha
  */
 @SuppressLint("InflateParams")
 class LoadMoreWindow(
-    context: Context,
-    layoutRes: Int,
+    private val context: Context,
+    @LayoutRes
+    private val layoutRes: Int,
     private val window: Window,
     Width: Int = context.dp2px(120.toFloat()),
     Height: Int = context.dp2px(120.toFloat())
@@ -39,8 +41,7 @@ class LoadMoreWindow(
     }
 
     fun setOnItemClickListener(itemViewRes: Int, clickEvent: (() -> Unit)) {
-        val itemView = contentView.findViewById<View>(itemViewRes)
-        itemView.setOnSingleClickListener {
+        contentView.findViewById<View>(itemViewRes).setOnSingleClickListener {
             clickEvent.invoke()
             dismiss()
         }

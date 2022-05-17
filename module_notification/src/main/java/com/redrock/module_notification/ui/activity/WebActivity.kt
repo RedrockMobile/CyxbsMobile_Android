@@ -2,6 +2,8 @@ package com.redrock.module_notification.ui.activity
 
 import android.content.Context
 import android.os.Bundle
+import android.webkit.WebResourceRequest
+import android.webkit.WebResourceResponse
 import android.webkit.WebView
 import android.webkit.WebViewClient
 import com.mredrock.cyxbs.common.ui.BaseActivity
@@ -16,11 +18,13 @@ import kotlinx.android.synthetic.main.activity_web.*
  */
 
 //禁止跳转
-class myWebViewClient : WebViewClient() {
-    @Deprecated("Deprecated in Java")
-    override fun shouldOverrideUrlLoading(view: WebView?, url: String): Boolean {
-        view?.loadUrl(url)
-        return super.shouldOverrideUrlLoading(view, url)
+class ForbidJumpWebViewClient : WebViewClient() {
+    override fun shouldInterceptRequest(
+        view: WebView?,
+        request: WebResourceRequest?
+    ): WebResourceResponse? {
+        view?.loadUrl(request?.url.toString())
+        return super.shouldInterceptRequest(view, request)
     }
 }
 
@@ -31,11 +35,12 @@ class WebActivity : BaseActivity() {
         setContentView(R.layout.activity_web)
         val url = intent.getStringExtra("URL")
 
-        notification_wv.webViewClient = myWebViewClient()
+        notification_wv.webViewClient = ForbidJumpWebViewClient()
 
         notification_detail_back.setOnClickListener { finish() }
         url?.let { notification_wv.loadUrl(it) }
 
+        //必须调用
         notification_wv.init()
 
     }
