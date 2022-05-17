@@ -20,9 +20,9 @@ abstract class BaseApp : Application() {
             private set
     }
 
-    abstract fun privacyAgree()
+    open fun privacyAgree(){}
 
-    abstract fun privacyDenied()
+    open fun privacyDenied(){}
 
 
     @CallSuper

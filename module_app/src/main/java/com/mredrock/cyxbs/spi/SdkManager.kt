@@ -13,16 +13,18 @@ import com.mredrock.cyxbs.common.utils.getProcessName
  */
 interface SdkManager {
     val application: Application
-
-    fun isMainProcess(): Boolean  = currentProcessName() == applicationId()
+    //currentProcessName中还包含部分不可见字符。所有不可使用equals
+    fun isMainProcess(): Boolean  = currentProcessName().contains(applicationId())
 
     fun currentProcessName(): String {
-        val applicationContext = application.applicationContext
+        //不允许通过getRunningAppProcess获取当前线程号，因为有可能触发隐私条例
+        /*val applicationContext = application.applicationContext
         val am = applicationContext.getSystemService(Application.ACTIVITY_SERVICE) as ActivityManager
-        return am.runningAppProcesses
+        am.runningAppProcesses
             .firstOrNull {
                 it.pid == Process.myPid()
-            }?.processName!!
+            }?.processName!!*/
+        return getProcessName(Process.myPid()) ?: ""
     }
 
 
