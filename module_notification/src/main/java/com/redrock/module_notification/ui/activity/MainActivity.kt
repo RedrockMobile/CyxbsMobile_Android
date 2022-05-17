@@ -39,6 +39,7 @@ import kotlin.properties.Delegates
 
 //TODO 使用Paging分页加载
 //TODO 使用payload部分刷新item
+//TODO 无网络状态下的处理
 //TODO 优化rv刷新
 @Route(path = NOTIFICATION_HOME)
 class MainActivity : BaseViewModelActivity<NotificationViewModel>() {
@@ -68,6 +69,7 @@ class MainActivity : BaseViewModelActivity<NotificationViewModel>() {
         initTabLayout()
         initSettingRedDots()
         initObserver()
+        initRefreshLayout()
     }
 
     override fun onStart() {
@@ -229,8 +231,8 @@ class MainActivity : BaseViewModelActivity<NotificationViewModel>() {
                     allUnreadSysMsgIds.add(value.id.toString())
                     changeTabRedDotsVisibility(0, View.VISIBLE)
                 }
-
             }
+            notification_refresh.isRefreshing = false
         }
 
         viewModel.activeMsg.observe {
@@ -262,6 +264,13 @@ class MainActivity : BaseViewModelActivity<NotificationViewModel>() {
                 changeTabRedDotsVisibility(1, View.INVISIBLE)
         }
 
+    }
+
+    private fun initRefreshLayout(){
+        notification_refresh.setOnRefreshListener {
+            viewModel.getAllMsg()
+        }
+        notification_refresh.isRefreshing = true
     }
 
     fun removeUnreadSysMsgId(id: String) {
