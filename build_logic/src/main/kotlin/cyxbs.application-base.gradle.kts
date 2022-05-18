@@ -30,13 +30,16 @@ android {
         minSdk = AGP.mineSdk
         targetSdk = AGP.targetSdk
         testInstrumentationRunner = AGP.testInstrumentationRunner
+        versionName = AGP.releaseVersionName
+        versionCode = AGP.releaseVersionCode
+        applicationId = AGP.releaseApplicationId
         // 秘钥文件
         manifestPlaceholders += (project.ext["secret"]["manifestPlaceholders"] as Map<String, Any>)
         (project.ext["secret"]["buildConfigField"] as Map<String, String>).forEach { (k, v) ->
             buildConfigField("String", k, v)
         }
         ndk {
-            abiFilters += AGP.releaseAbiFilters
+            abiFilters += AGP.abiFilters
         }
         /*dexOptions {
             preDexLibraries = true
@@ -45,31 +48,8 @@ android {
     }
 
     packagingOptions {
-        jniLibs.excludes +=
-            listOf(
-                "lib/armeabi/libAMapSDK_MAP_v6_9_4.so",
-                "lib/armeabi/libsophix.so",
-                "lib/armeabi/libBugly.so",
-                "lib/armeabi/libpl_droidsonroids_gif.so",
-                "lib/*/libRSSupport.so",
-                "lib/*/librsjni.so",
-                "lib/*/librsjni_androidx.so"
-            )
-
-        resources {
-            excludes += listOf(
-                "LICENSE.txt",
-                "META-INF/DEPENDENCIES",
-                "META-INF/ASL2.0",
-                "META-INF/NOTICE",
-                "META-INF/LICENSE",
-                "META-INF/LICENSE.txt",
-                "META-INF/services/javax.annotation.processing.Processor",
-                "META-INF/MANIFEST.MF",
-                "META-INF/NOTICE.txt",
-                "META-INF/rxjava.properties"
-            )
-        }
+        jniLibs.excludes += AGP.jniExclude
+        resources.excludes += AGP.resourcesExclude
     }
 
     compileOptions {
@@ -81,3 +61,4 @@ android {
         jvmTarget = "1.8"
     }
 }
+

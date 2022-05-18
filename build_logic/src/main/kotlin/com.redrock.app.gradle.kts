@@ -42,7 +42,7 @@ android {
 
             signingConfig = signingConfigs.getByName("config")
             ndk {
-                abiFilters += listOf("arm64-v8a","armeabi-v7a")
+                abiFilters += AGP.abiFilters
             }
         }
 
@@ -55,7 +55,7 @@ android {
 
             ndk {
                 // 修改安装包的架构要记得同步修改上面的 Bugly 的 ndk 依赖
-                abiFilters += listOf("arm64-v8a","armeabi-v7a")
+                abiFilters += AGP.abiFilters
             }
         }
     }
