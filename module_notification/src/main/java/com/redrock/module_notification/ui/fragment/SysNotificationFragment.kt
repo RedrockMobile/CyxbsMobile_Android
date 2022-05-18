@@ -2,6 +2,7 @@ package com.redrock.module_notification.ui.fragment
 
 import android.os.Bundle
 import android.view.View
+import android.view.animation.AnimationUtils
 import androidx.fragment.app.activityViewModels
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.mredrock.cyxbs.common.ui.BaseFragment
@@ -11,6 +12,7 @@ import com.mredrock.cyxbs.common.utils.extensions.setOnSingleClickListener
 import com.mredrock.cyxbs.common.utils.extensions.visible
 import com.redrock.module_notification.R
 import com.redrock.module_notification.adapter.SystemNotificationRvAdapter
+import com.redrock.module_notification.adapter.SystemNotificationRvAdapter.Companion.CHANGE_DOT_STATUS
 import com.redrock.module_notification.bean.DeleteMsgToBean
 import com.redrock.module_notification.bean.SystemMsgBean
 import com.redrock.module_notification.ui.activity.MainActivity
@@ -67,8 +69,11 @@ class SysNotificationFragment : BaseFragment() {
                 notification_rv_sys.closeMenu()
             }
         notification_rv_sys.adapter = adapter
-        notification_rv_sys.layoutManager = LinearLayoutManager(this.context)
 
+        val resId = R.anim.layout_animation_fall_down
+        val anim = AnimationUtils.loadLayoutAnimation(myActivity, resId)
+        notification_rv_sys.layoutAnimation = anim
+        notification_rv_sys.layoutManager = LinearLayoutManager(this.context)
     }
 
     private fun initObserver() {
@@ -81,6 +86,7 @@ class SysNotificationFragment : BaseFragment() {
             }
             data = it as ArrayList<SystemMsgBean>
             adapter.changeAllData(data)
+            notification_rv_sys.scheduleLayoutAnimation()
         }
 
         viewModel.sysDotStatus.observe(viewLifecycleOwner) {
@@ -96,7 +102,7 @@ class SysNotificationFragment : BaseFragment() {
             if (it < 0) return@observe
             data[it].has_read = true
             adapter.setNewList(data)
-            adapter.notifyItemChanged(it)
+            adapter.notifyItemChanged(it, CHANGE_DOT_STATUS)
             myActivity.removeUnreadSysMsgId(data[it].id.toString())
         }
 

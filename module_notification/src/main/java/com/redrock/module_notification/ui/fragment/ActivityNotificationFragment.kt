@@ -2,6 +2,7 @@ package com.redrock.module_notification.ui.fragment
 
 import android.os.Bundle
 import android.view.View
+import android.view.animation.AnimationUtils
 import androidx.fragment.app.activityViewModels
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.mredrock.cyxbs.common.ui.BaseFragment
@@ -14,6 +15,8 @@ import com.redrock.module_notification.bean.ActiveMsgBean
 import com.redrock.module_notification.ui.activity.MainActivity
 import com.redrock.module_notification.viewmodel.NotificationViewModel
 import kotlinx.android.synthetic.main.fragment_activity_notification.*
+import kotlinx.android.synthetic.main.fragment_activity_notification.notification_ll_no_internet
+import kotlinx.android.synthetic.main.fragment_system_notification.*
 import kotlin.properties.Delegates
 
 /**
@@ -46,6 +49,11 @@ class ActivityNotificationFragment : BaseFragment() {
     private fun initRv() {
         adapter = ActivityNotificationRvAdapter(data, viewModel, requireActivity())
         notification_rv_act.adapter = adapter
+
+        val resId = R.anim.layout_animation_fall_down
+        val anim = AnimationUtils.loadLayoutAnimation(myActivity, resId)
+        notification_rv_act.layoutAnimation = anim
+
         notification_rv_act.layoutManager = LinearLayoutManager(this.context)
     }
 
@@ -62,6 +70,8 @@ class ActivityNotificationFragment : BaseFragment() {
                     data[index].has_read = true
                 }
                 adapter.refreshAllData(data)
+                //让数据更改有动画效果
+                notification_rv_sys.scheduleLayoutAnimation()
             }
         }
 
