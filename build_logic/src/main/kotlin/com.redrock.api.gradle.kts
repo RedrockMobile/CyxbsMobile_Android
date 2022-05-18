@@ -1,9 +1,23 @@
-val isSingleModuleDebug: String by project
+import versions.`androidx-appcompat`
+import versions.aRouter
 
-if(isSingleModuleDebug.toBoolean()){
-    apply(plugin="com.redrock.api-debug")
-}else{
-    apply(plugin = "com.redrock.api-release")
+plugins {
+    id("cyxbs.library-base")
+    kotlin("kapt")
+    id("kotlin-android-extensions")
 }
 
+android.lint.abortOnError = false
+
+kapt {
+    // ARouter https://github.com/alibaba/ARouter
+    arguments {
+        arg("AROUTER_MODULE_NAME", project.name)
+    }
+}
+
+dependencies {
+    aRouter()
+    implementation(`androidx-appcompat`)
+}
 
