@@ -35,6 +35,8 @@ class SystemNotificationRvAdapter(
     companion object {
         const val TYPE_ONE = 1
         const val TYPE_SECOND = 2
+
+        const val CHANGE_DOT_STATUS = 3
     }
 
     private var multiDeleteAdapter: SysNotifyMultiDeleteRvAdapter? = null
@@ -77,6 +79,7 @@ class SystemNotificationRvAdapter(
         if (holder is InnerHolder) {
             val data = list[position]
             if (data.has_read) holder.itemSysNotificationIvRedDot.visibility = View.INVISIBLE
+            else holder.itemSysNotificationIvRedDot.visibility = View.VISIBLE
             holder.itemSysNotificationTvTitle.text = data.title
             holder.itemSysNotificationTvContent.text = data.content
             holder.itemSysNotificationTvTime.text = Date.getUnExactTime(data.publish_time)
@@ -115,6 +118,32 @@ class SystemNotificationRvAdapter(
                 }
             }
         }
+    }
+
+    override fun onBindViewHolder(
+        holder: RecyclerView.ViewHolder,
+        position: Int,
+        payloads: MutableList<Any>
+    ) {
+        if (holder is InnerHolder)
+            if (payloads.isNotEmpty()) {
+                when (payloads[0]) {
+                    CHANGE_DOT_STATUS -> {
+                        val data = list[position]
+                        if (data.has_read)
+                            holder.itemSysNotificationIvRedDot.visibility = View.INVISIBLE
+                        else
+                            holder.itemSysNotificationIvRedDot.visibility = View.VISIBLE
+                    }
+                }
+            }
+
+            //当payload为空时 我们进行full bind 不这样写会出错
+            //public void onBindViewHolder(@NonNull VH holder, int position,
+            //                @NonNull List<Object> payloads) {
+            //            onBindViewHolder(holder, position);
+            //        }
+            else super.onBindViewHolder(holder, position, payloads)
     }
 
     @SuppressLint("NotifyDataSetChanged")

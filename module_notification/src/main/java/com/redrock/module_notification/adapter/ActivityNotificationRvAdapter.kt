@@ -28,9 +28,12 @@ class ActivityNotificationRvAdapter(
     private var context: Context
 ) :
     RecyclerView.Adapter<RecyclerView.ViewHolder>() {
+
     companion object {
         const val TYPE_ONE = 1
         const val TYPE_SECOND = 2
+
+        const val CHANGE_DOT_STATUS = 3
     }
 
     inner class BlankHolder(itemView: View) : RecyclerView.ViewHolder(itemView)
@@ -97,6 +100,29 @@ class ActivityNotificationRvAdapter(
                 WebActivity.startWebViewActivity(data.redirect_url, context)
             }
         }
+    }
+
+    //如果我们仅需要改变红点的状态
+    override fun onBindViewHolder(
+        holder: RecyclerView.ViewHolder,
+        position: Int,
+        payloads: MutableList<Any>
+    ) {
+        if (holder is InnerHolder)
+            if (payloads.isNotEmpty()) {
+                when (payloads[0]) {
+                    CHANGE_DOT_STATUS -> {
+                        val data = list[position]
+                        if (data.has_read)
+                            holder.itemActivityNotificationIvRedDot.visibility = View.INVISIBLE
+                        else
+                            holder.itemActivityNotificationIvRedDot.visibility = View.VISIBLE
+                    }
+                }
+            }
+
+        //当payload为空时 我们进行full bind 不这样写会出错
+        else super.onBindViewHolder(holder, position, payloads)
     }
 
     fun setNewList(newList: List<ActiveMsgBean>) {

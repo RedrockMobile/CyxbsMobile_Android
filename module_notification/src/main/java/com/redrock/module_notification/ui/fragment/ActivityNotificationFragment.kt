@@ -9,6 +9,7 @@ import com.mredrock.cyxbs.common.utils.extensions.gone
 import com.mredrock.cyxbs.common.utils.extensions.visible
 import com.redrock.module_notification.R
 import com.redrock.module_notification.adapter.ActivityNotificationRvAdapter
+import com.redrock.module_notification.adapter.ActivityNotificationRvAdapter.Companion.CHANGE_DOT_STATUS
 import com.redrock.module_notification.bean.ActiveMsgBean
 import com.redrock.module_notification.ui.activity.MainActivity
 import com.redrock.module_notification.viewmodel.NotificationViewModel
@@ -69,7 +70,7 @@ class ActivityNotificationFragment : BaseFragment() {
             if (it > 0) return@observe
             data[-it].has_read = true
             adapter.setNewList(data)
-            adapter.notifyItemChanged(-it)
+            adapter.notifyItemChanged(-it,CHANGE_DOT_STATUS)
             myActivity.removeUnreadActiveMsgIds(data[-it].id.toString())
         }
 
