@@ -1,5 +1,6 @@
+@file:Suppress("UnstableApiUsage", "UNCHECKED_CAST")
+
 import ext.get
-import gradle.kotlin.dsl.accessors._11b1f85c87a6b4d0c16534be4db6fa46.ext
 import org.gradle.api.JavaVersion
 import org.gradle.kotlin.dsl.kotlin
 import versions.AGP
@@ -15,6 +16,7 @@ android {
     publishing {
         singleVariant("debug")
     }
+
     signingConfigs {
         create("config") {
             keyAlias = project.ext["secret"]["sign"]["RELEASE_KEY_ALIAS"] as String
@@ -23,6 +25,7 @@ android {
             storeFile = file("$rootDir/build_logic/secret/key-cyxbs")
         }
     }
+
     defaultConfig {
         minSdk = AGP.mineSdk
         targetSdk = AGP.targetSdk
@@ -35,10 +38,6 @@ android {
         }
     }
 
-    compileOptions {
-        sourceCompatibility = JavaVersion.VERSION_1_8
-        targetCompatibility = JavaVersion.VERSION_1_8
-    }
     buildTypes {
         release {
             isMinifyEnabled = false
@@ -52,6 +51,12 @@ android {
             }
         }
     }
+
+    compileOptions {
+        sourceCompatibility = JavaVersion.VERSION_1_8
+        targetCompatibility = JavaVersion.VERSION_1_8
+    }
+
     kotlinOptions {
         jvmTarget = "1.8"
     }
