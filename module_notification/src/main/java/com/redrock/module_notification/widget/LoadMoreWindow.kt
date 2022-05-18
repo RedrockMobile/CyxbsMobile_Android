@@ -25,8 +25,8 @@ class LoadMoreWindow(
     @LayoutRes
     private val layoutRes: Int,
     private val window: Window,
-    Width: Int = context.dp2px(120.toFloat()),
-    Height: Int = context.dp2px(120.toFloat())
+    Width: Int,
+    Height: Int
 ) : PopupWindow() {
 
     init {

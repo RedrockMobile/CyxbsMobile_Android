@@ -4,6 +4,7 @@ import android.content.Context
 import android.view.Window
 import androidx.annotation.LayoutRes
 import com.mredrock.cyxbs.common.utils.extensions.dp2px
+import kotlin.properties.Delegates
 
 /**
  * Author by OkAndGreat
@@ -17,16 +18,18 @@ fun buildLoadMoreWindow(init: (LoadMoreWindowBuilder.() -> Unit)): LoadMoreWindo
 }
 
 class LoadMoreWindowBuilder {
-    lateinit var context: Context
-    lateinit var window: Window
+    var context by Delegates.notNull<Context>()
+    var window by Delegates.notNull<Window>()
 
     @LayoutRes
     var layoutRes: Int = 0
 
-    var Width: Int = context.dp2px(120.toFloat())
-    var Height: Int = context.dp2px(120.toFloat())
+    var Width: Int = 0
+    var Height: Int = 0
 
     fun build(): LoadMoreWindow {
+        if (Width == 0) Width = context.dp2px(120.toFloat())
+        if (Height == 0) Height = context.dp2px(120.toFloat())
         return LoadMoreWindow(context, layoutRes, window, Width, Height)
     }
 }

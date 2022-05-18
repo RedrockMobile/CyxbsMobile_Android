@@ -9,32 +9,33 @@
         android:id="@+id/notification_ll_no_internet"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:visibility="gone"
+
         android:layout_gravity="center"
         android:orientation="vertical">
 
         <ImageView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_width="157dp"
+            android:layout_height="96dp"
+            android:layout_gravity="center"
             android:src="@drawable/ic_notification_no_internet"
             tools:ignore="ContentDescription" />
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="10dp"
             android:layout_gravity="center"
+            android:layout_marginTop="10dp"
+            android:text="最遥远的距离不是天各一方，而是断网了 TAT"
             android:textColor="@color/notification_base_tv"
             android:textSize="12sp"
-            android:text="最遥远的距离不是天各一方，而是断网了 TAT"
             tools:ignore="HardcodedText" />
     </androidx.appcompat.widget.LinearLayoutCompat>
 
     <com.redrock.module_notification.widget.SwipeDeleteRecyclerView
         android:id="@+id/notification_rv_sys"
         android:layout_width="match_parent"
-        android:layout_marginTop="10dp"
         android:layout_height="match_parent"
+        android:layout_marginTop="10dp"
         android:overScrollMode="never"
         tools:listitem="@layout/item_sys_notification" />
 
@@ -50,15 +51,15 @@
         android:insetBottom="0dp"
         android:padding="0dp"
         android:text="取消"
-        android:visibility="invisible"
         android:textColor="@color/common_white_font_color"
         android:textSize="15sp"
         android:theme="@style/Theme.MaterialComponents"
+        android:visibility="invisible"
         app:backgroundTint="@color/notification_delete_dialog_btn_negative"
         app:cornerRadius="26dp"
         app:rippleColor="@android:color/transparent"
-        tools:text="取消"
-        tools:ignore="HardcodedText" />
+        tools:ignore="HardcodedText"
+        tools:text="取消" />
 
     <com.google.android.material.button.MaterialButton
         android:id="@+id/notification_system_btn_positive"
@@ -71,15 +72,15 @@
         android:insetTop="0dp"
         android:insetBottom="0dp"
         android:padding="0dp"
-        android:visibility="invisible"
         android:text="删除"
         android:textColor="@color/common_white_font_color"
         android:textSize="14sp"
         android:theme="@style/Theme.MaterialComponents"
+        android:visibility="invisible"
         app:backgroundTint="@color/notification_delete_dialog_btn_positive"
         app:cornerRadius="26dp"
         app:rippleColor="@android:color/transparent"
-        tools:text="删除"
-        tools:ignore="HardcodedText" />
+        tools:ignore="HardcodedText"
+        tools:text="删除" />
 
 </FrameLayout>

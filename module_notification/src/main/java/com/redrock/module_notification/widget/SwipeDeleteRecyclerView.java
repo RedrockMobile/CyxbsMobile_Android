@@ -88,7 +88,7 @@ public class SwipeDeleteRecyclerView extends RecyclerView {
                     if (view != null && mFlingView != view && view.getScrollX() != 0) {
                         ValueAnimator anim = ValueAnimator
                                 .ofInt(view.getScrollX(), 0)
-                                .setDuration(300);
+                                .setDuration(200);
 
                         anim.addUpdateListener(animation -> {
                             int curVal = (int) animation.getAnimatedValue();

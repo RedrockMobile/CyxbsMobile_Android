@@ -68,6 +68,7 @@ class MainActivity : BaseViewModelActivity<NotificationViewModel>() {
         initSettingRedDots()
         initObserver()
         initRefreshLayout()
+        viewModel.getAllMsg()
     }
 
     override fun onStart() {
@@ -230,7 +231,6 @@ class MainActivity : BaseViewModelActivity<NotificationViewModel>() {
                     changeTabRedDotsVisibility(0, View.VISIBLE)
                 }
             }
-            notification_refresh.isRefreshing = false
         }
 
         viewModel.activeMsg.observe {
@@ -259,6 +259,11 @@ class MainActivity : BaseViewModelActivity<NotificationViewModel>() {
                 changeTabRedDotsVisibility(1, View.VISIBLE)
             else
                 changeTabRedDotsVisibility(1, View.INVISIBLE)
+        }
+
+        //请求数据是否成功的监听
+        viewModel.getMsgSuccessful.observe {
+            notification_refresh.isRefreshing = false
         }
 
     }

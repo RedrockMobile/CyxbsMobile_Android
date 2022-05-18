@@ -18,9 +18,11 @@
         app:layout_constraintTop_toTopOf="parent">
 
         <ImageView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:src="@drawable/ic_notification_no_internet" />
+            android:layout_width="157dp"
+            android:layout_height="96dp"
+            android:layout_gravity="center"
+            android:src="@drawable/ic_notification_no_internet"
+            tools:ignore="ContentDescription" />
 
         <TextView
             android:layout_width="wrap_content"
@@ -29,7 +31,8 @@
             android:layout_gravity="center"
             android:textColor="@color/notification_base_tv"
             android:textSize="12sp"
-            android:text="最遥远的距离不是天各一方，而是断网了 TAT"/>
+            android:text="最遥远的距离不是天各一方，而是断网了 TAT"
+            tools:ignore="HardcodedText" />
     </androidx.appcompat.widget.LinearLayoutCompat>
 
 
