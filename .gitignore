@@ -12,4 +12,5 @@ secret.gradle
 /.idea/
 *.log
 **/lint-baseline.xml
+**/modules
 maven

@@ -199,6 +199,7 @@ fun DependencyHandlerScope.rxPermission() {
 }
 
 //paging +  rxjava3
+@Suppress("FunctionName")
 fun DependencyHandlerScope.`paging-rxjava3`() {
     paging()
     rxjava3()
