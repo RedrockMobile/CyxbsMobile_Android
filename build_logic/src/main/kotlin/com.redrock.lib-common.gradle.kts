@@ -26,7 +26,7 @@ android {
 }
 
 dependencies {
-    android()
+    androidDependency()
     api(`androidx-appcompat`)
     test()
     aRouter()

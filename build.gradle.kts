@@ -1,10 +1,14 @@
 buildscript {
 //    apply(from= "$rootDir/build_logic/script/githook.gradle")
+    apply(from="$rootDir/build_logic/secret/secret.gradle")
 }
+
+
 
 val ignoreModuleMode:String by project
 val ignoreModule:String by project
 val isFullModuleDebug:String by project
+
 
 //缓存除module_app以及gradle.properties声明外的所有模块。
 tasks.register("cache"){

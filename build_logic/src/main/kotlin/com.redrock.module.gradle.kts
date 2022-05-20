@@ -1,6 +1,6 @@
 import versions.AGP
 import versions.aRouter
-import versions.android
+import versions.androidDependency
 import versions.test
 
 plugins {
@@ -27,7 +27,7 @@ android {
 
 dependencies {
     test()
-    android()
+    androidDependency()
     aRouter()
     implementation(project(":lib_common"))
 

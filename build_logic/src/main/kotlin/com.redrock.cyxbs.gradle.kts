@@ -20,8 +20,5 @@ val modulePluginName = when {
     }
 }
 
-
-
-apply(from="$rootDir/build_logic/secret/secret.gradle")
 apply(plugin=modulePluginName)
 apply(plugin="script.center")

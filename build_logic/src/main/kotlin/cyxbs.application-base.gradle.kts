@@ -13,15 +13,12 @@ plugins {
 android {
     compileSdk = AGP.compileSdk
 
-    publishing {
-        singleVariant("debug")
-    }
 
     signingConfigs {
         create("config") {
-            keyAlias = project.ext["secret"]["sign"]["RELEASE_KEY_ALIAS"] as String
-            keyPassword = project.ext["secret"]["sign"]["RELEASE_KEY_PASSWORD"] as String
-            storePassword = project.ext["secret"]["sign"]["RELEASE_STORE_PASSWORD"] as String
+            keyAlias = rootProject.ext["secret"]["sign"]["RELEASE_KEY_ALIAS"] as String
+            keyPassword = rootProject.ext["secret"]["sign"]["RELEASE_KEY_PASSWORD"] as String
+            storePassword = rootProject.ext["secret"]["sign"]["RELEASE_STORE_PASSWORD"] as String
             storeFile = file("$rootDir/build_logic/secret/key-cyxbs")
         }
     }
@@ -34,8 +31,8 @@ android {
         versionCode = AGP.releaseVersionCode
         applicationId = AGP.releaseApplicationId
         // 秘钥文件
-        manifestPlaceholders += (project.ext["secret"]["manifestPlaceholders"] as Map<String, Any>)
-        (project.ext["secret"]["buildConfigField"] as Map<String, String>).forEach { (k, v) ->
+        manifestPlaceholders += (rootProject.ext["secret"]["manifestPlaceholders"] as Map<String, Any>)
+        (rootProject.ext["secret"]["buildConfigField"] as Map<String, String>).forEach { (k, v) ->
             buildConfigField("String", k, v)
         }
         ndk {
@@ -61,4 +58,3 @@ android {
         jvmTarget = "1.8"
     }
 }
-

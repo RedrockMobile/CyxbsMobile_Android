@@ -2,8 +2,6 @@ plugins {
     `kotlin-dsl`
 }
 
-apply(from = "$rootDir/secret/secret.gradle")
-
 
 dependencies {
     implementation("com.android.tools.build:gradle:7.1.2")

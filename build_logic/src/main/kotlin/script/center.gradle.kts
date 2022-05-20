@@ -1,6 +1,7 @@
 package script
 
-plugins {
-    id("script.publications")
-    id("script.dependency-substitution")
+apply(plugin="script.dependency-substitution")
+
+if(!project.name.equals("module_app")){
+    apply(plugin="script.publications")
 }

@@ -92,6 +92,7 @@ fun DependencyHandlerScope.projects(){
         // 3.以lib_或者module_开头
         it.isDirectory && it.name != "module_app" && "(lib_.+)|(module_.+)".toRegex().matches(it.name)
     }.onEach {
+        println(it)
         implementation(project(":${it.name}"))
     }
 

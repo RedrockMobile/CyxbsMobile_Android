@@ -49,7 +49,7 @@ const val lPhotoPicker = "com.github.limuyang2:LPhotoPicker:2.6"
 
 //android官方基础库
 const val lifecycle = "2.4.1"
-val android = listOf(
+val androidDependency = listOf(
     "androidx.constraintlayout:constraintlayout:2.1.2",
 
     "com.google.android.material:material:1.4.0",
@@ -128,8 +128,8 @@ const val dialog = "com.afollestad.material-dialogs:core:3.3.0"
 const val coroutines = "org.jetbrains.kotlinx:kotlinx-coroutines-android:1.6.0-native-mt"
 
 
-fun DependencyHandlerScope.android() {
-    android.forEach {
+fun DependencyHandlerScope.androidDependency() {
+    androidDependency.forEach {
         "implementation"(it)
     }
 }

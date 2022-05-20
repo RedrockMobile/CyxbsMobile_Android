@@ -25,7 +25,7 @@ android {
 
 dependencies {
     //threeParty()
-    android()
+    androidDependency()
     test()
     aRouter()
     implementation(project(":lib_common"))
