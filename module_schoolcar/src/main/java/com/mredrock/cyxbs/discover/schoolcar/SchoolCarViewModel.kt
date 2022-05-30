@@ -4,6 +4,8 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModel
+import com.amap.api.maps.AMapUtils
+import com.amap.api.maps.model.LatLng
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.mredrock.cyxbs.common.network.ApiGenerator
 import com.mredrock.cyxbs.common.utils.extensions.safeSubscribeBy
@@ -55,6 +57,10 @@ class SchoolCarViewModel : ViewModel() {
   val chooseSite: LiveData<Int>
     get() = _chooseSite
 
+  //是否显示最近站点
+  private val _showRecently = MutableLiveData<Int>(0)
+  val showRecently: LiveData<Int>
+    get() = _showRecently
 
   fun chooseCar(line: Int) {
     _carLine.value = line
@@ -83,13 +89,33 @@ class SchoolCarViewModel : ViewModel() {
       _line.value = type
   }
 
+  fun showRecently(){
+    _showRecently.value= _showRecently.value?.plus(1)
+  }
 
-  fun bsbHide() {
-    _bsbState.value = BottomSheetBehavior.STATE_COLLAPSED
+  fun recentlySite(lat:Double,lng:Double){
+    var min = Float.MAX_VALUE
+    var siteId = -1
+    mapInfo.value?.lines?.forEach { line ->
+      line.stations.forEach { station ->
+        val recent = AMapUtils.calculateLineDistance(LatLng(lat,lng), LatLng(station.lat,station.lng))
+        if (recent < min){
+          min = recent
+          siteId = station.id
+        }
+      }
+    }
+    if (siteId != -1){
+      chooseSite(siteId)
+    }
+  }
+
+  fun bsbHide(isDraggable:Boolean = false) {
+    _bsbState.value = if (isDraggable) 1 else 2
   }
 
   fun bsbShow() {
-    _bsbState.value = BottomSheetBehavior.STATE_EXPANDED
+    _bsbState.value = 0
   }
 
   fun initMapInfo() {

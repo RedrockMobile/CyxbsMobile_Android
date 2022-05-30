@@ -31,12 +31,12 @@ class CarPageAdapter(val context: Context?, val lines:List<Line>): RecyclerView.
   }
   override fun onBindViewHolder(holder: ViewHolder, position: Int) {
     val line = lines[position]
-    holder.rv.adapter = CarPageSiteAdapter(context, line.stations)
+    holder.rv.adapter = CarPageSiteAdapter(context, line.stations,line.id)
     holder.binding.apply {
       schoolCarDetailIv.setImageResource(getIcon(line.id))
       schoolCarDetailCardLineTvType.text = line.sendType
       schoolCarDetailCardRunTvType.text = line.runType
-      schoolCarDetailTvTime.text = line.runTime
+      schoolCarDetailTvTime.text = "运行时间: ${line.runTime}"
       schoolCarDetailTvTitle.text = line.name
     }
   }

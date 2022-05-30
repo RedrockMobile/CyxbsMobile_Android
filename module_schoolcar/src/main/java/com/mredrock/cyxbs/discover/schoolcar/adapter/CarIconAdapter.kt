@@ -61,16 +61,24 @@ class CarIconAdapter(val context: Context?, val lines:List<Line>): RecyclerView.
   //+1是因为最后一个指南
   override fun getItemCount(): Int = lines.size+1
 
-  fun choose(id:Int,isIcon: Boolean = false){
+  fun choose(id:Int,isCheckIcon: Boolean = false,isShowIcon:Boolean = false){
     var need = -1
     lines.forEachIndexed { index, line ->
       if (line.id == id) {
         Arrays.fill(checks,false)
-        checks[index] = true
+        if (isCheckIcon || isShowIcon)
+        if (id != -2) checks[index] = true
         need = index
       }
     }
-    block?.invoke(need,isIcon)
+
+    block?.invoke(need,isCheckIcon)
+    notifyDataSetChanged()
+  }
+
+  fun clear(){
+    Arrays.fill(checks,false)
+    block?.invoke(-2,true)
     notifyDataSetChanged()
   }
 
@@ -81,7 +89,7 @@ class CarIconAdapter(val context: Context?, val lines:List<Line>): RecyclerView.
   private fun getIcon(id:Int,check:Boolean):Int{
     if (check){
       return when(id+1){
-        0-> R.drawable.schoolcar_car_icon_0_select
+        0-> R.drawable.schoolcar_car_icon_0
         1-> R.drawable.schoolcar_car_icon_1_select
         2-> R.drawable.schoolcar_car_icon_2_select
         3-> R.drawable.schoolcar_car_icon_3_select

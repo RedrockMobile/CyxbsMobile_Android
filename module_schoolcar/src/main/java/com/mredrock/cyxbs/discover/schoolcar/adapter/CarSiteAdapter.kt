@@ -2,11 +2,13 @@ package com.mredrock.cyxbs.discover.schoolcar.adapter
 
 import android.content.Context
 import android.graphics.Color
+import android.os.Build
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
+import androidx.annotation.RequiresApi
 import androidx.recyclerview.widget.RecyclerView
 import com.mredrock.cyxbs.discover.schoolcar.bean.Station
 import com.mredrock.cyxbs.schoolcar.R
@@ -17,7 +19,7 @@ import java.util.*
  *@Date:2022/5/7 16:55
  *
  */
-class CarSiteAdapter(val context: Context?, var stations:List<Station>): RecyclerView.Adapter<CarSiteAdapter.ViewHolder>() {
+class CarSiteAdapter(val context: Context, var stations:List<Station>,val lineId:Int): RecyclerView.Adapter<CarSiteAdapter.ViewHolder>() {
   private val checks = BooleanArray(stations.size).apply { Arrays.fill(this,false) }
   companion object{
     val SIDE_VIEW = 1
@@ -45,6 +47,7 @@ class CarSiteAdapter(val context: Context?, var stations:List<Station>): Recycle
     }
   }
 
+  @RequiresApi(Build.VERSION_CODES.M)
   override fun onBindViewHolder(holder: ViewHolder, position: Int) {
     val type = getItemViewType(position)
     holder.tv.text = stations[position].name
@@ -54,9 +57,9 @@ class CarSiteAdapter(val context: Context?, var stations:List<Station>): Recycle
         stations.size-1 -> holder.iv.setImageResource(R.drawable.schoolcar_car_site_line_last)
       }
       if (checks[position]){
-        holder.tv.setTextColor(Color.RED)
+        holder.tv.setTextColor(Color.parseColor(getTextColor(lineId)))
       }else{
-        holder.tv.setTextColor(Color.BLACK)
+        holder.tv.setTextColor(context.getColor(R.color.schoolcar_site_text))
       }
 //        holder.itemView.setOnClickListener {
 //          Arrays.fill(checks,false)
@@ -66,10 +69,10 @@ class CarSiteAdapter(val context: Context?, var stations:List<Station>): Recycle
     }else{
       if (checks[position]){
         holder.iv.setImageResource(R.drawable.schoolcar_car_site_line_select)
-        holder.tv.setTextColor(Color.RED)
+        holder.tv.setTextColor(Color.parseColor(getTextColor(lineId)))
       }else{
         holder.iv.setImageResource(R.drawable.schoolcar_car_site_line)
-        holder.tv.setTextColor(Color.BLACK)
+        holder.tv.setTextColor(context.getColor(R.color.schoolcar_site_text))
       }
 //        holder.itemView.setOnClickListener {
 //          Arrays.fill(checks,false)
@@ -98,4 +101,13 @@ class CarSiteAdapter(val context: Context?, var stations:List<Station>): Recycle
     Arrays.fill(checks,false)
     notifyDataSetChanged()
   }
+
+  private fun getTextColor(lineId:Int):String =
+    when(lineId){
+      0-> "#FF45B9"
+      1-> "#FF8015"
+      2-> "#06A3FC"
+      3-> "#18D19A"
+      else -> "#6F6AFF"
+    }
 }

@@ -17,7 +17,7 @@ import java.util.*
  *@Date:2022/5/12 09:02
  *
  */
-class CarPageSiteAdapter(val context: Context?, var stations:List<Station>): RecyclerView.Adapter<CarPageSiteAdapter.ViewHolder>() {
+class CarPageSiteAdapter(val context: Context?, var stations:List<Station>,val lineId:Int): RecyclerView.Adapter<CarPageSiteAdapter.ViewHolder>() {
   companion object{
     val SIDE_VIEW = 1
     val COMMON_VIEW = 2
@@ -66,10 +66,5 @@ class CarPageSiteAdapter(val context: Context?, var stations:List<Station>): Rec
       0,stations.size-1 -> return SIDE_VIEW
       else ->  return COMMON_VIEW
     }
-  }
-
-  fun changeAll(stations:List<Station>){
-    this.stations = stations
-    notifyDataSetChanged()
   }
 }
