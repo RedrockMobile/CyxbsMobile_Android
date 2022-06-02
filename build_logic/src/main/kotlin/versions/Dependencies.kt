@@ -21,6 +21,7 @@ const val `androidTestImpl-espresso` = "androidx.test.espresso:espresso-core:3.4
 
 //Bugly
 const val `bugly-native-crash-report` = "com.tencent.bugly:nativecrashreport:3.9.2"
+
 //bugly-crash-report-upgrade内已经集成bugly-crash-report，所以如果需要集成bugly的crash-report和upgrade时，crash-report需要注释掉。
 //具体参考自官方文档 https://bugly.qq.com/docs/user-guide/instruction-manual-android-upgrade/?v=1.0.0   接入sdk时间2021-3-31
 const val `bugly-crash-report` = "com.tencent.bugly:crashreport:4.0.0"
@@ -28,13 +29,15 @@ const val `bugly-crash-report-upgrade` = "com.tencent.bugly:crashreport_upgrade:
 
 //美团多渠道打包
 const val `walle-library` = "com.meituan.android.walle:library:1.1.7"
+
 //腾讯多渠道打包
 const val `vasDolly-library` = "com.tencent.vasdolly:helper:3.0.4"
+
 //umeng
 const val `umeng-common` = "com.umeng.umsdk:common:9.4.4"
 const val `umeng-asms` = "com.umeng.umsdk:asms:1.4.1"
 const val `umeng-push` = "com.umeng.umsdk:push:6.5.1"
-const val  `umemg-union` = "com.umeng.umsdk:union:1.3.0"
+const val `umemg-union` = "com.umeng.umsdk:union:1.3.0"
 
 //Sophics热修复
 const val `sophics-android-hotfix` = "com.aliyun.ams:alicloud-android-hotfix:3.3.5"
@@ -77,8 +80,6 @@ val androidDependency = listOf(
 //"androidx.lifecycle:lifecycle-viewmodel-compose:$lifecycle",
 
 //    "androidx.room:room-ktx:2.4.2",
-
-
 
 
 //eventbug事件总线
@@ -126,6 +127,15 @@ const val dialog = "com.afollestad.material-dialogs:core:3.3.0"
 
 //coroutines
 const val coroutines = "org.jetbrains.kotlinx:kotlinx-coroutines-android:1.6.0-native-mt"
+
+//CodeLocator
+// 依赖lancet-all, 则包含所有lancet能力
+const val `lancet-all` = "com.bytedance.tools.codelocator:codelocator-lancet-all:2.0.0"
+// 依赖androidx, 已升级AndroidX的项目集成下面的依赖
+const val `codelocator-core` = "com.bytedance.tools.codelocator:codelocator-core:2.0.0"
+
+//leakCanary
+const val leakcanary = "com.squareup.leakcanary:leakcanary-android:2.9.1"
 
 
 fun DependencyHandlerScope.androidDependency() {
@@ -257,17 +267,18 @@ fun DependencyHandlerScope.push() {
 fun DependencyHandlerScope.walle() {
     "implementation"(`walle-library`)
 }
-fun DependencyHandlerScope.vasDolly(){
+
+fun DependencyHandlerScope.vasDolly() {
     "implementation"(`vasDolly-library`)
 }
 
 // Sophix https://help.aliyun.com/document_detail/61082.html
 // 注意：请不要随意升级，请查看官方文档后进行升级，因为很可能改一些东西
 fun DependencyHandlerScope.hotFix() {
-    "implementation"(`sophics-android-hotfix`){
+    "implementation"(`sophics-android-hotfix`) {
         //与友盟push的utdid冲突，解决方案来源于官网
         //https://help.aliyun.com/knowledge_detail/59152.html?spm=a2c4g.11186623.0.0.3afd33beEHM2GM
-        exclude(module="alicloud-android-utdid")
+        exclude(module = "alicloud-android-utdid")
     }
 }
 
@@ -296,4 +307,15 @@ fun DependencyHandlerScope.test() {
 fun DependencyHandlerScope.autoService() {
     "kapt"("com.google.auto.service:auto-service:1.0.1")
     "compileOnly"("com.google.auto.service:auto-service:1.0.1")
+}
+
+//CodeLocator
+fun DependencyHandlerScope.codeLocator() {
+    "debugImplementation"(`lancet-all`)
+    "debugImplementation"(`codelocator-core`)
+}
+
+
+fun DependencyHandlerScope.leakCanary(){
+    "debugImplementation"(leakcanary)
 }

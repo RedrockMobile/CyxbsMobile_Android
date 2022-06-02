@@ -20,13 +20,13 @@ android {
         disable += listOf("TrustAllX509TrustManager")
     }
 
-    channel{
+    channel {
         //指定渠道文件
         channelFile = file("${rootDir}/build_logic/channel.txt")
         //多渠道包的输出目录，默认为new File(project.buildDir,"channel")
-        outputDir = File(project.buildDir,"channel")
+        outputDir = File(project.buildDir, "channel")
         //多渠道包的命名规则，默认为：${appName}-${versionName}-${versionCode}-${flavorName}-${buildType}-${buildTime}
-        apkNameFormat ="\${appName}-\${versionName}-\${versionCode}-\${flavorName}-\${buildType}"
+        apkNameFormat = "\${appName}-\${versionName}-\${versionCode}-\${flavorName}-\${buildType}"
         //快速模式：生成渠道包时不进行校验（速度可以提升10倍以上，默认为false）
         fastMode = false
         //buildTime的时间格式，默认格式：yyyyMMdd-HHmmss
@@ -46,7 +46,10 @@ android {
         release {
             isMinifyEnabled = true
             isShrinkResources = true
-            proguardFiles(getDefaultProguardFile("proguard-android.txt"), "${rootDir}/build_logic/proguard-rules.pro")
+            proguardFiles(
+                getDefaultProguardFile("proguard-android.txt"),
+                "${rootDir}/build_logic/proguard-rules.pro"
+            )
 
             signingConfig = signingConfigs.getByName("config")
         }
@@ -59,7 +62,7 @@ android {
 
 kapt {
     arguments {
-        arg("AROUTER_MODULE_NAME",project.name)
+        arg("AROUTER_MODULE_NAME", project.name)
     }
 }
 
@@ -74,13 +77,17 @@ dependencies {
     autoService()
     vasDolly()
 
-    //     上线之前如果需要检测是否有内存泄漏，直接解除注释，然后安装debug版本的掌邮
-//     就会附带一个LeakCanary的app来检测是否有内存泄漏
-    //debugImplementation("com.squareup.leakcanary:leakcanary-android:2.9.1")
+    //CodeLocator
+    //官方文档https://github.com/bytedance/CodeLocator
+    codeLocator()
+
+    //上线之前如果需要检测是否有内存泄漏，直接解除注释，然后安装debug版本的掌邮
+    //就会附带一个LeakCanary的app来检测是否有内存泄漏
+    leakCanary()
 }
 
 
-fun DependencyHandlerScope.projects(){
+fun DependencyHandlerScope.projects() {
     //引入所有的module和lib模块
     rootDir.listFiles()!!.filter {
         // 1.是文件夹
