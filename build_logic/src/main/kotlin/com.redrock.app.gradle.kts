@@ -41,9 +41,6 @@ android {
             isShrinkResources = false
 
             signingConfig = signingConfigs.getByName("config")
-            ndk {
-                abiFilters += AGP.abiFilters
-            }
         }
 
         release {
@@ -52,11 +49,6 @@ android {
             proguardFiles(getDefaultProguardFile("proguard-android.txt"), "${rootDir}/build_logic/proguard-rules.pro")
 
             signingConfig = signingConfigs.getByName("config")
-
-            ndk {
-                // 修改安装包的架构要记得同步修改上面的 Bugly 的 ndk 依赖
-                abiFilters += AGP.abiFilters
-            }
         }
     }
 
@@ -81,6 +73,10 @@ dependencies {
     test()
     autoService()
     vasDolly()
+
+    //     上线之前如果需要检测是否有内存泄漏，直接解除注释，然后安装debug版本的掌邮
+//     就会附带一个LeakCanary的app来检测是否有内存泄漏
+    //debugImplementation("com.squareup.leakcanary:leakcanary-android:2.9.1")
 }
 
 

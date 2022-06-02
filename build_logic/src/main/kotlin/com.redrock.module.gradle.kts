@@ -31,10 +31,6 @@ dependencies {
     aRouter()
     implementation(project(":lib_common"))
 
-//     上线之前如果需要检测是否有内存泄漏，直接解除注释，然后安装debug版本的掌邮
-//     就会附带一个LeakCanary的app来检测是否有内存泄漏
-//        debugImplementation 'com.squareup.leakcanary:leakcanary-android:2.2'
-
 //     https://github.com/whataa/pandora
 //     开发测试工具，如果需要解除注释
 //        debugImplementation 'com.github.whataa:pandora:androidx_v2.1.0'

@@ -38,6 +38,7 @@ android {
         ndk {
             abiFilters += AGP.abiFilters
         }
+        resourceConfigurations += AGP.resConfigs
         /*dexOptions {
             preDexLibraries = true
             maxProcessCount = 8
