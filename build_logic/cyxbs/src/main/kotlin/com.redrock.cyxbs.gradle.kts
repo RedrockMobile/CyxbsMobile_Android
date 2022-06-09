@@ -19,8 +19,5 @@ val modulePluginName = when {
         throw Exception("出现未知类型模块:$projectName $projectDir\n请为该模块声明对应的依赖插件")
     }
 }
-/*apply(plugin="com.android.library")
-apply(plugin="org.jetbrains.kotlin.android")
-apply(plugin="kotlin-kapt")*/
 apply(plugin=modulePluginName)
 apply(plugin="script.center")

@@ -14,5 +14,7 @@ dependencies {
         api("com.tencent.mm:AndResGuard-gradle-plugin:1.2.18")
         api("com.tencent.vasdolly:plugin:3.0.4")
         api("com.smallsoho.mobcase:McImage:1.5.1")
+        api("com.bytedance.android.byteX:base-plugin:0.3.0")
+        api("com.bytedance.android.byteX:shrink-r-plugin:0.3.0")
     }
 }

@@ -1,11 +1,15 @@
+@file:Suppress("UnstableApiUsage")
+
 pluginManagement {
     includeBuild("build_logic")
     repositories {
+        //国内镜像等。
         maven { url = uri("https://maven.aliyun.com/repository/public") }
         maven { url = uri("https://maven.aliyun.com/repository/google") }
         maven { url = uri("https://repo1.maven.org/maven2/") }
         maven { url = uri("https://jitpack.io") }
-
+        maven { url = uri("https://artifact.bytedance.com/repository/byteX/") }
+        //国外镜像仓库
         gradlePluginPortal()
         google()
         mavenCentral()
@@ -17,13 +21,15 @@ includeBuild("build_platforms")
 dependencyResolutionManagement {
     repositoriesMode.set(RepositoriesMode.FAIL_ON_PROJECT_REPOS)
     repositories {
-        // 以下两行代码相当于有了 google() jcenter() mavenCentral()，使用国内的阿里镜像
+        //本地的maven仓库
         maven { url = uri("$rootDir/maven") }
+        // 以下两行代码相当于有了 google() jcenter() mavenCentral()，使用国内的阿里镜像
         maven { url = uri("https://maven.aliyun.com/repository/public") }
         maven { url = uri("https://maven.aliyun.com/repository/google") }
         maven { url = uri("https://repo1.maven.org/maven2/") }
         maven { url = uri("https://jitpack.io") }
-
+        maven { url = uri("https://artifact.bytedance.com/repository/byteX/") }
+        //可能存有部分库没有依赖
         google()
         mavenCentral()
     }

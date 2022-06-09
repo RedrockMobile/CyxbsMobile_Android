@@ -3,9 +3,9 @@ import versions.*
 plugins {
     id("cyxbs.library-base")
     kotlin("kapt")
-    id("kotlin-android-extensions")
 }
 
+apply(plugin="kotlin-android-extensions")
 
 android {
 

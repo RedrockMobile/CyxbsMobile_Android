@@ -1,24 +1,16 @@
-pluginManagement {
-    repositories {
-        maven { url = uri("https://maven.aliyun.com/repository/public") }
-        maven { url = uri("https://maven.aliyun.com/repository/google") }
-        maven { url = uri("https://repo1.maven.org/maven2/") }
-        maven { url = uri("https://jitpack.io") }
-
-        gradlePluginPortal()
-        google()
-        mavenCentral()
-    }
-}
+@file:Suppress("UnstableApiUsage")
+//build_logic模块下所有模块都是plugin,按理只需要dependency,不会需要用到其他的plugin.
+//所以去除了pluginManagement
 dependencyResolutionManagement {
     //repositoriesMode.set(RepositoriesMode.FAIL_ON_PROJECT_REPOS)
     repositories {
-        // 以下两行代码相当于有了 google() jcenter() mavenCentral()，使用国内的阿里镜像
+        //国内镜像
         maven { url = uri("https://maven.aliyun.com/repository/public") }
         maven { url = uri("https://maven.aliyun.com/repository/google") }
+        maven { url = uri("https://artifact.bytedance.com/repository/byteX/") }
+        //国外镜像
         maven { url = uri("https://repo1.maven.org/maven2/") }
         maven { url = uri("https://jitpack.io") }
-
         gradlePluginPortal()
         google()
         mavenCentral()

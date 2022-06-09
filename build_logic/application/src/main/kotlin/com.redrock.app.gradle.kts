@@ -1,11 +1,10 @@
 @file:Suppress("UnstableApiUsage")
 
 plugins {
-    id("cyxbs.application-base")
-    kotlin("kapt")
-    id("kotlin-android-extensions")
+    id("com.android.application")
 }
 
+apply(plugin ="cyxbs.application-base")
 
 android {
 
@@ -26,7 +25,10 @@ android {
         release {
             isMinifyEnabled = true
             isShrinkResources = true
-            proguardFiles(getDefaultProguardFile("proguard-android.txt"), "${rootDir}/build_logic/proguard-rules.pro")
+            proguardFiles(
+                getDefaultProguardFile("proguard-android.txt"),
+                "${rootDir}/build_logic/proguard-rules.pro"
+            )
         }
     }
 

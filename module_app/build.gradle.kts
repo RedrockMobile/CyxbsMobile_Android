@@ -1,20 +1,32 @@
 import com.tencent.vasdolly.plugin.extension.ChannelConfigExtension
-import ext.get
+import org.jetbrains.kotlin.gradle.plugin.KaptExtension
 import versions.*
 
 plugins {
     id("com.redrock.cyxbs")
 }
 apply(plugin = "com.tencent.vasdolly")
-//apply(plugin="script.apk-opt")
+apply(plugin="kotlin-kapt")
+apply(plugin = "script.apk-opt")
+
+//bytex目前不兼容AGP7.0
+//apply(plugin = "bytex")
+
+//configure<ByteXExtension> {
+//    enable(true)
+//    enableInDebug(false)
+//    logLevel("DEBUG")
+//}
 
 buildscript {
     dependencies {
         classpath("com.tencent.vasdolly:plugin")
+        classpath("org.jetbrains.kotlin.android:org.jetbrains.kotlin.android.gradle.plugin")
+        //classpath("com.bytedance.android.byteX:base-plugin")
     }
 }
 
-kapt {
+configure<KaptExtension>{
     arguments {
         arg("AROUTER_MODULE_NAME", project.name)
     }
@@ -27,38 +39,9 @@ android {
         checkDependencies = true
     }
 
-    signingConfigs {
-        create("config") {
-            keyAlias = rootProject.ext["secret"]["sign"]["RELEASE_KEY_ALIAS"] as String
-            keyPassword = rootProject.ext["secret"]["sign"]["RELEASE_KEY_PASSWORD"] as String
-            storePassword = rootProject.ext["secret"]["sign"]["RELEASE_STORE_PASSWORD"] as String
-            storeFile = file("$rootDir/build_logic/secret/key-cyxbs")
-        }
-    }
-
-    defaultConfig {
-        // 秘钥文件
-        manifestPlaceholders += (rootProject.ext["secret"]["manifestPlaceholders"] as Map<String, Any>)
-        (rootProject.ext["secret"]["buildConfigField"] as Map<String, String>).forEach { (k, v) ->
-            buildConfigField("String", k, v)
-        }
-    }
-
-    buildTypes {
-        debug {
-            signingConfig = signingConfigs.getByName("config")
-        }
-
-        release {
-            signingConfig = signingConfigs.getByName("config")
-        }
-
-
-    }
-
 }
 
-configure<ChannelConfigExtension>{
+configure<ChannelConfigExtension> {
     //指定渠道文件
     channelFile = file("${rootDir}/build_logic/channel.txt")
     //多渠道包的输出目录，默认为new File(project.buildDir,"channel")
@@ -72,23 +55,9 @@ configure<ChannelConfigExtension>{
     //低内存模式（仅针对V2签名，默认为false）：只把签名块、中央目录和EOCD读取到内存，不把最大头的内容块读取到内存，在手机上合成APK时，可以使用该模式
     lowMemory = false
 }
-/*channel {
-    //指定渠道文件
-    channelFile = file("${rootDir}/build_logic/channel.txt")
-    //多渠道包的输出目录，默认为new File(project.buildDir,"channel")
-    outputDir = File(project.buildDir, "channel")
-    //多渠道包的命名规则，默认为：${appName}-${versionName}-${versionCode}-${flavorName}-${buildType}-${buildTime}
-    apkNameFormat = "\${appName}-\${versionName}-\${versionCode}-\${flavorName}-\${buildType}"
-    //快速模式：生成渠道包时不进行校验（速度可以提升10倍以上，默认为false）
-    fastMode = false
-    //buildTime的时间格式，默认格式：yyyyMMdd-HHmmss
-    buildTimeDateFormat = "yyyyMMdd-HH"
-    //低内存模式（仅针对V2签名，默认为false）：只把签名块、中央目录和EOCD读取到内存，不把最大头的内容块读取到内存，在手机上合成APK时，可以使用该模式
-    lowMemory = false
-}*/
 
-apply(from = "$rootDir/build_logic/script/andresguard.gradle")
-apply(from = "$rootDir/build_logic/script/redex.gradle")
+//apply(from = "$rootDir/build_logic/script/andresguard.gradle")
+//apply(from = "$rootDir/build_logic/script/redex.gradle")
 
 dependencies {
     projects()
@@ -117,7 +86,8 @@ fun DependencyHandlerScope.projects() {
         // 1.是文件夹
         // 2.不是module_app
         // 3.以lib_或者module_开头
-        it.isDirectory && it.name != "module_app" && "(lib_.+)|(module_.+)".toRegex().matches(it.name)
+        it.isDirectory && it.name != "module_app" && "(lib_.+)|(module_.+)".toRegex()
+            .matches(it.name)
     }.onEach {
         implementation(project(":${it.name}"))
     }

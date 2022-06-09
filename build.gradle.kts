@@ -1,7 +1,5 @@
-buildscript {
-//    apply(from= "$rootDir/build_logic/script/githook.gradle")
-    apply(from="$rootDir/build_logic/secret/secret.gradle")
-}
+//apply(from= "$rootDir/build_logic/script/githook.gradle")
+apply(from="$rootDir/build_logic/secret/secret.gradle")
 
 
 
