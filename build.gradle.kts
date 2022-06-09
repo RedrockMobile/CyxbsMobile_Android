@@ -16,6 +16,7 @@ tasks.register("cache"){
     subprojects
         //去除module_app
         .filter { it.name != "module_app" }
+        .filter { it.plugins.hasPlugin("com.android.library") }
         //去除gradle.properties文件声明的模块
         .filter {
             when(ignoreModuleMode){

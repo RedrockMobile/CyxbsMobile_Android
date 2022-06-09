@@ -41,7 +41,7 @@ class AboutActivity : BaseViewModelActivity<AboutViewModel>() {
         setContentView(R.layout.mine_activity_about)
 
         common_toolbar.apply {
-            setBackgroundColor(ContextCompat.getColor(this@AboutActivity, R.color.common_window_background))
+            setBackgroundColor(ContextCompat.getColor(this@AboutActivity, com.mredrock.cyxbs.common.R.color.common_window_background))
             initWithSplitLine("关于我们",
                     false,
                     R.drawable.mine_ic_arrow_left)

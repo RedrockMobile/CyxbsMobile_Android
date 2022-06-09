@@ -23,7 +23,6 @@ import android.graphics.drawable.GradientDrawable
 import android.net.Uri
 import android.os.Environment
 import android.provider.MediaStore
-import android.util.Log
 import android.view.MotionEvent
 import android.view.View
 import android.view.ViewAnimationUtils.createCircularReveal
@@ -49,7 +48,6 @@ import com.mredrock.cyxbs.mine.page.edit.EditInfoActivity
 import com.mredrock.cyxbs.mine.page.mine.widget.BlurBitmap
 import com.mredrock.cyxbs.mine.util.transformer.ScaleInTransformer
 import com.yalantis.ucrop.UCrop
-import kotlinx.android.synthetic.main.mine_activity_edit_info.*
 import kotlinx.android.synthetic.main.mine_activity_homepage_head.view.*
 import okhttp3.MultipartBody
 import java.io.File
@@ -502,7 +500,7 @@ class HomepageActivity : BaseViewModelActivity<MineViewModel>() {
                             getImageFromAlbum()
                         }
                     }
-                    cornerRadius(res = R.dimen.common_corner_radius)
+                    cornerRadius(res = com.mredrock.cyxbs.common.R.dimen.common_corner_radius)
 
                 }
             }
@@ -604,12 +602,12 @@ class HomepageActivity : BaseViewModelActivity<MineViewModel>() {
         options.setCropGridStrokeWidth(5)
         options.setCompressionFormat(Bitmap.CompressFormat.PNG)
         options.setCompressionQuality(100)
-        options.setLogoColor(ContextCompat.getColor(this, R.color.common_level_two_font_color))
+        options.setLogoColor(ContextCompat.getColor(this, com.mredrock.cyxbs.common.R.color.common_level_two_font_color))
         options.setToolbarColor(
-                ContextCompat.getColor(this, R.color.colorPrimaryDark)
+                ContextCompat.getColor(this, com.mredrock.cyxbs.common.R.color.colorPrimaryDark)
         )
         options.setStatusBarColor(
-                ContextCompat.getColor(this, R.color.colorPrimaryDark)
+                ContextCompat.getColor(this, com.mredrock.cyxbs.common.R.color.colorPrimaryDark)
         )
         uCrop.withOptions(options)
                 .withAspectRatio(

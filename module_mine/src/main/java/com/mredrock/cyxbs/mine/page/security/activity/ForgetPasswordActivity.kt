@@ -32,7 +32,7 @@ class ForgetPasswordActivity : BaseViewModelActivity<ForgetPasswordViewModel>() 
         mine_pb_security_forget.visibility = View.GONE
         //配置toolBar
         common_toolbar.apply {
-            setBackgroundColor(ContextCompat.getColor(this@ForgetPasswordActivity, R.color.common_white_background))
+            setBackgroundColor(ContextCompat.getColor(this@ForgetPasswordActivity, com.mredrock.cyxbs.common.R.color.common_white_background))
             initWithSplitLine("忘记密码",
                     false,
                     R.drawable.mine_ic_arrow_left,

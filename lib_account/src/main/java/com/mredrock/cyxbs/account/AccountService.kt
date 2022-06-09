@@ -276,7 +276,7 @@ internal class AccountService : IAccountService {
                 negativeButton(R.string.account_login_later) {
                     dismiss()
                 }
-                cornerRadius(res = R.dimen.common_corner_radius)
+                cornerRadius(res = com.mredrock.cyxbs.common.R.dimen.common_corner_radius)
             }
 
         }

@@ -54,7 +54,7 @@ class SymbolRvAdapter(val context: Context, val viewModel: MapViewModel, private
              */
             if (v == curSelectorItem) {
                 if (curSelectorItem?.isChecked == true) {
-                    curSelectorItem?.setTextColor(ContextCompat.getColor(context, R.color.map_text_symbol))
+                    curSelectorItem?.setTextColor(ContextCompat.getColor(context, com.mredrock.cyxbs.common.R.color.map_text_symbol))
                     val animator2 = ValueAnimator.ofFloat(1f, 0.8f, 1.2f, 1f)
                     animator2.duration = 500
                     animator2.addUpdateListener {
@@ -77,8 +77,8 @@ class SymbolRvAdapter(val context: Context, val viewModel: MapViewModel, private
              */
             val lastSelect = curSelectorItem
             curSelectorItem = v as AppCompatCheckedTextView
-            lastSelect?.setTextColor(ContextCompat.getColor(context, R.color.map_text_symbol))
-            curSelectorItem?.setTextColor(ContextCompat.getColor(context, R.color.map_text_symbol_select))
+            lastSelect?.setTextColor(ContextCompat.getColor(context, com.mredrock.cyxbs.common.R.color.map_text_symbol))
+            curSelectorItem?.setTextColor(ContextCompat.getColor(context, com.mredrock.cyxbs.common.R.color.map_text_symbol_select))
             val animator = ValueAnimator.ofFloat(1f, 1.2f, 0.8f, 1f)
             animator.duration = 500
             animator.addUpdateListener {

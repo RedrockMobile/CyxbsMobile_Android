@@ -50,9 +50,7 @@ import java.io.File
 import java.io.IOException
 import java.text.SimpleDateFormat
 import java.util.*
-import android.graphics.BitmapFactory
 
-import android.content.res.Resources
 import com.contrarywind.view.WheelView
 
 
@@ -99,14 +97,14 @@ class EditInfoActivity
         val userForTemporal = ServiceManager.getService(IAccountService::class.java).getUserService()
         if (checkIfInfoChange()) {
             mine_btn_info_save.apply {
-                setTextColor(ContextCompat.getColor(context, R.color.common_white_font_color))
-                background = ResourcesCompat.getDrawable(resources, R.drawable.common_dialog_btn_positive_blue, null)
+                setTextColor(ContextCompat.getColor(context, com.mredrock.cyxbs.common.R.color.common_white_font_color))
+                background = ResourcesCompat.getDrawable(resources, com.mredrock.cyxbs.common.R.drawable.common_dialog_btn_positive_blue, null)
                 text = "保存"
                 isClickable = true
             }
         } else {
             mine_btn_info_save.apply {
-                setTextColor(ContextCompat.getColor(context, R.color.common_grey_button_text))
+                setTextColor(ContextCompat.getColor(context, com.mredrock.cyxbs.common.R.color.common_grey_button_text))
                 background = ResourcesCompat.getDrawable(resources, R.drawable.mine_bg_round_corner_grey, null)
                 text = "已保存"
                 isClickable = false
@@ -122,34 +120,34 @@ class EditInfoActivity
         mine_tv_nickname.text = "昵称(${nickname.length}/10)"
         mine_tv_sign.text = "个性签名(${introduction.length}/20)"
         if (nickname != userForTemporal.getNickname()) {
-            mine_et_nickname.setTextColor(ContextCompat.getColor(this, R.color.common_level_two_font_color))
+            mine_et_nickname.setTextColor(ContextCompat.getColor(this, com.mredrock.cyxbs.common.R.color.common_level_two_font_color))
         } else {
-            mine_et_nickname.setTextColor(ContextCompat.getColor(this, R.color.common_grey_text))
+            mine_et_nickname.setTextColor(ContextCompat.getColor(this, com.mredrock.cyxbs.common.R.color.common_grey_text))
         }
         if (introduction != userForTemporal.getIntroduction()) {
-            mine_et_introduce.setTextColor(ContextCompat.getColor(this, R.color.common_level_two_font_color))
+            mine_et_introduce.setTextColor(ContextCompat.getColor(this, com.mredrock.cyxbs.common.R.color.common_level_two_font_color))
         } else {
-            mine_et_introduce.setTextColor(ContextCompat.getColor(this, R.color.common_grey_text))
+            mine_et_introduce.setTextColor(ContextCompat.getColor(this, com.mredrock.cyxbs.common.R.color.common_grey_text))
         }
         if (qq != userForTemporal.getQQ()) {
-            mine_et_qq.setTextColor(ContextCompat.getColor(this, R.color.common_level_two_font_color))
+            mine_et_qq.setTextColor(ContextCompat.getColor(this, com.mredrock.cyxbs.common.R.color.common_level_two_font_color))
         } else {
-            mine_et_qq.setTextColor(ContextCompat.getColor(this, R.color.common_grey_text))
+            mine_et_qq.setTextColor(ContextCompat.getColor(this, com.mredrock.cyxbs.common.R.color.common_grey_text))
         }
         if (phone != userForTemporal.getPhone()) {
-            mine_et_phone.setTextColor(ContextCompat.getColor(this, R.color.common_level_two_font_color))
+            mine_et_phone.setTextColor(ContextCompat.getColor(this, com.mredrock.cyxbs.common.R.color.common_level_two_font_color))
         } else {
-            mine_et_phone.setTextColor(ContextCompat.getColor(this, R.color.common_grey_text))
+            mine_et_phone.setTextColor(ContextCompat.getColor(this, com.mredrock.cyxbs.common.R.color.common_grey_text))
         }
         if (gender != userForTemporal.getGender()){
-            mine_et_gender.setTextColor(ContextCompat.getColor(this, R.color.common_level_two_font_color))
+            mine_et_gender.setTextColor(ContextCompat.getColor(this, com.mredrock.cyxbs.common.R.color.common_level_two_font_color))
         } else {
-            mine_et_gender.setTextColor(ContextCompat.getColor(this, R.color.common_grey_text))
+            mine_et_gender.setTextColor(ContextCompat.getColor(this, com.mredrock.cyxbs.common.R.color.common_grey_text))
         }
         if (birth != userForTemporal.getBirth()){
-            mine_et_birth.setTextColor(ContextCompat.getColor(this, R.color.common_level_two_font_color))
+            mine_et_birth.setTextColor(ContextCompat.getColor(this, com.mredrock.cyxbs.common.R.color.common_level_two_font_color))
         } else {
-            mine_et_birth.setTextColor(ContextCompat.getColor(this, R.color.common_grey_text))
+            mine_et_birth.setTextColor(ContextCompat.getColor(this, com.mredrock.cyxbs.common.R.color.common_grey_text))
         }
     }
 
@@ -160,7 +158,7 @@ class EditInfoActivity
         setContentView(R.layout.mine_activity_edit_info)
 
         common_toolbar.apply {
-            setBackgroundColor(ContextCompat.getColor(this@EditInfoActivity, R.color.common_window_background))
+            setBackgroundColor(ContextCompat.getColor(this@EditInfoActivity, com.mredrock.cyxbs.common.R.color.common_window_background))
             initWithSplitLine("资料编辑",
                     false,
                     R.drawable.mine_ic_arrow_left,
@@ -455,7 +453,7 @@ class EditInfoActivity
                             getImageFromAlbum()
                         }
                     }
-                    cornerRadius(res = R.dimen.common_corner_radius)
+                    cornerRadius(res = com.mredrock.cyxbs.common.R.dimen.common_corner_radius)
 
                 }
             }
@@ -494,11 +492,11 @@ class EditInfoActivity
         options.setCropGridStrokeWidth(5)
         options.setCompressionFormat(Bitmap.CompressFormat.PNG)
         options.setCompressionQuality(100)
-        options.setLogoColor(ContextCompat.getColor(this, R.color.common_level_two_font_color))
+        options.setLogoColor(ContextCompat.getColor(this, com.mredrock.cyxbs.common.R.color.common_level_two_font_color))
         options.setToolbarColor(
-                ContextCompat.getColor(this, R.color.colorPrimaryDark))
+                ContextCompat.getColor(this, com.mredrock.cyxbs.common.R.color.colorPrimaryDark))
         options.setStatusBarColor(
-                ContextCompat.getColor(this, R.color.colorPrimaryDark))
+                ContextCompat.getColor(this, com.mredrock.cyxbs.common.R.color.colorPrimaryDark))
         uCrop.withOptions(options)
                 .withAspectRatio(300f, 300f)
                 .withMaxResultSize(300, 300)

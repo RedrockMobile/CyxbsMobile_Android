@@ -24,7 +24,6 @@ import com.mredrock.cyxbs.common.BuildConfig
 import com.mredrock.cyxbs.common.component.CyxbsToast
 import com.mredrock.cyxbs.common.config.DIR_PHOTO
 import com.mredrock.cyxbs.common.ui.BaseActivity
-import com.mredrock.cyxbs.common.utils.LogUtils
 import com.mredrock.cyxbs.common.utils.extensions.*
 import com.mredrock.cyxbs.common.webView.IAndroidWebView
 import com.mredrock.cyxbs.common.webView.WebViewBaseCallBack
@@ -60,7 +59,7 @@ class RollerViewActivity : BaseActivity() {
         super.onCreate(savedInstanceState)
 
         setContentView(R.layout.discover_activity_roller_view)
-        setTheme(R.style.Theme_MaterialComponents) //这里是用的Material主题
+        setTheme(com.google.android.material.R.style.Theme_MaterialComponents) //这里是用的Material主题
         //如果是DEBUG就开启webview的debug
         if (BuildConfig.DEBUG) WebView.setWebContentsDebuggingEnabled(true)
 

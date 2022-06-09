@@ -30,18 +30,18 @@ class NoCourseInviteScheduleViewAdapter(
 
     private val mCoursesColors by lazy(LazyThreadSafetyMode.NONE) {
         intArrayOf(
-            ContextCompat.getColor(mContext, R.color.common_morning_course_color),
-            ContextCompat.getColor(mContext, R.color.common_afternoon_course_color),
-            ContextCompat.getColor(mContext, R.color.common_evening_course_color),
+            ContextCompat.getColor(mContext, com.mredrock.cyxbs.common.R.color.common_morning_course_color),
+            ContextCompat.getColor(mContext, com.mredrock.cyxbs.common.R.color.common_afternoon_course_color),
+            ContextCompat.getColor(mContext, com.mredrock.cyxbs.common.R.color.common_evening_course_color),
             ContextCompat.getColor(mContext, R.color.courseCoursesOther)
         )
     }
 
     private val mCoursesTextColors by lazy(LazyThreadSafetyMode.NONE) {
         intArrayOf(
-            ContextCompat.getColor(mContext, R.color.common_morning_course_text_color),
-            ContextCompat.getColor(mContext, R.color.common_afternoon_course_text_color),
-            ContextCompat.getColor(mContext, R.color.common_evening_course_text_color)
+            ContextCompat.getColor(mContext, com.mredrock.cyxbs.common.R.color.common_morning_course_text_color),
+            ContextCompat.getColor(mContext, com.mredrock.cyxbs.common.R.color.common_afternoon_course_text_color),
+            ContextCompat.getColor(mContext, com.mredrock.cyxbs.common.R.color.common_evening_course_text_color)
         )
     }
 

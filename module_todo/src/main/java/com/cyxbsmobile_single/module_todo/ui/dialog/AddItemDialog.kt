@@ -21,9 +21,7 @@ import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.mredrock.cyxbs.common.utils.extensions.dip
 import com.mredrock.cyxbs.common.utils.extensions.toast
-import kotlinx.android.synthetic.main.todo_activity_inner_detail.*
 import kotlinx.android.synthetic.main.todo_dialog_add_todo.*
-import kotlinx.android.synthetic.main.todo_rv_item_todo.*
 import java.util.*
 import kotlin.collections.ArrayList
 
@@ -33,7 +31,7 @@ import kotlin.collections.ArrayList
  * 增加todo用dialog
  */
 class AddItemDialog(context: Context, val onConfirm: (Todo) -> Unit) :
-    BottomSheetDialog(context, R.style.BottomSheetDialogTheme) {
+    BottomSheetDialog(context, com.mredrock.cyxbs.common.R.style.BottomSheetDialogTheme) {
 
     private val dateBeenList: ArrayList<ArrayList<DateBeen>>
             by lazy { getYearDateSting() }

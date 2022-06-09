@@ -1,5 +1,5 @@
-plugins {
-    `kotlin-dsl`
+/*plugins {
+    `kotlin-dsl` apply false
 }
 
 
@@ -15,5 +15,4 @@ dependencies {
     implementation("com.tencent.vasdolly:plugin:3.0.4")
     //美团多渠道打包不兼容gradle 7.0 而就目前而言，也只有单渠道，移除walle
     //implementation("com.meituan.android.walle:plugin:1.1.7")
-}
-
+}*/

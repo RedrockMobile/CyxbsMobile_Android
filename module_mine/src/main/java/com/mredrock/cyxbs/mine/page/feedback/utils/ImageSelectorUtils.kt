@@ -5,7 +5,6 @@ import android.net.Uri
 import androidx.appcompat.app.AppCompatActivity
 import com.mredrock.cyxbs.common.utils.extensions.doPermissionAction
 import com.mredrock.cyxbs.common.utils.extensions.longToast
-import com.mredrock.cyxbs.mine.R
 import top.limuyang2.photolibrary.LPhotoHelper
 import top.limuyang2.photolibrary.util.LPPImageType
 
@@ -27,7 +26,7 @@ fun AppCompatActivity.selectImageFromAlbum(maxCount: Int) {
                 .pauseOnScroll(false) // 是否滑动暂停加载图片显示
                 .isSingleChoose(false) // 是否是单选
                 .isOpenLastAlbum(false) // 是否直接打开最后一次选择的相册
-                .theme(R.style.common_LPhotoTheme)
+                .theme(com.mredrock.cyxbs.common.R.style.common_LPhotoTheme)
                 .build()
                 .start(this@selectImageFromAlbum, CHOOSE_FEED_BACK_PIC)
         }

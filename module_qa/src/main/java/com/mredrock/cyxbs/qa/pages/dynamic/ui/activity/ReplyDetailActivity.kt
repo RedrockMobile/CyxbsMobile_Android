@@ -76,7 +76,8 @@ class ReplyDetailActivity : BaseViewModelActivity<DynamicDetailViewModel>() {
             c.drawText("回复", dp2px(12f).toFloat(), topY + dp2px(26f), Paint().apply {
                 textSize = sp(16).toFloat()
                 isAntiAlias = true
-                color = ContextCompat.getColor(this@ReplyDetailActivity,R.color.common_level_one_font_color)
+                color = ContextCompat.getColor(this@ReplyDetailActivity,
+                    com.mredrock.cyxbs.common.R.color.common_level_one_font_color)
             })
         }
     }

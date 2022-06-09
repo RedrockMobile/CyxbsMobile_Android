@@ -16,9 +16,7 @@ import androidx.lifecycle.Observer
 import com.alibaba.android.arouter.facade.annotation.Route
 import com.alibaba.android.arouter.launcher.ARouter
 import com.mredrock.cyxbs.api.account.IAccountService
-import com.mredrock.cyxbs.common.BaseApp
 import com.mredrock.cyxbs.common.BaseApp.Companion.appContext
-import com.mredrock.cyxbs.common.component.CyxbsToast
 import com.mredrock.cyxbs.common.config.*
 import com.mredrock.cyxbs.common.service.ServiceManager
 import com.mredrock.cyxbs.common.ui.BaseViewModelFragment
@@ -26,9 +24,7 @@ import com.mredrock.cyxbs.common.utils.extensions.*
 import com.mredrock.cyxbs.mine.page.about.AboutActivity
 import com.mredrock.cyxbs.mine.page.edit.EditInfoActivity
 import com.mredrock.cyxbs.mine.page.feedback.center.ui.FeedbackCenterActivity
-import com.mredrock.cyxbs.mine.page.mine.ui.activity.FanActivity
 import com.mredrock.cyxbs.mine.page.mine.ui.activity.HomepageActivity
-import com.mredrock.cyxbs.mine.page.security.util.Jump2QQHelper
 import com.mredrock.cyxbs.mine.page.setting.SettingActivity
 import com.mredrock.cyxbs.mine.page.sign.DailySignActivity
 import kotlinx.android.synthetic.main.mine_fragment_main_new.*
@@ -101,7 +97,7 @@ class UserFragment : BaseViewModelFragment<UserViewModel>() {
                         null
                     )
                     text = "已签到"
-                    setTextColor(ContextCompat.getColor(context, R.color.common_grey_button_text))
+                    setTextColor(ContextCompat.getColor(context, com.mredrock.cyxbs.common.R.color.common_grey_button_text))
                 }
             } else {
                 mine_user_btn_sign.apply {
@@ -111,7 +107,7 @@ class UserFragment : BaseViewModelFragment<UserViewModel>() {
                         R.drawable.mine_shape_bg_user_btn_sign,
                         null
                     )
-                    setTextColor(ContextCompat.getColor(context, R.color.common_white_font_color))
+                    setTextColor(ContextCompat.getColor(context, com.mredrock.cyxbs.common.R.color.common_white_font_color))
                 }
             }
         })
