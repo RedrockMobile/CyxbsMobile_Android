@@ -1,12 +1,10 @@
-import com.tencent.vasdolly.plugin.extension.ChannelConfigExtension
-import org.jetbrains.kotlin.gradle.plugin.KaptExtension
 import versions.*
 
 plugins {
     id("com.redrock.cyxbs")
+    id("com.tencent.vasdolly")
 }
-apply(plugin = "com.tencent.vasdolly")
-apply(plugin="kotlin-kapt")
+
 apply(plugin = "script.apk-opt")
 
 //bytex目前不兼容AGP7.0
@@ -18,19 +16,6 @@ apply(plugin = "script.apk-opt")
 //    logLevel("DEBUG")
 //}
 
-buildscript {
-    dependencies {
-        classpath("com.tencent.vasdolly:plugin")
-        classpath("org.jetbrains.kotlin.android:org.jetbrains.kotlin.android.gradle.plugin")
-        //classpath("com.bytedance.android.byteX:base-plugin")
-    }
-}
-
-configure<KaptExtension>{
-    arguments {
-        arg("AROUTER_MODULE_NAME", project.name)
-    }
-}
 
 android {
 
@@ -41,7 +26,13 @@ android {
 
 }
 
-configure<ChannelConfigExtension> {
+kapt {
+    arguments {
+        arg("AROUTER_MODULE_NAME", name)
+    }
+}
+
+channel {
     //指定渠道文件
     channelFile = file("${rootDir}/build_logic/channel.txt")
     //多渠道包的输出目录，默认为new File(project.buildDir,"channel")
@@ -86,8 +77,11 @@ fun DependencyHandlerScope.projects() {
         // 1.是文件夹
         // 2.不是module_app
         // 3.以lib_或者module_开头
-        it.isDirectory && it.name != "module_app" && "(lib_.+)|(module_.+)".toRegex()
-            .matches(it.name)
+        it.isDirectory
+    }.filter {
+        it.name != "module_app"
+    }.filter {
+        "(module_.+)|(lib_.+)".toRegex().matches(it.name)
     }.onEach {
         implementation(project(":${it.name}"))
     }

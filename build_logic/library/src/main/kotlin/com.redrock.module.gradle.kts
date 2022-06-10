@@ -31,12 +31,6 @@ dependencies {
     androidDependency()
     aRouter()
     implementation(project(":lib_common"))
-
-//     https://github.com/whataa/pandora
-//     开发测试工具，如果需要解除注释
-//        debugImplementation 'com.github.whataa:pandora:androidx_v2.1.0'
-//        debugImplementation 'com.github.whataa:pandora-no-op:v2.1.0'
-
 }
 
 kapt {

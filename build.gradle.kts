@@ -1,6 +1,27 @@
 //apply(from= "$rootDir/build_logic/script/githook.gradle")
 apply(from="$rootDir/build_logic/secret/secret.gradle")
 
+buildscript {
+
+    repositories {
+        //国内镜像等。
+        maven { url = uri("https://maven.aliyun.com/repository/public") }
+        maven { url = uri("https://maven.aliyun.com/repository/google") }
+        maven { url = uri("https://repo1.maven.org/maven2/") }
+        maven { url = uri("https://jitpack.io") }
+        maven { url = uri("https://artifact.bytedance.com/repository/byteX/") }
+        //国外镜像仓库
+        gradlePluginPortal()
+        google()
+        mavenCentral()
+    }
+    dependencies {
+        classpath(platform("com.mredrock.team.platform:plugins"))
+        classpath("com.android.tools.build:gradle")
+        classpath("com.tencent.vasdolly:plugin")
+        //classpath("com.bytedance.android.byteX:base-plugin")
+    }
+}
 
 
 val ignoreModuleMode:String by project

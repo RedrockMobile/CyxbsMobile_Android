@@ -19,7 +19,7 @@ pluginManagement {
 includeBuild("build_platforms")
 
 dependencyResolutionManagement {
-    repositoriesMode.set(RepositoriesMode.FAIL_ON_PROJECT_REPOS)
+//    repositoriesMode.set(RepositoriesMode.FAIL_ON_PROJECT_REPOS)
     repositories {
         //本地的maven仓库
         maven { url = uri("$rootDir/maven") }

@@ -7,6 +7,7 @@ import versions.AGP
 
 plugins {
     kotlin("android")
+    kotlin("kapt")
     id("com.android.application")
 }
 
