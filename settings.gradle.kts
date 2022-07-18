@@ -1,5 +1,6 @@
 pluginManagement {
     includeBuild("build_logic")
+    includeBuild("build-logic")
     repositories {
         maven { url = uri("https://maven.aliyun.com/repository/public") }
         maven { url = uri("https://maven.aliyun.com/repository/google") }
