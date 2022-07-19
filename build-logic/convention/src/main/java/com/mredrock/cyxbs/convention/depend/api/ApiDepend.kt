@@ -24,7 +24,7 @@ object ApiDepend {
   * */
   
   val account = ":lib_account:api_account" by parent
-  val protocal = ":lib_protocal:api_protocal" by parent
+  val protocol = ":lib_protocol:api_protocol" by parent
   val update = ":lib_update:api_update" by parent
   val electricity = ":module_electricity:api_electricity" by parent
   val main = ":module_main:api_main" by parent
@@ -45,8 +45,8 @@ fun Project.dependApiAccount() {
   ApiDepend.account.dependApiOnly(this)
 }
 
-fun Project.dependApiProtocal() {
-  ApiDepend.protocal.dependApiOnly(this)
+fun Project.dependApiProtocol() {
+  ApiDepend.protocol.dependApiOnly(this)
 }
 
 fun Project.dependApiUpdate() {

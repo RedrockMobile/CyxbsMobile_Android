@@ -13,7 +13,6 @@ import androidx.annotation.CallSuper
 import androidx.annotation.DrawableRes
 import androidx.appcompat.app.AppCompatActivity
 import com.mredrock.cyxbs.api.account.IAccountService
-import com.mredrock.cyxbs.common.BaseApp
 import com.mredrock.cyxbs.common.R
 import com.mredrock.cyxbs.common.bean.LoginConfig
 import com.mredrock.cyxbs.common.component.JToolbar

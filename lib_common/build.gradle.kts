@@ -1,22 +1,12 @@
-import versions.*
+import com.mredrock.cyxbs.convention.depend.api.*
 
 plugins {
-    id("com.redrock.cyxbs")
-}
-dependencies {
-    implementation(project(":module_main:api_main"))
-    implementation(project(":lib_account:api_account"))
-    implementation(project(":lib_protocol:api_protocol"))
-    lPhotoPicker()
-    threeParty()
-    eventBus()
-    photoView()
-    rxPermission()
-    dialog()
-
-    api(`rxjava3-common`)
-    api(`rxjava3-kotlin`)
-    api(`rxjava3-android`)
+    id("module-manager")
+    id("kotlin-android-extensions") // todo kt 获取 View 的插件已被废弃，新模块禁止再使用！
 }
 
-android.buildFeatures.dataBinding = true
+// TODO common 模块不应该反向依赖 api_main
+dependApiMain()
+dependApiAccount()
+dependApiProtocol()
+

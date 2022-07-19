@@ -1,8 +1,3 @@
 plugins {
-    id("com.redrock.cyxbs")
+    id("module-manager")
 }
-
-dependencies {
-    implementation(project(":lib_protocol:api_protocol"))
-}
-android.buildFeatures.dataBinding = true
