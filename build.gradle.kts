@@ -1,29 +1,27 @@
-buildscript {
-//    apply(from= "$rootDir/build_logic/script/githook.gradle")
+tasks.register<Delete>("clean") {
+    delete(rootProject.buildDir)
 }
 
-val ignoreModuleMode:String by project
-val ignoreModule:String by project
-val isFullModuleDebug:String by project
-
-//缓存除module_app以及gradle.properties声明外的所有模块。
-tasks.register("cache"){
+tasks.register("cacheToLocalMaven") {
     group = "publishing"
     subprojects
-        //去除module_app
-        .filter { it.name != "module_app" }
-        //去除gradle.properties文件声明的模块
-        .filter {
-            when(ignoreModuleMode){
-                "normal"->it.name !in ignoreModule.split(' ')
-                "regex"->!ignoreModule.toRegex().matches(it.name)
-                else -> throw kotlin.IllegalStateException("目前只支持normal以及regex匹配方式")
-            }
-        }
-        //拿到对应的发布任务
-        .map { it.tasks.named("publishModuleCachePublicationToMavenRepository") }
-        //依赖
-        .run {
-            dependsOn(this)
-        }
+        .map { it.tasks.named("cacheToLocalMaven") }
+        .let { dependsOn(it) }
+}
+
+buildscript {
+    repositories {
+        maven { url = uri("https://maven.aliyun.com/repository/public") }
+        maven { url = uri("https://maven.aliyun.com/repository/google") }
+        mavenCentral()
+        google()
+    }
+    dependencies {
+        classpath(libs.android.gradlePlugin)
+        classpath(libs.kotlin.gradlePlugin)
+        classpath(libs.hilt.gradlePlugin)
+        // ARouter https://github.com/alibaba/ARouter
+        // 可以去插件中搜索 ARouter Helper，用于实现一些快捷跳转的操作
+        classpath("com.alibaba:arouter-register:1.0.2")
+    }
 }

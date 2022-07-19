@@ -14,6 +14,6 @@ when {
 }
 
 plugins {
-  id("com.mredrock.cyxbs.publish.publications")
+  id("com.mredrock.cyxbs.convention.publish.publications")
 }
 

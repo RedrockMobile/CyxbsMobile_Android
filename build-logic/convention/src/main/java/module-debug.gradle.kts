@@ -19,7 +19,7 @@ isAllowDebugModule().run {
 fun doDebugModule() {
   ModuleDebugProject(project).apply()
   plugins {
-    id("com.mredrock.cyxbs.publish.publications")
+    id("com.mredrock.cyxbs.convention.publish.publications")
   }
 }
 

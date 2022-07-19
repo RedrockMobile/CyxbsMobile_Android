@@ -25,3 +25,8 @@ val modulePluginName = when {
 apply(from="$rootDir/build_logic/secret/secret.gradle")
 apply(plugin=modulePluginName)
 apply(plugin="script.center")
+
+// 注册一个空的任务，因为新的 build-logic 需要
+tasks.register("cacheToLocalMaven") {
+
+}

@@ -60,9 +60,9 @@ class AppProject(project: Project) : BaseApplicationProject(project) {
   }
   
   override fun initApplication() {
-    apply(from = "$rootDir/build_logic/script/andresguard.gradle")
-    apply(from = "$rootDir/build_logic/script/redex.gradle")
-    apply(from = "$rootDir/secret/secret.gradle")
+    apply(from = "$rootDir/build-logic/script/andresguard.gradle")
+    apply(from = "$rootDir/build-logic/script/redex.gradle")
+    apply(from = "$rootDir/build-logic/secret/secret.gradle")
     apply(plugin = "com.tencent.vasdolly")
     super.initApplication()
   }
@@ -70,7 +70,7 @@ class AppProject(project: Project) : BaseApplicationProject(project) {
   override fun initAndroid(extension: BaseAppModuleExtension) {
     super.initAndroid(extension)
     extension.run {
-      // 这是腾讯的多渠道打包
+      // channel 闭包，这是腾讯的多渠道打包
       configure<ChannelConfigExtension> {
         //指定渠道文件
         channelFile = file("${rootDir}/build_logic/channel.txt")
