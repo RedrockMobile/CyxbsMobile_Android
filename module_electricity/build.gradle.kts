@@ -1,17 +1,18 @@
-import versions.defaultNet
-import versions.gson
-import versions.retrofit
+import com.mredrock.cyxbs.convention.depend.*
+import com.mredrock.cyxbs.convention.depend.api.*
 
 /*
 * 这里只添加确认模块独用库，添加请之前全局搜索，是否已经依赖
 * 公用库请不要添加到这里
 * */
 plugins {
-    id("com.redrock.cyxbs")
+    id("module-manager")
+    id("kotlin-android-extensions") // todo kt 获取 View 的插件已被废弃，新模块禁止再使用！
 }
-dependencies {
-    implementation(project(":module_electricity:api_electricity"))
-    implementation(project(":lib_account:api_account"))
-    defaultNet()
-    implementation("cn.aigestudio.wheelpicker:WheelPicker:1.1.3")
-}
+
+dependApiAccount()
+
+dependWheelPicker()
+dependNetwork()
+dependRxjava()
+

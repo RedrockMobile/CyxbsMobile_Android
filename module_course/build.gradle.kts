@@ -1,17 +1,16 @@
-import versions.*
+import com.mredrock.cyxbs.convention.depend.api.*
+import com.mredrock.cyxbs.convention.depend.*
 
 plugins {
-    id("com.redrock.cyxbs")
+    id("module-manager")
+    id("kotlin-android-extensions") // todo kt 获取 View 的插件已被废弃，新模块禁止再使用！
 }
 
-dependencies {
-    implementation(project(":lib_account:api_account"))
-    implementation(project(":module_main:api_main"))
-    implementation("com.super_rabbit.wheel_picker:NumberPicker:1.0.1")
-    implementation("com.umeng.umsdk:common:9.1.0")
-    defaultRoom()
-    eventBus()
-    defaultNet()
-}
+dependApiAccount()
+dependApiMain()
 
-android.buildFeatures.dataBinding = true
+dependRoom()
+dependRoomRxjava()
+dependRxjava()
+dependEventBus()
+dependNetwork()

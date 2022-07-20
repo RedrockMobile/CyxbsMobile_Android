@@ -1,14 +1,13 @@
-import versions.defaultNet
-import versions.photoView
-import versions.threeParty
+import com.mredrock.cyxbs.convention.depend.api.*
+import com.mredrock.cyxbs.convention.depend.*
 
 plugins {
-    id("com.redrock.cyxbs")
+    id("module-manager")
 }
 
-dependencies {
-    implementation(project(":lib_account:api_account"))
-    photoView()
-    threeParty()
-}
-android.buildFeatures.dataBinding = true
+dependApiAccount()
+
+dependPhotoView()
+dependGlide()
+dependRxjava()
+dependNetwork()

@@ -18,6 +18,6 @@ object WheelPicker {
 
 fun Project.dependWheelPicker() {
   dependencies {
-    "implemation"(WheelPicker.wheelPicker)
+    "implementation"(WheelPicker.wheelPicker)
   }
 }

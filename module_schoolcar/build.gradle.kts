@@ -1,11 +1,18 @@
-import versions.defaultNet
+import com.mredrock.cyxbs.convention.depend.*
 
 plugins {
-    id("com.redrock.cyxbs")
+    id("module-manager")
+    id("kotlin-android-extensions") // todo kt 获取 View 的插件已被废弃，新模块禁止再使用！
 }
+
+dependRxjava()
+dependNetwork()
+
 dependencies {
-    implementation("com.amap.api:3dmap:9.1.0")
-    implementation("com.amap.api:location:6.0.1")
+    // https://lbs.amap.com/api/android-location-sdk/guide/create-project/android-studio-create-project
+    implementation("com.amap.api:3dmap:latest.integration")
+    implementation("com.amap.api:location:latest.integration")
+    
+    // https://github.com/koral--/android-gif-drawable
     implementation("pl.droidsonroids.gif:android-gif-drawable:1.2.19")
-    defaultNet()
 }

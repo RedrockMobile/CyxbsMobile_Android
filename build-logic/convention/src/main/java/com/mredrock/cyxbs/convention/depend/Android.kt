@@ -35,7 +35,7 @@ object Android {
 }
 
 /**
- * 所有使用 build_logic 插件的模块都默认依赖了该 Android 最基础依赖
+ * 所有使用 build-logic 插件的模块都默认依赖了该 Android 最基础依赖
  */
 internal fun Project.dependAndroidBase() {
   dependencies {
@@ -43,7 +43,12 @@ internal fun Project.dependAndroidBase() {
   }
 }
 
-fun Project.dependAndroidView() {
+/*
+* 所有 module 模块都已经默认依赖
+*
+* 如果你的 api 模块需要使用，建议自己按需依赖，一般情况下 api 模块是不需要这些东西的
+* */
+internal fun Project.dependAndroidView() {
   dependencies {
     "implementation"(Android.constraintlayout)
     "implementation"(Android.recyclerview)
@@ -55,7 +60,12 @@ fun Project.dependAndroidView() {
   }
 }
 
-fun Project.dependAndroidKtx() {
+/*
+* 所有 module 模块都已经默认依赖
+*
+* 如果你的 api 模块需要使用，建议自己按需依赖，一般情况下 api 模块是不需要这些东西的
+* */
+internal fun Project.dependAndroidKtx() {
   dependencies {
     "implementation"(Android.`core-ktx`)
     "implementation"(Android.`collection-ktx`)

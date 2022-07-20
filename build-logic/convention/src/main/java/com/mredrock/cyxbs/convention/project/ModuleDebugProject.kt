@@ -5,6 +5,9 @@ package com.mredrock.cyxbs.convention.project
 import com.android.build.gradle.internal.dsl.BaseAppModuleExtension
 import com.mredrock.cyxbs.convention.depend.api.ApiDepend
 import com.mredrock.cyxbs.convention.depend.api.utils.ApiDependUtils
+import com.mredrock.cyxbs.convention.depend.dependAndroidKtx
+import com.mredrock.cyxbs.convention.depend.dependAndroidView
+import com.mredrock.cyxbs.convention.depend.dependLifecycleKtx
 import com.mredrock.cyxbs.convention.depend.lib.dependLibCommon
 import org.gradle.api.Project
 import com.mredrock.cyxbs.convention.project.base.BaseApplicationProject
@@ -25,6 +28,9 @@ class ModuleDebugProject(project: Project) : BaseApplicationProject(project) {
   
   override fun initProject() {
     dependLibCommon()
+    dependAndroidView()
+    dependAndroidKtx()
+    dependLifecycleKtx()
     // 依赖 api 模块的实现模块
     passOnApiImplDepend(project, project, hashSetOf(), hashSetOf())
   }

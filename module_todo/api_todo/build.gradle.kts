@@ -1,3 +1,3 @@
 plugins {
-    id("com.redrock.cyxbs")
+    id("module-manager")
 }

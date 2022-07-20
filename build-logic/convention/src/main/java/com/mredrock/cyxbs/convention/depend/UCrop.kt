@@ -13,11 +13,11 @@ import org.gradle.kotlin.dsl.dependencies
 @Suppress("MemberVisibilityCanBePrivate", "ObjectPropertyName", "SpellCheckingInspection")
 object UCrop {
   // https://github.com/Yalantis/uCrop
-  const val ucorp = "com.github.yalantis:ucrop:2.2.8-native"
+  const val ucrop = "com.github.yalantis:ucrop:2.2.8-native"
 }
 
-fun Project.dependUCorp() {
+fun Project.dependUCrop() {
   dependencies {
-    "implemation"(UCrop.ucorp)
+    "implementation"(UCrop.ucrop)
   }
 }

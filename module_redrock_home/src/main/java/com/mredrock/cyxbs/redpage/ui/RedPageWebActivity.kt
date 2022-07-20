@@ -8,14 +8,16 @@ import android.os.Bundle
 import android.view.KeyEvent
 import android.view.KeyEvent.KEYCODE_BACK
 import android.webkit.*
+import android.widget.ProgressBar
 import com.alibaba.android.arouter.facade.annotation.Route
+import com.mredrock.cyxbs.common.component.JToolbar
 import com.mredrock.cyxbs.common.config.REDROCK_HOME_ENTRY
 import com.mredrock.cyxbs.common.config.getBaseUrl
 import com.mredrock.cyxbs.common.ui.BaseActivity
 import com.mredrock.cyxbs.common.utils.extensions.gone
 import com.mredrock.cyxbs.common.utils.extensions.visible
+import com.mredrock.cyxbs.common.webView.LiteJsWebView
 import com.mredrock.cyxbs.redpage.R
-import kotlinx.android.synthetic.main.redrock_home_redpage_activity_webview.*
 
 /**
  * create by:Fxymine4ever
@@ -23,35 +25,38 @@ import kotlinx.android.synthetic.main.redrock_home_redpage_activity_webview.*
  */
 @Route(path = REDROCK_HOME_ENTRY)
 class RedPageWebActivity : BaseActivity() {
-
-
+    
+    private val mToolbar: JToolbar by R.id.tl_redPage.view()
+    private val mWebView: LiteJsWebView by R.id.wv_redPage.view()
+    private val mProgressBar: ProgressBar by R.id.pb_redPage.view()
+    
     @SuppressLint("JavascriptInterface")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.redrock_home_redpage_activity_webview)
-        tl_redPage.init("红岩网校")
-        tl_redPage.setBackgroundResource(R.drawable.redrock_home_shape_tl_bg_shape)
-        tl_redPage.setNavigationOnClickListener { finish() }
-
-        val webSettings = wv_redPage.settings
+        mToolbar.init("红岩网校")
+        mToolbar.setBackgroundResource(R.drawable.redrock_home_shape_tl_bg_shape)
+        mToolbar.setNavigationOnClickListener { finish() }
+        
+        val webSettings = mWebView.settings
         webSettings.apply {
             javaScriptEnabled = true//支持js
             cacheMode = WebSettings.LOAD_CACHE_ELSE_NETWORK//不使用缓存
             javaScriptCanOpenWindowsAutomatically = true
             allowFileAccess = false
         }
-
-        wv_redPage.apply {
-
+        
+        mWebView.apply {
+            
             loadUrl("${getBaseUrl()}/app/Public/index/")
             addJavascriptInterface(this, "android")
             webChromeClient = mWebChromeClient
             webViewClient = mWebViewClient
         }
-
-
+        
+        
     }
-
+    
     private val mWebViewClient = object : WebViewClient() {
         override fun shouldOverrideUrlLoading(view: WebView, url: String): Boolean {
             try {
@@ -60,43 +65,43 @@ class RedPageWebActivity : BaseActivity() {
                     startActivity(intent)
                     return true
                 }
-
+                
             } catch (e: Exception) {
                 return false
             }
-            wv_redPage.loadUrl(url)
+            mWebView.loadUrl(url)
             return true
         }
-
+        
         override fun onPageFinished(view: WebView?, url: String?) {
-            pb_redPage.gone()
+            mProgressBar.gone()
         }
-
+        
         override fun onPageStarted(view: WebView?, url: String?, favicon: Bitmap?) {
-            pb_redPage.visible()
+            mProgressBar.visible()
         }
     }
-
+    
     private val mWebChromeClient = object : WebChromeClient() {
         override fun onProgressChanged(view: WebView?, newProgress: Int) {
-            pb_redPage.progress = newProgress
+            mProgressBar.progress = newProgress
         }
-
+        
         override fun onConsoleMessage(consoleMessage: ConsoleMessage?): Boolean {
             return true
         }
     }
-
+    
     override fun onKeyDown(keyCode: Int, event: KeyEvent): Boolean {
-        if (keyCode == KEYCODE_BACK && wv_redPage.canGoBack()) {
-            wv_redPage.goBack()
+        if (keyCode == KEYCODE_BACK && mWebView.canGoBack()) {
+            mWebView.goBack()
             return true
         }
         return super.onKeyDown(keyCode, event)
     }
-
+    
     override fun onDestroy() {
         super.onDestroy()
-        wv_redPage.destroy()
+        mWebView.destroy()
     }
 }

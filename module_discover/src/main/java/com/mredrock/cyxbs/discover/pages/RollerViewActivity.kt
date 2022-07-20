@@ -24,7 +24,6 @@ import com.mredrock.cyxbs.common.BuildConfig
 import com.mredrock.cyxbs.common.component.CyxbsToast
 import com.mredrock.cyxbs.common.config.DIR_PHOTO
 import com.mredrock.cyxbs.common.ui.BaseActivity
-import com.mredrock.cyxbs.common.utils.LogUtils
 import com.mredrock.cyxbs.common.utils.extensions.*
 import com.mredrock.cyxbs.common.webView.IAndroidWebView
 import com.mredrock.cyxbs.common.webView.WebViewBaseCallBack
