@@ -110,10 +110,10 @@ class ViewImageCropActivity : AppCompatActivity() {
                 )
             )
             setToolbarColor(
-                ContextCompat.getColor(this@ViewImageCropActivity, R.color.colorPrimaryDark)
+                ContextCompat.getColor(this@ViewImageCropActivity, com.mredrock.cyxbs.common.R.color.colorPrimaryDark)
             )
             setStatusBarColor(
-                ContextCompat.getColor(this@ViewImageCropActivity, R.color.colorPrimaryDark)
+                ContextCompat.getColor(this@ViewImageCropActivity, com.mredrock.cyxbs.common.R.color.colorPrimaryDark)
             )
         })
         .start(this)

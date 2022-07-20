@@ -151,14 +151,14 @@ class DailySignActivity : BaseViewModelActivity<DailyViewModel>() {
             mine_daily_sign.apply {
                 isClickable = false
                 background = ResourcesCompat.getDrawable(resources, R.drawable.mine_bg_round_corner_grey, null)
-                setTextColor(ContextCompat.getColor(context, R.color.common_grey_button_text))
+                setTextColor(ContextCompat.getColor(context, com.mredrock.cyxbs.common.R.color.common_grey_button_text))
                 text = if (scoreStatus.canCheckIn) "已签到" else "签到"
             }
         } else {
             mine_daily_sign.apply {
                 isClickable = true
-                background = ResourcesCompat.getDrawable(resources, R.drawable.common_dialog_btn_positive_blue, null)
-                setTextColor(ContextCompat.getColor(context, R.color.common_white_font_color))
+                background = ResourcesCompat.getDrawable(resources, com.mredrock.cyxbs.common.R.drawable.common_dialog_btn_positive_blue, null)
+                setTextColor(ContextCompat.getColor(context, com.mredrock.cyxbs.common.R.color.common_white_font_color))
                 text = "签到"
             }
         }
@@ -228,13 +228,13 @@ class DailySignActivity : BaseViewModelActivity<DailyViewModel>() {
     private fun setDividerColor(i: Int, color: ColorState) {
         when (color) {
             ColorState.COLOR_GREY -> {
-                dividerResArr[i].color.color = ContextCompat.getColor(this, R.color.common_mine_sign_divider_grey)
+                dividerResArr[i].color.color = ContextCompat.getColor(this, com.mredrock.cyxbs.common.R.color.common_mine_sign_divider_grey)
             }
             ColorState.COLOR_BLUE -> {
-                dividerResArr[i].color.color = ContextCompat.getColor(this, R.color.common_mine_sign_divider_blue)
+                dividerResArr[i].color.color = ContextCompat.getColor(this, com.mredrock.cyxbs.common.R.color.common_mine_sign_divider_blue)
             }
             else -> {
-                dividerResArr[i].color.color = ContextCompat.getColor(this, R.color.common_mine_sign_divider_blue_light)
+                dividerResArr[i].color.color = ContextCompat.getColor(this, com.mredrock.cyxbs.common.R.color.common_mine_sign_divider_blue_light)
             }
         }
     }

@@ -30,7 +30,7 @@ class BindActivity : BaseActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.grades_activity_bind)
         common_toolbar.apply {
-            setBackgroundColor(ContextCompat.getColor(this@BindActivity, R.color.common_mine_sign_store_bg))
+            setBackgroundColor(ContextCompat.getColor(this@BindActivity, com.mredrock.cyxbs.common.R.color.common_mine_sign_store_bg))
             initWithSplitLine("绑定认证码",
                     false)
             setTitleLocationAtLeft(true)

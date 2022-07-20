@@ -152,7 +152,7 @@ class ChangePasswordActivity : BaseViewModelActivity<ChangePasswordViewModel>() 
         when (type) {
             TYPE_OLD_PASSWORDS -> {
                 common_toolbar.apply {
-                    setBackgroundColor(ContextCompat.getColor(this@ChangePasswordActivity, R.color.common_white_background))
+                    setBackgroundColor(ContextCompat.getColor(this@ChangePasswordActivity, com.mredrock.cyxbs.common.R.color.common_white_background))
                     initWithSplitLine("修改密码",
                             false,
                             R.drawable.mine_ic_arrow_left,
@@ -164,7 +164,7 @@ class ChangePasswordActivity : BaseViewModelActivity<ChangePasswordViewModel>() 
             }
             TYPE_NEW_PASSWORD -> {
                 common_toolbar.apply {
-                    setBackgroundColor(ContextCompat.getColor(this@ChangePasswordActivity, R.color.common_white_background))
+                    setBackgroundColor(ContextCompat.getColor(this@ChangePasswordActivity, com.mredrock.cyxbs.common.R.color.common_white_background))
                     initWithSplitLine("重设密码",
                             false,
                             R.drawable.mine_ic_arrow_left,

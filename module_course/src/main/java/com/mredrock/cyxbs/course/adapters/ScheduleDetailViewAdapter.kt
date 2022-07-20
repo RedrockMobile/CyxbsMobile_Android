@@ -176,7 +176,7 @@ class ScheduleDetailViewAdapter(
                     setTextColor(
                         ContextCompat.getColor(
                             context,
-                            R.color.common_level_two_font_color
+                            com.mredrock.cyxbs.common.R.color.common_level_two_font_color
                         )
                     )
                     textSize = 13f

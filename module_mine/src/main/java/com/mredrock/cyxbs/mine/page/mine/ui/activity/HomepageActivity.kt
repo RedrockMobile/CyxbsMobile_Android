@@ -502,7 +502,7 @@ class HomepageActivity : BaseViewModelActivity<MineViewModel>() {
                             getImageFromAlbum()
                         }
                     }
-                    cornerRadius(res = R.dimen.common_corner_radius)
+                    cornerRadius(res = com.mredrock.cyxbs.common.R.dimen.common_corner_radius)
 
                 }
             }
@@ -604,12 +604,12 @@ class HomepageActivity : BaseViewModelActivity<MineViewModel>() {
         options.setCropGridStrokeWidth(5)
         options.setCompressionFormat(Bitmap.CompressFormat.PNG)
         options.setCompressionQuality(100)
-        options.setLogoColor(ContextCompat.getColor(this, R.color.common_level_two_font_color))
+        options.setLogoColor(ContextCompat.getColor(this, com.mredrock.cyxbs.common.R.color.common_level_two_font_color))
         options.setToolbarColor(
-                ContextCompat.getColor(this, R.color.colorPrimaryDark)
+                ContextCompat.getColor(this, com.mredrock.cyxbs.common.R.color.colorPrimaryDark)
         )
         options.setStatusBarColor(
-                ContextCompat.getColor(this, R.color.colorPrimaryDark)
+                ContextCompat.getColor(this, com.mredrock.cyxbs.common.R.color.colorPrimaryDark)
         )
         uCrop.withOptions(options)
                 .withAspectRatio(

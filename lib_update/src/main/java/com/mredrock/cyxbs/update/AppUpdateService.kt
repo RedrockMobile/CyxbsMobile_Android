@@ -62,7 +62,7 @@ internal class AppUpdateService : IAppUpdateService {
                 dismiss()
                 AppUpdateModel.status.value = AppUpdateStatus.LATER
             }
-            cornerRadius(res=R.dimen.common_corner_radius)
+            cornerRadius(res= com.mredrock.cyxbs.common.R.dimen.common_corner_radius)
         }
     }
 

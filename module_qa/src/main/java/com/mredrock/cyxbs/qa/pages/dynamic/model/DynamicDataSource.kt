@@ -12,7 +12,6 @@ import com.mredrock.cyxbs.common.config.QA_GET_DYNAMIC_LIST
 import com.mredrock.cyxbs.common.config.getBaseUrl
 import com.mredrock.cyxbs.common.network.ApiGenerator
 import com.mredrock.cyxbs.common.service.ServiceManager
-import com.mredrock.cyxbs.common.utils.LogUtils
 import com.mredrock.cyxbs.common.utils.extensions.mapOrThrowApiException
 import com.mredrock.cyxbs.common.utils.extensions.safeSubscribeBy
 import com.mredrock.cyxbs.common.utils.extensions.setSchedulers
@@ -22,7 +21,6 @@ import com.mredrock.cyxbs.qa.network.ApiServiceNew
 import com.mredrock.cyxbs.qa.network.NetworkState
 import com.mredrock.cyxbs.qa.network.type_adapter.HybridTypeAdapter
 import retrofit2.converter.gson.GsonConverterFactory
-import javax.net.ssl.X509TrustManager
 
 /**
  * Created By jay68 on 2018/9/20.

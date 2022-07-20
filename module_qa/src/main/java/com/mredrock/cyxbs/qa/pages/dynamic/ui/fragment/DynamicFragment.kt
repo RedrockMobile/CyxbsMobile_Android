@@ -147,7 +147,7 @@ class DynamicFragment : BaseDynamicFragment(), EventBusLifecycleSubscriber {
             maxEms = 15
             overScrollMode = View.OVER_SCROLL_IF_CONTENT_SCROLLS
             alpha = 0.51f
-            setTextColor(ContextCompat.getColor(context, R.color.common_level_two_font_color))
+            setTextColor(ContextCompat.getColor(context, com.mredrock.cyxbs.common.R.color.common_level_two_font_color))
             textSize = 14f
         }
     }
@@ -163,7 +163,6 @@ class DynamicFragment : BaseDynamicFragment(), EventBusLifecycleSubscriber {
 
             QuizActivity.activityStart(this, "发动态", REQUEST_LIST_REFRESH_ACTIVITY)
             MobclickAgent.onEvent(context, CyxbsMob.Event.CLICK_ASK)
-
         }
     }
 

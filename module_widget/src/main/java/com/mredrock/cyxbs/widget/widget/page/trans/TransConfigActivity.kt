@@ -225,7 +225,7 @@ class TransConfigActivity : BaseActivity() {
                     colorView.setBackgroundColor(color)
                 }
             })
-            dialog.show(fragmentManager, "颜色选择")
+            dialog.show(supportFragmentManager, "颜色选择")
         }
     }
 }

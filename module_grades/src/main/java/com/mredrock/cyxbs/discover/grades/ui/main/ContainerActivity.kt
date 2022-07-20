@@ -78,7 +78,7 @@ class ContainerActivity : BaseActivity() {
             setBackgroundColor(
                 ContextCompat.getColor(
                     this@ContainerActivity,
-                    R.color.common_mine_sign_store_bg
+                    com.mredrock.cyxbs.common.R.color.common_mine_sign_store_bg
                 )
             )
             initWithSplitLine(

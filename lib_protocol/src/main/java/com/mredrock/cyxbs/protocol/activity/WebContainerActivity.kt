@@ -12,33 +12,34 @@ import com.alibaba.android.arouter.facade.annotation.Route
 import com.mredrock.cyxbs.common.ui.BaseActivity
 import com.mredrock.cyxbs.protocol.R
 import com.mredrock.cyxbs.protocol.config.PROTOCOL_WEB_CONTAINER
-import kotlinx.android.synthetic.main.protocol_activity_web_container.*
 
 
 @Route(path = PROTOCOL_WEB_CONTAINER)
 class WebContainerActivity : BaseActivity() {
-
+    
     companion object {
         const val URI = "uri"
-
+        
         fun loadWebPage(context: Context, uri: String) {
             context.startActivity(Intent(context, WebContainerActivity::class.java).apply {
                 putExtra(URI, uri)
             })
         }
     }
-
+    
+    private lateinit var mWebView: WebView
+    
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         val uri = intent.getStringExtra(URI)
         setContentView(R.layout.protocol_activity_web_container)
-
-
+        mWebView = findViewById(R.id.web_view)
+        
         val dialog = ProgressDialog(this)
         dialog.setMessage("加载中...")
         dialog.show()
-
-        web_view.settings.apply {
+        
+        mWebView.settings.apply {
             javaScriptEnabled = true
             domStorageEnabled = true
             useWideViewPort = true
@@ -50,8 +51,8 @@ class WebContainerActivity : BaseActivity() {
             mediaPlaybackRequiresUserGesture = false
             allowFileAccess =false
         }
-        web_view.loadUrl(uri!!)
-        web_view.webChromeClient = object : WebChromeClient() {
+        mWebView.loadUrl(uri!!)
+        mWebView.webChromeClient = object : WebChromeClient() {
             override fun onProgressChanged(view: WebView, newProgress: Int) {
                 super.onProgressChanged(view, newProgress)
                 if (newProgress >= 100) {
@@ -59,29 +60,29 @@ class WebContainerActivity : BaseActivity() {
                 }
             }
         }
-        web_view.webViewClient = object : WebViewClient() {
+        mWebView.webViewClient = object : WebViewClient() {
             override fun shouldOverrideUrlLoading(view: WebView, url: String): Boolean {
                 view.loadUrl(url)
                 return super.shouldOverrideUrlLoading(view, url)
             }
         }
     }
-
-
+    
+    
     override fun onResume() {
         super.onResume()
-        web_view.resumeTimers()
+        mWebView.resumeTimers()
     }
-
+    
     override fun onPause() {
         super.onPause()
-        web_view.pauseTimers()
+        mWebView.pauseTimers()
     }
-
-
+    
+    
     override fun onDestroy() {
         super.onDestroy()
-        web_view.destroy()
+        mWebView.destroy()
     }
-
+    
 }

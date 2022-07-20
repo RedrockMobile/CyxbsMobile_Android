@@ -1,17 +1,22 @@
-import versions.*
+import com.mredrock.cyxbs.convention.depend.api.*
+import com.mredrock.cyxbs.convention.depend.*
 
 plugins {
-    id("com.redrock.cyxbs")
+    id("module-manager")
+    id("kotlin-android-extensions") // todo kt 获取 View 的插件已被废弃，新模块禁止再使用！
 }
+
+dependApiAccount()
+dependApiMain()
+
+dependRoom()
+dependRoomRxjava()
+dependRxjava()
+dependEventBus()
+dependNetwork()
 
 dependencies {
-    implementation(project(":lib_account:api_account"))
-    implementation(project(":module_main:api_main"))
+    // TODO 未知项目，github 上未找到
     implementation("com.super_rabbit.wheel_picker:NumberPicker:1.0.1")
-    implementation("com.umeng.umsdk:common:9.1.0")
-    defaultRoom()
-    eventBus()
-    defaultNet()
+    implementation(Umeng.common)
 }
-
-android.buildFeatures.dataBinding = true

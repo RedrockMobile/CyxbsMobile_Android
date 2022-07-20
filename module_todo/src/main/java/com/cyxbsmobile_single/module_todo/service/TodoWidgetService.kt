@@ -85,7 +85,7 @@ class TodoWidgetService : RemoteViewsService() {
                     )
                     listItem.setTextColor(
                         R.id.todo_tv_widget_todo_title,
-                        ContextCompat.getColor(this@TodoWidgetService, R.color.common_level_one_font_color)
+                        ContextCompat.getColor(this@TodoWidgetService, com.mredrock.cyxbs.common.R.color.common_level_one_font_color)
                     )
                     listItem.setTextViewText(
                         R.id.todo_widget_notify_time,

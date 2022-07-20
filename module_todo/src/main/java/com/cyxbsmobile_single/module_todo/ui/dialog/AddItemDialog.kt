@@ -33,7 +33,7 @@ import kotlin.collections.ArrayList
  * 增加todo用dialog
  */
 class AddItemDialog(context: Context, val onConfirm: (Todo) -> Unit) :
-    BottomSheetDialog(context, R.style.BottomSheetDialogTheme) {
+    BottomSheetDialog(context, com.mredrock.cyxbs.common.R.style.BottomSheetDialogTheme) {
 
     private val dateBeenList: ArrayList<ArrayList<DateBeen>>
             by lazy { getYearDateSting() }

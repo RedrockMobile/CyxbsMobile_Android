@@ -118,7 +118,7 @@ class TodoInnerMainActivity : BaseViewModelActivity<TodoViewModel>() {
                         todo_cl_item_main.setBackgroundColor(
                                 ContextCompat.getColor(
                                         this@TodoInnerMainActivity,
-                                        R.color.common_white_background
+                                        com.mredrock.cyxbs.common.R.color.common_white_background
                                 )
                         )
 

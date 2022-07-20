@@ -32,7 +32,7 @@ class SettingActivity : BaseActivity() {
             setBackgroundColor(
                 ContextCompat.getColor(
                     this@SettingActivity,
-                    R.color.common_mine_setting_common_back_color
+                    com.mredrock.cyxbs.common.R.color.common_mine_setting_common_back_color
                 )
             )
             initWithSplitLine(

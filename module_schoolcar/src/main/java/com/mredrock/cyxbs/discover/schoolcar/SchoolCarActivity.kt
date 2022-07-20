@@ -19,7 +19,6 @@ import com.amap.api.maps.CameraUpdateFactory
 import com.amap.api.maps.MapsInitializer.updatePrivacyAgree
 import com.amap.api.maps.MapsInitializer.updatePrivacyShow
 import com.amap.api.maps.model.*
-import com.amap.api.maps.utils.overlay.MovingPointOverlay
 import com.mredrock.cyxbs.common.bean.RedrockApiWrapper
 import com.mredrock.cyxbs.common.config.DISCOVER_SCHOOL_CAR
 import com.mredrock.cyxbs.common.config.END_POINT_REDROCK_PROD

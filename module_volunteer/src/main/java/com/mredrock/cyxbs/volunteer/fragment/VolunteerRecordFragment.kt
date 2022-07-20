@@ -298,7 +298,7 @@ class VolunteerRecordFragment : BaseFragment(), EventBusLifecycleSubscriber, Vie
         val textView = TextView(context)
         context ?: return textView
         textView.textSize = context!!.dp2px(5f).toFloat()
-        textView.setTextColor(ContextCompat.getColor(context!!, R.color.common_level_three_font_color))
+        textView.setTextColor(ContextCompat.getColor(context!!, com.mredrock.cyxbs.common.R.color.common_level_three_font_color))
         return textView
     }
 }

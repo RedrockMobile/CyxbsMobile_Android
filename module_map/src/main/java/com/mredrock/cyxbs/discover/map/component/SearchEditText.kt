@@ -79,7 +79,7 @@ class SearchEditText : androidx.appcompat.widget.AppCompatEditText {
         paint = Paint()
         val fontScale = context.resources.displayMetrics.scaledDensity
         paint.textSize = fontScale * 14 + 0.5f //设置字号为14sp
-        paint.color = ContextCompat.getColor(context, R.color.map_search_text_color_hint)
+        paint.color = ContextCompat.getColor(context, com.mredrock.cyxbs.common.R.color.map_search_text_color_hint)
         paint.isAntiAlias = true
         hintString = ""
 
@@ -87,7 +87,7 @@ class SearchEditText : androidx.appcompat.widget.AppCompatEditText {
 
     override fun onTextChanged(text: CharSequence?, start: Int, lengthBefore: Int, lengthAfter: Int) {
         super.onTextChanged(text, start, lengthBefore, lengthAfter)
-        textIsNotEmpty = text?.length ?: 0 != 0
+        textIsNotEmpty = (text?.length ?: 0) != 0
     }
 
     override fun draw(canvas: Canvas?) {

@@ -101,7 +101,7 @@ class UserFragment : BaseViewModelFragment<UserViewModel>() {
                         null
                     )
                     text = "已签到"
-                    setTextColor(ContextCompat.getColor(context, R.color.common_grey_button_text))
+                    setTextColor(ContextCompat.getColor(context, com.mredrock.cyxbs.common.R.color.common_grey_button_text))
                 }
             } else {
                 mine_user_btn_sign.apply {
@@ -111,7 +111,7 @@ class UserFragment : BaseViewModelFragment<UserViewModel>() {
                         R.drawable.mine_shape_bg_user_btn_sign,
                         null
                     )
-                    setTextColor(ContextCompat.getColor(context, R.color.common_white_font_color))
+                    setTextColor(ContextCompat.getColor(context, com.mredrock.cyxbs.common.R.color.common_white_font_color))
                 }
             }
         })

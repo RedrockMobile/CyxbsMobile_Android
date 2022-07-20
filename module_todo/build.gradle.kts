@@ -1,13 +1,12 @@
-import versions.defaultNet
-import versions.defaultRoom
+import com.mredrock.cyxbs.convention.depend.*
 
 plugins {
-    id("com.redrock.cyxbs")
+    id("module-manager")
+    id("kotlin-android-extensions") // todo kt 获取 View 的插件已被废弃，新模块禁止再使用！
 }
 
-dependencies {
-    implementation(project(":module_todo:api_todo"))
-    implementation("cn.aigestudio.wheelpicker:WheelPicker:1.1.3")
-    defaultNet()
-    defaultRoom()
-}
+dependWheelPicker()
+dependNetwork()
+dependRxjava()
+dependRoom()
+dependRoomRxjava()

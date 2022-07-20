@@ -40,7 +40,7 @@ class ViewImageActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.qa_activity_view_image)
-        setTheme(R.style.Theme_MaterialComponents)
+        setTheme(com.google.android.material.R.style.Theme_MaterialComponents)
         setFullScreen()
         imgUrls = intent?.extras?.getStringArray(IMG_RES_PATHS)
         position = intent.getIntExtra(POSITION, 0)
