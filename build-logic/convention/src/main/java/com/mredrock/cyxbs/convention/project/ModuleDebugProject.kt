@@ -70,7 +70,7 @@ class ModuleDebugProject(project: Project) : BaseApplicationProject(project) {
    *
    * 所以该方法就是为了进行递归遍历整个依赖树，将所有间接或直接的 api 依赖都同时依赖上该 api 的实现模块
    *
-   * 但 api 的实现模块是不能直接得到了，为了解决这个问题，需要各位遵守规范，
+   * 但 api 的实现模块是不能直接得到了，为了解决这个问题，需要各位遵守规范 !!!!!
    * 将所有的 api 依赖及实现模块统一写在 [ApiDepend] 中
    *
    * @param debugProject 当前处于单模块调试的模块
@@ -113,7 +113,7 @@ class ModuleDebugProject(project: Project) : BaseApplicationProject(project) {
                   }
                 }?.forEach {
                   println("${debugProject.name} 间接或直接依赖了 ${project.name}\t" +
-                            "该模块依赖了: ${dependency.name}\t" +
+                            "该模块依赖了: ${dependency.name}\t\t" +
                             "已反向依赖: $it")
                 }
               }

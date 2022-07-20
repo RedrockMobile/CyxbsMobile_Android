@@ -11,7 +11,6 @@ dependNetwork()
 dependencies {
     // https://lbs.amap.com/api/android-location-sdk/guide/create-project/android-studio-create-project
     implementation("com.amap.api:3dmap:latest.integration")
-    implementation("com.amap.api:location:latest.integration")
     
     // https://github.com/koral--/android-gif-drawable
     implementation("pl.droidsonroids.gif:android-gif-drawable:1.2.19")

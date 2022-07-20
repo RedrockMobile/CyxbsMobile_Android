@@ -8,3 +8,4 @@ plugins {
 dependNetwork()
 dependRxjava()
 dependRoom()
+dependRoomRxjava()

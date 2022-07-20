@@ -8,17 +8,7 @@
         android:name="android.permission.RECEIVE_BOOT_COMPLETED"
         tools:node="remove" />
 
-    <!--    友盟"统计分析"所需权限-->
-    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
-    <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
-    <uses-permission android:name="android.permission.READ_PHONE_STATE" />
-    <uses-permission android:name="android.permission.INTERNET" />
-
     <!--    bugly所需权限-->
-    <uses-permission android:name="android.permission.READ_PHONE_STATE" />
-    <uses-permission android:name="android.permission.INTERNET" />
-    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
-    <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
     <uses-permission android:name="android.permission.READ_LOGS" />
 
     <application
@@ -43,21 +33,21 @@
 
         <!--Bugly-->
         <!--以下注释 Bugly 是想提醒你：Bugly 官网说1.3.1及以上版本，可以不用进行以下配置-->
-        <activity
-            android:name="com.tencent.bugly.beta.ui.BetaActivity"
-            android:configChanges="keyboardHidden|orientation|screenSize|locale"
-            android:exported="true"
-            android:theme="@android:style/Theme.Translucent" />
-        <provider
-            android:name="androidx.core.content.FileProvider"
-            android:authorities="com.mredrock.cyxbs.fileProvider"
-            android:exported="false"
-            android:grantUriPermissions="true"
-            tools:replace="android:authorities">
-            <meta-data
-                android:name="android.support.FILE_PROVIDER_PATHS"
-                android:resource="@xml/provider_paths" />
-        </provider>
+<!--        <activity-->
+<!--            android:name="com.tencent.bugly.beta.ui.BetaActivity"-->
+<!--            android:configChanges="keyboardHidden|orientation|screenSize|locale"-->
+<!--            android:exported="true"-->
+<!--            android:theme="@android:style/Theme.Translucent" />-->
+<!--        <provider-->
+<!--            android:name="androidx.core.content.FileProvider"-->
+<!--            android:authorities="com.mredrock.cyxbs.fileProvider"-->
+<!--            android:exported="false"-->
+<!--            android:grantUriPermissions="true"-->
+<!--            tools:replace="android:authorities">-->
+<!--            <meta-data-->
+<!--                android:name="android.support.FILE_PROVIDER_PATHS"-->
+<!--                android:resource="@xml/provider_paths" />-->
+<!--        </provider>-->
         <!--Bugly End-->
 
 

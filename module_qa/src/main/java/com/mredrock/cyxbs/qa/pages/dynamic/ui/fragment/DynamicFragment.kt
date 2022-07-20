@@ -163,7 +163,6 @@ class DynamicFragment : BaseDynamicFragment(), EventBusLifecycleSubscriber {
 
             QuizActivity.activityStart(this, "发动态", REQUEST_LIST_REFRESH_ACTIVITY)
             MobclickAgent.onEvent(context, CyxbsMob.Event.CLICK_ASK)
-
         }
     }
 

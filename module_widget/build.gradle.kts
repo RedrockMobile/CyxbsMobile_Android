@@ -21,5 +21,5 @@ dependencies {
     implementation("com.jaredrummler:colorpicker:1.1.0")
     
     // https://github.com/square/retrofit/tree/master/retrofit-converters/scalars
-    implementation("com.squareup.retrofit2:converter-scalars:latest.version")
+    implementation("com.squareup.retrofit2:converter-scalars:${Network.retrofit_version}")
 }

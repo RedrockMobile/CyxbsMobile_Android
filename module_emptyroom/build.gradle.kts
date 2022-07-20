@@ -6,3 +6,4 @@ plugins {
 }
 
 dependNetwork()
+dependRxjava()

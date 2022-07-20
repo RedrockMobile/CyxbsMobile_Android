@@ -11,3 +11,9 @@ plugins {
 dependMaterialDialog()
 dependNetwork()
 dependRxPermissions()
+dependRxjava()
+
+dependencies {
+    implementation(Network.`converter-gson`)
+    implementation(Network.`adapter-rxjava3`)
+}

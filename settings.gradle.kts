@@ -1,7 +1,7 @@
 @file:Suppress("UnstableApiUsage")
 
 pluginManagement {
-    includeBuild("build_logic")
+//    includeBuild("build_logic")
     includeBuild("build-logic")
     repositories {
         maven { url = uri("https://maven.aliyun.com/repository/public") }
@@ -17,8 +17,7 @@ pluginManagement {
 dependencyResolutionManagement {
     repositoriesMode.set(RepositoriesMode.FAIL_ON_PROJECT_REPOS)
     repositories {
-        // 以下两行代码相当于有了 google() jcenter() mavenCentral()，使用国内的阿里镜像
-        maven { url = uri("$rootDir/maven") }
+        maven { url = uri("$rootDir/build/maven") } // 这个是模块缓存地址
         maven { url = uri("https://maven.aliyun.com/repository/public") }
         maven { url = uri("https://maven.aliyun.com/repository/google") }
         maven { url = uri("https://repo1.maven.org/maven2/") }

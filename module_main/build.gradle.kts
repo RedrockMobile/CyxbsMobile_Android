@@ -19,3 +19,7 @@ dependEventBus()
 dependRxjava()
 dependNetwork()
 dependGlide()
+
+dependencies {
+    implementation(Umeng.push)
+}

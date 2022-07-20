@@ -33,4 +33,7 @@ dependencies {
     
     // 一个文本展开与收缩的库 https://github.com/MZCretin/ExpandableTextView
     implementation("com.github.MZCretin:ExpandableTextView:v1.6.1-x")
+    
+    implementation(Network.`converter-gson`)
+    implementation(Umeng.common)
 }

@@ -25,4 +25,8 @@ dependencies {
     implementation("com.kyleduo.switchbutton:library:2.1.0")
     // TODO 应该替换为官方的 ShapeableImageView 来实现圆角图片
     implementation("de.hdodenhof:circleimageview:3.1.0")
+    
+    implementation(Network.`logging-interceptor`)
+    implementation(Network.`converter-gson`)
+    implementation(Network.`adapter-rxjava3`)
 }

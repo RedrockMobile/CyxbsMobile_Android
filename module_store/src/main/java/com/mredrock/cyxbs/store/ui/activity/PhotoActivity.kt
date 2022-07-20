@@ -2,14 +2,11 @@ package com.mredrock.cyxbs.store.ui.activity
 
 import android.Manifest
 import android.annotation.SuppressLint
-import android.app.Activity
-import android.app.Instrumentation
 import android.content.Context
 import android.content.Intent
 import android.graphics.Bitmap
 import android.graphics.drawable.BitmapDrawable
 import android.os.Bundle
-import android.view.KeyEvent
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
@@ -17,11 +14,8 @@ import androidx.viewpager2.widget.ViewPager2
 import com.github.chrisbanes.photoview.PhotoView
 import com.mredrock.cyxbs.common.utils.extensions.*
 import com.mredrock.cyxbs.store.R
-import com.mredrock.cyxbs.store.page.exchange.ui.activity.ProductExchangeActivity
 import com.mredrock.cyxbs.store.utils.widget.slideshow.SlideShow
 import io.reactivex.rxjava3.schedulers.Schedulers
-import kotlinx.android.synthetic.main.store_activity_photo.*
-import kotlin.concurrent.thread
 
 /**
  *    author : zz

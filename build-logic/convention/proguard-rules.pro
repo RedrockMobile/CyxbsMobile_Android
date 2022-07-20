@@ -176,9 +176,6 @@
 # 高德地图
 # 高德地图 https://lbs.amap.com/api/android-sdk/guide/create-project/dev-attention
 # 3D 地图
--keep   class com.amap.api.maps.**{*;}
--keep   class com.autonavi.**{*;}
--keep   class com.amap.api.trace.**{*;}
 -keep class com.amap.api.maps.**{*;}
 -keep class com.autonavi.**{*;}
 -keep class com.amap.api.trace.**{*;}
@@ -186,10 +183,11 @@
 # 定位
 -keep class com.amap.api.location.**{*;}
 -keep class com.amap.api.fence.**{*;}
+-keep class com.loc.**{*;}
 -keep class com.autonavi.aps.amapapi.model.**{*;}
 
 # 搜索
--keep   class com.amap.api.services.**{*;}
+-keep class com.amap.api.services.**{*;}
 
 # 2D地图
 -keep class com.amap.api.maps2d.**{*;}

@@ -2,11 +2,13 @@ package com.mredrock.cyxbs.convention.publish
 
 import com.android.build.gradle.LibraryExtension
 import com.android.build.gradle.internal.dsl.BaseAppModuleExtension
-import com.mredrock.cyxbs.convention.publish.Cache
 
 plugins {
   `maven-publish`
 }
+
+// 开启模块缓存的总开关
+var isOpenModuleCache = false
 
 if (plugins.hasPlugin("com.android.application")) {
   extensions.configure<BaseAppModuleExtension> {
@@ -47,21 +49,22 @@ afterEvaluate {
   }
 }
 
-cache.isAllowSelfUseCache {
-  // 允许自身使用缓存的时候
-  configurations.all {
-    resolutionStrategy.dependencySubstitution.all {
-      val requested = requested
-      if (requested is ProjectComponentSelector) {
-        val projectPath = requested.projectPath
-        val otherProject = project(projectPath)
-        // 判断当前被依赖的模块是否允许用缓存替换
-        if (cache.isAllowOtherUseCache(otherProject)) {
-          val file = (otherProject.extensions["cache"] as Cache).getLocalMavenFile()
-          if (file.exists()) {
-            // 存在就直接替换依赖
-            println("当前模块：${project.name}，替换依赖：$projectPath")
-            useTarget("${cache.localMavenGroup}:${otherProject.name}:${otherProject.version}")
+cache.isAllowSelfUseCache { // 允许自身使用缓存的时候
+  if (isOpenModuleCache) {
+    configurations.all {
+      resolutionStrategy.dependencySubstitution.all {
+        val requested = requested
+        if (requested is ProjectComponentSelector) {
+          val projectPath = requested.projectPath
+          val otherProject = project(projectPath)
+          // 判断当前被依赖的模块是否允许用缓存替换
+          if (cache.isAllowOtherUseCache(otherProject)) {
+            val file = (otherProject.extensions["cache"] as Cache).getLocalMavenFile()
+            if (file.exists()) {
+              // 存在就直接替换依赖
+              println("正在编译的模块：${project.name}，依赖的 $projectPath 模块被替换为缓存")
+              useTarget("${cache.localMavenGroup}:${otherProject.name}:${otherProject.version}")
+            }
           }
         }
       }
@@ -69,6 +72,7 @@ cache.isAllowSelfUseCache {
   }
 }
 
+val publishTaskName = "publishModuleCachePublicationTo${cache.localMavenName.capitalize()}Repository"
 
 tasks.register("cacheToLocalMaven") {
   group = "publishing"
@@ -84,13 +88,21 @@ tasks.register("cacheToLocalMaven") {
     && !gradle.startParameter.taskNames.any {
       it == "${project.path}:assembleDebug" // 自身模块打包时不允许缓存，因为启动模块在单模块调试时经常被修改
     }
-    && cache.isNeedCreateNewCache()
+    && cache.deleteOldCacheIfNeedNewCache()
   ) {
-    dependsOn("publishModuleCachePublicationTo${cache.localMavenName.capitalize()}Repository")
+    dependsOn(publishTaskName)
   }
 }
 
-if (name.startsWith("module_") || name.startsWith("lib_")) {
+tasks.whenTaskAdded {
+  if (name == publishTaskName) {
+    doFirst {
+      println("正在缓存 ${project.name} 模块")
+    }
+  }
+}
+
+if (isOpenModuleCache && (name.startsWith("module_") || name.startsWith("lib_"))) {
   /*
   * 这里有个很奇怪的问题，如果给 api 模块加上，api 模块会报错：
   * Cannot access built-in declaration 'kotlin.String'. Ensure that you have a dependency on the Kotlin standard library

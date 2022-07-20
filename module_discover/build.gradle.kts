@@ -13,6 +13,7 @@ plugins {
 dependApiVolunteer()
 dependApiTodo()
 dependApiAccount()
+dependApiElectricity()
 
 dependNetwork()
 dependRxjava()

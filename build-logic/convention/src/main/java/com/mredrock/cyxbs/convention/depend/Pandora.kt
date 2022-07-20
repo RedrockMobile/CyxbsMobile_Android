@@ -1,6 +1,7 @@
 package com.mredrock.cyxbs.convention.depend
 
 import org.gradle.api.Project
+import org.gradle.kotlin.dsl.apply
 import org.gradle.kotlin.dsl.dependencies
 
 /**
@@ -17,7 +18,7 @@ object Pandora {
 
 // 内部使用，由 application 依赖即可
 internal fun Project.debugDependPandora() {
-//  apply(plugin = "pandora-plugin")
+  apply(plugin = "pandora-plugin")
   dependencies {
     "debugImplementation"(Pandora.pandora)
   }

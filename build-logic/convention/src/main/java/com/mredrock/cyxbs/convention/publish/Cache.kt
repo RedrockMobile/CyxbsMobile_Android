@@ -85,9 +85,10 @@ abstract class Cache(private val project: Project) {
   }
   
   /**
-   * 是否需要创建新的缓存
+   * 删除旧的缓存，如果需要新的缓存的话
+   * @return 是否需要删除旧的缓存
    */
-  internal fun isNeedCreateNewCache(): Boolean {
+  internal fun deleteOldCacheIfNeedNewCache(): Boolean {
     if (!isNeedCreateNewCache) {
       return false
     }

@@ -26,6 +26,8 @@ class AppProject(project: Project) : BaseApplicationProject(project) {
     dependSophix()
     dependUmeng()
     dependVasDolly()
+    dependAutoService()
+    dependRxjava()
   }
   
   /**
@@ -59,6 +61,7 @@ class AppProject(project: Project) : BaseApplicationProject(project) {
     }
   }
   
+  @Suppress("UNCHECKED_CAST")
   override fun initAndroid(extension: BaseAppModuleExtension) {
     apply(from = "$rootDir/build-logic/script/andresguard.gradle")
     apply(from = "$rootDir/build-logic/script/redex.gradle")
@@ -66,10 +69,16 @@ class AppProject(project: Project) : BaseApplicationProject(project) {
     apply(plugin = "com.tencent.vasdolly")
     super.initAndroid(extension)
     extension.run {
+      val ext = extensions["ext"] as ExtraPropertiesExtension
+      operator fun Any?.get(key: String): Any? {
+        check(this is Map<*, *>) { "key = $key，当前 key 值对应的不为 Map 类型" }
+        return this.getOrDefault(key, null)
+      }
+      
       // channel 闭包，这是腾讯的多渠道打包
       configure<ChannelConfigExtension> {
         //指定渠道文件
-        channelFile = file("${rootDir}/build_logic/channel.txt")
+        channelFile = file("channel.txt")
         //多渠道包的输出目录，默认为new File(project.buildDir,"channel")
         outputDir = File(project.buildDir,"channel")
         //多渠道包的命名规则，默认为：${appName}-${versionName}-${versionCode}-${flavorName}-${buildType}-${buildTime}
@@ -85,15 +94,18 @@ class AppProject(project: Project) : BaseApplicationProject(project) {
       signingConfigs {
         create("config") {
           // 获取保存在 secret.gradle 中的变量
-          val ext = extensions["ext"] as ExtraPropertiesExtension
-          operator fun Any?.get(key: String): Any? {
-            check(this is Map<*, *>) { "key = $key，当前 key 值对应的不为 Map 类型" }
-            return this.getOrDefault(key, null)
-          }
           keyAlias = ext["secret"]["sign"]["RELEASE_KEY_ALIAS"] as String
           keyPassword = ext["secret"]["sign"]["RELEASE_KEY_PASSWORD"] as String
           storePassword = ext["secret"]["sign"]["RELEASE_STORE_PASSWORD"] as String
-          storeFile = file("$rootDir/build_logic/secret/key-cyxbs")
+          storeFile = file("$rootDir/build-logic/secret/key-cyxbs")
+        }
+      }
+      
+      defaultConfig {
+        // 秘钥文件
+        manifestPlaceholders += (ext["secret"]["manifestPlaceholders"] as Map<String, String>)
+        (ext["secret"]["buildConfigField"] as Map<String, String>).forEach { (k, v) ->
+          buildConfigField("String", k, v)
         }
       }
   

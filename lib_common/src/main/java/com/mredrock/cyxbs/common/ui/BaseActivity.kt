@@ -110,9 +110,6 @@ abstract class BaseActivity : AppCompatActivity() {
     @Deprecated("老学长的远古遗留代码，经过几次迭代后，不建议再使用")
     val common_toolbar by R.id.toolbar.view<JToolbar>()
 
-    var menu: Menu? = null
-        private set
-
     @Deprecated(message = "废弃，请使用initWithSplitLine()", replaceWith = ReplaceWith("JToolbar.initWithSplitLine()", "com.mredrock.cyxbs.common.ui"))
     protected fun JToolbar.init(title: String,
                                 @DrawableRes icon: Int = R.drawable.common_ic_back,
@@ -144,12 +141,6 @@ abstract class BaseActivity : AppCompatActivity() {
         setTitleLocationAtLeft(false)
         withSplitLine(withSplitLine)
         initInternal(title, icon, listener, titleOnLeft)
-    }
-
-    override fun onPrepareOptionsMenu(menu: Menu?): Boolean {
-        val r = super.onPrepareOptionsMenu(menu)
-        this.menu = menu
-        return r
     }
 
     override fun onRestart() {

@@ -12,6 +12,7 @@ dependLottie()
 dependRoom()
 dependNetwork()
 dependRxjava()
+dependGlide()
 
 dependencies {
     // TODO 使用 官方的 ShapeableImageView 来实现圆角图片
