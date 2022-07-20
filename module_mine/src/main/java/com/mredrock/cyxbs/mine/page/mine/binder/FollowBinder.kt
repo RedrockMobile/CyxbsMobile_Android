@@ -33,7 +33,7 @@ class FollowBinder(
 
             Glide.with(root.context)
                 .load(follower.avatar)
-                .placeholder(R.drawable.common_default_avatar)
+                .placeholder(com.mredrock.cyxbs.common.R.drawable.common_default_avatar)
                 .into(mineFollowItemIvAvatar)
 
             if (!isSelf) {

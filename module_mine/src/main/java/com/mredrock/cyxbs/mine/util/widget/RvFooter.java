@@ -32,7 +32,7 @@ public class RvFooter extends LinearLayout {
         setLayoutParams(new LinearLayout.LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT));
         textView = new TextView(getContext());
         textView.setTextSize(textSize);
-        setBackgroundColor(ContextCompat.getColor(getContext(), R.color.common_secondary_window_background));
+        setBackgroundColor(ContextCompat.getColor(getContext(), com.mredrock.cyxbs.common.R.color.common_secondary_window_background));
         textView.setLayoutParams(new LinearLayout.LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT));
         textView.setGravity(Gravity.CENTER);
         textView.setPadding(0, 40, 0, 40);

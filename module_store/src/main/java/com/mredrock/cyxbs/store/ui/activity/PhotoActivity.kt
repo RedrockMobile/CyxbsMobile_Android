@@ -48,7 +48,7 @@ class PhotoActivity : AppCompatActivity() {
         // 降低因使用共享动画进入 activity 后的闪眼情况
         window.setBackgroundDrawableResource(android.R.color.transparent)
         setContentView(R.layout.store_activity_photo)
-        setTheme(R.style.Theme_MaterialComponents) // 因为学长用的奇怪的 dialog, 需要这个主题支持
+        setTheme(com.google.android.material.R.style.Theme_MaterialComponents) // 因为学长用的奇怪的 dialog, 需要这个主题支持
         setFullScreen()
 
         initData()

@@ -42,7 +42,7 @@ class SetPasswordProtectActivity : BaseViewModelActivity<SetPasswordProtectViewM
 
         //设置toolBar
         common_toolbar.apply {
-            setBackgroundColor(ContextCompat.getColor(this.context, R.color.common_white_background))
+            setBackgroundColor(ContextCompat.getColor(this.context, com.mredrock.cyxbs.common.R.color.common_white_background))
             initWithSplitLine(getString(R.string.mine_security_set_password_protect),
                     true
             )

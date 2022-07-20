@@ -85,7 +85,7 @@ class NewsItemActivity : BaseViewModelActivity<NewsItemViewModel>(), NewsItemVie
                     }
                 }
             }
-            cornerRadius(res = R.dimen.common_corner_radius)
+            cornerRadius(res = com.mredrock.cyxbs.common.R.dimen.common_corner_radius)
 
         }
     }
@@ -184,7 +184,7 @@ class NewsItemActivity : BaseViewModelActivity<NewsItemViewModel>(), NewsItemVie
                     } else {
                         val textView = TextView(this).apply {
                             layoutParams = LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT)
-                            setTextColor(ContextCompat.getColor(this@NewsItemActivity, R.color.common_level_two_font_color))
+                            setTextColor(ContextCompat.getColor(this@NewsItemActivity, com.mredrock.cyxbs.common.R.color.common_level_two_font_color))
                             textSize = context.sp(5).toFloat()
                             text = value
                         }
@@ -240,7 +240,7 @@ class NewsItemActivity : BaseViewModelActivity<NewsItemViewModel>(), NewsItemVie
                     }
                 }
                 positiveButton(text = "确定")
-                cornerRadius(res = R.dimen.common_corner_radius)
+                cornerRadius(res = com.mredrock.cyxbs.common.R.dimen.common_corner_radius)
 
             }
             return@setOnMenuItemClickListener false

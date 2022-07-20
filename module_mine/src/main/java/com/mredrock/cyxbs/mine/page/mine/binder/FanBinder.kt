@@ -33,7 +33,7 @@ class FanBinder(
 
             Glide.with(root.context)
                 .load(fan.avatar)
-                .placeholder(R.drawable.common_default_avatar)
+                .placeholder(com.mredrock.cyxbs.common.R.drawable.common_default_avatar)
                 .into(mineFanItemIvAvatar)
 
             if (!isSelf) {

@@ -49,7 +49,7 @@ class TodoConflictAdapter(
             val normalSpan = ForegroundColorSpan(
                 ContextCompat.getColor(
                     context,
-                    R.color.common_level_three_font_color
+                    com.mredrock.cyxbs.common.R.color.common_level_three_font_color
                 )
             )
 

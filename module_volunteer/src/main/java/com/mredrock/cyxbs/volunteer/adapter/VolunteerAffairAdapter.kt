@@ -38,9 +38,9 @@ class VolunteerAffairAdapter(private var dataList: List<VolunteerAffair>, privat
                 text = holder.itemView.context.getString(R.string.volunteer_sign_up_end_time, last.toString())
                 if (last <= 3) {
                     //三天之后结束，更换颜色
-                    setTextColor(ContextCompat.getColor(context, R.color.common_volunteer_affair_sign_up_end_t0))
+                    setTextColor(ContextCompat.getColor(context, com.mredrock.cyxbs.common.R.color.common_volunteer_affair_sign_up_end_t0))
                 } else {
-                    setTextColor(ContextCompat.getColor(context, R.color.common_volunteer_affair_sign_up_end_t1))
+                    setTextColor(ContextCompat.getColor(context, com.mredrock.cyxbs.common.R.color.common_volunteer_affair_sign_up_end_t1))
                 }
             }
         }

@@ -26,9 +26,9 @@ class TimeRealityAdapter(private val dayOfWeekList: Array<String>, private val d
             course_tv_day_of_month.text = dayOfMonthList[position]
             val dayOfWeek = if (calendar[Calendar.DAY_OF_WEEK] == 1) 6 else calendar[Calendar.DAY_OF_WEEK] - 2
             val color = if (dayOfWeek == position&&this@TimeRealityAdapter.position!=null)
-                ContextCompat.getColor(parent.context, R.color.common_discover_academic_online_colors)
+                ContextCompat.getColor(parent.context, com.mredrock.cyxbs.common.R.color.common_discover_academic_online_colors)
             else
-                ContextCompat.getColor(parent.context, R.color.common_level_one_font_color)
+                ContextCompat.getColor(parent.context, com.mredrock.cyxbs.common.R.color.common_level_one_font_color)
             course_tv_week_day.setTextColor(color)
             course_tv_day_of_month.setTextColor(color)
         }

@@ -59,7 +59,7 @@ class RollerViewActivity : BaseActivity() {
         super.onCreate(savedInstanceState)
 
         setContentView(R.layout.discover_activity_roller_view)
-        setTheme(R.style.Theme_MaterialComponents) //这里是用的Material主题
+        setTheme(com.google.android.material.R.style.Theme_MaterialComponents) //这里是用的Material主题
         //如果是DEBUG就开启webview的debug
         if (BuildConfig.DEBUG) WebView.setWebContentsDebuggingEnabled(true)
 

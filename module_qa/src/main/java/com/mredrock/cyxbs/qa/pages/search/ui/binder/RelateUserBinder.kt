@@ -32,7 +32,7 @@ class RelateUserBinder(
         binding.apply {
             Glide.with(root.context)
                 .load(user.avatar)
-                .placeholder(R.drawable.common_default_avatar)
+                .placeholder(com.mredrock.cyxbs.common.R.drawable.common_default_avatar)
                 .into(qaIvSearchUserAvatar)
             qaTvSearchUserNickname.text = user.nickname
             qaTvSearchUserIntroduction.text = user.introduction
