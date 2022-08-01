@@ -32,7 +32,7 @@ class SchoolDetailViewModel : ViewModel() {
           _mapInfo.postValue(mapLines)
         }
       )
-
+    //拿取车站等信息版本号
     apiService.schoolSiteVersion()
       .setSchedulers(observeOn = Schedulers.io())
       .safeSubscribeBy(
@@ -51,7 +51,7 @@ class SchoolDetailViewModel : ViewModel() {
       )
   }
 
-  fun getMapLinesByNet(){
+  private fun getMapLinesByNet(){
     apiService.schoolSite()
       .setSchedulers(observeOn = Schedulers.io())
       .safeSubscribeBy(

@@ -34,25 +34,29 @@ import kotlin.math.abs
 
 class SchoolCarsSmoothMove(
   private val schoolCarActivity: SchoolCarActivity?,
-  private val activity: Activity,
   private val vm: SchoolCarViewModel){
   private lateinit var carInterface: SchoolCarInterface
 
   //key:id value:type
   private val carMap : ArrayMap<Int,SchoolCar> = ArrayMap()
   private val siteMap : ArrayMap<Int,List<Marker>> = ArrayMap()
+  //markerId to site
   private val markerToSite : ArrayMap<String,Station> = ArrayMap()
   private val markerToCar : ArrayMap<String,Int> = ArrayMap()
   private val lineToBackGroundMarker : ArrayMap<Int,Marker> = ArrayMap()
+
   private val bitmapChanges: List<Bitmap> = getSmoothMakerBitmaps()
   private val siteChanges: List<Bitmap> = getSiteMakerBitmaps()
   private val markerBackGround: List<Bitmap> = getMarkerBackGroundBitmaps()
+
   private val apiService = ApiGenerator.getApiService(ApiService::class.java)
   private var lastPostTime = System.currentTimeMillis()
+
   private var chooseMarker:Marker ?= null
   var disposable: Disposable? = null
   private var line = -1
   init {
+    //这里是站点or车外面的圈圈显示
     buildBackGrounds()
     schoolCarActivity?.aMap?.setOnMapClickListener {
       chooseMarker?.hideInfoWindow()
@@ -89,6 +93,7 @@ class SchoolCarsSmoothMove(
     }
 
     schoolCarActivity?.let { schoolCarActivity ->
+      //初始化
       vm.line.observe(schoolCarActivity){
         line = it
         if (siteMap.contains(line)) {
@@ -121,6 +126,7 @@ class SchoolCarsSmoothMove(
           }
         }
       }
+      //选择路线时marker
       vm.mapInfo.observe(schoolCarActivity){ mapLines ->
         mapLines.lines.forEach { lineInfo ->
           if (!siteMap.contains(lineInfo.id)) {
@@ -136,6 +142,7 @@ class SchoolCarsSmoothMove(
           }
         }
       }
+      //选择站点时marker显示
       vm.chooseSite.observe(schoolCarActivity){ id ->
         if (schoolCarActivity.isBeginning){
           schoolCarActivity.isBeginning = false
@@ -225,7 +232,7 @@ class SchoolCarsSmoothMove(
       it.value.smoothBackgroundMarker.setVisible(false)
     }
   }
-
+  //move设置
   private fun smoothMove(car:SchoolCar, mistime:Int = 3) {
     if (line != -1 && car.type != line) return
     if (car.latLngList.size > 3) {

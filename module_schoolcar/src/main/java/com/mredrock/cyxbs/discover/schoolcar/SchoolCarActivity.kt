@@ -53,16 +53,21 @@ class SchoolCarActivity:BaseActivity() {
     const val ADD_TIMER_AND_SHOW_MAP: Long = 55
     const val NOT_ADD_TIMER: Long = 0
   }
-
+  //是否显示车辆
   private var showCarIcon = false
   private val vm by viewModels<SchoolCarViewModel>()
   private lateinit var binding: SchoolcarActivitySchoolcarBinding
+  //是否显示定位
   private var ifLocation = true
+  //定位client
   private lateinit var locationClient: AMapLocationClient
+  //地图
   lateinit var aMap: AMap
+  //一个help类
   private var smoothMoveData: SchoolCarsSmoothMove? = null
   private var disposable: Disposable? = null
   private var savedInstanceState:Bundle ?=null
+  //是否已经滑动
   var isBeginning = true
   @Override
   override fun onCreate(savedInstanceState: Bundle?) {
@@ -105,7 +110,7 @@ class SchoolCarActivity:BaseActivity() {
   }
 
   private fun initView(){
-
+    //放大缩小
     binding.schoolCarCvOut.setOnClickListener {
       val update = CameraUpdateFactory.zoomOut()
       aMap.animateCamera(update)
@@ -115,7 +120,7 @@ class SchoolCarActivity:BaseActivity() {
       val update = CameraUpdateFactory.zoomIn()
       aMap.animateCamera(update)
     }
-
+    //回到自己定位位置
     binding.schoolCarCvPositioning.setOnClickListener {
       vm.chooseCar(-2)
       aMap.myLocation?.let { location->
@@ -146,8 +151,8 @@ class SchoolCarActivity:BaseActivity() {
 
     //限制缩放大小
     aMap.minZoomLevel = 15f
-
-    smoothMoveData = SchoolCarsSmoothMove(this, this@SchoolCarActivity,vm)
+    //初始化help类
+    smoothMoveData = SchoolCarsSmoothMove(this,vm)
 
     smoothMoveData!!.setCarMapInterface(object : SchoolCarInterface {
       // 回调是否显示地图，和是否开启一个timer轮询接口
@@ -177,7 +182,7 @@ class SchoolCarActivity:BaseActivity() {
 
     initBottomSheetBehavior()
   }
-
+  //这里保证第一次显示最近的
   private fun initBottomSheetBehavior(){
     val behavior = BottomSheetBehavior.from(binding.schoolcarBts)
     behavior.addBottomSheetCallback(object :BottomSheetBehavior.BottomSheetCallback(){
@@ -229,7 +234,7 @@ class SchoolCarActivity:BaseActivity() {
             smoothMoveData?.hideCheck()
             siteAdapter?.clear()
           }
-
+          //-1，-2 特殊值
           if(position == -1 || position == -2){
             vm.bsbHide()
             vm.changeLine()

@@ -39,7 +39,7 @@ class CarIconAdapter(val context: Context?, val lines:List<Line>): RecyclerView.
         block?.invoke(-1,true)
         Arrays.fill(checks,false)
         checks[position] = true
-        notifyDataSetChanged()
+        notifyItemChanged(position,true)
       }
     }else{
       holder.iv.setImageResource(getIcon(position,checks[position]))
@@ -49,11 +49,11 @@ class CarIconAdapter(val context: Context?, val lines:List<Line>): RecyclerView.
           block?.invoke(position,true)
           Arrays.fill(checks,false)
           checks[position] = true
-          notifyDataSetChanged()
+          notifyItemChanged(position,true)
         }else{
           block?.invoke(-2,true)
           checks[position] = false
-          notifyDataSetChanged()
+          notifyItemChanged(position,true)
         }
       }
     }
@@ -71,7 +71,6 @@ class CarIconAdapter(val context: Context?, val lines:List<Line>): RecyclerView.
         need = index
       }
     }
-
     block?.invoke(need,isCheckIcon)
     notifyDataSetChanged()
   }

@@ -18,8 +18,11 @@ import java.util.*
  *
  */
 class CarPageSiteAdapter(val context: Context?, var stations:List<Station>,val lineId:Int): RecyclerView.Adapter<CarPageSiteAdapter.ViewHolder>() {
+
   companion object{
+    //开始和终点
     val SIDE_VIEW = 1
+    //普通线
     val COMMON_VIEW = 2
   }
 

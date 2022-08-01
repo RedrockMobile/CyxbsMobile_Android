@@ -58,7 +58,7 @@ class SchoolCarViewModel : ViewModel() {
     get() = _chooseSite
 
   //是否显示最近站点
-  private val _showRecently = MutableLiveData<Int>(0)
+  private val _showRecently = MutableLiveData(0)
   val showRecently: LiveData<Int>
     get() = _showRecently
 
@@ -66,12 +66,14 @@ class SchoolCarViewModel : ViewModel() {
     _carLine.value = line
   }
 
+  //选择站点
   fun chooseSite(id: Int) {
     val arrayList = ArrayList<Int>()
     val chooseLine = _line.value ?: -1
     if (chooseLine != -1) {
       arrayList.add(chooseLine)
     }
+    //显示对应路线
     mapInfo.value?.lines?.forEach { line ->
       line.stations.forEach { station ->
         if (station.id == id) {
@@ -146,7 +148,7 @@ class SchoolCarViewModel : ViewModel() {
       )
   }
 
-  fun getMapLinesByNet(){
+  private fun getMapLinesByNet(){
     apiService.schoolSite()
       .setSchedulers(observeOn = Schedulers.io())
       .safeSubscribeBy(

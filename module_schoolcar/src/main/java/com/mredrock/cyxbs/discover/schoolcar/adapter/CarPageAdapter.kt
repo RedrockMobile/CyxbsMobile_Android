@@ -29,6 +29,7 @@ class CarPageAdapter(val context: Context?, val lines:List<Line>): RecyclerView.
     val binding = SchoolcarItemCarPageBinding.inflate(LayoutInflater.from(parent.context),parent,false)
     return ViewHolder(binding)
   }
+
   override fun onBindViewHolder(holder: ViewHolder, position: Int) {
     val line = lines[position]
     holder.rv.adapter = CarPageSiteAdapter(context, line.stations,line.id)
