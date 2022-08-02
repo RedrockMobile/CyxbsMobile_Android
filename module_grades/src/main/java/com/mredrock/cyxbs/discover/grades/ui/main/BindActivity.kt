@@ -5,6 +5,9 @@ import android.transition.Explode
 import android.transition.TransitionManager
 import android.view.View
 import android.view.inputmethod.EditorInfo
+import android.widget.Button
+import android.widget.EditText
+import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.content.ContextCompat
 import androidx.core.view.get
 import androidx.lifecycle.Observer
@@ -14,7 +17,6 @@ import com.mredrock.cyxbs.common.utils.extensions.toast
 import com.mredrock.cyxbs.discover.grades.R
 import com.mredrock.cyxbs.discover.grades.ui.viewModel.ContainerViewModel
 import com.mredrock.cyxbs.discover.grades.utils.widget.KeyboardUtil
-import kotlinx.android.synthetic.main.grades_activity_bind.*
 
 
 /**
@@ -26,6 +28,11 @@ import kotlinx.android.synthetic.main.grades_activity_bind.*
 class BindActivity : BaseActivity() {
     private lateinit var viewModel: ContainerViewModel
 
+    private val mBtnBind by R.id.grades_btn_bind.view<Button>()
+    private val mEtIds by R.id.grades_et_ids.view<EditText>()
+    private val mEtPassword by R.id.grades_et_password.view<EditText>()
+    private val mConstraintLayout by R.id.grades_constraint_layout.view<ConstraintLayout>()
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.grades_activity_bind)
@@ -36,9 +43,9 @@ class BindActivity : BaseActivity() {
             setTitleLocationAtLeft(true)
         }
         viewModel = ViewModelProvider(this)[ContainerViewModel::class.java]
-        grades_btn_bind.setOnClickListener {
-            val ids: String = grades_et_ids.text.toString()
-            val password: String = grades_et_password.text.toString()
+        mBtnBind.setOnClickListener {
+            val ids: String = mEtIds.text.toString()
+            val password: String = mEtPassword.text.toString()
             if (ids.isNotEmpty() && password.isNotEmpty()) {
                 KeyboardUtil.closeKeybord(this)
                 viewModel.bindIds(ids, password) { bubble() }
@@ -54,11 +61,11 @@ class BindActivity : BaseActivity() {
                 finish()
             }
         })
-        grades_et_password.setOnEditorActionListener { _, actionId, _ ->
+        mEtPassword.setOnEditorActionListener { _, actionId, _ ->
             return@setOnEditorActionListener when (actionId) {
                 EditorInfo.IME_ACTION_SEND -> {
-                    val ids: String = grades_et_ids.text.toString()
-                    val password: String = grades_et_password.text.toString()
+                    val ids: String = mEtIds.text.toString()
+                    val password: String = mEtPassword.text.toString()
                     if (ids.isNotEmpty() && password.isNotEmpty()) {
                         KeyboardUtil.closeKeybord(this)
                         viewModel.bindIds(ids, password) { bubble() }
@@ -74,9 +81,9 @@ class BindActivity : BaseActivity() {
     }
 
     private fun bubble() {
-        TransitionManager.beginDelayedTransition(grades_constraint_layout, Explode())
-        for (i in 0 until grades_constraint_layout.childCount) {
-            val view = grades_constraint_layout[i]
+        TransitionManager.beginDelayedTransition(mConstraintLayout, Explode())
+        for (i in 0 until mConstraintLayout.childCount) {
+            val view = mConstraintLayout[i]
             view.visibility = when (view.visibility) {
                 View.GONE -> View.VISIBLE
                 View.VISIBLE -> View.GONE

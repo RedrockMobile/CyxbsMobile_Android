@@ -4,15 +4,16 @@ import android.content.Context
 import android.util.AttributeSet
 import android.view.LayoutInflater
 import android.widget.FrameLayout
+import androidx.recyclerview.widget.RecyclerView
 import com.mredrock.cyxbs.discover.emptyroom.R
 import com.mredrock.cyxbs.discover.emptyroom.utils.ViewInitializer
-import kotlinx.android.synthetic.main.emptyroom_layout_multi_selector.view.*
 import java.util.*
 
 /**
  * Created by Cynthia on 2018/9/18
  */
 class MultiSelector : FrameLayout {
+    private val rv:RecyclerView = findViewById(R.id.rv)
 
     val NO_LIMIT = context.resources.getInteger(R.integer.emptyroom_no_limit)
 
@@ -31,6 +32,7 @@ class MultiSelector : FrameLayout {
 
     private var mInitializer: ViewInitializer? = null
     private lateinit var mListener: OnItemSelectedChangeListener
+
 
     private fun init(attributeSet: AttributeSet?) {
         val array = context.obtainStyledAttributes(attributeSet, R.styleable.MultiSelector)
