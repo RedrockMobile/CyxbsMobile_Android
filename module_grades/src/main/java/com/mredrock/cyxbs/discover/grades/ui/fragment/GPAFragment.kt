@@ -7,11 +7,10 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
-import com.mredrock.cyxbs.common.utils.LogUtils
+import androidx.recyclerview.widget.RecyclerView
 import com.mredrock.cyxbs.discover.grades.R
 import com.mredrock.cyxbs.discover.grades.ui.expandableAdapter.GPAAdapter
 import com.mredrock.cyxbs.discover.grades.ui.viewModel.ContainerViewModel
-import kotlinx.android.synthetic.main.grades_fragment_gpa.*
 
 /**
  * Created by roger on 2020/3/21
@@ -22,6 +21,7 @@ class GPAFragment : Fragment() {
     private lateinit var adapter: GPAAdapter
 
     private lateinit var hashMap: HashMap<Int, Int>
+
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         return inflater.inflate(R.layout.grades_fragment_gpa, container, false)
@@ -45,10 +45,11 @@ class GPAFragment : Fragment() {
 
 
         viewModel.analyzeData.observe(viewLifecycleOwner, Observer {
+            val mRvGrade = view.findViewById<RecyclerView>(R.id.grades_rv)
             val context = context ?: return@Observer
             if (it?.data == null) return@Observer
             adapter = GPAAdapter(context, hashMap, it.data)
-            grades_rv.adapter = adapter
+            mRvGrade.adapter = adapter
         })
 
 

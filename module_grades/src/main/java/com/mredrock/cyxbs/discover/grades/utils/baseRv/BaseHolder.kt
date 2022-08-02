@@ -11,7 +11,7 @@ import androidx.recyclerview.widget.RecyclerView
  *
  * @CreateAt:2018/9/16
  */
-class BaseHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
+open class BaseHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
     companion object {
         fun getHolder(context: Context,
                       parent: ViewGroup,
