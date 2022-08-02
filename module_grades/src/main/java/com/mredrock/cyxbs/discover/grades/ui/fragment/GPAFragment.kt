@@ -52,7 +52,5 @@ class GPAFragment : Fragment() {
             mRvGrade.adapter = adapter
         })
 
-
-
     }
 }
