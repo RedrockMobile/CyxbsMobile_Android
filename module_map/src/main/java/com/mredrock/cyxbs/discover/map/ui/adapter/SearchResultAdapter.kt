@@ -4,6 +4,7 @@ import android.content.Context
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.TextView
 import androidx.databinding.ObservableArrayList
 import androidx.databinding.ObservableList
 import androidx.recyclerview.widget.RecyclerView
@@ -11,7 +12,6 @@ import com.mredrock.cyxbs.discover.map.R
 import com.mredrock.cyxbs.discover.map.bean.PlaceItem
 import com.mredrock.cyxbs.discover.map.model.DataSet
 import com.mredrock.cyxbs.discover.map.viewmodel.MapViewModel
-import kotlinx.android.synthetic.main.map_recycle_item_search_result.view.*
 import com.mredrock.cyxbs.common.utils.extensions.setOnSingleClickListener
 
 /**
@@ -83,7 +83,7 @@ class SearchResultAdapter(context: Context, private val viewModel: MapViewModel)
     }
 
     class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
-        val placeName = itemView.map_tv_search_result_place_name
+        val placeName:TextView = itemView.findViewById<TextView>(R.id.map_tv_search_result_place_name)
     }
 
 }

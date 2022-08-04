@@ -9,14 +9,13 @@ import com.mredrock.cyxbs.common.utils.extensions.setImageFromUrl
 import com.mredrock.cyxbs.common.utils.extensions.setOnSingleClickListener
 import com.mredrock.cyxbs.discover.map.R
 import com.mredrock.cyxbs.discover.map.component.RoundRectImageView
-import kotlinx.android.synthetic.main.map_recycle_item_all_picture.view.*
 
 class AllPictureRvAdapter(val context: Context, private val mList: MutableList<String>) : RecyclerView.Adapter<AllPictureRvAdapter.ViewHolder>() {
 
     private var onItemClickListener: OnItemClickListener? = null
 
     inner class ViewHolder(view: View) : RecyclerView.ViewHolder(view) {
-        val imageView: RoundRectImageView = view.map_iv_recycle_item_all_picture
+        val imageView: RoundRectImageView = view.findViewById(R.id.map_iv_recycle_item_all_picture)
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
