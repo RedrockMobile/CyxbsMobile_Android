@@ -77,7 +77,9 @@ abstract class BaseAndroidProject(project: Project) : BaseProject(project) {
 //        isShrinkResources = true
         proguardFiles(
           getDefaultProguardFile("proguard-android-optimize.txt"),
-          "proguard-rules.pro"
+          rootDir.resolve("build-logic")
+            .resolve("convention")
+            .resolve("proguard-rules.pro")
         )
   
         ndk {
@@ -85,11 +87,13 @@ abstract class BaseAndroidProject(project: Project) : BaseProject(project) {
         }
       }
       debug {
-        isMinifyEnabled = false
+        isMinifyEnabled = true
 //        isShrinkResources = false
         proguardFiles(
           getDefaultProguardFile("proguard-android-optimize.txt"),
-          "proguard-rules.pro"
+          rootDir.resolve("build-logic")
+            .resolve("convention")
+            .resolve("proguard-rules.pro")
         )
         
         ndk {

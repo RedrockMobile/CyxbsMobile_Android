@@ -74,6 +74,9 @@ class MainActivity : BaseViewModelActivity<MainViewModel>(),
         super.onCreate(savedInstanceState)
         // 暂时不要在mainActivity里面使用dataBinding，会有一个量级较大的闪退
         setContentView(R.layout.main_activity_main)
+
+//        ServiceManager.getService<IDialogService>()
+//            .openWebDialog(this, "https://coldrain-moro.github.io/android2web-test/")
     }
 
 

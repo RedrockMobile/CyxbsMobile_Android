@@ -30,6 +30,7 @@ object ApiDepend {
   val main = ":module_main:api_main" by parent
   val todo = ":module_todo:api_todo" by parent
   val volunteer = ":module_volunteer:api_volunteer" by parent
+  val dialog = ":module_dialog:api_dialog" by parent
   
   private infix fun String.by(implPath: String): ApiDependUtils.IApiDependUtils = by { implPath }
   private infix fun String.by(implPath: String.() -> String): ApiDependUtils.IApiDependUtils {
@@ -69,3 +70,6 @@ fun Project.dependApiVolunteer() {
   ApiDepend.volunteer.dependApiOnly(this)
 }
 
+fun Project.dependApiDialog() {
+  ApiDepend.dialog.dependApiOnly(this)
+}

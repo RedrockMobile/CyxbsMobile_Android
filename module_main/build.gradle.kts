@@ -13,6 +13,7 @@ plugins {
 dependApiAccount()
 dependApiUpdate()
 dependApiProtocol()
+dependApiDialog()
 
 dependLottie()
 dependEventBus()

@@ -172,6 +172,7 @@ class AboutActivity : BaseViewModelActivity<AboutViewModel>() {
                         mine_about_tv_already_up_to_date.text = "建议再试试哟~"
                         if (selfUpdateCheck) toast("有一股神秘力量阻拦了更新，请稍候重试或尝试反馈")
                     }
+                    else -> {}
                 }
             }
         }

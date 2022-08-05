@@ -28,7 +28,6 @@ import com.mredrock.cyxbs.common.mark.EventBusLifecycleSubscriber
 import com.mredrock.cyxbs.common.service.ServiceManager
 import com.mredrock.cyxbs.common.ui.BaseViewModelActivity
 import com.mredrock.cyxbs.common.utils.extensions.defaultSharedPreferences
-import com.mredrock.cyxbs.common.utils.extensions.doPermissionAction
 import com.mredrock.cyxbs.common.utils.extensions.editor
 import com.mredrock.cyxbs.api.main.MAIN_LOGIN
 import com.mredrock.cyxbs.common.config.*
@@ -55,7 +54,6 @@ class LoginActivity : BaseViewModelActivity<LoginViewModel>(), EventBusLifecycle
     @JvmField
     @Autowired(name = IS_EXIT_LOGIN)
     var isExitLogin: Boolean? = false
-
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)

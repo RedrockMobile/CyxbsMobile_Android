@@ -216,7 +216,6 @@ class DiscoverHomeFragment : BaseViewModelFragment<DiscoverHomeViewModel>(), Eve
         tv_day.text = dataEvent.time
     }
 
-
     override fun onPause() {
         super.onPause()
         vf_jwzx_detail.stopFlipping()

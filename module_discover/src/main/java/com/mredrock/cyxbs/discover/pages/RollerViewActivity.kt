@@ -15,6 +15,7 @@ import android.os.*
 import android.view.KeyEvent
 import android.view.KeyEvent.KEYCODE_BACK
 import android.view.MotionEvent
+import android.webkit.URLUtil
 import android.webkit.WebChromeClient
 import android.webkit.WebView
 import android.webkit.WebViewClient
@@ -97,13 +98,14 @@ class RollerViewActivity : BaseActivity() {
             }
         }
         discover_web_view.webViewClient = object : WebViewClient() {
+            @Deprecated("Deprecated in Java")
             override fun shouldOverrideUrlLoading(view: WebView, url: String): Boolean {
                 view.loadUrl(url)
                 return super.shouldOverrideUrlLoading(view, url)
             }
 
             //这里是页面加载完之后调用
-            override fun onPageFinished(view: WebView?, url: String?) {
+            override fun onPageFinished(view: WebView, url: String?) {
                 super.onPageFinished(view, url)
                 //在加载完之后，获得js中init中调用的方法
                 //这里需要Js代码中初始化，否则无法启动
@@ -111,11 +113,12 @@ class RollerViewActivity : BaseActivity() {
                 initSensor()
             }
         }
-        discover_web_view.setDownloadListener { url, userAgent, contentDisposition, mimetype, contentLength ->
+        discover_web_view.setDownloadListener { url, _, contentDisposition, mimeType, _ ->
             val request = DownloadManager.Request(Uri.parse(url))
             request.allowScanningByMediaScanner()
             request.setNotificationVisibility(DownloadManager.Request.VISIBILITY_VISIBLE_NOTIFY_COMPLETED)
-            request.setDestinationInExternalPublicDir(Environment.DIRECTORY_DOWNLOADS, "DownloadFile.pdf")
+            val fileName = URLUtil.guessFileName(url, contentDisposition, mimeType)
+            request.setDestinationInExternalPublicDir(Environment.DIRECTORY_DOWNLOADS, fileName)
             val dm = baseContext.getSystemService(DOWNLOAD_SERVICE) as DownloadManager
             dm.enqueue(request)
         }
@@ -128,6 +131,7 @@ class RollerViewActivity : BaseActivity() {
             when (type) {
                 WebView.HitTestResult.IMAGE_TYPE -> {
                     val imgUrl = result.extra
+
                 }
                 //如果是长按超链接就跳转
                 WebView.HitTestResult.SRC_ANCHOR_TYPE -> {
@@ -143,14 +147,13 @@ class RollerViewActivity : BaseActivity() {
             when(motionEvent.action){
                 MotionEvent.ACTION_DOWN ->{
                     val result = (view as WebView).hitTestResult
-                    when(result.type){
+                    when (result.type) {
                         WebView.HitTestResult.SRC_ANCHOR_TYPE -> {
                             toast("长按即可跳转到浏览器打开")
                         }
                     }
                 }
             }
-
         }
     }
 
