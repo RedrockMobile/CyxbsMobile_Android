@@ -5,6 +5,10 @@ import android.content.Intent
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.WindowManager
+import android.widget.Button
+import android.widget.EditText
+import android.widget.LinearLayout
+import android.widget.TextView
 import androidx.core.content.ContextCompat
 import androidx.databinding.DataBindingUtil
 import com.mredrock.cyxbs.common.ui.BaseViewModelActivity
@@ -15,7 +19,6 @@ import com.mredrock.cyxbs.mine.databinding.MineActivitySetPasswordProtectBinding
 import com.mredrock.cyxbs.mine.page.security.util.AnswerTextWatcher
 import com.mredrock.cyxbs.mine.page.security.viewmodel.SetPasswordProtectViewModel
 import com.mredrock.cyxbs.mine.util.ui.SelQuestionDialog
-import kotlinx.android.synthetic.main.mine_activity_set_password_protect.*
 
 /**
  * Author: RayleighZ
@@ -27,6 +30,11 @@ class SetPasswordProtectActivity : BaseViewModelActivity<SetPasswordProtectViewM
 
     var canClick = false
 
+    private val mTvSecurityQuestion by R.id.mine_tv_security_question.view<TextView>()
+    private val mLlSelQuestionShow by R.id.mine_ll_sel_question_show.view<LinearLayout>()
+    private val mEtSecurityAnswer by R.id.mine_edt_security_answer.view<EditText>()
+    private val mBtnSecuritySetProtectconfirm by R.id.mine_bt_security_set_protectconfirm.view<Button>()
+
     companion object {
         fun actionStart(context: Context) {
             context.startActivity(Intent(context, SetPasswordProtectActivity::class.java))
@@ -35,16 +43,24 @@ class SetPasswordProtectActivity : BaseViewModelActivity<SetPasswordProtectViewM
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        val binding = DataBindingUtil.inflate<MineActivitySetPasswordProtectBinding>(LayoutInflater.from(this),
-                R.layout.mine_activity_set_password_protect, null, false)
+        val binding = DataBindingUtil.inflate<MineActivitySetPasswordProtectBinding>(
+            LayoutInflater.from(this),
+            R.layout.mine_activity_set_password_protect, null, false
+        )
         binding.viewModel = viewModel
         setContentView(binding.root)
 
         //设置toolBar
         common_toolbar.apply {
-            setBackgroundColor(ContextCompat.getColor(this.context, com.mredrock.cyxbs.common.R.color.common_white_background))
-            initWithSplitLine(getString(R.string.mine_security_set_password_protect),
-                    true
+            setBackgroundColor(
+                ContextCompat.getColor(
+                    this.context,
+                    com.mredrock.cyxbs.common.R.color.common_white_background
+                )
+            )
+            initWithSplitLine(
+                getString(R.string.mine_security_set_password_protect),
+                true
             )
         }
 
@@ -53,12 +69,12 @@ class SetPasswordProtectActivity : BaseViewModelActivity<SetPasswordProtectViewM
             canClick = true
             //加载sheetDialog，设置展开和消失的阴影
             selQuestionDialog = SelQuestionDialog(this, viewModel.listOfSecurityQuestion) {
-                mine_tv_security_question.text = viewModel.listOfSecurityQuestion[it].content
+                mTvSecurityQuestion.text = viewModel.listOfSecurityQuestion[it].content
                 viewModel.securityQuestionId = viewModel.listOfSecurityQuestion[it].id
                 setBackGroundShadowOrShadow()
             }
 
-            mine_tv_security_question.text = viewModel.listOfSecurityQuestion[0].content
+            mTvSecurityQuestion.text = viewModel.listOfSecurityQuestion[0].content
             viewModel.securityQuestionId = viewModel.listOfSecurityQuestion[0].id
 
             selQuestionDialog.setOnCancelListener {
@@ -67,7 +83,7 @@ class SetPasswordProtectActivity : BaseViewModelActivity<SetPasswordProtectViewM
         }
 
 
-        mine_ll_sel_question_show.setOnSingleClickListener {
+        mLlSelQuestionShow.setOnSingleClickListener {
             if (canClick) {
                 selQuestionDialog.show()
                 setBackGroundShadowOrShadow()
@@ -77,12 +93,12 @@ class SetPasswordProtectActivity : BaseViewModelActivity<SetPasswordProtectViewM
         }
 
         //对editText输入进行监听
-        mine_edt_security_answer.addTextChangedListener(
-                AnswerTextWatcher(viewModel.tipForInputNum, mine_bt_security_set_protectconfirm, this)
+        mEtSecurityAnswer.addTextChangedListener(
+            AnswerTextWatcher(viewModel.tipForInputNum, mBtnSecuritySetProtectconfirm, this)
         )
 
         //确定设置密保的点击事件
-        mine_bt_security_set_protectconfirm.setOnSingleClickListener {
+        mBtnSecuritySetProtectconfirm.setOnSingleClickListener {
             viewModel.setSecurityQA {
                 finish()
             }

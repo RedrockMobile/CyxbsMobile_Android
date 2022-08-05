@@ -2,6 +2,9 @@ package com.mredrock.cyxbs.mine.page.security.activity
 
 import android.os.Bundle
 import android.view.View
+import android.widget.Button
+import android.widget.EditText
+import android.widget.ProgressBar
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.Observer
 import com.alibaba.android.arouter.facade.annotation.Route
@@ -12,7 +15,6 @@ import com.mredrock.cyxbs.mine.R
 import com.mredrock.cyxbs.mine.page.security.viewmodel.ForgetPasswordViewModel
 import com.mredrock.cyxbs.mine.util.ui.ChooseFindTypeDialog
 import com.mredrock.cyxbs.mine.util.ui.DefaultPasswordHintDialog
-import kotlinx.android.synthetic.main.mine_activity_forget_password.*
 
 /**
  * Author: SpreadWater
@@ -26,10 +28,14 @@ class ForgetPasswordActivity : BaseViewModelActivity<ForgetPasswordViewModel>() 
     private var stuNumber = ""
     private var canClick = true
 
+    private val mPbSecurityForget by R.id.mine_pb_security_forget.view<ProgressBar>()
+    private val mBtnForgetPasswordConfirm by R.id.mine_security_bt_forget_password_confirm.view<Button>()
+    private val mSecurityEtForgetPassword by R.id.mine_security_et_forget_password.view<EditText>()
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.mine_activity_forget_password)
-        mine_pb_security_forget.visibility = View.GONE
+        mPbSecurityForget.visibility = View.GONE
         //配置toolBar
         common_toolbar.apply {
             setBackgroundColor(ContextCompat.getColor(this@ForgetPasswordActivity, com.mredrock.cyxbs.common.R.color.common_white_background))
@@ -49,7 +55,7 @@ class ForgetPasswordActivity : BaseViewModelActivity<ForgetPasswordViewModel>() 
                 DefaultPasswordHintDialog.show(this, this)
             } else {
                 viewModel.checkBinding(stuNumber) {
-                    mine_pb_security_forget.visibility = View.GONE
+                    mPbSecurityForget.visibility = View.GONE
                     //展示不同的找回密码方式的dialog
                     viewModel.bindingEmail.value?.let { bindEmailValue ->
                         viewModel.bindingPasswordProtect.value?.let { bindingPasswordValue ->
@@ -59,13 +65,13 @@ class ForgetPasswordActivity : BaseViewModelActivity<ForgetPasswordViewModel>() 
                 }
             }
         })
-        mine_security_bt_forget_password_confirm.setOnSingleClickListener {
+        mBtnForgetPasswordConfirm.setOnSingleClickListener {
             if (canClick) {
-                stuNumber = mine_security_et_forget_password.text.toString()
+                stuNumber = mSecurityEtForgetPassword.text.toString()
                 if (stuNumber != "" && stuNumber != null) {
-                    mine_pb_security_forget.visibility = View.VISIBLE
+                    mPbSecurityForget.visibility = View.VISIBLE
                     viewModel.checkDefaultPassword(stuNumber) {
-                        mine_pb_security_forget.visibility = View.GONE
+                        mPbSecurityForget.visibility = View.GONE
                     }
                     canClick = false//网络请求结束之前不允许进行新的请求
                 }

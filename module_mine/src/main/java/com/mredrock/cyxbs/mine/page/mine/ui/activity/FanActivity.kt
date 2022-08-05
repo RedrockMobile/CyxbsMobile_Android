@@ -3,6 +3,9 @@ package com.mredrock.cyxbs.mine.page.mine.ui.activity
 import android.app.Activity
 import android.content.Intent
 import android.os.Bundle
+import android.widget.ImageButton
+import androidx.viewpager2.widget.ViewPager2
+import com.google.android.material.tabs.TabLayout
 import com.google.android.material.tabs.TabLayoutMediator
 import com.mredrock.cyxbs.api.account.IAccountService
 import com.mredrock.cyxbs.api.account.IUserService
@@ -12,7 +15,6 @@ import com.mredrock.cyxbs.mine.R
 import com.mredrock.cyxbs.mine.page.mine.adapter.FanPagerAdapter
 import com.mredrock.cyxbs.mine.page.mine.ui.fragment.FollowFragment
 import com.mredrock.cyxbs.mine.page.mine.ui.fragment.FanFragment
-import kotlinx.android.synthetic.main.mine_activity_fan.*
 
 /**
  * @class
@@ -24,6 +26,10 @@ class FanActivity : BaseActivity() {
 
     private var redId = ""
     private var pageIndex = 0
+
+    private val mine_fan_vp2 by R.id.mine_fan_vp2.view<ViewPager2>()
+    private val mine_fan_tl by R.id.mine_fan_tl.view<TabLayout>()
+    private val mine_fan_btn_back by R.id.mine_fan_btn_back.view<ImageButton>()
 
     private val userService: IUserService by lazy {
         ServiceManager.getService(IAccountService::class.java).getUserService()
