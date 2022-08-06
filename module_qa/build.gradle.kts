@@ -9,6 +9,7 @@ plugins {
 
 dependApiAccount()
 dependApiProtocol()
+dependApiStore()
 
 dependEventBus()
 dependMaterialDialog()

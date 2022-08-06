@@ -3,8 +3,8 @@ package com.mredrock.cyxbs.qa.pages.dynamic.viewmodel
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
-import com.mredrock.cyxbs.common.config.StoreTask
 import com.mredrock.cyxbs.common.network.ApiGenerator
+import com.mredrock.cyxbs.common.service.ServiceManager
 import com.mredrock.cyxbs.common.utils.extensions.mapOrThrowApiException
 import com.mredrock.cyxbs.common.utils.extensions.safeSubscribeBy
 import com.mredrock.cyxbs.common.utils.extensions.setSchedulers
@@ -19,6 +19,7 @@ import com.mredrock.cyxbs.qa.beannew.ReplyInfo
 import com.mredrock.cyxbs.qa.network.ApiServiceNew
 import com.mredrock.cyxbs.qa.network.NetworkState
 import com.mredrock.cyxbs.qa.utils.removeContinuousEnters
+import com.ndhzs.api.store.IStoreService
 
 /**
  * @Author: zhangzhe
@@ -63,7 +64,8 @@ open class DynamicDetailViewModel : BaseViewModel() {
                 if (it == null) {
                     toast("帖子不存在或已删除")
                 }else {
-                    StoreTask.postTask(StoreTask.Task.SEE_DYNAMIC, postId)
+                    ServiceManager.getService(IStoreService::class.java)
+                        .postTask(IStoreService.Task.SEE_DYNAMIC, postId)
                 }
                 dynamic.postValue(it)
             }
@@ -131,7 +133,8 @@ open class DynamicDetailViewModel : BaseViewModel() {
             }
             .safeSubscribeBy {
                 commentReleaseResult.postValue(it)
-                StoreTask.postTask(StoreTask.Task.POST_COMMENT, null) // 更新发送评论的任务
+                ServiceManager.getService(IStoreService::class.java)
+                    .postTask(IStoreService.Task.POST_COMMENT, content) // 更新发送评论的任务
             }
     }
 

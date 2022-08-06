@@ -1,7 +1,6 @@
 package com.mredrock.cyxbs.mine.page.feedback.center.presenter
 
-import com.mredrock.cyxbs.common.BaseApp
-import com.mredrock.cyxbs.common.BaseApp.Companion.appContext
+import com.mredrock.cyxbs.common.BaseApp.appContext
 import com.mredrock.cyxbs.common.utils.extensions.safeSubscribeBy
 import com.mredrock.cyxbs.common.utils.extensions.setSchedulers
 import com.mredrock.cyxbs.common.utils.extensions.toast

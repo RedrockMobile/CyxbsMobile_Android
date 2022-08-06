@@ -10,8 +10,6 @@ import android.text.style.ForegroundColorSpan
 import android.text.style.TypefaceSpan
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
-import com.mredrock.cyxbs.common.utils.extensions.appendln
-import com.mredrock.cyxbs.common.utils.extensions.intentFor
 import kotlin.system.exitProcess
 
 
@@ -24,7 +22,9 @@ class ExceptionActivity : AppCompatActivity() {
         const val DEVICE_INFO = "device_info"
 
         fun start(context: Context, stackInfo: String, deviceInfo: String) {
-            val intent = context.intentFor<ExceptionActivity>(STACK_INFO to stackInfo, DEVICE_INFO to deviceInfo)
+            val intent = Intent(context, ExceptionActivity::class.java)
+                .putExtra(STACK_INFO, stackInfo)
+                .putExtra(DEVICE_INFO, deviceInfo)
             intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK
             context.startActivity(intent)
         }
@@ -36,12 +36,21 @@ class ExceptionActivity : AppCompatActivity() {
 
         val stackInfo = intent.getStringExtra(STACK_INFO)
         val deviceInfo = intent.getStringExtra(DEVICE_INFO)
+    
+        fun SpannableStringBuilder.appendLine(text: CharSequence, vararg spans: Any) {
+            val textLength = text.length
+            append(text)
+            spans.forEach { span ->
+                setSpan(span, this.length - textLength, length, Spanned.SPAN_INCLUSIVE_EXCLUSIVE)
+            }
+            appendLine()
+        }
 
         val sb = SpannableStringBuilder().apply {
-            appendln("StackInfo:", ForegroundColorSpan(Color.parseColor("#FF0006")))
-            appendln(stackInfo)
-            appendln("deviceInfo:", ForegroundColorSpan(Color.parseColor("#FF0006")))
-            appendln(deviceInfo)
+            appendLine("StackInfo:", ForegroundColorSpan(Color.parseColor("#FF0006")))
+            appendLine(stackInfo)
+            appendLine("deviceInfo:", ForegroundColorSpan(Color.parseColor("#FF0006")))
+            appendLine(deviceInfo)
             setSpan(TypefaceSpan("monospace"), 0, length, Spanned.SPAN_INCLUSIVE_INCLUSIVE)
         }
         AlertDialog.Builder(this).apply {

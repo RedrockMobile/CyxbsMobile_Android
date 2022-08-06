@@ -3,8 +3,9 @@ package com.mredrock.cyxbs.qa.utils
 import android.app.Activity
 import android.os.Bundle
 import androidx.fragment.app.Fragment
-import com.mredrock.cyxbs.common.config.StoreTask
+import com.mredrock.cyxbs.common.service.ServiceManager
 import com.mredrock.cyxbs.qa.config.CommentConfig
+import com.ndhzs.api.store.IStoreService
 import com.tencent.connect.share.QQShare
 import com.tencent.connect.share.QzoneShare
 import com.tencent.tauth.IUiListener
@@ -58,7 +59,8 @@ object ShareUtils {
         * 更新任务进度
         * 那个 QQUiListener 有问题, onComplete() 一直不回调, 在于产品沟通后最终以点击跳转为准
         * */
-        StoreTask.postTask(StoreTask.Task.SHARE_DYNAMIC, url)
+        ServiceManager.getService(IStoreService::class.java)
+            .postTask(IStoreService.Task.SHARE_DYNAMIC, url)
     }
 
     /*
@@ -85,7 +87,8 @@ object ShareUtils {
         * 更新任务进度
         * 那个 QQUiListener 有问题, onComplete() 一直不回调, 在于产品沟通后最终以点击跳转为准
         * */
-        StoreTask.postTask(StoreTask.Task.SHARE_DYNAMIC, url)
+        ServiceManager.getService(IStoreService::class.java)
+            .postTask(IStoreService.Task.SHARE_DYNAMIC, url)
     }
 
 
@@ -115,7 +118,8 @@ object ShareUtils {
         * 更新任务进度
         * 那个 QQUiListener 有问题, onComplete() 一直不回调, 在于产品沟通后最终以点击跳转为准
         * */
-        StoreTask.postTask(StoreTask.Task.SHARE_DYNAMIC, url)
+        ServiceManager.getService(IStoreService::class.java)
+            .postTask(IStoreService.Task.SHARE_DYNAMIC, url)
     }
 
     /*
@@ -143,6 +147,7 @@ object ShareUtils {
         * 更新任务进度
         * 那个 QQUiListener 有问题, onComplete() 一直不回调, 在于产品沟通后最终以点击跳转为准
         * */
-        StoreTask.postTask(StoreTask.Task.SHARE_DYNAMIC, url)
+        ServiceManager.getService(IStoreService::class.java)
+            .postTask(IStoreService.Task.SHARE_DYNAMIC, url)
     }
 }

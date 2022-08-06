@@ -2,7 +2,7 @@ package com.mredrock.cyxbs.sdks
 
 import com.google.auto.service.AutoService
 import com.mredrock.cyxbs.api.account.IAccountService
-import com.mredrock.cyxbs.common.service.ServiceManager
+import com.mredrock.cyxbs.lib.utils.service.impl
 import com.mredrock.cyxbs.spi.SdkManager
 import com.mredrock.cyxbs.spi.SdkService
 import tech.linjiang.pandora.Pandora
@@ -28,7 +28,7 @@ class PandoraInitialService: SdkService, SensorDetector.Callback {
     val stuNumSet = setOf(
       "2020214988",
     )
-    val stuNum = ServiceManager.getService<IAccountService>().getUserService().getStuNum()
+    val stuNum = IAccountService::class.impl.getUserService().getStuNum()
     if (stuNumSet.contains(stuNum)) {
       Pandora.get().open()
     }

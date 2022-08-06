@@ -1,7 +1,7 @@
 package com.mredrock.cyxbs.store.page.record.ui.item
 
 import com.mredrock.cyxbs.store.R
-import com.mredrock.cyxbs.common.utils.SimpleRvAdapter
+import com.mredrock.cyxbs.store.utils.SimpleRvAdapter
 import com.mredrock.cyxbs.store.bean.StampGetRecord
 import com.mredrock.cyxbs.store.databinding.StoreRecyclerItemRecordGetBinding
 import com.mredrock.cyxbs.store.utils.Date

@@ -3,10 +3,10 @@ package com.mredrock.cyxbs.store.page.record.ui.item
 import android.view.View
 import android.widget.ProgressBar
 import androidx.recyclerview.widget.RecyclerView
-import com.mredrock.cyxbs.common.utils.extensions.invisible
-import com.mredrock.cyxbs.common.utils.extensions.visible
+import com.mredrock.cyxbs.lib.utils.extensions.invisible
+import com.mredrock.cyxbs.lib.utils.extensions.visible
 import com.mredrock.cyxbs.store.R
-import com.mredrock.cyxbs.common.utils.SimpleRvAdapter
+import com.mredrock.cyxbs.store.utils.SimpleRvAdapter
 
 /**
  * ...

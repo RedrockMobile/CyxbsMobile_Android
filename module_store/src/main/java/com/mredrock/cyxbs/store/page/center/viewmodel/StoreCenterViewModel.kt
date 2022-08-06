@@ -1,13 +1,17 @@
 package com.mredrock.cyxbs.store.page.center.viewmodel
 
+import androidx.core.content.edit
+import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
-import com.mredrock.cyxbs.common.BaseApp
-import com.mredrock.cyxbs.common.network.ApiGenerator
-import com.mredrock.cyxbs.common.utils.extensions.*
-import com.mredrock.cyxbs.common.viewmodel.BaseViewModel
+import com.mredrock.cyxbs.lib.base.ui.BaseViewModel
+import com.mredrock.cyxbs.lib.utils.extensions.getSp
+import com.mredrock.cyxbs.lib.utils.extensions.mapOrThrowApiException
+import com.mredrock.cyxbs.lib.utils.network.api
 import com.mredrock.cyxbs.store.bean.StampCenter
 import com.mredrock.cyxbs.store.network.ApiService
 import com.mredrock.cyxbs.store.utils.Date
+import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
+import io.reactivex.rxjava3.schedulers.Schedulers
 
 /**
  * ...
@@ -17,23 +21,27 @@ import com.mredrock.cyxbs.store.utils.Date
  */
 class StoreCenterViewModel: BaseViewModel() {
     // 邮票中心界面数据
-    val stampCenterData by lazy(LazyThreadSafetyMode.NONE) { MutableLiveData<StampCenter>() }
+    private val _stampCenterData = MutableLiveData<StampCenter>()
+    val stampCenterData: LiveData<StampCenter>
+        get() = _stampCenterData
 
     // 网络请求是否刷新成功
-    val refreshIsSuccessful by lazy(LazyThreadSafetyMode.NONE) { MutableLiveData<Boolean>() }
+    private val _refreshIsSuccessful = MutableLiveData<Boolean>()
+    val refreshIsSuccessful: LiveData<Boolean>
+        get() = _refreshIsSuccessful
 
     // 是否展示邮票中心界面 TabLayout 的小圆点, 产品给的需求是每天只显示一遍
     var isShowTabLayoutBadge: Boolean
         get() {
-            val shared = BaseApp.appContext.sharedPreferences("store")
+            val shared = appContext.getSp("store")
             val nowadays = Date.getTime(java.util.Date())
             val lastDay = shared.getString("show_tabLayout_badge_date", "")
             return nowadays != lastDay
         }
         set(value) {
             if (!value) {
-                val shared = BaseApp.appContext.sharedPreferences("store")
-                shared.editor {
+                val shared = appContext.getSp("store")
+                shared.edit {
                     val nowadays = Date.getTime(java.util.Date())
                     putString("show_tabLayout_badge_date", nowadays)
                 }
@@ -41,20 +49,17 @@ class StoreCenterViewModel: BaseViewModel() {
         }
 
     fun refresh() {
-        ApiGenerator.getApiService(ApiService::class.java)
+        ApiService::class.api
             .getStampCenter()
             .mapOrThrowApiException()
-            .setSchedulers()
-            .safeSubscribeBy(
-                onError = {
-                    refreshIsSuccessful.postValue(false)
-                },
-                onNext = {
-                    refreshIsSuccessful.postValue(true)
-                    stampCenterData.postValue(it)
-                }
-            )
-            .lifeCycle()
+            .subscribeOn(Schedulers.io())
+            .observeOn(AndroidSchedulers.mainThread())
+            .doOnError {
+                _refreshIsSuccessful.postValue(false)
+            }.safeSubscribeBy {
+                _refreshIsSuccessful.postValue(true)
+                _stampCenterData.postValue(it)
+            }
     }
 
     /*

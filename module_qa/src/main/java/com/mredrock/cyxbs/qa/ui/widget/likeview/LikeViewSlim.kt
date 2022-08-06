@@ -5,14 +5,14 @@ import android.graphics.Canvas
 import android.os.Build
 import android.text.TextPaint
 import android.util.AttributeSet
-import android.util.Log
 import androidx.core.content.ContextCompat
-import com.mredrock.cyxbs.common.config.StoreTask
 import com.mredrock.cyxbs.common.network.ApiGenerator
+import com.mredrock.cyxbs.common.service.ServiceManager
 import com.mredrock.cyxbs.common.utils.extensions.*
 import com.mredrock.cyxbs.qa.R
 import com.mredrock.cyxbs.qa.config.CommentConfig
 import com.mredrock.cyxbs.qa.network.ApiServiceNew
+import com.ndhzs.api.store.IStoreService
 import java.lang.ref.WeakReference
 
 /**
@@ -208,7 +208,8 @@ class LikeViewSlim @JvmOverloads constructor(
                  * (这个自定义 View 不是我写的)
                  * 在网络请求成功后向后端发送请求更新任务进度
                  */
-                StoreTask.postTask(StoreTask.Task.GIVE_A_LIKE, tmpId)
+                ServiceManager.getService(IStoreService::class.java)
+                    .postTask(IStoreService.Task.GIVE_A_LIKE, "$tmpId-$tmpModel")
             }
     }
 

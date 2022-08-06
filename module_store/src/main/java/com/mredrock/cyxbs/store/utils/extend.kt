@@ -2,8 +2,7 @@ package com.mredrock.cyxbs.store.utils
 
 import androidx.annotation.ColorRes
 import androidx.core.content.ContextCompat
-import com.mredrock.cyxbs.common.BaseApp
-import com.mredrock.cyxbs.common.BaseApp.Companion.appContext
+import com.mredrock.cyxbs.lib.utils.extensions.appContext
 
 /**
  * ...

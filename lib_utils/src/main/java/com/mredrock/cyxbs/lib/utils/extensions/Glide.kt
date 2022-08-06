@@ -5,6 +5,7 @@ import android.widget.ImageView
 import androidx.annotation.DrawableRes
 import com.bumptech.glide.Glide
 import com.bumptech.glide.RequestBuilder
+import com.bumptech.glide.request.RequestOptions
 import com.mredrock.cyxbs.lib.utils.R
 import com.mredrock.cyxbs.lib.utils.network.getBaseUrl
 
@@ -24,6 +25,7 @@ fun ImageView.setImageFromUrl(
   val realUrl = if (url.startsWith("http")) url else getBaseUrl() + url
   Glide.with(this)
     .load(realUrl)
+    .apply(RequestOptions().placeholder(placeholder).error(error))
     .apply { func?.invoke(this) }
     .into(this)
 }
@@ -36,6 +38,7 @@ fun ImageView.setImageFromId(
 ) {
   Glide.with(this)
     .load(id)
+    .apply(RequestOptions().placeholder(placeholder).error(error))
     .apply { func?.invoke(this) }
     .into(this)
 }

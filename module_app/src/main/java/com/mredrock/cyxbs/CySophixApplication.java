@@ -1,11 +1,9 @@
 package com.mredrock.cyxbs;
 
 import android.content.Context;
-import android.util.Log;
 
 import androidx.annotation.Keep;
 
-import com.mredrock.cyxbs.common.utils.LogUtils;
 import com.taobao.sophix.SophixApplication;
 import com.taobao.sophix.SophixEntry;
 import com.taobao.sophix.SophixManager;

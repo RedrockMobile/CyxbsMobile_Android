@@ -13,7 +13,7 @@ import kotlinx.coroutines.launch
 abstract class BaseViewModel : ViewModel(), RxjavaLifecycle, ToastUtils {
   
   val appContext: Context
-    get() = BaseApp.appContext
+    get() = BaseApp.baseApp
   
   private val mDisposableList = mutableListOf<Disposable>()
   

@@ -1,7 +1,6 @@
 package com.mredrock.cyxbs.qa.pages.dynamic.ui.fragment
 
 import android.content.Intent
-import android.util.Log
 import android.view.Window
 import android.view.WindowManager
 import android.widget.TextView
@@ -9,7 +8,7 @@ import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.alibaba.android.arouter.launcher.ARouter
-import com.mredrock.cyxbs.common.BaseApp.Companion.appContext
+import com.mredrock.cyxbs.common.BaseApp.appContext
 import com.mredrock.cyxbs.common.config.MINE_PERSON_PAGE
 import com.mredrock.cyxbs.qa.R
 import com.mredrock.cyxbs.qa.beannew.Dynamic
@@ -29,8 +28,6 @@ import com.mredrock.cyxbs.qa.utils.ClipboardController
 import com.mredrock.cyxbs.qa.utils.ShareUtils
 import com.tencent.tauth.Tencent
 import kotlinx.android.synthetic.main.qa_fragment_dynamic_focus.*
-import kotlinx.android.synthetic.main.qa_fragment_dynamic_recommend.*
-import kotlinx.android.synthetic.main.qa_fragment_question_search_result.*
 
 /**
  * @class FocusDynamicFragment

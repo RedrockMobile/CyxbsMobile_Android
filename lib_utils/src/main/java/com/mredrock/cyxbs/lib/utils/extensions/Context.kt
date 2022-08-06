@@ -1,7 +1,7 @@
 package com.mredrock.cyxbs.lib.utils.extensions
 
 import android.content.Context
-import com.mredrock.cyxbs.lib.utils.UtilsApplication
+import com.mredrock.cyxbs.lib.utils.UtilsApplicationWrapper
 
 /**
  * ...
@@ -11,4 +11,4 @@ import com.mredrock.cyxbs.lib.utils.UtilsApplication
  */
 
 val appContext: Context
-  get() = UtilsApplication.appContext.applicationContext
+  get() = UtilsApplicationWrapper.appContext.applicationContext
