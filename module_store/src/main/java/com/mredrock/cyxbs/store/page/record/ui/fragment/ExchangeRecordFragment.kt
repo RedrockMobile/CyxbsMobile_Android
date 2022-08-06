@@ -53,12 +53,12 @@ class ExchangeRecordFragment : BaseFragment() {
     }
 
     private fun initObserve() {
-        viewModel.mExchangeRecordIsSuccessful.observe {
+        viewModel.exchangeRecordIsSuccessful.observe {
             if (!it) {
                 showNoInterceptImage()
             }
         }
-        viewModel.mExchangeRecord.observe {
+        viewModel.exchangeRecord.observe {
             if (it.isEmpty()) {
                 mImageView.setImageResource(R.drawable.store_ic_fragment_record_exchange_null)
                 mTextView.text = "还没有兑换记录哦"

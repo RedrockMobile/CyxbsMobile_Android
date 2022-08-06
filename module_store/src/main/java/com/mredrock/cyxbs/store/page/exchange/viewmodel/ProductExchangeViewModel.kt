@@ -1,5 +1,6 @@
 package com.mredrock.cyxbs.store.page.exchange.viewmodel
 
+import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import com.mredrock.cyxbs.lib.base.ui.BaseViewModel
 import com.mredrock.cyxbs.lib.utils.extensions.mapOrThrowApiException
@@ -19,13 +20,19 @@ import io.reactivex.rxjava3.schedulers.Schedulers
  */
 class ProductExchangeViewModel : BaseViewModel() {
     // 商品详细页内容
-    val productDetail = MutableLiveData<ProductDetail>()
+    private val _productDetail = MutableLiveData<ProductDetail>()
+    val productDetail: LiveData<ProductDetail>
+        get() = _productDetail
 
     // 兑换成功
-    val exchangeResult = MutableLiveData<ExchangeState>()
+    private val _exchangeResult = MutableLiveData<ExchangeState>()
+    val exchangeResult: LiveData<ExchangeState>
+        get() = _exchangeResult
 
     // 兑换失败
-    val exchangeError = MutableLiveData<Int>()
+    private val _exchangeError = MutableLiveData<Int>()
+    val exchangeError: LiveData<Int>
+        get() = _exchangeError
 
     fun getProductDetail(id: String) {
         ApiService::class.api
@@ -36,7 +43,7 @@ class ProductExchangeViewModel : BaseViewModel() {
             .doOnError {
                 toast("获取商品详情失败")
             }.safeSubscribeBy {
-                productDetail.postValue(it)
+                _productDetail.postValue(it)
             }
     }
 
@@ -48,13 +55,13 @@ class ProductExchangeViewModel : BaseViewModel() {
             .observeOn(AndroidSchedulers.mainThread())
             .doOnError {
                 if (it is ApiException) { // 学长封装的错误, 用于请求虽然成功, 但 statue 不为 10000 时
-                    exchangeError.postValue(it.status) // 这里包括了 http 的请求成功的情况, 包含库存不足和积分不够
+                    _exchangeError.postValue(it.status) // 这里包括了 http 的请求成功的情况, 包含库存不足和积分不够
                 } else {
-                    exchangeError.postValue(StoreType.ExchangeError.OTHER_ERROR) // 这里是其他网络错误
+                    _exchangeError.postValue(StoreType.ExchangeError.OTHER_ERROR) // 这里是其他网络错误
                 }
             }
             .safeSubscribeBy {
-                exchangeResult.postValue(it)
+                _exchangeResult.postValue(it)
             }
     }
 }

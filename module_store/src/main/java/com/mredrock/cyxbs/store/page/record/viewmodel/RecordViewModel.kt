@@ -1,5 +1,6 @@
 package com.mredrock.cyxbs.store.page.record.viewmodel
 
+import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import com.mredrock.cyxbs.lib.base.ui.BaseViewModel
 import com.mredrock.cyxbs.lib.utils.extensions.mapOrThrowApiException
@@ -17,16 +18,29 @@ import io.reactivex.rxjava3.schedulers.Schedulers
  */
 class RecordViewModel : BaseViewModel() {
     // 兑换记录
-    val mExchangeRecord = MutableLiveData<List<ExchangeRecord>>()
+    private val _exchangeRecord = MutableLiveData<List<ExchangeRecord>>()
+    val exchangeRecord: LiveData<List<ExchangeRecord>>
+        get() = _exchangeRecord
+    
     // 兑换记录请求是否成功
-    val mExchangeRecordIsSuccessful = MutableLiveData<Boolean>()
+    private val _exchangeRecordIsSuccessful = MutableLiveData<Boolean>()
+    val exchangeRecordIsSuccessful: LiveData<Boolean>
+        get() = _exchangeRecordIsSuccessful
 
     // 获取记录
-    val mPageStampGetRecord = MutableLiveData<List<StampGetRecord>>()
+    private val _pageStampGetRecord = MutableLiveData<List<StampGetRecord>>()
+    val pageStampGetRecord: LiveData<List<StampGetRecord>>
+        get() = _pageStampGetRecord
+    
     // 第一页获取记录请求是否成功
-    val mFirstPageGetRecordIsSuccessful = MutableLiveData<Boolean>()
+    private val _firstPageGetRecordIsSuccessful = MutableLiveData<Boolean>()
+    val firstPageGetRecordIsSuccessful: LiveData<Boolean>
+        get() = _firstPageGetRecordIsSuccessful
+    
     // 下一页获取记录请求是否成功
-    val mNestPageGetRecordIsSuccessful = MutableLiveData<Boolean>()
+    private val _nestPageGetRecordIsSuccessful = MutableLiveData<Boolean>()
+    val nestPageGetRecordIsSuccessful: LiveData<Boolean>
+        get() = _nestPageGetRecordIsSuccessful
 
     fun getExchangeRecord() {
         ApiService::class.api
@@ -35,10 +49,10 @@ class RecordViewModel : BaseViewModel() {
             .subscribeOn(Schedulers.io())
             .observeOn(AndroidSchedulers.mainThread())
             .doOnError {
-                mExchangeRecordIsSuccessful.postValue(false)
+                _exchangeRecordIsSuccessful.postValue(false)
             }.safeSubscribeBy {
-                mExchangeRecordIsSuccessful.postValue(true)
-                mExchangeRecord.postValue(it)
+                _exchangeRecordIsSuccessful.postValue(true)
+                _exchangeRecord.postValue(it)
             }
     }
 
@@ -50,10 +64,10 @@ class RecordViewModel : BaseViewModel() {
             .subscribeOn(Schedulers.io())
             .observeOn(AndroidSchedulers.mainThread())
             .doOnError {
-                mFirstPageGetRecordIsSuccessful.postValue(false)
+                _firstPageGetRecordIsSuccessful.postValue(false)
             }.safeSubscribeBy {
-                mFirstPageGetRecordIsSuccessful.postValue(true)
-                mPageStampGetRecord.postValue(it)
+                _firstPageGetRecordIsSuccessful.postValue(true)
+                _pageStampGetRecord.postValue(it)
             }
     }
 
@@ -64,12 +78,12 @@ class RecordViewModel : BaseViewModel() {
             .subscribeOn(Schedulers.io())
             .observeOn(AndroidSchedulers.mainThread())
             .doOnError {
-                mNestPageGetRecordIsSuccessful.postValue(false)
+                _nestPageGetRecordIsSuccessful.postValue(false)
             }.safeSubscribeBy {
-                mNestPageGetRecordIsSuccessful.postValue(true)
+                _nestPageGetRecordIsSuccessful.postValue(true)
                 if (it.isNotEmpty()) {
-                    val oldList = mPageStampGetRecord.value ?: emptyList()
-                    mPageStampGetRecord.postValue(
+                    val oldList = pageStampGetRecord.value ?: emptyList()
+                    _pageStampGetRecord.postValue(
                         oldList.toMutableList()
                             .apply { addAll(it) }
                     )

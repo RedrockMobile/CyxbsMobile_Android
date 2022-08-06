@@ -65,14 +65,14 @@ class StampDetailActivity : BaseVmActivity<RecordViewModel>() {
                 if (position == 0) {
                     if (!hasObservedFirst) {
                         hasObservedFirst = true
-                        viewModel.mExchangeRecordIsSuccessful.observe {
+                        viewModel.exchangeRecordIsSuccessful.observe {
                             if (!it ) { toast("获取兑换记录失败") }
                         }
                     }
                 }else {
                     if (!hasObservedSecond) {
                         hasObservedSecond = true
-                        viewModel.mFirstPageGetRecordIsSuccessful.observe {
+                        viewModel.firstPageGetRecordIsSuccessful.observe {
                             if (!it) { toast("获取邮票记录失败") }
                         }
                     }

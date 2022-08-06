@@ -54,12 +54,12 @@ class GetRecordFragment : BaseFragment() {
     }
 
     private fun initObserve() {
-        viewModel.mFirstPageGetRecordIsSuccessful.observe {
+        viewModel.firstPageGetRecordIsSuccessful.observe {
             if (!it) {
                 showNoInterceptImage()
             }
         }
-        viewModel.mPageStampGetRecord.observe {
+        viewModel.pageStampGetRecord.observe {
             if (it.isEmpty()) {
                 mImageView.setImageResource(R.drawable.store_ic_fragment_record_get_null)
                 mTextView.text = "还没有获取记录，快去做任务吧"
@@ -67,7 +67,7 @@ class GetRecordFragment : BaseFragment() {
                 setPageGetAdapter(it)
             }
         }
-        viewModel.mNestPageGetRecordIsSuccessful.observe {
+        viewModel.nestPageGetRecordIsSuccessful.observe {
             if (!it) {
                 toast("获取更多记录失败")
             }
