@@ -3,7 +3,6 @@ package com.mredrock.cyxbs.convention.project
 import com.mredrock.cyxbs.convention.depend.dependAndroidKtx
 import com.mredrock.cyxbs.convention.depend.dependAndroidView
 import com.mredrock.cyxbs.convention.depend.dependLifecycleKtx
-import com.mredrock.cyxbs.convention.depend.lib.dependLibCommon
 import com.mredrock.cyxbs.convention.project.base.BaseLibraryProject
 import org.gradle.api.Project
 
@@ -17,7 +16,6 @@ class ModuleProject(project: Project) : BaseLibraryProject(project) {
   
   override fun initProject() {
     checkIsInDebug()
-    dependLibCommon()
     dependAndroidView()
     dependAndroidKtx()
     dependLifecycleKtx()

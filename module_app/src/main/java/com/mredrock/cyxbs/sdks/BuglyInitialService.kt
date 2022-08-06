@@ -3,7 +3,7 @@ package com.mredrock.cyxbs.sdks
 import com.google.auto.service.AutoService
 import com.mredrock.cyxbs.BuildConfig
 import com.mredrock.cyxbs.api.account.IAccountService
-import com.mredrock.cyxbs.common.service.ServiceManager
+import com.mredrock.cyxbs.lib.utils.service.impl
 import com.mredrock.cyxbs.spi.SdkManager
 import com.mredrock.cyxbs.spi.SdkService
 import com.tencent.bugly.Bugly
@@ -46,7 +46,7 @@ class BuglyInitialService : SdkService {
         }
         
         CrashReport.setUserId(
-            ServiceManager.getService(IAccountService::class.java).getUserService().getStuNum()
+            IAccountService::class.impl.getUserService().getStuNum()
         )
         
         //初始化bugly

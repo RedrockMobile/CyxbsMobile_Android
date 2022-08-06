@@ -6,7 +6,7 @@ import android.os.Process
 import android.provider.Settings
 import android.text.TextUtils
 import com.mredrock.cyxbs.BuildConfig
-import com.mredrock.cyxbs.common.utils.getProcessName
+import com.mredrock.cyxbs.lib.utils.utils.getProcessName
 import java.lang.reflect.InvocationTargetException
 import java.lang.reflect.Method
 

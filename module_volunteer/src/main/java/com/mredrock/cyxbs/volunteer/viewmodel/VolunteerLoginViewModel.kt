@@ -1,15 +1,16 @@
 package com.mredrock.cyxbs.volunteer.viewmodel
 
 import androidx.lifecycle.MutableLiveData
-import com.mredrock.cyxbs.common.config.StoreTask
 import com.mredrock.cyxbs.common.network.ApiGenerator
 import com.mredrock.cyxbs.common.network.exception.RedrockApiException
+import com.mredrock.cyxbs.common.service.ServiceManager
 import com.mredrock.cyxbs.common.utils.extensions.safeSubscribeBy
 import com.mredrock.cyxbs.common.utils.extensions.setSchedulers
 import com.mredrock.cyxbs.common.viewmodel.BaseViewModel
 import com.mredrock.cyxbs.volunteer.VolunteerLoginActivity
 import com.mredrock.cyxbs.volunteer.bean.VolunteerTime
 import com.mredrock.cyxbs.volunteer.network.ApiService
+import com.ndhzs.api.store.IStoreService
 
 /**
  * Created by yyfbe, Date on 2020/9/3.
@@ -35,7 +36,8 @@ class VolunteerLoginViewModel : BaseViewModel() {
                         onNext = {
                             volunteerTime.value = it
                             // 登录了就更新积分商城的任务, 后端已做重复处理
-                            StoreTask.postTask(StoreTask.Task.LOGIN_VOLUNTEER, null)
+                          ServiceManager.getService(IStoreService::class.java)
+                            .postTask(IStoreService.Task.LOGIN_VOLUNTEER, "")
                         },
                         onError = {
                             if (it !is RedrockApiException) {

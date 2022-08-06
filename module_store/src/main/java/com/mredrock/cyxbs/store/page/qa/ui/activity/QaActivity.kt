@@ -1,10 +1,9 @@
 package com.mredrock.cyxbs.store.page.qa.ui.activity
 
 import android.os.Bundle
-import androidx.fragment.app.commit
-import com.mredrock.cyxbs.common.config.QA_ENTRY
-import com.mredrock.cyxbs.common.service.ServiceManager
-import com.mredrock.cyxbs.common.ui.BaseActivity
+import com.mredrock.cyxbs.config.route.QA_ENTRY
+import com.mredrock.cyxbs.lib.base.ui.BaseActivity
+import com.mredrock.cyxbs.lib.utils.service.ServiceManager
 import com.mredrock.cyxbs.store.R
 
 /**
@@ -19,15 +18,12 @@ class QaActivity : BaseActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.store_activity_qa)
-
         initFragment()
     }
 
     private fun initFragment() {
-        val qaFragment = supportFragmentManager.findFragmentByTag(QA_ENTRY)
-            ?: ServiceManager.getService(QA_ENTRY)
-        supportFragmentManager.commit {
-            replace(R.id.store_fragment_qa, qaFragment, QA_ENTRY)
+        replaceFragment(R.id.store_fragment_qa) {
+            ServiceManager.fragment(QA_ENTRY)
         }
     }
 }

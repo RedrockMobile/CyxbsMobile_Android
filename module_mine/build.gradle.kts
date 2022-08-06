@@ -10,6 +10,7 @@ plugins {
 dependApiAccount()
 dependApiMain()
 dependApiUpdate()
+dependApiStore()
 
 dependMaterialDialog()
 dependGlide()

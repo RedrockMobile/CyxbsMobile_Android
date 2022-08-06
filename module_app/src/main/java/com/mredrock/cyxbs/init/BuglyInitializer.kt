@@ -1,14 +1,10 @@
 package com.mredrock.cyxbs.init
 
 import android.app.Application
-import android.os.Process
 import com.mredrock.cyxbs.BuildConfig
-//import com.mredrock.cyxbs.api.account.IAccountService
-import com.mredrock.cyxbs.common.service.ServiceManager
-import com.mredrock.cyxbs.common.utils.getAppVersionName
-import com.mredrock.cyxbs.common.utils.getProcessName
 import com.tencent.bugly.Bugly
 import com.tencent.bugly.crashreport.CrashReport
+import com.umeng.commonsdk.statistics.common.DeviceConfig.getAppVersionName
 
 /**
  * 配置的话可以先看看官方文档：https://bugly.qq.com/docs/
@@ -21,10 +17,10 @@ import com.tencent.bugly.crashreport.CrashReport
 object BuglyInitializer : SdkInitializer {
     override fun init(application: Application) {
         val packageName = application.packageName
-        val processName = getProcessName(Process.myPid())
+//        val processName = getProcessName(Process.myPid())
         val strategy = CrashReport.UserStrategy(application)
         strategy.appVersion = getAppVersionName(application)
-        strategy.isUploadProcess = processName == null || processName == packageName
+//        strategy.isUploadProcess = processName == null || processName == packageName
         //strategy.appChannel = WalleChannelReader.getChannel(application, "debug")
         //CrashReport.setUserId(ServiceManager.getService<IAccountService>().getUserService().getStuNum())
         Bugly.init(application, BuildConfig.BUGLY_APP_ID, false, strategy)

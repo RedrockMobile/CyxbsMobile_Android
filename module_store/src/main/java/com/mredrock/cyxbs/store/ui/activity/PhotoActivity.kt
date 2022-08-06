@@ -9,10 +9,13 @@ import android.graphics.drawable.BitmapDrawable
 import android.os.Bundle
 import android.widget.ImageView
 import android.widget.TextView
-import androidx.appcompat.app.AppCompatActivity
 import androidx.viewpager2.widget.ViewPager2
 import com.github.chrisbanes.photoview.PhotoView
-import com.mredrock.cyxbs.common.utils.extensions.*
+import com.mredrock.cyxbs.config.dir.DIR_PHOTO
+import com.mredrock.cyxbs.lib.base.ui.BaseActivity
+import com.mredrock.cyxbs.lib.utils.extensions.doPermissionAction
+import com.mredrock.cyxbs.lib.utils.extensions.saveImage
+import com.mredrock.cyxbs.lib.utils.extensions.setImageFromUrl
 import com.mredrock.cyxbs.store.R
 import com.mredrock.cyxbs.store.utils.widget.slideshow.SlideShow
 import io.reactivex.rxjava3.schedulers.Schedulers
@@ -22,7 +25,7 @@ import io.reactivex.rxjava3.schedulers.Schedulers
  *    e-mail : 1140143252@qq.com
  *    date   : 2021/8/9 15:10
  */
-class PhotoActivity : AppCompatActivity() {
+class PhotoActivity : BaseActivity() {
 
     private lateinit var mImgUrls: ArrayList<String>
 
@@ -49,7 +52,6 @@ class PhotoActivity : AppCompatActivity() {
         window.setBackgroundDrawableResource(android.R.color.transparent)
         setContentView(R.layout.store_activity_photo)
         setTheme(com.google.android.material.R.style.Theme_MaterialComponents) // 因为学长用的奇怪的 dialog, 需要这个主题支持
-        setFullScreen()
 
         initData()
         initView()
@@ -120,23 +122,21 @@ class PhotoActivity : AppCompatActivity() {
                                     this@PhotoActivity,
                                     arrayOf(
                                         "${android.os.Environment.getExternalStorageDirectory()}" +
-                                                com.mredrock.cyxbs.common.config.DIR_PHOTO
+                                                DIR_PHOTO
                                     ),
                                     arrayOf("image/jpeg"),
                                     null
                                 )
 
                             runOnUiThread {
-                                toast("图片保存于系统\"${com.mredrock.cyxbs.common.config.DIR_PHOTO}\"文件夹下哦")
+                                toast("图片保存于系统\"${DIR_PHOTO}\"文件夹下哦")
                                 dialog.dismiss()
-                                setFullScreen()
                             }
 
                         }
                     }
                     .setNegativeButton("取消") { dialog, _ ->
                         dialog.dismiss()
-                        setFullScreen()
                     }
                     .show()
             }

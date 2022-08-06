@@ -1,15 +1,14 @@
 package com.mredrock.cyxbs.store.page.record.viewmodel
 
 import androidx.lifecycle.MutableLiveData
-import com.mredrock.cyxbs.common.network.ApiGenerator
-import com.mredrock.cyxbs.common.network.exception.RedrockApiIllegalStateException
-import com.mredrock.cyxbs.common.utils.extensions.mapOrThrowApiException
-import com.mredrock.cyxbs.common.utils.extensions.safeSubscribeBy
-import com.mredrock.cyxbs.common.utils.extensions.setSchedulers
-import com.mredrock.cyxbs.common.viewmodel.BaseViewModel
+import com.mredrock.cyxbs.lib.base.ui.BaseViewModel
+import com.mredrock.cyxbs.lib.utils.extensions.mapOrThrowApiException
+import com.mredrock.cyxbs.lib.utils.network.api
 import com.mredrock.cyxbs.store.bean.ExchangeRecord
 import com.mredrock.cyxbs.store.bean.StampGetRecord
 import com.mredrock.cyxbs.store.network.ApiService
+import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
+import io.reactivex.rxjava3.schedulers.Schedulers
 
 /**
  *    author : zz
@@ -18,87 +17,63 @@ import com.mredrock.cyxbs.store.network.ApiService
  */
 class RecordViewModel : BaseViewModel() {
     // 兑换记录
-    val mExchangeRecord by lazy(LazyThreadSafetyMode.NONE) { MutableLiveData<List<ExchangeRecord>>() }
+    val mExchangeRecord = MutableLiveData<List<ExchangeRecord>>()
     // 兑换记录请求是否成功
-    val mExchangeRecordIsSuccessful by lazy(LazyThreadSafetyMode.NONE) { MutableLiveData<Boolean>() }
+    val mExchangeRecordIsSuccessful = MutableLiveData<Boolean>()
 
     // 获取记录
-    val mFirstPageStampGetRecord by lazy(LazyThreadSafetyMode.NONE) { MutableLiveData<List<StampGetRecord>>() }
+    val mPageStampGetRecord = MutableLiveData<List<StampGetRecord>>()
     // 第一页获取记录请求是否成功
-    val mFirstPageGetRecordIsSuccessful by lazy(LazyThreadSafetyMode.NONE) { MutableLiveData<Boolean>() }
+    val mFirstPageGetRecordIsSuccessful = MutableLiveData<Boolean>()
     // 下一页获取记录请求是否成功
-    val mNestPageGetRecordIsSuccessful by lazy(LazyThreadSafetyMode.NONE) { MutableLiveData<Boolean>() }
-    // 没有更多获取记录数据时的回调
-    var mHaveNotMoreNestGetRecord: (() -> Unit)? = null
+    val mNestPageGetRecordIsSuccessful = MutableLiveData<Boolean>()
 
     fun getExchangeRecord() {
-        ApiGenerator.getApiService(ApiService::class.java)
+        ApiService::class.api
             .getExchangeRecord()
             .mapOrThrowApiException()
-            .setSchedulers()
-            .safeSubscribeBy(
-                onError = {
-                    if (it is RedrockApiIllegalStateException) { // 如果请求来的数据中 data 为空, 将报这个错误
-                        mExchangeRecordIsSuccessful.postValue(true)
-                        mExchangeRecord.postValue(listOf())
-                    }else {
-                        mExchangeRecordIsSuccessful.postValue(false)
-                    }
-                },
-                onNext = {
-                    mExchangeRecordIsSuccessful.postValue(true)
-                    mExchangeRecord.postValue(it)
-                }
-            )
-            .lifeCycle()
+            .subscribeOn(Schedulers.io())
+            .observeOn(AndroidSchedulers.mainThread())
+            .doOnError {
+                mExchangeRecordIsSuccessful.postValue(false)
+            }.safeSubscribeBy {
+                mExchangeRecordIsSuccessful.postValue(true)
+                mExchangeRecord.postValue(it)
+            }
     }
 
     private var nowPage = 1
     fun getFirstPageGetRecord() {
-        ApiGenerator.getApiService(ApiService::class.java)
+        ApiService::class.api
             .getStampGetRecord(1, 30)
             .mapOrThrowApiException()
-            .setSchedulers()
-            .safeSubscribeBy(
-                onError = {
-                    if (it is RedrockApiIllegalStateException) { // 如果请求来的数据中 data 为空, 将报这个错误
-                        mFirstPageGetRecordIsSuccessful.postValue(true)
-                        mFirstPageStampGetRecord.postValue(listOf())
-                    }else {
-                        mFirstPageGetRecordIsSuccessful.postValue(false)
-                    }
-                },
-                onNext = {
-                    mFirstPageGetRecordIsSuccessful.postValue(true)
-                    mFirstPageStampGetRecord.postValue(it)
-                }
-            )
-            .lifeCycle()
+            .subscribeOn(Schedulers.io())
+            .observeOn(AndroidSchedulers.mainThread())
+            .doOnError {
+                mFirstPageGetRecordIsSuccessful.postValue(false)
+            }.safeSubscribeBy {
+                mFirstPageGetRecordIsSuccessful.postValue(true)
+                mPageStampGetRecord.postValue(it)
+            }
     }
 
     fun getNextPageGetRecord() {
-        ApiGenerator.getApiService(ApiService::class.java)
+        ApiService::class.api
             .getStampGetRecord(nowPage + 1, 30)
             .mapOrThrowApiException()
-            .setSchedulers()
-            .safeSubscribeBy(
-                onNext = {
-                    if (it.isNotEmpty()) {
-                        val list = mFirstPageStampGetRecord.value
-                        if (list is MutableList) { // 这里不是第一次加载, list 不会为空
-                            nowPage++
-                            list.addAll(it)
-                            mNestPageGetRecordIsSuccessful.postValue(true)
-                            mFirstPageStampGetRecord.postValue(list)
-                        }
-                    }else {
-                        mHaveNotMoreNestGetRecord?.invoke() // 没有更多数据时
-                    }
-                },
-                onError = {
-                    mNestPageGetRecordIsSuccessful.postValue(false)
+            .subscribeOn(Schedulers.io())
+            .observeOn(AndroidSchedulers.mainThread())
+            .doOnError {
+                mNestPageGetRecordIsSuccessful.postValue(false)
+            }.safeSubscribeBy {
+                mNestPageGetRecordIsSuccessful.postValue(true)
+                if (it.isNotEmpty()) {
+                    val oldList = mPageStampGetRecord.value ?: emptyList()
+                    mPageStampGetRecord.postValue(
+                        oldList.toMutableList()
+                            .apply { addAll(it) }
+                    )
                 }
-            )
-            .lifeCycle()
+            }
     }
 }

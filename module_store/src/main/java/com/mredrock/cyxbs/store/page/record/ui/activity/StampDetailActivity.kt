@@ -10,9 +10,8 @@ import android.widget.TextView
 import androidx.viewpager2.widget.ViewPager2
 import com.google.android.material.tabs.TabLayout
 import com.google.android.material.tabs.TabLayoutMediator
-import com.mredrock.cyxbs.common.ui.BaseViewModelActivity
-import com.mredrock.cyxbs.common.utils.extensions.setOnSingleClickListener
-import com.mredrock.cyxbs.common.utils.extensions.toast
+import com.mredrock.cyxbs.lib.base.ui.mvvm.BaseVmActivity
+import com.mredrock.cyxbs.lib.utils.extensions.setOnSingleClickListener
 import com.mredrock.cyxbs.store.R
 import com.mredrock.cyxbs.store.base.BaseFragmentVPAdapter
 import com.mredrock.cyxbs.store.page.record.ui.fragment.ExchangeRecordFragment
@@ -27,7 +26,7 @@ import com.mredrock.cyxbs.store.utils.transformer.ScaleInTransformer
  *    e-mail : 1140143252@qq.com
  *    date   : 2021/8/2 14:46
  */
-class StampDetailActivity : BaseViewModelActivity<RecordViewModel>() {
+class StampDetailActivity : BaseVmActivity<RecordViewModel>() {
 
     private lateinit var mTabLayout: TabLayout
     private lateinit var mViewPager2: ViewPager2
@@ -66,14 +65,14 @@ class StampDetailActivity : BaseViewModelActivity<RecordViewModel>() {
                 if (position == 0) {
                     if (!hasObservedFirst) {
                         hasObservedFirst = true
-                        viewModel.mExchangeRecordIsSuccessful.observeNotNull {
+                        viewModel.mExchangeRecordIsSuccessful.observe {
                             if (!it ) { toast("获取兑换记录失败") }
                         }
                     }
                 }else {
                     if (!hasObservedSecond) {
                         hasObservedSecond = true
-                        viewModel.mFirstPageGetRecordIsSuccessful.observeNotNull {
+                        viewModel.mFirstPageGetRecordIsSuccessful.observe {
                             if (!it) { toast("获取邮票记录失败") }
                         }
                     }

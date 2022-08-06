@@ -8,9 +8,8 @@ import android.os.Build
 import android.os.Handler
 import android.os.Looper
 import com.google.auto.service.AutoService
-import com.mredrock.cyxbs.common.BuildConfig
+import com.mredrock.cyxbs.lib.utils.BuildConfig
 import com.mredrock.cyxbs.ui.ExceptionActivity
-import com.mredrock.cyxbs.common.utils.LogUtils
 import com.mredrock.cyxbs.spi.SdkManager
 import com.mredrock.cyxbs.spi.SdkService
 import com.tencent.bugly.crashreport.CrashReport
@@ -111,9 +110,9 @@ class CrashInitialService : Thread.UncaughtExceptionHandler, SdkService {
         collectCrashInfo(throwable)
         collectDeviceInfo(context)
 
-        LogUtils.e(javaClass.simpleName, "Exception in thread [$threadName]:")
-        LogUtils.e(javaClass.simpleName, "deviceInfo:\n$deviceInfo")
-        LogUtils.e(javaClass.simpleName, "stackInfo:\n$stackInfo")
+//        LogUtils.e(javaClass.simpleName, "Exception in thread [$threadName]:")
+//        LogUtils.e(javaClass.simpleName, "deviceInfo:\n$deviceInfo")
+//        LogUtils.e(javaClass.simpleName, "stackInfo:\n$stackInfo")
         if (BuildConfig.DEBUG) {
             ExceptionActivity.start(context, stackInfo ?: "", deviceInfo)
         }

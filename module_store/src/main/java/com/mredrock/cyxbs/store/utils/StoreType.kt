@@ -3,13 +3,13 @@ package com.mredrock.cyxbs.store.utils
 import android.content.Context
 import android.content.Intent
 import com.alibaba.android.arouter.launcher.ARouter
-import com.mredrock.cyxbs.common.config.DISCOVER_VOLUNTEER
-import com.mredrock.cyxbs.common.config.MINE_CHECK_IN
-import com.mredrock.cyxbs.common.config.MINE_EDIT_INFO
-import com.mredrock.cyxbs.common.config.StoreTask
-import com.mredrock.cyxbs.common.utils.extensions.toast
+import com.mredrock.cyxbs.config.route.DISCOVER_VOLUNTEER
+import com.mredrock.cyxbs.config.route.MINE_CHECK_IN
+import com.mredrock.cyxbs.config.route.MINE_EDIT_INFO
+import com.mredrock.cyxbs.lib.utils.extensions.toast
 import com.mredrock.cyxbs.store.bean.StampCenter
 import com.mredrock.cyxbs.store.page.qa.ui.activity.QaActivity
+import com.ndhzs.api.store.IStoreService.Task.*
 
 /**
  * 需要与后端交互时的类型区分
@@ -26,22 +26,22 @@ class StoreType {
     object Task { // 邮票中心首页的邮票任务, 因为在进度修改时要我们自己上传任务进度(会涉及不同模块), 所以类型写在了 common 模块中
         fun jumpOtherUi(context: Context, task: StampCenter.Task) {
             when (task.title) {
-                StoreTask.Task.DAILY_SIGN.title -> {
+                DAILY_SIGN.title -> {
                     ARouter.getInstance().build(MINE_CHECK_IN).navigation()
                 }
-                StoreTask.Task.SEE_DYNAMIC.title,
-                StoreTask.Task.PUBLISH_DYNAMIC.title,
-                StoreTask.Task.SHARE_DYNAMIC.title,
-                StoreTask.Task.POST_COMMENT.title,
-                StoreTask.Task.GIVE_A_LIKE.title -> {
+                SEE_DYNAMIC.title,
+                PUBLISH_DYNAMIC.title,
+                SHARE_DYNAMIC.title,
+                POST_COMMENT.title,
+                GIVE_A_LIKE.title -> {
                     val intent = Intent(context, QaActivity::class.java)
                     context.startActivity(intent)
                 }
-                StoreTask.Task.EDIT_INFO.title -> {
+                EDIT_INFO.title -> {
                     ARouter.getInstance().build(MINE_EDIT_INFO).navigation()
 
                 }
-                StoreTask.Task.LOGIN_VOLUNTEER.title -> {
+                LOGIN_VOLUNTEER.title -> {
                     ARouter.getInstance().build(DISCOVER_VOLUNTEER).navigation()
                 }
                 /*
@@ -49,7 +49,7 @@ class StoreType {
                 * 发送请求的代码我已经封装进了 common 模块的 /config/StoreTask 中
                 * */
                 else -> {
-                    context.toast("若点击无跳转，请向我们反馈，谢谢")
+                    toast("若点击无跳转，请向我们反馈，谢谢")
                 }
             }
         }

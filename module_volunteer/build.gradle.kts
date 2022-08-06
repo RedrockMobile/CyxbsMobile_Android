@@ -8,6 +8,7 @@ plugins {
 }
 
 dependApiAccount()
+dependApiStore()
 
 dependLottie()
 dependEventBus()

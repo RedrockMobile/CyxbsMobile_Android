@@ -8,8 +8,8 @@ import androidx.lifecycle.MutableLiveData
 import com.google.gson.Gson
 import com.mredrock.cyxbs.common.BaseApp
 import com.mredrock.cyxbs.common.config.DIR_PHOTO
-import com.mredrock.cyxbs.common.config.StoreTask
 import com.mredrock.cyxbs.common.network.ApiGenerator
+import com.mredrock.cyxbs.common.service.ServiceManager
 import com.mredrock.cyxbs.common.utils.LogUtils
 import com.mredrock.cyxbs.common.utils.extensions.*
 import com.mredrock.cyxbs.common.viewmodel.BaseViewModel
@@ -22,6 +22,7 @@ import com.mredrock.cyxbs.qa.network.ApiServiceNew
 import com.mredrock.cyxbs.qa.pages.dynamic.model.TopicDataSet
 import com.mredrock.cyxbs.qa.utils.isNullOrEmpty
 import com.mredrock.cyxbs.qa.utils.removeContinuousEnters
+import com.ndhzs.api.store.IStoreService
 import io.reactivex.rxjava3.core.Observable
 import okhttp3.MediaType.Companion.toMediaTypeOrNull
 import okhttp3.MultipartBody
@@ -185,8 +186,9 @@ class QuizViewModel : BaseViewModel() {
                 isReleaseSuccess = true
                 toastEvent.value = R.string.qa_release_dynamic_success
                 backAndRefreshPreActivityEvent.value = true
-
-                StoreTask.postTask(StoreTask.Task.PUBLISH_DYNAMIC, null) // 更新发布动态的任务
+    
+                ServiceManager.getService(IStoreService::class.java)
+                    .postTask(IStoreService.Task.PUBLISH_DYNAMIC, null) // 更新发布动态的任务
             }
     }
 
@@ -212,8 +214,6 @@ class QuizViewModel : BaseViewModel() {
                 isReleaseSuccess = true
                 toastEvent.value = R.string.qa_release_dynamic_success
                 backAndRefreshPreActivityEvent.value = true
-
-                StoreTask.postTask(StoreTask.Task.PUBLISH_DYNAMIC, null) // 更新发布动态的任务
             }
     }
 
@@ -348,8 +348,9 @@ class QuizViewModel : BaseViewModel() {
             .safeSubscribeBy {
                 toastEvent.value = R.string.qa_release_comment_success
                 finishReleaseCommentEvent.value = true
-
-                StoreTask.postTask(StoreTask.Task.POST_COMMENT, null) // 更新发送评论的任务
+    
+                ServiceManager.getService(IStoreService::class.java)
+                    .postTask(IStoreService.Task.POST_COMMENT, content) // 更新发送评论的任务
             }
     }
 

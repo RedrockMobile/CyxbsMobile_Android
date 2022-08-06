@@ -8,21 +8,21 @@ import android.view.animation.AnimationUtils
 import android.view.animation.LayoutAnimationController
 import android.widget.ImageView
 import android.widget.TextView
+import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.Observer
-import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.mredrock.cyxbs.common.config.StoreTask
-import com.mredrock.cyxbs.common.ui.BaseFragment
-import com.mredrock.cyxbs.common.utils.extensions.gone
-import com.mredrock.cyxbs.common.utils.extensions.invisible
-import com.mredrock.cyxbs.common.utils.extensions.visible
 import com.mredrock.cyxbs.store.R
 import com.mredrock.cyxbs.store.bean.StampCenter
 import com.mredrock.cyxbs.store.page.center.ui.item.StampTaskListItem
 import com.mredrock.cyxbs.store.page.center.ui.item.StampTaskTitleItem
 import com.mredrock.cyxbs.store.page.center.viewmodel.StoreCenterViewModel
-import com.mredrock.cyxbs.common.utils.SimpleRvAdapter
+import com.mredrock.cyxbs.store.utils.SimpleRvAdapter
+import com.mredrock.cyxbs.lib.base.ui.BaseFragment
+import com.mredrock.cyxbs.lib.utils.extensions.gone
+import com.mredrock.cyxbs.lib.utils.extensions.invisible
+import com.mredrock.cyxbs.lib.utils.extensions.visible
+import com.ndhzs.api.store.IStoreService
 import java.util.*
 import kotlin.collections.HashMap
 
@@ -39,9 +39,7 @@ class StampTaskFragment : BaseFragment() {
     private lateinit var mTextView: TextView
 
     // 因为我只需要 Activity 的 ViewModel, 所以没有继承于 BaseViewModelFragment
-    private val viewModel by lazy(LazyThreadSafetyMode.NONE) {
-        ViewModelProvider(requireActivity()).get(StoreCenterViewModel::class.java)
-    }
+    private val viewModel by activityViewModels<StoreCenterViewModel>()
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -136,8 +134,8 @@ class StampTaskFragment : BaseFragment() {
         moreList.clear()
         for (task in tasks) { // 后端返回的 type = "base" 时为每日任务, type = "more" 时为更多任务
             when (task.type) {
-                StoreTask.TaskType.BASE.type -> baseList.add(task)
-                StoreTask.TaskType.MORE.type -> moreList.add(task)
+                IStoreService.TaskType.BASE.type -> baseList.add(task)
+                IStoreService.TaskType.MORE.type -> moreList.add(task)
             }
         }
 

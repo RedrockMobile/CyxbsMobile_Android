@@ -156,12 +156,11 @@ object ApiGenerator {
                 }
                 logging.level = HttpLoggingInterceptor.Level.BODY
                 addInterceptor(Interceptor {
-                    val response = proceedPoxyWithTryCatch {
-                        it.proceed(it.request().newBuilder()
+                    it.proceed(
+                        it.request().newBuilder()
                             .addHeader("APPVersion", BaseApp.version)
                             .build()
-                        )}
-                    response!!
+                    )
                 })
                 addInterceptor(logging)
                 //这里是在debug模式下方便开发人员简单确认 http 错误码 和 url(magipoke开始切的)
@@ -172,7 +171,6 @@ object ApiGenerator {
 
                         val response = it.proceed(request)
                         if (!response.isSuccessful){
-                            response.close()
                             Handler(Looper.getMainLooper()).post {
                                 BaseApp.appContext.toast("${response.code} ${request.url} ")
                             }

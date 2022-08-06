@@ -21,7 +21,7 @@ dependencies {
   implementation ("com.tencent.mm:AndResGuard-gradle-plugin:1.2.21")
   
   // 腾讯多渠道打包 https://github.com/Tencent/VasDolly
-  implementation("com.tencent.vasdolly:plugin:3.0.4")
+  implementation(libs.vasDolly.gradlePlugin)
   
   // 很牛逼的检测工具 debug 模式下摇一摇手机触发 https://github.com/whataa/pandora
   implementation("com.github.whataa:pandora-plugin:1.0.0")

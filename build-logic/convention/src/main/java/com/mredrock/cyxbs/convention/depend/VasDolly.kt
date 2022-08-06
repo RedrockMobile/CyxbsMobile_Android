@@ -1,9 +1,8 @@
 package com.mredrock.cyxbs.convention.depend
 
+import com.mredrock.cyxbs.convention.depend.utils.libsVersion
 import org.gradle.api.Project
-import org.gradle.api.artifacts.VersionCatalogsExtension
 import org.gradle.kotlin.dsl.dependencies
-import org.gradle.kotlin.dsl.getByType
 
 /**
  * ...
@@ -21,8 +20,7 @@ import org.gradle.kotlin.dsl.getByType
 * 其中版本号统一写在 build-logic 的 settings.gradle.kts 中
 * */
 val Project.vasDolly_version: String
-  get() = extensions.getByType<VersionCatalogsExtension>()
-    .named("libs").findVersion("vasDolly.version").get().toString()
+  get() = libsVersion("vasDolly.version").requiredVersion
 
 // 内部使用，只给 AppProject 配置，单模块调试时不需要
 internal fun Project.dependVasDolly() {

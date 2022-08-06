@@ -1,8 +1,8 @@
 package com.mredrock.cyxbs.store.page.record.ui.item
 
-import com.mredrock.cyxbs.common.utils.extensions.setOnSingleClickListener
+import com.mredrock.cyxbs.lib.utils.extensions.setOnSingleClickListener
 import com.mredrock.cyxbs.store.R
-import com.mredrock.cyxbs.common.utils.SimpleRvAdapter
+import com.mredrock.cyxbs.store.utils.SimpleRvAdapter
 import com.mredrock.cyxbs.store.bean.ExchangeRecord
 import com.mredrock.cyxbs.store.databinding.StoreRecyclerItemRecordExchangeBinding
 import com.mredrock.cyxbs.store.page.record.ui.activity.ExchangeDetailActivity

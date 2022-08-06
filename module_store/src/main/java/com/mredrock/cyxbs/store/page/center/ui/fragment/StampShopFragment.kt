@@ -8,21 +8,20 @@ import android.view.animation.AnimationUtils
 import android.view.animation.LayoutAnimationController
 import android.widget.ImageView
 import android.widget.TextView
-import androidx.lifecycle.Observer
-import androidx.lifecycle.ViewModelProvider
+import androidx.fragment.app.activityViewModels
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.mredrock.cyxbs.common.ui.BaseFragment
-import com.mredrock.cyxbs.common.utils.extensions.gone
-import com.mredrock.cyxbs.common.utils.extensions.invisible
-import com.mredrock.cyxbs.common.utils.extensions.visible
 import com.mredrock.cyxbs.store.R
 import com.mredrock.cyxbs.store.bean.StampCenter
 import com.mredrock.cyxbs.store.page.center.ui.item.SmallShopProductItem
 import com.mredrock.cyxbs.store.page.center.ui.item.SmallShopTitleItem
 import com.mredrock.cyxbs.store.page.center.viewmodel.StoreCenterViewModel
 import com.mredrock.cyxbs.store.utils.StoreType
-import com.mredrock.cyxbs.common.utils.SimpleRvAdapter
+import com.mredrock.cyxbs.store.utils.SimpleRvAdapter
+import com.mredrock.cyxbs.lib.base.ui.BaseFragment
+import com.mredrock.cyxbs.lib.utils.extensions.gone
+import com.mredrock.cyxbs.lib.utils.extensions.invisible
+import com.mredrock.cyxbs.lib.utils.extensions.visible
 
 /**
  * ...
@@ -37,9 +36,7 @@ class StampShopFragment : BaseFragment() {
     private lateinit var mTextView: TextView
 
     // 因为我只需要 Activity 的 ViewModel, 所以没有继承于 BaseViewModelFragment
-    private val viewModel by lazy(LazyThreadSafetyMode.NONE) {
-        ViewModelProvider(requireActivity()).get(StoreCenterViewModel::class.java)
-    }
+    private val viewModel by activityViewModels<StoreCenterViewModel>()
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -63,13 +60,13 @@ class StampShopFragment : BaseFragment() {
     }
 
     private fun initObserve() {
-        viewModel.refreshIsSuccessful.observe(viewLifecycleOwner, Observer {
+        viewModel.refreshIsSuccessful.observe {
             if (it) {
                 // 取消断网图片的显示
                 mImageView.invisible()
                 mTextView.invisible()
                 mRecyclerView.visible()
-            }else {
+            } else {
                 // 显示断网图片
                 mImageView.visible()
                 mTextView.visible()
@@ -77,20 +74,20 @@ class StampShopFragment : BaseFragment() {
                 mImageView.setImageResource(R.drawable.store_ic_no_internet)
                 mTextView.text = getText(R.string.store_no_internet)
             }
-        })
-
-        viewModel.stampCenterData.observe(viewLifecycleOwner, Observer {
+        }
+    
+        viewModel.stampCenterData.observe {
             if (it.shop == null) {
                 resetData(emptyList())
-            }else {
+            } else {
                 resetData(it.shop) // 重新设置数据
             }
             if (mRecyclerView.adapter == null) { // 第一次得到数据时设置 adapter
                 setAdapter(it.userAmount)
-            }else {
+            } else {
                 refreshAdapter(it.userAmount) // 再次得到数据时刷新
             }
-        })
+        }
     }
 
     private lateinit var mSmallShopTitleItem: SmallShopTitleItem

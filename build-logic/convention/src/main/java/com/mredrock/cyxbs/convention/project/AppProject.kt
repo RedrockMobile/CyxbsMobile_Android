@@ -35,6 +35,7 @@ class AppProject(project: Project) : BaseApplicationProject(project) {
     
     // 测试使用，设置 module_app 暂时不依赖的模块
     val excludeList = mutableListOf<String>(
+      "lib_common"
     )
     
     // 根 gradle 中包含的所有子模块
