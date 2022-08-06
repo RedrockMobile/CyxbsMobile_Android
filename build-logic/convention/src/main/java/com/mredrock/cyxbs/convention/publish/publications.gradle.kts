@@ -2,13 +2,17 @@ package com.mredrock.cyxbs.convention.publish
 
 import com.android.build.gradle.LibraryExtension
 import com.android.build.gradle.internal.dsl.BaseAppModuleExtension
+import gradle.kotlin.dsl.accessors._b7719bb009bf77985775c5b9fa4e40d9.publishing
+import org.gradle.kotlin.dsl.`maven-publish`
+import org.gradle.kotlin.dsl.configure
+import org.gradle.kotlin.dsl.create
 
 plugins {
   `maven-publish`
 }
 
 // 开启模块缓存的总开关
-var isOpenModuleCache = true
+var isOpenModuleCache = false
 
 if (plugins.hasPlugin("com.android.application")) {
   extensions.configure<BaseAppModuleExtension> {
@@ -88,30 +92,41 @@ tasks.register("cacheToLocalMaven") {
     && !gradle.startParameter.taskNames.any {
       it == "${project.path}:assembleDebug" // 自身模块打包时不允许缓存，因为启动模块在单模块调试时经常被修改
     }
-    && cache.deleteOldCacheIfNeedNewCache()
+    && cache.deleteOldCacheIfNeedNewCache() // 这个在简单刷新 gradle 时也会执行
   ) {
     dependsOn(publishTaskName)
-  }
-}
-
-tasks.whenTaskAdded {
-  if (name == publishTaskName) {
     doFirst {
       println("正在缓存 ${project.name} 模块")
     }
   }
 }
 
-if (isOpenModuleCache && (name.startsWith("module_") || name.startsWith("lib_"))) {
+if (projectDir.parentFile.name == rootDir.name) {
   /*
   * 这里有个很奇怪的问题，如果给 api 模块加上，api 模块会报错：
   * Cannot access built-in declaration 'kotlin.String'. Ensure that you have a dependency on the Kotlin standard library
   * 只要给 api 模块调用了 tasks.whenTaskAdded 就会报，
-  * 反正 api 模块不会调用打包，所以就判断了一下
+  *
+  * 怀疑是 api 模块是子模块的问题，因为取消了它的缓存，但缓存文件中仍然有它，所以不能单独给它使用 tasks.whenTaskAdded ?
+  * 所以只给父文件夹名字是根项目名字的模块使用
   * */
-  tasks.whenTaskAdded {
-    if (name == "assembleDebug") {
-      dependsOn(rootProject.tasks.named("cacheToLocalMaven"))
+  
+  // 目前这里原来的代码被移走了，但为了给以后的人一个提醒，所以请不要删除上面的注释！！！
+}
+
+if (plugins.hasPlugin("com.android.application")) {
+  if (isOpenModuleCache) {
+    tasks.whenTaskAdded {
+      if (name == "assembleDebug") {
+        dependsOn(rootProject.tasks.named("cacheToLocalMaven"))
+        /*
+        * 自动缓存的基本思路：
+        * 1、在引入了 application 插件的模块使用 assembleDebug 的 gradle 任务时，关联上根模块的 cacheToLocalMaven 任务
+        * 2、根模块的 cacheToLocalMaven 任务会拉起所有模块的 cacheToLocalMaven 任务
+        * 3、每个模块的 cacheToLocalMaven 任务里面依赖了 publishModuleCachePublicationToXXXRepository（这是 maven-publish 插件的任务），
+        *    就会自动进行缓存
+        * */
+      }
     }
   }
 }

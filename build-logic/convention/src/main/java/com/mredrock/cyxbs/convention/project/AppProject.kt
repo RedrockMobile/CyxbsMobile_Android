@@ -4,7 +4,6 @@ package com.mredrock.cyxbs.convention.project
 
 import com.android.build.gradle.internal.dsl.BaseAppModuleExtension
 import com.mredrock.cyxbs.convention.depend.*
-import com.mredrock.cyxbs.convention.depend.lib.dependLibCommon
 import com.mredrock.cyxbs.convention.project.base.BaseApplicationProject
 import com.tencent.vasdolly.plugin.extension.ChannelConfigExtension
 import org.gradle.api.Project
@@ -21,7 +20,6 @@ import java.io.File
 class AppProject(project: Project) : BaseApplicationProject(project) {
   override fun initProject() {
     dependAllProject()
-    dependLibCommon()
     dependBugly()
     dependSophix()
     dependUmeng()
@@ -52,7 +50,7 @@ class AppProject(project: Project) : BaseApplicationProject(project) {
         // 5.根 gradle 导入了的模块
         it.isDirectory
           && it.name != "module_app"
-          && "(lib_.+)|(module_.+)".toRegex().matches(it.name)
+          && "(lib_.+)|(module_.+)|(api_.+)".toRegex().matches(it.name)
           && it.name !in excludeList
           && includeProjects.contains(it.name)
       }.forEach {

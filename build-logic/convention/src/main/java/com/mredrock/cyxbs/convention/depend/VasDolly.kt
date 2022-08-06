@@ -13,6 +13,7 @@ import org.gradle.kotlin.dsl.getByType
  */
 
 /*
+* 腾讯的多渠道打包
 * 文档地址：
 * https://github.com/Tencent/VasDolly
 *

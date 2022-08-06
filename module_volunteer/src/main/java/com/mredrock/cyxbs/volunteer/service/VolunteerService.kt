@@ -5,8 +5,8 @@ import androidx.fragment.app.Fragment
 import com.alibaba.android.arouter.facade.annotation.Route
 import com.alibaba.android.arouter.launcher.ARouter
 import com.mredrock.cyxbs.common.config.DISCOVER_VOLUNTEER_FEED
-import com.mredrock.cyxbs.common.config.VOLUNTEER_SERVICE
 import com.mredrock.cyxbs.api.volunteer.IVolunteerService
+import com.mredrock.cyxbs.api.volunteer.VOLUNTEER_SERVICE
 import com.mredrock.cyxbs.volunteer.event.VolunteerLogoutEvent
 import org.greenrobot.eventbus.EventBus
 

@@ -8,12 +8,8 @@ import com.mredrock.cyxbs.convention.project.base.base.BaseAndroidProject
 import com.mredrock.cyxbs.convention.config.Config
 import com.mredrock.cyxbs.convention.depend.debugDependLeakCanary
 import com.mredrock.cyxbs.convention.depend.debugDependPandora
-import com.tencent.vasdolly.plugin.extension.ChannelConfigExtension
 import org.gradle.api.Project
-import org.gradle.api.plugins.ExtraPropertiesExtension
 import org.gradle.kotlin.dsl.configure
-import org.gradle.kotlin.dsl.get
-import java.io.File
 
 /**
  * ...
@@ -27,7 +23,7 @@ abstract class BaseApplicationProject(project: Project) : BaseAndroidProject(pro
     initApplication()
     super.initProjectInternal()
     debugDependLeakCanary() // 依赖 LeakCancry，检查内存泄漏
-    debugDependPandora() // 依赖 Pandora，一个界面检查工具 https://github.com/whataa/pandora
+    debugDependPandora() // 依赖 Pandora，一个很强的手机开发辅助工具 https://www.wanandroid.com/blog/show/2526
   }
   
   protected open fun initApplication() {
@@ -53,6 +49,12 @@ abstract class BaseApplicationProject(project: Project) : BaseAndroidProject(pro
   
       buildFeatures {
         dataBinding = true
+      }
+      
+      buildTypes {
+        release {
+          isShrinkResources = true
+        }
       }
     }
   }

@@ -1,8 +1,9 @@
 package com.mredrock.cyxbs.common.utils
 
 import android.view.View
-import android.view.ViewGroup
+import androidx.activity.ComponentActivity
 import androidx.annotation.IdRes
+import androidx.fragment.app.Fragment
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleEventObserver
 import androidx.lifecycle.LifecycleOwner
@@ -18,11 +19,15 @@ import kotlin.reflect.KProperty
  * ```
  * 使用方法：
  *    val mTvNum: TextView by R.id.xxx.view()
- * or
- *    val mTvNum by R.id.xxx.view<TextView>()
+ *        .addInitialize {
+ *           // 进行初始化的设置
+ *        }
  *
- * 方便程度比较：
- *    kt 插件(被废弃) > 属性代理 > ButterKnife(被废弃) > DataBinding > ViewBinding
+ * 代替 findViewById 的方法有：
+ *    kt 插件(被废弃)、属性代理、ButterKnife(被废弃)、DataBinding、ViewBinding
+ *
+ * 如果使用 DataBinding 和 ViewBinding 会因为 id 太长而劝退
+ * ViewBinding 是给所有布局都默认开启的，大项目会严重拖垮编译速度
  * ```
  * **NOTE:** kt 直接通过 id 获取 View 的插件已经被废弃，禁止再使用！
  *
@@ -31,33 +36,66 @@ import kotlin.reflect.KProperty
  * @date 2021/9/8
  * @time 17:34
  */
-class BindView<T: View>(
-    @IdRes
-    val resId: Int,
-    private val rootView: () -> View,
-    private val lifecycle: () -> Lifecycle
+class BindView<T : View>(
+  @IdRes
+  val resId: Int,
+  private val rootView: () -> View,
+  private val lifecycle: () -> Lifecycle
 ) : ReadOnlyProperty<Any, T> {
-
-    private var mView: T? = null
-
-    override fun getValue(thisRef: Any, property: KProperty<*>): T {
-        return mView ?: let {
-            val rootView = rootView.invoke()
-            val v = rootView.findViewById<T>(resId)
-                ?: throw IllegalStateException(
-                    "该根布局中找不到名字为 R.id.${rootView.context.resources.getResourceEntryName(resId)} 的 id"
-                )
-            mView = v
-            val life = lifecycle.invoke()
-            life.addObserver(object : LifecycleEventObserver {
-                override fun onStateChanged(source: LifecycleOwner, event: Lifecycle.Event) {
-                    if (source.lifecycle.currentState == Lifecycle.State.DESTROYED) {
-                        mView = null
-                        life.removeObserver(this)
-                    }
-                }
-            })
-            return v
+  constructor(
+    @IdRes
+    resId: Int,
+    activity: GetActivity
+  ) : this(resId, { activity.invoke().window.decorView }, { activity.invoke().lifecycle })
+  
+  constructor(
+    @IdRes
+    resId: Int,
+    fragment: () -> Fragment
+  ) : this(resId, { fragment.invoke().requireView() }, { fragment.invoke().viewLifecycleOwner.lifecycle })
+  
+  private var mView: T? = null
+  
+  private val initializeList = mutableListOf<T.() -> Unit>()
+  
+  override fun getValue(thisRef: Any, property: KProperty<*>): T {
+    return mView ?: let {
+      val rootView = rootView.invoke()
+      val v = rootView.findViewById<T>(resId)
+        ?: throw IllegalStateException(
+          "该根布局中找不到名字为 R.id.${rootView.context.resources.getResourceEntryName(resId)} 的 id"
+        )
+      mView = v
+      val life = lifecycle.invoke()
+      // 进行观察
+      life.addObserver(object : LifecycleEventObserver {
+        override fun onStateChanged(source: LifecycleOwner, event: Lifecycle.Event) {
+          if (source.lifecycle.currentState == Lifecycle.State.DESTROYED) {
+            mView = null
+            life.removeObserver(this) // 清理观察者
+          }
         }
+      })
+      // 调用初始化时的设置
+      initializeList.forEach {
+        it.invoke(v)
+      }
+      return v
     }
+  }
+  
+  /**
+   * 增加初始化的设置
+   */
+  fun addInitialize(initialize: T.() -> Unit): BindView<T> {
+    initializeList.add(initialize)
+    return this
+  }
+  
+  /**
+   * 如果直接用 kt 的 () -> ComponentActivity ，他告诉我有相同的 jvm 标识，奇怪，返回值不同还会这样？
+   */
+  fun interface GetActivity {
+    fun invoke(): ComponentActivity
+  }
 }
