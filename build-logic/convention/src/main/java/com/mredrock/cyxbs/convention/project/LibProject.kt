@@ -1,6 +1,5 @@
 package com.mredrock.cyxbs.convention.project
 
-import com.mredrock.cyxbs.convention.depend.lib.dependLibCommon
 import com.mredrock.cyxbs.convention.project.base.BaseLibraryProject
 import org.gradle.api.Project
 
@@ -12,7 +11,6 @@ import org.gradle.api.Project
  */
 class LibProject(project: Project) : BaseLibraryProject(project) {
   override fun initProject() {
-    dependLibCommon()
   }
   
   /**

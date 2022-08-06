@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.appcompat.widget.AppCompatTextView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/tv_toast"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:paddingLeft="35dp"
+    android:paddingRight="35dp"
+    android:paddingTop="9dp"
+    android:paddingBottom="9dp"
+    android:gravity="center"
+    android:background="@drawable/utils_shape_toast"
+    android:textColor="@color/utils_white_black"
+    tools:text="自定义Toast" />

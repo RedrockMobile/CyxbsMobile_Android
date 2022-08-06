@@ -7,8 +7,12 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.Observer
 import java.util.concurrent.atomic.AtomicBoolean
 
+@Deprecated(
+    "建议使用 ShareFlow",
+    ReplaceWith("MutableStateFlow", "kotlinx.coroutines.flow.MutableStateFlow")
+)
 class SingleLiveEvent<T> : MutableLiveData<T>() {
-
+    
     private val mPending = AtomicBoolean(false)
 
     @MainThread

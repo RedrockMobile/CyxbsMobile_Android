@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <color name="utils_white_black">#FFFFFF</color>
+
+    <!--    主要字体颜色分以下四种，下列按照蓝色由深到浅排序，要用自取-->
+    <!--    一级字体颜色-->
+    <color name="utils_level_one_font_color">#112C54</color>
+    <!--    二级字体颜色-->
+    <color name="utils_level_two_font_color">#112C57</color>
+    <!--    三级字体颜色-->
+    <color name="utils_level_three_font_color">#15315B</color>
+    <!--    四级字体颜色-->
+    <color name="utils_level_four_font_color">#2A4E84</color>
+
+</resources>

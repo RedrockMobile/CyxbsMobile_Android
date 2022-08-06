@@ -1,7 +1,6 @@
 @file:Suppress("UnstableApiUsage")
 
 pluginManagement {
-//    includeBuild("build_logic")
     includeBuild("build-logic")
     repositories {
         maven { url = uri("https://maven.aliyun.com/repository/public") }
@@ -30,7 +29,7 @@ dependencyResolutionManagement {
 
 // 测试使用，排除掉不需要的模块
 val excludeList = listOf<String>(
-
+//    "lib_base", "lib_utils"
 )
 
 //对文件夹进行遍历，深度为2

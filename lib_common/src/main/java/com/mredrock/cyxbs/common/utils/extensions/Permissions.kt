@@ -95,7 +95,7 @@ private fun performRequestPermission(
         builder.reason != null ->
             AlertDialog.Builder(context).apply {
                 setMessage(builder.reason)
-                setPositiveButton(android.R.string.yes) { _: DialogInterface, i: Int ->
+                setPositiveButton(android.R.string.ok) { _: DialogInterface, i: Int ->
                     requestPermission(rxPermissions, builder, *permissionsToRequest.toTypedArray())
                 }
                 if (builder.isShowNeverNotice) {
@@ -108,7 +108,7 @@ private fun performRequestPermission(
                         }
                     }
                 } else if (builder.isShowCancelNotice) {
-                    setNegativeButton(android.R.string.no) { _: DialogInterface, i: Int ->
+                    setNegativeButton(android.R.string.cancel) { _: DialogInterface, i: Int ->
 
                     }
 
