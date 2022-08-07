@@ -11,7 +11,8 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowCompat
 import androidx.fragment.app.Fragment
-import androidx.fragment.app.commit
+import androidx.fragment.app.FragmentTransaction
+import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleOwner
 import com.mredrock.cyxbs.lib.utils.extensions.RxjavaLifecycle
 import io.reactivex.rxjava3.disposables.Disposable
@@ -38,11 +39,17 @@ abstract class BaseActivity(
   private val isCancelStatusBar: Boolean = true
 ) : AppCompatActivity(), BaseUi, RxjavaLifecycle {
   
+  /**
+   * 是否处于转屏或异常重建后的 Activity 状态
+   */
+  protected var mIsActivityRebuilt = false
+    private set
+  
   @CallSuper
   @SuppressLint("SourceLockedOrientationActivity")
   override fun onCreate(savedInstanceState: Bundle?) {
+    mIsActivityRebuilt = savedInstanceState != null
     super.onCreate(savedInstanceState)
-    
     if (isPortraitScreen) { // 锁定竖屏
       requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_PORTRAIT
     }
@@ -79,19 +86,31 @@ abstract class BaseActivity(
    * 如果不按照正确方式使用，会造成 ViewModel 失效，
    * 你可以写个 demo 看看在屏幕翻转后 Fragment 的 ViewModel 的 hashcode() 值是不是同一个
    *
-   * 如果你复用了这个 [F]，那么会出现 replace "失败" 的问题，其实不算是失败，
-   * 你可以拿到这个 [F] 对象，调用它向外暴露的方法而重新设置它的状态，
-   * 但记得这个状态需要保存在 [Fragment.setArguments] 中，防止重建后丢失
+   * 其实不是很建议你在 Activity 中拿到这个 Fragment 对象，Fragment 一般是不能直接暴露方法让外面调用的
    */
-  protected inline fun <reified F : Fragment> replaceFragment(@IdRes id: Int, func: () -> F): F {
-    var fragment = supportFragmentManager.findFragmentById(id)
-    if (fragment !is F) {
-      fragment = func.invoke()
-      supportFragmentManager.commit {
-        replace(id, fragment)
+  protected fun <F : Fragment> replaceFragment(
+    @IdRes id: Int,
+    func: FragmentTransaction.() -> F
+  ) {
+    if (lifecycle.currentState == Lifecycle.State.CREATED) {
+      // 处于 onCreate 时
+      if (mIsActivityRebuilt) {
+        // 如果此时 Activity 处于重建状态，Fragment 会自动恢复，不能重复提交而改变之前的状态
+        // 因为存在重建前你在 onCreate 中提交的 Fragment 在后面因为点击事件而被替换掉，
+        // 如果你在这里进行提交，就会导致本来被取消了的 界面 重新出现
+      } else {
+        // Activity 正常被创建，即没有被异常摧毁
+        supportFragmentManager.beginTransaction()
+          .apply { replace(id, func.invoke(this)) }
+          .commit()
       }
+    } else {
+      // 除了 onCreate 外的其他生命周期，直接提交即可，一般也遇不到在 onStart 等生命周期中提交 Fragment
+      // 如果你要判断是否重复提交同类型的 Fragment，这是不好判断的，因为 reified 关键字如果匹配到 超类 Fragment 就会导致判断错误
+      supportFragmentManager.beginTransaction()
+        .apply { replace(id, func.invoke(this)) }
+        .commit()
     }
-    return fragment
   }
   
   private val mDisposableList = mutableListOf<Disposable>()

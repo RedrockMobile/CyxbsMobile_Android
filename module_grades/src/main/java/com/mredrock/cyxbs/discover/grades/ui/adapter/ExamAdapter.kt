@@ -57,7 +57,7 @@ class ExamAdapter(val data: MutableList<Exam>) : RecyclerView.Adapter<ExamAdapte
     override fun onBindViewHolder(holder: ExamVH, position: Int) {
         val context = holder.itemView.context
         if (holder is OtherVH) {
-            data[position].let { it ->
+            data[position - 1].let { it ->
                 it.let {
                     if (it.week?.toInt() != 0) {
                         val drawableTime = ResourcesCompat.getDrawable(context.resources, R.drawable.grades_time, null)
