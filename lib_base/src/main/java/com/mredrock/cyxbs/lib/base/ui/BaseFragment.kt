@@ -14,7 +14,6 @@ import androidx.lifecycle.coroutineScope
 import com.mredrock.cyxbs.lib.utils.extensions.RxjavaLifecycle
 import io.reactivex.rxjava3.disposables.Disposable
 
-@Suppress("UNCHECKED_CAST")
 abstract class BaseFragment : Fragment, BaseUi, RxjavaLifecycle {
   
   constructor() : super()

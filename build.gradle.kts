@@ -8,7 +8,7 @@ tasks.register<Delete>("clean") {
 tasks.register("cacheToLocalMaven") {
     group = "publishing"
     subprojects
-        .map { it.tasks.named("cacheToLocalMaven") }
+        .mapNotNull { it.tasks.findByName("cacheToLocalMaven") }
         .let { dependsOn(it) }
 }
 

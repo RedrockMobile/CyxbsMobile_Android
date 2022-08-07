@@ -86,6 +86,9 @@ abstract class Cache(private val project: Project) {
   
   /**
    * 删除旧的缓存，如果需要新的缓存的话
+   *
+   * 内部根据模块版本号来判断是否删除旧的缓存
+   *
    * @return 是否需要删除旧的缓存
    */
   internal fun deleteOldCacheIfNeedNewCache(): Boolean {
