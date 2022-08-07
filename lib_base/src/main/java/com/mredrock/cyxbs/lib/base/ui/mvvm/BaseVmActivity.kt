@@ -6,9 +6,8 @@ import com.mredrock.cyxbs.lib.base.ui.BaseActivity
 import com.mredrock.cyxbs.lib.utils.utils.GenericityUtils.getGenericClassFromSuperClass
 
 abstract class BaseVmActivity<VM : ViewModel>(
-  isPortraitScreen: Boolean = true, // 作用请查看父类
-  isCancelStatusBar: Boolean = true, // 作用请查看父类
-) : BaseActivity(isPortraitScreen, isCancelStatusBar) {
+  private val options: Options = Options.DEFAULT
+) : BaseActivity(options) {
   
   @Suppress("UNCHECKED_CAST")
   protected val viewModel by lazy(LazyThreadSafetyMode.NONE) {
@@ -20,5 +19,8 @@ abstract class BaseVmActivity<VM : ViewModel>(
     }
   }
   
+  /**
+   * 这个写在这里是因为有些参数需要通过 Intent 来拿
+   */
   protected open fun getViewModelFactory(): ViewModelProvider.Factory? = null
 }

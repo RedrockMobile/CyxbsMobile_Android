@@ -13,7 +13,10 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentTransaction
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleOwner
+import com.mredrock.cyxbs.api.account.IAccountService
+import com.mredrock.cyxbs.api.login.ILoginService
 import com.mredrock.cyxbs.lib.utils.extensions.RxjavaLifecycle
+import com.mredrock.cyxbs.lib.utils.service.impl
 import io.reactivex.rxjava3.disposables.Disposable
 
 /**
@@ -23,19 +26,7 @@ import io.reactivex.rxjava3.disposables.Disposable
  *@description
  */
 abstract class BaseActivity(
-  /**
-   * 是否锁定竖屏
-   */
-  private val isPortraitScreen: Boolean = true,
-  
-  /**
-   * 是否沉浸式状态栏
-   *
-   * 注意，沉浸式后，状态栏不会再有东西占位，界面会默认上移，
-   * 可以给根布局加上 android:fitsSystemWindows=true，
-   * 不同布局该属性效果不同，请给合适的布局添加
-   */
-  private val isCancelStatusBar: Boolean = true
+  private val options: Options = Options.DEFAULT
 ) : AppCompatActivity(), BaseUi, RxjavaLifecycle {
   
   /**
@@ -49,11 +40,20 @@ abstract class BaseActivity(
   override fun onCreate(savedInstanceState: Bundle?) {
     mIsActivityRebuilt = savedInstanceState != null
     super.onCreate(savedInstanceState)
-    if (isPortraitScreen) { // 锁定竖屏
+    if (options.isCheckLogin) {
+      // 是否是游客模式
+      val isTouristMode = IAccountService::class.impl.getVerifyService().isTouristMode()
+      if (isTouristMode) {
+        ILoginService::class.impl.startLoginActivity(this::class.java)
+        finish() // 因为此时该 activity 已经被加载，网络请求已经发送，但会因为没有登录而拿不到数据，所以要先 finish 掉
+      }
+    }
+    
+    if (options.isPortraitScreen) { // 锁定竖屏
       requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_PORTRAIT
     }
     
-    if (isCancelStatusBar) { // 沉浸式状态栏
+    if (options.isCancelStatusBar) { // 沉浸式状态栏
       cancelStatusBar()
     }
   }
@@ -125,4 +125,36 @@ abstract class BaseActivity(
     get() = window.decorView
   
   final override fun getViewLifecycleOwner(): LifecycleOwner = this
+  
+  /**
+   * Activity 构造时的可选项，有以下几点需要遵守：
+   * - 变量类型不能过于复杂，尽量为 Boolean、String、Int 等简单类型
+   * - 变量是不会修改的 val
+   * - 需要提供默认参数
+   * - 子类可以继承该类，然后填充需要的额外参数
+   */
+  open class Options(
+    /**
+     * 是否锁定竖屏
+     */
+    val isPortraitScreen: Boolean = true,
+  
+    /**
+     * 是否沉浸式状态栏
+     *
+     * 注意，沉浸式后，状态栏不会再有东西占位，界面会默认上移，
+     * 可以给根布局加上 android:fitsSystemWindows=true，
+     * 不同布局该属性效果不同，请给合适的布局添加
+     */
+    val isCancelStatusBar: Boolean = true,
+  
+    /**
+     * 是否检查登录，如果为 true，则会在未登录时直接跳转到登录界面
+     */
+    val isCheckLogin: Boolean = true
+  ) {
+    companion object {
+      val DEFAULT = Options()
+    }
+  }
 }

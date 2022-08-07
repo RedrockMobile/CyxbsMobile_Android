@@ -12,10 +12,6 @@
         <item name="android:windowBackground">@drawable/main_shape_activity_window_background</item>
     </style>
 
-    <style name="LoginTextInputStyle" parent="AppTheme" tools:ignore="ResourceName">
-        <item name="colorAccent">@color/common_level_two_font_color</item>
-    </style>
-
     <style name="transparent_dialog" parent="Theme.AppCompat.Dialog" tools:ignore="ResourceName">
         <item name="android:windowBackground">@null</item>
     </style>

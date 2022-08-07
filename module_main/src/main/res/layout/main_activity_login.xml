@@ -9,7 +9,7 @@
 
 
     <TextView
-        android:id="@+id/tv_main_login"
+        android:id="@+id/tv_login"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="16dp"
@@ -26,7 +26,7 @@
         app:layout_constraintVertical_bias="0.19" />
 
     <TextView
-        android:id="@+id/tv_main_welcome"
+        android:id="@+id/tv_welcome"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="@string/main_welcome_speech_2"
@@ -35,35 +35,35 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
-        app:layout_constraintStart_toStartOf="@+id/tv_main_login"
-        app:layout_constraintTop_toBottomOf="@+id/tv_main_login"
+        app:layout_constraintStart_toStartOf="@+id/tv_login"
+        app:layout_constraintTop_toBottomOf="@+id/tv_login"
         app:layout_constraintVertical_bias="0.01999998" />
 
 
     <ImageView
-        android:id="@+id/tv_account_ic"
+        android:id="@+id/iv_account"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:src="@drawable/main_ic_student_id"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
-        app:layout_constraintStart_toStartOf="@+id/tv_main_welcome"
-        app:layout_constraintTop_toBottomOf="@+id/tv_main_welcome"
+        app:layout_constraintStart_toStartOf="@+id/tv_welcome"
+        app:layout_constraintTop_toBottomOf="@+id/tv_welcome"
         app:layout_constraintVertical_bias="0.06999999"
         tools:ignore="ContentDescription" />
 
 
     <ImageView
-        android:id="@+id/tv_password_ic"
+        android:id="@+id/iv_password"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="40dp"
         android:src="@drawable/main_ic_password"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="@+id/tv_account_ic"
-        app:layout_constraintStart_toStartOf="@+id/tv_account_ic"
-        app:layout_constraintTop_toBottomOf="@+id/tv_account_ic"
+        app:layout_constraintEnd_toEndOf="@+id/iv_account"
+        app:layout_constraintStart_toStartOf="@+id/iv_account"
+        app:layout_constraintTop_toBottomOf="@+id/iv_account"
         app:layout_constraintVertical_bias="0.0"
         tools:ignore="ContentDescription" />
 
@@ -76,10 +76,10 @@
         android:layout_marginStart="24dp"
         android:layout_marginEnd="16dp"
         android:gravity="bottom"
-        app:layout_constraintBottom_toBottomOf="@+id/tv_account_ic"
+        app:layout_constraintBottom_toBottomOf="@+id/iv_account"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toEndOf="@+id/tv_account_ic"
-        app:layout_constraintTop_toTopOf="@+id/tv_account_ic"
+        app:layout_constraintStart_toEndOf="@+id/iv_account"
+        app:layout_constraintTop_toTopOf="@+id/iv_account"
         app:layout_constraintVertical_bias="1.0">
 
         <androidx.appcompat.widget.AppCompatEditText
@@ -108,7 +108,7 @@
         android:gravity="bottom"
         android:focusable="true"
         android:clickable="true"
-        app:layout_constraintBottom_toBottomOf="@+id/tv_password_ic"
+        app:layout_constraintBottom_toBottomOf="@+id/iv_password"
         app:layout_constraintEnd_toEndOf="@+id/et_account_container"
         app:layout_constraintStart_toStartOf="@+id/et_account_container"
         app:layout_constraintTop_toBottomOf="@+id/et_account_container"
@@ -186,7 +186,7 @@
         android:layout_height="18dp"
         android:layout_marginTop="32dp"
         app:layout_constraintHorizontal_bias="0.929"
-        app:layout_constraintStart_toStartOf="@+id/tv_password_ic"
+        app:layout_constraintStart_toStartOf="@+id/iv_password"
         app:layout_constraintTop_toBottomOf="@+id/et_password_container"
         app:lottie_progress="0.39"
         app:lottie_rawRes="@raw/lottie_check_login" />

@@ -23,10 +23,12 @@ object ApiDepend {
   * add:    用于连接多个实现模块，比如后面写的 module_xxx，就是 api_test 的另一个实现模块
   * */
   
+  // 下面的顺序尽量根据模块的排序来写
   val account = ":lib_account:api_account" by parent
   val protocol = ":lib_protocol:api_protocol" by parent
   val update = ":lib_update:api_update" by parent
   val electricity = ":module_electricity:api_electricity" by parent
+  val login = ":module_login:api_login" by parent
   val main = ":module_main:api_main" by parent
   val store = ":module_store:api_store" by parent
   val todo = ":module_todo:api_todo" by parent
@@ -56,6 +58,10 @@ fun Project.dependApiUpdate() {
 
 fun Project.dependApiElectricity() {
   ApiDepend.electricity.dependApiOnly(this)
+}
+
+fun Project.dependApiLogin() {
+  ApiDepend.login.dependApiOnly(this)
 }
 
 fun Project.dependApiMain() {

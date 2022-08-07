@@ -6,7 +6,6 @@ plugins {
 }
 
 // TODO common 模块不应该反向依赖 api_main
-dependApiMain()
 dependApiAccount()
 dependApiProtocol()
 

@@ -3,6 +3,7 @@ package com.mredrock.cyxbs.store.page.center.ui.activity
 import android.annotation.SuppressLint
 import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import android.widget.ImageButton
 import android.widget.ImageView
 import android.widget.TextView
@@ -13,9 +14,9 @@ import com.google.android.material.tabs.TabLayout
 import com.google.android.material.tabs.TabLayoutMediator
 import com.mredrock.cyxbs.config.route.STORE_ENTRY
 import com.mredrock.cyxbs.lib.base.ui.mvvm.BaseVmActivity
+import com.mredrock.cyxbs.lib.utils.adapter.FragmentVpAdapter
 import com.mredrock.cyxbs.lib.utils.extensions.setOnSingleClickListener
 import com.mredrock.cyxbs.store.R
-import com.mredrock.cyxbs.store.base.BaseFragmentVPAdapter
 import com.mredrock.cyxbs.store.page.center.ui.fragment.StampShopFragment
 import com.mredrock.cyxbs.store.page.center.ui.fragment.StampTaskFragment
 import com.mredrock.cyxbs.store.page.center.viewmodel.StoreCenterViewModel
@@ -67,13 +68,9 @@ class StoreCenterActivity : BaseVmActivity<StoreCenterViewModel>() {
     }
 
     private fun initViewPager2() {
-        mViewPager2.adapter = BaseFragmentVPAdapter(
-            this,
-            listOf(
-                StampShopFragment(),
-                StampTaskFragment()
-            )
-        )
+        mViewPager2.adapter = FragmentVpAdapter(this)
+            .add { StampShopFragment() }
+            .add { StampTaskFragment() }
         mViewPager2.setPageTransformer(ScaleInTransformer())
         mViewPager2.offscreenPageLimit = 1
         mViewPager2.registerOnPageChangeCallback(object : ViewPager2.OnPageChangeCallback() {
@@ -170,12 +167,13 @@ class StoreCenterActivity : BaseVmActivity<StoreCenterViewModel>() {
             startActivity(Intent(this, StampDetailActivity::class.java)) /*跳到邮票明细界面*/
         }
     }
-
-    private var isFirstLoad = true // 是否是第一次进入界面
+    
     // 对于 ViewModel 数据的观察
     @SuppressLint("SetTextI18n")
     private fun initObserve() {
+        var isFirstLoad = true // 是否是第一次进入界面
         viewModel.stampCenterData.observe {
+            Log.d("ggg", "(StoreCenterActivity.kt:179) -> it = $it")
             val text = it.userAmount.toString()
             if (!mTvStampBigNumber.hasText()) { // 如果是第一次进入界面, 肯定没有文字
                 mTvStampBigNumber.setTextOnlyAlpha(text) // 第一次进入界面就只使用隐现的动画
@@ -198,6 +196,7 @@ class StoreCenterActivity : BaseVmActivity<StoreCenterViewModel>() {
                 // 处于刷新状态且不是第一次刷新
                 if (mRefreshLayout.isRefreshing && !isFirstLoad) { toast("刷新成功") }
             }else {
+                Log.d("ggg", "(StoreCenterActivity.kt:203) -> toast")
                 toast("获取邮票数据失败")
             }
             mRefreshLayout.isRefreshing = false
