@@ -101,14 +101,6 @@ const val IS_ANSWER = 0 //从我的回答跳转到具体的回答页面
 //课表版本
 const val COURSE_VERSION = "course_version"
 
-//登录跳转时，前一个Activity的Class对象的键
-const val ACTIVITY_CLASS = "ACTIVITY_CLASS"
-
-//是否为退出登录按钮退出
-const val IS_EXIT_LOGIN = "IS_EXIT_LOGIN"
-
-const val IS_PRE_FINISH = "IS_PRE_FINISH"
-
 //ApiGenerator中的retrofitMap的key
 //适用于某些接口要求，一般不需要特定的retrofit
 //命名方式module+方法

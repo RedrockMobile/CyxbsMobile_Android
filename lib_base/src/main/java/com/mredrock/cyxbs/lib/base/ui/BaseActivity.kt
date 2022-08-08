@@ -7,27 +7,29 @@ import android.os.Bundle
 import android.view.View
 import androidx.annotation.CallSuper
 import androidx.annotation.IdRes
-import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.WindowCompat
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentTransaction
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleOwner
-import com.mredrock.cyxbs.api.account.IAccountService
-import com.mredrock.cyxbs.api.login.ILoginService
+import com.mredrock.cyxbs.lib.base.operations.OperationActivity
 import com.mredrock.cyxbs.lib.utils.extensions.RxjavaLifecycle
-import com.mredrock.cyxbs.lib.utils.service.impl
 import io.reactivex.rxjava3.disposables.Disposable
 
 /**
- *@author 985892345
- *@email 2767465918@qq.com
- *@data 2021/5/25
- *@description
+ * 绝对基础的抽象
+ *
+ * 这里面不要跟业务挂钩！！！
+ * 比如：使用 api 模块
+ * 这种操作请放在 [OperationActivity] 中
+ *
+ * @author 985892345
+ * @email 2767465918@qq.com
+ * @date 2021/5/25
  */
 abstract class BaseActivity(
   private val options: Options = Options.DEFAULT
-) : AppCompatActivity(), BaseUi, RxjavaLifecycle {
+) : OperationActivity(options), BaseUi, RxjavaLifecycle {
   
   /**
    * 是否处于转屏或异常重建后的 Activity 状态
@@ -40,15 +42,6 @@ abstract class BaseActivity(
   override fun onCreate(savedInstanceState: Bundle?) {
     mIsActivityRebuilt = savedInstanceState != null
     super.onCreate(savedInstanceState)
-    if (options.isCheckLogin) {
-      // 是否是游客模式
-      val isTouristMode = IAccountService::class.impl.getVerifyService().isTouristMode()
-      if (isTouristMode) {
-        ILoginService::class.impl.startLoginActivity(this::class.java)
-        finish() // 因为此时该 activity 已经被加载，网络请求已经发送，但会因为没有登录而拿不到数据，所以要先 finish 掉
-      }
-    }
-    
     if (options.isPortraitScreen) { // 锁定竖屏
       requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_PORTRAIT
     }
@@ -127,17 +120,22 @@ abstract class BaseActivity(
   final override fun getViewLifecycleOwner(): LifecycleOwner = this
   
   /**
-   * Activity 构造时的可选项，有以下几点需要遵守：
-   * - 变量类型不能过于复杂，尽量为 Boolean、String、Int 等简单类型
-   * - 变量是不会修改的 val
+   * Activity 构造时的可选项，写在这里主要是为了集中管理，以前学长是采取重写方法来实现的，
+   * 我不是很认同这种写法，这种只用一次的简单变量应该在构造的时候就直接传入，并且重写的话以后人来重构代码很容易被忽略掉
+   *
+   * 使用接口主要是为了更好的继承
+   *
+   * 有以下几点需要遵守：
+   * - 变量类型不能过于复杂，尽量为 Boolean、String、Int 等简单类型，且不可变 val
    * - 需要提供默认参数
-   * - 子类可以继承该类，然后填充需要的额外参数
+   * - 子类可以继承该接口，然后填充需要的额外参数，使用时请使用 [OptionsImpl]，子类建议使用 kt 的 by 接口 来简化
    */
-  open class Options(
+  interface Options : OperationActivity.Options {
     /**
      * 是否锁定竖屏
      */
-    val isPortraitScreen: Boolean = true,
+    val isPortraitScreen: Boolean
+      get() = true
   
     /**
      * 是否沉浸式状态栏
@@ -146,15 +144,18 @@ abstract class BaseActivity(
      * 可以给根布局加上 android:fitsSystemWindows=true，
      * 不同布局该属性效果不同，请给合适的布局添加
      */
-    val isCancelStatusBar: Boolean = true,
-  
-    /**
-     * 是否检查登录，如果为 true，则会在未登录时直接跳转到登录界面
-     */
-    val isCheckLogin: Boolean = true
-  ) {
+    val isCancelStatusBar: Boolean
+      get() = true
+    
     companion object {
-      val DEFAULT = Options()
+      val DEFAULT = object : Options {}
     }
   }
+  
+  open class OptionsImpl(
+    override val isCheckLogin: Boolean = true,
+    override val isShowToastIfNoLogin: Boolean = true,
+    override val isCancelStatusBar: Boolean = true,
+    override val isPortraitScreen: Boolean = true
+  ) : Options
 }

@@ -23,7 +23,7 @@ open class BaseApp : Application() {
     super.onCreate()
     baseApp = this
     UtilsApplicationWrapper.setUtilsApplication(this)
-    com.mredrock.cyxbs.common.BaseApp.onCreate(this, this::privacyDenied, this::privacyAgree)
+    com.mredrock.cyxbs.common.BaseApp.onCreate(this)
     initARouter()
   }
   

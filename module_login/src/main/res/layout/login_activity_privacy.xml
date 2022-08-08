@@ -3,12 +3,11 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:background="@color/common_white_background"
-    android:layout_height="match_parent"
-    tools:context=".ui.PrivacyActivity">
+    android:background="@color/config_white_black"
+    android:layout_height="match_parent" >
 
     <RelativeLayout
-        android:id="@+id/main_user_privacy_back"
+        android:id="@+id/login_view_privacy_back"
         android:layout_width="30dp"
         android:layout_height="29dp"
         android:layout_marginStart="8dp"
@@ -20,7 +19,7 @@
             android:layout_width="10dp"
             android:layout_height="18dp"
             android:layout_centerInParent="true"
-            android:background="@drawable/main_ic_user_agree_back" />
+            android:background="@drawable/login_ic_user_agree_back" />
     </RelativeLayout>
 
 
@@ -30,15 +29,15 @@
         android:layout_marginStart="12dp"
         android:layout_marginTop="45dp"
         android:text="隐私权政策"
-        android:textColor="@color/main_user_agree_toolbar"
+        android:textColor="@color/config_level_three_font_color"
         android:textSize="21sp"
-        app:layout_constraintBottom_toBottomOf="@id/main_user_privacy_back"
-        app:layout_constraintStart_toEndOf="@+id/main_user_privacy_back"
+        app:layout_constraintBottom_toBottomOf="@id/login_view_privacy_back"
+        app:layout_constraintStart_toEndOf="@+id/login_view_privacy_back"
         app:layout_constraintTop_toTopOf="parent"
         tools:ignore="HardcodedText" />
 
-    <com.mredrock.cyxbs.common.webView.LiteJsWebView
-        android:id="@+id/main_wv_privacy"
+    <WebView
+        android:id="@+id/login_wv_privacy"
         android:layout_width="match_parent"
         android:layout_marginTop="100dp"
         android:layout_height="match_parent" />

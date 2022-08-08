@@ -11,10 +11,22 @@ import androidx.fragment.app.FragmentTransaction
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleCoroutineScope
 import androidx.lifecycle.coroutineScope
+import com.mredrock.cyxbs.lib.base.operations.OperationFragment
 import com.mredrock.cyxbs.lib.utils.extensions.RxjavaLifecycle
 import io.reactivex.rxjava3.disposables.Disposable
 
-abstract class BaseFragment : Fragment, BaseUi, RxjavaLifecycle {
+/**
+ * 绝对基础的抽象
+ *
+ * 这里面不要跟业务挂钩！！！
+ * 比如：使用 api 模块
+ * 这种操作请放在 [OperationFragment] 中
+ *
+ * @author 985892345
+ * @email 2767465918@qq.com
+ * @date 2021/5/25
+ */
+abstract class BaseFragment : OperationFragment, BaseUi, RxjavaLifecycle {
   
   constructor() : super()
   

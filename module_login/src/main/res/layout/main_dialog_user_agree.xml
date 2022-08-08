@@ -6,7 +6,7 @@
     android:layout_height="285dp">
 
     <ImageView
-        android:id="@+id/main_iv_dialog_background"
+        android:id="@+id/login_iv_dialog_background"
         android:layout_width="match_parent"
         android:layout_height="285dp"
         android:orientation="vertical"
@@ -16,7 +16,7 @@
         tools:ignore="ContentDescription" />
 
     <TextView
-        android:id="@+id/main_textview"
+        android:id="@+id/login_tv_tips"
         style="@style/main_dialog_tv_tips"
         android:layout_width="match_parent"
         android:layout_height="25dp"
@@ -42,7 +42,7 @@
         android:textSize="14sp"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/main_textview"
+        app:layout_constraintTop_toBottomOf="@+id/login_tv_tips"
         tools:text="友友，欢迎使用掌上重邮！在您使用掌上重邮前，请认真阅读《用户协议》和《隐私权政策》，它们将帮助您了解我们所采集的个人信息与用途的对应关系。如您同意，请点击下方同意并·继续按钮开始接受我们的服务。" />
 
     <com.google.android.material.button.MaterialButton

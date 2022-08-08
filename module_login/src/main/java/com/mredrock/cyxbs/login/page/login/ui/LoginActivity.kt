@@ -1,6 +1,5 @@
-package com.mredrock.cyxbs.login.page
+package com.mredrock.cyxbs.login.page.login.ui
 
-import android.app.Activity
 import android.content.Context
 import android.content.Intent
 import android.graphics.Color
@@ -14,125 +13,128 @@ import android.text.style.ForegroundColorSpan
 import android.transition.Explode
 import android.transition.TransitionManager
 import android.view.View
+import android.view.ViewGroup
 import android.view.inputmethod.EditorInfo
 import android.view.inputmethod.InputMethodManager
-import android.widget.Toast
+import android.widget.Button
+import android.widget.EditText
+import android.widget.TextView
 import androidx.core.content.ContextCompat
+import androidx.core.content.edit
 import androidx.core.view.get
-import com.alibaba.android.arouter.facade.annotation.Autowired
+import com.airbnb.lottie.LottieAnimationView
 import com.alibaba.android.arouter.launcher.ARouter
 import com.mredrock.cyxbs.api.account.IAccountService
-import com.mredrock.cyxbs.common.component.CyxbsToast
-import com.mredrock.cyxbs.common.service.ServiceManager
-import com.mredrock.cyxbs.common.utils.extensions.defaultSharedPreferences
-import com.mredrock.cyxbs.common.utils.extensions.editor
-import com.mredrock.cyxbs.common.config.*
+import com.mredrock.cyxbs.config.route.MINE_FORGET_PASSWORD
+import com.mredrock.cyxbs.config.sp.SP_FIRST_TIME_OPEN
+import com.mredrock.cyxbs.config.sp.SP_PRIVACY_AGREED
+import com.mredrock.cyxbs.config.sp.defaultSp
 import com.mredrock.cyxbs.lib.base.ui.mvvm.BaseVmActivity
-import com.mredrock.cyxbs.main.R
-import com.mredrock.cyxbs.main.bean.LoginFailEvent
-import com.mredrock.cyxbs.main.components.UserAgreementDialog
-import com.mredrock.cyxbs.main.viewmodel.LoginViewModel
-import kotlinx.android.synthetic.main.main_activity_login.*
-import org.greenrobot.eventbus.Subscribe
-import org.greenrobot.eventbus.ThreadMode
+import com.mredrock.cyxbs.lib.utils.extensions.lazyUnlock
+import com.mredrock.cyxbs.lib.utils.extensions.setOnSingleClickListener
+import com.mredrock.cyxbs.lib.utils.service.impl
+import com.mredrock.cyxbs.login.R
+import com.mredrock.cyxbs.login.page.login.viewmodel.LoginViewModel
+import com.mredrock.cyxbs.login.ui.UserAgreementDialog
 
 class LoginActivity : BaseVmActivity<LoginViewModel>(
-    Options(isCheckLogin = false)
+    OptionsImpl()
 ) {
     companion object {
         
         private const val INTENT_TARGET = "intent_target"
+        private const val INTENT_TOURIST_MODE = "intent_tourist_mode"
         
-        fun startActivity(context: Context, targetActivity: Class<out Activity>) {
-            val targetIntent = Intent(context, targetActivity::class.java)
+        fun startActivity(
+            context: Context,
+            successIntent: Intent?,
+            touristModeIntent: Intent,
+            intent: (Intent.() -> Unit)? = null
+        ) {
             context.startActivity(
                 Intent(context, LoginActivity::class.java)
-                    .putExtra(INTENT_TARGET, targetIntent)
+                    .putExtra(INTENT_TARGET, successIntent)
+                    .putExtra(INTENT_TOURIST_MODE, touristModeIntent)
+                    .also { intent?.invoke(it) }
             )
         }
     }
     
+    private val mIntentSuccess by lazyUnlock { intent.getParcelableExtra<Intent>(INTENT_TARGET) }
+    private val mIntentTouristMode by lazyUnlock {
+        intent.getParcelableExtra<Intent>(INTENT_TOURIST_MODE)!!
+    }
+    
     private val lottieProgress = 0.39f // 点击同意用户协议时的动画的时间
-
-    @JvmField
-    @Autowired(name = ACTIVITY_CLASS)
-    var targetActivity: Class<*>? = null
-
-    @JvmField
-    @Autowired(name = IS_EXIT_LOGIN)
-    var isExitLogin: Boolean? = false
-
+    
+    private val mEtAccount by R.id.login_et_account.view<EditText>()
+    private val mEtPassword by R.id.login_et_password.view<EditText>()
+    private val mBtnLogin by R.id.login_btn_login.view<Button>()
+    private val mLavCheck by R.id.login_lav_check.view<LottieAnimationView>()
+    private val mTvTourist by R.id.login_tv_tourist_mode_enter.view<TextView>()
+    private val mTvForget by R.id.login_tv_forget_password.view<TextView>()
+    private val mTvUserAgreement by R.id.login_tv_user_agreement.view<TextView>()
+    private val mContainer by R.id.login_container.view<ViewGroup>()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.login_activity_login)
         initView()
+        initObserve()
     }
 
     private fun initView() {
-        et_password.setOnEditorActionListener { _, actionId, _ ->
+        mEtPassword.setOnEditorActionListener { _, actionId, _ ->
             if (actionId == EditorInfo.IME_ACTION_SEND) {
                 loginAction()
                 return@setOnEditorActionListener true
             }
             return@setOnEditorActionListener false
         }
-        btn_login.setOnClickListener {
+        mBtnLogin.setOnSingleClickListener {
             loginAction()
         }
-        lav_login_check.setOnClickListener {
-            lav_login_check.playAnimation()
+        mLavCheck.setOnSingleClickListener {
+            mLavCheck.playAnimation()
             viewModel.userAgreementIsCheck = !viewModel.userAgreementIsCheck
         }
-        lav_login_check.addAnimatorUpdateListener {
+        mLavCheck.addAnimatorUpdateListener {
             if (it.animatedFraction == 1f && viewModel.userAgreementIsCheck) {
-                lav_login_check.pauseAnimation()
+                mLavCheck.pauseAnimation()
             } else if (it.animatedFraction >= lottieProgress && it.animatedFraction != 1f && !viewModel.userAgreementIsCheck) {
-                lav_login_check.pauseAnimation()
+                mLavCheck.pauseAnimation()
             }
         }
-        tv_tourist_mode_enter.setOnClickListener {
+        mTvTourist.setOnSingleClickListener {
             if (!viewModel.userAgreementIsCheck) {
-                CyxbsToast.makeText(this, R.string.main_user_agreement_title, Toast.LENGTH_SHORT)
-                    .show()
+                agreeToUserAgreement()
             } else {
-                ServiceManager.getService(IAccountService::class.java).getVerifyService()
+                IAccountService::class.impl
+                    .getVerifyService()
                     .loginByTourist()
-                //如果是点击退出按钮到达的登录页那么就默认启动mainActivity，或者唤起登录页的Activity是MainActivity就默认启动
-                if (isExitLogin != null && isExitLogin!!) {
-                    startActivity(Intent(this, MainActivity::class.java))
-                    finish()
-                } else {
-                    if (targetActivity != null) {
-                        startActivity(Intent(this, targetActivity))
-                        finish()
-                    } else {
-                        finish()
-                    }
-                }
+                startActivity(mIntentTouristMode)
             }
         }
         //跳转到忘记密码模块
-        tv_main_forget_password.setOnClickListener {
+        mTvForget.setOnSingleClickListener {
             ARouter.getInstance().build(MINE_FORGET_PASSWORD).navigation()
         }
 
         //如果是第一次使用app并且没有同意过用户协议，自动打开用户协议页面
-        if (defaultSharedPreferences.getBoolean(FIRST_TIME_OPEN, true)) {
+        if (defaultSp.getBoolean(SP_FIRST_TIME_OPEN, true)) {
             showUserAgreement()
         }
-
 
         //设置用户协议和隐私政策的文字
         val spannableString = SpannableStringBuilder()
         spannableString.append("同意《用户协议》和《隐私权政策》")
         //解决文字点击后变色
-        main_user_agreement.highlightColor =
-            ContextCompat.getColor(applicationContext, android.R.color.transparent)
+        mTvUserAgreement.highlightColor =
+            ContextCompat.getColor(this, android.R.color.transparent)
         //设置用户协议和隐私权政策点击事件
         val userAgreementClickSpan = object : ClickableSpan() {
             override fun onClick(widget: View) {
-                val intent = Intent(this@LoginActivity,UserAgreementActivity::class.java)
+                val intent = Intent(this@LoginActivity, UserAgreeActivity::class.java)
                 startActivity(intent)
             }
 
@@ -165,10 +167,19 @@ class LoginActivity : BaseVmActivity<LoginViewModel>(
         spannableString.setSpan(userAgreementSpan, 2, 8, Spannable.SPAN_EXCLUSIVE_INCLUSIVE)
         spannableString.setSpan(privacySpan, 9, 16, Spannable.SPAN_EXCLUSIVE_INCLUSIVE)
 
-        main_user_agreement.text = spannableString
-        main_user_agreement.movementMethod = LinkMovementMethod.getInstance()
-
-
+        mTvUserAgreement.text = spannableString
+        mTvUserAgreement.movementMethod = LinkMovementMethod.getInstance()
+    }
+    
+    private fun initObserve() {
+        viewModel.loginEvent.collectLaunch {
+            if (it) {
+                startActivity(mIntentSuccess)
+                finish()
+            } else {
+                changeUiState()
+            }
+        }
     }
 
     private fun loginAction() {
@@ -179,35 +190,32 @@ class LoginActivity : BaseVmActivity<LoginViewModel>(
             if (inputMethodManager.isActive) {
                 inputMethodManager.hideSoftInputFromWindow(this.currentFocus?.windowToken, 0)
             }
-            viewModel.login(et_account.text?.toString(), et_password.text?.toString(), landing) {
-                //如果是点击退出按钮到达的登录页那么就默认启动mainActivity，或者唤起登录页的Activity是MainActivity就默认启动
-                if (isExitLogin != null && isExitLogin!!) {
-                    startActivity(Intent(this, MainActivity::class.java))
-                    finish()
-                } else {
-                    if (targetActivity != null) {
-                        startActivity(Intent(this, targetActivity))
-                        finish()
-                    } else {
-                        finish()
-                    }
-                }
+            val stuNum = mEtAccount.text?.toString() ?: ""
+            val password = mEtPassword.text?.toString() ?: ""
+            if (checkDataCorrect(stuNum, password)) {
+                viewModel.login(stuNum, password)
             }
         } else {
-            CyxbsToast.makeText(this, R.string.main_user_agreement_title, Toast.LENGTH_SHORT).show()
+            agreeToUserAgreement()
         }
+    }
+    
+    /**
+     * 同意用户协议
+     */
+    private fun agreeToUserAgreement() {
+        toast("请先同意用户协议吧")
     }
 
     override fun onBackPressed() {
-        finishAffinity()
-        finish()
+        finishAffinity() // 摧毁该 Activity 栈下所有 Activity，意思就是直接退出应用，但在有些手机上无效
     }
-
-    //这个方法可以在登录状态和未登录状态之间切换
-    private val landing = {
-        TransitionManager.beginDelayedTransition(login_container, Explode())
-        for (i in 0 until login_container.childCount) {
-            val view = login_container[i]
+    
+    // 这个方法可以在登录状态和未登录状态之间切换
+    private fun changeUiState() {
+        TransitionManager.beginDelayedTransition(mContainer, Explode())
+        for (i in 0 until mContainer.childCount) {
+            val view = mContainer[i]
             view.visibility = when (view.visibility) {
                 View.GONE -> View.VISIBLE
                 View.VISIBLE -> View.GONE
@@ -225,18 +233,23 @@ class LoginActivity : BaseVmActivity<LoginViewModel>(
             },
             onPositiveClick = {
                 dismiss()
-                defaultSharedPreferences.editor {
-                    putBoolean(FIRST_TIME_OPEN, false)
-                    putBoolean(PRIVACY_AGREED,true)
+                defaultSp.edit {
+                    putBoolean(SP_FIRST_TIME_OPEN, false)
+                    putBoolean(SP_PRIVACY_AGREED, true)
                     commit()
                 }
             }
         )
     }
-
-
-    @Subscribe(threadMode = ThreadMode.MAIN)
-    fun landingError(loginFailEvent: LoginFailEvent) {
-        landing()
+    
+    private fun checkDataCorrect(stuNum: String, idNum: String): Boolean {
+        if (stuNum.length < 10) {
+            toast("请检查一下学号吧，似乎有点问题")
+            return true
+        } else if (idNum.length < 6) {
+            toast("请检查一下密码吧，似乎有点问题")
+            return true
+        }
+        return false
     }
 }

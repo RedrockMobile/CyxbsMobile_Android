@@ -7,13 +7,13 @@
     android:background="@color/config_white_black" >
 
     <TextView
-        android:id="@+id/tv_login"
+        android:id="@+id/login_tv_login"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="16dp"
         android:layout_marginEnd="16dp"
         android:gravity="start"
-        android:text="@string/main_main_welcome_speech_1"
+        android:text="登录"
         android:textColor="@color/common_level_two_font_color"
         android:textSize="34sp"
         app:layout_constraintBottom_toBottomOf="parent"
@@ -21,71 +21,73 @@
         app:layout_constraintHorizontal_bias="1.0"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.19" />
+        app:layout_constraintVertical_bias="0.19"
+        tools:ignore="HardcodedText" />
 
     <TextView
-        android:id="@+id/tv_welcome"
+        android:id="@+id/login_tv_welcome"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="@string/main_welcome_speech_2"
+        android:text="您好鸭，欢迎来到掌上重邮~"
         android:textColor="@color/common_alpha_level_two_font_color"
         android:textSize="18sp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
-        app:layout_constraintStart_toStartOf="@+id/tv_login"
-        app:layout_constraintTop_toBottomOf="@+id/tv_login"
-        app:layout_constraintVertical_bias="0.01999998" />
+        app:layout_constraintStart_toStartOf="@+id/login_tv_login"
+        app:layout_constraintTop_toBottomOf="@+id/login_tv_login"
+        app:layout_constraintVertical_bias="0.01999998"
+        tools:ignore="HardcodedText" />
 
 
     <ImageView
-        android:id="@+id/iv_account"
+        android:id="@+id/login_iv_account"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        app:srcCompat="@drawable/main_ic_student_id"
+        app:srcCompat="@drawable/login_ic_student_id"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
-        app:layout_constraintStart_toStartOf="@+id/tv_welcome"
-        app:layout_constraintTop_toBottomOf="@+id/tv_welcome"
+        app:layout_constraintStart_toStartOf="@+id/login_tv_welcome"
+        app:layout_constraintTop_toBottomOf="@+id/login_tv_welcome"
         app:layout_constraintVertical_bias="0.06999999"
         tools:ignore="ContentDescription" />
 
     <ImageView
-        android:id="@+id/iv_password"
+        android:id="@+id/login_iv_password"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="40dp"
-        app:srcCompat="@drawable/main_ic_password"
+        app:srcCompat="@drawable/login_ic_password"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="@+id/iv_account"
-        app:layout_constraintStart_toStartOf="@+id/iv_account"
-        app:layout_constraintTop_toBottomOf="@+id/iv_account"
+        app:layout_constraintEnd_toEndOf="@+id/login_iv_account"
+        app:layout_constraintStart_toStartOf="@+id/login_iv_account"
+        app:layout_constraintTop_toBottomOf="@+id/login_iv_account"
         app:layout_constraintVertical_bias="0.0"
         tools:ignore="ContentDescription" />
 
 
     <com.google.android.material.textfield.TextInputLayout
-        android:id="@+id/et_account_container"
+        android:id="@+id/login_et_account_container"
         style="@style/LoginTextInputStyle"
         android:layout_width="0dp"
         android:layout_height="50dp"
         android:layout_marginStart="24dp"
         android:layout_marginEnd="16dp"
         android:gravity="bottom"
-        app:layout_constraintBottom_toBottomOf="@+id/iv_account"
+        app:layout_constraintBottom_toBottomOf="@+id/login_iv_account"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toEndOf="@+id/iv_account"
-        app:layout_constraintTop_toTopOf="@+id/iv_account"
+        app:layout_constraintStart_toEndOf="@+id/login_iv_account"
+        app:layout_constraintTop_toTopOf="@+id/login_iv_account"
         app:layout_constraintVertical_bias="1.0">
 
         <androidx.appcompat.widget.AppCompatEditText
-            android:id="@+id/et_account"
+            android:id="@+id/login_et_account"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:background="@null"
             android:drawablePadding="16dp"
-            android:hint="@string/main_activity_login_account_hint"
+            android:hint="请输入学号"
             android:inputType="number"
             android:maxLength="10"
             android:selectAllOnFocus="true"
@@ -98,27 +100,27 @@
 
 
     <com.google.android.material.textfield.TextInputLayout
-        android:id="@+id/et_password_container"
+        android:id="@+id/login_et_password_container"
         style="@style/LoginTextInputStyle"
         android:layout_width="0dp"
         android:layout_height="50dp"
         android:gravity="bottom"
         android:focusable="true"
         android:clickable="true"
-        app:layout_constraintBottom_toBottomOf="@+id/iv_password"
-        app:layout_constraintEnd_toEndOf="@+id/et_account_container"
-        app:layout_constraintStart_toStartOf="@+id/et_account_container"
-        app:layout_constraintTop_toBottomOf="@+id/et_account_container"
+        app:layout_constraintBottom_toBottomOf="@+id/login_iv_password"
+        app:layout_constraintEnd_toEndOf="@+id/login_et_account_container"
+        app:layout_constraintStart_toStartOf="@+id/login_et_account_container"
+        app:layout_constraintTop_toBottomOf="@+id/login_et_account_container"
         app:layout_constraintVertical_bias="1.0">
 
         <androidx.appcompat.widget.AppCompatEditText
-            android:id="@+id/et_password"
+            android:id="@+id/login_et_password"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="40dp"
             android:background="@null"
             android:drawablePadding="16dp"
-            android:hint="@string/main_activity_login_password_hint"
+            android:hint="统一认证码后六位/19级及以前为身份证后六位"
             android:imeOptions="actionSend"
             android:inputType="textPassword"
             android:maxLength="16"
@@ -132,21 +134,22 @@
 
 
     <Button
-        android:id="@+id/btn_login"
+        android:id="@+id/login_btn_login"
         android:layout_width="0dp"
         android:layout_height="52dp"
         android:layout_marginStart="33dp"
         android:layout_marginTop="48dp"
         android:layout_marginEnd="33dp"
         android:background="@drawable/common_toolbar_background"
-        android:text="@string/main_activity_login_btn_login"
-        android:textColor="@color/main_activity_login_btn_login_color"
+        android:text="登 录"
+        android:textColor="#FFFFFF"
         android:textSize="18sp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/main_user_agreement"
-        app:layout_constraintVertical_bias="0.11" />
+        app:layout_constraintTop_toBottomOf="@+id/login_tv_user_agreement"
+        app:layout_constraintVertical_bias="0.11"
+        tools:ignore="HardcodedText" />
 
 
     <RelativeLayout
@@ -155,50 +158,54 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/btn_login"
+        app:layout_constraintTop_toBottomOf="@+id/login_btn_login"
         app:layout_constraintVertical_bias="0.85">
 
         <TextView
-            android:id="@+id/tv_tourist_mode"
+            android:id="@+id/login_tv_tourist_mode"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/main_tourist_mode"
+            android:text="没有学号么？"
             android:textColor="@color/common_log_in_to_the_gray_font_below"
-            android:textSize="13sp" />
+            android:textSize="13sp"
+            tools:ignore="HardcodedText" />
 
         <TextView
-            android:id="@+id/tv_tourist_mode_enter"
+            android:id="@+id/login_tv_tourist_mode_enter"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_toEndOf="@+id/tv_tourist_mode"
-            android:text="@string/main_tourist_mode_enter"
+            android:layout_toEndOf="@+id/login_tv_tourist_mode"
+            android:text="游客模式吧"
             android:textColor="@color/common_log_in_by_tourist_text_enter_color"
-            android:textSize="13sp" />
+            android:textSize="13sp"
+            tools:ignore="HardcodedText" />
     </RelativeLayout>
 
 
     <com.airbnb.lottie.LottieAnimationView
-        android:id="@+id/lav_login_check"
+        android:id="@+id/login_lav_check"
         android:layout_width="18dp"
         android:layout_height="18dp"
         android:layout_marginTop="32dp"
         app:layout_constraintHorizontal_bias="0.929"
-        app:layout_constraintStart_toStartOf="@+id/iv_password"
-        app:layout_constraintTop_toBottomOf="@+id/et_password_container"
+        app:layout_constraintStart_toStartOf="@+id/login_iv_password"
+        app:layout_constraintTop_toBottomOf="@+id/login_et_password_container"
         app:lottie_progress="0.39"
         app:lottie_rawRes="@raw/lottie_check_login" />
 
     <TextView
-        android:id="@+id/main_user_agreement"
-        style="@style/main_user_agreement"
+        android:id="@+id/login_tv_user_agreement"
+        style="@style/login_user_agreement"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="16dp"
         android:layout_marginTop="32dp"
-        android:text="@string/main_user_agreement"
-        app:layout_constraintStart_toEndOf="@+id/lav_login_check"
-        app:layout_constraintTop_toBottomOf="@+id/et_password_container" />
+        android:text="同意《用户协议》和《隐私权政策》"
+        app:layout_constraintStart_toEndOf="@+id/login_lav_check"
+        app:layout_constraintTop_toBottomOf="@+id/login_et_password_container"
+        tools:ignore="HardcodedText" />
 
+    <!--这个登录时的飞机动画-->
     <com.airbnb.lottie.LottieAnimationView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
@@ -212,15 +219,16 @@
         app:lottie_rawRes="@raw/login_loging" />
 
     <TextView
-        android:id="@+id/tv_main_forget_password"
+        android:id="@+id/login_tv_forget_password"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginEnd="22dp"
-        android:text="@string/main_activity_login_forget_password"
+        android:text="忘记密码？"
         android:textColor="@color/common_log_in_to_the_gray_font_below"
         android:textSize="12sp"
-        app:layout_constraintBottom_toBottomOf="@+id/main_user_agreement"
+        app:layout_constraintBottom_toBottomOf="@+id/login_tv_user_agreement"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="@+id/main_user_agreement" />
+        app:layout_constraintTop_toTopOf="@+id/login_tv_user_agreement"
+        tools:ignore="HardcodedText" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

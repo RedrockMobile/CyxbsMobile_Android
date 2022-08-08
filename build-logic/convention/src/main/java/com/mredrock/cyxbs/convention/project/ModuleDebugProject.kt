@@ -89,8 +89,8 @@ class ModuleDebugProject(project: Project) : BaseApplicationProject(project) {
     project.configurations.all {
       // all 方法是一种观察性的回调，它会把已经添加了的和之后将要添加的都进行回调
       val configuration = this
-      if (configuration.name.matches(Regex("\\w*([iI]mplementation|[aA]pi)\\w*"))) {
-        // 只匹配带有 implementation 和 api 关键字配置
+      if (configuration.name.matches(Regex("\\w*([iI]mplementation|[aA]pi|[rR]untimeOnly)\\w*"))) {
+        // 只匹配带有 implementation、api、runtimeOnly 关键字配置
         configuration.dependencies.all {
           val dependency = this
           if (dependency is ProjectDependency) {
@@ -99,12 +99,15 @@ class ModuleDebugProject(project: Project) : BaseApplicationProject(project) {
               dependency.name.startsWith("api_") -> {
                 // 对于单模块调试，需要反向依赖 api 的实现模块，不然 ARouter 无法找到，会报空指针
                 val apiPath = dependency.dependencyProject.path
-                ApiDependUtils.sApiWithImplMap[apiPath]?.dependApiImplOnly(debugProject) {
+                ApiDependUtils.apiWithImplMap[apiPath]?.dependApiImplOnly(debugProject) {
                   (!dependPathSet.contains(it) && it != debugProject.path).apply {
                     if (this) {
                       /*
                       * 因为在 implementation 新依赖时又会回调上面的 configuration.dependencies.all
                       * 所以会比下面紧接着的 forEach 调用前再引入刚才的新依赖，所以需要在这里 add，防止重复引入
+                      *
+                      * 但目前 dependApiImplOnly() 已改为 runtimeOnly，所以不会再出现上述问题，但为了告知后人，
+                      * 所以仍保持该写法
                       * */
                       dependPathSet.add(it)
                     }

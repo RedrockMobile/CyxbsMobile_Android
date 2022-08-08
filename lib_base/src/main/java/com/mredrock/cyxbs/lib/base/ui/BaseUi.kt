@@ -5,6 +5,7 @@ import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.flowWithLifecycle
 import androidx.lifecycle.whenStarted
+import com.mredrock.cyxbs.lib.base.operations.OperationUi
 import com.mredrock.cyxbs.lib.utils.extensions.ToastUtils
 import com.mredrock.cyxbs.lib.utils.extensions.launch
 import com.mredrock.cyxbs.lib.utils.utils.BindView
@@ -13,20 +14,24 @@ import kotlinx.coroutines.flow.Flow
 /**
  * 从 BaseActivity 和 BaseFragment 中抽离的共用函数
  *
+ * 这里面不要跟业务挂钩！！！
+ * 比如：使用 api 模块
+ * 这种操作请放在 [OperationUi] 中
+ *
  * @author 985892345 (Guo Xiangrui)
  * @email guo985892345@foxmail.com
  * @date 2022/7/20 19:44
  */
-interface BaseUi : ToastUtils {
+interface BaseUi : OperationUi, ToastUtils {
   /**
    * 根布局
    */
-  val rootView: View
+  override val rootView: View
   
   /**
    * View 的 LifecycleOwner
    */
-  fun getViewLifecycleOwner(): LifecycleOwner
+  override fun getViewLifecycleOwner(): LifecycleOwner
   
   /**
    * 在简单界面，使用这种方式来得到 View，避免使用 ViewBinding 大材小用

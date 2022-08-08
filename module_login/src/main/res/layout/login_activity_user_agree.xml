@@ -4,11 +4,10 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/common_white_background"
-    tools:context=".ui.UserAgreementActivity">
+    android:background="@color/config_white_black" >
 
     <RelativeLayout
-        android:id="@+id/main_user_privacy_back"
+        android:id="@+id/login_view_user_agree_back"
         android:layout_width="30dp"
         android:layout_height="29dp"
         android:layout_marginStart="8dp"
@@ -20,7 +19,7 @@
             android:layout_width="10dp"
             android:layout_height="18dp"
             android:layout_centerInParent="true"
-            android:background="@drawable/main_ic_user_agree_back" />
+            android:background="@drawable/login_ic_user_agree_back" />
     </RelativeLayout>
 
 
@@ -30,15 +29,15 @@
         android:layout_marginStart="12dp"
         android:layout_marginTop="45dp"
         android:text="用户协议"
-        android:textColor="@color/main_user_agree_toolbar"
+        android:textColor="@color/config_level_three_font_color"
         android:textSize="21sp"
-        app:layout_constraintBottom_toBottomOf="@id/main_user_privacy_back"
-        app:layout_constraintStart_toEndOf="@+id/main_user_privacy_back"
+        app:layout_constraintBottom_toBottomOf="@id/login_view_user_agree_back"
+        app:layout_constraintStart_toEndOf="@+id/login_view_user_agree_back"
         app:layout_constraintTop_toTopOf="parent"
         tools:ignore="HardcodedText" />
 
     <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/main_rv_user_agree"
+        android:id="@+id/login_rv_user_agree"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_marginLeft="16dp"
@@ -49,10 +48,10 @@
         app:layout_constraintTop_toTopOf="parent" />
 
     <ProgressBar
-        android:id="@+id/loader"
+        android:id="@+id/login_pb_user_agree_loader"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        app:layout_constraintBottom_toBottomOf="@+id/main_rv_user_agree"
+        app:layout_constraintBottom_toBottomOf="@+id/login_rv_user_agree"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />

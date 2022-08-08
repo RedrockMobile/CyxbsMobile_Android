@@ -1,4 +1,4 @@
-package com.mredrock.cyxbs.main.components
+package com.mredrock.cyxbs.login.ui
 
 import android.content.Intent
 import android.graphics.Color
@@ -20,15 +20,16 @@ import android.widget.TextView
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.DialogFragment
 import androidx.fragment.app.FragmentManager
-import com.mredrock.cyxbs.common.BaseApp
-import com.mredrock.cyxbs.main.R
-import com.mredrock.cyxbs.main.ui.PrivacyActivity
-import com.mredrock.cyxbs.main.ui.UserAgreementActivity
+import com.mredrock.cyxbs.lib.base.BaseApp
+import com.mredrock.cyxbs.login.R
+import com.mredrock.cyxbs.login.page.login.ui.PrivacyActivity
+import com.mredrock.cyxbs.login.page.login.ui.UserAgreeActivity
 
 /**
  * Author by OkAndGreat，Date on 2021/9/23.
  * 点击用户协议弹出的dialog
  */
+@Deprecated("该 DialogFragment 使用不遵守 Fragment 规范")
 class UserAgreementDialog : DialogFragment() {
 
     companion object {
@@ -59,7 +60,7 @@ class UserAgreementDialog : DialogFragment() {
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
+    ): View {
         dialog?.requestWindowFeature(Window.FEATURE_NO_TITLE)
         val view = inflater.inflate(
             R.layout.main_dialog_user_agree,
@@ -86,12 +87,12 @@ class UserAgreementDialog : DialogFragment() {
 
         btnNegative.setOnClickListener {
             onNegativeClick?.invoke(this)
-            BaseApp.privacyDenied()
+            BaseApp.baseApp.privacyDenied()
         }
 
         btnPositive.setOnClickListener {
             onPositiveClick?.invoke(this)
-            BaseApp.privacyAgree()
+            BaseApp.baseApp.privacyAgree()
         }
 
         val spannableString = SpannableStringBuilder()
@@ -102,7 +103,7 @@ class UserAgreementDialog : DialogFragment() {
         //设置用户协议和隐私权政策点击事件
         val userAgreementClickSpan = object : ClickableSpan() {
             override fun onClick(widget: View) {
-                val intent = Intent(requireContext(), UserAgreementActivity::class.java)
+                val intent = Intent(requireContext(), UserAgreeActivity::class.java)
                 startActivity(intent)
             }
 

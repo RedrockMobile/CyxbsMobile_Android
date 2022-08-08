@@ -8,9 +8,9 @@ plugins {
 }
 
 dependApiAccount()
-dependApiMain()
 dependApiUpdate()
 dependApiStore()
+dependApiLogin()
 
 dependMaterialDialog()
 dependGlide()

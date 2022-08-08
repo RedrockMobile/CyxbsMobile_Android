@@ -5,12 +5,13 @@ import android.os.Bundle
 import androidx.core.content.ContextCompat
 import com.alibaba.android.arouter.launcher.ARouter
 import com.mredrock.cyxbs.api.account.IAccountService
+import com.mredrock.cyxbs.api.login.ILoginService
 import com.mredrock.cyxbs.common.component.CommonDialogFragment
 import com.mredrock.cyxbs.common.config.*
 import com.mredrock.cyxbs.common.service.ServiceManager
 import com.mredrock.cyxbs.common.ui.BaseActivity
 import com.mredrock.cyxbs.common.utils.extensions.*
-import com.mredrock.cyxbs.api.main.MAIN_LOGIN
+import com.mredrock.cyxbs.common.service.impl
 import com.mredrock.cyxbs.mine.R
 import com.mredrock.cyxbs.mine.page.security.activity.SecurityActivity
 import com.mredrock.cyxbs.mine.util.apiService
@@ -95,17 +96,7 @@ class SettingActivity : BaseActivity() {
                             //内部已经将dialog消除，这里啥都不用处理
                         },
                         onPositiveClick = {
-                            cleanAppWidgetCache()
-                            //清除user信息，必须要在LoginStateChangeEvent之前
-                            ServiceManager.getService(IAccountService::class.java)
-                                .getVerifyService().logout(
-                                this
-                            )
-                            //清空activity栈
-                            val flag =
-                                Intent.FLAG_ACTIVITY_CLEAR_TASK or Intent.FLAG_ACTIVITY_NEW_TASK
-                            ARouter.getInstance().build(MAIN_LOGIN).withFlags(flag)
-                                .withBoolean(IS_EXIT_LOGIN, true).navigation()
+                            jumpToLoginActivity()
                         }
                     )
                 }
@@ -124,22 +115,26 @@ class SettingActivity : BaseActivity() {
                 initView(
                     containerRes = R.layout.mine_layout_dialog_logout,
                     onPositiveClick = {
-                        cleanAppWidgetCache()
-                        //清除user信息，必须要在LoginStateChangeEvent之前
-                        ServiceManager.getService(IAccountService::class.java).getVerifyService()
-                            .logout(
-                                this@SettingActivity
-                            )
-                        //清空activity栈
-                        val flag = Intent.FLAG_ACTIVITY_CLEAR_TASK or Intent.FLAG_ACTIVITY_NEW_TASK
-                        ARouter.getInstance().build(MAIN_LOGIN).withFlags(flag)
-                            .withBoolean(IS_EXIT_LOGIN, true).navigation()
+                        jumpToLoginActivity()
                     },
                     positiveString = "退出",
                     onNegativeClick = { dismiss() }
                 )
             }.show(this.supportFragmentManager, tag)
         }
+    }
+    
+    private fun jumpToLoginActivity() {
+        cleanAppWidgetCache()
+        //清除user信息，必须要在LoginStateChangeEvent之前
+        ServiceManager.getService(IAccountService::class.java).getVerifyService()
+            .logout(this@SettingActivity)
+    
+        ILoginService::class.impl
+            .startLoginActivityReboot(this@SettingActivity,) {
+                // 清空activity栈
+                addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK or Intent.FLAG_ACTIVITY_NEW_TASK)
+            }
     }
 
     private fun cleanAppWidgetCache() {

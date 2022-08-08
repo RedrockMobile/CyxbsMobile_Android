@@ -6,6 +6,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.widget.TextView
 import android.widget.Toast
+import androidx.annotation.StringRes
 import com.mredrock.cyxbs.lib.utils.R
 
 /**
@@ -31,6 +32,7 @@ interface ToastUtils {
   fun toastLong(s: CharSequence) = CyxbsToast.makeText(appContext, s, Toast.LENGTH_LONG).show()
   fun String.toast() = toast(this)
   fun String.toastLong() = toastLong(this)
+  fun toast(@StringRes id: Int) = toast(appContext.getString(id))
 }
 
 class CyxbsToast {
