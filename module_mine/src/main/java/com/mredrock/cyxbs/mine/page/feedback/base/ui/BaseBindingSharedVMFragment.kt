@@ -39,14 +39,14 @@ abstract class BaseBindingSharedVMFragment<VM : BaseViewModel, T : ViewDataBindi
         shardViewModel?.apply {
             toastEvent.observe { str ->
                 str?.let {
-                    CyxbsToast.makeText(context,
-                        it,
-                        Toast.LENGTH_SHORT).show()
+                    CyxbsToast.makeText(requireContext(),
+                                        it,
+                                        Toast.LENGTH_SHORT).show()
                 }
             }
             longToastEvent.observe { str ->
                 str?.let {
-                    CyxbsToast.makeText(context,
+                    CyxbsToast.makeText(requireContext(),
                         it,
                         Toast.LENGTH_LONG).show()
                 }

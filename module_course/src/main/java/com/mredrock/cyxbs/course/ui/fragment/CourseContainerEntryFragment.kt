@@ -2,7 +2,6 @@ package com.mredrock.cyxbs.course.ui.fragment
 
 import android.os.Bundle
 import android.os.Looper
-import android.util.Log
 import android.view.Gravity
 import android.view.LayoutInflater
 import android.view.View
@@ -313,14 +312,14 @@ class CourseContainerEntryFragment : BaseViewModelFragment<CoursesViewModel>(),
             viewLifecycleOwner,
             Observer { str ->
                 str?.let {
-                    CyxbsToast.makeText(activity, it, Toast.LENGTH_SHORT).show()
+                    CyxbsToast.makeText(requireContext(), it, Toast.LENGTH_SHORT).show()
                 }
             })
         viewModel.longToastEvent.observe(
             viewLifecycleOwner,
             Observer { str ->
                 str?.let {
-                    CyxbsToast.makeText(activity, it, Toast.LENGTH_LONG).show()
+                    CyxbsToast.makeText(requireContext(), it, Toast.LENGTH_LONG).show()
                 }
             })
         viewModel.isShowBackPresentWeek.observe(viewLifecycleOwner, Observer {

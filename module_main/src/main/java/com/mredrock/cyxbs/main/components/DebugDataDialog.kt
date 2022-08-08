@@ -14,7 +14,6 @@ import android.widget.Toast
 import androidx.databinding.DataBindingUtil
 import com.mredrock.cyxbs.common.component.CyxbsToast
 import com.mredrock.cyxbs.common.config.DebugDataModel
-import com.mredrock.cyxbs.main.BR.debugModel
 import com.mredrock.cyxbs.main.R
 import com.mredrock.cyxbs.main.databinding.MainDialogTestDataBindingImpl
 import kotlinx.android.synthetic.main.main_dialog_test_data.*

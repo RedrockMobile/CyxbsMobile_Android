@@ -177,7 +177,7 @@ class DiscoverHomeFragment : BaseViewModelFragment<DiscoverHomeViewModel>(), Eve
             }
             adapter = DiscoverMoreFunctionRvAdapter(picUrls, texts) {
                 if (it == functions.size - 1) {
-                    CyxbsToast.makeText(context, R.string.discover_more_function_notice_text, Toast.LENGTH_SHORT).show()
+                    CyxbsToast.makeText(requireContext(), R.string.discover_more_function_notice_text, Toast.LENGTH_SHORT).show()
                 } else {
                     functions[it].activityStarter.startActivity(context)
                 }

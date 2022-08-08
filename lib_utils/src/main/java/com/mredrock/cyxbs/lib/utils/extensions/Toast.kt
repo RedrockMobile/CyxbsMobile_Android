@@ -8,6 +8,7 @@ import android.view.View
 import android.widget.TextView
 import android.widget.Toast
 import androidx.annotation.StringRes
+import com.mredrock.cyxbs.lib.utils.BuildConfig
 import com.mredrock.cyxbs.lib.utils.R
 
 /**
@@ -44,11 +45,19 @@ class CyxbsToast {
       duration: Int
     ) {
       if (text == null) return
-      if (text.contains("java")) {
-        Throwable().printStackTrace()
-        Log.d("ggg", "(Toast.kt:48) -> !!!")
+      if (BuildConfig.DEBUG) {
+        val throwable = Throwable() // 获取堆栈信息
+        val path = throwable.stackTrace
+          .toMutableList()
+          .apply { removeFirst() }
+          .filter {
+            it.className.startsWith("com.")
+              && it.fileName?.endsWith(".kt") ?: false
+          }.map {
+            "(${it.fileName}:${it.lineNumber})"
+          }.joinToString { " <- " }
+        Log.d("toast", "toast: text = $text   path: $path")
       }
-      Log.d("ggg", "makeText: text = $text")
       val result = Toast(context)
       val inflate = context.getSystemService(Context.LAYOUT_INFLATER_SERVICE) as LayoutInflater
       val v: View = inflate.inflate(R.layout.utils_layout_toast, null)
