@@ -6,7 +6,6 @@ import com.android.build.gradle.internal.dsl.BaseAppModuleExtension
 import org.gradle.kotlin.dsl.apply
 import com.mredrock.cyxbs.convention.project.base.base.BaseAndroidProject
 import com.mredrock.cyxbs.convention.config.Config
-import com.mredrock.cyxbs.convention.depend.debugDependCodeLocator
 import com.mredrock.cyxbs.convention.depend.debugDependLeakCanary
 import com.mredrock.cyxbs.convention.depend.debugDependPandora
 import org.gradle.api.Project
@@ -25,7 +24,9 @@ abstract class BaseApplicationProject(project: Project) : BaseAndroidProject(pro
     super.initProjectInternal()
     debugDependLeakCanary() // 依赖 LeakCancry，检查内存泄漏
     debugDependPandora() // 依赖 Pandora，一个很强的手机开发辅助工具 https://www.wanandroid.com/blog/show/2526
-    debugDependCodeLocator() // 字节在用的极其强大的调试工具：https://github.com/bytedance/CodeLocator
+    
+    // CodeLocator 问题比较多，会疯狂抛被抓的异常出来，影响其他异常，所以暂时先注释
+//    debugDependCodeLocator() // 字节在用的极其强大的调试工具：https://github.com/bytedance/CodeLocator
   }
   
   protected open fun initApplication() {

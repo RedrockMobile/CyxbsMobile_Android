@@ -26,7 +26,7 @@ import io.reactivex.rxjava3.disposables.Disposable
  * @email 2767465918@qq.com
  * @date 2021/5/25
  */
-abstract class BaseFragment : OperationFragment, BaseUi, RxjavaLifecycle {
+abstract class BaseFragment : OperationFragment {
   
   constructor() : super()
   

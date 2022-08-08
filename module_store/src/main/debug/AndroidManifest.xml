@@ -5,7 +5,7 @@
     <application
         android:name="com.mredrock.cyxbs.lib.base.BaseApp"
         android:allowBackup="true"
-        android:label="module_test"
+        android:label="module_store"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
         <activity

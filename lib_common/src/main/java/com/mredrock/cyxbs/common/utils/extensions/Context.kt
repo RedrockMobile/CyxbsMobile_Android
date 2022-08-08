@@ -111,13 +111,14 @@ fun Activity.startLoginActivity(loginConfig: LoginConfig = LoginConfig(isWarnUse
     if (loginConfig.isWarnUser) {
         CyxbsToast.makeText(this, loginConfig.warnMessage, Toast.LENGTH_SHORT).show()
     }
+    
     if (loginConfig.isFinish) {
-        ILoginService::class.impl
-            .startLoginActivityReboot(this)
-    } else {
         //如果设置了重新启动activity，则传Class过去
         ILoginService::class.impl
             .startLoginActivity(this, this::class.java)
+    } else {
+        ILoginService::class.impl
+            .startLoginActivity(this, null)
     }
     overridePendingTransition(0, 0)// 取消转场动画
     if (loginConfig.isFinish) finish() // 关闭需要放在跳转之后

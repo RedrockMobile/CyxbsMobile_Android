@@ -2,6 +2,8 @@ package com.mredrock.cyxbs.lib.base.operations
 
 import androidx.annotation.LayoutRes
 import androidx.fragment.app.Fragment
+import com.mredrock.cyxbs.lib.base.ui.BaseUi
+import com.mredrock.cyxbs.lib.utils.extensions.RxjavaLifecycle
 
 /**
  * ...
@@ -9,7 +11,7 @@ import androidx.fragment.app.Fragment
  * @email guo985892345@foxmail.com
  * @date 2022/8/8 21:01
  */
-abstract class OperationFragment : Fragment {
+abstract class OperationFragment : Fragment, BaseUi, RxjavaLifecycle {
   constructor() : super()
   constructor(@LayoutRes contentLayoutId: Int) : super(contentLayoutId)
   

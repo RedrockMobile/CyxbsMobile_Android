@@ -1,4 +1,4 @@
-package com.mredrock.cyxbs.login.page.login.ui
+package com.mredrock.cyxbs.login.page.useragree
 
 import android.os.Bundle
 import android.view.View
@@ -36,13 +36,13 @@ class UserAgreeActivity : BaseActivity() {
     
         // 因为界面简单，所以就没有必要使用 ViewModel，使用最原始的保存数据就可以了
         if (savedInstanceState == null) {
-            val nowTime = System.currentTimeMillis()
+            val startTime = System.currentTimeMillis()
             CommonApiService::class.commonApi
                 .getDownMessage(DownMessageParams("zscy-main-userAgreement"))
                 .subscribeOn(Schedulers.io())
                 .delay(
                     // 有时候网路慢会转一下圈圈，但是有时候网络快，圈圈就像是闪了一下，像bug，就让它最少转一秒吧
-                    (System.currentTimeMillis() - nowTime).let { if (it > 1000) 0 else it },
+                    (System.currentTimeMillis() - startTime).let { if (it > 1000) 0 else it },
                     TimeUnit.MILLISECONDS
                 ).observeOn(AndroidSchedulers.mainThread())
                 .mapOrCatchApiException {

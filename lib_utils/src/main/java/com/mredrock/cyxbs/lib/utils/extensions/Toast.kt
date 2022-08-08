@@ -1,6 +1,7 @@
 package com.mredrock.cyxbs.lib.utils.extensions
 
 import android.content.Context
+import android.util.Log
 import android.view.Gravity
 import android.view.LayoutInflater
 import android.view.View
@@ -16,20 +17,20 @@ import com.mredrock.cyxbs.lib.utils.R
  * @date 2022/3/7 17:58
  */
 
-fun toast(s: CharSequence) {
-  CyxbsToast.makeText(appContext, s, Toast.LENGTH_SHORT).show()
+fun toast(s: CharSequence?) {
+  CyxbsToast.show(appContext, s, Toast.LENGTH_SHORT)
 }
 
-fun toastLong(s: CharSequence) {
-  CyxbsToast.makeText(appContext, s, Toast.LENGTH_LONG).show()
+fun toastLong(s: CharSequence?) {
+  CyxbsToast.show(appContext, s, Toast.LENGTH_LONG)
 }
 
 fun String.toast() = toast(this)
 fun String.toastLong() = toastLong(this)
 
 interface ToastUtils {
-  fun toast(s: CharSequence) = CyxbsToast.makeText(appContext, s, Toast.LENGTH_SHORT)
-  fun toastLong(s: CharSequence) = CyxbsToast.makeText(appContext, s, Toast.LENGTH_LONG).show()
+  fun toast(s: CharSequence?) = CyxbsToast.show(appContext, s, Toast.LENGTH_SHORT)
+  fun toastLong(s: CharSequence?) = CyxbsToast.show(appContext, s, Toast.LENGTH_LONG)
   fun String.toast() = toast(this)
   fun String.toastLong() = toastLong(this)
   fun toast(@StringRes id: Int) = toast(appContext.getString(id))
@@ -37,11 +38,17 @@ interface ToastUtils {
 
 class CyxbsToast {
   companion object {
-    fun makeText(
+    fun show(
       context: Context,
-      text: CharSequence,
+      text: CharSequence?,
       duration: Int
-    ): Toast {
+    ) {
+      if (text == null) return
+      if (text.contains("java")) {
+        Throwable().printStackTrace()
+        Log.d("ggg", "(Toast.kt:48) -> !!!")
+      }
+      Log.d("ggg", "makeText: text = $text")
       val result = Toast(context)
       val inflate = context.getSystemService(Context.LAYOUT_INFLATER_SERVICE) as LayoutInflater
       val v: View = inflate.inflate(R.layout.utils_layout_toast, null)
@@ -51,7 +58,7 @@ class CyxbsToast {
       result.view = v
       result.duration = duration
       result.setGravity(Gravity.CENTER_HORIZONTAL or Gravity.TOP, 0, height / 8)
-      return result
+      result.show()
     }
   }
 }

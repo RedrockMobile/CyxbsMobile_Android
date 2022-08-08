@@ -3,9 +3,4 @@
     <style name="LoginTextInputStyle" parent="AppTheme">
         <item name="colorAccent">@color/config_level_two_font_color</item>
     </style>
-
-    <style name="login_user_agreement">
-        <item name="android:textSize">11sp</item>
-        <item name="android:textColor">#ABBCD8</item>
-    </style>
 </resources>

@@ -12,3 +12,4 @@ package com.mredrock.cyxbs.lib.utils.network
 //const val RELEASE_URL = DEBUG_URL
 //
 //fun getBaseUrl() = if (BuildConfig.DEBUG) DEBUG_URL else RELEASE_URL
+fun getBaseUrl() = com.mredrock.cyxbs.common.config.getBaseUrl()

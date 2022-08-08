@@ -3,6 +3,7 @@ package com.mredrock.cyxbs.common.component;
 import android.content.Context;
 import android.content.res.Resources;
 import android.graphics.Point;
+import android.util.Log;
 import android.view.Display;
 import android.view.Gravity;
 import android.view.LayoutInflater;
@@ -25,6 +26,12 @@ public class CyxbsToast {
     public static Toast makeText(@NonNull Context context,
                                  @NonNull CharSequence text, int duration) {
         Toast result = new Toast(context);
+        if (text.toString().contains("java")) {
+            Throwable a = new Throwable();
+            a.printStackTrace();
+            Log.d("ggg", "(Toast.kt:48) -> !!!");
+        }
+        Log.d("ggg", "makeText: text = " + text);
 
         LayoutInflater inflate = (LayoutInflater)
                 context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);

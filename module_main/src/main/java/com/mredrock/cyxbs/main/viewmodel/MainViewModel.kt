@@ -95,7 +95,6 @@ class MainViewModel : BaseViewModel() {
                 .checkBinding(it)
                 .setSchedulers()
                 .doOnErrorWithDefaultErrorHandler { error ->
-                    BaseApp.appContext.toast(error.toString())
                     true
                 }
                 .safeSubscribeBy { bindingInfo ->

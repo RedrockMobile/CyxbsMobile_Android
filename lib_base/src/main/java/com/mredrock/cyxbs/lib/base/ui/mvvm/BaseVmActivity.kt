@@ -5,9 +5,7 @@ import androidx.lifecycle.ViewModelProvider
 import com.mredrock.cyxbs.lib.base.ui.BaseActivity
 import com.mredrock.cyxbs.lib.utils.utils.GenericityUtils.getGenericClassFromSuperClass
 
-abstract class BaseVmActivity<VM : ViewModel>(
-  private val options: Options = Options.DEFAULT
-) : BaseActivity(options) {
+abstract class BaseVmActivity<VM : ViewModel> : BaseActivity() {
   
   @Suppress("UNCHECKED_CAST")
   protected val viewModel by lazy(LazyThreadSafetyMode.NONE) {

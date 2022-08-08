@@ -218,12 +218,12 @@ object ApiGenerator {
              * 发送版本号
              */
             interceptors().add(Interceptor {
-                val response = proceedPoxyWithTryCatch {
-                    it.proceed(it.request().newBuilder()
+                it.proceed(
+                    it.request()
+                        .newBuilder()
                         .addHeader("version", BaseApp.version)
                         .build()
-                    )}
-                return@Interceptor response!!
+                )
             })
             /**
              * 连接失败时切换备用url的Interceptor

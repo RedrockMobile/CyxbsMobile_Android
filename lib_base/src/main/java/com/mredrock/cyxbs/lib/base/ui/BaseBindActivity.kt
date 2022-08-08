@@ -14,9 +14,7 @@ import com.mredrock.cyxbs.lib.utils.utils.GenericityUtils.getGenericClassFromSup
  * @email 2767465918@qq.com
  * @data 2021/6/2
  */
-abstract class BaseBindActivity<VB : ViewDataBinding>(
-  private val options: Options = Options.DEFAULT
-) : BaseActivity(options) {
+abstract class BaseBindActivity<VB : ViewDataBinding> : BaseActivity() {
   
   /**
    * 用于在调用 [setContentView] 之前的方法, 可用于设置一些主题或窗口的东西, 放这里不会报错

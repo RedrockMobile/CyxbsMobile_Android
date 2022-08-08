@@ -1,4 +1,4 @@
-package com.mredrock.cyxbs.login.page.login.ui
+package com.mredrock.cyxbs.login.page.privacy
 
 import android.annotation.SuppressLint
 import android.content.res.Configuration

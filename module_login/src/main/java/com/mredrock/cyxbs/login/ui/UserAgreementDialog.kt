@@ -20,10 +20,9 @@ import android.widget.TextView
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.DialogFragment
 import androidx.fragment.app.FragmentManager
-import com.mredrock.cyxbs.lib.base.BaseApp
 import com.mredrock.cyxbs.login.R
-import com.mredrock.cyxbs.login.page.login.ui.PrivacyActivity
-import com.mredrock.cyxbs.login.page.login.ui.UserAgreeActivity
+import com.mredrock.cyxbs.login.page.privacy.PrivacyActivity
+import com.mredrock.cyxbs.login.page.useragree.UserAgreeActivity
 
 /**
  * Author by OkAndGreat，Date on 2021/9/23.
@@ -63,7 +62,7 @@ class UserAgreementDialog : DialogFragment() {
     ): View {
         dialog?.requestWindowFeature(Window.FEATURE_NO_TITLE)
         val view = inflater.inflate(
-            R.layout.main_dialog_user_agree,
+            R.layout.login_dialog_user_agree,
             dialog?.window?.findViewById(android.R.id.content) ?: container,
             false
         )
@@ -81,18 +80,16 @@ class UserAgreementDialog : DialogFragment() {
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        val btnNegative = view.findViewById<Button>(R.id.main_dialog_btn_negative)
-        val btnPositive = view.findViewById<Button>(R.id.main_dialog_btn_positive)
-        val tvUserAgreeDetail = view.findViewById<TextView>(R.id.main_tv_dialog_content)
+        val btnNegative = view.findViewById<Button>(R.id.login_dialog_btn_negative)
+        val btnPositive = view.findViewById<Button>(R.id.login_dialog_btn_positive)
+        val tvUserAgreeDetail = view.findViewById<TextView>(R.id.login_tv_dialog_content)
 
         btnNegative.setOnClickListener {
             onNegativeClick?.invoke(this)
-            BaseApp.baseApp.privacyDenied()
         }
 
         btnPositive.setOnClickListener {
             onPositiveClick?.invoke(this)
-            BaseApp.baseApp.privacyAgree()
         }
 
         val spannableString = SpannableStringBuilder()

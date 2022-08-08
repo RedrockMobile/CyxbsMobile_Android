@@ -45,6 +45,9 @@ interface ILoginService : IProvider {
     startLoginActivity(context, launchActivityIntent, launchActivityIntent, intent)
   }
   
+  /**
+   * @param successActivity 传入 null 表示 finish 后回到之前的 Activity
+   */
   fun startLoginActivity(
     context: Context,
     successActivity: Class<out Activity>?,

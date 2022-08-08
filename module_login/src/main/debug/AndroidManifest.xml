@@ -5,7 +5,7 @@
     <application
         android:name="com.mredrock.cyxbs.lib.base.BaseApp"
         android:allowBackup="true"
-        android:label="module_test"
+        android:label="module_login"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
 
@@ -16,7 +16,15 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-
+        <activity
+            android:name=".page.login.ui.LoginActivity"
+            android:launchMode="singleTask" />
+        <activity
+            android:name=".page.privacy.PrivacyActivity"
+            android:exported="false" />
+        <activity
+            android:name=".page.useragree.UserAgreeActivity"
+            android:exported="false" />
     </application>
 
 </manifest>

@@ -14,7 +14,7 @@
         android:layout_marginEnd="16dp"
         android:gravity="start"
         android:text="登录"
-        android:textColor="@color/common_level_two_font_color"
+        android:textColor="@color/config_level_two_font_color"
         android:textSize="34sp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
@@ -29,7 +29,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="您好鸭，欢迎来到掌上重邮~"
-        android:textColor="@color/common_alpha_level_two_font_color"
+        android:textColor="@color/config_alpha_level_two_font_color"
         android:textSize="18sp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
@@ -92,9 +92,10 @@
             android:maxLength="10"
             android:selectAllOnFocus="true"
             android:singleLine="true"
-            android:textColor="@color/common_main_activity_login_et_edited_color"
-            android:textColorHint="@color/common_main_activity_login_et_hint_color"
-            android:textSize="14sp" />
+            android:textColor="@color/login_et_text_color"
+            android:textColorHint="@color/login_et_hint_color"
+            android:textSize="14sp"
+            tools:ignore="HardcodedText" />
 
     </com.google.android.material.textfield.TextInputLayout>
 
@@ -126,9 +127,10 @@
             android:maxLength="16"
             android:selectAllOnFocus="true"
             android:singleLine="true"
-            android:textColor="@color/common_main_activity_login_et_edited_color"
-            android:textColorHint="@color/common_main_activity_login_et_hint_color"
-            android:textSize="14sp" />
+            android:textColor="@color/login_et_text_color"
+            android:textColorHint="@color/login_et_hint_color"
+            android:textSize="14sp"
+            tools:ignore="HardcodedText" />
 
     </com.google.android.material.textfield.TextInputLayout>
 
@@ -140,7 +142,7 @@
         android:layout_marginStart="33dp"
         android:layout_marginTop="48dp"
         android:layout_marginEnd="33dp"
-        android:background="@drawable/common_toolbar_background"
+        android:background="@drawable/login_ic_btn_login_background"
         android:text="登 录"
         android:textColor="#FFFFFF"
         android:textSize="18sp"
@@ -166,7 +168,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="没有学号么？"
-            android:textColor="@color/common_log_in_to_the_gray_font_below"
+            android:textColor="#ABBCD8"
             android:textSize="13sp"
             tools:ignore="HardcodedText" />
 
@@ -176,7 +178,7 @@
             android:layout_height="wrap_content"
             android:layout_toEndOf="@+id/login_tv_tourist_mode"
             android:text="游客模式吧"
-            android:textColor="@color/common_log_in_by_tourist_text_enter_color"
+            android:textColor="@color/login_tv_text_tourist"
             android:textSize="13sp"
             tools:ignore="HardcodedText" />
     </RelativeLayout>
@@ -195,12 +197,13 @@
 
     <TextView
         android:id="@+id/login_tv_user_agreement"
-        style="@style/login_user_agreement"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="16dp"
         android:layout_marginTop="32dp"
         android:text="同意《用户协议》和《隐私权政策》"
+        android:textSize="11sp"
+        android:textColor="#ABBCD8"
         app:layout_constraintStart_toEndOf="@+id/login_lav_check"
         app:layout_constraintTop_toBottomOf="@+id/login_et_password_container"
         tools:ignore="HardcodedText" />
@@ -224,7 +227,7 @@
         android:layout_height="wrap_content"
         android:layout_marginEnd="22dp"
         android:text="忘记密码？"
-        android:textColor="@color/common_log_in_to_the_gray_font_below"
+        android:textColor="#ABBCD8"
         android:textSize="12sp"
         app:layout_constraintBottom_toBottomOf="@+id/login_tv_user_agreement"
         app:layout_constraintEnd_toEndOf="parent"

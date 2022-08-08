@@ -33,15 +33,17 @@ class LoginViewModel : BaseViewModel() {
 
     fun login(stuNum: String, password: String) {
         if (isLanding) return
-        val nowTime = System.currentTimeMillis()
+        isLanding = true
+        val startTime = System.currentTimeMillis()
         Completable.create {
             IAccountService::class.impl
                 .getVerifyService()
                 .login(appContext, stuNum, password)
+            it.onComplete()
         }.subscribeOn(Schedulers.io())
             .delay(
                 // 网络太快会闪一下，像bug，就让它最少待一秒吧
-                (System.currentTimeMillis() - nowTime).let { if (it > 1000) 0 else it },
+                (System.currentTimeMillis() - startTime).let { if (it > 1000) 0 else it },
                 TimeUnit.MILLISECONDS
             ).observeOn(AndroidSchedulers.mainThread())
             .doOnComplete {
@@ -53,6 +55,10 @@ class LoginViewModel : BaseViewModel() {
                     is UnknownHostException -> toast("网络中断，请检查您的网络状态")
                     is HttpException -> toast("登录服务暂时不可用")
                     is IllegalStateException -> toast("登录失败：学号或者密码错误,请检查输入")
+//                    is RuntimeException -> {
+//                        toast(it.message)
+//                        Log.d("ggg", "(LoginViewModel.kt:60) -> message = ${it.message}")
+//                    }
                 }
                 viewModelScope.launch {
                     _loginEvent.emit(false)

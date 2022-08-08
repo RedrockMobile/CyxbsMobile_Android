@@ -25,7 +25,7 @@ import kotlinx.android.synthetic.main.mine_activity_forget_password.*
 class ForgetPasswordActivity : BaseViewModelActivity<ForgetPasswordViewModel>() {
     private var stuNumber = ""
     private var canClick = true
-
+    
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.mine_activity_forget_password)

@@ -27,9 +27,23 @@ import io.reactivex.rxjava3.disposables.Disposable
  * @email 2767465918@qq.com
  * @date 2021/5/25
  */
-abstract class BaseActivity(
-  private val options: Options = Options.DEFAULT
-) : OperationActivity(options), BaseUi, RxjavaLifecycle {
+abstract class BaseActivity : OperationActivity() {
+  
+  /**
+   * 是否锁定竖屏
+   */
+  protected open val isPortraitScreen: Boolean
+    get() = true
+  
+  /**
+   * 是否沉浸式状态栏
+   *
+   * 注意，沉浸式后，状态栏不会再有东西占位，界面会默认上移，
+   * 可以给根布局加上 android:fitsSystemWindows=true，
+   * 不同布局该属性效果不同，请给合适的布局添加
+   */
+  protected open val isCancelStatusBar: Boolean
+    get() = true
   
   /**
    * 是否处于转屏或异常重建后的 Activity 状态
@@ -42,11 +56,11 @@ abstract class BaseActivity(
   override fun onCreate(savedInstanceState: Bundle?) {
     mIsActivityRebuilt = savedInstanceState != null
     super.onCreate(savedInstanceState)
-    if (options.isPortraitScreen) { // 锁定竖屏
+    if (isPortraitScreen) { // 锁定竖屏
       requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_PORTRAIT
     }
     
-    if (options.isCancelStatusBar) { // 沉浸式状态栏
+    if (isCancelStatusBar) { // 沉浸式状态栏
       cancelStatusBar()
     }
   }
@@ -118,44 +132,4 @@ abstract class BaseActivity(
     get() = window.decorView
   
   final override fun getViewLifecycleOwner(): LifecycleOwner = this
-  
-  /**
-   * Activity 构造时的可选项，写在这里主要是为了集中管理，以前学长是采取重写方法来实现的，
-   * 我不是很认同这种写法，这种只用一次的简单变量应该在构造的时候就直接传入，并且重写的话以后人来重构代码很容易被忽略掉
-   *
-   * 使用接口主要是为了更好的继承
-   *
-   * 有以下几点需要遵守：
-   * - 变量类型不能过于复杂，尽量为 Boolean、String、Int 等简单类型，且不可变 val
-   * - 需要提供默认参数
-   * - 子类可以继承该接口，然后填充需要的额外参数，使用时请使用 [OptionsImpl]，子类建议使用 kt 的 by 接口 来简化
-   */
-  interface Options : OperationActivity.Options {
-    /**
-     * 是否锁定竖屏
-     */
-    val isPortraitScreen: Boolean
-      get() = true
-  
-    /**
-     * 是否沉浸式状态栏
-     *
-     * 注意，沉浸式后，状态栏不会再有东西占位，界面会默认上移，
-     * 可以给根布局加上 android:fitsSystemWindows=true，
-     * 不同布局该属性效果不同，请给合适的布局添加
-     */
-    val isCancelStatusBar: Boolean
-      get() = true
-    
-    companion object {
-      val DEFAULT = object : Options {}
-    }
-  }
-  
-  open class OptionsImpl(
-    override val isCheckLogin: Boolean = true,
-    override val isShowToastIfNoLogin: Boolean = true,
-    override val isCancelStatusBar: Boolean = true,
-    override val isPortraitScreen: Boolean = true
-  ) : Options
 }

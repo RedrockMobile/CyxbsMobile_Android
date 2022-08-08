@@ -12,9 +12,7 @@ import com.mredrock.cyxbs.lib.utils.utils.GenericityUtils.getGenericClassFromSup
  * @email 2767465918@qq.com
  * @data 2021/6/2
  */
-abstract class BaseVmBindActivity<VM : ViewModel, VB : ViewDataBinding>(
-  private val options: Options = Options.DEFAULT
-) : BaseBindActivity<VB>(options) {
+abstract class BaseVmBindActivity<VM : ViewModel, VB : ViewDataBinding> : BaseBindActivity<VB>() {
   
   @Suppress("UNCHECKED_CAST")
   protected val viewModel by lazy(LazyThreadSafetyMode.NONE) {

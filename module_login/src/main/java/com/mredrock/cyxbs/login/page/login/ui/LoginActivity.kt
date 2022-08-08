@@ -22,6 +22,7 @@ import android.widget.TextView
 import androidx.core.content.ContextCompat
 import androidx.core.content.edit
 import androidx.core.view.get
+import androidx.core.view.postDelayed
 import com.airbnb.lottie.LottieAnimationView
 import com.alibaba.android.arouter.launcher.ARouter
 import com.mredrock.cyxbs.api.account.IAccountService
@@ -29,17 +30,18 @@ import com.mredrock.cyxbs.config.route.MINE_FORGET_PASSWORD
 import com.mredrock.cyxbs.config.sp.SP_FIRST_TIME_OPEN
 import com.mredrock.cyxbs.config.sp.SP_PRIVACY_AGREED
 import com.mredrock.cyxbs.config.sp.defaultSp
+import com.mredrock.cyxbs.lib.base.BaseApp
 import com.mredrock.cyxbs.lib.base.ui.mvvm.BaseVmActivity
 import com.mredrock.cyxbs.lib.utils.extensions.lazyUnlock
 import com.mredrock.cyxbs.lib.utils.extensions.setOnSingleClickListener
 import com.mredrock.cyxbs.lib.utils.service.impl
 import com.mredrock.cyxbs.login.R
 import com.mredrock.cyxbs.login.page.login.viewmodel.LoginViewModel
+import com.mredrock.cyxbs.login.page.privacy.PrivacyActivity
+import com.mredrock.cyxbs.login.page.useragree.UserAgreeActivity
 import com.mredrock.cyxbs.login.ui.UserAgreementDialog
 
-class LoginActivity : BaseVmActivity<LoginViewModel>(
-    OptionsImpl()
-) {
+class LoginActivity : BaseVmActivity<LoginViewModel>() {
     companion object {
         
         private const val INTENT_TARGET = "intent_target"
@@ -112,7 +114,15 @@ class LoginActivity : BaseVmActivity<LoginViewModel>(
                 IAccountService::class.impl
                     .getVerifyService()
                     .loginByTourist()
-                startActivity(mIntentTouristMode)
+                it.postDelayed(100) {
+                    // 延迟一下，因为 sp 读取属性没得这么快，不然检测到仍未登录，会直接关闭应用
+                    startActivity(
+                        mIntentTouristMode
+                            .addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK) // 清除掉其他 Activity
+                            .addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+                    )
+                    finish()
+                }
             }
         }
         //跳转到忘记密码模块
@@ -193,6 +203,7 @@ class LoginActivity : BaseVmActivity<LoginViewModel>(
             val stuNum = mEtAccount.text?.toString() ?: ""
             val password = mEtPassword.text?.toString() ?: ""
             if (checkDataCorrect(stuNum, password)) {
+                changeUiState()
                 viewModel.login(stuNum, password)
             }
         } else {
@@ -205,10 +216,6 @@ class LoginActivity : BaseVmActivity<LoginViewModel>(
      */
     private fun agreeToUserAgreement() {
         toast("请先同意用户协议吧")
-    }
-
-    override fun onBackPressed() {
-        finishAffinity() // 摧毁该 Activity 栈下所有 Activity，意思就是直接退出应用，但在有些手机上无效
     }
     
     // 这个方法可以在登录状态和未登录状态之间切换
@@ -228,10 +235,15 @@ class LoginActivity : BaseVmActivity<LoginViewModel>(
         UserAgreementDialog.show(
             supportFragmentManager,
             onNegativeClick = {
+                viewModel.userAgreementIsCheck = false
+                BaseApp.baseApp.privacyDenied()
                 dismiss()
                 finish()
             },
             onPositiveClick = {
+                viewModel.userAgreementIsCheck = true
+                mLavCheck.playAnimation()
+                BaseApp.baseApp.privacyAgree()
                 dismiss()
                 defaultSp.edit {
                     putBoolean(SP_FIRST_TIME_OPEN, false)
@@ -245,11 +257,11 @@ class LoginActivity : BaseVmActivity<LoginViewModel>(
     private fun checkDataCorrect(stuNum: String, idNum: String): Boolean {
         if (stuNum.length < 10) {
             toast("请检查一下学号吧，似乎有点问题")
-            return true
+            return false
         } else if (idNum.length < 6) {
             toast("请检查一下密码吧，似乎有点问题")
-            return true
+            return false
         }
-        return false
+        return true
     }
 }
