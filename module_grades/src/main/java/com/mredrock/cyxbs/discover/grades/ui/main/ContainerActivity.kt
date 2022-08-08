@@ -6,23 +6,28 @@ import android.content.res.Configuration
 import android.os.Bundle
 import android.view.View
 import android.webkit.WebSettings
+import android.widget.TextView
+import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentTransaction
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import com.alibaba.android.arouter.facade.annotation.Route
 import com.bumptech.glide.Glide
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.mredrock.cyxbs.api.account.IAccountService
 import com.mredrock.cyxbs.api.account.IUserService
 import com.mredrock.cyxbs.common.bean.LoginConfig
+import com.mredrock.cyxbs.common.component.JCardViewPlus
 import com.mredrock.cyxbs.common.config.DISCOVER_GRADES
 import com.mredrock.cyxbs.common.service.ServiceManager
 import com.mredrock.cyxbs.common.ui.BaseActivity
 import com.mredrock.cyxbs.common.utils.extensions.pressToZoomOut
 import com.mredrock.cyxbs.common.utils.extensions.setOnSingleClickListener
+import com.mredrock.cyxbs.common.webView.LiteJsWebView
 import com.mredrock.cyxbs.discover.grades.R
 import com.mredrock.cyxbs.discover.grades.bean.Exam
 import com.mredrock.cyxbs.discover.grades.bean.analyze.isSuccessful
@@ -31,9 +36,7 @@ import com.mredrock.cyxbs.discover.grades.ui.fragment.GPAFragment
 import com.mredrock.cyxbs.discover.grades.ui.fragment.NoBindFragment
 import com.mredrock.cyxbs.discover.grades.ui.viewModel.ContainerViewModel
 import com.mredrock.cyxbs.discover.grades.utils.extension.dp2px
-import kotlinx.android.synthetic.main.grades_activity_container.*
-import kotlinx.android.synthetic.main.grades_bottom_sheet.*
-import kotlinx.android.synthetic.main.grades_bottom_sheet.view.*
+import de.hdodenhof.circleimageview.CircleImageView
 
 
 /**
@@ -68,8 +71,15 @@ class ContainerActivity : BaseActivity() {
     private lateinit var mAdapter: ExamAdapter
     private val data = mutableListOf<Exam>()
 
-    //grades
-    private lateinit var parent: View
+
+    private val mTvGradesNoBind by R.id.tv_grades_no_bind.view<TextView>()
+    private val mRvExamMain by R.id.rv_exam_main.view<RecyclerView>()
+    private val mTvGradesStuNum by R.id.tv_grades_stuNum.view<TextView>()
+    private val parent by R.id.fl_grades_bottom_sheet.view<JCardViewPlus>()
+    private val mTvGradesName by R.id.tv_grades_name.view<TextView>()
+    private val mWvExamMain by R.id.wv_exam_main.view<LiteJsWebView>()
+    private val mFlGradesHeader by R.id.fl_grades_header.view<ConstraintLayout>()
+    private val mIvGradesAvatar by R.id.iv_grades_avatar.view<CircleImageView>()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -102,7 +112,7 @@ class ContainerActivity : BaseActivity() {
         viewModel.getAnalyzeData()
     }
 
-    override fun onNewIntent(intent: Intent?) {
+    override fun onNewIntent(intent: Intent) {
         super.onNewIntent(intent)
         initExam()
         initBottomSheet()
@@ -121,7 +131,7 @@ class ContainerActivity : BaseActivity() {
     private fun initObserver() {
         viewModel.bottomStateListener.observe(this@ContainerActivity, Observer {
             if (it == true) {
-                val behavior = BottomSheetBehavior.from(fl_grades_bottom_sheet)
+                val behavior = BottomSheetBehavior.from(parent)
                 if (behavior.state == BottomSheetBehavior.STATE_COLLAPSED)
                     behavior.state = BottomSheetBehavior.STATE_EXPANDED
             }
@@ -131,14 +141,14 @@ class ContainerActivity : BaseActivity() {
                 if (typeOfFragment != IS_GPA_FRAGMENT) {
                     // 绑定成功，可解除绑定
                     typeOfFragment = IS_GPA_FRAGMENT
-                    tv_grades_no_bind.text = getString(R.string.grades_unbind_stdNum)
+                    mTvGradesNoBind.text = getString(R.string.grades_unbind_stdNum)
                     replaceFragment(GPAFragment())
                 }
             } else {
                 if (typeOfFragment != IS_BIND_FRAGMENT) {
                     // 未绑定
                     typeOfFragment = IS_BIND_FRAGMENT
-                    tv_grades_no_bind.text = getString(R.string.grades_no_bind_stdNum)
+                    mTvGradesNoBind.text = getString(R.string.grades_no_bind_stdNum)
                     replaceFragment(NoBindFragment())
                 }
             }
@@ -148,18 +158,18 @@ class ContainerActivity : BaseActivity() {
         viewModel.isBinding.observe(this, Observer {
             if (it) {
                 // 当前已绑定账号，点击解绑
-                tv_grades_no_bind.setOnSingleClickListener {
+                mTvGradesNoBind.setOnSingleClickListener {
                     // 解除绑定按钮的点击事件
                     viewModel.unbindIds {
                         // 解绑成功后的操作
-                        tv_grades_no_bind.text = getString(R.string.grades_no_bind_stdNum)
+                        mTvGradesNoBind.text = getString(R.string.grades_no_bind_stdNum)
                         typeOfFragment = IS_BIND_FRAGMENT
                         replaceFragment(NoBindFragment())
                     }
                 }
             } else {
                 // 当前未绑定账号，点击前往绑定账号界面
-                tv_grades_no_bind.setOnSingleClickListener { v ->
+                mTvGradesNoBind.setOnSingleClickListener { v ->
                     v.pressToZoomOut()
                     val intent = Intent(this, BindActivity::class.java)
                     this.startActivity(intent)
@@ -170,13 +180,9 @@ class ContainerActivity : BaseActivity() {
 
     private fun initExam() {
         viewModel.getStatus()
-        mAdapter = ExamAdapter(
-            this@ContainerActivity,
-            data,
-            intArrayOf(R.layout.grades_item_init, R.layout.grades_item_exam)
-        )
-        rv_exam_main.adapter = mAdapter
-        rv_exam_main.layoutManager = LinearLayoutManager(this@ContainerActivity)
+        mAdapter = ExamAdapter(data)
+        mRvExamMain.adapter = mAdapter
+        mRvExamMain.layoutManager = LinearLayoutManager(this@ContainerActivity)
 
         //观察数据
         viewModel.examData.observe(this@ContainerActivity, Observer { list ->
@@ -186,8 +192,8 @@ class ContainerActivity : BaseActivity() {
 
         viewModel.nowStatus.observe(this@ContainerActivity, Observer { status ->
             if (status.examModel == "magipoke") {
-                rv_exam_main.visibility = View.VISIBLE
-                wv_exam_main.visibility = View.GONE
+                mRvExamMain.visibility = View.VISIBLE
+                mWvExamMain.visibility = View.GONE
                 loadExam()
             } else {
                 loadH5(status.url)
@@ -201,7 +207,6 @@ class ContainerActivity : BaseActivity() {
     }
 
     private fun initBottomSheet() {
-        parent = fl_grades_bottom_sheet
         initHeader()
         initBehavior()
     }
@@ -210,15 +215,15 @@ class ContainerActivity : BaseActivity() {
         val behavior = BottomSheetBehavior.from(parent)
         parent.post {
             behavior.isHideable = false
-            behavior.peekHeight = fl_grades_header.height + dp2px(45)
-            rv_exam_main.setPadding(0, 0, 0, fl_grades_header.height)
+            behavior.peekHeight = mFlGradesHeader.height + dp2px(45)
+            mRvExamMain.setPadding(0, 0, 0, mFlGradesHeader.height)
         }
     }
 
     private fun initHeader() {
-        Glide.with(this).load(user.getAvatarImgUrl()).into(parent.iv_grades_avatar)
-        parent.tv_grades_stuNum.text = user.getStuNum()
-        parent.tv_grades_name.text = user.getRealName()
+        Glide.with(this).load(user.getAvatarImgUrl()).into(mIvGradesAvatar)
+        mTvGradesStuNum.text = user.getStuNum()
+        mTvGradesName.text = user.getRealName()
     }
 
     private fun replaceFragment(fragment: Fragment) {
@@ -230,7 +235,7 @@ class ContainerActivity : BaseActivity() {
 
 
     override fun onBackPressed() {
-        val behavior = BottomSheetBehavior.from(fl_grades_bottom_sheet)
+        val behavior = BottomSheetBehavior.from(parent)
         if (behavior.state == BottomSheetBehavior.STATE_EXPANDED) {
             behavior.state = BottomSheetBehavior.STATE_COLLAPSED
         } else {
@@ -240,11 +245,11 @@ class ContainerActivity : BaseActivity() {
 
     @SuppressLint("SetJavaScriptEnabled")
     private fun loadH5(baseUrl: String) {
-        rv_exam_main.visibility = View.GONE
-        wv_exam_main.visibility = View.VISIBLE
+        mRvExamMain.visibility = View.GONE
+        mWvExamMain.visibility = View.VISIBLE
         //H5使用Vue，需要开启js
-        wv_exam_main.setBackgroundColor(0)
-        wv_exam_main.settings.apply {
+        mWvExamMain.setBackgroundColor(0)
+        mWvExamMain.settings.apply {
             javaScriptEnabled = true
             domStorageEnabled = true
             useWideViewPort = true
@@ -263,6 +268,6 @@ class ContainerActivity : BaseActivity() {
                 == Configuration.UI_MODE_NIGHT_YES
             ) 1 else 0
         val url = "$baseUrl/?stuNum=$stuNum&uiType=$uiType"
-        wv_exam_main.loadUrl(url)
+        mWvExamMain.loadUrl(url)
     }
 }

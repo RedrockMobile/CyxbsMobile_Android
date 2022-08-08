@@ -1,10 +1,14 @@
 package com.mredrock.cyxbs.spi
 
-import android.app.ActivityManager
+import android.annotation.SuppressLint
 import android.app.Application
 import android.os.Process
+import android.provider.Settings
+import android.text.TextUtils
 import com.mredrock.cyxbs.BuildConfig
-import com.mredrock.cyxbs.common.utils.getProcessName
+import com.mredrock.cyxbs.lib.utils.utils.getProcessName
+import java.lang.reflect.InvocationTargetException
+import java.lang.reflect.Method
 
 /**
  *@author ZhiQiang Tu
@@ -31,4 +35,40 @@ interface SdkManager {
     fun applicationId() = BuildConfig.APPLICATION_ID
     fun applicationVersion() = BuildConfig.VERSION_NAME
     fun applicationCode() = BuildConfig.VERSION_CODE
+    
+    /*
+     * 使用 androidId 来代替设备 id
+     * android id 会在设备重置后还原，并且不具有唯一性
+     * 但都重置系统了，可以不用管这么多
+     * */
+    fun getAndroidID(): String {
+        return Settings.Secure.getString(application.contentResolver, Settings.Secure.ANDROID_ID)
+    }
+    
+    /*
+    * 获取设备型号
+    * 小米：https://dev.mi.com/console/doc/detail?pId=2226
+    * */
+    @SuppressLint("PrivateApi")
+    fun getDeviceModel(): String {
+        var deviceName = ""
+        try {
+            val systemProperties = Class.forName("android.os.SystemProperties")
+            val get: Method =
+                systemProperties.getDeclaredMethod("get", String::class.java, String::class.java)
+            deviceName = get.invoke(systemProperties, "ro.product.marketname", "") as String
+            if (TextUtils.isEmpty(deviceName)) {
+                deviceName = get.invoke(systemProperties, "ro.product.model", "") as String
+            }
+        } catch (e: InvocationTargetException) {
+            e.printStackTrace()
+        } catch (e: NoSuchMethodException) {
+            e.printStackTrace()
+        } catch (e: IllegalAccessException) {
+            e.printStackTrace()
+        } catch (e: ClassNotFoundException) {
+            e.printStackTrace()
+        }
+        return "设备型号: $deviceName"
+    }
 }

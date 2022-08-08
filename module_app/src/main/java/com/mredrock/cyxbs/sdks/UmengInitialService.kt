@@ -1,11 +1,10 @@
 package com.mredrock.cyxbs.sdks
 
-import android.util.Log
 import com.google.auto.service.AutoService
 import com.mredrock.cyxbs.BuildConfig
-import com.mredrock.cyxbs.common.BaseApp
-import com.mredrock.cyxbs.common.utils.LogUtils
-import com.mredrock.cyxbs.common.utils.extensions.safeSubscribeBy
+import com.mredrock.cyxbs.lib.utils.extensions.appContext
+import com.mredrock.cyxbs.lib.utils.extensions.unsafeSubscribeBy
+import com.mredrock.cyxbs.lib.utils.utils.LogUtils
 import com.mredrock.cyxbs.spi.SdkService
 import com.mredrock.cyxbs.spi.SdkManager
 import com.umeng.commonsdk.UMConfigure
@@ -31,11 +30,11 @@ class UmengInitialService : SdkService {
             UMConfigure.setLogEnabled(true)
         }
         //预初始化 等待隐私策略同意后才进行真正的初始化
-        UMConfigure.preInit(BaseApp.appContext, BuildConfig.UM_APP_KEY, UMENG_CHANNEL)
+        UMConfigure.preInit(appContext, BuildConfig.UM_APP_KEY, UMENG_CHANNEL)
     }
 
     override fun onSdkProcess(manager: SdkManager) {
-        Log.e("TAG", "onSdkProcess: \ncurrentProcess${manager.currentProcessName()}\n")
+        LogUtils.e("TAG", "onSdkProcess: \ncurrentProcess${manager.currentProcessName()}\n")
         initUmengPush(manager)
     }
 
@@ -45,7 +44,7 @@ class UmengInitialService : SdkService {
     override fun onPrivacyAgreed(manager: SdkManager) {
         Observable.just(Unit)
             .subscribeOn(Schedulers.io())
-            .safeSubscribeBy {
+            .unsafeSubscribeBy {
                 initUmengPush(manager)
                 initUmengAnalyse(manager)
             }

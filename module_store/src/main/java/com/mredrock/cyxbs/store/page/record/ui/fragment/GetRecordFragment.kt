@@ -6,14 +6,12 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
-import androidx.lifecycle.Observer
-import androidx.lifecycle.ViewModelProvider
+import androidx.fragment.app.activityViewModels
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.mredrock.cyxbs.common.ui.BaseFragment
-import com.mredrock.cyxbs.common.utils.extensions.toast
+import com.mredrock.cyxbs.lib.base.ui.BaseFragment
 import com.mredrock.cyxbs.store.R
-import com.mredrock.cyxbs.common.utils.SimpleRvAdapter
+import com.mredrock.cyxbs.store.utils.SimpleRvAdapter
 import com.mredrock.cyxbs.store.bean.StampGetRecord
 import com.mredrock.cyxbs.store.page.record.ui.item.GetPageItem
 import com.mredrock.cyxbs.store.page.record.ui.item.ProgressBarItem
@@ -29,9 +27,7 @@ import com.mredrock.cyxbs.store.utils.dp2px
  */
 class GetRecordFragment : BaseFragment() {
     // 因为我只需要 Activity 的 ViewModel, 所以没有继承于 BaseViewModelFragment
-    private val viewModel by lazy(LazyThreadSafetyMode.NONE) {
-        ViewModelProvider(requireActivity()).get(RecordViewModel::class.java)
-    }
+    private val viewModel by activityViewModels<RecordViewModel>()
 
     private lateinit var mRecyclerView: RecyclerView
     private lateinit var mImageView: ImageView
@@ -58,24 +54,23 @@ class GetRecordFragment : BaseFragment() {
     }
 
     private fun initObserve() {
-        viewModel.mFirstPageGetRecordIsSuccessful.observe(viewLifecycleOwner, Observer {
-            if (!it) { showNoInterceptImage() }
-        })
-        viewModel.mFirstPageStampGetRecord.observe(viewLifecycleOwner, Observer {
+        viewModel.firstPageGetRecordIsSuccessful.observe {
+            if (!it) {
+                showNoInterceptImage()
+            }
+        }
+        viewModel.pageStampGetRecord.observe {
             if (it.isEmpty()) {
                 mImageView.setImageResource(R.drawable.store_ic_fragment_record_get_null)
                 mTextView.text = "还没有获取记录，快去做任务吧"
-            }else {
+            } else {
                 setPageGetAdapter(it)
             }
-        })
-        viewModel.mNestPageGetRecordIsSuccessful.observe(viewLifecycleOwner, Observer {
+        }
+        viewModel.nestPageGetRecordIsSuccessful.observe {
             if (!it) {
-                context?.toast("获取更多记录失败")
-                mProgressBarItem.hideProgressBarWhenNoMoreData() // 取消 ProgressBar 动画
+                toast("获取更多记录失败")
             }
-        })
-        viewModel.mHaveNotMoreNestGetRecord = {
             mProgressBarItem.hideProgressBarWhenNoMoreData() // 取消 ProgressBar 动画
         }
     }

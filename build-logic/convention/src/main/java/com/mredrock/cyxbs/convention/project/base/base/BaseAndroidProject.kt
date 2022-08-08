@@ -74,10 +74,9 @@ abstract class BaseAndroidProject(project: Project) : BaseProject(project) {
     buildTypes {
       release {
         isMinifyEnabled = true
-//        isShrinkResources = true
         proguardFiles(
           getDefaultProguardFile("proguard-android-optimize.txt"),
-          rootDir.resolve("build-logic")
+          rootDir.resolve("build_logic")
             .resolve("convention")
             .resolve("proguard-rules.pro")
         )
@@ -87,11 +86,10 @@ abstract class BaseAndroidProject(project: Project) : BaseProject(project) {
         }
       }
       debug {
-        isMinifyEnabled = true
-//        isShrinkResources = false
+        isMinifyEnabled = false
         proguardFiles(
           getDefaultProguardFile("proguard-android-optimize.txt"),
-          rootDir.resolve("build-logic")
+          rootDir.resolve("build_logic")
             .resolve("convention")
             .resolve("proguard-rules.pro")
         )
@@ -120,6 +118,9 @@ abstract class BaseAndroidProject(project: Project) : BaseProject(project) {
     (this as ExtensionAware).extensions.configure<KotlinJvmOptions> {
       jvmTarget = "1.8"
     }
+    
+    // 命名规范设置，因为多模块相同资源名在打包时会合并，所以必须强制开启
+    resourcePrefix = project.name.substringAfter("_")
   }
   
   /**

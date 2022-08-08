@@ -54,7 +54,7 @@ abstract class IAndroidWebView(
 
     /**
      * 通过@Arouter进行端内跳转
-     * 传入 RoutingTable.kt 表中的路徑
+     * 传入 RouteTable.kt 表中的路徑
      */
     @JavascriptInterface
     open fun jumpARouter(arouterPath: String) {

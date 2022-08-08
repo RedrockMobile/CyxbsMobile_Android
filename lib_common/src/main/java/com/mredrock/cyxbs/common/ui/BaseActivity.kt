@@ -7,7 +7,6 @@ import android.graphics.Color
 import android.os.Build
 import android.os.Bundle
 import android.os.PersistableBundle
-import android.view.Menu
 import android.view.View
 import androidx.annotation.CallSuper
 import androidx.annotation.DrawableRes
@@ -231,5 +230,5 @@ abstract class BaseActivity : AppCompatActivity() {
      *    kt 插件(被废弃) > 属性代理 > ButterKnife(被废弃) > DataBinding > ViewBinding
      * ```
      */
-    protected fun <T: View> Int.view() = BindView<T>(this, { window.decorView }, { lifecycle })
+    protected fun <T: View> Int.view() = BindView<T>(this, BindView.GetActivity { this@BaseActivity })
 }

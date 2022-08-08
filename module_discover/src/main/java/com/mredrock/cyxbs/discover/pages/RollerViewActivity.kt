@@ -27,11 +27,11 @@ import com.mredrock.cyxbs.common.config.DIR_PHOTO
 import com.mredrock.cyxbs.common.ui.BaseActivity
 import com.mredrock.cyxbs.common.utils.extensions.*
 import com.mredrock.cyxbs.common.webView.IAndroidWebView
+import com.mredrock.cyxbs.common.webView.LiteJsWebView
 import com.mredrock.cyxbs.common.webView.WebViewBaseCallBack
 import com.mredrock.cyxbs.discover.R
 import com.mredrock.cyxbs.discover.network.RollerViewInfo
 import com.mredrock.cyxbs.discover.pages.discover.webView.WebViewFactory
-import kotlinx.android.synthetic.main.discover_activity_roller_view.*
 
 
 class RollerViewActivity : BaseActivity() {
@@ -54,6 +54,8 @@ class RollerViewActivity : BaseActivity() {
     //传感器(方便remove)
     private val sm: SensorManager? = null
     private var sensorEventListeners: ArrayList<SensorEventListener>? = null
+    
+    private val discover_web_view by R.id.discover_web_view.view<LiteJsWebView>()
 
     @SuppressLint("SetJavaScriptEnabled")
     override fun onCreate(savedInstanceState: Bundle?) {

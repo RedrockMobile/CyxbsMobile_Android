@@ -2,9 +2,9 @@ package com.mredrock.cyxbs
 
 import android.app.Application
 import androidx.annotation.Keep
-import com.mredrock.cyxbs.common.BaseApp
-import com.mredrock.cyxbs.common.config.PRIVACY_AGREED
-import com.mredrock.cyxbs.common.utils.extensions.defaultSharedPreferences
+import com.mredrock.cyxbs.config.sp.PRIVACY_AGREED
+import com.mredrock.cyxbs.config.sp.defaultSp
+import com.mredrock.cyxbs.lib.base.BaseApp
 import com.mredrock.cyxbs.spi.SdkService
 import com.mredrock.cyxbs.spi.SdkManager
 import java.util.*
@@ -44,13 +44,13 @@ class App : BaseApp(), SdkManager {
             it.onMainProcess(this)
         }
         //同意了隐私策略
-        if (defaultSharedPreferences.getBoolean(PRIVACY_AGREED,false) && isMainProcess()) {
+        if (defaultSp.getBoolean(PRIVACY_AGREED, false) && isMainProcess()) {
             loader.forEach {
                 it.onPrivacyAgreed(this)
             }
         }
     }
-
+    
     //隐私策略同意了
     override fun privacyAgree(){
         loader.forEach {

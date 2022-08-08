@@ -1,6 +1,7 @@
 package com.mredrock.cyxbs.store.page.center.ui.activity
 
 import android.annotation.SuppressLint
+import android.content.Intent
 import android.os.Bundle
 import android.widget.ImageButton
 import android.widget.ImageView
@@ -10,15 +11,16 @@ import androidx.viewpager2.widget.ViewPager2
 import com.alibaba.android.arouter.facade.annotation.Route
 import com.google.android.material.tabs.TabLayout
 import com.google.android.material.tabs.TabLayoutMediator
-import com.mredrock.cyxbs.common.config.STORE_ENTRY
-import com.mredrock.cyxbs.common.ui.BaseViewModelActivity
-import com.mredrock.cyxbs.common.utils.extensions.*
+import com.mredrock.cyxbs.config.route.STORE_ENTRY
+import com.mredrock.cyxbs.lib.base.ui.mvvm.BaseVmActivity
+import com.mredrock.cyxbs.lib.utils.extensions.setOnSingleClickListener
 import com.mredrock.cyxbs.store.R
 import com.mredrock.cyxbs.store.base.BaseFragmentVPAdapter
 import com.mredrock.cyxbs.store.page.center.ui.fragment.StampShopFragment
 import com.mredrock.cyxbs.store.page.center.ui.fragment.StampTaskFragment
 import com.mredrock.cyxbs.store.page.center.viewmodel.StoreCenterViewModel
 import com.mredrock.cyxbs.store.page.record.ui.activity.StampDetailActivity
+import com.mredrock.cyxbs.store.utils.dp2pxF
 import com.mredrock.cyxbs.store.utils.getColor2
 import com.mredrock.cyxbs.store.utils.widget.SlideUpLayout
 import com.mredrock.cyxbs.store.utils.widget.TextRollView
@@ -32,7 +34,7 @@ import com.mredrock.cyxbs.store.utils.transformer.ScaleInTransformer
  * @date 2021/8/7
  */
 @Route(path = STORE_ENTRY)
-class StoreCenterActivity : BaseViewModelActivity<StoreCenterViewModel>() {
+class StoreCenterActivity : BaseVmActivity<StoreCenterViewModel>() {
 
     private lateinit var mTvStampBigNumber: TextRollView // 邮票中心首页最大的邮票数字
     private lateinit var mTvStampSideNumber: TextView // 邮票中心首页右上角的邮票数字
@@ -113,7 +115,7 @@ class StoreCenterActivity : BaseViewModelActivity<StoreCenterViewModel>() {
                     * */
                     val field = badge.javaClass.getDeclaredField("badgeRadius")
                     field.isAccessible = true
-                    field.set(badge, dp2px(3.5F))
+                    field.set(badge, 3.5F.dp2pxF())
                 } catch (e: Exception) {  }
 
                 // 滑到邮票任务页面时就取消小圆点
@@ -164,14 +166,16 @@ class StoreCenterActivity : BaseViewModelActivity<StoreCenterViewModel>() {
         btnBack.setOnSingleClickListener { finish() /*左上角返回键*/ }
 
         val ivDetail: ImageView = findViewById(R.id.store_iv_stamp_center_stamp_bg)
-        ivDetail.setOnSingleClickListener { startActivity<StampDetailActivity>() /*跳到邮票明细界面*/ }
+        ivDetail.setOnSingleClickListener {
+            startActivity(Intent(this, StampDetailActivity::class.java)) /*跳到邮票明细界面*/
+        }
     }
 
     private var isFirstLoad = true // 是否是第一次进入界面
     // 对于 ViewModel 数据的观察
     @SuppressLint("SetTextI18n")
     private fun initObserve() {
-        viewModel.stampCenterData.observeNotNull{
+        viewModel.stampCenterData.observe {
             val text = it.userAmount.toString()
             if (!mTvStampBigNumber.hasText()) { // 如果是第一次进入界面, 肯定没有文字
                 mTvStampBigNumber.setTextOnlyAlpha(text) // 第一次进入界面就只使用隐现的动画
@@ -189,7 +193,7 @@ class StoreCenterActivity : BaseViewModelActivity<StoreCenterViewModel>() {
         }
 
         // 对数据是否请求成功的观察
-        viewModel.refreshIsSuccessful.observeNotNull {
+        viewModel.refreshIsSuccessful.observe {
             if (it) {
                 // 处于刷新状态且不是第一次刷新
                 if (mRefreshLayout.isRefreshing && !isFirstLoad) { toast("刷新成功") }

@@ -6,13 +6,12 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
-import androidx.lifecycle.Observer
-import androidx.lifecycle.ViewModelProvider
+import androidx.fragment.app.activityViewModels
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.mredrock.cyxbs.common.ui.BaseFragment
+import com.mredrock.cyxbs.store.utils.SimpleRvAdapter
 import com.mredrock.cyxbs.store.R
-import com.mredrock.cyxbs.common.utils.SimpleRvAdapter
+import com.mredrock.cyxbs.lib.base.ui.BaseFragment
 import com.mredrock.cyxbs.store.bean.ExchangeRecord
 import com.mredrock.cyxbs.store.page.record.ui.item.ExchangePageItem
 import com.mredrock.cyxbs.store.page.record.viewmodel.RecordViewModel
@@ -27,9 +26,7 @@ import com.mredrock.cyxbs.store.utils.dp2px
  */
 class ExchangeRecordFragment : BaseFragment() {
     // 因为我只需要 Activity 的 ViewModel, 所以没有继承于 BaseViewModelFragment
-    private val viewModel by lazy(LazyThreadSafetyMode.NONE) {
-        ViewModelProvider(requireActivity()).get(RecordViewModel::class.java)
-    }
+    private val viewModel by activityViewModels<RecordViewModel>()
 
     private lateinit var mRecyclerView: RecyclerView
     private lateinit var mImageView: ImageView
@@ -56,17 +53,19 @@ class ExchangeRecordFragment : BaseFragment() {
     }
 
     private fun initObserve() {
-        viewModel.mExchangeRecordIsSuccessful.observe(viewLifecycleOwner, Observer {
-            if (!it) { showNoInterceptImage() }
-        })
-        viewModel.mExchangeRecord.observe(viewLifecycleOwner, Observer {
+        viewModel.exchangeRecordIsSuccessful.observe {
+            if (!it) {
+                showNoInterceptImage()
+            }
+        }
+        viewModel.exchangeRecord.observe {
             if (it.isEmpty()) {
                 mImageView.setImageResource(R.drawable.store_ic_fragment_record_exchange_null)
                 mTextView.text = "还没有兑换记录哦"
-            }else {
+            } else {
                 setPageExchangeAdapter(it)
             }
-        })
+        }
     }
 
     private fun showNoInterceptImage() {

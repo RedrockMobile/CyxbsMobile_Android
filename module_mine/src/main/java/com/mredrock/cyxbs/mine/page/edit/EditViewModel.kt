@@ -1,13 +1,11 @@
 package com.mredrock.cyxbs.mine.page.edit
 
-import android.util.Log
 import androidx.lifecycle.MutableLiveData
 import com.mredrock.cyxbs.common.network.ApiGenerator
 import com.mredrock.cyxbs.common.network.CommonApiService
 import com.mredrock.cyxbs.common.service.ServiceManager
 import com.mredrock.cyxbs.api.account.IAccountService
 import com.mredrock.cyxbs.api.account.IUserService
-import com.mredrock.cyxbs.common.config.StoreTask
 import com.mredrock.cyxbs.common.utils.down.bean.DownMessageText
 import com.mredrock.cyxbs.common.utils.down.params.DownMessageParams
 import com.mredrock.cyxbs.common.utils.extensions.errorHandler
@@ -15,10 +13,10 @@ import com.mredrock.cyxbs.common.utils.extensions.mapOrThrowApiException
 import com.mredrock.cyxbs.common.utils.extensions.safeSubscribeBy
 import com.mredrock.cyxbs.common.utils.extensions.setSchedulers
 import com.mredrock.cyxbs.common.viewmodel.BaseViewModel
-import com.mredrock.cyxbs.mine.R
 import com.mredrock.cyxbs.mine.util.apiService
 import com.mredrock.cyxbs.mine.util.extension.normalStatus
 import com.mredrock.cyxbs.mine.util.widget.ExecuteOnceObserver
+import com.ndhzs.api.store.IStoreService
 import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
 import io.reactivex.rxjava3.schedulers.Schedulers
 import okhttp3.MultipartBody
@@ -60,7 +58,8 @@ class EditViewModel : BaseViewModel() {
                 .observeOn(AndroidSchedulers.mainThread())
                 .safeSubscribeBy {
                     if (nickname.isNotBlank() && introduction.isNotBlank() && qq.isNotBlank() && phone.isNotBlank()) {
-                        StoreTask.postTask(StoreTask.Task.EDIT_INFO, null)
+                      ServiceManager.getService(IStoreService::class.java)
+                        .postTask(IStoreService.Task.EDIT_INFO, null)
                     }
                 }
                 .lifeCycle()

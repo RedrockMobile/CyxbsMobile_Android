@@ -1,10 +1,9 @@
 package com.mredrock.cyxbs.convention.depend
 
+import com.mredrock.cyxbs.convention.depend.utils.libsVersion
 import org.gradle.api.Project
-import org.gradle.api.artifacts.VersionCatalogsExtension
 import org.gradle.kotlin.dsl.apply
 import org.gradle.kotlin.dsl.dependencies
-import org.gradle.kotlin.dsl.getByType
 
 /**
  * ...
@@ -21,8 +20,7 @@ import org.gradle.kotlin.dsl.getByType
 * 其中版本号统一写在 build-logic 的 settings.gradle.kts 中
 * */
 val Project.hilt_version: String
-  get() = extensions.getByType<VersionCatalogsExtension>()
-  .named("libs").findVersion("hilt.gradle.version").get().toString()
+  get() = libsVersion("hilt.gradle.version").requiredVersion
 
 fun Project.dependHilt() {
   apply(plugin = "dagger.hilt.android.plugin")

@@ -55,7 +55,7 @@ fun Context.getScreenWidth(): Int {
     return screenWidth
 }
 
-
+@Deprecated("目前 Base 包中的 BaseActivity 已自带了设置全屏的构造参数")
 fun Activity.setFullScreen() {
     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
         val lp = window.attributes

@@ -6,12 +6,15 @@ import android.graphics.drawable.Drawable
 import android.os.Bundle
 import android.view.Gravity
 import android.view.animation.AccelerateDecelerateInterpolator
+import android.widget.ImageButton
+import android.widget.ImageView
 import android.widget.TextView
 import android.widget.Toast
 import androidx.annotation.Px
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import com.alibaba.android.arouter.facade.annotation.Route
 import com.google.android.material.tabs.TabLayout
 import com.mredrock.cyxbs.common.component.CyxbsToast
@@ -33,10 +36,8 @@ import com.mredrock.cyxbs.discover.emptyroom.viewmodel.EmptyRoomViewModel.Compan
 import com.mredrock.cyxbs.discover.emptyroom.viewmodel.EmptyRoomViewModel.Companion.ERROR
 import com.mredrock.cyxbs.discover.emptyroom.viewmodel.EmptyRoomViewModel.Companion.FINISH
 import com.mredrock.cyxbs.discover.emptyroom.viewmodel.EmptyRoomViewModel.Companion.LOADING
-import kotlinx.android.synthetic.main.emptyroom_activity_empty_room.*
 import java.util.*
 import com.mredrock.cyxbs.common.utils.extensions.*
-
 
 
 @Route(path = DISCOVER_EMPTY_ROOM)
@@ -51,6 +52,13 @@ class EmptyRoomActivity : BaseViewModelActivity<EmptyRoomViewModel>(), OnItemSel
     private var resultAdapter: EmptyRoomResultAdapter? = null
     private lateinit var queryAnimator: ObjectAnimator
 
+    private val mTlBuilding by R.id.tl_building.view<TabLayout>()
+    private val mMultiSelectorSection by R.id.multi_selector_section.view<MultiSelector>()
+    private val mMultiSelectorWeek by R.id.multi_selector_week.view<MultiSelector>()
+    private val mMultiSelectorWeekday by R.id.multi_selector_weekday.view<MultiSelector>()
+    private val mIvQuerying by R.id.iv_querying.view<ImageView>()
+    private val mRvResult by R.id.rv_result.view<RecyclerView>()
+    private val mIbEmptyroomBack by R.id.ib_emptyroom_back.view<ImageButton>()
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -66,20 +74,20 @@ class EmptyRoomActivity : BaseViewModelActivity<EmptyRoomViewModel>(), OnItemSel
         initQueryingAnimator()
         initRv()
         initTab()
-        ib_emptyroom_back.setOnSingleClickListener {
+        mIbEmptyroomBack.setOnSingleClickListener {
             finish()
         }
     }
 
     private fun initTab() {
-        tl_building.apply {
-            addTab(tl_building.newTab().setText("二教"), false)
-            addTab(tl_building.newTab().setText("三教"), false)
-            addTab(tl_building.newTab().setText("四教"), false)
-            addTab(tl_building.newTab().setText("五教"), false)
-            addTab(tl_building.newTab().setText("八教"), false)
+        mTlBuilding.apply {
+            addTab(mTlBuilding.newTab().setText("二教"), false)
+            addTab(mTlBuilding.newTab().setText("三教"), false)
+            addTab(mTlBuilding.newTab().setText("四教"), false)
+            addTab(mTlBuilding.newTab().setText("五教"), false)
+            addTab(mTlBuilding.newTab().setText("八教"), false)
         }
-        tl_building.addOnTabSelectedListener(object : TabLayout.BaseOnTabSelectedListener<TabLayout.Tab> {
+        mTlBuilding.addOnTabSelectedListener(object : TabLayout.BaseOnTabSelectedListener<TabLayout.Tab> {
             override fun onTabReselected(p0: TabLayout.Tab?) {
 
             }
@@ -118,12 +126,12 @@ class EmptyRoomActivity : BaseViewModelActivity<EmptyRoomViewModel>(), OnItemSel
     private fun initObserver() {
         viewModel.rooms.observe(this, Observer {
             it ?: return@Observer
-            iv_querying.gone()
-            rv_result.visible()
+            mIvQuerying.gone()
+            mRvResult.visible()
             queryAnimator.cancel()
             if (resultAdapter == null) {
                 resultAdapter = EmptyRoomResultAdapter(it.toMutableList(), this@EmptyRoomActivity)
-                rv_result.adapter = resultAdapter
+                mRvResult.adapter = resultAdapter
             } else {
                 resultAdapter?.updateData(it)
             }
@@ -132,22 +140,22 @@ class EmptyRoomActivity : BaseViewModelActivity<EmptyRoomViewModel>(), OnItemSel
             it ?: return@Observer
             when (it) {
                 DEFAULT -> {
-                    iv_querying.gone()
-                    rv_result.gone()
+                    mIvQuerying.gone()
+                    mRvResult.gone()
                 }
                 LOADING -> {
-                    iv_querying.visible()
+                    mIvQuerying.visible()
                     queryAnimator.start()
-                    rv_result.gone()
+                    mRvResult.gone()
                 }
                 FINISH -> {
-                    iv_querying.gone()
-                    rv_result.visible()
+                    mIvQuerying.gone()
+                    mRvResult.visible()
                     queryAnimator.cancel()
                 }
                 ERROR -> {
-                    iv_querying.gone()
-                    rv_result.gone()
+                    mIvQuerying.gone()
+                    mRvResult.gone()
                     CyxbsToast.makeText(this, "抱歉，数据获取失败", Toast.LENGTH_SHORT).show()
                 }
             }
@@ -157,24 +165,24 @@ class EmptyRoomActivity : BaseViewModelActivity<EmptyRoomViewModel>(), OnItemSel
     private fun initData() {
 //      在未登录情况时，无法获取正确的当前周值，默认指向第一周
         var week = SchoolCalendar().weekOfTerm
-        val temp = multi_selector_week.getDisplayValues<String>()
+        val temp = mMultiSelectorWeek.getDisplayValues<String>()
         val list = ArrayList(temp)
         //删除"整学期"
         list.removeAt(0)
         //修正week值
         week = if (week > list.size || week < 0) 0 else week - 1
         repeat(week) { list.removeAt(0) }
-        multi_selector_week.setDisplayValues(list)
+        mMultiSelectorWeek.setDisplayValues(list)
         weekApi = IntArray(list.size)
         repeat(list.size) { weekApi[it] = ++week }
     }
 
 
     private fun initSelectors() {
-        initSelector(multi_selector_week, weekApi, 0, 0)
-        initSelector(multi_selector_weekday, weekdayApi, SchoolCalendar().dayOfWeek - 1, 1)
-        initSelector(multi_selector_section, sectionApi, -1, 3, middle = dip(1))
-        multi_selector_section.setMinSelectedNum(1)
+        initSelector(mMultiSelectorWeek, weekApi, 0, 0)
+        initSelector(mMultiSelectorWeekday, weekdayApi, SchoolCalendar().dayOfWeek - 1, 1)
+        initSelector(mMultiSelectorSection, sectionApi, -1, 3, middle = dip(1))
+        mMultiSelectorSection.setMinSelectedNum(1)
     }
 
     private fun initSelector(selector: MultiSelector, values: IntArray, defaultSelected: Int, tag: Int, isFullUp: Boolean = false, itemNumber: Int = 0, canScroll: Boolean = true, @Px head: Int = 0, @Px middle: Int = 0, @Px tail: Int = 0) {
@@ -215,7 +223,7 @@ class EmptyRoomActivity : BaseViewModelActivity<EmptyRoomViewModel>(), OnItemSel
 
 
     private fun initQueryingAnimator() {
-        queryAnimator = ObjectAnimator.ofFloat(iv_querying, "rotation", 0f, 360f)
+        queryAnimator = ObjectAnimator.ofFloat(mIvQuerying, "rotation", 0f, 360f)
                 .apply {
                     duration = 500
                     repeatCount = ObjectAnimator.INFINITE
@@ -224,16 +232,16 @@ class EmptyRoomActivity : BaseViewModelActivity<EmptyRoomViewModel>(), OnItemSel
     }
 
     private fun initRv() {
-        rv_result.layoutManager = LinearLayoutManager(this@EmptyRoomActivity)
+        mRvResult.layoutManager = LinearLayoutManager(this@EmptyRoomActivity)
                 .apply { orientation = LinearLayoutManager.VERTICAL }
     }
 
     private fun query() {
-        val week = multi_selector_week.getSelectedValues()[0]
+        val week = mMultiSelectorWeek.getSelectedValues()[0]
         LogUtils.d("LJXiao","week $week")
-        val weekday = multi_selector_weekday.getSelectedValues()[0]
+        val weekday = mMultiSelectorWeekday.getSelectedValues()[0]
         val building = buildingApi[buildingPosition]
-        val section = multi_selector_section.getSelectedValues()
+        val section = mMultiSelectorSection.getSelectedValues()
         val res = section.map { it + 1 }
         viewModel.getData(week, weekday, building, res)
     }
@@ -250,10 +258,10 @@ class EmptyRoomActivity : BaseViewModelActivity<EmptyRoomViewModel>(), OnItemSel
     override fun onItemClickListener() = Unit
 
     override fun onItemSelectedChange() {
-        if (multi_selector_section.selectedSize() == 0) {
+        if (mMultiSelectorSection.selectedSize() == 0) {
             viewModel.status.value = DEFAULT
         }
-        if (buildingPosition != -1 && multi_selector_section.selectedSize() > 0) {
+        if (buildingPosition != -1 && mMultiSelectorSection.selectedSize() > 0) {
             query()
         } else if (resultAdapter != null) {
             resultAdapter?.apply {

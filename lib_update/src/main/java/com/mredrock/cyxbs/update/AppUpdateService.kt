@@ -9,7 +9,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.LiveData
 import com.afollestad.materialdialogs.MaterialDialog
 import com.alibaba.android.arouter.facade.annotation.Route
-import com.mredrock.cyxbs.common.config.APP_UPDATE_SERVICE
+import com.mredrock.cyxbs.api.update.APP_UPDATE_SERVICE
 import com.mredrock.cyxbs.common.config.updateFile
 import com.mredrock.cyxbs.api.update.AppUpdateStatus
 import com.mredrock.cyxbs.api.update.IAppUpdateService

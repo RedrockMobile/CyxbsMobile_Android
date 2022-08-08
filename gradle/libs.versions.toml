@@ -8,4 +8,4 @@ vasDolly_version = "3.0.4"
 android-gradlePlugin = { module = "com.android.tools.build:gradle", version.ref = "android_gradle_version" }
 kotlin-gradlePlugin = { module = "org.jetbrains.kotlin:kotlin-gradle-plugin", version.ref = "kotlin_gradle_version" }
 hilt_gradlePlugin = { module = "com.google.dagger:hilt-android-gradle-plugin", version.ref = "hilt_gradle_version" }
-vasDolly = { module = "com.tencent.vasdolly:helper", version.ref = "vasDolly_version" }
+vasDolly_gradlePlugin = { module = "com.tencent.vasdolly:plugin", version.ref = "vasDolly_version" }

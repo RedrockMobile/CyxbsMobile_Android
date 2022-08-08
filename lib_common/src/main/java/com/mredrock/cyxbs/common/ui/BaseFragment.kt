@@ -163,6 +163,5 @@ open class BaseFragment : Fragment() {
      *    kt 插件(被废弃) > 属性代理 > ButterKnife(被废弃) > DataBinding > ViewBinding
      * ```
      */
-    protected fun <T: View> Int.view() = BindView<T>(
-        this, { requireView() }, { viewLifecycleOwner.lifecycle })
+    protected fun <T: View> Int.view() = BindView<T>(this) { this@BaseFragment }
 }

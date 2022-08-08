@@ -3,8 +3,8 @@ package com.mredrock.cyxbs.main.service
 import android.content.Context
 import androidx.lifecycle.MutableLiveData
 import com.alibaba.android.arouter.facade.annotation.Route
-import com.mredrock.cyxbs.common.config.MAIN_SERVICE
 import com.mredrock.cyxbs.api.main.IMainService
+import com.mredrock.cyxbs.api.main.MAIN_SERVICE
 
 /**
  * Created by Jovines on 2020/05/24 22:16

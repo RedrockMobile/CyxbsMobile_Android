@@ -1,12 +1,12 @@
 package com.mredrock.cyxbs.store.page.center.ui.item
 
-import com.mredrock.cyxbs.common.utils.extensions.setImageFromUrl
-import com.mredrock.cyxbs.common.utils.extensions.setOnSingleClickListener
+import com.mredrock.cyxbs.lib.utils.extensions.setImageFromUrl
+import com.mredrock.cyxbs.lib.utils.extensions.setOnSingleClickListener
 import com.mredrock.cyxbs.store.R
 import com.mredrock.cyxbs.store.bean.StampCenter
 import com.mredrock.cyxbs.store.databinding.StoreRecyclerItemSmallShopProductBinding
 import com.mredrock.cyxbs.store.page.exchange.ui.activity.ProductExchangeActivity
-import com.mredrock.cyxbs.common.utils.SimpleRvAdapter
+import com.mredrock.cyxbs.store.utils.SimpleRvAdapter
 
 /**
  * 自己写了个用于解耦不同的 item 的 Adapter 的封装类, 详情请看 [SimpleRvAdapter]

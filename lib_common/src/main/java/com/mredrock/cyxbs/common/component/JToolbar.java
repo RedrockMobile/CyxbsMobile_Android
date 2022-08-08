@@ -22,7 +22,7 @@ import java.util.Objects;
  * 标题居中显示的toolbar
  * Created by Jay on 2017/9/20.
  */
-
+@Deprecated()
 public class JToolbar extends Toolbar {
     private boolean isTitleAtLeft = true;
     private TextView mTitleTextView;

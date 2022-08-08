@@ -86,12 +86,12 @@ class UserAgreementDialog : DialogFragment() {
 
         btnNegative.setOnClickListener {
             onNegativeClick?.invoke(this)
-            BaseApp.application.privacyDenied()
+            BaseApp.privacyDenied()
         }
 
         btnPositive.setOnClickListener {
             onPositiveClick?.invoke(this)
-            BaseApp.application.privacyAgree()
+            BaseApp.privacyAgree()
         }
 
         val spannableString = SpannableStringBuilder()

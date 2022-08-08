@@ -22,9 +22,5 @@ buildscript {
     dependencies {
         classpath(libs.android.gradlePlugin)
         classpath(libs.kotlin.gradlePlugin)
-        classpath(libs.hilt.gradlePlugin)
-        // ARouter https://github.com/alibaba/ARouter
-        // 可以去插件中搜索 ARouter Helper，用于实现一些快捷跳转的操作
-        classpath("com.alibaba:arouter-register:1.0.2")
     }
 }

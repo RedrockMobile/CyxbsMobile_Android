@@ -59,6 +59,8 @@ class DiscoverHomeFragment : BaseViewModelFragment<DiscoverHomeViewModel>(), Eve
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         return inflater.inflate(R.layout.discover_home_fragment, container, false)
     }
+    
+    private val mVfDetail by R.id.vf_jwzx_detail.view<ViewFlipper>()
 
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -67,10 +69,10 @@ class DiscoverHomeFragment : BaseViewModelFragment<DiscoverHomeViewModel>(), Eve
         if (savedInstanceState == null) {
             initFeeds()
         }
-        initJwNews(vf_jwzx_detail, fl_discover_home_jwnews)
+        initJwNews(mVfDetail, fl_discover_home_jwnews)
         initViewPager()
         viewModel.getRollInfo()
-        iv_check_in.setOnSingleClickListener {
+        view.findViewById<View>(R.id.iv_check_in).setOnSingleClickListener {
             context?.doIfLogin("签到") {
                 ARouter.getInstance().build(MINE_CHECK_IN).navigation()
             }
@@ -127,7 +129,7 @@ class DiscoverHomeFragment : BaseViewModelFragment<DiscoverHomeViewModel>(), Eve
                 for (item in it) {
                     viewFlipper.addView(getTextView(item.title, item.id))
                 }
-                vf_jwzx_detail.startFlipping()
+                mVfDetail.startFlipping()
             }
         }
 
@@ -218,7 +220,7 @@ class DiscoverHomeFragment : BaseViewModelFragment<DiscoverHomeViewModel>(), Eve
 
     override fun onPause() {
         super.onPause()
-        vf_jwzx_detail.stopFlipping()
+        mVfDetail.stopFlipping()
         viewModel.stopPageTurner()
         viewModel.functionRvState = rv_discover_more_function.layoutManager?.onSaveInstanceState()
     }

@@ -8,7 +8,6 @@ import com.mredrock.cyxbs.convention.depend.api.utils.ApiDependUtils
 import com.mredrock.cyxbs.convention.depend.dependAndroidKtx
 import com.mredrock.cyxbs.convention.depend.dependAndroidView
 import com.mredrock.cyxbs.convention.depend.dependLifecycleKtx
-import com.mredrock.cyxbs.convention.depend.lib.dependLibCommon
 import org.gradle.api.Project
 import com.mredrock.cyxbs.convention.project.base.BaseApplicationProject
 import org.gradle.api.artifacts.ProjectDependency
@@ -27,7 +26,6 @@ class ModuleDebugProject(project: Project) : BaseApplicationProject(project) {
   }
   
   override fun initProject() {
-    dependLibCommon()
     dependAndroidView()
     dependAndroidKtx()
     dependLifecycleKtx()

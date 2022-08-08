@@ -1,5 +1,6 @@
 import com.mredrock.cyxbs.convention.depend.api.*
 import com.mredrock.cyxbs.convention.depend.*
+import com.mredrock.cyxbs.convention.depend.lib.dependLibCommon
 
 plugins {
     id("module-manager")
@@ -7,11 +8,14 @@ plugins {
 }
 
 dependApiAccount()
+dependApiStore()
 
 dependLottie()
 dependEventBus()
 dependRxjava()
 dependNetwork()
+
+dependLibCommon() // TODO common 模块不再使用，新模块请依赖 base 和 utils 模块
 
 // TODO 这几个依赖似乎是用于加密的，但未在项目找到使用，所以暂时注释
 //dependencies {

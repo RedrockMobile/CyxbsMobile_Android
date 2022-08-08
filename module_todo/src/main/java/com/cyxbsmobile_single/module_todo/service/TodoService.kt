@@ -5,8 +5,8 @@ import androidx.fragment.app.Fragment
 import com.alibaba.android.arouter.facade.annotation.Route
 import com.alibaba.android.arouter.launcher.ARouter
 import com.cyxbsmobile_single.api_todo.ITodoService
+import com.cyxbsmobile_single.api_todo.TODO_SERVICE
 import com.mredrock.cyxbs.common.config.DISCOVER_TODO_FEED
-import com.mredrock.cyxbs.common.config.TODO_SERVICE
 
 /**
  * Author: RayleighZ

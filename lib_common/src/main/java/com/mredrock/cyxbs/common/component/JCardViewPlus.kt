@@ -15,6 +15,7 @@ import com.mredrock.cyxbs.common.R
 /**
  * Created By jay68 on 2018/8/27.
  */
+@Deprecated("建议使用 CardView 代替", ReplaceWith("CardView", "androidx.cardview.widget.CardView"))
 open class JCardViewPlus(context: Context, attrs: AttributeSet?, defStyleAttr: Int) : ViewGroup(context, attrs, defStyleAttr) {
     companion object {
         @JvmStatic

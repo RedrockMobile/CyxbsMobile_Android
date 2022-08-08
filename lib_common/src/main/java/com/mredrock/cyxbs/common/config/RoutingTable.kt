@@ -13,8 +13,6 @@ const val QA_ENTRY = "/qa/entry"
 const val DISCOVER_ENTRY = "/discover/entry"
 const val MINE_ENTRY = "/mine/entry"
 
-const val MAIN_SPLASH = "/main/splash"
-
 const val DISCOVER_OTHER_COURSE = "/other_course/discover/entry"
 const val DISCOVER_NO_CLASS = "/no_class/discover/entry"
 const val DISCOVER_MAP = "/map/discover/entry"
@@ -52,11 +50,6 @@ const val MINE_EDIT_INFO = "/edit_info/mine/entry"
 //个人界面的个人主页
 const val MINE_PERSON_PAGE = "/person_page/mine/entry"
 
-// NoCourseInviteActivity
-const val COURSE_NO_COURSE_INVITE = "/course/no_course_invite_activity"
-
-const val COURSE_OTHER_COURSE = "/course/other_course_activity"
-
 //大红页
 const val REDROCK_HOME_ENTRY = "/redrock_home/entry"
 
@@ -66,10 +59,7 @@ const val WIDGET_SETTING = "/setting/widget"
 
 // QA
 const val QA_QUIZ = "/quiz/qa/entry"
-const val QA_ANSWER = "/answer/qa/entry"
-const val QA_ANSWER_LIST = "/answer_list/qa/entry"
 const val QA_CIRCLE_DETAIL = "/circle_detail/qa/entry"
-const val QA_COMMENT_LIST = "/comment_list/qa/entry"
 const val QA_DYNAMIC_DETAIL = "/dynamic_detail/qa/entry"
 const val QA_DYNAMIC_MINE = "/dynamic_mine/qa/entry"
 const val QA_MY_COMMENT = "/my_comment/qa/entry"
@@ -83,27 +73,9 @@ const val TODO_TODO_DETAIL = "/todo/todo_detail/entry"
 //小组件用，增加todo
 const val TODO_ADD_TODO_BY_WIDGET = "/widget/todo/entry"
 
-// 迎新专题
-const val FRESHMAN_ENTRY = "/freshman/entry"
-
-// 更新服务
-const val APP_UPDATE_SERVICE = "/update/service"
-
-//主模块服务
-const val MAIN_SERVICE = "/main/service"
-
-//发现模块服务
-const val DISCOVER_SERVICE = "/discover/service"
-
-//电费模块服务
-const val ELECTRICITY_SERVICE = "/electricity/service"
-
-//电费模块服务
-const val VOLUNTEER_SERVICE = "/volunteer/service"
-
 // module_store 邮票中心页
 const val STORE_ENTRY="/store/entry"
 
-//todo模块服务
-const val TODO_SERVICE = "/todo/service"
-
+/*
+* common 模块中的该路由表已废弃，请使用 lib_config 中的新路由表 ! ! ! ! ！
+* */

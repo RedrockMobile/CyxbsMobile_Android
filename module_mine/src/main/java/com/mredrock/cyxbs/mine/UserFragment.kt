@@ -16,9 +16,7 @@ import androidx.lifecycle.Observer
 import com.alibaba.android.arouter.facade.annotation.Route
 import com.alibaba.android.arouter.launcher.ARouter
 import com.mredrock.cyxbs.api.account.IAccountService
-import com.mredrock.cyxbs.common.BaseApp
-import com.mredrock.cyxbs.common.BaseApp.Companion.appContext
-import com.mredrock.cyxbs.common.component.CyxbsToast
+import com.mredrock.cyxbs.common.BaseApp.appContext
 import com.mredrock.cyxbs.common.config.*
 import com.mredrock.cyxbs.common.service.ServiceManager
 import com.mredrock.cyxbs.common.ui.BaseViewModelFragment
@@ -26,11 +24,10 @@ import com.mredrock.cyxbs.common.utils.extensions.*
 import com.mredrock.cyxbs.mine.page.about.AboutActivity
 import com.mredrock.cyxbs.mine.page.edit.EditInfoActivity
 import com.mredrock.cyxbs.mine.page.feedback.center.ui.FeedbackCenterActivity
-import com.mredrock.cyxbs.mine.page.mine.ui.activity.FanActivity
 import com.mredrock.cyxbs.mine.page.mine.ui.activity.HomepageActivity
-import com.mredrock.cyxbs.mine.page.security.util.Jump2QQHelper
 import com.mredrock.cyxbs.mine.page.setting.SettingActivity
 import com.mredrock.cyxbs.mine.page.sign.DailySignActivity
+import com.ndhzs.api.store.IStoreService
 import kotlinx.android.synthetic.main.mine_fragment_main_new.*
 
 /**
@@ -187,7 +184,8 @@ class UserFragment : BaseViewModelFragment<UserViewModel>() {
             userService.getPhone().isNotBlank()
         ) {
             // 当都不为空时, 说明已经设置了个人信息, 则提交积分商城任务进度, 后端已做重复处理
-            StoreTask.postTask(StoreTask.Task.EDIT_INFO, null)
+            ServiceManager.getService(IStoreService::class.java)
+                .postTask(IStoreService.Task.EDIT_INFO, null)
         }
     }
 

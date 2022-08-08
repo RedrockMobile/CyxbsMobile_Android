@@ -1,7 +1,7 @@
 package com.mredrock.cyxbs.discover.othercourse.pages.stusearch.viewmodel
 
 import androidx.lifecycle.MutableLiveData
-import com.mredrock.cyxbs.common.BaseApp.Companion.appContext
+import com.mredrock.cyxbs.common.BaseApp.appContext
 import com.mredrock.cyxbs.common.utils.extensions.safeSubscribeBy
 import com.mredrock.cyxbs.common.utils.extensions.setSchedulers
 import com.mredrock.cyxbs.common.viewmodel.BaseViewModel

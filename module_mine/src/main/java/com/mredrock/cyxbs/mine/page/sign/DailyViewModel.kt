@@ -3,9 +3,7 @@ package com.mredrock.cyxbs.mine.page.sign
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import com.mredrock.cyxbs.common.BaseApp
-import com.mredrock.cyxbs.common.bean.RedrockApiStatus
-import com.mredrock.cyxbs.common.bean.RedrockApiWrapper
-import com.mredrock.cyxbs.common.config.StoreTask
+import com.mredrock.cyxbs.common.service.ServiceManager
 import com.mredrock.cyxbs.common.utils.extensions.safeSubscribeBy
 import com.mredrock.cyxbs.common.utils.extensions.toast
 import com.mredrock.cyxbs.common.viewmodel.BaseViewModel
@@ -13,7 +11,7 @@ import com.mredrock.cyxbs.common.viewmodel.event.SingleLiveEvent
 import com.mredrock.cyxbs.mine.network.model.ScoreStatus
 import com.mredrock.cyxbs.mine.util.apiService
 import com.mredrock.cyxbs.mine.util.extension.normalWrapper
-import io.reactivex.rxjava3.core.Observable
+import com.ndhzs.api.store.IStoreService
 import io.reactivex.rxjava3.functions.Function
 
 /**
@@ -60,7 +58,8 @@ class DailyViewModel : BaseViewModel() {
                 .safeSubscribeBy(
                         onNext = {
                             _status.postValue(it)
-                            StoreTask.postTask(StoreTask.Task.DAILY_SIGN, null)
+                          ServiceManager.getService(IStoreService::class.java)
+                            .postTask(IStoreService.Task.DAILY_SIGN, "")
                         },
                         onError = {
                             BaseApp.appContext.toast("签到失败")

@@ -28,11 +28,6 @@ class ApiDependUtils(val apiProjectPath: String) {
     val apiProjectPath: String
       get() = this@ApiDependUtils.apiProjectPath
     
-    infix fun and(path: String): IApiDependUtils {
-      list.add(path)
-      return this
-    }
-  
     override fun add(path: String): IApiDependUtils {
       list.add(path)
       return this

@@ -1,7 +1,5 @@
 package com.mredrock.cyxbs.common.network
 
-import android.app.Application
-import android.content.pm.PackageManager
 import android.os.Handler
 import android.util.SparseArray
 import com.google.gson.Gson
@@ -25,7 +23,6 @@ import retrofit2.converter.gson.GsonConverterFactory
 import java.util.concurrent.TimeUnit
 import android.os.Looper
 import android.util.Log
-import androidx.core.content.PackageManagerCompat
 import com.mredrock.cyxbs.common.BaseApp
 import com.mredrock.cyxbs.common.utils.LogLocal
 import com.mredrock.cyxbs.common.utils.extensions.toast
@@ -116,7 +113,7 @@ object ApiGenerator {
      * @param uniqueNum retrofit标识符
      * @param retrofitConfig 配置Retrofit.Builder，已配置有
      * @see GsonConverterFactory
-     * @see RxJava2CallAdapterFactory
+     * @see RxJava3CallAdapterFactory
      * null-> 默认BaseUrl
      * @param okHttpClientConfig 配置OkHttpClient.Builder，已配置有
      * @see HttpLoggingInterceptor
@@ -159,12 +156,11 @@ object ApiGenerator {
                 }
                 logging.level = HttpLoggingInterceptor.Level.BODY
                 addInterceptor(Interceptor {
-                    val response = proceedPoxyWithTryCatch {
-                        it.proceed(it.request().newBuilder()
+                    it.proceed(
+                        it.request().newBuilder()
                             .addHeader("APPVersion", BaseApp.version)
                             .build()
-                        )}
-                    response!!
+                    )
                 })
                 addInterceptor(logging)
                 //这里是在debug模式下方便开发人员简单确认 http 错误码 和 url(magipoke开始切的)
@@ -175,7 +171,6 @@ object ApiGenerator {
 
                         val response = it.proceed(request)
                         if (!response.isSuccessful){
-                            response.close()
                             Handler(Looper.getMainLooper()).post {
                                 BaseApp.appContext.toast("${response.code} ${request.url} ")
                             }
