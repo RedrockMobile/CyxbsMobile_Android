@@ -27,7 +27,7 @@ import com.mredrock.cyxbs.mine.page.feedback.center.ui.FeedbackCenterActivity
 import com.mredrock.cyxbs.mine.page.mine.ui.activity.HomepageActivity
 import com.mredrock.cyxbs.mine.page.setting.SettingActivity
 import com.mredrock.cyxbs.mine.page.sign.DailySignActivity
-import com.ndhzs.api.store.IStoreService
+import com.mredrock.cyxbs.api.store.IStoreService
 import kotlinx.android.synthetic.main.mine_fragment_main_new.*
 
 /**

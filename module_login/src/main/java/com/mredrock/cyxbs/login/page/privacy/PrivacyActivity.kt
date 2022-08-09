@@ -17,12 +17,13 @@ class PrivacyActivity : BaseActivity() {
     }
     
     private val mWebView by R.id.login_wv_privacy.view<WebView>()
-    private val mBack by R.id.login_view_user_agree_back.view<View>()
+    private val mBack by R.id.login_view_privacy_back.view<View>()
 
     @SuppressLint("SetJavaScriptEnabled")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.login_activity_privacy)
+        toast("???")
         mWebView.apply {
             settings.apply {
                 javaScriptEnabled = true

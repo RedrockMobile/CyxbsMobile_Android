@@ -3,13 +3,13 @@ package com.mredrock.cyxbs.store.utils
 import android.content.Context
 import android.content.Intent
 import com.alibaba.android.arouter.launcher.ARouter
+import com.mredrock.cyxbs.api.store.IStoreService.Task.*
 import com.mredrock.cyxbs.config.route.DISCOVER_VOLUNTEER
 import com.mredrock.cyxbs.config.route.MINE_CHECK_IN
 import com.mredrock.cyxbs.config.route.MINE_EDIT_INFO
 import com.mredrock.cyxbs.lib.utils.extensions.toast
 import com.mredrock.cyxbs.store.bean.StampCenter
 import com.mredrock.cyxbs.store.page.qa.ui.activity.QaActivity
-import com.ndhzs.api.store.IStoreService.Task.*
 
 /**
  * 需要与后端交互时的类型区分
