@@ -14,10 +14,9 @@ import org.gradle.api.Project
  */
 class LibBaseProject(project: Project) : BaseLibraryProject(project) {
   override fun initProject() {
+    // 这里面只依赖带有 internal 修饰的
     dependAndroidView()
     dependAndroidKtx()
-    dependCoroutines()
-    dependCoroutinesRx3()
     dependLifecycleKtx()
   }
 }

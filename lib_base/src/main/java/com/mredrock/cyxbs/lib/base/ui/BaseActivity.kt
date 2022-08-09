@@ -13,8 +13,6 @@ import androidx.fragment.app.FragmentTransaction
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleOwner
 import com.mredrock.cyxbs.lib.base.operations.OperationActivity
-import com.mredrock.cyxbs.lib.utils.extensions.RxjavaLifecycle
-import io.reactivex.rxjava3.disposables.Disposable
 
 /**
  * 绝对基础的抽象
@@ -65,14 +63,6 @@ abstract class BaseActivity : OperationActivity() {
     }
   }
   
-  @CallSuper
-  override fun onDestroy() {
-    super.onDestroy()
-    // 取消 Rxjava 流
-    mDisposableList.filter { !it.isDisposed }.forEach { it.dispose() }
-    mDisposableList.clear()
-  }
-  
   private fun cancelStatusBar() {
     val window = this.window
     val decorView = window.decorView
@@ -117,15 +107,6 @@ abstract class BaseActivity : OperationActivity() {
         .apply { replace(id, func.invoke(this)) }
         .commit()
     }
-  }
-  
-  private val mDisposableList = mutableListOf<Disposable>()
-  
-  /**
-   * 实现 [RxjavaLifecycle] 的方法，用于带有生命周期的调用
-   */
-  final override fun onAddRxjava(disposable: Disposable) {
-    mDisposableList.add(disposable)
   }
   
   final override val rootView: View

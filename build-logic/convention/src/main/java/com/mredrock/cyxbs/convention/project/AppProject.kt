@@ -20,12 +20,11 @@ import java.io.File
 class AppProject(project: Project) : BaseApplicationProject(project) {
   override fun initProject() {
     dependAllProject()
+    // 这里面只依赖带有 internal 修饰的
     dependBugly()
     dependSophix()
     dependUmeng()
     dependVasDolly()
-    dependAutoService()
-    dependRxjava()
   }
   
   /**
@@ -35,7 +34,6 @@ class AppProject(project: Project) : BaseApplicationProject(project) {
     
     // 测试使用，设置 module_app 暂时不依赖的模块
     val excludeList = mutableListOf<String>(
-      "lib_common"
     )
     
     // 根 gradle 中包含的所有子模块
@@ -52,6 +50,7 @@ class AppProject(project: Project) : BaseApplicationProject(project) {
         it.isDirectory
           && it.name != "module_app"
           && "(lib_.+)|(module_.+)|(api_.+)".toRegex().matches(it.name)
+          && !it.name.contains("lib_common") // 目前 app 模块已经去掉了对 common 模块的依赖
           && it.name !in excludeList
           && includeProjects.contains(it.name)
       }.forEach {

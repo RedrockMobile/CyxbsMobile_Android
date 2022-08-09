@@ -1,3 +1,4 @@
+import com.mredrock.cyxbs.convention.depend.*
 import com.mredrock.cyxbs.convention.depend.api.*
 
 plugins {
@@ -8,4 +9,22 @@ plugins {
 dependApiAccount()
 dependApiProtocol()
 dependApiLogin()
+
+// lib_common 默认情况下是导入所有必要的依赖
+// 除了 Bugly、Sophix 等一些只需要 module_app 模块才需要
+dependCoroutines()
+dependCoroutinesRx3()
+dependEventBus()
+dependGlide()
+dependLottie()
+dependLPhotoPicker()
+dependMaterialDialog()
+dependNetwork()
+dependPaging()
+dependPhotoView()
+dependRoom()
+dependRoomRxjava()
+dependRoomPaging()
+dependRxjava()
+dependRxPermissions()
 

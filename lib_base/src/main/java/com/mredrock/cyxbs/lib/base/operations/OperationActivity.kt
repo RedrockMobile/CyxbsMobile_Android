@@ -2,7 +2,6 @@ package com.mredrock.cyxbs.lib.base.operations
 
 import androidx.appcompat.app.AppCompatActivity
 import com.mredrock.cyxbs.lib.base.ui.BaseUi
-import com.mredrock.cyxbs.lib.utils.extensions.RxjavaLifecycle
 
 /**
  *
@@ -14,6 +13,6 @@ import com.mredrock.cyxbs.lib.utils.extensions.RxjavaLifecycle
  * @email guo985892345@foxmail.com
  * @date 2022/8/8 19:16
  */
-abstract class OperationActivity : AppCompatActivity(), BaseUi, RxjavaLifecycle {
+abstract class OperationActivity : AppCompatActivity(), BaseUi {
 
 }

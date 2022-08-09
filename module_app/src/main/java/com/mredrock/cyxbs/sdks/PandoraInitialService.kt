@@ -23,8 +23,11 @@ class PandoraInitialService: SdkService, SensorDetector.Callback {
     SensorDetector(this)
   }
   
-  // 摇一摇的回调
   override fun shakeValid() {
+    /*
+    * 打全量编译的测试包时需要在这里注册你的学号才能使用
+    * 单模块调试不需要注册，直接摇一摇即可
+    * */
     val stuNumSet = setOf(
       "2020214988",
     )

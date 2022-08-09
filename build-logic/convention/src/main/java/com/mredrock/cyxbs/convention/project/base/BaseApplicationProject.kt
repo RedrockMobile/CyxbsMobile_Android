@@ -12,7 +12,10 @@ import org.gradle.api.Project
 import org.gradle.kotlin.dsl.configure
 
 /**
- * ...
+ * 只管 application 的 Project
+ *
+ * 包含：module_app 模块和单模块调试时的主模块
+ *
  * @author 985892345 (Guo Xiangrui)
  * @email 2767465918@qq.com
  * @date 2022/5/28 12:31

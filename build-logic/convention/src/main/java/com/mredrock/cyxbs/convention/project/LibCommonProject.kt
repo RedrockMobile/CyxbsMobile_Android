@@ -12,26 +12,10 @@ import org.gradle.api.Project
  */
 class LibCommonProject(project: Project) : BaseLibraryProject(project) {
   override fun initProject() {
-    // lib_common 默认情况下是导入所有必要的依赖
-    // 除了 Bugly、Sophix 等一些只需要 module_app 模块才需要
+    // 这里面只依赖带有 internal 修饰的
     dependAndroidView()
     dependAndroidKtx()
-    dependCoroutines()
-    dependCoroutinesRx3()
-    dependEventBus()
-    dependGlide()
     dependLifecycleKtx()
-    dependLottie()
-    dependLPhotoPicker()
-    dependMaterialDialog()
-    dependNetwork()
     dependNetworkInternal()
-    dependPaging()
-    dependPhotoView()
-    dependRoom()
-    dependRoomRxjava()
-    dependRoomPaging()
-    dependRxjava()
-    dependRxPermissions()
   }
 }

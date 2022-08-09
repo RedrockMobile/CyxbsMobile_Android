@@ -19,7 +19,8 @@ import org.gradle.kotlin.dsl.configure
 import org.jetbrains.kotlin.gradle.plugin.KaptExtension
 
 /**
- * ...
+ * 只管 Android 的 Project
+ *
  * @author 985892345 (Guo Xiangrui)
  * @email 2767465918@qq.com
  * @date 2022/5/28 12:34

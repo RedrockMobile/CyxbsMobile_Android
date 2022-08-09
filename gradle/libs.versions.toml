@@ -1,7 +1,7 @@
 [versions]
 android_gradle_version = "7.2.1"
 kotlin_gradle_version = "1.6.21"
-hilt_gradle_version = "2.42"
+hilt_gradle_version = "2.43"
 vasDolly_version = "3.0.4"
 
 [libraries]

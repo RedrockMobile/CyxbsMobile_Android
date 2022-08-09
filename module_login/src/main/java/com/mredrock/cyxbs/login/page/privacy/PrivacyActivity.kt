@@ -23,7 +23,6 @@ class PrivacyActivity : BaseActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.login_activity_privacy)
-        toast("???")
         mWebView.apply {
             settings.apply {
                 javaScriptEnabled = true

@@ -10,6 +10,8 @@ import com.mredrock.cyxbs.lib.base.ui.BaseActivity
 /**
  * 单模块调试的 BaseDebugActivity
  *
+ * 这个 Activity 设置简单一点，直接在 [onDebugCreate] 中启动主界面即可
+ *
  * @author 985892345 (Guo Xiangrui)
  * @email guo985892345@foxmail.com
  * @date 2022/8/7 20:18
@@ -38,5 +40,8 @@ abstract class BaseDebugActivity : BaseActivity() {
     }
   }
   
+  /**
+   * 主要是用来防止你直接在 onCreate 中 startActivity，导致登录界面被你的界面为覆盖
+   */
   abstract fun onDebugCreate(savedInstanceState: Bundle?)
 }

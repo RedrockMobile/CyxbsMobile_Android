@@ -1,14 +1,16 @@
 package com.mredrock.cyxbs.lib.base.ui
 
 import android.view.View
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.LifecycleEventObserver
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.flowWithLifecycle
 import androidx.lifecycle.whenStarted
 import com.mredrock.cyxbs.lib.base.operations.OperationUi
-import com.mredrock.cyxbs.lib.utils.extensions.ToastUtils
 import com.mredrock.cyxbs.lib.utils.extensions.launch
 import com.mredrock.cyxbs.lib.utils.utils.BindView
+import io.reactivex.rxjava3.disposables.Disposable
 import kotlinx.coroutines.flow.Flow
 
 /**
@@ -22,7 +24,7 @@ import kotlinx.coroutines.flow.Flow
  * @email guo985892345@foxmail.com
  * @date 2022/7/20 19:44
  */
-interface BaseUi : OperationUi, ToastUtils {
+interface BaseUi : OperationUi {
   /**
    * 根布局
    */
@@ -93,5 +95,24 @@ interface BaseUi : OperationUi, ToastUtils {
    */
   fun <T> Flow<T>.collectRestart(action: suspend (value: T) -> Unit) {
     flowWithLifecycle(getViewLifecycleOwner().lifecycle).collectLaunch(action)
+  }
+  
+  // Rxjava 自动关流
+  override fun onAddRxjava(disposable: Disposable) {
+    getViewLifecycleOwner().lifecycle.addObserver(
+      object : LifecycleEventObserver {
+        override fun onStateChanged(source: LifecycleOwner, event: Lifecycle.Event) {
+          if (event.targetState == Lifecycle.State.DESTROYED) {
+            source.lifecycle.removeObserver(this)
+            disposable.dispose() // 在 DESTROYED 时关掉流
+          } else {
+            if (disposable.isDisposed) {
+              // 如果在其他生命周期时流已经被关了，就取消该观察者
+              source.lifecycle.removeObserver(this)
+            }
+          }
+        }
+      }
+    )
   }
 }
