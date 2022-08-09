@@ -18,7 +18,7 @@ import io.reactivex.rxjava3.disposables.Disposable
  *     .unSafeSubscribeBy {             // 如果是网络连接错误，则这里会默认处理
  *         // 成功的时候
  *     }
- *     .lifeCycle() // ViewModel 中带有的自动回收，或者使用 ViewModel 里面的 safeSubscribeBy 方法
+ *     // ViewModel 中带有的自动回收，或者使用 ViewModel 里面的 safeSubscribeBy 方法
  * ```
  *
  * # 其他注意事项

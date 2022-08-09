@@ -11,9 +11,9 @@ import androidx.viewpager2.widget.ViewPager2
 import com.google.android.material.tabs.TabLayout
 import com.google.android.material.tabs.TabLayoutMediator
 import com.mredrock.cyxbs.lib.base.ui.mvvm.BaseVmActivity
+import com.mredrock.cyxbs.lib.utils.adapter.FragmentVpAdapter
 import com.mredrock.cyxbs.lib.utils.extensions.setOnSingleClickListener
 import com.mredrock.cyxbs.store.R
-import com.mredrock.cyxbs.store.base.BaseFragmentVPAdapter
 import com.mredrock.cyxbs.store.page.record.ui.fragment.ExchangeRecordFragment
 import com.mredrock.cyxbs.store.page.record.ui.fragment.GetRecordFragment
 import com.mredrock.cyxbs.store.page.record.viewmodel.RecordViewModel
@@ -51,13 +51,9 @@ class StampDetailActivity : BaseVmActivity<RecordViewModel>() {
         animation.interpolator = DecelerateInterpolator()
         mViewPager2.startAnimation(animation) // 入场动画
         mViewPager2.setPageTransformer(ScaleInTransformer())
-        mViewPager2.adapter = BaseFragmentVPAdapter(
-            this,
-            listOf(
-                ExchangeRecordFragment(),
-                GetRecordFragment()
-            )
-        )
+        mViewPager2.adapter = FragmentVpAdapter(this)
+            .add { ExchangeRecordFragment() }
+            .add { GetRecordFragment() }
         mViewPager2.registerOnPageChangeCallback(object : ViewPager2.OnPageChangeCallback() {
             var hasObservedFirst = false // 是否已经对第一页进行了观察
             var hasObservedSecond = false // 是否已经对第二页进行了观察

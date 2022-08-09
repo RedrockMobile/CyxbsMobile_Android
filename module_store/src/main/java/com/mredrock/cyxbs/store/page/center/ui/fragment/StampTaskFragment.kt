@@ -70,13 +70,13 @@ class StampTaskFragment : BaseFragment() {
             }
         }
 
-        viewModel.refreshIsSuccessful.observe(viewLifecycleOwner, Observer {
+        viewModel.refreshIsSuccessful.observe {
             if (it) {
                 // 取消断网图片的显示
                 mImageView.invisible()
                 mTextView.invisible()
                 mRecyclerView.visible()
-            }else {
+            } else {
                 // 显示断网图片
                 mImageView.visible()
                 mTextView.visible()
@@ -84,18 +84,18 @@ class StampTaskFragment : BaseFragment() {
                 mImageView.setImageResource(R.drawable.store_ic_no_internet)
                 mTextView.text = getText(R.string.store_no_internet)
             }
-        })
-
-        viewModel.stampCenterData.observe(viewLifecycleOwner, Observer {
+        }
+    
+        viewModel.stampCenterData.observe {
             if (it.task == null) {
                 resetData(emptyList())
-            }else {
+            } else {
                 resetData(it.task) // 重新设置数据
             }
             if (mRecyclerView.adapter != null) {
                 refreshAdapter() // 再次得到数据时刷新
             }
-        })
+        }
     }
 
     private lateinit var mStampTaskTitleItem: StampTaskTitleItem

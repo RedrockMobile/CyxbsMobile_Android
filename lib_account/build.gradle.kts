@@ -6,10 +6,9 @@ plugins {
     id("module-manager")
 }
 
-dependApiAccount()
 dependApiElectricity()
-dependApiMain()
 dependApiVolunteer()
+dependApiLogin()
 
 dependMaterialDialog()
 dependNetwork()

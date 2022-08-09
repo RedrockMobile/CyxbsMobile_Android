@@ -16,10 +16,16 @@ interface IUserStateService {
     interface StateListener {
         fun onStateChanged(state: UserState)
     }
-
+    
+    /**
+     * 这个 context 不能传入 appContext
+     */
     @MainThread
     fun askLogin(context: Context, reason: String)
-
+    
+    /**
+     * 如果是账号密码错误，则会抛 IllegalStateException("authentication error")
+     */
     @WorkerThread
     @Throws(Exception::class)
     fun login(context: Context, uid: String, passwd: String)
@@ -36,7 +42,7 @@ interface IUserStateService {
     fun isTouristMode(): Boolean
 
     fun isExpired():Boolean
-
+    
     fun isRefreshTokenExpired(): Boolean
 
     fun addOnStateChangedListener(listener: (state: UserState) -> Unit)

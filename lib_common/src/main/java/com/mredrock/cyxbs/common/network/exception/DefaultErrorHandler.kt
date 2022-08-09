@@ -13,6 +13,7 @@ import java.net.UnknownHostException
  * 只处理简单的网络异常及账号密码错误
  * Created By jay68 on 2018/8/12.
  */
+@Deprecated("检测状态已过时，请不要再使用")
 object DefaultErrorHandler : ErrorHandler {
     override fun handle(e: Throwable?): Boolean {
         when {

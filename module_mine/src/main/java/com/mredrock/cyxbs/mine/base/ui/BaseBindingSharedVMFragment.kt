@@ -36,8 +36,8 @@ abstract class BaseBindingSharedVMFragment<VM : BaseViewModel, T : ViewDataBindi
 
     private fun configVM() {
         shardViewModel?.apply {
-            toastEvent.observe { str -> str?.let { CyxbsToast.makeText(context, it, Toast.LENGTH_SHORT).show() } }
-            longToastEvent.observe { str -> str?.let { CyxbsToast.makeText(context, it, Toast.LENGTH_LONG).show() } }
+            toastEvent.observe { str -> str?.let { CyxbsToast.makeText(requireContext(), it, Toast.LENGTH_SHORT).show() } }
+            longToastEvent.observe { str -> str?.let { CyxbsToast.makeText(requireContext(), it, Toast.LENGTH_LONG).show() } }
             progressDialogEvent.observe {
                 it ?: return@observe
                 // 确保只有一个对话框会被弹出

@@ -85,11 +85,8 @@ object ApiGenerator {
 
 interface IApi {
   companion object {
-    /**
-     * String 为类带包名的全名称，是不会出现重复的情况
-     */
-    val MAP = HashMap<String, IApi>()
-    val MAP_COMMON = HashMap<String, IApi>()
+    val MAP = HashMap<KClass<out IApi>, IApi>()
+    val MAP_COMMON = HashMap<KClass<out IApi>, IApi>()
   }
 }
 
@@ -98,7 +95,7 @@ interface IApi {
  */
 @Suppress("UNCHECKED_CAST")
 val <I : IApi> KClass<I>.api: I
-  get() = IApi.MAP.getOrPut(this.qualifiedName!!) {
+  get() = IApi.MAP.getOrPut(this) {
     com.mredrock.cyxbs.lib.utils.network.ApiGenerator.getApiService(this)
   } as I
 
@@ -107,6 +104,6 @@ val <I : IApi> KClass<I>.api: I
  */
 @Suppress("UNCHECKED_CAST")
 val <I : IApi> KClass<I>.commonApi: I
-  get() = IApi.MAP.getOrPut(this.qualifiedName!!) {
+  get() = IApi.MAP_COMMON.getOrPut(this) {
     com.mredrock.cyxbs.lib.utils.network.ApiGenerator.getCommonApiService(this)
   } as I

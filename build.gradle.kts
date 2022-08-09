@@ -8,7 +8,7 @@ tasks.register<Delete>("clean") {
 tasks.register("cacheToLocalMaven") {
     group = "publishing"
     subprojects
-        .map { it.tasks.named("cacheToLocalMaven") }
+        .mapNotNull { it.tasks.findByName("cacheToLocalMaven") }
         .let { dependsOn(it) }
 }
 
@@ -22,5 +22,6 @@ buildscript {
     dependencies {
         classpath(libs.android.gradlePlugin)
         classpath(libs.kotlin.gradlePlugin)
+      classpath("org.jetbrains.kotlin:kotlin-gradle-plugin:1.7.10")
     }
 }

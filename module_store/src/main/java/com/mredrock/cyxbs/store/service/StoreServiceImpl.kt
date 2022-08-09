@@ -2,7 +2,6 @@ package com.mredrock.cyxbs.store.service
 
 import android.content.Context
 import android.content.SharedPreferences
-import android.util.Log
 import androidx.collection.arraySetOf
 import androidx.core.content.edit
 import com.alibaba.android.arouter.facade.annotation.Route
@@ -34,7 +33,6 @@ import java.util.*
 class StoreServiceImpl : IStoreService {
   
   override fun postTask(task: IStoreService.Task, onlyTag: String?) {
-    Log.d("ggg", "(StoreServiceImpl.kt:37) -> title = ${task.title}")
     when (task.type) {
       IStoreService.TaskType.BASE -> postTask(baseSp, task.title)
       IStoreService.TaskType.MORE -> postTask(moreSp, task.title)

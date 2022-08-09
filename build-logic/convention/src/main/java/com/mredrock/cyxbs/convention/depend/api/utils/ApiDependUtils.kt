@@ -59,7 +59,7 @@ class ApiDependUtils(val apiProjectPath: String) {
         dependencies {
           getImplPaths().forEach {
             if (it.isNotBlank() && filter.invoke(it)) {
-              "implementation"(project(it))
+              "runtimeOnly"(project(it)) // 使用 runtimeOnly 保证编译时不依赖
               dependList.add(it)
             }
           }
@@ -75,7 +75,7 @@ class ApiDependUtils(val apiProjectPath: String) {
     /**
      * api 模块的 path 与 实现模块的路径
      */
-    val sApiWithImplMap: Map<String, IApiDependUtils>
+    val apiWithImplMap: Map<String, IApiDependUtils>
       get() = _ApiWithImplMap
   }
   
@@ -84,6 +84,10 @@ class ApiDependUtils(val apiProjectPath: String) {
     infix fun add(path: (String) -> String): IApiDependUtils
     fun getImplPaths(): List<String>
     fun dependApiOnly(project: Project)
+  
+    /**
+     * @param filter 筛选器，提供实现模块的 path，返回一个 Boolean 用于决定是否依赖该实现模块
+     */
     fun dependApiImplOnly(project: Project, filter: (String) -> Boolean = { true }): List<String>
   }
 }

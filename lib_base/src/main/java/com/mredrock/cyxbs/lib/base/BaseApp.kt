@@ -3,7 +3,7 @@ package com.mredrock.cyxbs.lib.base
 import android.app.Application
 import androidx.annotation.CallSuper
 import com.alibaba.android.arouter.launcher.ARouter
-import com.mredrock.cyxbs.common.BuildConfig
+import com.mredrock.cyxbs.config.ConfigApplicationWrapper
 import com.mredrock.cyxbs.lib.utils.UtilsApplicationWrapper
 
 /**
@@ -23,7 +23,8 @@ open class BaseApp : Application() {
     super.onCreate()
     baseApp = this
     UtilsApplicationWrapper.setUtilsApplication(this)
-    com.mredrock.cyxbs.common.BaseApp.onCreate(this, this::privacyDenied, this::privacyAgree)
+    ConfigApplicationWrapper.setUtilsApplication(this)
+    com.mredrock.cyxbs.common.BaseApp.onCreate(this)
     initARouter()
   }
   

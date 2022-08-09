@@ -246,7 +246,7 @@ class QuizViewModel : BaseViewModel() {
                 val newList = it.images?.filter { path ->
                     path != ""
                 }
-                it.images = newList
+                it.images = newList ?: emptyList()
                 draft.value = it
                 LogUtils.d(
                     "Gibson",

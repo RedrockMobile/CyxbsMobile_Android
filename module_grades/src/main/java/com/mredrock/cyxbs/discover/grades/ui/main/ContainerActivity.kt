@@ -20,7 +20,6 @@ import com.bumptech.glide.Glide
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.mredrock.cyxbs.api.account.IAccountService
 import com.mredrock.cyxbs.api.account.IUserService
-import com.mredrock.cyxbs.common.bean.LoginConfig
 import com.mredrock.cyxbs.common.component.JCardViewPlus
 import com.mredrock.cyxbs.common.config.DISCOVER_GRADES
 import com.mredrock.cyxbs.common.service.ServiceManager
@@ -58,8 +57,6 @@ class ContainerActivity : BaseActivity() {
         @JvmStatic
         val IS_GPA_FRAGMENT = 3
     }
-
-    override val loginConfig = LoginConfig(isFinish = true)
 
     //区分FrameLayout内的fragment的type：未确定，BindFragment，或GPAFragment
     private var typeOfFragment = UNDEFINED

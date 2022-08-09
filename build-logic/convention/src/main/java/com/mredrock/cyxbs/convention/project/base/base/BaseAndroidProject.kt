@@ -13,6 +13,7 @@ import org.gradle.kotlin.dsl.project
 import org.jetbrains.kotlin.gradle.dsl.KotlinJvmOptions
 import com.mredrock.cyxbs.convention.config.Config
 import com.mredrock.cyxbs.convention.depend.dependAndroidBase
+import com.mredrock.cyxbs.convention.project.ModuleDebugProject
 import org.gradle.api.Project
 import org.gradle.kotlin.dsl.configure
 import org.jetbrains.kotlin.gradle.plugin.KaptExtension
@@ -84,6 +85,8 @@ abstract class BaseAndroidProject(project: Project) : BaseProject(project) {
         ndk {
           abiFilters += Config.releaseAbiFilters
         }
+        
+        buildConfigField("Boolean", "isSingleModuleDebug", "false")
       }
       debug {
         isMinifyEnabled = false
@@ -96,6 +99,12 @@ abstract class BaseAndroidProject(project: Project) : BaseProject(project) {
         
         ndk {
           abiFilters += Config.debugAbiFilters
+        }
+  
+        if (this@BaseAndroidProject is ModuleDebugProject) {
+          buildConfigField("Boolean", "isSingleModuleDebug", "true")
+        } else {
+          buildConfigField("Boolean", "isSingleModuleDebug", "false")
         }
       }
     }

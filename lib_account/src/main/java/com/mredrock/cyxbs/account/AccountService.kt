@@ -5,7 +5,6 @@ import androidx.annotation.MainThread
 import androidx.annotation.WorkerThread
 import com.afollestad.materialdialogs.MaterialDialog
 import com.alibaba.android.arouter.facade.annotation.Route
-import com.alibaba.android.arouter.launcher.ARouter
 import com.google.gson.Gson
 import com.google.gson.GsonBuilder
 import com.mredrock.cyxbs.account.bean.*
@@ -18,11 +17,12 @@ import com.mredrock.cyxbs.common.network.ApiGenerator
 import com.mredrock.cyxbs.common.network.exception.RedrockApiException
 import com.mredrock.cyxbs.common.service.ServiceManager
 import com.mredrock.cyxbs.api.electricity.IElectricityService
-import com.mredrock.cyxbs.api.main.MAIN_LOGIN
+import com.mredrock.cyxbs.api.login.ILoginService
 import com.mredrock.cyxbs.api.volunteer.IVolunteerService
 import com.mredrock.cyxbs.common.BaseApp
 import com.mredrock.cyxbs.common.bean.RedrockApiWrapper
 import com.mredrock.cyxbs.common.config.*
+import com.mredrock.cyxbs.common.service.impl
 import com.mredrock.cyxbs.common.utils.extensions.*
 import retrofit2.Call
 import retrofit2.Callback
@@ -270,7 +270,8 @@ internal class AccountService : IAccountService {
                 message(text = reason)
                 positiveButton(R.string.account_login_now) {
                     if (!isLogin()) {
-                        ARouter.getInstance().build(MAIN_LOGIN).navigation()
+                        ILoginService::class.impl
+                            .startLoginActivityReboot(context)
                     }
                 }
                 negativeButton(R.string.account_login_later) {
@@ -291,6 +292,8 @@ internal class AccountService : IAccountService {
                 .login(LoginParams(uid, passwd)).execute()
             //不同情况给用户不同的提示
             if (response.code() == 400) {
+                // 22年 后端有 "student info fail" 和 "sign in failed" 两种状态，但我们直接给学号或者密码错误即可
+                // 该异常已于下游约定，不可更改！！！
                 throw IllegalStateException("authentication error")
             }
             if (response.body() == null) {

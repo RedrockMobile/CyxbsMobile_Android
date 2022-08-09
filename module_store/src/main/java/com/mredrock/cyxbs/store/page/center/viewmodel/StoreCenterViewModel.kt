@@ -1,5 +1,6 @@
 package com.mredrock.cyxbs.store.page.center.viewmodel
 
+import android.util.Log
 import androidx.core.content.edit
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
@@ -55,8 +56,10 @@ class StoreCenterViewModel: BaseViewModel() {
             .subscribeOn(Schedulers.io())
             .observeOn(AndroidSchedulers.mainThread())
             .doOnError {
+                Log.d("ggg", "(StoreCenterViewModel.kt:59) -> doOnError")
                 _refreshIsSuccessful.postValue(false)
             }.safeSubscribeBy {
+                Log.d("ggg", "(StoreCenterViewModel.kt:60) -> safeSubscribeBy")
                 _refreshIsSuccessful.postValue(true)
                 _stampCenterData.postValue(it)
             }

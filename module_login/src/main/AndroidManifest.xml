@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    package="com.mredrock.cyxbs.login">
+
+    <application>
+        <activity
+            android:name=".page.login.ui.LoginActivity"
+            android:launchMode="singleTask" />
+        <activity
+            android:name=".page.privacy.PrivacyActivity"
+            android:exported="false" />
+        <activity
+            android:name=".page.useragree.UserAgreeActivity"
+            android:exported="false" />
+    </application>
+
+</manifest>

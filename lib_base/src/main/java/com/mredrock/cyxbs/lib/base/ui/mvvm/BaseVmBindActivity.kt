@@ -12,10 +12,7 @@ import com.mredrock.cyxbs.lib.utils.utils.GenericityUtils.getGenericClassFromSup
  * @email 2767465918@qq.com
  * @data 2021/6/2
  */
-abstract class BaseVmBindActivity<VM : ViewModel, VB : ViewDataBinding>(
-  isPortraitScreen: Boolean = true, // 作用请查看父类
-  isCancelStatusBar: Boolean = true, // 作用请查看父类
-) : BaseBindActivity<VB>(isPortraitScreen, isCancelStatusBar) {
+abstract class BaseVmBindActivity<VM : ViewModel, VB : ViewDataBinding> : BaseBindActivity<VB>() {
   
   @Suppress("UNCHECKED_CAST")
   protected val viewModel by lazy(LazyThreadSafetyMode.NONE) {

@@ -1,0 +1,237 @@
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/login_container"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/config_white_black" >
+
+    <TextView
+        android:id="@+id/login_tv_login"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:layout_marginEnd="16dp"
+        android:gravity="start"
+        android:text="登录"
+        android:textColor="@color/config_level_two_font_color"
+        android:textSize="34sp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="1.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.19"
+        tools:ignore="HardcodedText" />
+
+    <TextView
+        android:id="@+id/login_tv_welcome"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="您好鸭，欢迎来到掌上重邮~"
+        android:textColor="@color/config_alpha_level_two_font_color"
+        android:textSize="18sp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="@+id/login_tv_login"
+        app:layout_constraintTop_toBottomOf="@+id/login_tv_login"
+        app:layout_constraintVertical_bias="0.01999998"
+        tools:ignore="HardcodedText" />
+
+
+    <ImageView
+        android:id="@+id/login_iv_account"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:srcCompat="@drawable/login_ic_student_id"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="@+id/login_tv_welcome"
+        app:layout_constraintTop_toBottomOf="@+id/login_tv_welcome"
+        app:layout_constraintVertical_bias="0.06999999"
+        tools:ignore="ContentDescription" />
+
+    <ImageView
+        android:id="@+id/login_iv_password"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="40dp"
+        app:srcCompat="@drawable/login_ic_password"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="@+id/login_iv_account"
+        app:layout_constraintStart_toStartOf="@+id/login_iv_account"
+        app:layout_constraintTop_toBottomOf="@+id/login_iv_account"
+        app:layout_constraintVertical_bias="0.0"
+        tools:ignore="ContentDescription" />
+
+
+    <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/login_et_account_container"
+        style="@style/LoginTextInputStyle"
+        android:layout_width="0dp"
+        android:layout_height="50dp"
+        android:layout_marginStart="24dp"
+        android:layout_marginEnd="16dp"
+        android:gravity="bottom"
+        app:layout_constraintBottom_toBottomOf="@+id/login_iv_account"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/login_iv_account"
+        app:layout_constraintTop_toTopOf="@+id/login_iv_account"
+        app:layout_constraintVertical_bias="1.0">
+
+        <androidx.appcompat.widget.AppCompatEditText
+            android:id="@+id/login_et_account"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@null"
+            android:drawablePadding="16dp"
+            android:hint="请输入学号"
+            android:inputType="number"
+            android:maxLength="10"
+            android:selectAllOnFocus="true"
+            android:singleLine="true"
+            android:textColor="@color/login_et_text_color"
+            android:textColorHint="@color/login_et_hint_color"
+            android:textSize="14sp"
+            tools:ignore="HardcodedText" />
+
+    </com.google.android.material.textfield.TextInputLayout>
+
+
+    <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/login_et_password_container"
+        style="@style/LoginTextInputStyle"
+        android:layout_width="0dp"
+        android:layout_height="50dp"
+        android:gravity="bottom"
+        android:focusable="true"
+        android:clickable="true"
+        app:layout_constraintBottom_toBottomOf="@+id/login_iv_password"
+        app:layout_constraintEnd_toEndOf="@+id/login_et_account_container"
+        app:layout_constraintStart_toStartOf="@+id/login_et_account_container"
+        app:layout_constraintTop_toBottomOf="@+id/login_et_account_container"
+        app:layout_constraintVertical_bias="1.0">
+
+        <androidx.appcompat.widget.AppCompatEditText
+            android:id="@+id/login_et_password"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="40dp"
+            android:background="@null"
+            android:drawablePadding="16dp"
+            android:hint="统一认证码后六位/19级及以前为身份证后六位"
+            android:imeOptions="actionSend"
+            android:inputType="textPassword"
+            android:maxLength="16"
+            android:selectAllOnFocus="true"
+            android:singleLine="true"
+            android:textColor="@color/login_et_text_color"
+            android:textColorHint="@color/login_et_hint_color"
+            android:textSize="14sp"
+            tools:ignore="HardcodedText" />
+
+    </com.google.android.material.textfield.TextInputLayout>
+
+
+    <Button
+        android:id="@+id/login_btn_login"
+        android:layout_width="0dp"
+        android:layout_height="52dp"
+        android:layout_marginStart="33dp"
+        android:layout_marginTop="48dp"
+        android:layout_marginEnd="33dp"
+        android:background="@drawable/login_ic_btn_login_background"
+        android:text="登 录"
+        android:textColor="#FFFFFF"
+        android:textSize="18sp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/login_tv_user_agreement"
+        app:layout_constraintVertical_bias="0.11"
+        tools:ignore="HardcodedText" />
+
+
+    <RelativeLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/login_btn_login"
+        app:layout_constraintVertical_bias="0.85">
+
+        <TextView
+            android:id="@+id/login_tv_tourist_mode"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="没有学号么？"
+            android:textColor="#ABBCD8"
+            android:textSize="13sp"
+            tools:ignore="HardcodedText" />
+
+        <TextView
+            android:id="@+id/login_tv_tourist_mode_enter"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_toEndOf="@+id/login_tv_tourist_mode"
+            android:text="游客模式吧"
+            android:textColor="@color/login_tv_text_tourist"
+            android:textSize="13sp"
+            tools:ignore="HardcodedText" />
+    </RelativeLayout>
+
+
+    <com.airbnb.lottie.LottieAnimationView
+        android:id="@+id/login_lav_check"
+        android:layout_width="18dp"
+        android:layout_height="18dp"
+        android:layout_marginTop="32dp"
+        app:layout_constraintHorizontal_bias="0.929"
+        app:layout_constraintStart_toStartOf="@+id/login_iv_password"
+        app:layout_constraintTop_toBottomOf="@+id/login_et_password_container"
+        app:lottie_progress="0.39"
+        app:lottie_rawRes="@raw/lottie_check_login" />
+
+    <TextView
+        android:id="@+id/login_tv_user_agreement"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="32dp"
+        android:text="同意《用户协议》和《隐私权政策》"
+        android:textSize="11sp"
+        android:textColor="#ABBCD8"
+        app:layout_constraintStart_toEndOf="@+id/login_lav_check"
+        app:layout_constraintTop_toBottomOf="@+id/login_et_password_container"
+        tools:ignore="HardcodedText" />
+
+    <!--这个登录时的飞机动画-->
+    <com.airbnb.lottie.LottieAnimationView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:visibility="gone"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:lottie_autoPlay="true"
+        app:lottie_loop="true"
+        app:lottie_rawRes="@raw/login_loging" />
+
+    <TextView
+        android:id="@+id/login_tv_forget_password"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="22dp"
+        android:text="忘记密码？"
+        android:textColor="#ABBCD8"
+        android:textSize="12sp"
+        app:layout_constraintBottom_toBottomOf="@+id/login_tv_user_agreement"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/login_tv_user_agreement"
+        tools:ignore="HardcodedText" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

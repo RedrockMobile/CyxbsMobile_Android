@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <color name="config_white_black">#000000</color>
+    <color name="config_black_white">#FFFFFF</color>
+
+    <!--    主要字体颜色分以下四种，下列按照蓝色由深到浅排序，要用自取-->
+    <!--    一级字体颜色-->
+    <color name="config_level_one_font_color">#ffffff</color>
+    <!--    二级字体颜色-->
+    <color name="config_level_two_font_color">#ffffff</color>
+    <!--    三级字体颜色-->
+    <color name="config_level_three_font_color">#ffffff</color>
+    <!--    四级字体颜色-->
+    <color name="config_level_four_font_color">#ffffff</color>
+
+    <!--    60%透明度的二级字体-->
+    <color name="config_alpha_level_two_font_color">#5A5A5A</color>
+    <!--    44%透明度的二级字体-->
+    <color name="config_alpha_forty_level_two_font_color">#705A5A5A</color>
+
+    <!--    公共dialog背景-->
+    <color name="config_dialog_bg">#2C2C2C</color>
+
+</resources>
