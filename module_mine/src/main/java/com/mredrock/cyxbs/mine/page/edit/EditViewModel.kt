@@ -16,7 +16,7 @@ import com.mredrock.cyxbs.common.viewmodel.BaseViewModel
 import com.mredrock.cyxbs.mine.util.apiService
 import com.mredrock.cyxbs.mine.util.extension.normalStatus
 import com.mredrock.cyxbs.mine.util.widget.ExecuteOnceObserver
-import com.ndhzs.api.store.IStoreService
+import com.mredrock.cyxbs.api.store.IStoreService
 import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
 import io.reactivex.rxjava3.schedulers.Schedulers
 import okhttp3.MultipartBody

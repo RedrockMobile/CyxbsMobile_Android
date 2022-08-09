@@ -19,7 +19,7 @@ import com.mredrock.cyxbs.qa.beannew.ReplyInfo
 import com.mredrock.cyxbs.qa.network.ApiServiceNew
 import com.mredrock.cyxbs.qa.network.NetworkState
 import com.mredrock.cyxbs.qa.utils.removeContinuousEnters
-import com.ndhzs.api.store.IStoreService
+import com.mredrock.cyxbs.api.store.IStoreService
 
 /**
  * @Author: zhangzhe

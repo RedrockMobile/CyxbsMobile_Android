@@ -6,8 +6,7 @@
     android:layout_height="match_parent"
     android:background="@color/store_stamp_center_background"
     android:clipChildren="false"
-    android:orientation="vertical"
-    tools:context="com.mredrock.cyxbs.store.page.center.ui.activity.StoreCenterActivity">
+    android:orientation="vertical" >
 
     <include
         android:id="@+id/store_toolbar_stamp_detail"

@@ -21,6 +21,7 @@ import com.mredrock.cyxbs.store.R
  *    e-mail : 1140143252@qq.com
  *    date   : 2021/8/1 13:13
  */
+@Deprecated("错误封装，Fragment 不能向外暴露方法和接口！！！")
 class ExchangeDialog private constructor(): DialogFragment() {
 
     enum class DialogType(val layoutId: Int) {

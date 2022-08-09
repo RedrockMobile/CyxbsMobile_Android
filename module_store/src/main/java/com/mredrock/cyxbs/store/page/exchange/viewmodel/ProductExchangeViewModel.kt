@@ -59,8 +59,7 @@ class ProductExchangeViewModel : BaseViewModel() {
                 } else {
                     _exchangeError.postValue(StoreType.ExchangeError.OTHER_ERROR) // 这里是其他网络错误
                 }
-            }
-            .safeSubscribeBy {
+            }.safeSubscribeBy {
                 _exchangeResult.postValue(it)
             }
     }
