@@ -3,6 +3,8 @@ package com.mredrock.cyxbs.lib.base.operations
 import android.view.View
 import androidx.lifecycle.LifecycleOwner
 import com.mredrock.cyxbs.api.account.IAccountService
+import com.mredrock.cyxbs.lib.utils.extensions.RxjavaLifecycle
+import com.mredrock.cyxbs.lib.utils.extensions.ToastUtils
 import com.mredrock.cyxbs.lib.utils.service.impl
 
 /**
@@ -13,7 +15,7 @@ import com.mredrock.cyxbs.lib.utils.service.impl
  * @email guo985892345@foxmail.com
  * @date 2022/8/8 20:58
  */
-interface OperationUi {
+interface OperationUi : ToastUtils, RxjavaLifecycle {
   
   /**
    * 根布局

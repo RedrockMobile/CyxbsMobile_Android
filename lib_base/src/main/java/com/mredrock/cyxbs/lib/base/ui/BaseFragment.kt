@@ -12,8 +12,6 @@ import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleCoroutineScope
 import androidx.lifecycle.coroutineScope
 import com.mredrock.cyxbs.lib.base.operations.OperationFragment
-import com.mredrock.cyxbs.lib.utils.extensions.RxjavaLifecycle
-import io.reactivex.rxjava3.disposables.Disposable
 
 /**
  * 绝对基础的抽象
@@ -57,14 +55,6 @@ abstract class BaseFragment : OperationFragment {
     super.onCreate(savedInstanceState)
   }
   
-  @CallSuper
-  override fun onDestroyView() {
-    super.onDestroyView()
-    // 取消 Rxjava 流
-    mDisposableList.filter { !it.isDisposed }.forEach { it.dispose() }
-    mDisposableList.clear()
-  }
-  
   /**
    * 替换 Fragment 的正确用法。
    * 如果不按照正确方式使用，会造成 ViewModel 失效，
@@ -98,15 +88,6 @@ abstract class BaseFragment : OperationFragment {
     }
   }
   
-  private val mDisposableList = mutableListOf<Disposable>()
-  
-  /**
-   * 实现 [RxjavaLifecycle] 的方法，用于带有生命周期的调用
-   */
-  final override fun onAddRxjava(disposable: Disposable) {
-    mDisposableList.add(disposable)
-  }
-  
   final override val rootView: View
     get() = requireView()
   
@@ -130,7 +111,7 @@ abstract class BaseFragment : OperationFragment {
     ReplaceWith("viewLifecycleScope")
   )
   val lifecycleScope: LifecycleCoroutineScope
-    get() = lifecycle.coroutineScope
+    get() = super.getLifecycle().coroutineScope
   
   val viewLifecycleScope: LifecycleCoroutineScope
     get() = viewLifecycleOwner.lifecycle.coroutineScope

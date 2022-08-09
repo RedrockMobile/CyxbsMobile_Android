@@ -9,6 +9,7 @@ when {
   projectName == "lib_common" -> LibCommonProject(project).apply()
   projectName == "lib_base" -> LibBaseProject(project).apply()
   projectName == "lib_utils" -> LibUtilsProject(project).apply()
+  projectName == "lib_config" -> LibConfigProject(project).apply()
   projectName.startsWith("module_") -> ModuleProject(project).apply()
   projectName.startsWith("lib_") -> LibProject(project).apply()
   projectName.startsWith("api_") -> ApiProject(project).apply()

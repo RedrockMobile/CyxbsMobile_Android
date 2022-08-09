@@ -16,6 +16,7 @@ class ModuleProject(project: Project) : BaseLibraryProject(project) {
   
   override fun initProject() {
     checkIsInDebug()
+    // 这里面只依赖带有 internal 修饰的
     dependAndroidView()
     dependAndroidKtx()
     dependLifecycleKtx()

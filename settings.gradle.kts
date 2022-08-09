@@ -1,7 +1,10 @@
 @file:Suppress("UnstableApiUsage")
 
-include(":module_login:api_login")
 
+
+/*
+* 这里每次新建模块都会 include，把它们删掉，因为已经默认 include 了
+* */
 
 pluginManagement {
     includeBuild("build-logic")
@@ -30,7 +33,7 @@ dependencyResolutionManagement {
     }
 }
 
-// 测试使用，排除掉不需要的模块
+// 测试使用，排除掉不需要的模块，记得还原！！！
 val excludeList = listOf<String>(
 )
 

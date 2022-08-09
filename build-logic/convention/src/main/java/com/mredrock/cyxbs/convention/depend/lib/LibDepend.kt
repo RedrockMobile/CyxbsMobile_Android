@@ -15,21 +15,14 @@ object LibDepend {
   * 注意事项：
   * 1、别忘了前面要打引号
   * 2、建议按顺序添加
+  * 3、一般情况下只有共用的才会添加，比如像 lib_account 这种，只需要添加它的 api 模块就够了，
+  *   没必要添加它的 lib 模块，因为没有其他模块会使用
   * */
   
-  const val account = ":lib_account"
   const val base = ":lib_base"
   const val common = ":lib_common"
   const val config = ":lib_config"
-  const val protocol = ":lib_protocol"
-  const val update = ":lib_update"
   const val utils = ":lib_utils"
-}
-
-fun Project.dependLibAccount() {
-  dependencies {
-    "implementation"(project(LibDepend.account))
-  }
 }
 
 fun Project.dependLibBase() {
@@ -60,18 +53,6 @@ fun Project.dependLibCommon() {
 fun Project.dependLibConfig() {
   dependencies {
     "implementation"(project(LibDepend.config))
-  }
-}
-
-fun Project.dependLibProtocol() {
-  dependencies {
-    "implementation"(project(LibDepend.protocol))
-  }
-}
-
-fun Project.dependLibUpdate() {
-  dependencies {
-    "implementation"(project(LibDepend.update))
   }
 }
 
