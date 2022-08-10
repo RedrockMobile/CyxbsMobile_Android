@@ -4,6 +4,7 @@ import android.app.Activity
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
+import android.widget.FrameLayout
 import androidx.lifecycle.Observer
 import com.alibaba.android.arouter.facade.annotation.Route
 import com.mredrock.cyxbs.common.config.COURSE_POS_TO_MAP
@@ -19,7 +20,6 @@ import com.mredrock.cyxbs.discover.map.util.KeyboardController
 import com.mredrock.cyxbs.discover.map.viewmodel.MapViewModel
 import com.mredrock.cyxbs.discover.map.widget.GlideProgressDialog
 import com.mredrock.cyxbs.discover.map.widget.ProgressDialog
-import kotlinx.android.synthetic.main.map_activity_map.*
 import top.limuyang2.photolibrary.LPhotoHelper
 import java.io.File
 
@@ -66,6 +66,7 @@ class MapActivity : BaseViewModelActivity<MapViewModel>() {
         viewModel.fragmentFavoriteEditIsShowing.observe(
                 this@MapActivity,
                 Observer<Boolean> { t ->
+                    val map_fl_main_fragment = findViewById<FrameLayout>(R.id.map_fl_main_fragment)
                     if (t == true) {
                         val transaction = fragmentManager.beginTransaction()
                         transaction.setCustomAnimations(R.animator.map_slide_from_right, R.animator.map_slide_to_left, R.animator.map_slide_from_left, R.animator.map_slide_to_right)

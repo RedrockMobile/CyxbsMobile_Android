@@ -10,9 +10,7 @@ import android.view.View
 import android.view.ViewAnimationUtils
 import android.view.ViewGroup
 import android.view.animation.DecelerateInterpolator
-import android.widget.FrameLayout
-import android.widget.PopupWindow
-import android.widget.Toast
+import android.widget.*
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -23,6 +21,7 @@ import com.mredrock.cyxbs.common.utils.extensions.*
 import com.mredrock.cyxbs.discover.map.R
 import com.mredrock.cyxbs.discover.map.bean.IconBean
 import com.mredrock.cyxbs.discover.map.bean.PlaceItem
+import com.mredrock.cyxbs.discover.map.component.ClickView
 import com.mredrock.cyxbs.discover.map.component.MapLayout
 import com.mredrock.cyxbs.discover.map.component.MapToast
 import com.mredrock.cyxbs.discover.map.model.DataSet
@@ -31,7 +30,6 @@ import com.mredrock.cyxbs.discover.map.ui.adapter.FavoriteListAdapter
 import com.mredrock.cyxbs.discover.map.ui.adapter.SymbolRvAdapter
 import com.mredrock.cyxbs.discover.map.viewmodel.MapViewModel
 import com.mredrock.cyxbs.discover.map.widget.*
-import kotlinx.android.synthetic.main.map_fragment_map_view.*
 import java.io.File
 
 
@@ -44,9 +42,18 @@ class MapViewFragment : BaseFragment() {
     private var lastClickTime: Long = 0
     private val placeData = mutableListOf<PlaceItem>()
 
+    private val mMapLayout by R.id.map_layout.view<MapLayout>()
+    private val mIvLock by R.id.map_iv_lock.view<ClickView>()
+    private val mBottomSheetContent by R.id.map_bottom_sheet_content.view<FrameLayout>()
+    private val mRvSymbolPlaces by R.id.map_rv_symbol_places.view<RecyclerView>()
+    private val mLlMapViewMyFavorite by R.id.map_ll_map_view_my_favorite.view<LinearLayout>()
+    private val mIvVr by R.id.map_iv_vr.view<ClickView>()
+    private val mRootMapView by R.id.map_root_map_view.view<FrameLayout>()
+
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         return inflater.inflate(R.layout.map_fragment_map_view, container, false)
     }
+
 
     @SuppressLint("ResourceAsColor")
     override fun onActivityCreated(savedInstanceState: Bundle?) {
@@ -59,7 +66,7 @@ class MapViewFragment : BaseFragment() {
         viewModel.mapInfo.observe(viewLifecycleOwner, Observer { data ->
             placeData.clear()
             placeData.addAll(data.placeList)
-            map_layout.setBackgroundColor(Color.parseColor(data.mapBackgroundColor))
+            mMapLayout.setBackgroundColor(Color.parseColor(data.mapBackgroundColor))
             val list = data.placeList
             val iconList = mutableListOf<IconBean>()
             /**
@@ -83,7 +90,7 @@ class MapViewFragment : BaseFragment() {
                 }
 
             }
-            map_layout.addSomeIcons(iconList)
+            mMapLayout.addSomeIcons(iconList)
             openSiteId = data.openSiteId.toString()
             /**
              * 根据时间戳判断是否清除缓存重新加载
@@ -100,19 +107,19 @@ class MapViewFragment : BaseFragment() {
                         requireContext().getString(R.string.map_update_message),
                             object : OnUpdateSelectListener {
                                 override fun onDeny() {
-                                    map_layout.setUrl("noUpdate")
+                                    mMapLayout.setUrl("noUpdate")
                                 }
 
                                 override fun onPositive() {
                                     deleteFile(path)
                                     DataSet.savePictureVersion(data.pictureVersion)
-                                    map_layout.setUrl(data.mapUrl)
+                                    mMapLayout.setUrl(data.mapUrl)
                                 }
                             })
                 }
             } else {
                 DataSet.savePictureVersion(data.pictureVersion)
-                map_layout.setUrl(data.mapUrl)
+                mMapLayout.setUrl(data.mapUrl)
             }
 
         })
@@ -123,17 +130,17 @@ class MapViewFragment : BaseFragment() {
             when (it) {
                 MapViewModel.PLACE_SEARCH_500 -> {
                     context?.let { MapToast.makeText(it, it.getText(R.string.map_open_site_id_null), Toast.LENGTH_SHORT).show() }
-                    map_layout.setOpenSiteId(openSiteId)
-                    map_layout.showIconWithoutAnim(openSiteId)
+                    mMapLayout.setOpenSiteId(openSiteId)
+                    mMapLayout.showIconWithoutAnim(openSiteId)
                 }
                 MapViewModel.PLACE_SEARCH_NULL -> {
-                    map_layout.setOpenSiteId(openSiteId)
-                    map_layout.showIconWithoutAnim(openSiteId)
+                    mMapLayout.setOpenSiteId(openSiteId)
+                    mMapLayout.showIconWithoutAnim(openSiteId)
                 }
                 else -> {
                     viewModel.openId.value?.let { it1 ->
-                        map_layout.setOpenSiteId(it1)
-                        map_layout.showIconWithoutAnim(it1)
+                        mMapLayout.setOpenSiteId(it1)
+                        mMapLayout.showIconWithoutAnim(it1)
                     }
                 }
             }
@@ -157,7 +164,7 @@ class MapViewFragment : BaseFragment() {
                     }
                 } else {
                     if (fileIsExists(path)) {
-                        map_layout.setUrl("loadFail")
+                        mMapLayout.setUrl("loadFail")
                     } else {
                         GlideProgressDialog.hide()
                         context?.let { it1 ->
@@ -179,10 +186,10 @@ class MapViewFragment : BaseFragment() {
         /**
          * 设置地点大头针（水滴）点击事件
          */
-        map_layout.setMyOnIconClickListener(object : MapLayout.OnIconClickListener {
+        mMapLayout.setMyOnIconClickListener(object : MapLayout.OnIconClickListener {
             override fun onIconClick(v: View) {
                 val bean = v.tag as IconBean
-                map_layout.focusToPoint(bean.sx, bean.sy)
+                mMapLayout.focusToPoint(bean.sx, bean.sy)
                 viewModel.getPlaceDetails(bean.id.toString(), true)
                 viewModel.unCheck.value = true
             }
@@ -191,7 +198,7 @@ class MapViewFragment : BaseFragment() {
         /**
          * 监听点击到建筑区域的点击事件
          */
-        map_layout.setMyOnPlaceClickListener(object : MapLayout.OnPlaceClickListener {
+        mMapLayout.setMyOnPlaceClickListener(object : MapLayout.OnPlaceClickListener {
             override fun onPlaceClick(v: View) {
                 val bean = v.tag as IconBean
                 viewModel.getPlaceDetails(bean.id.toString(), false)
@@ -204,11 +211,11 @@ class MapViewFragment : BaseFragment() {
          * 监听显示某一个地点
          */
         viewModel.showIconById.observe(viewLifecycleOwner, Observer {
-            map_layout.closeAllIcon()
-            map_layout.setOnCloseFinishListener(object : MapLayout.OnCloseFinishListener {
+            mMapLayout.closeAllIcon()
+            mMapLayout.setOnCloseFinishListener(object : MapLayout.OnCloseFinishListener {
                 override fun onCloseFinish() {
-                    map_layout.showSomeIcons(listOf(it))
-                    map_layout.focusToPoint(it)
+                    mMapLayout.showSomeIcons(listOf(it))
+                    mMapLayout.focusToPoint(it)
                 }
             })
         })
@@ -216,7 +223,7 @@ class MapViewFragment : BaseFragment() {
         /**
          * 监听点击到非建筑区域的点击事件
          */
-        map_layout.setMyOnNoPlaceClickListener(object : MapLayout.OnNoPlaceClickListener {
+        mMapLayout.setMyOnNoPlaceClickListener(object : MapLayout.OnNoPlaceClickListener {
             override fun onNoPlaceClick() {
                 //通知隐藏底部栏
                 if (viewModel.bottomSheetStatus.value == BottomSheetBehavior.STATE_EXPANDED) {
@@ -235,49 +242,49 @@ class MapViewFragment : BaseFragment() {
                 animator.duration = 500
                 animator.addUpdateListener { t ->
                     val currentValue: Float = t.animatedValue as Float
-                    map_iv_lock.scaleX = currentValue
-                    map_iv_lock.scaleY = currentValue
+                    mIvLock.scaleX = currentValue
+                    mIvLock.scaleY = currentValue
                 }
                 animator.start()
-                map_iv_lock.setImageResource(R.drawable.map_ic_unlock)
+                mIvLock.setImageResource(R.drawable.map_ic_unlock)
                 MapToast.makeText(requireContext(), R.string.map_unlock, Toast.LENGTH_SHORT).show()
                 viewModel.isLock.value = false
-                map_layout.setIsLock(false)
+                mMapLayout.setIsLock(false)
             }
         })
 
         /**
          * 监听锁定按钮
          */
-        map_iv_lock.setOnClickListener {
+        mIvLock.setOnClickListener {
             if (viewModel.isLock.value!!) {
                 if (viewModel.isLock.value!!) {
                     val animator = ValueAnimator.ofFloat(1f, 0.8f, 1.2f, 1f)
                     animator.duration = 500
                     animator.addUpdateListener {
                         val currentValue: Float = it.animatedValue as Float
-                        map_iv_lock.scaleX = currentValue
-                        map_iv_lock.scaleY = currentValue
+                        mIvLock.scaleX = currentValue
+                        mIvLock.scaleY = currentValue
                     }
                     animator.start()
-                    map_iv_lock.setImageResource(R.drawable.map_ic_unlock)
+                    mIvLock.setImageResource(R.drawable.map_ic_unlock)
                     MapToast.makeText(requireContext(), R.string.map_unlock, Toast.LENGTH_SHORT).show()
                     viewModel.isLock.value = false
-                    map_layout.setIsLock(false)
+                    mMapLayout.setIsLock(false)
                 }
             } else {
                 val animator = ValueAnimator.ofFloat(1f, 1.2f, 0.8f, 1f)
                 animator.duration = 500
                 animator.addUpdateListener {
                     val currentValue: Float = it.animatedValue as Float
-                    map_iv_lock.scaleX = currentValue
-                    map_iv_lock.scaleY = currentValue
+                    mIvLock.scaleX = currentValue
+                    mIvLock.scaleY = currentValue
                 }
                 animator.start()
-                map_iv_lock.setImageResource(R.drawable.map_ic_lock)
+                mIvLock.setImageResource(R.drawable.map_ic_lock)
                 MapToast.makeText(requireContext(), R.string.map_lock, Toast.LENGTH_SHORT).show()
                 viewModel.isLock.value = true
-                map_layout.setIsLock(true)
+                mMapLayout.setIsLock(true)
             }
 
         }
@@ -285,8 +292,8 @@ class MapViewFragment : BaseFragment() {
         /**
          * 初始化bottomSheet
          */
-        bottomSheetBehavior = BottomSheetBehavior.from(map_bottom_sheet_content)
-        map_bottom_sheet_content.invisible()
+        bottomSheetBehavior = BottomSheetBehavior.from(mBottomSheetContent)
+        mBottomSheetContent.invisible()
         childFragmentManager.beginTransaction().apply {
             add(R.id.map_bottom_sheet_content, PlaceDetailBottomSheetFragment())
             commit()
@@ -307,9 +314,9 @@ class MapViewFragment : BaseFragment() {
          * 初始化标签adapter（搜索框下方按钮）
          */
         val linearLayoutManager = LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false)
-        map_rv_symbol_places.layoutManager = linearLayoutManager
+        mRvSymbolPlaces.layoutManager = linearLayoutManager
         val symbolRvAdapter = context?.let { SymbolRvAdapter(it, viewModel, mutableListOf(), viewLifecycleOwner) }
-        map_rv_symbol_places.adapter = symbolRvAdapter
+        mRvSymbolPlaces.adapter = symbolRvAdapter
 
         /**
          * 初始化我的收藏列表adapter
@@ -325,8 +332,8 @@ class MapViewFragment : BaseFragment() {
         val favoriteListAdapter = context?.let { FavoriteListAdapter(it, viewModel, mutableListOf()) }
         mapFavoriteRecyclerView.adapter = favoriteListAdapter
         //设置“我的收藏”点击事件
-        map_ll_map_view_my_favorite.pressToZoomOut()
-        map_ll_map_view_my_favorite.setOnClickListener {
+        mLlMapViewMyFavorite.pressToZoomOut()
+        mLlMapViewMyFavorite.setOnClickListener {
             context?.doIfLogin("收藏") {
                 if (isFastClick()) {
                     viewModel.unCheck.value = true
@@ -337,7 +344,7 @@ class MapViewFragment : BaseFragment() {
                     }
                     viewModel.refreshCollectList(true)
                     if (!popupWindow.isShowing) {
-                        popupWindow.showAsDropDown(map_ll_map_view_my_favorite, map_ll_map_view_my_favorite.width - (context?.dp2px(140f)
+                        popupWindow.showAsDropDown(mLlMapViewMyFavorite, mLlMapViewMyFavorite.width - (context?.dp2px(140f)
                                 ?: 30), context?.dp2px(15f) ?: 30)
                         popupWindow.update()
                     }
@@ -379,22 +386,22 @@ class MapViewFragment : BaseFragment() {
                     when (i) {
                         BottomSheetBehavior.STATE_COLLAPSED -> {
                             //半隐藏底部栏
-                            map_bottom_sheet_content.visible()
+                            mBottomSheetContent.visible()
                             bottomSheetBehavior.state = BottomSheetBehavior.STATE_COLLAPSED
                         }
 
                         BottomSheetBehavior.STATE_EXPANDED -> {
                             //展开底部栏
-                            map_bottom_sheet_content.visible()
+                            mBottomSheetContent.visible()
                             //下面这两句，因为低版本依赖的bottomSheetBehavior，当内部view高度发生变化时，不会及时修正高度，故手动测量
                             //换成高版本依赖可以删除
-                            map_bottom_sheet_content.requestLayout()
-                            map_bottom_sheet_content.invalidate()
+                            mBottomSheetContent.requestLayout()
+                            mBottomSheetContent.invalidate()
                             bottomSheetBehavior.state = BottomSheetBehavior.STATE_EXPANDED
                         }
 
                         BottomSheetBehavior.STATE_HIDDEN -> {
-                            map_bottom_sheet_content.invisible()
+                            mBottomSheetContent.invisible()
                             bottomSheetBehavior.state = BottomSheetBehavior.STATE_HIDDEN
                         }
 
@@ -410,19 +417,19 @@ class MapViewFragment : BaseFragment() {
         )
 
         viewModel.showSomePlaceIconById.observe(viewLifecycleOwner, Observer {
-            map_layout.closeAllIcon()
-            map_layout.setOnCloseFinishListener(object : MapLayout.OnCloseFinishListener {
+            mMapLayout.closeAllIcon()
+            mMapLayout.setOnCloseFinishListener(object : MapLayout.OnCloseFinishListener {
                 override fun onCloseFinish() {
                     /**
                      * 关闭动画结束
                      */
-                    map_layout?.showSomeIcons(it)
+                    mMapLayout?.showSomeIcons(it)
                 }
             })
 
         })
 
-        map_layout.setOnShowFinishListener(object : MapLayout.OnShowFinishListener {
+        mMapLayout.setOnShowFinishListener(object : MapLayout.OnShowFinishListener {
             override fun onShowFinish() {
                 /**
                  * 展示动画结束
@@ -433,10 +440,10 @@ class MapViewFragment : BaseFragment() {
         /**
          * VR按钮点击事件
          */
-        map_iv_vr.setOnClickListener {
-            val xc: Int = (map_root_map_view.left + map_root_map_view.right) / 2
-            val yc: Int = (map_root_map_view.top + map_root_map_view.bottom) / 2
-            val animator = ViewAnimationUtils.createCircularReveal(map_root_map_view, xc, yc, map_root_map_view.height.toFloat() + 100f, 0f)
+        mIvVr.setOnClickListener {
+            val xc: Int = (mRootMapView.left + mRootMapView.right) / 2
+            val yc: Int = (mRootMapView.top + mRootMapView.bottom) / 2
+            val animator = ViewAnimationUtils.createCircularReveal(mRootMapView, xc, yc, mRootMapView.height.toFloat() + 100f, 0f)
             animator.interpolator = DecelerateInterpolator()
             animator.duration = 1000
             animator.addListener(object : Animator.AnimatorListener {
@@ -454,7 +461,7 @@ class MapViewFragment : BaseFragment() {
 
                 override fun onAnimationStart(p0: Animator?) {
                     viewModel.mapViewIsInAnimation.value = true
-                    map_root_map_view.animate().alpha(0f).duration = 1000
+                    mRootMapView.animate().alpha(0f).duration = 1000
                 }
 
             })
@@ -465,7 +472,7 @@ class MapViewFragment : BaseFragment() {
     }
 
     override fun onResume() {
-        map_root_map_view.animate().alpha(1f).duration = 1000
+        mRootMapView.animate().alpha(1f).duration = 1000
         viewModel.mapViewIsInAnimation.value = false
         super.onResume()
     }
@@ -499,9 +506,9 @@ class MapViewFragment : BaseFragment() {
     /**
      * 销毁时移除所有view，防止二次创建
      */
-    override fun onDestroy() {
-        map_layout?.removeMyViews()
-        super.onDestroy()
+    override fun onDestroyView() {
+        mMapLayout.removeMyViews()
+        super.onDestroyView()
     }
 
     private fun isFastClick(): Boolean {

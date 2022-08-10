@@ -2,10 +2,6 @@ package com.mredrock.cyxbs.convention.publish
 
 import com.android.build.gradle.LibraryExtension
 import com.android.build.gradle.internal.dsl.BaseAppModuleExtension
-import gradle.kotlin.dsl.accessors._b7719bb009bf77985775c5b9fa4e40d9.publishing
-import org.gradle.kotlin.dsl.`maven-publish`
-import org.gradle.kotlin.dsl.configure
-import org.gradle.kotlin.dsl.create
 
 plugins {
   `maven-publish`

@@ -23,12 +23,12 @@ import android.graphics.drawable.GradientDrawable
 import android.net.Uri
 import android.os.Environment
 import android.provider.MediaStore
-import android.util.Log
 import android.view.MotionEvent
 import android.view.View
 import android.view.ViewAnimationUtils.createCircularReveal
 import android.widget.ImageView
 import android.widget.LinearLayout
+import android.widget.TextView
 import androidx.core.content.ContextCompat
 import androidx.core.content.res.ResourcesCompat
 import com.afollestad.materialdialogs.MaterialDialog
@@ -49,8 +49,7 @@ import com.mredrock.cyxbs.mine.page.edit.EditInfoActivity
 import com.mredrock.cyxbs.mine.page.mine.widget.BlurBitmap
 import com.mredrock.cyxbs.mine.util.transformer.ScaleInTransformer
 import com.yalantis.ucrop.UCrop
-import kotlinx.android.synthetic.main.mine_activity_edit_info.*
-import kotlinx.android.synthetic.main.mine_activity_homepage_head.view.*
+import de.hdodenhof.circleimageview.CircleImageView
 import okhttp3.MultipartBody
 import java.io.File
 import java.io.IOException
@@ -111,8 +110,8 @@ class HomepageActivity : BaseViewModelActivity<MineViewModel>() {
      */
     private val fileDir by lazyUnlock {
         StringBuilder(Environment.getExternalStorageDirectory().path)
-                .append(DIR_PHOTO)
-                .toString()
+            .append(DIR_PHOTO)
+            .toString()
     }
 
     /**
@@ -126,12 +125,15 @@ class HomepageActivity : BaseViewModelActivity<MineViewModel>() {
      */
     var isGirl: String = "男"
 
+
+
+
     var tabNames = listOf<String>("我的动态", "我的身份")
     val imageViewList by lazyUnlock {
         mutableListOf<ImageView>(
-                dataBinding.clPersonalInformation.iv_nameplate1,
-                dataBinding.clPersonalInformation.iv_nameplate2,
-                dataBinding.clPersonalInformation.iv_nameplate3
+            dataBinding.clPersonalInformation.findViewById(R.id.iv_nameplate1),
+            dataBinding.clPersonalInformation.findViewById(R.id.iv_nameplate2),
+            dataBinding.clPersonalInformation.findViewById(R.id.iv_nameplate3)
         )
     }
     private val userService: IUserService by lazy {
@@ -154,20 +156,28 @@ class HomepageActivity : BaseViewModelActivity<MineViewModel>() {
 
 
     fun initData() {
+        val layout  = dataBinding.clPersonalInformation
+        val tv_id_number: TextView = layout.findViewById(R.id.tv_id_number)
+        val tv_grade: TextView = layout.findViewById(R.id.tv_grade)
+        val mine_tv_constellation: TextView = layout.findViewById(R.id.mine_tv_constellation)
+        val tv_sex: TextView = layout.findViewById(R.id.tv_sex)
+        val tv_name: TextView = layout.findViewById(R.id.tv_name)
+        val tv_signature: TextView = layout.findViewById(R.id.tv_signature)
+        val civ_head: CircleImageView = layout.findViewById(R.id.civ_head)
         alphaMineView = dataBinding.clPersonalInformation.alpha
         viewModel._userInfo.observeForever {
             initSatu(it)
             changeAttention(it)
-            dataBinding.clPersonalInformation.tv_id_number.text = it.data.uid.toString()
-            dataBinding.clPersonalInformation.tv_grade.text = it.data.grade + "级"
+            tv_id_number.text = it.data.uid.toString()
+            tv_grade.text = it.data.grade + "级"
             if (it.data.constellation.equals("")) {
-                dataBinding.clPersonalInformation.mine_tv_constellation.text = "十三星座"
+                mine_tv_constellation.text = "十三星座"
             } else {
-                dataBinding.clPersonalInformation.mine_tv_constellation.text = it.data.constellation
+                mine_tv_constellation.text = it.data.constellation
             }
-            dataBinding.clPersonalInformation.tv_sex.text = it.data.gender
-            dataBinding.clPersonalInformation.tv_name.text = it.data.nickname
-            dataBinding.clPersonalInformation.tv_signature.text = it.data.introduction
+            tv_sex.text = it.data.gender
+            tv_name.text = it.data.nickname
+            tv_signature.text = it.data.introduction
             nickname = it.data.nickname
             isNeedRefresh = false
             isSelf = it.data.is_self
@@ -182,7 +192,7 @@ class HomepageActivity : BaseViewModelActivity<MineViewModel>() {
                 initBlurBitmap(it)
             }
             dataBinding.srlRefresh.isRefreshing = false
-            loadAvatar(it.data.photoSrc, dataBinding.clPersonalInformation.civ_head)
+            loadAvatar(it.data.photoSrc, civ_head)
             initTab()
         }
 
@@ -203,6 +213,8 @@ class HomepageActivity : BaseViewModelActivity<MineViewModel>() {
     }
 
     fun initTab() {
+        val iv_edit: ImageView = findViewById(R.id.iv_edit)
+        val tv_edit: TextView = findViewById(R.id.tv_edit)
         if (isSelf) {
             tabNames = listOf<String>("我的动态", "我的身份")
         } else {
@@ -211,8 +223,8 @@ class HomepageActivity : BaseViewModelActivity<MineViewModel>() {
             } else {
                 tabNames = listOf<String>("她的动态", "她的身份")
             }
-            dataBinding.clPersonalInformation.iv_edit.alpha = 0f
-            dataBinding.clPersonalInformation.tv_edit.alpha = 0f
+            iv_edit.alpha = 0f
+            tv_edit.alpha = 0f
         }
         TabLayoutMediator(dataBinding.mineTablayout, dataBinding.vp2Mine, true) { tab, position ->
             tab.text = tabNames[position]
@@ -220,16 +232,17 @@ class HomepageActivity : BaseViewModelActivity<MineViewModel>() {
     }
 
     val bg4 by lazy {
-        dataBinding.clPersonalInformation.mine_tv_concern.background as GradientDrawable
+        dataBinding.clPersonalInformation.findViewById<TextView>(R.id.mine_tv_concern).background as GradientDrawable
     }
 
 
     @SuppressLint("ResourceAsColor")
     fun changeAttention(data: UserInfo) {
+        val mine_tv_concern: TextView = findViewById(R.id.mine_tv_concern)
         if (data.data.is_self) {
-            dataBinding.clPersonalInformation.mine_tv_concern.visibility = View.INVISIBLE
+            mine_tv_concern.visibility = View.INVISIBLE
         } else {
-            dataBinding.clPersonalInformation.mine_tv_concern.visibility = View.VISIBLE
+            mine_tv_concern.visibility = View.VISIBLE
             if (data.data.isFocus) {
 
                 if (this.applicationContext.resources.configuration.uiMode == 0x21) {
@@ -239,14 +252,14 @@ class HomepageActivity : BaseViewModelActivity<MineViewModel>() {
 
                 }
                 if (data.data.isBefocused) {
-                    dataBinding.clPersonalInformation.mine_tv_concern.text = "互相关注"
+                    mine_tv_concern.text = "互相关注"
                 } else {
-                    dataBinding.clPersonalInformation.mine_tv_concern.text = "已关注"
+                    mine_tv_concern.text = "已关注"
                 }
             } else {
-                dataBinding.clPersonalInformation.mine_tv_concern.text = "关注"
+                mine_tv_concern.text = "关注"
 
-                    bg4.setColor(Color.parseColor("#4841E2"))
+                bg4.setColor(Color.parseColor("#4841E2"))
             }
         }
 
@@ -272,7 +285,7 @@ class HomepageActivity : BaseViewModelActivity<MineViewModel>() {
 
     fun initView() {
         val dynamicFragment =
-                ARouter.getInstance().build(QA_DYNAMIC_MINE_FRAGMENT).navigation() as Fragment
+            ARouter.getInstance().build(QA_DYNAMIC_MINE_FRAGMENT).navigation() as Fragment
         val list = arrayListOf<Fragment>(dynamicFragment, identityFragment)
         if (dynamicFragment is MineAndQa.RefreshListener) {
             MineAndQa.refreshListener = dynamicFragment
@@ -289,6 +302,11 @@ class HomepageActivity : BaseViewModelActivity<MineViewModel>() {
 
     @SuppressLint("ResourceAsColor")
     fun initListener() {
+        val layout = dataBinding.clPersonalInformation
+        val tv_fans_number: TextView = layout.findViewById(R.id.tv_fans_number)
+        val tv_attention_number: TextView = layout.findViewById(R.id.tv_attention_number)
+        val tv_praise_number: TextView = layout.findViewById(R.id.tv_praise_number)
+        val mine_tv_concern: TextView = layout.findViewById(R.id.mine_tv_concern)
         /**
          * 嵌套滑动由滑动距离传过来的滑动百分比的接口
          */
@@ -304,7 +322,12 @@ class HomepageActivity : BaseViewModelActivity<MineViewModel>() {
                     dataBinding.ivMineBackgroundNormal.alpha = 0f
                     dataBinding.btMineBack.setImageResource(R.drawable.mine_ic_iv_back_black_arrow)
                     dataBinding.tvMine.text = nickname
-                    dataBinding.tvMine.setTextColor(ContextCompat.getColor(this, R.color.mine_black))
+                    dataBinding.tvMine.setTextColor(
+                        ContextCompat.getColor(
+                            this,
+                            R.color.mine_black
+                        )
+                    )
                     dataBinding.flTabLine.gone()
                 }
                 dataBinding.tvMine.alpha = -alpha
@@ -328,12 +351,12 @@ class HomepageActivity : BaseViewModelActivity<MineViewModel>() {
             }
         }
         viewModel._PersonalCont.observeForever {
-            dataBinding.clPersonalInformation.tv_fans_number.text = it.data.fans.toString()
-            dataBinding.clPersonalInformation.tv_attention_number.text = it.data.follows.toString()
-            dataBinding.clPersonalInformation.tv_praise_number.text = it.data.praise.toString()
+            tv_fans_number.text = it.data.fans.toString()
+            tv_attention_number.text = it.data.follows.toString()
+            tv_praise_number.text = it.data.praise.toString()
 
         }
-        dataBinding.clPersonalInformation.mine_tv_concern.setOnClickListener {
+        mine_tv_concern.setOnClickListener {
             viewModel.changeFocusStatus(redid)
         }
         dataBinding.ivMineBackgroundNormal.setOnClickListener {
@@ -370,15 +393,16 @@ class HomepageActivity : BaseViewModelActivity<MineViewModel>() {
         dataBinding.clPersonalInformation.setOnClickListener {
 
         }
-
-        dataBinding.clPersonalInformation.tv_fans.setOnClickListener {
+        val tv_fans: TextView = layout.findViewById(R.id.tv_fans)
+        tv_fans.setOnClickListener {
             redid?.let { it1 -> FanActivity.activityStart(this, it1, TO_FANS) }
         }
-
-        dataBinding.clPersonalInformation.tv_attention.setOnClickListener {
+        val tv_attention: TextView = layout.findViewById(R.id.tv_attention)
+        tv_attention.setOnClickListener {
             redid?.let { it1 -> FanActivity.activityStart(this, it1, TO_ATTENTION) }
         }
-        dataBinding.clPersonalInformation.tv_edit.setOnClickListener {
+        val tv_edit:TextView = layout.findViewById(R.id.tv_edit)
+        tv_edit.setOnClickListener {
             if (isSelf) {
 
                 val intent = Intent(this, EditInfoActivity::class.java)
@@ -387,13 +411,14 @@ class HomepageActivity : BaseViewModelActivity<MineViewModel>() {
                 toast("不可以对别人资料动手动脚哦!")
             }
         }
-        dataBinding.clPersonalInformation.tv_fans_number.setOnClickListener {
+        tv_fans_number.setOnClickListener {
             redid?.let { it1 -> FanActivity.activityStart(this, it1, TO_FANS) }
         }
-        dataBinding.clPersonalInformation.tv_attention_number.setOnClickListener {
+        tv_attention_number.setOnClickListener {
             redid?.let { it1 -> FanActivity.activityStart(this, it1, TO_ATTENTION) }
         }
-        dataBinding.clPersonalInformation.iv_edit.setOnClickListener {
+        val iv_edit:ImageView = findViewById(R.id.iv_edit)
+        iv_edit.setOnClickListener {
             if (isSelf) {
                 val intent = Intent(this, EditInfoActivity::class.java)
                 startActivity(intent)
@@ -401,7 +426,8 @@ class HomepageActivity : BaseViewModelActivity<MineViewModel>() {
                 toast("不可以对别人的资料动手动脚哦!")
             }
         }
-        dataBinding.clPersonalInformation.tv_praise.setOnClickListener {
+        val tv_praise:TextView = findViewById(R.id.tv_praise)
+        tv_praise.setOnClickListener {
             if (isSelf) {
                 ARouter.getInstance().build(QA_MY_PRAISE).navigation()
             } else {
@@ -409,7 +435,7 @@ class HomepageActivity : BaseViewModelActivity<MineViewModel>() {
             }
 
         }
-        dataBinding.clPersonalInformation.tv_praise_number.setOnClickListener {
+        tv_praise_number.setOnClickListener {
             if (isSelf) {
                 ARouter.getInstance().build(QA_MY_PRAISE).navigation()
             } else {
@@ -432,7 +458,7 @@ class HomepageActivity : BaseViewModelActivity<MineViewModel>() {
     fun initBlurBitmap(bitmap: Bitmap?) {
         if (bitmap == null) {
             mTempBitmap =
-                    BitmapFactory.decodeResource(resources, R.drawable.mine_ic_iv_background)
+                BitmapFactory.decodeResource(resources, R.drawable.mine_ic_iv_background)
             mFinalBitmap = BlurBitmap.blur(this, mTempBitmap!!)
         } else {
             mTempBitmap = bitmap
@@ -449,11 +475,11 @@ class HomepageActivity : BaseViewModelActivity<MineViewModel>() {
      */
     fun loadBacgroundAnmator() {
         val p = createCircularReveal(
-                dataBinding.ivMineBackgroundNormal,
-                0,
-                0,
-                0f,
-                dataBinding.ivMineBackgroundNormal.height.toFloat() * 1.4f
+            dataBinding.ivMineBackgroundNormal,
+            0,
+            0,
+            0f,
+            dataBinding.ivMineBackgroundNormal.height.toFloat() * 1.4f
         )
         p.duration = 900
         p.addListener(object : Animator.AnimatorListener {
@@ -483,8 +509,8 @@ class HomepageActivity : BaseViewModelActivity<MineViewModel>() {
     fun changeBackground() {
         //获取权限
         doPermissionAction(
-                Manifest.permission.READ_EXTERNAL_STORAGE,
-                Manifest.permission.WRITE_EXTERNAL_STORAGE
+            Manifest.permission.READ_EXTERNAL_STORAGE,
+            Manifest.permission.WRITE_EXTERNAL_STORAGE
         ) {
             reason = "读取图片需要访问您的存储空间哦~"
             doAfterGranted {
@@ -586,9 +612,9 @@ class HomepageActivity : BaseViewModelActivity<MineViewModel>() {
         try {
 
             val fileBody = MultipartBody.Part.createFormData(
-                    "pic",
-                    destinationFile.name,
-                    destinationFile.getRequestBody()
+                "pic",
+                destinationFile.name,
+                destinationFile.getRequestBody()
             )
             viewModel.changePersonalBackground(fileBody)
         } catch (e: IOException) {
@@ -604,19 +630,24 @@ class HomepageActivity : BaseViewModelActivity<MineViewModel>() {
         options.setCropGridStrokeWidth(5)
         options.setCompressionFormat(Bitmap.CompressFormat.PNG)
         options.setCompressionQuality(100)
-        options.setLogoColor(ContextCompat.getColor(this, com.mredrock.cyxbs.common.R.color.common_level_two_font_color))
+        options.setLogoColor(
+            ContextCompat.getColor(
+                this,
+                com.mredrock.cyxbs.common.R.color.common_level_two_font_color
+            )
+        )
         options.setToolbarColor(
-                ContextCompat.getColor(this, com.mredrock.cyxbs.common.R.color.colorPrimaryDark)
+            ContextCompat.getColor(this, com.mredrock.cyxbs.common.R.color.colorPrimaryDark)
         )
         options.setStatusBarColor(
-                ContextCompat.getColor(this, com.mredrock.cyxbs.common.R.color.colorPrimaryDark)
+            ContextCompat.getColor(this, com.mredrock.cyxbs.common.R.color.colorPrimaryDark)
         )
         uCrop.withOptions(options)
-                .withAspectRatio(
-                        dataBinding.ivMineBackgroundNormal.width.toFloat(),
-                        dataBinding.ivMineBackgroundNormal.height.toFloat()
-                )
-                .start(this)
+            .withAspectRatio(
+                dataBinding.ivMineBackgroundNormal.width.toFloat(),
+                dataBinding.ivMineBackgroundNormal.height.toFloat()
+            )
+            .start(this)
     }
 
 
@@ -629,17 +660,17 @@ class HomepageActivity : BaseViewModelActivity<MineViewModel>() {
         if (progress == -1f && !isSetBackground) {
             isSetBackground = true
             dataBinding.mineTablayout.background =
-                    ResourcesCompat.getDrawable(resources, R.drawable.mine_ic_list_shadow, theme)
+                ResourcesCompat.getDrawable(resources, R.drawable.mine_ic_list_shadow, theme)
             dataBinding.mineTablayout.elevation = this.px2dip(300)
             dataBinding.vp2Mine.elevation = this.px2dip(0)
             setTopStatus()
         }
         if (isSetBackground && progress > -1f) {
             dataBinding.mineTablayout.background =
-                    ResourcesCompat.getDrawable(resources, R.drawable.mine_shape_ll_background, theme)
+                ResourcesCompat.getDrawable(resources, R.drawable.mine_shape_ll_background, theme)
             isSetBackground = false
             setBottomStatus()
-            dataBinding.vp2Mine.elevation=this.px2dip(300)
+            dataBinding.vp2Mine.elevation = this.px2dip(300)
         }
     }
 
@@ -672,18 +703,18 @@ class HomepageActivity : BaseViewModelActivity<MineViewModel>() {
      */
     fun loadBitmap(url: String, success: (Bitmap) -> Unit) {
         Glide.with(this) // context，可添加到参数中
-                .asBitmap()
-                .load(url)
-                .into(object : CustomTarget<Bitmap>() {
-                    override fun onResourceReady(resource: Bitmap, transition: Transition<in Bitmap>?) {
-                        // 成功返回 Bitmap
-                        success.invoke(resource)
-                    }
+            .asBitmap()
+            .load(url)
+            .into(object : CustomTarget<Bitmap>() {
+                override fun onResourceReady(resource: Bitmap, transition: Transition<in Bitmap>?) {
+                    // 成功返回 Bitmap
+                    success.invoke(resource)
+                }
 
-                    override fun onLoadCleared(placeholder: Drawable?) {
-                        initBlurBitmap(null)
-                    }
-                })
+                override fun onLoadCleared(placeholder: Drawable?) {
+                    initBlurBitmap(null)
+                }
+            })
     }
 
 

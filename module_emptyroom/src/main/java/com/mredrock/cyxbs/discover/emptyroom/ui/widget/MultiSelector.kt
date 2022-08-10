@@ -13,13 +13,16 @@ import java.util.*
  * Created by Cynthia on 2018/9/18
  */
 class MultiSelector : FrameLayout {
-    private val rv:RecyclerView = findViewById(R.id.rv)
-
+    lateinit var rv: RecyclerView
     val NO_LIMIT = context.resources.getInteger(R.integer.emptyroom_no_limit)
 
     constructor(context: Context) : this(context, null)
     constructor(context: Context, attributeSet: AttributeSet?) : this(context, attributeSet, 0)
-    constructor(context: Context, attributeSet: AttributeSet?, defStyleAttr: Int) : super(context, attributeSet, defStyleAttr) {
+    constructor(context: Context, attributeSet: AttributeSet?, defStyleAttr: Int) : super(
+        context,
+        attributeSet,
+        defStyleAttr
+    ) {
         init(attributeSet)
     }
 
@@ -59,6 +62,7 @@ class MultiSelector : FrameLayout {
 
     private fun inflate() {
         LayoutInflater.from(context).inflate(R.layout.emptyroom_layout_multi_selector, this)
+        rv = findViewById(R.id.rv)
     }
 
     fun setValues(values: IntArray) {
@@ -222,13 +226,21 @@ class MultiSelector : FrameLayout {
         return mMaxSelectedNum == mMinSelectedNum && mMaxSelectedNum == 1
     }
 
-    abstract class Adapter<T, VH : androidx.recyclerview.widget.RecyclerView.ViewHolder>(protected val mSelector: MultiSelector) : androidx.recyclerview.widget.RecyclerView.Adapter<VH>() {
+    abstract class Adapter<T, VH : androidx.recyclerview.widget.RecyclerView.ViewHolder>(protected val mSelector: MultiSelector) :
+        androidx.recyclerview.widget.RecyclerView.Adapter<VH>() {
 
-        protected abstract fun bindView(holder: VH, displayValue: T, selected: Boolean, position: Int)
+        protected abstract fun bindView(
+            holder: VH,
+            displayValue: T,
+            selected: Boolean,
+            position: Int
+        )
 
         override fun onBindViewHolder(holder: VH, position: Int) {
-            bindView(holder, mSelector.getDisplayValue<Any>(position) as T,
-                    mSelector.isPositionSelected(position), position)
+            bindView(
+                holder, mSelector.getDisplayValue<Any>(position) as T,
+                mSelector.isPositionSelected(position), position
+            )
 
             bindClickListener(holder, position)
         }

@@ -3,12 +3,12 @@ package com.mredrock.cyxbs.discover.news.ui.adapter
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.TextView
 import com.mredrock.cyxbs.common.utils.extensions.startActivity
 import com.mredrock.cyxbs.discover.news.R
 import com.mredrock.cyxbs.discover.news.bean.NewsListItem
 import com.mredrock.cyxbs.discover.news.ui.activity.NewsItemActivity
 import com.mredrock.cyxbs.discover.news.utils.TimeFormatHelper
-import kotlinx.android.synthetic.main.news_item_news.view.*
 import com.mredrock.cyxbs.common.utils.extensions.*
 
 
@@ -20,7 +20,8 @@ import com.mredrock.cyxbs.common.utils.extensions.*
 const val NORMAL_TYPE = 0x1
 const val FOOT_TYPE = 0x2
 
-class NewsAdapter(private val loadMore: () -> Unit) : androidx.recyclerview.widget.RecyclerView.Adapter<NewsAdapter.ViewHolder>() {
+class NewsAdapter(private val loadMore: () -> Unit)
+    : androidx.recyclerview.widget.RecyclerView.Adapter<NewsAdapter.ViewHolder>() {
 
     private val newsList: MutableList<NewsListItem> = mutableListOf()
 
@@ -63,6 +64,8 @@ class NewsAdapter(private val loadMore: () -> Unit) : androidx.recyclerview.widg
     )
 
     open inner class ViewHolder(v: View) : androidx.recyclerview.widget.RecyclerView.ViewHolder(v) {
+        val tv_time:TextView = v.findViewById(R.id.tv_time)
+        val tv_title:TextView = v.findViewById(R.id.tv_title)
         fun initView(news: NewsListItem?) {
             itemView.init(news)
         }

@@ -4,7 +4,6 @@ import android.content.Context
 import android.content.Intent
 import android.graphics.Typeface
 import android.graphics.drawable.BitmapDrawable
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -25,8 +24,6 @@ import com.alibaba.android.arouter.launcher.ARouter
 import com.mredrock.cyxbs.common.config.STORE_ENTRY
 import com.mredrock.cyxbs.common.utils.extensions.toast
 import com.mredrock.cyxbs.mine.page.mine.widget.MineDialog
-import kotlinx.android.synthetic.main.mine_default_identity_item.view.*
-import java.util.regex.Matcher
 import java.util.regex.Pattern
 
 
@@ -77,7 +74,8 @@ class IdentityAdapter(val list:List<AuthenticationStatus.Data>, val context: Con
       }else{
           //错误情况
             val convertView = LayoutInflater.from(context).inflate(R.layout.mine_default_identity_item, parent, false)
-            initspannableString(convertView.mine_textview4)
+            val mine_textview4:TextView = convertView.findViewById(R.id.mine_textview4)
+            initspannableString(mine_textview4)
             vh = noDataVH(convertView)
         }
         return vh!!
