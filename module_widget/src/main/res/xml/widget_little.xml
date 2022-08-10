@@ -1,10 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
+<!--值得注意的是minHeight和minWidth适用于Android 11及以下。Android 12默认大小只能是targetCellWidth以及targetCellHeight-->
 <appwidget-provider xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:initialKeyguardLayout="@layout/widget_little"
     android:initialLayout="@layout/widget_little"
     android:minHeight="40dp"
     android:minWidth="110dp"
+    android:targetCellWidth="2"
+    android:targetCellHeight="1"
     android:previewImage="@drawable/widget_ic_little_example"
     android:resizeMode="horizontal|vertical"
-    android:updatePeriodMillis="2400000"
-    android:widgetCategory="home_screen" />
+    android:updatePeriodMillis="@integer/widget_update_period_millis"
+    android:widgetCategory="home_screen"
+    tools:ignore="UnusedAttribute" />

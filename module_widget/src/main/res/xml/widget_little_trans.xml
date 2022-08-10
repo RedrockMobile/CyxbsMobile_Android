@@ -6,5 +6,5 @@
     android:minWidth="110dp"
     android:previewImage="@drawable/widget_ic_little_trans_example"
     android:resizeMode="horizontal|vertical"
-    android:updatePeriodMillis="2400000"
+    android:updatePeriodMillis="@integer/widget_update_period_millis"
     android:widgetCategory="home_screen" />

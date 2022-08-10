@@ -1,3 +1,4 @@
+/*
 package com.mredrock.cyxbs.widget.widget.little
 
 import android.content.Context
@@ -10,10 +11,12 @@ import com.mredrock.cyxbs.widget.util.getWeekDayChineseName
 import com.mredrock.cyxbs.widget.util.saveHashLesson
 import java.util.*
 
+*/
 /**
  * Created by zia on 2018/10/10.
  * 小型部件，不透明
- */
+ *//*
+
 class LittleWidget : BaseLittleWidget() {
 
     override fun getLayoutResId(): Int {
@@ -74,4 +77,4 @@ class LittleWidget : BaseLittleWidget() {
         }
         return rv
     }
-}
+}*/

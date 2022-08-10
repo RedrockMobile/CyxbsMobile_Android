@@ -1,3 +1,4 @@
+/*
 package com.mredrock.cyxbs.widget.widget.little
 
 import android.content.Context
@@ -14,10 +15,12 @@ import com.mredrock.cyxbs.widget.util.getClickPendingIntent
 import com.mredrock.cyxbs.widget.util.getWeekDayChineseName
 import java.util.*
 
+*/
 /**
  * Created by zia on 2018/10/10.
  * 小型部件，不透明
- */
+ *//*
+
 class LittleTransWidget : BaseLittleWidget() {
 
     override fun getLayoutResId(): Int {//获取当前小工具适配的ID
@@ -110,4 +113,4 @@ class LittleTransWidget : BaseLittleWidget() {
 
         return rv
     }
-}
+}*/

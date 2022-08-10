@@ -1,3 +1,4 @@
+/*
 package com.mredrock.cyxbs.widget.widget.little
 
 import android.appwidget.AppWidgetManager
@@ -11,16 +12,16 @@ import androidx.annotation.IdRes
 import androidx.annotation.LayoutRes
 import com.alibaba.android.arouter.launcher.ARouter
 import com.mredrock.cyxbs.api.main.MAIN_MAIN
-import com.mredrock.cyxbs.common.event.WidgetCourseEvent
 import com.mredrock.cyxbs.widget.bean.CourseStatus
 import com.mredrock.cyxbs.widget.util.*
-import org.greenrobot.eventbus.EventBus
 import java.util.*
 
+*/
 /**
  * Created by zia on 2018/10/10.
  * 精简版桌面小控件
- */
+ *//*
+
 abstract class BaseLittleWidget : AppWidgetProvider() {
 
     private val shareName = "share_hash_lesson_trans"
@@ -189,4 +190,4 @@ abstract class BaseLittleWidget : AppWidgetProvider() {
         }
         Toast.makeText(context, "没有下一节课了~", Toast.LENGTH_SHORT).show()
     }
-}
+}*/

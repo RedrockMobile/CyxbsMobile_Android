@@ -1,8 +1,7 @@
 package com.mredrock.cyxbs.widget.widget.page.trans
 
 import android.content.Context
-import com.mredrock.cyxbs.common.utils.extensions.editor
-import com.mredrock.cyxbs.common.utils.extensions.sharedPreferences
+import androidx.core.content.edit
 
 /**
  * Created by zia on 2018/10/11.
@@ -28,7 +27,7 @@ class TransConfig {
     var holderColor = "#FFFFFF"
 
     fun save(context: Context) {
-        context.sharedPreferences(shareName).editor {
+        context.getSharedPreferences(shareName, Context.MODE_PRIVATE).edit {
             putInt("timeTextSize", timeTextSize)
             putInt("courseTextSize", courseTextSize)
             putInt("roomTextSize", roomTextSize)
@@ -48,17 +47,24 @@ class TransConfig {
 
         fun getUserConfig(context: Context): TransConfig {
             return TransConfig().apply {
-                timeTextColor = context.sharedPreferences(shareName).getString("timeTextColor", timeTextColor)
-                        ?: "#FFFFFF"
-                courseTextColor = context.sharedPreferences(shareName).getString("courseTextColor", courseTextColor)
-                        ?: "#FFFFFF"
-                roomTextColor = context.sharedPreferences(shareName).getString("roomTextColor", roomTextColor)
-                        ?: "#FFFFFF"
-                holderColor = context.sharedPreferences(shareName).getString("holderColor", holderColor)
-                        ?: "#FFFFFF"
-                timeTextSize = context.sharedPreferences(shareName).getInt("timeTextSize", timeTextSize)
-                courseTextSize = context.sharedPreferences(shareName).getInt("courseTextSize", courseTextSize)
-                roomTextSize = context.sharedPreferences(shareName).getInt("roomTextSize", roomTextSize)
+                timeTextColor = context.getSharedPreferences(shareName, Context.MODE_PRIVATE)
+                    .getString("timeTextColor", timeTextColor)
+                    ?: "#FFFFFF"
+                courseTextColor = context.getSharedPreferences(shareName, Context.MODE_PRIVATE)
+                    .getString("courseTextColor", courseTextColor)
+                    ?: "#FFFFFF"
+                roomTextColor = context.getSharedPreferences(shareName, Context.MODE_PRIVATE)
+                    .getString("roomTextColor", roomTextColor)
+                    ?: "#FFFFFF"
+                holderColor = context.getSharedPreferences(shareName, Context.MODE_PRIVATE)
+                    .getString("holderColor", holderColor)
+                    ?: "#FFFFFF"
+                timeTextSize = context.getSharedPreferences(shareName, Context.MODE_PRIVATE)
+                    .getInt("timeTextSize", timeTextSize)
+                courseTextSize = context.getSharedPreferences(shareName, Context.MODE_PRIVATE)
+                    .getInt("courseTextSize", courseTextSize)
+                roomTextSize = context.getSharedPreferences(shareName, Context.MODE_PRIVATE)
+                    .getInt("roomTextSize", roomTextSize)
             }
         }
 

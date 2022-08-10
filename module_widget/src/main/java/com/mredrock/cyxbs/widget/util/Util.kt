@@ -9,104 +9,33 @@ import android.os.Build
 import android.os.Bundle
 import android.widget.Toast
 import androidx.annotation.IdRes
+import androidx.core.content.edit
 import com.alibaba.android.arouter.launcher.ARouter
-import com.google.gson.Gson
-import com.mredrock.cyxbs.common.bean.WidgetCourse
-import com.mredrock.cyxbs.common.component.CyxbsToast
-import com.mredrock.cyxbs.api.main.MAIN_MAIN
-import com.mredrock.cyxbs.common.config.WIDGET_COURSE
-import com.mredrock.cyxbs.common.event.WidgetCourseEvent
-import com.mredrock.cyxbs.common.service.ServiceManager
 import com.mredrock.cyxbs.api.account.IAccountService
-import com.mredrock.cyxbs.common.BaseApp
-import com.mredrock.cyxbs.common.utils.SchoolCalendar
-import com.mredrock.cyxbs.common.utils.extensions.defaultSharedPreferences
-import com.mredrock.cyxbs.common.utils.extensions.editor
-import com.mredrock.cyxbs.widget.bean.CourseStatus
-import org.greenrobot.eventbus.EventBus
-import java.text.SimpleDateFormat
+import com.mredrock.cyxbs.api.main.MAIN_MAIN
+import com.mredrock.cyxbs.config.sp.defaultSp
+import com.mredrock.cyxbs.lib.base.BaseApp
+import com.mredrock.cyxbs.lib.utils.extensions.CyxbsToast
+import com.mredrock.cyxbs.lib.utils.service.impl
+import com.mredrock.cyxbs.widget.repo.bean.Lesson
+import com.mredrock.cyxbs.widget.repo.database.LessonDatabase
 import java.util.*
 import kotlin.collections.ArrayList
 
 
 /**
  * Created by zia on 2018/10/10.
- * 精力憔悴，这些方法直接揉在一起了
- */
-
-const val EmptyCourseObject = -1
-
-/**
- * 获得今天得课程list信息
- */
-fun getTodayCourse(context: Context): List<CourseStatus.Course>? {
-    return getCourseByCalendar(context, Calendar.getInstance())
-}
-
-fun getCourseByCalendar(context: Context, calendar: Calendar): ArrayList<CourseStatus.Course>? {
-    val json = context.defaultSharedPreferences.getString(WIDGET_COURSE, "")
-    val course = Gson().fromJson<CourseStatus>(json, CourseStatus::class.java) ?: return null
-    if (course.data == null) return null
-    val week = SchoolCalendar().weekOfTerm
-    /*
-    * 转换表，老外从周日开始计数,orz
-    * 7 1 2 3 4 5 6 老外
-    * 1 2 3 4 5 6 7 Calendar.DAY_OF_WEEK
-    * 6 0 1 2 3 4 5 需要的结果(hash_day)
-    * */
-    val hash_day = (calendar.get(Calendar.DAY_OF_WEEK) + 5) % 7
-
-    val list = ArrayList<CourseStatus.Course>()
-    course.data!!.forEach {
-        if (it.hash_day == hash_day && it.week!!.contains(week)) {
-//            LogUtils.d("Widget", it.toString())
-            list.add(it)
-        }
-    }
-    list.sortBy { it.hash_lesson }
-    return list
-}
-
-fun getErrorCourseList(): ArrayList<CourseStatus.Course> {
-    val data = CourseStatus.Course()
-    data.hash_lesson = 0
-    data.course = "数据异常，请刷新"
-    data.classroom = ""
-    val list = ArrayList<CourseStatus.Course>()
-    list.add(data)
-    return list
-}
-
-fun getNoCourse(): CourseStatus.Course {
-    val data = CourseStatus.Course()
-    data.hash_lesson = EmptyCourseObject
-    data.course = "无课"
-    data.classroom = ""
-    return data
-}
-
-fun saveHashLesson(context: Context, hash_lesson: Int, shareName: String) {
-    context.defaultSharedPreferences.editor {
-        putInt(shareName, hash_lesson)
-    }
-}
-
-fun getHashLesson(context: Context, shareName: String): Int {
-    return context.defaultSharedPreferences.getInt(shareName, 0)
-}
-
+ * 精力憔悴，这些方法直接揉在一起了*/
 
 private const val SP_DayOffset = "dayOffset"
 
 //天数偏移量，用于LittleWidget切换明天课程
 fun saveDayOffset(context: Context, offset: Int) {
-    context.defaultSharedPreferences.editor {
-        putInt(SP_DayOffset, offset)
-    }
+    defaultSp.edit { putInt(SP_DayOffset, offset) }
 }
 
 fun getDayOffset(context: Context): Int {
-    return context.defaultSharedPreferences.getInt(SP_DayOffset, 0)
+    return defaultSp.getInt(SP_DayOffset, 0)
 }
 
 
@@ -116,8 +45,9 @@ fun isNight(): Boolean {
 }
 
 /**
- * hash_lesson == 0 第1节 返回8:00
- */
+ * hash_lesson == 0 第1节 返回8:00*/
+
+
 fun getStartCalendarByNum(hash_lesson: Int): Calendar {
     val calendar = Calendar.getInstance()
     when (hash_lesson) {
@@ -162,7 +92,12 @@ fun getWeekDayChineseName(weekDay: Int): String {
     }
 }
 
-fun getClickPendingIntent(context: Context, @IdRes resId: Int, action: String, clazz: Class<*>): PendingIntent {
+fun getClickPendingIntent(
+    context: Context,
+    @IdRes resId: Int,
+    action: String,
+    clazz: Class<*>,
+): PendingIntent {
     val intent = Intent()
     intent.setClass(context, clazz)
     intent.action = action
@@ -172,10 +107,17 @@ fun getClickPendingIntent(context: Context, @IdRes resId: Int, action: String, c
 }
 
 //给按钮返回PendingIntent
-fun getClickIntent(context: Context, widgetId: Int, viewId: Int, requestCode: Int, action: String, clazz: Class<*>): PendingIntent? {
+fun getClickIntent(
+    context: Context,
+    widgetId: Int,
+    viewId: Int,
+    requestCode: Int,
+    action: String,
+    clazz: Class<*>,
+): PendingIntent? {
     //pendingintent中需要的intent，绑定这个类和当前context
     val i = Intent(context, clazz)
-    //设置action
+    //设置action，方便在onReceive中区别点击事件
     i.action = action //设置更新动作
     //设置bundle
     val bundle = Bundle()
@@ -184,11 +126,7 @@ fun getClickIntent(context: Context, widgetId: Int, viewId: Int, requestCode: In
     //放进需要设置的viewId
     bundle.putInt("Button", viewId)
     i.putExtras(bundle)
-    return PendingIntent.getBroadcast(context, requestCode, i,getPendingIntentFlags())
-}
-
-fun formatTime(calendar: Calendar): String {
-    return SimpleDateFormat("HH:mm", Locale.SIMPLIFIED_CHINESE).format(calendar.time)
+    return PendingIntent.getBroadcast(context, requestCode, i, getPendingIntentFlags())
 }
 
 fun filterClassRoom(classRoom: String): String {
@@ -199,38 +137,52 @@ fun filterClassRoom(classRoom: String): String {
     }
 }
 
-//将widget模块的course转换为lib模块的WidgetCourse，WidgetCourse达到中转作用
-fun changeCourseToWidgetCourse(courseStatusBean: CourseStatus.Course): WidgetCourse.DataBean {
-    val bean = WidgetCourse.DataBean()
-    bean.apply {
-        hash_day = courseStatusBean.hash_day
-        hash_lesson = courseStatusBean.hash_lesson
-        begin_lesson = courseStatusBean.begin_lesson
-        day = courseStatusBean.day
-        lesson = courseStatusBean.lesson
-        course = courseStatusBean.course
-        course_num = courseStatusBean.course_num
-        teacher = courseStatusBean.teacher
-        classroom = courseStatusBean.classroom
-        rawWeek = courseStatusBean.rawWeek
-        weekModel = courseStatusBean.weekModel
-        weekBegin = courseStatusBean.weekBegin
-        weekEnd = courseStatusBean.weekEnd
-        week = courseStatusBean.week
-        type = courseStatusBean.type
-        period = courseStatusBean.period
+fun startOperation(lesson: Lesson) {
+    if (IAccountService::class.impl.getVerifyService().isLogin()) {
+        CyxbsToast.show(BaseApp.baseApp, "请登录之后再点击查看详细信息", Toast.LENGTH_SHORT)
+    } else {
+/*        ARouter.getInstance().build(MAIN_MAIN).navigation()
+//        Todo,此处等郭神提供课表的接口*/
     }
-    return bean
 }
 
-fun startOperation(dataBean: WidgetCourse.DataBean) {
-    if (!ServiceManager.getService(IAccountService::class.java).getVerifyService().isLogin()) {
-        CyxbsToast.makeText(BaseApp.appContext, "请登录之后再点击查看详细信息", Toast.LENGTH_SHORT).show()
-    } else {
-        ARouter.getInstance().build(MAIN_MAIN).navigation()
-        EventBus.getDefault().postSticky(WidgetCourseEvent(mutableListOf(dataBean)))
+fun getLessonByCalendar(context: Context, calendar: Calendar): ArrayList<Lesson>? {
+    val weekOfTerm = SchoolCalendar().weekOfTerm
+    val myStuNum =
+        context.getSharedPreferences(LessonDatabase.MY_STU_NUM, Context.MODE_PRIVATE)
+            .getString(LessonDatabase.MY_STU_NUM, "")
+    val lesson = LessonDatabase.getInstance(context).getLessonDao()
+        .queryAllLessons(myStuNum!!, weekOfTerm)
+    if (lesson.isEmpty()) return null
+    /*
+    * 转换表，老外从周日开始计数,orz
+    * 7 1 2 3 4 5 6 老外
+    * 1 2 3 4 5 6 7 Calendar.DAY_OF_WEEK
+    * 6 0 1 2 3 4 5 需要的结果(hash_day)
+    * */
+    val hashDay = (calendar.get(Calendar.DAY_OF_WEEK) + 5) % 7
+
+    val list = ArrayList<Lesson>()
+    lesson.forEach {
+        if (it.hashDay == hashDay && it.week == weekOfTerm) {
+            list.add(it)
+        }
     }
+//    list.sortBy { it.hash_lesson }
+    return list
 }
+
+fun getErrorLessonList(): ArrayList<Lesson> {
+    val data = Lesson(course = "数据异常，请刷新")
+    val list = ArrayList<Lesson>()
+    list.add(data)
+    return list
+}
+
+fun getNoCourse(): Lesson {
+    return Lesson(course = "无课")
+}
+
 private fun getPendingIntentFlags(isMutable: Boolean = true) =
     when {
         isMutable && Build.VERSION.SDK_INT >= Build.VERSION_CODES.S ->
@@ -243,3 +195,22 @@ private fun getPendingIntentFlags(isMutable: Boolean = true) =
             PendingIntent.FLAG_CANCEL_CURRENT
         else -> PendingIntent.FLAG_UPDATE_CURRENT
     }
+
+/**获取登录用户的本周所有Lesson,
+ * 这里需要传入RemoteViewService的context，因为小组件运行在桌面进程时，可能应用已经被关闭，此时无法获得application作为context*/
+fun getMyLessons(context: Context, weekOfTerm: Int): List<Lesson> {
+    val myStuNum =
+        context.getSharedPreferences(LessonDatabase.MY_STU_NUM, Context.MODE_PRIVATE)
+            .getString(LessonDatabase.MY_STU_NUM, "")
+    return LessonDatabase.getInstance(context).getLessonDao()
+        .queryAllLessons(myStuNum!!, weekOfTerm)
+}
+
+/**同上*/
+fun getOthersStuNum(context: Context, weekOfTerm: Int): List<Lesson> {
+    val othersStuNum =
+        context.getSharedPreferences(LessonDatabase.OTHERS_STU_NUM, Context.MODE_PRIVATE)
+            .getString(LessonDatabase.OTHERS_STU_NUM, "")
+    return LessonDatabase.getInstance(context).getLessonDao()
+        .queryAllLessons(othersStuNum!!, weekOfTerm)
+}
