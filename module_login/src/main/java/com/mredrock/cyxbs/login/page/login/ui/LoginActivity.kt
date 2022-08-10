@@ -4,6 +4,7 @@ import android.content.Context
 import android.content.Intent
 import android.graphics.Color
 import android.os.Bundle
+import android.text.NoCopySpan
 import android.text.Spannable
 import android.text.SpannableStringBuilder
 import android.text.TextPaint
@@ -142,7 +143,7 @@ class LoginActivity : BaseVmActivity<LoginViewModel>() {
         mTvUserAgreement.highlightColor =
             ContextCompat.getColor(this, android.R.color.transparent)
         //设置用户协议和隐私权政策点击事件
-        val userAgreementClickSpan = object : ClickableSpan() {
+        val userAgreementClickSpan = object : ClickableSpan(), NoCopySpan {
             override fun onClick(widget: View) {
                 val intent = Intent(this@LoginActivity, UserAgreeActivity::class.java)
                 startActivity(intent)
@@ -155,7 +156,7 @@ class LoginActivity : BaseVmActivity<LoginViewModel>() {
                 ds.isUnderlineText = false
             }
         }
-        val privacyClickSpan = object : ClickableSpan() {
+        val privacyClickSpan = object : ClickableSpan(), NoCopySpan {
             override fun onClick(widget: View) {
                 val intent = Intent(this@LoginActivity, PrivacyActivity::class.java)
                 startActivity(intent)

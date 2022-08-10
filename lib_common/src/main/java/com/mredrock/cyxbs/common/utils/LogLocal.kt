@@ -9,6 +9,13 @@ import com.mredrock.cyxbs.common.utils.extensions.safeSubscribeBy
 import io.reactivex.rxjava3.core.Observable
 import io.reactivex.rxjava3.schedulers.Schedulers
 
+/**
+ * 以前廖老师写的本地收集报错文件
+ *
+ * 在 关于我们 底部文字长按即可触发本地收集报错文件
+ *
+ * 解密请看飞书知识库
+ */
 @SuppressLint("StaticFieldLeak")
 object LogLocal {
     private var logLocalHelper: LogLocalHelper? = null
