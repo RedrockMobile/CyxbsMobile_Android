@@ -8,6 +8,8 @@ import android.widget.TextView
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import com.mredrock.cyxbs.api.account.IAccountService
 import com.mredrock.cyxbs.common.service.ServiceManager
 import com.mredrock.cyxbs.common.ui.BaseViewModelFragment
@@ -20,7 +22,6 @@ import com.mredrock.cyxbs.mine.page.mine.binder.EmptyFanBinder
 import com.mredrock.cyxbs.mine.page.mine.binder.FanBinder
 import com.mredrock.cyxbs.mine.page.mine.ui.activity.HomepageActivity
 import com.mredrock.cyxbs.mine.page.mine.viewmodel.FanViewModel
-import kotlinx.android.synthetic.main.mine_fragment_fan.*
 
 /**
  * @class
@@ -33,6 +34,9 @@ class FanFragment : BaseViewModelFragment<FanViewModel>() {
     private var redId = ""
     private lateinit var userAdapter: DataBindingAdapter
     private var isSelf: Boolean = false
+
+    private val mine_fan_srl by R.id.mine_fan_srl.view<SwipeRefreshLayout>()
+    private val mine_fan_rv by R.id.mine_fan_rv.view<RecyclerView>()
 
     override fun onCreateView(
         inflater: LayoutInflater,

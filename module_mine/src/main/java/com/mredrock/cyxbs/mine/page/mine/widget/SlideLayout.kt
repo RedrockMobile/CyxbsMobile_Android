@@ -1,9 +1,7 @@
 package com.mredrock.cyxbs.mine.page.mine.widget
 
 import android.animation.ValueAnimator
-import android.content.ContentValues.TAG
 import android.content.Context
-import android.graphics.Canvas
 import android.util.AttributeSet
 import android.util.Log
 import android.view.MotionEvent
@@ -11,8 +9,6 @@ import android.view.View
 import android.view.animation.OvershootInterpolator
 import android.widget.FrameLayout
 import android.widget.Scroller
-import androidx.constraintlayout.helper.widget.MotionEffect.TAG
-import androidx.core.graphics.alpha
 import androidx.lifecycle.MutableLiveData
 import com.mredrock.cyxbs.common.utils.extensions.dp2px
 import com.mredrock.cyxbs.mine.R

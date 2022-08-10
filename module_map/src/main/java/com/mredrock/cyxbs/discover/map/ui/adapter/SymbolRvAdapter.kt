@@ -18,14 +18,13 @@ import com.mredrock.cyxbs.common.utils.extensions.visible
 import com.mredrock.cyxbs.discover.map.R
 import com.mredrock.cyxbs.discover.map.bean.InfoItem
 import com.mredrock.cyxbs.discover.map.viewmodel.MapViewModel
-import kotlinx.android.synthetic.main.map_recycle_item_symbol_places.view.*
 
 class SymbolRvAdapter(val context: Context, val viewModel: MapViewModel, private val mList: MutableList<InfoItem>, val lifecycleOwner: LifecycleOwner) : RecyclerView.Adapter<SymbolRvAdapter.ViewHolder>() {
     var curSelectorItem: AppCompatCheckedTextView? = null
 
     inner class ViewHolder(view: View) : RecyclerView.ViewHolder(view) {
-        val hot: ImageView = view.map_iv_recycle_item_hot
-        val symbol: AppCompatCheckedTextView = view.map_tv_recycle_item_symbol
+        val hot: ImageView = view.findViewById(R.id.map_iv_recycle_item_hot)
+        val symbol: AppCompatCheckedTextView = view.findViewById(R.id.map_tv_recycle_item_symbol)
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {

@@ -1,10 +1,16 @@
 package com.mredrock.cyxbs.discover.grades.ui.expandableAdapter
 
-import android.annotation.SuppressLint
 import android.content.Context
 import android.view.Gravity
+import android.view.LayoutInflater
 import android.view.View
+import android.view.ViewGroup
+import android.widget.FrameLayout
+import android.widget.ImageView
+import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
+import androidx.constraintlayout.widget.ConstraintLayout
+import androidx.recyclerview.widget.RecyclerView
 import androidx.transition.Slide
 import androidx.transition.TransitionManager
 import androidx.transition.TransitionSet
@@ -16,27 +22,19 @@ import com.mredrock.cyxbs.discover.grades.R
 import com.mredrock.cyxbs.discover.grades.bean.analyze.GPAData
 import com.mredrock.cyxbs.discover.grades.bean.analyze.SingleGrade
 import com.mredrock.cyxbs.discover.grades.bean.analyze.TermGrade
-import com.mredrock.cyxbs.discover.grades.utils.baseRv.BaseHolder
 import com.mredrock.cyxbs.discover.grades.utils.widget.AverageRule
+import com.mredrock.cyxbs.discover.grades.utils.widget.GpAGraph
 import com.mredrock.cyxbs.discover.grades.utils.widget.NoDoubleClickListener
-import kotlinx.android.synthetic.main.grades_dialog_a_credit.view.*
-import kotlinx.android.synthetic.main.grades_item_dialog_a_credit.view.*
-import kotlinx.android.synthetic.main.grades_item_gpa_list_child.view.*
-import kotlinx.android.synthetic.main.grades_item_gpa_list_child.view.tv_grade_score
-import kotlinx.android.synthetic.main.grades_item_gpa_list_header.view.*
-import kotlinx.android.synthetic.main.grades_item_gpa_list_normal_bottom.view.*
-import kotlinx.android.synthetic.main.grades_item_gpa_list_normal_top.view.*
-import kotlinx.android.synthetic.main.grades_layout_transition.view.*
 
 /**
  * Created by roger on 2020/3/22
  * 一个多type的可以展开的adapter，时间匆忙，没有更多抽象
  */
 class GPAAdapter(
-        val context: Context,
-        private val type2ResId: HashMap<Int, Int>,
-        private val gpaData: GPAData
-) : RBaseAdapter(type2ResId) {
+    val context: Context,
+    private val type2ResId: HashMap<Int, Int>,
+    private val gpaData: GPAData
+) : RBaseAdapter<GPAAdapter.GpaVH>() {
     companion object {
         const val HEADER = 0
         const val NORMAL_TOP = 2
@@ -48,6 +46,7 @@ class GPAAdapter(
         const val RANK = "RANK"
     }
 
+
     init {
         refreshArrayList()
     }
@@ -56,146 +55,77 @@ class GPAAdapter(
 
     private var isExpand: Boolean = false
 
-    @SuppressLint("SetTextI18n")
-    override fun onBind(holder: BaseHolder, position: Int, type: Int) {
-        when (dataMirror[position]) {
 
-            is HeaderData -> {
-                val fl = holder.itemView.grades_tv_gpa_fl_title
-                val changeScene: () -> Unit = {
-                    TransitionManager.beginDelayedTransition(fl, TransitionSet().apply {
-                        addTransition(Slide().apply {
-                            slideEdge = Gravity.START
-                            duration = 250
-                        })
-                    })
-                    isExpand = !isExpand
-                    if (isExpand) {
-                        holder.itemView.grades_tv_gpa_title.gone()
-                        holder.itemView.grades_tab_layout.visible()
-                        holder.itemView.grades_iv_gpa_arrow.setImageResource(R.drawable.grades_ic_arrow_left)
-                    } else {
-                        holder.itemView.grades_tv_gpa_title.visible()
-                        holder.itemView.grades_tab_layout.gone()
-                        holder.itemView.grades_iv_gpa_arrow.setImageResource(R.drawable.grades_ic_arrow_right)
-                    }
-                }
-                fl.setOnClickListener {
-                    changeScene.invoke()
-                }
+    sealed class GpaVH(itemView: View) : RecyclerView.ViewHolder(itemView)
 
+    class HeaderVH(itemView: View) : GpaVH(itemView) {
+        val mGpAGraph: GpAGraph = itemView.findViewById(R.id.grades_view_gpa_graph)
+        val fl: FrameLayout = itemView.findViewById(R.id.grades_tv_gpa_fl_title)
+        val mTvGpaTitle: TextView = itemView.findViewById(R.id.grades_tv_gpa_title)
+        val mTabLayout: TabLayout = itemView.findViewById(R.id.grades_tab_layout)
+        val mIvGpaArrow: ImageView = itemView.findViewById(R.id.grades_iv_gpa_arrow)
+        val mTvACreditNumber: TextView =
+            itemView.findViewById(R.id.grades_tv_a_credit_number)
+        val mTvBCreditNumber: TextView =
+            itemView.findViewById(R.id.grades_tv_b_credit_number)
+        val mTvACredit: TextView = itemView.findViewById(R.id.grades_tv_a_credit)
+    }
 
-                changeGPAGraph(holder.itemView)
-                holder.itemView.grades_tab_layout.addOnTabSelectedListener(object : TabLayout.OnTabSelectedListener {
-                    override fun onTabReselected(tab: TabLayout.Tab?) {
-                        if (isExpand) {
-                            changeScene.invoke()
-                        }
-                    }
+    class NormalTopVH(itemView: View) : GpaVH(itemView) {
+        val mTvAverageCreditNum: TextView =
+            itemView.findViewById(R.id.grades_gpa_list_tv_average_credit_num)
+        val mTvAverageGradesNum: TextView =
+            itemView.findViewById(R.id.grades_gpa_list_tv_average_grades_num)
+        val mTvAverageRankNum: TextView =
+            itemView.findViewById(R.id.grades_gpa_list_tv_average_rank_num)
+        val mTvTerm: TextView = itemView.findViewById(R.id.grades_gpa_list_tv_term)
+    }
 
-                    override fun onTabUnselected(tab: TabLayout.Tab?) {
-                    }
+    class NormalBottomVH(itemView: View) : GpaVH(itemView) {
+        val mTvGradesDetail: TextView =
+            itemView.findViewById(R.id.grades_gpa_list_tv_grades_detail)
+    }
 
-                    override fun onTabSelected(tab: TabLayout.Tab?) {
+    class ChildVH(itemView: View) : GpaVH(itemView) {
+        val mTvGradeCourse: TextView = itemView.findViewById(R.id.tv_grade_course)
+        val mTvGradeScore: TextView = itemView.findViewById(R.id.tv_grade_score)
+        val mTvGradeProperty: TextView = itemView.findViewById(R.id.tv_grade_property)
+    }
 
-                        tab?.let {
-                            when (it.position) {
-                                0 -> {
-                                    tabSelectedType = GPA
-
-                                }
-                                1 -> {
-                                    tabSelectedType = GRADES
-                                }
-                                2 -> {
-                                    tabSelectedType = RANK
-                                }
-                            }
-                        }
-                        when (tabSelectedType) {
-                            GPA -> {
-                                holder.itemView.grades_tv_gpa_title.text = context.getString(R.string.grades_bottom_sheet_gpa_rv_average_gpa)
-                            }
-                            GRADES -> {
-                                holder.itemView.grades_tv_gpa_title.text = context.getString(R.string.grades_bottom_sheet_gpa_rv_average_grades)
-
-                            }
-                            RANK -> {
-                                holder.itemView.grades_tv_gpa_title.text = context.getString(R.string.grades_bottom_sheet_gpa_rv_average_rank)
-                            }
-                        }
-                        changeGPAGraph(holder.itemView)
-                        if (isExpand) {
-                            changeScene.invoke()
-                        }
-                    }
-
-                })
-
-
-
-
-                holder.itemView.grades_tv_a_credit_number.text = gpaData.aCredit
-                holder.itemView.grades_tv_b_credit_number.text = gpaData.bCredit
-                holder.itemView.grades_tv_a_credit_number.setOnClickListener {
-                    clickACredit()
-                }
-                holder.itemView.grades_tv_a_credit.setOnClickListener {
-                    clickACredit()
-                }
-            }
-            is TermGrade -> {
-                val termGrade = dataMirror[position] as TermGrade
-                holder.itemView.grades_gpa_list_tv_average_credit_num.text = termGrade.gpa
-                holder.itemView.grades_gpa_list_tv_average_grades_num.text = termGrade.grade
-                //rank可能会出现为0，因为教务在线还没有排名
-                if (termGrade.rank == "0") {
-                    holder.itemView.grades_gpa_list_tv_average_rank_num.text = "--"
-                } else {
-                    holder.itemView.grades_gpa_list_tv_average_rank_num.text = termGrade.rank
-                }
-                val term = termGrade.term
-                val termOfYear = term.substring(4)
-                val year = term.substring(0, 4).toInt()
-                if (termOfYear == "1") {
-                    //说明是上学期
-                    holder.itemView.grades_gpa_list_tv_term.text = "${year}-${year + 1}第一学期"
-                } else {
-                    holder.itemView.grades_gpa_list_tv_term.text = "${year}-${year + 1}第二学期"
-                }
-            }
-            is NormalBottom -> {
-                val bean = dataMirror[position] as NormalBottom
-                val view = holder.itemView
-                if (bean.termGrade.isClose()) {
-                    view.grades_gpa_list_tv_grades_detail.text = "查看各科成绩"
-                } else {
-                    view.grades_gpa_list_tv_grades_detail.text = "收起各科成绩"
-                }
-                holder.itemView.setOnClickListener(object : NoDoubleClickListener() {
-                    override fun onNoDoubleClick(v: View) {
-                        if (bean.termGrade.isClose()) {
-                            bean.termGrade.status = TermGrade.EXPAND
-                            view.grades_gpa_list_tv_grades_detail.text = "收起各科成绩"
-                        } else {
-                            bean.termGrade.status = TermGrade.CLOSE
-                            view.grades_gpa_list_tv_grades_detail.text = "查看各科成绩"
-                        }
-                        refreshArrayList()
-                    }
-
-                })
-            }
-            is SingleGrade -> {
-                val single = dataMirror[position] as SingleGrade
-                holder.itemView.tv_grade_course.text = single.className
-                holder.itemView.tv_grade_score.text = single.grade
-                holder.itemView.tv_grade_property.text = single.classType
-            }
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): GpaVH {
+        val res = type2ResId[viewType] ?: throw Exception("Invalid viewType")
+        //return BaseHolder.getHolder(parent.context, parent, res)
+        return when (viewType) {
+            HEADER -> HeaderVH(
+                LayoutInflater.from(parent.context).inflate(
+                    res, parent, false
+                )
+            )
+            NORMAL_TOP -> NormalTopVH(
+                LayoutInflater.from(parent.context).inflate(
+                    res, parent, false
+                )
+            )
+            NORMAL_BOTTOM -> NormalBottomVH(
+                LayoutInflater.from(parent.context).inflate(
+                    res, parent, false
+                )
+            )
+            CHILD -> ChildVH(
+                LayoutInflater.from(parent.context).inflate(
+                    res, parent, false
+                )
+            )
+            else -> error("")
         }
     }
 
-    override fun areItemsTheSame(oldItemPosition: Int, newItemPosition: Int, oldItem: Any, newItem: Any): Boolean {
+    override fun areItemsTheSame(
+        oldItemPosition: Int,
+        newItemPosition: Int,
+        oldItem: Any,
+        newItem: Any
+    ): Boolean {
         if (newItemPosition == oldItemPosition && newItemPosition == 0) {
             //说明是header
             return true
@@ -203,7 +133,12 @@ class GPAAdapter(
         return oldItem == newItem
     }
 
-    override fun areContentsTheSame(oldItemPosition: Int, newItemPosition: Int, oldItem: Any, newItem: Any): Boolean {
+    override fun areContentsTheSame(
+        oldItemPosition: Int,
+        newItemPosition: Int,
+        oldItem: Any,
+        newItem: Any
+    ): Boolean {
         if (newItemPosition == oldItemPosition && newItemPosition == 0) {
             //说明是header
             return true
@@ -213,6 +148,7 @@ class GPAAdapter(
 
     private fun refreshArrayList() {
         val newArray = arrayListOf<Any>()
+        newArray.clear()
         newArray.add(HeaderData())
         for (item in gpaData.termGrade) {
             newArray.add(item)
@@ -222,6 +158,10 @@ class GPAAdapter(
             newArray.add(NormalBottom(item))
         }
         refreshUI(newArray)
+    }
+
+    override fun getItemCount(): Int {
+        return dataMirror.size
     }
 
     override fun getItemViewType(position: Int): Int {
@@ -247,39 +187,62 @@ class GPAAdapter(
         if ((context as AppCompatActivity).supportFragmentManager.findFragmentByTag(tag) == null) {
             CommonDialogFragment().apply {
                 initView(
-                        containerRes = R.layout.grades_dialog_a_credit,
-                        positiveString = "知道了",
-                        onPositiveClick = { dismiss() },
-                        elseFunction = {
-                            val data = gpaData.allCredit
-                            it.tv_a_credit_score.text = gpaData.aCredit
-                            it.grades_compulsory.tv_grade_score.text = data[0].credit
-                            it.grades_compulsory.tv_grade_type.text = data[0].name
+                    containerRes = R.layout.grades_dialog_a_credit,
+                    positiveString = "知道了",
+                    onPositiveClick = { dismiss() },
+                    elseFunction = {
+                        val data = gpaData.allCredit
 
-                            it.grades_optional.tv_grade_score.text = data[1].credit
-                            it.grades_optional.tv_grade_type.text = data[1].name
+                        val mTvACreditScore: TextView = it.findViewById(R.id.tv_a_credit_score)
+                        mTvACreditScore.text = gpaData.aCredit
 
-                            it.grades_others.tv_grade_score.text = data[2].credit
-                            it.grades_others.tv_grade_type.text = data[2].name
+                        val mClGradesCompulsory: ConstraintLayout =
+                            it.findViewById(R.id.grades_compulsory)
+                        mClGradesCompulsory.findViewById<TextView>(R.id.tv_grade_score).text =
+                            data[0].credit
+                        mClGradesCompulsory.findViewById<TextView>(R.id.tv_grade_type).text =
+                            data[0].name
 
-                            it.grades_humanistic.tv_grade_score.text = data[3].credit
-                            it.grades_humanistic.tv_grade_type.text = data[3].name
+                        val mClGradesOptional: ConstraintLayout =
+                            it.findViewById(R.id.grades_optional)
+                        mClGradesOptional.findViewById<TextView>(R.id.tv_grade_score).text =
+                            data[1].credit
+                        mClGradesOptional.findViewById<TextView>(R.id.tv_grade_type).text =
+                            data[1].name
 
-                            it.grades_natural.tv_grade_score.text = data[4].credit
-                            it.grades_natural.tv_grade_type.text = data[4].name
+                        val mClGradesOthers: ConstraintLayout = it.findViewById(R.id.grades_others)
+                        mClGradesOthers.findViewById<TextView>(R.id.tv_grade_score).text =
+                            data[2].credit
+                        mClGradesOthers.findViewById<TextView>(R.id.tv_grade_type).text = data[2].name
 
-                            it.grades_cross_functional.tv_grade_score.text = data[5].credit
-                            it.grades_cross_functional.tv_grade_type.text = data[5].name
+                        val mClGradesHumanistic: ConstraintLayout =
+                            it.findViewById(R.id.grades_humanistic)
+                        mClGradesHumanistic.findViewById<TextView>(R.id.tv_grade_score).text =
+                            data[3].credit
+                        mClGradesHumanistic.findViewById<TextView>(R.id.tv_grade_type).text =
+                            data[3].name
 
-                        }
+                        val mClGradesNatural: ConstraintLayout = it.findViewById(R.id.grades_natural)
+                        mClGradesNatural.findViewById<TextView>(R.id.tv_grade_score).text =
+                            data[4].credit
+                        mClGradesNatural.findViewById<TextView>(R.id.tv_grade_type).text =
+                            data[4].name
+
+                        val mClGradesCrossFunctional: ConstraintLayout =
+                            it.findViewById(R.id.grades_cross_functional)
+                        mClGradesCrossFunctional.findViewById<TextView>(R.id.tv_grade_score).text =
+                            data[5].credit
+                        mClGradesCrossFunctional.findViewById<TextView>(R.id.tv_grade_type).text =
+                            data[5].name
+
+                    }
                 )
             }.show(context.supportFragmentManager, tag)
         }
-
     }
 
-    private fun changeGPAGraph(view: View) {
-        val gpaGraph = view.grades_view_gpa_graph
+    private fun changeGPAGraph(view: HeaderVH) {
+        val gpaGraph = view.mGpAGraph
         when (tabSelectedType) {
             GPA -> {
                 val gpaList = gpaData.termGrade.map {
@@ -294,7 +257,6 @@ class GPAAdapter(
                 }
                 gpaGraph.setRule(AverageRule(list))
                 gpaGraph.setData(list)
-
             }
             RANK -> {
                 val list = gpaData.termGrade.map {
@@ -308,8 +270,146 @@ class GPAAdapter(
                 gpaGraph.setData(list)
             }
         }
-
         gpaGraph.invalidate()
+    }
+
+    override fun onBind(holder: GpaVH, position: Int, type: Int) {
+        when (dataMirror[position]) {
+            is HeaderData -> {
+                if (holder is HeaderVH) {
+                    val changeScene: () -> Unit = {
+                        TransitionManager.beginDelayedTransition(holder.fl, TransitionSet().apply {
+                            addTransition(Slide().apply {
+                                slideEdge = Gravity.START
+                                duration = 250
+                            })
+                        })
+                        isExpand = !isExpand
+                        if (isExpand) {
+                            holder.mTvGpaTitle.gone()
+                            holder.mTabLayout.visible()
+                            holder.mIvGpaArrow.setImageResource(R.drawable.grades_ic_arrow_left)
+                        } else {
+                            holder.mTvGpaTitle.visible()
+                            holder.mTabLayout.gone()
+                            holder.mIvGpaArrow.setImageResource(R.drawable.grades_ic_arrow_right)
+                        }
+
+                    }
+                    holder.fl.setOnClickListener {
+                        changeScene.invoke()
+                    }
+                    changeGPAGraph(holder)
+                    holder.mTabLayout.addOnTabSelectedListener(object :
+                        TabLayout.OnTabSelectedListener {
+                        override fun onTabReselected(tab: TabLayout.Tab?) {
+                            if (isExpand) {
+                                changeScene.invoke()
+                            }
+                        }
+
+                        override fun onTabUnselected(tab: TabLayout.Tab?) {
+                        }
+
+                        override fun onTabSelected(tab: TabLayout.Tab?) {
+                            tab?.let {
+                                when (it.position) {
+                                    0 -> {
+                                        tabSelectedType = GPA
+                                    }
+                                    1 -> {
+                                        tabSelectedType = GRADES
+                                    }
+                                    2 -> {
+                                        tabSelectedType = RANK
+                                    }
+                                }
+                            }
+                            when (tabSelectedType) {
+                                GPA -> {
+                                    holder.mTvGpaTitle.text =
+                                        context.getString(R.string.grades_bottom_sheet_gpa_rv_average_gpa)
+                                }
+                                GRADES -> {
+                                    holder.mTvGpaTitle.text =
+                                        context.getString(R.string.grades_bottom_sheet_gpa_rv_average_grades)
+
+                                }
+                                RANK -> {
+                                    holder.mTvGpaTitle.text =
+                                        context.getString(R.string.grades_bottom_sheet_gpa_rv_average_rank)
+                                }
+                            }
+                            changeGPAGraph(holder)
+                            if (isExpand) {
+                                changeScene.invoke()
+                            }
+                        }
+
+                    })
+                    holder.mTvACreditNumber.text = gpaData.aCredit
+                    holder.mTvBCreditNumber.text = gpaData.bCredit
+                    holder.mTvACreditNumber.setOnClickListener {
+                        clickACredit()
+                    }
+                    holder.mTvACredit.setOnClickListener {
+                        clickACredit()
+                    }
+                }
+            }
+            is TermGrade -> {
+                if (holder is NormalTopVH) {
+                    val termGrade = dataMirror[position] as TermGrade
+                    holder.mTvAverageCreditNum.text = termGrade.gpa
+                    holder.mTvAverageGradesNum.text = termGrade.grade
+                    //rank可能会出现为0，因为教务在线还没有排名
+                    if (termGrade.rank == "0") {
+                        holder.mTvAverageRankNum.text = "--"
+                    } else {
+                        holder.mTvAverageRankNum.text = termGrade.rank
+                    }
+                    val term = termGrade.term
+                    val termOfYear = term.substring(4)
+                    val year = term.substring(0, 4).toInt()
+                    if (termOfYear == "1") {
+                        //说明是上学期
+                        holder.mTvTerm.text = "${year}-${year + 1}第一学期"
+                    } else {
+                        holder.mTvTerm.text = "${year}-${year + 1}第二学期"
+                    }
+                }
+            }
+            is NormalBottom -> {
+                if (holder is NormalBottomVH) {
+                    val bean = dataMirror[position] as NormalBottom
+                    if (bean.termGrade.isClose()) {
+                        holder.mTvGradesDetail.text = "查看各科成绩"
+                    } else {
+                        holder.mTvGradesDetail.text = "收起各科成绩"
+                    }
+                    holder.itemView.setOnClickListener(object : NoDoubleClickListener() {
+                        override fun onNoDoubleClick(v: View) {
+                            if (bean.termGrade.isClose()) {
+                                bean.termGrade.status = TermGrade.EXPAND
+                                holder.mTvGradesDetail.text = "收起各科成绩"
+                            } else {
+                                bean.termGrade.status = TermGrade.CLOSE
+                                holder.mTvGradesDetail.text = "查看各科成绩"
+                            }
+                            refreshArrayList()
+                        }
+                    })
+                }
+            }
+            is SingleGrade -> {
+                if (holder is ChildVH) {
+                    val single = dataMirror[position] as SingleGrade
+                    holder.mTvGradeCourse.text = single.className
+                    holder.mTvGradeScore.text = single.grade
+                    holder.mTvGradeProperty.text = single.classType
+                }
+            }
+        }
     }
 
 }

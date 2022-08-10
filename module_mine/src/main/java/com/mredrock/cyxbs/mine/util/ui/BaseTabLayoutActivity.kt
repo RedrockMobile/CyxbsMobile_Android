@@ -3,15 +3,17 @@ package com.mredrock.cyxbs.mine.util.ui
 import android.content.Intent
 import android.os.Bundle
 import androidx.fragment.app.Fragment
+import androidx.viewpager.widget.ViewPager
 import com.google.android.material.tabs.TabLayout
 import com.mredrock.cyxbs.common.ui.BaseActivity
 import com.mredrock.cyxbs.mine.R
-import kotlinx.android.synthetic.main.mine_activity_tablayout_common.*
 
 /**
  * Created by roger on 2019/12/3
  */
 abstract class BaseTabLayoutActivity : BaseActivity() {
+    private val mine_tl_view_pager by R.id.mine_tl_view_pager.view<ViewPager>()
+    private val mine_tl_tablayout by R.id.mine_tl_tablayout.view<TabLayout>()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)

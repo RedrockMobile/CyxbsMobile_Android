@@ -5,10 +5,12 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.FrameLayout
 import androidx.fragment.app.Fragment
+import androidx.recyclerview.widget.RecyclerView
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import com.mredrock.cyxbs.mine.R
 import com.mredrock.cyxbs.mine.util.widget.RvFooter
-import kotlinx.android.synthetic.main.mine_fragment_base_rv.*
 
 
 /**
@@ -22,11 +24,22 @@ abstract class BaseRVFragment<D> : Fragment() {
 
     abstract fun getItemLayout(): Int
 
-    abstract fun bindFooterHolder(holder: androidx.recyclerview.widget.RecyclerView.ViewHolder, position: Int)
+    abstract fun bindFooterHolder(
+        holder: androidx.recyclerview.widget.RecyclerView.ViewHolder,
+        position: Int
+    )
 
-    abstract fun bindDataHolder(holder: androidx.recyclerview.widget.RecyclerView.ViewHolder, position: Int, data: D)
+    abstract fun bindDataHolder(
+        holder: androidx.recyclerview.widget.RecyclerView.ViewHolder,
+        position: Int,
+        data: D
+    )
 
     abstract fun onSwipeLayoutRefresh()
+
+    lateinit var mine_fragment_base_rv: RecyclerView
+    lateinit var mine_fragment_base_sf: SwipeRefreshLayout
+    lateinit var mine_fragment_base_placeholder: FrameLayout
 
     protected fun setNewData(newData: List<D>?) {
         if (mine_fragment_base_rv.isComputingLayout) {
@@ -37,14 +50,20 @@ abstract class BaseRVFragment<D> : Fragment() {
     }
 
     private var baseRVAdapter: BaseRVAdapter<D>? = null
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        mine_fragment_base_sf = view.findViewById(R.id.mine_fragment_base_sf)
+        mine_fragment_base_rv = view.findViewById(R.id.mine_fragment_base_rv)
+        mine_fragment_base_placeholder = view.findViewById(R.id.mine_fragment_base_placeholder)
+    }
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
-
         baseRVAdapter = RvAdapter()
         setAdapter(baseRVAdapter as RvAdapter)
 
-        mine_fragment_base_rv.layoutManager = androidx.recyclerview.widget.LinearLayoutManager(context)
+        mine_fragment_base_rv.layoutManager =
+            androidx.recyclerview.widget.LinearLayoutManager(context)
 
         mine_fragment_base_sf.setOnRefreshListener { onSwipeLayoutRefresh() }
 
@@ -65,8 +84,10 @@ abstract class BaseRVFragment<D> : Fragment() {
         mine_fragment_base_placeholder.visibility = View.GONE
     }
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
-                              savedInstanceState: Bundle?): View? {
+    override fun onCreateView(
+        inflater: LayoutInflater, container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View? {
         return inflater.inflate(R.layout.mine_fragment_base_rv, container, false)
     }
 
@@ -92,11 +113,18 @@ abstract class BaseRVFragment<D> : Fragment() {
             return this@BaseRVFragment.getItemLayout()
         }
 
-        override fun bindFooterHolder(holder: androidx.recyclerview.widget.RecyclerView.ViewHolder, position: Int) {
+        override fun bindFooterHolder(
+            holder: androidx.recyclerview.widget.RecyclerView.ViewHolder,
+            position: Int
+        ) {
             this@BaseRVFragment.bindFooterHolder(holder, position)
         }
 
-        override fun bindDataHolder(holder: androidx.recyclerview.widget.RecyclerView.ViewHolder, position: Int, data: D) {
+        override fun bindDataHolder(
+            holder: androidx.recyclerview.widget.RecyclerView.ViewHolder,
+            position: Int,
+            data: D
+        ) {
             this@BaseRVFragment.bindDataHolder(holder, position, data)
         }
     }
