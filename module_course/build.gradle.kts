@@ -9,6 +9,7 @@ plugins {
 
 dependApiAccount()
 dependApiMain()
+dependApiWidget()
 
 dependRoom()
 dependRoomRxjava()

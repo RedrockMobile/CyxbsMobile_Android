@@ -14,8 +14,10 @@ import com.mredrock.cyxbs.widget.repo.database.AffairDatabase
 import com.mredrock.cyxbs.widget.repo.database.LessonDatabase
 import com.mredrock.cyxbs.widget.repo.database.LessonDatabase.Companion.MY_STU_NUM
 import com.mredrock.cyxbs.widget.repo.database.LessonDatabase.Companion.OTHERS_STU_NUM
+import com.mredrock.cyxbs.widget.util.getMyLessons
 import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
 import io.reactivex.rxjava3.core.Observable
+import io.reactivex.rxjava3.core.ObservableEmitter
 import io.reactivex.rxjava3.schedulers.Schedulers
 import java.util.concurrent.TimeUnit
 
@@ -48,6 +50,7 @@ class WidgetService : IWidgetService {
         }
         Observable.create<Int> {
             //将传入的来自api模块数据转化为该模块的对应数据并存入数据库
+            getMyLessons(mContext!!,3).size
             LessonDatabase.getInstance(mContext!!).getLessonDao()
                 .insertLessons(com.mredrock.cyxbs.widget.repo.bean.Lesson.convertFromApi(myLessons))
             LessonDatabase.getInstance(mContext!!).getLessonDao()
@@ -55,9 +58,11 @@ class WidgetService : IWidgetService {
                     otherStuLessons))
             AffairDatabase.getInstance(mContext!!).getAffairDao()
                 .insertAffairs(com.mredrock.cyxbs.widget.repo.bean.Affair.convert(affairs))
+            it.onNext(1)
         }.subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread())
             //延迟100ms,确保发送广播时已经将数据插入数据库
             .delay(100, TimeUnit.MILLISECONDS).subscribe {
+                Log.d("testTag", "(WidgetService.kt:64) -> 2")
                 widgetList.forEach { pkg ->
                     mContext?.sendBroadcast(Intent(actionFlush).apply {
                         component = ComponentName(mContext!!, pkg)
