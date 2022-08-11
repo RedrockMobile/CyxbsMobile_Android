@@ -1,12 +1,12 @@
-package com.mredrock.lib.crashmonitor.interceptor
+package com.mredrock.lib.crashmonitor.core.interceptor
 
 import android.os.Build
 import android.util.Log
 import com.mredrock.cyxbs.lib.utils.extensions.toast
-import com.mredrock.lib.crashmonitor.activitykiller.ActivityKillerV21ToV23
-import com.mredrock.lib.crashmonitor.activitykiller.ActivityKillerV24ToV25
-import com.mredrock.lib.crashmonitor.activitykiller.ActivityKillerV26
-import com.mredrock.lib.crashmonitor.activitykiller.ActivityKillerV28
+import com.mredrock.lib.crashmonitor.core.activitykiller.ActivityKillerV21ToV23
+import com.mredrock.lib.crashmonitor.core.activitykiller.ActivityKillerV24ToV25
+import com.mredrock.lib.crashmonitor.core.activitykiller.ActivityKillerV26
+import com.mredrock.lib.crashmonitor.core.activitykiller.ActivityKillerV28
 import com.mredrock.lib.crashmonitor.util.collectCrashInfo
 
 /**

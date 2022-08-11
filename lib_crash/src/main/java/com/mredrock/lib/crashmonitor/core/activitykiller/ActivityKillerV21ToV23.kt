@@ -1,4 +1,4 @@
-package com.mredrock.lib.crashmonitor.activitykiller
+package com.mredrock.lib.crashmonitor.core.activitykiller
 
 import android.annotation.SuppressLint
 import android.app.Activity

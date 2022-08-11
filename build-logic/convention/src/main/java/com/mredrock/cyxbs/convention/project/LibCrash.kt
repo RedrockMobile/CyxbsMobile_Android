@@ -1,5 +1,6 @@
 package com.mredrock.cyxbs.convention.project
 
+import com.mredrock.cyxbs.convention.depend.dependAndroidBase
 import com.mredrock.cyxbs.convention.depend.dependBugly
 import com.mredrock.cyxbs.convention.project.base.BaseLibraryProject
 import org.gradle.api.Project
@@ -11,8 +12,9 @@ import org.gradle.api.Project
  * @date 2022/8/10
  * @Description:
  */
-class LibCrashMonitor(project: Project) : BaseLibraryProject(project) {
+class LibCrash(project: Project) : BaseLibraryProject(project) {
     override fun initProject() {
         dependBugly()
+        dependAndroidBase()
     }
 }

@@ -1,3 +1,4 @@
+import com.mredrock.cyxbs.convention.depend.Android
 import com.mredrock.cyxbs.convention.depend.lib.dependLibUtils
 
 plugins {
@@ -6,4 +7,5 @@ plugins {
 dependLibUtils()
 dependencies {
     // 这里面写只有自己模块才会用到的依赖
+    implementation(Android.constraintlayout)
 }

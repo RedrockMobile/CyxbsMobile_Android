@@ -1,4 +1,4 @@
-package com.mredrock.lib.crashmonitor.interceptor
+package com.mredrock.lib.crashmonitor.core.interceptor
 
 import android.os.Handler
 import android.os.Looper

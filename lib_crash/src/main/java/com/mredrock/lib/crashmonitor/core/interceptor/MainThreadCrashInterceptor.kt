@@ -1,7 +1,6 @@
-package com.mredrock.lib.crashmonitor.interceptor
+package com.mredrock.lib.crashmonitor.core.interceptor
 
 import android.util.Log
-import android.widget.Toast
 import com.mredrock.cyxbs.lib.utils.extensions.toast
 import com.mredrock.lib.crashmonitor.util.collectCrashInfo
 import com.mredrock.lib.crashmonitor.util.reStartApp

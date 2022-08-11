@@ -1,4 +1,4 @@
-package com.mredrock.lib.crashmonitor
+package com.mredrock.lib.crashmonitor.core
 
 import android.annotation.SuppressLint
 import android.app.Activity
@@ -9,7 +9,7 @@ import android.os.Looper
 import android.os.Message
 import com.mredrock.cyxbs.lib.utils.extensions.toast
 import com.mredrock.cyxbs.lib.utils.utils.LogLocal
-import com.mredrock.lib.crashmonitor.interceptor.*
+import com.mredrock.lib.crashmonitor.core.interceptor.*
 import com.mredrock.lib.crashmonitor.util.noOpDelegate
 import com.mredrock.lib.crashmonitor.util.reStartApp
 import com.tencent.bugly.crashreport.CrashReport
@@ -32,6 +32,7 @@ import java.lang.reflect.Field
 object CyxbsCrashMonitor : Thread.UncaughtExceptionHandler {
     private val activities = mutableListOf<Activity>()
     private lateinit var mainThread: Thread
+    private var noHandleCrash = false
     fun install(application: Application) {
         mainThread = Thread.currentThread()
         initListener(application)
@@ -62,7 +63,7 @@ object CyxbsCrashMonitor : Thread.UncaughtExceptionHandler {
         var isFirstError = true
         //接管message异常的监听
         Handler(Looper.getMainLooper()).post {
-            while (true) {
+            while (!noHandleCrash) {
                 try {
                     Looper.loop()
                 } catch (e: Throwable) {
@@ -121,8 +122,10 @@ object CyxbsCrashMonitor : Thread.UncaughtExceptionHandler {
             activities = activities,
             t = t, e = e, message = message
         )
-        if (!realChain.proceed())
+        if (!realChain.proceed()){
             toast("未知异常！！！")
+            noHandleCrash = true
+        }
     }
 
     /**
