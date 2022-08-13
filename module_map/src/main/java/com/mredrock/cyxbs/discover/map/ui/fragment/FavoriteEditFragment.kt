@@ -4,6 +4,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.TextView
 import android.widget.Toast
 import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.ViewModelProvider
@@ -15,13 +16,20 @@ import com.mredrock.cyxbs.discover.map.viewmodel.MapViewModel
 import com.mredrock.cyxbs.discover.map.widget.MapDialog
 import com.mredrock.cyxbs.discover.map.widget.OnSelectListener
 import com.mredrock.cyxbs.discover.map.widget.ProgressDialog
-import kotlinx.android.synthetic.main.map_fragment_favorite_edit.*
 import com.mredrock.cyxbs.common.utils.extensions.*
+import com.mredrock.cyxbs.discover.map.component.FavoriteEditText
 
 
 class FavoriteEditFragment : BaseFragment() {
     private lateinit var viewModel: MapViewModel
     private lateinit var mBinding: MapFragmentFavoriteEditBinding
+
+    private val mTvFavoriteCancel by R.id.map_tv_favorite_cancel.view<TextView>()
+    private val mTvFavoriteCancelFavorite by R.id.map_tv_favorite_cancel_favorite.view<TextView>()
+    private val mTvFavoriteAccept by R.id.map_tv_favorite_accept.view<TextView>()
+    private val mEtFavoriteNickname by R.id.map_et_favorite_nickname.view<FavoriteEditText>()
+    private val mTvFavoritePlaceName by R.id.map_tv_favorite_place_name.view<TextView>()
+
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         mBinding = DataBindingUtil.inflate(inflater, R.layout.map_fragment_favorite_edit, container, false)
         return mBinding.root
@@ -30,13 +38,13 @@ class FavoriteEditFragment : BaseFragment() {
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
         viewModel = ViewModelProvider(requireActivity()).get(MapViewModel::class.java)
-        map_tv_favorite_cancel.setOnSingleClickListener {
+        mTvFavoriteCancel.setOnSingleClickListener {
             viewModel.fragmentFavoriteEditIsShowing.value = false
         }
 
 
 
-        map_tv_favorite_cancel_favorite.setOnSingleClickListener {
+        mTvFavoriteCancelFavorite.setOnSingleClickListener {
             context?.let { it1 ->
                 MapDialog.show(it1, resources.getString(R.string.map_favorite_delete_title), resources.getString(R.string.map_favorite_delete), object : OnSelectListener {
                     override fun onDeny() {
@@ -51,12 +59,12 @@ class FavoriteEditFragment : BaseFragment() {
                 })
             }
         }
-        map_tv_favorite_accept.setOnSingleClickListener {
-            if (map_et_favorite_nickname.length() != 0) {
+        mTvFavoriteAccept.setOnSingleClickListener {
+            if (mEtFavoriteNickname.length() != 0) {
                 viewModel.fragmentFavoriteEditIsShowing.value = false
                 ProgressDialog.show(requireActivity(), getString(R.string.map_please_a_moment_text), getString(R.string.map_collect_adding), false)
 
-                viewModel.addCollect(map_et_favorite_nickname.text.toString(), viewModel.showingPlaceId)
+                viewModel.addCollect(mEtFavoriteNickname.text.toString(), viewModel.showingPlaceId)
             } else {
                 MapToast.makeText(requireContext(), R.string.map_favorite_edit_length_not_enough, Toast.LENGTH_SHORT).show()
             }
@@ -66,7 +74,7 @@ class FavoriteEditFragment : BaseFragment() {
 
     override fun onResume() {
         super.onResume()
-        map_et_favorite_nickname.maxStringLength = 12
+        mEtFavoriteNickname.maxStringLength = 12
         if (viewModel.collectList.value != null) {
             var s = viewModel.placeDetails.value?.placeName
             for (t in viewModel.collectList.value!!) {
@@ -75,13 +83,13 @@ class FavoriteEditFragment : BaseFragment() {
                     break
                 }
             }
-            map_et_favorite_nickname.setText(s)
+            mEtFavoriteNickname.setText(s)
         } else {
-            map_et_favorite_nickname.setText(viewModel.placeDetails.value?.placeName)
+            mEtFavoriteNickname.setText(viewModel.placeDetails.value?.placeName)
         }
 
-        map_et_favorite_nickname.notifyStringChange()
-        map_tv_favorite_place_name.text = viewModel.placeDetails.value?.placeName
+        mEtFavoriteNickname.notifyStringChange()
+        mTvFavoritePlaceName.text = viewModel.placeDetails.value?.placeName
     }
 
 }

@@ -35,7 +35,6 @@ import com.mredrock.cyxbs.discover.news.utils.TimeFormatHelper
 import com.mredrock.cyxbs.discover.news.viewmodel.NewsItemViewModel
 import com.tbruyelle.rxpermissions3.RxPermissions
 import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
-import kotlinx.android.synthetic.main.news_activity_detail.*
 import java.io.File
 import java.util.regex.Matcher
 import java.util.regex.Pattern
@@ -46,6 +45,11 @@ class NewsItemActivity : BaseViewModelActivity<NewsItemViewModel>(), NewsItemVie
     private val files = mutableListOf<File>()
     private var downloadNeedSize = 0
     private var downloadEndSize = 0
+
+    private val tv_title by R.id.tv_title.view<TextView>()
+    private val tv_time by R.id.tv_time.view<TextView>()
+    private val tv_detail by R.id.tv_detail.view<TextView>()
+    private val ll_content by R.id.ll_content.view<LinearLayout>()
 
     private val permissionDialog by lazy {
         AlertDialog.Builder(this)

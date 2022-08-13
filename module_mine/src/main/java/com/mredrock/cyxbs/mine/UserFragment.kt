@@ -8,6 +8,8 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.*
+import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.app.ActivityOptionsCompat
 import androidx.core.content.ContextCompat
 import androidx.core.content.res.ResourcesCompat
@@ -27,8 +29,8 @@ import com.mredrock.cyxbs.mine.page.feedback.center.ui.FeedbackCenterActivity
 import com.mredrock.cyxbs.mine.page.mine.ui.activity.HomepageActivity
 import com.mredrock.cyxbs.mine.page.setting.SettingActivity
 import com.mredrock.cyxbs.mine.page.sign.DailySignActivity
+import de.hdodenhof.circleimageview.CircleImageView
 import com.mredrock.cyxbs.api.store.IStoreService
-import kotlinx.android.synthetic.main.mine_fragment_main_new.*
 
 /**
  * Created by zzzia on 2018/8/14.
@@ -37,7 +39,30 @@ import kotlinx.android.synthetic.main.mine_fragment_main_new.*
  */
 @SuppressLint("SetTextI18n")
 @Route(path = MINE_ENTRY)
-class UserFragment : BaseViewModelFragment<UserViewModel>() {
+class UserFragment : BaseViewModelFragment<UserViewModel>(){
+    private val mine_user_tv_dynamic_number by R.id.mine_user_tv_dynamic_number.view<TextView>()
+    private val  mine_user_tv_dynamic by R.id. mine_user_tv_dynamic.view<TextView>()
+    private val mine_user_ib_arrow by R.id.mine_user_ib_arrow.view<ImageButton>()
+    private val mine_user_tv_comment_number by R.id.mine_user_tv_comment_number.view<TextView>()
+    private val mine_user_tv_comment by R.id.mine_user_tv_comment.view<TextView>()
+    private val mine_user_tv_praise_number by R.id.mine_user_tv_praise_number.view<TextView>()
+    private val mine_user_tv_praise by R.id.mine_user_tv_praise.view<TextView>()
+    private val mine_user_iv_center_stamp by R.id.mine_user_iv_center_stamp.view<ImageView>()
+    private val mine_user_iv_center_feedback by R.id.mine_user_iv_center_feedback.view<ImageView>()
+    private val mine_user_tv_sign by R.id.mine_user_tv_sign.view<TextView>()
+    private val mine_user_btn_sign by R.id.mine_user_btn_sign.view<TextView>()
+    private val mine_user_fm_about_us by R.id.mine_user_fm_about_us.view<FrameLayout>()
+    private val mine_user_fm_setting by R.id.mine_user_fm_setting.view<FrameLayout>()
+    private val mine_user_cl_info by R.id.mine_user_cl_info.view<ConstraintLayout>()
+    private val mine_user_iv_center_notification by R.id.mine_user_iv_center_notification.view<ImageView>()
+    private val mine_user_tv_center_notification by R.id.mine_user_tv_center_notification.view<TextView>()
+    private val mine_user_avatar by R.id.mine_user_avatar.view<CircleImageView>()
+    private val mine_user_tv_unchecked_notification_count by R.id.mine_user_tv_unchecked_notification_count.view<TextView>()
+    private val mine_user_tv_unchecked_praise by R.id.mine_user_tv_unchecked_praise.view<TextView>()
+    private val mine_user_tv_unchecked_comment by R.id.mine_user_tv_unchecked_comment.view<TextView>()
+    private val mine_user_username by R.id.mine_user_username.view<TextView>()
+    private val mine_user_introduce by R.id.mine_user_introduce.view<TextView>()
+
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)

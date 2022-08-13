@@ -11,7 +11,6 @@ import com.mredrock.cyxbs.common.utils.extensions.visible
 import com.mredrock.cyxbs.discover.map.R
 import com.mredrock.cyxbs.discover.map.bean.FavoritePlace
 import com.mredrock.cyxbs.discover.map.viewmodel.MapViewModel
-import kotlinx.android.synthetic.main.map_recycle_item_favorite_list.view.*
 import com.mredrock.cyxbs.common.utils.extensions.*
 
 
@@ -60,8 +59,8 @@ class FavoriteListAdapter(context: Context, val viewModel: MapViewModel, private
 
 
     class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
-        val placeNickname = itemView.map_tv_favorite_list_item_text
-        val line = itemView.map_view_favorite_line
+        val placeNickname:MarqueeTextView = itemView.findViewById(R.id.map_tv_favorite_list_item_text)
+        val line:View = itemView.findViewById(R.id.map_view_favorite_line)
     }
 
 }

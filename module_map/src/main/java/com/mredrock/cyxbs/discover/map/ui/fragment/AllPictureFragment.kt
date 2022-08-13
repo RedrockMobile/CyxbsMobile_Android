@@ -4,6 +4,8 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ImageView
+import android.widget.TextView
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.RecyclerView
 import androidx.recyclerview.widget.RecyclerView.SCROLL_STATE_IDLE
@@ -14,13 +16,17 @@ import com.mredrock.cyxbs.discover.map.R
 import com.mredrock.cyxbs.discover.map.ui.activity.ShowPictureActivity
 import com.mredrock.cyxbs.discover.map.ui.adapter.AllPictureRvAdapter
 import com.mredrock.cyxbs.discover.map.viewmodel.MapViewModel
-import kotlinx.android.synthetic.main.map_fragment_all_picture.*
 
 
 class AllPictureFragment : BaseFragment() {
     private lateinit var viewModel: MapViewModel
     private lateinit var allPictureAdapter: AllPictureRvAdapter
     private val imageData = mutableListOf<String>()
+
+    private val mTvAllPicture by R.id.map_tv_all_picture.view<TextView>()
+    private val mRvAllPicture by R.id.map_rv_all_picture.view<RecyclerView>()
+    private val mIvAllPictureBack by R.id.map_iv_all_picture_back.view<ImageView>()
+    private val mTvAllPictureShare by R.id.map_tv_all_picture_share.view<TextView>()
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         return inflater.inflate(R.layout.map_fragment_all_picture, container, false)
@@ -29,10 +35,10 @@ class AllPictureFragment : BaseFragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         viewModel = ViewModelProvider(requireActivity()).get(MapViewModel::class.java)
-        map_tv_all_picture.alpha = 0f
+        mTvAllPicture.alpha = 0f
         val staggeredGridLayoutManager = StaggeredGridLayoutManager(2, StaggeredGridLayoutManager.VERTICAL)
         staggeredGridLayoutManager.gapStrategy = StaggeredGridLayoutManager.GAP_HANDLING_NONE
-        map_rv_all_picture.layoutManager = staggeredGridLayoutManager
+        mRvAllPicture.layoutManager = staggeredGridLayoutManager
         allPictureAdapter = context?.let { AllPictureRvAdapter(it, mutableListOf()) } ?: return
 
         allPictureAdapter.setOnItemClickListener(object : AllPictureRvAdapter.OnItemClickListener {
@@ -49,14 +55,14 @@ class AllPictureFragment : BaseFragment() {
 
         })
 
-        map_rv_all_picture.adapter = allPictureAdapter
+        mRvAllPicture.adapter = allPictureAdapter
 
-        map_iv_all_picture_back.setOnSingleClickListener {
+        mIvAllPictureBack.setOnSingleClickListener {
             viewModel.fragmentAllPictureIsShowing.value = false
         }
 
 
-        map_rv_all_picture.addOnScrollListener(object : RecyclerView.OnScrollListener() {
+        mRvAllPicture.addOnScrollListener(object : RecyclerView.OnScrollListener() {
 
             override fun onScrollStateChanged(recyclerView: RecyclerView, state: Int) {
                 // 如果停止滑动
@@ -81,10 +87,10 @@ class AllPictureFragment : BaseFragment() {
                             /**
                              * 此处实现业务逻辑
                              */
-                            map_tv_all_picture.animate().alpha(1f).duration = 500
+                            mTvAllPicture.animate().alpha(1f).duration = 500
                             return
                         } else {
-                            map_tv_all_picture.animate().alpha(0f).duration = 500
+                            mTvAllPicture.animate().alpha(0f).duration = 500
                         }
                     }
                 }
@@ -92,7 +98,7 @@ class AllPictureFragment : BaseFragment() {
             }
         })
 
-        map_tv_all_picture_share.setOnSingleClickListener {
+        mTvAllPictureShare.setOnSingleClickListener {
             context?.let { it1 -> viewModel.sharePicture(it1, this) }
         }
 

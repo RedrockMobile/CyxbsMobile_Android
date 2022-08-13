@@ -3,6 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="255dp"
     android:layout_height="349dp"
+    android:id="@+id/mine_dialog_warning"
     android:background="@drawable/mine_shape_dialog_back">
 
     <ImageView

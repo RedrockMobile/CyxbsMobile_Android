@@ -2,6 +2,8 @@ package com.mredrock.cyxbs.mine.page.security.activity
 
 import android.content.Intent
 import android.os.Bundle
+import android.widget.ImageView
+import android.widget.LinearLayout
 import com.mredrock.cyxbs.common.ui.BaseViewModelActivity
 import com.mredrock.cyxbs.common.utils.extensions.setOnSingleClickListener
 import com.mredrock.cyxbs.common.utils.extensions.toast
@@ -9,13 +11,17 @@ import com.mredrock.cyxbs.mine.R
 import com.mredrock.cyxbs.mine.page.security.activity.ChangePasswordActivity.Companion.TYPE_START_FROM_MINE
 import com.mredrock.cyxbs.mine.page.security.viewmodel.SecurityActivityViewModel
 import com.mredrock.cyxbs.mine.util.ui.DoubleChooseDialog
-import kotlinx.android.synthetic.main.mine_activity_security.*
 
 /**
  * Author: RayleighZ
  * Time: 2020-10-29 15:06
  */
 class SecurityActivity : BaseViewModelActivity<SecurityActivityViewModel>() {
+
+    private val mLlChangeBindingMail by R.id.mine_ll_change_binding_mail.view<LinearLayout>()
+    private val mLlChangeSecretSecurity by R.id.mine_ll_change_secret_security.view<LinearLayout>()
+    private val mLlChangePassword by R.id.mine_ll_change_password.view<LinearLayout>()
+    private val mIvSecurityBack by R.id.mine_iv_security_back.view<ImageView>()
 
     //在网络请求返回绑定结果之前不允许进行点击
 
@@ -27,7 +33,7 @@ class SecurityActivity : BaseViewModelActivity<SecurityActivityViewModel>() {
             if (!viewModel.netRequestSuccess)
                 toast("绑定信息请求失败")
         }
-        mine_ll_change_binding_mail.setOnSingleClickListener {//绑定邮箱
+        mLlChangeBindingMail.setOnSingleClickListener {//绑定邮箱
             if (viewModel.canClick) {
                 val intent = Intent(this, BindEmailActivity::class.java)
                 startActivity(intent)
@@ -36,7 +42,7 @@ class SecurityActivity : BaseViewModelActivity<SecurityActivityViewModel>() {
             }
         }
 
-        mine_ll_change_secret_security.setOnSingleClickListener {//密保
+        mLlChangeSecretSecurity.setOnSingleClickListener {//密保
             if (viewModel.canClick) {
                 SetPasswordProtectActivity.actionStart(this)
             } else {
@@ -44,7 +50,7 @@ class SecurityActivity : BaseViewModelActivity<SecurityActivityViewModel>() {
             }
         }
 
-        mine_ll_change_password.setOnSingleClickListener {//修改密码
+        mLlChangePassword.setOnSingleClickListener {//修改密码
             if (viewModel.canClick) {
                 if (!viewModel.isBindingEmail && !viewModel.isSetProtect) {
                     DoubleChooseDialog.show(this)
@@ -56,7 +62,7 @@ class SecurityActivity : BaseViewModelActivity<SecurityActivityViewModel>() {
             }
         }
 
-        mine_iv_security_back.setOnSingleClickListener {//退回界面
+        mIvSecurityBack.setOnSingleClickListener {//退回界面
             finish()
         }
     }

@@ -7,6 +7,7 @@ import android.view.ViewGroup
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import com.mredrock.cyxbs.common.ui.BaseFragment
 import com.mredrock.cyxbs.common.utils.extensions.runOnUiThread
 import com.mredrock.cyxbs.discover.map.R
@@ -14,7 +15,6 @@ import com.mredrock.cyxbs.discover.map.bean.PlaceItem
 import com.mredrock.cyxbs.discover.map.ui.adapter.SearchResultAdapter
 import com.mredrock.cyxbs.discover.map.util.ThreadPool
 import com.mredrock.cyxbs.discover.map.viewmodel.MapViewModel
-import kotlinx.android.synthetic.main.map_fragment_search_result.*
 import java.util.regex.Pattern
 
 class SearchResultFragment : BaseFragment() {
@@ -22,6 +22,7 @@ class SearchResultFragment : BaseFragment() {
     private lateinit var observer: Observer<String>
     private var isSearching = false
 
+    private val mRvSearchResult by R.id.map_rv_search_result.view<RecyclerView>()
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         return inflater.inflate(R.layout.map_fragment_search_result, container, false)
@@ -33,10 +34,8 @@ class SearchResultFragment : BaseFragment() {
 
 
         val searchResultAdapter = context?.let { SearchResultAdapter(it, viewModel) }
-        map_rv_search_result.adapter = searchResultAdapter
-        map_rv_search_result.layoutManager = LinearLayoutManager(context)
-
-
+        mRvSearchResult.adapter = searchResultAdapter
+        mRvSearchResult.layoutManager = LinearLayoutManager(context)
 
         observer = Observer { t ->
             if (t == "") {
@@ -67,8 +66,8 @@ class SearchResultFragment : BaseFragment() {
                 //以上是搜索到的结果
                 if (searchResultArrayList.size > 20 || viewModel.searchResult.size > 30) {
                     //如果数据大于10就不动态效果了
-                    if (map_rv_search_result.isComputingLayout) {
-                        map_rv_search_result.post {
+                    if (mRvSearchResult.isComputingLayout) {
+                        mRvSearchResult.post {
                             viewModel.searchResult.clear()
                             viewModel.searchResult.addAll(searchResultArrayList)
                         }
