@@ -30,7 +30,7 @@ abstract class BaseDebugActivity : BaseActivity() {
         .isLogin()
       if (!isLogin) {
         ILoginService::class.impl
-          .startLoginActivityReboot(this)
+          .startLoginActivity(this, this::class.java)
         finish()
       } else {
         onDebugCreate(savedInstanceState)
@@ -41,7 +41,7 @@ abstract class BaseDebugActivity : BaseActivity() {
   }
   
   /**
-   * 主要是用来防止你直接在 onCreate 中 startActivity，导致登录界面被你的界面为覆盖
+   * 主要是用来防止你直接在 onCreate 中 startActivity，导致登录界面被你的界面覆盖
    */
   abstract fun onDebugCreate(savedInstanceState: Bundle?)
 }
