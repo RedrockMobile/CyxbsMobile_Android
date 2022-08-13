@@ -3,6 +3,7 @@ package com.mredrock.cyxbs.mine.page.setting
 import android.content.Intent
 import android.os.Bundle
 import androidx.core.content.ContextCompat
+import androidx.core.view.postDelayed
 import com.alibaba.android.arouter.launcher.ARouter
 import com.mredrock.cyxbs.api.account.IAccountService
 import com.mredrock.cyxbs.api.login.ILoginService
@@ -80,7 +81,6 @@ class SettingActivity : BaseActivity() {
     private fun onExitClick() {
         mExitDisposable = apiService.pingMagipoke()
             .setSchedulers()
-            .doOnErrorWithDefaultErrorHandler { true }
             .safeSubscribeBy(
                 onNext = {
                     //判定magipoke系列接口正常，允许正常退出登陆
@@ -129,12 +129,15 @@ class SettingActivity : BaseActivity() {
         //清除user信息，必须要在LoginStateChangeEvent之前
         ServiceManager.getService(IAccountService::class.java).getVerifyService()
             .logout(this@SettingActivity)
-    
-        ILoginService::class.impl
-            .startLoginActivityReboot(this@SettingActivity,) {
-                // 清空activity栈
-                addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK or Intent.FLAG_ACTIVITY_NEW_TASK)
-            }
+        window.decorView.postDelayed(100) {
+            // 延迟打开，保证前面的 logout 有时间清空数据
+            ILoginService::class.impl
+                .startLoginActivityReboot(this@SettingActivity) {
+                    // 清空activity栈
+                    addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK or Intent.FLAG_ACTIVITY_NEW_TASK)
+                }
+            finish()
+        }
     }
 
     private fun cleanAppWidgetCache() {
