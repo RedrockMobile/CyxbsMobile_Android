@@ -34,3 +34,17 @@ fun View.setOnSingleClickListener(interval: Long = 500, click: (View) -> Unit) {
     it.setTag(423612342, System.currentTimeMillis())
   }
 }
+
+/**
+ * @param interval 毫秒为单位，点击间隔小于这个值监听事件才能生效（默认为500毫秒）
+ * @param click 具体的点击事件
+ */
+fun View.setOnDoubleClickListener(interval: Long = 500, click: (View) -> Unit) {
+  setOnClickListener {
+    val tag = getTag(2078660398) as? Long
+    if (System.currentTimeMillis() - (tag ?: 0L) < interval) {
+      click(it)
+    }
+    it.setTag(2078660398, System.currentTimeMillis())
+  }
+}

@@ -14,8 +14,6 @@ import com.mredrock.cyxbs.common.utils.extensions.*
 import com.mredrock.cyxbs.common.viewmodel.BaseViewModel
 import com.mredrock.cyxbs.discover.grades.R
 import com.mredrock.cyxbs.discover.grades.bean.Exam
-import com.mredrock.cyxbs.discover.grades.bean.IdsBean
-import com.mredrock.cyxbs.discover.grades.bean.IdsStatus
 import com.mredrock.cyxbs.discover.grades.bean.Status
 import com.mredrock.cyxbs.discover.grades.bean.analyze.GPAStatus
 import com.mredrock.cyxbs.discover.grades.network.ApiService
@@ -55,63 +53,6 @@ class ContainerViewModel : BaseViewModel() {
             }.lifeCycle()
     }
 
-
-    private var isAnimating = false
-
-    fun bindIds(idsNum: String, idsPassword: String, bubble: () -> Unit) {
-        if (isAnimating) {
-            return
-        }
-        isAnimating = true
-        bubble.invoke()
-        val startTime = System.currentTimeMillis()
-        apiService.bindIds(IdsBean(idsNum, idsPassword))
-            .doOnNext {
-                sleepThread(startTime)
-            }
-            .doOnError {
-                sleepThread(startTime)
-            }
-            .setSchedulers()
-            .safeSubscribeBy(
-                onNext = {
-                    apiService.getAnalyzeData()
-                        .setSchedulers()
-                        .safeSubscribeBy(
-                            onNext = {
-                                replaceBindFragmentToGPAFragment.value = true
-                                bottomStateListener.postValue(true)
-                                BaseApp.appContext.toast(R.string.grades_bottom_sheet_bind_success)
-                                isAnimating = false
-                            },
-                            onError = {
-                                replaceBindFragmentToGPAFragment.value = false
-                                BaseApp.appContext.toast(R.string.grades_bottom_sheet_bind_wrong)
-                                isAnimating = false
-                            }
-                        ).lifeCycle()
-                },
-                onError = {
-                    //密码错误的话,会导致状态码为400，Retrofit无法回调onNext
-                    //详见：https://www.cnblogs.com/fuyaozhishang/p/8607706.html
-                    // todo 以后学弟重构的话，记得让后端该下逻辑
-                    if (it is HttpException && it.code() == 400) {
-                        val body = (it).response()?.errorBody() ?: return@safeSubscribeBy
-                        val data = Gson().fromJson(body.string(), IdsStatus::class.java)
-                        if (data.errorCode == ERROR) {
-                            replaceBindFragmentToGPAFragment.value = false
-                            BaseApp.appContext.toast(R.string.grades_bottom_sheet_bind_fail)
-                        }
-                    } else {
-                        replaceBindFragmentToGPAFragment.value = false
-                        BaseApp.appContext.toast("绑定ids失败")
-                    }
-                    isAnimating = false
-                }
-            ).lifeCycle()
-
-    }
-
     /**
      * 解绑ids
      */
@@ -134,16 +75,6 @@ class ContainerViewModel : BaseViewModel() {
                 }
             ).lifeCycle()
     }
-
-    private fun sleepThread(startTime: Long) {
-        val curTime = System.currentTimeMillis()
-        val waitTime = 1500L
-        if (curTime - startTime < waitTime) {
-            Thread.sleep(waitTime - curTime + startTime)
-        }
-    }
-
-    val replaceBindFragmentToGPAFragment: MutableLiveData<Boolean> = MutableLiveData()
 
     /**
      * 当前是否处于绑定状态
@@ -168,12 +99,12 @@ class ContainerViewModel : BaseViewModel() {
                     //详见：https://www.cnblogs.com/fuyaozhishang/p/8607706.html
                     if (it is HttpException) {
                         val errorBody = it.response()?.errorBody()?.string() ?: ""
-                        try{
+                        try {
                             // 防止后端返回的status不符合json格式报错
                             val gpaStatus = Gson().fromJson(errorBody, GPAStatus::class.java)
                             _analyzeData.postValue(gpaStatus)
                             isBinding.value = false
-                        }catch (e: Exception){
+                        } catch (e: Exception) {
                             BaseApp.appContext.toast("加载绩点失败")
                         }
                     } else {

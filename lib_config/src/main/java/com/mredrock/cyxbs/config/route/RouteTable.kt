@@ -27,6 +27,7 @@ const val DISCOVER_SCHOOL_CAR = "/school_car/discover/entry"
 const val DISCOVER_NEWS = "/news/discover/entry"
 const val DISCOVER_MORE_FUNCTION = "/more_function/discover/entry"
 const val DISCOVER_TODO_MAIN = "/todo/discover/entry"
+const val DISCOVER_SPORT = "/sport/discover/entry"
 
 //志愿服务在发现页的展示信息
 const val DISCOVER_VOLUNTEER_FEED = "/volunteer/discover/feed"
@@ -36,6 +37,9 @@ const val DISCOVER_ELECTRICITY_FEED = "/electricity/discover/feed"
 
 //todo在发现页面展示信息
 const val DISCOVER_TODO_FEED = "/todo/discover/feed"
+
+//体育打卡在发现页面的展示信息
+const val DISCOVER_SPORT_FEED = "/sport/discover/feed"
 
 
 //教务新闻子项入口
@@ -77,6 +81,9 @@ const val TODO_ADD_TODO_BY_WIDGET = "/widget/todo/entry"
 
 // module_store 邮票中心页
 const val STORE_ENTRY="/store/entry"
+
+//绑定教务在线ids页面
+const val LOGIN_BIND_IDS="/login/bind_ids/entry"
 
 
 
