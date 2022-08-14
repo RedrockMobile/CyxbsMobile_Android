@@ -14,9 +14,9 @@ object UtilsApplicationWrapper {
     private set
   
   /**
-   * 设置 lib_utils 模块的 appContext
+   * 为了不反向依赖 lib_base，所以单独设置 lib_utils 模块的 appContext
    */
-  fun setUtilsApplication(application: Application) {
+  fun initialize(application: Application) {
     appContext = application
   }
 }

@@ -5,7 +5,12 @@ import org.gradle.api.Project
 import com.mredrock.cyxbs.convention.depend.api.utils.ApiDependUtils
 
 /**
- * ...
+ * 为什么要把 api 模块单独写出来？
+ *
+ * 因为单模块调试时 ARouter 如果不把实现模块一起拿来编译，就会报空指针，
+ * 但谁是 api 模块的实现模块是不能被定义的（虽然目前只有父模块是实现模块），
+ * 所以为了单模块调试，需要统一 api 模块的依赖写法
+ *
  * @author 985892345 (Guo Xiangrui)
  * @email 2767465918@qq.com
  * @date 2022/5/30 17:52

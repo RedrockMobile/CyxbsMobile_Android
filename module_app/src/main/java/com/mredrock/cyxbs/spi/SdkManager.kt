@@ -1,12 +1,12 @@
 package com.mredrock.cyxbs.spi
 
 import android.annotation.SuppressLint
+import android.app.ActivityManager
 import android.app.Application
 import android.os.Process
 import android.provider.Settings
 import android.text.TextUtils
 import com.mredrock.cyxbs.BuildConfig
-import com.mredrock.cyxbs.lib.utils.utils.getProcessName
 import java.lang.reflect.InvocationTargetException
 import java.lang.reflect.Method
 
@@ -18,17 +18,16 @@ import java.lang.reflect.Method
 interface SdkManager {
     val application: Application
     //currentProcessName中还包含部分不可见字符。所有不可使用equals
-    fun isMainProcess(): Boolean  = currentProcessName().contains(applicationId())
+    fun isMainProcess(): Boolean  = currentProcessName()?.equals(applicationId()) ?: false
 
-    fun currentProcessName(): String {
+    fun currentProcessName(): String? {
         //不允许通过getRunningAppProcess获取当前线程号，因为有可能触发隐私条例
-        /*val applicationContext = application.applicationContext
+        val applicationContext = application.applicationContext
         val am = applicationContext.getSystemService(Application.ACTIVITY_SERVICE) as ActivityManager
-        am.runningAppProcesses
+        return am.runningAppProcesses
             .firstOrNull {
                 it.pid == Process.myPid()
-            }?.processName!!*/
-        return getProcessName(Process.myPid()) ?: ""
+            }?.processName
     }
 
 
@@ -69,6 +68,6 @@ interface SdkManager {
         } catch (e: ClassNotFoundException) {
             e.printStackTrace()
         }
-        return "设备型号: $deviceName"
+        return deviceName
     }
 }

@@ -1,6 +1,8 @@
-package com.mredrock.cyxbs.lib.utils.extensions
+package com.mredrock.cyxbs.common.utils.extensions
 
 import androidx.lifecycle.LifecycleCoroutineScope
+import androidx.lifecycle.ProcessLifecycleOwner
+import androidx.lifecycle.coroutineScope
 import com.alibaba.android.arouter.facade.template.IProvider
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.CoroutineStart
@@ -10,27 +12,28 @@ import kotlin.coroutines.CoroutineContext
 import kotlin.coroutines.EmptyCoroutineContext
 
 /**
- * ...
+ *
+ * 这里面放的是 lib_utils 中的部分扩展
+ *
+ * 因为 lib_common 模块目前逻辑太多，还不能反向依赖 lib_utils，
+ * 所以为了给之前的模块做好兼容，强烈建议把新的扩展统一写在一起
+ *
+ * 但请注意，并不是所有的扩展都是必要的！！！
+ *
  * @author 985892345 (Guo Xiangrui)
- * @email 2767465918@qq.com
- * @date 2022/3/7 17:51
+ * @email guo985892345@foxmail.com
+ * @date 2022/8/14 20:34
  */
 
-/**
- * 不带锁的懒加载，建议使用这个代替 lazy，因为 Android 一般情况下不会遇到多线程问题
- */
-fun <T> lazyUnlock(initializer: () -> T) = lazy(LazyThreadSafetyMode.NONE, initializer)
 
 /**
  * IProvider 作为单例类，生命周期与应用保持一致
  */
 val IProvider.lifecycleScope: LifecycleCoroutineScope
-  get() = processLifecycleScope
+  get() = ProcessLifecycleOwner.get().lifecycle.coroutineScope
 
 fun IProvider.launch(
   context: CoroutineContext = EmptyCoroutineContext,
   start: CoroutineStart = CoroutineStart.DEFAULT,
   block: suspend CoroutineScope.() -> Unit
 ): Job = lifecycleScope.launch(context, start, block)
-
-
