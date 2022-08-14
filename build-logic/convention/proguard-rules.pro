@@ -230,6 +230,11 @@
     private final float badgeRadius;
 }
 
+# BaseBindFragment 和 BaseBindActivity 中反射获取 Binding
+-keepclassmembers public class * implements androidx.viewbinding.ViewBinding {
+    public static ** inflate(...);
+}
+
 
 #----------------------------------------------------------------------------
 #---------------------------------------------------------------------------------------------------

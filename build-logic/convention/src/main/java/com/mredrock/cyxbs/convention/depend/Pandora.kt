@@ -32,8 +32,11 @@ object Pandora {
 }
 
 fun Project.debugDependPandora() {
-  apply(plugin = "pandora-plugin")
-  dependencies {
-    "debugImplementation"(Pandora.pandora)
+  // 打 Release 包时不引入插件
+  if (!gradle.startParameter.taskNames.any { it.contains("Release") }) {
+    apply(plugin = "pandora-plugin")
+    dependencies {
+      "debugImplementation"(Pandora.pandora)
+    }
   }
 }
