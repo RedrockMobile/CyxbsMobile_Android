@@ -9,10 +9,10 @@ import android.content.Context
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.mredrock.cyxbs.discover.grades.R
 import com.mredrock.cyxbs.discover.grades.bean.Grade
-import kotlinx.android.synthetic.main.grades_item_gpa_list_child.view.*
 
 class GradesShowAdapter(val data : MutableList<Grade>,
                         val context: Context)
@@ -28,12 +28,15 @@ class GradesShowAdapter(val data : MutableList<Grade>,
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         data[position].let {
-            holder.itemView.tv_grade_course.text = it.course
-            holder.itemView.tv_grade_score.text = it.grade
-            holder.itemView.tv_grade_property.text = it.property
+            holder.mTvGradeCourse.text = it.course
+            holder.mTvGradeScore.text = it.grade
+            holder.mTvGradeProperty.text = it.property
         }
     }
 
-
-    inner class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView)
+    inner class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView){
+        val mTvGradeCourse:TextView = itemView.findViewById(R.id.tv_grade_course)
+        val mTvGradeScore:TextView = itemView.findViewById(R.id.tv_grade_score)
+        val mTvGradeProperty:TextView = itemView.findViewById(R.id.tv_grade_property)
+    }
 }

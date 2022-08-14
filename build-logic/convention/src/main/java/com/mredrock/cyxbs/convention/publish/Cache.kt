@@ -5,7 +5,24 @@ import java.io.File
 import java.net.URI
 
 /**
- * ...
+ *
+ * cache 闭包，用于对单个模块的缓存进行设置，
+ * 在你模块中的 build.gradle 中书写：
+ * ```
+ * cache {
+ *     isAllowSelfUseCache = false // 是否允许自身使用缓存，默认是允许的
+ *     isNeedCreateNewCache = false // 是否需要创建自己的缓存，默认是允许的
+ *
+ *     exclude("xxx") // 对名字叫 xxx 的不替换缓存
+ *
+ *     exclude {
+ *         it.name == "xxx" // 与上面相同，只是这个是动态的判断
+ *     }
+ * }
+ * ```
+ *
+ *
+ *
  * @author 985892345 (Guo Xiangrui)
  * @email 2767465918@qq.com
  * @date 2022/6/5 16:45

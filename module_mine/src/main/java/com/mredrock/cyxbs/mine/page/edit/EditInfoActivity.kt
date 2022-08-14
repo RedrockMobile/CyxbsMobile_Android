@@ -17,9 +17,6 @@ import android.text.Editable
 import android.text.TextWatcher
 import android.view.*
 import android.view.inputmethod.InputMethodManager
-import android.widget.EditText
-import android.widget.FrameLayout
-import android.widget.TextView
 import androidx.core.content.ContextCompat
 import androidx.core.content.res.ResourcesCompat
 import androidx.lifecycle.Observer
@@ -41,8 +38,6 @@ import com.mredrock.cyxbs.common.utils.extensions.*
 import com.mredrock.cyxbs.mine.R
 import com.mredrock.cyxbs.mine.util.ui.DynamicRVAdapter
 import com.yalantis.ucrop.UCrop
-import kotlinx.android.synthetic.main.mine_activity_edit_info.*
-import kotlinx.android.synthetic.main.mine_layout_dialog_recyclerview_dynamic.view.*
 import okhttp3.MediaType.Companion.toMediaTypeOrNull
 import okhttp3.MultipartBody
 import okhttp3.RequestBody.Companion.toRequestBody
@@ -50,10 +45,11 @@ import java.io.File
 import java.io.IOException
 import java.text.SimpleDateFormat
 import java.util.*
-import android.graphics.BitmapFactory
 
-import android.content.res.Resources
+import android.widget.*
+import androidx.recyclerview.widget.RecyclerView
 import com.contrarywind.view.WheelView
+import de.hdodenhof.circleimageview.CircleImageView
 
 
 /**
@@ -69,9 +65,22 @@ class EditInfoActivity
 
     private lateinit var pvGender: OptionsPickerView<String>
     private var genderIndex = 0
-    private val genderList = mutableListOf("男","女","X星人")
+    private val genderList = mutableListOf("男", "女", "X星人")
 
     private lateinit var pvBirth: TimePickerView
+
+    private val mine_btn_info_save by R.id.mine_btn_info_save.view<Button>()
+    private val mine_et_nickname by R.id.mine_et_nickname.view<EditText>()
+    private val mine_et_introduce by R.id.mine_et_introduce.view<EditText>()
+    private val mine_et_qq by R.id.mine_et_qq.view<EditText>()
+    private val mine_et_gender by R.id.mine_et_gender.view<TextView>()
+    private val mine_et_phone by R.id.mine_et_phone.view<EditText>()
+    private val mine_et_birth by R.id.mine_et_birth.view<TextView>()
+    private val mine_tv_nickname by R.id.mine_tv_nickname.view<TextView>()
+    private val mine_tv_sign by R.id.mine_tv_sign.view<TextView>()
+    private val mine_edit_et_avatar by R.id.mine_edit_et_avatar.view<CircleImageView>()
+    private val mine_edit_iv_agreement by R.id.mine_edit_iv_agreement.view<ImageView>()
+    private val  mine_tv_college_concrete by R.id. mine_tv_college_concrete.view<TextView>()
 
 
     private val userService: IUserService by lazy {
@@ -96,18 +105,37 @@ class EditInfoActivity
      */
     @SuppressLint("SetTextI18n")
     private fun checkColorAndText() {
-        val userForTemporal = ServiceManager.getService(IAccountService::class.java).getUserService()
+        val userForTemporal =
+            ServiceManager.getService(IAccountService::class.java).getUserService()
         if (checkIfInfoChange()) {
             mine_btn_info_save.apply {
-                setTextColor(ContextCompat.getColor(context, com.mredrock.cyxbs.common.R.color.common_white_font_color))
-                background = ResourcesCompat.getDrawable(resources, com.mredrock.cyxbs.common.R.drawable.common_dialog_btn_positive_blue, null)
+                setTextColor(
+                    ContextCompat.getColor(
+                        context,
+                        com.mredrock.cyxbs.common.R.color.common_white_font_color
+                    )
+                )
+                background = ResourcesCompat.getDrawable(
+                    resources,
+                    com.mredrock.cyxbs.common.R.drawable.common_dialog_btn_positive_blue,
+                    null
+                )
                 text = "保存"
                 isClickable = true
             }
         } else {
             mine_btn_info_save.apply {
-                setTextColor(ContextCompat.getColor(context, com.mredrock.cyxbs.common.R.color.common_grey_button_text))
-                background = ResourcesCompat.getDrawable(resources, R.drawable.mine_bg_round_corner_grey, null)
+                setTextColor(
+                    ContextCompat.getColor(
+                        context,
+                        com.mredrock.cyxbs.common.R.color.common_grey_button_text
+                    )
+                )
+                background = ResourcesCompat.getDrawable(
+                    resources,
+                    R.drawable.mine_bg_round_corner_grey,
+                    null
+                )
                 text = "已保存"
                 isClickable = false
             }
@@ -122,34 +150,94 @@ class EditInfoActivity
         mine_tv_nickname.text = "昵称(${nickname.length}/10)"
         mine_tv_sign.text = "个性签名(${introduction.length}/20)"
         if (nickname != userForTemporal.getNickname()) {
-            mine_et_nickname.setTextColor(ContextCompat.getColor(this, com.mredrock.cyxbs.common.R.color.common_level_two_font_color))
+            mine_et_nickname.setTextColor(
+                ContextCompat.getColor(
+                    this,
+                    com.mredrock.cyxbs.common.R.color.common_level_two_font_color
+                )
+            )
         } else {
-            mine_et_nickname.setTextColor(ContextCompat.getColor(this, com.mredrock.cyxbs.common.R.color.common_grey_text))
+            mine_et_nickname.setTextColor(
+                ContextCompat.getColor(
+                    this,
+                    com.mredrock.cyxbs.common.R.color.common_grey_text
+                )
+            )
         }
         if (introduction != userForTemporal.getIntroduction()) {
-            mine_et_introduce.setTextColor(ContextCompat.getColor(this, com.mredrock.cyxbs.common.R.color.common_level_two_font_color))
+            mine_et_introduce.setTextColor(
+                ContextCompat.getColor(
+                    this,
+                    com.mredrock.cyxbs.common.R.color.common_level_two_font_color
+                )
+            )
         } else {
-            mine_et_introduce.setTextColor(ContextCompat.getColor(this, com.mredrock.cyxbs.common.R.color.common_grey_text))
+            mine_et_introduce.setTextColor(
+                ContextCompat.getColor(
+                    this,
+                    com.mredrock.cyxbs.common.R.color.common_grey_text
+                )
+            )
         }
         if (qq != userForTemporal.getQQ()) {
-            mine_et_qq.setTextColor(ContextCompat.getColor(this, com.mredrock.cyxbs.common.R.color.common_level_two_font_color))
+            mine_et_qq.setTextColor(
+                ContextCompat.getColor(
+                    this,
+                    com.mredrock.cyxbs.common.R.color.common_level_two_font_color
+                )
+            )
         } else {
-            mine_et_qq.setTextColor(ContextCompat.getColor(this, com.mredrock.cyxbs.common.R.color.common_grey_text))
+            mine_et_qq.setTextColor(
+                ContextCompat.getColor(
+                    this,
+                    com.mredrock.cyxbs.common.R.color.common_grey_text
+                )
+            )
         }
         if (phone != userForTemporal.getPhone()) {
-            mine_et_phone.setTextColor(ContextCompat.getColor(this, com.mredrock.cyxbs.common.R.color.common_level_two_font_color))
+            mine_et_phone.setTextColor(
+                ContextCompat.getColor(
+                    this,
+                    com.mredrock.cyxbs.common.R.color.common_level_two_font_color
+                )
+            )
         } else {
-            mine_et_phone.setTextColor(ContextCompat.getColor(this, com.mredrock.cyxbs.common.R.color.common_grey_text))
+            mine_et_phone.setTextColor(
+                ContextCompat.getColor(
+                    this,
+                    com.mredrock.cyxbs.common.R.color.common_grey_text
+                )
+            )
         }
-        if (gender != userForTemporal.getGender()){
-            mine_et_gender.setTextColor(ContextCompat.getColor(this, com.mredrock.cyxbs.common.R.color.common_level_two_font_color))
+        if (gender != userForTemporal.getGender()) {
+            mine_et_gender.setTextColor(
+                ContextCompat.getColor(
+                    this,
+                    com.mredrock.cyxbs.common.R.color.common_level_two_font_color
+                )
+            )
         } else {
-            mine_et_gender.setTextColor(ContextCompat.getColor(this, com.mredrock.cyxbs.common.R.color.common_grey_text))
+            mine_et_gender.setTextColor(
+                ContextCompat.getColor(
+                    this,
+                    com.mredrock.cyxbs.common.R.color.common_grey_text
+                )
+            )
         }
-        if (birth != userForTemporal.getBirth()){
-            mine_et_birth.setTextColor(ContextCompat.getColor(this, com.mredrock.cyxbs.common.R.color.common_level_two_font_color))
+        if (birth != userForTemporal.getBirth()) {
+            mine_et_birth.setTextColor(
+                ContextCompat.getColor(
+                    this,
+                    com.mredrock.cyxbs.common.R.color.common_level_two_font_color
+                )
+            )
         } else {
-            mine_et_birth.setTextColor(ContextCompat.getColor(this, com.mredrock.cyxbs.common.R.color.common_grey_text))
+            mine_et_birth.setTextColor(
+                ContextCompat.getColor(
+                    this,
+                    com.mredrock.cyxbs.common.R.color.common_grey_text
+                )
+            )
         }
     }
 
@@ -160,11 +248,16 @@ class EditInfoActivity
         setContentView(R.layout.mine_activity_edit_info)
 
         common_toolbar.apply {
-            setBackgroundColor(ContextCompat.getColor(this@EditInfoActivity, com.mredrock.cyxbs.common.R.color.common_window_background))
+            setBackgroundColor(
+                ContextCompat.getColor(
+                    this@EditInfoActivity,
+                    com.mredrock.cyxbs.common.R.color.common_window_background
+                )
+            )
             initWithSplitLine("资料编辑",
-                    false,
-                    R.drawable.mine_ic_arrow_left,
-                View.OnClickListener{
+                false,
+                R.drawable.mine_ic_arrow_left,
+                View.OnClickListener {
                     finishAfterTransition()
                 })
             setTitleLocationAtLeft(true)
@@ -202,7 +295,9 @@ class EditInfoActivity
         * 如果返回的数据为空格，则表示数据为空，昵称除外
         * */
         mine_et_nickname.setText(userService.getNickname())
-        mine_et_introduce.setText(if (userService.getIntroduction().isBlank()) "" else userService.getIntroduction())
+        mine_et_introduce.setText(
+            if (userService.getIntroduction().isBlank()) "" else userService.getIntroduction()
+        )
         mine_et_qq.setText(if (userService.getQQ().isBlank()) "" else userService.getQQ())
         mine_et_phone.setText(if (userService.getPhone().isBlank()) "" else userService.getPhone())
         mine_et_gender.text = userService.getGender()
@@ -210,41 +305,58 @@ class EditInfoActivity
         mine_tv_college_concrete.text = userService.getCollege()
     }
 
-    private fun initListener(){
+    private fun initListener() {
         setTextChangeListener()
         mine_et_gender.setOnClickListener {
-            pvGender = OptionsPickerBuilder(this){ p1, _, _, _ ->
+            pvGender = OptionsPickerBuilder(this) { p1, _, _, _ ->
                 genderIndex = p1
                 mine_et_gender.text = genderList[genderIndex]
             }
-                .setLayoutRes(R.layout.mine_layout_dialog_gender){
+                .setLayoutRes(R.layout.mine_layout_dialog_gender) {
                     it.findViewById<TextView>(R.id.mine_tv_dialog_ensure).setOnClickListener {
                         pvGender.returnData()
                         pvGender.dismiss()
                     }
-            }
+                }
                 .setContentTextSize(16)
                 .setLineSpacingMultiplier(2.5f)
                 .setOutSideCancelable(false)
                 .setSelectOptions(genderIndex)
                 .setOutSideCancelable(true)
-                .setTextColorCenter(ContextCompat.getColor(this,
-                    R.color.mine_tv_dialog_text_center))
-                .setTextColorOut(ContextCompat.getColor(this,
-                    R.color.mine_tv_dialog_text_out))
-                .setBgColor(ContextCompat.getColor(this,
-                    R.color.mine_bg_dialog_edit))
+                .setTextColorCenter(
+                    ContextCompat.getColor(
+                        this,
+                        R.color.mine_tv_dialog_text_center
+                    )
+                )
+                .setTextColorOut(
+                    ContextCompat.getColor(
+                        this,
+                        R.color.mine_tv_dialog_text_out
+                    )
+                )
+                .setBgColor(
+                    ContextCompat.getColor(
+                        this,
+                        R.color.mine_bg_dialog_edit
+                    )
+                )
                 .setDividerType(WheelView.DividerType.WRAP)
-                .setDividerColor(ContextCompat.getColor(this,
-                    R.color.mine_bg_dialog_edit))
+                .setDividerColor(
+                    ContextCompat.getColor(
+                        this,
+                        R.color.mine_bg_dialog_edit
+                    )
+                )
                 .build()
 
             pvGender.setPicker(genderList)
             val dialog = pvGender.dialog
-            if (dialog != null){
+            if (dialog != null) {
                 val params = FrameLayout.LayoutParams(
                     FrameLayout.LayoutParams.MATCH_PARENT,
-                    FrameLayout.LayoutParams.WRAP_CONTENT, Gravity.BOTTOM)
+                    FrameLayout.LayoutParams.WRAP_CONTENT, Gravity.BOTTOM
+                )
                     .apply {
                         leftMargin = 0
                         rightMargin = 0
@@ -263,44 +375,61 @@ class EditInfoActivity
 
         mine_et_birth.setOnClickListener {
             val currentBirth = Calendar.getInstance().apply {
-                set(2002,8,14)
+                set(2002, 8, 14)
             }
 
             val currentTime = Calendar.getInstance()
             val startTime = Calendar.getInstance().apply {
-                set(1901,1,1)
+                set(1901, 1, 1)
             }
-            pvBirth = TimePickerBuilder(this){ date,view ->
+            pvBirth = TimePickerBuilder(this) { date, view ->
                 mine_et_birth.text = getDate(date)
             }
-                .setLayoutRes(R.layout.mine_layout_dialog_birth){
+                .setLayoutRes(R.layout.mine_layout_dialog_birth) {
                     it.findViewById<TextView>(R.id.mine_tv_dialog_ensure).setOnClickListener {
                         pvBirth.returnData()
                         pvBirth.dismiss()
                     }
                 }
                 .setDate(currentBirth)
-                .setRangDate(startTime,currentTime)
+                .setRangDate(startTime, currentTime)
                 .setContentTextSize(18)
-                .setLabel("","月","日","","","")
-                .setType(booleanArrayOf(true,true,true,false,false,false))
+                .setLabel("", "月", "日", "", "", "")
+                .setType(booleanArrayOf(true, true, true, false, false, false))
                 .setLineSpacingMultiplier(2.0f)
-                .setTextColorCenter(ContextCompat.getColor(this,
-                    R.color.mine_tv_dialog_text_center))
-                .setTextColorOut(ContextCompat.getColor(this,
-                    R.color.mine_tv_dialog_text_out))
-                .setBgColor(ContextCompat.getColor(this,
-                    R.color.mine_bg_dialog_edit))
+                .setTextColorCenter(
+                    ContextCompat.getColor(
+                        this,
+                        R.color.mine_tv_dialog_text_center
+                    )
+                )
+                .setTextColorOut(
+                    ContextCompat.getColor(
+                        this,
+                        R.color.mine_tv_dialog_text_out
+                    )
+                )
+                .setBgColor(
+                    ContextCompat.getColor(
+                        this,
+                        R.color.mine_bg_dialog_edit
+                    )
+                )
                 .setDividerType(WheelView.DividerType.WRAP)
-                .setDividerColor(ContextCompat.getColor(this,
-                    R.color.mine_bg_dialog_edit))
+                .setDividerColor(
+                    ContextCompat.getColor(
+                        this,
+                        R.color.mine_bg_dialog_edit
+                    )
+                )
                 .build()
 
             val dialog = pvBirth.dialog
-            if (dialog != null){
+            if (dialog != null) {
                 val params = FrameLayout.LayoutParams(
                     FrameLayout.LayoutParams.MATCH_PARENT,
-                    FrameLayout.LayoutParams.WRAP_CONTENT, Gravity.BOTTOM)
+                    FrameLayout.LayoutParams.WRAP_CONTENT, Gravity.BOTTOM
+                )
                     .apply {
                         leftMargin = 0
                         rightMargin = 0
@@ -319,7 +448,7 @@ class EditInfoActivity
     }
 
     @SuppressLint("SimpleDateFormat")
-    private fun getDate(date: Date): String{
+    private fun getDate(date: Date): String {
         val format = SimpleDateFormat("yyyy-MM-dd")
         return format.format(date)
     }
@@ -338,7 +467,8 @@ class EditInfoActivity
             if (it) {
                 toast("更改资料成功")
                 checkColorAndText()
-                ServiceManager.getService(IAccountService::class.java).getUserService().refreshInfo()
+                ServiceManager.getService(IAccountService::class.java).getUserService()
+                    .refreshInfo()
             } else {
                 toast("上传资料失败")
             }
@@ -346,7 +476,10 @@ class EditInfoActivity
 
         viewModel.upLoadImageEvent.observe(this, Observer {
             if (it) {
-                loadAvatar(ServiceManager.getService(IAccountService::class.java).getUserService().getAvatarImgUrl(), mine_edit_et_avatar)
+                loadAvatar(
+                    ServiceManager.getService(IAccountService::class.java).getUserService()
+                        .getAvatarImgUrl(), mine_edit_et_avatar
+                )
                 toast("修改头像成功")
             } else {
                 toast("修改头像失败")
@@ -360,18 +493,23 @@ class EditInfoActivity
         * 注意请求数据时，如果数据为空格，即为空
         * */
         val nickname = mine_et_nickname.text.toString()
-        val introduction = if (mine_et_introduce.text.toString().isNotBlank()) mine_et_introduce.text.toString() else " "
+        val introduction = if (mine_et_introduce.text.toString()
+                .isNotBlank()
+        ) mine_et_introduce.text.toString() else " "
         val qq = if (mine_et_qq.text.toString().isNotBlank()) mine_et_qq.text.toString() else " "
-        val phone = if (mine_et_phone.text.toString().isNotBlank()) mine_et_phone.text.toString() else " "
-        val gender = if (mine_et_gender.text.toString().isNotBlank()) mine_et_gender.text.toString() else " "
-        val birthday = if (mine_et_birth.text.toString().isNotBlank()) mine_et_birth.text.toString() else " "
+        val phone =
+            if (mine_et_phone.text.toString().isNotBlank()) mine_et_phone.text.toString() else " "
+        val gender =
+            if (mine_et_gender.text.toString().isNotBlank()) mine_et_gender.text.toString() else " "
+        val birthday =
+            if (mine_et_birth.text.toString().isNotBlank()) mine_et_birth.text.toString() else " "
 
         //数据没有改变，不进行网络请求
         if (!checkIfInfoChange()) {
             return
         }
 
-        if(nickname.isBlank()){
+        if (nickname.isBlank()) {
             toast(R.string.mine_nickname_null)
             return
         }
@@ -388,11 +526,12 @@ class EditInfoActivity
         val birth = mine_et_birth.text.toString()
 
         if (nickname == userService.getNickname() &&
-                introduction == userService.getIntroduction() &&
-                qq == userService.getQQ() &&
-                phone == userService.getPhone() &&
-                gender == userService.getGender() &&
-                birth == userService.getBirth()) {
+            introduction == userService.getIntroduction() &&
+            qq == userService.getQQ() &&
+            phone == userService.getPhone() &&
+            gender == userService.getGender() &&
+            birth == userService.getBirth()
+        ) {
             return false
         }
         return true
@@ -437,8 +576,10 @@ class EditInfoActivity
 
     private fun changeAvatar() {
         //获取权限
-        doPermissionAction(Manifest.permission.READ_EXTERNAL_STORAGE,
-                Manifest.permission.WRITE_EXTERNAL_STORAGE) {
+        doPermissionAction(
+            Manifest.permission.READ_EXTERNAL_STORAGE,
+            Manifest.permission.WRITE_EXTERNAL_STORAGE
+        ) {
             reason = "读取图片需要访问您的存储空间哦~"
             doAfterGranted {
                 //检查目录
@@ -464,8 +605,8 @@ class EditInfoActivity
 
     private val fileDir by lazy {
         StringBuilder(Environment.getExternalStorageDirectory().path)
-                .append(DIR_PHOTO)
-                .toString()
+            .append(DIR_PHOTO)
+            .toString()
     }
     private val cameraImageFile by lazy { File(fileDir + File.separator + System.currentTimeMillis() + ".png") }
     private val destinationFile by lazy { File(fileDir + File.separator + userService.getStuNum() + ".png") }
@@ -494,15 +635,22 @@ class EditInfoActivity
         options.setCropGridStrokeWidth(5)
         options.setCompressionFormat(Bitmap.CompressFormat.PNG)
         options.setCompressionQuality(100)
-        options.setLogoColor(ContextCompat.getColor(this, com.mredrock.cyxbs.common.R.color.common_level_two_font_color))
+        options.setLogoColor(
+            ContextCompat.getColor(
+                this,
+                com.mredrock.cyxbs.common.R.color.common_level_two_font_color
+            )
+        )
         options.setToolbarColor(
-                ContextCompat.getColor(this, com.mredrock.cyxbs.common.R.color.colorPrimaryDark))
+            ContextCompat.getColor(this, com.mredrock.cyxbs.common.R.color.colorPrimaryDark)
+        )
         options.setStatusBarColor(
-                ContextCompat.getColor(this, com.mredrock.cyxbs.common.R.color.colorPrimaryDark))
+            ContextCompat.getColor(this, com.mredrock.cyxbs.common.R.color.colorPrimaryDark)
+        )
         uCrop.withOptions(options)
-                .withAspectRatio(300f, 300f)
-                .withMaxResultSize(300, 300)
-                .start(this)
+            .withAspectRatio(300f, 300f)
+            .withMaxResultSize(300, 300)
+            .start(this)
     }
 
     private fun handleCropError(result: Intent) {
@@ -522,9 +670,14 @@ class EditInfoActivity
         }
 
         try {
-            val fileBody = MultipartBody.Part.createFormData("fold", destinationFile.name, destinationFile.getRequestBody())
+            val fileBody = MultipartBody.Part.createFormData(
+                "fold",
+                destinationFile.name,
+                destinationFile.getRequestBody()
+            )
 
-            val numBody = userService.getStuNum().toRequestBody("multipart/form-data".toMediaTypeOrNull())
+            val numBody =
+                userService.getStuNum().toRequestBody("multipart/form-data".toMediaTypeOrNull())
             viewModel.uploadAvatar(numBody, fileBody)
         } catch (e: IOException) {
             e.printStackTrace()
@@ -551,7 +704,7 @@ class EditInfoActivity
             }
             UCrop.REQUEST_CROP -> {
                 if (data != null) {
-                   uploadImage(data)
+                    uploadImage(data)
                 } else {
                     toast("未知错误，请重试")
                 }
@@ -562,20 +715,25 @@ class EditInfoActivity
 
     private fun showAgree() {
         val materialDialog = Dialog(this)
-        val view = LayoutInflater.from(this).inflate(R.layout.mine_layout_dialog_recyclerview_dynamic, materialDialog.window?.decorView as ViewGroup, false)
+        val view = LayoutInflater.from(this).inflate(
+            R.layout.mine_layout_dialog_recyclerview_dynamic,
+            materialDialog.window?.decorView as ViewGroup,
+            false
+        )
+        val rv_content:RecyclerView = view.findViewById(R.id.rv_content)
+        val loader:ProgressBar = view.findViewById(R.id.loader)
         materialDialog.setContentView(view)
         materialDialog.window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
         val featureIntroAdapter = DynamicRVAdapter(viewModel.portraitAgreementList)
-        view.rv_content.adapter = featureIntroAdapter
-        view.rv_content.layoutManager = LinearLayoutManager(this@EditInfoActivity)
-        if (viewModel.portraitAgreementList.isNotEmpty()) view.loader.visibility = View.GONE
+        rv_content.adapter = featureIntroAdapter
+        rv_content.layoutManager = LinearLayoutManager(this@EditInfoActivity)
+        if (viewModel.portraitAgreementList.isNotEmpty()) loader.visibility = View.GONE
         materialDialog.show()
         viewModel.getPortraitAgreement {
             featureIntroAdapter.notifyDataSetChanged()
-            view.loader.visibility = View.GONE
+            loader.visibility = View.GONE
         }
     }
-
 
 
 }

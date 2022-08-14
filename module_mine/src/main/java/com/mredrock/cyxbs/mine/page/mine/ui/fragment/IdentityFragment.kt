@@ -1,7 +1,6 @@
 package com.mredrock.cyxbs.mine.page.mine.ui.fragment
 
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -9,6 +8,7 @@ import android.view.animation.AnimationUtils
 import android.view.animation.LayoutAnimationController
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import com.mredrock.cyxbs.common.ui.BaseViewModelFragment
 import com.mredrock.cyxbs.common.utils.extensions.toast
 import com.mredrock.cyxbs.mine.R
@@ -19,13 +19,10 @@ import com.mredrock.cyxbs.mine.page.mine.callback.DiffCallBack
 import com.mredrock.cyxbs.mine.page.mine.ui.activity.HomepageActivity
 import com.mredrock.cyxbs.mine.page.mine.ui.activity.HomepageActivity.OnGetRedid
 import com.mredrock.cyxbs.mine.page.mine.viewmodel.IdentityViewModel
-import kotlinx.android.synthetic.main.mine_fragment_approve.view.*
-import kotlinx.android.synthetic.main.mine_fragment_identify.view.*
 import java.lang.Exception
 
-class IdentityFragment(
-
-) : BaseViewModelFragment<IdentityViewModel>(), OnGetRedid {
+class IdentityFragment() : BaseViewModelFragment<IdentityViewModel>(), OnGetRedid {
+    private val rv_approve by R.id.rv_approve.view<RecyclerView>()
 
     var oldList=mutableListOf<AuthenticationStatus.Data>()
     private var redid: String? = null
@@ -62,6 +59,7 @@ class IdentityFragment(
     }
 
     fun initData(view: View) {
+        val rv_identity:RecyclerView = view.findViewById(R.id.rv_identity)
         val list = mutableListOf<AuthenticationStatus.Data>()
         viewModel.getAllIdentify(redid)
         viewModel.allIdentifies.observeForever {
@@ -72,19 +70,19 @@ class IdentityFragment(
             it.data.customization.forEach {
                 list.add(it)
             }
-            if (view.rv_identity.adapter==null){
-                view.rv_identity.adapter = context?.let {
+            if (rv_identity.adapter==null){
+                rv_identity.adapter = context?.let {
                     redid?.let { it1 -> IdentityAdapter(list, it, it1, isSelf) }
                 }
-                view.rv_identity.layoutAnimation=//入场动画
+                rv_identity.layoutAnimation=//入场动画
                     LayoutAnimationController(
                         AnimationUtils.loadAnimation(context,R.anim.rv_load_anim)
                     )
-                view.rv_identity.layoutManager = LinearLayoutManager(context)
+                rv_identity.layoutManager = LinearLayoutManager(context)
             }else{
                 val diffResult = DiffUtil.calculateDiff(DiffCallBack(oldList, list), true)
-                (view.rv_identity.adapter as StatusAdapter).list=list
-                diffResult.dispatchUpdatesTo(view.rv_approve.adapter as StatusAdapter)
+                (rv_identity.adapter as StatusAdapter).list=list
+                diffResult.dispatchUpdatesTo(rv_approve.adapter as StatusAdapter)
             }
             oldList.clear()
             oldList = list
@@ -94,10 +92,10 @@ class IdentityFragment(
          * 身份信息发生错误的情况
          */
         viewModel.onErrorAction.observeForever {
-            view.rv_identity.adapter = context?.let { it ->
+            rv_identity.adapter = context?.let { it ->
                 IdentityAdapter(list, it, redid, isSelf)
             }
-            view.rv_identity.layoutManager = LinearLayoutManager(context)
+            rv_identity.layoutManager = LinearLayoutManager(context)
         }
     }
 

@@ -34,3 +34,17 @@ dependencies {
   * */
   //  implementation("com.bytedance.tools.lancet:lancet-plugin-asm6:1.0.2")
 }
+
+gradlePlugin {
+  plugins {
+    create("module-debug") {
+      id = "module-debug"
+      implementationClass = "ModuleDebugPlugin"
+    }
+    
+    create("module-manager") {
+      id = "module-manager"
+      implementationClass = "ModuleManagerPlugin"
+    }
+  }
+}

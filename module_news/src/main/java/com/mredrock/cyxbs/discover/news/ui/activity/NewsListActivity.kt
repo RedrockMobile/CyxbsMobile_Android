@@ -3,13 +3,14 @@ package com.mredrock.cyxbs.discover.news.ui.activity
 import android.os.Bundle
 import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.DividerItemDecoration
+import androidx.recyclerview.widget.RecyclerView
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import com.alibaba.android.arouter.facade.annotation.Route
 import com.mredrock.cyxbs.common.config.DISCOVER_NEWS
 import com.mredrock.cyxbs.common.ui.BaseViewModelActivity
 import com.mredrock.cyxbs.discover.news.R
 import com.mredrock.cyxbs.discover.news.ui.adapter.NewsAdapter
 import com.mredrock.cyxbs.discover.news.viewmodel.NewsListViewModel
-import kotlinx.android.synthetic.main.news_activity_list.*
 
 /**
  * @author zixuan
@@ -17,6 +18,8 @@ import kotlinx.android.synthetic.main.news_activity_list.*
  */
 @Route(path = DISCOVER_NEWS)
 class NewsListActivity : BaseViewModelActivity<NewsListViewModel>() {
+    private val srl_list by R.id.srl_list.view<SwipeRefreshLayout>()
+    private val rv_list by R.id.rv_list.view<RecyclerView>()
 
 
     private lateinit var adapter: NewsAdapter

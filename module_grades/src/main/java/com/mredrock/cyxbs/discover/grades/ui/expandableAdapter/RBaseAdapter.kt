@@ -1,38 +1,30 @@
 package com.mredrock.cyxbs.discover.grades.ui.expandableAdapter
 
-import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
-import com.mredrock.cyxbs.discover.grades.utils.baseRv.BaseHolder
 import java.util.*
 
 /**
  * Created by roger on 2020/3/22
  * 一个多type的可以展开的adapter
  */
-abstract class RBaseAdapter(
-        //type到resId的映射:type为子类自己定义的常量
-        private val type2ResId: HashMap<Int, Int>
-) : RecyclerView.Adapter<BaseHolder>() {
+@Deprecated("封装的不是很好")
+abstract class RBaseAdapter<VH:RecyclerView.ViewHolder> : RecyclerView.Adapter<VH>() {
 
     protected var dataMirror: ArrayList<Any> = arrayListOf()
 
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): BaseHolder {
-        val res = type2ResId[viewType] ?: throw Exception("Invalid viewType")
-        return BaseHolder.getHolder(parent.context, parent, res)
-    }
 
     override fun getItemCount(): Int {
         return dataMirror.size
     }
 
 
-    override fun onBindViewHolder(holder: BaseHolder, position: Int) {
+    override fun onBindViewHolder(holder: VH, position: Int) {
         val type = getItemViewType(position)
         onBind(holder, position, type)
     }
 
-    abstract fun onBind(holder: BaseHolder, position: Int, type: Int)
+    abstract fun onBind(holder: VH, position: Int, type: Int)
 
     fun getDataMirror(): Any {
         return dataMirror.clone()
