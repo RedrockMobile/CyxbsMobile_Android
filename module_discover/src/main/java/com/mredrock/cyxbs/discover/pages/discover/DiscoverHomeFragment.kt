@@ -21,6 +21,9 @@ import androidx.viewpager2.widget.ViewPager2
 import com.alibaba.android.arouter.facade.annotation.Route
 import com.alibaba.android.arouter.launcher.ARouter
 import com.cyxbsmobile_single.api_todo.ITodoService
+import com.mredrock.cyxbs.api.electricity.IElectricityService
+import com.mredrock.cyxbs.api.sport.ISportService
+import com.mredrock.cyxbs.api.volunteer.IVolunteerService
 import com.mredrock.cyxbs.common.component.CyxbsToast
 import com.mredrock.cyxbs.common.component.SpacesHorizontalItemDecoration
 import com.mredrock.cyxbs.common.config.DISCOVER_ENTRY
@@ -30,16 +33,15 @@ import com.mredrock.cyxbs.common.config.MINE_CHECK_IN
 import com.mredrock.cyxbs.common.event.CurrentDateInformationEvent
 import com.mredrock.cyxbs.common.mark.EventBusLifecycleSubscriber
 import com.mredrock.cyxbs.common.service.ServiceManager
+import com.mredrock.cyxbs.common.service.impl
 import com.mredrock.cyxbs.common.ui.BaseViewModelFragment
 import com.mredrock.cyxbs.common.utils.extensions.doIfLogin
 import com.mredrock.cyxbs.common.utils.extensions.dp2px
 import com.mredrock.cyxbs.common.utils.extensions.setOnSingleClickListener
 import com.mredrock.cyxbs.discover.R
-import com.mredrock.cyxbs.api.electricity.IElectricityService
 import com.mredrock.cyxbs.discover.pages.discover.adapter.DiscoverMoreFunctionRvAdapter
 import com.mredrock.cyxbs.discover.utils.BannerAdapter
 import com.mredrock.cyxbs.discover.utils.MoreFunctionProvider
-import com.mredrock.cyxbs.api.volunteer.IVolunteerService
 import kotlinx.android.synthetic.main.discover_home_fragment.*
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
@@ -59,7 +61,7 @@ class DiscoverHomeFragment : BaseViewModelFragment<DiscoverHomeViewModel>(), Eve
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         return inflater.inflate(R.layout.discover_home_fragment, container, false)
     }
-    
+
     private val mVfDetail by R.id.vf_jwzx_detail.view<ViewFlipper>()
 
 
@@ -195,6 +197,7 @@ class DiscoverHomeFragment : BaseViewModelFragment<DiscoverHomeViewModel>(), Eve
     }
 
     private fun initFeeds() {
+        addFeedFragment(ISportService::class.impl.getSportFeed())
         addFeedFragment(ServiceManager.getService(ITodoService::class.java).getTodoFeed())
         addFeedFragment(ServiceManager.getService(IElectricityService::class.java).getElectricityFeed())
         addFeedFragment(ServiceManager.getService(IVolunteerService::class.java).getVolunteerFeed())
@@ -210,7 +213,6 @@ class DiscoverHomeFragment : BaseViewModelFragment<DiscoverHomeViewModel>(), Eve
 
     private fun addFeedFragment(fragment: Fragment) {
         childFragmentManager.beginTransaction().add(R.id.ll_discover_feeds, fragment).commit()
-
     }
 
     @Subscribe(threadMode = ThreadMode.MAIN, sticky = true)
@@ -225,5 +227,4 @@ class DiscoverHomeFragment : BaseViewModelFragment<DiscoverHomeViewModel>(), Eve
         viewModel.stopPageTurner()
         viewModel.functionRvState = rv_discover_more_function.layoutManager?.onSaveInstanceState()
     }
-
 }

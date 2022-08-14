@@ -12,6 +12,9 @@
         <activity
             android:name=".page.useragree.UserAgreeActivity"
             android:exported="false" />
+        <activity
+            android:name=".page.bind.ui.BindActivity"
+            android:exported="false" />
     </application>
 
 </manifest>

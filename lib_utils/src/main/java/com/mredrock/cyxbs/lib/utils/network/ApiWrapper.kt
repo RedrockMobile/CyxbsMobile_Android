@@ -27,9 +27,9 @@ open class ApiWrapper<T> (
  * - 如果是老接口，请使用
  */
 open class ApiStatus(
-  @SerializedName("errorCode")
+  @SerializedName("status")
   val status: Int = -1,
-  @SerializedName("errorMsg")
+  @SerializedName("info")
   val info: String = ""
 ) : Serializable {
   

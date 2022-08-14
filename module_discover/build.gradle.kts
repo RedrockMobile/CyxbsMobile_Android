@@ -15,6 +15,8 @@ dependApiVolunteer()
 dependApiTodo()
 dependApiAccount()
 dependApiElectricity()
+dependApiSport()
+
 
 dependNetwork()
 dependRxjava()

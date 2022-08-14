@@ -16,6 +16,7 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.alibaba.android.arouter.facade.annotation.Route
+import com.alibaba.android.arouter.launcher.ARouter
 import com.bumptech.glide.Glide
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.mredrock.cyxbs.api.account.IAccountService
@@ -27,6 +28,7 @@ import com.mredrock.cyxbs.common.ui.BaseActivity
 import com.mredrock.cyxbs.common.utils.extensions.pressToZoomOut
 import com.mredrock.cyxbs.common.utils.extensions.setOnSingleClickListener
 import com.mredrock.cyxbs.common.webView.LiteJsWebView
+import com.mredrock.cyxbs.config.route.LOGIN_BIND_IDS
 import com.mredrock.cyxbs.discover.grades.R
 import com.mredrock.cyxbs.discover.grades.bean.Exam
 import com.mredrock.cyxbs.discover.grades.bean.analyze.isSuccessful
@@ -126,13 +128,6 @@ class ContainerActivity : BaseActivity() {
     }
 
     private fun initObserver() {
-        viewModel.bottomStateListener.observe(this@ContainerActivity, Observer {
-            if (it == true) {
-                val behavior = BottomSheetBehavior.from(parent)
-                if (behavior.state == BottomSheetBehavior.STATE_COLLAPSED)
-                    behavior.state = BottomSheetBehavior.STATE_EXPANDED
-            }
-        })
         viewModel.analyzeData.observe(this@ContainerActivity, Observer {
             if (it != null && it.isSuccessful) {
                 if (typeOfFragment != IS_GPA_FRAGMENT) {
@@ -154,6 +149,11 @@ class ContainerActivity : BaseActivity() {
         // 监听isBinding的变化 改变按钮点击事件
         viewModel.isBinding.observe(this, Observer {
             if (it) {
+                val behavior = BottomSheetBehavior.from(parent)
+                if (behavior.state == BottomSheetBehavior.STATE_COLLAPSED)
+                    behavior.state = BottomSheetBehavior.STATE_EXPANDED
+            }
+            if (it) {
                 // 当前已绑定账号，点击解绑
                 mTvGradesNoBind.setOnSingleClickListener {
                     // 解除绑定按钮的点击事件
@@ -168,8 +168,7 @@ class ContainerActivity : BaseActivity() {
                 // 当前未绑定账号，点击前往绑定账号界面
                 mTvGradesNoBind.setOnSingleClickListener { v ->
                     v.pressToZoomOut()
-                    val intent = Intent(this, BindActivity::class.java)
-                    this.startActivity(intent)
+                    ARouter.getInstance().build(LOGIN_BIND_IDS).navigation()
                 }
             }
         })

@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <!--日间模式的字体颜色-->
+    <color name="sport_text_color">#000000</color>
+
+    <!--日间模式的RecyclerView背后的CardView的背景颜色-->
+    <color name="sport_cardview_background">#fbfcff</color>
+
+    <!--日间模式RecyclerView的item的背景颜色-->
+    <color name="sport_item_background">#ffffff</color>
+
+    <!--日间模式首页小板块的字体颜色-->
+    <color name="sport_feed_text_color">#2a4e84</color>
+
+    <!--日间模式未登录以及未绑定教务在线提醒字体的颜色-->
+    <color name="sport_feed_text_hint">#6615315B</color>
+
+    <!--日间模式dialog的字体颜色-->
+    <color name="sport_feed_dialog_text_color">#15315b</color>
+</resources>
