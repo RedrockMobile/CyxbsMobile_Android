@@ -3,6 +3,7 @@ package com.mredrock.cyxbs.api.account
 import android.content.Context
 import androidx.annotation.MainThread
 import androidx.annotation.WorkerThread
+import kotlinx.coroutines.flow.SharedFlow
 
 interface IUserStateService {
     enum class UserState {
@@ -44,12 +45,27 @@ interface IUserStateService {
     fun isExpired():Boolean
     
     fun isRefreshTokenExpired(): Boolean
-
+    
+    @Deprecated(
+        "该方法不好管理生命周期，更建议使用 observeStateFlow()",
+        replaceWith = ReplaceWith("observeStateFlow()")
+    )
     fun addOnStateChangedListener(listener: (state: UserState) -> Unit)
-
+    
+    @Deprecated(
+        "该方法不好管理生命周期，更建议使用 observeStateFlow()",
+        replaceWith = ReplaceWith("observeStateFlow()")
+    )
     fun addOnStateChangedListener(listener: StateListener)
 
     fun removeStateChangedListener(listener: StateListener)
 
     fun removeAllStateListeners()
+    
+    /**
+     * 观察 [UserState] 的改变
+     *
+     * 注意：返回的是一个普通的 ShareFlow，因为这个属于事件，而不是状态
+     */
+    fun observeStateFlow(): SharedFlow<UserState>
 }

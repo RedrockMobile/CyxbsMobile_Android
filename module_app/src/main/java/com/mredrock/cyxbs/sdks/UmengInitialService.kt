@@ -34,12 +34,12 @@ class UmengInitialService : SdkService {
     }
 
     override fun onSdkProcess(manager: SdkManager) {
-        LogUtils.e("TAG", "onSdkProcess: \ncurrentProcess${manager.currentProcessName()}\n")
+        LogUtils.e("TAG", "onSdkProcess: \ncurrentProcess = ${manager.currentProcessName()}\n")
         initUmengPush(manager)
     }
 
     override fun isSdkProcess(manager: SdkManager): Boolean =
-        manager.currentProcessName().endsWith(":channel")
+        manager.currentProcessName()?.endsWith(":channel") ?: false
 
     override fun onPrivacyAgreed(manager: SdkManager) {
         Observable.just(Unit)

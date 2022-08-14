@@ -22,8 +22,8 @@ open class BaseApp : Application() {
   override fun onCreate() {
     super.onCreate()
     baseApp = this
-    UtilsApplicationWrapper.setUtilsApplication(this)
-    ConfigApplicationWrapper.setUtilsApplication(this)
+    UtilsApplicationWrapper.initialize(this)
+    ConfigApplicationWrapper.initialize(this)
     com.mredrock.cyxbs.common.BaseApp.onCreate(this)
     initARouter()
   }
