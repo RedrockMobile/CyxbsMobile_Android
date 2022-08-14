@@ -55,6 +55,9 @@ class BindActivity : BaseActivity() {
                 toast("请输入统一认证码和密码哟")
             }
         }
+        mToolbar.setNavigationOnClickListener {
+            finish()
+        }
         IBindService::class.impl.isBindSuccess.observe(this, Observer {
             if (!it) {
                 bubble()

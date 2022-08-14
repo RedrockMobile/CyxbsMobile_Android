@@ -76,7 +76,7 @@ class AppProject(project: Project) : BaseApplicationProject(project) {
       // channel 闭包，这是腾讯的多渠道打包
       configure<ChannelConfigExtension> {
         //指定渠道文件
-        channelFile = file("channel.txt")
+        channelFile = rootDir.resolve("build-logic").resolve("channel.txt")
         //多渠道包的输出目录，默认为new File(project.buildDir,"channel")
         outputDir = File(project.buildDir,"channel")
         //多渠道包的命名规则，默认为：${appName}-${versionName}-${versionCode}-${flavorName}-${buildType}-${buildTime}

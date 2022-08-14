@@ -28,6 +28,8 @@ class ModuleDebugPlugin : Plugin<Project> {
         || it.contains("assembleDebug") && !it.contains(project.name)
         || it == "publishModuleCachePublicationToMavenRepository" // 本地缓存任务
         || it == "cacheToLocalMaven"
+        || it == "channelRelease"
+        || it == "channelDebug"
     }
   }
   
