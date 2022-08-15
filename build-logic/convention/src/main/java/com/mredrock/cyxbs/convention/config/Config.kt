@@ -31,7 +31,8 @@ object Config {
     "META-INF/services/javax.annotation.processing.Processor",
     "META-INF/MANIFEST.MF",
     "META-INF/NOTICE.txt",
-    "META-INF/rxjava.properties"
+    "META-INF/rxjava.properties",
+    "**/schemas/**", // 用于取消数据库的导出文件
   )
   
   val jniExclude = listOf(
@@ -41,7 +42,7 @@ object Config {
     "lib/armeabi/libpl_droidsonroids_gif.so",
     "lib/*/libRSSupport.so",
     "lib/*/librsjni.so",
-    "lib/*/librsjni_androidx.so"
+    "lib/*/librsjni_androidx.so",
   )
   
   fun getApplicationId(project: Project): String {
