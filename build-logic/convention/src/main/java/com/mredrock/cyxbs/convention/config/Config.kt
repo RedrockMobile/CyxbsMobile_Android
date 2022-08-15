@@ -11,7 +11,7 @@ import org.gradle.api.Project
  * @date 2022/5/26 15:13
  */
 object Config {
-  const val minSdk = 21
+  const val minSdk = 23
   const val targetSdk = 31
   const val compileSdk = targetSdk
   

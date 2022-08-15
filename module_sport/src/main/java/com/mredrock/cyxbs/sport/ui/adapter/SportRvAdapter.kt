@@ -35,6 +35,11 @@ class SportRvAdapter : ListAdapter<SportDetailItemData, SportRvAdapter.VH>(
         ): Boolean {
             return oldItem == newItem
         }
+
+        override fun getChangePayload(
+            oldItem: SportDetailItemData,
+            newItem: SportDetailItemData
+        ): Any = ""
     }
 ) {
     inner class VH(val binding: SportItemRvDetailListBinding) :
@@ -85,7 +90,7 @@ class SportRvAdapter : ListAdapter<SportDetailItemData, SportRvAdapter.VH>(
                 "跑步" -> {
                     sportDetailItemTvType.text = "跑步"
                     sportDetailItemTvType.setCompoundDrawablesWithIntrinsicBounds(
-                        R.drawable.sport_ic_other,
+                        R.drawable.sport_ic_run,
                         0, 0, 0
                     )
                 }

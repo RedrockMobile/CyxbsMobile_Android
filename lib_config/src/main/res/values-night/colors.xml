@@ -22,4 +22,8 @@
     <!--    公共dialog背景-->
     <color name="config_dialog_bg">#2C2C2C</color>
 
+
+    <!--视觉要的若隐若现阴影的 endColor，在 drawable/config_layer_looming_shadow 中使用-->
+    <color name="config_layer_looming_shadow_end_color">#1D1D1D</color>
+
 </resources>

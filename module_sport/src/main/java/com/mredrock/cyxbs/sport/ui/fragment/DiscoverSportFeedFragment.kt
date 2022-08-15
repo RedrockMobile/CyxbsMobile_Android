@@ -13,7 +13,6 @@ import com.afollestad.materialdialogs.customview.getCustomView
 import com.alibaba.android.arouter.facade.annotation.Route
 import com.alibaba.android.arouter.launcher.ARouter
 import com.mredrock.cyxbs.api.account.IAccountService
-import com.mredrock.cyxbs.api.account.IUserStateService
 import com.mredrock.cyxbs.config.route.DISCOVER_SPORT
 import com.mredrock.cyxbs.config.route.DISCOVER_SPORT_FEED
 import com.mredrock.cyxbs.config.route.LOGIN_BIND_IDS
@@ -33,16 +32,18 @@ import com.mredrock.cyxbs.sport.util.sSpIdsIsBind
  */
 @Route(path = DISCOVER_SPORT_FEED)
 class DiscoverSportFeedFragment :
-    BaseVmBindFragment<DiscoverSportFeedViewModel, SportFragmentDiscoverFeedBinding>(),
-    IUserStateService.StateListener {
+    BaseVmBindFragment<DiscoverSportFeedViewModel, SportFragmentDiscoverFeedBinding>() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         /**
-         * 在这里注册登录状态改变的监听，当登录状态改变时，需要刷新界面（但请记得在onDestroyView方法中移除[onDestroyView]）
+         * 在这里注册登录状态改变的监听，当登录状态改变时，需要刷新界面
          */
         IAccountService::class.impl
             .getVerifyService()
-            .addOnStateChangedListener(this)
+            .observeStateFlow()
+            .collectLaunch {
+                viewModel.refreshSportData()
+            }
 
         binding.sportIvFeedTips.setOnClickListener {
             MaterialDialog(requireActivity()).show {
@@ -52,26 +53,13 @@ class DiscoverSportFeedFragment :
                         dismiss()
                     }
                 }
-                cornerRadius(8f)
+                cornerRadius(16f)
             }
         }
         //出错后弹出提示
         viewModel.isError.observe() {
             if (it) {
-                binding.run {
-                    //隐藏用于显示数据的控件
-                    sportTvFeedRunNeed.gone()
-                    sportTvFeedRunTimes.gone()
-                    sportTvFeedOtherNeed.gone()
-                    sportTvFeedOtherTimes.gone()
-                    sportTvFeedAward.gone()
-                    sportTvFeedAwardTimes.gone()
-                    sportTvFeedRunNeedHint.gone()
-                    sportTvFeedOtherNeedHint.gone()
-                    sportTvFeedAwardHint.gone()
-                    sportTvFeedHint.text = "当前数据错误，正在努力修复中"
-                    sportTvFeedHint.visible()
-                }
+                showError()
             }
         }
         //监听绑定ids的状态，存入SharePreference中
@@ -85,21 +73,7 @@ class DiscoverSportFeedFragment :
         }
         //进入首页后对登录和绑定状态进行判断
         if (!IAccountService::class.impl.getVerifyService().isLogin()) {
-            //游客模式则不显示数据，显示需要先登录
-            binding.run {
-                //隐藏用于显示数据的控件
-                sportTvFeedRunNeed.gone()
-                sportTvFeedRunTimes.gone()
-                sportTvFeedOtherNeed.gone()
-                sportTvFeedOtherTimes.gone()
-                sportTvFeedAward.gone()
-                sportTvFeedAwardTimes.gone()
-                sportTvFeedRunNeedHint.gone()
-                sportTvFeedOtherNeedHint.gone()
-                sportTvFeedAwardHint.gone()
-                sportTvFeedHint.text = "登录后才能查看体育打卡哦"
-                sportTvFeedHint.visible()
-            }
+            notLogin()
         } else {
             //登录后检查是否绑定了ids，如果没有绑定则显示需要绑定
             if (!sSpIdsIsBind) {
@@ -110,23 +84,14 @@ class DiscoverSportFeedFragment :
         }
     }
 
-    override fun onDestroyView() {
-        super.onDestroyView()
-        IAccountService::class.impl
-            .getVerifyService()
-            .removeStateChangedListener(this)
-    }
-
     override fun onResume() {
         super.onResume()
         viewModel.refreshSportData()
     }
 
-    override fun onStateChanged(state: IUserStateService.UserState) {
-        viewModel.refreshSportData()
-    }
-
-    //未绑定ids
+    /**
+     * 展示未绑定ids时的页面
+     */
     private fun unbound() {
         binding.run {
             //隐藏用于显示数据的控件
@@ -157,7 +122,9 @@ class DiscoverSportFeedFragment :
         }
     }
 
-    //展示数据
+    /**
+     * 加载数据
+     */
     private fun showData() {
         binding.run {
             //隐藏提示
@@ -193,6 +160,47 @@ class DiscoverSportFeedFragment :
             sportClFeed.setOnClickListener {
                 ARouter.getInstance().build(DISCOVER_SPORT).navigation()
             }
+        }
+    }
+
+    /**
+     * 用于未登录时（游客模式）加载提示
+     */
+    private fun notLogin() {
+        //游客模式则不显示数据，显示需要先登录
+        binding.run {
+            //隐藏用于显示数据的控件
+            sportTvFeedRunNeed.gone()
+            sportTvFeedRunTimes.gone()
+            sportTvFeedOtherNeed.gone()
+            sportTvFeedOtherTimes.gone()
+            sportTvFeedAward.gone()
+            sportTvFeedAwardTimes.gone()
+            sportTvFeedRunNeedHint.gone()
+            sportTvFeedOtherNeedHint.gone()
+            sportTvFeedAwardHint.gone()
+            sportTvFeedHint.text = "登录后才能查看体育打卡哦"
+            sportTvFeedHint.visible()
+        }
+    }
+
+    /**
+     * 展示错误提示
+     */
+    private fun showError() {
+        binding.run {
+            //隐藏用于显示数据的控件
+            sportTvFeedRunNeed.gone()
+            sportTvFeedRunTimes.gone()
+            sportTvFeedOtherNeed.gone()
+            sportTvFeedOtherTimes.gone()
+            sportTvFeedAward.gone()
+            sportTvFeedAwardTimes.gone()
+            sportTvFeedRunNeedHint.gone()
+            sportTvFeedOtherNeedHint.gone()
+            sportTvFeedAwardHint.gone()
+            sportTvFeedHint.text = "当前数据错误，正在努力修复中"
+            sportTvFeedHint.visible()
         }
     }
 }
