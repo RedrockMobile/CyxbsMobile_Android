@@ -10,6 +10,7 @@ import java.util.*
  * 学校日历工具类
  * Created by cc on 15/8/23.
  */
+@Deprecated("使用 lib_utils 中的 SchoolCalendarUtil 进行替换")
 open class SchoolCalendar {
     var firstDay: Calendar = GregorianCalendar(2015, Calendar.SEPTEMBER, 7)
     var calendar: Calendar

@@ -12,7 +12,7 @@ import com.mredrock.cyxbs.lib.utils.UtilsApplicationWrapper
  */
 
 val appContext: Context
-  get() = UtilsApplicationWrapper.appContext.applicationContext
+  get() = UtilsApplicationWrapper.application.applicationContext
 
 /**
  * 应用程序的生命周期
