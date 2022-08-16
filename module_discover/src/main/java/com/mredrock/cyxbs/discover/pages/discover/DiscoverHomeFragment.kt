@@ -26,10 +26,7 @@ import com.mredrock.cyxbs.api.sport.ISportService
 import com.mredrock.cyxbs.api.volunteer.IVolunteerService
 import com.mredrock.cyxbs.common.component.CyxbsToast
 import com.mredrock.cyxbs.common.component.SpacesHorizontalItemDecoration
-import com.mredrock.cyxbs.common.config.DISCOVER_ENTRY
-import com.mredrock.cyxbs.common.config.DISCOVER_NEWS
-import com.mredrock.cyxbs.common.config.DISCOVER_NEWS_ITEM
-import com.mredrock.cyxbs.common.config.MINE_CHECK_IN
+import com.mredrock.cyxbs.common.config.*
 import com.mredrock.cyxbs.common.event.CurrentDateInformationEvent
 import com.mredrock.cyxbs.common.mark.EventBusLifecycleSubscriber
 import com.mredrock.cyxbs.common.service.ServiceManager
@@ -42,6 +39,8 @@ import com.mredrock.cyxbs.discover.R
 import com.mredrock.cyxbs.discover.pages.discover.adapter.DiscoverMoreFunctionRvAdapter
 import com.mredrock.cyxbs.discover.utils.BannerAdapter
 import com.mredrock.cyxbs.discover.utils.MoreFunctionProvider
+import com.mredrock.cyxbs.discover.utils.IS_SWITCH1_SELECT
+import com.mredrock.cyxbs.discover.utils.NotificationSp
 import kotlinx.android.synthetic.main.discover_home_fragment.*
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
@@ -73,10 +72,31 @@ class DiscoverHomeFragment : BaseViewModelFragment<DiscoverHomeViewModel>(), Eve
         }
         initJwNews(mVfDetail, fl_discover_home_jwnews)
         initViewPager()
+        initHasUnread()
         viewModel.getRollInfo()
         view.findViewById<View>(R.id.iv_check_in).setOnSingleClickListener {
             context?.doIfLogin("签到") {
                 ARouter.getInstance().build(MINE_CHECK_IN).navigation()
+            }
+        }
+    }
+
+    private fun initHasUnread() {
+        //将msg View设置为没有消息的状态
+        iv_discover_msg.setBackgroundResource(R.drawable.discover_ic_home_msg)
+        activity?.doIfLogin {
+            iv_discover_msg.setOnClickListener {
+                ARouter.getInstance().build(NOTIFICATION_HOME).navigation()
+            }
+        }
+        viewModel.hasUnread.observe {
+            val shouldShowRedDots = requireActivity().NotificationSp.getBoolean(IS_SWITCH1_SELECT,true)
+            if (it == true && shouldShowRedDots) {
+                //将msg View设置为有消息的状态
+                iv_discover_msg.setBackgroundResource(R.drawable.discover_ic_home_has_msg)
+            } else {
+                //将msg View设置为没有消息的状态
+                iv_discover_msg.setBackgroundResource(R.drawable.discover_ic_home_msg)
             }
         }
     }

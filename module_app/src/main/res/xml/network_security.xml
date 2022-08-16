@@ -10,4 +10,12 @@
             <certificates src="system"/>
         </trust-anchors>
     </base-config>
+
+    <!--对于be-prod.redrock.cqupt.edu.cn域名，只信任如下公钥-->
+    <domain-config>
+        <domain includeSubdomains="true">be-prod.redrock.cqupt.edu.cn</domain>
+        <pin-set expiration="2024-01-01">
+            <pin digest="SHA-256">jQJTbIh0grw0/1TkHSumWb+Fs0Ggogr621gT3PvPKG0=</pin>
+        </pin-set>
+    </domain-config>
 </network-security-config>

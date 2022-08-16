@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="schoolcar_map_btn">#000000</color>
+    <color name="schoolcar_site_text">#B2F0F0F0</color>
+    <color name="schoolcar_bsb_button_background">#2E2F32</color>
+</resources>

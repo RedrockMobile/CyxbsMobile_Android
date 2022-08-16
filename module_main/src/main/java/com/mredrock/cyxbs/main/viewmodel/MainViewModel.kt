@@ -22,10 +22,23 @@ class MainViewModel : BaseViewModel() {
 
     val startPage: LiveData<StartPage?> = MutableLiveData()
 
+    val checkInStatus = MutableLiveData<Boolean>()
+
     val splashVisibility = MutableLiveData(View.GONE)
 
     //进入app是否直接显示课表
     var isCourseDirectShow = false
+
+    fun getCheckInStatus(){
+        ApiGenerator.getCommonApiService(ApiService::class.java)
+            .getCheckInStatus()
+            .mapOrThrowApiException()
+            .setSchedulers()
+            .safeSubscribeBy {
+                checkInStatus.value = it.isChecked
+            }
+            .lifeCycle()
+    }
 
     fun getStartPage() {
         ApiGenerator.getCommonApiService(ApiService::class.java)

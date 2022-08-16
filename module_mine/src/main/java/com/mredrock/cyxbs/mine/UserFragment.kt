@@ -88,26 +88,11 @@ class UserFragment : BaseViewModelFragment<UserViewModel>(){
 
             mine_user_fm_about_us.setOnSingleClickListener { doIfLogin { startActivity<AboutActivity>() } }
             mine_user_fm_setting.setOnSingleClickListener { doIfLogin { startActivity<SettingActivity>() } }
-            mine_user_cl_info.setOnSingleClickListener { doIfLogin { HomepageActivity.startHomePageActivity(null,context as Activity) }
-            }
+            mine_user_cl_info.setOnSingleClickListener { doIfLogin { HomepageActivity.startHomePageActivity(null,context as Activity) } }
 
-            mine_user_iv_center_notification.setOnSingleClickListener { toast(R.string.mine_person_empty_notification) }
-            mine_user_tv_center_notification.setOnSingleClickListener { toast(R.string.mine_person_empty_notification) }
+            mine_user_iv_center_notification.setOnSingleClickListener { ARouter.getInstance().build(NOTIFICATION_HOME).navigation() }
 
-            mine_user_avatar.setOnSingleClickListener {
-                doIfLogin {
-                    startActivity(
-                        Intent(
-                            context,
-                            EditInfoActivity::class.java
-                        ),
-                        ActivityOptionsCompat.makeSceneTransitionAnimation(
-                            context as Activity,
-                            Pair(mine_user_avatar, "avatar")
-                        ).toBundle()
-                    )
-                }
-            }
+            mine_user_avatar.setOnSingleClickListener { doIfLogin { startActivity(Intent(context, EditInfoActivity::class.java), ActivityOptionsCompat.makeSceneTransitionAnimation(context as Activity, Pair(mine_user_avatar, "avatar")).toBundle()) } }
         }
     }
 
