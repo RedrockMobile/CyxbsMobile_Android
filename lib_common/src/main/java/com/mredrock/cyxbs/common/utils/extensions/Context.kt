@@ -5,6 +5,7 @@ import android.content.Context
 import android.content.Intent
 import android.content.res.Configuration
 import android.content.res.Resources
+import android.graphics.Bitmap
 import android.graphics.Point
 import android.os.Build
 import android.os.Handler
