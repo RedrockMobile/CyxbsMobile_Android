@@ -44,8 +44,10 @@ rootDir.walk()
     .filter {
         //过滤掉干扰文件夹
         val isDirectory = it.isDirectory
-        val isSubModule = file("$it/build.gradle").exists() || file("$it/build.gradle.kts").exists()
-        val isIndependentProject = file("$it/settings.gradle").exists() || file("$it/settings.gradle.kts").exists()
+        val isSubModule = it.resolve("build.gradle").exists()
+          || it.resolve("build.gradle.kts").exists()
+        val isIndependentProject = it.resolve("settings.gradle").exists()
+          || it.resolve("settings.gradle.kts").exists()
         isDirectory && isSubModule && !isIndependentProject
     }
     .filter {
