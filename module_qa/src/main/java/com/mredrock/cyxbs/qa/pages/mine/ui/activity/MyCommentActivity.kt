@@ -43,6 +43,37 @@ class MyCommentActivity : BaseViewModelActivity<MyCommentViewModel>() {
         initClick()
     }
 
+    private fun initView() {
+        //初始化toolbar
+        qa_tv_toolbar_title.text = "评论回复"
+        qa_ib_toolbar_back.setOnSingleClickListener {
+            onBackPressed()
+        }
+        qa_tb_my_comment.setBackgroundColor(
+            ContextCompat.getColor(
+                this,
+                R.color.qa_ignore_item_background_color
+            )
+        )
+
+        //初始化三个Adapter
+        myCommentRvAdapter = MyCommentRvAdapter(this, viewModel)
+        footerRvAdapter = FooterRvAdapter { viewModel.retry() }
+        emptyRvAdapter = EmptyRvAdapter(getString(R.string.qa_my_comment_no_reply))
+        val adapterWrapper = RvAdapterWrapper(
+            normalAdapter = myCommentRvAdapter,
+            emptyAdapter = emptyRvAdapter,
+            footerAdapter = footerRvAdapter
+        )
+
+        qa_rv_my_comment.adapter = adapterWrapper
+        qa_rv_my_comment.layoutManager = LinearLayoutManager(this)
+        //设置刷新
+        qa_swl_my_comment.setOnRefreshListener {
+            viewModel.invalidateCWList()
+        }
+    }
+
     private fun initObserve() {
 
         //观察cwList是否变化
@@ -77,36 +108,6 @@ class MyCommentActivity : BaseViewModelActivity<MyCommentViewModel>() {
         }
     }
 
-    private fun initView() {
-        //初始化toolbar
-        qa_tv_toolbar_title.text = "评论回复"
-        qa_ib_toolbar_back.setOnSingleClickListener {
-            onBackPressed()
-        }
-        qa_tb_my_comment.setBackgroundColor(
-            ContextCompat.getColor(
-                this,
-                R.color.qa_ignore_item_background_color
-            )
-        )
-
-        //初始化三个Adapter
-        myCommentRvAdapter = MyCommentRvAdapter(this, viewModel)
-        footerRvAdapter = FooterRvAdapter { viewModel.retry() }
-        emptyRvAdapter = EmptyRvAdapter(getString(R.string.qa_my_comment_no_reply))
-        val adapterWrapper = RvAdapterWrapper(
-            normalAdapter = myCommentRvAdapter,
-            emptyAdapter = emptyRvAdapter,
-            footerAdapter = footerRvAdapter
-        )
-
-        qa_rv_my_comment.adapter = adapterWrapper
-        qa_rv_my_comment.layoutManager = LinearLayoutManager(this)
-        //设置刷新
-        qa_swl_my_comment.setOnRefreshListener {
-            viewModel.invalidateCWList()
-        }
-    }
 
     //传递评论的id进来，展开键盘进行回复
     fun showKeyboard(comment: Comment) {

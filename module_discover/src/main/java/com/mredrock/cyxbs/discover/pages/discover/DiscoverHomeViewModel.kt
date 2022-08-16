@@ -23,6 +23,7 @@ class DiscoverHomeViewModel : BaseViewModel() {
     val viewPagerInfo = MutableLiveData<List<RollerViewInfo>>()
     val jwNews = MutableLiveData<List<NewsListItem>>()
     val viewPagerTurner = MutableLiveData<Int>()
+    val hasUnread = MutableLiveData<Boolean>()
     var disposable: Disposable? = null
     var functionRvState: Parcelable? = null
     private val retrofit: Services by lazy {
@@ -50,6 +51,16 @@ class DiscoverHomeViewModel : BaseViewModel() {
                     viewPagerInfo.value = it
                 }
                 .lifeCycle()
+    }
+
+    fun getHasUnread(){
+        retrofit.getHashUnreadMsg()
+            .mapOrThrowApiException()
+            .setSchedulers()
+            .safeSubscribeBy {
+                hasUnread.value = it.has
+            }
+            .lifeCycle()
     }
 
     fun getJwNews(page: Int) {

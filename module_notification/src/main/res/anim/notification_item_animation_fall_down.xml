@@ -1,0 +1,33 @@
+<set xmlns:android="http://schemas.android.com/apk/res/android"
+    android:duration="300">
+
+<!--
+这是一个让RV item 向掉下来一样的动画
+Translate Y -20%到0%：在动画开始之前，向上移动视图20％的高度，并让它落到最终位置。
+Alpha 0到1：视图从开始完全不可见，并缓慢出现，直至完全可见。
+Scale X/Y 105% 到 100%：scale设置为105％，以使其缩小至最终尺寸。 这会使它看起来好像掉下来一样，落到背景上。
+-->
+
+    <translate
+        android:fromYDelta="-20%"
+        android:toYDelta="0"
+        android:interpolator="@android:anim/decelerate_interpolator"
+        />
+
+    <alpha
+        android:fromAlpha="0"
+        android:toAlpha="1"
+        android:interpolator="@android:anim/decelerate_interpolator"
+        />
+
+    <scale
+        android:fromXScale="105%"
+        android:fromYScale="105%"
+        android:toXScale="100%"
+        android:toYScale="100%"
+        android:pivotX="50%"
+        android:pivotY="50%"
+        android:interpolator="@android:anim/decelerate_interpolator"
+        />
+
+</set>
