@@ -6,7 +6,6 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.mredrock.cyxbs.common.ui.BaseActivity
 import com.mredrock.cyxbs.discover.schoolcar.adapter.CarPageAdapter
 import com.mredrock.cyxbs.schoolcar.databinding.SchoolcarActivityDetailSchoolcarBinding
-import com.mredrock.cyxbs.schoolcar.databinding.SchoolcarActivitySchoolcarBinding
 
 /**
  *@Author:SnowOwlet

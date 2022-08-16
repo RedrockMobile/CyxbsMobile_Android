@@ -3,7 +3,6 @@ package com.mredrock.cyxbs.discover.schoolcar.adapter
 import android.content.Context
 import android.view.LayoutInflater
 import android.view.ViewGroup
-import androidx.core.view.marginBottom
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.mredrock.cyxbs.discover.schoolcar.bean.Line

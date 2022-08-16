@@ -46,7 +46,7 @@ class LineConvert{
 
   @TypeConverter
   fun string2line(value: String): List<Line> {
-    return return Gson().fromJson(
+    return Gson().fromJson(
       value,
       object : TypeToken<List<Line>>() {}.type
     )

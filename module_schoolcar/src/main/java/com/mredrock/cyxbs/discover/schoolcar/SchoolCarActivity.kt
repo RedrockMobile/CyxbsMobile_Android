@@ -319,7 +319,7 @@ class SchoolCarActivity:BaseActivity() {
         vm.mapInfo.value?.lines?.forEach { line ->
           if (line.id == arrays[0]) {
             binding.schoolCarCardTvChangeBts.text = line.name
-            binding.schoolCarCardTvChangeBts.setTextColor(resources.getColor(R.color.common_level_one_font_color))
+            binding.schoolCarCardTvChangeBts.setTextColor(resources.getColor(com.mredrock.cyxbs.common.R.color.common_level_one_font_color))
             binding.schoolCarCardIvChangeBts.setImageResource(R.drawable.schoolcar_bts_btn_change)
             binding.schoolCarCardChangeBts.setBackgroundResource(R.drawable.schoolcar_bts_btn_change_shape)
           }
@@ -345,7 +345,7 @@ class SchoolCarActivity:BaseActivity() {
       vm.mapInfo.value?.lines?.forEach { line ->
         if (line.id == choose) {
             binding.schoolCarCardTvChangeBts.text = line.name
-            binding.schoolCarCardTvChangeBts.setTextColor(resources.getColor(R.color.common_white_font_color))
+            binding.schoolCarCardTvChangeBts.setTextColor(resources.getColor(com.mredrock.cyxbs.common.R.color.common_white_font_color))
             binding.schoolCarCardChangeBts.setBackgroundResource(R.drawable.schoolcar_bts_btn_change_shape_select)
             binding.schoolCarCardIvChangeBts.setImageResource(R.drawable.schoolcar_bts_btn_change_select)
         }
