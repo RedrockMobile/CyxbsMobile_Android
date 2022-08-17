@@ -22,12 +22,12 @@ buildscript {
     dependencies {
         classpath(libs.android.gradlePlugin)
         classpath(libs.kotlin.gradlePlugin)
-        /*
-        * 注意，如果某第三方库需要使用到 classpath，正确写法是把它写在 build-logic 的 build.gradle 中
-        *
-        * 还有每次新建模块这里斗湖自己加一个：
-        * classpath("org.jetbrains.kotlin:kotlin-gradle-plugin:x.x.xx")
-        * 把它删掉！！！！！
-        * */
+      /*
+      * 注意，如果某第三方库需要使用到 classpath，正确写法是把它写在 build-logic 的 build.gradle 中
+      *
+      * 还有每次新建模块这里斗湖自己加一个：
+      * classpath("org.jetbrains.kotlin:kotlin-gradle-plugin:x.x.xx")
+      * 把它删掉！！！！！
+      * */
     }
 }

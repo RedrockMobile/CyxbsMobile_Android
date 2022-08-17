@@ -22,4 +22,7 @@
     <!--    公共dialog背景-->
     <color name="config_dialog_bg">#FFFFFF</color>
 
+    <!--视觉最常用的背景颜色，夜间为 2D2D2D-->
+    <color name="config_common_background_color">#FFFFFF</color>
+
 </resources>

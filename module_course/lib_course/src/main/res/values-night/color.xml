@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!--课表左侧时间轴中午和傍晚的字体颜色-->
+    <color name="course_noon_dusk_tv">#80F0F0F0</color>
+</resources>

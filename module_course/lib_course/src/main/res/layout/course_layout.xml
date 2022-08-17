@@ -1,0 +1,300 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:background="@color/config_common_background_color">
+
+    <include
+        layout="@layout/course_item_week"/>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <com.mredrock.cyxbs.lib.course.view.scroll.impl.CourseScrollViewImpl
+            android:id="@+id/course_scrollView"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <com.mredrock.cyxbs.lib.course.view.course.CourseLayout
+                android:id="@+id/course_courseLayout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:minHeight="680dp"
+                app:net_rowCount="14"
+                app:net_columnCount="8" >
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:text="1"
+                    android:textColor="@color/config_level_one_font_color"
+                    android:textSize="12dp"
+                    android:textStyle="bold"
+                    android:gravity="center"
+                    android:tag="test"
+                    app:course_layout_day="0"
+                    app:course_layout_startPos="0"
+                    app:course_layout_length="1"
+                    app:course_type="time"
+                    tools:ignore="HardcodedText,SpUsage" />
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:text="2"
+                    android:textColor="@color/config_level_one_font_color"
+                    android:textSize="12dp"
+                    android:textStyle="bold"
+                    android:gravity="center"
+                    app:course_layout_day="0"
+                    app:course_layout_startPos="1"
+                    app:course_layout_length="1"
+                    app:course_type="time"
+                    tools:ignore="HardcodedText,SpUsage" />
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:text="3"
+                    android:textColor="@color/config_level_one_font_color"
+                    android:textSize="12dp"
+                    android:textStyle="bold"
+                    android:gravity="center"
+                    app:course_layout_day="0"
+                    app:course_layout_startPos="2"
+                    app:course_layout_length="1"
+                    app:course_type="time"
+                    tools:ignore="HardcodedText,SpUsage" />
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:text="4"
+                    android:textColor="@color/config_level_one_font_color"
+                    android:textSize="12dp"
+                    android:textStyle="bold"
+                    android:gravity="center"
+                    app:course_layout_day="0"
+                    app:course_layout_startPos="3"
+                    app:course_layout_length="1"
+                    app:course_type="time"
+                    tools:ignore="HardcodedText,SpUsage" />
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:text="5"
+                    android:textColor="@color/config_level_one_font_color"
+                    android:textSize="12dp"
+                    android:textStyle="bold"
+                    android:gravity="center"
+                    app:course_layout_day="0"
+                    app:course_layout_startPos="5"
+                    app:course_layout_length="1"
+                    app:course_type="time"
+                    tools:ignore="HardcodedText,SpUsage" />
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:text="6"
+                    android:textColor="@color/config_level_one_font_color"
+                    android:textSize="12dp"
+                    android:textStyle="bold"
+                    android:gravity="center"
+                    app:course_layout_day="0"
+                    app:course_layout_startPos="6"
+                    app:course_layout_length="1"
+                    app:course_type="time"
+                    tools:ignore="HardcodedText,SpUsage" />
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:text="7"
+                    android:textColor="@color/config_level_one_font_color"
+                    android:textSize="12dp"
+                    android:textStyle="bold"
+                    android:gravity="center"
+                    app:course_layout_day="0"
+                    app:course_layout_startPos="7"
+                    app:course_layout_length="1"
+                    app:course_type="time"
+                    tools:ignore="HardcodedText,SpUsage" />
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:text="8"
+                    android:textColor="@color/config_level_one_font_color"
+                    android:textSize="12dp"
+                    android:textStyle="bold"
+                    android:gravity="center"
+                    app:course_layout_day="0"
+                    app:course_layout_startPos="8"
+                    app:course_layout_length="1"
+                    app:course_type="time"
+                    tools:ignore="HardcodedText,SpUsage" />
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:text="9"
+                    android:textColor="@color/config_level_one_font_color"
+                    android:textSize="12dp"
+                    android:textStyle="bold"
+                    android:gravity="center"
+                    app:course_layout_day="0"
+                    app:course_layout_startPos="10"
+                    app:course_layout_length="1"
+                    app:course_type="time"
+                    tools:ignore="HardcodedText,SpUsage" />
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:text="10"
+                    android:textColor="@color/config_level_one_font_color"
+                    android:textSize="12dp"
+                    android:textStyle="bold"
+                    android:gravity="center"
+                    app:course_layout_day="0"
+                    app:course_layout_startPos="11"
+                    app:course_layout_length="1"
+                    app:course_type="time"
+                    tools:ignore="HardcodedText,SpUsage" />
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:text="11"
+                    android:textColor="@color/config_level_one_font_color"
+                    android:textSize="12dp"
+                    android:textStyle="bold"
+                    android:gravity="center"
+                    app:course_layout_day="0"
+                    app:course_layout_startPos="12"
+                    app:course_layout_length="1"
+                    app:course_type="time"
+                    tools:ignore="HardcodedText,SpUsage" />
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:text="12"
+                    android:textColor="@color/config_level_one_font_color"
+                    android:textSize="12dp"
+                    android:textStyle="bold"
+                    android:gravity="center"
+                    app:course_layout_day="0"
+                    app:course_layout_startPos="13"
+                    app:course_layout_length="1"
+                    app:course_type="time"
+                    tools:ignore="HardcodedText,SpUsage" />
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:text="中\n午"
+                    android:textColor="@color/course_noon_dusk_tv"
+                    android:textSize="12dp"
+                    android:textStyle="bold"
+                    android:gravity="center"
+                    app:course_layout_day="0"
+                    app:course_layout_startPos="4"
+                    app:course_layout_length="1"
+                    app:course_type="noon"
+                    tools:ignore="HardcodedText,SpUsage" />
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:text="傍\n晚"
+                    android:textColor="@color/course_noon_dusk_tv"
+                    android:textSize="12dp"
+                    android:textStyle="bold"
+                    android:gravity="center"
+                    app:course_layout_day="0"
+                    app:course_layout_startPos="9"
+                    app:course_layout_length="1"
+                    app:course_type="dusk"
+                    tools:ignore="HardcodedText,SpUsage" />
+
+                <androidx.appcompat.widget.AppCompatImageView
+                    android:id="@+id/course_iv_noon_close"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:scaleType="center"
+                    app:srcCompat="@drawable/course_ic_course_arrow_close"
+                    app:course_layout_day="0"
+                    app:course_layout_length="3"
+                    app:course_layout_startPos="3"
+                    tools:ignore="ContentDescription" />
+
+                <androidx.appcompat.widget.AppCompatImageView
+                    android:id="@+id/course_iv_noon_open"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:scaleType="center"
+                    android:alpha="0"
+                    app:srcCompat="@drawable/course_ic_course_arrow_open"
+                    app:course_layout_day="0"
+                    app:course_layout_length="2"
+                    app:course_layout_startPos="3"
+                    tools:ignore="ContentDescription" />
+
+                <androidx.appcompat.widget.AppCompatImageView
+                    android:id="@+id/course_iv_dusk_close"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:scaleType="center"
+                    app:srcCompat="@drawable/course_ic_course_arrow_close"
+                    app:course_layout_day="0"
+                    app:course_layout_length="3"
+                    app:course_layout_startPos="8"
+                    tools:ignore="ContentDescription" />
+
+                <androidx.appcompat.widget.AppCompatImageView
+                    android:id="@+id/course_iv_dusk_open"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:scaleType="center"
+                    android:alpha="0"
+                    app:srcCompat="@drawable/course_ic_course_arrow_open"
+                    app:course_layout_day="0"
+                    app:course_layout_length="2"
+                    app:course_layout_startPos="8"
+                    tools:ignore="ContentDescription" />
+
+            </com.mredrock.cyxbs.lib.course.view.course.CourseLayout>
+        </com.mredrock.cyxbs.lib.course.view.scroll.impl.CourseScrollViewImpl>
+
+        <ImageView
+            android:id="@+id/course_iv_no_lesson"
+            android:layout_width="210dp"
+            android:layout_height="130dp"
+            android:layout_gravity="center"
+            android:layout_marginBottom="20dp"
+            android:src="@drawable/config_ic_empty_holder"
+            tools:ignore="ContentDescription"
+            app:layout_constraintEnd_toEndOf="@+id/course_tv_no_lesson"
+            app:layout_constraintBottom_toTopOf="@+id/course_tv_no_lesson"
+            app:layout_constraintStart_toStartOf="@+id/course_tv_no_lesson" />
+
+        <TextView
+            android:id="@+id/course_tv_no_lesson"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="一片寂静"
+            tools:ignore="HardcodedText"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</LinearLayout>
