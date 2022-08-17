@@ -40,13 +40,15 @@
 
                 <androidx.appcompat.widget.AppCompatImageView
                     android:id="@+id/sport_detail_item_iv_award"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
+                    android:layout_width="0dp"
+                    android:layout_height="18dp"
                     android:layout_marginStart="10dp"
                     android:visibility="gone"
+                    app:layout_constraintDimensionRatio="43:14"
                     app:layout_constraintBottom_toBottomOf="@+id/sport_detail_item_tv_date"
                     app:layout_constraintStart_toStartOf="@+id/sport_detail_item_guidline3"
-                    app:layout_constraintTop_toTopOf="@+id/sport_detail_item_tv_date" />
+                    app:layout_constraintTop_toTopOf="parent"
+                    tools:src="@drawable/sport_ic_award" />
 
                 <androidx.appcompat.widget.AppCompatImageView
                     android:id="@+id/sport_detail_item_iv_valid"

@@ -9,8 +9,7 @@ import com.mredrock.cyxbs.convention.depend.lib.dependLibConfig
 import com.mredrock.cyxbs.convention.depend.lib.dependLibUtils
 
 plugins {
-    id("module-manager")
-    //id("module-debug")
+    id("module-debug")
 }
 
 dependNetwork()

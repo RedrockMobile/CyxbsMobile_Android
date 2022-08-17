@@ -12,7 +12,7 @@
         <shape>
             <gradient
                 android:angle="90"
-                android:startColor="#CBF4F6FF"
+                android:startColor="@color/config_layer_looming_shadow_start_color"
                 android:endColor="@color/config_layer_looming_shadow_end_color"
                 android:type="linear"/>
         </shape>
@@ -26,7 +26,7 @@
         <shape>
             <gradient
                 android:angle="270"
-                android:startColor="#CBF4F6FF"
+                android:startColor="@color/config_layer_looming_shadow_start_color"
                 android:endColor="@color/config_layer_looming_shadow_end_color"
                 android:type="linear"/>
         </shape>
@@ -39,7 +39,7 @@
         <shape>
             <gradient
                 android:angle="180"
-                android:startColor="#CBF4F6FF"
+                android:startColor="@color/config_layer_looming_shadow_start_color"
                 android:endColor="@color/config_layer_looming_shadow_end_color"
                 android:type="linear"/>
         </shape>
@@ -52,7 +52,7 @@
         <shape>
             <gradient
                 android:angle="0"
-                android:startColor="#CBF4F6FF"
+                android:startColor="@color/config_layer_looming_shadow_start_color"
                 android:endColor="@color/config_layer_looming_shadow_end_color"
                 android:type="linear"/>
         </shape>

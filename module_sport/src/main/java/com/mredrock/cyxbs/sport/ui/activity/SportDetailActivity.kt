@@ -12,6 +12,7 @@ import com.mredrock.cyxbs.lib.base.ui.BaseBindActivity
 import com.mredrock.cyxbs.lib.utils.extensions.gone
 import com.mredrock.cyxbs.lib.utils.extensions.setOnDoubleClickListener
 import com.mredrock.cyxbs.lib.utils.extensions.visible
+import com.mredrock.cyxbs.lib.utils.utils.SchoolCalendarUtil
 import com.mredrock.cyxbs.sport.R
 import com.mredrock.cyxbs.sport.databinding.SportActivitySportDetailBinding
 import com.mredrock.cyxbs.sport.model.SportDetailBean
@@ -26,15 +27,15 @@ class SportDetailActivity : BaseBindActivity<SportActivitySportDetailBinding>() 
     /**
      * RecyclerView的adapter
      */
-    private val sportRvAdapter = SportRvAdapter()
+    private val mSportRvAdapter = SportRvAdapter()
 
     /**
      * 是否放假中
      */
-    private var isHoliday = false
+    private var mIsHoliday = false
 
-    //TODO 获取课表模块提供的周数
-    private val week: Int = 22
+    //因为课表提供的周数可能为 null 因此当返回null时设置为22（即放假中）
+    private val mWeek: Int = SchoolCalendarUtil.getWeekOfTerm() ?: 22
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -51,10 +52,11 @@ class SportDetailActivity : BaseBindActivity<SportActivitySportDetailBinding>() 
         val vm = ViewModelProvider(this).get(SportDetailViewModel::class.java)
         binding.run {
             //设置刷新监听
-            if (!isHoliday) {
+            if (!mIsHoliday) {
                 //未放假则正常刷新
                 sportSrlDetailList.setOnRefreshListener {
                     vm.refreshSportDetailData()
+
                 }
             } else {
                 //放假则直接结束刷新
@@ -66,7 +68,7 @@ class SportDetailActivity : BaseBindActivity<SportActivitySportDetailBinding>() 
         //出错时结束刷新并设置提示图片和文字
         vm.isError.observe(this) {
             //若不处于放假中则显示错误页面
-            if (it && !isHoliday) {
+            if (it && !mIsHoliday) {
                 showError()
             }
         }
@@ -89,7 +91,7 @@ class SportDetailActivity : BaseBindActivity<SportActivitySportDetailBinding>() 
         binding.run {
             //设置RecyclerView
             sportRvDetailList.run {
-                adapter = sportRvAdapter
+                adapter = mSportRvAdapter
                 layoutManager = LinearLayoutManager(this@SportDetailActivity)
             }
             //初始化时加载数据较慢，显示加载动画让用户知晓正在加载
@@ -119,12 +121,12 @@ class SportDetailActivity : BaseBindActivity<SportActivitySportDetailBinding>() 
                 in 8..12 -> "秋"
                 else -> ""
             }
-            if (week in 1..21) {
+            if (mWeek in 1..21) {
                 //若周数为1到21则认定为未放假
                 sportTvDetailTime.text = "${year}年  $season"
             } else {
                 //若为其他值则显示放假中,并设置提示图为放假
-                isHoliday = true
+                mIsHoliday = true
                 sportTvDetailTime.text = "放假中"
                 sportSrlDetailList.finishRefresh()
                 sportRvDetailList.gone()
@@ -142,7 +144,7 @@ class SportDetailActivity : BaseBindActivity<SportActivitySportDetailBinding>() 
     @SuppressLint("SetTextI18n")
     private fun loadData(bean: SportDetailBean) {
         //未放假则正常加载
-        if (week in 1..21) {
+        if (mWeek in 1..21) {
             //添加页面顶部总数据
             binding.run {
                 sportTvDetailTotalDone.text =
@@ -171,7 +173,7 @@ class SportDetailActivity : BaseBindActivity<SportActivitySportDetailBinding>() 
                         spot = spot.replace("风雨操场（乒乓球馆）", "风雨操场")
                     }
                 }.reversed()
-                sportRvAdapter.submitList(list)
+                mSportRvAdapter.submitList(list)
             } else if ((bean.runDone + bean.otherDone) == 0) {
                 //若打卡的次数为0则隐藏RecyclerView并设置没有记录的提示
                 binding.run {

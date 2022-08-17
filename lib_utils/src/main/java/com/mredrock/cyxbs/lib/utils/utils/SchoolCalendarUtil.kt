@@ -48,7 +48,7 @@ object SchoolCalendarUtil {
    * 是否是上学期（即秋季学期），否则是下学期（春季学期）
    */
   fun isFirstSemester() : Boolean {
-    return mFirstDayCalendar[Calendar.MONTH] > 6
+    return Calendar.getInstance()[Calendar.MONTH + 1] > 8
   }
   
   /**
