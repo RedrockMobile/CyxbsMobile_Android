@@ -1,4 +1,4 @@
-package com.mredrock.cyxbs.lib.course.view
+package com.mredrock.cyxbs.lib.course.view.course
 
 import com.mredrock.cyxbs.lib.course.affair.IAffairContainer
 import com.mredrock.cyxbs.lib.course.item.IItem

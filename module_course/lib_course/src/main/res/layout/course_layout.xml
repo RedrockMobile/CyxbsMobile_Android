@@ -36,10 +36,10 @@
                     android:textStyle="bold"
                     android:gravity="center"
                     android:tag="test"
-                    app:course_layout_day="0"
-                    app:course_layout_startPos="0"
-                    app:course_layout_length="1"
-                    app:course_type="time"
+                    app:net_layout_startRow="0"
+                    app:net_layout_endRow="0"
+                    app:net_layout_startColumn="0"
+                    app:net_layout_endColumn="0"
                     tools:ignore="HardcodedText,SpUsage" />
 
                 <TextView
@@ -50,10 +50,10 @@
                     android:textSize="12dp"
                     android:textStyle="bold"
                     android:gravity="center"
-                    app:course_layout_day="0"
-                    app:course_layout_startPos="1"
-                    app:course_layout_length="1"
-                    app:course_type="time"
+                    app:net_layout_startRow="1"
+                    app:net_layout_endRow="1"
+                    app:net_layout_startColumn="0"
+                    app:net_layout_endColumn="0"
                     tools:ignore="HardcodedText,SpUsage" />
 
                 <TextView
@@ -64,10 +64,10 @@
                     android:textSize="12dp"
                     android:textStyle="bold"
                     android:gravity="center"
-                    app:course_layout_day="0"
-                    app:course_layout_startPos="2"
-                    app:course_layout_length="1"
-                    app:course_type="time"
+                    app:net_layout_startRow="2"
+                    app:net_layout_endRow="2"
+                    app:net_layout_startColumn="0"
+                    app:net_layout_endColumn="0"
                     tools:ignore="HardcodedText,SpUsage" />
 
                 <TextView
@@ -78,10 +78,10 @@
                     android:textSize="12dp"
                     android:textStyle="bold"
                     android:gravity="center"
-                    app:course_layout_day="0"
-                    app:course_layout_startPos="3"
-                    app:course_layout_length="1"
-                    app:course_type="time"
+                    app:net_layout_startRow="3"
+                    app:net_layout_endRow="3"
+                    app:net_layout_startColumn="0"
+                    app:net_layout_endColumn="0"
                     tools:ignore="HardcodedText,SpUsage" />
 
                 <TextView
@@ -92,10 +92,10 @@
                     android:textSize="12dp"
                     android:textStyle="bold"
                     android:gravity="center"
-                    app:course_layout_day="0"
-                    app:course_layout_startPos="5"
-                    app:course_layout_length="1"
-                    app:course_type="time"
+                    app:net_layout_startRow="5"
+                    app:net_layout_endRow="5"
+                    app:net_layout_startColumn="0"
+                    app:net_layout_endColumn="0"
                     tools:ignore="HardcodedText,SpUsage" />
 
                 <TextView
@@ -106,10 +106,10 @@
                     android:textSize="12dp"
                     android:textStyle="bold"
                     android:gravity="center"
-                    app:course_layout_day="0"
-                    app:course_layout_startPos="6"
-                    app:course_layout_length="1"
-                    app:course_type="time"
+                    app:net_layout_startRow="6"
+                    app:net_layout_endRow="6"
+                    app:net_layout_startColumn="0"
+                    app:net_layout_endColumn="0"
                     tools:ignore="HardcodedText,SpUsage" />
 
                 <TextView
@@ -120,10 +120,10 @@
                     android:textSize="12dp"
                     android:textStyle="bold"
                     android:gravity="center"
-                    app:course_layout_day="0"
-                    app:course_layout_startPos="7"
-                    app:course_layout_length="1"
-                    app:course_type="time"
+                    app:net_layout_startRow="7"
+                    app:net_layout_endRow="7"
+                    app:net_layout_startColumn="0"
+                    app:net_layout_endColumn="0"
                     tools:ignore="HardcodedText,SpUsage" />
 
                 <TextView
@@ -134,10 +134,10 @@
                     android:textSize="12dp"
                     android:textStyle="bold"
                     android:gravity="center"
-                    app:course_layout_day="0"
-                    app:course_layout_startPos="8"
-                    app:course_layout_length="1"
-                    app:course_type="time"
+                    app:net_layout_startRow="8"
+                    app:net_layout_endRow="8"
+                    app:net_layout_startColumn="0"
+                    app:net_layout_endColumn="0"
                     tools:ignore="HardcodedText,SpUsage" />
 
                 <TextView
@@ -148,10 +148,10 @@
                     android:textSize="12dp"
                     android:textStyle="bold"
                     android:gravity="center"
-                    app:course_layout_day="0"
-                    app:course_layout_startPos="10"
-                    app:course_layout_length="1"
-                    app:course_type="time"
+                    app:net_layout_startRow="10"
+                    app:net_layout_endRow="10"
+                    app:net_layout_startColumn="0"
+                    app:net_layout_endColumn="0"
                     tools:ignore="HardcodedText,SpUsage" />
 
                 <TextView
@@ -162,10 +162,10 @@
                     android:textSize="12dp"
                     android:textStyle="bold"
                     android:gravity="center"
-                    app:course_layout_day="0"
-                    app:course_layout_startPos="11"
-                    app:course_layout_length="1"
-                    app:course_type="time"
+                    app:net_layout_startRow="11"
+                    app:net_layout_endRow="11"
+                    app:net_layout_startColumn="0"
+                    app:net_layout_endColumn="0"
                     tools:ignore="HardcodedText,SpUsage" />
 
                 <TextView
@@ -176,10 +176,10 @@
                     android:textSize="12dp"
                     android:textStyle="bold"
                     android:gravity="center"
-                    app:course_layout_day="0"
-                    app:course_layout_startPos="12"
-                    app:course_layout_length="1"
-                    app:course_type="time"
+                    app:net_layout_startRow="12"
+                    app:net_layout_endRow="12"
+                    app:net_layout_startColumn="0"
+                    app:net_layout_endColumn="0"
                     tools:ignore="HardcodedText,SpUsage" />
 
                 <TextView
@@ -190,10 +190,10 @@
                     android:textSize="12dp"
                     android:textStyle="bold"
                     android:gravity="center"
-                    app:course_layout_day="0"
-                    app:course_layout_startPos="13"
-                    app:course_layout_length="1"
-                    app:course_type="time"
+                    app:net_layout_startRow="13"
+                    app:net_layout_endRow="13"
+                    app:net_layout_startColumn="0"
+                    app:net_layout_endColumn="0"
                     tools:ignore="HardcodedText,SpUsage" />
 
                 <TextView
@@ -204,70 +204,74 @@
                     android:textSize="12dp"
                     android:textStyle="bold"
                     android:gravity="center"
-                    app:course_layout_day="0"
-                    app:course_layout_startPos="4"
-                    app:course_layout_length="1"
-                    app:course_type="noon"
+                    app:net_layout_startRow="4"
+                    app:net_layout_endRow="4"
+                    app:net_layout_startColumn="0"
+                    app:net_layout_endColumn="0"
                     tools:ignore="HardcodedText,SpUsage" />
 
                 <TextView
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:text="傍\n晚"
+                    android:text="下\n午"
                     android:textColor="@color/course_noon_dusk_tv"
                     android:textSize="12dp"
                     android:textStyle="bold"
                     android:gravity="center"
-                    app:course_layout_day="0"
-                    app:course_layout_startPos="9"
-                    app:course_layout_length="1"
-                    app:course_type="dusk"
+                    app:net_layout_startRow="9"
+                    app:net_layout_endRow="9"
+                    app:net_layout_startColumn="0"
+                    app:net_layout_endColumn="0"
                     tools:ignore="HardcodedText,SpUsage" />
 
                 <androidx.appcompat.widget.AppCompatImageView
-                    android:id="@+id/course_iv_noon_close"
+                    android:id="@+id/course_iv_noon_fold"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:scaleType="center"
-                    app:srcCompat="@drawable/course_ic_course_arrow_close"
-                    app:course_layout_day="0"
-                    app:course_layout_length="3"
-                    app:course_layout_startPos="3"
+                    app:srcCompat="@drawable/course_ic_course_arrow"
+                    app:net_layout_startRow="3"
+                    app:net_layout_endRow="5"
+                    app:net_layout_startColumn="0"
+                    app:net_layout_endColumn="0"
                     tools:ignore="ContentDescription" />
 
                 <androidx.appcompat.widget.AppCompatImageView
-                    android:id="@+id/course_iv_noon_open"
+                    android:id="@+id/course_iv_noon_unfold"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:scaleType="center"
-                    android:alpha="0"
-                    app:srcCompat="@drawable/course_ic_course_arrow_open"
-                    app:course_layout_day="0"
-                    app:course_layout_length="2"
-                    app:course_layout_startPos="3"
+                    app:srcCompat="@drawable/course_ic_course_arrow"
+                    android:rotation="90"
+                    app:net_layout_startRow="3"
+                    app:net_layout_endRow="4"
+                    app:net_layout_startColumn="0"
+                    app:net_layout_endColumn="0"
                     tools:ignore="ContentDescription" />
 
                 <androidx.appcompat.widget.AppCompatImageView
-                    android:id="@+id/course_iv_dusk_close"
+                    android:id="@+id/course_iv_dusk_fold"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:scaleType="center"
-                    app:srcCompat="@drawable/course_ic_course_arrow_close"
-                    app:course_layout_day="0"
-                    app:course_layout_length="3"
-                    app:course_layout_startPos="8"
+                    app:srcCompat="@drawable/course_ic_course_arrow"
+                    app:net_layout_startRow="8"
+                    app:net_layout_endRow="10"
+                    app:net_layout_startColumn="0"
+                    app:net_layout_endColumn="0"
                     tools:ignore="ContentDescription" />
 
                 <androidx.appcompat.widget.AppCompatImageView
-                    android:id="@+id/course_iv_dusk_open"
+                    android:id="@+id/course_iv_dusk_unfold"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:scaleType="center"
-                    android:alpha="0"
-                    app:srcCompat="@drawable/course_ic_course_arrow_open"
-                    app:course_layout_day="0"
-                    app:course_layout_length="2"
-                    app:course_layout_startPos="8"
+                    app:srcCompat="@drawable/course_ic_course_arrow"
+                    android:rotation="90"
+                    app:net_layout_startRow="8"
+                    app:net_layout_endRow="9"
+                    app:net_layout_startColumn="0"
+                    app:net_layout_endColumn="0"
                     tools:ignore="ContentDescription" />
 
             </com.mredrock.cyxbs.lib.course.view.course.CourseLayout>

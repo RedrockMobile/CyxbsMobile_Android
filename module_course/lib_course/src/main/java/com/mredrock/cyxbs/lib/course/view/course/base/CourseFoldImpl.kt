@@ -10,6 +10,7 @@ import com.mredrock.cyxbs.lib.course.fold.FoldState
 import com.mredrock.cyxbs.lib.course.fold.OnFoldListener
 import com.mredrock.cyxbs.lib.course.period.dusk.IFoldDusk
 import com.mredrock.cyxbs.lib.course.period.noon.IFoldNoon
+import com.mredrock.cyxbs.lib.course.view.course.ICourseLayout
 
 /**
  * ...
@@ -182,24 +183,24 @@ abstract class CourseFoldImpl @JvmOverloads constructor(
   
   private fun changeNoonWeight(weight: Float) {
     forEachNoon {
-      super.setRowWeight(it, weight)
+      super.setRowShowWeight(it, weight)
     }
   }
   
   private fun changeDuskWeight(weight: Float) {
     forEachDusk {
-      super.setRowWeight(it, weight)
+      super.setRowShowWeight(it, weight)
     }
   }
   
-  @Deprecated("禁止子类调用", level = DeprecationLevel.ERROR)
-  override fun setRowWeight(row: Int, weight: Float) {
-    super.setRowWeight(row, weight)
+  @Deprecated("禁止子类调用", level = DeprecationLevel.HIDDEN)
+  override fun setRowShowWeight(row: Int, weight: Float) {
+    super.setRowShowWeight(row, weight)
   }
   
-  @Deprecated("禁止子类调用", level = DeprecationLevel.ERROR)
-  override fun setColumnWeight(column: Int, weight: Float) {
-    super.setColumnWeight(column, weight)
+  @Deprecated("禁止子类调用", level = DeprecationLevel.HIDDEN)
+  override fun setColumnShowWeight(column: Int, weight: Float) {
+    super.setColumnShowWeight(column, weight)
   }
   
   // 折叠动画
@@ -263,35 +264,35 @@ abstract class CourseFoldImpl @JvmOverloads constructor(
     // 为了分离逻辑，所以把 mNoonFoldState 和 mDuskFoldState 写在了这里
     addNoonFoldListener(
       object : OnFoldListener {
-        override fun onFoldStart(course: AbstractCourseLayout) {
+        override fun onFoldStart(course: ICourseLayout) {
           mNoonFoldState = FoldState.FOLD_ANIM
         }
   
-        override fun onFoldEnd(course: AbstractCourseLayout) {
+        override fun onFoldEnd(course: ICourseLayout) {
           mNoonFoldState = FoldState.FOLD
         }
   
-        override fun onFoldCancel(course: AbstractCourseLayout) {
+        override fun onFoldCancel(course: ICourseLayout) {
           mNoonFoldState = FoldState.UNKNOWN
         }
   
-        override fun onFoldWithoutAnim(course: AbstractCourseLayout) {
+        override fun onFoldWithoutAnim(course: ICourseLayout) {
           mNoonFoldState = FoldState.FOLD
         }
   
-        override fun onUnfoldStart(course: AbstractCourseLayout) {
+        override fun onUnfoldStart(course: ICourseLayout) {
           mNoonFoldState = FoldState.UNFOLD_ANIM
         }
   
-        override fun onUnfoldEnd(course: AbstractCourseLayout) {
+        override fun onUnfoldEnd(course: ICourseLayout) {
           mNoonFoldState = FoldState.UNFOLD
         }
   
-        override fun onUnfoldCancel(course: AbstractCourseLayout) {
+        override fun onUnfoldCancel(course: ICourseLayout) {
           mNoonFoldState = FoldState.UNKNOWN
         }
   
-        override fun onUnfoldWithoutAnim(course: AbstractCourseLayout) {
+        override fun onUnfoldWithoutAnim(course: ICourseLayout) {
           mNoonFoldState = FoldState.UNFOLD
         }
       }
@@ -299,35 +300,35 @@ abstract class CourseFoldImpl @JvmOverloads constructor(
     
     addDuskFoldListener(
       object : OnFoldListener {
-        override fun onFoldStart(course: AbstractCourseLayout) {
+        override fun onFoldStart(course: ICourseLayout) {
           mDuskFoldState = FoldState.FOLD_ANIM
         }
     
-        override fun onFoldEnd(course: AbstractCourseLayout) {
+        override fun onFoldEnd(course: ICourseLayout) {
           mDuskFoldState = FoldState.FOLD
         }
     
-        override fun onFoldCancel(course: AbstractCourseLayout) {
+        override fun onFoldCancel(course: ICourseLayout) {
           mDuskFoldState = FoldState.UNKNOWN
         }
   
-        override fun onFoldWithoutAnim(course: AbstractCourseLayout) {
+        override fun onFoldWithoutAnim(course: ICourseLayout) {
           mDuskFoldState = FoldState.FOLD
         }
   
-        override fun onUnfoldStart(course: AbstractCourseLayout) {
+        override fun onUnfoldStart(course: ICourseLayout) {
           mDuskFoldState = FoldState.UNFOLD_ANIM
         }
     
-        override fun onUnfoldEnd(course: AbstractCourseLayout) {
+        override fun onUnfoldEnd(course: ICourseLayout) {
           mDuskFoldState = FoldState.UNFOLD
         }
     
-        override fun onUnfoldCancel(course: AbstractCourseLayout) {
+        override fun onUnfoldCancel(course: ICourseLayout) {
           mDuskFoldState = FoldState.UNKNOWN
         }
   
-        override fun onUnfoldWithoutAnim(course: AbstractCourseLayout) {
+        override fun onUnfoldWithoutAnim(course: ICourseLayout) {
           mDuskFoldState = FoldState.UNFOLD
         }
       }

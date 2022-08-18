@@ -2,7 +2,7 @@ package com.mredrock.cyxbs.lib.course.view.course.base
 
 import android.content.Context
 import android.util.AttributeSet
-import com.mredrock.cyxbs.lib.course.view.ICourseLayout
+import com.mredrock.cyxbs.lib.course.view.course.ICourseLayout
 import com.mredrock.cyxbs.lib.course.R
 import com.ndhzs.netlayout.view.NetLayout2
 

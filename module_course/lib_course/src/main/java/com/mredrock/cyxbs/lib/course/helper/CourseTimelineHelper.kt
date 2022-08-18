@@ -3,7 +3,7 @@ package com.mredrock.cyxbs.lib.course.helper
 import android.graphics.Canvas
 import android.graphics.Paint
 import android.view.View
-import com.mredrock.cyxbs.lib.course.view.ICourseLayout
+import com.mredrock.cyxbs.lib.course.view.course.ICourseLayout
 import com.mredrock.cyxbs.lib.course.view.course.base.AbstractCourseLayout
 import com.mredrock.cyxbs.lib.course.view.course.base.CourseTimeLineImpl
 import com.ndhzs.netlayout.draw.ItemDecoration
@@ -23,7 +23,7 @@ import com.ndhzs.netlayout.draw.ItemDecoration
  * @email 2767465918@qq.com
  * @date 2022/2/6 15:21
  */
-class CourseTimelineHelper(
+class CourseTimelineHelper internal constructor(
   private val course: ICourseLayout
 ) : ItemDecoration {
   

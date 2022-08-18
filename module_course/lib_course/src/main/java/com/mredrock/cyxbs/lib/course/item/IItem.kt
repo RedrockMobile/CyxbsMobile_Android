@@ -1,8 +1,7 @@
 package com.mredrock.cyxbs.lib.course.item
 
 import android.view.View
-import com.ndhzs.netlayout.attrs.INetBean
-import com.ndhzs.netlayout.attrs.NetLayoutParams
+import com.mredrock.cyxbs.lib.course.view.course.lp.CourseLayoutParam
 
 /**
  * ...
@@ -10,7 +9,7 @@ import com.ndhzs.netlayout.attrs.NetLayoutParams
  * @email guo985892345@foxmail.com
  * @date 2022/8/17 13:07
  */
-interface IItem : INetBean {
+interface IItem : IItemData {
   val view: View
-  val lp: NetLayoutParams
+  val lp: CourseLayoutParam
 }

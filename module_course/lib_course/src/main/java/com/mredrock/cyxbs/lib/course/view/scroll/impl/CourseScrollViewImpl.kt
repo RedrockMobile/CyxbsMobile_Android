@@ -15,5 +15,12 @@ class CourseScrollViewImpl @JvmOverloads constructor(
   attrs: AttributeSet?,
   defStyleAttr: Int = 0
 ) : AbstractCourseScrollView(context, attrs, defStyleAttr) {
-
+  
+  override fun scrollCourseBy(dy: Int) {
+    scrollBy(0, dy)
+  }
+  
+  override fun scrollCourseY(y: Int) {
+    scrollY = y
+  }
 }

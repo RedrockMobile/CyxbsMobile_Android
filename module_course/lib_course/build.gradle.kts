@@ -2,7 +2,7 @@ import com.mredrock.cyxbs.convention.depend.Android
 import com.mredrock.cyxbs.convention.depend.lib.dependLibConfig
 
 plugins {
-  id("module-manager")
+  id("module-debug")
 }
 
 dependLibConfig()
@@ -12,6 +12,7 @@ configurations.all {
 }
 
 dependencies {
+  implementation(Android.`core-ktx`)
   implementation(Android.constraintlayout)
   implementation(Android.viewpager2)
   implementation(Android.`fragment-ktx`)

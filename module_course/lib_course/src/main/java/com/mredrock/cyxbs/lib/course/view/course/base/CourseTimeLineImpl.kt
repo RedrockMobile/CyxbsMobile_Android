@@ -20,7 +20,7 @@ abstract class CourseTimeLineImpl @JvmOverloads constructor(
   attrs: AttributeSet? = null,
   defStyleAttr: Int = R.attr.courseLayoutStyle,
   defStyleRes: Int = 0
-) : CourseFoldImpl(context, attrs, defStyleAttr, defStyleRes), ITimeLine {
+) : CourseScrollControlImpl(context, attrs, defStyleAttr, defStyleRes), ITimeLine {
   
   final override fun isIncludeTimeLine(item: IItem): ColumnInclude {
     val sColumn = isIncludeTimeLine(item.startColumn)
@@ -46,11 +46,11 @@ abstract class CourseTimeLineImpl @JvmOverloads constructor(
     mCourseTimelineHelper.setVisible(boolean)
   }
   
-  override fun getTimeLineStartWidth(): Int {
+  final override fun getTimeLineStartWidth(): Int {
     return getColumnsWidth(0, TIME_LINE_LEFT - 1)
   }
   
-  override fun getTimeLineEndWidth(): Int {
+  final override fun getTimeLineEndWidth(): Int {
     return getColumnsWidth(0, TIME_LINE_RIGHT)
   }
   
@@ -108,29 +108,29 @@ abstract class CourseTimeLineImpl @JvmOverloads constructor(
     }
   }
   
-  override fun getLessonStartHeight(num: Int): Int {
+  final override fun getLessonStartHeight(num: Int): Int {
     require(num >= 1)
     return getRowsHeight(0, transformLessonToNode(num) - 1)
   }
   
-  override fun getLessonEndHeight(num: Int): Int {
+  final override fun getLessonEndHeight(num: Int): Int {
     require(num >= 1)
     return getRowsHeight(0, transformLessonToNode(num))
   }
   
-  override fun getNoonStartHeight(): Int {
+  final override fun getNoonStartHeight(): Int {
     return getRowsHeight(0, NOON_TOP - 1)
   }
   
-  override fun getNoonEndHeight(): Int {
+  final override fun getNoonEndHeight(): Int {
     return getRowsHeight(0, NOON_BOTTOM)
   }
   
-  override fun getDuskStartHeight(): Int {
+  final override fun getDuskStartHeight(): Int {
     return getRowsHeight(0, DUSK_TOP - 1)
   }
   
-  override fun getDuskEndHeight(): Int {
+  final override fun getDuskEndHeight(): Int {
     return getRowsHeight(0, DUSK_BOTTOM)
   }
   
@@ -276,36 +276,32 @@ abstract class CourseTimeLineImpl @JvmOverloads constructor(
   
     /**
      * 转换课的节数为控件中对应的行数
-     *
-     * @param num -1 为 中午；-2 为 傍晚
      */
     fun transformLessonToNode(num: Int): Int {
-      require(num in 1 .. 12 || num == -1 || num == -2)
+      require(num in 1 .. 12)
       return when (num) {
-        -1 -> 4
-        -2 -> 9
         in 1 .. 4 -> num - 1
         in 5 .. 8 -> num
         in 9 .. 12 -> num + 1
         else -> error("不应该出现的错误，num = $num")
       }
     }
-  
-    /**
-     * 转换控件中对应的行数为课的节数
-     *
-     * @return -1 为 中午；-2 为 傍晚
-     */
-    fun transformNodeToLesson(node: Int): Int {
-      require(node in 0 .. 13)
-      return when (node) {
-        4 -> -1
-        9 -> -2
-        in 0 .. 3 -> node + 1
-        in 5 .. 8 -> node
-        in 10 .. 13 -> node + 1
-        else -> error("不应该出现的错误，node = $node")
-      }
-    }
+//
+//    /**
+//     * 转换控件中对应的行数为课的节数
+//     *
+//     * @return -1 为 中午；-2 为 傍晚
+//     */
+//    fun transformNodeToLesson(node: Int): Int {
+//      require(node in 0 .. 13)
+//      return when (node) {
+//        4 -> -1
+//        9 -> -2
+//        in 0 .. 3 -> node + 1
+//        in 5 .. 8 -> node
+//        in 10 .. 13 -> node + 1
+//        else -> error("不应该出现的错误，node = $node")
+//      }
+//    }
   }
 }

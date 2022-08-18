@@ -17,7 +17,7 @@ import com.mredrock.cyxbs.lib.course.period.dusk.IDuskItem
 import com.mredrock.cyxbs.lib.course.period.night.INightItem
 import com.mredrock.cyxbs.lib.course.period.noon.INoonItem
 import com.mredrock.cyxbs.lib.course.period.pm.IPmItem
-import com.mredrock.cyxbs.lib.course.view.ICourseContainer
+import com.mredrock.cyxbs.lib.course.view.course.ICourseContainer
 import com.ndhzs.netlayout.attrs.NetLayoutParams
 
 /**
@@ -115,27 +115,27 @@ abstract class CourseContainerImpl @JvmOverloads constructor(
   
   
   
-  @Deprecated("禁止子类调用", level = DeprecationLevel.ERROR)
+  @Deprecated("禁止子类调用", level = DeprecationLevel.HIDDEN)
   final override fun addItem(item: View, lp: NetLayoutParams) {
     super.addItem(item, lp)
   }
   
-  @Deprecated("禁止子类调用", level = DeprecationLevel.ERROR)
+  @Deprecated("禁止子类调用", level = DeprecationLevel.HIDDEN)
   final override fun addView(child: View?) {
     super.addView(child)
   }
   
-  @Deprecated("禁止子类调用", level = DeprecationLevel.ERROR)
+  @Deprecated("禁止子类调用", level = DeprecationLevel.HIDDEN)
   final override fun addView(child: View?, index: Int) {
     super.addView(child, index)
   }
   
-  @Deprecated("禁止子类调用", level = DeprecationLevel.ERROR)
+  @Deprecated("禁止子类调用", level = DeprecationLevel.HIDDEN)
   final override fun addView(child: View?, width: Int, height: Int) {
     super.addView(child, width, height)
   }
   
-  @Deprecated("禁止子类调用", level = DeprecationLevel.ERROR)
+  @Deprecated("禁止子类调用", level = DeprecationLevel.HIDDEN)
   final override fun addView(child: View?, params: LayoutParams?) {
     super.addView(child, params)
   }

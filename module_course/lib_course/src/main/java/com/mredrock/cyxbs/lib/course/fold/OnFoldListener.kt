@@ -1,7 +1,7 @@
 package com.mredrock.cyxbs.lib.course.fold
 
 import android.animation.ValueAnimator
-import com.mredrock.cyxbs.lib.course.view.course.base.AbstractCourseLayout
+import com.mredrock.cyxbs.lib.course.view.course.ICourseLayout
 
 /**
  * ...
@@ -13,52 +13,52 @@ interface OnFoldListener {
   /**
    * 折叠动画开始
    */
-  fun onFoldStart(course: AbstractCourseLayout) {}
+  fun onFoldStart(course: ICourseLayout) {}
   
   /**
    * 折叠动画中
    * @param fraction [ValueAnimator.getAnimatedFraction]
    */
-  fun onFolding(course: AbstractCourseLayout, fraction: Float) {}
+  fun onFolding(course: ICourseLayout, fraction: Float) {}
   
   /**
    * 折叠动画结束
    */
-  fun onFoldEnd(course: AbstractCourseLayout) {}
+  fun onFoldEnd(course: ICourseLayout) {}
   
   /**
    * 折叠动画被取消
    */
-  fun onFoldCancel(course: AbstractCourseLayout) {}
+  fun onFoldCancel(course: ICourseLayout) {}
   
   /**
    * 不带动画的直接折叠
    */
-  fun onFoldWithoutAnim(course: AbstractCourseLayout) {}
+  fun onFoldWithoutAnim(course: ICourseLayout) {}
   
   /**
    * 展开动画开始
    */
-  fun onUnfoldStart(course: AbstractCourseLayout) {}
+  fun onUnfoldStart(course: ICourseLayout) {}
   
   /**
    * 展开动画中
    * @param fraction [ValueAnimator.getAnimatedFraction]
    */
-  fun onUnfolding(course: AbstractCourseLayout, fraction: Float) {}
+  fun onUnfolding(course: ICourseLayout, fraction: Float) {}
   
   /**
    * 展开开动画结束
    */
-  fun onUnfoldEnd(course: AbstractCourseLayout) {}
+  fun onUnfoldEnd(course: ICourseLayout) {}
   
   /**
    * 展开动画被取消
    */
-  fun onUnfoldCancel(course: AbstractCourseLayout) {}
+  fun onUnfoldCancel(course: ICourseLayout) {}
   
   /**
    * 不带动画的直接展开
    */
-  fun onUnfoldWithoutAnim(course: AbstractCourseLayout) {}
+  fun onUnfoldWithoutAnim(course: ICourseLayout) {}
 }
