@@ -12,7 +12,6 @@
         android:id="@+id/course_tv_month"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:text="1月"
         android:textSize="16dp"
         android:textColor="@color/config_level_one_font_color"
         android:gravity="center"
@@ -20,6 +19,7 @@
         app:net_layout_endRow="0"
         app:net_layout_startColumn="0"
         app:net_layout_endColumn="0"
+        tools:text="1月"
         tools:ignore="HardcodedText,SpUsage" />
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -258,7 +258,7 @@
             android:layout_height="wrap_content"
             android:textColor="@color/config_level_one_font_color"
             android:textSize="12dp"
-            android:text="周天"
+            android:text="周日"
             app:layout_constraintBottom_toTopOf="@+id/course_tv_sun_month"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"

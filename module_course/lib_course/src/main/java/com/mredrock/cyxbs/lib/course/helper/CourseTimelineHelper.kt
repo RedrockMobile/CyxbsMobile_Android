@@ -31,11 +31,13 @@ class CourseTimelineHelper internal constructor(
    * 设置是否显示当前时间线
    */
   fun setVisible(boolean: Boolean) {
-    mVisible = boolean
-    course.invalidate()
-    mRefreshRunnable.cancel()
-    if (boolean) {
-      mRefreshRunnable.start()
+    if (mVisible != boolean) {
+      mVisible = boolean
+      if (boolean) {
+        mRefreshRunnable.start()
+      } else {
+        mRefreshRunnable.cancel()
+      }
     }
   }
   
@@ -60,11 +62,13 @@ class CourseTimelineHelper internal constructor(
     }
     
     fun start() {
+      course.removeCallbacks(this)
       run()
     }
     
     fun cancel() {
       course.removeCallbacks(this)
+      course.invalidate()
     }
   }
   

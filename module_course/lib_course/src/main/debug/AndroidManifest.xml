@@ -3,11 +3,11 @@
     package="com.mredrock.cyxbs.lib.course">
 
     <application
-        android:name="lib.course.app.DebugApp"
+        android:name="com.mredrock.cyxbs.lib.base.BaseApp"
         android:allowBackup="true"
         android:supportsRtl="true"
         android:label="lib_course"
-        android:theme="@style/Theme.AppCompat.DayNight">
+        android:theme="@style/AppTheme">
         <activity android:name="lib.course.ui.DebugActivity"
             android:exported="true">
             <intent-filter>

@@ -1,10 +1,14 @@
 import com.mredrock.cyxbs.convention.depend.Android
+import com.mredrock.cyxbs.convention.depend.lib.dependLibBase
 import com.mredrock.cyxbs.convention.depend.lib.dependLibConfig
+import com.mredrock.cyxbs.convention.depend.lib.dependLibUtils
 
 plugins {
   id("module-debug")
 }
 
+dependLibBase()
+dependLibUtils()
 dependLibConfig()
 
 configurations.all {

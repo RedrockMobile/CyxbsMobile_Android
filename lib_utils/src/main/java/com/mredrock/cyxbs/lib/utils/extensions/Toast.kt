@@ -7,7 +7,6 @@ import android.view.LayoutInflater
 import android.view.View
 import android.widget.TextView
 import android.widget.Toast
-import androidx.annotation.StringRes
 import com.mredrock.cyxbs.lib.utils.BuildConfig
 import com.mredrock.cyxbs.lib.utils.R
 
@@ -28,14 +27,6 @@ fun toastLong(s: CharSequence?) {
 
 fun String.toast() = toast(this)
 fun String.toastLong() = toastLong(this)
-
-interface ToastUtils {
-  fun toast(s: CharSequence?) = CyxbsToast.show(appContext, s, Toast.LENGTH_SHORT)
-  fun toastLong(s: CharSequence?) = CyxbsToast.show(appContext, s, Toast.LENGTH_LONG)
-  fun String.toast() = toast(this)
-  fun String.toastLong() = toastLong(this)
-  fun toast(@StringRes id: Int) = toast(appContext.getString(id))
-}
 
 class CyxbsToast {
   companion object {
