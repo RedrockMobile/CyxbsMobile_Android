@@ -7,7 +7,8 @@ import android.view.View
 import android.view.ViewConfiguration
 import android.view.ViewGroup
 import androidx.core.util.forEach
-import com.mredrock.cyxbs.lib.course.view.course.ICourseLayout
+import com.mredrock.cyxbs.lib.course.internal.item.IItem
+import com.mredrock.cyxbs.lib.course.internal.view.course.ICourseLayout
 import com.ndhzs.netlayout.touch.multiple.IPointerDispatcher
 import com.ndhzs.netlayout.touch.multiple.IPointerTouchHandler
 import com.ndhzs.netlayout.touch.multiple.event.IPointerEvent
@@ -21,27 +22,29 @@ import kotlin.math.pow
  * @email guo985892345@foxmail.com
  * @date 2022/8/18 13:12
  */
-abstract class CourseDownAnimDispatcher(
+open class CourseDownAnimDispatcher(
   val course: ICourseLayout
 ) : IPointerDispatcher {
   
   /**
    * 是否需要动画
    */
-  abstract fun isNeedAnim(item: View): Boolean
+  open fun isNeedAnim(item: IItem): Boolean {
+    return item.isLessonItem || item.isAffairItem
+  }
   
-  override fun isPrepareToIntercept(event: IPointerEvent, view: ViewGroup): Boolean {
+  final override fun isPrepareToIntercept(event: IPointerEvent, view: ViewGroup): Boolean {
     return false
   }
   
-  override fun getInterceptHandler(event: IPointerEvent, view: ViewGroup): IPointerTouchHandler? {
+  final override fun getInterceptHandler(event: IPointerEvent, view: ViewGroup): IPointerTouchHandler? {
     return null
   }
   
   private var mTouchSlop = ViewConfiguration.get(course.getContext()).scaledTouchSlop
   private val mViewWithRawPointById = SparseArray<Pair<View, Point>>()
   
-  override fun onDispatchTouchEvent(event: MotionEvent, view: ViewGroup) {
+  final override fun onDispatchTouchEvent(event: MotionEvent, view: ViewGroup) {
     when (event.actionMasked) {
       MotionEvent.ACTION_DOWN,
       MotionEvent.ACTION_POINTER_DOWN -> {
@@ -51,10 +54,10 @@ abstract class CourseDownAnimDispatcher(
         val y = event.getY(index).toInt()
         val rawX = getRawX(index, event).toInt()
         val rawY = getRawY(index, event).toInt()
-        val child = course.findItemUnderByXY(x, y) ?: return
-        if (isNeedAnim(child)) {
-          mViewWithRawPointById[id] = Pair(child, Point(rawX, rawY))
-          startAnim(child)
+        val item = course.findItemUnderByXY(x, y) ?: return
+        if (isNeedAnim(item)) {
+          mViewWithRawPointById[id] = Pair(item.view, Point(rawX, rawY))
+          startAnim(item.view)
         }
       }
       MotionEvent.ACTION_MOVE -> {
@@ -75,8 +78,7 @@ abstract class CourseDownAnimDispatcher(
           }
         }
       }
-      MotionEvent.ACTION_POINTER_UP,
-      MotionEvent.ACTION_UP -> {
+      MotionEvent.ACTION_POINTER_UP -> {
         val index = event.actionIndex
         val id = event.getPointerId(index)
         val pair = mViewWithRawPointById[id]
@@ -86,7 +88,7 @@ abstract class CourseDownAnimDispatcher(
           mViewWithRawPointById.remove(id)
         }
       }
-      MotionEvent.ACTION_CANCEL -> {
+      MotionEvent.ACTION_CANCEL, MotionEvent.ACTION_UP -> {
         mViewWithRawPointById.forEach { _, value ->
           recoverAnim(value.first)
         }

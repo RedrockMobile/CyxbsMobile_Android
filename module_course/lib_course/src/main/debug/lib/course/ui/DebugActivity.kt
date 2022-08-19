@@ -4,7 +4,7 @@ import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.FragmentContainerView
 import androidx.fragment.app.commit
-import com.mredrock.cyxbs.lib.course.CoursePageFragment
+import com.mredrock.cyxbs.lib.course.CoursePageFragmentImpl
 
 /**
  * ...
@@ -22,7 +22,7 @@ class DebugActivity : AppCompatActivity() {
     fcv.id = 78362892
     if (savedInstanceState == null) {
       supportFragmentManager.commit {
-        replace(fcv.id, CoursePageFragment())
+        replace(fcv.id, CoursePageFragmentImpl())
       }
     }
   }

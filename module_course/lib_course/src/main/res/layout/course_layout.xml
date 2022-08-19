@@ -14,12 +14,12 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
-        <com.mredrock.cyxbs.lib.course.view.scroll.impl.CourseScrollViewImpl
+        <com.mredrock.cyxbs.lib.course.internal.view.scroll.impl.CourseScrollViewImpl
             android:id="@+id/course_scrollView"
             android:layout_width="match_parent"
             android:layout_height="match_parent">
 
-            <com.mredrock.cyxbs.lib.course.view.course.CourseLayout
+            <com.mredrock.cyxbs.lib.course.internal.view.course.CourseLayout
                 android:id="@+id/course_courseLayout"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -28,6 +28,7 @@
                 app:net_columnCount="8" >
 
                 <TextView
+                    android:id="@+id/course_tv_lesson_1"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:text="1"
@@ -43,6 +44,7 @@
                     tools:ignore="HardcodedText,SpUsage" />
 
                 <TextView
+                    android:id="@+id/course_tv_lesson_2"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:text="2"
@@ -57,6 +59,7 @@
                     tools:ignore="HardcodedText,SpUsage" />
 
                 <TextView
+                    android:id="@+id/course_tv_lesson_3"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:text="3"
@@ -71,6 +74,7 @@
                     tools:ignore="HardcodedText,SpUsage" />
 
                 <TextView
+                    android:id="@+id/course_tv_lesson_4"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:text="4"
@@ -85,6 +89,7 @@
                     tools:ignore="HardcodedText,SpUsage" />
 
                 <TextView
+                    android:id="@+id/course_tv_lesson_5"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:text="5"
@@ -99,6 +104,7 @@
                     tools:ignore="HardcodedText,SpUsage" />
 
                 <TextView
+                    android:id="@+id/course_tv_lesson_6"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:text="6"
@@ -113,6 +119,7 @@
                     tools:ignore="HardcodedText,SpUsage" />
 
                 <TextView
+                    android:id="@+id/course_tv_lesson_7"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:text="7"
@@ -127,6 +134,7 @@
                     tools:ignore="HardcodedText,SpUsage" />
 
                 <TextView
+                    android:id="@+id/course_tv_lesson_8"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:text="8"
@@ -141,6 +149,7 @@
                     tools:ignore="HardcodedText,SpUsage" />
 
                 <TextView
+                    android:id="@+id/course_tv_lesson_9"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:text="9"
@@ -155,6 +164,7 @@
                     tools:ignore="HardcodedText,SpUsage" />
 
                 <TextView
+                    android:id="@+id/course_tv_lesson_10"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:text="10"
@@ -169,6 +179,7 @@
                     tools:ignore="HardcodedText,SpUsage" />
 
                 <TextView
+                    android:id="@+id/course_tv_lesson_11"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:text="11"
@@ -183,6 +194,7 @@
                     tools:ignore="HardcodedText,SpUsage" />
 
                 <TextView
+                    android:id="@+id/course_tv_lesson_12"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:text="12"
@@ -197,6 +209,7 @@
                     tools:ignore="HardcodedText,SpUsage" />
 
                 <TextView
+                    android:id="@+id/course_tv_noon"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:text="中\n午"
@@ -211,6 +224,7 @@
                     tools:ignore="HardcodedText,SpUsage" />
 
                 <TextView
+                    android:id="@+id/course_tv_dusk"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:text="下\n午"
@@ -274,31 +288,40 @@
                     app:net_layout_endColumn="0"
                     tools:ignore="ContentDescription" />
 
-            </com.mredrock.cyxbs.lib.course.view.course.CourseLayout>
-        </com.mredrock.cyxbs.lib.course.view.scroll.impl.CourseScrollViewImpl>
+            </com.mredrock.cyxbs.lib.course.internal.view.course.CourseLayout>
+        </com.mredrock.cyxbs.lib.course.internal.view.scroll.impl.CourseScrollViewImpl>
 
-        <ImageView
-            android:id="@+id/course_iv_no_lesson"
-            android:layout_width="210dp"
-            android:layout_height="130dp"
-            android:layout_gravity="center"
-            android:layout_marginBottom="20dp"
-            android:src="@drawable/config_ic_empty_holder"
-            tools:ignore="ContentDescription"
-            app:layout_constraintEnd_toEndOf="@+id/course_tv_no_lesson"
-            app:layout_constraintBottom_toTopOf="@+id/course_tv_no_lesson"
-            app:layout_constraintStart_toStartOf="@+id/course_tv_no_lesson" />
-
-        <TextView
-            android:id="@+id/course_tv_no_lesson"
+        <LinearLayout
+            android:id="@+id/course_ll_no_lesson"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="一片寂静"
-            tools:ignore="HardcodedText"
+            android:orientation="vertical"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintVertical_bias="0.3">
 
+            <ImageView
+                android:layout_width="210dp"
+                android:layout_height="130dp"
+                android:layout_gravity="center"
+                android:scaleType="centerCrop"
+                android:src="@drawable/config_ic_empty_holder"
+                tools:ignore="ContentDescription" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="20dp"
+                android:text="一片寂静"
+                android:layout_gravity="center_horizontal"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                tools:ignore="HardcodedText" />
+
+        </LinearLayout>
     </androidx.constraintlayout.widget.ConstraintLayout>
 </LinearLayout>

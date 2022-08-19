@@ -3,9 +3,9 @@ package com.mredrock.cyxbs.lib.course.helper
 import android.graphics.Canvas
 import android.graphics.Paint
 import android.view.View
-import com.mredrock.cyxbs.lib.course.view.course.ICourseLayout
-import com.mredrock.cyxbs.lib.course.view.course.base.AbstractCourseLayout
-import com.mredrock.cyxbs.lib.course.view.course.base.CourseTimeLineImpl
+import com.mredrock.cyxbs.lib.course.internal.view.course.ICourseLayout
+import com.mredrock.cyxbs.lib.course.internal.view.course.base.AbstractCourseLayout
+import com.mredrock.cyxbs.lib.course.internal.view.course.base.CourseTimeLineImpl
 import com.ndhzs.netlayout.draw.ItemDecoration
 
 /**

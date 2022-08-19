@@ -3,12 +3,12 @@ package com.mredrock.cyxbs.lib.course.helper
 import android.util.SparseIntArray
 import android.view.MotionEvent
 import android.view.ViewGroup
-import com.mredrock.cyxbs.lib.course.view.course.ICourseScrollControl
+import com.mredrock.cyxbs.lib.course.internal.view.course.ICourseScrollControl
 import com.ndhzs.netlayout.touch.multiple.IPointerTouchHandler
 import com.ndhzs.netlayout.touch.multiple.event.IPointerEvent
 
 /**
- * ...
+ * 是课表滚轴滚动的 Handler
  *
  * @author 985892345 (Guo Xiangrui)
  * @email guo985892345@foxmail.com
