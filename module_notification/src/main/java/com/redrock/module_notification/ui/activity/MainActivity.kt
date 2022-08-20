@@ -135,12 +135,12 @@ class MainActivity : BaseViewModelActivity<NotificationViewModel>() {
                 popupWindow = buildLoadMoreWindow {
                     context = this@MainActivity
                     window = this@MainActivity.window
-                    layoutRes = R.layout.notification_popupwindow_dots_sys
+                    layoutRes = R.layout.notification_popupwindow_dots_act
                     Height = dp2px(80.toFloat())
                 }
 
                 popupWindow.apply {
-                    setOnItemClickListener(R.id.notification_ll_home_popup_fast_read_sys) {
+                    setOnItemClickListener(R.id.notification_ll_home_popup_fast_read_act) {
                         viewModel.changeMsgStatus(ChangeReadStatusToBean(allUnreadActiveMsgIds))
                         viewModel.changeActiveDotStatus(false)
                     }

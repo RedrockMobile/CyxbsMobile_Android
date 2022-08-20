@@ -1,7 +1,6 @@
 package com.redrock.module_notification.network
 
 import com.mredrock.cyxbs.common.bean.RedrockApiWrapper
-import com.mredrock.cyxbs.mine.network.model.ScoreStatus
 import com.redrock.module_notification.bean.*
 import io.reactivex.rxjava3.core.Observable
 import retrofit2.http.*
