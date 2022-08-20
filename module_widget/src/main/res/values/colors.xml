@@ -14,6 +14,9 @@
     <color name="widget_bg_title">#2A4E84</color>
     <!--课表背景颜色-->
     <color name="widget_course_background">#ffffff</color>
+    <!--同学背景颜色-->
+    <color name="widget_other_course_background">#94A6C4</color>
+
 
     <!--课表item背景颜色-->
     <color name="widget_morning_item_background">#F9E7D8</color>

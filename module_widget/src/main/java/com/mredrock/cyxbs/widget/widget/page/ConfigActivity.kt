@@ -6,7 +6,6 @@ import com.alibaba.android.arouter.facade.annotation.Route
 import com.mredrock.cyxbs.config.route.WIDGET_SETTING
 import com.mredrock.cyxbs.lib.base.ui.BaseActivity
 import com.mredrock.cyxbs.widget.R
-import com.mredrock.cyxbs.widget.widget.page.little.LittleConfigActivity
 import com.mredrock.cyxbs.widget.widget.page.normal.NormalConfigActivity
 import kotlinx.android.synthetic.main.widget_activity_config.*
 
@@ -21,14 +20,6 @@ class ConfigActivity : BaseActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.widget_activity_config)
-        /*widget_config_littleTransLayout.setOnClickListener {
-            startActivity(Intent(this@ConfigActivity, TransConfigActivity::class.java))
-        }*/
-
-        widget_config_littleLayout.setOnClickListener {
-            startActivity(Intent(this@ConfigActivity, LittleConfigActivity::class.java))
-        }
-
         widget_config_normalLayout.setOnClickListener {
             startActivity(Intent(this@ConfigActivity, NormalConfigActivity::class.java))
         }

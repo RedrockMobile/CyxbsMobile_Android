@@ -7,12 +7,7 @@
             android:name=".widget.page.normal.NormalSelectActivity"
             android:theme="@style/widget_Theme"/>
         <activity android:name=".widget.page.ConfigActivity" />
-        <!--<activity
-            android:name=".widget.page.trans.TransConfigActivity"
-            android:windowSoftInputMode="adjustPan" />-->
-        <activity android:name=".widget.page.little.LittleConfigActivity" />
         <activity android:name=".widget.page.normal.NormalConfigActivity" />
-
         <activity
             android:name=".widget.page.oversized.OversizedAppWidgetConfigureActivity"
             android:theme="@style/widget_Theme"
@@ -21,35 +16,6 @@
                 <action android:name="android.appwidget.action.APPWIDGET_CONFIGURE" />
             </intent-filter>
         </activity>
-
-        <!--  LittleSize小组件-->
-        <!--<receiver
-            android:name=".widget.little.LittleWidget"
-            android:label="课程显示(小)"
-            android:exported="false">
-            <intent-filter>
-                <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
-            </intent-filter>
-
-            <meta-data
-                android:name="android.appwidget.provider"
-                android:resource="@xml/widget_little" />
-        </receiver>
-
-
-        <receiver
-            android:name=".widget.little.LittleTransWidget"
-            android:label="课程透明显示(小)"
-            android:exported="false">
-            <intent-filter>
-                <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
-            </intent-filter>
-
-            <meta-data
-                android:name="android.appwidget.provider"
-                android:resource="@xml/widget_little_trans" />
-        </receiver>
-
 
         <receiver
             android:name=".widget.normal.NormalWidget"
@@ -62,7 +28,7 @@
             <meta-data
                 android:name="android.appwidget.provider"
                 android:resource="@xml/widget_normal" />
-        </receiver>-->
+        </receiver>
 
         <service
             android:name=".service.GridWidgetService"

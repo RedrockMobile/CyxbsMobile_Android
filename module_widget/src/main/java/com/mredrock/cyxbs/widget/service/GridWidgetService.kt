@@ -2,7 +2,6 @@ package com.mredrock.cyxbs.widget.service
 
 import android.content.Context
 import android.content.Intent
-import android.util.Log
 import android.view.View
 import android.widget.RemoteViews
 import android.widget.RemoteViewsService
@@ -100,7 +99,10 @@ class GridWidgetService : RemoteViewsService() {
                 val mPosition = position - 7
                 val lesson = mSchedulesArray[mPosition / 7][mPosition % 7]
                 if (lesson == null) {
-                    if (affairs[mPosition / 7][mPosition % 7] != null)
+                    if (otherLessons[mPosition / 7][mPosition % 7] != null)
+                    /** 如果有同学的课，设置other_course的背景*/
+                        getOtherLessonRV(mPosition,position)
+                    else if (affairs[mPosition / 7][mPosition % 7] != null)
                     /** 如果是事务，设置事务的背景*/
                         RemoteViews(mContext.packageName, R.layout.widget_grid_view_item_affair)
                     else
@@ -136,6 +138,23 @@ class GridWidgetService : RemoteViewsService() {
                     return remoteViews
                 }
             }
+            return remoteViews
+        }
+        /**生成同学课表对应的RemoteView
+         * */
+        private fun getOtherLessonRV(mPosition: Int, position: Int): RemoteViews {
+            val remoteViews = RemoteViews(mContext.packageName, R.layout.widget_grid_view_item_other_course)
+            val lesson = otherLessons[mPosition / 7][mPosition % 7]
+            /**如果有事务，则在上面添加小红点*/
+            remoteViews.setViewVisibility(R.id.affair, View.GONE)
+            if (affairs[mPosition / 7][mPosition % 7] != null) {
+                remoteViews.setViewVisibility(R.id.affair, View.VISIBLE)
+            }
+            remoteViews.setTextViewText(R.id.top, lesson!!.course)
+            remoteViews.setTextViewText(R.id.bottom,
+                ClassRoomParse.parseClassRoom(lesson.classroom))
+            remoteViews.setOnClickFillInIntent(R.id.background,
+                Intent().putExtra("POSITION", position))
             return remoteViews
         }
 

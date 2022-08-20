@@ -7,6 +7,7 @@ import android.content.ComponentName
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import android.view.View
 import android.widget.RemoteViews
 import android.widget.Toast
@@ -21,6 +22,7 @@ import com.mredrock.cyxbs.widget.repo.database.LessonDatabase
 import com.mredrock.cyxbs.widget.repo.database.LessonDatabase.Companion.MY_STU_NUM
 import com.mredrock.cyxbs.widget.util.*
 import java.util.*
+import kotlin.concurrent.thread
 
 /**
  * Created by zia on 2018/10/10.
@@ -173,60 +175,51 @@ class NormalWidget : AppWidgetProvider() {
 
 
     private fun fresh(context: Context, offsetTime: Int) {
-        try {//catch异常，避免课表挂了之后这边跟着挂
-            val rv = RemoteViews(context.packageName, R.layout.widget_normal)
-            initView(rv, context)
-            calendar.set(Calendar.DATE, calendar.get(Calendar.DATE) + offsetTime)
-            //获取数据
-            list = getLessonByCalendar(context, calendar)
-                ?: getErrorLessonList()
+        thread {//要通过数据库获取数据，所以新开一条线程
+            try {//catch异常，避免课表挂了之后这边跟着挂
+                val rv = RemoteViews(context.packageName, R.layout.widget_normal)
+                initView(rv, context)
+                calendar.set(Calendar.DATE, calendar.get(Calendar.DATE) + offsetTime)
+                //获取数据
+                list = getLessonByCalendar(context, calendar)
+                    ?: getErrorLessonList()
 
 
-            //显示星期几
-            val text =
-                if (Calendar.getInstance()[Calendar.DAY_OF_WEEK] == calendar[Calendar.DAY_OF_WEEK]) "今" else getWeekDayChineseName(
-                    calendar.get(Calendar.DAY_OF_WEEK)
-                )
-            rv.setTextViewText(R.id.widget_normal_title, text)
-
-            //显示课程
-            list.forEach { lesson ->
-                val num = lesson.beginLesson + 1
-                if (lesson.period == 2) {
-                    rv.setTextViewText(getCourseId(num), lesson.course)
-                    rv.setTextViewText(getRoomId(num), filterClassRoom(lesson.classroom))
-                    rv.setOnClickPendingIntent(
-                        getLayoutId(num),
-                        getClickPendingIntent(context, getLayoutId(num), "btn.start.com", javaClass)
+                //显示星期几
+                val text =
+                    if (Calendar.getInstance()[Calendar.DAY_OF_WEEK] == calendar[Calendar.DAY_OF_WEEK]) "今" else getWeekDayChineseName(
+                        calendar.get(Calendar.DAY_OF_WEEK)
                     )
-                } else if (lesson.period == 3) {
-                    setMoreView(num, rv, lesson, context)
+                rv.setTextViewText(R.id.widget_normal_title, text)
 
-                } else if (lesson.period == 4) {
-                    setMoreView(num, rv, lesson, context)
-                    rv.setViewVisibility(getMoreViewId((num + 1) / 2), View.GONE)
+                //显示课程
+                list.forEach { lesson ->
+                    val num = lesson.beginLesson/2 + 1
+                    if (lesson.period == 2) {
+                        rv.setTextViewText(getCourseId(num), lesson.course)
+                        rv.setTextViewText(getRoomId(num), filterClassRoom(lesson.classroom))
+                        /*rv.setOnClickPendingIntent(
+                            getLayoutId(num),
+                            getClickPendingIntent(context, getLayoutId(num), "btn.start.com", javaClass)
+                        )*/
+                    } else if (lesson.period == 3) {
+                        setMoreView(num, rv, lesson, context)
+
+                    } else if (lesson.period == 4) {
+                        setMoreView(num, rv, lesson, context)
+                        rv.setViewVisibility(getMoreViewId((num + 1) / 2), View.GONE)
+                    }
+
                 }
 
+                //设置前后按钮操作
+                addClickPendingIntent(rv, context)
+
+                show(rv, context)
+                defaultSp.edit { putString(courseData, gson.toJson(list)) }
+            } catch (e: Exception) {
+                e.printStackTrace()
             }
-
-            val listLesson = list.map { it.beginLesson }
-            MutableList(6) { it }.filter { !listLesson.contains(it) }.forEach {
-                val num = it + 1
-                rv.setTextViewText(getCourseId(num), "")
-                rv.setTextViewText(getRoomId(num), "")
-                rv.setOnClickPendingIntent(
-                    getLayoutId(num),
-                    getClickPendingIntent(context, getLayoutId(num), "", javaClass)
-                )
-            }
-
-            //设置前后按钮操作
-            addClickPendingIntent(rv, context)
-
-            show(rv, context)
-            defaultSp.edit { putString(courseData, gson.toJson(list)) }
-        } catch (e: Exception) {
-            e.printStackTrace()
         }
     }
 

@@ -70,7 +70,7 @@ open class SchoolCalendar {
             if (weeks >= 0) {
                 weeks++
             }
-            return 3
+            return weeks
         }
 
     private fun getDeltaT(end: Calendar, begin: Calendar): Int {
