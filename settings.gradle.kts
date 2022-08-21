@@ -1,5 +1,6 @@
 @file:Suppress("UnstableApiUsage")
 
+include(":module_mine:api_mine")
 
 
 /*

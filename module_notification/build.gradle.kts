@@ -1,4 +1,6 @@
 import com.mredrock.cyxbs.convention.depend.api.dependApiAccount
+import com.mredrock.cyxbs.convention.depend.api.dependApiMain
+import com.mredrock.cyxbs.convention.depend.api.dependApiMine
 import com.mredrock.cyxbs.convention.depend.dependGlide
 import com.mredrock.cyxbs.convention.depend.dependNetwork
 import com.mredrock.cyxbs.convention.depend.dependRxjava
@@ -12,6 +14,8 @@ plugins {
 
 dependApiAccount()
 
+dependApiMine()
+
 dependNetwork()
 dependRxjava()
 dependGlide()
@@ -24,7 +28,6 @@ dependencies {
     implementation("de.hdodenhof:circleimageview:3.1.0")
     
     // FIXME 中泰写的
-    implementation(project(":module_mine"))
 }
 //
 //dependencies {

@@ -14,8 +14,11 @@ import androidx.work.OneTimeWorkRequestBuilder
 import androidx.work.WorkManager
 import com.alibaba.android.arouter.facade.annotation.Route
 import com.mredrock.cyxbs.common.config.NOTIFICATION_SETTING
+import com.mredrock.cyxbs.common.service.ServiceManager
 import com.mredrock.cyxbs.common.ui.BaseViewModelActivity
-import com.mredrock.cyxbs.mine.page.sign.DailySignActivity
+import com.mredrock.cyxbs.common.utils.extensions.visible
+import com.redrock.api_mine.api.IGetDaySignClassService
+import com.redrock.module_notification.BuildConfig
 import com.redrock.module_notification.R
 import com.redrock.module_notification.util.Constant.IS_SWITCH1_SELECT
 import com.redrock.module_notification.util.Constant.IS_SWITCH2_SELECT
@@ -64,6 +67,9 @@ class SettingActivity : BaseViewModelActivity<NotificationViewModel>() {
     }
 
     private fun initViewClickListener() {
+        if (BuildConfig.DEBUG) {
+            notification_setting_test.visible()
+        }
         notification_setting_test.setOnClickListener {
             val manager =
                 getSystemService(NOTIFICATION_SERVICE) as NotificationManager
@@ -92,8 +98,12 @@ class SettingActivity : BaseViewModelActivity<NotificationViewModel>() {
             //系统状态栏显示的小图标
             builder.setSmallIcon(com.mredrock.cyxbs.common.R.drawable.common_ic_app_notifacation)
             //下拉显示的大图标
-            val intent = Intent(this, DailySignActivity::class.java)
-            val pIntent = PendingIntent.getActivity(this, 1, intent, 0)
+            val intent = Intent(
+                this,
+                ServiceManager.getService(IGetDaySignClassService::class.java)
+                    .getDaySignClassService()
+            )
+            val pIntent = PendingIntent.getActivity(this, 1, intent, PendingIntent.FLAG_IMMUTABLE)
             builder.setContentIntent(pIntent)
             builder.setDefaults(NotificationCompat.DEFAULT_ALL)
             val notification = builder.build()

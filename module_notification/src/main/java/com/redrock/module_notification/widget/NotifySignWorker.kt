@@ -12,7 +12,8 @@ import androidx.work.OneTimeWorkRequestBuilder
 import androidx.work.WorkManager
 import androidx.work.Worker
 import androidx.work.WorkerParameters
-import com.mredrock.cyxbs.mine.page.sign.DailySignActivity
+import com.mredrock.cyxbs.common.service.ServiceManager
+import com.redrock.api_mine.api.IGetDaySignClassService
 import com.redrock.module_notification.util.Constant.NOTIFY_TAG
 import java.util.*
 import java.util.concurrent.TimeUnit
@@ -89,8 +90,9 @@ class NotifySignWorker(
         //系统状态栏显示的小图标
         builder.setSmallIcon(com.mredrock.cyxbs.common.R.drawable.common_ic_app_notifacation)
         //下拉显示的大图标
-        val intent = Intent(ctx, DailySignActivity::class.java)
-        val pIntent = PendingIntent.getActivity(ctx, 1, intent, 0)
+        val intent = Intent(ctx, ServiceManager.getService(IGetDaySignClassService::class.java)
+            .getDaySignClassService())
+        val pIntent = PendingIntent.getActivity(ctx, 1, intent, PendingIntent.FLAG_IMMUTABLE)
         builder.setContentIntent(pIntent)
         builder.setDefaults(NotificationCompat.DEFAULT_ALL)
         val notification = builder.build()
