@@ -29,6 +29,7 @@ import com.mredrock.cyxbs.sport.util.sSpIdsIsBind
  * @author : why
  * @time   : 2022/8/12 17:11
  * @bless  : God bless my code
+ * @description: 首页展示体育打卡数据的fragment
  */
 @Route(path = DISCOVER_SPORT_FEED)
 class DiscoverSportFeedFragment :

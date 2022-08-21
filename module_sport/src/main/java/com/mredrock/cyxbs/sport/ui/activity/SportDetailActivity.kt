@@ -21,6 +21,12 @@ import com.mredrock.cyxbs.sport.ui.viewmodel.SportDetailViewModel
 import com.mredrock.cyxbs.sport.util.sSpIdsIsBind
 import java.util.*
 
+/**
+ * @author : why
+ * @time   : 2022/8/10 18：22
+ * @bless  : God bless my code
+ * @description : 体育打卡点击进入后的详情页面
+ */
 @Route(path = DISCOVER_SPORT)
 class SportDetailActivity : BaseBindActivity<SportActivitySportDetailBinding>() {
 
@@ -40,8 +46,8 @@ class SportDetailActivity : BaseBindActivity<SportActivitySportDetailBinding>() 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         if (!sSpIdsIsBind) {
+            "请先绑定教务在线才能继续使用哦~".toast()
             ARouter.getInstance().build(LOGIN_BIND_IDS).navigation()
-            "请先绑定教务在线才能继续使用哦".toast()
             finish()
         }
         //初始化
