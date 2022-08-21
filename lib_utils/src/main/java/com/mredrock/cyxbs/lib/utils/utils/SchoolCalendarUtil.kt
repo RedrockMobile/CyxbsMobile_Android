@@ -122,7 +122,15 @@ object SchoolCalendarUtil {
    */
   private inline fun <T> checkFirstDay(action: () -> T): T? {
     // 不知道第一天的时间戳，说明之前都没有登录过课表
+    mFirstDayCalendar.timeInMillis = defaultSp.getLong(FIRST_DAY, 0L)
     if (mFirstDayCalendar.timeInMillis == 0L) return null
+    mFirstDayCalendar.apply {
+      // 保证是绝对的第一天的开始
+      set(Calendar.HOUR_OF_DAY, 0)
+      set(Calendar.MINUTE, 0)
+      set(Calendar.SECOND, 0)
+      set(Calendar.MILLISECOND, 0)
+    }
     return action.invoke()
   }
 }
