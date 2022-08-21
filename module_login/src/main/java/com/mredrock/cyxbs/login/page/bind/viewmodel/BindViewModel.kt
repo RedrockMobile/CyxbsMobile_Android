@@ -68,7 +68,7 @@ class BindViewModel : BaseViewModel() {
                         val data = Gson().fromJson(body.string(), IdsStatus::class.java)
                         if (data.errorCode == ERROR) {
                             bindServiceImpl._isBindSuccess.postValue(false)
-                            BaseApp.appContext.toast("账号或密码错误")
+                            BaseApp.appContext.toast("绑定失败")
                         }
                     } else {
                         bindServiceImpl._isBindSuccess.postValue(false)

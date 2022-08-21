@@ -1,22 +1,20 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    app:cardCornerRadius="8dp">
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content">
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="16dp"
-        android:layout_marginEnd="16dp">
+        android:layout_height="487dp"
+        android:paddingStart="23dp"
+        android:paddingEnd="20dp">
 
         <TextView
             android:id="@+id/sport_tv_feed_dialog_title"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="26dp"
             android:text="体育打卡信息说明"
             android:textColor="@color/sport_feed_dialog_text_color"
             android:textSize="18sp"
@@ -41,10 +39,9 @@
 
         <TextView
             android:id="@+id/sport_tv_feed_dialog_content1"
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="8dp"
-            android:maxEms="21"
             android:text="所有信息来源于教务在线，实际请以教务在线为准。"
             android:textColor="@color/sport_feed_dialog_text_color"
             android:textSize="14sp"
@@ -67,10 +64,9 @@
 
         <TextView
             android:id="@+id/sport_tv_feed_dialog_content2"
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="8dp"
-            android:maxEms="21"
             android:text="根据重庆邮电大学体育打卡规定，跑步锻炼可以替代其他锻炼次数。所以关于主页面显示的其他剩余次数减少原因可能时由于其他锻炼造成，也有可能是由跑步锻炼造成。但是其他锻炼不可以代替跑步。"
             android:textColor="@color/sport_feed_dialog_text_color"
             android:textSize="14sp"
@@ -81,10 +77,9 @@
 
         <com.google.android.material.button.MaterialButton
             android:id="@+id/sport_btn_feed_dialog_confirm"
+            style="@style/Widget.MaterialComponents.Button.UnelevatedButton"
             android:layout_width="129dp"
             android:layout_height="34dp"
-            android:layout_marginTop="68dp"
-            android:layout_marginBottom="26dp"
             android:backgroundTint="#4A44E4"
             android:insetTop="0dp"
             android:insetBottom="0dp"
@@ -95,8 +90,7 @@
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/sport_tv_feed_dialog_content2"
             tools:ignore="HardcodedText" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
-</androidx.cardview.widget.CardView>
+</FrameLayout>
