@@ -1,7 +1,5 @@
 @file:Suppress("UnstableApiUsage")
 
-include(":module_mine:api_mine")
-
 
 /*
 * 这里每次新建模块都会 include，把它们删掉，因为已经默认 include 了
