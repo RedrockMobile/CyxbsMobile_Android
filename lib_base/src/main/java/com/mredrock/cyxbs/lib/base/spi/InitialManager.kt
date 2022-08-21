@@ -1,4 +1,4 @@
-package com.mredrock.cyxbs.spi
+package com.mredrock.cyxbs.lib.base.spi
 
 import android.annotation.SuppressLint
 import android.app.ActivityManager
@@ -6,7 +6,6 @@ import android.app.Application
 import android.os.Process
 import android.provider.Settings
 import android.text.TextUtils
-import com.mredrock.cyxbs.BuildConfig
 import java.lang.reflect.InvocationTargetException
 import java.lang.reflect.Method
 
@@ -15,7 +14,7 @@ import java.lang.reflect.Method
  *@time 2022/3/24  12:46
  *@signature 我将追寻并获取我想要的答案
  */
-interface SdkManager {
+interface InitialManager {
     val application: Application
     //currentProcessName中还包含部分不可见字符。所有不可使用equals
     fun isMainProcess(): Boolean  = currentProcessName()?.equals(applicationId()) ?: false
@@ -31,9 +30,9 @@ interface SdkManager {
     }
 
 
-    fun applicationId() = BuildConfig.APPLICATION_ID
-    fun applicationVersion() = BuildConfig.VERSION_NAME
-    fun applicationCode() = BuildConfig.VERSION_CODE
+    fun applicationId() = application.packageName
+    fun applicationVersion() = application.packageManager.getPackageInfo(application.packageName, 0).versionName
+    fun applicationCode() = application.packageManager.getPackageInfo(application.packageName, 0).longVersionCode
     
     /*
      * 使用 androidId 来代替设备 id

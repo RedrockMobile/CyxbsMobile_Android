@@ -23,6 +23,7 @@ object LibDepend {
   const val common = ":lib_common"
   const val config = ":lib_config"
   const val utils = ":lib_utils"
+  const val debug = ":lib_debug"
 }
 
 fun Project.dependLibBase() {
@@ -59,5 +60,16 @@ fun Project.dependLibConfig() {
 fun Project.dependLibUtils() {
   dependencies {
     "implementation"(project(LibDepend.utils))
+  }
+}
+
+/**
+ * 依赖 lib_debug 模块
+ *
+ * 这个模块里面单独放只在 debug 下使用的依赖
+ */
+internal fun Project.debugDependLibDebug() {
+  dependencies {
+    "debugImplementation"(project(LibDepend.debug))
   }
 }

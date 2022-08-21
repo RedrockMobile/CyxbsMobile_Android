@@ -1,10 +1,10 @@
-package com.mredrock.cyxbs.sdks
+package com.mredrock.cyxbs.lib.debug
 
+import com.alibaba.android.arouter.launcher.ARouter
 import com.google.auto.service.AutoService
 import com.mredrock.cyxbs.api.account.IAccountService
-import com.mredrock.cyxbs.lib.utils.service.impl
-import com.mredrock.cyxbs.spi.SdkManager
-import com.mredrock.cyxbs.spi.SdkService
+import com.mredrock.cyxbs.lib.base.spi.InitialManager
+import com.mredrock.cyxbs.lib.base.spi.InitialService
 import tech.linjiang.pandora.Pandora
 import tech.linjiang.pandora.util.SensorDetector
 
@@ -15,9 +15,9 @@ import tech.linjiang.pandora.util.SensorDetector
  * @email guo985892345@foxmail.com
  * @date 2022/7/20 23:52
  */
-@AutoService(SdkService::class)
-class PandoraInitialService: SdkService, SensorDetector.Callback {
-  override fun onMainProcess(manager: SdkManager) {
+@AutoService(InitialService::class)
+class PandoraInitialService: InitialService, SensorDetector.Callback {
+  override fun onMainProcess(manager: InitialManager) {
     super.onMainProcess(manager)
     Pandora.get().disableShakeSwitch() // 取消 Pandora 默认的摇一摇打开方法
     SensorDetector(this)
@@ -31,7 +31,7 @@ class PandoraInitialService: SdkService, SensorDetector.Callback {
     val stuNumSet = setOf(
       "2020214988",
     )
-    val stuNum = IAccountService::class.impl.getUserService().getStuNum()
+    val stuNum = ARouter.getInstance().navigation(IAccountService::class.java).getUserService().getStuNum()
     if (stuNumSet.contains(stuNum)) {
       Pandora.get().open()
     }
