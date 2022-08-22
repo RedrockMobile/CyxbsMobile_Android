@@ -71,6 +71,7 @@ class DiscoverSportFeedFragment :
                 unbound()
             } else {
                 sSpIdsIsBind = true
+                showData()
             }
         }
         //进入首页后对登录和绑定状态进行判断

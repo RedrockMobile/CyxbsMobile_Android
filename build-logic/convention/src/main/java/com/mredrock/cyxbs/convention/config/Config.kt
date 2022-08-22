@@ -18,8 +18,8 @@ object Config {
   const val versionCode = 79 // 线上79，开发80
   const val versionName = "6.5.0" // 线上6.5.0，开发6.5.1
   
-  val releaseAbiFilters = listOf("arm64-v8a","armeabi-v7a")
-  val debugAbiFilters = listOf("arm64-v8a","armeabi-v7a","x86_64")
+  val releaseAbiFilters = listOf("arm64-v8a")
+  val debugAbiFilters = listOf("arm64-v8a","x86_64")
   
   val resourcesExclude = listOf(
     "LICENSE.txt",
