@@ -114,6 +114,8 @@
     <color name="mine_find_password_ids_title">#F1F1F1</color>
     <!--输入框提示语的文字-->
     <color name="mine_find_password_ids_et_hint">#C2C2C2</color>
+    <!--输入框下面的提示文字的颜色-->
+    <color name="mine_find_password_ids_tips">#66FFA2BA</color>
     <!--整个页面的背景颜色-->
     <color name="mine_find_password_ids_background">#191919</color>
     <!--输入框的背景颜色-->
