@@ -4,7 +4,6 @@ import com.mredrock.cyxbs.convention.depend.lib.dependLibBase
 
 plugins {
   id("module-manager")
-  id("pandora-plugin")
 //  id("me.ele.lancet") // CodeLocator 所需要的插件
 }
 
@@ -14,6 +13,7 @@ dependApiAccount()
 dependAutoService()
 
 dependencies {
+  
   // 依赖 LeakCanary，检查内存泄漏 https://github.com/square/leakcanary
   implementation("com.squareup.leakcanary:leakcanary-android:2.9.1")
   
@@ -56,5 +56,4 @@ dependencies {
 //  implementation("com.bytedance.tools.codelocator:codelocator-core:$codeLocatorVersion")
 //  implementation("com.bytedance.tools.codelocator:codelocator-lancet-all:$codeLocatorVersion")
   // CodeLocator 问题比较多，会疯狂抛被抓的异常出来，影响其他异常，加上目前高级功能无法使用，所以暂时先注释
-  
 }

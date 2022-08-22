@@ -1,8 +1,10 @@
-package com.mredrock.cyxbs.lib.debug
+package com.mredrock.cyxbs.lib.debug.pandora
 
-import com.alibaba.android.arouter.launcher.ARouter
+import android.app.Application
+import android.content.Context
+import android.content.Intent
+import androidx.core.content.edit
 import com.google.auto.service.AutoService
-import com.mredrock.cyxbs.api.account.IAccountService
 import com.mredrock.cyxbs.lib.base.spi.InitialManager
 import com.mredrock.cyxbs.lib.base.spi.InitialService
 import tech.linjiang.pandora.Pandora
@@ -17,23 +19,35 @@ import tech.linjiang.pandora.util.SensorDetector
  */
 @AutoService(InitialService::class)
 class PandoraInitialService: InitialService, SensorDetector.Callback {
+  
+  companion object {
+    lateinit var application: Application
+      private set
+  
+    var sSpPandoraIsOpen: Boolean
+      get() = application.getSharedPreferences("pandora", Context.MODE_PRIVATE).getBoolean("isOpen", false)
+      set(value) {
+        application.getSharedPreferences("pandora", Context.MODE_PRIVATE).edit {
+          putBoolean("isOpen", value)
+        }
+      }
+  }
+  
   override fun onMainProcess(manager: InitialManager) {
     super.onMainProcess(manager)
+    application = manager.application
     Pandora.get().disableShakeSwitch() // 取消 Pandora 默认的摇一摇打开方法
     SensorDetector(this)
   }
   
   override fun shakeValid() {
-    /*
-    * 打全量编译的测试包时需要在这里注册你的学号才能使用
-    * 单模块调试不需要注册，直接摇一摇即可
-    * */
-    val stuNumSet = setOf(
-      "2020214988",
-    )
-    val stuNum = ARouter.getInstance().navigation(IAccountService::class.java).getUserService().getStuNum()
-    if (stuNumSet.contains(stuNum)) {
+    if (sSpPandoraIsOpen) {
       Pandora.get().open()
+    } else {
+      application.startActivity(
+        Intent(application, PandoraActivity::class.java)
+          .setFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+      )
     }
   }
 }

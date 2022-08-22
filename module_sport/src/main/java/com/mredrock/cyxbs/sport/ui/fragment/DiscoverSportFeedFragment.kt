@@ -18,6 +18,7 @@ import com.mredrock.cyxbs.config.route.DISCOVER_SPORT_FEED
 import com.mredrock.cyxbs.config.route.LOGIN_BIND_IDS
 import com.mredrock.cyxbs.lib.base.ui.mvvm.BaseVmBindFragment
 import com.mredrock.cyxbs.lib.utils.extensions.gone
+import com.mredrock.cyxbs.lib.utils.extensions.setOnSingleClickListener
 import com.mredrock.cyxbs.lib.utils.extensions.visible
 import com.mredrock.cyxbs.lib.utils.service.impl
 import com.mredrock.cyxbs.sport.R
@@ -46,11 +47,11 @@ class DiscoverSportFeedFragment :
                 viewModel.refreshSportData()
             }
 
-        binding.sportIvFeedTips.setOnClickListener {
+        binding.sportIvFeedTips.setOnSingleClickListener {
             MaterialDialog(requireActivity()).show {
                 customView(R.layout.sport_dialog_feed)
                 getCustomView().apply {
-                    findViewById<Button>(R.id.sport_btn_feed_dialog_confirm).setOnClickListener {
+                    findViewById<Button>(R.id.sport_btn_feed_dialog_confirm).setOnSingleClickListener {
                         dismiss()
                     }
                 }
@@ -87,7 +88,9 @@ class DiscoverSportFeedFragment :
 
     override fun onResume() {
         super.onResume()
-        viewModel.refreshSportData()
+        if (IAccountService::class.impl.getVerifyService().isLogin()) {
+            viewModel.refreshSportData()
+        }
     }
 
     /**
@@ -117,7 +120,7 @@ class DiscoverSportFeedFragment :
             sportTvFeedHint.text = ssb
             sportTvFeedHint.visible()
             //设置点击跳转教务在线登录界面
-            sportClFeed.setOnClickListener {
+            sportClFeed.setOnSingleClickListener {
                 ARouter.getInstance().build(LOGIN_BIND_IDS).navigation()
             }
         }
@@ -158,7 +161,7 @@ class DiscoverSportFeedFragment :
                 sportTvFeedAward.text = it.award.toString()
             }
             //设置点击跳转进详情页
-            sportClFeed.setOnClickListener {
+            sportClFeed.setOnSingleClickListener {
                 ARouter.getInstance().build(DISCOVER_SPORT).navigation()
             }
         }

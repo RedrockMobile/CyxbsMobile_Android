@@ -16,6 +16,7 @@ import com.taobao.sophix.SophixManager
 class SophixInitialService : InitialService {
   override fun onPrivacyAgreed(manager: InitialManager) {
     super.onPrivacyAgreed(manager)
-    SophixManager.getInstance().queryAndLoadNewPatch() // 这个会获取
+    // 获取热修包，这个会读取设备信息，需要放在同意用户协议后
+    SophixManager.getInstance().queryAndLoadNewPatch()
   }
 }

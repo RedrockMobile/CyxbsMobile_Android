@@ -17,10 +17,6 @@ import io.reactivex.rxjava3.schedulers.Schedulers
  */
 class DiscoverSportFeedViewModel : BaseViewModel() {
 
-    init {
-        refreshSportData()
-    }
-
     /**
      * 观测发现界面体育打卡数据的LiveData
      */
@@ -39,8 +35,6 @@ class DiscoverSportFeedViewModel : BaseViewModel() {
     val isBind: LiveData<Boolean> get() = _isBind
     private val _isBind = MutableLiveData<Boolean>()
 
-    private var i = 0
-
     /**
      * 刷新体育打卡详情界面数据
      */
@@ -52,7 +46,6 @@ class DiscoverSportFeedViewModel : BaseViewModel() {
             .observeOn(AndroidSchedulers.mainThread())
             .mapOrCatchApiException {
                 //出错时更新LiveData
-                _isError.postValue(true)
                 if (it.status == 20100) {
                     //若未绑定教务在线（后端返回状态码为20100）则更新LiveData，并保存状态
                     _isBind.postValue(false)

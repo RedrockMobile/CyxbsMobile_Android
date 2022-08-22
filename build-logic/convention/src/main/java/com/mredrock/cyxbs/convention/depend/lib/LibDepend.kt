@@ -1,6 +1,7 @@
 package com.mredrock.cyxbs.convention.depend.lib
 
 import org.gradle.api.Project
+import org.gradle.kotlin.dsl.apply
 import org.gradle.kotlin.dsl.dependencies
 import org.gradle.kotlin.dsl.project
 
@@ -69,6 +70,9 @@ fun Project.dependLibUtils() {
  * 这个模块里面单独放只在 debug 下使用的依赖
  */
 internal fun Project.debugDependLibDebug() {
+  if (!gradle.startParameter.taskNames.any { it.contains("Release") }) {
+    apply(plugin = "pandora-plugin")
+  }
   dependencies {
     "debugImplementation"(project(LibDepend.debug))
   }

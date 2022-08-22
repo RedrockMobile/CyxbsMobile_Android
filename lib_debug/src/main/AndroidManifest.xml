@@ -2,4 +2,9 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.mredrock.cyxbs.lib.debug">
 
+    <application>
+        <activity android:name=".pandora.PandoraActivity"
+            android:launchMode="singleTop"/>
+    </application>
+
 </manifest>
