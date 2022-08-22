@@ -2,14 +2,17 @@ package com.mredrock.cyxbs.mine.util.ui
 
 import android.app.Dialog
 import android.content.Context
+import android.content.Intent
 import android.view.Gravity
 import android.widget.TextView
 import com.mredrock.cyxbs.common.ui.BaseActivity
+import com.mredrock.cyxbs.common.utils.extensions.setOnSingleClickListener
 import com.mredrock.cyxbs.common.utils.extensions.toast
 import com.mredrock.cyxbs.mine.R
 import com.mredrock.cyxbs.mine.page.security.activity.FindPasswordActivity
 import com.mredrock.cyxbs.mine.page.security.activity.FindPasswordActivity.Companion.FIND_PASSWORD_BY_EMAIL
 import com.mredrock.cyxbs.mine.page.security.activity.FindPasswordActivity.Companion.FIND_PASSWORD_BY_SECURITY_QUESTION
+import com.mredrock.cyxbs.mine.page.security.activity.FindPasswordByIdsActivity
 
 /**
  * Author: RayleighZ
@@ -25,7 +28,8 @@ class ChooseFindTypeDialog(context: Context, theme: Int) : Dialog(context, theme
             chooseFindTypeDialog.window?.attributes?.gravity = Gravity.CENTER
             val tvEmail = chooseFindTypeDialog.findViewById<TextView>(R.id.mine_tv_dialog_choose_type_email)
             val tvProtect = chooseFindTypeDialog.findViewById<TextView>(R.id.mine_tv_dialog_choose_type_protect)
-            tvEmail.setOnClickListener {
+            val tvIds = chooseFindTypeDialog.findViewById<TextView>(R.id.mine_tv_dialog_choose_type_ids)
+            tvEmail.setOnSingleClickListener {
                 //当点击通过邮箱找回的按钮时
                 if (hasEmailBinding) {
                     //启动邮箱找回模块
@@ -42,7 +46,7 @@ class ChooseFindTypeDialog(context: Context, theme: Int) : Dialog(context, theme
                     context.toast("您好像还没有绑定邮箱")
                 }
             }
-            tvProtect.setOnClickListener {
+            tvProtect.setOnSingleClickListener {
                 //当点击通过密保找回时
                 if (hasSecurityQuestion) {
                     //启动密保找回模块
@@ -57,6 +61,13 @@ class ChooseFindTypeDialog(context: Context, theme: Int) : Dialog(context, theme
                 } else {
                     context.toast("您好像还没有设置密保问题")
                 }
+            }
+            tvIds.setOnSingleClickListener {
+                //当点击通过教务在线找回时，跳转至教务在线找回界面
+                context.startActivity(Intent(context, FindPasswordByIdsActivity::class.java))
+                chooseFindTypeDialog.hide()
+                activity.finish()
+                chooseFindTypeDialog.dismiss()
             }
             chooseFindTypeDialog.show()
         }

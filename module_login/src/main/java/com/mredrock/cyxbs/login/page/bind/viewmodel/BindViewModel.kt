@@ -57,9 +57,11 @@ class BindViewModel : BaseViewModel() {
                     bindServiceImpl._isBindSuccess.postValue(true)
                     (ServiceManager(IBindService::class) as BindServiceImpl)
                     BaseApp.appContext.toast("绑定成功")
+                    bubble.invoke()
                     isAnimating = false
                 },
                 onError = {
+                    bubble.invoke()
                     //密码错误的话,会导致状态码为400，Retrofit无法回调onNext
                     //详见：https://www.cnblogs.com/fuyaozhishang/p/8607706.html
                     // todo 以后学弟重构的话，记得让后端该下逻辑

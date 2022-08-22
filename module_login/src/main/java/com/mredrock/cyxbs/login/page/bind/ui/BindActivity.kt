@@ -59,10 +59,7 @@ class BindActivity : BaseActivity() {
             finish()
         }
         IBindService::class.impl.isBindSuccess.observe(this, Observer {
-            if (!it) {
-                bubble()
-            } else {
-                // 注意 这里finish返回后viewModel被重建了
+            if (it) {
                 finish()
             }
         })
