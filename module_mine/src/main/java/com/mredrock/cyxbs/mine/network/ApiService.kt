@@ -2,8 +2,10 @@ package com.mredrock.cyxbs.mine.network
 
 import com.mredrock.cyxbs.common.bean.RedrockApiStatus
 import com.mredrock.cyxbs.common.bean.RedrockApiWrapper
+import com.mredrock.cyxbs.lib.utils.network.ApiWrapper
 import com.mredrock.cyxbs.mine.network.model.*
 import io.reactivex.rxjava3.core.Observable
+import io.reactivex.rxjava3.core.Single
 import okhttp3.MultipartBody
 import okhttp3.RequestBody
 import retrofit2.http.*
@@ -189,6 +191,26 @@ interface ApiService {
         @Field("question_id") question_id: Int,
         @Field("content") content: String
     ): Observable<RedrockApiWrapper<ConfirmQuestion>>
+
+    /**
+     * 获取通过ids改密所需的验证码 上传参数为json类型
+     */
+    @POST("/user-secret/user/valid/ids")
+    fun getIdsCode(@Body body: RequestBody): Single<ApiWrapper<IdsGetCode>>
+
+    /**
+     * 通过[getIdsCode]获取到的验证码来修改密码
+     * @param stuNum 学号
+     * @param newPassword 新密码
+     * @param code 验证码
+     */
+    @FormUrlEncoded
+    @POST("/user-secret/user/password/valid")
+    fun changePasswordByIds(
+        @Field("stu_num") stuNum: String,
+        @Field("new_password") newPassword: String,
+        @Field("code") code: Int
+    ): Single<ApiWrapper<IdsSetPassword>>
 
     /*
      * 判断旧密码是否正确
