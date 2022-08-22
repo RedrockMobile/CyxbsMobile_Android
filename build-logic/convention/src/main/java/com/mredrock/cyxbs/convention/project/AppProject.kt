@@ -51,6 +51,7 @@ class AppProject(project: Project) : BaseApplicationProject(project) {
           && it.name != "module_app"
           && "(lib_.+)|(module_.+)|(api_.+)".toRegex().matches(it.name)
           && !it.name.contains("lib_common") // 目前 app 模块已经去掉了对 common 模块的依赖
+          && !it.name.contains("lib_debug") // 去除主动依赖 lib_debug 模块
           && it.name !in excludeList
           && includeProjects.contains(it.name)
       }.forEach {
@@ -80,7 +81,7 @@ class AppProject(project: Project) : BaseApplicationProject(project) {
         //多渠道包的输出目录，默认为new File(project.buildDir,"channel")
         outputDir = File(project.buildDir,"channel")
         //多渠道包的命名规则，默认为：${appName}-${versionName}-${versionCode}-${flavorName}-${buildType}-${buildTime}
-        apkNameFormat ="\${appName}-\${versionName}-\${versionCode}-\${flavorName}-\${buildType}-\${buildTime}"
+        apkNameFormat ="掌上重邮-\${versionName}-\${flavorName}-\${buildTime}"
         //快速模式：生成渠道包时不进行校验（速度可以提升10倍以上，默认为false）
         fastMode = false
         //buildTime的时间格式，默认格式：yyyyMMdd-HHmmss

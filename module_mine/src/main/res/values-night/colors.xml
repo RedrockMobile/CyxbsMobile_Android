@@ -109,4 +109,29 @@
     <color name="mine_tv_user_name">#F0F0F2</color>
     <color name="mine_tv_user_introduce">#484848</color>
 
+    <!--教务在线找回密码界面颜色-->
+    <!--顶部title颜色-->
+    <color name="mine_find_password_ids_title">#F1F1F1</color>
+    <!--输入框提示语的文字-->
+    <color name="mine_find_password_ids_et_hint">#C2C2C2</color>
+    <!--整个页面的背景颜色-->
+    <color name="mine_find_password_ids_background">#191919</color>
+    <!--输入框的背景颜色-->
+    <color name="mine_find_password_ids_et_background">#282828</color>
+    <!--底部小字的颜色-->
+    <color name="mine_find_password_ids_hint">#80A4A3B7</color>
+    <!--确认密码界面输入的两个密码不相同弹出的提示文字的颜色-->
+    <color name="mine_find_password_ids_different">#FF7B9B</color>
+    <!--提示用的dialog-->
+    <!--title的颜色-->
+    <color name="mine_find_password_ids_dialog_title">#F1F1F1</color>
+    <!--内容文字的颜色-->
+    <color name="mine_find_password_ids_dialog_content">#C2C2C2</color>
+    <!--分割线的颜色-->
+    <color name="mine_find_password_ids_dialog_divider">#0DFFFFFF</color>
+    <!--背景颜色-->
+    <color name="mine_find_password_ids_dialog_background">#3B3B3B</color>
+    <!--按钮文字的颜色-->
+    <color name="mine_find_password_ids_dialog_confirm">#948FFF</color>
+
 </resources>

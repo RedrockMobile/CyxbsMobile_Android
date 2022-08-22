@@ -6,7 +6,6 @@ import android.app.ProgressDialog
 import android.os.Bundle
 import android.widget.Toast
 import androidx.lifecycle.LiveData
-import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import com.mredrock.cyxbs.common.component.CyxbsToast
 import com.mredrock.cyxbs.common.viewmodel.BaseViewModel
@@ -75,15 +74,9 @@ abstract class BaseViewModelActivity<T : BaseViewModel> : BaseActivity() {
 
     protected open fun getViewModelFactory(): ViewModelProvider.Factory? = null
 
-    inline fun <T> LiveData<T>.observe(crossinline onChange: (T?) -> Unit) =
-        observe(this@BaseViewModelActivity, Observer { onChange(it) })
-
-    inline fun <T> LiveData<T>.observeNotNull(crossinline onChange: (T) -> Unit) =
-        observe(this@BaseViewModelActivity, Observer {
-            it ?: return@Observer
-            onChange(it)
-        })
-
+    inline fun <T> LiveData<T>.observe(crossinline onChange: (T) -> Unit) =
+        observe(this@BaseViewModelActivity) { onChange(it) }
+    
     override fun onDestroy() {
         super.onDestroy()
         if (progressDialog?.isShowing == true) {

@@ -15,8 +15,8 @@ object Config {
   const val targetSdk = 31
   const val compileSdk = targetSdk
   
-  const val versionCode = 78 // 线上75，开发78
-  const val versionName = "6.4.5" // 线上6.4.2，开发6.4.5
+  const val versionCode = 79 // 线上79，开发80
+  const val versionName = "6.5.0" // 线上6.5.0，开发6.5.1
   
   val releaseAbiFilters = listOf("arm64-v8a","armeabi-v7a")
   val debugAbiFilters = listOf("arm64-v8a","armeabi-v7a","x86_64")
@@ -46,7 +46,14 @@ object Config {
   
   fun getApplicationId(project: Project): String {
     return when (project.name) {
-      "module_app" -> "com.mredrock.cyxbs"
+      "module_app" -> {
+        if (project.gradle.startParameter.taskNames.any { it.contains("Release") }) {
+          "com.mredrock.cyxbs"
+        } else {
+          // debug 状态下使用 debug 的包名，方便测试
+          "com.mredrock.cyxbs.debug"
+        }
+      }
       else -> "com.mredrock.cyxbs.${project.name}"
     }
   }

@@ -54,29 +54,6 @@ class ContainerViewModel : BaseViewModel() {
     }
 
     /**
-     * 解绑ids
-     */
-    fun unbindIds(onSuccess: () -> Unit) {
-        apiService.unbindIds()
-            .doOnNext {
-            }
-            .doOnError {
-            }
-            .setSchedulers()
-            .safeSubscribeBy(
-                onNext = {
-                    bottomStateListener.postValue(true)
-                    BaseApp.appContext.toast(R.string.grades_bottom_sheet_unbind_success)
-                    onSuccess.invoke()
-                    isBinding.value = false
-                },
-                onError = {
-                    BaseApp.appContext.toast(R.string.grades_bottom_sheet_unbind_fail)
-                }
-            ).lifeCycle()
-    }
-
-    /**
      * 当前是否处于绑定状态
      * 通过该LiveData改变按钮的点击事件
      */

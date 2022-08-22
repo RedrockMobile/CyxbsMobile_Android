@@ -8,8 +8,8 @@ import android.view.LayoutInflater
 import android.view.View
 import android.widget.Button
 import android.widget.EditText
-import android.widget.LinearLayout
 import android.widget.TextView
+import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.content.ContextCompat
 import androidx.databinding.DataBindingUtil
 import com.mredrock.cyxbs.api.account.IAccountService
@@ -37,7 +37,7 @@ class FindPasswordActivity : BaseViewModelActivity<FindPasswordViewModel>() {
     private var isFromLogin = false
 
     private val mTvSecurityFindContractUs by R.id.mine_tv_security_find_contract_us.view<TextView>()
-    private val mLlSecurityFindPasswordInputBox by R.id.mine_ll_securoty_find_password_input_box.view<LinearLayout>()
+    private val mClSecurityFindPasswordInputBox by R.id.mine_cl_securoty_find_password_input_box.view<ConstraintLayout>()
     private val mEtSecurityFind by R.id.mine_et_security_find.view<EditText>()
     private val mTvSecurityFindFirstTitle by R.id.mine_tv_security_find_first_title.view<TextView>()
     private val mTvSecuritySecondTitle by R.id.mine_tv_security_second_title.view<TextView>()
@@ -108,7 +108,7 @@ class FindPasswordActivity : BaseViewModelActivity<FindPasswordViewModel>() {
                 viewModel.getBindingEmail()
                 //将页面变更为为按照邮箱进行查找
                 //首先设置inputBox(ll)的高度
-                mLlSecurityFindPasswordInputBox.apply {
+                mClSecurityFindPasswordInputBox.apply {
                     this.layoutParams.height = context.dp2px(41f)
                 }
                 //更改title和hint的提示字符
