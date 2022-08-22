@@ -22,6 +22,7 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         android:usesCleartextTraffic="true"
+        android:extractNativeLibs="true"
         tools:replace="networkSecurityConfig"
         tools:targetApi="n">
 
