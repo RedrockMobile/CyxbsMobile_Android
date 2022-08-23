@@ -169,11 +169,12 @@ object ApiGenerator {
                         Log.d("OKHTTP","OKHTTP${request.body}")
 
                         val response = it.proceed(request)
-                        if (!response.isSuccessful){
-                            Handler(Looper.getMainLooper()).post {
-                                BaseApp.appContext.toast("${response.code} ${request.url} ")
-                            }
-                        }
+                        // 因为部分请求一直 403、404，一直不修，就直接不弹了，所以注释掉，以后直接看 Pandora
+//                        if (!response.isSuccessful){
+//                            Handler(Looper.getMainLooper()).post {
+//                                BaseApp.appContext.toast("${response.code} ${request.url} ")
+//                            }
+//                        }
                         response
                     })
                 }
@@ -324,7 +325,7 @@ object ApiGenerator {
             if (BuildConfig.DEBUG) {
                 Handler(Looper.getMainLooper()).post {
                     if (e is UnknownHostException) {
-                        BaseApp.appContext.longToast("网络为连接或学校 NS 炸裂！")
+                        BaseApp.appContext.longToast("网络未连接或学校 NS 炸裂！")
                     } else {
                         BaseApp.appContext.longToast("网络错误：${e.message}")
                     }
@@ -364,7 +365,6 @@ object ApiGenerator {
                 END_POINT_REDROCK_DEV -> {
                     // dev 环境先检查容灾是否是 prod
                     if ("https://$backupUrl" != END_POINT_REDROCK_PROD) {
-                        // 重新请求并返回
                         response?.close()
                         return useBackupUrl(chain) // 这里面使用新的 response
                     } else {
@@ -375,9 +375,10 @@ object ApiGenerator {
                     }
                 }
                 END_POINT_REDROCK_PROD -> {
-                    // 重新请求并返回
-                    response?.close()
-                    return useBackupUrl(chain) // 这里面使用新的 response
+                    if ("https://$backupUrl" != END_POINT_REDROCK_PROD) {
+                        response?.close()
+                        return useBackupUrl(chain) // 这里面使用新的 response
+                    }
                 }
             }
 

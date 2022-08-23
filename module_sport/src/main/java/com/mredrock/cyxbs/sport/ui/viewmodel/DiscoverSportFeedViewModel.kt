@@ -6,6 +6,7 @@ import com.mredrock.cyxbs.lib.base.ui.BaseViewModel
 import com.mredrock.cyxbs.lib.utils.extensions.mapOrCatchApiException
 import com.mredrock.cyxbs.sport.model.SportDetailBean
 import com.mredrock.cyxbs.sport.model.network.SportDetailApiService
+import com.mredrock.cyxbs.sport.ui.activity.SportDetailActivity
 import com.mredrock.cyxbs.sport.util.sSpIdsIsBind
 import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
 import io.reactivex.rxjava3.schedulers.Schedulers
@@ -39,6 +40,10 @@ class DiscoverSportFeedViewModel : BaseViewModel() {
      * 刷新体育打卡详情界面数据
      */
     fun refreshSportData() {
+        if (SportDetailActivity.sSportData != null) {
+            // 如果已经有数据，将不再进行刷新，因为多次请求很容易被冻结账号
+            return
+        }
         SportDetailApiService
             .INSTANCE
             .getSportDetailData()

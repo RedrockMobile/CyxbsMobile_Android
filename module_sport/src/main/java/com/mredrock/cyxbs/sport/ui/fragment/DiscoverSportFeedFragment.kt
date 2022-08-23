@@ -39,16 +39,6 @@ class DiscoverSportFeedFragment :
     BaseVmBindFragment<DiscoverSportFeedViewModel, SportFragmentDiscoverFeedBinding>() {
     
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        /**
-         * 在这里注册登录状态改变的监听，当登录状态改变时，需要刷新界面
-         */
-        IAccountService::class.impl
-            .getVerifyService()
-            .observeStateFlow()
-            .collectLaunch {
-                viewModel.refreshSportData()
-            }
-        
         IBindService::class.impl
             .isBindSuccess
             .observe {
