@@ -2,6 +2,7 @@ package com.mredrock.cyxbs.login.page.login.viewmodel
 
 import androidx.lifecycle.viewModelScope
 import com.mredrock.cyxbs.api.account.IAccountService
+import com.mredrock.cyxbs.common.BuildConfig
 import com.mredrock.cyxbs.lib.base.ui.BaseViewModel
 import com.mredrock.cyxbs.lib.utils.service.impl
 import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
@@ -55,10 +56,12 @@ class LoginViewModel : BaseViewModel() {
                     is UnknownHostException -> toast("网络中断，请检查您的网络状态")
                     is HttpException -> toast("登录服务暂时不可用")
                     is IllegalStateException -> toast("登录失败：学号或者密码错误,请检查输入")
-//                    is RuntimeException -> {
-//                        toast(it.message)
-//                        Log.d("ggg", "(LoginViewModel.kt:60) -> message = ${it.message}")
-//                    }
+                    else -> {
+                        toast(it.message)
+                        if (BuildConfig.DEBUG) {
+                            toast("登录出错：${it.message}")
+                        }
+                    }
                 }
                 viewModelScope.launch {
                     _loginEvent.emit(false)

@@ -52,8 +52,8 @@ class FindPasswordByIdsViewModel : BaseViewModel() {
     fun getCode(requestBody: RequestBody) {
         apiService
             .getIdsCode(requestBody)
-            .observeOn(Schedulers.io())
-            .subscribeOn(AndroidSchedulers.mainThread())
+            .subscribeOn(Schedulers.io())
+            .observeOn(AndroidSchedulers.mainThread())
             .mapOrThrowApiException()
             .doOnError {
                 _isGetCodeSuccess.postValue(false)
@@ -72,8 +72,8 @@ class FindPasswordByIdsViewModel : BaseViewModel() {
     fun changePassword(stuNum: String, newPassword: String) {
         apiService
             .changePasswordByIds(stuNum, newPassword, mCode)
-            .observeOn(Schedulers.io())
-            .subscribeOn(AndroidSchedulers.mainThread())
+            .subscribeOn(Schedulers.io())
+            .observeOn(AndroidSchedulers.mainThread())
             .mapOrThrowApiException()
             .doOnError {
                 "修改密码失败！".toast()

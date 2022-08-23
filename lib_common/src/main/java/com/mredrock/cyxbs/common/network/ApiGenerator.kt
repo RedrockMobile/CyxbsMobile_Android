@@ -9,10 +9,6 @@ import com.mredrock.cyxbs.api.account.IUserStateService
 import com.mredrock.cyxbs.common.BuildConfig
 import com.mredrock.cyxbs.common.bean.BackupUrlStatus
 import com.mredrock.cyxbs.common.bean.RedrockApiWrapper
-import com.mredrock.cyxbs.common.config.BASE_NORMAL_BACKUP_GET
-import com.mredrock.cyxbs.common.config.SUCCESS
-import com.mredrock.cyxbs.common.config.TOKEN_EXPIRE
-import com.mredrock.cyxbs.common.config.getBaseUrl
 import com.mredrock.cyxbs.common.service.ServiceManager
 import com.mredrock.cyxbs.common.utils.LogUtils
 import com.mredrock.cyxbs.common.utils.extensions.takeIfNoException
@@ -23,10 +19,12 @@ import retrofit2.converter.gson.GsonConverterFactory
 import java.util.concurrent.TimeUnit
 import android.os.Looper
 import android.util.Log
+import android.widget.Toast
 import com.mredrock.cyxbs.common.BaseApp
+import com.mredrock.cyxbs.common.config.*
 import com.mredrock.cyxbs.common.utils.LogLocal
-import com.mredrock.cyxbs.common.utils.extensions.toast
 import retrofit2.adapter.rxjava3.RxJava3CallAdapterFactory
+import java.net.UnknownHostException
 
 
 /**
@@ -170,11 +168,12 @@ object ApiGenerator {
                         Log.d("OKHTTP","OKHTTP${request.body}")
 
                         val response = it.proceed(request)
-                        if (!response.isSuccessful){
-                            Handler(Looper.getMainLooper()).post {
-                                BaseApp.appContext.toast("${response.code} ${request.url} ")
-                            }
-                        }
+                        // 因为部分请求一直 403、404，一直不修，就直接不弹了，所以注释掉，以后直接看 Pandora
+//                        if (!response.isSuccessful){
+//                            Handler(Looper.getMainLooper()).post {
+//                                BaseApp.appContext.toast("${response.code} ${request.url} ")
+//                            }
+//                        }
                         response
                     })
                 }
@@ -318,7 +317,20 @@ object ApiGenerator {
         try {
             response = proceed.invoke()
         } catch (e: Exception) {
+            /*
+            * 大部分的网络问题原因都是这个 e，如果你看到这条注释，请在这里打上断点
+            * */
             e.printStackTrace()
+            if (BuildConfig.DEBUG) {
+                Handler(Looper.getMainLooper()).post {
+                    // 使用原生 toast 醒目一点
+                    if (e is UnknownHostException) {
+                        Toast.makeText(BaseApp.appContext, "网络未连接或学校 NS 炸裂！", Toast.LENGTH_LONG).show()
+                    } else {
+                        Toast.makeText(BaseApp.appContext, "网络错误：${e.message}", Toast.LENGTH_LONG).show()
+                    }
+                }
+            }
         } finally {
             return response
         }
@@ -326,6 +338,7 @@ object ApiGenerator {
 
     class BackupInterceptor : Interceptor {
 
+        @Volatile
         private var useBackupUrl: Boolean = false
         private var backupUrl: String = getBaseUrlWithoutHttps()
 
@@ -337,6 +350,7 @@ object ApiGenerator {
             }
 
             // 正常请求，照理说应该进入tokenInterceptor
+            // 除了登录和部分接口使用的 CommonApiService 以外，他们不会跑进 tokenInterceptor
             val response = proceedPoxyWithTryCatch {
                 chain.proceed(chain.request())
             }
@@ -344,17 +358,37 @@ object ApiGenerator {
             if (response?.isSuccessful == true) {
                 return response
             }
-
-
-            // 如果请求失败（是tokenInterceptor即便刷新token也无法请求成功的情况），则请求是否有新的url
+    
+    
             backupUrl = getBackupUrl()
-            // 约定给的backupUrl不带https前缀，加上
-            if ("https://$backupUrl" != getBaseUrl()) {
-                useBackupUrl = true
-                // 重新请求并返回
-                return useBackupUrl(chain)
+            // 分不同的环境触发不同的容灾请求
+            when (getBackupUrl()) {
+                END_POINT_REDROCK_DEV -> {
+                    // dev 环境先检查容灾是否是 prod
+                    if ("https://$backupUrl" != END_POINT_REDROCK_PROD) {
+                        useBackupUrl = true
+                        response?.close()
+                        return useBackupUrl(chain) // 这里面使用新的 response
+                    } else {
+                        // dev 环境不触发容灾，不然会导致测试接口 404
+                        Handler(Looper.getMainLooper()).post {
+                            // 使用原生 toast 醒目一点
+                            Toast.makeText(
+                                BaseApp.appContext,
+                                "dev 请求出错, url = ${response?.request?.url.toString()}",
+                                Toast.LENGTH_LONG
+                            ).show()
+                        }
+                    }
+                }
+                END_POINT_REDROCK_PROD -> {
+                    if ("https://$backupUrl" != END_POINT_REDROCK_PROD) {
+                        useBackupUrl = true
+                        response?.close()
+                        return useBackupUrl(chain) // 这里面使用新的 response
+                    }
+                }
             }
-
 
             return response!!
         }

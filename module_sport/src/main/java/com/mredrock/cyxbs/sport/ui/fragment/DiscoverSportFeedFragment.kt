@@ -1,5 +1,6 @@
 package com.mredrock.cyxbs.sport.ui.fragment
 
+import android.content.Intent
 import android.graphics.Color
 import android.os.Bundle
 import android.text.SpannableStringBuilder
@@ -13,7 +14,7 @@ import com.afollestad.materialdialogs.customview.getCustomView
 import com.alibaba.android.arouter.facade.annotation.Route
 import com.alibaba.android.arouter.launcher.ARouter
 import com.mredrock.cyxbs.api.account.IAccountService
-import com.mredrock.cyxbs.config.route.DISCOVER_SPORT
+import com.mredrock.cyxbs.api.login.IBindService
 import com.mredrock.cyxbs.config.route.DISCOVER_SPORT_FEED
 import com.mredrock.cyxbs.config.route.LOGIN_BIND_IDS
 import com.mredrock.cyxbs.lib.base.ui.mvvm.BaseVmBindFragment
@@ -23,6 +24,7 @@ import com.mredrock.cyxbs.lib.utils.extensions.visible
 import com.mredrock.cyxbs.lib.utils.service.impl
 import com.mredrock.cyxbs.sport.R
 import com.mredrock.cyxbs.sport.databinding.SportFragmentDiscoverFeedBinding
+import com.mredrock.cyxbs.sport.ui.activity.SportDetailActivity
 import com.mredrock.cyxbs.sport.ui.viewmodel.DiscoverSportFeedViewModel
 import com.mredrock.cyxbs.sport.util.sSpIdsIsBind
 
@@ -35,16 +37,12 @@ import com.mredrock.cyxbs.sport.util.sSpIdsIsBind
 @Route(path = DISCOVER_SPORT_FEED)
 class DiscoverSportFeedFragment :
     BaseVmBindFragment<DiscoverSportFeedViewModel, SportFragmentDiscoverFeedBinding>() {
-
+    
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        /**
-         * 在这里注册登录状态改变的监听，当登录状态改变时，需要刷新界面
-         */
-        IAccountService::class.impl
-            .getVerifyService()
-            .observeStateFlow()
-            .collectLaunch {
-                viewModel.refreshSportData()
+        IBindService::class.impl
+            .isBindSuccess
+            .observe {
+                sSpIdsIsBind = it
             }
 
         binding.sportIvFeedTips.setOnSingleClickListener {
@@ -59,13 +57,13 @@ class DiscoverSportFeedFragment :
             }
         }
         //出错后弹出提示
-        viewModel.isError.observe() {
+        viewModel.isError.observe {
             if (it) {
                 showError()
             }
         }
         //监听绑定ids的状态，存入SharePreference中
-        viewModel.isBind.observe() {
+        viewModel.isBind.observe {
             if (!it) {
                 sSpIdsIsBind = false
                 unbound()
@@ -163,7 +161,9 @@ class DiscoverSportFeedFragment :
             }
             //设置点击跳转进详情页
             sportClFeed.setOnSingleClickListener {
-                ARouter.getInstance().build(DISCOVER_SPORT).navigation()
+                // 通过静态变量传参，这是最简单的办法
+                SportDetailActivity.sSportData = viewModel.sportData.value
+                startActivity(Intent(requireContext(), SportDetailActivity::class.java))
             }
         }
     }
