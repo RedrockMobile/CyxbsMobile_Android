@@ -2,7 +2,6 @@
 <androidx.appcompat.widget.LinearLayoutCompat xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="120dp"
     android:layout_height="60dp"
-    android:background="@drawable/notification_shape_popup_corner"
     android:orientation="vertical">
 
     <androidx.appcompat.widget.LinearLayoutCompat
@@ -10,7 +9,7 @@
         android:layout_width="match_parent"
         android:layout_height="20dp"
         android:layout_weight="1"
-        android:background="@drawable/notification_selector_popup_bg"
+        android:background="@drawable/notification_selector_round_corner_top"
         android:orientation="horizontal">
 
         <ImageView
@@ -34,7 +33,7 @@
         android:id="@+id/notification_ll_home_popup_setting"
         android:layout_width="match_parent"
         android:layout_height="20dp"
-        android:background="@drawable/notification_selector_popup_bg"
+        android:background="@drawable/notification_selector_round_corner_bottom"
         android:layout_weight="1"
         android:orientation="horizontal">
 

@@ -46,14 +46,15 @@ class NotificationViewModel : BaseViewModel() {
      */
     fun getAllMsg() {
         retrofit.getAllMsg()
-            .mapOrThrowApiException()
             .setSchedulers()
+            .mapOrThrowApiException()
             .safeSubscribeBy(
                 onError = {
-                    Log.w(NOTIFICATION_LOG_TAG, "getAllMsg failed")
+                    Log.w(NOTIFICATION_LOG_TAG, "getAllMsg failed $it")
                     getMsgSuccessful.value = false
                 },
                 onNext = {
+                    Log.d("bbp", "getAllMsg: success ")
                     Log.d(NOTIFICATION_LOG_TAG, "getAllMsg: $it")
                     activeMsg.value = it.active_msg
                     systemMsg.value = it.system_msg

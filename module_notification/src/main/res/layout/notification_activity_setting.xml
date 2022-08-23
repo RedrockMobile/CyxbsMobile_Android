@@ -57,29 +57,29 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center_vertical"
-            android:text="消息提醒"
-            android:textStyle="bold"
             android:layout_marginStart="10dp"
-            android:textAppearance="@style/notification_setting_tv" />
+            android:text="消息提醒"
+            android:textAppearance="@style/notification_setting_tv"
+            android:textStyle="bold" />
 
         <Switch
             android:id="@+id/notification_setting_switch_1"
             android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
             android:layout_gravity="center_vertical|end"
             android:layout_marginEnd="10dp"
             android:checked="true"
             android:thumb="@drawable/notification_selector_thumb"
             android:track="@drawable/notification_selector_switch_track"
-            android:layout_height="wrap_content"
             tools:ignore="UseSwitchCompatOrMaterialXml" />
     </FrameLayout>
 
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="关闭后不再显示任何信息"
         android:layout_marginStart="26dp"
         android:layout_marginTop="164dp"
+        android:text="关闭后不再显示任何信息"
         android:textAppearance="@style/notification_setting_tips_tv"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
@@ -102,21 +102,21 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center_vertical"
-            android:text="签到提醒"
-            android:textStyle="bold"
             android:layout_marginStart="10dp"
+            android:text="签到提醒"
             android:textAppearance="@style/notification_setting_tv"
+            android:textStyle="bold"
             tools:ignore="HardcodedText" />
 
         <Switch
             android:id="@+id/notification_setting_switch_2"
             android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
             android:layout_gravity="center_vertical|end"
             android:layout_marginEnd="10dp"
             android:checked="true"
             android:thumb="@drawable/notification_selector_thumb"
             android:track="@drawable/notification_selector_switch_track"
-            android:layout_height="wrap_content"
             tools:ignore="UseSwitchCompatOrMaterialXml" />
 
     </FrameLayout>
@@ -124,8 +124,8 @@
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="247dp"
         android:layout_marginStart="26dp"
+        android:layout_marginTop="247dp"
         android:text="打开后18点提醒签到（需要获取系统消息推送权限）"
         android:textAppearance="@style/notification_setting_tips_tv"
         app:layout_constraintStart_toStartOf="parent"
