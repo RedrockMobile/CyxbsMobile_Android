@@ -19,11 +19,10 @@ import retrofit2.converter.gson.GsonConverterFactory
 import java.util.concurrent.TimeUnit
 import android.os.Looper
 import android.util.Log
+import android.widget.Toast
 import com.mredrock.cyxbs.common.BaseApp
 import com.mredrock.cyxbs.common.config.*
 import com.mredrock.cyxbs.common.utils.LogLocal
-import com.mredrock.cyxbs.common.utils.extensions.longToast
-import com.mredrock.cyxbs.common.utils.extensions.toast
 import retrofit2.adapter.rxjava3.RxJava3CallAdapterFactory
 import java.net.UnknownHostException
 
@@ -324,10 +323,11 @@ object ApiGenerator {
             e.printStackTrace()
             if (BuildConfig.DEBUG) {
                 Handler(Looper.getMainLooper()).post {
+                    // 使用原生 toast 醒目一点
                     if (e is UnknownHostException) {
-                        BaseApp.appContext.longToast("网络未连接或学校 NS 炸裂！")
+                        Toast.makeText(BaseApp.appContext, "网络未连接或学校 NS 炸裂！", Toast.LENGTH_LONG).show()
                     } else {
-                        BaseApp.appContext.longToast("网络错误：${e.message}")
+                        Toast.makeText(BaseApp.appContext, "网络错误：${e.message}", Toast.LENGTH_LONG).show()
                     }
                 }
             }
@@ -360,7 +360,7 @@ object ApiGenerator {
     
     
             backupUrl = getBackupUrl()
-            // 分不同的环境触发不同的网络请求
+            // 分不同的环境触发不同的容灾请求
             when (getBackupUrl()) {
                 END_POINT_REDROCK_DEV -> {
                     // dev 环境先检查容灾是否是 prod
@@ -370,7 +370,12 @@ object ApiGenerator {
                     } else {
                         // dev 环境不触发容灾，不然会导致测试接口 404
                         Handler(Looper.getMainLooper()).post {
-                            BaseApp.appContext.toast("dev 请求出错, url = ${response?.request?.url.toString()}")
+                            // 使用原生 toast 醒目一点
+                            Toast.makeText(
+                                BaseApp.appContext,
+                                "dev 请求出错, url = ${response?.request?.url.toString()}",
+                                Toast.LENGTH_LONG
+                            ).show()
                         }
                     }
                 }
