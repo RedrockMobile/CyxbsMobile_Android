@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<selector xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <item android:drawable="@drawable/notification_shape_normal_fast_read_sys"
+        android:state_pressed="false" />
+
+    <item android:drawable="@drawable/notification_shape_press_fast_read_sys"
+        android:state_pressed="true" />
+
+</selector>

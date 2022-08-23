@@ -2,7 +2,8 @@
 <androidx.appcompat.widget.LinearLayoutCompat xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="120dp"
     android:layout_height="120dp"
-    android:background="@drawable/notification_shape_popup_corner"
+    android:layout_marginStart="100dp"
+    android:layout_marginTop="100dp"
     android:orientation="vertical">
 
     <androidx.appcompat.widget.LinearLayoutCompat
@@ -10,8 +11,7 @@
         android:layout_width="match_parent"
         android:layout_height="20dp"
         android:layout_weight="1"
-        android:background="@drawable/notification_selector_popup_bg"
-        android:orientation="horizontal">
+        android:background="@drawable/notification_selector_fast_read_sys">
 
         <ImageView
             android:layout_gravity="center"
@@ -35,8 +35,7 @@
         android:layout_width="match_parent"
         android:layout_height="20dp"
         android:layout_weight="1"
-        android:background="@drawable/notification_selector_popup_bg"
-        android:orientation="horizontal">
+        android:background="@drawable/notification_selector_popup_bg">
 
         <ImageView
             android:layout_marginStart="12dp"
@@ -59,9 +58,8 @@
         android:id="@+id/notification_ll_home_popup_setting"
         android:layout_width="match_parent"
         android:layout_height="20dp"
-        android:background="@drawable/notification_selector_popup_bg"
-        android:layout_weight="1"
-        android:orientation="horizontal">
+        android:background="@drawable/notification_selector_setting"
+        android:layout_weight="1">
 
         <ImageView
             android:id="@+id/notification_iv_popup_setting"
