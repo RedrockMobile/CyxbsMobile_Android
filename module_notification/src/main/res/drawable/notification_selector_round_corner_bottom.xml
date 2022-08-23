@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <selector xmlns:android="http://schemas.android.com/apk/res/android">
-    <item android:drawable="@drawable/notification_shape_normal_setting"
+    <item android:drawable="@drawable/notification_shape_normal_round_corner_bottom"
         android:state_pressed="false" />
 
-    <item android:drawable="@drawable/notification_shape_press_setting"
+    <item android:drawable="@drawable/notification_shape_press_round_corner_bottom"
         android:state_pressed="true" />
 
 </selector>

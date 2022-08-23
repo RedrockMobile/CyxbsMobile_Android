@@ -11,7 +11,7 @@
         android:layout_width="match_parent"
         android:layout_height="20dp"
         android:layout_weight="1"
-        android:background="@drawable/notification_selector_fast_read_sys">
+        android:background="@drawable/notification_selector_round_corner_top">
 
         <ImageView
             android:layout_gravity="center"
@@ -58,7 +58,7 @@
         android:id="@+id/notification_ll_home_popup_setting"
         android:layout_width="match_parent"
         android:layout_height="20dp"
-        android:background="@drawable/notification_selector_setting"
+        android:background="@drawable/notification_selector_round_corner_bottom"
         android:layout_weight="1">
 
         <ImageView
