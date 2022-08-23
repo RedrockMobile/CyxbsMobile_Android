@@ -9,10 +9,6 @@ import com.mredrock.cyxbs.api.account.IUserStateService
 import com.mredrock.cyxbs.common.BuildConfig
 import com.mredrock.cyxbs.common.bean.BackupUrlStatus
 import com.mredrock.cyxbs.common.bean.RedrockApiWrapper
-import com.mredrock.cyxbs.common.config.BASE_NORMAL_BACKUP_GET
-import com.mredrock.cyxbs.common.config.SUCCESS
-import com.mredrock.cyxbs.common.config.TOKEN_EXPIRE
-import com.mredrock.cyxbs.common.config.getBaseUrl
 import com.mredrock.cyxbs.common.service.ServiceManager
 import com.mredrock.cyxbs.common.utils.LogUtils
 import com.mredrock.cyxbs.common.utils.extensions.takeIfNoException
@@ -24,9 +20,12 @@ import java.util.concurrent.TimeUnit
 import android.os.Looper
 import android.util.Log
 import com.mredrock.cyxbs.common.BaseApp
+import com.mredrock.cyxbs.common.config.*
 import com.mredrock.cyxbs.common.utils.LogLocal
+import com.mredrock.cyxbs.common.utils.extensions.longToast
 import com.mredrock.cyxbs.common.utils.extensions.toast
 import retrofit2.adapter.rxjava3.RxJava3CallAdapterFactory
+import java.net.UnknownHostException
 
 
 /**
@@ -318,7 +317,19 @@ object ApiGenerator {
         try {
             response = proceed.invoke()
         } catch (e: Exception) {
+            /*
+            * 大部分的网络问题原因都是这个 e，如果你看到这条注释，请在这里打上断点
+            * */
             e.printStackTrace()
+            if (BuildConfig.DEBUG) {
+                Handler(Looper.getMainLooper()).post {
+                    if (e is UnknownHostException) {
+                        BaseApp.appContext.longToast("网络为连接或学校 NS 炸裂！")
+                    } else {
+                        BaseApp.appContext.longToast("网络错误：${e.message}")
+                    }
+                }
+            }
         } finally {
             return response
         }
@@ -337,6 +348,7 @@ object ApiGenerator {
             }
 
             // 正常请求，照理说应该进入tokenInterceptor
+            // 除了登录和部分接口使用的 CommonApiService 以外，他们不会跑进 tokenInterceptor
             val response = proceedPoxyWithTryCatch {
                 chain.proceed(chain.request())
             }
@@ -344,17 +356,30 @@ object ApiGenerator {
             if (response?.isSuccessful == true) {
                 return response
             }
-
-
-            // 如果请求失败（是tokenInterceptor即便刷新token也无法请求成功的情况），则请求是否有新的url
+    
+    
             backupUrl = getBackupUrl()
-            // 约定给的backupUrl不带https前缀，加上
-            if ("https://$backupUrl" != getBaseUrl()) {
-                useBackupUrl = true
-                // 重新请求并返回
-                return useBackupUrl(chain)
+            // 分不同的环境触发不同的网络请求
+            when (getBackupUrl()) {
+                END_POINT_REDROCK_DEV -> {
+                    // dev 环境先检查容灾是否是 prod
+                    if ("https://$backupUrl" != END_POINT_REDROCK_PROD) {
+                        // 重新请求并返回
+                        response?.close()
+                        return useBackupUrl(chain) // 这里面使用新的 response
+                    } else {
+                        // dev 环境不触发容灾，不然会导致测试接口 404
+                        Handler(Looper.getMainLooper()).post {
+                            BaseApp.appContext.toast("dev 请求出错, url = ${response?.request?.url.toString()}")
+                        }
+                    }
+                }
+                END_POINT_REDROCK_PROD -> {
+                    // 重新请求并返回
+                    response?.close()
+                    return useBackupUrl(chain) // 这里面使用新的 response
+                }
             }
-
 
             return response!!
         }

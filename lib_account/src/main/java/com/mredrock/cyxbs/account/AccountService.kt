@@ -324,7 +324,7 @@ internal class AccountService : IAccountService {
             //不同情况给用户不同的提示
             if (response.code() == 400) {
                 // 22年 后端有 "student info fail" 和 "sign in failed" 两种状态，但我们直接给学号或者密码错误即可
-                // 该异常已于下游约定，不可更改！！！
+                // 该异常已与下游约定，不可更改！！！
                 throw IllegalStateException("authentication error")
             }
             if (response.body() == null) {

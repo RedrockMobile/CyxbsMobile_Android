@@ -43,8 +43,6 @@ class SportDetailViewModel : BaseViewModel() {
             .subscribeOn(Schedulers.io())
             .observeOn(AndroidSchedulers.mainThread())
             .mapOrCatchApiException {
-                //出错时更新LiveData
-                _isError.postValue(true)
                 // 当 status 的值不为成功时抛错，并处理错误
                 if (it.status == 20100) {
                     sSpIdsIsBind = false
