@@ -338,6 +338,7 @@ object ApiGenerator {
 
     class BackupInterceptor : Interceptor {
 
+        @Volatile
         private var useBackupUrl: Boolean = false
         private var backupUrl: String = getBaseUrlWithoutHttps()
 
@@ -365,6 +366,7 @@ object ApiGenerator {
                 END_POINT_REDROCK_DEV -> {
                     // dev 环境先检查容灾是否是 prod
                     if ("https://$backupUrl" != END_POINT_REDROCK_PROD) {
+                        useBackupUrl = true
                         response?.close()
                         return useBackupUrl(chain) // 这里面使用新的 response
                     } else {
@@ -381,6 +383,7 @@ object ApiGenerator {
                 }
                 END_POINT_REDROCK_PROD -> {
                     if ("https://$backupUrl" != END_POINT_REDROCK_PROD) {
+                        useBackupUrl = true
                         response?.close()
                         return useBackupUrl(chain) // 这里面使用新的 response
                     }
