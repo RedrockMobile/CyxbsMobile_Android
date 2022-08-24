@@ -50,11 +50,17 @@ class NotificationViewModel : BaseViewModel() {
             .mapOrThrowApiException()
             .safeSubscribeBy(
                 onError = {
-                    Log.w(NOTIFICATION_LOG_TAG, "getAllMsg failed $it")
-                    getMsgSuccessful.value = false
+                    /**
+                     * onNext第一次发送null的时候会到onError，第二次就不会了
+                     */
+                    if(it is NullPointerException){
+                        getAllMsg()
+                    }else {
+                        Log.w(NOTIFICATION_LOG_TAG, "getAllMsg failed $it")
+                        getMsgSuccessful.value = false
+                    }
                 },
                 onNext = {
-                    Log.d("bbp", "getAllMsg: success ")
                     Log.d(NOTIFICATION_LOG_TAG, "getAllMsg: $it")
                     activeMsg.value = it.active_msg
                     systemMsg.value = it.system_msg
