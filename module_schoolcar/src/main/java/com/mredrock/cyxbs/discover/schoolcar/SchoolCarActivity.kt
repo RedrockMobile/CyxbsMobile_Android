@@ -198,8 +198,8 @@ class SchoolCarActivity:BaseActivity() {
           cvHeight = binding.schoolCarCvPositioning.y
           ivHeight = binding.schoolCarCvPositioningIv.y
         }
-        binding.schoolCarCvPositioning.y = cvHeight-dip(204*slideOffset).toFloat()
-        binding.schoolCarCvPositioningIv.y = ivHeight-dip(204*slideOffset).toFloat()
+        binding.schoolCarCvPositioning.y = cvHeight-dip(285*slideOffset).toFloat()
+        binding.schoolCarCvPositioningIv.y = ivHeight-dip(285*slideOffset).toFloat()
       }
     })
 
