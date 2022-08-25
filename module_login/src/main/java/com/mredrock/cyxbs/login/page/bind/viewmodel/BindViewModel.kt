@@ -5,6 +5,7 @@
 
 package com.mredrock.cyxbs.login.page.bind.viewmodel
 
+import androidx.lifecycle.viewModelScope
 import com.google.gson.Gson
 import com.mredrock.cyxbs.api.login.IBindService
 import com.mredrock.cyxbs.lib.base.ui.BaseViewModel
@@ -16,6 +17,7 @@ import com.mredrock.cyxbs.login.network.BindIdsApiService
 import com.mredrock.cyxbs.login.service.BindServiceImpl
 import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
 import io.reactivex.rxjava3.schedulers.Schedulers
+import kotlinx.coroutines.launch
 import retrofit2.HttpException
 
 class BindViewModel : BaseViewModel() {
@@ -53,7 +55,9 @@ class BindViewModel : BaseViewModel() {
             }
             .safeSubscribeBy(
                 onNext = {
-                    bindServiceImpl._isBindSuccess.postValue(true)
+                    viewModelScope.launch {
+                        bindServiceImpl._bindEvent.emit(true)
+                    }
                     (ServiceManager(IBindService::class) as BindServiceImpl)
                     "绑定成功".toast()
                     bubble.invoke()
@@ -68,11 +72,15 @@ class BindViewModel : BaseViewModel() {
                         val body = (it).response()?.errorBody() ?: return@safeSubscribeBy
                         val data = Gson().fromJson(body.string(), IdsStatus::class.java)
                         if (data.errorCode == ERROR) {
-                            bindServiceImpl._isBindSuccess.postValue(false)
+                            viewModelScope.launch {
+                                bindServiceImpl._bindEvent.emit(false)
+                            }
                             "绑定失败".toast()
                         }
                     } else {
-                        bindServiceImpl._isBindSuccess.postValue(false)
+                        viewModelScope.launch {
+                            bindServiceImpl._bindEvent.emit(false)
+                        }
                         "绑定失败".toast()
                     }
                     isAnimating = false

@@ -10,7 +10,6 @@ import android.widget.EditText
 import android.widget.Toolbar
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.view.get
-import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import com.alibaba.android.arouter.facade.annotation.Route
 import com.mredrock.cyxbs.api.login.IBindService
@@ -57,11 +56,11 @@ class BindActivity : BaseActivity() {
         mToolbar.setNavigationOnClickListener {
             finish()
         }
-        IBindService::class.impl.isBindSuccess.observe(this, Observer {
+        IBindService::class.impl.bindEvent.collectLaunch {
             if (it) {
                 finish()
             }
-        })
+        }
         mEtPassword.setOnEditorActionListener { _, actionId, _ ->
             return@setOnEditorActionListener when (actionId) {
                 EditorInfo.IME_ACTION_SEND -> {
