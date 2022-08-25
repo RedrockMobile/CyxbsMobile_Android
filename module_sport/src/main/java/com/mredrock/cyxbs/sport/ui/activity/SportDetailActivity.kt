@@ -150,8 +150,6 @@ class SportDetailActivity : BaseBindActivity<SportActivitySportDetailBinding>() 
                 adapter = mSportRvAdapter
                 layoutManager = LinearLayoutManager(this@SportDetailActivity)
             }
-            //初始化时加载数据较慢，显示加载动画让用户知晓正在加载
-            sportSrlDetailList.autoRefreshAnimationOnly()
             //设置双击返回顶部
             onDoubleClickScrollToTop()
             //设置返回键
