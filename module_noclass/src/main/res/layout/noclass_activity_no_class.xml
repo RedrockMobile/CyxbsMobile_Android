@@ -1,91 +1,160 @@
 <?xml version="1.0" encoding="utf-8"?>
-<layout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout
+    android:background="@color/config_white_black"
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools">
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
 
-    <data>
-        <variable
-            name="stuListActivity"
-            type="com.mredrock.cyxbs.discover.noclass.pages.noclass.NoClassActivity" />
-
-    </data>
-
-    <androidx.coordinatorlayout.widget.CoordinatorLayout
+    <Toolbar
+        android:id="@+id/tb_noclass_main"
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="wrap_content"
+        android:fitsSystemWindows="true"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+        <ImageView
+            android:paddingStart="7dp"
+            android:paddingEnd="6dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:srcCompat="@drawable/noclass_ic_return"/>
+        <TextView
+            android:paddingStart="6dp"
+            android:paddingEnd="12dp"
+            android:textColor="@color/noclass_primary_text_color"
+            android:textSize="21sp"
+            android:text="没课约"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"/>
+    </Toolbar>
 
-        <androidx.constraintlayout.widget.ConstraintLayout
-            android:id="@+id/cl_noclass"
-            android:fitsSystemWindows="true"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:orientation="vertical"
-            android:weightSum="100"
-            android:background="@color/common_white_background"
-            tools:context=".pages.noclass.NoClassActivity"
-            >
+    <View
+        android:alpha="0.1"
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="@color/noclass_line_bg_color"
+        app:layout_constraintTop_toBottomOf="@+id/tb_noclass_main"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
+
+    <EditText
+        android:layout_marginStart="16dp"
+        android:layout_marginEnd="16dp"
+        android:layout_marginTop="18dp"
+        android:id="@+id/et_noclass_add_classmate"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@drawable/noclass_shape_add_shape_bg"
+        android:hint="添加同学"
+        android:textColorHint="@color/noclass_hint_text_color_light"
+        android:imeOptions="actionSearch"
+        android:maxLines="1"
+        android:paddingStart="19dp"
+        android:paddingTop="12dp"
+        android:paddingEnd="19dp"
+        android:paddingBottom="12dp"
+        android:singleLine="true"
+        android:textColor="@color/config_level_two_font_color"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/tb_noclass_main" />
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:paddingTop="23dp"
+        android:paddingBottom="8dp"
+        android:id="@+id/noclass_constrain"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/et_noclass_add_classmate"
+        tools:ignore="MissingConstraints">
+
+        <androidx.appcompat.widget.AppCompatTextView
+            android:layout_marginStart="16dp"
+            android:id="@+id/noclassAppcompattextview"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:text="分组"
+            android:textColor="@color/noclass_primary_text_color"
+            android:textSize="18sp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <ImageView
+            android:layout_marginStart="4dp"
+            android:id="@+id/iv_noclass_show"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toEndOf="@+id/noclassAppcompattextview"
+            app:layout_constraintTop_toTopOf="parent"
+            app:srcCompat="@drawable/noclass_ic_group_action" />
+
+        <androidx.appcompat.widget.AppCompatTextView
+            android:layout_marginEnd="16dp"
+            android:textColor="@color/noclass_hint_text_color_light"
+            android:id="@+id/tv_noclass_enter_group"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="进入分组管理中心"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+    <com.mredrock.cyxbs.noclass.widget.FlexHorizontalScrollView
+        android:layout_marginStart="8dp"
+        android:layout_marginEnd="8dp"
+        android:paddingTop="4dp"
+        android:paddingBottom="4dp"
+        android:id="@+id/flex_noclass_container"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/noclass_constrain" />
+
+    <View
+        android:alpha="0.1"
+        android:id="@+id/noclassView"
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="@color/noclass_line_bg_color"
+        app:layout_constraintEnd_toEndOf="@+id/flex_noclass_container"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/flex_noclass_container" />
 
 
-            <include
-                android:id="@+id/noclass_include"
-                layout="@layout/common_toolbar" />
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/rv_noclass_container"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/noclassView" />
 
-            <androidx.appcompat.widget.AppCompatEditText
-                android:id="@+id/et_noclass_add_classmate"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="30dp"
-                android:layout_marginStart="16dp"
-                android:layout_marginEnd="16dp"
-                android:background="@drawable/noclass_shape_add_classmate"
-                android:hint="添加同学"
-                android:imeOptions="actionSearch"
-                android:maxLines="1"
-                android:paddingStart="19dp"
-                android:paddingTop="12dp"
-                android:paddingBottom="12dp"
-                android:singleLine="true"
-                android:textColor="@color/common_level_two_font_color"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/noclass_include" />
+    <Button
+        style="?android:attr/borderlessButtonStyle"
+        android:id="@+id/noclass_btn_query"
+        android:layout_width="120dp"
+        android:layout_height="40dp"
+        android:background="@drawable/noclass_shape_button_common_bg"
+        android:text="查询"
+        android:textColor="@color/config_white_black"
+        android:textSize="18sp"
+        android:layout_marginBottom="58dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
 
-            <androidx.recyclerview.widget.RecyclerView
-                android:id="@+id/noclass_rv"
-                android:layout_width="match_parent"
-                android:layout_marginTop="2dp"
-                android:layout_height="0dp"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/et_noclass_add_classmate">
+</androidx.constraintlayout.widget.ConstraintLayout>
 
-            </androidx.recyclerview.widget.RecyclerView>
-
-            <Button
-                android:id="@+id/noclass_btn_query"
-                android:layout_width="120dp"
-                android:layout_height="40dp"
-                android:background="@drawable/common_shape_button"
-                android:text="查询"
-                android:textColor="@color/common_white_font_color"
-                android:textSize="18sp"
-                android:layout_marginBottom="58dp"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent" />
-
-        </androidx.constraintlayout.widget.ConstraintLayout>
-
-        <FrameLayout
-            android:id="@+id/course_bottom_sheet_content"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            app:behavior_hideable="true"
-            android:paddingTop="30dp"
-            app:behavior_peekHeight="0dp"
-            app:layout_behavior="@string/bottom_sheet_behavior">
-
-
-        </FrameLayout>
-
-    </androidx.coordinatorlayout.widget.CoordinatorLayout>
-</layout>

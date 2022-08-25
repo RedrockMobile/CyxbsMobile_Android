@@ -1,13 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-          package="com.mredrock.cyxbs.discover.noclass">
+    package="com.mredrock.cyxbs.noclass">
 
     <application>
+
+        <activity android:name="com.mredrock.cyxbs.noclass.page.ui.NoClassActivity"/>
         <activity
-            android:name="com.mredrock.cyxbs.discover.noclass.pages.noclass.NoClassActivity"
-            android:windowSoftInputMode="adjustNothing"
-            android:launchMode="singleTop"/>
-        <activity android:name=".pages.stuselect.NoClassStuSelectActivity"
-            android:theme="@style/Transparent"/>
+            android:name=".page.ui.GroupManagerActivity"
+            android:windowSoftInputMode="adjustNothing"/>
+        <activity android:name=".page.ui.GroupDetailActivity"/>
+
     </application>
+
 </manifest>
