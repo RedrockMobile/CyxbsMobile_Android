@@ -102,15 +102,20 @@ class ConfirmPasswordFragment : BaseBindFragment<MineFragmentFindPasswordIdsConf
                     if (binding.mineEtFindPasswordIdsInputPassword.text.toString() ==
                         binding.mineEtFindPasswordIdsConfirmPassword.text.toString()
                     ) {
-                        //若两个输入栏里面的内容相同，则正常设置点击事件
-                        //设置提示内容为不可见
-                        binding.mineTvFindPasswordIdsDifferent.gone()
-                        binding.mineBtnFindPasswordIdsChange.text = "Loading..."
-                        binding.mineBtnFindPasswordIdsChange.isEnabled = false
-                        mViewModel.changePassword(
-                            mViewModel.stuNum,
-                            binding.mineEtFindPasswordIdsInputPassword.text.toString()
-                        )
+                        //若长度不够则弹出提示
+                        if (binding.mineEtFindPasswordIdsInputPassword.text.toString().length < 6) {
+                            "密码长度应不小于6位哦~".toast()
+                        } else {
+                            //若两个输入栏里面的内容相同且长度足够，则正常设置点击事件
+                            //设置提示内容为不可见
+                            binding.mineTvFindPasswordIdsDifferent.gone()
+                            binding.mineBtnFindPasswordIdsChange.text = "Loading..."
+                            binding.mineBtnFindPasswordIdsChange.isEnabled = false
+                            mViewModel.changePassword(
+                                mViewModel.stuNum,
+                                binding.mineEtFindPasswordIdsInputPassword.text.toString()
+                            )
+                        }
                     } else {
                         //若两个输入栏里面的内容不相同，则弹出提示
                         binding.mineTvFindPasswordIdsDifferent.visible()
