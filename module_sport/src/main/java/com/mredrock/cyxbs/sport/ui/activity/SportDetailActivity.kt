@@ -2,11 +2,14 @@ package com.mredrock.cyxbs.sport.ui.activity
 
 import android.annotation.SuppressLint
 import android.os.Bundle
+import androidx.core.content.edit
 import androidx.core.view.postDelayed
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.alibaba.android.arouter.facade.annotation.Route
 import com.alibaba.android.arouter.launcher.ARouter
+import com.google.gson.Gson
+import com.mredrock.cyxbs.api.account.IAccountService
 import com.mredrock.cyxbs.api.login.IBindService
 import com.mredrock.cyxbs.config.route.DISCOVER_SPORT
 import com.mredrock.cyxbs.config.route.LOGIN_BIND_IDS
@@ -106,8 +109,6 @@ class SportDetailActivity : BaseBindActivity<SportActivitySportDetailBinding>() 
                 adapter = mSportRvAdapter
                 layoutManager = LinearLayoutManager(this@SportDetailActivity)
             }
-            //初始化时加载数据较慢，显示加载动画让用户知晓正在加载
-            sportSrlDetailList.autoRefreshAnimationOnly()
             //设置双击返回顶部
             onDoubleClickScrollToTop()
             //设置返回键

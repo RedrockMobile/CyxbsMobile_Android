@@ -11,4 +11,9 @@
 
     <!--    游客模式进入的字体颜色-->
     <color name="login_tv_text_tourist">#2A4E84</color>
+
+    <!--绑定ids界面-->
+    <color name="login_main_activity_login_et_edited_color">#333333</color>
+    <color name="login_main_activity_login_et_hint_color">#999999</color>
+    <color name="login_white_font_color">#ffffff</color>
 </resources>
