@@ -88,12 +88,6 @@
     <color name="common_course_affair_delete_button_background_color">#E6EFFC
     </color>
 
-    <!--    事务dialog，修改按钮渐变颜色，这个居然和通用渐变不是一个颜色，不科学-->
-    <color name="common_course_affair_modify_button_gradient_start_color">#2921D1
-    </color>
-    <color name="common_course_affair_modify_button_gradient_end_color">#5D5DF7
-    </color>
-
     <!--    添加事务时标题-->
     <color name="common_transaction_heading">#122D55</color>
     <!--    添加事务时周数选择时，点击后字体颜色-->

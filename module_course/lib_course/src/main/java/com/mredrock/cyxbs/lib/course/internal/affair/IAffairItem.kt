@@ -1,6 +1,6 @@
 package com.mredrock.cyxbs.lib.course.internal.affair
 
-import com.mredrock.cyxbs.lib.course.internal.item.IItem
+import com.mredrock.cyxbs.lib.course.internal.day.ISingleDayItem
 
 /**
  * ...
@@ -8,5 +8,6 @@ import com.mredrock.cyxbs.lib.course.internal.item.IItem
  * @email guo985892345@foxmail.com
  * @date 2022/8/17 13:03
  */
-interface IAffairItem : IItem, IAffairData {
+interface IAffairItem : ISingleDayItem, IAffairData {
+  override val lp: BaseAffairLayoutParams
 }

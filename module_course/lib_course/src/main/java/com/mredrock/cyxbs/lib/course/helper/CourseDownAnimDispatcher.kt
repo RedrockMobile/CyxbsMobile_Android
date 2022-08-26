@@ -8,7 +8,7 @@ import android.view.ViewConfiguration
 import android.view.ViewGroup
 import androidx.core.util.forEach
 import com.mredrock.cyxbs.lib.course.internal.item.IItem
-import com.mredrock.cyxbs.lib.course.internal.view.course.ICourseLayout
+import com.mredrock.cyxbs.lib.course.internal.view.course.ICourseViewGroup
 import com.ndhzs.netlayout.touch.multiple.IPointerDispatcher
 import com.ndhzs.netlayout.touch.multiple.IPointerTouchHandler
 import com.ndhzs.netlayout.touch.multiple.event.IPointerEvent
@@ -23,7 +23,7 @@ import kotlin.math.pow
  * @date 2022/8/18 13:12
  */
 open class CourseDownAnimDispatcher(
-  val course: ICourseLayout
+  val course: ICourseViewGroup
 ) : IPointerDispatcher {
   
   /**

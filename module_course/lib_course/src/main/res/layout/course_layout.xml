@@ -14,12 +14,12 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
-        <com.mredrock.cyxbs.lib.course.internal.view.scroll.impl.CourseScrollViewImpl
+        <com.mredrock.cyxbs.lib.course.internal.view.scroll.CourseScrollView
             android:id="@+id/course_scrollView"
             android:layout_width="match_parent"
             android:layout_height="match_parent">
 
-            <com.mredrock.cyxbs.lib.course.internal.view.course.CourseLayout
+            <com.mredrock.cyxbs.lib.course.internal.view.course.CourseViewGroup
                 android:id="@+id/course_courseLayout"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -276,8 +276,8 @@
                     app:net_layout_endColumn="0"
                     tools:ignore="ContentDescription" />
 
-            </com.mredrock.cyxbs.lib.course.internal.view.course.CourseLayout>
-        </com.mredrock.cyxbs.lib.course.internal.view.scroll.impl.CourseScrollViewImpl>
+            </com.mredrock.cyxbs.lib.course.internal.view.course.CourseViewGroup>
+        </com.mredrock.cyxbs.lib.course.internal.view.scroll.CourseScrollView>
 
         <LinearLayout
             android:id="@+id/course_ll_no_lesson"

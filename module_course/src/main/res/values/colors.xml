@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="course_find_course_link_bg">#E8F0FC</color>
+    <color name="course_find_course_link_line">#F2F3F8</color>
+    <color name="course_find_course_link_add_tv">#66142C52</color>
+    <color name="course_noon_dusk_tv">#66142C52</color>
+
+    <!--    课程色块内的字体颜色-->
+    <color name="course_am_lesson_tv">#FF8015</color>
+    <color name="course_pm_lesson_tv">#FF6262</color>
+    <color name="course_night_lesson_tv">#4066EA</color>
+    <color name="course_link_lesson_tv">#06A3FC</color>
+
+    <!--    课表课程色块颜色-->
+    <color name="course_am_lesson_bg">#F9E7D8</color>
+    <color name="course_pm_lesson_bg">#F9E3E4</color>
+    <color name="course_night_lesson_bg">#DDE3F8</color>
+    <color name="course_link_lesson_bg">#DFF3FC</color>
+    <color name="course_affair_bg">#FFE9EDF2</color>
+
+    <!--事务备忘条纹-->
+    <color name="course_affair_stripe">#FFE4E7EC</color>
+
+    <!--课表双人图标-->
+    <color name="course_item_header_double">#4A44E4</color>
+
+    <!--课表标识当天阴影-->
+    <color name="course_now_day_highlight">#93E8F0FC</color>
+
+    <!--添加事务时标题-->
+    <color name="course_add_affair_title_tv">#122D55</color>
+
+    <!--添加事务时周数选择时，点击后字体颜色-->
+    <color name="course_edit_affair_select_week_tv">#FFA192</color>
+
+    <!--EditText 的 hint 颜色-->
+    <color name="course_edit_text_hint">#94A6C4</color>
+
+    <!--EditText 的背景颜色-->
+    <color name="course_edit_text_bg">#acE8F0FC</color>
+
+    <!--添加事务的气泡颜色-->
+    <color name="course_add_affair_bg">#DFE6FF</color>
+
+    <!--添加事务页面的标题候选背景-->
+    <color name="course_add_affair_candidate_bg">#F2F3F7</color>
+
+    <!--事务底部弹窗的删除按钮文字颜色-->
+    <color name="course_dialog_affair_delete_tv">#7CA3DF</color>
+
+    <!--tabLayout 指示器颜色-->
+    <color name="course_tab_layout_indicator_color">#1AD0F2</color>
+
+    <!--按钮渐变颜色-->
+    <color name="course_button_gradient_start_color">#2921D1</color>
+    <color name="course_button_gradient_end_color">#5D5DF7</color>
+
+    <!--课表可上拉下拉标识小块背景-->
+    <color name="course_tip_color">#E2EDFB</color>
+</resources>

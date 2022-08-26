@@ -15,6 +15,8 @@ interface IView {
   
   fun invalidate()
   
+  fun post(action: Runnable): Boolean
+  
   fun postDelayed(delayInMillis: Long, action: Runnable)
   
   fun removeCallbacks(action: Runnable): Boolean

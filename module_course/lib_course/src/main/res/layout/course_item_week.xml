@@ -2,7 +2,7 @@
 <com.ndhzs.netlayout.view.NetLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/course_net_week"
+    android:id="@+id/course_nl_week"
     android:layout_width="match_parent"
     android:layout_height="50dp"
     app:net_rowCount="1"

@@ -1,6 +1,6 @@
 package com.mredrock.cyxbs.lib.course.internal.affair
 
-import com.mredrock.cyxbs.lib.course.internal.view.course.ICourseContainer
+import com.mredrock.cyxbs.lib.course.internal.item.IItemContainer
 
 /**
  * ...
@@ -10,35 +10,18 @@ import com.mredrock.cyxbs.lib.course.internal.view.course.ICourseContainer
  */
 interface IAffairContainer {
   
-  fun addAffairItem(affair: IAffairItem)
+  /**
+   * 添加时候成功，因为可能会被拦截
+   */
+  fun addAffairItem(affair: IAffairItem): Boolean
   
   fun removeAffairItem(affair: IAffairItem)
-  
-  /**
-   * 得到中午时间段开始时的高度值
-   */
-  fun getNoonStartHeight(): Int
-  
-  /**
-   * 得到中午时间段结束时的高度值
-   */
-  fun getNoonEndHeight(): Int
-  
-  /**
-   * 得到傍晚时间段开始时的高度值
-   */
-  fun getDuskStartHeight(): Int
-  
-  /**
-   * 得到傍晚时间段结束时的高度值
-   */
-  fun getDuskEndHeight(): Int
   
   /**
    * 添加 [IAffairItem] 和移除 [IAffairItem] 的监听
    *
    * ## 注意
-   * 这个是只有调用 [addAffairItem] 方法后才会有回调，如果调用的是 [ICourseContainer.addItem] 是不会收到回调的
+   * 这个是只有调用 [addAffairItem] 方法后才会有回调，如果调用的是 [IItemContainer.addItem] 是不会收到回调的
    */
   fun addAffairExistListener(l: OnAffairExistListener)
   
@@ -48,6 +31,7 @@ interface IAffairContainer {
   fun findAffairItemUnderByXY(x: Int, y: Int): IAffairItem?
   
   interface OnAffairExistListener {
+    fun isAbleToAddAffair(affair: IAffairItem): Boolean = false
     fun onAffairAddedBefore(affair: IAffairItem) {}
     fun onAffairAddedAfter(affair: IAffairItem) {}
     fun onAffairRemovedBefore(affair: IAffairItem) {}

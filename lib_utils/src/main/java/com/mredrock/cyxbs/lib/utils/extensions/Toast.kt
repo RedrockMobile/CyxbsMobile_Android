@@ -1,6 +1,8 @@
 package com.mredrock.cyxbs.lib.utils.extensions
 
 import android.content.Context
+import android.os.Handler
+import android.os.Looper
 import android.util.Log
 import android.view.Gravity
 import android.view.LayoutInflater
@@ -18,11 +20,19 @@ import com.mredrock.cyxbs.lib.utils.R
  */
 
 fun toast(s: CharSequence?) {
-  CyxbsToast.show(appContext, s, Toast.LENGTH_SHORT)
+  if (Thread.currentThread() !== Looper.getMainLooper().thread) {
+    Handler(Looper.getMainLooper()).post { CyxbsToast.show(appContext, s, Toast.LENGTH_SHORT) }
+  } else {
+    CyxbsToast.show(appContext, s, Toast.LENGTH_SHORT)
+  }
 }
 
 fun toastLong(s: CharSequence?) {
-  CyxbsToast.show(appContext, s, Toast.LENGTH_LONG)
+  if (Thread.currentThread() !== Looper.getMainLooper().thread) {
+    Handler(Looper.getMainLooper()).post { CyxbsToast.show(appContext, s, Toast.LENGTH_LONG) }
+  } else {
+    CyxbsToast.show(appContext, s, Toast.LENGTH_LONG)
+  }
 }
 
 fun String.toast() = toast(this)

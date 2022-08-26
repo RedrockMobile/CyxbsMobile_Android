@@ -1,9 +1,6 @@
 package com.mredrock.cyxbs.lib.course.internal.lesson
 
-import com.mredrock.cyxbs.lib.course.internal.item.IItem
-import com.mredrock.cyxbs.lib.course.internal.lesson.period.IAmLessonItem
-import com.mredrock.cyxbs.lib.course.internal.lesson.period.INightLessonItem
-import com.mredrock.cyxbs.lib.course.internal.lesson.period.IPmLessonItem
+import com.mredrock.cyxbs.lib.course.internal.day.ISingleDayItem
 
 /**
  * ...
@@ -12,14 +9,6 @@ import com.mredrock.cyxbs.lib.course.internal.lesson.period.IPmLessonItem
  * @email guo985892345@foxmail.com
  * @date 2022/8/18 19:50
  */
-interface ILessonItem : IItem, ILessonData {
-  
-  val isAmLessonItem: Boolean
-    get() = this is IAmLessonItem
-  
-  val isPmLessonItem: Boolean
-    get() = this is IPmLessonItem
-  
-  val isNightLessonItem: Boolean
-    get() = this is INightLessonItem
+interface ILessonItem : ISingleDayItem, ILessonData {
+  override val lp: BaseLessonLayoutParams
 }

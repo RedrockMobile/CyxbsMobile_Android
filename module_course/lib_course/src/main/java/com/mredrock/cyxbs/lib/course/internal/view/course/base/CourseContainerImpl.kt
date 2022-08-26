@@ -8,13 +8,9 @@ import com.mredrock.cyxbs.lib.course.R
 import com.mredrock.cyxbs.lib.course.internal.affair.IAffairContainer
 import com.mredrock.cyxbs.lib.course.internal.affair.IAffairItem
 import com.mredrock.cyxbs.lib.course.internal.item.IItem
+import com.mredrock.cyxbs.lib.course.internal.item.IItemContainer
 import com.mredrock.cyxbs.lib.course.internal.lesson.ILessonContainer
 import com.mredrock.cyxbs.lib.course.internal.lesson.ILessonItem
-import com.mredrock.cyxbs.lib.course.internal.lesson.period.IAmLessonItem
-import com.mredrock.cyxbs.lib.course.internal.lesson.period.INightLessonItem
-import com.mredrock.cyxbs.lib.course.internal.lesson.period.IPmLessonItem
-import com.mredrock.cyxbs.lib.course.internal.period.RowInclude
-import com.mredrock.cyxbs.lib.course.internal.view.course.ICourseContainer
 import com.ndhzs.netlayout.attrs.NetLayoutParams
 import com.ndhzs.netlayout.child.IChildExistListener
 
@@ -30,26 +26,35 @@ abstract class CourseContainerImpl @JvmOverloads constructor(
   attrs: AttributeSet? = null,
   defStyleAttr: Int = R.attr.courseLayoutStyle,
   defStyleRes: Int = 0
-) : AbstractCourseLayout(context, attrs, defStyleAttr, defStyleRes), ICourseContainer {
+) : AbstractCourseViewGroup(context, attrs, defStyleAttr, defStyleRes),
+  IItemContainer, ILessonContainer, IAffairContainer
+{
   
-  private val mOnItemExistListeners = ArrayList<ICourseContainer.OnItemExistListener>(2)
+  private val mOnItemExistListeners = ArrayList<IItemContainer.OnItemExistListener>(2)
   private val mOnLessonExistListeners = ArrayList<ILessonContainer.OnLessonExistListener>(2)
   private val mOnAffairExistListeners = ArrayList<IAffairContainer.OnAffairExistListener>(2)
   private val mItemByView = ArrayMap<View, IItem>()
   
-  final override fun addLessonItem(lesson: ILessonItem) {
-    require(lesson is IAmLessonItem || lesson is IPmLessonItem || lesson is INightLessonItem) {
-      "未实现该时间段！ ILessonItem = $lesson"
+  final override fun addLessonItem(lesson: ILessonItem): Boolean {
+    if (mOnLessonExistListeners.all { it.isAllowToAddLesson(lesson) }) {
+      mOnLessonExistListeners.forEach { it.onLessonAddedBefore(lesson) }
+      if (addItem(lesson)) {
+        mOnLessonExistListeners.forEach { it.onLessonAddedAfter(lesson) }
+        return true
+      }
     }
-    mOnLessonExistListeners.forEach { it.onLessonAddedBefore(lesson) }
-    addItem(lesson)
-    mOnLessonExistListeners.forEach { it.onLessonAddedAfter(lesson) }
+    return false
   }
   
-  final override fun addAffairItem(affair: IAffairItem) {
-    mOnAffairExistListeners.forEach { it.onAffairAddedBefore(affair) }
-    addItem(affair)
-    mOnAffairExistListeners.forEach { it.onAffairAddedAfter(affair) }
+  final override fun addAffairItem(affair: IAffairItem): Boolean {
+    if (mOnAffairExistListeners.all { it.isAbleToAddAffair(affair) }) {
+      mOnAffairExistListeners.forEach { it.onAffairAddedBefore(affair) }
+      if (addItem(affair)) {
+        mOnAffairExistListeners.forEach { it.onAffairAddedAfter(affair) }
+        return true
+      }
+    }
+    return false
   }
   
   override fun removeLessonItem(lesson: ILessonItem) {
@@ -76,15 +81,19 @@ abstract class CourseContainerImpl @JvmOverloads constructor(
     mOnAffairExistListeners.add(l)
   }
   
-  override fun addItemExistListener(l: ICourseContainer.OnItemExistListener) {
+  override fun addItemExistListener(l: IItemContainer.OnItemExistListener) {
     mOnItemExistListeners.add(l)
   }
   
-  final override fun addItem(item: IItem) {
-    mOnItemExistListeners.forEach { it.onItemAddedBefore(item) }
-    super.addItem(item.view, item.lp)
-    mItemByView[item.view] = item
-    mOnItemExistListeners.forEach { it.onItemAddedAfter(item) }
+  final override fun addItem(item: IItem): Boolean {
+    if (mOnItemExistListeners.all { it.isAllowToAddItem(item) }) {
+      mOnItemExistListeners.forEach { it.onItemAddedBefore(item) }
+      super.addItem(item.view, item.lp)
+      mItemByView[item.view] = item
+      mOnItemExistListeners.forEach { it.onItemAddedAfter(item) }
+      return true
+    }
+    return false
   }
   
   final override fun removeItem(item: IItem) {
@@ -110,57 +119,6 @@ abstract class CourseContainerImpl @JvmOverloads constructor(
     return findViewUnderByXY(x, y)?.let { mItemByView[it] }
   }
   
-  
-  
-  final override fun isIncludeAmPeriod(item: IItem): RowInclude {
-    val sRow = isIncludeAmPeriod(item.startRow)
-    val eRow = isIncludeAmPeriod(item.endRow)
-    return if (sRow) {
-      if (eRow) RowInclude.CONTAIN_ITEM else RowInclude.INTERSECT_TOP
-    } else {
-      if (eRow) RowInclude.INTERSECT_BOTTOM else RowInclude.CONTAIN_PERIOD
-    }
-  }
-  
-  final override fun isIncludeNoonPeriod(item: IItem): RowInclude {
-    val sRow = isIncludeNoonPeriod(item.startRow)
-    val eRow = isIncludeNoonPeriod(item.endRow)
-    return if (sRow) {
-      if (eRow) RowInclude.CONTAIN_ITEM else RowInclude.INTERSECT_TOP
-    } else {
-      if (eRow) RowInclude.INTERSECT_BOTTOM else RowInclude.CONTAIN_PERIOD
-    }
-  }
-  
-  final override fun isIncludePmPeriod(item: IItem): RowInclude {
-    val sRow = isIncludePmPeriod(item.startRow)
-    val eRow = isIncludePmPeriod(item.endRow)
-    return if (sRow) {
-      if (eRow) RowInclude.CONTAIN_ITEM else RowInclude.INTERSECT_TOP
-    } else {
-      if (eRow) RowInclude.INTERSECT_BOTTOM else RowInclude.CONTAIN_PERIOD
-    }
-  }
-  
-  final override fun isIncludeDuskPeriod(item: IItem): RowInclude {
-    val sRow = isIncludeDuskPeriod(item.startRow)
-    val eRow = isIncludeDuskPeriod(item.endRow)
-    return if (sRow) {
-      if (eRow) RowInclude.CONTAIN_ITEM else RowInclude.INTERSECT_TOP
-    } else {
-      if (eRow) RowInclude.INTERSECT_BOTTOM else RowInclude.CONTAIN_PERIOD
-    }
-  }
-  
-  final override fun isIncludeNightPeriod(item: IItem): RowInclude {
-    val sRow = isIncludeNightPeriod(item.startRow)
-    val eRow = isIncludeNightPeriod(item.endRow)
-    return if (sRow) {
-      if (eRow) RowInclude.CONTAIN_ITEM else RowInclude.INTERSECT_TOP
-    } else {
-      if (eRow) RowInclude.INTERSECT_BOTTOM else RowInclude.CONTAIN_PERIOD
-    }
-  }
   
   init {
     addChildExistListener(

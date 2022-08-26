@@ -8,7 +8,7 @@ import com.mredrock.cyxbs.lib.utils.utils.GenericityUtils.getGenericClassFromSup
 abstract class BaseVmActivity<VM : ViewModel> : BaseActivity() {
   
   @Suppress("UNCHECKED_CAST")
-  protected val viewModel by lazy(LazyThreadSafetyMode.NONE) {
+  protected open val viewModel by lazy(LazyThreadSafetyMode.NONE) {
     val factory = getViewModelFactory()
     if (factory == null) {
       ViewModelProvider(this)[getGenericClassFromSuperClass(javaClass)] as VM

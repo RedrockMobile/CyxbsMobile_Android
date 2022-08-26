@@ -10,16 +10,16 @@ import com.ndhzs.netlayout.attrs.INetBean
  * @date 2022/8/18 15:42
  */
 interface IItemData : INetBean {
-  
-  fun forEachColumn(block: (column: Int) -> Unit) {
-    for (column in startColumn .. endColumn) {
-      block.invoke(column)
-    }
+}
+
+inline fun IItemData.forEachColumn(block: (column: Int) -> Unit) {
+  for (column in startColumn .. endColumn) {
+    block.invoke(column)
   }
-  
-  fun forEachRow(block: (row: Int) -> Unit) {
-    for (row in startRow .. endRow) {
-      block.invoke(row)
-    }
+}
+
+inline fun IItemData.forEachRow(block: (row: Int) -> Unit) {
+  for (row in startRow .. endRow) {
+    block.invoke(row)
   }
 }

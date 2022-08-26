@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="course_find_course_link_bg">#2C2C2C</color>
+    <color name="course_find_course_link_line">#F0F0F0</color>
+    <color name="course_find_course_link_add_tv">#F0F0F0</color>
+
+    <color name="course_noon_dusk_tv">#80F0F0F0</color>
+
+    <!--    课程色块内的字体颜色-->
+    <color name="course_am_lesson_tv">#F0F0F2</color>
+    <color name="course_pm_lesson_tv">#F0F0F2</color>
+    <color name="course_night_lesson_tv">#F0F0F2</color>
+    <color name="course_link_lesson_tv">#F0F0F2</color>
+
+    <!--    课表课程色块颜色-->
+    <color name="course_am_lesson_bg">#26FFCCA1</color>
+    <color name="course_pm_lesson_bg">#26FF979B</color>
+    <color name="course_night_lesson_bg">#269BB2FF</color>
+    <color name="course_link_lesson_bg">#2690DBFB</color>
+    <color name="course_affair_bg">#4D000000</color>
+
+    <!--事务备忘条纹-->
+    <color name="course_affair_stripe">#4d4b4c</color>
+
+    <!--课表双人图标-->
+    <color name="course_item_header_double">#5B54FF</color>
+
+    <!--课表标识当天阴影-->
+    <color name="course_now_day_highlight">#26000101</color>
+
+    <!--添加事务时标题-->
+    <color name="course_add_affair_title_tv">#E8E8E8</color>
+
+    <!--添加事务时周数选择时，点击后字体颜色-->
+    <color name="course_edit_affair_select_week_tv">#FFA192</color>
+
+    <!--EditText 的 hint 颜色-->
+    <color name="course_edit_text_hint">#85F0F0F2</color>
+
+    <!--EditText 的背景颜色-->
+    <color name="course_edit_text_bg">#b32C2C2C</color>
+
+    <!--添加事务的气泡颜色-->
+    <color name="course_add_affair_bg">#1d1d1d</color>
+
+    <!--添加事务页面的标题候选背景-->
+    <color name="course_add_affair_candidate_bg">#2D2D2D</color>
+
+    <!--事务底部弹窗的删除按钮文字颜色-->
+    <color name="course_dialog_affair_delete_tv">#5b585c</color>
+
+    <!--tabLayout 指示器颜色-->
+    <color name="course_tab_layout_indicator_color">#1AD0F2</color>
+
+    <!--按钮渐变颜色-->
+    <color name="course_button_gradient_start_color">#2921D1</color>
+    <color name="course_button_gradient_end_color">#5D5DF7</color>
+
+    <!--课表可上拉下拉标识小块背景-->
+    <color name="course_tip_color">#000000</color>
+</resources>

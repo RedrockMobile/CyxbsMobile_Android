@@ -3,7 +3,7 @@ package com.mredrock.cyxbs.lib.course.internal.item
 import android.view.View
 import com.mredrock.cyxbs.lib.course.internal.affair.IAffairItem
 import com.mredrock.cyxbs.lib.course.internal.lesson.ILessonItem
-import com.mredrock.cyxbs.lib.course.internal.view.course.lp.CourseLayoutParam
+import com.mredrock.cyxbs.lib.course.internal.view.course.lp.ItemLayoutParams
 
 /**
  * ...
@@ -13,7 +13,7 @@ import com.mredrock.cyxbs.lib.course.internal.view.course.lp.CourseLayoutParam
  */
 interface IItem : IItemData {
   val view: View
-  val lp: CourseLayoutParam
+  val lp: ItemLayoutParams
   
   val isLessonItem: Boolean
     get() = this is ILessonItem
