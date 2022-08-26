@@ -5,19 +5,19 @@
 
 package com.mredrock.cyxbs.login.page.bind.viewmodel
 
+import androidx.lifecycle.viewModelScope
 import com.google.gson.Gson
 import com.mredrock.cyxbs.api.login.IBindService
-import com.mredrock.cyxbs.common.BaseApp
-import com.mredrock.cyxbs.common.network.ApiGenerator
-import com.mredrock.cyxbs.common.service.ServiceManager
-import com.mredrock.cyxbs.common.utils.extensions.safeSubscribeBy
-import com.mredrock.cyxbs.common.utils.extensions.setSchedulers
-import com.mredrock.cyxbs.common.utils.extensions.toast
-import com.mredrock.cyxbs.common.viewmodel.BaseViewModel
+import com.mredrock.cyxbs.lib.base.ui.BaseViewModel
+import com.mredrock.cyxbs.lib.utils.network.ApiGenerator
+import com.mredrock.cyxbs.lib.utils.service.ServiceManager
 import com.mredrock.cyxbs.login.bean.IdsBean
 import com.mredrock.cyxbs.login.bean.IdsStatus
 import com.mredrock.cyxbs.login.network.BindIdsApiService
 import com.mredrock.cyxbs.login.service.BindServiceImpl
+import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
+import io.reactivex.rxjava3.schedulers.Schedulers
+import kotlinx.coroutines.launch
 import retrofit2.HttpException
 
 class BindViewModel : BaseViewModel() {
@@ -29,7 +29,7 @@ class BindViewModel : BaseViewModel() {
 
     private var isAnimating = false
 
-    private val bindIdsApiService = ApiGenerator.getApiService(BindIdsApiService::class.java)
+    private val bindIdsApiService = ApiGenerator.getApiService(BindIdsApiService::class)
 
     /**
      * API接口实现类的实例，用于更新绑定结果的LiveData
@@ -45,18 +45,20 @@ class BindViewModel : BaseViewModel() {
         bubble.invoke()
         val startTime = System.currentTimeMillis()
         bindIdsApiService.bindIds(IdsBean(idsNum, idsPassword))
+            .subscribeOn(Schedulers.io())
+            .observeOn(AndroidSchedulers.mainThread())
             .doOnNext {
                 sleepThread(startTime)
             }
             .doOnError {
                 sleepThread(startTime)
             }
-            .setSchedulers()
             .safeSubscribeBy(
                 onNext = {
-                    bindServiceImpl._isBindSuccess.postValue(true)
-                    (ServiceManager(IBindService::class) as BindServiceImpl)
-                    BaseApp.appContext.toast("绑定成功")
+                    viewModelScope.launch {
+                        bindServiceImpl._bindEvent.emit(true)
+                    }
+                    "绑定成功".toast()
                     bubble.invoke()
                     isAnimating = false
                 },
@@ -69,16 +71,20 @@ class BindViewModel : BaseViewModel() {
                         val body = (it).response()?.errorBody() ?: return@safeSubscribeBy
                         val data = Gson().fromJson(body.string(), IdsStatus::class.java)
                         if (data.errorCode == ERROR) {
-                            bindServiceImpl._isBindSuccess.postValue(false)
-                            BaseApp.appContext.toast("绑定失败")
+                            viewModelScope.launch {
+                                bindServiceImpl._bindEvent.emit(false)
+                            }
+                            "绑定失败".toast()
                         }
                     } else {
-                        bindServiceImpl._isBindSuccess.postValue(false)
-                        BaseApp.appContext.toast("绑定失败")
+                        viewModelScope.launch {
+                            bindServiceImpl._bindEvent.emit(false)
+                        }
+                        "绑定失败".toast()
                     }
                     isAnimating = false
                 }
-            ).lifeCycle()
+            )
     }
 
     private fun sleepThread(startTime: Long) {
