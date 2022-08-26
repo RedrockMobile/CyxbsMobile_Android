@@ -6,7 +6,7 @@
     android:layout_height="match_parent"
     android:background="@color/config_white_black">
 
-    <Toolbar
+    <androidx.appcompat.widget.Toolbar
         android:id="@+id/tb_noclass_group_detail"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -29,7 +29,7 @@
             android:text="分组一"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"/>
-    </Toolbar>
+    </androidx.appcompat.widget.Toolbar>
 
     <View
         android:id="@+id/noclass_group_detail_tb_line"

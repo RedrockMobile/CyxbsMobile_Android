@@ -5,7 +5,7 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
-    android:background="@drawable/noclass_ic_group_normal_bg">
+    android:background="@drawable/noclass_ic_group_top_bg">
 
     <TextView
         android:id="@+id/tv_noclass_group_normal"

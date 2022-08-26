@@ -18,4 +18,15 @@
         <attr format="boolean" name="noclass_allowDragging" />
         <attr format="boolean" name="noclass_isFixedView" />
     </declare-styleable>
+    <!--指示器的属性-->
+    <declare-styleable name="StickIndicator" tools:ignore="ResourceName">
+        <attr name="noclass_indicator_anim_time" format="integer"/>
+        <attr name="noclass_indicator_dot_padding" format="dimension" />
+        <attr name="noclass_indicator_small_dot_width" format="dimension" />
+        <attr name="noclass_indicator_big_dot_width" format="dimension" />
+        <attr name="noclass_indicator_select_color" format="color|reference" />
+        <attr name="noclass_indicator_default_color" format="color|reference" />
+        <attr name="noclass_indicator_stick_enable" format="boolean" />
+        <attr name="noclass_indicator_show_count" format="integer" />
+    </declare-styleable>
 </resources>

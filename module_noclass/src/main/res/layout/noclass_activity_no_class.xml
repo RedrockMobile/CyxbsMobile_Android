@@ -8,7 +8,7 @@
     android:layout_height="match_parent"
     android:orientation="vertical">
 
-    <Toolbar
+    <androidx.appcompat.widget.Toolbar
         android:id="@+id/tb_noclass_main"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -30,16 +30,17 @@
             android:text="没课约"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"/>
-    </Toolbar>
+    </androidx.appcompat.widget.Toolbar>
 
     <View
-        android:alpha="0.1"
+        android:id="@+id/noclassView2"
         android:layout_width="match_parent"
         android:layout_height="1dp"
+        android:alpha="0.1"
         android:background="@color/noclass_line_bg_color"
-        app:layout_constraintTop_toBottomOf="@+id/tb_noclass_main"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent" />
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/tb_noclass_main" />
 
     <EditText
         android:layout_marginStart="16dp"
@@ -132,6 +133,14 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/flex_noclass_container" />
 
+    <com.mredrock.cyxbs.noclass.widget.StickIndicator
+        app:noclass_indicator_show_count="5"
+        android:id="@+id/indicator_noclass_group"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/noclassView" />
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/rv_noclass_container"
@@ -140,7 +149,7 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/noclassView" />
+        app:layout_constraintTop_toBottomOf="@+id/indicator_noclass_group" />
 
     <Button
         style="?android:attr/borderlessButtonStyle"
@@ -157,4 +166,3 @@
         app:layout_constraintStart_toStartOf="parent" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
-

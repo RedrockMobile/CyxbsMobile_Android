@@ -20,6 +20,7 @@ import com.mredrock.cyxbs.noclass.util.expandAnim
 import com.mredrock.cyxbs.noclass.util.rotateAnim
 import com.mredrock.cyxbs.noclass.widget.FlexHorizontalScrollView
 import com.mredrock.cyxbs.noclass.widget.MyFlexLayout
+import com.mredrock.cyxbs.noclass.widget.StickIndicator
 import java.io.Serializable
 
 /**
@@ -59,6 +60,16 @@ class NoClassActivity : BaseVmActivity<NoClassViewModel>(){
     private val mTextView : TextView by R.id.tv_noclass_enter_group.view()
 
     /**
+     * 指示器
+     */
+    private val mIndicator : StickIndicator by R.id.indicator_noclass_group.view()
+
+    /**
+     * 查询按钮
+     */
+    private val mBtnQuery : Button by R.id.noclass_btn_query.view()
+
+    /**
      * 流式布局的展开动画
      */
     private var mCollapseAnim : ValueAnimator? = null
@@ -89,6 +100,7 @@ class NoClassActivity : BaseVmActivity<NoClassViewModel>(){
     private var mList : List<NoclassGroup> = emptyList()
 
 
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.noclass_activity_no_class)
@@ -96,6 +108,19 @@ class NoClassActivity : BaseVmActivity<NoClassViewModel>(){
         initEditText()
         initImageView()
         initNet()
+        //for test:
+        var x = 0
+        mIndicator.apply {
+            setTotalCount(7)
+        }
+        mBtnQuery.setOnClickListener {
+            mIndicator.setCurIndex(x++)
+            if (x == 7){
+                x = 0
+            }
+        }
+
+        //****end****
     }
 
     /**
@@ -105,15 +130,15 @@ class NoClassActivity : BaseVmActivity<NoClassViewModel>(){
     private fun initAnim(){
         mFlexHorizontalScrollView.also {
             it.post {
-                    it.post {
-                        mCollapseAnim = it.collapseAnim(it.height,200)
-                        mExpandAnim = it.expandAnim(it.height,150)
-                        //默认收缩
-                        it.collapseAnim(it.height,1).start()
-                    }
-                    mIconCollapseAnim = mImageView.rotateAnim(180f,0f)
-                    mIconExpandAnim = mImageView.rotateAnim(0f,180f)
+                it.post {
+                    mCollapseAnim = it.collapseAnim(it.height,200)
+                    mExpandAnim = it.expandAnim(it.height,150)
+                    //默认收缩
+                    it.collapseAnim(it.height,1).start()
                 }
+                mIconCollapseAnim = mImageView.rotateAnim(180f,0f)
+                mIconExpandAnim = mImageView.rotateAnim(0f,180f)
+            }
         }
     }
 
