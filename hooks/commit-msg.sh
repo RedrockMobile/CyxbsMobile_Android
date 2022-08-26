@@ -17,6 +17,13 @@ function setRealLastReturn() {
 ###############################################Commit消息格式检查####################################################
 commitMsg=$(cat "$1")
 
+merge=$(echo "$commitMsg" | grep "^Merge")
+
+if ! [ "$merge" == "" ]; then
+  # 当得到的 merge 不为空的时候，说明是 git 合并生成的提交记录，直接退出脚本
+  exit 0
+fi
+
 # 来源于该网址：https://gitmoji.dev/
 declare -A commitMap=(
   ["art"]="改进代码的结构"
@@ -92,14 +99,9 @@ declare -A commitMap=(
   ["money_with_wings"]="添加赞助或与资金相关的基础设施"
 )
 
-merge=$(echo "$commitMsg" | grep "^Merge")
-
 result=$(echo "$commitMsg" | grep ":[a-z_]\+: .\+")
 
-if ! [ "$merge" == "" ]; then
-  # 当得到的 merge 不为空的时候，说明是 git 合并生成的提交记录
-  echo "检测到为自动merge提交信息，忽略提交格式检查"
-elif [ "$result" == "" ]; then
+if [ "$result" == "" ]; then
   # 当得到的 result 为空的时候，说明没按正确格式提交
   blank=$(echo "$commitMsg" | grep ":[a-z_]\+:.\+") # 检查是否少打了空格
   if ! [ "$blank" == "" ]; then
@@ -237,10 +239,4 @@ if [[ $realLastReturn == 1 ]]; then
   echo "提交失败，请修复上述问题后再提交"
 fi
 
-merge=$(echo "$commitMsg" | grep "^Merge")
-if ! [ "$merge" == "" ]; then
-  # 当得到的 merge 不为空的时候，说明是 git 合并生成的提交记录
-  echo "检测到为自动merge提交信息，忽略提交格式检查"
-  setRealLastReturn 0
-fi
 exit ${realLastReturn}
