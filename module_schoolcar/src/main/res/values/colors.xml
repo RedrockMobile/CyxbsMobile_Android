@@ -12,4 +12,5 @@
     <color name="schoolcar_map_btn">#ffffff</color>
     <color name="schoolcar_site_text">#2A4E84</color>
     <color name="schoolcar_card_background">#1A07BFE1</color>
+    <color name="schoolcar_change_btn">#2921D1</color>
 </resources>
