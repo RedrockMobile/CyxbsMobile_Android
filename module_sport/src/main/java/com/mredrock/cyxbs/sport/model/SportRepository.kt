@@ -1,6 +1,7 @@
 package com.mredrock.cyxbs.sport.model
 
 import androidx.core.content.edit
+import androidx.lifecycle.asFlow
 import com.google.auto.service.AutoService
 import com.google.gson.Gson
 import com.mredrock.cyxbs.api.account.IAccountService
@@ -19,8 +20,12 @@ import kotlinx.coroutines.launch
  * 因为体育打卡的数据是现扒的，接口速度很慢，并且每次请求一遍就会登录一遍，如果多次登录会导致账号被封禁，
  * 所以单独拿出来做一个仓库层
  *
- * 该仓库层使用 [InitialService] 实现依赖注入，在 Application 被初始化时就进行网络请求，改接口因为其特殊性，
+ * 该仓库层使用 [InitialService] 实现依赖注入，在 Application 被初始化时就进行网络请求，该接口因为其特殊性，
  * 所以采用这种预加载的方式，其他的一般接口请不要尝试！！！
+ *
+ * 目前的逻辑是：
+ * - 因为接口太慢，所以打卡数据需要提前加载，越早越好
+ * - 因为重复请求容易被冻结账号，所以打卡数据需要做一层本地缓存，有效时间是 4 个小时
  *
  * @author 985892345 (Guo Xiangrui)
  * @email guo985892345@foxmail.com
@@ -77,7 +82,8 @@ class SportRepository : InitialService {
     // 对退出登录进行观察，使用 flatMapLatest 关闭上次发送的流（虽然一般不会这么快就重新登录）
     IAccountService::class.impl
       .getVerifyService()
-      .observeStateFlow()
+      .observeStateLiveData()
+      .asFlow()
       .flatMapLatest { state ->
         when (state) {
           IUserStateService.UserState.LOGIN -> {
@@ -98,6 +104,7 @@ class SportRepository : InitialService {
         }
       }.onEach {
         sportDataMutableShareFlow.emit(it)
+        sSportData = it.getOrNull()
       }.launchIn(processLifecycleScope)
     
     

@@ -66,7 +66,7 @@ interface IUserStateService {
     /**
      * 观察 [UserState] 的改变
      *
-     * 注意：返回的是一个普通的 ShareFlow，用于事件观察
+     * 注意：返回的是一个普通的 ShareFlow，用于事件观察，如果你需要得到之前的值，请使用 [observeStateLiveData]
      */
     fun observeStateFlow(): SharedFlow<UserState>
     

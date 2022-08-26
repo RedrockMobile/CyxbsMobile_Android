@@ -2,20 +2,15 @@ package com.mredrock.cyxbs.sport.ui.activity
 
 import android.annotation.SuppressLint
 import android.os.Bundle
-import androidx.core.content.edit
 import androidx.core.view.postDelayed
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.alibaba.android.arouter.facade.annotation.Route
 import com.alibaba.android.arouter.launcher.ARouter
-import com.google.gson.Gson
-import com.mredrock.cyxbs.api.account.IAccountService
-import com.mredrock.cyxbs.api.login.IBindService
 import com.mredrock.cyxbs.config.route.DISCOVER_SPORT
 import com.mredrock.cyxbs.config.route.LOGIN_BIND_IDS
 import com.mredrock.cyxbs.lib.base.ui.BaseBindActivity
 import com.mredrock.cyxbs.lib.utils.extensions.*
-import com.mredrock.cyxbs.lib.utils.service.impl
 import com.mredrock.cyxbs.lib.utils.utils.SchoolCalendarUtil
 import com.mredrock.cyxbs.sport.R
 import com.mredrock.cyxbs.sport.databinding.SportActivitySportDetailBinding
@@ -51,13 +46,9 @@ class SportDetailActivity : BaseBindActivity<SportActivitySportDetailBinding>() 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         if (!sSpIdsIsBind) {
-            if (IBindService::class.impl.isBindSuccessBoolean) {
-                // 这是不可能出现的情况，出现了说明后端在体育打卡这里返回了未绑定
-            } else {
-                "请先绑定教务在线才能继续使用哦~".toast()
-                ARouter.getInstance().build(LOGIN_BIND_IDS).navigation()
-                finish()
-            }
+            "请先绑定教务在线才能继续使用哦~".toast()
+            ARouter.getInstance().build(LOGIN_BIND_IDS).navigation()
+            finish()
         }
         //初始化
         init()
@@ -156,24 +147,24 @@ class SportDetailActivity : BaseBindActivity<SportActivitySportDetailBinding>() 
      */
     @SuppressLint("SetTextI18n")
     private fun loadData(bean: SportDetailBean) {
+        binding.run {
+            sportTvDetailTotalDone.text =
+                (bean.runDone + bean.otherDone).toString()                //总的已打次数
+            sportTvDetailTotalNeed.text =
+                " /${bean.runTotal + bean.otherTotal}"                     //总的需要打卡次数
+            sportTvDetailRunDone.text =
+                (bean.runDone).toString()                                 //跑步已打卡次数
+            sportTvDetailRunNeed.text =
+                " /${bean.runTotal}"                                       //跑步需要打卡的次数
+            sportTvDetailOtherDone.text =
+                (bean.otherDone).toString()                               //其他已打卡次数
+            sportTvDetailOtherNeed.text =
+                " /${bean.otherTotal}"                                     //其他需要打卡的次数
+            sportTvDetailAward.text = bean.award.toString()               //奖励次数
+        }
         //未放假则正常加载
         if (mWeek in 1..21) {
             //添加页面顶部总数据
-            binding.run {
-                sportTvDetailTotalDone.text =
-                    (bean.runDone + bean.otherDone).toString()                //总的已打次数
-                sportTvDetailTotalNeed.text =
-                    " /${bean.runTotal + bean.otherTotal}"                     //总的需要打卡次数
-                sportTvDetailRunDone.text =
-                    (bean.runDone).toString()                                 //跑步已打卡次数
-                sportTvDetailRunNeed.text =
-                    " /${bean.runTotal}"                                       //跑步需要打卡的次数
-                sportTvDetailOtherDone.text =
-                    (bean.otherDone).toString()                               //其他已打卡次数
-                sportTvDetailOtherNeed.text =
-                    " /${bean.otherTotal}"                                     //其他需要打卡的次数
-                sportTvDetailAward.text = bean.award.toString()               //奖励次数
-            }
             if ((bean.runDone + bean.otherDone) != 0) {
                 //若打卡次数不为0则添加RecyclerView的数据并将提示所用的图片和文字隐藏
                 binding.sportTvDetailHint.gone()

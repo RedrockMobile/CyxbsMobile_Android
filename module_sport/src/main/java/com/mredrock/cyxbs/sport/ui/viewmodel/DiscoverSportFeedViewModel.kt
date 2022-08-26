@@ -37,8 +37,8 @@ class DiscoverSportFeedViewModel : BaseViewModel() {
   
   init {
     IBindService::class.impl
-      .isBindSuccess
-      .observe {
+      .bindEvent
+      .collectLaunch {
         sSpIdsIsBind = it
         _isBind.value = it
       }

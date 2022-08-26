@@ -1,6 +1,8 @@
 package com.mredrock.cyxbs.login.service
 
 import android.content.Context
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
 import com.alibaba.android.arouter.facade.annotation.Route
 import com.mredrock.cyxbs.api.account.IAccountService
 import com.mredrock.cyxbs.api.account.IUserStateService
@@ -21,9 +23,15 @@ import kotlinx.coroutines.flow.SharedFlow
 class BindServiceImpl : IBindService {
     // 判断是否绑定成功的SharedFlow
     internal val _bindEvent = MutableSharedFlow<Boolean>()
+    
+    // 判断是否绑定成功的 LiveData
+    private val _bindLiveData = MutableLiveData<Boolean>()
+    
     override val bindEvent: SharedFlow<Boolean>
         get() = _bindEvent
-
+    override val bindLiveData: LiveData<Boolean>
+        get() = _bindLiveData
+    
     override fun init(context: Context?) {
         launch {
             IAccountService::class.impl
@@ -34,6 +42,11 @@ class BindServiceImpl : IBindService {
                         _bindEvent.emit(false)
                     }
                 }
+        }
+        launch {
+            bindEvent.collect {
+                _bindLiveData.value = it
+            }
         }
     }
 }

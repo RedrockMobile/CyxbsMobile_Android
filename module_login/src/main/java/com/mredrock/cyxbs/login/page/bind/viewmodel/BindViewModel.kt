@@ -58,7 +58,6 @@ class BindViewModel : BaseViewModel() {
                     viewModelScope.launch {
                         bindServiceImpl._bindEvent.emit(true)
                     }
-                    (ServiceManager(IBindService::class) as BindServiceImpl)
                     "绑定成功".toast()
                     bubble.invoke()
                     isAnimating = false
