@@ -2,14 +2,11 @@ package com.mredrock.cyxbs.sport.ui.activity
 
 import android.annotation.SuppressLint
 import android.os.Bundle
-import androidx.core.content.edit
 import androidx.core.view.postDelayed
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.alibaba.android.arouter.facade.annotation.Route
 import com.alibaba.android.arouter.launcher.ARouter
-import com.google.gson.Gson
-import com.mredrock.cyxbs.api.account.IAccountService
 import com.mredrock.cyxbs.api.login.IBindService
 import com.mredrock.cyxbs.config.route.DISCOVER_SPORT
 import com.mredrock.cyxbs.config.route.LOGIN_BIND_IDS
@@ -24,7 +21,6 @@ import com.mredrock.cyxbs.sport.ui.adapter.SportRvAdapter
 import com.mredrock.cyxbs.sport.ui.viewmodel.SportDetailViewModel
 import com.mredrock.cyxbs.sport.util.sSpIdsIsBind
 import java.util.*
-import java.util.concurrent.TimeUnit
 import kotlin.random.Random
 
 /**
@@ -35,41 +31,6 @@ import kotlin.random.Random
  */
 @Route(path = DISCOVER_SPORT)
 class SportDetailActivity : BaseBindActivity<SportActivitySportDetailBinding>() {
-    
-    companion object {
-        /**
-         * 这个是用于预先加载的数据
-         *
-         * 因为接口是现场扒的，所以很慢，我们想的办法是在主界面的那个简单显示区域加载数据后就保存起来，
-         * 但在如何与这个 Activity 通信时遇到了麻烦
-         * 因为进入这个 Activity 有两种方式，并且那个主界面
-         * 的显示区域是个 Fragment，依附于其他 Activity，不好通过 ViewModel 等正常方式通信，
-         * 如果使用 api 模块过于麻烦了，所以就直接静态变量了
-         */
-        var sSportData: SportDetailBean?
-            get() {
-                val sp = appContext.getSp("sport")
-                val data = sp.getString("SportDetailBean", null)
-                return if (data != null) {
-                    val lastTime = sp.getLong("上次加载的时间戳", 0)
-                    val lastStuNum = sp.getString("上次加载的学号", "")
-                    if (lastStuNum == IAccountService::class.impl.getUserService().getStuNum()) {
-                        if (TimeUnit.HOURS.convert(System.currentTimeMillis() - lastTime, TimeUnit.MILLISECONDS) > 4) {
-                            // 大于 4 个小时就返回 null，表示可以刷新
-                            null
-                        } else Gson().fromJson(data, SportDetailBean::class.java)
-                    } else null
-                } else null
-            }
-            set(value) {
-                val sp = appContext.getSp("sport")
-                sp.edit {
-                    putString("SportDetailBean", Gson().toJson(value))
-                    putLong("上次加载的时间戳", System.currentTimeMillis())
-                    putString("上次加载的学号", IAccountService::class.impl.getUserService().getStuNum())
-                }
-            }
-    }
     
     /**
      * RecyclerView的adapter
@@ -86,17 +47,13 @@ class SportDetailActivity : BaseBindActivity<SportActivitySportDetailBinding>() 
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        if (sSportData != null) {
-            loadData(sSportData!!)
-        } else {
-            if (!sSpIdsIsBind) {
-                if (IBindService::class.impl.isBindSuccessBoolean) {
-                    // 这是不可能出现的情况，出现了说明后端在体育打卡这里返回了未绑定
-                } else {
-                    "请先绑定教务在线才能继续使用哦~".toast()
-                    ARouter.getInstance().build(LOGIN_BIND_IDS).navigation()
-                    finish()
-                }
+        if (!sSpIdsIsBind) {
+            if (IBindService::class.impl.isBindSuccessBoolean) {
+                // 这是不可能出现的情况，出现了说明后端在体育打卡这里返回了未绑定
+            } else {
+                "请先绑定教务在线才能继续使用哦~".toast()
+                ARouter.getInstance().build(LOGIN_BIND_IDS).navigation()
+                finish()
             }
         }
         //初始化
@@ -128,8 +85,7 @@ class SportDetailActivity : BaseBindActivity<SportActivitySportDetailBinding>() 
             }
         }
         //添加数据
-        vm.sportDetailData.observe(this) { bean ->
-            sSportData = bean
+        vm.sportData.observe(this) { bean ->
             loadData(bean)
             //设置刷新完成
             binding.sportSrlDetailList.finishRefresh()
