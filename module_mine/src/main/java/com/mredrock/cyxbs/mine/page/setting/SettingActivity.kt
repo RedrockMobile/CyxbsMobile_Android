@@ -66,20 +66,20 @@ class SettingActivity : BaseActivity() {
             defaultSharedPreferences.getBoolean(COURSE_SHOW_STATE, false)
 
         //自定义桌面小组件
-        mFmEditWidget.setOnClickListener {
+        mFmEditWidget.setOnSingleClickListener {
             ARouter.getInstance().build(WIDGET_SETTING).navigation()
         }
 
         //账号安全
-        mFmSecurity.setOnClickListener { doIfLogin { startActivity<SecurityActivity>() } }
+        mFmSecurity.setOnSingleClickListener { doIfLogin { startActivity<SecurityActivity>() } }
         //屏蔽此人
-        mFmShieldPerson.setOnClickListener {
+        mFmShieldPerson.setOnSingleClickListener {
             doIfLogin {
                 ARouter.getInstance().build(QA_MY_IGNORE).navigation()
             }
         }
         //退出登录
-        mBtnExit.setOnClickListener { doIfLogin { onExitClick() } }
+        mBtnExit.setOnSingleClickListener { doIfLogin { onExitClick() } }
     }
 
     /**

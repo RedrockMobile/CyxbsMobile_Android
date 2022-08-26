@@ -20,13 +20,13 @@ import java.util.concurrent.TimeUnit
  * Created By jay68 on 2018/8/12.
  */
 class LoginViewModel : BaseViewModel() {
-    
+
     // 用户隐私是否同意检查
     var userAgreementIsCheck = false
 
     //是否正在登录，防止用户多次点击
     private var isLanding = false
-    
+
     private val _loginEvent = MutableSharedFlow<Boolean>()
     val loginEvent: SharedFlow<Boolean>
         get() = _loginEvent
@@ -55,10 +55,9 @@ class LoginViewModel : BaseViewModel() {
                     is UnknownHostException -> toast("网络中断，请检查您的网络状态")
                     is HttpException -> toast("登录服务暂时不可用")
                     is IllegalStateException -> toast("登录失败：学号或者密码错误,请检查输入")
-//                    is RuntimeException -> {
-//                        toast(it.message)
-//                        Log.d("ggg", "(LoginViewModel.kt:60) -> message = ${it.message}")
-//                    }
+                    else -> {
+                        toast(it.message)
+                    }
                 }
                 viewModelScope.launch {
                     _loginEvent.emit(false)

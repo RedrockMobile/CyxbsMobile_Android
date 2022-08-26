@@ -9,10 +9,6 @@ import com.mredrock.cyxbs.api.account.IUserStateService
 import com.mredrock.cyxbs.common.BuildConfig
 import com.mredrock.cyxbs.common.bean.BackupUrlStatus
 import com.mredrock.cyxbs.common.bean.RedrockApiWrapper
-import com.mredrock.cyxbs.common.config.BASE_NORMAL_BACKUP_GET
-import com.mredrock.cyxbs.common.config.SUCCESS
-import com.mredrock.cyxbs.common.config.TOKEN_EXPIRE
-import com.mredrock.cyxbs.common.config.getBaseUrl
 import com.mredrock.cyxbs.common.service.ServiceManager
 import com.mredrock.cyxbs.common.utils.LogUtils
 import com.mredrock.cyxbs.common.utils.extensions.takeIfNoException
@@ -23,9 +19,10 @@ import retrofit2.converter.gson.GsonConverterFactory
 import java.util.concurrent.TimeUnit
 import android.os.Looper
 import android.util.Log
+import android.widget.Toast
 import com.mredrock.cyxbs.common.BaseApp
+import com.mredrock.cyxbs.common.config.*
 import com.mredrock.cyxbs.common.utils.LogLocal
-import com.mredrock.cyxbs.common.utils.extensions.toast
 import retrofit2.adapter.rxjava3.RxJava3CallAdapterFactory
 
 
@@ -170,11 +167,12 @@ object ApiGenerator {
                         Log.d("OKHTTP","OKHTTP${request.body}")
 
                         val response = it.proceed(request)
-                        if (!response.isSuccessful){
-                            Handler(Looper.getMainLooper()).post {
-                                BaseApp.appContext.toast("${response.code} ${request.url} ")
-                            }
-                        }
+                        // 因为部分请求一直 403、404，一直不修，就直接不弹了，所以注释掉，以后直接看 Pandora
+//                        if (!response.isSuccessful){
+//                            Handler(Looper.getMainLooper()).post {
+//                                BaseApp.appContext.toast("${response.code} ${request.url} ")
+//                            }
+//                        }
                         response
                     })
                 }
@@ -314,18 +312,27 @@ object ApiGenerator {
     }
 
     private fun proceedPoxyWithTryCatch(proceed: () -> Response): Response? {
-        var response: Response? = null
+        // 以前学长在这里使用了 try catch，会导致 Pandora 看到的问题全是空指针
+        // 所以修改为直接调用，按正常逻辑，如果出现网络连接问题就会抛异常，然后 Pandora 可以看到问题
+        // 因为不想看到一堆报黄，所以该方法仍返回 Response?，暂不打算去掉 ?
         try {
-            response = proceed.invoke()
+            return proceed.invoke()
         } catch (e: Exception) {
-            e.printStackTrace()
-        } finally {
-            return response
+            if (BuildConfig.DEBUG) {
+                Handler(Looper.getMainLooper()).post {
+                    Toast.makeText(BaseApp.appContext, "网络请求异常，请查看 Pandora", Toast.LENGTH_SHORT)
+                        .show()
+                }
+            }
+            throw e
         }
     }
 
+
+
     class BackupInterceptor : Interceptor {
 
+        @Volatile
         private var useBackupUrl: Boolean = false
         private var backupUrl: String = getBaseUrlWithoutHttps()
 
@@ -337,27 +344,49 @@ object ApiGenerator {
             }
 
             // 正常请求，照理说应该进入tokenInterceptor
-            val response = proceedPoxyWithTryCatch {
-                chain.proceed(chain.request())
+            // 除了登录和部分接口使用的 CommonApiService 以外，他们不会跑进 tokenInterceptor
+            var response: Response? = null
+            val exception: Exception
+            try {
+                response = chain.proceed(chain.request())
+                return response // 这里不能检查 code，因为部分老接口会返回 http 状态码 500
+            } catch (e: Exception) {
+                exception = e
+            }
+            
+            // 分不同的环境触发不同的容灾请求
+            when (getBaseUrl()) {
+                END_POINT_REDROCK_DEV -> {
+                    // dev 环境不触发容灾，不然会导致测试接口 404
+                    Handler(Looper.getMainLooper()).post {
+                        // 使用原生 toast 醒目一点
+                        Toast.makeText(
+                            BaseApp.appContext,
+                            "dev 请求异常, 请查看 Pandora",
+                            Toast.LENGTH_LONG
+                        ).show()
+                    }
+                }
+                END_POINT_REDROCK_PROD -> {
+                    backupUrl = getBackupUrl()
+                    if ("https://$backupUrl" != END_POINT_REDROCK_PROD) {
+                        useBackupUrl = true
+                        response?.close()
+                        return useBackupUrl(chain) // 这里面使用新的 response
+                    }
+                }
+                else -> throw RuntimeException("未知请求头！")
             }
 
-            if (response?.isSuccessful == true) {
-                return response
+            if (response == null) {
+                // 这里抛出异常可以被 Pandora 捕获
+                // 只有在没有触发容灾时会跑到这一步
+                throw exception
             }
 
-
-            // 如果请求失败（是tokenInterceptor即便刷新token也无法请求成功的情况），则请求是否有新的url
-            backupUrl = getBackupUrl()
-            // 约定给的backupUrl不带https前缀，加上
-            if ("https://$backupUrl" != getBaseUrl()) {
-                useBackupUrl = true
-                // 重新请求并返回
-                return useBackupUrl(chain)
-            }
-
-
-            return response!!
+            return response
         }
+
 
         private fun useBackupUrl(chain: Interceptor.Chain): Response {
             val newUrl: HttpUrl = chain.request().url

@@ -7,4 +7,9 @@
     <color name="schoolcar_white">#ffffff</color>
     <color name="schoolcar_explore_school_car_toolbar">#74b9fa</color>
     <color name="schoolcar_explore_school_car_right">#95b5f7</color>
+
+    <color name="schoolcar_bsb_button_background">#E8F0FC</color>
+    <color name="schoolcar_map_btn">#ffffff</color>
+    <color name="schoolcar_site_text">#2A4E84</color>
+    <color name="schoolcar_card_background">#1A07BFE1</color>
 </resources>

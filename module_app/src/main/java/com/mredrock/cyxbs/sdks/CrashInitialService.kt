@@ -1,18 +1,14 @@
 package com.mredrock.cyxbs.sdks
 
-import android.annotation.SuppressLint
 import android.app.Application
 import android.content.Context
 import android.content.pm.PackageManager
 import android.os.Build
-import android.os.Handler
-import android.os.Looper
 import com.google.auto.service.AutoService
 import com.mredrock.cyxbs.lib.utils.BuildConfig
 import com.mredrock.cyxbs.ui.ExceptionActivity
-import com.mredrock.cyxbs.spi.SdkManager
-import com.mredrock.cyxbs.spi.SdkService
-import com.tencent.bugly.crashreport.CrashReport
+import com.mredrock.cyxbs.lib.base.spi.InitialManager
+import com.mredrock.cyxbs.lib.base.spi.InitialService
 import java.io.PrintWriter
 import java.io.StringWriter
 import kotlin.system.exitProcess
@@ -23,11 +19,10 @@ import kotlin.system.exitProcess
  * @email 2767465918@qq.com
  * @date 2022/3/4 21:39
  */
-@SuppressLint("StaticFieldLeak")
-@AutoService(SdkService::class)
-class CrashInitialService : Thread.UncaughtExceptionHandler, SdkService {
+@AutoService(InitialService::class)
+class CrashInitialService : Thread.UncaughtExceptionHandler, InitialService {
     
-    override fun onMainProcess(manager: SdkManager) {
+    override fun onMainProcess(manager: InitialManager) {
         super.onMainProcess(manager)
         init(manager.application)
     }
@@ -44,48 +39,12 @@ class CrashInitialService : Thread.UncaughtExceptionHandler, SdkService {
         Thread.setDefaultUncaughtExceptionHandler(this)
     }
     
-    /*
-    * debug 状态下错误直接闪退，然后弹窗
-    * */
-    private fun debugCrash() {
-        val last = Thread.getDefaultUncaughtExceptionHandler()
-        if (last != null) {
-            if (last !== this) {
-                throw RuntimeException("重复设置了 UncaughtExceptionHandler，请以该 app 模块内的为准！！！")
-            } else {
-                // 已经重复设置，直接退出
-                return
-            }
-        }
-        Thread.setDefaultUncaughtExceptionHandler(this)
-    }
-    
-    /*
-    * release 状态下强抓 Loop 错误，手动调用 bugly 上传，尽量做到不崩溃
-    * */
-    private fun releaseCrash() {
-        Handler(Looper.getMainLooper()).post {
-            // 最多抓取一次
-            repeat(2) {
-                try {
-                    Looper.loop()
-                } catch (e: Exception) {
-                    CrashReport.postCatchedException(e)
-                }
-            }
-        }
-    }
-    
     override fun uncaughtException(p0: Thread, p1: Throwable) {
         Thread.setDefaultUncaughtExceptionHandler(defaultHandler)
         handleException(p0.name, p1)
         defaultHandler?.uncaughtException(p0, p1)
         exitProcess(0)
     }
-    
-    
-    
-    
     
     private var defaultHandler: Thread.UncaughtExceptionHandler? = null
     private lateinit var context: Context

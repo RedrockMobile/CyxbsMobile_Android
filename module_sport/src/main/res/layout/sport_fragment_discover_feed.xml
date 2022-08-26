@@ -56,7 +56,6 @@
                 android:textColor="@color/common_level_two_font_color"
                 android:textSize="11sp"
                 tools:ignore="HardcodedText" />
-
         </FrameLayout>
 
         <TextView
@@ -66,8 +65,9 @@
             android:layout_marginStart="36dp"
             android:layout_marginTop="14dp"
             android:layout_marginBottom="41dp"
-            android:fontFamily="@font/impact_min"
-            android:gravity="center"
+            android:fontFamily="@font/impact"
+            android:gravity="bottom"
+            android:text="null"
             android:textColor="@color/sport_feed_text_color"
             android:textSize="40sp"
             app:layout_constraintBottom_toBottomOf="parent"
@@ -75,7 +75,7 @@
             app:layout_constraintHorizontal_chainStyle="spread_inside"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/sport_fl_feed_header"
-            tools:text="20" />
+            tools:ignore="HardcodedText" />
 
         <TextView
             android:id="@+id/sport_tv_feed_run_times"
@@ -83,6 +83,8 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="8dp"
             android:text="次"
+            android:textColor="@color/sport_text_color"
+            app:layout_constraintBaseline_toBaselineOf="@+id/sport_tv_feed_run_need"
             app:layout_constraintBottom_toBottomOf="@+id/sport_tv_feed_run_need"
             app:layout_constraintStart_toEndOf="@+id/sport_tv_feed_run_need"
             tools:ignore="HardcodedText" />
@@ -92,6 +94,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="跑步剩余"
+            android:textColor="@color/sport_text_color_light"
             app:layout_constraintEnd_toEndOf="@+id/sport_tv_feed_run_need"
             app:layout_constraintStart_toStartOf="@+id/sport_tv_feed_run_need"
             app:layout_constraintTop_toBottomOf="@id/sport_tv_feed_run_need"
@@ -101,15 +104,16 @@
             android:id="@+id/sport_tv_feed_other_need"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:fontFamily="@font/impact_min"
+            android:fontFamily="@font/impact"
             android:gravity="center"
+            android:text="null"
             android:textColor="@color/sport_feed_text_color"
             android:textSize="40sp"
             app:layout_constraintBottom_toBottomOf="@+id/sport_tv_feed_run_need"
             app:layout_constraintEnd_toStartOf="@+id/sport_tv_feed_award"
             app:layout_constraintStart_toEndOf="@+id/sport_tv_feed_run_need"
             app:layout_constraintTop_toTopOf="@+id/sport_tv_feed_run_need"
-            tools:text="8" />
+            tools:ignore="HardcodedText" />
 
         <TextView
             android:id="@+id/sport_tv_feed_other_times"
@@ -117,6 +121,8 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="8dp"
             android:text="次"
+            android:textColor="@color/sport_text_color"
+            app:layout_constraintBaseline_toBaselineOf="@+id/sport_tv_feed_other_need"
             app:layout_constraintBottom_toBottomOf="@+id/sport_tv_feed_other_need"
             app:layout_constraintStart_toEndOf="@+id/sport_tv_feed_other_need"
             tools:ignore="HardcodedText" />
@@ -126,6 +132,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="其他剩余"
+            android:textColor="@color/sport_text_color_light"
             app:layout_constraintEnd_toEndOf="@+id/sport_tv_feed_other_need"
             app:layout_constraintStart_toStartOf="@+id/sport_tv_feed_other_need"
             app:layout_constraintTop_toBottomOf="@+id/sport_tv_feed_other_need"
@@ -136,15 +143,16 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginEnd="53dp"
-            android:fontFamily="@font/impact_min"
+            android:fontFamily="@font/impact"
             android:gravity="center"
+            android:text="null"
             android:textColor="@color/sport_feed_text_color"
             android:textSize="40sp"
             app:layout_constraintBottom_toBottomOf="@+id/sport_tv_feed_other_need"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toEndOf="@+id/sport_tv_feed_other_need"
             app:layout_constraintTop_toTopOf="@+id/sport_tv_feed_other_need"
-            tools:text="20" />
+            tools:ignore="HardcodedText" />
 
         <TextView
             android:id="@+id/sport_tv_feed_award_times"
@@ -153,6 +161,8 @@
             android:layout_marginStart="8dp"
             android:layout_marginEnd="33dp"
             android:text="次"
+            android:textColor="@color/sport_text_color"
+            app:layout_constraintBaseline_toBaselineOf="@id/sport_tv_feed_award"
             app:layout_constraintBottom_toBottomOf="@+id/sport_tv_feed_award"
             app:layout_constraintStart_toEndOf="@+id/sport_tv_feed_award"
             tools:ignore="HardcodedText" />
@@ -162,6 +172,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="奖励"
+            android:textColor="@color/sport_text_color_light"
             app:layout_constraintEnd_toEndOf="@id/sport_tv_feed_award"
             app:layout_constraintStart_toStartOf="@id/sport_tv_feed_award"
             app:layout_constraintTop_toBottomOf="@+id/sport_tv_feed_award"

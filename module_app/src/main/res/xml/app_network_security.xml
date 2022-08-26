@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<network-security-config>
+    <domain-config cleartextTrafficPermitted="true">
+        <!--Bugly https://github.com/BuglyDevTeam/Bugly-Android-Demo-->
+        <domain includeSubdomains="true">android.bugly.qq.com</domain>
+    </domain-config>
+
+    <base-config cleartextTrafficPermitted="true" >
+        <trust-anchors>
+            <certificates src="system"/>
+        </trust-anchors>
+    </base-config>
+
+    <!--对于be-prod.redrock.cqupt.edu.cn域名，只信任如下公钥-->
+    <domain-config>
+        <domain includeSubdomains="true">be-prod.redrock.cqupt.edu.cn</domain>
+        <pin-set expiration="2024-01-01">
+            <pin digest="SHA-256">jQJTbIh0grw0/1TkHSumWb+Fs0Ggogr621gT3PvPKG0=</pin>
+        </pin-set>
+    </domain-config>
+</network-security-config>

@@ -2,6 +2,7 @@ package com.mredrock.cyxbs.api.login
 
 import androidx.lifecycle.LiveData
 import com.alibaba.android.arouter.facade.template.IProvider
+import kotlinx.coroutines.flow.SharedFlow
 
 /**
  * @author : why
@@ -11,12 +12,12 @@ import com.alibaba.android.arouter.facade.template.IProvider
 interface IBindService : IProvider {
 
     /**
-     * 判断绑定ids操作是否成功的LiveData
+     * 判断绑定ids操作是否成功的 SharedFlow
      */
-    val isBindSuccess: LiveData<Boolean>
-
+    val bindEvent: SharedFlow<Boolean>
+    
     /**
-     * 判断绑定ids操作是否成功的boolean值(默认为false)
+     * 判断绑定ids操作是否成功的 LiveData，会导致数据倒灌
      */
-    val isBindSuccessBoolean: Boolean
+    val bindLiveData: LiveData<Boolean>
 }

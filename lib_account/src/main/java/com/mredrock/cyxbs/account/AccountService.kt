@@ -3,6 +3,8 @@ package com.mredrock.cyxbs.account
 import android.content.Context
 import androidx.annotation.MainThread
 import androidx.annotation.WorkerThread
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
 import com.afollestad.materialdialogs.MaterialDialog
 import com.alibaba.android.arouter.facade.annotation.Route
 import com.google.gson.Gson
@@ -132,10 +134,21 @@ internal class AccountService : IAccountService {
             tokenWrapper?.let { bind(it) }
         }
         
-        val stuNumSharedFlow = MutableSharedFlow<String?>()
+        val stuNumSharedFlow = MutableSharedFlow<String?>().apply {
+            launch {
+                collect {
+                    stuNumLiveData.postValue(it)
+                }
+            }
+        }
+        private val stuNumLiveData = MutableLiveData<String?>()
     
         override fun observeStuNumFlow(): SharedFlow<String?> {
             return stuNumSharedFlow.asSharedFlow()
+        }
+    
+        override fun observeStuNumLiveData(): LiveData<String?> {
+            return stuNumLiveData
         }
     }
 
@@ -194,9 +207,14 @@ internal class AccountService : IAccountService {
         }
     
         private val mStateSharedFlow = MutableSharedFlow<IUserStateService.UserState>()
+        private val mStateLiveData = MutableLiveData<IUserStateService.UserState>()
     
         override fun observeStateFlow(): SharedFlow<IUserStateService.UserState> {
             return mStateSharedFlow.asSharedFlow()
+        }
+    
+        override fun observeStateLiveData(): LiveData<IUserStateService.UserState> {
+            return mStateLiveData
         }
 
         private fun notifyAllStateListeners(state: IUserStateService.UserState) {
@@ -204,6 +222,7 @@ internal class AccountService : IAccountService {
             launch {
                 mStateSharedFlow.emit(state)
             }
+            mStateLiveData.postValue(state)
         }
 
         override fun isLogin() = tokenWrapper != null
@@ -324,7 +343,7 @@ internal class AccountService : IAccountService {
             //不同情况给用户不同的提示
             if (response.code() == 400) {
                 // 22年 后端有 "student info fail" 和 "sign in failed" 两种状态，但我们直接给学号或者密码错误即可
-                // 该异常已于下游约定，不可更改！！！
+                // 该异常已与下游约定，不可更改！！！
                 throw IllegalStateException("authentication error")
             }
             if (response.body() == null) {

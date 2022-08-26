@@ -10,14 +10,12 @@ import android.widget.EditText
 import android.widget.Toolbar
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.view.get
-import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import com.alibaba.android.arouter.facade.annotation.Route
 import com.mredrock.cyxbs.api.login.IBindService
-import com.mredrock.cyxbs.common.service.impl
-import com.mredrock.cyxbs.common.ui.BaseActivity
-import com.mredrock.cyxbs.common.utils.extensions.toast
 import com.mredrock.cyxbs.config.route.LOGIN_BIND_IDS
+import com.mredrock.cyxbs.lib.base.ui.BaseActivity
+import com.mredrock.cyxbs.lib.utils.service.impl
 import com.mredrock.cyxbs.login.R
 import com.mredrock.cyxbs.login.page.bind.viewmodel.BindViewModel
 import com.mredrock.cyxbs.login.widget.KeyboardUtil
@@ -52,20 +50,17 @@ class BindActivity : BaseActivity() {
                 KeyboardUtil.closeKeybord(this)
                 viewModel.bindIds(ids, password) { bubble() }
             } else {
-                toast("请输入统一认证码和密码哟")
+                "请输入统一认证码和密码哟".toast()
             }
         }
         mToolbar.setNavigationOnClickListener {
             finish()
         }
-        IBindService::class.impl.isBindSuccess.observe(this, Observer {
-            if (!it) {
-                bubble()
-            } else {
-                // 注意 这里finish返回后viewModel被重建了
+        IBindService::class.impl.bindEvent.collectLaunch {
+            if (it) {
                 finish()
             }
-        })
+        }
         mEtPassword.setOnEditorActionListener { _, actionId, _ ->
             return@setOnEditorActionListener when (actionId) {
                 EditorInfo.IME_ACTION_SEND -> {
@@ -76,7 +71,7 @@ class BindActivity : BaseActivity() {
                         viewModel.bindIds(ids, password) { bubble() }
                         true
                     } else {
-                        toast("请输入统一认证码和密码哟")
+                        "请输入统一认证码和密码哟".toast()
                         false
                     }
                 }

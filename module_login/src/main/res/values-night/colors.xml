@@ -9,4 +9,8 @@
 
     <!--    游客模式进入后面的字体颜色-->
     <color name="login_tv_text_tourist">#ffffff</color>
+
+    <!--绑定ids界面-->
+    <color name="login_main_activity_login_et_edited_color">#ffffff</color>
+    <color name="login_white_font_color">#ffffff</color>
 </resources>
