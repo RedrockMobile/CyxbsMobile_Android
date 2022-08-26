@@ -320,7 +320,7 @@ object ApiGenerator {
         } catch (e: Exception) {
             if (BuildConfig.DEBUG) {
                 Handler(Looper.getMainLooper()).post {
-                    Toast.makeText(BaseApp.appContext, "一个网络请求出错，请查看 Pandora", Toast.LENGTH_SHORT)
+                    Toast.makeText(BaseApp.appContext, "网络请求异常，请查看 Pandora", Toast.LENGTH_SHORT)
                         .show()
                 }
             }
@@ -353,41 +353,34 @@ object ApiGenerator {
             } catch (e: Exception) {
                 exception = e
             }
-
-
-            backupUrl = getBackupUrl()
+            
             // 分不同的环境触发不同的容灾请求
-            when (getBackupUrl()) {
+            when (getBaseUrl()) {
                 END_POINT_REDROCK_DEV -> {
-                    // dev 环境先检查容灾是否是 prod
-                    if ("https://$backupUrl" != END_POINT_REDROCK_PROD) {
-                        useBackupUrl = true
-                        response?.close()
-                        return useBackupUrl(chain) // 这里面使用新的 response
-                    } else {
-                        // dev 环境不触发容灾，不然会导致测试接口 404
-                        Handler(Looper.getMainLooper()).post {
-                            // 使用原生 toast 醒目一点
-                            Toast.makeText(
-                                BaseApp.appContext,
-                                "dev 请求出错, url = ${response?.request?.url.toString()}",
-                                Toast.LENGTH_LONG
-                            ).show()
-                        }
+                    // dev 环境不触发容灾，不然会导致测试接口 404
+                    Handler(Looper.getMainLooper()).post {
+                        // 使用原生 toast 醒目一点
+                        Toast.makeText(
+                            BaseApp.appContext,
+                            "dev 请求异常, 请查看 Pandora",
+                            Toast.LENGTH_LONG
+                        ).show()
                     }
                 }
                 END_POINT_REDROCK_PROD -> {
+                    backupUrl = getBackupUrl()
                     if ("https://$backupUrl" != END_POINT_REDROCK_PROD) {
                         useBackupUrl = true
                         response?.close()
                         return useBackupUrl(chain) // 这里面使用新的 response
                     }
                 }
+                else -> throw RuntimeException("未知请求头！")
             }
 
             if (response == null) {
                 // 这里抛出异常可以被 Pandora 捕获
-                // 只有在 dev 环境且没有使用容灾时会跑到这一步
+                // 只有在没有触发容灾时会跑到这一步
                 throw exception
             }
 

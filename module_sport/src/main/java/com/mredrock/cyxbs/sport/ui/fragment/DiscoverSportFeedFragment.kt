@@ -14,7 +14,6 @@ import com.afollestad.materialdialogs.customview.getCustomView
 import com.alibaba.android.arouter.facade.annotation.Route
 import com.alibaba.android.arouter.launcher.ARouter
 import com.mredrock.cyxbs.api.account.IAccountService
-import com.mredrock.cyxbs.api.login.IBindService
 import com.mredrock.cyxbs.config.route.DISCOVER_SPORT_FEED
 import com.mredrock.cyxbs.config.route.LOGIN_BIND_IDS
 import com.mredrock.cyxbs.lib.base.ui.mvvm.BaseVmBindFragment
@@ -37,14 +36,8 @@ import com.mredrock.cyxbs.sport.util.sSpIdsIsBind
 @Route(path = DISCOVER_SPORT_FEED)
 class DiscoverSportFeedFragment :
     BaseVmBindFragment<DiscoverSportFeedViewModel, SportFragmentDiscoverFeedBinding>() {
-
+    
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        IBindService::class.impl
-            .bindEvent
-            .collectLaunch {
-                sSpIdsIsBind = it
-            }
-
         binding.sportIvFeedTips.setOnSingleClickListener {
             MaterialDialog(requireActivity()).show {
                 customView(R.layout.sport_dialog_feed)
@@ -65,10 +58,8 @@ class DiscoverSportFeedFragment :
         //监听绑定ids的状态，存入SharePreference中
         viewModel.isBind.observe {
             if (!it) {
-                sSpIdsIsBind = false
                 unbound()
             } else {
-                sSpIdsIsBind = true
                 showData()
             }
         }
@@ -82,13 +73,6 @@ class DiscoverSportFeedFragment :
             } else {
                 showData()
             }
-        }
-    }
-
-    override fun onResume() {
-        super.onResume()
-        if (IAccountService::class.impl.getVerifyService().isLogin()) {
-            viewModel.refreshSportData()
         }
     }
 
@@ -161,8 +145,6 @@ class DiscoverSportFeedFragment :
             }
             //设置点击跳转进详情页
             sportClFeed.setOnSingleClickListener {
-                // 通过静态变量传参，这是最简单的办法
-                SportDetailActivity.sSportData = viewModel.sportData.value
                 startActivity(Intent(requireContext(), SportDetailActivity::class.java))
             }
         }

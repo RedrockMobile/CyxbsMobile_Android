@@ -8,7 +8,9 @@
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="内部测试功能，请输入密码才能使用！"
+        android:text="Android 开发人员内部测试工具\n请输入密码才能使用！"
+        android:textColor="@android:color/black"
+        android:gravity="center"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
@@ -38,6 +40,17 @@
         app:layout_constraintTop_toBottomOf="@+id/debug_et_pandora"
         app:layout_constraintEnd_toEndOf="@+id/debug_et_pandora"
         app:layout_constraintStart_toStartOf="@+id/debug_et_pandora"
+        android:layout_marginTop="32dp" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="若不使用，直接返回即可\n（每次摇一摇手机才会触发该界面）"
+        android:gravity="center"
+        app:layout_constraintTop_toBottomOf="@+id/debug_btn_pandora"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        tools:ignore="HardcodedText"
         android:layout_marginTop="32dp" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
