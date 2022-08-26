@@ -37,11 +37,11 @@ import com.mredrock.cyxbs.sport.util.sSpIdsIsBind
 @Route(path = DISCOVER_SPORT_FEED)
 class DiscoverSportFeedFragment :
     BaseVmBindFragment<DiscoverSportFeedViewModel, SportFragmentDiscoverFeedBinding>() {
-    
+
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         IBindService::class.impl
-            .isBindSuccess
-            .observe {
+            .bindEvent
+            .collectLaunch {
                 sSpIdsIsBind = it
             }
 

@@ -2,7 +2,6 @@ package com.mredrock.cyxbs.login.page.login.viewmodel
 
 import androidx.lifecycle.viewModelScope
 import com.mredrock.cyxbs.api.account.IAccountService
-import com.mredrock.cyxbs.common.BuildConfig
 import com.mredrock.cyxbs.lib.base.ui.BaseViewModel
 import com.mredrock.cyxbs.lib.utils.service.impl
 import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
@@ -21,13 +20,13 @@ import java.util.concurrent.TimeUnit
  * Created By jay68 on 2018/8/12.
  */
 class LoginViewModel : BaseViewModel() {
-    
+
     // 用户隐私是否同意检查
     var userAgreementIsCheck = false
 
     //是否正在登录，防止用户多次点击
     private var isLanding = false
-    
+
     private val _loginEvent = MutableSharedFlow<Boolean>()
     val loginEvent: SharedFlow<Boolean>
         get() = _loginEvent
@@ -58,9 +57,6 @@ class LoginViewModel : BaseViewModel() {
                     is IllegalStateException -> toast("登录失败：学号或者密码错误,请检查输入")
                     else -> {
                         toast(it.message)
-                        if (BuildConfig.DEBUG) {
-                            toast("登录出错：${it.message}")
-                        }
                     }
                 }
                 viewModelScope.launch {

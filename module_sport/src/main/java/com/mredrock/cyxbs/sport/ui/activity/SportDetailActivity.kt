@@ -35,7 +35,7 @@ import kotlin.random.Random
  */
 @Route(path = DISCOVER_SPORT)
 class SportDetailActivity : BaseBindActivity<SportActivitySportDetailBinding>() {
-    
+
     companion object {
         /**
          * 这个是用于预先加载的数据
@@ -54,7 +54,11 @@ class SportDetailActivity : BaseBindActivity<SportActivitySportDetailBinding>() 
                     val lastTime = sp.getLong("上次加载的时间戳", 0)
                     val lastStuNum = sp.getString("上次加载的学号", "")
                     if (lastStuNum == IAccountService::class.impl.getUserService().getStuNum()) {
-                        if (TimeUnit.HOURS.convert(System.currentTimeMillis() - lastTime, TimeUnit.MILLISECONDS) > 4) {
+                        if (TimeUnit.HOURS.convert(
+                                System.currentTimeMillis() - lastTime,
+                                TimeUnit.MILLISECONDS
+                            ) > 4
+                        ) {
                             // 大于 4 个小时就返回 null，表示可以刷新
                             null
                         } else Gson().fromJson(data, SportDetailBean::class.java)
@@ -70,7 +74,7 @@ class SportDetailActivity : BaseBindActivity<SportActivitySportDetailBinding>() 
                 }
             }
     }
-    
+
     /**
      * RecyclerView的adapter
      */
@@ -90,12 +94,14 @@ class SportDetailActivity : BaseBindActivity<SportActivitySportDetailBinding>() 
             loadData(sSportData!!)
         } else {
             if (!sSpIdsIsBind) {
-                if (IBindService::class.impl.isBindSuccessBoolean) {
-                    // 这是不可能出现的情况，出现了说明后端在体育打卡这里返回了未绑定
-                } else {
-                    "请先绑定教务在线才能继续使用哦~".toast()
-                    ARouter.getInstance().build(LOGIN_BIND_IDS).navigation()
-                    finish()
+                IBindService::class.impl.bindEvent.collectLaunch {
+                    if (it) {
+                        // 这是不可能出现的情况，出现了说明后端在体育打卡这里返回了未绑定
+                    } else {
+                        "请先绑定教务在线才能继续使用哦~".toast()
+                        ARouter.getInstance().build(LOGIN_BIND_IDS).navigation()
+                        finish()
+                    }
                 }
             }
         }
