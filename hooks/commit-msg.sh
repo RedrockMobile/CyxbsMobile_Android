@@ -236,4 +236,11 @@ if [[ $realLastReturn == 1 ]]; then
   echo ""
   echo "提交失败，请修复上述问题后再提交"
 fi
+
+merge=$(echo "$commitMsg" | grep "^Merge")
+if ! [ "$merge" == "" ]; then
+  # 当得到的 merge 不为空的时候，说明是 git 合并生成的提交记录
+  echo "检测到为自动merge提交信息，忽略提交格式检查"
+  setRealLastReturn 0
+fi
 exit ${realLastReturn}

@@ -11,10 +11,7 @@
     <string name="grades_bottom_sheet_bind_success">绑定成功</string>
     <string name="grades_bottom_sheet_bind_wrong">账号或密码错误</string>
     <string name="grades_bottom_sheet_bind_fail">绑定失败</string>
-    <string name="grades_bottom_sheet_unbind_success">解绑成功</string>
-    <string name="grades_bottom_sheet_unbind_fail">解绑失败</string>
     <string name="grades_no_bind_stdNum" tools:ignore="ExtraTranslation">未绑定</string>
-    <string name="grades_unbind_stdNum" tools:ignore="ExtraTranslation">解除绑定</string>
     <string name="grades_no_bind_text">你还没有绑定哦</string>
     <!--gpa-->
     <string name="grades_bottom_sheet_title">学分成绩</string>

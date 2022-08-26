@@ -4,6 +4,7 @@ import android.content.Context
 import android.content.res.TypedArray
 import android.graphics.*
 import android.util.AttributeSet
+import android.util.Log
 import android.util.TypedValue
 import android.view.Gravity
 import android.view.View
@@ -172,10 +173,12 @@ open class JCardViewPlus(context: Context, attrs: AttributeSet?, defStyleAttr: I
         }
         val parentLeft = paddingLeft + contentPaddingLeft
         val parentTop = paddingTop + contentPaddingTop
+        Log.d("ggg", "(JCardViewPlus.kt:175) -> parentTop = $parentTop   paddingTop = $paddingTop   contentPaddingTop = $contentPaddingTop")
         val child = getChildAt(0)
         val lp = child.layoutParams as LayoutParams
         val childLeft = parentLeft + lp.leftMargin
         val childTop = parentTop + lp.topMargin
+        Log.d("ggg", "(JCardViewPlus.kt:181) -> childTop = $childTop")
         child.layout(childLeft, childTop, childLeft + child.measuredWidth, childTop + child.measuredHeight)
 //        layoutChildren(left, top, right, bottom)
     }

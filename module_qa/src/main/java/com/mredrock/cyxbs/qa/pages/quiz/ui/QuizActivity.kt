@@ -104,7 +104,7 @@ class QuizActivity : BaseViewModelActivity<QuizViewModel>() {
                 loadDraft(draft)
             }
         }
-        viewModel.backAndRefreshPreActivityEvent.observeNotNull {
+        viewModel.backAndRefreshPreActivityEvent.observe {
             if (it) {
                 if (viewModel.isReleaseSuccess) {
                     topicMap[topicType]?.let { id ->
@@ -123,14 +123,14 @@ class QuizActivity : BaseViewModelActivity<QuizViewModel>() {
             }
         }
 
-        viewModel.finishReleaseCommentEvent.observeNotNull {
+        viewModel.finishReleaseCommentEvent.observe {
             if (it) {
                 setResult(NEED_REFRESH_RESULT, Intent().apply { putExtra("text", "") })
                 finish()
             }
         }
 
-        viewModel.finishActivityEvent.observeNotNull {
+        viewModel.finishActivityEvent.observe {
             progressDialog?.dismiss()
             finish()
         }

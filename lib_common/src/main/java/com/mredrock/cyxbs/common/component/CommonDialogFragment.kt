@@ -12,7 +12,6 @@ import android.widget.FrameLayout
 import androidx.annotation.LayoutRes
 import androidx.fragment.app.DialogFragment
 import com.mredrock.cyxbs.common.R
-import com.mredrock.cyxbs.common.utils.LogUtils
 import com.mredrock.cyxbs.common.utils.extensions.gone
 import kotlinx.android.synthetic.main.common_dialog.*
 import com.mredrock.cyxbs.common.utils.extensions.*
@@ -22,6 +21,7 @@ import com.mredrock.cyxbs.common.utils.extensions.*
 /**
  * Created by roger on 2020/2/2
  */
+@Deprecated("不规范的 Fragment 使用，不能暴露接口出来给外部设置")
 class CommonDialogFragment() : DialogFragment() {
     @LayoutRes
     private var containerRes: Int? = null

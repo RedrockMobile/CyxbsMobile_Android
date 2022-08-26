@@ -24,6 +24,9 @@ import com.mredrock.cyxbs.common.bean.RedrockApiWrapper
 import com.mredrock.cyxbs.common.config.*
 import com.mredrock.cyxbs.common.service.impl
 import com.mredrock.cyxbs.common.utils.extensions.*
+import kotlinx.coroutines.flow.MutableSharedFlow
+import kotlinx.coroutines.flow.SharedFlow
+import kotlinx.coroutines.flow.asSharedFlow
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.HttpException
@@ -85,17 +88,17 @@ internal class AccountService : IAccountService {
                             putString(SP_KEY_USER_INFO, mUserInfoEncryption.encrypt(Gson().toJson(userInfo)))
                         }
                         this@AccountService.user = userInfo
+                        // 通知 StuNum 更新
+                        launch {
+                            (mUserService as UserService).stuNumSharedFlow.emit(it.stuNum)
+                        }
                     }
                 }
 
                 override fun onFailure(call: Call<RedrockApiWrapper<UserInfo>>, t: Throwable) {
                     BaseApp.appContext.toast("个人信息无法更新")
                 }
-
             })
-
-
-
     }
 
     inner class UserService : IUserService {
@@ -128,6 +131,12 @@ internal class AccountService : IAccountService {
         override fun refreshInfo() {
             tokenWrapper?.let { bind(it) }
         }
+        
+        val stuNumSharedFlow = MutableSharedFlow<String?>()
+    
+        override fun observeStuNumFlow(): SharedFlow<String?> {
+            return stuNumSharedFlow.asSharedFlow()
+        }
     }
 
     inner class UserEditorService : IUserEditorService {
@@ -154,6 +163,11 @@ internal class AccountService : IAccountService {
 
     inner class UserStateService : IUserStateService {
         private val stateListeners: MutableList<IUserStateService.StateListener> = mutableListOf()
+    
+        @Deprecated(
+            "该方法不好管理生命周期，更建议使用 observeStateFlow()",
+            replaceWith = ReplaceWith("observeStateFlow()")
+        )
         override fun addOnStateChangedListener(listener: (state: IUserStateService.UserState) -> Unit) {
             stateListeners.add(object : IUserStateService.StateListener {
                 override fun onStateChanged(state: IUserStateService.UserState) {
@@ -161,11 +175,15 @@ internal class AccountService : IAccountService {
                 }
             })
         }
-
+    
+        @Deprecated(
+            "该方法不好管理生命周期，更建议使用 observeStateFlow()",
+            replaceWith = ReplaceWith("observeStateFlow()")
+        )
         override fun addOnStateChangedListener(listener: IUserStateService.StateListener) {
             stateListeners.add(listener)
         }
-
+    
         override fun removeStateChangedListener(listener: IUserStateService.StateListener) {
             stateListeners.remove(listener)
         }
@@ -174,9 +192,18 @@ internal class AccountService : IAccountService {
         override fun removeAllStateListeners() {
             stateListeners.clear()
         }
+    
+        private val mStateSharedFlow = MutableSharedFlow<IUserStateService.UserState>()
+    
+        override fun observeStateFlow(): SharedFlow<IUserStateService.UserState> {
+            return mStateSharedFlow.asSharedFlow()
+        }
 
         private fun notifyAllStateListeners(state: IUserStateService.UserState) {
             for (i in stateListeners) i.onStateChanged(state)
+            launch {
+                mStateSharedFlow.emit(state)
+            }
         }
 
         override fun isLogin() = tokenWrapper != null
@@ -207,6 +234,10 @@ internal class AccountService : IAccountService {
             userInfo?.let {
                 user = GsonBuilder().create()
                     .fromJson(mUserInfoEncryption.decrypt(userInfo), UserInfo::class.java)
+                // 这里是从本地拿取数据，是第一次通知 StuNum 更新
+                launch {
+                    (mUserService as UserService).stuNumSharedFlow.emit(user?.stuNum)
+                }
             }
             tokenWrapper = TokenWrapper.fromJson(
                 mUserInfoEncryption.decrypt(
@@ -341,6 +372,10 @@ internal class AccountService : IAccountService {
             ServiceManager.getService(IElectricityService::class.java).clearSP()
             ServiceManager.getService(IVolunteerService::class.java).clearSP()
             user = null
+            // 通知 StuNum 更新
+            launch {
+                (mUserService as UserService).stuNumSharedFlow.emit(null)
+            }
             tokenWrapper = null
             mContext.runOnUiThread {
                 notifyAllStateListeners(IUserStateService.UserState.NOT_LOGIN)

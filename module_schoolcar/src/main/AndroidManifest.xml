@@ -9,6 +9,8 @@
         tools:targetApi="r">
         <activity android:name="com.mredrock.cyxbs.discover.schoolcar.SchoolCarActivity"
             android:launchMode="singleTop"/>
+        <activity android:name="com.mredrock.cyxbs.discover.schoolcar.SchoolDetailActivity"
+            />
         <meta-data
             android:name="com.amap.api.v2.apikey"
             android:value="${amap_apikey}"/>

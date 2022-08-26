@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+android:animation="@anim/item_animation_fall_down”：定义将哪个动画应用于布局中的每一项。
+android:delay=”15%"：设置动画延迟，0%表示所有项目同时进行动画，100%表示每个项目完成其动画后才开始下一个项目。15%则表示项目动画到达15%时开始下一个项目的动画。
+android:animationOrder="normal"：控制内容的动画顺序，有三种类型：normal，reverse和random。normal表示根据布局的自然顺序（垂直：从上到下，水平：从左到右）出现动画。reverse与normal相反。random表示动画随机出现。
+-->
+<layoutAnimation
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:animation="@anim/notification_item_animation_fall_down"
+    android:delay="15%"
+    android:animationOrder="normal"
+    />

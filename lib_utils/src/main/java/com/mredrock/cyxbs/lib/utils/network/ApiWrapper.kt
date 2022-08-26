@@ -24,12 +24,12 @@ open class ApiWrapper<T> (
  *
  * 禁止私自添加其他字段
  * - 如果需要添加且不是老接口，那说明是后端没有遵守规范，让后端自己改接口
- * - 如果是老接口，请使用
+ * - 如果是老接口，请自己使用 map 操作符判断
  */
 open class ApiStatus(
-  @SerializedName("errorCode")
+  @SerializedName("status")
   val status: Int = -1,
-  @SerializedName("errorMsg")
+  @SerializedName("info")
   val info: String = ""
 ) : Serializable {
   

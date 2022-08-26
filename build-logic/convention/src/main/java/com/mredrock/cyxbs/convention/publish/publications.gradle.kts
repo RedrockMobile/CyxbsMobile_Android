@@ -8,7 +8,7 @@ plugins {
 }
 
 // 开启模块缓存的总开关
-var isOpenModuleCache = true
+var isOpenModuleCache = false
 
 if (plugins.hasPlugin("com.android.application")) {
   extensions.configure<BaseAppModuleExtension> {
