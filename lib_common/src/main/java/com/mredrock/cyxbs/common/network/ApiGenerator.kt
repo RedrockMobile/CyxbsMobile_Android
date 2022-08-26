@@ -24,7 +24,6 @@ import com.mredrock.cyxbs.common.BaseApp
 import com.mredrock.cyxbs.common.config.*
 import com.mredrock.cyxbs.common.utils.LogLocal
 import retrofit2.adapter.rxjava3.RxJava3CallAdapterFactory
-import java.net.UnknownHostException
 
 
 /**
@@ -313,28 +312,23 @@ object ApiGenerator {
     }
 
     private fun proceedPoxyWithTryCatch(proceed: () -> Response): Response? {
-        var response: Response? = null
+        // 以前学长在这里使用了 try catch，会导致 Pandora 看到的问题全是空指针
+        // 所以修改为直接调用，按正常逻辑，如果出现网络连接问题就会抛异常，然后 Pandora 可以看到问题
+        // 因为不想看到一堆报黄，所以该方法仍返回 Response?，暂不打算去掉 ?
         try {
-            response = proceed.invoke()
+            return proceed.invoke()
         } catch (e: Exception) {
-            /*
-            * 大部分的网络问题原因都是这个 e，如果你看到这条注释，请在这里打上断点
-            * */
-            e.printStackTrace()
             if (BuildConfig.DEBUG) {
                 Handler(Looper.getMainLooper()).post {
-                    // 使用原生 toast 醒目一点
-                    if (e is UnknownHostException) {
-                        Toast.makeText(BaseApp.appContext, "网络未连接或学校 NS 炸裂！", Toast.LENGTH_LONG).show()
-                    } else {
-                        Toast.makeText(BaseApp.appContext, "网络错误：${e.message}", Toast.LENGTH_LONG).show()
-                    }
+                    Toast.makeText(BaseApp.appContext, "一个网络请求出错，请查看 Pandora", Toast.LENGTH_SHORT)
+                        .show()
                 }
             }
-        } finally {
-            return response
+            throw e
         }
     }
+
+
 
     class BackupInterceptor : Interceptor {
 
@@ -351,15 +345,16 @@ object ApiGenerator {
 
             // 正常请求，照理说应该进入tokenInterceptor
             // 除了登录和部分接口使用的 CommonApiService 以外，他们不会跑进 tokenInterceptor
-            val response = proceedPoxyWithTryCatch {
-                chain.proceed(chain.request())
+            var response: Response? = null
+            val exception: Exception
+            try {
+                response = chain.proceed(chain.request())
+                return response // 这里不能检查 code，因为部分老接口会返回 http 状态码 500
+            } catch (e: Exception) {
+                exception = e
             }
 
-            if (response?.isSuccessful == true) {
-                return response
-            }
-    
-    
+
             backupUrl = getBackupUrl()
             // 分不同的环境触发不同的容灾请求
             when (getBackupUrl()) {
@@ -390,8 +385,15 @@ object ApiGenerator {
                 }
             }
 
-            return response!!
+            if (response == null) {
+                // 这里抛出异常可以被 Pandora 捕获
+                // 只有在 dev 环境且没有使用容灾时会跑到这一步
+                throw exception
+            }
+
+            return response
         }
+
 
         private fun useBackupUrl(chain: Interceptor.Chain): Response {
             val newUrl: HttpUrl = chain.request().url

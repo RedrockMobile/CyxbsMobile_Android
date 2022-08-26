@@ -16,7 +16,6 @@ import java.lang.reflect.Method
  */
 interface InitialManager {
     val application: Application
-    //currentProcessName中还包含部分不可见字符。所有不可使用equals
     fun isMainProcess(): Boolean  = currentProcessName()?.equals(applicationId()) ?: false
 
     fun currentProcessName(): String? {
