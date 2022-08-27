@@ -4,7 +4,6 @@ import com.mredrock.cyxbs.convention.depend.dependLottie
 import com.mredrock.cyxbs.convention.depend.dependNetwork
 import com.mredrock.cyxbs.convention.depend.dependRxjava
 import com.mredrock.cyxbs.convention.depend.lib.dependLibBase
-import com.mredrock.cyxbs.convention.depend.lib.dependLibCommon
 import com.mredrock.cyxbs.convention.depend.lib.dependLibConfig
 import com.mredrock.cyxbs.convention.depend.lib.dependLibUtils
 
@@ -15,7 +14,6 @@ plugins {
 dependLibBase()
 dependLibUtils()
 dependLibConfig()
-dependLibCommon()
 
 dependApiAccount()
 

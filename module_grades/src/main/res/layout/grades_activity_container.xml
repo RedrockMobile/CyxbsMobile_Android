@@ -9,7 +9,9 @@
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        android:layout_marginBottom="70dp">
+        <!--这个 60 dp 为 头 的 85dp 减去背景的顶部阴影 15dp-->
 
         <com.mredrock.cyxbs.common.component.JToolbar
             android:id="@+id/toolbar"

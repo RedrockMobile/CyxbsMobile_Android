@@ -26,6 +26,7 @@ import com.mredrock.cyxbs.common.ui.BaseActivity
 import com.mredrock.cyxbs.common.utils.LogUtils
 import com.mredrock.cyxbs.common.utils.extensions.defaultSharedPreferences
 import com.mredrock.cyxbs.common.utils.extensions.dip
+import com.mredrock.cyxbs.common.utils.extensions.px2dip
 import com.mredrock.cyxbs.discover.schoolcar.Interface.SchoolCarInterface
 import com.mredrock.cyxbs.discover.schoolcar.adapter.CarIconAdapter
 import com.mredrock.cyxbs.discover.schoolcar.adapter.CarSiteAdapter
@@ -188,6 +189,8 @@ class SchoolCarActivity:BaseActivity() {
     behavior.addBottomSheetCallback(object :BottomSheetBehavior.BottomSheetCallback(){
       var cvHeight:Float = 0.0F
       var ivHeight:Float = 0.0F
+      var realPath = 100
+      var path:Float = 285F
       override fun onStateChanged(bottomSheet: View, newState: Int) {
         if(vm.line.value == -1 && newState == BottomSheetBehavior.STATE_DRAGGING && isBeginning){
           vm.showRecently()
@@ -197,9 +200,13 @@ class SchoolCarActivity:BaseActivity() {
         if (cvHeight == 0.0F && ivHeight == 0.0F) {
           cvHeight = binding.schoolCarCvPositioning.y
           ivHeight = binding.schoolCarCvPositioningIv.y
+          val top = binding.schoolCarCvOut.bottom
+          val bottom = binding.schoolCarCvPositioning.top
+          realPath = bottom - top
+          path = px2dip(realPath) - 18F
         }
-        binding.schoolCarCvPositioning.y = cvHeight-dip(204*slideOffset).toFloat()
-        binding.schoolCarCvPositioningIv.y = ivHeight-dip(204*slideOffset).toFloat()
+        binding.schoolCarCvPositioning.y = cvHeight-dip(path*slideOffset).toFloat()
+        binding.schoolCarCvPositioningIv.y = ivHeight-dip(path*slideOffset).toFloat()
       }
     })
 

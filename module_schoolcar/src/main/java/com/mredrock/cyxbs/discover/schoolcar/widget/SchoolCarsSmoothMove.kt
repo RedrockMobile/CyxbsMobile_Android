@@ -96,7 +96,7 @@ class SchoolCarsSmoothMove(
       //初始化
       vm.line.observe(schoolCarActivity){
         line = it
-        if (siteMap.contains(line)) {
+        if (siteMap.contains(line) && line != -1) {
           siteMap.iterator().forEach { map ->
             if (map.key == line){
               siteMap[line]?.forEach { marker ->
@@ -110,10 +110,16 @@ class SchoolCarsSmoothMove(
             }
           }
         }else{
+          val repetitionList = ArrayList<LatLng>()
           siteMap.iterator().forEach { map ->
             map.value.forEach { marker ->
-              marker.setIcon(BitmapDescriptorFactory.fromBitmap(getSiteMakerBitmaps()[0]))
-              marker.isVisible = true
+              if (!repetitionList.contains(marker.position)) {
+                repetitionList.add(marker.position)
+                marker.setIcon(BitmapDescriptorFactory.fromBitmap(getSiteMakerBitmaps()[0]))
+                marker.isVisible = true
+              }else{
+                marker.isVisible = false
+              }
             }
           }
         }
@@ -128,6 +134,7 @@ class SchoolCarsSmoothMove(
       }
       //选择路线时marker
       vm.mapInfo.observe(schoolCarActivity){ mapLines ->
+        val repetitionList = ArrayList<LatLng>()
         mapLines.lines.forEach { lineInfo ->
           if (!siteMap.contains(lineInfo.id)) {
             siteMap[lineInfo.id] = buildList {
@@ -136,6 +143,11 @@ class SchoolCarsSmoothMove(
                 marker?.let {
                   markerToSite[marker.id] = station
                   add(it)
+                }
+                if (repetitionList.contains(marker?.position)) {
+                  marker?.isVisible = false
+                }else{
+                  marker?.position?.let { repetitionList.add(it) }
                 }
               }
             }

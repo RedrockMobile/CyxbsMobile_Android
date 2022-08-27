@@ -4,6 +4,7 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import com.mredrock.cyxbs.lib.base.ui.BaseViewModel
 import com.mredrock.cyxbs.lib.utils.extensions.mapOrThrowApiException
+import com.mredrock.cyxbs.lib.utils.extensions.throwApiExceptionIfFail
 import com.mredrock.cyxbs.lib.utils.network.ApiGenerator
 import com.mredrock.cyxbs.mine.network.ApiService
 import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
@@ -52,8 +53,8 @@ class FindPasswordByIdsViewModel : BaseViewModel() {
     fun getCode(requestBody: RequestBody) {
         apiService
             .getIdsCode(requestBody)
-            .observeOn(Schedulers.io())
-            .subscribeOn(AndroidSchedulers.mainThread())
+            .subscribeOn(Schedulers.io())
+            .observeOn(AndroidSchedulers.mainThread())
             .mapOrThrowApiException()
             .doOnError {
                 _isGetCodeSuccess.postValue(false)
@@ -72,11 +73,10 @@ class FindPasswordByIdsViewModel : BaseViewModel() {
     fun changePassword(stuNum: String, newPassword: String) {
         apiService
             .changePasswordByIds(stuNum, newPassword, mCode)
-            .observeOn(Schedulers.io())
-            .subscribeOn(AndroidSchedulers.mainThread())
-            .mapOrThrowApiException()
+            .subscribeOn(Schedulers.io())
+            .observeOn(AndroidSchedulers.mainThread())
+            .throwApiExceptionIfFail()
             .doOnError {
-                "修改密码失败！".toast()
                 _isChangeSuccess.postValue(false)
             }
             .safeSubscribeBy {

@@ -2,6 +2,7 @@ package com.mredrock.cyxbs.mine.network
 
 import com.mredrock.cyxbs.common.bean.RedrockApiStatus
 import com.mredrock.cyxbs.common.bean.RedrockApiWrapper
+import com.mredrock.cyxbs.lib.utils.network.ApiStatus
 import com.mredrock.cyxbs.lib.utils.network.ApiWrapper
 import com.mredrock.cyxbs.mine.network.model.*
 import io.reactivex.rxjava3.core.Observable
@@ -210,7 +211,7 @@ interface ApiService {
         @Field("stu_num") stuNum: String,
         @Field("new_password") newPassword: String,
         @Field("code") code: Int
-    ): Single<ApiWrapper<IdsSetPassword>>
+    ): Single<ApiStatus>
 
     /*
      * 判断旧密码是否正确

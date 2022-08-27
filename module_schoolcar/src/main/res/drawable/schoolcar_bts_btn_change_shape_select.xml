@@ -4,5 +4,5 @@
     <corners
         android:radius="16dp"
         />
-    <solid android:color="@color/common_blue_button"/>
+    <solid android:color="@color/schoolcar_change_btn"/>
 </shape>

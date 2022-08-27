@@ -106,7 +106,7 @@
     <!--    分割线颜色-->
     <color name="common_sever_view_color">#BDCCE5</color>
     <color name="common_alpha_sever_view_color">#39BDCCE5</color>
-    <color name="common_blue_button">#2921D1</color>
+    <color name="common_blue_button">#465FFF</color>
 
     <!--    按钮颜色-->
     <color name="common_grey_button">#E1DFE0</color>

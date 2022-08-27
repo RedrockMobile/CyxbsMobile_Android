@@ -2,6 +2,7 @@ package com.mredrock.cyxbs.sport.ui.activity
 
 import android.annotation.SuppressLint
 import android.os.Bundle
+import androidx.core.view.postDelayed
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.alibaba.android.arouter.facade.annotation.Route
@@ -9,9 +10,7 @@ import com.alibaba.android.arouter.launcher.ARouter
 import com.mredrock.cyxbs.config.route.DISCOVER_SPORT
 import com.mredrock.cyxbs.config.route.LOGIN_BIND_IDS
 import com.mredrock.cyxbs.lib.base.ui.BaseBindActivity
-import com.mredrock.cyxbs.lib.utils.extensions.gone
-import com.mredrock.cyxbs.lib.utils.extensions.setOnDoubleClickListener
-import com.mredrock.cyxbs.lib.utils.extensions.visible
+import com.mredrock.cyxbs.lib.utils.extensions.*
 import com.mredrock.cyxbs.lib.utils.utils.SchoolCalendarUtil
 import com.mredrock.cyxbs.sport.R
 import com.mredrock.cyxbs.sport.databinding.SportActivitySportDetailBinding
@@ -20,6 +19,7 @@ import com.mredrock.cyxbs.sport.ui.adapter.SportRvAdapter
 import com.mredrock.cyxbs.sport.ui.viewmodel.SportDetailViewModel
 import com.mredrock.cyxbs.sport.util.sSpIdsIsBind
 import java.util.*
+import kotlin.random.Random
 
 /**
  * @author : why
@@ -29,7 +29,7 @@ import java.util.*
  */
 @Route(path = DISCOVER_SPORT)
 class SportDetailActivity : BaseBindActivity<SportActivitySportDetailBinding>() {
-
+    
     /**
      * RecyclerView的adapter
      */
@@ -61,14 +61,14 @@ class SportDetailActivity : BaseBindActivity<SportActivitySportDetailBinding>() 
             if (!mIsHoliday) {
                 //未放假则正常刷新
                 sportSrlDetailList.setOnRefreshListener {
-                    vm.refreshSportDetailData()
-
+                    // 应产品要求，该刷新作为摆设，因为每次刷新都是登录一次教务在线，容易被冻结账号
+                    sportSrlDetailList.postDelayed(Random.nextLong(300, 800)) {
+                        sportSrlDetailList.finishRefresh()
+                    }
                 }
             } else {
                 //放假则直接结束刷新
-                sportSrlDetailList.setOnRefreshListener {
-                    sportSrlDetailList.finishRefresh()
-                }
+                sportSrlDetailList.setEnableRefresh(false)
             }
         }
         //出错时结束刷新并设置提示图片和文字
@@ -79,7 +79,7 @@ class SportDetailActivity : BaseBindActivity<SportActivitySportDetailBinding>() 
             }
         }
         //添加数据
-        vm.sportDetailData.observe(this) { bean ->
+        vm.sportData.observe(this) { bean ->
             loadData(bean)
             //设置刷新完成
             binding.sportSrlDetailList.finishRefresh()
@@ -100,8 +100,6 @@ class SportDetailActivity : BaseBindActivity<SportActivitySportDetailBinding>() 
                 adapter = mSportRvAdapter
                 layoutManager = LinearLayoutManager(this@SportDetailActivity)
             }
-            //初始化时加载数据较慢，显示加载动画让用户知晓正在加载
-            sportSrlDetailList.autoRefreshAnimationOnly()
             //设置双击返回顶部
             onDoubleClickScrollToTop()
             //设置返回键
@@ -149,24 +147,24 @@ class SportDetailActivity : BaseBindActivity<SportActivitySportDetailBinding>() 
      */
     @SuppressLint("SetTextI18n")
     private fun loadData(bean: SportDetailBean) {
+        binding.run {
+            sportTvDetailTotalDone.text =
+                (bean.runDone + bean.otherDone).toString()                //总的已打次数
+            sportTvDetailTotalNeed.text =
+                " /${bean.runTotal + bean.otherTotal}"                     //总的需要打卡次数
+            sportTvDetailRunDone.text =
+                (bean.runDone).toString()                                 //跑步已打卡次数
+            sportTvDetailRunNeed.text =
+                " /${bean.runTotal}"                                       //跑步需要打卡的次数
+            sportTvDetailOtherDone.text =
+                (bean.otherDone).toString()                               //其他已打卡次数
+            sportTvDetailOtherNeed.text =
+                " /${bean.otherTotal}"                                     //其他需要打卡的次数
+            sportTvDetailAward.text = bean.award.toString()               //奖励次数
+        }
         //未放假则正常加载
         if (mWeek in 1..21) {
             //添加页面顶部总数据
-            binding.run {
-                sportTvDetailTotalDone.text =
-                    (bean.runDone + bean.otherDone).toString()                //总的已打次数
-                sportTvDetailTotalNeed.text =
-                    " /${bean.runTotal + bean.otherTotal}"                     //总的需要打卡次数
-                sportTvDetailRunDone.text =
-                    (bean.runDone).toString()                                 //跑步已打卡次数
-                sportTvDetailRunNeed.text =
-                    " /${bean.runTotal}"                                       //跑步需要打卡的次数
-                sportTvDetailOtherDone.text =
-                    (bean.otherDone).toString()                               //其他已打卡次数
-                sportTvDetailOtherNeed.text =
-                    " /${bean.otherTotal}"                                     //其他需要打卡的次数
-                sportTvDetailAward.text = bean.award.toString()               //奖励次数
-            }
             if ((bean.runDone + bean.otherDone) != 0) {
                 //若打卡次数不为0则添加RecyclerView的数据并将提示所用的图片和文字隐藏
                 binding.sportTvDetailHint.gone()

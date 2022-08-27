@@ -49,11 +49,11 @@ class CarIconAdapter(val context: Context?, val lines:List<Line>): RecyclerView.
           block?.invoke(position,true)
           Arrays.fill(checks,false)
           checks[position] = true
-          notifyItemChanged(position,true)
+          notifyDataSetChanged()
         }else{
           block?.invoke(-2,true)
           checks[position] = false
-          notifyItemChanged(position,true)
+          notifyDataSetChanged()
         }
       }
     }

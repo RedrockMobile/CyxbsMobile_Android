@@ -19,7 +19,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:background="@android:color/transparent"
-            android:navigationIcon="@drawable/common_ic_back"
+            android:navigationIcon="@drawable/login_ic_back"
             app:popupTheme="@style/ThemeOverlay.AppCompat.Light" />
     </FrameLayout>
 
@@ -30,7 +30,7 @@
         android:layout_marginStart="15dp"
         android:layout_marginTop="150dp"
         android:text="请输入您的统一认证码"
-        android:textColor="@color/common_level_two_font_color"
+        android:textColor="@color/config_level_two_font_color"
         android:textSize="18sp"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
@@ -80,8 +80,8 @@
             android:maxLength="10"
             android:selectAllOnFocus="true"
             android:singleLine="true"
-            android:textColor="@color/common_main_activity_login_et_edited_color"
-            android:textColorHint="@color/common_main_activity_login_et_hint_color"
+            android:textColor="@color/login_main_activity_login_et_edited_color"
+            android:textColorHint="@color/login_main_activity_login_et_hint_color"
             android:textSize="14sp"
             tools:ignore="HardcodedText" />
 
@@ -110,8 +110,8 @@
             android:maxLength="20"
             android:selectAllOnFocus="true"
             android:singleLine="true"
-            android:textColor="@color/common_main_activity_login_et_edited_color"
-            android:textColorHint="@color/common_main_activity_login_et_hint_color"
+            android:textColor="@color/login_main_activity_login_et_edited_color"
+            android:textColorHint="@color/login_main_activity_login_et_hint_color"
             android:textSize="14sp"
             tools:ignore="HardcodedText" />
 
@@ -124,9 +124,9 @@
         android:layout_marginStart="33dp"
         android:layout_marginTop="48dp"
         android:layout_marginEnd="33dp"
-        android:background="@drawable/common_toolbar_background"
+        android:background="@drawable/login_shape_toolbar_background"
         android:text="确认绑定"
-        android:textColor="@color/common_white_font_color"
+        android:textColor="@color/login_white_font_color"
         android:textSize="18sp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"

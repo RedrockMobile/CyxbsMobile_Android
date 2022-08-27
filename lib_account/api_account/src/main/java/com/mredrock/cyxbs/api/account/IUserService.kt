@@ -1,5 +1,6 @@
 package com.mredrock.cyxbs.api.account
 
+import androidx.lifecycle.LiveData
 import io.reactivex.rxjava3.core.Observable
 import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.rx3.asObservable
@@ -38,6 +39,7 @@ interface IUserService {
      * - Flow 更适合在 Activity、Fragment、ViewModel 层 使用
      * - 对于 Repository 层更推荐使用 [observeStuNumUnsafe]，因为 Flow 远不及 Rxjava 好处理复杂的数据流
      * - 如果你想对于不同学号返回给下游不同的 Flow，强烈建议使用 [observeStuNumUnsafe]，因为操作符 [Flow.flatMapLatest] 还在测验阶段
+     * - 使用普通无缓存的 ShareFlow，不会导致数据倒灌，如果你需要数据倒灌，请使用 [observeStuNumLiveData]（可以使用 asFlow() 装换为 Flow）
      */
     fun observeStuNumFlow(): SharedFlow<String?>
     
@@ -69,4 +71,11 @@ interface IUserService {
     fun observeStuNumUnsafe(): Observable<Result<String?>> {
         return observeStuNumFlow().map { Result.success(it) }.asObservable()
     }
+    
+    /**
+     * 会导致数据倒灌的 LiveData
+     *
+     * 因为存在数据倒灌，所以更推荐使用在仓库层（可以使用 asFlow() 装换为 Flow）
+     */
+    fun observeStuNumLiveData(): LiveData<String?>
 }

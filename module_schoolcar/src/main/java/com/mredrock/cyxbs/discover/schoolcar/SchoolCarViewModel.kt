@@ -126,6 +126,7 @@ class SchoolCarViewModel : ViewModel() {
       .setSchedulers(observeOn = Schedulers.io())
       .safeSubscribeBy(
         onNext = { mapLines ->
+          mapLines.lines.sortedBy { it.id }
           _mapInfo.postValue(mapLines)
         }
       )
@@ -153,6 +154,7 @@ class SchoolCarViewModel : ViewModel() {
       .setSchedulers(observeOn = Schedulers.io())
       .safeSubscribeBy(
         onNext = { mapLines ->
+          mapLines.data.lines.sortedBy { it.id }
           mapLines.data.let { res -> _mapInfo.postValue(res) }
           MapInfoDataBase.INSTANCE.mapInfoDao().insertMapLines(mapLines.data)
         },

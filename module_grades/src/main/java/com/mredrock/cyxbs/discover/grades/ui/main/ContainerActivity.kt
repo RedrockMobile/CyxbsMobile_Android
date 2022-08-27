@@ -122,11 +122,6 @@ class ContainerActivity : BaseViewModelActivity<ContainerViewModel>() {
         }
         // 监听isBinding的变化 改变按钮点击事件
         viewModel.isBinding.observe {
-            if (it) {
-                val behavior = BottomSheetBehavior.from(parent)
-                if (behavior.state == BottomSheetBehavior.STATE_COLLAPSED)
-                    behavior.state = BottomSheetBehavior.STATE_EXPANDED
-            }
             if (!it) {
                 // 当前未绑定账号，点击前往绑定账号界面
                 mTvGradesNoBind.setOnSingleClickListener { v ->
