@@ -37,13 +37,13 @@ class GroupManagerViewModel : BaseViewModel() {
             .subscribeOn(Schedulers.io())
             .observeOn(AndroidSchedulers.mainThread())
             .mapOrCatchApiException {
-                Log.e("ListNoclassApiError",it.toString())
+                Log.e("ListGroupApiError",it.toString())
             }.doOnError {
                 _isCreateSuccess.postValue(-1)
-                Log.e("ListError",it.toString())
+                Log.e("ListGroupError",it.toString())
             }.safeSubscribeBy {
                 _isCreateSuccess.postValue(it)
-                Log.e("ListNoclass",it.toString())
+                Log.e("ListGroup",it.toString())
             }
     }
 

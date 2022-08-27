@@ -20,7 +20,7 @@ import com.mredrock.cyxbs.noclass.page.ui.NoClassActivity
 class DebugActivity : BaseDebugActivity() {
 
     override val isNeedLogin: Boolean
-        get() = false
+        get() = true
 
     override fun onDebugCreate(savedInstanceState: Bundle?) {
         startActivity(

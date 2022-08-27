@@ -47,7 +47,7 @@ class NoClassViewModel : BaseViewModel() {
             .mapOrCatchApiException {
                 Log.e("ListNoclassApiError",it.toString())
             }.doOnError {
-                Log.e("ListNoclass",it.toString())
+                Log.e("ListNoclassError",it.toString())
                 _groupDetail.postValue(emptyList())
             }.safeSubscribeBy {
                 _groupDetail.postValue(it)

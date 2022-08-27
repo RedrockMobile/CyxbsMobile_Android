@@ -134,6 +134,7 @@
         app:layout_constraintTop_toBottomOf="@+id/flex_noclass_container" />
 
     <com.mredrock.cyxbs.noclass.widget.StickIndicator
+        android:visibility="gone"
         app:noclass_indicator_show_count="5"
         android:id="@+id/indicator_noclass_group"
         android:layout_width="wrap_content"

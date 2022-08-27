@@ -108,19 +108,20 @@ class NoClassActivity : BaseVmActivity<NoClassViewModel>(){
         initEditText()
         initImageView()
         initNet()
-        //for test:
-        var x = 0
-        mIndicator.apply {
-            setTotalCount(7)
-        }
-        mBtnQuery.setOnClickListener {
-            mIndicator.setCurIndex(x++)
-            if (x == 7){
-                x = 0
-            }
-        }
 
+        //for test:
+//        var x = 0
+//        mIndicator.apply {
+//            setTotalCount(7)
+//        }
+//        mBtnQuery.setOnClickListener {
+//            mIndicator.setCurIndex(x++)
+//            if (x == 7){
+//                x = 0
+//            }
+//        }
         //****end****
+
     }
 
     /**
