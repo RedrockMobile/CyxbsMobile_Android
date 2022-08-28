@@ -1,14 +1,8 @@
 package com.mredrock.cyxbs.lib.utils.extensions
 
-import com.mredrock.cyxbs.lib.utils.network.ApiException
-import com.mredrock.cyxbs.lib.utils.network.ApiStatus
-import com.mredrock.cyxbs.lib.utils.network.ApiWrapper
 import io.reactivex.rxjava3.core.Maybe
 import io.reactivex.rxjava3.core.Single
-import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.catch
-import kotlinx.coroutines.flow.map
-import kotlinx.coroutines.flow.onEach
+import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.rx3.asFlow
 
 /**
@@ -19,6 +13,8 @@ import kotlinx.coroutines.rx3.asFlow
  */
 
 /**
+ * 如果你要看网络请求相关的示例代码，请移步 network/ApiFlow
+ *
  * 个人观点：
  *
  * 1、不是很建议大家大量使用 Flow，因为 Flow 目前不是很成熟，有很多 api 还处于实验阶段，而且对于复杂的流水处理比不上 Rxjava
@@ -37,73 +33,47 @@ import kotlinx.coroutines.rx3.asFlow
  * - Repository 层用于转换 网络请求的 Bean 数据为 Room 的数据类，然后统一暴露 Room 数据类给 ViewModel
  *       而不是暴露 网络请求的 Bean 类，做到 VM 层与网络层的分离
  * - 如果网络请求数据简单，不需要本地化，可以省去 Repository 层，掌邮里面就基本没有 Repository 层
+ *
+ * 5、请小心使用 flowWithLifecycle()、lifecycle.repeatOnLifecycle()，他们会导致数据倒灌，
+ *    不适用于大部分场景！！！（别看到很多博客推荐就直接拿来用！！！）
  */
+
+
 
 /**
- * # 示例代码
- * 抓取 http 中的报错，并装换为直接包含 data 的 Flow
- * 建议配合 BaseViewModel 中 collectLaunch 一起食用
- * ```
- * flow {
- *     emit(FindApiServices.INSTANCE.getStudents(stu))
- * }.onStart {                  // 开始
- *     //...
- * }.onCompletion {             // 结束
- *     //...
- * }.mapOrCatchApiException {   // 出错
- *     toast("数据出错了")        // 请注意：这里只会抓取 ApiException，如果是没连接网络而抛出的 HttpException 是不会被抓取的
- * }.collectLaunch {            // 收集
- *     _studentData.emit(it)
- * }
- * ```
+ * 使用优雅的 DSL 来拦截异常
  *
- * # 其他注意事项
- * ## Flow 的下游没任何输出（怎么处理断网时的 HttpException）
- *
- * 大概率是你直接用了 [mapOrCatchApiException]，而它只会处理 [ApiException]，如果你要处理其他网络错误，
- * 请把 [mapOrCatchApiException] 替换为 [mapOrThrowApiException]：
+ * ## 注意
+ * - 使用该方法后，下游将不会收到任何异常，即异常在此步被全部拦截，除非你手动调用 throw 或 onError() 再次抛出异常
+ * - 网络请求中请使用 mapOrInterceptException 或 throwOrInterceptException 方法
  * ```
- *     .mapOrThrowApiException()
- *     .catch {
- *         if (it is ApiException) {
- *             // 处理 ApiException 错误
- *         } else {
- *             // 处理其他网络错误
- *         }
- *     }
- * ```
+ *   .interceptException {
  *
- * ## 网络请求怎么直接返回 Flow?
+ *       toast("捕获全部异常") // 直接写的话是处理全部异常
  *
- * 由于目前 Retrofit 官方没有直接给出 Flow 的 adapter，如果有必要使用 Flow 的话，
- * 可以暂时使用 Observable 来转成 Flow
+ *       RuntimeException::class.catch {
+ *           // 捕获 RuntimeException
  *
- * **需要先引入依赖：dependCoroutinesRx3()**
- * ```
- * FindApiServices.INSTANCE.getStudents(stu)
- *     .subscribeOn(Schedulers.io()) // 线程切换
- *     .asFlow()                     // 转换成 Flow
- *     .mapOrCatchApiException {     // 出错
- *         toast("网络似乎开小差了")
- *     }.collectLaunch {             // 收集
- *         _studentData.emit(it)
- *     }
+ *           val exception = it // 闭包中 it 为当前异常
+ *           val emitter = this // 闭包中 this 为 发射器，可用于发送值给下游
+ *       }
+ *
+ *       NullPointerException::class.catch {
+ *           // 捕获 NullPointerException
+ *       }
+ *
+ *       IndexOutOfBoundsException::class.catchOther { // 使用 catchOther 捕获除自身以外的其他异常
+ *           throw it // 你甚至可以把异常再次抛给下游（这里使用 catchOther 取了一个反，就会把其他异常抛到下游去）
+ *       }
+ *   }
  * ```
  */
-fun <T: ApiStatus> Flow<T>.throwApiExceptionIfFail(): Flow<T> {
-  return onEach { it.throwApiExceptionIfFail() }
-}
-
-fun <E, T: ApiWrapper<E>> Flow<T>.mapOrThrowApiException(): Flow<E> {
-  return throwApiExceptionIfFail()
-    .map { it.data }
-}
-
-fun <E, T: ApiWrapper<E>> Flow<T>.mapOrCatchApiException(
-  func: (ApiException) -> Unit
-): Flow<E> {
-  return mapOrThrowApiException()
-    .catch { if (it is ApiException) func.invoke(it) }
+fun <T> Flow<T>.interceptException(
+  action: ExceptionResult<FlowCollector<T>>.() -> Unit
+) : Flow<T> {
+  return catch {
+    ExceptionResult(it, this).action()
+  }
 }
 
 fun <T : Any> Single<T>.asFlow(): Flow<T> {

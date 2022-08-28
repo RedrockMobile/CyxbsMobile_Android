@@ -4,8 +4,8 @@ import android.content.Context
 import androidx.annotation.CallSuper
 import androidx.lifecycle.*
 import com.mredrock.cyxbs.lib.base.BaseApp
-import com.mredrock.cyxbs.lib.utils.extensions.RxjavaLifecycle
-import com.mredrock.cyxbs.lib.utils.extensions.ToastUtils
+import com.mredrock.cyxbs.lib.base.utils.RxjavaLifecycle
+import com.mredrock.cyxbs.lib.base.utils.ToastUtils
 import io.reactivex.rxjava3.disposables.Disposable
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.launch

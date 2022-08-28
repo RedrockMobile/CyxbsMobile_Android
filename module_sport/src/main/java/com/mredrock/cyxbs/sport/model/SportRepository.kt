@@ -9,6 +9,7 @@ import com.mredrock.cyxbs.api.account.IUserStateService
 import com.mredrock.cyxbs.lib.base.spi.InitialManager
 import com.mredrock.cyxbs.lib.base.spi.InitialService
 import com.mredrock.cyxbs.lib.utils.extensions.*
+import com.mredrock.cyxbs.lib.utils.network.mapOrThrowApiException
 import com.mredrock.cyxbs.lib.utils.service.impl
 import com.mredrock.cyxbs.sport.model.network.SportDetailApiService
 import kotlinx.coroutines.flow.*
