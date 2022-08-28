@@ -12,6 +12,7 @@ import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleCoroutineScope
 import androidx.lifecycle.coroutineScope
 import com.mredrock.cyxbs.lib.base.operations.OperationFragment
+import com.mredrock.cyxbs.lib.base.utils.ArgumentHelper
 
 /**
  * 绝对基础的抽象
@@ -115,4 +116,28 @@ abstract class BaseFragment : OperationFragment {
   
   val viewLifecycleScope: LifecycleCoroutineScope
     get() = viewLifecycleOwner.lifecycle.coroutineScope
+  
+  
+  
+  /**
+   * 快速得到 arguments 中的变量，直接使用反射拿了变量的名字。支持声明为 var 修改对应参数
+   * ```
+   * companion object {
+   *   fun newInstance(
+   *     key: String
+   *   ) : Fragment {
+   *     return Fragment().apply {
+   *       arguments = bundleOf(
+   *         this::key.name to key // 这里直接拿变量名字
+   *       )
+   *     }
+   *   }
+   * }
+   *
+   * var key by arguments.helper<String>()
+   *
+   * 这样写会在 arguments 中寻找名字叫 key 的参数
+   * ```
+   */
+  fun <T : Any> Bundle?.helper() = ArgumentHelper<T>{ this!! }
 }

@@ -1,13 +1,14 @@
 package com.mredrock.cyxbs.lib.utils.extensions
 
 import android.content.Context
+import android.os.Handler
+import android.os.Looper
 import android.util.Log
 import android.view.Gravity
 import android.view.LayoutInflater
 import android.view.View
 import android.widget.TextView
 import android.widget.Toast
-import androidx.annotation.StringRes
 import com.mredrock.cyxbs.lib.utils.BuildConfig
 import com.mredrock.cyxbs.lib.utils.R
 
@@ -18,24 +19,29 @@ import com.mredrock.cyxbs.lib.utils.R
  * @date 2022/3/7 17:58
  */
 
+/**
+ * 已自带处于其他线程时自动切换至主线程发送
+ */
 fun toast(s: CharSequence?) {
-  CyxbsToast.show(appContext, s, Toast.LENGTH_SHORT)
+  if (s == null) return
+  if (Thread.currentThread() !== Looper.getMainLooper().thread) {
+    Handler(Looper.getMainLooper()).post { CyxbsToast.show(appContext, s, Toast.LENGTH_SHORT) }
+  } else {
+    CyxbsToast.show(appContext, s, Toast.LENGTH_SHORT)
+  }
 }
 
 fun toastLong(s: CharSequence?) {
-  CyxbsToast.show(appContext, s, Toast.LENGTH_LONG)
+  if (s == null) return
+  if (Thread.currentThread() !== Looper.getMainLooper().thread) {
+    Handler(Looper.getMainLooper()).post { CyxbsToast.show(appContext, s, Toast.LENGTH_LONG) }
+  } else {
+    CyxbsToast.show(appContext, s, Toast.LENGTH_LONG)
+  }
 }
 
 fun String.toast() = toast(this)
 fun String.toastLong() = toastLong(this)
-
-interface ToastUtils {
-  fun toast(s: CharSequence?) = CyxbsToast.show(appContext, s, Toast.LENGTH_SHORT)
-  fun toastLong(s: CharSequence?) = CyxbsToast.show(appContext, s, Toast.LENGTH_LONG)
-  fun String.toast() = toast(this)
-  fun String.toastLong() = toastLong(this)
-  fun toast(@StringRes id: Int) = toast(appContext.getString(id))
-}
 
 class CyxbsToast {
   companion object {
@@ -77,7 +83,7 @@ class CyxbsToast {
       result.setGravity(Gravity.CENTER_HORIZONTAL or Gravity.TOP, 0, height / 8)
       result.show()
     }
-  
+    
     /**
      * 寻找第一个满足条件后的子数组
      */

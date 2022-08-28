@@ -1,13 +1,12 @@
 package com.mredrock.cyxbs.store.page.center.viewmodel
 
-import android.util.Log
 import androidx.core.content.edit
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import com.mredrock.cyxbs.lib.base.ui.BaseViewModel
 import com.mredrock.cyxbs.lib.utils.extensions.getSp
-import com.mredrock.cyxbs.lib.utils.extensions.mapOrThrowApiException
 import com.mredrock.cyxbs.lib.utils.network.api
+import com.mredrock.cyxbs.lib.utils.network.mapOrInterceptException
 import com.mredrock.cyxbs.store.bean.StampCenter
 import com.mredrock.cyxbs.store.network.ApiService
 import com.mredrock.cyxbs.store.utils.Date
@@ -52,14 +51,11 @@ class StoreCenterViewModel: BaseViewModel() {
     fun refresh() {
         ApiService::class.api
             .getStampCenter()
-            .mapOrThrowApiException()
             .subscribeOn(Schedulers.io())
             .observeOn(AndroidSchedulers.mainThread())
-            .doOnError {
-                Log.d("ggg", "(StoreCenterViewModel.kt:59) -> doOnError")
+            .mapOrInterceptException {
                 _refreshIsSuccessful.postValue(false)
             }.safeSubscribeBy {
-                Log.d("ggg", "(StoreCenterViewModel.kt:60) -> safeSubscribeBy")
                 _refreshIsSuccessful.postValue(true)
                 _stampCenterData.postValue(it)
             }
