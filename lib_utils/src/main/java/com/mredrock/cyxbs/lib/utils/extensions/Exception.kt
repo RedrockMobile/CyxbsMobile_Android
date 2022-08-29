@@ -11,7 +11,7 @@ import kotlin.reflect.KClass
  */
 
 open class ExceptionResult<Emitter>(
-  val error: Throwable,
+  val throwable: Throwable,
   val emitter: Emitter
 ) {
   
@@ -27,8 +27,8 @@ open class ExceptionResult<Emitter>(
   inline infix fun <reified T : Throwable> KClass<T>.catch(
     action: Emitter.(T) -> Unit
   ): KClass<T> {
-    if (error is T) {
-      action.invoke(emitter, error)
+    if (throwable is T) {
+      action.invoke(emitter, throwable)
     }
     return this
   }
@@ -39,8 +39,8 @@ open class ExceptionResult<Emitter>(
   inline infix fun <reified T : Throwable> KClass<T>.catchOther(
     action: Emitter.(Throwable) -> Unit
   ): KClass<T> {
-    if (error !is T) {
-      action.invoke(emitter, error)
+    if (throwable !is T) {
+      action.invoke(emitter, throwable)
     }
     return this
   }

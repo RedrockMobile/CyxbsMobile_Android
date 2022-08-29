@@ -17,6 +17,8 @@ import kotlinx.coroutines.flow.Flow
  *
  *         toast("捕捉全部异常")        // 直接写的话可以处理全部异常
  *
+ *         emitter.onSuccess(...)   // 手动发送新的值给下游
+ *
  *         ApiException {
  *             // 处理全部 ApiException 错误
  *         }.catchOther {
@@ -64,11 +66,11 @@ import kotlinx.coroutines.flow.Flow
  * - [IApiStatus] 使用 [throwOrInterceptException] 方法
  */
 fun <Data : Any, T : IApiWrapper<Data>> Single<T>.mapOrInterceptException(
-  action: ApiExceptionResult<SingleEmitter<Data>>.() -> Unit
+  action: ApiExceptionResult<SingleEmitter<Data>>.(Throwable) -> Unit
 ) : Single<Data> {
   return mapOrThrowApiException().onErrorResumeNext { error ->
     Single.create {
-      ApiExceptionResult(error, it).action()
+      ApiExceptionResult(error, it).action(error)
     }
   }
 }

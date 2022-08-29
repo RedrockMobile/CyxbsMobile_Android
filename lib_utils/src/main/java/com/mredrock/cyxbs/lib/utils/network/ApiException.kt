@@ -66,9 +66,9 @@ class ApiException(
 
 @Suppress("FunctionName")
 class ApiExceptionResult<Emitter>(
-  error: Throwable,
+  throwable: Throwable,
   emitter: Emitter
-) : ExceptionResult<Emitter>(error, emitter) {
+) : ExceptionResult<Emitter>(throwable, emitter) {
   
   /**
    * 只抓取 [ApiException] 异常
@@ -134,9 +134,9 @@ class ApiExceptionResult<Emitter>(
     httpCode: Int,
     action: Emitter.(ResponseBody) -> Unit
   ): KClass<HttpException> {
-    if (error is HttpException) {
-      if (error.code() == httpCode) {
-        val errorBody = error.response()?.errorBody()
+    if (throwable is HttpException) {
+      if (throwable.code() == httpCode) {
+        val errorBody = throwable.response()?.errorBody()
         if (errorBody != null) {
           action.invoke(emitter, errorBody)
         }
