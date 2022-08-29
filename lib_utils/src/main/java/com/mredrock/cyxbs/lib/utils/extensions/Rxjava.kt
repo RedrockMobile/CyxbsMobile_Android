@@ -21,41 +21,58 @@ import kotlinx.coroutines.flow.Flow
  * # 详细用法请查看 [Flow.interceptException]，注意事项也与 Flow 一致
  */
 fun <T : Any> Single<T>.interceptException(
-  action: ExceptionResult<SingleEmitter<T>>.() -> Unit
+  action: ExceptionResult<SingleEmitter<T>>.(Throwable) -> Unit
 ) : Single<T> {
-  return onErrorResumeNext { error ->
+  return onErrorResumeNext { throwable ->
     Single.create {
-      ExceptionResult(error, it).action()
+      ExceptionResult(throwable, it).action(throwable)
     }
   }
 }
 fun <T : Any> Maybe<T>.interceptException(
-  action: ExceptionResult<MaybeEmitter<T>>.() -> Unit
+  action: ExceptionResult<MaybeEmitter<T>>.(Throwable) -> Unit
 ) : Maybe<T> {
-  return onErrorResumeNext { error ->
+  return onErrorResumeNext { throwable ->
     Maybe.create {
-      ExceptionResult<MaybeEmitter<T>>(error, it).action()
+      ExceptionResult<MaybeEmitter<T>>(throwable, it).action(throwable)
     }
   }
 }
 fun <T : Any> Observable<T>.interceptException(
-  action: ExceptionResult<ObservableEmitter<T>>.() -> Unit
+  action: ExceptionResult<ObservableEmitter<T>>.(Throwable) -> Unit
 ) : Observable<T> {
-  return onErrorResumeNext { error ->
+  return onErrorResumeNext { throwable ->
     Observable.create {
-      ExceptionResult<ObservableEmitter<T>>(error, it).action()
+      ExceptionResult<ObservableEmitter<T>>(throwable, it).action(throwable)
     }
   }
 }
 fun Completable.interceptException(
   action: ExceptionResult<CompletableEmitter>.() -> Unit
 ) : Completable {
-  return onErrorResumeNext { error ->
+  return onErrorResumeNext { throwable ->
     Completable.create {
-      ExceptionResult<CompletableEmitter>(error, it).action()
+      ExceptionResult<CompletableEmitter>(throwable, it).action()
     }
   }
 }
+
+
+/**
+ * 使用 [Result] 来包裹一层数据，你可以配合网络请求使用
+ *
+ * 详细用法请看 [Flow.interceptExceptionByResult]
+ */
+fun <T : Any> Single<T>.interceptExceptionByResult(
+  action: ExceptionResult<SingleEmitter<Result<T>>>.(Throwable) -> Unit
+) : Single<Result<T>> = map { Result.success(it) }.interceptException(action)
+fun <T : Any> Maybe<T>.interceptExceptionByResult(
+  action: ExceptionResult<MaybeEmitter<Result<T>>>.(Throwable) -> Unit
+) : Maybe<Result<T>> = map { Result.success(it) }.interceptException(action)
+fun <T : Any> Observable<T>.interceptExceptionByResult(
+  action: ExceptionResult<ObservableEmitter<Result<T>>>.(Throwable) -> Unit
+) : Observable<Result<T>> = map { Result.success(it) }.interceptException(action)
+
 
 /**
  * 这个命名与之前的 lib_common 中有些区别，common 中那个 safe 的意思是如果直接使用一个形参的 subscribe(onSuccess)，
