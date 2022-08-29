@@ -4,7 +4,6 @@ import android.content.Intent
 import android.os.Bundle
 import android.os.Parcelable
 import androidx.core.os.bundleOf
-import com.mredrock.cyxbs.lib.utils.utils.GenericityUtils
 import java.io.Serializable
 import kotlin.properties.ReadWriteProperty
 import kotlin.reflect.KProperty
@@ -13,11 +12,11 @@ import kotlin.reflect.KProperty
  * 这里面所有的类型参考了官方的设计：[bundleOf]
  */
 class IntentHelper<T: Any>(
-  val intent: () -> Intent
+  private val clazz: Class<T>,
+  private val intent: () -> Intent
 ) : ReadWriteProperty<Any, T> {
     
     private var mValue: T? = null
-    private val mType = GenericityUtils.getGenericClassFromSuperClass<T, Any>(javaClass)
     
     @Suppress("UNCHECKED_CAST")
     override fun getValue(thisRef: Any, property: KProperty<*>): T {
@@ -25,7 +24,7 @@ class IntentHelper<T: Any>(
       val name = property.name
       mValue = intent.invoke().run {
         // 因为 intent 的 getExtra() 方法被废弃，所以只能一个一个判断
-        when (mType) {
+        when (clazz) {
           String::class -> getStringExtra(name)
   
           Int::class -> getIntExtra(name, Int.MIN_VALUE)
@@ -48,7 +47,7 @@ class IntentHelper<T: Any>(
           ShortArray::class -> getShortArrayExtra(name)
           
           Array::class -> {
-            val componentType = mType::class.java.componentType!!
+            val componentType = clazz.componentType!!
             when {
               Parcelable::class.java.isAssignableFrom(componentType) -> {
                 getParcelableArrayExtra(name)
@@ -73,10 +72,10 @@ class IntentHelper<T: Any>(
           
           else -> {
             when {
-              CharSequence::class.java.isAssignableFrom(mType) -> getCharExtra(name, ' ')
-              Parcelable::class.java.isAssignableFrom(mType) -> getParcelableExtra(name)
-              Serializable::class.java.isAssignableFrom(mType) -> getSerializableExtra(name)
-              else -> error("未实现该类型 ${mType::class.java.name} for key \"$name\"")
+              CharSequence::class.java.isAssignableFrom(clazz) -> getCharExtra(name, ' ')
+              Parcelable::class.java.isAssignableFrom(clazz) -> getParcelableExtra(name)
+              Serializable::class.java.isAssignableFrom(clazz) -> getSerializableExtra(name)
+              else -> error("未实现该类型 ${clazz.name} for key \"$name\"")
             }
           }
         }

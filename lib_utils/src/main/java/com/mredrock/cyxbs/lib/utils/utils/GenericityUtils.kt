@@ -1,6 +1,5 @@
 package com.mredrock.cyxbs.lib.utils.utils
 
-import java.lang.RuntimeException
 import java.lang.reflect.ParameterizedType
 
 /**
@@ -49,6 +48,6 @@ object GenericityUtils {
         }
       }
     }
-    throw RuntimeException("你父类的泛型为: $genericSuperclass, 其中不存在 ${E::class.java.simpleName}")
+    throw IllegalStateException("你父类的泛型为: $genericSuperclass, 其中不存在 ${E::class.java.simpleName}")
   }
 }

@@ -126,5 +126,5 @@ abstract class BaseActivity : OperationActivity() {
    * 这样写会在 intent 中寻找名字叫 key 的参数
    * ```
    */
-  fun <T : Any> Intent.helper() = IntentHelper<T> { intent }
+  inline fun <reified T : Any> Intent?.helper() = IntentHelper(T::class.java) { intent }
 }
