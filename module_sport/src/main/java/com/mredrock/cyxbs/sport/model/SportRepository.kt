@@ -10,6 +10,8 @@ import com.mredrock.cyxbs.lib.utils.extensions.*
 import com.mredrock.cyxbs.lib.utils.network.mapOrThrowApiException
 import com.mredrock.cyxbs.lib.utils.service.impl
 import com.mredrock.cyxbs.sport.model.network.SportDetailApiService
+import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
+import io.reactivex.rxjava3.schedulers.Schedulers
 import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
 
@@ -85,6 +87,8 @@ class SportRepository : InitialService {
         if (stuNum != null && sSportData == null) {
           SportDetailApiService.INSTANCE
             .getSportDetailData()
+            .subscribeOn(Schedulers.io())
+            .observeOn(AndroidSchedulers.mainThread())
             .mapOrThrowApiException()
             .interceptExceptionByResult {
               emitter.onSuccess(Result.failure(throwable))
