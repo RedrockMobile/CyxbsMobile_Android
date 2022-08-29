@@ -51,6 +51,8 @@ import kotlinx.coroutines.rx3.asFlow
  *
  *       toast("捕获全部异常") // 直接写的话是处理全部异常
  *
+ *       emitter.emit(...)   // 手动发送新的值给下游
+ *
  *       RuntimeException::class.catch {
  *           // 捕获 RuntimeException
  *
@@ -69,12 +71,29 @@ import kotlinx.coroutines.rx3.asFlow
  * ```
  */
 fun <T> Flow<T>.interceptException(
-  action: ExceptionResult<FlowCollector<T>>.() -> Unit
+  action: ExceptionResult<FlowCollector<T>>.(Throwable) -> Unit
 ) : Flow<T> {
   return catch {
-    ExceptionResult(it, this).action()
+    ExceptionResult(it, this).action(it)
   }
 }
+
+/**
+ * 使用 [Result] 来包裹一层数据，你可以配合网络请求使用：
+ * ```
+ * SportDetailApiService.INSTANCE
+ *     .getSportDetailData()
+ *     .mapOrThrowApiException()
+ *     .interceptExceptionByResult {
+ *         emitter.onSuccess(Result.failure(throwable)) // 发送包裹好的异常给下游
+ *     }.unsafeSubscribeBy {
+ *         // 这里的 it 就是 Result.success(data)
+ *     }
+ * ```
+ */
+fun <T> Flow<T>.interceptExceptionByResult(
+  action: ExceptionResult<FlowCollector<Result<T>>>.(Throwable) -> Unit
+) : Flow<Result<T>> = map { Result.success(it) }.interceptException(action)
 
 fun <T : Any> Single<T>.asFlow(): Flow<T> {
   return toObservable().asFlow()
