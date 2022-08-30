@@ -19,7 +19,11 @@ import com.mredrock.cyxbs.lib.utils.R
  * @date 2022/3/7 17:58
  */
 
+/**
+ * 已自带处于其他线程时自动切换至主线程发送
+ */
 fun toast(s: CharSequence?) {
+  if (s == null) return
   if (Thread.currentThread() !== Looper.getMainLooper().thread) {
     Handler(Looper.getMainLooper()).post { CyxbsToast.show(appContext, s, Toast.LENGTH_SHORT) }
   } else {
@@ -28,6 +32,7 @@ fun toast(s: CharSequence?) {
 }
 
 fun toastLong(s: CharSequence?) {
+  if (s == null) return
   if (Thread.currentThread() !== Looper.getMainLooper().thread) {
     Handler(Looper.getMainLooper()).post { CyxbsToast.show(appContext, s, Toast.LENGTH_LONG) }
   } else {
@@ -78,7 +83,7 @@ class CyxbsToast {
       result.setGravity(Gravity.CENTER_HORIZONTAL or Gravity.TOP, 0, height / 8)
       result.show()
     }
-  
+    
     /**
      * 寻找第一个满足条件后的子数组
      */

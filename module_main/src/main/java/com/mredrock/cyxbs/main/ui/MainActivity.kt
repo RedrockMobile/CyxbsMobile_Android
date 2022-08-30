@@ -10,6 +10,7 @@ import android.util.Log
 import android.view.View
 import android.widget.FrameLayout
 import androidx.appcompat.widget.AppCompatButton
+import androidx.core.content.edit
 import androidx.fragment.app.commit
 import androidx.lifecycle.Observer
 import androidx.work.Data
@@ -33,6 +34,7 @@ import com.mredrock.cyxbs.common.event.RefreshQaEvent
 import com.mredrock.cyxbs.common.mark.ActionLoginStatusSubscriber
 import com.mredrock.cyxbs.common.mark.EventBusLifecycleSubscriber
 import com.mredrock.cyxbs.common.service.ServiceManager
+import com.mredrock.cyxbs.common.service.impl
 import com.mredrock.cyxbs.common.ui.BaseViewModelActivity
 import com.mredrock.cyxbs.common.utils.debug
 import com.mredrock.cyxbs.common.utils.extensions.*
@@ -53,6 +55,7 @@ import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
 import java.io.File
 import java.util.*
+import java.util.concurrent.TimeUnit
 import kotlin.properties.Delegates
 
 @Route(path = MAIN_MAIN)
@@ -196,18 +199,22 @@ class MainActivity : BaseViewModelActivity<MainViewModel>(),
         }
     }
 
-
     private fun initUpdate() {
-        ServiceManager.getService(IAppUpdateService::class.java).apply {
-            getUpdateStatus().observe {
-                when (it) {
-                    AppUpdateStatus.UNCHECK -> checkUpdate()
-                    AppUpdateStatus.DATED -> noticeUpdate(this@MainActivity)
-                    AppUpdateStatus.TO_BE_INSTALLED -> installUpdate(this@MainActivity)
-                    else -> Unit
+        val updateService = IAppUpdateService::class.impl
+        updateService.checkUpdate()
+        updateService.getUpdateStatus()
+            .observe {
+                if (it == AppUpdateStatus.DATED) {
+                    val nowTime = System.currentTimeMillis()
+                    val lastTime = defaultSharedPreferences.getLong("上次提醒更新时间", 0L)
+                    val diff = TimeUnit.HOURS.convert(nowTime - lastTime, TimeUnit.MILLISECONDS)
+                    if (diff >= 12) {
+                        // 如果有更新，则每隔 12 个小时提醒一次更新
+                        updateService.noticeUpdate(this)
+                        defaultSharedPreferences.edit { putLong("上次提醒更新时间", nowTime) }
+                    }
                 }
             }
-        }
     }
 
     private fun initBottomSheetBehavior() {

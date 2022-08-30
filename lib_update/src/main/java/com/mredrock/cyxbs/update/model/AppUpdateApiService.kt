@@ -1,6 +1,6 @@
 package com.mredrock.cyxbs.update.model
 
-import io.reactivex.rxjava3.core.Observable
+import io.reactivex.rxjava3.core.Single
 import retrofit2.http.GET
 
 /**
@@ -8,5 +8,5 @@ import retrofit2.http.GET
  */
 interface AppUpdateApiService {
     @GET("https://app.redrock.team/cyxbsAppUpdate.json")
-    fun getUpdateInfo(): Observable<UpdateInfo>
+    fun getUpdateInfo(): Single<UpdateInfo>
 }

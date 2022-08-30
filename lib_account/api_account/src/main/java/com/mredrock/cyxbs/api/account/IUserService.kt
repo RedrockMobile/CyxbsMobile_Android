@@ -41,7 +41,7 @@ interface IUserService {
      * - 如果你想对于不同学号返回给下游不同的 Flow，强烈建议使用 [observeStuNumUnsafe]，因为操作符 [Flow.flatMapLatest] 还在测验阶段
      * - 使用普通无缓存的 ShareFlow，不会导致数据倒灌，如果你需要数据倒灌，请使用 [observeStuNumLiveData]（可以使用 asFlow() 装换为 Flow）
      */
-    fun observeStuNumFlow(): SharedFlow<String?>
+    fun observeStuNumFlow(): Flow<String?>
     
     /**
      * 观察学号的改变

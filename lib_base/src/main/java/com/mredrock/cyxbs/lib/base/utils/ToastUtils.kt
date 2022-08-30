@@ -14,6 +14,9 @@ import com.mredrock.cyxbs.lib.utils.extensions.appContext
  * 所以要求 base 类实现的接口尽量不要放在其他模块内
  */
 interface ToastUtils {
+  /**
+   * 已自带处于其他线程时自动切换至主线程发送
+   */
   fun toast(s: CharSequence?) {
     CyxbsToast.show(appContext, s, Toast.LENGTH_SHORT)
   }

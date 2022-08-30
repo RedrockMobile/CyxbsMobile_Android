@@ -3,7 +3,7 @@
     android:shape="rectangle">
 
     <!-- solid 设置stroke设置的边框以内的颜色 -->
-    <solid android:color="#FFFFFF"/>
+    <solid android:color="@color/notification_white"/>
     <!-- stroke主要设置组件的边框。width为边框宽度，color为边框颜色 -->
 
     <corners

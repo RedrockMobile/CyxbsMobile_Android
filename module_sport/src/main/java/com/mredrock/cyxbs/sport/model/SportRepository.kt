@@ -1,16 +1,17 @@
 package com.mredrock.cyxbs.sport.model
 
 import androidx.core.content.edit
-import androidx.lifecycle.asFlow
 import com.google.auto.service.AutoService
 import com.google.gson.Gson
 import com.mredrock.cyxbs.api.account.IAccountService
-import com.mredrock.cyxbs.api.account.IUserStateService
 import com.mredrock.cyxbs.lib.base.spi.InitialManager
 import com.mredrock.cyxbs.lib.base.spi.InitialService
 import com.mredrock.cyxbs.lib.utils.extensions.*
+import com.mredrock.cyxbs.lib.utils.network.mapOrThrowApiException
 import com.mredrock.cyxbs.lib.utils.service.impl
 import com.mredrock.cyxbs.sport.model.network.SportDetailApiService
+import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
+import io.reactivex.rxjava3.schedulers.Schedulers
 import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
 
@@ -78,34 +79,29 @@ class SportRepository : InitialService {
   
   override fun onMainProcess(manager: InitialManager) {
     super.onMainProcess(manager)
-    
-    // 对退出登录进行观察，使用 flatMapLatest 关闭上次发送的流（虽然一般不会这么快就重新登录）
+  
     IAccountService::class.impl
-      .getVerifyService()
-      .observeStateLiveData()
-      .asFlow()
-      .flatMapLatest { state ->
-        when (state) {
-          IUserStateService.UserState.LOGIN -> {
-            if (sSportData == null) {
-              // 等于 null 说明之前退出了登录
-              flow {
-                emit(SportDetailApiService.INSTANCE.getSportDetailData())
-              }.mapOrThrowApiException()
-                .map { Result.success(it) }
-                .catch { emit(Result.failure(it)) }
-            } else emptyFlow()
-          }
-          IUserStateService.UserState.NOT_LOGIN -> {
-            sSportData = null
-            emptyFlow()
-          }
-          else -> emptyFlow()
+      .getUserService()
+      .observeStuNumLiveData()
+      .observeForever { stuNum ->
+        if (stuNum != null && sSportData == null) {
+          SportDetailApiService.INSTANCE
+            .getSportDetailData()
+            .subscribeOn(Schedulers.io())
+            .observeOn(AndroidSchedulers.mainThread())
+            .mapOrThrowApiException()
+            .interceptExceptionByResult {
+              emitter.onSuccess(Result.failure(throwable))
+            }.unsafeSubscribeBy {
+              sSportData = it.getOrNull()
+              processLifecycleScope.launch {
+                sportDataMutableShareFlow.emit(it)
+              }
+            }
+        } else if (stuNum == null) {
+          sSportData = null
         }
-      }.onEach {
-        sportDataMutableShareFlow.emit(it)
-        sSportData = it.getOrNull()
-      }.launchIn(processLifecycleScope)
+      }
     
     
     // 应用刚开始初始化时，如果 sSportData 有值，则直接拿来用

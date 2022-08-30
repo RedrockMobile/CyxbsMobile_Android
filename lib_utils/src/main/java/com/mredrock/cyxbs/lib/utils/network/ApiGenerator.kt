@@ -1,8 +1,6 @@
 package com.mredrock.cyxbs.lib.utils.network
 
 import com.mredrock.cyxbs.common.network.ApiGenerator
-import com.mredrock.cyxbs.lib.utils.extensions.mapOrThrowApiException
-import com.mredrock.cyxbs.lib.utils.extensions.mapOrCatchApiException
 import kotlin.reflect.KClass
 
 /**
@@ -37,30 +35,13 @@ import kotlin.reflect.KClass
  * ApiService.INSTANCE.getXXX()
  *     .subscribeOn(Schedulers.io())  // 线程切换
  *     .observeOn(AndroidSchedulers.mainThread())
- *     .mapOrCatchApiException {      // 当 errorCode 的值不为成功时抛错，并处理错误
- *         // 处理 ApiException 错误，注意：这里并不会处理断网时的 HttpException
+ *     .mapOrInterceptException {     // 当 errorCode 的值不为成功时抛错，并拦截异常
+ *         // 这里面可以使用 DSL 写法，更多详细用法请看该方法注释
  *     }
  *     .safeSubscribeBy {            // 如果是网络连接错误，则这里会默认处理
  *         // 成功的时候
  *     }
  * ```
- *
- * # 其他注意事项
- * ## Rxjava 或 Flow 的下游没任何输出（怎么处理断网时的 HttpException）
- *
- * 大概率是你直接用了 [mapOrCatchApiException]，而它只会处理 [ApiException]，如果你要处理其他网络错误，
- * 请把 [mapOrCatchApiException] 替换为 [mapOrThrowApiException]：
- * ```
- *     .mapOrThrowApiException()
- *     .doOnError {                    // Flow 操作符为 catch
- *         if (it is ApiException) {
- *             // 处理 ApiException 错误
- *         } else {
- *             // 处理其他网络错误
- *         }
- *     }
- * ```
- *
  *
  * @author 985892345 (Guo Xiangrui)
  * @email 2767465918@qq.com

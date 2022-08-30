@@ -4,7 +4,6 @@ import android.app.AlertDialog
 import android.content.Intent
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
-import android.media.MediaScannerConnection
 import android.net.Uri
 import android.os.Build
 import android.os.Bundle
@@ -26,23 +25,22 @@ import com.mredrock.cyxbs.common.ui.BaseViewModelActivity
 import com.mredrock.cyxbs.common.utils.extensions.setOnSingleClickListener
 import com.mredrock.cyxbs.common.utils.extensions.sp
 import com.mredrock.cyxbs.common.utils.extensions.toast
-import com.mredrock.cyxbs.common.utils.extensions.uri
 import com.mredrock.cyxbs.common.viewmodel.event.ProgressDialogEvent
 import com.mredrock.cyxbs.discover.news.R
 import com.mredrock.cyxbs.discover.news.bean.NewsAttachment
 import com.mredrock.cyxbs.discover.news.utils.FileTypeHelper
 import com.mredrock.cyxbs.discover.news.utils.TimeFormatHelper
 import com.mredrock.cyxbs.discover.news.viewmodel.NewsItemViewModel
+import com.mredrock.cyxbs.lib.utils.extensions.showFile
 import com.tbruyelle.rxpermissions3.RxPermissions
 import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
-import java.io.File
 import java.util.regex.Matcher
 import java.util.regex.Pattern
 
 
 @Route(path = DISCOVER_NEWS_ITEM)
 class NewsItemActivity : BaseViewModelActivity<NewsItemViewModel>(), NewsItemViewModel.NewsDownloadListener {
-    private val files = mutableListOf<File>()
+    private val uris = mutableListOf<Uri>()
     private var downloadNeedSize = 0
     private var downloadEndSize = 0
 
@@ -71,10 +69,10 @@ class NewsItemActivity : BaseViewModelActivity<NewsItemViewModel>(), NewsItemVie
             title(text = "下载完成，打开附件")
             positiveButton(text = "确定")
             negativeButton(text = "取消")
-            listItemsSingleChoice(items = files.map { it.name }) { dialog, index, text ->
+            listItemsSingleChoice(items = uris.map { this@NewsItemActivity.showFile(it)!!.name }) { dialog, index, text ->
                 if (index != -1) {
-                    val file = files[index]
-                    if (file.exists()) {
+                    val uri = uris[index]
+                    if (this@NewsItemActivity.showFile(uri)?.exists() == true) {
                         try {
                             startActivity(Intent(Intent.ACTION_VIEW)
                                     .addFlags(if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
@@ -82,7 +80,7 @@ class NewsItemActivity : BaseViewModelActivity<NewsItemViewModel>(), NewsItemVie
                                     } else {
                                         Intent.FLAG_ACTIVITY_NEW_TASK
                                     })
-                                    .setDataAndType(file.uri, FileTypeHelper.getMIMEType(file)))
+                                    .setDataAndType(uri, FileTypeHelper.getMIMEType(this@NewsItemActivity.showFile(uri)!!)))
                         } catch (e: Exception) {
                             e.printStackTrace()
                         }
@@ -103,9 +101,9 @@ class NewsItemActivity : BaseViewModelActivity<NewsItemViewModel>(), NewsItemVie
     }
 
     @Synchronized
-    override fun onDownloadEnd(id: Int, file: File?, e: Throwable?) {
-        if (file != null) {
-            files.add(file)
+    override fun onDownloadEnd(id: Int, uri: Uri?, e: Throwable?) {
+        if (uri != null) {
+            uris.add(uri)
         } else {
             e?.printStackTrace()
             AndroidSchedulers.mainThread().scheduleDirect {
@@ -118,17 +116,17 @@ class NewsItemActivity : BaseViewModelActivity<NewsItemViewModel>(), NewsItemVie
         }
         downloadEndSize++
         if (downloadEndSize == downloadNeedSize) {
-            if (files.size < 1) {
+            if (uris.size < 1) {
                 AndroidSchedulers.mainThread().scheduleDirect {
                     toast("下载失败了，请稍候重试或反馈一下")
                     viewModel.progressDialogEvent.value = ProgressDialogEvent.DISMISS_DIALOG_EVENT
                 }
                 return
             }
-            MediaScannerConnection.scanFile(this,
-                    arrayOf(files[0].parent),
-                    files.map { FileTypeHelper.getMIMEType(it) }.toTypedArray(),
-                    null)
+//            MediaScannerConnection.scanFile(this,
+//                    arrayOf(uris[0].toFile().parent),
+//                    uris.map { FileTypeHelper.getMIMEType(it.toFile()) }.toTypedArray(),
+//                    null)
             AndroidSchedulers.mainThread().scheduleDirect {
                 toast("文件保存于系统\"Download\"文件夹下哦")
                 viewModel.progressDialogEvent.value = ProgressDialogEvent.DISMISS_DIALOG_EVENT
