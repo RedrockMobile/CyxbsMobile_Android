@@ -4,6 +4,7 @@
     android:id="@+id/login_container"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:fitsSystemWindows="true"
     android:background="@color/config_white_black" >
 
     <TextView

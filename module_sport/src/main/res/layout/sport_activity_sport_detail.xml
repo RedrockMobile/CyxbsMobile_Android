@@ -208,12 +208,10 @@
                 </LinearLayout>
             </androidx.constraintlayout.widget.ConstraintLayout>
 
-            <androidx.cardview.widget.CardView
+            <FrameLayout
                 android:layout_width="match_parent"
                 android:layout_height="0dp"
-                app:cardBackgroundColor="@color/sport_cardview_background"
-                app:cardCornerRadius="24dp"
-                app:cardElevation="0dp"
+                android:background="@drawable/sport_shape_round_corner"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/sport_cl_detail_top">
 
@@ -225,7 +223,7 @@
                     <com.mredrock.cyxbs.sport.widget.MyHeader
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:background="@color/sport_cardview_background" />
+                        android:background="@drawable/sport_shape_round_corner" />
 
                     <androidx.recyclerview.widget.RecyclerView
                         android:id="@+id/sport_rv_detail_list"
@@ -235,7 +233,7 @@
                         android:paddingTop="16dp"
                         tools:listitem="@layout/sport_item_rv_detail_list" />
                 </com.scwang.smart.refresh.layout.SmartRefreshLayout>
-            </androidx.cardview.widget.CardView>
+            </FrameLayout>
 
             <com.google.android.material.imageview.ShapeableImageView
                 android:id="@+id/sport_siv_detail_hint"
