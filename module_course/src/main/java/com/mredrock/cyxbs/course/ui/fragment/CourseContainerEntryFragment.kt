@@ -22,8 +22,8 @@ import com.mredrock.cyxbs.common.event.*
 import com.mredrock.cyxbs.common.mark.EventBusLifecycleSubscriber
 import com.mredrock.cyxbs.common.service.ServiceManager
 import com.mredrock.cyxbs.api.account.IAccountService
-import com.mredrock.cyxbs.api.account.IUserStateService
 import com.mredrock.cyxbs.api.main.IMainService
+import com.mredrock.cyxbs.common.service.impl
 import com.mredrock.cyxbs.common.ui.BaseViewModelFragment
 import com.mredrock.cyxbs.common.utils.extensions.gone
 import com.mredrock.cyxbs.common.utils.extensions.invisible
@@ -54,8 +54,7 @@ import com.mredrock.cyxbs.common.utils.extensions.*
  * Created by anriku on 2018/8/16.
  */
 @Route(path = COURSE_ENTRY)
-class CourseContainerEntryFragment : BaseViewModelFragment<CoursesViewModel>(),
-    IUserStateService.StateListener, EventBusLifecycleSubscriber {
+class CourseContainerEntryFragment : BaseViewModelFragment<CoursesViewModel>(), EventBusLifecycleSubscriber {
     val openStatistics: Boolean
         get() = false
 
@@ -155,15 +154,14 @@ class CourseContainerEntryFragment : BaseViewModelFragment<CoursesViewModel>(),
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        ServiceManager.getService(IAccountService::class.java).getVerifyService()
-            .addOnStateChangedListener(this)
-        initFragment()
-    }
-
-    override fun onDestroyView() {
-        super.onDestroyView()
-        ServiceManager.getService(IAccountService::class.java).getVerifyService()
-            .removeStateChangedListener(this)
+        IAccountService::class.impl
+            .getUserService()
+            .observeStuNumLiveData()
+            .observe {
+                if (it != null) {
+                    initFragment()
+                }
+            }
     }
 
     /**
@@ -527,19 +525,4 @@ class CourseContainerEntryFragment : BaseViewModelFragment<CoursesViewModel>(),
     enum class CourseState {
         OrdinaryCourse, TeacherCourse, OtherCourse, NoClassInvitationCourse
     }
-
-    override fun onStateChanged(state: IUserStateService.UserState) {
-        if (state == IUserStateService.UserState.LOGIN) {
-            initFragment()
-        } else if (state == IUserStateService.UserState.NOT_LOGIN) {
-            Thread {
-                try {
-                    ViewModelProvider(this).get(CoursesViewModel::class.java).clearCache()
-                } catch (e: Exception) {
-                    e.printStackTrace()
-                }
-            }.start()
-        }
-    }
-
 }
