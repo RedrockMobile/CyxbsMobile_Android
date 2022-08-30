@@ -1,17 +1,15 @@
 package com.mredrock.cyxbs.discover.news.network.download
 
+import android.content.Context
 import android.os.Environment
-import android.os.Environment.DIRECTORY_DOWNLOADS
 import com.mredrock.cyxbs.common.config.getBaseUrl
 import com.mredrock.cyxbs.discover.news.network.ApiService
+import com.mredrock.cyxbs.lib.utils.extensions.saveFile
 import okhttp3.OkHttpClient
 import okhttp3.ResponseBody
 import retrofit2.Call
 import retrofit2.Response
 import retrofit2.Retrofit
-import java.io.File
-import java.io.FileOutputStream
-import java.io.InputStream
 
 /**
  * Author: Hosigus
@@ -20,7 +18,7 @@ import java.io.InputStream
  */
 object DownloadManager {
 
-    fun download(listener: RedDownloadListener, id: String, fileName: String) {
+    fun download(listener: RedDownloadListener, id: String, fileName: String,context:Context) {
         val client = OkHttpClient.Builder()
                 .addNetworkInterceptor(RedDownloadInterceptor(listener))
                 .build()
@@ -44,22 +42,10 @@ object DownloadManager {
                             listener.onFail(Exception("permission deny"))
                             return
                         }
-                        val ins: InputStream
-                        val fos: FileOutputStream
                         try {
-                            ins = body.byteStream()
-                            val file = File(Environment.getExternalStoragePublicDirectory(DIRECTORY_DOWNLOADS),
-                                    "$fileName.${splitFileType(response.headers()["Content-Disposition"])}")
-                            fos = FileOutputStream(file)
-
-                            val bytes = ByteArray(1024)
-                            var length = ins.read(bytes)
-                            while (length != -1) {
-                                fos.write(bytes, 0, length)
-                                length = ins.read(bytes)
-                            }
-                            fos.flush()
-                            listener.onSuccess(file)
+                            val uri = context.saveFile(body.byteStream().readBytes(),"$fileName.${splitFileType(response.headers()["Content-Disposition"])}")
+                          println("AAAAA ${uri?.path}")
+                          listener.onSuccess(uri)
                         } catch (e: Exception) {
                             listener.onFail(e)
                         }
