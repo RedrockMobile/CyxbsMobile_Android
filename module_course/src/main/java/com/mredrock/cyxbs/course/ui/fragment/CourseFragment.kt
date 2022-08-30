@@ -71,7 +71,7 @@ class CourseFragment : BaseFragment(), EventBusLifecycleSubscriber {
         }
     }
     private fun initFragment() {
-        mBinding.lifecycleOwner = this
+        mBinding.lifecycleOwner = viewLifecycleOwner
         mWeek = arguments?.getInt(WEEK_NUM) ?: 0
 
         parentFragment?.let { mCoursesViewModel = ViewModelProvider(it).get(CoursesViewModel::class.java) }

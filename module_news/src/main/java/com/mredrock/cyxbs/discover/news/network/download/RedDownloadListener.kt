@@ -1,5 +1,6 @@
 package com.mredrock.cyxbs.discover.news.network.download
 
+import android.net.Uri
 import java.io.File
 
 /**
@@ -10,6 +11,6 @@ import java.io.File
 interface RedDownloadListener {
     fun onDownloadStart()
     fun onProgress(currentBytes: Long, contentLength: Long)
-    fun onSuccess(file: File)
+    fun onSuccess(uri: Uri?)
     fun onFail(e: Throwable)
 }

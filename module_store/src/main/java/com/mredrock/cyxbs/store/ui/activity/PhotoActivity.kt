@@ -7,6 +7,7 @@ import android.content.Intent
 import android.graphics.Bitmap
 import android.graphics.drawable.BitmapDrawable
 import android.os.Bundle
+import android.os.Environment
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.viewpager2.widget.ViewPager2
@@ -129,7 +130,7 @@ class PhotoActivity : BaseActivity() {
                                 )
 
                             runOnUiThread {
-                                toast("图片保存于系统\"${DIR_PHOTO}\"文件夹下哦")
+                                toast("图片保存于${Environment.DIRECTORY_PICTURES}${DIR_PHOTO}文件夹下哦")
                                 dialog.dismiss()
                             }
 

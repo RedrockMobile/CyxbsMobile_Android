@@ -494,25 +494,23 @@ class CoursesViewModel : BaseViewModel() {
     /**
      * 用来更新周数和开学第一天service
      */
+    /**
+     * 用来更新周数和开学第一天service
+     */
     private fun updateNowWeek(networkNowWeek: Int) {
-        val firstDay = Calendar.getInstance()
-        // 下面一行用于获取当前学期的第一天。nowWeek表示的是今天是第几周，然后整个过程就是今天前去前面的整周
-        // 再减去这周过了几天。减去本周的算法是使用了一种源码、补码的思想。也就是通过取余。比如说当前是周一，
-        // 然后now.get(Calendar.DAY_OF_WEEK)对应的值为2，再+5 % 7得到0，因此就不需要减，其它的计算
-        // 也依次类推。
-        firstDay.add(Calendar.DATE, -((networkNowWeek - 1) * 7 + (firstDay.get(Calendar.DAY_OF_WEEK) + 5) % 7))
-        // 更新第一天
-        BaseApp.appContext.defaultSharedPreferences.editor {
-            putLong(SchoolCalendar.FIRST_DAY, firstDay.timeInMillis)
-        }
+        SchoolCalendar.updateFirstCalendar(networkNowWeek)
+        
         schoolCalendarUpdated.value = true
-
+        
         if (this.nowWeek.value != networkNowWeek && networkNowWeek in 1..21) {
             this.nowWeek.value = networkNowWeek
         }
-
-        nowWeek.value?.let { nowWeek ->
-            sendTopText(firstDay, nowWeek)
+        
+        val firstDay = SchoolCalendar.getFirstMonDayOfTerm()
+        if (firstDay != null) {
+            nowWeek.value?.let { nowWeek ->
+                sendTopText(firstDay, nowWeek)
+            }
         }
     }
 
@@ -545,11 +543,6 @@ class CoursesViewModel : BaseViewModel() {
     private fun stopIntercept(): Boolean {
         mIsGettingData = false
         return false
-    }
-
-    fun clearCache() {
-        mCoursesDatabase?.courseDao()?.deleteAllCourses()
-        mCoursesDatabase?.affairDao()?.deleteAllAffairs()
     }
 
     //课程头部小条的动画方法，暂时不启用，没找到和BottomSheet滑动和其他动画共存并不会影响性能的

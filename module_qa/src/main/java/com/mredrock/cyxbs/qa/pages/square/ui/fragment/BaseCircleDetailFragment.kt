@@ -127,7 +127,7 @@ abstract class BaseCircleDetailFragment<T : CircleDetailViewModel> : BaseViewMod
         activityViewModels<CircleDetailViewModel>().value.followStateChangedMarkObservableByFragment.observe {
             viewModel.invalidateQuestionList()
         }
-        viewModel.deleteTips.observeNotNull {
+        viewModel.deleteTips.observe {
             if (it == true)
                 viewModel.invalidateQuestionList()
         }
@@ -153,9 +153,7 @@ abstract class BaseCircleDetailFragment<T : CircleDetailViewModel> : BaseViewMod
             dynamicListRvAdapter.submitList(it)
         }
         viewModel.networkState.observe {
-            it?.run {
-                footerRvAdapter.refreshData(listOf(this))
-            }
+            footerRvAdapter.refreshData(listOf(it))
         }
         viewModel.initialLoad.observe {
             when (it) {
