@@ -1,7 +1,6 @@
 package com.mredrock.cyxbs.discover.news.viewmodel
 
 import android.Manifest.permission.WRITE_EXTERNAL_STORAGE
-import android.content.Context
 import android.net.Uri
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
@@ -35,7 +34,8 @@ class NewsItemViewModel : BaseViewModel() {
                 }.lifeCycle()
     }
 
-    fun download(rxPermissions: RxPermissions, list: List<NewsAttachment>, listener: NewsDownloadListener,context:Context) {
+    // TODO NewsDownloadListener 接口会造成内存泄漏
+    fun download(rxPermissions: RxPermissions, list: List<NewsAttachment>, listener: NewsDownloadListener) {
         checkPermission(rxPermissions) { isGranted ->
             if (isGranted) {
                 listener.onDownloadStart()
@@ -53,7 +53,7 @@ class NewsItemViewModel : BaseViewModel() {
                         override fun onFail(e: Throwable) {
                             listener.onDownloadEnd(pos, e = e)
                         }
-                    }, it.id, it.name,context)
+                    }, it.id, it.name)
                 }
             } else {
                 listener.onDownloadEnd(-1, e = Exception("permission deny"))

@@ -1,9 +1,9 @@
 package com.mredrock.cyxbs.discover.news.network.download
 
-import android.content.Context
 import android.os.Environment
 import com.mredrock.cyxbs.common.config.getBaseUrl
 import com.mredrock.cyxbs.discover.news.network.ApiService
+import com.mredrock.cyxbs.lib.utils.extensions.appContext
 import com.mredrock.cyxbs.lib.utils.extensions.saveFile
 import okhttp3.OkHttpClient
 import okhttp3.ResponseBody
@@ -18,7 +18,7 @@ import retrofit2.Retrofit
  */
 object DownloadManager {
 
-    fun download(listener: RedDownloadListener, id: String, fileName: String,context:Context) {
+    fun download(listener: RedDownloadListener, id: String, fileName: String) {
         val client = OkHttpClient.Builder()
                 .addNetworkInterceptor(RedDownloadInterceptor(listener))
                 .build()
@@ -43,7 +43,7 @@ object DownloadManager {
                             return
                         }
                         try {
-                            val uri = context.saveFile(body.byteStream().readBytes(),"$fileName.${splitFileType(response.headers()["Content-Disposition"])}")
+                            val uri = appContext.saveFile(body.byteStream().readBytes(),"$fileName.${splitFileType(response.headers()["Content-Disposition"])}")
                           println("AAAAA ${uri?.path}")
                           listener.onSuccess(uri)
                         } catch (e: Exception) {

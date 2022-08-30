@@ -4,7 +4,6 @@ import android.app.AlertDialog
 import android.content.Intent
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
-import android.media.MediaScannerConnection
 import android.net.Uri
 import android.os.Build
 import android.os.Bundle
@@ -15,7 +14,6 @@ import android.widget.ImageView
 import android.widget.LinearLayout
 import android.widget.TextView
 import androidx.core.content.ContextCompat
-import androidx.core.net.toFile
 import androidx.lifecycle.Observer
 import com.afollestad.materialdialogs.MaterialDialog
 import com.afollestad.materialdialogs.list.listItemsMultiChoice
@@ -27,7 +25,6 @@ import com.mredrock.cyxbs.common.ui.BaseViewModelActivity
 import com.mredrock.cyxbs.common.utils.extensions.setOnSingleClickListener
 import com.mredrock.cyxbs.common.utils.extensions.sp
 import com.mredrock.cyxbs.common.utils.extensions.toast
-import com.mredrock.cyxbs.common.utils.extensions.uri
 import com.mredrock.cyxbs.common.viewmodel.event.ProgressDialogEvent
 import com.mredrock.cyxbs.discover.news.R
 import com.mredrock.cyxbs.discover.news.bean.NewsAttachment
@@ -37,7 +34,6 @@ import com.mredrock.cyxbs.discover.news.viewmodel.NewsItemViewModel
 import com.mredrock.cyxbs.lib.utils.extensions.showFile
 import com.tbruyelle.rxpermissions3.RxPermissions
 import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
-import java.io.File
 import java.util.regex.Matcher
 import java.util.regex.Pattern
 
@@ -242,7 +238,7 @@ class NewsItemActivity : BaseViewModelActivity<NewsItemViewModel>(), NewsItemVie
                     }
                     if (list.isNotEmpty()) {
                         downloadNeedSize = list.size
-                        viewModel.download(rxPermissions, list, this@NewsItemActivity,context)
+                        viewModel.download(rxPermissions, list, this@NewsItemActivity)
                     }
                 }
                 positiveButton(text = "确定")
