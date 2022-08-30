@@ -10,14 +10,10 @@ import android.widget.TextView
 import androidx.appcompat.content.res.AppCompatResources
 import androidx.core.view.isGone
 import androidx.fragment.app.viewModels
-import androidx.viewpager2.adapter.FragmentStateAdapter
 import androidx.viewpager2.widget.ViewPager2
 import com.mredrock.cyxbs.config.route.DISCOVER_OTHER_COURSE
 import com.mredrock.cyxbs.course.R
-import com.mredrock.cyxbs.course.page.course.page.CourseSemesterFragment
-import com.mredrock.cyxbs.course.page.course.page.CourseWeekFragment
-import com.mredrock.cyxbs.course.page.course.page.viewmodel.IParentFragment
-import com.mredrock.cyxbs.course.page.course.viewmodel.CourseHomeViewModel
+import com.mredrock.cyxbs.course.page.course.ui.home.viewmodel.HomeCourseViewModel
 import com.mredrock.cyxbs.lib.course.fragment.vp.BaseCourseVpFragment
 import com.mredrock.cyxbs.lib.course.fragment.page.CoursePageFragment
 import com.mredrock.cyxbs.lib.utils.extensions.lazyUnlock
@@ -32,15 +28,15 @@ import com.mredrock.cyxbs.lib.utils.utils.Num2CN
  * @email guo985892345@foxmail.com
  * @date 2022/8/20 16:53
  */
-class HomeCourseFragment : BaseCourseVpFragment(), IParentFragment {
-  
-  override val viewModel by viewModels<CourseHomeViewModel>()
+class HomeCourseFragment : BaseCourseVpFragment() {
   
   override val mViewPager: ViewPager2 by R.id.course_vp_fragment_home.view()
   
   override var pageCount: Int = 22 // 21 周加上第一页为整学期的课表
   
-  // 这个不是显示 整学期 那个 View，而是旁边显示 （本周）> 那个小 View
+  private val viewModel by viewModels<HomeCourseViewModel>()
+  
+  // 这个不是显示 整学期 那个 View，而是旁边显示 ⌈（本周）> ⌋ 那个小 View
   private val mTvNowWeek: TextView by R.id.course_iv_this_week.view()
   
   // 显示 整学期、第一周。。。的 View
@@ -56,16 +52,6 @@ class HomeCourseFragment : BaseCourseVpFragment(), IParentFragment {
   
   // 我的关联图标
   private val mIvLink: ImageView by R.id.course_iv_header_link.view()
-  
-  private val mDoubleLinkImg by lazyUnlock {
-    AppCompatResources.getDrawable(requireContext(), R.drawable.course_ic_item_header_link_double)
-  }
-  private val mSingleLinkImg by lazyUnlock {
-    AppCompatResources.getDrawable(requireContext(), R.drawable.course_ic_item_header_link_single)
-  }
-  
-  private val mVpAdapter: FragmentStateAdapter
-    get() = mViewPager.adapter as FragmentStateAdapter
   
   override fun onCreateView(
     inflater: LayoutInflater,
@@ -111,6 +97,7 @@ class HomeCourseFragment : BaseCourseVpFragment(), IParentFragment {
         mIvLink.setImageDrawable(mSingleLinkImg)
         viewModel.changeLinkStuVisible(false)
       } else {
+        
         val link = viewModel.lessonList.value?.link
         if (link != null) {
           mIvLink.setImageDrawable(mDoubleLinkImg)
@@ -125,7 +112,7 @@ class HomeCourseFragment : BaseCourseVpFragment(), IParentFragment {
     }
     mIvLink.setOnLongClickListener {
       // 测试功能，长按我的关联触发
-      toast("刷新所有课表数据")
+      toast("强制刷新所有课表数据")
       viewModel.resetLessonData()
       true
     }
@@ -146,13 +133,6 @@ class HomeCourseFragment : BaseCourseVpFragment(), IParentFragment {
     mBtnBackNowWeek.translationX = positionOffset * (mBtnBackNowWeek.width)
   }
   
-  /**
-   * 是否显示关联人的课
-   */
-  private fun isShowLinkLesson(): Boolean {
-    return if (mIvLink.isGone) false else mIvLink.drawable == mDoubleLinkImg
-  }
-  
   private fun initObserve() {
     viewModel.lessonList.observe {
       if (it.nowWeek != mNowWeek) {
@@ -162,14 +142,41 @@ class HomeCourseFragment : BaseCourseVpFragment(), IParentFragment {
       }
       // 判断关联图标显示双人还是单人
       if (it.link?.linkStuEntity?.isShowLink == true) {
-        mIvLink.setImageDrawable(mDoubleLinkImg)
+      
       } else {
-        mIvLink.setImageDrawable(mSingleLinkImg)
+      
+      }
+    }
+    viewModel.linkStu.observe {
+      if (it.isShowLink) {
+        mIvLink.setImageDrawable(mDoubleLinkImg)
       }
     }
   }
   
   override fun createFragment(position: Int): CoursePageFragment {
-    return if (position == 0) CourseSemesterFragment() else CourseWeekFragment.newInstance(position)
+    return if (position == 0) HomeSemesterFragment() else HomeWeekFragment.newInstance(position)
+  }
+  
+  private val mDoubleLinkImg by lazyUnlock {
+    AppCompatResources.getDrawable(requireContext(), R.drawable.course_ic_item_header_link_double)
+  }
+  private val mSingleLinkImg by lazyUnlock {
+    AppCompatResources.getDrawable(requireContext(), R.drawable.course_ic_item_header_link_single)
+  }
+  
+  /**
+   * 是否显示关联人的课
+   */
+  private fun isShowLinkLesson(): Boolean {
+    return if (mIvLink.isGone) false else mIvLink.drawable == mDoubleLinkImg
+  }
+  
+  private fun showDoubleLink() {
+    mIvLink.setImageDrawable(mDoubleLinkImg)
+  }
+  
+  private fun showSingleLink() {
+    mIvLink.setImageDrawable(mSingleLinkImg)
   }
 }

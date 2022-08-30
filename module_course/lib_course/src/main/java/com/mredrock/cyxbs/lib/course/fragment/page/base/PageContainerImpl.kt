@@ -59,6 +59,11 @@ abstract class PageContainerImpl : BasePageFragment(), ICourseContainer {
     mColumnAreas.forEach { _, value -> value.clearItem() }
   }
   
+  /**
+   * 管理每一列的一个工具类
+   *
+   * 因为目前课和事务都只能以一列存在，所以暂时这样设计
+   */
   private class ColumnArea(val column: Int, val course: ICourseViewGroup) {
     private val items = arrayListOf<IOverlapItem>()
     private val grids = SparseArray<Grid>()
@@ -110,6 +115,9 @@ abstract class PageContainerImpl : BasePageFragment(), ICourseContainer {
       }
     }
   
+    /**
+     * 管理每个表格的工具类
+     */
     private class Grid(val row: Int) {
   
       /**

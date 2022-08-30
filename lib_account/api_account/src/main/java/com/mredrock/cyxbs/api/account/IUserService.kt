@@ -49,7 +49,7 @@ interface IUserService {
      * 如果你想对于不同学号返回给下游不同的 Observable，**需要使用 [Observable.switchMap]**，因为它可以自动停止上一个发送的 Observable
      * ```
      * 写法如下：
-     * observeStuNum(lifecycleOwner)
+     * observeStuNumUnsafe()
      *   .switchMap { stuNum ->
      *     // switchMap 可以在上游发送新的数据时自动关闭上一次数据生成的 Observable
      *     if (stuNum.isEmpty()) {

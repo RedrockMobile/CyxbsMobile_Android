@@ -1,7 +1,6 @@
 package com.mredrock.cyxbs.course.page.course.data
 
 import com.mredrock.cyxbs.lib.course.internal.affair.IAffairData
-import com.mredrock.cyxbs.lib.course.internal.day.ISingleDayItemData
 
 /**
  * ...
@@ -35,8 +34,4 @@ data class AffairData(
     }
   override val length: Int
     get() = period
-  
-  override fun compare(o1: ISingleDayItemData, o2: ISingleDayItemData): Int {
-  
-  }
 }

@@ -14,9 +14,9 @@ import com.mredrock.cyxbs.lib.course.internal.view.course.ICourseViewGroup
  * @date 2022/8/25 15:24
  */
 interface ICourseExtend : ICoursePeriod,
-  ITimeLine,
-  IFoldNoon, IFoldDusk,
-  ICourseContainer
+  ITimeLine, // 左侧时间轴
+  IFoldNoon, IFoldDusk, // 中午和傍晚的折叠逻辑
+  ICourseContainer // 课表容器
 {
   val course: ICourseViewGroup
 }

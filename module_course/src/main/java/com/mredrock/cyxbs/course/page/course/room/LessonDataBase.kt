@@ -46,7 +46,7 @@ data class StuLessonEntity(
   val week: List<Int>, // 第几周的课
   val weekBegin: Int,
   val weekEnd: Int,
-  val weekModel: String
+  val weekModel: String,
 ) {
   class ClassNumberConverter {
     @TypeConverter
@@ -115,34 +115,43 @@ data class TeaLessonEntity(
 }
 
 @Dao
-interface StuLessonDao {
+abstract class StuLessonDao {
   
   @Query("SELECT * FROM stu_lesson WHERE stuNum = :stuNum")
-  fun observeAllLesson(stuNum: String): Observable<List<StuLessonEntity>>
+  abstract fun observeLesson(stuNum: String): Observable<List<StuLessonEntity>>
   
   @Query("SELECT * FROM stu_lesson WHERE stuNum = :stuNum")
-  fun getAllLesson(stuNum: String): List<StuLessonEntity>
-  
-  @Query("SELECT * FROM stu_lesson WHERE stuNum = :stuNum")
-  fun getAllLessonDirect(stuNum: String): List<StuLessonEntity>
+  abstract fun getLesson(stuNum: String): List<StuLessonEntity>
   
   @Query("DELETE FROM stu_lesson WHERE stuNum = :stuNum")
-  fun deleteLesson(stuNum: String)
+  protected abstract fun deleteLesson(stuNum: String)
   
   @Insert(onConflict = OnConflictStrategy.REPLACE)
-  fun insertLesson(lesson: List<StuLessonEntity>)
+  protected abstract fun insertLesson(lesson: List<StuLessonEntity>)
+  
+  @Transaction
+  open fun resetData(stuNum: String, lesson: List<StuLessonEntity>) {
+    deleteLesson(stuNum)
+    insertLesson(lesson)
+  }
 }
 
 @Dao
-interface TeaLessonDao {
+abstract class TeaLessonDao {
   @Query("SELECT * FROM tea_lesson WHERE teaNum = :teaNum")
-  fun getAllLesson(teaNum: String): List<TeaLessonEntity>
+  abstract fun getLesson(teaNum: String): List<TeaLessonEntity>
   
   @Query("DELETE FROM tea_lesson WHERE teaNum = :teaNum")
-  fun deleteLesson(teaNum: String)
+  protected abstract fun deleteLesson(teaNum: String)
   
   @Insert(onConflict = OnConflictStrategy.REPLACE)
-  fun insertLesson(lesson: List<TeaLessonEntity>)
+  protected abstract fun insertLesson(lesson: List<TeaLessonEntity>)
+  
+  @Transaction
+  open fun resetData(teaNum: String, lesson: List<TeaLessonEntity>) {
+    deleteLesson(teaNum)
+    insertLesson(lesson)
+  }
 }
 
 @Entity(tableName = "lesson_version")

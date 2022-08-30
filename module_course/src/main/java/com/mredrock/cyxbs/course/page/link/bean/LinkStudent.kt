@@ -11,16 +11,16 @@ import java.io.Serializable
  */
 data class LinkStudent(
   @SerializedName("stuNum")
-  val stuNum: String,
+  val linkNum: String, // 关联人的学号，注意这个跟接口的字段名不一样
   @SerializedName("major")
   val major: String,
   @SerializedName("name")
   val name: String,
   @SerializedName("selfNum")
-  val selfNum: String
+  val selfNum: String // 自身的学号
 ) : Serializable {
   fun isNotEmpty(): Boolean {
-    return stuNum.isNotEmpty()
+    return linkNum.isNotEmpty()
   }
   
   companion object {

@@ -24,10 +24,10 @@ import com.ndhzs.netlayout.view.NetLayout
  * @date 2022/8/18 15:03
  */
 @Suppress("LeakingThis")
-abstract class BasePageFragment : BaseFragment(R.layout.course_layout), ICourseExtend {
+abstract class BasePageFragment : BaseFragment(), ICourseExtend {
   
   // CourseLayout 保持接口通信，降低耦合度
-  protected val mCourseScrollView: ICourseScroll by R.id.course_scrollView.view<CourseScrollView>()
+  protected val mCourseScrollView: ICourseScroll  by R.id.course_scrollView.view<CourseScrollView>()
   private val mCourseLayout: ICourseViewGroup     by R.id.course_courseLayout.view<CourseViewGroup>()
   protected val mTvLesson1        by R.id.course_tv_lesson_1.view<TextView>()
   protected val mTvLesson2        by R.id.course_tv_lesson_2.view<TextView>()
@@ -70,8 +70,8 @@ abstract class BasePageFragment : BaseFragment(R.layout.course_layout), ICourseE
     inflater: LayoutInflater,
     container: ViewGroup?,
     savedInstanceState: Bundle?
-  ): View? {
-    return super.onCreateView(inflater, container, savedInstanceState)
+  ): View {
+    return inflater.inflate(R.layout.course_layout, container, false)
   }
   
   @CallSuper
@@ -82,10 +82,6 @@ abstract class BasePageFragment : BaseFragment(R.layout.course_layout), ICourseE
   
   @CallSuper
   protected open fun initCourseInternal(){}
-  
-  protected inline fun course(block: ICourseViewGroup.() -> Unit) {
-    block.invoke(course)
-  }
   
   /**
    * 遍历顶部的星期数
@@ -98,6 +94,10 @@ abstract class BasePageFragment : BaseFragment(R.layout.course_layout), ICourseE
     block.invoke(mTvFriWeek, mTvFriMonth)
     block.invoke(mTvSatWeek, mTvSatMonth)
     block.invoke(mTvSunWeek, mTvSunMonth)
+  }
+  
+  protected inline fun course(block: ICourseViewGroup.() -> Unit) {
+    block.invoke(course)
   }
   
   override val course: ICourseViewGroup

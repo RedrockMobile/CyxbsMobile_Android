@@ -139,5 +139,5 @@ abstract class BaseFragment : OperationFragment {
    * 这样写会在 arguments 中寻找名字叫 key 的参数
    * ```
    */
-  fun <T : Any> Bundle?.helper() = ArgumentHelper<T>{ arguments!! }
+  fun <T : Any> Bundle?.helper() = ArgumentHelper<T>{ this!! }
 }

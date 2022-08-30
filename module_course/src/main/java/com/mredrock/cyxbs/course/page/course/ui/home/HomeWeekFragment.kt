@@ -1,4 +1,4 @@
-package com.mredrock.cyxbs.course.page.course.page
+package com.mredrock.cyxbs.course.page.course.ui.home
 
 import androidx.core.os.bundleOf
 import com.mredrock.cyxbs.lib.course.fragment.page.CoursePageFragment
@@ -14,11 +14,11 @@ import java.util.*
  * @email guo985892345@foxmail.com
  * @date 2022/8/20 19:25
  */
-class CourseWeekFragment : CoursePageFragment() {
+class HomeWeekFragment : CoursePageFragment() {
   
   companion object {
-    fun newInstance(week: Int): CourseWeekFragment {
-      return CourseWeekFragment().apply {
+    fun newInstance(week: Int): HomeWeekFragment {
+      return HomeWeekFragment().apply {
         arguments = bundleOf(
           this::mWeek.name to week
         )

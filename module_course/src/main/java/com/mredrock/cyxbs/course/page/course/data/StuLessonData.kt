@@ -42,7 +42,7 @@ data class StuLessonData(
   }
   
   enum class Who {
-    My, Link
+    Self, Link
   }
 }
 

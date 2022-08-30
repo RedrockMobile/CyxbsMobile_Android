@@ -1,7 +1,7 @@
 package com.mredrock.cyxbs.course.page.link.network
 
-import com.mredrock.cyxbs.course.page.link.bean.DeleteLinkBean
 import com.mredrock.cyxbs.course.page.link.bean.LinkStudent
+import com.mredrock.cyxbs.lib.utils.network.ApiStatus
 import com.mredrock.cyxbs.lib.utils.network.ApiWrapper
 import com.mredrock.cyxbs.lib.utils.network.IApi
 import io.reactivex.rxjava3.core.Single
@@ -29,5 +29,5 @@ interface LinkApiServices : IApi {
   
   // 删除我的关联
   @DELETE("/magipoke-jwzx/kebiao/relevance/")
-  fun deleteLinkStudent(): Single<ApiWrapper<DeleteLinkBean>>
+  fun deleteLinkStudent(): Single<ApiStatus>
 }

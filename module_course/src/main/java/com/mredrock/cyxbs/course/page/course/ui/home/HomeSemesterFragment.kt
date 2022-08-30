@@ -1,8 +1,8 @@
-package com.mredrock.cyxbs.course.page.course.page
+package com.mredrock.cyxbs.course.page.course.ui.home
 
 import com.mredrock.cyxbs.lib.course.fragment.page.CoursePageFragment
 
-class CourseSemesterFragment : CoursePageFragment() {
+class HomeSemesterFragment : CoursePageFragment() {
   override fun initCourse() {
   }
 }

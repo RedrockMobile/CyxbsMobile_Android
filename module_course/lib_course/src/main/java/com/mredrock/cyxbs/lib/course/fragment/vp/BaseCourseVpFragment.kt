@@ -21,12 +21,14 @@ abstract class BaseCourseVpFragment : BaseFragment() {
   protected abstract fun createFragment(position: Int): CoursePageFragment
   protected abstract val mViewPager: ViewPager2
   
+  protected val mVpAdapter: FragmentStateAdapter = CourseAdapter()
+  
   override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
     super.onViewCreated(view, savedInstanceState)
-    mViewPager.adapter = CourseAdapter()
+    mViewPager.adapter = mVpAdapter
   }
   
-  protected inner class CourseAdapter : FragmentStateAdapter(this) {
+  private inner class CourseAdapter : FragmentStateAdapter(this) {
     override fun getItemCount(): Int = pageCount
     override fun createFragment(position: Int): Fragment = this@BaseCourseVpFragment.createFragment(position)
   }

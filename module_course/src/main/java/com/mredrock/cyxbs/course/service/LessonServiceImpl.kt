@@ -4,9 +4,10 @@ import android.content.Context
 import com.alibaba.android.arouter.facade.annotation.Route
 import com.mredrock.cyxbs.api.course.COURSE_LESSON
 import com.mredrock.cyxbs.api.course.ILessonService
-import com.mredrock.cyxbs.course.page.course.room.LessonDataBase
+import com.mredrock.cyxbs.course.page.course.model.StuLessonRepository
 import com.mredrock.cyxbs.course.page.course.room.StuLessonEntity
 import io.reactivex.rxjava3.core.Observable
+import io.reactivex.rxjava3.core.Single
 
 /**
  * ...
@@ -17,16 +18,18 @@ import io.reactivex.rxjava3.core.Observable
 @Route(path = COURSE_LESSON, name = COURSE_LESSON)
 class LessonServiceImpl : ILessonService {
   
-  override fun getLesson(stuNum: String): List<ILessonService.Lesson> {
-    return LessonDataBase.INSTANCE.getStuLessonDao()
-      .getAllLessonDirect(stuNum)
-      .toLesson()
+  override fun getLesson(stuNum: String): Single<List<ILessonService.Lesson>> {
+    return StuLessonRepository.getLesson(stuNum)
+      .map { it.toLesson() }
   }
   
   override fun observeLesson(stuNum: String): Observable<List<ILessonService.Lesson>> {
-    return LessonDataBase.INSTANCE.getStuLessonDao()
-      .observeAllLesson(stuNum)
-      .distinctUntilChanged()
+    return StuLessonRepository.observeLesson(stuNum)
+      .map { it.toLesson() }
+  }
+  
+  override fun observeSelfLesson(): Observable<List<ILessonService.Lesson>> {
+    return StuLessonRepository.observeSelfLesson()
       .map { it.toLesson() }
   }
   

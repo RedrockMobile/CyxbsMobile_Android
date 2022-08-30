@@ -1,8 +1,8 @@
 package com.mredrock.cyxbs.api.course
 
-import androidx.annotation.WorkerThread
 import com.alibaba.android.arouter.facade.template.IProvider
 import io.reactivex.rxjava3.core.Observable
+import io.reactivex.rxjava3.core.Single
 
 /**
  * ...
@@ -13,41 +13,26 @@ import io.reactivex.rxjava3.core.Observable
 interface ILessonService : IProvider {
   
   /**
-   * 直接得到当前学号的课，只能在非 ui 线程调用
+   * 直接得到当前学号的课
+   * - 上游已主动切换成 io 线程
    */
-  @WorkerThread
-  fun getLesson(stuNum: String): List<Lesson>
+  fun getLesson(stuNum: String): Single<List<Lesson>>
   
   /**
    * 观察当前学号的所有课
-   * 1、在数据库发生改变时回调
-   * 2、已进行了去重的处理
-   * 3、上游没有主动切换线程，请自己切换
-   * 4、对于学号可能因为登录而变化，可以参考下面这种写法来解决：
-   * val lessonService = ServiceManager(ILessonService::class)
-   * val affairService = ServiceManager(IAffairService::class)
-   * return ServiceManager(IAccountService::class).getUserService()
-   *     .observeStuNum() // 观察学号的变化
-   *     .switchMap { stuNum ->
-   *         // switchMap 会自动取消上一次发送的 Observable
-   *         if (stuNum.isEmpty()) Observable.just(NoLessonHeader())
-   *         else {
-   *             // combineLast 可以同时观察任一个 Observable，
-   *             // 只要收到一个新的，他就会整和数据发给下游，不同于 zip 操作符，
-   *             // zip 操作符需要两个都发送新的才会整合发给下游
-   *             Observable.combineLatest(
-   *                 lessonService.observeLesson(stuNum),
-   *                 affairService.observeAffair(stuNum),
-   *             ) { lessons, affairs ->
-   *                 val nowWeek = lessonService.getNowWeek()
-   *                 if (nowWeek != null) {
-   *                     getHeader(nowWeek, lessons, affairs)
-   *                 } else NoLessonHeader()
-   *             }.subscribeOn(Schedulers.io())
-   *         }
-   *     }
+   * - 在数据库发生改变时会回调
+   * - 已使用 distinctUntilChanged() 进行了去重处理
+   * - 上游已主动切换成 io 线程
    */
   fun observeLesson(stuNum: String): Observable<List<Lesson>>
+  
+  /**
+   * 观察当前登录人的课
+   * - 在数据库发生改变时会回调
+   * - 已使用 distinctUntilChanged() 进行了去重处理
+   * - 上游已主动切换成 io 线程
+   */
+  fun observeSelfLesson(): Observable<List<Lesson>>
   
   data class Lesson(
     val stuNum: String,

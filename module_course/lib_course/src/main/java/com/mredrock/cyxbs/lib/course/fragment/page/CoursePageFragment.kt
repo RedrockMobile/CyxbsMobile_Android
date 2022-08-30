@@ -16,6 +16,8 @@ import com.mredrock.cyxbs.lib.course.internal.item.IItemContainer
  */
 abstract class CoursePageFragment : PageTimelineImpl() {
   
+  abstract fun initCourse()
+  
   final override fun initCourseInternal() {
     super.initCourseInternal()
     course {
@@ -30,8 +32,6 @@ abstract class CoursePageFragment : PageTimelineImpl() {
     }
     initCourse()
   }
-  
-  abstract fun initCourse()
   
   /**
    * 初始化显示没课图片的逻辑

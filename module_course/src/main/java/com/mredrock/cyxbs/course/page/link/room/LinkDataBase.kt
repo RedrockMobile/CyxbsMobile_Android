@@ -4,7 +4,6 @@ import androidx.room.*
 import com.mredrock.cyxbs.course.page.link.bean.LinkStudent
 import com.mredrock.cyxbs.lib.utils.extensions.appContext
 import io.reactivex.rxjava3.core.Observable
-import io.reactivex.rxjava3.core.Single
 import java.io.Serializable
 
 /**
@@ -40,9 +39,9 @@ data class LinkStuEntity(
   constructor(
     linkStu: LinkStudent,
     isShowLink: Boolean
-  ) : this(linkStu.selfNum, linkStu.stuNum, linkStu.major, linkStu.name, isShowLink)
+  ) : this(linkStu.selfNum, linkStu.linkNum, linkStu.major, linkStu.name, isShowLink)
   
-  fun isNull(): Boolean = linkNum.isEmpty()
+  fun isNull(): Boolean = linkNum.isBlank()
   fun isNotNull(): Boolean = !isNull()
   fun toNull(): LinkStuEntity = copy(linkNum = "", linkMajor = "", linkName = "")
   companion object {
@@ -57,11 +56,11 @@ interface LinkStuDao {
   fun insertLinkStu(link: LinkStuEntity)
   
   @Update
-  fun updateLinkStu(link: LinkStuEntity): Single<Int>
+  fun updateLinkStu(link: LinkStuEntity): Int
 
-  @Query("SELECT * FROM link_stu WHERE selfNum = (:selfNum)")
+  @Query("SELECT * FROM link_stu WHERE selfNum = :selfNum")
   fun getLinkStu(selfNum: String): LinkStuEntity?
   
-  @Query("SELECT * FROM link_stu WHERE selfNum = (:selfNum)")
+  @Query("SELECT * FROM link_stu WHERE selfNum = :selfNum")
   fun observeLinkStu(selfNum: String): Observable<LinkStuEntity>
 }

@@ -5,6 +5,7 @@ import com.mredrock.cyxbs.course.page.course.bean.TeaLessonBean
 import com.mredrock.cyxbs.course.page.course.room.LessonDataBase
 import com.mredrock.cyxbs.course.page.course.room.TeaLessonEntity
 import com.mredrock.cyxbs.course.page.course.network.CourseApiServices
+import com.mredrock.cyxbs.lib.utils.extensions.lazyUnlock
 import com.mredrock.cyxbs.lib.utils.network.api
 import io.reactivex.rxjava3.core.Single
 import io.reactivex.rxjava3.schedulers.Schedulers
@@ -17,6 +18,8 @@ import io.reactivex.rxjava3.schedulers.Schedulers
  */
 @Suppress("LiftReturnOrAssignment")
 object TeaLessonRepository {
+  
+  private val mTeaDB by lazyUnlock { LessonDataBase.INSTANCE.getTeaLessonDao() }
   
   fun getTeaLesson(teaNum: String): Single<List<TeaLessonEntity>> {
     return CourseApiServices::class.api
@@ -34,30 +37,24 @@ object TeaLessonRepository {
   
   @WorkerThread
   private fun httpFromTeaWhenError(teaNum: String): List<TeaLessonEntity> {
-    return LessonDataBase.INSTANCE.getTeaLessonDao()
-      .getAllLesson(teaNum)
+    return mTeaDB.getLesson(teaNum)
   }
   
   @WorkerThread
   private fun httpFromTeaWhen200(bean: TeaLessonBean): List<TeaLessonEntity> {
     if (bean.judgeVersion()) {
       val list = bean.toTeaLessonEntity()
-      LessonDataBase.INSTANCE.getTeaLessonDao().apply {
-        deleteLesson(bean.teaNum)
-        insertLesson(list)
-      }
+      mTeaDB.resetData(bean.teaNum, list)
       return list
     } else {
-      val list = LessonDataBase.INSTANCE.getTeaLessonDao()
-        .getAllLesson(bean.teaNum)
+      val list = mTeaDB.getLesson(bean.teaNum)
       if (list.isNotEmpty()) {
         // 使用本地数据
           return list
       } else {
         // 本地没有数据，只能使用网络数据
         val newList = bean.toTeaLessonEntity()
-        LessonDataBase.INSTANCE.getTeaLessonDao()
-          .insertLesson(newList)
+        mTeaDB.resetData(bean.teaNum, list)
         return newList
       }
     }

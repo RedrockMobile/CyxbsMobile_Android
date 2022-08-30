@@ -1,20 +1,16 @@
 package com.mredrock.cyxbs.course.page.course.viewmodel
 
 import androidx.lifecycle.*
-import com.mredrock.cyxbs.api.account.IAccountService
 import com.mredrock.cyxbs.course.page.course.data.StuLessonData
 import com.mredrock.cyxbs.course.page.course.data.toStuLessonData
-import com.mredrock.cyxbs.course.page.link.room.LinkDataBase
 import com.mredrock.cyxbs.course.page.course.model.StuLessonRepository
 import com.mredrock.cyxbs.course.page.course.page.viewmodel.CoursePageViewModel
 import com.mredrock.cyxbs.course.page.course.utils.CourseDiff
 import com.mredrock.cyxbs.course.page.link.model.LinkRepository
 import com.mredrock.cyxbs.course.page.link.room.LinkStuEntity
-import com.mredrock.cyxbs.lib.utils.service.impl
 import com.mredrock.cyxbs.lib.utils.utils.SchoolCalendarUtil
 import io.reactivex.rxjava3.core.Observable
 import io.reactivex.rxjava3.disposables.Disposable
-import io.reactivex.rxjava3.schedulers.Schedulers
 
 /**
  * ...
@@ -25,27 +21,17 @@ import io.reactivex.rxjava3.schedulers.Schedulers
 class CourseHomeViewModel : CoursePageViewModel() {
   
   fun changeLinkStuVisible(isShowLink: Boolean) {
-    val selfNum = IAccountService::class.impl.getUserService().getStuNum()
-    if (selfNum.isEmpty()) return
-    val oldLinkStu = lessonList.value?.link?.linkStuEntity
-    if (oldLinkStu != null) {
-      if (oldLinkStu.isShowLink != isShowLink) {
-        LinkDataBase.INSTANCE.getLinkStuDao()
-          .updateLinkStu(oldLinkStu.copy(isShowLink = isShowLink))
-          .subscribeOn(Schedulers.io())
-          .safeSubscribeBy()
-        // 这里更新后，所有观察关联的地方都会重新发送新数据
-      }
-    }
+    LinkRepository.changeLinkStuVisible(isShowLink)
+    // 这里更新后，所有观察关联的地方都会重新发送新数据
   }
   
   /**
    * 重新得到课表数据
    *
    * 注意：
-   * 0、该方法请用于测试使用
-   * 1、课表数据是通过观察来回调的，一般不需要自己主动刷新
-   * 2、ViewModel 的 init 中已经加载了课表数据，请不要在 Activity 初始化时加载
+   * - 该方法请用于测试使用
+   * - 课表数据是通过观察来回调的，一般不需要自己主动刷新
+   * - ViewModel 的 init 中已经加载了课表数据，请不要在 Activity 初始化时加载
    */
   fun resetLessonData() {
     mLessonDataDisposable?.dispose()
@@ -65,8 +51,8 @@ class CourseHomeViewModel : CoursePageViewModel() {
   private fun observableLessons() {
     val selfObservable = StuLessonRepository.observeSelfLesson(true)
       .map {
-        val selfNewList = it.newList.toStuLessonData(StuLessonData.Who.My)
-        val selfOldList = (it.oldList ?: emptyList()).toStuLessonData(StuLessonData.Who.My)
+        val selfNewList = it.newList.toStuLessonData(StuLessonData.Who.Self)
+        val selfOldList = (it.oldList ?: emptyList()).toStuLessonData(StuLessonData.Who.Self)
         SelfResult(it.stuNum, selfNewList, CourseDiff.start(it.stuNum, selfNewList, selfOldList))
       }
     val linkObservable = LinkRepository.observeLinkStudent()
