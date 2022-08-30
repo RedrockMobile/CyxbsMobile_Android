@@ -1,6 +1,8 @@
 package com.mredrock.cyxbs.discover.news.viewmodel
 
 import android.Manifest.permission.WRITE_EXTERNAL_STORAGE
+import android.content.Context
+import android.net.Uri
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import com.mredrock.cyxbs.common.network.ApiGenerator
@@ -14,7 +16,6 @@ import com.mredrock.cyxbs.discover.news.network.ApiService
 import com.mredrock.cyxbs.discover.news.network.download.DownloadManager
 import com.mredrock.cyxbs.discover.news.network.download.RedDownloadListener
 import com.tbruyelle.rxpermissions3.RxPermissions
-import java.io.File
 
 /**
  * Author: Hosigus
@@ -34,7 +35,7 @@ class NewsItemViewModel : BaseViewModel() {
                 }.lifeCycle()
     }
 
-    fun download(rxPermissions: RxPermissions, list: List<NewsAttachment>, listener: NewsDownloadListener) {
+    fun download(rxPermissions: RxPermissions, list: List<NewsAttachment>, listener: NewsDownloadListener,context:Context) {
         checkPermission(rxPermissions) { isGranted ->
             if (isGranted) {
                 listener.onDownloadStart()
@@ -45,14 +46,14 @@ class NewsItemViewModel : BaseViewModel() {
                             listener.onProgress(pos, currentBytes, contentLength)
                         }
 
-                        override fun onSuccess(file: File) {
-                            listener.onDownloadEnd(pos, file)
+                        override fun onSuccess(uri: Uri?) {
+                            listener.onDownloadEnd(pos, uri)
                         }
 
                         override fun onFail(e: Throwable) {
                             listener.onDownloadEnd(pos, e = e)
                         }
-                    }, it.id, it.name)
+                    }, it.id, it.name,context)
                 }
             } else {
                 listener.onDownloadEnd(-1, e = Exception("permission deny"))
@@ -67,6 +68,6 @@ class NewsItemViewModel : BaseViewModel() {
     interface NewsDownloadListener {
         fun onDownloadStart()
         fun onProgress(id: Int, currentBytes: Long, contentLength: Long)
-        fun onDownloadEnd(id: Int, file: File? = null, e: Throwable? = null)
+        fun onDownloadEnd(id: Int, uri: Uri? = null, e: Throwable? = null)
     }
 }

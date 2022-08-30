@@ -11,6 +11,7 @@ import androidx.viewpager.widget.ViewPager
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.mredrock.cyxbs.common.config.DIR_PHOTO
 import com.mredrock.cyxbs.common.utils.extensions.*
+import com.mredrock.cyxbs.lib.utils.extensions.saveImage
 import com.mredrock.cyxbs.qa.R
 import com.mredrock.cyxbs.qa.ui.adapter.HackyViewPagerAdapter
 import io.reactivex.rxjava3.schedulers.Schedulers
@@ -88,7 +89,7 @@ class ViewImageActivity : AppCompatActivity() {
                                         )
 
                                         runOnUiThread {
-                                            toast("图片保存于系统\"$DIR_PHOTO\"文件夹下哦")
+                                            toast("图片保存于${Environment.DIRECTORY_PICTURES}${DIR_PHOTO}文件夹下哦")
                                             dialog.dismiss()
                                             setFullScreen()
                                         }

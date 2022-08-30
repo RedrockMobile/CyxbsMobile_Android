@@ -24,13 +24,17 @@ import com.mredrock.cyxbs.common.BuildConfig
 import com.mredrock.cyxbs.common.component.CyxbsToast
 import com.mredrock.cyxbs.common.config.DIR_PHOTO
 import com.mredrock.cyxbs.common.ui.BaseActivity
-import com.mredrock.cyxbs.common.utils.extensions.*
+import com.mredrock.cyxbs.common.utils.extensions.loadBitmap
+import com.mredrock.cyxbs.common.utils.extensions.onTouch
+import com.mredrock.cyxbs.common.utils.extensions.startActivity
+import com.mredrock.cyxbs.lib.utils.extensions.*
 import com.mredrock.cyxbs.common.webView.IAndroidWebView
 import com.mredrock.cyxbs.common.webView.LiteJsWebView
 import com.mredrock.cyxbs.common.webView.WebViewBaseCallBack
 import com.mredrock.cyxbs.discover.R
 import com.mredrock.cyxbs.discover.network.RollerViewInfo
 import com.mredrock.cyxbs.discover.pages.discover.webView.WebViewFactory
+import com.mredrock.cyxbs.lib.utils.extensions.saveImage
 
 
 class RollerViewActivity : BaseActivity() {
@@ -236,7 +240,7 @@ class RollerViewActivity : BaseActivity() {
                                 null
                             )
                             runOnUiThread {
-                                toast("图片保存于系统\"$DIR_PHOTO\"文件夹下哦")
+                                toast("图片保存于${Environment.DIRECTORY_PICTURES}${DIR_PHOTO}文件夹下哦")
                                 dialog.dismiss()
                             }
                         }
