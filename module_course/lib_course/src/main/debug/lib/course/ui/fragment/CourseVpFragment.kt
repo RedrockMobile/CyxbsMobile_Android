@@ -7,7 +7,7 @@ import android.view.ViewGroup
 import androidx.fragment.app.viewModels
 import androidx.viewpager2.widget.ViewPager2
 import com.mredrock.cyxbs.lib.course.fragment.page.CoursePageFragment
-import com.mredrock.cyxbs.lib.course.fragment.vp.BaseCourseVpFragment
+import com.mredrock.cyxbs.lib.course.fragment.vp.AbstractCourseVpFragment
 import lib.course.ui.viewmodel.VpViewModel
 
 /**
@@ -17,7 +17,7 @@ import lib.course.ui.viewmodel.VpViewModel
  * @email guo985892345@foxmail.com
  * @date 2022/8/26 17:34
  */
-class CourseVpFragment : BaseCourseVpFragment() {
+class CourseVpFragment : AbstractCourseVpFragment() {
   
   val viewModel by viewModels<VpViewModel>()
   

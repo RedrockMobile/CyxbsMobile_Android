@@ -38,7 +38,6 @@ object ScrollTouchHandler : IPointerTouchHandler {
         mIdDeque.remove(event.pointerId)
         mRawYById.delete(event.pointerId)
       }
-      else -> {}
     }
     when (event.event.actionMasked) {
       MotionEvent.ACTION_UP, MotionEvent.ACTION_CANCEL -> {

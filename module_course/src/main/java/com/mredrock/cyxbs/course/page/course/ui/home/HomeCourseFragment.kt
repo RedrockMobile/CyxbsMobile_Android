@@ -14,7 +14,7 @@ import androidx.viewpager2.widget.ViewPager2
 import com.mredrock.cyxbs.config.route.DISCOVER_OTHER_COURSE
 import com.mredrock.cyxbs.course.R
 import com.mredrock.cyxbs.course.page.course.ui.home.viewmodel.HomeCourseViewModel
-import com.mredrock.cyxbs.lib.course.fragment.vp.BaseCourseVpFragment
+import com.mredrock.cyxbs.lib.course.fragment.vp.AbstractCourseVpFragment
 import com.mredrock.cyxbs.lib.course.fragment.page.CoursePageFragment
 import com.mredrock.cyxbs.lib.utils.extensions.lazyUnlock
 import com.mredrock.cyxbs.lib.utils.extensions.setOnSingleClickListener
@@ -28,7 +28,7 @@ import com.mredrock.cyxbs.lib.utils.utils.Num2CN
  * @email guo985892345@foxmail.com
  * @date 2022/8/20 16:53
  */
-class HomeCourseFragment : BaseCourseVpFragment() {
+class HomeCourseFragment : AbstractCourseVpFragment() {
   
   override val mViewPager: ViewPager2 by R.id.course_vp_fragment_home.view()
   

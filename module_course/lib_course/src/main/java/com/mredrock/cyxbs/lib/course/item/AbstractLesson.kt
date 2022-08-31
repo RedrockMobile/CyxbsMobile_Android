@@ -1,6 +1,6 @@
 package com.mredrock.cyxbs.lib.course.item
 
-import com.mredrock.cyxbs.lib.course.fragment.page.item.ILesson
+import com.mredrock.cyxbs.lib.course.fragment.item.ILesson
 import com.mredrock.cyxbs.lib.course.internal.lesson.BaseLessonLayoutParams
 import com.mredrock.cyxbs.lib.course.internal.lesson.ILessonData
 

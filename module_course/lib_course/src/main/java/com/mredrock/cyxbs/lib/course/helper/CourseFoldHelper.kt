@@ -5,8 +5,8 @@ import android.os.Parcelable
 import android.util.SparseArray
 import android.view.ViewGroup
 import androidx.core.os.bundleOf
-import com.mredrock.cyxbs.lib.course.fragment.page.course.ICourseExtend
-import com.mredrock.cyxbs.lib.course.fragment.page.fold.FoldState
+import com.mredrock.cyxbs.lib.course.fragment.course.ICourseBase
+import com.mredrock.cyxbs.lib.course.fragment.course.expose.fold.FoldState
 import com.ndhzs.netlayout.save.OnSaveStateListener
 import com.ndhzs.netlayout.touch.multiple.IPointerDispatcher
 import com.ndhzs.netlayout.touch.multiple.IPointerTouchHandler
@@ -22,7 +22,7 @@ import com.ndhzs.netlayout.touch.multiple.event.IPointerEvent
  * @date 2022/8/19 19:24
  */
 class CourseFoldHelper private constructor(
-  private val extend: ICourseExtend
+  private val course: ICourseBase
 ) : IPointerDispatcher, OnSaveStateListener {
   
   private val mDownPointById = SparseArray<Point>()
@@ -30,16 +30,16 @@ class CourseFoldHelper private constructor(
   override fun isPrepareToIntercept(event: IPointerEvent, view: ViewGroup): Boolean {
     val x = event.x.toInt()
     val y = event.y.toInt()
-    val timeLineLeft = extend.getTimeLineStartWidth()
-    val timeLineRight = extend.getTimeLineEndWidth()
+    val timeLineLeft = course.getTimelineStartWidth()
+    val timeLineRight = course.getTimelineEndWidth()
     if (x !in timeLineLeft .. timeLineRight) return false
     val clickRange = 30 // 点击的范围
     when (event.action) {
       IPointerEvent.Action.DOWN -> {
-        when (extend.getNoonRowState()) {
+        when (course.getNoonRowState()) {
           FoldState.FOLD, FoldState.UNFOLD -> {
-            val noonTop = extend.getNoonStartHeight()
-            val noonBottom = extend.getNoonEndHeight()
+            val noonTop = course.getNoonStartHeight()
+            val noonBottom = course.getNoonEndHeight()
             if (y in (noonTop - clickRange) .. (noonBottom + clickRange)) {
               var point = mDownPointById[event.pointerId]
               if (point !is NoonPoint) {
@@ -54,10 +54,10 @@ class CourseFoldHelper private constructor(
           }
           else -> {}
         }
-        when (extend.getDuskRowState()) {
+        when (course.getDuskRowState()) {
           FoldState.FOLD, FoldState.UNFOLD -> {
-            val duskTop = extend.getDuskStartHeight()
-            val duskBottom = extend.getDuskEndHeight()
+            val duskTop = course.getDuskStartHeight()
+            val duskBottom = course.getDuskEndHeight()
             if (y in (duskTop - clickRange) .. (duskBottom + clickRange)) {
               var point = mDownPointById[event.pointerId]
               if (point !is DuskPoint) {
@@ -79,16 +79,16 @@ class CourseFoldHelper private constructor(
         // 该方法虽然返回了 true，但 getInterceptHandler() 却一直返回 null，可以保证事件不会被 View 自身拦截
         when (mDownPointById[event.pointerId]) {
           is NoonPoint -> {
-            when (extend.getNoonRowState()) {
-              FoldState.FOLD -> extend.unfoldNoon()
-              FoldState.UNFOLD -> extend.foldNoon()
+            when (course.getNoonRowState()) {
+              FoldState.FOLD -> course.unfoldNoon()
+              FoldState.UNFOLD -> course.foldNoon()
               else -> {}
             }
           }
           is DuskPoint -> {
-            when (extend.getDuskRowState()) {
-              FoldState.FOLD -> extend.unfoldDusk()
-              FoldState.UNFOLD -> extend.foldDusk()
+            when (course.getDuskRowState()) {
+              FoldState.FOLD -> course.unfoldDusk()
+              FoldState.UNFOLD -> course.foldDusk()
               else -> {}
             }
           }
@@ -110,9 +110,9 @@ class CourseFoldHelper private constructor(
   override fun onRestoreState(savedState: Parcelable?) {
     if (savedState is Bundle) {
       val noonState = savedState.getBoolean("noon_state")
-      if (noonState) extend.foldNoonWithoutAnim() else extend.unfoldNoonWithoutAnim()
+      if (noonState) course.foldNoonWithoutAnim() else course.unfoldNoonWithoutAnim()
       val duskState = savedState.getBoolean("dusk_state")
-      if (duskState) extend.foldDuskWithoutAnim() else extend.unfoldDuskWithoutAnim()
+      if (duskState) course.foldDuskWithoutAnim() else course.unfoldDuskWithoutAnim()
     }
   }
   
@@ -125,18 +125,18 @@ class CourseFoldHelper private constructor(
       }
     }
     return bundleOf(
-      "noon_state" to isFold(extend.getNoonRowState()),
-      "dusk_state" to isFold(extend.getDuskRowState())
+      "noon_state" to isFold(course.getNoonRowState()),
+      "dusk_state" to isFold(course.getDuskRowState())
     )
   }
   
   companion object {
-    fun attach(extend: ICourseExtend): CourseFoldHelper {
-      val dispatcher = CourseFoldHelper(extend)
+    fun attach(course: ICourseBase): CourseFoldHelper {
+      val dispatcher = CourseFoldHelper(course)
       // 处理事件分发
-      extend.course.addPointerDispatcher(dispatcher)
+      course.course.addPointerDispatcher(dispatcher)
       // 保存折叠状态
-      extend.course.addSaveStateListener("课表折叠状态", dispatcher)
+      course.course.addSaveStateListener("课表折叠状态", dispatcher)
       return dispatcher
     }
   }

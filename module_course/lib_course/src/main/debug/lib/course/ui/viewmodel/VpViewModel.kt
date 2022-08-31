@@ -1,6 +1,5 @@
 package lib.course.ui.viewmodel
 
-import android.util.ArrayMap
 import androidx.lifecycle.viewModelScope
 import com.mredrock.cyxbs.lib.base.ui.BaseViewModel
 import com.mredrock.cyxbs.lib.utils.network.api
@@ -31,14 +30,8 @@ class VpViewModel : BaseViewModel() {
       .subscribeOn(Schedulers.io())
       .doOnSuccess { SchoolCalendarUtil.updateFirstCalendar(it.nowWeek) }
       .map { it.toLessonData() }
-      .map {
-        ArrayMap<Int, MutableList<LessonData>>().apply {
-          it.forEach { data ->
-            getOrPut(data.week) { arrayListOf() }
-              .add(data)
-          }
-        }
-      }.observeOn(AndroidSchedulers.mainThread())
+      .map { it.groupBy { data -> data.week } }
+      .observeOn(AndroidSchedulers.mainThread())
       .safeSubscribeBy {
         viewModelScope.launch {
           _selfLessons.emit(it)

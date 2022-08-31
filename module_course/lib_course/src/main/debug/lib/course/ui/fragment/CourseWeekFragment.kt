@@ -1,5 +1,7 @@
 package lib.course.ui.fragment
 
+import android.os.Bundle
+import android.view.View
 import androidx.core.os.bundleOf
 import androidx.fragment.app.createViewModelLazy
 import com.mredrock.cyxbs.lib.course.fragment.page.CoursePageFragment
@@ -37,7 +39,8 @@ class CourseWeekFragment : CoursePageFragment() {
     { requireParentFragment().viewModelStore }
   )
   
-  override fun initCourse() {
+  override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+    super.onViewCreated(view, savedInstanceState)
     setWeekNum()
     initObserve()
   }
@@ -50,7 +53,7 @@ class CourseWeekFragment : CoursePageFragment() {
     if (calendar != null) {
       calendar.add(Calendar.DATE, (mWeek - 1) * 7)
       val startTimestamp = calendar.timeInMillis
-      mTvMonth.text = "${calendar.get(Calendar.MONTH) + 1}月"
+      tvMonth.text = "${calendar.get(Calendar.MONTH) + 1}月"
       forEachWeek { _, month ->
         month.text = calendar.get(Calendar.DATE).toString()
         calendar.add(Calendar.DATE, 1) // 天数加 1

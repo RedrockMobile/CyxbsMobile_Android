@@ -4,7 +4,7 @@ import android.content.Context
 import android.util.SparseArray
 import android.util.SparseBooleanArray
 import android.view.View
-import com.mredrock.cyxbs.lib.course.fragment.page.item.IOverlapItem
+import com.mredrock.cyxbs.lib.course.fragment.item.IOverlapItem
 import com.mredrock.cyxbs.lib.course.internal.day.ISingleDayItemData
 import com.mredrock.cyxbs.lib.course.internal.view.course.lp.ItemLayoutParams
 import com.mredrock.cyxbs.lib.utils.extensions.dp2px

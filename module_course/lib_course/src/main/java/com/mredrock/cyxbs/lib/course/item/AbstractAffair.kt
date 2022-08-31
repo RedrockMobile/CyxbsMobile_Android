@@ -1,6 +1,6 @@
 package com.mredrock.cyxbs.lib.course.item
 
-import com.mredrock.cyxbs.lib.course.fragment.page.item.IAffair
+import com.mredrock.cyxbs.lib.course.fragment.item.IAffair
 import com.mredrock.cyxbs.lib.course.internal.affair.BaseAffairLayoutParams
 import com.mredrock.cyxbs.lib.course.internal.affair.IAffairData
 

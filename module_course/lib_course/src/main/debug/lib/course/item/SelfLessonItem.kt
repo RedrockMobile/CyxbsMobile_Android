@@ -3,7 +3,7 @@ package lib.course.item
 import android.content.Context
 import android.view.View
 import androidx.core.view.forEach
-import com.mredrock.cyxbs.lib.course.fragment.page.item.IOverlapItem
+import com.mredrock.cyxbs.lib.course.fragment.item.IOverlapItem
 import com.mredrock.cyxbs.lib.course.internal.lesson.BaseLessonLayoutParams
 import com.mredrock.cyxbs.lib.course.item.AbstractLesson
 import lib.course.data.LessonData
