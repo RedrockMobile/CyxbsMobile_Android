@@ -1,18 +1,18 @@
 package com.mredrock.cyxbs.noclass.page.adapter
 
-import android.content.Intent
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
+import androidx.recyclerview.widget.DiffUtil
+import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.mredrock.cyxbs.lib.utils.extensions.dp2pxF
 import com.mredrock.cyxbs.noclass.R
 import com.mredrock.cyxbs.noclass.bean.NoclassGroup
 import com.mredrock.cyxbs.noclass.callback.ISlideMenuAction
 import com.mredrock.cyxbs.noclass.callback.OnSlideChangedListener
-import com.mredrock.cyxbs.noclass.page.ui.GroupDetailActivity
 import com.mredrock.cyxbs.noclass.page.ui.GroupManagerActivity
 import com.mredrock.cyxbs.noclass.util.alphaAnim
 import com.mredrock.cyxbs.noclass.util.translateXLeftAnim
@@ -33,9 +33,21 @@ import com.mredrock.cyxbs.noclass.widget.SlideMenuLayout
 
 
 class GroupManagerAdapter(
-    private val mList: List<NoclassGroup>,
     private val mOnDeleteItemsSelected : (MutableSet<Int>) -> Unit,
-) : RecyclerView.Adapter<GroupManagerAdapter.VH>(){
+) : ListAdapter<NoclassGroup,GroupManagerAdapter.VH>(groupManageDiffUtil){
+
+    companion object{
+        private val groupManageDiffUtil : DiffUtil.ItemCallback<NoclassGroup> = object : DiffUtil.ItemCallback<NoclassGroup>(){
+            override fun areItemsTheSame(oldItem: NoclassGroup, newItem: NoclassGroup): Boolean {
+                return oldItem.id == newItem.name
+            }
+
+            override fun areContentsTheSame(oldItem: NoclassGroup, newItem: NoclassGroup): Boolean {
+                return oldItem.isTop == newItem.isTop && oldItem.id == newItem.id && oldItem.name ==oldItem.name
+            }
+
+        }
+    }
 
     /**
      * 记录所有VH
@@ -67,15 +79,41 @@ class GroupManagerAdapter(
      */
     private var mCurScrollPosition = -1
 
-    inner class VH (itemView : View) : RecyclerView.ViewHolder(itemView){
+    /**
+     * 回调开启新activity
+     */
+    private var mOnGroupDetailStart : ((Int) -> Unit)? = null
 
-        val deleteIcon : ImageView= itemView.findViewById(R.id.iv_noclass_group_delete_icon)
+    /**
+     * 点击置顶/取消置顶的回调
+     */
+    private var mOnTopClick : ((Int) -> Unit)? = null
+
+    /**
+     * 点击删除的回调
+     */
+    private var mOnDeleteClick : ((Int) -> Unit)? = null
+
+    inner class VH (itemView : View) : RecyclerView.ViewHolder(itemView){
+        val topText : TextView = itemView.findViewById<TextView?>(R.id.tv_noclass_group_top_name).apply {
+            setOnClickListener {
+                mOnTopClick?.invoke(absoluteAdapterPosition)
+                slideContainer.closeRightSlide()
+            }
+        }
+        val deleteText : TextView = itemView.findViewById<TextView?>(R.id.tv_noclass_group_delete_item).apply {
+            setOnClickListener {
+                mOnDeleteClick?.invoke(absoluteAdapterPosition)
+                slideContainer.closeRightSlide()
+            }
+        }
+        val deleteIcon : ImageView = itemView.findViewById(R.id.iv_noclass_group_delete_icon)
         val groupName : TextView = itemView.findViewById(R.id.tv_noclass_group_name)
         val slideContainer : SlideMenuLayout = itemView.findViewById<SlideMenuLayout?>(R.id.slide_noclass_container).apply{
 
             setOnTapTouchListener {
                 if (mGroupState === GroupManagerActivity.GroupState.NORMAL){
-                    context.startActivity(Intent(context,GroupDetailActivity::class.java))
+                    mOnGroupDetailStart?.invoke(absoluteAdapterPosition)
                 }
             }
 
@@ -99,7 +137,6 @@ class GroupManagerAdapter(
                     }
                     mOnDeleteItemsSelected.invoke(mSelectedList)
                 }
-
                 notifyItemChanged(mLastSelPosition)
             }
 
@@ -138,7 +175,8 @@ class GroupManagerAdapter(
     override fun onBindViewHolder(holder: VH, position: Int) {
         mViews[position] = holder
         //test:
-        holder.groupName.text = mList[position].name
+        holder.groupName.text = currentList[position].name
+        holder.topText.text = if (currentList[position].isTop) "取消置顶" else "置顶"
 
         if (mSelectedList.contains(position)){
             holder.deleteIcon.alpha = if(mGroupState === GroupManagerActivity.GroupState.DELETE) 1f else 0f
@@ -156,8 +194,16 @@ class GroupManagerAdapter(
         }
     }
 
-    override fun getItemCount(): Int {
-        return mList.size
+    fun setOnGroupDetailStart(listener : (Int) -> Unit){
+        mOnGroupDetailStart = listener
+    }
+
+    fun setOnTopClick(listener: (Int) -> Unit){
+        mOnTopClick = listener
+    }
+
+    fun setOnDeleteClick(listener: (Int) -> Unit){
+        mOnDeleteClick = listener
     }
 
     fun onStateChange(state : GroupManagerActivity.GroupState){

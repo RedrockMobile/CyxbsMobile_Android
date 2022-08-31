@@ -59,17 +59,18 @@
                 app:layout_constraintVertical_bias="0.4">
 
                 <EditText
-                    android:layout_marginStart="16dp"
-                    android:layout_marginEnd="16dp"
-                    android:id="@+id/et_noclass_create_group"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center"
-                    android:background="@color/config_white_black"
+                    android:layout_marginEnd="8dp"
+                    android:layout_marginStart="8dp"
                     android:textSize="14sp"
                     android:maxLength="12"
                     android:maxLines="1"
-                    android:singleLine="true" />
+                    android:singleLine="true"
+                    android:layout_gravity="center"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/et_noclass_create_group"
+                    android:background="@color/config_white_black"
+                    />
 
             </LinearLayout>
 
@@ -79,7 +80,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="10dp"
-                android:text="请输入你的分组名称"
+                android:text="和已有分组重名，再想想吧"
                 android:textColor="@color/noclass_create_hint_text_color"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"

@@ -1,10 +1,13 @@
 package com.mredrock.cyxbs.noclass.page.ui
 
+import android.app.Activity
+import android.content.Intent
 import android.os.Bundle
 import android.view.View
 import android.view.WindowManager
 import android.widget.Button
 import android.widget.LinearLayout
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.recyclerview.widget.DefaultItemAnimator
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -16,6 +19,7 @@ import com.mredrock.cyxbs.noclass.page.adapter.GroupManagerAdapter
 import com.mredrock.cyxbs.noclass.page.ui.dialog.ConfirmDeleteDialog
 import com.mredrock.cyxbs.noclass.page.ui.dialog.CreateGroupDialogFragment
 import com.mredrock.cyxbs.noclass.page.viewmodel.GroupManagerViewModel
+import java.io.Serializable
 
 /**
  *
@@ -68,7 +72,25 @@ class GroupManagerActivity : BaseVmActivity<GroupManagerViewModel>(){
     /**
      * 整个分组数据
      */
-    private lateinit var mGroupList : List<NoclassGroup>
+    private lateinit var mGroupList : MutableList<NoclassGroup>
+
+    /**
+     * 这个界面是否有改变
+     */
+    private var mHasChanged : Boolean = false
+
+    /**
+     * 是否有更改值
+     */
+    private val startForResult = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
+        if (result.resultCode == Activity.RESULT_OK) {
+            val intent = result.data
+            val extra = intent?.getBooleanExtra("GroupDetailResult",false)
+            if (extra == true){
+                reGetGroup()
+            }
+        }
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -76,6 +98,7 @@ class GroupManagerActivity : BaseVmActivity<GroupManagerViewModel>(){
         getList()
         initBtn()
         initRv()
+        initObserve()
     }
 
     /**
@@ -83,7 +106,7 @@ class GroupManagerActivity : BaseVmActivity<GroupManagerViewModel>(){
      */
     private fun getList(){
         val extra = intent.getSerializableExtra("GroupList")
-        mGroupList = extra as List<NoclassGroup>
+        mGroupList = extra as MutableList<NoclassGroup>
          if (mGroupList.isEmpty()){
              mEmptyContainer.visibility = View.VISIBLE
          }
@@ -93,7 +116,7 @@ class GroupManagerActivity : BaseVmActivity<GroupManagerViewModel>(){
      * 初始化Rv
      */
     private fun initRv(){
-        mRvAdapter = GroupManagerAdapter (mGroupList){
+        mRvAdapter = GroupManagerAdapter {
             mSelectedItems = it
             if (it.isNotEmpty()) {
                 mBtnRight.text = "删除 (${it.size})"
@@ -102,10 +125,97 @@ class GroupManagerActivity : BaseVmActivity<GroupManagerViewModel>(){
                 mBtnRight.text = "删除"
                 mBtnRight.setBackgroundResource(R.drawable.noclass_shape_button_delete_default_bg)
             }
+         }.apply {
+            submitList(mGroupList)
+            setOnGroupDetailStart {
+                startForResult.launch(Intent(this@GroupManagerActivity,GroupDetailActivity::class.java).apply {
+                    putExtra("GroupList",mGroupList as Serializable)
+                    putExtra("GroupPosition",it)
+                })
+            }
+            setOnTopClick {
+                val selectedGroup = mGroupList[it]
+                viewModel.updateGroup(selectedGroup.id,selectedGroup.name, (!selectedGroup.isTop).toString())
+            }
+            setOnDeleteClick {
+                val selectedGroup = mGroupList[it]
+                viewModel.deleteGroup(selectedGroup.id)
+            }
         }
         mRecyclerView.adapter = mRvAdapter
         mRecyclerView.layoutManager = LinearLayoutManager(this)
         (mRecyclerView.itemAnimator as DefaultItemAnimator).supportsChangeAnimations = false
+    }
+
+    /**
+     * 网络请求获得分组
+     * 因为更新分组后的分组顺序跟创建时间相关
+     * 本地并没有保存下来
+     * 所有更新分组后需要重新请求获得分组
+     */
+    private fun reGetGroup(){
+        viewModel.getNoclassGroupDetail()
+    }
+
+    /**
+     * 对viewmodel的livedata的监听
+     */
+    private fun initObserve(){
+        //是否更新成功
+        viewModel.isUpdateSuccess.observe(this){
+            if (it.second){
+                for (group in mGroupList){
+                    if (group.id == it.first){
+                        //完成更新
+                        mHasChanged = true
+                        reGetGroup()
+                    }
+                }
+            }else{
+                toast("似乎出现了什么问题呢，请稍后再试")
+            }
+        }
+
+        //是否删除成功
+        viewModel.isDeleteSuccess.observe(this){
+            if (it.second){
+                val groupIds = it.first
+                val ids = groupIds.split(",")
+                for (idInGroup in ids){//每个id
+                    for (group in mGroupList){//删除组中该id
+                        if (group.id == idInGroup){
+                            //完成更新
+                            mHasChanged = true
+                            reGetGroup()
+                            if (mGroupState === GroupState.DELETE){
+                                mGroupState = GroupState.NORMAL
+                                changeState(mGroupState)
+                                mRvAdapter.onStateChange(mGroupState)
+                            }
+                            toast("删除成功")
+                            return@observe
+                        }
+                    }
+                }
+            }else{
+                toast("似乎出现了什么问题呢，请稍后再试")
+            }
+        }
+
+        //是否创建成功
+        viewModel.isCreateSuccess.observe(this){
+            if (it.id != -1){
+                mHasChanged = true
+                reGetGroup()
+            }
+        }
+
+        //重新获得分组
+        viewModel.groupList.observe(this){
+            mGroupList = it as MutableList<NoclassGroup>
+            mRvAdapter.submitList(mGroupList)
+        }
+
     }
 
     /**
@@ -133,7 +243,11 @@ class GroupManagerActivity : BaseVmActivity<GroupManagerViewModel>(){
     private fun onRightBtnClick(state: GroupState){
         when(state){
             GroupState.NORMAL -> {//新建
-                val mBottomSheetDialog = CreateGroupDialogFragment()
+                val mNameList : MutableList<String> = mutableListOf() //记录所有分组名字
+                for (i in mGroupList){
+                    mNameList.add(i.name)
+                }
+                val mBottomSheetDialog = CreateGroupDialogFragment(mNameList)
                 mBottomSheetDialog.show(supportFragmentManager,"createGroupDialog")
             }
             GroupState.DELETE -> {//删除
@@ -143,7 +257,14 @@ class GroupManagerActivity : BaseVmActivity<GroupManagerViewModel>(){
                 val confirmDeleteDialog = ConfirmDeleteDialog(this)
 
                 confirmDeleteDialog.setConfirmSelected {
-                    toast("删除")
+                    var ids = ""
+                    for ((cur, position) in mSelectedItems.withIndex()){
+                        ids += mGroupList[position].id
+                        if (cur != mSelectedItems.size - 1){
+                            ids += ","
+                        }
+                    }
+                    viewModel.deleteGroup(groupIds=ids)
                     it.cancel()
                 }.show()
             }
@@ -191,5 +312,13 @@ class GroupManagerActivity : BaseVmActivity<GroupManagerViewModel>(){
         DELETE
     }
 
+    override fun onBackPressed() {
+        if (mHasChanged){
+            setResult(RESULT_OK,Intent().apply {
+                putExtra("GroupListResult",mGroupList as Serializable)
+            })
+        }
+        super.onBackPressed()
+    }
 
 }

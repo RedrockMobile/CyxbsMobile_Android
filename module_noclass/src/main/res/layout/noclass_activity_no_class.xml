@@ -115,7 +115,7 @@
         android:layout_marginStart="8dp"
         android:layout_marginEnd="8dp"
         android:paddingTop="4dp"
-        android:paddingBottom="4dp"
+        android:paddingBottom="8dp"
         android:id="@+id/flex_noclass_container"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -123,26 +123,24 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/noclass_constrain" />
 
-    <View
-        android:alpha="0.1"
-        android:id="@+id/noclassView"
-        android:layout_width="match_parent"
-        android:layout_height="1dp"
-        android:background="@color/noclass_line_bg_color"
-        app:layout_constraintEnd_toEndOf="@+id/flex_noclass_container"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/flex_noclass_container" />
-
     <com.mredrock.cyxbs.noclass.widget.StickIndicator
-        android:visibility="gone"
-        app:noclass_indicator_show_count="5"
         android:id="@+id/indicator_noclass_group"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/noclassView" />
-
+        app:layout_constraintTop_toBottomOf="@+id/flex_noclass_container"
+        app:noclass_indicator_show_count="5" />
+    <View
+        android:layout_marginTop="8dp"
+        android:alpha="0.1"
+        android:id="@+id/noclassView"
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="@color/noclass_line_bg_color"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/indicator_noclass_group" />
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/rv_noclass_container"
         android:layout_width="match_parent"
@@ -150,7 +148,7 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/indicator_noclass_group" />
+        app:layout_constraintTop_toBottomOf="@+id/noclassView" />
 
     <Button
         style="?android:attr/borderlessButtonStyle"

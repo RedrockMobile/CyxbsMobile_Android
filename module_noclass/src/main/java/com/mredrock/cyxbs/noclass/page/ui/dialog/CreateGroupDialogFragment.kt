@@ -28,7 +28,9 @@ import com.mredrock.cyxbs.noclass.util.startShake
  * @Version:        1.0
  * @Description:    创建新分组的bottom sheet dial og
  */
-class CreateGroupDialogFragment : BottomSheetDialogFragment() {
+class CreateGroupDialogFragment(
+    private val existsName : List<String>
+) : BottomSheetDialogFragment() {
 
     private val viewModel by activityViewModels<GroupManagerViewModel>()
 
@@ -90,9 +92,10 @@ class CreateGroupDialogFragment : BottomSheetDialogFragment() {
             setOnSingleClickListener {
                 if (etName.text.isEmpty()){
                     createUndone(tvHint)
+                    tvHint.text = "请输入你的分组名称"
                     tvHint.visibility = View.VISIBLE
                 }else{
-                    createDone(etName.text.toString())
+                    createDone(etName.text.toString(),tvHint)
                 }
             }
         }
@@ -101,12 +104,22 @@ class CreateGroupDialogFragment : BottomSheetDialogFragment() {
     /**
      * 创建成功
      */
-    private fun createDone(name : String){
+    private fun createDone(name : String,tvHint : TextView){
+        for (i in existsName){//判断是否有重名
+            if (i == name){
+                tvHint.text = "和已有分组重名，再想想吧"
+                tvHint.visibility = View.VISIBLE
+                createUndone(tvHint)
+                return
+            }
+        }
         viewModel.postNoclassGroup(name,"")
         viewModel.isCreateSuccess.observe(this){
-
-            if (it != -1){
+            if (it.id == -1){
+                toast("似乎出现了什么问题呢,请稍后再试")
+            }else{
                 toast("创建成功")
+                dialog?.cancel()
             }
         }
     }

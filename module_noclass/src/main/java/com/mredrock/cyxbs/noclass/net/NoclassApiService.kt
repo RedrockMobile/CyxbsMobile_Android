@@ -1,13 +1,12 @@
 package com.mredrock.cyxbs.noclass.net
 
 import com.mredrock.cyxbs.lib.utils.network.ApiGenerator
+import com.mredrock.cyxbs.lib.utils.network.ApiStatus
 import com.mredrock.cyxbs.lib.utils.network.ApiWrapper
 import com.mredrock.cyxbs.noclass.bean.NoclassGroup
+import com.mredrock.cyxbs.noclass.bean.NoclassGroupId
 import io.reactivex.rxjava3.core.Single
-import retrofit2.http.Field
-import retrofit2.http.FormUrlEncoded
-import retrofit2.http.GET
-import retrofit2.http.POST
+import retrofit2.http.*
 
 /**
  *
@@ -31,7 +30,7 @@ interface NoclassApiService {
      * 没课约获取全部分组信息
      */
     @GET("/magipoke-jwzx/no_class/group/all")
-    fun getGroupAll() : Single<ApiWrapper< List<NoclassGroup> >>
+    fun getGroupAll() : Single<ApiWrapper<List<NoclassGroup>>>
 
     /**
      * 没课约上传分组
@@ -41,6 +40,45 @@ interface NoclassApiService {
     fun postGroup(
         @Field("name") name : String,
         @Field("stu_nums") stuNums : String,
-    ) : Single<ApiWrapper<Int>>
+    ) : Single<ApiWrapper<NoclassGroupId>>
+
+    /**
+     * 没课约删除分组
+     */
+    @DELETE("/magipoke-jwzx/no_class/group")
+    fun deleteGroup(
+        @Query("group_ids") groupIds : String
+    ) : Single<ApiStatus>
+
+    /**
+     * 没课约更新分组
+     */
+    @FormUrlEncoded
+    @PUT("/magipoke-jwzx/no_class/group")
+    fun updateGroup(
+        @Field("group_id") groupId: String,
+        @Field("name") name: String,
+        @Field("is_top") isTop: String,
+    ) : Single<ApiStatus>
+
+    /**
+     * 没课约分组添加成员
+     */
+    @FormUrlEncoded
+    @POST("/magipoke-jwzx/no_class/member")
+    fun addGroupMember(
+        @Field("group_id") groupId: String,
+        @Field("stu_num") stuNum : String
+    ) : Single<ApiStatus>
+
+    /**
+     * 没课约分组删除成员
+     */
+    @DELETE("/magipoke-jwzx/no_class/group")
+    fun deleteGroupMember(
+        @Query("group_id") groupId: String,
+        @Query("stu_num") stuNum : String
+    ) : Single<ApiStatus>
+
 
 }

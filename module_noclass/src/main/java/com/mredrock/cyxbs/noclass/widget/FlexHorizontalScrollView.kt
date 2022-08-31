@@ -2,13 +2,13 @@ package com.mredrock.cyxbs.noclass.widget
 
 import android.annotation.SuppressLint
 import android.content.Context
-import android.graphics.Color
 import android.util.AttributeSet
 import android.view.LayoutInflater
 import android.view.MotionEvent
 import android.view.View
 import android.view.ViewGroup
 import android.widget.*
+import androidx.core.content.ContextCompat
 import com.mredrock.cyxbs.lib.utils.extensions.dp2px
 import com.mredrock.cyxbs.noclass.R
 import com.mredrock.cyxbs.noclass.bean.NoclassGroup
@@ -82,7 +82,27 @@ class FlexHorizontalScrollView @JvmOverloads constructor(
      */
     private lateinit var mList: List<NoclassGroup>
 
-    private val mContainer: LinearLayout by lazy {
+    /**
+     * 记录每一个view
+     */
+    private val mViewHashMap = mutableMapOf<Int,View>()
+
+    /**
+     * 选择view进行的回调
+     */
+    private var mOnItemSelected : ( (NoclassGroup,Boolean) -> Unit )? = null
+
+    /**
+     * 记录上一个被点击的position
+     */
+    private var mLastPosition : Int = -1
+
+    /**
+     * 记录上一个被点击的TextView
+     */
+    private lateinit var mLastTextView : TextView
+
+    private val mContainer : LinearLayout by lazy {
         getChildAt(0) as LinearLayout
     }
 
@@ -105,15 +125,11 @@ class FlexHorizontalScrollView @JvmOverloads constructor(
     /**
      * 设置数据进行加载View
      */
-    fun setData(list: List<NoclassGroup>, onCompleteCallback: OnCompleteCallback? = null) {
+    fun setData(list: List<NoclassGroup>) {
         //延迟以获取距离屏幕左侧的距离用来支持 margin 和 padding
         post {
-//            mData.clear()
             mContainer.removeAllViews()
             mPageCount = 0
-            if(onCompleteCallback!=null){
-                mOnCompleteCallback = onCompleteCallback
-            }
             val xyLocation = IntArray(2)
             getLocationOnScreen(xyLocation)
             mMargin = xyLocation[0]
@@ -125,6 +141,10 @@ class FlexHorizontalScrollView @JvmOverloads constructor(
             addPage(flexLayout)
             fillDataInTextView(mList, flexLayout)
         }
+    }
+
+    fun setOnCompleteCallBack(onCompleteCallback: OnCompleteCallback){
+        mOnCompleteCallback = onCompleteCallback
     }
 
     @SuppressLint("InflateParams")
@@ -139,37 +159,59 @@ class FlexHorizontalScrollView @JvmOverloads constructor(
             //这个TextView就是每一个显示的Item
             val textView = LayoutInflater.from(context).inflate(R.layout.noclass_item_flex_textview, null) as TextView
             textView.text = "进入分组管理中心，来新建你的第一个分组吧"
-            textView.setTextColor(Color.parseColor("#556C8B"))
+            textView.setTextColor(ContextCompat.getColor(context,R.color.noclass_hint_text_color_dark))
             textView.layoutParams = lp
             flexLayout.addView(textView)
             return
         }
         for (i in mList.indices) {
             //这个TextView就是每一个显示的Item
+            val rootView : View
+            val textView : TextView
             if (list[i].isTop){
-                val rootView = LayoutInflater.from(context).inflate(R.layout.noclass_item_flex_group_top, null) as ViewGroup
+                rootView = LayoutInflater.from(context).inflate(R.layout.noclass_item_flex_group_top, null) as ViewGroup
                 rootView.layoutParams = MarginLayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT,ViewGroup.LayoutParams.WRAP_CONTENT).apply {
                     setMargins(16,10,16,10)
                 }
-                val textView = rootView.findViewById<TextView>(R.id.tv_noclass_group_top)
+                textView = rootView.findViewById(R.id.tv_noclass_group_top)
                 textView.text = list[i].name
-                textView.setOnClickListener {
-                    //每个item的点击效果
-
-                }
                 flexLayout.addView(rootView)
             }else{
-                val rootView = LayoutInflater.from(context).inflate(R.layout.noclass_item_flex_group_normal,null) as ViewGroup
+                rootView = LayoutInflater.from(context).inflate(R.layout.noclass_item_flex_group_normal,null) as ViewGroup
                 rootView.layoutParams = MarginLayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT,ViewGroup.LayoutParams.WRAP_CONTENT).apply {
                     setMargins(16,10,16,10)
                 }
-                rootView.findViewById<TextView>(R.id.tv_noclass_group_normal).apply {
-                    text = list[i].name
-                }
+                textView = rootView.findViewById(R.id.tv_noclass_group_normal)
+                textView.text = list[i].name
                 flexLayout.addView(rootView)
             }
-
+            mViewHashMap[i] = rootView.apply {
+                setOnClickListener {
+                    this.isSelected = mLastPosition != i
+                    mViewHashMap[mLastPosition]?.isSelected = false
+                    if (mLastPosition == i){
+                        textView.setTextColor(ContextCompat.getColor(context,R.color.noclass_primary_text_color))
+                        this.isSelected = false
+                        mLastPosition = -1
+                    }else{
+                        if (this@FlexHorizontalScrollView::mLastTextView.isInitialized){
+                            mLastTextView.setTextColor(ContextCompat.getColor(context,R.color.noclass_primary_text_color))
+                        }
+                        textView.setTextColor(ContextCompat.getColor(context,R.color.noclass_group_selected_text_bg))
+                        mLastTextView = textView
+                        this.isSelected = true
+                        mLastPosition = i
+                    }
+                    if (mLastPosition != -1){
+                        mOnItemSelected?.invoke(mList[i],true)
+                    }else{
+                        mOnItemSelected?.invoke(NoclassGroup("-1",false, emptyList(),"default"),false)
+                    }
+                }
+            }
         }
+
+
     }
 
     /**
@@ -259,6 +301,10 @@ class FlexHorizontalScrollView @JvmOverloads constructor(
             }
         }
         return super.onTouchEvent(ev)
+    }
+
+    fun setOnItemSelected(listener : (NoclassGroup,Boolean) -> Unit){
+        mOnItemSelected = listener
     }
 
     interface OnCompleteCallback {

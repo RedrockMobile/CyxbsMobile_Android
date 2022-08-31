@@ -4,6 +4,7 @@ import android.animation.ValueAnimator
 import android.view.View
 import android.view.animation.AnimationUtils
 import android.view.animation.LinearInterpolator
+import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.animation.doOnEnd
 import androidx.core.animation.doOnStart
 import com.mredrock.cyxbs.noclass.R
@@ -35,6 +36,7 @@ internal fun View.collapseAnim(viewHeight : Int,time : Long = 1000) : ValueAnima
         }
         doOnEnd {
             this@collapseAnim.visibility = View.GONE
+            layoutParams.height = ConstraintLayout.LayoutParams.WRAP_CONTENT
         }
     }
 }
@@ -55,6 +57,9 @@ internal fun View.expandAnim(viewHeight: Int,time : Long = 800) : ValueAnimator{
                 layoutParams.height = it.animatedValue as Int
                 requestLayout()
             }
+        }
+        doOnEnd {
+            layoutParams.height = ConstraintLayout.LayoutParams.WRAP_CONTENT
         }
     }
 }

@@ -5,12 +5,15 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
-    android:background="@drawable/noclass_ic_group_top_bg">
+    android:background="@drawable/noclass_selector_group_normal"
+    >
 
     <TextView
         android:id="@+id/tv_noclass_group_normal"
         android:layout_marginTop="6dp"
         android:layout_marginBottom="6dp"
+        android:layout_marginStart="12dp"
+        android:layout_marginEnd="12dp"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:textColor="#15315B"

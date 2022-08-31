@@ -6,7 +6,7 @@
     android:layout_width="match_parent"
     android:layout_height="50dp">
     <com.mredrock.cyxbs.noclass.widget.SlideMenuLayout
-        android:background="@drawable/noclass_selector_group_item_bg"
+        android:background="@drawable/noclass_selector_item_selected_bg"
         app:noclass_slideMode="right"
         app:noclass_isFixedView="false"
         android:id="@+id/slide_noclass_container"
@@ -18,6 +18,7 @@
             android:layout_height="match_parent"
             >
             <TextView
+                android:id="@+id/tv_noclass_group_top_name"
                 android:paddingStart="16dp"
                 android:paddingEnd="16dp"
                 android:gravity="center"
@@ -28,6 +29,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"/>
             <TextView
+                android:id="@+id/tv_noclass_group_delete_item"
                 android:paddingStart="16dp"
                 android:paddingEnd="16dp"
                 android:gravity="center"

@@ -1,20 +1,32 @@
 package com.mredrock.cyxbs.noclass.page.ui
 
 import android.animation.ValueAnimator
+import android.app.Activity
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.text.TextUtils
+import android.util.Log
+import android.view.View
 import android.view.WindowManager
 import android.view.inputmethod.EditorInfo
 import android.view.inputmethod.InputMethodManager
 import android.widget.*
+import androidx.activity.result.contract.ActivityResultContracts
+import androidx.core.animation.doOnEnd
+import androidx.core.animation.doOnStart
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import com.alibaba.android.arouter.facade.annotation.Route
+import com.mredrock.cyxbs.api.account.IAccountService
 import com.mredrock.cyxbs.config.route.DISCOVER_NO_CLASS
 import com.mredrock.cyxbs.lib.base.ui.mvvm.BaseVmActivity
+import com.mredrock.cyxbs.lib.utils.service.ServiceManager
 import com.mredrock.cyxbs.noclass.R
 import com.mredrock.cyxbs.noclass.bean.NoclassGroup
+import com.mredrock.cyxbs.noclass.page.adapter.NoClassGroupAdapter
 import com.mredrock.cyxbs.noclass.page.viewmodel.NoClassViewModel
+import com.mredrock.cyxbs.noclass.util.alphaAnim
 import com.mredrock.cyxbs.noclass.util.collapseAnim
 import com.mredrock.cyxbs.noclass.util.expandAnim
 import com.mredrock.cyxbs.noclass.util.rotateAnim
@@ -38,6 +50,26 @@ import java.io.Serializable
 
 @Route(path = DISCOVER_NO_CLASS)
 class NoClassActivity : BaseVmActivity<NoClassViewModel>(){
+
+    /**
+     * 用户名称
+     */
+    private lateinit var mUserName : String
+
+    /**
+     * 用户id
+     */
+    private lateinit var mUserId : String
+
+    /**
+     * 界面人员RV
+     */
+    private val mRecyclerView : RecyclerView by R.id.rv_noclass_container.view()
+
+    /**
+     * Rv的Adapter
+     */
+    private lateinit var mAdapter : NoClassGroupAdapter
 
     /**
      * 上方添加同学的编辑框
@@ -90,6 +122,21 @@ class NoClassActivity : BaseVmActivity<NoClassViewModel>(){
     private var mIconExpandAnim : ValueAnimator? = null
 
     /**
+     * 指示器淡出
+     */
+    private var mIndicatorShow : ValueAnimator? = null
+
+    /**
+     *  指示器淡入动画
+     */
+    private var mIndicatorHide : ValueAnimator? = null
+
+    /**
+     * 直接打开的动画
+     */
+    private lateinit var mExpandImmediately : ValueAnimator
+
+    /**
      * 记录流式布局的状态
      */
     private var mFLexState = MyFlexLayout.FlexState.COLLAPSING
@@ -97,48 +144,108 @@ class NoClassActivity : BaseVmActivity<NoClassViewModel>(){
     /**
      * 整个分组数据
      */
-    private var mList : List<NoclassGroup> = emptyList()
+    private var mList : MutableList<NoclassGroup> = mutableListOf()
+
+    /**
+     * groupId
+     *
+     * -1代表默认分组
+     */
+    private var mGroupId : String = "-1"
+
+    /**
+     * 默认分组的Group
+     */
+    private var mDefaultGroup = NoclassGroup("-1",false, emptyList(),"defaultGroup")
+
+    /**
+     * 是否有更改值
+     */
+    private val startForResult = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
+        if (result.resultCode == Activity.RESULT_OK) {
+            val intent = result.data
+            val extra = intent?.getSerializableExtra("GroupListResult")
+            if (extra != null){
+                mList = extra as MutableList<NoclassGroup>
+                initFlexLayout(mList,false)
+            }
+        }
+    }
 
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.noclass_activity_no_class)
+        initUserInfo()
+        initNet()
+        initRv()
         initTextView()
         initEditText()
         initImageView()
-        initNet()
+    }
 
-        //for test:
-//        var x = 0
-//        mIndicator.apply {
-//            setTotalCount(7)
-//        }
-//        mBtnQuery.setOnClickListener {
-//            mIndicator.setCurIndex(x++)
-//            if (x == 7){
-//                x = 0
-//            }
-//        }
-        //****end****
+    /**
+     * 初始化用户信息
+     */
+    private fun initUserInfo(){
+        ServiceManager.invoke(IAccountService::class).getUserService().apply {
+            val stuName = this.getRealName()
+            val stuNum = this.getStuNum()
+            Log.e("stuName",stuName.toString())
+            Log.e("stuName",stuNum.toString())
+        }
+    }
 
+    /**
+     * 初始化RV
+     */
+    private fun initRv(){
+        mAdapter = NoClassGroupAdapter().apply {
+            setOnItemDelete {
+                //删除RV下方的成员
+                if (mGroupId != "-1"){
+                    viewModel.deleteNoclassGroupMember(mGroupId,it.stuNum)
+                }
+            }
+        }
+        mRecyclerView.adapter = mAdapter
+        mRecyclerView.layoutManager = LinearLayoutManager(this)
     }
 
     /**
      * 初始化动画 在[initFlexLayout]之后自动调用
      * -> 如果FlexView被改变需要重新initAnim
+     *
+     * @param hide 是否需要收缩view
      */
-    private fun initAnim(){
+    private fun initAnim(hide: Boolean){
         mFlexHorizontalScrollView.also {
             it.post {
                 it.post {
                     mCollapseAnim = it.collapseAnim(it.height,200)
                     mExpandAnim = it.expandAnim(it.height,150)
+                    mExpandImmediately = it.expandAnim(it.height,1)
                     //默认收缩
+                    if (hide)
                     it.collapseAnim(it.height,1).start()
                 }
                 mIconCollapseAnim = mImageView.rotateAnim(180f,0f)
                 mIconExpandAnim = mImageView.rotateAnim(0f,180f)
+            }
+        }
+        mIndicator.also {
+            it.post {
+                mIndicatorShow = mIndicator.alphaAnim(0f,1f).apply {
+                    doOnStart { _ ->
+                        it.visibility = View.VISIBLE
+                    }
+                }
+                mIndicatorHide = mIndicator.alphaAnim(1f,0f).apply {
+                    doOnEnd { _ ->
+                        it.visibility = View.GONE
+                    }
+                }
             }
         }
     }
@@ -156,6 +263,7 @@ class NoClassActivity : BaseVmActivity<NoClassViewModel>(){
                     }
                     mIconExpandAnim?.start()
                     mExpandAnim?.start()
+                    mIndicatorShow?.start()
                     mFLexState = MyFlexLayout.FlexState.EXPANDING
                 }
                 //展开时点击
@@ -165,6 +273,7 @@ class NoClassActivity : BaseVmActivity<NoClassViewModel>(){
                     }
                     mIconCollapseAnim?.start()
                     mCollapseAnim?.start()
+                    mIndicatorHide?.start()
                     mFLexState = MyFlexLayout.FlexState.COLLAPSING
                 }
             }
@@ -176,9 +285,10 @@ class NoClassActivity : BaseVmActivity<NoClassViewModel>(){
      */
     private fun initTextView(){
         mTextView.setOnClickListener {
-            startActivity(Intent(this@NoClassActivity,GroupManagerActivity::class.java).apply {
+            val intent = (Intent(this@NoClassActivity,GroupManagerActivity::class.java).apply {
                 putExtra("GroupList",mList as Serializable)
             })
+            startForResult.launch(intent)
         }
     }
 
@@ -208,31 +318,70 @@ class NoClassActivity : BaseVmActivity<NoClassViewModel>(){
     }
 
     /**
+     * 流式布局下方的指示器
+     */
+    private fun initIndicator(total : Int){
+        if (total <= 0) return
+        mIndicator.visibility = if (mFLexState === MyFlexLayout.FlexState.COLLAPSING) View.GONE else View.VISIBLE
+        mIndicator.reset()
+        mIndicator.setTotalCount(total)
+    }
+
+    /**
      * 初始网络请求相关
      */
     private fun initNet(){
-        viewModel.groupDetail.observe(this){
-            mList = it
-            initFlexLayout(mList)
+        viewModel.groupList.observe(this){
+            if (it.isNotEmpty()){
+                mList = it as MutableList<NoclassGroup>
+            }else{
+                mList = mutableListOf()
+            }
+            initFlexLayout(mList,true)
         }
     }
 
     /**
      * 配置FlexLayout
+     * @param firstTime 是否是第一次
      */
-    private fun initFlexLayout(list: List<NoclassGroup>){
-        mFlexHorizontalScrollView.setData(list, object : FlexHorizontalScrollView.OnCompleteCallback {
-            //完成布局回调
-            override fun onComplete(count: Int) {
+    private fun initFlexLayout(list: List<NoclassGroup>,firstTime : Boolean) {
 
+        if (mFLexState === MyFlexLayout.FlexState.COLLAPSING && !firstTime) {
+            //不是第一次被调用的同时执行是在折叠状态就需要先打开
+            mExpandImmediately.start()
+        }
+
+        mFlexHorizontalScrollView.apply {
+            setData(list)
+            setOnCompleteCallBack(object : FlexHorizontalScrollView.OnCompleteCallback{
+                override fun onComplete(count: Int) {
+                    initIndicator(count)
+                }
+
+                override fun onScroll(index: Int) {
+                    mIndicator.setCurIndex(index)
+                }
+
+            })
+            setOnItemSelected { it, bool ->
+                if (bool) {
+                    mGroupId = it.id
+                    mAdapter.submitList(it.members)
+                } else {
+                    mGroupId = "-1"
+                    mAdapter.submitList(mDefaultGroup.members)
+                }
             }
-            //每次滑动的回调
-            override fun onScroll(index: Int) {
-            }
-        })
-        initAnim()
+        }
+
+
+        if (!firstTime && mFLexState === MyFlexLayout.FlexState.COLLAPSING) {
+            initAnim(true)
+        }else if (!firstTime){
+            initAnim(false)
+        }else{
+            initAnim(true)
+        }
     }
-
-
-
 }

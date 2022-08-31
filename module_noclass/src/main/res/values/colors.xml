@@ -5,7 +5,12 @@
     <color name="noclass_main">#FFFFFF</color>
     <!--    打字框背景颜色-->
     <color name="noclass_write_able_area_background_shallow">#F2F5FF</color>
-    <color name="noclass_write_able_area_background_dark">#E8F0FC</color>
+    <!--    每个组的默认背景色-->
+    <color name="noclass_group_default_bg">#E8F0FC</color>
+    <!--    每个组的被点击背景色-->
+    <color name="noclass_group_selected_bg">#4A44E4</color>
+    <!--    分组被点击后的字体颜色-->
+    <color name="noclass_group_selected_text_bg">#FFFFFF</color>
     <!--    没课约文字主体颜色-->
     <color name="noclass_primary_text_color">#15315B</color>
     <!--    没课约提示文字颜色-->
@@ -24,6 +29,8 @@
     <color name="noclass_group_delete_bg">#ED535C</color>
     <!--    分组管理被选中背景-->
     <color name="noclass_group_delete_selected_bg">#F2F4FF</color>
+    <!--    分组管理没有被选中的背景-->
+    <color name="noclass_group_delete_unselected_bg">#FFFFFF</color>
     <!--    保存按钮的默认颜色-->
     <color name="noclass_save_bg_color">#99A7B9</color>
 </resources>
