@@ -7,7 +7,7 @@ import io.reactivex.rxjava3.disposables.Disposable
 import kotlinx.coroutines.flow.Flow
 
 /**
- * 如果你要看网络请求相关的示例代码，请移步 network/ApiRxjava
+ * 如果你要看网络请求相关的示例代码，请移步于 network/ApiRxjava
  *
  * @author 985892345 (Guo Xiangrui)
  * @email 2767465918@qq.com
@@ -16,9 +16,10 @@ import kotlinx.coroutines.flow.Flow
 
 
 /**
- * 转换为 data 并使用 DSL 写法来处理异常
+ * 使用优雅的 DSL 来拦截异常
  *
- * # 详细用法请查看 [Flow.interceptException]，注意事项也与 Flow 一致
+ * # 如果你是想看网络请求的用法，请移步与 network/ApiRxjava.kt
+ * # 该 api 的详细用法请查看 [Flow.interceptException]，注意事项也与 Flow 一致
  */
 fun <T : Any> Single<T>.interceptException(
   action: ExceptionResult<SingleEmitter<T>>.(Throwable) -> Unit

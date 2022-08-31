@@ -2,9 +2,9 @@
 
 package com.mredrock.cyxbs.lib.utils.network
 
-import com.mredrock.cyxbs.lib.utils.extensions.interceptException
 import io.reactivex.rxjava3.core.Single
 import io.reactivex.rxjava3.core.SingleEmitter
+import com.mredrock.cyxbs.lib.utils.extensions.interceptException
 import kotlinx.coroutines.flow.Flow
 
 /**
@@ -13,11 +13,11 @@ import kotlinx.coroutines.flow.Flow
  * ApiService.INSTANCE.getXXX()
  *     .subscribeOn(Schedulers.io())  // 线程切换
  *     .observeOn(AndroidSchedulers.mainThread())
- *     .mapOrCatchException {         // 当 status 的值不为成功时抛错，并处理错误
+ *     .mapOrInterceptException {     // 当 status 的值不为成功时或有其他网络异常时
  *
  *         toast("捕捉全部异常")        // 直接写的话可以处理全部异常
  *
- *         emitter.onSuccess(...)   // 手动发送新的值给下游
+ *         emitter.onSuccess(...)     // 手动发送新的值给下游
  *
  *         ApiException {
  *             // 处理全部 ApiException 错误
@@ -26,7 +26,7 @@ import kotlinx.coroutines.flow.Flow
  *         }
  *
  *         ApiExceptionExcept {
- *             // 这样写可以直接处理非 ApiException 的其他异常
+ *             // 这样写可以直接处理 非 ApiException 的其他异常
  *         }
  *
  *         ApiException(10010) {
@@ -49,6 +49,7 @@ import kotlinx.coroutines.flow.Flow
  *     // ViewModel 中带有的自动回收，直接使用 ViewModel 里面的 safeSubscribeBy 方法即可
  * ```
  *
+ * ## 为什么值提供 Single，Observable 不行吗 ?
  * 由于网络请求是单发数据，所以使用 Single 即可，就没有添加其他数据流的扩展
  *
  * @author 985892345 (Guo Xiangrui)
@@ -60,7 +61,8 @@ import kotlinx.coroutines.flow.Flow
 /**
  * 转换为 data 并使用 DSL 写法来处理异常
  *
- * # 详细用法请查看 [Flow.interceptException]
+ * # 详细用法请查看该文件上面的注释
+ * # 更多注意事项可以查看 [Flow.interceptException]
  *
  * - [IApiWrapper] 推荐使用 [mapOrInterceptException] 方法
  * - [IApiStatus] 使用 [throwOrInterceptException] 方法
@@ -76,11 +78,11 @@ fun <Data : Any, T : IApiWrapper<Data>> Single<T>.mapOrInterceptException(
 }
 
 fun <T : IApiStatus> Single<T>.throwOrInterceptException(
-  action: ApiExceptionResult<SingleEmitter<T>>.() -> Unit
+  action: ApiExceptionResult<SingleEmitter<T>>.(Throwable) -> Unit
 ) : Single<T> {
   return throwApiExceptionIfFail().onErrorResumeNext { error ->
     Single.create {
-      ApiExceptionResult(error, it).action()
+      ApiExceptionResult(error, it).action(error)
     }
   }
 }
