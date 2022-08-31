@@ -1,6 +1,7 @@
 package com.mredrock.cyxbs.discover.news.viewmodel
 
 import android.Manifest.permission.WRITE_EXTERNAL_STORAGE
+import android.net.Uri
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import com.mredrock.cyxbs.common.network.ApiGenerator
@@ -14,7 +15,6 @@ import com.mredrock.cyxbs.discover.news.network.ApiService
 import com.mredrock.cyxbs.discover.news.network.download.DownloadManager
 import com.mredrock.cyxbs.discover.news.network.download.RedDownloadListener
 import com.tbruyelle.rxpermissions3.RxPermissions
-import java.io.File
 
 /**
  * Author: Hosigus
@@ -34,6 +34,7 @@ class NewsItemViewModel : BaseViewModel() {
                 }.lifeCycle()
     }
 
+    // TODO NewsDownloadListener 接口会造成内存泄漏
     fun download(rxPermissions: RxPermissions, list: List<NewsAttachment>, listener: NewsDownloadListener) {
         checkPermission(rxPermissions) { isGranted ->
             if (isGranted) {
@@ -45,8 +46,8 @@ class NewsItemViewModel : BaseViewModel() {
                             listener.onProgress(pos, currentBytes, contentLength)
                         }
 
-                        override fun onSuccess(file: File) {
-                            listener.onDownloadEnd(pos, file)
+                        override fun onSuccess(uri: Uri?) {
+                            listener.onDownloadEnd(pos, uri)
                         }
 
                         override fun onFail(e: Throwable) {
@@ -67,6 +68,6 @@ class NewsItemViewModel : BaseViewModel() {
     interface NewsDownloadListener {
         fun onDownloadStart()
         fun onProgress(id: Int, currentBytes: Long, contentLength: Long)
-        fun onDownloadEnd(id: Int, file: File? = null, e: Throwable? = null)
+        fun onDownloadEnd(id: Int, uri: Uri? = null, e: Throwable? = null)
     }
 }

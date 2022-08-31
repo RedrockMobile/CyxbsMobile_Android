@@ -13,10 +13,10 @@ import com.mredrock.cyxbs.lib.utils.extensions.unsafeSubscribeBy
 import com.mredrock.cyxbs.lib.utils.network.ApiStatus
 import com.mredrock.cyxbs.lib.utils.network.IApi
 import com.mredrock.cyxbs.lib.utils.network.api
+import com.mredrock.cyxbs.lib.utils.network.throwOrInterceptException
 import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
 import io.reactivex.rxjava3.core.Single
 import io.reactivex.rxjava3.schedulers.Schedulers
-import retrofit2.HttpException
 import retrofit2.http.Field
 import retrofit2.http.FormUrlEncoded
 import retrofit2.http.POST
@@ -101,20 +101,18 @@ class StoreServiceImpl : IStoreService {
       .changeTaskProgress(title)
       .subscribeOn(Schedulers.io())
       .observeOn(AndroidSchedulers.mainThread())
-      .doOnError {
-        if (it is HttpException) {
+      .throwOrInterceptException {
+        HttpExceptionBody(500) {
           // 在任务进度大于最大进度时, 后端返回 http 的错误码 500 导致回调到 onError 方法 所以这里手动拿到返回的 bean 类
           /*
           * todo 如果以后要改这里接口，我想说以下几点：
           *  1、把这个 http 的错误码 500 改成 200（这本来就是他们的不规范，我们端上也不好处理）；
           *  2、任务请求在我们端上点都不好做，希望能把逻辑写在后端
           * */
-          val code = it.response()?.code() // 返回的 code 如果为 500
-          if (code == 500) {
-            onSlopOver?.invoke()
-          }
+          onSlopOver?.invoke()
         }
-      }.unsafeSubscribeBy {
+      }
+      .unsafeSubscribeBy {
         onSuccess?.invoke()
       }
   }

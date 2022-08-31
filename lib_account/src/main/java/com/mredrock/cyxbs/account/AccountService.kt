@@ -5,6 +5,7 @@ import androidx.annotation.MainThread
 import androidx.annotation.WorkerThread
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.distinctUntilChanged
 import com.afollestad.materialdialogs.MaterialDialog
 import com.alibaba.android.arouter.facade.annotation.Route
 import com.google.gson.Gson
@@ -26,9 +27,7 @@ import com.mredrock.cyxbs.common.bean.RedrockApiWrapper
 import com.mredrock.cyxbs.common.config.*
 import com.mredrock.cyxbs.common.service.impl
 import com.mredrock.cyxbs.common.utils.extensions.*
-import kotlinx.coroutines.flow.MutableSharedFlow
-import kotlinx.coroutines.flow.SharedFlow
-import kotlinx.coroutines.flow.asSharedFlow
+import kotlinx.coroutines.flow.*
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.HttpException
@@ -136,15 +135,15 @@ internal class AccountService : IAccountService {
         
         val stuNumSharedFlow = MutableSharedFlow<String?>().apply {
             launch {
-                collect {
+                distinctUntilChanged().collect {
                     stuNumLiveData.postValue(it)
                 }
             }
         }
         private val stuNumLiveData = MutableLiveData<String?>()
     
-        override fun observeStuNumFlow(): SharedFlow<String?> {
-            return stuNumSharedFlow.asSharedFlow()
+        override fun observeStuNumFlow(): Flow<String?> {
+            return stuNumSharedFlow.asSharedFlow().distinctUntilChanged()
         }
     
         override fun observeStuNumLiveData(): LiveData<String?> {
@@ -209,12 +208,12 @@ internal class AccountService : IAccountService {
         private val mStateSharedFlow = MutableSharedFlow<IUserStateService.UserState>()
         private val mStateLiveData = MutableLiveData<IUserStateService.UserState>()
     
-        override fun observeStateFlow(): SharedFlow<IUserStateService.UserState> {
-            return mStateSharedFlow.asSharedFlow()
+        override fun observeStateFlow(): Flow<IUserStateService.UserState> {
+            return mStateSharedFlow.asSharedFlow().distinctUntilChanged()
         }
     
         override fun observeStateLiveData(): LiveData<IUserStateService.UserState> {
-            return mStateLiveData
+            return mStateLiveData.distinctUntilChanged()
         }
 
         private fun notifyAllStateListeners(state: IUserStateService.UserState) {

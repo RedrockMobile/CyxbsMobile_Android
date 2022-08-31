@@ -121,14 +121,8 @@ class AboutActivity : BaseViewModelActivity<AboutViewModel>()  {
         selfUpdateCheck = true
         ServiceManager.getService(IAppUpdateService::class.java).apply {
             when (getUpdateStatus().value) {
-                AppUpdateStatus.DOWNLOADING -> {
-                    toast("在下了在下了,下拉可以看进度")
-                }
-                AppUpdateStatus.CANCEL -> {
+                AppUpdateStatus.DATED -> {
                     noticeUpdate(this@AboutActivity)
-                }
-                AppUpdateStatus.TO_BE_INSTALLED -> {
-                    installUpdate(this@AboutActivity)
                 }
                 else -> checkUpdate()
             }
@@ -166,19 +160,6 @@ class AboutActivity : BaseViewModelActivity<AboutViewModel>()  {
                     AppUpdateStatus.VALID -> {
                         mine_about_tv_already_up_to_date.text = "已是最新版本"
                         if (selfUpdateCheck) toast("已经是最新版了哦")
-                    }
-                    AppUpdateStatus.LATER -> {
-                        mine_about_tv_already_up_to_date.text = "存在被忽略的新版本"
-                    }
-                    AppUpdateStatus.DOWNLOADING -> {
-                        mine_about_tv_already_up_to_date.text = "新版本下载中"
-                    }
-                    AppUpdateStatus.CANCEL -> {
-                        mine_about_tv_already_up_to_date.text = "更新被取消惹"
-                    }
-                    AppUpdateStatus.TO_BE_INSTALLED -> {
-                        mine_about_tv_already_up_to_date.text = ">>点我安装<<"
-                        installUpdate(this@AboutActivity)
                     }
                     AppUpdateStatus.ERROR -> {
                         mine_about_tv_already_up_to_date.text = "建议再试试哟~"

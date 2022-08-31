@@ -1,13 +1,13 @@
 package com.mredrock.cyxbs.update.model
 
 import androidx.lifecycle.MutableLiveData
-import com.mredrock.cyxbs.common.network.ApiGenerator
 import com.mredrock.cyxbs.api.update.AppUpdateStatus
-import com.mredrock.cyxbs.common.BaseApp
-import com.mredrock.cyxbs.common.utils.extensions.safeSubscribeBy
-import com.mredrock.cyxbs.common.utils.extensions.setSchedulers
-import com.mredrock.cyxbs.common.utils.getAppVersionCode
-import io.reactivex.rxjava3.core.Observable
+import com.mredrock.cyxbs.lib.utils.extensions.appContext
+import com.mredrock.cyxbs.lib.utils.extensions.unsafeSubscribeBy
+import com.mredrock.cyxbs.lib.utils.network.ApiGenerator
+import com.mredrock.cyxbs.lib.utils.utils.getAppVersionCode
+import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
+import io.reactivex.rxjava3.schedulers.Schedulers
 import retrofit2.Retrofit
 import retrofit2.adapter.rxjava3.RxJava3CallAdapterFactory
 import retrofit2.converter.gson.GsonConverterFactory
@@ -16,11 +16,12 @@ import retrofit2.converter.gson.GsonConverterFactory
  * Create By Hosigus at 2020/5/2
  */
 object AppUpdateModel {
-    val APP_VERSION_CODE: Long = getAppVersionCode(BaseApp.appContext)
+    
+    val APP_VERSION_CODE: Long = getAppVersionCode(appContext)
     val status: MutableLiveData<AppUpdateStatus> = MutableLiveData()
     var updateInfo: UpdateInfo? = null
         private set
-
+    
     init {
         status.value = AppUpdateStatus.UNCHECK
     }
@@ -30,37 +31,22 @@ object AppUpdateModel {
             return
         }
         status.value = AppUpdateStatus.CHECKING
-        Observable.create<UpdateInfo> { obEmitter ->
-            ApiGenerator.getCommonApiService(AppUpdateApiService::class.java)
-                .getUpdateInfo()
-                .safeSubscribeBy(onError = {
-                    ApiGenerator.getApiService(
-                        getSecondUpdateRetrofit(),
-                        AppUpdateApiService::class.java
-                    )
-                        .getUpdateInfo()
-                        .safeSubscribeBy(onError = {
-                            obEmitter.onError(it)
-                        }, onNext = {
-                            obEmitter.onNext(it)
-                        })
-                }, onNext = {
-                    obEmitter.onNext(it)
-                })
-            obEmitter.onComplete()
-        }
-            .setSchedulers()
-            .safeSubscribeBy(onError = {
-                // todo 建议统一异常上报接口，可以放DefaultErrorHandler里，然后把这个报上去
+        ApiGenerator.getCommonApiService(AppUpdateApiService::class)
+            .getUpdateInfo()
+            .onErrorResumeNext {
+                getSecondUpdateRetrofit().create(AppUpdateApiService::class.java)
+                    .getUpdateInfo()
+            }.subscribeOn(Schedulers.io())
+            .observeOn(AndroidSchedulers.mainThread())
+            .doOnError {
                 status.value = AppUpdateStatus.ERROR
-            }, onNext = {
+            }.unsafeSubscribeBy {
                 updateInfo = it
-                // todo 这里可以加更新信息的判断，包括状态 ${AppUpdateStatus.TEST} 等
                 status.value = when {
                     it.versionCode <= APP_VERSION_CODE -> AppUpdateStatus.VALID
                     else -> AppUpdateStatus.DATED
                 }
-            })
+            }
     }
 
     /**
@@ -72,5 +58,4 @@ object AppUpdateModel {
         .addConverterFactory(GsonConverterFactory.create())
         .addCallAdapterFactory(RxJava3CallAdapterFactory.createSynchronous())
         .build()
-
 }

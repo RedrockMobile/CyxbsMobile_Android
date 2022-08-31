@@ -98,6 +98,7 @@ interface BaseUi : OperationUi {
   }
   
   // Rxjava 自动关流
+  @Deprecated("内部方法，禁止调用", level = DeprecationLevel.HIDDEN)
   override fun onAddRxjava(disposable: Disposable) {
     getViewLifecycleOwner().lifecycle.addObserver(
       object : LifecycleEventObserver {

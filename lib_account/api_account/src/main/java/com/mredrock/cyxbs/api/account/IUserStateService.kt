@@ -4,7 +4,7 @@ import android.content.Context
 import androidx.annotation.MainThread
 import androidx.annotation.WorkerThread
 import androidx.lifecycle.LiveData
-import kotlinx.coroutines.flow.SharedFlow
+import kotlinx.coroutines.flow.Flow
 
 interface IUserStateService {
     enum class UserState {
@@ -68,7 +68,7 @@ interface IUserStateService {
      *
      * 注意：返回的是一个普通的 ShareFlow，用于事件观察，如果你需要得到之前的值，请使用 [observeStateLiveData]
      */
-    fun observeStateFlow(): SharedFlow<UserState>
+    fun observeStateFlow(): Flow<UserState>
     
     /**
      * 观察 [UserState] 的改变

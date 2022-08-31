@@ -3,6 +3,7 @@ package com.mredrock.cyxbs.sport.model.network
 import com.mredrock.cyxbs.lib.utils.network.ApiGenerator
 import com.mredrock.cyxbs.lib.utils.network.ApiWrapper
 import com.mredrock.cyxbs.sport.model.SportDetailBean
+import io.reactivex.rxjava3.core.Single
 import retrofit2.http.GET
 
 /**
@@ -24,5 +25,5 @@ interface SportDetailApiService {
      * 获取体育打卡详情页面数据
      */
     @GET("/magipoke/sunSport")
-    suspend fun getSportDetailData(): ApiWrapper<SportDetailBean>
+    fun getSportDetailData(): Single<ApiWrapper<SportDetailBean>>
 }

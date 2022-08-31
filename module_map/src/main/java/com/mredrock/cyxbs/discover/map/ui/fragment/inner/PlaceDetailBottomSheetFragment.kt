@@ -72,7 +72,7 @@ class PlaceDetailBottomSheetFragment : BaseFragment() {
         val flexBoxManager = FlexboxLayoutManager(context)
         flexBoxManager.flexWrap = FlexWrap.WRAP
         mRvDetailAboutList.layoutManager = flexBoxManager
-        val tagAdapter = context?.let { DetailTagRvAdapter(it, mutableListOf()) }
+        val tagAdapter = DetailTagRvAdapter()
         mRvDetailAboutList.adapter = tagAdapter
 
         val linearLayoutManager = LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false)
@@ -103,10 +103,15 @@ class PlaceDetailBottomSheetFragment : BaseFragment() {
                             mIndicatorDetail.setupWithViewPager(mBannerDetailImage)
                         }
                     }
-                    if (tagAdapter != null && t.tags != null) {
-                        tagAdapter.setList(t.tags!!)
-                        tagAdapter.notifyDataSetChanged()
+                    if (t.tags != null) {
+                        mBinding.mapTvDetailAboutText.visible()
+                        mBinding.mapRvDetailAboutList.visible()
+                        tagAdapter.submitList(t.tags ?: emptyList())
+                    } else {
+                        mBinding.mapTvDetailAboutText.gone()
+                        mBinding.mapRvDetailAboutList.gone()
                     }
+                    
                     if (attributeAdapter != null) {
                         if (t.placeAttribute != null) {
                             attributeAdapter.setList(t.placeAttribute!!)

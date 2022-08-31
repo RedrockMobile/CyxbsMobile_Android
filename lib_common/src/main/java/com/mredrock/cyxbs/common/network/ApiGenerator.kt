@@ -27,6 +27,10 @@ import retrofit2.adapter.rxjava3.RxJava3CallAdapterFactory
 
 
 /**
+ * 即将被废弃的 lib_common 模块中的网络请求工具类
+ *
+ * 网络请求的示例代码请看 lib_utils 模块中的 ApiGenerator
+ *
  * Created by AceMurder on 2018/1/24.
  */
 object ApiGenerator {
@@ -310,6 +314,8 @@ object ApiGenerator {
         }
         return response
     }
+    
+    private var mLastToastTime = 0L
 
     private fun proceedPoxyWithTryCatch(proceed: () -> Response): Response? {
         // 以前学长在这里使用了 try catch，会导致 Pandora 看到的问题全是空指针
@@ -319,9 +325,13 @@ object ApiGenerator {
             return proceed.invoke()
         } catch (e: Exception) {
             if (BuildConfig.DEBUG) {
-                Handler(Looper.getMainLooper()).post {
-                    Toast.makeText(BaseApp.appContext, "网络请求异常，请查看 Pandora", Toast.LENGTH_SHORT)
-                        .show()
+                val nowTime = System.currentTimeMillis()
+                if (nowTime - mLastToastTime > 10 * 1000) { // 保证不会一直疯狂 toast
+                    mLastToastTime = nowTime
+                    Handler(Looper.getMainLooper()).post {
+                        Toast.makeText(BaseApp.appContext, "网络请求异常，请查看 Pandora", Toast.LENGTH_SHORT)
+                            .show()
+                    }
                 }
             }
             throw e
@@ -335,6 +345,8 @@ object ApiGenerator {
         @Volatile
         private var useBackupUrl: Boolean = false
         private var backupUrl: String = getBaseUrlWithoutHttps()
+        
+        private var mLastToastTime = 0L
 
         override fun intercept(chain: Interceptor.Chain): Response {
 
@@ -358,13 +370,17 @@ object ApiGenerator {
             when (getBaseUrl()) {
                 END_POINT_REDROCK_DEV -> {
                     // dev 环境不触发容灾，不然会导致测试接口 404
-                    Handler(Looper.getMainLooper()).post {
-                        // 使用原生 toast 醒目一点
-                        Toast.makeText(
-                            BaseApp.appContext,
-                            "dev 请求异常, 请查看 Pandora",
-                            Toast.LENGTH_LONG
-                        ).show()
+                    val nowTime = System.currentTimeMillis()
+                    if (nowTime - mLastToastTime > 10 * 1000) { // 保证不会一直疯狂 toast
+                        mLastToastTime = nowTime
+                        Handler(Looper.getMainLooper()).post {
+                            // 使用原生 toast 醒目一点
+                            Toast.makeText(
+                                BaseApp.appContext,
+                                "dev 请求异常, 请查看 Pandora",
+                                Toast.LENGTH_SHORT
+                            ).show()
+                        }
                     }
                 }
                 END_POINT_REDROCK_PROD -> {

@@ -14,6 +14,4 @@ interface IAppUpdateService : IProvider {
     fun checkUpdate()
     // 通知用户有更新
     fun noticeUpdate(activity: AppCompatActivity)
-    // 安装更新
-    fun installUpdate(activity: AppCompatActivity)
 }

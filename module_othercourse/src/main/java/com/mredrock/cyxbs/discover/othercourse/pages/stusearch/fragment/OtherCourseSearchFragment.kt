@@ -25,7 +25,6 @@ import com.mredrock.cyxbs.discover.othercourse.room.History
 import com.mredrock.cyxbs.discover.othercourse.room.STUDENT_TYPE
 import com.mredrock.cyxbs.discover.othercourse.snackbar
 import kotlinx.android.synthetic.main.othercourse_discover_activity_other_course.*
-import kotlinx.android.synthetic.main.othercourse_discover_activity_stu_list.*
 import kotlinx.android.synthetic.main.othercourse_other_course_search_fragment.*
 
 /**
@@ -50,7 +49,7 @@ abstract class OtherCourseSearchFragment<T : OtherCourseSearchViewModel> : BaseV
     }
 
     private fun initObserve() {
-        viewModel.mList.observeNotNull {
+        viewModel.mList.observe {
             if (it.isNotEmpty()) {
                 lastSearch?.let { text ->
                     val history = History(text)
@@ -62,7 +61,7 @@ abstract class OtherCourseSearchFragment<T : OtherCourseSearchViewModel> : BaseV
                 context?.let { it1 -> CyxbsToast.makeText(it1, "查无此人", Toast.LENGTH_SHORT).show() }
             }
         }
-        viewModel.mListFromHistory.observeNotNull {
+        viewModel.mListFromHistory.observe {
             if (it.isNotEmpty()) {
                 context?.startActivity<StuListActivity>(("stu_list" to it), ("history_id" to viewModel.curHistoryId))
             } else {

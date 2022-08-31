@@ -3,9 +3,9 @@ package com.mredrock.cyxbs.mine.page.security.viewmodel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import com.mredrock.cyxbs.lib.base.ui.BaseViewModel
-import com.mredrock.cyxbs.lib.utils.extensions.mapOrThrowApiException
-import com.mredrock.cyxbs.lib.utils.extensions.throwApiExceptionIfFail
 import com.mredrock.cyxbs.lib.utils.network.ApiGenerator
+import com.mredrock.cyxbs.lib.utils.network.mapOrInterceptException
+import com.mredrock.cyxbs.lib.utils.network.throwOrInterceptException
 import com.mredrock.cyxbs.mine.network.ApiService
 import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
 import io.reactivex.rxjava3.schedulers.Schedulers
@@ -55,8 +55,7 @@ class FindPasswordByIdsViewModel : BaseViewModel() {
             .getIdsCode(requestBody)
             .subscribeOn(Schedulers.io())
             .observeOn(AndroidSchedulers.mainThread())
-            .mapOrThrowApiException()
-            .doOnError {
+            .mapOrInterceptException {
                 _isGetCodeSuccess.postValue(false)
             }
             .safeSubscribeBy {
@@ -75,8 +74,7 @@ class FindPasswordByIdsViewModel : BaseViewModel() {
             .changePasswordByIds(stuNum, newPassword, mCode)
             .subscribeOn(Schedulers.io())
             .observeOn(AndroidSchedulers.mainThread())
-            .throwApiExceptionIfFail()
-            .doOnError {
+            .throwOrInterceptException {
                 _isChangeSuccess.postValue(false)
             }
             .safeSubscribeBy {
