@@ -15,7 +15,7 @@ interface IOverlapItem : ISingleDayItem, Comparable<IOverlapItem> {
   /**
    * [position] 位置是否显示
    */
-  fun isShow(position: Int): Boolean
+  fun isDisplayable(position: Int): Boolean
   
   /**
    * 被重叠时的回调
@@ -52,4 +52,9 @@ interface IOverlapItem : ISingleDayItem, Comparable<IOverlapItem> {
    * 得到 [position] 位置重叠在下面的 item
    */
   fun getBelowItem(position: Int): IOverlapItem?
+  
+  /**
+   * 用于比较处于同一格时的前后顺序
+   */
+  override fun compareTo(other: IOverlapItem): Int
 }

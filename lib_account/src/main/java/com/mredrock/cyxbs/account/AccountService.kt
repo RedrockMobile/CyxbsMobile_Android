@@ -27,6 +27,7 @@ import com.mredrock.cyxbs.common.bean.RedrockApiWrapper
 import com.mredrock.cyxbs.common.config.*
 import com.mredrock.cyxbs.common.service.impl
 import com.mredrock.cyxbs.common.utils.extensions.*
+import io.reactivex.rxjava3.subjects.BehaviorSubject
 import kotlinx.coroutines.flow.*
 import retrofit2.Call
 import retrofit2.Callback
@@ -145,8 +146,9 @@ internal class AccountService : IAccountService {
         override fun observeStuNumFlow(): Flow<String?> {
             return stuNumSharedFlow.asSharedFlow().distinctUntilChanged()
         }
-    
+        
         override fun observeStuNumLiveData(): LiveData<String?> {
+            BehaviorSubject.create<String>().share()
             return stuNumLiveData
         }
     }

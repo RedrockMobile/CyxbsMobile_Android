@@ -2,4 +2,12 @@
 <resources>
     <!--课表左侧时间轴中午和傍晚的字体颜色-->
     <color name="course_noon_dusk_tv">#80F0F0F0</color>
+
+    <!--课表可上拉下拉标识小块背景-->
+    <color name="course_tip_color">#000000</color>
+
+    <!--按钮渐变颜色-->
+    <color name="course_button_gradient_start_color">#2921D1</color>
+    <color name="course_button_gradient_end_color">#5D5DF7</color>
+
 </resources>

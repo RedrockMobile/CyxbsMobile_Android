@@ -2,23 +2,24 @@ package com.mredrock.cyxbs.course.page.course.bean
 
 import com.google.gson.annotations.SerializedName
 import com.mredrock.cyxbs.course.page.course.room.StuLessonEntity
+import com.mredrock.cyxbs.lib.utils.network.IApiWrapper
 import java.io.Serializable
 
 // 详细的字段解释请看数据库中的实体类
 data class StuLessonBean(
   @SerializedName("data")
-  val `data`: List<StuLesson>,
+  override val `data`: List<StuLesson>,
   @SerializedName("info")
-  val info: String,
+  override val info: String,
   @SerializedName("nowWeek")
   val nowWeek: Int,
   @SerializedName("status")
-  val status: Int,
+  override val status: Int,
   @SerializedName("stuNum")
   val stuNum: String,
   @SerializedName("version")
   override val version: String
-) : Serializable, ILessonVersion {
+) : Serializable, ILessonVersion, IApiWrapper<List<StuLessonBean.StuLesson>> {
   data class StuLesson(
     @SerializedName("begin_lesson")
     val beginLesson: Int,

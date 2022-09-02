@@ -43,7 +43,6 @@ data class LinkStuEntity(
   
   fun isNull(): Boolean = linkNum.isBlank()
   fun isNotNull(): Boolean = !isNull()
-  fun toNull(): LinkStuEntity = copy(linkNum = "", linkMajor = "", linkName = "")
   companion object {
     val NULL = LinkStuEntity("", "", "", "", false)
   }

@@ -44,7 +44,7 @@ sealed class LessonData : ILessonData {
     }
   
   enum class Type {
-    // 暂不存在中午时间段的课
+    // 暂不存在中午傍晚时间段的课
     AM, PM, NIGHT
   }
   

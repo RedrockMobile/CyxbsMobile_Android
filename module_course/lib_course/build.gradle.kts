@@ -6,7 +6,7 @@ import com.mredrock.cyxbs.convention.depend.lib.dependLibConfig
 import com.mredrock.cyxbs.convention.depend.lib.dependLibUtils
 
 plugins {
-  id("module-debug")
+  id("module-manager")
 }
 
 dependLibBase()
@@ -16,9 +16,9 @@ dependLibConfig()
 dependNetwork()
 dependRxjava()
 
-configurations.all {
-  resolutionStrategy.cacheChangingModulesFor(0, TimeUnit.SECONDS)
-}
+//configurations.all {
+//  resolutionStrategy.cacheChangingModulesFor(0, TimeUnit.SECONDS)
+//}
 
 dependencies {
   implementation(Android.`core-ktx`)

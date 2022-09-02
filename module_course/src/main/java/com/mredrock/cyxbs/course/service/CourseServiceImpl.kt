@@ -7,7 +7,7 @@ import androidx.fragment.app.commit
 import com.alibaba.android.arouter.facade.annotation.Route
 import com.mredrock.cyxbs.api.course.COURSE_SERVICE
 import com.mredrock.cyxbs.api.course.ICourseService
-import com.mredrock.cyxbs.course.page.course.ui.home.HomeCourseFragment
+import com.mredrock.cyxbs.course.page.course.ui.home.HomeCourseVpFragment
 
 /**
  * ...
@@ -19,9 +19,9 @@ import com.mredrock.cyxbs.course.page.course.ui.home.HomeCourseFragment
 class CourseServiceImpl : ICourseService {
   
   override fun replaceHomeFragmentById(fm: FragmentManager, id: Int) {
-    val fragment = findFragment<HomeCourseFragment>(fm, id)
+    val fragment = findFragment<HomeCourseVpFragment>(fm, id)
     if (fragment == null) {
-      fm.commit { replace(id, HomeCourseFragment()) }
+      fm.commit { replace(id, HomeCourseVpFragment()) }
     }
     /*
     * 由于 HomeCourseFragment 的 ViewModel 观察了当前登录人的学号，

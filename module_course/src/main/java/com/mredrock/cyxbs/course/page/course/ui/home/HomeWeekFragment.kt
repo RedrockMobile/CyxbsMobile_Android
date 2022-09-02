@@ -1,8 +1,12 @@
 package com.mredrock.cyxbs.course.page.course.ui.home
 
+import android.os.Bundle
+import android.view.View
 import androidx.core.os.bundleOf
+import androidx.fragment.app.createViewModelLazy
+import com.mredrock.cyxbs.course.page.course.ui.home.viewmodel.HomeCourseViewModel
 import com.mredrock.cyxbs.lib.course.fragment.page.CoursePageFragment
-import com.mredrock.cyxbs.lib.course.helper.CourseTimelineHelper
+import com.mredrock.cyxbs.lib.course.helper.CourseNowTimeHelper
 import com.mredrock.cyxbs.lib.utils.extensions.lazyUnlock
 import com.mredrock.cyxbs.lib.utils.utils.SchoolCalendarUtil
 import java.util.*
@@ -28,8 +32,13 @@ class HomeWeekFragment : CoursePageFragment() {
   
   private val mWeek by arguments.helper<Int>()
   
-  override fun initCourse() {
-    super.initCourseInternal()
+  private val mViewModel by createViewModelLazy(
+    HomeCourseViewModel::class,
+    { requireParentFragment().viewModelStore }
+  )
+  
+  override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+    super.onViewCreated(view, savedInstanceState)
     setWeekNum()
   }
   
@@ -41,7 +50,7 @@ class HomeWeekFragment : CoursePageFragment() {
     if (calendar != null) {
       calendar.add(Calendar.DATE, (mWeek - 1) * 7)
       val startTimestamp = calendar.timeInMillis
-      mTvMonth.text = "${calendar.get(Calendar.MONTH) + 1}月"
+      tvMonth.text = "${calendar.get(Calendar.MONTH) + 1}月"
       forEachWeek { _, month ->
         month.text = calendar.get(Calendar.DATE).toString()
         calendar.add(Calendar.DATE, 1) // 天数加 1
@@ -52,14 +61,14 @@ class HomeWeekFragment : CoursePageFragment() {
     }
   }
   
-  private val mCourseTimelineHelper by lazyUnlock {
-    CourseTimelineHelper.attach(this)
+  private val mCourseNowTimeHelper by lazyUnlock {
+    CourseNowTimeHelper.attach(this)
   }
   
   /**
    * 今天是否在本周内的回调
    */
   private fun onIsInThisWeek(boolean: Boolean) {
-    mCourseTimelineHelper.setVisible(boolean)
+    mCourseNowTimeHelper.setVisible(boolean)
   }
 }

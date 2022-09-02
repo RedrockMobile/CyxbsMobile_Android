@@ -1,5 +1,6 @@
 package com.mredrock.cyxbs.api.course.utils
 
+import java.util.Calendar.*
 import java.util.regex.Pattern
 
 /**
@@ -32,7 +33,7 @@ fun getEnd(beginLesson: Int, period: Int): Int {
 }
 
 /**
- * @param start 这个 [start] 是调用了 [getStart] 转换后的值
+ * @param start 这个 [start] 是调用了 [getStart] 转换后的值，也可以是 row
  */
 fun getStartTime(start: Int): Int {
   return when (start) {
@@ -55,7 +56,7 @@ fun getStartTime(start: Int): Int {
 }
 
 /**
- * @param end 这个 [end] 是调用了 [getEnd] 转换后的值
+ * @param end 这个 [end] 是调用了 [getEnd] 转换后的值，也可以是 row
  */
 fun getEndTime(end: Int): Int {
   return when (end) {
@@ -74,6 +75,19 @@ fun getEndTime(end: Int): Int {
     12 -> 22 * 60 + 30
     13 -> 24 * 60
     else -> 0
+  }
+}
+
+private val Calendar = getInstance()
+
+/**
+ * 得到当前时间
+ */
+fun getNowTime(): Int {
+  return Calendar.run {
+    val hour = get(HOUR_OF_DAY)
+    val minute = get(MINUTE)
+    hour * 60 + minute
   }
 }
 

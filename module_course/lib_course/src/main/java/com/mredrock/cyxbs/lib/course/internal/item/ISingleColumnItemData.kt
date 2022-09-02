@@ -1,7 +1,7 @@
 package com.mredrock.cyxbs.lib.course.internal.item
 
 /**
- * 只有一列的 Item
+ * 只有一列的 Item 数据
  *
  * @author 985892345 (Guo Xiangrui)
  * @email guo985892345@foxmail.com

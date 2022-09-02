@@ -15,7 +15,6 @@ import com.mredrock.cyxbs.lib.utils.utils.SchoolCalendarUtil
 import io.reactivex.rxjava3.core.*
 import io.reactivex.rxjava3.core.Observable
 import io.reactivex.rxjava3.schedulers.Schedulers
-import java.lang.IllegalArgumentException
 
 /**
  * ...
@@ -76,7 +75,7 @@ object StuLessonRepository {
   fun getLesson(
     stuNum: String,
   ): Single<List<StuLessonEntity>> {
-    if (stuNum.isEmpty()) return Single.never()
+    if (stuNum.isEmpty()) return Single.error(IllegalArgumentException("学号不能为空！"))
     return CourseApiServices::class.api
       .getStuLesson(stuNum)
       .map {
@@ -119,7 +118,7 @@ object StuLessonRepository {
   
   @WorkerThread
   private fun httpFromStuWhen233(bean: StuLessonBean): List<StuLessonEntity> {
-    // 如果采用网校的缓存课表，则在版本号相等时，不采取更新策略
+    // 如果采用网校的缓存课表，则在版本号相等时，不采取更新策略，因为不能保证网校的缓存一定是最新的
     if (bean.judgeVersion(false)) {
       toast("教务在线当前不可用\n正使用红岩网校工作站缓存课表")
       val list = bean.toStuLessonEntity()

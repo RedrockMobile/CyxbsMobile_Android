@@ -17,7 +17,7 @@ import com.mredrock.cyxbs.lib.course.internal.item.IItemContainer
 @Suppress("LeakingThis")
 abstract class NoLessonImpl : CourseTouchImpl(), INoLesson {
   
-  override val viewNoLesson by R.id.course_ll_no_lesson.view<View>()
+  override val viewNoLesson by R.id.course_view_no_lesson.view<View>()
   
   override fun isExhibitionItem(item: IItem): Boolean {
     return item.isLessonItem || item.isAffairItem

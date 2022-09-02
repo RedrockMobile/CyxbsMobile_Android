@@ -23,13 +23,13 @@ import java.util.*
  * @email 2767465918@qq.com
  * @date 2022/2/6 15:21
  */
-class CourseTimelineHelper private constructor(
+class CourseNowTimeHelper private constructor(
   private val course: ICourseBase,
 ) : ItemDecoration {
   
   companion object {
-    fun attach(course: ICourseBase): CourseTimelineHelper {
-      return CourseTimelineHelper(course)
+    fun attach(course: ICourseBase): CourseNowTimeHelper {
+      return CourseNowTimeHelper(course)
     }
   }
   

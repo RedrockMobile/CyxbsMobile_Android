@@ -21,7 +21,7 @@ class CourseVpFragment : AbstractCourseVpFragment() {
   
   val viewModel by viewModels<VpViewModel>()
   
-  override val pageCount: Int
+  override val mPageCount: Int
     get() = 22
   
   override fun createFragment(position: Int): CoursePageFragment {

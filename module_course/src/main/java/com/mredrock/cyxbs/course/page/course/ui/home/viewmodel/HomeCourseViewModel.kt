@@ -49,7 +49,7 @@ class HomeCourseViewModel : BaseViewModel() {
   
   init {
     mRetryObservable
-      .switchMap {
+      .switchMap { // 使用 switchMap，每次发送新值时取消上一此转换的流
         // 我的课的观察流
         val selfLessonObservable = StuLessonRepository.observeSelfLesson()
           .map { it.toStuLessonData(StuLessonData.Who.Self) }
@@ -57,13 +57,16 @@ class HomeCourseViewModel : BaseViewModel() {
         // 关联人的课的观察流
         val linkLessonObservable = LinkRepository.observeLinkStudent()
           .doOnNext { _linkStu.postValue(it) }
-          .switchMap {
+          .distinctUntilChanged { t1, t2 ->
+            // 当自身学号已经关联人学号未发生改变时就不通知下游
+            t1.selfNum == t2.selfNum && t1.linkNum == t2.linkNum
+          }.switchMap {
             if (it.isNull()) Observable.just(emptyList()) // 没得关联人时发送空数据
             else StuLessonRepository.observeLesson(it.linkNum)
           }.map { it.toStuLessonData(StuLessonData.Who.Link) }
         
         // 我的事务的观察流
-        val affairObservable = Observable.never<List<AffairData>>() // TODO 事务待完成
+        val affairObservable = Observable.just<List<AffairData>>(emptyList()) // TODO 事务待完成
         
         // 合并观察流
         Observable.combineLatest(

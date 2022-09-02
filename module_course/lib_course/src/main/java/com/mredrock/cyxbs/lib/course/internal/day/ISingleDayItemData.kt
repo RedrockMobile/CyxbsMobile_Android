@@ -30,11 +30,9 @@ interface ISingleDayItemData : ISingleColumnItemData {
    */
   val length: Int
   
-  @Deprecated("不建议调用", level = DeprecationLevel.HIDDEN)
   override val startRow: Int
     get() = startNode
   
-  @Deprecated("不建议调用", level = DeprecationLevel.HIDDEN)
   override val endRow: Int
     get() = startNode + length - 1
   

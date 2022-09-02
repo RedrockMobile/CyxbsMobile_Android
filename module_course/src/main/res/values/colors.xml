@@ -51,10 +51,4 @@
     <!--tabLayout 指示器颜色-->
     <color name="course_tab_layout_indicator_color">#1AD0F2</color>
 
-    <!--按钮渐变颜色-->
-    <color name="course_button_gradient_start_color">#2921D1</color>
-    <color name="course_button_gradient_end_color">#5D5DF7</color>
-
-    <!--课表可上拉下拉标识小块背景-->
-    <color name="course_tip_color">#E2EDFB</color>
 </resources>

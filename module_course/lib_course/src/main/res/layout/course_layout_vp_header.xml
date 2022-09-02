@@ -5,12 +5,11 @@
     android:orientation="vertical">
 
     <include
-        layout="@layout/course_header_home"/>
+        layout="@layout/course_layout_header" />
 
     <androidx.viewpager2.widget.ViewPager2
-        android:id="@+id/course_vp_fragment_find_tea"
+        android:id="@+id/course_vp"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:background="@color/config_common_background_color"/>
+        android:layout_height="match_parent"/>
 
 </LinearLayout>
