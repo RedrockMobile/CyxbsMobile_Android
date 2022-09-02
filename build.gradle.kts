@@ -22,6 +22,7 @@ buildscript {
     dependencies {
         classpath(libs.android.gradlePlugin)
         classpath(libs.kotlin.gradlePlugin)
+        classpath("org.jetbrains.kotlin:kotlin-gradle-plugin:1.7.10")
         /*
         * 注意，如果某第三方库需要使用到 classpath，正确写法是把它写在 build-logic 的 build.gradle 中
         *

@@ -27,13 +27,14 @@ object ApiDepend {
   val account = ":lib_account:api_account" by parent
   val protocol = ":lib_protocol:api_protocol" by parent
   val update = ":lib_update:api_update" by parent
+  val crash = ":lib_crash:api_crash" by parent
   val electricity = ":module_electricity:api_electricity" by parent
   val login = ":module_login:api_login" by parent
   val main = ":module_main:api_main" by parent
   val store = ":module_store:api_store" by parent
   val todo = ":module_todo:api_todo" by parent
   val volunteer = ":module_volunteer:api_volunteer" by parent
-  
+
   private infix fun String.by(implPath: String): ApiDependUtils.IApiDependUtils = by { implPath }
   private infix fun String.by(implPath: String.() -> String): ApiDependUtils.IApiDependUtils {
     return ApiDependUtils(this)
@@ -80,3 +81,6 @@ fun Project.dependApiVolunteer() {
   ApiDepend.volunteer.dependApiOnly(this)
 }
 
+fun Project.dependApiCrash(){
+  ApiDepend.crash.dependApiOnly(this)
+}

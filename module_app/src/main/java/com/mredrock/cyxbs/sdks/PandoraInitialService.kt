@@ -19,8 +19,8 @@ import tech.linjiang.pandora.util.SensorDetector
 class PandoraInitialService: SdkService, SensorDetector.Callback {
   override fun onMainProcess(manager: SdkManager) {
     super.onMainProcess(manager)
-    Pandora.get().disableShakeSwitch() // 取消 Pandora 默认的摇一摇打开方法
-    SensorDetector(this)
+//    Pandora.get().disableShakeSwitch() // 取消 Pandora 默认的摇一摇打开方法
+//    SensorDetector(this)
   }
   
   override fun shakeValid() {

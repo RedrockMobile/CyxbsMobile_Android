@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    package="ui">
+
+    <application
+        android:name=".DebugApp"
+        android:allowBackup="true"
+        android:label="module_login"
+        android:supportsRtl="true"
+        android:theme="@style/AppTheme">
+        <activity
+            android:name=".DebugThirdActivity"
+            android:exported="false" />
+        <activity
+            android:name=".DebugSecondActivity"
+            android:exported="false" />
+        <activity
+            android:name=".DebugFirstActivity"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+    </application>
+</manifest>

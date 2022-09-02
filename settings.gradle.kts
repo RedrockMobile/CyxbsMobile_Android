@@ -1,5 +1,6 @@
 @file:Suppress("UnstableApiUsage")
 
+include(":lib_crash:api_crash")
 
 
 /*
