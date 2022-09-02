@@ -3,9 +3,6 @@ package com.mredrock.cyxbs.account
 import android.content.Context
 import androidx.annotation.MainThread
 import androidx.annotation.WorkerThread
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.distinctUntilChanged
 import com.afollestad.materialdialogs.MaterialDialog
 import com.alibaba.android.arouter.facade.annotation.Route
 import com.google.gson.Gson
@@ -16,6 +13,7 @@ import com.mredrock.cyxbs.account.bean.RefreshParams
 import com.mredrock.cyxbs.account.bean.TokenWrapper
 import com.mredrock.cyxbs.account.utils.UserInfoEncryption
 import com.mredrock.cyxbs.api.account.*
+import com.mredrock.cyxbs.api.account.utils.Value
 import com.mredrock.cyxbs.common.network.ApiGenerator
 import com.mredrock.cyxbs.common.network.exception.RedrockApiException
 import com.mredrock.cyxbs.common.service.ServiceManager
@@ -27,7 +25,9 @@ import com.mredrock.cyxbs.common.bean.RedrockApiWrapper
 import com.mredrock.cyxbs.common.config.*
 import com.mredrock.cyxbs.common.service.impl
 import com.mredrock.cyxbs.common.utils.extensions.*
-import kotlinx.coroutines.flow.*
+import io.reactivex.rxjava3.core.Observable
+import io.reactivex.rxjava3.subjects.BehaviorSubject
+import io.reactivex.rxjava3.subjects.PublishSubject
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.HttpException
@@ -90,9 +90,7 @@ internal class AccountService : IAccountService {
                         }
                         this@AccountService.user = userInfo
                         // 通知 StuNum 更新
-                        launch {
-                            (mUserService as UserService).stuNumSharedFlow.emit(it.stuNum)
-                        }
+                        (mUserService as UserService).emitStuNum(it.stuNum)
                     }
                 }
 
@@ -133,21 +131,22 @@ internal class AccountService : IAccountService {
             tokenWrapper?.let { bind(it) }
         }
         
-        val stuNumSharedFlow = MutableSharedFlow<String?>().apply {
-            launch {
-                distinctUntilChanged().collect {
-                    stuNumLiveData.postValue(it)
-                }
-            }
-        }
-        private val stuNumLiveData = MutableLiveData<String?>()
-    
-        override fun observeStuNumFlow(): Flow<String?> {
-            return stuNumSharedFlow.asSharedFlow().distinctUntilChanged()
+        // 发送学号给下游
+        fun emitStuNum(stuNum: String?) {
+            val value = Value(stuNum)
+            stuNumState.onNext(value)
+            stuNumEvent.onNext(value)
         }
     
-        override fun observeStuNumLiveData(): LiveData<String?> {
-            return stuNumLiveData
+        private val stuNumState = BehaviorSubject.create<Value<String>>()
+        private val stuNumEvent = PublishSubject.create<Value<String>>()
+    
+        override fun observeStuNumState(): Observable<Value<String>> {
+            return stuNumState.distinctUntilChanged()
+        }
+    
+        override fun observeStuNumEvent(): Observable<Value<String>> {
+            return stuNumEvent.distinctUntilChanged()
         }
     }
 
@@ -205,23 +204,20 @@ internal class AccountService : IAccountService {
             stateListeners.clear()
         }
     
-        private val mStateSharedFlow = MutableSharedFlow<IUserStateService.UserState>()
-        private val mStateLiveData = MutableLiveData<IUserStateService.UserState>()
+        private val userStateState = BehaviorSubject.create<IUserStateService.UserState>()
+        private val userStateEvent = PublishSubject.create<IUserStateService.UserState>()
     
-        override fun observeStateFlow(): Flow<IUserStateService.UserState> {
-            return mStateSharedFlow.asSharedFlow().distinctUntilChanged()
+        override fun observeUserStateState(): Observable<IUserStateService.UserState> {
+            return userStateState.distinctUntilChanged()
         }
-    
-        override fun observeStateLiveData(): LiveData<IUserStateService.UserState> {
-            return mStateLiveData.distinctUntilChanged()
+        override fun observeUserStateEvent(): Observable<IUserStateService.UserState> {
+            return userStateEvent.distinctUntilChanged()
         }
 
         private fun notifyAllStateListeners(state: IUserStateService.UserState) {
             for (i in stateListeners) i.onStateChanged(state)
-            launch {
-                mStateSharedFlow.emit(state)
-            }
-            mStateLiveData.postValue(state)
+            userStateState.onNext(state)
+            userStateEvent.onNext(state)
         }
 
         override fun isLogin() = tokenWrapper != null
@@ -253,9 +249,7 @@ internal class AccountService : IAccountService {
                 user = GsonBuilder().create()
                     .fromJson(mUserInfoEncryption.decrypt(userInfo), UserInfo::class.java)
                 // 这里是从本地拿取数据，是第一次通知 StuNum 更新
-                launch {
-                    (mUserService as UserService).stuNumSharedFlow.emit(user?.stuNum)
-                }
+                (mUserService as UserService).emitStuNum(user?.stuNum)
             }
             tokenWrapper = TokenWrapper.fromJson(
                 mUserInfoEncryption.decrypt(
@@ -391,9 +385,7 @@ internal class AccountService : IAccountService {
             ServiceManager.getService(IVolunteerService::class.java).clearSP()
             user = null
             // 通知 StuNum 更新
-            launch {
-                (mUserService as UserService).stuNumSharedFlow.emit(null)
-            }
+            (mUserService as UserService).emitStuNum(null)
             tokenWrapper = null
             mContext.runOnUiThread {
                 notifyAllStateListeners(IUserStateService.UserState.NOT_LOGIN)

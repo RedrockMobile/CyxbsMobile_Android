@@ -2,9 +2,8 @@
 
 package com.mredrock.cyxbs.lib.utils.network
 
-import io.reactivex.rxjava3.core.Single
-import io.reactivex.rxjava3.core.SingleEmitter
 import com.mredrock.cyxbs.lib.utils.extensions.interceptException
+import io.reactivex.rxjava3.core.*
 import kotlinx.coroutines.flow.Flow
 
 /**
@@ -49,9 +48,6 @@ import kotlinx.coroutines.flow.Flow
  *     // ViewModel 中带有的自动回收，直接使用 ViewModel 里面的 safeSubscribeBy 方法即可
  * ```
  *
- * ## 为什么值提供 Single，Observable 不行吗 ?
- * 由于网络请求是单发数据，所以使用 Single 即可，就没有添加其他数据流的扩展
- *
  * @author 985892345 (Guo Xiangrui)
  * @email 2767465918@qq.com
  * @date 2022/5/30 10:12
@@ -88,6 +84,27 @@ fun <T : IApiStatus> Single<T>.throwOrInterceptException(
 }
 
 
+fun <Data : Any, T : IApiWrapper<Data>> Observable<T>.mapOrInterceptException(
+  action: ApiExceptionResult<ObservableEmitter<Data>>.(Throwable) -> Unit
+) : Observable<Data> {
+  return mapOrThrowApiException().onErrorResumeNext { error ->
+    Observable.create {
+      ApiExceptionResult(error, it).action(error)
+    }
+  }
+}
+
+fun <T : IApiStatus> Observable<T>.throwOrInterceptException(
+  action: ApiExceptionResult<ObservableEmitter<T>>.(Throwable) -> Unit
+) : Observable<T> {
+  return throwApiExceptionIfFail().onErrorResumeNext { error ->
+    Observable.create {
+      ApiExceptionResult(error, it).action(error)
+    }
+  }
+}
+
+
 
 /**
  * 装换为 [Data] 并检查数据中的状态码是否有问题，有就抛出异常
@@ -103,6 +120,19 @@ fun <Data : Any, T : IApiWrapper<Data>> Single<T>.mapOrThrowApiException(): Sing
 
 fun <T : IApiStatus> Single<T>.throwApiExceptionIfFail(): Single<T> {
   return doOnSuccess {
+    it.throwApiExceptionIfFail()
+  }
+}
+
+
+fun <Data : Any, T : IApiWrapper<Data>> Observable<T>.mapOrThrowApiException(): Observable<Data> {
+  return throwApiExceptionIfFail()
+    .map {
+      it.data
+    }
+}
+fun <T : IApiStatus> Observable<T>.throwApiExceptionIfFail(): Observable<T> {
+  return doOnNext {
     it.throwApiExceptionIfFail()
   }
 }
