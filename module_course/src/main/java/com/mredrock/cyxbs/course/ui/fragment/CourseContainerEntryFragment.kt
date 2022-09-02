@@ -9,8 +9,8 @@ import android.view.ViewGroup
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.DataBindingUtil
+import androidx.lifecycle.*
 import androidx.lifecycle.Observer
-import androidx.lifecycle.ViewModelProvider
 import androidx.transition.Slide
 import androidx.transition.TransitionManager
 import androidx.transition.TransitionSet
@@ -48,6 +48,9 @@ import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
 import java.util.*
 import com.mredrock.cyxbs.common.utils.extensions.*
+import kotlinx.coroutines.flow.launchIn
+import kotlinx.coroutines.flow.onEach
+import kotlinx.coroutines.rx3.asFlow
 
 
 /**
@@ -156,12 +159,13 @@ class CourseContainerEntryFragment : BaseViewModelFragment<CoursesViewModel>(), 
         super.onViewCreated(view, savedInstanceState)
         IAccountService::class.impl
             .getUserService()
-            .observeStuNumLiveData()
-            .observe {
-                if (it != null) {
+            .observeStuNumState()
+            .asFlow()
+            .onEach {
+                it.nullUnless {
                     initFragment()
                 }
-            }
+            }.launchIn(lifecycleScope)
     }
 
     /**

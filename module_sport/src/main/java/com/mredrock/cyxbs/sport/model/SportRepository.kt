@@ -11,6 +11,7 @@ import com.mredrock.cyxbs.lib.utils.network.mapOrThrowApiException
 import com.mredrock.cyxbs.lib.utils.service.impl
 import com.mredrock.cyxbs.sport.model.network.SportDetailApiService
 import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
+import io.reactivex.rxjava3.core.Observable
 import io.reactivex.rxjava3.schedulers.Schedulers
 import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
@@ -79,27 +80,27 @@ class SportRepository : InitialService {
   
   override fun onMainProcess(manager: InitialManager) {
     super.onMainProcess(manager)
-  
+    
     IAccountService::class.impl
       .getUserService()
-      .observeStuNumLiveData()
-      .observeForever { stuNum ->
-        if (stuNum != null && sSportData == null) {
-          SportDetailApiService.INSTANCE
-            .getSportDetailData()
-            .subscribeOn(Schedulers.io())
-            .observeOn(AndroidSchedulers.mainThread())
-            .mapOrThrowApiException()
-            .interceptExceptionByResult {
-              emitter.onSuccess(Result.failure(throwable))
-            }.unsafeSubscribeBy {
-              sSportData = it.getOrNull()
-              processLifecycleScope.launch {
-                sportDataMutableShareFlow.emit(it)
-              }
-            }
-        } else if (stuNum == null) {
-          sSportData = null
+      .observeStuNumState()
+      .switchMap {
+        it.nullIf { sSportData = null }.nullUnless(Observable.never()) {
+          if (sSportData == null) {
+            SportDetailApiService.INSTANCE
+              .getSportDetailData()
+              .mapOrThrowApiException()
+              .interceptExceptionByResult {
+                emitter.onSuccess(Result.failure(throwable))
+              }.toObservable()
+          } else Observable.never()
+        }
+      }.subscribeOn(Schedulers.io())
+      .observeOn(AndroidSchedulers.mainThread())
+      .unsafeSubscribeBy {
+        sSportData = it.getOrNull()
+        processLifecycleScope.launch {
+          sportDataMutableShareFlow.emit(it)
         }
       }
     
