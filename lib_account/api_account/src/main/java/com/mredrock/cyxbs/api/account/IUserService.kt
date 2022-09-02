@@ -1,9 +1,7 @@
 package com.mredrock.cyxbs.api.account
 
-import androidx.lifecycle.LiveData
+import com.mredrock.cyxbs.api.account.utils.Value
 import io.reactivex.rxjava3.core.Observable
-import kotlinx.coroutines.flow.*
-import kotlinx.coroutines.rx3.asObservable
 
 interface IUserService {
     fun getStuNum(): String
@@ -33,49 +31,68 @@ interface IUserService {
     //用于刷新个人信息，请在需要的地方调用
     fun refreshInfo()
     
-    /**
-     * 观察学号的改变
-     *
-     * - Flow 更适合在 Activity、Fragment、ViewModel 层 使用
-     * - 对于 Repository 层更推荐使用 [observeStuNumUnsafe]，因为 Flow 远不及 Rxjava 好处理复杂的数据流
-     * - 如果你想对于不同学号返回给下游不同的 Flow，强烈建议使用 [observeStuNumUnsafe]，因为操作符 [Flow.flatMapLatest] 还在测验阶段
-     * - 使用普通无缓存的 ShareFlow，不会导致数据倒灌，如果你需要数据倒灌，请使用 [observeStuNumLiveData]（可以使用 asFlow() 装换为 Flow）
-     */
-    fun observeStuNumFlow(): Flow<String?>
     
     /**
-     * 观察学号的改变
+     * 观察学号的改变的状态
+     *
+     * 有数据倒灌的 Observable，每次订阅会发送之前的最新值
      *
      * 如果你想对于不同学号返回给下游不同的 Observable，**需要使用 [Observable.switchMap]**，因为它可以自动停止上一个发送的 Observable
      * ```
      * 写法如下：
-     * observeStuNumUnsafe()
-     *   .switchMap { stuNum ->
+     * observeStuNumState()
+     *   .switchMap { value ->
      *     // switchMap 可以在上游发送新的数据时自动关闭上一次数据生成的 Observable
-     *     if (stuNum.isEmpty()) {
-     *       Observable.never()
-     *     } else {
-     *       LessonDataBase.INSTANCE.getStuLessonDao() // 数据库
+     *     value.nullUnless(Observable.never()) {
+     *       if (stuNum.isEmpty()) Observable.never()
+     *       else LessonDataBase.INSTANCE.getStuLessonDao() // 数据库
      *         .observeAllLesson(stuNum) // 观察数据库的数据变动，这是 Room 的响应式编程
      *         .subscribeOn(Schedulers.io())
      *         .distinctUntilChanged() // 必加，因为 Room 每次修改都会回调，所以需要加这个去重
      *         .doOnSubscribe { getLesson(stuNum, isNeedOldList).safeSubscribeBy() } // 在开始订阅时请求一次云端数据
      *         .map { StuResult(stuNum, it) }
-     *      }
+     *     }
      *   }
      * ```
+     *
+     * ## 更多注意事项请看 [observeStuNumEvent]
+     */
+    fun observeStuNumState(): Observable<Value<String>>
+    
+    /**
+     * 观察学号的改变的事件
+     *
+     * 没有数据倒灌的 Observable，即每次订阅不会发送之前的最新值
+     *
      * 因为 Rxjava 不允许数据为空值，所以使用 Result 包裹了一层
      *
      * # 注意生命周期问题！
-     */
-    fun observeStuNumUnsafe(): Observable<Result<String?>> {
-        return observeStuNumFlow().map { Result.success(it) }.asObservable()
-    }
-    
-    /**
-     * 会导致数据倒灌的 LiveData
+     * ## 如果你在新模块中使用
+     * 新模块的 BaseActivity 已自带了 safeSubscribeBy() 方法用于关联生命周期
      *
-     * 因为存在数据倒灌，所以更推荐使用在仓库层（可以使用 asFlow() 装换为 Flow）
+     * ## 如果你在旧模块中使用
+     * 更推荐转换为 Flow 然后使用生命周期，请先在 build.gradle.kts 中加上以下依赖
+     * ```
+     * dependencies {
+     *     implementation(Coroutines.`coroutines-rx3`)
+     * }
+     * ```
+     * 然后使用：
+     * ```
+     * IAccountService::class.impl
+     *     .getUserService()
+     *     .observeStuNumState()
+     *     .asFlow()
+     *     .onEach {
+     *         it.nullUnless {
+     *             initFragment()
+     *         }
+     *     }.launchIn(lifecycleScope)
+     * ```
+     * # 为什么使用 Rxjava，不使用 Flow ?
+     * Flow 目前还有很多 api 处于测试阶段，不如 Rxjava 稳定
+     *
+     * ## 更多注意事项请看 [observeStuNumState]
      */
-    fun observeStuNumLiveData(): LiveData<String?>
+    fun observeStuNumEvent(): Observable<Value<String>>
 }
