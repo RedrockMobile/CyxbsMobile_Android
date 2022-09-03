@@ -20,6 +20,22 @@ import java.util.*
  */
 abstract class ContainerImpl : AbstractCourseBaseFragment(), ICourseContainer {
   
+  /**
+   * 比较大小
+   *
+   * @return > 0，则 o1 显示在 o2 上；= 0，则 o1 会替换 o2（只建议在同一个对象时返回 0）
+   */
+  protected open fun compareOverlayItem(row: Int, column: Int, o1: IOverlapItem, o2: IOverlapItem): Int {
+    return o1.compareTo(o2)
+  }
+  
+  /**
+   * 当 View 都被添加进来时的回调
+   *
+   * 添加 View 时会 post 一个 Runnable，然后在这个 Runnable 中回调该方法
+   */
+  protected open fun onAddIntoCourse() {}
+  
   private val mLessons = arrayListOf<ILesson>()
   private val mAffairs = arrayListOf<IAffair>()
   
@@ -64,14 +80,15 @@ abstract class ContainerImpl : AbstractCourseBaseFragment(), ICourseContainer {
    *
    * 因为目前课和事务都只能以一列存在，所以暂时这样设计
    */
-  private class ColumnArea(val column: Int, val course: ICourseViewGroup) {
+  private inner class ColumnArea(
+    val column: Int,
+    val course: ICourseViewGroup,
+  ) {
     private val items = arrayListOf<IOverlapItem>()
     private val newItems = arrayListOf<IOverlapItem>()
     private val grids = SparseArray<Grid>()
     private val runnable = Runnable {
       addIntoCourse()
-      items.addAll(newItems)
-      newItems.clear()
     }
   
     fun addItem(item: IOverlapItem) {
@@ -105,7 +122,8 @@ abstract class ContainerImpl : AbstractCourseBaseFragment(), ICourseContainer {
     }
     
     fun addIntoCourse() {
-      // 这里已经是下一个 Runnable，所有的 item 此时都已经添加进了 items
+      val list = arrayListOf<IOverlapItem>()
+      // 这里已经是下一个 Runnable，所有的 item 此时都已经添加进了 newItems
       newItems.forEach {
         if (it.isAllowToAddIntoCourse(course.getContext())) {
           when (it) {
@@ -113,29 +131,35 @@ abstract class ContainerImpl : AbstractCourseBaseFragment(), ICourseContainer {
             is IAffair -> course.addAffairItem(it)
             else -> course.addItem(it)
           }
+          list.add(it)
         }
       }
+      items.addAll(newItems)
+      newItems.clear()
+      onAddIntoCourse()
     }
   
     /**
      * 管理每个表格的工具类
      */
-    private class Grid(val row: Int) {
+    private inner class Grid(val row: Int, ) {
   
       /**
        * TreeSet 该数据结构有个特点就是如果 Compare 比较出来等于 0，则会把之前那个给覆盖掉
        */
-      private val sort = TreeSet<IOverlapItem>()
+      private val sort = TreeSet<IOverlapItem> { o1, o2 ->
+        compareOverlayItem(row, column, o1, o2)
+      }
       
       fun addItem(item: IOverlapItem) {
         sort.add(item)
         val higher = sort.higher(item)
-        higher?.onOverlapping(row - higher.startNode, item)
-        item.onOverlapped(row - item.startNode, higher)
+        higher?.onBelowItem(row, item)
+        item.onAboveItem(row, higher)
         
         val lower = sort.lower(item)
-        item.onOverlapping(row - item.startNode, lower)
-        lower?.onOverlapped(row - lower.startNode, item)
+        item.onBelowItem(row, lower)
+        lower?.onAboveItem(row, item)
       }
     
       /**
@@ -144,8 +168,8 @@ abstract class ContainerImpl : AbstractCourseBaseFragment(), ICourseContainer {
       fun removeItem(item: IOverlapItem) {
         val higher = sort.higher(item)
         val lower = sort.lower(item)
-        higher?.onOverlapping(row - higher.startNode, lower)
-        lower?.onOverlapped(row - lower.startNode, higher)
+        higher?.onBelowItem(row, lower)
+        lower?.onAboveItem(row, higher)
         sort.remove(item)
       }
       

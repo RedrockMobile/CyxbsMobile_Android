@@ -11,8 +11,8 @@ import com.mredrock.cyxbs.course.page.link.model.LinkRepository
 import com.mredrock.cyxbs.course.page.link.room.LinkStuEntity
 import com.mredrock.cyxbs.lib.base.ui.BaseViewModel
 import com.mredrock.cyxbs.lib.utils.extensions.asFlow
-import com.mredrock.cyxbs.lib.utils.extensions.mapOrThrowApiException
 import com.mredrock.cyxbs.lib.utils.network.api
+import com.mredrock.cyxbs.lib.utils.network.mapOrThrowApiException
 import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
 import io.reactivex.rxjava3.schedulers.Schedulers
 import kotlinx.coroutines.flow.*

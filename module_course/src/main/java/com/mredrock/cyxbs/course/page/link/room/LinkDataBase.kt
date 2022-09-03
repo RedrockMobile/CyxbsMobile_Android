@@ -41,7 +41,7 @@ data class LinkStuEntity(
     isShowLink: Boolean
   ) : this(linkStu.selfNum, linkStu.linkNum, linkStu.major, linkStu.name, isShowLink)
   
-  fun isNull(): Boolean = linkNum.isBlank()
+  fun isNull(): Boolean = selfNum.isBlank() || linkNum.isBlank()
   fun isNotNull(): Boolean = !isNull()
   companion object {
     val NULL = LinkStuEntity("", "", "", "", false)

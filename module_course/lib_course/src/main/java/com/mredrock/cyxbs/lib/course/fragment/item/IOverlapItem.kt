@@ -13,21 +13,21 @@ import com.mredrock.cyxbs.lib.course.internal.day.ISingleDayItem
 interface IOverlapItem : ISingleDayItem, Comparable<IOverlapItem> {
   
   /**
-   * [position] 位置是否显示
+   * [row] 位置是否显示
    */
-  fun isDisplayable(position: Int): Boolean
+  fun isDisplayable(row: Int): Boolean
   
   /**
    * 被重叠时的回调
-   * @param position 自己的第 [position] 的位置被重叠
+   * @param row 自己的第 [row] 的位置被重叠
    */
-  fun onOverlapped(position: Int, item: IOverlapItem?)
+  fun onAboveItem(row: Int, item: IOverlapItem?)
   
   /**
    * 重叠了其他 item 时的回调
-   * @param position 自己的第 [position] 的位置重叠了另一个 item
+   * @param row 自己的第 [row] 的位置重叠了另一个 item
    */
-  fun onOverlapping(position: Int, item: IOverlapItem?)
+  fun onBelowItem(row: Int, item: IOverlapItem?)
   
   /**
    * 即将被移除时的回调
@@ -44,14 +44,14 @@ interface IOverlapItem : ISingleDayItem, Comparable<IOverlapItem> {
   fun isAllowToAddIntoCourse(context: Context): Boolean
   
   /**
-   * 得到 [position] 位置重叠在上面的 item
+   * 得到 [row] 位置重叠在上面的 item
    */
-  fun getAboveItem(position: Int): IOverlapItem?
+  fun getAboveItem(row: Int): IOverlapItem?
   
   /**
-   * 得到 [position] 位置重叠在下面的 item
+   * 得到 [row] 位置重叠在下面的 item
    */
-  fun getBelowItem(position: Int): IOverlapItem?
+  fun getBelowItem(row: Int): IOverlapItem?
   
   /**
    * 用于比较处于同一格时的前后顺序

@@ -8,9 +8,7 @@ import androidx.fragment.app.viewModels
 import androidx.viewpager2.widget.ViewPager2
 import com.mredrock.cyxbs.course.R
 import com.mredrock.cyxbs.course.page.course.ui.home.base.BaseHomeCourseVpFragment
-import com.mredrock.cyxbs.course.page.course.ui.home.helper.RefreshLayoutHelper
 import com.mredrock.cyxbs.course.page.course.ui.home.viewmodel.HomeCourseViewModel
-import com.mredrock.cyxbs.lib.course.fragment.page.CoursePageFragment
 import com.mredrock.cyxbs.lib.utils.extensions.gone
 import com.mredrock.cyxbs.lib.utils.extensions.setOnSingleClickListener
 import com.mredrock.cyxbs.lib.utils.utils.SchoolCalendarUtil
@@ -49,6 +47,7 @@ class HomeCourseVpFragment : BaseHomeCourseVpFragment() {
     super.onViewCreated(view, savedInstanceState)
     initTouch()
     initRefresh()
+    initViewPager()
     initObserve()
   }
   
@@ -70,18 +69,20 @@ class HomeCourseVpFragment : BaseHomeCourseVpFragment() {
   }
   
   private fun initRefresh() {
-    RefreshLayoutHelper.attach(mRefreshLayout)
-    mRefreshLayout.setOnRefreshListener {
+    mRefreshLayout.setEnableHeaderTranslationContent(false)
+    mRefreshLayout.setHeaderHeight(0F)
+    mRefreshLayout.setOnLoadMoreListener {
       mViewModel.retryObserveHomeWeekData()
     }
   }
   
+  private fun initViewPager() {
+    // 初次加载时移到对应的周数
+    // 这里课表的翻页不建议带有动画，因为数据过多会较卡
+    mViewPager.setCurrentItem(if (mNowWeek >= mVpAdapter.itemCount) 0 else mNowWeek, false)
+  }
+  
   private fun initObserve() {
-    mViewModel.homeWeekData.observe {
-      // 这里课表的翻页不建议带有动画，因为数据过多会较卡
-      mViewPager.setCurrentItem(if (mNowWeek >= mVpAdapter.itemCount) 0 else mNowWeek, false)
-      mRefreshLayout.finishRefresh()
-    }
     mViewModel.linkStu.observe {
       if (it.isNull()) {
         mIvLink.gone()
@@ -93,9 +94,13 @@ class HomeCourseVpFragment : BaseHomeCourseVpFragment() {
         }
       }
     }
-  }
-  
-  override fun createFragment(position: Int): CoursePageFragment {
-    return if (position == 0) HomeSemesterFragment() else HomeWeekFragment.newInstance(position)
+    mViewModel.refreshEvent.collectLaunch {
+      mRefreshLayout.finishLoadMore()
+      if (it) {
+        toast("刷新成功！")
+      } else {
+        toast("刷新失败！")
+      }
+    }
   }
 }

@@ -10,8 +10,8 @@ import com.mredrock.cyxbs.course.page.find.room.FindTeaEntity
 import com.mredrock.cyxbs.lib.base.ui.BaseViewModel
 import com.mredrock.cyxbs.lib.utils.extensions.asFlow
 import com.mredrock.cyxbs.lib.utils.extensions.lazyUnlock
-import com.mredrock.cyxbs.lib.utils.extensions.mapOrThrowApiException
 import com.mredrock.cyxbs.lib.utils.network.api
+import com.mredrock.cyxbs.lib.utils.network.mapOrThrowApiException
 import io.reactivex.rxjava3.schedulers.Schedulers
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.*

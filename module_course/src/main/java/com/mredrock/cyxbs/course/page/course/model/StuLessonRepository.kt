@@ -9,6 +9,7 @@ import com.mredrock.cyxbs.course.page.course.network.CourseApiServices
 import com.mredrock.cyxbs.lib.utils.extensions.lazyUnlock
 import com.mredrock.cyxbs.lib.utils.extensions.toast
 import com.mredrock.cyxbs.lib.utils.extensions.unsafeSubscribeBy
+import com.mredrock.cyxbs.lib.utils.network.ApiException
 import com.mredrock.cyxbs.lib.utils.network.api
 import com.mredrock.cyxbs.lib.utils.service.impl
 import com.mredrock.cyxbs.lib.utils.utils.SchoolCalendarUtil
@@ -71,11 +72,9 @@ object StuLessonRepository {
   }
   
   /**
-   * 得到某人的课
+   * 刷新某人的课，会抛出网络异常
    */
-  fun getLesson(
-    stuNum: String,
-  ): Single<List<StuLessonEntity>> {
+  fun refreshLesson(stuNum: String): Single<List<StuLessonEntity>> {
     if (stuNum.isEmpty()) return Single.error(IllegalArgumentException("学号不能为空！"))
     return CourseApiServices::class.api
       .getStuLesson(stuNum)
@@ -83,11 +82,21 @@ object StuLessonRepository {
         when (it.status) {
           200 -> httpFromStuWhen200(it)
           233 -> httpFromStuWhen233(it)
-          else -> httpFromStuWhenError(stuNum)
+          else -> throw ApiException(it.status, it.info)
         }
-      }.onErrorReturn {
-        httpFromStuWhenError(stuNum)
       }.subscribeOn(Schedulers.io())
+  }
+  
+  /**
+   * 得到某人的课，不会抛出任何异常
+   */
+  fun getLesson(
+    stuNum: String,
+  ): Single<List<StuLessonEntity>> {
+    return refreshLesson(stuNum)
+      .onErrorReturn {
+        httpFromStuWhenError(stuNum)
+      }
   }
   
   @WorkerThread
@@ -97,7 +106,7 @@ object StuLessonRepository {
   
   @WorkerThread
   private fun httpFromStuWhen200(bean: StuLessonBean): List<StuLessonEntity> {
-    if (bean.judgeVersion()) {
+    if (bean.judgeVersion(true)) {
       val list = bean.toStuLessonEntity()
       // 更新日历
       SchoolCalendarUtil.updateFirstCalendar(bean.nowWeek)

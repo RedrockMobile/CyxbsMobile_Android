@@ -1,8 +1,9 @@
 package com.mredrock.cyxbs.course.page.course.item.lesson.lp
 
+import com.mredrock.cyxbs.course.page.course.data.LessonData
+import com.mredrock.cyxbs.course.page.course.data.expose.IWeek
 import com.mredrock.cyxbs.course.page.course.item.IRank
 import com.mredrock.cyxbs.lib.course.internal.lesson.BaseLessonLayoutParams
-import com.mredrock.cyxbs.lib.course.internal.lesson.ILessonData
 import com.ndhzs.netlayout.attrs.NetLayoutParams
 
 /**
@@ -12,7 +13,7 @@ import com.ndhzs.netlayout.attrs.NetLayoutParams
  * @email guo985892345@foxmail.com
  * @date 2022/9/2 17:21
  */
-class SelfLessonLayoutParams(data: ILessonData) : BaseLessonLayoutParams(data), IRank {
+class SelfLessonLayoutParams(data: LessonData) : BaseLessonLayoutParams(data), IRank, IWeek by data {
   
   override val rank: Int
     get() = 1

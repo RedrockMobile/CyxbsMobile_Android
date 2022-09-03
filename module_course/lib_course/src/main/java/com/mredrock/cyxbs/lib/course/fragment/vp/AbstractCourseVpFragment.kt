@@ -7,6 +7,7 @@ import androidx.fragment.app.Fragment
 import androidx.viewpager2.adapter.FragmentStateAdapter
 import com.mredrock.cyxbs.lib.base.ui.BaseFragment
 import com.mredrock.cyxbs.lib.course.fragment.vp.expose.ICourseVp
+import com.mredrock.cyxbs.lib.utils.extensions.lazyUnlock
 
 /**
  * ...
@@ -17,7 +18,7 @@ import com.mredrock.cyxbs.lib.course.fragment.vp.expose.ICourseVp
  */
 abstract class AbstractCourseVpFragment : BaseFragment(), ICourseVp {
   
-  override val mVpAdapter: FragmentStateAdapter = CourseAdapter()
+  override val mVpAdapter: FragmentStateAdapter by lazyUnlock { CourseAdapter(this) }
   
   @CallSuper
   override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -25,7 +26,7 @@ abstract class AbstractCourseVpFragment : BaseFragment(), ICourseVp {
     mViewPager.adapter = mVpAdapter
   }
   
-  private inner class CourseAdapter : FragmentStateAdapter(this) {
+  private inner class CourseAdapter(fragment: Fragment) : FragmentStateAdapter(fragment) {
     override fun getItemCount(): Int = mPageCount
     override fun createFragment(position: Int): Fragment = this@AbstractCourseVpFragment.createFragment(position)
   }

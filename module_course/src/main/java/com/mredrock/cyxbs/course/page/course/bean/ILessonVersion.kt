@@ -1,8 +1,10 @@
 package com.mredrock.cyxbs.course.page.course.bean
 
 import androidx.annotation.WorkerThread
+import com.mredrock.cyxbs.course.BuildConfig
 import com.mredrock.cyxbs.course.page.course.room.LessonDataBase
 import com.mredrock.cyxbs.course.page.course.room.LessonVerEntity
+import com.mredrock.cyxbs.lib.utils.extensions.toast
 
 /**
  * 比对课表版本号所必须的变量
@@ -22,7 +24,7 @@ sealed interface ILessonVersion {
    * @param defaultWhenSame 当版本号大小相等的时候，决定是否更新，默认为 true
    */
   @WorkerThread
-  fun judgeVersion(defaultWhenSame: Boolean = true): Boolean {
+  fun judgeVersion(defaultWhenSame: Boolean): Boolean {
     // 版本号保存于数据库中
     val oldVersion = LessonDataBase.INSTANCE.getLessonVerDao()
       .getVersion(num)?.version ?: "0.0.0"
@@ -31,6 +33,9 @@ sealed interface ILessonVersion {
     if (newVersionList.size != oldVersionList.size) {
       // 不应该出现这种情况，因为版本号规定形式为：0.0.0
       // 如果出现，可以认为是远端出现问题，所以就不对本地数据进行更新
+      if (BuildConfig.DEBUG) {
+        toast("课表接口version错误：$version")
+      }
       return false
     }
     for (i in oldVersionList.indices) {

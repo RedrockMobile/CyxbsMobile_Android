@@ -35,12 +35,6 @@ class CourseServiceImpl : ICourseService {
     id: Int,
     arg: ICourseService.ICourseArgs
   ) {
-    val fragment = findFragment<FindStuCourseFragment>(fm, id)
-    if (fragment == null) {
-      fm.commit { replace(id, FindStuCourseFragment.newInstance(arg)) }
-    } else {
-      fm.commit { replace(id, FindStuCourseFragment.newInstance(arg)) }
-    }
   }
   
   override fun replaceStuCourseFragmentById(
@@ -56,15 +50,6 @@ class CourseServiceImpl : ICourseService {
     id: Int,
     arg: ICourseService.ICourseArgs
   ) {
-    val fragment = findFragment<FindTeaCourseFragment>(fm, id)
-    if (fragment == null) {
-      fm.commit { replace(id, FindTeaCourseFragment.newInstance(arg)) }
-    } else {
-      if (!fragment.isCanRefreshWhenNewArg(arg)) {
-        // 如果不能够更新就生成新的 Fragment，然后重新提交
-        fm.commit { replace(id, FindTeaCourseFragment.newInstance(arg)) }
-      }
-    }
   }
   
   override fun init(context: Context) {

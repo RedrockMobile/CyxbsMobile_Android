@@ -5,6 +5,7 @@ import android.util.AttributeSet
 import com.mredrock.cyxbs.lib.course.R
 import com.mredrock.cyxbs.lib.course.internal.view.course.lp.ItemLayoutParams
 import com.mredrock.cyxbs.lib.course.internal.view.course.lp.XmlLayoutParams
+import com.ndhzs.netlayout.attrs.NetLayoutParams
 
 /**
  * ...
@@ -34,5 +35,16 @@ abstract class CourseLayoutParamsHandler @JvmOverloads constructor(
   
   override fun checkLayoutParams(p: LayoutParams?): Boolean {
     return p is ItemLayoutParams
+  }
+  
+  private var mCompareLayoutParams: Comparator<ItemLayoutParams>? = null
+  
+  final override fun setCompareLayoutParams(compare: Comparator<ItemLayoutParams>) {
+    mCompareLayoutParams = compare
+  }
+  
+  final override fun compareLayoutParams(o1: NetLayoutParams, o2: NetLayoutParams): Int {
+    return mCompareLayoutParams?.compare(o1 as ItemLayoutParams, o2 as ItemLayoutParams)
+      ?: super.compareLayoutParams(o1, o2)
   }
 }

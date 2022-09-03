@@ -217,7 +217,7 @@ class ShowResultActivity : BaseVmActivity<ShowResultViewModel>() {
                 height = 146.dp2px
               )
             ).setPositiveClick {
-              viewModel.deleteLinkStudent(data.linkStudent!!)
+              viewModel.deleteLinkStudent()
               dismiss()
             }.setDismissCallback {
               dismiss()

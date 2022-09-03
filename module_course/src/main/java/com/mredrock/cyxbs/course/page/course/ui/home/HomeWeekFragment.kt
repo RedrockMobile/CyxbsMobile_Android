@@ -4,6 +4,10 @@ import android.os.Bundle
 import android.view.View
 import androidx.core.os.bundleOf
 import androidx.fragment.app.createViewModelLazy
+import androidx.lifecycle.map
+import com.mredrock.cyxbs.course.page.course.item.affair.Affair
+import com.mredrock.cyxbs.course.page.course.item.lesson.LinkLesson
+import com.mredrock.cyxbs.course.page.course.item.lesson.SelfLesson
 import com.mredrock.cyxbs.course.page.course.ui.home.viewmodel.HomeCourseViewModel
 import com.mredrock.cyxbs.lib.course.fragment.page.CoursePageFragment
 import com.mredrock.cyxbs.lib.course.helper.CourseNowTimeHelper
@@ -24,13 +28,14 @@ class HomeWeekFragment : CoursePageFragment() {
     fun newInstance(week: Int): HomeWeekFragment {
       return HomeWeekFragment().apply {
         arguments = bundleOf(
-          this::mWeek.name to week
+          "mWeek" to week
         )
       }
     }
   }
   
-  private val mWeek by arguments.helper<Int>()
+//  private val mWeek by arguments.helper<Int>()
+  private val mWeek by lazyUnlock { arguments!!.getInt("mWeek") }
   
   private val mViewModel by createViewModelLazy(
     HomeCourseViewModel::class,
@@ -40,6 +45,7 @@ class HomeWeekFragment : CoursePageFragment() {
   override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
     super.onViewCreated(view, savedInstanceState)
     setWeekNum()
+    initObserve()
   }
   
   /**
@@ -52,7 +58,7 @@ class HomeWeekFragment : CoursePageFragment() {
       val startTimestamp = calendar.timeInMillis
       tvMonth.text = "${calendar.get(Calendar.MONTH) + 1}月"
       forEachWeek { _, month ->
-        month.text = calendar.get(Calendar.DATE).toString()
+        month.text = "${calendar.get(Calendar.DATE)}日"
         calendar.add(Calendar.DATE, 1) // 天数加 1
       }
       onIsInThisWeek(System.currentTimeMillis() in startTimestamp .. calendar.timeInMillis)
@@ -70,5 +76,17 @@ class HomeWeekFragment : CoursePageFragment() {
    */
   private fun onIsInThisWeek(boolean: Boolean) {
     mCourseNowTimeHelper.setVisible(boolean)
+  }
+  
+  private fun initObserve() {
+    mViewModel.homeWeekData
+      .map { it[mWeek] ?: HomeCourseViewModel.HomePageResult }
+      .observe { result ->
+        clearLesson()
+        clearAffair()
+        addLesson(result.selfLesson.map { SelfLesson(it) })
+        addLesson(result.linkLesson.map { LinkLesson(it) })
+        addAffair(result.affair.map { Affair(it) })
+      }
   }
 }

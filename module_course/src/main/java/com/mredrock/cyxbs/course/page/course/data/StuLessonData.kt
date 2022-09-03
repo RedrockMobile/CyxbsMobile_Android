@@ -23,7 +23,6 @@ data class StuLessonData(
   override val rawWeek: String,
   override val teacher: String,
   override val type: String,
-  val who: Who
 ) : LessonData() {
   companion object {
     val DIFF_UTIL by lazy {
@@ -40,13 +39,9 @@ data class StuLessonData(
       }
     }
   }
-  
-  enum class Who {
-    Self, Link
-  }
 }
 
-fun List<StuLessonEntity>.toStuLessonData(who: StuLessonData.Who) : List<StuLessonData> {
+fun List<StuLessonEntity>.toStuLessonData() : List<StuLessonData> {
   return buildList {
     this@toStuLessonData.forEach { entity ->
       entity.week.forEach { week ->
@@ -64,7 +59,6 @@ fun List<StuLessonEntity>.toStuLessonData(who: StuLessonData.Who) : List<StuLess
             entity.rawWeek,
             entity.teacher,
             entity.type,
-            who
           )
         )
       }

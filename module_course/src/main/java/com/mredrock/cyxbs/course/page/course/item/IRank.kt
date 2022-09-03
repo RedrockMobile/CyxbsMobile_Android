@@ -22,16 +22,16 @@ interface IRank : ISingleDayItemData {
   
   fun compareToInternal(other: IRank): Int {
     if (this === other) return 0 // 如果是同一个对象直接返回 0
-    return compare(weekNum - other.weekNum) {
+    return compareBy(weekNum - other.weekNum) {
       if (endRow < other.startRow) -1 else if (startRow > other.endRow) 1
       else {
         // 存在重叠的时候
-        compare(other.rank - rank) {
-          compare(other.length - length) { // 长度小的显示在上面
+        compareBy(other.rank - rank) {
+          compareBy(length - other.length) { // 长度大的显示在上面，因为后面的项目开发实训课一般都是不能请假的
             if (startRow == other.startRow && endRow == other.endRow) {
               return hashCode() - other.hashCode() // 为了不得出 0 的结果使用 hashCode()
             } else {
-              compare(getEndTime(endRow) - getNowTime()) {
+              compareBy(getEndTime(endRow) - getNowTime()) {
                 -1
               }
             }
@@ -42,7 +42,7 @@ interface IRank : ISingleDayItemData {
   }
   
   companion object {
-    inline fun compare(diff: Int, block: (diff: Int) -> Int): Int {
+    inline fun compareBy(diff: Int, block: (diff: Int) -> Int): Int {
       return if (diff != 0) diff else block.invoke(diff)
     }
   }

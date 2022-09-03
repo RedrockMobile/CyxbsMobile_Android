@@ -87,4 +87,6 @@ class CourseViewGroup @JvmOverloads constructor(
     
     child.measure(childWidthMeasureSpec, childHeightMeasureSpec)
   }
+  
+  
 }

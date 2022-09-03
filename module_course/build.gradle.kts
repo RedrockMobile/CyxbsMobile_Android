@@ -3,7 +3,7 @@ import com.mredrock.cyxbs.convention.depend.*
 import com.mredrock.cyxbs.convention.depend.lib.*
 
 plugins {
-  id("module-manager")
+  id("module-debug")
 }
 
 dependLibBase()
@@ -11,7 +11,6 @@ dependLibUtils()
 dependLibConfig()
 
 dependApiAccount()
-dependApiMain()
 
 dependRoom()
 dependRoomRxjava()
@@ -20,5 +19,5 @@ dependNetwork()
 dependSmartRefreshLayout()
 
 dependencies {
-  implementation(SmartRefreshLayout.`header-material`)
+  implementation(SmartRefreshLayout.`footer-ball`)
 }

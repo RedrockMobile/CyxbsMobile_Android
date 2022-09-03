@@ -55,11 +55,16 @@ class ShowResultViewModel : BaseViewModel() {
       }
   }
   
-  fun deleteLinkStudent(entity: LinkStuEntity) {
-    LinkRepository.deleteLinkStudent(entity)
-      .asFlow()
-      .collectLaunch {
-        _deleteLinkResult.emit(it)
+  fun deleteLinkStudent() {
+    LinkRepository.deleteLinkStudent()
+      .doOnError {
+        viewModelScope.launch {
+          _deleteLinkResult.emit(false)
+        }
+      }.safeSubscribeBy {
+        viewModelScope.launch {
+          _deleteLinkResult.emit(true)
+        }
       }
   }
 }

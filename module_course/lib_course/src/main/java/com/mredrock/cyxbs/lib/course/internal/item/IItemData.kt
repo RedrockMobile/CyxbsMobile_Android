@@ -12,13 +12,13 @@ import com.ndhzs.netlayout.attrs.INetBean
 interface IItemData : INetBean {
 }
 
-inline fun IItemData.forEachColumn(block: (column: Int) -> Unit) {
+inline fun IItemData.forEachColumn(crossinline block: (column: Int) -> Unit) {
   for (column in startColumn .. endColumn) {
     block.invoke(column)
   }
 }
 
-inline fun IItemData.forEachRow(block: (row: Int) -> Unit) {
+inline fun IItemData.forEachRow(crossinline block: (row: Int) -> Unit) {
   for (row in startRow .. endRow) {
     block.invoke(row)
   }

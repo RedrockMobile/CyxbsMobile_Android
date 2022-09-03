@@ -42,7 +42,7 @@ object TeaLessonRepository {
   
   @WorkerThread
   private fun httpFromTeaWhen200(bean: TeaLessonBean): List<TeaLessonEntity> {
-    if (bean.judgeVersion()) {
+    if (bean.judgeVersion(true)) {
       val list = bean.toTeaLessonEntity()
       mTeaDB.resetData(bean.teaNum, list)
       return list

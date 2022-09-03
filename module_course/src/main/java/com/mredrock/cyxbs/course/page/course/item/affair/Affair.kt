@@ -3,12 +3,15 @@ package com.mredrock.cyxbs.course.page.course.item.affair
 import android.content.Context
 import android.graphics.*
 import android.view.View
+import androidx.core.view.forEach
 import com.mredrock.cyxbs.course.R
 import com.mredrock.cyxbs.course.page.course.data.AffairData
+import com.mredrock.cyxbs.course.page.course.data.expose.IWeek
 import com.mredrock.cyxbs.course.page.course.item.IRank
 import com.mredrock.cyxbs.course.page.course.item.affair.lp.AffairLayoutParams
 import com.mredrock.cyxbs.course.page.course.item.view.ItemView
 import com.mredrock.cyxbs.lib.course.fragment.item.IOverlapItem
+import com.mredrock.cyxbs.lib.course.internal.item.forEachRow
 import com.mredrock.cyxbs.lib.course.item.AbstractAffair
 import com.mredrock.cyxbs.lib.utils.extensions.color
 import com.mredrock.cyxbs.lib.utils.extensions.dp2px
@@ -22,19 +25,33 @@ import kotlin.math.sqrt
  * @email guo985892345@foxmail.com
  * @date 2022/9/2 16:43
  */
-class Affair(val data: AffairData) : AbstractAffair(data), IRank {
+class Affair(val data: AffairData) : AbstractAffair(data), IRank, IWeek by data {
   
   override val rank: Int
     get() = lp.rank
   
   override val lp: AffairLayoutParams = AffairLayoutParams(data)
   
-  override fun createView(context: Context, startNode: Int, length: Int): View {
+  override fun createView(context: Context, parentStartRow: Int, parentEndRow: Int): View {
     return AffairView.newInstance(context, data)
   }
   
   override fun compareTo(other: IOverlapItem): Int {
     return if (other is IRank) compareToInternal(other) else 1
+  }
+  
+  override fun onAddIntoCourse() {
+    super.onAddIntoCourse()
+    forEachRow { row ->
+      if (getBelowItem(row) != null) {
+        view.forEach {
+          if (it is ItemView) {
+            it.setIsShowOverlapTag(true)
+          }
+        }
+        return@forEachRow
+      }
+    }
   }
   
   /**
@@ -112,6 +129,7 @@ class Affair(val data: AffairData) : AbstractAffair(data), IRank {
         )
       }
       canvas.restore()
+      drawOverlapTag(canvas) // 因为会被上面的覆盖，所以需要单独再绘制一遍
     }
   }
 }

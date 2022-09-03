@@ -19,16 +19,13 @@ class LinkCardViewModel : BaseViewModel() {
   val linkStudent: LiveData<LinkStuEntity?>
     get() = _linkStudent
   
-  fun deleteLinkStudent(entity: LinkStuEntity) {
-    LinkRepository.deleteLinkStudent(entity)
+  fun deleteLinkStudent() {
+    LinkRepository.deleteLinkStudent()
       .observeOn(AndroidSchedulers.mainThread())
-      .safeSubscribeBy {
-        if (it) {
-          toast("取消关联成功")
-          _linkStudent.value = null
-        } else {
-          toast("取消关联失败")
-        }
+      .doOnError {
+        toast("取消关联失败")
+      }.safeSubscribeBy {
+        toast("取消关联成功")
       }
   }
   

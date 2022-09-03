@@ -4,6 +4,7 @@ import android.content.Context
 import android.view.View
 import com.mredrock.cyxbs.course.R
 import com.mredrock.cyxbs.course.page.course.data.LessonData
+import com.mredrock.cyxbs.course.page.course.data.expose.IWeek
 import com.mredrock.cyxbs.course.page.course.item.IRank
 import com.mredrock.cyxbs.course.page.course.item.lesson.lp.SelfLessonLayoutParams
 import com.mredrock.cyxbs.course.page.course.item.view.ItemView
@@ -17,14 +18,14 @@ import com.mredrock.cyxbs.lib.utils.extensions.color
  * @email guo985892345@foxmail.com
  * @date 2022/9/2 16:43
  */
-class SelfLesson(val data: LessonData) : BaseLesson(data), IRank {
+class SelfLesson(val data: LessonData) : BaseLesson(data), IRank, IWeek by data {
   
   override val rank: Int
     get() = lp.rank
   
   override val lp: SelfLessonLayoutParams = SelfLessonLayoutParams(data)
   
-  override fun createView(context: Context, startNode: Int, length: Int): View {
+  override fun createView(context: Context, parentStartRow: Int, parentEndRow: Int): View {
     return SelfLessonView.newInstance(context, data)
   }
   

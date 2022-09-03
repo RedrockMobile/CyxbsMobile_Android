@@ -11,11 +11,15 @@ import androidx.core.animation.doOnEnd
 import androidx.fragment.app.activityViewModels
 import com.mredrock.cyxbs.course.R
 import com.mredrock.cyxbs.course.page.find.room.FindStuEntity
+import com.mredrock.cyxbs.course.page.find.viewmodel.activity.FindCourseViewModel
 import com.mredrock.cyxbs.course.page.link.room.LinkStuEntity
 import com.mredrock.cyxbs.course.page.link.viewmodel.fragment.LinkCardViewModel
 import com.mredrock.cyxbs.lib.base.dailog.ChooseDialog
 import com.mredrock.cyxbs.lib.base.ui.mvvm.BaseVmFragment
 import com.mredrock.cyxbs.lib.utils.extensions.dp2px
+import com.mredrock.cyxbs.lib.utils.extensions.gone
+import com.mredrock.cyxbs.lib.utils.extensions.setOnSingleClickListener
+import com.mredrock.cyxbs.lib.utils.extensions.visible
 
 /**
  * ...
@@ -62,7 +66,7 @@ class LinkCardFragment : BaseVmFragment<LinkCardViewModel>() {
               height = 146.dp2px,
             )
           ).setPositiveClick {
-            viewModel.deleteLinkStudent(mLinkStu)
+            viewModel.deleteLinkStudent()
             dismiss()
           }.setDismissCallback {
             dismiss()

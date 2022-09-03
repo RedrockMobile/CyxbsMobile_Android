@@ -4,6 +4,7 @@ import com.mredrock.cyxbs.api.course.utils.getEnd
 import com.mredrock.cyxbs.api.course.utils.getShowEndTimeStr
 import com.mredrock.cyxbs.api.course.utils.getShowStartTimeStr
 import com.mredrock.cyxbs.api.course.utils.getStart
+import com.mredrock.cyxbs.course.page.course.data.expose.IWeek
 import com.mredrock.cyxbs.lib.course.internal.lesson.ILessonData
 import com.mredrock.cyxbs.lib.utils.utils.Num2CN
 
@@ -13,8 +14,8 @@ import com.mredrock.cyxbs.lib.utils.utils.Num2CN
  * @email 2767465918@qq.com
  * @date 2022/5/10 21:13
  */
-sealed class LessonData : ILessonData {
-  abstract val week: Int
+sealed class LessonData : ILessonData, IWeek {
+  abstract override val week: Int
   abstract val beginLesson: Int
   abstract val classroom: String
   abstract val course: String

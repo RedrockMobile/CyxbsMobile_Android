@@ -5,6 +5,7 @@ import com.mredrock.cyxbs.lib.course.internal.item.IItemContainer
 import com.mredrock.cyxbs.lib.course.internal.lesson.ILessonContainer
 import com.mredrock.cyxbs.lib.course.internal.touch.IMultiTouch
 import com.mredrock.cyxbs.lib.course.internal.view.IView
+import com.mredrock.cyxbs.lib.course.internal.view.course.lp.ItemLayoutParams
 import com.ndhzs.netlayout.child.IChildExistListenerProvider
 import com.ndhzs.netlayout.draw.ItemDecorationProvider
 import com.ndhzs.netlayout.orientation.IColumn
@@ -36,4 +37,6 @@ interface ICourseViewGroup : IView,
    * debug 属性，开启后会绘制表格
    */
   var debug: Boolean
+  
+  fun setCompareLayoutParams(compare: Comparator<ItemLayoutParams>)
 }

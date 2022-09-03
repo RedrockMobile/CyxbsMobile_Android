@@ -47,6 +47,10 @@ abstract class ItemView(context: Context) : CardView(context) {
   
   override fun onDraw(canvas: Canvas) {
     super.onDraw(canvas)
+    drawOverlapTag(canvas)
+  }
+  
+  protected fun drawOverlapTag(canvas: Canvas) {
     if (mIsShowOverlapTag) {
       // 绘制右上角的重叠标志
       val l = width - 12.dp2pxF

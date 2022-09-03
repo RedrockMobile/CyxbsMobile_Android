@@ -1,5 +1,6 @@
 package com.mredrock.cyxbs.course.page.course.data
 
+import com.mredrock.cyxbs.course.page.course.data.expose.IWeek
 import com.mredrock.cyxbs.lib.course.internal.affair.IAffairData
 
 /**
@@ -15,11 +16,11 @@ data class AffairData(
   val time: Int, // 提醒时间
   val title: String,
   val content: String,
-  val week: Int, // 在哪一周
+  override val week: Int, // 在哪一周
   val beginLesson: Int,  // 开始节数，如：1、2 节课以 1 开始；3、4 节课以 3 开始，注意：中午是以 -1 开始，傍晚是以 -2 开始
   val day: Int, // 星期数，星期一为 0
   val period: Int, // 长度
-) : IAffairData {
+) : IAffairData, IWeek {
   
   override val weekNum: Int
     get() = day + 1
