@@ -38,12 +38,11 @@ object LinkRepository {
   fun observeLinkStudent(): Observable<LinkStuEntity> {
     return IAccountService::class.impl
       .getUserService()
-      .observeStuNumUnsafe()
-      .switchMap { // 使用 switchMap 可以停止之前学号的订阅
-        val stuNum = it.getOrNull()
-        if (stuNum == null) Observable.never() // 这里如果使用 Observable.empty()，效果跟 never 一样
-        else {
-          mLinkStuDB.observeLinkStu(stuNum)
+      .observeStuNumState()
+      .switchMap { value ->
+        // 使用 switchMap 可以停止之前学号的订阅
+        value.nullUnless(Observable.never()) { // 这里如果使用 Observable.empty()，效果跟 never 一样
+          mLinkStuDB.observeLinkStu(it) // 然后观察数据库
             .distinctUntilChanged() // 必加，因为 Room 每次修改都会回调，所以需要加个这个去重
             .doOnSubscribe {
               // 在开始订阅时请求一次云端数据

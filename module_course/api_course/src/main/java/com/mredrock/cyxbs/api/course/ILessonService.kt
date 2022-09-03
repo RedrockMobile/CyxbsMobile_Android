@@ -3,6 +3,7 @@ package com.mredrock.cyxbs.api.course
 import com.alibaba.android.arouter.facade.template.IProvider
 import io.reactivex.rxjava3.core.Observable
 import io.reactivex.rxjava3.core.Single
+import java.io.Serializable
 
 /**
  * ...
@@ -47,5 +48,5 @@ interface ILessonService : IProvider {
     val rawWeek: String, // 周期
     val teacher: String,
     val type: String, // 选修 or 必修
-  )
+  ) : Serializable
 }

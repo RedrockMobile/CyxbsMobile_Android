@@ -36,11 +36,12 @@ object StuLessonRepository {
   fun observeSelfLesson(): Observable<List<StuLessonEntity>> {
     return IAccountService::class.impl
       .getUserService()
-      .observeStuNumUnsafe()
-      .switchMap { // 使用 switchMap 可以停止之前学号的订阅
-        val stuNum = it.getOrNull()
-        if (stuNum == null) Observable.never() // 这里如果使用 Observable.empty()，效果跟 never 一样
-        else observeLesson(stuNum)
+      .observeStuNumState()
+      .switchMap { value ->
+        // 使用 switchMap 可以停止之前学号的订阅
+        value.nullUnless(Observable.never()) { // 这里如果使用 Observable.empty()，效果跟 never 一样
+          observeLesson(it)
+        }
       }
   }
   
@@ -63,9 +64,9 @@ object StuLessonRepository {
     return LessonDataBase.INSTANCE.getStuLessonDao()
       .observeLesson(stuNum)
       .doOnSubscribe {
-        // 在开始订阅时异步请求一次云端数据，所以下游会先拿到本地数据库中的数据，如果远端数据更新了，该流会再次通知
+        // 在开始订阅时异步请求一次云端数据，所以下游会先拿到本地数据库中的数据，如果远端数据更新了，整个流会再次通知
         getLesson(stuNum).unsafeSubscribeBy()
-      }.distinctUntilChanged() // 去重加载这里是因为周数可能发生改变
+      }.distinctUntilChanged() // 去重
       .subscribeOn(Schedulers.io())
   }
   

@@ -13,3 +13,6 @@ const val COURSE_SERVICE = "/course/service"
 
 // 课表服务模块-某人的课
 const val COURSE_LESSON = "/course/service/lesson"
+
+// 课表服务模块-关联人
+const val COURSE_LINK = "/course/service/link"
