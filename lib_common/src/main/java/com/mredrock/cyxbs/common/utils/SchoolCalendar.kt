@@ -17,6 +17,7 @@ open class SchoolCalendar {
     var firstDay: Calendar = GregorianCalendar(2015, Calendar.SEPTEMBER, 7)
     var calendar: Calendar
     
+    @Deprecated("过时方法，之后不会在做兼容，请使用静态方法代替")
     constructor() {
         // 鄙人认为，在这个时候，我们有必要去更新一下firstDay
         val first = BaseApp.appContext.defaultSharedPreferences.getLong(FIRST_MON_DAY, firstDay.timeInMillis)
@@ -26,15 +27,7 @@ open class SchoolCalendar {
         calendar.timeZone = TimeZone.getTimeZone("GMT+8:00")
     }
     
-    constructor(date: Date?) : this() {
-        calendar.time = date
-    }
-    
-    constructor(timestamp: Long) : this(Date(timestamp * 1000))
-    constructor(year: Int, month: Int, day: Int) {
-        calendar = GregorianCalendar(year, month, day)
-    }
-    
+    @Deprecated("过时方法，之后不会在做兼容，请使用静态方法代替")
     constructor(week: Int, weekDay: Int) : this() {
         var mWeekDay = weekDay
         calendar = firstDay
