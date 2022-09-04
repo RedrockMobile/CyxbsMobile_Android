@@ -255,9 +255,8 @@ class ScheduleViewAdapter(private val mActivity: Activity,
     }
 
     override fun getHighLightPosition(): Int? {
-        val schoolCalendar = SchoolCalendar()
         val now = Calendar.getInstance()
-        val nowWeek = schoolCalendar.weekOfTerm
+        val nowWeek = SchoolCalendar.getWeekOfTerm()
         if (nowWeek == mNowWeek) {
             return (now.get(Calendar.DAY_OF_WEEK) + 5) % 7
         }

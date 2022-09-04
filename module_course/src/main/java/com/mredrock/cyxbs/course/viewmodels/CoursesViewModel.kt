@@ -154,16 +154,11 @@ class CoursesViewModel : BaseViewModel() {
 
     // 表示今天是在第几周。
     var nowWeek = MutableLiveData<Int>().apply {
-        val schoolCalendar = SchoolCalendar()
-        schoolCalendar.weekOfTerm.let {
-            value = if (it in 1..21) {
-                it
-            } else {
-                0
-            }
-        }
-        value?.let {
-            sendTopText(schoolCalendar.firstDay, it)
+        val week = SchoolCalendar.getWeekOfTerm() ?: 0
+        value = week
+        val firstDay = SchoolCalendar.getFirstMonDayOfTerm()
+        if (firstDay != null) {
+            sendTopText(firstDay, week)
         }
     }
 

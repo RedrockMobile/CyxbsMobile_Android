@@ -64,7 +64,7 @@ interface IUserService {
      *
      * 没有数据倒灌的 Observable，即每次订阅不会发送之前的最新值
      *
-     * 因为 Rxjava 不允许数据为空值，所以使用 Result 包裹了一层
+     * 因为 Rxjava 不允许数据为空值，所以使用 Value 包裹了一层
      *
      * # 注意生命周期问题！
      * ## 如果你在新模块中使用
@@ -81,7 +81,7 @@ interface IUserService {
      * ```
      * IAccountService::class.impl
      *     .getUserService()
-     *     .observeStuNumState()
+     *     .observeStuNumEvent()
      *     .asFlow()
      *     .onEach {
      *         it.nullUnless {
