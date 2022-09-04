@@ -35,7 +35,8 @@ interface IUserStateService {
 
     fun loginByTourist()
 
-    fun refresh(onError: () -> Unit = {}, action: (token: String) -> Unit = { s: String -> })
+    @Throws(Exception::class)
+    fun refresh(): String?
 
     fun isLogin(): Boolean
 
@@ -64,7 +65,7 @@ interface IUserStateService {
     
     
     /**
-     * 观察学号的改变的状态
+     * 观察登录状态改变（状态）
      *
      * 有数据倒灌的 Observable，每次订阅会发送之前的最新值
      *
@@ -85,7 +86,7 @@ interface IUserStateService {
     fun observeUserStateState(): Observable<UserState>
     
     /**
-     * 观察学号的改变的事件
+     * 观察登录状态改变（事件）
      *
      * 没有数据倒灌的 Observable，即每次订阅不会发送之前的最新值
      *
