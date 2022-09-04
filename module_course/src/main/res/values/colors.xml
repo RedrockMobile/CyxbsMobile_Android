@@ -24,9 +24,6 @@
     <!--课表双人图标-->
     <color name="course_item_header_double">#4A44E4</color>
 
-    <!--课表标识当天阴影-->
-    <color name="course_now_day_highlight">#93E8F0FC</color>
-
     <!--添加事务时标题-->
     <color name="course_add_affair_title_tv">#122D55</color>
 

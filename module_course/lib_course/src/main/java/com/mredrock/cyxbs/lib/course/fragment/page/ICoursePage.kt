@@ -2,6 +2,7 @@ package com.mredrock.cyxbs.lib.course.fragment.page
 
 import com.mredrock.cyxbs.lib.course.fragment.page.expose.ICourseTouch
 import com.mredrock.cyxbs.lib.course.fragment.page.expose.INoLesson
+import com.mredrock.cyxbs.lib.course.fragment.page.expose.IToday
 import com.mredrock.cyxbs.lib.course.fragment.page.expose.IWeekWrapper
 
 /**
@@ -13,7 +14,8 @@ import com.mredrock.cyxbs.lib.course.fragment.page.expose.IWeekWrapper
  */
 interface ICoursePage :
   ICourseTouch,
-  IWeekWrapper,
-  INoLesson
+  INoLesson,
+  IToday,
+  IWeekWrapper
 {
 }

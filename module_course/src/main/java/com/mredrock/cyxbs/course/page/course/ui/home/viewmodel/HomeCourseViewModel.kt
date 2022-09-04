@@ -13,7 +13,6 @@ import com.mredrock.cyxbs.lib.base.ui.BaseViewModel
 import io.reactivex.rxjava3.core.Completable
 import io.reactivex.rxjava3.core.Observable
 import io.reactivex.rxjava3.core.Single
-import io.reactivex.rxjava3.subjects.BehaviorSubject
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.SharedFlow
 import kotlinx.coroutines.launch
@@ -48,14 +47,27 @@ class HomeCourseViewModel : BaseViewModel() {
   /**
    * 重新请求数据，相当于强制刷新，建议测试使用
    */
-  fun retryObserveHomeWeekData() {
-    mRetryObservable.onNext(Unit)
+  fun refreshData() {
+    LinkRepository.getLinkStudent()
+      .flatMapCompletable {
+        if (it.isNotNull()) {
+          // 直接调用网络刷新，请求成功后会修改数据库，然后上面的观察流会重新发送新的值
+          val self = StuLessonRepository.refreshLesson(it.selfNum)
+          val link = StuLessonRepository.refreshLesson(it.linkNum)
+          // TODO 刷新事务待完成
+          Single.mergeDelayError(self, link) // 使用 mergeDelayError() 延迟异常
+            .flatMapCompletable { Completable.complete() }
+        } else Completable.error(IllegalStateException("关联人数据为空！"))
+      }.doOnError {
+        viewModelScope.launch {
+          _refresh.emit(false)
+        }
+      }.safeSubscribeBy {
+        viewModelScope.launch {
+          _refresh.emit(true)
+        }
+      }
   }
-  
-  /**
-   * Rxjava 中类似于 LiveData 的东西，用于重新请求数据
-   */
-  private val mRetryObservable = BehaviorSubject.create<Unit>()
   
   init {
     initObserve()
@@ -90,30 +102,6 @@ class HomeCourseViewModel : BaseViewModel() {
     }.safeSubscribeBy {
       _homeWeekData.postValue(it)
     }
-    
-    // 刷新课表的观察
-    mRetryObservable
-      .safeSubscribeBy {
-        LinkRepository.getLinkStudent()
-          .flatMapCompletable {
-            if (it.isNotNull()) {
-              // 直接调用网络刷新，请求成功后会修改数据库，然后上面的观察流会重新发送新的值
-              val self = StuLessonRepository.refreshLesson(it.selfNum)
-              val link = StuLessonRepository.refreshLesson(it.linkNum)
-              // TODO 刷新事务待完成
-              Single.mergeDelayError(self, link) // 使用 mergeDelayError() 延迟异常
-                .flatMapCompletable { Completable.complete() }
-            } else Completable.error(IllegalStateException("关联人数据为空！"))
-          }.doOnError {
-            viewModelScope.launch {
-              _refresh.emit(false)
-            }
-          }.safeSubscribeBy {
-            viewModelScope.launch {
-              _refresh.emit(true)
-            }
-          }
-      }
   }
   
   /**

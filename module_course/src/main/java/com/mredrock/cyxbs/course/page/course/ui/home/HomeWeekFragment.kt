@@ -56,11 +56,8 @@ class HomeWeekFragment : CoursePageFragment() {
     if (calendar != null) {
       calendar.add(Calendar.DATE, (mWeek - 1) * 7)
       val startTimestamp = calendar.timeInMillis
-      tvMonth.text = "${calendar.get(Calendar.MONTH) + 1}月"
-      forEachWeek { _, month ->
-        month.text = "${calendar.get(Calendar.DATE)}日"
-        calendar.add(Calendar.DATE, 1) // 天数加 1
-      }
+      setMonth(calendar)
+      calendar.add(Calendar.DATE, 7)
       onIsInThisWeek(System.currentTimeMillis() in startTimestamp .. calendar.timeInMillis)
     } else {
       onIsInThisWeek(false)
@@ -76,6 +73,23 @@ class HomeWeekFragment : CoursePageFragment() {
    */
   private fun onIsInThisWeek(boolean: Boolean) {
     mCourseNowTimeHelper.setVisible(boolean)
+    if (boolean) {
+      val calendar = Calendar.getInstance()
+      val weekNum = (calendar.get(Calendar.DAY_OF_WEEK) + 5) % 7 + 1
+      /*
+      * 星期天：1 -> 7
+      * 星期一：2 -> 1
+      * 星期二：3 -> 2
+      * 星期三：4 -> 3
+      * 星期四：5 -> 4
+      * 星期五：6 -> 5
+      * 星期六：7 -> 6
+      *
+      * 左边一栏是 Calendar.get(Calendar.DAY_OF_WEEK) 得到的数字，
+      * 右边一栏是 weekNum 对应的数字
+      * */
+      showToday(weekNum)
+    }
   }
   
   private fun initObserve() {

@@ -6,7 +6,8 @@ import android.widget.TextView
 import androidx.annotation.CallSuper
 import com.mredrock.cyxbs.lib.course.R
 import com.mredrock.cyxbs.lib.course.fragment.page.expose.IWeekWrapper
-import com.ndhzs.netlayout.view.NetLayout
+import com.ndhzs.netlayout.view.NetLayout2
+import java.util.*
 
 /**
  * ...
@@ -16,9 +17,9 @@ import com.ndhzs.netlayout.view.NetLayout
  * @date 2022/8/31 17:56
  */
 @Suppress("LeakingThis")
-abstract class WeekWrapperImpl : NoLessonImpl(), IWeekWrapper {
+abstract class WeekWrapperImpl : TodayImpl(), IWeekWrapper {
   
-  override val nlWeek           by R.id.course_nl_week.view<NetLayout>()
+  override val nlWeek           by R.id.course_nl_week.view<NetLayout2>()
   override val tvMonth          by R.id.course_tv_month.view<TextView>()
   override val tvMonWeek        by R.id.course_tv_mon_week.view<TextView>()
   override val tvMonMonth       by R.id.course_tv_mon_month.view<TextView>()
@@ -35,7 +36,7 @@ abstract class WeekWrapperImpl : NoLessonImpl(), IWeekWrapper {
   override val tvSunWeek        by R.id.course_tv_sun_week.view<TextView>()
   override val tvSunMonth       by R.id.course_tv_sun_month.view<TextView>()
   
-  override fun forEachWeek(block: (week: TextView, month: TextView) -> Unit) {
+  override fun forEachWeekView(block: (week: TextView, month: TextView) -> Unit) {
     block.invoke(tvMonWeek, tvMonMonth)
     block.invoke(tvTueWeek, tvTueMonth)
     block.invoke(tvWedWeek, tvWedMonth)
@@ -45,9 +46,45 @@ abstract class WeekWrapperImpl : NoLessonImpl(), IWeekWrapper {
     block.invoke(tvSunWeek, tvSunMonth)
   }
   
+  override fun getWeekWeekView(weekNum: Int, block: (week: TextView, month: TextView) -> Unit) {
+    checkWeekNum(weekNum)
+    when (weekNum) {
+      1 -> block.invoke(tvMonWeek, tvMonMonth)
+      2 -> block.invoke(tvTueWeek, tvTueMonth)
+      3 -> block.invoke(tvWedWeek, tvWedMonth)
+      4 -> block.invoke(tvThuWeek, tvThuMonth)
+      5 -> block.invoke(tvFriWeek, tvFriMonth)
+      6 -> block.invoke(tvSatWeek, tvSatMonth)
+      7 -> block.invoke(tvSunWeek, tvSunMonth)
+    }
+  }
+  
   @CallSuper
   override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
     super.onViewCreated(view, savedInstanceState)
     nlWeek.syncColumnWeight(course) // 同步列比重
+  }
+  
+  override fun setMonth(monDay: Calendar) {
+    val calendar = monDay.clone() as Calendar
+    tvMonth.text = "${calendar.get(Calendar.MONTH) + 1}月"
+    forEachWeekView { _, month ->
+      month.text = "${calendar.get(Calendar.DATE)}日"
+      calendar.add(Calendar.DATE, 1) // 天数加 1
+    }
+  }
+  
+  override fun getWeekNumStartWidth(weekNum: Int): Int {
+    checkWeekNum(weekNum)
+    return course.getColumnsWidth(0, weekNum - 1)
+  }
+  
+  override fun getWeekNumEndWidth(weekNum: Int): Int {
+    checkWeekNum(weekNum)
+    return course.getColumnsWidth(0, weekNum)
+  }
+  
+  private fun checkWeekNum(weekNum: Int) {
+    require(weekNum in 1 .. 7) { "weekNum = $weekNum，超出边界！" }
   }
 }

@@ -10,4 +10,7 @@
     <color name="course_button_gradient_start_color">#2921D1</color>
     <color name="course_button_gradient_end_color">#5D5DF7</color>
 
+    <!--课表标识当天阴影-->
+    <color name="course_today_highlight">#26000101</color>
+
 </resources>

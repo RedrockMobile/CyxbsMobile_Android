@@ -29,7 +29,9 @@ class CourseNowTimeHelper private constructor(
   
   companion object {
     fun attach(course: ICourseBase): CourseNowTimeHelper {
-      return CourseNowTimeHelper(course)
+      return CourseNowTimeHelper(course).also {
+        course.course.addItemDecoration(it)
+      }
     }
   }
   
@@ -126,7 +128,6 @@ class CourseNowTimeHelper private constructor(
    */
   private fun getLineHeight(): Float {
     val now = getNowTime()
-    
     return when {
       now <= 6 * 60 -> {
         // 隐藏时间

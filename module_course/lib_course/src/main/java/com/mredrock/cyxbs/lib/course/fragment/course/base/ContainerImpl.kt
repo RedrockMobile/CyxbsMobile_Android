@@ -21,7 +21,7 @@ import java.util.*
 abstract class ContainerImpl : AbstractCourseBaseFragment(), ICourseContainer {
   
   /**
-   * 比较大小
+   * 比较大小，用于重叠时的判断
    *
    * @return > 0，则 o1 显示在 o2 上；= 0，则 o1 会替换 o2（只建议在同一个对象时返回 0）
    */

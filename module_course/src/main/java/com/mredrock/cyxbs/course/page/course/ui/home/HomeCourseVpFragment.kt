@@ -71,8 +71,9 @@ class HomeCourseVpFragment : BaseHomeCourseVpFragment() {
   private fun initRefresh() {
     mRefreshLayout.setEnableHeaderTranslationContent(false)
     mRefreshLayout.setHeaderHeight(0F)
+    mRefreshLayout.setFooterTriggerRate(0.9F)
     mRefreshLayout.setOnLoadMoreListener {
-      mViewModel.retryObserveHomeWeekData()
+      mViewModel.refreshData()
     }
   }
   

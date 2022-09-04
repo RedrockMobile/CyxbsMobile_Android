@@ -1,7 +1,8 @@
 package com.mredrock.cyxbs.lib.course.fragment.page.expose
 
 import android.widget.TextView
-import com.ndhzs.netlayout.view.NetLayout
+import com.ndhzs.netlayout.view.NetLayout2
+import java.util.*
 
 /**
  * ...
@@ -12,7 +13,7 @@ import com.ndhzs.netlayout.view.NetLayout
  */
 interface IWeekWrapper {
   
-  val nlWeek: NetLayout
+  val nlWeek: NetLayout2
   val tvMonth: TextView
   val tvMonWeek: TextView
   val tvMonMonth: TextView
@@ -29,5 +30,32 @@ interface IWeekWrapper {
   val tvSunWeek: TextView
   val tvSunMonth: TextView
   
-  fun forEachWeek(block: (week: TextView, month: TextView) -> Unit)
+  /**
+   * 遍历星期数
+   */
+  fun forEachWeekView(block: (week: TextView, month: TextView) -> Unit)
+  
+  /**
+   * 得到 [weekNum] 对应的 View
+   * @param weekNum 星期数，星期一为 1
+   */
+  fun getWeekWeekView(weekNum: Int, block: (week: TextView, month: TextView) -> Unit)
+  
+  /**
+   * 设置月份
+   * @param monDay 当前页星期一的 Calendar
+   */
+  fun setMonth(monDay: Calendar)
+  
+  /**
+   * 得到当前星期数开始的距离
+   * @param weekNum 星期数，星期一为 1
+   */
+  fun getWeekNumStartWidth(weekNum: Int): Int
+  
+  /**
+   * 得到当前星期数结束的距离
+   * @param weekNum 星期数，星期一为 1
+   */
+  fun getWeekNumEndWidth(weekNum: Int): Int
 }
