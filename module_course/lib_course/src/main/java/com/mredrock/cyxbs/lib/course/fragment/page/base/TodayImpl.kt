@@ -73,9 +73,11 @@ abstract class TodayImpl : NoLessonImpl(), IToday {
         course.post {
           mLeft = getWeekNumStartWidth(weekNum).toFloat()
           mRight = getWeekNumEndWidth(weekNum).toFloat()
+          nlWeek.invalidate()
           course.invalidate()
         }
       } else {
+        nlWeek.invalidate()
         course.invalidate()
       }
     }

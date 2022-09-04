@@ -70,15 +70,15 @@ class Affair(val data: AffairData) : AbstractAffair(data), IRank, IWeek by data 
   ) : ItemView(context) {
     
     companion object {
-      private val COLOR_TEXT = com.mredrock.cyxbs.config.R.color.config_level_two_font_color.color
-      private val COLOR_STRIPE = R.color.course_affair_stripe.color
-      
       fun newInstance(context: Context, data: AffairData): AffairView {
         return AffairView(context).apply {
           setLessonData(data)
         }
       }
     }
+  
+    private val mTextColor = com.mredrock.cyxbs.config.R.color.config_level_two_font_color.color
+    private val mStripeColor = R.color.course_affair_stripe.color
     
     fun setLessonData(data: AffairData) {
       setColor()
@@ -86,9 +86,9 @@ class Affair(val data: AffairData) : AbstractAffair(data), IRank, IWeek by data 
     }
     
     private fun setColor() {
-      mTvTitle.setTextColor(COLOR_TEXT)
-      mTvContent.setTextColor(COLOR_TEXT)
-      setOverlapTagColor(COLOR_TEXT)
+      mTvTitle.setTextColor(mTextColor)
+      mTvContent.setTextColor(mTextColor)
+      setOverlapTagColor(mTextColor)
     }
     
     init {
@@ -96,7 +96,7 @@ class Affair(val data: AffairData) : AbstractAffair(data), IRank, IWeek by data 
     }
   
     private val mPaint = Paint().apply {
-      color = COLOR_STRIPE
+      color = mStripeColor
     }
   
     private val mRectF = RectF()

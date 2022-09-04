@@ -38,9 +38,6 @@ class LinkLesson(val data: LessonData) : BaseLesson(data), IRank, IWeek by data 
   ) : ItemView(context) {
     
     companion object {
-      private val COLOR_BG = R.color.course_link_lesson_bg.color
-      private val COLOR_TEXT = R.color.course_link_lesson_tv.color
-      
       fun newInstance(context: Context, data: LessonData): LinkLessonView {
         return LinkLessonView(context).apply {
           setLessonData(data)
@@ -48,16 +45,19 @@ class LinkLesson(val data: LessonData) : BaseLesson(data), IRank, IWeek by data 
       }
     }
   
+    private val mBgColor = R.color.course_link_lesson_bg.color
+    private val mTextColor = R.color.course_link_lesson_tv.color
+  
     fun setLessonData(data: LessonData) {
       setColor(data.timeType)
       setText(data.course, data.classroom)
     }
   
     private fun setColor(type: LessonData.Type) {
-      mTvTitle.setTextColor(COLOR_TEXT)
-      mTvContent.setTextColor(COLOR_TEXT)
-      setCardBackgroundColor(COLOR_BG)
-      setOverlapTagColor(COLOR_TEXT)
+      mTvTitle.setTextColor(mTextColor)
+      mTvContent.setTextColor(mTextColor)
+      setCardBackgroundColor(mBgColor)
+      setOverlapTagColor(mTextColor)
     }
   }
 }

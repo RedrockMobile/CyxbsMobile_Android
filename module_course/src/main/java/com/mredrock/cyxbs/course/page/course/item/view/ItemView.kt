@@ -9,6 +9,7 @@ import android.util.TypedValue
 import android.view.Gravity
 import android.widget.TextView
 import androidx.cardview.widget.CardView
+import com.mredrock.cyxbs.lib.utils.extensions.color
 import com.mredrock.cyxbs.lib.utils.extensions.dp2px
 import com.mredrock.cyxbs.lib.utils.extensions.dp2pxF
 
@@ -43,6 +44,14 @@ abstract class ItemView(context: Context) : CardView(context) {
   
   private val mPaint = Paint().apply {
     style = Paint.Style.FILL
+  }
+  
+  // 课表背景色
+  private val mFloorColor = com.mredrock.cyxbs.config.R.color.config_common_background_color.color
+  
+  override fun draw(canvas: Canvas) {
+    canvas.drawColor(mFloorColor) // 需要在底层绘制背景色，不然黑夜模式下 item 颜色会透过去
+    super.draw(canvas)
   }
   
   override fun onDraw(canvas: Canvas) {

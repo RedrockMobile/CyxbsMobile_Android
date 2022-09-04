@@ -38,19 +38,19 @@ class SelfLesson(val data: LessonData) : BaseLesson(data), IRank, IWeek by data 
   ) : ItemView(context) {
     
     companion object {
-      private val COLOR_TEXT_AM = R.color.course_am_lesson_tv.color
-      private val COLOR_TEXT_PM = R.color.course_pm_lesson_tv.color
-      private val COLOR_TEXT_NIGHT = R.color.course_night_lesson_tv.color
-      private val COLOR_BG_AM = R.color.course_am_lesson_bg.color
-      private val COLOR_BG_PM = R.color.course_pm_lesson_bg.color
-      private val COLOR_BG_NIGHT = R.color.course_night_lesson_bg.color
-      
       fun newInstance(context: Context, data: LessonData): SelfLessonView {
         return SelfLessonView(context).apply {
           setLessonData(data)
         }
       }
     }
+  
+    private val mAmTextColor = R.color.course_am_lesson_tv.color
+    private val mPmTextColor = R.color.course_pm_lesson_tv.color
+    private val mNightTextColor = R.color.course_night_lesson_tv.color
+    private val mAmBgColor = R.color.course_am_lesson_bg.color
+    private val mPmBgColor = R.color.course_pm_lesson_bg.color
+    private val mNightBgColor = R.color.course_night_lesson_bg.color
     
     fun setLessonData(data: LessonData) {
       setColor(data.timeType)
@@ -60,22 +60,22 @@ class SelfLesson(val data: LessonData) : BaseLesson(data), IRank, IWeek by data 
     private fun setColor(type: LessonData.Type) {
       when (type) {
         LessonData.Type.AM -> {
-          mTvTitle.setTextColor(COLOR_TEXT_AM)
-          mTvContent.setTextColor(COLOR_TEXT_AM)
-          setCardBackgroundColor(COLOR_BG_AM)
-          setOverlapTagColor(COLOR_TEXT_AM)
+          mTvTitle.setTextColor(mAmTextColor)
+          mTvContent.setTextColor(mAmTextColor)
+          setCardBackgroundColor(mAmBgColor)
+          setOverlapTagColor(mAmTextColor)
         }
         LessonData.Type.PM -> {
-          mTvTitle.setTextColor(COLOR_TEXT_PM)
-          mTvContent.setTextColor(COLOR_TEXT_PM)
-          setCardBackgroundColor(COLOR_BG_PM)
-          setOverlapTagColor(COLOR_TEXT_PM)
+          mTvTitle.setTextColor(mPmTextColor)
+          mTvContent.setTextColor(mPmTextColor)
+          setCardBackgroundColor(mPmBgColor)
+          setOverlapTagColor(mPmTextColor)
         }
         LessonData.Type.NIGHT -> {
-          mTvTitle.setTextColor(COLOR_TEXT_NIGHT)
-          mTvContent.setTextColor(COLOR_TEXT_NIGHT)
-          setCardBackgroundColor(COLOR_BG_NIGHT)
-          setOverlapTagColor(COLOR_TEXT_NIGHT)
+          mTvTitle.setTextColor(mNightTextColor)
+          mTvContent.setTextColor(mNightTextColor)
+          setCardBackgroundColor(mNightBgColor)
+          setOverlapTagColor(mNightTextColor)
         }
       }
     }
