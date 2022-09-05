@@ -264,21 +264,21 @@ internal class AccountService : IAccountService {
                 notifyAllStateListeners(state)
             }
         }
-        override fun refresh(onError: () -> Unit, action: (token: String) -> Unit) {
-            val refreshToken = tokenWrapper?.refreshToken ?: return
+        override fun refresh(): String? {
+            val refreshToken = tokenWrapper?.refreshToken ?: return null
             val response = ApiGenerator.getCommonApiService(ApiService::class.java)
                 .refresh(RefreshParams(refreshToken),mUserService.getStuNum()).execute()
-            if (response.body() == null) {
-                //TODO: 与后端确认一下状态码
-                if (response.code() == 400) {//确定是因为refreshToken失效引起的刷新失败
+            val body = response.body()
+            if (body != null) {
+                // 根据后端标准返回文档：https://redrock.feishu.cn/wiki/wikcnB9p6U45ZJZmxwTEu8QXvye
+                if (body.status == 20004) {
                     mContext.runOnUiThread {
                         toast(R.string.account_token_expired_tip)
                     }
+                    return null
                 }
-                onError.invoke()
-                throw HttpException(response)
-            }
-            response.body()?.data?.let { data ->
+            } else return null
+            return body.data.let { data ->
                 bind(data)
                 mContext.runOnUiThread {
                     notifyAllStateListeners(IUserStateService.UserState.REFRESH)
@@ -297,7 +297,7 @@ internal class AccountService : IAccountService {
                         System.currentTimeMillis() + SP_TOKEN_TIME
                     )
                 }
-                action.invoke(data.token)
+                data.token
             }
         }
 

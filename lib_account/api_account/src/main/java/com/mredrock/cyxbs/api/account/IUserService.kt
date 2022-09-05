@@ -33,7 +33,7 @@ interface IUserService {
     
     
     /**
-     * 观察学号的改变的状态
+     * 观察学号的改变（状态）
      *
      * 有数据倒灌的 Observable，每次订阅会发送之前的最新值
      *
@@ -60,7 +60,7 @@ interface IUserService {
     fun observeStuNumState(): Observable<Value<String>>
     
     /**
-     * 观察学号的改变的事件
+     * 观察学号的改变（事件）
      *
      * 没有数据倒灌的 Observable，即每次订阅不会发送之前的最新值
      *
