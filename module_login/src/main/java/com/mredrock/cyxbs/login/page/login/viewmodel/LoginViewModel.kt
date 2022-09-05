@@ -14,32 +14,38 @@ import retrofit2.HttpException
 import java.net.ConnectException
 import java.net.SocketTimeoutException
 import java.net.UnknownHostException
+import java.util.concurrent.TimeUnit
 
 /**
  * Created By jay68 on 2018/8/12.
  */
 class LoginViewModel : BaseViewModel() {
-
+    
     // 用户隐私是否同意检查
     var userAgreementIsCheck = false
-
+    
     //是否正在登录，防止用户多次点击
     private var isLanding = false
-
+    
     private val _loginEvent = MutableSharedFlow<Boolean>()
     val loginEvent: SharedFlow<Boolean>
         get() = _loginEvent
-
+    
     fun login(stuNum: String, password: String) {
         if (isLanding) return
         isLanding = true
+        val startTime = System.currentTimeMillis()
         Completable.create {
             IAccountService::class.impl
                 .getVerifyService()
                 .login(appContext, stuNum, password)
             it.onComplete()
         }.subscribeOn(Schedulers.io())
-            .observeOn(AndroidSchedulers.mainThread())
+            .delay(
+                // 网络太快会闪一下，像bug，就让它最少待一秒吧
+                (System.currentTimeMillis() - startTime).let { if (it > 1000) 0 else it },
+                TimeUnit.MILLISECONDS
+            ).observeOn(AndroidSchedulers.mainThread())
             .doOnComplete {
                 isLanding = false
             }.doOnError {

@@ -34,7 +34,7 @@ import java.util.concurrent.locks.ReentrantLock
  * Created by AceMurder on 2018/1/24.
  */
 object ApiGenerator {
-    private const val DEFAULT_TIME_OUT = 20
+    private const val DEFAULT_TIME_OUT = 5
 
     private var retrofit: Retrofit //统一添加了token到header
     private var commonRetrofit: Retrofit // 未添加token到header
@@ -90,22 +90,7 @@ object ApiGenerator {
     fun <T> getCommonApiService(clazz: Class<T>) = commonRetrofit.create(clazz)
 
     /**
-     *这个方法提供对OkHttp和Retrofit进行自定义的操作，通过uniqueNum可以实现不同子模块中的复用，而不需要在通用模块中添加。
-     *默认会完成部分基础设置，此处传入的两个lambda在基础设置之后执行，可以覆盖基础设置。
-     * 需要先进行注册才能使用。
-     *@throws IllegalAccessException
-     */
-    fun <T> getApiService(uniqueNum: Int, clazz: Class<T>): T {
-
-        if (retrofitMap[uniqueNum] == null) {
-            throw IllegalArgumentException()
-        }
-        return retrofitMap[uniqueNum]!!.create(clazz)
-    }
-
-    /**
-     * 通过此方法对配置进行注册，之后即可使用uniqueNum获取service。
-     * @param uniqueNum retrofit标识符
+     * 通过此方法对得到单独的 Retrofit
      * @param retrofitConfig 配置Retrofit.Builder，已配置有
      * @see GsonConverterFactory
      * @see RxJava3CallAdapterFactory
@@ -115,8 +100,8 @@ object ApiGenerator {
      * null-> 默认Timeout
      * @param tokenNeeded 是否需要添加token请求
      */
-    fun registerNetSettings(uniqueNum: Int, retrofitConfig: ((Retrofit.Builder) -> Retrofit.Builder)? = null, okHttpClientConfig: ((OkHttpClient.Builder) -> OkHttpClient.Builder)? = null, tokenNeeded: Boolean) {
-        retrofitMap.put(uniqueNum, Retrofit.Builder()
+    fun createSelfRetrofit(retrofitConfig: ((Retrofit.Builder) -> Retrofit.Builder)? = null, okHttpClientConfig: ((OkHttpClient.Builder) -> OkHttpClient.Builder)? = null, tokenNeeded: Boolean): Retrofit {
+        return Retrofit.Builder()
                 //对传入的retrofitConfig配置
                 .apply {
                     if (retrofitConfig == null)
@@ -127,16 +112,17 @@ object ApiGenerator {
                 //对传入的okHttpClientConfig配置
                 .configRetrofitBuilder {
                     it.apply {
+                        
                         if (tokenNeeded && !isTouristMode())
                             configureTokenOkHttp()
                         if (okHttpClientConfig == null)
                             this.defaultConfig()
                         else
                             okHttpClientConfig.invoke(
-                                it.addInterceptor(BackupInterceptor())
+                                it.addInterceptor(BackupInterceptor)
                             )
                     }.build()
-                }.build())
+                }.build()
     }
 
     //以下是retrofit基本配置
@@ -203,7 +189,7 @@ object ApiGenerator {
              * 一旦切换，只有重启app才能切回来（因为如果请求得到的url不是原来的@{link getBaseUrl()}，则切换到新的url，而以后访问都用这个新的url了）
              * 放在tokenInterceptor上游的理由是：因为那里面还有token刷新机制，无法判断是否真正是因为服务器的原因请求失败
              */
-            interceptors().add(BackupInterceptor())
+            interceptors().add(BackupInterceptor)
         }.build()
     }
 
@@ -226,7 +212,7 @@ object ApiGenerator {
              * 一旦切换，只有重启app才能切回来（因为如果请求得到的url不是原来的@{link getBaseUrl()}，则切换到新的url，而以后访问都用这个新的url了）
              * 放在tokenInterceptor上游的理由是：因为那里面还有token刷新机制，无法判断是否真正是因为服务器的原因请求失败
              */
-            interceptors().add(BackupInterceptor())
+//            interceptors().add(BackupInterceptor())
 
 
             interceptors().add(Interceptor {
@@ -280,7 +266,7 @@ object ApiGenerator {
             token = ServiceManager.getService(IAccountService::class.java).getVerifyService().refresh() ?: return null
             return proceedPoxyWithTryCatch { chain.run { proceed(chain.request().newBuilder().header("Authorization", "Bearer $token").build()) } }
         } finally {
-          mReentrantLock.unlock()
+            mReentrantLock.unlock()
         }
     }
     
@@ -309,7 +295,7 @@ object ApiGenerator {
 
 
 
-    class BackupInterceptor : Interceptor {
+    object BackupInterceptor : Interceptor {
 
         @Volatile
         private var useBackupUrl: Boolean = false

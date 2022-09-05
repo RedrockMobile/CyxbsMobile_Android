@@ -78,7 +78,7 @@ import kotlinx.coroutines.rx3.asFlow
  * ```
  */
 fun <T> Flow<T>.interceptException(
-  action: ExceptionResult<FlowCollector<T>>.(Throwable) -> Unit
+  action: suspend ExceptionResult<FlowCollector<T>>.(Throwable) -> Unit
 ) : Flow<T> {
   return catch {
     ExceptionResult(it, this).action(it)
@@ -102,7 +102,7 @@ fun <T> Flow<T>.interceptException(
  * ```
  */
 fun <T> Flow<T>.interceptExceptionByResult(
-  action: ExceptionResult<FlowCollector<Result<T>>>.(Throwable) -> Unit
+  action: suspend ExceptionResult<FlowCollector<Result<T>>>.(Throwable) -> Unit
 ) : Flow<Result<T>> = map { Result.success(it) }.interceptException(action)
 
 

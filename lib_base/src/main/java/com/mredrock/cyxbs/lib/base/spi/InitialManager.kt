@@ -11,9 +11,9 @@ import java.lang.reflect.InvocationTargetException
 import java.lang.reflect.Method
 
 /**
- *@author ZhiQiang Tu
- *@time 2022/3/24  12:46
- *@signature 我将追寻并获取我想要的答案
+ * @author ZhiQiang Tu
+ * @time 2022/3/24  12:46
+ * @signature 我将追寻并获取我想要的答案
  */
 interface InitialManager {
     val application: Application
