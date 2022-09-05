@@ -1,8 +1,8 @@
 package com.mredrock.cyxbs.lib.base.ui.mvvm
 
-import androidx.databinding.ViewDataBinding
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
+import androidx.viewbinding.ViewBinding
 import com.mredrock.cyxbs.lib.base.ui.BaseBindFragment
 import com.mredrock.cyxbs.lib.utils.utils.GenericityUtils
 
@@ -12,7 +12,7 @@ import com.mredrock.cyxbs.lib.utils.utils.GenericityUtils
  * @email 2767465918@qq.com
  * @data 2021/6/1
  */
-abstract class BaseVmBindFragment<VM : ViewModel, DB : ViewDataBinding> : BaseBindFragment<DB>() {
+abstract class BaseVmBindFragment<VM : ViewModel, DB : ViewBinding> : BaseBindFragment<DB>() {
   
   @Suppress("UNCHECKED_CAST")
   protected val viewModel by lazy(LazyThreadSafetyMode.NONE) {

@@ -3,7 +3,9 @@ package com.mredrock.cyxbs.api.account.utils
 import java.io.Serializable
 
 /**
- * 用来解决 Rxjava 不允许传递 null 值的包裹类
+ * 因为 api_account 不能依赖 lib_utils，所以只能在这里单独写一份
+ *
+ * 如果依赖了会导致循环依赖：lib_common -> api_account -> lib_utils -> lib_common
  *
  * @author 985892345 (Guo Xiangrui)
  * @email guo985892345@foxmail.com

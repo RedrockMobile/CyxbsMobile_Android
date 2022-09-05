@@ -64,8 +64,14 @@ class NewsAdapter(private val loadMore: () -> Unit)
     )
 
     open inner class ViewHolder(v: View) : androidx.recyclerview.widget.RecyclerView.ViewHolder(v) {
-        val tv_time:TextView = v.findViewById(R.id.tv_time)
-        val tv_title:TextView = v.findViewById(R.id.tv_title)
+    
+        val tv_time:TextView by lazyUnlock {
+            v.findViewById(R.id.tv_time)
+        }
+        val tv_title:TextView by lazyUnlock {
+            v.findViewById(R.id.tv_title)
+        }
+        
         fun initView(news: NewsListItem?) {
             itemView.init(news)
         }

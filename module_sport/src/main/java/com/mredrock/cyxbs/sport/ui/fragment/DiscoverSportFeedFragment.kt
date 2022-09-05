@@ -25,7 +25,6 @@ import com.mredrock.cyxbs.sport.R
 import com.mredrock.cyxbs.sport.databinding.SportFragmentDiscoverFeedBinding
 import com.mredrock.cyxbs.sport.ui.activity.SportDetailActivity
 import com.mredrock.cyxbs.sport.ui.viewmodel.DiscoverSportFeedViewModel
-import com.mredrock.cyxbs.sport.util.sSpIdsIsBind
 
 /**
  * @author : why
@@ -68,10 +67,10 @@ class DiscoverSportFeedFragment :
             notLogin()
         } else {
             //登录后检查是否绑定了ids，如果没有绑定则显示需要绑定
-            if (!sSpIdsIsBind) {
-                unbound()
-            } else {
-                showData()
+            when (viewModel.isBind.value) {
+                null -> showError()
+                true -> showData()
+                false -> unbound()
             }
         }
     }

@@ -23,33 +23,7 @@ val updateFile get() = File(updateFilePath + updateFilename)
 
 const val APP_WIDGET_CACHE_FILE_NAME = "AppWidgetCache.json"
 
-//SharedPreferences key for encrypt version of user
-const val SP_KEY_ENCRYPT_VERSION_USER = "encrypt_version_user"
-
-//SharedPreferences value for encrypt version of user
-const val USER_INFO_ENCRYPT_VERSION = 1
-
 //SharedPreferences value to judge tourist login type
-
-const val IS_TOURIST = "is_tourist"
-
-//UserToken信息存储key
-const val SP_KEY_USER_V2 = "cyxbsmobile_user_v2"
-
-//User信息存储key
-const val SP_KEY_USER_INFO = "cyxbsmobile_user_info"
-
-//token失效时间
-const val SP_KEY_TOKEN_EXPIRED = "user_token_expired_time"
-
-//token 后端规定token2h过期，客户端规定1h55分过期，以防错误，时间戳
-const val SP_TOKEN_TIME = 6900000
-
-//refreshToken失效时间
-const val SP_KEY_REFRESH_TOKEN_EXPIRED = "user_refresh_token_expired_time"
-
-//refreshToken 后端规定45天过期，客户端规定44天过期，以防错误，时间戳
-const val SP_REFRESH_DAY = 3801600000
 
 const val DEFAULT_PREFERENCE_FILENAME = "share_data"
 
@@ -100,13 +74,6 @@ const val IS_ANSWER = 0 //从我的回答跳转到具体的回答页面
 
 //课表版本
 const val COURSE_VERSION = "course_version"
-
-//ApiGenerator中的retrofitMap的key
-//适用于某些接口要求，一般不需要特定的retrofit
-//命名方式module+方法
-const val SCHOOL_CAR_MAP_RES = 0
-const val DISCOVERY_ROLLER_VIEW_INFO = 1
-const val QA_GET_DYNAMIC_LIST = 2
 
 //课表上课地点跳转到地图key
 const val COURSE_POS_TO_MAP = "COURSE_POS_TO_MAP"
