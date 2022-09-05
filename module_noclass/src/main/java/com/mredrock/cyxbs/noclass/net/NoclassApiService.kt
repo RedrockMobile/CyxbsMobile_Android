@@ -5,6 +5,7 @@ import com.mredrock.cyxbs.lib.utils.network.ApiStatus
 import com.mredrock.cyxbs.lib.utils.network.ApiWrapper
 import com.mredrock.cyxbs.noclass.bean.NoclassGroup
 import com.mredrock.cyxbs.noclass.bean.NoclassGroupId
+import com.mredrock.cyxbs.noclass.bean.Student
 import io.reactivex.rxjava3.core.Single
 import retrofit2.http.*
 
@@ -68,17 +69,22 @@ interface NoclassApiService {
     @POST("/magipoke-jwzx/no_class/member")
     fun addGroupMember(
         @Field("group_id") groupId: String,
-        @Field("stu_num") stuNum : String
+        @Field("stu_nums") stuNum : String
     ) : Single<ApiStatus>
 
     /**
      * 没课约分组删除成员
      */
-    @DELETE("/magipoke-jwzx/no_class/group")
+    @HTTP(method = "DELETE",path = "/magipoke-jwzx/no_class/member", hasBody = true)
+    @FormUrlEncoded
     fun deleteGroupMember(
-        @Query("group_id") groupId: String,
-        @Query("stu_num") stuNum : String
+        @Field("group_id") groupId: String,
+        @Field("stu_nums") stuNum : String,
     ) : Single<ApiStatus>
 
+    @GET("/magipoke-text/search/people")
+    fun searchPeople(
+        @Query("stu") stu: String
+    ) : Single<ApiWrapper<List<Student>>>
 
 }

@@ -1,8 +1,14 @@
 package com.mredrock.cyxbs.noclass.page.viewmodel
 
-import android.util.Log
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
 import com.mredrock.cyxbs.lib.base.ui.BaseViewModel
+import com.mredrock.cyxbs.lib.utils.network.ApiStatus
+import com.mredrock.cyxbs.lib.utils.network.mapOrInterceptException
+import com.mredrock.cyxbs.noclass.bean.NoclassGroup
+import com.mredrock.cyxbs.noclass.bean.Student
 import com.mredrock.cyxbs.noclass.page.repository.NoClassRepository
+import io.reactivex.rxjava3.core.Flowable
 
 /**
  *
@@ -16,49 +22,95 @@ import com.mredrock.cyxbs.noclass.page.repository.NoClassRepository
  * @Description:    具体分组页面ViewModel
  */
 class GroupDetailViewModel : BaseViewModel() {
-
-    /**
-     * 用来更新标题
-     */
-    fun updateGroup(
-        groupId: String,
-        name: String,
-        isTop: String,
-    ){
-        NoClassRepository
-            .updateGroup(groupId, name, isTop)
-            .doOnError {
-                Log.e("testGroupDetail",it.toString())
-            }.safeSubscribeBy {
-                Log.e("testGroupDetail",it.toString())
-            }
+  
+  /**
+   * 更新标题
+   */
+  val isUpdateSuccess : LiveData<Boolean>
+    get() = _isUpdateSuccess
+  private val _isUpdateSuccess : MutableLiveData<Boolean> = MutableLiveData()
+  
+  /**
+   * 查找学生
+   */
+  val students : LiveData<List<Student>> get() = _students
+  private val _students = MutableLiveData<List<Student>>()
+  
+  /**
+   * 保存成员变化
+   */
+  val saveState : LiveData<Boolean> get() = _saveState
+  private val _saveState = MutableLiveData<Boolean>()
+  
+  /**
+   * 用来更新标题
+   */
+  fun updateGroup(
+    groupId: String,
+    name: String,
+    isTop: String,
+  ){
+    NoClassRepository
+      .updateGroup(groupId, name, isTop)
+      .doOnError {
+        _isUpdateSuccess.postValue(false)
+      }.safeSubscribeBy {
+        _isUpdateSuccess.postValue(true)
+      }
+  }
+  
+  /**
+   * 查询任务
+   */
+  fun searchStudent(stu : String){
+    NoClassRepository
+      .searchStudent(stu)
+      .mapOrInterceptException {
+      
+      }
+      .safeSubscribeBy {
+        _students.postValue(it)
+      }
+  }
+  
+  fun addAndDeleteStu(groupId: String,addSet : Set<NoclassGroup.Member>,deleteSet : Set<NoclassGroup.Member>){
+    var addStu = ""
+    var deleteStu = ""
+    for ((index,stu) in addSet.withIndex()){
+      addStu += stu.stuNum
+      if (index != addSet.size-1){
+        addStu += ","
+      }
     }
-
-    /**
-     * 添加分组中的任务
-     */
-    fun addNoclassGroupMember(groupId : String, stuNum : String){
-        NoClassRepository
-            .addNoclassGroupMember(groupId, stuNum)
-            .doOnError {
-
-            }.safeSubscribeBy {
-
-            }
+    for ((index,stu) in deleteSet.withIndex()){
+      deleteStu += stu.stuNum
+      if (index != deleteSet.size-1){
+        deleteStu += ","
+      }
     }
-
-
-    /**
-     * 删除分组中的人物
-     */
-    fun deleteNoclassGroupMember(groupId : String, stuNum : String){
-        NoClassRepository
-            .deleteNoclassGroupMember(groupId, stuNum)
-            .doOnError {
-
-            }.safeSubscribeBy {
-
-            }
+    val add =  NoClassRepository.addNoclassGroupMember(groupId,addStu)
+    val delete = NoClassRepository.deleteNoclassGroupMember(groupId,deleteStu)
+    val result : Flowable<ApiStatus>? =
+    if (addStu != "" && deleteStu != ""){
+      add.mergeWith(delete)
+    }else if (addStu == "" && deleteStu != ""){
+      delete.toFlowable()
+    }else if (addStu != "" && deleteStu == ""){
+      add.toFlowable()
+    }else{
+      null
     }
-
+    
+    if (result == null){
+      return
+    }
+    
+    result.doOnError {
+    
+    }.safeSubscribeBy {
+      _saveState.postValue(it.isSuccess())
+    }
+    
+  }
+  
 }

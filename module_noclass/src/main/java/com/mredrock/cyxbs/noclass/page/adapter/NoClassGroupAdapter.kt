@@ -23,7 +23,8 @@ import com.mredrock.cyxbs.noclass.bean.NoclassGroup
  * @Description:    没课约主页RV的Adapter
  */
 class NoClassGroupAdapter : ListAdapter<NoclassGroup.Member,NoClassGroupAdapter.VH>(
-    noClassGroupDiffUtil){
+    noClassGroupDiffUtil
+){
 
     companion object{
         private val noClassGroupDiffUtil : DiffUtil.ItemCallback<NoclassGroup.Member> = object : DiffUtil.ItemCallback<NoclassGroup.Member>(){
@@ -51,7 +52,13 @@ class NoClassGroupAdapter : ListAdapter<NoclassGroup.Member,NoClassGroupAdapter.
         val tvId : TextView = itemView.findViewById(R.id.noclass_tv_member_id)
         val ivDelete : ImageView = itemView.findViewById<ImageView?>(R.id.noclass_iv_member_delete).apply {
             setOnClickListener {
-                mOnItemDelete?.invoke(currentList[absoluteAdapterPosition])
+                //要删除的成员
+                val member = currentList[absoluteAdapterPosition]
+//                //要更新的列表
+//                val toBeList = currentList.toMutableList()
+//                toBeList.remove(member)
+//                submitList(toBeList)
+                mOnItemDelete?.invoke(member)
             }
         }
     }

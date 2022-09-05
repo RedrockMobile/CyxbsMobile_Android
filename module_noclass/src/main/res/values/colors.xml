@@ -33,4 +33,6 @@
     <color name="noclass_group_delete_unselected_bg">#FFFFFF</color>
     <!--    保存按钮的默认颜色-->
     <color name="noclass_save_bg_color">#99A7B9</color>
+    <!--    查找学生的颜色-->
+    <color name="noclass_search_student_color">#7B8899</color>
 </resources>

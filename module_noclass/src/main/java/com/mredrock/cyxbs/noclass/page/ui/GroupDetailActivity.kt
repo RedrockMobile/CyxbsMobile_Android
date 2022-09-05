@@ -19,6 +19,7 @@ import com.mredrock.cyxbs.noclass.bean.NoclassGroup
 import com.mredrock.cyxbs.noclass.page.adapter.NoClassGroupAdapter
 import com.mredrock.cyxbs.noclass.page.ui.dialog.ConfirmReturnDialog
 import com.mredrock.cyxbs.noclass.page.ui.dialog.RenameGroupDialog
+import com.mredrock.cyxbs.noclass.page.ui.dialog.SearchStudentDialog
 import com.mredrock.cyxbs.noclass.page.viewmodel.GroupDetailViewModel
 
 /**
@@ -55,9 +56,14 @@ class GroupDetailActivity : BaseVmActivity<GroupDetailViewModel>(){
     private val mBtnSave : Button by R.id.btn_noclass_group_detail_save.view()
 
     /**
-     * 该界面是否改变
+     * 该界面是否改变（是否发生网络请求为标准）
      */
     private var mHasChanged : Boolean = false
+    
+    /**
+     * 需不需要保存(按钮颜色为标准)
+     */
+    private var mNeedSave : Boolean = false
 
     /**
      * 设置list
@@ -72,12 +78,12 @@ class GroupDetailActivity : BaseVmActivity<GroupDetailViewModel>(){
     /**
      * 预增加用户
      */
-    private var mToAddSet : MutableSet<Int> = mutableSetOf()
+    private var mToAddSet : MutableSet<NoclassGroup.Member> = mutableSetOf()
 
     /**
      * 预删除用户
      */
-    private var mToDeleteSet : MutableSet<Int> = mutableSetOf()
+    private var mToDeleteSet : MutableSet<NoclassGroup.Member> = mutableSetOf()
 
     /**
      * 当前选择的NoclassGroup
@@ -88,14 +94,22 @@ class GroupDetailActivity : BaseVmActivity<GroupDetailViewModel>(){
      * 当前选择的members
      */
     private lateinit var mCurrentMembers : MutableList<NoclassGroup.Member>
+    
+    /**
+     * Adapter
+     */
+    private lateinit var mGroupAdapter : NoClassGroupAdapter
 
     /**
-     * private val
+     * 预更改的标题
      */
+    private var mTobeTitle = ""
+    
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.noclass_activity_group_detail)
         getList()
+        initObserve()
         initRv()
         initTextView()
         initEditText()
@@ -113,21 +127,76 @@ class GroupDetailActivity : BaseVmActivity<GroupDetailViewModel>(){
         mCurrentMembers = mCurrentNoclassGroup.members.toMutableList()
         mTitleText.text = mCurrentNoclassGroup.name
     }
-
+    
+    /**
+     * 初始化观测livedata
+     */
+    private fun initObserve(){
+        viewModel.isUpdateSuccess.observe(this){
+            if (it){
+                mHasChanged = true
+                if (mTobeTitle != ""){
+                    mTitleText.text = mTobeTitle
+                    mTobeTitle = ""
+                }
+            }else{
+                toast("网络请求错误,请稍后重试")
+            }
+        }
+        
+        var mSearchStudentDialog : SearchStudentDialog? = null
+        viewModel.students.observe(this){   students ->
+            if(students.isEmpty()){
+                toast("查无此人")
+            }else{
+                mSearchStudentDialog = SearchStudentDialog(students){
+                        if (mCurrentNoclassGroup.id =="-1"){
+                            return@SearchStudentDialog
+                        }
+                        if (mCurrentMembers.contains(it)){
+                            toast("用户已经存在分组中了哦~")
+                            return@SearchStudentDialog
+                        }
+                        mToAddSet.add(it)
+                        mCurrentMembers.add(it)
+                        mGroupAdapter.submitList(mCurrentMembers.toMutableList())
+                        toast("添加成功")
+                        setBtnState(true)
+                        mSearchStudentDialog?.dismiss()
+                    }.apply {
+                        show(supportFragmentManager,"searchStudentDialog")
+                    }
+            }
+        }
+        viewModel.saveState.observe(this){
+            if (it){
+                mToAddSet.clear()
+                mToDeleteSet.clear()
+                mHasChanged = true
+                setBtnState(false)
+            }else{
+                toast("保存失败")
+            }
+        }
+    }
+    
     /**
      * 初始化RV
      */
     private fun initRv(){
         mRecyclerView.layoutManager = LinearLayoutManager(this)
-        mRecyclerView.adapter = NoClassGroupAdapter().apply {
+        mGroupAdapter = NoClassGroupAdapter().apply {
             if (mPosition != -1){
-                submitList(mCurrentMembers)
+                submitList(mCurrentMembers.toMutableList())
             }
             setOnItemDelete {
                 mCurrentMembers.remove(it)
-                mHasChanged = true
+                mToDeleteSet.add(it)
+                submitList(mCurrentMembers.toMutableList())
+                setBtnState(true)
             }
         }
+        mRecyclerView.adapter = mGroupAdapter
     }
 
     /**
@@ -143,6 +212,7 @@ class GroupDetailActivity : BaseVmActivity<GroupDetailViewModel>(){
                             return@setOnGroupRename false
                         }
                     }
+                    mTobeTitle = it
                     viewModel.updateGroup(mCurrentNoclassGroup.id,it,mCurrentNoclassGroup.isTop.toString())
                     true
                 }
@@ -158,8 +228,7 @@ class GroupDetailActivity : BaseVmActivity<GroupDetailViewModel>(){
             if (mToAddSet.isEmpty() && mToDeleteSet.isEmpty()){
                 return@setOnClickListener
             }
-            //TODO
-            //保存变化
+            viewModel.addAndDeleteStu(mCurrentNoclassGroup.id,mToAddSet,mToDeleteSet)
         }
     }
 
@@ -167,10 +236,14 @@ class GroupDetailActivity : BaseVmActivity<GroupDetailViewModel>(){
      * 设置按钮状态
      */
     private fun setBtnState(unSaveState : Boolean){
-        if (unSaveState){//没有保存的状态
-            mBtnSave.setBackgroundResource(R.drawable.noclass_shape_button_save_default_bg)
-        }else{//需要保存的状态
+        if (unSaveState){//需要保存状态
+            mBtnSave.isClickable = true
             mBtnSave.setBackgroundResource(R.drawable.noclass_shape_button_common_bg)
+            mNeedSave = true
+        }else{//已经保存的状态
+            mBtnSave.isClickable = false
+            mBtnSave.setBackgroundResource(R.drawable.noclass_shape_button_save_default_bg)
+            mNeedSave = false
         }
     }
 
@@ -183,23 +256,29 @@ class GroupDetailActivity : BaseVmActivity<GroupDetailViewModel>(){
         //设置键盘上点击搜索的监听
         mEditTextView.setOnEditorActionListener{ v, actionId, event ->
             if (actionId == EditorInfo.IME_ACTION_SEARCH) {
-                val key = mEditTextView.text.toString().trim()
-                if (TextUtils.isEmpty(key)) {
-                    toast("输入为空")
-                    return@setOnEditorActionListener true
-                }
-//                TODO  完成搜索操作
-//                doSearch(key)
-                (getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager).hideSoftInputFromWindow(currentFocus?.windowToken, InputMethodManager.HIDE_NOT_ALWAYS)
-                mEditTextView.setText("")
+                doSearch()
                 return@setOnEditorActionListener true
             }
             return@setOnEditorActionListener false
         }
     }
+    
+    /**
+     * 执行搜索操作
+     */
+    private fun doSearch(){
+        val name = mEditTextView.text.toString().trim()
+        if (TextUtils.isEmpty(name)) {
+            toast("输入为空")
+            return
+        }
+        (getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager).hideSoftInputFromWindow(currentFocus?.windowToken, InputMethodManager.HIDE_NOT_ALWAYS)
+        mEditTextView.setText("")
+        viewModel.searchStudent(stu = name)
+    }
 
     override fun onBackPressed() {
-        if (mToAddSet.isEmpty() && mToDeleteSet.isEmpty()){
+        if (mToAddSet.isEmpty() && mToDeleteSet.isEmpty() && !mNeedSave){
             if (mHasChanged){
                 setResult(RESULT_OK, Intent().apply {
                     putExtra("GroupDetailResult",true)
@@ -208,7 +287,10 @@ class GroupDetailActivity : BaseVmActivity<GroupDetailViewModel>(){
             super.onBackPressed()
         }else{
             ConfirmReturnDialog(this).setOnReturnClick {
-                this@GroupDetailActivity.onBackPressed()
+                mToAddSet.clear()
+                mToDeleteSet.clear()
+                mNeedSave = false
+                onBackPressed()
             }.show()
         }
     }

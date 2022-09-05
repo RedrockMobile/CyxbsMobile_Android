@@ -87,6 +87,7 @@ class GroupManagerActivity : BaseVmActivity<GroupManagerViewModel>(){
             val intent = result.data
             val extra = intent?.getBooleanExtra("GroupDetailResult",false)
             if (extra == true){
+                mHasChanged = true
                 reGetGroup()
             }
         }

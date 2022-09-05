@@ -1,6 +1,7 @@
 package com.mredrock.cyxbs.noclass.bean
 
 import com.google.gson.annotations.SerializedName
+import java.io.Serializable
 
 /**
  *
@@ -20,14 +21,14 @@ data class NoclassGroup(
     @SerializedName("is_top")
     val isTop: Boolean,
     @SerializedName("members")
-    val members: List<Member>,
+    var members: List<Member>,
     @SerializedName("name")
     val name: String
-) : java.io.Serializable{
+) : Serializable{
     data class Member(
         @SerializedName("stu_name")
         val stuName: String,
         @SerializedName("stu_num")
         val stuNum: String
-    ) : java.io.Serializable
+    ) : Serializable
 }
