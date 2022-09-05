@@ -1,25 +1,23 @@
 import com.mredrock.cyxbs.convention.depend.api.*
 import com.mredrock.cyxbs.convention.depend.*
-import com.mredrock.cyxbs.convention.depend.lib.dependLibCommon
+import com.mredrock.cyxbs.convention.depend.lib.*
 
 plugins {
-    id("module-manager")
-    id("kotlin-android-extensions") // todo kt 获取 View 的插件已被废弃，新模块禁止再使用！
+  id("module-debug")
 }
 
+dependLibBase()
+dependLibUtils()
+dependLibConfig()
+
 dependApiAccount()
-dependApiMain()
 
 dependRoom()
 dependRoomRxjava()
 dependRxjava()
-dependEventBus()
 dependNetwork()
-
-dependLibCommon() // TODO common 模块不再使用，新模块请依赖 base 和 utils 模块
+dependSmartRefreshLayout()
 
 dependencies {
-    // TODO 未知项目，github 上未找到
-    implementation("com.super_rabbit.wheel_picker:NumberPicker:1.0.1")
-    implementation(Umeng.common)
+  implementation(SmartRefreshLayout.`footer-ball`)
 }

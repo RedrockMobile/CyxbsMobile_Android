@@ -5,9 +5,10 @@ package com.mredrock.cyxbs.lib.utils.extensions
 import io.reactivex.rxjava3.core.*
 import io.reactivex.rxjava3.disposables.Disposable
 import kotlinx.coroutines.flow.Flow
+import java.io.Serializable
 
 /**
- * 如果你要看网络请求相关的示例代码，请移步 network/ApiRxjava
+ * 如果你要看网络请求相关的示例代码，请移步于 network/ApiRxjava
  *
  * @author 985892345 (Guo Xiangrui)
  * @email 2767465918@qq.com
@@ -16,9 +17,10 @@ import kotlinx.coroutines.flow.Flow
 
 
 /**
- * 转换为 data 并使用 DSL 写法来处理异常
+ * 使用优雅的 DSL 来拦截异常
  *
- * # 详细用法请查看 [Flow.interceptException]，注意事项也与 Flow 一致
+ * # 如果你是想看网络请求的用法，请移步与 network/ApiRxjava.kt
+ * # 该 api 的详细用法请查看 [Flow.interceptException]，注意事项也与 Flow 一致
  */
 fun <T : Any> Single<T>.interceptException(
   action: ExceptionResult<SingleEmitter<T>>.(Throwable) -> Unit
@@ -105,3 +107,32 @@ fun Completable.unsafeSubscribeBy(
   onError: (Throwable) -> Unit = {},
   onComplete: () -> Unit = {},
 ): Disposable = subscribe(onComplete, onError)
+
+
+/**
+ * 用来解决 Rxjava 不允许传递 null 值的包裹类
+ */
+data class Value<T : Any>(val value: T?): Serializable {
+  
+  fun isNull(): Boolean = value == null
+  
+  fun isNotNull(): Boolean = !isNull()
+  
+  inline fun nullUnless(block: (T) -> Unit): Value<T> {
+    if (value != null) block.invoke(value)
+    return this
+  }
+  
+  inline fun <E> nullUnless(default: E, block: (T) -> E): E {
+    return if (value != null) block.invoke(value) else default
+  }
+  
+  inline fun nullIf(block: () -> Unit): Value<T> {
+    if (value == null) block.invoke()
+    return this
+  }
+  
+  inline fun <E> nullIf(default: E, block: () -> E): E {
+    return if (value == null) block.invoke() else default
+  }
+}

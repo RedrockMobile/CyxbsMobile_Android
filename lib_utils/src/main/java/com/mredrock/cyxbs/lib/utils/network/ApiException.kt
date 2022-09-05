@@ -65,7 +65,7 @@ class ApiException(
 ) : RuntimeException("status = $status   info = $info")
 
 @Suppress("FunctionName")
-class ApiExceptionResult<Emitter>(
+open class ApiExceptionResult<Emitter>(
   throwable: Throwable,
   emitter: Emitter
 ) : ExceptionResult<Emitter>(throwable, emitter) {
@@ -92,8 +92,9 @@ class ApiExceptionResult<Emitter>(
    * 如果是 [HttpException]，则反序列化 [Response.errorBody] 为 [T]
    *
    * ## 注意
-   * 不是很推荐使用，因为这个情况一般是后端的问题，只要与服务器连接成功都该返回 2xx，
+   * -不是很推荐使用，因为这个情况一般是后端的问题，只要与服务器连接成功都该返回 2xx，
    * 所以请在与后端多次沟通无果后再使用！！！（部分老接口除外）
+   * - 反序列化失败会吞异常
    *
    * @param httpCode 想要处理的 Http 状态码
    */
@@ -110,8 +111,10 @@ class ApiExceptionResult<Emitter>(
   /**
    * 用于后端异常返回，Http 状态码不为 2xx 时
    *
-   * 不是很推荐使用，因为这个情况一般是后端的问题，只要与服务器连接成功都该返回 2xx，
+   * ## 注意
+   * - 不是很推荐使用，因为这个情况一般是后端的问题，只要与服务器连接成功都该返回 2xx，
    * 所以请在与后端多次沟通无果后再使用！！！（部分老接口除外）
+   * - 反序列化失败会吞异常
    *
    * @param httpCode 想要处理的 Http 状态码
    */

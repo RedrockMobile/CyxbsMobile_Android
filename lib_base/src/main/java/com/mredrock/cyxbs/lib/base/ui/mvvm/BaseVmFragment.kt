@@ -26,7 +26,7 @@ abstract class BaseVmFragment<VM : ViewModel> : BaseFragment {
   constructor(@LayoutRes contentLayoutId: Int) : super(contentLayoutId)
   
   @Suppress("UNCHECKED_CAST")
-  protected val viewModel by lazy(LazyThreadSafetyMode.NONE) {
+  protected open val viewModel by lazy(LazyThreadSafetyMode.NONE) {
     val factory = getViewModelFactory()
     if (factory == null) {
       ViewModelProvider(this)[getGenericClassFromSuperClass(javaClass)] as VM

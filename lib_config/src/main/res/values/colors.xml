@@ -28,4 +28,11 @@
     <!--视觉要的若隐若现阴影的 endColor，在 drawable/config_layer_looming_shadow 中使用-->
     <color name="config_layer_looming_shadow_end_color">#FBFCFF</color>
 
+    <!--视觉最常用的背景颜色，夜间为 2D2D2D-->
+    <color name="config_common_background_color">#FFFFFF</color>
+
+    <!--lib_base 中公用的 ChooseDialog 的按钮颜色-->
+    <color name="config_choose_dialog_btn_positive">#4A44E4</color>
+    <color name="config_choose_dialog_btn_negative">#C3D4EE</color>
+
 </resources>

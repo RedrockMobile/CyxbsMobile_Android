@@ -34,6 +34,12 @@ fun Project.dependSmartRefreshLayout() {
     "implementation"(SmartRefreshLayout.kernel)
     /*
     * 头和尾自己单独依赖！！！
+    * 比如在你的 build.gradle.kts 中：
+    * ```
+    * dependencies {
+    *     implementation(SmartRefreshLayout.`header-classics`)
+    * }
+    * ```
     * */
   }
 }

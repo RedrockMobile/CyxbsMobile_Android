@@ -64,10 +64,17 @@ object ApiGenerator {
   }
 }
 
+/**
+ * 实现该接口后后直接使用写吗这种写法：
+ * ```
+ * ApiService::class.api
+ *   .getXXX()
+ * ```
+ */
 interface IApi {
   companion object {
-    val MAP = HashMap<KClass<out IApi>, IApi>()
-    val MAP_COMMON = HashMap<KClass<out IApi>, IApi>()
+    internal val MAP = HashMap<KClass<out IApi>, IApi>()
+    internal val MAP_COMMON = HashMap<KClass<out IApi>, IApi>()
   }
 }
 

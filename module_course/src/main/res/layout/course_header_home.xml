@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@drawable/course_layer_list_course_header_bg" >
+
+    <include
+        layout="@layout/course_layout_header" />
+
+    <ImageView
+        android:id="@+id/course_iv_header_link"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintBottom_toBottomOf="parent"
+        tools:ignore="ContentDescription"
+        tools:src="@drawable/course_ic_item_header_link_single"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintVertical_bias="0.75"
+        app:layout_constraintHorizontal_bias="0.68" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

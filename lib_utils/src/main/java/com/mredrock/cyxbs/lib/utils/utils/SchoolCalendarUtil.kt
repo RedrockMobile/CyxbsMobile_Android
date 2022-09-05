@@ -28,7 +28,7 @@ object SchoolCalendarUtil {
    */
   fun getDayOfTerm(): Int? {
     return checkFirstDay {
-      val diff = System.currentTimeMillis() - mFirstDayCalendar.timeInMillis
+      val diff = System.currentTimeMillis() - mFirstMonDayCalendar.timeInMillis
       TimeUnit.DAYS.convert(diff, TimeUnit.MILLISECONDS).toInt()
     }
   }
@@ -52,18 +52,24 @@ object SchoolCalendarUtil {
   }
   
   /**
-   * 得到开学第一天
+   * 得到开学第一周的星期一
    *
    * @return 返回 null，则说明不知道开学第一天是好久
    */
-  fun getFirstDayOfTerm(): Calendar? {
+  fun getFirstMonDayOfTerm(): Calendar? {
     return checkFirstDay {
-      mFirstDayCalendar.clone() as Calendar
+      mFirstMonDayCalendar.clone() as Calendar
+    }
+  }
+  
+  fun getFirstMonDayTimestamp(): Long? {
+    return checkFirstDay {
+      mFirstMonDayCalendar.timeInMillis
     }
   }
   
   /**
-   * 更新开学第一天
+   * 更新开学时间
    * @param nowWeek 当前周数，支持负数
    */
   fun updateFirstCalendar(nowWeek: Int) {
@@ -92,7 +98,7 @@ object SchoolCalendarUtil {
      *
      * 再使用 add(Calendar.DATE, 7)
      *
-     * 得到的就是开学第一天的 calendar
+     * 得到的就是开学第一周星期一的 calendar
      * */
     
     // 保证是绝对的第一天的开始
@@ -102,29 +108,29 @@ object SchoolCalendarUtil {
       set(Calendar.SECOND, 0)
       set(Calendar.MILLISECOND, 0)
     }
-    mFirstDayCalendar.timeInMillis = calendar.timeInMillis
+    mFirstMonDayCalendar.timeInMillis = calendar.timeInMillis
     defaultSp.edit {
       // 因为那边 lib_common 有类还需要使用这个，所以需要保存在 defaultSp 中
-      putLong(FIRST_DAY, calendar.timeInMillis)
+      putLong(FIRST_MON_DAY, calendar.timeInMillis)
     }
   }
   
-  private const val FIRST_DAY = "first_day" // 这个与 lib_common 包中的 SchoolCalendar 保持一致
+  private const val FIRST_MON_DAY = "first_day" // 这个与 lib_common 包中的 SchoolCalendar 保持一致
   
-  private var mFirstDayCalendar = Calendar.getInstance().apply {
-    timeInMillis = defaultSp.getLong(FIRST_DAY, 0L)
+  private var mFirstMonDayCalendar = Calendar.getInstance().apply {
+    timeInMillis = defaultSp.getLong(FIRST_MON_DAY, 0L)
   }
   
   /**
-   * 检查 [mFirstDayCalendar] 是否正确
+   * 检查 [mFirstMonDayCalendar] 是否正确
    *
    * 只有他第一次安装且没有网络时才会出现这个情况，只要之后加载了网络，都不会再出现问题
    */
   private inline fun <T> checkFirstDay(action: () -> T): T? {
     // 不知道第一天的时间戳，说明之前都没有登录过课表
-    mFirstDayCalendar.timeInMillis = defaultSp.getLong(FIRST_DAY, 0L)
-    if (mFirstDayCalendar.timeInMillis == 0L) return null
-    mFirstDayCalendar.apply {
+    mFirstMonDayCalendar.timeInMillis = defaultSp.getLong(FIRST_MON_DAY, 0L)
+    if (mFirstMonDayCalendar.timeInMillis == 0L) return null
+    mFirstMonDayCalendar.apply {
       // 保证是绝对的第一天的开始
       set(Calendar.HOUR_OF_DAY, 0)
       set(Calendar.MINUTE, 0)

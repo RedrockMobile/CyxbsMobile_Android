@@ -22,7 +22,7 @@ import kotlinx.coroutines.flow.*
  *     //...
  * }.onCompletion {             // 结束
  *     //...
- * }.mapOrInterceptException {  // 当 status 的值不为成功时抛错，并处理错误
+ * }.mapOrInterceptException {  // 当 status 的值不为成功时或有其他网络异常时
  *
  *     toast("捕捉全部异常")      // 直接写的话可以处理全部异常
  *
@@ -35,7 +35,7 @@ import kotlinx.coroutines.flow.*
  *     }
  *
  *     ApiExceptionExcept {
- *         // 这样写可以直接处理非 ApiException 的其他异常
+ *         // 这样写可以直接处理  ApiException 的其他异常
  *     }
  *
  *     ApiException(10010) {
@@ -45,7 +45,7 @@ import kotlinx.coroutines.flow.*
  *     HttpExceptionData<XXXBean>(500) {
  *         // 处理 HttpException 并反序列化 json 为 XXXBean
  *
- *         emit(it) // 也可以重新发送 XXXBean 给下游，但注意 XXXBean 需要数据流中的泛型一致才能发送
+ *         emit(it) // 也可以重新发送 XXXBean 给下游，但注意 XXXBean 需要与数据流中的泛型一致才能发送
  *     }
  *
  *     HttpExceptionBody(500) {
@@ -60,7 +60,7 @@ import kotlinx.coroutines.flow.*
  * ## 网络请求怎么直接返回 Flow ?
  *
  * 由于目前 Retrofit 官方没有直接给出 Flow 的 adapter，如果有必要使用 Flow 的话，
- * 可以暂时使用 Observable 来转成 Flow
+ * 可以暂时使用 Observable 来转成 Flow (Flow 很多 api 处于测试阶段，不是很推荐)
  *
  * **需要先引入依赖：dependCoroutinesRx3()**
  * ```
@@ -73,7 +73,8 @@ import kotlinx.coroutines.flow.*
 /**
  * 转换为 data 并使用 DSL 写法来处理异常
  *
- * # 详细用法请查看 [Flow.interceptException]
+ * # 详细用法请查看该文件上面的注释
+ * # 更多注意事项可以查看 [Flow.interceptException]
  *
  * - [IApiWrapper] 推荐使用 [mapOrInterceptException] 方法
  * - [IApiStatus] 使用 [throwOrInterceptException] 方法

@@ -17,5 +17,4 @@ dependLibCommon() // TODO common 模块不再使用，新模块请依赖 base �
 
 dependencies {
     implementation(Rxjava.rxjava3)
-    implementation(Lifecycle.`livedata-ktx`)
 }

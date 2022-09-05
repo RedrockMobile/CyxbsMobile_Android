@@ -1,0 +1,11 @@
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="5dp"
+    android:height="8dp"
+    android:viewportWidth="5"
+    android:viewportHeight="8">
+  <path
+      android:pathData="M3.73747,3.99745L0.15367,7.19706C-0.05121,7.37998 -0.05121,7.67655 0.15367,7.85948C0.35856,8.0424 0.69074,8.0424 0.89562,7.85948L4.84129,4.33679C4.90841,4.27687 4.95354,4.20475 4.97669,4.12843C5.0322,3.96733 4.98857,3.78486 4.84579,3.65739L0.90345,0.13768C0.69784,-0.04589 0.36447,-0.04589 0.15885,0.13768C-0.04677,0.32125 -0.04677,0.61889 0.15885,0.80246L3.73747,3.99745Z"
+      android:fillColor="@color/course_noon_dusk_tv"
+      android:fillAlpha="0.4"
+      android:fillType="evenOdd"/>
+</vector>
