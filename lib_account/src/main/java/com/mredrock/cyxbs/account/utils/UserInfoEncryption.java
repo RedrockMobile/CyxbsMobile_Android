@@ -1,17 +1,9 @@
 package com.mredrock.cyxbs.account.utils;
 
-import android.content.Context;
+import static com.mredrock.cyxbs.account.AccountService.SP_KEY_USER_V2;
 import android.content.SharedPreferences;
 import android.util.Base64;
-
-import com.mredrock.cyxbs.common.BaseApp;
-import com.mredrock.cyxbs.common.config.ConfigKt;
-import com.mredrock.cyxbs.common.utils.LogUtils;
-import com.mredrock.cyxbs.common.utils.encrypt.DecryptFailureException;
-import com.mredrock.cyxbs.common.utils.encrypt.Encryptor;
-import com.mredrock.cyxbs.common.utils.encrypt.SerialAESEncryptor;
-import com.mredrock.cyxbs.common.utils.extensions.SharedPreferencesKt;
-
+import com.mredrock.cyxbs.config.sp.SpTableKt;
 import java.nio.charset.StandardCharsets;
 
 /**
@@ -20,21 +12,25 @@ import java.nio.charset.StandardCharsets;
 
 public class UserInfoEncryption {
 
-    private Encryptor encryptor;
+    private final Encryptor encryptor;
     private boolean isSupportEncrypt = true;
-
+    
+    //SharedPreferences key for encrypt version of user
+    private static final String SP_KEY_ENCRYPT_VERSION_USER = "encrypt_version_user";
+    
     public UserInfoEncryption() {
         encryptor = new SerialAESEncryptor();
         try {
             encryptor.encrypt("abc".getBytes(StandardCharsets.UTF_8));
         } catch (Exception e) {
-            LogUtils.INSTANCE.e("CSET_UIE", "not support", e);
             isSupportEncrypt = false;
         }
         synchronized (UserInfoEncryption.class) {
-            int currentVersion = SharedPreferencesKt.getDefaultSharedPreferences(BaseApp.INSTANCE.getAppContext()).getInt(ConfigKt.SP_KEY_ENCRYPT_VERSION_USER, 0);
-            if (currentVersion < ConfigKt.USER_INFO_ENCRYPT_VERSION) {
-                onUpdate(currentVersion, ConfigKt.USER_INFO_ENCRYPT_VERSION);
+            int currentVersion = SpTableKt.getDefaultSp().getInt(SP_KEY_ENCRYPT_VERSION_USER, 0);
+            //SharedPreferences value for encrypt version of user
+            int USER_INFO_ENCRYPT_VERSION = 1;
+            if (currentVersion < USER_INFO_ENCRYPT_VERSION) {
+                onUpdate(currentVersion, USER_INFO_ENCRYPT_VERSION);
             }
         }
     }
@@ -60,7 +56,6 @@ public class UserInfoEncryption {
         try {
             return new String(encryptor.decrypt(Base64.decode(base64Encrypted, Base64.DEFAULT)), StandardCharsets.UTF_8);
         } catch (DecryptFailureException e) {
-            LogUtils.INSTANCE.e("CSET_UIE", "decrypt failure", e);
             return "";
         }
     }
@@ -72,15 +67,15 @@ public class UserInfoEncryption {
      * @param ii new version
      */
     public void onUpdate(int i, int ii) {
-        SharedPreferences.Editor editor = BaseApp.INSTANCE.getAppContext().getSharedPreferences(ConfigKt.DEFAULT_PREFERENCE_FILENAME, Context.MODE_PRIVATE).edit();
+        SharedPreferences.Editor editor = SpTableKt.getDefaultSp().edit();
         if (i == 0 && ii == 1) {
-            String unEncryptedJson = SharedPreferencesKt.sharedPreferences(BaseApp.INSTANCE.getAppContext(), ConfigKt.DEFAULT_PREFERENCE_FILENAME).getString(ConfigKt.SP_KEY_USER_V2, "");
+            String unEncryptedJson = SpTableKt.getDefaultSp().getString(SP_KEY_USER_V2, "");
             if (!"".equals(unEncryptedJson)) {
                 String encryptedJson = encrypt(unEncryptedJson);
-                editor.putString(ConfigKt.SP_KEY_USER_V2, encryptedJson);
+                editor.putString(SP_KEY_USER_V2, encryptedJson);
             }
         }
-        editor.putInt(ConfigKt.SP_KEY_ENCRYPT_VERSION_USER, ii);
+        editor.putInt(SP_KEY_ENCRYPT_VERSION_USER, ii);
         editor.apply();
     }
 

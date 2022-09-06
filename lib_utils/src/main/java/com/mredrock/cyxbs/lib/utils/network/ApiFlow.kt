@@ -80,7 +80,7 @@ import kotlinx.coroutines.flow.*
  * - [IApiStatus] 使用 [throwOrInterceptException] 方法
  */
 fun <Data, T : IApiWrapper<Data>> Flow<T>.mapOrInterceptException(
-  action: ApiExceptionResult<FlowCollector<Data>>.(Throwable) -> Unit
+  action: suspend ApiExceptionResult<FlowCollector<Data>>.(Throwable) -> Unit
 ): Flow<Data> {
   return mapOrThrowApiException()
     .catch {
@@ -89,7 +89,7 @@ fun <Data, T : IApiWrapper<Data>> Flow<T>.mapOrInterceptException(
 }
 
 fun <T : IApiStatus> Flow<T>.throwOrInterceptException(
-  action: ApiExceptionResult<FlowCollector<T>>.(Throwable) -> Unit
+  action: suspend ApiExceptionResult<FlowCollector<T>>.(Throwable) -> Unit
 ): Flow<T> {
   return throwApiExceptionIfFail()
     .catch {

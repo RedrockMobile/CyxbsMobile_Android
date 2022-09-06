@@ -2,7 +2,7 @@ package com.mredrock.cyxbs.lib.course.internal.view.scroll
 
 import android.content.Context
 import android.util.AttributeSet
-import com.mredrock.cyxbs.lib.course.internal.view.scroll.base.CourseScrollControlImpl
+import com.mredrock.cyxbs.lib.course.internal.view.scroll.base.ScrollControlImpl
 
 /**
  * ...
@@ -14,5 +14,5 @@ class CourseScrollView @JvmOverloads constructor(
   context: Context,
   attrs: AttributeSet?,
   defStyleAttr: Int = 0
-) : CourseScrollControlImpl(context, attrs, defStyleAttr) {
+) : ScrollControlImpl(context, attrs, defStyleAttr) {
 }

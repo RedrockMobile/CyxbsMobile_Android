@@ -4,7 +4,9 @@ import com.mredrock.cyxbs.lib.utils.network.ApiGenerator
 import com.mredrock.cyxbs.lib.utils.network.ApiWrapper
 import com.mredrock.cyxbs.sport.model.SportDetailBean
 import io.reactivex.rxjava3.core.Single
+import okhttp3.OkHttpClient
 import retrofit2.http.GET
+import java.util.concurrent.TimeUnit
 
 /**
  * @author : why
@@ -17,7 +19,12 @@ interface SportDetailApiService {
          * SportDetailApiService的实例
          */
         val INSTANCE by lazy {
-            ApiGenerator.getApiService(SportDetailApiService::class)
+            // 因为体育打卡接口是现扒的，所以需要额外设置超时时间
+            ApiGenerator.createSelfRetrofit(true) {
+                OkHttpClient.Builder()
+                    .readTimeout(20, TimeUnit.SECONDS)
+                    .writeTimeout(20, TimeUnit.SECONDS)
+            }.create(SportDetailApiService::class.java)
         }
     }
 

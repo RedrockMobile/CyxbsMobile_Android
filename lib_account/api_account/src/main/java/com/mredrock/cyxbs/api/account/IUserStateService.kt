@@ -35,7 +35,8 @@ interface IUserStateService {
 
     fun loginByTourist()
 
-    fun refresh(onError: () -> Unit = {}, action: (token: String) -> Unit = { s: String -> })
+    @Throws(Exception::class)
+    fun refresh(): String?
 
     fun isLogin(): Boolean
 
@@ -64,24 +65,18 @@ interface IUserStateService {
     
     
     /**
-     * 观察学号的改变的状态
+     * 观察登录状态改变（状态）
      *
      * 有数据倒灌的 Observable，每次订阅会发送之前的最新值
      *
      * 如果你想对于不同学号返回给下游不同的 Observable，**需要使用 [Observable.switchMap]**，因为它可以自动停止上一个发送的 Observable
      * ```
      * 写法如下：
-     * observeStuNumState()
-     *   .switchMap { value ->
+     * observeUserStateState()
+     *   .switchMap {
      *     // switchMap 可以在上游发送新的数据时自动关闭上一次数据生成的 Observable
-     *     value.nullUnless(Observable.never()) {
-     *       if (stuNum.isEmpty()) Observable.never()
-     *       else LessonDataBase.INSTANCE.getStuLessonDao() // 数据库
-     *         .observeAllLesson(stuNum) // 观察数据库的数据变动，这是 Room 的响应式编程
-     *         .subscribeOn(Schedulers.io())
-     *         .distinctUntilChanged() // 必加，因为 Room 每次修改都会回调，所以需要加这个去重
-     *         .doOnSubscribe { getLesson(stuNum, isNeedOldList).safeSubscribeBy() } // 在开始订阅时请求一次云端数据
-     *         .map { StuResult(stuNum, it) }
+     *     when () {
+     *       ...
      *     }
      *   }
      * ```
@@ -91,11 +86,9 @@ interface IUserStateService {
     fun observeUserStateState(): Observable<UserState>
     
     /**
-     * 观察学号的改变的事件
+     * 观察登录状态改变（事件）
      *
      * 没有数据倒灌的 Observable，即每次订阅不会发送之前的最新值
-     *
-     * 因为 Rxjava 不允许数据为空值，所以使用 Result 包裹了一层
      *
      * # 注意生命周期问题！
      * ## 如果你在新模块中使用
@@ -111,12 +104,12 @@ interface IUserStateService {
      * 然后使用：
      * ```
      * IAccountService::class.impl
-     *     .getUserService()
-     *     .observeStuNumState()
+     *     .getVerifyService()
+     *     .observeUserStateEvent()
      *     .asFlow()
      *     .onEach {
-     *         it.nullUnless {
-     *             initFragment()
+     *         when (it) {
+     *             ...
      *         }
      *     }.launchIn(lifecycleScope)
      * ```

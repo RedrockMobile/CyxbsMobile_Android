@@ -19,6 +19,7 @@ import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
 import io.reactivex.rxjava3.schedulers.Schedulers
 import kotlinx.coroutines.launch
 import retrofit2.HttpException
+import java.util.concurrent.TimeUnit
 
 class BindViewModel : BaseViewModel() {
     companion object {
@@ -46,13 +47,12 @@ class BindViewModel : BaseViewModel() {
         val startTime = System.currentTimeMillis()
         bindIdsApiService.bindIds(IdsBean(idsNum, idsPassword))
             .subscribeOn(Schedulers.io())
+            .delay(
+                // 网络太快会闪一下，像bug，就让它最少待两秒吧
+                (System.currentTimeMillis() - startTime).let { if (it > 2000) 0 else it },
+                TimeUnit.MILLISECONDS
+            )
             .observeOn(AndroidSchedulers.mainThread())
-            .doOnNext {
-                sleepThread(startTime)
-            }
-            .doOnError {
-                sleepThread(startTime)
-            }
             .safeSubscribeBy(
                 onNext = {
                     viewModelScope.launch {
@@ -85,13 +85,5 @@ class BindViewModel : BaseViewModel() {
                     isAnimating = false
                 }
             )
-    }
-
-    private fun sleepThread(startTime: Long) {
-        val curTime = System.currentTimeMillis()
-        val waitTime = 1500L
-        if (curTime - startTime < waitTime) {
-            Thread.sleep(waitTime - curTime + startTime)
-        }
     }
 }

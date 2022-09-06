@@ -79,7 +79,12 @@ class SettingActivity : BaseActivity() {
             }
         }
         //退出登录
-        mBtnExit.setOnSingleClickListener { doIfLogin { onExitClick() } }
+        mBtnExit.setOnSingleClickListener {
+            doIfLogin {
+                com.mredrock.cyxbs.lib.utils.extensions.toast("退出登录会先检查请求是否正常，请稍后~")
+                onExitClick()
+            }
+        }
     }
 
     /**
@@ -88,6 +93,9 @@ class SettingActivity : BaseActivity() {
     private var mExitDisposable: Disposable? = null
 
     private fun onExitClick() {
+        if (mExitDisposable != null) {
+            return
+        }
         mExitDisposable = apiService.pingMagipoke()
             .setSchedulers()
             .safeSubscribeBy(

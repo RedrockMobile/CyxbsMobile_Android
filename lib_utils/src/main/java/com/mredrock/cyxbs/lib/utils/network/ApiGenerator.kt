@@ -1,6 +1,8 @@
 package com.mredrock.cyxbs.lib.utils.network
 
 import com.mredrock.cyxbs.common.network.ApiGenerator
+import okhttp3.OkHttpClient
+import retrofit2.Retrofit
 import kotlin.reflect.KClass
 
 /**
@@ -61,6 +63,15 @@ object ApiGenerator {
    */
   fun <T : Any> getCommonApiService(clazz: KClass<T>): T {
     return ApiGenerator.getCommonApiService(clazz.java)
+  }
+  
+  
+  fun createSelfRetrofit(
+    tokenNeeded: Boolean,
+    retrofitConfig: ((Retrofit.Builder) -> Retrofit.Builder)? = null,
+    okHttpClientConfig: ((OkHttpClient.Builder) -> OkHttpClient.Builder)? = null
+  ): Retrofit {
+    return ApiGenerator.createSelfRetrofit(retrofitConfig, okHttpClientConfig, tokenNeeded)
   }
 }
 

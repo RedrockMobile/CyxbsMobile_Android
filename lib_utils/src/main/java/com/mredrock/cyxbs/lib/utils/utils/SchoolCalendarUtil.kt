@@ -36,12 +36,12 @@ object SchoolCalendarUtil {
   /**
    * 得到当前周数
    *
-   * @return 返回 null，则说明不知道开学第一天是好久；返回 0，则表示还没有开学
+   * @return 返回 null，则说明不知道开学第一天是好久；返回 0，则表示开学前的一周（因为第一周开学）
    *
    * # 注意：存在返回负数的情况！！！
    */
   fun getWeekOfTerm(): Int? {
-    return getDayOfTerm()?.div(7)
+    return getDayOfTerm()?.div(7)?.plus(1)
   }
   
   /**

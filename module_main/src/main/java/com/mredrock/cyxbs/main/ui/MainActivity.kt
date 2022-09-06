@@ -358,6 +358,7 @@ class MainActivity : BaseViewModelActivity<MainViewModel>(),
         //如果为异常启动，则可以取得选中状态
         bundle?.getInt(BOTTOM_SHEET_STATE)
             ?.let { viewModel.isCourseDirectShow = it == BottomSheetBehavior.STATE_EXPANDED }
+        Log.d("ggg", "(MainActivity.kt:361) -> isCourseDirectShow = ${viewModel.isCourseDirectShow}")
         lastState =
             if (viewModel.isCourseDirectShow) BottomSheetBehavior.STATE_EXPANDED else BottomSheetBehavior.STATE_COLLAPSED
         val isShortcut = intent.action == FAST

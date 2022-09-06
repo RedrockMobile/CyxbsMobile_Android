@@ -1,7 +1,6 @@
 package com.mredrock.cyxbs.lib.base.ui
 
 import android.annotation.SuppressLint
-import android.content.Intent
 import android.content.pm.ActivityInfo
 import android.graphics.Color
 import android.os.Bundle
@@ -121,10 +120,10 @@ abstract class BaseActivity : OperationActivity() {
   /**
    * 快速得到 intent 中的变量，直接使用反射拿了变量的名字。支持声明为 var 修改对应参数
    * ```
-   * var key by intent.helper<String>()
+   * var key by intent<String>()
    *
    * 这样写会在 intent 中寻找名字叫 key 的参数
    * ```
    */
-  inline fun <reified T : Any> Intent?.helper() = IntentHelper(T::class.java) { intent }
+  inline fun <reified T : Any> intent() = IntentHelper(T::class.java) { intent }
 }

@@ -1,8 +1,11 @@
 package com.mredrock.cyxbs.account
 
 import android.content.Context
+import android.os.Handler
+import android.os.Looper
 import androidx.annotation.MainThread
 import androidx.annotation.WorkerThread
+import androidx.core.content.edit
 import com.afollestad.materialdialogs.MaterialDialog
 import com.alibaba.android.arouter.facade.annotation.Route
 import com.google.gson.Gson
@@ -14,17 +17,17 @@ import com.mredrock.cyxbs.account.bean.TokenWrapper
 import com.mredrock.cyxbs.account.utils.UserInfoEncryption
 import com.mredrock.cyxbs.api.account.*
 import com.mredrock.cyxbs.api.account.utils.Value
-import com.mredrock.cyxbs.common.network.ApiGenerator
-import com.mredrock.cyxbs.common.network.exception.RedrockApiException
-import com.mredrock.cyxbs.common.service.ServiceManager
 import com.mredrock.cyxbs.api.electricity.IElectricityService
 import com.mredrock.cyxbs.api.login.ILoginService
 import com.mredrock.cyxbs.api.volunteer.IVolunteerService
-import com.mredrock.cyxbs.common.BaseApp
-import com.mredrock.cyxbs.common.bean.RedrockApiWrapper
-import com.mredrock.cyxbs.common.config.*
-import com.mredrock.cyxbs.common.service.impl
-import com.mredrock.cyxbs.common.utils.extensions.*
+import com.mredrock.cyxbs.config.sp.defaultSp
+import com.mredrock.cyxbs.lib.utils.extensions.dp2pxF
+import com.mredrock.cyxbs.lib.utils.extensions.toast
+import com.mredrock.cyxbs.lib.utils.network.ApiException
+import com.mredrock.cyxbs.lib.utils.network.ApiGenerator
+import com.mredrock.cyxbs.lib.utils.network.ApiWrapper
+import com.mredrock.cyxbs.lib.utils.service.ServiceManager
+import com.mredrock.cyxbs.lib.utils.service.impl
 import io.reactivex.rxjava3.core.Observable
 import io.reactivex.rxjava3.subjects.BehaviorSubject
 import io.reactivex.rxjava3.subjects.PublishSubject
@@ -52,7 +55,7 @@ internal class AccountService : IAccountService {
     override fun init(context: Context) {
         this.mContext = context
         (mUserStateService as UserStateService).loginFromCache(context)
-        isTouristMode = context.defaultSharedPreferences.getBoolean(IS_TOURIST, false)
+        isTouristMode = defaultSp.getBoolean(SP_IS_TOURIST, false)
     }
 
     override fun getUserService() = mUserService
@@ -69,23 +72,23 @@ internal class AccountService : IAccountService {
         }
         this.tokenWrapper = tokenWrapper
         //每次刷新存储到本地
-        mContext.defaultSharedPreferences.editor {
+        defaultSp.edit {
             putString(
                 SP_KEY_USER_V2,
                 mUserInfoEncryption.encrypt(Gson().toJson(tokenWrapper))
             )
         }
         //每次刷新的时候拿token请求一次个人信息，覆盖原来的
-        ApiGenerator.getCommonApiService(ApiService::class.java)
+        ApiGenerator.getCommonApiService(ApiService::class)
             .getUserInfo("Bearer ${tokenWrapper.token}")
-            .enqueue(object: Callback<RedrockApiWrapper<UserInfo>> {
+            .enqueue(object: Callback<ApiWrapper<UserInfo>> {
                 override fun onResponse(
-                    call: Call<RedrockApiWrapper<UserInfo>>,
-                    response: Response<RedrockApiWrapper<UserInfo>>
+                    call: Call<ApiWrapper<UserInfo>>,
+                    response: Response<ApiWrapper<UserInfo>>
                 ) {
                     val userInfo = response.body()?.data //如果为空就不更新
                     userInfo?.let {
-                        mContext.defaultSharedPreferences.editor {
+                        defaultSp.edit {
                             putString(SP_KEY_USER_INFO, mUserInfoEncryption.encrypt(Gson().toJson(userInfo)))
                         }
                         this@AccountService.user = userInfo
@@ -94,8 +97,8 @@ internal class AccountService : IAccountService {
                     }
                 }
 
-                override fun onFailure(call: Call<RedrockApiWrapper<UserInfo>>, t: Throwable) {
-                    BaseApp.appContext.toast("个人信息无法更新")
+                override fun onFailure(call: Call<ApiWrapper<UserInfo>>, t: Throwable) {
+                    toast("个人信息无法更新")
                 }
             })
     }
@@ -229,7 +232,7 @@ internal class AccountService : IAccountService {
                 return true
             }
             val curTime = System.currentTimeMillis()
-            val expiredTime = mContext.defaultSharedPreferences.getLong(SP_KEY_TOKEN_EXPIRED, 0)
+            val expiredTime = defaultSp.getLong(SP_KEY_TOKEN_EXPIRED, 0)
             //预留10s，防止一些奇怪的错误出现
             return curTime - expiredTime >= 10000L
         }
@@ -237,14 +240,14 @@ internal class AccountService : IAccountService {
         override fun isRefreshTokenExpired(): Boolean {
             val curTime = System.currentTimeMillis()
             val expiredTime =
-                mContext.defaultSharedPreferences.getLong(SP_KEY_REFRESH_TOKEN_EXPIRED, 0)
+                defaultSp.getLong(SP_KEY_REFRESH_TOKEN_EXPIRED, 0)
             //当前时间比预期过期时间快10s，就过期了
             return curTime - expiredTime >= 10000L
         }
 
         fun loginFromCache(context: Context) {
-            val encryptedTokenJson = context.defaultSharedPreferences.getString(SP_KEY_USER_V2, "")
-            val userInfo = context.defaultSharedPreferences.getString(SP_KEY_USER_INFO, "")
+            val encryptedTokenJson = defaultSp.getString(SP_KEY_USER_V2, "")
+            val userInfo = defaultSp.getString(SP_KEY_USER_INFO, "")
             userInfo?.let {
                 user = GsonBuilder().create()
                     .fromJson(mUserInfoEncryption.decrypt(userInfo), UserInfo::class.java)
@@ -260,34 +263,32 @@ internal class AccountService : IAccountService {
                 isLogin() -> IUserStateService.UserState.LOGIN
                 else -> IUserStateService.UserState.NOT_LOGIN
             }
-            context.runOnUiThread {
+            Handler(Looper.getMainLooper()).post {
                 notifyAllStateListeners(state)
             }
         }
-        override fun refresh(onError: () -> Unit, action: (token: String) -> Unit) {
-            val refreshToken = tokenWrapper?.refreshToken ?: return
-            val response = ApiGenerator.getCommonApiService(ApiService::class.java)
+        override fun refresh(): String? {
+            val refreshToken = tokenWrapper?.refreshToken ?: return null
+            val response = ApiGenerator.getCommonApiService(ApiService::class)
                 .refresh(RefreshParams(refreshToken),mUserService.getStuNum()).execute()
-            if (response.body() == null) {
-                //TODO: 与后端确认一下状态码
-                if (response.code() == 400) {//确定是因为refreshToken失效引起的刷新失败
-                    mContext.runOnUiThread {
-                        toast(R.string.account_token_expired_tip)
-                    }
+            val body = response.body()
+            if (body != null) {
+                // 根据后端标准返回文档：https://redrock.feishu.cn/wiki/wikcnB9p6U45ZJZmxwTEu8QXvye
+                if (body.status == 20004) {
+                    toast("用户认证刷新失败，请重新登录")
+                    return null
                 }
-                onError.invoke()
-                throw HttpException(response)
-            }
-            response.body()?.data?.let { data ->
+            } else return null
+            return body.data.let { data ->
                 bind(data)
-                mContext.runOnUiThread {
-                    notifyAllStateListeners(IUserStateService.UserState.REFRESH)
-                    isTouristMode = false
-                    this.defaultSharedPreferences.editor {
-                        putBoolean(IS_TOURIST, isTouristMode)
-                    }
+                isTouristMode = false
+                defaultSp.edit {
+                    putBoolean(SP_IS_TOURIST, isTouristMode)
                 }
-                mContext.defaultSharedPreferences.editor {
+                Handler(Looper.getMainLooper()).post {
+                    notifyAllStateListeners(IUserStateService.UserState.REFRESH)
+                }
+                defaultSp.edit {
                     putLong(
                         SP_KEY_REFRESH_TOKEN_EXPIRED,
                         System.currentTimeMillis() + SP_REFRESH_DAY
@@ -297,7 +298,7 @@ internal class AccountService : IAccountService {
                         System.currentTimeMillis() + SP_TOKEN_TIME
                     )
                 }
-                action.invoke(data.token)
+                data.token
             }
         }
 
@@ -320,7 +321,7 @@ internal class AccountService : IAccountService {
                 negativeButton(R.string.account_login_later) {
                     dismiss()
                 }
-                cornerRadius(res = com.mredrock.cyxbs.common.R.dimen.common_corner_radius)
+                cornerRadius(16.dp2pxF)
             }
 
         }
@@ -331,7 +332,7 @@ internal class AccountService : IAccountService {
          */
         @WorkerThread
         override fun login(context: Context, uid: String, passwd: String) {
-            val response = ApiGenerator.getCommonApiService(ApiService::class.java)
+            val response = ApiGenerator.getCommonApiService(ApiService::class)
                 .login(LoginParams(uid, passwd)).execute()
             //不同情况给用户不同的提示
             if (response.code() == 400) {
@@ -346,14 +347,14 @@ internal class AccountService : IAccountService {
             //该字段涉及到Java的反射，kotlin的机制无法完全保证不为空，需要判断一下
             if (apiWrapper?.data != null) {
                 bind(apiWrapper.data)
-                mContext.runOnUiThread {
-                    notifyAllStateListeners(IUserStateService.UserState.LOGIN)
-                    isTouristMode = false
-                    this.defaultSharedPreferences.editor {
-                        putBoolean(IS_TOURIST, isTouristMode)
-                    }
+                isTouristMode = false
+                defaultSp.edit {
+                    putBoolean(SP_IS_TOURIST, isTouristMode)
                 }
-                context.defaultSharedPreferences.editor {
+                Handler(Looper.getMainLooper()).post {
+                    notifyAllStateListeners(IUserStateService.UserState.LOGIN)
+                }
+                defaultSp.edit {
                     putString(
                         SP_KEY_USER_V2,
                         mUserInfoEncryption.encrypt(Gson().toJson(apiWrapper.data))
@@ -369,37 +370,37 @@ internal class AccountService : IAccountService {
                 }
             } else {
                 apiWrapper?.apply {
-                    throw RedrockApiException(info, status)
+                    throw ApiException(status, info)
                 }
             }
         }
 
         override fun logout(context: Context) {
-            context.defaultSharedPreferences.editor {
+            defaultSp.edit {
                 putString(SP_KEY_USER_V2, "")
                 putString(SP_KEY_USER_INFO, "")
                 putLong(SP_KEY_REFRESH_TOKEN_EXPIRED, 0)
                 putLong(SP_KEY_TOKEN_EXPIRED, 0)
             }
-            ServiceManager.getService(IElectricityService::class.java).clearSP()
-            ServiceManager.getService(IVolunteerService::class.java).clearSP()
+            ServiceManager(IElectricityService::class).clearSP()
+            ServiceManager(IVolunteerService::class).clearSP()
             user = null
             // 通知 StuNum 更新
             (mUserService as UserService).emitStuNum(null)
             tokenWrapper = null
-            mContext.runOnUiThread {
+            Handler(Looper.getMainLooper()).post {
                 notifyAllStateListeners(IUserStateService.UserState.NOT_LOGIN)
             }
         }
 
         //游客模式
         override fun loginByTourist() {
-            mContext.runOnUiThread {
+            isTouristMode = true
+            defaultSp.edit {
+                putBoolean(SP_IS_TOURIST, isTouristMode)
+            }
+            Handler(Looper.getMainLooper()).post {
                 notifyAllStateListeners(IUserStateService.UserState.TOURIST)
-                isTouristMode = true
-                this.defaultSharedPreferences.editor {
-                    putBoolean(IS_TOURIST, isTouristMode)
-                }
             }
         }
     }
@@ -412,5 +413,28 @@ internal class AccountService : IAccountService {
         override fun getToken(): String {
             return tokenWrapper?.token ?: ""
         }
+    }
+    
+    companion object {
+        // 是否是游客模式
+        const val SP_IS_TOURIST = "is_tourist"
+    
+        //UserToken信息存储key
+        const val SP_KEY_USER_V2 = "cyxbsmobile_user_v2"
+    
+        //User信息存储key
+        const val SP_KEY_USER_INFO = "cyxbsmobile_user_info"
+    
+        //token失效时间
+        const val SP_KEY_TOKEN_EXPIRED = "user_token_expired_time"
+    
+        //token 后端规定token2h过期，客户端规定1h55分过期，以防错误，时间戳
+        const val SP_TOKEN_TIME = 6900000
+    
+        //refreshToken失效时间
+        const val SP_KEY_REFRESH_TOKEN_EXPIRED = "user_refresh_token_expired_time"
+    
+        //refreshToken 后端规定45天过期，客户端规定44天过期，以防错误，时间戳
+        const val SP_REFRESH_DAY = 3801600000
     }
 }
