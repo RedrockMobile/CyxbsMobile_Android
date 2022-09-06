@@ -1,6 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
+    <!--如果要使用纯白色和纯黑色（日间和夜间模式也一样），请使用 @android:color/white-->
+
     <color name="config_white_black">#000000</color>
     <color name="config_black_white">#FFFFFF</color>
 

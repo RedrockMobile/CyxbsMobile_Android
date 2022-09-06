@@ -1,8 +1,8 @@
 package com.mredrock.cyxbs.lib.base.ui.mvvm
 
-import androidx.databinding.ViewDataBinding
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
+import androidx.viewbinding.ViewBinding
 import com.mredrock.cyxbs.lib.base.ui.BaseBindActivity
 import com.mredrock.cyxbs.lib.utils.utils.GenericityUtils.getGenericClassFromSuperClass
 
@@ -12,7 +12,7 @@ import com.mredrock.cyxbs.lib.utils.utils.GenericityUtils.getGenericClassFromSup
  * @email 2767465918@qq.com
  * @data 2021/6/2
  */
-abstract class BaseVmBindActivity<VM : ViewModel, VB : ViewDataBinding> : BaseBindActivity<VB>() {
+abstract class BaseVmBindActivity<VM : ViewModel, VB : ViewBinding> : BaseBindActivity<VB>() {
   
   @Suppress("UNCHECKED_CAST")
   protected val viewModel by lazy(LazyThreadSafetyMode.NONE) {

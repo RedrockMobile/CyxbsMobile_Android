@@ -89,6 +89,7 @@ class SportRepository : InitialService {
           if (sSportData == null) {
             SportDetailApiService.INSTANCE
               .getSportDetailData()
+              .subscribeOn(Schedulers.io())
               .mapOrThrowApiException()
               .interceptExceptionByResult {
                 emitter.onSuccess(Result.failure(throwable))

@@ -164,7 +164,7 @@ class EmptyRoomActivity : BaseViewModelActivity<EmptyRoomViewModel>(), OnItemSel
 
     private fun initData() {
 //      在未登录情况时，无法获取正确的当前周值，默认指向第一周
-        var week = SchoolCalendar().weekOfTerm
+        var week = SchoolCalendar.getWeekOfTerm() ?: 0
         val temp = mMultiSelectorWeek.getDisplayValues<String>()
         val list = ArrayList(temp)
         //删除"整学期"

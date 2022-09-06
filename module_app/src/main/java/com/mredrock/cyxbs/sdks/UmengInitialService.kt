@@ -33,12 +33,12 @@ class UmengInitialService : InitialService {
         UMConfigure.preInit(appContext, BuildConfig.UM_APP_KEY, UMENG_CHANNEL)
     }
 
-    override fun onSdkProcess(manager: InitialManager) {
+    override fun onOtherProcess(manager: InitialManager) {
         LogUtils.e("TAG", "onSdkProcess: \ncurrentProcess = ${manager.currentProcessName()}\n")
         initUmengPush(manager)
     }
 
-    override fun isSdkProcess(manager: InitialManager): Boolean =
+    override fun isOtherProcess(manager: InitialManager): Boolean =
         manager.currentProcessName()?.endsWith(":channel") ?: false
 
     override fun onPrivacyAgreed(manager: InitialManager) {

@@ -31,7 +31,7 @@ open class BaseApp : Application(), InitialManager {
     ConfigApplicationWrapper.initialize(this)
     com.mredrock.cyxbs.common.BaseApp.onCreate(this)
     initARouter()
-    initSdkService()
+    initInitialService()
   }
   
   /**
@@ -50,7 +50,7 @@ open class BaseApp : Application(), InitialManager {
   
   private val loader = ServiceLoader.load(InitialService::class.java)
   
-  private fun initSdkService() {
+  private fun initInitialService() {
     //由于android每开辟进程都会访问application的生命周期方法,所以为了保证sdk初始化无措，最好对其进行过滤。
     //因为有些sdk的初始化不是幂等的，即多次初始化会导致进程的crash。这样就会导致一些未知的问题。
     //所以解决方案就是对当前进程进程判断，只在main进程初始化sdk，其余进程默认不进行sdk的初始化。
@@ -65,7 +65,7 @@ open class BaseApp : Application(), InitialManager {
   //非主进程
   private fun onOtherProcess() {
     loader.forEach {
-      it.onSdkProcess(this)
+      it.onOtherProcess(this)
     }
   }
   

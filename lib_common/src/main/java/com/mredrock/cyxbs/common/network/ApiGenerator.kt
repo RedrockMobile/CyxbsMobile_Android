@@ -11,7 +11,6 @@ import com.mredrock.cyxbs.common.bean.BackupUrlStatus
 import com.mredrock.cyxbs.common.bean.RedrockApiWrapper
 import com.mredrock.cyxbs.common.service.ServiceManager
 import com.mredrock.cyxbs.common.utils.LogUtils
-import com.mredrock.cyxbs.common.utils.extensions.takeIfNoException
 import okhttp3.*
 import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit
@@ -24,6 +23,7 @@ import com.mredrock.cyxbs.common.BaseApp
 import com.mredrock.cyxbs.common.config.*
 import com.mredrock.cyxbs.common.utils.LogLocal
 import retrofit2.adapter.rxjava3.RxJava3CallAdapterFactory
+import java.util.concurrent.locks.ReentrantLock
 
 
 /**
@@ -34,17 +34,14 @@ import retrofit2.adapter.rxjava3.RxJava3CallAdapterFactory
  * Created by AceMurder on 2018/1/24.
  */
 object ApiGenerator {
-    private const val DEFAULT_TIME_OUT = 30
+    private const val DEFAULT_TIME_OUT = 5
 
     private var retrofit: Retrofit //统一添加了token到header
     private var commonRetrofit: Retrofit // 未添加token到header
 
+    @Volatile
     private var token = ""
-    private var refreshToken = ""
     private val retrofitMap by lazy { SparseArray<Retrofit>() }
-
-    //是否正在刷新Token
-    private var lastExpiredToken = ""
 
     //init对两种公共的retrofit进行配置
     init {
@@ -54,7 +51,6 @@ object ApiGenerator {
             when (it) {
                 IUserStateService.UserState.LOGIN, IUserStateService.UserState.REFRESH -> {
                     token = accountService.getUserTokenService().getToken()
-                    refreshToken = accountService.getUserTokenService().getRefreshToken()
                 }
                 else -> {
                     //不用操作
@@ -62,9 +58,7 @@ object ApiGenerator {
             }
         }
         token = accountService.getUserTokenService().getToken()
-        refreshToken = accountService.getUserTokenService().getRefreshToken()
         LogUtils.d("tokenTag", "token = $token")
-        LogUtils.d("tokenTag", "refresh token = $refreshToken")
         retrofit = Retrofit.Builder().apply {
             this.defaultConfig()
             configRetrofitBuilder {
@@ -96,22 +90,7 @@ object ApiGenerator {
     fun <T> getCommonApiService(clazz: Class<T>) = commonRetrofit.create(clazz)
 
     /**
-     *这个方法提供对OkHttp和Retrofit进行自定义的操作，通过uniqueNum可以实现不同子模块中的复用，而不需要在通用模块中添加。
-     *默认会完成部分基础设置，此处传入的两个lambda在基础设置之后执行，可以覆盖基础设置。
-     * 需要先进行注册才能使用。
-     *@throws IllegalAccessException
-     */
-    fun <T> getApiService(uniqueNum: Int, clazz: Class<T>): T {
-
-        if (retrofitMap[uniqueNum] == null) {
-            throw IllegalArgumentException()
-        }
-        return retrofitMap[uniqueNum]!!.create(clazz)
-    }
-
-    /**
-     * 通过此方法对配置进行注册，之后即可使用uniqueNum获取service。
-     * @param uniqueNum retrofit标识符
+     * 通过此方法对得到单独的 Retrofit
      * @param retrofitConfig 配置Retrofit.Builder，已配置有
      * @see GsonConverterFactory
      * @see RxJava3CallAdapterFactory
@@ -121,8 +100,8 @@ object ApiGenerator {
      * null-> 默认Timeout
      * @param tokenNeeded 是否需要添加token请求
      */
-    fun registerNetSettings(uniqueNum: Int, retrofitConfig: ((Retrofit.Builder) -> Retrofit.Builder)? = null, okHttpClientConfig: ((OkHttpClient.Builder) -> OkHttpClient.Builder)? = null, tokenNeeded: Boolean) {
-        retrofitMap.put(uniqueNum, Retrofit.Builder()
+    fun createSelfRetrofit(retrofitConfig: ((Retrofit.Builder) -> Retrofit.Builder)? = null, okHttpClientConfig: ((OkHttpClient.Builder) -> OkHttpClient.Builder)? = null, tokenNeeded: Boolean): Retrofit {
+        return Retrofit.Builder()
                 //对传入的retrofitConfig配置
                 .apply {
                     if (retrofitConfig == null)
@@ -133,16 +112,17 @@ object ApiGenerator {
                 //对传入的okHttpClientConfig配置
                 .configRetrofitBuilder {
                     it.apply {
+                        
                         if (tokenNeeded && !isTouristMode())
                             configureTokenOkHttp()
                         if (okHttpClientConfig == null)
                             this.defaultConfig()
                         else
                             okHttpClientConfig.invoke(
-                                it.addInterceptor(BackupInterceptor())
+                                it.addInterceptor(BackupInterceptor)
                             )
                     }.build()
-                }.build())
+                }.build()
     }
 
     //以下是retrofit基本配置
@@ -209,7 +189,7 @@ object ApiGenerator {
              * 一旦切换，只有重启app才能切回来（因为如果请求得到的url不是原来的@{link getBaseUrl()}，则切换到新的url，而以后访问都用这个新的url了）
              * 放在tokenInterceptor上游的理由是：因为那里面还有token刷新机制，无法判断是否真正是因为服务器的原因请求失败
              */
-            interceptors().add(BackupInterceptor())
+            interceptors().add(BackupInterceptor)
         }.build()
     }
 
@@ -232,7 +212,7 @@ object ApiGenerator {
              * 一旦切换，只有重启app才能切回来（因为如果请求得到的url不是原来的@{link getBaseUrl()}，则切换到新的url，而以后访问都用这个新的url了）
              * 放在tokenInterceptor上游的理由是：因为那里面还有token刷新机制，无法判断是否真正是因为服务器的原因请求失败
              */
-            interceptors().add(BackupInterceptor())
+//            interceptors().add(BackupInterceptor())
 
 
             interceptors().add(Interceptor {
@@ -242,9 +222,8 @@ object ApiGenerator {
                  * 如果有更好方式再改改
                  */
                 when {
-                    refreshToken.isEmpty() || token.isEmpty() -> {
+                    token.isEmpty() -> {
                         token = ServiceManager.getService(IAccountService::class.java).getUserTokenService().getToken()
-                        refreshToken = ServiceManager.getService(IAccountService::class.java).getUserTokenService().getRefreshToken()
                         if (isTokenExpired()) {
                             checkRefresh(it, token)
                         } else {
@@ -257,33 +236,20 @@ object ApiGenerator {
                         checkRefresh(it, token)
                     }
                     else -> {
-                        val response = proceedPoxyWithTryCatch { it.proceed(it.request().newBuilder().header("Authorization", "Bearer $token").build()) }
-                        //此处拦截http状态码进行统一处理
-                        response?.apply {
-                            when (code) {
-                                TOKEN_EXPIRE -> {
-                                    response.close()
-                                    checkRefresh(it, token)
-                                }
-                                SUCCESS -> {
-                                    return@Interceptor this
-                                }
-                                else -> {
-                                    return@Interceptor this
-                                }
-                            }
-                        }
+                        proceedPoxyWithTryCatch { it.proceed(it.request().newBuilder().header("Authorization", "Bearer $token").build()) }
                     }
                 } as Response
             })
         }.build()
     }
-
-    //对token和refreshToken进行刷新
-    @Synchronized
+    
+    private val mReentrantLock = ReentrantLock()
+    
+    //对token进行刷新
     private fun checkRefresh(chain: Interceptor.Chain, expiredToken: String): Response? {
-
-        var response = proceedPoxyWithTryCatch { chain.proceed(chain.request().newBuilder().header("Authorization", "Bearer $token").build()) }
+        
+        mReentrantLock.lock()
+        
         /**
          * 刷新token条件设置为，已有refreshToken，并且已经过期，也可以后端返回特定到token失效code
          * 当第一个过期token请求接口后，改变token和refreshToken，防止同步refreshToken失效
@@ -292,27 +258,16 @@ object ApiGenerator {
          * 可能会出现多个接口因为token过期导致同时（虽然是顺序执行）的情况
          * 故要求在刷新时传递过期token过来，如果该过期token已经被刷新，就直接配置新token，不再刷新
          */
-        if (lastExpiredToken == expiredToken) {//认定已经刷新成功，直接返回新的请求
-            response?.close()
+        if (expiredToken != token) {//认定已经刷新成功，直接返回新的请求
+            mReentrantLock.unlock()
             return proceedPoxyWithTryCatch { chain.run { proceed(chain.request().newBuilder().header("Authorization", "Bearer $token").build()) } }
         }
-        lastExpiredToken = expiredToken
-        if (refreshToken.isNotEmpty() && (isTokenExpired() || response?.code == 403)) {
-            takeIfNoException {
-                ServiceManager.getService(IAccountService::class.java).getVerifyService().refresh(
-                        onError = {
-                            response?.close()
-                        },
-                        action = { s: String ->
-                            response?.close()
-//                            appContext.toast("用户认证刷新成功")
-                            response = proceedPoxyWithTryCatch { chain.run { proceed(chain.request().newBuilder().header("Authorization", "Bearer $s").build()) } }
-                        }
-                )
-            }
-
+        try {
+            token = ServiceManager.getService(IAccountService::class.java).getVerifyService().refresh() ?: return null
+            return proceedPoxyWithTryCatch { chain.run { proceed(chain.request().newBuilder().header("Authorization", "Bearer $token").build()) } }
+        } finally {
+            mReentrantLock.unlock()
         }
-        return response
     }
     
     private var mLastToastTime = 0L
@@ -340,7 +295,7 @@ object ApiGenerator {
 
 
 
-    class BackupInterceptor : Interceptor {
+    object BackupInterceptor : Interceptor {
 
         @Volatile
         private var useBackupUrl: Boolean = false
