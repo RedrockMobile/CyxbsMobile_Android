@@ -134,10 +134,10 @@ abstract class BaseFragment : OperationFragment {
    *   }
    * }
    *
-   * var key by arguments.helper<String>()
+   * var key by arguments<String>()
    *
    * 这样写会在 arguments 中寻找名字叫 key 的参数
    * ```
    */
-  fun <T : Any> Bundle?.helper() = ArgumentHelper<T>{ this!! }
+  fun <T : Any> arguments() = ArgumentHelper<T>{ arguments!! }
 }

@@ -42,8 +42,8 @@ class LoginViewModel : BaseViewModel() {
             it.onComplete()
         }.subscribeOn(Schedulers.io())
             .delay(
-                // 网络太快会闪一下，像bug，就让它最少待一秒吧
-                (System.currentTimeMillis() - startTime).let { if (it > 1000) 0 else it },
+                // 网络太快会闪一下，像bug，就让它最少待两秒吧
+                (System.currentTimeMillis() - startTime).let { if (it > 2000) 0 else it },
                 TimeUnit.MILLISECONDS
             ).observeOn(AndroidSchedulers.mainThread())
             .doOnComplete {
