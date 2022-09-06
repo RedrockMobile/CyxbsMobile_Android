@@ -215,24 +215,35 @@
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/sport_cl_detail_top">
 
-                <com.scwang.smart.refresh.layout.SmartRefreshLayout
-                    android:id="@+id/sport_srl_detail_list"
+                <androidx.cardview.widget.CardView
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent">
+                    android:layout_height="match_parent"
+                    android:backgroundTint="@color/sport_cardview_background"
+                    app:cardCornerRadius="24dp"
+                    app:cardElevation="0dp">
 
-                    <com.mredrock.cyxbs.sport.widget.MyHeader
+                    <com.scwang.smart.refresh.layout.SmartRefreshLayout
+                        android:id="@+id/sport_srl_detail_list"
                         android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:background="@drawable/sport_shape_round_corner" />
+                        android:layout_height="match_parent">
 
-                    <androidx.recyclerview.widget.RecyclerView
-                        android:id="@+id/sport_rv_detail_list"
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:clipToPadding="false"
-                        android:paddingTop="16dp"
-                        tools:listitem="@layout/sport_item_rv_detail_list" />
-                </com.scwang.smart.refresh.layout.SmartRefreshLayout>
+                        <com.mredrock.cyxbs.sport.widget.MyHeader
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginStart="30dp"
+                            android:layout_marginTop="10dp"
+                            android:layout_marginEnd="30dp"
+                            android:background="@drawable/sport_shape_round_corner" />
+
+                        <androidx.recyclerview.widget.RecyclerView
+                            android:id="@+id/sport_rv_detail_list"
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:clipToPadding="false"
+                            android:paddingTop="16dp"
+                            tools:listitem="@layout/sport_item_rv_detail_list" />
+                    </com.scwang.smart.refresh.layout.SmartRefreshLayout>
+                </androidx.cardview.widget.CardView>
             </FrameLayout>
 
             <com.google.android.material.imageview.ShapeableImageView
