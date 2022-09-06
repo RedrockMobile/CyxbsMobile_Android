@@ -34,8 +34,8 @@ class HomeWeekFragment : CoursePageFragment() {
     }
   }
   
-//  private val mWeek by arguments.helper<Int>()
-  private val mWeek by lazyUnlock { arguments!!.getInt("mWeek") }
+  private val mWeek by arguments.helper<Int>()
+//  private val mWeek by lazyUnlock { arguments!!.getInt("mWeek") }
   
   private val mViewModel by createViewModelLazy(
     HomeCourseViewModel::class,

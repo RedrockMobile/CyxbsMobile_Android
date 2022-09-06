@@ -11,7 +11,7 @@ import com.mredrock.cyxbs.lib.course.internal.view.course.ICourseScrollControl
  * @email guo985892345@foxmail.com
  * @date 2022/8/20 14:21
  */
-abstract class CourseScrollControlImpl @JvmOverloads constructor(
+abstract class ScrollControlImpl @JvmOverloads constructor(
   context: Context,
   attrs: AttributeSet?,
   defStyleAttr: Int = 0
