@@ -16,11 +16,11 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name="com.mredrock.cyxbs.noclass.page.ui.NoClassActivity"/>
+        <activity android:name="com.mredrock.cyxbs.noclass.page.ui.activity.NoClassActivity"/>
         <activity
-            android:name=".page.ui.GroupManagerActivity"
+            android:name=".page.ui.activity.GroupManagerActivity"
             android:windowSoftInputMode="adjustNothing"/>
-        <activity android:name=".page.ui.GroupDetailActivity"/>
+        <activity android:name=".page.ui.activity.GroupDetailActivity"/>
 
     </application>
 

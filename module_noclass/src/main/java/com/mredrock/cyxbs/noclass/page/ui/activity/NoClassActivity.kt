@@ -1,4 +1,4 @@
-package com.mredrock.cyxbs.noclass.page.ui
+package com.mredrock.cyxbs.noclass.page.ui.activity
 
 import android.animation.ValueAnimator
 import android.app.Activity
@@ -17,15 +17,18 @@ import androidx.core.animation.doOnStart
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.alibaba.android.arouter.facade.annotation.Route
+import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.mredrock.cyxbs.api.account.IAccountService
 import com.mredrock.cyxbs.config.route.DISCOVER_NO_CLASS
 import com.mredrock.cyxbs.lib.base.ui.mvvm.BaseVmActivity
 import com.mredrock.cyxbs.lib.utils.extensions.setOnSingleClickListener
 import com.mredrock.cyxbs.lib.utils.service.ServiceManager
+import com.mredrock.cyxbs.lib.utils.utils.SchoolCalendarUtil
 import com.mredrock.cyxbs.noclass.R
 import com.mredrock.cyxbs.noclass.bean.NoclassGroup
 import com.mredrock.cyxbs.noclass.page.adapter.NoClassGroupAdapter
 import com.mredrock.cyxbs.noclass.page.ui.dialog.SearchStudentDialog
+import com.mredrock.cyxbs.noclass.page.ui.fragment.NoClassCourseVpFragment
 import com.mredrock.cyxbs.noclass.page.viewmodel.NoClassViewModel
 import com.mredrock.cyxbs.noclass.util.alphaAnim
 import com.mredrock.cyxbs.noclass.util.collapseAnim
@@ -103,6 +106,13 @@ class NoClassActivity : BaseVmActivity<NoClassViewModel>(){
   private val mBtnQuery : Button by R.id.noclass_btn_query.view()
   
   /**
+   * 底部查询fragment的container
+   */
+  private val mCourseContainer : FrameLayout by R.id.noclass_course_bottom_sheet_container.view()
+  
+  private lateinit var mCourseSheetBehavior: BottomSheetBehavior<FrameLayout>
+  
+  /**
    * 流式布局的展开动画
    */
   private var mCollapseAnim : ValueAnimator? = null
@@ -149,7 +159,7 @@ class NoClassActivity : BaseVmActivity<NoClassViewModel>(){
   
   /**
    * groupId
-   *
+   * 当前选择分组
    * -1代表默认分组
    */
   private var mGroupId : String = "-1"
@@ -168,6 +178,7 @@ class NoClassActivity : BaseVmActivity<NoClassViewModel>(){
    * 记录待从组中删除的学生
    */
   private var toBeDeleteStu = NoclassGroup.Member("","")
+  
   /**
    * 是否有更改值
    */
@@ -302,7 +313,7 @@ class NoClassActivity : BaseVmActivity<NoClassViewModel>(){
    */
   private fun initTextView(){
     mTextView.setOnClickListener {
-      val intent = (Intent(this@NoClassActivity,GroupManagerActivity::class.java).apply {
+      val intent = (Intent(this@NoClassActivity, GroupManagerActivity::class.java).apply {
         putExtra("GroupList",mList as Serializable)
       })
       startForResult.launch(intent)
@@ -315,14 +326,42 @@ class NoClassActivity : BaseVmActivity<NoClassViewModel>(){
   private fun initSearchEvent(){
     //防止软键盘弹起导致视图错位
     window.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_NOTHING)
-    //设置按钮监听
+    mCourseSheetBehavior = BottomSheetBehavior.from(mCourseContainer)
+    mCourseSheetBehavior.addBottomSheetCallback(object : BottomSheetBehavior.BottomSheetCallback() {
+      override fun onSlide(bottomSheet: View, slideOffset: Float) {
+      
+      }
+    
+      override fun onStateChanged(bottomSheet: View, newState: Int) {
+        when (newState) {
+          BottomSheetBehavior.STATE_EXPANDED -> { //展开操作
+            mEditTextView.apply {
+              clearFocus()
+            }
+          }
+          BottomSheetBehavior.STATE_COLLAPSED -> { //折叠操作
+            mEditTextView.apply {
+              isFocusable = true
+              isFocusableInTouchMode = true
+              requestFocus()
+            }
+          }
+          else -> {
+            //忽略
+          }
+        }
+      }
+    })
+    mCourseSheetBehavior.state = BottomSheetBehavior.STATE_COLLAPSED
+    
+    //设置查询课表
     mBtnQuery.setOnSingleClickListener {
-      doSearch()
+      doSearchCourse()
     }
     //设置键盘上点击搜索的监听
     mEditTextView.setOnEditorActionListener{ v, actionId, event ->
       if (actionId == EditorInfo.IME_ACTION_SEARCH) {
-        doSearch()
+        doSearchStu()
         return@setOnEditorActionListener true
       }
       return@setOnEditorActionListener false
@@ -330,9 +369,9 @@ class NoClassActivity : BaseVmActivity<NoClassViewModel>(){
   }
   
   /**
-   * 执行查找操作
+   * 执行查找学生操作
    */
-  private fun doSearch(){
+  private fun doSearchStu(){
     val name = mEditTextView.text.toString().trim()
     if (TextUtils.isEmpty(name)) {
       toast("输入为空")
@@ -342,6 +381,24 @@ class NoClassActivity : BaseVmActivity<NoClassViewModel>(){
     mEditTextView.setText("")
     viewModel.searchStudent(stu = name)
   }
+  
+  /**
+   * 执行查询课程的操作
+   */
+  private fun doSearchCourse(){
+    
+    //for test
+    // ----
+    SchoolCalendarUtil.updateFirstCalendar(1)
+    // ----
+    viewModel.getLessons(getCurrentGroup(mGroupId).members.map { it.stuNum })
+    //在滑动下拉课表容器中添加整个课表
+    replaceFragment(R.id.noclass_course_bottom_sheet_container){
+      NoClassCourseVpFragment()
+    }
+    mCourseSheetBehavior.state = BottomSheetBehavior.STATE_EXPANDED
+  }
+ 
   
   /**
    * 流式布局下方的指示器

@@ -1,4 +1,4 @@
-package com.mredrock.cyxbs.noclass.page.ui
+package com.mredrock.cyxbs.noclass.page.ui.activity
 
 import android.content.Context
 import android.content.Intent

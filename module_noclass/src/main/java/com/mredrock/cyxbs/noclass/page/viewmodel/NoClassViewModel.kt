@@ -3,11 +3,14 @@ package com.mredrock.cyxbs.noclass.page.viewmodel
 import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
+import com.mredrock.cyxbs.api.course.ILessonService
 import com.mredrock.cyxbs.lib.base.ui.BaseViewModel
 import com.mredrock.cyxbs.lib.utils.network.mapOrInterceptException
+import com.mredrock.cyxbs.lib.utils.service.ServiceManager
 import com.mredrock.cyxbs.noclass.bean.NoclassGroup
 import com.mredrock.cyxbs.noclass.bean.Student
 import com.mredrock.cyxbs.noclass.page.repository.NoClassRepository
+import io.reactivex.rxjava3.core.Observable.fromIterable
 
 
 /**
@@ -111,5 +114,29 @@ class NoClassViewModel : BaseViewModel() {
       }
   }
   
+  fun getLessons(stuNumList: List<String>){
+    val studentsLessons =  mutableMapOf<Int,List<ILessonService.Lesson>>()
+    fromIterable(stuNumList)
+      .flatMap {
+//          ILessonService::class.impl
+//            .getLesson(it)
+//            .toObservable()
+        ServiceManager(ILessonService::class)
+          .getLesson(it)
+          .toObservable()
+      }
+      .safeSubscribeBy (
+        onNext = {
+          Log.e("studentsLessons1",it.toString())
+          studentsLessons[stuNumList.indexOf(it[0].stuNum)] = it
+        },
+        onComplete = {
+          Log.e("studentsLessons2",studentsLessons.toString())
+        },
+        onError = {
+          Log.e("studentsLessons3",it.toString())
+        }
+      )
+  }
   
 }

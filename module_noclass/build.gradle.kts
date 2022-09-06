@@ -13,14 +13,16 @@ plugins {
 }
 
 dependLibBase()
-dependApiAccount()
 dependLibConfig()
 dependLibUtils()
+dependApiAccount()
+dependApiCourse()
 
 dependNetwork()
 dependRxjava()
 dependencies {
     implementation("androidx.appcompat:appcompat:1.4.2")
+    implementation(project(mapOf("path" to ":module_course:lib_course")))
 }
 
 

@@ -1,4 +1,4 @@
-package com.mredrock.cyxbs.noclass.page.ui
+package com.mredrock.cyxbs.noclass.page.ui.activity
 
 import android.app.Activity
 import android.content.Intent
@@ -129,7 +129,7 @@ class GroupManagerActivity : BaseVmActivity<GroupManagerViewModel>(){
          }.apply {
             submitList(mGroupList)
             setOnGroupDetailStart {
-                startForResult.launch(Intent(this@GroupManagerActivity,GroupDetailActivity::class.java).apply {
+                startForResult.launch(Intent(this@GroupManagerActivity, GroupDetailActivity::class.java).apply {
                     putExtra("GroupList",mGroupList as Serializable)
                     putExtra("GroupPosition",it)
                 })

@@ -13,7 +13,7 @@ import com.mredrock.cyxbs.noclass.R
 import com.mredrock.cyxbs.noclass.bean.NoclassGroup
 import com.mredrock.cyxbs.noclass.callback.ISlideMenuAction
 import com.mredrock.cyxbs.noclass.callback.OnSlideChangedListener
-import com.mredrock.cyxbs.noclass.page.ui.GroupManagerActivity
+import com.mredrock.cyxbs.noclass.page.ui.activity.GroupManagerActivity
 import com.mredrock.cyxbs.noclass.util.alphaAnim
 import com.mredrock.cyxbs.noclass.util.translateXLeftAnim
 import com.mredrock.cyxbs.noclass.util.translateXRightAnim

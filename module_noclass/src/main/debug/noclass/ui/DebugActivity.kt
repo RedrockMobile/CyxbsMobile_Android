@@ -3,7 +3,7 @@ package noclass.ui
 import android.content.Intent
 import android.os.Bundle
 import com.mredrock.cyxbs.lib.base.BaseDebugActivity
-import com.mredrock.cyxbs.noclass.page.ui.NoClassActivity
+import com.mredrock.cyxbs.noclass.page.ui.activity.NoClassActivity
 
 /**
  *
