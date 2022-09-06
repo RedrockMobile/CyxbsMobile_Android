@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    package="com.mredrock.cyxbs.affair">
+
+    <application
+        android:name="com.mredrock.cyxbs.lib.base.BaseApp"
+        android:allowBackup="true"
+        android:label="module_affair"
+        android:supportsRtl="true"
+        android:theme="@style/AppTheme">
+
+        <activity
+            android:name="affair.DebugActivity"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+        <activity
+            android:name=".AffairActivity"
+            android:theme="@style/AppTheme" />
+    </application>
+
+</manifest>
