@@ -1,8 +1,7 @@
 package affair
 
-import android.content.Intent
 import android.os.Bundle
-import com.mredrock.cyxbs.affair.AffairActivity
+import com.mredrock.cyxbs.api.affair.IAffairService
 import com.mredrock.cyxbs.lib.base.BaseDebugActivity
 
 /**
@@ -15,8 +14,10 @@ class DebugActivity : BaseDebugActivity() {
     get() = true
 
   override fun onDebugCreate(savedInstanceState: Bundle?) {
-    startActivity(
-      Intent(this, AffairActivity::class.java)
-    )
+    com.mredrock.cyxbs.lib.utils.service.ServiceManager(IAffairService::class)
+      .startAffairEditActivity(
+        this,
+        0, 1, 2
+      )
   }
 }

@@ -1,3 +1,3 @@
 <resources>
-
+    <string name="affair_transitionName_add_affair_to_edit_affair_title" translatable="false">添加事务到编辑事务的标题元素共享动画</string>
 </resources>

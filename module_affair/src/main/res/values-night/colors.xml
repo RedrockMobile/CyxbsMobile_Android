@@ -5,14 +5,15 @@
 
     <!--添加事务时周数选择时，点击后字体颜色-->
     <color name="affair_edit_affair_select_week_tv">#FFA192</color>
+
     <!--EditText 的背景颜色-->
-    <color name="affair_edit_text_bg">#acE8F0FC</color>
+    <color name="affair_edit_text_bg">#b32C2C2C</color>
     <!--添加事务的气泡颜色-->
-    <color name="affair_add_affair_bg">#DFE6FF</color>
+    <color name="affair_add_affair_bg">#1d1d1d</color>
 
     <!--添加事务页面的标题候选背景-->
-    <color name="affair_add_affair_candidate_bg">#F2F3F7</color>
+    <color name="affair_add_affair_candidate_bg">#2D2D2D</color>
 
     <!--事务底部弹窗的删除按钮文字颜色-->
-    <color name="affair_dialog_affair_delete_tv">#7CA3DF</color>
+    <color name="affair_dialog_affair_delete_tv">#5b585c</color>
 </resources>

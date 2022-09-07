@@ -1,0 +1,279 @@
+package com.mredrock.cyxbs.affair.ui.fragment
+
+import android.content.Context
+import android.graphics.Typeface
+import android.os.Bundle
+import android.view.Gravity
+import android.view.LayoutInflater
+import android.view.View
+import android.view.ViewGroup
+import android.widget.EditText
+import android.widget.TextView
+import androidx.activity.OnBackPressedCallback
+import androidx.constraintlayout.widget.ConstraintLayout
+import androidx.constraintlayout.widget.ConstraintSet
+import androidx.core.os.bundleOf
+import androidx.fragment.app.activityViewModels
+import androidx.recyclerview.widget.RecyclerView
+import androidx.transition.*
+import com.google.android.flexbox.FlexDirection
+import com.google.android.flexbox.FlexWrap
+import com.google.android.flexbox.FlexboxLayoutManager
+import com.mredrock.cyxbs.affair.R
+import com.mredrock.cyxbs.affair.model.data.AffairEditArgs
+import com.mredrock.cyxbs.affair.ui.fragment.AddAffairFragment.AffairPageManager.Companion.loadLastPage
+import com.mredrock.cyxbs.affair.ui.fragment.AddAffairFragment.AffairPageManager.Companion.loadNextPage
+import com.mredrock.cyxbs.affair.ui.viewmodel.activity.AffairViewModel
+import com.mredrock.cyxbs.affair.ui.viewmodel.fragment.AddAffairViewModel
+import com.mredrock.cyxbs.affair.widge.TextViewTransition
+import com.mredrock.cyxbs.course2.page.affair.ui.adapter.AffairDurationAdapter
+import com.mredrock.cyxbs.course2.page.affair.ui.adapter.TitleCandidateAdapter
+import com.mredrock.cyxbs.lib.base.ui.mvvm.BaseVmFragment
+import com.mredrock.cyxbs.lib.utils.extensions.gone
+import com.mredrock.cyxbs.lib.utils.extensions.invisible
+import com.mredrock.cyxbs.lib.utils.extensions.visible
+
+/**
+ * ...
+ * @author 985892345 (Guo Xiangrui)
+ * @email 2767465918@qq.com
+ * @date 2022/6/3 15:12
+ */
+class AddAffairFragment : BaseVmFragment<AddAffairViewModel>() {
+
+  companion object {
+    fun newInstance(args: AffairEditArgs.AffairDurationArgs): AddAffairFragment {
+      return AddAffairFragment().apply {
+        arguments = bundleOf(Pair(ARG_KEY, args))
+      }
+    }
+
+
+    private const val ARG_KEY = "arg_key"
+  }
+
+  private lateinit var mArguments: AffairEditArgs.AffairDurationArgs
+
+  private val mActivityViewModel by activityViewModels<AffairViewModel>()
+
+  private val mRootView: ConstraintLayout by R.id.course_root_add_affair.view()
+
+  private val mTvText1: TextView by R.id.affair_tv_add_affair_text_1.view()
+  private val mTvText2: TextView by R.id.affair_tv_add_affair_text_2.view()
+  private val mTvText3: TextView by R.id.affair_tv_add_affair_text_3.view()
+
+  private val mEtTitle: EditText by R.id.affair_tv_add_affair_title.view()
+
+  private val mEditText: EditText by R.id.affair_et_add_affair.view()
+
+  private val mRvTitleCandidate: RecyclerView by R.id.affair_rv_add_affair_title_candidate.view()
+  private val mRvTitleCandidateAdapter = TitleCandidateAdapter()
+
+  private val mRvDuration: RecyclerView by R.id.affair_rv_add_affair_duration.view()
+  private val mRvDurationAdapter = AffairDurationAdapter()
+
+  // 拦截返回键
+  private val mOnBackPressedCallback = object : OnBackPressedCallback(false) {
+    override fun handleOnBackPressed() {
+
+      if (loadLastPage() == 0) {
+        isEnabled = false
+      }
+    }
+  }
+
+  override fun onAttach(context: Context) {
+    super.onAttach(context)
+    requireActivity().onBackPressedDispatcher.addCallback(
+      this,
+      mOnBackPressedCallback
+    )
+  }
+
+  override fun onCreate(savedInstanceState: Bundle?) {
+    super.onCreate(savedInstanceState)
+    mArguments = requireArguments().get(ARG_KEY) as AffairEditArgs.AffairDurationArgs
+  }
+
+  override fun onCreateView(
+    inflater: LayoutInflater,
+    container: ViewGroup?,
+    savedInstanceState: Bundle?
+  ): View {
+    return inflater.inflate(
+      com.mredrock.cyxbs.affair.R.layout.affair_fragment_add_affair,
+      container,
+      false
+    )
+  }
+
+  override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+    super.onViewCreated(view, savedInstanceState)
+
+    initRv()
+    initObserve()
+  }
+
+  private fun initRv() {
+    mRvTitleCandidate.adapter = mRvTitleCandidateAdapter.setClickListener {
+      mEditText.setText(it)
+    }
+    mRvTitleCandidate.layoutManager =
+      FlexboxLayoutManager(requireContext(), FlexDirection.ROW, FlexWrap.WRAP)
+
+//    mRvDuration.adapter = mRvDurationAdapter
+//    mRvDuration.layoutManager = FlexboxLayoutManager(requireContext(), FlexDirection.ROW, FlexWrap.WRAP)
+
+//    mRvDurationAdapter.submitList(listOf(mArguments))
+  }
+
+  private fun initObserve() {
+    viewModel.titleCandidates.observe {
+      mRvTitleCandidateAdapter.submitList(it)
+    }
+
+    mActivityViewModel.clickAffect.collectLaunch {
+      loadNextPage()
+    }
+  }
+
+
+  protected var mTitle: String = ""
+  protected var mContent: String = ""
+
+  /**
+   * 封装事务点击按钮到下一页的逻辑
+   */
+  private class AffairPageManager private constructor() {
+    companion object {
+      // 静态变量，不会随 Fragment 生命周期而变化
+      private var sAffairPage: AffairPage = AffairPage.ADD_TITLE
+
+      /**
+       * @return 返回剩余页数
+       */
+      fun AddAffairFragment.loadNextPage(): Int {
+        if (sAffairPage.ordinal + 1 == AffairPage.values().size) return 0
+        sAffairPage = sAffairPage.next(this)
+        return AffairPage.values().size - sAffairPage.ordinal - 1
+      }
+
+      /**
+       * @return 返回剩余页数
+       */
+      fun AddAffairFragment.loadLastPage(): Int {
+        if (sAffairPage.ordinal == 0) return 0
+        sAffairPage = sAffairPage.last(this)
+        return sAffairPage.ordinal
+      }
+    }
+
+    private enum class AffairPage {
+      ADD_TITLE {
+        override fun AddAffairFragment.nextInterval(): Boolean {
+          mTitle = mEditText.text.toString()
+          if (mTitle.isNotBlank()) {
+            TransitionManager.beginDelayedTransition(mRootView, mTransitionSet)
+            mTvText1.visible()
+            mTvText3.text = "具体内容"
+            mEtTitle.setText(mTitle)
+            mEtTitle.visible()
+            mEditText.text = null
+            mRvTitleCandidate.gone()
+            mOnBackPressedCallback.isEnabled = true
+            return true
+          } else {
+            toast("掌友，标题不能为空哟！")
+          }
+          return false
+        }
+
+        override fun AddAffairFragment.lastInterval(): Boolean = false
+      },
+      ADD_CONTENT {
+        override fun AddAffairFragment.nextInterval(): Boolean {
+          mContent = mEditText.text.toString()
+          TransitionManager.beginDelayedTransition(mRootView, mTransitionSet)
+          mTvText1.invisible()
+          mTvText2.invisible()
+          mTvText3.invisible()
+          mRvDuration.visible()
+          val set = ConstraintSet().apply { clone(mRootView) }
+          set.connect(mEtTitle.id, ConstraintSet.START, mRootView.id, ConstraintSet.START)
+          set.connect(mEtTitle.id, ConstraintSet.TOP, mTvText1.id, ConstraintSet.BOTTOM)
+          set.clear(mEtTitle.id, ConstraintSet.BOTTOM)
+          mEtTitle.textSize = 34F
+//          mEtTitle.typeface = Typeface.DEFAULT_BOLD
+          set.connect(mEditText.id, ConstraintSet.TOP, mEtTitle.id, ConstraintSet.BOTTOM)
+          set.applyTo(mRootView)
+//          childFragmentManager.commit {
+//            addSharedElement(mEditText, getString(R.string.transitionName_add_affair_to_edit_affair_title))
+//            add(EditAffairFragment.newInstance(mArguments), null)
+//          }
+          return true
+        }
+
+        override fun AddAffairFragment.lastInterval(): Boolean {
+          TransitionManager.beginDelayedTransition(mRootView, mTransitionSet)
+          mTvText1.invisible()
+          mTvText3.text = "一个标题"
+          mEtTitle.invisible()
+          mEditText.setText(mTitle)
+          mRvTitleCandidate.visible()
+          return true
+        }
+      },
+      ADD_TIME {
+        override fun AddAffairFragment.nextInterval(): Boolean {
+          return false
+        }
+
+        override fun AddAffairFragment.lastInterval(): Boolean {
+          TransitionManager.beginDelayedTransition(mRootView, mTransitionSet)
+          mTvText1.visible()
+          mTvText2.visible()
+          mTvText3.visible()
+          mRvDuration.gone()
+          val set = ConstraintSet().apply { clone(mRootView) }
+          set.connect(mEtTitle.id, ConstraintSet.START, mTvText1.id, ConstraintSet.END)
+          set.connect(mEtTitle.id, ConstraintSet.TOP, mTvText1.id, ConstraintSet.TOP)
+          set.connect(mEtTitle.id, ConstraintSet.BOTTOM, mTvText1.id, ConstraintSet.BOTTOM)
+          mEtTitle.textSize = 15F
+          mEtTitle.typeface = Typeface.DEFAULT
+          set.connect(mEditText.id, ConstraintSet.TOP, mTvText3.id, ConstraintSet.BOTTOM)
+          set.applyTo(mRootView)
+          mEditText.setText(mContent)
+          return true
+        }
+      };
+
+      // 进行下一页
+      fun next(fragment: AddAffairFragment): AffairPage {
+        if (fragment.run { nextInterval() }) {
+          // 当返回 true 时表示下一页成功
+          return values()[ordinal + 1]
+        }
+        return this
+      }
+
+      abstract fun AddAffairFragment.nextInterval(): Boolean
+
+      fun last(fragment: AddAffairFragment): AffairPage {
+        if (fragment.run { lastInterval() }) {
+          return values()[ordinal - 1]
+        }
+        return this
+      }
+
+      abstract fun AddAffairFragment.lastInterval(): Boolean
+
+      protected val mTransitionSet = TransitionSet().apply {
+        addTransition(Fade())
+        addTransition(Slide().apply { slideEdge = Gravity.END })
+        addTransition(ChangeBounds())
+        addTransition(TextViewTransition())
+        duration = 300
+      }
+    }
+  }
+}
