@@ -26,8 +26,7 @@ import com.mredrock.cyxbs.lib.utils.extensions.dp2pxF
  */
 abstract class NoClassItemView (context: Context) : CardView(context) {
   
-  private val mTvTitle: TextView
-  private val mTvContent: TextView
+  protected val mTvNames: TextView
   private var mIsShowOverlapTag = false
   
   fun setIsShowOverlapTag(boolean: Boolean) {
@@ -40,9 +39,8 @@ abstract class NoClassItemView (context: Context) : CardView(context) {
     invalidate()
   }
   
-  fun setText(title: String, content: String) {
-    mTvTitle.text = title
-    mTvContent.text = content
+  fun setText(names: String) {
+    mTvNames.text = names
   }
   
   private val mPaint = Paint().apply {
@@ -50,9 +48,7 @@ abstract class NoClassItemView (context: Context) : CardView(context) {
   }
   
   // 课表背景色
-//  private val mFloorColor = com.mredrock.cyxbs.config.R.color.config_common_background_color.color
-  private val mFloorColor = com.mredrock.cyxbs.config.R.color.config_black_white.color
-  
+  private val mFloorColor = com.mredrock.cyxbs.config.R.color.config_common_background_color.color
   
   override fun draw(canvas: Canvas) {
     canvas.drawColor(mFloorColor) // 需要在底层绘制背景色，不然黑夜模式下 item 颜色会透过去
@@ -81,34 +77,21 @@ abstract class NoClassItemView (context: Context) : CardView(context) {
     cardElevation = 0F
     super.setCardBackgroundColor(Color.TRANSPARENT)
     radius = 8.dp2pxF
-    
     val margin1 = 7.dp2px
-    val margin2 = 10.dp2px
-    mTvTitle = TextView(context).apply {
+    val margin2 = 5.dp2px
+    mTvNames = TextView(context).apply {
       layoutParams = LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT).apply {
         topMargin = margin1
         leftMargin = margin2
         rightMargin = margin2
-        gravity = Gravity.TOP
-      }
-      ellipsize = TextUtils.TruncateAt.END
-      gravity = Gravity.CENTER
-      maxLines = 3
-      setTextSize(TypedValue.COMPLEX_UNIT_DIP, 11F)
-    }
-    mTvContent = TextView(context).apply {
-      layoutParams = LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT).apply {
-        leftMargin = margin2
-        rightMargin = margin2
         bottomMargin = margin1
-        gravity = Gravity.BOTTOM
+        gravity = Gravity.CENTER
       }
       ellipsize = TextUtils.TruncateAt.END
       gravity = Gravity.CENTER
-      maxLines = 3
+      maxLines = 10
       setTextSize(TypedValue.COMPLEX_UNIT_DIP, 11F)
     }
-    super.addView(mTvTitle)
-    super.addView(mTvContent)
+    super.addView(mTvNames)
   }
 }

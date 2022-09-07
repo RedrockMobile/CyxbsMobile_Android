@@ -193,13 +193,11 @@ class NoClassActivity : BaseVmActivity<NoClassViewModel>(){
     }
   }
   
-  
-  
   override fun onCreate(savedInstanceState: Bundle?) {
     super.onCreate(savedInstanceState)
     setContentView(R.layout.noclass_activity_no_class)
     initUserInfo()
-    initNet()
+    initObserve()
     initRv()
     initTextView()
     initSearchEvent()
@@ -391,12 +389,19 @@ class NoClassActivity : BaseVmActivity<NoClassViewModel>(){
     // ----
     SchoolCalendarUtil.updateFirstCalendar(1)
     // ----
-    viewModel.getLessons(getCurrentGroup(mGroupId).members.map { it.stuNum })
     //在滑动下拉课表容器中添加整个课表
-    replaceFragment(R.id.noclass_course_bottom_sheet_container){
-      NoClassCourseVpFragment()
+    
+    viewModel.getLessons(getCurrentGroup(mGroupId).members.map { it.stuNum })
+    viewModel.noclassData.observe(this){
+      replaceFragment(R.id.noclass_course_bottom_sheet_container) {
+        NoClassCourseVpFragment.newInstance(it.onEach { data -> //每一个NoClassSpareTime对象
+          getCurrentGroup(mGroupId).members.map{
+            data.value.mIdToNameMap[it.stuNum] = it.stuName
+          }
+        })
+      }
+      mCourseSheetBehavior.state = BottomSheetBehavior.STATE_EXPANDED
     }
-    mCourseSheetBehavior.state = BottomSheetBehavior.STATE_EXPANDED
   }
  
   
@@ -414,7 +419,7 @@ class NoClassActivity : BaseVmActivity<NoClassViewModel>(){
    * 初始网络请求相关
    * 主要是观察livedata
    */
-  private fun initNet(){
+  private fun initObserve(){
     var mSearchStudentDialog : SearchStudentDialog? = null
     //得到整个List
     viewModel.groupList.observe(this){
@@ -491,6 +496,18 @@ class NoClassActivity : BaseVmActivity<NoClassViewModel>(){
         toast("似乎出现了什么错误呢~")
       }
     }
+//    var firstTime = true
+//    viewModel.noclassData.observe(this){
+//      //在滑动下拉课表容器中添加整个课表
+//      if (firstTime){
+////        firstTime = false
+//        replaceFragment(R.id.noclass_course_bottom_sheet_container){
+//          NoClassCourseVpFragment()
+//        }
+//      }else{
+//        return@observe
+//      }
+//    }
   }
   
   /**
@@ -551,4 +568,13 @@ class NoClassActivity : BaseVmActivity<NoClassViewModel>(){
     }
     
   }
+  
+  override fun onBackPressed() {
+    if (mCourseSheetBehavior.state == BottomSheetBehavior.STATE_EXPANDED) {
+      mCourseSheetBehavior.state = BottomSheetBehavior.STATE_HIDDEN
+    } else {
+      super.onBackPressed()
+    }
+  }
+  
 }

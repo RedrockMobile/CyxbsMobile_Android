@@ -4,12 +4,14 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.core.os.bundleOf
 import androidx.viewpager2.widget.ViewPager2
 import com.mredrock.cyxbs.lib.course.fragment.page.CoursePageFragment
 import com.mredrock.cyxbs.lib.course.fragment.vp.AbstractHeaderCourseVpFragment
 import com.mredrock.cyxbs.lib.utils.extensions.setOnSingleClickListener
 import com.mredrock.cyxbs.lib.utils.utils.SchoolCalendarUtil
 import com.mredrock.cyxbs.noclass.R
+import com.mredrock.cyxbs.noclass.bean.NoClassSpareTime
 
 /**
  *
@@ -24,13 +26,24 @@ import com.mredrock.cyxbs.noclass.R
  */
 
 class NoClassCourseVpFragment : AbstractHeaderCourseVpFragment() {
-
+  
+  companion object {
+    fun newInstance(data : HashMap<Int, NoClassSpareTime>): NoClassCourseVpFragment {
+      return NoClassCourseVpFragment().apply {
+        arguments = bundleOf(
+          this::mNoClassData.name to data
+        )
+      }
+    }
+  }
+  
+  private val mNoClassData : HashMap<Int, NoClassSpareTime> by arguments()
+  
   override val mPageCount: Int
     get() = 22
 
   override fun createFragment(position: Int): CoursePageFragment {
-
-    return if (position == 0) NoClassSemesterFragment() else NoClassWeekFragment.newInstance(position)
+    return if (position == 0) NoClassSemesterFragment() else NoClassWeekFragment.newInstance(position,mNoClassData[position]!!)
   }
 
   override val mViewPager: ViewPager2 by R.id.noclass_vp_fragment_course.view()

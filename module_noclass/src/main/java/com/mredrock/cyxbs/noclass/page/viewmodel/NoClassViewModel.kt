@@ -1,14 +1,15 @@
 package com.mredrock.cyxbs.noclass.page.viewmodel
 
-import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import com.mredrock.cyxbs.api.course.ILessonService
 import com.mredrock.cyxbs.lib.base.ui.BaseViewModel
 import com.mredrock.cyxbs.lib.utils.network.mapOrInterceptException
-import com.mredrock.cyxbs.lib.utils.service.ServiceManager
+import com.mredrock.cyxbs.lib.utils.service.impl
+import com.mredrock.cyxbs.noclass.bean.NoClassSpareTime
 import com.mredrock.cyxbs.noclass.bean.NoclassGroup
 import com.mredrock.cyxbs.noclass.bean.Student
+import com.mredrock.cyxbs.noclass.bean.toSpareTime
 import com.mredrock.cyxbs.noclass.page.repository.NoClassRepository
 import io.reactivex.rxjava3.core.Observable.fromIterable
 
@@ -29,7 +30,6 @@ import io.reactivex.rxjava3.core.Observable.fromIterable
 class NoClassViewModel : BaseViewModel() {
   
   init {
-    Log.e("NoClassViewModel", "startNet")
     getNoclassGroupDetail()
   }
   
@@ -58,6 +58,12 @@ class NoClassViewModel : BaseViewModel() {
   private val _deleteState = MutableLiveData<Pair<Boolean,String>>()
   
   /**
+   * 没课时段
+   */
+  val noclassData : LiveData<HashMap<Int, NoClassSpareTime>> get() = _noclassData
+  private val _noclassData : MutableLiveData<HashMap<Int, NoClassSpareTime>> = MutableLiveData()
+  
+  /**
    * 获得全部分组数据
    * NoClassActivity只需要再init里请求一次
    */
@@ -66,9 +72,7 @@ class NoClassViewModel : BaseViewModel() {
       .getNoclassGroupDetail()
       .mapOrInterceptException {
         ApiException { }
-        Log.e("ListNoclassApiError", it.toString())
       }.doOnError {
-        Log.e("ListNoclassApiError", it.toString())
         _groupList.postValue(emptyList())
       }.safeSubscribeBy {
         _groupList.postValue(it)
@@ -118,23 +122,18 @@ class NoClassViewModel : BaseViewModel() {
     val studentsLessons =  mutableMapOf<Int,List<ILessonService.Lesson>>()
     fromIterable(stuNumList)
       .flatMap {
-//          ILessonService::class.impl
-//            .getLesson(it)
-//            .toObservable()
-        ServiceManager(ILessonService::class)
-          .getLesson(it)
-          .toObservable()
+          ILessonService::class.impl
+            .getLesson(it)
+            .toObservable()
       }
       .safeSubscribeBy (
         onNext = {
-          Log.e("studentsLessons1",it.toString())
           studentsLessons[stuNumList.indexOf(it[0].stuNum)] = it
         },
         onComplete = {
-          Log.e("studentsLessons2",studentsLessons.toString())
+          _noclassData.postValue(studentsLessons.toSpareTime())
         },
         onError = {
-          Log.e("studentsLessons3",it.toString())
         }
       )
   }

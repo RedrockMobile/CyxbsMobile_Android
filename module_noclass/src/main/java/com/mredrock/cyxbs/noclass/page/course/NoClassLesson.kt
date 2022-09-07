@@ -4,6 +4,8 @@ import android.content.Context
 import android.view.View
 import com.mredrock.cyxbs.lib.course.fragment.item.IOverlapItem
 import com.mredrock.cyxbs.lib.course.item.AbstractLesson
+import com.mredrock.cyxbs.lib.utils.extensions.color
+import com.mredrock.cyxbs.noclass.R
 
 /**
  *
@@ -34,44 +36,53 @@ class NoClassLesson(val data: NoClassLessonData) : AbstractLesson(data){
     companion object {
       fun newInstance(context: Context, data: NoClassLessonData): NoClassLesson {
         return NoClassLesson(context).apply {
-          NoClassLesson(data)
+          setColor(data.timeType)
+          setText(names = data.names)
         }
       }
     }
   
-//    private val mAmTextColor = R.color.course_am_lesson_tv.color
-//    private val mPmTextColor = R.color.course_pm_lesson_tv.color
-//    private val mNightTextColor = R.color.course_night_lesson_tv.color
-//    private val mAmBgColor = R.color.course_am_lesson_bg.color
-//    private val mPmBgColor = R.color.course_pm_lesson_bg.color
-//    private val mNightBgColor = R.color.course_night_lesson_bg.color
-  
-    fun setLessonData(data: NoClassLessonData) {
-//      setColor(data.timeType)
-//      setText(data.course, data.classroom)
-    }
+
+    private val mAmBgColor = R.color.noclass_course_am_lesson_color.color
+    private val mPmBgColor = R.color.noclass_course_pm_lesson_color.color
+    private val mNightBgColor = R.color.noclass_course_night_lesson_color.color
+    private val mNoonBgColor = R.color.noclass_course_noon_lesson_color.color
+    private val mDuskBgColor = R.color.noclass_course_dusk_lesson_color.color
+    
+    private val mAmTextColor = R.color.noclass_course_am_text_color.color
+    private val mPmTextColor = R.color.noclass_course_pm_text_color.color
+    private val mNightTextColor = R.color.noclass_course_night_text_color.color
+    private val mNoonTextColor = R.color.noclass_course_noon_text_color.color
+    private val mDuskTextColor = R.color.noclass_course_dusk_text_color.color
   
     private fun setColor(type: NoClassLessonData.Type) {
-//      when (type) {
-//        LessonData.Type.AM -> {
-//          mTvTitle.setTextColor(mAmTextColor)
-//          mTvContent.setTextColor(mAmTextColor)
-//          setCardBackgroundColor(mAmBgColor)
-//          setOverlapTagColor(mAmTextColor)
-//        }
-//        LessonData.Type.PM -> {
-//          mTvTitle.setTextColor(mPmTextColor)
-//          mTvContent.setTextColor(mPmTextColor)
-//          setCardBackgroundColor(mPmBgColor)
-//          setOverlapTagColor(mPmTextColor)
-//        }
-//        LessonData.Type.NIGHT -> {
-//          mTvTitle.setTextColor(mNightTextColor)
-//          mTvContent.setTextColor(mNightTextColor)
-//          setCardBackgroundColor(mNightBgColor)
-//          setOverlapTagColor(mNightTextColor)
-//        }
-//      }
+      when (type) {
+        NoClassLessonData.Type.AM -> {
+          mTvNames.setTextColor(mAmTextColor)
+          setCardBackgroundColor(mAmBgColor)
+          setOverlapTagColor(mAmTextColor)
+        }
+        NoClassLessonData.Type.NOON -> {
+          mTvNames.setTextColor(mNoonTextColor)
+          setCardBackgroundColor(mNoonBgColor)
+          setOverlapTagColor(mNoonTextColor)
+        }
+        NoClassLessonData.Type.PM -> {
+          mTvNames.setTextColor(mPmTextColor)
+          setCardBackgroundColor(mPmBgColor)
+          setOverlapTagColor(mPmTextColor)
+        }
+        NoClassLessonData.Type.DUSK -> {
+          mTvNames.setTextColor(mDuskTextColor)
+          setCardBackgroundColor(mDuskBgColor)
+          setOverlapTagColor(mDuskTextColor)
+        }
+        NoClassLessonData.Type.NIGHT -> {
+          mTvNames.setTextColor(mNightTextColor)
+          setCardBackgroundColor(mNightBgColor)
+          setOverlapTagColor(mNightTextColor)
+        }
+      }
     }
   }
   

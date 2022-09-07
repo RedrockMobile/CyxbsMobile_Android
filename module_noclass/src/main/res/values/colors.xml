@@ -35,4 +35,29 @@
     <color name="noclass_save_bg_color">#99A7B9</color>
     <!--    查找学生的颜色-->
     <color name="noclass_search_student_color">#7B8899</color>
+
+    <!--    以下为课表背景颜色-->
+    <!--    上午-->
+    <color name="noclass_course_am_lesson_color">#F9E7D8</color>
+    <!--    下午-->
+    <color name="noclass_course_pm_lesson_color">#F9E3E4</color>
+    <!--    晚上-->
+    <color name="noclass_course_night_lesson_color">#DDE3F8</color>
+    <!--    中午-->
+    <color name="noclass_course_noon_lesson_color">#E9EDF2</color>
+    <!--    傍晚-->
+    <color name="noclass_course_dusk_lesson_color">#E9EDF2</color>
+
+    <!--    以下为课表字体颜色-->
+    <!--    上午-->
+    <color name="noclass_course_am_text_color">#FF8015</color>
+    <!--    下午-->
+    <color name="noclass_course_pm_text_color">#FF6262</color>
+    <!--    晚上-->
+    <color name="noclass_course_night_text_color">#4066EA</color>
+    <!--    中午-->
+    <color name="noclass_course_noon_text_color">#9915315B</color>
+    <!--    傍晚-->
+    <color name="noclass_course_dusk_text_color">#9915315B</color>
+
 </resources>

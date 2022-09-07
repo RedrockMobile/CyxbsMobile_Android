@@ -16,18 +16,21 @@ import com.mredrock.cyxbs.lib.course.internal.lesson.ILessonData
 class NoClassLessonData(
   override val weekNum: Int,
   override val startNode: Int,
-  override val length: Int
+  override val length: Int,
+  val names : String,
 ) : ILessonData {
 
-//  val timeType: Type
-//    get() {
-//      return when (beginLesson) {
-//        in 1 .. 4 -> Type.AM
-//        in 5 .. 8 -> Type.PM
-//        in 9 .. 12 -> Type.NIGHT
-//        else -> throw RuntimeException("未知课程出现在未知时间段！bean = $this")
-//      }
-//    }
+  val timeType: Type
+    get() {
+      return when (startNode) {
+        in 0 .. 3 -> Type.AM
+        in 4 .. 4 -> Type.NOON
+        in 5 .. 8 -> Type.PM
+        in 9 .. 9 -> Type.DUSK
+        in 10 .. 13 -> Type.NIGHT
+        else -> throw RuntimeException("未知课程出现在未知时间段！bean = $this")
+      }
+    }
   
   enum class Type {
     AM, NOON ,PM, NIGHT, DUSK
