@@ -60,52 +60,63 @@ fun Map<Int, List<ILessonService.Lesson>>.toSpareTime() : HashMap<Int, NoClassSp
   this.forEach {
     stuIds.add(it.value[it.key].stuNum)
   }
+  studentSpareTimes[0] = getNewSpareTime(stuIds)
+  //整个学期的没课约
+  val semesterStu = studentSpareTimes[0]!!
   //学生为划分
   this.forEach { entry ->
     //每一节课为划分
     entry.value.forEach { lesson ->
       //得到当前lesson页面的SpareTime
       if (studentSpareTimes[lesson.week] == null) {
-        studentSpareTimes[lesson.week] = NoClassSpareTime(SparseArray(7)).apply {
-          (0..6).map {
-            spareDayTime[it] =
-              NoClassSpareTime.SpareLineTime(
-                Array(13) { stuIds.toMutableList() },
-                BooleanArray(13)
-              )
-          }
-        }
+        studentSpareTimes[lesson.week] = getNewSpareTime(stuIds)
       }
       //当前页面的
       val stu: NoClassSpareTime = studentSpareTimes[lesson.week]!!
       //当前页面第几竖列
       val line = stu.spareDayTime[lesson.hashDay]
+      //整个学期页面的第几行
+      val semesterLine = semesterStu.spareDayTime[lesson.hashDay]
       (0 until lesson.period).map {
         //得到了当前一整竖行的数据
         //检查移除该格子的空闲人
         if (line.SpareId[lesson.beginLesson + it].contains(lesson.stuNum)) {
           line.SpareId[lesson.beginLesson + it].remove(lesson.stuNum)
+          semesterLine.SpareId[lesson.beginLesson + it].remove(lesson.stuNum)
         }
-        //标记为有课
+        //如果这个格子上已经没人了，就标记为有课
+        if(line.SpareId[lesson.beginLesson + it].isEmpty())
         line.isSpare[lesson.beginLesson + it] = true
+        //整个学期的有没课状态
+        if(semesterLine.SpareId[lesson.beginLesson + it].isEmpty())
+          semesterLine.isSpare[lesson.beginLesson + it] = true
       }
     }
   }
+    //检查全部包含进去
     if (studentSpareTimes.size <= 22){
       (0..22).map{
         if (studentSpareTimes[it] == null){
-          studentSpareTimes[it] = NoClassSpareTime(SparseArray(7)).apply {
-            (0..6).map { week ->
-              spareDayTime[week] =
-                NoClassSpareTime.SpareLineTime(
-                  Array(13) { stuIds.toMutableList() },
-                  BooleanArray(13)
-                )
-            }
-          }
+          studentSpareTimes[it] = getNewSpareTime(stuIds)
         }
       }
     }
+
     return studentSpareTimes
+}
+
+/**
+ * 一个新的SpareTime对象
+ */
+private fun getNewSpareTime(stuIds : List<String>): NoClassSpareTime {
+  return NoClassSpareTime(SparseArray(7)).apply {
+    (0..6).map {
+      spareDayTime[it] =
+        NoClassSpareTime.SpareLineTime(
+          Array(13) { stuIds.toMutableList() },
+          BooleanArray(13)
+        )
+    }
+  }
 }
 

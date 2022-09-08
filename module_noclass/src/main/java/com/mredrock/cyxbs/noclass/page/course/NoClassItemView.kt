@@ -39,8 +39,9 @@ abstract class NoClassItemView (context: Context) : CardView(context) {
     invalidate()
   }
   
-  fun setText(names: String) {
+  fun setText(names: String,height : Int) {
     mTvNames.text = names
+    mTvNames.maxLines = if (height == 1) 3 else 6
   }
   
   private val mPaint = Paint().apply {
@@ -77,7 +78,7 @@ abstract class NoClassItemView (context: Context) : CardView(context) {
     cardElevation = 0F
     super.setCardBackgroundColor(Color.TRANSPARENT)
     radius = 8.dp2pxF
-    val margin1 = 7.dp2px
+    val margin1 = 6.dp2px
     val margin2 = 5.dp2px
     mTvNames = TextView(context).apply {
       layoutParams = LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT).apply {
@@ -89,7 +90,6 @@ abstract class NoClassItemView (context: Context) : CardView(context) {
       }
       ellipsize = TextUtils.TruncateAt.END
       gravity = Gravity.CENTER
-      maxLines = 10
       setTextSize(TypedValue.COMPLEX_UNIT_DIP, 11F)
     }
     super.addView(mTvNames)

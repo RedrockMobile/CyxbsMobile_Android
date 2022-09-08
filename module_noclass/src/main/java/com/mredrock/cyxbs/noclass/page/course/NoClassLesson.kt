@@ -37,7 +37,7 @@ class NoClassLesson(val data: NoClassLessonData) : AbstractLesson(data){
       fun newInstance(context: Context, data: NoClassLessonData): NoClassLesson {
         return NoClassLesson(context).apply {
           setColor(data.timeType)
-          setText(names = data.names)
+          setText(names = data.names,height = data.length)
         }
       }
     }

@@ -1,6 +1,7 @@
 package com.mredrock.cyxbs.noclass.page.ui.fragment
 
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -43,6 +44,7 @@ class NoClassCourseVpFragment : AbstractHeaderCourseVpFragment() {
     get() = 22
 
   override fun createFragment(position: Int): CoursePageFragment {
+    Log.e("createFragment",position.toString())
     return if (position == 0) NoClassSemesterFragment() else NoClassWeekFragment.newInstance(position,mNoClassData[position]!!)
   }
 

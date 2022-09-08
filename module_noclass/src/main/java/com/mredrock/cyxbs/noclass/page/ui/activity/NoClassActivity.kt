@@ -23,7 +23,6 @@ import com.mredrock.cyxbs.config.route.DISCOVER_NO_CLASS
 import com.mredrock.cyxbs.lib.base.ui.mvvm.BaseVmActivity
 import com.mredrock.cyxbs.lib.utils.extensions.setOnSingleClickListener
 import com.mredrock.cyxbs.lib.utils.service.ServiceManager
-import com.mredrock.cyxbs.lib.utils.utils.SchoolCalendarUtil
 import com.mredrock.cyxbs.noclass.R
 import com.mredrock.cyxbs.noclass.bean.NoclassGroup
 import com.mredrock.cyxbs.noclass.page.adapter.NoClassGroupAdapter
@@ -335,6 +334,8 @@ class NoClassActivity : BaseVmActivity<NoClassViewModel>(){
           BottomSheetBehavior.STATE_EXPANDED -> { //展开操作
             mEditTextView.apply {
               clearFocus()
+              isFocusable = false
+              isFocusableInTouchMode = false
             }
           }
           BottomSheetBehavior.STATE_COLLAPSED -> { //折叠操作
@@ -387,18 +388,20 @@ class NoClassActivity : BaseVmActivity<NoClassViewModel>(){
     
     //for test
     // ----
-    SchoolCalendarUtil.updateFirstCalendar(1)
+//    SchoolCalendarUtil.updateFirstCalendar(1)
     // ----
     //在滑动下拉课表容器中添加整个课表
     
     viewModel.getLessons(getCurrentGroup(mGroupId).members.map { it.stuNum })
     viewModel.noclassData.observe(this){
       replaceFragment(R.id.noclass_course_bottom_sheet_container) {
-        NoClassCourseVpFragment.newInstance(it.onEach { data -> //每一个NoClassSpareTime对象
-          getCurrentGroup(mGroupId).members.map{
-            data.value.mIdToNameMap[it.stuNum] = it.stuName
-          }
-        })
+        NoClassCourseVpFragment.newInstance(
+          it.onEach { data -> //每一个NoClassSpareTime对象
+            getCurrentGroup(mGroupId).members.map {
+              data.value.mIdToNameMap[it.stuNum] = it.stuName
+            }
+          },
+        )
       }
       mCourseSheetBehavior.state = BottomSheetBehavior.STATE_EXPANDED
     }
