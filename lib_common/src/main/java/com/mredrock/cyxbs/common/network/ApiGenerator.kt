@@ -4,7 +4,6 @@ import android.os.Handler
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
 import com.mredrock.cyxbs.api.account.IAccountService
-import com.mredrock.cyxbs.api.account.IUserStateService
 import com.mredrock.cyxbs.common.BuildConfig
 import com.mredrock.cyxbs.common.bean.RedrockApiWrapper
 import com.mredrock.cyxbs.common.service.ServiceManager
@@ -39,26 +38,12 @@ object ApiGenerator {
 
     private var retrofit: Retrofit //统一添加了token到header
     private var commonRetrofit: Retrofit // 未添加token到header
-
-    @Volatile
-    private var token = ""
+    
+    private val mAccountService = IAccountService::class.impl
 
     //init对两种公共的retrofit进行配置
     init {
         //添加监听得到登录后的token和refreshToken,应用于初次登录或重新登录
-        val accountService = ServiceManager.getService(IAccountService::class.java)
-        accountService.getVerifyService().addOnStateChangedListener {
-            when (it) {
-                IUserStateService.UserState.LOGIN, IUserStateService.UserState.REFRESH -> {
-                    token = accountService.getUserTokenService().getToken()
-                }
-                else -> {
-                    //不用操作
-                }
-            }
-        }
-        token = accountService.getUserTokenService().getToken()
-        LogUtils.d("tokenTag", "token = $token")
         retrofit = Retrofit.Builder().apply {
             this.defaultConfig()
             configRetrofitBuilder {
@@ -217,8 +202,7 @@ object ApiGenerator {
 
             interceptors().add(Interceptor {
                 
-                val accountService = IAccountService::class.impl
-                if (!accountService.getVerifyService().isLogin()) {
+                if (!mAccountService.getVerifyService().isLogin()) {
                     // 未登录直接请求，有些人对于不需要 token 的请求也使用了这个
                     return@Interceptor it.proceed(it.request())
                 }
@@ -230,7 +214,7 @@ object ApiGenerator {
                  * 后端文档：https://redrock.feishu.cn/wiki/wikcnB9p6U45ZJZmxwTEu8QXvye
                  */
                 if (isTokenExpired()) {
-                    checkRefresh(it, token)
+                    checkRefresh(it, mAccountService.getUserTokenService().getToken())
                 } else it.proceedWithToken()
             })
         }.build()
@@ -241,11 +225,14 @@ object ApiGenerator {
     //对token进行刷新
     private fun checkRefresh(chain: Interceptor.Chain, expiredToken: String): Response {
         mReentrantLock.withLock {
+            val token = mAccountService.getUserTokenService().getToken()
             // 判断之前的过期 token 是否跟现在的 token 一样
             if (expiredToken == token) {
                 // 一样的话说明需要刷新 token
-                token = IAccountService::class.impl.getVerifyService().refresh() ?: error("刷新 token 失败")
+                mAccountService.getVerifyService().refresh() ?: error("刷新 token 失败")
             }
+            // 如果本来网络就是崩的，一堆请求会堵在这里刷新 token，但这种情况本来就会因为网络问题而全部请求失败，
+            // 所以不用管这种情况（万一有个请求刷新成功了?）
         }
         return chain.proceedWithToken()
     }
@@ -253,6 +240,7 @@ object ApiGenerator {
     private fun Interceptor.Chain.proceedWithToken(
         block: (Request.Builder.() -> Unit)? = null
     ): Response {
+        val token = mAccountService.getUserTokenService().getToken()
         return proceed(
             request()
                 .newBuilder()
