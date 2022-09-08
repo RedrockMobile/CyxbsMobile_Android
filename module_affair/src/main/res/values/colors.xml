@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <!--添加事务时标题-->
-    <color name="affair_add_affair_title_tv">#E8E8E8</color>
+    <color name="affair_add_affair_title_tv">#122D55</color>
 
     <!--添加事务时周数选择时，点击后字体颜色-->
     <color name="affair_edit_affair_select_week_tv">#FFA192</color>

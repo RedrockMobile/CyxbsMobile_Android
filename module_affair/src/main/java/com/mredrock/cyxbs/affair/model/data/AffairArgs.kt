@@ -34,9 +34,9 @@ data class AffairEditArgs(
         else -> throw RuntimeException("未知时间段")
       }
       return if (period == 1) {
-        "${week}周 ${WEEK_ARRAY[weekNum]} ${LESSON_ARRAY[start]}"
+        "${week}周 ${DAY_ARRAY[weekNum]} ${LESSON_ARRAY[start]}"
       } else {
-        "${week}周 ${WEEK_ARRAY[weekNum]} ${LESSON_ARRAY[start]}-${LESSON_ARRAY[start + period - 1]}"
+        "${week}周 ${DAY_ARRAY[weekNum]} ${LESSON_ARRAY[start]}-${LESSON_ARRAY[start + period - 1]}"
       }
     }
 
@@ -46,7 +46,15 @@ data class AffairEditArgs(
         "第五节课", "第六节课", "第七节课", "第八节课", "傍晚",
         "第九节课", "第十节课", "第十一节课", "第十二节课",
       )
-      val WEEK_ARRAY = arrayOf("周一", "周二", "周三", "周四", "周五", "周六", "周日")
+      val DAY_ARRAY = arrayOf("周一", "周二", "周三", "周四", "周五", "周六", "周日")
+      val WEEK_ARRAY = arrayOf(
+        "整学期", "第一周", "第二周", "第三周", "第四周", "第五周",
+        "第六周", "第七周", "第八周", "第九周", "第十周", "第十一周",
+        "第十二周", "第十三周", "第十四周", "第十五周", "第十六周",
+        "第十七周", "第十八周", "第十九周", "第二十周", "第二十一周",
+        "第二十二周", "第二十三周", "第二十四周", "第二十五周"
+      )
+
     }
   }
 }

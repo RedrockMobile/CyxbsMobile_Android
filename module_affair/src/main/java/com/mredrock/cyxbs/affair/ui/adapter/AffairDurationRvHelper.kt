@@ -1,4 +1,4 @@
-package com.mredrock.cyxbs.course2.page.affair.ui.adapter
+package com.mredrock.cyxbs.affair.ui.adapter
 
 import androidx.recyclerview.widget.RecyclerView
 

@@ -12,8 +12,8 @@ import com.mredrock.cyxbs.affair.R
 import com.mredrock.cyxbs.affair.model.data.AffairArgs
 import com.mredrock.cyxbs.affair.model.data.AffairEditArgs
 import com.mredrock.cyxbs.affair.ui.fragment.AddAffairFragment
+import com.mredrock.cyxbs.affair.ui.fragment.EditAffairFragment
 import com.mredrock.cyxbs.affair.ui.viewmodel.activity.AffairViewModel
-import com.mredrock.cyxbs.course2.page.affair.ui.fragment.EditAffairFragment
 import com.mredrock.cyxbs.lib.base.ui.mvvm.BaseVmActivity
 import com.mredrock.cyxbs.lib.utils.extensions.lazyUnlock
 import com.mredrock.cyxbs.lib.utils.extensions.setOnSingleClickListener

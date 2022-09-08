@@ -2,7 +2,6 @@ package com.mredrock.cyxbs.affair.service
 
 import android.content.Context
 import com.alibaba.android.arouter.facade.annotation.Route
-import com.mredrock.cyxbs.affair.model.data.AffairArgs
 import com.mredrock.cyxbs.affair.model.data.AffairEditArgs
 import com.mredrock.cyxbs.affair.ui.activity.AffairActivity
 import com.mredrock.cyxbs.api.affair.AFFAIR_SERVICE
@@ -32,7 +31,7 @@ class AffairServiceImpl : IAffairService {
   }
 
   override fun startAffairEditActivity(context: Context, day: Int, beginLesson: Int, period: Int) {
-AffairActivity.start(context, AffairEditArgs.AffairDurationArgs(1,1,1,2))
+    AffairActivity.start(context, AffairEditArgs.AffairDurationArgs(1, 1, 1, 2))
   }
 
   override fun startAffairEditActivity(context: Context, id: Int) {

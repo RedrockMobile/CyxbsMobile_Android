@@ -18,8 +18,8 @@ import androidx.transition.TransitionValues
 class TextViewTransition : Transition() {
 
   companion object {
-    private const val KEY_TEXT_SIZE = "course:TextViewTransition:textSize"
-    private const val KEY_TEXT_COLOR = "course:TextViewTransition:textSize"
+    private const val KEY_TEXT_SIZE = "affair:TextViewTransition:textSize"
+    private const val KEY_TEXT_COLOR = "affair:TextViewTransition:textSize"
   }
 
   override fun captureStartValues(transitionValues: TransitionValues) {

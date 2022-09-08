@@ -1,4 +1,4 @@
-package com.mredrock.cyxbs.course2.page.affair.ui.fragment
+package com.mredrock.cyxbs.affair.ui.fragment
 
 import android.os.Bundle
 import android.view.LayoutInflater

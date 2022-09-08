@@ -21,13 +21,16 @@ import com.google.android.flexbox.FlexWrap
 import com.google.android.flexbox.FlexboxLayoutManager
 import com.mredrock.cyxbs.affair.R
 import com.mredrock.cyxbs.affair.model.data.AffairEditArgs
+import com.mredrock.cyxbs.affair.ui.adapter.AffairDurationAdapter
+import com.mredrock.cyxbs.affair.ui.adapter.TitleCandidateAdapter
+import com.mredrock.cyxbs.affair.ui.adapter.data.AffairTimeData
+import com.mredrock.cyxbs.affair.ui.adapter.data.AffairWeekData
 import com.mredrock.cyxbs.affair.ui.fragment.AddAffairFragment.AffairPageManager.Companion.loadLastPage
 import com.mredrock.cyxbs.affair.ui.fragment.AddAffairFragment.AffairPageManager.Companion.loadNextPage
 import com.mredrock.cyxbs.affair.ui.viewmodel.activity.AffairViewModel
 import com.mredrock.cyxbs.affair.ui.viewmodel.fragment.AddAffairViewModel
+import com.mredrock.cyxbs.affair.utils.AffairDataUtils
 import com.mredrock.cyxbs.affair.widge.TextViewTransition
-import com.mredrock.cyxbs.course2.page.affair.ui.adapter.AffairDurationAdapter
-import com.mredrock.cyxbs.course2.page.affair.ui.adapter.TitleCandidateAdapter
 import com.mredrock.cyxbs.lib.base.ui.mvvm.BaseVmFragment
 import com.mredrock.cyxbs.lib.utils.extensions.gone
 import com.mredrock.cyxbs.lib.utils.extensions.invisible
@@ -70,7 +73,6 @@ class AddAffairFragment : BaseVmFragment<AddAffairViewModel>() {
   private val mRvTitleCandidateAdapter = TitleCandidateAdapter()
 
   private val mRvDuration: RecyclerView by R.id.affair_rv_add_affair_duration.view()
-  private val mRvDurationAdapter = AffairDurationAdapter()
 
   // 拦截返回键
   private val mOnBackPressedCallback = object : OnBackPressedCallback(false) {
@@ -101,7 +103,7 @@ class AddAffairFragment : BaseVmFragment<AddAffairViewModel>() {
     savedInstanceState: Bundle?
   ): View {
     return inflater.inflate(
-      com.mredrock.cyxbs.affair.R.layout.affair_fragment_add_affair,
+      R.layout.affair_fragment_add_affair,
       container,
       false
     )
@@ -121,10 +123,19 @@ class AddAffairFragment : BaseVmFragment<AddAffairViewModel>() {
     mRvTitleCandidate.layoutManager =
       FlexboxLayoutManager(requireContext(), FlexDirection.ROW, FlexWrap.WRAP)
 
-//    mRvDuration.adapter = mRvDurationAdapter
-//    mRvDuration.layoutManager = FlexboxLayoutManager(requireContext(), FlexDirection.ROW, FlexWrap.WRAP)
+    val mRvDurationAdapter = AffairDurationAdapter(requireActivity())
+    mRvDuration.adapter = mRvDurationAdapter
+    mRvDuration.layoutManager =
+      FlexboxLayoutManager(requireContext(), FlexDirection.ROW, FlexWrap.WRAP)
 
-//    mRvDurationAdapter.submitList(listOf(mArguments))
+    mRvDurationAdapter.submitList(
+      AffairDataUtils.getNewList(
+        listOf(
+          AffairWeekData(1, listOf()),
+          AffairTimeData(1, 1, 1)
+        )
+      )
+    )
   }
 
   private fun initObserve() {
@@ -192,6 +203,8 @@ class AddAffairFragment : BaseVmFragment<AddAffairViewModel>() {
       },
       ADD_CONTENT {
         override fun AddAffairFragment.nextInterval(): Boolean {
+          mEtTitle.textSize = 34F
+          mEtTitle.setText(mTitle)
           mContent = mEditText.text.toString()
           TransitionManager.beginDelayedTransition(mRootView, mTransitionSet)
           mTvText1.invisible()
@@ -202,7 +215,8 @@ class AddAffairFragment : BaseVmFragment<AddAffairViewModel>() {
           set.connect(mEtTitle.id, ConstraintSet.START, mRootView.id, ConstraintSet.START)
           set.connect(mEtTitle.id, ConstraintSet.TOP, mTvText1.id, ConstraintSet.BOTTOM)
           set.clear(mEtTitle.id, ConstraintSet.BOTTOM)
-          mEtTitle.textSize = 34F
+
+
 //          mEtTitle.typeface = Typeface.DEFAULT_BOLD
           set.connect(mEditText.id, ConstraintSet.TOP, mEtTitle.id, ConstraintSet.BOTTOM)
           set.applyTo(mRootView)
