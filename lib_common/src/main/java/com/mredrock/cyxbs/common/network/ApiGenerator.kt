@@ -21,6 +21,7 @@ import android.util.Log
 import android.widget.Toast
 import com.mredrock.cyxbs.common.BaseApp
 import com.mredrock.cyxbs.common.config.*
+import com.mredrock.cyxbs.common.service.impl
 import com.mredrock.cyxbs.common.utils.LogLocal
 import retrofit2.adapter.rxjava3.RxJava3CallAdapterFactory
 import java.util.concurrent.locks.ReentrantLock
@@ -216,6 +217,12 @@ object ApiGenerator {
 
 
             interceptors().add(Interceptor {
+                
+                val accountService = IAccountService::class.impl
+                if (!accountService.getVerifyService().isLogin()) {
+                    return@Interceptor it.proceed(it.request())
+                }
+                
                 /**
                  * 所有请求添加token到header
                  * 在外面加一层判断，用于token未过期时，能够异步请求，不用阻塞在checkRefresh()
@@ -223,7 +230,7 @@ object ApiGenerator {
                  */
                 when {
                     token.isEmpty() -> {
-                        token = ServiceManager.getService(IAccountService::class.java).getUserTokenService().getToken()
+                        token = accountService.getUserTokenService().getToken()
                         if (isTokenExpired()) {
                             checkRefresh(it, token)
                         } else {
@@ -274,7 +281,7 @@ object ApiGenerator {
 
     private fun proceedPoxyWithTryCatch(proceed: () -> Response): Response? {
         // 以前学长在这里使用了 try catch，会导致 Pandora 看到的问题全是空指针
-        // 所以修改为直接调用，按正常逻辑，如果出现网络连接问题就会抛异常，然后 Pandora 可以看到问题
+        // 所以修改为直接调用，按正常逻辑，如果出现网络连接问题就会抛异常，然后 Pandora 可以看到异常
         // 因为不想看到一堆报黄，所以该方法仍返回 Response?，暂不打算去掉 ?
         try {
             return proceed.invoke()
