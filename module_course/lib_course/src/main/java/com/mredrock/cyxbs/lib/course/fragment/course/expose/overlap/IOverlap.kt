@@ -22,7 +22,7 @@ interface IOverlap {
    * 刷新重叠
    *
    * ## 注意
-   * - 只有添加进父布局的才会收到毁掉
+   * - 只有添加进父布局的才会收到回调
    * - 在父布局添加或移除了 [IOverlapItem] 和某个 [IOverlapItem] 的 view 的 visibility 发生改变时回调
    */
   fun refreshOverlap()

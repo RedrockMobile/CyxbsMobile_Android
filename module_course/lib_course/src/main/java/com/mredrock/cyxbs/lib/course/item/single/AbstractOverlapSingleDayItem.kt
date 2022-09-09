@@ -12,7 +12,7 @@ import com.ndhzs.netlayout.attrs.NetLayoutParams
 import com.ndhzs.netlayout.view.NetLayout2
 
 /**
- * ...
+ * 用于实现单列的可重叠 item
  *
  * @author 985892345 (Guo Xiangrui)
  * @email guo985892345@foxmail.com
@@ -31,12 +31,15 @@ abstract class AbstractOverlapSingleDayItem : IOverlapItem, OverlapHelper.ILogic
    * 即将被添加进父布局时的回调
    *
    * ## 注意
-   * 此时并没有被添加进父布局
+   * - 此时并没有被添加进父布局
    */
   protected open fun onAddIntoCourse() {}
   
   /**
    * 刷新重叠区域时的回调
+   *
+   * ## 注意
+   * - 只有添加进父布局的才会收到回调
    */
   protected open fun onRefreshOverlap() {}
   
@@ -85,6 +88,7 @@ abstract class AbstractOverlapSingleDayItem : IOverlapItem, OverlapHelper.ILogic
   final override fun isAddIntoParent(): Boolean {
     refreshFreeArea()
     if (mFreeAreaMap.isNotEmpty()) {
+      onAddIntoCourse()
       return true
     }
     return false
