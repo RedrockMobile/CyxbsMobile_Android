@@ -11,7 +11,7 @@ import android.util.SparseArray
  */
 
 internal inline fun <T> SparseArray<T>.getOrPut(key: Int, block: (key: Int) -> T): T {
-  var value = get(key)
+  var value = get(key, null)
   if (value == null) {
     value = block.invoke(key)
     put(key, value)

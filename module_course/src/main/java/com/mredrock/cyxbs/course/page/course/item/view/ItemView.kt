@@ -73,7 +73,7 @@ abstract class ItemView(context: Context) : CardView(context) {
   }
   
   init {
-    cardElevation = 0F
+    cardElevation = 1F
     super.setCardBackgroundColor(Color.TRANSPARENT)
     radius = 8.dp2pxF
     

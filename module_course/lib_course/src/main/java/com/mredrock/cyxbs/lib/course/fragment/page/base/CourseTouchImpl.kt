@@ -6,7 +6,6 @@ import androidx.annotation.CallSuper
 import com.mredrock.cyxbs.lib.course.fragment.page.expose.ICourseTouch
 import com.mredrock.cyxbs.lib.course.helper.CourseDownAnimDispatcher
 import com.mredrock.cyxbs.lib.course.helper.ScrollTouchHandler
-import com.ndhzs.netlayout.touch.multiple.IPointerDispatcher
 import com.ndhzs.netlayout.touch.multiple.IPointerTouchHandler
 import com.ndhzs.netlayout.touch.multiple.event.IPointerEvent
 
@@ -24,18 +23,17 @@ abstract class CourseTouchImpl : AbstractCoursePageFragment(), ICourseTouch {
     return if (event.pointerId != 0) ScrollTouchHandler else null
   }
   
-  override fun initializePointerDispatchers(list: MutableList<IPointerDispatcher>) {
-    list.add(CourseDownAnimDispatcher(course)) // Q弹动画的实现
-  }
-  
   @CallSuper
   override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
     super.onViewCreated(view, savedInstanceState)
     course.setDefaultHandler(this)
-    val list = arrayListOf<IPointerDispatcher>()
-    initializePointerDispatchers(list)
-    list.forEach {
-      course.addPointerDispatcher(it)
+    val dispatcher = getCourseDownAnimDispatcher()
+    if (dispatcher != null) {
+      course.addPointerDispatcher(dispatcher)
     }
+  }
+  
+  override fun getCourseDownAnimDispatcher(): CourseDownAnimDispatcher? {
+    return CourseDownAnimDispatcher(course)
   }
 }

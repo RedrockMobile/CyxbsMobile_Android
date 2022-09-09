@@ -12,7 +12,6 @@ import com.mredrock.cyxbs.course.page.course.ui.home.viewmodel.HomeCourseViewMod
 import com.mredrock.cyxbs.lib.utils.extensions.gone
 import com.mredrock.cyxbs.lib.utils.extensions.setOnSingleClickListener
 import com.mredrock.cyxbs.lib.utils.utils.SchoolCalendarUtil
-import com.scwang.smart.refresh.layout.SmartRefreshLayout
 
 /**
  * ...
@@ -33,7 +32,7 @@ class HomeCourseVpFragment : BaseHomeCourseVpFragment() {
   override val mViewPager by R.id.course_vp_fragment_home.view<ViewPager2>()
   
   // SmartRefreshLayout 刷新
-  private val mRefreshLayout by R.id.course_srl_fragment_home.view<SmartRefreshLayout>()
+//  private val mRefreshLayout by R.id.course_srl_fragment_home.view<SmartRefreshLayout>()
   
   
   
@@ -69,12 +68,12 @@ class HomeCourseVpFragment : BaseHomeCourseVpFragment() {
   }
   
   private fun initRefresh() {
-    mRefreshLayout.setEnableHeaderTranslationContent(false)
-    mRefreshLayout.setHeaderHeight(0F)
-    mRefreshLayout.setFooterTriggerRate(2F)
-    mRefreshLayout.setOnLoadMoreListener {
-      mViewModel.refreshData()
-    }
+//    mRefreshLayout.setEnableHeaderTranslationContent(false)
+//    mRefreshLayout.setHeaderHeight(0F)
+//    mRefreshLayout.setFooterTriggerRate(2F)
+//    mRefreshLayout.setOnLoadMoreListener {
+//      mViewModel.refreshData()
+//    }
   }
   
   private fun initViewPager() {
@@ -96,7 +95,7 @@ class HomeCourseVpFragment : BaseHomeCourseVpFragment() {
       }
     }
     mViewModel.refreshEvent.collectLaunch {
-      mRefreshLayout.finishLoadMore()
+//      mRefreshLayout.finishLoadMore()
       if (it) {
         toast("刷新成功！")
       } else {

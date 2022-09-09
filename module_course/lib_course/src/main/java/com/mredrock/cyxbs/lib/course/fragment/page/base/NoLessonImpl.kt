@@ -4,6 +4,8 @@ import android.os.Bundle
 import android.view.View
 import androidx.core.view.isVisible
 import com.mredrock.cyxbs.lib.course.R
+import com.mredrock.cyxbs.lib.course.item.affair.IAffairItem
+import com.mredrock.cyxbs.lib.course.item.lesson.ILessonItem
 import com.mredrock.cyxbs.lib.course.fragment.page.expose.INoLesson
 import com.mredrock.cyxbs.lib.course.internal.item.IItem
 import com.mredrock.cyxbs.lib.course.internal.item.IItemContainer
@@ -23,7 +25,7 @@ abstract class NoLessonImpl : CourseTouchImpl(), INoLesson {
   override val viewNoLesson by R.id.course_view_no_lesson.view<View>()
   
   override fun isExhibitionItem(item: IItem): Boolean {
-    return item.isLessonItem || item.isAffairItem
+    return item is ILessonItem || item is IAffairItem
   }
   
   override fun onViewCreated(view: View, savedInstanceState: Bundle?) {

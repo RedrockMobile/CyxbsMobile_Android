@@ -1,7 +1,7 @@
 package com.mredrock.cyxbs.course.page.course.data
 
 import com.mredrock.cyxbs.course.page.course.data.expose.IWeek
-import com.mredrock.cyxbs.lib.course.internal.affair.IAffairData
+import com.mredrock.cyxbs.lib.course.item.affair.IAffairData
 
 /**
  * ...

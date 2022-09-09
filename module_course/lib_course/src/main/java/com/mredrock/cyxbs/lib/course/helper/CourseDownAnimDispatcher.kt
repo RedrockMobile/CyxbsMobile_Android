@@ -6,7 +6,10 @@ import android.view.MotionEvent
 import android.view.View
 import android.view.ViewConfiguration
 import android.view.ViewGroup
+import android.view.animation.OvershootInterpolator
 import androidx.core.util.forEach
+import com.mredrock.cyxbs.lib.course.item.affair.IAffairItem
+import com.mredrock.cyxbs.lib.course.item.lesson.ILessonItem
 import com.mredrock.cyxbs.lib.course.internal.item.IItem
 import com.mredrock.cyxbs.lib.course.internal.view.course.ICourseViewGroup
 import com.ndhzs.netlayout.touch.multiple.IPointerDispatcher
@@ -29,8 +32,8 @@ open class CourseDownAnimDispatcher(
   /**
    * 是否需要动画
    */
-  open fun isNeedAnim(item: IItem): Boolean {
-    return item.isLessonItem || item.isAffairItem
+  open fun isNeedAnim(pair: Pair<IItem, View>): Boolean {
+    return pair.first is ILessonItem || pair.first is IAffairItem
   }
   
   final override fun isPrepareToIntercept(event: IPointerEvent, view: ViewGroup): Boolean {
@@ -52,12 +55,10 @@ open class CourseDownAnimDispatcher(
         val id = event.getPointerId(index)
         val x = event.getX(index).toInt()
         val y = event.getY(index).toInt()
-        val rawX = getRawX(index, event).toInt()
-        val rawY = getRawY(index, event).toInt()
-        val item = course.findItemUnderByXY(x, y) ?: return
-        if (isNeedAnim(item)) {
-          mViewWithRawPointById[id] = Pair(item.view, Point(rawX, rawY))
-          startAnim(item.view)
+        val pair = course.findPairUnderByXY(x, y) ?: return
+        if (isNeedAnim(pair)) {
+          startAnim(pair.second)
+          mViewWithRawPointById[id] = Pair(pair.second, Point(x, y))
         }
       }
       MotionEvent.ACTION_MOVE -> {
@@ -65,15 +66,17 @@ open class CourseDownAnimDispatcher(
           val id = event.getPointerId(index)
           val pair = mViewWithRawPointById[id]
           if (pair != null) {
+            val x = event.getX(index).toInt()
+            val y = event.getY(index).toInt()
             val child = pair.first
             val point = pair.second
-            val rawX = getRawX(index, event)
-            val rawY = getRawY(index, event)
-            if (abs(rawX - point.x) > mTouchSlop
-              || abs(rawY - point.y) > mTouchSlop
+            if (abs(x - point.x) > mTouchSlop
+              || abs(y - point.y) > mTouchSlop * 2
             ) {
-              recoverAnim(child)
+              endAnim(child)
               mViewWithRawPointById.remove(id)
+            } else {
+              change(pair.first, pair.second.x, pair.second.y, x, y)
             }
           }
         }
@@ -84,23 +87,20 @@ open class CourseDownAnimDispatcher(
         val pair = mViewWithRawPointById[id]
         if (pair != null) {
           val child = pair.first
-          recoverAnim(child)
+          endAnim(child)
           mViewWithRawPointById.remove(id)
         }
       }
       MotionEvent.ACTION_CANCEL, MotionEvent.ACTION_UP -> {
         mViewWithRawPointById.forEach { _, value ->
-          recoverAnim(value.first)
+          endAnim(value.first)
         }
         mViewWithRawPointById.clear()
       }
     }
   }
   
-  /**
-   * 实现按下后的 Q 弹动画
-   */
-  private fun startAnim(view: View) {
+  protected open fun startAnim(view: View) {
     view.animate()
       .scaleX(0.85F)
       .scaleY(0.85F)
@@ -108,20 +108,18 @@ open class CourseDownAnimDispatcher(
       .start()
   }
   
-  private fun recoverAnim(view: View) {
-    view.animate().cancel()
+  protected open fun change(view: View, initialX: Int, initialY: Int, nowX: Int, nowY: Int) {
+    view.rotationX = -(nowY - initialY) / view.height.toFloat() * 360
+    view.rotationY = (nowX - initialX) / view.width.toFloat() * 180
+  }
+  
+  protected open fun endAnim(view: View) {
     view.animate()
       .scaleX(1F)
       .scaleY(1F)
-      .setInterpolator { 1 - 1F / (1F + it).pow(6) }
+      .rotationX(0F)
+      .rotationY(0F)
+      .setInterpolator(OvershootInterpolator())
       .start()
-  }
-  
-  private fun getRawX(pointerIndex: Int, event: MotionEvent): Float {
-    return event.getX(pointerIndex) - event.x + event.rawX
-  }
-  
-  private fun getRawY(pointerIndex: Int, event: MotionEvent): Float {
-    return event.getY(pointerIndex) - event.y + event.rawY
   }
 }

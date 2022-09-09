@@ -1,7 +1,7 @@
 package com.mredrock.cyxbs.lib.course.fragment.page.expose
 
+import com.mredrock.cyxbs.lib.course.helper.CourseDownAnimDispatcher
 import com.mredrock.cyxbs.lib.course.internal.touch.IMultiTouch
-import com.ndhzs.netlayout.touch.multiple.IPointerDispatcher
 
 /**
  * ...
@@ -11,5 +11,5 @@ import com.ndhzs.netlayout.touch.multiple.IPointerDispatcher
  * @date 2022/8/31 18:23
  */
 interface ICourseTouch : IMultiTouch.DefaultHandler {
-  fun initializePointerDispatchers(list: MutableList<IPointerDispatcher>)
+  fun getCourseDownAnimDispatcher(): CourseDownAnimDispatcher?
 }
