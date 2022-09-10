@@ -33,12 +33,12 @@ interface IItemContainer {
   /**
    * 在已经添加进来的 [view] 中查找 [IItem]
    */
-  fun getItemByView(view: View): IItem?
+  fun getItemByView(view: View?): IItem?
   
   /**
    * 在已经添加进来的 [item] 中查找 [View]
    */
-  fun getViewByItem(item: IItem): View?
+  fun getViewByItem(item: IItem?): View?
   
   /**
    * 添加 [IItem] 和移除 [IItem] 的监听

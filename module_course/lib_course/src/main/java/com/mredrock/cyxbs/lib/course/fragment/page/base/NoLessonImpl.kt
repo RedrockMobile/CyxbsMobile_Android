@@ -38,19 +38,16 @@ abstract class NoLessonImpl : CourseTouchImpl(), INoLesson {
    */
   private fun initNoLessonLogic(savedInstanceState: Bundle?) {
     course.apply {
-      var showItemCount = 0
       addItemExistListener(
         object : IItemContainer.OnItemExistListener {
           override fun onItemAddedAfter(item: IItem) {
-            if (isExhibitionItem(item)) showItemCount++
-            viewNoLesson.gone()
+            if (isExhibitionItem(item)) mExhibitionItemCount++
+            tryPostRefreshNoLessonRunnable()
           }
           
           override fun onItemRemovedAfter(item: IItem) {
-            if (isExhibitionItem(item)) showItemCount--
-            if (showItemCount == 0) {
-              viewNoLesson.visible()
-            }
+            if (isExhibitionItem(item)) mExhibitionItemCount--
+            tryPostRefreshNoLessonRunnable()
           }
         }
       )
@@ -65,6 +62,29 @@ abstract class NoLessonImpl : CourseTouchImpl(), INoLesson {
         viewNoLesson.visible()
       } else {
         viewNoLesson.gone()
+      }
+    }
+  }
+  
+  private var mExhibitionItemCount = 0
+  
+  private var _isInRefreshRunnable = false
+  
+  /**
+   * 尝试发送没课图片显示的 Runnable
+   *
+   * 因为一次事件中存在先 clear 所有课程和事务，再添加的情况，所以是否显示没课图片需要移动到下一个 Runnable 中执行
+   */
+  private fun tryPostRefreshNoLessonRunnable() {
+    if (!_isInRefreshRunnable) {
+      _isInRefreshRunnable = true
+      course.post {
+        _isInRefreshRunnable = false
+        if (mExhibitionItemCount == 0) {
+          viewNoLesson.visible()
+        } else {
+          viewNoLesson.gone()
+        }
       }
     }
   }

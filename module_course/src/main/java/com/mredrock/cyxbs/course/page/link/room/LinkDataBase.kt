@@ -55,7 +55,7 @@ interface LinkStuDao {
   fun insertLinkStu(link: LinkStuEntity)
   
   @Update
-  fun updateLinkStu(link: LinkStuEntity): Int
+  fun updateLinkStu(link: LinkStuEntity)
 
   @Query("SELECT * FROM link_stu WHERE selfNum = :selfNum")
   fun getLinkStu(selfNum: String): LinkStuEntity?

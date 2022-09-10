@@ -11,12 +11,12 @@ import com.mredrock.cyxbs.lib.course.item.lesson.ILessonItem
  * @date 2022/8/25 16:11
  */
 interface ICourseContainer {
-  fun addLesson(lesson: ILessonItem): Boolean
+  fun addLesson(lesson: ILessonItem)
   fun addLesson(lessons: List<ILessonItem>)
   fun removeLesson(lesson: ILessonItem)
   fun clearLesson()
   
-  fun addAffair(affair: IAffairItem): Boolean
+  fun addAffair(affair: IAffairItem)
   fun addAffair(affairs: List<IAffairItem>)
   fun removeAffair(affair: IAffairItem)
   fun clearAffair()

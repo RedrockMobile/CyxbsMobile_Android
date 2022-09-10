@@ -40,7 +40,7 @@ class HomeCourseViewModel : BaseViewModel() {
    * 改变关联人的可见性
    */
   fun changeLinkStuVisible(isShowLink: Boolean) {
-    LinkRepository.changeLinkStuVisible(isShowLink)
+    LinkRepository.changeLinkStuVisible(isShowLink).safeSubscribeBy()
     // 这里更新后，所有观察关联的地方都会重新发送新数据
   }
   
@@ -77,17 +77,17 @@ class HomeCourseViewModel : BaseViewModel() {
     // 自己课的观察流
     val selfLessonObservable = StuLessonRepository.observeSelfLesson()
       .map { it.toStuLessonData() }
+//      .map { emptyList<StuLessonData>() } // 测试使用
   
     // 关联人课的观察流
     val linkLessonObservable = LinkRepository.observeLinkStudent()
       .doOnNext { _linkStu.postValue(it) }
-      .distinctUntilChanged { t1, t2 ->
-        // 当自身学号以及关联人学号未发生改变时就不通知下游
-        t1.selfNum == t2.selfNum && t1.linkNum == t2.linkNum
-      }.switchMap {
-        if (it.isNull()) Observable.just(emptyList()) // 没得关联人时发送空数据
+      .switchMap {
+        // 没得关联人和不显示关联课程时发送空数据
+        if (it.isNull() || !it.isShowLink) Observable.just(emptyList())
         else StuLessonRepository.observeLesson(it.linkNum)
       }.map { it.toStuLessonData() }
+//      .map { if (it.isEmpty()) it else arrayListOf(createLesson(1, 1, 1, 2)) } // 测试使用
   
     // 事务的观察流
     val affairObservable = Observable.just<List<AffairData>>(emptyList()) // TODO 事务待完成
@@ -107,7 +107,7 @@ class HomeCourseViewModel : BaseViewModel() {
   /**
    * 测试使用
    */
-  private fun getLesson(week: Int, hashDay: Int, beginLesson: Int, period: Int, title: String): StuLessonData {
+  private fun createLesson(week: Int, hashDay: Int, beginLesson: Int, period: Int, title: String = "标题"): StuLessonData {
     return StuLessonData(
       "", week, beginLesson, "", title, "",
       "", hashDay, period, "", "", "")

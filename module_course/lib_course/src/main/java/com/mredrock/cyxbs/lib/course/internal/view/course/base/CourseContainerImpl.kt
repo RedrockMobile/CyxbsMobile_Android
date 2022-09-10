@@ -3,13 +3,11 @@ package com.mredrock.cyxbs.lib.course.internal.view.course.base
 import android.content.Context
 import android.util.AttributeSet
 import android.view.View
-import android.view.ViewGroup
 import androidx.collection.arrayMapOf
 import com.mredrock.cyxbs.lib.course.R
 import com.mredrock.cyxbs.lib.course.internal.item.IItem
 import com.mredrock.cyxbs.lib.course.internal.item.IItemContainer
 import com.ndhzs.netlayout.attrs.NetLayoutParams
-import com.ndhzs.netlayout.child.OnChildExistListener
 
 /**
  * ...
@@ -63,22 +61,26 @@ abstract class CourseContainerImpl @JvmOverloads constructor(
     }
   }
   
-  final override fun getItemByView(view: View): IItem? {
+  final override fun getItemByView(view: View?): IItem? {
     return mItemByView[view]
   }
   
-  final override fun getViewByItem(item: IItem): View? {
+  final override fun getViewByItem(item: IItem?): View? {
     return mViewByItem[item]
   }
   
   final override fun findPairUnderByXY(x: Int, y: Int): Pair<IItem, View>? {
-    return findViewUnderByXY(x, y)?.let { Pair(getItemByView(it)!!, it) }
+    val view = findViewUnderByXY(x, y)
+    val item = getItemByView(view)
+    if (item != null && view != null) {
+      return Pair(item, view)
+    }
+    return null
   }
   
   final override fun findPairUnderByFilter(filter: IItem.(View) -> Boolean): Pair<IItem, View>? {
     for (i in childCount - 1 downTo 0) {
       val child = getChildAt(i)
-      if (child.visibility == GONE) continue
       val item = mItemByView[child]
       if (item != null) {
         if (filter.invoke(item, child)) {
@@ -87,19 +89,6 @@ abstract class CourseContainerImpl @JvmOverloads constructor(
       }
     }
     return null
-  }
-  
-  init {
-    addChildExistListener(
-      object : OnChildExistListener {
-        override fun onChildViewAdded(parent: ViewGroup, child: View) {}
-        override fun onChildViewRemoved(parent: ViewGroup, child: View) {
-          // 当 view 直接被你移除时清除掉引用
-          val item = mItemByView.remove(child)
-          mViewByItem.remove(item)
-        }
-      }
-    )
   }
   
   
@@ -130,17 +119,17 @@ abstract class CourseContainerImpl @JvmOverloads constructor(
   }
   
   @Deprecated("禁止子类调用", level = DeprecationLevel.HIDDEN)
-  override fun removeView(view: View?) {
+  final override fun removeView(view: View?) {
     super.removeView(view)
   }
   
   @Deprecated("禁止子类调用", level = DeprecationLevel.HIDDEN)
-  override fun removeViewAt(index: Int) {
+  final override fun removeViewAt(index: Int) {
     super.removeViewAt(index)
   }
   
   @Deprecated("禁止子类调用", level = DeprecationLevel.HIDDEN)
-  override fun removeViews(start: Int, count: Int) {
+  final override fun removeViews(start: Int, count: Int) {
     super.removeViews(start, count)
   }
 }

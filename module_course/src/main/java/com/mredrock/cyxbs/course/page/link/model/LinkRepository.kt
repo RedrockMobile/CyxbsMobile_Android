@@ -103,19 +103,19 @@ object LinkRepository {
       }.subscribeOn(Schedulers.io())
   }
   
-  fun changeLinkStuVisible(visible: Boolean): Single<Boolean> {
+  fun changeLinkStuVisible(visible: Boolean): Completable {
     val selfNum = IAccountService::class.impl.getUserService().getStuNum()
-    if (selfNum.isEmpty()) return Single.error(IllegalStateException("学号为空！"))
-    return Single.create {
+    if (selfNum.isEmpty()) return Completable.error(IllegalStateException("学号为空！"))
+    return Completable.create {
       val linkStuEntity = mLinkStuDB.getLinkStu(selfNum)
       if (linkStuEntity != null) {
         if (linkStuEntity.isShowLink != visible) {
           mLinkStuDB.updateLinkStu(linkStuEntity.copy(isShowLink = visible))
         }
-        it.onSuccess(visible)
+        it.onComplete()
       } else {
         it.onError(RuntimeException("数据库不存在该学号（$selfNum）的关联人"))
       }
-    }
+    }.subscribeOn(Schedulers.io())
   }
 }

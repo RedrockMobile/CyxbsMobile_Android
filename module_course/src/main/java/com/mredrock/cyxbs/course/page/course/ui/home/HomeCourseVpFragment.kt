@@ -52,8 +52,8 @@ class HomeCourseVpFragment : BaseHomeCourseVpFragment() {
   
   private fun initTouch() {
     mIvLink.setOnSingleClickListener {
-      val isShowing = isShowingDoubleLesson() ?: return@setOnSingleClickListener
-      if (isShowing) {
+      val isShowingDouble = isShowingDoubleLesson() ?: return@setOnSingleClickListener
+      if (isShowingDouble) {
         showSingleLink()
         mViewModel.changeLinkStuVisible(false)
       } else {

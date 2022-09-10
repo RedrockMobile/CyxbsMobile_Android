@@ -28,14 +28,16 @@ sealed class BaseLesson(data: ILessonData) : AbstractOverlapSingleDayItem(),
   
   override fun onRefreshOverlap() {
     super.onRefreshOverlap()
+    var isNeedShowOverlapTag = false
     lp.forEachRow { row ->
       if (overlap.getBelowItem(row, lp.weekNum) != null) {
-        getChildren().forEach {
-          if (it is ItemView) {
-            it.setIsShowOverlapTag(true)
-          }
-        }
+        isNeedShowOverlapTag = true
         return@forEachRow
+      }
+    }
+    getChildren().forEach {
+      if (it is ItemView) {
+        it.setIsShowOverlapTag(isNeedShowOverlapTag)
       }
     }
   }
