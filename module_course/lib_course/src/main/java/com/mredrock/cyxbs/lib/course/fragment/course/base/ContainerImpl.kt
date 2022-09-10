@@ -1,6 +1,11 @@
 package com.mredrock.cyxbs.lib.course.fragment.course.base
 
+import android.os.Bundle
+import android.view.View
+import androidx.annotation.CallSuper
 import com.mredrock.cyxbs.lib.course.fragment.course.expose.container.ICourseContainer
+import com.mredrock.cyxbs.lib.course.internal.item.IItem
+import com.mredrock.cyxbs.lib.course.internal.item.IItemContainer
 import com.mredrock.cyxbs.lib.course.item.affair.IAffairItem
 import com.mredrock.cyxbs.lib.course.item.lesson.ILessonItem
 
@@ -16,12 +21,8 @@ abstract class ContainerImpl : AbstractCourseBaseFragment(), ICourseContainer {
   private val mLessons = arrayListOf<ILessonItem>()
   private val mAffairs = arrayListOf<IAffairItem>()
   
-  final override fun addLesson(lesson: ILessonItem): Boolean {
-    if (course.addItem(lesson)) {
-      mLessons.add(lesson)
-      return true
-    }
-    return false
+  final override fun addLesson(lesson: ILessonItem) {
+    course.addItem(lesson)
   }
   
   final override fun addLesson(lessons: List<ILessonItem>) {
@@ -30,22 +31,18 @@ abstract class ContainerImpl : AbstractCourseBaseFragment(), ICourseContainer {
   
   final override fun removeLesson(lesson: ILessonItem) {
     course.removeItem(lesson)
-    mLessons.remove(lesson)
   }
   
   final override fun clearLesson() {
-    mLessons.forEach {
+    // 因为后面的监听中会调用 mLessons.remove()，迭代中是不能删除的
+    mLessons.toList().forEach {
       course.removeItem(it)
     }
     mLessons.clear()
   }
   
-  final override fun addAffair(affair: IAffairItem): Boolean {
-    if (course.addItem(affair)) {
-      mAffairs.add(affair)
-      return true
-    }
-    return false
+  final override fun addAffair(affair: IAffairItem) {
+    course.addItem(affair)
   }
   
   final override fun addAffair(affairs: List<IAffairItem>) {
@@ -54,13 +51,35 @@ abstract class ContainerImpl : AbstractCourseBaseFragment(), ICourseContainer {
   
   final override fun removeAffair(affair: IAffairItem) {
     course.removeItem(affair)
-    mAffairs.remove(affair)
   }
   
   final override fun clearAffair() {
-    mAffairs.forEach {
+    // 因为后面的监听中会调用 mAffairs.remove()，迭代中是不能删除的
+    mAffairs.toList().forEach {
       course.removeItem(it)
     }
     mAffairs.clear()
+  }
+  
+  @CallSuper
+  override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+    super.onViewCreated(view, savedInstanceState)
+    course.addItemExistListener(
+      object : IItemContainer.OnItemExistListener {
+        override fun onItemAddedAfter(item: IItem) {
+          when (item) {
+            is ILessonItem -> mLessons.add(item)
+            is IAffairItem -> mAffairs.add(item)
+          }
+        }
+  
+        override fun onItemRemovedAfter(item: IItem) {
+          when (item) {
+            is ILessonItem -> mLessons.remove(item)
+            is IAffairItem -> mAffairs.remove(item)
+          }
+        }
+      }
+    )
   }
 }
