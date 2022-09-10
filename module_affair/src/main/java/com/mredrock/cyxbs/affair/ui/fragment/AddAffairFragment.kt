@@ -3,10 +3,8 @@ package com.mredrock.cyxbs.affair.ui.fragment
 import android.content.Context
 import android.graphics.Typeface
 import android.os.Bundle
-import android.view.Gravity
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
+import android.view.*
+import android.view.inputmethod.EditorInfo
 import android.widget.EditText
 import android.widget.TextView
 import androidx.activity.OnBackPressedCallback
@@ -25,6 +23,7 @@ import com.mredrock.cyxbs.affair.ui.adapter.AffairDurationAdapter
 import com.mredrock.cyxbs.affair.ui.adapter.TitleCandidateAdapter
 import com.mredrock.cyxbs.affair.ui.adapter.data.AffairTimeData
 import com.mredrock.cyxbs.affair.ui.adapter.data.AffairWeekData
+import com.mredrock.cyxbs.affair.ui.fragment.AddAffairFragment.AffairPageManager.Companion.getCurrentPage
 import com.mredrock.cyxbs.affair.ui.fragment.AddAffairFragment.AffairPageManager.Companion.loadLastPage
 import com.mredrock.cyxbs.affair.ui.fragment.AddAffairFragment.AffairPageManager.Companion.loadNextPage
 import com.mredrock.cyxbs.affair.ui.viewmodel.activity.AffairViewModel
@@ -71,8 +70,9 @@ class AddAffairFragment : BaseVmFragment<AddAffairViewModel>() {
 
   private val mRvTitleCandidate: RecyclerView by R.id.affair_rv_add_affair_title_candidate.view()
   private val mRvTitleCandidateAdapter = TitleCandidateAdapter()
-
+  lateinit var mRvDurationAdapter: AffairDurationAdapter
   private val mRvDuration: RecyclerView by R.id.affair_rv_add_affair_duration.view()
+  private var a = 0 //当a=2时,才可以添加事务
 
   // 拦截返回键
   private val mOnBackPressedCallback = object : OnBackPressedCallback(false) {
@@ -80,6 +80,10 @@ class AddAffairFragment : BaseVmFragment<AddAffairViewModel>() {
 
       if (loadLastPage() == 0) {
         isEnabled = false
+      }
+      // 计数清零
+      if (getCurrentPage() != 2) {
+        a = 0
       }
     }
   }
@@ -112,8 +116,20 @@ class AddAffairFragment : BaseVmFragment<AddAffairViewModel>() {
   override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
     super.onViewCreated(view, savedInstanceState)
 
+    initView()
     initRv()
     initObserve()
+  }
+
+  private fun initView() {
+    mEditText.setOnEditorActionListener(object : TextView.OnEditorActionListener {
+      override fun onEditorAction(p0: TextView?, p1: Int, p2: KeyEvent?): Boolean {
+        return if (p1 == EditorInfo.IME_ACTION_NEXT) {
+          mActivityViewModel.clickNextBtn()
+          return true
+        } else false
+      }
+    })
   }
 
   private fun initRv() {
@@ -123,7 +139,7 @@ class AddAffairFragment : BaseVmFragment<AddAffairViewModel>() {
     mRvTitleCandidate.layoutManager =
       FlexboxLayoutManager(requireContext(), FlexDirection.ROW, FlexWrap.WRAP)
 
-    val mRvDurationAdapter = AffairDurationAdapter(requireActivity())
+    mRvDurationAdapter = AffairDurationAdapter(requireActivity())
     mRvDuration.adapter = mRvDurationAdapter
     mRvDuration.layoutManager =
       FlexboxLayoutManager(requireContext(), FlexDirection.ROW, FlexWrap.WRAP)
@@ -143,8 +159,20 @@ class AddAffairFragment : BaseVmFragment<AddAffairViewModel>() {
       mRvTitleCandidateAdapter.submitList(it)
     }
 
+
+
     mActivityViewModel.clickAffect.collectLaunch {
       loadNextPage()
+      if (getCurrentPage() == 2) a++
+      // 最后点击添加事务
+      if (a > 1) {
+        viewModel.addAffair(
+          1,
+          mTitle,
+          mContent,
+          AffairDataUtils.affairAdapterDataToAtWhatTime(mRvDurationAdapter.currentList)
+        )
+      }
     }
   }
 
@@ -175,6 +203,10 @@ class AddAffairFragment : BaseVmFragment<AddAffairViewModel>() {
       fun AddAffairFragment.loadLastPage(): Int {
         if (sAffairPage.ordinal == 0) return 0
         sAffairPage = sAffairPage.last(this)
+        return sAffairPage.ordinal
+      }
+
+      fun AddAffairFragment.getCurrentPage(): Int {
         return sAffairPage.ordinal
       }
     }

@@ -8,6 +8,7 @@ import com.mredrock.cyxbs.affair.service.AffairDataBase
 import com.mredrock.cyxbs.affair.service.AffairEntity
 import com.mredrock.cyxbs.affair.service.StuNumWithAffairId
 import com.mredrock.cyxbs.api.account.IAccountService
+import com.mredrock.cyxbs.lib.utils.extensions.toast
 import com.mredrock.cyxbs.lib.utils.extensions.unsafeSubscribeBy
 import com.mredrock.cyxbs.lib.utils.network.ApiException
 import com.mredrock.cyxbs.lib.utils.service.ServiceManager
@@ -120,7 +121,9 @@ object AffairRepository {
         // 插入数据库
         AffairDataBase.INSTANCE.getAffairDao().insertAffair(newAffair)
       }.subscribeOn(Schedulers.io())
-      .unsafeSubscribeBy()
+      .unsafeSubscribeBy {
+        "添加成功".toast()
+      }
   }
 
   /**

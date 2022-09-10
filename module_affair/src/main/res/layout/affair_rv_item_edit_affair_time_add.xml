@@ -6,8 +6,8 @@
 
     <ImageView
         android:id="@+id/affair_iv_add_time"
-        android:layout_width="32dp"
-        android:layout_height="32dp"
+        android:layout_width="28dp"
+        android:layout_height="28dp"
         android:src="@drawable/affair_ic_affair_sure_add"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"

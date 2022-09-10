@@ -56,6 +56,17 @@
             app:layout_constraintTop_toBottomOf="@+id/affair_view_affair_bg2"
             app:layout_constraintVertical_bias="0.30" />
 
+        <!--放在这里是防止下面的按钮跟随输入法上移-->
+        <ImageButton
+            android:id="@+id/affair_btn_edit_affair_next"
+            android:layout_width="66dp"
+            android:layout_height="66dp"
+            android:layout_marginBottom="100dp"
+            android:background="@drawable/affair_layer_list_edit_affair_button"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            tools:ignore="ContentDescription" />
     </androidx.constraintlayout.widget.ConstraintLayout>
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -94,16 +105,6 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
-        <ImageButton
-            android:id="@+id/affair_btn_edit_affair_next"
-            android:layout_width="66dp"
-            android:layout_height="66dp"
-            android:layout_marginBottom="100dp"
-            android:background="@drawable/affair_layer_list_edit_affair_button"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            tools:ignore="ContentDescription" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 

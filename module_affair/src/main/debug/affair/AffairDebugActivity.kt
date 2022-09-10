@@ -17,7 +17,7 @@ class DebugActivity : BaseDebugActivity() {
     com.mredrock.cyxbs.lib.utils.service.ServiceManager(IAffairService::class)
       .startAffairEditActivity(
         this,
-        0, 1, 2
+        228398
       )
   }
 }

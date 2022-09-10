@@ -1,5 +1,6 @@
 package com.mredrock.cyxbs.affair.utils
 
+import com.mredrock.cyxbs.affair.service.AffairEntity
 import com.mredrock.cyxbs.affair.ui.adapter.data.AffairAdapterData
 import com.mredrock.cyxbs.affair.ui.adapter.data.AffairTimeAdd
 import com.mredrock.cyxbs.affair.ui.adapter.data.AffairTimeData
@@ -65,6 +66,36 @@ object AffairDataUtils {
     }
     newList.addAll(weekList)
     newList.addAll(timeList)
+    return newList
+  }
+
+  // 将展示的数据转换为要上传的数据
+  fun affairAdapterDataToAtWhatTime(affairList: List<AffairAdapterData>): List<AffairEntity.AtWhatTime> {
+    val newList = arrayListOf<AffairEntity.AtWhatTime>()
+    val weekList = arrayListOf<Int>()
+    val timeList = arrayListOf<AffairTimeData>()
+    affairList.forEach {
+      if (it is AffairWeekData) weekList.add(it.week) else if (it is AffairTimeData) timeList.add(
+        it
+      )
+    }
+    timeList.forEach {
+      newList.add(
+        AffairEntity.AtWhatTime(
+          it.beginLesson,
+          it.weekNum,
+          it.period,
+          weekList
+        )
+      )
+    }
+    return newList
+  }
+  fun affairEntityToAffairAdapterData(affairEntity: AffairEntity): List<AffairAdapterData> {
+    val newList = arrayListOf<AffairAdapterData>()
+    val affairList = affairEntity.atWhatTime
+    affairList[0].week.forEach { newList.add(AffairWeekData(it, listOf()))}
+    affairList.forEach { newList.add(AffairTimeData(it.day,it.beginLesson,it.period)) }
     return newList
   }
 }

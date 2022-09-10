@@ -35,6 +35,13 @@ class AffairServiceImpl : IAffairService {
   }
 
   override fun startAffairEditActivity(context: Context, id: Int) {
+    // 随便传一个
+    AffairActivity.start(
+      context, AffairEditArgs(
+        "", id, "", "", 1,
+        AffairEditArgs.AffairDurationArgs(1, 1, 1, 1)
+      )
+    )
 
   }
 
@@ -63,5 +70,27 @@ class AffairServiceImpl : IAffairService {
         }
       }
     }
+  }
+
+  // 将数据库的类转化为要传递的类
+  private fun affairEntityToAffairEditArgs(data: AffairEntity): AffairEditArgs {
+    return AffairEditArgs(
+      data.stuNum,
+      data.id,
+      data.title,
+      data.content,
+      data.time,
+      atWhatTimeToAffairDurationArgs(data.atWhatTime)
+    )
+  }
+
+  private fun atWhatTimeToAffairDurationArgs(affairList: List<AffairEntity.AtWhatTime>): AffairEditArgs.AffairDurationArgs {
+    return AffairEditArgs.AffairDurationArgs(
+      // 旧版里面只有1个
+      affairList[0].day,
+      affairList[0].beginLesson,
+      affairList[0].period,
+      affairList[0].week[0]
+    )
   }
 }
