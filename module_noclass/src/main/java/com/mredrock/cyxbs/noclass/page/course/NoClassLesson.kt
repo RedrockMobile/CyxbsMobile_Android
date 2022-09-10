@@ -2,10 +2,13 @@ package com.mredrock.cyxbs.noclass.page.course
 
 import android.content.Context
 import android.view.View
-import com.mredrock.cyxbs.lib.course.fragment.item.IOverlapItem
-import com.mredrock.cyxbs.lib.course.item.AbstractLesson
+import androidx.appcompat.app.AppCompatActivity
+import com.mredrock.cyxbs.lib.course.item.lesson.BaseLessonLayoutParams
+import com.mredrock.cyxbs.lib.course.item.lesson.ILessonItem
 import com.mredrock.cyxbs.lib.utils.extensions.color
+import com.mredrock.cyxbs.lib.utils.extensions.dp2px
 import com.mredrock.cyxbs.noclass.R
+import com.mredrock.cyxbs.noclass.page.ui.dialog.NoClassGatherDialog
 
 /**
  *
@@ -18,26 +21,71 @@ import com.mredrock.cyxbs.noclass.R
  * @Version:        1.0
  * @Description:
  */
-class NoClassLesson(val data: NoClassLessonData) : AbstractLesson(data){
-  override val lp: NoClassLessonLayoutParams
-    get() = NoClassLessonLayoutParams(data)
+class NoClassLesson(
+  val data: NoClassLessonData,
+  private val mGatheringList : List<String>,
+  private val mNoGatheringList: List<String>,
+  private val mLastingTime : Pair<Int,Int>
+) : ILessonItem{
   
-  override fun createView(context: Context, parentStartRow: Int, parentEndRow: Int): View {
-    return NoClassLesson.newInstance(context,data)
+  override fun initializeView(context: Context): View {
+    return NoClassLesson.newInstance(context,data ,mGatheringList,mNoGatheringList,mLastingTime)
   }
   
-  override fun compareTo(other: IOverlapItem): Int {
-    return 0
-  }
+  override val lp: BaseLessonLayoutParams
+    get() = NoClassLessonLayoutParams(data).apply {
+      leftMargin = 1.2F.dp2px
+      rightMargin = 1.2F.dp2px
+      topMargin = 1.2F.dp2px
+      bottomMargin = 1.2F.dp2px
+    }
+  
+  override val weekNum: Int
+    get() = data.weekNum
+  override val startNode: Int
+    get() = data.startNode
+  override val length: Int
+    get() = data.length
   
   private class NoClassLesson private constructor(
     context: Context
   ) : NoClassItemView(context){
     companion object {
-      fun newInstance(context: Context, data: NoClassLessonData): NoClassLesson {
+      fun newInstance(context: Context, data: NoClassLessonData, mGatheringList : List<String>, mNoGatheringList: List<String>,mLastingTime : Pair<Int,Int>): NoClassLesson {
         return NoClassLesson(context).apply {
           setColor(data.timeType)
           setText(names = data.names,height = data.length)
+          setOnClickListener {
+            val stuMap = hashMapOf<String,Boolean>()
+            mGatheringList.forEach {
+              stuMap[it] = true
+            }
+            mNoGatheringList.forEach {
+              stuMap[it] = false
+            }
+            
+            val duration = mLastingTime.second - mLastingTime.first
+            val begin = if(mLastingTime.first >= 10) mLastingTime.first - 1 else mLastingTime.first
+            val end = if(mLastingTime.first >= 10) begin + duration - 1 else begin + duration
+            
+            val beginTime = com.mredrock.cyxbs.api.course.utils.getShowStartTimeStr(begin)
+            val endTime = com.mredrock.cyxbs.api.course.utils.getShowEndTimeStr(end)
+            
+            val beginLesson =  if(mLastingTime.first >= 10) mLastingTime.first - 1 else if (mLastingTime.first<=3) mLastingTime.first + 1 else mLastingTime.first
+  
+            val month = when(data.weekNum){
+               1 -> " 周日"
+               2 -> " 周一"
+               3 -> " 周二"
+               4 -> " 周三"
+               5 -> " 周四"
+               6 -> " 周五"
+               7 -> " 周六"
+              else -> ""
+            }
+            val textTime = "时间：${month} ${beginLesson}-${beginLesson + duration - 1} ${beginTime}-${endTime}"
+            NoClassGatherDialog(stuMap,textTime).show((context as AppCompatActivity).supportFragmentManager,"NoClassGatherDialog")
+          }
         }
       }
     }

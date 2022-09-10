@@ -1,6 +1,6 @@
 package com.mredrock.cyxbs.noclass.page.course
 
-import com.mredrock.cyxbs.lib.course.internal.lesson.BaseLessonLayoutParams
+import com.mredrock.cyxbs.lib.course.item.lesson.BaseLessonLayoutParams
 
 /**
  *
@@ -13,6 +13,4 @@ import com.mredrock.cyxbs.lib.course.internal.lesson.BaseLessonLayoutParams
  * @Version:        1.0
  * @Description:
  */
-class NoClassLessonLayoutParams(data : NoClassLessonData) : BaseLessonLayoutParams(data){
-
-}
+class NoClassLessonLayoutParams(data : NoClassLessonData) : BaseLessonLayoutParams(data)

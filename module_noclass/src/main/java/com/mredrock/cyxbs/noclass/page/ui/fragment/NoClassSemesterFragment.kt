@@ -2,8 +2,11 @@ package com.mredrock.cyxbs.noclass.page.ui.fragment
 
 import android.os.Bundle
 import android.view.View
-import com.mredrock.cyxbs.lib.course.fragment.page.CoursePageFragment
+import androidx.core.os.bundleOf
+import androidx.fragment.app.activityViewModels
 import com.mredrock.cyxbs.lib.course.helper.CourseNowTimeHelper
+import com.mredrock.cyxbs.noclass.bean.NoClassSpareTime
+import com.mredrock.cyxbs.noclass.page.viewmodel.NoClassViewModel
 import java.util.*
 
 /**
@@ -17,15 +20,36 @@ import java.util.*
  * @Version:        1.0
  * @Description:    没课约显示整个学期的view
  */
-class NoClassSemesterFragment : CoursePageFragment() {
+class NoClassSemesterFragment : NoClassPageFragment() {
+  
+  private val mViewModel by activityViewModels<NoClassViewModel>()
+  companion object {
+    fun newInstance(data: NoClassSpareTime): NoClassSemesterFragment {
+      return NoClassSemesterFragment().apply {
+        arguments = bundleOf(
+          this::mNoClassSpareTime.name to data
+        )
+      }
+    }
+  }
+  
+  private val mNoClassSpareTime by arguments<NoClassSpareTime>()
   
   override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
     super.onViewCreated(view, savedInstanceState)
     initToday()
     initTimeline()
+    initObserve()
+    addLessons(mNoClassSpareTime)
   }
   
-  
+  private fun initObserve(){
+    mViewModel.noclassData.observe(viewLifecycleOwner){
+      val mNoClassSpareTime = it[0]!!
+      clearLesson()
+      addLessons(mNoClassSpareTime)
+    }
+  }
   private fun initToday(){
     val calendar = Calendar.getInstance()
     val weekNum = (calendar.get(Calendar.DAY_OF_WEEK) + 5) % 7 + 1

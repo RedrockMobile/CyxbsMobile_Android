@@ -1,11 +1,11 @@
 package com.mredrock.cyxbs.noclass.page.ui.fragment
 
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.core.os.bundleOf
+import androidx.fragment.app.activityViewModels
 import androidx.viewpager2.widget.ViewPager2
 import com.mredrock.cyxbs.lib.course.fragment.page.CoursePageFragment
 import com.mredrock.cyxbs.lib.course.fragment.vp.AbstractHeaderCourseVpFragment
@@ -13,6 +13,7 @@ import com.mredrock.cyxbs.lib.utils.extensions.setOnSingleClickListener
 import com.mredrock.cyxbs.lib.utils.utils.SchoolCalendarUtil
 import com.mredrock.cyxbs.noclass.R
 import com.mredrock.cyxbs.noclass.bean.NoClassSpareTime
+import com.mredrock.cyxbs.noclass.page.viewmodel.NoClassViewModel
 
 /**
  *
@@ -28,24 +29,25 @@ import com.mredrock.cyxbs.noclass.bean.NoClassSpareTime
 
 class NoClassCourseVpFragment : AbstractHeaderCourseVpFragment() {
   
+  private val mViewModel by activityViewModels<NoClassViewModel>()
+  
   companion object {
-    fun newInstance(data : HashMap<Int, NoClassSpareTime>): NoClassCourseVpFragment {
+    fun newInstance(data: HashMap<Int, NoClassSpareTime>): NoClassCourseVpFragment {
       return NoClassCourseVpFragment().apply {
         arguments = bundleOf(
-          this::mNoClassData.name to data
+          this::mNoClassData.name to data,
         )
       }
     }
   }
   
   private val mNoClassData : HashMap<Int, NoClassSpareTime> by arguments()
-  
+
   override val mPageCount: Int
-    get() = 22
+    get() = if (mNoClassData.isNotEmpty()) 22 else 0
 
   override fun createFragment(position: Int): CoursePageFragment {
-    Log.e("createFragment",position.toString())
-    return if (position == 0) NoClassSemesterFragment() else NoClassWeekFragment.newInstance(position,mNoClassData[position]!!)
+    return if (position == 0) NoClassSemesterFragment.newInstance(mNoClassData[0]!!) else NoClassWeekFragment.newInstance(position,mNoClassData[position]!!)
   }
 
   override val mViewPager: ViewPager2 by R.id.noclass_vp_fragment_course.view()
@@ -61,8 +63,15 @@ class NoClassCourseVpFragment : AbstractHeaderCourseVpFragment() {
   
   override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
     super.onViewCreated(view, savedInstanceState)
+    initObserve()
     initTouch()
     initViewPager()
+  }
+  
+  private fun initObserve(){
+    mViewModel.noclassData.observe{
+//      mOnDataFill.invoke()
+    }
   }
   
   private fun initTouch(){

@@ -118,7 +118,7 @@ class NoClassViewModel : BaseViewModel() {
       }
   }
   
-  fun getLessons(stuNumList: List<String>){
+  fun getLessons(stuNumList: List<String>,members : List<NoclassGroup.Member>){
     val studentsLessons =  mutableMapOf<Int,List<ILessonService.Lesson>>()
     fromIterable(stuNumList)
       .flatMap {
@@ -131,7 +131,15 @@ class NoClassViewModel : BaseViewModel() {
           studentsLessons[stuNumList.indexOf(it[0].stuNum)] = it
         },
         onComplete = {
-          _noclassData.postValue(studentsLessons.toSpareTime())
+          _noclassData.postValue(studentsLessons.toSpareTime().apply {
+            val mMap = hashMapOf<String,String>()
+            members.forEach {
+              mMap[it.stuNum] = it.stuName
+            }
+            forEach {
+              it.value.mIdToNameMap = mMap
+            }
+          })
         },
         onError = {
         }

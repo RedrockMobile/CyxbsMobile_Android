@@ -1,6 +1,5 @@
 package com.mredrock.cyxbs.noclass.bean
 
-import android.util.SparseArray
 import com.mredrock.cyxbs.api.course.ILessonService
 import java.io.Serializable
 
@@ -18,45 +17,41 @@ import java.io.Serializable
 
 data class NoClassSpareTime (
     //记录一天的空闲时间
-    val spareDayTime : SparseArray<SpareLineTime>
+    val spareDayTime : HashMap<Int,SpareLineTime>
 ) : Serializable {
+  
+  companion object{
+    val EMPTY_PAGE = HashMap<Int, NoClassSpareTime>().apply {
+      (0..22).forEach{
+        this[it] = getNewEmptySpareTime()
+      }
+    }
+  }
+  
   //一个学生的map 用于学号与姓名之间的转换
-  val mIdToNameMap : HashMap<String,String> = hashMapOf()
+  var mIdToNameMap : HashMap<String,String> = hashMapOf()
   
   //记录从上当下一行的空闲时间
   data class SpareLineTime(
     //此时有空闲时间的学号
-    val SpareId: Array<MutableList<String>>,
+    val SpareItem: ArrayList<SpareIds>,
     //此时是否空闲 false代表没课
-    val isSpare: BooleanArray
+    val isSpare: HashMap<Int,Boolean>,
   ): Serializable {
-    override fun equals(other: Any?): Boolean {
-      if (this === other) return true
-      if (javaClass != other?.javaClass) return false
-      
-      other as SpareLineTime
-      
-      if (!SpareId.contentEquals(other.SpareId)) return false
-      if (!isSpare.contentEquals(other.isSpare)) return false
-      
-      return true
-    }
-    
-    override fun hashCode(): Int {
-      var result = SpareId.contentHashCode()
-      result = 31 * result + isSpare.contentHashCode()
-      return result
-    }
-    
+    //每格格子上空闲的人数
+    data class SpareIds(
+      val spareId : ArrayList<String>
+    ) : Serializable
   }
 }
+
   /**
    * 将返回出来的数据变为SpareTime格式
    */
 fun Map<Int, List<ILessonService.Lesson>>.toSpareTime() : HashMap<Int, NoClassSpareTime>{
   val studentSpareTimes: HashMap<Int, NoClassSpareTime> = HashMap()
   //所有学生的id
-  val stuIds = mutableListOf<String>()
+  val stuIds = arrayListOf<String>()
   this.forEach {
     stuIds.add(it.value[it.key].stuNum)
   }
@@ -80,15 +75,15 @@ fun Map<Int, List<ILessonService.Lesson>>.toSpareTime() : HashMap<Int, NoClassSp
       (0 until lesson.period).map {
         //得到了当前一整竖行的数据
         //检查移除该格子的空闲人
-        if (line.SpareId[lesson.beginLesson + it].contains(lesson.stuNum)) {
-          line.SpareId[lesson.beginLesson + it].remove(lesson.stuNum)
-          semesterLine.SpareId[lesson.beginLesson + it].remove(lesson.stuNum)
+        if (line!!.SpareItem[lesson.beginLesson + it].spareId.contains(lesson.stuNum)) {
+          line.SpareItem[lesson.beginLesson + it].spareId.remove(lesson.stuNum)
+          semesterLine!!.SpareItem[lesson.beginLesson + it].spareId.remove(lesson.stuNum)
         }
         //如果这个格子上已经没人了，就标记为有课
-        if(line.SpareId[lesson.beginLesson + it].isEmpty())
+        if(line.SpareItem[lesson.beginLesson + it].spareId.isEmpty())
         line.isSpare[lesson.beginLesson + it] = true
         //整个学期的有没课状态
-        if(semesterLine.SpareId[lesson.beginLesson + it].isEmpty())
+        if(semesterLine!!.SpareItem[lesson.beginLesson + it].spareId.isEmpty())
           semesterLine.isSpare[lesson.beginLesson + it] = true
       }
     }
@@ -108,13 +103,42 @@ fun Map<Int, List<ILessonService.Lesson>>.toSpareTime() : HashMap<Int, NoClassSp
 /**
  * 一个新的SpareTime对象
  */
-private fun getNewSpareTime(stuIds : List<String>): NoClassSpareTime {
-  return NoClassSpareTime(SparseArray(7)).apply {
+private fun getNewSpareTime(stuIds : ArrayList<String>): NoClassSpareTime {
+  return NoClassSpareTime(hashMapOf()).apply {
     (0..6).map {
       spareDayTime[it] =
         NoClassSpareTime.SpareLineTime(
-          Array(13) { stuIds.toMutableList() },
-          BooleanArray(13)
+          ArrayList<NoClassSpareTime.SpareLineTime.SpareIds>(13).apply {
+            (0..13).forEach { _ ->
+              add(NoClassSpareTime.SpareLineTime.SpareIds((stuIds.clone() as ArrayList<String>)))
+            }
+          },
+          hashMapOf<Int, Boolean>().apply {
+            (0..13).forEach{ index ->
+              this[index] = false
+            }
+          }
+        )
+    }
+  }
+}
+
+
+private fun getNewEmptySpareTime(): NoClassSpareTime {
+  return NoClassSpareTime(hashMapOf()).apply {
+    (0..6).map {
+      spareDayTime[it] =
+        NoClassSpareTime.SpareLineTime(
+          ArrayList<NoClassSpareTime.SpareLineTime.SpareIds>(13).apply {
+            (0..13).forEach { _ ->
+              add(NoClassSpareTime.SpareLineTime.SpareIds(arrayListOf()))
+            }
+          },
+          hashMapOf<Int, Boolean>().apply {
+            (0..13).forEach{ index ->
+              this[index] = false
+            }
+          }
         )
     }
   }

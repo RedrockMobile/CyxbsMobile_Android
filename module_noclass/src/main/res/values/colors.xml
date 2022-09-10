@@ -35,6 +35,16 @@
     <color name="noclass_save_bg_color">#99A7B9</color>
     <!--    查找学生的颜色-->
     <color name="noclass_search_student_color">#7B8899</color>
+    <!--    集合弹窗的划分线-->
+    <color name="noclass_gather_line_bg">#E2E8EE</color>
+    <!--    集合弹窗没课字体-->
+    <color name="noclass_gather_text_noclass_bg">#D4DAFF</color>
+    <!--    集合弹窗没课背景-->
+    <color name="noclass_gather_noclass_bg">#4841E2</color>
+    <!--    集合弹窗有课字体-->
+    <color name="noclass_gather_text_class_bg">#94A2B5</color>
+    <!--    集合弹窗有课背景-->
+    <color name="noclass_gather_class_bg">#E9EDF2</color>
 
     <!--    以下为课表背景颜色-->
     <!--    上午-->

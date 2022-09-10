@@ -8,7 +8,6 @@ import android.view.WindowManager
 import android.widget.Button
 import android.widget.LinearLayout
 import androidx.activity.result.contract.ActivityResultContracts
-import androidx.recyclerview.widget.DefaultItemAnimator
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.mredrock.cyxbs.lib.base.ui.mvvm.BaseVmActivity
@@ -106,11 +105,15 @@ class GroupManagerActivity : BaseVmActivity<GroupManagerViewModel>(){
      * 接受外部传来的数据
      */
     private fun getList(){
+        val create = intent.getBooleanExtra("CreateGroup",false)
         val extra = intent.getSerializableExtra("GroupList")
         mGroupList = extra as MutableList<NoclassGroup>
          if (mGroupList.isEmpty()){
              mEmptyContainer.visibility = View.VISIBLE
          }
+        if (create){
+            createGroup()
+        }
     }
 
     /**
@@ -145,7 +148,8 @@ class GroupManagerActivity : BaseVmActivity<GroupManagerViewModel>(){
         }
         mRecyclerView.adapter = mRvAdapter
         mRecyclerView.layoutManager = LinearLayoutManager(this)
-        (mRecyclerView.itemAnimator as DefaultItemAnimator).supportsChangeAnimations = false
+//        (mRecyclerView.itemAnimator as DefaultItemAnimator).supportsChangeAnimations = false
+        mRecyclerView.itemAnimator = null
     }
 
     /**
@@ -237,6 +241,18 @@ class GroupManagerActivity : BaseVmActivity<GroupManagerViewModel>(){
             }
         }
     }
+    
+    /**
+     * 新建分组
+     */
+    private fun createGroup(){
+        val mNameList : MutableList<String> = mutableListOf() //记录所有分组名字
+        for (i in mGroupList){
+            mNameList.add(i.name)
+        }
+        val mBottomSheetDialog = CreateGroupDialogFragment(mNameList)
+        mBottomSheetDialog.show(supportFragmentManager,"createGroupDialog")
+    }
 
     /**
      * 右侧按钮点击事件
@@ -244,12 +260,7 @@ class GroupManagerActivity : BaseVmActivity<GroupManagerViewModel>(){
     private fun onRightBtnClick(state: GroupState){
         when(state){
             GroupState.NORMAL -> {//新建
-                val mNameList : MutableList<String> = mutableListOf() //记录所有分组名字
-                for (i in mGroupList){
-                    mNameList.add(i.name)
-                }
-                val mBottomSheetDialog = CreateGroupDialogFragment(mNameList)
-                mBottomSheetDialog.show(supportFragmentManager,"createGroupDialog")
+                createGroup()
             }
             GroupState.DELETE -> {//删除
                 if (mSelectedItems.isEmpty()){

@@ -1,6 +1,6 @@
 package com.mredrock.cyxbs.noclass.page.course
 
-import com.mredrock.cyxbs.lib.course.internal.lesson.ILessonData
+import com.mredrock.cyxbs.lib.course.item.lesson.ILessonData
 
 /**
  *

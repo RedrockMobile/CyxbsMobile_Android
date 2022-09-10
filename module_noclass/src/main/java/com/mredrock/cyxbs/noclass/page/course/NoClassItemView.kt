@@ -27,13 +27,6 @@ import com.mredrock.cyxbs.lib.utils.extensions.dp2pxF
 abstract class NoClassItemView (context: Context) : CardView(context) {
   
   protected val mTvNames: TextView
-  private var mIsShowOverlapTag = false
-  
-  fun setIsShowOverlapTag(boolean: Boolean) {
-    mIsShowOverlapTag = boolean
-    invalidate()
-  }
-  
   fun setOverlapTagColor(color: Int) {
     mPaint.color = color
     invalidate()
@@ -54,24 +47,6 @@ abstract class NoClassItemView (context: Context) : CardView(context) {
   override fun draw(canvas: Canvas) {
     canvas.drawColor(mFloorColor) // 需要在底层绘制背景色，不然黑夜模式下 item 颜色会透过去
     super.draw(canvas)
-  }
-  
-  override fun onDraw(canvas: Canvas) {
-    super.onDraw(canvas)
-    drawOverlapTag(canvas)
-  }
-  
-  private fun drawOverlapTag(canvas: Canvas) {
-    if (mIsShowOverlapTag) {
-      // 绘制右上角的重叠标志
-      val l = width - 12.dp2pxF
-      val r = l + 6.dp2pxF
-      val t = 4.dp2pxF
-      val b = t + 2.dp2pxF
-      canvas.drawCircle(l, (t + b) / 2, 1.dp2pxF, mPaint)
-      canvas.drawRect(l, t, r, b, mPaint)
-      canvas.drawCircle(r, (t + b) / 2, 1.dp2pxF, mPaint)
-    }
   }
   
   init {

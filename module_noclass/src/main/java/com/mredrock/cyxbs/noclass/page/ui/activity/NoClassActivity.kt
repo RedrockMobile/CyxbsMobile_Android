@@ -14,18 +14,22 @@ import android.widget.*
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.animation.doOnEnd
 import androidx.core.animation.doOnStart
+import androidx.core.content.edit
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.alibaba.android.arouter.facade.annotation.Route
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.mredrock.cyxbs.api.account.IAccountService
 import com.mredrock.cyxbs.config.route.DISCOVER_NO_CLASS
+import com.mredrock.cyxbs.config.sp.defaultSp
 import com.mredrock.cyxbs.lib.base.ui.mvvm.BaseVmActivity
 import com.mredrock.cyxbs.lib.utils.extensions.setOnSingleClickListener
 import com.mredrock.cyxbs.lib.utils.service.ServiceManager
 import com.mredrock.cyxbs.noclass.R
+import com.mredrock.cyxbs.noclass.bean.NoClassSpareTime
 import com.mredrock.cyxbs.noclass.bean.NoclassGroup
 import com.mredrock.cyxbs.noclass.page.adapter.NoClassGroupAdapter
+import com.mredrock.cyxbs.noclass.page.ui.dialog.SearchDoneDialog
 import com.mredrock.cyxbs.noclass.page.ui.dialog.SearchStudentDialog
 import com.mredrock.cyxbs.noclass.page.ui.fragment.NoClassCourseVpFragment
 import com.mredrock.cyxbs.noclass.page.viewmodel.NoClassViewModel
@@ -179,6 +183,11 @@ class NoClassActivity : BaseVmActivity<NoClassViewModel>(){
   private var toBeDeleteStu = NoclassGroup.Member("","")
   
   /**
+   * 是否已经弹出提示窗
+   */
+  private var mHasShow = false
+  
+  /**
    * 是否有更改值
    */
   private val startForResult = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
@@ -310,12 +319,20 @@ class NoClassActivity : BaseVmActivity<NoClassViewModel>(){
    */
   private fun initTextView(){
     mTextView.setOnClickListener {
-      val intent = (Intent(this@NoClassActivity, GroupManagerActivity::class.java).apply {
-        putExtra("GroupList",mList as Serializable)
-      })
-      startForResult.launch(intent)
+      toGroupManager(false)
     }
   }
+  
+  /**
+   * 流式布局下方的指示器
+   */
+  private fun initIndicator(total : Int){
+    if (total <= 0) return
+    mIndicator.visibility = if (mFLexState === MyFlexLayout.FlexState.COLLAPSING) View.GONE else View.VISIBLE
+    mIndicator.reset()
+    mIndicator.setTotalCount(total)
+  }
+  
   
   /**
    * 搜索操作的初始化
@@ -326,9 +343,9 @@ class NoClassActivity : BaseVmActivity<NoClassViewModel>(){
     mCourseSheetBehavior = BottomSheetBehavior.from(mCourseContainer)
     mCourseSheetBehavior.addBottomSheetCallback(object : BottomSheetBehavior.BottomSheetCallback() {
       override fun onSlide(bottomSheet: View, slideOffset: Float) {
-      
+
       }
-    
+
       override fun onStateChanged(bottomSheet: View, newState: Int) {
         when (newState) {
           BottomSheetBehavior.STATE_EXPANDED -> { //展开操作
@@ -351,20 +368,44 @@ class NoClassActivity : BaseVmActivity<NoClassViewModel>(){
         }
       }
     })
+  
+    replaceFragment(R.id.noclass_course_bottom_sheet_container) {
+      NoClassCourseVpFragment.newInstance(NoClassSpareTime.EMPTY_PAGE)
+    }
     mCourseSheetBehavior.state = BottomSheetBehavior.STATE_COLLAPSED
+   
+    //在滑动下拉课表容器中添加整个课表
+    viewModel.noclassData.observe(this){
+      mCourseSheetBehavior.state = BottomSheetBehavior.STATE_EXPANDED
+    }
+    
+    mCourseSheetBehavior.state = BottomSheetBehavior.STATE_HIDDEN
     
     //设置查询课表
     mBtnQuery.setOnSingleClickListener {
       doSearchCourse()
     }
     //设置键盘上点击搜索的监听
-    mEditTextView.setOnEditorActionListener{ v, actionId, event ->
+    mEditTextView.setOnEditorActionListener{ _, actionId, _ ->
       if (actionId == EditorInfo.IME_ACTION_SEARCH) {
         doSearchStu()
         return@setOnEditorActionListener true
       }
       return@setOnEditorActionListener false
     }
+  }
+  
+  
+  /**
+   * 开启分组管理activity
+   * @param create 是否打开创建分组
+   */
+  private fun toGroupManager(create: Boolean){
+    val intent = (Intent(this@NoClassActivity, GroupManagerActivity::class.java).apply {
+      putExtra("GroupList",mList as Serializable)
+      putExtra("CreateGroup",create)
+    })
+    startForResult.launch(intent)
   }
   
   /**
@@ -385,37 +426,7 @@ class NoClassActivity : BaseVmActivity<NoClassViewModel>(){
    * 执行查询课程的操作
    */
   private fun doSearchCourse(){
-    
-    //for test
-    // ----
-//    SchoolCalendarUtil.updateFirstCalendar(1)
-    // ----
-    //在滑动下拉课表容器中添加整个课表
-    
-    viewModel.getLessons(getCurrentGroup(mGroupId).members.map { it.stuNum })
-    viewModel.noclassData.observe(this){
-      replaceFragment(R.id.noclass_course_bottom_sheet_container) {
-        NoClassCourseVpFragment.newInstance(
-          it.onEach { data -> //每一个NoClassSpareTime对象
-            getCurrentGroup(mGroupId).members.map {
-              data.value.mIdToNameMap[it.stuNum] = it.stuName
-            }
-          },
-        )
-      }
-      mCourseSheetBehavior.state = BottomSheetBehavior.STATE_EXPANDED
-    }
-  }
- 
-  
-  /**
-   * 流式布局下方的指示器
-   */
-  private fun initIndicator(total : Int){
-    if (total <= 0) return
-    mIndicator.visibility = if (mFLexState === MyFlexLayout.FlexState.COLLAPSING) View.GONE else View.VISIBLE
-    mIndicator.reset()
-    mIndicator.setTotalCount(total)
+    viewModel.getLessons(getCurrentGroup(mGroupId).members.map { it.stuNum },getCurrentGroup(mGroupId).members)
   }
   
   /**
@@ -499,18 +510,6 @@ class NoClassActivity : BaseVmActivity<NoClassViewModel>(){
         toast("似乎出现了什么错误呢~")
       }
     }
-//    var firstTime = true
-//    viewModel.noclassData.observe(this){
-//      //在滑动下拉课表容器中添加整个课表
-//      if (firstTime){
-////        firstTime = false
-//        replaceFragment(R.id.noclass_course_bottom_sheet_container){
-//          NoClassCourseVpFragment()
-//        }
-//      }else{
-//        return@observe
-//      }
-//    }
   }
   
   /**
@@ -575,7 +574,29 @@ class NoClassActivity : BaseVmActivity<NoClassViewModel>(){
   override fun onBackPressed() {
     if (mCourseSheetBehavior.state == BottomSheetBehavior.STATE_EXPANDED) {
       mCourseSheetBehavior.state = BottomSheetBehavior.STATE_HIDDEN
-    } else {
+    } else if ((mDefaultMembers.size != 1 || (mDefaultMembers.size == 1 && mDefaultMembers[0].stuNum == mUserId)) && !mHasShow ){
+      if (defaultSp.getBoolean("NeverRemindNextOnNoClass",false)){
+        mHasShow = true
+        this@NoClassActivity.onBackPressed()
+        return
+      }
+      SearchDoneDialog(this).apply {
+        setOnReturnClick { searchDoneDialog, remind ->
+          if (remind){
+            defaultSp.edit {
+              putBoolean("NeverRemindNextOnNoClass",remind)
+            }
+          }
+          mHasShow = true
+          searchDoneDialog.dismiss()
+          this@NoClassActivity.onBackPressed()
+        }
+        setOnContinueClick {
+          it.dismiss()
+          toGroupManager(true)
+        }
+      }.show()
+    } else{
       super.onBackPressed()
     }
   }

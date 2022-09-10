@@ -28,7 +28,7 @@ abstract class NoClassPageFragment: CoursePageFragment() {
     mNoClassSpareTime = noClassSpareTime
     mNameMap = mNoClassSpareTime.mIdToNameMap
     (0..6).map {
-      val lineSpareTime = noClassSpareTime.spareDayTime[it]
+      val lineSpareTime = noClassSpareTime.spareDayTime[it]!!
       addLessonsByLine(lineSpareTime, it)
     }
   }
@@ -49,30 +49,31 @@ abstract class NoClassPageFragment: CoursePageFragment() {
   
   private fun addLessonAm(lineTime: NoClassSpareTime.SpareLineTime,line : Int) {
     val week = line + 1
-    val id1 = lineTime.SpareId[1]
-    val id2 = lineTime.SpareId[2]
-    val id3 = lineTime.SpareId[3]
-    val id4 = lineTime.SpareId[4]
-    val spare1 = !lineTime.isSpare[1]
-    val spare2 = !lineTime.isSpare[2]
-    val spare3 = !lineTime.isSpare[3]
-    val spare4 = !lineTime.isSpare[4]
+    val id1 = lineTime.SpareItem[1].spareId
+    val id2 = lineTime.SpareItem[2].spareId
+    val id3 = lineTime.SpareItem[3].spareId
+    val id4 = lineTime.SpareItem[4].spareId
+    val spare1 = !lineTime.isSpare[1]!!
+    val spare2 = !lineTime.isSpare[2]!!
+    val spare3 = !lineTime.isSpare[3]!!
+    val spare4 = !lineTime.isSpare[4]!!
     addLessonByJudge(0,week,id1, id2, spare1, spare2)
     addLessonByJudge(2,week,id3, id4, spare3, spare4)
   }
   private fun addLessonNoon(lineTime: NoClassSpareTime.SpareLineTime,line : Int){
-  
+
   }
+  
   private fun addLessonPm(lineTime: NoClassSpareTime.SpareLineTime, line: Int){
     val week = line + 1
-    val id1 = lineTime.SpareId[5]
-    val id2 = lineTime.SpareId[6]
-    val id3 = lineTime.SpareId[7]
-    val id4 = lineTime.SpareId[8]
-    val spare1 = !lineTime.isSpare[5]
-    val spare2 = !lineTime.isSpare[6]
-    val spare3 = !lineTime.isSpare[7]
-    val spare4 = !lineTime.isSpare[8]
+    val id1 = lineTime.SpareItem[5].spareId
+    val id2 = lineTime.SpareItem[6].spareId
+    val id3 = lineTime.SpareItem[7].spareId
+    val id4 = lineTime.SpareItem[8].spareId
+    val spare1 = !lineTime.isSpare[5]!!
+    val spare2 = !lineTime.isSpare[6]!!
+    val spare3 = !lineTime.isSpare[7]!!
+    val spare4 = !lineTime.isSpare[8]!!
     addLessonByJudge(5,week,id1, id2, spare1, spare2)
     addLessonByJudge(7,week,id3, id4, spare3, spare4)
   }
@@ -81,14 +82,14 @@ abstract class NoClassPageFragment: CoursePageFragment() {
   }
   private fun addLessonNight(lineTime: NoClassSpareTime.SpareLineTime, line: Int){
     val week = line + 1
-    val id1 = lineTime.SpareId[9]
-    val id2 = lineTime.SpareId[10]
-    val id3 = lineTime.SpareId[11]
-    val id4 = lineTime.SpareId[12]
-    val spare1 = !lineTime.isSpare[9]
-    val spare2 = !lineTime.isSpare[10]
-    val spare3 = !lineTime.isSpare[11]
-    val spare4 = !lineTime.isSpare[12]
+    val id1 = lineTime.SpareItem[9].spareId
+    val id2 = lineTime.SpareItem[10].spareId
+    val id3 = lineTime.SpareItem[11].spareId
+    val id4 = lineTime.SpareItem[12].spareId
+    val spare1 = !lineTime.isSpare[9]!!
+    val spare2 = !lineTime.isSpare[10]!!
+    val spare3 = !lineTime.isSpare[11]!!
+    val spare4 = !lineTime.isSpare[12]!!
     addLessonByJudge(10,week,id1, id2, spare1, spare2)
     addLessonByJudge(12,week,id3, id4, spare3, spare4)
   }
@@ -107,18 +108,34 @@ abstract class NoClassPageFragment: CoursePageFragment() {
     spare2: Boolean
   ){
     if (id1 == id2 && spare1 && spare2) {
-      addLesson(NoClassLesson(NoClassLessonData(week, begin, 2, id1.idListToNames())))
+      addLesson(getLesson(begin,week,2,id1))
     } else if (id1 != id2 && spare1 && spare2) {
-      addLesson(NoClassLesson(NoClassLessonData(week, begin, 1, id1.idListToNames())))
-      addLesson(NoClassLesson(NoClassLessonData(week, begin+1, 1, id2.idListToNames())))
+      addLesson(getLesson(begin,week,1,id1))
+      addLesson(getLesson(begin+1,week,1,id2))
     } else {
       if (spare1) {
-        addLesson(NoClassLesson(NoClassLessonData(week, begin, 1, id1.idListToNames())))
+        addLesson(getLesson(begin,week,1,id1))
       }
       if (spare2) {
-        addLesson(NoClassLesson(NoClassLessonData(week, begin+1, 1, id2.idListToNames())))
+        addLesson(getLesson(begin+1,week,1,id2))
       }
     }
+  }
+  
+  private fun getLesson(
+    begin: Int,
+    week: Int,
+    length : Int,
+    gatheringIdList: List<String>,
+  ) : NoClassLesson{
+    val noGatheringIdList : List<String> = mNameMap.map { it.key }.toMutableList().apply {
+      gatheringIdList.forEach {
+        this.remove(it)
+      }
+    }
+    val gatheringList : List<String> = gatheringIdList.map { mNameMap[it]!! }
+    val noGatheringList : List<String> = noGatheringIdList.map { mNameMap[it]!! }
+    return NoClassLesson(NoClassLessonData(week, begin, length, gatheringIdList.idListToNames()),gatheringList,noGatheringList,Pair(begin,begin+length))
   }
   
   /**
@@ -127,7 +144,7 @@ abstract class NoClassPageFragment: CoursePageFragment() {
   private fun List<String>.idListToNames() : String{
     if (this.size == mNameMap.size)
       return "全体\n成员"
-    val nameList = this.map { mNameMap[it]!! }.toString().let { it.substring(1, it.length-1) }
+    val nameList = this.sorted().map { mNameMap[it]!! }.toString().let { it.substring(1, it.length-1) }
     var names = ""
     nameList.split(",").forEachIndexed { index, s ->
       names += s

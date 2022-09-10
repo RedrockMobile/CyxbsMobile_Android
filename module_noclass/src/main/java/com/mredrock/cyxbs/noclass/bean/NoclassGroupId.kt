@@ -1,6 +1,7 @@
 package com.mredrock.cyxbs.noclass.bean
 
 import com.google.gson.annotations.SerializedName
+import java.io.Serializable
 
 /**
  *
@@ -16,4 +17,4 @@ import com.google.gson.annotations.SerializedName
 data class NoclassGroupId(
     @SerializedName("group_id")
     val id : Int
-)
+) : Serializable

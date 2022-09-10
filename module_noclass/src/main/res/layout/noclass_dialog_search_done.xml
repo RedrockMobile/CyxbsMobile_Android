@@ -27,7 +27,7 @@
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
-                app:layout_constraintVertical_bias="0.28"
+                app:layout_constraintVertical_bias="0.25"
                 android:id="@+id/noclassLinearlayout2">
 
                 <TextView
@@ -58,10 +58,10 @@
                 android:textSize="14sp"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintHorizontal_bias="0.157"
+                app:layout_constraintHorizontal_bias="0.16"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
-                app:layout_constraintVertical_bias="0.75" />
+                app:layout_constraintVertical_bias="0.7" />
 
             <Button
                 android:id="@+id/btn_noclass_dialog_search_done_continue"
@@ -77,7 +77,32 @@
                 app:layout_constraintHorizontal_bias="0.84"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
-                app:layout_constraintVertical_bias="0.75" />
+                app:layout_constraintVertical_bias="0.7" />
+
+            <CheckBox
+                app:layout_constraintHorizontal_bias="0.356"
+                app:layout_constraintVertical_bias="0.955"
+                android:scaleX="0.6"
+                android:scaleY="0.6"
+                android:layout_width="25dp"
+                android:layout_height="25dp"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                android:id="@+id/noclass_cb_remind_next" />
+
+            <TextView
+                app:layout_constraintHorizontal_bias="0"
+                app:layout_constraintVertical_bias="0.93"
+                android:textColor="@color/noclass_search_student_color"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="下次不再提醒"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintStart_toEndOf="@+id/noclass_cb_remind_next" />
 
         </androidx.constraintlayout.widget.ConstraintLayout>
 
