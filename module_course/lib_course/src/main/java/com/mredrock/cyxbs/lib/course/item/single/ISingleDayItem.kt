@@ -1,4 +1,4 @@
-package com.mredrock.cyxbs.lib.course.internal.day
+package com.mredrock.cyxbs.lib.course.item.single
 
 import com.mredrock.cyxbs.lib.course.internal.item.IItem
 
@@ -9,5 +9,6 @@ import com.mredrock.cyxbs.lib.course.internal.item.IItem
  * @email guo985892345@foxmail.com
  * @date 2022/8/20 20:22
  */
-interface ISingleDayItem : IItem, ISingleDayItemData {
+interface ISingleDayItem : IItem {
+  override val lp: SingleDayLayoutParams
 }

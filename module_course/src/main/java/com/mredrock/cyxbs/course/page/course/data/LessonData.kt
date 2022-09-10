@@ -5,7 +5,7 @@ import com.mredrock.cyxbs.api.course.utils.getShowEndTimeStr
 import com.mredrock.cyxbs.api.course.utils.getShowStartTimeStr
 import com.mredrock.cyxbs.api.course.utils.getStart
 import com.mredrock.cyxbs.course.page.course.data.expose.IWeek
-import com.mredrock.cyxbs.lib.course.internal.lesson.ILessonData
+import com.mredrock.cyxbs.lib.course.item.lesson.ILessonData
 import com.mredrock.cyxbs.lib.utils.utils.Num2CN
 
 /**

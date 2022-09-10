@@ -1,7 +1,7 @@
 package com.mredrock.cyxbs.lib.course.fragment.course.expose.container
 
-import com.mredrock.cyxbs.lib.course.fragment.item.IAffair
-import com.mredrock.cyxbs.lib.course.fragment.item.ILesson
+import com.mredrock.cyxbs.lib.course.item.affair.IAffairItem
+import com.mredrock.cyxbs.lib.course.item.lesson.ILessonItem
 
 /**
  * ...
@@ -11,13 +11,13 @@ import com.mredrock.cyxbs.lib.course.fragment.item.ILesson
  * @date 2022/8/25 16:11
  */
 interface ICourseContainer {
-  fun addLesson(lesson: ILesson)
-  fun addLesson(lessons: List<ILesson>)
-  fun removeLesson(lesson: ILesson)
+  fun addLesson(lesson: ILessonItem): Boolean
+  fun addLesson(lessons: List<ILessonItem>)
+  fun removeLesson(lesson: ILessonItem)
   fun clearLesson()
   
-  fun addAffair(affair: IAffair)
-  fun addAffair(affairs: List<IAffair>)
-  fun removeAffair(affair: IAffair)
+  fun addAffair(affair: IAffairItem): Boolean
+  fun addAffair(affairs: List<IAffairItem>)
+  fun removeAffair(affair: IAffairItem)
   fun clearAffair()
 }

@@ -1,16 +1,16 @@
 package com.mredrock.cyxbs.lib.course.internal.view.course
 
-import com.mredrock.cyxbs.lib.course.internal.affair.IAffairContainer
 import com.mredrock.cyxbs.lib.course.internal.item.IItemContainer
-import com.mredrock.cyxbs.lib.course.internal.lesson.ILessonContainer
 import com.mredrock.cyxbs.lib.course.internal.touch.IMultiTouch
+import com.mredrock.cyxbs.lib.course.internal.transition.ICourseTransition
 import com.mredrock.cyxbs.lib.course.internal.view.IView
 import com.mredrock.cyxbs.lib.course.internal.view.course.lp.ItemLayoutParams
-import com.ndhzs.netlayout.child.IChildExistListenerProvider
-import com.ndhzs.netlayout.draw.ItemDecorationProvider
+import com.ndhzs.netlayout.child.ChildExistListenerContainer
+import com.ndhzs.netlayout.draw.ItemDecorationContainer
 import com.ndhzs.netlayout.orientation.IColumn
 import com.ndhzs.netlayout.orientation.IRow
-import com.ndhzs.netlayout.save.SaveStateProvider
+import com.ndhzs.netlayout.save.SaveStateListenerContainer
+import com.ndhzs.netlayout.transition.ChildVisibleListenerContainer
 
 /**
  * 课表控件的总接口
@@ -24,19 +24,22 @@ import com.ndhzs.netlayout.save.SaveStateProvider
  */
 interface ICourseViewGroup : IView,
   IColumn, IRow,
+  ItemDecorationContainer, // 绘制监听
+  SaveStateListenerContainer, // 状态保存
+  ChildExistListenerContainer, // 监听子 View 添加和删除
+  ChildVisibleListenerContainer, // 监听课表控件添加和移除，这个支持子 View visible 的监听
   IItemContainer, // IItem 容器
-  ILessonContainer, // ILessonItem 容器
-  IAffairContainer, // IAffairItem 容器
   IMultiTouch, // 多指触摸
-  ItemDecorationProvider, // 绘制监听
-  SaveStateProvider, // 状态保存
-  IChildExistListenerProvider, // 监听子 View 添加和删除
-  ICourseScrollControl // 操控课表的滚轴
+  ICourseScrollControl, // 操控课表的滚轴
+  ICourseTransition
 {
   /**
    * debug 属性，开启后会绘制表格
    */
   var debug: Boolean
   
+  /**
+   * 设置子 View 添加进来时的顺序
+   */
   fun setCompareLayoutParams(compare: Comparator<ItemLayoutParams>)
 }

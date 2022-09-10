@@ -10,7 +10,7 @@ import java.util.*
  * @email guo985892345@foxmail.com
  * @date 2022/8/25 14:02
  */
-abstract class PeriodImpl : FoldImpl(), ICoursePeriod {
+abstract class PeriodImpl : OverlapImpl(), ICoursePeriod {
   
   /**
    * 得到某节课开始前的高度值

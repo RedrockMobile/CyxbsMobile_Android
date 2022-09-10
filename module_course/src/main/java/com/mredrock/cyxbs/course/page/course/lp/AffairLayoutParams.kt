@@ -1,7 +1,7 @@
 package com.mredrock.cyxbs.course.page.course.lp
 
 import com.mredrock.cyxbs.course.page.course.data.AffairData
-import com.mredrock.cyxbs.lib.course.internal.affair.BaseAffairLayoutParams
+import com.mredrock.cyxbs.lib.course.item.affair.BaseAffairLayoutParams
 
 /**
  * ...

@@ -3,16 +3,13 @@ package com.mredrock.cyxbs.lib.course.internal.view.course.base
 import android.content.Context
 import android.util.AttributeSet
 import android.view.View
-import androidx.collection.ArrayMap
+import android.view.ViewGroup
+import androidx.collection.arrayMapOf
 import com.mredrock.cyxbs.lib.course.R
-import com.mredrock.cyxbs.lib.course.internal.affair.IAffairContainer
-import com.mredrock.cyxbs.lib.course.internal.affair.IAffairItem
 import com.mredrock.cyxbs.lib.course.internal.item.IItem
 import com.mredrock.cyxbs.lib.course.internal.item.IItemContainer
-import com.mredrock.cyxbs.lib.course.internal.lesson.ILessonContainer
-import com.mredrock.cyxbs.lib.course.internal.lesson.ILessonItem
 import com.ndhzs.netlayout.attrs.NetLayoutParams
-import com.ndhzs.netlayout.child.IChildExistListener
+import com.ndhzs.netlayout.child.OnChildExistListener
 
 /**
  * ...
@@ -27,69 +24,28 @@ abstract class CourseContainerImpl @JvmOverloads constructor(
   defStyleAttr: Int = R.attr.courseLayoutStyle,
   defStyleRes: Int = 0
 ) : AbstractCourseViewGroup(context, attrs, defStyleAttr, defStyleRes),
-  IItemContainer, ILessonContainer, IAffairContainer
+  IItemContainer
 {
   
   private val mOnItemExistListeners = ArrayList<IItemContainer.OnItemExistListener>(2)
-  private val mOnLessonExistListeners = ArrayList<ILessonContainer.OnLessonExistListener>(2)
-  private val mOnAffairExistListeners = ArrayList<IAffairContainer.OnAffairExistListener>(2)
-  private val mItemByView = ArrayMap<View, IItem>()
+  private val mItemByView = arrayMapOf<View, IItem>()
+  private val mViewByItem = arrayMapOf<IItem, View>()
   
-  final override fun addLessonItem(lesson: ILessonItem): Boolean {
-    if (mOnLessonExistListeners.all { it.isAllowToAddLesson(lesson) }) {
-      mOnLessonExistListeners.forEach { it.onLessonAddedBefore(lesson) }
-      if (addItem(lesson)) {
-        mOnLessonExistListeners.forEach { it.onLessonAddedAfter(lesson) }
-        return true
-      }
-    }
-    return false
-  }
-  
-  final override fun addAffairItem(affair: IAffairItem): Boolean {
-    if (mOnAffairExistListeners.all { it.isAbleToAddAffair(affair) }) {
-      mOnAffairExistListeners.forEach { it.onAffairAddedBefore(affair) }
-      if (addItem(affair)) {
-        mOnAffairExistListeners.forEach { it.onAffairAddedAfter(affair) }
-        return true
-      }
-    }
-    return false
-  }
-  
-  override fun removeLessonItem(lesson: ILessonItem) {
-    if (mItemByView.contains(lesson.view)) {
-      mOnLessonExistListeners.forEach { it.onLessonRemovedBefore(lesson) }
-      removeItem(lesson)
-      mOnLessonExistListeners.forEach { it.onLessonRemovedAfter(lesson) }
-    }
-  }
-  
-  override fun removeAffairItem(affair: IAffairItem) {
-    if (mItemByView.contains(affair.view)) {
-      mOnAffairExistListeners.forEach { it.onAffairRemovedBefore(affair) }
-      removeItem(affair)
-      mOnAffairExistListeners.forEach { it.onAffairRemovedAfter(affair) }
-    }
-  }
-  
-  final override fun addLessonExistListener(l: ILessonContainer.OnLessonExistListener) {
-    mOnLessonExistListeners.add(l)
-  }
-  
-  final override fun addAffairExistListener(l: IAffairContainer.OnAffairExistListener) {
-    mOnAffairExistListeners.add(l)
-  }
-  
-  override fun addItemExistListener(l: IItemContainer.OnItemExistListener) {
+  final override fun addItemExistListener(l: IItemContainer.OnItemExistListener) {
     mOnItemExistListeners.add(l)
   }
   
   final override fun addItem(item: IItem): Boolean {
+    if (mViewByItem.contains(item)) {
+      // 包含的话说明已经被添加了
+      return false
+    }
     if (mOnItemExistListeners.all { it.isAllowToAddItem(item) }) {
+      val view = item.initializeView(context)
+      mItemByView[view] = item
+      mViewByItem[item] = view
       mOnItemExistListeners.forEach { it.onItemAddedBefore(item) }
-      super.addItem(item.view, item.lp)
-      mItemByView[item.view] = item
+      super.addItem(view, item.lp)
       mOnItemExistListeners.forEach { it.onItemAddedAfter(item) }
       return true
     }
@@ -97,36 +53,50 @@ abstract class CourseContainerImpl @JvmOverloads constructor(
   }
   
   final override fun removeItem(item: IItem) {
-    if (mItemByView.contains(item.view)) {
+    val view = mViewByItem[item]
+    if (view != null) {
       mOnItemExistListeners.forEach { it.onItemRemovedBefore(item) }
-      removeView(item.view)
-      mItemByView.remove(item.view)
+      super.removeView(view)
       mOnItemExistListeners.forEach { it.onItemRemovedAfter(item) }
+      mItemByView.remove(view)
+      mViewByItem.remove(item)
     }
   }
   
-  
-  
-  override fun findLessonItemUnderByXY(x: Int, y: Int): ILessonItem? {
-    return findItemUnderByXY(x, y) as? ILessonItem
+  final override fun getItemByView(view: View): IItem? {
+    return mItemByView[view]
   }
   
-  override fun findAffairItemUnderByXY(x: Int, y: Int): IAffairItem? {
-    return findItemUnderByXY(x, y) as? IAffairItem
+  final override fun getViewByItem(item: IItem): View? {
+    return mViewByItem[item]
   }
   
-  override fun findItemUnderByXY(x: Int, y: Int): IItem? {
-    return findViewUnderByXY(x, y)?.let { mItemByView[it] }
+  final override fun findPairUnderByXY(x: Int, y: Int): Pair<IItem, View>? {
+    return findViewUnderByXY(x, y)?.let { Pair(getItemByView(it)!!, it) }
   }
   
+  final override fun findPairUnderByFilter(filter: IItem.(View) -> Boolean): Pair<IItem, View>? {
+    for (i in childCount - 1 downTo 0) {
+      val child = getChildAt(i)
+      if (child.visibility == GONE) continue
+      val item = mItemByView[child]
+      if (item != null) {
+        if (filter.invoke(item, child)) {
+          return Pair(item, child)
+        }
+      }
+    }
+    return null
+  }
   
   init {
     addChildExistListener(
-      object : IChildExistListener {
-        override fun onChildViewAdded(parent: View, child: View) {}
-        override fun onChildViewRemoved(parent: View, child: View) {
+      object : OnChildExistListener {
+        override fun onChildViewAdded(parent: ViewGroup, child: View) {}
+        override fun onChildViewRemoved(parent: ViewGroup, child: View) {
           // 当 view 直接被你移除时清除掉引用
-          mItemByView.remove(child)
+          val item = mItemByView.remove(child)
+          mViewByItem.remove(item)
         }
       }
     )
@@ -157,5 +127,20 @@ abstract class CourseContainerImpl @JvmOverloads constructor(
   @Deprecated("禁止子类调用", level = DeprecationLevel.HIDDEN)
   final override fun addView(child: View?, params: LayoutParams?) {
     super.addView(child, params)
+  }
+  
+  @Deprecated("禁止子类调用", level = DeprecationLevel.HIDDEN)
+  override fun removeView(view: View?) {
+    super.removeView(view)
+  }
+  
+  @Deprecated("禁止子类调用", level = DeprecationLevel.HIDDEN)
+  override fun removeViewAt(index: Int) {
+    super.removeViewAt(index)
+  }
+  
+  @Deprecated("禁止子类调用", level = DeprecationLevel.HIDDEN)
+  override fun removeViews(start: Int, count: Int) {
+    super.removeViews(start, count)
   }
 }

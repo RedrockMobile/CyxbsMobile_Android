@@ -7,20 +7,21 @@
     <include
         layout="@layout/course_header_home"/>
 
-    <com.scwang.smart.refresh.layout.SmartRefreshLayout
-        android:id="@+id/course_srl_fragment_home"
+    <androidx.viewpager2.widget.ViewPager2
+        android:id="@+id/course_vp_fragment_home"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:background="@color/config_common_background_color">
+        android:layout_height="match_parent" />
 
-        <androidx.viewpager2.widget.ViewPager2
-            android:id="@+id/course_vp_fragment_home"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent" />
+<!--    <com.scwang.smart.refresh.layout.SmartRefreshLayout-->
+<!--        android:id="@+id/course_srl_fragment_home"-->
+<!--        android:layout_width="match_parent"-->
+<!--        android:layout_height="match_parent"-->
+<!--        android:background="@color/config_common_background_color">-->
 
-        <com.scwang.smart.refresh.footer.BallPulseFooter
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"/>
 
-    </com.scwang.smart.refresh.layout.SmartRefreshLayout>
+<!--        <com.scwang.smart.refresh.footer.BallPulseFooter-->
+<!--            android:layout_width="match_parent"-->
+<!--            android:layout_height="match_parent"/>-->
+
+<!--    </com.scwang.smart.refresh.layout.SmartRefreshLayout>-->
 </LinearLayout>

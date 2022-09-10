@@ -16,9 +16,9 @@ dependLibConfig()
 dependNetwork()
 dependRxjava()
 
-//configurations.all {
-//  resolutionStrategy.cacheChangingModulesFor(0, TimeUnit.SECONDS)
-//}
+configurations.all {
+  resolutionStrategy.cacheChangingModulesFor(0, TimeUnit.SECONDS)
+}
 
 dependencies {
   implementation(Android.`core-ktx`)

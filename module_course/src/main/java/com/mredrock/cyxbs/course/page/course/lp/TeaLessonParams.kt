@@ -1,7 +1,7 @@
 package com.mredrock.cyxbs.course.page.course.lp
 
 import com.mredrock.cyxbs.course.page.course.data.TeaLessonData
-import com.mredrock.cyxbs.lib.course.internal.lesson.BaseLessonLayoutParams
+import com.mredrock.cyxbs.lib.course.item.lesson.BaseLessonLayoutParams
 
 /**
  * ...

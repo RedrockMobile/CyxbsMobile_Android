@@ -1,6 +1,4 @@
-package com.mredrock.cyxbs.lib.course.internal.day
-
-import com.mredrock.cyxbs.lib.course.internal.item.ISingleColumnItemData
+package com.mredrock.cyxbs.lib.course.item.single
 
 /**
  * ...
@@ -9,7 +7,7 @@ import com.mredrock.cyxbs.lib.course.internal.item.ISingleColumnItemData
  * @email guo985892345@foxmail.com
  * @date 2022/8/19 14:13
  */
-interface ISingleDayItemData : ISingleColumnItemData {
+interface ISingleDayData {
   
   /**
    * 星期数，星期一为 1
@@ -29,14 +27,4 @@ interface ISingleDayItemData : ISingleColumnItemData {
    * 长度
    */
   val length: Int
-  
-  override val startRow: Int
-    get() = startNode
-  
-  override val endRow: Int
-    get() = startNode + length - 1
-  
-  @Deprecated("不建议调用", level = DeprecationLevel.HIDDEN)
-  override val singleColumn: Int
-    get() = weekNum
 }

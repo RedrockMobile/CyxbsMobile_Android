@@ -1,6 +1,6 @@
-package com.mredrock.cyxbs.lib.course.internal.affair
+package com.mredrock.cyxbs.lib.course.item.affair
 
-import com.mredrock.cyxbs.lib.course.internal.day.ISingleDayItem
+import com.mredrock.cyxbs.lib.course.item.single.ISingleDayItem
 
 /**
  * ...
