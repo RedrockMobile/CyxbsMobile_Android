@@ -42,6 +42,7 @@ import kotlin.reflect.KClass
  *     }
  *     .safeSubscribeBy {            // 如果是网络连接错误，则这里会默认处理
  *         // 成功的时候
+ *         // 如果是仓库层，请使用 unsafeSubscribeBy()
  *     }
  * ```
  *
