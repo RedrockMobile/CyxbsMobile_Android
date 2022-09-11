@@ -24,6 +24,7 @@ import com.mredrock.cyxbs.lib.utils.extensions.dp2px
 import com.mredrock.cyxbs.lib.utils.extensions.lazyUnlock
 import com.mredrock.cyxbs.lib.utils.extensions.setOnSingleClickListener
 import com.mredrock.cyxbs.lib.utils.service.impl
+import com.mredrock.cyxbs.lib.utils.utils.ActivityBindView
 import com.mredrock.cyxbs.lib.utils.utils.BindView
 import java.io.Serializable
 
@@ -58,7 +59,7 @@ class ShowResultActivity : BaseVmActivity<ShowResultViewModel>() {
   
   @Suppress("UNCHECKED_CAST")
   private val mPersonHandler: PersonHandler by lazyUnlock {
-    PersonHandler.getHandler(intent.getSerializableExtra(PERSON_DATA_ARG) as PersonData)
+    PersonHandler.getHandler(intent.getSerializableExtra(PERSON_DATA_ARG) as PersonData, this)
   }
   
   override fun onCreate(savedInstanceState: Bundle?) {
@@ -69,7 +70,7 @@ class ShowResultActivity : BaseVmActivity<ShowResultViewModel>() {
   }
   
   private fun initView() {
-    mPersonHandler.initializeActivity(this)
+    mPersonHandler.apply { initialize() }
     mBottomSheet.addBottomSheetCallback(
       object : BottomSheetBehavior.BottomSheetCallback() {
         override fun onStateChanged(bottomSheet: View, newState: Int) {}
@@ -112,41 +113,32 @@ class ShowResultActivity : BaseVmActivity<ShowResultViewModel>() {
   /**
    * 用于分离学生和老师搜索的结果
    */
-  private sealed class PersonHandler {
+  private sealed class PersonHandler(val activity: ShowResultActivity) {
     companion object {
-      fun getHandler(data: PersonData): PersonHandler {
+      fun getHandler(data: PersonData, activity: ShowResultActivity): PersonHandler {
         return when (data) {
-          is StuData -> StudentHandler(data)
-          is TeaData -> TeacherHandler(data)
+          is StuData -> StudentHandler(data, activity)
+          is TeaData -> TeacherHandler(data, activity)
         }
       }
     }
     
-    /**
-     * 初始化 Activity
-     */
-    fun initializeActivity(activity: ShowResultActivity) {
-      mActivity = activity
-      activity.initialize()
-    }
+    abstract fun ShowResultActivity.initialize()
     
-    protected abstract fun ShowResultActivity.initialize()
-    protected lateinit var mActivity: ShowResultActivity
-      private set
-    
-    protected fun <T : View> Int.view(): BindView<T> = BindView(this, BindView.GetActivity { mActivity })
+    protected fun <T : View> Int.view(): BindView<T> = ActivityBindView(this, activity)
     
     // 这里是需要不同实现的控件
     protected val mTvTitle: TextView by R.id.course_tv_show_result_title.view()
     protected val mRvResult: RecyclerView by R.id.course_rv_show_result.view<RecyclerView>()
       .addInitialize {
-        layoutManager = LinearLayoutManager(mActivity)
+        layoutManager = LinearLayoutManager(activity)
       }
   }
   
   private class StudentHandler(
-    var data: StuData
-  ) : PersonHandler() {
+    var data: StuData,
+    activity: ShowResultActivity
+  ) : PersonHandler(activity) {
     
     private lateinit var mRvAdapter: ShowStuResultRvAdapter
     
@@ -261,8 +253,9 @@ class ShowResultActivity : BaseVmActivity<ShowResultViewModel>() {
   }
   
   private class TeacherHandler(
-    val data: TeaData
-  ) : PersonHandler() {
+    val data: TeaData,
+    activity: ShowResultActivity
+  ) : PersonHandler(activity) {
     override fun ShowResultActivity.initialize() {
       mTvTitle.text = "老师课表"
       initRecyclerView()

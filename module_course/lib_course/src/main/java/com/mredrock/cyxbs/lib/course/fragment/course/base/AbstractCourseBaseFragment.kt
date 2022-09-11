@@ -1,7 +1,6 @@
 package com.mredrock.cyxbs.lib.course.fragment.course.base
 
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -59,14 +58,9 @@ abstract class AbstractCourseBaseFragment : BaseFragment(), ICourseBase {
     mCourseLifecycleObservers.remove(observer)
   }
   
-  // 因为 mCourseLifecycleObservers 在 onDestroyCourse() 时需要 course
-  // 但 course 会因为属性代理被提前一步移除掉，所以需要单独保存一遍
-  private var mTempCourse: ICourseViewGroup? = null
-  
   @CallSuper
   override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
     super.onViewCreated(view, savedInstanceState)
-    mTempCourse = course
     mCourseLifecycleObservers.forEachReversed {
       it.onCreateCourse(course)
     }
@@ -75,10 +69,8 @@ abstract class AbstractCourseBaseFragment : BaseFragment(), ICourseBase {
   @CallSuper
   override fun onDestroyView() {
     super.onDestroyView()
-    Log.d("ggg", "(AbstractCourseBaseFragment.kt:77) -> onDestroyView")
     mCourseLifecycleObservers.forEachReversed {
-      it.onDestroyCourse(mTempCourse!!)
+      it.onDestroyCourse(course)
     }
-    mTempCourse = null
   }
 }

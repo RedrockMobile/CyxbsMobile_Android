@@ -23,6 +23,9 @@ abstract class BaseDiffRefresh<Data : Any> : DiffUtil.ItemCallback<Data>() {
   val currentData: List<Data>
     get() = mAsyncListDiffer.currentList
   
+  /**
+   * 异步差分刷新
+   */
   fun diffRefresh(newData: List<Data>) {
     mNewData = ArraySet(newData)
     mAsyncListDiffer.submitList(newData) {
@@ -30,12 +33,25 @@ abstract class BaseDiffRefresh<Data : Any> : DiffUtil.ItemCallback<Data>() {
     }
   }
   
-  fun addNewData(data: Data) {
+  /**
+   * 从旧数据集合中增加 data，应该在被意外删除时调用
+   */
+  fun addNewDataIntoOldList(data: Data) {
     mOldData.add(data)
   }
   
-  fun removeData(data: Data) {
-    mNewData.remove(data)
+  /**
+   * 从旧数据集合中移除 data，应该在被意外删除时调用
+   */
+  fun removeDataFromOldList(data: Data) {
+    mOldData.remove(data)
+  }
+  
+  /**
+   * 从旧数据集合中清空 data，应该在 Fragment 回调 onDestroyView() 时调用
+   */
+  fun clearDataFromOldList() {
+    mOldData.clear()
   }
   
   protected abstract fun onInserted(newData: Data)

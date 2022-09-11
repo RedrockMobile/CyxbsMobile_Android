@@ -7,7 +7,11 @@ import com.mredrock.cyxbs.lib.course.fragment.course.expose.container.ICourseCon
 import com.mredrock.cyxbs.lib.course.internal.item.IItem
 
 /**
- * 由于内部在 init 使用了 course，所以外面生成对象时候需要使用 by lazyUnlock
+ * 代理添加 [Affair]
+ *
+ * - 提供差分刷新方法 [diffRefresh]
+ * - 实现了 [Affair] 的回收池用于复用
+ * - 监听了使用其他方式删除的 [Affair]，用于解决差分旧数据不同步的问题
  *
  * @author 985892345 (Guo Xiangrui)
  * @email guo985892345@foxmail.com
@@ -15,7 +19,7 @@ import com.mredrock.cyxbs.lib.course.internal.item.IItem
  */
 class AffairContainerProxy(
   val container: ICourseContainer,
-) : CourseContainerProxy<Affair, AffairData>(container.course) {
+) : CourseContainerProxy<Affair, AffairData>(container) {
   
   override fun areItemsTheSame(oldItem: AffairData, newItem: AffairData): Boolean {
     return AffairData.areItemsTheSame(oldItem, newItem)

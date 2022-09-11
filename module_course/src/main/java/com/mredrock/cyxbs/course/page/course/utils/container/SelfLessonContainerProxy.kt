@@ -15,7 +15,7 @@ import com.mredrock.cyxbs.lib.course.internal.item.IItem
  */
 class SelfLessonContainerProxy(
   val container: ICourseContainer
-) : CourseContainerProxy<SelfLesson, StuLessonData>(container.course) {
+) : CourseContainerProxy<SelfLesson, StuLessonData>(container) {
   
   override fun areItemsTheSame(oldItem: StuLessonData, newItem: StuLessonData): Boolean {
     return StuLessonData.areItemsTheSame(oldItem, newItem)
