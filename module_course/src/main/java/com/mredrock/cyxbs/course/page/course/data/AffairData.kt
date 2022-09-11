@@ -1,5 +1,6 @@
 package com.mredrock.cyxbs.course.page.course.data
 
+import androidx.recyclerview.widget.DiffUtil
 import com.mredrock.cyxbs.course.page.course.data.expose.IWeek
 import com.mredrock.cyxbs.lib.course.item.affair.IAffairData
 
@@ -35,4 +36,16 @@ data class AffairData(
     }
   override val length: Int
     get() = period
+  
+  companion object DIFF : DiffUtil.ItemCallback<AffairData>() {
+    override fun areItemsTheSame(oldItem: AffairData, newItem: AffairData): Boolean {
+      return oldItem.stuNum == newItem.stuNum
+        && oldItem.id == newItem.id
+        && oldItem.week == newItem.week
+    }
+  
+    override fun areContentsTheSame(oldItem: AffairData, newItem: AffairData): Boolean {
+      return oldItem == newItem
+    }
+  }
 }

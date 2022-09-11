@@ -11,32 +11,46 @@ import java.util.regex.Pattern
  */
 
 /**
- * 把 [beginLesson] 转换成 0 - 12 的数字，为了好排序
+ * 把 [beginLesson] 转换成对应的 row
  */
-fun getStart(beginLesson: Int): Int {
+fun getStartRow(beginLesson: Int): Int {
   return when (beginLesson) {
-    in 1..4 -> beginLesson - 1
-    in 5..8 -> beginLesson
-    in 9..12 -> beginLesson + 1
+    in 1 .. 4 -> beginLesson - 1
+    in 5 .. 8 -> beginLesson
+    in 9 .. 12 -> beginLesson + 1
     -1 -> 4 // 中午
     -2 -> 9 // 傍晚
-    else -> throw RuntimeException("出现了未知的时间点！")
+    else -> throw IllegalArgumentException("出现了未知的时间点，beginLesson = $beginLesson")
   }
 }
 
 /**
- * 得到 0 - 12 中对应的数字
+ * 得到结尾对应的 row
  */
-fun getEnd(beginLesson: Int, period: Int): Int {
-  val start = getStart(beginLesson)
+fun getEndRow(beginLesson: Int, period: Int): Int {
+  val start = getStartRow(beginLesson)
   return start + period - 1
 }
 
 /**
- * @param start 这个 [start] 是调用了 [getStart] 转换后的值，也可以是 row
+ * 将 [startRow] 装换为对应的 beginLesson
  */
-fun getStartTime(start: Int): Int {
-  return when (start) {
+fun getBeginLesson(startRow: Int): Int {
+  return when (startRow) {
+    in 0 .. 3 -> startRow + 1
+    4 -> -1 // 中午
+    in 5 .. 8 -> startRow
+    9 -> -2 // 傍晚
+    in 10 .. 13 -> startRow - 1
+    else -> throw IllegalArgumentException("不存在对应的 beginLesson，startRow = $startRow")
+  }
+}
+
+/**
+ * @param startRow 这个 [startRow] 是调用了 [getStartRow] 转换后的值
+ */
+fun getStartTime(startRow: Int): Int {
+  return when (startRow) {
     0 -> 8 * 60
     1 -> 8 * 60 + 55
     2 -> 10 * 60 + 15
@@ -56,10 +70,10 @@ fun getStartTime(start: Int): Int {
 }
 
 /**
- * @param end 这个 [end] 是调用了 [getEnd] 转换后的值，也可以是 row
+ * @param endRow 这个 [endRow] 是调用了 [getEndRow] 转换后的值，也可以是 row
  */
-fun getEndTime(end: Int): Int {
-  return when (end) {
+fun getEndTime(endRow: Int): Int {
+  return when (endRow) {
     0 -> 8 * 60 + 45
     1 -> 9 * 60 + 40
     2 -> 11 * 60
@@ -85,6 +99,7 @@ private val Calendar = getInstance()
  */
 fun getNowTime(): Int {
   return Calendar.run {
+    timeInMillis = System.currentTimeMillis()
     val hour = get(HOUR_OF_DAY)
     val minute = get(MINUTE)
     hour * 60 + minute
@@ -92,16 +107,16 @@ fun getNowTime(): Int {
 }
 
 fun getShowTimeStr(beginLesson: Int, period: Int): String {
-  val startStr = getShowStartTimeStr(getStart(beginLesson))
-  val endStr = getShowEndTimeStr(getEnd(beginLesson, period))
+  val startStr = getShowStartTimeStr(getStartRow(beginLesson))
+  val endStr = getShowEndTimeStr(getEndRow(beginLesson, period))
   if (startStr.isNotEmpty() && endStr.isNotEmpty()) {
     return "$startStr-$endStr"
   }
   return ""
 }
 
-fun getShowStartTimeStr(start: Int): String {
-  return when (start) {
+fun getShowStartTimeStr(startRow: Int): String {
+  return when (startRow) {
     0 -> "8:00"
     1 -> "8:55"
     2 -> "10:15"
@@ -120,8 +135,8 @@ fun getShowStartTimeStr(start: Int): String {
   }
 }
 
-fun getShowEndTimeStr(end: Int): String {
-  return when (end) {
+fun getShowEndTimeStr(endRow: Int): String {
+  return when (endRow) {
     0 -> "8:45"
     1 -> "9:40"
     2 -> "11:00"

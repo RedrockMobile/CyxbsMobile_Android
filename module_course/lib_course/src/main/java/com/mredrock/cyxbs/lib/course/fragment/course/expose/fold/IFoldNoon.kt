@@ -1,6 +1,6 @@
 package com.mredrock.cyxbs.lib.course.fragment.course.expose.fold
 
-import android.widget.ImageView
+import android.view.View
 import com.mredrock.cyxbs.lib.course.fragment.course.expose.period.noon.INoonPeriod
 
 /**
@@ -11,8 +11,8 @@ import com.mredrock.cyxbs.lib.course.fragment.course.expose.period.noon.INoonPer
  */
 interface IFoldNoon : INoonPeriod {
   
-  val ivNoonFold: ImageView
-  val ivNoonUnfold: ImageView
+  val viewNoonFold: View
+  val viewNoonUnfold: View
   
   /**
    * 得到当前中午那一行的状态

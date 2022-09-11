@@ -33,4 +33,14 @@ open class SingleDayLayoutParams(
     get() = startRow
   override val length: Int
     get() = rowCount
+  
+  /**
+   * 根据 [ISingleDayData] 改变数据
+   */
+  fun changeSingleDay(data: ISingleDayData) {
+    startColumn = data.weekNum
+    endColumn = data.weekNum
+    startRow = data.startNode
+    endRow = data.startNode + data.length - 1
+  }
 }

@@ -64,8 +64,6 @@ abstract class CourseMultiTouchImpl @JvmOverloads constructor(
           // 还原，应该不会有其他 View 需要用到这个特性吧，就直接设置成 true 算了
           var parent2: ViewParent? = parent
           while (parent2 is ViewGroup) {
-            // 这个 isMotionEventSplittingEnabled 在 dispatchTouchEvent() 中有用到，
-            // 你看官方注释的话应该能看懂它的作用，事件分发源码从没看过? 那我不建议你来修课表 (
             parent2.isMotionEventSplittingEnabled = true
             parent2 = parent2.parent
           }

@@ -5,7 +5,6 @@ import android.util.SparseArray
 import android.view.View
 import android.view.ViewGroup
 import androidx.annotation.CallSuper
-import androidx.collection.arraySetOf
 import com.mredrock.cyxbs.lib.course.fragment.course.expose.overlap.IOverlapContainer
 import com.mredrock.cyxbs.lib.course.fragment.course.expose.overlap.IOverlapItem
 import com.mredrock.cyxbs.lib.course.internal.item.IItem
@@ -17,7 +16,11 @@ import com.ndhzs.netlayout.transition.OnChildVisibleListener
 import java.util.*
 
 /**
- * ...
+ * 操控重叠的类
+ *
+ * ## 特别注意
+ * - 该类会拦截使用 addItem() 添加进来的 IOverlapItem
+ * - 然后在下一个 Runnable 中添加**部分**之前被拦截的 item (如果添加全部会浪费性能)
  *
  * @author 985892345 (Guo Xiangrui)
  * @email guo985892345@foxmail.com
@@ -38,29 +41,36 @@ abstract class OverlapImpl : FoldImpl(), IOverlapContainer {
       object : IItemContainer.OnItemExistListener {
         override fun isAllowToAddItem(item: IItem): Boolean {
           return if (item is IOverlapItem) {
-            if (course.getViewByItem(item) == null) {
-              // 判断是否是重复添加，重复添加会直接报错
-              if (mItemFreeSet.contains(item)) {
-                // 这里按正常逻辑是下一个 Runnable 中添加进来的
-                true
-              } else {
-                mItemFreeSet.add(item)
-                setOverlap(item)
-                tryPostRefreshOverlapRunnable()
-                false // IOverlapItem 需要延迟添加进去
-              }
-            } else false
+            if (mIsInRefreshOverlapRunnable) {
+              // 这里按正常逻辑是下一个 Runnable 中添加进来的
+              true
+            } else {
+              mItemInFreeSet.add(item)
+              setOverlap(item)
+              tryPostRefreshOverlapRunnable()
+              false // IOverlapItem 需要延迟添加进去
+            }
           } else true
         }
   
         override fun onItemRemovedBefore(item: IItem) {
           if (item is IOverlapItem) {
-            // 因为考虑到有些 item 可能会根据底下的 item 而改变，所以就直接全部刷新算了
-            deleteOverlap(item)
-            tryPostRefreshOverlapRunnable()
-            item.overlap.clearOverlap()
-            mItemFreeSet.remove(item)
-            mItemInParentSet.remove(item)
+            if (mItemInParentSet.remove(item)) {
+              deleteOverlap(item)
+              item.overlap.clearOverlap()
+              tryPostRefreshOverlapRunnable()
+            }
+          }
+        }
+  
+        override fun onItemRemovedFail(item: IItem) {
+          if (item is IOverlapItem) {
+            // 这里说明原操控者需要删除该 item，但可能是因为被上方的拦截而删除失败
+            if (mItemInFreeSet.remove(item)) {
+              deleteOverlap(item)
+              item.overlap.clearOverlap()
+              tryPostRefreshOverlapRunnable()
+            }
           }
         }
       }
@@ -88,17 +98,23 @@ abstract class OverlapImpl : FoldImpl(), IOverlapContainer {
     )
   }
   
-  private val mItemFreeSet = arraySetOf<IOverlapItem>()
-  private val mItemInParentSet = arraySetOf<IOverlapItem>()
+  private val mItemInFreeSet = hashSetOf<IOverlapItem>()
+  private val mItemInParentSet = hashSetOf<IOverlapItem>()
   
-  private var _isInRefreshing = false
+  // 是否正处于刷新的 Runnable 中
+  private var mIsInRefreshOverlapRunnable = false
+  
+  // 是否已经发送了 Runnable，你只管直接调用 tryPostRefreshOverlapRunnable() 即可，是否为重复调用由该变量判断
+  private var _isPostRefreshOverlapRunnable = false
   
   private fun tryPostRefreshOverlapRunnable(): Boolean {
-    if (!_isInRefreshing) {
-      _isInRefreshing = true
+    if (!_isPostRefreshOverlapRunnable) {
+      _isPostRefreshOverlapRunnable = true
       course.post {
+        _isPostRefreshOverlapRunnable = false
+        mIsInRefreshOverlapRunnable = true
         // 先重新询问没有添加进去的 item 是否需要添加进父布局
-        val iterator = mItemFreeSet.iterator()
+        val iterator = mItemInFreeSet.iterator()
         while (iterator.hasNext()) {
           val next = iterator.next()
           if (next.overlap.isAddIntoParent()) {
@@ -113,7 +129,7 @@ abstract class OverlapImpl : FoldImpl(), IOverlapContainer {
         mItemInParentSet.forEach {
           it.overlap.refreshOverlap()
         }
-        _isInRefreshing = false
+        mIsInRefreshOverlapRunnable = false
       }
       return true
     }

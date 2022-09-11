@@ -6,7 +6,6 @@ import android.app.Dialog
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
-import android.util.Log
 import android.view.View
 import android.widget.FrameLayout
 import androidx.appcompat.widget.AppCompatButton
@@ -99,7 +98,6 @@ class MainActivity : BaseViewModelActivity<MainViewModel>(),
         viewModel.checkInStatus.observe {
             it?.let {
                 isSign = it
-                Log.d("NotifySignWorker", "今日是否已经签到 : $it ")
             }
         }
     }
@@ -358,7 +356,6 @@ class MainActivity : BaseViewModelActivity<MainViewModel>(),
         //如果为异常启动，则可以取得选中状态
         bundle?.getInt(BOTTOM_SHEET_STATE)
             ?.let { viewModel.isCourseDirectShow = it == BottomSheetBehavior.STATE_EXPANDED }
-        Log.d("ggg", "(MainActivity.kt:361) -> isCourseDirectShow = ${viewModel.isCourseDirectShow}")
         lastState =
             if (viewModel.isCourseDirectShow) BottomSheetBehavior.STATE_EXPANDED else BottomSheetBehavior.STATE_COLLAPSED
         val isShortcut = intent.action == FAST

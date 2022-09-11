@@ -24,7 +24,7 @@ abstract class AbstractCourseVpFragment : BaseFragment(), ICourseVp {
   override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
     super.onViewCreated(view, savedInstanceState)
     mViewPager.adapter = mVpAdapter
-    mViewPager.offscreenPageLimit = 1 // 预加载一页，减少页面刚加载时就滑动的卡顿
+//    mViewPager.offscreenPageLimit = 1 // 预加载一页，减少页面刚加载时就滑动的卡顿
   }
   
   private inner class CourseAdapter(fragment: Fragment) : FragmentStateAdapter(fragment) {

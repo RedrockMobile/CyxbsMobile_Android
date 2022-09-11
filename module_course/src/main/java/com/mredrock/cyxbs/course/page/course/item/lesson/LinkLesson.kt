@@ -4,7 +4,7 @@ import android.content.Context
 import android.view.View
 import com.mredrock.cyxbs.course.R
 import com.mredrock.cyxbs.course.page.course.data.LessonData
-import com.mredrock.cyxbs.course.page.course.data.expose.IWeek
+import com.mredrock.cyxbs.course.page.course.data.StuLessonData
 import com.mredrock.cyxbs.course.page.course.item.lesson.lp.LinkLessonLayoutParams
 import com.mredrock.cyxbs.course.page.course.item.view.ItemView
 import com.mredrock.cyxbs.lib.utils.extensions.color
@@ -16,15 +16,20 @@ import com.mredrock.cyxbs.lib.utils.extensions.color
  * @email guo985892345@foxmail.com
  * @date 2022/9/2 16:42
  */
-class LinkLesson(val data: LessonData) : BaseLesson(data), IWeek by data {
+class LinkLesson(private var lessonData: StuLessonData) : BaseLesson() {
   
-  override val rank: Int
-    get() = lp.rank
-  
-  override val lp: LinkLessonLayoutParams = LinkLessonLayoutParams(data)
+  override fun setData(newData: StuLessonData) {
+    getChildIterable().forEach {
+      if (it is LinkLessonView) {
+        it.setLessonData(newData)
+      }
+    }
+    lp.changeSingleDay(newData)
+    lessonData = newData
+  }
   
   override fun createView(context: Context): View {
-    return LinkLessonView.newInstance(context, data)
+    return LinkLessonView.newInstance(context, lessonData)
   }
   
   private class LinkLessonView private constructor(
@@ -32,7 +37,7 @@ class LinkLesson(val data: LessonData) : BaseLesson(data), IWeek by data {
   ) : ItemView(context) {
     
     companion object {
-      fun newInstance(context: Context, data: LessonData): LinkLessonView {
+      fun newInstance(context: Context, data: StuLessonData): LinkLessonView {
         return LinkLessonView(context).apply {
           setLessonData(data)
         }
@@ -42,7 +47,7 @@ class LinkLesson(val data: LessonData) : BaseLesson(data), IWeek by data {
     private val mBgColor = R.color.course_link_lesson_bg.color
     private val mTextColor = R.color.course_link_lesson_tv.color
   
-    fun setLessonData(data: LessonData) {
+    fun setLessonData(data: StuLessonData) {
       setColor(data.timeType)
       setText(data.course, data.classroom)
     }
@@ -54,4 +59,15 @@ class LinkLesson(val data: LessonData) : BaseLesson(data), IWeek by data {
       setOverlapTagColor(mTextColor)
     }
   }
+  
+  override val rank: Int
+    get() = lp.rank
+  
+  override val lp: LinkLessonLayoutParams = LinkLessonLayoutParams(lessonData)
+  
+  override val data: StuLessonData
+    get() = lessonData
+  
+  override val week: Int
+    get() = lessonData.week
 }

@@ -1,7 +1,11 @@
 package com.mredrock.cyxbs.lib.course.item.single
 
+import com.mredrock.cyxbs.lib.course.internal.item.IItemData
+
 /**
- * ...
+ * 用于课表某一天数据的接口
+ *
+ * 由于限制了只能是某一列，经过长时间的死牢，个人认为不应该继承 [IItemData]
  *
  * @author 985892345 (Guo Xiangrui)
  * @email guo985892345@foxmail.com

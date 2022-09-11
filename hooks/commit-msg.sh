@@ -97,6 +97,7 @@ declare -A commitMap=(
   ["bricks"]="与基础结构相关的更改"
   ["technologist"]="改善开发人员体验"
   ["money_with_wings"]="添加赞助或与资金相关的基础设施"
+  ["thread"]="添加或更新与多线程或并发相关的代码"
 )
 
 result=$(echo "$commitMsg" | grep ":[a-z_]\+: .\+")

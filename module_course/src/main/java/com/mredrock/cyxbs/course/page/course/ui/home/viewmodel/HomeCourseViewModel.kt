@@ -13,6 +13,7 @@ import com.mredrock.cyxbs.lib.base.ui.BaseViewModel
 import io.reactivex.rxjava3.core.Completable
 import io.reactivex.rxjava3.core.Observable
 import io.reactivex.rxjava3.core.Single
+import io.reactivex.rxjava3.schedulers.Schedulers
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.SharedFlow
 import kotlinx.coroutines.launch
@@ -98,10 +99,11 @@ class HomeCourseViewModel : BaseViewModel() {
       linkLessonObservable,
       affairObservable
     ) { self, link, affair ->
-      HomePageResultImpl.getMap(self, link, affair)
-    }.safeSubscribeBy {
-      _homeWeekData.postValue(it)
-    }
+      HomePageResultImpl.flatMap(self, link, affair)
+    }.subscribeOn(Schedulers.io())
+      .safeSubscribeBy {
+        _homeWeekData.postValue(it)
+      }
   }
   
   /**
@@ -114,14 +116,14 @@ class HomeCourseViewModel : BaseViewModel() {
   }
   
   interface HomePageResult {
-    val selfLesson: List<StuLessonData>
-    val linkLesson: List<StuLessonData>
+    val self: List<StuLessonData>
+    val link: List<StuLessonData>
     val affair: List<AffairData>
     
-    companion object EMPTY : HomePageResult {
-      override val selfLesson: List<StuLessonData>
+    companion object Empty : HomePageResult {
+      override val self: List<StuLessonData>
         get() = emptyList()
-      override val linkLesson: List<StuLessonData>
+      override val link: List<StuLessonData>
         get() = emptyList()
       override val affair: List<AffairData>
         get() = emptyList()
@@ -129,12 +131,12 @@ class HomeCourseViewModel : BaseViewModel() {
   }
   
   data class HomePageResultImpl(
-    override val selfLesson: MutableList<StuLessonData>,
-    override val linkLesson: MutableList<StuLessonData>,
+    override val self: MutableList<StuLessonData>,
+    override val link: MutableList<StuLessonData>,
     override val affair: MutableList<AffairData>
   ) : HomePageResult {
     companion object {
-      fun getMap(
+      fun flatMap(
         self: List<StuLessonData>,
         link: List<StuLessonData>,
         affair: List<AffairData>
@@ -142,11 +144,11 @@ class HomeCourseViewModel : BaseViewModel() {
         return buildMap {
           self.forEach {
             getOrPut(it.week) { HomePageResultImpl(arrayListOf(), arrayListOf(), arrayListOf()) }
-              .selfLesson.add(it)
+              .self.add(it)
           }
           link.forEach {
             getOrPut(it.week) { HomePageResultImpl(arrayListOf(), arrayListOf(), arrayListOf()) }
-              .linkLesson.add(it)
+              .link.add(it)
           }
           affair.forEach {
             getOrPut(it.week) { HomePageResultImpl(arrayListOf(), arrayListOf(), arrayListOf()) }

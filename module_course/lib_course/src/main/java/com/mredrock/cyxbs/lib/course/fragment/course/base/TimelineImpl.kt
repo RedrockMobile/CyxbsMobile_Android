@@ -78,7 +78,7 @@ abstract class TimelineImpl : PeriodImpl(), ITimeline {
     initTimeline()
   }
   
-  private fun initTimeline() {
+  protected open fun initTimeline() {
     course.apply {
       // 下面这个 for 用于设置时间轴的初始化宽度
       forEachTimelineColumn {

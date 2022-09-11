@@ -5,7 +5,7 @@ import androidx.core.util.forEach
 import com.mredrock.cyxbs.lib.course.utils.getOrPut
 
 /**
- * ...
+ * 重叠功能的帮助类，实现了一些模板代码
  *
  * @author 985892345 (Guo Xiangrui)
  * @email guo985892345@foxmail.com

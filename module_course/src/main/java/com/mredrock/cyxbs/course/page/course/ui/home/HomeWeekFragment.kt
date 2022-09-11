@@ -5,10 +5,10 @@ import android.view.View
 import androidx.core.os.bundleOf
 import androidx.fragment.app.createViewModelLazy
 import androidx.lifecycle.map
-import com.mredrock.cyxbs.course.page.course.item.affair.Affair
-import com.mredrock.cyxbs.course.page.course.item.lesson.LinkLesson
-import com.mredrock.cyxbs.course.page.course.item.lesson.SelfLesson
 import com.mredrock.cyxbs.course.page.course.ui.home.viewmodel.HomeCourseViewModel
+import com.mredrock.cyxbs.course.page.course.utils.container.AffairContainerProxy
+import com.mredrock.cyxbs.course.page.course.utils.container.LinkLessonContainerProxy
+import com.mredrock.cyxbs.course.page.course.utils.container.SelfLessonContainerProxy
 import com.mredrock.cyxbs.lib.course.fragment.page.CoursePageFragment
 import com.mredrock.cyxbs.lib.course.helper.CourseNowTimeHelper
 import com.mredrock.cyxbs.lib.utils.extensions.lazyUnlock
@@ -91,15 +91,17 @@ class HomeWeekFragment : CoursePageFragment() {
     }
   }
   
+  private val mSelfLessonContainerProxy by lazyUnlock { SelfLessonContainerProxy(this) }
+  private val mLinkLessonContainerProxy by lazyUnlock { LinkLessonContainerProxy(this) }
+  private val mAffairContainerProxy by lazyUnlock { AffairContainerProxy(this) }
+  
   private fun initObserve() {
     mViewModel.homeWeekData
       .map { it[mWeek] ?: HomeCourseViewModel.HomePageResult }
-      .observe { result ->
-        clearLesson()
-        clearAffair()
-        addLesson(result.selfLesson.map { SelfLesson(it) })
-        addLesson(result.linkLesson.map { LinkLesson(it) })
-        addAffair(result.affair.map { Affair(it) })
+      .observe {
+        mSelfLessonContainerProxy.diffRefresh(it.self)
+        mLinkLessonContainerProxy.diffRefresh(it.link)
+        mAffairContainerProxy.diffRefresh(it.affair)
       }
   }
 }

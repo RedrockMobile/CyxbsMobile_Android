@@ -3,10 +3,10 @@ package com.mredrock.cyxbs.lib.course.internal.view.course.base
 import android.content.Context
 import android.util.AttributeSet
 import android.view.View
-import androidx.collection.arrayMapOf
 import com.mredrock.cyxbs.lib.course.R
 import com.mredrock.cyxbs.lib.course.internal.item.IItem
 import com.mredrock.cyxbs.lib.course.internal.item.IItemContainer
+import com.mredrock.cyxbs.lib.course.utils.forEachInline
 import com.ndhzs.netlayout.attrs.NetLayoutParams
 
 /**
@@ -26,8 +26,8 @@ abstract class CourseContainerImpl @JvmOverloads constructor(
 {
   
   private val mOnItemExistListeners = ArrayList<IItemContainer.OnItemExistListener>(2)
-  private val mItemByView = arrayMapOf<View, IItem>()
-  private val mViewByItem = arrayMapOf<IItem, View>()
+  private val mItemByView = hashMapOf<View, IItem>()
+  private val mViewByItem = hashMapOf<IItem, View>()
   
   final override fun addItemExistListener(l: IItemContainer.OnItemExistListener) {
     mOnItemExistListeners.add(l)
@@ -35,30 +35,34 @@ abstract class CourseContainerImpl @JvmOverloads constructor(
   
   final override fun addItem(item: IItem): Boolean {
     if (mViewByItem.contains(item)) {
-      // 包含的话说明已经被添加了
-      return false
+      error("该 View 已经被添加了，请检查所有调用该方法的地方！")
     }
     if (mOnItemExistListeners.all { it.isAllowToAddItem(item) }) {
       val view = item.initializeView(context)
       mItemByView[view] = item
       mViewByItem[item] = view
-      mOnItemExistListeners.forEach { it.onItemAddedBefore(item) }
+      mOnItemExistListeners.forEachInline { it.onItemAddedBefore(item) }
       super.addItem(view, item.lp)
-      mOnItemExistListeners.forEach { it.onItemAddedAfter(item) }
+      mOnItemExistListeners.forEachInline { it.onItemAddedAfter(item) }
       return true
     }
+    mOnItemExistListeners.forEachInline { it.onItemAddedFail(item) }
     return false
   }
   
-  final override fun removeItem(item: IItem) {
+  final override fun removeItem(item: IItem): Boolean {
     val view = mViewByItem[item]
     if (view != null) {
-      mOnItemExistListeners.forEach { it.onItemRemovedBefore(item) }
+      mOnItemExistListeners.forEachInline { it.onItemRemovedBefore(item) }
       super.removeView(view)
-      mOnItemExistListeners.forEach { it.onItemRemovedAfter(item) }
+      mOnItemExistListeners.forEachInline { it.onItemRemovedAfter(item) }
       mItemByView.remove(view)
       mViewByItem.remove(item)
+      return true
     }
+    // 此时说明没有添加过该 item，但可能是因为之前的添加中有 listener 把它拦截了
+    mOnItemExistListeners.forEachInline { it.onItemRemovedFail(item) }
+    return false
   }
   
   final override fun getItemByView(view: View?): IItem? {

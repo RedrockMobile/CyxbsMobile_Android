@@ -1,8 +1,10 @@
 package com.mredrock.cyxbs.lib.course.item.single
 
 import android.content.Context
+import android.util.SparseIntArray
 import android.view.View
-import androidx.collection.ArrayMap
+import androidx.core.util.forEach
+import androidx.core.util.isNotEmpty
 import com.mredrock.cyxbs.lib.course.fragment.course.expose.overlap.IOverlap
 import com.mredrock.cyxbs.lib.course.fragment.course.expose.overlap.IOverlapItem
 import com.mredrock.cyxbs.lib.course.fragment.course.expose.overlap.OverlapHelper
@@ -49,17 +51,49 @@ abstract class AbstractOverlapSingleDayItem : IOverlapItem, OverlapHelper.ILogic
   override fun onClearOverlap() {}
   
   /**
-   * 得到 [createView] 创造的所有 view
+   * 得到使用 [createView] 生成的所有 view 集合的迭代器
    */
-  fun getChildren(): List<View> {
-    return mChildren
+  fun getChildIterable(): Iterable<View> {
+    return object : Iterable<View> {
+      override fun iterator(): Iterator<View> {
+        return object : Iterator<View> {
+  
+          val iterator1 = mChildInFree.iterator()
+          val iterator2 = mChildInParent.iterator()
+  
+          override fun hasNext(): Boolean {
+            return iterator1.hasNext() || iterator2.hasNext()
+          }
+  
+          override fun next(): View {
+            return if (iterator1.hasNext()) iterator1.next() else iterator2.next()
+          }
+        }
+      }
+    }
   }
   
   /**
-   * 得到空闲的区域，第一个 Int 为 startRow，第二个为 endRow
+   * 得到使用 [createView] 生成但目前不在 [mView] 中显示的所有 view 集合的迭代器
    */
-  fun getFreeAreaMap(): Map<Int, Int> {
-    return mFreeAreaMap
+  fun getChildInFreeIterable(): List<View> {
+    return mChildInFree
+  }
+  
+  /**
+   * 得到使用 [createView] 生成并在 [mView] 中显示的所有 view 集合的迭代器
+   */
+  fun getChildInParentIterable(): List<View> {
+    return mChildInParent
+  }
+  
+  /**
+   * 遍历空闲的区域
+   */
+  fun forEachFreeAreaMap(block: (startRow: Int, endRow: Int) -> Unit) {
+    mFreeAreaMap.forEach { startRow, endRow ->
+      block.invoke(startRow, endRow)
+    }
   }
   
   /**
@@ -72,12 +106,8 @@ abstract class AbstractOverlapSingleDayItem : IOverlapItem, OverlapHelper.ILogic
   @Suppress("LeakingThis")
   final override val overlap: IOverlap = OverlapHelper(this)
   
-  private val mChildren = arrayListOf<View>()
-  
   final override fun initializeView(context: Context): View {
-    if (this::mView.isInitialized) {
-      mView.removeAllViews()
-    } else {
+    if (!this::mView.isInitialized) {
       mView = NetLayout2(context).apply {
         setRowColumnCount(lp.rowCount, lp.columnCount)
       }
@@ -94,22 +124,32 @@ abstract class AbstractOverlapSingleDayItem : IOverlapItem, OverlapHelper.ILogic
     return false
   }
   
+  private val mChildInFree = arrayListOf<View>()
+  private val mChildInParent = arrayListOf<View>()
+  
   final override fun refreshOverlap() {
-    mFreeAreaMap.forEach { (row, column) ->
-      var view = mChildren.removeLastOrNull()
-      if (view != null && view.parent === mView) {
-        val params = view.layoutParams as NetLayoutParams
-        params.startRow = row - lp.startRow
-        params.endRow = column - lp.startRow
-        view.layoutParams = params
-      } else {
-        view = createView(mView.context)
-        val params = createNetLayoutParams()
-        params.startRow = row - lp.startRow
-        params.endRow = column - lp.startRow
-        mView.addItem(view, params)
-      }
-      mChildren.add(view)
+    refreshFreeArea()
+    repeat(mChildInParent.size - mFreeAreaMap.size()) {
+      val view = mChildInParent.removeLast()
+      mView.removeView(view)
+      mChildInFree.add(view)
+    }
+    repeat(mFreeAreaMap.size() - mChildInParent.size) {
+      val view = mChildInFree.removeLastOrNull() ?: createView(mView.context)
+      val params = view.layoutParams as? NetLayoutParams ?: createNetLayoutParams()
+      mView.addItem(view, params)
+      mChildInParent.add(view)
+    }
+    repeat(mFreeAreaMap.size()) {
+      val startRow = mFreeAreaMap.keyAt(it)
+      val endRow = mFreeAreaMap.valueAt(it)
+      val view = mChildInParent[it]
+      val params = view.layoutParams as NetLayoutParams
+      params.startColumn = 0
+      params.endColumn = 0
+      params.startRow = startRow - lp.startRow
+      params.endRow = endRow - lp.startRow
+      view.layoutParams = params
     }
     onRefreshOverlap()
   }
@@ -126,7 +166,7 @@ abstract class AbstractOverlapSingleDayItem : IOverlapItem, OverlapHelper.ILogic
     }
   }
   
-  private val mFreeAreaMap = ArrayMap<Int, Int>()
+  private val mFreeAreaMap = SparseIntArray()
   
   private fun refreshFreeArea() {
     mFreeAreaMap.clear()
@@ -139,41 +179,14 @@ abstract class AbstractOverlapSingleDayItem : IOverlapItem, OverlapHelper.ILogic
         e = row
       } else {
         if (s <= e) {
-          mFreeAreaMap[s] = e
+          mFreeAreaMap.put(s, e)
         }
         s = row + 1
       }
     }
     // 判断 e 是不是最后一格，如果是的话，就要单独加上
     if (e == lp.endRow) {
-      mFreeAreaMap[s] = e
-    }
-    if (mFreeAreaMap.isEmpty) {
-      lp.forEachRow { row ->
-        val above = overlap.getAboveItem(row, column)
-        if (above != null) {
-          if (above.overlap.getAboveItem(row, column) == null) {
-            // 如果存在某一个位置处于第二层，则允许显示
-            // 允许显示的原因是：点击顶上的 View 有一个 Q 弹动画，可以显示下面的 View
-            var aboveShowBottomRow = above.lp.endRow
-            for (r in (row + 1) .. above.lp.endRow) {
-              if (above.overlap.getAboveItem(r, column) != null) {
-                // 寻找到 above 从 row 开始往后的第一个有重叠的位置，这个位置到 row 的区域才可以用来显示下面的 View
-                // 如果超过这个区域，就会导致下面的 View 绘制到圆角区域
-                aboveShowBottomRow = row - 1
-                break
-              }
-            }
-            if (lp.startRow >= row && lp.endRow <= aboveShowBottomRow) {
-              // 排除掉会显示在外面的 View，不然会遮挡圆角
-              mFreeAreaMap[lp.startRow] = lp.endRow
-              return@forEachRow
-            }
-//            mFreeAreaMap.put(lp.startRow, lp.endRow)
-//            return@forEachRow
-          }
-        }
-      }
+      mFreeAreaMap.put(s, e)
     }
   }
 }

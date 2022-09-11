@@ -4,13 +4,16 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.annotation.CallSuper
 import com.mredrock.cyxbs.lib.base.ui.BaseFragment
 import com.mredrock.cyxbs.lib.course.R
 import com.mredrock.cyxbs.lib.course.fragment.course.ICourseBase
+import com.mredrock.cyxbs.lib.course.fragment.course.expose.wrapper.ICourseWrapper
 import com.mredrock.cyxbs.lib.course.internal.view.course.ICourseViewGroup
 import com.mredrock.cyxbs.lib.course.internal.view.course.base.AbstractCourseViewGroup
 import com.mredrock.cyxbs.lib.course.internal.view.scroll.ICourseScroll
 import com.mredrock.cyxbs.lib.course.internal.view.scroll.base.AbstractCourseScrollView
+import com.mredrock.cyxbs.lib.course.utils.forEachReversed
 
 /**
  * ...
@@ -43,5 +46,31 @@ abstract class AbstractCourseBaseFragment : BaseFragment(), ICourseBase {
   ): View {
     // 最基础布局，不建议对他进行修改，但允许你在它外面添加东西
     return inflater.inflate(R.layout.course_layout_course, container, false)
+  }
+  
+  private val mCourseLifecycleObservers = arrayListOf<ICourseWrapper.CourseLifecycleObserver>()
+  
+  final override fun addCourseLifecycleObservable(observer: ICourseWrapper.CourseLifecycleObserver) {
+    mCourseLifecycleObservers.add(observer)
+  }
+  
+  final override fun removeCourseLifecycleObserver(observer: ICourseWrapper.CourseLifecycleObserver) {
+    mCourseLifecycleObservers.remove(observer)
+  }
+  
+  @CallSuper
+  override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+    super.onViewCreated(view, savedInstanceState)
+    mCourseLifecycleObservers.forEachReversed {
+      it.onCreateCourse(course)
+    }
+  }
+  
+  @CallSuper
+  override fun onDestroyView() {
+    super.onDestroyView()
+    mCourseLifecycleObservers.forEachReversed {
+      it.onDestroyCourse(course)
+    }
   }
 }
