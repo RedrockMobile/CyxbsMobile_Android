@@ -19,7 +19,7 @@ class NotificationVp2Adapter(
     }
 
     override fun createFragment(position: Int): Fragment {
-        return fragmentList[position] as Fragment
+        return fragmentList[position]
     }
 
 }
