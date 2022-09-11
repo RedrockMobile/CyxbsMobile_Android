@@ -158,9 +158,12 @@ class AffairDurationAdapter(val requireActivity: Context) :
     init {
       ivAdd.setOnSingleClickListener {
         val dialog = TimeSelectDialog(requireActivity) { week, begin, end ->
-          val tmp = currentList.toMutableList()
-          tmp.add(AffairTimeData(week, begin, end - begin))
-          submitList(AffairDataUtils.getNewList(tmp))
+          submitList(
+            AffairDataUtils.addNewTime(
+              currentList,
+              AffairTimeData(week, begin, end - begin)
+            )
+          )
         }
         dialog.show()
       }

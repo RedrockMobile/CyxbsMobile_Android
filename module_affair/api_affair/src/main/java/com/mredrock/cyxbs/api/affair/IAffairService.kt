@@ -50,6 +50,7 @@ interface IAffairService : IProvider {
    */
   fun observeAffair(stuNum: String): Observable<List<Affair>>
 
+  fun deleteAffair(affairId:Int)
   data class Affair(
     val stuNum: String,
     val id: Int, // 事务唯一 id

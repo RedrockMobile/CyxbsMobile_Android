@@ -11,6 +11,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.mredrock.cyxbs.affair.R
 import com.mredrock.cyxbs.affair.model.data.AffairEditArgs.AffairDurationArgs.Companion.WEEK_ARRAY
 import com.mredrock.cyxbs.affair.ui.adapter.data.AffairWeekSelectData
+import com.mredrock.cyxbs.affair.utils.AffairDataUtils
 import com.mredrock.cyxbs.lib.utils.extensions.appContext
 import com.mredrock.cyxbs.lib.utils.extensions.setOnSingleClickListener
 import com.mredrock.cyxbs.lib.utils.extensions.toast
@@ -54,7 +55,7 @@ class AffairWeekAdapter : ListAdapter<AffairWeekSelectData, AffairWeekAdapter.VH
         val data = getItem(layoutPosition)
         data.isChoice = !data.isChoice
         data.toString().toast()
-        submitList(currentList)
+        submitList(AffairDataUtils.checkWeekSelectData(currentList))
       }
     }
   }

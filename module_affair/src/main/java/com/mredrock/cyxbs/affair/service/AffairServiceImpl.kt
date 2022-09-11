@@ -3,10 +3,14 @@ package com.mredrock.cyxbs.affair.service
 import android.content.Context
 import com.alibaba.android.arouter.facade.annotation.Route
 import com.mredrock.cyxbs.affair.model.data.AffairEditArgs
+import com.mredrock.cyxbs.affair.net.AffairRepository
 import com.mredrock.cyxbs.affair.ui.activity.AffairActivity
 import com.mredrock.cyxbs.api.affair.AFFAIR_SERVICE
 import com.mredrock.cyxbs.api.affair.IAffairService
+import com.mredrock.cyxbs.lib.utils.extensions.toast
+import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
 import io.reactivex.rxjava3.core.Observable
+import io.reactivex.rxjava3.kotlin.subscribeBy
 
 /**
  * ...
@@ -28,6 +32,11 @@ class AffairServiceImpl : IAffairService {
       .observeAffair(stuNum)
       .distinctUntilChanged()
       .map { it.toAffair() }
+  }
+
+  override fun deleteAffair(affairId: Int) {
+    AffairRepository.deleteAffair(affairId).observeOn(AndroidSchedulers.mainThread())
+      .doOnError { it.printStackTrace() }.subscribeBy { "删除成功".toast() }
   }
 
   override fun startAffairEditActivity(context: Context, day: Int, beginLesson: Int, period: Int) {
