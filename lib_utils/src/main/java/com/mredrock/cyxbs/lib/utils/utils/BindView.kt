@@ -86,8 +86,8 @@ abstract class BindView<T : View>(
       // 生命周期处于不合法状态，直接抛错
       throw RuntimeException("此时生命周期不合法，控件为：${getIdName()}", exception)
     }
-    // 这里有个小问题，就是当弱引用没有被清理掉时，Fragment 又再次调用 onCreateView() 创建了新的 rootView
-    // 这种情况下因为弱引用没有被清理导致 view != null，出现返回之前 view 的情况
+    // 这里有个小问题，存在弱引用没有被回收，但 Fragment 又再次调用 onCreateView() 创建了新 rootView 的情况
+    // 这种情况下因为弱引用没有被回收而导致 view != null，就会返回之前 view
     // 但现已解决 Fragment 的这种缺陷，解决方法为：观察 viewLifecycleOwnerLiveData 调用 forceSetNull()
     if (view == null) {
       view = findViewById(resId)
@@ -140,27 +140,33 @@ class ActivityBindView<T : View>(
   val activity: Activity
 ) : BindView<T>(resId), Application.ActivityLifecycleCallbacks by defaultImpl() {
   
+  init {
+    activity.application.registerActivityLifecycleCallbacks(
+      object : Application.ActivityLifecycleCallbacks by defaultImpl() {
+        override fun onActivityPostDestroyed(activity: Activity) {
+          if (activity === this@ActivityBindView.activity) {
+            isPostDestroy = true
+            forceSetNull()
+            // 别忘了取消监听！！！
+            activity.application.unregisterActivityLifecycleCallbacks(this)
+          }
+        }
+      }
+    )
+  }
+  
   // 是否已经调用了 onDestroy()
   private var isPostDestroy = false
   
   override fun checkLifecycleValid(nowView: View?): Exception? {
-    return if (isPostDestroy)
+    return if (isPostDestroy) {
       error("此时 ${activity::class.simpleName} 已经经历了 onDestroy() !")
-    else null
+    } else null
   }
   
   override fun findViewById(id: Int): T {
-    activity.application.unregisterActivityLifecycleCallbacks(this)
-    activity.application.registerActivityLifecycleCallbacks(this)
     return activity.findViewById(resId)
       ?: throw IllegalStateException("该根布局中找不到名字为 ${getIdName()} 的 id")
-  }
-  
-  override fun onActivityPostDestroyed(activity: Activity) {
-    isPostDestroy = true
-    forceSetNull()
-    // 别忘了取消监听！！！
-    activity.application.unregisterActivityLifecycleCallbacks(this)
   }
 }
 
