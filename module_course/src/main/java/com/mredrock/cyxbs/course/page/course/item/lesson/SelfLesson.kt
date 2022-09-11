@@ -4,8 +4,7 @@ import android.content.Context
 import android.view.View
 import com.mredrock.cyxbs.course.R
 import com.mredrock.cyxbs.course.page.course.data.LessonData
-import com.mredrock.cyxbs.course.page.course.data.expose.IWeek
-import com.mredrock.cyxbs.course.page.course.item.ISingleDayRank
+import com.mredrock.cyxbs.course.page.course.data.StuLessonData
 import com.mredrock.cyxbs.course.page.course.item.lesson.lp.SelfLessonLayoutParams
 import com.mredrock.cyxbs.course.page.course.item.view.ItemView
 import com.mredrock.cyxbs.lib.utils.extensions.color
@@ -17,15 +16,20 @@ import com.mredrock.cyxbs.lib.utils.extensions.color
  * @email guo985892345@foxmail.com
  * @date 2022/9/2 16:43
  */
-class SelfLesson(val data: LessonData) : BaseLesson(data), ISingleDayRank, IWeek by data {
+class SelfLesson(private var lessonData: StuLessonData) : BaseLesson() {
   
-  override val rank: Int
-    get() = lp.rank
-  
-  override val lp: SelfLessonLayoutParams = SelfLessonLayoutParams(data)
+  override fun setData(newData: StuLessonData) {
+    getChildIterable().forEach {
+      if (it is SelfLessonView) {
+        it.setLessonData(newData)
+      }
+    }
+    lp.changeSingleDay(newData)
+    lessonData = newData
+  }
   
   override fun createView(context: Context): View {
-    return SelfLessonView.newInstance(context, data)
+    return SelfLessonView.newInstance(context, lessonData)
   }
   
   private class SelfLessonView private constructor(
@@ -33,7 +37,7 @@ class SelfLesson(val data: LessonData) : BaseLesson(data), ISingleDayRank, IWeek
   ) : ItemView(context) {
     
     companion object {
-      fun newInstance(context: Context, data: LessonData): SelfLessonView {
+      fun newInstance(context: Context, data: StuLessonData): SelfLessonView {
         return SelfLessonView(context).apply {
           setLessonData(data)
         }
@@ -47,7 +51,7 @@ class SelfLesson(val data: LessonData) : BaseLesson(data), ISingleDayRank, IWeek
     private val mPmBgColor = R.color.course_pm_lesson_bg.color
     private val mNightBgColor = R.color.course_night_lesson_bg.color
     
-    fun setLessonData(data: LessonData) {
+    fun setLessonData(data: StuLessonData) {
       setColor(data.timeType)
       setText(data.course, data.classroom)
     }
@@ -75,4 +79,15 @@ class SelfLesson(val data: LessonData) : BaseLesson(data), ISingleDayRank, IWeek
       }
     }
   }
+  
+  override val rank: Int
+    get() = lp.rank
+  
+  override val lp: SelfLessonLayoutParams = SelfLessonLayoutParams(lessonData)
+  
+  override val data: StuLessonData
+    get() = lessonData
+  
+  override val week: Int
+    get() = lessonData.week
 }

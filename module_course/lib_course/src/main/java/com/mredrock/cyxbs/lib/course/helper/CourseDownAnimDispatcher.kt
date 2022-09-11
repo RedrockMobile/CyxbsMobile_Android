@@ -7,7 +7,6 @@ import android.view.View
 import android.view.ViewConfiguration
 import android.view.ViewGroup
 import android.view.animation.OvershootInterpolator
-import androidx.core.util.forEach
 import com.mredrock.cyxbs.lib.course.item.affair.IAffairItem
 import com.mredrock.cyxbs.lib.course.item.lesson.ILessonItem
 import com.mredrock.cyxbs.lib.course.internal.item.IItem
@@ -57,7 +56,8 @@ open class CourseDownAnimDispatcher(
         val y = event.getY(index).toInt()
         val pair = course.findPairUnderByXY(x, y) ?: return
         if (isNeedAnim(pair)) {
-          startAnim(pair.second)
+          startAnim(pair.second, x, y)
+          changeView(pair.second, x, y, x, y)
           mViewWithRawPointById[id] = Pair(pair.second, Point(x, y))
         }
       }
@@ -70,37 +70,44 @@ open class CourseDownAnimDispatcher(
             val y = event.getY(index).toInt()
             val child = pair.first
             val point = pair.second
+            changeView(child, point.x, point.y, x, y)
             if (abs(x - point.x) > mTouchSlop
-              || abs(y - point.y) > mTouchSlop * 2
+              || abs(y - point.y) > mTouchSlop
             ) {
-              endAnim(child)
+              endAnim(child, point.x, point.y, x, y)
               mViewWithRawPointById.remove(id)
-            } else {
-              change(pair.first, pair.second.x, pair.second.y, x, y)
             }
           }
         }
       }
-      MotionEvent.ACTION_POINTER_UP -> {
+      MotionEvent.ACTION_POINTER_UP, MotionEvent.ACTION_UP -> {
         val index = event.actionIndex
         val id = event.getPointerId(index)
         val pair = mViewWithRawPointById[id]
         if (pair != null) {
-          val child = pair.first
-          endAnim(child)
+          val x = event.getX(index).toInt()
+          val y = event.getY(index).toInt()
+          endAnim(pair.first, pair.second.x, pair.second.y, x, y)
           mViewWithRawPointById.remove(id)
         }
       }
-      MotionEvent.ACTION_CANCEL, MotionEvent.ACTION_UP -> {
-        mViewWithRawPointById.forEach { _, value ->
-          endAnim(value.first)
+      MotionEvent.ACTION_CANCEL -> {
+        for (index in 0 until event.pointerCount) {
+          val id = event.getPointerId(index)
+          val pair = mViewWithRawPointById[id]
+          if (pair != null) {
+            val x = event.getX(index).toInt()
+            val y = event.getY(index).toInt()
+            changeView(pair.first, pair.second.x, pair.second.y, x, y)
+            endAnim(pair.first, pair.second.x, pair.second.y, x, y)
+          }
         }
         mViewWithRawPointById.clear()
       }
     }
   }
   
-  protected open fun startAnim(view: View) {
+  protected open fun startAnim(view: View, initialX: Int, initialY: Int) {
     view.animate()
       .scaleX(0.85F)
       .scaleY(0.85F)
@@ -108,12 +115,12 @@ open class CourseDownAnimDispatcher(
       .start()
   }
   
-  protected open fun change(view: View, initialX: Int, initialY: Int, nowX: Int, nowY: Int) {
+  protected open fun changeView(view: View, initialX: Int, initialY: Int, nowX: Int, nowY: Int) {
     view.rotationX = -(nowY - initialY) / view.height.toFloat() * 360
     view.rotationY = (nowX - initialX) / view.width.toFloat() * 180
   }
   
-  protected open fun endAnim(view: View) {
+  protected open fun endAnim(view: View, initialX: Int, initialY: Int, nowX: Int, nowY: Int) {
     view.animate()
       .scaleX(1F)
       .scaleY(1F)

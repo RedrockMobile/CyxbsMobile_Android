@@ -24,9 +24,7 @@ abstract class CourseScrollControlImpl @JvmOverloads constructor(
   private fun getScrollImpl(): ICourseScrollControl {
     var parent = parent
     while (parent is ViewGroup) {
-      if (parent is ICourseScrollControl) {
-        break
-      }
+      if (parent is ICourseScrollControl) break
       parent = parent.parent
     }
     if (parent !is ICourseScrollControl) error("在父 View 中找不到 ${ICourseScrollControl::class.simpleName} 的实现类")

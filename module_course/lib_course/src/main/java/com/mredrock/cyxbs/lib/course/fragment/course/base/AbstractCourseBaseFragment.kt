@@ -1,16 +1,20 @@
 package com.mredrock.cyxbs.lib.course.fragment.course.base
 
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.annotation.CallSuper
 import com.mredrock.cyxbs.lib.base.ui.BaseFragment
 import com.mredrock.cyxbs.lib.course.R
 import com.mredrock.cyxbs.lib.course.fragment.course.ICourseBase
+import com.mredrock.cyxbs.lib.course.fragment.course.expose.wrapper.ICourseWrapper
 import com.mredrock.cyxbs.lib.course.internal.view.course.ICourseViewGroup
 import com.mredrock.cyxbs.lib.course.internal.view.course.base.AbstractCourseViewGroup
 import com.mredrock.cyxbs.lib.course.internal.view.scroll.ICourseScroll
 import com.mredrock.cyxbs.lib.course.internal.view.scroll.base.AbstractCourseScrollView
+import com.mredrock.cyxbs.lib.course.utils.forEachReversed
 
 /**
  * ...
@@ -43,5 +47,38 @@ abstract class AbstractCourseBaseFragment : BaseFragment(), ICourseBase {
   ): View {
     // 最基础布局，不建议对他进行修改，但允许你在它外面添加东西
     return inflater.inflate(R.layout.course_layout_course, container, false)
+  }
+  
+  private val mCourseLifecycleObservers = arrayListOf<ICourseWrapper.CourseLifecycleObserver>()
+  
+  final override fun addCourseLifecycleObservable(observer: ICourseWrapper.CourseLifecycleObserver) {
+    mCourseLifecycleObservers.add(observer)
+  }
+  
+  final override fun removeCourseLifecycleObserver(observer: ICourseWrapper.CourseLifecycleObserver) {
+    mCourseLifecycleObservers.remove(observer)
+  }
+  
+  // 因为 mCourseLifecycleObservers 在 onDestroyCourse() 时需要 course
+  // 但 course 会因为属性代理被提前一步移除掉，所以需要单独保存一遍
+  private var mTempCourse: ICourseViewGroup? = null
+  
+  @CallSuper
+  override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+    super.onViewCreated(view, savedInstanceState)
+    mTempCourse = course
+    mCourseLifecycleObservers.forEachReversed {
+      it.onCreateCourse(course)
+    }
+  }
+  
+  @CallSuper
+  override fun onDestroyView() {
+    super.onDestroyView()
+    Log.d("ggg", "(AbstractCourseBaseFragment.kt:77) -> onDestroyView")
+    mCourseLifecycleObservers.forEachReversed {
+      it.onDestroyCourse(mTempCourse!!)
+    }
+    mTempCourse = null
   }
 }

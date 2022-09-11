@@ -1,9 +1,9 @@
 package com.mredrock.cyxbs.course.page.course.data
 
-import com.mredrock.cyxbs.api.course.utils.getEnd
+import com.mredrock.cyxbs.api.course.utils.getEndRow
 import com.mredrock.cyxbs.api.course.utils.getShowEndTimeStr
 import com.mredrock.cyxbs.api.course.utils.getShowStartTimeStr
-import com.mredrock.cyxbs.api.course.utils.getStart
+import com.mredrock.cyxbs.api.course.utils.getStartRow
 import com.mredrock.cyxbs.course.page.course.data.expose.IWeek
 import com.mredrock.cyxbs.lib.course.item.lesson.ILessonData
 import com.mredrock.cyxbs.lib.utils.utils.Num2CN
@@ -30,7 +30,7 @@ sealed class LessonData : ILessonData, IWeek {
   override val weekNum: Int
     get() = hashDay + 1
   override val startNode: Int
-    get() = getStart(beginLesson)
+    get() = getStartRow(beginLesson)
   override val length: Int
     get() = period
   
@@ -67,5 +67,5 @@ sealed class LessonData : ILessonData, IWeek {
     }
   
   val durationStr: String
-    get() = getShowStartTimeStr(getStart(beginLesson)) + "-" + getShowEndTimeStr(getEnd(beginLesson, period))
+    get() = getShowStartTimeStr(getStartRow(beginLesson)) + "-" + getShowEndTimeStr(getEndRow(beginLesson, period))
 }

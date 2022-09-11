@@ -24,19 +24,16 @@ data class StuLessonData(
   override val teacher: String,
   override val type: String,
 ) : LessonData() {
-  companion object {
-    val DIFF_UTIL by lazy {
-      object : DiffUtil.ItemCallback<StuLessonData>() {
-        override fun areItemsTheSame(oldItem: StuLessonData, newItem: StuLessonData): Boolean {
-          return oldItem.stuNum == newItem.stuNum
-            && oldItem.courseNum == newItem.courseNum
-            && oldItem.week == newItem.week
-        }
-        
-        override fun areContentsTheSame(oldItem: StuLessonData, newItem: StuLessonData): Boolean {
-          return oldItem == newItem
-        }
-      }
+  companion object : DiffUtil.ItemCallback<StuLessonData>() {
+    override fun areItemsTheSame(oldItem: StuLessonData, newItem: StuLessonData): Boolean {
+      return oldItem.stuNum == newItem.stuNum
+        && oldItem.classroom == newItem.classroom
+        && oldItem.courseNum == newItem.courseNum
+        && oldItem.week == newItem.week
+    }
+  
+    override fun areContentsTheSame(oldItem: StuLessonData, newItem: StuLessonData): Boolean {
+      return oldItem == newItem
     }
   }
 }

@@ -5,13 +5,14 @@ import android.view.View
 import androidx.fragment.app.createViewModelLazy
 import com.mredrock.cyxbs.course.page.course.data.expose.IWeek
 import com.mredrock.cyxbs.course.page.course.item.ISingleDayRank
-import com.mredrock.cyxbs.course.page.course.item.affair.Affair
-import com.mredrock.cyxbs.course.page.course.item.lesson.LinkLesson
-import com.mredrock.cyxbs.course.page.course.item.lesson.SelfLesson
 import com.mredrock.cyxbs.course.page.course.ui.home.viewmodel.HomeCourseViewModel
+import com.mredrock.cyxbs.course.page.course.utils.container.AffairContainerProxy
+import com.mredrock.cyxbs.course.page.course.utils.container.LinkLessonContainerProxy
+import com.mredrock.cyxbs.course.page.course.utils.container.SelfLessonContainerProxy
 import com.mredrock.cyxbs.lib.course.fragment.course.expose.overlap.IOverlapItem
 import com.mredrock.cyxbs.lib.course.fragment.page.CoursePageFragment
 import com.mredrock.cyxbs.lib.course.helper.CourseNowTimeHelper
+import com.mredrock.cyxbs.lib.utils.extensions.lazyUnlock
 import java.util.*
 
 /**
@@ -32,7 +33,6 @@ class HomeSemesterFragment : CoursePageFragment() {
     super.onViewCreated(view, savedInstanceState)
     initCompare()
     initToday()
-    initTimeline()
     initObserve()
   }
   
@@ -54,20 +54,25 @@ class HomeSemesterFragment : CoursePageFragment() {
     showToday(weekNum)
   }
   
-  private fun initTimeline() {
+  override fun initTimeline() {
+    super.initTimeline()
     CourseNowTimeHelper.attach(this)
   }
+  
+  private val mSelfLessonContainerProxy by lazyUnlock { SelfLessonContainerProxy(this) }
+  private val mLinkLessonContainerProxy by lazyUnlock { LinkLessonContainerProxy(this) }
+  private val mAffairContainerProxy by lazyUnlock { AffairContainerProxy(this) }
   
   private fun initObserve() {
     mViewModel.homeWeekData
       .observe { map ->
-        clearLesson()
-        clearAffair()
-        map.values.forEach { result ->
-          addLesson(result.selfLesson.map { SelfLesson(it) })
-          addLesson(result.linkLesson.map { LinkLesson(it) })
-          addAffair(result.affair.map { Affair(it) })
-        }
+        val values = map.values
+        val self = values.map { it.self }.flatten()
+        val link = values.map { it.link }.flatten()
+        val affair = values.map { it.affair }.flatten()
+        mSelfLessonContainerProxy.diffRefresh(self)
+        mLinkLessonContainerProxy.diffRefresh(link)
+        mAffairContainerProxy.diffRefresh(affair)
       }
   }
   

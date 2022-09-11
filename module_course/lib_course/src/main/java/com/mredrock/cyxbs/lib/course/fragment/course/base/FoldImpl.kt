@@ -14,6 +14,7 @@ import com.mredrock.cyxbs.lib.course.fragment.course.expose.fold.FoldState
 import com.mredrock.cyxbs.lib.course.fragment.course.expose.fold.OnFoldListener
 import com.mredrock.cyxbs.lib.course.helper.CourseFoldHelper
 import com.mredrock.cyxbs.lib.course.internal.view.course.ICourseViewGroup
+import com.mredrock.cyxbs.lib.course.utils.forEachInline
 
 /**
  * ...
@@ -46,18 +47,18 @@ abstract class FoldImpl : ContainerImpl(), IFoldNoon, IFoldDusk {
       }
       else -> mNoonAnimation?.cancel()
     }
-    mOnFoldNoonListener.forEach { it.onFoldStart(course) }
+    mOnFoldNoonListener.forEachInline { it.onFoldStart(course) }
     val nowWeight = mNoonAnimation?.nowWeight ?: 0.99999F
     mNoonAnimation = FoldAnimation(nowWeight, duration) { weight, fraction ->
       changeNoonWeight(weight)
       onChanged?.invoke(weight, fraction)
-      mOnFoldNoonListener.forEach { it.onFolding(course, fraction) }
+      mOnFoldNoonListener.forEachInline { it.onFolding(course, fraction) }
     }.doOnEnd {
       mNoonAnimation = null
-      mOnFoldNoonListener.forEach { it.onFoldEnd(course) }
+      mOnFoldNoonListener.forEachInline { it.onFoldEnd(course) }
     }.doOnCancel {
       mNoonAnimation = null
-      mOnFoldNoonListener.forEach { it.onFoldCancel(course) }
+      mOnFoldNoonListener.forEachInline { it.onFoldCancel(course) }
     }.start()
   }
   
@@ -66,7 +67,7 @@ abstract class FoldImpl : ContainerImpl(), IFoldNoon, IFoldDusk {
     mNoonAnimation = null
     if (getNoonRowState() != FoldState.FOLD) {
       changeNoonWeight(0F)
-      mOnFoldNoonListener.forEach { it.onFoldWithoutAnim(course) }
+      mOnFoldNoonListener.forEachInline { it.onFoldWithoutAnim(course) }
     }
   }
   
@@ -79,17 +80,17 @@ abstract class FoldImpl : ContainerImpl(), IFoldNoon, IFoldDusk {
       else -> mNoonAnimation?.cancel()
     }
     val nowWeight = mNoonAnimation?.nowWeight ?: 0.00001F
-    mOnFoldNoonListener.forEach { it.onUnfoldStart(course) }
+    mOnFoldNoonListener.forEachInline { it.onUnfoldStart(course) }
     mNoonAnimation = UnfoldAnimation(nowWeight, duration) { weight, fraction ->
       changeNoonWeight(weight)
       onChanged?.invoke(weight, fraction)
-      mOnFoldNoonListener.forEach { it.onUnfolding(course, fraction) }
+      mOnFoldNoonListener.forEachInline { it.onUnfolding(course, fraction) }
     }.doOnEnd {
       mNoonAnimation = null
-      mOnFoldNoonListener.forEach { it.onUnfoldEnd(course) }
+      mOnFoldNoonListener.forEachInline { it.onUnfoldEnd(course) }
     }.doOnCancel {
       mNoonAnimation = null
-      mOnFoldNoonListener.forEach { it.onUnfoldCancel(course) }
+      mOnFoldNoonListener.forEachInline { it.onUnfoldCancel(course) }
     }.start()
   }
   
@@ -98,7 +99,7 @@ abstract class FoldImpl : ContainerImpl(), IFoldNoon, IFoldDusk {
     mNoonAnimation = null
     if (getNoonRowState() != FoldState.UNFOLD) {
       changeNoonWeight(1F)
-      mOnFoldNoonListener.forEach { it.onUnfoldWithoutAnim(course) }
+      mOnFoldNoonListener.forEachInline { it.onUnfoldWithoutAnim(course) }
     }
   }
   
@@ -120,18 +121,18 @@ abstract class FoldImpl : ContainerImpl(), IFoldNoon, IFoldDusk {
       }
       else -> mDuskAnimation?.cancel()
     }
-    mOnFoldDuskListener.forEach { it.onFoldStart(course) }
+    mOnFoldDuskListener.forEachInline { it.onFoldStart(course) }
     val nowWeight = mDuskAnimation?.nowWeight ?: 0.99999F
     mDuskAnimation = FoldAnimation(nowWeight, duration) { weight, fraction ->
       changeDuskWeight(weight)
       onChanged?.invoke(weight, fraction)
-      mOnFoldDuskListener.forEach { it.onFolding(course, fraction) }
+      mOnFoldDuskListener.forEachInline { it.onFolding(course, fraction) }
     }.doOnEnd {
       mDuskAnimation = null
-      mOnFoldDuskListener.forEach { it.onFoldEnd(course) }
+      mOnFoldDuskListener.forEachInline { it.onFoldEnd(course) }
     }.doOnCancel {
       mDuskAnimation = null
-      mOnFoldDuskListener.forEach { it.onFoldCancel(course) }
+      mOnFoldDuskListener.forEachInline { it.onFoldCancel(course) }
     }.start()
   }
   
@@ -140,7 +141,7 @@ abstract class FoldImpl : ContainerImpl(), IFoldNoon, IFoldDusk {
     mDuskAnimation = null
     if (getDuskRowState() != FoldState.FOLD) {
       changeDuskWeight(0F)
-      mOnFoldDuskListener.forEach { it.onFoldWithoutAnim(course) }
+      mOnFoldDuskListener.forEachInline { it.onFoldWithoutAnim(course) }
     }
   }
   
@@ -152,18 +153,18 @@ abstract class FoldImpl : ContainerImpl(), IFoldNoon, IFoldDusk {
       }
       else -> mDuskAnimation?.cancel()
     }
-    mOnFoldDuskListener.forEach { it.onUnfoldStart(course) }
+    mOnFoldDuskListener.forEachInline { it.onUnfoldStart(course) }
     val nowWeight = mDuskAnimation?.nowWeight ?: 0.00001F
     mDuskAnimation = UnfoldAnimation(nowWeight, duration) { weight, fraction ->
       changeDuskWeight(weight)
       onChanged?.invoke(weight, fraction)
-      mOnFoldDuskListener.forEach { it.onUnfolding(course, fraction) }
+      mOnFoldDuskListener.forEachInline { it.onUnfolding(course, fraction) }
     }.doOnEnd {
       mDuskAnimation = null
-      mOnFoldDuskListener.forEach { it.onUnfoldEnd(course) }
+      mOnFoldDuskListener.forEachInline { it.onUnfoldEnd(course) }
     }.doOnCancel {
       mDuskAnimation = null
-      mOnFoldDuskListener.forEach { it.onUnfoldCancel(course) }
+      mOnFoldDuskListener.forEachInline { it.onUnfoldCancel(course) }
     }.start()
   }
   
@@ -172,7 +173,7 @@ abstract class FoldImpl : ContainerImpl(), IFoldNoon, IFoldDusk {
     mDuskAnimation = null
     if (getDuskRowState() != FoldState.UNFOLD) {
       changeDuskWeight(1F)
-      mOnFoldDuskListener.forEach { it.onUnfoldWithoutAnim(course) }
+      mOnFoldDuskListener.forEachInline { it.onUnfoldWithoutAnim(course) }
     }
   }
   
@@ -333,10 +334,10 @@ abstract class FoldImpl : ContainerImpl(), IFoldNoon, IFoldDusk {
   //
   /////////////////////////////////////
   
-  override val ivNoonFold       by R.id.course_iv_noon_fold.view<ImageView>()
-  override val ivNoonUnfold     by R.id.course_iv_noon_unfold.view<ImageView>()
-  override val ivDuskFold       by R.id.course_iv_dusk_fold.view<ImageView>()
-  override val ivDuskUnfold     by R.id.course_iv_dusk_unfold.view<ImageView>()
+  override val viewNoonFold       by R.id.course_iv_noon_fold.view<ImageView>()
+  override val viewNoonUnfold     by R.id.course_iv_noon_unfold.view<ImageView>()
+  override val viewDuskFold       by R.id.course_iv_dusk_fold.view<ImageView>()
+  override val viewDuskUnfold     by R.id.course_iv_dusk_unfold.view<ImageView>()
   
   @CallSuper
   override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -346,7 +347,7 @@ abstract class FoldImpl : ContainerImpl(), IFoldNoon, IFoldDusk {
     initFoldLogic()
   }
   
-  private fun initNoon() {
+  protected open fun initNoon() {
     course.apply {
       // 设置初始时中午时间段的比重为 0，为了让板块初始时刚好撑满整个能够显示的高度，
       // 使中午和傍晚在折叠的状态下，外面的 ScrollView 不用滚动就刚好能显示其余板块
@@ -366,8 +367,8 @@ abstract class FoldImpl : ContainerImpl(), IFoldNoon, IFoldDusk {
           override fun onUnfoldWithoutAnim(course: ICourseViewGroup) = onUnfoldEnd(course)
           
           override fun onUnfolding(course: ICourseViewGroup, fraction: Float) {
-            ivNoonFold.alpha = 1 - fraction
-            ivNoonUnfold.alpha = fraction
+            viewNoonFold.alpha = 1 - fraction
+            viewNoonUnfold.alpha = fraction
           }
         }
       )
@@ -377,7 +378,7 @@ abstract class FoldImpl : ContainerImpl(), IFoldNoon, IFoldDusk {
     }
   }
   
-  private fun initDusk() {
+  protected open fun initDusk() {
     course.apply {
       // 设置初始时傍晚时间段的比重为 0，为了让板块初始时刚好撑满整个能够显示的高度，
       // 使中午和傍晚在折叠的状态下，外面的 ScrollView 不用滚动就刚好能显示其余板块
@@ -397,8 +398,8 @@ abstract class FoldImpl : ContainerImpl(), IFoldNoon, IFoldDusk {
           override fun onUnfoldWithoutAnim(course: ICourseViewGroup) = onUnfoldEnd(course)
           
           override fun onUnfolding(course: ICourseViewGroup, fraction: Float) {
-            ivDuskFold.alpha = 1 - fraction
-            ivDuskUnfold.alpha = fraction
+            viewDuskFold.alpha = 1 - fraction
+            viewDuskUnfold.alpha = fraction
           }
         }
       )
@@ -408,7 +409,7 @@ abstract class FoldImpl : ContainerImpl(), IFoldNoon, IFoldDusk {
     }
   }
   
-  private fun initFoldLogic() {
+  protected open fun initFoldLogic() {
     CourseFoldHelper.attach(this)
   }
 }

@@ -9,6 +9,7 @@ import com.mredrock.cyxbs.course.page.course.data.expose.IWeek
 import com.mredrock.cyxbs.course.page.course.item.ISingleDayRank
 import com.mredrock.cyxbs.course.page.course.item.affair.lp.AffairLayoutParams
 import com.mredrock.cyxbs.course.page.course.item.view.ItemView
+import com.mredrock.cyxbs.course.page.course.utils.container.base.IDataOwner
 import com.mredrock.cyxbs.lib.course.fragment.course.expose.overlap.IOverlapItem
 import com.mredrock.cyxbs.lib.course.internal.item.forEachRow
 import com.mredrock.cyxbs.lib.course.item.affair.IAffairItem
@@ -26,20 +27,26 @@ import kotlin.math.sqrt
  * @email guo985892345@foxmail.com
  * @date 2022/9/2 16:43
  */
-class Affair(val data: AffairData) : AbstractOverlapSingleDayItem(),
+class Affair(private var affairData: AffairData) : AbstractOverlapSingleDayItem(),
   ISingleDayRank,
-  ISingleDayData by data,
-  IWeek by data,
-  IAffairItem
+  ISingleDayData,
+  IWeek,
+  IAffairItem,
+  IDataOwner<AffairData>
 {
   
-  override val rank: Int
-    get() = lp.rank
-  
-  override val lp: AffairLayoutParams = AffairLayoutParams(data)
+  override fun setData(newData: AffairData) {
+    getChildIterable().forEach {
+      if (it is AffairView) {
+        it.setLessonData(newData)
+      }
+    }
+    lp.changeSingleDay(newData)
+    affairData = newData
+  }
   
   override fun createView(context: Context): View {
-    return AffairView.newInstance(context, data)
+    return AffairView.newInstance(context, affairData)
   }
   
   override fun compareTo(other: IOverlapItem): Int {
@@ -50,7 +57,7 @@ class Affair(val data: AffairData) : AbstractOverlapSingleDayItem(),
     super.onRefreshOverlap()
     lp.forEachRow { row ->
       if (overlap.getBelowItem(row, lp.weekNum) != null) {
-        getChildren().forEach {
+        getChildIterable().forEach {
           if (it is ItemView) {
             it.setIsShowOverlapTag(true)
           }
@@ -62,7 +69,7 @@ class Affair(val data: AffairData) : AbstractOverlapSingleDayItem(),
   
   override fun onClearOverlap() {
     super.onClearOverlap()
-    getChildren().forEach {
+    getChildIterable().forEach {
       if (it is ItemView) {
         it.setIsShowOverlapTag(false)
       }
@@ -147,4 +154,24 @@ class Affair(val data: AffairData) : AbstractOverlapSingleDayItem(),
       drawOverlapTag(canvas) // 因为会被上面绘制背景的代码覆盖，所以需要单独再绘制一遍
     }
   }
+  
+  override val week: Int
+    get() = affairData.week
+  
+  override val rank: Int
+    get() = lp.rank
+  
+  override val lp: AffairLayoutParams = AffairLayoutParams(affairData)
+  
+  override val weekNum: Int
+    get() = affairData.weekNum
+  
+  override val startNode: Int
+    get() = affairData.startNode
+  
+  override val length: Int
+    get() = affairData.length
+  
+  override val data: AffairData
+    get() = affairData
 }

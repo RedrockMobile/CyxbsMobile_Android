@@ -34,7 +34,7 @@ sealed interface ILessonVersion {
       // 不应该出现这种情况，因为版本号规定形式为：0.0.0
       // 如果出现，可以认为是远端出现问题，所以就不对本地数据进行更新
       if (BuildConfig.DEBUG) {
-        toast("课表接口version错误：$version")
+        toast("课表接口 version 字段错误：$version")
       }
       return false
     }

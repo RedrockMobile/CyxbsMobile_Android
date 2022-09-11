@@ -79,7 +79,7 @@ class HomeCourseVpFragment : BaseHomeCourseVpFragment() {
   private fun initViewPager() {
     // 初次加载时移到对应的周数
     // 这里课表的翻页不建议带有动画，因为数据过多会较卡
-    mViewPager.setCurrentItem(if (mNowWeek >= mVpAdapter.itemCount) 0 else mNowWeek, false)
+//    mViewPager.setCurrentItem(if (mNowWeek >= mVpAdapter.itemCount) 0 else mNowWeek, false)
   }
   
   private fun initObserve() {

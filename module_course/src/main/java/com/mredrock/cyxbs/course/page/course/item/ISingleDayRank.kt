@@ -5,7 +5,7 @@ import com.mredrock.cyxbs.api.course.utils.getNowTime
 import com.mredrock.cyxbs.lib.course.item.single.ISingleDayData
 
 /**
- * ...
+ * 单列 item 的排序
  *
  * @author 985892345 (Guo Xiangrui)
  * @email guo985892345@foxmail.com

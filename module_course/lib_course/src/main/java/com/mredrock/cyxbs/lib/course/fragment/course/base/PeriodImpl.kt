@@ -1,7 +1,6 @@
 package com.mredrock.cyxbs.lib.course.fragment.course.base
 
 import com.mredrock.cyxbs.lib.course.fragment.course.expose.period.ICoursePeriod
-import java.util.*
 
 /**
  * ...
@@ -14,6 +13,8 @@ abstract class PeriodImpl : OverlapImpl(), ICoursePeriod {
   
   /**
    * 得到某节课开始前的高度值
+   *
+   * 如果需要得到中午和傍晚，请使用 [getNoonStartHeight]、[getDuskStartHeight]
    */
   final override fun getLessonStartHeight(num: Int): Int {
     require(num >= 1)
@@ -22,6 +23,8 @@ abstract class PeriodImpl : OverlapImpl(), ICoursePeriod {
   
   /**
    * 得到某节课结束时的高度值
+   *
+   * 如果需要得到中午和傍晚，请使用 [getNoonEndHeight]、[getDuskEndHeight]
    */
   final override fun getLessonEndHeight(num: Int): Int {
     require(num >= 1)
@@ -137,7 +140,9 @@ abstract class PeriodImpl : OverlapImpl(), ICoursePeriod {
     * 1、方便以后好维护
     * 2、虽然目前中午和傍晚只有一行，但也不能保证以后不改为两行，所以中午和傍晚也得分为开始行和结束行
     * 3、课的话也是如此，但因为有了中午和傍晚，所以课与行数不对应
-    * 尽量不要自己写数字来固定
+    *
+    * 为什么设置成 private ?
+    * 因为不建议直接用数字去操作，因为这个是对应课的 row 数，更推荐使用其他方法来代替直接获取细节的操作
     * */
     
     // 上午
@@ -216,95 +221,17 @@ abstract class PeriodImpl : OverlapImpl(), ICoursePeriod {
     private const val LESSON_12_TOP = 13
     private const val LESSON_12_BOTTOM = 13
   
-    
-    
-    
-    private val CALENDAR = Calendar.getInstance()
-  
-    /**
-     * 得到当前时间
-     */
-    fun getNowTime(): Int {
-      CALENDAR.timeInMillis = System.currentTimeMillis()
-      val hour = CALENDAR.get(Calendar.HOUR_OF_DAY)
-      val minute = CALENDAR.get(Calendar.MINUTE)
-      return hour * 60 + minute
-    }
-  
-    /**
-     * 得到当前行开始时间
-     */
-    fun getStartTime(row: Int): Int {
-      return when (row) {
-        0 -> 8 * 60
-        1 -> 8 * 60 + 55
-        2 -> 10 * 60 + 15
-        3 -> 11 * 60 + 10
-        4 -> 11 * 60 + 55
-        5 -> 14 * 60
-        6 -> 14 * 60 + 55
-        7 -> 16 * 60 + 15
-        8 -> 17 * 60 + 10
-        9 -> 19 * 60
-        10 -> 19 * 60 + 55
-        11 -> 20 * 60 + 50
-        12 -> 21 * 60 + 45
-        13 -> 22 * 60 + 30
-        else -> 0
-      }
-    }
-  
-    /**
-     * 得到当前行结束时间
-     */
-    fun getEndTime(row: Int): Int {
-      return when (row) {
-        0 -> 8 * 60 + 45
-        1 -> 9 * 60 + 40
-        2 -> 11 * 60
-        3 -> 11 * 60 + 55
-        4 -> 14 * 60
-        5 -> 14 * 60 + 45
-        6 -> 15 * 60 + 40
-        7 -> 17 * 60
-        8 -> 17 * 60 + 55
-        9 -> 19 * 60 + 45
-        10 -> 20 * 60 + 40
-        11 -> 21 * 60 + 35
-        12 -> 22 * 60 + 30
-        13 -> 24 * 60
-        else -> 0
-      }
-    }
   
     /**
      * 转换课的节数为控件中对应的行数
      */
     fun transformLessonToNode(num: Int): Int {
-      require(num in 1 .. 12)
       return when (num) {
         in 1 .. 4 -> num - 1
         in 5 .. 8 -> num
         in 9 .. 12 -> num + 1
-        else -> error("不应该出现的错误，num = $num")
+        else -> error("不存在 num = $num 的课")
       }
     }
-    //
-    //    /**
-    //     * 转换控件中对应的行数为课的节数
-    //     *
-    //     * @return -1 为 中午；-2 为 傍晚
-    //     */
-    //    fun transformNodeToLesson(node: Int): Int {
-    //      require(node in 0 .. 13)
-    //      return when (node) {
-    //        4 -> -1
-    //        9 -> -2
-    //        in 0 .. 3 -> node + 1
-    //        in 5 .. 8 -> node
-    //        in 10 .. 13 -> node + 1
-    //        else -> error("不应该出现的错误，node = $node")
-    //      }
-    //    }
   }
 }

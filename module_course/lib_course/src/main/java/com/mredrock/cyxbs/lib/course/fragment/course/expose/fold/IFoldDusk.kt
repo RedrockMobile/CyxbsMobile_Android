@@ -1,6 +1,6 @@
 package com.mredrock.cyxbs.lib.course.fragment.course.expose.fold
 
-import android.widget.ImageView
+import android.view.View
 import com.mredrock.cyxbs.lib.course.fragment.course.expose.period.dusk.IDuskPeriod
 
 /**
@@ -11,8 +11,8 @@ import com.mredrock.cyxbs.lib.course.fragment.course.expose.period.dusk.IDuskPer
  */
 interface IFoldDusk : IDuskPeriod {
   
-  val ivDuskFold: ImageView
-  val ivDuskUnfold: ImageView
+  val viewDuskFold: View
+  val viewDuskUnfold: View
   
   /**
    * 得到当前中午那一行的状态

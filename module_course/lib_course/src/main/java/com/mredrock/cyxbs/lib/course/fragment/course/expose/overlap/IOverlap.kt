@@ -1,7 +1,9 @@
 package com.mredrock.cyxbs.lib.course.fragment.course.expose.overlap
 
 /**
- * ...
+ * 重叠相关的接口
+ *
+ * 请使用 [OverlapHelper] 来完成部分接口的默认实现
  *
  * @author 985892345 (Guo Xiangrui)
  * @email guo985892345@foxmail.com
@@ -15,6 +17,7 @@ interface IOverlap {
    * ## 注意
    * - 这个回调是在把所有 Item 都添加完后的一个 Runnable 中调用的
    * - 你需要在这个回调判断是否能添加到父布局中
+   * - 但并不能保证就一定能添加进父布局中，因为有拦截机制
    */
   fun isAddIntoParent(): Boolean
   
@@ -23,7 +26,7 @@ interface IOverlap {
    *
    * ## 注意
    * - 只有添加进父布局的才会收到回调
-   * - 在父布局添加或移除了 [IOverlapItem] 和某个 [IOverlapItem] 的 view 的 visibility 发生改变时回调
+   * - 在父布局添加或移除了 [IOverlapItem] 和某个 [IOverlapItem] 的 visibility 发生改变时回调
    */
   fun refreshOverlap()
   
