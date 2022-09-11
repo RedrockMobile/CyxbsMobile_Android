@@ -140,6 +140,21 @@ class ActivityBindView<T : View>(
   val activity: Activity
 ) : BindView<T>(resId), Application.ActivityLifecycleCallbacks by defaultImpl() {
   
+  init {
+    activity.application.registerActivityLifecycleCallbacks(
+      object : Application.ActivityLifecycleCallbacks by defaultImpl() {
+        override fun onActivityPostDestroyed(activity: Activity) {
+          if (activity === this@ActivityBindView.activity) {
+            isPostDestroy = true
+            forceSetNull()
+            // 别忘了取消监听！！！
+            activity.application.unregisterActivityLifecycleCallbacks(this)
+          }
+        }
+      }
+    )
+  }
+  
   // 是否已经调用了 onDestroy()
   private var isPostDestroy = false
   
@@ -150,19 +165,8 @@ class ActivityBindView<T : View>(
   }
   
   override fun findViewById(id: Int): T {
-    activity.application.unregisterActivityLifecycleCallbacks(this)
-    activity.application.registerActivityLifecycleCallbacks(this)
     return activity.findViewById(resId)
       ?: throw IllegalStateException("该根布局中找不到名字为 ${getIdName()} 的 id")
-  }
-  
-  override fun onActivityPostDestroyed(activity: Activity) {
-    if (activity === this.activity) {
-      isPostDestroy = true
-      forceSetNull()
-      // 别忘了取消监听！！！
-      activity.application.unregisterActivityLifecycleCallbacks(this)
-    }
   }
 }
 
