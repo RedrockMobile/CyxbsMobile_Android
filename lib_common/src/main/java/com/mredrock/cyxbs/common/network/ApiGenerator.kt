@@ -1,13 +1,10 @@
 package com.mredrock.cyxbs.common.network
 
 import android.os.Handler
-import android.util.SparseArray
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
 import com.mredrock.cyxbs.api.account.IAccountService
-import com.mredrock.cyxbs.api.account.IUserStateService
 import com.mredrock.cyxbs.common.BuildConfig
-import com.mredrock.cyxbs.common.bean.BackupUrlStatus
 import com.mredrock.cyxbs.common.bean.RedrockApiWrapper
 import com.mredrock.cyxbs.common.service.ServiceManager
 import com.mredrock.cyxbs.common.utils.LogUtils
@@ -19,11 +16,14 @@ import java.util.concurrent.TimeUnit
 import android.os.Looper
 import android.util.Log
 import android.widget.Toast
+import com.google.gson.annotations.SerializedName
 import com.mredrock.cyxbs.common.BaseApp
 import com.mredrock.cyxbs.common.config.*
+import com.mredrock.cyxbs.common.service.impl
 import com.mredrock.cyxbs.common.utils.LogLocal
 import retrofit2.adapter.rxjava3.RxJava3CallAdapterFactory
 import java.util.concurrent.locks.ReentrantLock
+import kotlin.concurrent.withLock
 
 
 /**
@@ -34,31 +34,16 @@ import java.util.concurrent.locks.ReentrantLock
  * Created by AceMurder on 2018/1/24.
  */
 object ApiGenerator {
-    private const val DEFAULT_TIME_OUT = 5
+    private const val DEFAULT_TIME_OUT = 10
 
     private var retrofit: Retrofit //统一添加了token到header
     private var commonRetrofit: Retrofit // 未添加token到header
-
-    @Volatile
-    private var token = ""
-    private val retrofitMap by lazy { SparseArray<Retrofit>() }
+    
+    private val mAccountService = IAccountService::class.impl
 
     //init对两种公共的retrofit进行配置
     init {
         //添加监听得到登录后的token和refreshToken,应用于初次登录或重新登录
-        val accountService = ServiceManager.getService(IAccountService::class.java)
-        accountService.getVerifyService().addOnStateChangedListener {
-            when (it) {
-                IUserStateService.UserState.LOGIN, IUserStateService.UserState.REFRESH -> {
-                    token = accountService.getUserTokenService().getToken()
-                }
-                else -> {
-                    //不用操作
-                }
-            }
-        }
-        token = accountService.getUserTokenService().getToken()
-        LogUtils.d("tokenTag", "token = $token")
         retrofit = Retrofit.Builder().apply {
             this.defaultConfig()
             configRetrofitBuilder {
@@ -212,33 +197,25 @@ object ApiGenerator {
              * 一旦切换，只有重启app才能切回来（因为如果请求得到的url不是原来的@{link getBaseUrl()}，则切换到新的url，而以后访问都用这个新的url了）
              * 放在tokenInterceptor上游的理由是：因为那里面还有token刷新机制，无法判断是否真正是因为服务器的原因请求失败
              */
-//            interceptors().add(BackupInterceptor())
+            interceptors().add(BackupInterceptor)
 
 
             interceptors().add(Interceptor {
+                
+                if (!mAccountService.getVerifyService().isLogin()) {
+                    // 未登录直接请求，有些人对于不需要 token 的请求也使用了这个
+                    return@Interceptor it.proceed(it.request())
+                }
+                
                 /**
                  * 所有请求添加token到header
-                 * 在外面加一层判断，用于token未过期时，能够异步请求，不用阻塞在checkRefresh()
-                 * 如果有更好方式再改改
+                 * TODO 目前 22 年后端已经更改 token 过期机制，token 过期时 http 状态码为 200，status 为 20003
+                 * TODO 目前还能正常刷新的原因是 token 过期时间没变。但为了以后考虑，需要完善 token 刷新机制
+                 * 后端文档：https://redrock.feishu.cn/wiki/wikcnB9p6U45ZJZmxwTEu8QXvye
                  */
-                when {
-                    token.isEmpty() -> {
-                        token = ServiceManager.getService(IAccountService::class.java).getUserTokenService().getToken()
-                        if (isTokenExpired()) {
-                            checkRefresh(it, token)
-                        } else {
-                            proceedPoxyWithTryCatch {
-                                it.proceed(it.request().newBuilder().header("Authorization", "Bearer $token").build())
-                            }
-                        }
-                    }
-                    isTokenExpired() -> {
-                        checkRefresh(it, token)
-                    }
-                    else -> {
-                        proceedPoxyWithTryCatch { it.proceed(it.request().newBuilder().header("Authorization", "Bearer $token").build()) }
-                    }
-                } as Response
+                if (isTokenExpired()) {
+                    checkRefresh(it, mAccountService.getUserTokenService().getToken())
+                } else it.proceedWithToken()
             })
         }.build()
     }
@@ -246,68 +223,46 @@ object ApiGenerator {
     private val mReentrantLock = ReentrantLock()
     
     //对token进行刷新
-    private fun checkRefresh(chain: Interceptor.Chain, expiredToken: String): Response? {
-        
-        mReentrantLock.lock()
-        
-        /**
-         * 刷新token条件设置为，已有refreshToken，并且已经过期，也可以后端返回特定到token失效code
-         * 当第一个过期token请求接口后，改变token和refreshToken，防止同步refreshToken失效
-         * 之后进入该方法的请求，token已经刷新
-         * 2021-04版本中由于添加了自http状态码而来的token过期检测
-         * 可能会出现多个接口因为token过期导致同时（虽然是顺序执行）的情况
-         * 故要求在刷新时传递过期token过来，如果该过期token已经被刷新，就直接配置新token，不再刷新
-         */
-        if (expiredToken != token) {//认定已经刷新成功，直接返回新的请求
-            mReentrantLock.unlock()
-            return proceedPoxyWithTryCatch { chain.run { proceed(chain.request().newBuilder().header("Authorization", "Bearer $token").build()) } }
+    private fun checkRefresh(chain: Interceptor.Chain, expiredToken: String): Response {
+        mReentrantLock.withLock {
+            val token = mAccountService.getUserTokenService().getToken()
+            // 判断之前的过期 token 是否跟现在的 token 一样
+            if (expiredToken == token) {
+                // 一样的话说明需要刷新 token
+                mAccountService.getVerifyService().refresh() ?: error("刷新 token 失败")
+            }
+            // 如果本来网络就是崩的，一堆请求会堵在这里刷新 token，但这种情况本来就会因为网络问题而全部请求失败，
+            // 所以不用管这种情况（万一有个请求刷新成功了?）
         }
-        try {
-            token = ServiceManager.getService(IAccountService::class.java).getVerifyService().refresh() ?: return null
-            return proceedPoxyWithTryCatch { chain.run { proceed(chain.request().newBuilder().header("Authorization", "Bearer $token").build()) } }
-        } finally {
-            mReentrantLock.unlock()
-        }
+        return chain.proceedWithToken()
     }
     
-    private var mLastToastTime = 0L
-
-    private fun proceedPoxyWithTryCatch(proceed: () -> Response): Response? {
-        // 以前学长在这里使用了 try catch，会导致 Pandora 看到的问题全是空指针
-        // 所以修改为直接调用，按正常逻辑，如果出现网络连接问题就会抛异常，然后 Pandora 可以看到问题
-        // 因为不想看到一堆报黄，所以该方法仍返回 Response?，暂不打算去掉 ?
-        try {
-            return proceed.invoke()
-        } catch (e: Exception) {
-            if (BuildConfig.DEBUG) {
-                val nowTime = System.currentTimeMillis()
-                if (nowTime - mLastToastTime > 10 * 1000) { // 保证不会一直疯狂 toast
-                    mLastToastTime = nowTime
-                    Handler(Looper.getMainLooper()).post {
-                        Toast.makeText(BaseApp.appContext, "网络请求异常，请查看 Pandora", Toast.LENGTH_SHORT)
-                            .show()
-                    }
-                }
-            }
-            throw e
-        }
+    private fun Interceptor.Chain.proceedWithToken(
+        block: (Request.Builder.() -> Unit)? = null
+    ): Response {
+        val token = mAccountService.getUserTokenService().getToken()
+        return proceed(
+            request()
+                .newBuilder()
+                .header("Authorization", "Bearer $token")
+                .also { block?.invoke(it) }
+                .build()
+        )
     }
-
-
 
     object BackupInterceptor : Interceptor {
 
         @Volatile
-        private var useBackupUrl: Boolean = false
-        private var backupUrl: String = getBaseUrlWithoutHttps()
+        private var mBackupUrl: String? = null
         
         private var mLastToastTime = 0L
-
+        
         override fun intercept(chain: Interceptor.Chain): Response {
 
             // 如果切换过url，则直接用这个url请求
-            if (useBackupUrl) {
-                return useBackupUrl(chain)
+            val backupUrl = mBackupUrl
+            if (backupUrl != null) {
+                return useBackupUrl(backupUrl, chain)
             }
 
             // 正常请求，照理说应该进入tokenInterceptor
@@ -339,12 +294,7 @@ object ApiGenerator {
                     }
                 }
                 END_POINT_REDROCK_PROD -> {
-                    backupUrl = getBackupUrl()
-                    if ("https://$backupUrl" != END_POINT_REDROCK_PROD) {
-                        useBackupUrl = true
-                        response?.close()
-                        return useBackupUrl(chain) // 这里面使用新的 response
-                    }
+                    useBackupUrl(getBackupUrl(), chain)
                 }
                 else -> throw RuntimeException("未知请求头！")
             }
@@ -357,9 +307,28 @@ object ApiGenerator {
 
             return response
         }
-
-
-        private fun useBackupUrl(chain: Interceptor.Chain): Response {
+    
+    
+        private val mLock = ReentrantLock()
+    
+        private fun getBackupUrl(): String {
+            return mLock.withLock {
+                val backupUrl = mBackupUrl
+                if (backupUrl != null) backupUrl // 如果 mBackupUrl 不为 null 则说明前一个线程已经请求到了容灾地址
+                else {
+                    val okHttpClient = OkHttpClient()
+                    val request: Request = Request.Builder()
+                        .url(BASE_NORMAL_BACKUP_GET)
+                        .build()
+                    val call = okHttpClient.newCall(request)
+                    val json = call.execute().body?.string()
+                    val backupUrlStatus = Gson().fromJson<RedrockApiWrapper<BackupUrlStatus>>(json, object : TypeToken<RedrockApiWrapper<BackupUrlStatus>>() {}.type)
+                    backupUrlStatus.data.baseUrl
+                }
+            }
+        }
+    
+        private fun useBackupUrl(backupUrl: String, chain: Interceptor.Chain): Response {
             val newUrl: HttpUrl = chain.request().url
                     .newBuilder()
                     .scheme("https")
@@ -368,31 +337,12 @@ object ApiGenerator {
             val builder: Request.Builder = chain.request().newBuilder()
             return chain.proceed(builder.url(newUrl).build())
         }
-
-        private fun getBackupUrl(): String {
-            val okHttpClient = OkHttpClient()
-            val request: Request = Request.Builder()
-                    .url(BASE_NORMAL_BACKUP_GET)
-                    .build()
-            val call = okHttpClient.newCall(request)
-            val json = call.execute().body?.string()
-            return try {
-                val backupUrlStatus = Gson().fromJson<RedrockApiWrapper<BackupUrlStatus>>(json, object : TypeToken<RedrockApiWrapper<BackupUrlStatus>>() {}.type)
-                if (backupUrlStatus.data.baseUrl.isNullOrEmpty()) {
-                    getBaseUrlWithoutHttps()
-                }else{
-                    backupUrlStatus.data.baseUrl
-                }
-            } catch (e: Exception) {
-                e.printStackTrace()
-                getBaseUrlWithoutHttps()
-            }
-        }
-
-
+    
+        data class BackupUrlStatus(
+            @SerializedName("base_url")
+            val baseUrl: String
+        )
     }
-    //获得没有 https://的地址提供给容灾使用
-    private fun getBaseUrlWithoutHttps() = getBaseUrl().subSequence(8, getBaseUrl().length).toString()
 
     //是否是游客模式
     private fun isTouristMode() = ServiceManager.getService(IAccountService::class.java).getVerifyService().isTouristMode()
