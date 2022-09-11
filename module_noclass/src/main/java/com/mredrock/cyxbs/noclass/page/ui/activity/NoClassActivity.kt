@@ -288,6 +288,13 @@ class NoClassActivity : BaseVmActivity<NoClassViewModel>(){
    * 上拉下拉图片的点击效果 需要在[initAnim]之后调用
    */
   private fun initImageView(){
+    
+    findViewById<ImageView>(R.id.iv_noclass_return).apply {
+      setOnClickListener {
+        onBackPressed()
+      }
+    }
+    
     mImageView.setOnClickListener {
       when(mFLexState){
         //折叠时点击

@@ -13,6 +13,8 @@
     android:layout_height="match_parent">
 
         <androidx.appcompat.widget.Toolbar
+            android:layout_marginTop="8dp"
+            android:layout_marginBottom="8dp"
             android:id="@+id/tb_noclass_main"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -21,6 +23,7 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent">
             <ImageView
+                android:id="@+id/iv_noclass_return"
                 android:paddingStart="7dp"
                 android:paddingEnd="6dp"
                 android:layout_width="wrap_content"
@@ -37,6 +40,7 @@
         </androidx.appcompat.widget.Toolbar>
 
         <View
+            android:layout_marginTop="8dp"
             android:id="@+id/noclassView2"
             android:layout_width="match_parent"
             android:layout_height="1dp"
@@ -145,14 +149,15 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/indicator_noclass_group" />
+
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/rv_noclass_container"
             android:layout_width="match_parent"
             android:layout_height="0dp"
-            app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/noclassView" />
+            app:layout_constraintTop_toBottomOf="@+id/noclassView"
+            app:layout_constraintBottom_toTopOf="@+id/noclass_btn_query" />
 
         <Button
             style="?android:attr/borderlessButtonStyle"

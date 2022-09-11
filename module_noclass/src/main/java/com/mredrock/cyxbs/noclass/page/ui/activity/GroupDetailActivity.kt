@@ -9,6 +9,7 @@ import android.view.inputmethod.EditorInfo
 import android.view.inputmethod.InputMethodManager
 import android.widget.Button
 import android.widget.EditText
+import android.widget.ImageView
 import android.widget.TextView
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -203,6 +204,12 @@ class GroupDetailActivity : BaseVmActivity<GroupDetailViewModel>(){
      * 完成上方标题点击初始化
      */
     private fun initTextView(){
+        findViewById<ImageView>(R.id.iv_noclass_group_detail_return).apply {
+            setOnClickListener {
+                onBackPressed()
+            }
+        }
+        
         mTitleText.setOnSingleClickListener {
             (getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager).hideSoftInputFromWindow(currentFocus?.windowToken, InputMethodManager.HIDE_NOT_ALWAYS)
             RenameGroupDialog(this)

@@ -355,10 +355,10 @@ class SlideMenuLayout @JvmOverloads constructor(
                 }
 
             }
-            MotionEvent.ACTION_UP, MotionEvent.ACTION_CANCEL -> {
+            MotionEvent.ACTION_UP -> {
                 performClick()
                 val dTime = System.currentTimeMillis() - getTag(R.id.noclass_tap_click_time_tag) as Long
-                if (dTime < 125 && mDx.absoluteValue <= touchSlop && mDy.absoluteValue <= touchSlop && scrollX.toFloat() / getCurrentRightWidth() < 0.001 && -scrollX.toFloat() / getCurrentLeftWidth() < 0.001 ){
+                if (dTime < 125 && mDx.absoluteValue <= touchSlop  && mDy.absoluteValue <= touchSlop  && scrollX.toFloat() / getCurrentRightWidth() < 0.001 && -scrollX.toFloat() / getCurrentLeftWidth() < 0.001 && scrollY.toFloat() < touchSlop){
                     mOnTapClickListener?.invoke(this)
                 }
                 if (mDx > 0) { //右滑

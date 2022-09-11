@@ -7,8 +7,8 @@
     android:background="@color/config_white_black">
 
     <androidx.appcompat.widget.Toolbar
-        android:layout_marginTop="4dp"
-        android:layout_marginBottom="4dp"
+        android:layout_marginTop="8dp"
+        android:layout_marginBottom="8dp"
         android:id="@+id/tb_noclass_group"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -17,6 +17,7 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" >
         <ImageView
+            android:id="@+id/iv_noclass_group_manager_return"
             android:paddingStart="7dp"
             android:paddingEnd="6dp"
             android:layout_width="wrap_content"
@@ -33,6 +34,7 @@
     </androidx.appcompat.widget.Toolbar>
 
     <View
+        android:layout_marginTop="8dp"
         android:id="@+id/noclass_group_manager_tb_line"
         android:layout_width="match_parent"
         android:layout_height="1dp"
@@ -70,13 +72,14 @@
     </LinearLayout>
 
     <androidx.recyclerview.widget.RecyclerView
+        android:layout_marginBottom="16dp"
         android:id="@+id/rv_noclass_group_container"
         android:layout_width="0dp"
         android:layout_height="0dp"
-        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/noclass_group_manager_tb_line" />
+        app:layout_constraintTop_toBottomOf="@+id/noclass_group_manager_tb_line"
+        app:layout_constraintBottom_toTopOf="@+id/btn_noclass_group_delete" />
 
     <Button
         style="?android:attr/borderlessButtonStyle"

@@ -6,6 +6,7 @@ import android.os.Bundle
 import android.view.View
 import android.view.WindowManager
 import android.widget.Button
+import android.widget.ImageView
 import android.widget.LinearLayout
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -227,6 +228,12 @@ class GroupManagerActivity : BaseVmActivity<GroupManagerViewModel>(){
      * 初始化下方按钮
      */
     private fun initBtn(){
+        findViewById<ImageView>(R.id.iv_noclass_group_manager_return).apply {
+            setOnClickListener {
+                onBackPressed()
+            }
+        }
+        
         //防止软键盘弹起导致视图错位
         window.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_NOTHING)
 

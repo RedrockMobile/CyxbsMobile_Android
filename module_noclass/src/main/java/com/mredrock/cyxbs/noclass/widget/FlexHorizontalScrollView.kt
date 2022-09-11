@@ -3,6 +3,7 @@ package com.mredrock.cyxbs.noclass.widget
 import android.annotation.SuppressLint
 import android.content.Context
 import android.util.AttributeSet
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.MotionEvent
 import android.view.View
@@ -81,6 +82,11 @@ class FlexHorizontalScrollView @JvmOverloads constructor(
      * 数据项
      */
     private lateinit var mList: List<NoclassGroup>
+    
+    /**
+     * 总的数据项
+     */
+    private lateinit var mTotalList : List<NoclassGroup>
 
     /**
      * 记录每一个view
@@ -101,6 +107,12 @@ class FlexHorizontalScrollView @JvmOverloads constructor(
      * 记录上一个被点击的TextView
      */
     private lateinit var mLastTextView : TextView
+    
+    /**
+     * 当前的第几个position
+     */
+    private var mCurrentPosition : Int = 0
+    
 
     private val mContainer : LinearLayout by lazy {
         getChildAt(0) as LinearLayout
@@ -135,11 +147,12 @@ class FlexHorizontalScrollView @JvmOverloads constructor(
             mMargin = xyLocation[0]
             mRealWidth = mScreenWidth - mMargin * 2
             mList = list
+            mTotalList = mList
             val flexLayout = MyFlexLayout(context)
             flexLayout.setOnFillCallback(onFillCallback)
             layoutList.add(flexLayout)
             addPage(flexLayout)
-            fillDataInTextView(mList, flexLayout)
+            fillDataInTextView(mList, flexLayout,0)
         }
     }
 
@@ -151,7 +164,7 @@ class FlexHorizontalScrollView @JvmOverloads constructor(
     /**
      * 默认填充TextView
      */
-    private fun fillDataInTextView(list: List<NoclassGroup>, flexLayout: MyFlexLayout) {
+    private fun fillDataInTextView(list: List<NoclassGroup>, flexLayout: MyFlexLayout ,mLastIndex : Int) {
         if(list.isEmpty()){
             //这个view是当元素为空的时候显示
             val lp = MarginLayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT)
@@ -165,6 +178,7 @@ class FlexHorizontalScrollView @JvmOverloads constructor(
             return
         }
         for (i in mList.indices) {
+            val index = i + mLastIndex
             //这个TextView就是每一个显示的Item
             val rootView : View
             val textView : TextView
@@ -185,25 +199,26 @@ class FlexHorizontalScrollView @JvmOverloads constructor(
                 textView.text = list[i].name
                 flexLayout.addView(rootView)
             }
-            mViewHashMap[i] = rootView.apply {
+            mViewHashMap[index] = rootView.apply {
                 setOnClickListener {
-                    this.isSelected = mLastPosition != i
+                    this.isSelected = mLastPosition != index
                     mViewHashMap[mLastPosition]?.isSelected = false
-                    if (mLastPosition == i){
+                    if (mLastPosition == index){ //点击相同item
                         textView.setTextColor(ContextCompat.getColor(context,R.color.noclass_primary_text_color))
                         this.isSelected = false
                         mLastPosition = -1
-                    }else{
+                    }else{  //点击不同item
                         if (this@FlexHorizontalScrollView::mLastTextView.isInitialized){
                             mLastTextView.setTextColor(ContextCompat.getColor(context,R.color.noclass_primary_text_color))
                         }
                         textView.setTextColor(ContextCompat.getColor(context,R.color.noclass_group_selected_text_bg))
                         mLastTextView = textView
                         this.isSelected = true
-                        mLastPosition = i
+                        mLastPosition = index
                     }
                     if (mLastPosition != -1){
-                        mOnItemSelected?.invoke(mList[i],true)
+                        Log.e("currentpostion",index.toString())
+                        mOnItemSelected?.invoke(mTotalList[index],true)
                     }else{
                         mOnItemSelected?.invoke(NoclassGroup("-1",false, emptyList(),"default"),false)
                     }
@@ -237,7 +252,8 @@ class FlexHorizontalScrollView @JvmOverloads constructor(
                 flexLayout.setOnFillCallback(this)
                 layoutList.add(flexLayout)
                 addPage(flexLayout)
-                fillDataInTextView(cache, flexLayout)
+                val last = mTotalList.size - mList.size
+                fillDataInTextView(cache, flexLayout,last)
             }
         }
     }
