@@ -54,6 +54,7 @@ dependencies {
    */
   val codeLocatorVersion = "2.0.0"
 //  implementation("com.bytedance.tools.codelocator:codelocator-core:$codeLocatorVersion")
+  // 下面这个是高级功能，目前无法正常使用，如果需要使用基础功能的话，取消上面这个注释即可
 //  implementation("com.bytedance.tools.codelocator:codelocator-lancet-all:$codeLocatorVersion")
   // CodeLocator 问题比较多，会疯狂抛被抓的异常出来，影响其他异常，加上目前高级功能无法使用，所以暂时先注释
 }
