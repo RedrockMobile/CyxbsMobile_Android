@@ -5,6 +5,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
+import androidx.core.animation.doOnEnd
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
@@ -212,12 +213,17 @@ class GroupManagerAdapter(
             GroupManagerActivity.GroupState.NORMAL -> {
                 for(itemView in mViews){
                     val deleteIcon : ImageView = itemView.value.deleteIcon
-                    deleteIcon.alphaAnim(1f,0f).start()
+                    deleteIcon.alphaAnim(1f,0f).apply {
+                        doOnEnd {
+                            deleteIcon.setImageResource(R.drawable.noclass_ic_delete_normal)
+                        }
+                    }.start()
                     val groupName : TextView = itemView.value.groupName
                     groupName.translateXLeftAnim(12f.dp2pxF).start()
                     val slideContainer : SlideMenuLayout = itemView.value.slideContainer
                     slideContainer.setSlideMode(ISlideMenuAction.SLIDE_MODE_RIGHT)
                 }
+                mSelectedList.clear()
             }
             GroupManagerActivity.GroupState.DELETE -> {
                 for(itemView in mViews){

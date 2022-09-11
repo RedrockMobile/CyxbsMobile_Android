@@ -54,15 +54,16 @@ abstract class NoClassItemView (context: Context) : CardView(context) {
     super.setCardBackgroundColor(Color.TRANSPARENT)
     radius = 8.dp2pxF
     val margin1 = 6.dp2px
-    val margin2 = 5.dp2px
+    val margin2 = 1.dp2px
     mTvNames = TextView(context).apply {
-      layoutParams = LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT).apply {
+      layoutParams = LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT).apply {
         topMargin = margin1
         leftMargin = margin2
         rightMargin = margin2
         bottomMargin = margin1
         gravity = Gravity.CENTER
       }
+      setHorizontallyScrolling(true)
       ellipsize = TextUtils.TruncateAt.END
       gravity = Gravity.CENTER
       setTextSize(TypedValue.COMPLEX_UNIT_DIP, 11F)

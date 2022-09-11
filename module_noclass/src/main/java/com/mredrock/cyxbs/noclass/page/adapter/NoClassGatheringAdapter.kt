@@ -22,7 +22,7 @@ import com.mredrock.cyxbs.noclass.R
  * @Version:        1.0
  * @Description:
  */
-class NoClassGatheringAdapter(private val context : Context,private val mMap : HashMap<Int,HashMap<String,Boolean>>) :  RecyclerView.Adapter<NoClassGatheringAdapter.VH>(){
+class NoClassGatheringAdapter(private val context : Context,private val mMap : HashMap<Int,ArrayList<Pair<String,Boolean>>>) :  RecyclerView.Adapter<NoClassGatheringAdapter.VH>(){
   
   inner class VH(itemView : View) : RecyclerView.ViewHolder(itemView){
       val parentView: GridLayout = itemView.findViewById(R.id.noclass_gl_container)
@@ -39,9 +39,9 @@ class NoClassGatheringAdapter(private val context : Context,private val mMap : H
       val view = noclassView(context)
       val linearLayout = view.findViewById<LinearLayout>(R.id.noclass_ll_gathering_item_container)
       val textView = view.findViewById<TextView>(R.id.noclass_tv_gathering_name).apply {
-        text = it.key
+        text = it.first
       }
-      if (!it.value){
+      if (!it.second){
         linearLayout.setBackgroundResource(R.drawable.noclass_shape_gathering_class_bg)
         textView.setTextColor(R.color.noclass_gather_text_class_bg.color)
       }

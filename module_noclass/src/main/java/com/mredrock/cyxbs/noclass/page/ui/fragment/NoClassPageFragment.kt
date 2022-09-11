@@ -37,13 +37,13 @@ abstract class NoClassPageFragment: CoursePageFragment() {
    * 添加每一竖行的课程
    *
    * @param lineTime 这一竖行的data
-   * @param line 第几行
+   * @param line 第几列
    */
   private fun addLessonsByLine(lineTime: NoClassSpareTime.SpareLineTime, line: Int){
     addLessonAm(lineTime,line)
-    addLessonNoon(lineTime,line)
+    addLessonNoon(line)
     addLessonPm(lineTime,line)
-    addLessonDusk(lineTime,line)
+    addLessonDusk(line)
     addLessonNight(lineTime,line)
   }
   
@@ -60,10 +60,9 @@ abstract class NoClassPageFragment: CoursePageFragment() {
     addLessonByJudge(0,week,id1, id2, spare1, spare2)
     addLessonByJudge(2,week,id3, id4, spare3, spare4)
   }
-  private fun addLessonNoon(lineTime: NoClassSpareTime.SpareLineTime,line : Int){
-
+  private fun addLessonNoon(line: Int){
+    addLesson(getFullStuLesson(4,line+1))
   }
-  
   private fun addLessonPm(lineTime: NoClassSpareTime.SpareLineTime, line: Int){
     val week = line + 1
     val id1 = lineTime.SpareItem[5].spareId
@@ -77,8 +76,8 @@ abstract class NoClassPageFragment: CoursePageFragment() {
     addLessonByJudge(5,week,id1, id2, spare1, spare2)
     addLessonByJudge(7,week,id3, id4, spare3, spare4)
   }
-  private fun addLessonDusk(lineTime: NoClassSpareTime.SpareLineTime, line: Int){
-  
+  private fun addLessonDusk(line: Int){
+    addLesson(getFullStuLesson(9,line+1))
   }
   private fun addLessonNight(lineTime: NoClassSpareTime.SpareLineTime, line: Int){
     val week = line + 1
@@ -120,6 +119,19 @@ abstract class NoClassPageFragment: CoursePageFragment() {
         addLesson(getLesson(begin+1,week,1,id2))
       }
     }
+  }
+  
+  /**
+   * 获得满员的课
+   */
+  private fun getFullStuLesson(
+    begin: Int,
+    week: Int,
+  ) : NoClassLesson{
+    val list = mNameMap.map{
+      it.key
+    }
+    return getLesson(begin,week,1,list)
   }
   
   private fun getLesson(

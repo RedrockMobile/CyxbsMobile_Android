@@ -314,6 +314,7 @@ class GroupManagerActivity : BaseVmActivity<GroupManagerViewModel>(){
     private fun changeState(state: GroupState){
         when(state){
             GroupState.NORMAL -> {
+                mSelectedItems.clear()
                 mBtnRight.setBackgroundResource(R.drawable.noclass_shape_button_common_bg)
                 mBtnLeft.text = "删除"
                 mBtnRight.text = "新建"

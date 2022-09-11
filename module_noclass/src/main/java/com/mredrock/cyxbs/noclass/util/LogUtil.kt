@@ -12,7 +12,7 @@ import java.util.*
  * @CreateDate:     2022年09月06日 23:07:00
  * @UpdateRemark:   更新说明：
  * @Version:        1.0
- * @Description:
+ * @Description:    测试用Log类 为了解决日志过长无法打印完的问题
  */
 
 object LogUtil{
@@ -23,7 +23,7 @@ object LogUtil{
    * @param tag
    * @param content
    */
-  fun print(priority: Int, tag: String?, content: String) {
+  fun print(priority: Int, tag: String?, content: String, maxLine : Int? = null) {
     // 1. 测试控制台最多打印4062个字节，不同情况稍有出入（注意：这里是字节，不是字符！！）
     // 2. 字符串默认字符集编码是utf-8，它是变长编码一个字符用1~4个字节表示
     // 3. 这里字符长度小于1000，即字节长度小于4000，则直接打印，避免执行后续流程，提高性能哈
@@ -60,9 +60,7 @@ object LogUtil{
       bytes = bytes.copyOfRange(subStr!!.toByteArray().size, bytes.size)
       
       // 可根据需求添加一个次数限制，避免有超长日志一直打印
-      /*if (count == 10) {
-                  break;
-              }*/
+      if (count == maxLine) { break }
     }
     
     // 打印剩余部分

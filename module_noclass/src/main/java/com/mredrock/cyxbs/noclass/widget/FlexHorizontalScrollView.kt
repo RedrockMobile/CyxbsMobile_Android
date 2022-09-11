@@ -3,7 +3,6 @@ package com.mredrock.cyxbs.noclass.widget
 import android.annotation.SuppressLint
 import android.content.Context
 import android.util.AttributeSet
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.MotionEvent
 import android.view.View
@@ -217,7 +216,6 @@ class FlexHorizontalScrollView @JvmOverloads constructor(
                         mLastPosition = index
                     }
                     if (mLastPosition != -1){
-                        Log.e("currentpostion",index.toString())
                         mOnItemSelected?.invoke(mTotalList[index],true)
                     }else{
                         mOnItemSelected?.invoke(NoclassGroup("-1",false, emptyList(),"default"),false)

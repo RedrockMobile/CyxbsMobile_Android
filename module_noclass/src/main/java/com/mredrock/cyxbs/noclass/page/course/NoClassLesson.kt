@@ -56,14 +56,15 @@ class NoClassLesson(
           setColor(data.timeType)
           setText(names = data.names,height = data.length)
           setOnClickListener {
-            val stuMap = hashMapOf<String,Boolean>()
+            //所有学生列表
+            //没课的在前面
+            val stuList = arrayListOf<Pair<String,Boolean>>()
             mGatheringList.forEach {
-              stuMap[it] = true
+              stuList.add(Pair(it, true))
             }
             mNoGatheringList.forEach {
-              stuMap[it] = false
+              stuList.add(Pair(it,false))
             }
-            
             val duration = mLastingTime.second - mLastingTime.first
             val begin = if(mLastingTime.first >= 10) mLastingTime.first - 1 else mLastingTime.first
             val end = if(mLastingTime.first >= 10) begin + duration - 1 else begin + duration
@@ -84,7 +85,7 @@ class NoClassLesson(
               else -> ""
             }
             val textTime = "时间：${month} ${beginLesson}-${beginLesson + duration - 1} ${beginTime}-${endTime}"
-            NoClassGatherDialog(stuMap,textTime).show((context as AppCompatActivity).supportFragmentManager,"NoClassGatherDialog")
+            NoClassGatherDialog(stuList, textTime).show((context as AppCompatActivity).supportFragmentManager, "NoClassGatherDialog")
           }
         }
       }

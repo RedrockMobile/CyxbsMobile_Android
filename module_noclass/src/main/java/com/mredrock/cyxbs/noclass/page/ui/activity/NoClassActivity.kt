@@ -201,9 +201,16 @@ class NoClassActivity : BaseVmActivity<NoClassViewModel>(){
     }
   }
   
+  /**
+   * 取消状态栏
+   */
+  override val isCancelStatusBar: Boolean
+    get() = false
+  
   override fun onCreate(savedInstanceState: Bundle?) {
     super.onCreate(savedInstanceState)
     setContentView(R.layout.noclass_activity_no_class)
+    
     initUserInfo()
     initObserve()
     initRv()
@@ -379,7 +386,6 @@ class NoClassActivity : BaseVmActivity<NoClassViewModel>(){
     replaceFragment(R.id.noclass_course_bottom_sheet_container) {
       NoClassCourseVpFragment.newInstance(NoClassSpareTime.EMPTY_PAGE)
     }
-    mCourseSheetBehavior.state = BottomSheetBehavior.STATE_COLLAPSED
    
     //在滑动下拉课表容器中添加整个课表
     viewModel.noclassData.observe(this){

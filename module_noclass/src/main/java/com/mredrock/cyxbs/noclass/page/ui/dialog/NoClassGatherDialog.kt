@@ -5,7 +5,6 @@ import android.os.Bundle
 import android.widget.TextView
 import androidx.viewpager2.widget.ViewPager2
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
-import com.mredrock.cyxbs.lib.utils.utils.SchoolCalendarUtil
 import com.mredrock.cyxbs.noclass.R
 import com.mredrock.cyxbs.noclass.page.adapter.NoClassGatheringAdapter
 
@@ -21,7 +20,7 @@ import com.mredrock.cyxbs.noclass.page.adapter.NoClassGatheringAdapter
  * @Description:
  */
 class NoClassGatherDialog (
-  private val mStuMap : Map<String,Boolean>,
+  private val mStuList : ArrayList<Pair<String,Boolean>>,
   private val mTextTime : String
 ) : BottomSheetDialogFragment() {
   
@@ -37,29 +36,28 @@ class NoClassGatherDialog (
     initView(dialog)
     return dialog
   }
-  
   private fun initView(dialog: Dialog){
-    SchoolCalendarUtil
     val mTvTotal = dialog.findViewById<TextView>(R.id.noclass_tv_gathering_total).apply {
-      text = "人数：共计 ${mStuMap.size} 人"
+      text = "人数：共计 ${mStuList.size} 人"
     }
     val mTvTime = dialog.findViewById<TextView>(R.id.noclass_tv_gathering_time).apply {
       text = mTextTime
     }
     val mViewPager2 = dialog.findViewById<ViewPager2>(R.id.noclass_vp_gather_container).apply {
       var index = 0
-      val mMap = hashMapOf<Int,HashMap<String,Boolean>>()
-      mStuMap.forEach {
-        if (mMap[index] == null){
-          mMap[index] = hashMapOf()
+      //将学生列表进行拆分，list上每一个节点的map相当于一页上的八个学生
+      val mStuListByPage = hashMapOf<Int,ArrayList<Pair<String,Boolean>>>()
+      mStuList.forEach {
+        if (mStuListByPage[index] == null){
+          mStuListByPage[index] = arrayListOf()
         }
-        mMap[index]!![it.key] = it.value
-        if (mMap[index]!!.size == 8){
+        mStuListByPage[index]!!.add(Pair(it.first,it.second))
+        if (mStuListByPage[index]!!.size == 8){
           index++
         }
       }
-      adapter = NoClassGatheringAdapter(context,mMap)
-    }
+      adapter = NoClassGatheringAdapter(context, mStuListByPage)
+    } 
   }
   
   
