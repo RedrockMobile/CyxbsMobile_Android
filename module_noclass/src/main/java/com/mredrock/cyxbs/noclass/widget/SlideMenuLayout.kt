@@ -129,7 +129,13 @@ class SlideMenuLayout @JvmOverloads constructor(
      * performClick在UP中处理，需要在DOWN事件处理的回调就得另行设置
      */
     private var mOnDownClickListener : ((SlideMenuLayout) -> Unit)? = null
-
+    
+    /**
+     * 每次事件
+     * 第一次Move事件且向上下滑动触发
+     */
+    private var mOnFirstMoveListener : ((SlideMenuLayout) -> Unit)? = null
+    
     init {
         initAttrs(attrs)
         initContentShadowPaint()
@@ -328,13 +334,12 @@ class SlideMenuLayout @JvmOverloads constructor(
     private var mLastY = 0
     private var hasInter = false
     private val touchSlop = ViewConfiguration.get(context).scaledTouchSlop
-    
+    private var mFirstMove = true
     override fun onTouchEvent(event: MotionEvent): Boolean {
         if (!mAllowDragging) return false
         when (event.action) {
 
             MotionEvent.ACTION_DOWN -> {
-                mOnDownClickListener?.invoke(this)
                 mLastX = event.x.toInt()
                 mLastY = event.y.toInt()
                 parent.requestDisallowInterceptTouchEvent(true)
@@ -342,11 +347,16 @@ class SlideMenuLayout @JvmOverloads constructor(
             }
 
             MotionEvent.ACTION_MOVE -> {
+                mOnDownClickListener?.invoke(this)
                 val currentX = event.x.toInt()
                 val currentY = event.y.toInt()
                 //拿到x方向的偏移量
                 val dx = currentX - mLastX
                 val dy = currentY - mLastY
+                if (mFirstMove){
+                    mOnFirstMoveListener?.invoke(this)
+                    mFirstMove = false
+                }
                 if (dx < 0) { //向左滑动
                     scrollLeft(dx)
                 } else { //向右滑动
@@ -375,19 +385,21 @@ class SlideMenuLayout @JvmOverloads constructor(
                 } else {
                     inertiaScrollLeft()
                 }
-                if (mDy.absoluteValue > mDx.absoluteValue * 1){
-                    closeRightSlide()
-                }
+//                if (mDy.absoluteValue > mDx.absoluteValue){
+//                    closeRightSlide()
+//                }
                 mDx = 0
                 mDy  = 0
                 hasInter = false
+                mFirstMove = true
             }
             
             MotionEvent.ACTION_CANCEL -> {
-                closeRightSlide()
+//                closeRightSlide()
                 mDx = 0
                 mDy  = 0
                 hasInter = false
+                mFirstMove = true
             }
         }
         return true
@@ -779,6 +791,10 @@ class SlideMenuLayout @JvmOverloads constructor(
 
     fun setOnDownListener(listener : (SlideMenuLayout) -> Unit){
         mOnDownClickListener = listener
+    }
+    
+    fun setOnFirstMoveListener(listener : (SlideMenuLayout) -> Unit){
+        mOnFirstMoveListener = listener
     }
 
 }

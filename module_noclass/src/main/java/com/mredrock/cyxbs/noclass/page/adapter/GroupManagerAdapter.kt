@@ -13,7 +13,6 @@ import com.mredrock.cyxbs.lib.utils.extensions.dp2pxF
 import com.mredrock.cyxbs.noclass.R
 import com.mredrock.cyxbs.noclass.bean.NoclassGroup
 import com.mredrock.cyxbs.noclass.callback.ISlideMenuAction
-import com.mredrock.cyxbs.noclass.callback.OnSlideChangedListener
 import com.mredrock.cyxbs.noclass.page.ui.activity.GroupManagerActivity
 import com.mredrock.cyxbs.noclass.util.alphaAnim
 import com.mredrock.cyxbs.noclass.util.translateXLeftAnim
@@ -66,19 +65,14 @@ class GroupManagerAdapter(
     private var mSelectedList = mutableSetOf<Int>()
 
     /**
-     * 记录最后一条被选中的item
-     */
-    private var mSelPosition = -1
-
-    /**
      * 临时记录上一条item
      */
     private var mLastSelPosition = -1
 
-    /**
-     * 临时记录现在滑动的view
-     */
-    private var mCurScrollPosition = -1
+//    /**
+//     * 临时记录现在滑动的view
+//     */
+//    private var mCurScrollPosition = -1
 
     /**
      * 回调开启新activity
@@ -119,10 +113,15 @@ class GroupManagerAdapter(
             }
 
             setOnDownListener {
-                mLastSelPosition = mSelPosition
-                mSelPosition = layoutPosition
-                //改变点击状态
                 notifyItemChanged(mLastSelPosition)
+                mLastSelPosition = layoutPosition
+            }
+    
+            setOnFirstMoveListener{
+                mViews.forEach {
+                    if(it.key != absoluteAdapterPosition)
+                    it.value.slideContainer.closeRightSlide()
+                }
             }
 
             setOnClickListener {
@@ -139,29 +138,29 @@ class GroupManagerAdapter(
                 notifyItemChanged(mLastSelPosition)
             }
 
-            setOnSlideChangedListener(
-                object : OnSlideChangedListener {
-                    override fun onSlideStateChanged(
-                        slideMenu: SlideMenuLayout,
-                        isLeftSlideOpen: Boolean,
-                        isRightSlideOpen: Boolean
-                    ) {
-
-                    }
-
-                    override fun onSlideRightChanged(percent: Float) {
-                        if (mCurScrollPosition != layoutPosition){
-                            notifyItemChanged(mLastSelPosition)
-                            mCurScrollPosition = layoutPosition
-                            //改变滑动状态
-                            notifyItemChanged(mLastSelPosition)
-                        }
-                    }
-
-                    override fun onSlideLeftChanged(percent: Float) {
-                    }
-                }
-            )
+//            setOnSlideChangedListener(
+//                object : OnSlideChangedListener {
+//                    override fun onSlideStateChanged(
+//                        slideMenu: SlideMenuLayout,
+//                        isLeftSlideOpen: Boolean,
+//                        isRightSlideOpen: Boolean
+//                    ) {
+//
+//                    }
+//
+//                    override fun onSlideRightChanged(percent: Float) {
+//                        if (mCurScrollPosition != layoutPosition){
+//                            //改变滑动状态
+//                            notifyItemChanged(mLastSelPosition)
+//                            mCurScrollPosition = layoutPosition
+//                            notifyItemChanged(mLastSelPosition)
+//                        }
+//                    }
+//
+//                    override fun onSlideLeftChanged(percent: Float) {
+//                    }
+//                }
+//            )
         }
     }
 
@@ -185,11 +184,11 @@ class GroupManagerAdapter(
             holder.deleteIcon.setImageResource(R.drawable.noclass_ic_delete_normal)
         }
 
-        if (holder.layoutPosition != mCurScrollPosition){
-            if(holder.slideContainer.isRightSlideOpen()){
-                holder.slideContainer.closeRightSlide()
-            }
-        }
+//        if (holder.layoutPosition != mCurScrollPosition){
+//            if(holder.slideContainer.isRightSlideOpen()){
+//                holder.slideContainer.closeRightSlide()
+//            }
+//        }
     }
 
     fun setOnGroupDetailStart(listener : (Int) -> Unit){
