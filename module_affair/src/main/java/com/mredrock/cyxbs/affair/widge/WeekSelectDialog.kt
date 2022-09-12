@@ -13,6 +13,7 @@ import com.mredrock.cyxbs.affair.ui.adapter.AffairWeekAdapter
 import com.mredrock.cyxbs.affair.ui.adapter.data.AffairWeekData
 import com.mredrock.cyxbs.affair.ui.adapter.data.AffairWeekSelectData
 import com.mredrock.cyxbs.lib.utils.extensions.setOnSingleClickListener
+import com.mredrock.cyxbs.lib.utils.extensions.toast
 
 /**
  * author: WhiteNight(1448375249@qq.com)
@@ -42,10 +43,13 @@ class WeekSelectDialog(
 
     tvSure.setOnSingleClickListener {
       val tmp = mRvDurationAdapter.currentList.filter { it.isChoice }
-      val tmp2 = tmp.map { data -> AffairWeekData(data.week, listOf()) }
-      addWeek(tmp2)
-
-      dismiss()
+      if (tmp.isEmpty()) {
+        "掌友,请至少选择一个周数哦".toast()
+      } else {
+        val tmp2 = tmp.map { data -> AffairWeekData(data.week, listOf()) }
+        addWeek(tmp2)
+        dismiss()
+      }
     }
     setContentView(view)
   }

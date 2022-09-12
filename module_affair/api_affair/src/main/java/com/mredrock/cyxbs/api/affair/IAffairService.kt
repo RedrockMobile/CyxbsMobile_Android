@@ -50,7 +50,11 @@ interface IAffairService : IProvider {
    */
   fun observeAffair(stuNum: String): Observable<List<Affair>>
 
-  fun deleteAffair(affairId:Int)
+  /**
+   * 删除事务
+   */
+  fun deleteAffair(affairId: Int)
+
   data class Affair(
     val stuNum: String,
     val id: Int, // 事务唯一 id
@@ -68,6 +72,7 @@ interface IAffairService : IProvider {
    */
   fun startAffairEditActivity(
     context: Context,
+    week: Int, //周数
     day: Int, // 星期数，星期一为 0
     beginLesson: Int, // 开始节数，如：1、2 节课以 1 开始；3、4 节课以 3 开始，注意：中午是以 -1 开始，傍晚是以 -2 开始
     period: Int // 长度

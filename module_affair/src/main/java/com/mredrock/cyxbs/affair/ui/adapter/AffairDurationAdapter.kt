@@ -124,7 +124,6 @@ class AffairDurationAdapter(val requireActivity: Context) :
 
     init {
       tvWeek.setOnSingleClickListener {
-        "haha".toast()
         var tmp = currentList.toMutableList()
         val dialog =
           WeekSelectDialog(requireActivity, AffairDataUtils.getAffairWeekData(tmp)) { week ->
@@ -147,7 +146,6 @@ class AffairDurationAdapter(val requireActivity: Context) :
         val data = getItem(layoutPosition) as AffairTimeData
         val tmp = currentList.filter { it != data }
         submitList(AffairDataUtils.getNewList(tmp))
-        "$data".toast()
       }
     }
   }
@@ -157,13 +155,12 @@ class AffairDurationAdapter(val requireActivity: Context) :
 
     init {
       ivAdd.setOnSingleClickListener {
-        val dialog = TimeSelectDialog(requireActivity) { week, begin, end ->
-          submitList(
-            AffairDataUtils.addNewTime(
-              currentList,
-              AffairTimeData(week, begin, end - begin)
-            )
-          )
+        val dialog = TimeSelectDialog(requireActivity) { timeData ->
+          if (AffairDataUtils.funCheckTime(currentList, timeData)) {
+            submitList(AffairDataUtils.addNewTime(currentList, timeData))
+            true
+          } else
+            false
         }
         dialog.show()
       }

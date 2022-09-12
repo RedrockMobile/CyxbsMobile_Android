@@ -147,8 +147,8 @@ class AddAffairFragment : BaseVmFragment<AddAffairViewModel>() {
     mRvDurationAdapter.submitList(
       AffairDataUtils.getNewList(
         listOf(
-          AffairWeekData(1, listOf()),
-          AffairTimeData(1, 1, 1)
+          AffairWeekData(mArguments.week, listOf()),
+          AffairTimeData(mArguments.weekNum, mArguments.beginLesson, mArguments.period)
         )
       )
     )
@@ -168,8 +168,8 @@ class AddAffairFragment : BaseVmFragment<AddAffairViewModel>() {
       if (a > 1) {
         viewModel.addAffair(
           1,
-          mTitle,
-          mContent,
+          mEtTitle.text.toString(),
+          mEditText.text.toString(),
           AffairDataUtils.affairAdapterDataToAtWhatTime(mRvDurationAdapter.currentList)
         )
       }

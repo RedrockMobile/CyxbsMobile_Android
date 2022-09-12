@@ -13,9 +13,9 @@ sealed interface AffairAdapterData {
 
 data class AffairWeekData(
   val week: Int,
-  val list: List<AffairTimeData>,
+  val list: List<AffairTimeData>, //为了以后拓展
 
-  ) : AffairAdapterData {
+) : AffairAdapterData {
   override val onlyId: Any
     get() = week
 }

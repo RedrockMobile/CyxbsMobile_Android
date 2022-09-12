@@ -14,7 +14,6 @@ import com.mredrock.cyxbs.affair.ui.adapter.data.AffairWeekSelectData
 import com.mredrock.cyxbs.affair.utils.AffairDataUtils
 import com.mredrock.cyxbs.lib.utils.extensions.appContext
 import com.mredrock.cyxbs.lib.utils.extensions.setOnSingleClickListener
-import com.mredrock.cyxbs.lib.utils.extensions.toast
 
 /**
  * author: WhiteNight(1448375249@qq.com)
@@ -34,7 +33,7 @@ class AffairWeekAdapter : ListAdapter<AffairWeekSelectData, AffairWeekAdapter.VH
       oldItem: AffairWeekSelectData,
       newItem: AffairWeekSelectData
     ): Boolean {
-      return oldItem.isChoice != newItem.isChoice
+      return oldItem.isChoice == newItem.isChoice
     }
 
     override fun getChangePayload(
@@ -53,9 +52,7 @@ class AffairWeekAdapter : ListAdapter<AffairWeekSelectData, AffairWeekAdapter.VH
     init {
       textView.setOnSingleClickListener {
         val data = getItem(layoutPosition)
-        data.isChoice = !data.isChoice
-        data.toString().toast()
-        submitList(AffairDataUtils.checkWeekSelectData(currentList))
+        submitList(AffairDataUtils.checkWeekSelectData(currentList, data))
       }
     }
   }

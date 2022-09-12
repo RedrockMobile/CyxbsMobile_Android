@@ -3,7 +3,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
-    android:padding="8dp">
+    android:padding="4dp">
 
     <androidx.appcompat.widget.AppCompatTextView
         android:id="@+id/affair_tv_find_course_history_name"
@@ -14,7 +14,7 @@
         android:paddingStart="13dp"
         android:paddingEnd="13dp"
         android:textColor="@color/common_level_two_font_color"
-        android:textSize="14dp"
+        android:textSize="13dp"
         tools:ignore="SpUsage"
         tools:text="五六节课 周六" />
 

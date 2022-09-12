@@ -5,7 +5,6 @@ import androidx.lifecycle.MutableLiveData
 import com.mredrock.cyxbs.affair.net.AffairApiService
 import com.mredrock.cyxbs.affair.net.AffairRepository
 import com.mredrock.cyxbs.affair.service.AffairEntity
-import com.mredrock.cyxbs.affair.ui.adapter.data.AffairAdapterData
 import com.mredrock.cyxbs.lib.base.ui.BaseViewModel
 import com.mredrock.cyxbs.lib.utils.network.mapOrThrowApiException
 import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
@@ -33,6 +32,7 @@ class AddAffairViewModel : BaseViewModel() {
     content: String,
     atWhatTime: List<AffairEntity.AtWhatTime>,
   ) {
+    content.toast()
     AffairRepository.addAffair(time, title, content, atWhatTime)
   }
 

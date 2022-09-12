@@ -3,6 +3,7 @@ package affair
 import android.os.Bundle
 import com.mredrock.cyxbs.api.affair.IAffairService
 import com.mredrock.cyxbs.lib.base.BaseDebugActivity
+import com.mredrock.cyxbs.lib.utils.service.ServiceManager
 
 /**
  * author: WhiteNight(1448375249@qq.com)
@@ -14,10 +15,11 @@ class DebugActivity : BaseDebugActivity() {
     get() = true
 
   override fun onDebugCreate(savedInstanceState: Bundle?) {
-    com.mredrock.cyxbs.lib.utils.service.ServiceManager(IAffairService::class)
+    ServiceManager(IAffairService::class)
       .startAffairEditActivity(
-        this,
-        228398
+        this, 0, 1, 1, 1
+        //228398
       )
+
   }
 }

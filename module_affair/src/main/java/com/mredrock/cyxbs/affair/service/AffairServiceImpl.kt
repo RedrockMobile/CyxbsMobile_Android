@@ -8,9 +8,9 @@ import com.mredrock.cyxbs.affair.ui.activity.AffairActivity
 import com.mredrock.cyxbs.api.affair.AFFAIR_SERVICE
 import com.mredrock.cyxbs.api.affair.IAffairService
 import com.mredrock.cyxbs.lib.utils.extensions.toast
+import com.mredrock.cyxbs.lib.utils.extensions.unsafeSubscribeBy
 import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
 import io.reactivex.rxjava3.core.Observable
-import io.reactivex.rxjava3.kotlin.subscribeBy
 
 /**
  * ...
@@ -35,12 +35,19 @@ class AffairServiceImpl : IAffairService {
   }
 
   override fun deleteAffair(affairId: Int) {
-    AffairRepository.deleteAffair(affairId).observeOn(AndroidSchedulers.mainThread())
-      .doOnError { it.printStackTrace() }.subscribeBy { "删除成功".toast() }
+    AffairRepository.deleteAffair(affairId).observeOn(AndroidSchedulers.mainThread()).doOnError {
+      it.printStackTrace()
+    }.unsafeSubscribeBy { "删除成功".toast() }
   }
 
-  override fun startAffairEditActivity(context: Context, day: Int, beginLesson: Int, period: Int) {
-    AffairActivity.start(context, AffairEditArgs.AffairDurationArgs(1, 1, 1, 2))
+  override fun startAffairEditActivity(
+    context: Context,
+    week: Int,
+    day: Int,
+    beginLesson: Int,
+    period: Int
+  ) {
+    AffairActivity.start(context, AffairEditArgs.AffairDurationArgs(week, day, beginLesson, period))
   }
 
   override fun startAffairEditActivity(context: Context, id: Int) {

@@ -32,11 +32,10 @@ class EditAffairViewModel : BaseViewModel() {
     content: String,
     atWhatTime: List<AffairEntity.AtWhatTime>,
   ) {
-    "hahaha".toast()
     AffairRepository.updateAffair(id, time, title, content, atWhatTime)
       .observeOn(AndroidSchedulers.mainThread()).doOnError {
-      it.printStackTrace()
-    }.safeSubscribeBy { "更新成功".toast() }
+        it.printStackTrace()
+      }.safeSubscribeBy { "更新成功".toast() }
   }
 
 
@@ -56,8 +55,8 @@ class EditAffairViewModel : BaseViewModel() {
   private fun getAffair() {
     AffairRepository.getAffair().observeOn(AndroidSchedulers.mainThread())
       .doOnError { it.printStackTrace() }.safeSubscribeBy {
-      "获取成功".toast()
-    }
+        "获取成功".toast()
+      }
   }
 
   init {

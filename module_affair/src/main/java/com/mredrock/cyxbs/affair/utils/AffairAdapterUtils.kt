@@ -68,42 +68,37 @@ object AffairDataUtils {
   }
 
   /**
-   * 添加时间(会检查参数的合法性)
+   * 添加时间
    */
   fun addNewTime(
     affairList: List<AffairAdapterData>,
     timeData: AffairTimeData
   ): List<AffairAdapterData> {
     val newList = affairList.toMutableList()
-    var isLegal = false
-    affairList.forEach {
-      if (it is AffairTimeData) {
-        if (funCheckTime(it, timeData)) isLegal = true
-      }
-    }
-    if (isLegal) {
-      newList.add(AffairTimeData(timeData.weekNum, timeData.beginLesson, timeData.period))
-    }
+    newList.add(AffairTimeData(timeData.weekNum, timeData.beginLesson, timeData.period))
     return getNewList(newList)
   }
 
-  //判断加入时间的合法性
-  private fun funCheckTime(oldTimeData: AffairTimeData, newTimeData: AffairTimeData): Boolean {
+  /**
+   * 判断加入时间的合法性
+   */
+  fun funCheckTime(affairList: List<AffairAdapterData>, newTimeData: AffairTimeData): Boolean {
     if (newTimeData.period == 0) {
       "掌友,起始时间和结束时间不能一样哦".toast()
       return false
     }
-    return if (oldTimeData.weekNum == newTimeData.weekNum) {
-      if (oldTimeData.beginLesson >= newTimeData.beginLesson + newTimeData.period || oldTimeData.beginLesson + oldTimeData.period <= newTimeData.beginLesson) {
-        true
-      } else {
-        "掌友,该时间段已经添加了呦".toast()
-        false
+    val tmpList = affairList.filterIsInstance<AffairTimeData>().toMutableList()
+    tmpList.forEach {
+      if (it.weekNum == newTimeData.weekNum) {
+        return if (it.beginLesson >= newTimeData.beginLesson + newTimeData.period || it.beginLesson + it.period <= newTimeData.beginLesson) {
+          true
+        } else {
+          "掌友,该时间段已经添加了呦".toast()
+          false
+        }
       }
-    } else {
-      true
     }
-
+    return true
   }
 
   // 将展示的数据转换为要上传的数据
@@ -134,19 +129,36 @@ object AffairDataUtils {
   /**
    * 判断整学期选择的逻辑
    */
-  fun checkWeekSelectData(weekList: List<AffairWeekSelectData>): List<AffairWeekSelectData> {
+  fun checkWeekSelectData(
+    weekList: List<AffairWeekSelectData>,
+    weekData: AffairWeekSelectData
+  ): List<AffairWeekSelectData> {
+    val tmpList = arrayListOf<AffairWeekSelectData>()
     val newList = arrayListOf<AffairWeekSelectData>()
+    // 先将选择状态反转
+    weekList.forEach {
+      if (it.week == weekData.week) tmpList.add(
+        AffairWeekSelectData(
+          it.week,
+          !it.isChoice
+        )
+      ) else tmpList.add(it)
+    }
+    if (weekData.week != 0) {
+      // 如果点击的不是整学期,将整学期重置为未选择
+      tmpList[0] = AffairWeekSelectData(0, false)
+    }
     // 整学期选择后,其他不能选择
-    if (weekList[0].isChoice) {
+    if (tmpList[0].isChoice) {
       newList.add(AffairWeekSelectData(0, true))
       for (i in 1 until weekList.size) {
-        newList.add(AffairWeekSelectData(weekList[i].week, false))
+        newList.add(AffairWeekSelectData(tmpList[i].week, false))
       }
     } else {
       // 反之,其他周数选择后,整学期不能选择
       newList.add(AffairWeekSelectData(0, false))
       for (i in 1 until weekList.size) {
-        newList.add(AffairWeekSelectData(weekList[i].week, weekList[i].isChoice))
+        newList.add(AffairWeekSelectData(tmpList[i].week, tmpList[i].isChoice))
       }
     }
     return newList

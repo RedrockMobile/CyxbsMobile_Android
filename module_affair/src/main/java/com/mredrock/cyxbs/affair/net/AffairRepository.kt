@@ -12,6 +12,7 @@ import com.mredrock.cyxbs.lib.utils.extensions.toast
 import com.mredrock.cyxbs.lib.utils.extensions.unsafeSubscribeBy
 import com.mredrock.cyxbs.lib.utils.network.ApiException
 import com.mredrock.cyxbs.lib.utils.service.ServiceManager
+import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
 import io.reactivex.rxjava3.core.Completable
 import io.reactivex.rxjava3.core.Observable
 import io.reactivex.rxjava3.core.Single
@@ -203,7 +204,7 @@ object AffairRepository {
         }
         // 更新本地数据
         AffairDataBase.INSTANCE.getAffairDao().deleteAffair(StuNumWithAffairId(selfNum, id))
-      }.subscribeOn(Schedulers.io())
+      }.subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread())
   }
 
   /**

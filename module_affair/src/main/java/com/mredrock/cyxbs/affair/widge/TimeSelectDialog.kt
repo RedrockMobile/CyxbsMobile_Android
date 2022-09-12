@@ -8,6 +8,8 @@ import com.github.gzuliyujiang.wheelview.widget.WheelView
 import com.mredrock.cyxbs.affair.R
 import com.mredrock.cyxbs.affair.model.data.AffairEditArgs.AffairDurationArgs.Companion.DAY_ARRAY
 import com.mredrock.cyxbs.affair.model.data.AffairEditArgs.AffairDurationArgs.Companion.LESSON_ARRAY
+import com.mredrock.cyxbs.affair.ui.adapter.data.AffairTimeData
+import com.mredrock.cyxbs.affair.utils.AffairDataUtils
 import com.mredrock.cyxbs.lib.utils.extensions.setOnSingleClickListener
 import com.mredrock.cyxbs.lib.utils.extensions.toast
 
@@ -17,7 +19,7 @@ import com.mredrock.cyxbs.lib.utils.extensions.toast
  * date: 2022/9/7
  * description:
  */
-class TimeSelectDialog(context: Context, addTime: (week: Int, begin: Int, end: Int) -> Unit) :
+class TimeSelectDialog(context: Context, addTime: (timeData:AffairTimeData) -> Boolean) :
   RedRockBottomSheetDialog(context) {
   var view: View = LayoutInflater.from(context).inflate(R.layout.affair_dialog_time_select, null)
   val weekWV: WheelView = view.findViewById(R.id.affair_wheel_view_week)
@@ -32,9 +34,9 @@ class TimeSelectDialog(context: Context, addTime: (week: Int, begin: Int, end: I
     endWV.data = LESSON_ARRAY.toList()
 
     tvSure.setOnSingleClickListener {
-      "${weekWV.currentPosition}+${beginWV.currentPosition}+${endWV.currentPosition}".toast()
-      addTime(weekWV.currentPosition, beginWV.currentPosition, endWV.currentPosition)
-      dismiss()
+      if (addTime(AffairTimeData(weekWV.currentPosition, beginWV.currentPosition, endWV.currentPosition-beginWV.currentPosition))){
+        dismiss()
+      }
     }
     setContentView(view)
   }
