@@ -309,15 +309,26 @@ class SlideMenuLayout @JvmOverloads constructor(
             changeContentViewAlpha()
         }
     }
-
+    //拦截
+    override fun onInterceptTouchEvent(ev: MotionEvent): Boolean {
+        when (ev.action) {
+            //在父布局拦截此事件时会给子View发送Cancel事件
+            //此时需求是需要关闭侧滑栏
+            MotionEvent.ACTION_CANCEL -> {
+                closeRightSlide()
+            }
+        }
+        return super.onInterceptTouchEvent(ev)
+    }
+    
     //滑动距离
     private var mDx = 0
     private var mDy = 0
     private var mLastX = 0
     private var mLastY = 0
-    private val touchSlop: Int = ViewConfiguration.get(context).scaledTouchSlop
     private var hasInter = false
-
+    private val touchSlop = ViewConfiguration.get(context).scaledTouchSlop
+    
     override fun onTouchEvent(event: MotionEvent): Boolean {
         if (!mAllowDragging) return false
         when (event.action) {
@@ -336,7 +347,6 @@ class SlideMenuLayout @JvmOverloads constructor(
                 //拿到x方向的偏移量
                 val dx = currentX - mLastX
                 val dy = currentY - mLastY
-
                 if (dx < 0) { //向左滑动
                     scrollLeft(dx)
                 } else { //向右滑动
@@ -346,15 +356,14 @@ class SlideMenuLayout @JvmOverloads constructor(
                 mLastY = currentY
                 mDx = dx
                 mDy = dy
-
                 if(abs(dx)  > abs(dy) * 0.5 || hasInter){
                     hasInter = true
                     parent.requestDisallowInterceptTouchEvent(true)
                 }else{
                     parent.requestDisallowInterceptTouchEvent(false)
                 }
-
             }
+            
             MotionEvent.ACTION_UP -> {
                 performClick()
                 val dTime = System.currentTimeMillis() - getTag(R.id.noclass_tap_click_time_tag) as Long
@@ -366,16 +375,18 @@ class SlideMenuLayout @JvmOverloads constructor(
                 } else {
                     inertiaScrollLeft()
                 }
-                mDx = 0
-                hasInter = false
-            }
-            MotionEvent.ACTION_CANCEL -> {
-                if (mDx > 0) { //右滑
-                    inertiaScrollRight()
-                } else {
-                    inertiaScrollLeft()
+                if (mDy.absoluteValue > mDx.absoluteValue * 1){
+                    closeRightSlide()
                 }
                 mDx = 0
+                mDy  = 0
+                hasInter = false
+            }
+            
+            MotionEvent.ACTION_CANCEL -> {
+                closeRightSlide()
+                mDx = 0
+                mDy  = 0
                 hasInter = false
             }
         }

@@ -49,8 +49,8 @@ import java.io.Serializable
  * @ClassName:      NoClassActivity
  * @Author:         Yan
  * @CreateDate:     2022年08月11日 16:07:00
- * @UpdateRemark:   更新说明：
- * @Version:        1.0
+ * @UpdateRemark:   更新说明： 主页不需要网络删除成员
+ * @Version:        1.1
  * @Description:    没课约主界面
  */
 
@@ -183,9 +183,9 @@ class NoClassActivity : BaseVmActivity<NoClassViewModel>(){
   private var toBeDeleteStu = NoclassGroup.Member("","")
   
   /**
-   * 是否已经弹出提示窗
+   * 是否应该弹出提示窗
    */
-  private var mHasShow = false
+  private var mNeedShow = false
   
   /**
    * 是否有更改值
@@ -210,7 +210,6 @@ class NoClassActivity : BaseVmActivity<NoClassViewModel>(){
   override fun onCreate(savedInstanceState: Bundle?) {
     super.onCreate(savedInstanceState)
     setContentView(R.layout.noclass_activity_no_class)
-    
     initUserInfo()
     initObserve()
     initRv()
@@ -239,12 +238,12 @@ class NoClassActivity : BaseVmActivity<NoClassViewModel>(){
         //删除RV下方的成员
         if (mGroupId != "-1"){
           toBeDeleteStu = it
-          viewModel.deleteNoclassGroupMember(mGroupId,it.stuNum)
+          mAdapter.deleteMember(it)
+//          viewModel.deleteNoclassGroupMember(mGroupId,it.stuNum)
         }else{
           mDefaultMembers.remove(it)
           mAdapter.submitList(mDefaultMembers.toMutableList())
         }
-        
       }
     }
     mRecyclerView.adapter = mAdapter.apply {
@@ -359,7 +358,6 @@ class NoClassActivity : BaseVmActivity<NoClassViewModel>(){
       override fun onSlide(bottomSheet: View, slideOffset: Float) {
 
       }
-
       override fun onStateChanged(bottomSheet: View, newState: Int) {
         when (newState) {
           BottomSheetBehavior.STATE_EXPANDED -> { //展开操作
@@ -369,12 +367,37 @@ class NoClassActivity : BaseVmActivity<NoClassViewModel>(){
               isFocusableInTouchMode = false
             }
           }
-          BottomSheetBehavior.STATE_COLLAPSED -> { //折叠操作
+          BottomSheetBehavior.STATE_COLLAPSED,BottomSheetBehavior.STATE_HIDDEN -> { //折叠操作
             mEditTextView.apply {
               isFocusable = true
               isFocusableInTouchMode = true
               requestFocus()
             }
+            if (mNeedShow){
+                if (defaultSp.getBoolean("NeverRemindNextOnNoClass",false)){
+                  return
+                }
+                SearchDoneDialog(this@NoClassActivity).apply {
+                  setOnReturnClick { searchDoneDialog, remind ->
+                    if (remind){
+                      defaultSp.edit {
+                        putBoolean("NeverRemindNextOnNoClass",remind)
+                      }
+                    }
+                    searchDoneDialog.dismiss()
+                  }
+                  setOnContinueClick { searchDoneDialog, remind ->
+                    if (remind){
+                      defaultSp.edit {
+                        putBoolean("NeverRemindNextOnNoClass",remind)
+                      }
+                    }
+                    searchDoneDialog.dismiss()
+                    toGroupManager(true)
+                  }
+                }.show()
+            }
+            mNeedShow = false
           }
           else -> {
             //忽略
@@ -385,11 +408,6 @@ class NoClassActivity : BaseVmActivity<NoClassViewModel>(){
   
     replaceFragment(R.id.noclass_course_bottom_sheet_container) {
       NoClassCourseVpFragment.newInstance(NoClassSpareTime.EMPTY_PAGE)
-    }
-   
-    //在滑动下拉课表容器中添加整个课表
-    viewModel.noclassData.observe(this){
-      mCourseSheetBehavior.state = BottomSheetBehavior.STATE_EXPANDED
     }
     
     mCourseSheetBehavior.state = BottomSheetBehavior.STATE_HIDDEN
@@ -417,6 +435,7 @@ class NoClassActivity : BaseVmActivity<NoClassViewModel>(){
     val intent = (Intent(this@NoClassActivity, GroupManagerActivity::class.java).apply {
       putExtra("GroupList",mList as Serializable)
       putExtra("CreateGroup",create)
+      if (create) putExtra("DefaultList",mDefaultMembers as Serializable)
     })
     startForResult.launch(intent)
   }
@@ -439,7 +458,7 @@ class NoClassActivity : BaseVmActivity<NoClassViewModel>(){
    * 执行查询课程的操作
    */
   private fun doSearchCourse(){
-    viewModel.getLessons(getCurrentGroup(mGroupId).members.map { it.stuNum },getCurrentGroup(mGroupId).members)
+    viewModel.getLessons(mAdapter.currentList.map { it.stuNum },mAdapter.currentList)
   }
   
   /**
@@ -464,11 +483,11 @@ class NoClassActivity : BaseVmActivity<NoClassViewModel>(){
        }else{
          mSearchStudentDialog = SearchStudentDialog(students){
            //点击分组事件回调
+           if (mAdapter.currentList.contains(it)){
+             toast("用户已经存在分组中了哦~")
+             return@SearchStudentDialog
+           }
            if (mGroupId == "-1"){//默认分组情况
-             if (mDefaultMembers.contains(it)){
-               toast("用户已经存在分组中了哦~")
-               return@SearchStudentDialog
-             }
              toast("添加成功")
              //添加成功关闭自身
              mSearchStudentDialog?.dismiss()
@@ -479,50 +498,54 @@ class NoClassActivity : BaseVmActivity<NoClassViewModel>(){
              if (currentGroup.id =="-1"){
                return@SearchStudentDialog
              }
-             if (currentGroup.members.contains(it)){
-               toast("用户已经存在分组中了哦~")
-               return@SearchStudentDialog
-             }
              toBeAddStu = it
-             viewModel.addNoclassGroupMember(mGroupId,it.stuNum)
+             mAdapter.addMember(it)
+//             viewModel.addNoclassGroupMember(mGroupId,it.stuNum)
            }
          }.apply {
            show(supportFragmentManager,"searchStudentDialog")
          }
        }
     }
-    //添加人物
-    viewModel.addState.observe(this){
-      if (it.first){
-        val currentGroup = getCurrentGroup(it.second)
-        if (toBeAddStu.stuName.isNotEmpty() && toBeAddStu.stuNum.isNotEmpty())
-        currentGroup.members += (toBeAddStu)
-        toBeAddStu = NoclassGroup.Member("","")
-        if (mGroupId == it.second){
-          mAdapter.submitList(currentGroup.members.toMutableList())
-        }
-        toast("添加成功")
-        mSearchStudentDialog?.dismiss()
-      }else{
-        toast("似乎出现了什么错误呢~")
-      }
+    
+    //在滑动下拉课表容器中添加整个课表
+    viewModel.noclassData.observe(this){
+      mCourseSheetBehavior.state = BottomSheetBehavior.STATE_EXPANDED
+      mNeedShow = mGroupId == "-1"
     }
-    //删除人物
-    viewModel.deleteState.observe(this){
-      if (it.first){
-        val currentGroup = getCurrentGroup(it.second)
-        if (toBeDeleteStu.stuNum.isNotEmpty() && toBeDeleteStu.stuName.isNotEmpty())
-        currentGroup.members -= (toBeDeleteStu)
-        toBeDeleteStu = NoclassGroup.Member("", "")
-        if (mGroupId == it.second){
-          mAdapter.submitList(currentGroup.members.toMutableList())
-        }
-        toast("删除成功")
-        mSearchStudentDialog?.dismiss()
-      }else{
-        toast("似乎出现了什么错误呢~")
-      }
-    }
+    //暂时不需要网络删除成员
+//    //添加人物
+//    viewModel.addState.observe(this){
+//      if (it.first){
+//        val currentGroup = getCurrentGroup(it.second)
+//        if (toBeAddStu.stuName.isNotEmpty() && toBeAddStu.stuNum.isNotEmpty())
+//        currentGroup.members += (toBeAddStu)
+//        toBeAddStu = NoclassGroup.Member("","")
+//        if (mGroupId == it.second){
+//          mAdapter.submitList(currentGroup.members.toMutableList())
+//        }
+//        toast("添加成功")
+//        mSearchStudentDialog?.dismiss()
+//      }else{
+//        toast("似乎出现了什么错误呢~")
+//      }
+//    }
+//    //删除人物
+//    viewModel.deleteState.observe(this){
+//      if (it.first){
+//        val currentGroup = getCurrentGroup(it.second)
+//        if (toBeDeleteStu.stuNum.isNotEmpty() && toBeDeleteStu.stuName.isNotEmpty())
+//        currentGroup.members -= (toBeDeleteStu)
+//        toBeDeleteStu = NoclassGroup.Member("", "")
+//        if (mGroupId == it.second){
+//          mAdapter.submitList(currentGroup.members.toMutableList())
+//        }
+//        toast("删除成功")
+//        mSearchStudentDialog?.dismiss()
+//      }else{
+//        toast("似乎出现了什么错误呢~")
+//      }
+//    }
   }
   
   /**
@@ -587,28 +610,6 @@ class NoClassActivity : BaseVmActivity<NoClassViewModel>(){
   override fun onBackPressed() {
     if (mCourseSheetBehavior.state == BottomSheetBehavior.STATE_EXPANDED) {
       mCourseSheetBehavior.state = BottomSheetBehavior.STATE_HIDDEN
-    } else if ((mDefaultMembers.size != 1 || (mDefaultMembers.size == 1 && mDefaultMembers[0].stuNum == mUserId)) && !mHasShow ){
-      if (defaultSp.getBoolean("NeverRemindNextOnNoClass",false)){
-        mHasShow = true
-        this@NoClassActivity.onBackPressed()
-        return
-      }
-      SearchDoneDialog(this).apply {
-        setOnReturnClick { searchDoneDialog, remind ->
-          if (remind){
-            defaultSp.edit {
-              putBoolean("NeverRemindNextOnNoClass",remind)
-            }
-          }
-          mHasShow = true
-          searchDoneDialog.dismiss()
-          this@NoClassActivity.onBackPressed()
-        }
-        setOnContinueClick {
-          it.dismiss()
-          toGroupManager(true)
-        }
-      }.show()
     } else{
       super.onBackPressed()
     }

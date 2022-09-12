@@ -34,6 +34,8 @@ class CreateGroupDialogFragment(
   
   private val viewModel by activityViewModels<GroupManagerViewModel>()
   
+  private var mExtraNums : String? = null
+  
   override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
     super.onCreateDialog(savedInstanceState)
     val dialog = super.onCreateDialog(savedInstanceState)
@@ -113,7 +115,7 @@ class CreateGroupDialogFragment(
         return
       }
     }
-    viewModel.postNoclassGroup(name, "")
+    viewModel.postNoclassGroup(name, mExtraNums ?: "")
     viewModel.isCreateSuccess.observe(this) {
       if (it.id == -1) {
         toast("似乎出现了什么问题呢,请稍后再试")
@@ -129,6 +131,10 @@ class CreateGroupDialogFragment(
    */
   private fun createUndone(textView: TextView) {
     textView.startShake()
+  }
+  
+  fun setExtraNumbers(nums : String){
+    mExtraNums = nums
   }
   
   

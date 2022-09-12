@@ -45,17 +45,17 @@ class NoClassViewModel : BaseViewModel() {
   val students : LiveData<List<Student>> get() = _students
   private val _students = MutableLiveData<List<Student>>()
   
-  /**
-   * 添加成员
-   */
-  val addState : LiveData<Pair<Boolean,String>> get() = _addState
-  private val _addState = MutableLiveData<Pair<Boolean,String>>()
-  
-  /**
-   * 删除成员
-   */
-  val deleteState : LiveData<Pair<Boolean,String>> get() = _deleteState
-  private val _deleteState = MutableLiveData<Pair<Boolean,String>>()
+//  /**
+//   * 添加成员
+//   */
+//  val addState : LiveData<Pair<Boolean,String>> get() = _addState
+//  private val _addState = MutableLiveData<Pair<Boolean,String>>()
+//
+//  /**
+//   * 删除成员
+//   */
+//  val deleteState : LiveData<Pair<Boolean,String>> get() = _deleteState
+//  private val _deleteState = MutableLiveData<Pair<Boolean,String>>()
   
   /**
    * 没课时段
@@ -79,30 +79,30 @@ class NoClassViewModel : BaseViewModel() {
       }
   }
   
-  /**
-   * 添加成员进族中
-   */
-  fun addNoclassGroupMember(groupId : String, stuNum: String){
-    NoClassRepository
-      .addNoclassGroupMember(groupId, stuNum)
-      .doOnError {
-        _addState.postValue(Pair(false,"-2"))
-      }.safeSubscribeBy {
-        _addState.postValue(Pair(it.isSuccess(),groupId))
-      }
-  }
-  /**
-   * 删除组中成员
-   */
-  fun deleteNoclassGroupMember(groupId: String, stuNum: String) {
-    NoClassRepository
-      .deleteNoclassGroupMember(groupId, stuNum)
-      .doOnError {
-        _deleteState.postValue(Pair(false,"-2"))
-      }.safeSubscribeBy {
-        _deleteState.postValue(Pair(it.isSuccess(),groupId))
-      }
-  }
+//  /**
+//   * 添加成员进族中
+//   */
+//  fun addNoclassGroupMember(groupId : String, stuNum: String){
+//    NoClassRepository
+//      .addNoclassGroupMember(groupId, stuNum)
+//      .doOnError {
+//        _addState.postValue(Pair(false,"-2"))
+//      }.safeSubscribeBy {
+//        _addState.postValue(Pair(it.isSuccess(),groupId))
+//      }
+//  }
+//  /**
+//   * 删除组中成员
+//   */
+//  fun deleteNoclassGroupMember(groupId: String, stuNum: String) {
+//    NoClassRepository
+//      .deleteNoclassGroupMember(groupId, stuNum)
+//      .doOnError {
+//        _deleteState.postValue(Pair(false,"-2"))
+//      }.safeSubscribeBy {
+//        _deleteState.postValue(Pair(it.isSuccess(),groupId))
+//      }
+//  }
   
   /**
    * 查询学生

@@ -72,6 +72,18 @@ class NoClassGroupAdapter : ListAdapter<NoclassGroup.Member,NoClassGroupAdapter.
         holder.tvName.text = currentList[position].stuName
         holder.tvId.text = currentList[position].stuNum
     }
+    
+    fun addMember(member : NoclassGroup.Member){
+        val list = currentList.toMutableList()
+        list.add(member)
+        submitList(list)
+    }
+    
+    fun deleteMember(member : NoclassGroup.Member){
+        val list = currentList.toMutableList()
+        list.remove(member)
+        submitList(list)
+    }
 
     fun setOnItemDelete(listener : (NoclassGroup.Member) -> Unit){
         mOnItemDelete = listener

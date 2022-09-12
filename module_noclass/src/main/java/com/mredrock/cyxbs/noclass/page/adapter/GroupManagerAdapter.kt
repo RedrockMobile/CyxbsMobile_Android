@@ -110,7 +110,7 @@ class GroupManagerAdapter(
         }
         val deleteIcon : ImageView = itemView.findViewById(R.id.iv_noclass_group_delete_icon)
         val groupName : TextView = itemView.findViewById(R.id.tv_noclass_group_name)
-        val slideContainer : SlideMenuLayout = itemView.findViewById<SlideMenuLayout?>(R.id.slide_noclass_container).apply{
+        val slideContainer : SlideMenuLayout = itemView.findViewById<SlideMenuLayout>(R.id.slide_noclass_container).apply{
 
             setOnTapTouchListener {
                 if (mGroupState === GroupManagerActivity.GroupState.NORMAL){
@@ -119,7 +119,6 @@ class GroupManagerAdapter(
             }
 
             setOnDownListener {
-                this.isSelected = true
                 mLastSelPosition = mSelPosition
                 mSelPosition = layoutPosition
                 //改变点击状态
@@ -127,7 +126,6 @@ class GroupManagerAdapter(
             }
 
             setOnClickListener {
-
                 if (mGroupState === GroupManagerActivity.GroupState.DELETE){
                     if(mSelectedList.contains(absoluteAdapterPosition)){
                         mSelectedList.remove(absoluteAdapterPosition)
@@ -157,7 +155,6 @@ class GroupManagerAdapter(
                             mCurScrollPosition = layoutPosition
                             //改变滑动状态
                             notifyItemChanged(mLastSelPosition)
-
                         }
                     }
 
@@ -178,6 +175,7 @@ class GroupManagerAdapter(
         //test:
         holder.groupName.text = currentList[position].name
         holder.topText.text = if (currentList[position].isTop) "取消置顶" else "置顶"
+        holder.slideContainer.isSelected = currentList[position].isTop
 
         if (mSelectedList.contains(position)){
             holder.deleteIcon.alpha = if(mGroupState === GroupManagerActivity.GroupState.DELETE) 1f else 0f
@@ -186,7 +184,6 @@ class GroupManagerAdapter(
             holder.deleteIcon.alpha = if(mGroupState === GroupManagerActivity.GroupState.DELETE) 1f else 0f
             holder.deleteIcon.setImageResource(R.drawable.noclass_ic_delete_normal)
         }
-        holder.slideContainer.isSelected = holder.layoutPosition == mSelPosition
 
         if (holder.layoutPosition != mCurScrollPosition){
             if(holder.slideContainer.isRightSlideOpen()){

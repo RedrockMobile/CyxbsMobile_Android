@@ -66,7 +66,10 @@ class SearchStudentDialog(
       }
     }
     dialog.findViewById<RecyclerView>(R.id.rv_noclass_search_container).apply {
-      adapter = SearchStudentAdapter(onAddClick).apply {
+      adapter = SearchStudentAdapter {
+        onAddClick(it)
+        dismiss()
+      }.apply {
         submitList(students)
       }
       layoutManager = LinearLayoutManager(context)

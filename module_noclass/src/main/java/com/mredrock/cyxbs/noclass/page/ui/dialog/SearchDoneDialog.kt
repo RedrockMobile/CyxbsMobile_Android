@@ -5,7 +5,6 @@ import android.content.Context
 import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
 import android.os.Bundle
-import android.util.Log
 import android.widget.Button
 import android.widget.CheckBox
 import com.mredrock.cyxbs.lib.utils.extensions.setOnSingleClickListener
@@ -32,7 +31,7 @@ class SearchDoneDialog(context: Context) : AlertDialog(context) {
   /**
    * 继续按钮的回调
    */
-  private var mOnContinue : ((SearchDoneDialog) -> Unit)? = null
+  private var mOnContinue : ((SearchDoneDialog,Boolean) -> Unit)? = null
   
   override fun onCreate(savedInstanceState: Bundle?) {
     super.onCreate(savedInstanceState)
@@ -48,14 +47,13 @@ class SearchDoneDialog(context: Context) : AlertDialog(context) {
     
     findViewById<Button>(R.id.btn_noclass_dialog_search_done_back).apply {
       setOnSingleClickListener {
-        Log.e("cbnwuiaxwa",checkBox.isChecked.toString())
         mOnReturnClick?.invoke(this@SearchDoneDialog,checkBox.isChecked)
       }
     }
     
     findViewById<Button>(R.id.btn_noclass_dialog_search_done_continue).apply {
       setOnSingleClickListener {
-        mOnContinue?.invoke(this@SearchDoneDialog)
+        mOnContinue?.invoke(this@SearchDoneDialog,checkBox.isChecked)
       }
     }
     
@@ -67,7 +65,7 @@ class SearchDoneDialog(context: Context) : AlertDialog(context) {
     }
   }
   
-  fun setOnContinueClick(onContinue : (SearchDoneDialog) -> Unit) : SearchDoneDialog{
+  fun setOnContinueClick(onContinue : (SearchDoneDialog,Boolean) -> Unit) : SearchDoneDialog{
     return this.apply {
       mOnContinue = onContinue
     }

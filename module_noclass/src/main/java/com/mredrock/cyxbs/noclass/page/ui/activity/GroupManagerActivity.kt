@@ -73,7 +73,7 @@ class GroupManagerActivity : BaseVmActivity<GroupManagerViewModel>(){
      * 整个分组数据
      */
     private lateinit var mGroupList : MutableList<NoclassGroup>
-
+    
     /**
      * 这个界面是否有改变
      */
@@ -106,14 +106,16 @@ class GroupManagerActivity : BaseVmActivity<GroupManagerViewModel>(){
      * 接受外部传来的数据
      */
     private fun getList(){
+        var mDefaultList : MutableList<NoclassGroup.Member>? = null
         val create = intent.getBooleanExtra("CreateGroup",false)
+        if (create) mDefaultList = intent.getSerializableExtra("DefaultList") as MutableList<NoclassGroup.Member>
         val extra = intent.getSerializableExtra("GroupList")
         mGroupList = extra as MutableList<NoclassGroup>
          if (mGroupList.isEmpty()){
              mEmptyContainer.visibility = View.VISIBLE
          }
         if (create){
-            createGroup()
+            createGroup(mDefaultList)
         }
     }
 
@@ -149,7 +151,6 @@ class GroupManagerActivity : BaseVmActivity<GroupManagerViewModel>(){
         }
         mRecyclerView.adapter = mRvAdapter
         mRecyclerView.layoutManager = LinearLayoutManager(this)
-//        (mRecyclerView.itemAnimator as DefaultItemAnimator).supportsChangeAnimations = false
         mRecyclerView.itemAnimator = null
     }
 
@@ -208,10 +209,13 @@ class GroupManagerActivity : BaseVmActivity<GroupManagerViewModel>(){
             }
         }
 
+        var mLastCreateId : Int = -1
+        
         //是否创建成功
         viewModel.isCreateSuccess.observe(this){
             if (it.id != -1){
                 mHasChanged = true
+                mLastCreateId = it.id
                 reGetGroup()
             }
         }
@@ -220,6 +224,20 @@ class GroupManagerActivity : BaseVmActivity<GroupManagerViewModel>(){
         viewModel.groupList.observe(this){
             mGroupList = it as MutableList<NoclassGroup>
             mRvAdapter.submitList(mGroupList)
+            if (mLastCreateId != -1){
+                var index = -1
+                for(i in 0 until mGroupList.size){
+                    if (mLastCreateId.toString() == mGroupList[i].id){
+                        index = i
+                        break
+                    }
+                }
+                startForResult.launch(Intent(this@GroupManagerActivity, GroupDetailActivity::class.java).apply {
+                    putExtra("GroupList",mGroupList as Serializable)
+                    putExtra("GroupPosition",index)
+                })
+                mLastCreateId = -1
+            }
         }
 
     }
@@ -252,12 +270,23 @@ class GroupManagerActivity : BaseVmActivity<GroupManagerViewModel>(){
     /**
      * 新建分组
      */
-    private fun createGroup(){
+    private fun createGroup(extraList : MutableList<NoclassGroup.Member>? = null){
         val mNameList : MutableList<String> = mutableListOf() //记录所有分组名字
         for (i in mGroupList){
             mNameList.add(i.name)
         }
-        val mBottomSheetDialog = CreateGroupDialogFragment(mNameList)
+        val mBottomSheetDialog = CreateGroupDialogFragment(mNameList).apply {
+            if (extraList?.isNotEmpty() == true){
+                var extraNums = ""
+                extraList.forEachIndexed { index, member ->
+                    extraNums += member.stuNum
+                    if (index != extraList.size -1){
+                        extraNums += ","
+                    }
+                }
+                setExtraNumbers(extraNums)
+            }
+        }
         mBottomSheetDialog.show(supportFragmentManager,"createGroupDialog")
     }
 
