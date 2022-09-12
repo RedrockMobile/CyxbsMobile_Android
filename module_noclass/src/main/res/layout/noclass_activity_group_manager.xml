@@ -2,13 +2,13 @@
 <androidx.constraintlayout.widget.ConstraintLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:ignore="HardcodedText"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/config_white_black">
 
     <androidx.appcompat.widget.Toolbar
-        android:layout_marginTop="8dp"
-        android:layout_marginBottom="8dp"
         android:id="@+id/tb_noclass_group"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -22,7 +22,8 @@
             android:paddingEnd="6dp"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            app:srcCompat="@drawable/noclass_ic_return"/>
+            app:srcCompat="@drawable/noclass_ic_return"
+            tools:ignore="ContentDescription" />
         <TextView
             android:paddingStart="6dp"
             android:paddingEnd="12dp"
@@ -30,7 +31,7 @@
             android:textSize="21sp"
             android:text="分组管理"
             android:layout_width="wrap_content"
-            android:layout_height="match_parent"/>
+            android:layout_height="match_parent" />
     </androidx.appcompat.widget.Toolbar>
 
     <View

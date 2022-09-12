@@ -7,7 +7,6 @@
     android:background="@color/config_white_black">
 
     <androidx.appcompat.widget.Toolbar
-        android:layout_marginTop="8dp"
         android:id="@+id/tb_noclass_group_detail"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"

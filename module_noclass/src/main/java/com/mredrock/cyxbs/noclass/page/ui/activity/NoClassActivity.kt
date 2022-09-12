@@ -205,7 +205,7 @@ class NoClassActivity : BaseVmActivity<NoClassViewModel>(){
    * 取消状态栏
    */
   override val isCancelStatusBar: Boolean
-    get() = false
+    get() = true
   
   override fun onCreate(savedInstanceState: Bundle?) {
     super.onCreate(savedInstanceState)

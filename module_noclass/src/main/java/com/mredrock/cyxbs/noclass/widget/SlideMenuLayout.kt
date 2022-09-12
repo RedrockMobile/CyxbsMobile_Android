@@ -369,6 +369,15 @@ class SlideMenuLayout @JvmOverloads constructor(
                 mDx = 0
                 hasInter = false
             }
+            MotionEvent.ACTION_CANCEL -> {
+                if (mDx > 0) { //右滑
+                    inertiaScrollRight()
+                } else {
+                    inertiaScrollLeft()
+                }
+                mDx = 0
+                hasInter = false
+            }
         }
         return true
     }

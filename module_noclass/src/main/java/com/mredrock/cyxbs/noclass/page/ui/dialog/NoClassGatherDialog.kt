@@ -7,6 +7,7 @@ import androidx.viewpager2.widget.ViewPager2
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import com.mredrock.cyxbs.noclass.R
 import com.mredrock.cyxbs.noclass.page.adapter.NoClassGatheringAdapter
+import com.mredrock.cyxbs.noclass.widget.StickIndicator
 
 /**
  *
@@ -36,6 +37,7 @@ class NoClassGatherDialog (
     initView(dialog)
     return dialog
   }
+  
   private fun initView(dialog: Dialog){
     val mTvTotal = dialog.findViewById<TextView>(R.id.noclass_tv_gathering_total).apply {
       text = "人数：共计 ${mStuList.size} 人"
@@ -57,7 +59,20 @@ class NoClassGatherDialog (
         }
       }
       adapter = NoClassGatheringAdapter(context, mStuListByPage)
-    } 
+    }
+    val mIndicator = dialog.findViewById<StickIndicator>(R.id.noclass_indicator_gathering).apply {
+      setTotalCount(mStuList.size/8 + 1)
+    }
+    mViewPager2.registerOnPageChangeCallback(object : ViewPager2.OnPageChangeCallback(){
+      override fun onPageScrolled(position: Int, positionOffset: Float, positionOffsetPixels: Int) {
+        super.onPageScrolled(position, positionOffset, positionOffsetPixels)
+        
+      }
+      override fun onPageSelected(position: Int) {
+        mIndicator.setCurIndex(position)
+        super.onPageSelected(position)
+      }
+    })
   }
   
   

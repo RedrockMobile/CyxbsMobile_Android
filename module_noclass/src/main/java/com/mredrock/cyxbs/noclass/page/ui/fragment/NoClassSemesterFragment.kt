@@ -38,7 +38,6 @@ class NoClassSemesterFragment : NoClassPageFragment() {
   override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
     super.onViewCreated(view, savedInstanceState)
     initToday()
-    initTimeline()
     initObserve()
     addLessons(mNoClassSpareTime)
   }
@@ -68,7 +67,7 @@ class NoClassSemesterFragment : NoClassPageFragment() {
     showToday(weekNum)
   }
   
-  private fun initTimeline() {
+  override fun initTimeline() {
     CourseNowTimeHelper.attach(this)
   }
 

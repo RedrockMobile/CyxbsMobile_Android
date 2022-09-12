@@ -3,18 +3,17 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:fitsSystemWindows="true"
+    tools:ignore="HardcodedText"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     >
 
     <androidx.constraintlayout.widget.ConstraintLayout
+    android:fitsSystemWindows="true"
     android:background="@color/config_white_black"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
-
         <androidx.appcompat.widget.Toolbar
-            android:layout_marginBottom="8dp"
             android:id="@+id/tb_noclass_main"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -27,7 +26,8 @@
                 android:paddingEnd="6dp"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                app:srcCompat="@drawable/noclass_ic_return"/>
+                app:srcCompat="@drawable/noclass_ic_return"
+                tools:ignore="ContentDescription" />
             <TextView
                 android:paddingStart="6dp"
                 android:paddingEnd="12dp"
@@ -35,11 +35,11 @@
                 android:textSize="21sp"
                 android:text="没课约"
                 android:layout_width="wrap_content"
-                android:layout_height="match_parent"/>
+                android:layout_height="match_parent"
+                tools:ignore="HardcodedText" />
         </androidx.appcompat.widget.Toolbar>
 
         <View
-            android:layout_marginTop="8dp"
             android:id="@+id/noclassView2"
             android:layout_width="match_parent"
             android:layout_height="1dp"
@@ -69,7 +69,8 @@
             android:textColor="@color/config_level_two_font_color"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/tb_noclass_main" />
+            app:layout_constraintTop_toBottomOf="@+id/tb_noclass_main"
+            tools:ignore="Autofill,TextFields" />
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:paddingTop="23dp"
@@ -104,7 +105,8 @@
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintStart_toEndOf="@+id/noclassAppcompattextview"
                 app:layout_constraintTop_toTopOf="parent"
-                app:srcCompat="@drawable/noclass_ic_group_action" />
+                app:srcCompat="@drawable/noclass_ic_group_action"
+                tools:ignore="ContentDescription" />
 
             <androidx.appcompat.widget.AppCompatTextView
                 android:layout_marginEnd="16dp"
@@ -174,11 +176,12 @@
 
     </androidx.constraintlayout.widget.ConstraintLayout>
     <FrameLayout
+        android:fitsSystemWindows="true"
         android:id="@+id/noclass_course_bottom_sheet_container"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         app:behavior_hideable="true"
-        android:paddingTop="30dp"
+        android:paddingTop="10dp"
         app:behavior_peekHeight="0dp"
         android:layout_marginBottom="0dp"
         app:layout_behavior="@string/bottom_sheet_behavior">

@@ -155,9 +155,10 @@ class StickIndicator @JvmOverloads constructor(
     }
 
     fun setCurIndex(index: Int) {
-        if (index == curIndex) {
-            return
-        }
+//        如果添加一下判断就会导致滑动过快会滑不回来
+//        if (index == curIndex) {
+//            return
+//        }
         //当前滑动到的新index 处于左右两边2个之外的区域
         if (totalCount > showCount) {
             if (index > curIndex) {
