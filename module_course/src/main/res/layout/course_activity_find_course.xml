@@ -12,7 +12,9 @@
 
         <FrameLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+            android:layout_height="wrap_content"
+            android:fitsSystemWindows="true"
+            android:background="@color/config_white_black">
 
             <androidx.appcompat.widget.AppCompatImageButton
                 android:id="@+id/course_ib_find_course_back"
@@ -66,8 +68,9 @@
         android:id="@+id/course_bsh_find_course"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        app:behavior_hideable="true"
         android:paddingTop="30dp"
+        android:fitsSystemWindows="true"
+        app:behavior_hideable="true"
         app:behavior_peekHeight="0dp"
         app:layout_behavior="@string/bottom_sheet_behavior">
 

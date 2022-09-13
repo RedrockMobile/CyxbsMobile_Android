@@ -6,7 +6,7 @@ import com.mredrock.cyxbs.lib.course.fragment.page.expose.IToday
 import com.mredrock.cyxbs.lib.course.fragment.page.expose.IWeekWrapper
 
 /**
- * ...
+ * page 包下主要放需要跟除课表容器外的其他控件进行交互的实现类
  *
  * @author 985892345 (Guo Xiangrui)
  * @email guo985892345@foxmail.com

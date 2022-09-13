@@ -26,7 +26,7 @@ import java.lang.IllegalStateException
  * @email guo985892345@foxmail.com
  * @date 2022/8/27 17:12
  */
-class HomeCourseViewModel : BaseViewModel() {
+class HomeCourseViewModel(val nowWeek: Int) : BaseViewModel() {
   
   val homeWeekData: LiveData<Map<Int, HomePageResult>> get() = _homeWeekData
   private val _homeWeekData = MutableLiveData<Map<Int, HomePageResult>>()

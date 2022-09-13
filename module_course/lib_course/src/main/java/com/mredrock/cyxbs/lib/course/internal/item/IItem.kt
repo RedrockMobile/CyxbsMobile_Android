@@ -22,6 +22,10 @@ interface IItem {
   
   /**
    * [initializeView] 对象对应的 layoutParams，用于添加进父布局时使用
+   * 正确继承写法：
+   * ```
+   * override val lp = ItemLayoutParams(data)
+   * ```
    */
   val lp: ItemLayoutParams
 }

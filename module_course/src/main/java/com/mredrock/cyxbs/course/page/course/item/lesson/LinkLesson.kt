@@ -1,12 +1,17 @@
 package com.mredrock.cyxbs.course.page.course.item.lesson
 
+import android.annotation.SuppressLint
 import android.content.Context
-import android.view.View
+import android.graphics.Canvas
 import com.mredrock.cyxbs.course.R
-import com.mredrock.cyxbs.course.page.course.data.LessonData
 import com.mredrock.cyxbs.course.page.course.data.StuLessonData
+import com.mredrock.cyxbs.course.page.course.item.BaseOverlapSingleDayItem
 import com.mredrock.cyxbs.course.page.course.item.lesson.lp.LinkLessonLayoutParams
-import com.mredrock.cyxbs.course.page.course.item.view.ItemView
+import com.mredrock.cyxbs.course.page.course.item.view.IOverlapTag
+import com.mredrock.cyxbs.course.page.course.item.view.OverlapTagHelper
+import com.mredrock.cyxbs.course.page.course.utils.container.base.IDataOwner
+import com.mredrock.cyxbs.lib.course.item.lesson.ILessonItem
+import com.mredrock.cyxbs.lib.course.item.view.ItemView
 import com.mredrock.cyxbs.lib.utils.extensions.color
 
 /**
@@ -16,9 +21,13 @@ import com.mredrock.cyxbs.lib.utils.extensions.color
  * @email guo985892345@foxmail.com
  * @date 2022/9/2 16:42
  */
-class LinkLesson(private var lessonData: StuLessonData) : BaseLesson() {
+class LinkLesson(private var lessonData: StuLessonData) :
+  BaseOverlapSingleDayItem<LinkLesson.LinkLessonView, StuLessonData>(),
+  IDataOwner<StuLessonData> ,
+  ILessonItem
+{
   
-  override fun setData(newData: StuLessonData) {
+  override fun setNewData(newData: StuLessonData) {
     getChildIterable().forEach {
       if (it is LinkLessonView) {
         it.setLessonData(newData)
@@ -28,35 +37,41 @@ class LinkLesson(private var lessonData: StuLessonData) : BaseLesson() {
     lessonData = newData
   }
   
-  override fun createView(context: Context): View {
-    return LinkLessonView.newInstance(context, lessonData)
+  override fun createView(context: Context): LinkLessonView {
+    return LinkLessonView(context, lessonData)
   }
   
-  private class LinkLessonView private constructor(
+  @SuppressLint("ViewConstructor")
+  class LinkLessonView(
     context: Context,
-  ) : ItemView(context) {
+    var data: StuLessonData
+  ) : ItemView(context), IOverlapTag {
     
-    companion object {
-      fun newInstance(context: Context, data: StuLessonData): LinkLessonView {
-        return LinkLessonView(context).apply {
-          setLessonData(data)
-        }
-      }
-    }
-  
     private val mBgColor = R.color.course_link_lesson_bg.color
     private val mTextColor = R.color.course_link_lesson_tv.color
+    
+    private val mHelper = OverlapTagHelper(this)
   
     fun setLessonData(data: StuLessonData) {
-      setColor(data.timeType)
+      this.data = data
       setText(data.course, data.classroom)
     }
   
-    private fun setColor(type: LessonData.Type) {
+    override fun onDraw(canvas: Canvas) {
+      super.onDraw(canvas)
+      mHelper.drawOverlapTag(canvas)
+    }
+  
+    override fun setIsShowOverlapTag(isShow: Boolean) {
+      mHelper.setIsShowOverlapTag(isShow)
+    }
+  
+    init {
+      setLessonData(data)
       mTvTitle.setTextColor(mTextColor)
       mTvContent.setTextColor(mTextColor)
       setCardBackgroundColor(mBgColor)
-      setOverlapTagColor(mTextColor)
+      mHelper.setOverlapTagColor(mTextColor)
     }
   }
   
@@ -67,7 +82,4 @@ class LinkLesson(private var lessonData: StuLessonData) : BaseLesson() {
   
   override val data: StuLessonData
     get() = lessonData
-  
-  override val week: Int
-    get() = lessonData.week
 }

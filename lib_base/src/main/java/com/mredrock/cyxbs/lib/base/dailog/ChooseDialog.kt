@@ -1,6 +1,5 @@
 package com.mredrock.cyxbs.lib.base.dailog
 
-import android.content.Context
 import android.content.DialogInterface
 import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
@@ -18,7 +17,8 @@ import androidx.lifecycle.*
 import com.google.android.material.button.MaterialButton
 import com.mredrock.cyxbs.config.R
 import kotlinx.coroutines.flow.MutableSharedFlow
-import kotlinx.coroutines.flow.asSharedFlow
+import kotlinx.coroutines.flow.launchIn
+import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.launch
 
 /**
@@ -124,24 +124,19 @@ class ChooseDialog internal constructor(): DialogFragment() {
   
   class Builder private constructor(
     private val fragmentManager: FragmentManager,
+    private val lifecycle: Lifecycle
   ) {
-    /**
-     * 注意：该构造器因为使用 context，默认是 Activity 的，但存在你使用 Fragment
-     * 生命周期倒没事，主要是 FragmentManager 会直接使用 Activity 的，
-     * 会导致 dialog 添加进 Activity 的 Fragment 管理栈中。
-     * （但这问题不是很严重 :)）
-     */
-    constructor(
-      context: Context
-    ) : this(context as FragmentActivity)
     
     constructor(
-      activity: FragmentActivity,
-    ) : this(activity.supportFragmentManager)
-
-    constructor(
-      fragment: Fragment,
-    ) : this(fragment.childFragmentManager)
+      lifecycleOwner: LifecycleOwner
+    ) : this(
+      when (lifecycleOwner) {
+        is FragmentActivity -> lifecycleOwner.supportFragmentManager
+        is Fragment -> lifecycleOwner.childFragmentManager
+        else -> error("不支持该类型：${lifecycleOwner::class.simpleName}")
+      },
+      lifecycleOwner.lifecycle
+    )
 
     private val mDialog: ChooseDialog
 
@@ -169,12 +164,11 @@ class ChooseDialog internal constructor(): DialogFragment() {
      */
     fun setPositiveClick(click: IDialogProxy.() -> Unit): Builder {
       addOnceCallbackAfterCreated {
-        mDialog.mViewModel.viewModelScope.launch {
-          mDialog.mViewModel.positiveClick
-            .collect {
-              click.invoke(it)
-            }
-        }
+        mDialog.mViewModel
+          .positiveClick
+          .onEach {
+            click.invoke(it)
+          }.launchIn(lifecycle.coroutineScope)
       }
       return this
     }
@@ -184,12 +178,11 @@ class ChooseDialog internal constructor(): DialogFragment() {
      */
     fun setNegativeClick(click: IDialogProxy.() -> Unit): Builder {
       addOnceCallbackAfterCreated {
-        mDialog.mViewModel.viewModelScope.launch {
-          mDialog.mViewModel.negativeClick
-            .collect {
-              click.invoke(it)
-            }
-        }
+        mDialog.mViewModel
+          .negativeClick
+          .onEach {
+            click.invoke(it)
+          }.launchIn(lifecycle.coroutineScope)
       }
       return this
     }
@@ -199,12 +192,11 @@ class ChooseDialog internal constructor(): DialogFragment() {
      */
     fun setDismissCallback(call: IDialogProxy.() -> Unit): Builder {
       addOnceCallbackAfterCreated {
-        mDialog.mViewModel.viewModelScope.launch {
-          mDialog.mViewModel.dismissCallback
-            .collect {
-              call.invoke(it)
-            }
-        }
+        mDialog.mViewModel
+          .dismissCallback
+          .onEach {
+            call.invoke(it)
+          }.launchIn(lifecycle.coroutineScope)
       }
       return this
     }
@@ -215,12 +207,11 @@ class ChooseDialog internal constructor(): DialogFragment() {
     fun setCancelCallback(call: IDialogProxy.() -> Unit): Builder {
       // 只有在 Fragment 初始化后才能得到 ViewModel，所以只能这样设置监听
       addOnceCallbackAfterCreated {
-        mDialog.mViewModel.viewModelScope.launch {
-          mDialog.mViewModel.cancelCallback
-            .collect {
-              call.invoke(it)
-            }
-        }
+        mDialog.mViewModel
+          .cancelCallback
+          .onEach {
+            call.invoke(it)
+          }.launchIn(lifecycle.coroutineScope)
       }
       return this
     }
@@ -269,39 +260,33 @@ class ChooseDialog internal constructor(): DialogFragment() {
   internal class ChooseDialogViewModel : ViewModel(), IDialogProxy {
     var data: Data = defaultData
     
-    private val _dismissEvent = MutableSharedFlow<Unit>()
-    val dismissEvent = _dismissEvent.asSharedFlow()
-    
-    private val _positiveClick = MutableSharedFlow<IDialogProxy>()
-    val positiveClick = _positiveClick.asSharedFlow()
-    private val _negativeClick = MutableSharedFlow<IDialogProxy>()
-    val negativeClick = _negativeClick.asSharedFlow()
-    private val _dismissCallback = MutableSharedFlow<IDialogProxy>()
-    val dismissCallback = _dismissCallback.asSharedFlow()
-    private val _cancelCallback = MutableSharedFlow<IDialogProxy>()
-    val cancelCallback = _cancelCallback.asSharedFlow()
+    val dismissEvent = MutableSharedFlow<Unit>()
+    val positiveClick = MutableSharedFlow<IDialogProxy>()
+    val negativeClick = MutableSharedFlow<IDialogProxy>()
+    val dismissCallback = MutableSharedFlow<IDialogProxy>()
+    val cancelCallback = MutableSharedFlow<IDialogProxy>()
 
     fun sendPositiveClick() {
       viewModelScope.launch {
-        _positiveClick.emit(this@ChooseDialogViewModel)
+        positiveClick.emit(this@ChooseDialogViewModel)
       }
     }
     
     fun sendNegativeClick() {
       viewModelScope.launch {
-        _negativeClick.emit(this@ChooseDialogViewModel)
+        negativeClick.emit(this@ChooseDialogViewModel)
       }
     }
     
     fun sendDismissCallback() {
       viewModelScope.launch {
-        _dismissCallback.emit(this@ChooseDialogViewModel)
+        dismissCallback.emit(this@ChooseDialogViewModel)
       }
     }
     
     fun sendCancelCallback() {
       viewModelScope.launch {
-        _cancelCallback.emit(this@ChooseDialogViewModel)
+        cancelCallback.emit(this@ChooseDialogViewModel)
       }
     }
 
@@ -311,7 +296,7 @@ class ChooseDialog internal constructor(): DialogFragment() {
   
     override fun dismiss() {
       viewModelScope.launch {
-        _dismissEvent.emit(Unit)
+        dismissEvent.emit(Unit)
       }
     }
   }

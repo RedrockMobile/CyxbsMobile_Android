@@ -19,6 +19,14 @@ abstract class BaseVmActivity<VM : ViewModel> : BaseActivity() {
   
   /**
    * 这个写在这里是因为有些参数需要通过 Intent 来拿
+   *
+   * 如果你需要使用 Factory，不妨试试这种写法：
+   * ```
+   * private val mViewModel by viewModelBy {
+   *     HomeCourseViewModel(mNowWeek)
+   * }
+   * ```
+   * 这样写的话，就可以不用继承 BaseVmActivity 了
    */
   protected open fun getViewModelFactory(): ViewModelProvider.Factory? = null
 }

@@ -4,7 +4,7 @@
     <application
         android:name="com.mredrock.cyxbs.lib.base.BaseApp"
         android:allowBackup="true"
-        android:label="module_course"
+        android:label="课表极速版 :)"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
 
@@ -16,5 +16,10 @@
             </intent-filter>
         </activity>
 
+        <activity
+            android:name=".page.find.ui.find.activity.FindLessonActivity"
+            android:windowSoftInputMode="adjustPan"/><!--  添加这个是为解决软键盘问题https://www.jb51.net/article/137229.htm  -->
+
+        <activity android:name=".page.find.ui.find.activity.ShowResultActivity"/>
     </application>
 </manifest>

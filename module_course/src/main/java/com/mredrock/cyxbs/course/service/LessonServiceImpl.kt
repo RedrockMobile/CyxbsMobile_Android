@@ -18,12 +18,12 @@ import io.reactivex.rxjava3.core.Single
 @Route(path = COURSE_LESSON, name = COURSE_LESSON)
 class LessonServiceImpl : ILessonService {
   
-  override fun getLesson(stuNum: String): Single<List<ILessonService.Lesson>> {
+  override fun getStuLesson(stuNum: String): Single<List<ILessonService.Lesson>> {
     return StuLessonRepository.getLesson(stuNum)
       .map { it.toLesson() }
   }
   
-  override fun observeLesson(stuNum: String): Observable<List<ILessonService.Lesson>> {
+  override fun observeStuLesson(stuNum: String): Observable<List<ILessonService.Lesson>> {
     return StuLessonRepository.observeLesson(stuNum)
       .map { it.toLesson() }
   }

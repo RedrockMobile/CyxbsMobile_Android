@@ -11,7 +11,7 @@ import androidx.core.animation.doOnEnd
 import androidx.fragment.app.activityViewModels
 import com.mredrock.cyxbs.course.R
 import com.mredrock.cyxbs.course.page.find.room.FindStuEntity
-import com.mredrock.cyxbs.course.page.find.viewmodel.activity.FindCourseViewModel
+import com.mredrock.cyxbs.course.page.find.viewmodel.activity.FindLessonViewModel
 import com.mredrock.cyxbs.course.page.link.room.LinkStuEntity
 import com.mredrock.cyxbs.course.page.link.viewmodel.fragment.LinkCardViewModel
 import com.mredrock.cyxbs.lib.base.dailog.ChooseDialog
@@ -29,7 +29,7 @@ import com.mredrock.cyxbs.lib.utils.extensions.visible
  */
 class LinkCardFragment : BaseVmFragment<LinkCardViewModel>() {
   
-  private val mActivityViewModel by activityViewModels<FindCourseViewModel>()
+  private val mActivityViewModel by activityViewModels<FindLessonViewModel>()
   
   // 没有关联时的 include（这个对象是 include 的根布局）
   private val mViewLinkNoInclude by R.id.course_include_link_card_no.view<View>()
@@ -68,7 +68,7 @@ class LinkCardFragment : BaseVmFragment<LinkCardViewModel>() {
           ).setPositiveClick {
             viewModel.deleteLinkStudent()
             dismiss()
-          }.setDismissCallback {
+          }.setNegativeClick {
             dismiss()
           }.show()
       }

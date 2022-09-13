@@ -1,5 +1,6 @@
 package com.mredrock.cyxbs.lib.course.item.single
 
+import android.animation.Animator
 import android.content.Context
 import android.util.SparseIntArray
 import android.view.View
@@ -9,8 +10,10 @@ import com.mredrock.cyxbs.lib.course.fragment.course.expose.overlap.IOverlap
 import com.mredrock.cyxbs.lib.course.fragment.course.expose.overlap.IOverlapItem
 import com.mredrock.cyxbs.lib.course.fragment.course.expose.overlap.OverlapHelper
 import com.mredrock.cyxbs.lib.course.internal.item.forEachRow
+import com.mredrock.cyxbs.lib.course.internal.view.course.base.CourseTransitionImpl
 import com.mredrock.cyxbs.lib.utils.extensions.dp2px
 import com.ndhzs.netlayout.attrs.NetLayoutParams
+import com.ndhzs.netlayout.transition.ILayoutTransition.TransitionType.*
 import com.ndhzs.netlayout.view.NetLayout2
 
 /**
@@ -28,6 +31,11 @@ abstract class AbstractOverlapSingleDayItem : IOverlapItem, OverlapHelper.ILogic
    * 因为存在重叠分开显示的情况，所以需要单独用子 View 来实现（比如：1 2 3 4 节课，中间的 2 3 节课被遮挡了）
    */
   protected abstract fun createView(context: Context): View
+  
+  // 设置子 View 的动画
+  protected open fun getChangingAppearingAnimator(): Animator? = CourseTransitionImpl.defaultFadeIn.clone()
+  protected open fun getChangingDisappearingAnimator(): Animator? = CourseTransitionImpl.defaultChangeOut.clone()
+  protected open fun getChangingAnimator(): Animator? = CourseTransitionImpl.defaultChange.clone()
   
   /**
    * 即将被添加进父布局时的回调
@@ -110,6 +118,9 @@ abstract class AbstractOverlapSingleDayItem : IOverlapItem, OverlapHelper.ILogic
     if (!this::mView.isInitialized) {
       mView = NetLayout2(context).apply {
         setRowColumnCount(lp.rowCount, lp.columnCount)
+        addAnimator(CHANGE_APPEARING, getChangingAppearingAnimator())
+        addAnimator(CHANGE_DISAPPEARING, getChangingDisappearingAnimator())
+        addAnimator(CHANGING, getChangingAnimator())
       }
     }
     return mView

@@ -23,7 +23,7 @@ import java.util.*
  * @email 2767465918@qq.com
  * @date 2022/2/6 15:21
  */
-class CourseNowTimeHelper private constructor(
+open class CourseNowTimeHelper private constructor(
   private val course: ICourseBase,
 ) : ItemDecoration {
   
@@ -38,7 +38,7 @@ class CourseNowTimeHelper private constructor(
   /**
    * 设置是否显示当前时间线
    */
-  fun setVisible(boolean: Boolean) {
+  open fun setVisible(boolean: Boolean) {
     if (mVisible != boolean) {
       mVisible = boolean
       if (boolean) {
@@ -108,12 +108,12 @@ class CourseNowTimeHelper private constructor(
     }
   }
   
-  private val mCalendar = Calendar.getInstance()
+  protected val mCalendar = Calendar.getInstance()
   
   /**
    * 得到当前时间
    */
-  private fun getNowTime(): Int {
+  protected fun getNowTime(): Int {
     mCalendar.timeInMillis = System.currentTimeMillis()
     val hour = mCalendar.get(Calendar.HOUR_OF_DAY)
     val minute = mCalendar.get(Calendar.MINUTE)
@@ -126,7 +126,7 @@ class CourseNowTimeHelper private constructor(
    * 因为包含下课时间段，还有中午时间段和傍晚时间段，尤其是他们又要展开，
    * 所以只能用穷举法列出了所有的时间段来计算对应的高度
    */
-  private fun getLineHeight(): Float {
+  protected open fun getLineHeight(): Float {
     val now = getNowTime()
     return when {
       now <= 6 * 60 -> {

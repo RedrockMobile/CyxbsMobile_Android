@@ -13,4 +13,20 @@
     <!--课表标识当天阴影-->
     <color name="course_today_highlight">#93E8F0FC</color>
 
+    <!--    课程色块内的字体颜色-->
+    <color name="course_am_lesson_tv">#FF8015</color>
+    <color name="course_pm_lesson_tv">#FF6262</color>
+    <color name="course_night_lesson_tv">#4066EA</color>
+    <color name="course_link_lesson_tv">#06A3FC</color>
+
+    <!--    课表课程色块颜色-->
+    <color name="course_am_lesson_bg">#F9E7D8</color>
+    <color name="course_pm_lesson_bg">#F9E3E4</color>
+    <color name="course_night_lesson_bg">#DDE3F8</color>
+    <color name="course_link_lesson_bg">#DFF3FC</color>
+    <color name="course_affair_bg">#FFE9EDF2</color>
+
+    <!--事务备忘条纹-->
+    <color name="course_affair_stripe">#FFE4E7EC</color>
+
 </resources>

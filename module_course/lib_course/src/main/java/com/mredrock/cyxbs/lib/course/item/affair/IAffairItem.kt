@@ -9,5 +9,12 @@ import com.mredrock.cyxbs.lib.course.item.single.ISingleDayItem
  * @date 2022/8/17 13:03
  */
 interface IAffairItem : ISingleDayItem, IAffairData {
+  
+  /**
+   * 正确继承写法：
+   * ```
+   * override val lp = BaseAffairLayoutParams(data)
+   * ```
+   */
   override val lp: BaseAffairLayoutParams
 }

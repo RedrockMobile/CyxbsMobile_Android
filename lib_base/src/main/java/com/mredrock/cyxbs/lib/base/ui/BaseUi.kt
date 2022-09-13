@@ -2,11 +2,13 @@ package com.mredrock.cyxbs.lib.base.ui
 
 import android.app.Activity
 import android.view.View
+import androidx.activity.ComponentActivity
+import androidx.activity.viewModels
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.LifecycleOwner
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.flowWithLifecycle
-import androidx.lifecycle.whenStarted
+import androidx.fragment.app.viewModels
+import androidx.lifecycle.*
+import androidx.lifecycle.viewmodel.initializer
+import androidx.lifecycle.viewmodel.viewModelFactory
 import com.mredrock.cyxbs.lib.base.operations.OperationUi
 import com.mredrock.cyxbs.lib.utils.extensions.launch
 import com.mredrock.cyxbs.lib.utils.utils.ActivityBindView
@@ -100,4 +102,28 @@ interface BaseUi : OperationUi {
   fun <T> Flow<T>.collectRestart(action: suspend (value: T) -> Unit) {
     flowWithLifecycle(getViewLifecycleOwner().lifecycle).collectLaunch(action)
   }
+  
+  
+}
+
+/**
+ * 官方的 viewModel 高阶函数在需要使用 Factory 时有些不方便，所以改了一下，用法如下：
+ * ```
+ * private val mViewModel by viewModelBy {
+ *   HomeCourseViewModel(mNowWeek)
+ * }
+ * ```
+ */
+inline fun <reified VM : ViewModel> BaseUi.viewModelBy(
+  noinline instance: (() -> VM)? = null
+) = when (this) {
+  is ComponentActivity -> this.viewModels {
+    if (instance == null) defaultViewModelProviderFactory
+    else viewModelFactory { initializer { instance.invoke() } }
+  }
+  is Fragment -> this.viewModels<VM> {
+    if (instance == null) defaultViewModelProviderFactory
+    else viewModelFactory { initializer { instance.invoke() } }
+  }
+  else -> error("未实现！")
 }

@@ -24,7 +24,9 @@ abstract class AbstractCourseVpFragment : BaseFragment(), ICourseVp {
   override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
     super.onViewCreated(view, savedInstanceState)
     mViewPager.adapter = mVpAdapter
-//    mViewPager.offscreenPageLimit = 1 // 预加载一页，减少页面刚加载时就滑动的卡顿
+    mViewPager.offscreenPageLimit = 1 // 预加载一页，减少页面刚加载时就滑动的卡顿
+    // 取消 rv 的嵌套滑动功能，解决 BottomSheet 的 bug，具体可以看 VpBottomSheetNestedView 的注释
+    mViewPager.getChildAt(0).isNestedScrollingEnabled = false
   }
   
   private inner class CourseAdapter(fragment: Fragment) : FragmentStateAdapter(fragment) {

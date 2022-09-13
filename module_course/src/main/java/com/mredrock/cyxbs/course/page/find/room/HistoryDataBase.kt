@@ -1,7 +1,6 @@
 package com.mredrock.cyxbs.course.page.find.room
 
 import androidx.room.*
-import com.mredrock.cyxbs.api.course.ICourseService
 import com.mredrock.cyxbs.course.page.find.bean.FindStuBean
 import com.mredrock.cyxbs.course.page.find.bean.FindTeaBean
 import com.mredrock.cyxbs.lib.utils.extensions.appContext
@@ -30,9 +29,9 @@ abstract class HistoryDataBase : RoomDatabase() {
   }
 }
 
-sealed interface FindPersonEntity : ICourseService.ICourseArgs {
+sealed interface FindPersonEntity {
   val name: String
-  override val num: String
+  val num: String
 }
 
 @Entity(tableName = "student")

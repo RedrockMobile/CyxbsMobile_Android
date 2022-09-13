@@ -25,5 +25,6 @@ dependencies {
   implementation(Android.constraintlayout)
   implementation(Android.viewpager2)
   implementation(Android.`fragment-ktx`)
+  implementation(Android.cardview)
   api("com.github.985892345:NetLayout:master-SNAPSHOT")
 }
