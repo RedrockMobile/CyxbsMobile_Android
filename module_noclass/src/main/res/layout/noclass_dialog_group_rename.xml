@@ -60,6 +60,7 @@
                 app:layout_constraintVertical_bias="0.4">
 
                 <EditText
+                    android:gravity="center"
                     android:layout_marginEnd="8dp"
                     android:layout_marginStart="8dp"
                     android:textSize="14sp"
@@ -76,6 +77,9 @@
             </LinearLayout>
 
             <TextView
+                android:maxLength="12"
+                android:maxLines="1"
+                android:singleLine="true"
                 android:visibility="invisible"
                 android:id="@+id/tv_noclass_group_rename_hint"
                 android:layout_width="wrap_content"

@@ -175,6 +175,7 @@ class GroupDetailActivity : BaseVmActivity<GroupDetailViewModel>(){
                 mToDeleteSet.clear()
                 mHasChanged = true
                 setBtnState(false)
+                toast("保存成功")
             }else{
                 toast("保存失败")
             }

@@ -13,13 +13,17 @@
     android:background="@color/config_white_black"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
+
         <androidx.appcompat.widget.Toolbar
+            app:layout_constraintVertical_bias="0"
             android:id="@+id/tb_noclass_main"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent">
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent">
+
             <ImageView
                 android:id="@+id/iv_noclass_return"
                 android:paddingStart="7dp"
@@ -28,6 +32,7 @@
                 android:layout_height="wrap_content"
                 app:srcCompat="@drawable/noclass_ic_return"
                 tools:ignore="ContentDescription" />
+
             <TextView
                 android:paddingStart="6dp"
                 android:paddingEnd="12dp"
@@ -40,6 +45,7 @@
         </androidx.appcompat.widget.Toolbar>
 
         <View
+            app:layout_constraintVertical_bias="0"
             android:id="@+id/noclassView2"
             android:layout_width="match_parent"
             android:layout_height="1dp"
@@ -47,7 +53,8 @@
             android:background="@color/noclass_line_bg_color"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/tb_noclass_main" />
+            app:layout_constraintTop_toBottomOf="@+id/tb_noclass_main"
+            app:layout_constraintBottom_toBottomOf="parent" />
 
         <EditText
             android:layout_marginStart="16dp"
@@ -86,7 +93,7 @@
 
             <androidx.appcompat.widget.AppCompatTextView
                 android:layout_marginStart="16dp"
-                android:id="@+id/noclassAppcompattextview"
+                android:id="@+id/noclass_tv_group_name"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
@@ -98,12 +105,13 @@
                 app:layout_constraintTop_toTopOf="parent" />
 
             <ImageView
-                android:layout_marginStart="4dp"
+                android:paddingStart="4dp"
+                android:paddingEnd="4dp"
                 android:id="@+id/iv_noclass_show"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintStart_toEndOf="@+id/noclassAppcompattextview"
+                app:layout_constraintStart_toEndOf="@+id/noclass_tv_group_name"
                 app:layout_constraintTop_toTopOf="parent"
                 app:srcCompat="@drawable/noclass_ic_group_action"
                 tools:ignore="ContentDescription" />

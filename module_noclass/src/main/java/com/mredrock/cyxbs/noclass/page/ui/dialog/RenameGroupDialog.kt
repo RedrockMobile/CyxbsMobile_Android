@@ -11,6 +11,8 @@ import android.widget.Button
 import android.widget.EditText
 import android.widget.ImageView
 import android.widget.TextView
+import androidx.core.view.postDelayed
+import androidx.core.widget.addTextChangedListener
 import com.mredrock.cyxbs.noclass.R
 
 /**
@@ -49,7 +51,24 @@ class RenameGroupDialog (context: Context) : AlertDialog(context) {
         //提示tv
         val mTvHint : TextView = findViewById(R.id.tv_noclass_group_rename_hint)
         //重命名EditText
-        val mEtName : EditText = findViewById(R.id.et_noclass_create_group)
+        val mEtName : EditText = findViewById<EditText?>(R.id.et_noclass_create_group).apply {
+            addTextChangedListener(
+                onTextChanged = { s, _, _, _ ->
+                    if (s?.length == 0) {
+                        mTvHint.text = "请输入你的分组名称"
+                        mTvHint.visibility = View.VISIBLE
+                    } else if (s?.length == 12) {
+                        mTvHint.postDelayed(3000) {
+                            mTvHint.visibility = View.INVISIBLE
+                        }
+                        mTvHint.text = "分组名称不能超过12个字符"
+                        mTvHint.visibility = View.VISIBLE
+                    } else {
+                        mTvHint.visibility = View.INVISIBLE
+                    }
+                }
+            )
+        }
         //确定按钮
         val mBtnDone : Button = findViewById<Button?>(R.id.btn_noclass_dialog_rename_confirm).apply {
             setOnClickListener {
@@ -57,6 +76,7 @@ class RenameGroupDialog (context: Context) : AlertDialog(context) {
                     mTvHint.visibility = View.INVISIBLE
                     cancel()
                 }else{
+                    mTvHint.text = "和已有分组重名，再想想吧"
                     mTvHint.visibility = View.VISIBLE
                 }
             }

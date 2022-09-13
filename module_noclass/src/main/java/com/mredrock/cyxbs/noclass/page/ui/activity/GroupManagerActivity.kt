@@ -144,9 +144,13 @@ class GroupManagerActivity : BaseVmActivity<GroupManagerViewModel>(){
                 val selectedGroup = mGroupList[it]
                 viewModel.updateGroup(selectedGroup.id,selectedGroup.name, (!selectedGroup.isTop).toString())
             }
-            setOnDeleteClick {
-                val selectedGroup = mGroupList[it]
-                viewModel.deleteGroup(selectedGroup.id)
+            setOnDeleteClick { index ->
+                val selectedGroup = mGroupList[index]
+                val confirmDeleteDialog = ConfirmDeleteDialog(this@GroupManagerActivity)
+                confirmDeleteDialog.setConfirmSelected {
+                    viewModel.deleteGroup(selectedGroup.id)
+                    it.cancel()
+                }.show()
             }
         }
         mRecyclerView.adapter = mRvAdapter
@@ -222,6 +226,7 @@ class GroupManagerActivity : BaseVmActivity<GroupManagerViewModel>(){
 
         //重新获得分组
         viewModel.groupList.observe(this){
+            mEmptyContainer.visibility = if (it.isEmpty()) View.VISIBLE else View.INVISIBLE
             mGroupList = it as MutableList<NoclassGroup>
             mRvAdapter.submitList(mGroupList)
             if (mLastCreateId != -1){

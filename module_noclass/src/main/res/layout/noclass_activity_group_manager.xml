@@ -6,16 +6,19 @@
     tools:ignore="HardcodedText"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:fitsSystemWindows="true"
     android:background="@color/config_white_black">
 
     <androidx.appcompat.widget.Toolbar
+        app:layout_constraintVertical_bias="0"
         android:id="@+id/tb_noclass_group"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:fitsSystemWindows="true"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" >
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent">
+
         <ImageView
             android:id="@+id/iv_noclass_group_manager_return"
             android:paddingStart="7dp"
@@ -24,6 +27,7 @@
             android:layout_height="wrap_content"
             app:srcCompat="@drawable/noclass_ic_return"
             tools:ignore="ContentDescription" />
+
         <TextView
             android:paddingStart="6dp"
             android:paddingEnd="12dp"
@@ -35,7 +39,7 @@
     </androidx.appcompat.widget.Toolbar>
 
     <View
-        android:layout_marginTop="8dp"
+        app:layout_constraintVertical_bias="0"
         android:id="@+id/noclass_group_manager_tb_line"
         android:layout_width="match_parent"
         android:layout_height="1dp"
@@ -43,7 +47,8 @@
         android:background="@color/noclass_line_bg_color"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/tb_noclass_group" />
+        app:layout_constraintTop_toBottomOf="@id/tb_noclass_group"
+        app:layout_constraintBottom_toBottomOf="parent" />
 
     <LinearLayout
         android:visibility="invisible"

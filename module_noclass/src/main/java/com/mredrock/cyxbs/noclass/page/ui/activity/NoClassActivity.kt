@@ -54,7 +54,6 @@ import java.io.Serializable
  * @Description:    没课约主界面
  */
 
-
 @Route(path = DISCOVER_NO_CLASS)
 class NoClassActivity : BaseVmActivity<NoClassViewModel>(){
   
@@ -107,6 +106,11 @@ class NoClassActivity : BaseVmActivity<NoClassViewModel>(){
    * 查询按钮
    */
   private val mBtnQuery : Button by R.id.noclass_btn_query.view()
+  
+  /**
+   * 分组 文字
+   */
+  private val mGroupText : TextView by R.id.noclass_tv_group_name.view()
   
   /**
    * 底部查询fragment的container
@@ -215,7 +219,7 @@ class NoClassActivity : BaseVmActivity<NoClassViewModel>(){
     initRv()
     initTextView()
     initSearchEvent()
-    initImageView()
+    initGroupClickEvent()
   }
   
   /**
@@ -239,7 +243,6 @@ class NoClassActivity : BaseVmActivity<NoClassViewModel>(){
         if (mGroupId != "-1"){
           toBeDeleteStu = it
           mAdapter.deleteMember(it)
-//          viewModel.deleteNoclassGroupMember(mGroupId,it.stuNum)
         }else{
           mDefaultMembers.remove(it)
           mAdapter.submitList(mDefaultMembers.toMutableList())
@@ -291,17 +294,26 @@ class NoClassActivity : BaseVmActivity<NoClassViewModel>(){
   }
   
   /**
-   * 上拉下拉图片的点击效果 需要在[initAnim]之后调用
+   * 分组上拉下拉的点击效果 需要在[initAnim]之后调用
    */
-  private fun initImageView(){
+  private fun initGroupClickEvent(){
     
     findViewById<ImageView>(R.id.iv_noclass_return).apply {
       setOnClickListener {
         onBackPressed()
       }
     }
+  
+    mGroupText.setOnClickListener {
+      initGroupClick()
+    }
     
     mImageView.setOnClickListener {
+      initGroupClick()
+    }
+  }
+  
+  private fun initGroupClick(){
       when(mFLexState){
         //折叠时点击
         MyFlexLayout.FlexState.COLLAPSING->{
@@ -324,7 +336,6 @@ class NoClassActivity : BaseVmActivity<NoClassViewModel>(){
           mFLexState = MyFlexLayout.FlexState.COLLAPSING
         }
       }
-    }
   }
   
   /**
@@ -340,7 +351,7 @@ class NoClassActivity : BaseVmActivity<NoClassViewModel>(){
    * 流式布局下方的指示器
    */
   private fun initIndicator(total : Int){
-    if (total <= 0) return
+    if (total < 0) return
     mIndicator.visibility = if (mFLexState === MyFlexLayout.FlexState.COLLAPSING) View.GONE else View.VISIBLE
     mIndicator.reset()
     mIndicator.setTotalCount(total)
@@ -500,7 +511,6 @@ class NoClassActivity : BaseVmActivity<NoClassViewModel>(){
              }
              toBeAddStu = it
              mAdapter.addMember(it)
-//             viewModel.addNoclassGroupMember(mGroupId,it.stuNum)
            }
          }.apply {
            show(supportFragmentManager,"searchStudentDialog")
@@ -513,39 +523,6 @@ class NoClassActivity : BaseVmActivity<NoClassViewModel>(){
       mCourseSheetBehavior.state = BottomSheetBehavior.STATE_EXPANDED
       mNeedShow = mGroupId == "-1"
     }
-    //暂时不需要网络删除成员
-//    //添加人物
-//    viewModel.addState.observe(this){
-//      if (it.first){
-//        val currentGroup = getCurrentGroup(it.second)
-//        if (toBeAddStu.stuName.isNotEmpty() && toBeAddStu.stuNum.isNotEmpty())
-//        currentGroup.members += (toBeAddStu)
-//        toBeAddStu = NoclassGroup.Member("","")
-//        if (mGroupId == it.second){
-//          mAdapter.submitList(currentGroup.members.toMutableList())
-//        }
-//        toast("添加成功")
-//        mSearchStudentDialog?.dismiss()
-//      }else{
-//        toast("似乎出现了什么错误呢~")
-//      }
-//    }
-//    //删除人物
-//    viewModel.deleteState.observe(this){
-//      if (it.first){
-//        val currentGroup = getCurrentGroup(it.second)
-//        if (toBeDeleteStu.stuNum.isNotEmpty() && toBeDeleteStu.stuName.isNotEmpty())
-//        currentGroup.members -= (toBeDeleteStu)
-//        toBeDeleteStu = NoclassGroup.Member("", "")
-//        if (mGroupId == it.second){
-//          mAdapter.submitList(currentGroup.members.toMutableList())
-//        }
-//        toast("删除成功")
-//        mSearchStudentDialog?.dismiss()
-//      }else{
-//        toast("似乎出现了什么错误呢~")
-//      }
-//    }
   }
   
   /**
@@ -570,31 +547,35 @@ class NoClassActivity : BaseVmActivity<NoClassViewModel>(){
       //不是第一次被调用的同时执行是在折叠状态就需要先打开
       mExpandImmediately.start()
     }
-    
-    mFlexHorizontalScrollView.apply {
-      setData(list)
-      setOnCompleteCallBack(object : FlexHorizontalScrollView.OnCompleteCallback{
-        override fun onComplete(count: Int) {
-          initIndicator(count)
-        }
+    mFlexHorizontalScrollView.setData(list)
+    if(mList.isEmpty()){
+      initIndicator(0)
+    }
+    if (firstTime){
+      mFlexHorizontalScrollView.apply {
+        setOnCompleteCallBack(object : FlexHorizontalScrollView.OnCompleteCallback{
+          override fun onComplete(count: Int) {
+            initIndicator(count)
+          }
+          
+          override fun onScroll(index: Int) {
+            mIndicator.setCurIndex(index)
+          }
+          
+        })
         
-        override fun onScroll(index: Int) {
-          mIndicator.setCurIndex(index)
+        //点击回调
+        // groupId -1 为默认分组
+        setOnItemSelected { it, bool ->
+          if (bool) {
+            mGroupId = it.id
+            mAdapter.submitList(it.members.toMutableList())
+          } else {
+            mGroupId = "-1"
+            mAdapter.submitList(mDefaultMembers.toMutableList())
+          }
         }
-        
-      })
-      
-      //点击回调
-      // groupId -1 为默认分组
-      setOnItemSelected { it, bool ->
-        if (bool) {
-          mGroupId = it.id
-          mAdapter.submitList(it.members.toMutableList())
-        } else {
-          mGroupId = "-1"
-          mAdapter.submitList(mDefaultMembers.toMutableList())
         }
-      }
     }
     
     if (!firstTime && mFLexState === MyFlexLayout.FlexState.COLLAPSING) {

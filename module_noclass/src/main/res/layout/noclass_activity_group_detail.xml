@@ -4,23 +4,27 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:fitsSystemWindows="true"
     android:background="@color/config_white_black">
 
     <androidx.appcompat.widget.Toolbar
+        app:layout_constraintVertical_bias="0"
         android:id="@+id/tb_noclass_group_detail"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:fitsSystemWindows="true"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" >
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent">
+
         <ImageView
             android:id="@+id/iv_noclass_group_detail_return"
             android:paddingStart="7dp"
             android:paddingEnd="6dp"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            app:srcCompat="@drawable/noclass_ic_return"/>
+            app:srcCompat="@drawable/noclass_ic_return" />
+
         <TextView
             android:id="@+id/tv_noclass_detail_title"
             android:paddingStart="6dp"
@@ -28,11 +32,11 @@
             android:textColor="@color/noclass_primary_text_color"
             android:textSize="21sp"
             android:layout_width="wrap_content"
-            android:layout_height="match_parent"/>
+            android:layout_height="match_parent" />
     </androidx.appcompat.widget.Toolbar>
 
     <View
-        android:layout_marginTop="8dp"
+        app:layout_constraintVertical_bias="0"
         android:id="@+id/noclass_group_detail_tb_line"
         android:layout_width="match_parent"
         android:layout_height="1dp"
@@ -40,7 +44,8 @@
         android:background="@color/noclass_line_bg_color"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/tb_noclass_group_detail" />
+        app:layout_constraintTop_toBottomOf="@id/tb_noclass_group_detail"
+        app:layout_constraintBottom_toBottomOf="parent" />
 
     <EditText
         android:id="@+id/et_noclass_group_add_classmate"
