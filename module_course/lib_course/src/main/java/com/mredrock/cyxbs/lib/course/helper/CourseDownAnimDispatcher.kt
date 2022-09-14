@@ -4,7 +4,6 @@ import android.graphics.Point
 import android.util.SparseArray
 import android.view.MotionEvent
 import android.view.View
-import android.view.ViewConfiguration
 import android.view.ViewGroup
 import android.view.animation.OvershootInterpolator
 import androidx.core.util.forEach
@@ -61,7 +60,6 @@ open class CourseDownAnimDispatcher(
     return null
   }
   
-  private var mTouchSlop = ViewConfiguration.get(course.getContext()).scaledTouchSlop
   private val mViewWithRawPointById = SparseArray<Pair<View, Point>>()
   
   final override fun onDispatchTouchEvent(event: MotionEvent, view: ViewGroup) {
