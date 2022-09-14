@@ -13,15 +13,30 @@ import com.alibaba.android.arouter.facade.template.IProvider
 interface ICourseService : IProvider {
   
   /**
-   * 显示主页的课表
+   * 尝试调用 replace() 显示主页的课表，如果已经添加，则不会重复添加
    *
    * 内部按规范添加 Fragment，对于异常重启，不会生成新的 Fragment
    *
    * @param fm FragmentManager，内部自动帮你添加课表 Fragment
    */
-  fun replaceHomeFragmentById(
+  fun tryReplaceHomeCourseFragmentById(
     fm: FragmentManager,
     @IdRes
     id: Int
   )
+  
+  /**
+   * 设置课表头的透明度
+   */
+  fun setHeaderAlpha(alpha: Float)
+  
+  /**
+   * 设置课表 Vp 页面的透明度
+   */
+  fun setCourseVpAlpha(alpha: Float)
+  
+  /**
+   * 设置 BottomSheet 偏移量
+   */
+  fun setBottomSheetSlideOffset(offset: Float)
 }

@@ -9,7 +9,7 @@ import com.mredrock.cyxbs.lib.course.fragment.course.expose.overlap.IOverlapItem
 import com.mredrock.cyxbs.lib.course.fragment.page.CourseSemesterFragment
 
 /**
- * 需要比较周数排序的整学期课表页面
+ * 需要比较周数排序的整学期课表页面基类
  *
  * @author 985892345 (Guo Xiangrui)
  * @email guo985892345@foxmail.com

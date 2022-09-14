@@ -9,7 +9,9 @@ import com.mredrock.cyxbs.lib.course.fragment.page.CourseWeekFragment
 import com.mredrock.cyxbs.lib.course.item.lesson.ILessonItem
 
 /**
- * ...
+ * 查看他人课表的每周页面
+ *
+ * 由于查找学生和老师课表的功能几乎一模一样，但又不想写在同一个 Fragment 中，所以写了该抽象类
  *
  * @author 985892345 (Guo Xiangrui)
  * @email guo985892345@foxmail.com
@@ -18,10 +20,12 @@ import com.mredrock.cyxbs.lib.course.item.lesson.ILessonItem
 abstract class BaseFindWeekFragment<D : LessonData> : CourseWeekFragment() {
   
   /**
-   * 正确实现方法：
+   * 得到宿主的 [BaseFindViewModel]
+   *
+   * 正确的写法：
    * ```
    * override val mParentViewModel by createViewModelLazy(
-   *   FindStuViewModel::class,                  // 这里要写具体的实现类
+   *   FindStuCourseViewModel::class,                  // 注意：这里要写具体的实现类
    *   { requireParentFragment().viewModelStore }
    * )
    * ```

@@ -18,7 +18,7 @@ interface ICourseContainer : ICourseWrapper {
   fun clearLesson()
   fun getLessonsSize(): Int
   fun containLesson(lesson: ILessonItem?): Boolean
-  fun getLessonIterable(): Set<ILessonItem>
+  fun getLessonSet(): Set<ILessonItem>
   
   fun addAffair(affair: IAffairItem)
   fun addAffair(affairs: List<IAffairItem>)
@@ -26,5 +26,5 @@ interface ICourseContainer : ICourseWrapper {
   fun clearAffair()
   fun getAffairsSize(): Int
   fun containAffair(affair: IAffairItem?): Boolean
-  fun getAffairIterable(): Set<IAffairItem>
+  fun getAffairSet(): Set<IAffairItem>
 }

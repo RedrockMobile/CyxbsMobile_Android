@@ -28,10 +28,10 @@ class Affair(private var affairData: AffairData) :
   override fun setNewData(newData: AffairData) {
     getChildIterable().forEach {
       if (it is AffairView) {
-        it.setLessonData(newData)
+        it.setNewData(newData)
       }
     }
-    lp.changeSingleDay(newData)
+    lp.setNewData(newData)
     affairData = newData
   }
   
@@ -53,15 +53,10 @@ class Affair(private var affairData: AffairData) :
   @SuppressLint("ViewConstructor")
   class AffairView(
     context: Context,
-    var data: AffairData
-  ) : AffairItemView(context), IOverlapTag {
+    override var data: AffairData
+  ) : AffairItemView(context), IOverlapTag, IDataOwner<AffairData> {
     
     private val mHelper = OverlapTagHelper(this)
-  
-    fun setLessonData(data: AffairData) {
-      this.data = data
-      setText(data.title, data.content)
-    }
   
     override fun onDraw(canvas: Canvas) {
       super.onDraw(canvas)
@@ -73,8 +68,13 @@ class Affair(private var affairData: AffairData) :
     }
     
     init {
-      setLessonData(data)
+      setNewData(data)
       mHelper.setOverlapTagColor(mTextColor)
+    }
+  
+    override fun setNewData(newData: AffairData) {
+      data = newData
+      setText(data.title, data.content)
     }
   }
   

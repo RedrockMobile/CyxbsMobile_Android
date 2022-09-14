@@ -5,15 +5,15 @@ import android.os.Bundle
 import android.view.View
 import android.widget.Button
 import androidx.fragment.app.FragmentContainerView
-import androidx.fragment.app.commit
 import com.google.android.material.bottomsheet.BottomSheetBehavior
+import com.mredrock.cyxbs.api.course.ICourseService
 import com.mredrock.cyxbs.course.R
-import com.mredrock.cyxbs.course.page.course.ui.home.HomeCourseVpFragment
 import com.mredrock.cyxbs.course.page.find.ui.find.activity.FindLessonActivity
 import com.mredrock.cyxbs.lib.base.BaseDebugActivity
 import com.mredrock.cyxbs.lib.utils.extensions.gone
 import com.mredrock.cyxbs.lib.utils.extensions.lazyUnlock
 import com.mredrock.cyxbs.lib.utils.extensions.visible
+import com.mredrock.cyxbs.lib.utils.service.impl
 import kotlin.math.max
 
 /**
@@ -34,6 +34,8 @@ class DebugActivity : BaseDebugActivity() {
     BottomSheetBehavior.from(mBottomSheetView)
   }
   
+  private val mCourseService = ICourseService::class.impl
+  
   override fun onDebugCreate(savedInstanceState: Bundle?) {
     setContentView(R.layout.course_activity_debug)
   
@@ -43,19 +45,24 @@ class DebugActivity : BaseDebugActivity() {
       )
     }
     
+    mHeader.setOnClickListener {
+      if (mBottomSheet.state == BottomSheetBehavior.STATE_COLLAPSED) {
+        mBottomSheet.state = BottomSheetBehavior.STATE_EXPANDED
+      }
+    }
+  
+    mCourseService.tryReplaceHomeCourseFragmentById(supportFragmentManager, mFcv.id)
+    mCourseService.setCourseVpAlpha(0F)
+    mCourseService.setHeaderAlpha(0F)
+    
     mBottomSheet.addBottomSheetCallback(
       object : BottomSheetBehavior.BottomSheetCallback() {
         override fun onStateChanged(bottomSheet: View, newState: Int) {
           when (newState) {
             BottomSheetBehavior.STATE_EXPANDED -> {
               mHeader.gone()
-              val fragment = supportFragmentManager.findFragmentById(mFcv.id)
-              if (fragment == null) {
-                supportFragmentManager.commit {
-                  replace(mFcv.id, HomeCourseVpFragment())
-                }
-              }
             }
+            
             else -> {
               mHeader.visible()
             }
@@ -67,16 +74,21 @@ class DebugActivity : BaseDebugActivity() {
             /*
             * 展开时：
             * slideOffset：0.0 --------> 1.0
-            * 课表：        0.0 -> 0.0 -> 1.0
-            * 头部：        1.0 -> 0.0 -> 0.0
+            * 课表主体:     0.0 --------> 1.0  挡板：1.0 --------> 0.0
+            * 课表头部:     0.0 -> 0.0 -> 1.0
+            * 主界面头部:   1.0 -> 0.0 -> 0.0
             *
             * 折叠时：
             * slideOffset：1.0 --------> 0.0
-            * 课表：        1.0 -> 0.0 -> 0.0
-            * 头部：        0.0 -> 0.0 -> 1.0
+            * 课表主体:     1.0 --------> 0.0  挡板：0.0 --------> 1.0
+            * 课表头部:     1.0 -> 0.0 -> 0.0
+            * 主界面头部:   0.0 -> 0.0 -> 1.0
             * */
-            mFcv.alpha = max(slideOffset * 2 - 1, 0F)
+            mCourseService.setCourseVpAlpha(slideOffset)
+            mCourseService.setHeaderAlpha(max(slideOffset * 2 - 1, 0F))
             mHeader.alpha = max(1 - slideOffset * 2, 0F)
+            
+            // 偏移底部按钮
             mBottom.translationY = mBottom.height * slideOffset
           }
         }

@@ -21,12 +21,12 @@ import com.mredrock.cyxbs.lib.utils.extensions.dp2pxF
  */
 abstract class ItemView(context: Context) : CardView(context) {
   
-  protected val mTvTitle: TextView
-  protected val mTvContent: TextView
+  val tvTitle: TextView
+  val tvContent: TextView
   
   open fun setText(title: String, content: String) {
-    mTvTitle.text = title
-    mTvContent.text = content
+    tvTitle.text = title
+    tvContent.text = content
   }
   
   // 课表背景色
@@ -37,6 +37,10 @@ abstract class ItemView(context: Context) : CardView(context) {
     super.draw(canvas)
   }
   
+  final override fun setBackgroundColor(color: Int) {
+    setCardBackgroundColor(color)
+  }
+  
   init {
     cardElevation = 1F
     super.setCardBackgroundColor(Color.TRANSPARENT)
@@ -44,7 +48,7 @@ abstract class ItemView(context: Context) : CardView(context) {
     
     val margin1 = 7.dp2px
     val margin2 = 10.dp2px
-    mTvTitle = TextView(context).apply {
+    tvTitle = TextView(context).apply {
       layoutParams = LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT).apply {
         topMargin = margin1
         leftMargin = margin2
@@ -56,7 +60,7 @@ abstract class ItemView(context: Context) : CardView(context) {
       maxLines = 3
       setTextSize(TypedValue.COMPLEX_UNIT_DIP, 11F)
     }
-    mTvContent = TextView(context).apply {
+    tvContent = TextView(context).apply {
       layoutParams = LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT).apply {
         leftMargin = margin2
         rightMargin = margin2
@@ -68,7 +72,7 @@ abstract class ItemView(context: Context) : CardView(context) {
       maxLines = 3
       setTextSize(TypedValue.COMPLEX_UNIT_DIP, 11F)
     }
-    super.addView(mTvTitle)
-    super.addView(mTvContent)
+    super.addView(tvTitle)
+    super.addView(tvContent)
   }
 }

@@ -169,7 +169,7 @@ class ShowResultActivity : BaseVmActivity<ShowResultViewModel>() {
           // 点击整个 item
           viewModel.saveHistory(this) // 保存搜索历史
           mBottomSheet.state = BottomSheetBehavior.STATE_EXPANDED
-          FindStuCourseFragment.tryReplaceById(supportFragmentManager, mBottomSheetView.id, num)
+          FindStuCourseFragment.tryReplaceOrFresh(supportFragmentManager, mBottomSheetView.id, num)
         }.setOnLinkNoClick {
           // 点击没有关联的图标
           doIfLogin { // 登录才能使用
@@ -261,7 +261,7 @@ class ShowResultActivity : BaseVmActivity<ShowResultViewModel>() {
         .setOnItemClick {
           viewModel.saveHistory(this) // 保存搜索历史
           mBottomSheet.state = BottomSheetBehavior.STATE_EXPANDED
-          FindTeaCourseFragment.tryReplaceById(supportFragmentManager, mBottomSheetView.id, num)
+          FindTeaCourseFragment.tryReplaceOrFresh(supportFragmentManager, mBottomSheetView.id, num)
         }
     }
   }

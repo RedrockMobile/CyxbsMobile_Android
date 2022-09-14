@@ -4,7 +4,7 @@ import android.content.Context
 import android.util.AttributeSet
 import com.mredrock.cyxbs.lib.course.R
 import com.mredrock.cyxbs.lib.course.internal.view.course.base.AbstractCourseViewGroup
-import com.mredrock.cyxbs.lib.course.internal.view.course.base.CourseTransitionImpl
+import com.mredrock.cyxbs.lib.course.internal.view.course.base.CourseScrollControlImpl
 import com.ndhzs.netlayout.view.NetLayout
 
 /**
@@ -49,5 +49,5 @@ class CourseViewGroup @JvmOverloads constructor(
   attrs: AttributeSet? = null,
   defStyleAttr: Int = R.attr.courseLayoutStyle,
   defStyleRes: Int = 0
-) : CourseTransitionImpl(context, attrs, defStyleAttr, defStyleRes), ICourseViewGroup {
+) : CourseScrollControlImpl(context, attrs, defStyleAttr, defStyleRes), ICourseViewGroup {
 }

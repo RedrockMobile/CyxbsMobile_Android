@@ -1,9 +1,10 @@
 package com.mredrock.cyxbs.course.service
 
 import android.content.Context
-import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
 import androidx.fragment.app.commit
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
 import com.alibaba.android.arouter.facade.annotation.Route
 import com.mredrock.cyxbs.api.course.COURSE_SERVICE
 import com.mredrock.cyxbs.api.course.ICourseService
@@ -18,31 +19,40 @@ import com.mredrock.cyxbs.course.page.course.ui.home.HomeCourseVpFragment
 @Route(path = COURSE_SERVICE, name = COURSE_SERVICE)
 class CourseServiceImpl : ICourseService {
   
-  override fun replaceHomeFragmentById(fm: FragmentManager, id: Int) {
-    val fragment = findFragment<HomeCourseVpFragment>(fm, id)
-    if (fragment == null) {
+  override fun tryReplaceHomeCourseFragmentById(fm: FragmentManager, id: Int) {
+    val fragment = fm.findFragmentById(id)
+    if (fragment !is HomeCourseVpFragment) {
       fm.commit { replace(id, HomeCourseVpFragment()) }
     }
+    
     /*
-    * 由于 HomeCourseFragment 的 ViewModel 观察了当前登录人的学号，
+    * 由于 HomeCourseVpFragment 的 ViewModel 观察了当前登录人的学号，
     * 会自动根据不同登录人发送不同的数据，
     * 所以这里没必要去通知 HomeCourseFragment 刷新数据
     * */
   }
   
-  override fun init(context: Context) {
+  override fun setHeaderAlpha(alpha: Float) {
+    _headerAlphaState.value = alpha
   }
   
-  private inline fun <reified F: Fragment> findFragment(
-    fm: FragmentManager,
-    id: Int
-  ): F? {
-    val fragment = fm.findFragmentById(id)
-    if (fragment != null) {
-      if (fragment is F) {
-        return fragment
-      }
-    }
-    return null
+  override fun setCourseVpAlpha(alpha: Float) {
+    _courseAlphaState.value = alpha
+  }
+  
+  override fun setBottomSheetSlideOffset(offset: Float) {
+    _bottomSheetSlideOffset.value = offset
+  }
+  
+  private val _headerAlphaState = MutableLiveData<Float>()
+  val headerAlphaState: LiveData<Float> get() = _headerAlphaState
+  
+  private val _courseAlphaState = MutableLiveData<Float>()
+  val courseVpAlphaState: LiveData<Float> get() = _courseAlphaState
+  
+  private val _bottomSheetSlideOffset = MutableLiveData<Float>()
+  val bottomSheetSlideOffset: LiveData<Float> get() = _bottomSheetSlideOffset
+  
+  override fun init(context: Context) {
   }
 }

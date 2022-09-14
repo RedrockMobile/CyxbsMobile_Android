@@ -19,7 +19,7 @@ abstract class AbstractCourseScrollView @JvmOverloads constructor(
   defStyleAttr: Int = 0
 ) : NestedScrollView(context, attrs, defStyleAttr), ICourseScroll {
   
-  override fun postDelayed(delayInMillis: Long, action: Runnable) {
+  override fun postDelayed(delayInMillis: Long, action: Runnable?) {
     postDelayed(action, delayInMillis)
   }
   

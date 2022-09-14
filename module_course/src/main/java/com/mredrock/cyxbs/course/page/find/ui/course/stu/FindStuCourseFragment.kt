@@ -21,7 +21,10 @@ import com.mredrock.cyxbs.lib.course.fragment.page.CoursePageFragment
 class FindStuCourseFragment : BaseFindVpFragment<StuLessonData>() {
   
   companion object {
-    fun tryReplaceById(fragmentManager: FragmentManager, @IdRes id: Int, stuNum: String) {
+    /**
+     * 尝试替换 Fragment 或者刷新 [stuNum]
+     */
+    fun tryReplaceOrFresh(fragmentManager: FragmentManager, @IdRes id: Int, stuNum: String) {
       val fragment = fragmentManager.findFragmentById(id) as? FindStuCourseFragment
       if (fragment == null) {
         FindStuCourseFragment().apply {
@@ -42,8 +45,6 @@ class FindStuCourseFragment : BaseFindVpFragment<StuLessonData>() {
   }
   
   private var mStuNum by arguments<String>()
-  
-  override var mPageCount: Int = 22 // 21 周加上第一页为整学期的课表
   
   override fun onCreate(savedInstanceState: Bundle?) {
     super.onCreate(savedInstanceState)

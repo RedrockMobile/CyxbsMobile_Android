@@ -26,18 +26,18 @@ abstract class CommonLessonView(context: Context) : ItemView(context) {
   open fun setLessonColor(period: LessonPeriod) {
     when (period) {
       LessonPeriod.AM -> {
-        mTvTitle.setTextColor(mAmTextColor)
-        mTvContent.setTextColor(mAmTextColor)
+        tvTitle.setTextColor(mAmTextColor)
+        tvContent.setTextColor(mAmTextColor)
         setCardBackgroundColor(mAmBgColor)
       }
       LessonPeriod.PM -> {
-        mTvTitle.setTextColor(mPmTextColor)
-        mTvContent.setTextColor(mPmTextColor)
+        tvTitle.setTextColor(mPmTextColor)
+        tvContent.setTextColor(mPmTextColor)
         setCardBackgroundColor(mPmBgColor)
       }
       LessonPeriod.NIGHT -> {
-        mTvTitle.setTextColor(mNightTextColor)
-        mTvContent.setTextColor(mNightTextColor)
+        tvTitle.setTextColor(mNightTextColor)
+        tvContent.setTextColor(mNightTextColor)
         setCardBackgroundColor(mNightBgColor)
       }
     }

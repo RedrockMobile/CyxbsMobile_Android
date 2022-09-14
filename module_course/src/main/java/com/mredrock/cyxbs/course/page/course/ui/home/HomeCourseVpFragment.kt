@@ -2,12 +2,15 @@ package com.mredrock.cyxbs.course.page.course.ui.home
 
 import android.os.Bundle
 import android.view.View
+import com.mredrock.cyxbs.api.course.ICourseService
 import com.mredrock.cyxbs.course.page.course.ui.home.base.HomeCourseVpLinkFragment
 import com.mredrock.cyxbs.course.page.course.ui.home.viewmodel.HomeCourseViewModel
+import com.mredrock.cyxbs.course.service.CourseServiceImpl
 import com.mredrock.cyxbs.lib.base.ui.viewModelBy
 import com.mredrock.cyxbs.lib.course.fragment.page.CoursePageFragment
 import com.mredrock.cyxbs.lib.utils.extensions.gone
 import com.mredrock.cyxbs.lib.utils.extensions.setOnSingleClickListener
+import com.mredrock.cyxbs.lib.utils.service.impl
 import com.mredrock.cyxbs.lib.utils.utils.SchoolCalendarUtil
 
 /**
@@ -27,6 +30,8 @@ class HomeCourseVpFragment : HomeCourseVpLinkFragment() {
     get() = SchoolCalendarUtil.getWeekOfTerm() ?: 0 // 当前周数
   
   override var mPageCount: Int = 22 // 21 周加上第一页为整学期的课表
+  
+  private val mCourseService = ICourseService::class.impl as CourseServiceImpl
   
   override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
     super.onViewCreated(view, savedInstanceState)
@@ -76,6 +81,13 @@ class HomeCourseVpFragment : HomeCourseVpLinkFragment() {
       } else {
         toast("刷新失败！")
       }
+    }
+    
+    mCourseService.headerAlphaState.observe {
+      mHeader.alpha = it
+    }
+    mCourseService.courseVpAlphaState.observe {
+      mViewPager.alpha = it
     }
   }
 }

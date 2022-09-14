@@ -2,9 +2,12 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical">
+    android:orientation="vertical"
+    android:background="@drawable/course_layer_list_course_bg">
 
-    <include layout="@layout/course_layout_header" />
+    <include
+        android:id="@+id/course_header"
+        layout="@layout/course_layout_header" />
 
     <androidx.viewpager2.widget.ViewPager2
         android:id="@+id/course_vp"
@@ -12,3 +15,5 @@
         android:layout_height="match_parent" />
 
 </LinearLayout>
+
+<!--这是通用的一个带 Vp2 的课表布局，适用于大部分场景-->

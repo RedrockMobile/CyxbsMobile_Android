@@ -76,11 +76,11 @@ class FindLessonActivity : BaseVmActivity<FindLessonViewModel>() {
       when (it) {
         is FindStuEntity -> {
           mBottomSheet.state = BottomSheetBehavior.STATE_EXPANDED
-          FindStuCourseFragment.tryReplaceById(supportFragmentManager, mBottomSheetView.id, it.num)
+          FindStuCourseFragment.tryReplaceOrFresh(supportFragmentManager, mBottomSheetView.id, it.num)
         }
         is FindTeaEntity -> {
           mBottomSheet.state = BottomSheetBehavior.STATE_EXPANDED
-          FindTeaCourseFragment.tryReplaceById(supportFragmentManager, mBottomSheetView.id, it.num)
+          FindTeaCourseFragment.tryReplaceOrFresh(supportFragmentManager, mBottomSheetView.id, it.num)
         }
         null -> {
           mBottomSheet.state = BottomSheetBehavior.STATE_COLLAPSED

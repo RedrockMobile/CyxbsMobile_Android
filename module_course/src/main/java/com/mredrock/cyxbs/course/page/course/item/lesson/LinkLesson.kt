@@ -3,6 +3,7 @@ package com.mredrock.cyxbs.course.page.course.item.lesson
 import android.annotation.SuppressLint
 import android.content.Context
 import android.graphics.Canvas
+import android.view.animation.Animation
 import com.mredrock.cyxbs.course.R
 import com.mredrock.cyxbs.course.page.course.data.StuLessonData
 import com.mredrock.cyxbs.course.page.course.item.BaseOverlapSingleDayItem
@@ -30,10 +31,10 @@ class LinkLesson(private var lessonData: StuLessonData) :
   override fun setNewData(newData: StuLessonData) {
     getChildIterable().forEach {
       if (it is LinkLessonView) {
-        it.setLessonData(newData)
+        it.setNewData(newData)
       }
     }
-    lp.changeSingleDay(newData)
+    lp.setNewData(newData)
     lessonData = newData
   }
   
@@ -41,21 +42,22 @@ class LinkLesson(private var lessonData: StuLessonData) :
     return LinkLessonView(context, lessonData)
   }
   
+  fun startEntranceAnim(anim: Animation) {
+    getChildInParent().forEach {
+      it.startAnimation(anim)
+    }
+  }
+  
   @SuppressLint("ViewConstructor")
   class LinkLessonView(
     context: Context,
-    var data: StuLessonData
-  ) : ItemView(context), IOverlapTag {
+    override var data: StuLessonData
+  ) : ItemView(context), IOverlapTag, IDataOwner<StuLessonData> {
     
     private val mBgColor = R.color.course_link_lesson_bg.color
     private val mTextColor = R.color.course_link_lesson_tv.color
     
     private val mHelper = OverlapTagHelper(this)
-  
-    fun setLessonData(data: StuLessonData) {
-      this.data = data
-      setText(data.course, data.classroom)
-    }
   
     override fun onDraw(canvas: Canvas) {
       super.onDraw(canvas)
@@ -67,11 +69,16 @@ class LinkLesson(private var lessonData: StuLessonData) :
     }
   
     init {
-      setLessonData(data)
-      mTvTitle.setTextColor(mTextColor)
-      mTvContent.setTextColor(mTextColor)
+      setNewData(data)
+      tvTitle.setTextColor(mTextColor)
+      tvContent.setTextColor(mTextColor)
       setCardBackgroundColor(mBgColor)
       mHelper.setOverlapTagColor(mTextColor)
+    }
+  
+    override fun setNewData(newData: StuLessonData) {
+      data = newData
+      setText(data.course, data.classroom)
     }
   }
   

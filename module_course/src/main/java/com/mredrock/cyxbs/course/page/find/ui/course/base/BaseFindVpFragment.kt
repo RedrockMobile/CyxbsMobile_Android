@@ -5,7 +5,9 @@ import com.mredrock.cyxbs.lib.course.fragment.vp.AbstractHeaderCourseVpFragment
 import com.mredrock.cyxbs.lib.utils.utils.SchoolCalendarUtil
 
 /**
- * ...
+ * 查看他人课表的 vp 界面，是 [BaseFindSemesterFragment] 和 [BaseFindWeekFragment] 的宿主
+ *
+ * 由于查找学生和老师课表的功能几乎一模一样，但又不想写在同一个 Fragment 中，所以写了该抽象类
  *
  * @author 985892345 (Guo Xiangrui)
  * @email guo985892345@foxmail.com
@@ -23,4 +25,6 @@ abstract class BaseFindVpFragment<D : LessonData> : AbstractHeaderCourseVpFragme
    * ```
    */
   abstract val mViewModel: BaseFindViewModel<D>
+  
+  override var mPageCount: Int = 22 // 21 周加上第一页为整学期的课表
 }

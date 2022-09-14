@@ -28,20 +28,28 @@ import java.lang.IllegalStateException
  */
 class HomeCourseViewModel(val nowWeek: Int) : BaseViewModel() {
   
-  val homeWeekData: LiveData<Map<Int, HomePageResult>> get() = _homeWeekData
   private val _homeWeekData = MutableLiveData<Map<Int, HomePageResult>>()
+  val homeWeekData: LiveData<Map<Int, HomePageResult>> get() = _homeWeekData
   
-  val linkStu: LiveData<LinkStuEntity> get() = _linkStu
   private val _linkStu = MutableLiveData<LinkStuEntity>()
+  val linkStu: LiveData<LinkStuEntity> get() = _linkStu
   
-  val refreshEvent: SharedFlow<Boolean> get() = _refresh
   private val _refresh = MutableSharedFlow<Boolean>()
+  val refreshEvent: SharedFlow<Boolean> get() = _refresh
+  
+  private val _showLinkEvent = MutableSharedFlow<Boolean>()
+  val showLinkEvent: SharedFlow<Boolean> get() = _showLinkEvent
   
   /**
    * 改变关联人的可见性
    */
   fun changeLinkStuVisible(isShowLink: Boolean) {
-    LinkRepository.changeLinkStuVisible(isShowLink).safeSubscribeBy()
+    LinkRepository.changeLinkStuVisible(isShowLink)
+      .safeSubscribeBy {
+        viewModelScope.launch {
+          _showLinkEvent.emit(isShowLink)
+        }
+      }
     // 这里更新后，所有观察关联的地方都会重新发送新数据
   }
   
@@ -78,7 +86,6 @@ class HomeCourseViewModel(val nowWeek: Int) : BaseViewModel() {
     // 自己课的观察流
     val selfLessonObservable = StuLessonRepository.observeSelfLesson()
       .map { it.toStuLessonData() }
-//      .map { emptyList<StuLessonData>() } // 测试使用
   
     // 关联人课的观察流
     val linkLessonObservable = LinkRepository.observeLinkStudent()
@@ -88,7 +95,6 @@ class HomeCourseViewModel(val nowWeek: Int) : BaseViewModel() {
         if (it.isNull() || !it.isShowLink) Observable.just(emptyList())
         else StuLessonRepository.observeLesson(it.linkNum)
       }.map { it.toStuLessonData() }
-//      .map { if (it.isEmpty()) it else arrayListOf(createLesson(1, 1, 1, 2)) } // 测试使用
   
     // 事务的观察流
     val affairObservable = Observable.just<List<AffairData>>(emptyList()) // TODO 事务待完成
@@ -106,14 +112,8 @@ class HomeCourseViewModel(val nowWeek: Int) : BaseViewModel() {
       }
   }
   
-  /**
-   * 测试使用
-   */
-  private fun createLesson(week: Int, hashDay: Int, beginLesson: Int, period: Int, title: String = "标题"): StuLessonData {
-    return StuLessonData(
-      "", week, beginLesson, "", title, "",
-      "", hashDay, period, "", "", "")
-  }
+  
+  
   
   interface HomePageResult {
     val self: List<StuLessonData>

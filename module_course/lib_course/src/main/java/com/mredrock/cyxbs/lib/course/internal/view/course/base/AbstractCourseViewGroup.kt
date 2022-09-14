@@ -23,7 +23,7 @@ abstract class AbstractCourseViewGroup(
     get() = DEBUG
     set(value) { DEBUG = value }
   
-  override fun postDelayed(delayInMillis: Long, action: Runnable) {
+  override fun postDelayed(delayInMillis: Long, action: Runnable?) {
     postDelayed(action, delayInMillis)
   }
 }

@@ -26,6 +26,8 @@ import com.mredrock.cyxbs.lib.utils.extensions.visible
 @Suppress("LeakingThis")
 abstract class HomeCourseVpLinkFragment : AbstractHeaderCourseVpFragment(), IHomeCourseVp {
   
+  override val mHeader by R.id.course_header_fragment_home.view<ViewGroup>()
+  
   // 因为使用了不一样的 xml，所以需要重写下 mViewPager
   override val mViewPager by R.id.course_vp_fragment_home.view<ViewPager2>()
   

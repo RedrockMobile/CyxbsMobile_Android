@@ -1,7 +1,6 @@
 package com.mredrock.cyxbs.lib.course.fragment.course
 
 import com.mredrock.cyxbs.lib.course.fragment.course.expose.container.ICourseContainer
-import com.mredrock.cyxbs.lib.course.fragment.course.expose.entrance.IEntranceAnim
 import com.mredrock.cyxbs.lib.course.fragment.course.expose.overlap.IOverlapContainer
 import com.mredrock.cyxbs.lib.course.fragment.course.expose.fold.IFoldDusk
 import com.mredrock.cyxbs.lib.course.fragment.course.expose.fold.IFoldNoon
@@ -21,7 +20,6 @@ interface ICourseBase :
   ICourseWrapper, // 包裹 CourseViewGroup
   IScrollWrapper, // 包裹 CourseScroll
   ICourseContainer, // 课表容器
-  IEntranceAnim, // 课表入场动画
   IFoldNoon, // 折叠中午时间段
   IFoldDusk, // 折叠傍晚时间段
   IOverlapContainer, // 用于实现重叠的逻辑

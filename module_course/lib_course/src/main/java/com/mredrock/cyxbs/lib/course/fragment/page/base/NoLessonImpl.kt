@@ -2,6 +2,7 @@ package com.mredrock.cyxbs.lib.course.fragment.page.base
 
 import android.os.Bundle
 import android.view.View
+import android.view.animation.AlphaAnimation
 import androidx.core.view.isVisible
 import com.mredrock.cyxbs.lib.course.R
 import com.mredrock.cyxbs.lib.course.item.affair.IAffairItem
@@ -40,12 +41,12 @@ abstract class NoLessonImpl : CourseTouchImpl(), INoLesson {
     course.apply {
       addItemExistListener(
         object : IItemContainer.OnItemExistListener {
-          override fun onItemAddedAfter(item: IItem) {
+          override fun onItemAddedAfter(item: IItem, view: View) {
             if (isExhibitionItem(item)) mExhibitionItemCount++
             tryPostRefreshNoLessonRunnable()
           }
           
-          override fun onItemRemovedAfter(item: IItem) {
+          override fun onItemRemovedAfter(item: IItem, view: View) {
             if (isExhibitionItem(item)) mExhibitionItemCount--
             tryPostRefreshNoLessonRunnable()
           }
@@ -82,12 +83,20 @@ abstract class NoLessonImpl : CourseTouchImpl(), INoLesson {
         _isInRefreshRunnable = false
         if (mExhibitionItemCount == 0) {
           viewNoLesson.visible()
+          viewNoLesson.startAnimation(mFadeInAnim)
         } else {
-          viewNoLesson.gone()
+          if (viewNoLesson.isVisible) {
+            viewNoLesson.gone()
+            viewNoLesson.startAnimation(mFadeOutAnim)
+          }
         }
       }
     }
   }
+  
+  // 补间动画可以在设置了 gone() 后仍能显示
+  private val mFadeInAnim = AlphaAnimation(0F, 1F).apply { duration = 360 }
+  private val mFadeOutAnim = AlphaAnimation(1F, 0F).apply { duration = 360 }
   
   override fun onSaveInstanceState(outState: Bundle) {
     super.onSaveInstanceState(outState)

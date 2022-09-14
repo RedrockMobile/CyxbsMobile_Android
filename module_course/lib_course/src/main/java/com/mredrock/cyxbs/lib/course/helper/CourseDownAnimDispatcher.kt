@@ -7,14 +7,15 @@ import android.view.View
 import android.view.ViewConfiguration
 import android.view.ViewGroup
 import android.view.animation.OvershootInterpolator
+import androidx.core.util.forEach
 import com.mredrock.cyxbs.lib.course.item.affair.IAffairItem
 import com.mredrock.cyxbs.lib.course.item.lesson.ILessonItem
 import com.mredrock.cyxbs.lib.course.internal.item.IItem
 import com.mredrock.cyxbs.lib.course.internal.view.course.ICourseViewGroup
+import com.ndhzs.netlayout.child.OnChildExistListener
 import com.ndhzs.netlayout.touch.multiple.IPointerDispatcher
 import com.ndhzs.netlayout.touch.multiple.IPointerTouchHandler
 import com.ndhzs.netlayout.touch.multiple.event.IPointerEvent
-import kotlin.math.abs
 import kotlin.math.pow
 
 /**
@@ -27,6 +28,23 @@ import kotlin.math.pow
 open class CourseDownAnimDispatcher(
   val course: ICourseViewGroup
 ) : IPointerDispatcher {
+  
+  init {
+    course.addChildExistListener(
+      object : OnChildExistListener {
+        override fun onChildViewAdded(parent: ViewGroup, child: View) {}
+        override fun onChildViewRemoved(parent: ViewGroup, child: View) {
+          mViewWithRawPointById.forEach { id, pair ->
+            if (pair.first === child) {
+              endAnim(child, pair.second.x, pair.second.y)
+              mViewWithRawPointById.remove(id)
+              return
+            }
+          }
+        }
+      }
+    )
+  }
   
   /**
    * 是否需要动画
@@ -70,11 +88,15 @@ open class CourseDownAnimDispatcher(
             val y = event.getY(index).toInt()
             val child = pair.first
             val point = pair.second
-            changeView(child, point.x, point.y, x, y)
-            if (abs(x - point.x) > mTouchSlop
-              || abs(y - point.y) > mTouchSlop
-            ) {
-              endAnim(child, point.x, point.y, x, y)
+            val l = child.x.toInt()
+            val r = l + child.width
+            val t = child.y.toInt()
+            val b = t + child.height
+            if (x in l .. r && y in t .. b) {
+              changeView(child, point.x, point.y, x, y)
+            } else {
+              // 移动到 View 外面就取消动画
+              endAnim(child, point.x, point.y)
               mViewWithRawPointById.remove(id)
             }
           }
@@ -85,9 +107,7 @@ open class CourseDownAnimDispatcher(
         val id = event.getPointerId(index)
         val pair = mViewWithRawPointById[id]
         if (pair != null) {
-          val x = event.getX(index).toInt()
-          val y = event.getY(index).toInt()
-          endAnim(pair.first, pair.second.x, pair.second.y, x, y)
+          endAnim(pair.first, pair.second.x, pair.second.y)
           mViewWithRawPointById.remove(id)
         }
       }
@@ -96,10 +116,7 @@ open class CourseDownAnimDispatcher(
           val id = event.getPointerId(index)
           val pair = mViewWithRawPointById[id]
           if (pair != null) {
-            val x = event.getX(index).toInt()
-            val y = event.getY(index).toInt()
-            changeView(pair.first, pair.second.x, pair.second.y, x, y)
-            endAnim(pair.first, pair.second.x, pair.second.y, x, y)
+            endAnim(pair.first, pair.second.x, pair.second.y)
           }
         }
         mViewWithRawPointById.clear()
@@ -117,16 +134,18 @@ open class CourseDownAnimDispatcher(
   
   protected open fun changeView(view: View, initialX: Int, initialY: Int, nowX: Int, nowY: Int) {
     view.rotationX = -(nowY - initialY) / view.height.toFloat() * 360
-    view.rotationY = (nowX - initialX) / view.width.toFloat() * 180
+    view.rotationY = (nowX - initialX) / view.width.toFloat() * 90
   }
   
-  protected open fun endAnim(view: View, initialX: Int, initialY: Int, nowX: Int, nowY: Int) {
+  protected open fun endAnim(view: View, initialX: Int, initialY: Int) {
     view.animate()
       .scaleX(1F)
       .scaleY(1F)
       .rotationX(0F)
       .rotationY(0F)
-      .setInterpolator(OvershootInterpolator())
+      .setInterpolator(mInterpolator)
       .start()
   }
+  
+  private val mInterpolator = OvershootInterpolator()
 }

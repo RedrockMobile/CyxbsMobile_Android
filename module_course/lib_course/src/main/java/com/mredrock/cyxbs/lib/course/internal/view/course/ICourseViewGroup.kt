@@ -2,7 +2,6 @@ package com.mredrock.cyxbs.lib.course.internal.view.course
 
 import com.mredrock.cyxbs.lib.course.internal.item.IItemContainer
 import com.mredrock.cyxbs.lib.course.internal.touch.IMultiTouch
-import com.mredrock.cyxbs.lib.course.internal.transition.ICourseTransition
 import com.mredrock.cyxbs.lib.course.internal.view.IView
 import com.mredrock.cyxbs.lib.course.internal.view.course.lp.ItemLayoutParams
 import com.ndhzs.netlayout.child.ChildExistListenerContainer
@@ -30,8 +29,7 @@ interface ICourseViewGroup : IView,
   ChildVisibleListenerContainer, // 监听课表控件添加和移除，这个支持子 View visible 的监听
   IItemContainer, // IItem 容器
   IMultiTouch, // 多指触摸
-  ICourseScrollControl, // 操控课表的滚轴
-  ICourseTransition
+  ICourseScrollControl // 操控课表的滚轴
 {
   /**
    * debug 属性，开启后会绘制表格

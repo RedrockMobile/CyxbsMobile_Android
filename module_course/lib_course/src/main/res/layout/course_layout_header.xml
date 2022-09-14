@@ -1,13 +1,52 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:id="@+id/course_vg_header"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content" >
+    android:layout_height="70dp">
 
-    <include
-        layout="@layout/course_layout_header_bg" />
+    <TextView
+        android:id="@+id/course_tv_which_week"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="第一周"
+        android:textColor="@color/config_level_two_font_color"
+        android:textSize="22dp"
+        android:textStyle="bold"
+        android:layout_marginStart="16dp"
+        android:layout_marginBottom="8dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        tools:ignore="HardcodedText,SpUsage" />
 
-    <include
-        layout="@layout/course_layout_header_other" />
+    <androidx.appcompat.widget.AppCompatTextView
+        android:id="@+id/course_iv_this_week"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textColor="@color/config_level_two_font_color"
+        android:textSize="15dp"
+        android:layout_marginStart="10dp"
+        android:drawableEnd="@drawable/course_ic_item_header_this_week"
+        android:drawablePadding="5dp"
+        android:text="(本周)"
+        app:layout_constraintBaseline_toBaselineOf="@+id/course_tv_which_week"
+        app:layout_constraintStart_toEndOf="@+id/course_tv_which_week"
+        tools:ignore="HardcodedText,SpUsage" />
 
-</FrameLayout>
+    <Button
+        android:id="@+id/course_btn_back_now_week"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:background="@drawable/course_shape_back_to_now_week_bg"
+        android:text="回到本周"
+        android:textColor="@android:color/white"
+        android:textSize="13dp"
+        android:minHeight="0dp"
+        android:paddingTop="8dp"
+        android:paddingBottom="8dp"
+        android:layout_marginEnd="16dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/course_tv_which_week"
+        tools:ignore="HardcodedText,SpUsage" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

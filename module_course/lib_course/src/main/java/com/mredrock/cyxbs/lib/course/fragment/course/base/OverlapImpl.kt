@@ -53,7 +53,7 @@ abstract class OverlapImpl : FoldImpl(), IOverlapContainer {
           } else true
         }
   
-        override fun onItemRemovedBefore(item: IItem) {
+        override fun onItemRemovedBefore(item: IItem, view: View) {
           if (item is IOverlapItem) {
             if (mItemInParentSet.remove(item)) {
               deleteOverlap(item)
@@ -120,8 +120,11 @@ abstract class OverlapImpl : FoldImpl(), IOverlapContainer {
           if (next.overlap.isAddIntoParent()) {
             // 这里又会回调 OnItemExistListener
             if (course.addItem(next)) {
+              next.overlap.onAddIntoParentResult(true)
               iterator.remove()
               mItemInParentSet.add(next)
+            } else {
+              next.overlap.onAddIntoParentResult(false)
             }
           }
         }
@@ -135,8 +138,6 @@ abstract class OverlapImpl : FoldImpl(), IOverlapContainer {
     }
     return false
   }
-  
-  
   
   /**
    * 设置重叠，不一定是在 item 被添加进来时调用

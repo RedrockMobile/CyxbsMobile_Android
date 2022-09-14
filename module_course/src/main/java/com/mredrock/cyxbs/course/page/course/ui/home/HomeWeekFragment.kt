@@ -10,7 +10,6 @@ import com.mredrock.cyxbs.course.page.course.utils.container.AffairContainerProx
 import com.mredrock.cyxbs.course.page.course.utils.container.LinkLessonContainerProxy
 import com.mredrock.cyxbs.course.page.course.utils.container.SelfLessonContainerProxy
 import com.mredrock.cyxbs.lib.course.fragment.page.CourseWeekFragment
-import com.mredrock.cyxbs.lib.utils.extensions.lazyUnlock
 
 /**
  * ...
@@ -43,39 +42,30 @@ class HomeWeekFragment : CourseWeekFragment() {
     initObserve()
   }
   
-  private val mSelfLessonContainerProxy by lazyUnlock { SelfLessonContainerProxy(this) }
-  private val mLinkLessonContainerProxy by lazyUnlock { LinkLessonContainerProxy(this) }
-  private val mAffairContainerProxy by lazyUnlock { AffairContainerProxy(this) }
+  private var mIsNeedStartLinkLessonEntranceAnim: Boolean? = null
+  
+  private val mSelfLessonContainerProxy = SelfLessonContainerProxy(this)
+  private val mLinkLessonContainerProxy = LinkLessonContainerProxy(this)
+  private val mAffairContainerProxy = AffairContainerProxy(this)
   
   private fun initObserve() {
+    mParentViewModel.showLinkEvent
+      .collectLaunch {
+        mIsNeedStartLinkLessonEntranceAnim = it
+      }
+    
     mParentViewModel.homeWeekData
       .map { it[mWeek] ?: HomeCourseViewModel.HomePageResult }
       .observe {
         mSelfLessonContainerProxy.diffRefresh(it.self)
-        mLinkLessonContainerProxy.diffRefresh(it.link)
         mAffairContainerProxy.diffRefresh(it.affair)
-        tryStartEntranceAnim()
-      }
-  }
-  
-  // 是否允许入场动画
-  private var mIsAllowEntranceAnim = true
-  
-  /**
-   * 尝试执行入场动画
-   */
-  private fun tryStartEntranceAnim() {
-    if (mIsFragmentRebuilt) {
-      // 如果 Fragment 处于被摧毁重建的状态，那么取消入场动画
-      return
-    }
-    if (mIsAllowEntranceAnim) {
-      mIsAllowEntranceAnim = false
-      if (mParentViewModel.nowWeek == mWeek) {
-        course.postDelayed(5000) {
-          startEntranceAnim()
+        mLinkLessonContainerProxy.diffRefresh(it.link) {
+          if (mIsNeedStartLinkLessonEntranceAnim == true) {
+            // 这时说明触发了关联人的显示，需要实现入场动画
+            // 使用 mIsNeedStartLinkLessonEntranceAnim 很巧妙的避开了 Fragment 重建数据倒灌的问题
+            mLinkLessonContainerProxy.startEntranceAnim()
+          }
         }
       }
-    }
   }
 }

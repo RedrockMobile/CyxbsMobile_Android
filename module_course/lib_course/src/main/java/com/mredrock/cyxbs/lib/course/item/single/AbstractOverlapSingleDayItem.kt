@@ -1,20 +1,18 @@
 package com.mredrock.cyxbs.lib.course.item.single
 
-import android.animation.Animator
 import android.content.Context
 import android.util.SparseIntArray
 import android.view.View
+import android.view.animation.AlphaAnimation
 import androidx.core.util.forEach
 import androidx.core.util.isNotEmpty
 import com.mredrock.cyxbs.lib.course.fragment.course.expose.overlap.IOverlap
 import com.mredrock.cyxbs.lib.course.fragment.course.expose.overlap.IOverlapItem
 import com.mredrock.cyxbs.lib.course.fragment.course.expose.overlap.OverlapHelper
 import com.mredrock.cyxbs.lib.course.internal.item.forEachRow
-import com.mredrock.cyxbs.lib.course.internal.view.course.base.CourseTransitionImpl
 import com.mredrock.cyxbs.lib.utils.extensions.dp2px
 import com.ndhzs.netlayout.attrs.NetLayoutParams
-import com.ndhzs.netlayout.transition.ILayoutTransition.TransitionType.*
-import com.ndhzs.netlayout.view.NetLayout2
+import com.ndhzs.netlayout.view.NetLayout
 
 /**
  * 用于实现单列的可重叠 item
@@ -32,18 +30,18 @@ abstract class AbstractOverlapSingleDayItem : IOverlapItem, OverlapHelper.ILogic
    */
   protected abstract fun createView(context: Context): View
   
-  // 设置子 View 的动画
-  protected open fun getChangingAppearingAnimator(): Animator? = CourseTransitionImpl.defaultFadeIn.clone()
-  protected open fun getChangingDisappearingAnimator(): Animator? = CourseTransitionImpl.defaultChangeOut.clone()
-  protected open fun getChangingAnimator(): Animator? = CourseTransitionImpl.defaultChange.clone()
-  
   /**
    * 即将被添加进父布局时的回调
    *
    * ## 注意
-   * - 此时并没有被添加进父布局
+   * - 此时并没有被添加进父布局，并且不能保证一定就能添加成功
    */
   protected open fun onAddIntoCourse() {}
+  
+  /**
+   * 添加进父布局是否成功的回调
+   */
+  override fun onAddIntoParentResult(isSuccess: Boolean) {}
   
   /**
    * 刷新重叠区域时的回调
@@ -84,14 +82,14 @@ abstract class AbstractOverlapSingleDayItem : IOverlapItem, OverlapHelper.ILogic
   /**
    * 得到使用 [createView] 生成但目前不在 [mView] 中显示的所有 view 集合的迭代器
    */
-  fun getChildInFreeIterable(): List<View> {
+  fun getChildInFree(): List<View> {
     return mChildInFree
   }
   
   /**
    * 得到使用 [createView] 生成并在 [mView] 中显示的所有 view 集合的迭代器
    */
-  fun getChildInParentIterable(): List<View> {
+  fun getChildInParent(): List<View> {
     return mChildInParent
   }
   
@@ -109,19 +107,18 @@ abstract class AbstractOverlapSingleDayItem : IOverlapItem, OverlapHelper.ILogic
    *
    * [createView] 中得到的 View 都会添加进这个 view 中
    */
-  private lateinit var mView: NetLayout2
+  private lateinit var mView: NetLayout
   
   @Suppress("LeakingThis")
   final override val overlap: IOverlap = OverlapHelper(this)
   
   final override fun initializeView(context: Context): View {
     if (!this::mView.isInitialized) {
-      mView = NetLayout2(context).apply {
+      mView = NetLayout(context).apply {
         setRowColumnCount(lp.rowCount, lp.columnCount)
-        addAnimator(CHANGE_APPEARING, getChangingAppearingAnimator())
-        addAnimator(CHANGE_DISAPPEARING, getChangingDisappearingAnimator())
-        addAnimator(CHANGING, getChangingAnimator())
       }
+    } else {
+      mView.setRowColumnCount(lp.rowCount, lp.columnCount)
     }
     return mView
   }
@@ -138,10 +135,16 @@ abstract class AbstractOverlapSingleDayItem : IOverlapItem, OverlapHelper.ILogic
   private val mChildInFree = arrayListOf<View>()
   private val mChildInParent = arrayListOf<View>()
   
+  
   final override fun refreshOverlap() {
+    // 这里需要重新设置一遍总行数，因为外面可能重新设置了 lp，但 mView 的属性与 lp 并没有相互绑定
+    mView.setRowColumnCount(lp.rowCount, lp.columnCount)
     refreshFreeArea()
     repeat(mChildInParent.size - mFreeAreaMap.size()) {
       val view = mChildInParent.removeLast()
+      // 执行淡出动画
+      val animation = AlphaAnimation(1F, 0F).apply { duration = 360 }
+      mView.startAnimation(animation)
       mView.removeView(view)
       mChildInFree.add(view)
     }
@@ -179,6 +182,9 @@ abstract class AbstractOverlapSingleDayItem : IOverlapItem, OverlapHelper.ILogic
   
   private val mFreeAreaMap = SparseIntArray()
   
+  /**
+   * 刷新空闲区域
+   */
   private fun refreshFreeArea() {
     mFreeAreaMap.clear()
     val column = lp.weekNum

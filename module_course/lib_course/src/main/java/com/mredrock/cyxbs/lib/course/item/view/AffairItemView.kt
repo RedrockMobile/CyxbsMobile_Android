@@ -22,8 +22,8 @@ open class AffairItemView(context: Context) : ItemView(context) {
   
   init {
     super.setCardBackgroundColor(Color.TRANSPARENT)
-    mTvTitle.setTextColor(mTextColor)
-    mTvContent.setTextColor(mTextColor)
+    tvTitle.setTextColor(mTextColor)
+    tvContent.setTextColor(mTextColor)
   }
   
   private val mPaint = Paint().apply {

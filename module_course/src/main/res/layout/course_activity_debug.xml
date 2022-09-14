@@ -43,40 +43,23 @@
                 android:id="@+id/course_fl_bottom_sheet_debug"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
+                android:background="@drawable/course_layer_list_course_bg"
                 app:behavior_peekHeight="130dp"
                 app:behavior_hideable="false"
                 app:layout_behavior="@string/bottom_sheet_behavior" >
                 <!--peekHeight 由课表头的 70 + 底部按钮的 60 组成-->
 
-                <FrameLayout
-                    android:id="@+id/course_parent_header_debug"
+                <!--主界面显示的课表头-->
+                <TextView
+                    android:id="@+id/course_view_header_debug"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    app:layout_constraintTop_toTopOf="parent">
-
-                    <!--课表头背景-->
-                    <include
-                        layout="@layout/course_layout_header_bg" />
-
-                    <!--主界面显示的课表头-->
-                    <TextView
-                        android:id="@+id/course_view_header_debug"
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:text="假装这是课表头"
-                        android:textSize="18sp"
-                        android:textColor="@color/config_level_one_font_color"
-                        android:gravity="bottom|center_horizontal"
-                        tools:ignore="HardcodedText" />
-
-                </FrameLayout>
-
-                <!--用来防止背景透明-->
-                <View
-                    android:layout_width="match_parent"
-                    android:layout_height="0dp"
-                    android:background="@color/config_common_background_color"
-                    app:layout_constraintTop_toBottomOf="@id/course_parent_header_debug"/>
+                    android:layout_height="70dp"
+                    android:text="假装这是课表头"
+                    android:textSize="18sp"
+                    android:textColor="@color/config_level_one_font_color"
+                    android:gravity="bottom|center_horizontal"
+                    app:layout_constraintTop_toTopOf="parent"
+                    tools:ignore="HardcodedText" />
 
                 <androidx.fragment.app.FragmentContainerView
                     android:id="@+id/course_fcv_debug"
