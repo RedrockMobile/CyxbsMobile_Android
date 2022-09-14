@@ -1,8 +1,10 @@
 package com.mredrock.cyxbs.affair.ui.fragment
 
+import android.Manifest
 import android.content.Context
 import android.graphics.Typeface
 import android.os.Bundle
+import android.util.Log
 import android.view.*
 import android.view.inputmethod.EditorInfo
 import android.widget.EditText
@@ -19,6 +21,7 @@ import com.google.android.flexbox.FlexWrap
 import com.google.android.flexbox.FlexboxLayoutManager
 import com.mredrock.cyxbs.affair.R
 import com.mredrock.cyxbs.affair.model.data.AffairEditArgs
+import com.mredrock.cyxbs.affair.model.data.AffairEditArgs.AffairDurationArgs.Companion.REMIND_ARRAY
 import com.mredrock.cyxbs.affair.ui.adapter.AffairDurationAdapter
 import com.mredrock.cyxbs.affair.ui.adapter.TitleCandidateAdapter
 import com.mredrock.cyxbs.affair.ui.adapter.data.AffairTimeData
@@ -29,11 +32,12 @@ import com.mredrock.cyxbs.affair.ui.fragment.AddAffairFragment.AffairPageManager
 import com.mredrock.cyxbs.affair.ui.viewmodel.activity.AffairViewModel
 import com.mredrock.cyxbs.affair.ui.viewmodel.fragment.AddAffairViewModel
 import com.mredrock.cyxbs.affair.utils.AffairDataUtils
+import com.mredrock.cyxbs.affair.utils.TimeUtils
+import com.mredrock.cyxbs.affair.widge.RemindSelectDialog
 import com.mredrock.cyxbs.affair.widge.TextViewTransition
 import com.mredrock.cyxbs.lib.base.ui.mvvm.BaseVmFragment
-import com.mredrock.cyxbs.lib.utils.extensions.gone
-import com.mredrock.cyxbs.lib.utils.extensions.invisible
-import com.mredrock.cyxbs.lib.utils.extensions.visible
+import com.mredrock.cyxbs.lib.utils.extensions.*
+import com.mredrock.cyxbs.lib.utils.utils.CalendarUtils
 
 /**
  * ...
@@ -65,14 +69,14 @@ class AddAffairFragment : BaseVmFragment<AddAffairViewModel>() {
   private val mTvText3: TextView by R.id.affair_tv_add_affair_text_3.view()
 
   private val mEtTitle: EditText by R.id.affair_tv_add_affair_title.view()
-
   private val mEditText: EditText by R.id.affair_et_add_affair.view()
-
+  private val mTvRemind: TextView by R.id.affair_tv_add_affair_remind.view()
   private val mRvTitleCandidate: RecyclerView by R.id.affair_rv_add_affair_title_candidate.view()
   private val mRvTitleCandidateAdapter = TitleCandidateAdapter()
   lateinit var mRvDurationAdapter: AffairDurationAdapter
   private val mRvDuration: RecyclerView by R.id.affair_rv_add_affair_duration.view()
   private var a = 0 //当a=2时,才可以添加事务
+  private var remind = 0
 
   // 拦截返回键
   private val mOnBackPressedCallback = object : OnBackPressedCallback(false) {
@@ -130,7 +134,15 @@ class AddAffairFragment : BaseVmFragment<AddAffairViewModel>() {
         } else false
       }
     })
+    mTvRemind.setOnSingleClickListener {
+      val dialog = RemindSelectDialog(requireActivity()) { remind ->
+        mTvRemind.text = REMIND_ARRAY[remind]
+        this.remind = remind
+      }
+      dialog.show()
+    }
   }
+
 
   private fun initRv() {
     mRvTitleCandidate.adapter = mRvTitleCandidateAdapter.setClickListener {
@@ -166,11 +178,27 @@ class AddAffairFragment : BaseVmFragment<AddAffairViewModel>() {
       if (getCurrentPage() == 2) a++
       // 最后点击添加事务
       if (a > 1) {
+        val data = AffairDataUtils.affairAdapterDataToAtWhatTime(mRvDurationAdapter.currentList)
+        val weekList = TimeUtils.atWhatTimeToWeekList(data)
+        data.forEach {
+          addRemind(
+            mEtTitle.text.toString(), mEditText.text.toString(), it.beginLesson, it.period,
+            it.day, TimeUtils.getRemind(remind)
+          )
+        }
+        data.forEach {
+          deleteRemind(
+            mEtTitle.text.toString(),
+            mEditText.text.toString(),
+            it.beginLesson,
+            it.day
+          )
+        }
         viewModel.addAffair(
           1,
           mEtTitle.text.toString(),
           mEditText.text.toString(),
-          AffairDataUtils.affairAdapterDataToAtWhatTime(mRvDurationAdapter.currentList)
+          data,
         )
       }
     }
@@ -243,6 +271,7 @@ class AddAffairFragment : BaseVmFragment<AddAffairViewModel>() {
           mTvText2.invisible()
           mTvText3.invisible()
           mRvDuration.visible()
+          mTvRemind.visible()
           val set = ConstraintSet().apply { clone(mRootView) }
           set.connect(mEtTitle.id, ConstraintSet.START, mRootView.id, ConstraintSet.START)
           set.connect(mEtTitle.id, ConstraintSet.TOP, mTvText1.id, ConstraintSet.BOTTOM)
@@ -280,6 +309,7 @@ class AddAffairFragment : BaseVmFragment<AddAffairViewModel>() {
           mTvText2.visible()
           mTvText3.visible()
           mRvDuration.gone()
+          mTvRemind.gone()
           val set = ConstraintSet().apply { clone(mRootView) }
           set.connect(mEtTitle.id, ConstraintSet.START, mTvText1.id, ConstraintSet.END)
           set.connect(mEtTitle.id, ConstraintSet.TOP, mTvText1.id, ConstraintSet.TOP)
@@ -321,5 +351,68 @@ class AddAffairFragment : BaseVmFragment<AddAffairViewModel>() {
         duration = 300
       }
     }
+  }
+
+  private fun addRemind(
+    title: String,
+    description: String,
+    beginTime: Int,
+    period: Int,
+    week: Int,
+    remindMinutes: Int
+  ) {
+    //获取权限
+    doPermissionAction(
+      Manifest.permission.READ_CALENDAR,
+      Manifest.permission.WRITE_CALENDAR
+    ) {
+      reason = "设置提醒需要访问您的日历哦~"
+      doAfterGranted {
+        CalendarUtils.addCalendarEventRemind(
+          requireActivity(),
+          title,
+          description,
+          TimeUtils.getBegin(beginTime, week),
+          TimeUtils.getDuration(period),
+          TimeUtils.getRRule(week),
+          remindMinutes,
+          object : CalendarUtils.OnCalendarRemindListener {
+            override fun onFailed(error_code: CalendarUtils.OnCalendarRemindListener.Status?) {
+              "添加失败".toast()
+              Log.e("TAG", "onFailed: 添加失败")
+            }
+
+            override fun onSuccess() {
+              "添加成功".toast()
+            }
+          })
+      }
+      doAfterRefused {
+        "呜呜呜".toast()
+      }
+    }
+  }
+
+  private fun deleteRemind(
+    title: String,
+    description: String,
+    beginTime: Int,
+    week: Int
+  ) {
+    CalendarUtils.deleteCalendarEventRemind(
+      requireActivity(),
+      title,
+      description,
+      TimeUtils.getBegin(beginTime, week),
+      object : CalendarUtils.OnCalendarRemindListener {
+        override fun onFailed(error_code: CalendarUtils.OnCalendarRemindListener.Status?) {
+          "删除失败".toast()
+          Log.e("TAG", "onFailed: 删除失败")
+        }
+
+        override fun onSuccess() {
+          "删除成功".toast()
+        }
+      })
   }
 }

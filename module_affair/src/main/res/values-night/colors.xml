@@ -1,5 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <!--    二级字体颜色-->
+    <color name="affair_common_level_two_font_color">#ffffff</color>
     <!--添加事务时标题-->
     <color name="affair_add_affair_title_tv">#E8E8E8</color>
 

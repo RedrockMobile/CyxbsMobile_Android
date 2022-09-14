@@ -20,6 +20,5 @@ class DebugActivity : BaseDebugActivity() {
         this, 0, 1, 1, 1
         //228398
       )
-
   }
 }

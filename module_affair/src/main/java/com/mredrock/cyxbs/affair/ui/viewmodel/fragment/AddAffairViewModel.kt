@@ -49,4 +49,5 @@ class AddAffairViewModel : BaseViewModel() {
         _titleCandidates.value = it
       }
   }
+
 }
