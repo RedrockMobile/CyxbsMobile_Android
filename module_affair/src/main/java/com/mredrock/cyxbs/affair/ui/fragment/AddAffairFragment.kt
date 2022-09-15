@@ -179,21 +179,13 @@ class AddAffairFragment : BaseVmFragment<AddAffairViewModel>() {
       // 最后点击添加事务
       if (a > 1) {
         val data = AffairDataUtils.affairAdapterDataToAtWhatTime(mRvDurationAdapter.currentList)
-        val weekList = TimeUtils.atWhatTimeToWeekList(data)
         data.forEach {
           addRemind(
             mEtTitle.text.toString(), mEditText.text.toString(), it.beginLesson, it.period,
             it.day, TimeUtils.getRemind(remind)
           )
         }
-        data.forEach {
-          deleteRemind(
-            mEtTitle.text.toString(),
-            mEditText.text.toString(),
-            it.beginLesson,
-            it.day
-          )
-        }
+
         viewModel.addAffair(
           1,
           mEtTitle.text.toString(),
@@ -393,26 +385,4 @@ class AddAffairFragment : BaseVmFragment<AddAffairViewModel>() {
     }
   }
 
-  private fun deleteRemind(
-    title: String,
-    description: String,
-    beginTime: Int,
-    week: Int
-  ) {
-    CalendarUtils.deleteCalendarEventRemind(
-      requireActivity(),
-      title,
-      description,
-      TimeUtils.getBegin(beginTime, week),
-      object : CalendarUtils.OnCalendarRemindListener {
-        override fun onFailed(error_code: CalendarUtils.OnCalendarRemindListener.Status?) {
-          "删除失败".toast()
-          Log.e("TAG", "onFailed: 删除失败")
-        }
-
-        override fun onSuccess() {
-          "删除成功".toast()
-        }
-      })
-  }
 }

@@ -144,8 +144,13 @@ class AffairDurationAdapter(val requireActivity: Context) :
     init {
       ivDelete.setOnSingleClickListener {
         val data = getItem(layoutPosition) as AffairTimeData
-        val tmp = currentList.filter { it != data }
-        submitList(AffairDataUtils.getNewList(tmp))
+        val a = currentList.filterIsInstance<AffairTimeData>().isEmpty()
+        if (a) {
+          "掌友,请至少保留1个时间呦".toast()
+        } else {
+          val tmp = currentList.filter { it != data }
+          submitList(AffairDataUtils.getNewList(tmp))
+        }
       }
     }
   }

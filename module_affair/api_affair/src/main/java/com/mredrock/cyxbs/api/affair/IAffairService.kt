@@ -2,6 +2,7 @@ package com.mredrock.cyxbs.api.affair
 
 import android.content.Context
 import androidx.annotation.WorkerThread
+import androidx.appcompat.app.AppCompatActivity
 import com.alibaba.android.arouter.facade.template.IProvider
 import io.reactivex.rxjava3.core.Observable
 
@@ -51,9 +52,9 @@ interface IAffairService : IProvider {
   fun observeAffair(stuNum: String): Observable<List<Affair>>
 
   /**
-   * 删除事务
+   * 删除事务,这个context必须是activity,用于获取权限
    */
-  fun deleteAffair(affairId: Int)
+  fun deleteAffair(context: AppCompatActivity,affairId: Int)
 
   data class Affair(
     val stuNum: String,

@@ -18,7 +18,7 @@ import com.mredrock.cyxbs.lib.utils.extensions.setOnSingleClickListener
 class RemindSelectDialog(context: Context, addRemind: (Int) -> Unit) :
   RedRockBottomSheetDialog(context) {
   var view: View = LayoutInflater.from(context).inflate(R.layout.affair_dialog_remind_select, null)
-  val weekWV: WheelView = view.findViewById(R.id.affair_wheel_view_remind)
+  private val weekWV: WheelView = view.findViewById(R.id.affair_wheel_view_remind)
   val tvSure: TextView = view.findViewById(R.id.affair_tv_sure)
 
   init {
