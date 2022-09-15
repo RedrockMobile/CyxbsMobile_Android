@@ -16,9 +16,7 @@ import com.mredrock.cyxbs.course.page.find.ui.course.base.BaseFindViewModel
  */
 class FindStuCourseViewModel : BaseFindViewModel<StuLessonData>() {
   
-  override val findLessonData: LiveData<Map<Int, List<StuLessonData>>>
-    get() = _findLessonData
-  
+  override val findLessonData: LiveData<Map<Int, List<StuLessonData>>> get() = _findLessonData
   private val _findLessonData = MutableLiveData<Map<Int, List<StuLessonData>>>()
   
   private var mOldStuNum = ""

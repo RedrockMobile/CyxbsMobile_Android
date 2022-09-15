@@ -2,7 +2,7 @@ package com.mredrock.cyxbs.lib.course.internal.view.course
 
 import com.mredrock.cyxbs.lib.course.internal.item.IItemContainer
 import com.mredrock.cyxbs.lib.course.internal.touch.IMultiTouch
-import com.mredrock.cyxbs.lib.course.internal.view.IView
+import com.mredrock.cyxbs.lib.course.internal.view.IViewGroup
 import com.mredrock.cyxbs.lib.course.internal.view.course.lp.ItemLayoutParams
 import com.ndhzs.netlayout.child.ChildExistListenerContainer
 import com.ndhzs.netlayout.draw.ItemDecorationContainer
@@ -21,7 +21,7 @@ import com.ndhzs.netlayout.transition.ChildVisibleListenerContainer
  * @email guo985892345@foxmail.com
  * @date 2022/8/17 12:58
  */
-interface ICourseViewGroup : IView,
+interface ICourseViewGroup : IViewGroup,
   IColumn, IRow,
   ItemDecorationContainer, // 绘制监听
   SaveStateListenerContainer, // 状态保存

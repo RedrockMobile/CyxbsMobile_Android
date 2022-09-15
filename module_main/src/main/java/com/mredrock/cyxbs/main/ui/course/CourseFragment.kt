@@ -156,6 +156,7 @@ class CourseFragment : BaseFragment() {
             mViewHeader.visible()
             mFcvCourse.visible()
             mActivityViewModel.courseBottomSheetOffset.value = slideOffset
+            mCourseService.setBottomSheetSlideOffset(slideOffset)
           }
         }
       }

@@ -1,6 +1,7 @@
 package com.mredrock.cyxbs.course.page.find.ui.course.stu
 
 import android.os.Bundle
+import android.view.View
 import androidx.annotation.IdRes
 import androidx.core.os.bundleOf
 import androidx.fragment.app.FragmentManager
@@ -49,6 +50,11 @@ class FindStuCourseFragment : BaseFindVpFragment<StuLessonData>() {
   override fun onCreate(savedInstanceState: Bundle?) {
     super.onCreate(savedInstanceState)
     mViewModel.tryFreshData(mStuNum)
+  }
+  
+  override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+    super.onViewCreated(view, savedInstanceState)
+    mViewPager.setCurrentItem(mNowWeek, false)
   }
   
   override fun createFragment(position: Int): CoursePageFragment {

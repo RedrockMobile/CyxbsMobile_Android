@@ -16,8 +16,3 @@ dependRoom()
 dependRoomRxjava()
 dependRxjava()
 dependNetwork()
-dependSmartRefreshLayout()
-
-dependencies {
-  implementation(SmartRefreshLayout.`footer-ball`)
-}

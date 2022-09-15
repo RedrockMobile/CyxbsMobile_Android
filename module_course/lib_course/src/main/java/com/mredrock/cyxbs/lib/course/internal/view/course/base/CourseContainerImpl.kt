@@ -35,7 +35,7 @@ abstract class CourseContainerImpl @JvmOverloads constructor(
   
   override fun postRemoveItemExistListener(l: IItemContainer.OnItemExistListener) {
     post {
-      // 由于遍历中不能直接删除，所以使用 post 来达到延迟删除
+      // 由于遍历中不能直接删除，所以使用 post 来延迟删除
       mOnItemExistListeners.remove(l)
     }
   }

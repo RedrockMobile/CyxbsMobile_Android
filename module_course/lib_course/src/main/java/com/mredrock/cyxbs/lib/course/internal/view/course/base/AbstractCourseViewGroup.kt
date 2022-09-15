@@ -2,6 +2,8 @@ package com.mredrock.cyxbs.lib.course.internal.view.course.base
 
 import android.content.Context
 import android.util.AttributeSet
+import android.view.View
+import androidx.core.view.iterator
 import com.mredrock.cyxbs.lib.course.internal.view.course.ICourseViewGroup
 import com.mredrock.cyxbs.lib.course.R
 import com.ndhzs.netlayout.view.NetLayout2
@@ -23,7 +25,15 @@ abstract class AbstractCourseViewGroup(
     get() = DEBUG
     set(value) { DEBUG = value }
   
-  override fun postDelayed(delayInMillis: Long, action: Runnable?) {
+  final override fun postDelayed(delayInMillis: Long, action: Runnable?) {
     postDelayed(action, delayInMillis)
+  }
+  
+  final override fun getIterable(): Iterable<View> {
+    return object : Iterable<View> {
+      override fun iterator(): Iterator<View> {
+        return this@AbstractCourseViewGroup.run { iterator() }
+      }
+    }
   }
 }

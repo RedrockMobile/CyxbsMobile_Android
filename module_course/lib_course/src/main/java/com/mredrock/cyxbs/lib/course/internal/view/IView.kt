@@ -3,7 +3,6 @@ package com.mredrock.cyxbs.lib.course.internal.view
 import android.content.Context
 import android.view.View
 import android.view.ViewParent
-import android.view.animation.LayoutAnimationController
 
 /**
  * ...
@@ -34,10 +33,4 @@ interface IView {
   fun getWidth(): Int
   
   fun getParent(): ViewParent
-  
-  fun setLayoutAnimation(controller: LayoutAnimationController?)
-  
-  fun getLayoutAnimation(): LayoutAnimationController?
-  
-  fun startLayoutAnimation()
 }

@@ -80,6 +80,7 @@ abstract class OverlapImpl : FoldImpl(), IOverlapContainer {
     course.addChildVisibleListener(
       object : OnChildVisibleListener {
         override fun onHideView(parent: ViewGroup, child: View, newVisibility: Int) {
+          if (newVisibility == View.INVISIBLE) return // 只监听 GONE 和 VISIBLE
           val item = course.getItemByView(child)
           if (item is IOverlapItem) {
             deleteOverlap(item)
@@ -88,6 +89,7 @@ abstract class OverlapImpl : FoldImpl(), IOverlapContainer {
         }
   
         override fun onShowView(parent: ViewGroup, child: View, oldVisibility: Int) {
+          if (oldVisibility == View.INVISIBLE) return // 只监听 GONE 和 VISIBLE
           val item = course.getItemByView(child)
           if (item is IOverlapItem) {
             setOverlap(item)
