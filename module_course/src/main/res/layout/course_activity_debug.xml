@@ -30,7 +30,7 @@
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
-                app:layout_constraintVertical_bias="0.32999998" />
+                app:layout_constraintVertical_bias="0.41000003" />
 
         </androidx.constraintlayout.widget.ConstraintLayout>
 
@@ -59,7 +59,7 @@
                         android:id="@+id/course_tv_course_header_state"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:textColor="@color/common_level_two_font_color"
+                        android:textColor="@color/config_level_two_font_color"
                         android:textSize="8sp"
                         app:layout_constraintBottom_toTopOf="@+id/course_tv_course_header_title"
                         app:layout_constraintEnd_toEndOf="@+id/course_tv_course_header_title"
@@ -79,7 +79,7 @@
                         android:paddingStart="0dp"
                         android:paddingEnd="15dp"
                         android:singleLine="true"
-                        android:textColor="@color/common_level_two_font_color"
+                        android:textColor="@color/config_level_two_font_color"
                         android:textSize="22sp"
                         android:textStyle="bold"
                         android:layout_marginBottom="2dp"

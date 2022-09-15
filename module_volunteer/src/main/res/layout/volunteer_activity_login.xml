@@ -20,13 +20,13 @@
             android:layout_marginStart="12.75dp"
             android:layout_marginTop="50dp">
 
-            <ImageView
+            <androidx.appcompat.widget.AppCompatImageView
                 android:id="@+id/iv_back"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_centerVertical="true"
                 android:padding="5dp"
-                android:src="@drawable/volunteer_ic_back" />
+                app:srcCompat="@drawable/volunteer_ic_back" />
 
             <TextView
                 android:layout_width="wrap_content"
@@ -56,12 +56,12 @@
             android:layout_marginEnd="30dp"
             android:orientation="horizontal">
 
-            <ImageView
+            <androidx.appcompat.widget.AppCompatImageView
                 android:id="@+id/iv_ic_account"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="bottom"
-                android:src="@drawable/volunteer_ic_account" />
+                app:srcCompat="@drawable/volunteer_ic_account" />
 
             <com.google.android.material.textfield.TextInputLayout
                 android:id="@+id/til_volunteer_account"
@@ -93,12 +93,12 @@
             android:layout_marginEnd="30dp"
             android:orientation="horizontal">
 
-            <ImageView
+            <androidx.appcompat.widget.AppCompatImageView
                 android:id="@+id/iv_ic_password"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="bottom"
-                android:src="@drawable/volunteer_ic_password" />
+                app:srcCompat="@drawable/volunteer_ic_password" />
 
             <com.google.android.material.textfield.TextInputLayout
                 android:id="@+id/til_volunteer_password"

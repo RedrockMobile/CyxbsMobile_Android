@@ -72,7 +72,7 @@ class FindLessonActivity : BaseVmActivity<FindLessonViewModel>() {
   }
 
   private fun initObserve() {
-    viewModel.courseEvent.collectLaunch {
+    viewModel.courseState.observe {
       when (it) {
         is FindStuEntity -> {
           mBottomSheet.state = BottomSheetBehavior.STATE_EXPANDED

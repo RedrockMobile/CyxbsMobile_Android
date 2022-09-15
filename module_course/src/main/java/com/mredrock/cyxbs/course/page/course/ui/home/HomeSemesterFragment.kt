@@ -35,10 +35,9 @@ class HomeSemesterFragment : CompareWeekSemesterFragment() {
   private val mAffairContainerProxy = AffairContainerProxy(this)
   
   private fun initObserve() {
-    mParentViewModel.showLinkEvent
-      .collectLaunch {
-        mIsNeedStartLinkLessonEntranceAnim = it
-      }
+    mParentViewModel.showLinkEvent.collectLaunch {
+      mIsNeedStartLinkLessonEntranceAnim = it
+    }
     
     mParentViewModel.homeWeekData
       .observe { map ->

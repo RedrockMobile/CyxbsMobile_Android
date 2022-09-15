@@ -41,7 +41,7 @@ object LinkRepository {
       .observeStuNumState()
       .switchMap { value ->
         // 使用 switchMap 可以停止之前学号的订阅
-        value.nullUnless(Observable.never()) { // 这里如果使用 Observable.empty()，效果跟 never 一样
+        value.nullUnless(Observable.just(LinkStuEntity.NULL)) {
           mLinkStuDB.observeLinkStu(it) // 然后观察数据库
             .distinctUntilChanged() // 必加，因为 Room 每次修改都会回调，所以需要加个这个去重
             .doOnSubscribe {

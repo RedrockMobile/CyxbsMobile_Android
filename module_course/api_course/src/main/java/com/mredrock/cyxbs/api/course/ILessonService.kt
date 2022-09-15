@@ -24,6 +24,7 @@ interface ILessonService : IProvider {
    * - 在数据库发生改变时会回调
    * - 已使用 distinctUntilChanged() 进行了去重处理
    * - 上游已主动切换成 io 线程
+   * - 没登录时发送 emptyList()
    */
   fun observeStuLesson(stuNum: String): Observable<List<Lesson>>
   
@@ -32,6 +33,7 @@ interface ILessonService : IProvider {
    * - 在数据库发生改变时会回调
    * - 已使用 distinctUntilChanged() 进行了去重处理
    * - 上游已主动切换成 io 线程
+   * - 没登录时发送 emptyList()
    */
   fun observeSelfLesson(): Observable<List<Lesson>>
   

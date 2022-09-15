@@ -26,6 +26,8 @@ import androidx.core.view.postDelayed
 import com.airbnb.lottie.LottieAnimationView
 import com.alibaba.android.arouter.launcher.ARouter
 import com.mredrock.cyxbs.api.account.IAccountService
+import com.mredrock.cyxbs.api.update.IAppUpdateService
+import com.mredrock.cyxbs.config.route.MAIN_MAIN
 import com.mredrock.cyxbs.config.route.MINE_FORGET_PASSWORD
 import com.mredrock.cyxbs.config.sp.SP_FIRST_TIME_OPEN
 import com.mredrock.cyxbs.config.sp.SP_PRIVACY_AGREED
@@ -34,6 +36,7 @@ import com.mredrock.cyxbs.lib.base.BaseApp
 import com.mredrock.cyxbs.lib.base.ui.mvvm.BaseVmActivity
 import com.mredrock.cyxbs.lib.utils.extensions.lazyUnlock
 import com.mredrock.cyxbs.lib.utils.extensions.setOnSingleClickListener
+import com.mredrock.cyxbs.lib.utils.service.ServiceManager
 import com.mredrock.cyxbs.lib.utils.service.impl
 import com.mredrock.cyxbs.login.R
 import com.mredrock.cyxbs.login.page.login.viewmodel.LoginViewModel
@@ -64,7 +67,7 @@ class LoginActivity : BaseVmActivity<LoginViewModel>() {
     
     private val mIntentSuccess by lazyUnlock { intent.getParcelableExtra<Intent>(INTENT_TARGET) }
     private val mIntentTouristMode by lazyUnlock {
-        intent.getParcelableExtra<Intent>(INTENT_TOURIST_MODE)!!
+        intent.getParcelableExtra<Intent>(INTENT_TOURIST_MODE)
     }
     
     private val lottieProgress = 0.39f // 点击同意用户协议时的动画的时间
@@ -83,6 +86,7 @@ class LoginActivity : BaseVmActivity<LoginViewModel>() {
         setContentView(R.layout.login_activity_login)
         initView()
         initObserve()
+        initUpdate()
     }
 
     private fun initView() {
@@ -114,14 +118,21 @@ class LoginActivity : BaseVmActivity<LoginViewModel>() {
                 IAccountService::class.impl
                     .getVerifyService()
                     .loginByTourist()
-                it.postDelayed(100) {
-                    // 延迟一下，因为 sp 读取属性没得这么快，不然检测到仍未登录，会直接关闭应用
-                    startActivity(
-                        mIntentTouristMode
-                            .addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK) // 清除掉其他 Activity
-                            .addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
-                    )
-                    finish()
+                it.postDelayed(30) {
+                    if (mIntentTouristMode == null) {
+                        // 延迟一下，因为 sp 读取属性没得这么快，不然检测到仍未登录，会直接关闭应用
+                        ServiceManager.activity(MAIN_MAIN) {
+                            addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK) // 清除掉其他 Activity
+                            addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+                        }
+                        it.postDelayed(30) {
+                            // 再延迟一下，防止因为没有完全启动 MainActivity 而导致整个应用直接退出
+                            finish()
+                        }
+                    } else {
+                        startActivity(mIntentTouristMode)
+                        finish()
+                    }
                 }
             }
         }
@@ -184,8 +195,15 @@ class LoginActivity : BaseVmActivity<LoginViewModel>() {
     private fun initObserve() {
         viewModel.loginEvent.collectLaunch {
             if (it) {
-                startActivity(mIntentSuccess)
-                finish()
+                if (mIntentSuccess != null) {
+                    startActivity(mIntentSuccess)
+                    window.decorView.postDelayed(10) {
+                        // 延迟一下，防止因为没有完全启动 MainActivity 而导致整个应用直接退出
+                        finish()
+                    }
+                } else {
+                    finish()
+                }
             } else {
                 changeUiState()
             }
@@ -263,5 +281,9 @@ class LoginActivity : BaseVmActivity<LoginViewModel>() {
             return false
         }
         return true
+    }
+    
+    private fun initUpdate() {
+        IAppUpdateService::class.impl.tryNoticeUpdate(this)
     }
 }

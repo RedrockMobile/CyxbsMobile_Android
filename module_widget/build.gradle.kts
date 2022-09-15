@@ -8,7 +8,6 @@ plugins {
 }
 
 dependApiAccount()
-dependApiMain()
 
 dependEventBus()
 dependRxjava()

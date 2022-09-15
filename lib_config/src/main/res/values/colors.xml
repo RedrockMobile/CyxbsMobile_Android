@@ -37,4 +37,7 @@
     <color name="config_choose_dialog_btn_positive">#4A44E4</color>
     <color name="config_choose_dialog_btn_negative">#C3D4EE</color>
 
+    <!--主页面的整体灰色背景-->
+    <color name="config_window_background">#F2F3F8</color>
+
 </resources>

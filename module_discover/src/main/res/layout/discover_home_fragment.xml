@@ -33,7 +33,7 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="15dp"
             android:layout_marginTop="3dp"
-            android:text="@string/common_explore"
+            android:text="发现"
             android:textColor="@color/common_level_two_font_color"
             android:textSize="26sp"
             android:textStyle="bold"

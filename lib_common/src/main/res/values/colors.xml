@@ -34,10 +34,7 @@
     <color name="common_course_delete_button_text_color">#7CA3DF</color>
 
 
-    <!--    底部tab未聚焦字体颜色-->
-    <color name="common_un_focused_font_color">#AABCD8</color>
-    <!--    底部tab聚焦字体颜色-->
-    <color name="common_focused_font_color">#2923D2</color>
+
 
     <!--    60%透明度的二级字体-->
     <color name="common_alpha_level_two_font_color">#9915315B</color>

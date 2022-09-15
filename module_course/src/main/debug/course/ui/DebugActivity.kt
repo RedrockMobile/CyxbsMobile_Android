@@ -28,8 +28,8 @@ import kotlin.math.max
 class DebugActivity : BaseDebugActivity() {
   
   private val mBtn by R.id.course_btn_find_debug.view<Button>()
-  private val mFcv by R.id.course_fcv_debug.view<FragmentContainerView>()
-  private val mHeader by R.id.course_view_header_debug.view<View>()
+  private val mFcvCourse by R.id.course_fcv_debug.view<FragmentContainerView>()
+  private val mCourseHeader by R.id.course_view_header_debug.view<View>()
   private val mBottom by R.id.course_tv_bottom_debug.view<View>()
   private val mBottomSheetView by R.id.course_fl_bottom_sheet_debug.view<View>()
   
@@ -55,13 +55,13 @@ class DebugActivity : BaseDebugActivity() {
       )
     }
     
-    mHeader.setOnClickListener {
+    mCourseHeader.setOnClickListener {
       if (mBottomSheet.state == BottomSheetBehavior.STATE_COLLAPSED) {
         mBottomSheet.state = BottomSheetBehavior.STATE_EXPANDED
       }
     }
   
-    mCourseService.tryReplaceHomeCourseFragmentById(supportFragmentManager, mFcv.id)
+    mCourseService.tryReplaceHomeCourseFragmentById(supportFragmentManager, mFcvCourse.id)
     mCourseService.setCourseVpAlpha(0F)
     mCourseService.setHeaderAlpha(0F)
     
@@ -70,11 +70,10 @@ class DebugActivity : BaseDebugActivity() {
         override fun onStateChanged(bottomSheet: View, newState: Int) {
           when (newState) {
             BottomSheetBehavior.STATE_EXPANDED -> {
-              mHeader.gone()
+              mCourseHeader.gone()
             }
-            
-            else -> {
-              mHeader.visible()
+            BottomSheetBehavior.STATE_COLLAPSED -> {
+              mFcvCourse.gone()
             }
           }
         }
@@ -84,19 +83,21 @@ class DebugActivity : BaseDebugActivity() {
             /*
             * 展开时：
             * slideOffset：0.0 --------> 1.0
-            * 课表主体:     0.0 --------> 1.0  挡板：1.0 --------> 0.0
+            * 课表主体:     0.0 --------> 1.0
             * 课表头部:     0.0 -> 0.0 -> 1.0
             * 主界面头部:   1.0 -> 0.0 -> 0.0
             *
             * 折叠时：
             * slideOffset：1.0 --------> 0.0
-            * 课表主体:     1.0 --------> 0.0  挡板：0.0 --------> 1.0
+            * 课表主体:     1.0 --------> 0.0
             * 课表头部:     1.0 -> 0.0 -> 0.0
             * 主界面头部:   0.0 -> 0.0 -> 1.0
             * */
             mCourseService.setCourseVpAlpha(slideOffset)
             mCourseService.setHeaderAlpha(max(slideOffset * 2 - 1, 0F))
-            mHeader.alpha = max(1 - slideOffset * 2, 0F)
+            mCourseHeader.alpha = max(1 - slideOffset * 2, 0F)
+            mCourseHeader.visible()
+            mFcvCourse.visible()
             
             // 偏移底部按钮
             mBottom.translationY = mBottom.height * slideOffset

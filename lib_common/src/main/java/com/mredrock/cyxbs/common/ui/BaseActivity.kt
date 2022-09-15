@@ -13,7 +13,6 @@ import androidx.annotation.DrawableRes
 import androidx.appcompat.app.AppCompatActivity
 import com.mredrock.cyxbs.api.account.IAccountService
 import com.mredrock.cyxbs.common.R
-import com.mredrock.cyxbs.common.bean.LoginConfig
 import com.mredrock.cyxbs.common.component.JToolbar
 import com.mredrock.cyxbs.common.mark.ActionLoginStatusSubscriber
 import com.mredrock.cyxbs.common.mark.EventBusLifecycleSubscriber
@@ -22,7 +21,6 @@ import com.mredrock.cyxbs.common.utils.BindView
 import com.mredrock.cyxbs.common.utils.LogUtils
 import com.mredrock.cyxbs.common.utils.extensions.getDarkModeStatus
 import com.mredrock.cyxbs.common.utils.extensions.startActivity
-import com.mredrock.cyxbs.common.utils.extensions.startLoginActivity
 import org.greenrobot.eventbus.EventBus
 
 
@@ -40,11 +38,6 @@ abstract class BaseActivity : AppCompatActivity() {
     //当然，你要定义自己的TAG方便在Log里面找也可以重写这个
     protected open var TAG: String = this::class.java.simpleName
 
-
-    // 默认不检查登陆
-    protected open val loginConfig = LoginConfig(
-            isCheckLogin = false
-    )
 
     // 只在这里做封装处理
     private var baseBundle: Bundle? = null
@@ -152,9 +145,6 @@ abstract class BaseActivity : AppCompatActivity() {
         if (this is EventBusLifecycleSubscriber) {
             EventBus.getDefault().register(this)
         }
-        if (!ServiceManager.getService(IAccountService::class.java).getVerifyService().isTouristMode()) {
-            checkLoginStatus()
-        }
         lifeCycleLog("onStart")
     }
 
@@ -200,21 +190,6 @@ abstract class BaseActivity : AppCompatActivity() {
     private fun lifeCycleLog(message: String) {
         if (isOpenLifeCycleLog) {
             LogUtils.d(TAG, "${this::class.java.simpleName}\$\$${message}")
-        }
-    }
-
-    /**
-     * 检查是否登录，若是单模块调试且某些
-     */
-    protected fun checkLoginStatus() {
-        val userState = ServiceManager.getService(IAccountService::class.java).getVerifyService()
-        if (!userState.isLogin() && loginConfig.isCheckLogin) {
-            startLoginActivity(loginConfig)
-        } else if (userState.isLogin() && userState.isRefreshTokenExpired()) {
-            userState.logout(this)
-            startLoginActivity(LoginConfig(
-                    warnMessage = "身份信息已过期，请重新登录"
-            ))
         }
     }
 

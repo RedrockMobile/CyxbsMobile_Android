@@ -17,7 +17,7 @@
         android:layout_marginTop="10dp"
         android:layout_marginBottom="10dp">
 
-        <ImageView
+        <androidx.appcompat.widget.AppCompatImageView
             android:id="@+id/qa_circle_detail_iv_back"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -25,7 +25,7 @@
             android:layout_gravity="center_vertical"
             android:layout_marginStart="20dp"
             android:padding="5dp"
-            android:src="@drawable/qa_ic_arrow_left" />
+            app:srcCompat="@drawable/qa_ic_arrow_left" />
 
         <TextView
             android:id="@+id/qa_detail_tv_title"

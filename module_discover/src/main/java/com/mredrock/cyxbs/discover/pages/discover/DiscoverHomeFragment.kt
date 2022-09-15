@@ -21,17 +21,17 @@ import androidx.viewpager2.widget.ViewPager2
 import com.alibaba.android.arouter.facade.annotation.Route
 import com.alibaba.android.arouter.launcher.ARouter
 import com.cyxbsmobile_single.api_todo.ITodoService
+import com.mredrock.cyxbs.api.account.IAccountService
 import com.mredrock.cyxbs.api.electricity.IElectricityService
 import com.mredrock.cyxbs.api.sport.ISportService
 import com.mredrock.cyxbs.api.volunteer.IVolunteerService
 import com.mredrock.cyxbs.common.component.CyxbsToast
 import com.mredrock.cyxbs.common.component.SpacesHorizontalItemDecoration
 import com.mredrock.cyxbs.common.config.*
-import com.mredrock.cyxbs.common.event.CurrentDateInformationEvent
-import com.mredrock.cyxbs.common.mark.EventBusLifecycleSubscriber
 import com.mredrock.cyxbs.common.service.ServiceManager
 import com.mredrock.cyxbs.common.service.impl
 import com.mredrock.cyxbs.common.ui.BaseViewModelFragment
+import com.mredrock.cyxbs.common.utils.Num2CN
 import com.mredrock.cyxbs.common.utils.extensions.doIfLogin
 import com.mredrock.cyxbs.common.utils.extensions.dp2px
 import com.mredrock.cyxbs.common.utils.extensions.setOnSingleClickListener
@@ -41,9 +41,9 @@ import com.mredrock.cyxbs.discover.utils.BannerAdapter
 import com.mredrock.cyxbs.discover.utils.MoreFunctionProvider
 import com.mredrock.cyxbs.discover.utils.IS_SWITCH1_SELECT
 import com.mredrock.cyxbs.discover.utils.NotificationSp
+import com.mredrock.cyxbs.lib.utils.utils.SchoolCalendarUtil
 import kotlinx.android.synthetic.main.discover_home_fragment.*
-import org.greenrobot.eventbus.Subscribe
-import org.greenrobot.eventbus.ThreadMode
+import java.util.*
 
 
 /**
@@ -52,7 +52,7 @@ import org.greenrobot.eventbus.ThreadMode
  */
 
 @Route(path = DISCOVER_ENTRY)
-class DiscoverHomeFragment : BaseViewModelFragment<DiscoverHomeViewModel>(), EventBusLifecycleSubscriber {
+class DiscoverHomeFragment : BaseViewModelFragment<DiscoverHomeViewModel>() {
     companion object {
         const val DISCOVER_FUNCTION_RV_STATE = "discover_function_rv_state"
     }
@@ -70,6 +70,7 @@ class DiscoverHomeFragment : BaseViewModelFragment<DiscoverHomeViewModel>(), Eve
         if (savedInstanceState == null) {
             initFeeds()
         }
+        initTyDay()
         initJwNews(mVfDetail, fl_discover_home_jwnews)
         initViewPager()
         initHasUnread()
@@ -77,6 +78,34 @@ class DiscoverHomeFragment : BaseViewModelFragment<DiscoverHomeViewModel>(), Eve
         view.findViewById<View>(R.id.iv_check_in).setOnSingleClickListener {
             context?.doIfLogin("签到") {
                 ARouter.getInstance().build(MINE_CHECK_IN).navigation()
+            }
+        }
+    }
+    
+    /**
+     * 从老课表那里移过来的代码
+     */
+    private fun initTyDay() {
+        if (!IAccountService::class.impl.getVerifyService().isLogin()) {
+            tv_day.text = "登录解锁更多功能~"
+        } else {
+            val nowWeek = SchoolCalendarUtil.getWeekOfTerm()
+            if (nowWeek != null) {
+                //这个用来判断是不是可能处于是暑假的那段时间除非大变动应该暑假绝对是6，7，8，9月当中
+                val summerVacation = listOf(6, 7, 8, 9)
+                val now = Calendar.getInstance()
+                tv_day.text = when {
+                    nowWeek > 0 ->
+                        "第${Num2CN.number2ChineseNumber(nowWeek.toLong())}周 " +
+                          "周${if (now[Calendar.DAY_OF_WEEK] != 1)
+                              Num2CN.number2ChineseNumber(now[Calendar.DAY_OF_WEEK] - 1.toLong())
+                              else "日"}"
+                    //8，9月欢迎新同学
+                    (now[Calendar.MONTH] + 1 == 8 || now[Calendar.MONTH] + 1 == 9) -> "欢迎新同学～"
+                    nowWeek !in 1 .. 24 && summerVacation.contains(now[Calendar.MONTH] + 1) -> "暑假快乐鸭"
+                    nowWeek !in 1 .. 24 && !summerVacation.contains(now[Calendar.MONTH] + 1) -> "寒假快乐鸭"
+                    else -> ""
+                }
             }
         }
     }
@@ -234,12 +263,6 @@ class DiscoverHomeFragment : BaseViewModelFragment<DiscoverHomeViewModel>(), Eve
     private fun addFeedFragment(fragment: Fragment) {
         childFragmentManager.beginTransaction().add(R.id.ll_discover_feeds, fragment).commit()
     }
-
-    @Subscribe(threadMode = ThreadMode.MAIN, sticky = true)
-    fun onGetData(dataEvent: CurrentDateInformationEvent) {
-        tv_day.text = dataEvent.time
-    }
-
 
     override fun onPause() {
         super.onPause()

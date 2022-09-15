@@ -8,12 +8,12 @@ import android.widget.EditText
 import androidx.appcompat.content.res.AppCompatResources
 import androidx.core.widget.doOnTextChanged
 import androidx.lifecycle.ViewModelProvider
-import com.alibaba.android.arouter.launcher.ARouter
-import com.mredrock.cyxbs.api.main.MAIN_MAIN
+import com.mredrock.cyxbs.api.login.ILoginService
 import com.mredrock.cyxbs.common.utils.extensions.setOnSingleClickListener
 import com.mredrock.cyxbs.lib.base.ui.BaseBindFragment
 import com.mredrock.cyxbs.lib.utils.extensions.gone
 import com.mredrock.cyxbs.lib.utils.extensions.visible
+import com.mredrock.cyxbs.lib.utils.service.impl
 import com.mredrock.cyxbs.mine.R
 import com.mredrock.cyxbs.mine.databinding.MineFragmentFindPasswordIdsConfirmBinding
 import com.mredrock.cyxbs.mine.page.security.util.IdsFindPasswordDialog
@@ -59,7 +59,8 @@ class ConfirmPasswordFragment : BaseBindFragment<MineFragmentFindPasswordIdsConf
                 .setContent("新密码修改成功，请重新登录后再进行操作")
                 .setConfirm {
                     //并设置点击跳转至登录界面
-                    ARouter.getInstance().build(MAIN_MAIN).navigation()
+                    ILoginService::class.impl
+                        .startLoginActivityReboot(context)
                     dismiss()
                     requireActivity().finish()
                 }
