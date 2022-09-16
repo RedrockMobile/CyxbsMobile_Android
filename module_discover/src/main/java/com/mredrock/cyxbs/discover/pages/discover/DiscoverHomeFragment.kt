@@ -154,7 +154,7 @@ class DiscoverHomeFragment : BaseViewModelFragment<DiscoverHomeViewModel>() {
                 .alpha(1F)
                 .duration = 600
             mSlideShow.addTransformer(ScaleInTransformer())
-                .setAutoSlideTime(1200, 5000)
+                .setAutoSlideTime(1200, 6000)
                 .setTimeInterpolator(DecelerateInterpolator())
                 .setImgAdapter(
                     ImageViewAdapter.Builder(list, 8.dp2pxF)

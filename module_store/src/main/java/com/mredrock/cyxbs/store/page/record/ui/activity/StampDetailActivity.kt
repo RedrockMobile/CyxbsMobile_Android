@@ -19,7 +19,7 @@ import com.mredrock.cyxbs.store.page.record.ui.fragment.GetRecordFragment
 import com.mredrock.cyxbs.store.page.record.viewmodel.RecordViewModel
 import com.mredrock.cyxbs.store.utils.dp2pxF
 import com.mredrock.cyxbs.store.utils.getColor2
-import com.mredrock.cyxbs.store.utils.transformer.ScaleInTransformer
+import com.ndhzs.slideshow.viewpager.transformer.ScaleInTransformer
 
 /**
  *    author : zz (后期优化: 985892345)

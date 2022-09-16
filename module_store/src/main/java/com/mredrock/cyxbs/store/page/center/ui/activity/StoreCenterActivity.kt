@@ -24,7 +24,7 @@ import com.mredrock.cyxbs.store.utils.dp2pxF
 import com.mredrock.cyxbs.store.utils.getColor2
 import com.mredrock.cyxbs.store.utils.widget.SlideUpLayout
 import com.mredrock.cyxbs.store.utils.widget.TextRollView
-import com.mredrock.cyxbs.store.utils.transformer.ScaleInTransformer
+import com.ndhzs.slideshow.viewpager.transformer.ScaleInTransformer
 
 /**
  * 邮票中心界面
@@ -112,7 +112,7 @@ class StoreCenterActivity : BaseVmActivity<StoreCenterViewModel>() {
                     val field = badge.javaClass.getDeclaredField("badgeRadius")
                     field.isAccessible = true
                     field.set(badge, 3.5F.dp2pxF())
-                } catch (e: Exception) {  }
+                } catch (_: Exception) {  }
 
                 // 滑到邮票任务页面时就取消小圆点
                 mViewPager2.registerOnPageChangeCallback(object : ViewPager2.OnPageChangeCallback() {
@@ -137,7 +137,7 @@ class StoreCenterActivity : BaseVmActivity<StoreCenterViewModel>() {
             val field = mRefreshLayout.javaClass.getDeclaredField("mTouchSlop")
             field.isAccessible = true
             field.set(mRefreshLayout, 220)
-        }catch (e: Exception) { }
+        } catch (_: Exception) { }
 
         // 下面这个 setOnChildScrollUpCallback() 返回 false 就代表刷新控件可以拦截滑动
         mRefreshLayout.setOnChildScrollUpCallback { _, _ -> !mSlideUpLayout.isUnfold() }

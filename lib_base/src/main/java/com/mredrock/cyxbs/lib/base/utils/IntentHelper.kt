@@ -25,28 +25,28 @@ class IntentHelper<T: Any>(
       mValue = intent.invoke().run {
         // 因为 intent 的 getExtra() 方法被废弃，所以只能一个一个判断
         when (clazz) {
-          String::class -> getStringExtra(name)
+          String::class.java -> getStringExtra(name)
   
-          Int::class -> getIntExtra(name, Int.MIN_VALUE)
-          Boolean::class -> getBooleanExtra(name, false)
-          Byte::class -> getByteExtra(name, Byte.MIN_VALUE)
-          Char::class -> getCharExtra(name, ' ')
-          Double::class -> getDoubleExtra(name, Double.MIN_VALUE)
-          Float::class -> getFloatExtra(name, Float.MIN_VALUE)
-          Long::class -> getLongExtra(name, Long.MIN_VALUE)
-          Short::class -> getShortExtra(name, Short.MIN_VALUE)
+          Int::class.java -> getIntExtra(name, Int.MIN_VALUE)
+          Boolean::class.java -> getBooleanExtra(name, false)
+          Byte::class.java -> getByteExtra(name, Byte.MIN_VALUE)
+          Char::class.java -> getCharExtra(name, ' ')
+          Double::class.java -> getDoubleExtra(name, Double.MIN_VALUE)
+          Float::class.java -> getFloatExtra(name, Float.MIN_VALUE)
+          Long::class.java -> getLongExtra(name, Long.MIN_VALUE)
+          Short::class.java -> getShortExtra(name, Short.MIN_VALUE)
           
-          Bundle::class -> getBundleExtra(name)
-          BooleanArray::class -> getBooleanArrayExtra(name)
-          ByteArray::class -> getByteArrayExtra(name)
-          CharArray::class -> getCharArrayExtra(name)
-          DoubleArray::class -> getDoubleArrayExtra(name)
-          FloatArray::class -> getFloatArrayExtra(name)
-          IntArray::class -> getIntArrayExtra(name)
-          LongArray::class -> getLongArrayExtra(name)
-          ShortArray::class -> getShortArrayExtra(name)
+          Bundle::class.java -> getBundleExtra(name)
+          BooleanArray::class.java -> getBooleanArrayExtra(name)
+          ByteArray::class.java -> getByteArrayExtra(name)
+          CharArray::class.java -> getCharArrayExtra(name)
+          DoubleArray::class.java -> getDoubleArrayExtra(name)
+          FloatArray::class.java -> getFloatArrayExtra(name)
+          IntArray::class.java -> getIntArrayExtra(name)
+          LongArray::class.java -> getLongArrayExtra(name)
+          ShortArray::class.java -> getShortArrayExtra(name)
           
-          Array::class -> {
+          Array::class.java -> {
             val componentType = clazz.componentType!!
             when {
               Parcelable::class.java.isAssignableFrom(componentType) -> {
