@@ -3,7 +3,6 @@ package com.mredrock.cyxbs.store.page.center.ui.activity
 import android.annotation.SuppressLint
 import android.content.Intent
 import android.os.Bundle
-import android.util.Log
 import android.widget.ImageButton
 import android.widget.ImageView
 import android.widget.TextView
@@ -173,7 +172,6 @@ class StoreCenterActivity : BaseVmActivity<StoreCenterViewModel>() {
     private fun initObserve() {
         var isFirstLoad = true // 是否是第一次进入界面
         viewModel.stampCenterData.observe {
-            Log.d("ggg", "(StoreCenterActivity.kt:179) -> it = $it")
             val text = it.userAmount.toString()
             if (!mTvStampBigNumber.hasText()) { // 如果是第一次进入界面, 肯定没有文字
                 mTvStampBigNumber.setTextOnlyAlpha(text) // 第一次进入界面就只使用隐现的动画
@@ -196,7 +194,6 @@ class StoreCenterActivity : BaseVmActivity<StoreCenterViewModel>() {
                 // 处于刷新状态且不是第一次刷新
                 if (mRefreshLayout.isRefreshing && !isFirstLoad) { toast("刷新成功") }
             }else {
-                Log.d("ggg", "(StoreCenterActivity.kt:203) -> toast")
                 toast("获取邮票数据失败")
             }
             mRefreshLayout.isRefreshing = false

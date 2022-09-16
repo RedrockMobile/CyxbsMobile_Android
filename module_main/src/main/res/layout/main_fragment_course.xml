@@ -97,7 +97,6 @@
                     android:ellipsize="marquee"
                     android:marqueeRepeatLimit="marquee_forever"
                     android:singleLine="true"
-                    android:visibility="gone"
                     app:drawableStartCompat="@drawable/main_ic_course_header_landmark"
                     app:layout_constraintTop_toTopOf="@id/main_tv_course_header_content"
                     app:layout_constraintBottom_toBottomOf="@+id/main_tv_course_header_content"

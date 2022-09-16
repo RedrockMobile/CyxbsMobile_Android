@@ -12,6 +12,7 @@ import com.mredrock.cyxbs.api.account.IAccountService
 import com.mredrock.cyxbs.api.course.ICourseService
 import com.mredrock.cyxbs.lib.base.ui.BaseFragment
 import com.mredrock.cyxbs.lib.utils.extensions.gone
+import com.mredrock.cyxbs.lib.utils.extensions.invisible
 import com.mredrock.cyxbs.lib.utils.extensions.lazyUnlock
 import com.mredrock.cyxbs.lib.utils.extensions.visible
 import com.mredrock.cyxbs.lib.utils.service.impl
@@ -86,11 +87,11 @@ class CourseFragment : BaseFragment() {
       .safeSubscribeBy {
         when (it) {
           is CourseHeaderHelper.HintHeader -> {
-            mTvHeaderState.gone()
-            mTvHeaderTitle.gone()
-            mTvHeaderTime.gone()
-            mTvHeaderPlace.gone()
-            mTvHeaderContent.gone()
+            mTvHeaderState.invisible()
+            mTvHeaderTitle.invisible()
+            mTvHeaderTime.invisible()
+            mTvHeaderPlace.invisible()
+            mTvHeaderContent.invisible()
             mTvHeaderHint.visible()
             mTvHeaderHint.text = it.hint
           }
@@ -98,17 +99,17 @@ class CourseFragment : BaseFragment() {
             mTvHeaderState.visible()
             mTvHeaderTitle.visible()
             mTvHeaderTime.visible()
-            mTvHeaderHint.gone()
+            mTvHeaderHint.invisible()
             mTvHeaderState.text = it.state
             mTvHeaderTitle.text = it.title
             mTvHeaderTime.text = it.time
             if (it.isLesson) {
-              mTvHeaderContent.gone()
+              mTvHeaderContent.invisible()
               mTvHeaderPlace.visible()
               mTvHeaderPlace.text = it.content
             } else {
               mTvHeaderContent.visible()
-              mTvHeaderPlace.gone()
+              mTvHeaderPlace.invisible()
               mTvHeaderContent.text = it.content
             }
           }

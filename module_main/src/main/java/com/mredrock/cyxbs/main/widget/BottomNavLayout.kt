@@ -84,7 +84,7 @@ class BottomNavLayout(
       }
       mLastSelectPosition = position
     } else {
-      ValueAnimator.ofFloat(1.1F, 0.8F, 1.1F).apply {
+      ValueAnimator.ofFloat(1.1F, 0.9F, 1.1F).apply {
         duration = animDuration * 2
         addUpdateListener {
           val value = it.animatedValue as Float

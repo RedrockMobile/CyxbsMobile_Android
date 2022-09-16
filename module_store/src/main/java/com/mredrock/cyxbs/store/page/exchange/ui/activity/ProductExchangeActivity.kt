@@ -4,7 +4,6 @@ import android.annotation.SuppressLint
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
-import android.view.View
 import android.widget.ImageButton
 import androidx.core.app.ActivityOptionsCompat
 import androidx.core.util.Pair
@@ -21,6 +20,8 @@ import com.mredrock.cyxbs.store.utils.StoreType
 import com.mredrock.cyxbs.store.utils.getColor2
 import com.mredrock.cyxbs.store.utils.transformer.AlphaTransformer
 import com.mredrock.cyxbs.store.utils.transformer.ScaleInTransformer
+import com.ndhzs.slideshow.adapter.ImageViewAdapter
+import com.ndhzs.slideshow.adapter.setImgAdapter
 
 /**
  *    author : zz
@@ -214,47 +215,49 @@ class ProductExchangeActivity : BaseVmBindActivity<ProductExchangeViewModel, Sto
             }
         }
     }
+    
+    // 是否需要 PhotoActivity 的 SHOW_POSITION 变量
+    private var mIsNeedPhotoActivityShowPosition = false
 
     private fun initSlideShow(imgUrls: List<String>) {
-        if (!binding.storeSlideShowExchangeProductImage.hasBeenSetAdapter()) {
-            binding.storeSlideShowExchangeProductImage
-                .addTransformer(ScaleInTransformer())
-                .addTransformer(AlphaTransformer())
-                .openCirculateEnabled()
-                .setImgAdapter(imgUrls,
-                    create = { holder ->
-                        holder.view.setOnSingleClickListener {
+        binding.storeSsExchangeProductImage
+            .addTransformer(ScaleInTransformer())
+            .addTransformer(AlphaTransformer())
+            .setIsCyclical(true)
+            .setImgAdapter(
+                ImageViewAdapter.Builder(imgUrls)
+                    .onCreate {
+                        view.setOnSingleClickListener {
                             // 装扮详情点击图片的元素共享动画
                             val options =
                                 ActivityOptionsCompat.makeSceneTransitionAnimation(
-                                    this, Pair<View, String>(
-                                        binding.storeSlideShowExchangeProductImage,
+                                    this@ProductExchangeActivity, Pair(
+                                        binding.storeSsExchangeProductImage,
                                         "productImage"
                                     )
                                 )
-
+    
                             PhotoActivity.activityStart(
-                                this, ArrayList(imgUrls),
+                                this@ProductExchangeActivity, ArrayList(imgUrls),
                                 // 因为开启了循环滑动, 所以必须使用 getRealPosition() 得到你所看到的位置
-                                binding
-                                    .storeSlideShowExchangeProductImage
-                                    .getRealPosition(holder.layoutPosition),
+                                binding.storeSsExchangeProductImage.getCurrentItem(),
                                 options.toBundle()
                             )
+                            mIsNeedPhotoActivityShowPosition = true
                         }
-                    },
-                    refactor = { data, imageView, _, _ ->
-                        imageView.setImageFromUrl(data)
-                    })
-        } else {
-            binding.storeSlideShowExchangeProductImage.notifyImgDataChange(imgUrls)
-        }
+                    }.onBind {
+                        view.setImageFromUrl(data)
+                    }
+            )
     }
 
     override fun onRestart() {
         super.onRestart()
-        // 从 PhotoActivity 返回时就使轮播图跳转到对应位置
-        binding.storeSlideShowExchangeProductImage
-            .setCurrentItem(PhotoActivity.SHOW_POSITION, false)
+        if (mIsNeedPhotoActivityShowPosition) {
+            mIsNeedPhotoActivityShowPosition = false
+            // 从 PhotoActivity 返回时就使轮播图跳转到对应位置
+            binding.storeSsExchangeProductImage
+                .setCurrentItem(PhotoActivity.SHOW_POSITION, false)
+        }
     }
 }

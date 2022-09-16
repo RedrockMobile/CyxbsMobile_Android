@@ -9,17 +9,15 @@ import android.view.View
 import android.view.View.OVER_SCROLL_IF_CONTENT_SCROLLS
 import android.view.ViewGroup
 import android.view.WindowManager
-import android.widget.FrameLayout
-import android.widget.TextView
-import android.widget.Toast
-import android.widget.ViewFlipper
+import android.view.animation.DecelerateInterpolator
+import android.widget.*
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import androidx.viewpager2.widget.ViewPager2
 import com.alibaba.android.arouter.facade.annotation.Route
 import com.alibaba.android.arouter.launcher.ARouter
+import com.bumptech.glide.Glide
 import com.cyxbsmobile_single.api_todo.ITodoService
 import com.mredrock.cyxbs.api.account.IAccountService
 import com.mredrock.cyxbs.api.electricity.IElectricityService
@@ -34,14 +32,19 @@ import com.mredrock.cyxbs.common.ui.BaseViewModelFragment
 import com.mredrock.cyxbs.common.utils.Num2CN
 import com.mredrock.cyxbs.common.utils.extensions.doIfLogin
 import com.mredrock.cyxbs.common.utils.extensions.dp2px
-import com.mredrock.cyxbs.common.utils.extensions.setOnSingleClickListener
 import com.mredrock.cyxbs.discover.R
+import com.mredrock.cyxbs.discover.pages.RollerViewActivity
 import com.mredrock.cyxbs.discover.pages.discover.adapter.DiscoverMoreFunctionRvAdapter
-import com.mredrock.cyxbs.discover.utils.BannerAdapter
 import com.mredrock.cyxbs.discover.utils.MoreFunctionProvider
 import com.mredrock.cyxbs.discover.utils.IS_SWITCH1_SELECT
 import com.mredrock.cyxbs.discover.utils.NotificationSp
+import com.mredrock.cyxbs.lib.utils.extensions.dp2pxF
+import com.mredrock.cyxbs.lib.utils.extensions.setOnSingleClickListener
 import com.mredrock.cyxbs.lib.utils.utils.SchoolCalendarUtil
+import com.ndhzs.slideshow.SlideShow
+import com.ndhzs.slideshow.adapter.ImageViewAdapter
+import com.ndhzs.slideshow.adapter.setImgAdapter
+import com.ndhzs.slideshow.viewpager.transformer.ScaleInTransformer
 import kotlinx.android.synthetic.main.discover_home_fragment.*
 import java.util.*
 
@@ -72,9 +75,8 @@ class DiscoverHomeFragment : BaseViewModelFragment<DiscoverHomeViewModel>() {
         }
         initTyDay()
         initJwNews(mVfDetail, fl_discover_home_jwnews)
-        initViewPager()
+        initBanner()
         initHasUnread()
-        viewModel.getRollInfo()
         view.findViewById<View>(R.id.iv_check_in).setOnSingleClickListener {
             context?.doIfLogin("签到") {
                 ARouter.getInstance().build(MINE_CHECK_IN).navigation()
@@ -134,42 +136,42 @@ class DiscoverHomeFragment : BaseViewModelFragment<DiscoverHomeViewModel>() {
     override fun onResume() {
         super.onResume()
         initFunctions()
-        viewModel.startSwitchViewPager()
         if (viewModel.functionRvState != null) {
             rv_discover_more_function.layoutManager?.onRestoreInstanceState(viewModel.functionRvState)
         }
-
     }
+    
+    private val mSlideShow by R.id.discover_ss_banner.view<SlideShow>()
+    private val mIvBannerBg by R.id.discover_iv_banner_bg.view<ImageView>()
 
-    //加载轮播图
-    private fun initViewPager() {
-        vp_discover_home.registerOnPageChangeCallback(object : ViewPager2.OnPageChangeCallback() {
-            override fun onPageScrollStateChanged(state: Int) {
-                if (state == ViewPager2.SCROLL_STATE_DRAGGING || state == ViewPager2.SCROLL_STATE_SETTLING)
-                    vp_discover_home.adapter?.notifyDataSetChanged()
-                super.onPageScrollStateChanged(state)
-            }
-
-            override fun onPageSelected(position: Int) {
-                super.onPageSelected(position)
-                viewModel.scrollFlag = false
-            }
-        })
-        vp_discover_home?.adapter = context?.let { BannerAdapter(it, vp_discover_home) }
-        viewModel.viewPagerInfo.observe {
-            if (it != null && context != null) {
-                (vp_discover_home?.adapter as BannerAdapter).apply {
-                    urlList.clear()
-                    urlList.addAll(it)
-                    notifyDataSetChanged()
-                }
-            }
-        }
-        viewModel.viewPagerTurner.observe {
-            if (viewModel.scrollFlag) {
-                vp_discover_home.currentItem += 1
-            }
-            viewModel.scrollFlag = true
+    private fun initBanner() {
+        viewModel.viewPagerInfo.observe { list ->
+            mIvBannerBg.animate()
+                .alpha(0F)
+                .duration = 600
+            mSlideShow.alpha = 0F
+            mSlideShow.animate()
+                .alpha(1F)
+                .duration = 600
+            mSlideShow.addTransformer(ScaleInTransformer())
+                .setAutoSlideTime(1200, 5000)
+                .setTimeInterpolator(DecelerateInterpolator())
+                .setImgAdapter(
+                    ImageViewAdapter.Builder(list, 8.dp2pxF)
+                        .onCreate {
+                            view.scaleType = ImageView.ScaleType.CENTER_CROP
+                            view.setOnSingleClickListener {
+                                if (data.picture_goto_url.startsWith("http")) {
+                                    RollerViewActivity.startRollerViewActivity(data, requireContext())
+                                }
+                            }
+                        }.onBind {
+                            Glide.with(this@DiscoverHomeFragment)
+                                .load(data.picture_url)
+                                .placeholder(R.drawable.discover_ic_cyxbsv6)
+                                .into(view)
+                        }
+                )
         }
     }
 
@@ -187,11 +189,10 @@ class DiscoverHomeFragment : BaseViewModelFragment<DiscoverHomeViewModel>() {
         viewFlipper.setOnSingleClickListener {
             ARouter.getInstance().build(DISCOVER_NEWS_ITEM).withString("id", viewFlipper.focusedChild.tag as String).navigation()
         }
-
-        viewFlipper.setFlipInterval(6555)
+    
+        viewFlipper.flipInterval = 6555
         viewFlipper.setInAnimation(context, R.anim.discover_text_in_anim)
         viewFlipper.setOutAnimation(context, R.anim.discover_text_out_anim)
-        viewModel.getJwNews(1)
 
         frameLayout.setOnSingleClickListener {
             ARouter.getInstance().build(DISCOVER_NEWS).navigation()
@@ -267,7 +268,6 @@ class DiscoverHomeFragment : BaseViewModelFragment<DiscoverHomeViewModel>() {
     override fun onPause() {
         super.onPause()
         mVfDetail.stopFlipping()
-        viewModel.stopPageTurner()
         viewModel.functionRvState = rv_discover_more_function.layoutManager?.onSaveInstanceState()
     }
 }

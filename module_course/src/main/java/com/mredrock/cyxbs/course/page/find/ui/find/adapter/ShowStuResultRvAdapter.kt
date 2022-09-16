@@ -5,12 +5,12 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
-import androidx.appcompat.content.res.AppCompatResources
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.mredrock.cyxbs.course.R
 import com.mredrock.cyxbs.course.page.find.bean.FindStuBean
+import com.mredrock.cyxbs.lib.utils.extensions.drawable
 import com.mredrock.cyxbs.lib.utils.extensions.lazyUnlock
 import com.mredrock.cyxbs.lib.utils.extensions.setOnSingleClickListener
 
@@ -81,11 +81,12 @@ class ShowStuResultRvAdapter :
     // ivLink 不建议公开，因为可能你会在 onBindViewHolder 中设置图片，这样会有严重的性能问题
     // 因为每次都会重新生成一张新的图片，所以我在 holder 中提供方法来使用缓存的图片
     private val ivLink: ImageView = itemView.findViewById(R.id.course_iv_item_show_stu_result_link)
+    private val viewLink: View = itemView.findViewById(R.id.course_view_item_show_stu_result_link)
     init {
       itemView.setOnSingleClickListener {
         mOnItemClick?.invoke(getItem(layoutPosition).bean, layoutPosition)
       }
-      ivLink.setOnSingleClickListener {
+      viewLink.setOnSingleClickListener {
         if (getItem(layoutPosition).isLink) {
           mOnLinkIngClick?.invoke(getItem(layoutPosition).bean, layoutPosition)
         } else {
@@ -95,27 +96,21 @@ class ShowStuResultRvAdapter :
     }
     // 缓存的没有关联的图片，为什么要缓存，如果你每次都在 onBindViewHolder 去加载图片，会严重影响性能
     private val mLinkNoDrawable by lazyUnlock {
-      AppCompatResources.getDrawable(
-        itemView.context,
-        R.drawable.course_ic_find_course_link_head_no
-      )
+      R.drawable.course_ic_find_course_link_head_no.drawable
     }
     // 缓存的已关联的图片
     private val mLinkingDrawable by lazyUnlock {
-      AppCompatResources.getDrawable(
-        itemView.context,
-        R.drawable.course_ic_find_course_link_head_ing
-      )
+      R.drawable.course_ic_find_course_link_head_ing.drawable
     }
     // 显示关联的图片
     fun showLinkingImg() {
-      if (ivLink.drawable != mLinkingDrawable) {
+      if (ivLink.drawable !== mLinkingDrawable) {
         ivLink.setImageDrawable(mLinkingDrawable)
       }
     }
     // 显示未关联的图片
     fun showLinkNoImg() {
-      if (ivLink.drawable != mLinkNoDrawable) {
+      if (ivLink.drawable !== mLinkNoDrawable) {
         ivLink.setImageDrawable(mLinkNoDrawable)
       }
     }

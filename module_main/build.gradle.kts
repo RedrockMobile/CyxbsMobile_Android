@@ -33,7 +33,4 @@ dependWorkManger()
 
 dependencies {
     implementation(Umeng.push)
-    
-    // FIXME 中泰写的
-    implementation(project(":module_mine"))
 }

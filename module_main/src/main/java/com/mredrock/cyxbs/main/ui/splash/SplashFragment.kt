@@ -95,8 +95,6 @@ class SplashFragment : BaseFragment() {
    */
   private fun hideSplashPage() {
     if (requireView().isVisible) {
-      // 加一个判断，防止重复加载动画
-      requireView().startAnimation(AlphaAnimation(1F, 0F).apply { duration = 300 })
       requireView().gone()
     }
   }

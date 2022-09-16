@@ -10,7 +10,6 @@ import android.os.Bundle
 import android.os.Environment
 import android.widget.ImageView
 import android.widget.TextView
-import androidx.viewpager2.widget.ViewPager2
 import com.github.chrisbanes.photoview.PhotoView
 import com.mredrock.cyxbs.config.dir.DIR_PHOTO
 import com.mredrock.cyxbs.lib.base.ui.BaseActivity
@@ -18,7 +17,10 @@ import com.mredrock.cyxbs.lib.utils.extensions.doPermissionAction
 import com.mredrock.cyxbs.lib.utils.extensions.saveImage
 import com.mredrock.cyxbs.lib.utils.extensions.setImageFromUrl
 import com.mredrock.cyxbs.store.R
-import com.mredrock.cyxbs.store.utils.widget.slideshow.SlideShow
+import com.ndhzs.slideshow.SlideShow
+import com.ndhzs.slideshow.adapter.ViewAdapter
+import com.ndhzs.slideshow.adapter.setViewAdapter
+import com.ndhzs.slideshow.utils.OnPageChangeCallback
 import io.reactivex.rxjava3.schedulers.Schedulers
 
 /**
@@ -70,39 +72,39 @@ class PhotoActivity : BaseActivity() {
         val tvPosition: TextView = findViewById(R.id.store_tv_photo_position)
 
         val slideShow: SlideShow = findViewById(R.id.store_slideShow_photo)
-        slideShow
-            .setStartItem(SHOW_POSITION)
-            .setPageChangeCallback(object : ViewPager2.OnPageChangeCallback() {
-                override fun onPageSelected(position: Int) {
-                    //设置图片进度(1/X)
-                    tvPosition.post { // TextView 有奇怪的 bug, 改变文字不用 post 就无法改变
-                        tvPosition.text = "${position + 1}/${mImgUrls.size}"
+        slideShow.setCurrentItem(SHOW_POSITION)
+            .addPageChangeCallback(
+                object : OnPageChangeCallback {
+                    override fun onPageSelected(position: Int) {
+                        //设置图片进度(1/X)
+                        tvPosition.post { // TextView 有奇怪的 bug, 改变文字不用 post 就无法改变
+                            tvPosition.text = "${position + 1}/${mImgUrls.size}"
+                        }
+                        SHOW_POSITION = position
                     }
-                    SHOW_POSITION = position
                 }
-            })
+            )
             .setViewAdapter(
-                getNewView = { context -> PhotoView(context) },
-                getItemCount = { mImgUrls.size },
-                create = { holder ->
-                    holder.view.scaleType= ImageView.ScaleType.CENTER_INSIDE
-                    holder.view.setOnPhotoTapListener { _, _, _ ->
+                ViewAdapter.Builder(mImgUrls) {
+                    PhotoView(context)
+                }.onCreate {
+                    view.scaleType= ImageView.ScaleType.CENTER_INSIDE
+                    view.setOnPhotoTapListener { _, _, _ ->
                         finishAfterTransition()
                     }
-                    holder.view.setOnOutsidePhotoTapListener {
+                    view.setOnOutsidePhotoTapListener {
                         finishAfterTransition()
                     }
-                    holder.view.setOnLongClickListener {
-                        val drawable = holder.view.drawable
+                    view.setOnLongClickListener {
+                        val drawable = view.drawable
                         if (drawable is BitmapDrawable) {
                             val bitmap = drawable.bitmap
-                            savePhoto(bitmap, mImgUrls[holder.layoutPosition])
+                            savePhoto(bitmap, data)
                         }
                         true
                     }
-                },
-                onBindViewHolder = { view, _, position, _ ->
-                    view.setImageFromUrl(mImgUrls[position])
+                }.onBind {
+                    view.setImageFromUrl(data)
                 }
             )
     }

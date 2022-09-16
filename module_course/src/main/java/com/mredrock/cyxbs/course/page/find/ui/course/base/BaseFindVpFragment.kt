@@ -1,5 +1,7 @@
 package com.mredrock.cyxbs.course.page.find.ui.course.base
 
+import android.os.Bundle
+import android.view.View
 import com.mredrock.cyxbs.course.page.course.data.LessonData
 import com.mredrock.cyxbs.lib.course.fragment.vp.AbstractHeaderCourseVpFragment
 import com.mredrock.cyxbs.lib.utils.utils.SchoolCalendarUtil
@@ -27,4 +29,9 @@ abstract class BaseFindVpFragment<D : LessonData> : AbstractHeaderCourseVpFragme
   abstract val mViewModel: BaseFindViewModel<D>
   
   override var mPageCount: Int = 22 // 21 周加上第一页为整学期的课表
+  
+  override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+    super.onViewCreated(view, savedInstanceState)
+    mViewPager.setCurrentItem(if (mNowWeek >= mVpAdapter.itemCount) 0 else mNowWeek, false)
+  }
 }

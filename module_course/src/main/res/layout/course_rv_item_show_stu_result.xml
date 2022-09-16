@@ -56,6 +56,16 @@
         app:layout_constraintHorizontal_bias="1"
         app:layout_constraintEnd_toEndOf="parent" />
 
+    <!--用于扩大点击范围-->
+    <View
+        android:id="@+id/course_view_item_show_stu_result_link"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        app:layout_constraintTop_toTopOf="@id/course_iv_item_show_stu_result_link"
+        app:layout_constraintBottom_toBottomOf="@id/course_iv_item_show_stu_result_link"
+        app:layout_constraintStart_toStartOf="@id/course_iv_item_show_stu_result_link"
+        app:layout_constraintEnd_toEndOf="@id/course_iv_item_show_stu_result_link"/>
+
     <ImageView
         android:id="@+id/course_iv_item_show_stu_result_link"
         android:layout_width="wrap_content"
