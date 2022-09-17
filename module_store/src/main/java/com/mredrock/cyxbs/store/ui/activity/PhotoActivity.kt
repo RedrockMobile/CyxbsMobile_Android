@@ -37,7 +37,10 @@ class PhotoActivity : BaseActivity() {
     // 加载时或退出时图片显示的位置(如果使用 startActivityForResult(),
     // 则会在共享动画时因回调过慢在图片位置不对应时出现图片闪动问题)
     private val PositionList = SparseArray<Position>()
-    
+  
+    /**
+     * @return 返回当前的 position 值
+     */
     fun activityStart(
       context: Context,
       imgUrls: ArrayList<String>,

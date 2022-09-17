@@ -8,6 +8,7 @@ import android.widget.ImageButton
 import androidx.core.app.ActivityOptionsCompat
 import androidx.core.util.Pair
 import com.mredrock.cyxbs.lib.base.ui.mvvm.BaseVmBindActivity
+import com.mredrock.cyxbs.lib.utils.extensions.color
 import com.mredrock.cyxbs.lib.utils.extensions.setImageFromUrl
 import com.mredrock.cyxbs.lib.utils.extensions.setOnSingleClickListener
 import com.mredrock.cyxbs.store.R
@@ -17,7 +18,6 @@ import com.mredrock.cyxbs.store.page.exchange.viewmodel.ProductExchangeViewModel
 import com.mredrock.cyxbs.store.ui.activity.PhotoActivity
 import com.mredrock.cyxbs.store.ui.fragment.ExchangeDialog
 import com.mredrock.cyxbs.store.utils.StoreType
-import com.mredrock.cyxbs.store.utils.getColor2
 import com.ndhzs.slideshow.adapter.ImageViewAdapter
 import com.ndhzs.slideshow.adapter.setImgAdapter
 import com.ndhzs.slideshow.viewpager.transformer.AlphaPageTransformer
@@ -65,7 +65,7 @@ class ProductExchangeActivity :
     mStampCount = intent.getIntExtra(INTENT_STAMP_COUNT, 0)
     mIsPurchased = intent.getBooleanExtra(INTENT_HAS_BOUGHT, false)
     if (mIsPurchased) { // 如果已经购买过
-      binding.storeBtnExchange.setBackgroundColor(getColor2(R.color.store_btn_ban_product_exchange))
+      binding.storeBtnExchange.setBackgroundColor(R.color.store_btn_ban_product_exchange.color)
     }
     
     binding.storeTvUserStampCount.text = mStampCount.toString()
