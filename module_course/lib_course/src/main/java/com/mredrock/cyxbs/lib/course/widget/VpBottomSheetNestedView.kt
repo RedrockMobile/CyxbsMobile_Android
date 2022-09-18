@@ -1,4 +1,4 @@
-package com.mredrock.cyxbs.lib.course.fragment.bottomsheet
+package com.mredrock.cyxbs.lib.course.widget
 
 import android.content.Context
 import android.util.AttributeSet
@@ -148,7 +148,7 @@ class VpBottomSheetNestedView @JvmOverloads constructor(
     mNestedChildHelper.dispatchNestedScroll(dxConsumed, dyConsumed, dxUnconsumed, dyUnconsumed, offsetInWindow, type, consumed)
   }
   
-  
+  private var mTargetView: View? = null
   
   // NestedScrollingParent
   
@@ -158,7 +158,10 @@ class VpBottomSheetNestedView @JvmOverloads constructor(
     child: View, target: View, axes: Int
   ): Boolean {
     return startNestedScroll(axes).also {
-      if (it) mNestedScrollAxes = axes
+      if (it) {
+        mNestedScrollAxes = axes
+        mTargetView = target
+      }
     }
   }
   
@@ -172,6 +175,7 @@ class VpBottomSheetNestedView @JvmOverloads constructor(
   override fun onStopNestedScroll(target: View) {
     stopNestedScroll()
     mNestedScrollAxes = SCROLL_AXIS_NONE
+    mTargetView = null
   }
   
   override fun onNestedScroll(
@@ -203,7 +207,10 @@ class VpBottomSheetNestedView @JvmOverloads constructor(
   
   override fun onStartNestedScroll(child: View, target: View, axes: Int, type: Int): Boolean {
     return startNestedScroll(axes, type).also {
-      if (it) mNestedScrollAxes = axes
+      if (it) {
+        mNestedScrollAxes = axes
+        mTargetView = target
+      }
     }
   }
   
@@ -215,6 +222,7 @@ class VpBottomSheetNestedView @JvmOverloads constructor(
   override fun onStopNestedScroll(target: View, type: Int) {
     stopNestedScroll(type)
     mNestedScrollAxes = SCROLL_AXIS_NONE
+    mTargetView = null
   }
   
   override fun onNestedScroll(
@@ -244,5 +252,17 @@ class VpBottomSheetNestedView @JvmOverloads constructor(
     consumed: IntArray
   ) {
     dispatchNestedScroll(dxConsumed, dyConsumed, dxUnconsumed, dyUnconsumed, null, type, consumed)
+  }
+  
+  /**
+   * 嵌套滑动中判断 View 是否能继续滑动的关键方法
+   * https://blog.csdn.net/yuzhangzhen/article/details/109018619
+   */
+  override fun canScrollVertically(direction: Int): Boolean {
+    return mTargetView?.canScrollVertically(direction) ?: super.canScrollVertically(direction)
+  }
+  
+  override fun canScrollHorizontally(direction: Int): Boolean {
+    return mTargetView?.canScrollHorizontally(direction) ?: super.canScrollHorizontally(direction)
   }
 }

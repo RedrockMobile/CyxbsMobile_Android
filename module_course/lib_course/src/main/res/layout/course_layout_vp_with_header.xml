@@ -9,7 +9,8 @@
         android:id="@+id/course_header"
         layout="@layout/course_layout_header" />
 
-    <com.mredrock.cyxbs.lib.course.fragment.bottomsheet.VpBottomSheetNestedView
+    <!--解决 BottomSheet 与 Vp、NSV 的嵌套滑动-->
+    <com.mredrock.cyxbs.lib.course.widget.VpBottomSheetNestedView
         android:layout_width="match_parent"
         android:layout_height="match_parent" >
 
@@ -18,7 +19,7 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent" />
 
-    </com.mredrock.cyxbs.lib.course.fragment.bottomsheet.VpBottomSheetNestedView>
+    </com.mredrock.cyxbs.lib.course.widget.VpBottomSheetNestedView>
 </LinearLayout>
 
 <!--这是通用的一个带 Vp2 的课表布局，适用于大部分场景-->
