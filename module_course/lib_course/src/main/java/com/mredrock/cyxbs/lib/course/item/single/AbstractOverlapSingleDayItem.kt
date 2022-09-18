@@ -21,7 +21,7 @@ import com.ndhzs.netlayout.view.NetLayout
  * @email guo985892345@foxmail.com
  * @date 2022/8/26 17:00
  */
-abstract class AbstractOverlapSingleDayItem : IOverlapItem, OverlapHelper.ILogic, ISingleDayItem {
+abstract class AbstractOverlapSingleDayItem : IOverlapItem, OverlapHelper.IImpl, ISingleDayItem {
   
   /**
    * 创建子 View，这个 View 才是真正用于显示的
@@ -103,6 +103,11 @@ abstract class AbstractOverlapSingleDayItem : IOverlapItem, OverlapHelper.ILogic
   }
   
   /**
+   * 初始化 View 的回调
+   */
+  protected open fun onInitializeView(view: NetLayout) {}
+  
+  /**
    * 用于实现折叠的 View
    *
    * [createView] 中得到的 View 都会添加进这个 view 中
@@ -120,6 +125,7 @@ abstract class AbstractOverlapSingleDayItem : IOverlapItem, OverlapHelper.ILogic
     } else {
       mView.setRowColumnCount(lp.rowCount, lp.columnCount)
     }
+    onInitializeView(mView)
     return mView
   }
   
@@ -134,7 +140,6 @@ abstract class AbstractOverlapSingleDayItem : IOverlapItem, OverlapHelper.ILogic
   
   private val mChildInFree = arrayListOf<View>()
   private val mChildInParent = arrayListOf<View>()
-  
   
   final override fun refreshOverlap() {
     // 这里需要重新设置一遍总行数，因为外面可能重新设置了 lp，但 mView 的属性与 lp 并没有相互绑定

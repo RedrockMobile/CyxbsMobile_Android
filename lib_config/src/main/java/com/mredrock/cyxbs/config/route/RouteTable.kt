@@ -96,5 +96,8 @@ const val STORE_ENTRY="/store/entry"
 //绑定教务在线ids页面
 const val LOGIN_BIND_IDS="/login/bind_ids/entry"
 
+//课表上课地点跳转到地图key
+const val COURSE_POS_TO_MAP = "COURSE_POS_TO_MAP"
+
 
 

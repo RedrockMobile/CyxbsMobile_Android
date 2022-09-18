@@ -14,7 +14,7 @@ import com.redrock.module_notification.R
 import com.redrock.module_notification.adapter.ActivityNotificationRvAdapter
 import com.redrock.module_notification.adapter.ActivityNotificationRvAdapter.Companion.CHANGE_DOT_STATUS
 import com.redrock.module_notification.bean.ActiveMsgBean
-import com.redrock.module_notification.ui.activity.MainActivity
+import com.redrock.module_notification.ui.activity.NotificationActivity
 import com.redrock.module_notification.viewmodel.NotificationViewModel
 import kotlin.properties.Delegates
 
@@ -35,7 +35,7 @@ class ActivityNotificationFragment : BaseFragment() {
     private lateinit var adapter: ActivityNotificationRvAdapter
 
     //fragment对应的Activity
-    private var myActivity by Delegates.notNull<MainActivity>()
+    private var myActivity by Delegates.notNull<NotificationActivity>()
 
     //使用和Activity同一个Viewmodel来与activity通信
     private val viewModel: NotificationViewModel by activityViewModels()
@@ -44,7 +44,7 @@ class ActivityNotificationFragment : BaseFragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        myActivity = requireActivity() as MainActivity
+        myActivity = requireActivity() as NotificationActivity
         initObserver()
         initRv()
     }

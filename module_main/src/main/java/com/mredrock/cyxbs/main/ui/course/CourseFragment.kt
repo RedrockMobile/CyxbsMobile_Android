@@ -35,15 +35,9 @@ class CourseFragment : BaseFragment() {
   
   private val mFcvCourse by R.id.main_fcv_course.view<FragmentContainerView>()
   private val mViewHeader by R.id.main_view_course_header.view<View>()
-  private val mBottomSheetView by R.id.main_view_course_bottom_sheet.view<View>()
   
   private val mTvHeaderState: TextView by R.id.main_tv_course_header_state.view()
   private val mTvHeaderTitle: TextView by R.id.main_tv_course_header_title.view<TextView>()
-    .addInitialize {
-      isFocusableInTouchMode = true
-      requestFocus()
-      isFocused
-    }
   
   private val mTvHeaderTime: TextView by R.id.main_tv_course_header_time.view()
   private val mTvHeaderPlace: TextView by R.id.main_tv_course_header_place.view()
@@ -51,7 +45,7 @@ class CourseFragment : BaseFragment() {
   private val mTvHeaderHint: TextView by R.id.main_tv_course_header_hint.view()
   
   private val mBottomSheet by lazyUnlock {
-    BottomSheetBehavior.from(mBottomSheetView)
+    BottomSheetBehavior.from(requireView().findViewById(R.id.main_view_course_bottom_sheet))
   }
   
   private val mCourseService = ICourseService::class.impl
@@ -79,8 +73,15 @@ class CourseFragment : BaseFragment() {
     }
   
     mCourseService.tryReplaceHomeCourseFragmentById(childFragmentManager, mFcvCourse.id)
-    mCourseService.setCourseVpAlpha(0F)
-    mCourseService.setHeaderAlpha(0F)
+    
+    val oldBottomSheetIsExpand = mActivityViewModel.courseBottomSheetExpand.value
+    if (oldBottomSheetIsExpand != true) {
+      // 如果 value 之前值为 true，则说明已经展开，此时不能设置透明度
+      mCourseService.setCourseVpAlpha(0F)
+      mCourseService.setHeaderAlpha(0F)
+    } else {
+      mViewHeader.gone()
+    }
   
     CourseHeaderHelper.observeHeader()
       .observeOn(AndroidSchedulers.mainThread())
@@ -186,9 +187,5 @@ class CourseFragment : BaseFragment() {
       .safeSubscribeBy {
         mBottomSheet.isDraggable = it.isNotNull()
       }
-  }
-  
-  override fun onSaveInstanceState(outState: Bundle) {
-    super.onSaveInstanceState(outState)
   }
 }

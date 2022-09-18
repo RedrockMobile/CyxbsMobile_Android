@@ -14,7 +14,7 @@
         app:layout_constraintBottom_toTopOf="@id/main_bnl_bottom_nav"/>
 
     <androidx.fragment.app.FragmentContainerView
-        android:id="@+id/main_fcv_course"
+        android:id="@+id/main_fcv_course_fragment"
         android:layout_width="match_parent"
         android:layout_height="match_parent"/>
 
@@ -25,7 +25,7 @@
         app:layout_constraintBottom_toBottomOf="parent" />
 
     <androidx.fragment.app.FragmentContainerView
-        android:id="@+id/main_fcv_splash"
+        android:id="@+id/main_fcv_splash_fragment"
         android:layout_width="match_parent"
         android:layout_height="match_parent" />
 

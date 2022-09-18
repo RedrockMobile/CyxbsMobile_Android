@@ -181,6 +181,7 @@ abstract class OverlapImpl : FoldImpl(), IOverlapContainer {
     private val sort = TreeSet<IOverlapItem> { o1, o2 ->
       compareOverlayItem(row, column, o1, o2).also {
         if (it == 0 && o1 !== o2) {
+          // 如果你想在它们为 0 时删除之前的数据，那么你应该在数据源中删除，而不是在这里删除
           throw RuntimeException("不允许在对象不相等时返回 0 !")
         }
       }

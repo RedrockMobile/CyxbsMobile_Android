@@ -40,6 +40,9 @@ class SelfLesson(private var lessonData: StuLessonData) :
     return SelfLessonView(context, lessonData)
   }
   
+  override val isHomeCourseItem: Boolean
+    get() = true
+  
   @SuppressLint("ViewConstructor")
   class SelfLessonView(
     context: Context,
@@ -79,7 +82,7 @@ class SelfLesson(private var lessonData: StuLessonData) :
     override fun setNewData(newData: StuLessonData) {
       data = newData
       setLessonColor(data.lessonPeriod)
-      setText(data.course, data.classroom)
+      setText(data.course.course, data.course.classroom)
     }
   }
   

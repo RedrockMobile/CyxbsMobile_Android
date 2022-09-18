@@ -1,13 +1,7 @@
 package com.mredrock.cyxbs.course.page.course.data
 
-import com.mredrock.cyxbs.api.course.utils.getEndRow
-import com.mredrock.cyxbs.api.course.utils.getShowEndTimeStr
-import com.mredrock.cyxbs.api.course.utils.getShowStartTimeStr
-import com.mredrock.cyxbs.api.course.utils.getStartRow
-import com.mredrock.cyxbs.course.page.course.data.expose.IWeek
 import com.mredrock.cyxbs.lib.course.item.lesson.ILessonData
 import com.mredrock.cyxbs.lib.course.item.lesson.LessonPeriod
-import com.mredrock.cyxbs.lib.utils.utils.Num2CN
 
 /**
  * ...
@@ -15,25 +9,18 @@ import com.mredrock.cyxbs.lib.utils.utils.Num2CN
  * @email 2767465918@qq.com
  * @date 2022/5/10 21:13
  */
-sealed class LessonData : ILessonData, IWeek {
+sealed class LessonData : ILessonData, ICourseData {
+  abstract val num: String // 学号或工号
   abstract override val week: Int
-  abstract val beginLesson: Int
-  abstract val classroom: String
-  abstract val course: String
-  abstract val courseNum: String
-  abstract val day: String // 星期几，这是字符串的星期几：星期一、星期二......
-  abstract val hashDay: Int // 星期数，星期一为 0
-  abstract val period: Int
-  abstract val rawWeek: String
-  abstract val teacher: String
-  abstract val type: String
   
-  override val weekNum: Int
-    get() = hashDay + 1
-  override val startNode: Int
-    get() = getStartRow(beginLesson)
-  override val length: Int
-    get() = period
+  abstract val course: Course
+  
+  final override val hashDay: Int
+    get() = course.hashDay
+  final override val beginLesson: Int
+    get() = course.beginLesson
+  final override val period: Int
+    get() = course.period
   
   val lessonPeriod: LessonPeriod
     get() {
@@ -45,23 +32,18 @@ sealed class LessonData : ILessonData, IWeek {
       }
     }
   
-  val weekStr: String
-    get() = "第${Num2CN.number2ChineseNumber(week.toLong())}周"
-  
-  val weekdayStr: String
-    get() {
-      return when (hashDay) {
-        0 -> "周一"
-        1 -> "周二"
-        2 -> "周三"
-        3 -> "周四"
-        4 -> "周五"
-        5 -> "周六"
-        6 -> "周日"
-        else -> throw RuntimeException("未知星期数：day = $day   bean = $this")
-      }
-    }
-  
-  val durationStr: String
-    get() = getShowStartTimeStr(getStartRow(beginLesson)) + "-" + getShowEndTimeStr(getEndRow(beginLesson, period))
+  /**
+   * 属于同一节课的数据类，这个可以用于表示同一个老师上的同一个课程
+   */
+  data class Course(
+    val course: String,
+    val classroom: String,
+    val courseNum: String,
+    val hashDay: Int, // 星期数，星期一为 0
+    val beginLesson: Int,
+    val period: Int,
+    val teacher: String,
+    val rawWeek: String,
+    val type: String
+  )
 }

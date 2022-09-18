@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:padding="8dp" >
+
+    <TextView
+        android:id="@+id/course_tv_dialog_bottom_tea_item"
+        android:layout_width="wrap_content"
+        android:layout_height="34dp"
+        android:paddingStart="13dp"
+        android:paddingEnd="13dp"
+        android:gravity="center"
+        android:textColor="@color/config_level_two_font_color"
+        android:textSize="14dp"
+        android:background="@drawable/course_shape_item_text_bg"
+        tools:text="089019|01,02班"
+        tools:ignore="SpUsage" />
+
+</FrameLayout>

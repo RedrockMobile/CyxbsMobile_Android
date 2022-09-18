@@ -13,17 +13,19 @@ import androidx.core.view.*
  * 所以直接把 Vp2 里面的 rv 拿来嵌套了
  *
  * ## 解决方案
- * ### 中转嵌套滑动
+ * ### 一、中转嵌套滑动
  * 使用当前布局包裹在 Vp2 外面，这样 BottomSheet 就会直接该布局进行嵌套关联
  *
  * 当 Vp2 里面的 NSV 需要寻找嵌套滑动父 View 时，就会找到当前 View，然后把事件分发给当前 View，当前 View 又把事件分发给 BottomSheet
  *
- * ### 取消 Vp2 中 rv 的嵌套滑动功能
+ * ### 二、取消 Vp2 中 rv 的嵌套滑动功能
  * ```
  * mViewPager.getChildAt(0).isNestedScrollingEnabled = false
  * ```
  * 因为 BottomSheet 找到嵌套子 View 的判断是查看该子 View 是否开启了嵌套滑动，所以可以直接取消 rv 的嵌套滑动功能，
  * 让 BottomSheet 找到 rv下面的 NSV
+ *
+ * **缺点:** 嵌套滑动失效，在你移动时会被 BottomSheet 直接拦截事件
  *
  * @author 985892345 (Guo Xiangrui)
  * @email guo985892345@foxmail.com

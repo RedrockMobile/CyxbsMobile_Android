@@ -21,7 +21,7 @@ class FindStuSemesterFragment : BaseFindSemesterFragment<StuLessonData>() {
     { requireParentFragment().viewModelStore }
   )
   
-  override fun getLessonItem(list: List<StuLessonData>): List<ILessonItem> {
-    return list.map { StuLessonItem(it) }
+  override fun List<StuLessonData>.getLessonItem(): List<ILessonItem> {
+    return map { StuLessonItem(it) }
   }
 }

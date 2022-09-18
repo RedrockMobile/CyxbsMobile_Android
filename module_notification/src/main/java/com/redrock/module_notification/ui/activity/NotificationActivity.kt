@@ -35,7 +35,7 @@ import com.redrock.module_notification.widget.*
 import kotlin.properties.Delegates
 
 @Route(path = NOTIFICATION_HOME)
-class MainActivity : BaseViewModelActivity<NotificationViewModel>() {
+class NotificationActivity : BaseViewModelActivity<NotificationViewModel>() {
     private var tab2View by Delegates.notNull<View>()
     private var tab1View by Delegates.notNull<View>()
     
@@ -99,8 +99,8 @@ class MainActivity : BaseViewModelActivity<NotificationViewModel>() {
         when (whichPageIsIn) {
             0 -> {
                 popupWindow = buildLoadMoreWindow {
-                    context = this@MainActivity
-                    window = this@MainActivity.window
+                    context = this@NotificationActivity
+                    window = this@NotificationActivity.window
                     layoutRes = R.layout.notification_popupwindow_dots_sys
                 }
 
@@ -133,8 +133,8 @@ class MainActivity : BaseViewModelActivity<NotificationViewModel>() {
 
             1 -> {
                 popupWindow = buildLoadMoreWindow {
-                    context = this@MainActivity
-                    window = this@MainActivity.window
+                    context = this@NotificationActivity
+                    window = this@NotificationActivity.window
                     layoutRes = R.layout.notification_popupwindow_dots_act
                     Height = dp2px(80.toFloat())
                 }

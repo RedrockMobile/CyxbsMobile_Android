@@ -39,6 +39,9 @@ class Affair(private var affairData: AffairData) :
     return AffairView(context, affairData)
   }
   
+  override val isHomeCourseItem: Boolean
+    get() = true
+  
   /**
    * 描述:课表中事务的背景View，
    * 别问为什么不用图片，问就是图片太麻烦，而且效果还不好

@@ -224,9 +224,9 @@
             app:cornerRadius="27dp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            tools:ignore="SpUsage"
+            tools:ignore="SpUsage,TouchTargetSizeCheck"
             tools:backgroundTint="@color/store_btn_product_exchange"
-            style="@style/Widget.MaterialComponents.Button.UnelevatedButton"/>
+            style="@style/Widget.MaterialComponents.Button.UnelevatedButton" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

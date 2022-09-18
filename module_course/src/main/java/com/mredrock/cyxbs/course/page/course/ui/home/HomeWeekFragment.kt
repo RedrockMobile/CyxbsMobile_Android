@@ -46,7 +46,10 @@ class HomeWeekFragment : CourseWeekFragment() {
   
   override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
     super.onViewCreated(view, savedInstanceState)
-    initEntrance()
+    if (savedInstanceState == null) {
+      // 如果是被异常重启，则取消动画
+      initEntrance()
+    }
     initObserve()
   }
   

@@ -27,6 +27,10 @@ open class SingleDayLayoutParams(
   gravity
 ), ISingleDayData
 {
+  
+  val singleColumn: Int
+    get() = startColumn
+  
   final override val weekNum: Int
     get() = startColumn
   final override val startNode: Int

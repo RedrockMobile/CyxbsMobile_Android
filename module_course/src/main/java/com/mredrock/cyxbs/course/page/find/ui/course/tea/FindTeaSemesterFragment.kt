@@ -21,7 +21,7 @@ class FindTeaSemesterFragment : BaseFindSemesterFragment<TeaLessonData>() {
     { requireParentFragment().viewModelStore }
   )
   
-  override fun getLessonItem(list: List<TeaLessonData>): List<ILessonItem> {
-    return list.map { TeaLessonItem(it) }
+  override fun List<TeaLessonData>.getLessonItem(): List<ILessonItem> {
+    return map { TeaLessonItem(it) }
   }
 }

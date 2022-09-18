@@ -1,6 +1,7 @@
-package com.mredrock.cyxbs.main.widget
+package com.mredrock.cyxbs.config.view
 
 import android.content.Context
+import android.text.TextUtils
 import android.util.AttributeSet
 import androidx.appcompat.widget.AppCompatTextView
 
@@ -19,6 +20,12 @@ class MarqueeTextView(
   context: Context,
   attrs: AttributeSet?
 ) : AppCompatTextView(context, attrs) {
+  
+  init {
+    ellipsize = TextUtils.TruncateAt.MARQUEE
+    marqueeRepeatLimit = -1
+  }
+  
   override fun isFocused(): Boolean {
     return true
   }

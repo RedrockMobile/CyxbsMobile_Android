@@ -32,7 +32,10 @@ class HomeSemesterFragment : CompareWeekSemesterFragment() {
   
   override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
     super.onViewCreated(view, savedInstanceState)
-    initEntrance()
+    if (savedInstanceState == null) {
+      // 如果是被异常重启，则不执行动画
+      initEntrance()
+    }
     initObserve()
   }
   
@@ -93,10 +96,9 @@ class HomeSemesterFragment : CompareWeekSemesterFragment() {
     
     mParentViewModel.homeWeekData
       .observe { map ->
-        val values = map.values
-        val self = values.map { it.self }.flatten()
-        val link = values.map { it.link }.flatten()
-        val affair = values.map { it.affair }.flatten()
+        val self = map.mapValues { it.value.self }.mapToMinWeek()
+        val link = map.mapValues { it.value.link }.mapToMinWeek()
+        val affair = map.values.map { it.affair }.flatten()
         mSelfLessonContainerProxy.diffRefresh(self)
         mAffairContainerProxy.diffRefresh(affair)
         mLinkLessonContainerProxy.diffRefresh(link) {

@@ -40,13 +40,11 @@
                     tools:ignore="SmallSp"
                     tools:text="下节课" />
 
-                <com.mredrock.cyxbs.main.widget.MarqueeTextView
+                <com.mredrock.cyxbs.config.view.MarqueeTextView
                     android:id="@+id/main_tv_course_header_title"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="16dp"
-                    android:ellipsize="marquee"
-                    android:marqueeRepeatLimit="marquee_forever"
                     android:paddingStart="0dp"
                     android:paddingEnd="15dp"
                     android:singleLine="true"
@@ -87,7 +85,7 @@
                     tools:visibility="invisible"
                     app:layout_constraintVertical_bias="0.55" />
 
-                <com.mredrock.cyxbs.main.widget.MarqueeTextView
+                <com.mredrock.cyxbs.config.view.MarqueeTextView
                     android:id="@+id/main_tv_course_header_place"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"

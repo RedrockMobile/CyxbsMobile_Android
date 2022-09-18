@@ -16,7 +16,7 @@ import com.ndhzs.netlayout.attrs.NetLayoutParams
  */
 class SelfLessonLayoutParams(
   override var data: StuLessonData
-) : BaseLessonLayoutParams(data), ISingleDayRank, IWeek, IDataOwner<StuLessonData> {
+) : BaseLessonLayoutParams(data), ISingleDayRank, IDataOwner<StuLessonData> {
   
   override val rank: Int
     get() = 1

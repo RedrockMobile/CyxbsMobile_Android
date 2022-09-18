@@ -17,6 +17,7 @@ import com.mredrock.cyxbs.common.R
  * 注意：不要给子item设置的最外层设置外边距，因为设置了也没有用
  *      我留有属性来设置子项的横向距离和纵向距离具体请看该自定义View的属性配置xml文件
  */
+@Deprecated("建议使用官方控件 FlexboxLayout 或 FlexboxLayoutManager 来代替")
 class RedRockAutoWarpView : FrameLayout {
 
     var adapter: Adapter? = null

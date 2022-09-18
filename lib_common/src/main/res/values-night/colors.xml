@@ -64,9 +64,6 @@
     <!--    按钮渐变终止颜色-->
     <color name="common_button_gradient_end_color">#4841E2</color>
 
-    <!--    事务dialog删除按钮背景颜色-->
-    <color name="common_course_affair_delete_button_background_color">#E6EFFC
-    </color>
 
     <!--    添加事务时标题-->
     <color name="common_transaction_heading">#ffffff</color>

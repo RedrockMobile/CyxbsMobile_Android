@@ -3,7 +3,7 @@ package com.mredrock.cyxbs.course.page.course.base
 import android.os.Bundle
 import android.view.View
 import androidx.annotation.CallSuper
-import com.mredrock.cyxbs.course.page.course.data.expose.IWeek
+import com.mredrock.cyxbs.course.page.course.data.LessonData
 import com.mredrock.cyxbs.course.page.course.item.ISingleDayRank
 import com.mredrock.cyxbs.lib.course.fragment.course.expose.overlap.IOverlapItem
 import com.mredrock.cyxbs.lib.course.fragment.page.CourseSemesterFragment
@@ -31,7 +31,7 @@ abstract class CompareWeekSemesterFragment : CourseSemesterFragment() {
     course.setCompareLayoutParams { o1, o2 ->
       if (o1 is ISingleDayRank) {
         if (o2 is ISingleDayRank) {
-          compareRank(o1, o2)
+          o1.compareToInternal(o2)
         } else 1
       } else {
         if (o2 is ISingleDayRank) -1 else o1.compareTo(o2)
@@ -45,7 +45,7 @@ abstract class CompareWeekSemesterFragment : CourseSemesterFragment() {
   override fun compareOverlayItem(row: Int, column: Int, o1: IOverlapItem, o2: IOverlapItem): Int {
     return if (o1 is ISingleDayRank) {
       if (o2 is ISingleDayRank) {
-        compareRank(o1, o2)
+        o1.compareToInternal(o2)
       } else 1
     } else {
       if (o2 is ISingleDayRank) -1 else super.compareOverlayItem(row, column, o1, o2)
@@ -53,18 +53,18 @@ abstract class CompareWeekSemesterFragment : CourseSemesterFragment() {
   }
   
   /**
-   * 比较 [ISingleDayRank]，但判断了是否实现 [IWeek]，
-   * 在整学期的页面中，周数也需要进行比较
+   * 筛选掉重复的课程，只留下最小周数的课程
    */
-  protected open fun compareRank(o1: ISingleDayRank, o2: ISingleDayRank): Int {
-    return if (o1 is IWeek) {
-      if (o2 is IWeek) {
-        ISingleDayRank.compareBy(o2.week - o1.week) { // 周数小的显示在上面
-          o1.compareToInternal(o2)
+  protected fun <T : LessonData> Map<Int, List<T>>.mapToMinWeek(): List<T> {
+    val map = hashMapOf<LessonData.Course, T>()
+    forEach { entry ->
+      entry.value.forEach {
+        val value = map[it.course]
+        if (value == null || value.week > it.week) {
+          map[it.course] = it
         }
-      } else 1
-    } else {
-      if (o2 is IWeek) -1 else o1.compareToInternal(o2)
+      }
     }
+    return map.map { it.value }
   }
 }

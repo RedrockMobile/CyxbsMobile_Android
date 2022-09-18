@@ -16,7 +16,7 @@ import com.ndhzs.netlayout.attrs.NetLayoutParams
  */
 class LinkLessonLayoutParams(
   override var data: StuLessonData
-) : BaseLessonLayoutParams(data), ISingleDayRank, IWeek, IDataOwner<StuLessonData> {
+) : BaseLessonLayoutParams(data), ISingleDayRank, IDataOwner<StuLessonData> {
   
   override val rank: Int
     get() = 3
@@ -31,9 +31,5 @@ class LinkLessonLayoutParams(
   override fun setNewData(newData: StuLessonData) {
     data = newData
     changeSingleDay(newData)
-  }
-  
-  override fun toString(): String {
-    return "week=$week"
   }
 }

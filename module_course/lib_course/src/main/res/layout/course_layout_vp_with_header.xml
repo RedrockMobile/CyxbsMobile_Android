@@ -9,11 +9,16 @@
         android:id="@+id/course_header"
         layout="@layout/course_layout_header" />
 
-    <androidx.viewpager2.widget.ViewPager2
-        android:id="@+id/course_vp"
+    <com.mredrock.cyxbs.lib.course.fragment.bottomsheet.VpBottomSheetNestedView
         android:layout_width="match_parent"
-        android:layout_height="match_parent" />
+        android:layout_height="match_parent" >
 
+        <androidx.viewpager2.widget.ViewPager2
+            android:id="@+id/course_vp"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" />
+
+    </com.mredrock.cyxbs.lib.course.fragment.bottomsheet.VpBottomSheetNestedView>
 </LinearLayout>
 
 <!--这是通用的一个带 Vp2 的课表布局，适用于大部分场景-->

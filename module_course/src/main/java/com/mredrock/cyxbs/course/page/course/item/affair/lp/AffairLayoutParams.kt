@@ -16,7 +16,7 @@ import com.ndhzs.netlayout.attrs.NetLayoutParams
  */
 class AffairLayoutParams(
   override var data: AffairData
-) : BaseAffairLayoutParams(data), ISingleDayRank, IWeek, IDataOwner<AffairData> {
+) : BaseAffairLayoutParams(data), ISingleDayRank, IDataOwner<AffairData> {
   
   override val rank: Int
     get() = 2

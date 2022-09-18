@@ -56,9 +56,6 @@ import java.util.*
 
 @Route(path = DISCOVER_ENTRY)
 class DiscoverHomeFragment : BaseViewModelFragment<DiscoverHomeViewModel>() {
-    companion object {
-        const val DISCOVER_FUNCTION_RV_STATE = "discover_function_rv_state"
-    }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         return inflater.inflate(R.layout.discover_home_fragment, container, false)
@@ -73,8 +70,8 @@ class DiscoverHomeFragment : BaseViewModelFragment<DiscoverHomeViewModel>() {
         if (savedInstanceState == null) {
             initFeeds()
         }
-        initTyDay()
-        initJwNews(mVfDetail, fl_discover_home_jwnews)
+        initTvDay()
+        initJwNews(fl_discover_home_jwnews)
         initBanner()
         initHasUnread()
         view.findViewById<View>(R.id.iv_check_in).setOnSingleClickListener {
@@ -87,7 +84,7 @@ class DiscoverHomeFragment : BaseViewModelFragment<DiscoverHomeViewModel>() {
     /**
      * 从老课表那里移过来的代码
      */
-    private fun initTyDay() {
+    private fun initTvDay() {
         if (!IAccountService::class.impl.getVerifyService().isLogin()) {
             tv_day.text = "登录解锁更多功能~"
         } else {
@@ -104,8 +101,8 @@ class DiscoverHomeFragment : BaseViewModelFragment<DiscoverHomeViewModel>() {
                               else "日"}"
                     //8，9月欢迎新同学
                     (now[Calendar.MONTH] + 1 == 8 || now[Calendar.MONTH] + 1 == 9) -> "欢迎新同学～"
-                    nowWeek !in 1 .. 24 && summerVacation.contains(now[Calendar.MONTH] + 1) -> "暑假快乐鸭"
-                    nowWeek !in 1 .. 24 && !summerVacation.contains(now[Calendar.MONTH] + 1) -> "寒假快乐鸭"
+                    nowWeek !in 1 .. 21 && summerVacation.contains(now[Calendar.MONTH] + 1) -> "暑假快乐鸭"
+                    nowWeek !in 1 .. 21 && !summerVacation.contains(now[Calendar.MONTH] + 1) -> "寒假快乐鸭"
                     else -> ""
                 }
             }
@@ -175,24 +172,24 @@ class DiscoverHomeFragment : BaseViewModelFragment<DiscoverHomeViewModel>() {
         }
     }
 
-    private fun initJwNews(viewFlipper: ViewFlipper, frameLayout: FrameLayout) {
+    private fun initJwNews(frameLayout: FrameLayout) {
         viewModel.jwNews.observe {
             if (it != null) {
-                viewFlipper.removeAllViews()
+                mVfDetail.removeAllViews()
                 for (item in it) {
-                    viewFlipper.addView(getTextView(item.title, item.id))
+                    mVfDetail.addView(getTextView(item.title, item.id))
                 }
                 mVfDetail.startFlipping()
             }
         }
-
-        viewFlipper.setOnSingleClickListener {
-            ARouter.getInstance().build(DISCOVER_NEWS_ITEM).withString("id", viewFlipper.focusedChild.tag as String).navigation()
+    
+        mVfDetail.setOnSingleClickListener {
+            ARouter.getInstance().build(DISCOVER_NEWS_ITEM).withString("id", mVfDetail.focusedChild.tag as String).navigation()
         }
     
-        viewFlipper.flipInterval = 6555
-        viewFlipper.setInAnimation(context, R.anim.discover_text_in_anim)
-        viewFlipper.setOutAnimation(context, R.anim.discover_text_out_anim)
+        mVfDetail.flipInterval = 6000
+        mVfDetail.setInAnimation(context, R.anim.discover_text_in_anim)
+        mVfDetail.setOutAnimation(context, R.anim.discover_text_out_anim)
 
         frameLayout.setOnSingleClickListener {
             ARouter.getInstance().build(DISCOVER_NEWS).navigation()

@@ -12,7 +12,7 @@ import com.mredrock.cyxbs.lib.course.utils.getOrPut
  * @date 2022/9/9 19:45
  */
 class OverlapHelper(
-  private val logic: ILogic
+  private val logic: IImpl
 ) : IOverlap {
   
   private val mAboveItemByRow = SparseArray<SparseArray<IOverlapItem>>()
@@ -72,7 +72,7 @@ class OverlapHelper(
     return list
   }
   
-  interface ILogic {
+  interface IImpl {
   
     /**
      * [IOverlap.isAddIntoParent]

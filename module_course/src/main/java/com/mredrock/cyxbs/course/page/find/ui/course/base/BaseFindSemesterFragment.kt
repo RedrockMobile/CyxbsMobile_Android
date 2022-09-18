@@ -39,16 +39,14 @@ abstract class BaseFindSemesterFragment<D : LessonData> : CompareWeekSemesterFra
   
   private fun initObserve() {
     mParentViewModel.findLessonData
-      .observe { map ->
+      .observe {
         clearLesson()
-        map.values.forEach {
-          addLesson(getLessonItem(it))
-        }
+        addLesson(it.mapToMinWeek().getLessonItem())
       }
   }
   
   /**
    * 得到数据对应的 [ILessonItem]
    */
-  protected abstract fun getLessonItem(list: List<D>): List<ILessonItem>
+  protected abstract fun List<D>.getLessonItem(): List<ILessonItem>
 }

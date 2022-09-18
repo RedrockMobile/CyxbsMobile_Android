@@ -42,6 +42,9 @@ class LinkLesson(private var lessonData: StuLessonData) :
     return LinkLessonView(context, lessonData)
   }
   
+  override val isHomeCourseItem: Boolean
+    get() = true
+  
   fun startEntranceAnim(anim: Animation) {
     getChildInParent().forEach {
       it.startAnimation(anim)
@@ -78,7 +81,7 @@ class LinkLesson(private var lessonData: StuLessonData) :
   
     override fun setNewData(newData: StuLessonData) {
       data = newData
-      setText(data.course, data.classroom)
+      setText(data.course.course, data.course.classroom)
     }
   }
   

@@ -83,13 +83,13 @@ class MainActivity : BaseActivity() {
   
   // 初始化闪屏页
   private fun initSplash() {
-    replaceFragment(R.id.main_fcv_splash) {
+    replaceFragment(R.id.main_fcv_splash_fragment) {
       SplashFragment()
     }
   }
   
   private fun initCourse() {
-    replaceFragment(R.id.main_fcv_course) {
+    replaceFragment(R.id.main_fcv_course_fragment) {
       CourseFragment()
     }
     mViewModel.courseBottomSheetOffset.observe {
@@ -129,7 +129,6 @@ class MainActivity : BaseActivity() {
   
   private fun initViewPager() {
     mViewPager.adapter = MainAdapter(this)
-    mViewPager.offscreenPageLimit = 1
     mViewPager.isUserInputEnabled = false
   }
   
@@ -138,12 +137,15 @@ class MainActivity : BaseActivity() {
       mViewPager.currentItem = it
       when (it) {
         0, 2 -> {
-          mViewModel.courseBottomSheetExpand.value = false
           mBottomNavLayout.cardElevation = 0F
+          if (!mIsActivityRebuilt) {
+            // 在重建 Activity 后这里会回调一次，这个时候需要还原之前的状态，这里不能去设置成 false
+            mViewModel.courseBottomSheetExpand.value = false
+          }
         }
         1 -> {
-          mViewModel.courseBottomSheetExpand.value = null
           mBottomNavLayout.cardElevation = 4.dp2pxF
+          mViewModel.courseBottomSheetExpand.value = null
         }
       }
     }
