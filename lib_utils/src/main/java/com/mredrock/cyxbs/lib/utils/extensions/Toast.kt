@@ -23,21 +23,11 @@ import com.mredrock.cyxbs.lib.utils.R
  * 已自带处于其他线程时自动切换至主线程发送
  */
 fun toast(s: CharSequence?) {
-  if (s == null) return
-  if (Thread.currentThread() !== Looper.getMainLooper().thread) {
-    Handler(Looper.getMainLooper()).post { CyxbsToast.show(appContext, s, Toast.LENGTH_SHORT) }
-  } else {
-    CyxbsToast.show(appContext, s, Toast.LENGTH_SHORT)
-  }
+  CyxbsToast.show(appContext, s, Toast.LENGTH_SHORT)
 }
 
 fun toastLong(s: CharSequence?) {
-  if (s == null) return
-  if (Thread.currentThread() !== Looper.getMainLooper().thread) {
-    Handler(Looper.getMainLooper()).post { CyxbsToast.show(appContext, s, Toast.LENGTH_LONG) }
-  } else {
-    CyxbsToast.show(appContext, s, Toast.LENGTH_LONG)
-  }
+  CyxbsToast.show(appContext, s, Toast.LENGTH_LONG)
 }
 
 fun String.toast() = toast(this)
@@ -45,12 +35,28 @@ fun String.toastLong() = toastLong(this)
 
 class CyxbsToast {
   companion object {
+  
+    /**
+     * 已自带处于其他线程时自动切换至主线程发送
+     */
     fun show(
       context: Context,
       text: CharSequence?,
       duration: Int
     ) {
       if (text == null) return
+      if (Thread.currentThread() !== Looper.getMainLooper().thread) {
+        Handler(Looper.getMainLooper()).post { newInstance(context, text, duration).show() }
+      } else {
+        newInstance(context, text, duration).show()
+      }
+    }
+    
+    private fun newInstance(
+      context: Context,
+      text: CharSequence,
+      duration: Int
+    ): Toast {
       if (BuildConfig.DEBUG) {
         val throwable = Throwable() // 获取堆栈信息
         val path = throwable.stackTrace
@@ -81,13 +87,13 @@ class CyxbsToast {
       result.view = v
       result.duration = duration
       result.setGravity(Gravity.CENTER_HORIZONTAL or Gravity.TOP, 0, height / 8)
-      result.show()
+      return result
     }
     
     /**
      * 寻找第一个满足条件后的子数组
      */
-    private fun <T> List<T>.after(first:(T) -> Boolean): List<T> {
+    private fun <T> List<T>.after(first: (T) -> Boolean): List<T> {
       val list = ArrayList<T>()
       var isFound = false
       forEach {

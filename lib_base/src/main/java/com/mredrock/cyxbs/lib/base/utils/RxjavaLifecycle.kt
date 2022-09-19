@@ -10,6 +10,19 @@ import io.reactivex.rxjava3.disposables.Disposable
  * 如果放到 lib_utils 中，在值依赖 lib_base 的时候会出现无法继承 BaseActivity 的情况
  *
  * 所以要求 base 类实现的接口尽量不要放在其他模块内
+ *
+ * ## 一、示例
+ * ```
+ * IXXXApiService::class.api
+ *     .getXXX()
+ *     .safeSubscribeBy {
+ *         // 使用 safeSubscribeBy() 将 Rxjava 流与生命周期相关联，实现自动取消
+ *     }
+ * ```
+ *
+ *
+ *
+ *
  */
 interface RxjavaLifecycle {
   

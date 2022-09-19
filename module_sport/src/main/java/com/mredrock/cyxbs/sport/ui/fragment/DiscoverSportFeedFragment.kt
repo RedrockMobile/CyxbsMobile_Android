@@ -8,6 +8,7 @@ import android.text.style.ForegroundColorSpan
 import android.text.style.UnderlineSpan
 import android.view.View
 import android.widget.Button
+import androidx.fragment.app.viewModels
 import com.afollestad.materialdialogs.MaterialDialog
 import com.afollestad.materialdialogs.customview.customView
 import com.afollestad.materialdialogs.customview.getCustomView
@@ -16,7 +17,7 @@ import com.alibaba.android.arouter.launcher.ARouter
 import com.mredrock.cyxbs.api.account.IAccountService
 import com.mredrock.cyxbs.config.route.DISCOVER_SPORT_FEED
 import com.mredrock.cyxbs.config.route.LOGIN_BIND_IDS
-import com.mredrock.cyxbs.lib.base.ui.mvvm.BaseVmBindFragment
+import com.mredrock.cyxbs.lib.base.ui.BaseBindFragment
 import com.mredrock.cyxbs.lib.utils.extensions.gone
 import com.mredrock.cyxbs.lib.utils.extensions.setOnSingleClickListener
 import com.mredrock.cyxbs.lib.utils.extensions.visible
@@ -34,7 +35,9 @@ import com.mredrock.cyxbs.sport.ui.viewmodel.DiscoverSportFeedViewModel
  */
 @Route(path = DISCOVER_SPORT_FEED)
 class DiscoverSportFeedFragment :
-    BaseVmBindFragment<DiscoverSportFeedViewModel, SportFragmentDiscoverFeedBinding>() {
+    BaseBindFragment<SportFragmentDiscoverFeedBinding>() {
+    
+    private val mViewModel by viewModels<DiscoverSportFeedViewModel>()
     
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         binding.sportIvFeedTips.setOnSingleClickListener {
@@ -49,13 +52,13 @@ class DiscoverSportFeedFragment :
             }
         }
         //出错后弹出提示
-        viewModel.isError.observe {
+        mViewModel.isError.observe {
             if (it) {
                 showError()
             }
         }
         //监听绑定ids的状态，存入SharePreference中
-        viewModel.isBind.observe {
+        mViewModel.isBind.observe {
             if (!it) {
                 unbound()
             } else {
@@ -67,7 +70,7 @@ class DiscoverSportFeedFragment :
             notLogin()
         } else {
             //登录后检查是否绑定了ids，如果没有绑定则显示需要绑定
-            when (viewModel.isBind.value) {
+            when (mViewModel.isBind.value) {
                 null -> showError()
                 true -> showData()
                 false -> unbound()
@@ -125,7 +128,7 @@ class DiscoverSportFeedFragment :
             sportTvFeedRunNeedHint.visible()
             sportTvFeedOtherNeedHint.visible()
             sportTvFeedAwardHint.visible()
-            viewModel.sportData.observe(viewLifecycleOwner) {
+            mViewModel.sportData.observe(viewLifecycleOwner) {
                 //跑步剩余次数 = 所需跑步次数 - 已跑步次数， 剩余次数需要 >= 0
                 sportTvFeedRunNeed.text =
                     if (it.runTotal - it.runDone >= 0) (it.runTotal - it.runDone).toString() else "0"

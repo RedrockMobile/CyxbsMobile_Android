@@ -14,6 +14,19 @@ import io.reactivex.rxjava3.disposables.Disposable
  *
  * 业务层的 Activity 和 Fragment 的共用函数
  *
+ * ## 一、doIfLogin()
+ * ```
+ * doIfLogin {
+ *     // 判断是否已经登录，只有登录了执行，未登录时会弹窗提示去登录界面
+ * }
+ * ```
+ *
+ *
+ *
+ *
+ *
+ *
+ * # 更多封装请往父类和接口查看
  * @author 985892345 (Guo Xiangrui)
  * @email guo985892345@foxmail.com
  * @date 2022/8/8 20:58
