@@ -20,6 +20,42 @@ import kotlinx.coroutines.flow.Flow
  * 比如：使用 api 模块
  * 这种操作请放在 [OperationUi] 中
  *
+ * ## 一、属性代理获取 View
+ * ```
+ * val mTvNum: TextView by R.id.xxx.view() // 可以在简单页面使用，就不用写 findViewById() 了
+ * ```
+ * 详细用法请查看 [Int.view]
+ *
+ * ## 二、Flow 相关 collect 封装
+ * ### collectLaunch()
+ * ```
+ * mViewModel.flow
+ *     .collectLaunch {
+ *         // 配合生命周期的收集方法，可以少写一个 lifecycleScope.launch {} 包在外面
+ *     }
+ * ```
+ * ### collectSuspend()
+ * ```
+ * mViewModel.flow
+ *     .collectSuspend {
+ *         // launchWhenStarted() 的封装，作用：在进入后台的时候会自动挂起
+ *     }
+ * ```
+ * ### collectRestart()
+ * ```
+ * mViewModel.flow
+ *     .collectRestart {
+ *         // flowWithLifecycle() 的封装，作用：在进入后台的摧毁，再次进入时重启
+ *     }
+ * // 注意：该方法适用场景很少，有数据倒灌的缺点，请注意使用场景！！！
+ * ```
+ *
+ *
+ *
+ *
+ *
+ *
+ * # 更多封装请往父类和接口查看
  * @author 985892345 (Guo Xiangrui)
  * @email guo985892345@foxmail.com
  * @date 2022/7/20 19:44

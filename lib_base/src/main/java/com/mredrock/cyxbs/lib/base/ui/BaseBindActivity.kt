@@ -11,7 +11,18 @@ import com.mredrock.cyxbs.lib.utils.extensions.lazyUnlock
 import com.mredrock.cyxbs.lib.utils.utils.GenericityUtils.getGenericClassFromSuperClass
 
 /**
- * .....
+ *
+ * 该类封装了 DataBind，可直接使用 [binding] 获得
+ *
+ * ## 一、获取 ViewModel 的规范写法
+ * 请查看该父类 [BaseFragment]
+ *
+ *
+ *
+ *
+ *
+ *
+ * # 更多封装请往父类和接口查看
  * @author 985892345
  * @email 2767465918@qq.com
  * @data 2021/6/2
