@@ -26,10 +26,10 @@ import com.mredrock.cyxbs.lib.base.utils.IntentHelper
  * ### 获取自身的 ViewModel
  * ```
  * 1、ViewModel 构造器无参数
- * private mViewModel by viewModels<XXXViewModel>()
+ * private val mViewModel by viewModels<XXXViewModel>()
  *
  * 2、ViewModel 构造器需要参数（即需要 Factory 的情况）
- * private mViewModel by viewModelBy {
+ * private val mViewModel by viewModelBy {
  *     XXXViewModel(stuNum)
  * }
  * ```

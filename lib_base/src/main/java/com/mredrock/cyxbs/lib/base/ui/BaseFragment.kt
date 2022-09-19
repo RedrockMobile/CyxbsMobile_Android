@@ -25,21 +25,21 @@ import com.mredrock.cyxbs.lib.base.utils.ArgumentHelper
  * ### 获取自身的 ViewModel
  * ```
  * 1、ViewModel 构造器无参数
- * private mViewModel by viewModels<XXXViewModel>()
+ * private val mViewModel by viewModels<XXXViewModel>()
  *
  * 2、ViewModel 构造器需要参数（即需要 Factory 的情况）
- * private mViewModel by viewModelBy {
+ * private val mViewModel by viewModelBy {
  *     XXXViewModel(stuNum)
  * }
  * ```
  * ### 获取宿主的 ViewModel
  * ```
  * 1、获取 activity 的 ViewModel：
- * private mActivityViewModel by activityViewModels<XXXViewModel>()
+ * private val mActivityViewModel by activityViewModels<XXXViewModel>()
  *
  * 2、获取父 Fragment 的 ViewModel：
  * // 由于比较少见，再加上不愿意封装得过于彻底，所以这个并没有封装
- * private mParentViewModel by createViewModel(
+ * private val mParentViewModel by createViewModelLazy(
  *     XXXViewModel::class,
  *     { requireParentFragment().viewModelStore }
  * )

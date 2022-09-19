@@ -2,11 +2,17 @@ package com.mredrock.cyxbs.lib.base.ui
 
 import android.app.Activity
 import android.view.View
+import androidx.activity.ComponentActivity
+import androidx.activity.viewModels
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.LifecycleOwner
+import androidx.fragment.app.viewModels
+import androidx.lifecycle.ViewModel
 import androidx.lifecycle.LiveData
-import androidx.lifecycle.flowWithLifecycle
+import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.whenStarted
+import androidx.lifecycle.flowWithLifecycle
+import androidx.lifecycle.viewmodel.initializer
+import androidx.lifecycle.viewmodel.viewModelFactory
 import com.mredrock.cyxbs.lib.base.operations.OperationUi
 import com.mredrock.cyxbs.lib.utils.extensions.launch
 import com.mredrock.cyxbs.lib.utils.utils.ActivityBindView
@@ -38,14 +44,14 @@ import kotlinx.coroutines.flow.Flow
  * ```
  * mViewModel.flow
  *     .collectSuspend {
- *         // launchWhenStarted() 的封装，作用：在进入后台的时候会自动挂起
+ *         // launchWhenStarted() 的封装，作用：在进入后台时会自动挂起
  *     }
  * ```
  * ### collectRestart()
  * ```
  * mViewModel.flow
  *     .collectRestart {
- *         // flowWithLifecycle() 的封装，作用：在进入后台的摧毁，再次进入时重启
+ *         // flowWithLifecycle() 的封装，作用：在进入后台时摧毁，再次进入时重启 Flow
  *     }
  * // 注意：该方法适用场景很少，有数据倒灌的缺点，请注意使用场景！！！
  * ```
@@ -136,4 +142,27 @@ interface BaseUi : OperationUi {
   fun <T> Flow<T>.collectRestart(action: suspend (value: T) -> Unit) {
     flowWithLifecycle(getViewLifecycleOwner().lifecycle).collectLaunch(action)
   }
+}
+
+
+/**
+ * 官方的 viewModel 高阶函数在需要使用 Factory 时有些不方便，所以改了一下，用法如下：
+ * ```
+ * private val mViewModel by viewModelBy {
+ *   HomeCourseViewModel(mNowWeek)
+ * }
+ * ```
+ */
+inline fun <reified VM : ViewModel> BaseUi.viewModelBy(
+  noinline instance: (() -> VM)? = null
+) = when (this) {
+  is ComponentActivity -> this.viewModels {
+    if (instance == null) defaultViewModelProviderFactory
+    else viewModelFactory { initializer { instance.invoke() } }
+  }
+  is Fragment -> this.viewModels<VM> {
+    if (instance == null) defaultViewModelProviderFactory
+    else viewModelFactory { initializer { instance.invoke() } }
+  }
+  else -> error("未实现！")
 }
