@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="discover_function">道具</string>
+    <string name="discover_title_other_course">カリキュラム</string>
+    <string name="discover_title_empty_classroom">空き教室</string>
+    <string name="discover_title_map">重郵地図</string>
+    <string name="discover_title_bus_track">重郵バス</string>
+    <string name="discover_title_no_class">暇会い</string>
+    <string name="discover_title_my_exam">試験</string>
+    <string name="discover_title_school_calendar">重郵カレンダー</string>
+    <string name="discover_title_more_function">その他</string>
+    <string name="discover_news_jwzx">学事オンライン</string>
+    <string name="discover_title_todo">やることリスト</string>
+    <string name="discover_title_sport">体育チェックイン</string>
+    <string name="discover_pic_save_alert_dialog_message">この写真はスマートフォンに保存されます</string>
+    <string name="discover_pic_save_alert_dialog_title">保存されますか</string>
+</resources>

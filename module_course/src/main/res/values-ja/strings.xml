@@ -1,0 +1,42 @@
+<resources>
+
+    <string name="course_empty_course_text">授業はもうないよ～www</string>
+    <string name="course_now_week">(今週)</string>
+
+    <string-array name="course_course_day_of_week_strings">
+        <item>月</item>
+        <item>火</item>
+        <item>水</item>
+        <item>木</item>
+        <item>金</item>
+        <item>土</item>
+        <item>日</item>
+    </string-array>
+
+    <string-array name="course_course_weeks_strings">
+        <item>学期の概要</item>
+        <item>１週目</item>
+        <item>２週目</item>
+        <item>３週目</item>
+        <item>４週目</item>
+        <item>５週目</item>
+        <item>６週目</item>
+        <item>７週目</item>
+        <item>８週目</item>
+        <item>９週目</item>
+        <item>１０週目</item>
+        <item>１１週目</item>
+        <item>１２週目</item>
+        <item>１３週目</item>
+        <item>１４週目</item>
+        <item>１５週目</item>
+        <item>１６週目</item>
+        <item>１７週目</item>
+        <item>１８週目</item>
+        <item>１９週目</item>
+        <item>２０週目</item>
+        <item>２１週目</item>
+    </string-array>
+
+    <string name="course_back_now_week">今週に戻る</string>
+</resources>
