@@ -8,6 +8,7 @@ import android.widget.ImageButton
 import androidx.activity.viewModels
 import androidx.core.app.ActivityOptionsCompat
 import androidx.core.util.Pair
+import com.mredrock.cyxbs.lib.base.ui.BaseBindActivity
 import com.mredrock.cyxbs.lib.utils.extensions.color
 import com.mredrock.cyxbs.lib.utils.extensions.setImageFromUrl
 import com.mredrock.cyxbs.lib.utils.extensions.setOnSingleClickListener
@@ -71,7 +72,7 @@ class ProductExchangeActivity : BaseBindActivity<StoreActivityProductExchangeBin
     
     binding.storeTvUserStampCount.text = mStampCount.toString()
     
-    viewModel.getProductDetail(mShopId) // 请求商品详细页数据
+    mViewModel.getProductDetail(mShopId) // 请求商品详细页数据
   }
   
   private fun initJump() {
@@ -92,7 +93,7 @@ class ProductExchangeActivity : BaseBindActivity<StoreActivityProductExchangeBin
         exchangeTips = "确认要用${binding.storeTvExchangeDetailPrice.text}" +
           "邮票兑换${binding.storeTvProductName.text}吗？",
         onPositiveClick = {
-          viewModel.getExchangeResult(mShopId) // 请求用户是否能购买
+          mViewModel.getExchangeResult(mShopId) // 请求用户是否能购买
           dismiss()
         },
         onNegativeClick = {
@@ -106,7 +107,7 @@ class ProductExchangeActivity : BaseBindActivity<StoreActivityProductExchangeBin
   
   @SuppressLint("SetTextI18n")
   private fun initObserve() {
-    viewModel.productDetail.observe {
+    mViewModel.productDetail.observe {
       binding.data = it
       // 处理权益说明以及标题
       when (it.type) {
@@ -132,7 +133,7 @@ class ProductExchangeActivity : BaseBindActivity<StoreActivityProductExchangeBin
     }
     
     // 请求购买成功的观察
-    viewModel.exchangeResult.observe {
+    mViewModel.exchangeResult.observe {
       // 根据不同商品类型弹出不同dialog
       when (mData.type) {
         StoreType.Product.DRESS -> {
@@ -181,7 +182,7 @@ class ProductExchangeActivity : BaseBindActivity<StoreActivityProductExchangeBin
     }
     
     // 请求失败的观察
-    viewModel.exchangeError.observe {
+    mViewModel.exchangeError.observe {
       when (it) {
         StoreType.ExchangeError.OUT_OF_STOCK -> {
           ExchangeDialog.show(

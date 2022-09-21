@@ -2,6 +2,7 @@ import com.mredrock.cyxbs.convention.depend.api.*
 import com.mredrock.cyxbs.convention.depend.*
 import com.mredrock.cyxbs.convention.depend.lib.dependLibBase
 import com.mredrock.cyxbs.convention.depend.lib.dependLibConfig
+import com.mredrock.cyxbs.convention.depend.lib.dependLibCourse
 import com.mredrock.cyxbs.convention.depend.lib.dependLibUtils
 
 /*
@@ -15,13 +16,12 @@ plugins {
 dependLibBase()
 dependLibConfig()
 dependLibUtils()
+dependLibCourse()
+
 dependApiAccount()
 dependApiCourse()
 
 dependNetwork()
 dependRxjava()
-dependencies {
-    implementation(project(mapOf("path" to ":module_course:lib_course")))
-}
 
 
