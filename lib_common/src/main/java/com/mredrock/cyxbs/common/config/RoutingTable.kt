@@ -8,6 +8,9 @@ package com.mredrock.cyxbs.common.config
  *     <li>多级路由：/模块依赖关系倒置/功能描述，例：/map/discover/entry</li>
  * </ul>
  */
+
+const val MAIN_MAIN = "/main/entry"
+
 const val COURSE_ENTRY = "/course/entry"
 const val QA_ENTRY = "/qa/entry"
 const val DISCOVER_ENTRY = "/discover/entry"

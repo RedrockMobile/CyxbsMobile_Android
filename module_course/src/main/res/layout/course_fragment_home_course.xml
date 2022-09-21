@@ -1,13 +1,45 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical">
 
-    <include layout="@layout/course_header_home" />
+    <!--因为主页面的课表头需要显示在 main 模块中，所以这里不添加背景-->
 
-    <androidx.viewpager2.widget.ViewPager2
-        android:id="@+id/course_vp_fragment_home"
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/course_header_fragment_home"
         android:layout_width="match_parent"
-        android:layout_height="match_parent" />
+        android:layout_height="wrap_content">
+
+        <include layout="@layout/course_layout_header" />
+
+        <ImageView
+            android:id="@+id/course_iv_header_link"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:scaleType="center"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintVertical_bias="0.96"
+            app:layout_constraintHorizontal_bias="0.68"
+            tools:ignore="ContentDescription"
+            tools:src="@drawable/course_ic_item_header_link_single" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+    <!--解决 BottomSheet 与 Vp、NSV 的嵌套滑动-->
+    <com.mredrock.cyxbs.lib.course.widget.VpBottomSheetNestedView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" >
+
+        <androidx.viewpager2.widget.ViewPager2
+            android:id="@+id/course_vp_fragment_home"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" />
+
+    </com.mredrock.cyxbs.lib.course.widget.VpBottomSheetNestedView>
 </LinearLayout>

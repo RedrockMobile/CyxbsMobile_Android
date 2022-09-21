@@ -12,13 +12,15 @@ import com.mredrock.cyxbs.lib.course.utils.getOrPut
  * @date 2022/9/9 19:45
  */
 class OverlapHelper(
-  private val logic: ILogic
+  private val logic: IImpl
 ) : IOverlap {
   
   private val mAboveItemByRow = SparseArray<SparseArray<IOverlapItem>>()
   private val mBelowItemByRow = SparseArray<SparseArray<IOverlapItem>>()
   
   override fun isAddIntoParent() = logic.isAddIntoParent()
+  
+  override fun onAddIntoParentResult(isSuccess: Boolean) = logic.onAddIntoParentResult(isSuccess)
   
   override fun refreshOverlap() = logic.refreshOverlap()
   
@@ -70,12 +72,17 @@ class OverlapHelper(
     return list
   }
   
-  interface ILogic {
+  interface IImpl {
   
     /**
      * [IOverlap.isAddIntoParent]
      */
     fun isAddIntoParent(): Boolean
+  
+    /**
+     * 添加进父布局是否成功的回调
+     */
+    fun onAddIntoParentResult(isSuccess: Boolean)
   
     /**
      * [IOverlap.refreshOverlap]

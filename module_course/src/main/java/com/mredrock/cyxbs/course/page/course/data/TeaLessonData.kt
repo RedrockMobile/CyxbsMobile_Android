@@ -14,16 +14,7 @@ import com.mredrock.cyxbs.course.page.course.room.TeaLessonEntity
 data class TeaLessonData(
   val teaNum: String,
   override val week: Int,
-  override val beginLesson: Int,
-  override val classroom: String,
-  override val course: String,
-  override val courseNum: String,
-  override val day: String, // 星期几，这是字符串的星期几：星期一、星期二......
-  override val hashDay: Int,
-  override val period: Int,
-  override val rawWeek: String,
-  override val teacher: String,
-  override val type: String,
+  override val course: Course,
   val classNumber: List<String>,
 ) : LessonData() {
   companion object {
@@ -31,10 +22,8 @@ data class TeaLessonData(
       object : DiffUtil.ItemCallback<TeaLessonData>() {
         override fun areItemsTheSame(oldItem: TeaLessonData, newItem: TeaLessonData): Boolean {
           return oldItem.teaNum == newItem.teaNum
-            && oldItem.courseNum == newItem.courseNum
+            && oldItem.course == newItem.course
             && oldItem.week == newItem.week
-            && oldItem.hashDay == newItem.hashDay
-            && oldItem.beginLesson == newItem.beginLesson
         }
         
         override fun areContentsTheSame(oldItem: TeaLessonData, newItem: TeaLessonData): Boolean {
@@ -43,6 +32,9 @@ data class TeaLessonData(
       }
     }
   }
+  
+  override val num: String
+    get() = teaNum
 }
 
 fun List<TeaLessonEntity>.toTeaLessonData(): List<TeaLessonData> {
@@ -53,16 +45,17 @@ fun List<TeaLessonEntity>.toTeaLessonData(): List<TeaLessonData> {
           TeaLessonData(
             entity.teaNum,
             week,
-            entity.beginLesson,
-            entity.classroom,
-            entity.course,
-            entity.courseNum,
-            entity.day,
-            entity.hashDay,
-            entity.period,
-            entity.rawWeek,
-            entity.teacher,
-            entity.type,
+            LessonData.Course(
+              entity.course,
+              entity.classroom,
+              entity.courseNum,
+              entity.hashDay,
+              entity.beginLesson,
+              entity.period,
+              entity.teacher,
+              entity.rawWeek,
+              entity.type,
+            ),
             entity.classNumber
           )
         )

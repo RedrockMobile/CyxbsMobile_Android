@@ -23,7 +23,7 @@ import com.mredrock.cyxbs.lib.utils.utils.Num2CN
 @Suppress("LeakingThis")
 abstract class AbstractHeaderCourseVpFragment : AbstractCourseVpFragment(), IHeaderCourseVp {
   
-  override val mHeader by R.id.course_vg_header.view<ViewGroup>()
+  override val mHeader by R.id.course_header.view<ViewGroup>()
   
   override val mViewPager by R.id.course_vp.view<ViewPager2>()
   

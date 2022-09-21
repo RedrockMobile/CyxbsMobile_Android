@@ -40,7 +40,6 @@ class ShowTeaResultRvAdapter(
   override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ShowTeaResultViewHolder {
     val view = LayoutInflater.from(parent.context)
       .inflate(R.layout.course_rv_item_show_tea_result, parent, false)
-    
     return ShowTeaResultViewHolder(view)
   }
   

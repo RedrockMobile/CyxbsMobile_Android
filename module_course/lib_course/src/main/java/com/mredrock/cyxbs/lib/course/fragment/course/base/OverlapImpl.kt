@@ -53,7 +53,7 @@ abstract class OverlapImpl : FoldImpl(), IOverlapContainer {
           } else true
         }
   
-        override fun onItemRemovedBefore(item: IItem) {
+        override fun onItemRemovedBefore(item: IItem, view: View) {
           if (item is IOverlapItem) {
             if (mItemInParentSet.remove(item)) {
               deleteOverlap(item)
@@ -80,6 +80,7 @@ abstract class OverlapImpl : FoldImpl(), IOverlapContainer {
     course.addChildVisibleListener(
       object : OnChildVisibleListener {
         override fun onHideView(parent: ViewGroup, child: View, newVisibility: Int) {
+          if (newVisibility == View.INVISIBLE) return // 只监听 GONE 和 VISIBLE
           val item = course.getItemByView(child)
           if (item is IOverlapItem) {
             deleteOverlap(item)
@@ -88,6 +89,7 @@ abstract class OverlapImpl : FoldImpl(), IOverlapContainer {
         }
   
         override fun onShowView(parent: ViewGroup, child: View, oldVisibility: Int) {
+          if (oldVisibility == View.INVISIBLE) return // 只监听 GONE 和 VISIBLE
           val item = course.getItemByView(child)
           if (item is IOverlapItem) {
             setOverlap(item)
@@ -120,8 +122,11 @@ abstract class OverlapImpl : FoldImpl(), IOverlapContainer {
           if (next.overlap.isAddIntoParent()) {
             // 这里又会回调 OnItemExistListener
             if (course.addItem(next)) {
+              next.overlap.onAddIntoParentResult(true)
               iterator.remove()
               mItemInParentSet.add(next)
+            } else {
+              next.overlap.onAddIntoParentResult(false)
             }
           }
         }
@@ -135,8 +140,6 @@ abstract class OverlapImpl : FoldImpl(), IOverlapContainer {
     }
     return false
   }
-  
-  
   
   /**
    * 设置重叠，不一定是在 item 被添加进来时调用
@@ -178,6 +181,7 @@ abstract class OverlapImpl : FoldImpl(), IOverlapContainer {
     private val sort = TreeSet<IOverlapItem> { o1, o2 ->
       compareOverlayItem(row, column, o1, o2).also {
         if (it == 0 && o1 !== o2) {
+          // 如果你想在它们为 0 时删除之前的数据，那么你应该在数据源中删除，而不是在这里删除
           throw RuntimeException("不允许在对象不相等时返回 0 !")
         }
       }

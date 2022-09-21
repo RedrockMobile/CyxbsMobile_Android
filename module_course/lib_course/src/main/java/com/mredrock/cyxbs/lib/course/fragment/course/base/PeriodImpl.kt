@@ -35,8 +35,8 @@ abstract class PeriodImpl : OverlapImpl(), ICoursePeriod {
   
   // 上午
   
-  final override fun isIncludeAmPeriod(row: Int): Boolean {
-    return row in AM_TOP .. AM_BOTTOM
+  final override fun compareAmPeriod(row: Int): Int {
+    return if (row < AM_TOP) -1 else if (row > AM_BOTTOM) 1 else 0
   }
   
   final override fun forEachAm(block: (row: Int) -> Unit) {
@@ -55,8 +55,8 @@ abstract class PeriodImpl : OverlapImpl(), ICoursePeriod {
   
   // 中午
   
-  final override fun isIncludeNoonPeriod(row: Int): Boolean {
-    return row in NOON_TOP .. NOON_BOTTOM
+  final override fun compareNoonPeriod(row: Int): Int {
+    return if (row < NOON_TOP) -1 else if (row > NOON_BOTTOM) 1 else 0
   }
   
   final override fun forEachNoon(block: (row: Int) -> Unit) {
@@ -75,8 +75,8 @@ abstract class PeriodImpl : OverlapImpl(), ICoursePeriod {
   
   // 下午
   
-  final override fun isIncludePmPeriod(row: Int): Boolean {
-    return row in PM_TOP .. PM_BOTTOM
+  final override fun comparePmPeriod(row: Int): Int {
+    return if (row < PM_TOP) -1 else if (row > PM_BOTTOM) 1 else 0
   }
   
   final override fun forEachPm(block: (row: Int) -> Unit) {
@@ -95,8 +95,8 @@ abstract class PeriodImpl : OverlapImpl(), ICoursePeriod {
   
   // 傍晚
   
-  final override fun isIncludeDuskPeriod(row: Int): Boolean {
-    return row in DUSK_TOP .. DUSK_BOTTOM
+  final override fun compareDuskPeriod(row: Int): Int {
+    return if (row < DUSK_TOP) -1 else if (row > DUSK_BOTTOM) 1 else 0
   }
   
   final override fun forEachDusk(block: (row: Int) -> Unit) {
@@ -115,8 +115,8 @@ abstract class PeriodImpl : OverlapImpl(), ICoursePeriod {
   
   // 晚上
   
-  final override fun isIncludeNightPeriod(row: Int): Boolean {
-    return row in NIGHT_TOP .. NIGHT_BOTTOM
+  final override fun compareNightPeriod(row: Int): Int {
+    return if (row < NIGHT_TOP) -1 else if (row > NIGHT_BOTTOM) 1 else 0
   }
   
   final override fun forEachNight(block: (row: Int) -> Unit) {

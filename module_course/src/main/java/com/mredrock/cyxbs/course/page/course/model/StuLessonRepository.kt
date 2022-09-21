@@ -33,6 +33,7 @@ object StuLessonRepository {
    * - 支持换账号登录后返回新登录人的数据
    * - 第一次观察时会请求新的数据
    * - 使用了 distinctUntilChanged()，只会在数据更改了才会回调
+   * - 没登录时发送 emptyList()
    */
   fun observeSelfLesson(): Observable<List<StuLessonEntity>> {
     return IAccountService::class.impl
@@ -40,7 +41,7 @@ object StuLessonRepository {
       .observeStuNumState()
       .switchMap { value ->
         // 使用 switchMap 可以停止之前学号的订阅
-        value.nullUnless(Observable.never()) { // 这里如果使用 Observable.empty()，效果跟 never 一样
+        value.nullUnless(Observable.just(emptyList())) {
           observeLesson(it)
         }
       }
@@ -50,6 +51,7 @@ object StuLessonRepository {
    * 观察某人的课（正常情况下本地课程是不会改变的）
    * - 优先发送本地数据给下游，并且会异步请求远端数据
    * - 使用了 distinctUntilChanged()，只会在数据更改了才会回调
+   * - 没登录时发送 emptyList()
    *
    * ## 注意
    * 如果你传进来错误的 [stuNum]，除了传空串外该观察流并不会 onError，也不会调用 onNext 和 doOnComplete，
@@ -61,7 +63,7 @@ object StuLessonRepository {
     stuNum: String,
   ) : Observable<List<StuLessonEntity>> {
     // 如果学号为空就发送空数据给下游
-    if (stuNum.isBlank()) return Observable.error(IllegalArgumentException("学号不能为空！"))
+    if (stuNum.isBlank()) return Observable.just(emptyList())
     return LessonDataBase.INSTANCE.getStuLessonDao()
       .observeLesson(stuNum)
       .doOnSubscribe {

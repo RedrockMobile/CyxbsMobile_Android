@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!--    课表item圆角-->
+    <dimen name="course_item_radius">8dp</dimen>
+
+    <!--课表中每个 item 的间距值-->
+    <dimen name="course_item_margin">1.2dp</dimen>
+</resources>

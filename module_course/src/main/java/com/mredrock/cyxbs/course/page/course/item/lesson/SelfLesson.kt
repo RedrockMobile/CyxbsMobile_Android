@@ -29,10 +29,10 @@ class SelfLesson(private var lessonData: StuLessonData) :
   override fun setNewData(newData: StuLessonData) {
     getChildIterable().forEach {
       if (it is SelfLessonView) {
-        it.setLessonData(newData)
+        it.setNewData(newData)
       }
     }
-    lp.changeSingleDay(newData)
+    lp.setNewData(newData)
     lessonData = newData
   }
   
@@ -40,19 +40,16 @@ class SelfLesson(private var lessonData: StuLessonData) :
     return SelfLessonView(context, lessonData)
   }
   
+  override val isHomeCourseItem: Boolean
+    get() = true
+  
   @SuppressLint("ViewConstructor")
   class SelfLessonView(
     context: Context,
-    var data: StuLessonData
-  ) : CommonLessonView(context), IOverlapTag {
+    override var data: StuLessonData
+  ) : CommonLessonView(context), IOverlapTag, IDataOwner<StuLessonData> {
     
     private val mHelper = OverlapTagHelper(this)
-    
-    fun setLessonData(data: StuLessonData) {
-      this.data = data
-      setLessonColor(data.lessonPeriod)
-      setText(data.course, data.classroom)
-    }
     
     override fun setLessonColor(period: LessonPeriod) {
       super.setLessonColor(period)
@@ -79,7 +76,13 @@ class SelfLesson(private var lessonData: StuLessonData) :
     }
   
     init {
-      setLessonData(data)
+      setNewData(data)
+    }
+  
+    override fun setNewData(newData: StuLessonData) {
+      data = newData
+      setLessonColor(data.lessonPeriod)
+      setText(data.course.course, data.course.classroom)
     }
   }
   

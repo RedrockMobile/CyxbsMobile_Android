@@ -27,20 +27,30 @@ open class SingleDayLayoutParams(
   gravity
 ), ISingleDayData
 {
-  override val weekNum: Int
+  
+  constructor(data: ISingleDayData) : this(data.weekNum, data.startNode, data.length)
+  
+  val singleColumn: Int
     get() = startColumn
-  override val startNode: Int
+  
+  final override val weekNum: Int
+    get() = startColumn
+  final override val startNode: Int
     get() = startRow
-  override val length: Int
+  final override val length: Int
     get() = rowCount
   
   /**
    * 根据 [ISingleDayData] 改变数据
    */
   fun changeSingleDay(data: ISingleDayData) {
-    startColumn = data.weekNum
-    endColumn = data.weekNum
-    startRow = data.startNode
-    endRow = data.startNode + data.length - 1
+    changeSingleDay(data.weekNum, data.startNode, data.length)
+  }
+  
+  fun changeSingleDay(weekNum: Int, startNode: Int, length: Int) {
+    startColumn = weekNum
+    endColumn = weekNum
+    startRow = startNode
+    endRow = startNode + length - 1
   }
 }

@@ -22,11 +22,11 @@
         app:layout_constraintVertical_bias="0.0"
         tools:layout_editor_absoluteX="0dp" />
 
-    <ImageView
+    <androidx.appcompat.widget.AppCompatImageView
         android:id="@+id/mine_about_logo"
         android:layout_width="96dp"
         android:layout_height="96dp"
-        android:src="@drawable/common_ic_app_logo"
+        app:srcCompat="@drawable/common_ic_app_logo"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -39,7 +39,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="11dp"
-        android:text="@string/app_name"
+        android:text="@string/common_app_name"
         android:textColor="@color/common_mine_about_text_color_normal"
         android:textSize="20sp"
         android:textStyle="bold"

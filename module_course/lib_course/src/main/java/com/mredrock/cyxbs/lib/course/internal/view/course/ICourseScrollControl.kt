@@ -22,4 +22,30 @@ interface ICourseScrollControl {
    * @param y 向上滚出的距离
    */
   fun scrollCourseY(y: Int)
+  
+  /**
+   * 得到课表移动的 ScrollY
+   */
+  fun getScrollCourseY(): Int
+  
+  /**
+   * 得到 [pointerId] 对应的在滚轴上的 Y 值
+   */
+  fun getAbsoluteY(pointerId: Int): Int
+  
+  /**
+   * 得到滚轴的高度
+   */
+  fun getScrollHeight(): Int
+  
+  /**
+   * 得到对应方向上能否继续滑动
+   * @param direction 正向检查手指向上滑动，负值检查手指向下滑动
+   * ```
+   *                                       true               false
+   * canCourseScrollVertically(1)     手指能够向上滑动       手指不能向上滑动
+   * canCourseScrollVertically(-1)    手指能够向下滑动       手指不能向下滑动
+   * ```
+   */
+  fun canCourseScrollVertically(direction: Int): Boolean
 }

@@ -7,8 +7,17 @@ package com.mredrock.cyxbs.lib.course.fragment.course.expose.period.dusk
  * @date 2022/8/17 1:07
  */
 interface IDuskPeriod {
-  fun isIncludeDuskPeriod(row: Int): Boolean
+  
+  /**
+   * 遍历傍晚时间段区域
+   */
   fun forEachDusk(block: (row: Int) -> Unit)
+  
+  /**
+   * 跟傍晚时间段作对比
+   * @return 1、返回正数，说明 [row] 在傍晚时间段下面；2、返回负数，说明在上面；3、返回 0，说明在里面
+   */
+  fun compareDuskPeriod(row: Int): Int
   
   /**
    * 得到傍晚时间段开始时的高度值

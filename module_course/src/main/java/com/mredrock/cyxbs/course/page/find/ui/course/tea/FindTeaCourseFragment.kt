@@ -21,7 +21,10 @@ import com.mredrock.cyxbs.lib.course.fragment.page.CoursePageFragment
 class FindTeaCourseFragment : BaseFindVpFragment<TeaLessonData>() {
   
   companion object {
-    fun tryReplaceById(fragmentManager: FragmentManager, @IdRes id: Int, teaNum: String) {
+    /**
+     * 尝试替换 Fragment 或者刷新 [teaNum]
+     */
+    fun tryReplaceOrFresh(fragmentManager: FragmentManager, @IdRes id: Int, teaNum: String) {
       val fragment = fragmentManager.findFragmentById(id) as? FindTeaCourseFragment
       if (fragment == null) {
         FindTeaCourseFragment().apply {
@@ -42,8 +45,6 @@ class FindTeaCourseFragment : BaseFindVpFragment<TeaLessonData>() {
   }
   
   private var mTeaNum by arguments<String>()
-  
-  override var mPageCount: Int = 22 // 21 周加上第一页为整学期的课表
   
   override fun onCreate(savedInstanceState: Bundle?) {
     super.onCreate(savedInstanceState)

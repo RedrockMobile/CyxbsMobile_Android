@@ -1,11 +1,9 @@
 package com.mredrock.cyxbs.course.page.find.viewmodel.activity
 
-import androidx.lifecycle.viewModelScope
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
 import com.mredrock.cyxbs.course.page.find.room.FindPersonEntity
 import com.mredrock.cyxbs.lib.base.ui.BaseViewModel
-import kotlinx.coroutines.flow.MutableSharedFlow
-import kotlinx.coroutines.flow.SharedFlow
-import kotlinx.coroutines.launch
 
 /**
  * ...
@@ -16,23 +14,19 @@ import kotlinx.coroutines.launch
 class FindLessonViewModel : BaseViewModel() {
 
   /**
-   * 课表是否打开的事件
+   * 课表是否打开的状态
    *
-   * 为什么使用 SharedFlow，而不是 StateFlow 或者 LiveData ?
-   * 因为打开课表是打开 BottomSheetBehavior 和 替换 Fragment，这两个都是可以记住自己状态的，
-   * 所以应该作为事件而不是状态来处理
+   * 发送 null 时取消打开课表
    */
-  private val _courseEvent = MutableSharedFlow<FindPersonEntity?>()
-  val courseEvent: SharedFlow<FindPersonEntity?>
-    get() = _courseEvent
+  private val _courseState = MutableLiveData<FindPersonEntity?>()
+  val courseState: LiveData<FindPersonEntity?>
+    get() = _courseState
 
   /**
    * 改变课表
    * @param person 为 null 就关闭课表
    */
   fun changeCourseState(person: FindPersonEntity?) {
-    viewModelScope.launch {
-      _courseEvent.emit(person)
-    }
+    _courseState.value = person
   }
 }

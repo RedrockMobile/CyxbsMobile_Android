@@ -1,6 +1,6 @@
 package com.mredrock.cyxbs.lib.course.internal.view.scroll
 
-import com.mredrock.cyxbs.lib.course.internal.view.IView
+import com.mredrock.cyxbs.lib.course.internal.view.IViewGroup
 import com.mredrock.cyxbs.lib.course.internal.view.course.ICourseScrollControl
 
 /**
@@ -10,6 +10,6 @@ import com.mredrock.cyxbs.lib.course.internal.view.course.ICourseScrollControl
  * @email guo985892345@foxmail.com
  * @date 2022/8/18 14:06
  */
-interface ICourseScroll : IView, ICourseScrollControl {
+interface ICourseScroll : IViewGroup, ICourseScrollControl {
 
 }

@@ -16,8 +16,13 @@ dependRoom()
 dependRoomRxjava()
 dependRxjava()
 dependNetwork()
-dependSmartRefreshLayout()
+
+configurations.all {
+  resolutionStrategy.cacheChangingModulesFor(0, TimeUnit.SECONDS)
+}
 
 dependencies {
-  implementation(SmartRefreshLayout.`footer-ball`)
+  // 20 级郭祥瑞封装的 Banner 库
+  implementation("io.github.985892345:SlideShow:2.0.0-SNAPSHOT")
 }
+

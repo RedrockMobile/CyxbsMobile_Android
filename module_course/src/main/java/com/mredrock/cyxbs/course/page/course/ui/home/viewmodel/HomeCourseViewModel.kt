@@ -3,13 +3,17 @@ package com.mredrock.cyxbs.course.page.course.ui.home.viewmodel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
+import com.mredrock.cyxbs.api.course.ICourseService
 import com.mredrock.cyxbs.course.page.course.data.AffairData
 import com.mredrock.cyxbs.course.page.course.data.StuLessonData
 import com.mredrock.cyxbs.course.page.course.data.toStuLessonData
 import com.mredrock.cyxbs.course.page.course.model.StuLessonRepository
 import com.mredrock.cyxbs.course.page.link.model.LinkRepository
 import com.mredrock.cyxbs.course.page.link.room.LinkStuEntity
+import com.mredrock.cyxbs.course.service.CourseServiceImpl
 import com.mredrock.cyxbs.lib.base.ui.BaseViewModel
+import com.mredrock.cyxbs.lib.utils.service.impl
+import com.mredrock.cyxbs.lib.utils.utils.SchoolCalendarUtil
 import io.reactivex.rxjava3.core.Completable
 import io.reactivex.rxjava3.core.Observable
 import io.reactivex.rxjava3.core.Single
@@ -26,27 +30,40 @@ import java.lang.IllegalStateException
  * @email guo985892345@foxmail.com
  * @date 2022/8/27 17:12
  */
-class HomeCourseViewModel(val nowWeek: Int) : BaseViewModel() {
+class HomeCourseViewModel : BaseViewModel() {
   
-  val homeWeekData: LiveData<Map<Int, HomePageResult>> get() = _homeWeekData
   private val _homeWeekData = MutableLiveData<Map<Int, HomePageResult>>()
+  val homeWeekData: LiveData<Map<Int, HomePageResult>> get() = _homeWeekData
   
-  val linkStu: LiveData<LinkStuEntity> get() = _linkStu
   private val _linkStu = MutableLiveData<LinkStuEntity>()
+  val linkStu: LiveData<LinkStuEntity> get() = _linkStu
   
-  val refreshEvent: SharedFlow<Boolean> get() = _refresh
   private val _refresh = MutableSharedFlow<Boolean>()
+  val refreshEvent: SharedFlow<Boolean> get() = _refresh
+  
+  private val _showLinkEvent = MutableSharedFlow<Boolean>()
+  val showLinkEvent: SharedFlow<Boolean> get() = _showLinkEvent
+  
+  val courseService = ICourseService::class.impl as CourseServiceImpl
+  
+  val nowWeek: Int  // 当前周数
+    get() = SchoolCalendarUtil.getWeekOfTerm() ?: 0
   
   /**
    * 改变关联人的可见性
    */
   fun changeLinkStuVisible(isShowLink: Boolean) {
-    LinkRepository.changeLinkStuVisible(isShowLink).safeSubscribeBy()
+    LinkRepository.changeLinkStuVisible(isShowLink)
+      .safeSubscribeBy {
+        viewModelScope.launch {
+          _showLinkEvent.emit(isShowLink)
+        }
+      }
     // 这里更新后，所有观察关联的地方都会重新发送新数据
   }
   
   /**
-   * 重新请求数据，相当于强制刷新，建议测试使用
+   * 重新请求数据，相当于强制刷新
    */
   fun refreshData() {
     LinkRepository.getLinkStudent()
@@ -78,7 +95,6 @@ class HomeCourseViewModel(val nowWeek: Int) : BaseViewModel() {
     // 自己课的观察流
     val selfLessonObservable = StuLessonRepository.observeSelfLesson()
       .map { it.toStuLessonData() }
-//      .map { emptyList<StuLessonData>() } // 测试使用
   
     // 关联人课的观察流
     val linkLessonObservable = LinkRepository.observeLinkStudent()
@@ -88,7 +104,6 @@ class HomeCourseViewModel(val nowWeek: Int) : BaseViewModel() {
         if (it.isNull() || !it.isShowLink) Observable.just(emptyList())
         else StuLessonRepository.observeLesson(it.linkNum)
       }.map { it.toStuLessonData() }
-//      .map { if (it.isEmpty()) it else arrayListOf(createLesson(1, 1, 1, 2)) } // 测试使用
   
     // 事务的观察流
     val affairObservable = Observable.just<List<AffairData>>(emptyList()) // TODO 事务待完成
@@ -106,14 +121,8 @@ class HomeCourseViewModel(val nowWeek: Int) : BaseViewModel() {
       }
   }
   
-  /**
-   * 测试使用
-   */
-  private fun createLesson(week: Int, hashDay: Int, beginLesson: Int, period: Int, title: String = "标题"): StuLessonData {
-    return StuLessonData(
-      "", week, beginLesson, "", title, "",
-      "", hashDay, period, "", "", "")
-  }
+  
+  
   
   interface HomePageResult {
     val self: List<StuLessonData>

@@ -31,15 +31,31 @@ abstract class CourseScrollControlImpl @JvmOverloads constructor(
     return parent
   }
   
-  override fun scrollCourseBy(dy: Int) {
+  final override fun scrollCourseBy(dy: Int) {
     getScrollImpl().scrollCourseBy(dy)
   }
   
-  override fun scrollCourseY(y: Int) {
+  final override fun scrollCourseY(y: Int) {
     getScrollImpl().scrollCourseY(y)
   }
   
-  override fun measureChildWithRatio(
+  final override fun getScrollCourseY(): Int {
+    return getScrollImpl().getScrollCourseY()
+  }
+  
+  final override fun getAbsoluteY(pointerId: Int): Int {
+    return getScrollImpl().getAbsoluteY(pointerId)
+  }
+  
+  final override fun getScrollHeight(): Int {
+    return getScrollImpl().getScrollHeight()
+  }
+  
+  final override fun canCourseScrollVertically(direction: Int): Boolean {
+    return getScrollImpl().canCourseScrollVertically(direction)
+  }
+  
+  final override fun measureChildWithRatio(
     child: View,
     parentWidthMeasureSpec: Int,
     parentHeightMeasureSpec: Int,

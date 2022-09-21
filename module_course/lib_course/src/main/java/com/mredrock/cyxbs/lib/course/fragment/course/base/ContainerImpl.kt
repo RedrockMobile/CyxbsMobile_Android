@@ -2,6 +2,7 @@ package com.mredrock.cyxbs.lib.course.fragment.course.base
 
 import android.os.Bundle
 import android.view.View
+import android.view.animation.AlphaAnimation
 import androidx.annotation.CallSuper
 import com.mredrock.cyxbs.lib.course.fragment.course.expose.container.ICourseContainer
 import com.mredrock.cyxbs.lib.course.internal.item.IItem
@@ -55,7 +56,7 @@ abstract class ContainerImpl : AbstractCourseBaseFragment(), ICourseContainer {
     return mLessons.contains(lesson)
   }
   
-  override fun getLessonIterable(): Set<ILessonItem> {
+  override fun getLessonSet(): Set<ILessonItem> {
     return mLessons
   }
   
@@ -94,8 +95,18 @@ abstract class ContainerImpl : AbstractCourseBaseFragment(), ICourseContainer {
     return mAffairs.contains(affair)
   }
   
-  override fun getAffairIterable(): Set<IAffairItem> {
+  override fun getAffairSet(): Set<IAffairItem> {
     return mAffairs
+  }
+  
+  /**
+   * 设置退场动画
+   *
+   * 退场动画可以统一，但入场动画不好把握时机，需要自己单独调用
+   */
+  private fun startExitAnimation(view: View) {
+    val animation = AlphaAnimation(1F, 0F).apply { duration = 360 }
+    view.startAnimation(animation)
   }
   
   
@@ -114,14 +125,20 @@ abstract class ContainerImpl : AbstractCourseBaseFragment(), ICourseContainer {
           }
         }
         
-        override fun onItemAddedAfter(item: IItem) {
+        override fun onItemAddedAfter(item: IItem, view: View) {
           when (item) {
             is ILessonItem -> mLessons.add(item)
             is IAffairItem -> mAffairs.add(item)
           }
         }
   
-        override fun onItemRemovedAfter(item: IItem) {
+        override fun onItemRemovedBefore(item: IItem, view: View) {
+          when (item) {
+            is ILessonItem, is IAffairItem -> startExitAnimation(view)
+          }
+        }
+  
+        override fun onItemRemovedAfter(item: IItem, view: View) {
           when (item) {
             is ILessonItem -> mLessons.remove(item)
             is IAffairItem -> mAffairs.remove(item)

@@ -1,20 +1,19 @@
 package com.mredrock.cyxbs.lib.course.item.single
 
-import android.animation.Animator
 import android.content.Context
 import android.util.SparseIntArray
 import android.view.View
+import android.view.animation.AlphaAnimation
 import androidx.core.util.forEach
 import androidx.core.util.isNotEmpty
+import com.mredrock.cyxbs.lib.course.R
 import com.mredrock.cyxbs.lib.course.fragment.course.expose.overlap.IOverlap
 import com.mredrock.cyxbs.lib.course.fragment.course.expose.overlap.IOverlapItem
 import com.mredrock.cyxbs.lib.course.fragment.course.expose.overlap.OverlapHelper
 import com.mredrock.cyxbs.lib.course.internal.item.forEachRow
-import com.mredrock.cyxbs.lib.course.internal.view.course.base.CourseTransitionImpl
-import com.mredrock.cyxbs.lib.utils.extensions.dp2px
+import com.mredrock.cyxbs.lib.utils.extensions.dimen
 import com.ndhzs.netlayout.attrs.NetLayoutParams
-import com.ndhzs.netlayout.transition.ILayoutTransition.TransitionType.*
-import com.ndhzs.netlayout.view.NetLayout2
+import com.ndhzs.netlayout.view.NetLayout
 
 /**
  * 用于实现单列的可重叠 item
@@ -23,7 +22,7 @@ import com.ndhzs.netlayout.view.NetLayout2
  * @email guo985892345@foxmail.com
  * @date 2022/8/26 17:00
  */
-abstract class AbstractOverlapSingleDayItem : IOverlapItem, OverlapHelper.ILogic, ISingleDayItem {
+abstract class AbstractOverlapSingleDayItem : IOverlapItem, OverlapHelper.IImpl, ISingleDayItem {
   
   /**
    * 创建子 View，这个 View 才是真正用于显示的
@@ -32,18 +31,18 @@ abstract class AbstractOverlapSingleDayItem : IOverlapItem, OverlapHelper.ILogic
    */
   protected abstract fun createView(context: Context): View
   
-  // 设置子 View 的动画
-  protected open fun getChangingAppearingAnimator(): Animator? = CourseTransitionImpl.defaultFadeIn.clone()
-  protected open fun getChangingDisappearingAnimator(): Animator? = CourseTransitionImpl.defaultChangeOut.clone()
-  protected open fun getChangingAnimator(): Animator? = CourseTransitionImpl.defaultChange.clone()
-  
   /**
    * 即将被添加进父布局时的回调
    *
    * ## 注意
-   * - 此时并没有被添加进父布局
+   * - 此时并没有被添加进父布局，并且不能保证一定就能添加成功
    */
   protected open fun onAddIntoCourse() {}
+  
+  /**
+   * 添加进父布局是否成功的回调
+   */
+  override fun onAddIntoParentResult(isSuccess: Boolean) {}
   
   /**
    * 刷新重叠区域时的回调
@@ -84,14 +83,14 @@ abstract class AbstractOverlapSingleDayItem : IOverlapItem, OverlapHelper.ILogic
   /**
    * 得到使用 [createView] 生成但目前不在 [mView] 中显示的所有 view 集合的迭代器
    */
-  fun getChildInFreeIterable(): List<View> {
+  fun getChildInFree(): List<View> {
     return mChildInFree
   }
   
   /**
    * 得到使用 [createView] 生成并在 [mView] 中显示的所有 view 集合的迭代器
    */
-  fun getChildInParentIterable(): List<View> {
+  fun getChildInParent(): List<View> {
     return mChildInParent
   }
   
@@ -105,24 +104,29 @@ abstract class AbstractOverlapSingleDayItem : IOverlapItem, OverlapHelper.ILogic
   }
   
   /**
+   * 初始化 View 的回调
+   */
+  protected open fun onInitializeView(view: NetLayout) {}
+  
+  /**
    * 用于实现折叠的 View
    *
    * [createView] 中得到的 View 都会添加进这个 view 中
    */
-  private lateinit var mView: NetLayout2
+  private lateinit var mView: NetLayout
   
   @Suppress("LeakingThis")
   final override val overlap: IOverlap = OverlapHelper(this)
   
   final override fun initializeView(context: Context): View {
     if (!this::mView.isInitialized) {
-      mView = NetLayout2(context).apply {
+      mView = NetLayout(context).apply {
         setRowColumnCount(lp.rowCount, lp.columnCount)
-        addAnimator(CHANGE_APPEARING, getChangingAppearingAnimator())
-        addAnimator(CHANGE_DISAPPEARING, getChangingDisappearingAnimator())
-        addAnimator(CHANGING, getChangingAnimator())
       }
+    } else {
+      mView.setRowColumnCount(lp.rowCount, lp.columnCount)
     }
+    onInitializeView(mView)
     return mView
   }
   
@@ -139,16 +143,24 @@ abstract class AbstractOverlapSingleDayItem : IOverlapItem, OverlapHelper.ILogic
   private val mChildInParent = arrayListOf<View>()
   
   final override fun refreshOverlap() {
+    // 这里需要重新设置一遍总行数，因为外面可能重新设置了 lp，但 mView 的属性与 lp 并没有相互绑定
+    mView.setRowColumnCount(lp.rowCount, lp.columnCount)
     refreshFreeArea()
     repeat(mChildInParent.size - mFreeAreaMap.size()) {
       val view = mChildInParent.removeLast()
+      // 执行淡出动画
+      val animation = AlphaAnimation(1F, 0F).apply { duration = 360 }
+      mView.startAnimation(animation)
       mView.removeView(view)
       mChildInFree.add(view)
     }
     repeat(mFreeAreaMap.size() - mChildInParent.size) {
       val view = mChildInFree.removeLastOrNull() ?: createView(mView.context)
       val params = view.layoutParams as? NetLayoutParams ?: createNetLayoutParams()
-      mView.addItem(view, params)
+      mView.addNetChild(view, params)
+      // 执行淡入动画
+      val animation = AlphaAnimation(0F, 1F).apply { duration = 360 }
+      view.startAnimation(animation)
       mChildInParent.add(view)
     }
     repeat(mFreeAreaMap.size()) {
@@ -170,7 +182,7 @@ abstract class AbstractOverlapSingleDayItem : IOverlapItem, OverlapHelper.ILogic
    */
   private fun createNetLayoutParams(): NetLayoutParams {
     return NetLayoutParams(0, 0,0, 0).apply {
-      leftMargin = 1.2F.dp2px
+      leftMargin = R.dimen.course_item_margin.dimen.toInt()
       rightMargin = leftMargin
       topMargin = leftMargin
       bottomMargin = leftMargin
@@ -179,6 +191,9 @@ abstract class AbstractOverlapSingleDayItem : IOverlapItem, OverlapHelper.ILogic
   
   private val mFreeAreaMap = SparseIntArray()
   
+  /**
+   * 刷新空闲区域
+   */
   private fun refreshFreeArea() {
     mFreeAreaMap.clear()
     val column = lp.weekNum

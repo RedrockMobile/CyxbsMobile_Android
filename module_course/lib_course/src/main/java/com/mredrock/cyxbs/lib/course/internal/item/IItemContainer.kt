@@ -42,9 +42,25 @@ interface IItemContainer {
   fun getViewByItem(item: IItem?): View?
   
   /**
+   * 得到 [View] 与 [IItem] 的 [Map]
+   */
+  fun getItemByViewMap(): Map<View, IItem>
+  
+  /**
+   * 得到 [IItem] 与 [View] 的 [Map]
+   */
+  fun getViewByItemMap(): Map<IItem, View>
+  
+  /**
    * 添加 [IItem] 和移除 [IItem] 的监听
    */
   fun addItemExistListener(l: OnItemExistListener)
+  
+  /**
+   * 发送一个 Runnable 延迟到下一个事件序列中删除监听
+   */
+  fun postRemoveItemExistListener(l: OnItemExistListener)
+  
   
   interface OnItemExistListener {
     /**
@@ -60,22 +76,22 @@ interface IItemContainer {
     /**
      * 调用 addView() 前回调
      */
-    fun onItemAddedBefore(item: IItem) {}
+    fun onItemAddedBefore(item: IItem, view: View) {}
   
     /**
      * 调用 addView() 后回调
      */
-    fun onItemAddedAfter(item: IItem) {}
+    fun onItemAddedAfter(item: IItem, view: View) {}
   
     /**
-     * 调用 removeView() 前回调
+     * 调用 removeView() 前回调，此时可用于设置退场动画
      */
-    fun onItemRemovedBefore(item: IItem) {}
+    fun onItemRemovedBefore(item: IItem, view: View) {}
   
     /**
      * 调用 removeView() 后回调
      */
-    fun onItemRemovedAfter(item: IItem) {}
+    fun onItemRemovedAfter(item: IItem, view: View) {}
   
     /**
      * 移除失败，说明该 item 并没有被添加进容器，有以下两种情况：

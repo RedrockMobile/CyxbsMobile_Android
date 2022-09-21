@@ -50,8 +50,15 @@ abstract class AbstractCourseBaseFragment : BaseFragment(), ICourseBase {
   
   private val mCourseLifecycleObservers = arrayListOf<ICourseWrapper.CourseLifecycleObserver>()
   
-  final override fun addCourseLifecycleObservable(observer: ICourseWrapper.CourseLifecycleObserver) {
+  final override fun addCourseLifecycleObservable(
+    observer: ICourseWrapper.CourseLifecycleObserver,
+    isCallbackIfCrested: Boolean
+  ) {
     mCourseLifecycleObservers.add(observer)
+    if (isCallbackIfCrested && view != null) {
+      // 但根布局不为 null 时，说明已经调用 onViewCreated()
+      observer.onCreateCourse(course)
+    }
   }
   
   final override fun removeCourseLifecycleObserver(observer: ICourseWrapper.CourseLifecycleObserver) {

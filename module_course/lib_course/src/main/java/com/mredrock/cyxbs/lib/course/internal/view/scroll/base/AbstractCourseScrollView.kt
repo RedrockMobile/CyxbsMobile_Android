@@ -3,6 +3,7 @@ package com.mredrock.cyxbs.lib.course.internal.view.scroll.base
 import android.content.Context
 import android.util.AttributeSet
 import android.view.View
+import androidx.core.view.iterator
 import androidx.core.widget.NestedScrollView
 import com.mredrock.cyxbs.lib.course.internal.view.scroll.ICourseScroll
 import kotlin.math.max
@@ -19,7 +20,7 @@ abstract class AbstractCourseScrollView @JvmOverloads constructor(
   defStyleAttr: Int = 0
 ) : NestedScrollView(context, attrs, defStyleAttr), ICourseScroll {
   
-  override fun postDelayed(delayInMillis: Long, action: Runnable) {
+  override fun postDelayed(delayInMillis: Long, action: Runnable?) {
     postDelayed(action, delayInMillis)
   }
   
@@ -56,5 +57,13 @@ abstract class AbstractCourseScrollView @JvmOverloads constructor(
     )
     
     child.measure(childWidthMeasureSpec, childHeightMeasureSpec)
+  }
+  
+  final override fun getIterable(): Iterable<View> {
+    return object : Iterable<View> {
+      override fun iterator(): Iterator<View> {
+        return this@AbstractCourseScrollView.run { iterator() }
+      }
+    }
   }
 }

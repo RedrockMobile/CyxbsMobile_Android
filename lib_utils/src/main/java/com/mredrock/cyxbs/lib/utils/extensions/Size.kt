@@ -1,6 +1,8 @@
 package com.mredrock.cyxbs.lib.utils.extensions
 
 import android.graphics.drawable.Drawable
+import android.view.animation.Animation
+import android.view.animation.AnimationUtils
 import androidx.appcompat.content.res.AppCompatResources
 import androidx.core.content.ContextCompat
 
@@ -46,6 +48,9 @@ val Int.drawable: Drawable
 
 val Int.dimen: Float
   get() = appContext.resources.getDimension(this)
+
+val Int.anim: Animation
+  get() = AnimationUtils.loadAnimation(appContext, this)
 
 val screenWidth: Int
   get() = appContext.resources.displayMetrics.widthPixels

@@ -34,10 +34,7 @@
     <color name="common_course_delete_button_text_color">#7CA3DF</color>
 
 
-    <!--    底部tab未聚焦字体颜色-->
-    <color name="common_un_focused_font_color">#AABCD8</color>
-    <!--    底部tab聚焦字体颜色-->
-    <color name="common_focused_font_color">#2923D2</color>
+
 
     <!--    60%透明度的二级字体-->
     <color name="common_alpha_level_two_font_color">#9915315B</color>
@@ -84,9 +81,7 @@
     <!--    按钮渐变终止颜色-->
     <color name="common_button_gradient_end_color">#5D5DF7</color>
 
-    <!--    事务dialog删除按钮背景颜色-->
-    <color name="common_course_affair_delete_button_background_color">#E6EFFC
-    </color>
+
 
     <!--    添加事务时标题-->
     <color name="common_transaction_heading">#122D55</color>

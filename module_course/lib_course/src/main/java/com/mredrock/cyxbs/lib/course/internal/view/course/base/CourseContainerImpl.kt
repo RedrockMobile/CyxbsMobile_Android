@@ -33,6 +33,13 @@ abstract class CourseContainerImpl @JvmOverloads constructor(
     mOnItemExistListeners.add(l)
   }
   
+  override fun postRemoveItemExistListener(l: IItemContainer.OnItemExistListener) {
+    post {
+      // 由于遍历中不能直接删除，所以使用 post 来延迟删除
+      mOnItemExistListeners.remove(l)
+    }
+  }
+  
   final override fun addItem(item: IItem): Boolean {
     if (mViewByItem.contains(item)) {
       error("该 View 已经被添加了，请检查所有调用该方法的地方！")
@@ -41,9 +48,9 @@ abstract class CourseContainerImpl @JvmOverloads constructor(
       val view = item.initializeView(context)
       mItemByView[view] = item
       mViewByItem[item] = view
-      mOnItemExistListeners.forEachInline { it.onItemAddedBefore(item) }
-      super.addItem(view, item.lp)
-      mOnItemExistListeners.forEachInline { it.onItemAddedAfter(item) }
+      mOnItemExistListeners.forEachInline { it.onItemAddedBefore(item, view) }
+      super.addNetChild(view, item.lp)
+      mOnItemExistListeners.forEachInline { it.onItemAddedAfter(item, view) }
       return true
     }
     mOnItemExistListeners.forEachInline { it.onItemAddedFail(item) }
@@ -53,9 +60,9 @@ abstract class CourseContainerImpl @JvmOverloads constructor(
   final override fun removeItem(item: IItem): Boolean {
     val view = mViewByItem[item]
     if (view != null) {
-      mOnItemExistListeners.forEachInline { it.onItemRemovedBefore(item) }
+      mOnItemExistListeners.forEachInline { it.onItemRemovedBefore(item, view) }
       super.removeView(view)
-      mOnItemExistListeners.forEachInline { it.onItemRemovedAfter(item) }
+      mOnItemExistListeners.forEachInline { it.onItemRemovedAfter(item, view) }
       mItemByView.remove(view)
       mViewByItem.remove(item)
       return true
@@ -71,6 +78,14 @@ abstract class CourseContainerImpl @JvmOverloads constructor(
   
   final override fun getViewByItem(item: IItem?): View? {
     return mViewByItem[item]
+  }
+  
+  override fun getItemByViewMap(): Map<View, IItem> {
+    return mItemByView
+  }
+  
+  override fun getViewByItemMap(): Map<IItem, View> {
+    return mViewByItem
   }
   
   final override fun findPairUnderByXY(x: Int, y: Int): Pair<IItem, View>? {
@@ -96,10 +111,9 @@ abstract class CourseContainerImpl @JvmOverloads constructor(
   }
   
   
-  
   @Deprecated("禁止子类调用", level = DeprecationLevel.HIDDEN)
-  final override fun addItem(item: View, lp: NetLayoutParams) {
-    super.addItem(item, lp)
+  final override fun addNetChild(child: View, lp: NetLayoutParams) {
+    super.addNetChild(child, lp)
   }
   
   @Deprecated("禁止子类调用", level = DeprecationLevel.HIDDEN)

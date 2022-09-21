@@ -1,5 +1,6 @@
 package com.mredrock.cyxbs.course.page.course.utils.container.base
 
+import android.view.View
 import androidx.collection.arraySetOf
 import com.mredrock.cyxbs.lib.course.fragment.course.expose.wrapper.ICourseWrapper
 import com.mredrock.cyxbs.lib.course.internal.item.IItem
@@ -24,56 +25,57 @@ abstract class CourseContainerProxy<Item, Data : Any>(
   // 没有使用的 item 池子
   private val mFreePool = arraySetOf<Item>()
   
+  // 在父布局中显示的 item
+  private val mShowItems = arrayListOf<Item>()
+  
   init {
     // 这里需要以添加监听的方式来修改 mOldDataMap
     // 因为 item 存在被其他地方移除的情况
     wrapper.addCourseLifecycleObservable(
       object : ICourseWrapper.CourseLifecycleObserver {
         
-        var isDestroy = false
+        val listener = object : IItemContainer.OnItemExistListener {
+          override fun onItemAddedAfter(item: IItem, view: View) {
+            if (checkItem(item)) {
+              item as Item
+              val data = item.data
+              if (!mOldDataMap.contains(data)) {
+                // 不包含的时候说明是通过其他方式添加进来的
+                mOldDataMap[data] = item
+                addNewDataIntoOldList(data)
+              }
+              mShowItems.add(item)
+            }
+          }
+  
+          override fun onItemRemovedAfter(item: IItem, view: View) {
+            if (checkItem(item)) {
+              item as Item
+              // 当你使用其他方式移除时
+              val data = item.data
+              if (mOldDataMap.remove(data) != null) {
+                // 移除成功说明是通过其他方式移除的
+                mFreePool.add(item)
+                removeDataFromOldList(data) // 这里是通过其他方式
+              }
+              mShowItems.remove(item)
+            }
+          }
+        }
         
         override fun onCreateCourse(course: ICourseViewGroup) {
-          isDestroy = false
-          course.addItemExistListener(
-            object : IItemContainer.OnItemExistListener {
-              override fun onItemAddedAfter(item: IItem) {
-                if (isDestroy) return
-                if (checkItem(item)) {
-                  item as Item
-                  val data = item.data
-                  if (!mOldDataMap.contains(data)) {
-                    // 不包含的时候说明是通过其他方式添加进来的
-                    mOldDataMap[data] = item
-                    addNewDataIntoOldList(data)
-                  }
-                }
-              }
-      
-              override fun onItemRemovedAfter(item: IItem) {
-                if (isDestroy) return
-                if (checkItem(item)) {
-                  item as Item
-                  // 当你使用其他方式移除时
-                  val data = item.data
-                  if (mOldDataMap.remove(data) != null) {
-                    // 移除成功说明是通过其他方式移除的
-                    mFreePool.add(item)
-                    removeDataFromOldList(data) // 这里是通过其他方式
-                  }
-                }
-              }
-            }
-          )
+          course.addItemExistListener(listener)
         }
   
         override fun onDestroyCourse(course: ICourseViewGroup) {
-          isDestroy = true
           // Fragment 的 View 被摧毁，它的子 View 也应该一起被废弃掉
           mOldDataMap.clear()
           mFreePool.clear()
+          mShowItems.clear()
           clearDataFromOldList()
+          course.postRemoveItemExistListener(listener)
         }
-      }
+      }, true
     )
   }
   
@@ -88,6 +90,7 @@ abstract class CourseContainerProxy<Item, Data : Any>(
   final override fun onInserted(newData: Data) {
     val item = newData.getFreeAffair()
     mOldDataMap[newData] = item
+    // 这个 addItem() 需要放在 mOldDataMap[newData] = item 后
     addItem(item)
   }
   
@@ -118,5 +121,9 @@ abstract class CourseContainerProxy<Item, Data : Any>(
     val last = mFreePool.removeAt(mFreePool.size - 1)
     last.setNewData(this)
     return last
+  }
+  
+  protected fun getShowItems(): List<Item> {
+    return mShowItems
   }
 }

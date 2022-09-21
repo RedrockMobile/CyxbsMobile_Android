@@ -4,6 +4,7 @@ import android.content.Context
 import android.content.Intent
 import android.net.Uri
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.content.edit
 import androidx.lifecycle.LiveData
 import com.afollestad.materialdialogs.MaterialDialog
 import com.alibaba.android.arouter.facade.annotation.Route
@@ -11,6 +12,7 @@ import com.mredrock.cyxbs.api.update.APP_UPDATE_SERVICE
 import com.mredrock.cyxbs.api.update.AppUpdateStatus
 import com.mredrock.cyxbs.api.update.IAppUpdateService
 import com.mredrock.cyxbs.update.model.AppUpdateModel
+import java.util.concurrent.TimeUnit
 
 /**
  * Create By Hosigus at 2020/5/2
@@ -44,6 +46,23 @@ internal class AppUpdateService : IAppUpdateService {
             cornerRadius(16F)
         }
     }
-
+    
+    override fun tryNoticeUpdate(activity: AppCompatActivity) {
+        checkUpdate()
+        getUpdateStatus().observe(activity) {
+            if (it == AppUpdateStatus.DATED) {
+                val sp = activity.getSharedPreferences("更新记录", Context.MODE_APPEND)
+                val nowTime = System.currentTimeMillis()
+                val lastTime = sp.getLong("上次提醒更新时间", 0L)
+                val diff = TimeUnit.HOURS.convert(nowTime - lastTime, TimeUnit.MILLISECONDS)
+                if (diff >= 12) {
+                    // 如果有更新，则每隔 12 个小时提醒一次更新
+                    noticeUpdate(activity)
+                    sp.edit { putLong("上次提醒更新时间", nowTime) }
+                }
+            }
+        }
+    }
+    
     override fun init(context: Context) {}
 }

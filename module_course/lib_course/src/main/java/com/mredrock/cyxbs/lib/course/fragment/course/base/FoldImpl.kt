@@ -8,10 +8,7 @@ import androidx.annotation.CallSuper
 import androidx.core.animation.doOnCancel
 import androidx.core.animation.doOnEnd
 import com.mredrock.cyxbs.lib.course.R
-import com.mredrock.cyxbs.lib.course.fragment.course.expose.fold.IFoldDusk
-import com.mredrock.cyxbs.lib.course.fragment.course.expose.fold.IFoldNoon
-import com.mredrock.cyxbs.lib.course.fragment.course.expose.fold.FoldState
-import com.mredrock.cyxbs.lib.course.fragment.course.expose.fold.OnFoldListener
+import com.mredrock.cyxbs.lib.course.fragment.course.expose.fold.*
 import com.mredrock.cyxbs.lib.course.helper.CourseFoldHelper
 import com.mredrock.cyxbs.lib.course.internal.view.course.ICourseViewGroup
 import com.mredrock.cyxbs.lib.course.utils.forEachInline
@@ -24,7 +21,7 @@ import com.mredrock.cyxbs.lib.course.utils.forEachInline
  * @date 2022/8/25 14:26
  */
 @Suppress("LeakingThis")
-abstract class FoldImpl : EntranceAnimImpl(), IFoldNoon, IFoldDusk {
+abstract class FoldImpl : ContainerImpl(), IFold {
   
   private var mNoonFoldState = FoldState.UNKNOWN // 当前中午时间段的状态，主要用于上一层保险，不能光靠他来判断
   private var mDuskFoldState = FoldState.UNKNOWN // 当前傍晚时间段的状态，主要用于上一层保险，不能光靠他来判断

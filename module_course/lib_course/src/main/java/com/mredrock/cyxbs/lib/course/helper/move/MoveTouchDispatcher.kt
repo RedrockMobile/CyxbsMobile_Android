@@ -14,7 +14,7 @@ import com.ndhzs.netlayout.touch.multiple.event.IPointerEvent
 import com.ndhzs.netlayout.touch.multiple.event.IPointerEvent.Action.*
 
 /**
- * ...
+ * TODO 长按移动待完成中
  *
  * @author 985892345 (Guo Xiangrui)
  * @email guo985892345@foxmail.com
