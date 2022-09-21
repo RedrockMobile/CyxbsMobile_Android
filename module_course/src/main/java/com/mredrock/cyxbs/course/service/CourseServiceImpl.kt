@@ -30,28 +30,6 @@ class CourseServiceImpl : ICourseService {
     * */
   }
   
-  override fun replaceStuCourseFragmentById(
-    fm: FragmentManager,
-    id: Int,
-    arg: ICourseService.ICourseArgs
-  ) {
-  }
-  
-  override fun replaceStuCourseFragmentById(
-    fm: FragmentManager,
-    id: Int,
-    args: List<ICourseService.ICourseArgs>
-  ) {
-  
-  }
-  
-  override fun replaceTeaCourseFragmentById(
-    fm: FragmentManager,
-    id: Int,
-    arg: ICourseService.ICourseArgs
-  ) {
-  }
-  
   override fun init(context: Context) {
   }
   

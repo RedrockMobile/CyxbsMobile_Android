@@ -1,13 +1,17 @@
 package com.mredrock.cyxbs.course.page.course.item.lesson
 
+import android.annotation.SuppressLint
 import android.content.Context
-import android.view.View
-import com.mredrock.cyxbs.course.R
-import com.mredrock.cyxbs.course.page.course.data.LessonData
+import android.graphics.Canvas
 import com.mredrock.cyxbs.course.page.course.data.StuLessonData
+import com.mredrock.cyxbs.course.page.course.item.BaseOverlapSingleDayItem
 import com.mredrock.cyxbs.course.page.course.item.lesson.lp.SelfLessonLayoutParams
-import com.mredrock.cyxbs.course.page.course.item.view.ItemView
-import com.mredrock.cyxbs.lib.utils.extensions.color
+import com.mredrock.cyxbs.course.page.course.item.view.IOverlapTag
+import com.mredrock.cyxbs.course.page.course.item.view.OverlapTagHelper
+import com.mredrock.cyxbs.course.page.course.utils.container.base.IDataOwner
+import com.mredrock.cyxbs.lib.course.item.lesson.ILessonItem
+import com.mredrock.cyxbs.lib.course.item.lesson.LessonPeriod
+import com.mredrock.cyxbs.lib.course.item.view.CommonLessonView
 
 /**
  * ...
@@ -16,9 +20,13 @@ import com.mredrock.cyxbs.lib.utils.extensions.color
  * @email guo985892345@foxmail.com
  * @date 2022/9/2 16:43
  */
-class SelfLesson(private var lessonData: StuLessonData) : BaseLesson() {
+class SelfLesson(private var lessonData: StuLessonData) :
+  BaseOverlapSingleDayItem<SelfLesson.SelfLessonView, StuLessonData>(),
+  IDataOwner<StuLessonData>,
+  ILessonItem
+{
   
-  override fun setData(newData: StuLessonData) {
+  override fun setNewData(newData: StuLessonData) {
     getChildIterable().forEach {
       if (it is SelfLessonView) {
         it.setLessonData(newData)
@@ -28,55 +36,50 @@ class SelfLesson(private var lessonData: StuLessonData) : BaseLesson() {
     lessonData = newData
   }
   
-  override fun createView(context: Context): View {
-    return SelfLessonView.newInstance(context, lessonData)
+  override fun createView(context: Context): SelfLessonView {
+    return SelfLessonView(context, lessonData)
   }
   
-  private class SelfLessonView private constructor(
+  @SuppressLint("ViewConstructor")
+  class SelfLessonView(
     context: Context,
-  ) : ItemView(context) {
+    var data: StuLessonData
+  ) : CommonLessonView(context), IOverlapTag {
     
-    companion object {
-      fun newInstance(context: Context, data: StuLessonData): SelfLessonView {
-        return SelfLessonView(context).apply {
-          setLessonData(data)
-        }
-      }
-    }
-  
-    private val mAmTextColor = R.color.course_am_lesson_tv.color
-    private val mPmTextColor = R.color.course_pm_lesson_tv.color
-    private val mNightTextColor = R.color.course_night_lesson_tv.color
-    private val mAmBgColor = R.color.course_am_lesson_bg.color
-    private val mPmBgColor = R.color.course_pm_lesson_bg.color
-    private val mNightBgColor = R.color.course_night_lesson_bg.color
+    private val mHelper = OverlapTagHelper(this)
     
     fun setLessonData(data: StuLessonData) {
-      setColor(data.timeType)
+      this.data = data
+      setLessonColor(data.lessonPeriod)
       setText(data.course, data.classroom)
     }
     
-    private fun setColor(type: LessonData.Type) {
-      when (type) {
-        LessonData.Type.AM -> {
-          mTvTitle.setTextColor(mAmTextColor)
-          mTvContent.setTextColor(mAmTextColor)
-          setCardBackgroundColor(mAmBgColor)
-          setOverlapTagColor(mAmTextColor)
+    override fun setLessonColor(period: LessonPeriod) {
+      super.setLessonColor(period)
+      when (period) {
+        LessonPeriod.AM -> {
+          mHelper.setOverlapTagColor(mAmTextColor)
         }
-        LessonData.Type.PM -> {
-          mTvTitle.setTextColor(mPmTextColor)
-          mTvContent.setTextColor(mPmTextColor)
-          setCardBackgroundColor(mPmBgColor)
-          setOverlapTagColor(mPmTextColor)
+        LessonPeriod.PM -> {
+          mHelper.setOverlapTagColor(mPmTextColor)
         }
-        LessonData.Type.NIGHT -> {
-          mTvTitle.setTextColor(mNightTextColor)
-          mTvContent.setTextColor(mNightTextColor)
-          setCardBackgroundColor(mNightBgColor)
-          setOverlapTagColor(mNightTextColor)
+        LessonPeriod.NIGHT -> {
+          mHelper.setOverlapTagColor(mNightTextColor)
         }
       }
+    }
+  
+    override fun onDraw(canvas: Canvas) {
+      super.onDraw(canvas)
+      mHelper.drawOverlapTag(canvas)
+    }
+  
+    override fun setIsShowOverlapTag(isShow: Boolean) {
+      mHelper.setIsShowOverlapTag(isShow)
+    }
+  
+    init {
+      setLessonData(data)
     }
   }
   
@@ -87,7 +90,4 @@ class SelfLesson(private var lessonData: StuLessonData) : BaseLesson() {
   
   override val data: StuLessonData
     get() = lessonData
-  
-  override val week: Int
-    get() = lessonData.week
 }

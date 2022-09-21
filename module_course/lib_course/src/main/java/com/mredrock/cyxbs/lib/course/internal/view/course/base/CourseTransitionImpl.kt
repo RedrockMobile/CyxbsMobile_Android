@@ -51,22 +51,23 @@ abstract class CourseTransitionImpl @JvmOverloads constructor(
   }
   
   override fun getChangingAppearingAnimator(): Animator? {
-    return defaultChangeIn
+    return defaultChangeIn.clone()
   }
   
   override fun getChangingDisappearingAnimator(): Animator? {
-    return defaultChangeOut
+    return defaultChangeOut.clone()
   }
   
   override fun getAppearingAnimator(): Animator? {
+    // 因为每次进入页面都会开启这个动画，很影响观感，所以置为 null
     return null
   }
   
   override fun getDisappearingAnimator(): Animator? {
-    return defaultFadeOut
+    return defaultFadeOut.clone()
   }
   
   override fun getChangingAnimator(): Animator? {
-    return defaultChange
+    return defaultChange.clone()
   }
 }

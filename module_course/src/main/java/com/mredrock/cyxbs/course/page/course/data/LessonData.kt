@@ -6,6 +6,7 @@ import com.mredrock.cyxbs.api.course.utils.getShowStartTimeStr
 import com.mredrock.cyxbs.api.course.utils.getStartRow
 import com.mredrock.cyxbs.course.page.course.data.expose.IWeek
 import com.mredrock.cyxbs.lib.course.item.lesson.ILessonData
+import com.mredrock.cyxbs.lib.course.item.lesson.LessonPeriod
 import com.mredrock.cyxbs.lib.utils.utils.Num2CN
 
 /**
@@ -34,20 +35,15 @@ sealed class LessonData : ILessonData, IWeek {
   override val length: Int
     get() = period
   
-  val timeType: Type
+  val lessonPeriod: LessonPeriod
     get() {
       return when (beginLesson) {
-        in 1 .. 4 -> Type.AM
-        in 5 .. 8 -> Type.PM
-        in 9 .. 12 -> Type.NIGHT
+        in 1 .. 4 -> LessonPeriod.AM
+        in 5 .. 8 -> LessonPeriod.PM
+        in 9 .. 12 -> LessonPeriod.NIGHT
         else -> throw RuntimeException("未知课程出现在未知时间段！bean = $this")
       }
     }
-  
-  enum class Type {
-    // 暂不存在中午傍晚时间段的课
-    AM, PM, NIGHT
-  }
   
   val weekStr: String
     get() = "第${Num2CN.number2ChineseNumber(week.toLong())}周"

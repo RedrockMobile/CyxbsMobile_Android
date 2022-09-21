@@ -67,7 +67,6 @@ data class TeaLessonBean(
           TeaLessonEntity(
             teaNum,
             it.beginLesson,
-            it.classNumber,
             it.classroom,
             it.course,
             it.courseNum,
@@ -82,7 +81,8 @@ data class TeaLessonBean(
             it.week,
             it.weekBegin,
             it.weekEnd,
-            it.weekModel
+            it.weekModel,
+            it.classNumber,
           )
         )
       }

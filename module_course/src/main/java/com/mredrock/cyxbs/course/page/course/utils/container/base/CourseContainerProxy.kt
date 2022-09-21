@@ -105,7 +105,7 @@ abstract class CourseContainerProxy<Item, Data : Any>(
   
   final override fun onChanged(oldData: Data, newData: Data) {
     val item = mOldDataMap[oldData]
-    item?.setData(newData)
+    item?.setNewData(newData)
   }
   
   /**
@@ -116,7 +116,7 @@ abstract class CourseContainerProxy<Item, Data : Any>(
       return newItem(this)
     }
     val last = mFreePool.removeAt(mFreePool.size - 1)
-    last.setData(this)
+    last.setNewData(this)
     return last
   }
 }

@@ -17,7 +17,7 @@ interface ILessonService : IProvider {
    * 直接得到当前学号的课
    * - 上游已主动切换成 io 线程
    */
-  fun getLesson(stuNum: String): Single<List<Lesson>>
+  fun getStuLesson(stuNum: String): Single<List<Lesson>>
   
   /**
    * 观察当前学号的所有课
@@ -25,7 +25,7 @@ interface ILessonService : IProvider {
    * - 已使用 distinctUntilChanged() 进行了去重处理
    * - 上游已主动切换成 io 线程
    */
-  fun observeLesson(stuNum: String): Observable<List<Lesson>>
+  fun observeStuLesson(stuNum: String): Observable<List<Lesson>>
   
   /**
    * 观察当前登录人的课

@@ -9,5 +9,5 @@ package com.mredrock.cyxbs.course.page.course.utils.container.base
  */
 interface IDataOwner<T : Any> {
   val data: T
-  fun setData(newData: T)
+  fun setNewData(newData: T)
 }

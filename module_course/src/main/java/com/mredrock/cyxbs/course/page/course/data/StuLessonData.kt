@@ -1,10 +1,11 @@
 package com.mredrock.cyxbs.course.page.course.data
 
 import androidx.recyclerview.widget.DiffUtil
+import com.mredrock.cyxbs.course.page.course.room.ILessonEntity
 import com.mredrock.cyxbs.course.page.course.room.StuLessonEntity
 
 /**
- * 参数解释请以 Room 数据库为准，请看 [StuLessonEntity]
+ * 参数解释请以 Room 数据库为准，请看 [ILessonEntity]
  *
  * @author 985892345 (Guo Xiangrui)
  * @email 2767465918@qq.com

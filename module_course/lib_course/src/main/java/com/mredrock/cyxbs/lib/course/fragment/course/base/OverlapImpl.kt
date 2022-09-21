@@ -19,7 +19,7 @@ import java.util.*
  * 操控重叠的类
  *
  * ## 特别注意
- * - 该类会拦截使用 addItem() 添加进来的 IOverlapItem
+ * - 该类会拦截使用 addItem() 添加进来的 [IOverlapItem]
  * - 然后在下一个 Runnable 中添加**部分**之前被拦截的 item (如果添加全部会浪费性能)
  *
  * @author 985892345 (Guo Xiangrui)

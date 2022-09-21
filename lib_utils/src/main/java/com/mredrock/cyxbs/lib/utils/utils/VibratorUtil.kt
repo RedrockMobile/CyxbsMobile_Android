@@ -5,7 +5,8 @@ import android.os.*
 import android.os.Vibrator
 
 /**
- * 用于长按震动
+ * 用于触发震动的工具类
+ *
  * @author 985892345 (Guo Xiangrui)
  * @email 2767465918@qq.com
  * @date 2022/2/2 10:24

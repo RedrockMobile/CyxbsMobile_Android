@@ -24,7 +24,7 @@ import com.mredrock.cyxbs.lib.course.utils.forEachInline
  * @date 2022/8/25 14:26
  */
 @Suppress("LeakingThis")
-abstract class FoldImpl : ContainerImpl(), IFoldNoon, IFoldDusk {
+abstract class FoldImpl : EntranceAnimImpl(), IFoldNoon, IFoldDusk {
   
   private var mNoonFoldState = FoldState.UNKNOWN // 当前中午时间段的状态，主要用于上一层保险，不能光靠他来判断
   private var mDuskFoldState = FoldState.UNKNOWN // 当前傍晚时间段的状态，主要用于上一层保险，不能光靠他来判断

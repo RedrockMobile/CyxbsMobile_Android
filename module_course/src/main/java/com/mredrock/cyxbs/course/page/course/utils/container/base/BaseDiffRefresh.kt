@@ -26,10 +26,11 @@ abstract class BaseDiffRefresh<Data : Any> : DiffUtil.ItemCallback<Data>() {
   /**
    * 异步差分刷新
    */
-  fun diffRefresh(newData: List<Data>) {
+  fun diffRefresh(newData: List<Data>, action: (() -> Unit)? = null) {
     mNewData = ArraySet(newData)
     mAsyncListDiffer.submitList(newData) {
       mOldData = mNewData // 保存旧数据，提供给下次刷新使用
+      action?.invoke()
     }
   }
   
