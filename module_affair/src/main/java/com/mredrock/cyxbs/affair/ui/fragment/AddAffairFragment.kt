@@ -179,19 +179,22 @@ class AddAffairFragment : BaseVmFragment<AddAffairViewModel>() {
       // 最后点击添加事务
       if (a > 1) {
         val data = AffairDataUtils.affairAdapterDataToAtWhatTime(mRvDurationAdapter.currentList)
-        data.forEach {
-          addRemind(
-            mEtTitle.text.toString(), mEditText.text.toString(), it.beginLesson, it.period,
-            it.day, TimeUtils.getRemind(remind)
-          )
+        // 不提醒
+        if (remind != 0) {
+          data.forEach {
+            addRemind(
+              mEtTitle.text.toString(), mEditText.text.toString(), it.beginLesson, it.period,
+              it.day, TimeUtils.getRemind(remind)
+            )
+          }
         }
-
         viewModel.addAffair(
           1,
           mEtTitle.text.toString(),
           mEditText.text.toString(),
           data,
         )
+        activity?.finish()
       }
     }
   }
@@ -226,7 +229,7 @@ class AddAffairFragment : BaseVmFragment<AddAffairViewModel>() {
         return sAffairPage.ordinal
       }
 
-      fun AddAffairFragment.getCurrentPage(): Int {
+      fun getCurrentPage(): Int {
         return sAffairPage.ordinal
       }
     }

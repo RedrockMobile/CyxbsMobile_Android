@@ -119,11 +119,14 @@ class EditAffairFragment : BaseVmFragment<EditAffairViewModel>() {
   private fun initObserve() {
     mActivityViewModel.clickAffect.collectLaunch {
       val data = AffairDataUtils.affairAdapterDataToAtWhatTime(mRvDurationAdapter.currentList)
-      data.forEach {
-        addRemind(
-          mEtTitle.text.toString(), mEtContent.text.toString(), it.beginLesson, it.period,
-          it.day, TimeUtils.getRemind(remind)
-        )
+      if (remind!=0) {
+        // 添加日历
+        data.forEach {
+          updateRemind(
+            mEtTitle.text.toString(), mEtContent.text.toString(), it.beginLesson, it.period,
+            it.day, TimeUtils.getRemind(remind)
+          )
+        }
       }
 //      data.forEach {
 //        deleteRemind(
@@ -141,6 +144,7 @@ class EditAffairFragment : BaseVmFragment<EditAffairViewModel>() {
         mEtContent.text.toString(),
         AffairDataUtils.affairAdapterDataToAtWhatTime(mRvDurationAdapter.currentList)
       )
+      activity?.finish()
     }
     viewModel.affairEntity.observe {
       mEtTitle.setText(it.title)
@@ -153,12 +157,12 @@ class EditAffairFragment : BaseVmFragment<EditAffairViewModel>() {
           )
         )
       )
-      remind = it.time
+      remind = 0
       mTvRemind.text = REMIND_ARRAY[remind]
     }
   }
 
-  private fun addRemind(
+  private fun updateRemind(
     title: String,
     description: String,
     beginTime: Int,
@@ -183,12 +187,12 @@ class EditAffairFragment : BaseVmFragment<EditAffairViewModel>() {
           remindMinutes,
           object : CalendarUtils.OnCalendarRemindListener {
             override fun onFailed(error_code: CalendarUtils.OnCalendarRemindListener.Status?) {
-              "添加失败".toast()
-              Log.e("TAG", "onFailed: 添加失败")
+              "更新失败".toast()
+              Log.e("TAG", "onFailed: 更新失败")
             }
 
             override fun onSuccess() {
-              "添加日历成功".toast()
+              "更新日历成功".toast()
             }
           })
       }
