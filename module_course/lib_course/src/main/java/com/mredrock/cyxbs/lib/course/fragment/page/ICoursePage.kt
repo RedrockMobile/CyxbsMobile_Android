@@ -1,5 +1,6 @@
 package com.mredrock.cyxbs.lib.course.fragment.page
 
+import com.mredrock.cyxbs.lib.course.fragment.course.ICourseBase
 import com.mredrock.cyxbs.lib.course.fragment.page.expose.ICourseTouch
 import com.mredrock.cyxbs.lib.course.fragment.page.expose.INoLesson
 import com.mredrock.cyxbs.lib.course.fragment.page.expose.IToday
@@ -13,6 +14,7 @@ import com.mredrock.cyxbs.lib.course.fragment.page.expose.IWeekWrapper
  * @date 2022/8/31 17:57
  */
 interface ICoursePage :
+  ICourseBase,
   ICourseTouch,
   INoLesson,
   IToday,

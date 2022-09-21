@@ -74,7 +74,7 @@ object CourseHeaderHelper {
   ): Header {
     val calendar = Calendar.getInstance()
     /*
-    * 转换星期数
+    * 转换星期数，为了跟 hashDay 相匹配
     * (calendar.get(Calendar.DAY_OF_WEEK) + 5) % 7 的逻辑如下：
     * 星期天：1 -> 6
     * 星期一：2 -> 0
@@ -90,15 +90,20 @@ object CourseHeaderHelper {
     val todayHashDay = (calendar.get(Calendar.DAY_OF_WEEK) + 5) % 7
     val tomorrowHashDay = (todayHashDay + 1) % 7
     val treeSet = TreeSet<Item> { o1, o2 ->
-      // 使用 abs 避免明天是下一周周一的情况
+      if (o1 === o2) return@TreeSet 0 // 同一个对象，直接返回 0
+      // 使用 abs() 避免明天是下一周周一的情况
       val absDiffDay1 = abs(o1.hashDay - todayHashDay)
       val absDiffDay2 = abs(o2.hashDay - todayHashDay)
-      if (absDiffDay1 == absDiffDay2) {
+      val diff = if (absDiffDay1 == absDiffDay2) {
         if (o1.startTime == o2.startTime) {
           // 根据先后顺序来排
           o1.rank - o2.rank
         } else o1.startTime - o2.startTime
       } else absDiffDay1 - absDiffDay2
+      if (diff == 0) {
+        // 这里防止前面算出来 0，导致 o2 把 o1 给抵掉了
+        o1.hashCode() - o2.hashCode()
+      } else diff
     }
     treeSet.addAll(
       lessonList.filterList {
@@ -109,6 +114,7 @@ object CourseHeaderHelper {
         * 2、明天就在这周
         * */
         if (tomorrowHashDay == 0) {
+          // 明天是下周一
           week == nowWeek && hashDay == todayHashDay
             || week == nowWeek + 1 && hashDay == tomorrowHashDay
         } else {
@@ -125,6 +131,7 @@ object CourseHeaderHelper {
         * 2、明天就在这周
         * */
         if (tomorrowHashDay == 0) {
+          // 明天是下周一
           week == nowWeek && day == todayHashDay
             || week == nowWeek + 1 && day == tomorrowHashDay
         } else {

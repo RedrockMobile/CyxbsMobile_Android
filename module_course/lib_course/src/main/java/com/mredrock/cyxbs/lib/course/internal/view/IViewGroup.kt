@@ -19,4 +19,12 @@ interface IViewGroup : IView {
   fun startLayoutAnimation()
   
   fun getIterable(): Iterable<View>
+  
+  fun getChildCount(): Int
+  
+  fun getChildAt(index: Int): View
+  
+  fun setClipChildren(clipChildren: Boolean)
+  
+  fun getClipChildren(): Boolean
 }

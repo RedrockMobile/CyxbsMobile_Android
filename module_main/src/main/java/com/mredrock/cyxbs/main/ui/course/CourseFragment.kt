@@ -37,7 +37,7 @@ class CourseFragment : BaseFragment() {
   private val mViewHeader by R.id.main_view_course_header.view<View>()
   
   private val mTvHeaderState: TextView by R.id.main_tv_course_header_state.view()
-  private val mTvHeaderTitle: TextView by R.id.main_tv_course_header_title.view<TextView>()
+  private val mTvHeaderTitle: TextView by R.id.main_tv_course_header_title.view()
   
   private val mTvHeaderTime: TextView by R.id.main_tv_course_header_time.view()
   private val mTvHeaderPlace: TextView by R.id.main_tv_course_header_place.view()
@@ -76,7 +76,7 @@ class CourseFragment : BaseFragment() {
     
     val oldBottomSheetIsExpand = mActivityViewModel.courseBottomSheetExpand.value
     if (oldBottomSheetIsExpand != true) {
-      // 如果 value 之前值为 true，则说明已经展开，此时不能设置透明度
+      // 如果 value 之前值为 true，则说明已经展开，只能在没有展开时才允许设置透明度
       mCourseService.setCourseVpAlpha(0F)
       mCourseService.setHeaderAlpha(0F)
     } else {
@@ -185,6 +185,7 @@ class CourseFragment : BaseFragment() {
       .observeStuNumState()
       .observeOn(AndroidSchedulers.mainThread())
       .safeSubscribeBy {
+        // 只有登录了才允许拖动课表
         mBottomSheet.isDraggable = it.isNotNull()
       }
   }

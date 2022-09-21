@@ -6,6 +6,7 @@ import android.view.View
 import androidx.core.view.iterator
 import com.mredrock.cyxbs.lib.course.internal.view.course.ICourseViewGroup
 import com.mredrock.cyxbs.lib.course.R
+import com.mredrock.cyxbs.lib.course.internal.view.course.lp.ItemLayoutParams
 import com.ndhzs.netlayout.view.NetLayout2
 
 /**
@@ -35,5 +36,9 @@ abstract class AbstractCourseViewGroup(
         return this@AbstractCourseViewGroup.run { iterator() }
       }
     }
+  }
+  
+  override fun addView(view: View, lp: ItemLayoutParams) {
+    addNetChild(view, lp)
   }
 }

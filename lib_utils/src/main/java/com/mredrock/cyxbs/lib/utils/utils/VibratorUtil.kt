@@ -3,6 +3,7 @@ package com.mredrock.cyxbs.lib.utils.utils
 import android.content.Context
 import android.os.*
 import android.os.Vibrator
+import com.mredrock.cyxbs.lib.utils.extensions.appContext
 
 /**
  * 用于触发震动的工具类
@@ -16,9 +17,9 @@ object VibratorUtil {
   /**
    * 根据不同的 Android 版本调用不同的震动方法
    */
-  fun start(context: Context, milliseconds: Long) {
+  fun start(milliseconds: Long) {
     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
-      val vibrator = context.getSystemService(VibratorManager::class.java)
+      val vibrator = appContext.getSystemService(VibratorManager::class.java)
       vibrator.vibrate(
         CombinedVibration.createParallel(
           VibrationEffect.createOneShot(
@@ -28,7 +29,7 @@ object VibratorUtil {
         )
       )
     } else {
-      val vibrator = context.getSystemService(Context.VIBRATOR_SERVICE) as Vibrator
+      val vibrator = appContext.getSystemService(Context.VIBRATOR_SERVICE) as Vibrator
       if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
         vibrator.vibrate(
           VibrationEffect.createOneShot(

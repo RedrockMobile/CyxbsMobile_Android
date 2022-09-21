@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:fitsSystemWindows="true">
-    <!--给 CoordinatorLayout 添加 fitsSystemWindows 无效-->
+    <!--给 CoordinatorLayout 添加 fitsSystemWindows 无效，所以外面再包了一层 FrameLayout-->
 
     <androidx.coordinatorlayout.widget.CoordinatorLayout
         android:layout_width="match_parent"
@@ -117,6 +117,7 @@
 
             </androidx.constraintlayout.widget.ConstraintLayout>
 
+            <!--module_course 模块中的课表 Fragment-->
             <androidx.fragment.app.FragmentContainerView
                 android:id="@+id/main_fcv_course"
                 android:layout_width="match_parent"

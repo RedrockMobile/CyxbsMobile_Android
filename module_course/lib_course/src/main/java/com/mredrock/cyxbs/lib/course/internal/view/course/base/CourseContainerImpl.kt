@@ -49,7 +49,7 @@ abstract class CourseContainerImpl @JvmOverloads constructor(
       mItemByView[view] = item
       mViewByItem[item] = view
       mOnItemExistListeners.forEachInline { it.onItemAddedBefore(item, view) }
-      super.addItem(view, item.lp)
+      super.addNetChild(view, item.lp)
       mOnItemExistListeners.forEachInline { it.onItemAddedAfter(item, view) }
       return true
     }
@@ -80,6 +80,14 @@ abstract class CourseContainerImpl @JvmOverloads constructor(
     return mViewByItem[item]
   }
   
+  override fun getItemByViewMap(): Map<View, IItem> {
+    return mItemByView
+  }
+  
+  override fun getViewByItemMap(): Map<IItem, View> {
+    return mViewByItem
+  }
+  
   final override fun findPairUnderByXY(x: Int, y: Int): Pair<IItem, View>? {
     val view = findViewUnderByXY(x, y)
     val item = getItemByView(view)
@@ -103,10 +111,9 @@ abstract class CourseContainerImpl @JvmOverloads constructor(
   }
   
   
-  
   @Deprecated("禁止子类调用", level = DeprecationLevel.HIDDEN)
-  final override fun addItem(item: View, lp: NetLayoutParams) {
-    super.addItem(item, lp)
+  final override fun addNetChild(child: View, lp: NetLayoutParams) {
+    super.addNetChild(child, lp)
   }
   
   @Deprecated("禁止子类调用", level = DeprecationLevel.HIDDEN)

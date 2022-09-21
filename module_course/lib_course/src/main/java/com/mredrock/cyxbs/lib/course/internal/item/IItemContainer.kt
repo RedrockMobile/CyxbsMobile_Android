@@ -42,6 +42,16 @@ interface IItemContainer {
   fun getViewByItem(item: IItem?): View?
   
   /**
+   * 得到 [View] 与 [IItem] 的 [Map]
+   */
+  fun getItemByViewMap(): Map<View, IItem>
+  
+  /**
+   * 得到 [IItem] 与 [View] 的 [Map]
+   */
+  fun getViewByItemMap(): Map<IItem, View>
+  
+  /**
    * 添加 [IItem] 和移除 [IItem] 的监听
    */
   fun addItemExistListener(l: OnItemExistListener)

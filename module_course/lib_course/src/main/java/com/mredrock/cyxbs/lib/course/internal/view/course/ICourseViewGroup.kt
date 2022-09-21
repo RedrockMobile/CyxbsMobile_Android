@@ -1,5 +1,7 @@
 package com.mredrock.cyxbs.lib.course.internal.view.course
 
+import android.view.View
+import com.mredrock.cyxbs.lib.course.internal.item.IItem
 import com.mredrock.cyxbs.lib.course.internal.item.IItemContainer
 import com.mredrock.cyxbs.lib.course.internal.touch.IMultiTouch
 import com.mredrock.cyxbs.lib.course.internal.view.IViewGroup
@@ -10,6 +12,7 @@ import com.ndhzs.netlayout.orientation.IColumn
 import com.ndhzs.netlayout.orientation.IRow
 import com.ndhzs.netlayout.save.SaveStateListenerContainer
 import com.ndhzs.netlayout.transition.ChildVisibleListenerContainer
+import com.ndhzs.netlayout.view.NetLayout
 
 /**
  * 课表控件的总接口
@@ -40,4 +43,24 @@ interface ICourseViewGroup : IViewGroup,
    * 设置子 View 添加进来时的顺序
    */
   fun setCompareLayoutParams(compare: Comparator<ItemLayoutParams>)
+  
+  /**
+   * 倒序查找子 View (该方法由 [NetLayout] 实现)
+   *
+   * 倒序的原因是因为一般排在后面的显示在最上面
+   *
+   * @see findViewUnderByRowColumn
+   */
+  fun findViewUnderByXY(x: Int, y: Int): View?
+  
+  /**
+   * 根据行和列倒序查找子 View (该方法由 [NetLayout] 实现)
+   * @see findViewUnderByXY
+   */
+  fun findViewUnderByRowColumn(row: Int, column: Int): View?
+  
+  /**
+   * 单独添加一个 view，而不是以 [IItem] 的形式加入 (使用 [IItem] 的形式加入，可以方便统一管理)
+   */
+  fun addView(view: View, lp: ItemLayoutParams)
 }

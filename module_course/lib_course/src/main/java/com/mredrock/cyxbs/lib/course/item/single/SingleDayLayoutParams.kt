@@ -28,6 +28,8 @@ open class SingleDayLayoutParams(
 ), ISingleDayData
 {
   
+  constructor(data: ISingleDayData) : this(data.weekNum, data.startNode, data.length)
+  
   val singleColumn: Int
     get() = startColumn
   
@@ -42,9 +44,13 @@ open class SingleDayLayoutParams(
    * 根据 [ISingleDayData] 改变数据
    */
   fun changeSingleDay(data: ISingleDayData) {
-    startColumn = data.weekNum
-    endColumn = data.weekNum
-    startRow = data.startNode
-    endRow = data.startNode + data.length - 1
+    changeSingleDay(data.weekNum, data.startNode, data.length)
+  }
+  
+  fun changeSingleDay(weekNum: Int, startNode: Int, length: Int) {
+    startColumn = weekNum
+    endColumn = weekNum
+    startRow = startNode
+    endRow = startNode + length - 1
   }
 }

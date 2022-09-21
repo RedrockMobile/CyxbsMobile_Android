@@ -37,6 +37,24 @@ interface ILessonService : IProvider {
    */
   fun observeSelfLesson(): Observable<List<Lesson>>
   
+  /**
+   * 这里提供 Calendar 与 [hashDay] 互换代码
+   * ```
+   * 转换星期数，为了跟 hashDay 相匹配
+   * 互换代码：(calendar.get(Calendar.DAY_OF_WEEK) + 5) % 7
+   * 逻辑如下：
+   * 星期天：1 -> 6
+   * 星期一：2 -> 0
+   * 星期二：3 -> 1
+   * 星期三：4 -> 2
+   * 星期四：5 -> 3
+   * 星期五：6 -> 4
+   * 星期六：7 -> 5
+   *
+   * 左边一栏是 Calendar.get(Calendar.DAY_OF_WEEK) 得到的数字，
+   * 右边一栏是该数字距离周一的天数差
+   * ```
+   */
   data class Lesson(
     val stuNum: String,
     val week: Int, // 第几周的课

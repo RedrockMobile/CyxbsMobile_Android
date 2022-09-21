@@ -6,11 +6,12 @@ import android.view.View
 import android.view.animation.AlphaAnimation
 import androidx.core.util.forEach
 import androidx.core.util.isNotEmpty
+import com.mredrock.cyxbs.lib.course.R
 import com.mredrock.cyxbs.lib.course.fragment.course.expose.overlap.IOverlap
 import com.mredrock.cyxbs.lib.course.fragment.course.expose.overlap.IOverlapItem
 import com.mredrock.cyxbs.lib.course.fragment.course.expose.overlap.OverlapHelper
 import com.mredrock.cyxbs.lib.course.internal.item.forEachRow
-import com.mredrock.cyxbs.lib.utils.extensions.dp2px
+import com.mredrock.cyxbs.lib.utils.extensions.dimen
 import com.ndhzs.netlayout.attrs.NetLayoutParams
 import com.ndhzs.netlayout.view.NetLayout
 
@@ -156,7 +157,10 @@ abstract class AbstractOverlapSingleDayItem : IOverlapItem, OverlapHelper.IImpl,
     repeat(mFreeAreaMap.size() - mChildInParent.size) {
       val view = mChildInFree.removeLastOrNull() ?: createView(mView.context)
       val params = view.layoutParams as? NetLayoutParams ?: createNetLayoutParams()
-      mView.addItem(view, params)
+      mView.addNetChild(view, params)
+      // 执行淡入动画
+      val animation = AlphaAnimation(0F, 1F).apply { duration = 360 }
+      view.startAnimation(animation)
       mChildInParent.add(view)
     }
     repeat(mFreeAreaMap.size()) {
@@ -178,7 +182,7 @@ abstract class AbstractOverlapSingleDayItem : IOverlapItem, OverlapHelper.IImpl,
    */
   private fun createNetLayoutParams(): NetLayoutParams {
     return NetLayoutParams(0, 0,0, 0).apply {
-      leftMargin = 1.2F.dp2px
+      leftMargin = R.dimen.course_item_margin.dimen.toInt()
       rightMargin = leftMargin
       topMargin = leftMargin
       bottomMargin = leftMargin

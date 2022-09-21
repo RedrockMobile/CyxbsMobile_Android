@@ -2,7 +2,7 @@
 <layer-list xmlns:android="http://schemas.android.com/apk/res/android">
 
     <!--课表整个页面的背景，包括头背景-->
-    <!--虽然 AS 预览其阿里有点怪，但其实真实的显示效果是没问题的-->
+    <!--虽然 AS 预览有点怪，但真实的显示效果是没问题的-->
 
     <!-- 课表头阴影部分 -->
     <item

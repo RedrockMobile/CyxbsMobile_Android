@@ -26,8 +26,6 @@
         android:textColor="@color/config_level_two_font_color"
         android:textSize="15dp"
         android:layout_marginStart="10dp"
-        android:drawableEnd="@drawable/course_ic_item_header_this_week"
-        android:drawablePadding="5dp"
         android:text="(本周)"
         app:layout_constraintBaseline_toBaselineOf="@+id/course_tv_which_week"
         app:layout_constraintStart_toEndOf="@+id/course_tv_which_week"
