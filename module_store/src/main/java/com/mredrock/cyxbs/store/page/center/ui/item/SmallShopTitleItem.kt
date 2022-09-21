@@ -13,42 +13,41 @@ import com.mredrock.cyxbs.store.utils.SimpleRvAdapter
  * @date 2021/8/9
  */
 class SmallShopTitleItem(
-    titleMap: Map<Int, Pair<String, String>>
+  titleMap: Map<Int, Pair<String, String>>
 ) : SimpleRvAdapter.VHItem<SmallShopTitleItem.SmallShopTitleVH, Pair<String, String>>(
-    titleMap, R.layout.store_recycler_item_small_shop_title
+  titleMap, R.layout.store_recycler_item_small_shop_title
 ) {
-
-    /**
-     * 该方法调用了 [diffRefreshAllItemMap] 用于自动刷新
-     *
-     * 因为我在 Item 中整合了 DiffUtil 自动刷新, 只有你全部的 Item 都调用了 [diffRefreshAllItemMap],
-     * 就会自动启动 DiffUtil
-     */
-    fun resetData(titleMap: Map<Int, Pair<String, String>>) {
-        diffRefreshAllItemMap(titleMap,
-            isSameName = { oldData, newData ->
-                oldData.first == newData.first
-            },
-            isSameData = { oldData, newData ->
-                oldData.second == newData.second
-            }
-        )
-    }
-
-    class SmallShopTitleVH(itemView: View) : RecyclerView.ViewHolder(itemView) {
-        val tvTitle: TextView = itemView.findViewById(R.id.store_tv_small_shop_title)
-        val tvOther: TextView = itemView.findViewById(R.id.store_tv_small_shop_other)
-    }
-
-    override fun getNewViewHolder(itemView: View): SmallShopTitleVH {
-        return SmallShopTitleVH(itemView)
-    }
-
-    override fun onCreate(holder: SmallShopTitleVH, map: Map<Int, Pair<String, String>>) {
-    }
-
-    override fun onRefactor(holder: SmallShopTitleVH, position: Int, value: Pair<String, String>) {
-        holder.tvTitle.text = value.first
-        holder.tvOther.text = value.second
-    }
+  
+  /**
+   * 该方法调用了 [diffRefreshAllItemMap] 用于自动刷新
+   *
+   * 因为我在 Item 中整合了 DiffUtil 自动刷新, 只有你全部的 Item 都调用了 [diffRefreshAllItemMap],
+   * 就会自动启动 DiffUtil
+   */
+  fun resetData(titleMap: Map<Int, Pair<String, String>>) {
+    diffRefreshAllItemMap(
+      titleMap,
+      isSameName = { oldData, newData ->
+        oldData.first == newData.first
+      }, isSameData = { oldData, newData ->
+        oldData.second == newData.second
+      })
+  }
+  
+  class SmallShopTitleVH(itemView: View) : RecyclerView.ViewHolder(itemView) {
+    val tvTitle: TextView = itemView.findViewById(R.id.store_tv_small_shop_title)
+    val tvOther: TextView = itemView.findViewById(R.id.store_tv_small_shop_other)
+  }
+  
+  override fun getNewViewHolder(itemView: View): SmallShopTitleVH {
+    return SmallShopTitleVH(itemView)
+  }
+  
+  override fun onCreate(holder: SmallShopTitleVH, map: Map<Int, Pair<String, String>>) {
+  }
+  
+  override fun onRefactor(holder: SmallShopTitleVH, position: Int, value: Pair<String, String>) {
+    holder.tvTitle.text = value.first
+    holder.tvOther.text = value.second
+  }
 }

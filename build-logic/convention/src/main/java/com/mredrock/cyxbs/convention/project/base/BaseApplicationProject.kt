@@ -56,6 +56,11 @@ abstract class BaseApplicationProject(project: Project) : BaseAndroidProject(pro
           isShrinkResources = true
         }
       }
+  
+      packagingOptions {
+        jniLibs.excludes += Config.jniExclude
+        resources.excludes += Config.resourcesExclude
+      }
     }
   }
 }

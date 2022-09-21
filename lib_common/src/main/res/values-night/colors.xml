@@ -34,10 +34,6 @@
     <color name="common_course_delete_button_text_color">#5b585c</color>
 
 
-    <!--    底部tab未聚焦字体颜色-->
-    <color name="common_un_focused_font_color">#5b585c</color>
-    <!--    底部tab聚焦字体颜色-->
-    <color name="common_focused_font_color">#465FFF</color>
     <!--    图片选择器状态栏和toolbar颜色-->
     <color name="common_photo_select_status_color">#000000</color>
 
@@ -68,15 +64,6 @@
     <!--    按钮渐变终止颜色-->
     <color name="common_button_gradient_end_color">#4841E2</color>
 
-    <!--    事务dialog删除按钮背景颜色-->
-    <color name="common_course_affair_delete_button_background_color">#E6EFFC
-    </color>
-
-    <!--    事务dialog，修改按钮渐变颜色，这个居然和通用渐变不是一个颜色，不科学-->
-    <color name="common_course_affair_modify_button_gradient_start_color">#2921D1
-    </color>
-    <color name="common_course_affair_modify_button_gradient_end_color">#5D5DF7
-    </color>
 
     <!--    添加事务时标题-->
     <color name="common_transaction_heading">#ffffff</color>
@@ -84,9 +71,7 @@
     <color name="common_select_font_color_for_transaction_weeks">#FFA192</color>
 
 
-    <!--    打字框背景颜色-->
-    <color name="common_write_able_area_background_shallow">#1F1F1F</color>
-    <color name="common_write_able_area_background_dark">#E8F0FC</color>
+
 
     <!--    我的-->
     <!--    签到页面TextView颜色-->

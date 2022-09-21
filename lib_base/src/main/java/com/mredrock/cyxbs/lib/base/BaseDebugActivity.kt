@@ -4,8 +4,8 @@ import android.os.Bundle
 import androidx.annotation.CallSuper
 import com.mredrock.cyxbs.api.account.IAccountService
 import com.mredrock.cyxbs.api.login.ILoginService
-import com.mredrock.cyxbs.common.service.impl
 import com.mredrock.cyxbs.lib.base.ui.BaseActivity
+import com.mredrock.cyxbs.lib.utils.service.impl
 
 /**
  * 单模块调试的 BaseDebugActivity

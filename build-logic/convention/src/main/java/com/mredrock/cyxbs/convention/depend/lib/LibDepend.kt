@@ -25,6 +25,7 @@ object LibDepend {
   const val config = ":lib_config"
   const val utils = ":lib_utils"
   const val debug = ":lib_debug"
+  const val course = ":module_course:lib_course"
 }
 
 fun Project.dependLibBase() {
@@ -75,5 +76,11 @@ internal fun Project.debugDependLibDebug() {
   }
   dependencies {
     "debugImplementation"(project(LibDepend.debug))
+  }
+}
+
+fun Project.dependLibCourse() {
+  dependencies {
+    "implementation"(project(LibDepend.course))
   }
 }

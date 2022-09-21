@@ -1,0 +1,58 @@
+{
+  "formatVersion": 1,
+  "database": {
+    "version": 1,
+    "identityHash": "5a13098b79b15e882e26a18c07556425",
+    "entities": [
+      {
+        "tableName": "link_stu",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`selfNum` TEXT NOT NULL, `linkNum` TEXT NOT NULL, `linkMajor` TEXT NOT NULL, `linkName` TEXT NOT NULL, `isShowLink` INTEGER NOT NULL, PRIMARY KEY(`selfNum`))",
+        "fields": [
+          {
+            "fieldPath": "selfNum",
+            "columnName": "selfNum",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "linkNum",
+            "columnName": "linkNum",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "linkMajor",
+            "columnName": "linkMajor",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "linkName",
+            "columnName": "linkName",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "isShowLink",
+            "columnName": "isShowLink",
+            "affinity": "INTEGER",
+            "notNull": true
+          }
+        ],
+        "primaryKey": {
+          "columnNames": [
+            "selfNum"
+          ],
+          "autoGenerate": false
+        },
+        "indices": [],
+        "foreignKeys": []
+      }
+    ],
+    "views": [],
+    "setupQueries": [
+      "CREATE TABLE IF NOT EXISTS room_master_table (id INTEGER PRIMARY KEY,identity_hash TEXT)",
+      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, '5a13098b79b15e882e26a18c07556425')"
+    ]
+  }
+}

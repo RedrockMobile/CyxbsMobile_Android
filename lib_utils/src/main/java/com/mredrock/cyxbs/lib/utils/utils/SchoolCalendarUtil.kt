@@ -1,8 +1,7 @@
 package com.mredrock.cyxbs.lib.utils.utils
 
 import androidx.core.content.edit
-import com.mredrock.cyxbs.common.BaseApp
-import com.mredrock.cyxbs.common.utils.extensions.defaultSharedPreferences
+import com.mredrock.cyxbs.config.sp.defaultSp
 import java.util.*
 import java.util.concurrent.TimeUnit
 
@@ -19,8 +18,6 @@ import java.util.concurrent.TimeUnit
  * @date 2022/8/15 14:59
  */
 object SchoolCalendarUtil {
-  
-  private const val FIRST_MON_DAY = "first_day"
   
   /**
    * 得到这学期过去了多少天
@@ -39,7 +36,7 @@ object SchoolCalendarUtil {
   /**
    * 得到当前周数
    *
-   * @return 返回 null，则说明不知道开学第一天是好久；返回 0，则表示还没有开学
+   * @return 返回 null，则说明不知道开学第一天是好久；返回 0，则表示开学前的一周（因为第一周开学）
    *
    * # 注意：存在返回负数的情况！！！
    */
@@ -112,14 +109,16 @@ object SchoolCalendarUtil {
       set(Calendar.MILLISECOND, 0)
     }
     mFirstMonDayCalendar.timeInMillis = calendar.timeInMillis
-    BaseApp.appContext.defaultSharedPreferences.edit {
+    defaultSp.edit {
       // 因为那边 lib_common 有类还需要使用这个，所以需要保存在 defaultSp 中
       putLong(FIRST_MON_DAY, calendar.timeInMillis)
     }
   }
   
+  private const val FIRST_MON_DAY = "first_day" // 这个与 lib_common 包中的 SchoolCalendar 保持一致
+  
   private var mFirstMonDayCalendar = Calendar.getInstance().apply {
-    timeInMillis = BaseApp.appContext.defaultSharedPreferences.getLong(FIRST_MON_DAY, 0L)
+    timeInMillis = defaultSp.getLong(FIRST_MON_DAY, 0L)
   }
   
   /**
@@ -129,7 +128,7 @@ object SchoolCalendarUtil {
    */
   private inline fun <T> checkFirstDay(action: () -> T): T? {
     // 不知道第一天的时间戳，说明之前都没有登录过课表
-    mFirstMonDayCalendar.timeInMillis = BaseApp.appContext.defaultSharedPreferences.getLong(FIRST_MON_DAY, 0L)
+    mFirstMonDayCalendar.timeInMillis = defaultSp.getLong(FIRST_MON_DAY, 0L)
     if (mFirstMonDayCalendar.timeInMillis == 0L) return null
     mFirstMonDayCalendar.apply {
       // 保证是绝对的第一天的开始

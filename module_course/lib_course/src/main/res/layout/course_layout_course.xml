@@ -1,0 +1,267 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.mredrock.cyxbs.lib.course.internal.view.scroll.CourseScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/course_scrollView"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <com.mredrock.cyxbs.lib.course.internal.view.course.CourseViewGroup
+        android:id="@+id/course_courseLayout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:minHeight="680dp"
+        app:net_rowCount="14"
+        app:net_columnCount="8" >
+
+        <TextView
+            android:id="@+id/course_tv_lesson_1"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:text="1"
+            android:textColor="@color/config_level_one_font_color"
+            android:textSize="12dp"
+            android:gravity="center"
+            android:tag="test"
+            app:net_layout_startRow="0"
+            app:net_layout_endRow="0"
+            app:net_layout_startColumn="0"
+            app:net_layout_endColumn="0"
+            tools:ignore="HardcodedText,SpUsage" />
+
+        <TextView
+            android:id="@+id/course_tv_lesson_2"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:text="2"
+            android:textColor="@color/config_level_one_font_color"
+            android:textSize="12dp"
+            android:gravity="center"
+            app:net_layout_startRow="1"
+            app:net_layout_endRow="1"
+            app:net_layout_startColumn="0"
+            app:net_layout_endColumn="0"
+            tools:ignore="HardcodedText,SpUsage" />
+
+        <TextView
+            android:id="@+id/course_tv_lesson_3"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:text="3"
+            android:textColor="@color/config_level_one_font_color"
+            android:textSize="12dp"
+            android:gravity="center"
+            app:net_layout_startRow="2"
+            app:net_layout_endRow="2"
+            app:net_layout_startColumn="0"
+            app:net_layout_endColumn="0"
+            tools:ignore="HardcodedText,SpUsage" />
+
+        <TextView
+            android:id="@+id/course_tv_lesson_4"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:text="4"
+            android:textColor="@color/config_level_one_font_color"
+            android:textSize="12dp"
+            android:gravity="center"
+            app:net_layout_startRow="3"
+            app:net_layout_endRow="3"
+            app:net_layout_startColumn="0"
+            app:net_layout_endColumn="0"
+            tools:ignore="HardcodedText,SpUsage" />
+
+        <TextView
+            android:id="@+id/course_tv_lesson_5"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:text="5"
+            android:textColor="@color/config_level_one_font_color"
+            android:textSize="12dp"
+            android:gravity="center"
+            app:net_layout_startRow="5"
+            app:net_layout_endRow="5"
+            app:net_layout_startColumn="0"
+            app:net_layout_endColumn="0"
+            tools:ignore="HardcodedText,SpUsage" />
+
+        <TextView
+            android:id="@+id/course_tv_lesson_6"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:text="6"
+            android:textColor="@color/config_level_one_font_color"
+            android:textSize="12dp"
+            android:gravity="center"
+            app:net_layout_startRow="6"
+            app:net_layout_endRow="6"
+            app:net_layout_startColumn="0"
+            app:net_layout_endColumn="0"
+            tools:ignore="HardcodedText,SpUsage" />
+
+        <TextView
+            android:id="@+id/course_tv_lesson_7"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:text="7"
+            android:textColor="@color/config_level_one_font_color"
+            android:textSize="12dp"
+            android:gravity="center"
+            app:net_layout_startRow="7"
+            app:net_layout_endRow="7"
+            app:net_layout_startColumn="0"
+            app:net_layout_endColumn="0"
+            tools:ignore="HardcodedText,SpUsage" />
+
+        <TextView
+            android:id="@+id/course_tv_lesson_8"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:text="8"
+            android:textColor="@color/config_level_one_font_color"
+            android:textSize="12dp"
+            android:gravity="center"
+            app:net_layout_startRow="8"
+            app:net_layout_endRow="8"
+            app:net_layout_startColumn="0"
+            app:net_layout_endColumn="0"
+            tools:ignore="HardcodedText,SpUsage" />
+
+        <TextView
+            android:id="@+id/course_tv_lesson_9"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:text="9"
+            android:textColor="@color/config_level_one_font_color"
+            android:textSize="12dp"
+            android:gravity="center"
+            app:net_layout_startRow="10"
+            app:net_layout_endRow="10"
+            app:net_layout_startColumn="0"
+            app:net_layout_endColumn="0"
+            tools:ignore="HardcodedText,SpUsage" />
+
+        <TextView
+            android:id="@+id/course_tv_lesson_10"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:text="10"
+            android:textColor="@color/config_level_one_font_color"
+            android:textSize="12dp"
+            android:gravity="center"
+            app:net_layout_startRow="11"
+            app:net_layout_endRow="11"
+            app:net_layout_startColumn="0"
+            app:net_layout_endColumn="0"
+            tools:ignore="HardcodedText,SpUsage" />
+
+        <TextView
+            android:id="@+id/course_tv_lesson_11"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:text="11"
+            android:textColor="@color/config_level_one_font_color"
+            android:textSize="12dp"
+            android:gravity="center"
+            app:net_layout_startRow="12"
+            app:net_layout_endRow="12"
+            app:net_layout_startColumn="0"
+            app:net_layout_endColumn="0"
+            tools:ignore="HardcodedText,SpUsage" />
+
+        <TextView
+            android:id="@+id/course_tv_lesson_12"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:text="12"
+            android:textColor="@color/config_level_one_font_color"
+            android:textSize="12dp"
+            android:gravity="center"
+            app:net_layout_startRow="13"
+            app:net_layout_endRow="13"
+            app:net_layout_startColumn="0"
+            app:net_layout_endColumn="0"
+            tools:ignore="HardcodedText,SpUsage" />
+
+        <TextView
+            android:id="@+id/course_tv_noon"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:text="中\n午"
+            android:textColor="@color/course_noon_dusk_tv"
+            android:textSize="12dp"
+            android:textStyle="bold"
+            android:gravity="center"
+            app:net_layout_startRow="4"
+            app:net_layout_endRow="4"
+            app:net_layout_startColumn="0"
+            app:net_layout_endColumn="0"
+            tools:ignore="HardcodedText,SpUsage" />
+
+        <TextView
+            android:id="@+id/course_tv_dusk"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:text="下\n午"
+            android:textColor="@color/course_noon_dusk_tv"
+            android:textSize="12dp"
+            android:textStyle="bold"
+            android:gravity="center"
+            app:net_layout_startRow="9"
+            app:net_layout_endRow="9"
+            app:net_layout_startColumn="0"
+            app:net_layout_endColumn="0"
+            tools:ignore="HardcodedText,SpUsage" />
+
+        <androidx.appcompat.widget.AppCompatImageView
+            android:id="@+id/course_iv_noon_fold"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:scaleType="center"
+            app:srcCompat="@drawable/course_ic_course_arrow"
+            app:net_layout_startRow="3"
+            app:net_layout_endRow="5"
+            app:net_layout_startColumn="0"
+            app:net_layout_endColumn="0"
+            tools:ignore="ContentDescription" />
+
+        <androidx.appcompat.widget.AppCompatImageView
+            android:id="@+id/course_iv_noon_unfold"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:scaleType="center"
+            app:srcCompat="@drawable/course_ic_course_arrow"
+            android:rotation="90"
+            app:net_layout_startRow="3"
+            app:net_layout_endRow="4"
+            app:net_layout_startColumn="0"
+            app:net_layout_endColumn="0"
+            tools:ignore="ContentDescription" />
+
+        <androidx.appcompat.widget.AppCompatImageView
+            android:id="@+id/course_iv_dusk_fold"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:scaleType="center"
+            app:srcCompat="@drawable/course_ic_course_arrow"
+            app:net_layout_startRow="8"
+            app:net_layout_endRow="10"
+            app:net_layout_startColumn="0"
+            app:net_layout_endColumn="0"
+            tools:ignore="ContentDescription" />
+
+        <androidx.appcompat.widget.AppCompatImageView
+            android:id="@+id/course_iv_dusk_unfold"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:scaleType="center"
+            app:srcCompat="@drawable/course_ic_course_arrow"
+            android:rotation="90"
+            app:net_layout_startRow="8"
+            app:net_layout_endRow="9"
+            app:net_layout_startColumn="0"
+            app:net_layout_endColumn="0"
+            tools:ignore="ContentDescription" />
+
+    </com.mredrock.cyxbs.lib.course.internal.view.course.CourseViewGroup>
+</com.mredrock.cyxbs.lib.course.internal.view.scroll.CourseScrollView>

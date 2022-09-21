@@ -85,8 +85,8 @@ object ApiGenerator {
  */
 interface IApi {
   companion object {
-    val MAP = HashMap<KClass<out IApi>, IApi>()
-    val MAP_COMMON = HashMap<KClass<out IApi>, IApi>()
+    internal val MAP = HashMap<KClass<out IApi>, IApi>()
+    internal val MAP_COMMON = HashMap<KClass<out IApi>, IApi>()
   }
 }
 

@@ -8,9 +8,7 @@ import androidx.annotation.LayoutRes
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
 import androidx.fragment.app.FragmentTransaction
-import androidx.lifecycle.Lifecycle
-import androidx.lifecycle.LifecycleCoroutineScope
-import androidx.lifecycle.coroutineScope
+import androidx.lifecycle.*
 import com.mredrock.cyxbs.lib.base.operations.OperationFragment
 import com.mredrock.cyxbs.lib.base.utils.ArgumentHelper
 
@@ -146,32 +144,8 @@ abstract class BaseFragment : OperationFragment {
   final override val rootView: View
     get() = requireView()
   
-  @Deprecated(
-    "你确定你需要的是 Lifecycle 而不是 viewLifecycle?",
-    ReplaceWith("viewLifecycle")
-  )
-  override fun getLifecycle(): Lifecycle = super.getLifecycle()
-  
-  val viewLifecycle: Lifecycle
-    get() = viewLifecycleOwner.lifecycle
-  
-  @Deprecated(
-    "你确定你需要的是 onDestroy() 而不是 onDestroyView()?",
-    ReplaceWith("onDestroyView()")
-  )
-  override fun onDestroy() = super.onDestroy()
-  
-  @Deprecated(
-    "你确定你需要的是 lifecycleScope 而不是 viewLifecycleScope?",
-    ReplaceWith("viewLifecycleScope")
-  )
-  val lifecycleScope: LifecycleCoroutineScope
-    get() = super.getLifecycle().coroutineScope
-  
   val viewLifecycleScope: LifecycleCoroutineScope
     get() = viewLifecycleOwner.lifecycle.coroutineScope
-  
-  
   
   /**
    * 快速得到 arguments 中的变量，直接使用反射拿了变量的名字
@@ -194,4 +168,57 @@ abstract class BaseFragment : OperationFragment {
    * ```
    */
   fun <T : Any> arguments() = ArgumentHelper<T>{ requireArguments() }
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  @Deprecated(
+    "你确定你需要的是 Lifecycle 而不是 viewLifecycle?",
+    ReplaceWith("viewLifecycle")
+  )
+  override fun getLifecycle(): Lifecycle = super.getLifecycle()
+  
+  val viewLifecycle: Lifecycle
+    get() = viewLifecycleOwner.lifecycle
+  
+  @Deprecated(
+    "你确定你需要的是 onDestroy() 而不是 onDestroyView()?",
+    ReplaceWith("onDestroyView()")
+  )
+  override fun onDestroy() = super.onDestroy()
+  
+  @Deprecated(
+    "你确定你需要的是 lifecycleScope 而不是 viewLifecycleScope?",
+    ReplaceWith("viewLifecycleScope")
+  )
+  val lifecycleScope: LifecycleCoroutineScope
+    get() = super.getLifecycle().coroutineScope
 }

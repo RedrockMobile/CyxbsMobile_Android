@@ -13,10 +13,12 @@ dependApiAccount()
 dependApiUpdate()
 dependApiStore()
 dependApiLogin()
+
 dependLibUtils()
 dependLibBase()
 dependLibConfig()
-dependApiMain()
+
+dependLibCommon() // TODO common 模块不再使用，新模块请依赖 base 和 utils 模块
 
 dependMaterialDialog()
 dependGlide()
@@ -24,9 +26,8 @@ dependRxjava()
 dependNetwork()
 dependLPhotoPicker()
 dependUCrop()
-dependLibUtils()
 
-dependLibCommon() // TODO common 模块不再使用，新模块请依赖 base 和 utils 模块
+dependWorkManger()
 
 dependencies {
     // PickerView https://github.com/Bigkoo/Android-PickerView
