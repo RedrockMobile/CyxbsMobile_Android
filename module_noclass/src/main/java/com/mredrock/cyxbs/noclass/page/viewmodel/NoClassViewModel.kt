@@ -86,7 +86,7 @@ class NoClassViewModel : BaseViewModel() {
     fromIterable(stuNumList)
       .flatMap {
           ILessonService::class.impl
-            .getLesson(it)
+            .getStuLesson(it)
             .toObservable()
       }
       .safeSubscribeBy (
