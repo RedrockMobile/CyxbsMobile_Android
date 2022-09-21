@@ -43,16 +43,19 @@ class LinkLessonContainerProxy(
     return LinkLesson(data)
   }
   
-  fun startEntranceAnim() {
+  /**
+   * 开启关联人 item 的入场动画
+   */
+  fun startAnimation() {
     /**
-     * 因为 [LinkLesson] 是 [IOverlapItem]，它会延迟添加 item，所以需要使用 post
+     * 注意：因为 [LinkLesson] 是 [IOverlapItem]，它会延迟添加 item，所以需要使用 post
      */
     container.course.post {
       getShowItems().forEachIndexed { index, item ->
         // 因为 Animation 没有公开 clone() 方法，所以只能每次 new 一个新的
         val anim = com.mredrock.cyxbs.lib.course.R.anim.course_anim_entrance.anim
         anim.startOffset = index * 60L
-        item.startEntranceAnim(anim)
+        item.startAnimation(anim)
       }
     }
   }

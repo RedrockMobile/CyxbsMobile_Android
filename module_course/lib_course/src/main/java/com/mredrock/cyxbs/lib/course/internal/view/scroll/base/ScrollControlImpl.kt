@@ -25,13 +25,13 @@ abstract class ScrollControlImpl @JvmOverloads constructor(
     when (ev.actionMasked) {
       MotionEvent.ACTION_DOWN, MotionEvent.ACTION_POINTER_DOWN -> {
         val id = ev.getPointerId(ev.actionIndex)
-        val y = ev.getY(id).toInt()
+        val y = ev.getY(ev.actionIndex).toInt()
         mAbsoluteYById.put(id, y)
       }
       MotionEvent.ACTION_MOVE -> {
         for (index in 0 until ev.pointerCount) {
           val id = ev.getPointerId(index)
-          val y = ev.getY(id).toInt()
+          val y = ev.getY(index).toInt()
           mAbsoluteYById.put(id, y)
         }
       }

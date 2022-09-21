@@ -153,7 +153,7 @@ class CreateAffairHandler(
   private fun calculateUpperLowerRow() {
     mUpperRow = 0 // 重置
     mLowerRow = course.rowCount - 1 // 重置
-    for ((child, item) in course.getItemByViewMap()) {
+    for ((child, _) in course.getItemByViewMap()) {
       if (child.isGone) continue
       val lp = child.layoutParams as ItemLayoutParams
       if (mInitialColumn in lp.startColumn..lp.endColumn) {

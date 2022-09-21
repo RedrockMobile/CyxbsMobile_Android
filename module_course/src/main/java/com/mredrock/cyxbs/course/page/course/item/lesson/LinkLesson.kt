@@ -45,7 +45,10 @@ class LinkLesson(private var lessonData: StuLessonData) :
   override val isHomeCourseItem: Boolean
     get() = true
   
-  fun startEntranceAnim(anim: Animation) {
+  /**
+   * 开启动画
+   */
+  fun startAnimation(anim: Animation) {
     getChildInParent().forEach {
       it.startAnimation(anim)
     }

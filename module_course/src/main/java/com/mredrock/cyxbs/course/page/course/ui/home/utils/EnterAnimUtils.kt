@@ -4,6 +4,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.view.animation.LayoutAnimationController
 import androidx.core.view.children
+import androidx.lifecycle.DefaultLifecycleObserver
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.Observer
 import com.mredrock.cyxbs.course.page.course.ui.home.viewmodel.HomeCourseViewModel
@@ -59,15 +60,21 @@ object EnterAnimUtils {
                 )
               )
               course.startLayoutAnimation() // 现在已经布局了，需要手动开启动画执行
-              course.postOnAnimation {
-                // 在下一帧回调，因为动画是在下一帧执行的，这个时候动画已经开始执行，可以移除动画防止第二次运行
-                viewList.forEach { it.alpha = 1F }
-                course.setLayoutAnimation(null) // 执行完后移除动画
-                course.removeChildExitListener(viewListener) // 移除上面设置的监听
-              }
+              // 在下一帧回调，因为动画是在下一帧执行的，这个时候动画已经开始执行
+              viewList.forEach { it.alpha = 1F }
+              course.removeChildExitListener(viewListener) // 移除上面设置的监听
             }
           }
         }
       )
+    viewLifecycleOwner.lifecycle.addObserver(
+      object : DefaultLifecycleObserver {
+        override fun onPause(owner: LifecycleOwner) {
+          // 需要在这里移除动画，防止 Fragment 重新加载而触发动画
+          course.setLayoutAnimation(null)
+          owner.lifecycle.removeObserver(this)
+        }
+      }
+    )
   }
 }

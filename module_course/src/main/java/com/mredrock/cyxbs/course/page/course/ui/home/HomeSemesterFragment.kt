@@ -64,7 +64,7 @@ class HomeSemesterFragment : CompareWeekSemesterFragment() {
           if (mIsNeedStartLinkLessonEntranceAnim == true) {
             // 这时说明触发了关联人的显示，需要实现入场动画
             // 使用 mIsNeedStartLinkLessonEntranceAnim 很巧妙的避开了 Fragment 重建数据倒灌的问题
-            mLinkLessonContainerProxy.startEntranceAnim()
+            mLinkLessonContainerProxy.startAnimation()
           }
         }
       }
