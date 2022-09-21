@@ -141,9 +141,11 @@ open class CourseDownAnimDispatcher(
       .scaleY(1F)
       .rotationX(0F)
       .rotationY(0F)
-      .setInterpolator(mInterpolator)
+      .setInterpolator(OvershootInterpolator)
       .start()
   }
   
-  private val mInterpolator = OvershootInterpolator()
+  companion object {
+    val OvershootInterpolator = OvershootInterpolator()
+  }
 }

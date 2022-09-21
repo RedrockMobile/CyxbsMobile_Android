@@ -4,8 +4,11 @@
     <color name="colorPrimaryDark" tools:ignore="ResourceName">#000000</color>
     <color name="colorAccent" tools:ignore="ResourceName">#ffffff</color>
 
-    <!--    颜色汇总，方便黑夜模式，自己把用到的颜色，都扔在这，写好注释，并在飞书上标注好
-          并以模块名为前缀-->
+<!--
+TODO 以后不要再把颜色写在这里面 ！！！
+ 写到自己的模块里面去，该文件将逐步分离这些颜色
+ 如果你正在重构某个模块，请把这个里面对应的颜色删除后移到你的模块里，但如果是共用的颜色，放在 lib_config 中 (使用 Alt + F7 可以查看被哪些模块引用)
+-->
 
     <!--    整体灰色背景-->
     <color name="common_window_background">#000000</color>
@@ -21,8 +24,9 @@
     <color name="common_transparent_background">#00000000</color>
 
 
-    <!--    主要字体颜色分以下四种，下列按照蓝色由深到浅排序，要用自取-->
-    <!--    一级字体颜色-->
+    <!--TODO 这个字体颜色已移植到 lib_config 中，common 模块中该颜色不再使用！！！-->
+    <!--主要字体颜色分以下四种，下列按照蓝色由深到浅排序，要用自取-->
+    <!--一级字体颜色-->
     <color name="common_level_one_font_color">#ffffff</color>
     <!--    二级字体颜色-->
     <color name="common_level_two_font_color">#ffffff</color>
@@ -31,29 +35,13 @@
     <!--    四级字体颜色-->
     <color name="levelFourFontColor" tools:ignore="DuplicateDefinition,ResourceName">#ffffff</color>
 
-    <color name="common_course_delete_button_text_color">#5b585c</color>
 
 
     <!--    图片选择器状态栏和toolbar颜色-->
     <color name="common_photo_select_status_color">#000000</color>
 
-    <!--    课表可上拉下拉标识小块背景-->
-    <color name="common_course_table_drag_indicator_block_color">#000000</color>
-    <!--    课表标识当天阴影-->
-    <color name="common_course_identifies_the_current_shadow_color">#26000101
-    </color>
-    <!--    课表课程色块颜色-->
-    <color name="common_morning_course_color">#26FFCCA1</color>
-    <color name="common_afternoon_course_color">#26FF979B</color>
-    <color name="common_evening_course_color">#269BB2FF</color>
-    <!--    课程色块内的字体颜色-->
-    <color name="common_morning_course_text_color">#F0F0F2</color>
-    <color name="common_afternoon_course_text_color">#F0F0F2</color>
-    <color name="common_evening_course_text_color">#F0F0F2</color>
-
-    <color name="common_course_affair_you_might_recycle_item_background_color">
-        #99F2F3F7
-    </color>
+    <!--可上拉下拉标识小块背景-->
+    <color name="common_table_drag_indicator_block_color">#000000</color>
 
     <!--    发现教务在线方框背景-->
     <color name="common_discovery_jwzx_background">#AFD2FB</color>
@@ -64,11 +52,6 @@
     <!--    按钮渐变终止颜色-->
     <color name="common_button_gradient_end_color">#4841E2</color>
 
-
-    <!--    添加事务时标题-->
-    <color name="common_transaction_heading">#ffffff</color>
-    <!--    添加事务时周数选择时，点击后字体颜色-->
-    <color name="common_select_font_color_for_transaction_weeks">#FFA192</color>
 
 
     <!--    打字框背景颜色-->
@@ -169,16 +152,7 @@
     <!--    找回密码的灰色字体-->
     <color name="common_log_in_to_the_gray_font_below">#ABBCD8</color>
 
-    <!--    添加事务下面按钮的光晕渐变结束颜色-->
-    <color name="common_course_end_of_light">#006B65EF</color>
-
-    <!--    添加事务页面的圆角shape背景-->
-    <color name="common_course_affair_add_background">#2D2D2D</color>
-
-    <!--    添加事务的气泡颜色-->
-    <color name="common_course_affair_bubble_color">#1d1d1d</color>
-
-
+    <!--不是课表背景，而是整个应用主页的背景色，目前该值已经移植到 lib_config 中，名字为：config_common_background_color-->
     <color name="common_curriculum_background_color">#2D2D2D</color>
 
     <color name="common_transaction_background_stripe_color">#4d4b4c</color>
