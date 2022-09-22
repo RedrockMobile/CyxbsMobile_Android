@@ -7,9 +7,9 @@ import androidx.viewpager2.widget.ViewPager2
 import com.mredrock.cyxbs.api.account.IAccountService
 import com.mredrock.cyxbs.api.login.ILoginService
 import com.mredrock.cyxbs.api.update.IAppUpdateService
-import com.mredrock.cyxbs.common.config.DISCOVER_EMPTY_ROOM
-import com.mredrock.cyxbs.common.config.DISCOVER_SCHOOL_CAR
+import com.mredrock.cyxbs.config.route.DISCOVER_EMPTY_ROOM
 import com.mredrock.cyxbs.config.route.DISCOVER_GRADES
+import com.mredrock.cyxbs.config.route.DISCOVER_SCHOOL_CAR
 import com.mredrock.cyxbs.config.sp.SP_COURSE_SHOW_STATE
 import com.mredrock.cyxbs.config.sp.defaultSp
 import com.mredrock.cyxbs.lib.base.ui.BaseActivity
@@ -43,7 +43,7 @@ class MainActivity : BaseActivity() {
   
   override fun onCreate(savedInstanceState: Bundle?) {
     // 还原主题，因为 MainActivity 最开始在 AndroidManifest.xml 设置了闪屏页背景，所以这里需要还原
-    setTheme(com.mredrock.cyxbs.common.R.style.AppTheme)
+    setTheme(com.mredrock.cyxbs.config.R.style.ConfigAppTheme)
     super.onCreate(savedInstanceState)
     val isLogin = checkIsLogin()
     if (isLogin != null) {

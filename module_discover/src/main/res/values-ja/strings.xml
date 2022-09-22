@@ -1,5 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <string name="discover">発見</string>
+
     <string name="discover_function">道具</string>
     <string name="discover_title_other_course">カリキュラム</string>
     <string name="discover_title_empty_classroom">空き教室</string>

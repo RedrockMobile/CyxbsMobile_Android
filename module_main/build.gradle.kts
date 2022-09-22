@@ -14,22 +14,15 @@ dependLibBase()
 dependLibUtils()
 dependLibConfig()
 
-dependLibCommon()
-
 dependApiAccount()
 dependApiUpdate()
-dependApiProtocol()
 dependApiLogin()
 
 dependApiCourse()
 dependLibCourse()
 
-dependLottie()
-dependEventBus()
 dependRxjava()
 dependNetwork()
-dependGlide()
-dependWorkManger()
 
 dependencies {
     implementation(Umeng.push)

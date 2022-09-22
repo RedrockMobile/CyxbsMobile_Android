@@ -33,13 +33,13 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="15dp"
             android:layout_marginTop="3dp"
-            android:text="发现"
+            android:text="@string/discover"
             android:textColor="@color/common_level_two_font_color"
             android:textSize="26sp"
             android:textStyle="bold"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/tv_day"
-            tools:ignore="HardcodedText,MissingConstraints" />
+            tools:ignore="MissingConstraints" />
 
         <ImageView
             android:id="@+id/iv_discover_msg"

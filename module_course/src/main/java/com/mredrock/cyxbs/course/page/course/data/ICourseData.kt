@@ -4,9 +4,11 @@ import com.mredrock.cyxbs.api.course.utils.getEndRow
 import com.mredrock.cyxbs.api.course.utils.getShowEndTimeStr
 import com.mredrock.cyxbs.api.course.utils.getShowStartTimeStr
 import com.mredrock.cyxbs.api.course.utils.getStartRow
+import com.mredrock.cyxbs.course.R
 import com.mredrock.cyxbs.course.page.course.data.expose.IWeek
 import com.mredrock.cyxbs.lib.course.item.single.ISingleDayData
-import com.mredrock.cyxbs.lib.utils.utils.Num2CN
+import com.mredrock.cyxbs.lib.utils.extensions.appContext
+import com.mredrock.cyxbs.lib.utils.extensions.lazyUnlock
 
 /**
  *
@@ -15,26 +17,15 @@ import com.mredrock.cyxbs.lib.utils.utils.Num2CN
  * @date 2022/9/17 17:54
  */
 sealed interface ICourseData : IWeek, ISingleDayData {
-  val hashDay: Int
-  val beginLesson: Int
-  val period: Int
+  val hashDay: Int // 星期数，星期一为 0
+  val beginLesson: Int // 开始节数，如：1、2 节课以 1 开始；3、4 节课以 3 开始，注意：中午是以 -1 开始，傍晚是以 -2 开始
+  val period: Int // 长度
   
   val weekStr: String
-    get() = "第${Num2CN.number2ChineseNumber(week.toLong())}周"
+    get() = WeekStr[week]
   
   val weekdayStr: String
-    get() {
-      return when (hashDay) {
-        0 -> "周一"
-        1 -> "周二"
-        2 -> "周三"
-        3 -> "周四"
-        4 -> "周五"
-        5 -> "周六"
-        6 -> "周日"
-        else -> throw RuntimeException("未知星期数：hashDay = $hashDay   bean = $this")
-      }
-    }
+    get() = WeekdayStr[hashDay]
   
   val durationStr: String
     get() = getShowStartTimeStr(getStartRow(beginLesson)) + "-" + getShowEndTimeStr(getEndRow(beginLesson, period))
@@ -45,4 +36,23 @@ sealed interface ICourseData : IWeek, ISingleDayData {
     get() = getStartRow(beginLesson)
   override val length: Int
     get() = period
+  
+  companion object {
+    private val WeekStr by lazyUnlock {
+      appContext.resources.getStringArray(R.array.course_course_weeks_strings)
+    }
+    
+    private val WeekdayStr by lazyUnlock {
+      val resources = appContext.resources
+      arrayOf(
+        resources.getString(com.mredrock.cyxbs.lib.course.R.string.course_week_mon),
+        resources.getString(com.mredrock.cyxbs.lib.course.R.string.course_week_tue),
+        resources.getString(com.mredrock.cyxbs.lib.course.R.string.course_week_wed),
+        resources.getString(com.mredrock.cyxbs.lib.course.R.string.course_week_thu),
+        resources.getString(com.mredrock.cyxbs.lib.course.R.string.course_week_fri),
+        resources.getString(com.mredrock.cyxbs.lib.course.R.string.course_week_sat),
+        resources.getString(com.mredrock.cyxbs.lib.course.R.string.course_week_sun),
+      )
+    }
+  }
 }

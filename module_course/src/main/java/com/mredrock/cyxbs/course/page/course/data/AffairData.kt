@@ -14,7 +14,7 @@ data class AffairData(
   val stuNum: String,
   override val week: Int, // 在哪一周
   override val hashDay: Int, // 星期数，星期一为 0
-  override val beginLesson: Int,  // 开始节数，如：1、2 节课以 1 开始；3、4 节课以 3 开始，注意：中午是以 -1 开始，傍晚是以 -2 开始
+  override val beginLesson: Int, // 开始节数，如：1、2 节课以 1 开始；3、4 节课以 3 开始，注意：中午是以 -1 开始，傍晚是以 -2 开始
   override val period: Int, // 长度
   val id: Int, // 事务唯一 id
   val time: Int, // 提醒时间

@@ -1,5 +1,9 @@
 <resources>
 
+    <string name="main_nav_discover">发现</string>
+    <string name="main_nav_qa">邮问</string>
+    <string name="main_nav_mine">我的</string>
+
     <string name="main_course_long_name">我的课表</string>
     <string name="main_course_short_name">课表</string>
     <string name="main_school_car_long_name">校车查询</string>

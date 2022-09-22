@@ -13,10 +13,10 @@ import androidx.core.content.edit
 import androidx.core.view.isVisible
 import androidx.core.view.postDelayed
 import androidx.fragment.app.commit
-import com.bumptech.glide.Glide
 import com.mredrock.cyxbs.lib.base.ui.BaseFragment
 import com.mredrock.cyxbs.lib.utils.extensions.getSp
 import com.mredrock.cyxbs.lib.utils.extensions.gone
+import com.mredrock.cyxbs.lib.utils.extensions.setImageFromUrl
 import com.mredrock.cyxbs.lib.utils.extensions.setOnSingleClickListener
 import com.mredrock.cyxbs.lib.utils.network.api
 import com.mredrock.cyxbs.lib.utils.network.mapOrThrowApiException
@@ -53,10 +53,7 @@ class SplashFragment : BaseFragment() {
   private fun initSplash() {
     val lastUrl = getLastLoadUrl()
     if (lastUrl != null) {
-      Glide.with(this)
-        .load(lastUrl.first)
-        .placeholder(R.drawable.main_ic_bg_splash_big)
-        .into(mIvSplash)
+      mIvSplash.setImageFromUrl(lastUrl.first, R.drawable.main_ic_bg_splash_big, R.drawable.main_ic_bg_splash_big)
       mIvSplash.setOnSingleClickListener {
         val uri = Uri.parse(lastUrl.second)
         startActivity(Intent(Intent.ACTION_VIEW, uri))

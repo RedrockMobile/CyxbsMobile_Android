@@ -2,7 +2,7 @@
 <resources xmlns:tools="http://schemas.android.com/tools">
 
     <!--    闪屏页,用于系统在创建app进程之前显示的预览图片-->
-    <style name="SplashTheme" parent="AppTheme" tools:ignore="ResourceName">
+    <style name="SplashTheme" parent="ConfigAppTheme" tools:ignore="ResourceName">
         <item name="android:windowBackground">@drawable/main_ic_bg_splash_big</item>
     </style>
 

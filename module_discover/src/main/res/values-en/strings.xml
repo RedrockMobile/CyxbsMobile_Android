@@ -1,5 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <string name="discover">Explore</string>
+
     <string name="discover_function">Tools</string>
     <string name="discover_title_other_course">Curriculum</string>
     <string name="discover_pic_save_alert_dialog_message">This image will be saved to the phone</string>
