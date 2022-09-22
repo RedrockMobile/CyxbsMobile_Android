@@ -4,7 +4,7 @@ import com.mredrock.cyxbs.api.course.utils.getEndRow
 import com.mredrock.cyxbs.api.course.utils.getShowEndTimeStr
 import com.mredrock.cyxbs.api.course.utils.getShowStartTimeStr
 import com.mredrock.cyxbs.api.course.utils.getStartRow
-import com.mredrock.cyxbs.course.R
+import com.mredrock.cyxbs.lib.course.R
 import com.mredrock.cyxbs.course.page.course.data.expose.IWeek
 import com.mredrock.cyxbs.lib.course.item.single.ISingleDayData
 import com.mredrock.cyxbs.lib.utils.extensions.appContext
@@ -45,13 +45,13 @@ sealed interface ICourseData : IWeek, ISingleDayData {
     private val WeekdayStr by lazyUnlock {
       val resources = appContext.resources
       arrayOf(
-        resources.getString(com.mredrock.cyxbs.lib.course.R.string.course_week_mon),
-        resources.getString(com.mredrock.cyxbs.lib.course.R.string.course_week_tue),
-        resources.getString(com.mredrock.cyxbs.lib.course.R.string.course_week_wed),
-        resources.getString(com.mredrock.cyxbs.lib.course.R.string.course_week_thu),
-        resources.getString(com.mredrock.cyxbs.lib.course.R.string.course_week_fri),
-        resources.getString(com.mredrock.cyxbs.lib.course.R.string.course_week_sat),
-        resources.getString(com.mredrock.cyxbs.lib.course.R.string.course_week_sun),
+        resources.getString(R.string.course_week_mon),
+        resources.getString(R.string.course_week_tue),
+        resources.getString(R.string.course_week_wed),
+        resources.getString(R.string.course_week_thu),
+        resources.getString(R.string.course_week_fri),
+        resources.getString(R.string.course_week_sat),
+        resources.getString(R.string.course_week_sun),
       )
     }
   }

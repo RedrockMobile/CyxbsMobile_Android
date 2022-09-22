@@ -8,9 +8,7 @@ import android.util.TypedValue
 import android.view.Gravity
 import android.widget.TextView
 import androidx.cardview.widget.CardView
-import com.mredrock.cyxbs.lib.utils.extensions.color
-import com.mredrock.cyxbs.lib.utils.extensions.dp2px
-import com.mredrock.cyxbs.lib.utils.extensions.dp2pxF
+import com.mredrock.cyxbs.lib.utils.extensions.*
 
 /**
  * ...
@@ -41,18 +39,29 @@ abstract class ItemView(context: Context) : CardView(context) {
     setCardBackgroundColor(color)
   }
   
+  override fun onLayout(changed: Boolean, left: Int, top: Int, right: Int, bottom: Int) {
+    super.onLayout(changed, left, top, right, bottom)
+    if (tvTitle.bottom >= tvContent.top) {
+      // 如果标题与内容存在重叠，则取消内容的显示
+      tvContent.gone()
+    } else {
+      tvContent.visible()
+    }
+  }
+  
   init {
     cardElevation = 1F
     super.setCardBackgroundColor(Color.TRANSPARENT)
     radius = 8.dp2pxF
     
-    val margin1 = 7.dp2px
-    val margin2 = 10.dp2px
+    val marginTB = 7.dp2px
+    val marginLR = 8.dp2px
     tvTitle = TextView(context).apply {
       layoutParams = LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT).apply {
-        topMargin = margin1
-        leftMargin = margin2
-        rightMargin = margin2
+        topMargin = marginTB
+        bottomMargin = marginTB
+        leftMargin = marginLR
+        rightMargin = marginLR
         gravity = Gravity.TOP
       }
       ellipsize = TextUtils.TruncateAt.END
@@ -62,9 +71,10 @@ abstract class ItemView(context: Context) : CardView(context) {
     }
     tvContent = TextView(context).apply {
       layoutParams = LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT).apply {
-        leftMargin = margin2
-        rightMargin = margin2
-        bottomMargin = margin1
+        topMargin = marginTB
+        bottomMargin = marginTB
+        leftMargin = marginLR
+        rightMargin = marginLR
         gravity = Gravity.BOTTOM
       }
       ellipsize = TextUtils.TruncateAt.END
