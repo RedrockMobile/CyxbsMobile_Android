@@ -36,12 +36,12 @@
             android:layout_height="wrap_content"
             android:textColor="@color/config_level_one_font_color"
             android:textSize="12dp"
-            android:text="周一"
+            android:text="@string/course_week_mon"
             app:layout_constraintBottom_toTopOf="@+id/course_tv_mon_month"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            tools:ignore="HardcodedText,SpUsage" />
+            tools:ignore="SpUsage" />
 
         <androidx.appcompat.widget.AppCompatTextView
             android:id="@+id/course_tv_mon_month"
@@ -73,12 +73,12 @@
             android:layout_height="wrap_content"
             android:textColor="@color/config_level_one_font_color"
             android:textSize="12dp"
-            android:text="周二"
+            android:text="@string/course_week_tue"
             app:layout_constraintBottom_toTopOf="@+id/course_tv_tue_month"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            tools:ignore="HardcodedText,SpUsage" />
+            tools:ignore="SpUsage" />
 
         <androidx.appcompat.widget.AppCompatTextView
             android:id="@+id/course_tv_tue_month"
@@ -110,12 +110,12 @@
             android:layout_height="wrap_content"
             android:textColor="@color/config_level_one_font_color"
             android:textSize="12dp"
-            android:text="周三"
+            android:text="@string/course_week_wed"
             app:layout_constraintBottom_toTopOf="@+id/course_tv_wed_month"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            tools:ignore="HardcodedText,SpUsage" />
+            tools:ignore="SpUsage" />
 
         <androidx.appcompat.widget.AppCompatTextView
             android:id="@+id/course_tv_wed_month"
@@ -147,12 +147,12 @@
             android:layout_height="wrap_content"
             android:textColor="@color/config_level_one_font_color"
             android:textSize="12dp"
-            android:text="周四"
+            android:text="@string/course_week_thu"
             app:layout_constraintBottom_toTopOf="@+id/course_tv_thu_month"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            tools:ignore="HardcodedText,SpUsage" />
+            tools:ignore="SpUsage" />
 
         <androidx.appcompat.widget.AppCompatTextView
             android:id="@+id/course_tv_thu_month"
@@ -184,12 +184,12 @@
             android:layout_height="wrap_content"
             android:textColor="@color/config_level_one_font_color"
             android:textSize="12dp"
-            android:text="周五"
+            android:text="@string/course_week_fri"
             app:layout_constraintBottom_toTopOf="@+id/course_tv_fri_month"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            tools:ignore="HardcodedText,SpUsage" />
+            tools:ignore="SpUsage" />
 
         <androidx.appcompat.widget.AppCompatTextView
             android:id="@+id/course_tv_fri_month"
@@ -221,12 +221,12 @@
             android:layout_height="wrap_content"
             android:textColor="@color/config_level_one_font_color"
             android:textSize="12dp"
-            android:text="周六"
+            android:text="@string/course_week_sat"
             app:layout_constraintBottom_toTopOf="@+id/course_tv_sat_month"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            tools:ignore="HardcodedText,SpUsage" />
+            tools:ignore="SpUsage" />
 
         <androidx.appcompat.widget.AppCompatTextView
             android:id="@+id/course_tv_sat_month"
@@ -258,12 +258,12 @@
             android:layout_height="wrap_content"
             android:textColor="@color/config_level_one_font_color"
             android:textSize="12dp"
-            android:text="周日"
+            android:text="@string/course_week_sun"
             app:layout_constraintBottom_toTopOf="@+id/course_tv_sun_month"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            tools:ignore="HardcodedText,SpUsage" />
+            tools:ignore="SpUsage" />
 
         <androidx.appcompat.widget.AppCompatTextView
             android:id="@+id/course_tv_sun_month"

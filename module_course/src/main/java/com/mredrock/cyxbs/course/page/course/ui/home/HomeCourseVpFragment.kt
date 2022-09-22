@@ -23,8 +23,6 @@ class HomeCourseVpFragment : HomeCourseVpLinkFragment() {
   override val mNowWeek: Int
     get() = mViewModel.nowWeek
   
-  override var mPageCount: Int = 22 // 21 周加上第一页为整学期的课表
-  
   override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
     super.onViewCreated(view, savedInstanceState)
     initTouch()

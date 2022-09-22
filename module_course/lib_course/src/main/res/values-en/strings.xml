@@ -1,0 +1,40 @@
+<resources>
+
+    <string name="course_empty_course_text">No Course Now LOL</string>
+    <string name="course_this_week">(This Week)</string>
+    <string name="course_back_now_week">Go Back to This Week</string>
+
+    <string name="course_week_mon">Mon</string>
+    <string name="course_week_tue">Tue</string>
+    <string name="course_week_wed">Wed</string>
+    <string name="course_week_thu">Thu</string>
+    <string name="course_week_fri">Fri</string>
+    <string name="course_week_sat">Sat</string>
+    <string name="course_week_sun">Sun</string>
+
+    <string-array name="course_course_weeks_strings">
+        <item>Overview</item>
+        <item>The 1st Week</item>
+        <item>The 2nd Week</item>
+        <item>The 3rd Week</item>
+        <item>The 4th Week</item>
+        <item>The 5th Week</item>
+        <item>The 6th Week</item>
+        <item>The 7th Week</item>
+        <item>The 8th Week</item>
+        <item>The 9th Week</item>
+        <item>The 10th Week</item>
+        <item>The 11th Week</item>
+        <item>The 12th Week</item>
+        <item>The 13th Week</item>
+        <item>The 14th Week</item>
+        <item>The 15th Week</item>
+        <item>The 16th Week</item>
+        <item>The 17th Week</item>
+        <item>The 18th Week</item>
+        <item>The 19th Week</item>
+        <item>The 20th Week</item>
+        <item>The 21st Week</item>
+    </string-array>
+
+</resources>
