@@ -15,8 +15,8 @@ class OverlapHelper(
   private val logic: IImpl
 ) : IOverlap {
   
-  private val mAboveItemByRow = SparseArray<SparseArray<IOverlapItem>>()
-  private val mBelowItemByRow = SparseArray<SparseArray<IOverlapItem>>()
+  private val mAboveItemByRowColumn = SparseArray<SparseArray<IOverlapItem>>()
+  private val mBelowItemByRowColumn = SparseArray<SparseArray<IOverlapItem>>()
   
   override fun isAddIntoParent() = logic.isAddIntoParent()
   
@@ -25,8 +25,8 @@ class OverlapHelper(
   override fun refreshOverlap() = logic.refreshOverlap()
   
   override fun clearOverlap() {
-    mAboveItemByRow.clear()
-    mBelowItemByRow.clear()
+    mAboveItemByRowColumn.clear()
+    mBelowItemByRowColumn.clear()
     logic.onClearOverlap()
   }
   
@@ -35,23 +35,23 @@ class OverlapHelper(
   }
   
   override fun onAboveItem(row: Int, column: Int, item: IOverlapItem?) {
-    mAboveItemByRow.getOrPut(row) { SparseArray() }
+    mAboveItemByRowColumn.getOrPut(row) { SparseArray() }
       .put(column, item)
   }
   
   override fun onBelowItem(row: Int, column: Int, item: IOverlapItem?) {
-    mBelowItemByRow.getOrPut(row) { SparseArray() }
+    mBelowItemByRowColumn.getOrPut(row) { SparseArray() }
       .put(column, item)
   }
   
   override fun getAboveItem(row: Int, column: Int): IOverlapItem? {
-    return mAboveItemByRow.get(row)?.get(column)
+    return mAboveItemByRowColumn.get(row)?.get(column)
   }
   
   override fun getAboveItems(): List<IOverlapItem> {
     val list = arrayListOf<IOverlapItem>()
-    mAboveItemByRow.forEach { _, value ->
-      value.forEach { _, item ->
+    mAboveItemByRowColumn.forEach { _, array ->
+      array.forEach { _, item ->
         list.add(item)
       }
     }
@@ -59,13 +59,13 @@ class OverlapHelper(
   }
   
   override fun getBelowItem(row: Int, column: Int): IOverlapItem? {
-    return mBelowItemByRow.get(row)?.get(column)
+    return mBelowItemByRowColumn.get(row)?.get(column)
   }
   
   override fun getBelowItems(): List<IOverlapItem> {
     val list = arrayListOf<IOverlapItem>()
-    mBelowItemByRow.forEach { _, value ->
-      value.forEach { _, item ->
+    mBelowItemByRowColumn.forEach { _, array ->
+      array.forEach { _, item ->
         list.add(item)
       }
     }

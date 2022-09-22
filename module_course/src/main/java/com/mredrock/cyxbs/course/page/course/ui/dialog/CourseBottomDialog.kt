@@ -3,8 +3,6 @@ package com.mredrock.cyxbs.course.page.course.ui.dialog
 import android.content.Context
 import android.os.Bundle
 import android.view.View
-import androidx.core.view.forEach
-import androidx.viewpager2.widget.ViewPager2
 import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.mredrock.cyxbs.course.R
 import com.mredrock.cyxbs.course.page.course.data.ICourseData
@@ -41,13 +39,6 @@ class CourseBottomDialog(
       findViewById<View>(R.id.course_indicator_dialog_bottom).gone()
     }
     slideShow.setAdapter(DialogBottomVpAdapter(data, isHomeCourse))
-    slideShow.forEach {
-      if (it is ViewPager2) {
-        // 解决 BottomSheet 与 Vp 嵌套问题，这个问题与整个课表 BottomSheet 问题一样
-        it.getChildAt(0).isNestedScrollingEnabled = false
-        return@forEach
-      }
-    }
   }
   
   override fun <T : View> findViewById(id: Int): T {

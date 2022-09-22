@@ -4,11 +4,11 @@ import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
 import com.mredrock.cyxbs.api.account.IAccountService
-import com.mredrock.cyxbs.api.course.COURSE_SERVICE
 import com.mredrock.cyxbs.config.route.COURSE_POS_TO_MAP
 import com.mredrock.cyxbs.config.route.DISCOVER_MAP
 import com.mredrock.cyxbs.course.R
 import com.mredrock.cyxbs.course.page.course.data.StuLessonData
+import com.mredrock.cyxbs.lib.utils.extensions.gone
 import com.mredrock.cyxbs.lib.utils.extensions.setOnSingleClickListener
 import com.mredrock.cyxbs.lib.utils.extensions.visible
 import com.mredrock.cyxbs.lib.utils.service.ServiceManager
@@ -44,6 +44,8 @@ class StuLessonVH(
     if (isHomeCourse) {
       if (data.stuNum != IAccountService::class.impl.getUserService().getStuNum()) {
         mIvLink.visible()
+      } else {
+        mIvLink.gone()
       }
     }
     

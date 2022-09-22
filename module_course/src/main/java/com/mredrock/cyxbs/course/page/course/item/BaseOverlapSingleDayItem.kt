@@ -15,10 +15,10 @@ import com.ndhzs.netlayout.view.NetLayout
 import java.util.TreeSet
 
 /**
- * 支持重叠的 item 的父类
+ * 支持重叠的 item 的父类，只能用于单列显示的 item
  *
  * ## 注意
- * - item 的点击事件统一写这个父类里面
+ * - item 的点击事件统一写在了这个父类里面
  *
  * @author 985892345 (Guo Xiangrui)
  * @email guo985892345@foxmail.com
@@ -44,7 +44,7 @@ where V : View, V :IOverlapTag, D : ISingleDayData, D : IWeek // 用于提醒子
     super.onRefreshOverlap()
     var isNeedShowOverlapTag = false
     lp.forEachRow { row ->
-      if (overlap.getBelowItem(row, lp.weekNum) != null) {
+      if (overlap.getBelowItem(row, lp.singleColumn) != null) {
         isNeedShowOverlapTag = true
         return@forEachRow
       }
@@ -76,8 +76,9 @@ where V : View, V :IOverlapTag, D : ISingleDayData, D : IWeek // 用于提醒子
         val treeSet = TreeSet<BaseOverlapSingleDayItem<*, *>> { o1, o2 ->
           o2.compareTo(o1) // 这里需要逆序
         }
-        treeSet.add(this)
+        treeSet.add(this) // 别忘了添加自己
         lp.forEachRow { row ->
+          // 寻找重叠在下面的所有 item
           var item = overlap.getBelowItem(row, lp.singleColumn)
           while (item != null) {
             if (item is BaseOverlapSingleDayItem<*, *>) {

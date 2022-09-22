@@ -6,23 +6,30 @@
     android:background="@drawable/course_layer_list_dialog_bg"
     android:paddingTop="36dp">
 
-    <com.ndhzs.slideshow.SlideShow
-        android:id="@+id/course_ss_dialog_bottom"
+    <!--解决 Vp 与 BottomSheet 的嵌套滑动问题-->
+    <com.mredrock.cyxbs.lib.course.widget.VpBottomSheetNestedView
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        app:cardBackgroundColor="@color/config_white_black">
+        android:layout_height="match_parent" >
 
-        <com.ndhzs.slideshow.indicators.view.WaterDropIndicators
-            android:id="@+id/course_indicator_dialog_bottom"
+        <com.ndhzs.slideshow.SlideShow
+            android:id="@+id/course_ss_dialog_bottom"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_gravity="bottom"
-            android:layout_marginBottom="8dp"
-            app:indicators_circleRadius="4dp"
-            app:indicators_circleColor="#788EFA"
-            app:indicators_circleBackground="#888888"
-            app:indicators_intervalMargin="16dp"/>
+            android:layout_height="match_parent"
+            app:cardBackgroundColor="@color/config_white_black">
 
-    </com.ndhzs.slideshow.SlideShow>
+            <com.ndhzs.slideshow.indicators.view.WaterDropIndicators
+                android:id="@+id/course_indicator_dialog_bottom"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="bottom"
+                android:layout_marginBottom="8dp"
+                app:indicators_circleRadius="4dp"
+                app:indicators_circleColor="#788EFA"
+                app:indicators_circleBackground="#888888"
+                app:indicators_intervalMargin="16dp"/>
+
+        </com.ndhzs.slideshow.SlideShow>
+
+    </com.mredrock.cyxbs.lib.course.widget.VpBottomSheetNestedView>
 
 </FrameLayout>
