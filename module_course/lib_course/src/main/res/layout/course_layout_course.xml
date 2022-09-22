@@ -10,7 +10,7 @@
         android:id="@+id/course_courseLayout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:minHeight="680dp"
+        android:minHeight="600dp"
         app:net_rowCount="14"
         app:net_columnCount="8" >
 

@@ -34,9 +34,6 @@ class NoClassCourseVpFragment : AbstractHeaderCourseVpFragment() {
   
   private val mNoClassData : HashMap<Int, NoClassSpareTime> by arguments()
 
-  override val mPageCount: Int
-    get() = if (mNoClassData.isNotEmpty()) 22 else 0
-
   override fun createFragment(position: Int): CoursePageFragment {
     return if (position == 0) NoClassSemesterFragment.newInstance(mNoClassData[0]!!) else NoClassWeekFragment.newInstance(position,mNoClassData[position]!!)
   }
