@@ -70,7 +70,7 @@ class RenameGroupDialog (context: Context) : AlertDialog(context) {
             )
         }
         //确定按钮
-        val mBtnDone : Button = findViewById<Button?>(R.id.btn_noclass_dialog_rename_confirm).apply {
+        findViewById<Button?>(R.id.btn_noclass_dialog_rename_confirm).apply {
             setOnClickListener {
                 if (mOnGroupRename?.invoke(mEtName.text.toString()) == true){
                     mTvHint.visibility = View.INVISIBLE

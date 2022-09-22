@@ -23,8 +23,6 @@ import java.util.*
  */
 class NoClassWeekFragment : NoClassPageFragment(){
   
-  private val mViewModel by activityViewModels<NoClassViewModel>()
-  
   companion object {
     fun newInstance(week: Int,data:NoClassSpareTime): NoClassWeekFragment {
       return NoClassWeekFragment().apply {
@@ -35,6 +33,8 @@ class NoClassWeekFragment : NoClassPageFragment(){
       }
     }
   }
+  
+  private val mParentViewModel by activityViewModels<NoClassViewModel>()
 
   private var mNoClassSpareTime by arguments<NoClassSpareTime>()
   private val mWeek by arguments<Int>()
@@ -47,7 +47,7 @@ class NoClassWeekFragment : NoClassPageFragment(){
   }
   
   private fun initObserve(){
-    mViewModel.noclassData.observe(viewLifecycleOwner){
+    mParentViewModel.noclassData.observe(viewLifecycleOwner){
       mNoClassSpareTime = it[mWeek]!!
       clearLesson()
       addLessons(mNoClassSpareTime)

@@ -11,9 +11,10 @@ import android.widget.Button
 import android.widget.EditText
 import android.widget.ImageView
 import android.widget.TextView
+import androidx.activity.viewModels
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.mredrock.cyxbs.lib.base.ui.mvvm.BaseVmActivity
+import com.mredrock.cyxbs.lib.base.ui.BaseActivity
 import com.mredrock.cyxbs.lib.utils.extensions.setOnSingleClickListener
 import com.mredrock.cyxbs.noclass.R
 import com.mredrock.cyxbs.noclass.bean.NoclassGroup
@@ -34,7 +35,9 @@ import com.mredrock.cyxbs.noclass.page.viewmodel.GroupDetailViewModel
  * @Version:        1.0
  * @Description:    具体分组页面
  */
-class GroupDetailActivity : BaseVmActivity<GroupDetailViewModel>(){
+class GroupDetailActivity : BaseActivity(){
+    
+    private val mViewModel by viewModels<GroupDetailViewModel>()
 
     /**
      * 上方添加同学的编辑框
@@ -133,7 +136,7 @@ class GroupDetailActivity : BaseVmActivity<GroupDetailViewModel>(){
      * 初始化观测livedata
      */
     private fun initObserve(){
-        viewModel.isUpdateSuccess.observe(this){
+        mViewModel.isUpdateSuccess.observe(this){
             if (it){
                 mHasChanged = true
                 if (mTobeTitle != ""){
@@ -146,7 +149,7 @@ class GroupDetailActivity : BaseVmActivity<GroupDetailViewModel>(){
         }
         
         var mSearchStudentDialog : SearchStudentDialog? = null
-        viewModel.students.observe(this){   students ->
+        mViewModel.students.observe(this){   students ->
             if(students.isEmpty()){
                 toast("查无此人")
             }else{
@@ -169,7 +172,7 @@ class GroupDetailActivity : BaseVmActivity<GroupDetailViewModel>(){
                     }
             }
         }
-        viewModel.saveState.observe(this){
+        mViewModel.saveState.observe(this){
             if (it){
                 mToAddSet.clear()
                 mToDeleteSet.clear()
@@ -221,7 +224,7 @@ class GroupDetailActivity : BaseVmActivity<GroupDetailViewModel>(){
                         }
                     }
                     mTobeTitle = it
-                    viewModel.updateGroup(mCurrentNoclassGroup.id,it,mCurrentNoclassGroup.isTop.toString())
+                    mViewModel.updateGroup(mCurrentNoclassGroup.id, it, mCurrentNoclassGroup.isTop.toString())
                     true
                 }
                 .show()
@@ -236,7 +239,7 @@ class GroupDetailActivity : BaseVmActivity<GroupDetailViewModel>(){
             if (mToAddSet.isEmpty() && mToDeleteSet.isEmpty()){
                 return@setOnClickListener
             }
-            viewModel.addAndDeleteStu(mCurrentNoclassGroup.id,mToAddSet,mToDeleteSet)
+            mViewModel.addAndDeleteStu(mCurrentNoclassGroup.id, mToAddSet, mToDeleteSet)
         }
     }
 
@@ -282,7 +285,7 @@ class GroupDetailActivity : BaseVmActivity<GroupDetailViewModel>(){
         }
         (getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager).hideSoftInputFromWindow(currentFocus?.windowToken, InputMethodManager.HIDE_NOT_ALWAYS)
         mEditTextView.setText("")
-        viewModel.searchStudent(stu = name)
+        mViewModel.searchStudent(stu = name)
     }
 
     override fun onBackPressed() {

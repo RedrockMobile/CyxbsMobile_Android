@@ -39,10 +39,10 @@ class NoClassGatherDialog (
   }
   
   private fun initView(dialog: Dialog){
-    val mTvTotal = dialog.findViewById<TextView>(R.id.noclass_tv_gathering_total).apply {
+    dialog.findViewById<TextView>(R.id.noclass_tv_gathering_total).apply {
       text = "人数：共计 ${mStuList.filter{ it.second }.size} 人"
     }
-    val mTvTime = dialog.findViewById<TextView>(R.id.noclass_tv_gathering_time).apply {
+    dialog.findViewById<TextView>(R.id.noclass_tv_gathering_time).apply {
       text = mTextTime
     }
     val mViewPager2 = dialog.findViewById<ViewPager2>(R.id.noclass_vp_gather_container).apply {
@@ -64,10 +64,6 @@ class NoClassGatherDialog (
       setTotalCount(mStuList.size/8 + 1)
     }
     mViewPager2.registerOnPageChangeCallback(object : ViewPager2.OnPageChangeCallback(){
-      override fun onPageScrolled(position: Int, positionOffset: Float, positionOffsetPixels: Int) {
-        super.onPageScrolled(position, positionOffset, positionOffsetPixels)
-        
-      }
       override fun onPageSelected(position: Int) {
         mIndicator.setCurIndex(position)
         super.onPageSelected(position)

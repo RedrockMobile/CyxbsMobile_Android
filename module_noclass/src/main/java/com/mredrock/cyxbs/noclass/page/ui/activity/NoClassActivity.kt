@@ -12,6 +12,7 @@ import android.view.inputmethod.EditorInfo
 import android.view.inputmethod.InputMethodManager
 import android.widget.*
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.activity.viewModels
 import androidx.core.animation.doOnEnd
 import androidx.core.animation.doOnStart
 import androidx.core.content.edit
@@ -22,7 +23,7 @@ import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.mredrock.cyxbs.api.account.IAccountService
 import com.mredrock.cyxbs.config.route.DISCOVER_NO_CLASS
 import com.mredrock.cyxbs.config.sp.defaultSp
-import com.mredrock.cyxbs.lib.base.ui.mvvm.BaseVmActivity
+import com.mredrock.cyxbs.lib.base.ui.BaseActivity
 import com.mredrock.cyxbs.lib.utils.extensions.setOnSingleClickListener
 import com.mredrock.cyxbs.lib.utils.service.ServiceManager
 import com.mredrock.cyxbs.noclass.R
@@ -55,7 +56,9 @@ import java.io.Serializable
  */
 
 @Route(path = DISCOVER_NO_CLASS)
-class NoClassActivity : BaseVmActivity<NoClassViewModel>(){
+class NoClassActivity : BaseActivity(){
+  
+  private val mViewModel by viewModels<NoClassViewModel>()
   
   /**
    * 用户名称
@@ -462,14 +465,14 @@ class NoClassActivity : BaseVmActivity<NoClassViewModel>(){
     }
     (getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager).hideSoftInputFromWindow(currentFocus?.windowToken, InputMethodManager.HIDE_NOT_ALWAYS)
     mEditTextView.setText("")
-    viewModel.searchStudent(stu = name)
+    mViewModel.searchStudent(stu = name)
   }
   
   /**
    * 执行查询课程的操作
    */
   private fun doSearchCourse(){
-    viewModel.getLessons(mAdapter.currentList.map { it.stuNum },mAdapter.currentList)
+    mViewModel.getLessons(mAdapter.currentList.map { it.stuNum }, mAdapter.currentList)
   }
   
   /**
@@ -479,7 +482,7 @@ class NoClassActivity : BaseVmActivity<NoClassViewModel>(){
   private fun initObserve(){
     var mSearchStudentDialog : SearchStudentDialog? = null
     //得到整个List
-    viewModel.groupList.observe(this){
+    mViewModel.groupList.observe(this){
       mList = if (it.isNotEmpty()){
         it as MutableList<NoclassGroup>
       }else{
@@ -488,7 +491,7 @@ class NoClassActivity : BaseVmActivity<NoClassViewModel>(){
       initFlexLayout(mList,true)
     }
     //搜索学生
-    viewModel.students.observe(this){ students ->
+    mViewModel.students.observe(this){ students ->
       if(students.isEmpty()){
          toast("查无此人")
        }else{
@@ -519,7 +522,7 @@ class NoClassActivity : BaseVmActivity<NoClassViewModel>(){
     }
     
     //在滑动下拉课表容器中添加整个课表
-    viewModel.noclassData.observe(this){
+    mViewModel.noclassData.observe(this){
       mCourseSheetBehavior.state = BottomSheetBehavior.STATE_EXPANDED
       mNeedShow = mGroupId == "-1"
     }

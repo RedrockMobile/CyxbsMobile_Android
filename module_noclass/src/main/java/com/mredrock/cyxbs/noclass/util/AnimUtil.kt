@@ -7,6 +7,7 @@ import android.view.animation.LinearInterpolator
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.animation.doOnEnd
 import androidx.core.animation.doOnStart
+import com.mredrock.cyxbs.lib.utils.utils.VibratorUtil
 import com.mredrock.cyxbs.noclass.R
 
 /**
@@ -70,7 +71,7 @@ internal fun View.expandAnim(viewHeight: Int,time : Long = 800) : ValueAnimator{
 internal fun View.startShake(){
     val shakeAnim = AnimationUtils.loadAnimation(this.context, R.anim.noclass_tv_shake_anim)
     this.startAnimation(shakeAnim)
-    VibratorUtil.start(this.context,300)
+    VibratorUtil.start(300)
 }
 
 /**

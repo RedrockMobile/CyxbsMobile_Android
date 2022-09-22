@@ -9,13 +9,14 @@ import android.widget.ImageButton
 import android.widget.TextView
 import androidx.core.animation.doOnEnd
 import androidx.fragment.app.activityViewModels
+import androidx.fragment.app.viewModels
 import com.mredrock.cyxbs.course.R
 import com.mredrock.cyxbs.course.page.find.room.FindStuEntity
 import com.mredrock.cyxbs.course.page.find.viewmodel.activity.FindLessonViewModel
 import com.mredrock.cyxbs.course.page.link.room.LinkStuEntity
 import com.mredrock.cyxbs.course.page.link.viewmodel.fragment.LinkCardViewModel
 import com.mredrock.cyxbs.lib.base.dailog.ChooseDialog
-import com.mredrock.cyxbs.lib.base.ui.mvvm.BaseVmFragment
+import com.mredrock.cyxbs.lib.base.ui.BaseFragment
 import com.mredrock.cyxbs.lib.utils.extensions.dp2px
 import com.mredrock.cyxbs.lib.utils.extensions.gone
 import com.mredrock.cyxbs.lib.utils.extensions.setOnSingleClickListener
@@ -27,7 +28,9 @@ import com.mredrock.cyxbs.lib.utils.extensions.visible
  * @email 2767465918@qq.com
  * @date 2022/6/10 11:09
  */
-class LinkCardFragment : BaseVmFragment<LinkCardViewModel>() {
+class LinkCardFragment : BaseFragment() {
+  
+  private val viewModel by viewModels<LinkCardViewModel>()
   
   private val mActivityViewModel by activityViewModels<FindLessonViewModel>()
   

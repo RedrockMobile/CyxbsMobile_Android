@@ -59,7 +59,7 @@ class CreateGroupDialogFragment(
       visibility = View.INVISIBLE
     }
     //取消textview
-    val cancelButton = dialog.findViewById<TextView>(R.id.tv_noclass_create_group_cancel).apply {
+    dialog.findViewById<TextView>(R.id.tv_noclass_create_group_cancel).apply {
       setOnClickListener {
         dialog.cancel()
       }
@@ -90,7 +90,7 @@ class CreateGroupDialogFragment(
     )
     
     //创建完成的按钮
-    val doneButton = dialog.findViewById<Button>(R.id.btn_noclass_group_create_done).apply {
+    dialog.findViewById<Button>(R.id.btn_noclass_group_create_done).apply {
       setOnSingleClickListener {
         if (etName.text.isEmpty()) {
           createUndone(tvHint)

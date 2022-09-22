@@ -6,6 +6,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.EditText
 import androidx.fragment.app.activityViewModels
+import androidx.fragment.app.viewModels
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.flexbox.FlexDirection
@@ -19,7 +20,7 @@ import com.mredrock.cyxbs.course.page.find.room.FindPersonEntity
 import com.mredrock.cyxbs.course.page.find.ui.find.activity.ShowResultActivity
 import com.mredrock.cyxbs.course.page.find.viewmodel.activity.FindLessonViewModel
 import com.mredrock.cyxbs.course.page.find.viewmodel.fragment.FindTeaViewModel
-import com.mredrock.cyxbs.lib.base.ui.mvvm.BaseVmFragment
+import com.mredrock.cyxbs.lib.base.ui.BaseFragment
 
 /**
  * ...
@@ -27,7 +28,9 @@ import com.mredrock.cyxbs.lib.base.ui.mvvm.BaseVmFragment
  * @email 2767465918@qq.com
  * @date 2022/2/8 17:08
  */
-class FindTeaFragment : BaseVmFragment<FindTeaViewModel>() {
+class FindTeaFragment : BaseFragment() {
+  
+  private val mViewModel by viewModels<FindTeaViewModel>()
 
   // Activity 的 ViewModel
   private val mActivityViewModel by activityViewModels<FindLessonViewModel>()
@@ -55,7 +58,7 @@ class FindTeaFragment : BaseVmFragment<FindTeaViewModel>() {
     mRvHistory.layoutManager = FlexboxLayoutManager(requireContext(), FlexDirection.ROW, FlexWrap.WRAP)
     mRvHistory.adapter = RvHistoryAdapter()
       .setOnDeleteClick {
-        viewModel.deleteHistory(num)
+        mViewModel.deleteHistory(num)
       }.setOnTextClick {
         mActivityViewModel.changeCourseState(this)
       }.apply {
@@ -70,14 +73,14 @@ class FindTeaFragment : BaseVmFragment<FindTeaViewModel>() {
         Snackbar.make(requireView(), "输入为空", BaseTransientBottomBar.LENGTH_SHORT).show()
         false
       } else {
-        viewModel.searchTeachers(text.toString())
+        mViewModel.searchTeachers(text.toString())
         true
       }
     }
   }
 
   private fun initObserve() {
-    viewModel.teacherSearchData.collectLaunch {
+    mViewModel.teacherSearchData.collectLaunch {
       if (it.isNotEmpty()) {
         ShowResultActivity.startActivity(requireContext(), ShowResultActivity.TeaData(it))
       } else {
@@ -85,7 +88,7 @@ class FindTeaFragment : BaseVmFragment<FindTeaViewModel>() {
       }
     }
 
-    viewModel.teacherHistory.observe {
+    mViewModel.teacherHistory.observe {
       mRvAdapter.submitList(it.reversed())
     }
   }

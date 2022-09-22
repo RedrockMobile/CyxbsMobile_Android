@@ -7,6 +7,7 @@ import android.view.View
 import android.widget.FrameLayout
 import android.widget.ImageButton
 import android.widget.TextView
+import androidx.activity.viewModels
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.bottomsheet.BottomSheetBehavior
@@ -20,7 +21,7 @@ import com.mredrock.cyxbs.course.page.find.ui.find.adapter.ShowTeaResultRvAdapte
 import com.mredrock.cyxbs.course.page.find.viewmodel.activity.ShowResultViewModel
 import com.mredrock.cyxbs.course.page.link.room.LinkStuEntity
 import com.mredrock.cyxbs.lib.base.dailog.ChooseDialog
-import com.mredrock.cyxbs.lib.base.ui.mvvm.BaseVmActivity
+import com.mredrock.cyxbs.lib.base.ui.BaseActivity
 import com.mredrock.cyxbs.lib.utils.extensions.dp2px
 import com.mredrock.cyxbs.lib.utils.extensions.lazyUnlock
 import com.mredrock.cyxbs.lib.utils.extensions.setOnSingleClickListener
@@ -34,7 +35,7 @@ import java.io.Serializable
  * @email 2767465918@qq.com
  * @date 2022/2/8 20:18
  */
-class ShowResultActivity : BaseVmActivity<ShowResultViewModel>() {
+class ShowResultActivity : BaseActivity() {
   
   companion object {
     
@@ -49,6 +50,8 @@ class ShowResultActivity : BaseVmActivity<ShowResultViewModel>() {
       )
     }
   }
+  
+  private val mViewModel by viewModels<ShowResultViewModel>()
   
   private val mImgBtnBack by R.id.course_ib_show_result_back.view<ImageButton>()
   private val mBottomSheetView by R.id.course_bsb_show_result_course.view<FrameLayout>()
@@ -167,7 +170,7 @@ class ShowResultActivity : BaseVmActivity<ShowResultViewModel>() {
           )
         }.setOnItemClick {
           // 点击整个 item
-          viewModel.saveHistory(this) // 保存搜索历史
+          mViewModel.saveHistory(this) // 保存搜索历史
           mBottomSheet.state = BottomSheetBehavior.STATE_EXPANDED
           FindStuCourseFragment.tryReplaceOrFresh(supportFragmentManager, mBottomSheetView.id, num)
         }.setOnLinkNoClick {
@@ -175,8 +178,8 @@ class ShowResultActivity : BaseVmActivity<ShowResultViewModel>() {
           doIfLogin { // 登录才能使用
             if (data.linkStudent == null) {
               // 这里说明他没有关联人
-              viewModel.changeLinkStudent(stuNum)
-              viewModel.saveHistory(this) // 保存搜索历史
+              mViewModel.changeLinkStudent(stuNum)
+              mViewModel.saveHistory(this) // 保存搜索历史
             } else {
               ChooseDialog.Builder(this@initRecyclerView)
                 .setData(
@@ -186,8 +189,8 @@ class ShowResultActivity : BaseVmActivity<ShowResultViewModel>() {
                     height = 167.dp2px
                   )
                 ).setPositiveClick {
-                  viewModel.changeLinkStudent(stuNum)
-                  viewModel.saveHistory(this@setOnLinkNoClick) // 保存搜索历史
+                  mViewModel.changeLinkStudent(stuNum)
+                  mViewModel.saveHistory(this@setOnLinkNoClick) // 保存搜索历史
                   dismiss()
                 }.setNegativeClick {
                   dismiss()
@@ -204,7 +207,7 @@ class ShowResultActivity : BaseVmActivity<ShowResultViewModel>() {
                 height = 146.dp2px
               )
             ).setPositiveClick {
-              viewModel.deleteLinkStudent()
+              mViewModel.deleteLinkStudent()
               dismiss()
             }.setNegativeClick {
               dismiss()
@@ -213,7 +216,7 @@ class ShowResultActivity : BaseVmActivity<ShowResultViewModel>() {
     }
     
     private fun ShowResultActivity.initObserve() {
-      viewModel.changeLinkResult.collectLaunch {
+      mViewModel.changeLinkResult.collectLaunch {
         if (it != null) {
           toast("关联成功！")
           val newData = data.copy(linkStudent = it)
@@ -228,7 +231,7 @@ class ShowResultActivity : BaseVmActivity<ShowResultViewModel>() {
         }
       }
       
-      viewModel.deleteLinkResult.collectLaunch {
+      mViewModel.deleteLinkResult.collectLaunch {
         if (it) {
           toast("已取消关联")
           val newData = data.copy(linkStudent = null)
@@ -259,7 +262,7 @@ class ShowResultActivity : BaseVmActivity<ShowResultViewModel>() {
     private fun ShowResultActivity.initRecyclerView() {
       mRvResult.adapter = ShowTeaResultRvAdapter(data.teacherList)
         .setOnItemClick {
-          viewModel.saveHistory(this) // 保存搜索历史
+          mViewModel.saveHistory(this) // 保存搜索历史
           mBottomSheet.state = BottomSheetBehavior.STATE_EXPANDED
           FindTeaCourseFragment.tryReplaceOrFresh(supportFragmentManager, mBottomSheetView.id, num)
         }

@@ -6,6 +6,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.EditText
 import androidx.fragment.app.activityViewModels
+import androidx.fragment.app.viewModels
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.flexbox.FlexDirection
@@ -21,7 +22,7 @@ import com.mredrock.cyxbs.course.page.find.viewmodel.activity.FindLessonViewMode
 import com.mredrock.cyxbs.course.page.find.viewmodel.fragment.FindStuViewModel
 import com.mredrock.cyxbs.course.page.link.ui.fragment.LinkCardFragment
 import com.mredrock.cyxbs.lib.base.dailog.ChooseDialog
-import com.mredrock.cyxbs.lib.base.ui.mvvm.BaseVmFragment
+import com.mredrock.cyxbs.lib.base.ui.BaseFragment
 import com.mredrock.cyxbs.lib.utils.extensions.dp2px
 
 /**
@@ -30,7 +31,9 @@ import com.mredrock.cyxbs.lib.utils.extensions.dp2px
  * @email 2767465918@qq.com
  * @date 2022/2/8 17:03
  */
-class FindStuFragment : BaseVmFragment<FindStuViewModel>() {
+class FindStuFragment : BaseFragment() {
+  
+  private val mViewModel by viewModels<FindStuViewModel>()
   
   // Activity 的 ViewModel
   private val mActivityViewModel by activityViewModels<FindLessonViewModel>()
@@ -63,15 +66,15 @@ class FindStuFragment : BaseVmFragment<FindStuViewModel>() {
       FlexboxLayoutManager(requireContext(), FlexDirection.ROW, FlexWrap.WRAP)
     mRvHistory.adapter = RvHistoryAdapter()
       .setOnDeleteClick {
-        viewModel.deleteHistory(num)
+        mViewModel.deleteHistory(num)
       }.setOnTextClick {
         mActivityViewModel.changeCourseState(this)
       }.setOnLongClick {
         // 自己偷偷加的长按历史记录快速关联的功能 :)
         doIfLogin { // 登录才能使用
-          if (viewModel.linkStudent.value?.linkNum == null) {
-            viewModel.changeLinkStudent(num)
-          } else if (num != viewModel.linkStudent.value?.linkNum) {
+          if (mViewModel.linkStudent.value?.linkNum == null) {
+            mViewModel.changeLinkStudent(num)
+          } else if (num != mViewModel.linkStudent.value?.linkNum) {
             ChooseDialog.Builder(this@FindStuFragment)
               .setData(
                 ChooseDialog.Data(
@@ -80,7 +83,7 @@ class FindStuFragment : BaseVmFragment<FindStuViewModel>() {
                   height = 167.dp2px
                 )
               ).setPositiveClick {
-                viewModel.changeLinkStudent(num)
+                mViewModel.changeLinkStudent(num)
                 dismiss()
               }.setNegativeClick {
                 dismiss()
@@ -99,7 +102,7 @@ class FindStuFragment : BaseVmFragment<FindStuViewModel>() {
         Snackbar.make(requireView(), "输入为空", LENGTH_SHORT).show()
         false
       } else {
-        viewModel.searchStudents(text.toString())
+        mViewModel.searchStudents(text.toString())
         true
       }
     }
@@ -114,18 +117,18 @@ class FindStuFragment : BaseVmFragment<FindStuViewModel>() {
   
   private fun initObserve() {
     // 搜索的回调
-    viewModel.studentSearchData.collectLaunch {
+    mViewModel.studentSearchData.collectLaunch {
       if (it.isNotEmpty()) {
         ShowResultActivity.startActivity(
           requireContext(),
-          ShowResultActivity.StuData(it, viewModel.linkStudent.value)
+          ShowResultActivity.StuData(it, mViewModel.linkStudent.value)
         )
       } else {
         toast("查无此人")
       }
     }
     // 历史记录数据的回调
-    viewModel.studentHistory.observe {
+    mViewModel.studentHistory.observe {
       mRvHistoryAdapter.submitList(it.reversed())
     }
   }

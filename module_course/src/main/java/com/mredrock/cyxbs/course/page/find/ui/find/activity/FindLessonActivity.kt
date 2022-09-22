@@ -3,6 +3,7 @@ package com.mredrock.cyxbs.course.page.find.ui.find.activity
 import android.os.Bundle
 import android.view.View
 import android.widget.FrameLayout
+import androidx.activity.viewModels
 import androidx.viewpager2.widget.ViewPager2
 import com.alibaba.android.arouter.facade.annotation.Route
 import com.google.android.material.bottomsheet.BottomSheetBehavior
@@ -17,7 +18,7 @@ import com.mredrock.cyxbs.course.page.find.ui.course.tea.FindTeaCourseFragment
 import com.mredrock.cyxbs.course.page.find.ui.find.fragment.FindStuFragment
 import com.mredrock.cyxbs.course.page.find.ui.find.fragment.FindTeaFragment
 import com.mredrock.cyxbs.course.page.find.viewmodel.activity.FindLessonViewModel
-import com.mredrock.cyxbs.lib.base.ui.mvvm.BaseVmActivity
+import com.mredrock.cyxbs.lib.base.ui.BaseActivity
 import com.mredrock.cyxbs.lib.utils.adapter.FragmentVpAdapter
 import com.mredrock.cyxbs.lib.utils.extensions.lazyUnlock
 import com.mredrock.cyxbs.lib.utils.extensions.setOnSingleClickListener
@@ -29,7 +30,9 @@ import com.mredrock.cyxbs.lib.utils.extensions.setOnSingleClickListener
  * @date 2022/2/8 15:40
  */
 @Route(path = DISCOVER_OTHER_COURSE)
-class FindLessonActivity : BaseVmActivity<FindLessonViewModel>() {
+class FindLessonActivity : BaseActivity() {
+  
+  private val mViewModel by viewModels<FindLessonViewModel>()
 
   private val mTabLayout by R.id.course_tl_find_course.view<TabLayout>()
   private val mViewPager by R.id.course_vp_find_course.view<ViewPager2>()
@@ -72,7 +75,7 @@ class FindLessonActivity : BaseVmActivity<FindLessonViewModel>() {
   }
 
   private fun initObserve() {
-    viewModel.courseState.observe {
+    mViewModel.courseState.observe {
       when (it) {
         is FindStuEntity -> {
           mBottomSheet.state = BottomSheetBehavior.STATE_EXPANDED

@@ -22,7 +22,6 @@ import java.util.*
  */
 class NoClassSemesterFragment : NoClassPageFragment() {
   
-  private val mViewModel by activityViewModels<NoClassViewModel>()
   companion object {
     fun newInstance(data: NoClassSpareTime): NoClassSemesterFragment {
       return NoClassSemesterFragment().apply {
@@ -32,6 +31,8 @@ class NoClassSemesterFragment : NoClassPageFragment() {
       }
     }
   }
+  
+  private val mParentViewModel by activityViewModels<NoClassViewModel>()
   
   private val mNoClassSpareTime by arguments<NoClassSpareTime>()
   
@@ -43,7 +44,7 @@ class NoClassSemesterFragment : NoClassPageFragment() {
   }
   
   private fun initObserve(){
-    mViewModel.noclassData.observe(viewLifecycleOwner){
+    mParentViewModel.noclassData.observe(viewLifecycleOwner){
       val mNoClassSpareTime = it[0]!!
       clearLesson()
       addLessons(mNoClassSpareTime)
@@ -68,6 +69,7 @@ class NoClassSemesterFragment : NoClassPageFragment() {
   }
   
   override fun initTimeline() {
+    super.initTimeline()
     CourseNowTimeHelper.attach(this)
   }
 

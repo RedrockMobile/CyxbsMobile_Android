@@ -9,9 +9,10 @@ import android.widget.Button
 import android.widget.ImageView
 import android.widget.LinearLayout
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.activity.viewModels
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.mredrock.cyxbs.lib.base.ui.mvvm.BaseVmActivity
+import com.mredrock.cyxbs.lib.base.ui.BaseActivity
 import com.mredrock.cyxbs.lib.utils.extensions.setOnSingleClickListener
 import com.mredrock.cyxbs.noclass.R
 import com.mredrock.cyxbs.noclass.bean.NoclassGroup
@@ -32,7 +33,9 @@ import java.io.Serializable
  * @Version:        1.0
  * @Description:    分组管理中心Activity
  */
-class GroupManagerActivity : BaseVmActivity<GroupManagerViewModel>(){
+class GroupManagerActivity : BaseActivity() {
+    
+    private val mViewModel by viewModels<GroupManagerViewModel>()
 
     /**
      * 分组管理界面 新建/删除 按钮
@@ -142,13 +145,13 @@ class GroupManagerActivity : BaseVmActivity<GroupManagerViewModel>(){
             }
             setOnTopClick {
                 val selectedGroup = mGroupList[it]
-                viewModel.updateGroup(selectedGroup.id,selectedGroup.name, (!selectedGroup.isTop).toString())
+                mViewModel.updateGroup(selectedGroup.id, selectedGroup.name, (!selectedGroup.isTop).toString())
             }
             setOnDeleteClick { index ->
                 val selectedGroup = mGroupList[index]
                 val confirmDeleteDialog = ConfirmDeleteDialog(this@GroupManagerActivity)
                 confirmDeleteDialog.setConfirmSelected {
-                    viewModel.deleteGroup(selectedGroup.id)
+                    mViewModel.deleteGroup(selectedGroup.id)
                     it.cancel()
                 }.show()
             }
@@ -165,7 +168,7 @@ class GroupManagerActivity : BaseVmActivity<GroupManagerViewModel>(){
      * 所有更新分组后需要重新请求获得分组
      */
     private fun reGetGroup(){
-        viewModel.getNoclassGroupDetail()
+        mViewModel.getNoclassGroupDetail()
     }
 
     /**
@@ -173,7 +176,7 @@ class GroupManagerActivity : BaseVmActivity<GroupManagerViewModel>(){
      */
     private fun initObserve(){
         //是否更新成功
-        viewModel.isUpdateSuccess.observe(this){
+        mViewModel.isUpdateSuccess.observe(this){
             if (it.second){
                 for (group in mGroupList){
                     if (group.id == it.first){
@@ -188,7 +191,7 @@ class GroupManagerActivity : BaseVmActivity<GroupManagerViewModel>(){
         }
 
         //是否删除成功
-        viewModel.isDeleteSuccess.observe(this){
+        mViewModel.isDeleteSuccess.observe(this){
             if (it.second){
                 val groupIds = it.first
                 val ids = groupIds.split(",")
@@ -216,7 +219,7 @@ class GroupManagerActivity : BaseVmActivity<GroupManagerViewModel>(){
         var mLastCreateId : Int = -1
         
         //是否创建成功
-        viewModel.isCreateSuccess.observe(this){
+        mViewModel.isCreateSuccess.observe(this){
             if (it.id != -1){
                 mHasChanged = true
                 mLastCreateId = it.id
@@ -225,7 +228,7 @@ class GroupManagerActivity : BaseVmActivity<GroupManagerViewModel>(){
         }
 
         //重新获得分组
-        viewModel.groupList.observe(this){
+        mViewModel.groupList.observe(this){
             mEmptyContainer.visibility = if (it.isEmpty()) View.VISIBLE else View.INVISIBLE
             mGroupList = it as MutableList<NoclassGroup>
             mRvAdapter.submitList(mGroupList)
@@ -317,7 +320,7 @@ class GroupManagerActivity : BaseVmActivity<GroupManagerViewModel>(){
                             ids += ","
                         }
                     }
-                    viewModel.deleteGroup(groupIds=ids)
+                    mViewModel.deleteGroup(groupIds=ids)
                     it.cancel()
                 }.show()
             }
