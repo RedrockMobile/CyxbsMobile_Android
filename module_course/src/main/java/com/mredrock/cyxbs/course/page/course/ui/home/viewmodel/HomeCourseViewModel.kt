@@ -21,7 +21,6 @@ import io.reactivex.rxjava3.schedulers.Schedulers
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.SharedFlow
 import kotlinx.coroutines.launch
-import java.lang.IllegalStateException
 
 /**
  * ...
@@ -59,7 +58,7 @@ class HomeCourseViewModel : BaseViewModel() {
           _showLinkEvent.emit(isShowLink)
         }
       }
-    // 这里更新后，所有观察关联的地方都会重新发送新数据
+    // 这里更新后，所有观察关联人的地方都会重新发送新数据
   }
   
   /**
@@ -68,14 +67,17 @@ class HomeCourseViewModel : BaseViewModel() {
   fun refreshData() {
     LinkRepository.getLinkStudent()
       .flatMapCompletable {
+        // 直接调用网络刷新，请求成功后会修改数据库，然后上面的观察流会重新发送新的值
+        val self = StuLessonRepository.refreshLesson(it.selfNum)
+        val affair = Single.just<List<AffairData>>(emptyList()) // TODO 刷新事务待完成
+        val link = StuLessonRepository.refreshLesson(it.linkNum)
         if (it.isNotNull()) {
-          // 直接调用网络刷新，请求成功后会修改数据库，然后上面的观察流会重新发送新的值
-          val self = StuLessonRepository.refreshLesson(it.selfNum)
-          val link = StuLessonRepository.refreshLesson(it.linkNum)
-          // TODO 刷新事务待完成
-          Single.mergeDelayError(self, link) // 使用 mergeDelayError() 延迟异常
+          Single.mergeDelayError(self, link, affair) // 使用 mergeDelayError() 延迟异常
             .flatMapCompletable { Completable.complete() }
-        } else Completable.error(IllegalStateException("关联人数据为空！"))
+        } else {
+          Single.mergeDelayError(self, affair)
+            .flatMapCompletable { Completable.complete() }
+        }
       }.doOnError {
         viewModelScope.launch {
           _refresh.emit(false)
@@ -91,6 +93,9 @@ class HomeCourseViewModel : BaseViewModel() {
     initObserve()
   }
   
+  /**
+   * 注意：整个课表采用了观察者模式。数据库对应的数据改变，会自动修改视图内容
+   */
   private fun initObserve() {
     // 自己课的观察流
     val selfLessonObservable = StuLessonRepository.observeSelfLesson()

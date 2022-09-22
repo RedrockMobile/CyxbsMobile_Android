@@ -77,7 +77,7 @@ object StuLessonRepository {
    * 刷新某人的课，会抛出网络异常
    */
   fun refreshLesson(stuNum: String): Single<List<StuLessonEntity>> {
-    if (stuNum.isEmpty()) return Single.error(IllegalArgumentException("学号不能为空！"))
+    if (stuNum.isBlank()) return Single.error(IllegalArgumentException("学号不能为空！"))
     return CourseApiServices::class.api
       .getStuLesson(stuNum)
       .map {

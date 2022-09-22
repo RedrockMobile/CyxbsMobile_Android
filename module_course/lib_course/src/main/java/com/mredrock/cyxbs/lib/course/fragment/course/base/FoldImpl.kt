@@ -12,6 +12,8 @@ import com.mredrock.cyxbs.lib.course.fragment.course.expose.fold.*
 import com.mredrock.cyxbs.lib.course.helper.CourseFoldHelper
 import com.mredrock.cyxbs.lib.course.internal.view.course.ICourseViewGroup
 import com.mredrock.cyxbs.lib.course.utils.forEachInline
+import com.mredrock.cyxbs.lib.utils.extensions.invisible
+import com.mredrock.cyxbs.lib.utils.extensions.visible
 
 /**
  * ...
@@ -351,6 +353,11 @@ abstract class FoldImpl : ContainerImpl(), IFold {
       forEachNoon {
         setRowInitialWeight(it, 0F)
       }
+  
+      // 初始状态下折叠中午时间段
+      foldNoonWithoutAnim()
+      // 如果直接设置透明度会失效，即使使用 post 也是如此，原因未知，所以使用 invisible
+      viewNoonUnfold.invisible()
       
       // 中午时间段的折叠合展开动画
       addNoonFoldListener(
@@ -366,12 +373,10 @@ abstract class FoldImpl : ContainerImpl(), IFold {
           override fun onUnfolding(course: ICourseViewGroup, fraction: Float) {
             viewNoonFold.alpha = 1 - fraction
             viewNoonUnfold.alpha = fraction
+            viewNoonUnfold.visible()
           }
         }
       )
-      
-      // 初始状态下折叠中午时间段，需要在上面的监听增加后才能设置
-      foldNoonWithoutAnim()
     }
   }
   
@@ -382,7 +387,12 @@ abstract class FoldImpl : ContainerImpl(), IFold {
       forEachDusk {
         setRowInitialWeight(it, 0F)
       }
-      
+  
+      // 初始状态下折叠傍晚时间段
+      foldDuskWithoutAnim()
+      // 如果直接设置透明度会失效，即使使用 post 也是如此，原因未知，所以使用 invisible
+      viewDuskUnfold.invisible()
+  
       // 傍晚时间段的折叠和展开动画
       addDuskFoldListener(
         object : OnFoldListener {
@@ -397,12 +407,10 @@ abstract class FoldImpl : ContainerImpl(), IFold {
           override fun onUnfolding(course: ICourseViewGroup, fraction: Float) {
             viewDuskFold.alpha = 1 - fraction
             viewDuskUnfold.alpha = fraction
+            viewDuskUnfold.visible()
           }
         }
       )
-      
-      // 初始状态下折叠傍晚时间段，需要在上面的监听增加后才能设置
-      foldDuskWithoutAnim()
     }
   }
   

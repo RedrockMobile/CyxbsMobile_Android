@@ -54,10 +54,14 @@ object LinkRepository {
   
   /**
    * 只是单纯的得到数据，如果要观察请使用 [observeLinkStudent]
+   *
+   * ## 注意
+   * - 只要学号不为空串，就不会返回异常
+   * - 网络连接失败时会返回本地数据，本地数据为 null 时会返回一个空的 [LinkStuEntity]
    */
   fun getLinkStudent(): Single<LinkStuEntity> {
     val selfNum = IAccountService::class.impl.getUserService().getStuNum()
-    if (selfNum.isEmpty()) return Single.error(IllegalStateException("学号为空！"))
+    if (selfNum.isBlank()) return Single.error(IllegalStateException("学号为空！"))
     return LinkApiServices::class.api
       .getLinkStudent()
       .mapOrThrowApiException()
@@ -70,12 +74,12 @@ object LinkRepository {
           }
         }
         // 这里说明与远端的关联人不一样，需要修改数据库
-        val newLinkStu = LinkStuEntity(it, true)
+        val newLinkStu = LinkStuEntity(it, it.linkNum.isNotBlank())
         mLinkStuDB.insertLinkStu(newLinkStu)
         newLinkStu
       }.onErrorReturn {
         // 这里说明网络连接失败，只能使用本地数据
-        mLinkStuDB.getLinkStu(selfNum) ?: LinkStuEntity.NULL
+        mLinkStuDB.getLinkStu(selfNum) ?: LinkStuEntity(selfNum, "", "", "", false)
       }.subscribeOn(Schedulers.io())
   }
   
