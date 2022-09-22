@@ -259,7 +259,7 @@ object CourseHeaderHelper {
     lesson.hashDay,
     lesson.beginLesson,
     lesson.period,
-    if (isSelf) 0 else 1 // 自己的课优先在前面
+    if (isSelf) 0 else 2 // 自己的课优先在前面
   )
   
   data class AffairItem(
@@ -268,7 +268,7 @@ object CourseHeaderHelper {
     affair.day,
     affair.beginLesson,
     affair.period,
-    2 // 事务放到后面
+    1 // 事务放到自己课后面，关联人课前面
   )
   
   sealed interface Header

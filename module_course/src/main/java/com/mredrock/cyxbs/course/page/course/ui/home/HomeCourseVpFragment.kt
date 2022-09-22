@@ -3,6 +3,7 @@ package com.mredrock.cyxbs.course.page.course.ui.home
 import android.os.Bundle
 import android.view.View
 import androidx.fragment.app.viewModels
+import androidx.viewpager2.widget.ViewPager2.OnPageChangeCallback
 import com.mredrock.cyxbs.config.config.SchoolCalendarUtil
 import com.mredrock.cyxbs.course.page.course.ui.home.base.HomeCourseVpLinkFragment
 import com.mredrock.cyxbs.course.page.course.ui.home.viewmodel.HomeCourseViewModel
@@ -72,6 +73,14 @@ class HomeCourseVpFragment : HomeCourseVpLinkFragment() {
         // 这里课表的翻页不建议带有动画，因为数据过多会较卡
         mViewPager.setCurrentItem(if (it >= mVpAdapter.itemCount) 0 else it, false)
       }
+    
+    mViewPager.registerOnPageChangeCallback(
+      object : OnPageChangeCallback() {
+        override fun onPageSelected(position: Int) {
+          mViewModel.currentItem = position
+        }
+      }
+    )
   }
   
   private fun initObserve() {

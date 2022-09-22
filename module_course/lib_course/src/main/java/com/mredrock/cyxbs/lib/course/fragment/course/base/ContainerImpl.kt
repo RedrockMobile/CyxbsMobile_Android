@@ -134,7 +134,12 @@ abstract class ContainerImpl : AbstractCourseBaseFragment(), ICourseContainer {
   
         override fun onItemRemovedBefore(item: IItem, view: View) {
           when (item) {
-            is ILessonItem, is IAffairItem -> startExitAnimation(view)
+            is ILessonItem, is IAffairItem -> {
+              if (view.isAttachedToWindow) {
+                // 只对还显示在屏幕内的 view 开启动画
+                startExitAnimation(view)
+              }
+            }
           }
         }
   

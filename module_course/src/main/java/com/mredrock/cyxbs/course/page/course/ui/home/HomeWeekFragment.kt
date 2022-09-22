@@ -4,6 +4,7 @@ import android.os.Bundle
 import android.view.View
 import androidx.core.os.bundleOf
 import androidx.fragment.app.createViewModelLazy
+import androidx.lifecycle.distinctUntilChanged
 import androidx.lifecycle.map
 import com.mredrock.cyxbs.config.config.SchoolCalendarUtil
 import com.mredrock.cyxbs.course.page.course.ui.home.utils.EnterAnimUtils
@@ -65,7 +66,7 @@ class HomeWeekFragment : CourseWeekFragment() {
     }
   }
   
-  private var mIsNeedStartLinkLessonEntranceAnim: Boolean? = null
+  private var mIsHappenShowLinkEvent: Boolean? = null
   
   private val mSelfLessonContainerProxy = SelfLessonContainerProxy(this)
   private val mLinkLessonContainerProxy = LinkLessonContainerProxy(this)
@@ -74,18 +75,18 @@ class HomeWeekFragment : CourseWeekFragment() {
   private fun initObserve() {
     mParentViewModel.showLinkEvent
       .collectLaunch {
-        mIsNeedStartLinkLessonEntranceAnim = it
+        mIsHappenShowLinkEvent = it
       }
     
     mParentViewModel.homeWeekData
       .map { it[mWeek] ?: HomeCourseViewModel.HomePageResult }
+      .distinctUntilChanged()
       .observe {
         mSelfLessonContainerProxy.diffRefresh(it.self)
         mAffairContainerProxy.diffRefresh(it.affair)
         mLinkLessonContainerProxy.diffRefresh(it.link) { data ->
-          if (mIsNeedStartLinkLessonEntranceAnim == true && data.isNotEmpty()) {
-            // 这时说明触发了关联人的显示，需要实现入场动画
-            // 使用 mIsNeedStartLinkLessonEntranceAnim 很巧妙的避开了 Fragment 重建数据倒灌的问题
+          if (mIsHappenShowLinkEvent == true && mParentViewModel.currentItem == mWeek && data.isNotEmpty()) {
+            // 这时说明触发了关联人的显示，需要开启入场动画
             mLinkLessonContainerProxy.startAnimation()
           }
         }

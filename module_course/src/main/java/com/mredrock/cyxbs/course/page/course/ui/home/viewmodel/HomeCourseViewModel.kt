@@ -44,6 +44,9 @@ class HomeCourseViewModel : BaseViewModel() {
   
   val courseService = ICourseService::class.impl as CourseServiceImpl
   
+  // Vp2 的 currentItem
+  var currentItem: Int = 0
+  
   /**
    * 改变关联人的可见性
    */

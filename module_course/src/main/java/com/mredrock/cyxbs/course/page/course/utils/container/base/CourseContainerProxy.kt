@@ -56,7 +56,7 @@ abstract class CourseContainerProxy<Item, Data : Any>(
               if (mOldDataMap.remove(data) != null) {
                 // 移除成功说明是通过其他方式移除的
                 mFreePool.add(item)
-                removeDataFromOldList(data) // 这里是通过其他方式
+                removeDataFromOldList(data) // 这里是通过其他方式删除的
               }
               mShowItems.remove(item)
             }
