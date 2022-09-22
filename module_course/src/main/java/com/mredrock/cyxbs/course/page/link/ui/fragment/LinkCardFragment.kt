@@ -11,7 +11,6 @@ import androidx.core.animation.doOnEnd
 import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
 import com.mredrock.cyxbs.course.R
-import com.mredrock.cyxbs.course.page.find.room.FindStuEntity
 import com.mredrock.cyxbs.course.page.find.viewmodel.activity.FindLessonViewModel
 import com.mredrock.cyxbs.course.page.link.room.LinkStuEntity
 import com.mredrock.cyxbs.course.page.link.viewmodel.fragment.LinkCardViewModel
@@ -41,7 +40,7 @@ class LinkCardFragment : BaseFragment() {
   private val mViewLinkIngInclude by R.id.course_include_link_card_ing.view<View>()
     .addInitialize {
       setOnSingleClickListener {
-        mActivityViewModel.changeCourseState(FindStuEntity(mLinkStu.linkName, mLinkStu.linkNum))
+        mActivityViewModel.changeCourseState(mLinkStu.linkNum, true)
       }
     }
   

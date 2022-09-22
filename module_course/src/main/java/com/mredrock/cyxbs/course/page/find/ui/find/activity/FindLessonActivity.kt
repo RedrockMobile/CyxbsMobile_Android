@@ -1,5 +1,7 @@
 package com.mredrock.cyxbs.course.page.find.ui.find.activity
 
+import android.content.Context
+import android.content.Intent
 import android.os.Bundle
 import android.view.View
 import android.widget.FrameLayout
@@ -11,8 +13,6 @@ import com.google.android.material.tabs.TabLayout
 import com.google.android.material.tabs.TabLayoutMediator
 import com.mredrock.cyxbs.config.route.DISCOVER_OTHER_COURSE
 import com.mredrock.cyxbs.course.R
-import com.mredrock.cyxbs.course.page.find.room.FindStuEntity
-import com.mredrock.cyxbs.course.page.find.room.FindTeaEntity
 import com.mredrock.cyxbs.course.page.find.ui.course.stu.FindStuCourseFragment
 import com.mredrock.cyxbs.course.page.find.ui.course.tea.FindTeaCourseFragment
 import com.mredrock.cyxbs.course.page.find.ui.find.fragment.FindStuFragment
@@ -32,6 +32,56 @@ import com.mredrock.cyxbs.lib.utils.extensions.setOnSingleClickListener
 @Route(path = DISCOVER_OTHER_COURSE)
 class FindLessonActivity : BaseActivity() {
   
+  companion object {
+  
+    private const val Intent_stuNum = "需要查找的学生学号"
+    private const val Intent_stuName = "需要查找的学生名字"
+    private const val Intent_teaNum = "需要查找的老师学号"
+    private const val Intent_teaName = "需要查找的老师名字"
+    
+    // 下面几个方法可通过依赖 api_course 模块使用
+  
+    /**
+     * 通过学号查找对应学生的课表，会直接打开课表界面
+     */
+    fun startByStuNum(context: Context, stuNum: String) {
+      context.startActivity(
+        Intent(context, FindLessonActivity::class.java)
+          .putExtra(Intent_stuNum, stuNum)
+      )
+    }
+  
+    /**
+     * 通过名字查找对应学生，会打开查找的列表
+     */
+    fun startByStuName(context: Context, stuName: String) {
+      context.startActivity(
+        Intent(context, FindLessonActivity::class.java)
+          .putExtra(Intent_stuName, stuName)
+      )
+    }
+  
+    /**
+     * 通过工号查找对应老师的课表，会直接打开课表界面
+     */
+    fun startByTeaNum(context: Context, teaNum: String) {
+      context.startActivity(
+        Intent(context, FindLessonActivity::class.java)
+          .putExtra(Intent_teaNum, teaNum)
+      )
+    }
+  
+    /**
+     * 通过名字查找对应老师，会打开查找的列表
+     */
+    fun startByTeaName(context: Context, teaName: String) {
+      context.startActivity(
+        Intent(context, FindLessonActivity::class.java)
+          .putExtra(Intent_teaName, teaName)
+      )
+    }
+  }
+  
   private val mViewModel by viewModels<FindLessonViewModel>()
 
   private val mTabLayout by R.id.course_tl_find_course.view<TabLayout>()
@@ -40,18 +90,19 @@ class FindLessonActivity : BaseActivity() {
   private val mBottomSheet by lazyUnlock {
     BottomSheetBehavior.from(mBottomSheetView)
   }
-
+  
   override fun onCreate(savedInstanceState: Bundle?) {
     super.onCreate(savedInstanceState)
     setContentView(R.layout.course_activity_find_course)
     initView()
+    initIntent()
     initObserve()
   }
 
   private fun initView() {
     mViewPager.adapter = FragmentVpAdapter(this)
-      .add(FindStuFragment::class.java)
-      .add(FindTeaFragment::class.java)
+      .add { FindStuFragment() }
+      .add { FindTeaFragment() }
 
     TabLayoutMediator(mTabLayout, mViewPager) { tab, position ->
       when (position) {
@@ -73,17 +124,41 @@ class FindLessonActivity : BaseActivity() {
     
     findViewById<View>(R.id.course_ib_find_course_back).setOnSingleClickListener { finish() }
   }
+  
+  private fun initIntent() {
+    val stuNum = intent.getStringExtra(Intent_stuNum)
+    if (stuNum != null) {
+      mViewModel.findLesson(FindLessonViewModel.StuNum(stuNum))
+    } else {
+      val stuName = intent.getStringExtra(Intent_stuName)
+      if (stuName != null) {
+        mViewModel.findLesson(FindLessonViewModel.StuName(stuName))
+      } else {
+        val teaNum = intent.getStringExtra(Intent_teaNum)
+        if (teaNum != null) {
+          mViewPager.setCurrentItem(1, false)
+          mViewModel.findLesson(FindLessonViewModel.TeaNum(teaNum))
+        } else {
+          val teaName = intent.getStringExtra(Intent_teaName)
+          if (teaName != null) {
+            mViewPager.setCurrentItem(1, false)
+            mViewModel.findLesson(FindLessonViewModel.TeaName(teaName))
+          }
+        }
+      }
+    }
+  }
 
   private fun initObserve() {
     mViewModel.courseState.observe {
-      when (it) {
-        is FindStuEntity -> {
+      when (it?.second) {
+        true -> {
           mBottomSheet.state = BottomSheetBehavior.STATE_EXPANDED
-          FindStuCourseFragment.tryReplaceOrFresh(supportFragmentManager, mBottomSheetView.id, it.num)
+          FindStuCourseFragment.tryReplaceOrFresh(supportFragmentManager, mBottomSheetView.id, it.first)
         }
-        is FindTeaEntity -> {
+        false -> {
           mBottomSheet.state = BottomSheetBehavior.STATE_EXPANDED
-          FindTeaCourseFragment.tryReplaceOrFresh(supportFragmentManager, mBottomSheetView.id, it.num)
+          FindTeaCourseFragment.tryReplaceOrFresh(supportFragmentManager, mBottomSheetView.id, it.first)
         }
         null -> {
           mBottomSheet.state = BottomSheetBehavior.STATE_COLLAPSED
@@ -91,7 +166,7 @@ class FindLessonActivity : BaseActivity() {
       }
     }
   }
-
+  
   override fun onBackPressed() {
     if (mBottomSheet.state == BottomSheetBehavior.STATE_EXPANDED) {
       mBottomSheet.state = BottomSheetBehavior.STATE_COLLAPSED

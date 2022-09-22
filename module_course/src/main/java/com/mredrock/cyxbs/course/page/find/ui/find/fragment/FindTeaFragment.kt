@@ -17,6 +17,7 @@ import com.google.android.material.snackbar.Snackbar
 import com.mredrock.cyxbs.course.R
 import com.mredrock.cyxbs.course.page.find.adapter.RvHistoryAdapter
 import com.mredrock.cyxbs.course.page.find.room.FindPersonEntity
+import com.mredrock.cyxbs.course.page.find.room.FindStuEntity
 import com.mredrock.cyxbs.course.page.find.ui.find.activity.ShowResultActivity
 import com.mredrock.cyxbs.course.page.find.viewmodel.activity.FindLessonViewModel
 import com.mredrock.cyxbs.course.page.find.viewmodel.fragment.FindTeaViewModel
@@ -60,7 +61,7 @@ class FindTeaFragment : BaseFragment() {
       .setOnDeleteClick {
         mViewModel.deleteHistory(num)
       }.setOnTextClick {
-        mActivityViewModel.changeCourseState(this)
+        mActivityViewModel.changeCourseState(num, this is FindStuEntity)
       }.apply {
         mRvAdapter = this
       }
@@ -90,6 +91,16 @@ class FindTeaFragment : BaseFragment() {
 
     mViewModel.teacherHistory.observe {
       mRvAdapter.submitList(it.reversed())
+    }
+  
+    // 打开界面直接查找时
+    mActivityViewModel.findText.observe {
+      if (it is FindLessonViewModel.TeaName) {
+        mEtSearch.setText(it.text)
+        mViewModel.searchTeachers(it.text)
+      } else if (it is FindLessonViewModel.TeaNum) {
+        mActivityViewModel.changeCourseState(it.text, false)
+      }
     }
   }
 }

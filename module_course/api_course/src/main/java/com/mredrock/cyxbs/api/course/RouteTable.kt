@@ -16,3 +16,6 @@ const val COURSE_LESSON = "/course/service/lesson"
 
 // 课表服务模块-关联人
 const val COURSE_LINK = "/course/service/link"
+
+// 查找他人课表服务
+const val COURSE_FIND = "/course/find"

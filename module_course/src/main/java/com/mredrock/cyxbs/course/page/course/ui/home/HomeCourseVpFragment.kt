@@ -5,6 +5,7 @@ import android.view.View
 import androidx.fragment.app.viewModels
 import com.mredrock.cyxbs.course.page.course.ui.home.base.HomeCourseVpLinkFragment
 import com.mredrock.cyxbs.course.page.course.ui.home.viewmodel.HomeCourseViewModel
+import com.mredrock.cyxbs.course.page.find.ui.find.activity.FindLessonActivity
 import com.mredrock.cyxbs.lib.course.fragment.page.CoursePageFragment
 import com.mredrock.cyxbs.lib.utils.extensions.gone
 import com.mredrock.cyxbs.lib.utils.extensions.setOnSingleClickListener
@@ -46,7 +47,16 @@ class HomeCourseVpFragment : HomeCourseVpLinkFragment() {
       }
     }
     
+    mIvLink.setOnLongClickListener {
+      val linkNum = mViewModel.linkStu.value?.linkNum
+      return@setOnLongClickListener if (linkNum != null) {
+        FindLessonActivity.startByStuNum(it.context, linkNum)
+        true
+      } else false
+    }
+    
     mTvWhichWeek.setOnLongClickListener {
+      // 长按第几周可刷新课表数据
       mViewModel.refreshData()
       true
     }

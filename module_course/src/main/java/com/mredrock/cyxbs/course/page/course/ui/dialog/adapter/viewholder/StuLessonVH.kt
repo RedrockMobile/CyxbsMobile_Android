@@ -8,6 +8,7 @@ import com.mredrock.cyxbs.config.route.COURSE_POS_TO_MAP
 import com.mredrock.cyxbs.config.route.DISCOVER_MAP
 import com.mredrock.cyxbs.course.R
 import com.mredrock.cyxbs.course.page.course.data.StuLessonData
+import com.mredrock.cyxbs.course.page.find.ui.find.activity.FindLessonActivity
 import com.mredrock.cyxbs.lib.utils.extensions.gone
 import com.mredrock.cyxbs.lib.utils.extensions.setOnSingleClickListener
 import com.mredrock.cyxbs.lib.utils.extensions.visible
@@ -54,6 +55,16 @@ class StuLessonVH(
       ServiceManager.activity(DISCOVER_MAP) {
         withString(COURSE_POS_TO_MAP, data.course.classroom)
       }
+    }
+    
+    mTvTeacher.setOnSingleClickListener {
+      // 查找老师课表
+      FindLessonActivity.startByTeaName(it.context, data.course.teacher)
+    }
+    
+    mIvLink.setOnSingleClickListener {
+      // 跳到查找关联人课表的界面
+      FindLessonActivity.startByStuNum(it.context, data.stuNum)
     }
   }
 }

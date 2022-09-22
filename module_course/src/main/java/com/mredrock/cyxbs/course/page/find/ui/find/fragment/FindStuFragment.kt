@@ -17,6 +17,7 @@ import com.google.android.material.snackbar.Snackbar
 import com.mredrock.cyxbs.course.R
 import com.mredrock.cyxbs.course.page.find.adapter.RvHistoryAdapter
 import com.mredrock.cyxbs.course.page.find.room.FindPersonEntity
+import com.mredrock.cyxbs.course.page.find.room.FindStuEntity
 import com.mredrock.cyxbs.course.page.find.ui.find.activity.ShowResultActivity
 import com.mredrock.cyxbs.course.page.find.viewmodel.activity.FindLessonViewModel
 import com.mredrock.cyxbs.course.page.find.viewmodel.fragment.FindStuViewModel
@@ -68,7 +69,7 @@ class FindStuFragment : BaseFragment() {
       .setOnDeleteClick {
         mViewModel.deleteHistory(num)
       }.setOnTextClick {
-        mActivityViewModel.changeCourseState(this)
+        mActivityViewModel.changeCourseState(num, this is FindStuEntity)
       }.setOnLongClick {
         // 自己偷偷加的长按历史记录快速关联的功能 :)
         doIfLogin { // 登录才能使用
@@ -130,6 +131,16 @@ class FindStuFragment : BaseFragment() {
     // 历史记录数据的回调
     mViewModel.studentHistory.observe {
       mRvHistoryAdapter.submitList(it.reversed())
+    }
+    
+    // 打开界面直接查找时
+    mActivityViewModel.findText.observe {
+      if (it is FindLessonViewModel.StuName) {
+        mEtSearch.setText(it.text)
+        mViewModel.searchStudents(it.text)
+      } else if (it is FindLessonViewModel.StuNum) {
+        mActivityViewModel.changeCourseState(it.text, true)
+      }
     }
   }
 }
