@@ -10,8 +10,8 @@ import androidx.annotation.CallSuper
 import androidx.viewpager2.widget.ViewPager2
 import com.mredrock.cyxbs.lib.course.R
 import com.mredrock.cyxbs.lib.course.fragment.vp.expose.IHeaderCourseVp
+import com.mredrock.cyxbs.lib.utils.extensions.lazyUnlock
 import com.mredrock.cyxbs.lib.utils.extensions.setOnSingleClickListener
-import com.mredrock.cyxbs.lib.utils.utils.Num2CN
 
 /**
  * ...
@@ -37,6 +37,13 @@ abstract class AbstractHeaderCourseVpFragment : AbstractCourseVpFragment(), IHea
         mViewPager.currentItem = getPositionByNowWeek()
       }
     }
+  
+  protected val mWhichWeekStr by lazyUnlock {
+    resources.getStringArray(R.array.course_course_weeks_strings)
+  }
+  
+  override val mPageCount: Int
+    get() = mWhichWeekStr.size
   
   /**
    * 如果你要想在 Header 上新增东西，请重写该方法，并且在 xml 中使用 <include> 来包含原有的 Header 控件
@@ -90,10 +97,7 @@ abstract class AbstractHeaderCourseVpFragment : AbstractCourseVpFragment(), IHea
    * 设置对应位置的 [mTvWhichWeek] 文字
    */
   protected open fun getWhichWeekStr(position: Int): String {
-    return when (position) {
-      0 -> "整学期"
-      else -> "第${Num2CN.number2ChineseNumber(position.toLong())}周"
-    }
+    return mWhichWeekStr[position]
   }
   
   /**
