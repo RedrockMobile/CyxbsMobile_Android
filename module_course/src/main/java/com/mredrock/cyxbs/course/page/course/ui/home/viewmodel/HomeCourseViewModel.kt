@@ -13,7 +13,6 @@ import com.mredrock.cyxbs.course.page.link.room.LinkStuEntity
 import com.mredrock.cyxbs.course.service.CourseServiceImpl
 import com.mredrock.cyxbs.lib.base.ui.BaseViewModel
 import com.mredrock.cyxbs.lib.utils.service.impl
-import com.mredrock.cyxbs.lib.utils.utils.SchoolCalendarUtil
 import io.reactivex.rxjava3.core.Completable
 import io.reactivex.rxjava3.core.Observable
 import io.reactivex.rxjava3.core.Single
@@ -44,9 +43,6 @@ class HomeCourseViewModel : BaseViewModel() {
   val showLinkEvent: SharedFlow<Boolean> get() = _showLinkEvent
   
   val courseService = ICourseService::class.impl as CourseServiceImpl
-  
-  val nowWeek: Int  // 当前周数
-    get() = SchoolCalendarUtil.getWeekOfTerm() ?: 0
   
   /**
    * 改变关联人的可见性

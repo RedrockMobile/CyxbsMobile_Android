@@ -5,7 +5,6 @@ import android.view.View
 import androidx.core.os.bundleOf
 import com.mredrock.cyxbs.lib.course.fragment.page.CoursePageFragment
 import com.mredrock.cyxbs.lib.course.fragment.vp.AbstractHeaderCourseVpFragment
-import com.mredrock.cyxbs.lib.utils.utils.SchoolCalendarUtil
 import com.mredrock.cyxbs.noclass.bean.NoClassSpareTime
 
 /**
@@ -38,9 +37,6 @@ class NoClassCourseVpFragment : AbstractHeaderCourseVpFragment() {
     return if (position == 0) NoClassSemesterFragment.newInstance(mNoClassData[0]!!) else NoClassWeekFragment.newInstance(position,mNoClassData[position]!!)
   }
 
-  override val mNowWeek: Int
-    get() = SchoolCalendarUtil.getWeekOfTerm() ?: 0
-  
   override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
     super.onViewCreated(view, savedInstanceState)
     initViewPager()

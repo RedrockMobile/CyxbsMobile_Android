@@ -21,6 +21,9 @@ interface ILinkService : IProvider {
   
   /**
    * 观察当前登录人的关联情况
+   *
+   * ## 注意
+   * - 观察后是一定有值发送下来的，请使用 [LinkStu.isNull] 来判断是否存在关联人
    */
   fun observeSelfLinkStu(): Observable<LinkStu>
   
@@ -29,6 +32,16 @@ interface ILinkService : IProvider {
     val linkNum: String, // 关联人的学号
     val linkMajor: String, // 关联人的专业
     val linkName: String, // 关联人的姓名
-    val isShowLink: Boolean // 是否显示
-  ) : Serializable
+    val isShowLink: Boolean, // 是否显示
+    val isBoy: Boolean, // 关联人性别
+  ) : Serializable {
+    
+    fun isNull(): Boolean {
+      return linkNum.isBlank() || selfNum.isBlank()
+    }
+    
+    fun isNotNull(): Boolean {
+      return !isNull()
+    }
+  }
 }

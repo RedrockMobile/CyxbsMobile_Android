@@ -42,7 +42,6 @@
                 android:layout_marginStart="16dp"
                 android:paddingStart="0dp"
                 android:paddingEnd="15dp"
-                android:singleLine="true"
                 android:textColor="@color/config_level_two_font_color"
                 android:textSize="22sp"
                 android:textStyle="bold"

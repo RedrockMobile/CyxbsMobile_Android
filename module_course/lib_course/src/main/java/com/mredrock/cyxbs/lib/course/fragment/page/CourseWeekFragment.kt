@@ -5,7 +5,7 @@ import android.view.View
 import androidx.annotation.CallSuper
 import com.mredrock.cyxbs.lib.course.helper.CourseNowTimeHelper
 import com.mredrock.cyxbs.lib.utils.extensions.lazyUnlock
-import com.mredrock.cyxbs.lib.utils.utils.SchoolCalendarUtil
+import com.mredrock.cyxbs.config.config.SchoolCalendarUtil
 import java.util.*
 
 /**
@@ -38,22 +38,24 @@ abstract class CourseWeekFragment : CoursePageFragment() {
   @CallSuper
   override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
     super.onViewCreated(view, savedInstanceState)
-    onIsInThisWeek(setWeekNum())
+    initWeekNum()
   }
   
   /**
    * 设置星期数
    * @return 今天是否在本周
    */
-  protected open fun setWeekNum(): Boolean? {
-    val calendar = SchoolCalendarUtil.getFirstMonDayOfTerm()
-    return if (calendar != null) {
-      calendar.add(Calendar.DATE, (mWeek - 1) * 7)
-      val startTimestamp = calendar.timeInMillis
-      setMonth(calendar)
-      calendar.add(Calendar.DATE, 7)
-      System.currentTimeMillis() in startTimestamp .. calendar.timeInMillis
-    } else null
+  protected open fun initWeekNum() {
+    SchoolCalendarUtil.observeFirstMonDayOfTerm()
+      .firstElement()
+      .safeSubscribeBy {
+        it.add(Calendar.DATE, (mWeek - 1) * 7)
+        val startTimestamp = it.timeInMillis
+        setMonth(it)
+        it.add(Calendar.DATE, 7)
+        val isInThisWeek = System.currentTimeMillis() in startTimestamp .. it.timeInMillis
+        onIsInThisWeek(isInThisWeek)
+      }
   }
   
   protected open val mCourseNowTimeHelper by lazyUnlock {
@@ -62,10 +64,9 @@ abstract class CourseWeekFragment : CoursePageFragment() {
   
   /**
    * 今天是否在本周内的回调
-   * @param boolean 今天是否处于本周内，如果为 null，则未知 (一般是第一次打开掌邮没有请求课表数据时才会出现)
+   * @param boolean 今天是否处于本周内
    */
-  protected open fun onIsInThisWeek(boolean: Boolean?) {
-    if (boolean == null) return
+  protected open fun onIsInThisWeek(boolean: Boolean) {
     mCourseNowTimeHelper.setVisible(boolean)
     if (boolean) {
       val calendar = Calendar.getInstance()

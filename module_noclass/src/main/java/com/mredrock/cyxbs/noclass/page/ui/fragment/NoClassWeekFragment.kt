@@ -5,7 +5,7 @@ import android.view.View
 import androidx.core.os.bundleOf
 import androidx.fragment.app.activityViewModels
 import com.mredrock.cyxbs.lib.course.helper.CourseNowTimeHelper
-import com.mredrock.cyxbs.lib.utils.utils.SchoolCalendarUtil
+import com.mredrock.cyxbs.config.config.SchoolCalendarUtil
 import com.mredrock.cyxbs.noclass.bean.NoClassSpareTime
 import com.mredrock.cyxbs.noclass.page.viewmodel.NoClassViewModel
 import java.util.*

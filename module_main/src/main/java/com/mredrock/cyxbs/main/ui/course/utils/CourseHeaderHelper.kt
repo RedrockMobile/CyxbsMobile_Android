@@ -2,13 +2,16 @@ package com.mredrock.cyxbs.main.ui.course.utils
 
 import com.mredrock.cyxbs.api.account.IAccountService
 import com.mredrock.cyxbs.api.course.ILessonService
+import com.mredrock.cyxbs.api.course.ILinkService
 import com.mredrock.cyxbs.api.course.utils.*
 import com.mredrock.cyxbs.lib.utils.service.impl
-import com.mredrock.cyxbs.lib.utils.utils.SchoolCalendarUtil
+import com.mredrock.cyxbs.config.config.SchoolCalendarUtil
 import io.reactivex.rxjava3.core.Observable
 import io.reactivex.rxjava3.schedulers.Schedulers
 import okhttp3.internal.filterList
 import java.util.*
+import java.util.concurrent.TimeUnit
+import kotlin.collections.ArrayList
 import kotlin.math.abs
 
 /**
@@ -43,34 +46,52 @@ object CourseHeaderHelper {
    */
   fun observeHeader(): Observable<Header> {
     val lessonService = ILessonService::class.impl
+    val linkService = ILinkService::class.impl
     val affairService = AffairService()
-    return IAccountService::class.impl
-      .getUserService()
-      .observeStuNumState() // 观察学号的变化
-      .switchMap { value ->
-        value.nullUnless(Observable.just(HintHeader("登录后即可查看课表"))) {
-          // combineLast 可以同时观察任一个 Observable，
-          // 只要收到一个新的，他就会整和数据发给下游，不同于 zip 操作符，
-          // zip 操作符需要两个都发送新的才会整合发给下游
-          Observable.combineLatest(
-            lessonService.observeStuLesson(it),
-            affairService.observeAffair(it),
-          ) { lessons, affairs ->
-            val nowWeek = SchoolCalendarUtil.getWeekOfTerm()
-            if (nowWeek == null || nowWeek <= 0) {
-              HintHeader("享受假期吧～")
-            } else {
-              getHeader(nowWeek, lessons, affairs)
+    return SchoolCalendarUtil.observeWeekOfTerm()
+      .switchMap { week ->
+        if (week !in 1 .. 21) Observable.just(HintHeader("享受假期吧～"))
+        else {
+          // 观察当前登录人的学号
+          IAccountService::class.impl
+            .getUserService()
+            .observeStuNumState()
+            .switchMap { value ->
+              value.nullUnless(Observable.just(HintHeader("登录后即可查看课表"))) { selfNum ->
+                // combineLast 可以同时观察任一个 Observable，
+                // 只要收到一个新的，他就会整和数据发给下游，不同于 zip 操作符，
+                // zip 操作符需要三个都发送新的才会整合发给下游
+                Observable.combineLatest(
+                  lessonService.observeSelfLesson(),
+                  affairService.observeAffair(selfNum),
+                  linkService.observeSelfLinkStu().switchMap { linkStu ->
+                    lessonService.observeStuLesson(linkStu.linkNum)
+                      .map { lessonList -> Pair(lessonList, linkStu) }
+                  },
+                  Observable.interval(0, 1, TimeUnit.MINUTES) // 每分钟流动一次，用于刷新课表头
+                ) { stu, affairs, linkPair, _ ->
+                  getHeader(
+                    selfNum,
+                    week,
+                    ArrayList(stu).apply { addAll(linkPair.first) },
+                    affairs,
+                    linkPair.second.isBoy
+                  )
+                }.subscribeOn(Schedulers.io())
+              }
             }
-          }.subscribeOn(Schedulers.io())
         }
       }.startWithItem(HintHeader("数据加载中"))
+      .onErrorReturnItem(HintHeader("数据错误"))
+      .subscribeOn(Schedulers.io())
   }
   
   private fun getHeader(
+    selfNum: String,
     nowWeek: Int,
     lessonList: List<ILessonService.Lesson>,
-    affairList: List<Affair>
+    affairList: List<Affair>,
+    linkIsBoy: Boolean
   ): Header {
     val calendar = Calendar.getInstance()
     /*
@@ -120,7 +141,7 @@ object CourseHeaderHelper {
         } else {
           week == nowWeek && (hashDay == todayHashDay || hashDay == tomorrowHashDay)
         }
-      }.map { LessonItem(it) }
+      }.map { LessonItem(it, it.stuNum == selfNum) }
     )
     treeSet.addAll(
       affairList.filterList {
@@ -140,58 +161,65 @@ object CourseHeaderHelper {
       }.map { AffairItem(it) }
     )
     val nowTime = calendar.get(Calendar.HOUR_OF_DAY) * 60 + calendar.get(Calendar.MINUTE)
-    treeSet.forEach {
-      if (it.hashDay == todayHashDay) {
-        if (nowTime < it.startTime) {
-          return when (it) {
+    val heOrShe = if (linkIsBoy) "他" else "她"
+    val iterator = treeSet.iterator()
+    while (iterator.hasNext()) {
+      val item = iterator.next()
+      if (item.hashDay == todayHashDay) {
+        if (nowTime < item.startTime) {
+          return when (item) {
             is LessonItem -> ShowHeader(
-              "下节课",
-              it.lesson.course,
-              getShowTimeStr(it.lesson.beginLesson, it.lesson.period),
-              parseClassRoom(it.lesson.classroom),
-              true
+              if (item.isSelf) "下节课" else "${heOrShe}的下节课",
+              item.lesson.course,
+              getShowTimeStr(item.lesson.beginLesson, item.lesson.period),
+              parseClassRoom(item.lesson.classroom),
+              item
             )
             is AffairItem -> ShowHeader(
               "下个事务",
-              it.affair.title,
-              getShowTimeStr(it.affair.beginLesson, it.affair.period),
-              it.affair.content,
-              false
+              item.affair.title,
+              getShowTimeStr(item.affair.beginLesson, item.affair.period),
+              item.affair.content,
+              item
             )
           }
-        } else if (nowTime < it.endTime) {
-          return when (it) {
+        } else if (nowTime < item.endTime) {
+          return when (item) {
             is LessonItem -> ShowHeader(
-              "进行中...",
-              it.lesson.course,
-              getShowTimeStr(it.lesson.beginLesson, it.lesson.period),
-              parseClassRoom(it.lesson.classroom),
-              true
+              if (item.isSelf) "进行中..." else "${heOrShe}的课进行中...",
+              item.lesson.course,
+              getShowTimeStr(item.lesson.beginLesson, item.lesson.period),
+              parseClassRoom(item.lesson.classroom),
+              item
             )
             is AffairItem -> ShowHeader(
               "进行中...",
-              it.affair.title,
-              getShowTimeStr(it.affair.beginLesson, it.affair.period),
-              it.affair.content,
-              false
+              item.affair.title,
+              getShowTimeStr(item.affair.beginLesson, item.affair.period),
+              item.affair.content,
+              item
             )
           }
         }
-      } else if (it.hashDay == tomorrowHashDay) {
-        return when (it) {
+      } else if (item.hashDay == tomorrowHashDay) {
+        if (item is LessonItem) {
+          // 这里我想了下，还是优先显示自己的课比较好，所以关联人的课就跳过
+          if (!item.isSelf) continue
+        }
+        return when (item) {
           is LessonItem -> ShowHeader(
             "明天",
-            it.lesson.course,
-            getShowTimeStr(it.lesson.beginLesson, it.lesson.period),
-            parseClassRoom(it.lesson.classroom),
-            true
+            item.lesson.course,
+            getShowTimeStr(item.lesson.beginLesson, item.lesson.period),
+            parseClassRoom(item.lesson.classroom),
+            item
           )
           is AffairItem -> ShowHeader(
             "明天事务",
-            it.affair.title,
-            getShowTimeStr(it.affair.beginLesson, it.affair.period),
-            it.affair.content,
-            false
+            item.affair.title,
+            getShowTimeStr(item.affair.beginLesson, item.affair.period),
+            item.affair.content,
+            item
           )
         }
       }
@@ -211,7 +239,7 @@ object CourseHeaderHelper {
    * @param period 课的长度
    * @param rank 先后顺序，再开始时间都相同的时候，会用它作为标准来判断谁在前面，越小的越在前面
    */
-  private sealed class Item(
+  sealed class Item(
     val hashDay: Int,
     beginLesson: Int,
     period: Int,
@@ -219,26 +247,28 @@ object CourseHeaderHelper {
   ) {
     // 开始时间大小，为 小时数 * 60 + 分钟数
     val startTime: Int = getStartTime(getStartRow(beginLesson))
+    
     // 结束时间大小，为 小时数 * 60 + 分钟数
     val endTime: Int = getEndTime(getEndRow(beginLesson, period))
   }
   
-  private data class LessonItem(
-    val lesson: ILessonService.Lesson
+  data class LessonItem(
+    val lesson: ILessonService.Lesson,
+    val isSelf: Boolean
   ) : Item(
     lesson.hashDay,
     lesson.beginLesson,
     lesson.period,
-    0 // 课优先在前面
+    if (isSelf) 0 else 1 // 自己的课优先在前面
   )
   
-  private data class AffairItem(
+  data class AffairItem(
     val affair: Affair
   ) : Item(
     affair.day,
     affair.beginLesson,
     affair.period,
-    1 // 事务放到后面
+    2 // 事务放到后面
   )
   
   sealed interface Header
@@ -252,6 +282,6 @@ object CourseHeaderHelper {
     val title: String,
     val time: String,
     val content: String,
-    val isLesson: Boolean
+    val item: Item
   ) : Header
 }

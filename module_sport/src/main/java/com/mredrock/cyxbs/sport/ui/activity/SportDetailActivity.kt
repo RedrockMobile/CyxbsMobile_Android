@@ -11,7 +11,7 @@ import com.mredrock.cyxbs.config.route.DISCOVER_SPORT
 import com.mredrock.cyxbs.config.route.LOGIN_BIND_IDS
 import com.mredrock.cyxbs.lib.base.ui.BaseBindActivity
 import com.mredrock.cyxbs.lib.utils.extensions.*
-import com.mredrock.cyxbs.lib.utils.utils.SchoolCalendarUtil
+import com.mredrock.cyxbs.config.config.SchoolCalendarUtil
 import com.mredrock.cyxbs.sport.R
 import com.mredrock.cyxbs.sport.databinding.SportActivitySportDetailBinding
 import com.mredrock.cyxbs.sport.model.SportDetailBean

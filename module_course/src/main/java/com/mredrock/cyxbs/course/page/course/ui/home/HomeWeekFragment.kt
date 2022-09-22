@@ -5,6 +5,7 @@ import android.view.View
 import androidx.core.os.bundleOf
 import androidx.fragment.app.createViewModelLazy
 import androidx.lifecycle.map
+import com.mredrock.cyxbs.config.config.SchoolCalendarUtil
 import com.mredrock.cyxbs.course.page.course.ui.home.utils.EnterAnimUtils
 import com.mredrock.cyxbs.course.page.course.ui.home.viewmodel.HomeCourseViewModel
 import com.mredrock.cyxbs.course.page.course.utils.container.AffairContainerProxy
@@ -47,12 +48,20 @@ class HomeWeekFragment : CourseWeekFragment() {
   }
   
   private fun initEntrance() {
+    // 如果是被异常重启，则不执行动画
     if (!mIsFragmentRebuilt) {
-      // 如果是被异常重启，则不执行动画
-      if (mParentViewModel.nowWeek == mWeek) {
-        // 判断周数，只对当前周进行动画
-        EnterAnimUtils.startEnterAnim(course, mParentViewModel, viewLifecycleOwner)
-      }
+      /**
+       * 观察第几周，因为如果是初次进入应用，会因为得不到周数而不主动翻页，所以只能观察该数据
+       * 但这是因为主页课表比较特殊而进行观察，其他界面可以直接使用 *VpFragment 的 mNowWeek 变量
+       */
+      SchoolCalendarUtil.observeWeekOfTerm()
+        .firstElement()
+        .safeSubscribeBy {
+          if (it == mWeek) {
+            // 判断周数，只对当前周进行动画
+            EnterAnimUtils.startEnterAnim(course, mParentViewModel, viewLifecycleOwner)
+          }
+        }
     }
   }
   
@@ -73,8 +82,8 @@ class HomeWeekFragment : CourseWeekFragment() {
       .observe {
         mSelfLessonContainerProxy.diffRefresh(it.self)
         mAffairContainerProxy.diffRefresh(it.affair)
-        mLinkLessonContainerProxy.diffRefresh(it.link) {
-          if (mIsNeedStartLinkLessonEntranceAnim == true) {
+        mLinkLessonContainerProxy.diffRefresh(it.link) { data ->
+          if (mIsNeedStartLinkLessonEntranceAnim == true && data.isNotEmpty()) {
             // 这时说明触发了关联人的显示，需要实现入场动画
             // 使用 mIsNeedStartLinkLessonEntranceAnim 很巧妙的避开了 Fragment 重建数据倒灌的问题
             mLinkLessonContainerProxy.startAnimation()

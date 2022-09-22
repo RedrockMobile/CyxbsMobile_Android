@@ -1,7 +1,9 @@
-package com.mredrock.cyxbs.lib.utils.utils
+package com.mredrock.cyxbs.config.config
 
 import androidx.core.content.edit
 import com.mredrock.cyxbs.config.sp.defaultSp
+import io.reactivex.rxjava3.core.Observable
+import io.reactivex.rxjava3.subjects.BehaviorSubject
 import java.util.*
 import java.util.concurrent.TimeUnit
 
@@ -27,10 +29,22 @@ object SchoolCalendarUtil {
    * # 注意：存在返回负数的情况！！！
    */
   fun getDayOfTerm(): Int? {
-    return checkFirstDay {
-      val diff = System.currentTimeMillis() - mFirstMonDayCalendar.timeInMillis
+    return mBehaviorSubject.value?.run {
+      val diff = System.currentTimeMillis() - timeInMillis
       TimeUnit.DAYS.convert(diff, TimeUnit.MILLISECONDS).toInt()
     }
+  }
+  
+  /**
+   * 观察这学期过去了多少天
+   */
+  fun observeDayOfTerm(): Observable<Int> {
+    return mBehaviorSubject
+      .distinctUntilChanged()
+      .map {
+        val diff = System.currentTimeMillis() - it.timeInMillis
+        TimeUnit.DAYS.convert(diff, TimeUnit.MILLISECONDS).toInt()
+      }
   }
   
   /**
@@ -45,10 +59,11 @@ object SchoolCalendarUtil {
   }
   
   /**
-   * 是否是上学期（即秋季学期），否则是下学期（春季学期）
+   * 观察当前周数
    */
-  fun isFirstSemester() : Boolean {
-    return Calendar.getInstance()[Calendar.MONTH + 1] > 8
+  fun observeWeekOfTerm(): Observable<Int> {
+    return observeDayOfTerm()
+      .map { it / 7 + 1 }
   }
   
   /**
@@ -57,16 +72,56 @@ object SchoolCalendarUtil {
    * @return 返回 null，则说明不知道开学第一天是好久
    */
   fun getFirstMonDayOfTerm(): Calendar? {
-    return checkFirstDay {
-      mFirstMonDayCalendar.clone() as Calendar
-    }
+    return mBehaviorSubject.value?.clone() as Calendar?
   }
   
-  fun getFirstMonDayTimestamp(): Long? {
-    return checkFirstDay {
-      mFirstMonDayCalendar.timeInMillis
-    }
+  /**
+   * 观察开学第一周的星期一
+   */
+  fun observeFirstMonDayOfTerm(): Observable<Calendar> {
+    return mBehaviorSubject
+      .distinctUntilChanged()
+      .map { it.clone() as Calendar }
   }
+  
+  /**
+   * 得到开学第一周的星期一的时间戳
+   */
+  fun getFirstMonDayTimestamp(): Long? {
+    return mBehaviorSubject.value?.timeInMillis
+  }
+  
+  /**
+   * 观察开学第一周的星期一的时间戳
+   */
+  fun observeFirstMonDayTimestamp(): Observable<Long> {
+    return mBehaviorSubject
+      .distinctUntilChanged()
+      .map { it.timeInMillis }
+  }
+  
+  /**
+   * 是否是上学期（即秋季学期），否则是下学期（春季学期）
+   */
+  fun isFirstSemester() : Boolean {
+    return Calendar.getInstance()[Calendar.MONTH + 1] > 8
+  }
+  
+  private val mBehaviorSubject = BehaviorSubject.create<Calendar>()
+    .apply {
+      val oldTimestamp = defaultSp.getLong(FIRST_MON_DAY, 0L)
+      if (oldTimestamp != 0L) {
+        val newCalendar = Calendar.getInstance().apply {
+          timeInMillis = oldTimestamp
+          // 保证是绝对的第一天的开始
+          set(Calendar.HOUR_OF_DAY, 0)
+          set(Calendar.MINUTE, 0)
+          set(Calendar.SECOND, 0)
+          set(Calendar.MILLISECOND, 0)
+        }
+        onNext(newCalendar)
+      }
+    }
   
   /**
    * 更新开学时间
@@ -108,35 +163,12 @@ object SchoolCalendarUtil {
       set(Calendar.SECOND, 0)
       set(Calendar.MILLISECOND, 0)
     }
-    mFirstMonDayCalendar.timeInMillis = calendar.timeInMillis
     defaultSp.edit {
       // 因为那边 lib_common 有类还需要使用这个，所以需要保存在 defaultSp 中
       putLong(FIRST_MON_DAY, calendar.timeInMillis)
     }
+    mBehaviorSubject.onNext(calendar)
   }
   
   private const val FIRST_MON_DAY = "first_day" // 这个与 lib_common 包中的 SchoolCalendar 保持一致
-  
-  private var mFirstMonDayCalendar = Calendar.getInstance().apply {
-    timeInMillis = defaultSp.getLong(FIRST_MON_DAY, 0L)
-  }
-  
-  /**
-   * 检查 [mFirstMonDayCalendar] 是否正确
-   *
-   * 只有他第一次安装且没有网络时才会出现这个情况，只要之后加载了网络，都不会再出现问题
-   */
-  private inline fun <T> checkFirstDay(action: () -> T): T? {
-    // 不知道第一天的时间戳，说明之前都没有登录过课表
-    mFirstMonDayCalendar.timeInMillis = defaultSp.getLong(FIRST_MON_DAY, 0L)
-    if (mFirstMonDayCalendar.timeInMillis == 0L) return null
-    mFirstMonDayCalendar.apply {
-      // 保证是绝对的第一天的开始
-      set(Calendar.HOUR_OF_DAY, 0)
-      set(Calendar.MINUTE, 0)
-      set(Calendar.SECOND, 0)
-      set(Calendar.MILLISECOND, 0)
-    }
-    return action.invoke()
-  }
 }

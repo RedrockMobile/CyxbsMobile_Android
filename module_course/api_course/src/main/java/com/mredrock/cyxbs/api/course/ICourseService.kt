@@ -1,5 +1,6 @@
 package com.mredrock.cyxbs.api.course
 
+import android.content.Context
 import androidx.annotation.IdRes
 import androidx.fragment.app.FragmentManager
 import com.alibaba.android.arouter.facade.template.IProvider
@@ -39,4 +40,14 @@ interface ICourseService : IProvider {
    * 设置 BottomSheet 偏移量
    */
   fun setBottomSheetSlideOffset(offset: Float)
+  
+  /**
+   * 通过 [lesson] 打开对应 BottomSheetDialog
+   */
+  fun openBottomSheetDialogByLesson(context: Context, lesson: ILessonService.Lesson)
+  
+  /**
+   * 通过 [affair] 打开对应 BottomSheetDialog
+   */
+  fun openBottomSheetDialogByAffair(context: Context, affair: Any)
 }

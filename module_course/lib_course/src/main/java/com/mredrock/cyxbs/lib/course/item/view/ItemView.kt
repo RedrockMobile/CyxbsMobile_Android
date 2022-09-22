@@ -41,11 +41,13 @@ abstract class ItemView(context: Context) : CardView(context) {
   
   override fun onLayout(changed: Boolean, left: Int, top: Int, right: Int, bottom: Int) {
     super.onLayout(changed, left, top, right, bottom)
-    if (tvTitle.bottom >= tvContent.top) {
-      // 如果标题与内容存在重叠，则取消内容的显示
-      tvContent.gone()
-    } else {
-      tvContent.visible()
+    if (changed) {
+      if (tvTitle.bottom >= tvContent.top) {
+        // 如果标题与内容存在重叠，则取消内容的显示
+        tvContent.invisible()
+      } else {
+        tvContent.visible()
+      }
     }
   }
   

@@ -30,6 +30,7 @@ import com.mredrock.cyxbs.common.service.ServiceManager
 import com.mredrock.cyxbs.common.service.impl
 import com.mredrock.cyxbs.common.ui.BaseViewModelFragment
 import com.mredrock.cyxbs.common.utils.Num2CN
+import com.mredrock.cyxbs.common.utils.SchoolCalendar
 import com.mredrock.cyxbs.common.utils.extensions.doIfLogin
 import com.mredrock.cyxbs.common.utils.extensions.dp2px
 import com.mredrock.cyxbs.discover.R
@@ -40,7 +41,6 @@ import com.mredrock.cyxbs.discover.utils.IS_SWITCH1_SELECT
 import com.mredrock.cyxbs.discover.utils.NotificationSp
 import com.mredrock.cyxbs.lib.utils.extensions.dp2pxF
 import com.mredrock.cyxbs.lib.utils.extensions.setOnSingleClickListener
-import com.mredrock.cyxbs.lib.utils.utils.SchoolCalendarUtil
 import com.ndhzs.slideshow.SlideShow
 import com.ndhzs.slideshow.adapter.ImageViewAdapter
 import com.ndhzs.slideshow.adapter.setImgAdapter
@@ -88,7 +88,7 @@ class DiscoverHomeFragment : BaseViewModelFragment<DiscoverHomeViewModel>() {
         if (!IAccountService::class.impl.getVerifyService().isLogin()) {
             tv_day.text = "登录解锁更多功能~"
         } else {
-            val nowWeek = SchoolCalendarUtil.getWeekOfTerm()
+            val nowWeek = SchoolCalendar.getWeekOfTerm()
             if (nowWeek != null) {
                 //这个用来判断是不是可能处于是暑假的那段时间除非大变动应该暑假绝对是6，7，8，9月当中
                 val summerVacation = listOf(6, 7, 8, 9)
@@ -153,6 +153,7 @@ class DiscoverHomeFragment : BaseViewModelFragment<DiscoverHomeViewModel>() {
             mSlideShow.addTransformer(ScaleInTransformer())
                 .setAutoSlideTime(1200, 6000)
                 .setTimeInterpolator(DecelerateInterpolator())
+                .apply { offscreenPageLimit = 1 }
                 .setImgAdapter(
                     ImageViewAdapter.Builder(list, 8.dp2pxF)
                         .onCreate {

@@ -17,13 +17,17 @@ data class LinkStudent(
   @SerializedName("name")
   val name: String,
   @SerializedName("selfNum")
-  val selfNum: String // 自身的学号
+  val selfNum: String, // 自身的学号
+  @SerializedName("gender")
+  val gender: String, // 关联人性别
 ) : Serializable {
-  fun isNotEmpty(): Boolean {
-    return linkNum.isNotEmpty()
+  
+  fun isEmpty(): Boolean {
+    // 后端在没有关联人时返回空串
+    return linkNum.isEmpty()
   }
   
-  companion object {
-    val EMPTY = LinkStudent("", "", "", "")
+  fun isNotEmpty(): Boolean {
+    return linkNum.isNotEmpty()
   }
 }

@@ -66,20 +66,21 @@ object LinkRepository {
       .getLinkStudent()
       .mapOrThrowApiException()
       .map {
-        // 因为本地有个是否显示的逻辑，所以需要先拿本地数据库做比较
+        // 因为本地有其他字段，所以需要先拿本地数据库做比较
         val linkStu = mLinkStuDB.getLinkStu(selfNum)
-        if (linkStu != null) {
+        if (linkStu != null && linkStu.isNotNull()) {
           if (linkStu.linkNum == it.linkNum) {
             return@map linkStu
           }
         }
         // 这里说明与远端的关联人不一样，需要修改数据库
-        val newLinkStu = LinkStuEntity(it, it.linkNum.isNotBlank())
+        // 但注意后端对应没有关联人时会返回空串，所以需要使用 it.isNotEmpty()
+        val newLinkStu = LinkStuEntity(it, it.isNotEmpty(), it.gender == "男")
         mLinkStuDB.insertLinkStu(newLinkStu)
         newLinkStu
       }.onErrorReturn {
         // 这里说明网络连接失败，只能使用本地数据
-        mLinkStuDB.getLinkStu(selfNum) ?: LinkStuEntity(selfNum, "", "", "", false)
+        mLinkStuDB.getLinkStu(selfNum) ?: LinkStuEntity.NULL.copy(selfNum = selfNum)
       }.subscribeOn(Schedulers.io())
   }
   
@@ -97,12 +98,13 @@ object LinkRepository {
       }.subscribeOn(Schedulers.io())
   }
   
-  fun changeLinkStudent(linkStu: String): Single<LinkStuEntity> {
+  fun changeLinkStudent(linkNum: String): Single<LinkStuEntity> {
     return LinkApiServices::class.api
-      .changeLinkStudent(linkStu)
+      .changeLinkStudent(linkNum)
       .mapOrThrowApiException()
-      .map { LinkStuEntity(it, true) }
-      .doOnSuccess {
+      .map {
+        LinkStuEntity(it, true, it.gender == "男")
+      }.doOnSuccess {
         mLinkStuDB.insertLinkStu(it)
       }.subscribeOn(Schedulers.io())
   }

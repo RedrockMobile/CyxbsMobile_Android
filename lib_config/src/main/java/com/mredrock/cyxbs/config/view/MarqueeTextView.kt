@@ -24,6 +24,7 @@ class MarqueeTextView(
   init {
     ellipsize = TextUtils.TruncateAt.MARQUEE
     marqueeRepeatLimit = -1
+    setSingleLine()
   }
   
   override fun isFocused(): Boolean {

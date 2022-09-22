@@ -8,6 +8,10 @@ import androidx.lifecycle.MutableLiveData
 import com.alibaba.android.arouter.facade.annotation.Route
 import com.mredrock.cyxbs.api.course.COURSE_SERVICE
 import com.mredrock.cyxbs.api.course.ICourseService
+import com.mredrock.cyxbs.api.course.ILessonService
+import com.mredrock.cyxbs.course.page.course.data.LessonData
+import com.mredrock.cyxbs.course.page.course.data.StuLessonData
+import com.mredrock.cyxbs.course.page.course.ui.dialog.CourseBottomDialog
 import com.mredrock.cyxbs.course.page.course.ui.home.HomeCourseVpFragment
 
 /**
@@ -42,6 +46,33 @@ class CourseServiceImpl : ICourseService {
   
   override fun setBottomSheetSlideOffset(offset: Float) {
     _bottomSheetSlideOffset.value = offset
+  }
+  
+  override fun openBottomSheetDialogByLesson(context: Context, lesson: ILessonService.Lesson) {
+    CourseBottomDialog(
+      context,
+      listOf(
+        StuLessonData(
+          lesson.stuNum,
+          lesson.week,
+          LessonData.Course(
+            lesson.course,
+            lesson.classroom,
+            lesson.courseNum,
+            lesson.hashDay,
+            lesson.beginLesson,
+            lesson.period,
+            lesson.teacher,
+            lesson.rawWeek,
+            lesson.type
+          )
+        )
+      ), true
+    ).show()
+  }
+  
+  override fun openBottomSheetDialogByAffair(context: Context, affair: Any) {
+    // TODO 待完成
   }
   
   private val _headerAlphaState = MutableLiveData<Float>()

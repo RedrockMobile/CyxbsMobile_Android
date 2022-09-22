@@ -3,7 +3,6 @@ package com.mredrock.cyxbs.lib.course.item.single
 import android.content.Context
 import android.util.SparseIntArray
 import android.view.View
-import android.view.animation.AlphaAnimation
 import androidx.core.util.forEach
 import androidx.core.util.isNotEmpty
 import com.mredrock.cyxbs.lib.course.R
@@ -148,9 +147,6 @@ abstract class AbstractOverlapSingleDayItem : IOverlapItem, OverlapHelper.IImpl,
     refreshFreeArea()
     repeat(mChildInParent.size - mFreeAreaMap.size()) {
       val view = mChildInParent.removeLast()
-      // 执行淡出动画
-      val animation = AlphaAnimation(1F, 0F).apply { duration = 360 }
-      mView.startAnimation(animation)
       mView.removeView(view)
       mChildInFree.add(view)
     }
@@ -158,9 +154,6 @@ abstract class AbstractOverlapSingleDayItem : IOverlapItem, OverlapHelper.IImpl,
       val view = mChildInFree.removeLastOrNull() ?: createView(mView.context)
       val params = view.layoutParams as? NetLayoutParams ?: createNetLayoutParams()
       mView.addNetChild(view, params)
-      // 执行淡入动画
-      val animation = AlphaAnimation(0F, 1F).apply { duration = 360 }
-      view.startAnimation(animation)
       mChildInParent.add(view)
     }
     repeat(mFreeAreaMap.size()) {

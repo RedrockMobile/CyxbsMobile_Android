@@ -19,7 +19,6 @@
             android:textSize="22sp"
             android:textStyle="bold"
             android:textColor="@color/config_level_two_font_color"
-            android:maxLines="1"
             android:layout_marginEnd="16dp"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toStartOf="@id/course_btn_dialog_affair_delete"

@@ -12,7 +12,7 @@ import com.mredrock.cyxbs.lib.utils.extensions.unsafeSubscribeBy
 import com.mredrock.cyxbs.lib.utils.network.ApiException
 import com.mredrock.cyxbs.lib.utils.network.api
 import com.mredrock.cyxbs.lib.utils.service.impl
-import com.mredrock.cyxbs.lib.utils.utils.SchoolCalendarUtil
+import com.mredrock.cyxbs.config.config.SchoolCalendarUtil
 import io.reactivex.rxjava3.core.*
 import io.reactivex.rxjava3.core.Observable
 import io.reactivex.rxjava3.schedulers.Schedulers
@@ -68,7 +68,7 @@ object StuLessonRepository {
       .observeLesson(stuNum)
       .doOnSubscribe {
         // 在开始订阅时异步请求一次云端数据，所以下游会先拿到本地数据库中的数据，如果远端数据更新了，整个流会再次通知
-        getLesson(stuNum).unsafeSubscribeBy()
+        refreshLesson(stuNum).unsafeSubscribeBy()
       }.distinctUntilChanged() // 去重
       .subscribeOn(Schedulers.io())
   }

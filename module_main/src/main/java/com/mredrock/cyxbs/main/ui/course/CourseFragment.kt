@@ -10,11 +10,11 @@ import androidx.fragment.app.activityViewModels
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.mredrock.cyxbs.api.account.IAccountService
 import com.mredrock.cyxbs.api.course.ICourseService
+import com.mredrock.cyxbs.config.route.COURSE_POS_TO_MAP
+import com.mredrock.cyxbs.config.route.DISCOVER_MAP
 import com.mredrock.cyxbs.lib.base.ui.BaseFragment
-import com.mredrock.cyxbs.lib.utils.extensions.gone
-import com.mredrock.cyxbs.lib.utils.extensions.invisible
-import com.mredrock.cyxbs.lib.utils.extensions.lazyUnlock
-import com.mredrock.cyxbs.lib.utils.extensions.visible
+import com.mredrock.cyxbs.lib.utils.extensions.*
+import com.mredrock.cyxbs.lib.utils.service.ServiceManager
 import com.mredrock.cyxbs.lib.utils.service.impl
 import com.mredrock.cyxbs.main.R
 import com.mredrock.cyxbs.main.ui.course.utils.CourseHeaderHelper
@@ -85,8 +85,8 @@ class CourseFragment : BaseFragment() {
   
     CourseHeaderHelper.observeHeader()
       .observeOn(AndroidSchedulers.mainThread())
-      .safeSubscribeBy {
-        when (it) {
+      .safeSubscribeBy { header ->
+        when (header) {
           is CourseHeaderHelper.HintHeader -> {
             mTvHeaderState.invisible()
             mTvHeaderTitle.invisible()
@@ -94,24 +94,39 @@ class CourseFragment : BaseFragment() {
             mTvHeaderPlace.invisible()
             mTvHeaderContent.invisible()
             mTvHeaderHint.visible()
-            mTvHeaderHint.text = it.hint
+            mTvHeaderHint.text = header.hint
           }
           is CourseHeaderHelper.ShowHeader -> {
             mTvHeaderState.visible()
             mTvHeaderTitle.visible()
             mTvHeaderTime.visible()
             mTvHeaderHint.invisible()
-            mTvHeaderState.text = it.state
-            mTvHeaderTitle.text = it.title
-            mTvHeaderTime.text = it.time
-            if (it.isLesson) {
-              mTvHeaderContent.invisible()
-              mTvHeaderPlace.visible()
-              mTvHeaderPlace.text = it.content
-            } else {
-              mTvHeaderContent.visible()
-              mTvHeaderPlace.invisible()
-              mTvHeaderContent.text = it.content
+            mTvHeaderState.text = header.state
+            mTvHeaderTitle.text = header.title
+            mTvHeaderTime.text = header.time
+            when (header.item) {
+              is CourseHeaderHelper.LessonItem -> {
+                mTvHeaderContent.invisible()
+                mTvHeaderPlace.visible()
+                mTvHeaderPlace.text = header.content
+                mTvHeaderPlace.setOnSingleClickListener {
+                  // 跳转至地图界面
+                  ServiceManager.activity(DISCOVER_MAP) {
+                    withString(COURSE_POS_TO_MAP, header.content)
+                  }
+                }
+                mTvHeaderTitle.setOnSingleClickListener {
+                  mCourseService.openBottomSheetDialogByLesson(requireContext(), header.item.lesson)
+                }
+              }
+              is CourseHeaderHelper.AffairItem -> {
+                mTvHeaderContent.visible()
+                mTvHeaderPlace.invisible()
+                mTvHeaderContent.text = header.content
+                mTvHeaderTitle.setOnSingleClickListener {
+                  mCourseService.openBottomSheetDialogByAffair(requireContext(), header.item.affair)
+                }
+              }
             }
           }
         }

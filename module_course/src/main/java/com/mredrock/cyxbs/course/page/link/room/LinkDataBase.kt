@@ -34,17 +34,19 @@ data class LinkStuEntity(
   val linkNum: String, // 关联人的学号
   val linkMajor: String, // 关联人的专业
   val linkName: String, // 关联人的姓名
-  val isShowLink: Boolean // 是否显示
+  val isShowLink: Boolean, // 是否显示
+  val isBoy: Boolean // 是否是男生
 ) : Serializable {
   constructor(
     linkStu: LinkStudent,
-    isShowLink: Boolean
-  ) : this(linkStu.selfNum, linkStu.linkNum, linkStu.major, linkStu.name, isShowLink)
+    isShowLink: Boolean,
+    isBoy: Boolean
+  ) : this(linkStu.selfNum, linkStu.linkNum, linkStu.major, linkStu.name, isShowLink, isBoy)
   
-  fun isNull(): Boolean = selfNum.isBlank() || linkNum.isBlank()
+  fun isNull(): Boolean = linkNum.isBlank() || selfNum.isBlank()
   fun isNotNull(): Boolean = !isNull()
   companion object {
-    val NULL = LinkStuEntity("", "", "", "", false)
+    val NULL = LinkStuEntity("", "", "", "", isShowLink = false, isBoy = true)
   }
 }
 

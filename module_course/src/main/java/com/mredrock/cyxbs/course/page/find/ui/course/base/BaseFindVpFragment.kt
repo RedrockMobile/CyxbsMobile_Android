@@ -4,7 +4,6 @@ import android.os.Bundle
 import android.view.View
 import com.mredrock.cyxbs.course.page.course.data.LessonData
 import com.mredrock.cyxbs.lib.course.fragment.vp.AbstractHeaderCourseVpFragment
-import com.mredrock.cyxbs.lib.utils.utils.SchoolCalendarUtil
 
 /**
  * 查看他人课表的 vp 界面，是 [BaseFindSemesterFragment] 和 [BaseFindWeekFragment] 的宿主
@@ -16,9 +15,6 @@ import com.mredrock.cyxbs.lib.utils.utils.SchoolCalendarUtil
  * @date 2022/9/12 13:29
  */
 abstract class BaseFindVpFragment<D : LessonData> : AbstractHeaderCourseVpFragment() {
-  
-  override val mNowWeek: Int
-    get() = SchoolCalendarUtil.getWeekOfTerm() ?: 0 // 当前周数
   
   /**
    * 正确实现方式：

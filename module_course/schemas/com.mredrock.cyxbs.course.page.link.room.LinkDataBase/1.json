@@ -2,11 +2,11 @@
   "formatVersion": 1,
   "database": {
     "version": 1,
-    "identityHash": "5a13098b79b15e882e26a18c07556425",
+    "identityHash": "f641bce891f7c6228dc433103eed78ce",
     "entities": [
       {
         "tableName": "link_stu",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`selfNum` TEXT NOT NULL, `linkNum` TEXT NOT NULL, `linkMajor` TEXT NOT NULL, `linkName` TEXT NOT NULL, `isShowLink` INTEGER NOT NULL, PRIMARY KEY(`selfNum`))",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`selfNum` TEXT NOT NULL, `linkNum` TEXT NOT NULL, `linkMajor` TEXT NOT NULL, `linkName` TEXT NOT NULL, `isShowLink` INTEGER NOT NULL, `isBoy` INTEGER NOT NULL, PRIMARY KEY(`selfNum`))",
         "fields": [
           {
             "fieldPath": "selfNum",
@@ -37,6 +37,12 @@
             "columnName": "isShowLink",
             "affinity": "INTEGER",
             "notNull": true
+          },
+          {
+            "fieldPath": "isBoy",
+            "columnName": "isBoy",
+            "affinity": "INTEGER",
+            "notNull": true
           }
         ],
         "primaryKey": {
@@ -52,7 +58,7 @@
     "views": [],
     "setupQueries": [
       "CREATE TABLE IF NOT EXISTS room_master_table (id INTEGER PRIMARY KEY,identity_hash TEXT)",
-      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, '5a13098b79b15e882e26a18c07556425')"
+      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, 'f641bce891f7c6228dc433103eed78ce')"
     ]
   }
 }
