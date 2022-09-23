@@ -57,7 +57,7 @@ object LinkRepository {
    *
    * ## 注意
    * - 只要学号不为空串，就不会返回异常
-   * - 网络连接失败时会返回本地数据，本地数据为 null 时会返回一个空的 [LinkStuEntity]
+   * - 网络连接失败时会返回本地数据，本地数据为 null 时会返回一个空的 [LinkStuEntity]，但会包含自己的学号
    */
   fun getLinkStudent(): Single<LinkStuEntity> {
     val selfNum = IAccountService::class.impl.getUserService().getStuNum()

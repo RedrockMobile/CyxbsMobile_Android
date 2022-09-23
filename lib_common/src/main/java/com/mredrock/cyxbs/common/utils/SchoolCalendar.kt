@@ -189,7 +189,8 @@ open class SchoolCalendar {
          * # 注意：存在返回负数的情况！！！
          */
         fun getWeekOfTerm(): Int? {
-            return getDayOfTerm()?.div(7)?.plus(1)
+            val dayOfTerm = getDayOfTerm() ?: return null
+            return if (dayOfTerm >= 0) dayOfTerm / 7 + 1 else dayOfTerm / 7
         }
         
         /**

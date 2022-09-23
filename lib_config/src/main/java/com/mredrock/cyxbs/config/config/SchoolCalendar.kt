@@ -19,7 +19,7 @@ import java.util.concurrent.TimeUnit
  * @email guo985892345@foxmail.com
  * @date 2022/8/15 14:59
  */
-object SchoolCalendarUtil {
+object SchoolCalendar {
   
   /**
    * 得到这学期过去了多少天
@@ -37,6 +37,12 @@ object SchoolCalendarUtil {
   
   /**
    * 观察这学期过去了多少天
+   *
+   * ## 注意
+   * - Activity 和 Fragment 中使用一般需要切换线程
+   * ```
+   * observeOn(AndroidSchedulers.mainThread())
+   * ```
    */
   fun observeDayOfTerm(): Observable<Int> {
     return mBehaviorSubject
@@ -53,13 +59,25 @@ object SchoolCalendarUtil {
    * @return 返回 null，则说明不知道开学第一天是好久；返回 0，则表示开学前的一周（因为第一周开学）
    *
    * # 注意：存在返回负数的情况！！！
+   * ```
+   *     -1      0      1      2       3        4
+   *  ----------------------------------------------------------->
+   * -14     -7      0      7      14       21       28
+   * ```
    */
   fun getWeekOfTerm(): Int? {
-    return getDayOfTerm()?.div(7)?.plus(1)
+    val dayOfTerm = getDayOfTerm() ?: return null
+    return if (dayOfTerm >= 0) dayOfTerm / 7 + 1 else dayOfTerm / 7
   }
   
   /**
    * 观察当前周数
+   *
+   * ## 注意
+   * - Activity 和 Fragment 中使用一般需要切换线程
+   * ```
+   * observeOn(AndroidSchedulers.mainThread())
+   * ```
    */
   fun observeWeekOfTerm(): Observable<Int> {
     return observeDayOfTerm()
@@ -77,6 +95,12 @@ object SchoolCalendarUtil {
   
   /**
    * 观察开学第一周的星期一
+   *
+   * ## 注意
+   * - Activity 和 Fragment 中使用一般需要切换线程
+   * ```
+   * observeOn(AndroidSchedulers.mainThread())
+   * ```
    */
   fun observeFirstMonDayOfTerm(): Observable<Calendar> {
     return mBehaviorSubject
@@ -93,6 +117,12 @@ object SchoolCalendarUtil {
   
   /**
    * 观察开学第一周的星期一的时间戳
+   *
+   * ## 注意
+   * - Activity 和 Fragment 中使用一般需要切换线程
+   * ```
+   * observeOn(AndroidSchedulers.mainThread())
+   * ```
    */
   fun observeFirstMonDayTimestamp(): Observable<Long> {
     return mBehaviorSubject

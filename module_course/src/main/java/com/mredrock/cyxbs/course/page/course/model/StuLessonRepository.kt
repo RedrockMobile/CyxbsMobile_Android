@@ -12,7 +12,7 @@ import com.mredrock.cyxbs.lib.utils.extensions.unsafeSubscribeBy
 import com.mredrock.cyxbs.lib.utils.network.ApiException
 import com.mredrock.cyxbs.lib.utils.network.api
 import com.mredrock.cyxbs.lib.utils.service.impl
-import com.mredrock.cyxbs.config.config.SchoolCalendarUtil
+import com.mredrock.cyxbs.config.config.SchoolCalendar
 import io.reactivex.rxjava3.core.*
 import io.reactivex.rxjava3.core.Observable
 import io.reactivex.rxjava3.schedulers.Schedulers
@@ -111,7 +111,7 @@ object StuLessonRepository {
     if (bean.judgeVersion(true)) {
       val list = bean.toStuLessonEntity()
       // 更新日历
-      SchoolCalendarUtil.updateFirstCalendar(bean.nowWeek)
+      SchoolCalendar.updateFirstCalendar(bean.nowWeek)
       mStuDB.resetData(bean.stuNum, list)
       return list
     } else {

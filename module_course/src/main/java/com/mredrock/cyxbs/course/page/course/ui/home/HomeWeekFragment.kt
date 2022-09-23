@@ -6,7 +6,7 @@ import androidx.core.os.bundleOf
 import androidx.fragment.app.createViewModelLazy
 import androidx.lifecycle.distinctUntilChanged
 import androidx.lifecycle.map
-import com.mredrock.cyxbs.config.config.SchoolCalendarUtil
+import com.mredrock.cyxbs.config.config.SchoolCalendar
 import com.mredrock.cyxbs.course.page.course.ui.home.utils.EnterAnimUtils
 import com.mredrock.cyxbs.course.page.course.ui.home.viewmodel.HomeCourseViewModel
 import com.mredrock.cyxbs.course.page.course.utils.container.AffairContainerProxy
@@ -14,6 +14,7 @@ import com.mredrock.cyxbs.course.page.course.utils.container.LinkLessonContainer
 import com.mredrock.cyxbs.course.page.course.utils.container.SelfLessonContainerProxy
 import com.mredrock.cyxbs.lib.course.fragment.page.CourseWeekFragment
 import com.mredrock.cyxbs.lib.course.helper.affair.CreateAffairDispatcher
+import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
 
 /**
  * ...
@@ -53,10 +54,11 @@ class HomeWeekFragment : CourseWeekFragment() {
     if (!mIsFragmentRebuilt) {
       /**
        * 观察第几周，因为如果是初次进入应用，会因为得不到周数而不主动翻页，所以只能观察该数据
-       * 但这是因为主页课表比较特殊而进行观察，其他界面可以直接使用 *VpFragment 的 mNowWeek 变量
+       * 但这是因为主页课表比较特殊而采取观察，其他界面可以直接使用 *VpFragment 的 mNowWeek 变量
        */
-      SchoolCalendarUtil.observeWeekOfTerm()
+      SchoolCalendar.observeWeekOfTerm()
         .firstElement()
+        .observeOn(AndroidSchedulers.mainThread())
         .safeSubscribeBy {
           if (it == mWeek) {
             // 判断周数，只对当前周进行动画

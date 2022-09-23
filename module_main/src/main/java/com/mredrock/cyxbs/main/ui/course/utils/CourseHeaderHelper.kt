@@ -5,7 +5,7 @@ import com.mredrock.cyxbs.api.course.ILessonService
 import com.mredrock.cyxbs.api.course.ILinkService
 import com.mredrock.cyxbs.api.course.utils.*
 import com.mredrock.cyxbs.lib.utils.service.impl
-import com.mredrock.cyxbs.config.config.SchoolCalendarUtil
+import com.mredrock.cyxbs.config.config.SchoolCalendar
 import io.reactivex.rxjava3.core.Observable
 import io.reactivex.rxjava3.schedulers.Schedulers
 import okhttp3.internal.filterList
@@ -48,7 +48,7 @@ object CourseHeaderHelper {
     val lessonService = ILessonService::class.impl
     val linkService = ILinkService::class.impl
     val affairService = AffairService()
-    return SchoolCalendarUtil.observeWeekOfTerm()
+    return SchoolCalendar.observeWeekOfTerm()
       .switchMap { week ->
         if (week !in 1 .. 21) Observable.just(HintHeader("享受假期吧～"))
         else {

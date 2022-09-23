@@ -5,7 +5,8 @@ import android.view.View
 import androidx.annotation.CallSuper
 import com.mredrock.cyxbs.lib.course.helper.CourseNowTimeHelper
 import com.mredrock.cyxbs.lib.utils.extensions.lazyUnlock
-import com.mredrock.cyxbs.config.config.SchoolCalendarUtil
+import com.mredrock.cyxbs.config.config.SchoolCalendar
+import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
 import java.util.*
 
 /**
@@ -46,8 +47,9 @@ abstract class CourseWeekFragment : CoursePageFragment() {
    * @return 今天是否在本周
    */
   protected open fun initWeekNum() {
-    SchoolCalendarUtil.observeFirstMonDayOfTerm()
+    SchoolCalendar.observeFirstMonDayOfTerm()
       .firstElement()
+      .observeOn(AndroidSchedulers.mainThread())
       .safeSubscribeBy {
         it.add(Calendar.DATE, (mWeek - 1) * 7)
         val startTimestamp = it.timeInMillis

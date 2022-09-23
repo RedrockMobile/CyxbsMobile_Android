@@ -4,13 +4,14 @@ import android.os.Bundle
 import android.view.View
 import androidx.fragment.app.viewModels
 import androidx.viewpager2.widget.ViewPager2.OnPageChangeCallback
-import com.mredrock.cyxbs.config.config.SchoolCalendarUtil
+import com.mredrock.cyxbs.config.config.SchoolCalendar
 import com.mredrock.cyxbs.course.page.course.ui.home.base.HomeCourseVpLinkFragment
 import com.mredrock.cyxbs.course.page.course.ui.home.viewmodel.HomeCourseViewModel
 import com.mredrock.cyxbs.course.page.find.ui.find.activity.FindLessonActivity
 import com.mredrock.cyxbs.lib.course.fragment.page.CoursePageFragment
 import com.mredrock.cyxbs.lib.utils.extensions.gone
 import com.mredrock.cyxbs.lib.utils.extensions.setOnSingleClickListener
+import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
 
 /**
  * ...
@@ -64,10 +65,11 @@ class HomeCourseVpFragment : HomeCourseVpLinkFragment() {
   private fun initViewPager() {
     /**
      * 观察第几周，因为如果是初次进入应用，会因为得不到周数而不主动翻页，所以只能观察该数据
-     * 但这是因为主页课表比较特殊而进行观察，其他界面可以直接使用 [mNowWeek] 变量
+     * 但这是因为主页课表比较特殊而采取观察，其他界面可以直接使用 [mNowWeek] 变量
      */
-    SchoolCalendarUtil.observeWeekOfTerm()
+    SchoolCalendar.observeWeekOfTerm()
       .firstElement()
+      .observeOn(AndroidSchedulers.mainThread())
       .safeSubscribeBy {
         // 初次加载时移到对应的周数
         // 这里课表的翻页不建议带有动画，因为数据过多会较卡

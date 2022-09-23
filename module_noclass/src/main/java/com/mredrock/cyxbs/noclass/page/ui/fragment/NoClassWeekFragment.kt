@@ -5,7 +5,7 @@ import android.view.View
 import androidx.core.os.bundleOf
 import androidx.fragment.app.activityViewModels
 import com.mredrock.cyxbs.lib.course.helper.CourseNowTimeHelper
-import com.mredrock.cyxbs.config.config.SchoolCalendarUtil
+import com.mredrock.cyxbs.config.config.SchoolCalendar
 import com.mredrock.cyxbs.noclass.bean.NoClassSpareTime
 import com.mredrock.cyxbs.noclass.page.viewmodel.NoClassViewModel
 import java.util.*
@@ -58,7 +58,7 @@ class NoClassWeekFragment : NoClassPageFragment(){
    * 设置星期数
    */
   private fun setWeekNum() {
-    val calendar = SchoolCalendarUtil.getFirstMonDayOfTerm()
+    val calendar = SchoolCalendar.getFirstMonDayOfTerm()
     if (calendar != null) {
       calendar.add(Calendar.DATE, (mWeek - 1) * 7)
       val startTimestamp = calendar.timeInMillis
