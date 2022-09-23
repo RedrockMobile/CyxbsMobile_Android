@@ -2,7 +2,6 @@ package com.mredrock.cyxbs.lib.base.ui
 
 import android.annotation.SuppressLint
 import android.content.pm.ActivityInfo
-import android.content.res.Configuration
 import android.graphics.Color
 import android.os.Bundle
 import android.view.View
@@ -15,6 +14,7 @@ import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleOwner
 import com.mredrock.cyxbs.lib.base.operations.OperationActivity
 import com.mredrock.cyxbs.lib.base.utils.IntentHelper
+import com.mredrock.cyxbs.lib.utils.extensions.isDaytimeMode
 
 /**
  * 绝对基础的抽象
@@ -129,8 +129,7 @@ abstract class BaseActivity : OperationActivity() {
     WindowCompat.setDecorFitsSystemWindows(window, false)
     val windowInsetsController = WindowCompat.getInsetsController(window, decorView)
     // 如果你要白色的状态栏字体，请在你直接的 Activity 中单独设置 isAppearanceLightStatusBars，这里不提供方法
-    val uiMode = resources.configuration.uiMode // 判断是否是夜间模式
-    windowInsetsController.isAppearanceLightStatusBars = (uiMode and  Configuration.UI_MODE_NIGHT_MASK) == Configuration.UI_MODE_NIGHT_NO
+    windowInsetsController.isAppearanceLightStatusBars = isDaytimeMode()
     window.statusBarColor = Color.TRANSPARENT //把状态栏颜色设置成透明
   }
   

@@ -61,4 +61,9 @@ abstract class HomeCourseVpLinkFragment : AbstractHeaderCourseVpFragment(), IHom
     mIvLink.visible()
     mIvLink.setImageDrawable(mSingleLinkImg)
   }
+  
+  override fun showNowWeek(positionOffset: Float) {
+    super.showNowWeek(positionOffset)
+    mIvLink.translationX = positionOffset * (mHeader.width - 23 - mIvLink.right)
+  }
 }

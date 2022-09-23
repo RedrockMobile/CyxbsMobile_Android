@@ -97,30 +97,32 @@ class MainActivity : BaseActivity() {
       mBottomNavLayout.translationY = mBottomNavLayout.height * it
       mBottomNavLayout.alpha = 1 - it
     }
-    if (mIsLogin) {
-      when (intent.action) {
-        DESKTOP_SHORTCUT_COURSE -> {
-          mViewPager.postDelayed(1500) {
-            // 延迟些时间才打开课表，因为打开快了课表会出现短时间的白屏
+    when (intent.action) {
+      DESKTOP_SHORTCUT_COURSE -> {
+        if (mIsLogin) {
+          mViewPager.postDelayed(500) {
+            // 延迟些时间才打开课表，因为打开快了，课表会出现短时间的白屏
             mViewModel.courseBottomSheetExpand.value = true
           }
         }
-        DESKTOP_SHORTCUT_EXAM -> {
+      }
+      DESKTOP_SHORTCUT_EXAM -> {
+        if (mIsLogin) {
           ServiceManager.activity(DISCOVER_GRADES)
         }
-        DESKTOP_SHORTCUT_SCHOOL_CAR -> {
-          ServiceManager.activity(DISCOVER_SCHOOL_CAR)
-        }
-        DESKTOP_SHORTCUT_EMPTY_ROOM -> {
-          ServiceManager.activity(DISCOVER_EMPTY_ROOM)
-        }
-        else -> {
-          if (defaultSp.getBoolean(SP_COURSE_SHOW_STATE, false)) {
-            // 打开应用优先显示课表的设置
-            mViewPager.postDelayed(1500) {
-              // 延迟些时间才打开课表，因为打开快了课表会出现短时间的白屏
-              mViewModel.courseBottomSheetExpand.value = true
-            }
+      }
+      DESKTOP_SHORTCUT_SCHOOL_CAR -> {
+        ServiceManager.activity(DISCOVER_SCHOOL_CAR)
+      }
+      DESKTOP_SHORTCUT_EMPTY_ROOM -> {
+        ServiceManager.activity(DISCOVER_EMPTY_ROOM)
+      }
+      else -> {
+        if (mIsLogin && defaultSp.getBoolean(SP_COURSE_SHOW_STATE, false)) {
+          // 打开应用优先显示课表的设置
+          mViewPager.postDelayed(500) {
+            // 延迟些时间才打开课表，因为打开快了，课表会出现短时间的白屏
+            mViewModel.courseBottomSheetExpand.value = true
           }
         }
       }

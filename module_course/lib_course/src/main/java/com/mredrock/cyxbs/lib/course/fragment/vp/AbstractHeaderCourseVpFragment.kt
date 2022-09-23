@@ -78,7 +78,6 @@ abstract class AbstractHeaderCourseVpFragment : AbstractCourseVpFragment(), IHea
           when (position) {
             mNowWeek - 1 -> showNowWeek(positionOffset)
             mNowWeek -> showNowWeek(1 - positionOffset)
-            else -> showNowWeek(0F)
           }
         }
       }
@@ -106,8 +105,9 @@ abstract class AbstractHeaderCourseVpFragment : AbstractCourseVpFragment(), IHea
    */
   protected open fun showNowWeek(positionOffset: Float) {
     mTvNowWeek.alpha = positionOffset
-    mTvNowWeek.translationX = (1 - positionOffset) * (mTvNowWeek.right + mTvNowWeek.width)
+    mTvNowWeek.scaleX = positionOffset
+    mTvNowWeek.scaleY = positionOffset
     mBtnBackNowWeek.alpha = (1 - positionOffset)
-    mBtnBackNowWeek.translationX = positionOffset * (mBtnBackNowWeek.width)
+    mBtnBackNowWeek.translationX = positionOffset * (mHeader.width - mBtnBackNowWeek.left)
   }
 }

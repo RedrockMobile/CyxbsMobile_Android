@@ -25,7 +25,7 @@
         android:layout_height="wrap_content"
         android:textColor="@color/config_level_two_font_color"
         android:textSize="15dp"
-        android:layout_marginStart="10dp"
+        android:layout_marginStart="13dp"
         android:text="@string/course_this_week"
         app:layout_constraintBaseline_toBaselineOf="@+id/course_tv_which_week"
         app:layout_constraintStart_toEndOf="@+id/course_tv_which_week"
