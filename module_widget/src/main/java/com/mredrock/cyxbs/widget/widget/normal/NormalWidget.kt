@@ -7,14 +7,12 @@ import android.content.ComponentName
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
-import android.util.Log
 import android.view.View
 import android.widget.RemoteViews
 import android.widget.Toast
 import androidx.annotation.IdRes
 import androidx.core.content.edit
 import com.google.gson.Gson
-import com.mredrock.cyxbs.config.sp.defaultSp
 import com.mredrock.cyxbs.lib.utils.extensions.CyxbsToast
 import com.mredrock.cyxbs.widget.R
 import com.mredrock.cyxbs.widget.repo.bean.Lesson
@@ -111,8 +109,8 @@ class NormalWidget : AppWidgetProvider() {
                     CyxbsToast.show(context, "提示：点击星期返回今日", Toast.LENGTH_SHORT)
                 }
             }
-            "btn.start.com" -> {
-                val myStuNum = context.getSharedPreferences(MY_STU_NUM, Context.MODE_PRIVATE).getString(MY_STU_NUM, "")
+            ACTION_CLICK -> {
+                val myStuNum = defaultSp.getString(MY_STU_NUM, "")
                 list = LessonDatabase.getInstance(context).getLessonDao()
                     .queryAllLessons(myStuNum!!, SchoolCalendar().weekOfTerm)
                 when (rId) {
@@ -236,7 +234,7 @@ class NormalWidget : AppWidgetProvider() {
         rv.setTextViewText(getMoreRoomId(moreViewNum), filterClassRoom(course.classroom))
         rv.setOnClickPendingIntent(
             getMoreContentId(moreViewNum),
-            getClickPendingIntent(context, getLayoutId(num), "btn.start.com", javaClass)
+            getClickPendingIntent(context, getLayoutId(num), ACTION_CLICK, javaClass)
         )
     }
 

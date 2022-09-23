@@ -13,10 +13,10 @@ import androidx.core.content.edit
 import com.alibaba.android.arouter.launcher.ARouter
 import com.mredrock.cyxbs.api.account.IAccountService
 import com.mredrock.cyxbs.api.main.MAIN_MAIN
-import com.mredrock.cyxbs.config.sp.defaultSp
 import com.mredrock.cyxbs.lib.base.BaseApp
 import com.mredrock.cyxbs.lib.utils.extensions.CyxbsToast
 import com.mredrock.cyxbs.lib.utils.service.impl
+import com.mredrock.cyxbs.widget.repo.bean.Affair
 import com.mredrock.cyxbs.widget.repo.bean.Lesson
 import com.mredrock.cyxbs.widget.repo.database.LessonDatabase
 import java.util.*
@@ -28,6 +28,8 @@ import kotlin.collections.ArrayList
  * 精力憔悴，这些方法直接揉在一起了*/
 
 private const val SP_DayOffset = "dayOffset"
+const val ACTION_FLUSH = "flush"
+const val ACTION_CLICK = "btn.start.com"
 
 //天数偏移量，用于LittleWidget切换明天课程
 fun saveDayOffset(context: Context, offset: Int) {
@@ -149,8 +151,7 @@ fun startOperation(lesson: Lesson) {
 fun getLessonByCalendar(context: Context, calendar: Calendar): ArrayList<Lesson>? {
     val weekOfTerm = SchoolCalendar().weekOfTerm
     val myStuNum =
-        context.getSharedPreferences(LessonDatabase.MY_STU_NUM, Context.MODE_PRIVATE)
-            .getString(LessonDatabase.MY_STU_NUM, "")
+        defaultSp.getString(LessonDatabase.MY_STU_NUM, "")
     val lesson = LessonDatabase.getInstance(context).getLessonDao()
         .queryAllLessons(myStuNum!!, weekOfTerm)
     if (lesson.isEmpty()) return null
@@ -200,8 +201,7 @@ private fun getPendingIntentFlags(isMutable: Boolean = true) =
  * 这里需要传入RemoteViewService的context，因为小组件运行在桌面进程时，可能应用已经被关闭，此时无法获得application作为context*/
 fun getMyLessons(context: Context, weekOfTerm: Int): List<Lesson> {
     val myStuNum =
-        context.getSharedPreferences(LessonDatabase.MY_STU_NUM, Context.MODE_PRIVATE)
-            .getString(LessonDatabase.MY_STU_NUM, "")
+        defaultSp.getString(LessonDatabase.MY_STU_NUM, "")
     return LessonDatabase.getInstance(context).getLessonDao()
         .queryAllLessons(myStuNum!!, weekOfTerm)
 }
@@ -209,8 +209,7 @@ fun getMyLessons(context: Context, weekOfTerm: Int): List<Lesson> {
 /**同上*/
 fun getOthersStuNum(context: Context, weekOfTerm: Int): List<Lesson> {
     val othersStuNum =
-        context.getSharedPreferences(LessonDatabase.OTHERS_STU_NUM, Context.MODE_PRIVATE)
-            .getString(LessonDatabase.OTHERS_STU_NUM, "")
+        defaultSp.getString(LessonDatabase.OTHERS_STU_NUM, "")
     return LessonDatabase.getInstance(context).getLessonDao()
         .queryAllLessons(othersStuNum!!, weekOfTerm)
 }

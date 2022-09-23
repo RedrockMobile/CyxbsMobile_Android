@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:id="@+id/background"
+    android:layout_width="match_parent"
+    android:layout_height="@dimen/widget_course_item_height"
+    android:background="@color/common_course_affair_add_background">
+    <TextView
+        android:text="+"
+        android:layout_width="wrap_content"
+        android:textAlignment="center"
+        android:layout_gravity="center"
+        android:layout_height="wrap_content"/>
+</FrameLayout>

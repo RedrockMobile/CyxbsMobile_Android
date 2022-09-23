@@ -14,6 +14,7 @@ import com.mredrock.cyxbs.widget.repo.database.AffairDatabase
 import com.mredrock.cyxbs.widget.repo.database.LessonDatabase
 import com.mredrock.cyxbs.widget.repo.database.LessonDatabase.Companion.MY_STU_NUM
 import com.mredrock.cyxbs.widget.repo.database.LessonDatabase.Companion.OTHERS_STU_NUM
+import com.mredrock.cyxbs.widget.util.defaultSp
 import com.mredrock.cyxbs.widget.util.getMyLessons
 import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
 import io.reactivex.rxjava3.core.Observable
@@ -39,12 +40,11 @@ class WidgetService : IWidgetService {
         //设置两者的学号，用于数据库查询
         if (myLessons.isNotEmpty()) {
             myLessons[0].stuNum.let {
-                mContext?.getSharedPreferences(MY_STU_NUM, Context.MODE_PRIVATE)
-                    ?.edit { putString(MY_STU_NUM, it) }
+                defaultSp.edit { putString(MY_STU_NUM, it) }
             }
         }
         if (otherStuLessons.isNotEmpty()) {
-            mContext?.getSharedPreferences(OTHERS_STU_NUM, Context.MODE_PRIVATE)?.edit {
+            defaultSp.edit {
                 putString(OTHERS_STU_NUM, otherStuLessons[0].stuNum)
             }
         }
@@ -62,7 +62,6 @@ class WidgetService : IWidgetService {
         }.subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread())
             //延迟100ms,确保发送广播时已经将数据插入数据库
             .delay(100, TimeUnit.MILLISECONDS).subscribe {
-                Log.d("testTag", "(WidgetService.kt:64) -> 2")
                 widgetList.forEach { pkg ->
                     mContext?.sendBroadcast(Intent(actionFlush).apply {
                         component = ComponentName(mContext!!, pkg)

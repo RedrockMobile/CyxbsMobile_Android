@@ -11,8 +11,7 @@ import com.mredrock.cyxbs.widget.repo.bean.Affair
 import com.mredrock.cyxbs.widget.repo.bean.Lesson
 import com.mredrock.cyxbs.widget.repo.database.AffairDatabase
 import com.mredrock.cyxbs.widget.util.*
-import io.reactivex.rxjava3.core.Observable
-import io.reactivex.rxjava3.schedulers.Schedulers
+import kotlin.concurrent.thread
 
 /**
  * author : Watermelon02
@@ -82,6 +81,7 @@ class GridWidgetService : RemoteViewsService() {
         override fun getViewAt(position: Int): RemoteViews? {
             //获取当前时间
             val time = intent.getIntExtra("time", 0)
+            val lastClickPosition = mContext.getSharedPreferences("module_widget", Context.MODE_PRIVATE).getInt("position", -1)
             //如果是前7个说明是显示今天是星期几
             if (position < 7) {
                 //获取当前item是否应该高亮
@@ -101,13 +101,28 @@ class GridWidgetService : RemoteViewsService() {
                 if (lesson == null) {
                     if (otherLessons[mPosition / 7][mPosition % 7] != null)
                     /** 如果有同学的课，设置other_course的背景*/
-                        getOtherLessonRV(mPosition,position)
+                        getOtherLessonRV(mPosition, position)
                     else if (affairs[mPosition / 7][mPosition % 7] != null)
                     /** 如果是事务，设置事务的背景*/
                         RemoteViews(mContext.packageName, R.layout.widget_grid_view_item_affair)
                     else
                     /** 无事务也无课*/
-                        RemoteViews(mContext.packageName, R.layout.widget_grid_view_item_blank)
+                    {
+                        /**新增事务，显示加号*/
+                        if (mPosition == lastClickPosition) {
+                            RemoteViews(mContext.packageName,
+                                R.layout.widget_grid_view_item_blank_add_affair).apply {
+                                intent.putExtra("position", mPosition)
+                                setOnClickFillInIntent(R.id.background, intent)
+                            }
+                        } else {
+                            RemoteViews(mContext.packageName,
+                                R.layout.widget_grid_view_item_blank).apply {
+                                intent.putExtra("position", mPosition)
+                                setOnClickFillInIntent(R.id.background, intent)
+                            }
+                        }
+                    }
                 } else {
                     val remoteViews: RemoteViews =
                         when {
@@ -140,10 +155,12 @@ class GridWidgetService : RemoteViewsService() {
             }
             return remoteViews
         }
+
         /**生成同学课表对应的RemoteView
          * */
         private fun getOtherLessonRV(mPosition: Int, position: Int): RemoteViews {
-            val remoteViews = RemoteViews(mContext.packageName, R.layout.widget_grid_view_item_other_course)
+            val remoteViews =
+                RemoteViews(mContext.packageName, R.layout.widget_grid_view_item_other_course)
             val lesson = otherLessons[mPosition / 7][mPosition % 7]
             /**如果有事务，则在上面添加小红点*/
             remoteViews.setViewVisibility(R.id.affair, View.GONE)
@@ -160,8 +177,7 @@ class GridWidgetService : RemoteViewsService() {
 
         override fun onCreate() {
             /**初始化GridView的数据*/
-            Observable.just(0).observeOn(Schedulers.io())
-                .subscribe { mScheduleLessons = makeSchedules(mContext) }
+            thread { mScheduleLessons = makeSchedules(mContext) }
         }
 
         override fun getCount(): Int { // 返回“集合视图”中的数据的总数

@@ -22,10 +22,10 @@ data class Affair(
 ) : Serializable {
     companion object {
         //将api模块的Affair转化为widget模块的Affair
-        fun convert(apiAffairs: List<com.mredrock.cyxbs.api.widget.bean.Affair>): ArrayList<com.mredrock.cyxbs.widget.repo.bean.Affair> {
-            val affairs = arrayListOf<com.mredrock.cyxbs.widget.repo.bean.Affair>()
+        fun convert(apiAffairs: List<com.mredrock.cyxbs.api.widget.bean.Affair>): ArrayList<Affair> {
+            val affairs = arrayListOf<Affair>()
             for (apiAffair in apiAffairs) {
-                val affair = com.mredrock.cyxbs.widget.repo.bean.Affair(
+                val affair = Affair(
                     stuNum = apiAffair.stuNum,
                     id = apiAffair.id,
                     time = apiAffair.time,
