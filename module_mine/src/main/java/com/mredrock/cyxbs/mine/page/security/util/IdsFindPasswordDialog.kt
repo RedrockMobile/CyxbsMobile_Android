@@ -35,6 +35,8 @@ class IdsFindPasswordDialog(context: Context) : Dialog(context) {
         confirm.setOnSingleClickListener {
             mBlock()
         }
+        setCancelable(false) // 返回键不允许关闭次此 dialog
+        setCanceledOnTouchOutside(false) // 点击其他区域也不允许关闭此 dialog
     }
 
     /**
