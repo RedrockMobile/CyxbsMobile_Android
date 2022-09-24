@@ -2,6 +2,8 @@ package com.mredrock.cyxbs.lib.utils.network
 
 import com.mredrock.cyxbs.common.network.ApiGenerator
 import okhttp3.OkHttpClient
+import okhttp3.Request
+import okhttp3.Response
 import retrofit2.Retrofit
 import kotlin.reflect.KClass
 
@@ -74,6 +76,10 @@ object ApiGenerator {
   ): Retrofit {
     return ApiGenerator.createSelfRetrofit(retrofitConfig, okHttpClientConfig, tokenNeeded)
   }
+  
+  // 因为 网络请求没有从 lib_common 开始移植，所以这里暴露一个变量供 lib_debug 模块使用
+  val apiResultList: List<Triple<Request, Response?, String?>>
+    get() = ApiGenerator.apiResultList.map { Triple(it.request, it.response, it.stackTrace) }
 }
 
 /**

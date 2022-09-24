@@ -69,7 +69,7 @@ object EnterAnimUtils {
       )
     viewLifecycleOwner.lifecycle.addObserver(
       object : DefaultLifecycleObserver {
-        override fun onPause(owner: LifecycleOwner) {
+        override fun onDestroy(owner: LifecycleOwner) {
           // 需要在这里移除动画，防止 Fragment 重新加载而触发动画
           course.setLayoutAnimation(null)
           owner.lifecycle.removeObserver(this)

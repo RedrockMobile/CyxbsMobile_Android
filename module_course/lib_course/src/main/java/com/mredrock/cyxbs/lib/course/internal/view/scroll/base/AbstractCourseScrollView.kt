@@ -20,6 +20,15 @@ abstract class AbstractCourseScrollView @JvmOverloads constructor(
   defStyleAttr: Int = 0
 ) : NestedScrollView(context, attrs, defStyleAttr), ICourseScroll {
   
+  init {
+    /**
+     * 取消 Android11 及以下的滑到边缘的虚影，Android12 及以上滑到边缘的拉伸效果
+     *
+     * Android12 后滑到边缘时拉伸效果，会导致嵌套滑动失效，所以需要取消该效果
+     */
+    overScrollMode = OVER_SCROLL_NEVER
+  }
+  
   override fun postDelayed(delayInMillis: Long, action: Runnable?) {
     postDelayed(action, delayInMillis)
   }

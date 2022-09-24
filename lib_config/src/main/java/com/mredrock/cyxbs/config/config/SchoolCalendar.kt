@@ -81,7 +81,7 @@ object SchoolCalendar {
    */
   fun observeWeekOfTerm(): Observable<Int> {
     return observeDayOfTerm()
-      .map { it / 7 + 1 }
+      .map { if (it >= 0) it / 7 + 1 else it / 7 }
   }
   
   /**

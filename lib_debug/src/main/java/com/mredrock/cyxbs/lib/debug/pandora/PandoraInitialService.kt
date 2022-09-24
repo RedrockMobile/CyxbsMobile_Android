@@ -1,12 +1,16 @@
 package com.mredrock.cyxbs.lib.debug.pandora
 
+import android.app.Activity
 import android.app.Application
-import android.content.Context
-import android.content.Intent
-import androidx.core.content.edit
+import android.os.Bundle
+import android.view.Gravity
+import android.view.View
+import android.widget.FrameLayout
 import com.google.auto.service.AutoService
 import com.mredrock.cyxbs.lib.base.spi.InitialManager
 import com.mredrock.cyxbs.lib.base.spi.InitialService
+import com.mredrock.cyxbs.lib.debug.SecretActivity
+import com.mredrock.cyxbs.lib.utils.utils.defaultImpl
 import tech.linjiang.pandora.Pandora
 import tech.linjiang.pandora.util.SensorDetector
 
@@ -20,34 +24,46 @@ import tech.linjiang.pandora.util.SensorDetector
 @AutoService(InitialService::class)
 class PandoraInitialService: InitialService, SensorDetector.Callback {
   
-  companion object {
-    lateinit var application: Application
-      private set
-  
-    var sSpPandoraIsOpen: Boolean
-      get() = application.getSharedPreferences("pandora", Context.MODE_PRIVATE).getBoolean("isOpen", false)
-      set(value) {
-        application.getSharedPreferences("pandora", Context.MODE_PRIVATE).edit {
-          putBoolean("isOpen", value)
-        }
-      }
-  }
-  
   override fun onMainProcess(manager: InitialManager) {
     super.onMainProcess(manager)
-    application = manager.application
     Pandora.get().disableShakeSwitch() // 取消 Pandora 默认的摇一摇打开方法
     SensorDetector(this)
+    
+    /*
+    * 除了摇一摇以外，点击屏幕顶部状态栏下正中间区域 10 下也能打开
+    * */
+    manager.application.registerActivityLifecycleCallbacks(
+      object : Application.ActivityLifecycleCallbacks by defaultImpl() {
+        override fun onActivityCreated(activity: Activity, savedInstanceState: Bundle?) {
+          val decorView = activity.window.decorView as FrameLayout
+          decorView.addView(
+            View(activity).apply {
+              layoutParams = FrameLayout.LayoutParams(160, 160, Gravity.CENTER_HORIZONTAL)
+              setOnClickListener {
+                val key = 76456823
+                val times = it.getTag(key) as? Int
+                if (times == null) {
+                  it.setTag(key, 1)
+                } else {
+                  if (times == 3) {
+                    // 点击的第 3 下打开
+                    shakeValid()
+                    it.setTag(key, 1)
+                  } else {
+                    it.setTag(key, times + 1)
+                  }
+                }
+              }
+            }
+          )
+        }
+      }
+    )
   }
   
   override fun shakeValid() {
-    if (sSpPandoraIsOpen) {
+    SecretActivity.tryStart {
       Pandora.get().open()
-    } else {
-      application.startActivity(
-        Intent(application, PandoraActivity::class.java)
-          .setFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
-      )
     }
   }
 }

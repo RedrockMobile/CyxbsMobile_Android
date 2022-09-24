@@ -3,8 +3,12 @@
     package="com.mredrock.cyxbs.lib.debug">
 
     <application>
-        <activity android:name=".pandora.PandoraActivity"
+        <activity android:name=".SecretActivity"
             android:launchMode="singleTop"/>
+        <activity android:name=".crash.CrashActivity"
+            android:process=":debug_crash"
+            android:launchMode="singleTop"/><!--CrashActivity 需要早其他进程中启动-->
+        <activity android:name=".crash.NetworkApiResultActivity"/>
     </application>
 
 </manifest>
