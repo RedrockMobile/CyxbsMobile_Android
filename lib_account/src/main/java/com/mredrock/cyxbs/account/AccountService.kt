@@ -49,6 +49,7 @@ internal class AccountService : IAccountService {
     private val mUserInfoEncryption = UserInfoEncryption()
 
     private var user: UserInfo? = null
+    @Volatile
     private var tokenWrapper: TokenWrapper? = null
     private var isTouristMode = false
     private lateinit var mContext: Context

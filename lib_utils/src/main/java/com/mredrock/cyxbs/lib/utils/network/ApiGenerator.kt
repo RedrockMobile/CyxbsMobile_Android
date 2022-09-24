@@ -42,6 +42,7 @@ import kotlin.reflect.KClass
  *     }
  *     .safeSubscribeBy {            // 如果是网络连接错误，则这里会默认处理
  *         // 成功的时候
+ *         // 如果是仓库层，请使用 unsafeSubscribeBy()
  *     }
  * ```
  *
@@ -75,6 +76,13 @@ object ApiGenerator {
   }
 }
 
+/**
+ * 实现该接口后后直接使用这种写法：
+ * ```
+ * ApiService::class.api
+ *   .getXXX()
+ * ```
+ */
 interface IApi {
   companion object {
     val MAP = HashMap<KClass<out IApi>, IApi>()

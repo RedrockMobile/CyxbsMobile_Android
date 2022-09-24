@@ -19,6 +19,7 @@ import android.view.inputmethod.InputMethodManager
 import android.widget.Button
 import android.widget.EditText
 import android.widget.TextView
+import androidx.activity.viewModels
 import androidx.core.content.ContextCompat
 import androidx.core.content.edit
 import androidx.core.view.get
@@ -31,7 +32,7 @@ import com.mredrock.cyxbs.config.sp.SP_FIRST_TIME_OPEN
 import com.mredrock.cyxbs.config.sp.SP_PRIVACY_AGREED
 import com.mredrock.cyxbs.config.sp.defaultSp
 import com.mredrock.cyxbs.lib.base.BaseApp
-import com.mredrock.cyxbs.lib.base.ui.mvvm.BaseVmActivity
+import com.mredrock.cyxbs.lib.base.ui.BaseActivity
 import com.mredrock.cyxbs.lib.utils.extensions.lazyUnlock
 import com.mredrock.cyxbs.lib.utils.extensions.setOnSingleClickListener
 import com.mredrock.cyxbs.lib.utils.service.impl
@@ -41,7 +42,7 @@ import com.mredrock.cyxbs.login.page.privacy.PrivacyActivity
 import com.mredrock.cyxbs.login.page.useragree.UserAgreeActivity
 import com.mredrock.cyxbs.login.ui.UserAgreementDialog
 
-class LoginActivity : BaseVmActivity<LoginViewModel>() {
+class LoginActivity : BaseActivity() {
     companion object {
         
         private const val INTENT_TARGET = "intent_target"
@@ -61,6 +62,8 @@ class LoginActivity : BaseVmActivity<LoginViewModel>() {
             )
         }
     }
+    
+    private val mViewModel by viewModels<LoginViewModel>()
     
     private val mIntentSuccess by lazyUnlock { intent.getParcelableExtra<Intent>(INTENT_TARGET) }
     private val mIntentTouristMode by lazyUnlock {
@@ -98,17 +101,17 @@ class LoginActivity : BaseVmActivity<LoginViewModel>() {
         }
         mLavCheck.setOnSingleClickListener {
             mLavCheck.playAnimation()
-            viewModel.userAgreementIsCheck = !viewModel.userAgreementIsCheck
+            mViewModel.userAgreementIsCheck = !mViewModel.userAgreementIsCheck
         }
         mLavCheck.addAnimatorUpdateListener {
-            if (it.animatedFraction == 1f && viewModel.userAgreementIsCheck) {
+            if (it.animatedFraction == 1f && mViewModel.userAgreementIsCheck) {
                 mLavCheck.pauseAnimation()
-            } else if (it.animatedFraction >= lottieProgress && it.animatedFraction != 1f && !viewModel.userAgreementIsCheck) {
+            } else if (it.animatedFraction >= lottieProgress && it.animatedFraction != 1f && !mViewModel.userAgreementIsCheck) {
                 mLavCheck.pauseAnimation()
             }
         }
         mTvTourist.setOnSingleClickListener {
-            if (!viewModel.userAgreementIsCheck) {
+            if (!mViewModel.userAgreementIsCheck) {
                 agreeToUserAgreement()
             } else {
                 IAccountService::class.impl
@@ -182,7 +185,7 @@ class LoginActivity : BaseVmActivity<LoginViewModel>() {
     }
     
     private fun initObserve() {
-        viewModel.loginEvent.collectLaunch {
+        mViewModel.loginEvent.collectLaunch {
             if (it) {
                 startActivity(mIntentSuccess)
                 finish()
@@ -193,7 +196,7 @@ class LoginActivity : BaseVmActivity<LoginViewModel>() {
     }
 
     private fun loginAction() {
-        if (viewModel.userAgreementIsCheck) {
+        if (mViewModel.userAgreementIsCheck) {
             //放下键盘
             val inputMethodManager =
                 getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
@@ -204,7 +207,7 @@ class LoginActivity : BaseVmActivity<LoginViewModel>() {
             val password = mEtPassword.text?.toString() ?: ""
             if (checkDataCorrect(stuNum, password)) {
                 changeUiState()
-                viewModel.login(stuNum, password)
+                mViewModel.login(stuNum, password)
             }
         } else {
             agreeToUserAgreement()
@@ -235,13 +238,13 @@ class LoginActivity : BaseVmActivity<LoginViewModel>() {
         UserAgreementDialog.show(
             supportFragmentManager,
             onNegativeClick = {
-                viewModel.userAgreementIsCheck = false
+                mViewModel.userAgreementIsCheck = false
                 BaseApp.baseApp.privacyDenied()
                 dismiss()
                 finish()
             },
             onPositiveClick = {
-                viewModel.userAgreementIsCheck = true
+                mViewModel.userAgreementIsCheck = true
                 mLavCheck.playAnimation()
                 BaseApp.baseApp.privacyAgree()
                 dismiss()

@@ -10,6 +10,7 @@ import android.app.Application
  * @date 2022/8/8 22:37
  */
 object ConfigApplicationWrapper {
+  
   internal lateinit var application: Application
     private set
   

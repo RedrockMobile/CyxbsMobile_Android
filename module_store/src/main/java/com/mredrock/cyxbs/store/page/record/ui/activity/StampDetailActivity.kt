@@ -7,10 +7,11 @@ import android.view.Gravity
 import android.view.animation.*
 import android.widget.ImageButton
 import android.widget.TextView
+import androidx.activity.viewModels
 import androidx.viewpager2.widget.ViewPager2
 import com.google.android.material.tabs.TabLayout
 import com.google.android.material.tabs.TabLayoutMediator
-import com.mredrock.cyxbs.lib.base.ui.mvvm.BaseVmActivity
+import com.mredrock.cyxbs.lib.base.ui.BaseActivity
 import com.mredrock.cyxbs.lib.utils.adapter.FragmentVpAdapter
 import com.mredrock.cyxbs.lib.utils.extensions.setOnSingleClickListener
 import com.mredrock.cyxbs.store.R
@@ -26,7 +27,9 @@ import com.mredrock.cyxbs.store.utils.transformer.ScaleInTransformer
  *    e-mail : 1140143252@qq.com
  *    date   : 2021/8/2 14:46
  */
-class StampDetailActivity : BaseVmActivity<RecordViewModel>() {
+class StampDetailActivity : BaseActivity() {
+    
+    private val mViewModel by viewModels<RecordViewModel>()
 
     private lateinit var mTabLayout: TabLayout
     private lateinit var mViewPager2: ViewPager2
@@ -61,14 +64,14 @@ class StampDetailActivity : BaseVmActivity<RecordViewModel>() {
                 if (position == 0) {
                     if (!hasObservedFirst) {
                         hasObservedFirst = true
-                        viewModel.exchangeRecordIsSuccessful.observe {
+                        mViewModel.exchangeRecordIsSuccessful.observe {
                             if (!it ) { toast("获取兑换记录失败") }
                         }
                     }
                 }else {
                     if (!hasObservedSecond) {
                         hasObservedSecond = true
-                        viewModel.firstPageGetRecordIsSuccessful.observe {
+                        mViewModel.firstPageGetRecordIsSuccessful.observe {
                             if (!it) { toast("获取邮票记录失败") }
                         }
                     }
@@ -151,7 +154,7 @@ class StampDetailActivity : BaseVmActivity<RecordViewModel>() {
 
     private fun initData() {
         // 请求网络数据
-        viewModel.getExchangeRecord()
-        viewModel.getFirstPageGetRecord()
+        mViewModel.getExchangeRecord()
+        mViewModel.getFirstPageGetRecord()
     }
 }

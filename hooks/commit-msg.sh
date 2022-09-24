@@ -97,13 +97,14 @@ declare -A commitMap=(
   ["bricks"]="与基础结构相关的更改"
   ["technologist"]="改善开发人员体验"
   ["money_with_wings"]="添加赞助或与资金相关的基础设施"
+  ["thread"]="添加或更新与多线程或并发相关的代码"
 )
 
-result=$(echo "$commitMsg" | grep ":[a-z_]\+: .\+")
+result=$(echo "$commitMsg" | grep ":[a-z0-9_]\+: .\+")
 
 if [ "$result" == "" ]; then
   # 当得到的 result 为空的时候，说明没按正确格式提交
-  blank=$(echo "$commitMsg" | grep ":[a-z_]\+:.\+") # 检查是否少打了空格
+  blank=$(echo "$commitMsg" | grep ":[a-z0-9_]\+:.\+") # 检查是否少打了空格
   if ! [ "$blank" == "" ]; then
     echo "『:title:』与『title』之间未空格！"
   else
