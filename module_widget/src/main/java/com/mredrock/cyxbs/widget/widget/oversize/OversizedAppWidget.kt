@@ -8,16 +8,14 @@ import android.content.Context
 import android.content.Intent
 import android.os.Build
 import android.os.Bundle
+import android.util.Log
 import android.util.SizeF
 import android.view.View
 import android.widget.RemoteViews
 import androidx.core.content.edit
 import com.mredrock.cyxbs.widget.R
 import com.mredrock.cyxbs.widget.service.GridWidgetService
-import com.mredrock.cyxbs.widget.util.ACTION_CLICK
-import com.mredrock.cyxbs.widget.util.ACTION_FLUSH
-import com.mredrock.cyxbs.widget.util.defaultSp
-import com.mredrock.cyxbs.widget.util.getClickIntent
+import com.mredrock.cyxbs.widget.util.*
 import com.mredrock.cyxbs.widget.widget.page.oversized.deleteTitlePref
 import java.util.*
 
@@ -61,26 +59,22 @@ class OversizedAppWidget : AppWidgetProvider() {
         when (intent.action) {
             /** 点击事件*/
             ACTION_CLICK -> {
-                val lastPosition = defaultSp.getInt("position", -1)
-                val position = intent.getIntExtra("position", -1)
+                val lastPosition = defaultSp.getInt(POSITION, -1)
+                val position = intent.getIntExtra(POSITION, -1)
+                val day = position / 7
+                val beginLesson = position % 7
+                Log.d("testTag", "(OversizedAppWidget.kt:68) -> ${position}")
                 if (lastPosition == position) {
-                    /**两次点击同一个item,进入添加事务界面*/
-                    val day = position / 7
-                    val beginLesson = position % 7
-                    defaultSp.edit().putInt("position", -1).commit()
+                    defaultSp.edit().putInt(POSITION, -1).commit()
                 } else {
-                    defaultSp.edit().putInt("position", position).commit()
+                    defaultSp.edit().putInt(POSITION, position).commit()
                 }
-                val manager = AppWidgetManager.getInstance(context)
-                val ids =
-                    manager.getAppWidgetIds(ComponentName(context, OversizedAppWidget::class.java))
-                manager.notifyAppWidgetViewDataChanged(ids, R.id.grid_course_widget)
             }
             ACTION_FLUSH -> {
                 val manager = AppWidgetManager.getInstance(context)
                 val ids =
                     manager.getAppWidgetIds(ComponentName(context, OversizedAppWidget::class.java))
-                onUpdate(context, manager, ids)
+                manager.notifyAppWidgetViewDataChanged(ids, R.id.grid_course_widget)
             }
         }
     }

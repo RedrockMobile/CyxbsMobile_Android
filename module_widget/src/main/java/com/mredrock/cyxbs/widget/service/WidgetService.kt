@@ -3,8 +3,10 @@ package com.mredrock.cyxbs.widget.service
 import android.content.ComponentName
 import android.content.Context
 import android.content.Intent
+import android.util.Log
 import androidx.core.content.edit
 import com.alibaba.android.arouter.facade.annotation.Route
+import com.google.gson.Gson
 import com.mredrock.cyxbs.api.affair.IAffairService
 import com.mredrock.cyxbs.api.course.ILessonService
 import com.mredrock.cyxbs.api.widget.IWidgetService
@@ -19,6 +21,7 @@ import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
 import io.reactivex.rxjava3.core.Observable
 import io.reactivex.rxjava3.schedulers.Schedulers
 import java.util.concurrent.TimeUnit
+import kotlin.concurrent.thread
 
 /**
  * description ： IWidgetService接口的实现类，通过发送延时广播通知小组件刷新
@@ -35,6 +38,8 @@ class WidgetService : IWidgetService {
         otherStuLessons: List<ILessonService.Lesson>,
         affairs: List<IAffairService.Affair>,
     ) {
+        LessonDatabase.INSTANCE.getLessonDao().deleteAllLessons()
+        AffairDatabase.INSTANCE.getAffairDao().deleteAllAffair()
         //设置两者的学号，用于数据库查询
         if (myLessons.isNotEmpty()) {
             myLessons[0].stuNum.let {
@@ -50,7 +55,8 @@ class WidgetService : IWidgetService {
             //将传入的来自api模块数据转化为该模块的对应数据并存入数据库
             getMyLessons(3).size
             LessonDatabase.INSTANCE.getLessonDao()
-                .insertLessons(com.mredrock.cyxbs.widget.repo.bean.LessonEntity.convertFromApi(myLessons))
+                .insertLessons(com.mredrock.cyxbs.widget.repo.bean.LessonEntity.convertFromApi(
+                    myLessons))
             LessonDatabase.INSTANCE.getLessonDao()
                 .insertLessons(com.mredrock.cyxbs.widget.repo.bean.LessonEntity.convertFromApi(
                     otherStuLessons))
@@ -66,6 +72,10 @@ class WidgetService : IWidgetService {
                     })
                 }
             }
+    }
+
+    override fun deleteAffair(affair: IAffairService.Affair) {
+        thread { AffairDatabase.INSTANCE.getAffairDao().deleteAffair(affair.id) }
     }
 
     override fun init(context: Context?) {

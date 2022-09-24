@@ -25,6 +25,7 @@ import kotlin.collections.ArrayList
 
 const val ACTION_FLUSH = "flush"
 const val ACTION_CLICK = "btn.start.com"
+const val POSITION = "position"
 
 fun getClickPendingIntent(
     context: Context,

@@ -18,13 +18,16 @@ interface LessonDao {
     fun insertLesson(lesson: LessonEntity)
 
     @Query("SELECT * FROM LessonEntity WHERE stuNum = :stuNum AND week = :week")
-    fun queryAllLessons(stuNum: String,week:Int): List<LessonEntity>
+    fun queryAllLessons(stuNum: String, week: Int): List<LessonEntity>
 
     @Query("SELECT * FROM LessonEntity")
-    fun test():List<LessonEntity>
+    fun test(): List<LessonEntity>
 
     @Query("DELETE FROM LessonEntity")
     fun deleteAllLessons()
+
+    @Query("DELETE FROM LessonEntity WHERE stuNum = :otherStuNum")
+    fun deleteAllOtherLessons(otherStuNum: String)
 
     @Update
     fun updateLesson(lesson: LessonEntity)
