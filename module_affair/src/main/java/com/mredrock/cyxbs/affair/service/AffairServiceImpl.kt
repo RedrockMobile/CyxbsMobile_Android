@@ -17,7 +17,6 @@ import com.mredrock.cyxbs.lib.utils.extensions.unsafeSubscribeBy
 import com.mredrock.cyxbs.lib.utils.utils.CalendarUtils
 import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
 import io.reactivex.rxjava3.core.Observable
-import io.reactivex.rxjava3.core.Single
 
 /**
  * ...
@@ -43,13 +42,15 @@ class AffairServiceImpl : IAffairService {
       .distinctUntilChanged()
       .map { it.toAffair() }
   }
-  
-  override fun deleteAffair(context: AppCompatActivity,affairId: Int) {
+
+  override fun deleteAffair(context: AppCompatActivity, affairId: Int) {
     AffairRepository.getAffair().observeOn(AndroidSchedulers.mainThread()).unsafeSubscribeBy {
       val data = it.filter { it.id == affairId }
       val list = data[0].atWhatTime
       list.forEach {
-        deleteRemind(context,data[0].title, data[0].content, it.beginLesson, it.day)
+        // 先删除日历
+        deleteRemind(context, data[0].title, data[0].content, it.beginLesson, it.day)
+        // 再删除数据库
         AffairRepository.deleteAffair(affairId)
           .observeOn(AndroidSchedulers.mainThread())
           .unsafeSubscribeBy { "删除成功".toast() }
@@ -64,7 +65,12 @@ class AffairServiceImpl : IAffairService {
     beginLesson: Int,
     period: Int
   ) {
-    AffairActivity.start(context, AffairEditArgs.AffairDurationArgs(week, day, beginLesson, period))
+    AffairActivity.start(
+      context, AffairEditArgs.AffairDurationArgs(
+        week, day,
+        getStartRow(beginLesson), period
+      )
+    )
   }
 
   override fun startAffairEditActivity(context: Context, id: Int) {
@@ -75,7 +81,6 @@ class AffairServiceImpl : IAffairService {
         AffairEditArgs.AffairDurationArgs(1, 1, 1, 1)
       )
     )
-
   }
 
   override fun init(context: Context) {
@@ -141,20 +146,20 @@ class AffairServiceImpl : IAffairService {
     ) {
       reason = "设置提醒需要访问您的日历哦~"
       doAfterGranted {
-    CalendarUtils.deleteCalendarEventRemind(
-      appContext,
-      title,
-      description,
-      TimeUtils.getBegin(beginTime, week),
-      object : CalendarUtils.OnCalendarRemindListener {
-        override fun onFailed(error_code: CalendarUtils.OnCalendarRemindListener.Status?) {
-          "删除日历失败".toast()
-        }
+        CalendarUtils.deleteCalendarEventRemind(
+          appContext,
+          title,
+          description,
+          TimeUtils.getBegin(beginTime, week),
+          object : CalendarUtils.OnCalendarRemindListener {
+            override fun onFailed(error_code: CalendarUtils.OnCalendarRemindListener.Status?) {
+              "删除日历失败".toast()
+            }
 
-        override fun onSuccess() {
-          "删除日历成功".toast()
-        }
-      })
+            override fun onSuccess() {
+              "删除日历成功".toast()
+            }
+          })
       }
       doAfterRefused {
         "呜呜呜".toast()
