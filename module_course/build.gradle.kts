@@ -11,6 +11,8 @@ dependLibUtils()
 dependLibConfig()
 
 dependApiAccount()
+dependApiAffair()
+dependApiWidget()
 
 dependRoom()
 dependRoomRxjava()
