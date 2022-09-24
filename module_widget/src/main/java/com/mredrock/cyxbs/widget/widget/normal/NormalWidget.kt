@@ -111,7 +111,7 @@ class NormalWidget : AppWidgetProvider() {
             }
             ACTION_CLICK -> {
                 val myStuNum = defaultSp.getString(MY_STU_NUM, "")
-                list = LessonDatabase.getInstance(context).getLessonDao()
+                list = LessonDatabase.INSTANCE.getLessonDao()
                     .queryAllLessons(myStuNum!!, SchoolCalendar().weekOfTerm)
                 when (rId) {
                     R.id.widget_normal_layout1 -> {

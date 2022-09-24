@@ -31,10 +31,10 @@ class GridWidgetService : RemoteViewsService() {
 
         private fun makeSchedules(context: Context): Array<Array<LessonEntity?>> {
             val weekOfTerm = SchoolCalendar().weekOfTerm
-            myLessons = getMyLessons(context, weekOfTerm)
-            otherLessons = getOthersStuNum(context, weekOfTerm).schedule()
+            myLessons = getMyLessons(weekOfTerm)
+            otherLessons = getOthersStuNum(weekOfTerm).schedule()
             affairs =
-                AffairDatabase.getInstance(BaseApp.baseApp).getAffairDao()
+                AffairDatabase.INSTANCE.getAffairDao()
                     .queryAllAffair(weekOfTerm).schedule()
             return myLessons.schedule()
         }

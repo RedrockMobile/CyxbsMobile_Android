@@ -48,13 +48,13 @@ class WidgetService : IWidgetService {
         }
         Observable.create<Int> {
             //将传入的来自api模块数据转化为该模块的对应数据并存入数据库
-            getMyLessons(mContext!!,3).size
-            LessonDatabase.getInstance(mContext!!).getLessonDao()
+            getMyLessons(3).size
+            LessonDatabase.INSTANCE.getLessonDao()
                 .insertLessons(com.mredrock.cyxbs.widget.repo.bean.LessonEntity.convertFromApi(myLessons))
-            LessonDatabase.getInstance(mContext!!).getLessonDao()
+            LessonDatabase.INSTANCE.getLessonDao()
                 .insertLessons(com.mredrock.cyxbs.widget.repo.bean.LessonEntity.convertFromApi(
                     otherStuLessons))
-            AffairDatabase.getInstance(mContext!!).getAffairDao()
+            AffairDatabase.INSTANCE.getAffairDao()
                 .insertAffairs(com.mredrock.cyxbs.widget.repo.bean.AffairEntity.convert(affairs))
             it.onNext(1)
         }.subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread())

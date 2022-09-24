@@ -1,6 +1,7 @@
 package com.mredrock.cyxbs.course.page.course.data
 
 import androidx.recyclerview.widget.DiffUtil
+import com.mredrock.cyxbs.api.affair.IAffairService
 import com.mredrock.cyxbs.lib.course.item.affair.IAffairData
 
 /**
@@ -35,5 +36,21 @@ data class AffairData(
     override fun areContentsTheSame(oldItem: AffairData, newItem: AffairData): Boolean {
       return oldItem == newItem
     }
+  }
+}
+
+fun List<IAffairService.Affair>.toAffairData(): List<AffairData> {
+  return map {
+    AffairData(
+      it.stuNum,
+      it.week,
+      it.day,
+      it.beginLesson,
+      it.period,
+      it.id,
+      it.time,
+      it.title,
+      it.content
+    )
   }
 }

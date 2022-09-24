@@ -3,14 +3,18 @@ package com.mredrock.cyxbs.course.page.course.ui.home.viewmodel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
+import com.mredrock.cyxbs.api.affair.IAffairService
 import com.mredrock.cyxbs.api.course.ICourseService
+import com.mredrock.cyxbs.api.widget.IWidgetService
 import com.mredrock.cyxbs.course.page.course.data.AffairData
 import com.mredrock.cyxbs.course.page.course.data.StuLessonData
+import com.mredrock.cyxbs.course.page.course.data.toAffairData
 import com.mredrock.cyxbs.course.page.course.data.toStuLessonData
 import com.mredrock.cyxbs.course.page.course.model.StuLessonRepository
 import com.mredrock.cyxbs.course.page.link.model.LinkRepository
 import com.mredrock.cyxbs.course.page.link.room.LinkStuEntity
 import com.mredrock.cyxbs.course.service.CourseServiceImpl
+import com.mredrock.cyxbs.course.service.toLesson
 import com.mredrock.cyxbs.lib.base.ui.BaseViewModel
 import com.mredrock.cyxbs.lib.utils.service.impl
 import io.reactivex.rxjava3.core.Completable
@@ -68,7 +72,7 @@ class HomeCourseViewModel : BaseViewModel() {
       .flatMapCompletable {
         // 直接调用网络刷新，请求成功后会修改数据库，然后上面的观察流会重新发送新的值
         val self = StuLessonRepository.refreshLesson(it.selfNum)
-        val affair = Single.just<List<AffairData>>(emptyList()) // TODO 刷新事务待完成
+        val affair = IAffairService::class.impl.refreshAffair()
         val link = StuLessonRepository.refreshLesson(it.linkNum)
         if (it.isNotNull()) {
           Single.mergeDelayError(self, link, affair) // 使用 mergeDelayError() 延迟异常
@@ -98,7 +102,6 @@ class HomeCourseViewModel : BaseViewModel() {
   private fun initObserve() {
     // 自己课的观察流
     val selfLessonObservable = StuLessonRepository.observeSelfLesson()
-      .map { it.toStuLessonData() }
   
     // 关联人课的观察流
     val linkLessonObservable = LinkRepository.observeLinkStudent()
@@ -107,10 +110,11 @@ class HomeCourseViewModel : BaseViewModel() {
         // 没得关联人和不显示关联课程时发送空数据
         if (it.isNull() || !it.isShowLink) Observable.just(emptyList())
         else StuLessonRepository.observeLesson(it.linkNum)
-      }.map { it.toStuLessonData() }
+      }
   
     // 事务的观察流
-    val affairObservable = Observable.just<List<AffairData>>(emptyList()) // TODO 事务待完成
+    val affairObservable = IAffairService::class.impl
+      .observeSelfAffair()
   
     // 合并观察流
     Observable.combineLatest(
@@ -118,7 +122,19 @@ class HomeCourseViewModel : BaseViewModel() {
       linkLessonObservable,
       affairObservable
     ) { self, link, affair ->
-      HomePageResultImpl.flatMap(self, link, affair)
+      // 通知小组件更新
+      IWidgetService::class.impl
+        .notifyWidgetRefresh(
+          self.toLesson(),
+          link.toLesson(),
+          affair
+        )
+      // 装换为 data 数据类
+      HomePageResultImpl.flatMap(
+        self.toStuLessonData(),
+        link.toStuLessonData(),
+        affair.toAffairData()
+      )
     }.subscribeOn(Schedulers.io())
       .safeSubscribeBy {
         _homeWeekData.postValue(it)

@@ -17,6 +17,7 @@ import com.mredrock.cyxbs.lib.utils.extensions.unsafeSubscribeBy
 import com.mredrock.cyxbs.lib.utils.utils.CalendarUtils
 import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
 import io.reactivex.rxjava3.core.Observable
+import io.reactivex.rxjava3.core.Single
 
 /**
  * ...
@@ -27,29 +28,31 @@ import io.reactivex.rxjava3.core.Observable
 @Route(path = AFFAIR_SERVICE, name = AFFAIR_SERVICE)
 class AffairServiceImpl : IAffairService {
 
-  override fun getAffair(stuNum: String): List<IAffairService.Affair> {
-    return AffairDataBase.INSTANCE.getAffairDao()
-      .getAllAffair(stuNum)
-      .toAffair()
+  override fun getAffair(): Single<List<IAffairService.Affair>> {
+    return AffairRepository.getAffair()
+      .map { it.toAffair() }
   }
-
-  override fun observeAffair(stuNum: String): Observable<List<IAffairService.Affair>> {
-    return AffairDataBase.INSTANCE.getAffairDao()
-      .observeAffair(stuNum)
+  
+  override fun refreshAffair(): Single<List<IAffairService.Affair>> {
+    return AffairRepository.refreshAffair()
+      .map { it.toAffair() }
+  }
+  
+  override fun observeSelfAffair(): Observable<List<IAffairService.Affair>> {
+    return AffairRepository.observeAffair()
       .distinctUntilChanged()
       .map { it.toAffair() }
   }
-
+  
   override fun deleteAffair(context: AppCompatActivity,affairId: Int) {
     AffairRepository.getAffair().observeOn(AndroidSchedulers.mainThread()).unsafeSubscribeBy {
       val data = it.filter { it.id == affairId }
       val list = data[0].atWhatTime
       list.forEach {
         deleteRemind(context,data[0].title, data[0].content, it.beginLesson, it.day)
-        AffairRepository.deleteAffair(affairId).observeOn(AndroidSchedulers.mainThread())
-          .doOnError {
-            it.printStackTrace()
-          }.unsafeSubscribeBy { "删除成功".toast() }
+        AffairRepository.deleteAffair(affairId)
+          .observeOn(AndroidSchedulers.mainThread())
+          .unsafeSubscribeBy { "删除成功".toast() }
       }
     }
   }

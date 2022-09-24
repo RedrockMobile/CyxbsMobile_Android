@@ -60,11 +60,11 @@ object AffairRepository {
         }
       }
   }
-
+  
   /**
-   * 得到事务，但不建议你直接使用，应该用 [observeAffair] 来代替
+   * 刷新事务
    */
-  fun getAffair(): Single<List<AffairEntity>> {
+  fun refreshAffair(): Single<List<AffairEntity>> {
     val selfNum: String = ServiceManager(IAccountService::class).getUserService().getStuNum()
     if (selfNum.isEmpty()) return Single.error(RuntimeException("学号为空！"))
     // 先检查是否有本地临时数据，只有本地临时数据全部上传后才能下载新的数据，防止数据混乱
@@ -78,7 +78,16 @@ object AffairRepository {
           AffairDataBase.INSTANCE.getAffairDao().resetData(selfNum, affairEntity)
           affairEntity
         } else throw ApiException(bean.status, bean.info)
-      }.onErrorReturn {
+      }.subscribeOn(Schedulers.io())
+  }
+
+  /**
+   * 得到事务，但不建议你直接使用，应该用 [observeAffair] 来代替
+   */
+  fun getAffair(): Single<List<AffairEntity>> {
+    val selfNum: String = ServiceManager(IAccountService::class).getUserService().getStuNum()
+    if (selfNum.isEmpty()) return Single.error(RuntimeException("学号为空！"))
+    return refreshAffair().onErrorReturn {
         // 上游失败了就取本地数据，可能是网络失败，也可能是本地临时上传事务失败
         AffairDataBase.INSTANCE.getAffairDao().getAllAffair(selfNum)
       }.subscribeOn(Schedulers.io())
