@@ -1,8 +1,11 @@
-package com.mredrock.cyxbs.affair.service
+package com.mredrock.cyxbs.affair.room
 
 import androidx.room.*
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
+import com.mredrock.cyxbs.affair.ui.adapter.data.AffairAdapterData
+import com.mredrock.cyxbs.affair.ui.adapter.data.AffairTimeData
+import com.mredrock.cyxbs.affair.ui.adapter.data.AffairWeekData
 import com.mredrock.cyxbs.lib.utils.extensions.appContext
 import io.reactivex.rxjava3.core.Observable
 
@@ -59,6 +62,15 @@ data class AffairEntity(
     fun stringToList(string: String): List<AtWhatTime> {
       return GSON.fromJson(string, object : TypeToken<List<AtWhatTime>>() {}.type)
     }
+  }
+  
+  // 将数据库的类转化为要展示的类
+  fun toAffairAdapterData(): List<AffairAdapterData> {
+    val newList = arrayListOf<AffairAdapterData>()
+    val affairList = atWhatTime
+    affairList[0].week.forEach { newList.add(AffairWeekData(it, listOf())) }
+    affairList.forEach { newList.add(AffairTimeData(it.day, it.beginLesson, it.period)) }
+    return newList
   }
 }
 

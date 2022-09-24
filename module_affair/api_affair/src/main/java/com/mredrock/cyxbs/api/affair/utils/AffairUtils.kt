@@ -20,3 +20,25 @@ fun getStartRow(beginLesson: Int): Int {
   }
 }
 
+/**
+ * 得到结尾对应的 row
+ */
+fun getEndRow(beginLesson: Int, period: Int): Int {
+  val start = getStartRow(beginLesson)
+  return start + period - 1
+}
+
+/**
+ * 将 [startRow] 装换为对应的 beginLesson
+ */
+fun getBeginLesson(startRow: Int): Int {
+  return when (startRow) {
+    in 0..3 -> startRow + 1
+    4 -> -1 // 中午
+    in 5..8 -> startRow
+    9 -> -2 // 傍晚
+    in 10..13 -> startRow - 1
+    else -> throw IllegalArgumentException("不存在对应的 beginLesson，startRow = $startRow")
+  }
+}
+

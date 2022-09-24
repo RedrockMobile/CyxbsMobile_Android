@@ -4,6 +4,7 @@ import android.content.Context
 import androidx.annotation.IdRes
 import androidx.fragment.app.FragmentManager
 import com.alibaba.android.arouter.facade.template.IProvider
+import com.mredrock.cyxbs.api.affair.IAffairService
 
 /**
  * ...
@@ -49,5 +50,5 @@ interface ICourseService : IProvider {
   /**
    * 通过 [affair] 打开对应 BottomSheetDialog
    */
-  fun openBottomSheetDialogByAffair(context: Context, affair: Any)
+  fun openBottomSheetDialogByAffair(context: Context, affair: IAffairService.Affair)
 }

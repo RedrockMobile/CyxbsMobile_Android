@@ -23,7 +23,7 @@ class TitleCandidateAdapter : ListAdapter<String, TitleCandidateAdapter.VHolder>
     }
 
     override fun areContentsTheSame(oldItem: String, newItem: String): Boolean {
-      return oldItem == newItem
+      return true
     }
 
     override fun getChangePayload(oldItem: String, newItem: String): Any {

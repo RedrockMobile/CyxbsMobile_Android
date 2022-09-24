@@ -1,7 +1,7 @@
 package com.mredrock.cyxbs.affair.model.bean
 
 import com.google.gson.annotations.SerializedName
-import com.mredrock.cyxbs.affair.service.AffairEntity
+import com.mredrock.cyxbs.affair.room.AffairEntity
 import java.io.Serializable
 
 // 详细的字段解释请看数据库中的实体类

@@ -103,10 +103,7 @@ class HomeWeekFragment : CourseWeekFragment() {
       CreateAffairDispatcher(this).apply {
         setOnClickListener {
           IAffairService::class.impl
-            .startAffairEditActivity(
-              requireContext(),
-              mWeek, weekNum - 1, getBeginLesson(startRow), length
-            )
+            .startActivityForAddAffair(mWeek, weekNum - 1, getBeginLesson(startRow), length)
         }
       }
     )

@@ -16,8 +16,8 @@ class DebugActivity : BaseDebugActivity() {
 
   override fun onDebugCreate(savedInstanceState: Bundle?) {
     ServiceManager(IAffairService::class)
-      .startAffairEditActivity(
-        this, 0, 1, 1, 1
+      .startActivityForAddAffair(
+        0, 1, 1, 1
         //228398
       )
   }

@@ -91,10 +91,7 @@ class HomeSemesterFragment : CompareWeekSemesterFragment() {
       CreateAffairDispatcher(this).apply {
         setOnClickListener {
           IAffairService::class.impl
-            .startAffairEditActivity(
-              requireContext(),
-              0, weekNum - 1, getBeginLesson(startRow), length
-            )
+            .startActivityForAddAffair(0, weekNum - 1, getBeginLesson(startRow), length)
         }
       }
     )
