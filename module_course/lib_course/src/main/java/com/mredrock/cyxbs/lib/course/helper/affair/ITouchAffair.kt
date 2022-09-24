@@ -32,6 +32,8 @@ interface ITouchAffair : ISingleDayItem {
   
   fun cloneLp(): SingleDayLayoutParams
   
+  fun setOnClickListener(onClick: ITouchAffair.() -> Unit)
+  
   companion object {
     
     /**

@@ -84,7 +84,7 @@ fun getLessonByCalendar(context: Context, calendar: Calendar): ArrayList<LessonE
     val weekOfTerm = SchoolCalendar().weekOfTerm
     val myStuNum =
         defaultSp.getString(LessonDatabase.MY_STU_NUM, "")
-    val lesson = LessonDatabase.getInstance(context).getLessonDao()
+    val lesson = LessonDatabase.INSTANCE.getLessonDao()
         .queryAllLessons(myStuNum!!, weekOfTerm)
     if (lesson.isEmpty()) return null
     /*
@@ -127,17 +127,17 @@ private fun getPendingIntentFlags(isMutable: Boolean = true) =
 
 /**获取登录用户的本周所有Lesson,
  * 这里需要传入RemoteViewService的context，因为小组件运行在桌面进程时，可能应用已经被关闭，此时无法获得application作为context*/
-fun getMyLessons(context: Context, weekOfTerm: Int): List<LessonEntity> {
+fun getMyLessons(weekOfTerm: Int): List<LessonEntity> {
     val myStuNum =
         defaultSp.getString(LessonDatabase.MY_STU_NUM, "")
-    return LessonDatabase.getInstance(context).getLessonDao()
+    return LessonDatabase.INSTANCE.getLessonDao()
         .queryAllLessons(myStuNum!!, weekOfTerm)
 }
 
 /**同上*/
-fun getOthersStuNum(context: Context, weekOfTerm: Int): List<LessonEntity> {
+fun getOthersStuNum(weekOfTerm: Int): List<LessonEntity> {
     val othersStuNum =
         defaultSp.getString(LessonDatabase.OTHERS_STU_NUM, "")
-    return LessonDatabase.getInstance(context).getLessonDao()
+    return LessonDatabase.INSTANCE.getLessonDao()
         .queryAllLessons(othersStuNum!!, weekOfTerm)
 }

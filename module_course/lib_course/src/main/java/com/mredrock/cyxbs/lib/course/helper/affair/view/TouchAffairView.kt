@@ -19,7 +19,7 @@ import com.mredrock.cyxbs.lib.course.internal.view.course.lp.ItemLayoutParams
 import com.mredrock.cyxbs.lib.course.item.single.SingleDayLayoutParams
 import com.mredrock.cyxbs.lib.utils.extensions.color
 import com.mredrock.cyxbs.lib.utils.extensions.dimen
-import com.ndhzs.netlayout.orientation.IRow
+import com.mredrock.cyxbs.lib.utils.extensions.setOnSingleClickListener
 import kotlin.math.roundToInt
 
 /**
@@ -118,6 +118,12 @@ class TouchAffairView(val course: ICourseViewGroup) : ViewGroup(course.getContex
   override fun cloneLp(): SingleDayLayoutParams {
     return SingleDayLayoutParams(lp).apply {
       changeAll(lp)
+    }
+  }
+  
+  override fun setOnClickListener(onClick: ITouchAffair.() -> Unit) {
+    setOnSingleClickListener {
+      onClick.invoke(this)
     }
   }
   

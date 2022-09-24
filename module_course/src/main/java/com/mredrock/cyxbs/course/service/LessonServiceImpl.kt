@@ -35,28 +35,28 @@ class LessonServiceImpl : ILessonService {
   
   override fun init(context: Context) {
   }
-  
-  private fun List<StuLessonEntity>.toLesson(): List<ILessonService.Lesson> {
-    return buildList {
-      this@toLesson.forEach { entity ->
-        entity.week.forEach { week ->
-          add(
-            ILessonService.Lesson(
-              entity.stuNum,
-              week,
-              entity.beginLesson,
-              entity.classroom,
-              entity.course,
-              entity.courseNum,
-              entity.day,
-              entity.hashDay,
-              entity.period,
-              entity.rawWeek,
-              entity.teacher,
-              entity.type
-            )
+}
+
+fun List<StuLessonEntity>.toLesson(): List<ILessonService.Lesson> {
+  return buildList {
+    this@toLesson.forEach { entity ->
+      entity.week.forEach { week ->
+        add(
+          ILessonService.Lesson(
+            entity.stuNum,
+            week,
+            entity.beginLesson,
+            entity.classroom,
+            entity.course,
+            entity.courseNum,
+            entity.day,
+            entity.hashDay,
+            entity.period,
+            entity.rawWeek,
+            entity.teacher,
+            entity.type
           )
-        }
+        )
       }
     }
   }
