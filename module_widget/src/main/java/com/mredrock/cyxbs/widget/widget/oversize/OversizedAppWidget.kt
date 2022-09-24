@@ -8,7 +8,6 @@ import android.content.Context
 import android.content.Intent
 import android.os.Build
 import android.os.Bundle
-import android.util.Log
 import android.util.SizeF
 import android.view.View
 import android.widget.RemoteViews
@@ -105,7 +104,7 @@ class OversizedAppWidget : AppWidgetProvider() {
                 val i1 = if (i == weekDay) View.VISIBLE else View.INVISIBLE
                 remoteViews.setViewVisibility(getShadowId(i), i1)
             }
-            val intent = Intent(context, GridWidgetService::class.java).apply {
+            val gridWidgetIntent = Intent(context, GridWidgetService::class.java).apply {
                 putExtra("time", if (weekDay == 1) 6 else weekDay - 2)
                 //因为如果每次更新的时候都是一个Intent那么onGetViewFactory只会执行一次
                 //这样更新就不会生效，因为RemoteView中的GridView只会局部更新,这样处理并不是很好
@@ -121,7 +120,7 @@ class OversizedAppWidget : AppWidgetProvider() {
                     3,
                     ACTION_CLICK,
                     OversizedAppWidget::class.java))
-            remoteViews.setRemoteAdapter(R.id.grid_course_widget, intent)
+            remoteViews.setRemoteAdapter(R.id.grid_course_widget, gridWidgetIntent)
             appWidgetManager.updateAppWidget(appWidgetId, remoteViews)
         }
     }

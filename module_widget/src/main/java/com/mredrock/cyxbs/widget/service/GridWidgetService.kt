@@ -11,6 +11,7 @@ import com.mredrock.cyxbs.widget.repo.bean.AffairEntity
 import com.mredrock.cyxbs.widget.repo.bean.LessonEntity
 import com.mredrock.cyxbs.widget.repo.database.AffairDatabase
 import com.mredrock.cyxbs.widget.util.*
+import java.util.*
 import kotlin.concurrent.thread
 
 /**
@@ -43,11 +44,16 @@ class GridWidgetService : RemoteViewsService() {
             val mScheduleLessons = Array(6) { arrayOfNulls<LessonEntity>(7) }
             for (i in 0 until size) {
                 get(i).let {
-                    val row = it.beginLesson / 2
-                    val column = it.hashDay
+                    val row = if (it.beginLesson < 4)
+                        it.beginLesson / 2
+                    else if (it.beginLesson < 8)
+                        it.beginLesson / 2 + 1
+                    else
+                        it.beginLesson / 2 + 2
+                    val column = it.hashDay + 1
                     mScheduleLessons[row][column] = it
                     if (it.period == 3) {
-                        mScheduleLessons[row + 1][column] = it.apply { period = 1 }
+                        mScheduleLessons[row + 1][column] = it.copy(period = 1)
                     } else if (it.period == 4) {
                         mScheduleLessons[row + 1][column] = it
                     }
@@ -57,14 +63,19 @@ class GridWidgetService : RemoteViewsService() {
         }
 
         private fun List<AffairEntity>.schedule(): Array<Array<AffairEntity?>> {
-            val mScheduleAffairs = Array(6) { arrayOfNulls<AffairEntity>(7) }
+            val mScheduleAffairs = Array(8) { arrayOfNulls<AffairEntity>(8) }
             for (i in 0 until size) {
                 get(i).let {
-                    val row = it.beginLesson / 2 
-                    val column = it.day
+                    val row = if (it.beginLesson < 4)
+                        it.beginLesson / 2
+                    else if (it.beginLesson < 8)
+                        it.beginLesson / 2 + 1
+                    else
+                        it.beginLesson / 2 + 2
+                    val column = it.day + 1
                     mScheduleAffairs[row][column] = it
                     if (it.period == 3) {
-                        mScheduleAffairs[row + 1][column] = it.apply { period = 1 }
+                        mScheduleAffairs[row + 1][column] = it.copy(period = 1)
                     } else if (it.period == 4) {
                         mScheduleAffairs[row + 1][column] = it
                     }
@@ -85,21 +96,14 @@ class GridWidgetService : RemoteViewsService() {
 
         override fun getViewAt(position: Int): RemoteViews? {
             //获取当前时间
-            val time = intent.getIntExtra("time", 0)
-            val lastClickPosition = mContext.getSharedPreferences("module_widget", Context.MODE_PRIVATE).getInt("position", -1)
-            //如果是前7个说明是显示今天是星期几
-            if (position < 7) {
-                //获取当前item是否应该高亮
-                val id = if (time == position)
-                    R.layout.widget_grid_view_day_of_week_selected_item
-                else R.layout.widget_grid_view_day_of_week_item
-                //返回对应的item
-                return RemoteViews(mContext.packageName, id).apply {
-                    setTextViewText(R.id.tv_day_of_week, "周${
-                        if (position != 6) Num2CN.number2ChineseNumber((position + 1).toLong()) else "日"
-                    }")
-                }
-            }
+            val lastClickPosition =
+                mContext.getSharedPreferences("module_widget", Context.MODE_PRIVATE)
+                    .getInt("position", -1)
+            //如果等于0，说明是第1列的，该显示课程是第几节
+            if (position % 8 == 0)
+                return getLessonNumRv(position)
+            //如果是第1到8个说明是显示今天是星期几
+            if (position in 1..7) return getWeekDayRv(position)
             val remoteViews = mScheduleLessons?.let { mSchedulesArray ->
                 val mPosition = position - 7
                 val lesson = mSchedulesArray[mPosition / 7][mPosition % 7]
@@ -161,6 +165,53 @@ class GridWidgetService : RemoteViewsService() {
             return remoteViews
         }
 
+        /**生成显示星期几的rv*/
+        private fun getWeekDayRv(position: Int): RemoteViews {
+            val time = intent.getIntExtra("time", 0)
+            //获取当前item是否应该高亮
+            val id = if (time == position - 1)
+                R.layout.widget_grid_view_day_of_week_selected_item
+            else R.layout.widget_grid_view_day_of_week_item
+            //返回对应的item
+            return RemoteViews(mContext.packageName, id).apply {
+                setTextViewText(R.id.tv_day_of_week, "周${
+                    if (position != 6) Num2CN.number2ChineseNumber((position + 1).toLong()) else "日"
+                }")
+            }
+        }
+
+        /**生成课表显示第几节课以及中午、下午的rv*/
+        private fun getLessonNumRv(position: Int): RemoteViews {
+            return if (position == 0) //显示月份
+                RemoteViews(mContext.packageName,
+                    R.layout.widget_grid_view_month).apply {
+                    setTextViewText(R.id.tv_month,
+                        Calendar.getInstance()[Calendar.MONTH].toString() + "月")
+                }
+            else if (position == 8 || position == 16) RemoteViews(mContext.packageName,
+                R.layout.widget_grid_view_item_lesson_num_afternoon).apply {
+                setTextViewText(R.id.lesson_num_top, (position / 8 * 2 + 1).toString())
+                setTextViewText(R.id.lesson_num_bottom, (position / 8 * 2 + 2).toString())
+            }
+            else if (position == 24) //显示中午
+                RemoteViews(mContext.packageName,
+                    R.layout.widget_grid_view_item_lesson_num_afternoon)
+            else if (position == 32 || position == 40)
+                RemoteViews(mContext.packageName,
+                    R.layout.widget_grid_view_item_lesson_num_afternoon).apply {
+                    setTextViewText(R.id.lesson_num_top, ((position - 8) / 8 * 2 + 1).toString())
+                    setTextViewText(R.id.lesson_num_bottom, ((position - 8) / 8 * 2 + 2).toString())
+                }
+            else if (position == 48) //显示晚上
+                RemoteViews(mContext.packageName,
+                    R.layout.widget_grid_view_item_lesson_num_night)
+            else RemoteViews(mContext.packageName,
+                R.layout.widget_grid_view_item_lesson_num_night).apply {
+                setTextViewText(R.id.lesson_num_top, ((position - 16) / 8 * 2 + 1).toString())
+                setTextViewText(R.id.lesson_num_bottom, ((position - 16) / 8 * 2 + 2).toString())
+            }
+        }
+
         /**生成同学课表对应的RemoteView
          * */
         private fun getOtherLessonRV(mPosition: Int, position: Int): RemoteViews {
@@ -181,12 +232,12 @@ class GridWidgetService : RemoteViewsService() {
         }
 
         override fun onCreate() {
-            /**初始化GridView的数据*/
+            /**初始化GridView的数据,设计数据库存储，所以开了个线程*/
             thread { mScheduleLessons = makeSchedules(mContext) }
         }
 
         override fun getCount(): Int { // 返回“集合视图”中的数据的总数
-            return 7 * 7
+            return 8 * 9
         }
 
         override fun getItemId(position: Int): Long { // 返回当前项在“集合视图”中的位置
@@ -196,7 +247,7 @@ class GridWidgetService : RemoteViewsService() {
         override fun getLoadingView() =
             RemoteViews(mContext.packageName, R.layout.widget_grid_view_item_blank)
 
-        override fun getViewTypeCount() = 10
+        override fun getViewTypeCount() = 11
 
         override fun hasStableIds() = true
 
