@@ -15,7 +15,7 @@ import com.redrock.module_notification.adapter.SystemNotificationRvAdapter
 import com.redrock.module_notification.adapter.SystemNotificationRvAdapter.Companion.CHANGE_DOT_STATUS
 import com.redrock.module_notification.bean.DeleteMsgToBean
 import com.redrock.module_notification.bean.SystemMsgBean
-import com.redrock.module_notification.ui.activity.MainActivity
+import com.redrock.module_notification.ui.activity.NotificationActivity
 import com.redrock.module_notification.viewmodel.NotificationViewModel
 import com.redrock.module_notification.widget.DeleteDialog
 import kotlinx.android.synthetic.main.notification_fragment_system.*
@@ -35,7 +35,7 @@ class SysNotificationFragment : BaseFragment() {
     private lateinit var adapter: SystemNotificationRvAdapter
 
     //fragment对应的activity
-    private var myActivity by Delegates.notNull<MainActivity>()
+    private var myActivity by Delegates.notNull<NotificationActivity>()
 
     //所有已读的系统通知的消息的bean 用来给删除已读使用
     private var allReadSysMsg = ArrayList<SystemMsgBean>()
@@ -47,7 +47,7 @@ class SysNotificationFragment : BaseFragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        myActivity = requireActivity() as MainActivity
+        myActivity = requireActivity() as NotificationActivity
         initRv()
         initObserver()
         initViewClickListener()

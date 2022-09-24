@@ -1,0 +1,143 @@
+{
+  "formatVersion": 1,
+  "database": {
+    "version": 1,
+    "identityHash": "63ab66f0183dc2a366863bd47b3147cc",
+    "entities": [
+      {
+        "tableName": "local_add_affair",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`stuNum` TEXT NOT NULL, `id` INTEGER NOT NULL, `dateJson` TEXT NOT NULL, `time` INTEGER NOT NULL, `title` TEXT NOT NULL, `content` TEXT NOT NULL, PRIMARY KEY(`stuNum`, `id`))",
+        "fields": [
+          {
+            "fieldPath": "stuNum",
+            "columnName": "stuNum",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "id",
+            "columnName": "id",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "dateJson",
+            "columnName": "dateJson",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "time",
+            "columnName": "time",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "title",
+            "columnName": "title",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "content",
+            "columnName": "content",
+            "affinity": "TEXT",
+            "notNull": true
+          }
+        ],
+        "primaryKey": {
+          "columnNames": [
+            "stuNum",
+            "id"
+          ],
+          "autoGenerate": false
+        },
+        "indices": [],
+        "foreignKeys": []
+      },
+      {
+        "tableName": "local_update_affair",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`stuNum` TEXT NOT NULL, `id` INTEGER NOT NULL, `dateJson` TEXT NOT NULL, `time` INTEGER NOT NULL, `title` TEXT NOT NULL, `content` TEXT NOT NULL, PRIMARY KEY(`stuNum`, `id`))",
+        "fields": [
+          {
+            "fieldPath": "stuNum",
+            "columnName": "stuNum",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "id",
+            "columnName": "id",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "dateJson",
+            "columnName": "dateJson",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "time",
+            "columnName": "time",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "title",
+            "columnName": "title",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "content",
+            "columnName": "content",
+            "affinity": "TEXT",
+            "notNull": true
+          }
+        ],
+        "primaryKey": {
+          "columnNames": [
+            "stuNum",
+            "id"
+          ],
+          "autoGenerate": false
+        },
+        "indices": [],
+        "foreignKeys": []
+      },
+      {
+        "tableName": "local_delete_affair",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`stuNum` TEXT NOT NULL, `id` INTEGER NOT NULL, PRIMARY KEY(`stuNum`, `id`))",
+        "fields": [
+          {
+            "fieldPath": "stuNum",
+            "columnName": "stuNum",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "id",
+            "columnName": "id",
+            "affinity": "INTEGER",
+            "notNull": true
+          }
+        ],
+        "primaryKey": {
+          "columnNames": [
+            "stuNum",
+            "id"
+          ],
+          "autoGenerate": false
+        },
+        "indices": [],
+        "foreignKeys": []
+      }
+    ],
+    "views": [],
+    "setupQueries": [
+      "CREATE TABLE IF NOT EXISTS room_master_table (id INTEGER PRIMARY KEY,identity_hash TEXT)",
+      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, '63ab66f0183dc2a366863bd47b3147cc')"
+    ]
+  }
+}

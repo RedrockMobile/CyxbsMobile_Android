@@ -4,13 +4,13 @@ import android.content.Context
 import androidx.room.Database
 import androidx.room.Room
 import androidx.room.RoomDatabase
-import com.mredrock.cyxbs.widget.repo.bean.Lesson
+import com.mredrock.cyxbs.widget.repo.bean.LessonEntity
 
 /**
  * author : Watermelon02
  * email : 1446157077@qq.com
  */
-@Database(entities = [Lesson::class], version = 1, exportSchema = false)
+@Database(entities = [LessonEntity::class], version = 1, exportSchema = false)
 abstract class LessonDatabase : RoomDatabase() {
 
     abstract fun getLessonDao(): LessonDao

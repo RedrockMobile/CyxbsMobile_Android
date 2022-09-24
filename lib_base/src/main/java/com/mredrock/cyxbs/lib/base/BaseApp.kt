@@ -48,7 +48,9 @@ open class BaseApp : Application(), InitialManager {
   override val application: Application
     get() = this
   
-  private val loader = ServiceLoader.load(InitialService::class.java)
+  private val loader by lazy {
+    ServiceLoader.load(InitialService::class.java)
+  }
   
   private fun initInitialService() {
     //由于android每开辟进程都会访问application的生命周期方法,所以为了保证sdk初始化无措，最好对其进行过滤。

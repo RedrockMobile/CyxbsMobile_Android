@@ -15,7 +15,7 @@ import androidx.core.content.edit
 import com.google.gson.Gson
 import com.mredrock.cyxbs.lib.utils.extensions.CyxbsToast
 import com.mredrock.cyxbs.widget.R
-import com.mredrock.cyxbs.widget.repo.bean.Lesson
+import com.mredrock.cyxbs.widget.repo.bean.LessonEntity
 import com.mredrock.cyxbs.widget.repo.database.LessonDatabase
 import com.mredrock.cyxbs.widget.repo.database.LessonDatabase.Companion.MY_STU_NUM
 import com.mredrock.cyxbs.widget.util.*
@@ -39,7 +39,7 @@ class NormalWidget : AppWidgetProvider() {
     //生成calendar
     private val calendar = Calendar.getInstance()
     private var gson = Gson()
-    private var list = listOf<Lesson>()
+    private var list = listOf<LessonEntity>()
 
     companion object {
         private var lastClickTime: Long = 0//用于记录点击时间
@@ -224,7 +224,7 @@ class NormalWidget : AppWidgetProvider() {
     private fun setMoreView(
         num: Int,
         rv: RemoteViews,
-        course: Lesson,
+        course: LessonEntity,
         context: Context,
     ) {
         val moreViewNum = (num + 1) / 2

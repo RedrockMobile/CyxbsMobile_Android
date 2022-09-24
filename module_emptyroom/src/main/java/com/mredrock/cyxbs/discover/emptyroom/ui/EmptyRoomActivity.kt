@@ -201,7 +201,7 @@ class EmptyRoomActivity : BaseViewModelActivity<EmptyRoomViewModel>(), OnItemSel
                         val drawable = if (selected) ContextCompat.getDrawable(this@EmptyRoomActivity, R.drawable.emptyroom_shape_query_item) else null
 //                        var color =  1
                         if (selected) {
-                            textView.setTextColor(ContextCompat.getColor(this@EmptyRoomActivity, com.mredrock.cyxbs.common.R.color.common_transaction_heading))
+                            textView.setTextColor(ContextCompat.getColor(this@EmptyRoomActivity, R.color.emptyroom_selected))
                             textView.paint.isFakeBoldText = true
                         } else {
                             textView.setTextColor(ContextCompat.getColor(this@EmptyRoomActivity, com.mredrock.cyxbs.common.R.color.common_level_two_font_color))

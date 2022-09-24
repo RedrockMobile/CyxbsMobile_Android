@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<translate
+xmlns:android="http://schemas.android.com/apk/res/android"
+android:fromXDelta="0"
+android:toXDelta="22.5"
+android:duration="450"
+android:interpolator="@anim/noclass_tv_shake_interpolator" />
+

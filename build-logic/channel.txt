@@ -1,6 +1,3 @@
-redrock
 official
+coolapk
 xiaomi
-huawei
-vivo
-oppo

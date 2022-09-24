@@ -72,9 +72,6 @@ const val NAVIGATE_FROM_WHERE = "NAVIGATE_FROM_WHERE"  //作为Key
 const val IS_COMMENT = 1 //从我的评论跳转到具体回答页面
 const val IS_ANSWER = 0 //从我的回答跳转到具体的回答页面
 
-//课表版本
-const val COURSE_VERSION = "course_version"
-
 //课表上课地点跳转到地图key
 const val COURSE_POS_TO_MAP = "COURSE_POS_TO_MAP"
 

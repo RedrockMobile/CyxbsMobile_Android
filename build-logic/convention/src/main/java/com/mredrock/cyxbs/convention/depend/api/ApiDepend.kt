@@ -1,7 +1,6 @@
 package com.mredrock.cyxbs.convention.depend.api
 
 import org.gradle.api.Project
-
 import com.mredrock.cyxbs.convention.depend.api.utils.ApiDependUtils
 
 /**
@@ -15,7 +14,6 @@ import com.mredrock.cyxbs.convention.depend.api.utils.ApiDependUtils
  * @email 2767465918@qq.com
  * @date 2022/5/30 17:52
  */
-
 object ApiDepend {
   
   /*
@@ -34,14 +32,15 @@ object ApiDepend {
   val update = ":lib_update:api_update" by parent
   val electricity = ":module_electricity:api_electricity" by parent
   val login = ":module_login:api_login" by parent
-  val main = ":module_main:api_main" by parent
   val sport = ":module_sport:api_sport" by parent
   val store = ":module_store:api_store" by parent
   val todo = ":module_todo:api_todo" by parent
   val volunteer = ":module_volunteer:api_volunteer" by parent
   val widget = ":module_widget:api_widget" by parent
   val mine = ":module_mine:api_mine" by parent
-
+  val course = ":module_course:api_course" by parent
+  val affair = ":module_affair:api_affair" by parent
+  
   private infix fun String.by(implPath: String): ApiDependUtils.IApiDependUtils = by { implPath }
   private infix fun String.by(implPath: String.() -> String): ApiDependUtils.IApiDependUtils {
     return ApiDependUtils(this)
@@ -72,10 +71,6 @@ fun Project.dependApiLogin() {
   ApiDepend.login.dependApiOnly(this)
 }
 
-fun Project.dependApiMain() {
-  ApiDepend.main.dependApiOnly(this)
-}
-
 fun Project.dependApiStore() {
   ApiDepend.store.dependApiOnly(this)
 }
@@ -100,3 +95,10 @@ fun Project.dependApiMine(){
   ApiDepend.mine.dependApiOnly(this)
 }
 
+fun Project.dependApiCourse(){
+  ApiDepend.course.dependApiOnly(this)
+}
+
+fun Project.dependApiAffair(){
+  ApiDepend.affair.dependApiOnly(this)
+}

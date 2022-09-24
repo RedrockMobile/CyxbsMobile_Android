@@ -3,7 +3,7 @@
     package="com.redrock.module_notification">
 
     <application android:theme="@style/AppTheme">
-        <activity android:name=".ui.activity.MainActivity" />
+        <activity android:name=".ui.activity.NotificationActivity" />
         <activity
             android:name=".ui.activity.SettingActivity"
             android:launchMode="singleTask" />

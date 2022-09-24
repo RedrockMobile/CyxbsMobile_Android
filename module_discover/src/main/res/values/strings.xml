@@ -1,5 +1,7 @@
 <resources>
 
+    <string name="discover">发现</string>
+
     <string name="discover_function">工具</string>
 
     <string name="discover_title_no_class">没课约</string>

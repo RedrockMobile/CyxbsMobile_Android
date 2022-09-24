@@ -7,10 +7,10 @@ import com.mredrock.cyxbs.common.config.DISCOVER_ELECTRICITY_FEED
 import com.mredrock.cyxbs.common.service.ServiceManager
 import com.mredrock.cyxbs.api.account.IAccountService
 import com.mredrock.cyxbs.api.account.IUserStateService
+import com.mredrock.cyxbs.common.service.impl
 import com.mredrock.cyxbs.common.ui.BaseFeedFragment
 import com.mredrock.cyxbs.common.utils.extensions.defaultSharedPreferences
 import com.mredrock.cyxbs.common.utils.extensions.doIfLogin
-import com.mredrock.cyxbs.common.utils.extensions.runOnUiThread
 import com.mredrock.cyxbs.discover.electricity.adapter.ElectricityFeedAdapter
 import com.mredrock.cyxbs.discover.electricity.adapter.ElectricityFeedUnboundAdapter
 import com.mredrock.cyxbs.discover.electricity.bean.ElecInf
@@ -19,6 +19,7 @@ import com.mredrock.cyxbs.discover.electricity.viewmodel.ChargeViewModel
 import com.mredrock.cyxbs.electricity.R
 import kotlinx.android.synthetic.main.electricity_discover_feed_unbound.view.*
 import com.mredrock.cyxbs.common.utils.extensions.*
+import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
 
 
 @Route(path = DISCOVER_ELECTRICITY_FEED)
@@ -33,13 +34,15 @@ class ElectricityFeedFragment : BaseFeedFragment<ChargeViewModel>() {
         if (ServiceManager.getService(IAccountService::class.java).getVerifyService().isLogin()) {
             setAdapter(ElectricityFeedUnboundAdapter())
         }
-        ServiceManager.getService(IAccountService::class.java).getVerifyService().addOnStateChangedListener {
-            if (it == IUserStateService.UserState.LOGIN) {
-                context?.runOnUiThread {
+        IAccountService::class.impl
+            .getVerifyService()
+            .observeUserStateEvent()
+            .observeOn(AndroidSchedulers.mainThread())
+            .safeSubscribeBy {
+                if (it == IUserStateService.UserState.LOGIN) {
                     setAdapter(ElectricityFeedUnboundAdapter())
                 }
             }
-        }
         init()
     }
 

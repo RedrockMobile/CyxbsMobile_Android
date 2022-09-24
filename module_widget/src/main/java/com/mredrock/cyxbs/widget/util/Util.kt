@@ -9,86 +9,22 @@ import android.os.Build
 import android.os.Bundle
 import android.widget.Toast
 import androidx.annotation.IdRes
-import androidx.core.content.edit
 import com.mredrock.cyxbs.api.account.IAccountService
 import com.mredrock.cyxbs.lib.base.BaseApp
 import com.mredrock.cyxbs.lib.utils.extensions.CyxbsToast
 import com.mredrock.cyxbs.lib.utils.service.impl
-import com.mredrock.cyxbs.widget.repo.bean.Lesson
+import com.mredrock.cyxbs.widget.repo.bean.LessonEntity
 import com.mredrock.cyxbs.widget.repo.database.LessonDatabase
 import java.util.*
+import kotlin.collections.ArrayList
 
 
 /**
  * Created by zia on 2018/10/10.
  * 精力憔悴，这些方法直接揉在一起了*/
 
-private const val SP_DayOffset = "dayOffset"
 const val ACTION_FLUSH = "flush"
 const val ACTION_CLICK = "btn.start.com"
-
-//天数偏移量，用于LittleWidget切换明天课程
-fun saveDayOffset(context: Context, offset: Int) {
-    defaultSp.edit { putInt(SP_DayOffset, offset) }
-}
-
-fun getDayOffset(context: Context): Int {
-    return defaultSp.getInt(SP_DayOffset, 0)
-}
-
-
-fun isNight(): Boolean {
-    val calendar = Calendar.getInstance()
-    return calendar.get(Calendar.HOUR_OF_DAY) > 19
-}
-
-/**
- * hash_lesson == 0 第1节 返回8:00*/
-
-
-fun getStartCalendarByNum(hash_lesson: Int): Calendar {
-    val calendar = Calendar.getInstance()
-    when (hash_lesson) {
-        0 -> {
-            calendar.set(Calendar.HOUR_OF_DAY, 8)
-            calendar.set(Calendar.MINUTE, 0)
-        }
-        1 -> {
-            calendar.set(Calendar.HOUR_OF_DAY, 10)
-            calendar.set(Calendar.MINUTE, 15)
-        }
-        2 -> {
-            calendar.set(Calendar.HOUR_OF_DAY, 14)
-            calendar.set(Calendar.MINUTE, 0)
-        }
-        3 -> {
-            calendar.set(Calendar.HOUR_OF_DAY, 16)
-            calendar.set(Calendar.MINUTE, 15)
-        }
-        4 -> {
-            calendar.set(Calendar.HOUR_OF_DAY, 19)
-            calendar.set(Calendar.MINUTE, 0)
-        }
-        5 -> {
-            calendar.set(Calendar.HOUR_OF_DAY, 20)
-            calendar.set(Calendar.MINUTE, 50)
-        }
-    }
-    return calendar
-}
-
-fun getWeekDayChineseName(weekDay: Int): String {
-    return when (weekDay) {
-        1 -> "周日"
-        2 -> "周一"
-        3 -> "周二"
-        4 -> "周三"
-        5 -> "周四"
-        6 -> "周五"
-        7 -> "周六"
-        else -> "null"
-    }
-}
 
 fun getClickPendingIntent(
     context: Context,
@@ -135,7 +71,7 @@ fun filterClassRoom(classRoom: String): String {
     }
 }
 
-fun startOperation(lesson: Lesson) {
+fun startOperation(lesson: LessonEntity) {
     if (IAccountService::class.impl.getVerifyService().isLogin()) {
         CyxbsToast.show(BaseApp.baseApp, "请登录之后再点击查看详细信息", Toast.LENGTH_SHORT)
     } else {
@@ -144,7 +80,7 @@ fun startOperation(lesson: Lesson) {
     }
 }
 
-fun getLessonByCalendar(context: Context, calendar: Calendar): ArrayList<Lesson>? {
+fun getLessonByCalendar(context: Context, calendar: Calendar): ArrayList<LessonEntity>? {
     val weekOfTerm = SchoolCalendar().weekOfTerm
     val myStuNum =
         defaultSp.getString(LessonDatabase.MY_STU_NUM, "")
@@ -159,7 +95,7 @@ fun getLessonByCalendar(context: Context, calendar: Calendar): ArrayList<Lesson>
     * */
     val hashDay = (calendar.get(Calendar.DAY_OF_WEEK) + 5) % 7
 
-    val list = ArrayList<Lesson>()
+    val list = ArrayList<LessonEntity>()
     lesson.forEach {
         if (it.hashDay == hashDay && it.week == weekOfTerm) {
             list.add(it)
@@ -169,15 +105,11 @@ fun getLessonByCalendar(context: Context, calendar: Calendar): ArrayList<Lesson>
     return list
 }
 
-fun getErrorLessonList(): ArrayList<Lesson> {
-    val data = Lesson(course = "数据异常，请刷新")
-    val list = ArrayList<Lesson>()
+fun getErrorLessonList(): ArrayList<LessonEntity> {
+    val data = LessonEntity(course = "数据异常，请刷新")
+    val list = ArrayList<LessonEntity>()
     list.add(data)
     return list
-}
-
-fun getNoCourse(): Lesson {
-    return Lesson(course = "无课")
 }
 
 private fun getPendingIntentFlags(isMutable: Boolean = true) =
@@ -195,7 +127,7 @@ private fun getPendingIntentFlags(isMutable: Boolean = true) =
 
 /**获取登录用户的本周所有Lesson,
  * 这里需要传入RemoteViewService的context，因为小组件运行在桌面进程时，可能应用已经被关闭，此时无法获得application作为context*/
-fun getMyLessons(context: Context, weekOfTerm: Int): List<Lesson> {
+fun getMyLessons(context: Context, weekOfTerm: Int): List<LessonEntity> {
     val myStuNum =
         defaultSp.getString(LessonDatabase.MY_STU_NUM, "")
     return LessonDatabase.getInstance(context).getLessonDao()
@@ -203,7 +135,7 @@ fun getMyLessons(context: Context, weekOfTerm: Int): List<Lesson> {
 }
 
 /**同上*/
-fun getOthersStuNum(context: Context, weekOfTerm: Int): List<Lesson> {
+fun getOthersStuNum(context: Context, weekOfTerm: Int): List<LessonEntity> {
     val othersStuNum =
         defaultSp.getString(LessonDatabase.OTHERS_STU_NUM, "")
     return LessonDatabase.getInstance(context).getLessonDao()

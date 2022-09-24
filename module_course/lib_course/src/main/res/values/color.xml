@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!--课表左侧时间轴中午和傍晚的字体颜色-->
+    <color name="course_noon_dusk_tv">#66142C52</color>
+
+    <!--课表可上拉下拉标识小块背景-->
+    <color name="course_tip_color">#E2EDFB</color>
+
+    <!--按钮渐变颜色-->
+    <color name="course_button_gradient_start_color">#2921D1</color>
+    <color name="course_button_gradient_end_color">#5D5DF7</color>
+
+    <!--课表标识当天阴影-->
+    <color name="course_today_highlight">#93E8F0FC</color>
+
+    <!--    课程色块内的字体颜色-->
+    <color name="course_am_lesson_tv">#FF8015</color>
+    <color name="course_pm_lesson_tv">#FF6262</color>
+    <color name="course_night_lesson_tv">#4066EA</color>
+    <color name="course_link_lesson_tv">#06A3FC</color>
+
+    <!--    课表课程色块颜色-->
+    <color name="course_am_lesson_bg">#F9E7D8</color>
+    <color name="course_pm_lesson_bg">#F9E3E4</color>
+    <color name="course_night_lesson_bg">#DDE3F8</color>
+    <color name="course_link_lesson_bg">#DFF3FC</color>
+    <color name="course_affair_bg">#FFE9EDF2</color>
+
+    <!--事务备忘条纹-->
+    <color name="course_affair_stripe">#FFE4E7EC</color>
+
+</resources>

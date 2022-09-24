@@ -1,0 +1,97 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:fitsSystemWindows="true"
+    android:background="@color/config_window_background">
+
+    <TextView
+        android:id="@+id/debug_tv_process_crash"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="崩溃进程名："
+        android:textColor="@android:color/black"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="16dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:ignore="HardcodedText" />
+
+    <TextView
+        android:id="@+id/debug_tv_thread_crash"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="崩溃线程名："
+        android:textColor="@android:color/black"
+        android:layout_marginTop="2dp"
+        app:layout_constraintStart_toStartOf="@id/debug_tv_process_crash"
+        app:layout_constraintTop_toBottomOf="@id/debug_tv_process_crash"
+        tools:ignore="HardcodedText" />
+
+    <TextView
+        android:id="@+id/debug_tv_title_crash"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="异常堆栈："
+        android:textSize="22sp"
+        android:textStyle="bold"
+        android:textColor="@android:color/black"
+        android:layout_marginTop="8dp"
+        app:layout_constraintStart_toStartOf="@id/debug_tv_thread_crash"
+        app:layout_constraintTop_toBottomOf="@id/debug_tv_thread_crash"
+        tools:ignore="HardcodedText" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="支持双指触摸放大缩小"
+        android:textSize="10sp"
+        app:layout_constraintStart_toStartOf="@id/debug_tv_title_crash"
+        app:layout_constraintTop_toBottomOf="@id/debug_tv_title_crash"
+        tools:ignore="HardcodedText,SmallSp" />
+
+    <com.mredrock.cyxbs.lib.debug.crash.ScaleScrollTextView
+        android:id="@+id/debug_ssv_crash"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_marginBottom="100dp"
+        android:layout_marginTop="16dp"
+        app:layout_constraintTop_toBottomOf="@id/debug_tv_title_crash"
+        app:layout_constraintBottom_toBottomOf="parent" />
+
+    <Button
+        android:id="@+id/debug_btn_copy_crash"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="复制堆栈"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toStartOf="@id/debug_btn_reboot_crash"
+        app:layout_constraintTop_toBottomOf="@id/debug_ssv_crash"
+        app:layout_constraintBottom_toBottomOf="parent"
+        tools:ignore="HardcodedText"/>
+
+    <Button
+        android:id="@+id/debug_btn_reboot_crash"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="重启应用"
+        app:layout_constraintStart_toEndOf="@id/debug_btn_copy_crash"
+        app:layout_constraintEnd_toStartOf="@id/debug_btn_network_crash"
+        app:layout_constraintTop_toTopOf="@id/debug_btn_copy_crash"
+        app:layout_constraintBottom_toBottomOf="@id/debug_btn_copy_crash"
+        tools:ignore="HardcodedText"/>
+
+    <Button
+        android:id="@+id/debug_btn_network_crash"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="查看请求"
+        app:layout_constraintStart_toEndOf="@id/debug_btn_reboot_crash"
+        app:layout_constraintTop_toTopOf="@id/debug_btn_copy_crash"
+        app:layout_constraintBottom_toBottomOf="@id/debug_btn_copy_crash"
+        app:layout_constraintEnd_toEndOf="parent"
+        tools:ignore="HardcodedText" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>
