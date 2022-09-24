@@ -38,6 +38,7 @@ object ApiDepend {
   val store = ":module_store:api_store" by parent
   val todo = ":module_todo:api_todo" by parent
   val volunteer = ":module_volunteer:api_volunteer" by parent
+  val widget = ":module_widget:api_widget" by parent
   val mine = ":module_mine:api_mine" by parent
   val course = ":module_course:api_course" by parent
   
@@ -81,6 +82,10 @@ fun Project.dependApiTodo() {
 
 fun Project.dependApiVolunteer() {
   ApiDepend.volunteer.dependApiOnly(this)
+}
+
+fun Project.dependApiWidget() {
+  ApiDepend.widget.dependApiOnly(this)
 }
 
 fun Project.dependApiSport() {
