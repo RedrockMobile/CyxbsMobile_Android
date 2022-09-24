@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:padding="4dp">
+
+    <TextView
+        android:id="@+id/affair_tv_add_affair_candidate"
+        android:layout_width="wrap_content"
+        android:layout_height="34dp"
+        android:background="@drawable/affair_shape_item_text_bg"
+        android:gravity="center"
+        android:paddingStart="13dp"
+        android:paddingEnd="13dp"
+        android:textColor="@color/common_level_two_font_color"
+        android:textSize="12dp"
+        tools:ignore="SpUsage"
+        tools:text="会议" />
+
+</FrameLayout>

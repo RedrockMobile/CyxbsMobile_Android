@@ -1,0 +1,111 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/common_white_background"
+    tools:context=".ui.activity.AffairActivity">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <View
+            android:id="@+id/affair_view_affair_bg1"
+            android:layout_width="128dp"
+            android:layout_height="128dp"
+            android:background="@drawable/affair_shape_edit_affair_bg1"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="1.0"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintVertical_bias="0.0" />
+
+        <View
+            android:id="@+id/affair_view_affair_bg2"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:background="@drawable/affair_shape_edit_affair_bg2"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="@+id/affair_view_affair_bg1"
+            app:layout_constraintStart_toStartOf="@+id/affair_view_affair_bg1"
+            app:layout_constraintTop_toBottomOf="@+id/affair_view_affair_bg1" />
+
+        <View
+            android:id="@+id/affair_view_affair_bg3"
+            android:layout_width="71dp"
+            android:layout_height="142dp"
+            android:background="@drawable/affair_shape_edit_affair_bg3"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.0"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/affair_view_affair_bg2" />
+
+        <View
+            android:id="@+id/affair_view_affair_bg4"
+            android:layout_width="12dp"
+            android:layout_height="12dp"
+            android:background="@drawable/affair_shape_edit_affair_bg2"
+            app:layout_constraintBottom_toBottomOf="@+id/affair_view_affair_bg3"
+            app:layout_constraintEnd_toStartOf="@+id/affair_view_affair_bg2"
+            app:layout_constraintHorizontal_bias="0.11"
+            app:layout_constraintStart_toEndOf="@+id/affair_view_affair_bg3"
+            app:layout_constraintTop_toBottomOf="@+id/affair_view_affair_bg2"
+            app:layout_constraintVertical_bias="0.30" />
+
+        <!--放在这里是防止下面的按钮跟随输入法上移-->
+        <ImageButton
+            android:id="@+id/affair_btn_edit_affair_next"
+            android:layout_width="66dp"
+            android:layout_height="66dp"
+            android:layout_marginBottom="100dp"
+            android:background="@drawable/affair_layer_list_edit_affair_button"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            tools:ignore="ContentDescription" />
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:fitsSystemWindows="true">
+
+        <ImageButton
+            android:id="@+id/affair_btn_edit_affair_back"
+            android:layout_width="10dp"
+            android:layout_height="20dp"
+            android:layout_marginStart="16dp"
+            android:layout_marginTop="16dp"
+            android:background="@android:color/transparent"
+            android:paddingTop="0dp"
+            android:paddingBottom="0dp"
+            android:scaleType="fitCenter"
+            android:src="@drawable/affair_ic_back"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.0"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintVertical_bias="0.0"
+            tools:ignore="ContentDescription" />
+
+        <androidx.fragment.app.FragmentContainerView
+            android:id="@+id/affair_fcv_edit_affair"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="16dp"
+            android:layout_marginTop="130dp"
+            android:layout_marginEnd="16dp"
+            android:minHeight="300dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+</FrameLayout>
