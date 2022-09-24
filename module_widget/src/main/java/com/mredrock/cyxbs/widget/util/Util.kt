@@ -10,17 +10,13 @@ import android.os.Bundle
 import android.widget.Toast
 import androidx.annotation.IdRes
 import androidx.core.content.edit
-import com.alibaba.android.arouter.launcher.ARouter
 import com.mredrock.cyxbs.api.account.IAccountService
-import com.mredrock.cyxbs.api.main.MAIN_MAIN
 import com.mredrock.cyxbs.lib.base.BaseApp
 import com.mredrock.cyxbs.lib.utils.extensions.CyxbsToast
 import com.mredrock.cyxbs.lib.utils.service.impl
-import com.mredrock.cyxbs.widget.repo.bean.Affair
 import com.mredrock.cyxbs.widget.repo.bean.Lesson
 import com.mredrock.cyxbs.widget.repo.database.LessonDatabase
 import java.util.*
-import kotlin.collections.ArrayList
 
 
 /**

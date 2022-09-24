@@ -25,8 +25,6 @@ import java.util.*
 /**
  * 超大小部件
  */
-
-
 class OversizedAppWidget : AppWidgetProvider() {
     override fun onUpdate(
         context: Context,

@@ -9,16 +9,16 @@ import java.io.Serializable
  */
 @Entity
 data class Affair(
-    val stuNum: String,
+    val stuNum: String ="",
     @PrimaryKey
-    val id: Int,
-    val time: Int,
-    val title: String,
-    val content: String,
-    val week: Int,
-    val beginLesson: Int,
-    val day: Int,
-    val period: Int,
+    val id: Int=0,
+    val time: Int=0,
+    val title: String="",
+    val content: String="",
+    val week: Int=0,
+    val beginLesson: Int=0,
+    val day: Int=0,
+    var period: Int=2,
 ) : Serializable {
     companion object {
         //将api模块的Affair转化为widget模块的Affair

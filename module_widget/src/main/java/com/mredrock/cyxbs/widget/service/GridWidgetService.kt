@@ -60,9 +60,14 @@ class GridWidgetService : RemoteViewsService() {
             val mScheduleAffairs = Array(6) { arrayOfNulls<Affair>(7) }
             for (i in 0 until size) {
                 get(i).let {
-                    val row = it.beginLesson / 2 + 1
+                    val row = it.beginLesson / 2 
                     val column = it.day
                     mScheduleAffairs[row][column] = it
+                    if (it.period == 3) {
+                        mScheduleAffairs[row + 1][column] = it.apply { period = 1 }
+                    } else if (it.period == 4) {
+                        mScheduleAffairs[row + 1][column] = it
+                    }
                 }
             }
             return mScheduleAffairs
