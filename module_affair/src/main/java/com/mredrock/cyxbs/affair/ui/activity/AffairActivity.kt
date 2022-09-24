@@ -6,6 +6,7 @@ import android.content.Intent
 import android.os.Bundle
 import android.view.View
 import android.widget.ImageButton
+import androidx.activity.viewModels
 import androidx.lifecycle.DefaultLifecycleObserver
 import androidx.lifecycle.LifecycleOwner
 import com.mredrock.cyxbs.affair.R
@@ -14,13 +15,13 @@ import com.mredrock.cyxbs.affair.model.data.AffairEditArgs
 import com.mredrock.cyxbs.affair.ui.fragment.AddAffairFragment
 import com.mredrock.cyxbs.affair.ui.fragment.EditAffairFragment
 import com.mredrock.cyxbs.affair.ui.viewmodel.activity.AffairViewModel
-import com.mredrock.cyxbs.lib.base.ui.mvvm.BaseVmActivity
+import com.mredrock.cyxbs.lib.base.ui.BaseActivity
 import com.mredrock.cyxbs.lib.utils.extensions.lazyUnlock
 import com.mredrock.cyxbs.lib.utils.extensions.setOnSingleClickListener
 import kotlin.math.PI
 import kotlin.math.cos
 
-class AffairActivity : BaseVmActivity<AffairViewModel>() {
+class AffairActivity : BaseActivity() {
 
   companion object {
     fun start(context: Context, args: AffairArgs) {
@@ -33,6 +34,8 @@ class AffairActivity : BaseVmActivity<AffairViewModel>() {
 
     private const val ARG_KEY = "arg_key"
   }
+  
+  private val mViewModel by viewModels<AffairViewModel>()
 
   private val mViewBg1: View by R.id.affair_view_affair_bg1.view()
   private val mViewBg2: View by R.id.affair_view_affair_bg2.view()
@@ -102,7 +105,7 @@ class AffairActivity : BaseVmActivity<AffairViewModel>() {
     }
 
     mBtnNext.setOnSingleClickListener {
-      viewModel.clickNextBtn()
+      mViewModel.clickNextBtn()
     }
   }
 

@@ -27,7 +27,6 @@ import io.reactivex.rxjava3.disposables.Disposable
 class SettingActivity : BaseActivity() {
     private val mToolbar by R.id.mine_setting_toolbar.view<AppBarLayout>()
     private val mSwitch by R.id.mine_setting_switch.view<SwitchPlus>()
-    private val mFmEditWidget by R.id.mine_setting_fm_edit_widget.view<FrameLayout>()
     private val mFmSecurity by R.id.mine_setting_fm_security.view<FrameLayout>()
     private val mFmShieldPerson by R.id.mine_setting_fm_shield_person.view<FrameLayout>()
     private val mBtnExit by R.id.mine_setting_btn_exit.view<Button>()
@@ -64,11 +63,6 @@ class SettingActivity : BaseActivity() {
         }
         mSwitch.isChecked =
             defaultSharedPreferences.getBoolean(COURSE_SHOW_STATE, false)
-
-        //自定义桌面小组件
-        mFmEditWidget.setOnSingleClickListener {
-            ARouter.getInstance().build(WIDGET_SETTING).navigation()
-        }
 
         //账号安全
         mFmSecurity.setOnSingleClickListener { doIfLogin { startActivity<SecurityActivity>() } }

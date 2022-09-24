@@ -12,6 +12,7 @@ import android.widget.EditText
 import android.widget.TextView
 import androidx.core.os.bundleOf
 import androidx.fragment.app.activityViewModels
+import androidx.fragment.app.viewModels
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.flexbox.FlexDirection
 import com.google.android.flexbox.FlexWrap
@@ -26,7 +27,7 @@ import com.mredrock.cyxbs.affair.ui.viewmodel.fragment.EditAffairViewModel
 import com.mredrock.cyxbs.affair.utils.AffairDataUtils
 import com.mredrock.cyxbs.affair.utils.TimeUtils
 import com.mredrock.cyxbs.affair.widge.RemindSelectDialog
-import com.mredrock.cyxbs.lib.base.ui.mvvm.BaseVmFragment
+import com.mredrock.cyxbs.lib.base.ui.BaseFragment
 import com.mredrock.cyxbs.lib.utils.extensions.appContext
 import com.mredrock.cyxbs.lib.utils.extensions.doPermissionAction
 import com.mredrock.cyxbs.lib.utils.extensions.setOnSingleClickListener
@@ -38,7 +39,7 @@ import com.mredrock.cyxbs.lib.utils.utils.CalendarUtils
  * @email 2767465918@qq.com
  * @date 2022/6/3 15:14
  */
-class EditAffairFragment : BaseVmFragment<EditAffairViewModel>() {
+class EditAffairFragment : BaseFragment() {
 
   companion object {
 
@@ -50,6 +51,8 @@ class EditAffairFragment : BaseVmFragment<EditAffairViewModel>() {
 
     private const val ARG_KEY = "arg_key"
   }
+  
+  private val mViewModel by viewModels<EditAffairViewModel>()
 
   private val mEtTitle: EditText by R.id.affair_et_edit_affair_title.view()
 
@@ -67,7 +70,7 @@ class EditAffairFragment : BaseVmFragment<EditAffairViewModel>() {
   override fun onCreate(savedInstanceState: Bundle?) {
     super.onCreate(savedInstanceState)
     mArguments = requireArguments().get(ARG_KEY) as AffairEditArgs
-    viewModel.findAffairEntity(mArguments.id)
+    mViewModel.findAffairEntity(mArguments.id)
   }
 
   override fun onCreateView(
@@ -137,7 +140,7 @@ class EditAffairFragment : BaseVmFragment<EditAffairViewModel>() {
 //        )
 //      }
 
-      viewModel.updateAffair(
+      mViewModel.updateAffair(
         affairId,
         1,
         mEtTitle.text.toString(),
@@ -146,7 +149,7 @@ class EditAffairFragment : BaseVmFragment<EditAffairViewModel>() {
       )
       activity?.finish()
     }
-    viewModel.affairEntity.observe {
+    mViewModel.affairEntity.observe {
       mEtTitle.setText(it.title)
       mEtContent.setText(it.content)
       affairId = it.id

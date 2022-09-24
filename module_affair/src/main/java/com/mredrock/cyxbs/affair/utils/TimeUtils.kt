@@ -1,7 +1,7 @@
 package com.mredrock.cyxbs.affair.utils
 
 import com.mredrock.cyxbs.affair.service.AffairEntity
-import com.mredrock.cyxbs.lib.utils.utils.SchoolCalendarUtil
+import com.mredrock.cyxbs.config.config.SchoolCalendar
 
 /**
  * author: WhiteNight(1448375249@qq.com)
@@ -32,7 +32,8 @@ object TimeUtils {
    * 得到开始时间
    */
   fun getBegin(begin: Int, weekNum: Int): Long {
-    val tmp = SchoolCalendarUtil.getFirstMonDayTimestamp() ?: 1662307200000
+    // 在拿不到开学第一天时间戳时，返回 2022 年 9 月 5 号，但这个是不可能出现的情况
+    val tmp = SchoolCalendar.getFirstMonDayTimestamp() ?: 1662307200000
     // 得到确切的时间 开学第一天+星期*8640+选择的开始时间
     return tmp + LESSON_TIME_ARRAY[begin] + weekNum * 86400000
   }

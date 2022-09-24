@@ -55,7 +55,7 @@ object AffairRepository {
             .distinctUntilChanged()
             .doOnSubscribe {
               // 观察时先请求一次最新数据
-              getAffair(stuNum).unsafeSubscribeBy()
+              getAffair().unsafeSubscribeBy()
             }
         }
       }
@@ -64,9 +64,8 @@ object AffairRepository {
   /**
    * 得到事务，但不建议你直接使用，应该用 [observeAffair] 来代替
    */
-  fun getAffair(
-    selfNum: String = ServiceManager(IAccountService::class).getUserService().getStuNum()
-  ): Single<List<AffairEntity>> {
+  fun getAffair(): Single<List<AffairEntity>> {
+    val selfNum: String = ServiceManager(IAccountService::class).getUserService().getStuNum()
     if (selfNum.isEmpty()) return Single.error(RuntimeException("学号为空！"))
     // 先检查是否有本地临时数据，只有本地临时数据全部上传后才能下载新的数据，防止数据混乱
     return uploadLocalAffair(selfNum)
@@ -76,11 +75,7 @@ object AffairRepository {
         // 是 200 就装换数据并插入数据库
         if (bean.status == 200 && bean.info == "success") {
           val affairEntity = bean.toAffairEntity()
-          AffairDataBase.INSTANCE.getAffairDao().apply {
-            // 只能删除后重新插入，这样处理简单
-            deleteAllAffair(selfNum)
-            insertAffair(affairEntity)
-          }
+          AffairDataBase.INSTANCE.getAffairDao().resetData(selfNum, affairEntity)
           affairEntity
         } else throw ApiException(bean.status, bean.info)
       }.onErrorReturn {
@@ -150,7 +145,7 @@ object AffairRepository {
           AffairDataBase.INSTANCE.getAffairDao()
             .updateAffair(AffairEntity(selfNum, id, time, title, content, atWhatTime))
         } else throw ApiException(bean.status, bean.info)
-      }.doOnError {
+      }.onErrorResumeWith {
         // 这里说明网络出问题了或者本地临时事务没有上传成功
         // 要先判断是否是本地临时的事务，如果是本地临时的事务就更新 add 表
         val result = LocalAffairDataBase.INSTANCE.getLocalAddAffairDao()

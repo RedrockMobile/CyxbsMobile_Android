@@ -6,7 +6,6 @@
         <activity
             android:name=".widget.page.normal.NormalSelectActivity"
             android:theme="@style/widget_Theme"/>
-        <activity android:name=".widget.page.ConfigActivity" />
         <activity android:name=".widget.page.normal.NormalConfigActivity" />
         <activity
             android:name=".widget.page.oversized.OversizedAppWidgetConfigureActivity"

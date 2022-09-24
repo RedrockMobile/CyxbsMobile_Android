@@ -1,9 +1,7 @@
 package com.mredrock.cyxbs.affair.service
 
 import android.Manifest
-import android.app.Activity
 import android.content.Context
-import android.util.Log
 import androidx.appcompat.app.AppCompatActivity
 import com.alibaba.android.arouter.facade.annotation.Route
 import com.mredrock.cyxbs.affair.model.data.AffairEditArgs
@@ -43,7 +41,7 @@ class AffairServiceImpl : IAffairService {
   }
 
   override fun deleteAffair(context: AppCompatActivity,affairId: Int) {
-    AffairRepository.getAffair().observeOn(AndroidSchedulers.mainThread()).doOnError { it.printStackTrace() }.unsafeSubscribeBy {
+    AffairRepository.getAffair().observeOn(AndroidSchedulers.mainThread()).unsafeSubscribeBy {
       val data = it.filter { it.id == affairId }
       val list = data[0].atWhatTime
       list.forEach {
@@ -54,7 +52,6 @@ class AffairServiceImpl : IAffairService {
           }.unsafeSubscribeBy { "删除成功".toast() }
       }
     }
-
   }
 
   override fun startAffairEditActivity(
@@ -149,7 +146,6 @@ class AffairServiceImpl : IAffairService {
       object : CalendarUtils.OnCalendarRemindListener {
         override fun onFailed(error_code: CalendarUtils.OnCalendarRemindListener.Status?) {
           "删除日历失败".toast()
-          Log.e("TAG", "onFailed: 删除日历失败")
         }
 
         override fun onSuccess() {

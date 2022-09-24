@@ -70,10 +70,6 @@ const val MINE_PERSON_PAGE = "/person_page/mine/entry"
 //大红页
 const val REDROCK_HOME_ENTRY = "/redrock_home/entry"
 
-
-//小控件设置
-const val WIDGET_SETTING = "/setting/widget"
-
 // QA
 const val QA_QUIZ = "/quiz/qa/entry"
 const val QA_CIRCLE_DETAIL = "/circle_detail/qa/entry"

@@ -7,8 +7,8 @@ import android.widget.RemoteViews
 import android.widget.RemoteViewsService
 import com.mredrock.cyxbs.lib.base.BaseApp
 import com.mredrock.cyxbs.widget.R
-import com.mredrock.cyxbs.widget.repo.bean.Affair
-import com.mredrock.cyxbs.widget.repo.bean.Lesson
+import com.mredrock.cyxbs.widget.repo.bean.AffairEntity
+import com.mredrock.cyxbs.widget.repo.bean.LessonEntity
 import com.mredrock.cyxbs.widget.repo.database.AffairDatabase
 import com.mredrock.cyxbs.widget.util.*
 import kotlin.concurrent.thread
@@ -20,16 +20,16 @@ import kotlin.concurrent.thread
 class GridWidgetService : RemoteViewsService() {
 
     companion object {
-        private lateinit var myLessons: List<Lesson>
-        private lateinit var otherLessons: Array<Array<Lesson?>>
-        private lateinit var affairs: Array<Array<Affair?>>
+        private lateinit var myLessons: List<LessonEntity>
+        private lateinit var otherLessons: Array<Array<LessonEntity?>>
+        private lateinit var affairs: Array<Array<AffairEntity?>>
 
-        fun getLesson(position: Int): Lesson? {
+        fun getLesson(position: Int): LessonEntity? {
             val mPosition = position - 7
             return makeSchedules(BaseApp.baseApp).let { it[mPosition / 7][mPosition % 7] }
         }
 
-        private fun makeSchedules(context: Context): Array<Array<Lesson?>> {
+        private fun makeSchedules(context: Context): Array<Array<LessonEntity?>> {
             val weekOfTerm = SchoolCalendar().weekOfTerm
             myLessons = getMyLessons(context, weekOfTerm)
             otherLessons = getOthersStuNum(context, weekOfTerm).schedule()
@@ -39,8 +39,8 @@ class GridWidgetService : RemoteViewsService() {
             return myLessons.schedule()
         }
 
-        private fun List<Lesson>.schedule(): Array<Array<Lesson?>> {
-            val mScheduleLessons = Array(6) { arrayOfNulls<Lesson>(7) }
+        private fun List<LessonEntity>.schedule(): Array<Array<LessonEntity?>> {
+            val mScheduleLessons = Array(6) { arrayOfNulls<LessonEntity>(7) }
             for (i in 0 until size) {
                 get(i).let {
                     val row = it.beginLesson / 2
@@ -56,8 +56,8 @@ class GridWidgetService : RemoteViewsService() {
             return mScheduleLessons
         }
 
-        private fun List<Affair>.schedule(): Array<Array<Affair?>> {
-            val mScheduleAffairs = Array(6) { arrayOfNulls<Affair>(7) }
+        private fun List<AffairEntity>.schedule(): Array<Array<AffairEntity?>> {
+            val mScheduleAffairs = Array(6) { arrayOfNulls<AffairEntity>(7) }
             for (i in 0 until size) {
                 get(i).let {
                     val row = it.beginLesson / 2 + 1
@@ -76,7 +76,7 @@ class GridWidgetService : RemoteViewsService() {
     private inner class GridRemoteViewsFactory(val mContext: Context, val intent: Intent) :
         RemoteViewsFactory {
 
-        private var mScheduleLessons: Array<Array<Lesson?>>? = null
+        private var mScheduleLessons: Array<Array<LessonEntity?>>? = null
 
         override fun getViewAt(position: Int): RemoteViews? {
             //获取当前时间

@@ -6,7 +6,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.FrameLayout
 import com.google.android.material.bottomsheet.BottomSheetDialog
-import com.mredrock.cyxbs.common.R
+import com.mredrock.cyxbs.affair.R
 
 /**
  * author: WhiteNight(1448375249@qq.com)
@@ -17,7 +17,7 @@ open class RedRockBottomSheetDialog(context: Context) :
   BottomSheetDialog(context, R.style.BottomSheetDialogTheme) {
   override fun setContentView(view: View) {
     val viewGroup = LayoutInflater.from(context).inflate(
-      R.layout.common_red_rock_bottom_sheet_dalog_container,
+      R.layout.affair_dialog,
       window?.decorView as ViewGroup,
       false
     ) as FrameLayout

@@ -17,6 +17,7 @@ dependLibConfig()
 dependApiAccount()
 dependApiUpdate()
 dependApiLogin()
+dependApiAffair()
 
 dependApiCourse()
 dependLibCourse()

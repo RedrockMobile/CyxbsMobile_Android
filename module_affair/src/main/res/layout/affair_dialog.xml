@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:background="@drawable/affair_layer_list_dialog_bg"
+    android:paddingTop="36dp"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+
+
+</FrameLayout>

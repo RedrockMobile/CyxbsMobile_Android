@@ -1,8 +1,7 @@
 package com.mredrock.cyxbs.widget.repo.database
 
 import androidx.room.*
-import com.mredrock.cyxbs.widget.repo.bean.Affair
-import io.reactivex.rxjava3.core.Flowable
+import com.mredrock.cyxbs.widget.repo.bean.AffairEntity
 
 /**
  * author : Watermelon02
@@ -12,17 +11,17 @@ import io.reactivex.rxjava3.core.Flowable
 @Dao
 interface AffairDao {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    fun insertAffairs(affairs: List<Affair>)
+    fun insertAffairs(affairs: List<AffairEntity>)
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    fun insertAffair(affair: Affair)
+    fun insertAffair(affair: AffairEntity)
 
-    @Query("SELECT * FROM Affair WHERE week=:week")
-    fun queryAllAffair(week:Int): List<Affair>
+    @Query("SELECT * FROM AffairEntity WHERE week=:week")
+    fun queryAllAffair(week:Int): List<AffairEntity>
 
-    @Query("DELETE FROM Affair")
+    @Query("DELETE FROM AffairEntity")
     fun deleteAllAffair()
 
     @Update
-    fun updateAffair(affair: Affair)
+    fun updateAffair(affair: AffairEntity)
 }

@@ -1,7 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <!--    二级字体颜色-->
-    <color name="affair_common_level_two_font_color">#112C57</color>
     <!--添加事务时标题-->
     <color name="affair_add_affair_title_tv">#122D55</color>
 
@@ -17,4 +15,8 @@
 
     <!--事务底部弹窗的删除按钮文字颜色-->
     <color name="affair_dialog_affair_delete_tv">#7CA3DF</color>
+
+    <!--按钮渐变颜色-->
+    <color name="affair_button_gradient_start_color">#2921D1</color>
+    <color name="affair_button_gradient_end_color">#5D5DF7</color>
 </resources>

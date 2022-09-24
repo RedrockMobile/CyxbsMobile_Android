@@ -1,7 +1,6 @@
 package com.mredrock.cyxbs.convention.depend.api
 
 import org.gradle.api.Project
-
 import com.mredrock.cyxbs.convention.depend.api.utils.ApiDependUtils
 
 /**
@@ -15,7 +14,6 @@ import com.mredrock.cyxbs.convention.depend.api.utils.ApiDependUtils
  * @email 2767465918@qq.com
  * @date 2022/5/30 17:52
  */
-
 object ApiDepend {
   
   /*
@@ -41,6 +39,7 @@ object ApiDepend {
   val widget = ":module_widget:api_widget" by parent
   val mine = ":module_mine:api_mine" by parent
   val course = ":module_course:api_course" by parent
+  val affair = ":module_affair:api_affair" by parent
   
   private infix fun String.by(implPath: String): ApiDependUtils.IApiDependUtils = by { implPath }
   private infix fun String.by(implPath: String.() -> String): ApiDependUtils.IApiDependUtils {
@@ -98,4 +97,8 @@ fun Project.dependApiMine(){
 
 fun Project.dependApiCourse(){
   ApiDepend.course.dependApiOnly(this)
+}
+
+fun Project.dependApiAffair(){
+  ApiDepend.affair.dependApiOnly(this)
 }

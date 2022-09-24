@@ -14,6 +14,7 @@ import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.constraintlayout.widget.ConstraintSet
 import androidx.core.os.bundleOf
 import androidx.fragment.app.activityViewModels
+import androidx.fragment.app.viewModels
 import androidx.recyclerview.widget.RecyclerView
 import androidx.transition.*
 import com.google.android.flexbox.FlexDirection
@@ -35,7 +36,7 @@ import com.mredrock.cyxbs.affair.utils.AffairDataUtils
 import com.mredrock.cyxbs.affair.utils.TimeUtils
 import com.mredrock.cyxbs.affair.widge.RemindSelectDialog
 import com.mredrock.cyxbs.affair.widge.TextViewTransition
-import com.mredrock.cyxbs.lib.base.ui.mvvm.BaseVmFragment
+import com.mredrock.cyxbs.lib.base.ui.BaseFragment
 import com.mredrock.cyxbs.lib.utils.extensions.*
 import com.mredrock.cyxbs.lib.utils.utils.CalendarUtils
 
@@ -45,7 +46,7 @@ import com.mredrock.cyxbs.lib.utils.utils.CalendarUtils
  * @email 2767465918@qq.com
  * @date 2022/6/3 15:12
  */
-class AddAffairFragment : BaseVmFragment<AddAffairViewModel>() {
+class AddAffairFragment : BaseFragment() {
 
   companion object {
     fun newInstance(args: AffairEditArgs.AffairDurationArgs): AddAffairFragment {
@@ -57,6 +58,8 @@ class AddAffairFragment : BaseVmFragment<AddAffairViewModel>() {
 
     private const val ARG_KEY = "arg_key"
   }
+  
+  private val mViewModel by viewModels<AddAffairViewModel>()
 
   private lateinit var mArguments: AffairEditArgs.AffairDurationArgs
 
@@ -167,7 +170,7 @@ class AddAffairFragment : BaseVmFragment<AddAffairViewModel>() {
   }
 
   private fun initObserve() {
-    viewModel.titleCandidates.observe {
+    mViewModel.titleCandidates.observe {
       mRvTitleCandidateAdapter.submitList(it)
     }
 
@@ -188,7 +191,7 @@ class AddAffairFragment : BaseVmFragment<AddAffairViewModel>() {
             )
           }
         }
-        viewModel.addAffair(
+        mViewModel.addAffair(
           1,
           mEtTitle.text.toString(),
           mEditText.text.toString(),

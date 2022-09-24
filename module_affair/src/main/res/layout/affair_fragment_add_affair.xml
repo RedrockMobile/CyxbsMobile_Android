@@ -78,7 +78,7 @@
         android:paddingTop="12dp"
         android:paddingEnd="18dp"
         android:paddingBottom="12dp"
-        android:textColor="@color/common_level_three_font_color"
+        android:textColor="@color/config_level_three_font_color"
         android:textSize="21sp"
         app:layout_constraintTop_toBottomOf="@+id/affair_tv_add_affair_text_3"
         tools:ignore="Autofill,LabelFor" />
@@ -119,7 +119,7 @@
         android:paddingStart="13dp"
         android:paddingEnd="13dp"
         android:text="不提醒"
-        android:textColor="@color/common_level_two_font_color"
+        android:textColor="@color/config_level_two_font_color"
         android:textSize="14dp"
         android:visibility="gone"
         app:layout_constraintStart_toStartOf="parent"

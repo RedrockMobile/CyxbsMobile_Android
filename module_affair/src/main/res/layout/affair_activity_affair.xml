@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/common_white_background"
+    android:background="@color/config_white_black"
     tools:context=".ui.activity.AffairActivity">
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -74,7 +74,7 @@
         android:layout_height="match_parent"
         android:fitsSystemWindows="true">
 
-        <ImageButton
+        <androidx.appcompat.widget.AppCompatImageButton
             android:id="@+id/affair_btn_edit_affair_back"
             android:layout_width="10dp"
             android:layout_height="20dp"
@@ -84,7 +84,7 @@
             android:paddingTop="0dp"
             android:paddingBottom="0dp"
             android:scaleType="fitCenter"
-            android:src="@drawable/affair_ic_back"
+            app:srcCompat="@drawable/affair_ic_back"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.0"

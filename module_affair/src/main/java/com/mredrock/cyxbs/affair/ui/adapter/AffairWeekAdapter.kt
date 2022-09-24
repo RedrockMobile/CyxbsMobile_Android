@@ -69,7 +69,7 @@ class AffairWeekAdapter : ListAdapter<AffairWeekSelectData, AffairWeekAdapter.VH
       holder.textView.setTextColor(appContext.getColor(R.color.affair_edit_affair_select_week_tv))
     } else {
       Log.e("TAG", "onBindViewHolder: hhhh")
-      holder.textView.setTextColor(appContext.getColor(R.color.affair_common_level_two_font_color))
+      holder.textView.setTextColor(appContext.getColor(com.mredrock.cyxbs.config.R.color.config_level_two_font_color))
     }
   }
 }

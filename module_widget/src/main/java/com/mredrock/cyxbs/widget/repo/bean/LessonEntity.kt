@@ -2,6 +2,7 @@ package com.mredrock.cyxbs.widget.repo.bean
 
 import androidx.room.Entity
 import androidx.room.PrimaryKey
+import com.mredrock.cyxbs.api.course.ILessonService
 import java.io.Serializable
 
 /**
@@ -9,7 +10,7 @@ import java.io.Serializable
  * email : 1446157077@qq.com
  */
 @Entity
-data class Lesson(
+data class LessonEntity(
     val stuNum: String = "",
     val week: Int = 0, // 第几周的课
     val beginLesson: Int = 0, // 开始节数，如：1、2 节课以 1 开始；3、4 节课以 3 开始，注意：中午是以 -1 开始，傍晚是以 -2 开始
@@ -27,10 +28,10 @@ data class Lesson(
 ) : Serializable {
     companion object {
         //将api模块的Lesson转化为widget模块的Lesson
-        fun convertFromApi(apiLessons: List<com.mredrock.cyxbs.api.widget.bean.Lesson>): ArrayList<Lesson> {
-            val lessons = arrayListOf<Lesson>()
+        fun convertFromApi(apiLessons: List<ILessonService.Lesson>): ArrayList<LessonEntity> {
+            val lessons = arrayListOf<LessonEntity>()
             for (apiLesson in apiLessons) {
-                val lesson = Lesson(
+                val lesson = LessonEntity(
                     stuNum = apiLesson.stuNum,
                     week = apiLesson.week,
                     beginLesson = apiLesson.beginLesson,

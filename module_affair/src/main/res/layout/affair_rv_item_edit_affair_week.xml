@@ -14,7 +14,7 @@
         android:gravity="center"
         android:paddingStart="13dp"
         android:paddingEnd="13dp"
-        android:textColor="@color/common_level_two_font_color"
+        android:textColor="@color/config_level_two_font_color"
         android:textSize="14dp"
         tools:ignore="SpUsage"
         tools:text="第15周" />

@@ -22,10 +22,6 @@ class AddAffairViewModel : BaseViewModel() {
   val titleCandidates: LiveData<List<String>>
     get() = _titleCandidates
 
-  fun refresh() {
-
-  }
-
   fun addAffair(
     time: Int = 1,
     title: String,
@@ -34,10 +30,6 @@ class AddAffairViewModel : BaseViewModel() {
   ) {
     content.toast()
     AffairRepository.addAffair(time, title, content, atWhatTime)
-  }
-
-  fun updateAffair() {
-
   }
 
   init {

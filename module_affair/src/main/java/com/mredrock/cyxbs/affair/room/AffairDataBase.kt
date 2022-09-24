@@ -69,32 +69,38 @@ data class StuNumWithAffairId(
 )
 
 @Dao
-interface AffairDao {
+abstract class AffairDao {
 
   @Query("SELECT * FROM affair WHERE stuNum = :stuNum")
-  fun getAllAffair(stuNum: String): List<AffairEntity>
+  abstract fun getAllAffair(stuNum: String): List<AffairEntity>
 
   @Query("SELECT * FROM affair WHERE stuNum = :stuNum AND id = :id")
-  fun getAffairById(stuNum: String, id: Int): AffairEntity?
+  abstract fun getAffairById(stuNum: String, id: Int): AffairEntity?
 
   @Query("SELECT * FROM affair WHERE stuNum = :stuNum")
-  fun observeAffair(stuNum: String): Observable<List<AffairEntity>>
+  abstract fun observeAffair(stuNum: String): Observable<List<AffairEntity>>
 
   @Query("DELETE FROM affair WHERE stuNum = :stuNum")
-  fun deleteAllAffair(stuNum: String)
+  protected abstract fun deleteAllAffair(stuNum: String)
+  
+  @Insert(onConflict = OnConflictStrategy.REPLACE)
+  protected abstract fun insertAffair(affairs: List<AffairEntity>)
+  
+  @Transaction
+  open fun resetData(stuNum: String, affairs: List<AffairEntity>) {
+    deleteAllAffair(stuNum)
+    insertAffair(affairs)
+  }
 
   @Delete(entity = AffairEntity::class)
-  fun deleteAffair(stuNumWithId: StuNumWithAffairId): Int
+  abstract fun deleteAffair(stuNumWithId: StuNumWithAffairId): Int
 
   @Delete
-  fun deleteAffair(affair: AffairEntity): Int
+  abstract fun deleteAffair(affair: AffairEntity): Int
 
   @Insert(onConflict = OnConflictStrategy.REPLACE)
-  fun insertAffair(affairs: List<AffairEntity>)
-
-  @Insert(onConflict = OnConflictStrategy.REPLACE)
-  fun insertAffair(affair: AffairEntity)
+  abstract fun insertAffair(affair: AffairEntity)
 
   @Update
-  fun updateAffair(affair: AffairEntity)
+  abstract fun updateAffair(affair: AffairEntity)
 }
