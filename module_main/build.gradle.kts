@@ -20,9 +20,13 @@ dependEventBus()
 dependRxjava()
 dependNetwork()
 dependGlide()
+dependWorkManger()
 
 dependLibCommon() // TODO common 模块不再使用，新模块请依赖 base 和 utils 模块
 
 dependencies {
     implementation(Umeng.push)
+    
+    // FIXME 中泰写的
+    implementation(project(":module_mine"))
 }

@@ -2,7 +2,6 @@ package com.mredrock.cyxbs.discover.pages
 
 import android.Manifest
 import android.annotation.SuppressLint
-import android.app.DownloadManager
 import android.content.Context
 import android.content.Intent
 import android.hardware.Sensor
@@ -24,13 +23,18 @@ import com.mredrock.cyxbs.common.BuildConfig
 import com.mredrock.cyxbs.common.component.CyxbsToast
 import com.mredrock.cyxbs.common.config.DIR_PHOTO
 import com.mredrock.cyxbs.common.ui.BaseActivity
-import com.mredrock.cyxbs.common.utils.extensions.*
+import com.mredrock.cyxbs.common.utils.extensions.loadBitmap
+import com.mredrock.cyxbs.common.utils.extensions.onTouch
+import com.mredrock.cyxbs.common.utils.extensions.startActivity
 import com.mredrock.cyxbs.common.webView.IAndroidWebView
 import com.mredrock.cyxbs.common.webView.LiteJsWebView
 import com.mredrock.cyxbs.common.webView.WebViewBaseCallBack
 import com.mredrock.cyxbs.discover.R
 import com.mredrock.cyxbs.discover.network.RollerViewInfo
 import com.mredrock.cyxbs.discover.pages.discover.webView.WebViewFactory
+import com.mredrock.cyxbs.lib.utils.extensions.doPermissionAction
+import com.mredrock.cyxbs.lib.utils.extensions.saveImage
+import com.mredrock.cyxbs.lib.utils.extensions.toast
 
 
 class RollerViewActivity : BaseActivity() {
@@ -113,13 +117,12 @@ class RollerViewActivity : BaseActivity() {
                 initSensor()
             }
         }
-        discover_web_view.setDownloadListener { url, userAgent, contentDisposition, mimetype, contentLength ->
-            val request = DownloadManager.Request(Uri.parse(url))
-            request.allowScanningByMediaScanner()
-            request.setNotificationVisibility(DownloadManager.Request.VISIBILITY_VISIBLE_NOTIFY_COMPLETED)
-            request.setDestinationInExternalPublicDir(Environment.DIRECTORY_DOWNLOADS, "DownloadFile.pdf")
-            val dm = baseContext.getSystemService(DOWNLOAD_SERVICE) as DownloadManager
-            dm.enqueue(request)
+        discover_web_view.setDownloadListener { downloadUrl, _, _, _, _ ->
+            // 直接交给浏览器下载，简单粗暴
+            val intent = Intent(Intent.ACTION_VIEW)
+            intent.addCategory(Intent.CATEGORY_BROWSABLE)
+            intent.data = Uri.parse(downloadUrl)
+            startActivity(intent)
         }
         //长按处理各种信息
         discover_web_view.setOnLongClickListener { view ->
@@ -236,7 +239,7 @@ class RollerViewActivity : BaseActivity() {
                                 null
                             )
                             runOnUiThread {
-                                toast("图片保存于系统\"$DIR_PHOTO\"文件夹下哦")
+                                toast("图片保存于${Environment.DIRECTORY_PICTURES}${DIR_PHOTO}文件夹下哦")
                                 dialog.dismiss()
                             }
                         }

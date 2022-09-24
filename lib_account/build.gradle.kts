@@ -1,6 +1,7 @@
 import com.mredrock.cyxbs.convention.depend.api.*
 import com.mredrock.cyxbs.convention.depend.*
-import com.mredrock.cyxbs.convention.depend.lib.dependLibCommon
+import com.mredrock.cyxbs.convention.depend.lib.dependLibConfig
+import com.mredrock.cyxbs.convention.depend.lib.dependLibUtils
 
 plugins {
     id("module-manager")
@@ -13,4 +14,9 @@ dependApiLogin()
 dependMaterialDialog()
 dependNetwork()
 
-dependLibCommon() // TODO common 模块不再使用，新模块请依赖 base 和 utils 模块
+dependLibUtils()
+dependLibConfig()
+
+dependencies {
+    implementation(Rxjava.rxjava3)
+}

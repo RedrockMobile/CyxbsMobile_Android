@@ -6,9 +6,10 @@ import android.content.Intent
 import android.os.Bundle
 import android.view.View
 import android.widget.ImageButton
+import androidx.activity.viewModels
 import androidx.core.app.ActivityOptionsCompat
 import androidx.core.util.Pair
-import com.mredrock.cyxbs.lib.base.ui.mvvm.BaseVmBindActivity
+import com.mredrock.cyxbs.lib.base.ui.BaseBindActivity
 import com.mredrock.cyxbs.lib.utils.extensions.setImageFromUrl
 import com.mredrock.cyxbs.lib.utils.extensions.setOnSingleClickListener
 import com.mredrock.cyxbs.store.R
@@ -27,7 +28,9 @@ import com.mredrock.cyxbs.store.utils.transformer.ScaleInTransformer
  *    e-mail : 1140143252@qq.com
  *    date   : 2021/8/2 11:55
  */
-class ProductExchangeActivity : BaseVmBindActivity<ProductExchangeViewModel, StoreActivityProductExchangeBinding>() {
+class ProductExchangeActivity : BaseBindActivity<StoreActivityProductExchangeBinding>() {
+    
+    private val mViewModel by viewModels<ProductExchangeViewModel>()
 
     private lateinit var mData: ProductDetail // 记录该页面的商品数据, 用于之后的判断
     private var mShopId = "" //商品ID
@@ -68,7 +71,7 @@ class ProductExchangeActivity : BaseVmBindActivity<ProductExchangeViewModel, Sto
     
         binding.storeTvUserStampCount.text = mStampCount.toString()
 
-        viewModel.getProductDetail(mShopId) // 请求商品详细页数据
+        mViewModel.getProductDetail(mShopId) // 请求商品详细页数据
     }
 
     private fun initJump() {
@@ -89,7 +92,7 @@ class ProductExchangeActivity : BaseVmBindActivity<ProductExchangeViewModel, Sto
                 exchangeTips = "确认要用${binding.storeTvExchangeDetailPrice.text}" +
                         "邮票兑换${binding.storeTvProductName.text}吗？",
                 onPositiveClick = {
-                    viewModel.getExchangeResult(mShopId) // 请求用户是否能购买
+                    mViewModel.getExchangeResult(mShopId) // 请求用户是否能购买
                     dismiss()
                 },
                 onNegativeClick = {
@@ -103,7 +106,7 @@ class ProductExchangeActivity : BaseVmBindActivity<ProductExchangeViewModel, Sto
 
     @SuppressLint("SetTextI18n")
     private fun initObserve() {
-        viewModel.productDetail.observe {
+        mViewModel.productDetail.observe {
             binding.data = it
             // 处理权益说明以及标题
             when (it.type) {
@@ -129,7 +132,7 @@ class ProductExchangeActivity : BaseVmBindActivity<ProductExchangeViewModel, Sto
         }
 
         // 请求购买成功的观察
-        viewModel.exchangeResult.observe {
+        mViewModel.exchangeResult.observe {
             // 根据不同商品类型弹出不同dialog
             when (mData.type) {
                 StoreType.Product.DRESS -> {
@@ -178,7 +181,7 @@ class ProductExchangeActivity : BaseVmBindActivity<ProductExchangeViewModel, Sto
         }
 
         // 请求失败的观察
-        viewModel.exchangeError.observe {
+        mViewModel.exchangeError.observe {
             when (it) {
                 StoreType.ExchangeError.OUT_OF_STOCK -> {
                     ExchangeDialog.show(

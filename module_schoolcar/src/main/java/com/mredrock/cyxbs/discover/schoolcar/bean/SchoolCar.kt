@@ -1,5 +1,6 @@
 package com.mredrock.cyxbs.discover.schoolcar.bean
 
+import android.text.style.BackgroundColorSpan
 import com.amap.api.maps.model.LatLng
 import com.amap.api.maps.model.Marker
 import com.amap.api.maps.model.Polyline
@@ -22,8 +23,12 @@ data class SchoolCar(
   var lastDate:Long = 0,
   //上一次的移动标记
   var smoothMarker:MovingPointOverlay,
+  //背景的移动标记
+  var smoothBackgroundMarker:MovingPointOverlay,
   //校车的标记
   val marker: Marker,
+  //校车背景标记
+  val backgroundMarker: Marker,
   //校车历史路径
   val latLngList:MutableList<LatLng>,
   //校车每次的路径

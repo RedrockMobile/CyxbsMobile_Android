@@ -1,13 +1,14 @@
 package com.mredrock.cyxbs.lib.utils.extensions
 
 import android.content.Context
+import android.os.Handler
+import android.os.Looper
 import android.util.Log
 import android.view.Gravity
 import android.view.LayoutInflater
 import android.view.View
 import android.widget.TextView
 import android.widget.Toast
-import androidx.annotation.StringRes
 import com.mredrock.cyxbs.lib.utils.BuildConfig
 import com.mredrock.cyxbs.lib.utils.R
 
@@ -18,6 +19,9 @@ import com.mredrock.cyxbs.lib.utils.R
  * @date 2022/3/7 17:58
  */
 
+/**
+ * 已自带处于其他线程时自动切换至主线程发送
+ */
 fun toast(s: CharSequence?) {
   CyxbsToast.show(appContext, s, Toast.LENGTH_SHORT)
 }
@@ -29,22 +33,30 @@ fun toastLong(s: CharSequence?) {
 fun String.toast() = toast(this)
 fun String.toastLong() = toastLong(this)
 
-interface ToastUtils {
-  fun toast(s: CharSequence?) = CyxbsToast.show(appContext, s, Toast.LENGTH_SHORT)
-  fun toastLong(s: CharSequence?) = CyxbsToast.show(appContext, s, Toast.LENGTH_LONG)
-  fun String.toast() = toast(this)
-  fun String.toastLong() = toastLong(this)
-  fun toast(@StringRes id: Int) = toast(appContext.getString(id))
-}
-
 class CyxbsToast {
   companion object {
+  
+    /**
+     * 已自带处于其他线程时自动切换至主线程发送
+     */
     fun show(
       context: Context,
       text: CharSequence?,
       duration: Int
     ) {
       if (text == null) return
+      if (Thread.currentThread() !== Looper.getMainLooper().thread) {
+        Handler(Looper.getMainLooper()).post { newInstance(context, text, duration).show() }
+      } else {
+        newInstance(context, text, duration).show()
+      }
+    }
+    
+    private fun newInstance(
+      context: Context,
+      text: CharSequence,
+      duration: Int
+    ): Toast {
       if (BuildConfig.DEBUG) {
         val throwable = Throwable() // 获取堆栈信息
         val path = throwable.stackTrace
@@ -75,13 +87,13 @@ class CyxbsToast {
       result.view = v
       result.duration = duration
       result.setGravity(Gravity.CENTER_HORIZONTAL or Gravity.TOP, 0, height / 8)
-      result.show()
+      return result
     }
-  
+    
     /**
      * 寻找第一个满足条件后的子数组
      */
-    private fun <T> List<T>.after(first:(T) -> Boolean): List<T> {
+    private fun <T> List<T>.after(first: (T) -> Boolean): List<T> {
       val list = ArrayList<T>()
       var isFound = false
       forEach {

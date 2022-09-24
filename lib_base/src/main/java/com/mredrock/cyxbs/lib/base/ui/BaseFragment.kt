@@ -12,6 +12,7 @@ import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleCoroutineScope
 import androidx.lifecycle.coroutineScope
 import com.mredrock.cyxbs.lib.base.operations.OperationFragment
+import com.mredrock.cyxbs.lib.base.utils.ArgumentHelper
 
 /**
  * 绝对基础的抽象
@@ -20,6 +21,60 @@ import com.mredrock.cyxbs.lib.base.operations.OperationFragment
  * 比如：使用 api 模块
  * 这种操作请放在 [OperationFragment] 中
  *
+ * ## 一、获取 ViewModel 的规范写法
+ * ### 获取自身的 ViewModel
+ * ```
+ * 1、ViewModel 构造器无参数
+ * private val mViewModel by viewModels<XXXViewModel>()
+ *
+ * 2、ViewModel 构造器需要参数（即需要 Factory 的情况）
+ * private val mViewModel by viewModelBy {
+ *     XXXViewModel(stuNum)
+ * }
+ * ```
+ * ### 获取宿主的 ViewModel
+ * ```
+ * 1、获取 activity 的 ViewModel：
+ * private val mActivityViewModel by activityViewModels<XXXViewModel>()
+ *
+ * 2、获取父 Fragment 的 ViewModel：
+ * // 由于比较少见，再加上不愿意封装得过于彻底，所以这个并没有封装
+ * private val mParentViewModel by createViewModelLazy(
+ *     XXXViewModel::class,
+ *     { requireParentFragment().viewModelStore }
+ * )
+ *
+ * // 特别注意：宿主的 ViewModel 如果构造器需要传参，那么子 Fragment 是不需要传参进去的，因为此时宿主的 ViewModel 已经被加载，可以直接拿
+ * ```
+ *
+ * ## 二、replace Fragment 的规范写法
+ * 对于 replace(Fragment) 时的封装
+ * ```
+ * childFragmentManager.beginTransaction()
+ *     .replace(id, XXXFragment())
+ *     .commit()
+ *  ↓
+ * replaceFragment(id) {
+ *     XXXFragment() // 这种写法避免了 Fragment 重复创建导致的 ViewModel 失效的问题
+ * }
+ * ```
+ * 详细用法请查看 [replaceFragment] 方法
+ *
+ * ## 三、arguments 的封装
+ * 对于 arguments 的使用进行了一层封装
+ * ```
+ * val a by lazy { arguments!!.getInt("xxx") } // 过于繁琐，需要简化
+ *  ↓
+ * val a by arguments<Int>()
+ * ```
+ * 详细用法请查看 [arguments]
+ *
+ *
+ *
+ *
+ *
+ *
+ * # 更多封装请往父类和接口查看
  * @author 985892345
  * @email 2767465918@qq.com
  * @date 2021/5/25
@@ -115,4 +170,28 @@ abstract class BaseFragment : OperationFragment {
   
   val viewLifecycleScope: LifecycleCoroutineScope
     get() = viewLifecycleOwner.lifecycle.coroutineScope
+  
+  
+  
+  /**
+   * 快速得到 arguments 中的变量，直接使用反射拿了变量的名字
+   * ```
+   * companion object {
+   *   fun newInstance(
+   *     key: String
+   *   ) : Fragment {
+   *     return Fragment().apply {
+   *       arguments = bundleOf(
+   *         this::key.name to key // 这里直接拿变量名字
+   *       )
+   *     }
+   *   }
+   * }
+   *
+   * var key by arguments<String>() // 支持声明为 var 修改参数
+   *
+   * 这样写会在 arguments 中寻找名字叫 key 的参数
+   * ```
+   */
+  fun <T : Any> arguments() = ArgumentHelper<T>{ requireArguments() }
 }

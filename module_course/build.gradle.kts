@@ -23,4 +23,5 @@ dependencies {
     // TODO 未知项目，github 上未找到
     implementation("com.super_rabbit.wheel_picker:NumberPicker:1.0.1")
     implementation(Umeng.common)
+    implementation(Coroutines.`coroutines-rx3`)
 }

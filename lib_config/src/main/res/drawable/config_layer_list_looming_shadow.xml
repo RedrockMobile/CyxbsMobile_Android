@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layer-list xmlns:android="http://schemas.android.com/apk/res/android">
+<!--这是视觉想要的若隐若现的阴影，采用 4 个 shape 来合成-->
+<!--建议使用方式为：rv 不设置 padding，然后在 item 里面的 CardView 外面
+    包裹一个 FrameLayout，在这个 FrameLayout 上设置为这个阴影 drawable，
+    并设置 padding 值实现内部 item 的边距值-->
+    <item
+        android:gravity="top"
+        android:left="16dp"
+        android:right="16dp"
+        android:height="20dp">
+        <shape>
+            <gradient
+                android:angle="90"
+                android:startColor="@color/config_layer_looming_shadow_start_color"
+                android:endColor="@color/config_layer_looming_shadow_end_color"
+                android:type="linear"/>
+        </shape>
+    </item>
+
+    <item
+        android:gravity="bottom"
+        android:left="16dp"
+        android:right="16dp"
+        android:height="20dp">
+        <shape>
+            <gradient
+                android:angle="270"
+                android:startColor="@color/config_layer_looming_shadow_start_color"
+                android:endColor="@color/config_layer_looming_shadow_end_color"
+                android:type="linear"/>
+        </shape>
+    </item>
+    <item
+        android:gravity="left"
+        android:top="8dp"
+        android:bottom="8dp"
+        android:width="30dp">
+        <shape>
+            <gradient
+                android:angle="180"
+                android:startColor="@color/config_layer_looming_shadow_start_color"
+                android:endColor="@color/config_layer_looming_shadow_end_color"
+                android:type="linear"/>
+        </shape>
+    </item>
+    <item
+        android:gravity="right"
+        android:top="8dp"
+        android:bottom="8dp"
+        android:width="30dp">
+        <shape>
+            <gradient
+                android:angle="0"
+                android:startColor="@color/config_layer_looming_shadow_start_color"
+                android:endColor="@color/config_layer_looming_shadow_end_color"
+                android:type="linear"/>
+        </shape>
+    </item>
+</layer-list>

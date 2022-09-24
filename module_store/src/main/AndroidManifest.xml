@@ -6,21 +6,26 @@
         android:theme="@style/AppTheme">
         <activity
             android:name=".page.center.ui.activity.StoreCenterActivity"
-            android:theme="@style/AppTheme_NoSplitMotionEvent"/>
+            android:theme="@style/AppTheme_NoSplitMotionEvent"
+            android:screenOrientation="portrait"/>
         <activity
             android:name=".page.record.ui.activity.ExchangeDetailActivity"
-            android:theme="@style/AppTheme_NoSplitMotionEvent"/>
+            android:theme="@style/AppTheme_NoSplitMotionEvent"
+            android:screenOrientation="portrait"/>
         <activity
             android:name=".page.record.ui.activity.StampDetailActivity"
-            android:theme="@style/AppTheme_NoSplitMotionEvent"/>
+            android:theme="@style/AppTheme_NoSplitMotionEvent"
+            android:screenOrientation="portrait"/>
         <activity
             android:name=".page.exchange.ui.activity.ProductExchangeActivity"
-            android:theme="@style/AppTheme_NoSplitMotionEvent"/>
+            android:theme="@style/AppTheme_NoSplitMotionEvent"
+            android:screenOrientation="portrait"/>
         <activity
             android:name=".page.qa.ui.activity.QaActivity"
-            android:theme="@style/AppTheme_NoSplitMotionEvent"/>
+            android:theme="@style/AppTheme_NoSplitMotionEvent"
+            android:screenOrientation="portrait"/>
         <activity
-            android:name=".ui.activity.PhotoActivity" />
+            android:name=".ui.activity.PhotoActivity"/>
     </application>
 
 </manifest>

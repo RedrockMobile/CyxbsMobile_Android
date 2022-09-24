@@ -29,6 +29,7 @@ import android.view.ViewAnimationUtils.createCircularReveal
 import android.widget.ImageView
 import android.widget.LinearLayout
 import android.widget.TextView
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.content.ContextCompat
 import androidx.core.content.res.ResourcesCompat
 import com.afollestad.materialdialogs.MaterialDialog
@@ -41,6 +42,7 @@ import com.mredrock.cyxbs.api.account.IAccountService
 import com.mredrock.cyxbs.api.account.IUserService
 import com.mredrock.cyxbs.common.config.*
 import com.mredrock.cyxbs.common.service.ServiceManager
+import com.mredrock.cyxbs.common.service.impl
 import com.mredrock.cyxbs.common.utils.extensions.*
 import com.mredrock.cyxbs.mine.R
 import com.mredrock.cyxbs.mine.databinding.MineActivityHomepageBinding
@@ -106,15 +108,6 @@ class HomepageActivity : BaseViewModelActivity<MineViewModel>() {
     }
 
     /**
-     * 相册图片的地址
-     */
-    private val fileDir by lazyUnlock {
-        StringBuilder(Environment.getExternalStorageDirectory().path)
-            .append(DIR_PHOTO)
-            .toString()
-    }
-
-    /**
      * 是否需要刷新
      */
     private var isNeedRefresh = true
@@ -139,12 +132,9 @@ class HomepageActivity : BaseViewModelActivity<MineViewModel>() {
     private val userService: IUserService by lazy {
         ServiceManager.getService(IAccountService::class.java).getUserService()
     }
-    private val SELECT_PICTURE = 1
 
-    private val SELECT_CAMERA = 2
-
-    private val cameraImageFile by lazyUnlock { File(fileDir + File.separator + System.currentTimeMillis() + ".png") }
-    private val destinationFile by lazyUnlock { File(fileDir + File.separator + userService.getStuNum() + ".png") }
+    private val cameraImageFile by lazy { File(getExternalFilesDir(Environment.DIRECTORY_DCIM)?.absolutePath + File.separator + System.currentTimeMillis() + ".png") }
+    private val destinationFile by lazy { File(getExternalFilesDir(Environment.DIRECTORY_DCIM)?.absolutePath + File.separator + userService.getStuNum() + ".png") }
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         dataBinding = MineActivityHomepageBinding.inflate(layoutInflater)
@@ -514,11 +504,6 @@ class HomepageActivity : BaseViewModelActivity<MineViewModel>() {
         ) {
             reason = "读取图片需要访问您的存储空间哦~"
             doAfterGranted {
-                //检查目录
-                val parent = File(fileDir)
-                if (!parent.exists()) {
-                    parent.mkdirs()
-                }
                 //选择
                 MaterialDialog(this@HomepageActivity).show {
                     listItems(items = listOf("拍照", "从相册中选择")) { dialog, index, text ->
@@ -536,23 +521,48 @@ class HomepageActivity : BaseViewModelActivity<MineViewModel>() {
     }
 
 
+    /**
+     * 用于跳转至拍照界面获取头像
+     */
+    private val takePictureLauncher =
+        registerForActivityResult(ActivityResultContracts.TakePicture()) { result ->
+            //若获取成功则进入裁剪界面
+            if (result) {
+                startCropActivity(cameraImageFile.uri)
+            }
+        }
+
+    /**
+     * 申请权限后跳转至拍照界面获取图片
+     */
     private fun getImageFromCamera() {
         doPermissionAction(Manifest.permission.CAMERA) {
             reason = "拍照需要访问你的相机哦~"
             doAfterGranted {
-                val intent = Intent(MediaStore.ACTION_IMAGE_CAPTURE)
-                intent.putExtra(MediaStore.EXTRA_OUTPUT, cameraImageFile.uri)
-                startActivityForResult(intent, SELECT_CAMERA)
+                takePictureLauncher.launch(cameraImageFile.uri)
             }
         }
     }
 
 
+    /**
+     * 跳转至图片选择界面，选择图片用于裁剪后上传头像
+     */
+    private val selectPictureFromAlbumLauncher =
+        registerForActivityResult(ActivityResultContracts.StartActivityForResult()) {
+            val uri = it.data?.data
+            if (uri != null) {
+                startCropActivity(uri)
+            } else {
+                toast("无法识别该图像")
+            }
+        }
+
     //文件权限在点击头像框时已经获取到了，这里不需要再获取
     private fun getImageFromAlbum() {
         val intent = Intent(Intent.ACTION_PICK)
         intent.setDataAndType(MediaStore.Images.Media.INTERNAL_CONTENT_URI, "image/*")
-        startActivityForResult(intent, SELECT_PICTURE)
+        selectPictureFromAlbumLauncher.launch(intent)
     }
 
 
@@ -566,24 +576,11 @@ class HomepageActivity : BaseViewModelActivity<MineViewModel>() {
         if (resultCode != Activity.RESULT_OK) return
         if (resultCode == UCrop.RESULT_ERROR && data != null) handleCropError(data)
 
-        when (requestCode) {
-            SELECT_PICTURE -> {
-                val uri = data?.data
-                if (uri != null) {
-                    startCropActivity(uri)
-                } else {
-                    toast("无法识别该图像")
-                }
-            }
-            SELECT_CAMERA -> {
-                startCropActivity(cameraImageFile.uri)
-            }
-            UCrop.REQUEST_CROP -> {
-                if (data != null) {
-                    uploadImage(data)
-                } else {
-                    toast("未知错误，请重试")
-                }
+        if (requestCode == UCrop.REQUEST_CROP) {
+            if (data != null) {
+                uploadImage(data)
+            } else {
+                toast("未知错误，请重试")
             }
         }
 
@@ -769,5 +766,10 @@ class HomepageActivity : BaseViewModelActivity<MineViewModel>() {
         finish()
     }
 
-
+    override fun onResume() {
+        super.onResume()
+        //在编辑界面更换头像后返回该页面时，更新一下显示的头像
+        loadAvatar(IAccountService::class.impl.getUserService().getAvatarImgUrl(), findViewById(R.id.civ_head))
+        MineAndQa.refreshListener?.onRefresh(redid)
+    }
 }

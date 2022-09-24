@@ -5,8 +5,8 @@ import com.mredrock.cyxbs.BuildConfig
 import com.mredrock.cyxbs.lib.utils.extensions.appContext
 import com.mredrock.cyxbs.lib.utils.extensions.unsafeSubscribeBy
 import com.mredrock.cyxbs.lib.utils.utils.LogUtils
-import com.mredrock.cyxbs.spi.SdkService
-import com.mredrock.cyxbs.spi.SdkManager
+import com.mredrock.cyxbs.lib.base.spi.InitialService
+import com.mredrock.cyxbs.lib.base.spi.InitialManager
 import com.umeng.commonsdk.UMConfigure
 import com.umeng.message.PushAgent
 import com.umeng.message.api.UPushRegisterCallback
@@ -19,12 +19,12 @@ import io.reactivex.rxjava3.schedulers.Schedulers
  *@time 2022/3/24  19:42
  *@signature 我将追寻并获取我想要的答案
  */
-@AutoService(SdkService::class)
-class UmengInitialService : SdkService {
+@AutoService(InitialService::class)
+class UmengInitialService : InitialService {
 
     private val UMENG_CHANNEL = "official"
 
-    override fun onMainProcess(manager: SdkManager) {
+    override fun onMainProcess(manager: InitialManager) {
         //debug包开启log
         if (BuildConfig.DEBUG) {
             UMConfigure.setLogEnabled(true)
@@ -33,15 +33,15 @@ class UmengInitialService : SdkService {
         UMConfigure.preInit(appContext, BuildConfig.UM_APP_KEY, UMENG_CHANNEL)
     }
 
-    override fun onSdkProcess(manager: SdkManager) {
-        LogUtils.e("TAG", "onSdkProcess: \ncurrentProcess${manager.currentProcessName()}\n")
+    override fun onOtherProcess(manager: InitialManager) {
+        LogUtils.e("TAG", "onSdkProcess: \ncurrentProcess = ${manager.currentProcessName()}\n")
         initUmengPush(manager)
     }
 
-    override fun isSdkProcess(manager: SdkManager): Boolean =
-        manager.currentProcessName().endsWith(":channel")
+    override fun isOtherProcess(manager: InitialManager): Boolean =
+        manager.currentProcessName()?.endsWith(":channel") ?: false
 
-    override fun onPrivacyAgreed(manager: SdkManager) {
+    override fun onPrivacyAgreed(manager: InitialManager) {
         Observable.just(Unit)
             .subscribeOn(Schedulers.io())
             .unsafeSubscribeBy {
@@ -51,7 +51,7 @@ class UmengInitialService : SdkService {
     }
 
     //注意sdk进程和main进程均需要初始化
-    private fun initUmengPush(manager: SdkManager) {
+    private fun initUmengPush(manager: InitialManager) {
         val context = manager.application.applicationContext
         val agent = PushAgent.getInstance(context)
         agent.register(
@@ -69,7 +69,7 @@ class UmengInitialService : SdkService {
         )
     }
 
-    private fun initUmengAnalyse(manager: SdkManager) {
+    private fun initUmengAnalyse(manager: InitialManager) {
         val context = manager.application.applicationContext
 
         //这段代码理应再用户隐私协议同意以后才执行的。现暂时搁置。

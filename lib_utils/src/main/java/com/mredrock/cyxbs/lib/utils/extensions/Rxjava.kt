@@ -1,259 +1,138 @@
+@file:Suppress("HasPlatformType")
+
 package com.mredrock.cyxbs.lib.utils.extensions
 
-import com.mredrock.cyxbs.lib.utils.network.ApiException
-import com.mredrock.cyxbs.lib.utils.network.ApiStatus
-import com.mredrock.cyxbs.lib.utils.network.ApiWrapper
 import io.reactivex.rxjava3.core.*
 import io.reactivex.rxjava3.disposables.Disposable
+import kotlinx.coroutines.flow.Flow
+import java.io.Serializable
 
 /**
- * # 示例代码
- * ```
- * ApiService.INSTANCE.getXXX()
- *     .subscribeOn(Schedulers.io())  // 线程切换
- *     .observeOn(AndroidSchedulers.mainThread())
- *     .mapOrCatchApiException {      // 当 errorCode 的值不为成功时抛错，并处理错误
- *         // 处理 ApiException 错误
- *     }
- *     .unSafeSubscribeBy {             // 如果是网络连接错误，则这里会默认处理
- *         // 成功的时候
- *     }
- *     // ViewModel 中带有的自动回收，直接使用 ViewModel 里面的 safeSubscribeBy 方法即可
- * ```
- *
- * # 其他注意事项
- * ## Rxjava 的下游没任何输出（怎么处理断网时的 HttpException）
- *
- * 大概率是你直接用了 [mapOrCatchApiException]，而它只会处理 [ApiException] ，如果你要处理其他网络错误，
- * 请把 [mapOrCatchApiException] 替换为 [mapOrThrowApiException]：
- * ```
- *     .mapOrThrowApiException()
- *     .doOnError {
- *         if (it is ApiException) {
- *             // 处理 ApiException 错误
- *         } else {
- *             // 处理其他网络错误
- *         }
- *     }
- * ```
+ * 如果你要看网络请求相关的示例代码，请移步于 network/ApiRxjava
  *
  * @author 985892345 (Guo Xiangrui)
  * @email 2767465918@qq.com
  * @date 2022/5/30 10:12
  */
 
-fun <T : ApiStatus> Single<T>.throwApiExceptionIfFail(): Single<T> {
-  return doOnSuccess { it.throwApiExceptionIfFail() }
-}
-
-fun <T : ApiStatus> Maybe<T>.throwApiExceptionIfFail(): Maybe<T> {
-  return doOnSuccess { it.throwApiExceptionIfFail() }
-}
-
-fun <T : ApiStatus> Observable<T>.throwApiExceptionIfFail(): Observable<T> {
-  return doOnNext { it.throwApiExceptionIfFail() }
-}
-
-fun <T : ApiStatus> Flowable<T>.throwApiExceptionIfFail(): Flowable<T> {
-  return doOnNext { it.throwApiExceptionIfFail() }
-}
-
-fun <E : Any, T : ApiWrapper<E>> Single<T>.mapOrThrowApiException(): Single<E> {
-  return throwApiExceptionIfFail()
-    .map { it.data }
-}
-
-fun <E : Any, T : ApiWrapper<E>> Maybe<T>.mapOrThrowApiException(): Maybe<E> {
-  return throwApiExceptionIfFail()
-    .map { it.data }
-}
-
-fun <E : Any, T : ApiWrapper<E>> Observable<T>.mapOrThrowApiException(): Observable<E> {
-  return throwApiExceptionIfFail()
-    .map { it.data }
-}
-
-fun <E : Any, T : ApiWrapper<E>> Flowable<T>.mapOrThrowApiException(): Flowable<E> {
-  return throwApiExceptionIfFail()
-    .map { it.data }
-}
-
-fun <T : ApiStatus> Single<T>.catchApiException(
-  func: (ApiException) -> Unit
-): Single<T> {
-  return throwApiExceptionIfFail()
-    .doOnError {
-      if (it is ApiException) func.invoke(it)
-    }
-}
-
-fun <T : ApiStatus> Maybe<T>.catchApiException(
-  func: (ApiException) -> Unit
-): Maybe<T> {
-  return throwApiExceptionIfFail()
-    .doOnError {
-      if (it is ApiException) func.invoke(it)
-    }
-}
-
-fun <T : ApiStatus> Observable<T>.catchApiException(
-  func: (ApiException) -> Unit
-): Observable<T> {
-  return throwApiExceptionIfFail()
-    .doOnError {
-      if (it is ApiException) func.invoke(it)
-    }
-}
-
-fun <T : ApiStatus> Flowable<T>.catchApiException(
-  func: (ApiException) -> Unit
-): Flowable<T> {
-  return throwApiExceptionIfFail()
-    .doOnError {
-      if (it is ApiException) func.invoke(it)
-    }
-}
-
-fun <E : Any, T : ApiWrapper<E>> Single<T>.mapOrCatchApiException(
-  func: (ApiException) -> Unit
-): Single<E> {
-  return catchApiException(func)
-    .map { it.data }
-}
-
-fun <E : Any, T : ApiWrapper<E>> Maybe<T>.mapOrCatchApiException(
-  func: (ApiException) -> Unit
-): Maybe<E> {
-  return catchApiException(func)
-    .map { it.data }
-}
-
-fun <E : Any, T : ApiWrapper<E>> Observable<T>.mapOrCatchApiException(
-  func: (ApiException) -> Unit
-): Observable<E> {
-  return catchApiException(func)
-    .map { it.data }
-}
-
-fun <E : Any, T : ApiWrapper<E>> Flowable<T>.mapOrCatchApiException(
-  func: (ApiException) -> Unit
-): Flowable<E> {
-  return catchApiException(func)
-    .map { it.data }
-}
 
 /**
- * 其实这个命名是直接抄的掌邮的，最开始这个 safe 的意思是如果直接使用一个形参的 subscribe(onSuccess)，
+ * 使用优雅的 DSL 来拦截异常
+ *
+ * # 如果你是想看网络请求的用法，请移步与 network/ApiRxjava.kt
+ * # 该 api 的详细用法请查看 [Flow.interceptException]，注意事项也与 Flow 一致
+ */
+fun <T : Any> Single<T>.interceptException(
+  action: ExceptionResult<SingleEmitter<T>>.(Throwable) -> Unit
+) : Single<T> {
+  return onErrorResumeNext { throwable ->
+    Single.create {
+      ExceptionResult(throwable, it).action(throwable)
+    }
+  }
+}
+fun <T : Any> Maybe<T>.interceptException(
+  action: ExceptionResult<MaybeEmitter<T>>.(Throwable) -> Unit
+) : Maybe<T> {
+  return onErrorResumeNext { throwable ->
+    Maybe.create {
+      ExceptionResult<MaybeEmitter<T>>(throwable, it).action(throwable)
+    }
+  }
+}
+fun <T : Any> Observable<T>.interceptException(
+  action: ExceptionResult<ObservableEmitter<T>>.(Throwable) -> Unit
+) : Observable<T> {
+  return onErrorResumeNext { throwable ->
+    Observable.create {
+      ExceptionResult<ObservableEmitter<T>>(throwable, it).action(throwable)
+    }
+  }
+}
+fun Completable.interceptException(
+  action: ExceptionResult<CompletableEmitter>.() -> Unit
+) : Completable {
+  return onErrorResumeNext { throwable ->
+    Completable.create {
+      ExceptionResult<CompletableEmitter>(throwable, it).action()
+    }
+  }
+}
+
+
+/**
+ * 使用 [Result] 来包裹一层数据，你可以配合网络请求使用
+ *
+ * 详细用法请看 [Flow.interceptExceptionByResult]
+ */
+fun <T : Any> Single<T>.interceptExceptionByResult(
+  action: ExceptionResult<SingleEmitter<Result<T>>>.(Throwable) -> Unit
+) : Single<Result<T>> = map { Result.success(it) }.interceptException(action)
+fun <T : Any> Maybe<T>.interceptExceptionByResult(
+  action: ExceptionResult<MaybeEmitter<Result<T>>>.(Throwable) -> Unit
+) : Maybe<Result<T>> = map { Result.success(it) }.interceptException(action)
+fun <T : Any> Observable<T>.interceptExceptionByResult(
+  action: ExceptionResult<ObservableEmitter<Result<T>>>.(Throwable) -> Unit
+) : Observable<Result<T>> = map { Result.success(it) }.interceptException(action)
+
+
+/**
+ * 这个命名与之前的 lib_common 中有些区别，common 中那个 safe 的意思是如果直接使用一个形参的 subscribe(onSuccess)，
  * 在收到上游错误时 Rxjava 会把错误直接抛给整个应用来处理，如果你没有配置 Rxjava 的全局报错，应用会直接闪退，
- * safe 就是指这个安全问题，目前因为生命周期问题，所以改名 unsafe
+ * common 中 safe 就是指上述安全问题
+ *
+ * 目前这个 safe 表示带有生命周期的安全订阅
  */
 
 fun <T : Any> Single<T>.unsafeSubscribeBy(
   onError: (Throwable) -> Unit = {},
   onSuccess: (T) -> Unit = {}
 ): Disposable = subscribe(onSuccess, onError)
-
 fun <T : Any> Maybe<T>.unsafeSubscribeBy(
   onError: (Throwable) -> Unit = {},
   onComplete: () -> Unit = {},
   onSuccess: (T) -> Unit = {}
 ): Disposable = subscribe(onSuccess, onError, onComplete)
-
 fun <T : Any> Observable<T>.unsafeSubscribeBy(
   onError: (Throwable) -> Unit = {},
   onComplete: () -> Unit = {},
   onNext: (T) -> Unit = {}
 ): Disposable = subscribe(onNext, onError, onComplete)
-
 fun <T : Any> Flowable<T>.unsafeSubscribeBy(
   onError: (Throwable) -> Unit = {},
   onComplete: () -> Unit = {},
   onNext: (T) -> Unit = {}
 ): Disposable = subscribe(onNext, onError, onComplete)
-
 fun Completable.unsafeSubscribeBy(
   onError: (Throwable) -> Unit = {},
   onComplete: () -> Unit = {},
 ): Disposable = subscribe(onComplete, onError)
 
+
 /**
- * 实现该接口，即代表该类支持自动关闭 Rxjava
+ * 用来解决 Rxjava 不允许传递 null 值的包裹类
  */
-interface RxjavaLifecycle {
+data class Value<T : Any>(val value: T?): Serializable {
   
-  /**
-   * 请把他们放在一个数组中，并在合适的时候关闭
-   */
-  fun onAddRxjava(disposable: Disposable)
+  fun isNull(): Boolean = value == null
   
-  fun <T : Any> Single<T>.safeSubscribeBy(
-    onError: (Throwable) -> Unit = {},
-    onSuccess: (T) -> Unit = {}
-  ): Disposable = subscribe(onSuccess, onError).also { onAddRxjava(it) }
+  fun isNotNull(): Boolean = !isNull()
   
-  @Deprecated(
-    "该类已实现 Rxjava 的生命周期，请使用 safeSubscribeBy() 代替",
-    ReplaceWith("safeSubscribeBy()"))
-  fun <T : Any> Single<T>.unsafeSubscribeBy(
-    onError: (Throwable) -> Unit = {},
-    onSuccess: (T) -> Unit = {}
-  ): Disposable = subscribe(onSuccess, onError)
+  inline fun nullUnless(block: (T) -> Unit): Value<T> {
+    if (value != null) block.invoke(value)
+    return this
+  }
   
-  fun <T : Any> Maybe<T>.safeSubscribeBy(
-    onError: (Throwable) -> Unit = {},
-    onComplete: () -> Unit = {},
-    onSuccess: (T) -> Unit = {}
-  ): Disposable = subscribe(onSuccess, onError).also { onAddRxjava(it) }
+  inline fun <E> nullUnless(default: E, block: (T) -> E): E {
+    return if (value != null) block.invoke(value) else default
+  }
   
-  @Deprecated(
-    "该类已实现 Rxjava 的生命周期，请使用 safeSubscribeBy() 代替",
-    ReplaceWith("safeSubscribeBy()"))
-  fun <T : Any> Maybe<T>.unsafeSubscribeBy(
-    onError: (Throwable) -> Unit = {},
-    onComplete: () -> Unit = {},
-    onSuccess: (T) -> Unit = {}
-  ): Disposable = subscribe(onSuccess, onError, onComplete)
+  inline fun nullIf(block: () -> Unit): Value<T> {
+    if (value == null) block.invoke()
+    return this
+  }
   
-  fun <T : Any> Observable<T>.safeSubscribeBy(
-    onError: (Throwable) -> Unit = {},
-    onComplete: () -> Unit = {},
-    onNext: (T) -> Unit = {}
-  ): Disposable = subscribe(onNext, onError, onComplete).also { onAddRxjava(it) }
-  
-  @Deprecated(
-    "该类已实现 Rxjava 的生命周期，请使用 safeSubscribeBy() 代替",
-    ReplaceWith("safeSubscribeBy()"))
-  fun <T : Any> Observable<T>.unsafeSubscribeBy(
-    onError: (Throwable) -> Unit = {},
-    onComplete: () -> Unit = {},
-    onNext: (T) -> Unit = {}
-  ): Disposable = subscribe(onNext, onError, onComplete)
-  
-  fun <T : Any> Flowable<T>.safeSubscribeBy(
-    onError: (Throwable) -> Unit = {},
-    onComplete: () -> Unit = {},
-    onNext: (T) -> Unit = {}
-  ): Disposable = subscribe(onNext, onError, onComplete).also { onAddRxjava(it) }
-  
-  @Deprecated(
-    "该类已实现 Rxjava 的生命周期，请使用 safeSubscribeBy() 代替",
-    ReplaceWith("safeSubscribeBy()"))
-  fun <T : Any> Flowable<T>.unsafeSubscribeBy(
-    onError: (Throwable) -> Unit = {},
-    onComplete: () -> Unit = {},
-    onNext: (T) -> Unit = {}
-  ): Disposable = subscribe(onNext, onError, onComplete)
-  
-  fun Completable.safeSubscribeBy(
-    onError: (Throwable) -> Unit = {},
-    onComplete: () -> Unit = {},
-  ): Disposable = subscribe(onComplete, onError).also { onAddRxjava(it) }
-  
-  @Deprecated(
-    "该类已实现 Rxjava 的生命周期，请使用 safeSubscribeBy() 代替",
-    ReplaceWith("safeSubscribeBy()"))
-  fun Completable.unsafeSubscribeBy(
-    onError: (Throwable) -> Unit = {},
-    onComplete: () -> Unit = {},
-  ): Disposable = subscribe(onComplete, onError)
+  inline fun <E> nullIf(default: E, block: () -> E): E {
+    return if (value == null) block.invoke() else default
+  }
 }

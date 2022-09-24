@@ -9,9 +9,7 @@ import com.mredrock.cyxbs.common.utils.extensions.safeSubscribeBy
 import com.mredrock.cyxbs.common.utils.extensions.setSchedulers
 import com.mredrock.cyxbs.course.network.Course
 import com.mredrock.cyxbs.course.network.CourseApiService
-import io.reactivex.rxjava3.core.Flowable.fromIterable
 import io.reactivex.rxjava3.core.Observable
-import io.reactivex.rxjava3.core.Observable.fromIterable
 
 /**
  * Created by anriku on 2018/10/2.

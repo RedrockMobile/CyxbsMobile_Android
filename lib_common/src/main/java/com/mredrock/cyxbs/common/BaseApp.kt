@@ -15,7 +15,7 @@ object BaseApp {
         private set
     
     /**
-     * 因为 lib_common 模块以及被废弃，所以为了兼容以前的代码，所以设置了 onCreate 来初始化 Application 和一些其他东西
+     * 因为 lib_common 模块已经被废弃，所以为了兼容以前的代码，所以设置了 onCreate 来初始化 Application 和一些其他东西
      */
     fun onCreate(app: Application) {
         appContext = app

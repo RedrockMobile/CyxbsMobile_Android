@@ -7,13 +7,14 @@ import android.util.Log
 import android.widget.ImageButton
 import android.widget.ImageView
 import android.widget.TextView
+import androidx.activity.viewModels
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import androidx.viewpager2.widget.ViewPager2
 import com.alibaba.android.arouter.facade.annotation.Route
 import com.google.android.material.tabs.TabLayout
 import com.google.android.material.tabs.TabLayoutMediator
 import com.mredrock.cyxbs.config.route.STORE_ENTRY
-import com.mredrock.cyxbs.lib.base.ui.mvvm.BaseVmActivity
+import com.mredrock.cyxbs.lib.base.ui.BaseActivity
 import com.mredrock.cyxbs.lib.utils.adapter.FragmentVpAdapter
 import com.mredrock.cyxbs.lib.utils.extensions.setOnSingleClickListener
 import com.mredrock.cyxbs.store.R
@@ -35,7 +36,9 @@ import com.mredrock.cyxbs.store.utils.transformer.ScaleInTransformer
  * @date 2021/8/7
  */
 @Route(path = STORE_ENTRY)
-class StoreCenterActivity : BaseVmActivity<StoreCenterViewModel>() {
+class StoreCenterActivity : BaseActivity() {
+    
+    private val mViewModel by viewModels<StoreCenterViewModel>()
 
     private lateinit var mTvStampBigNumber: TextRollView // 邮票中心首页最大的邮票数字
     private lateinit var mTvStampSideNumber: TextView // 邮票中心首页右上角的邮票数字
@@ -55,7 +58,7 @@ class StoreCenterActivity : BaseVmActivity<StoreCenterViewModel>() {
         initSlideUpLayoutWithLeftTopStamp() // 设置向上滑时与右上角邮票小图标的联合效果
         initJump() // 一些简单不传参的跳转写这里
         initObserve()
-        viewModel.refresh()
+        mViewModel.refresh()
     }
 
     private fun initView() {
@@ -81,8 +84,8 @@ class StoreCenterActivity : BaseVmActivity<StoreCenterViewModel>() {
             ) {
                 if (position + positionOffset >= 0.97F) {
                     // 通知 StampTaskFragment 加载 RecyclerView, 这么做的原因我写在了 ViewModel 的这个回调上
-                    viewModel.loadStampTaskRecyclerView?.invoke()
-                    viewModel.loadStampTaskRecyclerView = null
+                    mViewModel.loadStampTaskRecyclerView?.invoke()
+                    mViewModel.loadStampTaskRecyclerView = null
                 }
             }
         })
@@ -100,7 +103,7 @@ class StoreCenterActivity : BaseVmActivity<StoreCenterViewModel>() {
         ) { tab, position -> tab.text = tabs[position] }.attach()
 
         // 以下代码是设置邮票任务的小圆点
-        if (viewModel.isShowTabLayoutBadge) {
+        if (mViewModel.isShowTabLayoutBadge) {
             val tab = mTabLayout.getTabAt(1)
             if (tab != null) {
                 val badge = tab.orCreateBadge
@@ -120,7 +123,7 @@ class StoreCenterActivity : BaseVmActivity<StoreCenterViewModel>() {
                     override fun onPageSelected(position: Int) {
                         if (position == 1) {
                             tab.removeBadge()
-                            viewModel.isShowTabLayoutBadge = false
+                            mViewModel.isShowTabLayoutBadge = false
                             mViewPager2.unregisterOnPageChangeCallback(this)
                         }
                     }
@@ -142,7 +145,7 @@ class StoreCenterActivity : BaseVmActivity<StoreCenterViewModel>() {
 
         // 下面这个 setOnChildScrollUpCallback() 返回 false 就代表刷新控件可以拦截滑动
         mRefreshLayout.setOnChildScrollUpCallback { _, _ -> !mSlideUpLayout.isUnfold() }
-        mRefreshLayout.setOnRefreshListener { viewModel.refresh() }
+        mRefreshLayout.setOnRefreshListener { mViewModel.refresh() }
         mRefreshLayout.isRefreshing = true // 默认开始加载时打开刷新动画
     }
 
@@ -172,7 +175,7 @@ class StoreCenterActivity : BaseVmActivity<StoreCenterViewModel>() {
     @SuppressLint("SetTextI18n")
     private fun initObserve() {
         var isFirstLoad = true // 是否是第一次进入界面
-        viewModel.stampCenterData.observe {
+        mViewModel.stampCenterData.observe {
             Log.d("ggg", "(StoreCenterActivity.kt:179) -> it = $it")
             val text = it.userAmount.toString()
             if (!mTvStampBigNumber.hasText()) { // 如果是第一次进入界面, 肯定没有文字
@@ -191,7 +194,7 @@ class StoreCenterActivity : BaseVmActivity<StoreCenterViewModel>() {
         }
 
         // 对数据是否请求成功的观察
-        viewModel.refreshIsSuccessful.observe {
+        mViewModel.refreshIsSuccessful.observe {
             if (it) {
                 // 处于刷新状态且不是第一次刷新
                 if (mRefreshLayout.isRefreshing && !isFirstLoad) { toast("刷新成功") }
@@ -206,7 +209,7 @@ class StoreCenterActivity : BaseVmActivity<StoreCenterViewModel>() {
 
     // 从邮货详细界面以及经过邮票任务界面跳转后的返回刷新数据
     override fun onRestart() {
-        viewModel.refresh()
+        mViewModel.refresh()
         super.onRestart()
     }
 }

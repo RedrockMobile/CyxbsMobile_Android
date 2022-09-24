@@ -8,13 +8,13 @@ import com.google.gson.GsonBuilder
 import com.google.gson.reflect.TypeToken
 import com.mredrock.cyxbs.api.account.IAccountService
 import com.mredrock.cyxbs.common.bean.RedrockApiWrapper
-import com.mredrock.cyxbs.common.config.QA_GET_DYNAMIC_LIST
 import com.mredrock.cyxbs.common.config.getBaseUrl
 import com.mredrock.cyxbs.common.network.ApiGenerator
 import com.mredrock.cyxbs.common.service.ServiceManager
 import com.mredrock.cyxbs.common.utils.extensions.mapOrThrowApiException
 import com.mredrock.cyxbs.common.utils.extensions.safeSubscribeBy
 import com.mredrock.cyxbs.common.utils.extensions.setSchedulers
+import com.mredrock.cyxbs.lib.utils.extensions.lazyUnlock
 import com.mredrock.cyxbs.qa.beannew.Message
 import com.mredrock.cyxbs.qa.beannew.MessageWrapper
 import com.mredrock.cyxbs.qa.network.ApiServiceNew
@@ -30,13 +30,12 @@ class DynamicDataSource(private val kind: String,private val redid: String?) : P
     val initialLoad = MutableLiveData<Int>()
 
     private var failedRequest: (() -> Unit)? = null
-
+    
     //在加载的初期优先注册专门处理的ApiGenerator
-    init {
+    private val mSpecialApiService by lazyUnlock {
         //需要单独处理的数据类型的typeToken
         val type = object : TypeToken<RedrockApiWrapper<Array<MessageWrapper>>>() {}.type
-        ApiGenerator.registerNetSettings(
-            uniqueNum = QA_GET_DYNAMIC_LIST,
+        ApiGenerator.createSelfRetrofit(
             retrofitConfig = {
                 it.addConverterFactory(
                     GsonConverterFactory.create(
@@ -48,7 +47,7 @@ class DynamicDataSource(private val kind: String,private val redid: String?) : P
                 ).baseUrl(getBaseUrl())
             },
             tokenNeeded = true
-        )
+        ).create(ApiServiceNew::class.java)
     }
 
     override fun loadInitial(
@@ -105,7 +104,7 @@ class DynamicDataSource(private val kind: String,private val redid: String?) : P
 
             "main" -> {
                 //这里是针对首页获取动态，需要启用混合类型反序列化策略
-                ApiGenerator.getApiService(QA_GET_DYNAMIC_LIST, ApiServiceNew::class.java)
+                mSpecialApiService
                     .getDynamicList(1, params.requestedLoadSize, 77)//测试用版本号
                     .mapOrThrowApiException()
                     .setSchedulers()
@@ -180,7 +179,7 @@ class DynamicDataSource(private val kind: String,private val redid: String?) : P
                     }
             }
             "main" -> {
-                ApiGenerator.getApiService(QA_GET_DYNAMIC_LIST, ApiServiceNew::class.java)
+                mSpecialApiService
                     .getDynamicList(params.key, params.requestedLoadSize, 77)
                     .mapOrThrowApiException()
                     .setSchedulers()

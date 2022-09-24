@@ -18,7 +18,7 @@ import com.mredrock.cyxbs.common.component.JToolbar
 import com.mredrock.cyxbs.common.mark.ActionLoginStatusSubscriber
 import com.mredrock.cyxbs.common.mark.EventBusLifecycleSubscriber
 import com.mredrock.cyxbs.common.service.ServiceManager
-import com.mredrock.cyxbs.common.utils.BindView
+import com.mredrock.cyxbs.common.utils.ActivityBindView
 import com.mredrock.cyxbs.common.utils.LogUtils
 import com.mredrock.cyxbs.common.utils.extensions.getDarkModeStatus
 import com.mredrock.cyxbs.common.utils.extensions.startActivity
@@ -230,5 +230,5 @@ abstract class BaseActivity : AppCompatActivity() {
      *    kt 插件(被废弃) > 属性代理 > ButterKnife(被废弃) > DataBinding > ViewBinding
      * ```
      */
-    protected fun <T: View> Int.view() = BindView<T>(this, BindView.GetActivity { this@BaseActivity })
+    protected fun <T: View> Int.view() = ActivityBindView<T>(this, this@BaseActivity)
 }

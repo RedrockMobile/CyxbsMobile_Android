@@ -2,7 +2,6 @@ package com.mredrock.cyxbs.discover.pages.discover
 
 import android.os.Parcelable
 import androidx.lifecycle.MutableLiveData
-import com.mredrock.cyxbs.common.config.DISCOVERY_ROLLER_VIEW_INFO
 import com.mredrock.cyxbs.common.network.ApiGenerator
 import com.mredrock.cyxbs.common.utils.extensions.mapOrThrowApiException
 import com.mredrock.cyxbs.common.utils.extensions.safeSubscribeBy
@@ -10,7 +9,7 @@ import com.mredrock.cyxbs.common.utils.extensions.setSchedulers
 import com.mredrock.cyxbs.common.viewmodel.BaseViewModel
 import com.mredrock.cyxbs.discover.bean.NewsListItem
 import com.mredrock.cyxbs.discover.network.RollerViewInfo
-import com.mredrock.cyxbs.discover.network.Services
+import com.mredrock.cyxbs.discover.network.ApiServices
 import io.reactivex.rxjava3.core.Observable
 import io.reactivex.rxjava3.disposables.Disposable
 import java.util.concurrent.TimeUnit
@@ -23,27 +22,24 @@ class DiscoverHomeViewModel : BaseViewModel() {
     val viewPagerInfo = MutableLiveData<List<RollerViewInfo>>()
     val jwNews = MutableLiveData<List<NewsListItem>>()
     val viewPagerTurner = MutableLiveData<Int>()
+    val hasUnread = MutableLiveData<Boolean>()
     var disposable: Disposable? = null
     var functionRvState: Parcelable? = null
-    private val retrofit: Services by lazy {
-        ApiGenerator.getApiService(DISCOVERY_ROLLER_VIEW_INFO, Services::class.java)
-    }
-
-    init {
-        ApiGenerator.registerNetSettings(1, okHttpClientConfig = {
-            it.apply {
-                callTimeout(10, TimeUnit.SECONDS)
-                readTimeout(8, TimeUnit.SECONDS)
-                writeTimeout(8, TimeUnit.SECONDS)
-                retryOnConnectionFailure(true)
-            }
-        }, tokenNeeded = true)
+    private val apiServices: ApiServices by lazy {
+      ApiGenerator.createSelfRetrofit(okHttpClientConfig = {
+        it.apply {
+          callTimeout(10, TimeUnit.SECONDS)
+          readTimeout(2, TimeUnit.SECONDS)
+          writeTimeout(2, TimeUnit.SECONDS)
+          retryOnConnectionFailure(true)
+        }
+      }, tokenNeeded = true).create(ApiServices::class.java)
     }
 
     //标记是否未经被滑动，被滑动就取消下一次自动滚动
     var scrollFlag = true
     fun getRollInfo() {
-        retrofit.getRollerViewInfo()
+        apiServices.getRollerViewInfo()
                 .mapOrThrowApiException()
                 .setSchedulers()
                 .safeSubscribeBy {
@@ -52,8 +48,18 @@ class DiscoverHomeViewModel : BaseViewModel() {
                 .lifeCycle()
     }
 
+    fun getHasUnread(){
+        apiServices.getHashUnreadMsg()
+            .mapOrThrowApiException()
+            .setSchedulers()
+            .safeSubscribeBy {
+                hasUnread.value = it.has
+            }
+            .lifeCycle()
+    }
+
     fun getJwNews(page: Int) {
-        retrofit.getNewsList(page)
+        apiServices.getNewsList(page)
                 .mapOrThrowApiException()
                 .setSchedulers()
                 .safeSubscribeBy {
