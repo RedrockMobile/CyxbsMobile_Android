@@ -1,6 +1,5 @@
 package com.mredrock.cyxbs.affair.ui.adapter
 
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -9,9 +8,7 @@ import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.mredrock.cyxbs.affair.R
-import com.mredrock.cyxbs.affair.model.data.AffairEditArgs.AffairDurationArgs.Companion.WEEK_ARRAY
-import com.mredrock.cyxbs.affair.ui.adapter.data.AffairWeekSelectData
-import com.mredrock.cyxbs.affair.utils.AffairDataUtils
+import com.mredrock.cyxbs.affair.ui.adapter.data.AffairWeekData.Companion.WEEK_ARRAY
 import com.mredrock.cyxbs.lib.utils.extensions.appContext
 import com.mredrock.cyxbs.lib.utils.extensions.setOnSingleClickListener
 
@@ -20,7 +17,7 @@ import com.mredrock.cyxbs.lib.utils.extensions.setOnSingleClickListener
  * date: 2022/9/7
  * description:
  */
-class AffairWeekAdapter : ListAdapter<AffairWeekSelectData, AffairWeekAdapter.VHolder>(
+class AffairWeekAdapter : ListAdapter<AffairWeekAdapter.AffairWeekSelectData, AffairWeekAdapter.VHolder>(
   object : DiffUtil.ItemCallback<AffairWeekSelectData>() {
     override fun areItemsTheSame(
       oldItem: AffairWeekSelectData,
@@ -44,7 +41,8 @@ class AffairWeekAdapter : ListAdapter<AffairWeekSelectData, AffairWeekAdapter.VH
     }
   }
 ) {
-
+  
+  data class AffairWeekSelectData(val week: Int, var isChoice: Boolean = false)
 
   inner class VHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
     val textView: TextView = itemView.findViewById(R.id.affair_tv_add_affair_week)
@@ -52,7 +50,7 @@ class AffairWeekAdapter : ListAdapter<AffairWeekSelectData, AffairWeekAdapter.VH
     init {
       textView.setOnSingleClickListener {
         val data = getItem(layoutPosition)
-        submitList(AffairDataUtils.checkWeekSelectData(currentList, data))
+        submitList(checkWeekSelectData(currentList, data))
       }
     }
   }
@@ -68,8 +66,45 @@ class AffairWeekAdapter : ListAdapter<AffairWeekSelectData, AffairWeekAdapter.VH
     if (getItem(position).isChoice) {
       holder.textView.setTextColor(appContext.getColor(R.color.affair_edit_affair_select_week_tv))
     } else {
-      Log.e("TAG", "onBindViewHolder: hhhh")
       holder.textView.setTextColor(appContext.getColor(com.mredrock.cyxbs.config.R.color.config_level_two_font_color))
     }
+  }
+  
+  /**
+   * 判断整学期选择的逻辑
+   */
+  private fun checkWeekSelectData(
+    weekList: List<AffairWeekSelectData>,
+    weekData: AffairWeekSelectData
+  ): List<AffairWeekSelectData> {
+    val tmpList = arrayListOf<AffairWeekSelectData>()
+    val newList = arrayListOf<AffairWeekSelectData>()
+    // 先将选择状态反转
+    weekList.forEach {
+      if (it.week == weekData.week) tmpList.add(
+        AffairWeekSelectData(
+          it.week,
+          !it.isChoice
+        )
+      ) else tmpList.add(it)
+    }
+    if (weekData.week != 0) {
+      // 如果点击的不是整学期,将整学期重置为未选择
+      tmpList[0] = AffairWeekSelectData(0, false)
+    }
+    // 整学期选择后,其他不能选择
+    if (tmpList[0].isChoice) {
+      newList.add(AffairWeekSelectData(0, true))
+      for (i in 1 until weekList.size) {
+        newList.add(AffairWeekSelectData(tmpList[i].week, false))
+      }
+    } else {
+      // 反之,其他周数选择后,整学期不能选择
+      newList.add(AffairWeekSelectData(0, false))
+      for (i in 1 until weekList.size) {
+        newList.add(AffairWeekSelectData(tmpList[i].week, tmpList[i].isChoice))
+      }
+    }
+    return newList
   }
 }

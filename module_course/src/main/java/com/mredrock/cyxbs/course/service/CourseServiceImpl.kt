@@ -6,9 +6,11 @@ import androidx.fragment.app.commit
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import com.alibaba.android.arouter.facade.annotation.Route
+import com.mredrock.cyxbs.api.affair.IAffairService
 import com.mredrock.cyxbs.api.course.COURSE_SERVICE
 import com.mredrock.cyxbs.api.course.ICourseService
 import com.mredrock.cyxbs.api.course.ILessonService
+import com.mredrock.cyxbs.course.page.course.data.AffairData
 import com.mredrock.cyxbs.course.page.course.data.LessonData
 import com.mredrock.cyxbs.course.page.course.data.StuLessonData
 import com.mredrock.cyxbs.course.page.course.ui.dialog.CourseBottomDialog
@@ -71,8 +73,23 @@ class CourseServiceImpl : ICourseService {
     ).show()
   }
   
-  override fun openBottomSheetDialogByAffair(context: Context, affair: Any) {
-    // TODO 待完成
+  override fun openBottomSheetDialogByAffair(context: Context, affair: IAffairService.Affair) {
+    CourseBottomDialog(
+      context,
+      listOf(
+        AffairData(
+          affair.stuNum,
+          affair.week,
+          affair.day,
+          affair.beginLesson,
+          affair.period,
+          affair.id,
+          affair.time,
+          affair.title,
+          affair.content
+        )
+      ), true
+    ).show()
   }
   
   private val _headerAlphaState = MutableLiveData<Float>()

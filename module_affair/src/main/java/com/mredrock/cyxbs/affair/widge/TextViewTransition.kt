@@ -3,7 +3,6 @@ package com.mredrock.cyxbs.affair.widge
 import android.animation.Animator
 import android.animation.AnimatorSet
 import android.animation.ValueAnimator
-import android.util.Log
 import android.view.ViewGroup
 import android.widget.TextView
 import androidx.transition.Transition
@@ -68,10 +67,6 @@ class TextViewTransition : Transition() {
       addUpdateListener {
         val value = it.animatedValue as Float
         textView.textSize = value
-        Log.d(
-          "ggg", "(TextViewTransition.kt:71)-->> " +
-                  "value = $value"
-        )
       }
       duration = this@TextViewTransition.duration
     }

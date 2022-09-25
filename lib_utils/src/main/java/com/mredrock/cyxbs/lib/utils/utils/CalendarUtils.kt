@@ -5,7 +5,6 @@ import android.content.ContentValues
 import android.content.Context
 import android.database.Cursor
 import android.graphics.Color
-import android.icu.util.Calendar
 import android.icu.util.TimeZone
 import android.net.Uri
 import android.os.Build
@@ -199,10 +198,6 @@ object CalendarUtils {
     description: String,
     start_time: Long,
   ): String {
-//    // 根据日期范围构造查询
-//    val builder: Uri.Builder = CalendarContract.Instances.CONTENT_URI.buildUpon()
-//    ContentUris.appendId(builder, start_time)
-//    ContentUris.appendId(builder, endTime)
     val cursor: Cursor =
       context.contentResolver.query(Uri.parse(calenderEventURL), null, null, null, null)!!
     var tmpTitle: String
@@ -287,7 +282,6 @@ object CalendarUtils {
    * @param title 日历提醒的标题,不允许为空
    * @param description 日历的描述（备注）信息
    * @param beginTime 事件开始时间，以从公元纪年开始计算的协调世界时毫秒数表示。
-   * @param endTime 事件结束时间，以从公元纪年开始计算的协调世界时毫秒数表示。
    * @param remind_minutes 提前remind_minutes分钟发出提醒
    * @param callback 添加提醒是否成功结果监听
    */
@@ -384,21 +378,6 @@ object CalendarUtils {
     } finally {
       eventCursor?.close()
     }
-  }
-
-  /**
-   * 辅助方法：获取设置时间起止时间的对应毫秒数
-   * @param year
-   * @param month 1-12
-   * @param day 1-31
-   * @param hour 0-23
-   * @param minute 0-59
-   * @return
-   */
-  fun remindTimeCalculator(year: Int, month: Int, day: Int, hour: Int, minute: Int): Long {
-    val calendar: Calendar = Calendar.getInstance()
-    calendar.set(year, month - 1, day, hour, minute)
-    return calendar.timeInMillis
   }
 
   /**

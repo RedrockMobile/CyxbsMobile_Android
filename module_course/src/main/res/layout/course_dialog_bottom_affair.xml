@@ -39,6 +39,7 @@
             android:insetBottom="0dp"
             android:padding="0dp"
             android:backgroundTint="@color/course_dialog_bottom_affair_delete"
+            style="@style/Widget.MaterialComponents.Button.UnelevatedButton"
             app:cornerRadius="20dp"
             app:layout_constraintEnd_toStartOf="@id/course_btn_dialog_affair_change"
             app:layout_constraintTop_toTopOf="@+id/course_btn_dialog_affair_change"

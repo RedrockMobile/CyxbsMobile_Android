@@ -1,7 +1,5 @@
 package com.mredrock.cyxbs.affair.ui.adapter
 
-import android.content.Context
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -12,14 +10,10 @@ import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.flexbox.FlexboxLayoutManager
 import com.mredrock.cyxbs.affair.R
-import com.mredrock.cyxbs.affair.model.data.AffairEditArgs
-import com.mredrock.cyxbs.affair.model.data.AffairEditArgs.AffairDurationArgs.Companion.DAY_ARRAY
-import com.mredrock.cyxbs.affair.model.data.AffairEditArgs.AffairDurationArgs.Companion.WEEK_ARRAY
 import com.mredrock.cyxbs.affair.ui.adapter.data.AffairAdapterData
 import com.mredrock.cyxbs.affair.ui.adapter.data.AffairTimeAdd
 import com.mredrock.cyxbs.affair.ui.adapter.data.AffairTimeData
 import com.mredrock.cyxbs.affair.ui.adapter.data.AffairWeekData
-import com.mredrock.cyxbs.affair.utils.AffairDataUtils
 import com.mredrock.cyxbs.affair.widge.TimeSelectDialog
 import com.mredrock.cyxbs.affair.widge.WeekSelectDialog
 import com.mredrock.cyxbs.lib.utils.extensions.setOnSingleClickListener
@@ -31,7 +25,7 @@ import com.mredrock.cyxbs.lib.utils.extensions.toast
  * @email 2767465918@qq.com
  * @date 2022/6/11 15:07
  */
-class AffairDurationAdapter(val requireActivity: Context) :
+class AffairDurationAdapter :
   ListAdapter<AffairAdapterData, AffairDurationAdapter.VHolder>(
     object : DiffUtil.ItemCallback<AffairAdapterData>() {
       override fun areItemsTheSame(
@@ -58,18 +52,34 @@ class AffairDurationAdapter(val requireActivity: Context) :
       }
     }
   ) {
+  
+  override fun submitList(list: List<AffairAdapterData>?) {
+    if (list != null) {
+      super.submitList(list.sortList())
+    } else {
+      super.submitList(list)
+    }
+  }
+  
+  override fun submitList(list: List<AffairAdapterData>?, commitCallback: Runnable?) {
+    if (list != null) {
+      super.submitList(list.sortList(), commitCallback)
+    } else {
+      super.submitList(list, commitCallback)
+    }
+  }
 
   override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): VHolder {
     val inflater = LayoutInflater.from(parent.context)
     return when (viewType) {
-      WeekVHolder::class.hashCode() -> WeekVHolder(
+      WeekDataVHolder::class.hashCode() -> WeekDataVHolder(
         inflater.inflate(
           R.layout.affair_rv_item_edit_affair_week,
           parent,
           false
         )
       )
-      DurationVHolder::class.hashCode() -> DurationVHolder(
+      TimeDataVHolder::class.hashCode() -> TimeDataVHolder(
         inflater.inflate(
           R.layout.affair_rv_item_edit_affair_duration,
           parent,
@@ -92,16 +102,14 @@ class AffairDurationAdapter(val requireActivity: Context) :
     val lp = holder.itemView.layoutParams as FlexboxLayoutManager.LayoutParams
 
     when (holder) {
-      is WeekVHolder -> {
+      is WeekDataVHolder -> {
         data as AffairWeekData
-        holder.tvWeek.text = WEEK_ARRAY[data.week]
+        holder.tvWeek.text = data.getWeekStr()
       }
-      is DurationVHolder -> {
+      is TimeDataVHolder -> {
         data as AffairTimeData
-        holder.tvTime.text =
-          "${DAY_ARRAY[data.weekNum]} ${AffairEditArgs.AffairDurationArgs.LESSON_ARRAY[data.beginLesson]}-${AffairEditArgs.AffairDurationArgs.LESSON_ARRAY[data.beginLesson + data.period]}"
+        holder.tvTime.text = data.getTimeStr()
         lp.isWrapBefore = data.isWrapBefore
-        Log.e("TAG", "onBindViewHolder: ${data.isWrapBefore}")
       }
       is TimeAddVHolder -> {
         holder.ivAdd.animate().rotation(360f)
@@ -111,33 +119,36 @@ class AffairDurationAdapter(val requireActivity: Context) :
 
   override fun getItemViewType(position: Int): Int {
     return when (getItem(position)) {
-      is AffairWeekData -> WeekVHolder::class.hashCode()
-      is AffairTimeData -> DurationVHolder::class.hashCode()
+      is AffairWeekData -> WeekDataVHolder::class.hashCode()
+      is AffairTimeData -> TimeDataVHolder::class.hashCode()
       is AffairTimeAdd -> TimeAddVHolder::class.hashCode()
     }
   }
 
   sealed class VHolder(itemView: View) : RecyclerView.ViewHolder(itemView)
 
-  inner class WeekVHolder(itemView: View) : VHolder(itemView) {
+  inner class WeekDataVHolder(itemView: View) : VHolder(itemView) {
     val tvWeek: TextView = itemView.findViewById(R.id.affair_tv_add_affair_week)
 
     init {
-      tvWeek.setOnSingleClickListener {
-        var tmp = currentList.toMutableList()
+      tvWeek.setOnSingleClickListener { view ->
         val dialog =
-          WeekSelectDialog(requireActivity, AffairDataUtils.getAffairWeekData(tmp)) { week ->
+          WeekSelectDialog(
+            view.context,
+            currentList.mapNotNull { if (it is AffairWeekData) it.week else null } // 获取有哪几周
+          ) { week ->
             // 删除旧的,添加新的
-            tmp = tmp.filter { it !is AffairWeekData }.toMutableList()
-            tmp.addAll(week)
-            submitList(AffairDataUtils.getNewList(tmp))
+            val newList = arrayListOf<AffairAdapterData>()
+            newList.addAll(week)
+            newList.addAll(currentList.filter { it !is AffairWeekData })
+            submitList(newList)
           }
         dialog.show()
       }
     }
   }
 
-  inner class DurationVHolder(itemView: View) : VHolder(itemView) {
+  inner class TimeDataVHolder(itemView: View) : VHolder(itemView) {
     val tvTime: TextView = itemView.findViewById(R.id.affair_tv_find_course_history_name)
     val ivDelete: ImageView = itemView.findViewById(R.id.affair_ib_find_course_history_delete)
 
@@ -146,10 +157,10 @@ class AffairDurationAdapter(val requireActivity: Context) :
         val data = getItem(layoutPosition) as AffairTimeData
         val a = currentList.filterIsInstance<AffairTimeData>().isEmpty()
         if (a) {
-          "掌友,请至少保留1个时间呦".toast()
+          "掌友，请至少保留1个时间呦".toast()
         } else {
-          val tmp = currentList.filter { it != data }
-          submitList(AffairDataUtils.getNewList(tmp))
+          val tmp = currentList.filter { it !== data }
+          submitList(tmp)
         }
       }
     }
@@ -160,15 +171,68 @@ class AffairDurationAdapter(val requireActivity: Context) :
 
     init {
       ivAdd.setOnSingleClickListener {
-        val dialog = TimeSelectDialog(requireActivity) { timeData ->
-          if (AffairDataUtils.funCheckTime(currentList, timeData)) {
-            submitList(AffairDataUtils.addNewTime(currentList, timeData))
-            true
-          } else
-            false
+        val dialog = TimeSelectDialog(it.context) { timeData ->
+          val newList = currentList.toMutableList()
+          newList.add(timeData)
+          submitList(newList)
         }
         dialog.show()
       }
     }
+  }
+  
+  
+  
+  
+  
+  /**
+   * Time的第一个要换行,建议所有的submitList都用这个方法处理一下
+   */
+  private fun List<AffairAdapterData>.sortList(): List<AffairAdapterData> {
+    val list = sort(this)
+    val newList = arrayListOf<AffairAdapterData>()
+    var index = 0
+    while (index < list.size) {
+      val prev = newList.getOrNull(index - 1)
+      //val next = list.getOrNull(index + 1)
+      when (val now = list[index]) {
+        is AffairWeekData -> {
+          newList.add(now)
+        }
+        is AffairTimeData -> {
+          if (prev is AffairWeekData) {
+            // 这个时候 isWrapBefore 该为 true
+            newList.add(if (now.isWrapBefore) now else now.copy(isWrapBefore = true))
+          } else {
+            // 这个时候 isWrapBefore 该为 false
+            newList.add(if (!now.isWrapBefore) now else now.copy(isWrapBefore = false))
+          }
+          
+        }
+        is AffairTimeAdd -> {
+        }
+      }
+      index++
+    }
+    // 最后一个是加号
+    newList.add(AffairTimeAdd(1))
+    return newList
+  }
+  
+  // 将数据按照先AffairWeekData后AffairTimeData排序
+  private fun sort(list: List<AffairAdapterData>): List<AffairAdapterData> {
+    val newList = arrayListOf<AffairAdapterData>()
+    val weekList = arrayListOf<AffairWeekData>()
+    val timeList = arrayListOf<AffairTimeData>()
+    list.forEach {
+      if (it is AffairWeekData) {
+        weekList.add(it)
+      } else if (it is AffairTimeData) {
+        timeList.add(it)
+      }
+    }
+    newList.addAll(weekList)
+    newList.addAll(timeList)
+    return newList
   }
 }

@@ -4,8 +4,8 @@ import android.content.Context
 import android.content.DialogInterface
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.content.edit
 import androidx.fragment.app.Fragment
-import com.mredrock.cyxbs.common.utils.extensions.editor
 import com.tbruyelle.rxpermissions3.RxPermissions
 
 /**
@@ -25,6 +25,11 @@ doPermissionAction(Manifest.permission.READ_PHONE_STATE, Manifest.permission.CAL
 
     doAfterRefused {
         //optional. do something after permission refused by user
+    }
+    
+    doNeverShow {
+        // 在设置成永远不显示时回调
+        true // 如果返回 true，则什么都不会发送，如果返回 false，则会再次显示授权弹窗
     }
 }
 
@@ -47,6 +52,8 @@ class PermissionActionBuilder {
         private set
     var doAfterRefused: (() -> Unit)? = null
         private set
+    var doNeverShow: () -> Boolean = { true }
+        private set
     var reason: String? = null
 
     var isShowNeverNotice = false
@@ -62,6 +69,14 @@ class PermissionActionBuilder {
 
     fun doAfterRefused(action: () -> Unit) {
         doAfterRefused = action
+    }
+    
+    /**
+     * 在设置了永远不显示时回调
+     * @return 返回 true，则什么都不干，返回 false，则取消永远不显示
+     */
+    fun doNeverShow(action: () -> Boolean) {
+        doNeverShow = action
     }
 }
 
@@ -86,37 +101,49 @@ private fun performRequestPermission(
 ) {
     val builder = PermissionActionBuilder().apply(actionBuilder)
     val permissionsToRequest = permissionsRequired.filterNot { rxPermissions.isGranted(it) }
-
-    when {
-        context.getSp(
-            builder.tag
-                ?: permissionsRequired.toString()
-        ).getBoolean("isNeverShow", false) -> Unit
-        permissionsToRequest.isEmpty() -> builder.doAfterGranted.invoke()
-        builder.reason != null ->
-            AlertDialog.Builder(context).apply {
-                setMessage(builder.reason)
-                setPositiveButton(android.R.string.ok) { _: DialogInterface, i: Int ->
-                    requestPermission(rxPermissions, builder, *permissionsToRequest.toTypedArray())
+    fun request() {
+        when {
+            permissionsToRequest.isEmpty() -> builder.doAfterGranted.invoke()
+            context.getSp(
+                builder.tag
+                    ?: permissionsRequired.toString()
+            ).getBoolean("isNeverShow", false) -> {
+                val boolean = builder.doNeverShow.invoke()
+                if (!boolean) {
+                    context.getSp(
+                        builder.tag
+                            ?: permissionsRequired.toString()
+                    ).edit {
+                        putBoolean("isNeverShow", false)
+                    }
                 }
-                if (builder.isShowNeverNotice) {
-                    setNegativeButton("不再提示") { _: DialogInterface, i: Int ->
-                        context.getSp(
-                            builder.tag
-                                ?: permissionsRequired.toString()
-                        ).editor {
-                            putBoolean("isNeverShow", true)
+                request()
+            }
+            builder.reason != null ->
+                AlertDialog.Builder(context).apply {
+                    setMessage(builder.reason)
+                    setPositiveButton(android.R.string.ok) { _: DialogInterface, i: Int ->
+                        requestPermission(rxPermissions, builder, *permissionsToRequest.toTypedArray())
+                    }
+                    if (builder.isShowNeverNotice) {
+                        setNegativeButton("不再提示") { _: DialogInterface, i: Int ->
+                            context.getSp(
+                                builder.tag
+                                    ?: permissionsRequired.toString()
+                            ).edit {
+                                putBoolean("isNeverShow", true)
+                            }
+                        }
+                    } else if (builder.isShowCancelNotice) {
+                        setNegativeButton(android.R.string.cancel) { _: DialogInterface, i: Int ->
+                        
                         }
                     }
-                } else if (builder.isShowCancelNotice) {
-                    setNegativeButton(android.R.string.cancel) { _: DialogInterface, i: Int ->
-
-                    }
-
-                }
-            }.show()
-        else -> requestPermission(rxPermissions, builder, *permissionsToRequest.toTypedArray())
+                }.show()
+            else -> requestPermission(rxPermissions, builder, *permissionsToRequest.toTypedArray())
+        }
     }
+    request()
 }
 
 fun AppCompatActivity.doPermissionAction(

@@ -4,8 +4,8 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
 import com.mredrock.cyxbs.affair.net.AffairRepository
-import com.mredrock.cyxbs.affair.service.AffairDataBase
-import com.mredrock.cyxbs.affair.service.AffairEntity
+import com.mredrock.cyxbs.affair.room.AffairDataBase
+import com.mredrock.cyxbs.affair.room.AffairEntity
 import com.mredrock.cyxbs.api.account.IAccountService
 import com.mredrock.cyxbs.lib.base.ui.BaseViewModel
 import com.mredrock.cyxbs.lib.utils.service.ServiceManager
@@ -27,7 +27,7 @@ class EditAffairViewModel : BaseViewModel() {
 
   fun updateAffair(
     id: Int,
-    time: Int = 1,
+    time: Int,
     title: String,
     content: String,
     atWhatTime: List<AffairEntity.AtWhatTime>,
@@ -36,7 +36,6 @@ class EditAffairViewModel : BaseViewModel() {
       .observeOn(AndroidSchedulers.mainThread())
       .safeSubscribeBy { "更新成功".toast() }
   }
-
 
   fun findAffairEntity(affairId: Int) {
     val stuNum = ServiceManager(IAccountService::class).getUserService().getStuNum()
@@ -50,17 +49,31 @@ class EditAffairViewModel : BaseViewModel() {
       }
     }
   }
-
-  private fun getAffair() {
-    AffairRepository.getAffair()
-      .observeOn(AndroidSchedulers.mainThread())
-      .safeSubscribeBy {
-        "获取成功".toast()
-      }
-  }
-
-  init {
-    getAffair()
-  }
-
+  
+//  private fun updateRemind(
+//    title: String,
+//    description: String,
+//    startRow: Int,
+//    period: Int,
+//    week: Int,
+//    remindMinutes: Int
+//  ) {
+//    CalendarUtils.addCalendarEventRemind(
+//      requireActivity(),
+//      title,
+//      description,
+//      TimeUtils.getBegin(startRow, week),
+//      TimeUtils.getDuration(period),
+//      TimeUtils.getRRule(week),
+//      remindMinutes,
+//      object : CalendarUtils.OnCalendarRemindListener {
+//        override fun onFailed(error_code: CalendarUtils.OnCalendarRemindListener.Status?) {
+//          "更新失败".toast()
+//        }
+//
+//        override fun onSuccess() {
+//          "更新日历成功".toast()
+//        }
+//      })
+//  }
 }

@@ -11,7 +11,6 @@ import com.google.android.flexbox.FlexboxLayoutManager
 import com.mredrock.cyxbs.affair.R
 import com.mredrock.cyxbs.affair.ui.adapter.AffairWeekAdapter
 import com.mredrock.cyxbs.affair.ui.adapter.data.AffairWeekData
-import com.mredrock.cyxbs.affair.ui.adapter.data.AffairWeekSelectData
 import com.mredrock.cyxbs.lib.utils.extensions.setOnSingleClickListener
 import com.mredrock.cyxbs.lib.utils.extensions.toast
 
@@ -34,17 +33,17 @@ class WeekSelectDialog(
     weekRecyclerView.adapter = mRvDurationAdapter
     weekRecyclerView.layoutManager =
       FlexboxLayoutManager(context, FlexDirection.ROW, FlexWrap.WRAP)
-    val list = mutableListOf<AffairWeekSelectData>()
+    val list = mutableListOf<AffairWeekAdapter.AffairWeekSelectData>()
     for (i in 0..22) {
       val isChoice = weekList.contains(i)
-      list.add(AffairWeekSelectData(i, isChoice))
+      list.add(AffairWeekAdapter.AffairWeekSelectData(i, isChoice))
     }
     mRvDurationAdapter.submitList(list)
 
     tvSure.setOnSingleClickListener {
       val tmp = mRvDurationAdapter.currentList.filter { it.isChoice }
       if (tmp.isEmpty()) {
-        "掌友,请至少选择一个周数哦".toast()
+        "掌友，请至少选择一个周数哦".toast()
       } else {
         val tmp2 = tmp.map { data -> AffairWeekData(data.week, listOf()) }
         addWeek(tmp2)
@@ -53,7 +52,4 @@ class WeekSelectDialog(
     }
     setContentView(view)
   }
-
-  fun getList() = mRvDurationAdapter.currentList
-
 }

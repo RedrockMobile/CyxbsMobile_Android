@@ -4,6 +4,8 @@ import android.os.Bundle
 import android.view.View
 import androidx.fragment.app.createViewModelLazy
 import androidx.lifecycle.distinctUntilChanged
+import com.mredrock.cyxbs.api.affair.IAffairService
+import com.mredrock.cyxbs.api.course.utils.getBeginLesson
 import com.mredrock.cyxbs.config.config.SchoolCalendar
 import com.mredrock.cyxbs.course.page.course.base.CompareWeekSemesterFragment
 import com.mredrock.cyxbs.course.page.course.ui.home.utils.EnterAnimUtils
@@ -12,6 +14,7 @@ import com.mredrock.cyxbs.course.page.course.utils.container.AffairContainerProx
 import com.mredrock.cyxbs.course.page.course.utils.container.LinkLessonContainerProxy
 import com.mredrock.cyxbs.course.page.course.utils.container.SelfLessonContainerProxy
 import com.mredrock.cyxbs.lib.course.helper.affair.CreateAffairDispatcher
+import com.mredrock.cyxbs.lib.utils.service.impl
 import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
 
 /**
@@ -84,6 +87,13 @@ class HomeSemesterFragment : CompareWeekSemesterFragment() {
   }
   
   private fun initCreateAffair() {
-    course.addPointerDispatcher(CreateAffairDispatcher(this))
+    course.addPointerDispatcher(
+      CreateAffairDispatcher(this).apply {
+        setOnClickListener {
+          IAffairService::class.impl
+            .startActivityForAddAffair(0, weekNum - 1, getBeginLesson(startRow), length)
+        }
+      }
+    )
   }
 }

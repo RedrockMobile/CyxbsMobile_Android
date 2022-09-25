@@ -4,9 +4,9 @@ import androidx.annotation.WorkerThread
 import com.google.gson.Gson
 import com.mredrock.cyxbs.affair.model.bean.toAffairDateBean
 import com.mredrock.cyxbs.affair.room.*
-import com.mredrock.cyxbs.affair.service.AffairDataBase
-import com.mredrock.cyxbs.affair.service.AffairEntity
-import com.mredrock.cyxbs.affair.service.StuNumWithAffairId
+import com.mredrock.cyxbs.affair.room.AffairDataBase
+import com.mredrock.cyxbs.affair.room.AffairEntity
+import com.mredrock.cyxbs.affair.room.StuNumWithAffairId
 import com.mredrock.cyxbs.api.account.IAccountService
 import com.mredrock.cyxbs.lib.utils.extensions.toast
 import com.mredrock.cyxbs.lib.utils.extensions.unsafeSubscribeBy

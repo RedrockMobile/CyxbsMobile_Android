@@ -6,6 +6,7 @@ import com.mredrock.cyxbs.lib.course.fragment.course.expose.fold.FoldState
 import com.mredrock.cyxbs.lib.course.fragment.course.expose.wrapper.ICourseWrapper
 import com.mredrock.cyxbs.lib.course.fragment.page.ICoursePage
 import com.mredrock.cyxbs.lib.course.internal.view.course.ICourseViewGroup
+import com.mredrock.cyxbs.lib.course.item.single.SingleDayLayoutParams
 import com.ndhzs.netlayout.touch.multiple.IPointerDispatcher
 import com.ndhzs.netlayout.touch.multiple.IPointerTouchHandler
 import com.ndhzs.netlayout.touch.multiple.event.IPointerEvent
@@ -21,6 +22,10 @@ class CreateAffairDispatcher(
   val page: ICoursePage
 ) : IPointerDispatcher, CreateAffairHandler.ITouch {
   
+  fun setOnClickListener(onClick: SingleDayLayoutParams.() -> Unit) {
+    mOnClickListener = onClick
+  }
+  
   init {
     page.addCourseLifecycleObservable(
       object : ICourseWrapper.CourseLifecycleObserver {
@@ -34,6 +39,7 @@ class CreateAffairDispatcher(
   
   private val mPointerHandlerPool = arrayListOf<ICreateAffairHandler>()
   private var mIsAllowIntercept = true
+  private var mOnClickListener: (SingleDayLayoutParams.() -> Unit)? = null
   
   override fun isPrepareToIntercept(event: IPointerEvent, view: ViewGroup): Boolean {
     val x = event.x.toInt()
@@ -83,7 +89,13 @@ class CreateAffairDispatcher(
     mPointerHandlerPool.forEach {
       if (!it.isInUse()) return it
     }
-    val newHandler = ICreateAffairHandler.getImpl(page.course, ITouchAffair.getImpl(page.course), this)
+    val newHandler = ICreateAffairHandler.getImpl(
+      page.course,
+      ITouchAffair
+        .getImpl(page.course)
+        .apply { setOnClickListener { mOnClickListener?.invoke(cloneLp()) } },
+      this
+    )
     mPointerHandlerPool.add(newHandler)
     return newHandler
   }

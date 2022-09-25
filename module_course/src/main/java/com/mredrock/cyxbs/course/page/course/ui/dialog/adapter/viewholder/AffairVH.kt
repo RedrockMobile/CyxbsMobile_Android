@@ -3,7 +3,6 @@ package com.mredrock.cyxbs.course.page.course.ui.dialog.adapter.viewholder
 import android.view.ViewGroup
 import android.widget.Button
 import android.widget.TextView
-import androidx.appcompat.app.AppCompatActivity
 import com.mredrock.cyxbs.api.affair.IAffairService
 import com.mredrock.cyxbs.course.R
 import com.mredrock.cyxbs.course.page.course.data.AffairData
@@ -32,11 +31,11 @@ class AffairVH(
     mTvDuration.text = "${data.weekStr} ${data.weekdayStr}   ${data.durationStr}"
     mBtnDelete.setOnSingleClickListener {
       IAffairService::class.impl
-        .deleteAffair(it.context as AppCompatActivity, data.id)
+        .deleteAffair(data.id)
     }
     mBtnChange.setOnSingleClickListener {
       IAffairService::class.impl
-        .startAffairEditActivity(it.context, data.id)
+        .startActivityForEditActivity(data.id)
     }
   }
 }

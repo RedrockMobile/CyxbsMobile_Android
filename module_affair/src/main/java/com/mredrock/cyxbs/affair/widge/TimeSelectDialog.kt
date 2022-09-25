@@ -6,10 +6,10 @@ import android.view.View
 import android.widget.TextView
 import com.github.gzuliyujiang.wheelview.widget.WheelView
 import com.mredrock.cyxbs.affair.R
-import com.mredrock.cyxbs.affair.model.data.AffairEditArgs.AffairDurationArgs.Companion.DAY_ARRAY
-import com.mredrock.cyxbs.affair.model.data.AffairEditArgs.AffairDurationArgs.Companion.LESSON_ARRAY
 import com.mredrock.cyxbs.affair.ui.adapter.data.AffairTimeData
-import com.mredrock.cyxbs.affair.utils.AffairDataUtils
+import com.mredrock.cyxbs.affair.ui.adapter.data.AffairTimeData.Companion.DAY_ARRAY
+import com.mredrock.cyxbs.affair.ui.adapter.data.AffairTimeData.Companion.LESSON_ARRAY
+import com.mredrock.cyxbs.api.affair.utils.getBeginLesson
 import com.mredrock.cyxbs.lib.utils.extensions.setOnSingleClickListener
 import com.mredrock.cyxbs.lib.utils.extensions.toast
 
@@ -19,7 +19,7 @@ import com.mredrock.cyxbs.lib.utils.extensions.toast
  * date: 2022/9/7
  * description:
  */
-class TimeSelectDialog(context: Context, addTime: (timeData:AffairTimeData) -> Boolean) :
+class TimeSelectDialog(context: Context, callback: (timeData: AffairTimeData) -> Unit) :
   RedRockBottomSheetDialog(context) {
   var view: View = LayoutInflater.from(context).inflate(R.layout.affair_dialog_time_select, null)
   val weekWV: WheelView = view.findViewById(R.id.affair_wheel_view_week)
@@ -34,7 +34,16 @@ class TimeSelectDialog(context: Context, addTime: (timeData:AffairTimeData) -> B
     endWV.data = LESSON_ARRAY.toList()
 
     tvSure.setOnSingleClickListener {
-      if (addTime(AffairTimeData(weekWV.currentPosition, beginWV.currentPosition, endWV.currentPosition-beginWV.currentPosition))){
+      if (endWV.currentPosition < beginWV.currentPosition) {
+        "非法时间段".toast()
+      } else {
+        callback.invoke(
+          AffairTimeData(
+            weekWV.currentPosition,
+            getBeginLesson(beginWV.currentPosition),
+            endWV.currentPosition - beginWV.currentPosition + 1
+          )
+        )
         dismiss()
       }
     }
