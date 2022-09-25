@@ -42,9 +42,6 @@ abstract class AbstractHeaderCourseVpFragment : AbstractCourseVpFragment(), IHea
     resources.getStringArray(R.array.course_course_weeks_strings)
   }
   
-  override val mPageCount: Int
-    get() = mWhichWeekStr.size
-  
   /**
    * 如果你要想在 Header 上新增东西，请重写该方法，并且在 xml 中使用 <include> 来包含原有的 Header 控件
    * 当然，如果你想全部重写也是可以的，把上面几个控件也一起重写下就可以了

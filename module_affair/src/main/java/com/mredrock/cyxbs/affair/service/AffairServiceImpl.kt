@@ -1,25 +1,12 @@
 package com.mredrock.cyxbs.affair.service
 
-import android.Manifest
 import android.content.Context
-import android.content.Intent
-import androidx.appcompat.app.AppCompatActivity
 import com.alibaba.android.arouter.facade.annotation.Route
-import com.mredrock.cyxbs.affair.data.AffairEditArgs
 import com.mredrock.cyxbs.affair.model.AffairRepository
 import com.mredrock.cyxbs.affair.room.AffairEntity
 import com.mredrock.cyxbs.affair.ui.activity.AffairActivity
-import com.mredrock.cyxbs.affair.ui.activity.DeleteRemindActivity
-import com.mredrock.cyxbs.affair.utils.TimeUtils
 import com.mredrock.cyxbs.api.affair.AFFAIR_SERVICE
 import com.mredrock.cyxbs.api.affair.IAffairService
-import com.mredrock.cyxbs.api.affair.utils.getStartRow
-import com.mredrock.cyxbs.lib.utils.extensions.appContext
-import com.mredrock.cyxbs.lib.utils.extensions.doPermissionAction
-import com.mredrock.cyxbs.lib.utils.extensions.toast
-import com.mredrock.cyxbs.lib.utils.extensions.unsafeSubscribeBy
-import com.mredrock.cyxbs.lib.utils.utils.CalendarUtils
-import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
 import io.reactivex.rxjava3.core.Completable
 import io.reactivex.rxjava3.core.Observable
 import io.reactivex.rxjava3.core.Single
@@ -48,22 +35,8 @@ class AffairServiceImpl : IAffairService {
       .map { it.toAffair() }
   }
 
-  override fun deleteAffair(context: AppCompatActivity, affairId: Int) {
-    AffairRepository.getAffair().observeOn(AndroidSchedulers.mainThread()).unsafeSubscribeBy {
-      val data = it.filter { it.id == affairId }
-      val list = data[0].atWhatTime
-      list.forEach {
-        // 先删除日历
-        deleteRemind(context, data[0].title, data[0].content, getStartRow(it.beginLesson), it.day)
-        // 再删除数据库
-        AffairRepository.deleteAffair(affairId)
-          .observeOn(AndroidSchedulers.mainThread())
-          .unsafeSubscribeBy { "删除成功".toast() }
-      }
-    }
-  }
-  
   override fun deleteAffair(affairId: Int): Completable {
+//    DeleteRemindActivity.start(affairId) TODO 删除日历，待完成
     return AffairRepository.deleteAffair(affairId)
   }
 
@@ -103,70 +76,6 @@ class AffairServiceImpl : IAffairService {
             )
           }
         }
-      }
-    }
-  }
-
-  // 将数据库的类转化为要传递的类
-  private fun affairEntityToAffairEditArgs(data: AffairEntity): AffairEditArgs {
-    return AffairEditArgs(
-      data.stuNum,
-      data.id,
-      data.title,
-      data.content,
-      data.time,
-      atWhatTimeToAffairDurationArgs(data.atWhatTime)
-    )
-  }
-
-  private fun atWhatTimeToAffairDurationArgs(affairList: List<AffairEntity.AtWhatTime>): AffairEditArgs.AffairDurationArgs {
-    return AffairEditArgs.AffairDurationArgs(
-      // 旧版里面只有1个
-      affairList[0].day,
-      affairList[0].beginLesson,
-      affairList[0].period,
-      affairList[0].week[0]
-    )
-  }
-  
-  private fun deleteRemind() {
-    appContext.startActivity(
-      Intent(appContext, DeleteRemindActivity::class.java)
-        .addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
-    )
-  }
-
-  private fun deleteRemind(
-    context: AppCompatActivity,
-    title: String,
-    description: String,
-    startRow: Int,
-    week: Int
-  ) {
-    //获取权限
-    context.doPermissionAction(
-      Manifest.permission.READ_CALENDAR,
-      Manifest.permission.WRITE_CALENDAR
-    ) {
-      reason = "设置提醒需要访问您的日历哦~"
-      doAfterGranted {
-        CalendarUtils.deleteCalendarEventRemind(
-          appContext,
-          title,
-          description,
-          TimeUtils.getBegin(startRow, week),
-          object : CalendarUtils.OnCalendarRemindListener {
-            override fun onFailed(error_code: CalendarUtils.OnCalendarRemindListener.Status?) {
-              "删除日历失败".toast()
-            }
-
-            override fun onSuccess() {
-              "删除日历成功".toast()
-            }
-          })
-      }
-      doAfterRefused {
-        "呜呜呜".toast()
       }
     }
   }

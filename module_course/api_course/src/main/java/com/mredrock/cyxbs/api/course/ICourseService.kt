@@ -14,6 +14,14 @@ import com.mredrock.cyxbs.api.affair.IAffairService
  */
 interface ICourseService : IProvider {
   
+  companion object {
+    /**
+     * 课表能显示的最大周数
+     */
+    val maxWeek = 21
+  }
+  
+  
   /**
    * 尝试调用 replace() 显示主页的课表，如果已经添加，则不会重复添加
    *

@@ -1,5 +1,6 @@
 package com.mredrock.cyxbs.noclass.bean
 
+import com.mredrock.cyxbs.api.course.ICourseService
 import com.mredrock.cyxbs.api.course.ILessonService
 import java.io.Serializable
 
@@ -22,7 +23,7 @@ data class NoClassSpareTime (
   
   companion object{
     val EMPTY_PAGE = HashMap<Int, NoClassSpareTime>().apply {
-      (0..22).forEach{
+      (0 .. ICourseService.maxWeek).forEach{
         this[it] = getNewEmptySpareTime()
       }
     }
@@ -89,8 +90,8 @@ fun Map<Int, List<ILessonService.Lesson>>.toSpareTime() : HashMap<Int, NoClassSp
     }
   }
     //检查全部包含进去
-    if (studentSpareTimes.size <= 22){
-      (0..22).map{
+    if (studentSpareTimes.size <= ICourseService.maxWeek){
+      (0 .. ICourseService.maxWeek).map{
         if (studentSpareTimes[it] == null){
           studentSpareTimes[it] = getNewSpareTime(stuIds)
         }
@@ -105,10 +106,12 @@ fun Map<Int, List<ILessonService.Lesson>>.toSpareTime() : HashMap<Int, NoClassSp
  */
 private fun getNewSpareTime(stuIds : ArrayList<String>): NoClassSpareTime {
   return NoClassSpareTime(hashMapOf()).apply {
+    // 0 .. 6 指星期数
     (0..6).map {
       spareDayTime[it] =
         NoClassSpareTime.SpareLineTime(
           ArrayList<NoClassSpareTime.SpareLineTime.SpareIds>(13).apply {
+            // 13 是总的行数，为上午 4 行，中午 1 行，下午 4 行，傍晚 1 行，晚上 4 行
             (0..13).forEach { _ ->
               add(NoClassSpareTime.SpareLineTime.SpareIds((stuIds.clone() as ArrayList<String>)))
             }

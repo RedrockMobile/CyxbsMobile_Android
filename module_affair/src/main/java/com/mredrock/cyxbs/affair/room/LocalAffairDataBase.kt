@@ -69,15 +69,17 @@ abstract class LocalAddAffairDao {
 
   @Query("SELECT * FROM local_add_affair WHERE stuNum = :stuNum AND id = :id")
   abstract fun getLocalAddAffair(stuNum: String, id: Int): LocalAddAffairEntity?
-
+  
+  // 内部方法
   @Query("SELECT * FROM local_add_affair WHERE stuNum = :stuNum")
   protected abstract fun getLocalAddAffair(stuNum: String): List<LocalAddAffairEntity>
   
+  // 内部方法
   @Delete
   protected abstract fun deleteLocalAddAffair(affair: List<LocalAddAffairEntity>)
   
   @Transaction
-  open fun getLocalAddAffairWithDelete(stuNum: String): List<LocalAddAffairEntity> {
+  open fun removeLocalAddAffair(stuNum: String): List<LocalAddAffairEntity> {
     val list = getLocalAddAffair(stuNum)
     deleteLocalAddAffair(list)
     return list
@@ -96,14 +98,16 @@ abstract class LocalUpdateAffairDao {
   @Query("DELETE FROM local_update_affair WHERE stuNum = :stuNum AND id = :id")
   abstract fun deleteLocalUpdateAffair(stuNum: String, id: Int)
 
+  // 内部方法
   @Query("SELECT * FROM local_update_affair WHERE stuNum = :stuNum")
   protected abstract fun getLocalUpdateAffair(stuNum: String): List<LocalUpdateAffairEntity>
   
+  // 内部方法
   @Delete
   protected abstract fun deleteLocalUpdateAffair(affair: List<LocalUpdateAffairEntity>)
   
   @Transaction
-  open fun getLocalUpdateAffairWithDelete(stuNum: String): List<LocalUpdateAffairEntity> {
+  open fun removeLocalUpdateAffair(stuNum: String): List<LocalUpdateAffairEntity> {
     val list = getLocalUpdateAffair(stuNum)
     deleteLocalUpdateAffair(list)
     return list
@@ -116,14 +120,16 @@ abstract class LocalDeleteAffairDao {
   @Insert(onConflict = OnConflictStrategy.REPLACE)
   abstract fun insertLocalDeleteAffair(affair: LocalDeleteAffairEntity)
   
+  // 内部方法
   @Query("SELECT * FROM local_delete_affair WHERE stuNum = :stuNum")
   protected abstract fun getLocalDeleteAffair(stuNum: String): List<LocalDeleteAffairEntity>
   
+  // 内部方法
   @Delete
   protected abstract fun deleteLocalDeleteAffair(affair: List<LocalDeleteAffairEntity>)
   
   @Transaction
-  open fun getLocalDeleteAffairWithDelete(stuNum: String): List<LocalDeleteAffairEntity> {
+  open fun removeLocalDeleteAffair(stuNum: String): List<LocalDeleteAffairEntity> {
     val list = getLocalDeleteAffair(stuNum)
     deleteLocalDeleteAffair(list)
     return list

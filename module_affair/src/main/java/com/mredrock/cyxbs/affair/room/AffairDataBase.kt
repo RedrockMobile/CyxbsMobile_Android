@@ -45,7 +45,7 @@ data class AffairEntity(
     val beginLesson: Int, // 开始节数，如：1、2 节课以 1 开始；3、4 节课以 3 开始，注意：中午是以 -1 开始，傍晚是以 -2 开始
     val day: Int, // 星期数，星期一为 0
     val period: Int, // 长度
-    val week: List<Int> // 在哪几周
+    val week: List<Int> // 在哪几周，特别注意：整学期的 week 为 0
   )
 
   class AtWhatTimeConverter {
@@ -79,25 +79,28 @@ data class AffairEntity(
 abstract class AffairDao {
 
   @Query("SELECT * FROM affair WHERE stuNum = :stuNum")
-  abstract fun getAllAffair(stuNum: String): List<AffairEntity>
+  abstract fun getAffairByStuNum(stuNum: String): List<AffairEntity>
 
   @Query("SELECT * FROM affair WHERE stuNum = :stuNum AND id = :id")
-  abstract fun getAffairById(stuNum: String, id: Int): AffairEntity?
+  abstract fun getAffairByStuNumId(stuNum: String, id: Int): AffairEntity?
 
   @Query("SELECT * FROM affair WHERE stuNum = :stuNum")
   abstract fun observeAffair(stuNum: String): Observable<List<AffairEntity>>
 
   // 内部使用
   @Query("DELETE FROM affair WHERE stuNum = :stuNum")
-  protected abstract fun deleteAllAffair(stuNum: String)
+  protected abstract fun deleteAffairByStuNum(stuNum: String)
   
   // 内部使用
   @Insert(onConflict = OnConflictStrategy.REPLACE)
   protected abstract fun insertAffair(affairs: List<AffairEntity>)
   
+  /**
+   * 重新设置数据，先删除，再插入
+   */
   @Transaction
   open fun resetData(stuNum: String, affairs: List<AffairEntity>) {
-    deleteAllAffair(stuNum)
+    deleteAffairByStuNum(stuNum)
     insertAffair(affairs)
   }
 
@@ -119,7 +122,7 @@ abstract class AffairDao {
    */
   @Transaction
   open fun updateId(stuNum: String, oldId: Int, newId: Int) {
-    val affair = getAffairById(stuNum, oldId)
+    val affair = getAffairByStuNumId(stuNum, oldId)
     if (affair != null) {
       deleteAffair(affair)
       insertAffair(affair.copy(id = newId))

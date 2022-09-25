@@ -42,7 +42,7 @@ class EditAffairViewModel : BaseViewModel() {
     if (stuNum.isNotEmpty()) {
       viewModelScope.launch(Dispatchers.IO) {
         AffairDataBase.INSTANCE.getAffairDao()
-          .getAffairById(stuNum, affairId)
+          .getAffairByStuNumId(stuNum, affairId)
           ?.let {
             _affairEntity.postValue(it)
           }

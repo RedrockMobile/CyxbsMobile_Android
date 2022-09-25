@@ -106,7 +106,7 @@ abstract class OverlapImpl : FoldImpl(), IOverlapContainer {
   // 是否正处于刷新的 Runnable 中
   private var mIsInRefreshOverlapRunnable = false
   
-  // 是否已经发送了 Runnable，你只管直接调用 tryPostRefreshOverlapRunnable() 即可，是否为重复调用由该变量判断
+  // 判断是否重复发送了 Runnable。你只管直接调用 tryPostRefreshOverlapRunnable() 即可，是否为重复调用由该变量判断
   private var _isPostRefreshOverlapRunnable = false
   
   private fun tryPostRefreshOverlapRunnable(): Boolean {
