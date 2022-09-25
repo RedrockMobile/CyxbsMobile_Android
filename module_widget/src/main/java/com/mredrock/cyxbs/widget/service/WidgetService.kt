@@ -3,14 +3,13 @@ package com.mredrock.cyxbs.widget.service
 import android.content.ComponentName
 import android.content.Context
 import android.content.Intent
-import android.util.Log
 import androidx.core.content.edit
 import com.alibaba.android.arouter.facade.annotation.Route
-import com.google.gson.Gson
 import com.mredrock.cyxbs.api.affair.IAffairService
 import com.mredrock.cyxbs.api.course.ILessonService
 import com.mredrock.cyxbs.api.widget.IWidgetService
 import com.mredrock.cyxbs.api.widget.WIDGET_SERVICE
+import com.mredrock.cyxbs.widget.repo.bean.AffairEntity
 import com.mredrock.cyxbs.widget.repo.database.AffairDatabase
 import com.mredrock.cyxbs.widget.repo.database.LessonDatabase
 import com.mredrock.cyxbs.widget.repo.database.LessonDatabase.Companion.MY_STU_NUM

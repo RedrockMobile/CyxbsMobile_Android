@@ -63,7 +63,6 @@ class OversizedAppWidget : AppWidgetProvider() {
                 val position = intent.getIntExtra(POSITION, -1)
                 val day = position / 7
                 val beginLesson = position % 7
-                Log.d("testTag", "(OversizedAppWidget.kt:68) -> ${position}")
                 if (lastPosition == position) {
                     defaultSp.edit().putInt(POSITION, -1).commit()
                 } else {

@@ -2,6 +2,7 @@ package com.mredrock.cyxbs.widget.service
 
 import android.content.Context
 import android.content.Intent
+import android.util.Log
 import android.view.View
 import android.widget.RemoteViews
 import android.widget.RemoteViewsService
@@ -22,15 +23,18 @@ class GridWidgetService : RemoteViewsService() {
     companion object {
         private lateinit var myLessons: List<LessonEntity>
         private lateinit var otherLessons: Array<Array<LessonEntity?>>
-        private lateinit var affairs: Array<Array<AffairEntity?>>
+        private val affairs = Array(8) { arrayOfNulls<AffairEntity?>(8) }
+
+
+        //中午，下午的period
+        const val SPECIAL_PERIOD = 1
 
         private fun makeSchedules(): Array<Array<LessonEntity?>> {
             val weekOfTerm = SchoolCalendar().weekOfTerm
             myLessons = getMyLessons(weekOfTerm)
             otherLessons = getOthersStuNum(weekOfTerm).schedule()
-            affairs =
-                AffairDatabase.INSTANCE.getAffairDao()
-                    .queryAllAffair(weekOfTerm).schedule()
+            AffairDatabase.INSTANCE.getAffairDao().queryAllAffair(weekOfTerm).splitAffairs()
+                .schedule()
             return myLessons.schedule()
         }
 
@@ -56,62 +60,106 @@ class GridWidgetService : RemoteViewsService() {
             return mScheduleLessons
         }
 
-        private fun List<AffairEntity>.schedule(): Array<Array<AffairEntity?>> {
-            val mScheduleAffairs = Array(8) { arrayOfNulls<AffairEntity>(8) }
+        private fun List<AffairEntity>.splitAffairs(): List<AffairEntity> {
+            val splitAffairList = arrayListOf<AffairEntity>()
             for (i in 0 until size) {
                 get(i).let {
-                    val column = it.day + 1
+                    //扣除中午，下午period后的affair
+                    splitAffairList.addAll(splitAtSpecialAffairs(it))
+                }
+            }
+            return splitAffairList
+        }
+
+        private fun List<AffairEntity>.schedule(): Array<Array<AffairEntity?>> {
+            for (i in 0 until size) {
+                get(i).let {
                     //处理beginLesson特殊的情况
+                    val column = it.day + 1
                     if (it.beginLesson % 2 == 0 && it.beginLesson != -2) {//从偶数节课开始
                         val evenAffair = it.copy(period = 1, beginLesson = it.beginLesson)
-                        mScheduleAffairs[it.beginLesson / 2][column] = evenAffair
+                        affairs[it.beginLesson / 2 - 1][column] = evenAffair
+                        addNormalAffair(it.copy(period = it.period - 1,
+                            beginLesson = it.beginLesson + 1))
                     } else if (it.beginLesson == -1) {//中午
-                        mScheduleAffairs[2][column] =
-                            it.copy(period = 1, beginLesson = it.beginLesson)
+                        affairs[2][column] =
+                            it.copy(period = SPECIAL_PERIOD, beginLesson = 5)
+                        addNormalAffair(it.copy(period = it.period - SPECIAL_PERIOD,
+                            beginLesson = 5))
                     } else if (it.beginLesson == -2) {//晚上
-                        mScheduleAffairs[5][column] =
-                            it.copy(period = 1, beginLesson = it.beginLesson)
+                        affairs[5][column] =
+                            it.copy(period = SPECIAL_PERIOD, beginLesson = 9)
+                        addNormalAffair(it.copy(period = it.period - SPECIAL_PERIOD,
+                            beginLesson = 9))
+                    } else {
+                        addNormalAffair(it)
                     }
-                    addSpecialAffair(it, mScheduleAffairs)
-                    addLongAffair(it.copy(period = it.period - 1,
-                        beginLesson = it.beginLesson + 1), mScheduleAffairs)
                 }
             }
-            return mScheduleAffairs
+            return affairs
         }
 
-        //处理跨域中午，下午的事务
-        private fun addSpecialAffair(
+        //处理跨越中午，下午的事务
+        private fun splitAtSpecialAffairs(
             affairEntity: AffairEntity,
-            mScheduleAffairs: Array<Array<AffairEntity?>>,
-        ) {
-            if (affairEntity.beginLesson <= 4) {
-                if (affairEntity.period + affairEntity.beginLesson > 5) {
-                    mScheduleAffairs[2][affairEntity.day + 1] =
+        ): ArrayList<AffairEntity> {
+            //如果跨越了中午，下午，则以中午、下午为界限拆成多个事务,放入这个list中
+            val splitAffairList = arrayListOf<AffairEntity>()
+            if (affairEntity.beginLesson in 1..4) {
+                if (affairEntity.period + affairEntity.beginLesson in 6..9) {//跨越中午
+                    affairs[2][affairEntity.day + 1] =
                         affairEntity.copy(period = 1, beginLesson = -1)
-                } else if (affairEntity.period + affairEntity.beginLesson > 9) {
-                    mScheduleAffairs[2][affairEntity.day + 1] =
+                    splitAffairList.add(affairEntity.copy(period = 5 - affairEntity.beginLesson))
+                    splitAffairList.add(affairEntity.copy(period = affairEntity.period - SPECIAL_PERIOD - (5 - affairEntity.beginLesson),
+                        beginLesson = 5))
+                } else if (affairEntity.period + affairEntity.beginLesson > 9) {//跨越中午和下午
+                    affairs[2][affairEntity.day + 1] =
+                        affairEntity.copy(period = 1, beginLesson = -1)
+                    affairs[5][affairEntity.day + 1] =
+                        affairEntity.copy(period = 1, beginLesson = -2)
+                    splitAffairList.add(affairEntity.copy(period = 5 - affairEntity.beginLesson))
+                    splitAffairList.add(affairEntity.copy(period = 4, beginLesson = 5))
+                    splitAffairList.add(affairEntity.copy(period = affairEntity.period - 4 - (5 - affairEntity.beginLesson) - (2 * SPECIAL_PERIOD),
+                        beginLesson = 9))
+                } else splitAffairList.add(affairEntity)//1-4的普通affair
+            } else if (affairEntity.beginLesson in 1..8 ) {
+                if (affairEntity.period + affairEntity.beginLesson > 9) {
+                    affairs[5][affairEntity.day + 1] =
                         affairEntity.copy(period = 5, beginLesson = -2)
-                }
-            } else if (affairEntity.beginLesson <= 8 && affairEntity.period + affairEntity.beginLesson > 9) {
-                mScheduleAffairs[2][affairEntity.day + 1] =
-                    affairEntity.copy(period = 5, beginLesson = -2)
+                    splitAffairList.add(affairEntity.copy(period = 9 - affairEntity.beginLesson))
+                    splitAffairList.add(affairEntity.copy(period = affairEntity.period - SPECIAL_PERIOD - (9 - affairEntity.beginLesson)))
+                } else splitAffairList.add(affairEntity)//5-8的普通affair
+            } else {
+                splitAffairList.add(affairEntity)//9-12的普通affair
             }
+            return splitAffairList
         }
 
-        //递归处理period大的事务
-        private fun addLongAffair(
+        //添加在1-4,5-8,9-12节课上的事务
+        private fun addNormalAffair(
             affairEntity: AffairEntity,
-            mScheduleAffairs: Array<Array<AffairEntity?>>,
         ) {
-            if (affairEntity.period > 1) {
-                val evenAffair = affairEntity.copy(period = 2)
-                mScheduleAffairs[affairEntity.beginLesson / 2][affairEntity.day + 1] = evenAffair
-                addLongAffair(affairEntity.copy(period = affairEntity.period - 2,
-                    beginLesson = affairEntity.beginLesson + 2), mScheduleAffairs)
-            } else if (affairEntity.period == 1) {
-                mScheduleAffairs[affairEntity.beginLesson / 2][affairEntity.day + 1] =
-                    affairEntity.copy(period = 1, beginLesson = affairEntity.beginLesson + 1)
+            var row =
+                if (affairEntity.beginLesson % 2 == 1)
+                    affairEntity.beginLesson / 2
+                else
+                    affairEntity.beginLesson / 2 - 1
+            row +=
+                if (affairEntity.period + affairEntity.beginLesson in 6..9) 1 else if (affairEntity.beginLesson + affairEntity.period > 9) 2 else 0
+            val column = affairEntity.day + 1
+            if (affairEntity.period == 1) {
+                affairs[row][column] = affairEntity
+            } else if (affairEntity.period == 2) {
+                affairs[row][column] = affairEntity
+            } else if (affairEntity.period == 3) {
+                affairs[row][column] = affairEntity.copy(period = 2)
+                affairs[row + 1][column] =
+                    affairEntity.copy(beginLesson = affairEntity.beginLesson + 2, period = 1)
+            } else if (affairEntity.period == 4) {
+                affairs[row][column] = affairEntity.copy(period = 2)
+                affairs[row + 1][column] =
+                    affairEntity.copy(period = 2,
+                        beginLesson = affairEntity.beginLesson + 2)
             }
         }
     }
@@ -126,7 +174,6 @@ class GridWidgetService : RemoteViewsService() {
         private var mScheduleLessons: Array<Array<LessonEntity?>>? = null
 
         override fun getViewAt(position: Int): RemoteViews? {
-            //获取当前时间
             val lastClickPosition =
                 mContext.getSharedPreferences("module_widget", Context.MODE_PRIVATE)
                     .getInt(POSITION, -1)
@@ -208,6 +255,8 @@ class GridWidgetService : RemoteViewsService() {
 
         /**如果有关联他人的课表，则在课程上面添加装饰*/
         private fun decoratedLessonWithOtherLesson(remoteViews: RemoteViews, mPosition: Int) {
+            //这一行是必须的，不然在课程上有事务时，所有的课程都会有装饰
+            remoteViews.setViewVisibility(R.id.other_lesson, View.GONE)
             if (otherLessons[mPosition / 8][mPosition % 8] != null) {
                 remoteViews.setViewVisibility(R.id.other_lesson, View.VISIBLE)
             }
@@ -215,6 +264,7 @@ class GridWidgetService : RemoteViewsService() {
 
         /**如果有事务，则在上面添加小红点*/
         private fun decoratedLessonWithAffair(remoteViews: RemoteViews, mPosition: Int) {
+            remoteViews.setViewVisibility(R.id.affair, View.GONE)
             if (affairs[mPosition / 8][mPosition % 8] != null) {
                 remoteViews.setViewVisibility(R.id.affair, View.VISIBLE)
             }
@@ -223,9 +273,14 @@ class GridWidgetService : RemoteViewsService() {
         /**生成事务rv*/
         private fun getAffairRv(mPosition: Int): RemoteViews {
             val affair = affairs[mPosition / 8][mPosition % 8]
-            return if (affair!!.period == 1) RemoteViews(mContext.packageName,
-                R.layout.widget_grid_view_item_half_affair).apply {
-                setTextViewText(R.id.half_affair_title, affair.title)
+            return if (affair!!.period == 1) {
+                if (affair.beginLesson % 2 == 1) RemoteViews(mContext.packageName,
+                    R.layout.widget_grid_view_item_half_affair).apply {
+                    setTextViewText(R.id.half_affair_title, affair.title)
+                } else RemoteViews(mContext.packageName,
+                    R.layout.widget_grid_view_item_half_bottom_affair).apply {
+                    setTextViewText(R.id.half_affair_title, affair.title)
+                }
             } else RemoteViews(mContext.packageName, R.layout.widget_grid_view_item_affair).apply {
                 setTextViewText(R.id.top, affair.title)
                 setTextViewText(R.id.bottom, parseClassRoom(affair.content))
@@ -234,16 +289,17 @@ class GridWidgetService : RemoteViewsService() {
 
 
         /**生成中午，下午的半长事务或者空白rv*/
-        private fun getHalfAffairRv(position: Int) =
-            if (affairs[(position - 8) / 8][(position - 8) % 8] != null) RemoteViews(mContext.packageName,
+        private fun getHalfAffairRv(position: Int): RemoteViews {
+            val affairEntity = affairs[(position - 8) / 8][(position - 8) % 8]
+            return if (affairEntity != null) RemoteViews(mContext.packageName,
                 R.layout.widget_grid_view_item_half_affair).apply {
-                affairs[(position - 8) / 8][(position - 8) % 8]?.let {
-                    setTextViewText(R.id.top, it.title)
-                }
+                setTextViewText(R.id.half_affair_title, affairEntity.title)
             } else {
                 RemoteViews(mContext.packageName,
                     R.layout.widget_grid_view_item_half_blank)
             }
+        }
+
 
         /**生成显示星期几的rv*/
         private fun getWeekDayRv(position: Int): RemoteViews {
@@ -318,7 +374,7 @@ class GridWidgetService : RemoteViewsService() {
         override fun getLoadingView() =
             RemoteViews(mContext.packageName, R.layout.widget_grid_view_item_blank)
 
-        override fun getViewTypeCount() = 11
+        override fun getViewTypeCount() = 30
 
         override fun hasStableIds() = true
 
