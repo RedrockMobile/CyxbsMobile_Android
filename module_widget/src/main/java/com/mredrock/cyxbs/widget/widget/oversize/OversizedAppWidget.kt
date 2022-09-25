@@ -8,7 +8,6 @@ import android.content.Context
 import android.content.Intent
 import android.os.Build
 import android.os.Bundle
-import android.util.Log
 import android.util.SizeF
 import android.view.View
 import android.widget.RemoteViews
@@ -57,16 +56,12 @@ class OversizedAppWidget : AppWidgetProvider() {
         super.onReceive(context, intent)
         intent ?: return
         when (intent.action) {
-            /** 点击事件*/
             ACTION_CLICK -> {
-                val lastPosition = defaultSp.getInt(POSITION, -1)
-                val position = intent.getIntExtra(POSITION, -1)
-                val day = position / 7
-                val beginLesson = position % 7
-                if (lastPosition == position) {
-                    defaultSp.edit().putInt(POSITION, -1).commit()
-                } else {
-                    defaultSp.edit().putInt(POSITION, position).commit()
+                intent.getStringExtra(CLICK_LESSON)?.let {
+                    showLessonInfo(it)
+                }
+                intent.getStringExtra(CLICK_AFFAIR)?.let {
+                    showAffairInfo(it)
                 }
             }
             ACTION_FLUSH -> {

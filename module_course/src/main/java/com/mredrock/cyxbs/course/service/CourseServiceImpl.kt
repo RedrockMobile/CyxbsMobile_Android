@@ -1,5 +1,6 @@
 package com.mredrock.cyxbs.course.service
 
+import android.app.Dialog
 import android.content.Context
 import androidx.fragment.app.FragmentManager
 import androidx.fragment.app.commit
@@ -24,7 +25,7 @@ import com.mredrock.cyxbs.course.page.course.ui.home.HomeCourseVpFragment
  */
 @Route(path = COURSE_SERVICE, name = COURSE_SERVICE)
 class CourseServiceImpl : ICourseService {
-  
+
   override fun tryReplaceHomeCourseFragmentById(fm: FragmentManager, id: Int) {
     val fragment = fm.findFragmentById(id)
     if (fragment !is HomeCourseVpFragment) {
@@ -50,8 +51,8 @@ class CourseServiceImpl : ICourseService {
     _bottomSheetSlideOffset.value = offset
   }
   
-  override fun openBottomSheetDialogByLesson(context: Context, lesson: ILessonService.Lesson) {
-    CourseBottomDialog(
+  override fun openBottomSheetDialogByLesson(context: Context, lesson: ILessonService.Lesson): Dialog {
+    return CourseBottomDialog(
       context,
       listOf(
         StuLessonData(
@@ -70,11 +71,11 @@ class CourseServiceImpl : ICourseService {
           )
         )
       ), true
-    ).show()
+    ).apply { show() }
   }
   
-  override fun openBottomSheetDialogByAffair(context: Context, affair: IAffairService.Affair) {
-    CourseBottomDialog(
+  override fun openBottomSheetDialogByAffair(context: Context, affair: IAffairService.Affair): Dialog {
+    return CourseBottomDialog(
       context,
       listOf(
         AffairData(
@@ -89,7 +90,7 @@ class CourseServiceImpl : ICourseService {
           affair.content
         )
       ), true
-    ).show()
+    ).apply { show() }
   }
   
   private val _headerAlphaState = MutableLiveData<Float>()

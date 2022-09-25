@@ -48,5 +48,22 @@ data class LessonEntity(
             }
             return lessons
         }
+
+        fun LessonEntity.convertToApi(): ILessonService.Lesson {
+            return ILessonService.Lesson(
+                stuNum = this.stuNum,
+                week = this.week,
+                beginLesson = this.beginLesson,
+                classroom = this.classroom,
+                course = this.course,
+                courseNum = this.courseNum,
+                day = this.day,
+                hashDay = this.hashDay,
+                period = this.period,
+                rawWeek = this.rawWeek,
+                teacher = this.teacher,
+                type = this.type
+            )
+        }
     }
 }

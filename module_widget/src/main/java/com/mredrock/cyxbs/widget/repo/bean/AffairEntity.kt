@@ -3,6 +3,7 @@ package com.mredrock.cyxbs.widget.repo.bean
 import androidx.room.Entity
 import androidx.room.PrimaryKey
 import com.mredrock.cyxbs.api.affair.IAffairService
+import com.mredrock.cyxbs.api.course.ILessonService
 import java.io.Serializable
 
 /**
@@ -40,6 +41,20 @@ data class AffairEntity(
                 affairs.add(affair)
             }
             return affairs
+        }
+
+        fun AffairEntity.convertToApi(): IAffairService.Affair {
+            return IAffairService.Affair(
+                stuNum = this.stuNum,
+                week = this.week,
+                beginLesson = this.beginLesson,
+                day = this.day,
+                period = this.period,
+                id = this.id,
+                time = this.time,
+                title = this.title,
+                content = this.content
+            )
         }
     }
 }
