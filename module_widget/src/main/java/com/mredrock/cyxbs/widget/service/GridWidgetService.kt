@@ -78,7 +78,10 @@ class GridWidgetService : RemoteViewsService() {
                     val column = it.day + 1
                     if (it.beginLesson % 2 == 0 && it.beginLesson != -2) {//从偶数节课开始
                         val evenAffair = it.copy(period = 1, beginLesson = it.beginLesson)
-                        affairs[it.beginLesson / 2 - 1][column] = evenAffair
+                        var row = it.beginLesson / 2 - 1
+                        row +=
+                            if (it.period + it.beginLesson in 6..9) 1 else if (it.beginLesson + it.period > 9) 2 else 0
+                        affairs[row][column] = evenAffair
                         addNormalAffair(it.copy(period = it.period - 1,
                             beginLesson = it.beginLesson + 1))
                     } else if (it.beginLesson == -1) {//中午
@@ -122,7 +125,7 @@ class GridWidgetService : RemoteViewsService() {
                     splitAffairList.add(affairEntity.copy(period = affairEntity.period - 4 - (5 - affairEntity.beginLesson) - (2 * SPECIAL_PERIOD),
                         beginLesson = 9))
                 } else splitAffairList.add(affairEntity)//1-4的普通affair
-            } else if (affairEntity.beginLesson in 1..8 ) {
+            } else if (affairEntity.beginLesson in 5..8) {
                 if (affairEntity.period + affairEntity.beginLesson > 9) {
                     affairs[5][affairEntity.day + 1] =
                         affairEntity.copy(period = 5, beginLesson = -2)
@@ -229,7 +232,7 @@ class GridWidgetService : RemoteViewsService() {
                     remoteViews.setTextViewText(R.id.bottom,
                         ClassRoomParse.parseClassRoom(lesson.classroom))
                     remoteViews.setOnClickFillInIntent(R.id.background,
-                        Intent().putExtra(POSITION, position))
+                        Intent().putExtra(CLICK_LESSON, gson.toJson(lesson)))
                     return remoteViews
                 }
             }
@@ -273,7 +276,7 @@ class GridWidgetService : RemoteViewsService() {
         /**生成事务rv*/
         private fun getAffairRv(mPosition: Int): RemoteViews {
             val affair = affairs[mPosition / 8][mPosition % 8]
-            return if (affair!!.period == 1) {
+            return (if (affair!!.period == 1) {
                 if (affair.beginLesson % 2 == 1) RemoteViews(mContext.packageName,
                     R.layout.widget_grid_view_item_half_affair).apply {
                     setTextViewText(R.id.half_affair_title, affair.title)
@@ -284,6 +287,10 @@ class GridWidgetService : RemoteViewsService() {
             } else RemoteViews(mContext.packageName, R.layout.widget_grid_view_item_affair).apply {
                 setTextViewText(R.id.top, affair.title)
                 setTextViewText(R.id.bottom, parseClassRoom(affair.content))
+            }).apply {
+                setOnClickFillInIntent(R.id.background,
+                    Intent().putExtra(CLICK_AFFAIR,
+                        gson.toJson(affairs[mPosition / 8][mPosition % 8])))
             }
         }
 
@@ -354,7 +361,7 @@ class GridWidgetService : RemoteViewsService() {
                 ClassRoomParse.parseClassRoom(lesson.classroom))
             decoratedLessonWithAffair(remoteViews, mPosition)
             remoteViews.setOnClickFillInIntent(R.id.background,
-                Intent().putExtra(POSITION, position))
+                Intent().putExtra(CLICK_LESSON, gson.toJson(lesson)))
             return remoteViews
         }
 

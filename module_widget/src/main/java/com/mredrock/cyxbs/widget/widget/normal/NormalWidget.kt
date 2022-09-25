@@ -13,9 +13,13 @@ import android.widget.Toast
 import androidx.annotation.IdRes
 import androidx.core.content.edit
 import com.google.gson.Gson
+import com.mredrock.cyxbs.api.course.ICourseService
 import com.mredrock.cyxbs.lib.utils.extensions.CyxbsToast
+import com.mredrock.cyxbs.lib.utils.extensions.appContext
+import com.mredrock.cyxbs.lib.utils.service.impl
 import com.mredrock.cyxbs.widget.R
 import com.mredrock.cyxbs.widget.repo.bean.LessonEntity
+import com.mredrock.cyxbs.widget.repo.bean.LessonEntity.Companion.convertToApi
 import com.mredrock.cyxbs.widget.repo.database.LessonDatabase
 import com.mredrock.cyxbs.widget.repo.database.LessonDatabase.Companion.MY_STU_NUM
 import com.mredrock.cyxbs.widget.util.*
@@ -87,10 +91,12 @@ class NormalWidget : AppWidgetProvider() {
             rId = data.schemeSpecificPart.toInt()
         }
         when (intent.action) {
-            "btn.text.com" -> {
+            ACTION_CLICK -> {
 
                 val offsetTime = defaultSp.getInt(shareName, 0)
-
+                intent.getStringExtra(CLICK_LESSON)?.let {
+                    showLessonInfo(it)
+                }
                 when (rId) {
                     R.id.widget_normal_back -> {
                         defaultSp.edit { putInt(shareName, makeOffsetTime(offsetTime - 1)) }
@@ -115,22 +121,22 @@ class NormalWidget : AppWidgetProvider() {
                     .queryAllLessons(myStuNum!!, SchoolCalendar().weekOfTerm)
                 when (rId) {
                     R.id.widget_normal_layout1 -> {
-                        startOperation(list.filter { it.beginLesson/2+1 == 0 }[0])
+                        startOperation(list.filter { it.beginLesson / 2 + 1 == 0 }[0])
                     }
                     R.id.widget_normal_layout2 -> {
-                        startOperation(list.filter { it.beginLesson/2+1 == 1 }[0])
+                        startOperation(list.filter { it.beginLesson / 2 + 1 == 1 }[0])
                     }
                     R.id.widget_normal_layout3 -> {
-                        startOperation(list.filter { it.beginLesson/2+1 == 2 }[0])
+                        startOperation(list.filter { it.beginLesson / 2 + 1 == 2 }[0])
                     }
                     R.id.widget_normal_layout4 -> {
-                        startOperation(list.filter { it.beginLesson/2+1 == 3 }[0])
+                        startOperation(list.filter { it.beginLesson / 2 + 1 == 3 }[0])
                     }
                     R.id.widget_normal_layout5 -> {
-                        startOperation(list.filter { it.beginLesson/2+1 == 4 }[0])
+                        startOperation(list.filter { it.beginLesson / 2 + 1 == 4 }[0])
                     }
                     R.id.widget_normal_layout6 -> {
-                        startOperation(list.filter { it.beginLesson/2+1 == 5 }[0])
+                        startOperation(list.filter { it.beginLesson / 2 + 1 == 5 }[0])
                     }
                 }
 
@@ -182,7 +188,6 @@ class NormalWidget : AppWidgetProvider() {
                 list = getLessonByCalendar(context, calendar)
                     ?: getErrorLessonList()
 
-
                 //显示星期几
                 val text =
                     if (Calendar.getInstance()[Calendar.DAY_OF_WEEK] == calendar[Calendar.DAY_OF_WEEK]) "今" else getWeekDayChineseName(
@@ -192,14 +197,17 @@ class NormalWidget : AppWidgetProvider() {
 
                 //显示课程
                 list.forEach { lesson ->
-                    val num = lesson.beginLesson/2 + 1
+                    val num = lesson.beginLesson / 2 + 1
                     if (lesson.period == 2) {
                         rv.setTextViewText(getCourseId(num), lesson.course)
                         rv.setTextViewText(getRoomId(num), filterClassRoom(lesson.classroom))
-                        /*rv.setOnClickPendingIntent(
+                        rv.setOnClickPendingIntent(
                             getLayoutId(num),
-                            getClickPendingIntent(context, getLayoutId(num), "btn.start.com", javaClass)
-                        )*/
+                            getLessonClickPendingIntent(context,
+                                getLayoutId(num),
+                                ACTION_CLICK,
+                                javaClass, lesson)
+                        )
                     } else if (lesson.period == 3) {
                         setMoreView(num, rv, lesson, context)
 
@@ -290,15 +298,15 @@ class NormalWidget : AppWidgetProvider() {
     private fun addClickPendingIntent(rv: RemoteViews, context: Context) {
         rv.setOnClickPendingIntent(
             R.id.widget_normal_title,
-            getClickPendingIntent(context, R.id.widget_normal_title, "btn.text.com", javaClass)
+            getClickPendingIntent(context, R.id.widget_normal_title, ACTION_CLICK, javaClass)
         )
         rv.setOnClickPendingIntent(
             R.id.widget_normal_front,
-            getClickPendingIntent(context, R.id.widget_normal_front, "btn.text.com", javaClass)
+            getClickPendingIntent(context, R.id.widget_normal_front, ACTION_CLICK, javaClass)
         )
         rv.setOnClickPendingIntent(
             R.id.widget_normal_back,
-            getClickPendingIntent(context, R.id.widget_normal_back, "btn.text.com", javaClass)
+            getClickPendingIntent(context, R.id.widget_normal_back, ACTION_CLICK, javaClass)
         )
     }
 

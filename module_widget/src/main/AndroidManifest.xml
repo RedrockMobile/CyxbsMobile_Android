@@ -46,6 +46,14 @@
                 android:resource="@xml/widget_oversized_app_widget_info" />
         </receiver>
 
+        <activity
+            android:name=".activity.InfoActivity"
+            android:configChanges="keyboardHidden|orientation"
+            android:screenOrientation="portrait"
+            android:theme="@style/WidgetDialogTheme"
+            android:launchMode="singleInstance"
+            />
+
     </application>
 
 </manifest>

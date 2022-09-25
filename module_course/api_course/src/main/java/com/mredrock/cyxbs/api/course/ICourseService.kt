@@ -1,5 +1,6 @@
 package com.mredrock.cyxbs.api.course
 
+import android.app.Dialog
 import android.content.Context
 import androidx.annotation.IdRes
 import androidx.fragment.app.FragmentManager
@@ -45,10 +46,10 @@ interface ICourseService : IProvider {
   /**
    * 通过 [lesson] 打开对应 BottomSheetDialog
    */
-  fun openBottomSheetDialogByLesson(context: Context, lesson: ILessonService.Lesson)
+  fun openBottomSheetDialogByLesson(context: Context, lesson: ILessonService.Lesson): Dialog
   
   /**
    * 通过 [affair] 打开对应 BottomSheetDialog
    */
-  fun openBottomSheetDialogByAffair(context: Context, affair: IAffairService.Affair)
+  fun openBottomSheetDialogByAffair(context: Context, affair: IAffairService.Affair): Dialog
 }

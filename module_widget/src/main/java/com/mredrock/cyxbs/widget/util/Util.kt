@@ -9,12 +9,15 @@ import android.os.Build
 import android.os.Bundle
 import android.widget.Toast
 import androidx.annotation.IdRes
+import com.google.gson.Gson
 import com.mredrock.cyxbs.api.account.IAccountService
 import com.mredrock.cyxbs.lib.base.BaseApp
 import com.mredrock.cyxbs.lib.utils.extensions.CyxbsToast
+import com.mredrock.cyxbs.lib.utils.extensions.appContext
 import com.mredrock.cyxbs.lib.utils.service.impl
 import com.mredrock.cyxbs.widget.repo.bean.LessonEntity
 import com.mredrock.cyxbs.widget.repo.database.LessonDatabase
+import com.mredrock.cyxbs.widget.activity.InfoActivity
 import java.util.*
 import kotlin.collections.ArrayList
 
@@ -26,6 +29,8 @@ import kotlin.collections.ArrayList
 const val ACTION_FLUSH = "flush"
 const val ACTION_CLICK = "btn.start.com"
 const val POSITION = "position"
+const val CLICK_LESSON = "btn.click.lesson"
+const val CLICK_AFFAIR = "btn.click.affair"
 
 fun getClickPendingIntent(
     context: Context,
@@ -40,6 +45,24 @@ fun getClickPendingIntent(
 
     return PendingIntent.getBroadcast(context, 0, intent, getPendingIntentFlags())
 }
+
+/**实现lesson点击跳转到显示课程详情界面*/
+fun getLessonClickPendingIntent(
+    context: Context,
+    @IdRes resId: Int,
+    action: String,
+    clazz: Class<*>,
+    lesson: LessonEntity
+): PendingIntent {
+    val intent = Intent()
+    intent.setClass(context, clazz)
+    intent.action = action
+    intent.data = Uri.parse("id:$resId")
+    intent.putExtra(CLICK_LESSON, gson.toJson(lesson))
+    return PendingIntent.getBroadcast(context, 0, intent, getPendingIntentFlags())
+}
+
+val gson by lazy { Gson() }
 
 //给按钮返回PendingIntent
 fun getClickIntent(
@@ -102,7 +125,7 @@ fun getLessonByCalendar(context: Context, calendar: Calendar): ArrayList<LessonE
             list.add(it)
         }
     }
-//    list.sortBy { it.hash_lesson }
+    list.sortBy { it.beginLesson }
     return list
 }
 
@@ -126,8 +149,7 @@ private fun getPendingIntentFlags(isMutable: Boolean = true) =
         else -> PendingIntent.FLAG_UPDATE_CURRENT
     }
 
-/**获取登录用户的本周所有Lesson,
- * 这里需要传入RemoteViewService的context，因为小组件运行在桌面进程时，可能应用已经被关闭，此时无法获得application作为context*/
+/**获取登录用户的本周所有Lessont*/
 fun getMyLessons(weekOfTerm: Int): List<LessonEntity> {
     val myStuNum =
         defaultSp.getString(LessonDatabase.MY_STU_NUM, "")
@@ -135,10 +157,27 @@ fun getMyLessons(weekOfTerm: Int): List<LessonEntity> {
         .queryAllLessons(myStuNum!!, weekOfTerm)
 }
 
-/**同上*/
 fun getOthersStuNum(weekOfTerm: Int): List<LessonEntity> {
     val othersStuNum =
         defaultSp.getString(LessonDatabase.OTHERS_STU_NUM, "")
     return LessonDatabase.INSTANCE.getLessonDao()
         .queryAllLessons(othersStuNum!!, weekOfTerm)
 }
+
+/**打开activity，展示课程详情*/
+fun showLessonInfo(lesson: String) {
+    val intent = Intent(appContext, InfoActivity::class.java)
+    intent.putExtra(CLICK_LESSON, lesson)
+    intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_NO_USER_ACTION
+    appContext.startActivity(intent)
+}
+
+/**展示事务详情*/
+fun showAffairInfo(affair: String) {
+    val intent = Intent(appContext, InfoActivity::class.java)
+    intent.putExtra(CLICK_LESSON, affair)
+    intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_NO_USER_ACTION
+    appContext.startActivity(intent)
+}
+
+
