@@ -27,10 +27,10 @@ object CalendarUtils {
   private var calenderURL: String? = null
   private var calenderEventURL: String? = null
   private var calenderReminderURL: String? = null
-  private const val CALENDARS_NAME = "XXXX"
-  private const val CALENDARS_ACCOUNT_NAME = "XXXX"
-  private const val CALENDARS_ACCOUNT_TYPE = "XXXXX"
-  private const val CALENDARS_DISPLAY_NAME = "XXXXX"
+  private const val CALENDARS_NAME = "RedRock"
+  private const val CALENDARS_ACCOUNT_NAME = "CYXBS"
+  private const val CALENDARS_ACCOUNT_TYPE = "Android"
+  private const val CALENDARS_DISPLAY_NAME = "重邮小帮手"
 
   /**
    * 获取日历ID
@@ -155,13 +155,13 @@ object CalendarUtils {
   }
 
   /**
-   * 向日历中添加一个事件(重复事件)
+   * 向日历中添加一个事件(一次性事件)
    * @param context
    * @param calendar_id （必须参数）
    * @param title
    * @param description
    * @param beginTime 事件开始时间，以从公元纪年开始计算的协调世界时毫秒数表示。 （必须参数）
-   * @param endTime 事件结束时间，以从公元纪年开始计算的协调世界时毫秒数表示。（非重复事件：必须参数）
+   * @param endTime 事件结束时间，以从公元纪年开始计算的协调世界时毫秒数表示。（一次性事件：必须参数）
    * @return
    */
   private fun insertCalendarEvent(
