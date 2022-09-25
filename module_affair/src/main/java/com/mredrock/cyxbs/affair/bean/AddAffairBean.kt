@@ -1,15 +1,16 @@
-package com.mredrock.cyxbs.affair.model.bean
+package com.mredrock.cyxbs.affair.bean
 
 import com.google.gson.annotations.SerializedName
+import com.mredrock.cyxbs.lib.utils.network.IApiStatus
 import java.io.Serializable
 
 data class AddAffairBean(
   @SerializedName("id")
   val id: Int,
   @SerializedName("info")
-  val info: String,
+  override val info: String,
   @SerializedName("state")
   val state: Int,
   @SerializedName("status")
-  val status: Int
-) : Serializable
+  override val status: Int
+) : Serializable, IApiStatus

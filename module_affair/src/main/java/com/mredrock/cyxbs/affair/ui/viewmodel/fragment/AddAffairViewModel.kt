@@ -3,10 +3,10 @@ package com.mredrock.cyxbs.affair.ui.viewmodel.fragment
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import com.mredrock.cyxbs.affair.net.AffairApiService
-import com.mredrock.cyxbs.affair.net.AffairRepository
+import com.mredrock.cyxbs.affair.model.AffairRepository
 import com.mredrock.cyxbs.affair.room.AffairEntity
 import com.mredrock.cyxbs.lib.base.ui.BaseViewModel
-import com.mredrock.cyxbs.lib.utils.network.mapOrThrowApiException
+import com.mredrock.cyxbs.lib.utils.network.mapOrInterceptException
 import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
 import io.reactivex.rxjava3.schedulers.Schedulers
 
@@ -29,14 +29,18 @@ class AddAffairViewModel : BaseViewModel() {
     atWhatTime: List<AffairEntity.AtWhatTime>,
   ) {
     AffairRepository.addAffair(time, title, content, atWhatTime)
+      .safeSubscribeBy {
+        "添加成功".toast()
+      }
   }
 
   init {
     AffairApiService.INSTANCE.getTitleCandidate()
       .subscribeOn(Schedulers.io())
       .observeOn(AndroidSchedulers.mainThread())
-      .mapOrThrowApiException()
-      .safeSubscribeBy {
+      .mapOrInterceptException {
+        emitter.onSuccess(listOf("自习", "值班", "考试", "英语", "开会", "作业", "补课", "实验", "复习", "学习"))
+      }.safeSubscribeBy {
         _titleCandidates.value = it
       }
   }

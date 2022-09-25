@@ -3,7 +3,7 @@ package com.mredrock.cyxbs.affair.ui.viewmodel.fragment
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
-import com.mredrock.cyxbs.affair.net.AffairRepository
+import com.mredrock.cyxbs.affair.model.AffairRepository
 import com.mredrock.cyxbs.affair.room.AffairDataBase
 import com.mredrock.cyxbs.affair.room.AffairEntity
 import com.mredrock.cyxbs.api.account.IAccountService

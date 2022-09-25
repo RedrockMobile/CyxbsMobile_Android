@@ -5,8 +5,8 @@ import android.content.Context
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import com.alibaba.android.arouter.facade.annotation.Route
-import com.mredrock.cyxbs.affair.model.data.AffairEditArgs
-import com.mredrock.cyxbs.affair.net.AffairRepository
+import com.mredrock.cyxbs.affair.data.AffairEditArgs
+import com.mredrock.cyxbs.affair.model.AffairRepository
 import com.mredrock.cyxbs.affair.room.AffairEntity
 import com.mredrock.cyxbs.affair.ui.activity.AffairActivity
 import com.mredrock.cyxbs.affair.ui.activity.DeleteRemindActivity
@@ -20,6 +20,7 @@ import com.mredrock.cyxbs.lib.utils.extensions.toast
 import com.mredrock.cyxbs.lib.utils.extensions.unsafeSubscribeBy
 import com.mredrock.cyxbs.lib.utils.utils.CalendarUtils
 import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
+import io.reactivex.rxjava3.core.Completable
 import io.reactivex.rxjava3.core.Observable
 import io.reactivex.rxjava3.core.Single
 
@@ -44,7 +45,6 @@ class AffairServiceImpl : IAffairService {
   
   override fun observeSelfAffair(): Observable<List<IAffairService.Affair>> {
     return AffairRepository.observeAffair()
-      .distinctUntilChanged()
       .map { it.toAffair() }
   }
 
@@ -63,10 +63,8 @@ class AffairServiceImpl : IAffairService {
     }
   }
   
-  override fun deleteAffair(affairId: Int) {
-    AffairRepository.deleteAffair(affairId)
-      .observeOn(AndroidSchedulers.mainThread())
-      .unsafeSubscribeBy { "删除成功".toast() }
+  override fun deleteAffair(affairId: Int): Completable {
+    return AffairRepository.deleteAffair(affairId)
   }
 
   override fun startActivityForAddAffair(

@@ -20,7 +20,6 @@ sealed interface AffairAdapterData {
  */
 data class AffairWeekData(
   val week: Int,
-  val list: List<AffairTimeData>, // 为了以后拓展
 ) : AffairAdapterData {
   override val onlyId: Any
     get() = week
@@ -53,7 +52,13 @@ data class AffairTimeData(
     get() = weekNum * 10000 + beginLesson * 100 + period
   
   fun getTimeStr(): String {
-    return "${DAY_ARRAY[weekNum]} ${LESSON_ARRAY[getStartRow(beginLesson)]}-${LESSON_ARRAY[getEndRow(beginLesson, period)]}"
+    val startRow = getStartRow(beginLesson)
+    val endRow = getEndRow(beginLesson, period)
+    return if (startRow == endRow) {
+      "${DAY_ARRAY[weekNum]} ${LESSON_ARRAY[getStartRow(beginLesson)]}"
+    } else {
+      "${DAY_ARRAY[weekNum]} ${LESSON_ARRAY[getStartRow(beginLesson)]}-${LESSON_ARRAY[getEndRow(beginLesson, period)]}"
+    }
   }
   
   companion object {
@@ -91,10 +96,14 @@ fun List<AffairAdapterData>.toAtWhatTime(): List<AffairEntity.AtWhatTime> {
   val weekList = arrayListOf<Int>()
   val timeList = arrayListOf<AffairTimeData>()
   forEach {
-    if (it is AffairWeekData) {
-      weekList.add(it.week)
-    } else if (it is AffairTimeData) {
-      timeList.add(it)
+    when (it) {
+      is AffairWeekData -> {
+        weekList.add(it.week)
+      }
+      is AffairTimeData -> {
+        timeList.add(it)
+      }
+      is AffairTimeAdd -> {}
     }
   }
   timeList.forEach {

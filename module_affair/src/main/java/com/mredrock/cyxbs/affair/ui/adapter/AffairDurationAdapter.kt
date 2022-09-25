@@ -14,13 +14,15 @@ import com.mredrock.cyxbs.affair.ui.adapter.data.AffairAdapterData
 import com.mredrock.cyxbs.affair.ui.adapter.data.AffairTimeAdd
 import com.mredrock.cyxbs.affair.ui.adapter.data.AffairTimeData
 import com.mredrock.cyxbs.affair.ui.adapter.data.AffairWeekData
-import com.mredrock.cyxbs.affair.widge.TimeSelectDialog
-import com.mredrock.cyxbs.affair.widge.WeekSelectDialog
+import com.mredrock.cyxbs.affair.ui.dialog.TimeSelectDialog
+import com.mredrock.cyxbs.affair.ui.dialog.WeekSelectDialog
 import com.mredrock.cyxbs.lib.utils.extensions.setOnSingleClickListener
 import com.mredrock.cyxbs.lib.utils.extensions.toast
 
 /**
- * ...
+ *
+ * 这个 Adapter 里面包括了周数和时间段，使用 FlexboxLayoutManager 自带的换行功能来实现的
+ *
  * @author 985892345 (Guo Xiangrui)
  * @email 2767465918@qq.com
  * @date 2022/6/11 15:07
@@ -193,8 +195,8 @@ class AffairDurationAdapter :
     val newList = arrayListOf<AffairAdapterData>()
     var index = 0
     while (index < list.size) {
-      val prev = newList.getOrNull(index - 1)
-      //val next = list.getOrNull(index + 1)
+      val prev = newList.lastOrNull()
+      val next = list.getOrNull(index + 1)
       when (val now = list[index]) {
         is AffairWeekData -> {
           newList.add(now)
@@ -207,7 +209,6 @@ class AffairDurationAdapter :
             // 这个时候 isWrapBefore 该为 false
             newList.add(if (!now.isWrapBefore) now else now.copy(isWrapBefore = false))
           }
-          
         }
         is AffairTimeAdd -> {
         }

@@ -2,7 +2,6 @@ package com.mredrock.cyxbs.affair.room
 
 import androidx.room.*
 import com.mredrock.cyxbs.lib.utils.extensions.appContext
-import io.reactivex.rxjava3.core.Single
 
 /**
  * ...
@@ -56,62 +55,77 @@ data class LocalDeleteAffairEntity(
   val id: Int
 )
 
-// 用于 DELETE 时只指定部分数据
-data class StuNumWithLocalAffairId(
-  val stuNum: String,
-  val id: Int
-)
-
 @Dao
-interface LocalAddAffairDao {
+abstract class LocalAddAffairDao {
 
   @Insert(onConflict = OnConflictStrategy.REPLACE)
-  fun insertLocalAddAffair(affair: LocalAddAffairEntity)
+  abstract fun insertLocalAddAffair(affair: LocalAddAffairEntity)
 
   @Update
-  fun updateLocalAddAffair(affair: LocalAddAffairEntity): Int
+  abstract fun updateLocalAddAffair(affair: LocalAddAffairEntity): Int
 
-  @Delete
-  fun deleteLocalAddAffair(affair: LocalAddAffairEntity): Single<Int>
-
-  @Delete(entity = LocalAddAffairEntity::class)
-  fun deleteLocalAddAffair(stuNumWithId: StuNumWithLocalAffairId): Int
+  @Query("DELETE FROM local_add_affair WHERE stuNum = :stuNum AND id = :id")
+  abstract fun deleteLocalAddAffair(stuNum: String, id: Int): Int
 
   @Query("SELECT * FROM local_add_affair WHERE stuNum = :stuNum AND id = :id")
-  fun getLocalAddAffair(stuNum: String, id: Int): LocalAddAffairEntity?
+  abstract fun getLocalAddAffair(stuNum: String, id: Int): LocalAddAffairEntity?
 
   @Query("SELECT * FROM local_add_affair WHERE stuNum = :stuNum")
-  fun getLocalAddAffair(stuNum: String): Single<List<LocalAddAffairEntity>>
+  protected abstract fun getLocalAddAffair(stuNum: String): List<LocalAddAffairEntity>
+  
+  @Delete
+  protected abstract fun deleteLocalAddAffair(affair: List<LocalAddAffairEntity>)
+  
+  @Transaction
+  open fun getLocalAddAffairWithDelete(stuNum: String): List<LocalAddAffairEntity> {
+    val list = getLocalAddAffair(stuNum)
+    deleteLocalAddAffair(list)
+    return list
+  }
 }
 
 @Dao
-interface LocalUpdateAffairDao {
+abstract class LocalUpdateAffairDao {
 
   @Insert(onConflict = OnConflictStrategy.REPLACE)
-  fun insertLocalUpdateAffair(affair: LocalUpdateAffairEntity)
+  abstract fun insertLocalUpdateAffair(affair: LocalUpdateAffairEntity)
 
   @Update
-  fun updateLocalUpdateAffair(affair: LocalUpdateAffairEntity)
+  abstract fun updateLocalUpdateAffair(affair: LocalUpdateAffairEntity)
 
-  @Delete
-  fun deleteLocalUpdateAffair(affair: LocalUpdateAffairEntity): Single<Int>
-
-  @Delete(entity = LocalUpdateAffairEntity::class)
-  fun deleteLocalUpdateAffair(stuNumWithId: StuNumWithLocalAffairId): Int
+  @Query("DELETE FROM local_update_affair WHERE stuNum = :stuNum AND id = :id")
+  abstract fun deleteLocalUpdateAffair(stuNum: String, id: Int)
 
   @Query("SELECT * FROM local_update_affair WHERE stuNum = :stuNum")
-  fun getLocalUpdateAffair(stuNum: String): Single<List<LocalUpdateAffairEntity>>
+  protected abstract fun getLocalUpdateAffair(stuNum: String): List<LocalUpdateAffairEntity>
+  
+  @Delete
+  protected abstract fun deleteLocalUpdateAffair(affair: List<LocalUpdateAffairEntity>)
+  
+  @Transaction
+  open fun getLocalUpdateAffairWithDelete(stuNum: String): List<LocalUpdateAffairEntity> {
+    val list = getLocalUpdateAffair(stuNum)
+    deleteLocalUpdateAffair(list)
+    return list
+  }
 }
 
 @Dao
-interface LocalDeleteAffairDao {
+abstract class LocalDeleteAffairDao {
 
   @Insert(onConflict = OnConflictStrategy.REPLACE)
-  fun insertLocalDeleteAffair(affair: LocalDeleteAffairEntity)
-
-  @Delete
-  fun deleteLocalDeleteAffair(affair: LocalDeleteAffairEntity): Single<Int>
-
+  abstract fun insertLocalDeleteAffair(affair: LocalDeleteAffairEntity)
+  
   @Query("SELECT * FROM local_delete_affair WHERE stuNum = :stuNum")
-  fun getLocalDeleteAffair(stuNum: String): Single<List<LocalDeleteAffairEntity>>
+  protected abstract fun getLocalDeleteAffair(stuNum: String): List<LocalDeleteAffairEntity>
+  
+  @Delete
+  protected abstract fun deleteLocalDeleteAffair(affair: List<LocalDeleteAffairEntity>)
+  
+  @Transaction
+  open fun getLocalDeleteAffairWithDelete(stuNum: String): List<LocalDeleteAffairEntity> {
+    val list = getLocalDeleteAffair(stuNum)
+    deleteLocalDeleteAffair(list)
+    return list
+  }
 }

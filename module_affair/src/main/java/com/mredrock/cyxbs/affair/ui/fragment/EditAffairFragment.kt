@@ -19,7 +19,7 @@ import com.mredrock.cyxbs.affair.ui.adapter.AffairDurationAdapter
 import com.mredrock.cyxbs.affair.ui.adapter.data.toAtWhatTime
 import com.mredrock.cyxbs.affair.ui.viewmodel.activity.AffairViewModel
 import com.mredrock.cyxbs.affair.ui.viewmodel.fragment.EditAffairViewModel
-import com.mredrock.cyxbs.affair.widge.RemindSelectDialog
+import com.mredrock.cyxbs.affair.ui.dialog.RemindSelectDialog
 import com.mredrock.cyxbs.lib.base.ui.BaseFragment
 import com.mredrock.cyxbs.lib.utils.extensions.doPermissionAction
 import com.mredrock.cyxbs.lib.utils.extensions.setOnSingleClickListener

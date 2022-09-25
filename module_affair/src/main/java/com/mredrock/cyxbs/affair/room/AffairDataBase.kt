@@ -68,17 +68,12 @@ data class AffairEntity(
   fun toAffairAdapterData(): List<AffairAdapterData> {
     val newList = arrayListOf<AffairAdapterData>()
     val affairList = atWhatTime
-    affairList[0].week.forEach { newList.add(AffairWeekData(it, listOf())) }
+    affairList[0].week.forEach { newList.add(AffairWeekData(it)) }
     affairList.forEach { newList.add(AffairTimeData(it.day, it.beginLesson, it.period)) }
     return newList
   }
 }
 
-// 用于 DELETE 时只指定部分数据
-data class StuNumWithAffairId(
-  val stuNum: String,
-  val id: Int
-)
 
 @Dao
 abstract class AffairDao {
@@ -92,9 +87,11 @@ abstract class AffairDao {
   @Query("SELECT * FROM affair WHERE stuNum = :stuNum")
   abstract fun observeAffair(stuNum: String): Observable<List<AffairEntity>>
 
+  // 内部使用
   @Query("DELETE FROM affair WHERE stuNum = :stuNum")
   protected abstract fun deleteAllAffair(stuNum: String)
   
+  // 内部使用
   @Insert(onConflict = OnConflictStrategy.REPLACE)
   protected abstract fun insertAffair(affairs: List<AffairEntity>)
   
@@ -104,15 +101,28 @@ abstract class AffairDao {
     insertAffair(affairs)
   }
 
-  @Delete(entity = AffairEntity::class)
-  abstract fun deleteAffair(stuNumWithId: StuNumWithAffairId): Int
-
-  @Delete
-  abstract fun deleteAffair(affair: AffairEntity): Int
-
+  @Query("DELETE FROM affair WHERE stuNum = :stuNum AND id = :id")
+  abstract fun deleteAffair(stuNum: String, id: Int): Int
+  
   @Insert(onConflict = OnConflictStrategy.REPLACE)
   abstract fun insertAffair(affair: AffairEntity)
-
+  
   @Update
   abstract fun updateAffair(affair: AffairEntity)
+  
+  // 内部使用
+  @Delete
+  protected abstract fun deleteAffair(affair: AffairEntity)
+  
+  /**
+   * 更新旧事务的 id
+   */
+  @Transaction
+  open fun updateId(stuNum: String, oldId: Int, newId: Int) {
+    val affair = getAffairById(stuNum, oldId)
+    if (affair != null) {
+      deleteAffair(affair)
+      insertAffair(affair.copy(id = newId))
+    }
+  }
 }

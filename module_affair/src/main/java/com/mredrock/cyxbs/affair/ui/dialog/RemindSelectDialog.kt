@@ -1,4 +1,4 @@
-package com.mredrock.cyxbs.affair.widge
+package com.mredrock.cyxbs.affair.ui.dialog
 
 import android.content.Context
 import android.view.LayoutInflater
@@ -6,6 +6,7 @@ import android.view.View
 import android.widget.TextView
 import com.github.gzuliyujiang.wheelview.widget.WheelView
 import com.mredrock.cyxbs.affair.R
+import com.mredrock.cyxbs.affair.ui.dialog.base.RedRockBottomSheetDialog
 import com.mredrock.cyxbs.lib.utils.extensions.setOnSingleClickListener
 
 /**
@@ -37,7 +38,7 @@ class RemindSelectDialog(context: Context, callback: (text: String, minute: Int)
   val tvSure: TextView = view.findViewById(R.id.affair_tv_sure)
 
   init {
-    weekWV.data =REMIND_ARRAY.toList()
+    weekWV.data = REMIND_ARRAY.toList()
 
     tvSure.setOnSingleClickListener {
       val position = weekWV.currentPosition

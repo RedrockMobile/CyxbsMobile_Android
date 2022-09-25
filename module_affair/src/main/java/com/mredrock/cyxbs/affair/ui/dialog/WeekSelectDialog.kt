@@ -1,4 +1,4 @@
-package com.mredrock.cyxbs.affair.widge
+package com.mredrock.cyxbs.affair.ui.dialog
 
 import android.content.Context
 import android.view.LayoutInflater
@@ -11,6 +11,7 @@ import com.google.android.flexbox.FlexboxLayoutManager
 import com.mredrock.cyxbs.affair.R
 import com.mredrock.cyxbs.affair.ui.adapter.AffairWeekAdapter
 import com.mredrock.cyxbs.affair.ui.adapter.data.AffairWeekData
+import com.mredrock.cyxbs.affair.ui.dialog.base.RedRockBottomSheetDialog
 import com.mredrock.cyxbs.lib.utils.extensions.setOnSingleClickListener
 import com.mredrock.cyxbs.lib.utils.extensions.toast
 
@@ -45,7 +46,7 @@ class WeekSelectDialog(
       if (tmp.isEmpty()) {
         "掌友，请至少选择一个周数哦".toast()
       } else {
-        val tmp2 = tmp.map { data -> AffairWeekData(data.week, listOf()) }
+        val tmp2 = tmp.map { data -> AffairWeekData(data.week) }
         addWeek(tmp2)
         dismiss()
       }

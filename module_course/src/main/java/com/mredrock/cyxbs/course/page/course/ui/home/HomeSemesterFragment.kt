@@ -14,6 +14,8 @@ import com.mredrock.cyxbs.course.page.course.utils.container.AffairContainerProx
 import com.mredrock.cyxbs.course.page.course.utils.container.LinkLessonContainerProxy
 import com.mredrock.cyxbs.course.page.course.utils.container.SelfLessonContainerProxy
 import com.mredrock.cyxbs.lib.course.helper.affair.CreateAffairDispatcher
+import com.mredrock.cyxbs.lib.course.internal.item.IItem
+import com.mredrock.cyxbs.lib.course.internal.item.IItemContainer
 import com.mredrock.cyxbs.lib.utils.service.impl
 import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
 
@@ -91,9 +93,30 @@ class HomeSemesterFragment : CompareWeekSemesterFragment() {
       CreateAffairDispatcher(this).apply {
         setOnClickListener {
           IAffairService::class.impl
-            .startActivityForAddAffair(0, weekNum - 1, getBeginLesson(startRow), length)
+            .startActivityForAddAffair(0, lp.weekNum - 1, getBeginLesson(lp.startRow), lp.length)
+          remove()
         }
       }
     )
+  }
+  
+  override fun initFoldLogic() {
+    super.initFoldLogic()
+    if (!mIsFragmentRebuilt) {
+      // 只有在第一次显示 Fragment 时才进行监听，后面的折叠状态会由 CourseFoldHelper 保存
+      course.addItemExistListener(
+        object : IItemContainer.OnItemExistListener {
+          override fun onItemAddedAfter(item: IItem, view: View) {
+            val lp = item.lp
+            if (compareNoonPeriod(lp.startRow) * compareNoonPeriod(lp.endRow) <= 0) {
+              unfoldNoon()
+            }
+            if (compareDuskPeriod(lp.startRow) * compareDuskPeriod(lp.endRow) <= 0) {
+              unfoldDusk()
+            }
+          }
+        }
+      )
+    }
   }
 }

@@ -2,6 +2,7 @@ package com.mredrock.cyxbs.api.affair
 
 import androidx.appcompat.app.AppCompatActivity
 import com.alibaba.android.arouter.facade.template.IProvider
+import io.reactivex.rxjava3.core.Completable
 import io.reactivex.rxjava3.core.Observable
 import io.reactivex.rxjava3.core.Single
 
@@ -36,7 +37,7 @@ interface IAffairService : IProvider {
    */
   fun deleteAffair(context: AppCompatActivity,affairId: Int)
   
-  fun deleteAffair(affairId: Int)
+  fun deleteAffair(affairId: Int): Completable
 
   data class Affair(
     val stuNum: String,

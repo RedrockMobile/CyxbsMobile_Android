@@ -1,7 +1,7 @@
 package com.mredrock.cyxbs.affair.net
 
-import com.mredrock.cyxbs.affair.model.bean.AddAffairBean
-import com.mredrock.cyxbs.affair.model.bean.AffairBean
+import com.mredrock.cyxbs.affair.bean.AddAffairBean
+import com.mredrock.cyxbs.affair.bean.AffairBean
 import com.mredrock.cyxbs.lib.utils.network.ApiGenerator
 import com.mredrock.cyxbs.lib.utils.network.ApiStatus
 import com.mredrock.cyxbs.lib.utils.network.ApiWrapper
