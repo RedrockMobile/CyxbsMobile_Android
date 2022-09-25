@@ -38,9 +38,24 @@
 
     <ImageView
         android:id="@+id/affair"
-        android:layout_width="20dp"
-        android:layout_height="20dp"
+        android:layout_width="@dimen/widget_lesson_decoration_width"
+        android:layout_height="@dimen/widget_lesson_decoration_height"
+        android:layout_alignParentStart="true"
+        android:layout_marginStart="@dimen/widget_course_margin"
+        android:layout_marginEnd="@dimen/widget_course_margin"
+        android:layout_marginTop="@dimen/widget_lesson_decoration_margin_top"
         android:src="@drawable/widget_shape_lesson_with_affair"
+        android:visibility="gone" />
+
+    <ImageView
+        android:id="@+id/other_lesson"
+        android:layout_width="@dimen/widget_lesson_decoration_width"
+        android:layout_height="@dimen/widget_lesson_decoration_height"
+        android:layout_alignParentEnd="true"
+        android:layout_marginStart="@dimen/widget_course_margin"
+        android:layout_marginEnd="@dimen/widget_course_margin"
+        android:layout_marginTop="@dimen/widget_lesson_decoration_margin_top"
+        android:src="@drawable/widget_shape_lesson_with_other_lesson_afternoon"
         android:visibility="gone" />
 
 </RelativeLayout>

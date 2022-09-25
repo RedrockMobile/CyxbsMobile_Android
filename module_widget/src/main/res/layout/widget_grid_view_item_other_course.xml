@@ -19,6 +19,7 @@
         android:ellipsize="end"
         android:gravity="center"
         android:maxLines="3"
+        android:textColor="@color/widget_other_course_text_color"
         android:textSize="@dimen/widget_course_text_size"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
@@ -38,6 +39,7 @@
         android:ellipsize="end"
         android:gravity="center"
         android:maxLines="3"
+        android:textColor="@color/widget_other_course_text_color"
         android:textSize="@dimen/widget_course_text_size"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
@@ -47,13 +49,13 @@
 
     <ImageView
         android:id="@+id/affair"
+        android:layout_width="@dimen/widget_lesson_decoration_width"
+        android:layout_height="@dimen/widget_lesson_decoration_height"
+        android:layout_alignParentStart="true"
+        android:layout_marginStart="@dimen/widget_course_margin"
+        android:layout_marginTop="@dimen/widget_lesson_decoration_margin_top"
+        android:layout_marginEnd="@dimen/widget_course_margin"
         android:src="@drawable/widget_shape_lesson_with_affair"
-        android:layout_width="20dp"
-        android:layout_height="4dp"
-        android:layout_marginEnd="4dp"
-        app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        android:layout_centerHorizontal="true"
-        android:layout_alignParentTop="true"/>
+        android:visibility="gone" />
 
 </RelativeLayout>

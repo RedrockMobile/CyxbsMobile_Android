@@ -24,4 +24,7 @@ interface AffairDao {
 
     @Update
     fun updateAffair(affair: AffairEntity)
+
+    @Query("DELETE FROM AffairEntity WHERE id = :id")
+    fun deleteAffair(id:Int)
 }

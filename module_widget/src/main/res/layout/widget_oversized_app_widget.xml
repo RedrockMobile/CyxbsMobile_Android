@@ -8,6 +8,14 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
+        <TextView
+            android:id="@+id/oversize_month_num"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:visibility="invisible"
+            android:background="@drawable/widget_shape_oversize_shadow"
+            android:layout_weight="1"
+            android:layout_marginEnd="3dp" />
 
         <TextView
             android:id="@+id/oversize_shadow_1"
@@ -80,16 +88,21 @@
 
     </LinearLayout>
 
-    <GridView
-        android:id="@+id/grid_course_widget"
+    <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:numColumns="7"
-        android:horizontalSpacing="3dp"
-        android:verticalSpacing="3dp"
-        android:cacheColorHint="#00000000"
-        android:listSelector="#00000000"
-        android:scrollbars="none"
-        android:fadeScrollbars="true"/>
+        android:layout_height="match_parent">
+
+        <GridView
+            android:id="@+id/grid_course_widget"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:numColumns="8"
+            android:horizontalSpacing="3dp"
+            android:verticalSpacing="3dp"
+            android:cacheColorHint="#00000000"
+            android:listSelector="#00000000"
+            android:scrollbars="none"
+            android:fadeScrollbars="true"/>
+    </LinearLayout>
 
 </FrameLayout>
