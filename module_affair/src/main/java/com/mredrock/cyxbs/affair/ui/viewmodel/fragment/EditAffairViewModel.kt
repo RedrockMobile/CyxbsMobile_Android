@@ -1,12 +1,15 @@
 package com.mredrock.cyxbs.affair.ui.viewmodel.fragment
 
+import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
 import com.mredrock.cyxbs.affair.model.AffairRepository
 import com.mredrock.cyxbs.affair.room.AffairDataBase
 import com.mredrock.cyxbs.affair.room.AffairEntity
+import com.mredrock.cyxbs.affair.utils.TimeUtils
 import com.mredrock.cyxbs.api.account.IAccountService
+import com.mredrock.cyxbs.config.config.PhoneCalendar
 import com.mredrock.cyxbs.lib.base.ui.BaseViewModel
 import com.mredrock.cyxbs.lib.utils.service.ServiceManager
 import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
@@ -32,9 +35,25 @@ class EditAffairViewModel : BaseViewModel() {
     content: String,
     atWhatTime: List<AffairEntity.AtWhatTime>,
   ) {
+    // 先更新日历
+    if (time > 0) {
+      atWhatTime.forEach {
+        PhoneCalendar.update(
+          PhoneCalendar.RepeatData(
+            title,
+            content,
+            TimeUtils.getBegin(it.beginLesson, it.day),
+            TimeUtils.getDuration(it.period),
+            TimeUtils.getRRule(it.day),
+            time
+          ),90
+        )
+      }
+    }
     AffairRepository.updateAffair(id, time, title, content, atWhatTime)
       .observeOn(AndroidSchedulers.mainThread())
-      .safeSubscribeBy { "更新成功".toast() }
+      .safeSubscribeBy {
+        "更新成功".toast() }
   }
 
   fun findAffairEntity(affairId: Int) {

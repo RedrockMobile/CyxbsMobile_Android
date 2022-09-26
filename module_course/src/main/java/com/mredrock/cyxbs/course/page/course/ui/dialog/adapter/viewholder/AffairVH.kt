@@ -5,6 +5,7 @@ import android.view.ViewGroup
 import android.widget.Button
 import android.widget.TextView
 import com.mredrock.cyxbs.api.affair.IAffairService
+import com.mredrock.cyxbs.config.config.PhoneCalendar
 import com.mredrock.cyxbs.course.R
 import com.mredrock.cyxbs.course.page.course.data.AffairData
 import com.mredrock.cyxbs.lib.base.utils.safeSubscribeBy
@@ -35,6 +36,8 @@ class AffairVH(
     mTvContent.text = data.content
     mTvDuration.text = "${data.weekStr} ${data.weekdayStr}   ${data.durationStr}"
     mBtnDelete.setOnSingleClickListener {
+      // 先删除日历
+      // PhoneCalendar.delete(90)
       IAffairService::class.impl
         .deleteAffair(data.id)
         .observeOn(AndroidSchedulers.mainThread())

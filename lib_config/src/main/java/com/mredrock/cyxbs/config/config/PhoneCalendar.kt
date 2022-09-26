@@ -9,7 +9,6 @@ import android.icu.util.TimeZone
 import android.net.Uri
 import android.provider.CalendarContract
 import com.mredrock.cyxbs.config.ConfigApplicationWrapper.application
-import java.util.*
 
 /**
  * https://developer.android.google.cn/guide/topics/providers/calendar-provider?hl=zh-cn
@@ -21,9 +20,9 @@ object PhoneCalendar {
 
   private val context = application
 
-  private var calenderURL: String? = null
-  private var calenderEventURL: String? = null
-  private var calenderReminderURL: String? = null
+  private var calenderURL: String? = "content://com.android.calendar/calendars"
+  private var calenderEventURL: String? = "content://com.android.calendar/events"
+  private var calenderReminderURL: String? = "content://com.android.calendar/reminders"
   private const val CALENDARS_NAME = "RedRock"
   private const val CALENDARS_ACCOUNT_NAME = "CYXBS"
   private const val CALENDARS_ACCOUNT_TYPE = "Android"
@@ -38,7 +37,7 @@ object PhoneCalendar {
       // 获取日历失败直接返回
       return null
     }
-    val eventId:Long?
+    val eventId: Long?
     when (data) {
       is RepeatData -> {
         val newEvent: Uri? =
@@ -46,7 +45,7 @@ object PhoneCalendar {
             calendarId,
             data.title,
             data.description,
-            data.beginTime.timeInMillis,
+            data.beginTime,
             data.duration,
             data.rrule
           )
@@ -55,7 +54,7 @@ object PhoneCalendar {
           return null
         }
         eventId = newEvent.lastPathSegment?.toLong()
-        addRemind(eventId!!,data.remind)
+        addRemind(eventId!!, data.remind)
       }
       is OnceData -> {
         val newEvent: Uri? =
@@ -63,15 +62,15 @@ object PhoneCalendar {
             calendarId,
             data.title,
             data.description,
-            data.beginTime.timeInMillis,
-            data.endTime.timeInMillis,
+            data.beginTime,
+            data.endTime,
           )
         if (newEvent == null) {
           // 添加日历事件失败直接返回
           return null
         }
         eventId = newEvent.lastPathSegment?.toLong()
-        if (!addRemind(eventId!!,data.remind)){
+        if (!addRemind(eventId!!, data.remind)) {
           // 添加提醒失败
           return null
         }
@@ -80,6 +79,9 @@ object PhoneCalendar {
     return eventId
   }
 
+  /**
+   * 添加事件,成功返回true,失败返回false
+   */
   fun delete(affairId: Long): Boolean {
     val eventCursor: Cursor? =
       context.contentResolver.query(Uri.parse(calenderEventURL), null, null, null, null)
@@ -111,6 +113,9 @@ object PhoneCalendar {
     return false
   }
 
+  /**
+   * 更新事件,成功返回true,失败返回false
+   */
   fun update(data: Data, affairID: Long): Boolean {
     val calendarId = checkAndAddCalendarAccounts(context).toLong()
     if (calendarId < 0) {
@@ -129,7 +134,7 @@ object PhoneCalendar {
               calendarId,
               data.title,
               data.description,
-              data.beginTime.timeInMillis,
+              data.beginTime,
               data.duration,
               data.rrule
             )
@@ -145,7 +150,7 @@ object PhoneCalendar {
             // 更新数据
             put("title", data.title)
             put("description", data.description)
-            put(CalendarContract.Events.DTSTART, data.beginTime.timeInMillis) // 开始时间
+            put(CalendarContract.Events.DTSTART, data.beginTime) // 开始时间
             put(CalendarContract.Events.DURATION, data.duration) // 持续时间
             put(CalendarContract.Events.RRULE, data.rrule) // 重复规则
             put(CalendarContract.Events.HAS_ALARM, 1) // 设置提醒
@@ -155,14 +160,49 @@ object PhoneCalendar {
             ContentUris.withAppendedId(CalendarContract.Events.CONTENT_URI, eventId.toLong())
           val rows: Int = context.contentResolver.update(updateUri, values, null, null)
         }
-        if (!addRemind(eventId!!.toLong(),data.remind)){
+        if (!addRemind(eventId!!.toLong(), data.remind)) {
           // 添加提醒失败直接返回
           return false
         }
         return true
       }
       is OnceData -> {
-        return false
+        //如果事件不存在，则新建事件
+        if (!isExist) {
+          val newEvent: Uri? =
+            insertCalendarEvent(
+              calendarId,
+              data.title,
+              data.description,
+              data.beginTime,
+              data.endTime
+            )
+          if (newEvent == null) {
+            // 添加日历事件失败直接返回
+            return false
+          }
+          // 获取唯一Id
+          eventId = newEvent.lastPathSegment
+        } else {
+          // 如果事件存在，则更新事件
+          val values = ContentValues().apply {
+            // 更新数据
+            put("title", data.title)
+            put("description", data.description)
+            put(CalendarContract.Events.DTSTART, data.beginTime) // 开始时间
+            put(CalendarContract.Events.DTEND, data.endTime) // 结束时间
+            put(CalendarContract.Events.HAS_ALARM, 1) // 设置提醒
+          }
+          eventId = affairID.toString()
+          val updateUri: Uri =
+            ContentUris.withAppendedId(CalendarContract.Events.CONTENT_URI, eventId.toLong())
+          val rows: Int = context.contentResolver.update(updateUri, values, null, null)
+        }
+        if (!addRemind(eventId!!.toLong(), data.remind)) {
+          // 添加提醒失败直接返回
+          return false
+        }
+        return true
       }
     }
   }
@@ -170,7 +210,7 @@ object PhoneCalendar {
   /**
    * 为事件设定提醒
    */
-  private fun addRemind(affairId: Long,remind: Int):Boolean{
+  private fun addRemind(affairId: Long, remind: Int): Boolean {
     val values = ContentValues()
     values.put(CalendarContract.Reminders.EVENT_ID, affairId)
     // 提前remind_minutes分钟有提醒
@@ -183,6 +223,7 @@ object PhoneCalendar {
     }
     return true
   }
+
   /**
    * 查询日历事件
    * @return 事件id,查询不到则返回""
@@ -348,8 +389,8 @@ object PhoneCalendar {
   data class OnceData(
     val title: String,
     val description: String,
-    val beginTime: Calendar,
-    val endTime: Calendar,
+    val beginTime: Long,
+    val endTime: Long,
     val remind: Int // 分钟
   ) : Data
 
@@ -363,7 +404,7 @@ object PhoneCalendar {
   data class RepeatData(
     val title: String,
     val description: String,
-    val beginTime: Calendar,
+    val beginTime: Long,
     val duration: String,
     val rrule: String,
     val remind: Int // 分钟
