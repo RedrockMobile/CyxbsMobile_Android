@@ -36,7 +36,7 @@ class AffairVH(
     mTvDuration.text = "${data.weekStr} ${data.weekdayStr}   ${data.durationStr}"
     mBtnDelete.setOnSingleClickListener {
       IAffairService::class.impl
-        .deleteAffair(data.id)
+        .deleteAffair(data.onlyId)
         .observeOn(AndroidSchedulers.mainThread())
         .safeSubscribeBy(mBtnDelete) {
           toast("删除成功")
@@ -45,7 +45,7 @@ class AffairVH(
     }
     mBtnChange.setOnSingleClickListener {
       IAffairService::class.impl
-        .startActivityForEditActivity(data.id)
+        .startActivityForEditActivity(data.onlyId)
     }
   }
 }

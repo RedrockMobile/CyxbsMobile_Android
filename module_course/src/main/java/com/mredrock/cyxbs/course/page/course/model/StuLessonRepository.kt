@@ -44,7 +44,7 @@ object StuLessonRepository {
         value.nullUnless(Observable.just(emptyList())) {
           observeLesson(it)
         }
-      }
+      }.subscribeOn(Schedulers.io())
   }
   
   /**

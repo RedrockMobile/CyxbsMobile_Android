@@ -2,6 +2,7 @@ package com.mredrock.cyxbs.affair.bean
 
 import com.google.gson.annotations.SerializedName
 import com.mredrock.cyxbs.affair.room.AffairEntity
+import com.mredrock.cyxbs.affair.room.AffairIncompleteEntity
 import com.mredrock.cyxbs.lib.utils.network.IApiWrapper
 import java.io.Serializable
 
@@ -26,7 +27,7 @@ data class AffairBean(
     @SerializedName("date")
     val date: List<AffairDateBean>,
     @SerializedName("id")
-    val id: Int,
+    val remoteId: Int,
     @SerializedName("time")
     val time: Int,
     @SerializedName("title")
@@ -44,13 +45,12 @@ data class AffairBean(
     val week: List<Int>
   ) : Serializable
 
-  fun toAffairEntity(): List<AffairEntity> {
+  fun toAffairIncompleteEntity(): List<AffairIncompleteEntity> {
     return buildList {
       data.forEach { content ->
         add(
-          AffairEntity(
-            stuNum,
-            content.id,
+          AffairIncompleteEntity(
+            content.remoteId,
             content.time,
             content.title,
             content.content,

@@ -6,7 +6,7 @@ import java.io.Serializable
 
 data class AddAffairBean(
   @SerializedName("id")
-  val id: Int,
+  val remoteId: Int,
   @SerializedName("info")
   override val info: String,
   @SerializedName("state")

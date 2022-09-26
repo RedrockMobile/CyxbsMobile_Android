@@ -35,9 +35,8 @@ class AffairServiceImpl : IAffairService {
       .map { it.toAffair() }
   }
 
-  override fun deleteAffair(affairId: Int): Completable {
-//    DeleteRemindActivity.start(affairId) TODO 删除日历，待完成
-    return AffairRepository.deleteAffair(affairId)
+  override fun deleteAffair(onlyId: Int): Completable {
+    return AffairRepository.deleteAffair(onlyId)
   }
 
   override fun startActivityForAddAffair(
@@ -49,8 +48,8 @@ class AffairServiceImpl : IAffairService {
     AffairActivity.startForAdd(week, day, beginLesson, period)
   }
 
-  override fun startActivityForEditActivity(affairId: Int) {
-    AffairActivity.startForEdit(affairId)
+  override fun startActivityForEditActivity(onlyId: Int) {
+    AffairActivity.startForEdit(onlyId)
   }
 
   override fun init(context: Context) {
@@ -64,7 +63,7 @@ class AffairServiceImpl : IAffairService {
             add(
               IAffairService.Affair(
                 entity.stuNum,
-                entity.id,
+                entity.onlyId,
                 entity.time,
                 entity.title,
                 entity.content,

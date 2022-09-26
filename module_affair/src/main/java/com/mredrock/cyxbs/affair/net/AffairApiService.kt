@@ -39,7 +39,7 @@ interface AffairApiService {
   @Headers("App-Version:74")
   fun updateAffair(
     @Field("id")
-    id: Int,
+    remoteId: Int,
     @Field("date")
     dateJson: String,
     @Field("time")
@@ -55,7 +55,7 @@ interface AffairApiService {
   @Headers("App-Version:74")
   fun deleteAffair(
     @Field("id")
-    id: Int
+    remoteId: Int
   ): Single<ApiStatus>
 
   @GET("/magipoke-reminder/Person/getHotWord")

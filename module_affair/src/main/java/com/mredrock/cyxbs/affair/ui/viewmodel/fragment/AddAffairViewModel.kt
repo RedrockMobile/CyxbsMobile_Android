@@ -39,6 +39,7 @@ class AddAffairViewModel : BaseViewModel() {
       .subscribeOn(Schedulers.io())
       .observeOn(AndroidSchedulers.mainThread())
       .mapOrInterceptException {
+        // 网络请求失败就发送这个默认显示
         emitter.onSuccess(listOf("自习", "值班", "考试", "英语", "开会", "作业", "补课", "实验", "复习", "学习"))
       }.safeSubscribeBy {
         _titleCandidates.value = it

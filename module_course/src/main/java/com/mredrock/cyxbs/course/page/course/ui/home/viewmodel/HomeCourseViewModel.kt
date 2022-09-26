@@ -179,7 +179,7 @@ class HomeCourseViewModel : BaseViewModel() {
             getOrPut(it.week) { HomePageResultImpl(arrayListOf(), arrayListOf(), arrayListOf()) }
               .link.add(it)
           }
-          val max = this.maxOf { it.key }
+          val max = this.maxOfOrNull { it.key } ?: 0
           affair.forEach { data ->
             if (data.week == 0) {
               // 因为 affair 模块那边对于整学期的事务使用 week = 0 来记录，

@@ -27,7 +27,7 @@ sealed interface ILessonVersion {
   fun judgeVersion(defaultWhenSame: Boolean): Boolean {
     // 版本号保存于数据库中
     val oldVersion = LessonDataBase.INSTANCE.getLessonVerDao()
-      .getVersion(num)?.version ?: "0.0.0"
+      .findVersion(num)?.version ?: "0.0.0"
     val newVersionList = version.split(".")
     val oldVersionList = oldVersion.split(".")
     if (newVersionList.size != oldVersionList.size) {

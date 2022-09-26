@@ -26,23 +26,23 @@ class EditAffairViewModel : BaseViewModel() {
     get() = _affairEntity
 
   fun updateAffair(
-    id: Int,
+    onlyId: Int,
     time: Int,
     title: String,
     content: String,
     atWhatTime: List<AffairEntity.AtWhatTime>,
   ) {
-    AffairRepository.updateAffair(id, time, title, content, atWhatTime)
+    AffairRepository.updateAffair(onlyId, time, title, content, atWhatTime)
       .observeOn(AndroidSchedulers.mainThread())
       .safeSubscribeBy { "更新成功".toast() }
   }
 
-  fun findAffairEntity(affairId: Int) {
+  fun findAffairEntity(onlyId: Int) {
     val stuNum = ServiceManager(IAccountService::class).getUserService().getStuNum()
     if (stuNum.isNotEmpty()) {
       viewModelScope.launch(Dispatchers.IO) {
         AffairDataBase.INSTANCE.getAffairDao()
-          .getAffairByStuNumId(stuNum, affairId)
+          .findAffairByOnlyId(stuNum, onlyId)
           ?.let {
             _affairEntity.postValue(it)
           }

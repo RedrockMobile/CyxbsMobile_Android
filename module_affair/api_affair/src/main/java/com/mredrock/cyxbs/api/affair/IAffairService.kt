@@ -31,11 +31,11 @@ interface IAffairService : IProvider {
    */
   fun observeSelfAffair(): Observable<List<Affair>>
 
-  fun deleteAffair(affairId: Int): Completable
+  fun deleteAffair(onlyId: Int): Completable
 
   data class Affair(
     val stuNum: String,
-    val id: Int, // 事务唯一 id
+    val onlyId: Int, // 事务唯一 id
     val time: Int, // 提醒时间
     val title: String,
     val content: String,
@@ -57,7 +57,7 @@ interface IAffairService : IProvider {
 
   /**
    * 打开 AffairActivity，用于修改一个事务
-   * @param affairId 事务唯一 id
+   * @param onlyId 事务唯一 id
    */
-  fun startActivityForEditActivity(affairId: Int)
+  fun startActivityForEditActivity(onlyId: Int)
 }

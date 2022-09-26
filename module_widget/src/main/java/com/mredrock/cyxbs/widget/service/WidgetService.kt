@@ -9,7 +9,6 @@ import com.mredrock.cyxbs.api.affair.IAffairService
 import com.mredrock.cyxbs.api.course.ILessonService
 import com.mredrock.cyxbs.api.widget.IWidgetService
 import com.mredrock.cyxbs.api.widget.WIDGET_SERVICE
-import com.mredrock.cyxbs.widget.repo.bean.AffairEntity
 import com.mredrock.cyxbs.widget.repo.database.AffairDatabase
 import com.mredrock.cyxbs.widget.repo.database.LessonDatabase
 import com.mredrock.cyxbs.widget.repo.database.LessonDatabase.Companion.MY_STU_NUM
@@ -74,7 +73,7 @@ class WidgetService : IWidgetService {
     }
 
     override fun deleteAffair(affair: IAffairService.Affair) {
-        thread { AffairDatabase.INSTANCE.getAffairDao().deleteAffair(affair.id) }
+        thread { AffairDatabase.INSTANCE.getAffairDao().deleteAffair(affair.onlyId) }
     }
 
     override fun init(context: Context?) {

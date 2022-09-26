@@ -8,6 +8,7 @@ import com.mredrock.cyxbs.affair.ui.adapter.data.AffairTimeData
 import com.mredrock.cyxbs.affair.ui.adapter.data.AffairWeekData
 import com.mredrock.cyxbs.lib.utils.extensions.appContext
 import io.reactivex.rxjava3.core.Observable
+import io.reactivex.rxjava3.core.Single
 
 /**
  * ...
@@ -15,9 +16,22 @@ import io.reactivex.rxjava3.core.Observable
  * @email 2767465918@qq.com
  * @date 2022/5/2 16:14
  */
-@Database(entities = [AffairEntity::class], version = 1)
+@Database(
+  entities = [
+    AffairEntity::class,
+    AffairCalendarEntity::class,
+    LocalAddAffairEntity::class,
+    LocalUpdateAffairEntity::class,
+    LocalDeleteAffairEntity::class,
+             ],
+  version = 1
+)
 abstract class AffairDataBase : RoomDatabase() {
   abstract fun getAffairDao(): AffairDao
+  abstract fun getAffairCalendarDao(): AffairCalendarDao
+  abstract fun getLocalAddAffairDao(): LocalAddAffairDao
+  abstract fun getLocalUpdateAffairDao(): LocalUpdateAffairDao
+  abstract fun getLocalDeleteAffairDao(): LocalDeleteAffairDao
 
   companion object {
     val INSTANCE by lazy {
@@ -30,16 +44,42 @@ abstract class AffairDataBase : RoomDatabase() {
   }
 }
 
+
+
+////////////////////////////
+//
+//     用于桌面显示的事务表
+//
+////////////////////////////
+/**
+ * 用于删库后重新添加的残缺的实体类，因为插入时需要重新获取新的 [AffairEntity.onlyId]，所以要单独插入
+ */
+data class AffairIncompleteEntity(
+  val remoteId: Int, // 后端的 id，因为存在本地临时事务，所以会发生改变
+  val time: Int, // 提醒时间
+  val title: String,
+  val content: String,
+  val atWhatTime: List<AffairEntity.AtWhatTime>
+)
+
 @TypeConverters(AffairEntity.AtWhatTimeConverter::class)
-@Entity(tableName = "affair", primaryKeys = ["stuNum", "id"])
+@Entity(tableName = "affair", primaryKeys = ["stuNum", "onlyId"])
 data class AffairEntity(
   val stuNum: String,
-  val id: Int,
+  val onlyId: Int, // 本地的唯一 id，由我们端上给出
+  val remoteId: Int, // 后端的 id，因为存在本地临时事务，所以会发生改变
   val time: Int, // 提醒时间
   val title: String,
   val content: String,
   val atWhatTime: List<AtWhatTime>
 ) {
+  
+  companion object {
+    /**
+     * 表示没有上传到远端的事务的 [remoteId]
+     */
+    val LocalRemoteId = -114514
+  }
 
   data class AtWhatTime(
     val beginLesson: Int, // 开始节数，如：1、2 节课以 1 开始；3、4 节课以 3 开始，注意：中午是以 -1 开始，傍晚是以 -2 开始
@@ -81,34 +121,14 @@ abstract class AffairDao {
   @Query("SELECT * FROM affair WHERE stuNum = :stuNum")
   abstract fun getAffairByStuNum(stuNum: String): List<AffairEntity>
 
-  @Query("SELECT * FROM affair WHERE stuNum = :stuNum AND id = :id")
-  abstract fun getAffairByStuNumId(stuNum: String, id: Int): AffairEntity?
+  @Query("SELECT * FROM affair WHERE stuNum = :stuNum AND onlyId = :onlyId")
+  abstract fun findAffairByOnlyId(stuNum: String, onlyId: Int): AffairEntity?
 
   @Query("SELECT * FROM affair WHERE stuNum = :stuNum")
   abstract fun observeAffair(stuNum: String): Observable<List<AffairEntity>>
-
-  // 内部使用
-  @Query("DELETE FROM affair WHERE stuNum = :stuNum")
-  protected abstract fun deleteAffairByStuNum(stuNum: String)
   
-  // 内部使用
-  @Insert(onConflict = OnConflictStrategy.REPLACE)
-  protected abstract fun insertAffair(affairs: List<AffairEntity>)
-  
-  /**
-   * 重新设置数据，先删除，再插入
-   */
-  @Transaction
-  open fun resetData(stuNum: String, affairs: List<AffairEntity>) {
-    deleteAffairByStuNum(stuNum)
-    insertAffair(affairs)
-  }
-
-  @Query("DELETE FROM affair WHERE stuNum = :stuNum AND id = :id")
-  abstract fun deleteAffair(stuNum: String, id: Int): Int
-  
-  @Insert(onConflict = OnConflictStrategy.REPLACE)
-  abstract fun insertAffair(affair: AffairEntity)
+  @Query("DELETE FROM affair WHERE stuNum = :stuNum AND onlyId = :onlyId")
+  abstract fun deleteAffair(stuNum: String, onlyId: Int)
   
   @Update
   abstract fun updateAffair(affair: AffairEntity)
@@ -117,15 +137,209 @@ abstract class AffairDao {
   @Delete
   protected abstract fun deleteAffair(affair: AffairEntity)
   
+  // 内部使用
+  @Insert(onConflict = OnConflictStrategy.REPLACE)
+  protected abstract fun insertAffair(affair: AffairEntity)
+  
   /**
    * 更新旧事务的 id
    */
   @Transaction
-  open fun updateId(stuNum: String, oldId: Int, newId: Int) {
-    val affair = getAffairByStuNumId(stuNum, oldId)
+  open fun updateRemoteId(stuNum: String, onlyId: Int, newRemoteId: Int) {
+    val affair = findAffairByOnlyId(stuNum, onlyId)
     if (affair != null) {
       deleteAffair(affair)
-      insertAffair(affair.copy(id = newId))
+      insertAffair(affair.copy(remoteId = newRemoteId))
     }
   }
+  
+  @Query("SELECT MAX(onlyId) FROM affair WHERE stuNum = :stuNum")
+  protected abstract fun getMaxOnlyId(stuNum: String): Int
+  
+  /**
+   * 提供一个唯一的 [AffairEntity.onlyId]
+   */
+  fun getNewOnlyId(stuNum: String): Int {
+    return getMaxOnlyId(stuNum) + 1
+  }
+  
+  /**
+   * 返回当前插入的 [AffairEntity.onlyId]
+   */
+  @Transaction
+  open fun insertAffair(
+    stuNum: String,
+    incompleteEntity: AffairIncompleteEntity
+  ) : AffairEntity {
+    val onlyId = getNewOnlyId(stuNum)
+    val entity = AffairEntity(
+      stuNum,
+      onlyId,
+      incompleteEntity.remoteId,
+      incompleteEntity.time,
+      incompleteEntity.title,
+      incompleteEntity.content,
+      incompleteEntity.atWhatTime
+    )
+    insertAffair(entity)
+    return entity
+  }
+  
+  // 内部使用
+  @Query("DELETE FROM affair WHERE stuNum = :stuNum")
+  protected abstract fun deleteAffairByStuNum(stuNum: String)
+  
+  /**
+   * 重新设置数据，先删除，再插入
+   */
+  @Transaction
+  open fun resetData(
+    stuNum: String,
+    incompleteEntity: List<AffairIncompleteEntity>
+  ) : List<AffairEntity> {
+    deleteAffairByStuNum(stuNum)
+    return incompleteEntity.map {
+      insertAffair(stuNum, it)
+    }
+  }
+  
+  fun getRemoteIdByOnlyId(stuNum: String, onlyId: Int): Int {
+    val entity = findAffairByOnlyId(stuNum, onlyId)
+    return entity?.remoteId ?: AffairEntity.LocalRemoteId
+  }
+}
+
+
+////////////////////////////
+//
+//    事务与手机日历对应表
+//
+////////////////////////////
+@Entity(tableName = "affair_calendar", primaryKeys = ["onlyId"])
+data class AffairCalendarEntity(
+  val onlyId: Int,
+  val calendarId: Int // 手机日历的 id
+)
+
+@Dao
+abstract class AffairCalendarDao {
+  
+  @Insert
+  abstract fun insert(entity: AffairCalendarEntity)
+  
+  @Query("SELECT * FROM affair_calendar WHERE onlyId = :onlyId")
+  abstract fun find(onlyId: Int): AffairCalendarEntity?
+  
+  @Query("DELETE FROM affair_calendar WHERE onlyId = :onlyId")
+  abstract fun delete(onlyId: Int)
+  
+  @Transaction
+  open fun remove(onlyId: Int): Int? {
+    val entity = find(onlyId)
+    if (entity != null) {
+      delete(onlyId)
+      return entity.calendarId
+    }
+    return null
+  }
+}
+
+
+////////////////////////////
+//
+//     临时添加事务表
+//
+////////////////////////////
+@Entity(tableName = "affair_local_add", primaryKeys = ["stuNum", "onlyId"])
+data class LocalAddAffairEntity(
+  val stuNum: String,
+  val onlyId: Int,
+  val dateJson: String,
+  val time: Int,
+  val title: String,
+  val content: String
+)
+
+@Dao
+abstract class LocalAddAffairDao {
+  
+  @Insert(onConflict = OnConflictStrategy.REPLACE)
+  abstract fun insertLocalAddAffair(affair: LocalAddAffairEntity)
+  
+  @Update
+  abstract fun updateLocalAddAffair(affair: LocalAddAffairEntity)
+  
+  @Query("DELETE FROM affair_local_add WHERE stuNum = :stuNum AND onlyId = :onlyId")
+  abstract fun deleteLocalAddAffair(stuNum: String, onlyId: Int)
+  
+  @Query("SELECT * FROM affair_local_add WHERE stuNum = :stuNum AND onlyId = :onlyId")
+  abstract fun findLocalAddAffair(stuNum: String, onlyId: Int): LocalAddAffairEntity?
+  
+  @Query("SELECT * FROM affair_local_add WHERE stuNum = :stuNum")
+  abstract fun getLocalAddAffair(stuNum: String): Single<List<LocalAddAffairEntity>>
+  
+  @Delete
+  abstract fun deleteLocalAddAffair(affair: LocalAddAffairEntity)
+}
+
+
+////////////////////////////
+//
+//     临时更新事务表
+//
+////////////////////////////
+@Entity(tableName = "affair_local_update", primaryKeys = ["stuNum", "onlyId"])
+data class LocalUpdateAffairEntity(
+  val stuNum: String,
+  val onlyId: Int,
+  val remoteId: Int,
+  val dateJson: String,
+  val time: Int,
+  val title: String,
+  val content: String
+)
+
+@Dao
+abstract class LocalUpdateAffairDao {
+  
+  @Insert(onConflict = OnConflictStrategy.REPLACE)
+  abstract fun insertLocalUpdateAffair(affair: LocalUpdateAffairEntity)
+  
+  @Update
+  abstract fun updateLocalUpdateAffair(affair: LocalUpdateAffairEntity)
+  
+  @Query("DELETE FROM affair_local_update WHERE stuNum = :stuNum AND onlyId = :onlyId")
+  abstract fun deleteLocalUpdateAffair(stuNum: String, onlyId: Int)
+  
+  @Query("SELECT * FROM affair_local_update WHERE stuNum = :stuNum")
+  abstract fun getLocalUpdateAffair(stuNum: String): Single<List<LocalUpdateAffairEntity>>
+  
+  @Delete
+  abstract fun deleteLocalUpdateAffair(affair: LocalUpdateAffairEntity)
+}
+
+
+////////////////////////////
+//
+//     临时删除事务表
+//
+////////////////////////////
+@Entity(tableName = "affair_local_delete", primaryKeys = ["stuNum", "onlyId"])
+data class LocalDeleteAffairEntity(
+  val stuNum: String,
+  val onlyId: Int,
+  val remoteId: Int
+)
+
+@Dao
+abstract class LocalDeleteAffairDao {
+  
+  @Insert(onConflict = OnConflictStrategy.REPLACE)
+  abstract fun insertLocalDeleteAffair(affair: LocalDeleteAffairEntity)
+  
+  @Query("SELECT * FROM affair_local_delete WHERE stuNum = :stuNum")
+  abstract fun getLocalDeleteAffair(stuNum: String): Single<List<LocalDeleteAffairEntity>>
+  
+  @Delete
+  abstract fun deleteLocalDeleteAffair(affair: LocalDeleteAffairEntity)
 }

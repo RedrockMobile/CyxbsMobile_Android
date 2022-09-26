@@ -173,7 +173,7 @@ data class LessonVerEntity(
 interface LessonVerDao {
   
   @Query("SELECT * FROM lesson_version WHERE num = :num")
-  fun getVersion(num: String): LessonVerEntity?
+  fun findVersion(num: String): LessonVerEntity?
   
   @Insert(onConflict = OnConflictStrategy.REPLACE)
   fun insertVersion(lessonVer: LessonVerEntity)
