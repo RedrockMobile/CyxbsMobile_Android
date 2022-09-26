@@ -7,6 +7,7 @@ import android.content.Intent
 import android.net.Uri
 import android.os.Build
 import android.os.Bundle
+import android.util.Log
 import android.widget.Toast
 import androidx.annotation.IdRes
 import com.google.gson.Gson
@@ -175,7 +176,7 @@ fun showLessonInfo(lesson: String) {
 /**展示事务详情*/
 fun showAffairInfo(affair: String) {
     val intent = Intent(appContext, InfoActivity::class.java)
-    intent.putExtra(CLICK_LESSON, affair)
+    intent.putExtra(CLICK_AFFAIR, affair)
     intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_NO_USER_ACTION
     appContext.startActivity(intent)
 }

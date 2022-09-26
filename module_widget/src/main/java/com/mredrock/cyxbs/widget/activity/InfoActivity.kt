@@ -2,6 +2,7 @@ package com.mredrock.cyxbs.widget.activity
 
 import android.app.Dialog
 import android.os.Bundle
+import android.util.Log
 import androidx.appcompat.app.AppCompatActivity
 import com.mredrock.cyxbs.api.course.ICourseService
 import com.mredrock.cyxbs.lib.utils.service.impl
