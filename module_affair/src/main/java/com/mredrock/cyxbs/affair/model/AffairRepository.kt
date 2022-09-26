@@ -7,6 +7,7 @@ import com.mredrock.cyxbs.affair.room.*
 import com.mredrock.cyxbs.affair.room.AffairDataBase
 import com.mredrock.cyxbs.affair.room.AffairEntity
 import com.mredrock.cyxbs.affair.room.AffairEntity.Companion.LocalRemoteId
+import com.mredrock.cyxbs.affair.utils.TimeUtils
 import com.mredrock.cyxbs.api.account.IAccountService
 import com.mredrock.cyxbs.config.config.PhoneCalendar
 import com.mredrock.cyxbs.lib.utils.extensions.unsafeSubscribeBy
@@ -16,7 +17,6 @@ import io.reactivex.rxjava3.core.Completable
 import io.reactivex.rxjava3.core.Observable
 import io.reactivex.rxjava3.core.Single
 import io.reactivex.rxjava3.schedulers.Schedulers
-import java.lang.IllegalArgumentException
 import java.util.concurrent.Callable
 import kotlin.IllegalStateException
 
@@ -140,11 +140,23 @@ object AffairRepository {
           }
         )
       }.doOnSuccess { onlyId ->
+        // 先添加日历
         if (time > 0) {
-          //          PhoneCalendar.add()
-          //          AffairDataBase.INSTANCE.getAffairCalendarDao()
-          //            .insert(AffairCalendarEntity())
-          // TODO 待完成
+          atWhatTime.forEach {
+            val calendarId = PhoneCalendar.add(
+              PhoneCalendar.RepeatData(
+                title,
+                content,
+                TimeUtils.getBegin(it.beginLesson, it.day),
+                TimeUtils.getDuration(it.period),
+                TimeUtils.getRRule(it.day),
+                time
+              )
+            )
+            if (calendarId != null) {
+              AffairCalendarDao.insert(AffairCalendarEntity(onlyId, calendarId))
+            }
+          }
         }
       }.flatMapCompletable { Completable.complete() }
       .subscribeOn(Schedulers.io())
@@ -162,23 +174,17 @@ object AffairRepository {
   ): Completable {
     val selfNum = ServiceManager(IAccountService::class).getUserService().getStuNum()
     if (selfNum.isEmpty()) return Completable.error(IllegalStateException("学号为空"))
-    if (AffairDao.findAffairByOnlyId(selfNum, onlyId) == null) {
-      return Completable.error(
-        IllegalArgumentException("onlyId 不存在或已经被删除, onlyId = $onlyId, stuNum = $selfNum")
-      )
-    }
     val dateJson = atWhatTime.toPostDateJson()
     return uploadLocalAffair(selfNum)
-      .andThen(
+      .toSingle {
         Api.updateAffair(
           AffairDao.getRemoteIdByOnlyId(selfNum, onlyId), // 注意：这里需要使用 remoteId
           dateJson,
           time,
           title,
           content
-        )
-      ).throwApiExceptionIfFail()
-      .map {
+        ).throwApiExceptionIfFail()
+      }.map {
         // 请求成功的话就去拿 remoteId 值，并装换给下游
         // 这里在网络请求成功时会重复查找一次，但如果分开写，代码易读性会下降，所以多查找一次就多一次吧
         AffairDao.getRemoteIdByOnlyId(selfNum, onlyId)
@@ -215,8 +221,28 @@ object AffairRepository {
         AffairDao.updateAffair(AffairEntity(selfNum, onlyId, it, time, title, content, atWhatTime))
       }.flatMapCompletable { Completable.complete() }
       .doOnComplete {
-        // 更新手机上的日历
-        val calendarId = AffairDataBase.INSTANCE.getAffairCalendarDao().find(onlyId)
+        // 更新手机上的日历，采取先删除再添加的方式，因为一个事务对应了多个日历中的安排，不好更新
+        AffairCalendarDao.get(onlyId).forEach {
+          PhoneCalendar.delete(it.calendarId)
+        }
+        // 先添加日历
+        if (time > 0) {
+          atWhatTime.forEach {
+            val calendarId = PhoneCalendar.add(
+              PhoneCalendar.RepeatData(
+                title,
+                content,
+                TimeUtils.getBegin(it.beginLesson, it.day),
+                TimeUtils.getDuration(it.period),
+                TimeUtils.getRRule(it.day),
+                time
+              )
+            )
+            if (calendarId != null) {
+              AffairCalendarDao.insert(AffairCalendarEntity(onlyId, calendarId))
+            }
+          }
+        }
       }.subscribeOn(Schedulers.io())
   }
   
@@ -226,18 +252,12 @@ object AffairRepository {
   fun deleteAffair(onlyId: Int): Completable {
     val selfNum = ServiceManager(IAccountService::class).getUserService().getStuNum()
     if (selfNum.isEmpty()) return Completable.error(IllegalStateException("学号为空"))
-    if (AffairDao.findAffairByOnlyId(selfNum, onlyId) == null) {
-      return Completable.error(
-        IllegalArgumentException("onlyId 不存在或已经被删除, onlyId = $onlyId, stuNum = $selfNum")
-      )
-    }
     return uploadLocalAffair(selfNum)
-      .andThen(
+      .toSingle {
         Api.deleteAffair(
           AffairDao.getRemoteIdByOnlyId(selfNum, onlyId) // 注意：这里需要使用 remoteId
-        )
-      ).throwApiExceptionIfFail()
-      .flatMapCompletable { Completable.complete() }
+        ).throwApiExceptionIfFail()
+      }.flatMapCompletable { Completable.complete() }
       .onErrorComplete {
         /**
          * 这里有概率很小的同步问题，所以采取事务
@@ -273,9 +293,8 @@ object AffairRepository {
         AffairDao.deleteAffair(selfNum, onlyId)
       }.doOnComplete {
         // 删除手机上的日历
-        val calendarId = AffairCalendarDao.remove(onlyId)
-        if (calendarId != null) {
-          PhoneCalendar.delete(calendarId)
+        AffairCalendarDao.remove(onlyId).forEach {
+          PhoneCalendar.delete(it)
         }
       }.subscribeOn(Schedulers.io())
   }

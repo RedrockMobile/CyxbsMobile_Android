@@ -2,11 +2,11 @@
   "formatVersion": 1,
   "database": {
     "version": 1,
-    "identityHash": "ec31fd615bf47ac2ab8b2ce6f06d4551",
+    "identityHash": "f8630cd43cc01ac6a18412baef606a8e",
     "entities": [
       {
         "tableName": "affair",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`stuNum` TEXT NOT NULL, `id` INTEGER NOT NULL, `time` INTEGER NOT NULL, `title` TEXT NOT NULL, `content` TEXT NOT NULL, `atWhatTime` TEXT NOT NULL, PRIMARY KEY(`stuNum`, `id`))",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`stuNum` TEXT NOT NULL, `onlyId` INTEGER NOT NULL, `remoteId` INTEGER NOT NULL, `time` INTEGER NOT NULL, `title` TEXT NOT NULL, `content` TEXT NOT NULL, `atWhatTime` TEXT NOT NULL, PRIMARY KEY(`stuNum`, `onlyId`))",
         "fields": [
           {
             "fieldPath": "stuNum",
@@ -15,8 +15,14 @@
             "notNull": true
           },
           {
-            "fieldPath": "id",
-            "columnName": "id",
+            "fieldPath": "onlyId",
+            "columnName": "onlyId",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "remoteId",
+            "columnName": "remoteId",
             "affinity": "INTEGER",
             "notNull": true
           },
@@ -48,7 +54,175 @@
         "primaryKey": {
           "columnNames": [
             "stuNum",
-            "id"
+            "onlyId"
+          ],
+          "autoGenerate": false
+        },
+        "indices": [],
+        "foreignKeys": []
+      },
+      {
+        "tableName": "affair_calendar",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`onlyId` INTEGER NOT NULL, `calendarId` INTEGER NOT NULL, PRIMARY KEY(`onlyId`, `calendarId`))",
+        "fields": [
+          {
+            "fieldPath": "onlyId",
+            "columnName": "onlyId",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "calendarId",
+            "columnName": "calendarId",
+            "affinity": "INTEGER",
+            "notNull": true
+          }
+        ],
+        "primaryKey": {
+          "columnNames": [
+            "onlyId",
+            "calendarId"
+          ],
+          "autoGenerate": false
+        },
+        "indices": [],
+        "foreignKeys": []
+      },
+      {
+        "tableName": "affair_local_add",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`stuNum` TEXT NOT NULL, `onlyId` INTEGER NOT NULL, `dateJson` TEXT NOT NULL, `time` INTEGER NOT NULL, `title` TEXT NOT NULL, `content` TEXT NOT NULL, PRIMARY KEY(`stuNum`, `onlyId`))",
+        "fields": [
+          {
+            "fieldPath": "stuNum",
+            "columnName": "stuNum",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "onlyId",
+            "columnName": "onlyId",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "dateJson",
+            "columnName": "dateJson",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "time",
+            "columnName": "time",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "title",
+            "columnName": "title",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "content",
+            "columnName": "content",
+            "affinity": "TEXT",
+            "notNull": true
+          }
+        ],
+        "primaryKey": {
+          "columnNames": [
+            "stuNum",
+            "onlyId"
+          ],
+          "autoGenerate": false
+        },
+        "indices": [],
+        "foreignKeys": []
+      },
+      {
+        "tableName": "affair_local_update",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`stuNum` TEXT NOT NULL, `onlyId` INTEGER NOT NULL, `remoteId` INTEGER NOT NULL, `dateJson` TEXT NOT NULL, `time` INTEGER NOT NULL, `title` TEXT NOT NULL, `content` TEXT NOT NULL, PRIMARY KEY(`stuNum`, `onlyId`))",
+        "fields": [
+          {
+            "fieldPath": "stuNum",
+            "columnName": "stuNum",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "onlyId",
+            "columnName": "onlyId",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "remoteId",
+            "columnName": "remoteId",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "dateJson",
+            "columnName": "dateJson",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "time",
+            "columnName": "time",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "title",
+            "columnName": "title",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "content",
+            "columnName": "content",
+            "affinity": "TEXT",
+            "notNull": true
+          }
+        ],
+        "primaryKey": {
+          "columnNames": [
+            "stuNum",
+            "onlyId"
+          ],
+          "autoGenerate": false
+        },
+        "indices": [],
+        "foreignKeys": []
+      },
+      {
+        "tableName": "affair_local_delete",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`stuNum` TEXT NOT NULL, `onlyId` INTEGER NOT NULL, `remoteId` INTEGER NOT NULL, PRIMARY KEY(`stuNum`, `onlyId`))",
+        "fields": [
+          {
+            "fieldPath": "stuNum",
+            "columnName": "stuNum",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "onlyId",
+            "columnName": "onlyId",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "remoteId",
+            "columnName": "remoteId",
+            "affinity": "INTEGER",
+            "notNull": true
+          }
+        ],
+        "primaryKey": {
+          "columnNames": [
+            "stuNum",
+            "onlyId"
           ],
           "autoGenerate": false
         },
@@ -59,7 +233,7 @@
     "views": [],
     "setupQueries": [
       "CREATE TABLE IF NOT EXISTS room_master_table (id INTEGER PRIMARY KEY,identity_hash TEXT)",
-      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, 'ec31fd615bf47ac2ab8b2ce6f06d4551')"
+      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, 'f8630cd43cc01ac6a18412baef606a8e')"
     ]
   }
 }

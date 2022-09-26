@@ -66,7 +66,6 @@ object TimeUtils {
   /**
    * 将周数转换为Rule规则,只添加单个周数
    */
-
   fun getRRule(week: Int): String {
     var str = "FREQ=WEEKLY;COUNT=21;BYDAY="
     str += WEEK_RULE_ARRAY[week]

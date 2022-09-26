@@ -215,10 +215,10 @@ abstract class AffairDao {
 //    事务与手机日历对应表
 //
 ////////////////////////////
-@Entity(tableName = "affair_calendar", primaryKeys = ["onlyId"])
+@Entity(tableName = "affair_calendar", primaryKeys = ["onlyId", "calendarId"])
 data class AffairCalendarEntity(
   val onlyId: Int,
-  val calendarId: Int // 手机日历的 id
+  val calendarId: Long // 手机日历的 id
 )
 
 @Dao
@@ -228,19 +228,16 @@ abstract class AffairCalendarDao {
   abstract fun insert(entity: AffairCalendarEntity)
   
   @Query("SELECT * FROM affair_calendar WHERE onlyId = :onlyId")
-  abstract fun find(onlyId: Int): AffairCalendarEntity?
+  abstract fun get(onlyId: Int): List<AffairCalendarEntity>
   
   @Query("DELETE FROM affair_calendar WHERE onlyId = :onlyId")
   abstract fun delete(onlyId: Int)
   
   @Transaction
-  open fun remove(onlyId: Int): Int? {
-    val entity = find(onlyId)
-    if (entity != null) {
-      delete(onlyId)
-      return entity.calendarId
-    }
-    return null
+  open fun remove(onlyId: Int): List<Long> {
+    val list = get(onlyId)
+    delete(onlyId)
+    return list.map { it.calendarId }
   }
 }
 

@@ -1,13 +1,10 @@
 package com.mredrock.cyxbs.affair.ui.viewmodel.fragment
 
-import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import com.mredrock.cyxbs.affair.model.AffairRepository
 import com.mredrock.cyxbs.affair.net.AffairApiService
 import com.mredrock.cyxbs.affair.room.AffairEntity
-import com.mredrock.cyxbs.affair.utils.TimeUtils
-import com.mredrock.cyxbs.config.config.PhoneCalendar
 import com.mredrock.cyxbs.lib.base.ui.BaseViewModel
 import com.mredrock.cyxbs.lib.utils.network.mapOrInterceptException
 import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
@@ -31,22 +28,6 @@ class AddAffairViewModel : BaseViewModel() {
     content: String,
     atWhatTime: List<AffairEntity.AtWhatTime>,
   ) {
-    // 先添加日历
-    if (time > 0) {
-      atWhatTime.forEach {
-        val affairID = PhoneCalendar.add(
-          PhoneCalendar.RepeatData(
-            title,
-            content,
-            TimeUtils.getBegin(it.beginLesson, it.day),
-            TimeUtils.getDuration(it.period),
-            TimeUtils.getRRule(it.day),
-            time
-          )
-        )
-        Log.e("TAG", "addAffair: affairId:$affairID", )
-      }
-    }
     AffairRepository.addAffair(time, title, content, atWhatTime)
       .safeSubscribeBy {
         "添加成功".toast()
