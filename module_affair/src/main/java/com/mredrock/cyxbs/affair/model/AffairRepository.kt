@@ -9,6 +9,10 @@ import com.mredrock.cyxbs.affair.room.AffairEntity
 import com.mredrock.cyxbs.affair.room.AffairEntity.Companion.LocalRemoteId
 import com.mredrock.cyxbs.affair.utils.TimeUtils
 import com.mredrock.cyxbs.api.account.IAccountService
+import com.mredrock.cyxbs.api.affair.utils.getEndRow
+import com.mredrock.cyxbs.api.affair.utils.getStartRow
+import com.mredrock.cyxbs.api.affair.utils.getEndRow
+import com.mredrock.cyxbs.api.affair.utils.getStartRow
 import com.mredrock.cyxbs.config.config.PhoneCalendar
 import com.mredrock.cyxbs.lib.utils.extensions.unsafeSubscribeBy
 import com.mredrock.cyxbs.lib.utils.network.throwApiExceptionIfFail
@@ -138,19 +142,45 @@ object AffairRepository {
       }.doOnSuccess { onlyId ->
         // 先添加日历
         if (time > 0) {
-          atWhatTime.forEach {
-            val calendarId = PhoneCalendar.add(
-              PhoneCalendar.RepeatData(
-                title,
-                content,
-                TimeUtils.getBegin(it.beginLesson, it.day),
-                TimeUtils.getDuration(it.period),
-                TimeUtils.getRRule(it.day),
-                time
+          atWhatTime.forEach { it ->
+            // 如果是整学期,添加重复事件
+            if (it.week.isNotEmpty() && it.week[0] == 0) {
+              val calendarId = PhoneCalendar.add(
+                PhoneCalendar.RepeatData(
+                  title,
+                  content,
+                  TimeUtils.getBegin(it.beginLesson, it.day),
+                  TimeUtils.getDuration(
+                    getStartRow(it.beginLesson),
+                    getEndRow(it.beginLesson, it.period)
+                  ),
+                  TimeUtils.getRRule(it.day),
+                  time
+                )
               )
-            )
-            if (calendarId != null) {
-              AffairCalendarDao.insert(AffairCalendarEntity(onlyId, calendarId))
+              if (calendarId != null) {
+                AffairCalendarDao.insert(AffairCalendarEntity(onlyId, calendarId))
+              }
+            } else {
+              // 如果不是整学期,添加一次性事件
+              it.week.forEach { weekNum ->
+                val calendarId = PhoneCalendar.add(
+                  PhoneCalendar.OnceData(
+                    title,
+                    content,
+                    TimeUtils.getBegin(getStartRow(it.beginLesson), it.day, weekNum),
+                    TimeUtils.getEnd(
+                      getStartRow(it.beginLesson),
+                      it.day, weekNum,
+                      getEndRow(it.beginLesson, it.period)
+                    ),
+                    time
+                  )
+                )
+                if (calendarId != null) {
+                  AffairCalendarDao.insert(AffairCalendarEntity(onlyId, calendarId))
+                }
+              }
             }
           }
         }
@@ -179,19 +209,45 @@ object AffairRepository {
         }
         // 先添加日历
         if (time > 0) {
-          atWhatTime.forEach {
-            val calendarId = PhoneCalendar.add(
-              PhoneCalendar.RepeatData(
-                title,
-                content,
-                TimeUtils.getBegin(it.beginLesson, it.day),
-                TimeUtils.getDuration(it.period),
-                TimeUtils.getRRule(it.day),
-                time
+          atWhatTime.forEach { it ->
+            // 如果是整学期,添加重复事件
+            if (it.week.isNotEmpty() && it.week.any { it == 0 }) {
+              val calendarId = PhoneCalendar.add(
+                PhoneCalendar.RepeatData(
+                  title,
+                  content,
+                  TimeUtils.getBegin(it.beginLesson, it.day),
+                  TimeUtils.getDuration(
+                    getStartRow(it.beginLesson),
+                    getEndRow(it.beginLesson, it.period)
+                  ),
+                  TimeUtils.getRRule(it.day),
+                  time
+                )
               )
-            )
-            if (calendarId != null) {
-              AffairCalendarDao.insert(AffairCalendarEntity(onlyId, calendarId))
+              if (calendarId != null) {
+                AffairCalendarDao.insert(AffairCalendarEntity(onlyId, calendarId))
+              }
+            } else {
+              // 如果不是整学期,添加一次性事件
+              it.week.forEach { weekNum ->
+                val calendarId = PhoneCalendar.add(
+                  PhoneCalendar.OnceData(
+                    title,
+                    content,
+                    TimeUtils.getBegin(getStartRow(it.beginLesson), it.day, weekNum),
+                    TimeUtils.getEnd(
+                      getStartRow(it.beginLesson),
+                      it.day, weekNum,
+                      getEndRow(it.beginLesson, it.period)
+                    ),
+                    time
+                  )
+                )
+                if (calendarId != null) {
+                  AffairCalendarDao.insert(AffairCalendarEntity(onlyId, calendarId))
+                }
+              }
             }
           }
         }
