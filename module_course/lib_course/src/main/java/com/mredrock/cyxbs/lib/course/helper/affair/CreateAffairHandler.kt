@@ -4,10 +4,13 @@ import android.graphics.Canvas
 import android.view.View
 import android.view.ViewConfiguration
 import android.view.ViewGroup
+import androidx.core.content.edit
 import androidx.core.view.isGone
 import com.mredrock.cyxbs.lib.course.helper.ScrollTouchHandler
 import com.mredrock.cyxbs.lib.course.internal.view.course.ICourseViewGroup
 import com.mredrock.cyxbs.lib.course.internal.view.course.lp.ItemLayoutParams
+import com.mredrock.cyxbs.lib.utils.extensions.getSp
+import com.mredrock.cyxbs.lib.utils.extensions.toast
 import com.mredrock.cyxbs.lib.utils.utils.VibratorUtil
 import com.ndhzs.netlayout.draw.ItemDecoration
 import com.ndhzs.netlayout.touch.multiple.event.IPointerEvent
@@ -131,6 +134,7 @@ class CreateAffairHandler(
           ) {
             // 这里说明移动的距离小于 mTouchSlop，但还是得把点击的事务给绘制上，但是只有一格
             affair.show(mTopRow, mBottomRow, mInitialColumn)
+            tryToastSingleRow()
           }
         }
       }
@@ -145,6 +149,22 @@ class CreateAffairHandler(
         }
       }
     }
+  }
+  
+  /**
+   * 在只是单独点击时，只会生成长度为 1 的 [ITouchAffair]，
+   * 所以需要弹个 toast 来提示用户可以长按空白区域上下移动来生成更长的事务
+   * (不然可能他一直不知道怎么生成更长的事务)
+   */
+  private fun tryToastSingleRow() {
+    val sp = course.getContext().getSp("课表长按生成事务")
+    val times = sp.getInt("点击单行事务的次数", 0)
+    when (times) {
+      1, 5, 12 -> {
+        toast("可以长按空白处上下移动添加哦~")
+      }
+    }
+    sp.edit { putInt("点击单行事务的次数", times + 1) }
   }
   
   /**

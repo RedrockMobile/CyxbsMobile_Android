@@ -20,14 +20,14 @@ interface AffairApiService {
   @FormUrlEncoded
   @Headers("App-Version:74")
   fun addAffair(
-    @Field("date")
-    date: String, // 为 json 序列化后的 string
     @Field("time")
-    time: Int,
+    time: Int, // 为 json 序列化后的 string
     @Field("title")
     title: String,
     @Field("content")
-    content: String
+    content: String,
+    @Field("date")
+    dateJson: String
   ): Single<AddAffairBean>
 
   @POST("/magipoke-reminder/Person/getTransaction")
@@ -40,14 +40,14 @@ interface AffairApiService {
   fun updateAffair(
     @Field("id")
     remoteId: Int,
-    @Field("date")
-    dateJson: String,
     @Field("time")
     time: Int,
     @Field("title")
     title: String,
     @Field("content")
-    content: String
+    content: String,
+    @Field("date")
+    dateJson: String
   ): Single<ApiStatus>
 
   @POST("/magipoke-reminder/Person/deleteTransaction")

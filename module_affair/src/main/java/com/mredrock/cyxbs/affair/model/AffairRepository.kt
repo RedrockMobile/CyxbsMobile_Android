@@ -73,7 +73,7 @@ object AffairRepository {
    */
   fun refreshAffair(): Single<List<AffairEntity>> {
     val selfNum: String = ServiceManager(IAccountService::class).getUserService().getStuNum()
-    if (selfNum.isEmpty()) return Single.just(emptyList())
+    if (selfNum.isBlank()) return Single.just(emptyList())
     // 先上传本地临时数据，只有本地临时数据全部上传后才能下载新的数据，防止数据混乱
     return uploadLocalAffair(selfNum)
       .andThen(Api.getAffair())
@@ -92,7 +92,7 @@ object AffairRepository {
    */
   fun getAffair(): Single<List<AffairEntity>> {
     val selfNum: String = ServiceManager(IAccountService::class).getUserService().getStuNum()
-    if (selfNum.isEmpty()) return Single.error(RuntimeException("学号为空！"))
+    if (selfNum.isBlank()) return Single.error(RuntimeException("学号为空！"))
     return refreshAffair().onErrorReturn {
       // 上游失败了就取本地数据，可能是网络失败，也可能是本地临时上传事务失败
       AffairDao.getAffairByStuNum(selfNum)
@@ -108,34 +108,30 @@ object AffairRepository {
     content: String,
     atWhatTime: List<AffairEntity.AtWhatTime>,
   ): Completable {
-    val selfNum = ServiceManager(IAccountService::class).getUserService().getStuNum()
-    if (selfNum.isEmpty()) return Completable.error(IllegalStateException("学号为空！"))
+    val stuNum = ServiceManager(IAccountService::class).getUserService().getStuNum()
+    if (stuNum.isBlank()) return Completable.error(IllegalStateException("学号为空！"))
     val dateJson = atWhatTime.toPostDateJson()
-    return Api.addAffair(dateJson, time, title, content)
+    return Api.addAffair(time, title, content, dateJson)
       .throwApiExceptionIfFail()
       .map { it.remoteId }
       .onErrorReturn {
         // 发送给下流本地 remoteId，表示网络连接失败，需要添加进临时数据库
         LocalRemoteId
-      }.map {
-        /**
-         * 这里有概率很小的同步问题，所以采取事务
-         *
-         * 该问题为：
-         * 虽然此时 [uploadLocalAffair] 失败，则存在另一个 [uploadLocalAffair] 正在运行中
-         */
+      }.map { remoteId ->
+        // 存在概率很小的同步问题，可能此时正在执行另一个 uploadLocalAffair()，所以使用 runInTransaction
         DB.runInTransaction(
           Callable {
             // 插入数据库新数据，并返回给下游 onlyId
             val onlyId = AffairDao
-              .insertAffair(selfNum, AffairIncompleteEntity(it, time, title, content, atWhatTime))
+              .insertAffair(stuNum, AffairIncompleteEntity(remoteId, time, title, content, atWhatTime))
               .onlyId
-            if (it == LocalRemoteId) {
-              // 为本地 remoteId 的话就插入到本地临时添加的事务
+            if (remoteId == LocalRemoteId) {
+              // 为本地 remoteId 的话就插入到本地临时添加的事务中
               LocalAddDao.insertLocalAddAffair(
-                LocalAddAffairEntity(selfNum, onlyId, dateJson, time, title, content)
+                LocalAddAffairEntity(stuNum, onlyId, time, title, content, dateJson)
               )
             }
+            // 注意：这里返回给下游的是 onlyId，不是 remoteId
             onlyId
           }
         )
@@ -172,54 +168,10 @@ object AffairRepository {
     content: String,
     atWhatTime: List<AffairEntity.AtWhatTime>,
   ): Completable {
-    val selfNum = ServiceManager(IAccountService::class).getUserService().getStuNum()
-    if (selfNum.isEmpty()) return Completable.error(IllegalStateException("学号为空"))
-    val dateJson = atWhatTime.toPostDateJson()
-    return uploadLocalAffair(selfNum)
-      .toSingle {
-        Api.updateAffair(
-          AffairDao.getRemoteIdByOnlyId(selfNum, onlyId), // 注意：这里需要使用 remoteId
-          dateJson,
-          time,
-          title,
-          content
-        ).throwApiExceptionIfFail()
-      }.map {
-        // 请求成功的话就去拿 remoteId 值，并装换给下游
-        // 这里在网络请求成功时会重复查找一次，但如果分开写，代码易读性会下降，所以多查找一次就多一次吧
-        AffairDao.getRemoteIdByOnlyId(selfNum, onlyId)
-      }.onErrorReturn {
-        /**
-         * 这里有概率很小的同步问题，所以采取事务
-         *
-         * 该问题为：
-         * 虽然此时 [uploadLocalAffair] 失败，则存在另一个 [uploadLocalAffair] 正在运行中
-         */
-        DB.runInTransaction(
-          Callable {
-            // 这里说明网络出问题了，并且可能本地临时事务没有上传成功
-            val remoteId = AffairDao.getRemoteIdByOnlyId(selfNum, onlyId)
-            if (remoteId == LocalRemoteId) {
-              // 如果是 LocalRemoteId，就说明是本地事务，直接 更新 本地临时添加的事务，因为之前已经添加了
-              LocalAddDao
-                .updateLocalAddAffair(
-                  LocalAddAffairEntity(selfNum, onlyId, dateJson, time, title, content)
-                )
-            } else {
-              // 这个分支说明不是本地临时事务，就更新或者插入本都临时更新的事务
-              // insert 已改为 OnConflictStrategy.REPLACE，可进行替换插入
-              LocalUpdateDao
-                .insertLocalUpdateAffair(
-                  LocalUpdateAffairEntity(selfNum, onlyId, remoteId, dateJson, time, title, content)
-                )
-            }
-            remoteId
-          }
-        )
-      }.doOnSuccess {
-        // 更新本地数据
-        AffairDao.updateAffair(AffairEntity(selfNum, onlyId, it, time, title, content, atWhatTime))
-      }.flatMapCompletable { Completable.complete() }
+    val stuNum = ServiceManager(IAccountService::class).getUserService().getStuNum()
+    if (stuNum.isBlank()) return Completable.error(IllegalStateException("学号为空"))
+    return uploadLocalAffair(stuNum)
+      .andThen(updateAffairInternal(stuNum, onlyId, time, title, content, atWhatTime))
       .doOnComplete {
         // 更新手机上的日历，采取先删除再添加的方式，因为一个事务对应了多个日历中的安排，不好更新
         AffairCalendarDao.get(onlyId).forEach {
@@ -243,146 +195,174 @@ object AffairRepository {
             }
           }
         }
-      }.subscribeOn(Schedulers.io())
+      }
+  }
+  
+  private fun updateAffairInternal(
+    stuNum: String,
+    onlyId: Int,
+    time: Int,
+    title: String,
+    content: String,
+    atWhatTime: List<AffairEntity.AtWhatTime>
+  ): Completable {
+    return Completable.create { emitter ->
+      // 存在概率很小的同步问题，可能此时正在执行另一个 uploadLocalAffair()，所以使用 runInTransaction
+      DB.runInTransaction {
+        AffairDao.findAffairByOnlyId(stuNum, onlyId)
+          .toSingle() // 找不到时直接抛错
+          .map { it.remoteId }
+          .doOnSuccess { remoteId ->
+            val dateJson = atWhatTime.toPostDateJson()
+            if (remoteId == LocalRemoteId) {
+              // 如果是本地临时事务，就直接更新临时添加的事务
+              LocalAddDao
+                .updateLocalAddAffair(
+                  LocalAddAffairEntity(stuNum, onlyId, time, title, content, dateJson)
+                )
+            } else {
+              // 不是本地临时事务就上传
+              Api.updateAffair(remoteId, time, title, content, dateJson)
+                .throwApiExceptionIfFail()
+                .doOnError {
+                  // 上传失败就暂时保存在本地临时更新的事务中
+                  // insert 已改为 OnConflictStrategy.REPLACE，可进行替换插入
+                  LocalUpdateDao
+                    .insertLocalUpdateAffair(
+                      LocalUpdateAffairEntity(
+                        stuNum, onlyId, remoteId, time, title, content, dateJson
+                      )
+                    )
+                }.onErrorComplete { true } // 终止异常向下游传递
+                .blockingGet() // 直接堵塞，因为需要使用数据库的 runInTransaction，不能使用流来处理
+            }
+          }.doOnSuccess { remoteId ->
+            // 最后更新本地数据
+            AffairDao.updateAffair(AffairEntity(stuNum, onlyId, remoteId, time, title, content, atWhatTime))
+          }.blockingGet() // 直接堵塞，因为需要使用数据库的 runInTransaction，不能使用流来处理
+      }
+      // 在 runInTransaction 结束后再发送
+      emitter.onComplete()
+    }
   }
   
   /**
    * 删除事务，请使用 [observeAffair] 进行观察数据
    */
   fun deleteAffair(onlyId: Int): Completable {
-    val selfNum = ServiceManager(IAccountService::class).getUserService().getStuNum()
-    if (selfNum.isEmpty()) return Completable.error(IllegalStateException("学号为空"))
-    return uploadLocalAffair(selfNum)
-      .toSingle {
-        Api.deleteAffair(
-          AffairDao.getRemoteIdByOnlyId(selfNum, onlyId) // 注意：这里需要使用 remoteId
-        ).throwApiExceptionIfFail()
-      }.flatMapCompletable { Completable.complete() }
-      .onErrorComplete {
-        /**
-         * 这里有概率很小的同步问题，所以采取事务
-         *
-         * 该问题为：
-         * 虽然此时 [uploadLocalAffair] 失败，则存在另一个 [uploadLocalAffair] 正在运行中
-         */
-        DB.runInTransaction(
-          Callable {
-            // 这里说明网络出问题了，并且可能本地临时事务没有上传成功
-            val remoteId = AffairDao.getRemoteIdByOnlyId(selfNum, onlyId)
-            if (remoteId == LocalRemoteId) {
-              // 如果是本地临时事务，就直接删除临时添加的事务
-              LocalAddDao.deleteLocalAddAffair(selfNum, onlyId)
-            } else {
-              // 如果不是本地临时事务
-              // 直接删除本地临时更新的事务，不管有没有
-              LocalUpdateDao.deleteLocalUpdateAffair(selfNum, onlyId)
-              // 再插入本地临时删除的事务
-              LocalDeleteDao.insertLocalDeleteAffair(
-                LocalDeleteAffairEntity(
-                  selfNum,
-                  onlyId,
-                  remoteId
-                )
-              )
-            }
-            true
-          }
-        )
-      }.doOnComplete {
-        // 最后删除本地数据
-        AffairDao.deleteAffair(selfNum, onlyId)
-      }.doOnComplete {
+    val stuNum = ServiceManager(IAccountService::class).getUserService().getStuNum()
+    if (stuNum.isEmpty()) return Completable.error(IllegalStateException("学号为空"))
+    return uploadLocalAffair(stuNum)
+      .andThen(deleteAffairInternal(stuNum, onlyId))
+      .doOnComplete {
         // 删除手机上的日历
         AffairCalendarDao.remove(onlyId).forEach {
           PhoneCalendar.delete(it)
         }
-      }.subscribeOn(Schedulers.io())
+      }
+  }
+  
+  private fun deleteAffairInternal(stuNum: String, onlyId: Int): Completable {
+    return Completable.create { emitter ->
+      // 存在概率很小的同步问题，可能此时正在执行另一个 uploadLocalAffair()，所以使用 runInTransaction
+      DB.runInTransaction {
+        AffairDao.findAffairByOnlyId(stuNum, onlyId)
+          .toSingle() // 找不到时直接抛错
+          .map { it.remoteId }
+          .doOnSuccess { remoteId ->
+            if (remoteId == LocalRemoteId) {
+              // 如果是本地临时事务，就直接删除临时添加的事务
+              LocalAddDao.deleteLocalAddAffair(stuNum, onlyId)
+            } else {
+              // 不是本地临时事务就上传
+              Api.deleteAffair(remoteId)
+                .throwApiExceptionIfFail()
+                .doOnError {
+                  // 上传失败就暂时保存在本地临时删除的事务中
+                  LocalDeleteDao.insertLocalDeleteAffair(
+                    LocalDeleteAffairEntity(stuNum, onlyId, remoteId)
+                  )
+                  // 然后尝试删除本地临时更新的事务，不管有没有
+                  LocalUpdateDao.deleteLocalUpdateAffair(stuNum, onlyId)
+                }.onErrorComplete { true } // 终止异常向下游传递
+                .blockingGet() // 直接堵塞，因为需要使用数据库的 runInTransaction，不能使用流来处理
+            }
+          }.doOnSuccess {
+            // 最后删除本地数据
+            AffairDao.deleteAffair(stuNum, onlyId)
+          }.blockingGet() // 直接堵塞，因为需要使用数据库的 runInTransaction，不能使用流来处理
+      }
+      // 在 runInTransaction 结束后再发送
+      emitter.onComplete()
+    }
   }
   
   /**
    * 发送本地临时保存的事务
    *
-   * 写了这个复杂的数据流动后，我只想说：
-   * Flow    ✘ 不行
-   * Rxjava  ✔ 彳亍
+   * ## 注意：
+   * ### 不使用 Rxjava 多条流的原因
+   * 最开始采用的 Rxjava 多条流合并，结果发现在使用 runInTransaction 后导致线程死锁，
+   * 最后就直接改成单线程运行了
    *
-   * 如果你能搞懂这里面的数据流动，相信会增加你对 Rxjava 的理解
+   * ### 使用接口包裹的原因
+   * localAdd、localUpdate、localDelete 三个都是接口，
+   * 一是为了同时在 runInTransaction  使用
+   * 二是为了可读性，并没有全部写在 Completable.create {} 里面
    */
   private fun uploadLocalAffair(stuNum: String): Completable {
-    
-    // 本地临时添加的事务干流
-    val addCompletable = {
-      // 这里必须使用这种接口的方式，为了在 runInTransaction 中使用，下同
-      LocalAddDao.getLocalAddAffair(stuNum)
-        .flatMapCompletable { list ->
-          val singleList = list.map { entity ->
-            Api.addAffair(entity.dateJson, entity.time, entity.title, entity.content) // 网络请求
-              .throwApiExceptionIfFail()
-              .doOnSuccess {
-                // 上传成功就删除
-                LocalAddDao.deleteLocalAddAffair(entity)
-              }.doOnSuccess {
-                // 上传成功就修改 remoteId
-                AffairDao.updateRemoteId(stuNum, entity.onlyId, it.remoteId)
-              }.subscribeOn(Schedulers.io())
-          }
-          Single.mergeDelayError(singleList)
-            .flatMapCompletable { Completable.complete() }
-        }.subscribeOn(Schedulers.io())
-    }
-    
-    // 本地临时更新的事务干流
-    val updateCompletable = {
-      LocalUpdateDao.getLocalUpdateAffair(stuNum)
-        .flatMapCompletable { list ->
-          val singleList = list.map { entity ->
-            Api.updateAffair(
-              entity.remoteId, // 注意：这里需要使用 remoteId
-              entity.dateJson,
-              entity.time,
-              entity.title,
-              entity.content
-            ).throwApiExceptionIfFail()
-              .doOnSuccess {
-                // 上传成功就删除
-                LocalUpdateDao.deleteLocalUpdateAffair(entity)
-              }.subscribeOn(Schedulers.io())
-          }
-          Single.mergeDelayError(singleList)
-            .flatMapCompletable { Completable.complete() }
-        }.subscribeOn(Schedulers.io())
-    }
-    
-    // 本地临时删除的事务干流
-    val deleteCompletable = {
-      LocalDeleteDao.getLocalDeleteAffair(stuNum)
-        .flatMapCompletable { list ->
-          val singleList = list.map { entity ->
-            Api.deleteAffair(entity.remoteId)
-              .throwApiExceptionIfFail()
-              .doOnSuccess {
-                // 上传成功就删除
-                LocalDeleteDao.deleteLocalDeleteAffair(entity)
-              }.subscribeOn(Schedulers.io())
-          }
-          Single.mergeDelayError(singleList)
-            .flatMapCompletable { Completable.complete() }
-        }.subscribeOn(Schedulers.io())
-    }
-    
-    // 合并三条干流
-    return Completable.create {
-      // 必须使用 Transaction，保证数据库的同步性
-      try {
-        DB.runInTransaction {
-          Completable.mergeDelayError(
-            listOf(addCompletable.invoke(), updateCompletable.invoke(), deleteCompletable.invoke())
-          ).blockingAwait()
-        }
-        it.onComplete()
-      } catch (e: Exception) {
-        it.onError(e)
+    // 本地临时添加的事务
+    val localAdd = {
+      LocalAddDao.getLocalAddAffair(stuNum).forEach { entity ->
+        Api.addAffair(entity.time, entity.title, entity.content, entity.dateJson) // 网络请求
+          .throwApiExceptionIfFail()
+          .doOnSuccess {
+            // 上传成功就删除
+            LocalAddDao.deleteLocalAddAffair(entity)
+          }.doOnSuccess {
+            // 上传成功就修改 remoteId
+            AffairDao.updateRemoteId(stuNum, entity.onlyId, it.remoteId)
+          }.blockingGet() // 直接同步请求，原因请看该方法注释
       }
     }
+    
+    // 本地临时更新的事务
+    val localUpdate = {
+      LocalUpdateDao.getLocalUpdateAffair(stuNum).forEach { entity ->
+        Api.updateAffair(
+          entity.remoteId, // 注意：这里需要使用 remoteId
+          entity.time,
+          entity.title,
+          entity.content,
+          entity.dateJson
+        ).throwApiExceptionIfFail()
+          .doOnSuccess {
+            // 上传成功就删除
+            LocalUpdateDao.deleteLocalUpdateAffair(entity)
+          }.blockingGet() // 直接同步请求，原因请看该方法注释
+      }
+    }
+    
+    // 本地临时删除的事务
+    val localDelete = {
+      LocalDeleteDao.getLocalDeleteAffair(stuNum).forEach { entity ->
+        Api.deleteAffair(entity.remoteId) // 注意：这里需要使用 remoteId
+          .throwApiExceptionIfFail()
+          .doOnSuccess {
+            // 上传成功就删除
+            LocalDeleteDao.deleteLocalDeleteAffair(entity)
+          }.blockingGet() // 直接同步请求，原因请看该方法注释
+      }
+    }
+    
+    return Completable.create {
+      // 必须使用 Transaction，保证数据库的同步性
+      DB.runInTransaction {
+        localAdd.invoke()
+        localUpdate.invoke()
+        localDelete.invoke()
+      }
+      it.onComplete()
+    }.subscribeOn(Schedulers.io())
   }
 }

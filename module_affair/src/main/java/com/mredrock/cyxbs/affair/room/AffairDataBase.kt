@@ -7,8 +7,8 @@ import com.mredrock.cyxbs.affair.ui.adapter.data.AffairAdapterData
 import com.mredrock.cyxbs.affair.ui.adapter.data.AffairTimeData
 import com.mredrock.cyxbs.affair.ui.adapter.data.AffairWeekData
 import com.mredrock.cyxbs.lib.utils.extensions.appContext
+import io.reactivex.rxjava3.core.Maybe
 import io.reactivex.rxjava3.core.Observable
-import io.reactivex.rxjava3.core.Single
 
 /**
  * ...
@@ -122,7 +122,7 @@ abstract class AffairDao {
   abstract fun getAffairByStuNum(stuNum: String): List<AffairEntity>
 
   @Query("SELECT * FROM affair WHERE stuNum = :stuNum AND onlyId = :onlyId")
-  abstract fun findAffairByOnlyId(stuNum: String, onlyId: Int): AffairEntity?
+  abstract fun findAffairByOnlyId(stuNum: String, onlyId: Int): Maybe<AffairEntity>
 
   @Query("SELECT * FROM affair WHERE stuNum = :stuNum")
   abstract fun observeAffair(stuNum: String): Observable<List<AffairEntity>>
@@ -146,11 +146,10 @@ abstract class AffairDao {
    */
   @Transaction
   open fun updateRemoteId(stuNum: String, onlyId: Int, newRemoteId: Int) {
-    val affair = findAffairByOnlyId(stuNum, onlyId)
-    if (affair != null) {
-      deleteAffair(affair)
-      insertAffair(affair.copy(remoteId = newRemoteId))
-    }
+    findAffairByOnlyId(stuNum, onlyId)
+      .doOnSuccess {
+        updateAffair(it.copy(remoteId = newRemoteId))
+      }.blockingGet()
   }
   
   @Query("SELECT MAX(onlyId) FROM affair WHERE stuNum = :stuNum")
@@ -202,11 +201,6 @@ abstract class AffairDao {
       insertAffair(stuNum, it)
     }
   }
-  
-  fun getRemoteIdByOnlyId(stuNum: String, onlyId: Int): Int {
-    val entity = findAffairByOnlyId(stuNum, onlyId)
-    return entity?.remoteId ?: AffairEntity.LocalRemoteId
-  }
 }
 
 
@@ -251,10 +245,10 @@ abstract class AffairCalendarDao {
 data class LocalAddAffairEntity(
   val stuNum: String,
   val onlyId: Int,
-  val dateJson: String,
   val time: Int,
   val title: String,
-  val content: String
+  val content: String,
+  val dateJson: String
 )
 
 @Dao
@@ -273,7 +267,7 @@ abstract class LocalAddAffairDao {
   abstract fun findLocalAddAffair(stuNum: String, onlyId: Int): LocalAddAffairEntity?
   
   @Query("SELECT * FROM affair_local_add WHERE stuNum = :stuNum")
-  abstract fun getLocalAddAffair(stuNum: String): Single<List<LocalAddAffairEntity>>
+  abstract fun getLocalAddAffair(stuNum: String): List<LocalAddAffairEntity>
   
   @Delete
   abstract fun deleteLocalAddAffair(affair: LocalAddAffairEntity)
@@ -290,10 +284,10 @@ data class LocalUpdateAffairEntity(
   val stuNum: String,
   val onlyId: Int,
   val remoteId: Int,
-  val dateJson: String,
   val time: Int,
   val title: String,
-  val content: String
+  val content: String,
+  val dateJson: String
 )
 
 @Dao
@@ -309,7 +303,7 @@ abstract class LocalUpdateAffairDao {
   abstract fun deleteLocalUpdateAffair(stuNum: String, onlyId: Int)
   
   @Query("SELECT * FROM affair_local_update WHERE stuNum = :stuNum")
-  abstract fun getLocalUpdateAffair(stuNum: String): Single<List<LocalUpdateAffairEntity>>
+  abstract fun getLocalUpdateAffair(stuNum: String): List<LocalUpdateAffairEntity>
   
   @Delete
   abstract fun deleteLocalUpdateAffair(affair: LocalUpdateAffairEntity)
@@ -335,7 +329,7 @@ abstract class LocalDeleteAffairDao {
   abstract fun insertLocalDeleteAffair(affair: LocalDeleteAffairEntity)
   
   @Query("SELECT * FROM affair_local_delete WHERE stuNum = :stuNum")
-  abstract fun getLocalDeleteAffair(stuNum: String): Single<List<LocalDeleteAffairEntity>>
+  abstract fun getLocalDeleteAffair(stuNum: String): List<LocalDeleteAffairEntity>
   
   @Delete
   abstract fun deleteLocalDeleteAffair(affair: LocalDeleteAffairEntity)
