@@ -74,7 +74,7 @@ object PhoneCalendar {
   }
   
   /**
-   * 添加事件,成功返回true,失败返回false
+   * 删除事件,成功返回true,失败返回false
    */
   fun delete(id: Long): Boolean {
     if (!checkPermission()) return false

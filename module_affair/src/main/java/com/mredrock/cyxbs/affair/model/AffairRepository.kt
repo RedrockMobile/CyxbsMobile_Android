@@ -4,11 +4,11 @@ import com.google.gson.Gson
 import com.mredrock.cyxbs.affair.bean.toAffairDateBean
 import com.mredrock.cyxbs.affair.net.AffairApiService
 import com.mredrock.cyxbs.affair.room.*
-import com.mredrock.cyxbs.affair.room.AffairDataBase
-import com.mredrock.cyxbs.affair.room.AffairEntity
 import com.mredrock.cyxbs.affair.room.AffairEntity.Companion.LocalRemoteId
 import com.mredrock.cyxbs.affair.utils.TimeUtils
 import com.mredrock.cyxbs.api.account.IAccountService
+import com.mredrock.cyxbs.api.affair.utils.getEndRow
+import com.mredrock.cyxbs.api.affair.utils.getStartRow
 import com.mredrock.cyxbs.config.config.PhoneCalendar
 import com.mredrock.cyxbs.lib.utils.extensions.unsafeSubscribeBy
 import com.mredrock.cyxbs.lib.utils.network.throwApiExceptionIfFail
@@ -18,7 +18,6 @@ import io.reactivex.rxjava3.core.Observable
 import io.reactivex.rxjava3.core.Single
 import io.reactivex.rxjava3.schedulers.Schedulers
 import java.util.concurrent.Callable
-import kotlin.IllegalStateException
 
 /**
  * ...
@@ -27,23 +26,23 @@ import kotlin.IllegalStateException
  * @date 2022/5/3 19:30
  */
 object AffairRepository {
-  
+
   private val Api = AffairApiService.INSTANCE
-  
+
   private val DB = AffairDataBase.INSTANCE
   private val AffairDao = DB.getAffairDao()
   private val AffairCalendarDao = DB.getAffairCalendarDao()
   private val LocalAddDao = DB.getLocalAddAffairDao()
   private val LocalUpdateDao = DB.getLocalUpdateAffairDao()
   private val LocalDeleteDao = DB.getLocalDeleteAffairDao()
-  
+
   private val mGson = Gson()
-  
+
   private fun List<AffairEntity.AtWhatTime>.toPostDateJson(): String {
     // 不建议让 AtWhatTime 成为转 json 的类，应该转换成 AffairDateBean 转 json
     return mGson.toJson(toAffairDateBean())
   }
-  
+
   /**
    * 观察当前登录人的事务
    * 1、支持换账号登录后返回新登录人的数据
@@ -67,7 +66,7 @@ object AffairRepository {
         }
       }.subscribeOn(Schedulers.io())
   }
-  
+
   /**
    * 刷新事务
    */
@@ -84,7 +83,7 @@ object AffairRepository {
         AffairDao.resetData(selfNum, affairIncompleteEntity)
       }.subscribeOn(Schedulers.io())
   }
-  
+
   /**
    * 得到事务，但不建议你直接使用，应该用 [observeAffair] 来代替
    *
@@ -98,7 +97,7 @@ object AffairRepository {
       AffairDao.getAffairByStuNum(selfNum)
     }.subscribeOn(Schedulers.io())
   }
-  
+
   /**
    * 添加事务，请使用 [observeAffair] 进行观察数据
    */
@@ -142,26 +141,52 @@ object AffairRepository {
       }.doOnSuccess { onlyId ->
         // 先添加日历
         if (time > 0) {
-          atWhatTime.forEach {
-            val calendarId = PhoneCalendar.add(
-              PhoneCalendar.RepeatData(
-                title,
-                content,
-                TimeUtils.getBegin(it.beginLesson, it.day),
-                TimeUtils.getDuration(it.period),
-                TimeUtils.getRRule(it.day),
-                time
+          atWhatTime.forEach { it ->
+            // 如果是整学期,添加重复事件
+            if (it.week.isNotEmpty() && it.week[0] == 0) {
+              val calendarId = PhoneCalendar.add(
+                PhoneCalendar.RepeatData(
+                  title,
+                  content,
+                  TimeUtils.getBegin(it.beginLesson, it.day),
+                  TimeUtils.getDuration(
+                    getStartRow(it.beginLesson),
+                    getEndRow(it.beginLesson, it.period)
+                  ),
+                  TimeUtils.getRRule(it.day),
+                  time
+                )
               )
-            )
-            if (calendarId != null) {
-              AffairCalendarDao.insert(AffairCalendarEntity(onlyId, calendarId))
+              if (calendarId != null) {
+                AffairCalendarDao.insert(AffairCalendarEntity(onlyId, calendarId))
+              }
+            } else {
+              // 如果不是整学期,添加一次性事件
+              it.week.forEach { weekNum ->
+                val calendarId = PhoneCalendar.add(
+                  PhoneCalendar.OnceData(
+                    title,
+                    content,
+                    TimeUtils.getBegin(getStartRow(it.beginLesson), it.day, weekNum),
+                    TimeUtils.getEnd(
+                      getStartRow(it.beginLesson),
+                      it.day, weekNum,
+                      getEndRow(it.beginLesson, it.period)
+                    ),
+                    time
+                  )
+                )
+                if (calendarId != null) {
+                  AffairCalendarDao.insert(AffairCalendarEntity(onlyId, calendarId))
+                }
+              }
             }
           }
         }
       }.flatMapCompletable { Completable.complete() }
       .subscribeOn(Schedulers.io())
   }
-  
+
   /**
    * 更新事务，请使用 [observeAffair] 进行观察数据
    */
@@ -227,25 +252,51 @@ object AffairRepository {
         }
         // 先添加日历
         if (time > 0) {
-          atWhatTime.forEach {
-            val calendarId = PhoneCalendar.add(
-              PhoneCalendar.RepeatData(
-                title,
-                content,
-                TimeUtils.getBegin(it.beginLesson, it.day),
-                TimeUtils.getDuration(it.period),
-                TimeUtils.getRRule(it.day),
-                time
+          atWhatTime.forEach { it ->
+            // 如果是整学期,添加重复事件
+            if (it.week.isNotEmpty() && it.week[0] == 0) {
+              val calendarId = PhoneCalendar.add(
+                PhoneCalendar.RepeatData(
+                  title,
+                  content,
+                  TimeUtils.getBegin(it.beginLesson, it.day),
+                  TimeUtils.getDuration(
+                    getStartRow(it.beginLesson),
+                    getEndRow(it.beginLesson, it.period)
+                  ),
+                  TimeUtils.getRRule(it.day),
+                  time
+                )
               )
-            )
-            if (calendarId != null) {
-              AffairCalendarDao.insert(AffairCalendarEntity(onlyId, calendarId))
+              if (calendarId != null) {
+                AffairCalendarDao.insert(AffairCalendarEntity(onlyId, calendarId))
+              }
+            } else {
+              // 如果不是整学期,添加一次性事件
+              it.week.forEach { weekNum ->
+                val calendarId = PhoneCalendar.add(
+                  PhoneCalendar.OnceData(
+                    title,
+                    content,
+                    TimeUtils.getBegin(getStartRow(it.beginLesson), it.day, weekNum),
+                    TimeUtils.getEnd(
+                      getStartRow(it.beginLesson),
+                      it.day, weekNum,
+                      getEndRow(it.beginLesson, it.period)
+                    ),
+                    time
+                  )
+                )
+                if (calendarId != null) {
+                  AffairCalendarDao.insert(AffairCalendarEntity(onlyId, calendarId))
+                }
+              }
             }
           }
         }
       }.subscribeOn(Schedulers.io())
   }
-  
+
   /**
    * 删除事务，请使用 [observeAffair] 进行观察数据
    */
@@ -298,7 +349,7 @@ object AffairRepository {
         }
       }.subscribeOn(Schedulers.io())
   }
-  
+
   /**
    * 发送本地临时保存的事务
    *
@@ -309,7 +360,7 @@ object AffairRepository {
    * 如果你能搞懂这里面的数据流动，相信会增加你对 Rxjava 的理解
    */
   private fun uploadLocalAffair(stuNum: String): Completable {
-    
+
     // 本地临时添加的事务干流
     val addCompletable = {
       // 这里必须使用这种接口的方式，为了在 runInTransaction 中使用，下同
@@ -330,7 +381,7 @@ object AffairRepository {
             .flatMapCompletable { Completable.complete() }
         }.subscribeOn(Schedulers.io())
     }
-    
+
     // 本地临时更新的事务干流
     val updateCompletable = {
       LocalUpdateDao.getLocalUpdateAffair(stuNum)
@@ -352,7 +403,7 @@ object AffairRepository {
             .flatMapCompletable { Completable.complete() }
         }.subscribeOn(Schedulers.io())
     }
-    
+
     // 本地临时删除的事务干流
     val deleteCompletable = {
       LocalDeleteDao.getLocalDeleteAffair(stuNum)
@@ -369,7 +420,7 @@ object AffairRepository {
             .flatMapCompletable { Completable.complete() }
         }.subscribeOn(Schedulers.io())
     }
-    
+
     // 合并三条干流
     return Completable.create {
       // 必须使用 Transaction，保证数据库的同步性
