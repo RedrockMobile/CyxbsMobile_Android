@@ -38,7 +38,7 @@ class CourseBottomDialog(
       // 只有一个时隐藏指示器
       findViewById<View>(R.id.course_indicator_dialog_bottom).gone()
     }
-    slideShow.setAdapter(DialogBottomVpAdapter(data, isHomeCourse))
+    slideShow.setAdapter(DialogBottomVpAdapter(this, data, isHomeCourse))
   }
   
   override fun <T : View> findViewById(id: Int): T {

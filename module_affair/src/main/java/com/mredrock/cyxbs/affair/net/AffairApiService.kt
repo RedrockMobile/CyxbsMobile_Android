@@ -1,7 +1,7 @@
 package com.mredrock.cyxbs.affair.net
 
-import com.mredrock.cyxbs.affair.model.bean.AddAffairBean
-import com.mredrock.cyxbs.affair.model.bean.AffairBean
+import com.mredrock.cyxbs.affair.bean.AddAffairBean
+import com.mredrock.cyxbs.affair.bean.AffairBean
 import com.mredrock.cyxbs.lib.utils.network.ApiGenerator
 import com.mredrock.cyxbs.lib.utils.network.ApiStatus
 import com.mredrock.cyxbs.lib.utils.network.ApiWrapper
@@ -20,14 +20,14 @@ interface AffairApiService {
   @FormUrlEncoded
   @Headers("App-Version:74")
   fun addAffair(
-    @Field("date")
-    date: String, // 为 json 序列化后的 string
     @Field("time")
-    time: Int,
+    time: Int, // 为 json 序列化后的 string
     @Field("title")
     title: String,
     @Field("content")
-    content: String
+    content: String,
+    @Field("date")
+    dateJson: String
   ): Single<AddAffairBean>
 
   @POST("/magipoke-reminder/Person/getTransaction")
@@ -39,15 +39,15 @@ interface AffairApiService {
   @Headers("App-Version:74")
   fun updateAffair(
     @Field("id")
-    id: Int,
-    @Field("date")
-    dateJson: String,
+    remoteId: Int,
     @Field("time")
     time: Int,
     @Field("title")
     title: String,
     @Field("content")
-    content: String
+    content: String,
+    @Field("date")
+    dateJson: String
   ): Single<ApiStatus>
 
   @POST("/magipoke-reminder/Person/deleteTransaction")
@@ -55,7 +55,7 @@ interface AffairApiService {
   @Headers("App-Version:74")
   fun deleteAffair(
     @Field("id")
-    id: Int
+    remoteId: Int
   ): Single<ApiStatus>
 
   @GET("/magipoke-reminder/Person/getHotWord")

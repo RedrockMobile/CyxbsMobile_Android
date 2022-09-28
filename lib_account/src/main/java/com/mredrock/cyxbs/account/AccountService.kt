@@ -316,7 +316,7 @@ internal class AccountService : IAccountService {
                 positiveButton(R.string.account_login_now) {
                     if (!isLogin()) {
                         ILoginService::class.impl
-                            .startLoginActivityReboot(context)
+                            .startLoginActivityReboot()
                     }
                 }
                 negativeButton(R.string.account_login_later) {

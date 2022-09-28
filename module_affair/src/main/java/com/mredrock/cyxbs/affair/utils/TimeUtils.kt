@@ -25,29 +25,50 @@ object TimeUtils {
     68400000, // "19:00",
     71700000, // "19:55",
     75000000, // "20:50",
-    78300000, // "21:45"
+    78300000, // "21:45",
+    81000000, // "22:30"
   )
 
   /**
-   * 得到开始时间
+   * 得到开始时间(重复事件,开始时间固定在该学期的第一周)
    */
-  fun getBegin(startRow: Int, weekNum: Int): Long {
+  fun getBegin(startRow: Int, day: Int): Long {
     // 在拿不到开学第一天时间戳时，返回 2022 年 9 月 5 号，但这个是不可能出现的情况
     val tmp = SchoolCalendar.getFirstMonDayTimestamp() ?: 1662307200000
     // 得到确切的时间 开学第一天+星期*8640+选择的开始时间
-    return tmp + LESSON_TIME_ARRAY[startRow] + weekNum * 86400000
+    return tmp + LESSON_TIME_ARRAY[startRow] + day * 86400000
+  }
+
+  /**
+   * 得到开始时间(一次性事件,开始时间在具体的某一周)
+   */
+  fun getBegin(startRow: Int, day: Int, weekNum: Int): Long {
+    // 在拿不到开学第一天时间戳时，返回 2022 年 9 月 5 号，但这个是不可能出现的情况
+    val tmp = SchoolCalendar.getFirstMonDayTimestamp() ?: 1662307200000
+    // 得到确切的时间 开学第一天+星期数*8640+选择的开始时间+(周数-1)*604800000
+    return tmp + LESSON_TIME_ARRAY[startRow] + day * 86400000 + (weekNum.toLong() - 1) * 604800000
+  }
+
+  /**
+   * 得到结束时间(只有一次性事件)
+   */
+  fun getEnd(startRow: Int, day: Int, weekNum: Int, endRow: Int): Long {
+    return getBegin(
+      startRow,
+      day,
+      weekNum
+    ) + LESSON_TIME_ARRAY[endRow + 1] - LESSON_TIME_ARRAY[startRow]
   }
 
   /**
    * 将持续时间转化为rule持续时间
    */
-  fun getDuration(period: Int): String {
-    return when (period) {
-      1 -> "P45M"
-      2 -> "PT1H40M"
-      3 -> "PT2H35M"
-      4 -> "PT3H25M"
-      else -> "P1M"
+  fun getDuration(startRow: Int, endRow: Int): String {
+    val duration = LESSON_TIME_ARRAY[endRow + 1] - LESSON_TIME_ARRAY[startRow]
+    return if (duration < 60000) {
+      "P${duration / 60000}M"
+    } else {
+      "PT${duration / 3660000}H${duration % 3600000 / 60000}M"
     }
   }
 
@@ -66,27 +87,12 @@ object TimeUtils {
   /**
    * 将周数转换为Rule规则,只添加单个周数
    */
-
   fun getRRule(week: Int): String {
     var str = "FREQ=WEEKLY;COUNT=21;BYDAY="
     str += WEEK_RULE_ARRAY[week]
     // 去除最后一个,
     str = str.substring(0, str.length - 1)
     return str
-  }
-
-  /**
-   * 设置提醒时间
-   */
-  fun getRemind(remind: Int): Int {
-    return when (remind) {
-      1 -> 5
-      2 -> 10
-      3 -> 20
-      4 -> 30
-      5 -> 60
-      else -> 0
-    }
   }
 
   /**
@@ -97,6 +103,4 @@ object TimeUtils {
     rawList.forEach { set.add(it.day) }
     return set.toList()
   }
-
-
 }

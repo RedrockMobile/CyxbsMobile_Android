@@ -38,11 +38,11 @@ class AffairActivity : BaseActivity() {
       )
     }
     
-    fun startForEdit(affairId: Int) {
+    fun startForEdit(onlyId: Int) {
       appContext.startActivity(
         Intent(appContext, AffairActivity::class.java)
           .addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
-          .putExtra(AffairActivity::mArguments.name, EditAffairArgument(affairId))
+          .putExtra(AffairActivity::mArguments.name, EditAffairArgument(onlyId))
       )
     }
     
@@ -54,7 +54,7 @@ class AffairActivity : BaseActivity() {
       val period: Int
     ) : Argument
     
-    data class EditAffairArgument(val affairId: Int) : Argument
+    data class EditAffairArgument(val onlyId: Int) : Argument
   }
   
   // 启动参数
@@ -136,7 +136,7 @@ class AffairActivity : BaseActivity() {
     when (val it = mArguments) {
       is EditAffairArgument -> {
         replaceFragment(R.id.affair_fcv_edit_affair) {
-          EditAffairFragment.newInstance(it.affairId)
+          EditAffairFragment.newInstance(it.onlyId)
         }
       }
       is AddAffairArgument -> {

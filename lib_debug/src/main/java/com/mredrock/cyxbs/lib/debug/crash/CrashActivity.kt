@@ -7,6 +7,7 @@ import android.content.Context
 import android.content.Intent
 import android.graphics.Color
 import android.os.Bundle
+import android.os.Process
 import android.text.Spannable
 import android.text.SpannableStringBuilder
 import android.text.style.ForegroundColorSpan
@@ -42,7 +43,8 @@ class CrashActivity : BaseActivity() {
             appContext.packageManager.getLaunchIntentForPackage(appContext.packageName)!!
               .addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
               .addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK)
-          ).putExtra(
+          ).putExtra(CrashActivity::mMainProcessPid.name, Process.myPid())
+          .putExtra(
             CrashActivity::mNetworkResult.name,
             ApiGenerator.apiResultList.mapTo(ArrayList()) {
               // 因为 CrashActivity 是在另一个进程中启动，所以只能以 String 的形式传过去
@@ -79,6 +81,7 @@ class CrashActivity : BaseActivity() {
   
   private val mStackTrace by intent<String>()
   private val mRebootIntent by intent<Intent>()
+  private val mMainProcessPid by intent<Int>()
   private val mNetworkResult by intent<ArrayList<NetworkApiResult>>()
   private val mProcessName by intent<String>()
   private val mThreadName by intent<String>()
@@ -92,6 +95,7 @@ class CrashActivity : BaseActivity() {
   
   override fun onCreate(savedInstanceState: Bundle?) {
     super.onCreate(savedInstanceState)
+    Process.killProcess(mMainProcessPid); // Kill original main process
     setContentView(R.layout.debug_activity_crash)
     initTextView()
     initShowStackTrace()

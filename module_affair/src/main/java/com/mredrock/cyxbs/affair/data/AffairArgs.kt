@@ -1,4 +1,4 @@
-package com.mredrock.cyxbs.affair.model.data
+package com.mredrock.cyxbs.affair.data
 
 import java.io.Serializable
 

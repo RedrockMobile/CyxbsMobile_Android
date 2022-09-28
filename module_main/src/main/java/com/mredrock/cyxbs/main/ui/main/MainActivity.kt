@@ -4,12 +4,14 @@ import android.os.Bundle
 import androidx.activity.viewModels
 import androidx.core.view.postDelayed
 import androidx.viewpager2.widget.ViewPager2
+import com.alibaba.android.arouter.facade.annotation.Route
 import com.mredrock.cyxbs.api.account.IAccountService
 import com.mredrock.cyxbs.api.login.ILoginService
 import com.mredrock.cyxbs.api.update.IAppUpdateService
 import com.mredrock.cyxbs.config.route.DISCOVER_EMPTY_ROOM
 import com.mredrock.cyxbs.config.route.DISCOVER_GRADES
 import com.mredrock.cyxbs.config.route.DISCOVER_SCHOOL_CAR
+import com.mredrock.cyxbs.config.route.MAIN_MAIN
 import com.mredrock.cyxbs.config.sp.SP_COURSE_SHOW_STATE
 import com.mredrock.cyxbs.config.sp.defaultSp
 import com.mredrock.cyxbs.lib.base.ui.BaseActivity
@@ -30,6 +32,7 @@ import com.mredrock.cyxbs.main.widget.BottomNavLayout
  * @email guo985892345@foxmail.com
  * @date 2022/9/14 20:49
  */
+@Route(path = MAIN_MAIN)
 class MainActivity : BaseActivity() {
   
   private val mViewModel by viewModels<MainViewModel>()
@@ -58,7 +61,7 @@ class MainActivity : BaseActivity() {
       if (!mAccountService.getVerifyService().isLogin() || mAccountService.getVerifyService().isRefreshTokenExpired()) {
         // 未登录 和 refreshToken 过期时 需要跳转到登录界面
         ILoginService::class.impl
-          .startLoginActivity(this, MainActivity::class.java, MainActivity::class.java)
+          .startLoginActivityReboot()
         finish()
         return null
       }

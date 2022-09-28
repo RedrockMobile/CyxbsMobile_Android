@@ -49,7 +49,7 @@ object LinkRepository {
               getLinkStudent().unsafeSubscribeBy()
             }.subscribeOn(Schedulers.io())
         }
-      }
+      }.subscribeOn(Schedulers.io())
   }
   
   /**

@@ -22,7 +22,7 @@ import com.mredrock.cyxbs.affair.ui.adapter.data.toAtWhatTime
 import com.mredrock.cyxbs.affair.ui.fragment.utils.AffairPageManager
 import com.mredrock.cyxbs.affair.ui.viewmodel.activity.AffairViewModel
 import com.mredrock.cyxbs.affair.ui.viewmodel.fragment.AddAffairViewModel
-import com.mredrock.cyxbs.affair.widge.RemindSelectDialog
+import com.mredrock.cyxbs.affair.ui.dialog.RemindSelectDialog
 import com.mredrock.cyxbs.lib.base.ui.BaseFragment
 import com.mredrock.cyxbs.lib.utils.extensions.*
 
@@ -95,7 +95,7 @@ class AddAffairFragment : BaseFragment(R.layout.affair_fragment_add_affair) {
     
     mRvDurationAdapter.submitList(
       listOf(
-        AffairWeekData(mAffairWeek, emptyList()),
+        AffairWeekData(mAffairWeek),
         AffairTimeData(mAffairDay, mAffairBeginLesson, mAffairPeriod)
       )
     )

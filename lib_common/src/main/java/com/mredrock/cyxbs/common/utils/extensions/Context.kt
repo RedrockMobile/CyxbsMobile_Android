@@ -5,7 +5,6 @@ import android.content.Context
 import android.content.Intent
 import android.content.res.Configuration
 import android.content.res.Resources
-import android.graphics.Bitmap
 import android.graphics.Point
 import android.os.Build
 import android.os.Handler
@@ -17,12 +16,9 @@ import android.widget.Toast
 import androidx.annotation.DimenRes
 import androidx.annotation.IdRes
 import androidx.fragment.app.Fragment
-import com.mredrock.cyxbs.common.bean.LoginConfig
 import com.mredrock.cyxbs.common.component.CyxbsToast
 import com.mredrock.cyxbs.common.service.ServiceManager
 import com.mredrock.cyxbs.api.account.IAccountService
-import com.mredrock.cyxbs.api.login.ILoginService
-import com.mredrock.cyxbs.common.service.impl
 import com.mredrock.cyxbs.common.utils.Internals
 
 /**
@@ -104,25 +100,6 @@ fun Context.doIfLogin(msg: String? = "此功能", next: () -> Unit) {
     } else {
         ServiceManager.getService(IAccountService::class.java).getVerifyService().askLogin(this, "请先登录才能使用${msg}哦~")
     }
-}
-
-@Deprecated("LoginActivity 已开始使用 lib_base 模块，虽然有兼容，但请不要再使用")
-fun Activity.startLoginActivity(loginConfig: LoginConfig = LoginConfig(isWarnUser = false)) {
-    //如果需要提示用户未登录
-    if (loginConfig.isWarnUser) {
-        CyxbsToast.makeText(this, loginConfig.warnMessage, Toast.LENGTH_SHORT).show()
-    }
-    
-    if (loginConfig.isFinish) {
-        //如果设置了重新启动activity，则传Class过去
-        ILoginService::class.impl
-            .startLoginActivity(this, this::class.java)
-    } else {
-        ILoginService::class.impl
-            .startLoginActivity(this, null)
-    }
-    overridePendingTransition(0, 0)// 取消转场动画
-    if (loginConfig.isFinish) finish() // 关闭需要放在跳转之后
 }
 
 

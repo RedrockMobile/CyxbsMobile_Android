@@ -1,5 +1,6 @@
 import com.mredrock.cyxbs.convention.depend.*
 import com.mredrock.cyxbs.convention.depend.api.dependApiAccount
+import com.mredrock.cyxbs.convention.depend.api.dependApiCourse
 import com.mredrock.cyxbs.convention.depend.api.dependApiLogin
 import com.mredrock.cyxbs.convention.depend.lib.dependLibBase
 import com.mredrock.cyxbs.convention.depend.lib.dependLibConfig
@@ -11,6 +12,7 @@ plugins {
 
 dependApiLogin()
 dependApiAccount()
+dependApiCourse()
 
 dependLibBase()
 dependLibUtils()

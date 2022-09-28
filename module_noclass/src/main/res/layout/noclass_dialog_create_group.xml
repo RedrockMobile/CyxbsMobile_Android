@@ -73,6 +73,7 @@
             app:layout_constraintVertical_bias="0.4">
 
             <TextView
+                android:textColor="@color/noclass_hint_text_color_dark"
                 android:layout_marginStart="16dp"
                 android:id="@+id/tv_noclass_create_group_name"
                 android:layout_width="wrap_content"
@@ -82,19 +83,20 @@
                 android:textSize="14sp" />
 
             <EditText
-                android:layout_marginStart="16dp"
+                android:textColorHint="@color/noclass_create_group_bg"
+                android:textColor="@color/noclass_hint_text_color_dark"
+                android:layout_marginStart="8dp"
                 android:layout_marginEnd="16dp"
                 android:id="@+id/et_noclass_create_group"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
-                android:background="@color/config_white_black"
+                android:background="@color/noclass_create_group_bg"
                 android:hint="请输入你的分组名称"
                 android:textSize="14sp"
                 android:maxLength="12"
                 android:maxLines="1"
                 android:singleLine="true" />
-
         </LinearLayout>
 
         <Button
@@ -104,7 +106,7 @@
             android:layout_height="40dp"
             android:background="@drawable/noclass_shape_button_common_bg"
             android:text="创建完成"
-            android:textColor="@color/config_white_black"
+            android:textColor="@color/noclass_group_selected_text_bg"
             android:textSize="18sp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"

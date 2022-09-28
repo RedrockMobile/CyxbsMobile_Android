@@ -3,6 +3,7 @@ package com.mredrock.cyxbs.affair.ui.adapter.data
 import com.mredrock.cyxbs.affair.room.AffairEntity
 import com.mredrock.cyxbs.api.affair.utils.getEndRow
 import com.mredrock.cyxbs.api.affair.utils.getStartRow
+import com.mredrock.cyxbs.api.course.ICourseService
 
 /**
  * ...
@@ -20,7 +21,6 @@ sealed interface AffairAdapterData {
  */
 data class AffairWeekData(
   val week: Int,
-  val list: List<AffairTimeData>, // 为了以后拓展
 ) : AffairAdapterData {
   override val onlyId: Any
     get() = week
@@ -30,12 +30,14 @@ data class AffairWeekData(
   }
   
   companion object {
+    /**
+     * 这里面的个数跟 [ICourseService.maxWeek] 挂钩
+     */
     val WEEK_ARRAY = arrayOf(
       "整学期", "第一周", "第二周", "第三周", "第四周", "第五周",
       "第六周", "第七周", "第八周", "第九周", "第十周", "第十一周",
       "第十二周", "第十三周", "第十四周", "第十五周", "第十六周",
       "第十七周", "第十八周", "第十九周", "第二十周", "第二十一周",
-      "第二十二周", "第二十三周", "第二十四周", "第二十五周"
     )
   }
 }
@@ -53,7 +55,13 @@ data class AffairTimeData(
     get() = weekNum * 10000 + beginLesson * 100 + period
   
   fun getTimeStr(): String {
-    return "${DAY_ARRAY[weekNum]} ${LESSON_ARRAY[getStartRow(beginLesson)]}-${LESSON_ARRAY[getEndRow(beginLesson, period)]}"
+    val startRow = getStartRow(beginLesson)
+    val endRow = getEndRow(beginLesson, period)
+    return if (startRow == endRow) {
+      "${DAY_ARRAY[weekNum]} ${LESSON_ARRAY[getStartRow(beginLesson)]}"
+    } else {
+      "${DAY_ARRAY[weekNum]} ${LESSON_ARRAY[getStartRow(beginLesson)]}-${LESSON_ARRAY[getEndRow(beginLesson, period)]}"
+    }
   }
   
   companion object {
@@ -91,10 +99,14 @@ fun List<AffairAdapterData>.toAtWhatTime(): List<AffairEntity.AtWhatTime> {
   val weekList = arrayListOf<Int>()
   val timeList = arrayListOf<AffairTimeData>()
   forEach {
-    if (it is AffairWeekData) {
-      weekList.add(it.week)
-    } else if (it is AffairTimeData) {
-      timeList.add(it)
+    when (it) {
+      is AffairWeekData -> {
+        weekList.add(it.week)
+      }
+      is AffairTimeData -> {
+        timeList.add(it)
+      }
+      is AffairTimeAdd -> {}
     }
   }
   timeList.forEach {

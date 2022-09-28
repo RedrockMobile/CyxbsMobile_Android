@@ -1,4 +1,5 @@
 import com.mredrock.cyxbs.convention.depend.Android
+import com.mredrock.cyxbs.convention.depend.api.dependApiCourse
 import com.mredrock.cyxbs.convention.depend.dependNetwork
 import com.mredrock.cyxbs.convention.depend.dependRxjava
 import com.mredrock.cyxbs.convention.depend.lib.dependLibBase
@@ -12,6 +13,8 @@ plugins {
 dependLibBase()
 dependLibUtils()
 dependLibConfig()
+
+dependApiCourse()
 
 dependNetwork()
 dependRxjava()

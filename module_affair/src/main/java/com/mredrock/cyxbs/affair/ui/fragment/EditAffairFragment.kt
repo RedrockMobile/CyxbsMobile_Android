@@ -19,7 +19,7 @@ import com.mredrock.cyxbs.affair.ui.adapter.AffairDurationAdapter
 import com.mredrock.cyxbs.affair.ui.adapter.data.toAtWhatTime
 import com.mredrock.cyxbs.affair.ui.viewmodel.activity.AffairViewModel
 import com.mredrock.cyxbs.affair.ui.viewmodel.fragment.EditAffairViewModel
-import com.mredrock.cyxbs.affair.widge.RemindSelectDialog
+import com.mredrock.cyxbs.affair.ui.dialog.RemindSelectDialog
 import com.mredrock.cyxbs.lib.base.ui.BaseFragment
 import com.mredrock.cyxbs.lib.utils.extensions.doPermissionAction
 import com.mredrock.cyxbs.lib.utils.extensions.setOnSingleClickListener
@@ -33,16 +33,16 @@ import com.mredrock.cyxbs.lib.utils.extensions.setOnSingleClickListener
 class EditAffairFragment : BaseFragment(R.layout.affair_fragment_edit_affair) {
 
   companion object {
-    fun newInstance(affairId: Int): EditAffairFragment {
+    fun newInstance(onlyId: Int): EditAffairFragment {
       return EditAffairFragment().apply {
         arguments = bundleOf(
-          this::mAffairId.name to affairId
+          this::mAffairOnlyId.name to onlyId
         )
       }
     }
   }
   
-  private val mAffairId by arguments<Int>()
+  private val mAffairOnlyId by arguments<Int>()
   
   private val mViewModel by viewModels<EditAffairViewModel>()
   private val mActivityViewModel by activityViewModels<AffairViewModel>()
@@ -58,7 +58,7 @@ class EditAffairFragment : BaseFragment(R.layout.affair_fragment_edit_affair) {
 
   override fun onCreate(savedInstanceState: Bundle?) {
     super.onCreate(savedInstanceState)
-    mViewModel.findAffairEntity(mAffairId)
+    mViewModel.findAffairEntity(mAffairOnlyId)
   }
 
   override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -111,7 +111,7 @@ class EditAffairFragment : BaseFragment(R.layout.affair_fragment_edit_affair) {
         toast("掌友，标题不能为空哟！")
       } else {
         mViewModel.updateAffair(
-          mAffairId,
+          mAffairOnlyId,
           mRemindMinute,
           mEtTitle.text.toString(),
           mEtContent.text.toString(),

@@ -65,7 +65,8 @@ object CourseHeaderHelper {
             }
         }
       }.startWithItem(HintHeader("数据加载中"))
-      .onErrorReturnItem(HintHeader("数据错误"))
+      // 因为上流用的观察流，一般是不会发送异常到下流的，所以该问题一般不会出现，除非你动了数据库但没有改版本号
+      .onErrorReturnItem(HintHeader("内部错误，请尝试卸载后重装"))
       .subscribeOn(Schedulers.io())
   }
   

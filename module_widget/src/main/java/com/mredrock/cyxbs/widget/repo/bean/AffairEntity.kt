@@ -3,7 +3,6 @@ package com.mredrock.cyxbs.widget.repo.bean
 import androidx.room.Entity
 import androidx.room.PrimaryKey
 import com.mredrock.cyxbs.api.affair.IAffairService
-import com.mredrock.cyxbs.api.course.ILessonService
 import java.io.Serializable
 
 /**
@@ -28,15 +27,15 @@ data class AffairEntity(
             val affairs = arrayListOf<AffairEntity>()
             for (apiAffair in apiAffairs) {
                 val affair = AffairEntity(
-                    stuNum = apiAffair.stuNum,
-                    id = apiAffair.id,
-                    time = apiAffair.time,
-                    title = apiAffair.title,
-                    content = apiAffair.content,
-                    week = apiAffair.week,
-                    beginLesson = apiAffair.beginLesson,
-                    day = apiAffair.day,
-                    period = apiAffair.period
+                  stuNum = apiAffair.stuNum,
+                  id = apiAffair.onlyId,
+                  time = apiAffair.time,
+                  title = apiAffair.title,
+                  content = apiAffair.content,
+                  week = apiAffair.week,
+                  beginLesson = apiAffair.beginLesson,
+                  day = apiAffair.day,
+                  period = apiAffair.period
                 )
                 affairs.add(affair)
             }
@@ -45,15 +44,15 @@ data class AffairEntity(
 
         fun AffairEntity.convertToApi(): IAffairService.Affair {
             return IAffairService.Affair(
-                stuNum = this.stuNum,
-                week = this.week,
-                beginLesson = this.beginLesson,
-                day = this.day,
-                period = this.period,
-                id = this.id,
-                time = this.time,
-                title = this.title,
-                content = this.content
+              stuNum = this.stuNum,
+              week = this.week,
+              beginLesson = this.beginLesson,
+              day = this.day,
+              period = this.period,
+              onlyId = this.id,
+              time = this.time,
+              title = this.title,
+              content = this.content
             )
         }
     }

@@ -3,9 +3,9 @@ package com.mredrock.cyxbs.lib.utils.extensions
 import android.content.Context
 import android.content.DialogInterface
 import androidx.appcompat.app.AlertDialog
-import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.edit
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.FragmentActivity
 import com.tbruyelle.rxpermissions3.RxPermissions
 
 /**
@@ -146,7 +146,7 @@ private fun performRequestPermission(
     request()
 }
 
-fun AppCompatActivity.doPermissionAction(
+fun FragmentActivity.doPermissionAction(
     vararg permissionsRequired: String,
     actionBuilder: PermissionActionBuilder.() -> Unit
 ) {
@@ -170,7 +170,7 @@ fun Fragment.doPermissionAction(
     )
 }
 
-fun AppCompatActivity.isPermissionGranted(permissions: String) =
+fun FragmentActivity.isPermissionGranted(permissions: String) =
     RxPermissions(this).isGranted(permissions)
 
 fun Fragment.isPermissionGranted(permissions: String) = RxPermissions(this).isGranted(permissions)

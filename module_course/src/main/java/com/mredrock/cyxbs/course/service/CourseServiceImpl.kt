@@ -84,7 +84,7 @@ class CourseServiceImpl : ICourseService {
           affair.day,
           affair.beginLesson,
           affair.period,
-          affair.id,
+          affair.onlyId,
           affair.time,
           affair.title,
           affair.content

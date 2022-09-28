@@ -1,13 +1,17 @@
 package com.mredrock.cyxbs.course.page.course.ui.dialog.adapter.viewholder
 
+import android.content.DialogInterface
 import android.view.ViewGroup
 import android.widget.Button
 import android.widget.TextView
 import com.mredrock.cyxbs.api.affair.IAffairService
 import com.mredrock.cyxbs.course.R
 import com.mredrock.cyxbs.course.page.course.data.AffairData
+import com.mredrock.cyxbs.lib.base.utils.safeSubscribeBy
 import com.mredrock.cyxbs.lib.utils.extensions.setOnSingleClickListener
+import com.mredrock.cyxbs.lib.utils.extensions.toast
 import com.mredrock.cyxbs.lib.utils.service.impl
+import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
 
 /**
  *
@@ -16,7 +20,8 @@ import com.mredrock.cyxbs.lib.utils.service.impl
  * @date 2022/9/17 18:03
  */
 class AffairVH(
-  parent: ViewGroup
+  parent: ViewGroup,
+  val dialog: DialogInterface
 ) : CourseViewHolder<AffairData>(parent, R.layout.course_dialog_bottom_affair) {
   
   private val mTvTitle = findViewById<TextView>(R.id.course_tv_dialog_affair_title)
@@ -31,11 +36,16 @@ class AffairVH(
     mTvDuration.text = "${data.weekStr} ${data.weekdayStr}   ${data.durationStr}"
     mBtnDelete.setOnSingleClickListener {
       IAffairService::class.impl
-        .deleteAffair(data.id)
+        .deleteAffair(data.onlyId)
+        .observeOn(AndroidSchedulers.mainThread())
+        .safeSubscribeBy(mBtnDelete) {
+          toast("删除成功")
+          dialog.dismiss()
+        }
     }
     mBtnChange.setOnSingleClickListener {
       IAffairService::class.impl
-        .startActivityForEditActivity(data.id)
+        .startActivityForEditActivity(data.onlyId)
     }
   }
 }

@@ -1,4 +1,4 @@
-package com.mredrock.cyxbs.affair.widge
+package com.mredrock.cyxbs.affair.ui.dialog.base
 
 import android.content.Context
 import android.view.LayoutInflater
@@ -13,7 +13,7 @@ import com.mredrock.cyxbs.affair.R
  * date: 2022/9/7
  * description:
  */
-open class RedRockBottomSheetDialog(context: Context) :
+abstract class RedRockBottomSheetDialog(context: Context) :
   BottomSheetDialog(context, R.style.BottomSheetDialogTheme) {
   override fun setContentView(view: View) {
     val viewGroup = LayoutInflater.from(context).inflate(

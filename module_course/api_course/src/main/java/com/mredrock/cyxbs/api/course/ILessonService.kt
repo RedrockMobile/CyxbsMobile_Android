@@ -34,6 +34,7 @@ interface ILessonService : IProvider {
    * - 已使用 distinctUntilChanged() 进行了去重处理
    * - 上游已主动切换成 io 线程
    * - 没登录时发送 emptyList()
+   * - 不会抛异常
    */
   fun observeSelfLesson(): Observable<List<Lesson>>
   

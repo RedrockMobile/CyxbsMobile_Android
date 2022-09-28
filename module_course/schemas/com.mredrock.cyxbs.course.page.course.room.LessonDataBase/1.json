@@ -2,11 +2,11 @@
   "formatVersion": 1,
   "database": {
     "version": 1,
-    "identityHash": "9612ca4155e046704ceb1086f65063ce",
+    "identityHash": "cee16cd388e212582bb7ffcfe326ec38",
     "entities": [
       {
         "tableName": "stu_lesson",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`stuNum` TEXT NOT NULL, `beginLesson` INTEGER NOT NULL, `classroom` TEXT NOT NULL, `course` TEXT NOT NULL, `courseNum` TEXT NOT NULL, `day` TEXT NOT NULL, `hashDay` INTEGER NOT NULL, `hashLesson` INTEGER NOT NULL, `lesson` TEXT NOT NULL, `period` INTEGER NOT NULL, `rawWeek` TEXT NOT NULL, `teacher` TEXT NOT NULL, `type` TEXT NOT NULL, `week` TEXT NOT NULL, `weekBegin` INTEGER NOT NULL, `weekEnd` INTEGER NOT NULL, `weekModel` TEXT NOT NULL, PRIMARY KEY(`stuNum`, `courseNum`, `hashDay`, `beginLesson`))",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`stuNum` TEXT NOT NULL, `beginLesson` INTEGER NOT NULL, `classroom` TEXT NOT NULL, `course` TEXT NOT NULL, `courseNum` TEXT NOT NULL, `day` TEXT NOT NULL, `hashDay` INTEGER NOT NULL, `hashLesson` INTEGER NOT NULL, `lesson` TEXT NOT NULL, `period` INTEGER NOT NULL, `rawWeek` TEXT NOT NULL, `teacher` TEXT NOT NULL, `type` TEXT NOT NULL, `week` TEXT NOT NULL, `weekBegin` INTEGER NOT NULL, `weekEnd` INTEGER NOT NULL, `weekModel` TEXT NOT NULL, `id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL)",
         "fields": [
           {
             "fieldPath": "stuNum",
@@ -109,23 +109,36 @@
             "columnName": "weekModel",
             "affinity": "TEXT",
             "notNull": true
+          },
+          {
+            "fieldPath": "id",
+            "columnName": "id",
+            "affinity": "INTEGER",
+            "notNull": true
           }
         ],
         "primaryKey": {
           "columnNames": [
-            "stuNum",
-            "courseNum",
-            "hashDay",
-            "beginLesson"
+            "id"
           ],
-          "autoGenerate": false
+          "autoGenerate": true
         },
-        "indices": [],
+        "indices": [
+          {
+            "name": "index_stu_lesson_stuNum",
+            "unique": false,
+            "columnNames": [
+              "stuNum"
+            ],
+            "orders": [],
+            "createSql": "CREATE INDEX IF NOT EXISTS `index_stu_lesson_stuNum` ON `${TABLE_NAME}` (`stuNum`)"
+          }
+        ],
         "foreignKeys": []
       },
       {
         "tableName": "tea_lesson",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`teaNum` TEXT NOT NULL, `beginLesson` INTEGER NOT NULL, `classNumber` TEXT NOT NULL, `classroom` TEXT NOT NULL, `course` TEXT NOT NULL, `courseNum` TEXT NOT NULL, `day` TEXT NOT NULL, `hashDay` INTEGER NOT NULL, `hashLesson` INTEGER NOT NULL, `lesson` TEXT NOT NULL, `period` INTEGER NOT NULL, `rawWeek` TEXT NOT NULL, `teacher` TEXT NOT NULL, `type` TEXT NOT NULL, `week` TEXT NOT NULL, `weekBegin` INTEGER NOT NULL, `weekEnd` INTEGER NOT NULL, `weekModel` TEXT NOT NULL, PRIMARY KEY(`teaNum`, `courseNum`, `hashDay`, `beginLesson`))",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`teaNum` TEXT NOT NULL, `beginLesson` INTEGER NOT NULL, `classroom` TEXT NOT NULL, `course` TEXT NOT NULL, `courseNum` TEXT NOT NULL, `day` TEXT NOT NULL, `hashDay` INTEGER NOT NULL, `hashLesson` INTEGER NOT NULL, `lesson` TEXT NOT NULL, `period` INTEGER NOT NULL, `rawWeek` TEXT NOT NULL, `teacher` TEXT NOT NULL, `type` TEXT NOT NULL, `week` TEXT NOT NULL, `weekBegin` INTEGER NOT NULL, `weekEnd` INTEGER NOT NULL, `weekModel` TEXT NOT NULL, `classNumber` TEXT NOT NULL, `id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL)",
         "fields": [
           {
             "fieldPath": "teaNum",
@@ -137,12 +150,6 @@
             "fieldPath": "beginLesson",
             "columnName": "beginLesson",
             "affinity": "INTEGER",
-            "notNull": true
-          },
-          {
-            "fieldPath": "classNumber",
-            "columnName": "classNumber",
-            "affinity": "TEXT",
             "notNull": true
           },
           {
@@ -234,18 +241,37 @@
             "columnName": "weekModel",
             "affinity": "TEXT",
             "notNull": true
+          },
+          {
+            "fieldPath": "classNumber",
+            "columnName": "classNumber",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "id",
+            "columnName": "id",
+            "affinity": "INTEGER",
+            "notNull": true
           }
         ],
         "primaryKey": {
           "columnNames": [
-            "teaNum",
-            "courseNum",
-            "hashDay",
-            "beginLesson"
+            "id"
           ],
-          "autoGenerate": false
+          "autoGenerate": true
         },
-        "indices": [],
+        "indices": [
+          {
+            "name": "index_tea_lesson_teaNum",
+            "unique": false,
+            "columnNames": [
+              "teaNum"
+            ],
+            "orders": [],
+            "createSql": "CREATE INDEX IF NOT EXISTS `index_tea_lesson_teaNum` ON `${TABLE_NAME}` (`teaNum`)"
+          }
+        ],
         "foreignKeys": []
       },
       {
@@ -278,7 +304,7 @@
     "views": [],
     "setupQueries": [
       "CREATE TABLE IF NOT EXISTS room_master_table (id INTEGER PRIMARY KEY,identity_hash TEXT)",
-      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, '9612ca4155e046704ceb1086f65063ce')"
+      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, 'cee16cd388e212582bb7ffcfe326ec38')"
     ]
   }
 }

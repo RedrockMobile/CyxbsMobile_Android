@@ -1,4 +1,4 @@
-package com.mredrock.cyxbs.affair.widge
+package com.mredrock.cyxbs.affair.ui.dialog
 
 import android.content.Context
 import android.view.LayoutInflater
@@ -9,6 +9,7 @@ import com.mredrock.cyxbs.affair.R
 import com.mredrock.cyxbs.affair.ui.adapter.data.AffairTimeData
 import com.mredrock.cyxbs.affair.ui.adapter.data.AffairTimeData.Companion.DAY_ARRAY
 import com.mredrock.cyxbs.affair.ui.adapter.data.AffairTimeData.Companion.LESSON_ARRAY
+import com.mredrock.cyxbs.affair.ui.dialog.base.RedRockBottomSheetDialog
 import com.mredrock.cyxbs.api.affair.utils.getBeginLesson
 import com.mredrock.cyxbs.lib.utils.extensions.setOnSingleClickListener
 import com.mredrock.cyxbs.lib.utils.extensions.toast

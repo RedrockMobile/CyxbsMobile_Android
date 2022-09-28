@@ -35,7 +35,7 @@
     <!--    查找学生的颜色-->
     <color name="noclass_search_student_color">#A8A8A8</color>
     <!--    集合弹窗的划分线-->
-    <color name="noclass_gather_line_bg">#F0F0F2</color>
+    <color name="noclass_gather_line_bg">#2D2D2D</color>
     <color name="noclass_gather_text_noclass_bg">#D4DAFF</color>
     <!--    集合弹窗没课背景-->
     <color name="noclass_gather_noclass_bg">#4841E2</color>
@@ -43,6 +43,10 @@
     <color name="noclass_gather_text_class_bg">#878787</color>
     <!--    集合弹窗有课背景-->
     <color name="noclass_gather_class_bg">#878787</color>
+    <!--    创建新分组的背景-->
+    <color name="noclass_create_group_bg">#2D2D2D</color>
+    <!--    创建新分组的提示文字-->
+    <color name="noclass_create_group_tint_bg">#F0F0F0</color>
 
     <!--    以下为课表颜色-->
     <!--    上午-->

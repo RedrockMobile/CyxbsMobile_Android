@@ -52,7 +52,7 @@ class ConfirmPasswordFragment : BaseBindFragment<MineFragmentFindPasswordIdsConf
      */
     private val mReLoginRunnable = Runnable {
         ILoginService::class.impl
-            .startLoginActivityReboot(requireContext())
+            .startLoginActivityReboot()
         requireActivity().finish()
     }
 

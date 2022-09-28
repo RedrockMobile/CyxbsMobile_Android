@@ -2,16 +2,13 @@ package com.mredrock.cyxbs.affair.ui.viewmodel.fragment
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.viewModelScope
-import com.mredrock.cyxbs.affair.net.AffairRepository
+import com.mredrock.cyxbs.affair.model.AffairRepository
 import com.mredrock.cyxbs.affair.room.AffairDataBase
 import com.mredrock.cyxbs.affair.room.AffairEntity
 import com.mredrock.cyxbs.api.account.IAccountService
 import com.mredrock.cyxbs.lib.base.ui.BaseViewModel
 import com.mredrock.cyxbs.lib.utils.service.ServiceManager
 import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
 
 /**
  * ...
@@ -26,27 +23,25 @@ class EditAffairViewModel : BaseViewModel() {
     get() = _affairEntity
 
   fun updateAffair(
-    id: Int,
+    onlyId: Int,
     time: Int,
     title: String,
     content: String,
     atWhatTime: List<AffairEntity.AtWhatTime>,
   ) {
-    AffairRepository.updateAffair(id, time, title, content, atWhatTime)
+    AffairRepository.updateAffair(onlyId, time, title, content, atWhatTime)
       .observeOn(AndroidSchedulers.mainThread())
       .safeSubscribeBy { "更新成功".toast() }
   }
 
-  fun findAffairEntity(affairId: Int) {
+  fun findAffairEntity(onlyId: Int) {
     val stuNum = ServiceManager(IAccountService::class).getUserService().getStuNum()
     if (stuNum.isNotEmpty()) {
-      viewModelScope.launch(Dispatchers.IO) {
-        AffairDataBase.INSTANCE.getAffairDao()
-          .getAffairById(stuNum, affairId)
-          ?.let {
-            _affairEntity.postValue(it)
-          }
-      }
+      AffairDataBase.INSTANCE.getAffairDao()
+        .findAffairByOnlyId(stuNum, onlyId)
+        .safeSubscribeBy {
+          _affairEntity.postValue(it)
+        }
     }
   }
   
