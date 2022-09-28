@@ -23,7 +23,7 @@ class GridWidgetService : RemoteViewsService() {
     companion object {
         private lateinit var myLessons: List<LessonEntity>
         private lateinit var otherLessons: Array<Array<LessonEntity?>>
-        private val affairs = Array(8) { arrayOfNulls<AffairEntity?>(8) }
+        private lateinit var affairs : Array<Array<AffairEntity?>>
 
 
         //中午，下午的period
@@ -33,6 +33,7 @@ class GridWidgetService : RemoteViewsService() {
             val weekOfTerm = SchoolCalendar().weekOfTerm
             myLessons = getMyLessons(weekOfTerm)
             otherLessons = getOthersStuNum(weekOfTerm).schedule()
+            affairs = Array(8) { arrayOfNulls<AffairEntity?>(8) }
             AffairDatabase.INSTANCE.getAffairDao().queryAllAffair(weekOfTerm).splitAffairs()
                 .schedule()
             return myLessons.schedule()
@@ -310,7 +311,7 @@ class GridWidgetService : RemoteViewsService() {
 
         /**生成显示星期几的rv*/
         private fun getWeekDayRv(position: Int): RemoteViews {
-            val time = intent.getIntExtra("time", 0)
+            val time = defaultSp.getInt("time",0)
             //获取当前item是否应该高亮
             val id = if (time == position - 1)
                 R.layout.widget_grid_view_day_of_week_selected_item

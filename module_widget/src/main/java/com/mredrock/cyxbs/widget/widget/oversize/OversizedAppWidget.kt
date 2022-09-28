@@ -64,6 +64,15 @@ class OversizedAppWidget : AppWidgetProvider() {
                 intent.getStringExtra(CLICK_AFFAIR)?.let {
                     showAffairInfo(it)
                 }
+                val weekDay = Calendar.getInstance()[Calendar.DAY_OF_WEEK]
+                val time = if (weekDay == 1) 6 else weekDay - 2
+                if (lastTime != time){//不等于则说明，日期已经改变但是小组件还没有刷新
+                    val manager = AppWidgetManager.getInstance(context)
+                    val ids =
+                        manager.getAppWidgetIds(ComponentName(context, OversizedAppWidget::class.java))
+                    onUpdate(context,manager,ids)
+                    manager.notifyAppWidgetViewDataChanged(ids, R.id.grid_course_widget)
+                }
             }
             ACTION_FLUSH -> {
                 val manager = AppWidgetManager.getInstance(context)
@@ -81,7 +90,7 @@ class OversizedAppWidget : AppWidgetProvider() {
     }
 
     companion object {
-
+        private var lastTime = 0
         fun updateAppWidget(
             context: Context,
             appWidgetManager: AppWidgetManager,
@@ -89,12 +98,14 @@ class OversizedAppWidget : AppWidgetProvider() {
         ) {
             val remoteViews = RemoteViews(context.packageName, R.layout.widget_oversized_app_widget)
             val weekDay = Calendar.getInstance()[Calendar.DAY_OF_WEEK]
+            lastTime = if (weekDay == 1) 6 else weekDay - 2
             for (i in 1..7) {
                 val i1 = if (i == weekDay) View.VISIBLE else View.INVISIBLE
                 remoteViews.setViewVisibility(getShadowId(i), i1)
             }
             val gridWidgetIntent = Intent(context, GridWidgetService::class.java).apply {
                 putExtra("time", if (weekDay == 1) 6 else weekDay - 2)
+                defaultSp.edit().putInt("time",if (weekDay == 1) 6 else weekDay - 2).commit()
                 //因为如果每次更新的时候都是一个Intent那么onGetViewFactory只会执行一次
                 //这样更新就不会生效，因为RemoteView中的GridView只会局部更新,这样处理并不是很好
                 //如果谁有好办法，希望尽快更换
