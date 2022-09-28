@@ -21,6 +21,7 @@ interface ILinkService : IProvider {
   
   /**
    * 观察当前登录人的关联情况
+   * - 不会抛异常
    *
    * ## 注意
    * - 观察后是一定有值发送下来的，请使用 [LinkStu.isNull] 来判断是否存在关联人

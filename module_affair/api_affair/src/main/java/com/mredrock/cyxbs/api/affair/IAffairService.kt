@@ -25,9 +25,10 @@ interface IAffairService : IProvider {
   
   /**
    * 观察当前登录人学号的所有事务
-   * 1、在数据库发生改变时回调
-   * 2、已进行了去重的处理
-   * 3、上游没有主动切换线程，请自己切换
+   * - 在数据库发生改变时回调
+   * - 已进行了去重的处理
+   * - 上游没有主动切换线程，请自己切换
+   * - 不会抛异常
    */
   fun observeSelfAffair(): Observable<List<Affair>>
 

@@ -2,7 +2,7 @@
   "formatVersion": 1,
   "database": {
     "version": 1,
-    "identityHash": "f8630cd43cc01ac6a18412baef606a8e",
+    "identityHash": "fbe75b43efe3ae10073bd99d5a91c7e3",
     "entities": [
       {
         "tableName": "affair",
@@ -63,7 +63,7 @@
       },
       {
         "tableName": "affair_calendar",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`onlyId` INTEGER NOT NULL, `calendarId` INTEGER NOT NULL, PRIMARY KEY(`onlyId`, `calendarId`))",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`onlyId` INTEGER NOT NULL, `calendarIdList` TEXT NOT NULL, PRIMARY KEY(`onlyId`))",
         "fields": [
           {
             "fieldPath": "onlyId",
@@ -72,16 +72,15 @@
             "notNull": true
           },
           {
-            "fieldPath": "calendarId",
-            "columnName": "calendarId",
-            "affinity": "INTEGER",
+            "fieldPath": "calendarIdList",
+            "columnName": "calendarIdList",
+            "affinity": "TEXT",
             "notNull": true
           }
         ],
         "primaryKey": {
           "columnNames": [
-            "onlyId",
-            "calendarId"
+            "onlyId"
           ],
           "autoGenerate": false
         },
@@ -90,7 +89,7 @@
       },
       {
         "tableName": "affair_local_add",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`stuNum` TEXT NOT NULL, `onlyId` INTEGER NOT NULL, `dateJson` TEXT NOT NULL, `time` INTEGER NOT NULL, `title` TEXT NOT NULL, `content` TEXT NOT NULL, PRIMARY KEY(`stuNum`, `onlyId`))",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`stuNum` TEXT NOT NULL, `onlyId` INTEGER NOT NULL, `time` INTEGER NOT NULL, `title` TEXT NOT NULL, `content` TEXT NOT NULL, `dateJson` TEXT NOT NULL, PRIMARY KEY(`stuNum`, `onlyId`))",
         "fields": [
           {
             "fieldPath": "stuNum",
@@ -102,12 +101,6 @@
             "fieldPath": "onlyId",
             "columnName": "onlyId",
             "affinity": "INTEGER",
-            "notNull": true
-          },
-          {
-            "fieldPath": "dateJson",
-            "columnName": "dateJson",
-            "affinity": "TEXT",
             "notNull": true
           },
           {
@@ -127,6 +120,12 @@
             "columnName": "content",
             "affinity": "TEXT",
             "notNull": true
+          },
+          {
+            "fieldPath": "dateJson",
+            "columnName": "dateJson",
+            "affinity": "TEXT",
+            "notNull": true
           }
         ],
         "primaryKey": {
@@ -141,7 +140,7 @@
       },
       {
         "tableName": "affair_local_update",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`stuNum` TEXT NOT NULL, `onlyId` INTEGER NOT NULL, `remoteId` INTEGER NOT NULL, `dateJson` TEXT NOT NULL, `time` INTEGER NOT NULL, `title` TEXT NOT NULL, `content` TEXT NOT NULL, PRIMARY KEY(`stuNum`, `onlyId`))",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`stuNum` TEXT NOT NULL, `onlyId` INTEGER NOT NULL, `remoteId` INTEGER NOT NULL, `time` INTEGER NOT NULL, `title` TEXT NOT NULL, `content` TEXT NOT NULL, `dateJson` TEXT NOT NULL, PRIMARY KEY(`stuNum`, `onlyId`))",
         "fields": [
           {
             "fieldPath": "stuNum",
@@ -162,12 +161,6 @@
             "notNull": true
           },
           {
-            "fieldPath": "dateJson",
-            "columnName": "dateJson",
-            "affinity": "TEXT",
-            "notNull": true
-          },
-          {
             "fieldPath": "time",
             "columnName": "time",
             "affinity": "INTEGER",
@@ -182,6 +175,12 @@
           {
             "fieldPath": "content",
             "columnName": "content",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "dateJson",
+            "columnName": "dateJson",
             "affinity": "TEXT",
             "notNull": true
           }
@@ -233,7 +232,7 @@
     "views": [],
     "setupQueries": [
       "CREATE TABLE IF NOT EXISTS room_master_table (id INTEGER PRIMARY KEY,identity_hash TEXT)",
-      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, 'f8630cd43cc01ac6a18412baef606a8e')"
+      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, 'fbe75b43efe3ae10073bd99d5a91c7e3')"
     ]
   }
 }

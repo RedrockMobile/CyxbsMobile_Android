@@ -1,6 +1,5 @@
 package com.mredrock.cyxbs.affair.utils
 
-import android.util.Log
 import com.mredrock.cyxbs.affair.room.AffairEntity
 import com.mredrock.cyxbs.config.config.SchoolCalendar
 

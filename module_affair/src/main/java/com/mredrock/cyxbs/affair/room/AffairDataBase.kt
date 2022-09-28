@@ -209,11 +209,24 @@ abstract class AffairDao {
 //    事务与手机日历对应表
 //
 ////////////////////////////
-@Entity(tableName = "affair_calendar", primaryKeys = ["onlyId", "calendarId"])
+@Entity(tableName = "affair_calendar")
+@TypeConverters(AffairCalendarEntity.CalendarIdConverter::class)
 data class AffairCalendarEntity(
+  @PrimaryKey
   val onlyId: Int,
-  val calendarId: Long // 手机日历的 id
-)
+  val calendarIdList: List<Long> // 手机日历的 id
+) {
+  class CalendarIdConverter {
+    @TypeConverter
+    fun listToString(list: List<Long>): String {
+      return list.joinToString("*&*")
+    }
+    @TypeConverter
+    fun stringToList(string: String): List<Long> {
+      return string.split("*&*").map { it.toLong() }
+    }
+  }
+}
 
 @Dao
 abstract class AffairCalendarDao {
@@ -221,17 +234,19 @@ abstract class AffairCalendarDao {
   @Insert
   abstract fun insert(entity: AffairCalendarEntity)
   
+  // 内部使用
   @Query("SELECT * FROM affair_calendar WHERE onlyId = :onlyId")
-  abstract fun get(onlyId: Int): List<AffairCalendarEntity>
+  protected abstract fun get(onlyId: Int): AffairCalendarEntity?
   
+  // 内部使用
   @Query("DELETE FROM affair_calendar WHERE onlyId = :onlyId")
-  abstract fun delete(onlyId: Int)
+  protected abstract fun delete(onlyId: Int)
   
   @Transaction
   open fun remove(onlyId: Int): List<Long> {
     val list = get(onlyId)
     delete(onlyId)
-    return list.map { it.calendarId }
+    return list?.calendarIdList ?: emptyList()
   }
 }
 

@@ -59,8 +59,8 @@ sealed interface ILessonEntity {
   }
 }
 
+@Entity(tableName = "stu_lesson", indices = [Index("stuNum")])
 @TypeConverters(ILessonEntity.WeekConverter::class)
-@Entity(tableName = "stu_lesson", primaryKeys = ["stuNum", "courseNum", "hashDay", "beginLesson"])
 data class StuLessonEntity(
   val stuNum: String,
   override val beginLesson: Int,
@@ -80,46 +80,12 @@ data class StuLessonEntity(
   override val weekEnd: Int,
   override val weekModel: String,
 ) : ILessonEntity {
+  
+  @PrimaryKey(autoGenerate = true)
+  var id: Int = 0
+  
   override val num: String
     get() = stuNum
-}
-
-@TypeConverters(TeaLessonEntity.ClassNumberConverter::class, ILessonEntity.WeekConverter::class)
-@Entity(tableName = "tea_lesson", primaryKeys = ["teaNum", "courseNum", "hashDay", "beginLesson"])
-data class TeaLessonEntity(
-  val teaNum: String,
-  override val beginLesson: Int,
-  override val classroom: String,
-  override val course: String,
-  override val courseNum: String,
-  override val day: String,
-  override val hashDay: Int,
-  override val hashLesson: Int,
-  override val lesson: String,
-  override val period: Int,
-  override val rawWeek: String,
-  override val teacher: String,
-  override val type: String,
-  override val week: List<Int>,
-  override val weekBegin: Int,
-  override val weekEnd: Int,
-  override val weekModel: String,
-  val classNumber: List<String>,
-) : ILessonEntity {
-  
-  override val num: String
-    get() = teaNum
-  
-  class ClassNumberConverter {
-    @TypeConverter
-    fun listToString(list: List<String>): String {
-      return list.joinToString("*&*")
-    }
-    @TypeConverter
-    fun stringToList(string: String): List<String> {
-      return string.split("*&*")
-    }
-  }
 }
 
 @Dao
@@ -141,6 +107,49 @@ abstract class StuLessonDao {
   open fun resetData(stuNum: String, lesson: List<StuLessonEntity>) {
     deleteLesson(stuNum)
     insertLesson(lesson)
+  }
+}
+
+
+
+@Entity(tableName = "tea_lesson", indices = [Index("teaNum")])
+@TypeConverters(TeaLessonEntity.ClassNumberConverter::class, ILessonEntity.WeekConverter::class)
+data class TeaLessonEntity(
+  val teaNum: String,
+  override val beginLesson: Int,
+  override val classroom: String,
+  override val course: String,
+  override val courseNum: String,
+  override val day: String,
+  override val hashDay: Int,
+  override val hashLesson: Int,
+  override val lesson: String,
+  override val period: Int,
+  override val rawWeek: String,
+  override val teacher: String,
+  override val type: String,
+  override val week: List<Int>,
+  override val weekBegin: Int,
+  override val weekEnd: Int,
+  override val weekModel: String,
+  val classNumber: List<String>,
+) : ILessonEntity {
+  
+  @PrimaryKey(autoGenerate = true)
+  var id: Int = 0
+  
+  override val num: String
+    get() = teaNum
+  
+  class ClassNumberConverter {
+    @TypeConverter
+    fun listToString(list: List<String>): String {
+      return list.joinToString("*&*")
+    }
+    @TypeConverter
+    fun stringToList(string: String): List<String> {
+      return string.split("*&*")
+    }
   }
 }
 

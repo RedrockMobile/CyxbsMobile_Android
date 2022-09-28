@@ -1,5 +1,6 @@
 package com.mredrock.cyxbs.login.service
 
+import android.app.Activity
 import android.content.Context
 import android.content.Intent
 import com.alibaba.android.arouter.facade.annotation.Route
@@ -16,13 +17,19 @@ import com.mredrock.cyxbs.login.page.login.ui.LoginActivity
 @Route(path = LOGIN_SERVICE)
 class LoginServiceImpl : ILoginService {
   
+  override fun startLoginActivity(intent: (Intent.() -> Unit)?) {
+    LoginActivity.start(intent)
+  }
+  
   override fun startLoginActivity(
-    context: Context,
-    successIntent: Intent?,
-    touristModeIntent: Intent,
+    successActivity: Class<out Activity>,
     intent: (Intent.() -> Unit)?
   ) {
-    LoginActivity.startActivity(context, successIntent, touristModeIntent, intent)
+    LoginActivity.start(successActivity, intent)
+  }
+  
+  override fun startLoginActivityReboot(intent: (Intent.() -> Unit)?) {
+    LoginActivity.startReboot(intent)
   }
   
   override fun init(context: Context) {

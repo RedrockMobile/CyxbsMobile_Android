@@ -52,10 +52,7 @@ object StuLessonRepository {
    * - 优先发送本地数据给下游，并且会异步请求远端数据
    * - 使用了 distinctUntilChanged()，只会在数据更改了才会回调
    * - 没登录时发送 emptyList()
-   *
-   * ## 注意
-   * 如果你传进来错误的 [stuNum]，除了传空串外该观察流并不会 onError，也不会调用 onNext 和 doOnComplete，
-   * 在使用 combineLatest 合并多个观察流时建议使用 startWithItem(emptyList()) 发一个空数据下去
+   * - 不会抛异常到下游
    *
    * @param stuNum 学号
    */

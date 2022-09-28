@@ -30,7 +30,7 @@ abstract class BaseDebugActivity : BaseActivity() {
         .isLogin()
       if (!isLogin) {
         ILoginService::class.impl
-          .startLoginActivity(this, this::class.java)
+          .startLoginActivity(this::class.java)
         finish()
       } else {
         onDebugCreate(savedInstanceState)

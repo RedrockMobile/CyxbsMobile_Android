@@ -1,6 +1,5 @@
 package com.mredrock.cyxbs.mine.page.setting
 
-import android.content.Intent
 import android.os.Bundle
 import android.widget.Button
 import android.widget.FrameLayout
@@ -140,13 +139,10 @@ class SettingActivity : BaseActivity() {
         //清除user信息，必须要在LoginStateChangeEvent之前
         ServiceManager.getService(IAccountService::class.java).getVerifyService()
             .logout(this@SettingActivity)
-        window.decorView.postDelayed(100) {
+        window.decorView.postDelayed(20) {
             // 延迟打开，保证前面的 logout 有时间清空数据
             ILoginService::class.impl
-                .startLoginActivityReboot(this@SettingActivity) {
-                    // 清空activity栈
-                    addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK or Intent.FLAG_ACTIVITY_NEW_TASK)
-                }
+                .startLoginActivityReboot()
             finish()
         }
     }
