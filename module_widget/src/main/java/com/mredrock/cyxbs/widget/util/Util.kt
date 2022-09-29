@@ -19,6 +19,8 @@ import com.mredrock.cyxbs.lib.utils.service.impl
 import com.mredrock.cyxbs.widget.repo.bean.LessonEntity
 import com.mredrock.cyxbs.widget.repo.database.LessonDatabase
 import com.mredrock.cyxbs.widget.activity.InfoActivity
+import com.mredrock.cyxbs.widget.repo.bean.AffairEntity
+import com.mredrock.cyxbs.widget.repo.database.AffairDatabase
 import java.util.*
 import kotlin.collections.ArrayList
 
@@ -53,7 +55,7 @@ fun getLessonClickPendingIntent(
     @IdRes resId: Int,
     action: String,
     clazz: Class<*>,
-    lesson: LessonEntity
+    lesson: LessonEntity,
 ): PendingIntent {
     val intent = Intent()
     intent.setClass(context, clazz)
@@ -163,6 +165,12 @@ fun getOthersStuNum(weekOfTerm: Int): List<LessonEntity> {
         defaultSp.getString(LessonDatabase.OTHERS_STU_NUM, "")
     return LessonDatabase.INSTANCE.getLessonDao()
         .queryAllLessons(othersStuNum!!, weekOfTerm)
+}
+
+fun getAffairs(weekOfTerm: Int): List<AffairEntity> {
+    val thisWeekAffair = AffairDatabase.INSTANCE.getAffairDao().queryAllAffair(weekOfTerm)
+    val wholeTermAffair = AffairDatabase.INSTANCE.getAffairDao().queryAllAffair(0)
+    return thisWeekAffair+wholeTermAffair
 }
 
 /**打开activity，展示课程详情*/

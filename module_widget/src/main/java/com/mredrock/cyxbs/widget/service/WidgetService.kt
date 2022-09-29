@@ -63,7 +63,7 @@ class WidgetService : IWidgetService {
             it.onNext(1)
         }.subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread())
             //延迟100ms,确保发送广播时已经将数据插入数据库
-            .delay(100, TimeUnit.MILLISECONDS).subscribe {
+            .subscribe {
                 widgetList.forEach { pkg ->
                     mContext?.sendBroadcast(Intent(actionFlush).apply {
                         component = ComponentName(mContext!!, pkg)
