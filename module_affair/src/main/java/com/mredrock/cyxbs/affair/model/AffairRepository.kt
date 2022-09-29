@@ -171,42 +171,46 @@ object AffairRepository {
     atWhatTime: List<AffairEntity.AtWhatTime>
   ): Completable {
     return Completable.create { emitter ->
-      // 存在概率很小的同步问题，可能此时正在执行另一个 uploadLocalAffair()，所以使用 runInTransaction
-      DB.runInTransaction {
-        AffairDao.findAffairByOnlyId(stuNum, onlyId)
-          .toSingle() // 找不到时直接抛错
-          .map { it.remoteId }
-          .doOnSuccess { remoteId ->
-            val dateJson = atWhatTime.toPostDateJson()
-            if (remoteId == LocalRemoteId) {
-              // 如果是本地临时事务，就直接更新临时添加的事务
-              LocalAddDao
-                .updateLocalAddAffair(
-                  LocalAddAffairEntity(stuNum, onlyId, time, title, content, dateJson)
-                )
-            } else {
-              // 不是本地临时事务就上传
-              Api.updateAffair(remoteId, time, title, content, dateJson)
-                .throwApiExceptionIfFail()
-                .doOnError {
-                  // 上传失败就暂时保存在本地临时更新的事务中
-                  // insert 已改为 OnConflictStrategy.REPLACE，可进行替换插入
-                  LocalUpdateDao
-                    .insertLocalUpdateAffair(
-                      LocalUpdateAffairEntity(
-                        stuNum, onlyId, remoteId, time, title, content, dateJson
+      try {
+        // 存在概率很小的同步问题，可能此时正在执行另一个 uploadLocalAffair()，所以使用 runInTransaction
+        DB.runInTransaction {
+          AffairDao.findAffairByOnlyId(stuNum, onlyId)
+            .toSingle() // 找不到时直接抛错
+            .map { it.remoteId }
+            .doOnSuccess { remoteId ->
+              val dateJson = atWhatTime.toPostDateJson()
+              if (remoteId == LocalRemoteId) {
+                // 如果是本地临时事务，就直接更新临时添加的事务
+                LocalAddDao
+                  .updateLocalAddAffair(
+                    LocalAddAffairEntity(stuNum, onlyId, time, title, content, dateJson)
+                  )
+              } else {
+                // 不是本地临时事务就上传
+                Api.updateAffair(remoteId, time, title, content, dateJson)
+                  .throwApiExceptionIfFail()
+                  .doOnError {
+                    // 上传失败就暂时保存在本地临时更新的事务中
+                    // insert 已改为 OnConflictStrategy.REPLACE，可进行替换插入
+                    LocalUpdateDao
+                      .insertLocalUpdateAffair(
+                        LocalUpdateAffairEntity(
+                          stuNum, onlyId, remoteId, time, title, content, dateJson
+                        )
                       )
-                    )
-                }.onErrorComplete { true } // 终止异常向下游传递
-                .blockingGet() // 直接堵塞，因为需要使用数据库的 runInTransaction，不能使用流来处理
-            }
-          }.doOnSuccess { remoteId ->
-            // 最后更新本地数据
-            AffairDao.updateAffair(AffairEntity(stuNum, onlyId, remoteId, time, title, content, atWhatTime))
-          }.blockingGet() // 直接堵塞，因为需要使用数据库的 runInTransaction，不能使用流来处理
+                  }.onErrorComplete { true } // 终止异常向下游传递
+                  .blockingGet() // 直接堵塞，因为需要使用数据库的 runInTransaction，不能使用流来处理
+              }
+            }.doOnSuccess { remoteId ->
+              // 最后更新本地数据
+              AffairDao.updateAffair(AffairEntity(stuNum, onlyId, remoteId, time, title, content, atWhatTime))
+            }.blockingGet() // 直接堵塞，因为需要使用数据库的 runInTransaction，不能使用流来处理
+        }
+        // 在 runInTransaction 结束后再发送
+        emitter.onComplete()
+      } catch (e: Exception) {
+        emitter.tryOnError(e)
       }
-      // 在 runInTransaction 结束后再发送
-      emitter.onComplete()
     }
   }
   
@@ -229,35 +233,39 @@ object AffairRepository {
   private fun deleteAffairInternal(stuNum: String, onlyId: Int): Completable {
     return Completable.create { emitter ->
       // 存在概率很小的同步问题，可能此时正在执行另一个 uploadLocalAffair()，所以使用 runInTransaction
-      DB.runInTransaction {
-        AffairDao.findAffairByOnlyId(stuNum, onlyId)
-          .toSingle() // 找不到时直接抛错
-          .map { it.remoteId }
-          .doOnSuccess { remoteId ->
-            if (remoteId == LocalRemoteId) {
-              // 如果是本地临时事务，就直接删除临时添加的事务
-              LocalAddDao.deleteLocalAddAffair(stuNum, onlyId)
-            } else {
-              // 不是本地临时事务就上传
-              Api.deleteAffair(remoteId)
-                .throwApiExceptionIfFail()
-                .doOnError {
-                  // 上传失败就暂时保存在本地临时删除的事务中
-                  LocalDeleteDao.insertLocalDeleteAffair(
-                    LocalDeleteAffairEntity(stuNum, onlyId, remoteId)
-                  )
-                  // 然后尝试删除本地临时更新的事务，不管有没有
-                  LocalUpdateDao.deleteLocalUpdateAffair(stuNum, onlyId)
-                }.onErrorComplete { true } // 终止异常向下游传递
-                .blockingGet() // 直接堵塞，因为需要使用数据库的 runInTransaction，不能使用流来处理
-            }
-          }.doOnSuccess {
-            // 最后删除本地数据
-            AffairDao.deleteAffair(stuNum, onlyId)
-          }.blockingGet() // 直接堵塞，因为需要使用数据库的 runInTransaction，不能使用流来处理
+      try {
+        DB.runInTransaction {
+          AffairDao.findAffairByOnlyId(stuNum, onlyId)
+            .toSingle() // 找不到时直接抛错
+            .map { it.remoteId }
+            .doOnSuccess { remoteId ->
+              if (remoteId == LocalRemoteId) {
+                // 如果是本地临时事务，就直接删除临时添加的事务
+                LocalAddDao.deleteLocalAddAffair(stuNum, onlyId)
+              } else {
+                // 不是本地临时事务就上传
+                Api.deleteAffair(remoteId)
+                  .throwApiExceptionIfFail()
+                  .doOnError {
+                    // 上传失败就暂时保存在本地临时删除的事务中
+                    LocalDeleteDao.insertLocalDeleteAffair(
+                      LocalDeleteAffairEntity(stuNum, onlyId, remoteId)
+                    )
+                    // 然后尝试删除本地临时更新的事务，不管有没有
+                    LocalUpdateDao.deleteLocalUpdateAffair(stuNum, onlyId)
+                  }.onErrorComplete { true } // 终止异常向下游传递
+                  .blockingGet() // 直接堵塞，因为需要使用数据库的 runInTransaction，不能使用流来处理
+              }
+            }.doOnSuccess {
+              // 最后删除本地数据
+              AffairDao.deleteAffair(stuNum, onlyId)
+            }.blockingGet() // 直接堵塞，因为需要使用数据库的 runInTransaction，不能使用流来处理
+        }
+        // 在 runInTransaction 结束后再发送
+        emitter.onComplete()
+      } catch (e: Exception) {
+        emitter.tryOnError(e)
       }
-      // 在 runInTransaction 结束后再发送
-      emitter.onComplete()
     }
   }
   
@@ -319,14 +327,18 @@ object AffairRepository {
       }
     }
     
-    return Completable.create {
-      // 必须使用 Transaction，保证数据库的同步性
-      DB.runInTransaction {
-        localAdd.invoke()
-        localUpdate.invoke()
-        localDelete.invoke()
+    return Completable.create { emitter ->
+      try {
+        // 必须使用 Transaction，保证数据库的同步性
+        DB.runInTransaction {
+          localAdd.invoke()
+          localUpdate.invoke()
+          localDelete.invoke()
+        }
+        emitter.onComplete()
+      } catch (e: Exception) {
+        emitter.tryOnError(e)
       }
-      it.onComplete()
     }.subscribeOn(Schedulers.io())
   }
   

@@ -158,7 +158,7 @@ abstract class AffairDao {
   /**
    * 提供一个唯一的 [AffairEntity.onlyId]
    */
-  fun getNewOnlyId(stuNum: String): Int {
+  private fun getNewOnlyId(stuNum: String): Int {
     return getMaxOnlyId(stuNum) + 1
   }
   
