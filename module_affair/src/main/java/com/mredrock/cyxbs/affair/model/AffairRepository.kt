@@ -90,15 +90,15 @@ object AffairRepository {
   /**
    * 得到事务，但不建议你直接使用，应该用 [observeAffair] 来代替
    *
-   * 永远不会抛出异常
+   * 永远不会给下游抛出异常
    */
   fun getAffair(): Single<List<AffairEntity>> {
     val selfNum: String = ServiceManager(IAccountService::class).getUserService().getStuNum()
-    if (selfNum.isBlank()) return Single.error(RuntimeException("学号为空！"))
+    if (selfNum.isBlank()) return Single.just(emptyList())
     return refreshAffair().onErrorReturn {
       // 上游失败了就取本地数据，可能是网络失败，也可能是本地临时上传事务失败
       AffairDao.getAffairByStuNum(selfNum)
-    }.subscribeOn(Schedulers.io())
+    }
   }
   
   /**
@@ -124,14 +124,14 @@ object AffairRepository {
         DB.runInTransaction(
           Callable {
             // 插入数据库新数据，并返回给下游 onlyId
+            val entity = AffairIncompleteEntity(remoteId, time, title, content, atWhatTime)
             val onlyId = AffairDao
-              .insertAffair(stuNum, AffairIncompleteEntity(remoteId, time, title, content, atWhatTime))
+              .insertAffair(stuNum, entity)
               .onlyId
             if (remoteId == LocalRemoteId) {
               // 为本地 remoteId 的话就插入到本地临时添加的事务中
-              LocalAddDao.insertLocalAddAffair(
-                LocalAddAffairEntity(stuNum, onlyId, time, title, content, dateJson)
-              )
+              val localEntity = LocalAddAffairEntity(stuNum, onlyId, time, title, content, dateJson)
+              LocalAddDao.insertLocalAddAffair(localEntity)
             }
             // 注意：这里返回给下游的是 onlyId，不是 remoteId
             onlyId
@@ -155,11 +155,10 @@ object AffairRepository {
   ): Completable {
     val stuNum = ServiceManager(IAccountService::class).getUserService().getStuNum()
     if (stuNum.isBlank()) return Completable.error(IllegalStateException("学号为空"))
-    return uploadLocalAffair(stuNum)
-      .andThen(updateAffairInternal(stuNum, onlyId, time, title, content, atWhatTime))
+    return updateAffairInternal(stuNum, onlyId, time, title, content, atWhatTime)
       .doOnComplete {
         insertCalendarAfterClear(onlyId, time, title, content, atWhatTime)
-      }
+      }.subscribeOn(Schedulers.io())
   }
   
   private fun updateAffairInternal(
@@ -220,14 +219,13 @@ object AffairRepository {
   fun deleteAffair(onlyId: Int): Completable {
     val stuNum = ServiceManager(IAccountService::class).getUserService().getStuNum()
     if (stuNum.isEmpty()) return Completable.error(IllegalStateException("学号为空"))
-    return uploadLocalAffair(stuNum)
-      .andThen(deleteAffairInternal(stuNum, onlyId))
+    return deleteAffairInternal(stuNum, onlyId)
       .doOnComplete {
         // 删除手机上的日历
         AffairCalendarDao.remove(onlyId).forEach {
           PhoneCalendar.delete(it)
         }
-      }
+      }.subscribeOn(Schedulers.io())
   }
   
   private fun deleteAffairInternal(stuNum: String, onlyId: Int): Completable {

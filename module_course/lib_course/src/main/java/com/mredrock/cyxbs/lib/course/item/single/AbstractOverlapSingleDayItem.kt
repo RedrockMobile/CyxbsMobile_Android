@@ -108,6 +108,13 @@ abstract class AbstractOverlapSingleDayItem : IOverlapItem, OverlapHelper.IImpl,
   protected open fun onInitializeView(view: NetLayout) {}
   
   /**
+   * 得到当前 item 的 View
+   */
+  fun getView(): NetLayout? {
+    return if (this::mView.isInitialized) mView else null
+  }
+  
+  /**
    * 用于实现折叠的 View
    *
    * [createView] 中得到的 View 都会添加进这个 view 中

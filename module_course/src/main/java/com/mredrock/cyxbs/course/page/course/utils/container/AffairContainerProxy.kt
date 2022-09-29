@@ -2,9 +2,8 @@ package com.mredrock.cyxbs.course.page.course.utils.container
 
 import com.mredrock.cyxbs.course.page.course.data.AffairData
 import com.mredrock.cyxbs.course.page.course.item.affair.Affair
-import com.mredrock.cyxbs.course.page.course.utils.container.base.CourseContainerProxy
+import com.mredrock.cyxbs.course.page.course.utils.container.base.ItemPoolController
 import com.mredrock.cyxbs.lib.course.fragment.course.expose.container.ICourseContainer
-import com.mredrock.cyxbs.lib.course.internal.item.IItem
 
 /**
  * 代理添加 [Affair]
@@ -19,7 +18,7 @@ import com.mredrock.cyxbs.lib.course.internal.item.IItem
  */
 class AffairContainerProxy(
   val container: ICourseContainer,
-) : CourseContainerProxy<Affair, AffairData>(container) {
+) : ItemPoolController<Affair, AffairData>(container) {
   
   override fun areItemsTheSame(oldItem: AffairData, newItem: AffairData): Boolean {
     return AffairData.areItemsTheSame(oldItem, newItem)
@@ -29,9 +28,8 @@ class AffairContainerProxy(
     return AffairData.areContentsTheSame(oldItem, newItem)
   }
   
-  override fun checkItem(item: IItem): Boolean {
-    return item is Affair
-  }
+  override val itemClass: Class<Affair>
+    get() = Affair::class.java
   
   override fun addItem(item: Affair) {
     container.addAffair(item)

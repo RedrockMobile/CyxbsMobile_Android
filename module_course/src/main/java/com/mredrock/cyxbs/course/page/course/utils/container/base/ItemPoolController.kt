@@ -6,18 +6,19 @@ import com.mredrock.cyxbs.lib.course.fragment.course.expose.wrapper.ICourseWrapp
 import com.mredrock.cyxbs.lib.course.internal.item.IItem
 import com.mredrock.cyxbs.lib.course.internal.item.IItemContainer
 import com.mredrock.cyxbs.lib.course.internal.view.course.ICourseViewGroup
+import com.mredrock.cyxbs.lib.course.utils.forEachReversed
 
 /**
- * ...
+ * 管理 Item 回收池
  *
  * @author 985892345 (Guo Xiangrui)
  * @email guo985892345@foxmail.com
  * @date 2022/9/11 17:28
  */
 @Suppress("UNCHECKED_CAST")
-abstract class CourseContainerProxy<Item, Data : Any>(
+abstract class ItemPoolController<Item, Data : Any>(
   wrapper: ICourseWrapper
-) : BaseDiffRefresh<Data>() where Item : IItem, Item : IDataOwner<Data> {
+) : DiffRefreshController<Data>() where Item : IRecycleItem, Item : IDataOwner<Data> {
   
   // 旧数据与 item 的 map
   private val mOldDataMap = hashMapOf<Data, Item>()
@@ -36,7 +37,7 @@ abstract class CourseContainerProxy<Item, Data : Any>(
         
         val listener = object : IItemContainer.OnItemExistListener {
           override fun onItemAddedAfter(item: IItem, view: View) {
-            if (checkItem(item)) {
+            if (itemClass.isInstance(item)) {
               item as Item
               val data = item.data
               if (!mOldDataMap.contains(data)) {
@@ -49,13 +50,15 @@ abstract class CourseContainerProxy<Item, Data : Any>(
           }
   
           override fun onItemRemovedAfter(item: IItem, view: View) {
-            if (checkItem(item)) {
+            if (itemClass.isInstance(item)) {
               item as Item
               // 当你使用其他方式移除时
               val data = item.data
               if (mOldDataMap.remove(data) != null) {
                 // 移除成功说明是通过其他方式移除的
-                mFreePool.add(item)
+                if (item.onRecycle()) {
+                  mFreePool.add(item)
+                }
                 removeDataFromOldList(data) // 这里是通过其他方式删除的
               }
               mShowItems.remove(item)
@@ -70,7 +73,6 @@ abstract class CourseContainerProxy<Item, Data : Any>(
         override fun onDestroyCourse(course: ICourseViewGroup) {
           // Fragment 的 View 被摧毁，它的子 View 也应该一起被废弃掉
           mOldDataMap.clear()
-          mFreePool.clear()
           mShowItems.clear()
           clearDataFromOldList()
           course.postRemoveItemExistListener(listener)
@@ -79,7 +81,7 @@ abstract class CourseContainerProxy<Item, Data : Any>(
     )
   }
   
-  protected abstract fun checkItem(item: IItem): Boolean
+  protected abstract val itemClass: Class<Item>
   
   protected abstract fun addItem(item: Item)
   
@@ -98,10 +100,11 @@ abstract class CourseContainerProxy<Item, Data : Any>(
     val item = mOldDataMap[oldData]
     if (item != null) {
       mOldDataMap.remove(oldData)
-      mFreePool.add(item)
+      if (item.onRecycle()) {
+        mFreePool.add(item)
+      }
       // 这个需要放在 mOldDataMap.remove() 和 mFreePool.add() 后
       // 因为在 onItemRemovedAfter() 回调中会再次 remove() 和 add()
-      // (虽然目前已经使用 Set 来避免，但之前为此我找了很久的 bug)
       removeItem(item)
     }
   }
@@ -115,12 +118,13 @@ abstract class CourseContainerProxy<Item, Data : Any>(
    * 得到空闲的 [Item]
    */
   private fun Data.getFreeAffair(): Item {
-    if (mFreePool.isEmpty()) {
-      return newItem(this)
+    // 倒序遍历，减少移动
+    mFreePool.forEachReversed {
+      if (it.onReuse()) {
+        return it
+      }
     }
-    val last = mFreePool.removeAt(mFreePool.size - 1)
-    last.setNewData(this)
-    return last
+    return newItem(this)
   }
   
   protected fun getShowItems(): List<Item> {

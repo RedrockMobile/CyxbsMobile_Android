@@ -2,10 +2,9 @@ package com.mredrock.cyxbs.course.page.course.utils.container
 
 import com.mredrock.cyxbs.course.page.course.data.StuLessonData
 import com.mredrock.cyxbs.course.page.course.item.lesson.LinkLesson
-import com.mredrock.cyxbs.course.page.course.utils.container.base.CourseContainerProxy
+import com.mredrock.cyxbs.course.page.course.utils.container.base.ItemPoolController
 import com.mredrock.cyxbs.lib.course.fragment.course.expose.container.ICourseContainer
 import com.mredrock.cyxbs.lib.course.fragment.course.expose.overlap.IOverlapItem
-import com.mredrock.cyxbs.lib.course.internal.item.IItem
 import com.mredrock.cyxbs.lib.utils.extensions.anim
 
 /**
@@ -17,7 +16,7 @@ import com.mredrock.cyxbs.lib.utils.extensions.anim
  */
 class LinkLessonContainerProxy(
   val container: ICourseContainer
-) : CourseContainerProxy<LinkLesson, StuLessonData>(container) {
+) : ItemPoolController<LinkLesson, StuLessonData>(container) {
   
   override fun areItemsTheSame(oldItem: StuLessonData, newItem: StuLessonData): Boolean {
     return StuLessonData.areItemsTheSame(oldItem, newItem)
@@ -27,9 +26,8 @@ class LinkLessonContainerProxy(
     return StuLessonData.areContentsTheSame(oldItem, newItem)
   }
   
-  override fun checkItem(item: IItem): Boolean {
-    return item is LinkLesson
-  }
+  override val itemClass: Class<LinkLesson>
+    get() = LinkLesson::class.java
   
   override fun addItem(item: LinkLesson) {
     container.addLesson(item)

@@ -9,6 +9,7 @@ import com.mredrock.cyxbs.course.page.course.item.affair.lp.AffairLayoutParams
 import com.mredrock.cyxbs.course.page.course.item.view.IOverlapTag
 import com.mredrock.cyxbs.course.page.course.item.view.OverlapTagHelper
 import com.mredrock.cyxbs.course.page.course.utils.container.base.IDataOwner
+import com.mredrock.cyxbs.course.page.course.utils.container.base.IRecycleItem
 import com.mredrock.cyxbs.lib.course.item.affair.IAffairItem
 import com.mredrock.cyxbs.lib.course.item.view.AffairItemView
 
@@ -22,7 +23,8 @@ import com.mredrock.cyxbs.lib.course.item.view.AffairItemView
 class Affair(private var affairData: AffairData) :
   BaseOverlapSingleDayItem<Affair.AffairView, AffairData>(),
   IDataOwner<AffairData>,
-  IAffairItem
+  IAffairItem,
+  IRecycleItem
 {
   
   override fun setNewData(newData: AffairData) {
@@ -78,6 +80,18 @@ class Affair(private var affairData: AffairData) :
     override fun setNewData(newData: AffairData) {
       data = newData
       setText(data.title, data.content)
+    }
+  }
+  
+  override fun onRecycle(): Boolean {
+    return true
+  }
+  
+  override fun onReuse(): Boolean {
+    val view = getView() ?: return true
+    return view.run {
+      // 如果存在离场动画，则不允许重新使用
+      parent == null && isAttachedToWindow
     }
   }
   

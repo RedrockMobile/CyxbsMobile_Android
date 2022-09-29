@@ -3,12 +3,14 @@ package com.mredrock.cyxbs.course.page.course.item.lesson
 import android.annotation.SuppressLint
 import android.content.Context
 import android.graphics.Canvas
+import com.mredrock.cyxbs.api.course.utils.parseClassRoom
 import com.mredrock.cyxbs.course.page.course.data.StuLessonData
 import com.mredrock.cyxbs.course.page.course.item.BaseOverlapSingleDayItem
 import com.mredrock.cyxbs.course.page.course.item.lesson.lp.SelfLessonLayoutParams
 import com.mredrock.cyxbs.course.page.course.item.view.IOverlapTag
 import com.mredrock.cyxbs.course.page.course.item.view.OverlapTagHelper
 import com.mredrock.cyxbs.course.page.course.utils.container.base.IDataOwner
+import com.mredrock.cyxbs.course.page.course.utils.container.base.IRecycleItem
 import com.mredrock.cyxbs.lib.course.item.lesson.ILessonItem
 import com.mredrock.cyxbs.lib.course.item.lesson.LessonPeriod
 import com.mredrock.cyxbs.lib.course.item.view.CommonLessonView
@@ -23,7 +25,8 @@ import com.mredrock.cyxbs.lib.course.item.view.CommonLessonView
 class SelfLesson(private var lessonData: StuLessonData) :
   BaseOverlapSingleDayItem<SelfLesson.SelfLessonView, StuLessonData>(),
   IDataOwner<StuLessonData>,
-  ILessonItem
+  ILessonItem,
+  IRecycleItem
 {
   
   override fun setNewData(newData: StuLessonData) {
@@ -82,7 +85,19 @@ class SelfLesson(private var lessonData: StuLessonData) :
     override fun setNewData(newData: StuLessonData) {
       data = newData
       setLessonColor(data.lessonPeriod)
-      setText(data.course.course, data.course.classroom)
+      setText(data.course.course, parseClassRoom(data.course.classroom))
+    }
+  }
+  
+  override fun onRecycle(): Boolean {
+    return true
+  }
+  
+  override fun onReuse(): Boolean {
+    val view = getView() ?: return true
+    return view.run {
+      // 如果存在离场动画，则不允许重新使用
+      parent == null && isAttachedToWindow
     }
   }
   

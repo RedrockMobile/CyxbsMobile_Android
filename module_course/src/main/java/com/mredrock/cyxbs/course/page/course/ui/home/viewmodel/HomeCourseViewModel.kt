@@ -179,12 +179,11 @@ class HomeCourseViewModel : BaseViewModel() {
             getOrPut(it.week) { HomePageResultImpl(arrayListOf(), arrayListOf(), arrayListOf()) }
               .link.add(it)
           }
-          val max = this.maxOfOrNull { it.key } ?: 0
           affair.forEach { data ->
             if (data.week == 0) {
               // 因为 affair 模块那边对于整学期的事务使用 week = 0 来记录，
               // 所以这里需要单独做适配，把 week = 0 扩展到每一周去
-              repeat(max) {
+              repeat(ICourseService.maxWeek) {
                 getOrPut(it + 1) { HomePageResultImpl(arrayListOf(), arrayListOf(), arrayListOf()) }
                   .affair.add(data.copy(week = it + 1))
               }

@@ -4,6 +4,7 @@ import android.annotation.SuppressLint
 import android.content.Context
 import android.graphics.Canvas
 import android.view.animation.Animation
+import com.mredrock.cyxbs.api.course.utils.parseClassRoom
 import com.mredrock.cyxbs.course.R
 import com.mredrock.cyxbs.course.page.course.data.StuLessonData
 import com.mredrock.cyxbs.course.page.course.item.BaseOverlapSingleDayItem
@@ -11,6 +12,7 @@ import com.mredrock.cyxbs.course.page.course.item.lesson.lp.LinkLessonLayoutPara
 import com.mredrock.cyxbs.course.page.course.item.view.IOverlapTag
 import com.mredrock.cyxbs.course.page.course.item.view.OverlapTagHelper
 import com.mredrock.cyxbs.course.page.course.utils.container.base.IDataOwner
+import com.mredrock.cyxbs.course.page.course.utils.container.base.IRecycleItem
 import com.mredrock.cyxbs.lib.course.item.lesson.ILessonItem
 import com.mredrock.cyxbs.lib.course.item.view.ItemView
 import com.mredrock.cyxbs.lib.utils.extensions.color
@@ -25,7 +27,8 @@ import com.mredrock.cyxbs.lib.utils.extensions.color
 class LinkLesson(private var lessonData: StuLessonData) :
   BaseOverlapSingleDayItem<LinkLesson.LinkLessonView, StuLessonData>(),
   IDataOwner<StuLessonData> ,
-  ILessonItem
+  ILessonItem,
+  IRecycleItem
 {
   
   override fun setNewData(newData: StuLessonData) {
@@ -84,7 +87,19 @@ class LinkLesson(private var lessonData: StuLessonData) :
   
     override fun setNewData(newData: StuLessonData) {
       data = newData
-      setText(data.course.course, data.course.classroom)
+      setText(data.course.course, parseClassRoom(data.course.classroom))
+    }
+  }
+  
+  override fun onRecycle(): Boolean {
+    return true
+  }
+  
+  override fun onReuse(): Boolean {
+    val view = getView() ?: return true
+    return view.run {
+      // 如果存在离场动画，则不允许重新使用
+      parent == null && isAttachedToWindow
     }
   }
   

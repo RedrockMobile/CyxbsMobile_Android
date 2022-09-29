@@ -1,24 +1,24 @@
 package com.mredrock.cyxbs.course.page.course.utils.container.base
 
-import androidx.collection.ArraySet
-import androidx.collection.arraySetOf
 import androidx.recyclerview.widget.AsyncDifferConfig
 import androidx.recyclerview.widget.AsyncListDiffer
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListUpdateCallback
 
 /**
- * ...
+ * 差分比较刷新
+ *
+ * ## 原因
+ * - 因为关联人课程可进行隐藏操作，但自己的课、关联人的课和事务应该被合并成一条 流 添加进课表，所以需要增加差分刷新功能
  *
  * @author 985892345 (Guo Xiangrui)
  * @email guo985892345@foxmail.com
  * @date 2022/9/11 14:47
  */
-abstract class BaseDiffRefresh<Data : Any> : DiffUtil.ItemCallback<Data>() {
+abstract class DiffRefreshController<Data : Any> : DiffUtil.ItemCallback<Data>() {
   
-  // 使用 set 去重，因为后面差分需要 valueAt()，所以综合考虑下使用 ArraySet 比较合适
-  private var mOldData: ArraySet<Data> = arraySetOf()
-  private lateinit var mNewData: ArraySet<Data>
+  private var mOldData = arrayListOf<Data>()
+  private var mNewData = arrayListOf<Data>()
   
   val currentData: List<Data>
     get() = mAsyncListDiffer.currentList
@@ -27,7 +27,7 @@ abstract class BaseDiffRefresh<Data : Any> : DiffUtil.ItemCallback<Data>() {
    * 异步差分刷新
    */
   fun diffRefresh(newData: List<Data>, action: ((List<Data>) -> Unit)? = null) {
-    mNewData = ArraySet(newData)
+    mNewData = ArrayList(newData) // 不能直接使用传来的数据
     mAsyncListDiffer.submitList(newData) {
       mOldData = mNewData // 保存旧数据，提供给下次刷新使用
       action?.invoke(newData)
@@ -66,23 +66,23 @@ abstract class BaseDiffRefresh<Data : Any> : DiffUtil.ItemCallback<Data>() {
     object : ListUpdateCallback {
       override fun onInserted(position: Int, count: Int) {
         repeat(count) {
-          onInserted(mNewData.valueAt(position + it))
+          onInserted(mNewData[position + it])
         }
       }
       
       override fun onRemoved(position: Int, count: Int) {
         repeat(count) {
-          onRemoved(mOldData.valueAt(position + it))
+          onRemoved(mOldData[position + it])
         }
       }
       
       override fun onMoved(fromPosition: Int, toPosition: Int) {
-        onChanged(mOldData.valueAt(fromPosition), mNewData.valueAt(toPosition))
+        onChanged(mOldData[fromPosition], mNewData[toPosition])
       }
       
       override fun onChanged(position: Int, count: Int, payload: Any?) {
         repeat(count) {
-          onChanged(mOldData.valueAt(position + it), mNewData.valueAt(position + it))
+          onChanged(mOldData[position + it], mNewData[position + it])
         }
       }
     }, AsyncDifferConfig.Builder(this).build()

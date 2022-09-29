@@ -65,16 +65,12 @@ data class AffairBean(
 }
 
 fun List<AffairEntity.AtWhatTime>.toAffairDateBean(): List<AffairBean.AffairDateBean> {
-  return buildList {
-    this@toAffairDateBean.forEach {
-      add(
-        AffairBean.AffairDateBean(
-          it.beginLesson,
-          it.day,
-          it.period,
-          it.week
-        )
-      )
-    }
+  return map {
+    AffairBean.AffairDateBean(
+      it.beginLesson,
+      it.day,
+      it.period,
+      it.week
+    )
   }
 }

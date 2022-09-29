@@ -2,9 +2,8 @@ package com.mredrock.cyxbs.course.page.course.utils.container
 
 import com.mredrock.cyxbs.course.page.course.data.StuLessonData
 import com.mredrock.cyxbs.course.page.course.item.lesson.SelfLesson
-import com.mredrock.cyxbs.course.page.course.utils.container.base.CourseContainerProxy
+import com.mredrock.cyxbs.course.page.course.utils.container.base.ItemPoolController
 import com.mredrock.cyxbs.lib.course.fragment.course.expose.container.ICourseContainer
-import com.mredrock.cyxbs.lib.course.internal.item.IItem
 
 /**
  * 由于内部在 init 使用了 course，所以外面生成对象时候需要使用 by lazyUnlock
@@ -15,7 +14,7 @@ import com.mredrock.cyxbs.lib.course.internal.item.IItem
  */
 class SelfLessonContainerProxy(
   val container: ICourseContainer
-) : CourseContainerProxy<SelfLesson, StuLessonData>(container) {
+) : ItemPoolController<SelfLesson, StuLessonData>(container) {
   
   override fun areItemsTheSame(oldItem: StuLessonData, newItem: StuLessonData): Boolean {
     return StuLessonData.areItemsTheSame(oldItem, newItem)
@@ -25,9 +24,8 @@ class SelfLessonContainerProxy(
     return StuLessonData.areContentsTheSame(oldItem, newItem)
   }
   
-  override fun checkItem(item: IItem): Boolean {
-    return item is SelfLesson
-  }
+  override val itemClass: Class<SelfLesson>
+    get() = SelfLesson::class.java
   
   override fun addItem(item: SelfLesson) {
     container.addLesson(item)
