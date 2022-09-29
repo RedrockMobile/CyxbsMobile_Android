@@ -1,12 +1,10 @@
 package com.mredrock.cyxbs.course.page.course.utils.container.base
 
 import android.view.View
-import androidx.collection.arraySetOf
 import com.mredrock.cyxbs.lib.course.fragment.course.expose.wrapper.ICourseWrapper
 import com.mredrock.cyxbs.lib.course.internal.item.IItem
 import com.mredrock.cyxbs.lib.course.internal.item.IItemContainer
 import com.mredrock.cyxbs.lib.course.internal.view.course.ICourseViewGroup
-import com.mredrock.cyxbs.lib.course.utils.forEachReversed
 
 /**
  * 管理 Item 回收池
@@ -24,7 +22,7 @@ abstract class ItemPoolController<Item, Data : Any>(
   private val mOldDataMap = hashMapOf<Data, Item>()
   
   // 没有使用的 item 池子
-  private val mFreePool = arraySetOf<Item>()
+  private val mFreePool = hashSetOf<Item>()
   
   // 在父布局中显示的 item
   private val mShowItems = arrayListOf<Item>()
@@ -73,6 +71,7 @@ abstract class ItemPoolController<Item, Data : Any>(
         override fun onDestroyCourse(course: ICourseViewGroup) {
           // Fragment 的 View 被摧毁，它的子 View 也应该一起被废弃掉
           mOldDataMap.clear()
+          mFreePool.clear()
           mShowItems.clear()
           clearDataFromOldList()
           course.postRemoveItemExistListener(listener)
@@ -118,10 +117,13 @@ abstract class ItemPoolController<Item, Data : Any>(
    * 得到空闲的 [Item]
    */
   private fun Data.getFreeAffair(): Item {
-    // 倒序遍历，减少移动
-    mFreePool.forEachReversed {
-      if (it.onReuse()) {
-        return it
+    val iterator = mFreePool.iterator()
+    while (iterator.hasNext()) {
+      val next = iterator.next()
+      if (next.onReuse()) {
+        iterator.remove()
+        next.setNewData(this)
+        return next
       }
     }
     return newItem(this)

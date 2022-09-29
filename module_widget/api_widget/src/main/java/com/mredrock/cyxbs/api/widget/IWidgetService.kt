@@ -21,9 +21,4 @@ interface IWidgetService : IProvider {
     otherStuLessons: List<ILessonService.Lesson>,
     affairs: List<IAffairService.Affair>
   )
-
-  /**通知小组件有事务删除
-   * @param affair 要删除的事务
-   * */
-  fun deleteAffair(affair: IAffairService.Affair)
 }

@@ -18,8 +18,6 @@ import com.mredrock.cyxbs.widget.util.getMyLessons
 import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
 import io.reactivex.rxjava3.core.Observable
 import io.reactivex.rxjava3.schedulers.Schedulers
-import java.util.concurrent.TimeUnit
-import kotlin.concurrent.thread
 
 /**
  * description ： IWidgetService接口的实现类，通过发送延时广播通知小组件刷新
@@ -70,10 +68,6 @@ class WidgetService : IWidgetService {
                     })
                 }
             }
-    }
-
-    override fun deleteAffair(affair: IAffairService.Affair) {
-        thread { AffairDatabase.INSTANCE.getAffairDao().deleteAffair(affair.onlyId) }
     }
 
     override fun init(context: Context?) {
