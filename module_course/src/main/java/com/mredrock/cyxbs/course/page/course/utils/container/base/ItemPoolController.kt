@@ -21,8 +21,8 @@ abstract class ItemPoolController<Item, Data : Any>(
   // 旧数据与 item 的 map
   private val mOldDataMap = hashMapOf<Data, Item>()
   
-  // 没有使用的 item 池子
-  private val mFreePool = hashSetOf<Item>()
+  // 回收的 item 池子
+  private val mRecyclePool = hashSetOf<Item>()
   
   // 在父布局中显示的 item
   private val mShowItems = arrayListOf<Item>()
@@ -55,7 +55,7 @@ abstract class ItemPoolController<Item, Data : Any>(
               if (mOldDataMap.remove(data) != null) {
                 // 移除成功说明是通过其他方式移除的
                 if (item.onRecycle()) {
-                  mFreePool.add(item)
+                  mRecyclePool.add(item)
                 }
                 removeDataFromOldList(data) // 这里是通过其他方式删除的
               }
@@ -71,7 +71,7 @@ abstract class ItemPoolController<Item, Data : Any>(
         override fun onDestroyCourse(course: ICourseViewGroup) {
           // Fragment 的 View 被摧毁，它的子 View 也应该一起被废弃掉
           mOldDataMap.clear()
-          mFreePool.clear()
+          mRecyclePool.clear()
           mShowItems.clear()
           clearDataFromOldList()
           course.postRemoveItemExistListener(listener)
@@ -100,7 +100,7 @@ abstract class ItemPoolController<Item, Data : Any>(
     if (item != null) {
       mOldDataMap.remove(oldData)
       if (item.onRecycle()) {
-        mFreePool.add(item)
+        mRecyclePool.add(item)
       }
       // 这个需要放在 mOldDataMap.remove() 和 mFreePool.add() 后
       // 因为在 onItemRemovedAfter() 回调中会再次 remove() 和 add()
@@ -117,7 +117,7 @@ abstract class ItemPoolController<Item, Data : Any>(
    * 得到空闲的 [Item]
    */
   private fun Data.getFreeAffair(): Item {
-    val iterator = mFreePool.iterator()
+    val iterator = mRecyclePool.iterator()
     while (iterator.hasNext()) {
       val next = iterator.next()
       if (next.onReuse()) {

@@ -16,7 +16,7 @@ import com.mredrock.cyxbs.lib.base.BaseDebugActivity
 import com.mredrock.cyxbs.lib.utils.extensions.*
 import com.mredrock.cyxbs.lib.utils.service.ServiceManager
 import com.mredrock.cyxbs.lib.utils.service.impl
-import com.mredrock.cyxbs.main.ui.course.utils.CourseHeaderHelper
+import course.ui.utils.CourseHeaderHelper
 import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
 import kotlin.math.max
 
@@ -27,6 +27,9 @@ import kotlin.math.max
  * @date 2022/8/15 18:49
  */
 class DebugActivity : BaseDebugActivity() {
+  
+  override val isNeedLogin: Boolean
+    get() = false
   
   private val mBtn by R.id.course_btn_find_debug.view<Button>()
   private val mFcvCourse by R.id.course_fcv_debug.view<FragmentContainerView>()

@@ -1,6 +1,7 @@
-package com.mredrock.cyxbs.main.ui.course.utils
+package course.ui.utils
 
 import com.mredrock.cyxbs.api.account.IAccountService
+import com.mredrock.cyxbs.api.affair.IAffairService
 import com.mredrock.cyxbs.api.course.ILessonService
 import com.mredrock.cyxbs.api.course.ILinkService
 import com.mredrock.cyxbs.api.course.utils.*
@@ -23,31 +24,13 @@ import kotlin.math.abs
  */
 object CourseHeaderHelper {
   
-  data class Affair(
-    val stuNum: String,
-    val id: Int, // 事务唯一 id
-    val time: Int, // 提醒时间
-    val title: String,
-    val content: String,
-    val week: Int, // 在哪一周
-    val beginLesson: Int,  // 开始节数，如：1、2 节课以 1 开始；3、4 节课以 3 开始，注意：中午是以 -1 开始，傍晚是以 -2 开始
-    val day: Int, // 星期数，星期一为 0
-    val period: Int, // 长度
-  )
-  
-  private class AffairService {
-    fun observeAffair(stuNum: String): Observable<List<Affair>> {
-      return Observable.just(emptyList())
-    }
-  }
-  
   /**
    * 观察课表头的变化
    */
   fun observeHeader(): Observable<Header> {
     val lessonService = ILessonService::class.impl
     val linkService = ILinkService::class.impl
-    val affairService = AffairService()
+    val affairService = IAffairService::class.impl
     return SchoolCalendar.observeWeekOfTerm()
       .switchMap { week ->
         if (week !in 1 .. 21) Observable.just(HintHeader("享受假期吧～"))
@@ -63,7 +46,7 @@ object CourseHeaderHelper {
                 // zip 操作符需要三个都发送新的才会整合发给下游
                 Observable.combineLatest(
                   lessonService.observeSelfLesson(),
-                  affairService.observeAffair(selfNum),
+                  affairService.observeSelfAffair(),
                   linkService.observeSelfLinkStu().switchMap { linkStu ->
                     lessonService.observeStuLesson(linkStu.linkNum)
                       .map { lessonList -> Pair(lessonList, linkStu) }
@@ -82,7 +65,8 @@ object CourseHeaderHelper {
             }
         }
       }.startWithItem(HintHeader("数据加载中"))
-      .onErrorReturnItem(HintHeader("数据错误"))
+      // 因为上流用的观察流，一般是不会发送异常到下流的，所以该问题一般不会出现，除非你动了数据库但没有改版本号
+      .onErrorReturnItem(HintHeader("内部错误，请尝试卸载后重装"))
       .subscribeOn(Schedulers.io())
   }
   
@@ -90,7 +74,7 @@ object CourseHeaderHelper {
     selfNum: String,
     nowWeek: Int,
     lessonList: List<ILessonService.Lesson>,
-    affairList: List<Affair>,
+    affairList: List<IAffairService.Affair>,
     linkIsBoy: Boolean
   ): Header {
     val calendar = Calendar.getInstance()
@@ -263,7 +247,7 @@ object CourseHeaderHelper {
   )
   
   data class AffairItem(
-    val affair: Affair
+    val affair: IAffairService.Affair
   ) : Item(
     affair.day,
     affair.beginLesson,

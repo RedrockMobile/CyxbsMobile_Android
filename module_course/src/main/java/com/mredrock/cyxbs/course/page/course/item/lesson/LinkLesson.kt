@@ -98,8 +98,7 @@ class LinkLesson(private var lessonData: StuLessonData) :
   override fun onReuse(): Boolean {
     val view = getView() ?: return true
     return view.run {
-      // 如果存在离场动画，则不允许重新使用
-      parent == null && isAttachedToWindow
+      parent == null && !isAttachedToWindow
     }
   }
   
