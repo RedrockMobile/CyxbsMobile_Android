@@ -1,6 +1,6 @@
 import sys
 
-file = open("CyxbsMobile_Android/build-logic/secret/secret.gradle", 'w')
+file = open("/Users/runner/work/CyxbsMobile_Android/CyxbsMobile_Android/build-logic/secret/secret.gradle", 'w')
 
 file.write("def secret = [:]\n\n"
            "// === START ===\n\n"
