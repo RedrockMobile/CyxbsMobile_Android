@@ -1,6 +1,5 @@
 package com.mredrock.cyxbs.mine.page.setting
 
-import android.content.Intent
 import android.os.Bundle
 import android.widget.Button
 import android.widget.FrameLayout
@@ -27,7 +26,6 @@ import io.reactivex.rxjava3.disposables.Disposable
 class SettingActivity : BaseActivity() {
     private val mToolbar by R.id.mine_setting_toolbar.view<AppBarLayout>()
     private val mSwitch by R.id.mine_setting_switch.view<SwitchPlus>()
-    private val mFmEditWidget by R.id.mine_setting_fm_edit_widget.view<FrameLayout>()
     private val mFmSecurity by R.id.mine_setting_fm_security.view<FrameLayout>()
     private val mFmShieldPerson by R.id.mine_setting_fm_shield_person.view<FrameLayout>()
     private val mBtnExit by R.id.mine_setting_btn_exit.view<Button>()
@@ -64,11 +62,6 @@ class SettingActivity : BaseActivity() {
         }
         mSwitch.isChecked =
             defaultSharedPreferences.getBoolean(COURSE_SHOW_STATE, false)
-
-        //自定义桌面小组件
-        mFmEditWidget.setOnSingleClickListener {
-            ARouter.getInstance().build(WIDGET_SETTING).navigation()
-        }
 
         //账号安全
         mFmSecurity.setOnSingleClickListener { doIfLogin { startActivity<SecurityActivity>() } }
@@ -146,13 +139,10 @@ class SettingActivity : BaseActivity() {
         //清除user信息，必须要在LoginStateChangeEvent之前
         ServiceManager.getService(IAccountService::class.java).getVerifyService()
             .logout(this@SettingActivity)
-        window.decorView.postDelayed(100) {
+        window.decorView.postDelayed(20) {
             // 延迟打开，保证前面的 logout 有时间清空数据
             ILoginService::class.impl
-                .startLoginActivityReboot(this@SettingActivity) {
-                    // 清空activity栈
-                    addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK or Intent.FLAG_ACTIVITY_NEW_TASK)
-                }
+                .startLoginActivityReboot()
             finish()
         }
     }

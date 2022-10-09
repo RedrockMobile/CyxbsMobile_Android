@@ -11,7 +11,7 @@ import kotlin.reflect.KProperty
 /**
  * 这里面所有的类型参考了官方的设计：[bundleOf]
  */
-class IntentHelper<T: Any>(
+class IntentHelper<T : Any>(
   private val clazz: Class<T>,
   private val intent: () -> Intent
 ) : ReadWriteProperty<Any, T> {
@@ -69,11 +69,10 @@ class IntentHelper<T: Any>(
             }
           }
         }
-        
         else -> {
           when {
             CharSequence::class.java.isAssignableFrom(clazz) -> getCharExtra(name, ' ')
-            Parcelable::class.java.isAssignableFrom(clazz) -> getParcelableExtra(name)
+            Parcelable::class.java.isAssignableFrom(clazz) -> getParcelableExtra<Parcelable>(name) // 这里类型推导会出问题，必须加泛型
             Serializable::class.java.isAssignableFrom(clazz) -> getSerializableExtra(name)
             else -> error("未实现该类型 ${clazz.name} for key \"$name\"")
           }

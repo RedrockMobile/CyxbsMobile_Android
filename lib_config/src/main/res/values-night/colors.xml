@@ -1,10 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
-<resources>
+<resources xmlns:tools="http://schemas.android.com/tools">
 
     <!--如果要使用纯白色和纯黑色（日间和夜间模式也一样），请使用 @android:color/white-->
 
     <color name="config_white_black">#000000</color>
     <color name="config_black_white">#FFFFFF</color>
+
+    <!--视觉最常用的背景颜色，夜间为 2D2D2D-->
+    <color name="config_common_background_color">#2D2D2D</color>
 
     <!--    主要字体颜色分以下四种，下列按照蓝色由深到浅排序，要用自取-->
     <!--    一级字体颜色-->
@@ -29,5 +32,12 @@
 
     <!--视觉要的若隐若现阴影的 endColor，在 drawable/config_layer_looming_shadow 中使用-->
     <color name="config_layer_looming_shadow_end_color">#1D1D1D</color>
+
+    <!--lib_base 中公用的 ChooseDialog 的按钮颜色-->
+    <color name="config_choose_dialog_btn_positive">#4A44E4</color>
+    <color name="config_choose_dialog_btn_negative">#CC5A5A5A</color>
+
+    <!--主页面的整体灰色背景-->
+    <color name="config_window_background">#000000</color>
 
 </resources>

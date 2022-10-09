@@ -9,7 +9,12 @@ package com.mredrock.cyxbs.config.route
  *
  * 注意：如果你的 api 模块只有父模块实现，请把路由地址放在你的 api 模块中！！！
  *     这里只放共用的路由地址
+ *
+ * TODO 由于目前没有完全迁移 lib_common，所以有些看起来没有使用的变量，可能以后需要使用，所以暂时不要删除
  */
+
+const val MAIN_MAIN = "/main/entry"
+
 const val COURSE_ENTRY = "/course/entry"
 const val QA_ENTRY = "/qa/entry"
 const val DISCOVER_ENTRY = "/discover/entry"
@@ -65,10 +70,6 @@ const val MINE_PERSON_PAGE = "/person_page/mine/entry"
 //大红页
 const val REDROCK_HOME_ENTRY = "/redrock_home/entry"
 
-
-//小控件设置
-const val WIDGET_SETTING = "/setting/widget"
-
 // QA
 const val QA_QUIZ = "/quiz/qa/entry"
 const val QA_CIRCLE_DETAIL = "/circle_detail/qa/entry"
@@ -90,6 +91,9 @@ const val STORE_ENTRY="/store/entry"
 
 //绑定教务在线ids页面
 const val LOGIN_BIND_IDS="/login/bind_ids/entry"
+
+//课表上课地点跳转到地图key
+const val COURSE_POS_TO_MAP = "COURSE_POS_TO_MAP"
 
 
 

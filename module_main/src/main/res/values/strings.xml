@@ -1,5 +1,9 @@
 <resources>
 
+    <string name="main_nav_discover">发现</string>
+    <string name="main_nav_qa">邮问</string>
+    <string name="main_nav_mine">我的</string>
+
     <string name="main_course_long_name">我的课表</string>
     <string name="main_course_short_name">课表</string>
     <string name="main_school_car_long_name">校车查询</string>
@@ -10,18 +14,11 @@
     <string name="main_grade_short_name">考试</string>
     <string name="main_shortcut_cancel">暂时无法使用哦</string>
 
-    <string name="main_user_agreement_title">请先同意用户协议吧</string>
-    <string name="main_login_error_prompt">登录失败，请检查一下用户名和密码是否正确</string>
-
-    <string name="main_tourist_course_ask_login_text">登录后就可查看课表~</string>
     <string name="main_umeng_push_device_id" translatable="false">友盟推送设备id：</string>
     <string name="main_long_press_to_copy">长按复制</string>
     <string name="main_umeng_analyzes_device_data">友盟分析设备数据：</string>
     <string name="main_unified_protocol_jump">统一协议跳转</string>
     <string name="main_jump">跳转</string>
     <string name="main_uri_cyxbs_redrock_team">协议uri:cyxbs://redrock.team/xxxxx</string>
-    <string name="main_dialog_bind_email_tip_title">温馨提示</string>
-    <string name="main_dialog_bind_email_tip_content">为了您的账号安全，请绑定邮箱</string>
-    <string name="main_dialog_bind_email_cancel">忽略</string>
-    <string name="main_dialog_bind_email_confirm">绑定</string>
+
 </resources>

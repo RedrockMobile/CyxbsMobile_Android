@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:paddingRight="4dp"
+    android:orientation="vertical"
+    android:background="@color/config_common_background_color">
+
+    <include
+        layout="@layout/course_layout_week"/>
+
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" >
+
+        <include
+            layout="@layout/course_layout_course"/>
+
+        <include
+            android:id="@+id/course_view_no_lesson"
+            layout="@layout/course_layout_no_lesson" />
+
+    </FrameLayout>
+</LinearLayout>

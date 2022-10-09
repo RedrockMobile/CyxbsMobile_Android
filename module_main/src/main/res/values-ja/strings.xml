@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="main_nav_discover">発見</string>
+    <string name="main_nav_qa">フォーラム</string>
+    <string name="main_nav_mine">自分</string>
+</resources>

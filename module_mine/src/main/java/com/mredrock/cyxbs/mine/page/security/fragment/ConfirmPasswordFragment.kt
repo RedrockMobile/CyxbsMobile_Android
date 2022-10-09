@@ -8,12 +8,12 @@ import android.widget.EditText
 import androidx.appcompat.content.res.AppCompatResources
 import androidx.core.widget.doOnTextChanged
 import androidx.lifecycle.ViewModelProvider
-import com.alibaba.android.arouter.launcher.ARouter
-import com.mredrock.cyxbs.api.main.MAIN_MAIN
+import com.mredrock.cyxbs.api.login.ILoginService
 import com.mredrock.cyxbs.common.utils.extensions.setOnSingleClickListener
 import com.mredrock.cyxbs.lib.base.ui.BaseBindFragment
 import com.mredrock.cyxbs.lib.utils.extensions.gone
 import com.mredrock.cyxbs.lib.utils.extensions.visible
+import com.mredrock.cyxbs.lib.utils.service.impl
 import com.mredrock.cyxbs.mine.R
 import com.mredrock.cyxbs.mine.databinding.MineFragmentFindPasswordIdsConfirmBinding
 import com.mredrock.cyxbs.mine.page.security.util.IdsFindPasswordDialog
@@ -43,6 +43,18 @@ class ConfirmPasswordFragment : BaseBindFragment<MineFragmentFindPasswordIdsConf
      * 可点击的背景
      */
     private var mClickable: Drawable? = null
+    
+    /**
+     * 跳转到登录界面重新登录的 Runnable
+     *
+     * 在修改密码成功后弹出 dialog 时会倒计时 2 秒允许这个 Runnable，
+     * 但 dialog 有个确认按钮，点击就会立马跳转，所以需要防止重复调用
+     */
+    private val mReLoginRunnable = Runnable {
+        ILoginService::class.impl
+            .startLoginActivityReboot()
+        requireActivity().finish()
+    }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         mUnClickable = AppCompatResources.getDrawable(
@@ -59,9 +71,9 @@ class ConfirmPasswordFragment : BaseBindFragment<MineFragmentFindPasswordIdsConf
                 .setContent("新密码修改成功，请重新登录后再进行操作")
                 .setConfirm {
                     //并设置点击跳转至登录界面
-                    ARouter.getInstance().build(MAIN_MAIN).navigation()
+                    view.removeCallbacks(mReLoginRunnable) // 先手动取消之前设置的自动跳转
+                    mReLoginRunnable.run()
                     dismiss()
-                    requireActivity().finish()
                 }
 
         //刚进入页面时按钮设置为灰色,且不可点击
@@ -78,6 +90,9 @@ class ConfirmPasswordFragment : BaseBindFragment<MineFragmentFindPasswordIdsConf
                 } else {
                     //修改成功后弹出dialog提示
                     dialog.show()
+                    // 该 dialog 在按返回键和按其他区域时无法取消，只能通过确认按钮才能关闭，
+                    // 但点击确认按钮会取消该 Runnable，所以不会触发内存泄漏
+                    view.postDelayed(mReLoginRunnable, 2000)
                 }
             }
         }

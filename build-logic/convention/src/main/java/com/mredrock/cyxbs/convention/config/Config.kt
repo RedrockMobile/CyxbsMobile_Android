@@ -11,12 +11,12 @@ import org.gradle.api.Project
  * @date 2022/5/26 15:13
  */
 object Config {
-  const val minSdk = 23
+  const val minSdk = 24
   const val targetSdk = 31
   const val compileSdk = targetSdk
   
-  const val versionCode = 79 // 线上79，开发80
-  const val versionName = "6.5.0" // 线上6.5.0，开发6.5.1
+  const val versionCode = 80 // 线上79，开发80
+  const val versionName = "6.6.0" // 线上6.5.0，开发6.5.1
   
   val releaseAbiFilters = listOf("arm64-v8a")
   val debugAbiFilters = listOf("arm64-v8a","x86_64")
@@ -31,7 +31,8 @@ object Config {
     "META-INF/services/javax.annotation.processing.Processor",
     "META-INF/MANIFEST.MF",
     "META-INF/NOTICE.txt",
-    "META-INF/rxjava.properties"
+    "META-INF/rxjava.properties",
+    "**/schemas/**", // 用于取消数据库的导出文件
   )
   
   val jniExclude = listOf(
@@ -41,7 +42,7 @@ object Config {
     "lib/armeabi/libpl_droidsonroids_gif.so",
     "lib/*/libRSSupport.so",
     "lib/*/librsjni.so",
-    "lib/*/librsjni_androidx.so"
+    "lib/*/librsjni_androidx.so",
   )
   
   fun getApplicationId(project: Project): String {

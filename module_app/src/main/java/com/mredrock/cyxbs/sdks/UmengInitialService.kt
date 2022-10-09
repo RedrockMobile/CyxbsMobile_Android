@@ -72,7 +72,7 @@ class UmengInitialService : InitialService {
     private fun initUmengAnalyse(manager: InitialManager) {
         val context = manager.application.applicationContext
 
-        //这段代码理应再用户隐私协议同意以后才执行的。现暂时搁置。
+        //这段代码理应再用户隐私协议同意以后才执行的
         UMConfigure.init(
             context,
             BuildConfig.UM_APP_KEY,

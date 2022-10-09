@@ -137,7 +137,7 @@
         android:id="@+id/notification_setting_test"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="测试打卡签到提醒"
+        android:text="测试打卡签到提醒\n(正式版本不会显示该按钮)"
         android:visibility="gone"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"

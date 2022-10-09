@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+
+    <EditText
+        android:id="@+id/affair_et_edit_affair_title"
+        android:layout_width="wrap_content"
+        android:layout_height="55dp"
+        android:layout_marginStart="8dp"
+        android:background="@android:color/transparent"
+        android:gravity="center_vertical"
+        android:importantForAutofill="no"
+        android:inputType="text"
+        android:maxLines="1"
+        android:paddingHorizontal="2dp"
+        android:textColor="@color/config_level_two_font_color"
+        android:textColorHint="@color/config_level_two_font_color"
+        android:textSize="34sp"
+        android:textStyle="bold"
+        android:transitionName="@string/affair_transitionName_add_affair_to_edit_affair_title"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:ignore="LabelFor"
+        tools:text="自习" />
+
+    <EditText
+        android:id="@+id/affair_et_edit_affair_content"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="16dp"
+        android:layout_marginEnd="8dp"
+        android:background="@drawable/affair_shape_item_text_bg"
+        android:gravity="center_vertical"
+        android:imeOptions="actionNext"
+        android:inputType="text"
+        android:maxEms="250"
+        android:maxLength="180"
+        android:maxLines="1"
+        android:paddingStart="18dp"
+        android:paddingTop="12dp"
+        android:paddingEnd="18dp"
+        android:paddingBottom="12dp"
+        android:textColor="@color/config_level_three_font_color"
+        android:textSize="21dp"
+        app:layout_constraintTop_toBottomOf="@+id/affair_et_edit_affair_title"
+        tools:ignore="Autofill,LabelFor,SpUsage" />
+
+    <!--一个 Rv 用于显示周数和时间段-->
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/affair_rv_edit_affair_duration"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_marginStart="4dp"
+        android:layout_marginEnd="4dp"
+        android:layout_marginTop="8dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHeight_max="350dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/affair_et_edit_affair_content"
+        tools:layout_height="50dp"
+        tools:listitem="@layout/affair_rv_item_edit_affair_week" />
+
+    <TextView
+        android:id="@+id/affair_tv_edit_affair_remind"
+        android:layout_width="wrap_content"
+        android:layout_height="34dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="8dp"
+        android:background="@drawable/affair_shape_item_text_bg"
+        android:gravity="center"
+        android:paddingStart="13dp"
+        android:paddingEnd="13dp"
+        android:text="不提醒"
+        android:textColor="@color/config_level_two_font_color"
+        android:textSize="14dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/affair_rv_edit_affair_duration"
+        tools:ignore="HardcodedText,SpUsage" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

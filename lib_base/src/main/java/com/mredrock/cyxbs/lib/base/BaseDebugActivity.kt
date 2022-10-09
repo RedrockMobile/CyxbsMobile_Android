@@ -4,8 +4,8 @@ import android.os.Bundle
 import androidx.annotation.CallSuper
 import com.mredrock.cyxbs.api.account.IAccountService
 import com.mredrock.cyxbs.api.login.ILoginService
-import com.mredrock.cyxbs.common.service.impl
 import com.mredrock.cyxbs.lib.base.ui.BaseActivity
+import com.mredrock.cyxbs.lib.utils.service.impl
 
 /**
  * 单模块调试的 BaseDebugActivity
@@ -30,7 +30,7 @@ abstract class BaseDebugActivity : BaseActivity() {
         .isLogin()
       if (!isLogin) {
         ILoginService::class.impl
-          .startLoginActivity(this, this::class.java)
+          .startLoginActivity(this::class.java)
         finish()
       } else {
         onDebugCreate(savedInstanceState)

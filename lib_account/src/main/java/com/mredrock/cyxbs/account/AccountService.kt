@@ -137,7 +137,9 @@ internal class AccountService : IAccountService {
         
         // 发送学号给下游
         fun emitStuNum(stuNum: String?) {
-            val value = Value(stuNum)
+            val value = Value(
+                if (stuNum == null || stuNum.isBlank()) null else stuNum
+            )
             stuNumState.onNext(value)
             stuNumEvent.onNext(value)
         }
@@ -316,7 +318,7 @@ internal class AccountService : IAccountService {
                 positiveButton(R.string.account_login_now) {
                     if (!isLogin()) {
                         ILoginService::class.impl
-                            .startLoginActivityReboot(context)
+                            .startLoginActivityReboot()
                     }
                 }
                 negativeButton(R.string.account_login_later) {

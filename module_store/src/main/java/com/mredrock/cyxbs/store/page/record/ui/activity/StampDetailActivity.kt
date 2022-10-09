@@ -13,14 +13,14 @@ import com.google.android.material.tabs.TabLayout
 import com.google.android.material.tabs.TabLayoutMediator
 import com.mredrock.cyxbs.lib.base.ui.BaseActivity
 import com.mredrock.cyxbs.lib.utils.adapter.FragmentVpAdapter
+import com.mredrock.cyxbs.lib.utils.extensions.color
+import com.mredrock.cyxbs.lib.utils.extensions.dp2pxF
 import com.mredrock.cyxbs.lib.utils.extensions.setOnSingleClickListener
 import com.mredrock.cyxbs.store.R
 import com.mredrock.cyxbs.store.page.record.ui.fragment.ExchangeRecordFragment
 import com.mredrock.cyxbs.store.page.record.ui.fragment.GetRecordFragment
 import com.mredrock.cyxbs.store.page.record.viewmodel.RecordViewModel
-import com.mredrock.cyxbs.store.utils.dp2pxF
-import com.mredrock.cyxbs.store.utils.getColor2
-import com.mredrock.cyxbs.store.utils.transformer.ScaleInTransformer
+import com.ndhzs.slideshow.viewpager.transformer.ScaleInTransformer
 
 /**
  *    author : zz (后期优化: 985892345)
@@ -122,8 +122,8 @@ class StampDetailActivity : BaseActivity() {
         val textView = tab.customView
         if (textView is TextView) {
             textView.setTypeface(null, Typeface.BOLD) // 加粗
-            textView.setTextColor(getColor2(R.color.store_stamp_detail_tabLayout_selected_title))
-            ValueAnimator.ofFloat(5.dp2pxF(), 5.8F.dp2pxF()).run {
+            textView.setTextColor(R.color.store_stamp_detail_tabLayout_selected_title.color)
+            ValueAnimator.ofFloat(5.dp2pxF, 5.8F.dp2pxF).run {
                 duration = 260L
                 addUpdateListener { textView.textSize = animatedValue as Float }
                 start()
@@ -135,8 +135,8 @@ class StampDetailActivity : BaseActivity() {
         val textView = tab.customView
         if (textView is TextView) {
             textView.setTypeface(null, Typeface.NORMAL) // 取消加粗
-            textView.setTextColor(getColor2(R.color.store_stamp_detail_tabLayout_unselected_title))
-            ValueAnimator.ofFloat(5.8F.dp2pxF(), 5.dp2pxF()).run {
+            textView.setTextColor(R.color.store_stamp_detail_tabLayout_unselected_title.color)
+            ValueAnimator.ofFloat(5.8F.dp2pxF, 5.dp2pxF).run {
                 duration = 260L
                 addUpdateListener { textView.textSize = animatedValue as Float }
                 start()

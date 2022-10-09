@@ -11,7 +11,7 @@ import com.mredrock.cyxbs.config.route.DISCOVER_SPORT
 import com.mredrock.cyxbs.config.route.LOGIN_BIND_IDS
 import com.mredrock.cyxbs.lib.base.ui.BaseBindActivity
 import com.mredrock.cyxbs.lib.utils.extensions.*
-import com.mredrock.cyxbs.lib.utils.utils.SchoolCalendarUtil
+import com.mredrock.cyxbs.config.config.SchoolCalendar
 import com.mredrock.cyxbs.sport.R
 import com.mredrock.cyxbs.sport.databinding.SportActivitySportDetailBinding
 import com.mredrock.cyxbs.sport.model.SportDetailBean
@@ -41,7 +41,7 @@ class SportDetailActivity : BaseBindActivity<SportActivitySportDetailBinding>() 
     private var mIsHoliday = false
 
     //因为课表提供的周数可能为 null 因此当返回null时设置为22（即放假中）
-    private val mWeek: Int = SchoolCalendarUtil.getWeekOfTerm() ?: 22
+    private val mWeek: Int = SchoolCalendar.getWeekOfTerm() ?: 22
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)

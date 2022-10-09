@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    tools:ignore="HardcodedText"
+    android:layout_height="50dp">
+    <com.mredrock.cyxbs.noclass.widget.SlideMenuLayout
+        android:background="@drawable/noclass_selector_item_selected_bg"
+        app:noclass_slideMode="right"
+        app:noclass_isFixedView="false"
+        android:id="@+id/slide_noclass_container"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            >
+            <TextView
+                android:id="@+id/tv_noclass_group_top_name"
+                android:paddingStart="16dp"
+                android:paddingEnd="16dp"
+                android:gravity="center"
+                tools:text="取消置顶"
+                android:text="取消置顶"
+                android:textColor="@color/config_white_black"
+                android:background="@color/noclass_group_top_bg"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"/>
+            <TextView
+                android:id="@+id/tv_noclass_group_delete_item"
+                android:paddingStart="16dp"
+                android:paddingEnd="16dp"
+                android:gravity="center"
+                android:textColor="@color/config_white_black"
+                android:background="@color/noclass_group_delete_bg"
+                android:text="删除"
+                tools:text="删除"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"/>
+        </LinearLayout>
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_marginStart="16dp"
+            android:orientation="horizontal"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <ImageView
+                android:alpha="0"
+                android:layout_marginStart="16dp"
+                app:layout_constraintHorizontal_bias="0"
+                android:id="@+id/iv_noclass_group_delete_icon"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                android:background="@drawable/noclass_ic_delete_normal"
+                />
+
+            <TextView
+               app:layout_constraintVertical_bias="0.48"
+                app:layout_constraintHorizontal_bias="0"
+                android:layout_marginStart="16dp"
+                android:paddingStart="16dp"
+                android:paddingEnd="16dp"
+                android:id="@+id/tv_noclass_group_name"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:textColor="@color/noclass_primary_text_color"
+                android:textSize="18sp"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                tools:text="分组1" />
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+
+
+    </com.mredrock.cyxbs.noclass.widget.SlideMenuLayout>
+
+</FrameLayout>
