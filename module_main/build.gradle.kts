@@ -20,7 +20,7 @@ dependApiLogin()
 dependApiAffair()
 
 dependApiCourse()
-dependLibCourse()
+dependLibCourse() // 需要它的背景图
 
 dependRxjava()
 dependNetwork()

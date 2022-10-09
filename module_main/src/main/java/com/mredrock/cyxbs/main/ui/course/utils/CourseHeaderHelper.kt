@@ -2,6 +2,7 @@ package com.mredrock.cyxbs.main.ui.course.utils
 
 import com.mredrock.cyxbs.api.account.IAccountService
 import com.mredrock.cyxbs.api.affair.IAffairService
+import com.mredrock.cyxbs.api.course.ICourseService
 import com.mredrock.cyxbs.api.course.ILessonService
 import com.mredrock.cyxbs.api.course.ILinkService
 import com.mredrock.cyxbs.api.course.utils.*
@@ -33,7 +34,7 @@ object CourseHeaderHelper {
     val affairService = IAffairService::class.impl
     return SchoolCalendar.observeWeekOfTerm()
       .switchMap { week ->
-        if (week !in 1 .. 21) Observable.just(HintHeader("享受假期吧～"))
+        if (week !in 1 .. ICourseService.maxWeek) Observable.just(HintHeader("享受假期吧～"))
         else {
           // 观察当前登录人的学号
           IAccountService::class.impl

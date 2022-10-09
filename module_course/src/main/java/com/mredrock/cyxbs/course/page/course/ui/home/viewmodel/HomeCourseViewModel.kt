@@ -73,8 +73,8 @@ class HomeCourseViewModel : BaseViewModel() {
         // 直接调用网络刷新，请求成功后会修改数据库，然后上面的观察流会重新发送新的值
         val self = StuLessonRepository.refreshLesson(it.selfNum)
         val affair = IAffairService::class.impl.refreshAffair()
-        val link = StuLessonRepository.refreshLesson(it.linkNum)
         if (it.isNotNull()) {
+          val link = StuLessonRepository.refreshLesson(it.linkNum)
           Single.mergeDelayError(self, link, affair) // 使用 mergeDelayError() 延迟异常
             .flatMapCompletable { Completable.complete() }
         } else {
@@ -160,9 +160,9 @@ class HomeCourseViewModel : BaseViewModel() {
   }
   
   data class HomePageResultImpl(
-    override val self: MutableList<StuLessonData>,
-    override val link: MutableList<StuLessonData>,
-    override val affair: MutableList<AffairData>
+    override val self: MutableList<StuLessonData> = arrayListOf(),
+    override val link: MutableList<StuLessonData> = arrayListOf(),
+    override val affair: MutableList<AffairData> = arrayListOf()
   ) : HomePageResult {
     companion object {
       fun flatMap(
@@ -172,11 +172,11 @@ class HomeCourseViewModel : BaseViewModel() {
       ) : Map<Int, HomePageResultImpl> {
         return buildMap {
           self.forEach {
-            getOrPut(it.week) { HomePageResultImpl(arrayListOf(), arrayListOf(), arrayListOf()) }
+            getOrPut(it.week) { HomePageResultImpl() }
               .self.add(it)
           }
           link.forEach {
-            getOrPut(it.week) { HomePageResultImpl(arrayListOf(), arrayListOf(), arrayListOf()) }
+            getOrPut(it.week) { HomePageResultImpl() }
               .link.add(it)
           }
           affair.forEach { data ->
@@ -184,11 +184,11 @@ class HomeCourseViewModel : BaseViewModel() {
               // 因为 affair 模块那边对于整学期的事务使用 week = 0 来记录，
               // 所以这里需要单独做适配，把 week = 0 扩展到每一周去
               repeat(ICourseService.maxWeek) {
-                getOrPut(it + 1) { HomePageResultImpl(arrayListOf(), arrayListOf(), arrayListOf()) }
+                getOrPut(it + 1) { HomePageResultImpl() }
                   .affair.add(data.copy(week = it + 1))
               }
             } else {
-              getOrPut(data.week) { HomePageResultImpl(arrayListOf(), arrayListOf(), arrayListOf()) }
+              getOrPut(data.week) { HomePageResultImpl() }
                 .affair.add(data)
             }
           }

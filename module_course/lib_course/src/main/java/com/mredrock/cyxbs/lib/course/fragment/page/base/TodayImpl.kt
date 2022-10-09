@@ -71,10 +71,14 @@ abstract class TodayImpl : NoLessonImpl(), IToday {
       if (mLeft == 0F && mRight == 0F) {
         // 如果都为 0，说明此时没有开始布局
         course.post {
-          mLeft = getWeekNumStartWidth(weekNum).toFloat()
-          mRight = getWeekNumEndWidth(weekNum).toFloat()
-          nlWeek.invalidate()
-          course.invalidate()
+          if (view != null) {
+            // view 为 null 的时候说明此时 Fragment 已经被摧毁了
+            // 出现这个情况的概率很低
+            mLeft = getWeekNumStartWidth(weekNum).toFloat()
+            mRight = getWeekNumEndWidth(weekNum).toFloat()
+            nlWeek.invalidate()
+            course.invalidate()
+          }
         }
       } else {
         nlWeek.invalidate()

@@ -67,8 +67,10 @@ class CourseFragment : BaseFragment() {
   
   private fun initCourse() {
     mViewHeader.setOnClickListener {
-      if (mBottomSheet.state == BottomSheetBehavior.STATE_COLLAPSED) {
-        mBottomSheet.state = BottomSheetBehavior.STATE_EXPANDED
+      if (mBottomSheet.isDraggable) {
+        if (mBottomSheet.state == BottomSheetBehavior.STATE_COLLAPSED) {
+          mBottomSheet.state = BottomSheetBehavior.STATE_EXPANDED
+        }
       }
     }
   

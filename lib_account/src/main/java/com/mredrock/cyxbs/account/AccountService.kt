@@ -137,7 +137,9 @@ internal class AccountService : IAccountService {
         
         // 发送学号给下游
         fun emitStuNum(stuNum: String?) {
-            val value = Value(stuNum)
+            val value = Value(
+                if (stuNum == null || stuNum.isBlank()) null else stuNum
+            )
             stuNumState.onNext(value)
             stuNumEvent.onNext(value)
         }

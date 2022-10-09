@@ -13,6 +13,7 @@
         android:background="@drawable/course_layer_list_course_bg"
         app:behavior_peekHeight="130dp"
         app:behavior_hideable="false"
+        app:behavior_draggable="false"
         app:layout_behavior="@string/bottom_sheet_behavior">
         <!--peekHeight 由课表头的 70 + 底部按钮的 60 组成-->
 

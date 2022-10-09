@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.mredrock.cyxbs.course">
+
     <application>
         <activity
             android:name=".page.find.ui.find.activity.FindLessonActivity"
@@ -8,4 +9,5 @@
 
         <activity android:name=".page.find.ui.find.activity.ShowResultActivity"/>
     </application>
+
 </manifest>
