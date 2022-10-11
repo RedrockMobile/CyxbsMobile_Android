@@ -24,8 +24,8 @@ abstract class BaseLibraryProject(project: Project) : BaseAndroidProject(project
   
   protected open fun initLibrary() {
     apply(plugin = "com.android.library")
-    apply(plugin = "kotlin-android")
-    apply(plugin = "kotlin-kapt")
+    apply(plugin =  "org.jetbrains.kotlin.android")
+    apply(plugin = "org.jetbrains.kotlin.kapt")
     
     extensions.configure<LibraryExtension> {
       initAndroid(this)

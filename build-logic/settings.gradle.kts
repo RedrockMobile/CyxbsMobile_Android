@@ -33,7 +33,7 @@ dependencyResolutionManagement {
 }
 
 rootProject.name = "build-logic"
-include(":convention")
+//include(":convention")
 include(":core")
 include(":core:api")
 include(":core:base")

@@ -33,6 +33,11 @@ class ModuleDebugPlugin : BasePlugin() {
         if (!gradle.startParameter.taskNames.any { it.contains("Release") }) {
             apply(plugin = "pandora-plugin")
         }
+
+        apply(plugin = "com.android.application")
+        apply(plugin =  "org.jetbrains.kotlin.android")
+        apply(plugin = "org.jetbrains.kotlin.kapt")
+
         dependencies {
             "debugImplementation"(project(LibDepend.debug))
         }
@@ -43,10 +48,6 @@ class ModuleDebugPlugin : BasePlugin() {
 
         passOnApiImplDepend(project, project, hashSetOf(), hashSetOf())
 
-
-        apply(plugin = "com.android.application")
-        apply(plugin = "kotlin-android")
-        apply(plugin = "kotlin-kapt")
 
 
         androidApp {

@@ -35,7 +35,7 @@ class ModuleDebugPlugin : Plugin<Project> {
   // 允许执行单模块调试
   private fun Project.doDebugModule() {
     apply(plugin="module.debug")
-    apply(plugin = "com.mredrock.cyxbs.convention.publish.publications")
+//    apply(plugin = "com.mredrock.cyxbs.convention.publish.publications")
   }
   
   // 不允许执行单模块调试

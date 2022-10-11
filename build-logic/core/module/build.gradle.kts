@@ -17,9 +17,9 @@ gradlePlugin {
             implementationClass = "ModuleDebugPlugin"
         }
 
-        create("module-manager") {
-            id = "module-manager"
-            implementationClass = "ModuleManagerPlugin"
+        create("module") {
+            id = "module"
+            implementationClass = "ModulePlugin"
         }
 
     }
