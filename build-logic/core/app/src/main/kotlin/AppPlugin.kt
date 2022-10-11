@@ -2,6 +2,7 @@ import com.mredrock.cyxbs.convention.config.Config
 import com.mredrock.cyxbs.convention.depend.dependBugly
 import com.mredrock.cyxbs.convention.depend.dependSophix
 import com.mredrock.cyxbs.convention.depend.dependUmeng
+import com.mredrock.cyxbs.convention.depend.dependVasDolly
 import com.tencent.vasdolly.plugin.extension.ChannelConfigExtension
 import org.gradle.api.JavaVersion
 import org.gradle.api.plugins.ExtensionAware
@@ -30,6 +31,7 @@ class AppPlugin : BasePlugin() {
         dependBugly()
         dependSophix()
         dependUmeng()
+        dependVasDolly()
 
         val ext = extensions["ext"] as ExtraPropertiesExtension
         operator fun Any?.get(key: String): Any? {

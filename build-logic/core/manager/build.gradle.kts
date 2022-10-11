@@ -10,7 +10,6 @@ dependencies {
     implementation(project(":core:base"))
     implementation(project(":core:api"))
     implementation(project(":core:app"))
-    implementation(project(":core:debug"))
     implementation(project(":core:library"))
     implementation(project(":core:module"))
 
@@ -20,7 +19,7 @@ gradlePlugin {
     plugins {
         create("module-debug") {
             id = "module-debug"
-            implementationClass = "ModuleDebugPlugin"
+            implementationClass = "ModuleDebugManagerPlugin"
         }
 
         create("module-manager") {

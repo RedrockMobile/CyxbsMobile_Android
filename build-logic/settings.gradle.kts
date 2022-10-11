@@ -40,7 +40,6 @@ include(":core:base")
 include(":core:module")
 include(":core:library")
 include(":core:manager")
-include(":core:debug")
 include(":core:versions")
 include(":core:app")
 

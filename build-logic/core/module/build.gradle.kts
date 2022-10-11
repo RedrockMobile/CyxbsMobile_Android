@@ -12,8 +12,8 @@ dependencies {
 gradlePlugin {
 
     plugins {
-        create("module-debug") {
-            id = "module-debug"
+        create("module.debug") {
+            id = "module.debug"
             implementationClass = "ModuleDebugPlugin"
         }
 
