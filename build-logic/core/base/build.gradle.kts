@@ -10,9 +10,14 @@ gradlePlugin {
             id="base.library"
         }
 
-        create("application.base") {
+        create("base.application") {
             implementationClass="BaseApplicationPlugin"
-            id="application.base"
+            id="base.application"
+        }
+
+        create("base.android") {
+            implementationClass="BaseAndroidPlugin"
+            id="base.android"
         }
     }
 }

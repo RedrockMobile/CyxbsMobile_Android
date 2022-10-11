@@ -16,6 +16,8 @@ internal class BaseApplicationPlugin : BasePlugin() {
 
     override fun PluginScope.configure() {
 
+        apply(plugin = "base.android")
+
         apply(plugin = "com.android.application")
         apply(plugin = "kotlin-android")
         apply(plugin = "kotlin-kapt")

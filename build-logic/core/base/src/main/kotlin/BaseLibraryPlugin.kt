@@ -16,6 +16,8 @@ internal class BaseLibraryPlugin : BasePlugin() {
 
     override fun PluginScope.configure() {
 
+        apply(plugin = "base.android")
+
         apply(plugin = "com.android.library")
         apply(plugin = "kotlin-android")
         apply(plugin = "kotlin-kapt")

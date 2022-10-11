@@ -23,7 +23,7 @@ val Project.vasDolly_version: String
   get() = libsVersion("vasDolly.version").requiredVersion
 
 // 内部使用，只给 AppProject 配置，单模块调试时不需要
-internal fun Project.dependVasDolly() {
+fun Project.dependVasDolly() {
   dependencies {
     "implementation"("com.tencent.vasdolly:helper:${vasDolly_version}")
   }

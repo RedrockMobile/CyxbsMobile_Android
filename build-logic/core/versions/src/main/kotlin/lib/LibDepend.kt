@@ -70,7 +70,7 @@ fun Project.dependLibUtils() {
  *
  * 这个模块里面单独放只在 debug 下使用的依赖
  */
-internal fun Project.debugDependLibDebug() {
+fun Project.debugDependLibDebug() {
   if (!gradle.startParameter.taskNames.any { it.contains("Release") }) {
     apply(plugin = "pandora-plugin")
   }

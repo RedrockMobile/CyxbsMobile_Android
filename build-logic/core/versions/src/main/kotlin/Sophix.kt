@@ -17,7 +17,7 @@ object Sophix {
 }
 
 // 内部使用，只给 AppProject 配置，单模块调试时不需要
-internal fun Project.dependSophix() {
+fun Project.dependSophix() {
   dependencies {
     "implementation"(Sophix.sophix) {
       // 与友盟 push 的 utdid 冲突，解决方案来源于官网

@@ -18,7 +18,7 @@ object Umeng {
 }
 
 // 内部使用，只给 AppProject 配置，单模块调试时不需要
-internal fun Project.dependUmeng() {
+fun Project.dependUmeng() {
   dependencies {
     "implementation"(Umeng.common)
     "implementation"(Umeng.asms)

@@ -43,7 +43,7 @@ object Lifecycle {
 *
 * 如果你的 api 模块需要使用，建议自己按需依赖，一般情况下 api 模块是不需要这些东西的
 * */
-internal fun Project.dependLifecycleKtx() {
+fun Project.dependLifecycleKtx() {
   dependencies {
     "implementation"(Lifecycle.`viewmodel-ktx`)
     "implementation"(Lifecycle.`livedata-ktx`)
