@@ -2,7 +2,7 @@
 
 
 // 开启 versionCatalogs 功能
-enableFeaturePreview("VERSION_CATALOGS")
+//enableFeaturePreview("VERSION_CATALOGS")
 
 pluginManagement {
   repositories {
@@ -23,13 +23,24 @@ dependencyResolutionManagement {
     google()
     mavenCentral()
   }
-  versionCatalogs {
-    // 这个 libs 名字是固定的，搞了好久才解决这个问题
-    create("libs") {
-      // 这个 libs.versions.toml 名字也必须固定，不能改成其他的
-      from(files("../gradle/libs.versions.toml"))
-    }
-  }
+//  versionCatalogs {
+//    // 这个 libs 名字是固定的，搞了好久才解决这个问题
+//    create("libs") {
+//      // 这个 libs.versions.toml 名字也必须固定，不能改成其他的
+//      from(files("../gradle/libs.versions.toml"))
+//    }
+//  }
 }
+
 rootProject.name = "build-logic"
 include(":convention")
+include(":core")
+include(":core:api")
+include(":core:base")
+include(":core:module")
+include(":core:library")
+include(":core:manager")
+include(":core:debug")
+include(":core:versions")
+
+include(":plugin")

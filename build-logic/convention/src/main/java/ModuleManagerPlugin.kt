@@ -9,7 +9,8 @@ import org.gradle.kotlin.dsl.apply
  * @email guo985892345@foxmail.com
  * @date 2022/8/12 13:07
  */
-class ModuleManagerPlugin : Plugin<Project> {
+class
+ModuleManagerPlugin : Plugin<Project> {
   override fun apply(target: Project) {
     target.run {
       /**

@@ -8,10 +8,10 @@ java {
 }
 
 dependencies {
-  implementation(libs.android.gradlePlugin)
-  implementation(libs.kotlin.gradlePlugin)
+  implementation("com.android.tools.build:gradle:7.2.1")
+  implementation("org.jetbrains.kotlin:kotlin-gradle-plugin:1.6.21")
   
-  implementation(libs.hilt.gradlePlugin)
+  implementation("com.google.dagger:hilt-android-gradle-plugin:2.43")
   
   // ARouter https://github.com/alibaba/ARouter
   // 可以去插件中搜索 ARouter Helper，用于实现一些快捷跳转的操作
@@ -21,7 +21,7 @@ dependencies {
   implementation("com.tencent.mm:AndResGuard-gradle-plugin:1.2.21")
   
   // 腾讯多渠道打包 https://github.com/Tencent/VasDolly
-  implementation(libs.vasDolly.gradlePlugin)
+  implementation("com.tencent.vasdolly:plugin:3.0.4")
 }
 
 gradlePlugin {
