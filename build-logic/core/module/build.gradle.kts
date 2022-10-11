@@ -12,10 +12,16 @@ dependencies {
 gradlePlugin {
 
     plugins {
-        create("module") {
-            implementationClass = "ModulePlugin"
-            id="module"
+        create("module-debug") {
+            id = "module-debug"
+            implementationClass = "ModuleDebugPlugin"
         }
+
+        create("module-manager") {
+            id = "module-manager"
+            implementationClass = "ModuleManagerPlugin"
+        }
+
     }
 
 }

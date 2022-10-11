@@ -1,6 +1,8 @@
 import com.mredrock.cyxbs.convention.depend.dependAndroidKtx
 import com.mredrock.cyxbs.convention.depend.dependAndroidView
 import com.mredrock.cyxbs.convention.depend.dependLifecycleKtx
+import org.gradle.api.Plugin
+import org.gradle.api.Project
 
 /**
  *@author ZhiQiang Tu
@@ -9,16 +11,18 @@ import com.mredrock.cyxbs.convention.depend.dependLifecycleKtx
  *@mail  2623036785@qq.com
  */
 
-class ModulePlugin : BasePlugin() {
-    override fun PluginScope.configure() {
+class ModuleManagerPlugin : Plugin<Project> {
 
-        if (plugins.hasPlugin("com.android.application")) {
+    override fun apply(target: Project) {
+        if (target.plugins.hasPlugin("com.android.application")) {
             throw RuntimeException("取消单模块调试才能使用多模块插件！")
         }
-        // 这里面只依赖带有 internal 修饰的
-        dependAndroidView()
-        dependAndroidKtx()
-        dependLifecycleKtx()
 
+        // 这里面只依赖带有 internal 修饰的
+        with(target) {
+            dependAndroidView()
+            dependAndroidKtx()
+            dependLifecycleKtx()
+        }
     }
 }

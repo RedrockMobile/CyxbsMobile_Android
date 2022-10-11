@@ -7,6 +7,7 @@ java.toolchain.languageVersion.set(JavaLanguageVersion.of(11))
 dependencies {
 
     api(project(":core:versions"))
+    implementation(project(":core:base"))
 
 }
 
