@@ -57,7 +57,7 @@ class AppPlugin : BasePlugin() {
                     proguardFiles(
                         getDefaultProguardFile("proguard-android-optimize.txt"),
                         rootDir.resolve("build-logic")
-                            .resolve("convention")
+                            .resolve("core")
                             .resolve("proguard-rules.pro")
                     )
 
@@ -72,7 +72,7 @@ class AppPlugin : BasePlugin() {
                     proguardFiles(
                         getDefaultProguardFile("proguard-android-optimize.txt"),
                         rootDir.resolve("build-logic")
-                            .resolve("convention")
+                            .resolve("core")
                             .resolve("proguard-rules.pro")
                     )
 
