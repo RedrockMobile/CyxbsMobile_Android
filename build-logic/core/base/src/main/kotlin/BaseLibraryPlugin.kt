@@ -12,7 +12,8 @@ import org.jetbrains.kotlin.gradle.dsl.KotlinJvmOptions
  *@mail  2623036785@qq.com
  */
 
-class BaseLibraryPlugin : BasePlugin() {
+internal class BaseLibraryPlugin : BasePlugin() {
+
     override fun PluginScope.configure() {
 
         apply(plugin = "com.android.library")
@@ -117,5 +118,8 @@ class BaseLibraryPlugin : BasePlugin() {
 
         }
 
+
     }
+
+
 }

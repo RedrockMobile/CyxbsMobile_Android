@@ -12,7 +12,8 @@ import org.jetbrains.kotlin.gradle.dsl.KotlinJvmOptions
  *@mail  2623036785@qq.com
  */
 
-class BaseApplicationPlugin : BasePlugin() {
+internal class BaseApplicationPlugin : BasePlugin() {
+
     override fun PluginScope.configure() {
 
         apply(plugin = "com.android.application")
@@ -112,4 +113,6 @@ class BaseApplicationPlugin : BasePlugin() {
         }
 
     }
+
+
 }

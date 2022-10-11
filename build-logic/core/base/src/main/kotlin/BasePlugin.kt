@@ -12,11 +12,11 @@ abstract class BasePlugin : Plugin<Project> {
 
     lateinit var project: Project
 
-    override fun apply(target: Project) {
+    final override fun apply(target: Project) {
         this.project = target
-        val scope = PluginScope(project)
-        scope.configure()
+        PluginScope(project).configure()
     }
+
 
     abstract fun PluginScope.configure()
 }
