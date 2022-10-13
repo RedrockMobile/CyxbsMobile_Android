@@ -48,10 +48,10 @@ object AffairRepository {
   
   /**
    * 观察当前登录人的事务
-   * 1、支持换账号登录后返回新登录人的数据
-   * 2、第一次观察时会请求新的数据
-   * 3、使用了 distinctUntilChanged()，只会在数据更改了才会回调
-   * 4、上游不会抛出错误到下游
+   * - 支持换账号登录后返回新登录人的数据
+   * - 第一次观察时会请求新的数据
+   * - 使用了 distinctUntilChanged()，只会在数据更改了才会回调
+   * - 上游不会抛出错误到下游
    */
   fun observeAffair(): Observable<List<AffairEntity>> {
     return ServiceManager(IAccountService::class)
@@ -376,15 +376,15 @@ object AffairRepository {
           )?.also { calendarIdList.add(it) }
         } else {
           // 如果不是整学期,添加一次性事件
-          it.week.forEach { weekNum ->
+          it.week.forEach { week ->
             PhoneCalendar.add(
               PhoneCalendar.OnceData(
                 title,
                 content,
-                TimeUtils.getBegin(getStartRow(it.beginLesson), it.day, weekNum),
+                TimeUtils.getBegin(getStartRow(it.beginLesson), it.day, week),
                 TimeUtils.getEnd(
                   getStartRow(it.beginLesson),
-                  it.day, weekNum,
+                  it.day, week,
                   getEndRow(it.beginLesson, it.period)
                 ),
                 time
