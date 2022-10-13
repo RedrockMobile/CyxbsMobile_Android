@@ -1,16 +1,19 @@
 package com.mredrock.cyxbs.convention.depend.api
 
 import org.gradle.api.Project
-
 import com.mredrock.cyxbs.convention.depend.api.utils.ApiDependUtils
 
 /**
- * ...
+ * 为什么要把 api 模块单独写出来？
+ *
+ * 因为单模块调试时 ARouter 如果不把实现模块一起拿来编译，就会报空指针，
+ * 但谁是 api 模块的实现模块是不能被定义的（虽然目前只有父模块是实现模块），
+ * 所以为了单模块调试，需要统一 api 模块的依赖写法
+ *
  * @author 985892345 (Guo Xiangrui)
  * @email 2767465918@qq.com
  * @date 2022/5/30 17:52
  */
-
 object ApiDepend {
   
   /*
@@ -30,10 +33,14 @@ object ApiDepend {
   val crash = ":lib_crash:api_crash" by parent
   val electricity = ":module_electricity:api_electricity" by parent
   val login = ":module_login:api_login" by parent
-  val main = ":module_main:api_main" by parent
+  val sport = ":module_sport:api_sport" by parent
   val store = ":module_store:api_store" by parent
   val todo = ":module_todo:api_todo" by parent
   val volunteer = ":module_volunteer:api_volunteer" by parent
+  val widget = ":module_widget:api_widget" by parent
+  val mine = ":module_mine:api_mine" by parent
+  val course = ":module_course:api_course" by parent
+  val affair = ":module_affair:api_affair" by parent
 
   private infix fun String.by(implPath: String): ApiDependUtils.IApiDependUtils = by { implPath }
   private infix fun String.by(implPath: String.() -> String): ApiDependUtils.IApiDependUtils {
@@ -65,10 +72,6 @@ fun Project.dependApiLogin() {
   ApiDepend.login.dependApiOnly(this)
 }
 
-fun Project.dependApiMain() {
-  ApiDepend.main.dependApiOnly(this)
-}
-
 fun Project.dependApiStore() {
   ApiDepend.store.dependApiOnly(this)
 }
@@ -81,6 +84,25 @@ fun Project.dependApiVolunteer() {
   ApiDepend.volunteer.dependApiOnly(this)
 }
 
+fun Project.dependApiWidget() {
+  ApiDepend.widget.dependApiOnly(this)
+}
+
+fun Project.dependApiSport() {
+  ApiDepend.sport.dependApiOnly(this)
+}
+
+fun Project.dependApiMine(){
+  ApiDepend.mine.dependApiOnly(this)
+}
+
+fun Project.dependApiCourse(){
+  ApiDepend.course.dependApiOnly(this)
+}
+
+fun Project.dependApiAffair(){
+  ApiDepend.affair.dependApiOnly(this)
+}
 fun Project.dependApiCrash(){
   ApiDepend.crash.dependApiOnly(this)
 }

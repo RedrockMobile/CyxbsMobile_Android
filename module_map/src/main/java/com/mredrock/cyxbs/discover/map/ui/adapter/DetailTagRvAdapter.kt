@@ -1,20 +1,33 @@
 package com.mredrock.cyxbs.discover.map.ui.adapter
 
-import android.content.Context
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
+import androidx.recyclerview.widget.DiffUtil
+import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.mredrock.cyxbs.common.utils.extensions.pressToZoomOut
 import com.mredrock.cyxbs.discover.map.R
-import kotlinx.android.synthetic.main.map_recycle_item_detail_tag.view.*
 
-class DetailTagRvAdapter(val context: Context, private val mList: MutableList<String>) : RecyclerView.Adapter<DetailTagRvAdapter.ViewHolder>() {
-
+class DetailTagRvAdapter : ListAdapter<String, DetailTagRvAdapter.ViewHolder>(
+    object : DiffUtil.ItemCallback<String>() {
+        override fun areItemsTheSame(oldItem: String, newItem: String): Boolean {
+            return oldItem == newItem
+        }
+    
+        override fun areContentsTheSame(oldItem: String, newItem: String): Boolean {
+            return true
+        }
+    
+        override fun getChangePayload(oldItem: String, newItem: String): Any {
+            return "" // 不返回 null 可以避免 ViewHolder 互换，减少性能消耗
+        }
+    }
+) {
 
     inner class ViewHolder(view: View) : RecyclerView.ViewHolder(view) {
-        val tag: TextView = view.map_tv_recycle_item_detail_tag.apply { pressToZoomOut() }
+        val tag: TextView = view.findViewById<TextView>(R.id.map_tv_recycle_item_detail_tag).apply { pressToZoomOut() }
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
@@ -23,21 +36,7 @@ class DetailTagRvAdapter(val context: Context, private val mList: MutableList<St
         return ViewHolder(view)
     }
 
-    override fun getItemCount(): Int {
-        return mList.size
-    }
-
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-        holder.tag.text = mList[position]
-
+        holder.tag.text = getItem(position)
     }
-
-
-    fun setList(list: List<String>) {
-        mList.clear()
-        mList.addAll(list)
-
-
-    }
-
 }

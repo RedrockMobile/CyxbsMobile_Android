@@ -24,10 +24,10 @@ class MapStyleHelper(val context: Context) {
 
     fun saveMapStyle(callback: () -> Unit) {
         checkFile()
-        ApiGenerator.registerNetSettings(SCHOOL_CAR_MAP_RES, retrofitConfig = { builder: Retrofit.Builder ->
+        val retrofit = ApiGenerator.createSelfRetrofit(retrofitConfig = { builder: Retrofit.Builder ->
             builder.baseUrl(getBaseUrl())
-        },tokenNeeded = true)
-        val apiService = ApiGenerator.getApiService(0, MapService::class.java)
+        }, tokenNeeded = true)
+        val apiService = retrofit.create(MapService::class.java)
         apiService.getMapRes("map_A")
                 .setSchedulers()
                 .safeSubscribeBy(onError = {

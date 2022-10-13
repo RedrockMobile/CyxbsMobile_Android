@@ -1,5 +1,7 @@
 <resources>
 
+    <string name="discover">发现</string>
+
     <string name="discover_function">工具</string>
 
     <string name="discover_title_no_class">没课约</string>
@@ -30,6 +32,9 @@
 
     <string name="discover_title_todo">邮子清单</string>
     <string name="discover_detail_todo">待办事项</string>
+
+    <string name="discover_title_sport">体育打卡</string>
+    <string name="discover_detail_sport">记录查询</string>
 
     <string name="discover_pic_save_alert_dialog_title">是否保存</string>
     <string name="discover_pic_save_alert_dialog_message">这张图片将保存到手机</string>

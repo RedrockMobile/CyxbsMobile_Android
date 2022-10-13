@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:orientation="vertical"
     android:id="@+id/background"
-    android:background="@drawable/widget_shape_course_grid_afternoon_item"
     android:layout_width="match_parent"
-    android:layout_height="@dimen/widget_course_item_height">
+    android:layout_height="@dimen/widget_course_item_height"
+    android:background="@drawable/widget_shape_course_grid_afternoon_item"
+    android:orientation="vertical">
 
 
     <TextView
@@ -20,13 +20,7 @@
         android:gravity="center"
         android:maxLines="3"
         android:textColor="@color/widget_afternoon_text_color"
-        android:textSize="@dimen/widget_course_text_size"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.0"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.0" />
+        android:textSize="@dimen/widget_course_text_size" />
 
     <TextView
         android:id="@+id/bottom"
@@ -40,12 +34,28 @@
         android:gravity="center"
         android:maxLines="3"
         android:textColor="@color/widget_afternoon_text_color"
+        android:textSize="@dimen/widget_course_text_size" />
 
-android:textSize="@dimen/widget_course_text_size"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/top"
-        app:layout_constraintVertical_bias="1.0" />
+    <ImageView
+        android:id="@+id/affair"
+        android:layout_width="@dimen/widget_lesson_decoration_width"
+        android:layout_height="@dimen/widget_lesson_decoration_height"
+        android:layout_alignParentStart="true"
+        android:layout_marginStart="@dimen/widget_course_margin"
+        android:layout_marginEnd="@dimen/widget_course_margin"
+        android:layout_marginTop="@dimen/widget_lesson_decoration_margin_top"
+        android:src="@drawable/widget_shape_lesson_with_affair"
+        android:visibility="gone" />
+
+    <ImageView
+        android:id="@+id/other_lesson"
+        android:layout_width="@dimen/widget_lesson_decoration_width"
+        android:layout_height="@dimen/widget_lesson_decoration_height"
+        android:layout_alignParentEnd="true"
+        android:layout_marginStart="@dimen/widget_course_margin"
+        android:layout_marginEnd="@dimen/widget_course_margin"
+        android:layout_marginTop="@dimen/widget_lesson_decoration_margin_top"
+        android:src="@drawable/widget_shape_lesson_with_other_lesson_afternoon"
+        android:visibility="gone" />
 
 </RelativeLayout>

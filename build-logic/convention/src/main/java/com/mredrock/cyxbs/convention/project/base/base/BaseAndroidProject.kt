@@ -78,7 +78,7 @@ abstract class BaseAndroidProject(project: Project) : BaseProject(project) {
         isMinifyEnabled = true
         proguardFiles(
           getDefaultProguardFile("proguard-android-optimize.txt"),
-          rootDir.resolve("build_logic")
+          rootDir.resolve("build-logic")
             .resolve("convention")
             .resolve("proguard-rules.pro")
         )
@@ -93,7 +93,7 @@ abstract class BaseAndroidProject(project: Project) : BaseProject(project) {
         isMinifyEnabled = false
         proguardFiles(
           getDefaultProguardFile("proguard-android-optimize.txt"),
-          rootDir.resolve("build_logic")
+          rootDir.resolve("build-logic")
             .resolve("convention")
             .resolve("proguard-rules.pro")
         )

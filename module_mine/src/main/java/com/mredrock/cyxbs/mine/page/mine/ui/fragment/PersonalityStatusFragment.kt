@@ -10,17 +10,11 @@ import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.mredrock.cyxbs.common.ui.BaseFragment
-import com.mredrock.cyxbs.common.ui.BaseViewModelFragment
 import com.mredrock.cyxbs.mine.R
 import com.mredrock.cyxbs.mine.network.model.AuthenticationStatus
-import com.mredrock.cyxbs.mine.page.mine.adapter.IdentityAdapter
 import com.mredrock.cyxbs.mine.page.mine.adapter.StatusAdapter
 import com.mredrock.cyxbs.mine.page.mine.callback.DiffCallBack
 import com.mredrock.cyxbs.mine.page.mine.viewmodel.IdentityViewModel
-import kotlinx.android.synthetic.main.mine_fragment_approve.view.*
-
-import kotlinx.android.synthetic.main.mine_fragment_personality.view.*
-import java.lang.NullPointerException
 
 class PersonalityStatusFragment(
     val redid: String
@@ -38,17 +32,18 @@ class PersonalityStatusFragment(
         return view
     }
     fun initData(view: View) {
+        val rv_personal:RecyclerView = view.findViewById(R.id.rv_personal)
         viewModel.getCustomization(redid)
         viewModel.customization.observeForever { it ->
             val list = mutableListOf<AuthenticationStatus.Data>()
             it.data.forEach {
                 list.add(it)
             }
-            if (view.rv_personal?.adapter == null) {
+            if (rv_personal?.adapter == null) {
                 Log.i("缺省页面","null执行了吗")
                 adapter = StatusAdapter(list, context, redid)
-                view.rv_personal.adapter = adapter
-                view.rv_personal.layoutManager = LinearLayoutManager(context)
+                rv_personal.adapter = adapter
+                rv_personal.layoutManager = LinearLayoutManager(context)
             } else {
                 val diffResult = DiffUtil.calculateDiff(DiffCallBack(oldList, list))
                 adapter!!.list = list

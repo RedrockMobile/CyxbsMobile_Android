@@ -12,6 +12,7 @@
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:fitsSystemWindows="true"
         android:background="@color/store_product_exchange_bg">
 
         <include
@@ -32,28 +33,31 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintVertical_bias="0.067"
+            app:layout_constraintVertical_bias="0.03"
             tools:ignore="HardcodedText" />
 
-        <com.mredrock.cyxbs.store.utils.widget.slideshow.SlideShow
-            android:id="@+id/store_slideShow_exchange_product_image"
+        <com.ndhzs.slideshow.SlideShow
+            android:id="@+id/store_ss_exchange_product_image"
             android:layout_width="match_parent"
             android:layout_height="0dp"
             android:layout_marginLeft="16dp"
             android:layout_marginRight="16dp"
             android:layout_marginTop="20dp"
-            android:background="@drawable/store_shape_stamp_center_product"
-            app:slide_imgRadius="8dp"
-            app:indicators_backgroundCircleColor="#4D000000"
-            app:indicators_circleColor="#F6F6F6"
-            app:indicators_circleRadius="3.5dp"
-            app:indicators_intervalMargin="16dp"
-            app:indicators_style="water_drop"
-            app:indicators_wrapWidth="16dp"
             app:layout_constraintDimensionRatio="192:100"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/store_tv_product_detail_title" />
+            app:layout_constraintTop_toBottomOf="@+id/store_tv_product_detail_title" >
+
+            <com.ndhzs.slideshow.indicators.view.WaterDropIndicators
+                android:layout_width="match_parent"
+                android:layout_height="16dp"
+                android:layout_gravity="bottom"
+                app:indicators_circleColor="#F6F6F6"
+                app:indicators_intervalMargin="16dp"
+                app:indicators_circleRadius="3.5dp"
+                app:indicators_circleBackground="#4D000000" />
+
+        </com.ndhzs.slideshow.SlideShow>
 
         <TextView
             android:id="@+id/store_tv_product_name"
@@ -65,7 +69,7 @@
             android:textColor="@color/store_common_title"
             android:textSize="18sp"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/store_slideShow_exchange_product_image"
+            app:layout_constraintTop_toBottomOf="@+id/store_ss_exchange_product_image"
             tools:ignore="HardcodedText"
             tools:text="兮哥哥的爱❤" />
 
@@ -220,9 +224,9 @@
             app:cornerRadius="27dp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            tools:ignore="SpUsage"
+            tools:ignore="SpUsage,TouchTargetSizeCheck"
             tools:backgroundTint="@color/store_btn_product_exchange"
-            style="@style/Widget.MaterialComponents.Button.UnelevatedButton"/>
+            style="@style/Widget.MaterialComponents.Button.UnelevatedButton" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

@@ -9,6 +9,7 @@ import android.view.View
 import android.view.Window
 import android.view.WindowManager
 import android.view.animation.AccelerateDecelerateInterpolator
+import android.widget.Button
 import android.widget.ImageView
 import android.widget.Space
 import android.widget.TextView
@@ -16,15 +17,12 @@ import androidx.core.content.ContextCompat
 import androidx.core.content.res.ResourcesCompat
 import androidx.lifecycle.Observer
 import com.alibaba.android.arouter.facade.annotation.Route
-import com.mredrock.cyxbs.common.component.CommonDialogFragment
 import com.mredrock.cyxbs.common.config.MINE_CHECK_IN
 import com.mredrock.cyxbs.common.ui.BaseViewModelActivity
 import com.mredrock.cyxbs.common.utils.extensions.toast
 import com.mredrock.cyxbs.mine.R
-import com.mredrock.cyxbs.mine.network.model.Product
 import com.mredrock.cyxbs.mine.network.model.ScoreStatus
 import com.mredrock.cyxbs.mine.util.widget.*
-import kotlinx.android.synthetic.main.mine_activity_daily_sign.*
 import kotlin.math.abs
 
 /**
@@ -34,34 +32,41 @@ import kotlin.math.abs
  */
 @Route(path = MINE_CHECK_IN)
 class DailySignActivity : BaseViewModelActivity<DailyViewModel>() {
+    private val mine_daily_sign by R.id.mine_daily_sign.view<Button>()
+    private val mine_daily_tv_year by R.id.mine_daily_tv_year.view<TextView>()
+    private val mine_daily_tv_week by R.id.mine_daily_tv_week.view<TextView>()
+    private val mine_daily_dayCount by R.id.mine_daily_dayCount.view<TextView>()
+    private val mine_daily_tv_ranking_percentage by R.id.mine_daily_tv_ranking_percentage.view<TextView>()
+    private val mine_daily_tv_ranking by R.id.mine_daily_tv_ranking.view<TextView>()
+    private val mine_daily_tv_bubble by R.id.mine_daily_tv_bubble.view<TextView>()
 
     private var objectAnimator: ObjectAnimator? = null
 
     private val dividerResArr: Array<Stick> by lazy {
-        arrayOf(mine_daily_v_divider_mon_tue,
-            mine_daily_v_divider_tue_wed,
-            mine_daily_v_divider_wed_thurs,
-            mine_daily_v_divider_thurs_fri,
-            mine_daily_v_divider_fri_sat,
-            mine_daily_v_divider_sat_sun)
+        arrayOf(findViewById(R.id.mine_daily_v_divider_mon_tue),
+            findViewById(R.id.mine_daily_v_divider_tue_wed),
+            findViewById(R.id.mine_daily_v_divider_wed_thurs),
+            findViewById(R.id.mine_daily_v_divider_thurs_fri),
+            findViewById(R.id.mine_daily_v_divider_fri_sat),
+            findViewById(R.id.mine_daily_v_divider_sat_sun))
     }
     private val imageViewResArr: Array<ImageView> by lazy {
-        arrayOf(mine_daily_iv_mon,
-            mine_daily_iv_tue,
-            mine_daily_iv_wed,
-            mine_daily_iv_thurs,
-            mine_daily_iv_fri,
-            mine_daily_iv_sat,
-            mine_daily_iv_sun)
+        arrayOf(findViewById(R.id.mine_daily_iv_mon),
+            findViewById(R.id.mine_daily_iv_tue),
+            findViewById(R.id.mine_daily_iv_wed),
+            findViewById(R.id.mine_daily_iv_thurs),
+            findViewById(R.id.mine_daily_iv_fri),
+            findViewById(R.id.mine_daily_iv_sat),
+            findViewById(R.id.mine_daily_iv_sun))
     }
     private val spaceResArr: Array<Space> by lazy {
-        arrayOf(mine_daily_space_mon,
-            mine_daily_space_tue,
-            mine_daily_space_wed,
-            mine_daily_space_thurs,
-            mine_daily_space_fri,
-            mine_daily_space_sat,
-            mine_daily_space_sun)
+        arrayOf(findViewById(R.id.mine_daily_space_mon),
+            findViewById(R.id.mine_daily_space_tue),
+            findViewById(R.id.mine_daily_space_wed),
+            findViewById(R.id.mine_daily_space_thurs),
+            findViewById(R.id.mine_daily_space_fri),
+            findViewById(R.id.mine_daily_space_sat),
+            findViewById(R.id.mine_daily_space_sun))
     }
     private val weekGenerator: WeekGenerator by lazy {
         WeekGenerator()

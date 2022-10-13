@@ -4,8 +4,8 @@ import android.os.Bundle
 import androidx.annotation.CallSuper
 import com.mredrock.cyxbs.api.account.IAccountService
 import com.mredrock.cyxbs.api.login.ILoginService
-import com.mredrock.cyxbs.common.service.impl
 import com.mredrock.cyxbs.lib.base.ui.BaseActivity
+import com.mredrock.cyxbs.lib.utils.service.impl
 
 /**
  * 单模块调试的 BaseDebugActivity
@@ -17,10 +17,10 @@ import com.mredrock.cyxbs.lib.base.ui.BaseActivity
  * @date 2022/8/7 20:18
  */
 abstract class BaseDebugActivity : BaseActivity() {
-  
+
   protected open val isNeedLogin: Boolean
     get() = true
-  
+
   @CallSuper
   final override fun onCreate(savedInstanceState: Bundle?) {
     super.onCreate(savedInstanceState)
@@ -30,7 +30,7 @@ abstract class BaseDebugActivity : BaseActivity() {
         .isLogin()
       if (!isLogin) {
         ILoginService::class.impl
-          .startLoginActivityReboot(this)
+          .startLoginActivity(this::class.java)
         finish()
       } else {
         onDebugCreate(savedInstanceState)
@@ -39,9 +39,9 @@ abstract class BaseDebugActivity : BaseActivity() {
       onDebugCreate(savedInstanceState)
     }
   }
-  
+
   /**
-   * 主要是用来防止你直接在 onCreate 中 startActivity，导致登录界面被你的界面为覆盖
+   * 主要是用来防止你直接在 onCreate 中 startActivity，导致登录界面被你的界面覆盖
    */
   abstract fun onDebugCreate(savedInstanceState: Bundle?)
 }

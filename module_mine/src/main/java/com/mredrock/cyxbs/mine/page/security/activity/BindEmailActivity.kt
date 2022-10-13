@@ -1,6 +1,9 @@
 package com.mredrock.cyxbs.mine.page.security.activity
 
 import android.os.Bundle
+import android.widget.Button
+import android.widget.EditText
+import android.widget.TextView
 import android.widget.Toast
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
@@ -25,6 +28,13 @@ import java.util.regex.Pattern
 class BindEmailActivity : BaseActivity() {
     private val viewModel by lazy { ViewModelProvider(this).get(BindEmailViewModel::class.java) }
     var email = ""
+
+    private val btn_bind_email_next by R.id.btn_bind_email_next.view<Button>()
+    private val tv_bind_email_contact_us by R.id.tv_bind_email_contact_us.view<TextView>()
+    private val tv_bind_email_send_code by R.id.tv_bind_email_send_code.view<TextView>()
+    private val et_bind_email by R.id.et_bind_email.view<EditText>()
+    private val tv_bind_email_top_tips by R.id.tv_bind_email_top_tips.view<TextView>()
+    private val tv_bind_email_tips by R.id.tv_bind_email_tips.view<TextView>()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)

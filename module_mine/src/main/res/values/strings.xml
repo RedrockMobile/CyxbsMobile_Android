@@ -1,7 +1,10 @@
 <resources xmlns:tools="http://schemas.android.com/tools">
+
+    <string name="mine_app_name">掌上重邮</string>
+
     <!--    从邮问偷的值-->
-    <string name="mine_dialog_tip_deny_text" translatable="false">取消</string>
-    <string name="mine_dialog_tip_positive_text" translatable="false">确定</string>
+    <string name="mine_dialog_tip_deny_text">取消</string>
+    <string name="mine_dialog_tip_positive_text">确定</string>
 
     <string name="mine_user_empty_username">请填写用户名</string>
     <string name="mine_user_empty_introduce">写下你对世界想说的话，就现在</string>
@@ -192,7 +195,6 @@
     <string name="mine_feedback_label_text">#%s</string>
     <string name="mine_feedback_feedback_content_text">今天喝了脉动呐，吃了果冻呐，打了电动呐， 还是挡不住对你的心动呐~</string>
     <string name="mine_feedback_none_history_text">你还没有提交过反馈意见哦~</string>
-
 
 
 </resources>

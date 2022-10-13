@@ -1,4 +1,5 @@
 import com.mredrock.cyxbs.convention.depend.api.dependApiAccount
+import com.mredrock.cyxbs.convention.depend.api.dependApiUpdate
 import com.mredrock.cyxbs.convention.depend.dependGlide
 import com.mredrock.cyxbs.convention.depend.dependLottie
 import com.mredrock.cyxbs.convention.depend.dependNetwork
@@ -16,6 +17,7 @@ dependLibUtils()
 dependLibConfig()
 
 dependApiAccount()
+dependApiUpdate()
 
 dependLottie()
 dependRxjava()

@@ -1,0 +1,284 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.ndhzs.netlayout.view.NetLayout2 xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/course_nl_week"
+    android:layout_width="match_parent"
+    android:layout_height="50dp"
+    app:net_rowCount="1"
+    app:net_columnCount="8">
+
+    <TextView
+        android:id="@+id/course_tv_month"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:textSize="16dp"
+        android:textColor="@color/config_level_one_font_color"
+        android:gravity="center"
+        app:net_layout_startRow="0"
+        app:net_layout_endRow="0"
+        app:net_layout_startColumn="0"
+        app:net_layout_endColumn="0"
+        tools:text="1月"
+        tools:ignore="HardcodedText,SpUsage" />
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        app:net_layout_startRow="0"
+        app:net_layout_endRow="0"
+        app:net_layout_startColumn="1"
+        app:net_layout_endColumn="1">
+
+        <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/course_tv_mon_week"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="@color/config_level_one_font_color"
+            android:textSize="12dp"
+            android:text="@string/course_week_mon"
+            app:layout_constraintBottom_toTopOf="@+id/course_tv_mon_month"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            tools:ignore="SpUsage" />
+
+        <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/course_tv_mon_month"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:alpha="0.6"
+            android:textColor="@color/config_level_one_font_color"
+            android:textSize="11dp"
+            app:layout_constraintTop_toBottomOf="@id/course_tv_mon_week"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            tools:text="30日"
+            tools:ignore="SpUsage" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        app:net_layout_startRow="0"
+        app:net_layout_endRow="0"
+        app:net_layout_startColumn="2"
+        app:net_layout_endColumn="2">
+
+        <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/course_tv_tue_week"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="@color/config_level_one_font_color"
+            android:textSize="12dp"
+            android:text="@string/course_week_tue"
+            app:layout_constraintBottom_toTopOf="@+id/course_tv_tue_month"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            tools:ignore="SpUsage" />
+
+        <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/course_tv_tue_month"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:alpha="0.6"
+            android:textColor="@color/config_level_one_font_color"
+            android:textSize="11dp"
+            app:layout_constraintTop_toBottomOf="@id/course_tv_tue_week"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            tools:text="30日"
+            tools:ignore="SpUsage" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        app:net_layout_startRow="0"
+        app:net_layout_endRow="0"
+        app:net_layout_startColumn="3"
+        app:net_layout_endColumn="3">
+
+        <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/course_tv_wed_week"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="@color/config_level_one_font_color"
+            android:textSize="12dp"
+            android:text="@string/course_week_wed"
+            app:layout_constraintBottom_toTopOf="@+id/course_tv_wed_month"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            tools:ignore="SpUsage" />
+
+        <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/course_tv_wed_month"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:alpha="0.6"
+            android:textColor="@color/config_level_one_font_color"
+            android:textSize="11dp"
+            app:layout_constraintTop_toBottomOf="@id/course_tv_wed_week"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            tools:text="30日"
+            tools:ignore="SpUsage" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        app:net_layout_startRow="0"
+        app:net_layout_endRow="0"
+        app:net_layout_startColumn="4"
+        app:net_layout_endColumn="4">
+
+        <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/course_tv_thu_week"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="@color/config_level_one_font_color"
+            android:textSize="12dp"
+            android:text="@string/course_week_thu"
+            app:layout_constraintBottom_toTopOf="@+id/course_tv_thu_month"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            tools:ignore="SpUsage" />
+
+        <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/course_tv_thu_month"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:alpha="0.6"
+            android:textColor="@color/config_level_one_font_color"
+            android:textSize="11dp"
+            app:layout_constraintTop_toBottomOf="@id/course_tv_thu_week"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            tools:text="30日"
+            tools:ignore="SpUsage" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        app:net_layout_startRow="0"
+        app:net_layout_endRow="0"
+        app:net_layout_startColumn="5"
+        app:net_layout_endColumn="5">
+
+        <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/course_tv_fri_week"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="@color/config_level_one_font_color"
+            android:textSize="12dp"
+            android:text="@string/course_week_fri"
+            app:layout_constraintBottom_toTopOf="@+id/course_tv_fri_month"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            tools:ignore="SpUsage" />
+
+        <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/course_tv_fri_month"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:alpha="0.6"
+            android:textColor="@color/config_level_one_font_color"
+            android:textSize="11dp"
+            app:layout_constraintTop_toBottomOf="@id/course_tv_fri_week"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            tools:text="30日"
+            tools:ignore="SpUsage" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        app:net_layout_startRow="0"
+        app:net_layout_endRow="0"
+        app:net_layout_startColumn="6"
+        app:net_layout_endColumn="6">
+
+        <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/course_tv_sat_week"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="@color/config_level_one_font_color"
+            android:textSize="12dp"
+            android:text="@string/course_week_sat"
+            app:layout_constraintBottom_toTopOf="@+id/course_tv_sat_month"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            tools:ignore="SpUsage" />
+
+        <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/course_tv_sat_month"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:alpha="0.6"
+            android:textColor="@color/config_level_one_font_color"
+            android:textSize="11dp"
+            app:layout_constraintTop_toBottomOf="@id/course_tv_sat_week"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            tools:text="30日"
+            tools:ignore="HardcodedText,SpUsage" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        app:net_layout_startRow="0"
+        app:net_layout_endRow="0"
+        app:net_layout_startColumn="7"
+        app:net_layout_endColumn="7">
+
+        <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/course_tv_sun_week"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="@color/config_level_one_font_color"
+            android:textSize="12dp"
+            android:text="@string/course_week_sun"
+            app:layout_constraintBottom_toTopOf="@+id/course_tv_sun_month"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            tools:ignore="SpUsage" />
+
+        <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/course_tv_sun_month"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:alpha="0.6"
+            android:textColor="@color/config_level_one_font_color"
+            android:textSize="11dp"
+            app:layout_constraintTop_toBottomOf="@id/course_tv_sun_week"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            tools:text="30日"
+            tools:ignore="SpUsage" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+</com.ndhzs.netlayout.view.NetLayout2>

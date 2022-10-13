@@ -15,7 +15,6 @@ import com.taobao.sophix.SophixManager;
  * 注意原先Application里不需要再重复初始化Sophix，并且需要避免混淆原先Application类。
  * 如有其它自定义改造，请咨询官方后妥善处理。
  */
-//TODO 阿里热修在启动时自动读取device_id，违反隐私策略
 public class CySophixApplication extends SophixApplication {
     private final String TAG = "SophixStubApplication";
 
@@ -43,23 +42,6 @@ public class CySophixApplication extends SophixApplication {
                 .setAppVersion(appVersion)
                 .setSecretMetaData(BuildConfig.SOPHIX_APP_ID, BuildConfig.SOPHIX_APP_SECRET, BuildConfig.SOPHIX_RSA)
                 .setEnableDebug(BuildConfig.DEBUG)
-//                .setAesKey("AES")
-//                .setEnableFullLog()
-//                .setPatchLoadStatusStub((mode, code, info, handlePatchVersion) -> {
-//                    if (code == PatchStatus.CODE_LOAD_SUCCESS) {
-//                            Log.i(TAG, "sophix load patch success!");
-//                    } else if (code == PatchStatus.CODE_LOAD_RELAUNCH) {
-//                        // 如果需要在后台重启，建议此处用SharePreference保存状态。
-//                            Log.i(TAG, "sophix preload patch success. restart app to make effect.");
-//                    }
-//                })
                 .initialize();
     }
-
-    @Override
-    public void onCreate() {
-        super.onCreate();
-        SophixManager.getInstance().queryAndLoadNewPatch();
-    }
-
 }

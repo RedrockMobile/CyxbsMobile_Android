@@ -12,6 +12,6 @@ import org.gradle.api.Project
 class ApiProject(project: Project) : BaseLibraryProject(project) {
   override fun initProject() {
     // 这里面只依赖带有 internal 修饰的
-    // api 模块不主动依赖 lib_common，应尽量做到只有接口和简单逻辑
+    // api 模块不主动依赖 lib_common、lib_base、lib_utils，应尽量做到只有接口和简单逻辑
   }
 }

@@ -10,13 +10,13 @@ import androidx.fragment.app.activityViewModels
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.mredrock.cyxbs.lib.base.ui.BaseFragment
+import com.mredrock.cyxbs.lib.utils.extensions.dp2px
 import com.mredrock.cyxbs.store.R
 import com.mredrock.cyxbs.store.utils.SimpleRvAdapter
 import com.mredrock.cyxbs.store.bean.StampGetRecord
 import com.mredrock.cyxbs.store.page.record.ui.item.GetPageItem
 import com.mredrock.cyxbs.store.page.record.ui.item.ProgressBarItem
 import com.mredrock.cyxbs.store.page.record.viewmodel.RecordViewModel
-import com.mredrock.cyxbs.store.utils.dp2px
 
 /**
  * ...
@@ -78,8 +78,8 @@ class GetRecordFragment : BaseFragment() {
     private fun showNoInterceptImage() {
         mImageView.setImageResource(R.drawable.store_ic_no_internet)
         val lp = mImageView.layoutParams
-        lp.width = 157.dp2px() // 那张没有网络的图片有点小
-        lp.height = 96.dp2px()
+        lp.width = 157.dp2px // 那张没有网络的图片有点小
+        lp.height = 96.dp2px
         mImageView.layoutParams = lp
         mTextView.text = getText(R.string.store_no_internet)
     }
@@ -124,6 +124,8 @@ class GetRecordFragment : BaseFragment() {
                 val layoutManager = recyclerView.layoutManager
                 if (layoutManager is LinearLayoutManager) {
                     mLinearLayoutManager = layoutManager
+                } else {
+                    error("layoutManager 不是 LinearLayoutManager")
                 }
             }
             if (isLoading && totalItemCount != mLinearLayoutManager.itemCount) {

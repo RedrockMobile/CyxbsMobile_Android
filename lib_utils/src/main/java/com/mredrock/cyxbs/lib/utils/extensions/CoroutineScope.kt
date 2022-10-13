@@ -1,5 +1,6 @@
 package com.mredrock.cyxbs.lib.utils.extensions
 
+import androidx.lifecycle.LifecycleOwner
 import kotlinx.coroutines.CoroutineExceptionHandler
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Job
@@ -14,7 +15,7 @@ import kotlin.coroutines.CoroutineContext
  */
 
 /**
- * 注释查看：LifecycleOwner 的 [launchCatch]
+ * 注释查看：LifecycleOwner 的 [LifecycleOwner.launchCatch]
  */
 fun CoroutineScope.launchCatch(block: suspend CoroutineScope.() -> Unit): CatchSaver {
   return CatchSaver(this, block)

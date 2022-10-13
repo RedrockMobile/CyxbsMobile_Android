@@ -8,26 +8,30 @@ import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.mredrock.cyxbs.common.utils.down.bean.DownMessageText
 import com.mredrock.cyxbs.mine.R
-import kotlinx.android.synthetic.main.mine_list_item_feature_intro.view.*
 
 /**
  * copy from UserAgreementAdapter
  */
 
 class DynamicRVAdapter(private val list: List<DownMessageText>) :
-    RecyclerView.Adapter<RecyclerView.ViewHolder>() {
+    RecyclerView.Adapter<DynamicRVAdapter.ViewHolder>() {
 
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
-        return object : RecyclerView.ViewHolder(
+    inner class ViewHolder(view:View):RecyclerView.ViewHolder(view){
+        val mine_about_rv_title:TextView = view.findViewById(R.id.mine_about_rv_title)
+        val mine_about_rv_content:TextView = view.findViewById(R.id.mine_about_rv_content)
+    }
+
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): DynamicRVAdapter.ViewHolder {
+        return ViewHolder(
             LayoutInflater.from(parent.context)
                 .inflate(R.layout.mine_list_item_feature_intro, parent, false)
-        ) {}
+        )
     }
 
     override fun getItemCount() = list.size
 
-    override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
-        holder.itemView.apply {
+    override fun onBindViewHolder(holder: DynamicRVAdapter.ViewHolder, position: Int) {
+        holder.apply {
             restoredToTheirOriginal(mine_about_rv_title, mine_about_rv_content)
             when (list[position].title) {
                 "title" -> {

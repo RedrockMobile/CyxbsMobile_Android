@@ -3,8 +3,6 @@ package com.mredrock.cyxbs.discover.grades.network
 import com.mredrock.cyxbs.common.bean.RedrockApiStatus
 import com.mredrock.cyxbs.common.bean.RedrockApiWrapper
 import com.mredrock.cyxbs.discover.grades.bean.Exam
-import com.mredrock.cyxbs.discover.grades.bean.IdsBean
-import com.mredrock.cyxbs.discover.grades.bean.IdsStatus
 import com.mredrock.cyxbs.discover.grades.bean.Status
 import com.mredrock.cyxbs.discover.grades.bean.analyze.GPAStatus
 import io.reactivex.rxjava3.core.Observable
@@ -31,9 +29,6 @@ interface ApiService {
     @FormUrlEncoded
     @POST("/magipoke-jwzx/examReexam")
     fun getReExam(@Field("stuNum") stu: String): Observable<RedrockApiWrapper<List<Exam>>>
-
-    @POST("/magipoke/ids/bind")
-    fun bindIds(@Body idsBean: IdsBean) : Observable<IdsStatus>
 
     @POST("/magipoke/ids/unbind")
     fun unbindIds() : Observable<RedrockApiStatus>

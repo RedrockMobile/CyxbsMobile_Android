@@ -2,11 +2,10 @@ package com.mredrock.cyxbs.mine.util.ui
 
 import android.app.Dialog
 import android.content.Context
-import android.view.LayoutInflater
+import android.widget.Button
 import android.widget.TextView
+import androidx.constraintlayout.widget.ConstraintLayout
 import com.mredrock.cyxbs.mine.R
-import kotlinx.android.synthetic.main.mine_dialog_warning.*
-import kotlinx.android.synthetic.main.mine_layout_dialog_with_title_and_content.*
 
 /**
  * Author: RayleighZ
@@ -19,6 +18,11 @@ class WarningDialog(context: Context, theme: Int) : Dialog(context, theme) {
             val warningDialog = Dialog(context, R.style.transparent_dialog)
             warningDialog.apply {
                 setContentView(R.layout.mine_dialog_warning)
+                val view:ConstraintLayout = findViewById(R.id.mine_dialog_warning)
+                val mine_tv_dialog_warning_title:TextView = view.findViewById(R.id.mine_tv_dialog_warning_title)
+                val mine_tv_dialog_warning_content:TextView = view.findViewById(R.id.mine_tv_dialog_warning_content)
+                val mine_bt_security_dialog_negative:Button = view.findViewById(R.id.mine_bt_security_dialog_negative)
+                val mine_bt_security_dialog_postive:Button = view.findViewById(R.id.mine_bt_security_dialog_postive)
                 mine_tv_dialog_warning_title.text = title
                 mine_tv_dialog_warning_content.text = content
                 mine_bt_security_dialog_negative.setOnClickListener {

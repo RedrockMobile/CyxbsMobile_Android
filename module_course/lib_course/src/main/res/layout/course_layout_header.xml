@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="70dp">
+
+    <TextView
+        android:id="@+id/course_tv_which_week"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textColor="@color/config_level_two_font_color"
+        android:textSize="22dp"
+        android:textStyle="bold"
+        android:layout_marginStart="16dp"
+        android:layout_marginBottom="8dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        tools:ignore="SpUsage"
+        tools:text="第一周"/>
+
+    <androidx.appcompat.widget.AppCompatTextView
+        android:id="@+id/course_iv_this_week"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textColor="@color/config_level_two_font_color"
+        android:textSize="15dp"
+        android:layout_marginStart="13dp"
+        android:text="@string/course_this_week"
+        app:layout_constraintBaseline_toBaselineOf="@+id/course_tv_which_week"
+        app:layout_constraintStart_toEndOf="@+id/course_tv_which_week"
+        tools:ignore="SpUsage" />
+
+    <Button
+        android:id="@+id/course_btn_back_now_week"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:background="@drawable/course_shape_back_to_now_week_bg"
+        android:text="@string/course_back_now_week"
+        android:textColor="@android:color/white"
+        android:textSize="13dp"
+        android:minHeight="0dp"
+        android:paddingTop="8dp"
+        android:paddingBottom="8dp"
+        android:layout_marginEnd="16dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/course_tv_which_week"
+        tools:ignore="SpUsage" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

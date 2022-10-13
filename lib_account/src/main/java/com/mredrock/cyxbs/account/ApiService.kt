@@ -4,7 +4,7 @@ import com.mredrock.cyxbs.account.bean.LoginParams
 import com.mredrock.cyxbs.account.bean.RefreshParams
 import com.mredrock.cyxbs.account.bean.TokenWrapper
 import com.mredrock.cyxbs.account.bean.UserInfo
-import com.mredrock.cyxbs.common.bean.RedrockApiWrapper
+import com.mredrock.cyxbs.lib.utils.network.ApiWrapper
 import retrofit2.Call
 import retrofit2.http.*
 
@@ -13,11 +13,11 @@ import retrofit2.http.*
  */
 internal interface ApiService {
     @POST("/magipoke/token")
-    fun login(@Body loginParams: LoginParams): Call<RedrockApiWrapper<TokenWrapper>>
+    fun login(@Body loginParams: LoginParams): Call<ApiWrapper<TokenWrapper>>
 
     @POST("/magipoke/token/refresh")
-    fun refresh(@Body refreshParams: RefreshParams,@Header("STU-NUM") stu:String): Call<RedrockApiWrapper<TokenWrapper>>
+    fun refresh(@Body refreshParams: RefreshParams,@Header("STU-NUM") stu:String): Call<ApiWrapper<TokenWrapper>>
 
     @GET("/magipoke/person/info")
-    fun getUserInfo(@Header("Authorization") token: String): Call<RedrockApiWrapper<UserInfo>>
+    fun getUserInfo(@Header("Authorization") token: String): Call<ApiWrapper<UserInfo>>
 }
