@@ -1,17 +1,18 @@
-package ui
+package crash.ui
 
-import android.content.Intent
 import android.os.Bundle
 import android.widget.Button
 import androidx.appcompat.app.AppCompatActivity
 
-class DebugFirstActivity : AppCompatActivity() {
+class DebugThirdActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.crash_activity_main)
+        setContentView(R.layout.crash_activity_third)
+        throw RuntimeException("模拟生命周期异常")
         findViewById<Button>(R.id.button).setOnClickListener {
-            1/0
+            throw RuntimeException("模拟onClickCrash")
         }
+
         findViewById<Button>(R.id.button2).setOnClickListener {
             Thread{
                 throw RuntimeException("其他线程Crash")
@@ -19,8 +20,7 @@ class DebugFirstActivity : AppCompatActivity() {
         }
 
         findViewById<Button>(R.id.button3).setOnClickListener {
-            startActivity(Intent(this, DebugSecondActivity::class.java))
+            throw RuntimeException("主线程异常")
         }
-        
     }
 }

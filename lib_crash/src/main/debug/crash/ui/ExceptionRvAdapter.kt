@@ -1,4 +1,4 @@
-package ui
+package crash.ui
 
 import android.view.LayoutInflater
 import android.view.View

@@ -1,8 +1,7 @@
-package ui
+package crash.ui
 
-import android.app.Application
 import android.content.Context
-import com.mredrock.lib.crash.DebugCyxbsCrashMonitor
+import com.mredrock.cyxbs.lib.base.BaseApp
 
 /**
  * ...
@@ -11,7 +10,7 @@ import com.mredrock.lib.crash.DebugCyxbsCrashMonitor
  * @date 2022/7/9
  * @Description:
  */
-class DebugApp:Application() {
+class DebugApp: BaseApp() {
     companion object{
         lateinit var appContext:Context
         private set

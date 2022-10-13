@@ -1,9 +1,5 @@
 package com.mredrock.lib.crash.core.interceptor
 
-import android.util.Log
-import com.mredrock.cyxbs.lib.utils.extensions.toast
-import com.mredrock.lib.crash.util.ErrorDialog
-import com.mredrock.lib.crash.util.collectCrashInfo
 import com.mredrock.lib.crash.util.isViewDrawException
 
 /**
@@ -18,12 +14,7 @@ class CommonMessageCrashInterceptor : Interceptor {
         val realChain = chain as RealInterceptChain
         val isHandled =
             if (realChain.message == null && realChain.t == null && !isViewDrawException(realChain.e)) {
-                Log.e("RQ", "intercept: 捕获了Message异常：${collectCrashInfo(realChain.e)}")
-//                toast("普通Message异常！")
-                ErrorDialog.showCrashDialog(
-                    realChain.activities.last(), "普通Message异常！",
-                    collectCrashInfo(realChain.e)
-                )
+                // 普通Message异常！
                 true
             } else realChain.proceed()
 

@@ -9,7 +9,6 @@ import com.mredrock.cyxbs.lib.utils.extensions.getSp
 import com.mredrock.cyxbs.lib.utils.extensions.toast
 import com.mredrock.cyxbs.lib.utils.utils.LogLocal
 import com.mredrock.lib.crash.core.interceptor.*
-import com.mredrock.lib.crash.util.ErrorDialog
 import com.mredrock.lib.crash.util.noOpDelegate
 import com.mredrock.lib.crash.util.reStartApp
 import com.tencent.bugly.crashreport.CrashReport
@@ -57,7 +56,7 @@ object CyxbsCrashMonitor : Thread.UncaughtExceptionHandler {
         val stackInfo = sp.getString("stackInfo", "")
         val reason = sp.getString("reason", "")
         if (stackInfo != null && stackInfo != "" && reason != null && reason != "") {
-            ErrorDialog.showCrashDialog(activities.last(), reason, stackInfo)
+            // nothing
         }
         sp.edit().run {
             putString("stackInfo", "")
@@ -129,7 +128,7 @@ object CyxbsCrashMonitor : Thread.UncaughtExceptionHandler {
      */
     override fun uncaughtException(t: Thread, e: Throwable) {
         if (t != Looper.getMainLooper().thread) {
-            CrashReport.postCatchedException(e)
+//            CrashReport.postCatchedException(e)
             LogLocal.log(
                 tag = "CrashMonitor",
                 msg = "非主线程异常",

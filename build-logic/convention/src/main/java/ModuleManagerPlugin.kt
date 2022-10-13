@@ -23,6 +23,7 @@ class ModuleManagerPlugin : Plugin<Project> {
         projectName == "lib_utils" -> LibUtilsProject(project).apply()
         projectName == "lib_config" -> LibConfigProject(project).apply()
         projectName == "lib_debug" -> LibDebugProject(project).apply()
+        projectName == "lib_crash" -> LibCrashProject(project).apply()
         projectName.startsWith("module_") -> ModuleProject(project).apply()
         projectName.startsWith("lib_") -> LibProject(project).apply()
         projectName.startsWith("api_") -> ApiProject(project).apply()

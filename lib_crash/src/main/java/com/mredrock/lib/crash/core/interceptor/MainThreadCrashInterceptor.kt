@@ -1,8 +1,5 @@
 package com.mredrock.lib.crash.core.interceptor
 
-import android.util.Log
-import com.mredrock.cyxbs.lib.utils.extensions.toast
-import com.mredrock.lib.crash.util.ErrorDialog
 import com.mredrock.lib.crash.util.collectCrashInfo
 import com.mredrock.lib.crash.util.reStartApp
 
@@ -20,12 +17,11 @@ class MainThreadCrashInterceptor : Interceptor {
             if (realChain.t != null && realChain.t?.name == "main") {
                 realChain.t = null
                 val stackInfo = collectCrashInfo(realChain.e)
-                Log.e("RQ", "intercept: 捕获了主线程异常：$stackInfo")
-                toast("主线程异常！")
+                 // 主线程异常！"
                 if (!reStartApp("主线程异常！", realChain.e)) {
                     realChain.activities.forEach { it.finish() }
                 }//直接重启应用
-                ErrorDialog.showCrashDialog(realChain.activities.last(), "主线程异常！", stackInfo)
+                // 主线程异常
                 true
             } else realChain.proceed()
         return isHandled

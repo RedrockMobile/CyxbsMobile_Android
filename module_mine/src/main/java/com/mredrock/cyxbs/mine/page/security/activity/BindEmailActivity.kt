@@ -20,7 +20,6 @@ import com.mredrock.cyxbs.mine.page.security.util.Jump2QQHelper
 import com.mredrock.cyxbs.mine.page.security.viewmodel.BindEmailViewModel
 import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
 import io.reactivex.rxjava3.core.Observable
-import kotlinx.android.synthetic.main.mine_activity_bind_email.*
 import java.util.concurrent.TimeUnit
 import java.util.regex.Matcher
 import java.util.regex.Pattern

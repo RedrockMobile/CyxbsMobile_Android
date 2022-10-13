@@ -1,16 +1,9 @@
 package com.mredrock.lib.crash.util
 
-import android.app.Activity
 import android.content.Intent
-import android.util.Log
-import android.view.LayoutInflater
-import android.view.View
-import android.widget.TextView
-import androidx.appcompat.app.AlertDialog
 import com.mredrock.cyxbs.lib.utils.extensions.appContext
 import com.mredrock.cyxbs.lib.utils.extensions.getSp
 import com.mredrock.cyxbs.lib.utils.extensions.toast
-import com.mredrock.lib.crash.R
 import java.io.PrintWriter
 import java.io.StringWriter
 import kotlin.system.exitProcess
@@ -68,12 +61,15 @@ internal fun collectCrashInfo(throwable: Throwable): String {
     val printWriter = PrintWriter(writer)
     throwable.printStackTrace(printWriter)
     var cause = throwable.cause
+    var position = 1
     while (cause != null) {
+        printWriter.println()
+        printWriter.print("第 $position 个 Caused By: ")
+        position++
         cause.printStackTrace(printWriter)
         cause = cause.cause
     }
     printWriter.close()
-    writer.close()
     return writer.toString()
 }
 

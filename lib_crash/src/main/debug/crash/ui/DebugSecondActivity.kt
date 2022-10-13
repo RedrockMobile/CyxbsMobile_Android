@@ -1,4 +1,4 @@
-package ui
+package crash.ui
 
 import android.content.Intent
 import android.os.Bundle

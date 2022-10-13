@@ -49,7 +49,7 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/button2" />
 
-    <ui.ExceptionView
+    <crash.ui.ExceptionView
         android:id="@+id/exceptionView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"

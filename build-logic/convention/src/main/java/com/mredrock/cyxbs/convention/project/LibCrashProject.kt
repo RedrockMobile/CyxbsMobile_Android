@@ -12,7 +12,7 @@ import org.gradle.api.Project
  * @date 2022/8/10
  * @Description:
  */
-class LibCrash(project: Project) : BaseLibraryProject(project) {
+class LibCrashProject(project: Project) : BaseLibraryProject(project) {
     override fun initProject() {
         dependBugly()
         dependAndroidBase()

@@ -1,21 +1,21 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="ui">
+    package="com.mredrock.lib.crash">
 
     <application
-        android:name=".DebugApp"
+        android:name="crash.ui.DebugApp"
         android:allowBackup="true"
-        android:label="module_login"
+        android:label="module_crash"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
         <activity
-            android:name=".DebugThirdActivity"
+            android:name="crash.ui.DebugThirdActivity"
             android:exported="false" />
         <activity
-            android:name=".DebugSecondActivity"
+            android:name="crash.ui.DebugSecondActivity"
             android:exported="false" />
         <activity
-            android:name=".DebugFirstActivity"
+            android:name="crash.ui.DebugFirstActivity"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

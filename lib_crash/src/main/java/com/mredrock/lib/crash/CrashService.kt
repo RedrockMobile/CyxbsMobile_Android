@@ -1,10 +1,8 @@
 package com.mredrock.lib.crash
 
-import android.app.Application
-import android.content.Context
-import com.alibaba.android.arouter.facade.annotation.Route
-import com.mredrock.api.crash.CRASH_SERVICE
-import com.mredrock.api.crash.ICrashService
+import com.google.auto.service.AutoService
+import com.mredrock.cyxbs.lib.base.spi.InitialManager
+import com.mredrock.cyxbs.lib.base.spi.InitialService
 import com.mredrock.lib.crash.core.CyxbsCrashMonitor
 
 /**
@@ -14,11 +12,12 @@ import com.mredrock.lib.crash.core.CyxbsCrashMonitor
  * @date 2022/8/13
  * @Description:
  */
-@Route(path = CRASH_SERVICE, name = CRASH_SERVICE)
-class CrashService:ICrashService {
-    override fun initCrashMonitor(application: Application) {
-        CyxbsCrashMonitor.install(application)
+@AutoService(InitialService::class)
+class CrashService: InitialService {
+    override fun onMainProcess(manager: InitialManager) {
+        super.onMainProcess(manager)
+        if (!BuildConfig.DEBUG) {
+            CyxbsCrashMonitor.install(manager.application)
+        }
     }
-
-    override fun init(context: Context) {}
 }
