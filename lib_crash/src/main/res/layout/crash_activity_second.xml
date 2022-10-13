@@ -49,11 +49,10 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/button2" />
 
-    <crash.ui.ExceptionView
-        android:id="@+id/exceptionView"
+    <FrameLayout
+        android:id="@+id/fl_exceptionView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="view绘制异常测试"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.498"
@@ -67,6 +66,6 @@
         android:layout_width="match_parent"
         android:layout_height="0dp"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/exceptionView" />
+        app:layout_constraintTop_toBottomOf="@+id/fl_exceptionView" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

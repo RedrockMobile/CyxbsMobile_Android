@@ -20,8 +20,7 @@ object Bugly {
   const val `native-crash-report` = "com.tencent.bugly:nativecrashreport:latest.release"
 }
 
-// 内部使用，只给 AppProject 配置，单模块调试时不需要
-internal fun Project.dependBugly() {
+fun Project.dependBugly() {
   dependencies {
     "implementation"(Bugly.`crash-report-upgrade`)
     "implementation"(Bugly.`native-crash-report`)

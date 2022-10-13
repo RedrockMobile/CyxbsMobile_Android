@@ -3,6 +3,7 @@ package crash.ui
 import android.os.Bundle
 import android.widget.Button
 import androidx.appcompat.app.AppCompatActivity
+import com.mredrock.lib.crash.R
 
 class DebugThirdActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
