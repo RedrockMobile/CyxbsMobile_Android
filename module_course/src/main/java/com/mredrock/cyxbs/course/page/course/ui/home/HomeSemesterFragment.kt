@@ -77,8 +77,8 @@ class HomeSemesterFragment : CompareWeekSemesterFragment() {
         val self = map.mapValues { it.value.self }.mapToMinWeek()
         val link = map.mapValues { it.value.link }.mapToMinWeek()
         val affair = map.values.map { it.affair }.flatten()
-        mSelfLessonContainerProxy.diffRefresh(self)
         mAffairContainerProxy.diffRefresh(affair)
+        mSelfLessonContainerProxy.diffRefresh(self)
         mLinkLessonContainerProxy.diffRefresh(link) {
           if (mIsHappenShowLinkEvent == true && mParentViewModel.currentItem == 0 && it.isNotEmpty()) {
             // 这时说明触发了关联人的显示，需要开启入场动画

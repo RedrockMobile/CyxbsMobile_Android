@@ -89,8 +89,8 @@ class HomeWeekFragment : CourseWeekFragment() {
       .map { it[mWeek] ?: HomeCourseViewModel.HomePageResult }
       .distinctUntilChanged()
       .observe {
-        mSelfLessonContainerProxy.diffRefresh(it.self)
         mAffairContainerProxy.diffRefresh(it.affair)
+        mSelfLessonContainerProxy.diffRefresh(it.self)
         mLinkLessonContainerProxy.diffRefresh(it.link) { data ->
           if (mIsHappenShowLinkEvent == true && mParentViewModel.currentItem == mWeek && data.isNotEmpty()) {
             // 这时说明触发了关联人的显示，需要开启入场动画

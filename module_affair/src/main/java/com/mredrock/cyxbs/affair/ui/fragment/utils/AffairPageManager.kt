@@ -30,7 +30,7 @@ class AffairPageManager(val fragment: BaseFragment) {
   
   private fun <T : View> Int.view() = fragment.run { view<T>() }
   
-  private val mRootView: ConstraintLayout by R.id.course_root_add_affair.view()
+  private val mRootView: ConstraintLayout by R.id.affair_root_add_affair.view()
   private val mTvText1: TextView by R.id.affair_tv_add_affair_text_1.view()
   private val mTvText2: TextView by R.id.affair_tv_add_affair_text_2.view()
   private val mTvText3: TextView by R.id.affair_tv_add_affair_text_3.view()
