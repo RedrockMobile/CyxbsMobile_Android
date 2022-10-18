@@ -5,24 +5,25 @@
 //enableFeaturePreview("VERSION_CATALOGS")
 
 pluginManagement {
-  repositories {
-    maven { url = uri("https://maven.aliyun.com/repository/public") }
-    maven { url = uri("https://maven.aliyun.com/repository/google") }
-    gradlePluginPortal()
-    maven { url = uri("https://jitpack.io") }
-    google()
-    mavenCentral()
-  }
+    repositories {
+        maven { url = uri("https://maven.aliyun.com/repository/public") }
+        maven { url = uri("https://maven.aliyun.com/repository/google") }
+        gradlePluginPortal()
+        maven { url = uri("https://jitpack.io") }
+        google()
+        mavenCentral()
+        includeBuild(".")
+    }
 }
 
 dependencyResolutionManagement {
-  repositories {
-    maven { url = uri("https://maven.aliyun.com/repository/public") }
-    maven { url = uri("https://maven.aliyun.com/repository/google") }
-    maven { url = uri("https://jitpack.io") }
-    google()
-    mavenCentral()
-  }
+    repositories {
+        maven { url = uri("https://maven.aliyun.com/repository/public") }
+        maven { url = uri("https://maven.aliyun.com/repository/google") }
+        maven { url = uri("https://jitpack.io") }
+        google()
+        mavenCentral()
+    }
 //  versionCatalogs {
 //    // 这个 libs 名字是固定的，搞了好久才解决这个问题
 //    create("libs") {
@@ -44,3 +45,4 @@ include(":core:versions")
 include(":core:app")
 
 include(":plugin")
+include(":plugin:cache")

@@ -13,6 +13,17 @@ dependencies {
     implementation(project(":core:library"))
     implementation(project(":core:module"))
 
+    //依赖所有:plugin:xxx project
+    findProject(":plugin")!!.allprojects
+        .filter {
+            it.name != "plugin"
+        }.forEach {
+            implementation(
+                group = it.group.toString(),
+                name = it.name,
+                version = it.version.toString()
+            )
+        }
 }
 
 gradlePlugin {
