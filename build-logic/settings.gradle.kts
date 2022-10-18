@@ -1,9 +1,5 @@
 @file:Suppress("UnstableApiUsage")
 
-
-// 开启 versionCatalogs 功能
-//enableFeaturePreview("VERSION_CATALOGS")
-
 pluginManagement {
     repositories {
         maven { url = uri("https://maven.aliyun.com/repository/public") }
@@ -24,6 +20,9 @@ dependencyResolutionManagement {
         google()
         mavenCentral()
     }
+//不推荐使用。可能会影响到一部分kts的功能
+// 开启 versionCatalogs 功能
+//enableFeaturePreview("VERSION_CATALOGS")
 //  versionCatalogs {
 //    // 这个 libs 名字是固定的，搞了好久才解决这个问题
 //    create("libs") {
@@ -35,6 +34,7 @@ dependencyResolutionManagement {
 
 rootProject.name = "build-logic"
 //include(":convention")
+//核心插件模块
 include(":core")
 include(":core:api")
 include(":core:base")
@@ -43,6 +43,6 @@ include(":core:library")
 include(":core:manager")
 include(":core:versions")
 include(":core:app")
-
+//其他业务插件
 include(":plugin")
 include(":plugin:cache")

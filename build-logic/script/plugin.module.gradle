@@ -1,0 +1,7 @@
+//用于配置插件模块的冗余代码
+//如果是要对gradle插件进行开发,推荐apply from该文件进行配置的统一抽离
+java.toolchain.languageVersion.set(JavaLanguageVersion.of(11))
+dependencies {
+    implementation("com.android.tools.build:gradle:7.2.1")
+    implementation("org.jetbrains.kotlin:kotlin-gradle-plugin:1.6.21")
+}

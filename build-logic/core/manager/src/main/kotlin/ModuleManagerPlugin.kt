@@ -26,7 +26,7 @@ class ModuleManagerPlugin : BasePlugin() {
         }
 
         apply(plugin = pluginId)
-//        apply(plugin = "com.mredrock.cyxbs.convention.publish.publications")
+        apply(plugin = "com.mredrock.team.cache")
     }
 
 }

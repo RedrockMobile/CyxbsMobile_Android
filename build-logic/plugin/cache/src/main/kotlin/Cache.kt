@@ -1,5 +1,3 @@
-package com.mredrock.cyxbs.convention.publish
-
 import org.gradle.api.Project
 import java.io.File
 import java.net.URI

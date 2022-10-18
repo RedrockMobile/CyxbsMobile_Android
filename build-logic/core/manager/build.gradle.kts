@@ -13,9 +13,10 @@ dependencies {
     implementation(project(":core:library"))
     implementation(project(":core:module"))
 
-    //依赖所有:plugin:xxx project
+    //依赖所有:plugin模块下的所有子模块
     findProject(":plugin")!!.allprojects
         .filter {
+            //不依赖plugin模块本身
             it.name != "plugin"
         }.forEach {
             implementation(

@@ -6,11 +6,16 @@ plugins {
 
 gradlePlugin {
 
+    plugins {
+
+        create("com.mredrock.team.cache"){
+            implementationClass = "PublishPlugin"
+            id = "com.mredrock.team.cache"
+        }
+
+    }
 
 
 }
 
-dependencies {
-    implementation("com.android.tools.build:gradle:7.2.1")
-    implementation("org.jetbrains.kotlin:kotlin-gradle-plugin:1.6.21")
-}
+apply(from="../../script/plugin.module.gradle")

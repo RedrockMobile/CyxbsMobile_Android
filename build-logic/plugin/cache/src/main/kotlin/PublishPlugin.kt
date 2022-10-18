@@ -1,5 +1,3 @@
-package com.mredrock.cyxbs.convention.publish
-
 import com.android.build.api.dsl.LibraryExtension
 import com.android.build.gradle.internal.dsl.BaseAppModuleExtension
 import org.gradle.api.Plugin
