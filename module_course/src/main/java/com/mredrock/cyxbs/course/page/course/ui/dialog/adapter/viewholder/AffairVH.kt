@@ -46,6 +46,7 @@ class AffairVH(
     mBtnChange.setOnSingleClickListener {
       IAffairService::class.impl
         .startActivityForEditActivity(data.onlyId)
+      dialog.dismiss() // 因为修改过后数据会发生变动，所以这里直接取消 dialog 显示
     }
   }
 }

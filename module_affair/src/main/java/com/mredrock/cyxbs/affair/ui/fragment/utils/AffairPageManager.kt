@@ -148,8 +148,9 @@ class AffairPageManager(val fragment: BaseFragment) {
     },
     ADD_CONTENT {
       override fun AffairPageManager.nextInterval(): Boolean {
+        mTitle = mEtTitle.text.toString() // 他可能在这个页面修改了标题
         mEtTitle.textSize = 34F
-        mEtTitle.setText(mTitle)
+        mEtTitle.setText(mTitle) // 重复设置，用于刷新，不然文字会因为动画而出现显示问题
         mContent = mEditText.text.toString()
         TransitionManager.beginDelayedTransition(mRootView, createTransition())
         mTvText1.invisible()
@@ -170,6 +171,8 @@ class AffairPageManager(val fragment: BaseFragment) {
         TransitionManager.beginDelayedTransition(mRootView, createTransition())
         mTvText1.invisible()
         mTvText3.text = "一个标题"
+        mTitle = mEtTitle.text.toString()
+        mContent = ""
         mEtTitle.invisible()
         mEditText.setText(mTitle)
         mRvTitleCandidate.visible()
@@ -178,6 +181,8 @@ class AffairPageManager(val fragment: BaseFragment) {
     },
     ADD_TIME {
       override fun AffairPageManager.nextInterval(): Boolean {
+        mTitle = mEtTitle.text.toString()
+        mContent = mEditText.text.toString()
         return false
       }
       
@@ -196,7 +201,6 @@ class AffairPageManager(val fragment: BaseFragment) {
         mEtTitle.typeface = Typeface.DEFAULT
         set.connect(mEditText.id, ConstraintSet.TOP, mTvText3.id, ConstraintSet.BOTTOM)
         set.applyTo(mRootView)
-        mEditText.setText(mContent)
         return true
       }
     };
@@ -216,7 +220,7 @@ class AffairPageManager(val fragment: BaseFragment) {
       }
       return this
     }
-  
+    
     abstract fun AffairPageManager.nextInterval(): Boolean
     abstract fun AffairPageManager.lastInterval(): Boolean
     
