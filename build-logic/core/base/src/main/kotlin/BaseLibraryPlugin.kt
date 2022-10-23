@@ -48,8 +48,6 @@ internal class BaseLibraryPlugin : BasePlugin() {
                     ndk {
                         abiFilters += Config.releaseAbiFilters
                     }
-
-                    buildConfigField("Boolean", "isSingleModuleDebug", "false")
                 }
 
 
@@ -77,8 +75,6 @@ internal class BaseLibraryPlugin : BasePlugin() {
                     buildFeatures {
                         dataBinding = true
                     }
-
-                    buildConfigField("Boolean", "isSingleModuleDebug", "false")
 
                 }
 
