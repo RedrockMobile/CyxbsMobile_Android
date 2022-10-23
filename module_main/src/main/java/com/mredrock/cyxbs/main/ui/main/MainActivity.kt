@@ -2,7 +2,6 @@ package com.mredrock.cyxbs.main.ui.main
 
 import android.os.Bundle
 import androidx.activity.viewModels
-import androidx.core.view.postDelayed
 import androidx.viewpager2.widget.ViewPager2
 import com.alibaba.android.arouter.facade.annotation.Route
 import com.mredrock.cyxbs.api.account.IAccountService
@@ -103,7 +102,7 @@ class MainActivity : BaseActivity() {
     when (intent.action) {
       DESKTOP_SHORTCUT_COURSE -> {
         if (mIsLogin) {
-          mViewPager.postDelayed(300) {
+          mViewPager.post {
             // 延迟些时间才打开课表，因为打开快了，课表会出现短时间的白屏
             mViewModel.courseBottomSheetExpand.value = true
           }
@@ -123,7 +122,7 @@ class MainActivity : BaseActivity() {
       else -> {
         if (mIsLogin && defaultSp.getBoolean(SP_COURSE_SHOW_STATE, false)) {
           // 打开应用优先显示课表的设置
-          mViewPager.postDelayed(300) {
+          mViewPager.post {
             // 延迟些时间才打开课表，因为打开快了，课表会出现短时间的白屏
             mViewModel.courseBottomSheetExpand.value = true
           }
