@@ -216,7 +216,7 @@ class AffairDurationAdapter :
       index++
     }
     // 最后一个是加号
-    newList.add(AffairTimeAdd(1))
+    newList.add(AffairTimeAdd)
     return newList
   }
   

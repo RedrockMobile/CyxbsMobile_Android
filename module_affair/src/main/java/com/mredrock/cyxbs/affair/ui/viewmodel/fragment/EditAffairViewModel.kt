@@ -44,31 +44,4 @@ class EditAffairViewModel : BaseViewModel() {
         }
     }
   }
-  
-//  private fun updateRemind(
-//    title: String,
-//    description: String,
-//    startRow: Int,
-//    period: Int,
-//    week: Int,
-//    remindMinutes: Int
-//  ) {
-//    CalendarUtils.addCalendarEventRemind(
-//      requireActivity(),
-//      title,
-//      description,
-//      TimeUtils.getBegin(startRow, week),
-//      TimeUtils.getDuration(period),
-//      TimeUtils.getRRule(week),
-//      remindMinutes,
-//      object : CalendarUtils.OnCalendarRemindListener {
-//        override fun onFailed(error_code: CalendarUtils.OnCalendarRemindListener.Status?) {
-//          "更新失败".toast()
-//        }
-//
-//        override fun onSuccess() {
-//          "更新日历成功".toast()
-//        }
-//      })
-//  }
 }

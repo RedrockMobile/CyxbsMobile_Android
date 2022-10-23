@@ -46,8 +46,6 @@ internal class BaseApplicationPlugin : BasePlugin() {
                     ndk {
                         abiFilters += Config.releaseAbiFilters
                     }
-
-                    buildConfigField("Boolean", "isSingleModuleDebug", "false")
                 }
                 debug {
                     isMinifyEnabled = false
@@ -61,8 +59,6 @@ internal class BaseApplicationPlugin : BasePlugin() {
                     ndk {
                         abiFilters += Config.debugAbiFilters
                     }
-
-                    buildConfigField("Boolean", "isSingleModuleDebug", "false")
 
                 }
             }

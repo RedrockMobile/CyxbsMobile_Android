@@ -4,6 +4,7 @@ import android.content.Context
 import android.view.LayoutInflater
 import android.view.View
 import android.widget.TextView
+import com.github.gzuliyujiang.wheelview.contract.OnWheelChangedListener
 import com.github.gzuliyujiang.wheelview.widget.WheelView
 import com.mredrock.cyxbs.affair.R
 import com.mredrock.cyxbs.affair.ui.adapter.data.AffairTimeData
@@ -48,6 +49,45 @@ class TimeSelectDialog(context: Context, callback: (timeData: AffairTimeData) ->
         dismiss()
       }
     }
+  
+    // 在开始时间滚动结束时设置结束时间为对应位置
+    beginWV.setOnWheelChangedListener(
+      object : OnWheelChangedListener {
+        override fun onWheelScrolled(view: WheelView, offset: Int) {
+        }
+      
+        override fun onWheelSelected(view: WheelView, position: Int) {
+          if (endWV.currentPosition < position) {
+            endWV.smoothScrollTo(position)
+          }
+        }
+      
+        override fun onWheelScrollStateChanged(view: WheelView, state: Int) {
+        }
+      
+        override fun onWheelLoopFinished(view: WheelView) {
+        }
+      }
+    )
+  
+    endWV.setOnWheelChangedListener(
+      object : OnWheelChangedListener {
+        override fun onWheelScrolled(view: WheelView, offset: Int) {
+        }
+      
+        override fun onWheelSelected(view: WheelView, position: Int) {
+          if (position < beginWV.currentPosition) {
+            endWV.smoothScrollTo(beginWV.currentPosition)
+          }
+        }
+      
+        override fun onWheelScrollStateChanged(view: WheelView, state: Int) {
+        }
+      
+        override fun onWheelLoopFinished(view: WheelView) {
+        }
+      }
+    )
     setContentView(view)
   }
 }

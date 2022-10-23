@@ -2,6 +2,7 @@ package course.ui.utils
 
 import com.mredrock.cyxbs.api.account.IAccountService
 import com.mredrock.cyxbs.api.affair.IAffairService
+import com.mredrock.cyxbs.api.course.ICourseService
 import com.mredrock.cyxbs.api.course.ILessonService
 import com.mredrock.cyxbs.api.course.ILinkService
 import com.mredrock.cyxbs.api.course.utils.*
@@ -32,13 +33,15 @@ object CourseHeaderHelper {
     val linkService = ILinkService::class.impl
     val affairService = IAffairService::class.impl
     return SchoolCalendar.observeWeekOfTerm()
+      .observeOn(Schedulers.io())
       .switchMap { week ->
-        if (week !in 1 .. 21) Observable.just(HintHeader("享受假期吧～"))
+        if (week !in 1..ICourseService.maxWeek) Observable.just(HintHeader("享受假期吧～"))
         else {
           // 观察当前登录人的学号
           IAccountService::class.impl
             .getUserService()
             .observeStuNumState()
+            .observeOn(Schedulers.io())
             .switchMap { value ->
               value.nullUnless(Observable.just(HintHeader("登录后即可查看课表"))) { selfNum ->
                 // combineLast 可以同时观察任一个 Observable，
@@ -47,10 +50,11 @@ object CourseHeaderHelper {
                 Observable.combineLatest(
                   lessonService.observeSelfLesson(),
                   affairService.observeSelfAffair(),
-                  linkService.observeSelfLinkStu().switchMap { linkStu ->
-                    lessonService.observeStuLesson(linkStu.linkNum)
-                      .map { lessonList -> Pair(lessonList, linkStu) }
-                  },
+                  linkService.observeSelfLinkStu()
+                    .switchMap { linkStu ->
+                      lessonService.observeStuLesson(linkStu.linkNum)
+                        .map { lessonList -> Pair(lessonList, linkStu) }
+                    },
                   Observable.interval(0, 1, TimeUnit.MINUTES) // 每分钟流动一次，用于刷新课表头
                 ) { stu, affairs, linkPair, _ ->
                   getHeader(
@@ -60,14 +64,17 @@ object CourseHeaderHelper {
                     affairs,
                     linkPair.second.isBoy
                   )
-                }.subscribeOn(Schedulers.io())
+                }.startWithItem(HintHeader("加载数据中"))
+                  .onErrorReturnItem(HintHeader("数据加载失败"))
               }
             }
         }
-      }.startWithItem(HintHeader("数据加载中"))
+      }
+      // 如果在获取不了周数时说明没有请求过课表数据，因为周数是从课表接口来的
+      .startWithItem(HintHeader("登录后即可查看课表"))
       // 因为上流用的观察流，一般是不会发送异常到下流的，所以该问题一般不会出现，除非你动了数据库但没有改版本号
-      .onErrorReturnItem(HintHeader("内部错误，请尝试卸载后重装"))
-      .subscribeOn(Schedulers.io())
+      // 并且这里一旦出错，将导致整个观察流终止，此后都不会发送数据给下游
+      .onErrorReturnItem(HintHeader("内部错误"))
   }
   
   private fun getHeader(

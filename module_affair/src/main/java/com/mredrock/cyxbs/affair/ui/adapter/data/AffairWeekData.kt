@@ -86,11 +86,12 @@ data class AffairTimeData(
 }
 
 /**
- * 用来显示加号的数据类
+ * 用来给事务显示加号的数据类
  */
-data class AffairTimeAdd(val a: Int) : AffairAdapterData {
+object AffairTimeAdd : AffairAdapterData {
+  override fun equals(other: Any?): Boolean = other is AffairTimeAdd
   override val onlyId: Any
-    get() = 0
+    get() = javaClass.hashCode()
 }
 
 // 将展示的数据转换为要上传的数据

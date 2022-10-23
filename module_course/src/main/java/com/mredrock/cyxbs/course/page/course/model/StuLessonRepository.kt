@@ -39,12 +39,13 @@ object StuLessonRepository {
     return IAccountService::class.impl
       .getUserService()
       .observeStuNumState()
+      .observeOn(Schedulers.io())
       .switchMap { value ->
         // 使用 switchMap 可以停止之前学号的订阅
         value.nullUnless(Observable.just(emptyList())) {
           observeLesson(it)
         }
-      }.subscribeOn(Schedulers.io())
+      }
   }
   
   /**

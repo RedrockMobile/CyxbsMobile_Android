@@ -9,20 +9,6 @@ import org.gradle.kotlin.dsl.apply
 
 class LibDebugPlugin : BasePlugin() {
     override fun PluginScope.configure() {
-
         apply(plugin = "base.library")
-
-        androidLib {
-
-            buildTypes {
-
-                debug {
-                    buildConfigField("Boolean", "isSingleModuleDebug", "true")
-                }
-
-            }
-
-        }
-
     }
 }

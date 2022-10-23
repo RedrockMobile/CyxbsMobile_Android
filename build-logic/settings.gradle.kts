@@ -33,7 +33,6 @@ dependencyResolutionManagement {
 }
 
 rootProject.name = "build-logic"
-//include(":convention")
 //核心插件模块
 include(":core")
 include(":core:api")

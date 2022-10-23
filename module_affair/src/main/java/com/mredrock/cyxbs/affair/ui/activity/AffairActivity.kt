@@ -82,7 +82,7 @@ class AffairActivity : BaseActivity() {
   }
   
   private fun initBackground() {
-    // 使用 tLifecycleObserver，便于及时取消动画
+    // 使用 LifecycleObserver，便于及时取消动画
     lifecycle.addObserver(
       object : DefaultLifecycleObserver {
         private val mAnimatorList = mutableListOf<ValueAnimator>()
