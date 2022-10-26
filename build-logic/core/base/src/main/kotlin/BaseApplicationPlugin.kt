@@ -1,4 +1,5 @@
 import com.mredrock.cyxbs.convention.config.Config
+import com.mredrock.cyxbs.convention.depend.lib.debugDependLibDebug
 import org.gradle.api.JavaVersion
 import org.gradle.api.plugins.ExtensionAware
 import org.gradle.kotlin.dsl.apply
@@ -109,6 +110,8 @@ internal class BaseApplicationPlugin : BasePlugin() {
             }
 
         }
+        //潘多拉
+        debugDependLibDebug()
 
     }
 
