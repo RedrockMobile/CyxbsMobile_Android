@@ -7,23 +7,22 @@ import android.content.ComponentName
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import android.view.View
 import android.widget.RemoteViews
 import android.widget.Toast
 import androidx.annotation.IdRes
 import androidx.core.content.edit
 import com.google.gson.Gson
-import com.mredrock.cyxbs.api.course.ICourseService
 import com.mredrock.cyxbs.lib.utils.extensions.CyxbsToast
-import com.mredrock.cyxbs.lib.utils.extensions.appContext
-import com.mredrock.cyxbs.lib.utils.service.impl
 import com.mredrock.cyxbs.widget.R
 import com.mredrock.cyxbs.widget.repo.bean.LessonEntity
-import com.mredrock.cyxbs.widget.repo.bean.LessonEntity.Companion.convertToApi
 import com.mredrock.cyxbs.widget.repo.database.LessonDatabase
 import com.mredrock.cyxbs.widget.repo.database.LessonDatabase.Companion.MY_STU_NUM
 import com.mredrock.cyxbs.widget.util.*
+import io.reactivex.rxjava3.core.Observable
 import java.util.*
+import java.util.concurrent.TimeUnit
 import kotlin.concurrent.thread
 
 /**
@@ -91,10 +90,10 @@ class NormalWidget : AppWidgetProvider() {
             rId = data.schemeSpecificPart.toInt()
         }
         when (intent.action) {
-            ACTION_CLICK -> {
-
+            ACTION_NORMAL_CLICK -> {
                 val offsetTime = defaultSp.getInt(shareName, 0)
                 intent.getStringExtra(CLICK_LESSON)?.let {
+                    Log.d("testTag", "(NormalWidget.kt:96) -> ${it}")
                     showLessonInfo(it)
                 }
                 when (rId) {
@@ -110,36 +109,13 @@ class NormalWidget : AppWidgetProvider() {
                         defaultSp.edit { putInt(shareName, 0) }
                         fresh(context, 0)
                     }
+                    R.id.widget_normal_refresh_blank -> {
+                        fresh(context, 0)
+                    }
                 }
                 if (isDoubleClick()) {
                     CyxbsToast.show(context, "提示：点击星期返回今日", Toast.LENGTH_SHORT)
                 }
-            }
-            ACTION_CLICK -> {
-                val myStuNum = defaultSp.getString(MY_STU_NUM, "")
-                list = LessonDatabase.INSTANCE.getLessonDao()
-                    .queryAllLessons(myStuNum!!, SchoolCalendar().weekOfTerm)
-                when (rId) {
-                    R.id.widget_normal_layout1 -> {
-                        startOperation(list.filter { it.beginLesson / 2 + 1 == 0 }[0])
-                    }
-                    R.id.widget_normal_layout2 -> {
-                        startOperation(list.filter { it.beginLesson / 2 + 1 == 1 }[0])
-                    }
-                    R.id.widget_normal_layout3 -> {
-                        startOperation(list.filter { it.beginLesson / 2 + 1 == 2 }[0])
-                    }
-                    R.id.widget_normal_layout4 -> {
-                        startOperation(list.filter { it.beginLesson / 2 + 1 == 3 }[0])
-                    }
-                    R.id.widget_normal_layout5 -> {
-                        startOperation(list.filter { it.beginLesson / 2 + 1 == 4 }[0])
-                    }
-                    R.id.widget_normal_layout6 -> {
-                        startOperation(list.filter { it.beginLesson / 2 + 1 == 5 }[0])
-                    }
-                }
-
             }
             actionFlush -> {
                 onUpdate(context, null, null)
@@ -201,13 +177,15 @@ class NormalWidget : AppWidgetProvider() {
                     if (lesson.period == 2) {
                         rv.setTextViewText(getCourseId(num), lesson.course)
                         rv.setTextViewText(getRoomId(num), filterClassRoom(lesson.classroom))
-                        rv.setOnClickPendingIntent(
-                            getLayoutId(num),
-                            getLessonClickPendingIntent(context,
+                        if (lesson.course!="数据异常，请刷新"){
+                            rv.setOnClickPendingIntent(
                                 getLayoutId(num),
-                                ACTION_CLICK,
-                                javaClass, lesson)
-                        )
+                                getLessonClickPendingIntent(context,
+                                    getLayoutId(num),
+                                    ACTION_NORMAL_CLICK,
+                                    javaClass, lesson)
+                            )
+                        }
                     } else if (lesson.period == 3) {
                         setMoreView(num, rv, lesson, context)
 
@@ -222,6 +200,14 @@ class NormalWidget : AppWidgetProvider() {
                 addClickPendingIntent(rv, context)
 
                 show(rv, context)
+                //为了满足 不能缓存 的需求，让课表展示60s,然后让文字填满小组件
+                Observable.just(1).doOnNext {
+                    rv.setViewVisibility(R.id.widget_normal_refresh_blank, View.GONE)
+                    show(rv, context)
+                }.delay(60L, TimeUnit.SECONDS).subscribe {
+                    rv.setViewVisibility(R.id.widget_normal_refresh_blank, View.VISIBLE)
+                    show(rv, context)
+                }
                 defaultSp.edit { putString(courseData, gson.toJson(list)) }
             } catch (e: Exception) {
                 e.printStackTrace()
@@ -242,7 +228,7 @@ class NormalWidget : AppWidgetProvider() {
         rv.setTextViewText(getMoreRoomId(moreViewNum), filterClassRoom(course.classroom))
         rv.setOnClickPendingIntent(
             getMoreContentId(moreViewNum),
-            getClickPendingIntent(context, getLayoutId(num), ACTION_CLICK, javaClass)
+            getClickPendingIntent(context, getLayoutId(num), ACTION_NORMAL_CLICK, javaClass)
         )
     }
 
@@ -298,15 +284,22 @@ class NormalWidget : AppWidgetProvider() {
     private fun addClickPendingIntent(rv: RemoteViews, context: Context) {
         rv.setOnClickPendingIntent(
             R.id.widget_normal_title,
-            getClickPendingIntent(context, R.id.widget_normal_title, ACTION_CLICK, javaClass)
+            getClickPendingIntent(context, R.id.widget_normal_title, ACTION_NORMAL_CLICK, javaClass)
         )
         rv.setOnClickPendingIntent(
             R.id.widget_normal_front,
-            getClickPendingIntent(context, R.id.widget_normal_front, ACTION_CLICK, javaClass)
+            getClickPendingIntent(context, R.id.widget_normal_front, ACTION_NORMAL_CLICK, javaClass)
         )
         rv.setOnClickPendingIntent(
             R.id.widget_normal_back,
-            getClickPendingIntent(context, R.id.widget_normal_back, ACTION_CLICK, javaClass)
+            getClickPendingIntent(context, R.id.widget_normal_back, ACTION_NORMAL_CLICK, javaClass)
+        )
+        rv.setOnClickPendingIntent(
+            R.id.widget_normal_refresh_blank,
+            getClickPendingIntent(context,
+                R.id.widget_normal_refresh_blank,
+                ACTION_NORMAL_CLICK,
+                javaClass)
         )
     }
 

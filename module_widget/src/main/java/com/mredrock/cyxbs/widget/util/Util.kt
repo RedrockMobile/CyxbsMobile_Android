@@ -31,9 +31,11 @@ import kotlin.collections.ArrayList
 
 const val ACTION_FLUSH = "flush"
 const val ACTION_CLICK = "btn.start.com"
+const val ACTION_NORMAL_CLICK = "btn.start.com"
 const val POSITION = "position"
 const val CLICK_LESSON = "btn.click.lesson"
 const val CLICK_AFFAIR = "btn.click.affair"
+const val CLICK_REFRESH_TEXT = "btn.click.refresh.text"
 
 fun getClickPendingIntent(
     context: Context,
@@ -102,8 +104,7 @@ fun startOperation(lesson: LessonEntity) {
     if (IAccountService::class.impl.getVerifyService().isLogin()) {
         CyxbsToast.show(BaseApp.baseApp, "请登录之后再点击查看详细信息", Toast.LENGTH_SHORT)
     } else {
-/*        ARouter.getInstance().build(MAIN_MAIN).navigation()
-//        Todo,此处等郭神提供课表的接口*/
+
     }
 }
 

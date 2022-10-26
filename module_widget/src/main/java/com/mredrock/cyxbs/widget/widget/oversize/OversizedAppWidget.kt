@@ -17,7 +17,9 @@ import com.mredrock.cyxbs.widget.R
 import com.mredrock.cyxbs.widget.service.GridWidgetService
 import com.mredrock.cyxbs.widget.util.*
 import com.mredrock.cyxbs.widget.widget.page.oversized.deleteTitlePref
+import io.reactivex.rxjava3.core.Observable
 import java.util.*
+import java.util.concurrent.TimeUnit
 
 /**
  * 超大小部件
@@ -28,6 +30,7 @@ class OversizedAppWidget : AppWidgetProvider() {
         appWidgetManager: AppWidgetManager,
         appWidgetIds: IntArray,
     ) {
+        val remoteViews = RemoteViews(context.packageName, R.layout.widget_oversized_app_widget)
         for (appWidgetId in appWidgetIds) {
             updateAppWidget(context, appWidgetManager, appWidgetId)
         }
@@ -66,13 +69,21 @@ class OversizedAppWidget : AppWidgetProvider() {
                 }
                 val weekDay = Calendar.getInstance()[Calendar.DAY_OF_WEEK]
                 val time = if (weekDay == 1) 6 else weekDay - 2
-                if (lastTime != time){//不等于则说明，日期已经改变但是小组件还没有刷新
+                if (lastTime != time) {//不等于则说明，日期已经改变但是小组件还没有刷新
                     val manager = AppWidgetManager.getInstance(context)
                     val ids =
-                        manager.getAppWidgetIds(ComponentName(context, OversizedAppWidget::class.java))
-                    onUpdate(context,manager,ids)
+                        manager.getAppWidgetIds(ComponentName(context,
+                            OversizedAppWidget::class.java))
+                    onUpdate(context, manager, ids)
                     manager.notifyAppWidgetViewDataChanged(ids, R.id.grid_course_widget)
                 }
+            }
+            CLICK_REFRESH_TEXT->{
+                val manager = AppWidgetManager.getInstance(context)
+                val ids =
+                    manager.getAppWidgetIds(ComponentName(context,
+                        OversizedAppWidget::class.java))
+                onUpdate(context, manager, ids)
             }
             ACTION_FLUSH -> {
                 val manager = AppWidgetManager.getInstance(context)
@@ -97,6 +108,13 @@ class OversizedAppWidget : AppWidgetProvider() {
             appWidgetId: Int,
         ) {
             val remoteViews = RemoteViews(context.packageName, R.layout.widget_oversized_app_widget)
+            remoteViews.setOnClickPendingIntent(
+                R.id.widget_oversized_refresh_blank,
+                getClickPendingIntent(context,
+                    R.id.widget_oversized_refresh_blank,
+                    CLICK_REFRESH_TEXT,
+                    OversizedAppWidget::class.java)
+            )
             val weekDay = Calendar.getInstance()[Calendar.DAY_OF_WEEK]
             lastTime = if (weekDay == 1) 6 else weekDay - 2
             for (i in 1..7) {
@@ -105,7 +123,7 @@ class OversizedAppWidget : AppWidgetProvider() {
             }
             val gridWidgetIntent = Intent(context, GridWidgetService::class.java).apply {
                 putExtra("time", if (weekDay == 1) 6 else weekDay - 2)
-                defaultSp.edit().putInt("time",if (weekDay == 1) 6 else weekDay - 2).commit()
+                defaultSp.edit().putInt("time", if (weekDay == 1) 6 else weekDay - 2).commit()
                 //因为如果每次更新的时候都是一个Intent那么onGetViewFactory只会执行一次
                 //这样更新就不会生效，因为RemoteView中的GridView只会局部更新,这样处理并不是很好
                 //如果谁有好办法，希望尽快更换
@@ -122,6 +140,14 @@ class OversizedAppWidget : AppWidgetProvider() {
                     OversizedAppWidget::class.java))
             remoteViews.setRemoteAdapter(R.id.grid_course_widget, gridWidgetIntent)
             appWidgetManager.updateAppWidget(appWidgetId, remoteViews)
+            //为了满足 不能缓存 的需求，让课表展示60s,然后让文字填满小组件
+            Observable.just(1).doOnNext {
+                remoteViews.setViewVisibility(R.id.widget_oversized_refresh_blank, View.GONE)
+                appWidgetManager.updateAppWidget(appWidgetId, remoteViews)
+            }.delay(3L, TimeUnit.SECONDS).subscribe {
+                remoteViews.setViewVisibility(R.id.widget_oversized_refresh_blank, View.VISIBLE)
+                appWidgetManager.updateAppWidget(appWidgetId, remoteViews)
+            }
         }
     }
 }
