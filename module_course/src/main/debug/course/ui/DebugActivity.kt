@@ -8,6 +8,7 @@ import android.widget.TextView
 import androidx.fragment.app.FragmentContainerView
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.mredrock.cyxbs.api.course.ICourseService
+import com.mredrock.cyxbs.api.course.ILessonService
 import com.mredrock.cyxbs.config.route.COURSE_POS_TO_MAP
 import com.mredrock.cyxbs.config.route.DISCOVER_MAP
 import com.mredrock.cyxbs.course.R
@@ -52,7 +53,9 @@ class DebugActivity : BaseDebugActivity() {
   
   override fun onDebugCreate(savedInstanceState: Bundle?) {
     setContentView(R.layout.course_activity_debug)
-  
+    
+    ILessonService.isUseLocalSaveLesson = true
+    
     mBtn.setOnClickListener {
       startActivity(
         Intent(this, FindLessonActivity::class.java)

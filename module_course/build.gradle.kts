@@ -18,6 +18,7 @@ dependRoom()
 dependRoomRxjava()
 dependRxjava()
 dependNetwork()
+dependCoroutinesRx3()
 
 configurations.all {
   resolutionStrategy.cacheChangingModulesFor(0, TimeUnit.SECONDS)

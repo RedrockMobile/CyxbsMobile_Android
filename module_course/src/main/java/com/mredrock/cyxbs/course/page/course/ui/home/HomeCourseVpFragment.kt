@@ -54,12 +54,6 @@ class HomeCourseVpFragment : HomeCourseVpLinkFragment() {
         true
       } else false
     }
-    
-    mTvWhichWeek.setOnLongClickListener {
-      // 长按第几周可刷新课表数据
-      mViewModel.refreshData()
-      true
-    }
   }
   
   private fun initViewPager() {

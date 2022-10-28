@@ -21,7 +21,9 @@ sealed interface ILessonVersion {
    *
    * 根据远古代码留下的注释，学长们担心远端服务器出现数据回退问题，故而提供版本号来防止直接使用远端数据
    *
-   * @param defaultWhenSame 当版本号大小相等的时候，决定是否更新，默认为 true
+   * 但在 22 年 10 月后，后端课表接口已经采用 jwzx 的官方接口，所以该问题已经不会再出现，但我仍保留了这个逻辑
+   *
+   * @param defaultWhenSame 当版本号大小相等的时候，决定是否更新
    */
   @WorkerThread
   fun judgeVersion(defaultWhenSame: Boolean): Boolean {

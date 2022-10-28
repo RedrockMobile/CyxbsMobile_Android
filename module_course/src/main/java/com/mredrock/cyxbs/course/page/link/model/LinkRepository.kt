@@ -93,7 +93,7 @@ object LinkRepository {
       .throwApiExceptionIfFail()
       .flatMapCompletable {
         // 这个只能更新，不能使用删除，
-        // 因为 Observable 不能发送 null，所以删除后的观察中是不会回调的
+        // 因为 Observable 不能发送 null，删除后的观察中是不会回调的，所以只能使用 update
         mLinkStuDB.updateLinkStu(LinkStuEntity.NULL.copy(selfNum = selfNum))
         Completable.complete()
       }.subscribeOn(Schedulers.io())
@@ -121,7 +121,7 @@ object LinkRepository {
         }
         it.onComplete()
       } else {
-        it.onError(RuntimeException("数据库不存在该学号（$selfNum）的关联人"))
+        it.tryOnError(RuntimeException("数据库不存在该学号（$selfNum）的关联人"))
       }
     }.subscribeOn(Schedulers.io())
   }

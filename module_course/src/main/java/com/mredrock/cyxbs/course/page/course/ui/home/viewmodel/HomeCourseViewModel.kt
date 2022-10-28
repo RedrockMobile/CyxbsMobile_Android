@@ -17,9 +17,7 @@ import com.mredrock.cyxbs.course.service.CourseServiceImpl
 import com.mredrock.cyxbs.course.service.toLesson
 import com.mredrock.cyxbs.lib.base.ui.BaseViewModel
 import com.mredrock.cyxbs.lib.utils.service.impl
-import io.reactivex.rxjava3.core.Completable
 import io.reactivex.rxjava3.core.Observable
-import io.reactivex.rxjava3.core.Single
 import io.reactivex.rxjava3.schedulers.Schedulers
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.SharedFlow
@@ -64,34 +62,6 @@ class HomeCourseViewModel : BaseViewModel() {
     // 这里更新后，所有观察关联人的地方都会重新发送新数据
   }
   
-  /**
-   * 重新请求数据，相当于强制刷新
-   */
-  fun refreshData() {
-    LinkRepository.getLinkStudent()
-      .flatMapCompletable {
-        // 直接调用网络刷新，请求成功后会修改数据库，然后上面的观察流会重新发送新的值
-        val self = StuLessonRepository.refreshLesson(it.selfNum)
-        val affair = IAffairService::class.impl.refreshAffair()
-        if (it.isNotNull()) {
-          val link = StuLessonRepository.refreshLesson(it.linkNum)
-          Single.mergeDelayError(self, link, affair) // 使用 mergeDelayError() 延迟异常
-            .flatMapCompletable { Completable.complete() }
-        } else {
-          Single.mergeDelayError(self, affair)
-            .flatMapCompletable { Completable.complete() }
-        }
-      }.doOnError {
-        viewModelScope.launch {
-          _refresh.emit(false)
-        }
-      }.safeSubscribeBy {
-        viewModelScope.launch {
-          _refresh.emit(true)
-        }
-      }
-  }
-  
   init {
     initObserve()
   }
@@ -109,7 +79,7 @@ class HomeCourseViewModel : BaseViewModel() {
       .switchMap {
         // 没得关联人和不显示关联课程时发送空数据
         if (it.isNull() || !it.isShowLink) Observable.just(emptyList())
-        else StuLessonRepository.observeLesson(it.linkNum)
+        else StuLessonRepository.getLesson(it.linkNum).toObservable()
       }
   
     // 事务的观察流
