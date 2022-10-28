@@ -32,6 +32,7 @@
                 android:name="android.app.shortcuts"
                 android:resource="@xml/main_shortcut" />
         </activity>
+        <activity android:name=".defaultpage.DefaultPageActivity"/>
     </application>
 
 </manifest>

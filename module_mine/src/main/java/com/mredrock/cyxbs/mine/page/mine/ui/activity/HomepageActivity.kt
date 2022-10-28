@@ -44,6 +44,7 @@ import com.mredrock.cyxbs.common.config.*
 import com.mredrock.cyxbs.common.service.ServiceManager
 import com.mredrock.cyxbs.common.service.impl
 import com.mredrock.cyxbs.common.utils.extensions.*
+import com.mredrock.cyxbs.config.route.DEFAULT_PAGE
 import com.mredrock.cyxbs.mine.R
 import com.mredrock.cyxbs.mine.databinding.MineActivityHomepageBinding
 import com.mredrock.cyxbs.mine.network.model.UserInfo
@@ -717,9 +718,13 @@ class HomepageActivity : BaseViewModelActivity<MineViewModel>() {
 
     companion object {
         fun startHomePageActivity(redid: String?, activity: Activity) {
-            val intent = Intent(activity, HomepageActivity::class.java)
-            intent.putExtra("redid", redid)
-            activity.startActivity(intent)
+            /**
+             * TODO 关闭服务 个人主页
+             */
+            ARouter.getInstance().build(DEFAULT_PAGE).navigation()
+//            val intent = Intent(activity, HomepageActivity::class.java)
+//            intent.putExtra("redid", redid)
+//            activity.startActivity(intent)
         }
     }
 
