@@ -14,6 +14,8 @@ import android.view.View
 import android.widget.RemoteViews
 import androidx.core.content.edit
 import com.mredrock.cyxbs.widget.R
+import com.mredrock.cyxbs.widget.repo.database.AffairDatabase
+import com.mredrock.cyxbs.widget.repo.database.LessonDatabase
 import com.mredrock.cyxbs.widget.service.GridWidgetService
 import com.mredrock.cyxbs.widget.util.*
 import com.mredrock.cyxbs.widget.widget.page.oversized.deleteTitlePref
@@ -30,7 +32,6 @@ class OversizedAppWidget : AppWidgetProvider() {
         appWidgetManager: AppWidgetManager,
         appWidgetIds: IntArray,
     ) {
-        val remoteViews = RemoteViews(context.packageName, R.layout.widget_oversized_app_widget)
         for (appWidgetId in appWidgetIds) {
             updateAppWidget(context, appWidgetManager, appWidgetId)
         }
@@ -78,12 +79,14 @@ class OversizedAppWidget : AppWidgetProvider() {
                     manager.notifyAppWidgetViewDataChanged(ids, R.id.grid_course_widget)
                 }
             }
-            CLICK_REFRESH_TEXT->{
-                val manager = AppWidgetManager.getInstance(context)
-                val ids =
-                    manager.getAppWidgetIds(ComponentName(context,
-                        OversizedAppWidget::class.java))
-                onUpdate(context, manager, ids)
+            CLICK_REFRESH_TEXT -> {
+                doAfterInsertLessonsAndAffairs {
+                    val manager = AppWidgetManager.getInstance(context)
+                    val ids =
+                        manager.getAppWidgetIds(ComponentName(context,
+                            OversizedAppWidget::class.java))
+                    onUpdate(context, manager, ids)
+                }
             }
             ACTION_FLUSH -> {
                 val manager = AppWidgetManager.getInstance(context)
@@ -95,9 +98,11 @@ class OversizedAppWidget : AppWidgetProvider() {
     }
 
     override fun onEnabled(context: Context) {
-    }
-
-    override fun onDisabled(context: Context) {
+        //放在桌面上时要去加载一次数据并刷新
+        doAfterInsertLessonsAndAffairs {
+            Log.d("testTag", "(OversizedAppWidget.kt:103) -> 2")
+            refresh(context)
+        }
     }
 
     companion object {
@@ -144,11 +149,21 @@ class OversizedAppWidget : AppWidgetProvider() {
             Observable.just(1).doOnNext {
                 remoteViews.setViewVisibility(R.id.widget_oversized_refresh_blank, View.GONE)
                 appWidgetManager.updateAppWidget(appWidgetId, remoteViews)
-            }.delay(3L, TimeUnit.SECONDS).subscribe {
+            }.delay(300L, TimeUnit.SECONDS).subscribe {
                 remoteViews.setViewVisibility(R.id.widget_oversized_refresh_blank, View.VISIBLE)
                 appWidgetManager.updateAppWidget(appWidgetId, remoteViews)
+                LessonDatabase.INSTANCE.getLessonDao().deleteAllLessons()
+                AffairDatabase.INSTANCE.getAffairDao().deleteAllAffair()
             }
         }
+    }
+
+    /**刷新小组件*/
+    private fun refresh(context: Context) {
+        val manager = AppWidgetManager.getInstance(context)
+        val ids =
+            manager.getAppWidgetIds(ComponentName(context, OversizedAppWidget::class.java))
+        manager.notifyAppWidgetViewDataChanged(ids, R.id.grid_course_widget)
     }
 }
 

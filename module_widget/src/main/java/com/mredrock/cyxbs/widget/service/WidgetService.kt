@@ -11,7 +11,6 @@ import com.mredrock.cyxbs.api.widget.IWidgetService
 import com.mredrock.cyxbs.api.widget.WIDGET_SERVICE
 import com.mredrock.cyxbs.widget.repo.database.AffairDatabase
 import com.mredrock.cyxbs.widget.repo.database.LessonDatabase
-import com.mredrock.cyxbs.widget.repo.database.LessonDatabase.Companion.MY_STU_NUM
 import com.mredrock.cyxbs.widget.repo.database.LessonDatabase.Companion.OTHERS_STU_NUM
 import com.mredrock.cyxbs.widget.util.defaultSp
 import com.mredrock.cyxbs.widget.util.getMyLessons
@@ -36,7 +35,7 @@ class WidgetService : IWidgetService {
         otherStuLessons: List<ILessonService.Lesson>,
         affairs: List<IAffairService.Affair>,
     ) {
-        LessonDatabase.INSTANCE.getLessonDao().deleteAllLessons()
+        /*LessonDatabase.INSTANCE.getLessonDao().deleteAllLessons()
         AffairDatabase.INSTANCE.getAffairDao().deleteAllAffair()
         //设置两者的学号，用于数据库查询
         if (myLessons.isNotEmpty()) {
@@ -69,7 +68,7 @@ class WidgetService : IWidgetService {
                         component = ComponentName(mContext!!, pkg)
                     })
                 }
-            }
+            }*/
     }
 
     override fun deleteAffair(affair: IAffairService.Affair) {

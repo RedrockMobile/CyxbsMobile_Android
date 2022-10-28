@@ -16,7 +16,6 @@ abstract class LessonDatabase : RoomDatabase() {
     abstract fun getLessonDao(): LessonDao
 
     companion object {
-        const val MY_STU_NUM = "my_stu_num"
         const val OTHERS_STU_NUM = "others_stu_num"
         
         val INSTANCE by lazy {

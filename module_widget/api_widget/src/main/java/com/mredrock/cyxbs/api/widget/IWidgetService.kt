@@ -16,6 +16,7 @@ interface IWidgetService : IProvider {
    * @param otherStuLessons 双人课表中另一个人的课表
    * @param affairs 事务
    * */
+  @Deprecated("由于不允许缓存，该方法准备弃用")
   fun notifyWidgetRefresh(
     myLessons: List<ILessonService.Lesson>,
     otherStuLessons: List<ILessonService.Lesson>,

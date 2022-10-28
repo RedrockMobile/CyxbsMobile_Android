@@ -7,7 +7,6 @@ import android.content.ComponentName
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
-import android.util.Log
 import android.view.View
 import android.widget.RemoteViews
 import android.widget.Toast
@@ -17,8 +16,8 @@ import com.google.gson.Gson
 import com.mredrock.cyxbs.lib.utils.extensions.CyxbsToast
 import com.mredrock.cyxbs.widget.R
 import com.mredrock.cyxbs.widget.repo.bean.LessonEntity
+import com.mredrock.cyxbs.widget.repo.database.AffairDatabase
 import com.mredrock.cyxbs.widget.repo.database.LessonDatabase
-import com.mredrock.cyxbs.widget.repo.database.LessonDatabase.Companion.MY_STU_NUM
 import com.mredrock.cyxbs.widget.util.*
 import io.reactivex.rxjava3.core.Observable
 import java.util.*
@@ -49,6 +48,12 @@ class NormalWidget : AppWidgetProvider() {
         //用于保存每一条刷新的课程，多个方法都要使用，若非静态，其他方法无法调用到正确数据
     }
 
+    override fun onEnabled(context: Context) {
+        super.onEnabled(context)
+        //放在桌面上时要去加载一次数据并刷新
+        doAfterInsertLessonsAndAffairs { refresh(context,0) }
+    }
+
     override fun onUpdate(
         context: Context,
         appWidgetManager: AppWidgetManager?,
@@ -56,7 +61,7 @@ class NormalWidget : AppWidgetProvider() {
     ) {
         super.onUpdate(context, appWidgetManager, appWidgetIds)
         defaultSp.edit { putInt(shareName, 0) }
-        fresh(context, 0)
+        refresh(context, 0)
     }
 
     override fun onAppWidgetOptionsChanged(
@@ -93,24 +98,24 @@ class NormalWidget : AppWidgetProvider() {
             ACTION_NORMAL_CLICK -> {
                 val offsetTime = defaultSp.getInt(shareName, 0)
                 intent.getStringExtra(CLICK_LESSON)?.let {
-                    Log.d("testTag", "(NormalWidget.kt:96) -> ${it}")
                     showLessonInfo(it)
                 }
                 when (rId) {
                     R.id.widget_normal_back -> {
                         defaultSp.edit { putInt(shareName, makeOffsetTime(offsetTime - 1)) }
-                        fresh(context, makeOffsetTime(offsetTime - 1))
+                        refresh(context, makeOffsetTime(offsetTime - 1))
                     }
                     R.id.widget_normal_front -> {
                         defaultSp.edit { putInt(shareName, makeOffsetTime(offsetTime + 1)) }
-                        fresh(context, makeOffsetTime(offsetTime + 1))
+                        refresh(context, makeOffsetTime(offsetTime + 1))
                     }
                     R.id.widget_normal_title -> {
                         defaultSp.edit { putInt(shareName, 0) }
-                        fresh(context, 0)
+                        refresh(context, 0)
                     }
                     R.id.widget_normal_refresh_blank -> {
-                        fresh(context, 0)
+                        //每次点击的时候重新获取事务和课表并刷新
+                        doAfterInsertLessonsAndAffairs { refresh(context, 0) }
                     }
                 }
                 if (isDoubleClick()) {
@@ -152,9 +157,7 @@ class NormalWidget : AppWidgetProvider() {
 
     /**
      * 刷新，传入offsetTime作为今天的偏移量*/
-
-
-    private fun fresh(context: Context, offsetTime: Int) {
+    private fun refresh(context: Context, offsetTime: Int) {
         thread {//要通过数据库获取数据，所以新开一条线程
             try {//catch异常，避免课表挂了之后这边跟着挂
                 val rv = RemoteViews(context.packageName, R.layout.widget_normal)
@@ -177,7 +180,7 @@ class NormalWidget : AppWidgetProvider() {
                     if (lesson.period == 2) {
                         rv.setTextViewText(getCourseId(num), lesson.course)
                         rv.setTextViewText(getRoomId(num), filterClassRoom(lesson.classroom))
-                        if (lesson.course!="数据异常，请刷新"){
+                        if (lesson.course != "数据异常，请刷新") {
                             rv.setOnClickPendingIntent(
                                 getLayoutId(num),
                                 getLessonClickPendingIntent(context,
@@ -204,9 +207,11 @@ class NormalWidget : AppWidgetProvider() {
                 Observable.just(1).doOnNext {
                     rv.setViewVisibility(R.id.widget_normal_refresh_blank, View.GONE)
                     show(rv, context)
-                }.delay(60L, TimeUnit.SECONDS).subscribe {
+                }.delay(300L, TimeUnit.SECONDS).subscribe {
                     rv.setViewVisibility(R.id.widget_normal_refresh_blank, View.VISIBLE)
                     show(rv, context)
+                    LessonDatabase.INSTANCE.getLessonDao().deleteAllLessons()
+                    AffairDatabase.INSTANCE.getAffairDao().deleteAllAffair()
                 }
                 defaultSp.edit { putString(courseData, gson.toJson(list)) }
             } catch (e: Exception) {

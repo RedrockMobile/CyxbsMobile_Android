@@ -12,17 +12,20 @@ import android.widget.Toast
 import androidx.annotation.IdRes
 import com.google.gson.Gson
 import com.mredrock.cyxbs.api.account.IAccountService
+import com.mredrock.cyxbs.api.affair.IAffairService
+import com.mredrock.cyxbs.api.course.ILessonService
 import com.mredrock.cyxbs.lib.base.BaseApp
 import com.mredrock.cyxbs.lib.utils.extensions.CyxbsToast
 import com.mredrock.cyxbs.lib.utils.extensions.appContext
 import com.mredrock.cyxbs.lib.utils.service.impl
-import com.mredrock.cyxbs.widget.repo.bean.LessonEntity
-import com.mredrock.cyxbs.widget.repo.database.LessonDatabase
 import com.mredrock.cyxbs.widget.activity.InfoActivity
 import com.mredrock.cyxbs.widget.repo.bean.AffairEntity
+import com.mredrock.cyxbs.widget.repo.bean.LessonEntity
 import com.mredrock.cyxbs.widget.repo.database.AffairDatabase
+import com.mredrock.cyxbs.widget.repo.database.LessonDatabase
+import io.reactivex.rxjava3.kotlin.zipWith
+import io.reactivex.rxjava3.schedulers.Schedulers
 import java.util.*
-import kotlin.collections.ArrayList
 
 
 /**
@@ -110,10 +113,9 @@ fun startOperation(lesson: LessonEntity) {
 
 fun getLessonByCalendar(context: Context, calendar: Calendar): ArrayList<LessonEntity>? {
     val weekOfTerm = SchoolCalendar().weekOfTerm
-    val myStuNum =
-        defaultSp.getString(LessonDatabase.MY_STU_NUM, "")
+    val myStuNum = IAccountService::class.impl.getUserService().getStuNum()
     val lesson = LessonDatabase.INSTANCE.getLessonDao()
-        .queryAllLessons(myStuNum!!, weekOfTerm)
+        .queryAllLessons(myStuNum, weekOfTerm)
     if (lesson.isEmpty()) return null
     /*
     * 转换表，老外从周日开始计数,orz
@@ -155,10 +157,9 @@ private fun getPendingIntentFlags(isMutable: Boolean = true) =
 
 /**获取登录用户的本周所有Lessont*/
 fun getMyLessons(weekOfTerm: Int): List<LessonEntity> {
-    val myStuNum =
-        defaultSp.getString(LessonDatabase.MY_STU_NUM, "")
+    val myStuNum = IAccountService::class.impl.getUserService().getStuNum()
     return LessonDatabase.INSTANCE.getLessonDao()
-        .queryAllLessons(myStuNum!!, weekOfTerm)
+        .queryAllLessons(myStuNum, weekOfTerm)
 }
 
 fun getOthersStuNum(weekOfTerm: Int): List<LessonEntity> {
@@ -171,7 +172,7 @@ fun getOthersStuNum(weekOfTerm: Int): List<LessonEntity> {
 fun getAffairs(weekOfTerm: Int): List<AffairEntity> {
     val thisWeekAffair = AffairDatabase.INSTANCE.getAffairDao().queryAllAffair(weekOfTerm)
     val wholeTermAffair = AffairDatabase.INSTANCE.getAffairDao().queryAllAffair(0)
-    return thisWeekAffair+wholeTermAffair
+    return thisWeekAffair + wholeTermAffair
 }
 
 /**打开activity，展示课程详情*/
@@ -188,6 +189,20 @@ fun showAffairInfo(affair: String) {
     intent.putExtra(CLICK_AFFAIR, affair)
     intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_NO_USER_ACTION
     appContext.startActivity(intent)
+}
+
+/**获取并存储课程和事务，接受一个在存储完毕之后回调的lambda函数*/
+fun doAfterInsertLessonsAndAffairs(afterInsertAction: () -> Unit) {
+    IAffairService::class.impl.getAffair().map { it }
+        .zipWith(ILessonService::class.impl.getStuLesson(IAccountService::class.impl.getUserService()
+            .getStuNum())).observeOn(Schedulers.io()).subscribe { t1, t2 ->
+            LessonDatabase.INSTANCE.getLessonDao()
+                .insertLessons(LessonEntity.convertFromApi(t1.second))
+            AffairDatabase.INSTANCE.getAffairDao()
+                .insertAffairs(AffairEntity.convert(t1.first))
+            Thread.sleep(1000)
+            afterInsertAction.invoke()
+        }
 }
 
 
