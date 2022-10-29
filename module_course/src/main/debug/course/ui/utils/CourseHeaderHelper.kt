@@ -7,6 +7,7 @@ import com.mredrock.cyxbs.api.course.ILinkService
 import com.mredrock.cyxbs.api.course.utils.*
 import com.mredrock.cyxbs.lib.utils.service.impl
 import com.mredrock.cyxbs.config.config.SchoolCalendar
+import com.mredrock.cyxbs.lib.utils.extensions.toast
 import com.mredrock.cyxbs.lib.utils.utils.judge.NetworkUtil
 import io.reactivex.rxjava3.core.Observable
 import io.reactivex.rxjava3.core.Single
@@ -45,7 +46,7 @@ object CourseHeaderHelper {
       }
       // 如果在获取不了周数时说明没有请求过课表数据，因为周数是从课表接口来的
       .startWithItem(HintHeader("登录后即可查看课表"))
-      // 因为上流用的观察流，一般是不会发送异常到下流的，所以该问题一般不会出现（除非你动了数据库但没有改版本号）
+      // 因为上流用的观察流，一般是不会发送异常到下流的，所以该问题一般不会出现
       // 并且这里一旦出错，将导致整个观察流终止，此后都不会发送数据给下游
       .onErrorReturnItem(HintHeader("内部错误"))
   }
@@ -61,13 +62,14 @@ object CourseHeaderHelper {
         // 可以使用本地数据时
         emit(true)
       } else {
-        if (NetworkUtil.isAvailable()) {
+        if (NetworkUtil.isAvailableExact()) {
           emit(true)
         } else {
           // 网络不可用，并且也不能使用本地数据
           emit(false)
           // 挂起，一直直到网络可用
           NetworkUtil.suspendUntilAvailable()
+          toast("网络已恢复，正在加载课表中")
           emit(true) // 重新请求网络数据
         }
       }

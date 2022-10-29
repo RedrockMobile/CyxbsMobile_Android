@@ -41,6 +41,7 @@ import com.mredrock.cyxbs.discover.utils.IS_SWITCH1_SELECT
 import com.mredrock.cyxbs.discover.utils.NotificationSp
 import com.mredrock.cyxbs.lib.utils.extensions.dp2pxF
 import com.mredrock.cyxbs.lib.utils.extensions.setOnSingleClickListener
+import com.mredrock.cyxbs.lib.utils.extensions.visible
 import com.ndhzs.slideshow.SlideShow
 import com.ndhzs.slideshow.adapter.ImageViewAdapter
 import com.ndhzs.slideshow.adapter.setImgAdapter
@@ -143,6 +144,8 @@ class DiscoverHomeFragment : BaseViewModelFragment<DiscoverHomeViewModel>() {
 
     private fun initBanner() {
         viewModel.viewPagerInfo.observe { list ->
+            if (list.isEmpty()) return@observe
+            mSlideShow.visible()
             mIvBannerBg.animate()
                 .alpha(0F)
                 .duration = 600
@@ -167,6 +170,7 @@ class DiscoverHomeFragment : BaseViewModelFragment<DiscoverHomeViewModel>() {
                             Glide.with(this@DiscoverHomeFragment)
                                 .load(data.picture_url)
                                 .placeholder(R.drawable.discover_ic_cyxbsv6)
+                                .error(R.drawable.discover_ic_cyxbsv6)
                                 .into(view)
                         }
                 )

@@ -1,5 +1,6 @@
 package com.mredrock.cyxbs.course.page.course.ui.dialog.adapter.viewholder
 
+import android.annotation.SuppressLint
 import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
@@ -35,6 +36,7 @@ class StuLessonVH(
   private val mTvType = findViewById<TextView>(R.id.course_tv_dialog_stu_type)
   private val mIvLink = findViewById<ImageView>(R.id.course_iv_dialog_stu_link)
   
+  @SuppressLint("SetTextI18n")
   override fun onBindViewHolder(data: StuLessonData) {
     mTvTitle.text = data.course.course
     mTvClassroom.text = data.course.classroom
@@ -55,11 +57,6 @@ class StuLessonVH(
       ServiceManager.activity(DISCOVER_MAP) {
         withString(COURSE_POS_TO_MAP, data.course.classroom)
       }
-    }
-    
-    mTvTeacher.setOnSingleClickListener {
-      // 查找老师课表
-      FindLessonActivity.startByTeaName(it.context, data.course.teacher)
     }
     
     mIvLink.setOnSingleClickListener {

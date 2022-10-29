@@ -1,5 +1,5 @@
 [versions]
-android_gradle_version = "7.2.2"
+android_gradle_version = "7.3.1"
 kotlin_gradle_version = "1.7.20"
 vasDolly_version = "3.0.4"
 

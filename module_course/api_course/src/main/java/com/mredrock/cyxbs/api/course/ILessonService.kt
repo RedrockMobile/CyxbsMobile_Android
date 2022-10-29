@@ -24,6 +24,8 @@ interface ILessonService : IProvider {
      * 所以增加该变量控制课表本地保存逻辑
      *
      * 目前逻辑为课表数据仍会保存至数据库，但在网络请求失败时会直接返回空数据
+     *
+     * 注意：请不要私自修改该变量 !!!!!
      */
     var isUseLocalSaveLesson
       get() = defaultSp.getBoolean("是否使用本地课表数据", false)

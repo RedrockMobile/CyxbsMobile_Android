@@ -7,6 +7,7 @@ import com.mredrock.cyxbs.api.course.ILinkService
 import com.mredrock.cyxbs.api.course.utils.*
 import com.mredrock.cyxbs.lib.utils.service.impl
 import com.mredrock.cyxbs.config.config.SchoolCalendar
+import com.mredrock.cyxbs.lib.utils.extensions.toast
 import com.mredrock.cyxbs.lib.utils.utils.judge.NetworkUtil
 import io.reactivex.rxjava3.core.Observable
 import io.reactivex.rxjava3.core.Single
@@ -61,13 +62,14 @@ object CourseHeaderHelper {
         // 可以使用本地数据时
         emit(true)
       } else {
-        if (NetworkUtil.isAvailable()) {
+        if (NetworkUtil.isAvailableExact()) {
           emit(true)
         } else {
           // 网络不可用，并且也不能使用本地数据
           emit(false)
           // 挂起，一直直到网络可用
           NetworkUtil.suspendUntilAvailable()
+          toast("网络已恢复，正在加载课表中")
           emit(true) // 重新请求网络数据
         }
       }
