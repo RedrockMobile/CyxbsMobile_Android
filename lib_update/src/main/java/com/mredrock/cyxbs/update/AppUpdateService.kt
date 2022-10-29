@@ -3,8 +3,8 @@ package com.mredrock.cyxbs.update
 import android.content.Context
 import android.content.Intent
 import android.net.Uri
-import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.edit
+import androidx.fragment.app.FragmentActivity
 import androidx.lifecycle.LiveData
 import com.afollestad.materialdialogs.MaterialDialog
 import com.alibaba.android.arouter.facade.annotation.Route
@@ -25,7 +25,7 @@ internal class AppUpdateService : IAppUpdateService {
         AppUpdateModel.checkUpdate()
     }
 
-    override fun noticeUpdate(activity: AppCompatActivity) {
+    override fun noticeUpdate(activity: FragmentActivity) {
         val info = AppUpdateModel.updateInfo ?: return
         MaterialDialog(activity).show {
             title(text = "有新版本更新")
@@ -47,11 +47,11 @@ internal class AppUpdateService : IAppUpdateService {
         }
     }
     
-    override fun tryNoticeUpdate(activity: AppCompatActivity) {
+    override fun tryNoticeUpdate(activity: FragmentActivity) {
         checkUpdate()
         getUpdateStatus().observe(activity) {
             if (it == AppUpdateStatus.DATED) {
-                val sp = activity.getSharedPreferences("更新记录", Context.MODE_APPEND)
+                val sp = activity.getSharedPreferences("更新记录", Context.MODE_PRIVATE)
                 val nowTime = System.currentTimeMillis()
                 val lastTime = sp.getLong("上次提醒更新时间", 0L)
                 val diff = TimeUnit.HOURS.convert(nowTime - lastTime, TimeUnit.MILLISECONDS)

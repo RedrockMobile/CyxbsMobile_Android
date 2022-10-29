@@ -159,14 +159,6 @@ class MainActivity : BaseActivity() {
     IAppUpdateService::class.impl.tryNoticeUpdate(this)
   }
   
-  override fun onBackPressed() {
-    if (mViewModel.courseBottomSheetExpand.value == true) {
-      mViewModel.courseBottomSheetExpand.value = false
-    } else {
-      super.onBackPressed()
-    }
-  }
-  
   companion object {
     // 长按桌面图标的那个东西，对应 AndroidManifest.xml 中的设置
     const val DESKTOP_SHORTCUT_COURSE = "com.mredrock.cyxbs.action.COURSE"

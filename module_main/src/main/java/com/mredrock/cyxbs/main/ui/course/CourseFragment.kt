@@ -5,6 +5,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
+import androidx.activity.addCallback
 import androidx.fragment.app.FragmentContainerView
 import androidx.fragment.app.activityViewModels
 import com.google.android.material.bottomsheet.BottomSheetBehavior
@@ -143,14 +144,18 @@ class CourseFragment : BaseFragment() {
             BottomSheetBehavior.STATE_EXPANDED -> {
               mViewHeader.gone()
               mActivityViewModel.courseBottomSheetExpand.value = true
+              mCollapsedBackPressedCallback.isEnabled = true
             }
             BottomSheetBehavior.STATE_COLLAPSED -> {
               mFcvCourse.gone()
               mActivityViewModel.courseBottomSheetExpand.value = false
+              mCollapsedBackPressedCallback.isEnabled = false
             }
             BottomSheetBehavior.STATE_HIDDEN -> {
               mActivityViewModel.courseBottomSheetExpand.value = null
+              mCollapsedBackPressedCallback.isEnabled = false
             }
+            else -> {}
           }
         }
       
@@ -181,6 +186,7 @@ class CourseFragment : BaseFragment() {
       }
     )
     mActivityViewModel.courseBottomSheetExpand.observe {
+      mBottomSheet.isHideable = false
       if (it == null) {
         if (mBottomSheet.state != BottomSheetBehavior.STATE_HIDDEN) {
           mBottomSheet.isHideable = true
@@ -188,12 +194,10 @@ class CourseFragment : BaseFragment() {
         }
       } else if (it) {
         if (mBottomSheet.state != BottomSheetBehavior.STATE_EXPANDED) {
-          mBottomSheet.isHideable = false
           mBottomSheet.state = BottomSheetBehavior.STATE_EXPANDED
         }
       } else {
         if (mBottomSheet.state != BottomSheetBehavior.STATE_COLLAPSED) {
-          mBottomSheet.isHideable = false
           mBottomSheet.state = BottomSheetBehavior.STATE_COLLAPSED
         }
       }
@@ -205,5 +209,14 @@ class CourseFragment : BaseFragment() {
         // 只有登录了才允许拖动课表
         mBottomSheet.isDraggable = it.isNotNull()
       }
+  }
+  
+  /**
+   * 用于拦截返回键，在 BottomSheet 未折叠时先折叠
+   */
+  private val mCollapsedBackPressedCallback by lazy {
+    requireActivity().onBackPressedDispatcher.addCallback {
+      mBottomSheet.state = BottomSheetBehavior.STATE_COLLAPSED
+    }
   }
 }
