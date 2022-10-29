@@ -1,4 +1,4 @@
-import com.mredrock.cyxbs.convention.config.Config
+import config.Config
 import org.gradle.api.JavaVersion
 import org.gradle.api.plugins.ExtensionAware
 import org.gradle.kotlin.dsl.apply
@@ -17,7 +17,7 @@ internal class BaseLibraryPlugin : BasePlugin() {
     override fun PluginScope.configure() {
 
         apply(plugin = "com.android.library")
-        apply(plugin =  "org.jetbrains.kotlin.android")
+        apply(plugin = "org.jetbrains.kotlin.android")
         apply(plugin = "org.jetbrains.kotlin.kapt")
         
         apply(plugin = "base.android")
@@ -63,19 +63,6 @@ internal class BaseLibraryPlugin : BasePlugin() {
                     ndk {
                         abiFilters += Config.debugAbiFilters
                     }
-
-
-                    defaultConfig {
-                        targetSdk = Config.targetSdk
-
-                        // 自己模块的混淆文件
-                        consumerProguardFiles.add(projectDir.resolve("consumer-rules.pro"))
-                    }
-
-                    buildFeatures {
-                        dataBinding = true
-                    }
-
                 }
 
             }

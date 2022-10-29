@@ -14,7 +14,7 @@ import com.mredrock.cyxbs.lib.utils.network.api
 import com.mredrock.cyxbs.lib.utils.service.impl
 import com.mredrock.cyxbs.config.config.SchoolCalendar
 import com.mredrock.cyxbs.lib.utils.extensions.*
-import com.mredrock.cyxbs.lib.utils.utils.judge.NetworkConfig
+import com.mredrock.cyxbs.lib.utils.utils.judge.NetworkUtil
 import io.reactivex.rxjava3.core.*
 import io.reactivex.rxjava3.core.Observable
 import io.reactivex.rxjava3.schedulers.Schedulers
@@ -61,7 +61,7 @@ object StuLessonRepository {
             // 不允许使用本地数据时
             flow {
               // 直到第一次网络请求成功前一直挂起，不返回结果给下游
-              NetworkConfig.suspendUntilAvailable()
+              NetworkUtil.suspendUntilAvailable()
               emit(Unit)
             }.asObservable()
               .switchMap {

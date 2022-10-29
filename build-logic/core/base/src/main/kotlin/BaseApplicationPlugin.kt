@@ -1,4 +1,4 @@
-import com.mredrock.cyxbs.convention.config.Config
+import config.Config
 import org.gradle.api.JavaVersion
 import org.gradle.api.plugins.ExtensionAware
 import org.gradle.kotlin.dsl.apply

@@ -447,19 +447,19 @@ class MapViewFragment : BaseFragment() {
             animator.interpolator = DecelerateInterpolator()
             animator.duration = 1000
             animator.addListener(object : Animator.AnimatorListener {
-                override fun onAnimationRepeat(p0: Animator?) {
+                override fun onAnimationRepeat(p0: Animator) {
 
                 }
 
-                override fun onAnimationEnd(p0: Animator?) {
+                override fun onAnimationEnd(p0: Animator) {
                     activity?.let { it1 -> VRActivity.startVRActivity(it1, viewModel.vrUrl) }
                 }
 
-                override fun onAnimationCancel(p0: Animator?) {
+                override fun onAnimationCancel(p0: Animator) {
 
                 }
 
-                override fun onAnimationStart(p0: Animator?) {
+                override fun onAnimationStart(p0: Animator) {
                     viewModel.mapViewIsInAnimation.value = true
                     mRootMapView.animate().alpha(0f).duration = 1000
                 }

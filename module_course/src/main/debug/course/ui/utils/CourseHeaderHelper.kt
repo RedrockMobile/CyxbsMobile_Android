@@ -7,7 +7,7 @@ import com.mredrock.cyxbs.api.course.ILinkService
 import com.mredrock.cyxbs.api.course.utils.*
 import com.mredrock.cyxbs.lib.utils.service.impl
 import com.mredrock.cyxbs.config.config.SchoolCalendar
-import com.mredrock.cyxbs.lib.utils.utils.judge.NetworkConfig
+import com.mredrock.cyxbs.lib.utils.utils.judge.NetworkUtil
 import io.reactivex.rxjava3.core.Observable
 import io.reactivex.rxjava3.core.Single
 import io.reactivex.rxjava3.schedulers.Schedulers
@@ -61,13 +61,13 @@ object CourseHeaderHelper {
         // 可以使用本地数据时
         emit(true)
       } else {
-        if (NetworkConfig.isAvailable()) {
+        if (NetworkUtil.isAvailable()) {
           emit(true)
         } else {
           // 网络不可用，并且也不能使用本地数据
           emit(false)
           // 挂起，一直直到网络可用
-          NetworkConfig.suspendUntilAvailable()
+          NetworkUtil.suspendUntilAvailable()
           emit(true) // 重新请求网络数据
         }
       }

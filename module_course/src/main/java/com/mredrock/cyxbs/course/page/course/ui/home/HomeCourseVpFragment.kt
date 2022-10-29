@@ -91,13 +91,6 @@ class HomeCourseVpFragment : HomeCourseVpLinkFragment() {
         }
       }
     }
-    mViewModel.refreshEvent.collectLaunch {
-      if (it) {
-        toast("刷新成功！")
-      } else {
-        toast("刷新失败！")
-      }
-    }
     
     mViewModel.courseService.headerAlphaState.observe {
       mHeader.alpha = it

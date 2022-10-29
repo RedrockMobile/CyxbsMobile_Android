@@ -3,6 +3,8 @@ package com.mredrock.cyxbs.lib.course.fragment.page.base
 import android.os.Bundle
 import android.view.View
 import android.view.animation.AlphaAnimation
+import android.widget.ImageView
+import android.widget.TextView
 import androidx.core.view.isGone
 import androidx.core.view.isVisible
 import com.mredrock.cyxbs.lib.course.R
@@ -25,6 +27,8 @@ import com.mredrock.cyxbs.lib.utils.extensions.visible
 abstract class NoLessonImpl : CourseTouchImpl(), INoLesson {
   
   override val viewNoLesson by R.id.course_view_no_lesson.view<View>()
+  override val ivNoLesson by R.id.course_iv_no_lesson.view<ImageView>()
+  override val tvNoLesson by R.id.course_tv_no_lesson.view<TextView>()
   
   override fun isExhibitionItem(item: IItem): Boolean {
     return item is ILessonItem || item is IAffairItem

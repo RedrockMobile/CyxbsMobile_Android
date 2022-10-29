@@ -17,6 +17,7 @@
         tools:ignore="UseCompoundDrawables">
 
         <ImageView
+            android:id="@+id/course_iv_no_lesson"
             android:layout_width="210dp"
             android:layout_height="130dp"
             android:layout_gravity="center"
@@ -24,6 +25,7 @@
             tools:ignore="ContentDescription" />
 
         <TextView
+            android:id="@+id/course_tv_no_lesson"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="20dp"

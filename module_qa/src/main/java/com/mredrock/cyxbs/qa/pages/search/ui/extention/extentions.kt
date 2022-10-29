@@ -25,10 +25,10 @@ fun createBindingAdapter(recyclerView: RecyclerView, layoutManager: RecyclerView
     recyclerView.adapter = mAdapter
     // 处理RecyclerView的触发回调
     recyclerView.addOnAttachStateChangeListener(object : View.OnAttachStateChangeListener{
-        override fun onViewAttachedToWindow(v: View?) {
+        override fun onViewAttachedToWindow(v: View) {
         }
 
-        override fun onViewDetachedFromWindow(v: View?) {
+        override fun onViewDetachedFromWindow(v: View) {
             mAdapter.onDetachedFromRecyclerView(recyclerView)
         }
     })

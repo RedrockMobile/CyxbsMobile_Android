@@ -9,6 +9,7 @@ import androidx.fragment.app.viewModels
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.LifecycleOwner
+import androidx.lifecycle.Observer
 import androidx.lifecycle.whenStarted
 import androidx.lifecycle.flowWithLifecycle
 import androidx.lifecycle.viewmodel.initializer
@@ -106,6 +107,38 @@ interface BaseUi : OperationUi {
    */
   fun <T> LiveData<T>.observe(observer: (T) -> Unit) {
     observe(getViewLifecycleOwner(), observer)
+  }
+  
+  /**
+   * 只观察一次 LiveData
+   */
+  fun <T> LiveData<T>.observeOnce(observer: (T) -> Unit) {
+    observe(
+      getViewLifecycleOwner(),
+      object : Observer<T> {
+        override fun onChanged(t: T) {
+          removeObserver(this)
+          observer.invoke(t)
+        }
+      }
+    )
+  }
+  
+  /**
+   * 观察 LiveData 直到返回 true
+   * @param observer 返回 true，则停止观察；返回 false，则继续观察
+   */
+  fun <T> LiveData<T>.observeUntil(observer: (T) -> Boolean) {
+    observe(
+      getViewLifecycleOwner(),
+      object : Observer<T> {
+        override fun onChanged(t: T) {
+          if (observer.invoke(t)) {
+            removeObserver(this)
+          }
+        }
+      }
+    )
   }
   
   fun <T> Flow<T>.collectLaunch(action: suspend (value: T) -> Unit) {

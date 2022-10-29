@@ -25,8 +25,8 @@ buildscript {
     * 如果你在 build-logic 中要使用插件，需要 implementation() 才行，
     * 而如果你只是在某个模块里面使用，那直接在这里写即可，但请写好注释和对应链接！！！
     * */
-    classpath("com.android.tools.build:gradle:7.2.1")
-    classpath("org.jetbrains.kotlin:kotlin-gradle-plugin:1.6.21")
+    classpath(libs.android.gradlePlugin)
+    classpath(libs.kotlin.gradlePlugin)
     
     // 很牛逼的检测工具 debug 模式下摇一摇手机触发 https://github.com/whataa/pandora
     // 在 lib_debug 模块中使用

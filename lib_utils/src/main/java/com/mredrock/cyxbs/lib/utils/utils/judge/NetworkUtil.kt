@@ -4,9 +4,7 @@ import android.net.ConnectivityManager
 import android.net.Network
 import com.mredrock.cyxbs.lib.utils.extensions.appContext
 import com.mredrock.cyxbs.lib.utils.extensions.processLifecycleScope
-import kotlinx.coroutines.flow.MutableSharedFlow
-import kotlinx.coroutines.flow.SharedFlow
-import kotlinx.coroutines.flow.last
+import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.suspendCancellableCoroutine
 import kotlin.coroutines.resume
@@ -19,12 +17,12 @@ import kotlin.coroutines.resume
  * @date 2022/10/27 21:17
  */
 @Suppress("ObjectPropertyName")
-object NetworkConfig {
+object NetworkUtil {
   
   /**
    * 观察网络连接状态
    */
-  val state: SharedFlow<Boolean>
+  val state: StateFlow<Boolean>
     get() = _state
   
   /**
@@ -32,11 +30,9 @@ object NetworkConfig {
    *
    * 网上写的直接获取网络连接状态的那个方法已经被废弃了，官方换成了回调，下面链接中有官方原因
    * https://developer.android.com/reference/android/net/NetworkInfo
-   *
-   * 由于回调的加入，导致调用出现异步，所以使用了协程来解决
    */
-  suspend fun isAvailable(): Boolean {
-    return state.last()
+  fun isAvailable(): Boolean {
+    return state.value
   }
   
   /**
@@ -60,7 +56,7 @@ object NetworkConfig {
     }
   }
   
-  private val _state = MutableSharedFlow<Boolean>(replay = 1)
+  private val _state = MutableStateFlow(false)
   
   init {
     appContext.getSystemService(ConnectivityManager::class.java)

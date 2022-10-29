@@ -1,4 +1,4 @@
-import com.mredrock.cyxbs.convention.depend.api.utils.ApiDependUtils
+import api.utils.ApiDependUtils
 import com.mredrock.cyxbs.convention.depend.dependAndroidKtx
 import com.mredrock.cyxbs.convention.depend.dependAndroidView
 import com.mredrock.cyxbs.convention.depend.dependLifecycleKtx

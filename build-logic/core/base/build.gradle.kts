@@ -2,6 +2,11 @@ plugins {
     `kotlin-dsl`
 }
 java.toolchain.languageVersion.set(JavaLanguageVersion.of(11))
+tasks.withType<org.jetbrains.kotlin.gradle.tasks.KotlinCompile>().configureEach {
+    kotlinOptions {
+        jvmTarget = "11"
+    }
+}
 
 gradlePlugin {
     plugins {
@@ -24,6 +29,6 @@ gradlePlugin {
 
 dependencies {
     api(project(":core:versions"))
-    api("com.android.tools.build:gradle:7.2.1")
-    api("org.jetbrains.kotlin:kotlin-gradle-plugin:1.6.21")
+    api(libs.android.gradlePlugin)
+    api(libs.kotlin.gradlePlugin)
 }

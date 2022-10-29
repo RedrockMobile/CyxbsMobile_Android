@@ -5,7 +5,6 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
 import com.mredrock.cyxbs.api.affair.IAffairService
 import com.mredrock.cyxbs.api.course.ICourseService
-import com.mredrock.cyxbs.api.widget.IWidgetService
 import com.mredrock.cyxbs.course.page.course.data.AffairData
 import com.mredrock.cyxbs.course.page.course.data.StuLessonData
 import com.mredrock.cyxbs.course.page.course.data.toAffairData
@@ -14,7 +13,6 @@ import com.mredrock.cyxbs.course.page.course.model.StuLessonRepository
 import com.mredrock.cyxbs.course.page.link.model.LinkRepository
 import com.mredrock.cyxbs.course.page.link.room.LinkStuEntity
 import com.mredrock.cyxbs.course.service.CourseServiceImpl
-import com.mredrock.cyxbs.course.service.toLesson
 import com.mredrock.cyxbs.lib.base.ui.BaseViewModel
 import com.mredrock.cyxbs.lib.utils.service.impl
 import io.reactivex.rxjava3.core.Observable
@@ -37,9 +35,6 @@ class HomeCourseViewModel : BaseViewModel() {
   
   private val _linkStu = MutableLiveData<LinkStuEntity>()
   val linkStu: LiveData<LinkStuEntity> get() = _linkStu
-  
-  private val _refresh = MutableSharedFlow<Boolean>()
-  val refreshEvent: SharedFlow<Boolean> get() = _refresh
   
   private val _showLinkEvent = MutableSharedFlow<Boolean>()
   val showLinkEvent: SharedFlow<Boolean> get() = _showLinkEvent
@@ -92,13 +87,6 @@ class HomeCourseViewModel : BaseViewModel() {
       linkLessonObservable,
       affairObservable
     ) { self, link, affair ->
-      // 通知小组件更新
-      IWidgetService::class.impl
-        .notifyWidgetRefresh(
-          self.toLesson(),
-          link.toLesson(),
-          affair
-        )
       // 装换为 data 数据类
       HomePageResultImpl.flatMap(
         self.toStuLessonData(),
