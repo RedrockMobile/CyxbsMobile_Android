@@ -474,20 +474,20 @@ class HomepageActivity : BaseViewModelActivity<MineViewModel>() {
         )
         p.duration = 900
         p.addListener(object : Animator.AnimatorListener {
-            override fun onAnimationStart(animation: Animator?) {
+            override fun onAnimationStart(animation: Animator) {
                 dataBinding.ivMineBackgroundNormal.setImageBitmap(mTempBitmap)
                 dataBinding.ivMineBackgroundBlur.setImageBitmap(mFinalBitmap)
             }
 
-            override fun onAnimationEnd(animation: Animator?) {
-                dataBinding.ivMineBackgroundBlur?.setImageBitmap(mFinalBitmap)
+            override fun onAnimationEnd(animation: Animator) {
+                dataBinding.ivMineBackgroundBlur.setImageBitmap(mFinalBitmap)
             }
 
-            override fun onAnimationCancel(animation: Animator?) {
+            override fun onAnimationCancel(animation: Animator) {
 
             }
 
-            override fun onAnimationRepeat(animation: Animator?) {
+            override fun onAnimationRepeat(animation: Animator) {
 
             }
 

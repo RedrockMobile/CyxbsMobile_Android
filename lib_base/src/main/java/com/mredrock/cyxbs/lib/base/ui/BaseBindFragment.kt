@@ -8,7 +8,7 @@ import androidx.annotation.CallSuper
 import androidx.databinding.ViewDataBinding
 import androidx.viewbinding.ViewBinding
 import com.mredrock.cyxbs.lib.base.BuildConfig
-import com.mredrock.cyxbs.lib.utils.utils.GenericityUtils.getGenericClassFromSuperClass
+import com.mredrock.cyxbs.lib.utils.utils.get.GenericityUtils.getGenericClassFromSuperClass
 
 /**
  *

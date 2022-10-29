@@ -5,7 +5,6 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
 import com.mredrock.cyxbs.api.affair.IAffairService
 import com.mredrock.cyxbs.api.course.ICourseService
-import com.mredrock.cyxbs.api.widget.IWidgetService
 import com.mredrock.cyxbs.course.page.course.data.AffairData
 import com.mredrock.cyxbs.course.page.course.data.StuLessonData
 import com.mredrock.cyxbs.course.page.course.data.toAffairData
@@ -14,12 +13,9 @@ import com.mredrock.cyxbs.course.page.course.model.StuLessonRepository
 import com.mredrock.cyxbs.course.page.link.model.LinkRepository
 import com.mredrock.cyxbs.course.page.link.room.LinkStuEntity
 import com.mredrock.cyxbs.course.service.CourseServiceImpl
-import com.mredrock.cyxbs.course.service.toLesson
 import com.mredrock.cyxbs.lib.base.ui.BaseViewModel
 import com.mredrock.cyxbs.lib.utils.service.impl
-import io.reactivex.rxjava3.core.Completable
 import io.reactivex.rxjava3.core.Observable
-import io.reactivex.rxjava3.core.Single
 import io.reactivex.rxjava3.schedulers.Schedulers
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.SharedFlow
@@ -39,9 +35,6 @@ class HomeCourseViewModel : BaseViewModel() {
   
   private val _linkStu = MutableLiveData<LinkStuEntity>()
   val linkStu: LiveData<LinkStuEntity> get() = _linkStu
-  
-  private val _refresh = MutableSharedFlow<Boolean>()
-  val refreshEvent: SharedFlow<Boolean> get() = _refresh
   
   private val _showLinkEvent = MutableSharedFlow<Boolean>()
   val showLinkEvent: SharedFlow<Boolean> get() = _showLinkEvent
@@ -64,34 +57,6 @@ class HomeCourseViewModel : BaseViewModel() {
     // 这里更新后，所有观察关联人的地方都会重新发送新数据
   }
   
-  /**
-   * 重新请求数据，相当于强制刷新
-   */
-  fun refreshData() {
-    LinkRepository.getLinkStudent()
-      .flatMapCompletable {
-        // 直接调用网络刷新，请求成功后会修改数据库，然后上面的观察流会重新发送新的值
-        val self = StuLessonRepository.refreshLesson(it.selfNum)
-        val affair = IAffairService::class.impl.refreshAffair()
-        if (it.isNotNull()) {
-          val link = StuLessonRepository.refreshLesson(it.linkNum)
-          Single.mergeDelayError(self, link, affair) // 使用 mergeDelayError() 延迟异常
-            .flatMapCompletable { Completable.complete() }
-        } else {
-          Single.mergeDelayError(self, affair)
-            .flatMapCompletable { Completable.complete() }
-        }
-      }.doOnError {
-        viewModelScope.launch {
-          _refresh.emit(false)
-        }
-      }.safeSubscribeBy {
-        viewModelScope.launch {
-          _refresh.emit(true)
-        }
-      }
-  }
-  
   init {
     initObserve()
   }
@@ -109,7 +74,7 @@ class HomeCourseViewModel : BaseViewModel() {
       .switchMap {
         // 没得关联人和不显示关联课程时发送空数据
         if (it.isNull() || !it.isShowLink) Observable.just(emptyList())
-        else StuLessonRepository.observeLesson(it.linkNum)
+        else StuLessonRepository.getLesson(it.linkNum).toObservable()
       }
   
     // 事务的观察流
@@ -122,13 +87,6 @@ class HomeCourseViewModel : BaseViewModel() {
       linkLessonObservable,
       affairObservable
     ) { self, link, affair ->
-      // 通知小组件更新
-      IWidgetService::class.impl
-        .notifyWidgetRefresh(
-          self.toLesson(),
-          link.toLesson(),
-          affair
-        )
       // 装换为 data 数据类
       HomePageResultImpl.flatMap(
         self.toStuLessonData(),

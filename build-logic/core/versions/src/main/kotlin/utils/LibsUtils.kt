@@ -1,4 +1,4 @@
-package com.mredrock.cyxbs.convention.depend.utils
+package utils
 
 import org.gradle.api.Project
 import org.gradle.api.artifacts.ExternalModuleDependencyBundle

@@ -1,3 +1,5 @@
+@file:Suppress("UNCHECKED_CAST")
+
 import com.mredrock.cyxbs.convention.depend.dependBugly
 import com.mredrock.cyxbs.convention.depend.dependSophix
 import com.mredrock.cyxbs.convention.depend.dependUmeng

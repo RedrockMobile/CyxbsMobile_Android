@@ -1,6 +1,8 @@
 package com.mredrock.cyxbs.api.course
 
+import androidx.core.content.edit
 import com.alibaba.android.arouter.facade.template.IProvider
+import com.mredrock.cyxbs.config.sp.defaultSp
 import io.reactivex.rxjava3.core.Observable
 import io.reactivex.rxjava3.core.Single
 import java.io.Serializable
@@ -13,28 +15,64 @@ import java.io.Serializable
  */
 interface ILessonService : IProvider {
   
+  companion object {
+  
+    /**
+     * 在 22 年 10 月，掌邮因为获取信息不合法需要整改，
+     * 后端课表接口由最开始的爬取 jwzx，改为了由教务在线提供的官方接口
+     * 但他们要求我们不能本地本地保存课表，
+     * 所以增加该变量控制课表本地保存逻辑
+     *
+     * 目前逻辑为课表数据仍会保存至数据库，但在网络请求失败时会直接返回空数据
+     */
+    var isUseLocalSaveLesson
+      get() = defaultSp.getBoolean("是否使用本地课表数据", false)
+      set(value) = defaultSp.edit { putBoolean("是否使用本地课表数据", value) }
+  }
+  
+  object CourseDisallowLocalSaveException : RuntimeException("课表数据不被允许本地保存")
+  
   /**
    * 直接得到当前学号的课
    * - 上游已主动切换成 io 线程
+   * - 在得不到这个人课表数据时会抛出异常，比如学号为空串时
+   * - 在不允许使用本地缓存且得不到课表数据时抛出 [CourseDisallowLocalSaveException] 异常
    */
   fun getStuLesson(stuNum: String): Single<List<Lesson>>
   
   /**
-   * 观察当前学号的所有课
-   * - 在数据库发生改变时会回调
-   * - 已使用 distinctUntilChanged() 进行了去重处理
+   * 得到当前登录人的课
    * - 上游已主动切换成 io 线程
-   * - 传入空串以及错误学号时发送 emptyList()
+   * - 在得不到这个人课表数据时会抛出异常
+   * - 在不允许使用本地缓存且得不到课表数据时抛出 [CourseDisallowLocalSaveException] 异常
    */
-  fun observeStuLesson(stuNum: String): Observable<List<Lesson>>
+  fun getSelfLesson(): Single<List<Lesson>>
+  
+  /**
+   * 得到当前关联人的课
+   * - 上游已主动切换成 io 线程
+   * - 在不存在关联人和得不到这个人课表数据时会抛出异常
+   * - 在不允许使用本地缓存且得不到课表数据时抛出 [CourseDisallowLocalSaveException] 异常
+   */
+  fun getLinkLesson(): Single<List<Lesson>>
+  
+  /**
+   * 直接得到当前登录人和关联人的课
+   * - 上游已主动切换成 io 线程
+   * - 在得不到当前登录人课表数据时会抛出异常
+   * - 在不存在关联人和得不到这个人课表数据时会返回 emptyList()
+   * - 在不允许使用本地缓存且得不到课表数据时抛出 [CourseDisallowLocalSaveException] 异常
+   */
+  fun getSelfLinkLesson(): Single<Pair<List<Lesson>, List<Lesson>>>
   
   /**
    * 观察当前登录人的课
-   * - 在数据库发生改变时会回调
+   * - 在登录人改变时回调
    * - 已使用 distinctUntilChanged() 进行了去重处理
    * - 上游已主动切换成 io 线程
    * - 没登录时发送 emptyList()
-   * - 不会抛异常
+   * - 没有连接网络并且不允许使用本地缓存时会一直不发送数据给下游
+   * - 不会抛出异常给下游
    */
   fun observeSelfLesson(): Observable<List<Lesson>>
   

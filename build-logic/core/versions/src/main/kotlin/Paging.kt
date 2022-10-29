@@ -11,7 +11,7 @@ import org.gradle.kotlin.dsl.dependencies
  */
 @Suppress("MemberVisibilityCanBePrivate", "ObjectPropertyName", "SpellCheckingInspection")
 object Paging {
-  // https://developer.android.com/jetpack/androidx/releases/paging?hl=zh_cn
+  // https://developer.android.com/jetpack/androidx/releases/paging
   const val paging_version = "3.1.1"
   
   const val `paging-runtime` = "androidx.paging:paging-runtime:$paging_version"

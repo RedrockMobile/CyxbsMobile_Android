@@ -1,6 +1,6 @@
 package com.mredrock.cyxbs.convention.depend
 
-import com.mredrock.cyxbs.convention.depend.utils.libsVersion
+import utils.libsVersion
 import org.gradle.api.Project
 import org.gradle.kotlin.dsl.dependencies
 

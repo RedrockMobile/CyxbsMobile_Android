@@ -1,6 +1,6 @@
 @file:Suppress("ObjectPropertyName")
 
-package com.mredrock.cyxbs.convention.config
+package config
 
 import org.gradle.api.Project
 
@@ -12,7 +12,7 @@ import org.gradle.api.Project
  */
 object Config {
   const val minSdk = 24
-  const val targetSdk = 31
+  const val targetSdk = 33
   const val compileSdk = targetSdk
   
   const val versionCode = 80 // 线上79，开发80

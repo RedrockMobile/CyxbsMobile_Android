@@ -2,10 +2,10 @@
 
 pluginManagement {
     repositories {
-        maven { url = uri("https://maven.aliyun.com/repository/public") }
-        maven { url = uri("https://maven.aliyun.com/repository/google") }
+        maven("https://maven.aliyun.com/repository/public")
+        maven("https://maven.aliyun.com/repository/google")
         gradlePluginPortal()
-        maven { url = uri("https://jitpack.io") }
+        maven("https://jitpack.io")
         google()
         mavenCentral()
         includeBuild(".")
@@ -14,22 +14,20 @@ pluginManagement {
 
 dependencyResolutionManagement {
     repositories {
-        maven { url = uri("https://maven.aliyun.com/repository/public") }
-        maven { url = uri("https://maven.aliyun.com/repository/google") }
-        maven { url = uri("https://jitpack.io") }
+        maven("https://maven.aliyun.com/repository/public")
+        maven("https://maven.aliyun.com/repository/google")
+        maven("https://jitpack.io")
         google()
         mavenCentral()
     }
-//不推荐使用。可能会影响到一部分kts的功能
-// 开启 versionCatalogs 功能
-//enableFeaturePreview("VERSION_CATALOGS")
-//  versionCatalogs {
-//    // 这个 libs 名字是固定的，搞了好久才解决这个问题
-//    create("libs") {
-//      // 这个 libs.versions.toml 名字也必须固定，不能改成其他的
-//      from(files("../gradle/libs.versions.toml"))
-//    }
-//  }
+    // 开启 versionCatalogs 功能
+    versionCatalogs {
+        // 这个 libs 名字是固定的，搞了好久才解决这个问题
+        create("libs") {
+            // 这个 libs.versions.toml 名字也必须固定，不能改成其他的
+            from(files("../gradle/libs.versions.toml"))
+        }
+    }
 }
 
 rootProject.name = "build-logic"

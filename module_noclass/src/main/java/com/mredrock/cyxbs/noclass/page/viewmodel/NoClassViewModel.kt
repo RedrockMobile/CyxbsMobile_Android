@@ -105,6 +105,7 @@ class NoClassViewModel : BaseViewModel() {
           })
         },
         onError = {
+          toast("网络似乎开小差了~")
         }
       )
   }

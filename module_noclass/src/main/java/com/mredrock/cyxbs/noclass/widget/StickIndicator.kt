@@ -235,7 +235,7 @@ class StickIndicator @JvmOverloads constructor(
         isSwitchFinish = false
         stickAnimator.removeAllListeners()
         stickAnimator.addListener(object : AnimatorListenerAdapter() {
-            override fun onAnimationEnd(animation: Animator?) {
+            override fun onAnimationEnd(animation: Animator) {
                 isSwitchFinish = true
                 curIndex = index
                 invalidate()
@@ -256,16 +256,16 @@ class StickIndicator @JvmOverloads constructor(
         scrollAnimator.setFloatValues(startValues, endValues)
         scrollAnimator.removeAllListeners()
         scrollAnimator.addListener(object : AnimatorListenerAdapter() {
-            override fun onAnimationStart(animation: Animator?) {
+            override fun onAnimationStart(animation: Animator) {
                 lastX = curX
                 invalidate()
             }
 
-            override fun onAnimationEnd(animation: Animator?) {
+            override fun onAnimationEnd(animation: Animator) {
                 onScrollEndListener.invoke()
             }
 
-            override fun onAnimationCancel(animation: Animator?) {
+            override fun onAnimationCancel(animation: Animator) {
                 curX = lastX
                 invalidate()
             }

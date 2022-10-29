@@ -5,7 +5,7 @@ import com.mredrock.cyxbs.api.update.AppUpdateStatus
 import com.mredrock.cyxbs.lib.utils.extensions.appContext
 import com.mredrock.cyxbs.lib.utils.extensions.unsafeSubscribeBy
 import com.mredrock.cyxbs.lib.utils.network.ApiGenerator
-import com.mredrock.cyxbs.lib.utils.utils.getAppVersionCode
+import com.mredrock.cyxbs.lib.utils.utils.get.getAppVersionCode
 import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
 import io.reactivex.rxjava3.schedulers.Schedulers
 import retrofit2.Retrofit

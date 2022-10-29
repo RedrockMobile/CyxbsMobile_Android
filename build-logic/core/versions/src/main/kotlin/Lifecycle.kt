@@ -14,7 +14,7 @@ object Lifecycle {
   // 官方 lifecycle 扩展
   // https://developer.android.google.cn/jetpack/androidx/releases/lifecycle
   // https://developer.android.google.cn/kotlin/ktx/extensions-list?hl=zh_cn#androidxlifecycle
-  const val lifecycle_version = "2.5.0"
+  const val lifecycle_version = "2.5.1"
   const val `viewmodel-ktx` = "androidx.lifecycle:lifecycle-viewmodel-ktx:$lifecycle_version"
   const val `livedata-ktx` = "androidx.lifecycle:lifecycle-livedata-ktx:$lifecycle_version"
   // Lifecycles only (without ViewModel or LiveData)
