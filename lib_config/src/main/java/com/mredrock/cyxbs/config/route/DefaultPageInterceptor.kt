@@ -51,8 +51,8 @@ class DefaultPageInterceptor: IInterceptor {
   override fun process(postcard: Postcard, callback: InterceptorCallback) {
     if (postcard.path in defaultPages) {
       //如果是需要缺省页的
-      //callback.onInterrupt(null)
-      ARouter.getInstance().build(DEFAULT_PAGE).navigation()
+      callback.onInterrupt(null)
+      ARouter.getInstance().build(DEFAULT_PAGE).greenChannel().navigation()
     }else{
       //正常跳转
       callback.onContinue(postcard)
