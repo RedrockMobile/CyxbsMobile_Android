@@ -3,8 +3,10 @@ package com.redrock.module_notification.ui.fragment
 import android.os.Bundle
 import android.view.View
 import android.view.animation.AnimationUtils
+import androidx.appcompat.widget.LinearLayoutCompat
 import androidx.fragment.app.activityViewModels
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.google.android.material.button.MaterialButton
 import com.mredrock.cyxbs.common.ui.BaseFragment
 import com.mredrock.cyxbs.common.utils.extensions.gone
 import com.mredrock.cyxbs.common.utils.extensions.invisible
@@ -18,7 +20,7 @@ import com.redrock.module_notification.bean.SystemMsgBean
 import com.redrock.module_notification.ui.activity.NotificationActivity
 import com.redrock.module_notification.viewmodel.NotificationViewModel
 import com.redrock.module_notification.widget.DeleteDialog
-import kotlinx.android.synthetic.main.notification_fragment_system.*
+import com.redrock.module_notification.widget.SwipeDeleteRecyclerView
 import kotlin.properties.Delegates
 
 /**
@@ -27,7 +29,10 @@ import kotlin.properties.Delegates
  *
  */
 class SysNotificationFragment : BaseFragment() {
-    
+    private val notification_system_btn_positive by R.id.notification_system_btn_positive.view<MaterialButton>()
+    private val notification_system_btn_negative by R.id.notification_system_btn_negative.view<MaterialButton>()
+    private val notification_ll_no_internet by R.id.notification_ll_no_internet.view<LinearLayoutCompat>()
+    private val notification_rv_sys by R.id.notification_rv_sys.view<SwipeDeleteRecyclerView>()
     //页面数据
     private var data = ArrayList<SystemMsgBean>()
 
@@ -149,9 +154,9 @@ class SysNotificationFragment : BaseFragment() {
                     onNegativeClick = { dismiss() },
                     onPositiveClick = {
                         viewModel.deleteMsg(DeleteMsgToBean(selectedItemInfos.ids))
-                        requireActivity().notification_system_btn_negative?.invisible()
-                        requireActivity().notification_system_btn_positive?.invisible()
-                        requireActivity().notification_rv_sys.adapter = adapter
+                        notification_system_btn_negative?.invisible()
+                        notification_system_btn_positive?.invisible()
+                        notification_rv_sys.adapter = adapter
 
                         val deleteItems = ArrayList<SystemMsgBean>()
                         for (position in selectedItemInfos.position) {

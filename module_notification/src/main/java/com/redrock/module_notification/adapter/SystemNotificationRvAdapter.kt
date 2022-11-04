@@ -5,6 +5,7 @@ import android.content.Context
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Button
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.fragment.app.FragmentActivity
@@ -18,7 +19,6 @@ import com.redrock.module_notification.ui.activity.WebActivity
 import com.redrock.module_notification.util.Date
 import com.redrock.module_notification.viewmodel.NotificationViewModel
 import com.redrock.module_notification.widget.DeleteDialog
-import kotlinx.android.synthetic.main.notification_fragment_system.*
 
 /**
  * Author by OkAndGreat
@@ -76,6 +76,8 @@ class SystemNotificationRvAdapter(
     }
 
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
+        val notification_system_btn_negative = activity.findViewById<Button>(R.id.notification_system_btn_negative)
+        val notification_system_btn_positive = activity.findViewById<Button>(R.id.notification_system_btn_positive)
         if (holder is InnerHolder) {
             val data = list[position]
             if (data.has_read) holder.itemSysNotificationIvRedDot.visibility = View.INVISIBLE
@@ -92,8 +94,8 @@ class SystemNotificationRvAdapter(
                 WebActivity.startWebViewActivity(data.redirect_url, context)
             }
             holder.itemSysNotificationClMain.setOnLongClickListener {
-                activity.notification_system_btn_negative.visibleWithAnim()
-                activity.notification_system_btn_positive.visibleWithAnim()
+                notification_system_btn_negative.visibleWithAnim()
+                notification_system_btn_positive.visibleWithAnim()
                 multiDeleteAdapter = SysNotifyMultiDeleteRvAdapter(list)
                 rv.adapter = multiDeleteAdapter
                 viewmodel.changePopUpWindowClickableStatus(false)
