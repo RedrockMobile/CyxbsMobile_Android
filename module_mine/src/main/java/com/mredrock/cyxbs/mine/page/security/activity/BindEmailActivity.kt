@@ -18,6 +18,9 @@ import com.mredrock.cyxbs.common.utils.extensions.visible
 import com.mredrock.cyxbs.mine.R
 import com.mredrock.cyxbs.mine.page.security.util.Jump2QQHelper
 import com.mredrock.cyxbs.mine.page.security.viewmodel.BindEmailViewModel
+import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
+import io.reactivex.rxjava3.core.Observable
+import java.util.concurrent.TimeUnit
 import java.util.regex.Matcher
 import java.util.regex.Pattern
 @Route(path = MINE_BIND_EMAIL)
@@ -105,20 +108,14 @@ class BindEmailActivity : BaseActivity() {
                 tv_bind_email_tips.gone()
                 tv_bind_email_send_code.isEnabled = false
                 btn_bind_email_next.isEnabled = false
-                Thread {
-                    var timeSecond = 60
-                    while (timeSecond > 0) {
-                        runOnUiThread {
-                            tv_bind_email_send_code.text = "正在发送(${timeSecond})"
-                        }
-                        timeSecond--
-                        Thread.sleep(1000)
-                    }
-                    runOnUiThread {
+                Observable.intervalRange(0, 60, 0, 1, TimeUnit.SECONDS)
+                    .observeOn(AndroidSchedulers.mainThread())
+                    .doOnComplete {
                         tv_bind_email_send_code.isEnabled = true
                         tv_bind_email_send_code.text = getString(R.string.mine_security_resend)
+                    }.subscribe {
+                        tv_bind_email_send_code.text = "正在发送(${60 - it})"
                     }
-                }.start()
             }
         } else {
             tv_bind_email_tips.visible()

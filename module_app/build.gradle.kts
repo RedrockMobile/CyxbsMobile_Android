@@ -8,7 +8,6 @@ plugins {
 }
 
 dependApiAccount()
-
 dependLibUtils()
 
 dependAutoService()

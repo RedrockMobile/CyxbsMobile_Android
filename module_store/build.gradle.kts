@@ -5,7 +5,7 @@ import com.mredrock.cyxbs.convention.depend.lib.dependLibConfig
 import com.mredrock.cyxbs.convention.depend.lib.dependLibUtils
 
 plugins {
-    id("module-debug")
+    id("module-manager")
 }
 
 dependApiAccount()

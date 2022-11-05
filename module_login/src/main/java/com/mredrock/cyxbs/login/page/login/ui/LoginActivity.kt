@@ -5,6 +5,7 @@ import android.content.Context
 import android.content.Intent
 import android.graphics.Color
 import android.os.Bundle
+import android.text.NoCopySpan
 import android.text.Spannable
 import android.text.SpannableStringBuilder
 import android.text.TextPaint
@@ -52,18 +53,18 @@ class LoginActivity : BaseActivity() {
     fun start(intent: (Intent.() -> Unit)? = null) {
       startInternal(false, null, intent)
     }
-    
+
     fun start(
       successActivity: Class<out Activity>,
       intent: (Intent.() -> Unit)? = null
     ) {
       startInternal(false, successActivity, intent)
     }
-    
+
     fun startReboot(intent: (Intent.() -> Unit)?) {
       startInternal(true, null, intent)
     }
-    
+
     private fun startInternal(
       isRoot: Boolean,
       successActivity: Class<out Activity>?,
@@ -88,19 +89,19 @@ class LoginActivity : BaseActivity() {
           }
       )
     }
-  
+
     private const val INTENT_SUCCESS = "成功后跳转的 Activity"
   }
-  
+
   private val mIsRoot by intent<Boolean>()
   private val mSuccessIntent by lazyUnlock {
     intent.getParcelableExtra(INTENT_SUCCESS) as Intent?
   }
-  
+
   private val mViewModel by viewModels<LoginViewModel>()
-  
+
   private val mLottieProgress = 0.39f // 点击同意用户协议时的动画的时间
-  
+
   private val mEtAccount by R.id.login_et_account.view<EditText>()
   private val mEtPassword by R.id.login_et_password.view<EditText>()
   private val mBtnLogin by R.id.login_btn_login.view<Button>()
@@ -109,7 +110,7 @@ class LoginActivity : BaseActivity() {
   private val mTvForget by R.id.login_tv_forget_password.view<TextView>()
   private val mTvUserAgreement by R.id.login_tv_user_agreement.view<TextView>()
   private val mContainer by R.id.login_container.view<ViewGroup>()
-  
+
   override fun onCreate(savedInstanceState: Bundle?) {
     super.onCreate(savedInstanceState)
     setContentView(R.layout.login_activity_login)
@@ -117,7 +118,7 @@ class LoginActivity : BaseActivity() {
     initObserve()
     initUpdate()
   }
-  
+
   private fun initView() {
     mEtPassword.setOnEditorActionListener { _, actionId, _ ->
       if (actionId == EditorInfo.IME_ACTION_SEND) {
@@ -160,12 +161,12 @@ class LoginActivity : BaseActivity() {
     mTvForget.setOnSingleClickListener {
       ARouter.getInstance().build(MINE_FORGET_PASSWORD).navigation()
     }
-    
+
     //如果是第一次使用app并且没有同意过用户协议，自动打开用户协议页面
     if (defaultSp.getBoolean(SP_FIRST_TIME_OPEN, true)) {
       showUserAgreement()
     }
-    
+
     //设置用户协议和隐私政策的文字
     val spannableString = SpannableStringBuilder()
     spannableString.append("同意《用户协议》和《隐私权政策》")
@@ -173,12 +174,12 @@ class LoginActivity : BaseActivity() {
     mTvUserAgreement.highlightColor =
       ContextCompat.getColor(this, android.R.color.transparent)
     //设置用户协议和隐私权政策点击事件
-    val userAgreementClickSpan = object : ClickableSpan() {
+    val userAgreementClickSpan = object : ClickableSpan(), NoCopySpan {
       override fun onClick(widget: View) {
         val intent = Intent(this@LoginActivity, UserAgreeActivity::class.java)
         startActivity(intent)
       }
-      
+
       override fun updateDrawState(ds: TextPaint) {
         /**设置文字颜色**/
         ds.color = ds.linkColor
@@ -186,12 +187,12 @@ class LoginActivity : BaseActivity() {
         ds.isUnderlineText = false
       }
     }
-    val privacyClickSpan = object : ClickableSpan() {
+    val privacyClickSpan = object : ClickableSpan(), NoCopySpan {
       override fun onClick(widget: View) {
         val intent = Intent(this@LoginActivity, PrivacyActivity::class.java)
         startActivity(intent)
       }
-      
+
       override fun updateDrawState(ds: TextPaint) {
         /**设置文字颜色**/
         ds.color = ds.linkColor
@@ -201,17 +202,17 @@ class LoginActivity : BaseActivity() {
     }
     spannableString.setSpan(userAgreementClickSpan, 2, 8, Spannable.SPAN_EXCLUSIVE_INCLUSIVE)
     spannableString.setSpan(privacyClickSpan, 9, 16, Spannable.SPAN_EXCLUSIVE_INCLUSIVE)
-    
+
     //设置用户协议和隐私权政策字体颜色
     val userAgreementSpan = ForegroundColorSpan(Color.parseColor("#2CDEFF"))
     val privacySpan = ForegroundColorSpan(Color.parseColor("#2CDEFF"))
     spannableString.setSpan(userAgreementSpan, 2, 8, Spannable.SPAN_EXCLUSIVE_INCLUSIVE)
     spannableString.setSpan(privacySpan, 9, 16, Spannable.SPAN_EXCLUSIVE_INCLUSIVE)
-    
+
     mTvUserAgreement.text = spannableString
     mTvUserAgreement.movementMethod = LinkMovementMethod.getInstance()
   }
-  
+
   private fun initObserve() {
     mViewModel.loginEvent.collectLaunch {
       if (it) {
@@ -230,7 +231,7 @@ class LoginActivity : BaseActivity() {
       }
     }
   }
-  
+
   private fun loginAction() {
     if (mViewModel.userAgreementIsCheck) {
       //放下键盘
@@ -249,14 +250,14 @@ class LoginActivity : BaseActivity() {
       agreeToUserAgreement()
     }
   }
-  
+
   /**
    * 同意用户协议
    */
   private fun agreeToUserAgreement() {
     toast("请先同意用户协议吧")
   }
-  
+
   // 这个方法可以在登录状态和未登录状态之间切换
   private fun changeUiState() {
     TransitionManager.beginDelayedTransition(mContainer, Explode())
@@ -269,7 +270,7 @@ class LoginActivity : BaseActivity() {
       }
     }
   }
-  
+
   private fun showUserAgreement() {
     UserAgreementDialog.show(
       supportFragmentManager,
@@ -292,7 +293,7 @@ class LoginActivity : BaseActivity() {
       }
     )
   }
-  
+
   private fun checkDataCorrect(stuNum: String, idNum: String): Boolean {
     if (stuNum.length < 10) {
       toast("请检查一下学号吧，似乎有点问题")
@@ -303,7 +304,7 @@ class LoginActivity : BaseActivity() {
     }
     return true
   }
-  
+
   private fun initUpdate() {
     IAppUpdateService::class.impl.tryNoticeUpdate(this)
   }
