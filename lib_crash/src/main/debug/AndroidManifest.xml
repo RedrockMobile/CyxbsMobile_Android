@@ -3,7 +3,7 @@
     package="com.mredrock.lib.crash">
 
     <application
-        android:name="com.mredrock.cyxbs.lib.base.BaseApp"
+        android:name="crash.ui.CrashDebugApp"
         android:allowBackup="true"
         android:label="module_crash"
         android:supportsRtl="true"

@@ -48,7 +48,10 @@ class DebugSecondActivity : AppCompatActivity() {
 
                     override fun onDraw(canvas: Canvas?) {
                         super.onDraw(canvas)
-                        if (openException) throw RuntimeException("view OnDraw绘制异常")
+                        if (openException) {
+                            openException = false
+                            throw RuntimeException("view OnDraw绘制异常")
+                        }
                     }
                 }
             )

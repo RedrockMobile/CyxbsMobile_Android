@@ -1,5 +1,6 @@
 package com.mredrock.lib.crash.core.interceptor
 
+import android.util.Log
 import com.mredrock.lib.crash.util.isViewDrawException
 import com.mredrock.lib.crash.util.reStartApp
 
@@ -16,10 +17,10 @@ class ViewDrawCrashInterceptor : Interceptor {
         val isHandled =
             if (isViewDrawException(realChain.e)) {
                 //如果是最后一个Activity直接重启
-                if (realChain.activities.size == 1)
+                if (realChain.activities.size == 1) {
                     if (!reStartApp("最后的activity的view绘制或Rv异常！", realChain.e))
                         realChain.activities.forEach { it.finish() }
-                else realChain.activities.last().finish()//不finish掉这个activity会黑屏
+                } else realChain.activities.last().finish()//不finish掉这个activity会黑屏
                 // view绘制或Rv异常
                 true
             } else realChain.proceed()

@@ -3,7 +3,6 @@ package com.mredrock.lib.crash.util
 import android.content.Intent
 import com.mredrock.cyxbs.lib.utils.extensions.appContext
 import com.mredrock.cyxbs.lib.utils.extensions.getSp
-import com.mredrock.cyxbs.lib.utils.extensions.toast
 import java.io.PrintWriter
 import java.io.StringWriter
 import kotlin.system.exitProcess
@@ -49,7 +48,6 @@ internal fun reStartApp(reason: String, e: Throwable): Boolean {
         appContext.packageManager.getLaunchIntentForPackage(appContext.packageName)!!
     intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK or Intent.FLAG_ACTIVITY_NEW_TASK)//清除任务栈并启动新的任务栈即新进程
     appContext.startActivity(intent)
-    toast(reason)
     exitProcess(0)
 }
 

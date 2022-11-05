@@ -10,8 +10,6 @@ import com.mredrock.lib.crash.core.CyxbsCrashMonitor
 class DebugFirstActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        // 因为 debug 单模块调试不会主动启动，所以这里单独手动开启
-        CyxbsCrashMonitor.install(application)
         setContentView(R.layout.crash_activity_main)
         findViewById<Button>(R.id.button).setOnClickListener {
             1/0

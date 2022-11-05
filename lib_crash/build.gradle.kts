@@ -5,7 +5,7 @@ import com.mredrock.cyxbs.convention.depend.lib.dependLibBase
 import com.mredrock.cyxbs.convention.depend.lib.dependLibUtils
 
 plugins {
-    id("module-debug")
+    id("module-manager")
 }
 
 dependLibBase()

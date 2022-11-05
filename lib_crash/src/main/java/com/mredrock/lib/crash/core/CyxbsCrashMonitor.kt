@@ -200,11 +200,11 @@ object CyxbsCrashMonitor : Thread.UncaughtExceptionHandler {
                     try {
                         mhHandler.handleMessage(msg)
                     } catch (throwable: Throwable) {
+                        handleException(e = throwable, message = msg)
                         if (!isActivityRemovedAfterFinished) {
                             activities.removeLast()
                             isActivityRemovedAfterFinished = true
                         }
-                        handleException(e = throwable, message = msg)
                     }
                     return@Callback true
                 }
@@ -216,11 +216,11 @@ object CyxbsCrashMonitor : Thread.UncaughtExceptionHandler {
                     try {
                         mhHandler.handleMessage(msg)
                     } catch (throwable: Throwable) {
+                        handleException(e = throwable, message = msg)
                         if (!isActivityRemovedAfterFinished) {
                             activities.removeLast()
                             isActivityRemovedAfterFinished = true
                         }
-                        handleException(e = throwable, message = msg)
                     }
                     return@Callback true
                 }
