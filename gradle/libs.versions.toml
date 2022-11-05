@@ -1,11 +1,9 @@
 [versions]
-android_gradle_version = "7.2.1"
-kotlin_gradle_version = "1.6.21"
-hilt_gradle_version = "2.43"
+android_gradle_version = "7.3.1"
+kotlin_gradle_version = "1.7.20"
 vasDolly_version = "3.0.4"
 
 [libraries]
 android-gradlePlugin = { module = "com.android.tools.build:gradle", version.ref = "android_gradle_version" }
 kotlin-gradlePlugin = { module = "org.jetbrains.kotlin:kotlin-gradle-plugin", version.ref = "kotlin_gradle_version" }
-hilt_gradlePlugin = { module = "com.google.dagger:hilt-android-gradle-plugin", version.ref = "hilt_gradle_version" }
 vasDolly_gradlePlugin = { module = "com.tencent.vasdolly:plugin", version.ref = "vasDolly_version" }

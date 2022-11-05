@@ -3,12 +3,11 @@ package com.mredrock.cyxbs.config.config
 import android.Manifest
 import android.content.ContentUris
 import android.content.ContentValues
-import android.database.Cursor
+import android.content.pm.PackageManager
 import android.graphics.Color
 import android.icu.util.TimeZone
 import android.net.Uri
 import android.provider.CalendarContract
-import androidx.core.content.PermissionChecker.PERMISSION_GRANTED
 import com.mredrock.cyxbs.config.ConfigApplicationWrapper.application
 
 /**
@@ -92,7 +91,8 @@ object PhoneCalendar {
           //遍历所有事件，找到title、description、startTime跟需要查询的title、descriptio、dtstart一样的项
           eventCursor.moveToFirst()
           while (!eventCursor.isAfterLast) {
-            val calendarId = eventCursor.getLong(eventCursor.getColumnIndex("_id"))
+            val index = eventCursor.getColumnIndex("_id")
+            val calendarId = eventCursor.getLong(index)
             if (calendarId == id) {
               val deleteUri: Uri =
                 ContentUris.withAppendedId(Uri.parse(calenderEventURL), id)
@@ -189,20 +189,22 @@ object PhoneCalendar {
     calendarId: Long,
     id: Long,
   ): Boolean {
-    val cursor: Cursor =
-      context.contentResolver.query(Uri.parse(calenderEventURL), null, null, null, null)!!
-    var tempCalendarId: Long
-    if (cursor.moveToFirst()) {
-      do {
-        tempCalendarId = cursor.getLong(cursor.getColumnIndex("calendar_id"))
-        val tempAffairId: String = cursor.getString(cursor.getColumnIndex("_id"))
-        if (calendarId == tempCalendarId && id == tempAffairId.toLong()
-        ) {
-          return true
+    context.contentResolver.query(Uri.parse(calenderEventURL), null, null, null, null)!!
+      .use {
+        var tempCalendarId: Long
+        if (it.moveToFirst()) {
+          do {
+            val calendarIdIndex = it.getColumnIndex("calendar_id")
+            tempCalendarId = it.getLong(calendarIdIndex)
+            val affairIdIndex = it.getColumnIndex("_id")
+            val tempAffairId = it.getString(affairIdIndex)
+            if (calendarId == tempCalendarId && id == tempAffairId.toLong()) {
+              return true
+            }
+          } while (it.moveToNext())
         }
-      } while (cursor.moveToNext())
-    }
-    return false
+        return false
+      }
   }
   
   /**
@@ -287,7 +289,11 @@ object PhoneCalendar {
       val count: Int = userCursor.count
       if (count > 0) { //存在现有账户，取第一个账户的id返回
         userCursor.moveToLast()
-        userCursor.getInt(userCursor.getColumnIndex(CalendarContract.Calendars._ID))
+        userCursor.getColumnIndex(CalendarContract.Calendars._ID).let {
+          if (it >= 0) {
+            userCursor.getInt(it)
+          } else -1
+        }
       } else {
         -1
       }
@@ -334,8 +340,8 @@ object PhoneCalendar {
   }
   
   private fun checkPermission(): Boolean {
-    return context.checkSelfPermission(Manifest.permission.READ_CALENDAR) == PERMISSION_GRANTED
-      && context.checkSelfPermission(Manifest.permission.WRITE_CALENDAR) == PERMISSION_GRANTED
+    return context.checkSelfPermission(Manifest.permission.READ_CALENDAR) == PackageManager.PERMISSION_GRANTED
+      && context.checkSelfPermission(Manifest.permission.WRITE_CALENDAR) == PackageManager.PERMISSION_GRANTED
   }
   
   sealed interface Data

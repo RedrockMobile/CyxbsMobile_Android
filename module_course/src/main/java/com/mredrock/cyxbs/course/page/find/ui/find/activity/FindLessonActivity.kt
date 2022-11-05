@@ -5,6 +5,7 @@ import android.content.Intent
 import android.os.Bundle
 import android.view.View
 import android.widget.FrameLayout
+import androidx.activity.addCallback
 import androidx.activity.viewModels
 import androidx.viewpager2.widget.ViewPager2
 import com.alibaba.android.arouter.facade.annotation.Route
@@ -16,7 +17,6 @@ import com.mredrock.cyxbs.course.R
 import com.mredrock.cyxbs.course.page.find.ui.course.stu.FindStuCourseFragment
 import com.mredrock.cyxbs.course.page.find.ui.course.tea.FindTeaCourseFragment
 import com.mredrock.cyxbs.course.page.find.ui.find.fragment.FindStuFragment
-import com.mredrock.cyxbs.course.page.find.ui.find.fragment.FindTeaFragment
 import com.mredrock.cyxbs.course.page.find.viewmodel.activity.FindLessonViewModel
 import com.mredrock.cyxbs.lib.base.ui.BaseActivity
 import com.mredrock.cyxbs.lib.utils.adapter.FragmentVpAdapter
@@ -102,7 +102,7 @@ class FindLessonActivity : BaseActivity() {
   private fun initView() {
     mViewPager.adapter = FragmentVpAdapter(this)
       .add { FindStuFragment() }
-      .add { FindTeaFragment() }
+//      .add { FindTeaFragment() } // 因为 jwzx 没有给查找老师课表的接口，所以取消老师课表
 
     TabLayoutMediator(mTabLayout, mViewPager) { tab, position ->
       when (position) {
@@ -113,7 +113,17 @@ class FindLessonActivity : BaseActivity() {
   
     mBottomSheet.addBottomSheetCallback(
       object : BottomSheetBehavior.BottomSheetCallback() {
-        override fun onStateChanged(bottomSheet: View, newState: Int) {}
+        override fun onStateChanged(bottomSheet: View, newState: Int) {
+          when (newState) {
+            BottomSheetBehavior.STATE_EXPANDED -> {
+              mCollapsedBackPressedCallback.isEnabled = true
+            }
+            BottomSheetBehavior.STATE_COLLAPSED -> {
+              mCollapsedBackPressedCallback.isEnabled = false
+            }
+            else -> {}
+          }
+        }
         override fun onSlide(bottomSheet: View, slideOffset: Float) {
           if (slideOffset >= 0) {
             mBottomSheetView.alpha = slideOffset
@@ -167,11 +177,10 @@ class FindLessonActivity : BaseActivity() {
     }
   }
   
-  override fun onBackPressed() {
-    if (mBottomSheet.state == BottomSheetBehavior.STATE_EXPANDED) {
-      mBottomSheet.state = BottomSheetBehavior.STATE_COLLAPSED
-    } else {
-      super.onBackPressed()
-    }
+  /**
+   * 用于拦截返回键，在 BottomSheet 未折叠时先折叠
+   */
+  private val mCollapsedBackPressedCallback = onBackPressedDispatcher.addCallback(enabled = false) {
+    mBottomSheet.state = BottomSheetBehavior.STATE_COLLAPSED
   }
 }

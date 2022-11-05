@@ -5,6 +5,7 @@ import android.view.View
 import androidx.fragment.app.createViewModelLazy
 import androidx.lifecycle.distinctUntilChanged
 import com.mredrock.cyxbs.api.affair.IAffairService
+import com.mredrock.cyxbs.api.course.ILessonService
 import com.mredrock.cyxbs.api.course.utils.getBeginLesson
 import com.mredrock.cyxbs.config.config.SchoolCalendar
 import com.mredrock.cyxbs.course.page.course.base.CompareWeekSemesterFragment
@@ -17,6 +18,7 @@ import com.mredrock.cyxbs.lib.course.helper.affair.CreateAffairDispatcher
 import com.mredrock.cyxbs.lib.course.internal.item.IItem
 import com.mredrock.cyxbs.lib.course.internal.item.IItemContainer
 import com.mredrock.cyxbs.lib.utils.service.impl
+import com.mredrock.cyxbs.lib.utils.utils.judge.NetworkUtil
 import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
 
 /**
@@ -38,6 +40,7 @@ class HomeSemesterFragment : CompareWeekSemesterFragment() {
     initEntrance()
     initObserve()
     initCreateAffair()
+    initNoInternetLogic()
   }
   
   private fun initEntrance() {
@@ -59,7 +62,11 @@ class HomeSemesterFragment : CompareWeekSemesterFragment() {
     }
   }
   
-  private var mIsHappenShowLinkEvent: Boolean? = null
+  /**
+   * 是否显示关联人，但需要点击一次关联人图标，才会激活该变量
+   * 初始值为 null 是表示没有点击过关联人图标
+   */
+  private var mIsShowLinkEventAfterClick: Boolean? = null
   
   private val mSelfLessonContainerProxy = SelfLessonContainerProxy(this)
   private val mLinkLessonContainerProxy = LinkLessonContainerProxy(this)
@@ -68,7 +75,7 @@ class HomeSemesterFragment : CompareWeekSemesterFragment() {
   private fun initObserve() {
     mParentViewModel.showLinkEvent
       .collectLaunch {
-        mIsHappenShowLinkEvent = it
+        mIsShowLinkEventAfterClick = it
       }
     
     mParentViewModel.homeWeekData
@@ -77,10 +84,10 @@ class HomeSemesterFragment : CompareWeekSemesterFragment() {
         val self = map.mapValues { it.value.self }.mapToMinWeek()
         val link = map.mapValues { it.value.link }.mapToMinWeek()
         val affair = map.values.map { it.affair }.flatten()
-        mSelfLessonContainerProxy.diffRefresh(self)
         mAffairContainerProxy.diffRefresh(affair)
+        mSelfLessonContainerProxy.diffRefresh(self)
         mLinkLessonContainerProxy.diffRefresh(link) {
-          if (mIsHappenShowLinkEvent == true && mParentViewModel.currentItem == 0 && it.isNotEmpty()) {
+          if (mIsShowLinkEventAfterClick == true && mParentViewModel.currentItem == 0 && it.isNotEmpty()) {
             // 这时说明触发了关联人的显示，需要开启入场动画
             mLinkLessonContainerProxy.startAnimation()
           }
@@ -88,6 +95,9 @@ class HomeSemesterFragment : CompareWeekSemesterFragment() {
       }
   }
   
+  /**
+   * 长按创建事务
+   */
   private fun initCreateAffair() {
     course.addPointerDispatcher(
       CreateAffairDispatcher(this).apply {
@@ -100,6 +110,9 @@ class HomeSemesterFragment : CompareWeekSemesterFragment() {
     )
   }
   
+  /**
+   * 点击中午和傍晚的折叠
+   */
   override fun initFoldLogic() {
     super.initFoldLogic()
     if (!mIsFragmentRebuilt) {
@@ -117,6 +130,29 @@ class HomeSemesterFragment : CompareWeekSemesterFragment() {
           }
         }
       )
+    }
+  }
+  
+  /**
+   * 初始化没有网络连接时的逻辑
+   */
+  private fun initNoInternetLogic() {
+    if (!ILessonService.isUseLocalSaveLesson) {
+      val noLessonImage = ivNoLesson.drawable
+      val noLessonText = tvNoLesson.text
+      if (!NetworkUtil.isAvailable()) {
+        ivNoLesson.setImageResource(com.mredrock.cyxbs.config.R.drawable.config_ic_404)
+        tvNoLesson.text = "联网才能查看课表哦~"
+        mParentViewModel.homeWeekData.observeUntil {
+          NetworkUtil.isAvailable().also {
+            if (it) {
+              // 网络可用了就还原设置
+              ivNoLesson.setImageDrawable(noLessonImage)
+              tvNoLesson.text = noLessonText
+            }
+          }
+        }
+      }
     }
   }
 }

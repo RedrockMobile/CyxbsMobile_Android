@@ -69,7 +69,7 @@
         android:layout_width="wrap_content"
         android:layout_height="34dp"
         android:layout_marginStart="8dp"
-        android:layout_marginTop="8dp"
+        android:layout_marginTop="20dp"
         android:background="@drawable/affair_shape_item_text_bg"
         android:gravity="center"
         android:paddingStart="13dp"

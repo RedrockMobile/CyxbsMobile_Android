@@ -1,6 +1,8 @@
 package com.mredrock.cyxbs.lib.course.fragment.page.expose
 
 import android.view.View
+import android.widget.ImageView
+import android.widget.TextView
 import com.mredrock.cyxbs.lib.course.internal.item.IItem
 
 /**
@@ -14,10 +16,18 @@ interface INoLesson {
   
   /**
    * 没有课时展示的 View
-   *
-   * 应该不需要额外操作，所以只需要 View 就可以了
    */
   val viewNoLesson: View
+  
+  /**
+   * [viewNoLesson] 中的 ImageView
+   */
+  val ivNoLesson: ImageView
+  
+  /**
+   * [viewNoLesson] 中的 TextView
+   */
+  val tvNoLesson: TextView
   
   /**
    * 是否是用于展示的 item，会影响没课图片的显示

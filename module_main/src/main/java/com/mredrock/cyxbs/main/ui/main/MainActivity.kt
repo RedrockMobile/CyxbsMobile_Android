@@ -2,7 +2,6 @@ package com.mredrock.cyxbs.main.ui.main
 
 import android.os.Bundle
 import androidx.activity.viewModels
-import androidx.core.view.postDelayed
 import androidx.viewpager2.widget.ViewPager2
 import com.alibaba.android.arouter.facade.annotation.Route
 import com.mredrock.cyxbs.api.account.IAccountService
@@ -103,27 +102,30 @@ class MainActivity : BaseActivity() {
     when (intent.action) {
       DESKTOP_SHORTCUT_COURSE -> {
         if (mIsLogin) {
-          mViewPager.postDelayed(300) {
+          mViewPager.post {
             // 延迟些时间才打开课表，因为打开快了，课表会出现短时间的白屏
             mViewModel.courseBottomSheetExpand.value = true
           }
         }
       }
-      DESKTOP_SHORTCUT_EXAM -> {
-        if (mIsLogin) {
-          ServiceManager.activity(DISCOVER_GRADES)
-        }
-      }
+      /**
+       * TODO 关闭服务 长按桌面图标
+       */
+//      DESKTOP_SHORTCUT_EXAM -> {
+//        if (mIsLogin) {
+//          ServiceManager.activity(DISCOVER_GRADES)
+//        }
+//      }
       DESKTOP_SHORTCUT_SCHOOL_CAR -> {
         ServiceManager.activity(DISCOVER_SCHOOL_CAR)
       }
-      DESKTOP_SHORTCUT_EMPTY_ROOM -> {
-        ServiceManager.activity(DISCOVER_EMPTY_ROOM)
-      }
+//      DESKTOP_SHORTCUT_EMPTY_ROOM -> {
+//        ServiceManager.activity(DISCOVER_EMPTY_ROOM)
+//      }
       else -> {
         if (mIsLogin && defaultSp.getBoolean(SP_COURSE_SHOW_STATE, false)) {
           // 打开应用优先显示课表的设置
-          mViewPager.postDelayed(300) {
+          mViewPager.post {
             // 延迟些时间才打开课表，因为打开快了，课表会出现短时间的白屏
             mViewModel.courseBottomSheetExpand.value = true
           }
@@ -148,10 +150,20 @@ class MainActivity : BaseActivity() {
             mViewModel.courseBottomSheetExpand.value = false
           }
         }
-        1 -> {
-          mBottomNavLayout.cardElevation = 4.dp2pxF
-          mViewModel.courseBottomSheetExpand.value = null
+        /**
+         * TODO 关闭服务 邮问位置课表上拉
+         */
+        1 ->{
+          mBottomNavLayout.cardElevation = 0F
+          if (!mIsActivityRebuilt) {
+            // 在重建 Activity 后这里会回调一次，这个时候需要还原之前的状态，这里不能去设置成 false
+            mViewModel.courseBottomSheetExpand.value = false
+          }
         }
+//        1 -> {
+//          mBottomNavLayout.cardElevation = 4.dp2pxF
+//          mViewModel.courseBottomSheetExpand.value = null
+//        }
       }
     }
   }
@@ -160,19 +172,11 @@ class MainActivity : BaseActivity() {
     IAppUpdateService::class.impl.tryNoticeUpdate(this)
   }
   
-  override fun onBackPressed() {
-    if (mViewModel.courseBottomSheetExpand.value == true) {
-      mViewModel.courseBottomSheetExpand.value = false
-    } else {
-      super.onBackPressed()
-    }
-  }
-  
   companion object {
     // 长按桌面图标的那个东西，对应 AndroidManifest.xml 中的设置
     const val DESKTOP_SHORTCUT_COURSE = "com.mredrock.cyxbs.action.COURSE"
-    const val DESKTOP_SHORTCUT_EXAM = "android.intent.action.EXAM"
+//    const val DESKTOP_SHORTCUT_EXAM = "android.intent.action.EXAM"
     const val DESKTOP_SHORTCUT_SCHOOL_CAR = "android.intent.action.SCHOOL_CAR"
-    const val DESKTOP_SHORTCUT_EMPTY_ROOM = "android.intent.action.EMPTY_ROOM"
+//    const val DESKTOP_SHORTCUT_EMPTY_ROOM = "android.intent.action.EMPTY_ROOM"
   }
 }

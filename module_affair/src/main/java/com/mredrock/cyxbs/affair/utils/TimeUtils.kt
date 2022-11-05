@@ -1,6 +1,5 @@
 package com.mredrock.cyxbs.affair.utils
 
-import com.mredrock.cyxbs.affair.room.AffairEntity
 import com.mredrock.cyxbs.config.config.SchoolCalendar
 
 /**
@@ -93,14 +92,5 @@ object TimeUtils {
     // 去除最后一个,
     str = str.substring(0, str.length - 1)
     return str
-  }
-
-  /**
-   * 将星期数合成一个list
-   */
-  fun atWhatTimeToWeekList(rawList: List<AffairEntity.AtWhatTime>): List<Int> {
-    val set = mutableSetOf<Int>()
-    rawList.forEach { set.add(it.day) }
-    return set.toList()
   }
 }

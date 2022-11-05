@@ -2,7 +2,7 @@
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/course_root_add_affair"
+    android:id="@+id/affair_root_add_affair"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
@@ -83,6 +83,7 @@
         app:layout_constraintTop_toBottomOf="@+id/affair_tv_add_affair_text_3"
         tools:ignore="Autofill,LabelFor" />
 
+    <!--这个 rv 用于第一页的候选词-->
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/affair_rv_add_affair_title_candidate"
         android:layout_width="match_parent"
@@ -91,6 +92,7 @@
         app:layout_constraintTop_toBottomOf="@id/affair_et_add_affair"
         tools:listitem="@layout/affair_rv_item_add_affair_candidate" />
 
+    <!--这个 rv 用于最后一页时间段的选择-->
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/affair_rv_add_affair_duration"
         android:layout_width="match_parent"
@@ -113,7 +115,7 @@
         android:layout_width="wrap_content"
         android:layout_height="34dp"
         android:layout_marginStart="8dp"
-        android:layout_marginTop="8dp"
+        android:layout_marginTop="20dp"
         android:background="@drawable/affair_shape_item_text_bg"
         android:gravity="center"
         android:paddingStart="13dp"

@@ -72,6 +72,7 @@ interface IUserService {
      * ```
      * 写法如下：
      * observeStuNumState()
+     *   .observeOn(Schedulers.io()) // 注意：你需要使用 observeOn 才能切换线程，subscribeOn 无法切换发送源的线程
      *   .switchMap { value ->
      *     // switchMap 可以在上游发送新的数据时自动关闭上一次数据生成的 Observable
      *     value.nullUnless(Observable.never()) {

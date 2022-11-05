@@ -5,9 +5,11 @@ import android.os.Bundle
 import android.view.View
 import android.widget.Button
 import android.widget.TextView
+import androidx.activity.addCallback
 import androidx.fragment.app.FragmentContainerView
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.mredrock.cyxbs.api.course.ICourseService
+import com.mredrock.cyxbs.api.course.ILessonService
 import com.mredrock.cyxbs.config.route.COURSE_POS_TO_MAP
 import com.mredrock.cyxbs.config.route.DISCOVER_MAP
 import com.mredrock.cyxbs.course.R
@@ -52,7 +54,9 @@ class DebugActivity : BaseDebugActivity() {
   
   override fun onDebugCreate(savedInstanceState: Bundle?) {
     setContentView(R.layout.course_activity_debug)
-  
+    
+    ILessonService.isUseLocalSaveLesson = true
+    
     mBtn.setOnClickListener {
       startActivity(
         Intent(this, FindLessonActivity::class.java)
@@ -64,7 +68,7 @@ class DebugActivity : BaseDebugActivity() {
         mBottomSheet.state = BottomSheetBehavior.STATE_EXPANDED
       }
     }
-  
+    
     mCourseService.tryReplaceHomeCourseFragmentById(supportFragmentManager, mFcvCourse.id)
     mCourseService.setCourseVpAlpha(0F)
     mCourseService.setHeaderAlpha(0F)
@@ -75,13 +79,16 @@ class DebugActivity : BaseDebugActivity() {
           when (newState) {
             BottomSheetBehavior.STATE_EXPANDED -> {
               mCourseHeader.gone()
+              mCollapsedBackPressedCallback.isEnabled = true
             }
             BottomSheetBehavior.STATE_COLLAPSED -> {
               mFcvCourse.gone()
+              mCollapsedBackPressedCallback.isEnabled = false
             }
+            else -> {}
           }
         }
-  
+        
         override fun onSlide(bottomSheet: View, slideOffset: Float) {
           if (slideOffset >= 0) {
             /*
@@ -109,7 +116,7 @@ class DebugActivity : BaseDebugActivity() {
         }
       }
     )
-  
+    
     CourseHeaderHelper.observeHeader()
       .observeOn(AndroidSchedulers.mainThread())
       .safeSubscribeBy { header ->
@@ -160,11 +167,10 @@ class DebugActivity : BaseDebugActivity() {
       }
   }
   
-  override fun onBackPressed() {
-    if (mBottomSheet.state == BottomSheetBehavior.STATE_EXPANDED) {
-      mBottomSheet.state = BottomSheetBehavior.STATE_COLLAPSED
-    } else {
-      super.onBackPressed()
-    }
+  /**
+   * 用于拦截返回键，在 BottomSheet 未折叠时先折叠
+   */
+  private val mCollapsedBackPressedCallback = onBackPressedDispatcher.addCallback {
+    mBottomSheet.state = BottomSheetBehavior.STATE_COLLAPSED
   }
 }

@@ -1,15 +1,13 @@
 package com.mredrock.cyxbs.store.utils
 
 import android.content.Context
-import android.content.Intent
 import com.alibaba.android.arouter.launcher.ARouter
 import com.mredrock.cyxbs.api.store.IStoreService.Task.*
-import com.mredrock.cyxbs.config.route.DISCOVER_VOLUNTEER
+import com.mredrock.cyxbs.config.route.DEFAULT_PAGE
 import com.mredrock.cyxbs.config.route.MINE_CHECK_IN
 import com.mredrock.cyxbs.config.route.MINE_EDIT_INFO
 import com.mredrock.cyxbs.lib.utils.extensions.toast
 import com.mredrock.cyxbs.store.bean.StampCenter
-import com.mredrock.cyxbs.store.page.qa.ui.activity.QaActivity
 
 /**
  * 需要与后端交互时的类型区分
@@ -34,15 +32,20 @@ class StoreType {
         SHARE_DYNAMIC.title,
         POST_COMMENT.title,
         GIVE_A_LIKE.title -> {
-          val intent = Intent(context, QaActivity::class.java)
-          context.startActivity(intent)
+          /**
+           * TODO 下架服务
+           */
+          ARouter.getInstance().build(DEFAULT_PAGE).navigation()
+//          val intent = Intent(context, QaActivity::class.java)
+//          context.startActivity(intent)
         }
         EDIT_INFO.title -> {
           ARouter.getInstance().build(MINE_EDIT_INFO).navigation()
           
         }
         LOGIN_VOLUNTEER.title -> {
-          ARouter.getInstance().build(DISCOVER_VOLUNTEER).navigation()
+          ARouter.getInstance().build(DEFAULT_PAGE).navigation()
+//          ARouter.getInstance().build(DISCOVER_VOLUNTEER).navigation()
         }
         /*
         * 注意, 如果后面接手的学弟要添加新的任务, 目前(2021/9/11)对于任务进度是要我们自己完成后向后端发送请求的

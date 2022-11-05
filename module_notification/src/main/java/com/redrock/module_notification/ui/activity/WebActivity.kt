@@ -2,10 +2,11 @@ package com.redrock.module_notification.ui.activity
 
 import android.content.Context
 import android.os.Bundle
+import android.widget.RelativeLayout
 import com.mredrock.cyxbs.common.ui.BaseActivity
 import com.mredrock.cyxbs.common.utils.extensions.startActivity
+import com.mredrock.cyxbs.common.webView.LiteJsWebView
 import com.redrock.module_notification.R
-import kotlinx.android.synthetic.main.notification_activity_web.*
 
 /**
  * Author by OkAndGreat
@@ -15,6 +16,8 @@ import kotlinx.android.synthetic.main.notification_activity_web.*
 
 
 class WebActivity : BaseActivity() {
+    private val notification_detail_back by R.id.notification_detail_back.view<RelativeLayout>()
+    private val notification_wv by R.id.notification_wv.view<LiteJsWebView>()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)

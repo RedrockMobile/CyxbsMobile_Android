@@ -110,7 +110,13 @@ abstract class ItemPoolController<Item, Data : Any>(
   
   final override fun onChanged(oldData: Data, newData: Data) {
     val item = mOldDataMap[oldData]
-    item?.setNewData(newData)
+    if (item != null) {
+      mOldDataMap.remove(oldData)
+      mOldDataMap[newData] = item
+      item.setNewData(newData)
+    }
+    // 如果为 null 的话，说明 mOldDataMap 被提前 remove 了，可能是你提前把 view 给 remove 掉了
+    // 然后触发了上面的 onItemRemovedAfter() 回调
   }
   
   /**

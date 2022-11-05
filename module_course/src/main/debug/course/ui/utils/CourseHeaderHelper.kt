@@ -1,18 +1,22 @@
 package course.ui.utils
 
-import com.mredrock.cyxbs.api.account.IAccountService
 import com.mredrock.cyxbs.api.affair.IAffairService
+import com.mredrock.cyxbs.api.course.ICourseService
 import com.mredrock.cyxbs.api.course.ILessonService
 import com.mredrock.cyxbs.api.course.ILinkService
 import com.mredrock.cyxbs.api.course.utils.*
 import com.mredrock.cyxbs.lib.utils.service.impl
 import com.mredrock.cyxbs.config.config.SchoolCalendar
+import com.mredrock.cyxbs.lib.utils.extensions.toast
+import com.mredrock.cyxbs.lib.utils.utils.judge.NetworkUtil
 import io.reactivex.rxjava3.core.Observable
+import io.reactivex.rxjava3.core.Single
 import io.reactivex.rxjava3.schedulers.Schedulers
+import kotlinx.coroutines.flow.flow
+import kotlinx.coroutines.rx3.asObservable
 import okhttp3.internal.filterList
 import java.util.*
 import java.util.concurrent.TimeUnit
-import kotlin.collections.ArrayList
 import kotlin.math.abs
 
 /**
@@ -24,50 +28,110 @@ import kotlin.math.abs
  */
 object CourseHeaderHelper {
   
+  private val lessonService = ILessonService::class.impl
+  private val linkService = ILinkService::class.impl
+  private val affairService = IAffairService::class.impl
+  
   /**
    * 观察课表头的变化
    */
   fun observeHeader(): Observable<Header> {
-    val lessonService = ILessonService::class.impl
-    val linkService = ILinkService::class.impl
-    val affairService = IAffairService::class.impl
     return SchoolCalendar.observeWeekOfTerm()
+      .observeOn(Schedulers.io())
       .switchMap { week ->
-        if (week !in 1 .. 21) Observable.just(HintHeader("享受假期吧～"))
-        else {
-          // 观察当前登录人的学号
-          IAccountService::class.impl
-            .getUserService()
-            .observeStuNumState()
-            .switchMap { value ->
-              value.nullUnless(Observable.just(HintHeader("登录后即可查看课表"))) { selfNum ->
-                // combineLast 可以同时观察任一个 Observable，
-                // 只要收到一个新的，他就会整和数据发给下游，不同于 zip 操作符，
-                // zip 操作符需要三个都发送新的才会整合发给下游
-                Observable.combineLatest(
-                  lessonService.observeSelfLesson(),
-                  affairService.observeSelfAffair(),
-                  linkService.observeSelfLinkStu().switchMap { linkStu ->
-                    lessonService.observeStuLesson(linkStu.linkNum)
-                      .map { lessonList -> Pair(lessonList, linkStu) }
-                  },
-                  Observable.interval(0, 1, TimeUnit.MINUTES) // 每分钟流动一次，用于刷新课表头
-                ) { stu, affairs, linkPair, _ ->
-                  getHeader(
-                    selfNum,
-                    week,
-                    ArrayList(stu).apply { addAll(linkPair.first) },
-                    affairs,
-                    linkPair.second.isBoy
-                  )
-                }.subscribeOn(Schedulers.io())
-              }
-            }
+        if (week !in 1..ICourseService.maxWeek) Observable.just(HintHeader("享受假期吧～"))
+        else observeHeader1(week)
+          .startWithItem(HintHeader("加载数据中"))
+          .onErrorReturnItem(HintHeader("数据加载失败"))
+      }
+      // 如果在获取不了周数时说明没有请求过课表数据，因为周数是从课表接口来的
+      .startWithItem(HintHeader("登录后即可查看课表"))
+      // 因为上流用的观察流，一般是不会发送异常到下流的，所以该问题一般不会出现
+      // 并且这里一旦出错，将导致整个观察流终止，此后都不会发送数据给下游
+      .onErrorReturnItem(HintHeader("内部错误"))
+  }
+  
+  /**
+   * 处理是否允许使用本地数据的逻辑
+   */
+  private fun observeHeader1(
+    nowWeek: Int
+  ): Observable<Header> {
+    return flow {
+      if (ILessonService.isUseLocalSaveLesson) {
+        // 可以使用本地数据时
+        emit(true)
+      } else {
+        if (NetworkUtil.isAvailableExact()) {
+          emit(true)
+        } else {
+          // 网络不可用，并且也不能使用本地数据
+          emit(false)
+          // 挂起，一直直到网络可用
+          NetworkUtil.suspendUntilAvailable()
+          toast("网络已恢复，正在加载课表中")
+          emit(true) // 重新请求网络数据
         }
-      }.startWithItem(HintHeader("数据加载中"))
-      // 因为上流用的观察流，一般是不会发送异常到下流的，所以该问题一般不会出现，除非你动了数据库但没有改版本号
-      .onErrorReturnItem(HintHeader("内部错误，请尝试卸载后重装"))
-      .subscribeOn(Schedulers.io())
+      }
+    }.asObservable()
+      .switchMap {
+        if (it) observeHeader2(nowWeek) else Observable.just(HintHeader("联网才能查看课表哦~"))
+      }
+  }
+  
+  /**
+   * 处理是否登录的逻辑
+   */
+  private fun observeHeader2(
+    nowWeek: Int
+  ): Observable<Header> {
+    return linkService.observeSelfLinkStu()
+      .switchMap { linkData ->
+        if (linkData.selfNum.isBlank()) {
+          Observable.just(HintHeader("登录后即可查看课表"))
+        } else {
+          observeHeader3(nowWeek, linkData.selfNum, linkData.linkNum, linkData.isBoy)
+        }
+      }
+  }
+  
+  /**
+   * 处理数据流合并的逻辑
+   */
+  private fun observeHeader3(
+    nowWeek: Int,
+    selfNum: String,
+    linkNum: String,
+    isBoy: Boolean
+  ): Observable<Header> {
+    // 这里不需要调用 observeSelfLesson()，因为外面的 observeSelfLinkStu() 有观察 self 的作用
+    val selfSingle = lessonService.getStuLesson(selfNum)
+    val linkSingle =
+      if (linkNum.isNotBlank()) lessonService.getStuLesson(linkNum)
+      else Single.just(emptyList())
+    val affairObservable = affairService.observeSelfAffair()
+    // combineLast 可以同时观察任一个 Observable，
+    // 只要收到一个新的，他就会整和数据发给下游，不同于 zip 操作符，
+    // zip 操作符需要三个都发送新的才会整合发给下游
+    return Observable.combineLatest(
+      selfSingle.toObservable(),
+      linkSingle.toObservable(),
+      affairObservable
+    ) { self, link, affair ->
+      Triple(self, link, affair)
+    }.switchMap { (self, link, affair) ->
+      // 每分钟流动一次，用于刷新课表头
+      Observable.interval(0, 1, TimeUnit.MINUTES)
+        .map {
+          getHeader(
+            selfNum,
+            nowWeek,
+            self + link,
+            affair,
+            isBoy
+          )
+        }
+    }
   }
   
   private fun getHeader(

@@ -6,6 +6,9 @@ import android.app.PendingIntent
 import android.content.Intent
 import android.os.Build
 import android.os.Bundle
+import android.widget.Button
+import android.widget.RelativeLayout
+import android.widget.Switch
 import androidx.core.app.NotificationCompat
 import androidx.core.content.edit
 import androidx.work.Data
@@ -26,7 +29,6 @@ import com.redrock.module_notification.util.Constant.NOTIFY_TAG
 import com.redrock.module_notification.util.NotificationSp
 import com.redrock.module_notification.viewmodel.NotificationViewModel
 import com.redrock.module_notification.widget.NotifySignWorker
-import kotlinx.android.synthetic.main.notification_activity_setting.*
 import java.util.*
 import kotlin.properties.Delegates
 
@@ -41,6 +43,11 @@ class SettingActivity : BaseViewModelActivity<NotificationViewModel>() {
     private var switch1Checked by Delegates.notNull<Boolean>()
     private var switch2Checked by Delegates.notNull<Boolean>()
     private var isSign = false
+
+    private val notification_setting_switch_1 by R.id.notification_setting_switch_1.view<Switch>()
+    private val notification_setting_switch_2 by R.id.notification_setting_switch_2.view<Switch>()
+    private val notification_setting_test by R.id.notification_setting_test.view<Button>()
+    private val notification_rl_setting_back by R.id.notification_rl_setting_back.view<RelativeLayout>()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)

@@ -11,9 +11,13 @@ package com.mredrock.cyxbs.config.route
  *     这里只放共用的路由地址
  *
  * TODO 由于目前没有完全迁移 lib_common，所以有些看起来没有使用的变量，可能以后需要使用，所以暂时不要删除
+ *
+ * 其余配置：缺省页拦截器[DefaultPageInterceptor]
  */
-
 const val MAIN_MAIN = "/main/entry"
+//缺省页
+const val DEFAULT_PAGE = "/main/default"
+const val DEFAULT_FRAGMENT_PAGE = "/main/default2"
 
 const val COURSE_ENTRY = "/course/entry"
 const val QA_ENTRY = "/qa/entry"

@@ -8,7 +8,11 @@ import com.mredrock.cyxbs.lib.course.fragment.course.expose.overlap.IOverlapItem
 import com.mredrock.cyxbs.lib.utils.extensions.anim
 
 /**
- * 由于内部在 init 使用了 course，所以外面生成对象时候需要使用 by lazyUnlock
+ * 代理添加 [LinkLesson]
+ *
+ * - 提供差分刷新方法 [diffRefresh]
+ * - 实现了 [LinkLesson] 的回收池用于复用
+ * - 监听了使用其他方式删除的 [LinkLesson]，用于解决差分旧数据不同步的问题
  *
  * @author 985892345 (Guo Xiangrui)
  * @email guo985892345@foxmail.com

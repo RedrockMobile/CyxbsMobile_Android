@@ -15,19 +15,19 @@
         <categories android:name="android.shortcut.conversation" />
     </shortcut>
 
-    <shortcut
-        android:enabled="true"
-        android:icon="@drawable/main_ic_grade"
-        android:shortcutDisabledMessage="@string/main_shortcut_cancel"
-        android:shortcutId="grade"
-        android:shortcutLongLabel="@string/main_grade_long_name"
-        android:shortcutShortLabel="@string/main_grade_short_name">
-        <intent
-            android:action="android.intent.action.EXAM"
-            android:targetClass="com.mredrock.cyxbs.main.ui.main.MainActivity"
-            android:targetPackage="com.mredrock.cyxbs" />
-        <categories android:name="android.shortcut.conversation" />
-    </shortcut>
+<!--    <shortcut-->
+<!--        android:enabled="true"-->
+<!--        android:icon="@drawable/main_ic_grade"-->
+<!--        android:shortcutDisabledMessage="@string/main_shortcut_cancel"-->
+<!--        android:shortcutId="grade"-->
+<!--        android:shortcutLongLabel="@string/main_grade_long_name"-->
+<!--        android:shortcutShortLabel="@string/main_grade_short_name">-->
+<!--        <intent-->
+<!--            android:action="android.intent.action.EXAM"-->
+<!--            android:targetClass="com.mredrock.cyxbs.main.ui.main.MainActivity"-->
+<!--            android:targetPackage="com.mredrock.cyxbs" />-->
+<!--        <categories android:name="android.shortcut.conversation" />-->
+<!--    </shortcut>-->
 
     <shortcut
         android:enabled="true"

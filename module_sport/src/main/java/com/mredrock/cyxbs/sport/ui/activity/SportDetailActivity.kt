@@ -203,7 +203,7 @@ class SportDetailActivity : BaseBindActivity<SportActivitySportDetailBinding>() 
             sportSrlDetailList.finishRefresh()
             //隐藏RecyclerView并加载出错的图片及提示
             sportRvDetailList.gone()
-            sportSivDetailHint.setImageResource(R.drawable.sport_ic_data_error)
+            sportSivDetailHint.setImageResource(com.mredrock.cyxbs.config.R.drawable.config_ic_404)
             sportSivDetailHint.visible()
             sportTvDetailHint.text = "数据错误"
             sportTvDetailHint.visible()
