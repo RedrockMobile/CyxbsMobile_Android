@@ -1,6 +1,6 @@
 package com.mredrock.cyxbs.api.update
 
-import androidx.appcompat.app.AppCompatActivity
+import androidx.fragment.app.FragmentActivity
 import androidx.lifecycle.LiveData
 import com.alibaba.android.arouter.facade.template.IProvider
 
@@ -13,7 +13,7 @@ interface IAppUpdateService : IProvider {
     // 检查更新
     fun checkUpdate()
     // 通知用户有更新
-    fun noticeUpdate(activity: AppCompatActivity)
-    // 安装更新
-    fun installUpdate(activity: AppCompatActivity)
+    fun noticeUpdate(activity: FragmentActivity)
+    // 尝试通知用户更新，内部有时间和状态判断
+    fun tryNoticeUpdate(activity: FragmentActivity)
 }

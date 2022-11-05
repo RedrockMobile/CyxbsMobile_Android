@@ -1,12 +1,11 @@
 package com.mredrock.cyxbs.discover.schoolcar.network
 
 import com.mredrock.cyxbs.common.bean.RedrockApiWrapper
+import com.mredrock.cyxbs.discover.schoolcar.bean.MapLines
+import com.mredrock.cyxbs.discover.schoolcar.bean.MapLinesVersion
 import com.mredrock.cyxbs.discover.schoolcar.bean.SchoolCarLocation
 import io.reactivex.rxjava3.core.Observable
-import retrofit2.http.Field
-import retrofit2.http.FormUrlEncoded
-import retrofit2.http.Header
-import retrofit2.http.POST
+import retrofit2.http.*
 
 /**
  * Created by glossimar on 2018/9/12
@@ -19,4 +18,15 @@ interface ApiService {
                   @Field("s") s: String,
                   @Field("t") t: String,
                   @Field("r") r: String): Observable<RedrockApiWrapper<SchoolCarLocation>>
+
+
+    //获得校车信息版本号
+    @GET("/schoolbus/map/version")
+    fun schoolSiteVersion(): Observable<RedrockApiWrapper<MapLinesVersion>>
+
+    //获得地图信息
+    @GET("/schoolbus/map/line")
+    fun schoolSite(): Observable<RedrockApiWrapper<MapLines>>
+
+
 }

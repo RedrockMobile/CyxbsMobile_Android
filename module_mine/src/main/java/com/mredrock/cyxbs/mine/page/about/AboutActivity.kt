@@ -20,21 +20,31 @@ import com.mredrock.cyxbs.common.utils.extensions.toast
 import com.mredrock.cyxbs.common.utils.getAppVersionName
 import com.mredrock.cyxbs.mine.R
 import com.mredrock.cyxbs.mine.util.ui.DynamicRVAdapter
-import kotlinx.android.synthetic.main.mine_activity_about.*
-import kotlinx.android.synthetic.main.mine_layout_dialog_recyclerview_dynamic.view.*
 import android.os.StrictMode
 
 import android.os.StrictMode.VmPolicy
+import android.widget.ProgressBar
+import android.widget.RelativeLayout
+import android.widget.TextView
 
 import android.widget.Toast
 import androidx.core.content.FileProvider
+import androidx.recyclerview.widget.RecyclerView
 import com.mredrock.cyxbs.common.component.CyxbsToast
 import com.mredrock.cyxbs.common.config.DIR_LOG
 import com.mredrock.cyxbs.common.config.OKHTTP_LOCAL_LOG
 import java.io.File
 
 
-class AboutActivity : BaseViewModelActivity<AboutViewModel>() {
+class AboutActivity : BaseViewModelActivity<AboutViewModel>()  {
+    private val mine_about_rl_share by R.id.mine_about_rl_share.view<RelativeLayout>()
+    private val mine_about_legal by R.id.mine_about_legal.view<TextView>()
+    private val mine_about_rl_website by R.id.mine_about_rl_website.view<RelativeLayout>()
+    private val mine_about_rl_update by R.id.mine_about_rl_update.view<RelativeLayout>()
+    private val mine_about_rl_function by R.id.mine_about_rl_function.view<RelativeLayout>()
+    private val mine_about_tv_copy_right by R.id.mine_about_tv_copy_right.view<TextView>()
+    private val mine_about_version by R.id.mine_about_version.view<TextView>()
+    private val mine_about_tv_already_up_to_date by R.id.mine_about_tv_already_up_to_date.view<TextView>()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -82,19 +92,21 @@ class AboutActivity : BaseViewModelActivity<AboutViewModel>() {
     private fun clickFeatureIntroduction() {
         val materialDialog = Dialog(this)
         val view = LayoutInflater.from(this).inflate(R.layout.mine_layout_dialog_recyclerview_dynamic, materialDialog.window?.decorView as ViewGroup, false)
+        val rv_content:RecyclerView = view.findViewById(R.id.rv_content)
+        val loader:ProgressBar = view.findViewById(R.id.loader)
         materialDialog.setContentView(view)
         materialDialog.window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
         val featureIntroAdapter = DynamicRVAdapter(viewModel.featureIntroList)
-        view.rv_content.adapter = featureIntroAdapter
-        view.rv_content.layoutManager = LinearLayoutManager(this@AboutActivity)
-        if (viewModel.featureIntroList.isNotEmpty()) view.loader.visibility = View.GONE
+        rv_content.adapter = featureIntroAdapter
+        rv_content.layoutManager = LinearLayoutManager(this@AboutActivity)
+        if (viewModel.featureIntroList.isNotEmpty()) loader.visibility = View.GONE
         materialDialog.show()
         getAppVersionName(this@AboutActivity)?.let {
             val name = "zscy-feature-intro-${it}"
             viewModel.getFeatureIntro(name,
                     successCallBack = {
                         featureIntroAdapter.notifyDataSetChanged()
-                        view.loader.visibility = View.GONE
+                        loader.visibility = View.GONE
                     },
                     errorCallback = {
                         materialDialog.dismiss()
@@ -109,14 +121,8 @@ class AboutActivity : BaseViewModelActivity<AboutViewModel>() {
         selfUpdateCheck = true
         ServiceManager.getService(IAppUpdateService::class.java).apply {
             when (getUpdateStatus().value) {
-                AppUpdateStatus.DOWNLOADING -> {
-                    toast("在下了在下了,下拉可以看进度")
-                }
-                AppUpdateStatus.CANCEL -> {
+                AppUpdateStatus.DATED -> {
                     noticeUpdate(this@AboutActivity)
-                }
-                AppUpdateStatus.TO_BE_INSTALLED -> {
-                    installUpdate(this@AboutActivity)
                 }
                 else -> checkUpdate()
             }
@@ -154,19 +160,6 @@ class AboutActivity : BaseViewModelActivity<AboutViewModel>() {
                     AppUpdateStatus.VALID -> {
                         mine_about_tv_already_up_to_date.text = "已是最新版本"
                         if (selfUpdateCheck) toast("已经是最新版了哦")
-                    }
-                    AppUpdateStatus.LATER -> {
-                        mine_about_tv_already_up_to_date.text = "存在被忽略的新版本"
-                    }
-                    AppUpdateStatus.DOWNLOADING -> {
-                        mine_about_tv_already_up_to_date.text = "新版本下载中"
-                    }
-                    AppUpdateStatus.CANCEL -> {
-                        mine_about_tv_already_up_to_date.text = "更新被取消惹"
-                    }
-                    AppUpdateStatus.TO_BE_INSTALLED -> {
-                        mine_about_tv_already_up_to_date.text = ">>点我安装<<"
-                        installUpdate(this@AboutActivity)
                     }
                     AppUpdateStatus.ERROR -> {
                         mine_about_tv_already_up_to_date.text = "建议再试试哟~"

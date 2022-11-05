@@ -5,15 +5,10 @@
 
     <application android:theme="@style/AppTheme">
         <activity
-            android:name=".ui.PrivacyActivity"
-            android:exported="true" />
-        <activity
-            android:name=".ui.UserAgreementActivity"
-            android:exported="true" />
-        <activity
-            android:name=".ui.MainActivity"
+            android:name=".ui.main.MainActivity"
             android:exported="true"
             android:launchMode="singleTop"
+            android:screenOrientation="portrait"
             android:theme="@style/SplashTheme">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -37,9 +32,7 @@
                 android:name="android.app.shortcuts"
                 android:resource="@xml/main_shortcut" />
         </activity>
-        <activity
-            android:name=".ui.LoginActivity"
-            android:launchMode="singleTask" />
+        <activity android:name=".ui.defaultpage.DefaultPageActivity"/>
     </application>
 
 </manifest>

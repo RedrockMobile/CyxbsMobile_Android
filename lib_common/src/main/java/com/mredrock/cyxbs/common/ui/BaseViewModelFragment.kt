@@ -6,7 +6,6 @@ import android.app.ProgressDialog
 import android.os.Bundle
 import android.widget.Toast
 import androidx.lifecycle.LiveData
-import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import com.mredrock.cyxbs.common.component.CyxbsToast
 import com.mredrock.cyxbs.common.viewmodel.BaseViewModel
@@ -39,9 +38,9 @@ abstract class BaseViewModelFragment<T : BaseViewModel> : BaseFragment() {
         }
         
         viewModel.apply {
-            toastEvent.observe { str -> str?.let { CyxbsToast.makeText(context, it, Toast.LENGTH_SHORT).show() } }
-            longToastEvent.observe { str -> str?.let { CyxbsToast.makeText(context, it, Toast.LENGTH_LONG).show() } }
-            progressDialogEvent.observe {
+            toastEvent.observe(this@BaseViewModelFragment) { str -> str?.let { CyxbsToast.makeText(requireContext(), it, Toast.LENGTH_SHORT).show() } }
+            longToastEvent.observe(this@BaseViewModelFragment) { str -> str?.let { CyxbsToast.makeText(requireContext(), it, Toast.LENGTH_LONG).show() } }
+            progressDialogEvent.observe(this@BaseViewModelFragment) {
                 it ?: return@observe
                 // 确保只有一个对话框会被弹出
                 if (it != ProgressDialogEvent.DISMISS_DIALOG_EVENT && progressDialog?.isShowing != true) {
@@ -56,12 +55,9 @@ abstract class BaseViewModelFragment<T : BaseViewModel> : BaseFragment() {
 
     protected open fun getViewModelFactory(): ViewModelProvider.Factory? = null
 
-    inline fun <T> LiveData<T>.observe(crossinline onChange: (T?) -> Unit) = observe(this@BaseViewModelFragment, Observer { onChange(value) })
-    inline fun <T> LiveData<T>.observeNotNull(crossinline onChange: (T) -> Unit) = observe(this@BaseViewModelFragment, Observer {
-        it ?: return@Observer
-        onChange(it)
-    })
-
+    inline fun <T> LiveData<T>.observe(crossinline onChange: (T) -> Unit) = observe(viewLifecycleOwner
+    ) { onChange(it) }
+    
     override fun onDestroyView() {
         super.onDestroyView()
         if (progressDialog?.isShowing == true) {

@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources xmlns:tools="http://schemas.android.com/tools">
+    <!--侧滑菜单的属性-->
+    <declare-styleable name="SlideMenuLayout" tools:ignore="ResourceName">
+        <attr format="enum" name="noclass_slideMode">
+            <enum name="left" value="0x1234"/>
+            <enum name="right" value="0x2341"/>
+            <enum name="both" value="0x3412"/>
+            <enum name="none" value="0x4123"/>
+        </attr>
+        <attr format="dimension" name="noclass_slideWidth"/>
+        <attr format="dimension" name="noclass_slideLeftWidth"/>
+        <attr format="dimension" name="noclass_slideRightWidth"/>
+        <attr format="integer" name="noclass_slideTime"/>
+        <attr format="float" name="noclass_contentAlpha"/>
+        <attr format="color" name="noclass_contentShadowColor"/>
+        <attr format="boolean" name="noclass_contentToggle"/>
+        <attr format="boolean" name="noclass_allowDragging" />
+        <attr format="boolean" name="noclass_isFixedView" />
+    </declare-styleable>
+    <!--指示器的属性-->
+    <declare-styleable name="StickIndicator" tools:ignore="ResourceName">
+        <attr name="noclass_indicator_anim_time" format="integer"/>
+        <attr name="noclass_indicator_dot_padding" format="dimension" />
+        <attr name="noclass_indicator_small_dot_width" format="dimension" />
+        <attr name="noclass_indicator_big_dot_width" format="dimension" />
+        <attr name="noclass_indicator_select_color" format="color|reference" />
+        <attr name="noclass_indicator_default_color" format="color|reference" />
+        <attr name="noclass_indicator_stick_enable" format="boolean" />
+        <attr name="noclass_indicator_show_count" format="integer" />
+    </declare-styleable>
+</resources>

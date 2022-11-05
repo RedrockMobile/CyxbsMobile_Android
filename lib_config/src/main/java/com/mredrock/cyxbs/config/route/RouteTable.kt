@@ -9,7 +9,16 @@ package com.mredrock.cyxbs.config.route
  *
  * 注意：如果你的 api 模块只有父模块实现，请把路由地址放在你的 api 模块中！！！
  *     这里只放共用的路由地址
+ *
+ * TODO 由于目前没有完全迁移 lib_common，所以有些看起来没有使用的变量，可能以后需要使用，所以暂时不要删除
+ *
+ * 其余配置：缺省页拦截器[DefaultPageInterceptor]
  */
+const val MAIN_MAIN = "/main/entry"
+//缺省页
+const val DEFAULT_PAGE = "/main/default"
+const val DEFAULT_FRAGMENT_PAGE = "/main/default2"
+
 const val COURSE_ENTRY = "/course/entry"
 const val QA_ENTRY = "/qa/entry"
 const val DISCOVER_ENTRY = "/discover/entry"
@@ -27,6 +36,7 @@ const val DISCOVER_SCHOOL_CAR = "/school_car/discover/entry"
 const val DISCOVER_NEWS = "/news/discover/entry"
 const val DISCOVER_MORE_FUNCTION = "/more_function/discover/entry"
 const val DISCOVER_TODO_MAIN = "/todo/discover/entry"
+const val DISCOVER_SPORT = "/sport/discover/entry"
 
 //志愿服务在发现页的展示信息
 const val DISCOVER_VOLUNTEER_FEED = "/volunteer/discover/feed"
@@ -37,12 +47,21 @@ const val DISCOVER_ELECTRICITY_FEED = "/electricity/discover/feed"
 //todo在发现页面展示信息
 const val DISCOVER_TODO_FEED = "/todo/discover/feed"
 
+//体育打卡在发现页面的展示信息
+const val DISCOVER_SPORT_FEED = "/sport/discover/feed"
+
 
 //教务新闻子项入口
 const val DISCOVER_NEWS_ITEM = "/news/discover/item"
 
 //签到页
 const val MINE_CHECK_IN = "/check_in/mine/entry"
+
+//通知页主页
+const val NOTIFICATION_HOME = "/notification/entry"
+//通知设置页
+const val NOTIFICATION_SETTING = "/notification/setting"
+
 // 个人界面的确认密码模块
 const val MINE_FORGET_PASSWORD = "/forget_password/mine/entry"
 // 个人界面的绑定邮箱模块
@@ -54,10 +73,6 @@ const val MINE_PERSON_PAGE = "/person_page/mine/entry"
 
 //大红页
 const val REDROCK_HOME_ENTRY = "/redrock_home/entry"
-
-
-//小控件设置
-const val WIDGET_SETTING = "/setting/widget"
 
 // QA
 const val QA_QUIZ = "/quiz/qa/entry"
@@ -77,6 +92,12 @@ const val TODO_ADD_TODO_BY_WIDGET = "/widget/todo/entry"
 
 // module_store 邮票中心页
 const val STORE_ENTRY="/store/entry"
+
+//绑定教务在线ids页面
+const val LOGIN_BIND_IDS="/login/bind_ids/entry"
+
+//课表上课地点跳转到地图key
+const val COURSE_POS_TO_MAP = "COURSE_POS_TO_MAP"
 
 
 

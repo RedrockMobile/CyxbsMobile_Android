@@ -3,8 +3,8 @@ package com.mredrock.cyxbs.store.page.record.viewmodel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import com.mredrock.cyxbs.lib.base.ui.BaseViewModel
-import com.mredrock.cyxbs.lib.utils.extensions.mapOrThrowApiException
 import com.mredrock.cyxbs.lib.utils.network.api
+import com.mredrock.cyxbs.lib.utils.network.mapOrInterceptException
 import com.mredrock.cyxbs.store.bean.ExchangeRecord
 import com.mredrock.cyxbs.store.bean.StampGetRecord
 import com.mredrock.cyxbs.store.network.ApiService
@@ -45,10 +45,9 @@ class RecordViewModel : BaseViewModel() {
     fun getExchangeRecord() {
         ApiService::class.api
             .getExchangeRecord()
-            .mapOrThrowApiException()
             .subscribeOn(Schedulers.io())
             .observeOn(AndroidSchedulers.mainThread())
-            .doOnError {
+            .mapOrInterceptException {
                 _exchangeRecordIsSuccessful.postValue(false)
             }.safeSubscribeBy {
                 _exchangeRecordIsSuccessful.postValue(true)
@@ -60,10 +59,9 @@ class RecordViewModel : BaseViewModel() {
     fun getFirstPageGetRecord() {
         ApiService::class.api
             .getStampGetRecord(1, 30)
-            .mapOrThrowApiException()
             .subscribeOn(Schedulers.io())
             .observeOn(AndroidSchedulers.mainThread())
-            .doOnError {
+            .mapOrInterceptException {
                 _firstPageGetRecordIsSuccessful.postValue(false)
             }.safeSubscribeBy {
                 _firstPageGetRecordIsSuccessful.postValue(true)
@@ -74,10 +72,9 @@ class RecordViewModel : BaseViewModel() {
     fun getNextPageGetRecord() {
         ApiService::class.api
             .getStampGetRecord(nowPage + 1, 30)
-            .mapOrThrowApiException()
             .subscribeOn(Schedulers.io())
             .observeOn(AndroidSchedulers.mainThread())
-            .doOnError {
+            .mapOrInterceptException {
                 _nestPageGetRecordIsSuccessful.postValue(false)
             }.safeSubscribeBy {
                 _nestPageGetRecordIsSuccessful.postValue(true)

@@ -9,40 +9,47 @@ import android.view.View
 import android.view.View.OVER_SCROLL_IF_CONTENT_SCROLLS
 import android.view.ViewGroup
 import android.view.WindowManager
-import android.widget.FrameLayout
-import android.widget.TextView
-import android.widget.Toast
-import android.widget.ViewFlipper
+import android.view.animation.DecelerateInterpolator
+import android.widget.*
+import androidx.appcompat.widget.AppCompatTextView
+import androidx.appcompat.widget.LinearLayoutCompat
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import androidx.viewpager2.widget.ViewPager2
 import com.alibaba.android.arouter.facade.annotation.Route
 import com.alibaba.android.arouter.launcher.ARouter
+import com.bumptech.glide.Glide
 import com.cyxbsmobile_single.api_todo.ITodoService
+import com.mredrock.cyxbs.api.account.IAccountService
+import com.mredrock.cyxbs.api.electricity.IElectricityService
+import com.mredrock.cyxbs.api.sport.ISportService
+import com.mredrock.cyxbs.api.volunteer.IVolunteerService
 import com.mredrock.cyxbs.common.component.CyxbsToast
 import com.mredrock.cyxbs.common.component.SpacesHorizontalItemDecoration
-import com.mredrock.cyxbs.common.config.DISCOVER_ENTRY
-import com.mredrock.cyxbs.common.config.DISCOVER_NEWS
-import com.mredrock.cyxbs.common.config.DISCOVER_NEWS_ITEM
-import com.mredrock.cyxbs.common.config.MINE_CHECK_IN
-import com.mredrock.cyxbs.common.event.CurrentDateInformationEvent
-import com.mredrock.cyxbs.common.mark.EventBusLifecycleSubscriber
+import com.mredrock.cyxbs.common.config.*
 import com.mredrock.cyxbs.common.service.ServiceManager
+import com.mredrock.cyxbs.common.service.impl
 import com.mredrock.cyxbs.common.ui.BaseViewModelFragment
+import com.mredrock.cyxbs.common.utils.Num2CN
+import com.mredrock.cyxbs.common.utils.SchoolCalendar
 import com.mredrock.cyxbs.common.utils.extensions.doIfLogin
 import com.mredrock.cyxbs.common.utils.extensions.dp2px
-import com.mredrock.cyxbs.common.utils.extensions.setOnSingleClickListener
 import com.mredrock.cyxbs.discover.R
-import com.mredrock.cyxbs.api.electricity.IElectricityService
+import com.mredrock.cyxbs.discover.pages.RollerViewActivity
 import com.mredrock.cyxbs.discover.pages.discover.adapter.DiscoverMoreFunctionRvAdapter
-import com.mredrock.cyxbs.discover.utils.BannerAdapter
 import com.mredrock.cyxbs.discover.utils.MoreFunctionProvider
-import com.mredrock.cyxbs.api.volunteer.IVolunteerService
-import kotlinx.android.synthetic.main.discover_home_fragment.*
-import org.greenrobot.eventbus.Subscribe
-import org.greenrobot.eventbus.ThreadMode
+import com.mredrock.cyxbs.discover.utils.IS_SWITCH1_SELECT
+import com.mredrock.cyxbs.discover.utils.NotificationSp
+import com.mredrock.cyxbs.discover.widget.IndicatorView
+import com.mredrock.cyxbs.lib.utils.extensions.dp2pxF
+import com.mredrock.cyxbs.lib.utils.extensions.setOnSingleClickListener
+import com.mredrock.cyxbs.lib.utils.extensions.visible
+import com.ndhzs.slideshow.SlideShow
+import com.ndhzs.slideshow.adapter.ImageViewAdapter
+import com.ndhzs.slideshow.adapter.setImgAdapter
+import com.ndhzs.slideshow.viewpager.transformer.ScaleInTransformer
+import java.util.*
 
 
 /**
@@ -51,15 +58,19 @@ import org.greenrobot.eventbus.ThreadMode
  */
 
 @Route(path = DISCOVER_ENTRY)
-class DiscoverHomeFragment : BaseViewModelFragment<DiscoverHomeViewModel>(), EventBusLifecycleSubscriber {
-    companion object {
-        const val DISCOVER_FUNCTION_RV_STATE = "discover_function_rv_state"
-    }
+class DiscoverHomeFragment : BaseViewModelFragment<DiscoverHomeViewModel>() {
+
+    private val fl_discover_home_jwnews by R.id.fl_discover_home_jwnews.view<FrameLayout>()
+    private val tv_day by R.id.tv_day.view<AppCompatTextView>()
+    private val iv_discover_msg by R.id.iv_discover_msg.view<ImageView>()
+    private val rv_discover_more_function by R.id.rv_discover_more_function.view<RecyclerView>()
+    private val ll_discover_feeds by R.id.ll_discover_feeds.view<LinearLayoutCompat>()
+    private val indicator_view_discover by R.id.indicator_view_discover.view<IndicatorView>()
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         return inflater.inflate(R.layout.discover_home_fragment, container, false)
     }
-    
+
     private val mVfDetail by R.id.vf_jwzx_detail.view<ViewFlipper>()
 
 
@@ -69,12 +80,61 @@ class DiscoverHomeFragment : BaseViewModelFragment<DiscoverHomeViewModel>(), Eve
         if (savedInstanceState == null) {
             initFeeds()
         }
-        initJwNews(mVfDetail, fl_discover_home_jwnews)
-        initViewPager()
-        viewModel.getRollInfo()
+        initTvDay()
+        initJwNews(fl_discover_home_jwnews)
+        initBanner()
+        initHasUnread()
         view.findViewById<View>(R.id.iv_check_in).setOnSingleClickListener {
             context?.doIfLogin("签到") {
                 ARouter.getInstance().build(MINE_CHECK_IN).navigation()
+            }
+        }
+    }
+    
+    /**
+     * 从老课表那里移过来的代码
+     */
+    private fun initTvDay() {
+        if (!IAccountService::class.impl.getVerifyService().isLogin()) {
+            tv_day.text = "登录解锁更多功能~"
+        } else {
+            val nowWeek = SchoolCalendar.getWeekOfTerm()
+            if (nowWeek != null) {
+                //这个用来判断是不是可能处于是暑假的那段时间除非大变动应该暑假绝对是6，7，8，9月当中
+                val summerVacation = listOf(6, 7, 8, 9)
+                val now = Calendar.getInstance()
+                tv_day.text = when {
+                    nowWeek > 0 ->
+                        "第${Num2CN.number2ChineseNumber(nowWeek.toLong())}周 " +
+                          "周${if (now[Calendar.DAY_OF_WEEK] != 1)
+                              Num2CN.number2ChineseNumber(now[Calendar.DAY_OF_WEEK] - 1.toLong())
+                              else "日"}"
+                    //8，9月欢迎新同学
+                    (now[Calendar.MONTH] + 1 == 8 || now[Calendar.MONTH] + 1 == 9) -> "欢迎新同学～"
+                    nowWeek !in 1 .. 21 && summerVacation.contains(now[Calendar.MONTH] + 1) -> "暑假快乐鸭"
+                    nowWeek !in 1 .. 21 && !summerVacation.contains(now[Calendar.MONTH] + 1) -> "寒假快乐鸭"
+                    else -> ""
+                }
+            }
+        }
+    }
+
+    private fun initHasUnread() {
+        //将msg View设置为没有消息的状态
+        iv_discover_msg.setBackgroundResource(R.drawable.discover_ic_home_msg)
+        activity?.doIfLogin {
+            iv_discover_msg.setOnClickListener {
+                ARouter.getInstance().build(NOTIFICATION_HOME).navigation()
+            }
+        }
+        viewModel.hasUnread.observe {
+            val shouldShowRedDots = requireActivity().NotificationSp.getBoolean(IS_SWITCH1_SELECT,true)
+            if (it == true && shouldShowRedDots) {
+                //将msg View设置为有消息的状态
+                iv_discover_msg.setBackgroundResource(R.drawable.discover_ic_home_has_msg)
+            } else {
+                //将msg View设置为没有消息的状态
+                iv_discover_msg.setBackgroundResource(R.drawable.discover_ic_home_msg)
             }
         }
     }
@@ -83,64 +143,67 @@ class DiscoverHomeFragment : BaseViewModelFragment<DiscoverHomeViewModel>(), Eve
     override fun onResume() {
         super.onResume()
         initFunctions()
-        viewModel.startSwitchViewPager()
         if (viewModel.functionRvState != null) {
             rv_discover_more_function.layoutManager?.onRestoreInstanceState(viewModel.functionRvState)
         }
+    }
+    
+    private val mSlideShow by R.id.discover_ss_banner.view<SlideShow>()
+    private val mIvBannerBg by R.id.discover_iv_banner_bg.view<ImageView>()
 
+    private fun initBanner() {
+        viewModel.viewPagerInfo.observe { list ->
+            if (list.isEmpty()) return@observe
+            mSlideShow.visible()
+            mIvBannerBg.animate()
+                .alpha(0F)
+                .duration = 600
+            mSlideShow.alpha = 0F
+            mSlideShow.animate()
+                .alpha(1F)
+                .duration = 600
+            mSlideShow.addTransformer(ScaleInTransformer())
+                .setAutoSlideTime(1200, 6000)
+                .setTimeInterpolator(DecelerateInterpolator())
+                .apply { offscreenPageLimit = 1 }
+                .setImgAdapter(
+                    ImageViewAdapter.Builder(list, 8.dp2pxF)
+                        .onCreate {
+                            view.scaleType = ImageView.ScaleType.CENTER_CROP
+                            view.setOnSingleClickListener {
+                                if (data.picture_goto_url.startsWith("http")) {
+                                    RollerViewActivity.startRollerViewActivity(data, requireContext())
+                                }
+                            }
+                        }.onBind {
+                            Glide.with(this@DiscoverHomeFragment)
+                                .load(data.picture_url)
+                                .placeholder(R.drawable.discover_ic_cyxbsv6)
+                                .error(R.drawable.discover_ic_cyxbsv6)
+                                .into(view)
+                        }
+                )
+        }
     }
 
-    //加载轮播图
-    private fun initViewPager() {
-        vp_discover_home.registerOnPageChangeCallback(object : ViewPager2.OnPageChangeCallback() {
-            override fun onPageScrollStateChanged(state: Int) {
-                if (state == ViewPager2.SCROLL_STATE_DRAGGING || state == ViewPager2.SCROLL_STATE_SETTLING)
-                    vp_discover_home.adapter?.notifyDataSetChanged()
-                super.onPageScrollStateChanged(state)
-            }
-
-            override fun onPageSelected(position: Int) {
-                super.onPageSelected(position)
-                viewModel.scrollFlag = false
-            }
-        })
-        vp_discover_home?.adapter = context?.let { BannerAdapter(it, vp_discover_home) }
-        viewModel.viewPagerInfo.observe {
-            if (it != null && context != null) {
-                (vp_discover_home?.adapter as BannerAdapter).apply {
-                    urlList.clear()
-                    urlList.addAll(it)
-                    notifyDataSetChanged()
-                }
-            }
-        }
-        viewModel.viewPagerTurner.observe {
-            if (viewModel.scrollFlag) {
-                vp_discover_home.currentItem += 1
-            }
-            viewModel.scrollFlag = true
-        }
-    }
-
-    private fun initJwNews(viewFlipper: ViewFlipper, frameLayout: FrameLayout) {
+    private fun initJwNews(frameLayout: FrameLayout) {
         viewModel.jwNews.observe {
             if (it != null) {
-                viewFlipper.removeAllViews()
+                mVfDetail.removeAllViews()
                 for (item in it) {
-                    viewFlipper.addView(getTextView(item.title, item.id))
+                    mVfDetail.addView(getTextView(item.title, item.id))
                 }
                 mVfDetail.startFlipping()
             }
         }
-
-        viewFlipper.setOnSingleClickListener {
-            ARouter.getInstance().build(DISCOVER_NEWS_ITEM).withString("id", viewFlipper.focusedChild.tag as String).navigation()
+    
+        mVfDetail.setOnSingleClickListener {
+            ARouter.getInstance().build(DISCOVER_NEWS_ITEM).withString("id", mVfDetail.focusedChild.tag as String).navigation()
         }
-
-        viewFlipper.setFlipInterval(6555)
-        viewFlipper.setInAnimation(context, R.anim.discover_text_in_anim)
-        viewFlipper.setOutAnimation(context, R.anim.discover_text_out_anim)
-        viewModel.getJwNews(1)
+    
+        mVfDetail.flipInterval = 6000
+        mVfDetail.setInAnimation(context, R.anim.discover_text_in_anim)
+        mVfDetail.setOutAnimation(context, R.anim.discover_text_out_anim)
 
         frameLayout.setOnSingleClickListener {
             ARouter.getInstance().build(DISCOVER_NEWS).navigation()
@@ -177,7 +240,7 @@ class DiscoverHomeFragment : BaseViewModelFragment<DiscoverHomeViewModel>(), Eve
             }
             adapter = DiscoverMoreFunctionRvAdapter(picUrls, texts) {
                 if (it == functions.size - 1) {
-                    CyxbsToast.makeText(context, R.string.discover_more_function_notice_text, Toast.LENGTH_SHORT).show()
+                    CyxbsToast.makeText(requireContext(), R.string.discover_more_function_notice_text, Toast.LENGTH_SHORT).show()
                 } else {
                     functions[it].activityStarter.startActivity(context)
                 }
@@ -195,9 +258,13 @@ class DiscoverHomeFragment : BaseViewModelFragment<DiscoverHomeViewModel>(), Eve
     }
 
     private fun initFeeds() {
+        /**
+         * TODO 关闭服务 feed
+         */
+//        addFeedFragment(ISportService::class.impl.getSportFeed())
         addFeedFragment(ServiceManager.getService(ITodoService::class.java).getTodoFeed())
         addFeedFragment(ServiceManager.getService(IElectricityService::class.java).getElectricityFeed())
-        addFeedFragment(ServiceManager.getService(IVolunteerService::class.java).getVolunteerFeed())
+//        addFeedFragment(ServiceManager.getService(IVolunteerService::class.java).getVolunteerFeed())
         //处理手机屏幕过长导致feed无法填充满下方的情况
         ll_discover_feeds.post {
             context?.let {
@@ -210,19 +277,11 @@ class DiscoverHomeFragment : BaseViewModelFragment<DiscoverHomeViewModel>(), Eve
 
     private fun addFeedFragment(fragment: Fragment) {
         childFragmentManager.beginTransaction().add(R.id.ll_discover_feeds, fragment).commit()
-
-    }
-
-    @Subscribe(threadMode = ThreadMode.MAIN, sticky = true)
-    fun onGetData(dataEvent: CurrentDateInformationEvent) {
-        tv_day.text = dataEvent.time
     }
 
     override fun onPause() {
         super.onPause()
         mVfDetail.stopFlipping()
-        viewModel.stopPageTurner()
         viewModel.functionRvState = rv_discover_more_function.layoutManager?.onSaveInstanceState()
     }
-
 }

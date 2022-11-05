@@ -5,12 +5,13 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.annotation.LayoutRes
 import androidx.fragment.app.Fragment
 import com.mredrock.cyxbs.api.account.IAccountService
 import com.mredrock.cyxbs.common.mark.ActionLoginStatusSubscriber
 import com.mredrock.cyxbs.common.mark.EventBusLifecycleSubscriber
 import com.mredrock.cyxbs.common.service.ServiceManager
-import com.mredrock.cyxbs.common.utils.BindView
+import com.mredrock.cyxbs.common.utils.FragmentBindView
 import com.mredrock.cyxbs.common.utils.LogUtils
 import org.greenrobot.eventbus.EventBus
 
@@ -46,10 +47,10 @@ open class BaseFragment : Fragment() {
      * 这里可以开启生命周期的Log，你可以重写这个值并给值为true，
      * 也可以直接赋值为true（赋值的话请在init{}里面赋值或者在super.onCreate(savedInstanceState)调用之前赋值）
      */
-    open protected var isOpenLifeCycleLog = false
+    protected open var isOpenLifeCycleLog = false
 
     //当然，你要定义自己的TAG方便在Log里面找也可以重写这个
-    open protected var TAG: String = this::class.java.simpleName
+    protected open var TAG: String = this::class.java.simpleName
 
     // 只做本地封装使用
     private var baseBundle: Bundle? = null
@@ -89,11 +90,16 @@ open class BaseFragment : Fragment() {
         lifeCycleLog("onAttach")
     }
 
+    @LayoutRes
+    open var layoutRes : Int? = null
+
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         lifeCycleLog("onCreateView")
+        layoutRes?.let { return inflater.inflate(layoutRes!!, container, false) }
         return super.onCreateView(inflater, container, savedInstanceState)
     }
 
+    @Deprecated("Deprecated in Java")
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
         lifeCycleLog("onActivityCreated")
@@ -145,7 +151,7 @@ open class BaseFragment : Fragment() {
         lifeCycleLog("onDetach")
     }
 
-    fun lifeCycleLog(message: String) {
+    private fun lifeCycleLog(message: String) {
         if (isOpenLifeCycleLog) {
             LogUtils.d(TAG, "${this::class.java.simpleName}\$\$${message}")
         }
@@ -163,5 +169,5 @@ open class BaseFragment : Fragment() {
      *    kt 插件(被废弃) > 属性代理 > ButterKnife(被废弃) > DataBinding > ViewBinding
      * ```
      */
-    protected fun <T: View> Int.view() = BindView<T>(this) { this@BaseFragment }
+    protected fun <T: View> Int.view() = FragmentBindView<T>(this, this@BaseFragment)
 }

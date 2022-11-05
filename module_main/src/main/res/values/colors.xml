@@ -1,23 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="main_activity_login_background_color">#f6f6f6</color>
-    <color name="main_activity_login_divider_color">#F6F6F6</color>
-    <color name="main_activity_login_btn_login_color">#FFFFFF</color>
-    <color name="main_main_bottom_navigation_text_checked">#779afa</color>
-    <color name="main_main_bottom_navigation_text_normal">#999999</color>
-    <color name="main_freshman_entry_fab_background">#779afa</color>
-    <color name="main_main_bottom_navigation_view_background">#FFFFFF</color>
-    <color name="main_red_home_entry_fab_background">#779afa</color>
-    <color name="main_activity_splash_bottom_color">#FFFFFF</color>
 
-    <!--    用户协议dialog相关颜色-->
-    <!--    商品兑换界面Dialog按钮颜色-->
-    <color name="main_dialog_btn_positive">#4A44E4</color>
-    <color name="main_dialog_btn_negative">#C3D4EE</color>
-    <color name="main_dialog_tv">#15315B</color>
-    <color name="main_dialog_tv_negative">#7CA3DF</color>
-    <color name="main_dialog_tv_tips">#2A4E84</color>
+    <!--    底部tab未聚焦字体颜色-->
+    <color name="main_btn_bottom_un_focused">#AABCD8</color>
+    <!--    底部tab聚焦字体颜色-->
+    <color name="main_btn_bottom_focused">#2923D2</color>
 
-    <!--    用户协议页面颜色值-->
-    <color name="main_user_agree_toolbar">#15315B</color>
 </resources>

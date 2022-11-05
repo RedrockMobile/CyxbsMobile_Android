@@ -16,7 +16,7 @@ import com.mredrock.cyxbs.common.viewmodel.BaseViewModel
 import com.mredrock.cyxbs.mine.util.apiService
 import com.mredrock.cyxbs.mine.util.extension.normalStatus
 import com.mredrock.cyxbs.mine.util.widget.ExecuteOnceObserver
-import com.ndhzs.api.store.IStoreService
+import com.mredrock.cyxbs.api.store.IStoreService
 import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
 import io.reactivex.rxjava3.schedulers.Schedulers
 import okhttp3.MultipartBody
@@ -40,23 +40,11 @@ class EditViewModel : BaseViewModel() {
 
         apiService.updateUserInfo(nickname, introduction, qq, phone, photoUrl, gender, birthday)
                 .normalStatus(this)
-                .observeOn(Schedulers.io())
-                .map {
-                    //setInfo请求后，本地数据需要调用refresh接口刷新并保存即时的用户信息到sp
-                    //userEditorService并没有将数据保存到文件，故退出app数据就消失了
-                    //UserEditorService没有用，不要使用，如果需要更新用户信息的话，上传相关数据到后端然后调用UserStateService的refresh()即可
-                    ServiceManager.getService(IAccountService::class.java).getVerifyService().refresh(
-                            onError = {
-                                updateInfoEvent.postValue(false)
-                            },
-                            action = { s: String ->
-                                updateInfoEvent.postValue(true)
-                            }
-                    )
-                    it
+                .doOnError {
+                    updateInfoEvent.postValue(false)
                 }
-                .observeOn(AndroidSchedulers.mainThread())
                 .safeSubscribeBy {
+                    updateInfoEvent.postValue(true)
                     if (nickname.isNotBlank() && introduction.isNotBlank() && qq.isNotBlank() && phone.isNotBlank()) {
                       ServiceManager.getService(IStoreService::class.java)
                         .postTask(IStoreService.Task.EDIT_INFO, null)
@@ -73,24 +61,10 @@ class EditViewModel : BaseViewModel() {
                     apiService.updateUserImage(it.thumbnail_src, it.photosrc)
                 }
                 .normalStatus(this)
-                .observeOn(Schedulers.io())
-                .map {
-                    //setInfo请求后，本地数据需要调用refresh接口刷新并保存即时的用户信息到sp
-                    //userEditorService并没有将数据保存到文件，故退出app数据就消失了
-                    //UserEditorService没有用，不要使用，如果需要更新用户信息的话，上传相关数据到后端然后调用UserStateService的refresh()即可
-                    ServiceManager.getService(IAccountService::class.java).getVerifyService().refresh(
-                            onError = {
-                                upLoadImageEvent.postValue(false)
-                            },
-                            action = { s: String ->
-                                upLoadImageEvent.postValue(true)
-                            }
-                    )
-                    it
+                .doOnError { upLoadImageEvent.postValue(false) }
+                .safeSubscribeBy {
+                    upLoadImageEvent.postValue(true)
                 }
-                .observeOn(AndroidSchedulers.mainThread())
-                .safeSubscribeBy(
-                )
                 .lifeCycle()
     }
 

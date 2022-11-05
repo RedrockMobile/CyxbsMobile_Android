@@ -11,6 +11,11 @@
 * 2、部分系统可能存在权限问题，无法删除文件
 * */
 
+/*
+* 我也不知道为什么这个文件会提示黄条：This script caused build configguration to fail, run ......
+* 但不影响正常运行，所以就不要管它
+* */
+
 val hooksFile = rootDir.absoluteFile.resolve("hooks")
 val gitHookFile = rootDir.absoluteFile.resolve(".git").resolve("hooks")
 

@@ -5,7 +5,7 @@ import android.os.Bundle
 import androidx.fragment.app.Fragment
 import com.mredrock.cyxbs.common.service.ServiceManager
 import com.mredrock.cyxbs.qa.config.CommentConfig
-import com.ndhzs.api.store.IStoreService
+import com.mredrock.cyxbs.api.store.IStoreService
 import com.tencent.connect.share.QQShare
 import com.tencent.connect.share.QzoneShare
 import com.tencent.tauth.IUiListener

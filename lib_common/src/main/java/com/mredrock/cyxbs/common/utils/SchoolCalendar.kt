@@ -5,33 +5,28 @@ import com.mredrock.cyxbs.common.utils.extensions.defaultSharedPreferences
 import java.text.ParseException
 import java.text.SimpleDateFormat
 import java.util.*
+import java.util.concurrent.TimeUnit
 
 /**
  * 学校日历工具类
  * Created by cc on 15/8/23.
  */
+@Deprecated("使用 lib_utils 中的 SchoolCalendarUtil 进行替换")
 open class SchoolCalendar {
     var firstDay: Calendar = GregorianCalendar(2015, Calendar.SEPTEMBER, 7)
     var calendar: Calendar
-
+    
+    @Deprecated("过时方法，之后不会在做兼容，请使用静态方法代替")
     constructor() {
         // 鄙人认为，在这个时候，我们有必要去更新一下firstDay
-        val first = BaseApp.appContext.defaultSharedPreferences.getLong(FIRST_DAY, firstDay.timeInMillis)
+        val first = BaseApp.appContext.defaultSharedPreferences.getLong(FIRST_MON_DAY, firstDay.timeInMillis)
         firstDay.timeZone = TimeZone.getTimeZone("GMT+8:00")
         firstDay.timeInMillis = first
         calendar = GregorianCalendar()
         calendar.timeZone = TimeZone.getTimeZone("GMT+8:00")
     }
-
-    constructor(date: Date?) : this() {
-        calendar.time = date
-    }
-
-    constructor(timestamp: Long) : this(Date(timestamp * 1000))
-    constructor(year: Int, month: Int, day: Int) {
-        calendar = GregorianCalendar(year, month, day)
-    }
-
+    
+    @Deprecated("过时方法，之后不会在做兼容，请使用静态方法代替")
     constructor(week: Int, weekDay: Int) : this() {
         var mWeekDay = weekDay
         calendar = firstDay
@@ -39,7 +34,7 @@ open class SchoolCalendar {
         mWeekDay = if (mWeekDay == 0) 7 else mWeekDay
         calendar.add(Calendar.DATE, mWeekDay - dayOfWeek)
     }
-
+    
     /**
      * 取这学期过去了多少天
      *
@@ -53,7 +48,7 @@ open class SchoolCalendar {
             }
             return days
         }
-
+    
     /**
      * 取当前第几周
      *
@@ -71,9 +66,9 @@ open class SchoolCalendar {
             if (weeks >= 0) {
                 weeks++
             }
-            return weeks
+            return 3
         }
-
+    
     private fun getDeltaT(end: Calendar, begin: Calendar): Int {
         val mBegin = begin.clone() as Calendar
         mBegin[Calendar.HOUR_OF_DAY] = 0
@@ -87,7 +82,7 @@ open class SchoolCalendar {
         mEnd[Calendar.MILLISECOND] = 0
         return ((mEnd.timeInMillis - mBegin.timeInMillis) / (1000 * 86400)).toInt()
     }
-
+    
     /**
      * 日期加减
      *
@@ -97,7 +92,7 @@ open class SchoolCalendar {
         calendar.add(Calendar.DATE, day)
         return this
     }
-
+    
     /**
      * 格式化输出日期
      * 年:y		月:M		日:d		时:h(12制)/H(24值)	分:m		秒:s		毫秒:S
@@ -108,7 +103,7 @@ open class SchoolCalendar {
         val format = SimpleDateFormat(formatString, Locale.CHINA)
         return format.format(calendar.time)
     }
-
+    
     /**
      * 格式化解析日期文本
      * 年:y		月:M		日:d		时:h(12制)/H(24值)	分:m		秒:s		毫秒:S
@@ -124,15 +119,15 @@ open class SchoolCalendar {
             null
         }
     }
-
+    
     fun setDate(year: Int, month: Int, day: Int): SchoolCalendar {
         calendar[year, month] = day
         return this
     }
-
+    
     val date: Date
         get() = calendar.time
-
+    
     val dayOfWeek: Int
         get() {
             val weekDay = calendar[Calendar.DAY_OF_WEEK]
@@ -142,29 +137,107 @@ open class SchoolCalendar {
                 weekDay - 1
             }
         }
-
+    
     val day: Int
         get() = calendar[Calendar.DATE]
-
+    
     val month: Int
         get() = calendar[Calendar.MONTH] + 1
-
+    
     val year: Int
         get() = calendar[Calendar.YEAR]
-
+    
     override fun equals(other: Any?): Boolean {
         return if (other is SchoolCalendar) {
             dayOfTerm == other.dayOfTerm
         } else false
     }
-
+    
     override fun hashCode(): Int {
         var result = firstDay.hashCode()
         result = 31 * result + calendar.hashCode()
         return result
     }
-
+    
     companion object {
-        const val FIRST_DAY = "first_day"
+        private const val FIRST_MON_DAY = "first_day"
+        
+        /*
+        * TODO 目前该类已经移植到 lib_config 中的 SchoolCalendarUtils 中
+        *  所以不再提供 set 方法，只提供 get 方法用于兼容旧模块
+        * */
+        
+        /**
+         * 得到这学期过去了多少天
+         *
+         * 返回 null，则说明不知道开学第一天是好久
+         *
+         * # 注意：存在返回负数的情况！！！
+         */
+        fun getDayOfTerm(): Int? {
+            return checkFirstDay {
+                val diff = System.currentTimeMillis() - mFirstMonDayCalendar.timeInMillis
+                TimeUnit.DAYS.convert(diff, TimeUnit.MILLISECONDS).toInt()
+            }
+        }
+        
+        /**
+         * 得到当前周数
+         *
+         * @return 返回 null，则说明不知道开学第一天是好久；返回 0，则表示开学前的一周（因为第一周开学）
+         *
+         * # 注意：存在返回负数的情况！！！
+         */
+        fun getWeekOfTerm(): Int? {
+            val dayOfTerm = getDayOfTerm() ?: return null
+            return if (dayOfTerm >= 0) dayOfTerm / 7 + 1 else dayOfTerm / 7
+        }
+        
+        /**
+         * 是否是上学期（即秋季学期），否则是下学期（春季学期）
+         */
+        fun isFirstSemester() : Boolean {
+            return Calendar.getInstance()[Calendar.MONTH + 1] > 8
+        }
+        
+        /**
+         * 得到开学第一周的星期一
+         *
+         * @return 返回 null，则说明不知道开学第一天是好久
+         */
+        fun getFirstMonDayOfTerm(): Calendar? {
+            return checkFirstDay {
+                mFirstMonDayCalendar.clone() as Calendar
+            }
+        }
+        
+        fun getFirstMonDayTimestamp(): Long? {
+            return checkFirstDay {
+                mFirstMonDayCalendar.timeInMillis
+            }
+        }
+        
+        private var mFirstMonDayCalendar = Calendar.getInstance().apply {
+            timeInMillis = BaseApp.appContext.defaultSharedPreferences.getLong(FIRST_MON_DAY, 0L)
+        }
+        
+        /**
+         * 检查 [mFirstMonDayCalendar] 是否正确
+         *
+         * 只有他第一次安装且没有网络时才会出现这个情况，只要之后加载了网络，都不会再出现问题
+         */
+        private inline fun <T> checkFirstDay(action: () -> T): T? {
+            // 不知道第一天的时间戳，说明之前都没有登录过课表
+            mFirstMonDayCalendar.timeInMillis = BaseApp.appContext.defaultSharedPreferences.getLong(FIRST_MON_DAY, 0L)
+            if (mFirstMonDayCalendar.timeInMillis == 0L) return null
+            mFirstMonDayCalendar.apply {
+                // 保证是绝对的第一天的开始
+                set(Calendar.HOUR_OF_DAY, 0)
+                set(Calendar.MINUTE, 0)
+                set(Calendar.SECOND, 0)
+                set(Calendar.MILLISECOND, 0)
+            }
+            return action.invoke()
+        }
     }
 }

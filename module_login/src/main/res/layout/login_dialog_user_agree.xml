@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="310dp"
+    android:layout_height="285dp">
+
+    <ImageView
+        android:id="@+id/login_iv_dialog_background"
+        android:layout_width="match_parent"
+        android:layout_height="285dp"
+        android:orientation="vertical"
+        android:src="@drawable/login_shape_round_corner_dialog"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:ignore="ContentDescription" />
+
+    <TextView
+        android:id="@+id/login_tv_tips"
+        android:layout_width="match_parent"
+        android:layout_height="25dp"
+        android:layout_marginTop="28dp"
+        android:gravity="center"
+        android:text="温馨提示"
+        android:textSize="18sp"
+        android:textColor="@color/config_level_four_font_color"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:ignore="HardcodedText" />
+
+    <TextView
+        android:id="@+id/login_tv_dialog_content"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="22dp"
+        android:layout_marginTop="10dp"
+        android:layout_marginRight="22dp"
+        android:gravity="center"
+        android:textColor="@color/config_level_three_font_color"
+        android:textSize="14sp"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/login_tv_tips"
+        tools:text="友友，欢迎使用掌上重邮！在您使用掌上重邮前，请认真阅读《用户协议》和《隐私权政策》，它们将帮助您了解我们所采集的个人信息与用途的对应关系。如您同意，请点击下方同意并·继续按钮开始接受我们的服务。" />
+
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/login_dialog_btn_negative"
+        style="@style/Widget.MaterialComponents.Button.UnelevatedButton"
+        android:layout_width="119dp"
+        android:layout_height="38dp"
+        android:layout_marginStart="26dp"
+        android:layout_marginEnd="20dp"
+        android:insetTop="0dp"
+        android:insetBottom="0dp"
+        android:padding="0dp"
+        android:layout_marginTop="23dp"
+        android:text="不同意"
+        android:textColor="@color/login_dialog_tv_negative"
+        android:textSize="15sp"
+        android:theme="@style/Theme.MaterialComponents"
+        app:backgroundTint="@color/login_dialog_btn_negative"
+        app:cornerRadius="26dp"
+        app:layout_constraintEnd_toStartOf="@+id/login_dialog_btn_positive"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/login_tv_dialog_content"
+        app:rippleColor="@android:color/transparent"
+        tools:ignore="HardcodedText" />
+
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/login_dialog_btn_positive"
+        style="@style/Widget.MaterialComponents.Button.UnelevatedButton"
+        android:layout_width="119dp"
+        android:layout_height="38dp"
+        android:layout_marginEnd="26dp"
+        android:insetTop="0dp"
+        android:insetBottom="0dp"
+        android:padding="0dp"
+        android:text="同意并继续"
+        android:textColor="#FFFFFF"
+        android:textSize="14sp"
+        android:theme="@style/Theme.MaterialComponents"
+        app:backgroundTint="@color/login_dialog_btn_positive"
+        app:cornerRadius="26dp"
+        app:layout_constraintBottom_toBottomOf="@+id/login_dialog_btn_negative"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/login_dialog_btn_negative"
+        app:layout_constraintTop_toTopOf="@+id/login_dialog_btn_negative"
+        app:rippleColor="@android:color/transparent"
+        tools:ignore="HardcodedText" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

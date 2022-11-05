@@ -4,8 +4,8 @@ import com.google.auto.service.AutoService
 import com.mredrock.cyxbs.BuildConfig
 import com.mredrock.cyxbs.api.account.IAccountService
 import com.mredrock.cyxbs.lib.utils.service.impl
-import com.mredrock.cyxbs.spi.SdkManager
-import com.mredrock.cyxbs.spi.SdkService
+import com.mredrock.cyxbs.lib.base.spi.InitialManager
+import com.mredrock.cyxbs.lib.base.spi.InitialService
 import com.tencent.bugly.Bugly
 import com.tencent.bugly.crashreport.CrashReport
 import com.tencent.vasdolly.helper.ChannelReaderUtil
@@ -18,15 +18,15 @@ import com.tencent.vasdolly.helper.ChannelReaderUtil
  * @time 2022/3/24  19:40
  * @signature 我将追寻并获取我想要的答案
  */
-@AutoService(SdkService::class)
-class BuglyInitialService : SdkService {
+@AutoService(InitialService::class)
+class BuglyInitialService : InitialService {
     
     // bugly 会读取 Android id
-    override fun onPrivacyAgreed(manager: SdkManager) {
+    override fun onPrivacyAgreed(manager: InitialManager) {
         init(manager)
     }
     
-    private fun init(manager: SdkManager) {
+    private fun init(manager: InitialManager) {
         val appContext = manager.application.applicationContext
         
         if (BuildConfig.DEBUG) {

@@ -7,26 +7,29 @@ import android.view.Gravity
 import android.view.animation.*
 import android.widget.ImageButton
 import android.widget.TextView
+import androidx.activity.viewModels
 import androidx.viewpager2.widget.ViewPager2
 import com.google.android.material.tabs.TabLayout
 import com.google.android.material.tabs.TabLayoutMediator
-import com.mredrock.cyxbs.lib.base.ui.mvvm.BaseVmActivity
+import com.mredrock.cyxbs.lib.base.ui.BaseActivity
+import com.mredrock.cyxbs.lib.utils.adapter.FragmentVpAdapter
+import com.mredrock.cyxbs.lib.utils.extensions.color
+import com.mredrock.cyxbs.lib.utils.extensions.dp2pxF
 import com.mredrock.cyxbs.lib.utils.extensions.setOnSingleClickListener
 import com.mredrock.cyxbs.store.R
-import com.mredrock.cyxbs.store.base.BaseFragmentVPAdapter
 import com.mredrock.cyxbs.store.page.record.ui.fragment.ExchangeRecordFragment
 import com.mredrock.cyxbs.store.page.record.ui.fragment.GetRecordFragment
 import com.mredrock.cyxbs.store.page.record.viewmodel.RecordViewModel
-import com.mredrock.cyxbs.store.utils.dp2pxF
-import com.mredrock.cyxbs.store.utils.getColor2
-import com.mredrock.cyxbs.store.utils.transformer.ScaleInTransformer
+import com.ndhzs.slideshow.viewpager.transformer.ScaleInTransformer
 
 /**
  *    author : zz (后期优化: 985892345)
  *    e-mail : 1140143252@qq.com
  *    date   : 2021/8/2 14:46
  */
-class StampDetailActivity : BaseVmActivity<RecordViewModel>() {
+class StampDetailActivity : BaseActivity() {
+    
+    private val mViewModel by viewModels<RecordViewModel>()
 
     private lateinit var mTabLayout: TabLayout
     private lateinit var mViewPager2: ViewPager2
@@ -51,13 +54,9 @@ class StampDetailActivity : BaseVmActivity<RecordViewModel>() {
         animation.interpolator = DecelerateInterpolator()
         mViewPager2.startAnimation(animation) // 入场动画
         mViewPager2.setPageTransformer(ScaleInTransformer())
-        mViewPager2.adapter = BaseFragmentVPAdapter(
-            this,
-            listOf(
-                ExchangeRecordFragment(),
-                GetRecordFragment()
-            )
-        )
+        mViewPager2.adapter = FragmentVpAdapter(this)
+            .add { ExchangeRecordFragment() }
+            .add { GetRecordFragment() }
         mViewPager2.registerOnPageChangeCallback(object : ViewPager2.OnPageChangeCallback() {
             var hasObservedFirst = false // 是否已经对第一页进行了观察
             var hasObservedSecond = false // 是否已经对第二页进行了观察
@@ -65,14 +64,14 @@ class StampDetailActivity : BaseVmActivity<RecordViewModel>() {
                 if (position == 0) {
                     if (!hasObservedFirst) {
                         hasObservedFirst = true
-                        viewModel.exchangeRecordIsSuccessful.observe {
+                        mViewModel.exchangeRecordIsSuccessful.observe {
                             if (!it ) { toast("获取兑换记录失败") }
                         }
                     }
                 }else {
                     if (!hasObservedSecond) {
                         hasObservedSecond = true
-                        viewModel.firstPageGetRecordIsSuccessful.observe {
+                        mViewModel.firstPageGetRecordIsSuccessful.observe {
                             if (!it) { toast("获取邮票记录失败") }
                         }
                     }
@@ -123,8 +122,8 @@ class StampDetailActivity : BaseVmActivity<RecordViewModel>() {
         val textView = tab.customView
         if (textView is TextView) {
             textView.setTypeface(null, Typeface.BOLD) // 加粗
-            textView.setTextColor(getColor2(R.color.store_stamp_detail_tabLayout_selected_title))
-            ValueAnimator.ofFloat(5.dp2pxF(), 5.8F.dp2pxF()).run {
+            textView.setTextColor(R.color.store_stamp_detail_tabLayout_selected_title.color)
+            ValueAnimator.ofFloat(5.dp2pxF, 5.8F.dp2pxF).run {
                 duration = 260L
                 addUpdateListener { textView.textSize = animatedValue as Float }
                 start()
@@ -136,8 +135,8 @@ class StampDetailActivity : BaseVmActivity<RecordViewModel>() {
         val textView = tab.customView
         if (textView is TextView) {
             textView.setTypeface(null, Typeface.NORMAL) // 取消加粗
-            textView.setTextColor(getColor2(R.color.store_stamp_detail_tabLayout_unselected_title))
-            ValueAnimator.ofFloat(5.8F.dp2pxF(), 5.dp2pxF()).run {
+            textView.setTextColor(R.color.store_stamp_detail_tabLayout_unselected_title.color)
+            ValueAnimator.ofFloat(5.8F.dp2pxF, 5.dp2pxF).run {
                 duration = 260L
                 addUpdateListener { textView.textSize = animatedValue as Float }
                 start()
@@ -155,7 +154,7 @@ class StampDetailActivity : BaseVmActivity<RecordViewModel>() {
 
     private fun initData() {
         // 请求网络数据
-        viewModel.getExchangeRecord()
-        viewModel.getFirstPageGetRecord()
+        mViewModel.getExchangeRecord()
+        mViewModel.getFirstPageGetRecord()
     }
 }

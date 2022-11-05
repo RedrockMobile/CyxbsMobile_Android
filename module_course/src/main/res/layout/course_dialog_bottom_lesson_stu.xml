@@ -1,0 +1,133 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.core.widget.NestedScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:paddingBottom="40dp"
+        android:paddingStart="16dp"
+        android:paddingEnd="16dp"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <com.mredrock.cyxbs.config.view.MarqueeTextView
+            android:id="@+id/course_tv_dialog_stu_course"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:textSize="22sp"
+            android:textColor="@color/config_level_two_font_color"
+            android:textStyle="bold"
+            android:layout_marginEnd="16dp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toStartOf="@+id/course_iv_dialog_stu_link"
+            app:layout_constraintTop_toTopOf="parent"
+            tools:text="软件项目开发实训1" />
+
+        <androidx.appcompat.widget.AppCompatImageView
+            android:id="@+id/course_iv_dialog_stu_link"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:visibility="gone"
+            app:srcCompat="@drawable/course_ic_item_header_link_double"
+            app:layout_constraintTop_toTopOf="@id/course_tv_dialog_stu_course"
+            app:layout_constraintBottom_toBottomOf="@id/course_tv_dialog_stu_course"
+            app:layout_constraintEnd_toEndOf="parent"
+            tools:ignore="ContentDescription"
+            tools:visibility="visible" />
+
+        <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/course_tv_dialog_stu_classroom"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:textSize="13sp"
+            android:textColor="@color/config_level_two_font_color"
+            android:drawableEnd="@drawable/course_ic_dialog_bottom_lesson_classroom"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/course_tv_dialog_stu_course"
+            tools:text="计算机制图教室(三)(综合实验楼C401/C402)" />
+
+        <TextView
+            android:id="@+id/course_tv_dialog_stu_teacher"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
+            android:textSize="13sp"
+            android:textColor="@color/config_level_two_font_color"
+            app:layout_constraintTop_toTopOf="@id/course_tv_dialog_stu_classroom"
+            app:layout_constraintStart_toEndOf="@id/course_tv_dialog_stu_classroom"
+            tools:text="某教师" />
+
+        <TextView
+            android:id="@+id/course_tv_dialog_stu_rawWeek_title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="24dp"
+            android:text="周期"
+            android:textSize="15sp"
+            android:textColor="@color/config_level_two_font_color"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/course_tv_dialog_stu_classroom"
+            tools:ignore="HardcodedText" />
+
+        <TextView
+            android:id="@+id/course_tv_dialog_stu_rawWeek"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="15sp"
+            android:textStyle="bold"
+            android:textColor="@color/config_level_two_font_color"
+            app:layout_constraintTop_toTopOf="@id/course_tv_dialog_stu_rawWeek_title"
+            app:layout_constraintEnd_toEndOf="parent"
+            tools:text="14-15周4节连上" />
+
+        <TextView
+            android:id="@+id/course_tv_dialog_stu_time_title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="24dp"
+            android:text="时间"
+            android:textSize="15sp"
+            android:textColor="@color/config_level_two_font_color"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/course_tv_dialog_stu_rawWeek_title"
+            tools:ignore="HardcodedText" />
+
+        <TextView
+            android:id="@+id/course_tv_dialog_stu_time"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="15sp"
+            android:textStyle="bold"
+            android:textColor="@color/config_level_two_font_color"
+            app:layout_constraintTop_toTopOf="@id/course_tv_dialog_stu_time_title"
+            app:layout_constraintEnd_toEndOf="parent"
+            tools:text="星期四 8:00-11:55" />
+
+        <TextView
+            android:id="@+id/course_tv_dialog_stu_type_title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="24dp"
+            android:text="课程类型"
+            android:textSize="15sp"
+            android:textColor="@color/config_level_two_font_color"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/course_tv_dialog_stu_time_title"
+            tools:ignore="HardcodedText" />
+
+        <TextView
+            android:id="@+id/course_tv_dialog_stu_type"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="15sp"
+            android:textStyle="bold"
+            android:textColor="@color/config_level_two_font_color"
+            app:layout_constraintTop_toTopOf="@id/course_tv_dialog_stu_type_title"
+            app:layout_constraintEnd_toEndOf="parent"
+            tools:text="必修" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</androidx.core.widget.NestedScrollView>

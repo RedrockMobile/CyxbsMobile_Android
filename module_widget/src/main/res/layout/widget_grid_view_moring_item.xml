@@ -20,13 +20,7 @@
         android:gravity="center"
         android:maxLines="3"
         android:textColor="@color/widget_morning_text_color"
-        android:textSize="@dimen/widget_course_text_size"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.0"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.0" />
+        android:textSize="@dimen/widget_course_text_size" />
 
     <TextView
         android:id="@+id/bottom"
@@ -40,11 +34,28 @@
         android:gravity="center"
         android:maxLines="3"
         android:textColor="@color/widget_morning_text_color"
-        android:textSize="@dimen/widget_course_text_size"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/top"
-        app:layout_constraintVertical_bias="1.0" />
+        android:textSize="@dimen/widget_course_text_size" />
+
+    <ImageView
+        android:id="@+id/affair"
+        android:layout_width="@dimen/widget_lesson_decoration_width"
+        android:layout_height="@dimen/widget_lesson_decoration_height"
+        android:layout_alignParentStart="true"
+        android:layout_marginStart="@dimen/widget_course_margin"
+        android:layout_marginTop="@dimen/widget_lesson_decoration_margin_top"
+        android:layout_marginEnd="@dimen/widget_course_margin"
+        android:src="@drawable/widget_shape_lesson_with_affair"
+        />
+
+    <ImageView
+        android:id="@+id/other_lesson"
+        android:layout_width="@dimen/widget_lesson_decoration_width"
+        android:layout_height="@dimen/widget_lesson_decoration_height"
+        android:layout_alignParentEnd="true"
+        android:layout_marginStart="@dimen/widget_course_margin"
+        android:layout_marginTop="@dimen/widget_lesson_decoration_margin_top"
+        android:layout_marginEnd="@dimen/widget_course_margin"
+        android:src="@drawable/widget_shape_lesson_with_other_lesson_moning"
+        />
 
 </RelativeLayout>

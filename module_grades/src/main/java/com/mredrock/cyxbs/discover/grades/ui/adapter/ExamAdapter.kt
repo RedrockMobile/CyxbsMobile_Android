@@ -26,16 +26,16 @@ class ExamAdapter(val data: MutableList<Exam>) : RecyclerView.Adapter<ExamAdapte
     class HeadVH(itemView: View) : ExamVH(itemView)
 
     class OtherVH(itemView: View) : ExamVH(itemView) {
-        val tv_exam_month: TextView = itemView.findViewById(R.id.tv_exam_month)
-        val tv_exam_location:TextView = itemView.findViewById(R.id.tv_exam_location)
-        val grades_distance:TextView = itemView.findViewById(R.id.grades_distance)
-        val tv_exam_kind:TextView = itemView.findViewById(R.id.tv_exam_kind)
-        val tv_exam_day_of_week:TextView = itemView.findViewById(R.id.tv_exam_day_of_week)
-        val tv_exam_day_of_month:TextView = itemView.findViewById(R.id.tv_exam_day_of_month)
-        val tv_exam_name:TextView = itemView.findViewById(R.id.tv_exam_name)
-        val tv_exam_location_number:TextView = itemView.findViewById(R.id.tv_exam_location_number)
-        val tv_exam_time:TextView = itemView.findViewById(R.id.tv_exam_time)
-        val iv_exam_circle:DashGapLine = itemView.findViewById(R.id.iv_exam_circle)
+        val mTvExamMonth: TextView = itemView.findViewById(R.id.tv_exam_month)
+        val mTvExamLocation:TextView = itemView.findViewById(R.id.tv_exam_location)
+        val mTvGradesDistance:TextView = itemView.findViewById(R.id.grades_distance)
+        val mTvExamKind:TextView = itemView.findViewById(R.id.tv_exam_kind)
+        val mTvExamDayOfWeek:TextView = itemView.findViewById(R.id.tv_exam_day_of_week)
+        val mTvExamDayOfMonth:TextView = itemView.findViewById(R.id.tv_exam_day_of_month)
+        val mTvExamName:TextView = itemView.findViewById(R.id.tv_exam_name)
+        val mTvExamLocationNumber:TextView = itemView.findViewById(R.id.tv_exam_location_number)
+        val mTvExamTime:TextView = itemView.findViewById(R.id.tv_exam_time)
+        val mIvExamCircle:DashGapLine = itemView.findViewById(R.id.iv_exam_circle)
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ExamVH {
@@ -57,16 +57,16 @@ class ExamAdapter(val data: MutableList<Exam>) : RecyclerView.Adapter<ExamAdapte
     override fun onBindViewHolder(holder: ExamVH, position: Int) {
         val context = holder.itemView.context
         if (holder is OtherVH) {
-            data[position].let { it ->
+            data[position-1].let { it ->
                 it.let {
                     if (it.week?.toInt() != 0) {
                         val drawableTime = ResourcesCompat.getDrawable(context.resources, R.drawable.grades_time, null)
                         drawableTime?.setBounds(0, 0, 30, 30)
-                        holder.tv_exam_month.setCompoundDrawables(drawableTime, null, null, null)
+                        holder.mTvExamMonth.setCompoundDrawables(drawableTime, null, null, null)
 
                         val drawableLocation = ResourcesCompat.getDrawable(context.resources, R.drawable.grades_exam_location, null)
                         drawableLocation?.setBounds(0, 0, 30, 30)
-                        holder.tv_exam_location.setCompoundDrawables(drawableLocation, null, null, null)
+                        holder.mTvExamLocation.setCompoundDrawables(drawableLocation, null, null, null)
                         var schoolCalendar: SchoolCalendar? = null
                         it.week?.let { week ->
                             it.weekday?.let { weekday ->
@@ -79,60 +79,60 @@ class ExamAdapter(val data: MutableList<Exam>) : RecyclerView.Adapter<ExamAdapte
 
                             when {
                                 distance == 0 -> {
-                                    holder.grades_distance.text = "今天考试"
-                                    holder.grades_distance.setTextColor(Color.parseColor("#3A39D3"))
+                                    holder.mTvGradesDistance.text = "今天考试"
+                                    holder.mTvGradesDistance.setTextColor(Color.parseColor("#3A39D3"))
                                 }
                                 distance > 0 -> {
-                                    holder.grades_distance.text = "还剩${distance}天考试"
-                                    holder.grades_distance.setTextColor(Color.parseColor("#3A39D3"))
+                                    holder.mTvGradesDistance.text = "还剩${distance}天考试"
+                                    holder.mTvGradesDistance.setTextColor(Color.parseColor("#3A39D3"))
                                 }
                                 distance == -1 -> {
-                                    holder.grades_distance.text = "考试已结束"
-                                    holder.grades_distance.setTextColor(Color.parseColor("#2A4E84"))
+                                    holder.mTvGradesDistance.text = "考试已结束"
+                                    holder.mTvGradesDistance.setTextColor(Color.parseColor("#2A4E84"))
                                 }
                                 distance == -2 -> {
-                                    holder.grades_distance.text = "暂时无法获取到考试天数"
-                                    holder.grades_distance.setTextColor(Color.parseColor("#2A4E84"))
+                                    holder.mTvGradesDistance.text = "暂时无法获取到考试天数"
+                                    holder.mTvGradesDistance.setTextColor(Color.parseColor("#2A4E84"))
                                 }
                             }
-                            holder.tv_exam_kind.text = it.type ?: ""
+                            holder.mTvExamKind.text = it.type ?: ""
                             it.week?.let { week ->
-                                holder.tv_exam_day_of_week.text = String.format("%s周周%s", getChineseWeek(week.toInt() - 1), it.chineseWeekday
+                                holder.mTvExamDayOfWeek.text = String.format("%s周周%s", getChineseWeek(week.toInt() - 1), it.chineseWeekday
                                     ?: "--")
                             }
-                            holder.tv_exam_day_of_month.text = String.format("%s" + "号", schoolCalendar?.day
+                            holder.mTvExamDayOfMonth.text = String.format("%s" + "号", schoolCalendar?.day
                                 ?: "--")
-                            holder.tv_exam_month.text = String.format("%s月", schoolCalendar?.month
+                            holder.mTvExamMonth.text = String.format("%s月", schoolCalendar?.month
                                 ?: "--")
                         } else {
-                            holder.tv_exam_day_of_week.text = String.format("%s周周%s", "-", "-")
-                            holder.tv_exam_day_of_month.text = String.format("%s" + "号", "-")
-                            holder.tv_exam_month.text = String.format("%s月", "-")
+                            holder.mTvExamDayOfWeek.text = String.format("%s周周%s", "-", "-")
+                            holder.mTvExamDayOfMonth.text = String.format("%s" + "号", "-")
+                            holder.mTvExamMonth.text = String.format("%s月", "-")
                         }
                     }
 
-                    holder.tv_exam_name.text = it.course
+                    holder.mTvExamName.text = it.course
                     var seat = it.seat ?: "--"
 
                     if (seat.length < 2) seat = "0$seat"
                     seat = "${seat}号"
 
-                    holder.tv_exam_location.text = "${it.classroom}场"
-                    holder.tv_exam_location_number.text = seat
+                    holder.mTvExamLocation.text = "${it.classroom}场"
+                    holder.mTvExamLocationNumber.text = seat
 
                     if (it.begin_time != null && it.end_time != null) {
-                        holder.tv_exam_time.text = String.format("%s - %s", it.begin_time, it.end_time)
+                        holder.mTvExamTime.text = String.format("%s - %s", it.begin_time, it.end_time)
                     } else {
-                        holder.tv_exam_time.text = it.time
+                        holder.mTvExamTime.text = it.time
                     }
                 }
             }
 
             //要去除header的占位
             if (position - 1 == data.size - 1) {
-                holder.iv_exam_circle.setLineVisible(false)
+                holder.mIvExamCircle.setLineVisible(false)
             } else {
-                holder.iv_exam_circle.setLineVisible(true)
+                holder.mIvExamCircle.setLineVisible(true)
             }
         }
     }

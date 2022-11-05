@@ -10,7 +10,7 @@ import com.mredrock.cyxbs.common.viewmodel.BaseViewModel
 import com.mredrock.cyxbs.volunteer.VolunteerLoginActivity
 import com.mredrock.cyxbs.volunteer.bean.VolunteerTime
 import com.mredrock.cyxbs.volunteer.network.ApiService
-import com.ndhzs.api.store.IStoreService
+import com.mredrock.cyxbs.api.store.IStoreService
 
 /**
  * Created by yyfbe, Date on 2020/9/3.

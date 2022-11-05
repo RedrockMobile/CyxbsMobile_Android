@@ -10,5 +10,5 @@
     android:paddingBottom="9dp"
     android:gravity="center"
     android:background="@drawable/utils_shape_toast"
-    android:textColor="@color/utils_white_black"
+    android:textColor="@color/config_white_black"
     tools:text="自定义Toast" />

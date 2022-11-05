@@ -1,33 +1,42 @@
 package com.mredrock.cyxbs.mine.page.setting
 
-import android.content.Intent
 import android.os.Bundle
+import android.widget.Button
+import android.widget.FrameLayout
 import androidx.core.content.ContextCompat
+import androidx.core.view.postDelayed
 import com.alibaba.android.arouter.launcher.ARouter
+import com.google.android.material.appbar.AppBarLayout
 import com.mredrock.cyxbs.api.account.IAccountService
+import com.mredrock.cyxbs.api.login.ILoginService
 import com.mredrock.cyxbs.common.component.CommonDialogFragment
 import com.mredrock.cyxbs.common.config.*
 import com.mredrock.cyxbs.common.service.ServiceManager
 import com.mredrock.cyxbs.common.ui.BaseActivity
 import com.mredrock.cyxbs.common.utils.extensions.*
-import com.mredrock.cyxbs.api.main.MAIN_LOGIN
+import com.mredrock.cyxbs.common.service.impl
+import com.mredrock.cyxbs.common.component.JToolbar
 import com.mredrock.cyxbs.mine.R
 import com.mredrock.cyxbs.mine.page.security.activity.SecurityActivity
 import com.mredrock.cyxbs.mine.util.apiService
 import com.mredrock.cyxbs.mine.util.ui.WarningDialog
+import com.mredrock.cyxbs.mine.util.widget.SwitchPlus
 import io.reactivex.rxjava3.disposables.Disposable
-import kotlinx.android.synthetic.main.mine_activity_daily_sign.view.*
-import kotlinx.android.synthetic.main.mine_activity_setting.*
 
 class SettingActivity : BaseActivity() {
+    private val mToolbar by R.id.mine_setting_toolbar.view<AppBarLayout>()
+    private val mSwitch by R.id.mine_setting_switch.view<SwitchPlus>()
+    private val mFmSecurity by R.id.mine_setting_fm_security.view<FrameLayout>()
+    private val mFmShieldPerson by R.id.mine_setting_fm_shield_person.view<FrameLayout>()
+    private val mBtnExit by R.id.mine_setting_btn_exit.view<Button>()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.mine_activity_setting)
-
+        val toolbar:JToolbar = mToolbar.findViewById(R.id.toolbar)
         //初始化toolbar
 
-        mine_setting_toolbar.toolbar.apply {
+        toolbar.apply {
             setTitleLocationAtLeft(false)
             setBackgroundColor(
                 ContextCompat.getColor(
@@ -42,7 +51,7 @@ class SettingActivity : BaseActivity() {
             )
         }
         //启动App优先显示课表
-        mine_setting_switch.setOnCheckedChangeListener { _, isChecked ->
+        mSwitch.setOnCheckedChangeListener { _, isChecked ->
             defaultSharedPreferences.editor {
                 if (isChecked) {
                     putBoolean(COURSE_SHOW_STATE, true)
@@ -51,24 +60,24 @@ class SettingActivity : BaseActivity() {
                 }
             }
         }
-        mine_setting_switch.isChecked =
+        mSwitch.isChecked =
             defaultSharedPreferences.getBoolean(COURSE_SHOW_STATE, false)
 
-        //自定义桌面小组件
-        mine_setting_fm_edit_widget.setOnClickListener {
-            ARouter.getInstance().build(WIDGET_SETTING).navigation()
-        }
-
         //账号安全
-        mine_setting_fm_security.setOnClickListener { doIfLogin { startActivity<SecurityActivity>() } }
+        mFmSecurity.setOnSingleClickListener { doIfLogin { startActivity<SecurityActivity>() } }
         //屏蔽此人
-        mine_setting_fm_shield_person.setOnClickListener {
+        mFmShieldPerson.setOnSingleClickListener {
             doIfLogin {
                 ARouter.getInstance().build(QA_MY_IGNORE).navigation()
             }
         }
         //退出登录
-        mine_setting_btn_exit.setOnClickListener { doIfLogin { onExitClick() } }
+        mBtnExit.setOnSingleClickListener {
+            doIfLogin {
+                com.mredrock.cyxbs.lib.utils.extensions.toast("退出登录会先检查请求是否正常，请稍后~")
+                onExitClick()
+            }
+        }
     }
 
     /**
@@ -77,9 +86,11 @@ class SettingActivity : BaseActivity() {
     private var mExitDisposable: Disposable? = null
 
     private fun onExitClick() {
+        if (mExitDisposable != null) {
+            return
+        }
         mExitDisposable = apiService.pingMagipoke()
             .setSchedulers()
-            .doOnErrorWithDefaultErrorHandler { true }
             .safeSubscribeBy(
                 onNext = {
                     //判定magipoke系列接口正常，允许正常退出登陆
@@ -95,17 +106,7 @@ class SettingActivity : BaseActivity() {
                             //内部已经将dialog消除，这里啥都不用处理
                         },
                         onPositiveClick = {
-                            cleanAppWidgetCache()
-                            //清除user信息，必须要在LoginStateChangeEvent之前
-                            ServiceManager.getService(IAccountService::class.java)
-                                .getVerifyService().logout(
-                                this
-                            )
-                            //清空activity栈
-                            val flag =
-                                Intent.FLAG_ACTIVITY_CLEAR_TASK or Intent.FLAG_ACTIVITY_NEW_TASK
-                            ARouter.getInstance().build(MAIN_LOGIN).withFlags(flag)
-                                .withBoolean(IS_EXIT_LOGIN, true).navigation()
+                            jumpToLoginActivity()
                         }
                     )
                 }
@@ -124,21 +125,25 @@ class SettingActivity : BaseActivity() {
                 initView(
                     containerRes = R.layout.mine_layout_dialog_logout,
                     onPositiveClick = {
-                        cleanAppWidgetCache()
-                        //清除user信息，必须要在LoginStateChangeEvent之前
-                        ServiceManager.getService(IAccountService::class.java).getVerifyService()
-                            .logout(
-                                this@SettingActivity
-                            )
-                        //清空activity栈
-                        val flag = Intent.FLAG_ACTIVITY_CLEAR_TASK or Intent.FLAG_ACTIVITY_NEW_TASK
-                        ARouter.getInstance().build(MAIN_LOGIN).withFlags(flag)
-                            .withBoolean(IS_EXIT_LOGIN, true).navigation()
+                        jumpToLoginActivity()
                     },
                     positiveString = "退出",
                     onNegativeClick = { dismiss() }
                 )
             }.show(this.supportFragmentManager, tag)
+        }
+    }
+    
+    private fun jumpToLoginActivity() {
+        cleanAppWidgetCache()
+        //清除user信息，必须要在LoginStateChangeEvent之前
+        ServiceManager.getService(IAccountService::class.java).getVerifyService()
+            .logout(this@SettingActivity)
+        window.decorView.postDelayed(20) {
+            // 延迟打开，保证前面的 logout 有时间清空数据
+            ILoginService::class.impl
+                .startLoginActivityReboot()
+            finish()
         }
     }
 

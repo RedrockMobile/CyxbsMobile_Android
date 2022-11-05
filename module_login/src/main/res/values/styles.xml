@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <style name="LoginTextInputStyle" parent="AppTheme">
+        <item name="colorAccent">@color/config_level_two_font_color</item>
+    </style>
+</resources>

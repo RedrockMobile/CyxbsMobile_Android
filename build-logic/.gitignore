@@ -3,3 +3,4 @@ build
 secret/secret.gradle
 secret/key-cyxbs
 secret
+proguardMapping.txt

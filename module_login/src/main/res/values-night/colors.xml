@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!--    用户协议dialog相关颜色-->
+    <color name="login_dialog_btn_positive">#4A44E4</color>
+    <color name="login_dialog_btn_negative">#4E4E4E</color>
+    <color name="login_dialog_tv_negative">#F0F0F2</color>
+
+    <color name="login_et_text_color">#ffffff</color>
+
+    <!--    游客模式进入后面的字体颜色-->
+    <color name="login_tv_text_tourist">#ffffff</color>
+
+    <!--绑定ids界面-->
+    <color name="login_main_activity_login_et_edited_color">#ffffff</color>
+    <color name="login_white_font_color">#ffffff</color>
+</resources>

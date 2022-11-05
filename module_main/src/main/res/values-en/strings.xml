@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="main_nav_discover">Explore</string>
+    <string name="main_nav_qa">Forum</string>
+    <string name="main_nav_mine">Profile</string>
+</resources>

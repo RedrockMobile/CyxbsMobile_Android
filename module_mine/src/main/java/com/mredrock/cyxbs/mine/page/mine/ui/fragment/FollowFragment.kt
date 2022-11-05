@@ -8,6 +8,8 @@ import android.widget.TextView
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import com.mredrock.cyxbs.api.account.IAccountService
 import com.mredrock.cyxbs.common.service.ServiceManager
 import com.mredrock.cyxbs.common.ui.BaseViewModelFragment
@@ -18,7 +20,6 @@ import com.mredrock.cyxbs.mine.page.mine.adapter.DataBindingAdapter
 import com.mredrock.cyxbs.mine.page.mine.binder.*
 import com.mredrock.cyxbs.mine.page.mine.ui.activity.HomepageActivity
 import com.mredrock.cyxbs.mine.page.mine.viewmodel.FollowViewModel
-import kotlinx.android.synthetic.main.mine_fragment_follow.*
 
 /**
  * @class
@@ -31,6 +32,9 @@ class FollowFragment : BaseViewModelFragment<FollowViewModel>() {
     private var redId = ""
     private lateinit var userAdapter: DataBindingAdapter
     private var isSelf: Boolean = false
+
+    private val mine_follow_srl by R.id.mine_follow_srl.view<SwipeRefreshLayout>()
+    private val mine_follow_rv by R.id.mine_follow_rv.view<RecyclerView>()
 
     override fun onCreateView(
         inflater: LayoutInflater,

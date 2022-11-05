@@ -4,9 +4,7 @@ import android.animation.Animator
 import android.animation.ValueAnimator
 
 import android.content.Context
-import android.content.res.Resources
 import android.graphics.Bitmap
-import android.graphics.Color
 import android.graphics.Typeface
 import android.graphics.drawable.BitmapDrawable
 import android.graphics.drawable.Drawable
@@ -16,7 +14,6 @@ import android.view.animation.OvershootInterpolator
 import android.widget.*
 import androidx.recyclerview.widget.RecyclerView
 
-import com.mredrock.cyxbs.common.utils.extensions.gone
 import com.mredrock.cyxbs.common.utils.extensions.visible
 import com.mredrock.cyxbs.mine.R
 
@@ -24,18 +21,12 @@ import com.mredrock.cyxbs.mine.page.mine.ui.activity.IdentityActivity
 import android.widget.LinearLayout
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.content.res.ResourcesCompat
-import androidx.core.view.children
-import androidx.core.view.get
 import com.bumptech.glide.Glide
 import com.bumptech.glide.request.target.CustomTarget
 import com.bumptech.glide.request.transition.Transition
 import com.mredrock.cyxbs.common.utils.extensions.invisible
 import com.mredrock.cyxbs.common.utils.extensions.toast
 import com.mredrock.cyxbs.mine.network.model.AuthenticationStatus
-import com.mredrock.cyxbs.mine.util.ColorUntil
-import kotlinx.android.synthetic.main.mine_default_identity_item.view.*
-import org.w3c.dom.Text
-import java.util.ArrayList
 
 
 class StatusAdapter(

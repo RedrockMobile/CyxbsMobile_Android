@@ -1,25 +1,30 @@
 import com.mredrock.cyxbs.convention.depend.api.*
 import com.mredrock.cyxbs.convention.depend.*
-import com.mredrock.cyxbs.convention.depend.lib.dependLibCommon
+import com.mredrock.cyxbs.convention.depend.lib.*
 
 plugins {
-    id("module-manager")
-    id("kotlin-android-extensions") // todo kt 获取 View 的插件已被废弃，新模块禁止再使用！
+  id("module-debug")
 }
 
+dependLibBase()
+dependLibUtils()
+dependLibConfig()
+
 dependApiAccount()
-dependApiMain()
+dependApiAffair()
 
 dependRoom()
 dependRoomRxjava()
 dependRxjava()
-dependEventBus()
 dependNetwork()
+dependCoroutinesRx3()
 
-dependLibCommon() // TODO common 模块不再使用，新模块请依赖 base 和 utils 模块
+configurations.all {
+  resolutionStrategy.cacheChangingModulesFor(0, TimeUnit.SECONDS)
+}
 
 dependencies {
-    // TODO 未知项目，github 上未找到
-    implementation("com.super_rabbit.wheel_picker:NumberPicker:1.0.1")
-    implementation(Umeng.common)
+  // 20 级郭祥瑞封装的 Banner 库
+  implementation("io.github.985892345:SlideShow:2.0.0-SNAPSHOT")
 }
+

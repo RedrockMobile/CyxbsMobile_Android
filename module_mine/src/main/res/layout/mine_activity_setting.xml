@@ -41,27 +41,6 @@
         </FrameLayout>
 
         <FrameLayout
-            android:id="@+id/mine_setting_fm_edit_widget"
-            android:layout_width="match_parent"
-            android:layout_height="36dp"
-            android:layout_marginTop="31.25dp">
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:textSize="15sp"
-                android:textColor="@color/common_level_three_font_color"
-                android:text="@string/mine_custom_icon"
-                android:layout_marginStart="15dp"
-                android:layout_gravity="center_vertical" />
-            <ImageView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:src="@drawable/mine_ic_arrow_right"
-                android:layout_gravity="end|center_vertical"
-                android:layout_marginEnd="16dp"/>
-        </FrameLayout>
-
-        <FrameLayout
             android:id="@+id/mine_setting_fm_security"
             android:layout_width="match_parent"
             android:layout_height="36dp"
@@ -113,10 +92,6 @@
             android:text="@string/mine_exit"
             android:textColor="@color/common_white_font_color"
             android:textSize="18sp" />
-
-        <Space
-            android:layout_width="match_parent"
-            android:layout_height="100dp" />
 
     </LinearLayout>
 </androidx.core.widget.NestedScrollView>

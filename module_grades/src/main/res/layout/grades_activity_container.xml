@@ -4,18 +4,20 @@
     android:id="@+id/coordinator"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:fitsSystemWindows="true"
     android:background="@color/common_mine_sign_store_bg">
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        android:layout_marginBottom="70dp">
+        <!--这个 60 dp 为 头 的 85dp 减去背景的顶部阴影 15dp-->
 
         <com.mredrock.cyxbs.common.component.JToolbar
             android:id="@+id/toolbar"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:background="@color/common_mine_sign_store_bg"
-            android:fitsSystemWindows="true"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
@@ -48,22 +50,17 @@
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 
-    <com.mredrock.cyxbs.common.component.JCardViewPlus
+    <FrameLayout
         android:id="@+id/fl_grades_bottom_sheet"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        app:behavior_peekHeight="15dp"
-        app:cardCornerRadius="16dp"
-        android:fitsSystemWindows="true"
-        app:layout_behavior="@string/bottom_sheet_behavior"
-        app:shadowColor="@color/common_grades_bottom_sheet_shadow"
-        app:shadowFlags="top"
-        app:shadowRadius="45dp">
+        app:behavior_peekHeight="85dp"
+        app:layout_behavior="@string/bottom_sheet_behavior">
+        <!--注意：这里的 behavior_peekHeight 只是演示效果，真实值是在代码中动态设置的-->
 
         <include layout="@layout/grades_bottom_sheet" />
 
-    </com.mredrock.cyxbs.common.component.JCardViewPlus>
-
+    </FrameLayout>
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>
 

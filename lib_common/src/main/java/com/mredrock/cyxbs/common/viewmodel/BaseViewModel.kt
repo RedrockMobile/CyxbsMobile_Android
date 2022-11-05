@@ -14,9 +14,9 @@ import io.reactivex.rxjava3.disposables.Disposable
  * Created By jay68 on 2018/8/23.
  */
 open class BaseViewModel : ViewModel() {
-    val toastEvent: MutableLiveData<Int> by lazy { SingleLiveEvent<Int>() }
-    val longToastEvent: MutableLiveData<Int> by lazy { SingleLiveEvent<Int>() }
-    val progressDialogEvent: MutableLiveData<ProgressDialogEvent> by lazy { SingleLiveEvent<ProgressDialogEvent>() }
+    val toastEvent: MutableLiveData<Int> by lazy { SingleLiveEvent() }
+    val longToastEvent: MutableLiveData<Int> by lazy { SingleLiveEvent() }
+    val progressDialogEvent: MutableLiveData<ProgressDialogEvent> by lazy { SingleLiveEvent() }
 
     private val disposables: MutableList<Disposable> = mutableListOf()
 
@@ -38,8 +38,8 @@ open class BaseViewModel : ViewModel() {
 
     private fun disposeAll() {
         disposables.asSequence()
-                .filterNot { it.isDisposed }
-                .forEach { it.dispose() }
+            .filterNot { it.isDisposed }
+            .forEach { it.dispose() }
         disposables.clear()
     }
 

@@ -33,7 +33,7 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="15dp"
             android:layout_marginTop="3dp"
-            android:text="@string/common_explore"
+            android:text="@string/discover"
             android:textColor="@color/common_level_two_font_color"
             android:textSize="26sp"
             android:textStyle="bold"
@@ -41,32 +41,55 @@
             app:layout_constraintTop_toBottomOf="@+id/tv_day"
             tools:ignore="MissingConstraints" />
 
+        <ImageView
+            android:id="@+id/iv_discover_msg"
+            android:layout_width="24dp"
+            android:layout_height="20dp"
+            android:layout_marginEnd="73dp"
+            android:background="@drawable/discover_ic_home_has_msg"
+            app:layout_constraintBottom_toBottomOf="@+id/tv_dis"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="@+id/tv_dis"
+            tools:ignore="ContentDescription" />
+
         <androidx.appcompat.widget.AppCompatImageView
             android:id="@+id/iv_check_in"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginEnd="15dp"
-            android:src="@drawable/discover_ic_check_in"
+            app:srcCompat="@drawable/discover_ic_check_in"
             app:layout_constraintBottom_toBottomOf="@+id/tv_dis"
+            android:layout_marginEnd="16dp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="@+id/tv_dis"
             tools:ignore="ContentDescription,MissingConstraints" />
 
-        <androidx.viewpager2.widget.ViewPager2
-            android:id="@+id/vp_discover_home"
+        <!--轮播图的背景-->
+        <ImageView
+            android:id="@+id/discover_iv_banner_bg"
             android:layout_width="0dp"
             android:layout_height="0dp"
             android:layout_marginStart="15dp"
             android:layout_marginTop="12dp"
             android:layout_marginEnd="15dp"
-            android:orientation="horizontal"
-            android:translationZ="4dp"
+            android:src="@drawable/discover_ic_cyxbsv6"
             app:layout_constraintDimensionRatio="2.56"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/tv_dis"
-            tools:ignore="MissingConstraints"
-            tools:targetApi="lollipop" />
+            tools:ignore="ContentDescription" />
+
+        <!--轮播图-->
+        <com.ndhzs.slideshow.SlideShow
+            android:id="@+id/discover_ss_banner"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            app:show_isCyclical="true"
+            app:show_isAutoSlide="true"
+            app:cardBackgroundColor="@android:color/transparent"
+            app:layout_constraintTop_toTopOf="@id/discover_iv_banner_bg"
+            app:layout_constraintBottom_toBottomOf="@id/discover_iv_banner_bg"
+            app:layout_constraintStart_toStartOf="@id/discover_iv_banner_bg"
+            app:layout_constraintEnd_toEndOf="@id/discover_iv_banner_bg" />
 
         <FrameLayout
             android:id="@+id/fl_discover_home_jwnews"
@@ -78,7 +101,7 @@
             app:layout_constraintEnd_toStartOf="@+id/vf_jwzx_detail"
             app:layout_constraintHorizontal_bias="0.0"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/vp_discover_home"
+            app:layout_constraintTop_toBottomOf="@+id/discover_iv_banner_bg"
             tools:ignore="MissingConstraints,UselessLeaf">
 
             <androidx.appcompat.widget.AppCompatTextView
@@ -148,10 +171,6 @@
             app:showDividers="end"
             tools:ignore="MissingConstraints">
 
-
         </androidx.appcompat.widget.LinearLayoutCompat>
-
     </androidx.constraintlayout.widget.ConstraintLayout>
-
-
 </androidx.core.widget.NestedScrollView>

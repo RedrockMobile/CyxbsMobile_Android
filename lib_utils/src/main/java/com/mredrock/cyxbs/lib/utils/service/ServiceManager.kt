@@ -14,7 +14,6 @@ import kotlin.reflect.KClass
  *     2. 创建该接口的实现类，命名尽量只去掉I即可，然后加上路由注解，路由地址统一写到RoutingTable中，例如AccountService；
  *     3. 通过ServiceManager的方式获取实现类。
  */
-@Suppress("UNCHECKED_CAST")
 object ServiceManager {
   
   /**
@@ -40,6 +39,7 @@ object ServiceManager {
    *   .isLogin()
    * ```
    */
+  @Suppress("UNCHECKED_CAST")
   operator fun <T : Any> invoke(servicePath: String): T {
     return ARouter.getInstance().build(servicePath).navigation() as T
   }
