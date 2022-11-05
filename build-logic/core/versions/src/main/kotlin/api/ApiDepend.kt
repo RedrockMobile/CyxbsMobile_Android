@@ -2,7 +2,7 @@ package com.mredrock.cyxbs.convention.depend.api
 
 import org.gradle.api.Project
 
-import com.mredrock.cyxbs.convention.depend.api.utils.ApiDependUtils
+import api.utils.ApiDependUtils
 
 /**
  * 为什么要把 api 模块单独写出来？

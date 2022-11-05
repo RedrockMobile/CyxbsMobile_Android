@@ -6,6 +6,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Lifecycle
 import com.alibaba.android.arouter.facade.template.IProvider
+import kotlinx.coroutines.flow.SharedFlow
 
 /**
  * kim.bifrost.api_dialog.IDialogService
@@ -44,4 +45,10 @@ interface IDialogService : IProvider {
     fun openWebDialog(fragment: Fragment, url: String, handleWebView: WebView.() -> Unit = {}) {
         openWebDialog(fragment.viewLifecycleOwner.lifecycle, fragment.requireContext(), url, handleWebView)
     }
+
+    /**
+     * 订阅它以接收前端侧发送的事件
+     * 下载 保存图片 自定义事件
+     */
+    val webEventChannel: SharedFlow<DialogWebEvent>
 }

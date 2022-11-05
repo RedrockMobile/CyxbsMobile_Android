@@ -10,7 +10,10 @@ import com.alibaba.android.arouter.facade.annotation.Route
 import com.mredrock.cyxbs.dialog.webView.DialogJsInterface
 import com.mredrock.cyxbs.dialog.webView.DialogWebView
 import com.mredrock.api.dialog.DIALOG_SERVICE
+import com.mredrock.api.dialog.DialogWebEvent
 import com.mredrock.api.dialog.IDialogService
+import kotlinx.coroutines.flow.MutableSharedFlow
+import kotlinx.coroutines.flow.SharedFlow
 
 /**
  * com.mredrock.cyxbs.dialog.DialogService
@@ -20,7 +23,10 @@ import com.mredrock.api.dialog.IDialogService
  * @since 2022/8/2 14:02
  */
 @Route(path = DIALOG_SERVICE)
-class DialogService : IDialogService {
+class DialogService() : IDialogService {
+    internal val mutableEventChannel: MutableSharedFlow<DialogWebEvent> = MutableSharedFlow()
+
+    override val webEventChannel: SharedFlow<DialogWebEvent> = mutableEventChannel
 
     override fun openWebDialog(
         lifecycle: Lifecycle,

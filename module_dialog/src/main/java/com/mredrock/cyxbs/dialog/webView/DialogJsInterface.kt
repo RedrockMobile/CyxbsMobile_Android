@@ -11,19 +11,18 @@ import android.hardware.SensorManager
 import android.net.Uri
 import android.util.Log
 import android.webkit.*
-import android.widget.Toast
 import androidx.annotation.Keep
 import androidx.lifecycle.*
 import com.alibaba.android.arouter.launcher.ARouter
+import com.mredrock.api.dialog.DialogWebEvent
+import com.mredrock.api.dialog.IDialogService
 import com.mredrock.cyxbs.api.account.IAccountService
-import com.mredrock.cyxbs.common.BaseApp
-import com.mredrock.cyxbs.common.component.CyxbsToast
-import com.mredrock.cyxbs.common.service.ServiceManager
+import com.mredrock.cyxbs.dialog.DialogService
 import com.mredrock.cyxbs.dialog.activity.PhotoActivity
-import com.mredrock.api.dialog.DialogCustomEvent
-import com.mredrock.api.dialog.DialogDownloadEvent
-import com.mredrock.api.dialog.DialogSavePicEvent
-import org.greenrobot.eventbus.EventBus
+import com.mredrock.cyxbs.lib.base.BaseApp.Companion.baseApp
+import com.mredrock.cyxbs.lib.utils.extensions.toast
+import com.mredrock.cyxbs.lib.utils.extensions.toastLong
+import com.mredrock.cyxbs.lib.utils.service.ServiceManager
 import org.mozilla.javascript.Context
 
 /**
@@ -87,7 +86,9 @@ class DialogJsInterface : DefaultLifecycleObserver {
      */
     @JavascriptInterface
     fun postCustomEvent(command: String) {
-        EventBus.getDefault().post(DialogCustomEvent(command))
+        (ServiceManager.invoke(IDialogService::class) as DialogService).mutableEventChannel.tryEmit(
+            DialogWebEvent.Custom(command)
+        )
     }
 
     /**
@@ -99,7 +100,9 @@ class DialogJsInterface : DefaultLifecycleObserver {
      */
     @JavascriptInterface
     fun download(url: String, fileName: String) {
-        EventBus.getDefault().post(DialogDownloadEvent(url, fileName))
+        (ServiceManager.invoke(IDialogService::class) as DialogService).mutableEventChannel.tryEmit(
+            DialogWebEvent.Download(url, fileName)
+        )
     }
 
     /**
@@ -115,27 +118,29 @@ class DialogJsInterface : DefaultLifecycleObserver {
      */
     @JavascriptInterface
     fun getStu(): String {
-        return ServiceManager.getService(IAccountService::class.java).getUserService().getStuNum()
+        return ServiceManager.invoke(IAccountService::class).getUserService().getStuNum()
     }
 
     @JavascriptInterface
     fun toast(str: String) {
-        CyxbsToast.makeText(BaseApp.appContext, str, Toast.LENGTH_SHORT).show()
+        str.toast()
     }
 
     @JavascriptInterface
     fun toastLong(str: String) {
-        CyxbsToast.makeText(BaseApp.appContext, str, Toast.LENGTH_LONG).show()
+        str.toastLong()
     }
 
     @JavascriptInterface
     fun isDark(): Boolean {
-        return BaseApp.appContext.applicationContext.resources.configuration.uiMode == 0x21
+        return baseApp.applicationContext.resources.configuration.uiMode == 0x21
     }
 
     @JavascriptInterface
     fun savePic(url: String) {
-        EventBus.getDefault().post(DialogSavePicEvent(url))
+        (ServiceManager.invoke(IDialogService::class) as DialogService).mutableEventChannel.tryEmit(
+            DialogWebEvent.SavePic(url)
+        )
     }
 
     @JavascriptInterface

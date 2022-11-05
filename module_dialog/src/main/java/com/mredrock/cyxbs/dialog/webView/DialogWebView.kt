@@ -1,5 +1,6 @@
 package com.mredrock.cyxbs.dialog.webView
 
+import android.annotation.SuppressLint
 import android.content.Context
 import android.util.AttributeSet
 import android.webkit.WebSettings
@@ -27,6 +28,7 @@ class DialogWebView @JvmOverloads constructor(
      * @param jsInterface (名称 to 实例) 挂载到前端window的对象实例,
      * 实例类中请使用@JavascriptInterface向前端暴露可访问方法
      */
+    @SuppressLint("SetJavaScriptEnabled")
     fun initialize(lifecycle: Lifecycle, jsInterface: Pair<String, DialogJsInterface>) {
         settings.apply {
             //支持js

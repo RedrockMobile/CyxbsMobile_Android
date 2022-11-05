@@ -7,19 +7,22 @@ import android.content.Intent
 import android.graphics.Bitmap
 import android.graphics.drawable.BitmapDrawable
 import android.os.Bundle
-import android.transition.Fade
-import android.transition.Visibility
-import android.view.ViewTreeObserver
-import android.view.animation.OvershootInterpolator
+import android.os.Environment
+import android.util.SparseArray
 import android.widget.ImageView
 import android.widget.TextView
-import androidx.appcompat.app.AppCompatActivity
-import androidx.viewpager2.widget.ViewPager2
+import androidx.core.view.WindowCompat
 import com.github.chrisbanes.photoview.PhotoView
-import com.mredrock.cyxbs.common.config.DIR_PHOTO
-import com.mredrock.cyxbs.common.utils.extensions.*
+import com.mredrock.cyxbs.config.dir.DIR_PHOTO
 import com.mredrock.cyxbs.dialog.R
-import com.mredrock.cyxbs.dialog.widget.slideshow.SlideShow
+import com.mredrock.cyxbs.lib.base.ui.BaseActivity
+import com.mredrock.cyxbs.lib.utils.extensions.doPermissionAction
+import com.mredrock.cyxbs.lib.utils.extensions.saveImage
+import com.mredrock.cyxbs.lib.utils.extensions.setImageFromUrl
+import com.ndhzs.slideshow.SlideShow
+import com.ndhzs.slideshow.adapter.ViewAdapter
+import com.ndhzs.slideshow.adapter.setViewAdapter
+import com.ndhzs.slideshow.utils.OnPageChangeCallback
 import io.reactivex.rxjava3.schedulers.Schedulers
 
 /**
@@ -27,26 +30,35 @@ import io.reactivex.rxjava3.schedulers.Schedulers
  *    e-mail : 1140143252@qq.com
  *    date   : 2021/8/9 15:10
  */
-class PhotoActivity : AppCompatActivity() {
-
-    private lateinit var mImgUrls: ArrayList<String>
+class PhotoActivity : BaseActivity() {
 
     companion object {
 
-        private const val INTENT_IMG_URLS = "imgUrls"
-
         // 加载时或退出时图片显示的位置(如果使用 startActivityForResult(),
         // 则会在共享动画时因回调过慢在图片位置不对应时出现图片闪动问题)
-        var SHOW_POSITION = 0
-            private set
+        private val PositionList = SparseArray<Position>()
 
-        fun activityStart(context: Context, imgUrls: ArrayList<String>, showPosition: Int, options: Bundle?) {
-            SHOW_POSITION = showPosition
+        /**
+         * @return 返回当前的 position 值
+         */
+        fun activityStart(
+            context: Context,
+            imgUrls: ArrayList<String>,
+            showPosition: Int,
+            options: Bundle?
+        ): Position {
             val intent = Intent(context, PhotoActivity::class.java)
-            intent.putStringArrayListExtra(INTENT_IMG_URLS, imgUrls)
+            intent.putExtra(PhotoActivity::mImgUrls.name, imgUrls)
             context.startActivity(intent, options)
+            val position = Position(showPosition)
+            PositionList.put(imgUrls.hashCode(), position)
+            return position
         }
+
+        data class Position(var value: Int)
     }
+
+    private val mImgUrls by intent<ArrayList<String>>()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -54,79 +66,51 @@ class PhotoActivity : AppCompatActivity() {
         window.setBackgroundDrawableResource(android.R.color.transparent)
         setContentView(R.layout.store_activity_photo)
         setTheme(com.google.android.material.R.style.Theme_MaterialComponents) // 因为学长用的奇怪的 dialog, 需要这个主题支持
-        setFullScreen()
-
-        // 淡入动画
-        window.enterTransition = buildEnterTransition()
-        postponeEnterTransition()
-        val decorView = window.decorView
-        window.decorView.viewTreeObserver.addOnPreDrawListener(object :
-            ViewTreeObserver.OnPreDrawListener {
-            override fun onPreDraw(): Boolean {
-                decorView.viewTreeObserver.removeOnPreDrawListener(this)
-                supportStartPostponedEnterTransition()
-                return true
-            }
-        })
-
-        initData()
+        val windowInsetsController = WindowCompat.getInsetsController(window, window.decorView)
+        windowInsetsController.isAppearanceLightStatusBars = false // 设置状态栏字体颜色为白色
         initView()
-    }
-
-    private fun initData() {
-        val imgUrls = intent.getStringArrayListExtra(INTENT_IMG_URLS)
-        if (imgUrls != null ) {
-            mImgUrls = imgUrls
-        }
     }
 
     @SuppressLint("SetTextI18n")
     private fun initView() {
         val tvPosition: TextView = findViewById(R.id.store_tv_photo_position)
-
+        val pos = PositionList.get(mImgUrls.hashCode())
         val slideShow: SlideShow = findViewById(R.id.store_slideShow_photo)
-        slideShow
-            .setStartItem(SHOW_POSITION)
-            .setPageChangeCallback(object : ViewPager2.OnPageChangeCallback() {
-                override fun onPageSelected(position: Int) {
-                    //设置图片进度(1/X)
-                    tvPosition.post { // TextView 有奇怪的 bug, 改变文字不用 post 就无法改变
-                        tvPosition.text = "${position + 1}/${mImgUrls.size}"
+        slideShow.setCurrentItem(pos.value)
+            .addPageChangeCallback(
+                object : OnPageChangeCallback {
+                    override fun onPageSelected(position: Int) {
+                        //设置图片进度(1/X)
+                        tvPosition.post { // TextView 有奇怪的 bug, 改变文字不用 post 就无法改变
+                            tvPosition.text = "${position + 1}/${mImgUrls.size}"
+                        }
+                        pos.value = position
                     }
-                    SHOW_POSITION = position
                 }
-            })
+            )
             .setViewAdapter(
-                getNewView = { context -> PhotoView(context) },
-                getItemCount = { mImgUrls.size },
-                create = { holder ->
-                    holder.view.scaleType= ImageView.ScaleType.CENTER_INSIDE
-                    holder.view.setOnPhotoTapListener { _, _, _ ->
+                ViewAdapter.Builder(mImgUrls) {
+                    PhotoView(context)
+                }.onCreate {
+                    view.scaleType = ImageView.ScaleType.CENTER_INSIDE
+                    view.setOnPhotoTapListener { _, _, _ ->
                         finishAfterTransition()
                     }
-                    holder.view.setOnOutsidePhotoTapListener {
+                    view.setOnOutsidePhotoTapListener {
                         finishAfterTransition()
                     }
-                    holder.view.setOnLongClickListener {
-                        val drawable = holder.view.drawable
+                    view.setOnLongClickListener {
+                        val drawable = view.drawable
                         if (drawable is BitmapDrawable) {
                             val bitmap = drawable.bitmap
-                            savePhoto(bitmap, mImgUrls[holder.layoutPosition])
+                            savePhoto(bitmap, data)
                         }
                         true
                     }
-                },
-                onBindViewHolder = { view, _, position, _ ->
-                    view.setImageFromUrl(mImgUrls[position])
+                }.onBind {
+                    view.setImageFromUrl(data)
                 }
             )
-    }
-
-    private fun buildEnterTransition(): Visibility {
-        val slide = Fade()
-        slide.duration = 500
-        slide.interpolator = OvershootInterpolator(0.5F)
-        return slide
     }
 
     //对图片保存的处理是照搬 邮问 ViewImageActivity
@@ -135,7 +119,7 @@ class PhotoActivity : AppCompatActivity() {
             doAfterGranted {
                 com.google.android.material.dialog.MaterialAlertDialogBuilder(this@PhotoActivity)
                     .setTitle("是否保存")
-                    .setMessage("这张图片将保存到手机")
+                    .setMessage("这张照片将保存到手机")
                     .setPositiveButton("确定") { dialog, _ ->
                         val name = "${System.currentTimeMillis()}${url.split('/').lastIndex}"
                         Schedulers.io()
@@ -144,24 +128,22 @@ class PhotoActivity : AppCompatActivity() {
                                 android.media.MediaScannerConnection.scanFile(
                                     this@PhotoActivity,
                                     arrayOf(
-                                        "${android.os.Environment.getExternalStorageDirectory()}" +
+                                        "${Environment.getExternalStorageDirectory()}" +
                                                 DIR_PHOTO
                                     ),
                                     arrayOf("image/jpeg"),
                                     null
                                 )
 
-                            runOnUiThread {
-                                toast("图片保存于系统\"${DIR_PHOTO}\"文件夹下哦")
-                                dialog.dismiss()
-                                setFullScreen()
-                            }
+                                runOnUiThread {
+                                    toast("图片保存于${Environment.DIRECTORY_PICTURES}${DIR_PHOTO}文件夹下哦")
+                                    dialog.dismiss()
+                                }
 
-                        }
+                            }
                     }
                     .setNegativeButton("取消") { dialog, _ ->
                         dialog.dismiss()
-                        setFullScreen()
                     }
                     .show()
             }
