@@ -6,12 +6,27 @@ import android.content.ContentValues
 import android.content.pm.PackageManager
 import android.graphics.Color
 import android.icu.util.TimeZone
-import android.net.Uri
-import android.provider.CalendarContract
+import android.provider.CalendarContract.*
+import androidx.annotation.IntRange
+import com.mredrock.cyxbs.api.account.IAccountService
+import com.mredrock.cyxbs.common.service.impl
 import com.mredrock.cyxbs.config.ConfigApplicationWrapper.application
+import java.util.*
 
 /**
  * https://developer.android.google.cn/guide/topics/providers/calendar-provider?hl=zh-cn
+ *
+ * 除了官方文档外，你可能还需要阅读以下文档，因为日历信息的添加是有一套国际标准的
+ * RFC5545 规范中英对照文档：http://rfc2cn.com/rfc5545.html（如果你想详细研究一下怎么写规则，强烈推荐看下这篇文档）
+ * RERIOD 规则: 3.3.9
+ * RDATE 规则：3.8.5.2
+ * RRULE 规则：3.8.5.3、3.3.10
+ * DURATION 规则：3.3.6、3.8.2.5
+ * DATE 规则：3.3.4
+ * DATE-TIME 规则：3.3.5
+ * DTSTART 规则：3.8.2.4
+ *
+ * 当然，你觉得太麻烦了也不可以不用阅读，我对添加事件进行了封装，你只需要传入 [Data] 即可
  *
  * @author 985892345
  * @date 2022/9/24 20:01
@@ -20,323 +35,246 @@ object PhoneCalendar {
   
   private val context = application
   
-  private var calenderURL: String? = "content://com.android.calendar/calendars"
-  private var calenderEventURL: String? = "content://com.android.calendar/events"
-  private var calenderReminderURL: String? = "content://com.android.calendar/reminders"
-  private const val CALENDARS_NAME = "RedRock"
-  private const val CALENDARS_ACCOUNT_NAME = "CYXBS"
+  private const val CALENDARS_NAME = "红岩网校工作站"
+  private const val CALENDARS_ACCOUNT_NAME = "掌上重邮"
   private const val CALENDARS_ACCOUNT_TYPE = "Android"
-  private const val CALENDARS_DISPLAY_NAME = "重邮小帮手"
+  private const val CALENDARS_DISPLAY_NAME = "掌上重邮"
+  private val CALENDARS_OWNER_ACCOUNT: String
+    get() = IAccountService::class.impl.getUserService().getStuNum()
   
   /**
-   * 添加事件,成功返回事件Id,失败返回null
+   * 添加事件,成功返回事件 Id,失败返回 null
    */
-  fun add(data: Data): Long? {
+  fun add(event: Event): Long? {
     if (!checkPermission()) return null
-    val calendarId = checkAndAddCalendarAccounts().toLong()
-    if (calendarId < 0) {
-      // 获取日历失败直接返回
-      return null
-    }
-    val eventId: Long?
-    when (data) {
-      is RepeatData -> {
-        val newEvent: Uri =
-          insertCalendarEvent(
-            calendarId,
-            data.title,
-            data.description,
-            data.beginTime,
-            data.duration,
-            data.rrule
-          ) ?: return null // 添加日历事件失败直接返回
-        eventId = newEvent.lastPathSegment?.toLong()
-        addRemind(eventId, data.remind)
-      }
-      is OnceData -> {
-        val newEvent: Uri =
-          insertCalendarEvent(
-            calendarId,
-            data.title,
-            data.description,
-            data.beginTime,
-            data.endTime,
-          ) ?: return null // 添加日历事件失败直接返回
-        eventId = newEvent.lastPathSegment?.toLong()
-        if (!addRemind(eventId, data.remind)) {
-          // 添加提醒失败
-          return null
-        }
-      }
+    val calendarId = checkOrAddCalendarAccounts() ?: return null
+    if (calendarId < 0) return null // 获取日历失败直接返回
+    val value = when (event) {
+      is CommonEvent -> getCommonEventContent(event, calendarId)
+      is FrequencyEvent -> getFrequencyEventContent(event, calendarId)
+    } ?: return null
+    val eventId = context.contentResolver.insert(Events.CONTENT_URI, value)
+      ?.lastPathSegment
+      ?.toLong() ?: return null
+    if (event.remind >= 0) {
+      addRemind(eventId, event.remind)
     }
     return eventId
   }
   
-  /**
-   * 删除事件,成功返回true,失败返回false
-   */
-  fun delete(id: Long): Boolean {
-    if (!checkPermission()) return false
-    context.contentResolver
-      .query(
-        Uri.parse(calenderEventURL),
-        null,
-        null,
-        null,
-        null
-      ).use { eventCursor ->
-        if (eventCursor == null) //查询返回空值
-          return false
-        if (eventCursor.count > 0) {
-          //遍历所有事件，找到title、description、startTime跟需要查询的title、descriptio、dtstart一样的项
-          eventCursor.moveToFirst()
-          while (!eventCursor.isAfterLast) {
-            val index = eventCursor.getColumnIndex("_id")
-            val calendarId = eventCursor.getLong(index)
-            if (calendarId == id) {
-              val deleteUri: Uri =
-                ContentUris.withAppendedId(Uri.parse(calenderEventURL), id)
-              val rows: Int = context.contentResolver.delete(deleteUri, null, null)
-              if (rows == -1) {
-                // 删除提醒失败直接返回
-                return false
-              }
-              return true
-            }
-            eventCursor.moveToNext()
-          }
+  private fun getCommonEventContent(
+    event: CommonEvent,
+    calendarId: Long,
+    block: (ContentValues.() -> Unit)? = null
+  ): ContentValues? {
+    if (event.startTime.isEmpty()) return null
+    val zone = TimeZone.getDefault()
+    return ContentValues().apply {
+      put(Events.TITLE, event.title)
+      put(Events.DESCRIPTION, event.description)
+      put(Events.CALENDAR_ID, calendarId)
+      // 在使用了 DURATION 后，DTSTART 会失效，但又必须填上，所以写个 0 用于区分 CommonEvent 和 FrequencyEvent
+      put(Events.DTSTART, 0)
+      put(Events.DURATION, event.duration.toDuration())
+      put(Events.RDATE, event.startTime.joinToString(separator = ",") {
+        (it.clone() as Calendar).run {
+          // 不知道什么原因，这个日历写进去的时间有一个时区的时间偏移量，所以这里需要单独减掉
+          timeInMillis -= zone.rawOffset
+          toDateTime()
         }
-      }
+      })
+      put(Events.HAS_ALARM, if (event.remind >= 0) 1 else 0) //设置有提醒
+      put(Events.EVENT_TIMEZONE, zone.id) //设置时区
+      block?.invoke(this)
+    }
+  }
+  
+  private fun getFrequencyEventContent(
+    event: FrequencyEvent,
+    calendarId: Long,
+    block: (ContentValues.() -> Unit)? = null
+  ): ContentValues {
+    return ContentValues().apply {
+      put(Events.TITLE, event.title)
+      put(Events.DESCRIPTION, event.description)
+      put(Events.CALENDAR_ID, calendarId)
+      put(Events.DTSTART, event.startTime.timeInMillis)
+      put(Events.DURATION, event.duration.toDuration())
+      put(Events.RRULE, event.toRRule())
+      put(Events.HAS_ALARM, if (event.remind >= 0) 1 else 0) //设置有提醒
+      put(Events.EVENT_TIMEZONE, TimeZone.getDefault().id) //设置时区
+      block?.invoke(this)
+    }
+  }
+  
+  /**
+   * 删除事件,成功返回 true,失败返回 false
+   */
+  fun delete(eventId: Long): Boolean {
+    if (!checkPermission()) return true
+    val deleteUri = ContentUris.withAppendedId(Events.CONTENT_URI, eventId)
+    context.contentResolver.delete(deleteUri, null, null)
     return false
   }
   
   /**
-   * 更新事件,成功返回true,失败返回false
+   * 删除当前账号下所有的事件
    */
-  fun update(id: Long, data: Data): Boolean {
+  fun deleteAll(): Boolean {
     if (!checkPermission()) return false
-    val calendarId = checkAndAddCalendarAccounts().toLong()
-    if (calendarId < 0) {
-      // 获取日历失败直接返回
-      return false
-    }
-    //根据事务Id查看提醒事件是否已经存在
-    val isExist = queryCalendarEvent(calendarId, id)
-    val eventId: String?
-    when (data) {
-      is RepeatData -> {
-        if (isExist) {
-          // 如果事件存在，则更新事件
-          val values = ContentValues().apply {
-            // 更新数据
-            put("title", data.title)
-            put("description", data.description)
-            put(CalendarContract.Events.DTSTART, data.beginTime) // 开始时间
-            put(CalendarContract.Events.DURATION, data.duration) // 持续时间
-            put(CalendarContract.Events.RRULE, data.rrule) // 重复规则
-            put(CalendarContract.Events.HAS_ALARM, 1) // 设置提醒
-          }
-          eventId = id.toString()
-          val updateUri: Uri =
-            ContentUris.withAppendedId(CalendarContract.Events.CONTENT_URI, eventId.toLong())
-          context.contentResolver.update(updateUri, values, null, null)
-          addRemind(id, data.remind)
-          return true
-        }
+    val calendarId = getCalendarAccount()
+    return if (calendarId != null) {
+      context.contentResolver.delete(
+        Events.CONTENT_URI,
+        "(${Events.CALENDAR_ID}=?)",
+        arrayOf(calendarId.toString())
+      ) > 0
+    } else false
+  }
+  
+  /**
+   * 更新事件,成功返回 true,失败返回 false
+   */
+  fun update(eventId: Long, event: Event): Boolean {
+    if (!checkPermission()) return false
+    val calendarId = checkOrAddCalendarAccounts() ?: return false
+    if (calendarId < 0) return false
+    val value = when (event) {
+      is CommonEvent -> getCommonEventContent(event, calendarId) {
+        putNull(Events.RRULE) // 删除 RRULE，防止之前是 FrequencyEvent
       }
-      is OnceData -> {
-        if (isExist) {
-          // 如果事件存在，则更新事件
-          val values = ContentValues().apply {
-            // 更新数据
-            put("title", data.title)
-            put("description", data.description)
-            put(CalendarContract.Events.DTSTART, data.beginTime) // 开始时间
-            put(CalendarContract.Events.DTEND, data.endTime) // 结束时间
-            put(CalendarContract.Events.HAS_ALARM, 1) // 设置提醒
-          }
-          eventId = id.toString()
-          val updateUri: Uri =
-            ContentUris.withAppendedId(CalendarContract.Events.CONTENT_URI, eventId.toLong())
-          context.contentResolver.update(updateUri, values, null, null)
-          addRemind(eventId.toLong(), data.remind)
-          return true
-        }
+      is FrequencyEvent -> getFrequencyEventContent(event, calendarId) {
+        putNull(Events.RDATE) // 删除 RDATE，防止之前是 CommonEvent
       }
-    }
+    } ?: return false
+    val updateUri = ContentUris.withAppendedId(Events.CONTENT_URI, eventId)
+    try {
+      if (context.contentResolver.update(updateUri, value, null, null) >= 0) {
+        deleteRemind(eventId)
+        if (event.remind >= 0) {
+          addRemind(eventId, event.remind)
+        }
+        return true
+      }
+    } catch (_: Exception) { }
     return false
   }
   
   /**
    * 为事件设定提醒
+   * @param eventId 事件 id
+   * @param minute 分钟数
    */
-  private fun addRemind(id: Long?, remind: Int): Boolean {
-    if (id == null) return false
+  private fun addRemind(eventId: Long, minute: Int): Boolean {
     val values = ContentValues()
-    values.put(CalendarContract.Reminders.EVENT_ID, id)
+    values.put(Reminders.EVENT_ID, eventId)
     // 提前remind_minutes分钟有提醒
-    values.put(CalendarContract.Reminders.MINUTES, remind)
-    values.put(CalendarContract.Reminders.METHOD, CalendarContract.Reminders.METHOD_ALERT)
-    context.contentResolver.insert(Uri.parse(calenderReminderURL), values) ?: return false
+    values.put(Reminders.MINUTES, minute)
+    values.put(Reminders.METHOD, Reminders.METHOD_ALERT)
+    context.contentResolver.insert(Reminders.CONTENT_URI, values) ?: return false
     return true
   }
   
-  /**
-   * 查询日历事件
-   * @return 事件id,查询不到则返回""
-   */
-  private fun queryCalendarEvent(
-    calendarId: Long,
-    id: Long,
-  ): Boolean {
-    context.contentResolver.query(Uri.parse(calenderEventURL), null, null, null, null)!!
-      .use {
-        var tempCalendarId: Long
-        if (it.moveToFirst()) {
-          do {
-            val calendarIdIndex = it.getColumnIndex("calendar_id")
-            tempCalendarId = it.getLong(calendarIdIndex)
-            val affairIdIndex = it.getColumnIndex("_id")
-            val tempAffairId = it.getString(affairIdIndex)
-            if (calendarId == tempCalendarId && id == tempAffairId.toLong()) {
-              return true
-            }
-          } while (it.moveToNext())
-        }
-        return false
-      }
+  private fun deleteRemind(eventId: Long): Boolean {
+    val deleteUri = ContentUris.withAppendedId(Events.CONTENT_URI, eventId)
+    return context.contentResolver.delete(deleteUri, null, null) >= 0
   }
   
   /**
-   * 向日历中添加一个事件(重复事件)
+   * 获取日历 ID
+   * @return 日历 ID
    */
-  private fun insertCalendarEvent(
-    calendarId: Long,
-    title: String,
-    description: String,
-    beginTime: Long,
-    duration: String,
-    rrule: String,
-  ): Uri? {
-    val event = ContentValues()
-    event.put("title", title)
-    event.put("description", description)
-    // 插入账户的id
-    event.put("calendar_id", calendarId)
-    event.put(CalendarContract.Events.DTSTART, beginTime) //开始时间
-    event.put(CalendarContract.Events.DURATION, duration) //持续时间
-    event.put(CalendarContract.Events.RRULE, rrule) //重复规则
-    event.put(CalendarContract.Events.HAS_ALARM, 1) //设置提醒
-    event.put(CalendarContract.Events.EVENT_TIMEZONE, TimeZone.getDefault().id) //设置时区
-    //添加事件
-    return context.contentResolver.insert(Uri.parse(calenderEventURL), event)
+  private fun checkOrAddCalendarAccounts(): Long? {
+    val oldId = getCalendarAccount()
+    return oldId ?: addCalendarAccount()
   }
   
   /**
-   * 向日历中添加一个事件(一次性事件)
+   * 检查是否存在日历账户，不存在时返回 null
+   * @return 返回 CALENDAR_ID，不存在时返回 null
    */
-  private fun insertCalendarEvent(
-    calendarId: Long,
-    title: String,
-    description: String,
-    beginTime: Long,
-    endTime: Long
-  ): Uri? {
-    val event = ContentValues()
-    event.put("title", title)
-    event.put("description", description)
-    // 插入账户的id
-    event.put("calendar_id", calendarId)
-    event.put(CalendarContract.Events.DTSTART, beginTime) // 开始时间
-    event.put(CalendarContract.Events.DTEND, endTime) // 结束时间
-    event.put(CalendarContract.Events.HAS_ALARM, 1) //设置有提醒
-    event.put(CalendarContract.Events.EVENT_TIMEZONE, TimeZone.getDefault().id) //设置时区
-    //添加事件
-    return context.contentResolver.insert(Uri.parse(calenderEventURL), event)
-  }
-  
-  /**
-   * 获取日历ID
-   * @return 日历ID
-   */
-  private fun checkAndAddCalendarAccounts(): Int {
-    val oldId = checkCalendarAccounts()
-    return if (oldId >= 0) {
-      oldId
-    } else {
-      val addId = addCalendarAccount()
-      if (addId >= 0) {
-        checkCalendarAccounts()
-      } else {
-        -1
-      }
-    }
-  }
-  
-  /**
-   * 检查是否存在日历账户
-   */
-  private fun checkCalendarAccounts(): Int {
+  fun getCalendarAccount(): Long? {
+    if (!checkPermission()) return null
     return context.contentResolver.query(
-      Uri.parse(calenderURL),
-      null,
-      null,
-      null,
-      CalendarContract.Calendars.CALENDAR_ACCESS_LEVEL + " ASC "
-    ).use { userCursor ->
-      if (userCursor == null) //查询返回空值
-        return -1
-      val count: Int = userCursor.count
-      if (count > 0) { //存在现有账户，取第一个账户的id返回
-        userCursor.moveToLast()
-        userCursor.getColumnIndex(CalendarContract.Calendars._ID).let {
-          if (it >= 0) {
-            userCursor.getInt(it)
-          } else -1
-        }
-      } else {
-        -1
+      Calendars.CONTENT_URI,
+      arrayOf( // 这个是查询结果只展示这几列
+        Calendars._ID,
+        Calendars.ACCOUNT_NAME,
+        Calendars.ACCOUNT_TYPE,
+        Calendars.CALENDAR_DISPLAY_NAME,
+        Calendars.OWNER_ACCOUNT
+      ),
+      // 下面这个是 WHERE 语句
+      "((${Calendars.ACCOUNT_NAME} = ?) AND " +
+        "(${Calendars.ACCOUNT_TYPE} = ?) AND " +
+        "(${Calendars.CALENDAR_DISPLAY_NAME} = ?) AND " +
+        "(${Calendars.OWNER_ACCOUNT} = ?))",
+      arrayOf( // 这个是用于填充上面写的 ? 值
+        CALENDARS_ACCOUNT_NAME,
+        CALENDARS_ACCOUNT_TYPE,
+        CALENDARS_DISPLAY_NAME,
+        CALENDARS_OWNER_ACCOUNT
+      ),
+      null
+    ).use { cursor ->
+      if (cursor == null || cursor.count == 0) return null
+      cursor.moveToNext() // 必须调用，不然查询就报错
+      cursor.getColumnIndex(Calendars._ID).let {
+        if (it >= 0) cursor.getLong(it) else null
       }
     }
+  }
+  
+  /**
+   * 删除创建的日历账户
+   */
+  fun deleteCalendarAccount(CALENDAR_ID: Long) {
+    if (!checkPermission()) return
+    context.contentResolver.delete(
+      Calendars.CONTENT_URI,
+      // 下面这个是 WHERE 语句
+      "((${Calendars._ID} = ?) AND " +
+        "(${Calendars.ACCOUNT_NAME} = ?) AND " +
+        "(${Calendars.ACCOUNT_TYPE} = ?) AND " +
+        "(${Calendars.CALENDAR_DISPLAY_NAME} = ?) AND " +
+        "(${Calendars.OWNER_ACCOUNT} = ?))",
+      arrayOf( // 这个是用于填充上面写的 ? 值
+        CALENDAR_ID.toString(),
+        CALENDARS_ACCOUNT_NAME,
+        CALENDARS_ACCOUNT_TYPE,
+        CALENDARS_DISPLAY_NAME,
+        CALENDARS_OWNER_ACCOUNT
+      )
+    )
   }
   
   /**
    * 添加一个日历账户
    */
-  private fun addCalendarAccount(): Long {
-    val timeZone: TimeZone = TimeZone.getDefault()
-    val value = ContentValues()
-    value.put(CalendarContract.Calendars.NAME, CALENDARS_NAME)
-    value.put(CalendarContract.Calendars.ACCOUNT_NAME, CALENDARS_ACCOUNT_NAME)
-    value.put(CalendarContract.Calendars.ACCOUNT_TYPE, CALENDARS_ACCOUNT_TYPE)
-    value.put(
-      CalendarContract.Calendars.CALENDAR_DISPLAY_NAME,
-      CALENDARS_DISPLAY_NAME
-    )
-    value.put(CalendarContract.Calendars.VISIBLE, 1)
-    value.put(CalendarContract.Calendars.CALENDAR_COLOR, Color.BLUE)
-    value.put(
-      CalendarContract.Calendars.CALENDAR_ACCESS_LEVEL,
-      CalendarContract.Calendars.CAL_ACCESS_OWNER
-    )
-    value.put(CalendarContract.Calendars.SYNC_EVENTS, 1)
-    value.put(CalendarContract.Calendars.CALENDAR_TIME_ZONE, timeZone.id)
-    value.put(CalendarContract.Calendars.OWNER_ACCOUNT, CALENDARS_ACCOUNT_NAME)
-    value.put(CalendarContract.Calendars.CAN_ORGANIZER_RESPOND, 0)
-    var calendarUri: Uri = Uri.parse(calenderURL)
-    calendarUri = calendarUri.buildUpon()
-      .appendQueryParameter(CalendarContract.CALLER_IS_SYNCADAPTER, "true")
-      .appendQueryParameter(
-        CalendarContract.Calendars.ACCOUNT_NAME,
-        CALENDARS_ACCOUNT_NAME
-      )
-      .appendQueryParameter(
-        CalendarContract.Calendars.ACCOUNT_TYPE,
-        CALENDARS_ACCOUNT_TYPE
-      )
-      .build()
-    val result: Uri? = context.contentResolver.insert(calendarUri, value)
-    return if (result == null) -1 else ContentUris.parseId(result)
+  private fun addCalendarAccount(): Long? {
+    if (!checkPermission()) return null
+    val value = ContentValues().apply {
+      put(Calendars.NAME, CALENDARS_NAME)
+      put(Calendars.ACCOUNT_NAME, CALENDARS_ACCOUNT_NAME)
+      put(Calendars.ACCOUNT_TYPE, CALENDARS_ACCOUNT_TYPE)
+      put(Calendars.CALENDAR_DISPLAY_NAME, CALENDARS_DISPLAY_NAME)
+      put(Calendars.OWNER_ACCOUNT, CALENDARS_OWNER_ACCOUNT)
+      put(Calendars.VISIBLE, 1)
+      put(Calendars.CALENDAR_COLOR, Color.BLUE)
+      put(Calendars.CALENDAR_ACCESS_LEVEL, Calendars.CAL_ACCESS_OWNER)
+      put(Calendars.SYNC_EVENTS, 1)
+      put(Calendars.CALENDAR_TIME_ZONE, TimeZone.getDefault().id)
+      put(Calendars.CAN_ORGANIZER_RESPOND, 0)
+    }
+    
+    return context.contentResolver.insert(
+      Calendars.CONTENT_URI.buildUpon()
+        .appendQueryParameter(CALLER_IS_SYNCADAPTER, "true")
+        .appendQueryParameter(Calendars.ACCOUNT_NAME, CALENDARS_ACCOUNT_NAME)
+        .appendQueryParameter(Calendars.ACCOUNT_TYPE, CALENDARS_ACCOUNT_TYPE)
+        .build(),
+      value
+    )?.lastPathSegment?.toLong()
   }
   
   private fun checkPermission(): Boolean {
@@ -344,34 +282,160 @@ object PhoneCalendar {
       && context.checkSelfPermission(Manifest.permission.WRITE_CALENDAR) == PackageManager.PERMISSION_GRANTED
   }
   
-  sealed interface Data
+  /**
+   * 将时间戳根据 国际 RFC5545 规则装换为 DATE-TIME 类型
+   * RFC5545 规范中英对照文档：http://rfc2cn.com/rfc5545.html
+   * DATE-TIME 规则：3.3.5
+   */
+  private fun Calendar.toDateTime(): String {
+    val year = get(Calendar.YEAR)
+    val month = get(Calendar.MONTH) + 1
+    val date = get(Calendar.DATE)
+    val hour = get(Calendar.HOUR_OF_DAY)
+    val minute = get(Calendar.MINUTE)
+    val second = get(Calendar.SECOND)
+    return "$year" +
+      "${if (month < 10) "0$month" else month}" +
+      "${if (date < 10) "0$date" else date}" +
+      "T" +
+      "${if (hour < 10) "0$hour" else hour}" +
+      "${if (minute < 10) "0$minute" else minute}" +
+      "${if (second < 10) "0$second" else second}" +
+      "Z"
+  }
+  
+  sealed interface Event {
+    val title: String
+    val description: String
+    
+    /**
+     * 提前几分钟提醒(单位：分钟)。值为 负数 时表示不提醒；值为 0 时表示立即提醒
+     */
+    val remind: Int
+    
+    /**
+     * 持续时间
+     */
+    val duration: Duration
+    
+    class Duration(
+      @IntRange(from = 0) val day: Int = 0,
+      @IntRange(from = 0) val hour: Int = 0,
+      @IntRange(from = 0) val minute: Int = 0,
+      @IntRange(from = 0) val second: Int = 0,
+    ) {
+      // 转变成日历需要的字符串，具体请看：3.3.6
+      internal fun toDuration(): String {
+        return "P${day}DT${hour}H${minute}M${second}S"
+      }
+    }
+  }
   
   /**
-   * 一次性事件
-   * @param beginTime 事件开始时间,以从公元纪年开始计算的世界时毫秒数表示.
-   * @param remind 提醒时间,单位:分钟
+   * 在某几天内重复的事件
+   * @param startTime 开始的时间
    */
-  data class OnceData(
-    val title: String,
-    val description: String,
-    val beginTime: Long,
-    val endTime: Long,
-    val remind: Int // 分钟
-  ) : Data
+  data class CommonEvent(
+    override val title: String,
+    override val description: String,
+    override val remind: Int,
+    override val duration: Event.Duration,
+    val startTime: List<Calendar>
+  ) : Event
   
   /**
-   * 重复事件
-   * @param beginTime 事件开始时间,以从公元纪年开始计算的世界时毫秒数表示.
-   * @param duration 持续时间. 例:PT1H45M0S 指定了一小时四十五分零秒的时间间隔
-   * @param rrule 重复规则. 例:FREQ=DAILY;COUNT=10 每天发生一次，重复10次
-   * @param remind 提醒时间,单位:分钟
+   * 带有一定频率的事件，更多参考的例子请查看：http://rfc2cn.com/rfc5545.html 中的 3.8.5.3
+   * 每个参数的详细解释请查看 3.3.10
+   *
+   * @param freq 频率单位
+   * @param interval 重复事件之间的间隔，单位由 [freq] 决定
+   * @param until 直到什么时候结束
+   * @param count 总次数
+   * @param byDay 星期数
+   * @param byMonthDay 一月中的天数。例如，-10 表示一个月的倒数第 10 天
+   * @param byYearDay 一年中的日期。例如，-1 表示一年中的最后一天（12月31日）
+   * @param byWeekNo 一年中的周数。例如，3 代表一年中的第三周
+   * @param byMonth 一年的月份。例如，2 代表一年中的第二月
+   * @param bySetPos 与 ByXXX 结合使用，用于指定哪一次。比如：当月最后一个工作日 -> FREQ=MONTHLY;BYDAY=MO,TU,WE,TH,FR;BYSETPOS=-1
    */
-  data class RepeatData(
-    val title: String,
-    val description: String,
-    val beginTime: Long,
-    val duration: String,
-    val rrule: String,
-    val remind: Int // 分钟
-  ) : Data
+  data class FrequencyEvent(
+    override val title: String,
+    override val description: String,
+    override val remind: Int,
+    override val duration: Event.Duration,
+    val startTime: Calendar,
+    val freq: Freq,
+    val interval: Int = 1,
+    val until: Calendar? = null,
+    @IntRange(from = 1)
+    val count: Int? = null,
+    val byDay: List<ByDay> = emptyList(),
+    val byMonthDay: List<Int> = emptyList(),
+    val byYearDay: List<Int> = emptyList(),
+    val byWeekNo: List<Int> = emptyList(),
+    val byMonth: List<Int> = emptyList(),
+    val bySetPos: List<Int> = emptyList(),
+  ) : Event {
+    enum class Freq { SECONDLY, MINUTELY, HOURLY, DAILY, WEEKLY, MONTHLY, YEARLY }
+    sealed interface ByDay {
+      /**
+       * 用于表示在每月或每年的 “RRULE” 中特定日期的第 n 次出现。支持负数
+       *
+       * 比如：
+       * +1MO（或简单地说是 1MO）表示该月（或该年）的第一个星期一，而 -1MO 表示该月的最后一个星期一
+       */
+      val num: Int
+      
+      class MO(override val num: Int = 0) : ByDay
+      class TU(override val num: Int = 0) : ByDay
+      class WE(override val num: Int = 0) : ByDay
+      class TH(override val num: Int = 0) : ByDay
+      class FR(override val num: Int = 0) : ByDay
+      class SA(override val num: Int = 0) : ByDay
+      class SU(override val num: Int = 0) : ByDay
+      
+      fun getString(): String {
+        return if (num == 0) javaClass.simpleName else "$num" + javaClass.simpleName
+      }
+    }
+    
+    // 转变成 RRULE，请看：3.3.10、3.8.5.3
+    internal fun toRRule(): String {
+      return "FREQ=${freq.name};INTERVAL=$interval;" +
+        (until?.toDateTime() ?: "") +
+        if (count != null) "COUNT=$count;" else {
+          ""
+        } +
+        if (byDay.isNotEmpty()) {
+          "BYDAY=${byDay.joinToString(",") { it.getString() }};"
+        } else {
+          ""
+        } +
+        if (byMonthDay.isNotEmpty() && freq != Freq.WEEKLY) {
+          "BYMONTHDAY=${byMonthDay.filter { it in -31..31 && it != 0 }.joinToString(",")};"
+        } else {
+          ""
+        } +
+        if (byYearDay.isNotEmpty() && (freq < Freq.DAILY || freq == Freq.YEARLY)) {
+          "BYYEARDAY=${byYearDay.filter { it in -366..366 && it != 0 }.joinToString(",")};"
+        } else {
+          ""
+        } +
+        if (byWeekNo.isNotEmpty() && freq == Freq.YEARLY) {
+          "BYWEEKNO=${byWeekNo.filter { it in -53..53 && it != 0 }.joinToString(",")};"
+        } else {
+          ""
+        } +
+        if (byMonth.isNotEmpty()) {
+          "BYMONTH=${byMonth.filter { it in 1..12 }.joinToString(",")};"
+        } else {
+          ""
+        } +
+        if (bySetPos.isNotEmpty()) {
+          "BYSETPOS=${bySetPos.filter { it in -366..366 && it != 0 }.joinToString(",")}"
+        } else {
+          ""
+        }
+    }
+  }
 }

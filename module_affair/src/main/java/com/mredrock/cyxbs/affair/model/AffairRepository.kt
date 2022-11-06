@@ -7,11 +7,14 @@ import com.mredrock.cyxbs.affair.room.*
 import com.mredrock.cyxbs.affair.room.AffairDataBase
 import com.mredrock.cyxbs.affair.room.AffairEntity
 import com.mredrock.cyxbs.affair.room.AffairEntity.Companion.LocalRemoteId
-import com.mredrock.cyxbs.affair.utils.TimeUtils
 import com.mredrock.cyxbs.api.account.IAccountService
-import com.mredrock.cyxbs.api.affair.utils.getEndRow
-import com.mredrock.cyxbs.api.affair.utils.getStartRow
+import com.mredrock.cyxbs.api.course.ICourseService
+import com.mredrock.cyxbs.api.course.utils.getEndRow
+import com.mredrock.cyxbs.api.course.utils.getEndTimeMinute
+import com.mredrock.cyxbs.api.course.utils.getStartRow
+import com.mredrock.cyxbs.api.course.utils.getStartTimeMinute
 import com.mredrock.cyxbs.config.config.PhoneCalendar
+import com.mredrock.cyxbs.config.config.SchoolCalendar
 import com.mredrock.cyxbs.lib.utils.extensions.unsafeSubscribeBy
 import com.mredrock.cyxbs.lib.utils.network.throwApiExceptionIfFail
 import com.mredrock.cyxbs.lib.utils.service.ServiceManager
@@ -19,6 +22,7 @@ import io.reactivex.rxjava3.core.Completable
 import io.reactivex.rxjava3.core.Observable
 import io.reactivex.rxjava3.core.Single
 import io.reactivex.rxjava3.schedulers.Schedulers
+import java.util.*
 import java.util.concurrent.Callable
 import kotlin.IllegalStateException
 
@@ -203,7 +207,17 @@ object AffairRepository {
               }
             }.doOnSuccess { remoteId ->
               // 最后更新本地数据
-              AffairDao.updateAffair(AffairEntity(stuNum, onlyId, remoteId, time, title, content, atWhatTime))
+              AffairDao.updateAffair(
+                AffairEntity(
+                  stuNum,
+                  onlyId,
+                  remoteId,
+                  time,
+                  title,
+                  content,
+                  atWhatTime
+                )
+              )
             }.blockingGet() // 直接堵塞，因为需要使用数据库的 runInTransaction，不能使用流来处理
         }
         // 在 runInTransaction 结束后再发送
@@ -356,42 +370,49 @@ object AffairRepository {
     AffairCalendarDao.remove(onlyId).forEach {
       PhoneCalendar.delete(it)
     }
+    val firstMonDay = SchoolCalendar.getFirstMonDayOfTerm() ?: return
     // 只有大于 0 才有提醒，只有需要提醒的才写进手机日历
     if (time > 0) {
       val calendarIdList = arrayListOf<Long>()
-      atWhatTime.forEach { it ->
+      atWhatTime.forEach { whatTime ->
+        val startMinute = getStartTimeMinute(getStartRow(whatTime.beginLesson))
+        val endMinute = getEndTimeMinute(getEndRow(whatTime.beginLesson, whatTime.period))
         // 如果是整学期,添加重复事件
-        if (it.week.any { it == 0 }) {
+        if (whatTime.week.any { it == 0 }) {
           PhoneCalendar.add(
-            PhoneCalendar.RepeatData(
-              title,
-              content,
-              TimeUtils.getBegin(it.beginLesson, it.day),
-              TimeUtils.getDuration(
-                getStartRow(it.beginLesson),
-                getEndRow(it.beginLesson, it.period)
+            PhoneCalendar.FrequencyEvent(
+              title = title,
+              description = content,
+              remind = time,
+              duration = PhoneCalendar.Event.Duration(
+                minute = endMinute - startMinute
               ),
-              TimeUtils.getRRule(it.day),
-              time
+              startTime = (firstMonDay.clone() as Calendar).apply {
+                add(Calendar.DATE, whatTime.day)
+                add(Calendar.MINUTE, startMinute)
+              },
+              freq = PhoneCalendar.FrequencyEvent.Freq.WEEKLY,
+              count = ICourseService.maxWeek
             )
           )?.also { calendarIdList.add(it) }
         } else {
           // 如果不是整学期,添加一次性事件
-          it.week.forEach { week ->
-            PhoneCalendar.add(
-              PhoneCalendar.OnceData(
-                title,
-                content,
-                TimeUtils.getBegin(getStartRow(it.beginLesson), it.day, week),
-                TimeUtils.getEnd(
-                  getStartRow(it.beginLesson),
-                  it.day, week,
-                  getEndRow(it.beginLesson, it.period)
-                ),
-                time
-              )
-            )?.also { calendarIdList.add(it) }
-          }
+          PhoneCalendar.add(
+            PhoneCalendar.CommonEvent(
+              title = title,
+              description = content,
+              remind = time,
+              duration = PhoneCalendar.Event.Duration(
+                minute = endMinute - startMinute
+              ),
+              startTime = whatTime.week.map {
+                (firstMonDay.clone() as Calendar).apply {
+                  add(Calendar.DATE, whatTime.day + it * 7)
+                  add(Calendar.MINUTE, startMinute)
+                }
+              }
+            )
+          )?.also { calendarIdList.add(it) }
         }
       }
       if (calendarIdList.isNotEmpty()) {

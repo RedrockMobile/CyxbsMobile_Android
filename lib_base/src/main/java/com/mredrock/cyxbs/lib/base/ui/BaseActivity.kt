@@ -90,7 +90,7 @@ abstract class BaseActivity : OperationActivity() {
    * 不同布局该属性效果不同，请给合适的布局添加
    * 
    * ## 比如
-   * - 大部分情况下是给第二层布局添加 fitsSystemWindows=true，因为最外层布局需要提供背景给状态栏，而第二层布局需要下移标题栏
+   * - 大部分情况下是给第二层布局添加 fitsSystemWindows=true，因为最外层布局需要提供背景给状态栏，而第二层布局需要下移状态栏
    * - 如果你使用了 BottomSheet，那么大概率需要给 BottomSheet 加上 fitsSystemWindows=true。
    *   (注意: CoordinatorLayout 设置 fitsSystemWindows 无效，但可以在外面包一层 FrameLayout，给它加上 fitsSystemWindows)
    * - 
