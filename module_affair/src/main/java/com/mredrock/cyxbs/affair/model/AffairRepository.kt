@@ -13,7 +13,7 @@ import com.mredrock.cyxbs.api.course.utils.getEndRow
 import com.mredrock.cyxbs.api.course.utils.getEndTimeMinute
 import com.mredrock.cyxbs.api.course.utils.getStartRow
 import com.mredrock.cyxbs.api.course.utils.getStartTimeMinute
-import com.mredrock.cyxbs.config.config.PhoneCalendar
+import com.mredrock.cyxbs.lib.utils.utils.config.PhoneCalendar
 import com.mredrock.cyxbs.config.config.SchoolCalendar
 import com.mredrock.cyxbs.lib.utils.extensions.unsafeSubscribeBy
 import com.mredrock.cyxbs.lib.utils.network.throwApiExceptionIfFail
@@ -367,6 +367,11 @@ object AffairRepository {
     atWhatTime: List<AffairEntity.AtWhatTime>
   ) {
     // 更新手机上的日历，采取先删除再添加的方式，因为一个事务对应了多个日历中的安排，不好更新
+    /*
+    * todo 如果以后有学弟要更新事务逻辑，我的建议是将事务改成设置一个事务长度后，进入编辑界面时只能设置出现在哪几天内，
+    *  而不是仍能设置其他长度的事务。
+    * 这样一个事务才能与日历中的一个事务才能对应起来
+    * */
     AffairCalendarDao.remove(onlyId).forEach {
       PhoneCalendar.delete(it)
     }
@@ -407,7 +412,7 @@ object AffairRepository {
               ),
               startTime = whatTime.week.map {
                 (firstMonDay.clone() as Calendar).apply {
-                  add(Calendar.DATE, whatTime.day + it * 7)
+                  add(Calendar.DATE, whatTime.day + (it - 1) * 7)
                   add(Calendar.MINUTE, startMinute)
                 }
               }

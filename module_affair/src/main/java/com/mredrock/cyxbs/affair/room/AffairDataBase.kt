@@ -214,8 +214,7 @@ data class AffairCalendarEntity(
   @PrimaryKey
   val onlyId: Int,
   val eventIdList: List<Long> // 手机日历的 id
-) {
-}
+)
 
 @Dao
 abstract class AffairCalendarDao {
