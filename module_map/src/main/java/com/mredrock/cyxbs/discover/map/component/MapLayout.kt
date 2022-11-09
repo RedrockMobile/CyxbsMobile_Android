@@ -122,6 +122,7 @@ class MapLayout : FrameLayout, View.OnClickListener {
          * 其他则直接下载地图到/data/data/com.mredrock.cyxbs.discover.map/cache/image_manager_disk_cache目录下
          */
         setOnUrlGetListener(object : OnUrlGetListener {
+
             override fun onUrlGet() {
                 when (url) {
                     "loadFail" -> {

@@ -149,6 +149,9 @@ class MapViewFragment : BaseFragment() {
          * 加载失败时使用本地地图缓存
          */
         viewModel.loadFail.observe(viewLifecycleOwner, Observer {
+
+
+
             if (it) {
                 val path = DataSet.getPath()
                 if (path == null) {

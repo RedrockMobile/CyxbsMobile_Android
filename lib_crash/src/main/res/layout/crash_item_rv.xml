@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<TextView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/textView_Rv"
+    android:text="测试的异常RV"
+    android:gravity="center"
+    android:textSize="20sp"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+</TextView>

@@ -20,6 +20,7 @@ import com.mredrock.cyxbs.discover.map.util.KeyboardController
 import com.mredrock.cyxbs.discover.map.viewmodel.MapViewModel
 import com.mredrock.cyxbs.discover.map.widget.GlideProgressDialog
 import com.mredrock.cyxbs.discover.map.widget.ProgressDialog
+import com.mredrock.cyxbs.discover.map.widget.ProgressDialog.hide
 import top.limuyang2.photolibrary.LPhotoHelper
 import java.io.File
 

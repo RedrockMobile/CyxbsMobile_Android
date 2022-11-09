@@ -43,6 +43,6 @@ class VolunteerLoginViewModel : BaseViewModel() {
                             if (it !is RedrockApiException) {
                                 onError()
                             }
-                        })
+                        }).lifeCycle()
     }
 }

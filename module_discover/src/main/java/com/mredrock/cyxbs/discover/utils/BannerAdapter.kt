@@ -1,30 +1,12 @@
 package com.mredrock.cyxbs.discover.utils
 
-import android.content.Context
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
-import androidx.recyclerview.widget.RecyclerView
-import androidx.recyclerview.widget.RecyclerView.Adapter
-import androidx.viewpager2.widget.ViewPager2
-import com.bumptech.glide.Glide
-import com.bumptech.glide.load.MultiTransformation
-import com.bumptech.glide.load.resource.bitmap.CenterCrop
-import com.bumptech.glide.load.resource.bitmap.RoundedCorners
-import com.bumptech.glide.request.RequestOptions
-import com.mredrock.cyxbs.common.utils.extensions.dip
-import com.mredrock.cyxbs.common.utils.extensions.setOnSingleClickListener
-import com.mredrock.cyxbs.discover.R
-import com.mredrock.cyxbs.discover.network.RollerViewInfo
-import com.mredrock.cyxbs.discover.pages.RollerViewActivity
-import kotlinx.android.synthetic.main.discover_viewpager_item.view.*
-
 
 /**
  * @author zixuan
  * 2019/11/20
  *
  */
+/*
 class BannerAdapter(private val context: Context, private val viewPager: ViewPager2) :
     Adapter<RecyclerView.ViewHolder>() {
     var urlList = ArrayList<RollerViewInfo>()
@@ -61,4 +43,4 @@ class BannerAdapter(private val context: Context, private val viewPager: ViewPag
     }
 
     class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView)
-}
+}*/
