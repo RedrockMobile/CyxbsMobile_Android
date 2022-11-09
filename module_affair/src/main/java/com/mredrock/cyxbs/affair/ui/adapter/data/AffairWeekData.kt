@@ -1,9 +1,9 @@
 package com.mredrock.cyxbs.affair.ui.adapter.data
 
 import com.mredrock.cyxbs.affair.room.AffairEntity
-import com.mredrock.cyxbs.api.affair.utils.getEndRow
-import com.mredrock.cyxbs.api.affair.utils.getStartRow
 import com.mredrock.cyxbs.api.course.ICourseService
+import com.mredrock.cyxbs.api.course.utils.getEndRow
+import com.mredrock.cyxbs.api.course.utils.getStartRow
 
 /**
  * ...

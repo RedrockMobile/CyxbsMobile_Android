@@ -48,8 +48,9 @@ fun getBeginLesson(startRow: Int): Int {
 
 /**
  * @param startRow 这个 [startRow] 是调用了 [getStartRow] 转换后的值
+ * @return [startRow] 行表示的开始上课的分钟数
  */
-fun getStartTime(startRow: Int): Int {
+fun getStartTimeMinute(startRow: Int): Int {
   return when (startRow) {
     0 -> 8 * 60
     1 -> 8 * 60 + 55
@@ -60,19 +61,21 @@ fun getStartTime(startRow: Int): Int {
     6 -> 14 * 60 + 55
     7 -> 16 * 60 + 15
     8 -> 17 * 60 + 10
-    9 -> 19 * 60
-    10 -> 19 * 60 + 55
-    11 -> 20 * 60 + 50
-    12 -> 21 * 60 + 45
-    13 -> 22 * 60 + 30
+    9 -> 17 * 60 + 55
+    10 -> 19 * 60
+    11 -> 19 * 60 + 55
+    12 -> 20 * 60 + 50
+    13 -> 21 * 60 + 45
+    14 -> 22 * 60 + 30
     else -> 0
   }
 }
 
 /**
  * @param endRow 这个 [endRow] 是调用了 [getEndRow] 转换后的值，也可以是 row
+ * @return [endRow] 行表示的下课的分钟数
  */
-fun getEndTime(endRow: Int): Int {
+fun getEndTimeMinute(endRow: Int): Int {
   return when (endRow) {
     0 -> 8 * 60 + 45
     1 -> 9 * 60 + 40
@@ -83,11 +86,12 @@ fun getEndTime(endRow: Int): Int {
     6 -> 15 * 60 + 40
     7 -> 17 * 60
     8 -> 17 * 60 + 55
-    9 -> 19 * 60 + 45
-    10 -> 20 * 60 + 40
-    11 -> 21 * 60 + 35
-    12 -> 22 * 60 + 30
-    13 -> 24 * 60
+    9 -> 19 * 60
+    10 -> 19 * 60 + 45
+    11 -> 20 * 60 + 40
+    12 -> 21 * 60 + 35
+    13 -> 22 * 60 + 30
+    14 -> 23 * 59
     else -> 0
   }
 }
