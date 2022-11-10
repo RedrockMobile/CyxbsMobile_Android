@@ -122,4 +122,4 @@ jobs:
           LARK_BOT_APP_ID: ${{secrets.LARK_BOT_APP_ID}}
           LARK_BOT_APP_SECRET: ${{secrets.LARK_BOT_APP_SECRET}}
           TITLE:  ${{ github.event.pull_request.title }}
-          BODY:  ${{ github.event.pull_request.body}}
+          BODY:  ${{ github.event.pull_request.body }}

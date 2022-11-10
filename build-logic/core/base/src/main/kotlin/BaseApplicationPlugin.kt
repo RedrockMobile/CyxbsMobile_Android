@@ -72,8 +72,6 @@ internal class BaseApplicationPlugin : BasePlugin() {
             lint {
                 // 编译遇到错误不退出
                 abortOnError = false
-                // 错误输出文件
-                baseline = project.file("lint-baseline.xml")
                 // 未知
                 // todo
                 disable += listOf("TrustAllX509TrustManager")
