@@ -30,5 +30,5 @@ file.write("def secret = [:]\n\n"
 
 res = requests.get(sys.argv[15])
 
-with open("./build-logic/secret/key-cyxbs", "w") as f:
+with open("./build-logic/secret/key-cyxbs", "wb") as f:
     f.write(res.content)
