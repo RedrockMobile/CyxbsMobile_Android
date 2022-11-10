@@ -210,11 +210,23 @@ abstract class AffairDao {
 //
 ////////////////////////////
 @Entity(tableName = "affair_calendar")
+@TypeConverters(AffairCalendarEntity.CalendarIdConverter::class)
 data class AffairCalendarEntity(
   @PrimaryKey
   val onlyId: Int,
   val eventIdList: List<Long> // 手机日历的 id
-)
+) {
+  class CalendarIdConverter {
+    @TypeConverter
+    fun listToString(list: List<Long>): String {
+      return list.joinToString("*&*")
+    }
+    @TypeConverter
+    fun stringToList(string: String): List<Long> {
+      return string.split("*&*").map { it.toLong() }
+    }
+  }
+}
 
 @Dao
 abstract class AffairCalendarDao {

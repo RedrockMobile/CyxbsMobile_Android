@@ -2,7 +2,7 @@
   "formatVersion": 1,
   "database": {
     "version": 2,
-    "identityHash": "bae2e0f18cea28ae8f0458140efbcf98",
+    "identityHash": "fc3bb411ef1cf65cd1bdf1843dd2eb8e",
     "entities": [
       {
         "tableName": "affair",
@@ -63,7 +63,7 @@
       },
       {
         "tableName": "affair_calendar",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`onlyId` INTEGER NOT NULL, `calendarId` INTEGER NOT NULL, PRIMARY KEY(`onlyId`))",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`onlyId` INTEGER NOT NULL, `eventIdList` TEXT NOT NULL, PRIMARY KEY(`onlyId`))",
         "fields": [
           {
             "fieldPath": "onlyId",
@@ -72,9 +72,9 @@
             "notNull": true
           },
           {
-            "fieldPath": "calendarId",
-            "columnName": "calendarId",
-            "affinity": "INTEGER",
+            "fieldPath": "eventIdList",
+            "columnName": "eventIdList",
+            "affinity": "TEXT",
             "notNull": true
           }
         ],
@@ -232,7 +232,7 @@
     "views": [],
     "setupQueries": [
       "CREATE TABLE IF NOT EXISTS room_master_table (id INTEGER PRIMARY KEY,identity_hash TEXT)",
-      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, 'bae2e0f18cea28ae8f0458140efbcf98')"
+      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, 'fc3bb411ef1cf65cd1bdf1843dd2eb8e')"
     ]
   }
 }
