@@ -41,6 +41,7 @@ object ApiDepend {
   val mine = ":module_mine:api_mine" by parent
   val course = ":module_course:api_course" by parent
   val affair = ":module_affair:api_affair" by parent
+  val dialog = ":module_dialog:api_dialog" by parent
 
   private infix fun String.by(implPath: String): ApiDependUtils.IApiDependUtils = by { implPath }
   private infix fun String.by(implPath: String.() -> String): ApiDependUtils.IApiDependUtils {
@@ -84,6 +85,10 @@ fun Project.dependApiVolunteer() {
   ApiDepend.volunteer.dependApiOnly(this)
 }
 
+fun Project.dependApiDialog() {
+  ApiDepend.dialog.dependApiOnly(this)
+}
+
 fun Project.dependApiWidget() {
   ApiDepend.widget.dependApiOnly(this)
 }
@@ -103,6 +108,7 @@ fun Project.dependApiCourse(){
 fun Project.dependApiAffair(){
   ApiDepend.affair.dependApiOnly(this)
 }
+
 fun Project.dependApiCrash(){
   ApiDepend.crash.dependApiOnly(this)
 }

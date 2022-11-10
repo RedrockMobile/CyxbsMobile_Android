@@ -6,7 +6,6 @@ package com.mredrock.cyxbs.common.webView
  */
 interface WebViewBaseCallBack {
 
-
     //webViewResume后
     fun webViewResume()
 
