@@ -2,13 +2,13 @@
 
 pluginManagement {
     repositories {
+        includeBuild(".")
         maven("https://maven.aliyun.com/repository/public")
         maven("https://maven.aliyun.com/repository/google")
         gradlePluginPortal()
         maven("https://jitpack.io")
         google()
         mavenCentral()
-        includeBuild(".")
     }
 }
 
