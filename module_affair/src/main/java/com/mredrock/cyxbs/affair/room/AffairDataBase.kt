@@ -24,7 +24,7 @@ import io.reactivex.rxjava3.core.Observable
     LocalUpdateAffairEntity::class,
     LocalDeleteAffairEntity::class,
              ],
-  version = 1
+  version = 2
 )
 abstract class AffairDataBase : RoomDatabase() {
   abstract fun getAffairDao(): AffairDao
@@ -210,23 +210,11 @@ abstract class AffairDao {
 //
 ////////////////////////////
 @Entity(tableName = "affair_calendar")
-@TypeConverters(AffairCalendarEntity.CalendarIdConverter::class)
 data class AffairCalendarEntity(
   @PrimaryKey
   val onlyId: Int,
-  val calendarIdList: List<Long> // 手机日历的 id
-) {
-  class CalendarIdConverter {
-    @TypeConverter
-    fun listToString(list: List<Long>): String {
-      return list.joinToString("*&*")
-    }
-    @TypeConverter
-    fun stringToList(string: String): List<Long> {
-      return string.split("*&*").map { it.toLong() }
-    }
-  }
-}
+  val eventIdList: List<Long> // 手机日历的 id
+)
 
 @Dao
 abstract class AffairCalendarDao {
@@ -246,7 +234,7 @@ abstract class AffairCalendarDao {
   open fun remove(onlyId: Int): List<Long> {
     val list = get(onlyId)
     delete(onlyId)
-    return list?.calendarIdList ?: emptyList()
+    return list?.eventIdList ?: emptyList()
   }
 }
 

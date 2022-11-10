@@ -1,7 +1,6 @@
 package com.mredrock.cyxbs.convention.depend.api
 
 import org.gradle.api.Project
-
 import api.utils.ApiDependUtils
 
 /**
@@ -27,9 +26,11 @@ object ApiDepend {
   * add:    用于连接多个实现模块，比如后面写的 module_xxx，就是 api_test 的另一个实现模块
   * */
   
+  // 下面的顺序尽量根据模块的排序来写
   val account = ":lib_account:api_account" by parent
   val protocol = ":lib_protocol:api_protocol" by parent
   val update = ":lib_update:api_update" by parent
+  val crash = ":lib_crash:api_crash" by parent
   val electricity = ":module_electricity:api_electricity" by parent
   val login = ":module_login:api_login" by parent
   val sport = ":module_sport:api_sport" by parent
@@ -87,6 +88,7 @@ fun Project.dependApiVolunteer() {
 fun Project.dependApiDialog() {
   ApiDepend.dialog.dependApiOnly(this)
 }
+
 fun Project.dependApiWidget() {
   ApiDepend.widget.dependApiOnly(this)
 }
@@ -105,4 +107,8 @@ fun Project.dependApiCourse(){
 
 fun Project.dependApiAffair(){
   ApiDepend.affair.dependApiOnly(this)
+}
+
+fun Project.dependApiCrash(){
+  ApiDepend.crash.dependApiOnly(this)
 }

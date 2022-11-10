@@ -294,10 +294,10 @@ object CourseHeaderHelper {
     val rank: Int,
   ) {
     // 开始时间大小，为 小时数 * 60 + 分钟数
-    val startTime: Int = getStartTime(getStartRow(beginLesson))
+    val startTime: Int = getStartTimeMinute(getStartRow(beginLesson))
     
     // 结束时间大小，为 小时数 * 60 + 分钟数
-    val endTime: Int = getEndTime(getEndRow(beginLesson, period))
+    val endTime: Int = getEndTimeMinute(getEndRow(beginLesson, period))
   }
   
   data class LessonItem(

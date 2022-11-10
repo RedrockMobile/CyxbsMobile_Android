@@ -1,6 +1,6 @@
 package com.mredrock.cyxbs.course.page.course.item
 
-import com.mredrock.cyxbs.api.course.utils.getEndTime
+import com.mredrock.cyxbs.api.course.utils.getEndTimeMinute
 import com.mredrock.cyxbs.api.course.utils.getNowTime
 import com.mredrock.cyxbs.course.page.course.data.expose.IWeek
 import com.mredrock.cyxbs.lib.course.item.single.ISingleDayData
@@ -47,7 +47,7 @@ interface ISingleDayRank : ISingleDayData, IWeek {
                   }
                 }
               } else {
-                compareBy(getEndTime(e1) - getNowTime()) {
+                compareBy(getEndTimeMinute(e1) - getNowTime()) {
                   -1
                 }
               }

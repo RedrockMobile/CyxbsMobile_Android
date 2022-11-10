@@ -44,7 +44,7 @@ class DiscoverVolunteerFeedViewModel : BaseViewModel() {
                     // 登录了就更新积分商城的任务, 后端已做重复处理
                   ServiceManager.getService(IStoreService::class.java)
                     .postTask(IStoreService.Task.LOGIN_VOLUNTEER, "")
-                }
+                }.lifeCycle()
     }
 
     fun unbind() {

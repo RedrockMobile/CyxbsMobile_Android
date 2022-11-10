@@ -3,6 +3,7 @@ package com.mredrock.cyxbs.course.page.find.ui.course.item
 import android.annotation.SuppressLint
 import android.content.Context
 import android.graphics.Canvas
+import com.mredrock.cyxbs.api.course.utils.parseClassRoom
 import com.mredrock.cyxbs.course.page.course.data.TeaLessonData
 import com.mredrock.cyxbs.course.page.course.item.BaseOverlapSingleDayItem
 import com.mredrock.cyxbs.course.page.course.item.ISingleDayRank
@@ -85,7 +86,7 @@ class TeaLessonItem(
     
     init {
       setLessonColor(data.lessonPeriod)
-      setText(data.course.course, data.course.classroom)
+      setText(data.course.course, parseClassRoom(data.course.classroom))
     }
   }
 }
