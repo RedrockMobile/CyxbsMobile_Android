@@ -27,6 +27,9 @@ jobs:
       - name: Install python dependency
         run: pip install beautifulsoup4
 
+      - name: Install python requests
+        run: pip install requests
+
       - name: Send lark message
         run: python ./.github/scripts/send_lark_message.py start "$LARK_BOT_APP_ID" "$LARK_BOT_APP_SECRET" "$GITHUB_RUN_ID" "$TITLE" "$BODY"
         env:
