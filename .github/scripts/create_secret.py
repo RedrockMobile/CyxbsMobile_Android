@@ -1,6 +1,7 @@
-import sys
+import sys, os
 
-file = open("secret.gradle", 'w')
+os.makedirs("./build-logic/secret/")
+file = open("./build-logic/secret/secret.gradle", 'w')
 
 file.write("def secret = [:]\n\n"
            "// === START ===\n\n"
