@@ -24,7 +24,7 @@ jobs:
         with:
           python-version: '3.7'
           
-      - name: Install python dependence
+      - name: Install python dependency
         run: pip install beautifulsoup4
 
       - name: Send lark message
@@ -52,6 +52,9 @@ jobs:
         uses: actions/setup-python@v2
         with:
           python-version: '3.7'
+
+      - name: Install python requests
+          run: pip install requests
 
       - name: create secret file
         run: python ./.github/scripts/create_secret.py "$BUGLY_APP_ID" "$SOPHIX_APP_ID" "$SOPHIX_APP_SECRET" "$SOPHIX_RSA" "$UM_APP_KEY" "$UM_PUSH_SECRET" "$UM_SHARE_SINA_APP_KEY" "$UM_SHARE_SINA_APP_SECRET" "$UM_SHARE_QQ_ZONE_APP_ID" "$UM_SHARE_QQ_ZONE_APP_SECRET" "$amap_apikey" "$RELEASE_KEY_ALIAS" "$RELEASE_KEY_PASSWORD" "$RELEASE_STORE_PASSWORD"
