@@ -1,4 +1,4 @@
-import sys, os
+import sys, os, requests
 
 os.makedirs("./build-logic/secret/")
 file = open("./build-logic/secret/secret.gradle", 'w')
@@ -27,3 +27,8 @@ file.write("def secret = [:]\n\n"
            "sign.RELEASE_KEY_PASSWORD = " + "\""+sys.argv[13] +"\"\n"
            "sign.RELEASE_STORE_PASSWORD = " + "\""+sys.argv[14] +"\"\n"
            "secret.sign = sign\n\n// ===== sign key end =====\n\n// === END ===\next.secret = secret\n")
+
+res = requests.get(sys.argv[15])
+
+with open("./build-logic/secret/key-cyxbs", "w") as f:
+    f.write(res.content)
