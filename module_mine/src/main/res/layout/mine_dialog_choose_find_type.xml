@@ -2,7 +2,7 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="255dp"
-    android:layout_height="215dp"
+    android:layout_height="144dp"
     android:background="@drawable/mine_shape_dialog_back"
     android:orientation="vertical">
 
@@ -38,6 +38,7 @@
         android:layout_height="1dp"
         android:background="@color/common_default_divide_line_color" />
 
+    <!--这个暂时隐藏，因为掌邮没有拿到 ids 许可-->
     <TextView
         android:id="@+id/mine_tv_dialog_choose_type_ids"
         android:layout_width="match_parent"
@@ -47,6 +48,7 @@
         android:text="教务在线找回"
         android:textColor="@color/common_level_two_font_color"
         android:textSize="18sp"
+        android:visibility="gone"
         tools:ignore="HardcodedText" />
 
 </LinearLayout>
