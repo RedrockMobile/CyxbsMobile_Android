@@ -16,13 +16,13 @@ import com.mredrock.cyxbs.mine.page.mine.ui.activity.IdentityActivity
 import com.mredrock.cyxbs.mine.page.mine.widget.SlideLayout
 import com.mredrock.cyxbs.mine.util.widget.loadBitmap
 import android.text.Spanned
-
 import android.text.SpannableString
 import android.text.method.LinkMovementMethod
 import android.text.style.ClickableSpan
 import com.alibaba.android.arouter.launcher.ARouter
 import com.mredrock.cyxbs.common.config.STORE_ENTRY
 import com.mredrock.cyxbs.common.utils.extensions.toast
+import com.mredrock.cyxbs.lib.utils.extensions.wrapByNoLeak
 import com.mredrock.cyxbs.mine.page.mine.widget.MineDialog
 import java.util.regex.Pattern
 
@@ -151,7 +151,7 @@ class IdentityAdapter(val list:List<AuthenticationStatus.Data>, val context: Con
                 override fun onClick(widget: View) {
                         ARouter.getInstance().build(STORE_ENTRY).navigation()
                 }
-            },start, end, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE)
+            }.wrapByNoLeak(), start, end, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE)
         }
         v.text = spannableString
 

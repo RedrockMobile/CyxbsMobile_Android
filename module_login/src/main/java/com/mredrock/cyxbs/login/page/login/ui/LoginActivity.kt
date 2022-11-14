@@ -5,7 +5,6 @@ import android.content.Context
 import android.content.Intent
 import android.graphics.Color
 import android.os.Bundle
-import android.text.NoCopySpan
 import android.text.Spannable
 import android.text.SpannableStringBuilder
 import android.text.TextPaint
@@ -40,6 +39,7 @@ import com.mredrock.cyxbs.lib.base.ui.BaseActivity
 import com.mredrock.cyxbs.lib.utils.extensions.appContext
 import com.mredrock.cyxbs.lib.utils.extensions.lazyUnlock
 import com.mredrock.cyxbs.lib.utils.extensions.setOnSingleClickListener
+import com.mredrock.cyxbs.lib.utils.extensions.wrapByNoLeak
 import com.mredrock.cyxbs.lib.utils.service.ServiceManager
 import com.mredrock.cyxbs.lib.utils.service.impl
 import com.mredrock.cyxbs.login.R
@@ -175,7 +175,7 @@ class LoginActivity : BaseActivity() {
     mTvUserAgreement.highlightColor =
       ContextCompat.getColor(this, android.R.color.transparent)
     //设置用户协议和隐私权政策点击事件
-    val userAgreementClickSpan = object : ClickableSpan(), NoCopySpan {
+    val userAgreementClickSpan = object : ClickableSpan() {
       override fun onClick(widget: View) {
         val intent = Intent(this@LoginActivity, UserAgreeActivity::class.java)
         startActivity(intent)
@@ -187,8 +187,8 @@ class LoginActivity : BaseActivity() {
         /**去除连接下划线**/
         ds.isUnderlineText = false
       }
-    }
-    val privacyClickSpan = object : ClickableSpan(), NoCopySpan {
+    }.wrapByNoLeak() // 防止内存泄漏
+    val privacyClickSpan = object : ClickableSpan() {
       override fun onClick(widget: View) {
         val intent = Intent(this@LoginActivity, PrivacyActivity::class.java)
         startActivity(intent)
@@ -200,7 +200,7 @@ class LoginActivity : BaseActivity() {
         /**去除连接下划线**/
         ds.isUnderlineText = false
       }
-    }
+    }.wrapByNoLeak() // 防止内存泄漏
     spannableString.setSpan(userAgreementClickSpan, 2, 8, Spannable.SPAN_EXCLUSIVE_INCLUSIVE)
     spannableString.setSpan(privacyClickSpan, 9, 16, Spannable.SPAN_EXCLUSIVE_INCLUSIVE)
 
