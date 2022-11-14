@@ -20,6 +20,7 @@ import android.widget.TextView
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.DialogFragment
 import androidx.fragment.app.FragmentManager
+import com.mredrock.cyxbs.lib.utils.extensions.wrapByNoLeak
 import com.mredrock.cyxbs.login.R
 import com.mredrock.cyxbs.login.page.privacy.PrivacyActivity
 import com.mredrock.cyxbs.login.page.useragree.UserAgreeActivity
@@ -110,7 +111,7 @@ class UserAgreementDialog : DialogFragment() {
                 /**去除连接下划线**/
                 ds.isUnderlineText = false
             }
-        }
+        }.wrapByNoLeak() // 防止内存泄漏
         val privacyClickSpan = object : ClickableSpan() {
             override fun onClick(widget: View) {
                 val intent = Intent(context, PrivacyActivity::class.java)
@@ -123,7 +124,7 @@ class UserAgreementDialog : DialogFragment() {
                 /**去除连接下划线**/
                 ds.isUnderlineText = false
             }
-        }
+        }.wrapByNoLeak() // 防止内存泄漏
         spannableString.setSpan(userAgreementClickSpan, 27, 33, Spannable.SPAN_EXCLUSIVE_INCLUSIVE)
         spannableString.setSpan(privacyClickSpan, 34, 41, Spannable.SPAN_EXCLUSIVE_INCLUSIVE)
 
