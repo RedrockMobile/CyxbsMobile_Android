@@ -57,6 +57,7 @@ open class BaseApp : Application(), InitialManager {
     //因为有些sdk的初始化不是幂等的，即多次初始化会导致进程的crash。这样就会导致一些未知的问题。
     //所以解决方案就是对当前进程进程判断，只在main进程初始化sdk，其余进程默认不进行sdk的初始化。
     // (不排除某些sdk需要，比如友盟推送就需要在新开辟的:channel进行进行初始化)
+    loader.forEach { it.onAllProcess(this) }
     if (isMainProcess()){
       onMainProcess()
     }else {

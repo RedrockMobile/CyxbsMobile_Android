@@ -26,11 +26,7 @@ dependEventBus()
 dependLibUtils()
 dependLibCommon() // TODO common 模块不再使用，新模块请依赖 base 和 utils 模块
 
-configurations.all {
-    resolutionStrategy.cacheChangingModulesFor(0, TimeUnit.SECONDS)
-}
-
 dependencies {
-    // 20 级郭祥瑞封装的 Banner 库
-    implementation("io.github.985892345:SlideShow:2.0.0-SNAPSHOT")
+    // 20 级郭祥瑞封装的 Banner 库，如果有问题，欢迎来联系 👀
+    implementation("io.github.985892345:SlideShow:2.0.0")
 }
