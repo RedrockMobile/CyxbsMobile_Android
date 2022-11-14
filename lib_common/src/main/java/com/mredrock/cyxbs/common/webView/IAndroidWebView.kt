@@ -17,8 +17,8 @@ import com.mredrock.cyxbs.common.service.ServiceManager
  */
 abstract class IAndroidWebView(
     private val handler: Handler?,
-    private val lExeJs:(String) -> Unit = {},
-    private val lToast:(String) -> Unit = {}
+    private val lExeJs: (String) -> Unit = {},
+    private val lToast: (String) -> Unit = {}
     ) : WebViewBaseCallBack {
 
     var onLoadStr: String? = null

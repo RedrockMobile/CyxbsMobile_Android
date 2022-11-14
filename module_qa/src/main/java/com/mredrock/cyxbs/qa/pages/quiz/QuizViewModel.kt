@@ -243,7 +243,7 @@ class QuizViewModel : BaseViewModel() {
                 LogUtils.d("Gibson", it.toString())
                 //后端返回的json的images可能是[""]，会引起fileNotFind，这里要进行一次过滤
                 //判空的原因是后端还有可能返回的是null，不加就会空指针
-                val newList = it.images?.filter { path ->
+                val newList = it.images.filter { path ->
                     path != ""
                 }
                 it.images = newList ?: emptyList()
