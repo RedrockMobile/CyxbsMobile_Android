@@ -120,7 +120,7 @@ object PhoneCalendar {
       put(Events.TITLE, event.title)
       put(Events.DESCRIPTION, event.description)
       put(Events.CALENDAR_ID, calendarId)
-      // 在使用了 DURATION 后，DTSTART 会失效，但又必须填上，所以写个 0 用于区分 CommonEvent 和 FrequencyEvent
+      // 在使用了 RDATE 后，DTSTART 会失效，但又必须填上，所以写个 0 用于区分 CommonEvent 和 FrequencyEvent
       put(Events.DTSTART, 0)
       put(Events.DURATION, event.duration.toDuration())
       put(Events.RDATE, event.startTime.joinToString(separator = ",") {
@@ -156,7 +156,7 @@ object PhoneCalendar {
   }
   
   /**
-   * 删除事件,成功返回 true,失败返回 false
+   * 删除事件,成功返回 true，失败返回 false
    */
   fun delete(eventId: Long): Boolean {
     if (!checkPermission()) return false
@@ -460,24 +460,24 @@ object PhoneCalendar {
     val bySetPos: List<Int> = emptyList(),
   ) : Event {
     enum class Freq { SECONDLY, MINUTELY, HOURLY, DAILY, WEEKLY, MONTHLY, YEARLY }
-    sealed interface ByDay {
+    sealed class ByDay {
       /**
        * 用于表示在每月或每年的 “RRULE” 中特定日期的第 n 次出现。支持负数
        *
        * 比如：
        * +1MO（或简单地说是 1MO）表示该月（或该年）的第一个星期一，而 -1MO 表示该月的最后一个星期一
        */
-      val num: Int
+      abstract val num: Int
       
-      class MO(override val num: Int = 0) : ByDay
-      class TU(override val num: Int = 0) : ByDay
-      class WE(override val num: Int = 0) : ByDay
-      class TH(override val num: Int = 0) : ByDay
-      class FR(override val num: Int = 0) : ByDay
-      class SA(override val num: Int = 0) : ByDay
-      class SU(override val num: Int = 0) : ByDay
+      class MO(override val num: Int = 0) : ByDay()
+      class TU(override val num: Int = 0) : ByDay()
+      class WE(override val num: Int = 0) : ByDay()
+      class TH(override val num: Int = 0) : ByDay()
+      class FR(override val num: Int = 0) : ByDay()
+      class SA(override val num: Int = 0) : ByDay()
+      class SU(override val num: Int = 0) : ByDay()
       
-      fun getString(): String {
+      override fun toString(): String {
         return if (num == 0) javaClass.simpleName else "$num" + javaClass.simpleName
       }
     }
@@ -489,35 +489,35 @@ object PhoneCalendar {
         if (count != null) "COUNT=$count;" else {
           ""
         } +
-        if (byDay.isNotEmpty()) {
-          "BYDAY=${byDay.joinToString(",")};"
+        byDay.joinToString(",").let {
+          "BYDAY=$it"
+        } +
+        if (freq != Freq.WEEKLY) {
+          byMonthDay.filter { it in -31..31 && it != 0 }.joinToString(",").let {
+            "BYMONTHDAY=$it"
+          }
         } else {
           ""
         } +
-        if (byMonthDay.isNotEmpty() && freq != Freq.WEEKLY) {
-          "BYMONTHDAY=${byMonthDay.filter { it in -31..31 && it != 0 }.joinToString(",")};"
+        if (freq < Freq.DAILY || freq == Freq.YEARLY) {
+          byYearDay.filter { it in -366..366 && it != 0 }.joinToString(",").let {
+            "BYYEARDAY=$it"
+          }
         } else {
           ""
         } +
-        if (byYearDay.isNotEmpty() && (freq < Freq.DAILY || freq == Freq.YEARLY)) {
-          "BYYEARDAY=${byYearDay.filter { it in -366..366 && it != 0 }.joinToString(",")};"
+        if (freq == Freq.YEARLY) {
+          byWeekNo.filter { it in -53..53 && it != 0 }.joinToString(",").let {
+            "BYWEEKNO=$it"
+          }
         } else {
           ""
         } +
-        if (byWeekNo.isNotEmpty() && freq == Freq.YEARLY) {
-          "BYWEEKNO=${byWeekNo.filter { it in -53..53 && it != 0 }.joinToString(",")};"
-        } else {
-          ""
+        byMonth.filter { it in 1..12 }.joinToString(",").let {
+          "BYMONTH=$it"
         } +
-        if (byMonth.isNotEmpty()) {
-          "BYMONTH=${byMonth.filter { it in 1..12 }.joinToString(",")};"
-        } else {
-          ""
-        } +
-        if (bySetPos.isNotEmpty()) {
-          "BYSETPOS=${bySetPos.filter { it in -366..366 && it != 0 }.joinToString(",")}"
-        } else {
-          ""
+        bySetPos.filter { it in -366..366 && it != 0 }.joinToString(",").let {
+          "BYSETPOS=$it"
         }
     }
   }

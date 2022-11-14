@@ -77,7 +77,7 @@ class LoginActivity : BaseActivity() {
           .apply {
             if (successActivity != null) {
               putExtra(
-                INTENT_SUCCESS,
+                LoginActivity::mSuccessIntent.name,
                 Intent(appContext, successActivity)
                   .addFlags(Intent.FLAG_ACTIVITY_NEW_TASK) // 因为使用 appContext，所以需要加
               )
@@ -95,6 +95,7 @@ class LoginActivity : BaseActivity() {
 
   private val mIsRoot by intent<Boolean>()
   private val mSuccessIntent by lazyUnlock {
+    // 因为 by intent<>() 泛型不能写 null，所以采用原始的方法去拿
     intent.getParcelableExtra(INTENT_SUCCESS) as Intent?
   }
 
