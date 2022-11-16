@@ -1,5 +1,6 @@
 package com.mredrock.cyxbs.course.page.course.ui.dialog.adapter.viewholder
 
+import android.annotation.SuppressLint
 import android.content.DialogInterface
 import android.view.ViewGroup
 import android.widget.Button
@@ -30,6 +31,7 @@ class AffairVH(
   private val mBtnDelete = findViewById<Button>(R.id.course_btn_dialog_affair_delete)
   private val mBtnChange = findViewById<Button>(R.id.course_btn_dialog_affair_change)
   
+  @SuppressLint("SetTextI18n")
   override fun onBindViewHolder(data: AffairData) {
     mTvTitle.text = data.title
     mTvContent.text = data.content
