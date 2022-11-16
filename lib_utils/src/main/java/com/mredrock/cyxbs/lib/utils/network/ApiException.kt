@@ -13,7 +13,7 @@ import kotlin.reflect.KClass
  * 正常请求后的网络异常
  *
  * ## 一、什么情况下是正常请求？
- * 只有当 Http 状态码为 200 到 299 之间时才能被认为是正常请求，其他状态码会被 Retrofit 之间拦截并抛出 [HttpException]
+ * 只有当 Http 状态码为 200 到 299 之间时才能被认为是正常请求，其他状态码会被 Retrofit 拦截并抛出 [HttpException]
  *
  * ## 二、什么是 Http 状态码？和 status 这个状态码有什么区别？
  * Http 状态码是公开的规范，各个公司都遵守，返回 200 时表示本次请求成功，

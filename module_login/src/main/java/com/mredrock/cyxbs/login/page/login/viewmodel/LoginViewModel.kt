@@ -46,7 +46,8 @@ class LoginViewModel : BaseViewModel() {
                 (System.currentTimeMillis() - startTime).let { if (it > 2000) 0 else it },
                 TimeUnit.MILLISECONDS
             ).observeOn(AndroidSchedulers.mainThread())
-            .doOnComplete {
+            .doOnTerminate {
+                // 这个不能使用 doOnComplete
                 isLanding = false
             }.doOnError {
                 when (it) {
