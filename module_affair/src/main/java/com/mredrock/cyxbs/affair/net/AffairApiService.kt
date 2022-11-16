@@ -21,13 +21,13 @@ interface AffairApiService {
   @Headers("App-Version:74")
   fun addAffair(
     @Field("time")
-    time: Int, // 为 json 序列化后的 string
+    time: Int,
     @Field("title")
     title: String,
     @Field("content")
     content: String,
     @Field("date")
-    dateJson: String
+    dateJson: String // 为 json 序列化后的 string
   ): Single<AddAffairBean>
 
   @POST("/magipoke-reminder/Person/getTransaction")

@@ -9,6 +9,7 @@ import com.mredrock.cyxbs.api.account.IAccountService
 import com.mredrock.cyxbs.lib.base.ui.BaseViewModel
 import com.mredrock.cyxbs.lib.utils.service.ServiceManager
 import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
+import io.reactivex.rxjava3.schedulers.Schedulers
 
 /**
  * ...
@@ -39,6 +40,7 @@ class EditAffairViewModel : BaseViewModel() {
     if (stuNum.isNotEmpty()) {
       AffairDataBase.INSTANCE.getAffairDao()
         .findAffairByOnlyId(stuNum, onlyId)
+        .subscribeOn(Schedulers.io())
         .safeSubscribeBy {
           _affairEntity.postValue(it)
         }
