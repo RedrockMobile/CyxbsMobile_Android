@@ -378,7 +378,7 @@ object AffairRepository {
     val firstMonDay = SchoolCalendar.getFirstMonDayOfTerm() ?: return
     // 只有大于 0 才有提醒，只有需要提醒的才写进手机日历
     if (time > 0) {
-      val calendarIdList = arrayListOf<Long>()
+      val eventIdList = arrayListOf<Long>()
       atWhatTime.forEach { whatTime ->
         val startMinute = getStartTimeMinute(getStartRow(whatTime.beginLesson))
         val endMinute = getEndTimeMinute(getEndRow(whatTime.beginLesson, whatTime.period))
@@ -399,7 +399,7 @@ object AffairRepository {
               freq = PhoneCalendar.FrequencyEvent.Freq.WEEKLY,
               count = ICourseService.maxWeek
             )
-          )?.also { calendarIdList.add(it) }
+          )?.also { eventIdList.add(it) }
         } else {
           // 如果不是整学期,添加一次性事件
           PhoneCalendar.add(
@@ -417,11 +417,11 @@ object AffairRepository {
                 }
               }
             )
-          )?.also { calendarIdList.add(it) }
+          )?.also { eventIdList.add(it) }
         }
       }
-      if (calendarIdList.isNotEmpty()) {
-        AffairCalendarDao.insert(AffairCalendarEntity(onlyId, calendarIdList))
+      if (eventIdList.isNotEmpty()) {
+        AffairCalendarDao.insert(AffairCalendarEntity(onlyId, eventIdList))
       }
     }
   }

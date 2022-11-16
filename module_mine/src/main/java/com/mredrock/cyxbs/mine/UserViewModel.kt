@@ -81,7 +81,7 @@ class UserViewModel : BaseViewModel() {
                     _userCount.postValue(it.data)
                 },
                 onError = {
-                    toast("获取动态等信息异常")
+//                    toast("获取动态等信息异常")
                 }
             )
     }
