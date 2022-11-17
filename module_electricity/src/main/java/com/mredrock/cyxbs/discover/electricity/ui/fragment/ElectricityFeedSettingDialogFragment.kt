@@ -5,19 +5,28 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.EditText
+import android.widget.TextView
+import androidx.appcompat.widget.AppCompatButton
 import androidx.core.widget.doOnTextChanged
 import androidx.fragment.app.DialogFragment
+import com.aigestudio.wheelpicker.WheelPicker
 import com.mredrock.cyxbs.common.utils.LogUtils
 import com.mredrock.cyxbs.common.utils.extensions.defaultSharedPreferences
 import com.mredrock.cyxbs.common.utils.extensions.editor
 import com.mredrock.cyxbs.discover.electricity.config.*
 import com.mredrock.cyxbs.electricity.R
-import kotlinx.android.synthetic.main.electricity_dialog_dormitory_select.*
-import kotlinx.android.synthetic.main.electricity_dialog_dormitory_select.view.*
 import com.mredrock.cyxbs.common.utils.extensions.*
 
 
 class ElectricityFeedSettingDialogFragment : DialogFragment() {
+    private lateinit var et_electricity_room_num:EditText
+    private lateinit var wp_dormitory_head:WheelPicker
+    private lateinit var wp_dormitory_foot:WheelPicker
+    private lateinit var btn_dialog_dormitory_confirm:AppCompatButton
+    private lateinit var tv_dormitory_num:TextView
+
+
     var refresher: ((id: String, room: String) -> Unit)? = null
     private val buildingNames by lazy(LazyThreadSafetyMode.NONE) { BUILDING_NAMES }
     private val buildingHeadNames by lazy(LazyThreadSafetyMode.NONE) { BUILDING_NAMES_HEADER }
@@ -47,7 +56,11 @@ class ElectricityFeedSettingDialogFragment : DialogFragment() {
                 ?: 0
         selectBuildingFootPosition = context?.defaultSharedPreferences?.getInt(SP_BUILDING_FOOT_KEY, 0)
                 ?: 0
-
+        et_electricity_room_num = view.findViewById(R.id.et_electricity_room_num)
+        wp_dormitory_head = view.findViewById(R.id.wp_dormitory_head)
+        wp_dormitory_foot = view.findViewById(R.id.wp_dormitory_foot)
+        btn_dialog_dormitory_confirm = view.findViewById(R.id.btn_dialog_dormitory_confirm)
+        tv_dormitory_num = view.findViewById(R.id.tv_dormitory_num)
         view.apply {
             et_electricity_room_num.apply {
                 setText(room)
