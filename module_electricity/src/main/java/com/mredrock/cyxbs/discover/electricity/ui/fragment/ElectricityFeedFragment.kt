@@ -2,6 +2,7 @@ package com.mredrock.cyxbs.discover.electricity.ui.fragment
 
 import android.os.Bundle
 import android.view.View
+import android.widget.TextView
 import com.alibaba.android.arouter.facade.annotation.Route
 import com.mredrock.cyxbs.common.config.DISCOVER_ELECTRICITY_FEED
 import com.mredrock.cyxbs.common.service.ServiceManager
@@ -17,14 +18,13 @@ import com.mredrock.cyxbs.discover.electricity.bean.ElecInf
 import com.mredrock.cyxbs.discover.electricity.config.*
 import com.mredrock.cyxbs.discover.electricity.viewmodel.ChargeViewModel
 import com.mredrock.cyxbs.electricity.R
-import kotlinx.android.synthetic.main.electricity_discover_feed_unbound.view.*
 import com.mredrock.cyxbs.common.utils.extensions.*
 import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
 
 
 @Route(path = DISCOVER_ELECTRICITY_FEED)
 class ElectricityFeedFragment : BaseFeedFragment<ChargeViewModel>() {
-
+    private val tv_electricity_no_account by R.id.tv_electricity_no_account.view<TextView>()
 
 
     override var hasTopSplitLine = false
@@ -72,7 +72,7 @@ class ElectricityFeedFragment : BaseFeedFragment<ChargeViewModel>() {
             val adapter = getAdapter()
             if (adapter is ElectricityFeedUnboundAdapter) {
                 adapter.apply {
-                    view?.tv_electricity_no_account?.text = getString(R.string.electricity_unbind)
+                    tv_electricity_no_account.text = getString(R.string.electricity_unbind)
                 }
             }
         }
