@@ -10,7 +10,7 @@ on:
 
 jobs:
   build:
-    runs-on: macos-latest
+    runs-on: ubuntu-latest
     steps:
       - name: Set up JDK
         uses: actions/setup-java@v1
@@ -24,6 +24,9 @@ jobs:
 
       - name: Install python requests
         run: pip install requests
+
+      - name: view the current path
+        run: ls
 
       - name: create secret file
         run: python ./.github/scripts/create_secret.py "$BUGLY_APP_ID" "$SOPHIX_APP_ID" "$SOPHIX_APP_SECRET" "$SOPHIX_RSA" "$UM_APP_KEY" "$UM_PUSH_SECRET" "$UM_SHARE_SINA_APP_KEY" "$UM_SHARE_SINA_APP_SECRET" "$UM_SHARE_QQ_ZONE_APP_ID" "$UM_SHARE_QQ_ZONE_APP_SECRET" "$amap_apikey" "$RELEASE_KEY_ALIAS" "$RELEASE_KEY_PASSWORD" "$RELEASE_STORE_PASSWORD" "$KEY_CYXBS_URL"
