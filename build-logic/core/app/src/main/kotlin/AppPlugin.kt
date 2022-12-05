@@ -5,6 +5,7 @@ import com.mredrock.cyxbs.convention.depend.dependSophix
 import com.mredrock.cyxbs.convention.depend.dependUmeng
 import com.mredrock.cyxbs.convention.depend.dependVasDolly
 import com.tencent.vasdolly.plugin.extension.ChannelConfigExtension
+import com.tencent.vasdolly.plugin.extension.RebuildChannelConfigExtension
 import org.gradle.api.plugins.ExtraPropertiesExtension
 import org.gradle.kotlin.dsl.*
 import java.io.File
@@ -81,6 +82,25 @@ class AppPlugin : BasePlugin() {
             fastMode = false
             //buildTime的时间格式，默认格式：yyyyMMdd-HHmmss
             buildTimeDateFormat = "yyyyMMdd-HH"
+            //低内存模式（仅针对V2签名，默认为false）：只把签名块、中央目录和EOCD读取到内存，不把最大头的内容块读取到内存，在手机上合成APK时，可以使用该模式
+            lowMemory = false
+        }
+
+        // rebuildChannel 闭包，腾讯多渠道打包根据基础包生成渠道包
+        // ./gradlew rebuildChannel
+        configure<RebuildChannelConfigExtension> {
+            //指定渠道文件
+            channelFile = rootDir.resolve("build-logic").resolve("channel.txt")
+            //多渠道包的输出目录，默认为new File(project.buildDir,"channel")
+            outputDir = File(project.buildDir, "channel")
+            baseApk = rootDir.resolve("module_app")
+                .resolve("build")
+                .resolve("outputs")
+                .resolve("apk")
+                .resolve("release")
+                .resolve("module_app-release.apk")
+            //快速模式：生成渠道包时不进行校验（速度可以提升10倍以上，默认为false）
+            fastMode = false
             //低内存模式（仅针对V2签名，默认为false）：只把签名块、中央目录和EOCD读取到内存，不把最大头的内容块读取到内存，在手机上合成APK时，可以使用该模式
             lowMemory = false
         }

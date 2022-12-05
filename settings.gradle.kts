@@ -19,13 +19,13 @@ dependencyResolutionManagement {
   repositoriesMode.set(RepositoriesMode.FAIL_ON_PROJECT_REPOS)
   repositories {
     maven("$rootDir/build/maven") // 本地模块缓存文件夹
+    mavenCentral()
     maven("https://maven.aliyun.com/repository/public")
     maven("https://maven.aliyun.com/repository/google")
     maven("https://jitpack.io")
     // mavenCentral 快照仓库
     maven("https://s01.oss.sonatype.org/content/repositories/snapshots/")
     google()
-    mavenCentral()
   }
 }
 

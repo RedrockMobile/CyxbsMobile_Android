@@ -1,0 +1,71 @@
+name: Release CI
+
+on:
+  pull_request:
+    branches:
+      - master
+
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Set up JDK
+        uses: actions/setup-java@v1
+        with:
+          java-version: 11
+
+      - name: Set up Python
+        uses: actions/setup-python@v2
+        with:
+          python-version: '3.7'
+
+      - name: Install python requests
+        run: pip install requests
+
+      - name: create secret file
+        run: python ./.github/scripts/create_secret.py "$BUGLY_APP_ID" "$SOPHIX_APP_ID" "$SOPHIX_APP_SECRET" "$SOPHIX_RSA" "$UM_APP_KEY" "$UM_PUSH_SECRET" "$UM_SHARE_SINA_APP_KEY" "$UM_SHARE_SINA_APP_SECRET" "$UM_SHARE_QQ_ZONE_APP_ID" "$UM_SHARE_QQ_ZONE_APP_SECRET" "$amap_apikey" "$RELEASE_KEY_ALIAS" "$RELEASE_KEY_PASSWORD" "$RELEASE_STORE_PASSWORD" "$KEY_CYXBS_URL"
+        env:
+          BUGLY_APP_ID: ${{secrets.BUGLY_APP_ID}}
+          SOPHIX_APP_ID: ${{secrets.SOPHIX_APP_ID }}
+          SOPHIX_APP_SECRET: ${{secrets.SOPHIX_APP_SECRET}}
+          SOPHIX_RSA: ${{secrets.SOPHIX_RSA}}
+          UM_APP_KEY: ${{secrets.UM_APP_KEY}}
+          UM_PUSH_SECRET: ${{secrets.UM_PUSH_SECRET}}
+          UM_SHARE_SINA_APP_KEY: ${{secrets.UM_SHARE_SINA_APP_KEY}}
+          UM_SHARE_SINA_APP_SECRET: ${{secrets.UM_SHARE_SINA_APP_SECRET}}
+          UM_SHARE_QQ_ZONE_APP_ID: ${{secrets.UM_SHARE_QQ_ZONE_APP_ID}}
+          UM_SHARE_QQ_ZONE_APP_SECRET: ${{secrets.UM_SHARE_QQ_ZONE_APP_SECRET}}
+          amap_apikey: ${{secrets.amap_apikey}}
+          RELEASE_KEY_ALIAS: ${{secrets.RELEASE_KEY_ALIAS}}
+          RELEASE_KEY_PASSWORD: ${{secrets.RELEASE_KEY_PASSWORD}}
+          RELEASE_STORE_PASSWORD: ${{secrets.RELEASE_STORE_PASSWORD}}
+          KEY_CYXBS_URL: ${{secrets.KEY_CYXBS_URL}}
+
+      - uses: actions/cache@v2
+        with:
+          path: |
+            ~/.gradle/caches
+            ~/.gradle/wrapper
+          key: ${{ runner.os }}-gradle-${{ hashFiles('**/*.gradle*') }}
+          restore-keys: |
+            ${{ runner.os }}-gradle-
+
+      - name: Grant execute permission for gradlew
+        run: chmod +x gradlew
+
+      - name: Build with Gradle
+        run: ./gradlew channelRelease
+      
+      - name: upload release apk
+        # python ./.github/scripts/release.py "https://be-dev.redrock.cqupt.edu.cn" "E3582A4713276D6874B1C2A67CCC5030" "update_content=好久不见！\n阔别一个月，掌邮它又回来啦！\n根据相关规定，我们关闭了成绩查询等功能（很抱歉给大家带来不便）\n但是别担心，我们也在探索掌邮的新板块\n欢迎大家加入交流群说出自己的需求（QQ：570919844）\n【双人课表】：关联课表，探索课表新可能\n【没课约优化】：邮子随心约，分组管理，快速查询"
+        run: python ./.github/scripts/release.py "$RELEASE_BASE_URL" "$RELEASE_TOKEN" "$UPDATE_CONTENT"
+        env:
+          RELEASE_BASE_URL: ${{ secrets.RELEASE_BASE_URL }}
+          RELEASE_TOKEN: ${{ secrets.RELEASE_TOKEN }}
+          UPDATE_CONTENT: ${{ github.event.pull_request.body }}
+
+        
+        
+      
