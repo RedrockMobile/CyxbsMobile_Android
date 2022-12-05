@@ -4,6 +4,7 @@ on:
   pull_request:
     branches:
       - master
+      - ColdRain-Moro/ci_test
 
   workflow_dispatch:
 
