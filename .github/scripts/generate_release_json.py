@@ -1,13 +1,18 @@
-import sys, requests, re, os
+import sys, requests, re, os, json, time
 
 base_url = sys.argv[1]
 token = sys.argv[2]
-update_content = sys.argv[3]
+pr_content = sys.argv[3]
 
-if update_content.startswith("update_content="):
-    update_content = update_content.removeprefix("update_content=")
-else:
-    raise RuntimeError("pr信息格式错误, 终止发版操作 (请以 update_content= 开头)")
+try:
+    # 更新信息
+    update_content = pr_content.split("update_content=")[0]
+    # 更新时间
+    update_time = pr_content.split("update_time=")[1].split("update_content=")[0]
+    # 示例: update_time=2022 12 14 0
+    update_time = time.mktime(time.strptime(update_time, "%Y %m %d %H"))
+except:
+    raise RuntimeError("pr信息格式错误, 终止发版操作 (example: update_time=2022 12 14 0update_ontent=xxxxxx)")
 
 def upload_apk(path: str) -> str:
     resp = requests.post(base_url + "/upload_apk", files={ "file": open(path, "rb") }, headers={ "token": token }).json()
@@ -39,8 +44,20 @@ for file_name in os.listdir("./module_app/build/channel"):
 # 混淆映射文件
 packages["mappings"] = upload_data("./build-logic/core/proguardMapping.txt")
 
-resp = requests.post(f"{base_url}/cyxbsAppUpdate.json", 
-    json={ "apk_url": packages, "update_content": update_content, "version_code": int(version_code), "version_name": version_name }, 
-    headers={ "token": token }).json()
+content_json = {
+    "apk_url": packages, 
+    "update_content": update_content, 
+    "version_code": int(version_code), 
+    "version_name": version_name 
+}
 
-print(resp)
+release_json = { 
+    update_time,
+    content_json
+}
+
+# 将发包信息写出到文件中，之后再由 CI 上传为 artifact
+with open("./release.json") as f:
+    f.write(json.dumps(release_json, indent=2, sort_keys=True, ensure_ascii=False))
+
+print(release_json)
