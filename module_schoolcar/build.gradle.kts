@@ -1,5 +1,5 @@
-import com.mredrock.cyxbs.convention.depend.*
-import com.mredrock.cyxbs.convention.depend.lib.dependLibCommon
+
+
 
 plugins {
     id("module-manager")

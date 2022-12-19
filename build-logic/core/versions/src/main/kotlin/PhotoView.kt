@@ -1,4 +1,4 @@
-package com.mredrock.cyxbs.convention.depend
+
 
 import org.gradle.api.Project
 import org.gradle.kotlin.dsl.dependencies

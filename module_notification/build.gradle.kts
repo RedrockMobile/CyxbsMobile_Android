@@ -1,10 +1,10 @@
-import com.mredrock.cyxbs.convention.depend.api.dependApiAccount
-import com.mredrock.cyxbs.convention.depend.api.dependApiMine
-import com.mredrock.cyxbs.convention.depend.dependGlide
-import com.mredrock.cyxbs.convention.depend.dependNetwork
-import com.mredrock.cyxbs.convention.depend.dependRxjava
-import com.mredrock.cyxbs.convention.depend.dependWorkManger
-import com.mredrock.cyxbs.convention.depend.lib.dependLibCommon
+
+
+
+
+
+
+
 
 plugins {
     id("module-manager")

@@ -1,4 +1,4 @@
-package com.mredrock.cyxbs.convention.depend
+
 
 import utils.libsVersion
 import org.gradle.api.Project

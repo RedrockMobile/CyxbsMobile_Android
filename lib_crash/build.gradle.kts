@@ -1,8 +1,8 @@
-import com.mredrock.cyxbs.convention.depend.Android
-import com.mredrock.cyxbs.convention.depend.dependAutoService
-import com.mredrock.cyxbs.convention.depend.dependBugly
-import com.mredrock.cyxbs.convention.depend.lib.dependLibBase
-import com.mredrock.cyxbs.convention.depend.lib.dependLibUtils
+
+
+
+
+
 
 plugins {
     id("module-manager")
