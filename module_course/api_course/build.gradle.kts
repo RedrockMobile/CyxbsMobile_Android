@@ -1,7 +1,3 @@
-
-
-
-
 plugins {
   id("module-manager")
 }

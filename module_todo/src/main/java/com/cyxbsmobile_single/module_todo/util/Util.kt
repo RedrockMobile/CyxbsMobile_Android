@@ -17,7 +17,7 @@ import com.cyxbsmobile_single.module_todo.model.bean.Todo.Companion.NONE_WITH_RE
 import com.cyxbsmobile_single.module_todo.model.database.TodoDatabase
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
-import com.mredrock.cyxbs.common.BaseApp.appContext
+import com.mredrock.cyxbs.common.BaseApp.Companion.appContext
 import com.mredrock.cyxbs.common.config.TODO_REPEAT_TODO_ID_LIST
 import com.mredrock.cyxbs.common.config.TODO_REPEAT_TODO_ID_LIST_DATE
 import com.mredrock.cyxbs.common.config.TODO_WEEK_MONTH_ARRAY

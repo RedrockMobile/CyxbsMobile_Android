@@ -11,7 +11,7 @@ import android.view.View
 import android.widget.CompoundButton
 import androidx.annotation.RequiresApi
 import com.google.android.material.chip.Chip
-import com.mredrock.cyxbs.common.BaseApp.appContext
+import com.mredrock.cyxbs.common.BaseApp.Companion.appContext
 import com.mredrock.cyxbs.common.utils.extensions.getRequestBody
 import com.mredrock.cyxbs.common.utils.extensions.safeSubscribeBy
 import com.mredrock.cyxbs.common.utils.extensions.setSchedulers

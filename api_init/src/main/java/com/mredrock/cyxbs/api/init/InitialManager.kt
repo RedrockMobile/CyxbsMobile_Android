@@ -1,4 +1,4 @@
-package com.mredrock.cyxbs.lib.base.spi
+package com.mredrock.cyxbs.api.init
 
 import android.annotation.SuppressLint
 import android.app.ActivityManager

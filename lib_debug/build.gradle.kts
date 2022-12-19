@@ -1,9 +1,3 @@
-
-
-
-
-
-
 plugins {
   id("module-manager")
 //  id("me.ele.lancet") // CodeLocator 所需要的插件
@@ -17,6 +11,8 @@ dependApiAccount()
 dependAutoService()
 
 dependencies {
+  
+  implementation(project(":api_init")) // 因为 api_init 没有实现模块，所以写这里
   
   // 依赖 LeakCanary，检查内存泄漏 https://github.com/square/leakcanary
   implementation("com.squareup.leakcanary:leakcanary-android:2.9.1")

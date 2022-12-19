@@ -1,4 +1,4 @@
-package com.mredrock.cyxbs.lib.base.spi
+package com.mredrock.cyxbs.api.init
 
 /**
  * spi 依赖注入

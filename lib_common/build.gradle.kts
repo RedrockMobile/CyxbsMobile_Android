@@ -1,6 +1,3 @@
-
-
-
 plugins {
     id("module-manager")
     id("kotlin-android-extensions") // todo kt 获取 View 的插件已被废弃，新模块禁止再使用！
@@ -27,4 +24,10 @@ dependRoomRxjava()
 dependRoomPaging()
 dependRxjava()
 dependRxPermissions()
+
+dependAutoService()
+
+dependencies {
+    implementation(project(":api_init")) // 因为 api_init 没有实现模块，所以写这里
+}
 
