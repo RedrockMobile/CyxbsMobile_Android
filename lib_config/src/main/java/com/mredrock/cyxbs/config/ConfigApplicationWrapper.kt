@@ -2,8 +2,8 @@ package com.mredrock.cyxbs.config
 
 import android.app.Application
 import com.google.auto.service.AutoService
-import com.mredrock.cyxbs.api.init.InitialManager
-import com.mredrock.cyxbs.api.init.InitialService
+import com.mredrock.cyxbs.init.InitialManager
+import com.mredrock.cyxbs.init.InitialService
 
 /**
  * ...

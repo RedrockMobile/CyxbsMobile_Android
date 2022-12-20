@@ -20,7 +20,7 @@ import com.mredrock.cyxbs.common.config.NOTIFICATION_SETTING
 import com.mredrock.cyxbs.common.service.ServiceManager
 import com.mredrock.cyxbs.common.ui.BaseViewModelActivity
 import com.mredrock.cyxbs.common.utils.extensions.visible
-import com.redrock.api_mine.api.IGetDaySignClassService
+import com.mredrock.cyxbs.api.mine.IGetDaySignClassService
 import com.redrock.module_notification.BuildConfig
 import com.redrock.module_notification.R
 import com.redrock.module_notification.util.Constant.IS_SWITCH1_SELECT

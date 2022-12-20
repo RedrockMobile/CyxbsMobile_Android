@@ -1,6 +1,7 @@
 
 
 
+import check.AndroidProjectChecker
 import org.gradle.kotlin.dsl.configure
 import org.gradle.kotlin.dsl.dependencies
 import org.gradle.kotlin.dsl.project
@@ -15,6 +16,9 @@ import org.jetbrains.kotlin.gradle.plugin.KaptExtension
 
 internal class BaseAndroidPlugin : BasePlugin() {
     override fun PluginScope.configure() {
+        // 项目检查工具
+        AndroidProjectChecker.configBefore(project)
+        
         dependencies {
             "testImplementation"(Test.junit)
             "androidTestImplementation"(Test.`junit-android`)
@@ -55,6 +59,8 @@ internal class BaseAndroidPlugin : BasePlugin() {
                 arg("room.schemaLocation", "${project.projectDir}/schemas") // room 的架构导出目录
             }
         }
-
+    
+        // 项目检查工具
+        AndroidProjectChecker.configAfter(project)
     }
 }

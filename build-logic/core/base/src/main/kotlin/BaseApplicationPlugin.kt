@@ -1,5 +1,6 @@
 @file:Suppress("UnstableApiUsage")
 
+import check.rule.ModuleNamespaceCheckRule
 import config.Config
 
 import org.gradle.api.JavaVersion
@@ -26,7 +27,9 @@ internal class BaseApplicationPlugin : BasePlugin() {
         apply(plugin = "base.android")
 
         androidApp {
-
+            
+            namespace = ModuleNamespaceCheckRule.getCorrectNamespace(project)
+            
             compileSdk = Config.compileSdk
             defaultConfig {
                 minSdk = Config.minSdk
@@ -114,6 +117,5 @@ internal class BaseApplicationPlugin : BasePlugin() {
         debugDependLibDebug()
 
     }
-
 
 }

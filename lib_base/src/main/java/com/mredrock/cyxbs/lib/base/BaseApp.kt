@@ -3,8 +3,8 @@ package com.mredrock.cyxbs.lib.base
 import android.app.Application
 import androidx.annotation.CallSuper
 import com.alibaba.android.arouter.launcher.ARouter
-import com.mredrock.cyxbs.api.init.InitialManager
-import com.mredrock.cyxbs.api.init.InitialService
+import com.mredrock.cyxbs.init.InitialManager
+import com.mredrock.cyxbs.init.InitialService
 import com.mredrock.cyxbs.config.sp.SP_PRIVACY_AGREED
 import com.mredrock.cyxbs.config.sp.defaultSp
 import java.util.*

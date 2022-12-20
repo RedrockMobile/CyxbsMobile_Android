@@ -1,3 +1,6 @@
+@file:Suppress("UnstableApiUsage")
+
+import check.rule.ModuleNamespaceCheckRule
 import config.Config
 import org.gradle.api.JavaVersion
 import org.gradle.api.plugins.ExtensionAware
@@ -23,6 +26,8 @@ internal class BaseLibraryPlugin : BasePlugin() {
         apply(plugin = "base.android")
 
         androidLib {
+    
+            namespace = ModuleNamespaceCheckRule.getCorrectNamespace(project)
 
             compileSdk = Config.compileSdk
             defaultConfig {

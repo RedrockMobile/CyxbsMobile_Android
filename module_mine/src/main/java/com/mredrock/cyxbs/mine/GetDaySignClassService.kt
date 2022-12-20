@@ -4,8 +4,8 @@ import android.app.Activity
 import android.content.Context
 import com.alibaba.android.arouter.facade.annotation.Route
 import com.mredrock.cyxbs.mine.page.sign.DailySignActivity
-import com.redrock.api_mine.MINE_SERVICE
-import com.redrock.api_mine.api.IGetDaySignClassService
+import com.mredrock.cyxbs.api.mine.MINE_SERVICE
+import com.mredrock.cyxbs.api.mine.IGetDaySignClassService
 
 @Route(path = MINE_SERVICE, name = MINE_SERVICE)
 class GetDaySignClassService : IGetDaySignClassService {
