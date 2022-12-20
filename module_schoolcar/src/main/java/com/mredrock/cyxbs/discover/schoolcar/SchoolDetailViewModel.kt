@@ -4,7 +4,7 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.mredrock.cyxbs.common.network.ApiGenerator
-import com.mredrock.cyxbs.common.utils.extensions.safeSubscribeBy
+import com.mredrock.cyxbs.common.utils.extensions.unsafeSubscribeBy
 import com.mredrock.cyxbs.common.utils.extensions.setSchedulers
 import com.mredrock.cyxbs.discover.schoolcar.bean.MapLines
 import com.mredrock.cyxbs.discover.schoolcar.database.MapInfoDataBase
@@ -27,7 +27,7 @@ class SchoolDetailViewModel : ViewModel() {
     MapInfoDataBase.INSTANCE.mapInfoDao().queryMapLines()
       .toObservable()
       .setSchedulers(observeOn = Schedulers.io())
-      .safeSubscribeBy(
+      .unsafeSubscribeBy(
         onNext = { mapLines ->
           _mapInfo.postValue(mapLines)
         }
@@ -35,7 +35,7 @@ class SchoolDetailViewModel : ViewModel() {
     //拿取车站等信息版本号
     apiService.schoolSiteVersion()
       .setSchedulers(observeOn = Schedulers.io())
-      .safeSubscribeBy(
+      .unsafeSubscribeBy(
         onNext = { version ->
           MapInfoDataBase.INSTANCE.mapInfoDao().queryMapLines()
             .subscribeOn(Schedulers.io())
@@ -54,7 +54,7 @@ class SchoolDetailViewModel : ViewModel() {
   private fun getMapLinesByNet(){
     apiService.schoolSite()
       .setSchedulers(observeOn = Schedulers.io())
-      .safeSubscribeBy(
+      .unsafeSubscribeBy(
         onNext = { mapLines ->
           mapLines.data.let { res -> _mapInfo.postValue(res) }
           MapInfoDataBase.INSTANCE.mapInfoDao().insertMapLines(mapLines.data)

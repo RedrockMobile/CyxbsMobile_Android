@@ -51,7 +51,7 @@ class UserViewModel : BaseViewModel() {
             .mapOrThrowApiException()
             .setSchedulers()
             .doOnErrorWithDefaultErrorHandler { true }
-            .safeSubscribeBy(
+            .unsafeSubscribeBy(
                 onNext = {
                     _status.postValue(it)
                 }
@@ -62,7 +62,7 @@ class UserViewModel : BaseViewModel() {
     fun getQANumber() {
         apiService.getQANumber()
             .normalWrapper(this)
-            .safeSubscribeBy(
+            .unsafeSubscribeBy(
                 onNext = {
                     _qaNumber.postValue(it)
                 }
@@ -76,7 +76,7 @@ class UserViewModel : BaseViewModel() {
         apiService.getUserCount()
             .setSchedulers()
             .doOnErrorWithDefaultErrorHandler { true }
-            .safeSubscribeBy(
+            .unsafeSubscribeBy(
                 onNext = {
                     _userCount.postValue(it.data)
                 },
@@ -93,7 +93,7 @@ class UserViewModel : BaseViewModel() {
         apiService.getUncheckedPraiseCount(lastCheckTimeStamp)
             .setSchedulers()
             .doOnErrorWithDefaultErrorHandler { true }
-            .safeSubscribeBy(
+            .unsafeSubscribeBy(
                 onNext = {
                     _userUncheckCount.postValue(it.data)
                 },
@@ -110,7 +110,7 @@ class UserViewModel : BaseViewModel() {
         apiService.getUncheckedCommentCount(lastCheckTimeStamp)
             .setSchedulers()
             .doOnErrorWithDefaultErrorHandler { true }
-            .safeSubscribeBy(
+            .unsafeSubscribeBy(
                 onNext = {
                     _userUncheckCount.postValue(it.data)
                 },

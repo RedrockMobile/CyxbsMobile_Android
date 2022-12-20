@@ -1,16 +1,18 @@
 package com.mredrock.cyxbs.discover.map.ui.activity
 
 import android.app.Activity
+import android.content.Context
 import android.content.Intent
+import android.database.Cursor
 import android.net.Uri
 import android.os.Bundle
+import android.provider.MediaStore
 import android.widget.FrameLayout
 import androidx.lifecycle.Observer
 import com.alibaba.android.arouter.facade.annotation.Route
 import com.mredrock.cyxbs.common.config.COURSE_POS_TO_MAP
 import com.mredrock.cyxbs.common.config.DISCOVER_MAP
 import com.mredrock.cyxbs.common.ui.BaseViewModelActivity
-import com.mredrock.cyxbs.common.utils.extensions.getAbsolutePath
 import com.mredrock.cyxbs.discover.map.R
 import com.mredrock.cyxbs.discover.map.model.DataSet
 import com.mredrock.cyxbs.discover.map.ui.fragment.AllPictureFragment
@@ -20,7 +22,6 @@ import com.mredrock.cyxbs.discover.map.util.KeyboardController
 import com.mredrock.cyxbs.discover.map.viewmodel.MapViewModel
 import com.mredrock.cyxbs.discover.map.widget.GlideProgressDialog
 import com.mredrock.cyxbs.discover.map.widget.ProgressDialog
-import com.mredrock.cyxbs.discover.map.widget.ProgressDialog.hide
 import top.limuyang2.photolibrary.LPhotoHelper
 import java.io.File
 
@@ -178,5 +179,23 @@ class MapActivity : BaseViewModelActivity<MapViewModel>() {
         }
     }
 
+  private fun Uri.getAbsolutePath(context: Context): String{
+    val selectedImage = this
+    val filePathColumn = arrayOf(MediaStore.Images.Media.DATA)
+    val cursor: Cursor? =
+      selectedImage.let {
+        context.contentResolver?.query(
+          it,
+          filePathColumn,
+          null,
+          null,
+          null)
+      }
+    cursor?.moveToFirst()
+    val columnIndex = cursor?.getColumnIndex(filePathColumn[0])
+    val imgPath = columnIndex?.let { cursor.getString(it) }
+    cursor?.close()
+    return imgPath?: ""
+  }
 
 }

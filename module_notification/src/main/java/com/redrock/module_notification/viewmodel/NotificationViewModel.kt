@@ -4,7 +4,7 @@ import android.util.Log
 import androidx.lifecycle.MutableLiveData
 import com.mredrock.cyxbs.common.network.ApiGenerator
 import com.mredrock.cyxbs.common.utils.extensions.mapOrThrowApiException
-import com.mredrock.cyxbs.common.utils.extensions.safeSubscribeBy
+import com.mredrock.cyxbs.common.utils.extensions.unsafeSubscribeBy
 import com.mredrock.cyxbs.common.utils.extensions.setSchedulers
 import com.mredrock.cyxbs.common.viewmodel.BaseViewModel
 import com.redrock.module_notification.bean.ActiveMsgBean
@@ -48,7 +48,7 @@ class NotificationViewModel : BaseViewModel() {
         retrofit.getAllMsg()
             .setSchedulers()
             .mapOrThrowApiException()
-            .safeSubscribeBy(
+            .unsafeSubscribeBy(
                 onError = {
                     /**
                      * onNext第一次发送null的时候会到onError，第二次就不会了
@@ -78,7 +78,7 @@ class NotificationViewModel : BaseViewModel() {
         retrofit.deleteMsg(bean)
             .mapOrThrowApiException()
             .setSchedulers()
-            .safeSubscribeBy {
+            .unsafeSubscribeBy {
                 toast("删除消息成功")
                 Log.d("wzt", "deleteMsg: ")
 
@@ -95,7 +95,7 @@ class NotificationViewModel : BaseViewModel() {
         retrofit.changeMsgStatus(bean)
             .mapOrThrowApiException()
             .setSchedulers()
-            .safeSubscribeBy {}
+            .unsafeSubscribeBy {}
             .lifeCycle()
     }
 
@@ -107,7 +107,7 @@ class NotificationViewModel : BaseViewModel() {
             .getCheckInStatus()
             .mapOrThrowApiException()
             .setSchedulers()
-            .safeSubscribeBy {
+            .unsafeSubscribeBy {
                 checkInStatus.value = it.isChecked
             }
             .lifeCycle()

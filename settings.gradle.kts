@@ -8,8 +8,6 @@
 pluginManagement {
   includeBuild("build-logic")
   repositories {
-    maven("https://maven.aliyun.com/repository/public")
-    maven("https://maven.aliyun.com/repository/google")
     gradlePluginPortal()
     mavenCentral()
     google()
@@ -19,13 +17,13 @@ dependencyResolutionManagement {
   repositoriesMode.set(RepositoriesMode.FAIL_ON_PROJECT_REPOS)
   repositories {
     maven("$rootDir/build/maven") // 本地模块缓存文件夹
-    maven("https://maven.aliyun.com/repository/public")
-    maven("https://maven.aliyun.com/repository/google")
+    google()
+    mavenCentral() // 优先 MavenCentral，一是：aliyun 镜像有坑；二是：不至于你 vpn 都没得吧
     maven("https://jitpack.io")
     // mavenCentral 快照仓库
     maven("https://s01.oss.sonatype.org/content/repositories/snapshots/")
-    google()
-    mavenCentral()
+    maven("https://maven.aliyun.com/repository/public")
+    maven("https://maven.aliyun.com/repository/google")
   }
 }
 

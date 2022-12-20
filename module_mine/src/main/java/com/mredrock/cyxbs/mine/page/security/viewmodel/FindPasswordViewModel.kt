@@ -2,7 +2,7 @@ package com.mredrock.cyxbs.mine.page.security.viewmodel
 
 import androidx.databinding.ObservableField
 import com.mredrock.cyxbs.common.utils.extensions.doOnErrorWithDefaultErrorHandler
-import com.mredrock.cyxbs.common.utils.extensions.safeSubscribeBy
+import com.mredrock.cyxbs.common.utils.extensions.unsafeSubscribeBy
 import com.mredrock.cyxbs.common.utils.extensions.setSchedulers
 import com.mredrock.cyxbs.common.viewmodel.BaseViewModel
 import com.mredrock.cyxbs.mine.network.model.SecurityQuestion
@@ -83,7 +83,7 @@ class FindPasswordViewModel : BaseViewModel() {
                         toast("对不起，验证码发送失败，原因为:$it")
                         true
                     }
-                    .safeSubscribeBy {
+                    .unsafeSubscribeBy {
                         when (it.status) {
                             10000 -> {
                                 //发送成功
@@ -128,7 +128,7 @@ class FindPasswordViewModel : BaseViewModel() {
                             canClickNext = true
                             true
                         }
-                        .safeSubscribeBy(
+                        .unsafeSubscribeBy(
                                 onError = {
 
                                 },
@@ -156,7 +156,7 @@ class FindPasswordViewModel : BaseViewModel() {
                     toast("获取邮箱信息失败，原因为$it")
                     true
                 }
-                .safeSubscribeBy {
+                .unsafeSubscribeBy {
                     if (it.status == 10000) {
                         email = it.data.email
                         if (email == null || email == "") {
@@ -195,7 +195,7 @@ class FindPasswordViewModel : BaseViewModel() {
                     toast("服务器君打盹了,$it")
                     true
                 }
-                .safeSubscribeBy {
+                .unsafeSubscribeBy {
                     if (it.status == 10000) {
                         //目前仅仅有一个密保问题
                         //后端为了拓展将这里的返回值设计成了一个集合
@@ -239,7 +239,7 @@ class FindPasswordViewModel : BaseViewModel() {
                             canClickNext = true
                             true
                         }
-                        .safeSubscribeBy { cq ->
+                        .unsafeSubscribeBy { cq ->
                             when (cq.status) {
                                 10006 -> {//用户尝试次数已经达到上限
                                     toast("输入次数已达上限，请10分钟后再次尝试")

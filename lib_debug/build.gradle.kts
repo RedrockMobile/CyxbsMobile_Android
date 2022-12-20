@@ -2,6 +2,7 @@ plugins {
   id("module-manager")
 //  id("me.ele.lancet") // CodeLocator 所需要的插件
 }
+android.namespace = "com.mredrock.cyxbs.lib.debug"
 
 dependLibBase()
 dependLibUtils()

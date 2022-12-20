@@ -1,10 +1,7 @@
-
-
-
-
 plugins {
   id("module-debug")
 }
+android.namespace = "com.mredrock.cyxbs.course"
 
 dependLibBase()
 dependLibUtils()

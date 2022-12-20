@@ -6,7 +6,7 @@ import androidx.paging.LivePagedListBuilder
 import androidx.paging.PagedList
 import com.mredrock.cyxbs.common.network.ApiGenerator
 import com.mredrock.cyxbs.common.utils.extensions.doOnErrorWithDefaultErrorHandler
-import com.mredrock.cyxbs.common.utils.extensions.safeSubscribeBy
+import com.mredrock.cyxbs.common.utils.extensions.unsafeSubscribeBy
 import com.mredrock.cyxbs.common.utils.extensions.setSchedulers
 import com.mredrock.cyxbs.common.viewmodel.BaseViewModel
 import com.mredrock.cyxbs.qa.beannew.Comment
@@ -49,7 +49,7 @@ class MyCommentViewModel : BaseViewModel() {
             .praiseComment(id)
             .setSchedulers()
             .doOnErrorWithDefaultErrorHandler { true }
-            .safeSubscribeBy(
+            .unsafeSubscribeBy(
                 onError = {
                     toast("点赞失败")
                 },
@@ -74,7 +74,7 @@ class MyCommentViewModel : BaseViewModel() {
             )
             .setSchedulers()
             .doOnErrorWithDefaultErrorHandler { true }
-            .safeSubscribeBy(
+            .unsafeSubscribeBy(
                 onError = {
                     toast("评论失败o(*￣▽￣*)o")
                 },

@@ -2,7 +2,7 @@ package com.mredrock.cyxbs.discover.emptyroom.viewmodel
 
 import androidx.lifecycle.MutableLiveData
 import com.mredrock.cyxbs.common.network.ApiGenerator
-import com.mredrock.cyxbs.common.utils.extensions.safeSubscribeBy
+import com.mredrock.cyxbs.common.utils.extensions.unsafeSubscribeBy
 import com.mredrock.cyxbs.common.utils.extensions.setSchedulers
 import com.mredrock.cyxbs.common.viewmodel.BaseViewModel
 import com.mredrock.cyxbs.discover.emptyroom.bean.EmptyRoom
@@ -46,7 +46,7 @@ class EmptyRoomViewModel : BaseViewModel() {
         d = apiService.getEmpyRooms(week, weekday, building, tag)
                 .delay(300, TimeUnit.MILLISECONDS)
                 .setSchedulers()
-                .safeSubscribeBy(
+                .unsafeSubscribeBy(
                         onNext = {
                             status.value = FINISH
                             val converter = EmptyConverter()

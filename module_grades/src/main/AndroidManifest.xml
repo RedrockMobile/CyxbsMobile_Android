@@ -1,9 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
-<manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.mredrock.cyxbs.discover.grades">
+<manifest xmlns:android="http://schemas.android.com/apk/res/android">
 
     <application>
         <activity android:name="com.mredrock.cyxbs.discover.grades.ui.main.ContainerActivity" />
-        <activity android:name=".ui.main.BindActivity" />
     </application>
 </manifest>

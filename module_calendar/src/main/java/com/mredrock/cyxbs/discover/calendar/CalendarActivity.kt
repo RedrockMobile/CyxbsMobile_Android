@@ -16,10 +16,10 @@ import com.bumptech.glide.request.RequestOptions
 import com.bumptech.glide.request.target.DrawableImageViewTarget
 import com.bumptech.glide.request.transition.Transition
 import com.mredrock.cyxbs.calendar.R
-import com.mredrock.cyxbs.common.utils.extensions.getDarkModeStatus
-import com.mredrock.cyxbs.common.config.DISCOVER_CALENDAR
-import com.mredrock.cyxbs.common.config.getBaseUrl
-import com.mredrock.cyxbs.common.ui.BaseActivity
+import com.mredrock.cyxbs.config.route.DISCOVER_CALENDAR
+import com.mredrock.cyxbs.lib.base.ui.BaseActivity
+import com.mredrock.cyxbs.lib.utils.extensions.isDarkMode
+import com.mredrock.cyxbs.lib.utils.network.getBaseUrl
 
 @Route(path = DISCOVER_CALENDAR)
 class CalendarActivity : BaseActivity() {
@@ -55,7 +55,7 @@ class CalendarActivity : BaseActivity() {
                     lp.height = ivHeight
                     mImageView.layoutParams = lp
                     val bitmap = Bitmap.createBitmap((resource as BitmapDrawable).bitmap)
-                    if (this@CalendarActivity.getDarkModeStatus()) {
+                    if (isDarkMode()) {
                         convertColor(bitmap, resource)
                     }
                     mImageView.setImageBitmap(bitmap)

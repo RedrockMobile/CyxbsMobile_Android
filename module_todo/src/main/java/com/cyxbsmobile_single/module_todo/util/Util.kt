@@ -263,7 +263,7 @@ fun resetRepeatStatus(){
                     .map { list ->
                         TodoDatabase.INSTANCE.todoDao()
                                 .updateTodoList(list)
-                    }.setSchedulers().safeSubscribeBy {
+                    }.setSchedulers().unsafeSubscribeBy {
 
                     }
         }

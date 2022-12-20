@@ -17,6 +17,7 @@ import android.os.Bundle
  *
  *              使用java8的接口默认实现对应的kotlin版本，见到默认实现不要觉得奇怪
  */
+@Deprecated("不再使用")
 interface ActionLoginStatusSubscriber {
 
     /**

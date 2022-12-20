@@ -1,6 +1,6 @@
 package com.mredrock.cyxbs.mine.page.feedback.history.detail
 
-import com.mredrock.cyxbs.common.utils.extensions.safeSubscribeBy
+import com.mredrock.cyxbs.common.utils.extensions.unsafeSubscribeBy
 import com.mredrock.cyxbs.common.utils.extensions.setSchedulers
 import com.mredrock.cyxbs.lib.utils.extensions.toast
 import com.mredrock.cyxbs.mine.page.feedback.api
@@ -23,7 +23,7 @@ class HistoryDetailPresenter(private val id: Long, private val isReply: Boolean)
             .map {
                 it.data
             }
-            .safeSubscribeBy(
+            .unsafeSubscribeBy(
                 onNext = {
                     vm?.setFeedback(Feedback(DateUtils.strToLong(it.feedback.updatedAt),
                         it.feedback.title,
@@ -33,7 +33,7 @@ class HistoryDetailPresenter(private val id: Long, private val isReply: Boolean)
                     val last = it.reply
                     if (last == null){
                         vm?.setIsReply(false)
-                        return@safeSubscribeBy
+                        return@unsafeSubscribeBy
                     }
                     vm?.setIsReply(it.feedback.replied)
                     vm?.setReply(Reply(DateUtils.strToLong(it.feedback.updatedAt),last.content,last.urls?: listOf()))

@@ -6,7 +6,7 @@ import androidx.paging.PagedList
 import com.mredrock.cyxbs.common.bean.isSuccessful
 import com.mredrock.cyxbs.common.network.ApiGenerator
 import com.mredrock.cyxbs.common.utils.extensions.mapOrThrowApiException
-import com.mredrock.cyxbs.common.utils.extensions.safeSubscribeBy
+import com.mredrock.cyxbs.common.utils.extensions.unsafeSubscribeBy
 import com.mredrock.cyxbs.common.utils.extensions.setSchedulers
 import com.mredrock.cyxbs.common.viewmodel.BaseViewModel
 import com.mredrock.cyxbs.qa.R
@@ -69,7 +69,7 @@ open class DynamicListViewModel : BaseViewModel() {
             .doOnError {
                 toastEvent.value = R.string.qa_get_circle_data_failure
             }
-            .safeSubscribeBy {
+            .unsafeSubscribeBy {
                 myCircle.value = it
             }
     }
@@ -79,7 +79,7 @@ open class DynamicListViewModel : BaseViewModel() {
             .getTopicGround(topic_name, instruction)
             .mapOrThrowApiException()
             .setSchedulers()
-            .safeSubscribeBy { it ->
+            .unsafeSubscribeBy { it ->
                 TopicDataSet.clearCircleDetailTime()
                 it.forEach {
                     TopicDataSet.storageTopicData(it)
@@ -95,7 +95,7 @@ open class DynamicListViewModel : BaseViewModel() {
             .doOnError {
                 toastEvent.value = R.string.qa_topic_message_failure
             }
-            .safeSubscribeBy {
+            .unsafeSubscribeBy {
                 topicMessageList.value = it
             }
     }
@@ -105,7 +105,7 @@ open class DynamicListViewModel : BaseViewModel() {
             .getSearchHotWord()
             .mapOrThrowApiException()
             .setSchedulers()
-            .safeSubscribeBy { texts ->
+            .unsafeSubscribeBy { texts ->
                 hotWords.value = texts.hotWords
             }
     }
@@ -121,7 +121,7 @@ open class DynamicListViewModel : BaseViewModel() {
                     toast("关注失败")
                 }
             }
-            .safeSubscribeBy {
+            .unsafeSubscribeBy {
                 if (it.isSuccessful) {
                     if (followState) {
                         //如果处于关注状态,点击之后是取消关注
@@ -151,7 +151,7 @@ open class DynamicListViewModel : BaseViewModel() {
             .doOnError {
                 toastEvent.value = R.string.qa_ignore_dynamic_failure
             }
-            .safeSubscribeBy {
+            .unsafeSubscribeBy {
                 if (it.status == 200) {
                     toastEvent.value = R.string.qa_ignore_dynamic_success
                     ignorePeople.value = true
@@ -167,7 +167,7 @@ open class DynamicListViewModel : BaseViewModel() {
             .doOnError {
                 toastEvent.value = R.string.qa_report_dynamic_failure
             }
-            .safeSubscribeBy {
+            .unsafeSubscribeBy {
                 if (it.status == 200)
                     toastEvent.value = R.string.qa_report_dynamic_success
             }
@@ -180,7 +180,7 @@ open class DynamicListViewModel : BaseViewModel() {
             .doOnError {
                 toastEvent.value = R.string.qa_delete_dynamic_failure
             }
-            .safeSubscribeBy {
+            .unsafeSubscribeBy {
                 deleteTips.value = true
                 toastEvent.value = R.string.qa_delete_dynamic_success
             }

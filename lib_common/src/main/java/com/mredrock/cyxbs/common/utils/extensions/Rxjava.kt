@@ -91,7 +91,7 @@ fun <T : Any> Observable<T>.errorHandler(errorHandler: ErrorHandler = DefaultErr
 /**
  * 未实现onError时不会抛出[io.reactivex.exceptions.OnErrorNotImplementedException]异常
  */
-fun <T : Any> Observable<T>.safeSubscribeBy(
+fun <T : Any> Observable<T>.unsafeSubscribeBy(
     onError: (Throwable) -> Unit = {},
     onComplete: () -> Unit = {},
     onNext: (T) -> Unit = {}

@@ -1,14 +1,7 @@
-
-
-
-
-
-
-
-
 plugins {
     id("module-manager")
 }
+android.namespace = "com.redrock.module_notification"
 
 dependApiAccount()
 

@@ -200,7 +200,7 @@ class LikeViewSlim @JvmOverloads constructor(
                 sendBroadcast("$tmpId-$tmpModel")
             }.doFinally {
                 isLoading = false
-            }.safeSubscribeBy {
+            }.unsafeSubscribeBy {
                 // 如果成功，则保持
                 sendBroadcast("$tmpId-$tmpModel")
 

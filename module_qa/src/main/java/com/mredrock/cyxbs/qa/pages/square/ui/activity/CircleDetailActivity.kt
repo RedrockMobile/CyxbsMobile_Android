@@ -112,10 +112,10 @@ class CircleDetailActivity : BaseViewModelActivity<CircleDetailViewModel>() {
                 .mapOrThrowApiException()
                 .setSchedulers()
                 .doOnErrorWithDefaultErrorHandler { true }
-                .safeSubscribeBy(
+                .unsafeSubscribeBy(
                     onNext = {
                         if (id !in 1..it.size) {
-                            return@safeSubscribeBy
+                            return@unsafeSubscribeBy
                         }
                         topic = it[id - 1]
                         viewModel.topicId = topic.topicId.toInt()

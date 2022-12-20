@@ -5,7 +5,7 @@ import androidx.paging.LivePagedListBuilder
 import androidx.paging.PagedList
 import com.mredrock.cyxbs.common.network.ApiGenerator
 import com.mredrock.cyxbs.common.utils.extensions.mapOrThrowApiException
-import com.mredrock.cyxbs.common.utils.extensions.safeSubscribeBy
+import com.mredrock.cyxbs.common.utils.extensions.unsafeSubscribeBy
 import com.mredrock.cyxbs.common.utils.extensions.setSchedulers
 import com.mredrock.cyxbs.common.viewmodel.BaseViewModel
 import com.mredrock.cyxbs.qa.R
@@ -86,7 +86,7 @@ class QuestionSearchedViewModel(var searchKey: String) : BaseViewModel() {
                 toastEvent.value = R.string.qa_ignore_dynamic_failure
                 ignorePeople.value = false
             }
-            .safeSubscribeBy {
+            .unsafeSubscribeBy {
                 if (it.status == 200) {
                     toastEvent.value = R.string.qa_ignore_dynamic_success
                     ignorePeople.value = true
@@ -103,7 +103,7 @@ class QuestionSearchedViewModel(var searchKey: String) : BaseViewModel() {
             .doOnError {
                 toastEvent.value = R.string.qa_report_dynamic_failure
             }
-            .safeSubscribeBy {
+            .unsafeSubscribeBy {
                 if (it.status == 200)
                     toastEvent.value = R.string.qa_report_dynamic_success
             }
@@ -117,7 +117,7 @@ class QuestionSearchedViewModel(var searchKey: String) : BaseViewModel() {
                 toastEvent.value = R.string.qa_delete_dynamic_failure
                 deleteTips.value = false
             }
-            .safeSubscribeBy {
+            .unsafeSubscribeBy {
                 deleteTips.value = true
             }
     }
@@ -127,7 +127,7 @@ class QuestionSearchedViewModel(var searchKey: String) : BaseViewModel() {
             .getSearchKnowledge(key, page, size)
             .mapOrThrowApiException()
             .setSchedulers()
-            .safeSubscribeBy {
+            .unsafeSubscribeBy {
                 if (it.isNotEmpty()) {
                     isKnowledge = true
                     knowledge.value = it
@@ -148,7 +148,7 @@ class QuestionSearchedViewModel(var searchKey: String) : BaseViewModel() {
                 toastEvent.value = R.string.qa_search_no_user
                 userNetworkState.value = NetworkState.FAILED
             }
-            .safeSubscribeBy {
+            .unsafeSubscribeBy {
                 userList.value = it
                 userNetworkState.value = NetworkState.SUCCESSFUL
             }
@@ -161,7 +161,7 @@ class QuestionSearchedViewModel(var searchKey: String) : BaseViewModel() {
             .doOnError {
                 toastEvent.value = R.string.qa_person_change_focus_status_failed
             }
-            .safeSubscribeBy {
+            .unsafeSubscribeBy {
 
             }
     }

@@ -154,7 +154,7 @@ class MapViewModel : BaseViewModel() {
                 loadFail.postValue(true)
                 true
             }
-            .safeSubscribeBy {
+            .unsafeSubscribeBy {
                 mapInfo.value = it
                 DataSet.saveMapInfo(it)
             }.lifeCycle()
@@ -174,7 +174,7 @@ class MapViewModel : BaseViewModel() {
                 }
                 true
             }
-            .safeSubscribeBy {
+            .unsafeSubscribeBy {
                 buttonInfo.postValue(it)
                 DataSet.saveButtonInfo(it)
             }.lifeCycle()
@@ -219,7 +219,7 @@ class MapViewModel : BaseViewModel() {
 
                 true
             }
-            .safeSubscribeBy() {
+            .unsafeSubscribeBy() {
                 showingPlaceId = placeId
                 placeDetails.postValue(it)
                 if (bottomSheetStatus.value == BottomSheetBehavior.STATE_HIDDEN) {
@@ -264,7 +264,7 @@ class MapViewModel : BaseViewModel() {
 
                 true
             }
-            .safeSubscribeBy {
+            .unsafeSubscribeBy {
                 /**
                  * 同步服务端与缓存。因为之前是可以取placeNickname的所以这里还可以简化，
                  * 但保留功能扩展性，而且本来这里数据量很小，故下列代码也可以接受
@@ -328,7 +328,7 @@ class MapViewModel : BaseViewModel() {
                     refreshCollectList(true)
                     true
                 }
-                .safeSubscribeBy {
+                .unsafeSubscribeBy {
                     if (it.isSuccessful) {
                         DataSet.addCollect(FavoritePlace(placeNickname, id))
                         MapToast.makeText(
@@ -371,7 +371,7 @@ class MapViewModel : BaseViewModel() {
                 refreshCollectList(true)
                 true
             }
-            .safeSubscribeBy {
+            .unsafeSubscribeBy {
                 if (it.isSuccessful) {
                     DataSet.deleteCollect(id)
                 } else {
@@ -406,7 +406,7 @@ class MapViewModel : BaseViewModel() {
             .doOnErrorWithDefaultErrorHandler {
                 true
             }
-            .safeSubscribeBy {
+            .unsafeSubscribeBy {
                 // 这里手动判断 statue，不使用 mapOrThrowApiException()
                 if (it.status == 200) {
                     openId.value = it.data.placeId
@@ -435,7 +435,7 @@ class MapViewModel : BaseViewModel() {
             .doOnErrorWithDefaultErrorHandler {
                 true
             }
-            .safeSubscribeBy {
+            .unsafeSubscribeBy {
                 if (!it.isSuccessful) {
                     MapToast.makeText(
                         BaseApp.appContext,
@@ -455,7 +455,7 @@ class MapViewModel : BaseViewModel() {
             .getDownMessage(DownMessageParams(DOWN_MESSAGE_NAME))
             .setSchedulers()
             .mapOrThrowApiException()
-            .safeSubscribeBy {
+            .unsafeSubscribeBy {
                 if (!it.textList.isNullOrEmpty()) {
                     vrUrl = it.textList[0].content
                 }
@@ -503,7 +503,7 @@ class MapViewModel : BaseViewModel() {
                     uploadFailedCount++
                     true
                 }
-                .safeSubscribeBy {
+                .unsafeSubscribeBy {
                     if (it.isSuccessful) {
                         uploadSuccessCount++
                     } else {

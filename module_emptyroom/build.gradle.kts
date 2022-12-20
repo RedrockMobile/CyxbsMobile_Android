@@ -1,9 +1,7 @@
-
-
-
 plugins {
     id("module-manager")
 }
+android.namespace = "com.mredrock.cyxbs.discover.emptyroom"
 
 dependNetwork()
 dependRxjava()

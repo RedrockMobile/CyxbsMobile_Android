@@ -1,14 +1,7 @@
-
-
-
-
-
-
-
-
 plugins {
   id("module-debug")
 }
+android.namespace = "com.mredrock.cyxbs.affair"
 
 dependApiLogin()
 dependApiAccount()

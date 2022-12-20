@@ -1,7 +1,7 @@
 package com.mredrock.cyxbs.mine.page.feedback.center.presenter
 
 import com.mredrock.cyxbs.common.BaseApp.Companion.appContext
-import com.mredrock.cyxbs.common.utils.extensions.safeSubscribeBy
+import com.mredrock.cyxbs.common.utils.extensions.unsafeSubscribeBy
 import com.mredrock.cyxbs.common.utils.extensions.setSchedulers
 import com.mredrock.cyxbs.common.utils.extensions.toast
 import com.mredrock.cyxbs.mine.base.presenter.BasePresenter
@@ -24,7 +24,7 @@ class FeedbackCenterPresenter :
             .setSchedulers()
             .doOnSubscribe {}
             .doOnError { }
-            .safeSubscribeBy(
+            .unsafeSubscribeBy(
                 onNext = {
                     it?.let {
                         vm?.setContentList(it.data)

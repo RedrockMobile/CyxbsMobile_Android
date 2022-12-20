@@ -20,6 +20,10 @@ import com.mredrock.cyxbs.lib.utils.R
  */
 
 /**
+ * TODO 可以在 debug 包下控制台筛选：toast，查看 toast 调用堆栈信息
+ */
+
+/**
  * 已自带处于其他线程时自动切换至主线程发送
  */
 fun toast(s: CharSequence?) {

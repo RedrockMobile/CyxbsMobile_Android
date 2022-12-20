@@ -16,10 +16,11 @@ import com.mredrock.cyxbs.common.config.TODO_LAST_SYNC_TIME
 import com.mredrock.cyxbs.common.config.TODO_OFFLINE_DEL_LIST
 import com.mredrock.cyxbs.common.config.TODO_OFFLINE_MODIFY_LIST
 import com.mredrock.cyxbs.common.network.ApiGenerator
-import com.mredrock.cyxbs.common.utils.ExecuteOnceObserver
 import com.mredrock.cyxbs.common.utils.LogUtils
 import com.mredrock.cyxbs.common.utils.extensions.*
 import io.reactivex.rxjava3.core.Observable
+import io.reactivex.rxjava3.core.Observer
+import io.reactivex.rxjava3.disposables.Disposable
 
 /**
  * Author: RayleighZ
@@ -76,7 +77,7 @@ class TodoModel {
             .map {
                 TodoDatabase.INSTANCE.todoDao()
                     .updateTodo(todo)
-            }.setSchedulers().safeSubscribeBy {
+            }.setSchedulers().unsafeSubscribeBy {
                 onSuccess?.invoke()
             }
         apiGenerator.pushTodo(
@@ -87,7 +88,7 @@ class TodoModel {
                 firsPush = if (syncTime == 0L) 1 else 0
             )
         ).setSchedulers()
-            .safeSubscribeBy(
+            .unsafeSubscribeBy(
                 onNext = {
                     setLastSyncTime(it.data.syncTime)
                     setLastModifyTime(it.data.syncTime)
@@ -105,7 +106,7 @@ class TodoModel {
             .map {
                 TodoDatabase.INSTANCE.todoDao()
                     .deleteTodoById(todoId)
-            }.setSchedulers().safeSubscribeBy {
+            }.setSchedulers().unsafeSubscribeBy {
                 onSuccess.invoke()
             }
         apiGenerator.delTodo(
@@ -115,7 +116,7 @@ class TodoModel {
                 force = TodoListPushWrapper.NONE_FORCE
             )
         ).setSchedulers()
-            .safeSubscribeBy(
+            .unsafeSubscribeBy(
                 onNext = {
                     setLastSyncTime(it.data.syncTime)
                     setLastModifyTime(it.data.syncTime)
@@ -132,7 +133,7 @@ class TodoModel {
             .queryTodoById(todoId)
             .toObservable()
             .setSchedulers()
-            .safeSubscribeBy(
+            .unsafeSubscribeBy(
                 onNext = onSuccess,
                 onError = {
                     onError.invoke()
@@ -145,7 +146,7 @@ class TodoModel {
         TodoDatabase.INSTANCE
                 .todoDao().queryTodoByIdList(rawQuery)
                 .toObservable().setSchedulers()
-                .safeSubscribeBy {
+                .unsafeSubscribeBy {
                     onSuccess(it)
                 }
     }
@@ -156,7 +157,7 @@ class TodoModel {
             .insertTodo(todo)
             .toObservable()
             .setSchedulers()
-            .safeSubscribeBy {
+            .unsafeSubscribeBy {
                 onSuccess(it)
                 todo.todoId = it
                 apiGenerator.pushTodo(
@@ -167,7 +168,7 @@ class TodoModel {
                         firsPush = if (syncTime == 0L) 1 else 0
                     )
                 ).setSchedulers()
-                    .safeSubscribeBy(
+                    .unsafeSubscribeBy(
                         onNext = { syncTime ->
                             setLastSyncTime(syncTime.data.syncTime)
                             setLastModifyTime(syncTime.data.syncTime)
@@ -263,7 +264,7 @@ class TodoModel {
             .queryTodoByWeatherDone(isDone)
             .toObservable()
             .setSchedulers()
-            .safeSubscribeBy {
+            .unsafeSubscribeBy {
                 if (firstTimeGet) {
                     onSuccess(it)
                     firstTimeGet = false
@@ -280,7 +281,7 @@ class TodoModel {
         val lastSyncTime = getLastSyncTime()
         apiGenerator.getLastSyncTime(lastSyncTime)
             .setSchedulers()
-            .safeSubscribeBy(
+            .unsafeSubscribeBy(
                 onNext = {
                     LogUtils.d("RayleighZ", "Sync Success")
                     val remoteSyncTime = it.data.syncTime
@@ -289,7 +290,7 @@ class TodoModel {
                         //无条件信任远程数据库
                         apiGenerator.queryAllTodo()
                             .setSchedulers()
-                            .safeSubscribeBy(
+                            .unsafeSubscribeBy(
                                 onNext = { inner ->
                                     //同步本地syncTime
                                     setLastModifyTime(inner.data.syncTime)
@@ -310,7 +311,7 @@ class TodoModel {
                                                         .insertTodoList(list)
                                                 }
                                                 .setSchedulers()
-                                                .safeSubscribeBy { }
+                                                .unsafeSubscribeBy { }
                                         }
                                     }
                                 }
@@ -344,14 +345,14 @@ class TodoModel {
                                 //获取修改，更新本地数据库
                                 apiGenerator.queryChangedTodo(lastSyncTime)
                                     .setSchedulers()
-                                    .safeSubscribeBy(
+                                    .unsafeSubscribeBy(
                                         onNext = { wrapper ->
                                             //更新本地
                                             Observable.just(wrapper.data.todoList)
                                                 .map { list ->
                                                     TodoDatabase.INSTANCE
                                                         .todoDao().insertTodoList(list)
-                                                }.setSchedulers().safeSubscribeBy { }
+                                                }.setSchedulers().unsafeSubscribeBy { }
                                             //删除本地
                                             Observable.fromArray(wrapper.data.delTodoArray)
                                                 .map { idList ->
@@ -359,7 +360,7 @@ class TodoModel {
                                                         TodoDatabase.INSTANCE.todoDao()
                                                             .deleteTodoById(id)
                                                     }
-                                                }.setSchedulers().safeSubscribeBy { }
+                                                }.setSchedulers().unsafeSubscribeBy { }
 
                                             //两个时间记录同步处理
                                             setLastSyncTime(wrapper.data.syncTime)
@@ -391,7 +392,7 @@ class TodoModel {
         apiGenerator
             .queryAllTodo()
             .setSchedulers()
-            .safeSubscribeBy(
+            .unsafeSubscribeBy(
                 onNext = {
                     setLastSyncTime(it.data.syncTime)
                     //本地数据库全部覆盖
@@ -406,7 +407,7 @@ class TodoModel {
                                     .todoDao()
                                     .insertTodoList(list)
                             }.setSchedulers()
-                            .safeSubscribeBy { }
+                            .unsafeSubscribeBy { }
                     }
                     todoList.clear()
                     it.data.todoArray?.let { list ->
@@ -433,7 +434,7 @@ class TodoModel {
         TodoDatabase.INSTANCE
             .todoDao().queryTodoByIdList(rawQuery)
             .toObservable().setSchedulers()
-            .safeSubscribeBy(
+            .unsafeSubscribeBy(
                 onNext = {
                     LogUtils.d("RayleighZ", "offline todo list = $it")
                     if (it.isNotEmpty()){
@@ -447,7 +448,7 @@ class TodoModel {
 
                         apiGenerator.pushTodo(pushWrapper)
                                 .setSchedulers()
-                                .safeSubscribeBy(
+                                .unsafeSubscribeBy(
                                         onNext = { syncTime ->
                                             setLastSyncTime(syncTime.data.syncTime)
                                             setLastModifyTime(syncTime.data.syncTime)
@@ -469,7 +470,7 @@ class TodoModel {
                                         getLastSyncTime()
                                 )
                         ).setSchedulers()
-                                .safeSubscribeBy(
+                                .unsafeSubscribeBy(
                                         onNext = { syncTime ->
                                             setLastSyncTime(syncTime.data.syncTime)
                                             setLastModifyTime(syncTime.data.syncTime)
@@ -496,7 +497,7 @@ class TodoModel {
             .queryAllTodo()
             .toObservable()
             .setSchedulers()
-            .safeSubscribeBy {
+            .unsafeSubscribeBy {
                 //重传所有todo
                 apiGenerator.pushTodo(
                     TodoListPushWrapper(
@@ -507,7 +508,7 @@ class TodoModel {
                     )
                 )
                     .setSchedulers()
-                    .safeSubscribeBy(
+                    .unsafeSubscribeBy(
                         onNext = { syncTime ->
                             onSuccess.invoke()
                             setLastModifyTime(syncTime.data.syncTime)
@@ -519,5 +520,52 @@ class TodoModel {
                         }
                     )
             }
+    }
+    
+    /**
+     * [ExecuteOnceObserver] is used to only get one [onNext] Result.
+     *
+     * @param onExecuteOnceNext The concrete implement of the [onNext]
+     * @param onExecuteOnceComplete The concrete implement of the [onComplete]
+     * @param onExecuteOnceError The concrete implement of the [onError]
+     * @param onExecuteOnFinal When everything is done,[onExecuteOnFinal] is called
+     *
+     * Created by anriku on 2018/9/18.
+     */
+    private class ExecuteOnceObserver<T: Any>(
+        val onExecuteOnceNext: (T) -> Unit = {},
+        val onExecuteOnceComplete: () -> Unit = {},
+        val onExecuteOnceError: (Throwable) -> Unit = {},
+        val onExecuteOnFinal: () -> Unit = {}
+    ) : Observer<T> {
+        
+        private var mDisposable: Disposable? = null
+        
+        override fun onComplete() {
+            onExecuteOnceComplete()
+        }
+        
+        override fun onSubscribe(d: Disposable) {
+            mDisposable = d
+        }
+        
+        override fun onNext(t: T) {
+            try {
+                onExecuteOnceNext(t)
+                this.onComplete()
+            } catch (e: Throwable) {
+                this.onError(e)
+            } finally {
+                onExecuteOnFinal()
+                if (mDisposable != null && !mDisposable!!.isDisposed) {
+                    mDisposable!!.dispose()
+                }
+            }
+        }
+        
+        override fun onError(e: Throwable) {
+            onExecuteOnceError(e)
+        }
+        
     }
 }

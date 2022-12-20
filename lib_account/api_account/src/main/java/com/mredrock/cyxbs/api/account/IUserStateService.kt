@@ -78,7 +78,7 @@ interface IUserStateService {
      * ### 2、生命周期问题
      * 新模块中 BaseActivity 已自带了 safeSubscribeBy() 方法用于关联生命周期
      *
-     * 旧模块中推荐转换为 Flow 然后配合生命周期
+     * 旧模块中推荐转换为 Flow 然后配合生命周期，旧模块的使用方式：
      * ```
      * // build.gradle.kts 需要先依赖
      * dependCoroutinesRx3()
@@ -92,7 +92,7 @@ interface IUserStateService {
      *         it.nullUnless {
      *             initFragment()
      *         }
-     *     }.launchIn(lifecycleScope)
+     *     }.launchIn(lifecycleScope) // 这里请注意 Fragment 中要使用 viewLifecycleOwner.lifecycleScope
      * ```
      *
      * ## 其他问题

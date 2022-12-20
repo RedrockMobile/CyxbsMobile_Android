@@ -1,15 +1,15 @@
 package com.mredrock.cyxbs.lib.utils.utils.get
 
-import android.content.Context
 import android.content.pm.PackageManager
 import android.os.Build
+import com.mredrock.cyxbs.lib.utils.extensions.appContext
 
 /**
  * getAppVersionCode
  */
-fun getAppVersionCode(context: Context): Long {
+fun getAppVersionCode(): Long {
     return try {
-        val packageInfo = context.packageManager.getPackageInfo(context.packageName, 0)
+        val packageInfo = appContext.packageManager.getPackageInfo(appContext.packageName, 0)
         when {
             Build.VERSION.SDK_INT >= Build.VERSION_CODES.P -> packageInfo.longVersionCode
             else -> packageInfo.versionCode.toLong()
@@ -19,10 +19,10 @@ fun getAppVersionCode(context: Context): Long {
     }
 }
 
-fun getAppVersionName(context: Context): String? {
+fun getAppVersionName(): String? {
     return try {
-        val packageManager = context.packageManager
-        val info = packageManager.getPackageInfo(context.packageName, 0)
+        val packageManager = appContext.packageManager
+        val info = packageManager.getPackageInfo(appContext.packageName, 0)
         info.versionName
     } catch (e: PackageManager.NameNotFoundException) {
         null

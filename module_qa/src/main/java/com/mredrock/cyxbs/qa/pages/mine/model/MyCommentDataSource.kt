@@ -8,7 +8,7 @@ import com.mredrock.cyxbs.common.network.ApiGenerator
 import com.mredrock.cyxbs.common.network.exception.RedrockApiIllegalStateException
 import com.mredrock.cyxbs.common.service.ServiceManager
 import com.mredrock.cyxbs.common.utils.extensions.mapOrThrowApiException
-import com.mredrock.cyxbs.common.utils.extensions.safeSubscribeBy
+import com.mredrock.cyxbs.common.utils.extensions.unsafeSubscribeBy
 import com.mredrock.cyxbs.common.utils.extensions.setSchedulers
 import com.mredrock.cyxbs.qa.beannew.CommentWrapper
 import com.mredrock.cyxbs.qa.network.ApiServiceNew
@@ -53,7 +53,7 @@ class MyCommentDataSource : PageKeyedDataSource<Int, CommentWrapper>() {
                     failedRequest = { loadInitial(params, callback) }
                 }
             }
-            .safeSubscribeBy { list ->
+            .unsafeSubscribeBy { list ->
                 initialLoad.postValue(NetworkState.SUCCESSFUL)
                 networkState.postValue(NetworkState.SUCCESSFUL)
                 val nextKey = 2.takeUnless { list.size < params.requestedLoadSize }
@@ -85,7 +85,7 @@ class MyCommentDataSource : PageKeyedDataSource<Int, CommentWrapper>() {
                     failedRequest = { loadAfter(params, callback) }
                 }
             }
-            .safeSubscribeBy { list ->
+            .unsafeSubscribeBy { list ->
                 networkState.postValue(NetworkState.SUCCESSFUL)
                 initialLoad.postValue(NetworkState.SUCCESSFUL)
                 val adjacentPageKey =

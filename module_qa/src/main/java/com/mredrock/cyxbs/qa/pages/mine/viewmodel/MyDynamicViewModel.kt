@@ -6,7 +6,7 @@ import androidx.lifecycle.Transformations
 import androidx.paging.LivePagedListBuilder
 import androidx.paging.PagedList
 import com.mredrock.cyxbs.common.network.ApiGenerator
-import com.mredrock.cyxbs.common.utils.extensions.safeSubscribeBy
+import com.mredrock.cyxbs.common.utils.extensions.unsafeSubscribeBy
 import com.mredrock.cyxbs.common.utils.extensions.setSchedulers
 import com.mredrock.cyxbs.common.viewmodel.BaseViewModel
 import com.mredrock.cyxbs.qa.R
@@ -56,7 +56,7 @@ class MyDynamicViewModel : BaseViewModel(){
             .doOnError {
                 toastEvent.value = R.string.qa_delete_dynamic_failure
             }
-            .safeSubscribeBy {
+            .unsafeSubscribeBy {
                 deleteTips.value = true
                 toastEvent.value = R.string.qa_delete_dynamic_success
             }

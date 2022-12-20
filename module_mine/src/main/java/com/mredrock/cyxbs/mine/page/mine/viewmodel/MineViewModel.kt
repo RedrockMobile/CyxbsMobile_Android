@@ -5,7 +5,7 @@ import androidx.lifecycle.MutableLiveData
 import com.mredrock.cyxbs.common.bean.RedrockApiStatus
 import com.mredrock.cyxbs.common.network.ApiGenerator
 import com.mredrock.cyxbs.common.utils.extensions.doOnErrorWithDefaultErrorHandler
-import com.mredrock.cyxbs.common.utils.extensions.safeSubscribeBy
+import com.mredrock.cyxbs.common.utils.extensions.unsafeSubscribeBy
 import com.mredrock.cyxbs.common.utils.extensions.setSchedulers
 import com.mredrock.cyxbs.common.viewmodel.BaseViewModel
 import com.mredrock.cyxbs.mine.R
@@ -30,7 +30,7 @@ class MineViewModel: BaseViewModel() {
            apiService.getPersonInfo(redid)
                .setSchedulers()
                .doOnErrorWithDefaultErrorHandler { true }
-               .safeSubscribeBy(
+               .unsafeSubscribeBy(
                    onNext = {
                        _userInfo.value=it
                    },
@@ -47,7 +47,7 @@ class MineViewModel: BaseViewModel() {
            apiService.getPersonInfo(redid)
                .setSchedulers()
                .doOnErrorWithDefaultErrorHandler { true }
-               .safeSubscribeBy(
+               .unsafeSubscribeBy(
                    onNext = {
 
                        _userInfo.value=it
@@ -69,7 +69,7 @@ class MineViewModel: BaseViewModel() {
         apiService.changePersonalBackground(file)
             .setSchedulers()
             .doOnErrorWithDefaultErrorHandler { true }
-            .safeSubscribeBy(
+            .unsafeSubscribeBy(
                 onNext = {
                     Log.i("背景图片",it.status.toString())
                     _isChangeSuccess.value =true
@@ -89,7 +89,7 @@ class MineViewModel: BaseViewModel() {
         apiService.deleteIdentity(identityId)
             .setSchedulers()
             .doOnErrorWithDefaultErrorHandler { true }
-            .safeSubscribeBy(
+            .unsafeSubscribeBy(
                 onNext = {
                    Log.e("wxtag身份","(MineViewModel.kt:92)->>删除身份成功 ")
                     redRockApiStatusDelete.value = it
@@ -110,7 +110,7 @@ class MineViewModel: BaseViewModel() {
         apiService.getPersonalCount(redid)
             .setSchedulers()
             .doOnErrorWithDefaultErrorHandler { true }
-            .safeSubscribeBy(
+            .unsafeSubscribeBy(
                 onNext = {
                    _PersonalCont.value=it
                 },
@@ -132,7 +132,7 @@ class MineViewModel: BaseViewModel() {
                 toastEvent.value = R.string.mine_person_change_focus_status_failed
 
             }
-            .safeSubscribeBy {
+            .unsafeSubscribeBy {
                 _redRockApiChangeUsercount.value=it
             }
     }
