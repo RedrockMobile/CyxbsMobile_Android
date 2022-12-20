@@ -1,5 +1,6 @@
 package com.redrock.module_notification.adapter
 
+import android.animation.ValueAnimator
 import android.annotation.SuppressLint
 import android.content.Context
 import android.view.LayoutInflater
@@ -11,7 +12,6 @@ import android.widget.TextView
 import androidx.fragment.app.FragmentActivity
 import androidx.recyclerview.widget.RecyclerView
 import com.mredrock.cyxbs.common.utils.extensions.setOnSingleClickListener
-import com.mredrock.cyxbs.common.utils.extensions.visibleWithAnim
 import com.redrock.module_notification.R
 import com.redrock.module_notification.bean.ChangeReadStatusToBean
 import com.redrock.module_notification.bean.SystemMsgBean
@@ -166,5 +166,21 @@ class SystemNotificationRvAdapter(
     override fun getItemViewType(position: Int): Int {
         return if (position == list.size) TYPE_SECOND
         else TYPE_ONE
+    }
+    
+    private fun View.visibleWithAnim(duration: Long = 300) {
+        if(visibility == View.VISIBLE) return
+    
+        visibility = View.VISIBLE
+        val anim = ValueAnimator
+            .ofFloat(0f, 1f)
+            .setDuration(duration)
+    
+        anim.addUpdateListener {
+            val curVal = it.animatedValue as Float
+            this.alpha = curVal
+        }
+    
+        anim.start()
     }
 }

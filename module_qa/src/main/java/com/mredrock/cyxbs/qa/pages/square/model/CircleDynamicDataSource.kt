@@ -7,7 +7,7 @@ import com.mredrock.cyxbs.api.account.IAccountService
 import com.mredrock.cyxbs.common.network.ApiGenerator
 import com.mredrock.cyxbs.common.service.ServiceManager
 import com.mredrock.cyxbs.common.utils.extensions.mapOrThrowApiException
-import com.mredrock.cyxbs.common.utils.extensions.safeSubscribeBy
+import com.mredrock.cyxbs.common.utils.extensions.unsafeSubscribeBy
 import com.mredrock.cyxbs.common.utils.extensions.setSchedulers
 import com.mredrock.cyxbs.qa.beannew.Dynamic
 import com.mredrock.cyxbs.qa.network.ApiServiceNew
@@ -46,7 +46,7 @@ class CircleDynamicDataSource(private val kind: String, private val loop: Int) :
                 initialLoad.value = NetworkState.FAILED
                 failedRequest = { loadInitial(params, callback) }
             }
-            .safeSubscribeBy { list ->
+            .unsafeSubscribeBy { list ->
                 initialLoad.value = NetworkState.SUCCESSFUL
                 val nextPageKey = 2.takeUnless { (list.size < params.requestedLoadSize) }
                 callback.onResult(list, 1, nextPageKey)
@@ -63,7 +63,7 @@ class CircleDynamicDataSource(private val kind: String, private val loop: Int) :
                 networkState.value = NetworkState.FAILED
                 failedRequest = { loadAfter(params, callback) }
             }
-            .safeSubscribeBy { list ->
+            .unsafeSubscribeBy { list ->
                 networkState.value = NetworkState.SUCCESSFUL
                 val adjacentPageKey =
                     (params.key + 1).takeUnless { list.size < params.requestedLoadSize }

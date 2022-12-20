@@ -3,9 +3,9 @@ package com.mredrock.cyxbs.sdks
 import com.google.auto.service.AutoService
 import com.mredrock.cyxbs.BuildConfig
 import com.mredrock.cyxbs.api.account.IAccountService
+import com.mredrock.cyxbs.api.init.InitialManager
+import com.mredrock.cyxbs.api.init.InitialService
 import com.mredrock.cyxbs.lib.utils.service.impl
-import com.mredrock.cyxbs.lib.base.spi.InitialManager
-import com.mredrock.cyxbs.lib.base.spi.InitialService
 import com.tencent.bugly.Bugly
 import com.tencent.bugly.crashreport.CrashReport
 import com.tencent.vasdolly.helper.ChannelReaderUtil

@@ -1,10 +1,7 @@
-import com.mredrock.cyxbs.convention.depend.api.*
-import com.mredrock.cyxbs.convention.depend.*
-import com.mredrock.cyxbs.convention.depend.lib.*
-
 plugins {
   id("module-debug")
 }
+android.namespace = "com.mredrock.cyxbs.course"
 
 dependLibBase()
 dependLibUtils()

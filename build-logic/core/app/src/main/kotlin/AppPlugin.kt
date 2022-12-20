@@ -1,9 +1,9 @@
 @file:Suppress("UNCHECKED_CAST")
 
-import com.mredrock.cyxbs.convention.depend.dependBugly
-import com.mredrock.cyxbs.convention.depend.dependSophix
-import com.mredrock.cyxbs.convention.depend.dependUmeng
-import com.mredrock.cyxbs.convention.depend.dependVasDolly
+
+
+
+
 import com.tencent.vasdolly.plugin.extension.ChannelConfigExtension
 import org.gradle.api.plugins.ExtraPropertiesExtension
 import org.gradle.kotlin.dsl.*

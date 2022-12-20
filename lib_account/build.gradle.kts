@@ -1,11 +1,7 @@
-import com.mredrock.cyxbs.convention.depend.api.*
-import com.mredrock.cyxbs.convention.depend.*
-import com.mredrock.cyxbs.convention.depend.lib.dependLibConfig
-import com.mredrock.cyxbs.convention.depend.lib.dependLibUtils
-
 plugins {
     id("module-manager")
 }
+android.namespace = "com.mredrock.cyxbs.account"
 
 dependApiElectricity()
 dependApiVolunteer()

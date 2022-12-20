@@ -4,14 +4,12 @@ import android.util.Log
 import androidx.lifecycle.MutableLiveData
 import com.mredrock.cyxbs.common.bean.RedrockApiStatus
 import com.mredrock.cyxbs.common.utils.extensions.doOnErrorWithDefaultErrorHandler
-import com.mredrock.cyxbs.common.utils.extensions.safeSubscribeBy
+import com.mredrock.cyxbs.common.utils.extensions.unsafeSubscribeBy
 import com.mredrock.cyxbs.common.utils.extensions.setSchedulers
 import com.mredrock.cyxbs.common.viewmodel.BaseViewModel
 import com.mredrock.cyxbs.mine.network.model.AllStatus
 import com.mredrock.cyxbs.mine.network.model.AuthenticationStatus
 import com.mredrock.cyxbs.mine.network.model.PersonalStatu
-import com.mredrock.cyxbs.mine.network.model.Status
-import com.mredrock.cyxbs.mine.page.mine.ui.activity.HomepageActivity
 import com.mredrock.cyxbs.mine.util.apiService
 
 class IdentityViewModel: BaseViewModel()  {
@@ -33,7 +31,7 @@ class IdentityViewModel: BaseViewModel()  {
         apiService.getAuthenticationStatus(redid)
             .setSchedulers()
             .doOnErrorWithDefaultErrorHandler { true }
-            .safeSubscribeBy(
+            .unsafeSubscribeBy(
 
                 onNext = {
                        authenticationStatus.value=it
@@ -50,7 +48,7 @@ class IdentityViewModel: BaseViewModel()  {
         apiService.getCustomization(redid)
             .setSchedulers()
             .doOnErrorWithDefaultErrorHandler { true }
-            .safeSubscribeBy(
+            .unsafeSubscribeBy(
                 onNext = {
                    customization.value = it
 
@@ -69,7 +67,7 @@ class IdentityViewModel: BaseViewModel()  {
             apiService.getAllIdentify(it)
                 .setSchedulers()
                 .doOnErrorWithDefaultErrorHandler { true }
-                .safeSubscribeBy(
+                .unsafeSubscribeBy(
                     onNext = {
                         Log.e("wxtag身份","(IdentityViewModel.kt:70)->> 获取身份成功")
                         allIdentifies.value = it
@@ -96,7 +94,7 @@ class IdentityViewModel: BaseViewModel()  {
         apiService.uploadDisplayIdentity(identityId)
             .setSchedulers()
             .doOnErrorWithDefaultErrorHandler { true }
-            .safeSubscribeBy(
+            .unsafeSubscribeBy(
                 onNext = {
                     redrockApiStatusUpdate.value=it
                     if (type.equals("个性身份")){
@@ -121,7 +119,7 @@ class IdentityViewModel: BaseViewModel()  {
         apiService.getShowIdentify(id)
             .setSchedulers()
             .doOnErrorWithDefaultErrorHandler { true }
-            .safeSubscribeBy(
+            .unsafeSubscribeBy(
                 onNext = {
                     Log.i("身份设置","getShowIdentify")
                 showStatu.value=it

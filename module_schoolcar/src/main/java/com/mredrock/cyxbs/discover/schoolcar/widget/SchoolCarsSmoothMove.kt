@@ -1,6 +1,5 @@
 package com.mredrock.cyxbs.discover.schoolcar.widget
 
-import android.app.Activity
 import android.graphics.*
 import android.util.ArrayMap
 import android.view.animation.LinearInterpolator
@@ -11,7 +10,7 @@ import com.amap.api.maps.model.animation.Animation
 import com.amap.api.maps.model.animation.ScaleAnimation
 import com.amap.api.maps.utils.overlay.MovingPointOverlay
 import com.mredrock.cyxbs.common.network.ApiGenerator
-import com.mredrock.cyxbs.common.utils.extensions.safeSubscribeBy
+import com.mredrock.cyxbs.common.utils.extensions.unsafeSubscribeBy
 import com.mredrock.cyxbs.common.utils.extensions.setSchedulers
 import com.mredrock.cyxbs.discover.schoolcar.Interface.SchoolCarInterface
 import com.mredrock.cyxbs.discover.schoolcar.SchoolCarActivity
@@ -191,7 +190,7 @@ class SchoolCarsSmoothMove(
       System.currentTimeMillis().toString().substring(0, 10),
       md5Hex((System.currentTimeMillis() - 1).toString().substring(0, 10)))
       .setSchedulers()
-      .safeSubscribeBy(
+      .unsafeSubscribeBy(
         onNext =  {
           lastPostTime = System.currentTimeMillis()
           //如果所有的数据都没有更新

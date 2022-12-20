@@ -7,7 +7,7 @@ import android.os.Bundle
 import android.view.View
 import androidx.annotation.IdRes
 import androidx.fragment.app.Fragment
-import com.mredrock.cyxbs.common.BaseApp.appContext
+import com.mredrock.cyxbs.common.BaseApp.Companion.appContext
 import java.lang.ref.WeakReference
 import kotlin.properties.ReadOnlyProperty
 import kotlin.reflect.KProperty

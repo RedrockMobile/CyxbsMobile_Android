@@ -71,8 +71,6 @@ const val MINE_EDIT_INFO = "/edit_info/mine/entry"
 //个人界面的个人主页
 const val MINE_PERSON_PAGE = "/person_page/mine/entry"
 
-//大红页
-const val REDROCK_HOME_ENTRY = "/redrock_home/entry"
 
 // QA
 const val QA_QUIZ = "/quiz/qa/entry"

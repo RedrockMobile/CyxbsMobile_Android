@@ -4,7 +4,7 @@ import androidx.lifecycle.MutableLiveData
 import com.mredrock.cyxbs.common.network.ApiGenerator
 import com.mredrock.cyxbs.common.network.exception.RedrockApiException
 import com.mredrock.cyxbs.common.service.ServiceManager
-import com.mredrock.cyxbs.common.utils.extensions.safeSubscribeBy
+import com.mredrock.cyxbs.common.utils.extensions.unsafeSubscribeBy
 import com.mredrock.cyxbs.common.utils.extensions.setSchedulers
 import com.mredrock.cyxbs.common.viewmodel.BaseViewModel
 import com.mredrock.cyxbs.volunteer.VolunteerLoginActivity
@@ -32,7 +32,7 @@ class VolunteerLoginViewModel : BaseViewModel() {
 
                 }
                 .setSchedulers()
-                .safeSubscribeBy(
+                .unsafeSubscribeBy(
                         onNext = {
                             volunteerTime.value = it
                             // 登录了就更新积分商城的任务, 后端已做重复处理

@@ -3,12 +3,15 @@ package com.mredrock.cyxbs.qa.pages.quiz.ui
 import android.annotation.SuppressLint
 import android.app.Activity
 import android.app.ProgressDialog
+import android.content.Context
 import android.content.Intent
+import android.database.Cursor
 import android.graphics.Bitmap
 import android.graphics.drawable.Drawable
 import android.net.Uri
 import android.os.Build
 import android.os.Bundle
+import android.provider.MediaStore
 import android.text.InputFilter
 import android.util.Log
 import android.view.KeyEvent
@@ -379,6 +382,25 @@ class QuizActivity : BaseViewModelActivity<QuizViewModel>() {
                 }
             })
         }
+    }
+    
+    private fun Uri.getAbsolutePath(context: Context): String{
+        val selectedImage = this
+        val filePathColumn = arrayOf(MediaStore.Images.Media.DATA)
+        val cursor: Cursor? =
+            selectedImage.let {
+                context.contentResolver?.query(
+                    it,
+                    filePathColumn,
+                    null,
+                    null,
+                    null)
+            }
+        cursor?.moveToFirst()
+        val columnIndex = cursor?.getColumnIndex(filePathColumn[0])
+        val imgPath = columnIndex?.let { cursor.getString(it) }
+        cursor?.close()
+        return imgPath?: ""
     }
 
     private fun createImageViewFromVector(drawable: Drawable) = RectangleView(this).apply {

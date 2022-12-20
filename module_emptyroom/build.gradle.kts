@@ -1,9 +1,7 @@
-import com.mredrock.cyxbs.convention.depend.*
-import com.mredrock.cyxbs.convention.depend.lib.dependLibCommon
-
 plugins {
     id("module-manager")
 }
+android.namespace = "com.mredrock.cyxbs.discover.emptyroom"
 
 dependNetwork()
 dependRxjava()

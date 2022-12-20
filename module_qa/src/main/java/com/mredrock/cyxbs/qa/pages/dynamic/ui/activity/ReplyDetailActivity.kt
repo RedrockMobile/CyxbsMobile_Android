@@ -146,7 +146,7 @@ class ReplyDetailActivity : BaseViewModelActivity<DynamicDetailViewModel>() {
                 dataList?.let { it1 -> it.onNext(it1) }
             }
                 .setSchedulers()
-                .safeSubscribeBy {
+                .unsafeSubscribeBy {
                     it?.toMutableList()?.let { it1 -> replyDetailAdapter?.refreshData(it1) }
 
                     qa_reply_detail_swipe_refresh.isRefreshing = false

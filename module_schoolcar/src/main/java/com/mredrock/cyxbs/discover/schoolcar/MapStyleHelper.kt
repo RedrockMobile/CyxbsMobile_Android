@@ -6,7 +6,7 @@ import com.mredrock.cyxbs.common.network.ApiGenerator
 import com.mredrock.cyxbs.common.utils.LogUtils
 import com.mredrock.cyxbs.common.utils.extensions.defaultSharedPreferences
 import com.mredrock.cyxbs.common.utils.extensions.editor
-import com.mredrock.cyxbs.common.utils.extensions.safeSubscribeBy
+import com.mredrock.cyxbs.common.utils.extensions.unsafeSubscribeBy
 import com.mredrock.cyxbs.common.utils.extensions.setSchedulers
 import com.mredrock.cyxbs.discover.schoolcar.network.MapService
 import okhttp3.ResponseBody
@@ -30,7 +30,7 @@ class MapStyleHelper(val context: Context) {
         val apiService = retrofit.create(MapService::class.java)
         apiService.getMapRes("map_A")
                 .setSchedulers()
-                .safeSubscribeBy(onError = {
+                .unsafeSubscribeBy(onError = {
 
                 }) {
                     LogUtils.d("MapStyleHelper", "start save")
@@ -39,7 +39,7 @@ class MapStyleHelper(val context: Context) {
                 }
         apiService.getMapRes("map_B")
                 .setSchedulers()
-                .safeSubscribeBy {
+                .unsafeSubscribeBy {
                     saveToDisk(it, styleExtra)
                     fileReady(callback)
                 }

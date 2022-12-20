@@ -6,7 +6,7 @@ import androidx.paging.LivePagedListBuilder
 import androidx.paging.PagedList
 import com.mredrock.cyxbs.common.network.ApiGenerator
 import com.mredrock.cyxbs.common.utils.extensions.doOnErrorWithDefaultErrorHandler
-import com.mredrock.cyxbs.common.utils.extensions.safeSubscribeBy
+import com.mredrock.cyxbs.common.utils.extensions.unsafeSubscribeBy
 import com.mredrock.cyxbs.common.utils.extensions.setSchedulers
 import com.mredrock.cyxbs.common.viewmodel.BaseViewModel
 import com.mredrock.cyxbs.qa.beannew.Ignore
@@ -47,7 +47,7 @@ class MyIgnoreViewModel : BaseViewModel() {
             .cancelIgnoreUid(uid)
             .doOnErrorWithDefaultErrorHandler { true }
             .setSchedulers()
-            .safeSubscribeBy(
+            .unsafeSubscribeBy(
                 onNext = {
                     onSuccess()
                 },

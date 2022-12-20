@@ -3,6 +3,7 @@ package com.cyxbsmobile_single.module_todo.adapter
 import android.content.Context
 import android.text.SpannableString
 import android.text.SpannableStringBuilder
+import android.text.Spanned
 import android.text.style.ForegroundColorSpan
 import android.view.LayoutInflater
 import android.view.View
@@ -11,7 +12,6 @@ import androidx.core.content.ContextCompat
 import com.cyxbsmobile_single.module_todo.R
 import com.cyxbsmobile_single.module_todo.model.TodoModel
 import com.mredrock.cyxbs.common.ui.BaseFeedFragment
-import com.mredrock.cyxbs.common.utils.extensions.append
 import kotlinx.android.synthetic.main.todo_fragment_on_confilt.view.*
 import java.text.SimpleDateFormat
 import java.util.*
@@ -70,5 +70,13 @@ class TodoConflictAdapter(
             }
         }
         return rootView
+    }
+    
+    private fun SpannableStringBuilder.append(text: CharSequence, vararg spans: Any) {
+        val textLength = text.length
+        append(text)
+        spans.forEach { span ->
+            setSpan(span, this.length - textLength, length, Spanned.SPAN_INCLUSIVE_EXCLUSIVE)
+        }
     }
 }

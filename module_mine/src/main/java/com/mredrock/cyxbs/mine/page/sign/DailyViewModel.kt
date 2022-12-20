@@ -4,7 +4,7 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import com.mredrock.cyxbs.common.BaseApp
 import com.mredrock.cyxbs.common.service.ServiceManager
-import com.mredrock.cyxbs.common.utils.extensions.safeSubscribeBy
+import com.mredrock.cyxbs.common.utils.extensions.unsafeSubscribeBy
 import com.mredrock.cyxbs.common.utils.extensions.toast
 import com.mredrock.cyxbs.common.viewmodel.BaseViewModel
 import com.mredrock.cyxbs.common.viewmodel.event.SingleLiveEvent
@@ -33,7 +33,7 @@ class DailyViewModel : BaseViewModel() {
     fun loadAllData() {
         apiService.getScoreStatus()
                 .normalWrapper(this)
-                .safeSubscribeBy(
+                .unsafeSubscribeBy(
                         onNext = {
                             _status.postValue(it)
                         },
@@ -55,7 +55,7 @@ class DailyViewModel : BaseViewModel() {
                     return@Function apiService.getScoreStatus()
                 })
                 .normalWrapper(this)
-                .safeSubscribeBy(
+                .unsafeSubscribeBy(
                         onNext = {
                             _status.postValue(it)
                           ServiceManager.getService(IStoreService::class.java)

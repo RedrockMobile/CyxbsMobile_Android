@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?><!--suppress ALL -->
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
-    package="com.mredrock.cyxbs">
+    xmlns:tools="http://schemas.android.com/tools">
 
     <!--移除友盟的自启动功能 https://developer.umeng.com/docs/67966/detail/206987-->
     <uses-permission

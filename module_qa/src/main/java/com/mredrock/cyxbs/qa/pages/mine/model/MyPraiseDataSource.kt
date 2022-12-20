@@ -8,7 +8,7 @@ import com.mredrock.cyxbs.common.network.ApiGenerator
 import com.mredrock.cyxbs.common.network.exception.RedrockApiIllegalStateException
 import com.mredrock.cyxbs.common.service.ServiceManager
 import com.mredrock.cyxbs.common.utils.extensions.mapOrThrowApiException
-import com.mredrock.cyxbs.common.utils.extensions.safeSubscribeBy
+import com.mredrock.cyxbs.common.utils.extensions.unsafeSubscribeBy
 import com.mredrock.cyxbs.common.utils.extensions.setSchedulers
 import com.mredrock.cyxbs.qa.beannew.Praise
 import com.mredrock.cyxbs.qa.network.ApiServiceNew
@@ -57,7 +57,7 @@ class MyPraiseDataSource : PageKeyedDataSource<Int, Praise>() {
                     failedRequest = { loadInitial(params, callback) }
                 }
             }
-            .safeSubscribeBy { list ->
+            .unsafeSubscribeBy { list ->
                 networkState.postValue(NetworkState.SUCCESSFUL)
                 initialLoad.postValue(NetworkState.SUCCESSFUL)
                 val nextKey = 2.takeUnless { list.size < params.requestedLoadSize }
@@ -85,7 +85,7 @@ class MyPraiseDataSource : PageKeyedDataSource<Int, Praise>() {
                     failedRequest = { loadAfter(params, callback) }
                 }
             }
-            .safeSubscribeBy { list ->
+            .unsafeSubscribeBy { list ->
                 networkState.postValue(NetworkState.SUCCESSFUL)
                 initialLoad.postValue(NetworkState.SUCCESSFUL)
                 val adjacentPageKey =

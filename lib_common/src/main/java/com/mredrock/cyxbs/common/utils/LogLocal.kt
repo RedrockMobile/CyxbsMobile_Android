@@ -5,7 +5,7 @@ import android.os.*
 import com.mredrock.cyxbs.common.BaseApp
 import com.mredrock.cyxbs.common.config.DIR_LOG
 import com.mredrock.cyxbs.common.config.OKHTTP_LOCAL_LOG
-import com.mredrock.cyxbs.common.utils.extensions.safeSubscribeBy
+import com.mredrock.cyxbs.common.utils.extensions.unsafeSubscribeBy
 import io.reactivex.rxjava3.core.Observable
 import io.reactivex.rxjava3.schedulers.Schedulers
 
@@ -33,6 +33,6 @@ object LogLocal {
                     }
                     logLocalHelper?.write(it)
                         Unit
-                }.safeSubscribeBy {}
+                }.unsafeSubscribeBy {}
     }
 }

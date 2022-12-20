@@ -9,6 +9,7 @@ import androidx.appcompat.widget.AppCompatTextView
  *
  * 具体可以看这篇文章：https://cloud.tencent.com/developer/article/1591880
  */
+@Deprecated("使用 lib_config 中的 MarqueeTextView")
 class MarqueeTextView: AppCompatTextView {
     constructor(context: Context) : super(context)
     constructor(context: Context, attrs: AttributeSet?) : super(

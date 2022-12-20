@@ -3,7 +3,7 @@ package com.mredrock.cyxbs.discover.news.viewmodel
 import androidx.lifecycle.MutableLiveData
 import com.mredrock.cyxbs.common.network.ApiGenerator
 import com.mredrock.cyxbs.common.utils.extensions.mapOrThrowApiException
-import com.mredrock.cyxbs.common.utils.extensions.safeSubscribeBy
+import com.mredrock.cyxbs.common.utils.extensions.unsafeSubscribeBy
 import com.mredrock.cyxbs.common.utils.extensions.setSchedulers
 import com.mredrock.cyxbs.common.viewmodel.BaseViewModel
 import com.mredrock.cyxbs.discover.news.bean.NewsListItem
@@ -23,7 +23,7 @@ class NewsListViewModel : BaseViewModel() {
                 .getNewsList(nextPage++)
                 .mapOrThrowApiException()
                 .setSchedulers()
-                .safeSubscribeBy {
+                .unsafeSubscribeBy {
                     newsEvent.postValue(it)
                 }.lifeCycle()
     }

@@ -25,33 +25,12 @@ import com.mredrock.cyxbs.common.utils.Internals
  * Created by anriku on 2018/8/14.
  */
 
-var screenHeight: Int = 0
-var screenWidth: Int = 0
-
-fun Context.getScreenHeight(): Int {
-    if (screenHeight == 0) {
-        val wm = this.getSystemService(Context.WINDOW_SERVICE) as WindowManager
-        val display = wm.defaultDisplay
-        val size = Point()
-        display.getSize(size)
-        screenHeight = size.y
-    }
-    return screenHeight
-}
-
-
+@Deprecated("使用 lib_utils 中 screenWidth 替换", replaceWith = ReplaceWith(""))
 fun Context.getScreenWidth(): Int {
-    if (screenWidth == 0) {
-        val wm = this.getSystemService(Context.WINDOW_SERVICE) as WindowManager
-        val display = wm.defaultDisplay
-        val size = Point()
-        display.getSize(size)
-        screenWidth = size.x
-    }
-    return screenWidth
+    return resources.displayMetrics.widthPixels
 }
 
-@Deprecated("目前 Base 包中的 BaseActivity 已默认设置全屏")
+@Deprecated("目前 Base 包中的 BaseActivity 已默认设置全屏，请查看父类中的 isCancelStatusBar 属性")
 fun Activity.setFullScreen() {
     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
         val lp = window.attributes
@@ -67,33 +46,30 @@ fun Activity.setFullScreen() {
             or View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY)
 }
 
+@Deprecated("使用 lib_utils 中 toast() 替换", replaceWith = ReplaceWith(""))
 fun Context.toast(message: CharSequence) = CyxbsToast.makeText(this, message, Toast.LENGTH_SHORT).show()
 
+@Deprecated("使用 lib_utils 中 toast() 替换", replaceWith = ReplaceWith(""))
 fun Context.toast(res: Int) = CyxbsToast.makeText(this, res, Toast.LENGTH_SHORT).show()
 
+@Deprecated("使用 lib_utils 中 isDarkMode() 替换")
 fun Context.getDarkModeStatus(): Boolean {
     val mode = resources.configuration.uiMode and Configuration.UI_MODE_NIGHT_MASK
     return mode == Configuration.UI_MODE_NIGHT_YES
 }
 
+@Deprecated("使用 lib_utils 中 toastLong() 替换", replaceWith = ReplaceWith(""))
 fun Context.longToast(message: CharSequence) = CyxbsToast
         .makeText(this, message, Toast.LENGTH_LONG)
         .show()
 
+@Deprecated("使用 lib_utils 中 toastLong() 替换", replaceWith = ReplaceWith(""))
 fun Context.longToast(res: Int) = CyxbsToast
         .makeText(this, res, Toast.LENGTH_LONG)
         .show()
 
 
-/**
- * 获取状态栏高度
- */
-fun Context.getStatusBarHeight(): Int {
-    val resources: Resources = resources
-    val resourceId: Int = resources.getIdentifier("status_bar_height", "dimen", "android")
-    return resources.getDimensionPixelSize(resourceId)
-}
-
+@Deprecated("使用 lib_base 中 OperationUi#doIfLogin() 替换", replaceWith = ReplaceWith(""))
 fun Context.doIfLogin(msg: String? = "此功能", next: () -> Unit) {
     if (ServiceManager.getService(IAccountService::class.java).getVerifyService().isLogin()) {
         next()
@@ -105,44 +81,34 @@ fun Context.doIfLogin(msg: String? = "此功能", next: () -> Unit) {
 
 //anko-bridge
 //anko不再维护，删除anko，一些从anko拿过来的扩展方法
+@Deprecated("使用 lib_utils 中 dp2px 替换", replaceWith = ReplaceWith(""))
 fun Context.dp2px(dpValue: Float) = (dpValue * resources.displayMetrics.density + 0.5f).toInt()
 
 //returns dip(dp) dimension value in pixels
+@Deprecated("使用 lib_utils 中 dp2px 替换", replaceWith = ReplaceWith(""))
 fun Context.dip(value: Int): Int = (value * resources.displayMetrics.density).toInt()
+@Deprecated("使用 lib_utils 中 dp2px 替换", replaceWith = ReplaceWith(""))
 fun Context.dip(value: Float): Int = (value * resources.displayMetrics.density).toInt()
 
 //return sp dimension value in pixels
+@Deprecated("使用 lib_utils 中 dp2sp 替换", replaceWith = ReplaceWith(""))
 fun Context.sp(value: Int): Int = (value * resources.displayMetrics.scaledDensity).toInt()
+@Deprecated("使用 lib_utils 中 dp2sp 替换", replaceWith = ReplaceWith(""))
 fun Context.sp(value: Float): Int = (value * resources.displayMetrics.scaledDensity).toInt()
 
 //converts px value into dip or sp
+@Deprecated("使用 lib_utils 中 px2dp 替换", replaceWith = ReplaceWith(""))
 fun Context.px2dip(px: Int): Float = px.toFloat() / resources.displayMetrics.density
-fun Context.px2sp(px: Int): Float = px.toFloat() / resources.displayMetrics.scaledDensity
 
-fun Context.dimen(@DimenRes resource: Int): Int = resources.getDimensionPixelSize(resource)
-
-
-fun Context.runOnUiThread(f: Context.() -> Unit) {
-    if (Looper.getMainLooper() === Looper.myLooper()) f() else Handler(Looper.getMainLooper()).post { f() }
-}
-
+@Deprecated("不建议使用，请被启动的 Activity 单独提供静态方法，而不是这样随意传参！！！", replaceWith = ReplaceWith(""))
 inline fun <reified T : Activity> Context.startActivity(vararg params: Pair<String, Any?>) =
         Internals.internalStartActivity(this, T::class.java, params)
 
+@Deprecated("请使用新的 Result API 代替：https://juejin.cn/post/6922866182190022663", replaceWith = ReplaceWith(""))
 inline fun <reified T : Activity> Activity.startActivityForResult(requestCode: Int, vararg params: Pair<String, Any?>) =
         Internals.internalStartActivityForResult(this, T::class.java, requestCode, params)
 
+@Deprecated("请使用新的 Result API 代替：https://juejin.cn/post/6922866182190022663", replaceWith = ReplaceWith(""))
 inline fun <reified T : Activity> Fragment.startActivityForResult(requestCode: Int, vararg params: Pair<String, Any?>) {
     startActivityForResult(Internals.createIntent(requireActivity(), T::class.java, params), requestCode)
 }
-
-/**
- * Returns the content view of this Activity if set, null otherwise.
- */
-inline val Activity.contentView: View?
-    get() = findOptional<ViewGroup>(android.R.id.content)?.getChildAt(0)
-
-inline fun <reified T : View> Activity.findOptional(@IdRes id: Int): T? = findViewById(id) as? T
-
-inline fun <reified T : Any> Context.intentFor(vararg params: Pair<String, Any?>): Intent =
-        Internals.createIntent(this, T::class.java, params)

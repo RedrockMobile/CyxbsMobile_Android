@@ -91,7 +91,7 @@ class SettingActivity : BaseActivity() {
         }
         mExitDisposable = apiService.pingMagipoke()
             .setSchedulers()
-            .safeSubscribeBy(
+            .unsafeSubscribeBy(
                 onNext = {
                     //判定magipoke系列接口正常，允许正常退出登陆
                     doExit()

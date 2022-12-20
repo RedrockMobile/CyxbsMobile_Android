@@ -48,7 +48,7 @@ class ContainerViewModel : BaseViewModel() {
                 toastEvent.value = R.string.grades_no_exam_history
                 false
             }
-            .safeSubscribeBy {
+            .unsafeSubscribeBy {
                 examData.value = it
             }.lifeCycle()
     }
@@ -66,7 +66,7 @@ class ContainerViewModel : BaseViewModel() {
     fun getAnalyzeData() {
         apiService.getAnalyzeData()
             .setSchedulers()
-            .safeSubscribeBy(
+            .unsafeSubscribeBy(
                 onNext = {
                     _analyzeData.value = it
                     isBinding.value = true
@@ -101,7 +101,7 @@ class ContainerViewModel : BaseViewModel() {
     fun getStatus() {
         apiService.getNowStatus()
             .setSchedulers()
-            .safeSubscribeBy {
+            .unsafeSubscribeBy {
                 it.data.let { status ->
                     nowStatus.postValue(status)
                 }

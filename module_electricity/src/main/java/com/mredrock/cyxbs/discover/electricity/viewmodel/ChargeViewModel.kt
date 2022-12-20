@@ -5,7 +5,7 @@ import androidx.lifecycle.MutableLiveData
 import com.mredrock.cyxbs.common.bean.isSuccessful
 import com.mredrock.cyxbs.common.network.ApiGenerator
 import com.mredrock.cyxbs.common.network.exception.RedrockApiException
-import com.mredrock.cyxbs.common.utils.extensions.safeSubscribeBy
+import com.mredrock.cyxbs.common.utils.extensions.unsafeSubscribeBy
 import com.mredrock.cyxbs.common.utils.extensions.setSchedulers
 import com.mredrock.cyxbs.common.viewmodel.BaseViewModel
 import com.mredrock.cyxbs.common.viewmodel.event.SingleLiveEvent
@@ -34,7 +34,7 @@ class ChargeViewModel : BaseViewModel() {
                     }
                 }
                 .setSchedulers()
-                .safeSubscribeBy {
+                .unsafeSubscribeBy {
                     (chargeInfo as MutableLiveData).value = it
                 }.lifeCycle()
     }
@@ -52,7 +52,7 @@ class ChargeViewModel : BaseViewModel() {
                 .doOnError {
                     loadFailed.value = true
                 }
-                .safeSubscribeBy {
+                .unsafeSubscribeBy {
                     if (it == null) loadFailed.value = true
                     (chargeInfo as MutableLiveData).value = it
                 }

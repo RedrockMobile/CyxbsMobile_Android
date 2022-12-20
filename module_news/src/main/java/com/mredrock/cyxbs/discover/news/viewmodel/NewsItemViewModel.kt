@@ -6,7 +6,7 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import com.mredrock.cyxbs.common.network.ApiGenerator
 import com.mredrock.cyxbs.common.utils.extensions.mapOrThrowApiException
-import com.mredrock.cyxbs.common.utils.extensions.safeSubscribeBy
+import com.mredrock.cyxbs.common.utils.extensions.unsafeSubscribeBy
 import com.mredrock.cyxbs.common.utils.extensions.setSchedulers
 import com.mredrock.cyxbs.common.viewmodel.BaseViewModel
 import com.mredrock.cyxbs.discover.news.bean.NewsAttachment
@@ -29,7 +29,7 @@ class NewsItemViewModel : BaseViewModel() {
                 .getNewsDetails(id)
                 .mapOrThrowApiException()
                 .setSchedulers()
-                .safeSubscribeBy {
+                .unsafeSubscribeBy {
                     (news as MutableLiveData).value = it
                 }.lifeCycle()
     }

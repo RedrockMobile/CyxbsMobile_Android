@@ -1,10 +1,7 @@
-import com.mredrock.cyxbs.convention.depend.Rxjava
-import com.mredrock.cyxbs.convention.depend.api.dependApiAffair
-import com.mredrock.cyxbs.convention.depend.lib.dependLibConfig
-
 plugins {
   id("module-manager")
 }
+android.namespace = "com.mredrock.cyxbs.api.course"
 
 dependLibConfig()
 dependApiAffair()

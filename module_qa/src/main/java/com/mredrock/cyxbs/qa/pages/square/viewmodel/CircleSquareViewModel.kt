@@ -5,7 +5,7 @@ import androidx.lifecycle.MutableLiveData
 import com.mredrock.cyxbs.common.bean.isSuccessful
 import com.mredrock.cyxbs.common.network.ApiGenerator
 import com.mredrock.cyxbs.common.utils.extensions.mapOrThrowApiException
-import com.mredrock.cyxbs.common.utils.extensions.safeSubscribeBy
+import com.mredrock.cyxbs.common.utils.extensions.unsafeSubscribeBy
 import com.mredrock.cyxbs.common.utils.extensions.setSchedulers
 import com.mredrock.cyxbs.common.viewmodel.BaseViewModel
 import com.mredrock.cyxbs.qa.R
@@ -31,7 +31,7 @@ class CircleSquareViewModel : BaseViewModel() {
             .getTopicGround(topic_name, instruction)
             .mapOrThrowApiException()
             .setSchedulers()
-            .safeSubscribeBy {
+            .unsafeSubscribeBy {
                 _allCircle.value = it
             }
     }
@@ -53,7 +53,7 @@ class CircleSquareViewModel : BaseViewModel() {
                     toast("关注失败")
                 }
             }
-            .safeSubscribeBy {
+            .unsafeSubscribeBy {
                 // 请求成功
                 if (it.isSuccessful) {
                     if (isFollowing) {

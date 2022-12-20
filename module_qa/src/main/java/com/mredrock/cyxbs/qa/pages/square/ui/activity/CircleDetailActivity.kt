@@ -14,7 +14,7 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import com.alibaba.android.arouter.facade.annotation.Route
 import com.google.android.material.tabs.TabLayoutMediator
-import com.mredrock.cyxbs.common.BaseApp.appContext
+import com.mredrock.cyxbs.common.BaseApp.Companion.appContext
 import com.mredrock.cyxbs.common.component.CyxbsToast
 import com.mredrock.cyxbs.common.config.QA_CIRCLE_DETAIL
 import com.mredrock.cyxbs.common.network.ApiGenerator
@@ -112,10 +112,10 @@ class CircleDetailActivity : BaseViewModelActivity<CircleDetailViewModel>() {
                 .mapOrThrowApiException()
                 .setSchedulers()
                 .doOnErrorWithDefaultErrorHandler { true }
-                .safeSubscribeBy(
+                .unsafeSubscribeBy(
                     onNext = {
                         if (id !in 1..it.size) {
-                            return@safeSubscribeBy
+                            return@unsafeSubscribeBy
                         }
                         topic = it[id - 1]
                         viewModel.topicId = topic.topicId.toInt()

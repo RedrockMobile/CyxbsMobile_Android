@@ -38,7 +38,7 @@ class ElectricityFeedFragment : BaseFeedFragment<ChargeViewModel>() {
             .getVerifyService()
             .observeUserStateEvent()
             .observeOn(AndroidSchedulers.mainThread())
-            .safeSubscribeBy {
+            .unsafeSubscribeBy {
                 if (it == IUserStateService.UserState.LOGIN) {
                     setAdapter(ElectricityFeedUnboundAdapter())
                 }

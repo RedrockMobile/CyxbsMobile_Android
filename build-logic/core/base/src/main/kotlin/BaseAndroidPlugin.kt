@@ -1,6 +1,6 @@
-import com.mredrock.cyxbs.convention.depend.ARouter
-import com.mredrock.cyxbs.convention.depend.Android
-import com.mredrock.cyxbs.convention.depend.Test
+
+
+
 import org.gradle.kotlin.dsl.configure
 import org.gradle.kotlin.dsl.dependencies
 import org.gradle.kotlin.dsl.project

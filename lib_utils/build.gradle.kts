@@ -1,11 +1,7 @@
-import com.mredrock.cyxbs.convention.depend.*
-import com.mredrock.cyxbs.convention.depend.api.dependApiAccount
-import com.mredrock.cyxbs.convention.depend.lib.dependLibCommon
-import com.mredrock.cyxbs.convention.depend.lib.dependLibConfig
-
 plugins {
   id("module-manager")
 }
+android.namespace = "com.mredrock.cyxbs.lib.utils"
 
 dependLibCommon()
 dependLibConfig()
@@ -18,3 +14,9 @@ dependRxjava()
 dependRxPermissions()
 
 dependApiAccount()
+
+dependAutoService()
+
+dependencies {
+  implementation(project(":api_init")) // 因为 api_init 没有实现模块，所以写这里
+}
