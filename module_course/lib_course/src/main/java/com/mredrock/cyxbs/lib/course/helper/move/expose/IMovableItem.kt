@@ -32,4 +32,10 @@ interface IMovableItem : IItem {
    * - 该方法返回的 View 可以不用返回 [IItem.view]，返回其他 View 也是可行的
    */
   fun createMovableView(): View
+  
+  /**
+   * 是否自动开启长按整体移动功能，反之则手动开启
+   */
+  val isAutoStartMove: Boolean
+    get() = true
 }

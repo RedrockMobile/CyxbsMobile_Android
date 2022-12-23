@@ -48,7 +48,7 @@ import de.hdodenhof.circleimageview.CircleImageView
 class ContainerActivity : BaseViewModelActivity<ContainerViewModel>() {
 
     private val user: IUserService by lazy {
-        ServiceManager.getService(IAccountService::class.java).getUserService()
+        ServiceManager(IAccountService::class).getUserService()
     }
     private lateinit var mAdapter: ExamAdapter
     private val data = mutableListOf<Exam>()
@@ -83,7 +83,7 @@ class ContainerActivity : BaseViewModelActivity<ContainerViewModel>() {
     }
 
     private fun init() {
-        if (!ServiceManager.getService(IAccountService::class.java).getVerifyService().isLogin()) {
+        if (!ServiceManager(IAccountService::class).getVerifyService().isLogin()) {
             return
         }
         initExam()

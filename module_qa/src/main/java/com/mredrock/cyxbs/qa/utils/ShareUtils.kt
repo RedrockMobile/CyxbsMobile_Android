@@ -59,7 +59,7 @@ object ShareUtils {
         * 更新任务进度
         * 那个 QQUiListener 有问题, onComplete() 一直不回调, 在于产品沟通后最终以点击跳转为准
         * */
-        ServiceManager.getService(IStoreService::class.java)
+        ServiceManager(IStoreService::class)
             .postTask(IStoreService.Task.SHARE_DYNAMIC, url)
     }
 
@@ -87,7 +87,7 @@ object ShareUtils {
         * 更新任务进度
         * 那个 QQUiListener 有问题, onComplete() 一直不回调, 在于产品沟通后最终以点击跳转为准
         * */
-        ServiceManager.getService(IStoreService::class.java)
+        ServiceManager(IStoreService::class)
             .postTask(IStoreService.Task.SHARE_DYNAMIC, url)
     }
 
@@ -118,7 +118,7 @@ object ShareUtils {
         * 更新任务进度
         * 那个 QQUiListener 有问题, onComplete() 一直不回调, 在于产品沟通后最终以点击跳转为准
         * */
-        ServiceManager.getService(IStoreService::class.java)
+        ServiceManager(IStoreService::class)
             .postTask(IStoreService.Task.SHARE_DYNAMIC, url)
     }
 
@@ -147,7 +147,7 @@ object ShareUtils {
         * 更新任务进度
         * 那个 QQUiListener 有问题, onComplete() 一直不回调, 在于产品沟通后最终以点击跳转为准
         * */
-        ServiceManager.getService(IStoreService::class.java)
+        ServiceManager(IStoreService::class)
             .postTask(IStoreService.Task.SHARE_DYNAMIC, url)
     }
 }

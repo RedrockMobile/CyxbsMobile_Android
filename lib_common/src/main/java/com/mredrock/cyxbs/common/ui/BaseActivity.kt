@@ -1,10 +1,7 @@
 package com.mredrock.cyxbs.common.ui
 
 import android.annotation.SuppressLint
-import android.app.Activity
 import android.content.pm.ActivityInfo
-import android.graphics.Color
-import android.os.Build
 import android.os.Bundle
 import android.os.PersistableBundle
 import android.view.View
@@ -20,7 +17,6 @@ import com.mredrock.cyxbs.common.service.ServiceManager
 import com.mredrock.cyxbs.common.utils.ActivityBindView
 import com.mredrock.cyxbs.common.utils.LogUtils
 import com.mredrock.cyxbs.common.utils.extensions.getDarkModeStatus
-import com.mredrock.cyxbs.common.utils.extensions.startActivity
 import org.greenrobot.eventbus.EventBus
 
 
@@ -60,7 +56,7 @@ abstract class BaseActivity : AppCompatActivity() {
     override fun setContentView(layoutResID: Int) { super.setContentView(layoutResID);notificationInit() }
     private fun notificationInit() {
 
-            val verifyService = ServiceManager.getService(IAccountService::class.java).getVerifyService()
+            val verifyService = ServiceManager(IAccountService::class).getVerifyService()
             if (this is ActionLoginStatusSubscriber) {
                 if (verifyService.isLogin()) initOnLoginMode(baseBundle)
                 if (verifyService.isTouristMode()) initOnTouristMode(baseBundle)
@@ -71,32 +67,17 @@ abstract class BaseActivity : AppCompatActivity() {
     }
 
     private fun initFlag() {
-
-        when {
-            Build.VERSION.SDK_INT >= 23 -> {
-                if (this.getDarkModeStatus()) {
-                    window.decorView.systemUiVisibility = View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN or View.SYSTEM_UI_FLAG_LAYOUT_STABLE
-                } else {
-                    window.decorView.systemUiVisibility =
-                            //亮色模式状态栏
-                            View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR or
-                                    //设置decorView的布局设置为全屏
-                                    View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN or
-                                    //维持布局稳定，不会因为statusBar和虚拟按键的消失而移动view位置
-                                    View.SYSTEM_UI_FLAG_LAYOUT_STABLE
-                }
-            }
-            else -> {
-                //设置decorView的布局设置为全屏，并维持布局稳定
-                window.decorView.systemUiVisibility = View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN or View.SYSTEM_UI_FLAG_LAYOUT_STABLE
-                window.statusBarColor = Color.TRANSPARENT
-            }
+        if (getDarkModeStatus()) {
+            window.decorView.systemUiVisibility = View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN or View.SYSTEM_UI_FLAG_LAYOUT_STABLE
+        } else {
+            window.decorView.systemUiVisibility =
+                    //亮色模式状态栏
+                    View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR or
+                            //设置decorView的布局设置为全屏
+                            View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN or
+                            //维持布局稳定，不会因为statusBar和虚拟按键的消失而移动view位置
+                            View.SYSTEM_UI_FLAG_LAYOUT_STABLE
         }
-    }
-
-    inline fun <reified T : Activity> startActivity(finish: Boolean = false, vararg params: Pair<String, Any?>) {
-        if (finish) finish()
-        startActivity<T>(*params)
     }
 
     @Deprecated("老学长的远古遗留代码，经过几次迭代后，不建议再使用")
@@ -167,7 +148,7 @@ abstract class BaseActivity : AppCompatActivity() {
     override fun onDestroy() {
         super.onDestroy()
         lifeCycleLog("onDestroy")
-        val verifyService = ServiceManager.getService(IAccountService::class.java).getVerifyService()
+        val verifyService = ServiceManager(IAccountService::class).getVerifyService()
         if (this is ActionLoginStatusSubscriber) {
             if (verifyService.isLogin()) destroyOnLoginMode()
             if (verifyService.isTouristMode()) destroyOnTouristMode()

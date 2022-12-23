@@ -9,6 +9,7 @@ import androidx.viewbinding.ViewBinding
 import com.mredrock.cyxbs.lib.base.BuildConfig
 import com.mredrock.cyxbs.lib.utils.extensions.lazyUnlock
 import com.mredrock.cyxbs.lib.utils.utils.get.GenericityUtils.getGenericClass
+import java.lang.reflect.Method
 
 /**
  *
@@ -29,6 +30,11 @@ import com.mredrock.cyxbs.lib.utils.utils.get.GenericityUtils.getGenericClass
  */
 abstract class BaseBindActivity<VB : ViewBinding> : BaseActivity() {
   
+  companion object {
+    // VB inflate() 缓存。key 为 javaClass，value 为 VB 的 inflate 方法
+    private val VB_METHOD_BY_CLASS = hashMapOf<Class<out BaseBindActivity<*>>, Method>()
+  }
+  
   /**
    * 用于在调用 [setContentView] 之前的方法, 可用于设置一些主题或窗口的东西, 放这里不会报错
    */
@@ -36,10 +42,12 @@ abstract class BaseBindActivity<VB : ViewBinding> : BaseActivity() {
   
   @Suppress("UNCHECKED_CAST")
   protected val binding: VB by lazyUnlock {
-    val method = getGenericClass<VB, ViewBinding>(javaClass).getMethod(
-      "inflate",
-      LayoutInflater::class.java
-    )
+    val method = VB_METHOD_BY_CLASS.getOrPut(javaClass) {
+      getGenericClass<VB, ViewBinding>(javaClass).getMethod(
+        "inflate",
+        LayoutInflater::class.java
+      )
+    }
     val binding = method.invoke(null, layoutInflater) as VB
     if (binding is ViewDataBinding) {
       // ViewBinding 是 ViewBind 和 DataBind 共有的父类

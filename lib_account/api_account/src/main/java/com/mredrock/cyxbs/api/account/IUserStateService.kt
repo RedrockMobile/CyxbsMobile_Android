@@ -47,23 +47,6 @@ interface IUserStateService {
     
     fun isRefreshTokenExpired(): Boolean
     
-    @Deprecated(
-        "该方法不好管理生命周期，更建议使用 observeStateFlow()",
-        replaceWith = ReplaceWith("observeStateFlow()")
-    )
-    fun addOnStateChangedListener(listener: (state: UserState) -> Unit)
-    
-    @Deprecated(
-        "该方法不好管理生命周期，更建议使用 observeStateFlow()",
-        replaceWith = ReplaceWith("observeStateFlow()")
-    )
-    fun addOnStateChangedListener(listener: StateListener)
-
-    fun removeStateChangedListener(listener: StateListener)
-
-    fun removeAllStateListeners()
-    
-    
     /**
      * 观察登录状态改变（状态）
      *

@@ -58,7 +58,7 @@ class DailyViewModel : BaseViewModel() {
                 .unsafeSubscribeBy(
                         onNext = {
                             _status.postValue(it)
-                          ServiceManager.getService(IStoreService::class.java)
+                          ServiceManager(IStoreService::class)
                             .postTask(IStoreService.Task.DAILY_SIGN, "")
                         },
                         onError = {

@@ -211,7 +211,7 @@ class UserViewModel : BaseViewModel() {
      * 清除User的信息，唯一会调用这个方法的时候是在用户登出
      */
     fun clearUser() {
-        ServiceManager.getService(IAccountService::class.java).getVerifyService()
+        ServiceManager(IAccountService::class).getVerifyService()
             .logout(appContext)
     }
 }

@@ -9,10 +9,10 @@ import org.gradle.api.Project
  * @author 985892345
  * 2022/12/20 17:37
  */
-internal object AndroidProjectChecker {
+object AndroidProjectChecker {
   
   // TODO 在这里进行注册
-  private val register = arrayOf(
+  private val checkRules = arrayOf(
     ModuleNamespaceCheckRule
   )
   
@@ -21,7 +21,7 @@ internal object AndroidProjectChecker {
    */
   fun configBefore(project: Project) {
     try {
-      register.forEach {
+      checkRules.forEach {
         it.onConfigBefore(project)
       }
     } catch (e: RuntimeException) {
@@ -35,7 +35,7 @@ internal object AndroidProjectChecker {
    */
   fun configAfter(project: Project) {
     try {
-      register.forEach {
+      checkRules.forEach {
         it.onConfigAfter(project)
       }
     } catch (e: RuntimeException) {
@@ -44,6 +44,7 @@ internal object AndroidProjectChecker {
     }
   }
   
+  // gradle 默然字符集会导致中文乱码，所以这里单独写了个英文提示
   private val hint = """
     
     =====================================================================================================

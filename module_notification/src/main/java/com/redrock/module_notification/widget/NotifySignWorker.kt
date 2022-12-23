@@ -90,7 +90,7 @@ class NotifySignWorker(
         //系统状态栏显示的小图标
         builder.setSmallIcon(com.mredrock.cyxbs.common.R.drawable.common_ic_app_notifacation)
         //下拉显示的大图标
-        val intent = Intent(ctx, ServiceManager.getService(IGetDaySignClassService::class.java)
+        val intent = Intent(ctx, ServiceManager(IGetDaySignClassService::class)
             .getDaySignClassService())
         val pIntent = PendingIntent.getActivity(ctx, 1, intent, PendingIntent.FLAG_IMMUTABLE)
         builder.setContentIntent(pIntent)

@@ -258,7 +258,7 @@ class HybridAdapter(val context: Context?, private val onItemClickEvent: (Dynami
         } else if (data is H5Dynamic) {
             //跳转到web容器
             data.linkUrl?.let { url ->
-                ServiceManager.getService(IProtocolService::class.java).jump(url)
+                ServiceManager(IProtocolService::class).jump(url)
             }
         }
 

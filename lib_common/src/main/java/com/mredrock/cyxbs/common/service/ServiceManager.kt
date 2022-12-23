@@ -18,22 +18,6 @@ import kotlin.reflect.KClass
  */
 
 object ServiceManager {
-    /**
-     * 通过类型搜索对应服务，建议优先使用此方式
-     */
-    @Suppress("DeprecatedCallableAddReplaceWith")
-    @Deprecated("为了之后好迁移至新的 lib_utils 模块，所以不再使用旧的方法名", replaceWith = ReplaceWith("ServiceManager(T::class)"))
-    fun <T> getService(serviceClass: Class<T>): T = ARouter.getInstance().navigation(serviceClass)
-
-    /**
-     * 通过Path搜索服务，当同一种类型的服务有多个实现时只能使用该方式获取
-     *
-     * @param servicePath 实现类的路由地址
-     */
-    @Suppress("UNCHECKED_CAST", "DeprecatedCallableAddReplaceWith")
-    @Deprecated("为了之后好迁移至新的 lib_utils 模块，所以不再使用旧的方法名", replaceWith = ReplaceWith("ServiceManager(servicePath)"))
-    fun <T> getService(servicePath: String) = ARouter.getInstance().build(servicePath).navigation() as T
-    
     
     /**
      * 写法：
@@ -57,6 +41,8 @@ object ServiceManager {
      * ServiceManger<IAccountService>(ACCOUNT_SERVICE)
      *   .isLogin()
      * ```
+     *
+     * 当同一种类型的服务有多个实现时只能使用该方式获取
      */
     @Suppress("UNCHECKED_CAST")
     operator fun <T : Any> invoke(servicePath: String): T {

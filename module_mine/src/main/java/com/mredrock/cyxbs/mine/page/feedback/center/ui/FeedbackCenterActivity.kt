@@ -74,10 +74,10 @@ class FeedbackCenterActivity :
                 onBackPressed()
             }
             btnQuestion.setOnClickListener {
-                startActivity<FeedbackEditActivity>()
+                startActivity(Intent(this@FeedbackCenterActivity, FeedbackEditActivity::class.java))
             }
             ivHistory.setOnSingleClickListener {
-                startActivity<HistoryListActivity>()
+                startActivity(Intent(this@FeedbackCenterActivity, HistoryListActivity::class.java))
             }
             tvQqTwo.setOnSingleClickListener {
                 Jump2QQHelper.onFeedBackClick(

@@ -9,6 +9,7 @@ import androidx.databinding.ViewDataBinding
 import androidx.viewbinding.ViewBinding
 import com.mredrock.cyxbs.lib.base.BuildConfig
 import com.mredrock.cyxbs.lib.utils.utils.get.GenericityUtils.getGenericClass
+import java.lang.reflect.Method
 
 /**
  *
@@ -27,6 +28,11 @@ import com.mredrock.cyxbs.lib.utils.utils.get.GenericityUtils.getGenericClass
  * @data 2021/6/2
  */
 abstract class BaseBindFragment<VB : ViewBinding> : BaseFragment() {
+  
+  companion object {
+    // VB inflate() 缓存。key 为 javaClass，value 为 VB 的 inflate 方法
+    private val VB_METHOD_BY_CLASS = hashMapOf<Class<out BaseBindFragment<*>>, Method>()
+  }
   
   abstract override fun onViewCreated(view: View, savedInstanceState: Bundle?)
   
@@ -50,12 +56,14 @@ abstract class BaseBindFragment<VB : ViewBinding> : BaseFragment() {
     container: ViewGroup?,
     savedInstanceState: Bundle?
   ): View {
-    val method = getGenericClass<VB, ViewBinding>(javaClass).getMethod(
-      "inflate",
-      LayoutInflater::class.java,
-      ViewGroup::class.java,
-      Boolean::class.java
-    )
+    val method = VB_METHOD_BY_CLASS.getOrPut(javaClass) {
+      getGenericClass<VB, ViewBinding>(javaClass).getMethod(
+        "inflate",
+        LayoutInflater::class.java,
+        ViewGroup::class.java,
+        Boolean::class.java
+      )
+    }
     _binding = method.invoke(null, inflater, container, false) as VB
     if (_binding is ViewDataBinding) {
       // ViewBinding 是 ViewBind 和 DataBind 共有的父类

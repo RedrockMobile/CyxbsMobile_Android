@@ -13,7 +13,7 @@ import kotlinx.android.synthetic.main.volunteer_discover_feed_unbound.view.*
 class VolunteerFeedUnbindAdapter : BaseFeedFragment.Adapter() {
     override fun onCreateView(context: Context, parent: ViewGroup): View =
             LayoutInflater.from(context).inflate(R.layout.volunteer_discover_feed_unbound, parent, false).apply {
-                if (!ServiceManager.getService(IAccountService::class.java).getVerifyService().isLogin()) {
+                if (!ServiceManager(IAccountService::class).getVerifyService().isLogin()) {
                     this.tv_volunteer_no_account.text = context.getString(R.string.volunteer_ask_login_string)
                 }
             }

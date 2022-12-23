@@ -107,7 +107,7 @@ class SettingActivity : BaseViewModelActivity<NotificationViewModel>() {
             //下拉显示的大图标
             val intent = Intent(
                 this,
-                ServiceManager.getService(IGetDaySignClassService::class.java)
+                ServiceManager(IGetDaySignClassService::class)
                     .getDaySignClassService()
             )
             val pIntent = PendingIntent.getActivity(this, 1, intent, PendingIntent.FLAG_IMMUTABLE)

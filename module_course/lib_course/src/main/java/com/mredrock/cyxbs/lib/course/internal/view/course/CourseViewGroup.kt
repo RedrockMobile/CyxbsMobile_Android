@@ -40,6 +40,9 @@ import com.ndhzs.netlayout.view.NetLayout
  *
  * 小型改变的话，就直接从 Fragment 层改动即可
  *
+ * ## 为什么不用组合代替继承？
+ * 其实能抽离出来的基本都抽出来，剩下的大部分是与整体有关联的东西，比如需要在子类中暴露 public 方法。因此才使用了继承的方式
+ *
  * @author 985892345 (Guo Xiangrui)
  * @email guo985892345@foxmail.com
  * @date 2022/8/17 15:17

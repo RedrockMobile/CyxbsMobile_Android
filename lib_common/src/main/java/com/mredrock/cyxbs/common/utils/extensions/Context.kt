@@ -71,10 +71,10 @@ fun Context.longToast(res: Int) = CyxbsToast
 
 @Deprecated("使用 lib_base 中 OperationUi#doIfLogin() 替换", replaceWith = ReplaceWith(""))
 fun Context.doIfLogin(msg: String? = "此功能", next: () -> Unit) {
-    if (ServiceManager.getService(IAccountService::class.java).getVerifyService().isLogin()) {
+    if (ServiceManager(IAccountService::class).getVerifyService().isLogin()) {
         next()
     } else {
-        ServiceManager.getService(IAccountService::class.java).getVerifyService().askLogin(this, "请先登录才能使用${msg}哦~")
+        ServiceManager(IAccountService::class).getVerifyService().askLogin(this, "请先登录才能使用${msg}哦~")
     }
 }
 

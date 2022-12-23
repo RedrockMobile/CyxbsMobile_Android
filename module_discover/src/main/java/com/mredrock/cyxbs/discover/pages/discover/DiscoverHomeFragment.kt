@@ -260,9 +260,9 @@ class DiscoverHomeFragment : BaseViewModelFragment<DiscoverHomeViewModel>() {
          * TODO 关闭服务 feed
          */
 //        addFeedFragment(ISportService::class.impl.getSportFeed())
-        addFeedFragment(ServiceManager.getService(ITodoService::class.java).getTodoFeed())
-        addFeedFragment(ServiceManager.getService(IElectricityService::class.java).getElectricityFeed())
-//        addFeedFragment(ServiceManager.getService(IVolunteerService::class.java).getVolunteerFeed())
+        addFeedFragment(ServiceManager(ITodoService::class).getTodoFeed())
+        addFeedFragment(ServiceManager(IElectricityService::class).getElectricityFeed())
+//        addFeedFragment(ServiceManager(IVolunteerService::class).getVolunteerFeed())
         //处理手机屏幕过长导致feed无法填充满下方的情况
         ll_discover_feeds.post {
             context?.let {

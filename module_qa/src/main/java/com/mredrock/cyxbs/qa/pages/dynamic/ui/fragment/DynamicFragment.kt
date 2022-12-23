@@ -13,7 +13,6 @@ import com.alibaba.android.arouter.facade.annotation.Route
 import com.google.android.material.tabs.TabLayoutMediator
 import com.mredrock.cyxbs.common.config.CyxbsMob
 import com.mredrock.cyxbs.common.config.QA_ENTRY
-import com.mredrock.cyxbs.common.event.RefreshQaEvent
 import com.mredrock.cyxbs.common.mark.EventBusLifecycleSubscriber
 import com.mredrock.cyxbs.common.utils.extensions.doIfLogin
 import com.mredrock.cyxbs.common.utils.extensions.setOnSingleClickListener
@@ -28,8 +27,6 @@ import com.mredrock.cyxbs.qa.pages.square.ui.activity.CircleDetailActivity
 import com.mredrock.cyxbs.qa.pages.square.ui.activity.CircleSquareActivity
 import com.umeng.analytics.MobclickAgent
 import kotlinx.android.synthetic.main.qa_fragment_dynamic.*
-import org.greenrobot.eventbus.Subscribe
-import org.greenrobot.eventbus.ThreadMode
 
 
 /**
@@ -206,20 +203,4 @@ class DynamicFragment : BaseDynamicFragment(), EventBusLifecycleSubscriber {
             invalidateDynamicList()
         }
     }
-
-    @Subscribe(threadMode = ThreadMode.MAIN, sticky = true)
-    open fun refreshQuestionList(event: RefreshQaEvent) {
-    }
-//        if (isRvAtTop) {
-//            viewModel.apply {
-//                invalidateFocusList()
-//                invalidateRecommendList()
-//            }
-//        }
-//        else {
-//            focusFragment.qa_rv_dynamic_List_focus.smoothScrollToPosition(0)
-//            recommendFragment.qa_rv_dynamic_List_recommend.smoothScrollToPosition(0)
-//
-//        }
-//    }
 }

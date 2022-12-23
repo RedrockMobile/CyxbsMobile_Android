@@ -3,7 +3,7 @@ package com.mredrock.cyxbs.lib.course.internal.view.course
 /**
  * 课表滚轴的操控者，实现该接口将拥有操控课表滚轴的功能
  *
- * 由 ScrollView 实现功能，但 CourseLayout 暴露该接口用于间接操控 ScrollView
+ * 由 ScrollView 实现功能，但 [ICourseViewGroup] 暴露该接口用于间接操控 ScrollView
  *
  * @author 985892345 (Guo Xiangrui)
  * @email guo985892345@foxmail.com

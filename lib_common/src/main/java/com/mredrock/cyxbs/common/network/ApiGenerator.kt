@@ -22,6 +22,7 @@ import com.mredrock.cyxbs.common.config.*
 import com.mredrock.cyxbs.common.service.impl
 import com.mredrock.cyxbs.common.utils.LogLocal
 import retrofit2.adapter.rxjava3.RxJava3CallAdapterFactory
+import java.net.URLConnection
 import java.util.concurrent.CopyOnWriteArrayList
 import java.util.concurrent.locks.ReentrantLock
 import kotlin.concurrent.withLock
@@ -195,10 +196,6 @@ object ApiGenerator {
     //不带token请求的OkHttp配置
     private fun OkHttpClient.Builder.configureCommonOkHttp(): OkHttpClient {
         return this.apply {
-            /**
-             * 发送版本号
-             */
-
             /**
              * 连接失败时切换备用url的Interceptor
              * 一旦切换，只有重启app才能切回来（因为如果请求得到的url不是原来的@{link getBaseUrl()}，则切换到新的url，而以后访问都用这个新的url了）
@@ -375,8 +372,8 @@ object ApiGenerator {
     }
 
     //是否是游客模式
-    private fun isTouristMode() = ServiceManager.getService(IAccountService::class.java).getVerifyService().isTouristMode()
+    private fun isTouristMode() = ServiceManager(IAccountService::class).getVerifyService().isTouristMode()
 
     //检查token是否过期
-    private fun isTokenExpired() = ServiceManager.getService(IAccountService::class.java).getVerifyService().isExpired()
+    private fun isTokenExpired() = ServiceManager(IAccountService::class).getVerifyService().isExpired()
 }

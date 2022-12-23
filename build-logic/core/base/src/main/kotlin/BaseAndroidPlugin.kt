@@ -1,6 +1,3 @@
-
-
-
 import check.AndroidProjectChecker
 import org.gradle.kotlin.dsl.configure
 import org.gradle.kotlin.dsl.dependencies

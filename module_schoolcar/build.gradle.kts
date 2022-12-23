@@ -12,8 +12,8 @@ dependLibCommon() // TODO common 模块不再使用，新模块请依赖 base �
 
 dependencies {
     // https://lbs.amap.com/api/android-location-sdk/guide/create-project/android-studio-create-project
-    implementation("com.amap.api:3dmap:9.4.0")
+    implementation("com.amap.api:3dmap:latest.integration")
     
     // https://github.com/koral--/android-gif-drawable
-    implementation("pl.droidsonroids.gif:android-gif-drawable:1.2.19")
+    implementation("pl.droidsonroids.gif:android-gif-drawable:1.2.25")
 }

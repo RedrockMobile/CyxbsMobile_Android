@@ -36,7 +36,7 @@ class VolunteerLoginViewModel : BaseViewModel() {
                         onNext = {
                             volunteerTime.value = it
                             // 登录了就更新积分商城的任务, 后端已做重复处理
-                          ServiceManager.getService(IStoreService::class.java)
+                          ServiceManager(IStoreService::class)
                             .postTask(IStoreService.Task.LOGIN_VOLUNTEER, "")
                         },
                         onError = {

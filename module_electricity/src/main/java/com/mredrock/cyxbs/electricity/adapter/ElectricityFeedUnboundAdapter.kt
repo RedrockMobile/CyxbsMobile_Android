@@ -13,7 +13,7 @@ import com.mredrock.cyxbs.electricity.R
 class ElectricityFeedUnboundAdapter : BaseFeedFragment.Adapter() {
     override fun onCreateView(context: Context, parent: ViewGroup): View =
             LayoutInflater.from(context).inflate(R.layout.electricity_discover_feed_unbound, parent, false).apply {
-                if (!ServiceManager.getService(IAccountService::class.java).getVerifyService().isLogin()){
+                if (!ServiceManager(IAccountService::class).getVerifyService().isLogin()){
                     val tv_electricity_no_account = this.findViewById<TextView>(R.id.tv_electricity_no_account)
                     tv_electricity_no_account.text = context.getString(R.string.electricity_ask_login_string)
                 }

@@ -208,7 +208,7 @@ class LikeViewSlim @JvmOverloads constructor(
                  * (这个自定义 View 不是我写的)
                  * 在网络请求成功后向后端发送请求更新任务进度
                  */
-                ServiceManager.getService(IStoreService::class.java)
+                ServiceManager(IStoreService::class)
                     .postTask(IStoreService.Task.GIVE_A_LIKE, "$tmpId-$tmpModel")
             }
     }

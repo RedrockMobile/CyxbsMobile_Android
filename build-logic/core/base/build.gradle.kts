@@ -29,6 +29,7 @@ gradlePlugin {
 
 dependencies {
     api(project(":core:versions"))
+    api(project(":plugin:checker"))
     api(libs.android.gradlePlugin)
     api(libs.kotlin.gradlePlugin)
 }

@@ -102,7 +102,7 @@ abstract class ItemPoolController<Item, Data : Any>(
       if (item.onRecycle()) {
         mRecyclePool.add(item)
       }
-      // 这个需要放在 mOldDataMap.remove() 和 mFreePool.add() 后
+      // removeItem(item) 需要放在 mOldDataMap.remove() 和 mFreePool.add() 后
       // 因为在 onItemRemovedAfter() 回调中会再次 remove() 和 add()
       removeItem(item)
     }

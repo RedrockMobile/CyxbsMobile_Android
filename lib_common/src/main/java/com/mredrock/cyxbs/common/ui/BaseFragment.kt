@@ -59,7 +59,7 @@ open class BaseFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
         baseBundle = savedInstanceState
         if (this is EventBusLifecycleSubscriber) EventBus.getDefault().register(this)
-        val verifyService = ServiceManager.getService(IAccountService::class.java).getVerifyService()
+        val verifyService = ServiceManager(IAccountService::class).getVerifyService()
         if (this is ActionLoginStatusSubscriber) {
             if (verifyService.isLogin()) initOnLoginMode(baseBundle)
             if (verifyService.isTouristMode()) initOnTouristMode(baseBundle)
@@ -72,7 +72,7 @@ open class BaseFragment : Fragment() {
         super.onDestroyView()
         lifeCycleLog("onDestroyView")
         if (this is EventBusLifecycleSubscriber && EventBus.getDefault().isRegistered(this)) EventBus.getDefault().unregister(this)
-        val verifyService = ServiceManager.getService(IAccountService::class.java).getVerifyService()
+        val verifyService = ServiceManager(IAccountService::class).getVerifyService()
         if (this is ActionLoginStatusSubscriber) {
             if (verifyService.isLogin()) destroyOnLoginMode()
             if (verifyService.isTouristMode()) destroyOnTouristMode()

@@ -3,12 +3,12 @@ package com.mredrock.cyxbs.electricity.fragment
 import android.os.Bundle
 import android.view.View
 import android.widget.TextView
+import androidx.lifecycle.lifecycleScope
 import com.alibaba.android.arouter.facade.annotation.Route
 import com.mredrock.cyxbs.common.config.DISCOVER_ELECTRICITY_FEED
 import com.mredrock.cyxbs.common.service.ServiceManager
 import com.mredrock.cyxbs.api.account.IAccountService
 import com.mredrock.cyxbs.api.account.IUserStateService
-import com.mredrock.cyxbs.common.service.impl
 import com.mredrock.cyxbs.common.ui.BaseFeedFragment
 import com.mredrock.cyxbs.common.utils.extensions.defaultSharedPreferences
 import com.mredrock.cyxbs.common.utils.extensions.doIfLogin
@@ -18,8 +18,9 @@ import com.mredrock.cyxbs.electricity.bean.ElecInf
 import com.mredrock.cyxbs.electricity.config.*
 import com.mredrock.cyxbs.electricity.viewmodel.ChargeViewModel
 import com.mredrock.cyxbs.electricity.R
-import com.mredrock.cyxbs.common.utils.extensions.*
-import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
+import kotlinx.coroutines.flow.launchIn
+import kotlinx.coroutines.flow.onEach
+import kotlinx.coroutines.rx3.asFlow
 
 
 @Route(path = DISCOVER_ELECTRICITY_FEED)
@@ -30,19 +31,19 @@ class ElectricityFeedFragment : BaseFeedFragment<ChargeViewModel>() {
     override var hasTopSplitLine = false
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        val verifyService = ServiceManager(IAccountService::class).getVerifyService()
         //主要为了防止，使用游客模式，在此登录，导致的登录后状态未刷新，感觉听不规范的，游客模式之后还得统一管理
-        if (ServiceManager.getService(IAccountService::class.java).getVerifyService().isLogin()) {
+        if (verifyService.isLogin()) {
             setAdapter(ElectricityFeedUnboundAdapter())
         }
-        IAccountService::class.impl
-            .getVerifyService()
+        verifyService
             .observeUserStateEvent()
-            .observeOn(AndroidSchedulers.mainThread())
-            .unsafeSubscribeBy {
+            .asFlow()
+            .onEach {
                 if (it == IUserStateService.UserState.LOGIN) {
                     setAdapter(ElectricityFeedUnboundAdapter())
                 }
-            }
+            }.launchIn(viewLifecycleOwner.lifecycleScope)
         init()
     }
 
@@ -96,7 +97,7 @@ class ElectricityFeedFragment : BaseFeedFragment<ChargeViewModel>() {
     }
 
     override fun onRefresh() {
-        if (!ServiceManager.getService(IAccountService::class.java).getVerifyService().isLogin()) {
+        if (!ServiceManager(IAccountService::class).getVerifyService().isLogin()) {
             return
         }
         if (viewModel.chargeInfo.value != null) {
