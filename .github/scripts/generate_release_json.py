@@ -58,7 +58,7 @@ release_json = {
 
 
 # 将发包信息写出到文件中，之后再由 CI 上传为 artifact
-with open("./release.json", "x") as f:
+with open("./release.json", "w") as f:
     f.write(json.dumps(release_json, indent=2, sort_keys=True, ensure_ascii=False))
 
 print(release_json)
