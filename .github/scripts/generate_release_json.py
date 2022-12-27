@@ -52,8 +52,8 @@ content_json = {
 }
 
 release_json = { 
-    update_time,
-    content_json
+    "update_time": update_time,
+    "content_json": content_json
 }
 
 # 将发包信息写出到文件中，之后再由 CI 上传为 artifact
