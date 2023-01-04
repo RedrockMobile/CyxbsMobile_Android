@@ -1,0 +1,37 @@
+name: Release-Schedule
+on: 
+  schedule: 
+    # 每小时检查
+    - cron: '0 * * * *'
+jobs:
+  track_pr:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+        with:
+          ref: master
+      - name: Set up Python
+        uses: actions/setup-python@v2
+        with:
+          python-version: '3.9'
+
+      - name: Install python requests
+        run: pip install requests
+
+      # 找到最新的 Assemble Release apk CI并下载它的artifacts
+      # 注意 artifacts 只会保存 90 天，所以设定的发版时间必须是在 merge master 分支的三个月内 (一般来说都不会这么久吧...)
+      - name: Download latest artifacts
+        run: |
+          runs_id="$(gh api -X GET repos/RedrockMobile/CyxbsMobile_Android/actions/runs\?branch=master\&status=success --jq '.workflow_runs.[0].id')"
+
+          gh run download -R RedrockMobile/CyxbsMobile_Android "$runs_id"
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          OWNER: ${{ github.repository_owner }}
+          REPO: ${{ github.event.repository.name }}
+      - name: Check Release or not
+        run: |
+          python ./.github/scripts/push_release.py "$RELEASE_BASE_URL" "RELEASE_TOKEN"
+        env:
+          RELEASE_BASE_URL: ${{ secrets.RELEASE_BASE_URL }}
+          RELEASE_TOKEN: ${{ secrets.RELEASE_TOKEN }}

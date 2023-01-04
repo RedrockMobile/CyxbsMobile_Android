@@ -1,4 +1,4 @@
-name: Release CI
+name: Assemble Release apk
 
 on:
   pull_request:
@@ -63,14 +63,16 @@ jobs:
       - name: Build with Gradle
         run: ./gradlew channelRelease
       
-      - name: upload release apk
-        # python ./.github/scripts/release.py "https://be-dev.redrock.cqupt.edu.cn" "E3582A4713276D6874B1C2A67CCC5030" "update_content=好久不见！\n阔别一个月，掌邮它又回来啦！\n根据相关规定，我们关闭了成绩查询等功能（很抱歉给大家带来不便）\n但是别担心，我们也在探索掌邮的新板块\n欢迎大家加入交流群说出自己的需求（QQ：570919844）\n【双人课表】：关联课表，探索课表新可能\n【没课约优化】：邮子随心约，分组管理，快速查询"
-        run: python ./.github/scripts/release.py "$RELEASE_BASE_URL" "$RELEASE_TOKEN" "$UPDATE_CONTENT"
+      - name: Generate release json
+        run: python ./.github/scripts/generate_release_json.py "$RELEASE_BASE_URL" "$RELEASE_TOKEN" "$UPDATE_CONTENT"
         env:
           RELEASE_BASE_URL: ${{ secrets.RELEASE_BASE_URL }}
           RELEASE_TOKEN: ${{ secrets.RELEASE_TOKEN }}
           UPDATE_CONTENT: ${{ github.event.pull_request.body }}
 
-        
-        
-      
+      - name: Archive release json
+        uses: actions/upload-artifact@v2
+        with:
+          name: release_json
+          path: release.json
+          retention-days: 15
