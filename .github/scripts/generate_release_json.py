@@ -6,7 +6,7 @@ pr_content = sys.argv[3]
 
 try:
     # 更新信息
-    update_content = pr_content.split("update_content=")[0]
+    update_content = pr_content.split("update_content=")[1]
     # 更新时间
     update_time = pr_content.split("update_time=")[1].split("update_content=")[0]
     # 示例: update_time=2022 12 14 0
@@ -55,7 +55,6 @@ release_json = {
     "update_time": update_time,
     "content_json": content_json
 }
-
 
 # 将发包信息写出到文件中，之后再由 CI 上传为 artifact
 with open("./release.json", "w") as f:
