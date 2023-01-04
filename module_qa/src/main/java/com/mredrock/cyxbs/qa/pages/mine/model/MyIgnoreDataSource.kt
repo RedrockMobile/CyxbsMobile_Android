@@ -6,7 +6,7 @@ import androidx.paging.PageKeyedDataSource
 import com.mredrock.cyxbs.common.network.ApiGenerator
 import com.mredrock.cyxbs.common.network.exception.RedrockApiIllegalStateException
 import com.mredrock.cyxbs.common.utils.extensions.mapOrThrowApiException
-import com.mredrock.cyxbs.common.utils.extensions.safeSubscribeBy
+import com.mredrock.cyxbs.common.utils.extensions.unsafeSubscribeBy
 import com.mredrock.cyxbs.common.utils.extensions.setSchedulers
 import com.mredrock.cyxbs.qa.beannew.Ignore
 import com.mredrock.cyxbs.qa.network.ApiServiceNew
@@ -50,7 +50,7 @@ class MyIgnoreDataSource : PageKeyedDataSource<Int, Ignore>() {
                     failedRequest = { loadInitial(params, callback) }
                 }
             }
-            .safeSubscribeBy { list ->
+            .unsafeSubscribeBy { list ->
                 initialLoad.postValue(NetworkState.SUCCESSFUL)
                 networkState.postValue(NetworkState.SUCCESSFUL)
                 val nextPageKey = 2.takeUnless { (list.size < params.requestedLoadSize) }
@@ -75,7 +75,7 @@ class MyIgnoreDataSource : PageKeyedDataSource<Int, Ignore>() {
                     failedRequest = { loadAfter(params, callback) }
                 }
             }
-            .safeSubscribeBy { list ->
+            .unsafeSubscribeBy { list ->
                 initialLoad.postValue(NetworkState.SUCCESSFUL)
                 networkState.postValue(NetworkState.SUCCESSFUL)
                 val adjacentPageKet =

@@ -3,7 +3,7 @@ package com.mredrock.cyxbs.mine.page.security.viewmodel
 import androidx.lifecycle.MutableLiveData
 import com.mredrock.cyxbs.common.BaseApp
 import com.mredrock.cyxbs.common.utils.extensions.doOnErrorWithDefaultErrorHandler
-import com.mredrock.cyxbs.common.utils.extensions.safeSubscribeBy
+import com.mredrock.cyxbs.common.utils.extensions.unsafeSubscribeBy
 import com.mredrock.cyxbs.common.utils.extensions.setSchedulers
 import com.mredrock.cyxbs.common.utils.extensions.toast
 import com.mredrock.cyxbs.common.viewmodel.BaseViewModel
@@ -33,7 +33,7 @@ class ForgetPasswordViewModel : BaseViewModel() {
                     onError()
                     true
                 }
-                .safeSubscribeBy {
+                .unsafeSubscribeBy {
                     defaultPassword.value = it.status == 10000
                 }
     }
@@ -46,7 +46,7 @@ class ForgetPasswordViewModel : BaseViewModel() {
                     BaseApp.appContext.toast(it.toString())
                     true
                 }
-                .safeSubscribeBy {
+                .unsafeSubscribeBy {
                     if (it.status == 10000) {
                         //设置信息绑定的情况
                         bindingEmail.value = it.data.email_is == 1

@@ -1,14 +1,7 @@
-import com.mredrock.cyxbs.convention.depend.api.dependApiAccount
-import com.mredrock.cyxbs.convention.depend.api.dependApiLogin
-import com.mredrock.cyxbs.convention.depend.lib.dependLibConfig
-import com.mredrock.cyxbs.convention.depend.lib.dependLibUtils
-import com.mredrock.cyxbs.convention.depend.dependCoroutinesRx3
-import com.mredrock.cyxbs.convention.depend.dependCoroutines
-import com.mredrock.cyxbs.convention.depend.lib.dependLibCommon
-
 plugins {
   id("module-manager")
 }
+android.namespace = "com.mredrock.cyxbs.lib.base"
 
 dependLibCommon()
 dependLibUtils()
@@ -19,3 +12,7 @@ dependApiLogin()
 
 dependCoroutines()
 dependCoroutinesRx3()
+
+dependencies {
+  implementation(project(":api_init")) // 因为 api_init 没有实现模块，所以写这里
+}

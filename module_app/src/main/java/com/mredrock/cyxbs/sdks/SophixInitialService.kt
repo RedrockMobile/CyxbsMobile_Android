@@ -1,8 +1,8 @@
 package com.mredrock.cyxbs.sdks
 
 import com.google.auto.service.AutoService
-import com.mredrock.cyxbs.lib.base.spi.InitialManager
-import com.mredrock.cyxbs.lib.base.spi.InitialService
+import com.mredrock.cyxbs.api.init.InitialManager
+import com.mredrock.cyxbs.api.init.InitialService
 import com.taobao.sophix.SophixManager
 
 /**

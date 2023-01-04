@@ -3,7 +3,7 @@ package com.mredrock.cyxbs.mine.page.mine.viewmodel
 import androidx.lifecycle.MutableLiveData
 import com.mredrock.cyxbs.common.network.ApiGenerator
 import com.mredrock.cyxbs.common.utils.extensions.mapOrThrowApiException
-import com.mredrock.cyxbs.common.utils.extensions.safeSubscribeBy
+import com.mredrock.cyxbs.common.utils.extensions.unsafeSubscribeBy
 import com.mredrock.cyxbs.common.utils.extensions.setSchedulers
 import com.mredrock.cyxbs.common.viewmodel.BaseViewModel
 import com.mredrock.cyxbs.mine.R
@@ -27,7 +27,7 @@ class FanViewModel : BaseViewModel() {
             .doOnError {
                 toastEvent.value = R.string.mine_person_change_focus_status_failed
             }
-            .safeSubscribeBy {
+            .unsafeSubscribeBy {
             }
     }
 
@@ -42,7 +42,7 @@ class FanViewModel : BaseViewModel() {
             .doOnError {
                 fanNetWorkState.value = NetworkState.FAILED
             }
-            .safeSubscribeBy {
+            .unsafeSubscribeBy {
                 fanNetWorkState.value = NetworkState.SUCCESSFUL
                 fanList.value = it
             }

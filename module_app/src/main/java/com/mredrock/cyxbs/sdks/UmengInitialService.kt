@@ -2,11 +2,11 @@ package com.mredrock.cyxbs.sdks
 
 import com.google.auto.service.AutoService
 import com.mredrock.cyxbs.BuildConfig
+import com.mredrock.cyxbs.api.init.InitialManager
+import com.mredrock.cyxbs.api.init.InitialService
 import com.mredrock.cyxbs.lib.utils.extensions.appContext
 import com.mredrock.cyxbs.lib.utils.extensions.unsafeSubscribeBy
 import com.mredrock.cyxbs.lib.utils.utils.LogUtils
-import com.mredrock.cyxbs.lib.base.spi.InitialService
-import com.mredrock.cyxbs.lib.base.spi.InitialManager
 import com.umeng.commonsdk.UMConfigure
 import com.umeng.message.PushAgent
 import com.umeng.message.api.UPushRegisterCallback

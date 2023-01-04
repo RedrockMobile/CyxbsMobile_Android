@@ -2,7 +2,7 @@ package com.mredrock.cyxbs.volunteer.viewmodel
 
 import androidx.lifecycle.MutableLiveData
 import com.mredrock.cyxbs.common.network.ApiGenerator
-import com.mredrock.cyxbs.common.utils.extensions.safeSubscribeBy
+import com.mredrock.cyxbs.common.utils.extensions.unsafeSubscribeBy
 import com.mredrock.cyxbs.common.utils.extensions.setSchedulers
 import com.mredrock.cyxbs.common.viewmodel.BaseViewModel
 import com.mredrock.cyxbs.volunteer.bean.VolunteerTime
@@ -19,7 +19,7 @@ class VolunteerRecordViewModel : BaseViewModel() {
     fun getVolunteerTime() {
         ApiGenerator.getApiService(ApiService::class.java).getVolunteerRecord()
                 .setSchedulers()
-                .safeSubscribeBy {
+                .unsafeSubscribeBy {
                     this.volunteerTime.value = it
                 }
     }
@@ -27,7 +27,7 @@ class VolunteerRecordViewModel : BaseViewModel() {
     fun unBindAccount() {
         ApiGenerator.getApiService(ApiService::class.java).unbindVolunteerAccount()
                 .setSchedulers()
-                .safeSubscribeBy {
+                .unsafeSubscribeBy {
                     //没啥处理，除非后端出问题，没有解绑成功，觉得也并没必要阻止用户重新登录
                 }
     }

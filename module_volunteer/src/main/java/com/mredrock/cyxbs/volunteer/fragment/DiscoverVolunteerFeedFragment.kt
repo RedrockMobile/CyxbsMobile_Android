@@ -2,6 +2,7 @@ package com.mredrock.cyxbs.volunteer.fragment
 
 import android.os.Bundle
 import android.view.View
+import androidx.lifecycle.lifecycleScope
 import com.alibaba.android.arouter.facade.annotation.Route
 import com.alibaba.android.arouter.launcher.ARouter
 import com.google.gson.Gson
@@ -14,13 +15,15 @@ import com.mredrock.cyxbs.common.mark.EventBusLifecycleSubscriber
 import com.mredrock.cyxbs.common.service.ServiceManager
 import com.mredrock.cyxbs.common.ui.BaseFeedFragment
 import com.mredrock.cyxbs.common.utils.extensions.doIfLogin
-import com.mredrock.cyxbs.common.utils.extensions.runOnUiThread
 import com.mredrock.cyxbs.volunteer.R
 import com.mredrock.cyxbs.volunteer.adapter.VolunteerFeedAdapter
 import com.mredrock.cyxbs.volunteer.adapter.VolunteerFeedUnbindAdapter
 import com.mredrock.cyxbs.volunteer.event.VolunteerLoginEvent
 import com.mredrock.cyxbs.volunteer.event.VolunteerLogoutEvent
 import com.mredrock.cyxbs.volunteer.viewmodel.DiscoverVolunteerFeedViewModel
+import kotlinx.coroutines.flow.launchIn
+import kotlinx.coroutines.flow.onEach
+import kotlinx.coroutines.rx3.asFlow
 import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
@@ -36,14 +39,14 @@ class DiscoverVolunteerFeedFragment : BaseFeedFragment<DiscoverVolunteerFeedView
         if (ServiceManager.getService(IAccountService::class.java).getVerifyService().isLogin()) {
             setAdapter(VolunteerFeedUnbindAdapter())
         }
-        //设置监听，用于游客->登录
-        ServiceManager.getService(IAccountService::class.java).getVerifyService().addOnStateChangedListener {
-            if (it == IUserStateService.UserState.LOGIN) {
-                context?.runOnUiThread {
+        ServiceManager(IAccountService::class).getVerifyService()
+            .observeUserStateEvent()
+            .asFlow()
+            .onEach {
+                if (it == IUserStateService.UserState.LOGIN) {
                     setAdapter(VolunteerFeedUnbindAdapter())
                 }
-            }
-        }
+            }.launchIn(viewLifecycleOwner.lifecycleScope)
         init()
     }
 

@@ -5,7 +5,7 @@ import androidx.paging.LivePagedListBuilder
 import androidx.paging.PagedList
 import com.mredrock.cyxbs.common.bean.isSuccessful
 import com.mredrock.cyxbs.common.network.ApiGenerator
-import com.mredrock.cyxbs.common.utils.extensions.safeSubscribeBy
+import com.mredrock.cyxbs.common.utils.extensions.unsafeSubscribeBy
 import com.mredrock.cyxbs.common.utils.extensions.setSchedulers
 import com.mredrock.cyxbs.common.viewmodel.BaseViewModel
 import com.mredrock.cyxbs.qa.R
@@ -59,7 +59,7 @@ open class CircleDetailViewModel(kind: String, loop: Int) : BaseViewModel() {
             .doOnError {
                 toastEvent.value = R.string.qa_ignore_dynamic_failure
             }
-            .safeSubscribeBy {
+            .unsafeSubscribeBy {
                 if (it.status == 200) {
                     toastEvent.value = R.string.qa_ignore_dynamic_success
                     ignorePeople.value = true
@@ -76,7 +76,7 @@ open class CircleDetailViewModel(kind: String, loop: Int) : BaseViewModel() {
             .doOnError {
                 toastEvent.value = R.string.qa_report_dynamic_failure
             }
-            .safeSubscribeBy {
+            .unsafeSubscribeBy {
                 if (it.status == 200)
                     toastEvent.value = R.string.qa_report_dynamic_success
             }
@@ -89,7 +89,7 @@ open class CircleDetailViewModel(kind: String, loop: Int) : BaseViewModel() {
             .doOnError {
                 toastEvent.value = R.string.qa_delete_dynamic_failure
             }
-            .safeSubscribeBy {
+            .unsafeSubscribeBy {
                 deleteTips.value = true
                 toastEvent.value = R.string.qa_delete_dynamic_success
             }
@@ -106,7 +106,7 @@ open class CircleDetailViewModel(kind: String, loop: Int) : BaseViewModel() {
                     toast("关注失败")
                 }
             }
-            .safeSubscribeBy {
+            .unsafeSubscribeBy {
                 if (it.isSuccessful) {
                     if (followState) {
                         //如果处于关注状态,点击之后是取消关注

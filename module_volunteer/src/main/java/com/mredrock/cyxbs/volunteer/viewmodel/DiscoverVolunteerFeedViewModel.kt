@@ -4,7 +4,7 @@ import androidx.lifecycle.MutableLiveData
 import com.mredrock.cyxbs.common.network.ApiGenerator
 import com.mredrock.cyxbs.common.network.exception.RedrockApiIllegalStateException
 import com.mredrock.cyxbs.common.service.ServiceManager
-import com.mredrock.cyxbs.common.utils.extensions.safeSubscribeBy
+import com.mredrock.cyxbs.common.utils.extensions.unsafeSubscribeBy
 import com.mredrock.cyxbs.common.utils.extensions.setSchedulers
 import com.mredrock.cyxbs.common.viewmodel.BaseViewModel
 import com.mredrock.cyxbs.common.viewmodel.event.SingleLiveEvent
@@ -36,7 +36,7 @@ class DiscoverVolunteerFeedViewModel : BaseViewModel() {
                     loadFailed.value = true
                     isQuerying = false
                 }
-                .safeSubscribeBy {
+                .unsafeSubscribeBy {
                     isBind = true
                     volunteerData.value = it
                     isQuerying = false

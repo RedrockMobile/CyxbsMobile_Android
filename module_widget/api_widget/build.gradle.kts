@@ -1,9 +1,7 @@
-import com.mredrock.cyxbs.convention.depend.api.dependApiAffair
-import com.mredrock.cyxbs.convention.depend.api.dependApiCourse
-
 plugins {
     id("module-manager")
 }
+android.namespace = "com.mredrock.cyxbs.api.widget"
 
 dependApiCourse()
 dependApiAffair()

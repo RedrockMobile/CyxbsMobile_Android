@@ -4,14 +4,12 @@ import android.os.Parcelable
 import androidx.lifecycle.MutableLiveData
 import com.mredrock.cyxbs.common.network.ApiGenerator
 import com.mredrock.cyxbs.common.utils.extensions.mapOrThrowApiException
-import com.mredrock.cyxbs.common.utils.extensions.safeSubscribeBy
+import com.mredrock.cyxbs.common.utils.extensions.unsafeSubscribeBy
 import com.mredrock.cyxbs.common.utils.extensions.setSchedulers
 import com.mredrock.cyxbs.common.viewmodel.BaseViewModel
 import com.mredrock.cyxbs.discover.bean.NewsListItem
 import com.mredrock.cyxbs.discover.network.RollerViewInfo
 import com.mredrock.cyxbs.discover.network.ApiServices
-import io.reactivex.rxjava3.core.Observable
-import io.reactivex.rxjava3.disposables.Disposable
 import java.util.concurrent.TimeUnit
 
 /**
@@ -44,7 +42,7 @@ class DiscoverHomeViewModel : BaseViewModel() {
     apiServices.getRollerViewInfo()
       .mapOrThrowApiException()
       .setSchedulers()
-      .safeSubscribeBy {
+      .unsafeSubscribeBy {
         viewPagerInfo.value = it
       }
       .lifeCycle()
@@ -54,7 +52,7 @@ class DiscoverHomeViewModel : BaseViewModel() {
     apiServices.getHashUnreadMsg()
       .mapOrThrowApiException()
       .setSchedulers()
-      .safeSubscribeBy {
+      .unsafeSubscribeBy {
         hasUnread.value = it.has
       }
       .lifeCycle()
@@ -64,7 +62,7 @@ class DiscoverHomeViewModel : BaseViewModel() {
     apiServices.getNewsList(1)
       .mapOrThrowApiException()
       .setSchedulers()
-      .safeSubscribeBy {
+      .unsafeSubscribeBy {
         jwNews.value = it
       }
       .lifeCycle()

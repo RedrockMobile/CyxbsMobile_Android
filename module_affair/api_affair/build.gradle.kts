@@ -1,6 +1,6 @@
-import com.mredrock.cyxbs.convention.depend.dependRxjava
-
 plugins {
   id("module-manager")
 }
+android.namespace = "com.mredrock.cyxbs.api.affair"
+
 dependRxjava()

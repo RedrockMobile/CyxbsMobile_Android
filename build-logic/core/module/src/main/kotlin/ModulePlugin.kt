@@ -1,6 +1,6 @@
-import com.mredrock.cyxbs.convention.depend.dependAndroidKtx
-import com.mredrock.cyxbs.convention.depend.dependAndroidView
-import com.mredrock.cyxbs.convention.depend.dependLifecycleKtx
+
+
+
 import org.gradle.kotlin.dsl.apply
 
 /**

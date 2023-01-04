@@ -19,10 +19,10 @@ fun Context.demo() {
     }
 }
 */
-@Deprecated("使用 lib_config 模块中的 defaultSp 代替")
+@Deprecated("使用 lib_config 模块中的 defaultSp 代替", replaceWith = ReplaceWith(""))
 val Context.defaultSharedPreferences get() = sharedPreferences(DEFAULT_PREFERENCE_FILENAME)
 
-@Deprecated("使用 lib_utils 模块中的 getSp() 代替")
+@Deprecated("使用 lib_utils 模块中的 getSp() 代替", replaceWith = ReplaceWith(""))
 fun Context.sharedPreferences(name: String): SharedPreferences = getSharedPreferences(name, Context.MODE_PRIVATE)
 
 @Deprecated(

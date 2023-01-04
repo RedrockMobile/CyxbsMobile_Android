@@ -2,7 +2,7 @@ package com.mredrock.cyxbs.mine.page.security.viewmodel
 
 import androidx.lifecycle.MutableLiveData
 import com.mredrock.cyxbs.common.utils.extensions.doOnErrorWithDefaultErrorHandler
-import com.mredrock.cyxbs.common.utils.extensions.safeSubscribeBy
+import com.mredrock.cyxbs.common.utils.extensions.unsafeSubscribeBy
 import com.mredrock.cyxbs.common.utils.extensions.setSchedulers
 import com.mredrock.cyxbs.common.viewmodel.BaseViewModel
 import com.mredrock.cyxbs.mine.util.apiService
@@ -39,7 +39,7 @@ class ChangePasswordViewModel : BaseViewModel() {
                     true
                 }
                 .setSchedulers()
-                .safeSubscribeBy {
+                .unsafeSubscribeBy {
                     originPassWordIsCorrect.value = it.status == 10000
                 }
     }
@@ -52,7 +52,7 @@ class ChangePasswordViewModel : BaseViewModel() {
                     toast("对不起，目前无法修改密码，原因为:$it")
                     true
                 }
-                .safeSubscribeBy {
+                .unsafeSubscribeBy {
                     when (it.status) {
                         10000 -> {
                             inputNewPasswordCorrect.value = true
@@ -85,7 +85,7 @@ class ChangePasswordViewModel : BaseViewModel() {
                     toast(it.toString())
                     true
                 }
-                .safeSubscribeBy {
+                .unsafeSubscribeBy {
                     when (it.status) {
                         10000 -> {
                             inputNewPasswordCorrect.value = true
@@ -111,7 +111,7 @@ class ChangePasswordViewModel : BaseViewModel() {
                     toast(it.toString())
                     true
                 }
-                .safeSubscribeBy {
+                .unsafeSubscribeBy {
                     if (it.status == 10000) {
                         //设置信息绑定的情况
                         bindingEmail = it.data.email_is == 1
@@ -131,7 +131,7 @@ class ChangePasswordViewModel : BaseViewModel() {
                     toast(it.toString())
                     true
                 }
-                .safeSubscribeBy {
+                .unsafeSubscribeBy {
                     isDefaultPassword = it.status == 10000
                     onSuccess()
                 }

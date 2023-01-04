@@ -1,7 +1,7 @@
 package com.mredrock.cyxbs.mine.page.feedback.history.list
 
-import com.mredrock.cyxbs.common.BaseApp.appContext
-import com.mredrock.cyxbs.common.utils.extensions.safeSubscribeBy
+import com.mredrock.cyxbs.common.BaseApp.Companion.appContext
+import com.mredrock.cyxbs.common.utils.extensions.unsafeSubscribeBy
 import com.mredrock.cyxbs.common.utils.extensions.setSchedulers
 import com.mredrock.cyxbs.common.utils.extensions.toast
 import com.mredrock.cyxbs.mine.page.feedback.api
@@ -41,10 +41,10 @@ class HistoryListPresenter : BasePresenter<HistoryListViewModel>() {
             .switchIfEmpty {
                 emptyList<HistoryFeedback.Data.Feedback>()
             }
-            .safeSubscribeBy(onError = {
+            .unsafeSubscribeBy(onError = {
                 appContext.toast("出问题啦~ ${it.message}")
             },
-                onComplete = {
+                               onComplete = {
                 }, onNext = {
                     val sortHistoryList = sortHistoryList(it)
                     vm?.setListData(sortHistoryList)

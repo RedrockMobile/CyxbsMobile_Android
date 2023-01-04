@@ -1,6 +1,6 @@
-import com.mredrock.cyxbs.convention.depend.Android
-import com.mredrock.cyxbs.convention.depend.Lifecycle
-import com.mredrock.cyxbs.convention.depend.Network
+
+
+
 import org.gradle.kotlin.dsl.apply
 import org.gradle.kotlin.dsl.dependencies
 

@@ -2,20 +2,15 @@ package com.mredrock.cyxbs.discover.schoolcar
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModel
 import com.amap.api.maps.AMapUtils
 import com.amap.api.maps.model.LatLng
-import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.mredrock.cyxbs.common.network.ApiGenerator
-import com.mredrock.cyxbs.common.utils.extensions.safeSubscribeBy
+import com.mredrock.cyxbs.common.utils.extensions.unsafeSubscribeBy
 import com.mredrock.cyxbs.common.utils.extensions.setSchedulers
 import com.mredrock.cyxbs.discover.schoolcar.bean.MapLines
 import com.mredrock.cyxbs.discover.schoolcar.database.MapInfoDataBase
 import com.mredrock.cyxbs.discover.schoolcar.network.ApiService
-import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
-import io.reactivex.rxjava3.core.SingleObserver
-import io.reactivex.rxjava3.disposables.Disposable
 import io.reactivex.rxjava3.schedulers.Schedulers
 
 /**
@@ -77,8 +72,9 @@ class SchoolCarViewModel : ViewModel() {
     mapInfo.value?.lines?.forEach { line ->
       line.stations.forEach { station ->
         if (station.id == id) {
-          if (chooseLine != line.id)
-          arrayList.add(line.id)
+          if (chooseLine != line.id) {
+            arrayList.add(line.id)
+          }
           _chooseSite.value = station.id
         }
       }
@@ -124,7 +120,7 @@ class SchoolCarViewModel : ViewModel() {
     MapInfoDataBase.INSTANCE.mapInfoDao().queryMapLines()
       .toObservable()
       .setSchedulers(observeOn = Schedulers.io())
-      .safeSubscribeBy(
+      .unsafeSubscribeBy(
         onNext = { mapLines ->
           mapLines.lines.sortedBy { it.id }
           _mapInfo.postValue(mapLines)
@@ -133,7 +129,7 @@ class SchoolCarViewModel : ViewModel() {
 
     apiService.schoolSiteVersion()
       .setSchedulers(observeOn = Schedulers.io())
-      .safeSubscribeBy(
+      .unsafeSubscribeBy(
         onNext = { version ->
           MapInfoDataBase.INSTANCE.mapInfoDao().queryMapLines()
             .subscribeOn(Schedulers.io())
@@ -152,7 +148,7 @@ class SchoolCarViewModel : ViewModel() {
   private fun getMapLinesByNet(){
     apiService.schoolSite()
       .setSchedulers(observeOn = Schedulers.io())
-      .safeSubscribeBy(
+      .unsafeSubscribeBy(
         onNext = { mapLines ->
           mapLines.data.lines.sortedBy { it.id }
           mapLines.data.let { res -> _mapInfo.postValue(res) }

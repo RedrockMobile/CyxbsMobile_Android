@@ -2,7 +2,7 @@ package com.mredrock.cyxbs.config.sp
 
 import android.content.Context
 import android.content.SharedPreferences
-import com.mredrock.cyxbs.config.ConfigApplicationWrapper.application
+import com.mredrock.cyxbs.config.ConfigApplicationWrapper.Companion.application
 
 /**
  * 这里面保存需要跨模块全局使用的 SP，重要数据以及大量数据请不要使用该 SP 保存

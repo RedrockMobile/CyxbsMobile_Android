@@ -11,9 +11,9 @@ import android.view.View
 import android.widget.CompoundButton
 import androidx.annotation.RequiresApi
 import com.google.android.material.chip.Chip
-import com.mredrock.cyxbs.common.BaseApp.appContext
+import com.mredrock.cyxbs.common.BaseApp.Companion.appContext
 import com.mredrock.cyxbs.common.utils.extensions.getRequestBody
-import com.mredrock.cyxbs.common.utils.extensions.safeSubscribeBy
+import com.mredrock.cyxbs.common.utils.extensions.unsafeSubscribeBy
 import com.mredrock.cyxbs.common.utils.extensions.setSchedulers
 import com.mredrock.cyxbs.common.utils.extensions.toast
 import com.mredrock.cyxbs.mine.R
@@ -73,7 +73,7 @@ class FeedbackEditPresenter(val activity:Activity) : BasePresenter<FeedbackEditV
             .setSchedulers()
             .doOnSubscribe {}
             .doOnError { }
-            .safeSubscribeBy(
+            .unsafeSubscribeBy(
                 onNext = {
                     appContext.toast("提交成功  我们会在十四个工作日内回复")
                 },

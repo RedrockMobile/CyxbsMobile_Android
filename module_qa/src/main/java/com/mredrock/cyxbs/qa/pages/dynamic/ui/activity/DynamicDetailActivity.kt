@@ -13,6 +13,7 @@ import android.transition.Slide
 import android.util.Log
 import android.view.Gravity
 import android.view.View
+import android.view.ViewGroup
 import android.widget.Toast
 import androidx.coordinatorlayout.widget.CoordinatorLayout
 import androidx.core.app.ActivityOptionsCompat
@@ -566,7 +567,9 @@ class DynamicDetailActivity : BaseViewModelActivity<DynamicDetailViewModel>() {
                     }.show()
                 }
             }
-            this.contentView?.let { it1 -> optionPopWindow.showFromBottom(it1) }
+            findViewById<ViewGroup>(android.R.id.content).getChildAt(0)?.let { it1 ->
+                optionPopWindow.showFromBottom(it1)
+            }
         }
 
         dynamic?.let {

@@ -22,7 +22,7 @@ object ServiceManager {
      * 通过类型搜索对应服务，建议优先使用此方式
      */
     @Suppress("DeprecatedCallableAddReplaceWith")
-    @Deprecated("为了之后好迁移至新的 lib_utils 模块，所以不再使用旧的方法名")
+    @Deprecated("为了之后好迁移至新的 lib_utils 模块，所以不再使用旧的方法名", replaceWith = ReplaceWith("ServiceManager(T::class)"))
     fun <T> getService(serviceClass: Class<T>): T = ARouter.getInstance().navigation(serviceClass)
 
     /**
@@ -31,7 +31,7 @@ object ServiceManager {
      * @param servicePath 实现类的路由地址
      */
     @Suppress("UNCHECKED_CAST", "DeprecatedCallableAddReplaceWith")
-    @Deprecated("为了之后好迁移至新的 lib_utils 模块，所以不再使用旧的方法名")
+    @Deprecated("为了之后好迁移至新的 lib_utils 模块，所以不再使用旧的方法名", replaceWith = ReplaceWith("ServiceManager(servicePath)"))
     fun <T> getService(servicePath: String) = ARouter.getInstance().build(servicePath).navigation() as T
     
     

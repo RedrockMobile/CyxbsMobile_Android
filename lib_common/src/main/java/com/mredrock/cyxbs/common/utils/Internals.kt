@@ -12,7 +12,7 @@ import java.io.Serializable
  * Created by yyfbe, Date on 2020/8/20.
  * anko-bridge
  */
-
+@Deprecated("该类存在 bug，不再使用")
 object Internals {
     @JvmStatic
     private fun fillIntentArguments(intent: Intent, params: Array<out Pair<String, Any?>>) {

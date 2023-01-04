@@ -17,7 +17,7 @@ import retrofit2.converter.gson.GsonConverterFactory
  */
 object AppUpdateModel {
     
-    val APP_VERSION_CODE: Long = getAppVersionCode(appContext)
+    val APP_VERSION_CODE: Long = getAppVersionCode()
     val status: MutableLiveData<AppUpdateStatus> = MutableLiveData()
     var updateInfo: UpdateInfo? = null
         private set

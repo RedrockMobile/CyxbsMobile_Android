@@ -4,7 +4,7 @@ import androidx.lifecycle.MutableLiveData
 import com.mredrock.cyxbs.common.BaseApp
 import com.mredrock.cyxbs.common.network.ApiGenerator
 import com.mredrock.cyxbs.common.utils.extensions.doOnErrorWithDefaultErrorHandler
-import com.mredrock.cyxbs.common.utils.extensions.safeSubscribeBy
+import com.mredrock.cyxbs.common.utils.extensions.unsafeSubscribeBy
 import com.mredrock.cyxbs.common.utils.extensions.setSchedulers
 import com.mredrock.cyxbs.common.utils.extensions.toast
 import com.mredrock.cyxbs.common.viewmodel.BaseViewModel
@@ -24,7 +24,7 @@ class BindEmailViewModel : BaseViewModel() {
                     true
                 }
                 .setSchedulers()
-                .safeSubscribeBy {
+                .unsafeSubscribeBy {
                     when (it.status) {
                         10000 -> {
                             expireTime = it.data.expiredTime
@@ -49,7 +49,7 @@ class BindEmailViewModel : BaseViewModel() {
                     toast(it.toString())
                     true
                 }
-                .safeSubscribeBy {
+                .unsafeSubscribeBy {
                     when (it.status) {
                         10000 -> {
                             mldConfirmIsSucceed.value = true

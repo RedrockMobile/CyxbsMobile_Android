@@ -10,7 +10,7 @@ import com.mredrock.cyxbs.common.utils.down.bean.DownMessageText
 import com.mredrock.cyxbs.common.utils.down.params.DownMessageParams
 import com.mredrock.cyxbs.common.utils.extensions.errorHandler
 import com.mredrock.cyxbs.common.utils.extensions.mapOrThrowApiException
-import com.mredrock.cyxbs.common.utils.extensions.safeSubscribeBy
+import com.mredrock.cyxbs.common.utils.extensions.unsafeSubscribeBy
 import com.mredrock.cyxbs.common.utils.extensions.setSchedulers
 import com.mredrock.cyxbs.common.viewmodel.BaseViewModel
 import com.mredrock.cyxbs.mine.util.apiService
@@ -43,7 +43,7 @@ class EditViewModel : BaseViewModel() {
                 .doOnError {
                     updateInfoEvent.postValue(false)
                 }
-                .safeSubscribeBy {
+                .unsafeSubscribeBy {
                     updateInfoEvent.postValue(true)
                     if (nickname.isNotBlank() && introduction.isNotBlank() && qq.isNotBlank() && phone.isNotBlank()) {
                       ServiceManager.getService(IStoreService::class.java)
@@ -62,7 +62,7 @@ class EditViewModel : BaseViewModel() {
                 }
                 .normalStatus(this)
                 .doOnError { upLoadImageEvent.postValue(false) }
-                .safeSubscribeBy {
+                .unsafeSubscribeBy {
                     upLoadImageEvent.postValue(true)
                 }
                 .lifeCycle()

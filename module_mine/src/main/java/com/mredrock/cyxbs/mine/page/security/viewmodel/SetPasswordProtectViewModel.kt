@@ -4,7 +4,7 @@ import androidx.databinding.ObservableField
 import com.mredrock.cyxbs.common.BaseApp
 import com.mredrock.cyxbs.common.utils.LogUtils
 import com.mredrock.cyxbs.common.utils.extensions.doOnErrorWithDefaultErrorHandler
-import com.mredrock.cyxbs.common.utils.extensions.safeSubscribeBy
+import com.mredrock.cyxbs.common.utils.extensions.unsafeSubscribeBy
 import com.mredrock.cyxbs.common.utils.extensions.setSchedulers
 import com.mredrock.cyxbs.common.utils.extensions.toast
 import com.mredrock.cyxbs.common.viewmodel.BaseViewModel
@@ -38,7 +38,7 @@ class SetPasswordProtectViewModel : BaseViewModel() {
                     BaseApp.appContext.toast("获取密保问题失败")
                     true
                 }
-                .safeSubscribeBy {
+                .unsafeSubscribeBy {
                     listOfSecurityQuestion = it.data
                     onQuestionLoaded(listOfSecurityQuestion)
                 }
@@ -58,7 +58,7 @@ class SetPasswordProtectViewModel : BaseViewModel() {
                             BaseApp.appContext.toast(it.toString())
                             true
                         }
-                        .safeSubscribeBy {
+                        .unsafeSubscribeBy {
                             if (it.status == 10000) {
                                 BaseApp.appContext.toast("恭喜您，设置成功")
                                 onSucceed()

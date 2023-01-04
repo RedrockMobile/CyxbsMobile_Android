@@ -24,6 +24,7 @@ import kotlin.math.pow
  *      如果你在代码中需要使用到onTouch监听，又想使用这个果冻动画可能需要自己复制代码过去
  *      因为这里有一些tag，不便于拆分
  */
+@Deprecated("使用 lib_utils 中的 View#pressToZoomOut()")
 fun View.pressToZoomOut(scale: Float = 0.85f,
                         @FloatRange(from = 1.0, to = 10.0) rate: Float = 6f,
                         onTouch: View.OnTouchListener? = null

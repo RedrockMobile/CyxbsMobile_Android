@@ -6,7 +6,7 @@ import androidx.lifecycle.ViewModelProvider
 import com.mredrock.cyxbs.common.network.ApiGenerator
 import com.mredrock.cyxbs.common.service.ServiceManager
 import com.mredrock.cyxbs.common.utils.extensions.mapOrThrowApiException
-import com.mredrock.cyxbs.common.utils.extensions.safeSubscribeBy
+import com.mredrock.cyxbs.common.utils.extensions.unsafeSubscribeBy
 import com.mredrock.cyxbs.common.utils.extensions.setSchedulers
 import com.mredrock.cyxbs.common.viewmodel.BaseViewModel
 import com.mredrock.cyxbs.common.viewmodel.event.ProgressDialogEvent
@@ -60,7 +60,7 @@ open class DynamicDetailViewModel : BaseViewModel() {
             }
             .doOnError {
             }
-            .safeSubscribeBy {
+            .unsafeSubscribeBy {
                 if (it == null) {
                     toast("帖子不存在或已删除")
                 }else {
@@ -80,7 +80,7 @@ open class DynamicDetailViewModel : BaseViewModel() {
             .doOnError {
                 loadStatus.value = NetworkState.FAILED
             }
-            .safeSubscribeBy { list ->
+            .unsafeSubscribeBy { list ->
                 loadStatus.value = NetworkState.SUCCESSFUL
                 commentList.postValue(list.reversed())
                 position = findCommentByCommentId(list.reversed(), commentId)
@@ -131,7 +131,7 @@ open class DynamicDetailViewModel : BaseViewModel() {
             .doOnError {
 
             }
-            .safeSubscribeBy {
+            .unsafeSubscribeBy {
                 commentReleaseResult.postValue(it)
                 ServiceManager.getService(IStoreService::class.java)
                     .postTask(IStoreService.Task.POST_COMMENT, content) // 更新发送评论的任务
@@ -151,7 +151,7 @@ open class DynamicDetailViewModel : BaseViewModel() {
             .doOnError {
                 toastEvent.value = R.string.qa_delete_dynamic_failure
             }
-            .safeSubscribeBy {
+            .unsafeSubscribeBy {
                 isNeedFinish=true
                 deleteDynamic.postValue(true)
                 toastEvent.value = R.string.qa_delete_dynamic_success
@@ -171,7 +171,7 @@ open class DynamicDetailViewModel : BaseViewModel() {
             .doOnError {
                 toastEvent.value = R.string.qa_delete_comment_failure
             }
-            .safeSubscribeBy {
+            .unsafeSubscribeBy {
                 refreshCommentList(dynamic.value?.postId ?: "0", "-1")
                 toastEvent.value = R.string.qa_delete_comment_success
             }
@@ -190,7 +190,7 @@ open class DynamicDetailViewModel : BaseViewModel() {
             .doOnError {
                 toastEvent.value = R.string.qa_report_dynamic_failure
             }
-            .safeSubscribeBy {
+            .unsafeSubscribeBy {
                 if (it.status == 200)
                     toastEvent.value = R.string.qa_report_dynamic_success
             }
@@ -209,7 +209,7 @@ open class DynamicDetailViewModel : BaseViewModel() {
             .doOnError {
                 toastEvent.value = R.string.qa_report_comment_failure
             }
-            .safeSubscribeBy {
+            .unsafeSubscribeBy {
                 if (it.status == 200)
                     toastEvent.value = R.string.qa_report_comment_success
             }

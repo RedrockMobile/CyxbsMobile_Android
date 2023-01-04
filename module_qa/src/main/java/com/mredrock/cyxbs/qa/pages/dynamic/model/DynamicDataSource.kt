@@ -12,7 +12,7 @@ import com.mredrock.cyxbs.common.config.getBaseUrl
 import com.mredrock.cyxbs.common.network.ApiGenerator
 import com.mredrock.cyxbs.common.service.ServiceManager
 import com.mredrock.cyxbs.common.utils.extensions.mapOrThrowApiException
-import com.mredrock.cyxbs.common.utils.extensions.safeSubscribeBy
+import com.mredrock.cyxbs.common.utils.extensions.unsafeSubscribeBy
 import com.mredrock.cyxbs.common.utils.extensions.setSchedulers
 import com.mredrock.cyxbs.lib.utils.extensions.lazyUnlock
 import com.mredrock.cyxbs.qa.beannew.Message
@@ -75,7 +75,7 @@ class DynamicDataSource(private val kind: String,private val redid: String?) : P
                         initialLoad.value = NetworkState.FAILED
                         failedRequest = { loadInitial(params, callback) }
                     }
-                    .safeSubscribeBy { list ->
+                    .unsafeSubscribeBy { list ->
                         initialLoad.value = NetworkState.SUCCESSFUL
                         val nextPageKey = 2.takeUnless { (list.size < params.requestedLoadSize) }
                         callback.onResult(list.map { it }, 1, nextPageKey)
@@ -94,7 +94,7 @@ class DynamicDataSource(private val kind: String,private val redid: String?) : P
                         initialLoad.value = NetworkState.FAILED
                         failedRequest = { loadInitial(params, callback) }
                     }
-                    .safeSubscribeBy { list ->
+                    .unsafeSubscribeBy { list ->
 
                         initialLoad.value = NetworkState.SUCCESSFUL
                         val nextPageKey = 2.takeUnless { (list.size < params.requestedLoadSize) }
@@ -114,7 +114,7 @@ class DynamicDataSource(private val kind: String,private val redid: String?) : P
                         initialLoad.value = NetworkState.FAILED
                         failedRequest = { loadInitial(params, callback) }
                     }
-                    .safeSubscribeBy { list ->
+                    .unsafeSubscribeBy { list ->
                         initialLoad.value = NetworkState.SUCCESSFUL
                         val nextPageKey = 2.takeUnless { (list.size < params.requestedLoadSize) }
                         callback.onResult(list.map { it.data }, 1, nextPageKey)
@@ -131,7 +131,7 @@ class DynamicDataSource(private val kind: String,private val redid: String?) : P
                         initialLoad.value = NetworkState.FAILED
                         failedRequest = { loadInitial(params, callback) }
                     }
-                    .safeSubscribeBy { list ->
+                    .unsafeSubscribeBy { list ->
                         initialLoad.value = NetworkState.SUCCESSFUL
                         val nextPageKey = 2.takeUnless { (list.size < params.requestedLoadSize) }
                         callback.onResult(list, 1, nextPageKey)
@@ -153,7 +153,7 @@ class DynamicDataSource(private val kind: String,private val redid: String?) : P
                         networkState.value = NetworkState.FAILED
                         failedRequest = { loadAfter(params, callback) }
                     }
-                    .safeSubscribeBy { list ->
+                    .unsafeSubscribeBy { list ->
                         networkState.value = NetworkState.SUCCESSFUL
                         val adjacentPageKey =
                             (params.key + 1).takeUnless { list.size < params.requestedLoadSize }
@@ -171,7 +171,7 @@ class DynamicDataSource(private val kind: String,private val redid: String?) : P
                         networkState.value = NetworkState.FAILED
                         failedRequest = { loadAfter(params, callback) }
                     }
-                    .safeSubscribeBy { list ->
+                    .unsafeSubscribeBy { list ->
                         networkState.value = NetworkState.SUCCESSFUL
                         val adjacentPageKey =
                             (params.key + 1).takeUnless { list.size < params.requestedLoadSize }
@@ -188,7 +188,7 @@ class DynamicDataSource(private val kind: String,private val redid: String?) : P
                         networkState.value = NetworkState.FAILED
                         failedRequest = { loadAfter(params, callback) }
                     }
-                    .safeSubscribeBy { list ->
+                    .unsafeSubscribeBy { list ->
                         networkState.value = NetworkState.SUCCESSFUL
                         val adjacentPageKey =
                             (params.key + 1).takeUnless { list.size < params.requestedLoadSize }
@@ -206,7 +206,7 @@ class DynamicDataSource(private val kind: String,private val redid: String?) : P
                         networkState.value = NetworkState.FAILED
                         failedRequest = { loadAfter(params, callback) }
                     }
-                    .safeSubscribeBy { list ->
+                    .unsafeSubscribeBy { list ->
                         networkState.value = NetworkState.SUCCESSFUL
                         val adjacentPageKey =
                             (params.key + 1).takeUnless { list.size < params.requestedLoadSize }

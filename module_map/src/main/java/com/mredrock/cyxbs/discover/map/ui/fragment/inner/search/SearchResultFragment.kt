@@ -1,6 +1,8 @@
 package com.mredrock.cyxbs.discover.map.ui.fragment.inner.search
 
 import android.os.Bundle
+import android.os.Handler
+import android.os.Looper
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -9,7 +11,6 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.mredrock.cyxbs.common.ui.BaseFragment
-import com.mredrock.cyxbs.common.utils.extensions.runOnUiThread
 import com.mredrock.cyxbs.discover.map.R
 import com.mredrock.cyxbs.discover.map.bean.PlaceItem
 import com.mredrock.cyxbs.discover.map.ui.adapter.SearchResultAdapter
@@ -23,7 +24,9 @@ class SearchResultFragment : BaseFragment() {
     private var isSearching = false
 
     private val mRvSearchResult by R.id.map_rv_search_result.view<RecyclerView>()
-
+    
+    private val mHandler = Handler(Looper.getMainLooper())
+    
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         return inflater.inflate(R.layout.map_fragment_search_result, container, false)
     }
@@ -72,7 +75,7 @@ class SearchResultFragment : BaseFragment() {
                             viewModel.searchResult.addAll(searchResultArrayList)
                         }
                     } else {
-                        context?.runOnUiThread {
+                        mHandler.post {
                             viewModel.searchResult.clear()
                             viewModel.searchResult.addAll(searchResultArrayList)
                         }
@@ -91,7 +94,7 @@ class SearchResultFragment : BaseFragment() {
                         }
                         if (!flag) {
                             Thread.sleep(50)
-                            context?.runOnUiThread {
+                            mHandler.post {
                                 viewModel.searchResult.remove(placeItemOrigin)
                             }
                         }
@@ -107,7 +110,7 @@ class SearchResultFragment : BaseFragment() {
                         }
                         if (!flag) {
                             Thread.sleep(50)
-                            context?.runOnUiThread {
+                            mHandler.post {
                                 viewModel.searchResult.add(placeItemResult)
                             }
                         }

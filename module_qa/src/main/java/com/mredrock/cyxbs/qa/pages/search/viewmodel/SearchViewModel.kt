@@ -4,7 +4,7 @@ import androidx.lifecycle.MutableLiveData
 import com.mredrock.cyxbs.common.BaseApp
 import com.mredrock.cyxbs.common.network.ApiGenerator
 import com.mredrock.cyxbs.common.utils.LogUtils
-import com.mredrock.cyxbs.common.utils.extensions.safeSubscribeBy
+import com.mredrock.cyxbs.common.utils.extensions.unsafeSubscribeBy
 import com.mredrock.cyxbs.common.utils.extensions.setSchedulers
 import com.mredrock.cyxbs.common.viewmodel.BaseViewModel
 import com.mredrock.cyxbs.qa.beannew.QAHistory
@@ -32,7 +32,7 @@ class SearchViewModel : BaseViewModel() {
             .getHistory()
             .toObservable()
             .setSchedulers()
-            .safeSubscribeBy {
+            .unsafeSubscribeBy {
                 historyFromDB.value = it
             }
     }
@@ -40,7 +40,7 @@ class SearchViewModel : BaseViewModel() {
     fun delete(history: QAHistory) {
         Observable.just(history)
             .subscribeOn(Schedulers.io())
-            .safeSubscribeBy {
+            .unsafeSubscribeBy {
                 qaSearchHistoryDatabase.getHistoryDao()
                     .delete(history)
             }.lifeCycle()
@@ -51,7 +51,7 @@ class SearchViewModel : BaseViewModel() {
         Observable.create(ObservableOnSubscribe<Unit>(function = {
             it.onNext(dao.deleteAll())
         })).setSchedulers()
-            .safeSubscribeBy {
+            .unsafeSubscribeBy {
                 historyFromDB.value = mutableListOf()
             }
     }
@@ -59,7 +59,7 @@ class SearchViewModel : BaseViewModel() {
     fun update(history: QAHistory) {
         Observable.just(history)
             .subscribeOn(Schedulers.io())
-            .safeSubscribeBy {
+            .unsafeSubscribeBy {
                 qaSearchHistoryDatabase.getHistoryDao().update(history)
             }.lifeCycle()
 
@@ -68,7 +68,7 @@ class SearchViewModel : BaseViewModel() {
     fun insert(history: QAHistory) {
         Observable.just(history)
             .subscribeOn(Schedulers.io())
-            .safeSubscribeBy {
+            .unsafeSubscribeBy {
                 qaSearchHistoryDatabase.getHistoryDao().insertHistory(it)
             }.lifeCycle()
 
@@ -78,7 +78,7 @@ class SearchViewModel : BaseViewModel() {
         ApiGenerator.getApiService(ApiServiceNew::class.java)
             .getSearchHotWord()
             .setSchedulers()
-            .safeSubscribeBy {
+            .unsafeSubscribeBy {
                 if (it.status == 200) {
                     LogUtils.d("zt", "获取热词成功")
                     searchHotWords.value = it.data.hotWords

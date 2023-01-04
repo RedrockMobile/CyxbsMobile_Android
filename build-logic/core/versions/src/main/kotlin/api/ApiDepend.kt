@@ -1,4 +1,4 @@
-package com.mredrock.cyxbs.convention.depend.api
+
 
 import org.gradle.api.Project
 import api.utils.ApiDependUtils

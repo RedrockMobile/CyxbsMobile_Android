@@ -8,7 +8,7 @@ import androidx.databinding.ViewDataBinding
 import androidx.viewbinding.ViewBinding
 import com.mredrock.cyxbs.lib.base.BuildConfig
 import com.mredrock.cyxbs.lib.utils.extensions.lazyUnlock
-import com.mredrock.cyxbs.lib.utils.utils.get.GenericityUtils.getGenericClassFromSuperClass
+import com.mredrock.cyxbs.lib.utils.utils.get.GenericityUtils.getGenericClass
 
 /**
  *
@@ -36,7 +36,7 @@ abstract class BaseBindActivity<VB : ViewBinding> : BaseActivity() {
   
   @Suppress("UNCHECKED_CAST")
   protected val binding: VB by lazyUnlock {
-    val method = getGenericClassFromSuperClass<VB, ViewBinding>(javaClass).getMethod(
+    val method = getGenericClass<VB, ViewBinding>(javaClass).getMethod(
       "inflate",
       LayoutInflater::class.java
     )

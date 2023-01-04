@@ -102,7 +102,7 @@ class QuizViewModel : BaseViewModel() {
                             fileCaster(path)
                         }
                     }
-                    .safeSubscribeBy {
+                    .unsafeSubscribeBy {
                         it?.let { list ->
                             list.forEachIndexed { index, pair ->
                                 val suffix =
@@ -138,7 +138,7 @@ class QuizViewModel : BaseViewModel() {
                             fileCaster(path)
                         }
                     }
-                    .safeSubscribeBy {
+                    .unsafeSubscribeBy {
                         it?.let { list ->
                             list.forEachIndexed { index, pair ->
                                 val suffix =
@@ -182,7 +182,7 @@ class QuizViewModel : BaseViewModel() {
                 }
                 backAndRefreshPreActivityEvent.value = true
             }
-            .safeSubscribeBy {
+            .unsafeSubscribeBy {
                 isReleaseSuccess = true
                 toastEvent.value = R.string.qa_release_dynamic_success
                 backAndRefreshPreActivityEvent.value = true
@@ -210,7 +210,7 @@ class QuizViewModel : BaseViewModel() {
                 toast(throwable.toString())
                 backAndRefreshPreActivityEvent.value = true
             }
-            .safeSubscribeBy {
+            .unsafeSubscribeBy {
                 isReleaseSuccess = true
                 toastEvent.value = R.string.qa_release_dynamic_success
                 backAndRefreshPreActivityEvent.value = true
@@ -239,7 +239,7 @@ class QuizViewModel : BaseViewModel() {
             .doOnError {
                 toastEvent.value = R.string.qa_get_draft_failure
             }
-            .safeSubscribeBy {
+            .unsafeSubscribeBy {
                 LogUtils.d("Gibson", it.toString())
                 //后端返回的json的images可能是[""]，会引起fileNotFind，这里要进行一次过滤
                 //判空的原因是后端还有可能返回的是null，不加就会空指针
@@ -262,7 +262,7 @@ class QuizViewModel : BaseViewModel() {
             .doOnError {
                 toastEvent.value = R.string.qa_delete_draft
             }
-            .safeSubscribeBy {
+            .unsafeSubscribeBy {
             }
     }
 
@@ -287,7 +287,7 @@ class QuizViewModel : BaseViewModel() {
                 backAndRefreshPreActivityEvent.value = true
 
             }
-            .safeSubscribeBy {
+            .unsafeSubscribeBy {
                 toastEvent.value = R.string.qa_save_draft_success
                 backAndRefreshPreActivityEvent.value = true
 
@@ -306,7 +306,7 @@ class QuizViewModel : BaseViewModel() {
         ApiGenerator.getApiService(ApiServiceNew::class.java)
             .getImageMaxSize()
             .setSchedulers()
-            .safeSubscribeBy {
+            .unsafeSubscribeBy {
                 fileMaxSize = it.data.image_limit * 1024 * 1024
             }
     }
@@ -345,7 +345,7 @@ class QuizViewModel : BaseViewModel() {
                 toastEvent.value = R.string.qa_release_comment_failure
                 finishReleaseCommentEvent.value = false
             }
-            .safeSubscribeBy {
+            .unsafeSubscribeBy {
                 toastEvent.value = R.string.qa_release_comment_success
                 finishReleaseCommentEvent.value = true
     
