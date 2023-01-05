@@ -1,4 +1,4 @@
-package com.mredrock.cyxbs.convention.depend.lib
+
 
 import org.gradle.api.Project
 import org.gradle.kotlin.dsl.apply

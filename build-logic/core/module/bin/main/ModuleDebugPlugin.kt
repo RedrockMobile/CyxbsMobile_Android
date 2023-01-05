@@ -1,8 +1,10 @@
+@file:Suppress("UnstableApiUsage")
+
 import api.utils.ApiDependUtils
-import com.mredrock.cyxbs.convention.depend.dependAndroidKtx
-import com.mredrock.cyxbs.convention.depend.dependAndroidView
-import com.mredrock.cyxbs.convention.depend.dependLifecycleKtx
-import com.mredrock.cyxbs.convention.depend.lib.LibDepend
+
+
+
+
 import org.gradle.api.Project
 import org.gradle.api.artifacts.ProjectDependency
 import org.gradle.kotlin.dsl.apply
