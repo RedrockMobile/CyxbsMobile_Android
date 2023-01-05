@@ -4,7 +4,7 @@ on:
     # 每小时检查
     - cron: '0 * * * *'
 jobs:
-  track_pr:
+  schedule:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
