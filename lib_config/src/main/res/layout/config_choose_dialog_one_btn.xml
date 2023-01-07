@@ -1,44 +1,39 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="300dp"
-    android:layout_height="178dp">
-    <!--注意这里设置宽和高本来只有修饰作用，是会失效的，请看22年上半年郭祥瑞的自定义View课件，里面有分析-->
+    android:layout_height="wrap_content">
 
     <ImageView
         android:id="@+id/config_iv_choose_dialog_one_btn_background"
-        android:layout_width="0dp"
-        android:layout_height="0dp"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
         tools:ignore="ContentDescription"
         tools:src="@drawable/config_shape_round_corner_dialog"/>
 
-    <TextView
+    <FrameLayout
         android:id="@+id/config_tv_choose_dialog_one_btn_content"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="50dp"
-        android:gravity="center"
-        android:textColor="@color/config_level_four_font_color"
-        android:textSize="13dp"
-        android:layout_marginLeft="25dp"
-        android:layout_marginRight="25dp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        tools:text="恭喜你购买成功❤，晚上兮哥哥会在床上等着你"
-        tools:ignore="SpUsage" />
+        android:layout_marginBottom="64dp"
+        android:tag="choose_dialog_content"
+        tools:layout_height="120dp">
+
+        <!--这里面填充内容-->
+        <!--可以使用 ChooseDialog，它默认填充了一个在合适位置显示的文本-->
+
+        <!--这个 layout_height = match 可以在根布局 layout_height = wrap 时实现实际却为 wrap 的效果-->
+        <!--这也是为什么使用多层嵌套的原因，ConstraintLayout 无法实现该效果-->
+
+    </FrameLayout>
 
     <com.google.android.material.button.MaterialButton
         android:id="@+id/config_btn_choose_dialog_one_btn_positive"
         android:layout_width="80dp"
         android:layout_height="34dp"
         android:layout_marginBottom="30dp"
+        android:layout_gravity="center|bottom"
         android:textColor="@android:color/white"
         android:textSize="14dp"
         android:theme="@style/Theme.MaterialComponents"
@@ -47,12 +42,9 @@
         android:padding="0dp"
         app:rippleColor="@android:color/transparent"
         app:cornerRadius="26dp"
-        app:layout_constraintBottom_toBottomOf="@+id/config_iv_choose_dialog_one_btn_background"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toRightOf="parent"
         tools:text="💕"
         style="@style/Widget.MaterialComponents.Button.UnelevatedButton"
         tools:ignore="SpUsage"
         tools:backgroundTint="@color/config_choose_dialog_btn_positive"/>
 
-</androidx.constraintlayout.widget.ConstraintLayout>
+</FrameLayout>

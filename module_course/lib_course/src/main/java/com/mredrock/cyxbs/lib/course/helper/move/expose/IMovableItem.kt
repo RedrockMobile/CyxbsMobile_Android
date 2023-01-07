@@ -23,19 +23,34 @@ interface IMovableItem : IItem {
   /**
    * 取消自身 View 的显示
    */
-  fun cancelShowView()
+  fun hideView()
+  
+  /**
+   * 显示 View
+   */
+  fun showView()
   
   /**
    * 得到用于移动的 View
    *
    * ## 注意
-   * - 该方法返回的 View 可以不用返回 [IItem.view]，返回其他 View 也是可行的
+   * - 该方法返回的 View 可以不用返回 [IItem.initializeView]，返回其他 View 也是可行的，但你应该返回相同样子的 View
    */
   fun createMovableView(): View
   
   /**
-   * 是否自动开启长按整体移动功能，反之则手动开启
+   * 是否允许开启长按整体移动功能
    */
-  val isAutoStartMove: Boolean
+  val isAllowMove: Boolean
     get() = true
+  
+  fun onMoveStart(view: View, initialX: Int, initialAbsoluteY: Int) {}
+  
+  fun onMoving(view: View, initialX: Int, initialAbsoluteY: Int, nowX: Int, nowAbsoluteY: Int) {}
+  
+  fun onMoveEnd(view: View, initialX: Int, initialAbsoluteY: Int, nowX: Int, nowAbsoluteY: Int) {}
+  
+  fun handleMove(view: View, initialX: Int, initialAbsoluteY: Int, nowX: Int, nowAbsoluteY: Int) {
+  
+  }
 }

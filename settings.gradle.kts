@@ -18,7 +18,7 @@ dependencyResolutionManagement {
   repositories {
     maven("$rootDir/build/maven") // 本地模块缓存文件夹
     google()
-    mavenCentral() // 优先 MavenCentral，一是：aliyun 镜像有坑；二是：不至于你 vpn 都没得吧
+    mavenCentral() // 优先 MavenCentral，一是：aliyun 镜像有坑；二是：开 VPN 访问 aliyun 反而变慢了
     maven("https://jitpack.io")
     // mavenCentral 快照仓库
     maven("https://s01.oss.sonatype.org/content/repositories/snapshots/")
@@ -66,3 +66,25 @@ rootDir.walk()
 /**
  * 每次新建模块会自动添加 include()，请删除掉，因为上面会自动读取
  */
+
+
+
+
+
+
+
+// 制作网址：http://patorjk.com/software/taag/
+val redrock = """
+  
+   _______                   __  _______                       __
+  |       \                 |  \|       \                     |  \      
+  | ▓▓▓▓▓▓▓\  ______    ____| ▓▓| ▓▓▓▓▓▓▓\  ______    _______ | ▓▓   __ 
+  | ▓▓__| ▓▓ /      \  /      ▓▓| ▓▓__| ▓▓ /      \  /       \| ▓▓  /  \
+  | ▓▓    ▓▓|  ▓▓▓▓▓▓\|  ▓▓▓▓▓▓▓| ▓▓    ▓▓|  ▓▓▓▓▓▓\|  ▓▓▓▓▓▓▓| ▓▓_/  ▓▓
+  | ▓▓▓▓▓▓▓\| ▓▓    ▓▓| ▓▓  | ▓▓| ▓▓▓▓▓▓▓\| ▓▓  | ▓▓| ▓▓      | ▓▓   ▓▓ 
+  | ▓▓  | ▓▓| ▓▓▓▓▓▓▓▓| ▓▓__| ▓▓| ▓▓  | ▓▓| ▓▓__/ ▓▓| ▓▓_____ | ▓▓▓▓▓▓\ 
+  | ▓▓  | ▓▓ \▓▓     \ \▓▓    ▓▓| ▓▓  | ▓▓ \▓▓    ▓▓ \▓▓     \| ▓▓  \▓▓\
+   \▓▓   \▓▓  \▓▓▓▓▓▓▓  \▓▓▓▓▓▓▓ \▓▓   \▓▓  \▓▓▓▓▓▓   \▓▓▓▓▓▓▓ \▓▓   \▓▓
+
+""".trimIndent()
+println(redrock)

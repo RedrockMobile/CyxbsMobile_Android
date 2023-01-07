@@ -44,19 +44,19 @@
         <categories android:name="android.shortcut.conversation" />
     </shortcut>
 
-    <shortcut
-        android:enabled="true"
-        android:icon="@drawable/main_ic_empty_room"
-        android:shortcutDisabledMessage="@string/main_shortcut_cancel"
-        android:shortcutId="emptyRoom"
-        android:shortcutLongLabel="@string/main_empty_room_long_name"
-        android:shortcutShortLabel="@string/main_empty_room_short_name">
+<!--    <shortcut-->
+<!--        android:enabled="true"-->
+<!--        android:icon="@drawable/main_ic_empty_room"-->
+<!--        android:shortcutDisabledMessage="@string/main_shortcut_cancel"-->
+<!--        android:shortcutId="emptyRoom"-->
+<!--        android:shortcutLongLabel="@string/main_empty_room_long_name"-->
+<!--        android:shortcutShortLabel="@string/main_empty_room_short_name">-->
 
-        <intent
-            android:action="android.intent.action.EMPTYROOM"
-            android:targetClass="com.mredrock.cyxbs.main.ui.main.MainActivity"
-            android:targetPackage="com.mredrock.cyxbs" />
-        <categories android:name="android.shortcut.conversation" />
-    </shortcut>
+<!--        <intent-->
+<!--            android:action="android.intent.action.EMPTYROOM"-->
+<!--            android:targetClass="com.mredrock.cyxbs.main.ui.main.MainActivity"-->
+<!--            android:targetPackage="com.mredrock.cyxbs" />-->
+<!--        <categories android:name="android.shortcut.conversation" />-->
+<!--    </shortcut>-->
 
 </shortcuts>

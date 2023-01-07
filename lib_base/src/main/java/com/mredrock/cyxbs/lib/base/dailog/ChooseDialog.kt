@@ -1,313 +1,98 @@
 package com.mredrock.cyxbs.lib.base.dailog
 
-import android.content.DialogInterface
-import android.graphics.Color
-import android.graphics.drawable.ColorDrawable
-import android.os.Bundle
-import android.view.LayoutInflater
+import android.content.Context
+import android.util.SizeF
+import android.view.Gravity
 import android.view.View
 import android.view.ViewGroup
-import android.widget.ImageView
+import android.widget.FrameLayout
 import android.widget.TextView
 import androidx.annotation.ColorRes
 import androidx.annotation.DrawableRes
-import androidx.core.content.ContextCompat
-import androidx.fragment.app.*
-import androidx.lifecycle.*
-import com.google.android.material.button.MaterialButton
 import com.mredrock.cyxbs.config.R
-import kotlinx.coroutines.flow.MutableSharedFlow
-import kotlinx.coroutines.flow.launchIn
-import kotlinx.coroutines.flow.onEach
-import kotlinx.coroutines.launch
+import com.mredrock.cyxbs.lib.utils.extensions.color
+import com.mredrock.cyxbs.lib.utils.extensions.dp2px
 
 /**
- * 由于掌邮的 Dialog 都长一个样，特意封装了一下
+ * 封装了只有单按钮和双按钮的 dialog，自带圆角，符合大部分视觉需要的场景
  *
- * 功能有：
- * - 自动管理 Fragment 的生命周期问题
+ * ## 用法
+ * ```
+ * ChooseDialog.Builder(
+ *     context,
+ *     ChooseDialog.Data(
+ *         content = "你已有一位关联的同学\n确定要替换吗？",
+ *         width = 255.dp2px,
+ *         height = 167.dp2px
+ *     )
+ * ).setPositiveClick {
+ *     // 点击确认按钮
+ * }.setNegativeClick {
+ *     // 点击取消按钮
+ * }.setDismissCallback {
+ *     // dialog 被关闭时的回调，包含返回键
+ * }.setCancelCallback {
+ *     // 使用返回键关闭 dialog 的回调
+ * }.show()
+ * ```
  *
- * 注意事项：
- * - 构造器本来是该设置成 private，但因为系统重建 Fragment 只能反射调用公开的无参构造器，所以只能使用 internal
- * - 不设置成 abstract 或者 open class，是为了防止不正确的使用 Fragment
- * - 不建议之后修改代码，将 [ChooseDialog] 对象向外提供，正确做法是将回调设置在 [ChooseDialogViewModel] 中
+ * ## 我的 dialog 需要带有一个标题 ? 一个输入框 ?
+ * 你可以参考 module_login 中的 UserAgreementDialog，他是我写的带有标题的一个示例。
+ * 如果你还有其他扩展需求，可以继承 ChooseDialog 或者 BaseDialog 进行自定义
  *
- * 必须调用 [Builder.show] 才能展示
+ * ## 为什么不用 DialogFragment ?
+ * 虽然官方推荐使用 DialogFragment，但是 Fragment 与父容器通信很麻烦，并且目前掌邮强制竖屏，所以不打算使用 DialogFragment
+ *
+ * ## DialogFragment 推荐用法
+ * DialogFragment 主要有两个坑
+ * - Fragment 重建导致的数据丢失问题
+ * - Fragment 不好与父容器直接通信
+ *
+ * 问题一可以采用 ViewModel 或者 savedInstanceState 解决
+ * 问题二可以采用 ViewModel 或者 DialogFragment 直接 getActivity()/getParentFragment() 强转解决(强烈建议用接口约束下有哪些方法)
+ *
+ * ## 本 Dialog 可直接变为 DialogFragment
+ * DialogFragment 提供了 onCreateDialog(): Dialog 方法用于自定义 Dialog，如果有必要的话，可以重写该方法。
+ * 但请遵守 Fragment 的使用规范 (详细请查看飞书易错点文档)
  *
  * @author 985892345 (Guo Xiangrui)
  * @email 2767465918@qq.com
  * @date 2022/4/23 21:08
  */
-class ChooseDialog internal constructor(): DialogFragment() {
-
-  private val mViewModel: ChooseDialogViewModel by viewModels()
+open class ChooseDialog protected constructor(
+  context: Context,
+  positiveClick: (ChooseDialog.() -> Unit)? = null,
+  negativeClick: (ChooseDialog.() -> Unit)? = null,
+  dismissCallback: (ChooseDialog.() -> Unit)? = null,
+  cancelCallback: (ChooseDialog.() -> Unit)? = null,
+  data: Data,
+) : BaseDialog<ChooseDialog, ChooseDialog.Data>(
+  context,
+  positiveClick,
+  negativeClick,
+  dismissCallback,
+  cancelCallback,
+  data
+) {
   
-  override fun onCreate(savedInstanceState: Bundle?) {
-    super.onCreate(savedInstanceState)
-    // dismiss 事件应该交给 Fragment 整个生命周期来处理，而不是 View 的生命周期
-    // 所以写在 onCreate 中，并且使用 Fragment 的 lifecycle
-    lifecycleScope.launch {
-      mViewModel.dismissEvent
-        .collect {
-          this@ChooseDialog.dismiss()
-        }
-    }
-  }
-  
-  override fun onCreateView(
-    inflater: LayoutInflater,
-    container: ViewGroup?,
-    savedInstanceState: Bundle?
-  ): View {
-    // 取消 dialog 默认背景
-    dialog?.window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
-    return inflater.inflate(mViewModel.data.type.layoutId, container, false)
-  }
-  
-  override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-    /*
-    * 设置根布局的宽和高
-    * 这里设置是因为在 xml 中写的宽和高是会失效的，失效后会变成 wrap_content 值
-    * 失效原因请看 22 年上半年郭祥瑞的自定义 View 课件，里面有分析
-    * */
-    val lp = view.layoutParams
-    lp.width = mViewModel.data.width
-    lp.height = mViewModel.data.height
+  open class Builder(context: Context, data: Data) : BaseDialog.Builder<ChooseDialog, Data>(context, data) {
     
-    // 根据不同类型进行不同的设置
-    when (mViewModel.data.type) {
-      DialogType.ONR_BUT -> {
-        val ivBg: ImageView = view.findViewById(R.id.config_iv_choose_dialog_one_btn_background)
-        val tvContent: TextView = view.findViewById(R.id.config_tv_choose_dialog_one_btn_content)
-        val btnPositive: MaterialButton = view.findViewById(R.id.config_btn_choose_dialog_one_btn_positive)
-        ivBg.setImageResource(mViewModel.data.backgroundId)
-        tvContent.text = mViewModel.data.content
-        btnPositive.text = mViewModel.data.positiveButtonText
-        btnPositive.setBackgroundColor(
-          ContextCompat.getColor(requireContext(), mViewModel.data.positiveButtonColor))
-        btnPositive.setOnClickListener {
-          mViewModel.sendPositiveClick()
-        }
-      }
-      DialogType.TWO_BUT -> {
-        val ivBg: ImageView = view.findViewById(R.id.config_iv_choose_dialog_two_btn_background)
-        val tvContent: TextView = view.findViewById(R.id.config_tv_choose_dialog_two_btn_content)
-        val btnPositive: MaterialButton = view.findViewById(R.id.config_btn_choose_dialog_two_btn_positive)
-        val btnNegative: MaterialButton = view.findViewById(R.id.config_btn_choose_dialog_two_btn_negative)
-        ivBg.setImageResource(mViewModel.data.backgroundId)
-        tvContent.text = mViewModel.data.content
-        btnPositive.text = mViewModel.data.positiveButtonText
-        btnNegative.text = mViewModel.data.negativeButtonText
-        btnPositive.setBackgroundColor(
-          ContextCompat.getColor(requireContext(), mViewModel.data.positiveButtonColor))
-        btnNegative.setBackgroundColor(
-          ContextCompat.getColor(requireContext(), mViewModel.data.negativeButtonColor))
-        btnPositive.setOnClickListener {
-          mViewModel.sendPositiveClick()
-        }
-        btnNegative.setOnClickListener {
-          mViewModel.sendNegativeClick()
-        }
-      }
-    }
-  }
-  
-  override fun onCancel(dialog: DialogInterface) {
-    super.onCancel(dialog)
-    mViewModel.sendCancelCallback()
-  }
-
-  override fun onDismiss(dialog: DialogInterface) {
-    super.onDismiss(dialog)
-    mViewModel.sendDismissCallback()
-  }
-  
-  class Builder private constructor(
-    private val fragmentManager: FragmentManager,
-    private val lifecycle: Lifecycle
-  ) {
-    
-    constructor(
-      lifecycleOwner: LifecycleOwner
-    ) : this(
-      when (lifecycleOwner) {
-        is FragmentActivity -> lifecycleOwner.supportFragmentManager
-        is Fragment -> lifecycleOwner.childFragmentManager
-        else -> error("不支持该类型：${lifecycleOwner::class.simpleName}")
-      },
-      lifecycleOwner.lifecycle
-    )
-
-    private val mDialog: ChooseDialog
-
-    init {
-      val dialog = fragmentManager.findFragmentByTag(DIALOG_TAG)
-      mDialog = if (dialog is ChooseDialog) {
-        dialog // 说明之前已经初始化
-      } else {
-        ChooseDialog() // 说明没有初始化过
-      }
-    }
-  
-    /**
-     * 设置数据
-     */
-    fun setData(data: Data): Builder {
-      addOnceCallbackAfterCreated {
-        mDialog.mViewModel.data = data
-      }
-      return this
-    }
-  
-    /**
-     * 设置确定按钮的点击监听
-     */
-    fun setPositiveClick(click: IDialogProxy.() -> Unit): Builder {
-      addOnceCallbackAfterCreated {
-        mDialog.mViewModel
-          .positiveClick
-          .onEach {
-            click.invoke(it)
-          }.launchIn(lifecycle.coroutineScope)
-      }
-      return this
-    }
-  
-    /**
-     * 设置取消按钮的点击监听
-     */
-    fun setNegativeClick(click: IDialogProxy.() -> Unit): Builder {
-      addOnceCallbackAfterCreated {
-        mDialog.mViewModel
-          .negativeClick
-          .onEach {
-            click.invoke(it)
-          }.launchIn(lifecycle.coroutineScope)
-      }
-      return this
-    }
-  
-    /**
-     * 设置所有关闭 dialog 的回调, 包括调用 dismiss() 和 返回键
-     */
-    fun setDismissCallback(call: IDialogProxy.() -> Unit): Builder {
-      addOnceCallbackAfterCreated {
-        mDialog.mViewModel
-          .dismissCallback
-          .onEach {
-            call.invoke(it)
-          }.launchIn(lifecycle.coroutineScope)
-      }
-      return this
-    }
-  
-    /**
-     * 设置只包含返回键关闭 Dialog 的回调
-     */
-    fun setCancelCallback(call: IDialogProxy.() -> Unit): Builder {
-      // 只有在 Fragment 初始化后才能得到 ViewModel，所以只能这样设置监听
-      addOnceCallbackAfterCreated {
-        mDialog.mViewModel
-          .cancelCallback
-          .onEach {
-            call.invoke(it)
-          }.launchIn(lifecycle.coroutineScope)
-      }
-      return this
-    }
-  
-    /**
-     * 展示 Dialog
-     *
-     * 内部是 Fragment 较为正确的写法，不会出现 Fragment 被重复创建和 ViewModel 失效的问题
-     */
-    fun show() {
-      val dialog = fragmentManager.findFragmentByTag(DIALOG_TAG)
-      if (dialog is ChooseDialog) {
-        // 说明之前已经初始化，一般情况下只显示一个 dialog 即可，没必要再次提交
-      } else {
-        mDialog.show(fragmentManager, DIALOG_TAG) // 说明没有初始化过
-      }
-    }
-  
-    /**
-     * 添加一个在 DialogFragment 初始化后只会回调一次的回调，且回调后会立即取消该回调
-     *
-     * 为什么要这样？
-     * 1、ViewModel 只能在 Created 后才能使用
-     */
-    private fun addOnceCallbackAfterCreated(call: () -> Unit) {
-      // 只有在 Fragment 初始化后才能得到 ViewModel，所以只能这样设置监听
-      mDialog.lifecycle.addObserver(
-        object : LifecycleEventObserver {
-          override fun onStateChanged(source: LifecycleOwner, event: Lifecycle.Event) {
-            if (source.lifecycle.currentState >= Lifecycle.State.CREATED) {
-              call.invoke()
-              // 回调后就 remove 掉
-              mDialog.lifecycle.removeObserver(this)
-            }
-          }
-        }
+    override fun build(): ChooseDialog {
+      return ChooseDialog(
+        context,
+        positiveClick,
+        negativeClick,
+        dismissCallback,
+        cancelCallback,
+        data
       )
     }
-
-    companion object {
-      private const val DIALOG_TAG = "BaseDialog"
-      private const val LAST_LIFECYCLE = ""
-    }
-  }
-
-  internal class ChooseDialogViewModel : ViewModel(), IDialogProxy {
-    var data: Data = defaultData
-    
-    val dismissEvent = MutableSharedFlow<Unit>()
-    val positiveClick = MutableSharedFlow<IDialogProxy>()
-    val negativeClick = MutableSharedFlow<IDialogProxy>()
-    val dismissCallback = MutableSharedFlow<IDialogProxy>()
-    val cancelCallback = MutableSharedFlow<IDialogProxy>()
-
-    fun sendPositiveClick() {
-      viewModelScope.launch {
-        positiveClick.emit(this@ChooseDialogViewModel)
-      }
-    }
-    
-    fun sendNegativeClick() {
-      viewModelScope.launch {
-        negativeClick.emit(this@ChooseDialogViewModel)
-      }
-    }
-    
-    fun sendDismissCallback() {
-      viewModelScope.launch {
-        dismissCallback.emit(this@ChooseDialogViewModel)
-      }
-    }
-    
-    fun sendCancelCallback() {
-      viewModelScope.launch {
-        cancelCallback.emit(this@ChooseDialogViewModel)
-      }
-    }
-
-    companion object {
-      private val defaultData = Data()
-    }
-  
-    override fun dismiss() {
-      viewModelScope.launch {
-        dismissEvent.emit(Unit)
-      }
-    }
-  }
-  
-  // Dialog 的代理类
-  interface IDialogProxy {
-    fun dismiss()
   }
   
   /**
    * @param content dialog 的文本内容
+   * @param contentSize content 的字体大小
+   * @param contentGravity 文本的 gravity（是 TextView 的 gravity 属性，非 layout_gravity）
    * @param positiveButtonText 确定按钮文本
    * @param negativeButtonText 取消按钮文本
    * @param positiveButtonColor 确定按钮颜色
@@ -318,24 +103,43 @@ class ChooseDialog internal constructor(): DialogFragment() {
    */
   data class Data(
     val content: String = "弹窗内容为空",
-    val type: DialogType = DialogType.TWO_BUT,
-    val positiveButtonText: String = "确定",
-    val negativeButtonText: String = "取消",
+    val contentSize: Float = 13F,
+    val contentGravity: Int = Gravity.CENTER,
+    override val type: DialogType = DialogType.TWO_BUT,
+    override val positiveButtonText: String = "确定",
+    override val negativeButtonText: String = "取消",
     @ColorRes
-    val positiveButtonColor: Int = R.color.config_choose_dialog_btn_positive,
+    override val positiveButtonColor: Int = R.color.config_choose_dialog_btn_positive,
     @ColorRes
-    val negativeButtonColor: Int = R.color.config_choose_dialog_btn_negative,
-    val width: Int = ViewGroup.LayoutParams.WRAP_CONTENT,
-    val height: Int = ViewGroup.LayoutParams.WRAP_CONTENT,
+    override val negativeButtonColor: Int = R.color.config_choose_dialog_btn_negative,
+    override val width: Int = ViewGroup.LayoutParams.WRAP_CONTENT,
+    override val height: Int = ViewGroup.LayoutParams.WRAP_CONTENT,
     @DrawableRes
-    val backgroundId: Int = R.drawable.config_shape_round_corner_dialog
-  )
-
-  enum class DialogType(val layoutId: Int) {
-    // 只有一个 Button
-    ONR_BUT(R.layout.config_choose_dialog_one_btn),
-    // 有两个 Button
-    TWO_BUT(R.layout.config_choose_dialog_two_btn)
+    override val backgroundId: Int = R.drawable.config_shape_round_corner_dialog,
+    override val buttonSize: SizeF = BaseDialog.Data.buttonSize,
+  ) : BaseDialog.Data
+  
+  override fun createContentView(context: Context): View {
+    return TextView(context).apply {
+      layoutParams = FrameLayout.LayoutParams(
+        FrameLayout.LayoutParams.MATCH_PARENT,
+        FrameLayout.LayoutParams.MATCH_PARENT,
+        Gravity.CENTER
+      ).apply {
+        topMargin = 15.dp2px
+        bottomMargin = topMargin
+        leftMargin = 25.dp2px
+        rightMargin = leftMargin
+      }
+      setTextColor(R.color.config_level_four_font_color.color)
+      textSize = data.contentSize
+      gravity = data.contentGravity
+    }
+  }
+  
+  override fun initContentView(view: View) {
+    view as TextView
+    view.text = data.content
   }
 }
 

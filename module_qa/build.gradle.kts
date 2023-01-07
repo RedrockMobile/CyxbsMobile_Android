@@ -37,5 +37,4 @@ dependencies {
     implementation("com.github.MZCretin:ExpandableTextView:v1.6.1-x")
     
     implementation(Network.`converter-gson`)
-    implementation(Umeng.common)
 }

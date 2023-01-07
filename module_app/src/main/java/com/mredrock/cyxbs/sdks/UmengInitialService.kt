@@ -1,5 +1,6 @@
 package com.mredrock.cyxbs.sdks
 
+import android.content.Context
 import com.google.auto.service.AutoService
 import com.mredrock.cyxbs.BuildConfig
 import com.mredrock.cyxbs.init.InitialManager
@@ -7,6 +8,8 @@ import com.mredrock.cyxbs.init.InitialService
 import com.mredrock.cyxbs.lib.utils.extensions.appContext
 import com.mredrock.cyxbs.lib.utils.extensions.unsafeSubscribeBy
 import com.mredrock.cyxbs.lib.utils.utils.LogUtils
+import com.tencent.vasdolly.helper.ChannelReaderUtil
+import com.umeng.analytics.MobclickAgent
 import com.umeng.commonsdk.UMConfigure
 import com.umeng.message.PushAgent
 import com.umeng.message.api.UPushRegisterCallback
@@ -22,15 +25,15 @@ import io.reactivex.rxjava3.schedulers.Schedulers
 @AutoService(InitialService::class)
 class UmengInitialService : InitialService {
 
-    private val UMENG_CHANNEL = "official"
-
     override fun onMainProcess(manager: InitialManager) {
         //debug包开启log
         if (BuildConfig.DEBUG) {
             UMConfigure.setLogEnabled(true)
         }
         //预初始化 等待隐私策略同意后才进行真正的初始化
-        UMConfigure.preInit(appContext, BuildConfig.UM_APP_KEY, UMENG_CHANNEL)
+        UMConfigure.preInit(appContext, BuildConfig.UM_APP_KEY, getChannel(manager.application))
+        //手动采集选择，进行 BaseActivity 和 BaseFragment 中的页面埋点
+        MobclickAgent.setPageCollectionMode(MobclickAgent.PageMode.AUTO)
     }
 
     override fun onOtherProcess(manager: InitialManager) {
@@ -76,11 +79,13 @@ class UmengInitialService : InitialService {
         UMConfigure.init(
             context,
             BuildConfig.UM_APP_KEY,
-            UMENG_CHANNEL,
+            getChannel(manager.application),
             UMConfigure.DEVICE_TYPE_PHONE,
             BuildConfig.UM_PUSH_SECRET
         )
-
     }
 
+    private fun getChannel(context: Context): String {
+        return ChannelReaderUtil.getChannel(context) ?: "unknown"
+    }
 }

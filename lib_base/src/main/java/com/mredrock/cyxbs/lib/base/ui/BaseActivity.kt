@@ -10,11 +10,13 @@ import androidx.annotation.IdRes
 import androidx.core.view.WindowCompat
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentTransaction
+import androidx.lifecycle.DefaultLifecycleObserver
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleOwner
 import com.mredrock.cyxbs.lib.base.operations.OperationActivity
 import com.mredrock.cyxbs.lib.base.utils.IntentHelper
 import com.mredrock.cyxbs.lib.utils.extensions.isDaytimeMode
+import com.umeng.analytics.MobclickAgent
 
 /**
  * 绝对基础的抽象
@@ -184,4 +186,46 @@ abstract class BaseActivity : OperationActivity() {
    * 但对于使用 ARouter 时该写法并不能起到很大的帮助，但我个人不是很推荐需要传参的 ARouter 启动，不如直接 api 模块
    */
   inline fun <reified T : Any> intent() = IntentHelper(T::class.java) { intent }
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  init {
+    // Umeng 统计当前 Activity
+    super.getLifecycle().addObserver(
+      object : DefaultLifecycleObserver {
+        override fun onResume(owner: LifecycleOwner) {
+          MobclickAgent.onPageStart(javaClass.name)
+        }
+      
+        override fun onPause(owner: LifecycleOwner) {
+          MobclickAgent.onPageEnd(javaClass.name)
+        }
+      }
+    )
+  }
 }

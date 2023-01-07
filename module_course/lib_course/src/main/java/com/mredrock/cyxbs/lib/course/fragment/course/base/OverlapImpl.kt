@@ -109,6 +109,7 @@ abstract class OverlapImpl : FoldImpl(), IOverlapContainer {
   // 判断是否重复发送了 Runnable。你只管直接调用 tryPostRefreshOverlapRunnable() 即可，是否为重复调用由该变量判断
   private var _isPostRefreshOverlapRunnable = false
   
+  // 尝试发送重叠区域改变的 Runnable。这里面会将 mItemInFreeSet 保存的 item 尝试添加进 course
   private fun tryPostRefreshOverlapRunnable(): Boolean {
     if (!_isPostRefreshOverlapRunnable) {
       _isPostRefreshOverlapRunnable = true
@@ -120,7 +121,7 @@ abstract class OverlapImpl : FoldImpl(), IOverlapContainer {
         while (iterator.hasNext()) {
           val next = iterator.next()
           if (next.overlap.isAddIntoParent()) {
-            // 这里又会回调 OnItemExistListener
+            // 这里 addItem 又会回调 前面的 OnItemExistListener
             if (course.addItem(next)) {
               next.overlap.onAddIntoParentResult(true)
               iterator.remove()

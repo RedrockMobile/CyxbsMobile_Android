@@ -21,7 +21,7 @@ data class AffairData(
   val time: Int, // 提醒时间
   val title: String,
   val content: String,
-) : IAffairData, ICourseData {
+) : IAffairData, ICourseItemData {
   
   companion object DIFF : DiffUtil.ItemCallback<AffairData>() {
     override fun areItemsTheSame(oldItem: AffairData, newItem: AffairData): Boolean {

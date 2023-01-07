@@ -8,6 +8,8 @@ import android.view.View
 import androidx.annotation.CallSuper
 import androidx.annotation.DrawableRes
 import androidx.appcompat.app.AppCompatActivity
+import androidx.lifecycle.DefaultLifecycleObserver
+import androidx.lifecycle.LifecycleOwner
 import com.mredrock.cyxbs.api.account.IAccountService
 import com.mredrock.cyxbs.common.R
 import com.mredrock.cyxbs.common.component.JToolbar
@@ -17,6 +19,7 @@ import com.mredrock.cyxbs.common.service.ServiceManager
 import com.mredrock.cyxbs.common.utils.ActivityBindView
 import com.mredrock.cyxbs.common.utils.LogUtils
 import com.mredrock.cyxbs.common.utils.extensions.getDarkModeStatus
+import com.umeng.analytics.MobclickAgent
 import org.greenrobot.eventbus.EventBus
 
 
@@ -187,4 +190,27 @@ abstract class BaseActivity : AppCompatActivity() {
      * ```
      */
     protected fun <T: View> Int.view() = ActivityBindView<T>(this, this@BaseActivity)
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    init {
+        // Umeng 统计当前 Activity
+        super.getLifecycle().addObserver(
+            object : DefaultLifecycleObserver {
+                override fun onResume(owner: LifecycleOwner) {
+                    MobclickAgent.onPageStart(javaClass.name)
+                }
+            
+                override fun onPause(owner: LifecycleOwner) {
+                    MobclickAgent.onPageEnd(javaClass.name)
+                }
+            }
+        )
+    }
 }

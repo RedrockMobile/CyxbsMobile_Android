@@ -1,5 +1,6 @@
 package com.mredrock.cyxbs.course.page.course.ui.dialog.adapter.viewholder
 
+import android.annotation.SuppressLint
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -39,6 +40,7 @@ class TeaLessonVH(
     mRvClass.adapter = ClassRvAdapter()
   }
   
+  @SuppressLint("SetTextI18n")
   override fun onBindViewHolder(data: TeaLessonData) {
     mTvTitle.text = data.course.course
     mTvClassroom.text = data.course.classroom

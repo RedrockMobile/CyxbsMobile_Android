@@ -1,5 +1,6 @@
 package com.mredrock.cyxbs.lib.course.fragment.page.base
 
+import android.annotation.SuppressLint
 import android.os.Bundle
 import android.view.View
 import android.widget.TextView
@@ -65,6 +66,7 @@ abstract class WeekWrapperImpl : TodayImpl(), IWeekWrapper {
     nlWeek.syncColumnWeight(course) // 同步列比重
   }
   
+  @SuppressLint("SetTextI18n")
   override fun setMonth(monDay: Calendar) {
     val calendar = monDay.clone() as Calendar
     tvMonth.text = "${calendar.get(Calendar.MONTH) + 1}月"

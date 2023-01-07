@@ -11,12 +11,12 @@ import com.mredrock.cyxbs.lib.utils.extensions.appContext
 import com.mredrock.cyxbs.lib.utils.extensions.lazyUnlock
 
 /**
- *
+ * 课表 item 数据类
  *
  * @author 985892345
  * @date 2022/9/17 17:54
  */
-sealed interface ICourseData : IWeek, ISingleDayData {
+sealed interface ICourseItemData : IWeek, ISingleDayData {
   val hashDay: Int // 星期数，星期一为 0
   val beginLesson: Int // 开始节数，如：1、2 节课以 1 开始；3、4 节课以 3 开始，注意：中午是以 -1 开始，傍晚是以 -2 开始
   val period: Int // 长度

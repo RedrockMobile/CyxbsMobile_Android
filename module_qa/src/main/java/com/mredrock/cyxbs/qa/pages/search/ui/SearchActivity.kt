@@ -8,7 +8,6 @@ import android.view.inputmethod.EditorInfo
 import android.view.inputmethod.InputMethodManager
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentTransaction
-import com.mredrock.cyxbs.common.config.CyxbsMob
 import com.mredrock.cyxbs.common.mark.EventBusLifecycleSubscriber
 import com.mredrock.cyxbs.common.ui.BaseViewModelActivity
 import com.mredrock.cyxbs.common.utils.extensions.longToast
@@ -20,7 +19,6 @@ import com.mredrock.cyxbs.qa.pages.search.ui.callback.IKeyProvider
 import com.mredrock.cyxbs.qa.pages.search.ui.fragment.QuestionSearchedFragment
 import com.mredrock.cyxbs.qa.pages.search.ui.fragment.QuestionSearchingFragment
 import com.mredrock.cyxbs.qa.pages.search.viewmodel.SearchViewModel
-import com.umeng.analytics.MobclickAgent
 import kotlinx.android.synthetic.main.qa_activity_question_search.*
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
@@ -83,7 +81,7 @@ class SearchActivity : BaseViewModelActivity<SearchViewModel>(), EventBusLifecyc
                     turnToResult(v.text.toString())
                     viewModel.insert(QAHistory(v.text.toString(), System.currentTimeMillis()))
                 }
-                MobclickAgent.onEvent(this, CyxbsMob.Event.QA_SEARCH)
+//                MobclickAgent.onEvent(this, CyxbsMob.Event.QA_SEARCH) // 这个是 Umeng 埋点统计，因为邮问下架，所以已取消
             }
             false
         }

@@ -18,15 +18,17 @@ import com.mredrock.cyxbs.lib.utils.service.impl
 
 /**
  *
- * @param isHomeCourse 是否是主页课表
+ * @param isShowLink 是否是主页课表
  *
  * @author 985892345
  * @date 2022/9/17 18:00
  */
 class StuLessonVH(
   parent: ViewGroup,
-  private val isHomeCourse: Boolean
+  private val isShowLink: Boolean
 ) : CourseViewHolder<StuLessonData>(parent, R.layout.course_dialog_bottom_lesson_stu) {
+  
+  private var mData: StuLessonData? = null
   
   private val mTvTitle = findViewById<TextView>(R.id.course_tv_dialog_stu_course)
   private val mTvClassroom = findViewById<TextView>(R.id.course_tv_dialog_stu_classroom)
@@ -38,28 +40,33 @@ class StuLessonVH(
   
   @SuppressLint("SetTextI18n")
   override fun onBindViewHolder(data: StuLessonData) {
+    mData = data
     mTvTitle.text = data.course.course
     mTvClassroom.text = data.course.classroom
     mTvTeacher.text = data.course.teacher
     mTvRawWeek.text = data.course.rawWeek
     mTvTime.text = "${data.weekdayStr} ${data.durationStr}"
     mTvType.text = data.course.type
-    if (isHomeCourse) {
+    if (isShowLink) {
       if (data.stuNum != IAccountService::class.impl.getUserService().getStuNum()) {
         mIvLink.visible()
       } else {
         mIvLink.gone()
       }
     }
-    
+  }
+  
+  init {
     mTvClassroom.setOnSingleClickListener {
+      val data = mData ?: return@setOnSingleClickListener
       // 跳转至地图界面
       ServiceManager.activity(DISCOVER_MAP) {
         withString(COURSE_POS_TO_MAP, data.course.classroom)
       }
     }
-    
+  
     mIvLink.setOnSingleClickListener {
+      val data = mData ?: return@setOnSingleClickListener
       // 跳到查找关联人课表的界面
       FindLessonActivity.startByStuNum(it.context, data.stuNum)
     }

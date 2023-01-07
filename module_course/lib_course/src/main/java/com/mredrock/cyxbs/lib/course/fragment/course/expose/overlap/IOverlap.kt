@@ -3,7 +3,7 @@ package com.mredrock.cyxbs.lib.course.fragment.course.expose.overlap
 /**
  * 重叠相关的接口
  *
- * 请使用 [OverlapHelper] 来完成部分接口的默认实现
+ * 使用了 [OverlapHelper] 来完成部分接口的默认实现
  *
  * @author 985892345 (Guo Xiangrui)
  * @email guo985892345@foxmail.com
@@ -17,7 +17,7 @@ interface IOverlap {
    * ## 注意
    * - 这个回调是在把所有 Item 都添加完后的一个 Runnable 中调用的
    * - 你需要在这个回调判断是否能添加到父布局中
-   * - 但并不能保证就一定能添加进父布局中，因为有拦截机制
+   * - 即使你返回 true，并不能保证就一定能添加进父布局中，因为有拦截机制
    */
   fun isAddIntoParent(): Boolean
   
@@ -65,7 +65,9 @@ interface IOverlap {
   fun getAboveItem(row: Int, column: Int): IOverlapItem?
   
   /**
-   * 得到所有重叠在上面的 [IOverlapItem]
+   * 得到重叠在自身区域上的所有 [IOverlapItem]
+   * 注意：
+   * - 没有传递获取父级的重叠。每个 item 每一格上最多只有一个，所以这个该方法返回的最大长度就是自身的格数
    */
   fun getAboveItems(): List<IOverlapItem>
   
@@ -76,6 +78,8 @@ interface IOverlap {
   
   /**
    * 得到所有重叠在下面的 [IOverlapItem]
+   * 注意：
+   * - 没有传递获取子级的重叠
    */
   fun getBelowItems(): List<IOverlapItem>
 }

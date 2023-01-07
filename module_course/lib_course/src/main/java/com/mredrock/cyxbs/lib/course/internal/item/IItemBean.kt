@@ -9,16 +9,16 @@ import com.ndhzs.netlayout.attrs.INetBean
  * @email guo985892345@foxmail.com
  * @date 2022/8/18 15:42
  */
-interface IItemData : INetBean {
+interface IItemBean : INetBean {
 }
 
-inline fun IItemData.forEachColumn(crossinline block: (column: Int) -> Unit) {
+inline fun IItemBean.forEachColumn(crossinline block: (column: Int) -> Unit) {
   for (column in startColumn .. endColumn) {
     block.invoke(column)
   }
 }
 
-inline fun IItemData.forEachRow(crossinline block: (row: Int) -> Unit) {
+inline fun IItemBean.forEachRow(crossinline block: (row: Int) -> Unit) {
   for (row in startRow .. endRow) {
     block.invoke(row)
   }

@@ -3,7 +3,7 @@ package com.mredrock.cyxbs.lib.course.internal.view.course.lp
 import android.content.Context
 import android.util.AttributeSet
 import android.view.Gravity
-import com.mredrock.cyxbs.lib.course.internal.item.IItemData
+import com.mredrock.cyxbs.lib.course.internal.item.IItemBean
 import com.ndhzs.netlayout.attrs.NetLayoutParams
 
 /**
@@ -13,7 +13,7 @@ import com.ndhzs.netlayout.attrs.NetLayoutParams
  * @email guo985892345@foxmail.com
  * @date 2022/8/18 15:36
  */
-open class ItemLayoutParams : NetLayoutParams, IItemData {
+open class ItemLayoutParams : NetLayoutParams, IItemBean {
   
   constructor(
     c: Context,
@@ -21,7 +21,7 @@ open class ItemLayoutParams : NetLayoutParams, IItemData {
   ) : super(c, attrs)
   
   constructor(
-    data: IItemData,
+    data: IItemBean,
     width: Int = MATCH_PARENT,
     height: Int = MATCH_PARENT,
     gravity: Int = Gravity.CENTER,

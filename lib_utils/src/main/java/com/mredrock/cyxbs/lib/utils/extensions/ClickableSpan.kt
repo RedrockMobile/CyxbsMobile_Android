@@ -19,7 +19,16 @@ import java.lang.ref.WeakReference
  * @author 985892345
  * @date 2022/11/14 14:10
  */
-fun ClickableSpan.wrapByNoLeak(): ClickableSpan {
+fun ClickableSpan.wrapByNoLeak(view: View): ClickableSpan {
+  // 如果你在方法体中使用弱引用，就会导致这个 this 被回收，所以需要有一个跟生命周期相关的东西强引用 this
+  val list = view.getTag(73587853)
+  if (list !is MutableList<*>) {
+    view.setTag(73587853, mutableListOf(this))
+  } else {
+    @Suppress("UNCHECKED_CAST")
+    list as MutableList<ClickableSpan>
+    list.add(this)
+  }
   val weakReference = WeakReference(this)
   return object : ClickableSpan() {
     override fun onClick(widget: View) {
