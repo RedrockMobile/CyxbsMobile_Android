@@ -20,7 +20,8 @@ import kotlin.math.max
 import kotlin.math.min
 
 /**
- * .
+ * 整个核心机制是：
+ * onPointerTouchEvent -> mScrollRunnable -> invalidate -> mItemDecoration -> refreshTouchAffairView
  *
  * @author 985892345
  * @date 2022/9/20 17:11
@@ -28,7 +29,7 @@ import kotlin.math.min
 class CreateAffairHandler(
   val course: ICourseViewGroup,
   val affair: ITouchAffair,
-  val iTouch: ITouch
+  val iTouch: ICreateAffairHandler.TouchCallback
 ) : ICreateAffairHandler {
   
   private var mTopRow = 0 // Move 事件中选择区域的开始行数
@@ -63,6 +64,7 @@ class CreateAffairHandler(
     }
   }
   
+  // 用于刷新 TouchAffairView 长度的回调，在每一帧时进行回调
   private val mItemDecoration = object : ItemDecoration {
     override fun onDrawBelow(canvas: Canvas, view: View) {
       refreshTouchAffairView()
@@ -108,7 +110,8 @@ class CreateAffairHandler(
       }
       MOVE -> {
         if (mIsInLongPress) {
-          mScrollRunnable.startIfCan()
+          // 核心代码
+          mScrollRunnable.startIfCan() // 触发 mScrollRunnable 中的核心代码
           course.invalidate()
         } else {
           if (abs(x - mLastMoveX) > mTouchSlop
@@ -127,6 +130,7 @@ class CreateAffairHandler(
           mIsInLongPress = false // 重置
           mScrollRunnable.cancel()
           course.removeItemDecoration(mItemDecoration)
+          iTouch.onEnd(mPointerId, mInitialRow, mInitialColumn, mTopRow, mBottomRow, mTouchRow)
         } else {
           mLongPressRunnable.cancel()
           if (abs(x - mLastMoveX) <= mTouchSlop
@@ -134,7 +138,6 @@ class CreateAffairHandler(
           ) {
             // 这里说明移动的距离小于 mTouchSlop，但还是得把点击的事务给绘制上，但是只有一格
             affair.show(mTopRow, mBottomRow, mInitialColumn)
-            tryToastSingleRow()
           }
         }
       }
@@ -144,27 +147,12 @@ class CreateAffairHandler(
           mIsInLongPress = false // 重置
           mScrollRunnable.cancel()
           course.removeItemDecoration(mItemDecoration)
+          iTouch.onEnd(mPointerId, mInitialRow, mInitialColumn, mTopRow, mBottomRow, mTouchRow)
         } else {
           mLongPressRunnable.cancel()
         }
       }
     }
-  }
-  
-  /**
-   * 在只是单独点击时，只会生成长度为 1 的 [ITouchAffair]，
-   * 所以需要弹个 toast 来提示用户可以长按空白区域上下移动来生成更长的事务
-   * (不然可能他一直不知道怎么生成更长的事务)
-   */
-  private fun tryToastSingleRow() {
-    val sp = course.getContext().getSp("课表长按生成事务")
-    val times = sp.getInt("点击单行事务的次数", 0)
-    when (times) {
-      1, 5, 12 -> {
-        toast("可以长按空白处上下移动添加哦~")
-      }
-    }
-    sp.edit { putInt("点击单行事务的次数", times + 1) }
   }
   
   /**
@@ -215,9 +203,11 @@ class CreateAffairHandler(
       topRow = mTouchRow
       bottomRow = mInitialRow
     }
-    iTouch.onMove(mPointerId, mInitialRow, mInitialColumn, mTouchRow)
     if (topRow < mUpperRow) topRow = mUpperRow // 根据上限再次修正 topRow
     if (bottomRow > mLowerRow) bottomRow = mLowerRow // 根据下限再次修正 bottomRow
+    
+    iTouch.onMove(mPointerId, mInitialRow, mInitialColumn, topRow, bottomRow, mTouchRow)
+    
     if (topRow != mTopRow || bottomRow != mBottomRow) { // 避免不必要的刷新
       affair.refresh(mTopRow, mBottomRow, topRow, bottomRow)
       mTopRow = topRow
@@ -235,9 +225,10 @@ class CreateAffairHandler(
     
     override fun run() {
       if (isAllowScrollAndCalculateVelocity()) {
-        course.scrollCourseBy(velocity)
-        course.invalidate()
-        course.postOnAnimation(this)
+        // 核心运行代码
+        course.scrollCourseBy(velocity) // 滚动
+        course.invalidate() // 刷新，之后会回调 mItemDecoration
+        course.postOnAnimation(this) // 一直循环下去
       } else {
         isInScrolling = false
         velocity = 0
@@ -270,6 +261,10 @@ class CreateAffairHandler(
     private fun isAllowScrollAndCalculateVelocity(): Boolean {
       val absoluteY = course.getAbsoluteY(mPointerId)
       val moveBoundary = 100 // 移动的边界值
+      val minV = 6 // 最小速度
+      val maxV = 20 // 最大速度
+      // 速度最小为 6，最大为 20，与边界的差值成线性关系
+      
       // 向上滚动，即手指移到底部，需要显示下面的内容
       val isNeedScrollUp =
         absoluteY > course.getScrollHeight() - moveBoundary
@@ -284,11 +279,9 @@ class CreateAffairHandler(
       val isAllowScroll = isNeedScrollUp || isNeedScrollDown
       if (isAllowScroll) {
         velocity = if (isNeedScrollUp) {
-          // 速度最小为 6，最大为 20，与边界的差值成线性关系
-          min((absoluteY - (course.getScrollHeight() - moveBoundary)) / 10 + 6, 20)
+          min((absoluteY - (course.getScrollHeight() - moveBoundary)) / 10 + minV, maxV)
         } else {
-          // 速度最小为 6，最大为 20，与边界的差值成线性关系
-          -min(((moveBoundary - absoluteY) / 10 + 6), 20)
+          -min(((moveBoundary - absoluteY) / 10 + minV), maxV)
         }
       }
       return isAllowScroll
@@ -305,11 +298,5 @@ class CreateAffairHandler(
   
   override fun cancelShow() {
     affair.remove()
-  }
-  
-  interface ITouch {
-    fun onLongPressStart(pointerId: Int, initialRow: Int, initialColumn: Int)
-    fun onMove(pointerId: Int, initialRow: Int, initialColumn: Int, touchRow: Int)
-    fun onUp(pointerId: Int, initialRow: Int, initialColumn: Int)
   }
 }

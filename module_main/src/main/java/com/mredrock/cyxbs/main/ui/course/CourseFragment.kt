@@ -14,6 +14,7 @@ import com.mredrock.cyxbs.api.course.ICourseService
 import com.mredrock.cyxbs.config.route.COURSE_POS_TO_MAP
 import com.mredrock.cyxbs.config.route.DISCOVER_MAP
 import com.mredrock.cyxbs.lib.base.ui.BaseFragment
+import com.mredrock.cyxbs.lib.base.utils.Umeng
 import com.mredrock.cyxbs.lib.utils.extensions.*
 import com.mredrock.cyxbs.lib.utils.service.ServiceManager
 import com.mredrock.cyxbs.lib.utils.service.impl
@@ -71,6 +72,9 @@ class CourseFragment : BaseFragment() {
       if (mBottomSheet.isDraggable) {
         if (mBottomSheet.state == BottomSheetBehavior.STATE_COLLAPSED) {
           mBottomSheet.state = BottomSheetBehavior.STATE_EXPANDED
+          
+          // Umeng 埋点统计
+          Umeng.sendEvent(Umeng.Event.ClickCourseItem(true))
         }
       }
     }
@@ -185,6 +189,21 @@ class CourseFragment : BaseFragment() {
         }
       }
     )
+    
+    // 数据埋点操作。如果你想监听 BottomSheet，请写其他地方！！！
+    mBottomSheet.addBottomSheetCallback(
+      object : BottomSheetBehavior.BottomSheetCallback() {
+        override fun onStateChanged(bottomSheet: View, newState: Int) {
+          if (newState == BottomSheetBehavior.STATE_EXPANDED) {
+            // Umeng 统计课表显示
+            Umeng.sendEvent(Umeng.Event.CourseShow)
+          }
+        }
+        override fun onSlide(bottomSheet: View, slideOffset: Float) {
+        }
+      }
+    )
+    
     mActivityViewModel.courseBottomSheetExpand.observe {
       mBottomSheet.isHideable = false
       if (it == null) {

@@ -10,6 +10,7 @@ import com.mredrock.cyxbs.lib.course.internal.item.IItemContainer
 import com.mredrock.cyxbs.lib.course.item.affair.IAffairItem
 import com.mredrock.cyxbs.lib.course.item.lesson.ILessonItem
 import com.mredrock.cyxbs.lib.course.utils.forEachInline
+import java.util.*
 
 /**
  * 掌控 [ILessonItem] 和 [IAffairItem] 的容器
@@ -57,7 +58,7 @@ abstract class ContainerImpl : AbstractCourseBaseFragment(), ICourseContainer {
   }
   
   override fun getLessonSet(): Set<ILessonItem> {
-    return mLessons
+    return Collections.unmodifiableSet(mLessons)
   }
   
   
@@ -96,7 +97,7 @@ abstract class ContainerImpl : AbstractCourseBaseFragment(), ICourseContainer {
   }
   
   override fun getAffairSet(): Set<IAffairItem> {
-    return mAffairs
+    return Collections.unmodifiableSet(mAffairs)
   }
   
   /**

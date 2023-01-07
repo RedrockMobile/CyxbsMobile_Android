@@ -93,7 +93,7 @@ class LogLocalHelper(
 
     private fun getPassword(): String {
         var password = "1234567890123456"
-        val stuNum = ServiceManager.getService(IAccountService::class.java)
+        val stuNum = ServiceManager(IAccountService::class)
             .getUserService().getStuNum()
         if (stuNum.length < 16) {
             password = stuNum

@@ -11,9 +11,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.alibaba.android.arouter.facade.annotation.Route
 import com.google.android.material.tabs.TabLayoutMediator
-import com.mredrock.cyxbs.common.config.CyxbsMob
 import com.mredrock.cyxbs.common.config.QA_ENTRY
-import com.mredrock.cyxbs.common.event.RefreshQaEvent
 import com.mredrock.cyxbs.common.mark.EventBusLifecycleSubscriber
 import com.mredrock.cyxbs.common.utils.extensions.doIfLogin
 import com.mredrock.cyxbs.common.utils.extensions.setOnSingleClickListener
@@ -26,10 +24,7 @@ import com.mredrock.cyxbs.qa.pages.quiz.ui.QuizActivity
 import com.mredrock.cyxbs.qa.pages.search.ui.SearchActivity
 import com.mredrock.cyxbs.qa.pages.square.ui.activity.CircleDetailActivity
 import com.mredrock.cyxbs.qa.pages.square.ui.activity.CircleSquareActivity
-import com.umeng.analytics.MobclickAgent
 import kotlinx.android.synthetic.main.qa_fragment_dynamic.*
-import org.greenrobot.eventbus.Subscribe
-import org.greenrobot.eventbus.ThreadMode
 
 
 /**
@@ -132,7 +127,7 @@ class DynamicFragment : BaseDynamicFragment(), EventBusLifecycleSubscriber {
             handler.postDelayed(windowAlphaRunnable, 1000)
 
             SearchActivity.activityStart(this, hotWord.toString())
-            MobclickAgent.onEvent(context, CyxbsMob.Event.QA_SEARCH_RECOMMEND)
+//            MobclickAgent.onEvent(context, CyxbsMob.Event.QA_SEARCH_RECOMMEND) // 这个是 Umeng 埋点统计，因为邮问下架，所以已取消
         }
 
         viewFlipper.setFlipInterval(6555)
@@ -162,7 +157,8 @@ class DynamicFragment : BaseDynamicFragment(), EventBusLifecycleSubscriber {
         context?.doIfLogin("提问") {
 
             QuizActivity.activityStart(this, "发动态", REQUEST_LIST_REFRESH_ACTIVITY)
-            MobclickAgent.onEvent(context, CyxbsMob.Event.CLICK_ASK)
+            
+//            MobclickAgent.onEvent(context, CyxbsMob.Event.CLICK_ASK) // 这个是 Umeng 埋点统计，因为邮问下架，所以已取消
         }
     }
 
@@ -206,20 +202,4 @@ class DynamicFragment : BaseDynamicFragment(), EventBusLifecycleSubscriber {
             invalidateDynamicList()
         }
     }
-
-    @Subscribe(threadMode = ThreadMode.MAIN, sticky = true)
-    open fun refreshQuestionList(event: RefreshQaEvent) {
-    }
-//        if (isRvAtTop) {
-//            viewModel.apply {
-//                invalidateFocusList()
-//                invalidateRecommendList()
-//            }
-//        }
-//        else {
-//            focusFragment.qa_rv_dynamic_List_focus.smoothScrollToPosition(0)
-//            recommendFragment.qa_rv_dynamic_List_recommend.smoothScrollToPosition(0)
-//
-//        }
-//    }
 }

@@ -179,37 +179,7 @@ internal class AccountService : IAccountService {
     }
 
     inner class UserStateService : IUserStateService {
-        private val stateListeners: MutableList<IUserStateService.StateListener> = mutableListOf()
-    
-        @Deprecated(
-            "该方法不好管理生命周期，更建议使用 observeStateFlow()",
-            replaceWith = ReplaceWith("observeStateFlow()")
-        )
-        override fun addOnStateChangedListener(listener: (state: IUserStateService.UserState) -> Unit) {
-            stateListeners.add(object : IUserStateService.StateListener {
-                override fun onStateChanged(state: IUserStateService.UserState) {
-                    listener.invoke(state)
-                }
-            })
-        }
-    
-        @Deprecated(
-            "该方法不好管理生命周期，更建议使用 observeStateFlow()",
-            replaceWith = ReplaceWith("observeStateFlow()")
-        )
-        override fun addOnStateChangedListener(listener: IUserStateService.StateListener) {
-            stateListeners.add(listener)
-        }
-    
-        override fun removeStateChangedListener(listener: IUserStateService.StateListener) {
-            stateListeners.remove(listener)
-        }
-
-
-        override fun removeAllStateListeners() {
-            stateListeners.clear()
-        }
-    
+        
         private val userStateState = BehaviorSubject.create<IUserStateService.UserState>()
         private val userStateEvent = PublishSubject.create<IUserStateService.UserState>()
     
@@ -221,7 +191,6 @@ internal class AccountService : IAccountService {
         }
 
         private fun notifyAllStateListeners(state: IUserStateService.UserState) {
-            for (i in stateListeners) i.onStateChanged(state)
             userStateState.onNext(state)
             userStateEvent.onNext(state)
         }
@@ -266,9 +235,7 @@ internal class AccountService : IAccountService {
                 isLogin() -> IUserStateService.UserState.LOGIN
                 else -> IUserStateService.UserState.NOT_LOGIN
             }
-            Handler(Looper.getMainLooper()).post {
-                notifyAllStateListeners(state)
-            }
+            notifyAllStateListeners(state)
         }
         override fun refresh(): String? {
             val refreshToken = tokenWrapper?.refreshToken ?: return null
@@ -288,9 +255,6 @@ internal class AccountService : IAccountService {
                 defaultSp.edit {
                     putBoolean(SP_IS_TOURIST, isTouristMode)
                 }
-                Handler(Looper.getMainLooper()).post {
-                    notifyAllStateListeners(IUserStateService.UserState.REFRESH)
-                }
                 defaultSp.edit {
                     putLong(
                         SP_KEY_REFRESH_TOKEN_EXPIRED,
@@ -301,6 +265,7 @@ internal class AccountService : IAccountService {
                         System.currentTimeMillis() + SP_TOKEN_TIME
                     )
                 }
+                notifyAllStateListeners(IUserStateService.UserState.REFRESH)
                 data.token
             }
         }
@@ -354,9 +319,6 @@ internal class AccountService : IAccountService {
                 defaultSp.edit {
                     putBoolean(SP_IS_TOURIST, isTouristMode)
                 }
-                Handler(Looper.getMainLooper()).post {
-                    notifyAllStateListeners(IUserStateService.UserState.LOGIN)
-                }
                 defaultSp.edit {
                     putString(
                         SP_KEY_USER_V2,
@@ -371,6 +333,7 @@ internal class AccountService : IAccountService {
                         System.currentTimeMillis() + SP_TOKEN_TIME
                     )
                 }
+                notifyAllStateListeners(IUserStateService.UserState.LOGIN)
             } else {
                 apiWrapper?.apply {
                     throw ApiException(status, info)
@@ -391,9 +354,7 @@ internal class AccountService : IAccountService {
             // 通知 StuNum 更新
             (mUserService as UserService).emitStuNum(null)
             tokenWrapper = null
-            Handler(Looper.getMainLooper()).post {
-                notifyAllStateListeners(IUserStateService.UserState.NOT_LOGIN)
-            }
+            notifyAllStateListeners(IUserStateService.UserState.NOT_LOGIN)
         }
 
         //游客模式
@@ -402,9 +363,7 @@ internal class AccountService : IAccountService {
             defaultSp.edit {
                 putBoolean(SP_IS_TOURIST, isTouristMode)
             }
-            Handler(Looper.getMainLooper()).post {
-                notifyAllStateListeners(IUserStateService.UserState.TOURIST)
-            }
+            notifyAllStateListeners(IUserStateService.UserState.TOURIST)
         }
     }
 

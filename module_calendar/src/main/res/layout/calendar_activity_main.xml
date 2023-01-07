@@ -7,7 +7,7 @@
     android:fitsSystemWindows="true"
     android:orientation="vertical"
     android:background="@color/common_white_background"
-    tools:context="com.mredrock.cyxbs.discover.calendar.CalendarActivity">
+    tools:context=".CalendarActivity">
 
 
     <ScrollView

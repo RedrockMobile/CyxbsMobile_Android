@@ -25,7 +25,7 @@ class ReceiveActivity : AppCompatActivity() {
                 return
             } else {
                 // 跳转
-                ServiceManager.getService(IProtocolService::class.java).jump(uri.toString())
+                ServiceManager(IProtocolService::class).jump(uri.toString())
                 finish()
             }
         }

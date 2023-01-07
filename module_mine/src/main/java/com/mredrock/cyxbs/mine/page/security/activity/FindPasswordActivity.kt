@@ -31,7 +31,7 @@ import com.mredrock.cyxbs.mine.page.security.viewmodel.FindPasswordViewModel
 class FindPasswordActivity : BaseViewModelActivity<FindPasswordViewModel>() {
     //在此activity以及ViewModel中统一使用这个stuNumber来获取学号，以方便整体修改
     private var stuNumber =
-        ServiceManager.getService(IAccountService::class.java).getUserService().getStuNum()
+        ServiceManager(IAccountService::class).getUserService().getStuNum()
 
     //是否来自登陆界面
     private var isFromLogin = false

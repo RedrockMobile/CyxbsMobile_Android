@@ -6,23 +6,32 @@ import com.mredrock.cyxbs.lib.course.fragment.course.expose.fold.FoldState
 import com.mredrock.cyxbs.lib.course.fragment.course.expose.wrapper.ICourseWrapper
 import com.mredrock.cyxbs.lib.course.fragment.page.ICoursePage
 import com.mredrock.cyxbs.lib.course.internal.view.course.ICourseViewGroup
+import com.mredrock.cyxbs.lib.course.utils.forEachReversed
 import com.ndhzs.netlayout.touch.multiple.IPointerDispatcher
 import com.ndhzs.netlayout.touch.multiple.IPointerTouchHandler
 import com.ndhzs.netlayout.touch.multiple.event.IPointerEvent
 import com.ndhzs.netlayout.touch.multiple.event.IPointerEvent.Action.DOWN
 
 /**
- * .
+ * 长按生成事务的事件分发者
  *
  * @author 985892345
  * @date 2022/9/19 14:48
  */
 class CreateAffairDispatcher(
-  val page: ICoursePage
-) : IPointerDispatcher, CreateAffairHandler.ITouch {
+  val page: ICoursePage,
+) : IPointerDispatcher, ICreateAffairHandler.TouchCallback {
   
   fun setOnClickListener(onClick: ITouchAffair.() -> Unit) {
     mOnClickListener = onClick
+  }
+  
+  fun addTouchCallback(callback: ICreateAffairHandler.TouchCallback) {
+    mTouchCallbacks.add(callback)
+  }
+  
+  fun removeTouchCallback(callback: ICreateAffairHandler.TouchCallback) {
+    mTouchCallbacks.remove(callback)
   }
   
   init {
@@ -39,6 +48,7 @@ class CreateAffairDispatcher(
   private val mPointerHandlerPool = arrayListOf<ICreateAffairHandler>()
   private var mIsAllowIntercept = true
   private var mOnClickListener: (ITouchAffair.() -> Unit)? = null
+  private val mTouchCallbacks = arrayListOf<ICreateAffairHandler.TouchCallback>()
   
   override fun isPrepareToIntercept(event: IPointerEvent, view: ViewGroup): Boolean {
     val x = event.x.toInt()
@@ -46,7 +56,9 @@ class CreateAffairDispatcher(
     if (event.action == DOWN) {
       if (mIsAllowIntercept) {
         if (x > page.getTimelineEndWidth()) {
+          // 触摸位置大于左边时间轴的宽度时
           if (page.course.findPairUnderByXY(x, y) == null) {
+            // 当前触摸的是空白位置时才准备拦截，之后会立即回调 getInterceptHandler()
             return true
           }
         }
@@ -86,6 +98,7 @@ class CreateAffairDispatcher(
   
   private fun getFreeHandler(): ICreateAffairHandler {
     mPointerHandlerPool.forEach {
+      // 如果没有被使用，就直接 return
       if (!it.isInUse()) return it
     }
     val newHandler = ICreateAffairHandler.getImpl(
@@ -100,15 +113,48 @@ class CreateAffairDispatcher(
   }
   
   override fun onLongPressStart(pointerId: Int, initialRow: Int, initialColumn: Int) {
-  
+    mTouchCallbacks.forEachReversed { it.onLongPressStart(pointerId, initialRow, initialColumn) }
   }
   
-  override fun onMove(pointerId: Int, initialRow: Int, initialColumn: Int, touchRow: Int) {
+  override fun onMove(
+    pointerId: Int,
+    initialRow: Int,
+    initialColumn: Int,
+    topRow: Int,
+    bottomRow: Int,
+    touchRow: Int,
+  ) {
     unfoldNoonOrDuskIfNecessary(initialRow, touchRow)
+    mTouchCallbacks.forEachReversed {
+      it.onMove(
+        pointerId,
+        initialRow,
+        initialColumn,
+        topRow,
+        bottomRow,
+        touchRow
+      )
+    }
   }
   
-  override fun onUp(pointerId: Int, initialRow: Int, initialColumn: Int) {
-  
+  override fun onEnd(
+    pointerId: Int,
+    initialRow: Int,
+    initialColumn: Int,
+    topRow: Int,
+    bottomRow: Int,
+    touchRow: Int,
+  ) {
+    mTouchCallbacks.forEachReversed {
+      it.onEnd(
+        pointerId,
+        initialRow,
+        initialColumn,
+        topRow,
+        bottomRow,
+        touchRow
+      )
+    }
   }
   
   /**

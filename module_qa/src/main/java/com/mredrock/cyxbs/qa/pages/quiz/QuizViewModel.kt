@@ -187,7 +187,7 @@ class QuizViewModel : BaseViewModel() {
                 toastEvent.value = R.string.qa_release_dynamic_success
                 backAndRefreshPreActivityEvent.value = true
     
-                ServiceManager.getService(IStoreService::class.java)
+                ServiceManager(IStoreService::class)
                     .postTask(IStoreService.Task.PUBLISH_DYNAMIC, null) // 更新发布动态的任务
             }
     }
@@ -349,7 +349,7 @@ class QuizViewModel : BaseViewModel() {
                 toastEvent.value = R.string.qa_release_comment_success
                 finishReleaseCommentEvent.value = true
     
-                ServiceManager.getService(IStoreService::class.java)
+                ServiceManager(IStoreService::class)
                     .postTask(IStoreService.Task.POST_COMMENT, content) // 更新发送评论的任务
             }
     }

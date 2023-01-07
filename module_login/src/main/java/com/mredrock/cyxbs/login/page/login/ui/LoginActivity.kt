@@ -31,7 +31,6 @@ import com.mredrock.cyxbs.api.account.IAccountService
 import com.mredrock.cyxbs.api.update.IAppUpdateService
 import com.mredrock.cyxbs.config.route.MAIN_MAIN
 import com.mredrock.cyxbs.config.route.MINE_FORGET_PASSWORD
-import com.mredrock.cyxbs.config.sp.SP_FIRST_TIME_OPEN
 import com.mredrock.cyxbs.config.sp.SP_PRIVACY_AGREED
 import com.mredrock.cyxbs.config.sp.defaultSp
 import com.mredrock.cyxbs.lib.base.BaseApp
@@ -162,9 +161,9 @@ class LoginActivity : BaseActivity() {
     mTvForget.setOnSingleClickListener {
       ARouter.getInstance().build(MINE_FORGET_PASSWORD).navigation()
     }
-
-    //如果是第一次使用app并且没有同意过用户协议，自动打开用户协议页面
-    if (defaultSp.getBoolean(SP_FIRST_TIME_OPEN, true)) {
+  
+    if (!mViewModel.userAgreementIsCheck) {
+      // 显示用户协议 dialog
       showUserAgreement()
     }
 
@@ -187,7 +186,7 @@ class LoginActivity : BaseActivity() {
         /**去除连接下划线**/
         ds.isUnderlineText = false
       }
-    }.wrapByNoLeak() // 防止内存泄漏
+    }.wrapByNoLeak(mTvUserAgreement) // 防止内存泄漏
     val privacyClickSpan = object : ClickableSpan() {
       override fun onClick(widget: View) {
         val intent = Intent(this@LoginActivity, PrivacyActivity::class.java)
@@ -200,7 +199,7 @@ class LoginActivity : BaseActivity() {
         /**去除连接下划线**/
         ds.isUnderlineText = false
       }
-    }.wrapByNoLeak() // 防止内存泄漏
+    }.wrapByNoLeak(mTvUserAgreement) // 防止内存泄漏
     spannableString.setSpan(userAgreementClickSpan, 2, 8, Spannable.SPAN_EXCLUSIVE_INCLUSIVE)
     spannableString.setSpan(privacyClickSpan, 9, 16, Spannable.SPAN_EXCLUSIVE_INCLUSIVE)
 
@@ -273,26 +272,21 @@ class LoginActivity : BaseActivity() {
   }
 
   private fun showUserAgreement() {
-    UserAgreementDialog.show(
-      supportFragmentManager,
-      onNegativeClick = {
-        mViewModel.userAgreementIsCheck = false
-        BaseApp.baseApp.privacyDenied()
-        dismiss()
-        finish()
-      },
-      onPositiveClick = {
+    UserAgreementDialog.Builder(this)
+      .setPositiveClick {
         mViewModel.userAgreementIsCheck = true
         mLavCheck.playAnimation()
         BaseApp.baseApp.privacyAgree()
         dismiss()
         defaultSp.edit {
-          putBoolean(SP_FIRST_TIME_OPEN, false)
           putBoolean(SP_PRIVACY_AGREED, true)
-          commit()
         }
-      }
-    )
+      }.setNegativeClick {
+        mViewModel.userAgreementIsCheck = false
+        BaseApp.baseApp.privacyDenied()
+        dismiss()
+        finish()
+      }.show()
   }
 
   private fun checkDataCorrect(stuNum: String, idNum: String): Boolean {

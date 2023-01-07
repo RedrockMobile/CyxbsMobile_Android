@@ -13,6 +13,7 @@ import com.mredrock.cyxbs.lib.course.internal.item.forEachRow
 import com.mredrock.cyxbs.lib.utils.extensions.dimen
 import com.ndhzs.netlayout.attrs.NetLayoutParams
 import com.ndhzs.netlayout.view.NetLayout
+import java.util.Collections
 
 /**
  * 用于实现单列的可重叠 item
@@ -21,7 +22,7 @@ import com.ndhzs.netlayout.view.NetLayout
  * @email guo985892345@foxmail.com
  * @date 2022/8/26 17:00
  */
-abstract class AbstractOverlapSingleDayItem : IOverlapItem, OverlapHelper.IImpl, ISingleDayItem {
+abstract class AbstractOverlapSingleDayItem : IOverlapItem, OverlapHelper.IOverlapLogic, ISingleDayItem {
   
   /**
    * 创建子 View，这个 View 才是真正用于显示的
@@ -83,14 +84,14 @@ abstract class AbstractOverlapSingleDayItem : IOverlapItem, OverlapHelper.IImpl,
    * 得到使用 [createView] 生成但目前不在 [mView] 中显示的所有 view 集合的迭代器
    */
   fun getChildInFree(): List<View> {
-    return mChildInFree
+    return Collections.unmodifiableList(mChildInFree)
   }
   
   /**
    * 得到使用 [createView] 生成并在 [mView] 中显示的所有 view 集合的迭代器
    */
   fun getChildInParent(): List<View> {
-    return mChildInParent
+    return Collections.unmodifiableList(mChildInParent)
   }
   
   /**
@@ -151,12 +152,15 @@ abstract class AbstractOverlapSingleDayItem : IOverlapItem, OverlapHelper.IImpl,
   final override fun refreshOverlap() {
     // 这里需要重新设置一遍总行数，因为外面可能重新设置了 lp，但 mView 的属性与 lp 并没有相互绑定
     mView.setRowColumnCount(lp.rowCount, lp.columnCount)
+    // 刷新空闲区域
     refreshFreeArea()
+    // 移除掉多的子 View
     repeat(mChildInParent.size - mFreeAreaMap.size()) {
       val view = mChildInParent.removeLast()
       mView.removeView(view)
       mChildInFree.add(view)
     }
+    // 添加新的子 View
     repeat(mFreeAreaMap.size() - mChildInParent.size) {
       val view = mChildInFree.removeLastOrNull() ?: createView(mView.context)
       val params = view.layoutParams as? NetLayoutParams ?: createNetLayoutParams()

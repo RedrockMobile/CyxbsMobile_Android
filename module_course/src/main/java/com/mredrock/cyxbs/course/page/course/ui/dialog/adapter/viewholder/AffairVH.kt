@@ -25,6 +25,8 @@ class AffairVH(
   val dialog: DialogInterface
 ) : CourseViewHolder<AffairData>(parent, R.layout.course_dialog_bottom_affair) {
   
+  private var mData: AffairData? = null
+  
   private val mTvTitle = findViewById<TextView>(R.id.course_tv_dialog_affair_title)
   private val mTvContent = findViewById<TextView>(R.id.course_tv_dialog_affair_content)
   private val mTvDuration = findViewById<TextView>(R.id.course_tv_dialog_affair_duration)
@@ -33,10 +35,15 @@ class AffairVH(
   
   @SuppressLint("SetTextI18n")
   override fun onBindViewHolder(data: AffairData) {
+    mData = data
     mTvTitle.text = data.title
     mTvContent.text = data.content
     mTvDuration.text = "${data.weekStr} ${data.weekdayStr}   ${data.durationStr}"
+  }
+  
+  init {
     mBtnDelete.setOnSingleClickListener {
+      val data = mData ?: return@setOnSingleClickListener
       IAffairService::class.impl
         .deleteAffair(data.onlyId)
         .observeOn(AndroidSchedulers.mainThread())
@@ -46,6 +53,7 @@ class AffairVH(
         }
     }
     mBtnChange.setOnSingleClickListener {
+      val data = mData ?: return@setOnSingleClickListener
       IAffairService::class.impl
         .startActivityForEditActivity(data.onlyId)
       dialog.dismiss() // 因为修改过后数据会发生变动，所以这里直接取消 dialog 显示

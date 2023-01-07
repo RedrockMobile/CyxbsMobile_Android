@@ -23,7 +23,7 @@ abstract class BaseMoveItemWrapper(private val item: IMovableItem) {
     parent.getParent().requestDisallowInterceptTouchEvent(true)
     VibratorUtil.start(36) // 长按触发来个震动提醒
     
-    item.cancelShowView()
+    item.hideView()
     
     val moveView = item.createMovableView()
   }

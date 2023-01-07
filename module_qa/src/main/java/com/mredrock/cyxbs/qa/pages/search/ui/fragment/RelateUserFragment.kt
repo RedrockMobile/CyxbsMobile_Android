@@ -63,7 +63,7 @@ class RelateUserFragment private constructor() : BaseResultFragment() {
     override fun initData() {
         //获取搜索内容
         searchKey = (requireActivity() as IKeyProvider).getKey()
-        myRedid = ServiceManager.getService(IAccountService::class.java).getUserService().getRedid()
+        myRedid = ServiceManager(IAccountService::class).getUserService().getRedid()
         initObserve()
         initRecycler()
         initialed = true

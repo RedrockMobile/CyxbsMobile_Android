@@ -35,11 +35,12 @@ class DiscoverVolunteerFeedFragment : BaseFeedFragment<DiscoverVolunteerFeedView
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        val verifyService = ServiceManager(IAccountService::class).getVerifyService()
         //对登录状态判断
-        if (ServiceManager.getService(IAccountService::class.java).getVerifyService().isLogin()) {
+        if (verifyService.isLogin()) {
             setAdapter(VolunteerFeedUnbindAdapter())
         }
-        ServiceManager(IAccountService::class).getVerifyService()
+        verifyService
             .observeUserStateEvent()
             .asFlow()
             .onEach {
@@ -95,7 +96,7 @@ class DiscoverVolunteerFeedFragment : BaseFeedFragment<DiscoverVolunteerFeedView
     //onResume
     override fun onRefresh() {
         //首先判断是否登录，没登录，那直接return
-        if (!ServiceManager.getService(IAccountService::class.java).getVerifyService().isLogin()) {
+        if (!ServiceManager(IAccountService::class).getVerifyService().isLogin()) {
             return
         }
         //再判断vm是否有数据，有数据直接加载，再return

@@ -64,7 +64,7 @@ open class DynamicDetailViewModel : BaseViewModel() {
                 if (it == null) {
                     toast("帖子不存在或已删除")
                 }else {
-                    ServiceManager.getService(IStoreService::class.java)
+                    ServiceManager(IStoreService::class)
                         .postTask(IStoreService.Task.SEE_DYNAMIC, postId)
                 }
                 dynamic.postValue(it)
@@ -133,7 +133,7 @@ open class DynamicDetailViewModel : BaseViewModel() {
             }
             .unsafeSubscribeBy {
                 commentReleaseResult.postValue(it)
-                ServiceManager.getService(IStoreService::class.java)
+                ServiceManager(IStoreService::class)
                     .postTask(IStoreService.Task.POST_COMMENT, content) // 更新发送评论的任务
             }
     }

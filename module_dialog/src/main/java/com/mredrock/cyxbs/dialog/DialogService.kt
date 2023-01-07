@@ -9,9 +9,9 @@ import com.afollestad.materialdialogs.customview.getCustomView
 import com.alibaba.android.arouter.facade.annotation.Route
 import com.mredrock.cyxbs.dialog.webView.DialogJsInterface
 import com.mredrock.cyxbs.dialog.webView.DialogWebView
-import com.mredrock.api.dialog.DIALOG_SERVICE
-import com.mredrock.api.dialog.DialogWebEvent
-import com.mredrock.api.dialog.IDialogService
+import com.mredrock.cyxbs.api.dialog.DIALOG_SERVICE
+import com.mredrock.cyxbs.api.dialog.DialogWebEvent
+import com.mredrock.cyxbs.api.dialog.IDialogService
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.SharedFlow
 

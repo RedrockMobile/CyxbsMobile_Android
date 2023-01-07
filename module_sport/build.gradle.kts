@@ -1,7 +1,7 @@
 plugins {
     id("module-debug")
 }
-android.namespace = "com.mredrock.cyxbs.sport"
+
 
 dependApiLogin()
 dependApiAccount()

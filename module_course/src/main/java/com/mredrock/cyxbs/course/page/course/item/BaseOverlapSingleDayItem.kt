@@ -2,10 +2,11 @@ package com.mredrock.cyxbs.course.page.course.item
 
 import android.content.Context
 import android.view.View
-import com.mredrock.cyxbs.course.page.course.data.ICourseData
+import com.mredrock.cyxbs.course.page.course.data.ICourseItemData
 import com.mredrock.cyxbs.course.page.course.data.expose.IWeek
 import com.mredrock.cyxbs.course.page.course.item.view.IOverlapTag
 import com.mredrock.cyxbs.course.page.course.ui.dialog.CourseBottomDialog
+import com.mredrock.cyxbs.lib.base.utils.Umeng
 import com.mredrock.cyxbs.lib.course.fragment.course.expose.overlap.IOverlapItem
 import com.mredrock.cyxbs.lib.course.internal.item.forEachRow
 import com.mredrock.cyxbs.lib.course.item.single.AbstractOverlapSingleDayItem
@@ -71,35 +72,49 @@ where V : View, V :IOverlapTag, D : ISingleDayData, D : IWeek // 用于提醒子
     super.onInitializeView(view)
     // 设置点击事件，这里把 course 模块中所有的 item 都统一设置了
     val itemData = data
-    if (itemData is ICourseData) {
+    if (itemData is ICourseItemData) {
+      /*
+      * item 的点击事件统一在这里设置
+      * */
       view.setOnSingleClickListener {
-        val treeSet = TreeSet<BaseOverlapSingleDayItem<*, *>> { o1, o2 ->
-          o2.compareTo(o1) // 这里需要逆序
-        }
-        treeSet.add(this) // 别忘了添加自己
-        lp.forEachRow { row ->
-          // 寻找重叠在下面的所有 item
-          var item = overlap.getBelowItem(row, lp.singleColumn)
-          while (item != null) {
-            if (item is BaseOverlapSingleDayItem<*, *>) {
-              treeSet.add(item)
-            }
-            item = item.overlap.getBelowItem(row, lp.singleColumn)
-          }
-        }
-        mLastShowDialog?.dismiss()
-        CourseBottomDialog(
-          it.context,
-          treeSet.mapNotNull { item ->
-            item.data as? ICourseData
-          },
-          isHomeCourseItem
-        ).apply {
-          mLastShowDialog = this
-          show()
-        }
+        showCourseBottomDialog()
       }
     }
+  }
+  
+  /**
+   * 显示点击课表 item 后的 [CourseBottomDialog]
+   */
+  protected open fun showCourseBottomDialog() {
+    val context = getView()?.context ?: return
+    val treeSet = TreeSet<BaseOverlapSingleDayItem<*, *>> { o1, o2 ->
+      o2.compareTo(o1) // 这里需要逆序
+    }
+    treeSet.add(this) // 别忘了添加自己
+    lp.forEachRow { row ->
+      // 寻找重叠在下面的所有 item
+      var item = overlap.getBelowItem(row, lp.singleColumn)
+      while (item != null) {
+        if (item is BaseOverlapSingleDayItem<*, *>) {
+          treeSet.add(item)
+        }
+        item = item.overlap.getBelowItem(row, lp.singleColumn)
+      }
+    }
+    mLastShowDialog?.dismiss()
+    CourseBottomDialog(
+      context,
+      treeSet.mapNotNull { item ->
+        item.data as? ICourseItemData
+      },
+      isHomeCourseItem
+    ).apply {
+      mLastShowDialog = this
+      show()
+    }
+  
+    // Umeng 埋点统计
+    Umeng.sendEvent(Umeng.Event.ClickCourseItem(false))
   }
   
   final override val weekNum: Int

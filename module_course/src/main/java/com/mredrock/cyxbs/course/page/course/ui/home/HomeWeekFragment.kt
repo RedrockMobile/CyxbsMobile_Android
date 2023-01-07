@@ -2,6 +2,7 @@ package com.mredrock.cyxbs.course.page.course.ui.home
 
 import android.os.Bundle
 import android.view.View
+import androidx.core.content.edit
 import androidx.core.os.bundleOf
 import androidx.fragment.app.createViewModelLazy
 import androidx.lifecycle.distinctUntilChanged
@@ -17,8 +18,11 @@ import com.mredrock.cyxbs.course.page.course.utils.container.LinkLessonContainer
 import com.mredrock.cyxbs.course.page.course.utils.container.SelfLessonContainerProxy
 import com.mredrock.cyxbs.lib.course.fragment.page.CourseWeekFragment
 import com.mredrock.cyxbs.lib.course.helper.affair.CreateAffairDispatcher
+import com.mredrock.cyxbs.lib.course.helper.affair.ICreateAffairHandler
+import com.mredrock.cyxbs.lib.course.helper.affair.ITouchAffair
 import com.mredrock.cyxbs.lib.course.internal.item.IItem
 import com.mredrock.cyxbs.lib.course.internal.item.IItemContainer
+import com.mredrock.cyxbs.lib.utils.extensions.getSp
 import com.mredrock.cyxbs.lib.utils.service.impl
 import com.mredrock.cyxbs.lib.utils.utils.judge.NetworkUtil
 import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
@@ -118,8 +122,44 @@ class HomeWeekFragment : CourseWeekFragment() {
             .startActivityForAddAffair(mWeek, lp.weekNum - 1, getBeginLesson(lp.startRow), lp.length)
           remove()
         }
+        addTouchCallback(
+          object : ICreateAffairHandler.TouchCallback {
+            override fun onEnd(
+              pointerId: Int,
+              initialRow: Int,
+              initialColumn: Int,
+              topRow: Int,
+              bottomRow: Int,
+              touchRow: Int,
+            ) {
+              if (bottomRow == topRow) {
+                tryToastSingleRow()
+              }
+            }
+  
+            /**
+             * 在只是单独点击时，只会生成长度为 1 的 [ITouchAffair]，
+             * 所以需要弹个 toast 来提示用户可以长按空白区域上下移动来生成更长的事务
+             * (不然可能他一直不知道怎么生成更长的事务)
+             */
+            private fun tryToastSingleRow() {
+              val sp = course.getContext().getSp("课表长按生成事务")
+              val times = sp.getInt("点击单行事务的次数", 0)
+              when (times) {
+                1, 5, 12 -> {
+                  toast("可以长按空白处上下移动添加哦~")
+                }
+              }
+              sp.edit { putInt("点击单行事务的次数", times + 1) }
+            }
+          }
+        )
       }
     )
+  }
+  
+  override fun isExhibitionItem(item: IItem): Boolean {
+    return super.isExhibitionItem(item) || item is ITouchAffair
   }
   
   /**

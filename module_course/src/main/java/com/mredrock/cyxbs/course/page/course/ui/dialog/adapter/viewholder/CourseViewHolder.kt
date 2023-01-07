@@ -6,7 +6,7 @@ import android.view.ViewGroup
 import androidx.annotation.IdRes
 import androidx.annotation.LayoutRes
 import androidx.recyclerview.widget.RecyclerView
-import com.mredrock.cyxbs.course.page.course.data.ICourseData
+import com.mredrock.cyxbs.course.page.course.data.ICourseItemData
 
 /**
  *
@@ -14,7 +14,7 @@ import com.mredrock.cyxbs.course.page.course.data.ICourseData
  * @author 985892345
  * @date 2022/9/17 17:59
  */
-sealed class CourseViewHolder<T: ICourseData>(
+sealed class CourseViewHolder<T: ICourseItemData>(
   parent: ViewGroup,
   @LayoutRes layoutId: Int
 ) : RecyclerView.ViewHolder(

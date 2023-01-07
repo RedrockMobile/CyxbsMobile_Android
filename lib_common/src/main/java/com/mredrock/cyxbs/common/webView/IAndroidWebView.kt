@@ -82,7 +82,7 @@ abstract class IAndroidWebView(
      */
     @JavascriptInterface
     open fun getStu(): String {
-        return ServiceManager.getService(IAccountService::class.java).getUserService().getStuNum()
+        return ServiceManager(IAccountService::class).getUserService().getStuNum()
     }
 
     @JavascriptInterface

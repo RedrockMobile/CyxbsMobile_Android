@@ -3,8 +3,8 @@ package com.mredrock.cyxbs.sdks
 import com.google.auto.service.AutoService
 import com.mredrock.cyxbs.BuildConfig
 import com.mredrock.cyxbs.api.account.IAccountService
-import com.mredrock.cyxbs.api.init.InitialManager
-import com.mredrock.cyxbs.api.init.InitialService
+import com.mredrock.cyxbs.init.InitialManager
+import com.mredrock.cyxbs.init.InitialService
 import com.mredrock.cyxbs.lib.utils.service.impl
 import com.tencent.bugly.Bugly
 import com.tencent.bugly.crashreport.CrashReport

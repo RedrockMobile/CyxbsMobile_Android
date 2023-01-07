@@ -151,7 +151,7 @@ class IdentityAdapter(val list:List<AuthenticationStatus.Data>, val context: Con
                 override fun onClick(widget: View) {
                         ARouter.getInstance().build(STORE_ENTRY).navigation()
                 }
-            }.wrapByNoLeak(), start, end, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE)
+            }.wrapByNoLeak(v), start, end, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE)
         }
         v.text = spannableString
 

@@ -119,7 +119,7 @@ class AboutActivity : BaseViewModelActivity<AboutViewModel>()  {
 
     private fun clickUpdate() {
         selfUpdateCheck = true
-        ServiceManager.getService(IAppUpdateService::class.java).apply {
+        ServiceManager(IAppUpdateService::class).apply {
             when (getUpdateStatus().value) {
                 AppUpdateStatus.DATED -> {
                     noticeUpdate(this@AboutActivity)
@@ -149,7 +149,7 @@ class AboutActivity : BaseViewModelActivity<AboutViewModel>()  {
 
     private var selfUpdateCheck = false
     private fun bindUpdate() {
-        ServiceManager.getService(IAppUpdateService::class.java).apply {
+        ServiceManager(IAppUpdateService::class).apply {
             getUpdateStatus().observe {
                 when (it) {
                     AppUpdateStatus.UNCHECK -> checkUpdate()

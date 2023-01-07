@@ -32,7 +32,7 @@ class FanActivity : BaseActivity() {
     private val mine_fan_btn_back by R.id.mine_fan_btn_back.view<ImageButton>()
 
     private val userService: IUserService by lazy {
-        ServiceManager.getService(IAccountService::class.java).getUserService()
+        ServiceManager(IAccountService::class).getUserService()
     }
 
     companion object {

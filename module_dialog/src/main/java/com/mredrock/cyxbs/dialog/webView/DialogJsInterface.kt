@@ -14,8 +14,8 @@ import android.webkit.*
 import androidx.annotation.Keep
 import androidx.lifecycle.*
 import com.alibaba.android.arouter.launcher.ARouter
-import com.mredrock.api.dialog.DialogWebEvent
-import com.mredrock.api.dialog.IDialogService
+import com.mredrock.cyxbs.api.dialog.DialogWebEvent
+import com.mredrock.cyxbs.api.dialog.IDialogService
 import com.mredrock.cyxbs.api.account.IAccountService
 import com.mredrock.cyxbs.dialog.DialogService
 import com.mredrock.cyxbs.dialog.activity.PhotoActivity

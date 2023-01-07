@@ -131,7 +131,7 @@ class HomepageActivity : BaseViewModelActivity<MineViewModel>() {
         )
     }
     private val userService: IUserService by lazy {
-        ServiceManager.getService(IAccountService::class.java).getUserService()
+        ServiceManager(IAccountService::class).getUserService()
     }
 
     private val cameraImageFile by lazy { File(getExternalFilesDir(Environment.DIRECTORY_DCIM)?.absolutePath + File.separator + System.currentTimeMillis() + ".png") }

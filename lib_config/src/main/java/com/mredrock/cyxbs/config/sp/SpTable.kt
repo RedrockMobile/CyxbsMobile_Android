@@ -23,8 +23,5 @@ val defaultSp: SharedPreferences
 // 隐私条例是否同意
 const val SP_PRIVACY_AGREED = "privacy_agreed"
 
-// 第一次安装的标志，默认或者更新之后就会置为true
-const val SP_FIRST_TIME_OPEN = "first_time_open"
-
 // 启动 App 是否优先显示课表界面
 const val SP_COURSE_SHOW_STATE = "course_show_state"

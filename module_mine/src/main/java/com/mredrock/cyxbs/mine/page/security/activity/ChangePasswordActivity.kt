@@ -77,7 +77,7 @@ class ChangePasswordActivity : BaseViewModelActivity<ChangePasswordViewModel>() 
 
     private var originPassword = ""//用来保存旧密码
 
-    private var stuNum = ServiceManager.getService(IAccountService::class.java).getUserService()
+    private var stuNum = ServiceManager(IAccountService::class).getUserService()
         .getStuNum()//获取当前用户的学号
 
     private var isFromLogin = false//是否来自登陆界面

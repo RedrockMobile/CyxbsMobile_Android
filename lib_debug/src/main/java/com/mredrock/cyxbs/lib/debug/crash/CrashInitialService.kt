@@ -1,8 +1,8 @@
 package com.mredrock.cyxbs.lib.debug.crash
 
 import com.google.auto.service.AutoService
-import com.mredrock.cyxbs.api.init.InitialManager
-import com.mredrock.cyxbs.api.init.InitialService
+import com.mredrock.cyxbs.init.InitialManager
+import com.mredrock.cyxbs.init.InitialService
 
 /**
  * .

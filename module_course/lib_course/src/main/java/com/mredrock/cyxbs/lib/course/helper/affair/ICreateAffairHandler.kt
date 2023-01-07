@@ -4,7 +4,7 @@ import com.mredrock.cyxbs.lib.course.internal.view.course.ICourseViewGroup
 import com.ndhzs.netlayout.touch.multiple.IPointerTouchHandler
 
 /**
- * .
+ * 处理创建事务的单根手指处理者
  *
  * @author 985892345
  * @date 2022/9/21 15:20
@@ -26,6 +26,38 @@ interface ICreateAffairHandler : IPointerTouchHandler {
    */
   fun cancelShow()
   
+  /**
+   * 创建事务收到的触摸事件回调
+   */
+  interface TouchCallback {
+    fun onLongPressStart(pointerId: Int, initialRow: Int, initialColumn: Int) {}
+  
+    /**
+     * @param initialRow 初始行
+     * @param initialColumn 初始列
+     * @param topRow 与上边界比较后的实际值
+     * @param bottomRow 与下界比较后的实际值
+     * @param touchRow 当前触摸的值
+     */
+    fun onMove(
+      pointerId: Int,
+      initialRow: Int,
+      initialColumn: Int,
+      topRow: Int,
+      bottomRow: Int,
+      touchRow: Int
+    ) {}
+    
+    fun onEnd(
+      pointerId: Int,
+      initialRow: Int,
+      initialColumn: Int,
+      topRow: Int,
+      bottomRow: Int,
+      touchRow: Int
+    ) {}
+  }
+  
   companion object {
     
     /**
@@ -34,7 +66,7 @@ interface ICreateAffairHandler : IPointerTouchHandler {
     fun getImpl(
       course: ICourseViewGroup,
       affair: ITouchAffair,
-      iTouch: CreateAffairHandler.ITouch
+      iTouch: TouchCallback
     ): ICreateAffairHandler {
       return CreateAffairHandler(course, affair, iTouch)
     }

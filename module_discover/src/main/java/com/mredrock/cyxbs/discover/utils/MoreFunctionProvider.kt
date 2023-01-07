@@ -78,10 +78,10 @@ object MoreFunctionProvider {
 
     class StartActivityAfterLogin(private val msg: String, private val routing: String) : StartActivityAble {
         override fun startActivity(context: Context) {
-            if (ServiceManager.getService(IAccountService::class.java).getVerifyService().isLogin()) {
+            if (ServiceManager(IAccountService::class).getVerifyService().isLogin()) {
                 ARouter.getInstance().build(routing).navigation()
             } else {
-                ServiceManager.getService(IAccountService::class.java).getVerifyService().askLogin(context, "请先登录才能使用${msg}哦~")
+                ServiceManager(IAccountService::class).getVerifyService().askLogin(context, "请先登录才能使用${msg}哦~")
             }
         }
 

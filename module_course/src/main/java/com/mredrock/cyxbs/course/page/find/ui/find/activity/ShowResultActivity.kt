@@ -10,6 +10,8 @@ import android.widget.TextView
 import androidx.activity.viewModels
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import androidx.viewpager2.widget.ViewPager2
+import com.google.android.flexbox.FlexboxLayoutManager
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.mredrock.cyxbs.course.R
 import com.mredrock.cyxbs.course.page.find.bean.FindTeaBean
@@ -181,14 +183,14 @@ class ShowResultActivity : BaseActivity() {
               mViewModel.changeLinkStudent(stuNum)
               mViewModel.saveHistory(this) // 保存搜索历史
             } else {
-              ChooseDialog.Builder(this@initRecyclerView)
-                .setData(
-                  ChooseDialog.Data(
-                    content = "你已有一位关联的同学\n确定要替换吗？",
-                    width = 255.dp2px,
-                    height = 167.dp2px
-                  )
-                ).setPositiveClick {
+              ChooseDialog.Builder(
+                this@initRecyclerView,
+                ChooseDialog.Data(
+                  content = "你已有一位关联的同学\n确定要替换吗？",
+                  width = 255.dp2px,
+                  height = 167.dp2px
+                )
+              ).setPositiveClick {
                   mViewModel.changeLinkStudent(stuNum)
                   mViewModel.saveHistory(this@setOnLinkNoClick) // 保存搜索历史
                   dismiss()
@@ -199,14 +201,14 @@ class ShowResultActivity : BaseActivity() {
           }
         }.setOnLinkIngClick {
           // 点击已关联的图标
-          ChooseDialog.Builder(this@initRecyclerView)
-            .setData(
-              ChooseDialog.Data(
-                content = "确定要取消关联吗？",
-                width = 255.dp2px,
-                height = 146.dp2px
-              )
-            ).setPositiveClick {
+          ChooseDialog.Builder(
+            this@initRecyclerView,
+            ChooseDialog.Data(
+              content = "确定要取消关联吗？",
+              width = 255.dp2px,
+              height = 146.dp2px
+            )
+          ).setPositiveClick {
               mViewModel.deleteLinkStudent()
               dismiss()
             }.setNegativeClick {

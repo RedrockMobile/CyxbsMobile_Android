@@ -84,7 +84,9 @@ class AddAffairFragment : BaseFragment(R.layout.affair_fragment_add_affair) {
   private fun initRv() {
     mRvTitleCandidate.adapter = mRvTitleCandidateAdapter
       .setClickListener {
-        mEditText.setText(it)
+        val index = mEditText.selectionStart // 得到光标位置
+        val text = mEditText.text
+        text.insert(index, it)
       }
     mRvTitleCandidate.layoutManager =
       FlexboxLayoutManager(requireContext(), FlexDirection.ROW, FlexWrap.WRAP)

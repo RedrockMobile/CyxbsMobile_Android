@@ -43,3 +43,4 @@ include(":core:app")
 //其他业务插件
 include(":plugin")
 include(":plugin:cache")
+include(":plugin:checker")

@@ -9,7 +9,7 @@ import com.mredrock.cyxbs.lib.course.item.lesson.LessonPeriod
  * @email 2767465918@qq.com
  * @date 2022/5/10 21:13
  */
-sealed class LessonData : ILessonData, ICourseData {
+sealed class LessonData : ILessonData, ICourseItemData {
   abstract val num: String // 学号或工号
   abstract override val week: Int
   

@@ -20,11 +20,9 @@ import androidx.recyclerview.widget.RecyclerView
 import com.alibaba.android.arouter.facade.annotation.Route
 import com.alibaba.android.arouter.launcher.ARouter
 import com.bumptech.glide.Glide
-import com.cyxbsmobile_single.api_todo.ITodoService
+import com.mredrock.cyxbs.api.todo.ITodoService
 import com.mredrock.cyxbs.api.account.IAccountService
 import com.mredrock.cyxbs.api.electricity.IElectricityService
-import com.mredrock.cyxbs.api.sport.ISportService
-import com.mredrock.cyxbs.api.volunteer.IVolunteerService
 import com.mredrock.cyxbs.common.component.CyxbsToast
 import com.mredrock.cyxbs.common.component.SpacesHorizontalItemDecoration
 import com.mredrock.cyxbs.common.config.*
@@ -262,9 +260,9 @@ class DiscoverHomeFragment : BaseViewModelFragment<DiscoverHomeViewModel>() {
          * TODO 关闭服务 feed
          */
 //        addFeedFragment(ISportService::class.impl.getSportFeed())
-        addFeedFragment(ServiceManager.getService(ITodoService::class.java).getTodoFeed())
-        addFeedFragment(ServiceManager.getService(IElectricityService::class.java).getElectricityFeed())
-//        addFeedFragment(ServiceManager.getService(IVolunteerService::class.java).getVolunteerFeed())
+        addFeedFragment(ServiceManager(ITodoService::class).getTodoFeed())
+        addFeedFragment(ServiceManager(IElectricityService::class).getElectricityFeed())
+//        addFeedFragment(ServiceManager(IVolunteerService::class).getVolunteerFeed())
         //处理手机屏幕过长导致feed无法填充满下方的情况
         ll_discover_feeds.post {
             context?.let {

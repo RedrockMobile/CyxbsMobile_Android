@@ -28,7 +28,7 @@ import okhttp3.RequestBody
 class EditViewModel : BaseViewModel() {
 
     private val userService: IUserService by lazy {
-        ServiceManager.getService(IAccountService::class.java).getUserService()
+        ServiceManager(IAccountService::class).getUserService()
     }
 
     val updateInfoEvent = MutableLiveData<Boolean>()
@@ -46,7 +46,7 @@ class EditViewModel : BaseViewModel() {
                 .unsafeSubscribeBy {
                     updateInfoEvent.postValue(true)
                     if (nickname.isNotBlank() && introduction.isNotBlank() && qq.isNotBlank() && phone.isNotBlank()) {
-                      ServiceManager.getService(IStoreService::class.java)
+                      ServiceManager(IStoreService::class)
                         .postTask(IStoreService.Task.EDIT_INFO, null)
                     }
                 }

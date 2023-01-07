@@ -4,8 +4,8 @@ import androidx.core.content.edit
 import com.google.auto.service.AutoService
 import com.google.gson.Gson
 import com.mredrock.cyxbs.api.account.IAccountService
-import com.mredrock.cyxbs.api.init.InitialManager
-import com.mredrock.cyxbs.api.init.InitialService
+import com.mredrock.cyxbs.init.InitialManager
+import com.mredrock.cyxbs.init.InitialService
 import com.mredrock.cyxbs.lib.utils.extensions.*
 import com.mredrock.cyxbs.lib.utils.network.mapOrThrowApiException
 import com.mredrock.cyxbs.lib.utils.service.impl

@@ -4,7 +4,7 @@ import android.content.DialogInterface
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.mredrock.cyxbs.course.page.course.data.AffairData
-import com.mredrock.cyxbs.course.page.course.data.ICourseData
+import com.mredrock.cyxbs.course.page.course.data.ICourseItemData
 import com.mredrock.cyxbs.course.page.course.data.StuLessonData
 import com.mredrock.cyxbs.course.page.course.data.TeaLessonData
 import com.mredrock.cyxbs.course.page.course.ui.dialog.adapter.viewholder.AffairVH
@@ -20,14 +20,14 @@ import com.mredrock.cyxbs.course.page.course.ui.dialog.adapter.viewholder.TeaLes
  */
 class DialogBottomVpAdapter(
   val dialog: DialogInterface,
-  val data: List<ICourseData>,
-  val isHomeCourse: Boolean
+  val data: List<ICourseItemData>,
+  val isShowLink: Boolean
 ) : RecyclerView.Adapter<CourseViewHolder<*>>() {
   
   override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): CourseViewHolder<*> {
     return when (viewType) {
       AffairVH::class.hashCode() -> AffairVH(parent, dialog)
-      StuLessonVH::class.hashCode() -> StuLessonVH(parent, isHomeCourse)
+      StuLessonVH::class.hashCode() -> StuLessonVH(parent, isShowLink)
       TeaLessonVH::class.hashCode() -> TeaLessonVH(parent)
       else -> error("缺失该类型对应的 ViewHolder")
     }

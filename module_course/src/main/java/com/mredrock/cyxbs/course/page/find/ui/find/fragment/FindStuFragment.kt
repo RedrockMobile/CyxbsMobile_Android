@@ -78,14 +78,14 @@ class FindStuFragment : BaseFragment() {
           if (mViewModel.linkStudent.value?.linkNum == null) {
             mViewModel.changeLinkStudent(num)
           } else if (num != mViewModel.linkStudent.value?.linkNum) {
-            ChooseDialog.Builder(this@FindStuFragment)
-              .setData(
-                ChooseDialog.Data(
-                  content = "你已有一位关联的同学\n确定要替换吗？",
-                  width = 255.dp2px,
-                  height = 167.dp2px
-                )
-              ).setPositiveClick {
+            ChooseDialog.Builder(
+              requireContext(),
+              ChooseDialog.Data(
+                content = "你已有一位关联的同学\n确定要替换吗？",
+                width = 255.dp2px,
+                height = 167.dp2px
+              )
+            ).setPositiveClick {
                 mViewModel.changeLinkStudent(num)
                 dismiss()
               }.setNegativeClick {

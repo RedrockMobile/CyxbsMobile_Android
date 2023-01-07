@@ -13,6 +13,9 @@ import java.util.*
  */
 interface IWeekWrapper {
   
+  /**
+   * 周数列表
+   */
   val nlWeek: NetLayout2
   val tvMonth: TextView
   val tvMonWeek: TextView
@@ -48,13 +51,13 @@ interface IWeekWrapper {
   fun setMonth(monDay: Calendar)
   
   /**
-   * 得到当前星期数开始的距离
+   * 得到当前星期数开始的距离(距离课表控件左边缘的距离)
    * @param weekNum 星期数，星期一为 1
    */
   fun getWeekNumStartWidth(weekNum: Int): Int
   
   /**
-   * 得到当前星期数结束的距离
+   * 得到当前星期数结束的距离(距离课表控件左边缘的距离)
    * @param weekNum 星期数，星期一为 1
    */
   fun getWeekNumEndWidth(weekNum: Int): Int

@@ -60,14 +60,14 @@ class LinkCardFragment : BaseFragment() {
   private val mBtnLinkDelete by R.id.course_ib_link_card_delete.view<ImageButton>()
     .addInitialize {
       setOnSingleClickListener {
-        ChooseDialog.Builder(this@LinkCardFragment)
-          .setData(
-            ChooseDialog.Data(
-              content = "确定要取消关联吗？",
-              width = 255.dp2px,
-              height = 146.dp2px,
-            )
-          ).setPositiveClick {
+        ChooseDialog.Builder(
+          requireContext(),
+          ChooseDialog.Data(
+            content = "确定要取消关联吗？",
+            width = 255.dp2px,
+            height = 146.dp2px,
+          )
+        ).setPositiveClick {
             viewModel.deleteLinkStudent()
             dismiss()
           }.setNegativeClick {

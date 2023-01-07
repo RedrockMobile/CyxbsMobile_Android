@@ -30,8 +30,25 @@ abstract class NoLessonImpl : CourseTouchImpl(), INoLesson {
   override val ivNoLesson by R.id.course_iv_no_lesson.view<ImageView>()
   override val tvNoLesson by R.id.course_tv_no_lesson.view<TextView>()
   
+  /**
+   * 如果你给 item 添加了新的类型，并且需要隐藏没课图片，那么你需要重写该方法
+   */
   override fun isExhibitionItem(item: IItem): Boolean {
     return item is ILessonItem || item is IAffairItem
+  }
+  
+  override fun showViewNoLesson() {
+    if (viewNoLesson.isGone) {
+      viewNoLesson.visible()
+      viewNoLesson.startAnimation(mFadeInAnim)
+    }
+  }
+  
+  override fun hideViewNoLesson() {
+    if (viewNoLesson.isVisible) {
+      viewNoLesson.gone()
+      viewNoLesson.startAnimation(mFadeOutAnim)
+    }
   }
   
   override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -87,15 +104,9 @@ abstract class NoLessonImpl : CourseTouchImpl(), INoLesson {
       course.post {
         _isInRefreshRunnable = false
         if (mExhibitionItemCount == 0) {
-          if (viewNoLesson.isGone) {
-            viewNoLesson.visible()
-            viewNoLesson.startAnimation(mFadeInAnim)
-          }
+          showViewNoLesson()
         } else {
-          if (viewNoLesson.isVisible) {
-            viewNoLesson.gone()
-            viewNoLesson.startAnimation(mFadeOutAnim)
-          }
+          hideViewNoLesson()
         }
       }
     }

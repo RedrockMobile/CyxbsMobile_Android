@@ -64,7 +64,7 @@ interface IItemContainer {
   
   interface OnItemExistListener {
     /**
-     * 是否允许添加该 item
+     * 是否允许添加该 item，在 [onItemAddedBefore] 前回调
      */
     fun isAllowToAddItem(item: IItem): Boolean = true
   

@@ -22,7 +22,7 @@ class SecurityActivityViewModel : BaseViewModel() {
 
     fun checkBinding(onSuccess: () -> Unit) {
         apiService.checkBinding(
-                ServiceManager.getService(IAccountService::class.java).getUserService().getStuNum()
+                ServiceManager(IAccountService::class).getUserService().getStuNum()
         )
                 .setSchedulers()
                 .doOnErrorWithDefaultErrorHandler {

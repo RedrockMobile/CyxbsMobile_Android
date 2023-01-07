@@ -46,7 +46,7 @@ class FollowFragment : BaseViewModelFragment<FollowViewModel>() {
         }
 
         if (redId ==
-            ServiceManager.getService(IAccountService::class.java).getUserService().getRedid()){
+            ServiceManager(IAccountService::class).getUserService().getRedid()){
             isSelf = true
         }
 

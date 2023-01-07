@@ -55,7 +55,7 @@ class DynamicDataSource(private val kind: String,private val redid: String?) : P
         callback: LoadInitialCallback<Int, Message>
     ) {
         //最开始加上判断，以防登录bug
-        val userState = ServiceManager.getService(IAccountService::class.java).getVerifyService()
+        val userState = ServiceManager(IAccountService::class).getVerifyService()
         if (!userState.isLogin() && !userState.isTouristMode()) {
             callback.onResult(listOf(), 1, null)
             initialLoad.postValue(NetworkState.CANNOT_LOAD_WITHOUT_LOGIN)

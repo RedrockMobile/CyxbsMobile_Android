@@ -10,12 +10,17 @@ import com.ndhzs.netlayout.touch.multiple.event.IPointerEvent
 /**
  * 是课表滚轴滚动的 Handler
  *
+ * 这个类一般用于处理一些特殊情况，
+ * 比如：有一个手指的 Handler 处理了事件，但因为长按前移动距离过大，不被视为长按操作，
+ * 此时应该表现为滚轴移动。这个类就是用来干这种事情的
+ *
  * @author 985892345 (Guo Xiangrui)
  * @email guo985892345@foxmail.com
  * @date 2022/8/18 13:58
  */
 object ScrollTouchHandler : IPointerTouchHandler {
   
+  // 采用队列，滚轴只能交给最先来的手指处理
   private val mIdDeque = ArrayDeque<Int>()
   private val mRawYById = SparseIntArray()
   

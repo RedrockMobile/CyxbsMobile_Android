@@ -1,5 +1,6 @@
 package com.mredrock.cyxbs.mine.page.setting
 
+import android.content.Intent
 import android.os.Bundle
 import android.widget.Button
 import android.widget.FrameLayout
@@ -64,7 +65,11 @@ class SettingActivity : BaseActivity() {
             defaultSharedPreferences.getBoolean(COURSE_SHOW_STATE, false)
 
         //账号安全
-        mFmSecurity.setOnSingleClickListener { doIfLogin { startActivity<SecurityActivity>() } }
+        mFmSecurity.setOnSingleClickListener {
+            doIfLogin {
+                startActivity(Intent(this, SecurityActivity::class.java))
+            }
+        }
         //屏蔽此人
         mFmShieldPerson.setOnSingleClickListener {
             doIfLogin {
@@ -137,7 +142,7 @@ class SettingActivity : BaseActivity() {
     private fun jumpToLoginActivity() {
         cleanAppWidgetCache()
         //清除user信息，必须要在LoginStateChangeEvent之前
-        ServiceManager.getService(IAccountService::class.java).getVerifyService()
+        ServiceManager(IAccountService::class).getVerifyService()
             .logout(this@SettingActivity)
         window.decorView.postDelayed(20) {
             // 延迟打开，保证前面的 logout 有时间清空数据

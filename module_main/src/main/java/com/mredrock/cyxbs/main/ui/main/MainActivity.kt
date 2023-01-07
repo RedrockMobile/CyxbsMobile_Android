@@ -14,6 +14,7 @@ import com.mredrock.cyxbs.config.route.MAIN_MAIN
 import com.mredrock.cyxbs.config.sp.SP_COURSE_SHOW_STATE
 import com.mredrock.cyxbs.config.sp.defaultSp
 import com.mredrock.cyxbs.lib.base.ui.BaseActivity
+import com.mredrock.cyxbs.lib.base.utils.Umeng
 import com.mredrock.cyxbs.lib.utils.extensions.dp2pxF
 import com.mredrock.cyxbs.lib.utils.service.ServiceManager
 import com.mredrock.cyxbs.lib.utils.service.impl
@@ -165,6 +166,10 @@ class MainActivity : BaseActivity() {
 //          mViewModel.courseBottomSheetExpand.value = null
 //        }
       }
+      
+      
+      // Umeng 埋点统计
+      Umeng.sendEvent(Umeng.Event.ClickBottomTab(it))
     }
   }
   

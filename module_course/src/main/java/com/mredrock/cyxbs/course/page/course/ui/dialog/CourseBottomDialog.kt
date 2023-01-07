@@ -5,7 +5,7 @@ import android.os.Bundle
 import android.view.View
 import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.mredrock.cyxbs.course.R
-import com.mredrock.cyxbs.course.page.course.data.ICourseData
+import com.mredrock.cyxbs.course.page.course.data.ICourseItemData
 import com.mredrock.cyxbs.course.page.course.ui.dialog.adapter.DialogBottomVpAdapter
 import com.mredrock.cyxbs.lib.utils.extensions.gone
 import com.ndhzs.slideshow.SlideShow
@@ -17,10 +17,15 @@ import com.ndhzs.slideshow.SlideShow
  * @email guo985892345@foxmail.com
  * @date 2022/9/16 10:38
  */
+
+/**
+ * @param data 重叠的数据
+ * @param isShowLink 是否显示关联人图标 (如果数据中的学号不是自己时，会显示关联图标)
+ */
 class CourseBottomDialog(
   context: Context,
-  val data: List<ICourseData>,
-  val isHomeCourse: Boolean
+  val data: List<ICourseItemData>,
+  val isShowLink: Boolean
 ) : BottomSheetDialog(context, R.style.BottomSheetDialogTheme) {
   
   override fun onCreate(savedInstanceState: Bundle?) {
@@ -38,7 +43,7 @@ class CourseBottomDialog(
       // 只有一个时隐藏指示器
       findViewById<View>(R.id.course_indicator_dialog_bottom).gone()
     }
-    slideShow.setAdapter(DialogBottomVpAdapter(this, data, isHomeCourse))
+    slideShow.setAdapter(DialogBottomVpAdapter(this, data, isShowLink))
   }
   
   override fun <T : View> findViewById(id: Int): T {
