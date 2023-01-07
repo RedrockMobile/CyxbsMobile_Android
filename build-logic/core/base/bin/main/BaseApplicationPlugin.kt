@@ -1,5 +1,7 @@
+@file:Suppress("UnstableApiUsage")
+
 import config.Config
-import com.mredrock.cyxbs.convention.depend.lib.debugDependLibDebug
+
 import org.gradle.api.JavaVersion
 import org.gradle.api.plugins.ExtensionAware
 import org.gradle.kotlin.dsl.apply
