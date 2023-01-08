@@ -213,6 +213,7 @@
             app:net_layout_endColumn="0"
             tools:ignore="HardcodedText,SpUsage" />
 
+        <!--折叠状态下显示的 View-->
         <androidx.appcompat.widget.AppCompatImageView
             android:id="@+id/course_iv_noon_fold"
             android:layout_width="match_parent"
@@ -225,6 +226,7 @@
             app:net_layout_endColumn="0"
             tools:ignore="ContentDescription" />
 
+        <!--展开状态下显示的 View-->
         <androidx.appcompat.widget.AppCompatImageView
             android:id="@+id/course_iv_noon_unfold"
             android:layout_width="match_parent"
@@ -238,6 +240,7 @@
             app:net_layout_endColumn="0"
             tools:ignore="ContentDescription" />
 
+        <!--折叠状态下显示的 View-->
         <androidx.appcompat.widget.AppCompatImageView
             android:id="@+id/course_iv_dusk_fold"
             android:layout_width="match_parent"
@@ -250,6 +253,7 @@
             app:net_layout_endColumn="0"
             tools:ignore="ContentDescription" />
 
+        <!--展开状态下显示的 View-->
         <androidx.appcompat.widget.AppCompatImageView
             android:id="@+id/course_iv_dusk_unfold"
             android:layout_width="match_parent"

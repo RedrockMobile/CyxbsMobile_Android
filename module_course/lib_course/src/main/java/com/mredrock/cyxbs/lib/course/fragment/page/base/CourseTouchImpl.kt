@@ -19,7 +19,7 @@ import com.ndhzs.netlayout.touch.multiple.event.IPointerEvent
 abstract class CourseTouchImpl : AbstractCoursePageFragment(), ICourseTouch {
   
   override fun getDefaultPointerHandler(event: IPointerEvent, view: View): IPointerTouchHandler? {
-    // 如果是第一根手指的事件应该交给 ScrollView 拦截，而不是自身处理
+    // 如果是第一根手指的事件在没有其他分发者拦截时默认交给 ScrollTouchHandler 拦截
     return if (event.pointerId != 0) ScrollTouchHandler else null
   }
   

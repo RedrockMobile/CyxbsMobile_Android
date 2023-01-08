@@ -47,7 +47,6 @@ class UserAgreementDialog private constructor(
   class Builder(context: Context) : ChooseDialog.Builder(
     context,
     Data(
-      width = 310.dp2px,
       positiveButtonText = "同意并继续",
       negativeButtonText = "不同意",
       buttonSize = SizeF(119F, 38F)
@@ -65,6 +64,7 @@ class UserAgreementDialog private constructor(
     }
   }
   
+  // 内容
   private val mTvContent = TextView(context).apply {
     layoutParams = LinearLayout.LayoutParams(
       LinearLayout.LayoutParams.MATCH_PARENT,
@@ -73,7 +73,7 @@ class UserAgreementDialog private constructor(
       topMargin = 10.dp2px
       leftMargin = 22.dp2px
       rightMargin = leftMargin
-      bottomMargin = 20.dp2px
+      bottomMargin = 24.dp2px
     }
     setTextColor(com.mredrock.cyxbs.config.R.color.config_level_four_font_color.color)
     textSize = 14F
@@ -83,6 +83,7 @@ class UserAgreementDialog private constructor(
     return LinearLayout(context).apply {
       orientation = LinearLayout.VERTICAL
       addView(
+        // 标题
         TextView(context).apply {
           text = "温馨提示"
           layoutParams = LinearLayout.LayoutParams(
@@ -111,7 +112,7 @@ class UserAgreementDialog private constructor(
         val intent = Intent(context, UserAgreeActivity::class.java)
         context.startActivity(intent)
       }
-    
+      
       override fun updateDrawState(ds: TextPaint) {
         /**设置文字颜色**/
         ds.color = ds.linkColor
@@ -124,7 +125,7 @@ class UserAgreementDialog private constructor(
         val intent = Intent(context, PrivacyActivity::class.java)
         context.startActivity(intent)
       }
-    
+      
       override fun updateDrawState(ds: TextPaint) {
         /**设置文字颜色**/
         ds.color = ds.linkColor
@@ -134,13 +135,13 @@ class UserAgreementDialog private constructor(
     }.wrapByNoLeak(view) // 防止内存泄漏
     spannableString.setSpan(userAgreementClickSpan, 27, 33, Spannable.SPAN_EXCLUSIVE_INCLUSIVE)
     spannableString.setSpan(privacyClickSpan, 34, 41, Spannable.SPAN_EXCLUSIVE_INCLUSIVE)
-  
+    
     //设置用户协议和隐私权政策字体颜色
     val userAgreementSpan = ForegroundColorSpan(Color.parseColor("#2CDEFF"))
     val privacySpan = ForegroundColorSpan(Color.parseColor("#2CDEFF"))
     spannableString.setSpan(userAgreementSpan, 27, 33, Spannable.SPAN_EXCLUSIVE_INCLUSIVE)
     spannableString.setSpan(privacySpan, 34, 41, Spannable.SPAN_EXCLUSIVE_INCLUSIVE)
-  
+    
     mTvContent.text = spannableString
     mTvContent.movementMethod = LinkMovementMethod.getInstance()
   }

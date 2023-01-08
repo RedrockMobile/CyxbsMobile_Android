@@ -2,7 +2,6 @@ package com.mredrock.cyxbs.store.service
 
 import android.content.Context
 import android.content.SharedPreferences
-import androidx.collection.arraySetOf
 import androidx.core.content.edit
 import com.alibaba.android.arouter.facade.annotation.Route
 import com.mredrock.cyxbs.api.store.IStoreService
@@ -56,7 +55,7 @@ class StoreServiceImpl : IStoreService {
   
   private fun checkOnlyTag(title: String, onlyTag: String? = null): Boolean {
     if (onlyTag != null) {
-      val set = onlyTagSp.getStringSet(title, null) ?: arraySetOf()
+      val set = onlyTagSp.getStringSet(title, null)?.toHashSet() ?: hashSetOf()
       if (set.contains(onlyTag)) {
         return false
       } else {

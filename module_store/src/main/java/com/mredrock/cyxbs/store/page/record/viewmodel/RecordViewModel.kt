@@ -22,49 +22,60 @@ class RecordViewModel : BaseViewModel() {
     val exchangeRecord: LiveData<List<ExchangeRecord>>
         get() = _exchangeRecord
     
-    // 兑换记录请求是否成功
-    private val _exchangeRecordIsSuccessful = MutableLiveData<Boolean>()
-    val exchangeRecordIsSuccessful: LiveData<Boolean>
-        get() = _exchangeRecordIsSuccessful
+    // 兑换记录请求是否成功（状态）
+    private val _exchangeRecordIsSuccessfulState = MutableLiveData<Boolean>()
+    val exchangeRecordIsSuccessfulState: LiveData<Boolean>
+        get() = _exchangeRecordIsSuccessfulState
+    // 兑换记录请求是否成功（事件）
+    val exchangeRecordIsSuccessfulEvent = _exchangeRecordIsSuccessfulState.asShareFlow()
 
     // 获取记录
     private val _pageStampGetRecord = MutableLiveData<List<StampGetRecord>>()
     val pageStampGetRecord: LiveData<List<StampGetRecord>>
         get() = _pageStampGetRecord
     
-    // 第一页获取记录请求是否成功
-    private val _firstPageGetRecordIsSuccessful = MutableLiveData<Boolean>()
-    val firstPageGetRecordIsSuccessful: LiveData<Boolean>
-        get() = _firstPageGetRecordIsSuccessful
+    // 第一页获取记录请求是否成功（状态）
+    private val _firstPageGetRecordIsSuccessfulState = MutableLiveData<Boolean>()
+    val firstPageGetRecordIsSuccessfulState: LiveData<Boolean>
+        get() = _firstPageGetRecordIsSuccessfulState
+    // 第一页获取记录请求是否成功（事件）
+    val firstPageGetRecordIsSuccessfulEvent = _exchangeRecordIsSuccessfulState.asShareFlow()
     
-    // 下一页获取记录请求是否成功
-    private val _nestPageGetRecordIsSuccessful = MutableLiveData<Boolean>()
-    val nestPageGetRecordIsSuccessful: LiveData<Boolean>
-        get() = _nestPageGetRecordIsSuccessful
+    // 下一页获取记录请求是否成功（状态）
+    private val _nestPageGetRecordIsSuccessfulState = MutableLiveData<Boolean>()
+    val nestPageGetRecordIsSuccessfulState: LiveData<Boolean>
+        get() = _nestPageGetRecordIsSuccessfulState
+    // 下一页获取记录请求是否成功（事件）
+    val nestPageGetRecordIsSuccessfulEvent = _nestPageGetRecordIsSuccessfulState.asShareFlow()
+    
+    init {
+        getExchangeRecord()
+        getFirstPageGetRecord()
+    }
 
-    fun getExchangeRecord() {
+    private fun getExchangeRecord() {
         ApiService::class.api
             .getExchangeRecord()
             .subscribeOn(Schedulers.io())
             .observeOn(AndroidSchedulers.mainThread())
             .mapOrInterceptException {
-                _exchangeRecordIsSuccessful.postValue(false)
+                _exchangeRecordIsSuccessfulState.postValue(false)
             }.safeSubscribeBy {
-                _exchangeRecordIsSuccessful.postValue(true)
+                _exchangeRecordIsSuccessfulState.postValue(true)
                 _exchangeRecord.postValue(it)
             }
     }
 
     private var nowPage = 1
-    fun getFirstPageGetRecord() {
+    private fun getFirstPageGetRecord() {
         ApiService::class.api
             .getStampGetRecord(1, 30)
             .subscribeOn(Schedulers.io())
             .observeOn(AndroidSchedulers.mainThread())
             .mapOrInterceptException {
-                _firstPageGetRecordIsSuccessful.postValue(false)
+                _firstPageGetRecordIsSuccessfulState.postValue(false)
             }.safeSubscribeBy {
-                _firstPageGetRecordIsSuccessful.postValue(true)
+                _firstPageGetRecordIsSuccessfulState.postValue(true)
                 _pageStampGetRecord.postValue(it)
             }
     }
@@ -75,9 +86,9 @@ class RecordViewModel : BaseViewModel() {
             .subscribeOn(Schedulers.io())
             .observeOn(AndroidSchedulers.mainThread())
             .mapOrInterceptException {
-                _nestPageGetRecordIsSuccessful.postValue(false)
+                _nestPageGetRecordIsSuccessfulState.postValue(false)
             }.safeSubscribeBy {
-                _nestPageGetRecordIsSuccessful.postValue(true)
+                _nestPageGetRecordIsSuccessfulState.postValue(true)
                 if (it.isNotEmpty()) {
                     val oldList = pageStampGetRecord.value ?: emptyList()
                     _pageStampGetRecord.postValue(

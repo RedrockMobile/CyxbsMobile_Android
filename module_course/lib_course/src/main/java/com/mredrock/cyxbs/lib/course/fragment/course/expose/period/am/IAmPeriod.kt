@@ -20,12 +20,12 @@ interface IAmPeriod {
   fun compareAmPeriod(row: Int): Int
   
   /**
-   * 得到上午时间段开始时的高度值
+   * 得到上午时间段开始时的高度值（距离课表上边缘）
    */
   fun getAmStartHeight(): Int
   
   /**
-   * 得到上午时间段结束时的高度值
+   * 得到上午时间段结束时的高度值（距离课表上边缘）
    */
   fun getAmEndHeight(): Int
 }

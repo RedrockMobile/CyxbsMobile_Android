@@ -57,7 +57,6 @@ class StoreCenterActivity : BaseActivity() {
     initSlideUpLayoutWithLeftTopStamp() // 设置向上滑时与右上角邮票小图标的联合效果
     initJump() // 一些简单不传参的跳转写这里
     initObserve()
-    mViewModel.refresh()
   }
   
   private fun initView() {
@@ -202,8 +201,14 @@ class StoreCenterActivity : BaseActivity() {
       }
     }
     
-    // 对数据是否请求成功的观察
-    mViewModel.refreshIsSuccessful.observe {
+    // 对数据是否请求成功的观察（状态）
+    mViewModel.refreshIsSuccessfulState.observe {
+      mRefreshLayout.isRefreshing = false
+      isFirstLoad = false
+    }
+  
+    // 对数据是否请求成功的观察（事件）
+    mViewModel.refreshIsSuccessfulEvent.collectLaunch {
       if (it) {
         // 处于刷新状态且不是第一次刷新
         if (mRefreshLayout.isRefreshing && !isFirstLoad) {
@@ -212,8 +217,6 @@ class StoreCenterActivity : BaseActivity() {
       } else {
         toast("获取邮票数据失败")
       }
-      mRefreshLayout.isRefreshing = false
-      isFirstLoad = false
     }
   }
   

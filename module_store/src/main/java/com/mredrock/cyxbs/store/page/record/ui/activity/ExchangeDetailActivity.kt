@@ -21,20 +21,15 @@ class ExchangeDetailActivity : BaseBindActivity<StoreActivityExchangeDetailBindi
     companion object {
         fun activityStart(context: Context, data: ExchangeRecord) {
             val intent = Intent(context, ExchangeDetailActivity::class.java)
-            intent.putExtra("data", data)
+            intent.putExtra(ExchangeDetailActivity::data.name, data)
             context.startActivity(intent)
         }
     }
 
-    private lateinit var data: ExchangeRecord
+    private val data by intent<ExchangeRecord>()
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        initData()
         initView()
-    }
-
-    private fun initData() {
-        data = intent.getSerializableExtra("data") as ExchangeRecord
     }
 
     private fun initView() {
