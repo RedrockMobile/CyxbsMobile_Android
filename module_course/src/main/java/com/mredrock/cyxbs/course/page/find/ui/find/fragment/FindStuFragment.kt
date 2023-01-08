@@ -53,7 +53,7 @@ class FindStuFragment : BaseFragment() {
   override fun onCreateView(
     inflater: LayoutInflater,
     container: ViewGroup?,
-    savedInstanceState: Bundle?
+    savedInstanceState: Bundle?,
   ): View = inflater.inflate(R.layout.course_fragment_find_stu, container, false)
   
   override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -86,11 +86,11 @@ class FindStuFragment : BaseFragment() {
                 height = 167.dp2px
               )
             ).setPositiveClick {
-                mViewModel.changeLinkStudent(num)
-                dismiss()
-              }.setNegativeClick {
-                dismiss()
-              }.show()
+              mViewModel.changeLinkStudent(num)
+              dismiss()
+            }.setNegativeClick {
+              dismiss()
+            }.show()
           }
         }
       }.apply {
@@ -109,7 +109,10 @@ class FindStuFragment : BaseFragment() {
         mViewModel.searchStudents(text.toString())
         // 取消键盘
         (requireActivity().getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager)
-          .hideSoftInputFromWindow(requireActivity().currentFocus?.windowToken, InputMethodManager.HIDE_NOT_ALWAYS)
+          .hideSoftInputFromWindow(
+            requireActivity().currentFocus?.windowToken,
+            InputMethodManager.HIDE_NOT_ALWAYS
+          )
         true
       }
     }

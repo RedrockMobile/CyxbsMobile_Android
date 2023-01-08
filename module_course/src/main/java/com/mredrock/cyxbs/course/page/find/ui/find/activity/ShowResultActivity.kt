@@ -43,7 +43,7 @@ class ShowResultActivity : BaseActivity() {
     
     fun startActivity(
       context: Context,
-      data: PersonData
+      data: PersonData,
     ) {
       context.startActivity(
         Intent(context, ShowResultActivity::class.java).apply {
@@ -142,7 +142,7 @@ class ShowResultActivity : BaseActivity() {
   
   private class StudentHandler(
     var data: StuData,
-    activity: ShowResultActivity
+    activity: ShowResultActivity,
   ) : PersonHandler(activity) {
     
     private lateinit var mRvAdapter: ShowStuResultRvAdapter
@@ -152,7 +152,7 @@ class ShowResultActivity : BaseActivity() {
       initRecyclerView()
       initObserve()
     }
-  
+    
     /**
      * 初始化 RecyclerView
      *
@@ -191,12 +191,12 @@ class ShowResultActivity : BaseActivity() {
                   height = 167.dp2px
                 )
               ).setPositiveClick {
-                  mViewModel.changeLinkStudent(stuNum)
-                  mViewModel.saveHistory(this@setOnLinkNoClick) // 保存搜索历史
-                  dismiss()
-                }.setNegativeClick {
-                  dismiss()
-                }.show()
+                mViewModel.changeLinkStudent(stuNum)
+                mViewModel.saveHistory(this@setOnLinkNoClick) // 保存搜索历史
+                dismiss()
+              }.setNegativeClick {
+                dismiss()
+              }.show()
             }
           }
         }.setOnLinkIngClick {
@@ -209,11 +209,11 @@ class ShowResultActivity : BaseActivity() {
               height = 146.dp2px
             )
           ).setPositiveClick {
-              mViewModel.deleteLinkStudent()
-              dismiss()
-            }.setNegativeClick {
-              dismiss()
-            }.show()
+            mViewModel.deleteLinkStudent()
+            dismiss()
+          }.setNegativeClick {
+            dismiss()
+          }.show()
         }
     }
     
@@ -254,7 +254,7 @@ class ShowResultActivity : BaseActivity() {
   
   private class TeacherHandler(
     val data: TeaData,
-    activity: ShowResultActivity
+    activity: ShowResultActivity,
   ) : PersonHandler(activity) {
     override fun ShowResultActivity.initialize() {
       mTvTitle.text = "老师课表"

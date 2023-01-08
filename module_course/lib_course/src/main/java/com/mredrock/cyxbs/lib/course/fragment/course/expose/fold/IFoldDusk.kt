@@ -11,7 +11,14 @@ import com.mredrock.cyxbs.lib.course.fragment.course.expose.period.dusk.IDuskPer
  */
 interface IFoldDusk : IDuskPeriod {
   
+  /**
+   * 折叠状态下显示的 View
+   */
   val viewDuskFold: View
+  
+  /**
+   * 展开状态下显示的 View
+   */
   val viewDuskUnfold: View
   
   /**

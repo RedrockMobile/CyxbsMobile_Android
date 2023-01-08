@@ -125,8 +125,8 @@ abstract class BaseFragment : OperationFragment {
       // 处于 onCreate 时
       if (mIsFragmentRebuilt) {
         // 如果此时 Fragment 处于重建状态，Fragment 会自动恢复，不能重复提交而改变之前的状态
-        // 因为存在重建前你在 onCreate 中提交的 Fragment 在后面因为点击事件而被替换掉，
-        // 如果你在这里进行提交，就会导致本来被取消了的 界面 重新出现
+        // 因为存在重建前你在 onCreate 中提交的 Fragment 在后面因为其他事件取消了，
+        // 但如果你在这里进行提交，就会导致本来被取消了的 界面 重新出现
       } else {
         // Fragment 正常被创建，即没有被异常摧毁
         fragmentManager.beginTransaction()

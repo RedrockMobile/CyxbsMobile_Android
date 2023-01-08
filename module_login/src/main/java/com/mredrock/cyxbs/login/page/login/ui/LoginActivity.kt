@@ -65,14 +65,14 @@ class LoginActivity : BaseActivity() {
     }
 
     private fun startInternal(
-      isRoot: Boolean,
+      isReboot: Boolean,
       successActivity: Class<out Activity>?,
       intent: (Intent.() -> Unit)?
     ) {
       appContext.startActivity(
         Intent(appContext, LoginActivity::class.java)
           .addFlags(Intent.FLAG_ACTIVITY_NEW_TASK) // 因为使用 appContext，所以需要加
-          .putExtra(LoginActivity::mIsRoot.name, isRoot)
+          .putExtra(LoginActivity::mIsReboot.name, isReboot)
           .apply {
             if (successActivity != null) {
               putExtra(
@@ -81,7 +81,7 @@ class LoginActivity : BaseActivity() {
                   .addFlags(Intent.FLAG_ACTIVITY_NEW_TASK) // 因为使用 appContext，所以需要加
               )
             }
-            if (isRoot) {
+            if (isReboot) {
               addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK) // 清空 Activity 栈
             }
             intent?.invoke(this)
@@ -92,7 +92,7 @@ class LoginActivity : BaseActivity() {
     private const val INTENT_SUCCESS = "成功后跳转的 Activity"
   }
 
-  private val mIsRoot by intent<Boolean>()
+  private val mIsReboot by intent<Boolean>()
   private val mSuccessIntent by lazyUnlock {
     // 因为 by intent<>() 泛型不能写 null，所以采用原始的方法去拿
     intent.getParcelableExtra(INTENT_SUCCESS) as Intent?
@@ -216,7 +216,7 @@ class LoginActivity : BaseActivity() {
   private fun initObserve() {
     mViewModel.loginEvent.collectLaunch {
       if (it) {
-        if (mIsRoot) {
+        if (mIsReboot) {
           ServiceManager.activity(MAIN_MAIN) {
             addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK) //清空 Activity 栈
           }

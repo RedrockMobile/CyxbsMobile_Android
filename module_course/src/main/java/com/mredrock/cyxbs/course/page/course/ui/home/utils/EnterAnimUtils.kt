@@ -50,7 +50,7 @@ object EnterAnimUtils {
         object : Observer<Float> {
           override fun onChanged(t: Float) {
             if (t > 0.8F) {
-              // 当为 1 时取消观察
+              // 执行一次就取消观察
               viewModel.courseService.bottomSheetSlideOffset.removeObserver(this)
               // 设置入场动画
               course.setLayoutAnimation(

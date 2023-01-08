@@ -15,14 +15,30 @@ import com.mredrock.cyxbs.lib.course.fragment.course.expose.period.pm.IPmPeriod
  */
 interface ITimeline : IAmPeriod, INoonPeriod, IPmPeriod, IDuskPeriod, INightPeriod {
   
-  fun isIncludeTimeline(row: Int): Boolean
+  /**
+   * 跟时间轴所在列作对比
+   * @return 1、返回正数，说明 [column] 在时间轴所在列右边；2、返回负数，说明在左边；3、返回 0，说明在里面
+   */
+  fun compareTimelineColumn(column: Int): Int
   
+  /**
+   * 以行遍历时间轴
+   */
   fun forEachTimelineRow(block: (row: Int) -> Unit)
   
+  /**
+   * 以列遍历时间轴
+   */
   fun forEachTimelineColumn(block: (column: Int) -> Unit)
   
+  /**
+   * 得到时间轴开始的宽度值（距离课表左边缘）
+   */
   fun getTimelineStartWidth(): Int
   
+  /**
+   * 得到时间轴结束的宽度值（距离课表左边缘）
+   */
   fun getTimelineEndWidth(): Int
   
   val tvLesson1: TextView

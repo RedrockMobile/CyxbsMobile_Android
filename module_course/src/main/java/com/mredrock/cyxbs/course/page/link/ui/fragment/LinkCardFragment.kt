@@ -68,11 +68,11 @@ class LinkCardFragment : BaseFragment() {
             height = 146.dp2px,
           )
         ).setPositiveClick {
-            viewModel.deleteLinkStudent()
-            dismiss()
-          }.setNegativeClick {
-            dismiss()
-          }.show()
+          viewModel.deleteLinkStudent()
+          dismiss()
+        }.setNegativeClick {
+          dismiss()
+        }.show()
       }
     }
   
@@ -82,7 +82,7 @@ class LinkCardFragment : BaseFragment() {
   override fun onCreateView(
     inflater: LayoutInflater,
     container: ViewGroup?,
-    savedInstanceState: Bundle?
+    savedInstanceState: Bundle?,
   ): View {
     return inflater.inflate(R.layout.course_fragment_link_card, container, false)
   }
@@ -112,7 +112,7 @@ class LinkCardFragment : BaseFragment() {
       ValueAnimator.ofFloat(0F, 1F).apply {
         addUpdateListener {
           val now = it.animatedValue as Float
-          mViewLinkNoInclude.alpha = 1- now
+          mViewLinkNoInclude.alpha = 1 - now
           mViewLinkNoInclude.translationX = it.animatedFraction * requireView().width
           mViewLinkIngInclude.alpha = now
           mViewLinkIngInclude.translationX = -(1 - it.animatedFraction) * requireView().width
@@ -145,7 +145,7 @@ class LinkCardFragment : BaseFragment() {
           val now = it.animatedValue as Float
           mViewLinkNoInclude.alpha = now
           mViewLinkNoInclude.translationX = (1 - it.animatedFraction) * requireView().width
-          mViewLinkIngInclude.alpha = 1- now
+          mViewLinkIngInclude.alpha = 1 - now
           mViewLinkIngInclude.translationX = -it.animatedFraction * requireView().width
         }
         doOnEnd { hideInternal() }

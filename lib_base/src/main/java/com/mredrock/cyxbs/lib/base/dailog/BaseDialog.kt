@@ -18,7 +18,28 @@ import com.mredrock.cyxbs.config.R
 import com.mredrock.cyxbs.lib.utils.extensions.dp2px
 
 /**
- * .
+ * 支持自定义内容视图的圆角 dialog，该 dialog 样式符合视觉要求的大部分场景
+ *
+ * 你可以参考它的实现类 [ChooseDialog] 和 UserAgreementDialog 来适配你需要的场景
+ *
+ * ## 1、为什么不用 DialogFragment ?
+ * 虽然官方推荐使用 DialogFragment，但是 Fragment 与父容器通信很麻烦，并且目前掌邮强制竖屏，所以不打算使用 DialogFragment
+ *
+ * ## 2、DialogFragment 推荐用法
+ * DialogFragment 主要有两个坑
+ * - Fragment 重建导致的数据丢失问题
+ * - Fragment 不好与父容器直接通信
+ *
+ * 问题一可以采用 ViewModel 或者 savedInstanceState 解决
+ * 问题二可以采用 ViewModel 或者 DialogFragment 直接 getActivity()/getParentFragment() 强转解决(强烈建议用接口约束下有哪些方法)
+ *
+ * ## 3、本 Dialog 可直接变为 DialogFragment
+ * DialogFragment 提供了 onCreateDialog(): Dialog 方法用于自定义 Dialog，如果有必要的话，可以重写该方法。
+ * 但请遵守 Fragment 的使用规范 (详细请查看飞书易错点文档)
+ *
+ *
+ *
+ * 更多注释请查看 [ChooseDialog]
  *
  * @author 985892345
  * 2022/12/29 20:08
