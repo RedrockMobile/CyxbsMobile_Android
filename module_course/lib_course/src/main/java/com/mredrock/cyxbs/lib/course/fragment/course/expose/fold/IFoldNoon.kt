@@ -11,7 +11,14 @@ import com.mredrock.cyxbs.lib.course.fragment.course.expose.period.noon.INoonPer
  */
 interface IFoldNoon : INoonPeriod {
   
+  /**
+   * 折叠状态下显示的 View
+   */
   val viewNoonFold: View
+  
+  /**
+   * 展开状态下显示的 View
+   */
   val viewNoonUnfold: View
   
   /**

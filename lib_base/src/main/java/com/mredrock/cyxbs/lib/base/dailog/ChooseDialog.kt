@@ -36,24 +36,9 @@ import com.mredrock.cyxbs.lib.utils.extensions.dp2px
  * }.show()
  * ```
  *
- * ## 我的 dialog 需要带有一个标题 ? 一个输入框 ?
- * 你可以参考 module_login 中的 UserAgreementDialog，他是我写的带有标题的一个示例。
+ * ## 1、我的 dialog 需要带有一个标题 ? 一个输入框 ?
+ * 你可以参考 module_login 中的 UserAgreementDialog，他是我写的带有标题的一个示例，并且是这个 dialog 的子类。
  * 如果你还有其他扩展需求，可以继承 ChooseDialog 或者 BaseDialog 进行自定义
- *
- * ## 为什么不用 DialogFragment ?
- * 虽然官方推荐使用 DialogFragment，但是 Fragment 与父容器通信很麻烦，并且目前掌邮强制竖屏，所以不打算使用 DialogFragment
- *
- * ## DialogFragment 推荐用法
- * DialogFragment 主要有两个坑
- * - Fragment 重建导致的数据丢失问题
- * - Fragment 不好与父容器直接通信
- *
- * 问题一可以采用 ViewModel 或者 savedInstanceState 解决
- * 问题二可以采用 ViewModel 或者 DialogFragment 直接 getActivity()/getParentFragment() 强转解决(强烈建议用接口约束下有哪些方法)
- *
- * ## 本 Dialog 可直接变为 DialogFragment
- * DialogFragment 提供了 onCreateDialog(): Dialog 方法用于自定义 Dialog，如果有必要的话，可以重写该方法。
- * 但请遵守 Fragment 的使用规范 (详细请查看飞书易错点文档)
  *
  * @author 985892345 (Guo Xiangrui)
  * @email 2767465918@qq.com
@@ -100,6 +85,7 @@ open class ChooseDialog protected constructor(
    * @param width dialog 的宽，默认为 wrap_content
    * @param height dialog 的高，默认为 wrap_content
    * @param backgroundId dialog 的背景，默认背景应该能满足
+   * @param buttonSize button 的大小，单位 dp
    */
   data class Data(
     val content: String = "弹窗内容为空",
@@ -132,14 +118,14 @@ open class ChooseDialog protected constructor(
         rightMargin = leftMargin
       }
       setTextColor(R.color.config_level_four_font_color.color)
-      textSize = data.contentSize
-      gravity = data.contentGravity
     }
   }
   
   override fun initContentView(view: View) {
     view as TextView
     view.text = data.content
+    view.textSize = data.contentSize
+    view.gravity = data.contentGravity
   }
 }
 

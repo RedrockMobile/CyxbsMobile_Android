@@ -76,7 +76,7 @@ class CourseFoldHelper private constructor(
       IPointerEvent.Action.UP -> {
         // 因为 getInterceptHandler 一直返回 null，所以会收到 UP 事件
         // 写在 UP 事件的原因在于点击事件本来就是在 UP 中触发的
-        // 该方法虽然返回了 true，但 getInterceptHandler() 却一直返回 null，可以保证事件不会被 View 自身拦截
+        // 上面 DOWN 中虽然返回了 true，但 getInterceptHandler() 却一直返回 null，可以保证事件不会被 View 自身拦截
         when (mDownPointById[event.pointerId]) {
           is NoonPoint -> {
             when (course.getNoonRowState()) {

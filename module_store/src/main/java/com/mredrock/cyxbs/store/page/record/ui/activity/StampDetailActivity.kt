@@ -41,7 +41,6 @@ class StampDetailActivity : BaseActivity() {
         initViewPager2()
         initTabLayout()
         initJump() // 一些简单的跳转
-        initData()
     }
 
     private fun initView() {
@@ -64,14 +63,14 @@ class StampDetailActivity : BaseActivity() {
                 if (position == 0) {
                     if (!hasObservedFirst) {
                         hasObservedFirst = true
-                        mViewModel.exchangeRecordIsSuccessful.observe {
-                            if (!it ) { toast("获取兑换记录失败") }
+                        mViewModel.exchangeRecordIsSuccessfulEvent.collectLaunch {
+                            if (!it) { toast("获取兑换记录失败") }
                         }
                     }
-                }else {
+                } else {
                     if (!hasObservedSecond) {
                         hasObservedSecond = true
-                        mViewModel.firstPageGetRecordIsSuccessful.observe {
+                        mViewModel.firstPageGetRecordIsSuccessfulEvent.collectLaunch {
                             if (!it) { toast("获取邮票记录失败") }
                         }
                     }
@@ -150,11 +149,5 @@ class StampDetailActivity : BaseActivity() {
         button.setOnSingleClickListener {
             finish()
         }
-    }
-
-    private fun initData() {
-        // 请求网络数据
-        mViewModel.getExchangeRecord()
-        mViewModel.getFirstPageGetRecord()
     }
 }

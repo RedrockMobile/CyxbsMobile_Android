@@ -14,6 +14,9 @@ import com.ndhzs.netlayout.touch.multiple.event.IPointerEvent
  */
 interface IMultiTouch {
   
+  /**
+   * 添加多指触摸分发者
+   */
   fun addPointerDispatcher(dispatcher: IPointerDispatcher)
   
   /**
@@ -21,6 +24,9 @@ interface IMultiTouch {
    */
   fun setDefaultHandler(handler: DefaultHandler?)
   
+  /**
+   * 默认多指处理者，在当前 PointerId 对应的事件没有处理者拦截时触发
+   */
   fun interface DefaultHandler {
     fun getDefaultPointerHandler(event: IPointerEvent, view: View): IPointerTouchHandler?
   }

@@ -10,8 +10,6 @@ import android.widget.TextView
 import androidx.activity.viewModels
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import androidx.viewpager2.widget.ViewPager2
-import com.google.android.flexbox.FlexboxLayoutManager
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.mredrock.cyxbs.course.R
 import com.mredrock.cyxbs.course.page.find.bean.FindTeaBean
@@ -24,7 +22,6 @@ import com.mredrock.cyxbs.course.page.find.viewmodel.activity.ShowResultViewMode
 import com.mredrock.cyxbs.course.page.link.room.LinkStuEntity
 import com.mredrock.cyxbs.lib.base.dailog.ChooseDialog
 import com.mredrock.cyxbs.lib.base.ui.BaseActivity
-import com.mredrock.cyxbs.lib.utils.extensions.dp2px
 import com.mredrock.cyxbs.lib.utils.extensions.lazyUnlock
 import com.mredrock.cyxbs.lib.utils.extensions.setOnSingleClickListener
 import com.mredrock.cyxbs.lib.utils.utils.ActivityBindView
@@ -43,7 +40,7 @@ class ShowResultActivity : BaseActivity() {
     
     fun startActivity(
       context: Context,
-      data: PersonData
+      data: PersonData,
     ) {
       context.startActivity(
         Intent(context, ShowResultActivity::class.java).apply {
@@ -142,7 +139,7 @@ class ShowResultActivity : BaseActivity() {
   
   private class StudentHandler(
     var data: StuData,
-    activity: ShowResultActivity
+    activity: ShowResultActivity,
   ) : PersonHandler(activity) {
     
     private lateinit var mRvAdapter: ShowStuResultRvAdapter
@@ -152,7 +149,7 @@ class ShowResultActivity : BaseActivity() {
       initRecyclerView()
       initObserve()
     }
-  
+    
     /**
      * 初始化 RecyclerView
      *
@@ -187,16 +184,16 @@ class ShowResultActivity : BaseActivity() {
                 this@initRecyclerView,
                 ChooseDialog.Data(
                   content = "你已有一位关联的同学\n确定要替换吗？",
-                  width = 255.dp2px,
-                  height = 167.dp2px
+                  width = 255,
+                  height = 167
                 )
               ).setPositiveClick {
-                  mViewModel.changeLinkStudent(stuNum)
-                  mViewModel.saveHistory(this@setOnLinkNoClick) // 保存搜索历史
-                  dismiss()
-                }.setNegativeClick {
-                  dismiss()
-                }.show()
+                mViewModel.changeLinkStudent(stuNum)
+                mViewModel.saveHistory(this@setOnLinkNoClick) // 保存搜索历史
+                dismiss()
+              }.setNegativeClick {
+                dismiss()
+              }.show()
             }
           }
         }.setOnLinkIngClick {
@@ -205,15 +202,15 @@ class ShowResultActivity : BaseActivity() {
             this@initRecyclerView,
             ChooseDialog.Data(
               content = "确定要取消关联吗？",
-              width = 255.dp2px,
-              height = 146.dp2px
+              width = 255,
+              height = 146
             )
           ).setPositiveClick {
-              mViewModel.deleteLinkStudent()
-              dismiss()
-            }.setNegativeClick {
-              dismiss()
-            }.show()
+            mViewModel.deleteLinkStudent()
+            dismiss()
+          }.setNegativeClick {
+            dismiss()
+          }.show()
         }
     }
     
@@ -254,7 +251,7 @@ class ShowResultActivity : BaseActivity() {
   
   private class TeacherHandler(
     val data: TeaData,
-    activity: ShowResultActivity
+    activity: ShowResultActivity,
   ) : PersonHandler(activity) {
     override fun ShowResultActivity.initialize() {
       mTvTitle.text = "老师课表"

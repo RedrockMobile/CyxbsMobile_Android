@@ -48,6 +48,9 @@ import kotlinx.coroutines.flow.Flow
  *     // ViewModel 中带有的自动回收，直接使用 ViewModel 里面的 safeSubscribeBy 方法即可
  * ```
  *
+ * 除了 mapOrInterceptException() 方法，还有 throwApiExceptionIfFail() 和 mapOrThrowApiException()
+ * 后者都是简单的抛出异常但不拦截
+ *
  * @author 985892345 (Guo Xiangrui)
  * @email 2767465918@qq.com
  * @date 2022/5/30 10:12

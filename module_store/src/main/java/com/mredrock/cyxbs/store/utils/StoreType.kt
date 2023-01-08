@@ -21,7 +21,7 @@ class StoreType {
     const val GOODS = 0 // 邮货
   }
   
-  object Task { // 邮票中心首页的邮票任务, 因为在进度修改时要我们自己上传任务进度(会涉及不同模块), 所以类型写在了 common 模块中
+  object Task { // 邮票中心首页的邮票任务, 在进度修改时要我们自己上传任务进度 (会涉及不同模块)
     fun jumpOtherUi(context: Context, task: StampCenter.Task) {
       when (task.title) {
         DAILY_SIGN.title -> {
@@ -49,7 +49,7 @@ class StoreType {
         }
         /*
         * 注意, 如果后面接手的学弟要添加新的任务, 目前(2021/9/11)对于任务进度是要我们自己完成后向后端发送请求的
-        * 发送请求的代码我已经封装进了 common 模块的 /config/StoreTask 中
+        * 发送请求的代码我已经封装进了 api 模块中
         * */
         else -> {
           toast("若点击无跳转，请向我们反馈，谢谢")

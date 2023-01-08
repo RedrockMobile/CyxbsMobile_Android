@@ -20,12 +20,12 @@ interface IPmPeriod {
   fun comparePmPeriod(row: Int): Int
   
   /**
-   * 得到下午时间段开始时的高度值
+   * 得到下午时间段开始时的高度值（距离课表上边缘）
    */
   fun getPmStartHeight(): Int
   
   /**
-   * 得到下午时间段结束时的高度值
+   * 得到下午时间段结束时的高度值（距离课表上边缘）
    */
   fun getPmEndHeight(): Int
 }

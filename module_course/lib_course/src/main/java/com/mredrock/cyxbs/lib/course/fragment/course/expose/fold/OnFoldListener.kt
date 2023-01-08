@@ -17,7 +17,7 @@ interface OnFoldListener {
   
   /**
    * 折叠动画中
-   * @param fraction [ValueAnimator.getAnimatedFraction]
+   * @param fraction [ValueAnimator.getAnimatedFraction]，0 -> 1 的进度值
    */
   fun onFolding(course: ICourseViewGroup, fraction: Float) {}
   
@@ -43,12 +43,12 @@ interface OnFoldListener {
   
   /**
    * 展开动画中
-   * @param fraction [ValueAnimator.getAnimatedFraction]
+   * @param fraction [ValueAnimator.getAnimatedFraction]，0 -> 1 的进度值
    */
   fun onUnfolding(course: ICourseViewGroup, fraction: Float) {}
   
   /**
-   * 展开开动画结束
+   * 展开动画结束
    */
   fun onUnfoldEnd(course: ICourseViewGroup) {}
   

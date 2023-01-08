@@ -8,6 +8,8 @@ import com.mredrock.cyxbs.lib.base.utils.RxjavaLifecycle
 import com.mredrock.cyxbs.lib.base.utils.ToastUtils
 import io.reactivex.rxjava3.disposables.Disposable
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.MutableSharedFlow
+import kotlinx.coroutines.flow.SharedFlow
 import kotlinx.coroutines.launch
 
 /**
@@ -61,6 +63,28 @@ abstract class BaseViewModel : ViewModel(), RxjavaLifecycle, ToastUtils {
       collect{ action.invoke(it) }
     }
   }
+  
+  /**
+   * 返回一个缓存值为 0 表示事件的 SharedFlow，不会因为 Activity 重建而出现数据倒灌问题
+   *
+   * [关于状态跟事件的区别可以看这篇文章](https://juejin.cn/post/7046191406825603109)
+   */
+  protected fun <T> LiveData<T>.asShareFlow(): SharedFlow<T> {
+    val sharedFlow = MutableSharedFlow<T>()
+    observeForever {
+      viewModelScope.launch {
+        sharedFlow.emit(it)
+      }
+    }
+    return sharedFlow
+  }
+  
+  
+  
+  
+  
+  
+  
   
   /**
    * 实现 [RxjavaLifecycle] 的方法，用于带有生命周期的调用

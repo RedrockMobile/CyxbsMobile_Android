@@ -43,6 +43,7 @@
             android:layout_marginLeft="16dp"
             android:layout_marginRight="16dp"
             android:layout_marginTop="20dp"
+            app:cardBackgroundColor="@android:color/transparent"
             app:layout_constraintDimensionRatio="192:100"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
