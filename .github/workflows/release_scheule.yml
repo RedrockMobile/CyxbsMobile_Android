@@ -1,7 +1,10 @@
 name: Release-Schedule
 on: 
+  workflow_dispatch:
   schedule: 
     # 每小时检查
+    # 实际上github action CI执行定时任务的时间并不精确，所以没办法控制准时发版
+    # 也许可以迁移到云函数，也能避免创建太多Job
     - cron: '0 * * * *'
 jobs:
   schedule:
@@ -10,6 +13,10 @@ jobs:
       - uses: actions/checkout@v2
         with:
           ref: develop
+      # 设置时区
+      - uses: szenius/set-timezone@v1.0
+        with:
+          timezoneLinux: "Asia/Singapore"
       - name: Set up Python
         uses: actions/setup-python@v2
         with:
