@@ -2,6 +2,7 @@ package com.mredrock.cyxbs.lib.course.internal.view.course
 
 import android.content.Context
 import android.util.AttributeSet
+import android.view.View
 import com.mredrock.cyxbs.lib.course.R
 import com.mredrock.cyxbs.lib.course.internal.view.course.base.AbstractCourseViewGroup
 import com.mredrock.cyxbs.lib.course.internal.view.course.base.CourseScrollControlImpl
