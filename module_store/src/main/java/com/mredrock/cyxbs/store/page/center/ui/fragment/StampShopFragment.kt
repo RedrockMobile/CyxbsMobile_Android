@@ -60,7 +60,7 @@ class StampShopFragment : BaseFragment() {
   }
   
   private fun initObserve() {
-    viewModel.refreshIsSuccessful.observe {
+    viewModel.refreshIsSuccessfulState.observe {
       if (it) {
         // 取消断网图片的显示
         mImageView.invisible()

@@ -141,6 +141,9 @@ interface BaseUi : OperationUi {
     )
   }
   
+  /**
+   * 普通的 launch，大部分情况下使用它即可
+   */
   fun <T> Flow<T>.collectLaunch(action: suspend (value: T) -> Unit) {
     getViewLifecycleOwner().launch {
       collect { action.invoke(it) }

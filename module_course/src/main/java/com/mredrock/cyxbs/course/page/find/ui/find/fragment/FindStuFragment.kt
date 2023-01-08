@@ -82,8 +82,8 @@ class FindStuFragment : BaseFragment() {
               requireContext(),
               ChooseDialog.Data(
                 content = "你已有一位关联的同学\n确定要替换吗？",
-                width = 255.dp2px,
-                height = 167.dp2px
+                width = 255,
+                height = 167
               )
             ).setPositiveClick {
               mViewModel.changeLinkStudent(num)

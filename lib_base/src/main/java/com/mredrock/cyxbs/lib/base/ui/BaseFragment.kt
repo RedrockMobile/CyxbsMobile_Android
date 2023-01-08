@@ -152,15 +152,15 @@ abstract class BaseFragment : OperationFragment {
    * 快速得到 arguments 中的变量，直接使用反射拿了变量的名字
    * ```
    * companion object {
-   *   fun newInstance(
-   *     key: String
-   *   ) : Fragment {
-   *     return Fragment().apply {
-   *       arguments = bundleOf(
-   *         this::key.name to key // 这里直接拿变量名字
-   *       )
+   *     fun newInstance(
+   *         key: String
+   *     ) : Fragment {
+   *         return Fragment().apply {
+   *             arguments = bundleOf(
+   *                 this::key.name to key // 这里直接拿变量名字
+   *             )
+   *         }
    *     }
-   *   }
    * }
    *
    * var key by arguments<String>() // 支持声明为 var 修改参数

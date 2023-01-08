@@ -71,7 +71,7 @@ abstract class BaseDialog<T : BaseDialog<T, D>, D: BaseDialog.Data> protected co
     val view = LayoutInflater.from(context).inflate(data.type.layoutId, null)
     val insertView = createContentView(view.context)
     view.findViewWithTag<FrameLayout>("choose_dialog_content").addView(insertView)
-    setContentView(view, ViewGroup.LayoutParams(data.width, data.height))
+    setContentView(view, ViewGroup.LayoutParams(data.width.dp2px, data.height.dp2px))
     initViewInternal(view)
     initContentView(insertView)
   }
@@ -80,7 +80,7 @@ abstract class BaseDialog<T : BaseDialog<T, D>, D: BaseDialog.Data> protected co
   private fun initViewInternal(view: View) {
     // 根据不同类型进行不同的设置
     when (data.type) {
-      DialogType.ONR_BUT -> {
+      DialogType.ONE_BUT -> {
         val ivBg: ImageView = view.findViewById(R.id.config_iv_choose_dialog_one_btn_background)
         val btnPositive: MaterialButton =
           view.findViewById(R.id.config_btn_choose_dialog_one_btn_positive)
@@ -226,12 +226,18 @@ abstract class BaseDialog<T : BaseDialog<T, D>, D: BaseDialog.Data> protected co
     val buttonSize: SizeF
   
     /**
-     * dialog 的宽，默认为 300dp
+     * dialog 的宽
+     * - 默认为 300dp
+     * - 单位 dp
+     * - 支持 LayoutParams.WRAP_CONTENT、LayoutParams.MATCH_PARENT
      */
     val width: Int
   
     /**
-     * dialog 的高，默认为 wrap_content
+     * dialog 的高
+     * - 默认为 wrap_content
+     * - 单位 dp
+     * - 支持 LayoutParams.WRAP_CONTENT、LayoutParams.MATCH_PARENT
      */
     val height: Int
   
@@ -255,7 +261,7 @@ abstract class BaseDialog<T : BaseDialog<T, D>, D: BaseDialog.Data> protected co
       override val buttonSize: SizeF
         get() = SizeF(80F, 34F)
       override val width: Int
-        get() = 300.dp2px
+        get() = 300
       override val height: Int
         get() = ViewGroup.LayoutParams.WRAP_CONTENT
       override val backgroundId: Int
@@ -265,7 +271,7 @@ abstract class BaseDialog<T : BaseDialog<T, D>, D: BaseDialog.Data> protected co
   
   enum class DialogType(val layoutId: Int) {
     // 只有一个 Button
-    ONR_BUT(R.layout.config_choose_dialog_one_btn),
+    ONE_BUT(R.layout.config_choose_dialog_one_btn),
     
     // 有两个 Button
     TWO_BUT(R.layout.config_choose_dialog_two_btn)

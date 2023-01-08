@@ -47,7 +47,6 @@ class UserAgreementDialog private constructor(
   class Builder(context: Context) : ChooseDialog.Builder(
     context,
     Data(
-      width = 310.dp2px,
       positiveButtonText = "同意并继续",
       negativeButtonText = "不同意",
       buttonSize = SizeF(119F, 38F)

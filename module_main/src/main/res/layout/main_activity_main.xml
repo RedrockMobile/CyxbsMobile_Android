@@ -21,11 +21,13 @@
         android:fitsSystemWindows="true" >
         <!--设置 fitsSystemWindows-->
 
+        <!--课表-->
         <androidx.fragment.app.FragmentContainerView
             android:id="@+id/main_fcv_course_fragment"
             android:layout_width="match_parent"
             android:layout_height="match_parent" />
 
+        <!--底部按钮-->
         <com.mredrock.cyxbs.main.widget.BottomNavLayout
             android:id="@+id/main_bnl_bottom_nav"
             android:layout_width="match_parent"
@@ -34,6 +36,7 @@
 
     </FrameLayout>
 
+    <!--闪屏页-->
     <androidx.fragment.app.FragmentContainerView
         android:id="@+id/main_fcv_splash_fragment"
         android:layout_width="match_parent"

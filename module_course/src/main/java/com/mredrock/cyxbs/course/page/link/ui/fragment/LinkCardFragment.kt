@@ -16,7 +16,6 @@ import com.mredrock.cyxbs.course.page.link.room.LinkStuEntity
 import com.mredrock.cyxbs.course.page.link.viewmodel.fragment.LinkCardViewModel
 import com.mredrock.cyxbs.lib.base.dailog.ChooseDialog
 import com.mredrock.cyxbs.lib.base.ui.BaseFragment
-import com.mredrock.cyxbs.lib.utils.extensions.dp2px
 import com.mredrock.cyxbs.lib.utils.extensions.gone
 import com.mredrock.cyxbs.lib.utils.extensions.setOnSingleClickListener
 import com.mredrock.cyxbs.lib.utils.extensions.visible
@@ -64,8 +63,8 @@ class LinkCardFragment : BaseFragment() {
           requireContext(),
           ChooseDialog.Data(
             content = "确定要取消关联吗？",
-            width = 255.dp2px,
-            height = 146.dp2px,
+            width = 255,
+            height = 146,
           )
         ).setPositiveClick {
           viewModel.deleteLinkStudent()

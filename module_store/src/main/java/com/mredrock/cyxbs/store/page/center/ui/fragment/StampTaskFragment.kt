@@ -73,7 +73,7 @@ class StampTaskFragment : BaseFragment() {
       }
     }
     
-    mActivityViewModel.refreshIsSuccessful.observe {
+    mActivityViewModel.refreshIsSuccessfulState.observe {
       if (it) {
         // 取消断网图片的显示
         mImageView.invisible()

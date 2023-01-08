@@ -15,7 +15,7 @@
     <FrameLayout
         android:id="@+id/config_fl_choose_dialog_one_btn_content"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="match_parent"
         android:layout_marginBottom="64dp"
         android:tag="choose_dialog_content"
         tools:layout_height="120dp">

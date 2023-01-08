@@ -8,8 +8,4 @@ package com.mredrock.cyxbs.lib.utils.network
  */
 
 // TODO 因为目前 ApiGenerator 未迁移过来，所以地址暂未改
-//const val DEBUG_URL = "https://www.wanandroid.com"
-//const val RELEASE_URL = DEBUG_URL
-//
-//fun getBaseUrl() = if (BuildConfig.DEBUG) DEBUG_URL else RELEASE_URL
 fun getBaseUrl() = com.mredrock.cyxbs.common.config.getBaseUrl()
