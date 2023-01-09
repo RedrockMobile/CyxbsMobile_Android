@@ -15,7 +15,7 @@ if os.path.exists("./release_json/release.json"):
     print("云端数据: ")
     print(latest)
     # 不相同说明有更新
-    if latest.version_code != content_json.version_code:
+    if latest["version_code"] != content_json["version_code"]:
         # 检查是否到时间了，到了就直接更新json
         if time.time() > info["update_time"]: 
             print("触发发版操作")
