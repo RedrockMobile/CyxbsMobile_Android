@@ -5,7 +5,7 @@ import android.content.Context
 import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
 import android.os.Bundle
-import android.util.SizeF
+import android.util.Size
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -71,7 +71,13 @@ abstract class BaseDialog<T : BaseDialog<T, D>, D: BaseDialog.Data> protected co
     val view = LayoutInflater.from(context).inflate(data.type.layoutId, null)
     val insertView = createContentView(view.context)
     view.findViewWithTag<FrameLayout>("choose_dialog_content").addView(insertView)
-    setContentView(view, ViewGroup.LayoutParams(data.width.dp2px, data.height.dp2px))
+    setContentView(
+      view,
+      ViewGroup.LayoutParams(
+        data.width.let { if (it > 0) it.dp2px else it },
+        data.height.let { if (it > 0) it.dp2px else it }
+      )
+    )
     initViewInternal(view)
     initContentView(insertView)
   }
@@ -87,8 +93,8 @@ abstract class BaseDialog<T : BaseDialog<T, D>, D: BaseDialog.Data> protected co
         ivBg.setImageResource(data.backgroundId)
         btnPositive.text = data.positiveButtonText
         btnPositive.layoutParams.apply {
-          width = data.buttonSize.width.dp2px
-          height = data.buttonSize.height.dp2px
+          width = data.buttonSize.width.let { if (it > 0) it.dp2px else it }
+          height = data.buttonSize.height.let { if (it > 0) it.dp2px else it }
         }
         btnPositive.setBackgroundColor(
           ContextCompat.getColor(context, data.positiveButtonColor)
@@ -107,12 +113,12 @@ abstract class BaseDialog<T : BaseDialog<T, D>, D: BaseDialog.Data> protected co
         btnPositive.text = data.positiveButtonText
         btnNegative.text = data.negativeButtonText
         btnPositive.layoutParams.apply {
-          width = data.buttonSize.width.dp2px
-          height = data.buttonSize.height.dp2px
+          width = data.buttonSize.width.let { if (it > 0) it.dp2px else it }
+          height = data.buttonSize.height.let { if (it > 0) it.dp2px else it }
         }
         btnNegative.layoutParams.apply {
-          width = data.buttonSize.width.dp2px
-          height = data.buttonSize.height.dp2px
+          width = data.buttonSize.width.let { if (it > 0) it.dp2px else it }
+          height = data.buttonSize.height.let { if (it > 0) it.dp2px else it }
         }
         btnPositive.setBackgroundColor(
           ContextCompat.getColor(context, data.positiveButtonColor)
@@ -221,9 +227,12 @@ abstract class BaseDialog<T : BaseDialog<T, D>, D: BaseDialog.Data> protected co
     val negativeButtonColor: Int
   
     /**
-     * button 的按钮大小，单位 dp
+     * button 的按钮大小
+     * - 默认为 80dp-34dp
+     * - 单位 dp
+     * - 支持 LayoutParams.WRAP_CONTENT、LayoutParams.MATCH_PARENT
      */
-    val buttonSize: SizeF
+    val buttonSize: Size
   
     /**
      * dialog 的宽
@@ -258,8 +267,8 @@ abstract class BaseDialog<T : BaseDialog<T, D>, D: BaseDialog.Data> protected co
         get() = R.color.config_choose_dialog_btn_positive
       override val negativeButtonColor: Int
         get() = R.color.config_choose_dialog_btn_negative
-      override val buttonSize: SizeF
-        get() = SizeF(80F, 34F)
+      override val buttonSize: Size
+        get() = Size(80, 34)
       override val width: Int
         get() = 300
       override val height: Int

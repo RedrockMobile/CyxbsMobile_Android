@@ -7,15 +7,12 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.annotation.LayoutRes
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.DefaultLifecycleObserver
-import androidx.lifecycle.LifecycleOwner
 import com.mredrock.cyxbs.api.account.IAccountService
 import com.mredrock.cyxbs.common.mark.ActionLoginStatusSubscriber
 import com.mredrock.cyxbs.common.mark.EventBusLifecycleSubscriber
 import com.mredrock.cyxbs.common.service.ServiceManager
 import com.mredrock.cyxbs.common.utils.FragmentBindView
 import com.mredrock.cyxbs.common.utils.LogUtils
-import com.umeng.analytics.MobclickAgent
 import org.greenrobot.eventbus.EventBus
 
 /**
@@ -183,18 +180,4 @@ open class BaseFragment : Fragment() {
     
     
     
-    init {
-        // Umeng 统计当前 Fragment
-        super.getLifecycle().addObserver(
-            object : DefaultLifecycleObserver {
-                override fun onResume(owner: LifecycleOwner) {
-                    MobclickAgent.onPageStart(javaClass.name)
-                }
-                
-                override fun onPause(owner: LifecycleOwner) {
-                    MobclickAgent.onPageEnd(javaClass.name)
-                }
-            }
-        )
-    }
 }

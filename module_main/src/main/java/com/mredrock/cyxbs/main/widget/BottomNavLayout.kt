@@ -53,6 +53,7 @@ class BottomNavLayout(
     selectPosition(0)
     
     if (BuildConfig.DEBUG) {
+      // debug 下，长按第三个按钮打开友盟测试 id
       mBtnMine.setOnLongClickListener {
         DebugDataDialog(context).show()
         true
