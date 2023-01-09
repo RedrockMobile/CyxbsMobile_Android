@@ -3,7 +3,7 @@
 
     <application>
         <activity
-            android:name=".PostActivity"
+            android:name=".pages.post.PostActivity"
             android:exported="false">
             <meta-data
                 android:name="android.app.lib_name"
