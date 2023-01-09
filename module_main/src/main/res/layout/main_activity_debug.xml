@@ -35,7 +35,7 @@
 
 
                 <TextView
-                    android:id="@+id/device_id"
+                    android:id="@+id/umeng_device_id"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:background="@drawable/main_shape_debug_text_bg"

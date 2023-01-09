@@ -14,30 +14,15 @@
         android:textSize="18sp" />
 
     <TextView
+        android:id="@+id/umeng_device_title"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="16dp"
         android:text="@string/main_umeng_push_device_id"
         android:textStyle="bold" />
 
-
     <TextView
-        android:id="@+id/device_id"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:background="@drawable/main_shape_debug_text_bg"
-        android:padding="8dp"
-        tools:text="设备id" />
-
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="16dp"
-        android:text="@string/main_umeng_analyzes_device_data"
-        android:textStyle="bold" />
-
-    <TextView
-        android:id="@+id/device_data"
+        android:id="@+id/umeng_device_id"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="@drawable/main_shape_debug_text_bg"

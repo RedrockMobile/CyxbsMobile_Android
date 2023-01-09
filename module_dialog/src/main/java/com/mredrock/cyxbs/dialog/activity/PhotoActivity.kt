@@ -26,9 +26,7 @@ import com.ndhzs.slideshow.utils.OnPageChangeCallback
 import io.reactivex.rxjava3.schedulers.Schedulers
 
 /**
- *    author : zz
- *    e-mail : 1140143252@qq.com
- *    date   : 2021/8/9 15:10
+ * 该 Activity CV 来自 store 模块的 PhotoActivity
  */
 class PhotoActivity : BaseActivity() {
 
@@ -64,7 +62,7 @@ class PhotoActivity : BaseActivity() {
         super.onCreate(savedInstanceState)
         // 降低因使用共享动画进入 activity 后的闪眼情况
         window.setBackgroundDrawableResource(android.R.color.transparent)
-        setContentView(R.layout.store_activity_photo)
+        setContentView(R.layout.dialog_activity_photo)
         setTheme(com.google.android.material.R.style.Theme_MaterialComponents) // 因为学长用的奇怪的 dialog, 需要这个主题支持
         val windowInsetsController = WindowCompat.getInsetsController(window, window.decorView)
         windowInsetsController.isAppearanceLightStatusBars = false // 设置状态栏字体颜色为白色
@@ -73,9 +71,9 @@ class PhotoActivity : BaseActivity() {
 
     @SuppressLint("SetTextI18n")
     private fun initView() {
-        val tvPosition: TextView = findViewById(R.id.store_tv_photo_position)
+        val tvPosition: TextView = findViewById(R.id.dialog_tv_photo_position)
         val pos = PositionList.get(mImgUrls.hashCode())
-        val slideShow: SlideShow = findViewById(R.id.store_slideShow_photo)
+        val slideShow: SlideShow = findViewById(R.id.dialog_slideShow_photo)
         slideShow.setCurrentItem(pos.value)
             .addPageChangeCallback(
                 object : OnPageChangeCallback {
