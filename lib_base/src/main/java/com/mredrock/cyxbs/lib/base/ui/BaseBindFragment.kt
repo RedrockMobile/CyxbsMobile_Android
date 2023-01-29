@@ -44,6 +44,17 @@ abstract class BaseBindFragment<VB : ViewBinding> : BaseFragment() {
   protected val binding: VB
     get() = _binding!!
   
+  init {
+    viewLifecycleOwnerLiveData.observeForever {
+      // 因为 binding 需要在 onDestroyView() 中置空
+      // 但是置空是在父类中操作，会导致比子类先调用 (除非你把 super 写在末尾)
+      // 所以为了优雅，可以观察 viewLifecycleOwnerLiveData，它是在 onDestroyView() 后回调的
+      if (it == null) {
+        _binding = null
+      }
+    }
+  }
+  
   @CallSuper
   @Suppress("UNCHECKED_CAST")
   @Deprecated(
@@ -86,10 +97,5 @@ abstract class BaseBindFragment<VB : ViewBinding> : BaseFragment() {
     container: ViewGroup?,
     savedInstanceState: Bundle?
   ) {
-  }
-  
-  override fun onDestroyView() {
-    super.onDestroyView()
-    _binding = null
   }
 }
