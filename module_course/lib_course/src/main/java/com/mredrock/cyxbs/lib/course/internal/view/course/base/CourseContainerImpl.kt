@@ -8,6 +8,8 @@ import com.mredrock.cyxbs.lib.course.internal.item.IItem
 import com.mredrock.cyxbs.lib.course.internal.item.IItemContainer
 import com.mredrock.cyxbs.lib.course.utils.forEachInline
 import com.ndhzs.netlayout.attrs.NetLayoutParams
+import java.util.*
+import kotlin.collections.ArrayList
 
 /**
  * ...
@@ -81,11 +83,11 @@ abstract class CourseContainerImpl @JvmOverloads constructor(
   }
   
   override fun getItemByViewMap(): Map<View, IItem> {
-    return mItemByView
+    return Collections.unmodifiableMap(mItemByView)
   }
   
   override fun getViewByItemMap(): Map<IItem, View> {
-    return mViewByItem
+    return Collections.unmodifiableMap(mViewByItem)
   }
   
   final override fun findPairUnderByXY(x: Int, y: Int): Pair<IItem, View>? {

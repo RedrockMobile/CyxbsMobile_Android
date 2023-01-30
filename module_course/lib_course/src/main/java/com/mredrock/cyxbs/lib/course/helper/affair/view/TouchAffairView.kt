@@ -13,7 +13,7 @@ import androidx.core.animation.doOnEnd
 import androidx.core.animation.doOnStart
 import androidx.core.view.doOnNextLayout
 import com.mredrock.cyxbs.lib.course.R
-import com.mredrock.cyxbs.lib.course.helper.affair.ITouchAffair
+import com.mredrock.cyxbs.lib.course.helper.affair.expose.ITouchAffairItem
 import com.mredrock.cyxbs.lib.course.internal.view.course.ICourseViewGroup
 import com.mredrock.cyxbs.lib.course.internal.view.course.lp.ItemLayoutParams
 import com.mredrock.cyxbs.lib.course.item.single.SingleDayLayoutParams
@@ -29,7 +29,9 @@ import kotlin.math.roundToInt
  * @date 2022/9/19 14:55
  */
 @SuppressLint("ViewConstructor")
-class TouchAffairView(val course: ICourseViewGroup) : ViewGroup(course.getContext()), ITouchAffair {
+open class TouchAffairView(
+  val course: ICourseViewGroup,
+) : ViewGroup(course.getContext()), ITouchAffairItem {
   
   // 扩展动画
   private var mExpandValueAnimator: ValueAnimator? = null
@@ -92,13 +94,13 @@ class TouchAffairView(val course: ICourseViewGroup) : ViewGroup(course.getContex
   /**
    * 该方法作用：
    * - 计算当前位置并刷新布局
-   * - 启动一个生长的动画
+   * - 启动一个过度动画
    */
   override fun refresh(
     oldTopRow: Int,
     oldBottomRow: Int,
     topRow: Int,
-    bottomRow: Int
+    bottomRow: Int,
   ) {
     val lp = layoutParams as ItemLayoutParams
     lp.startRow = topRow
@@ -110,7 +112,7 @@ class TouchAffairView(val course: ICourseViewGroup) : ViewGroup(course.getContex
     }
   }
   
-  override fun remove() {
+  override fun cancelShow() {
     // 离场动画
     startAnimation(AlphaAnimation(1F, 0F).apply { duration = 200 })
     course.removeItem(this)
@@ -122,20 +124,18 @@ class TouchAffairView(val course: ICourseViewGroup) : ViewGroup(course.getContex
     }
   }
   
-  override fun setOnClickListener(onClick: ITouchAffair.() -> Unit) {
-    setOnSingleClickListener {
-      onClick.invoke(this)
-    }
+  override fun setOnClickListener(l: () -> Unit) {
+    setOnSingleClickListener { l.invoke() }
   }
   
   /**
-   * 启动生长动画
+   * 启动过度动画
    */
   private fun startExpandValueAnimator(
     oldTopRow: Int,
     oldBottomRow: Int,
     topRow: Int,
-    bottomRow: Int
+    bottomRow: Int,
   ) {
     mExpandValueAnimator?.end() // 取消之前的动画
     mExpandValueAnimator = ValueAnimator.ofFloat(0F, 1F).apply {
@@ -174,7 +174,7 @@ class TouchAffairView(val course: ICourseViewGroup) : ViewGroup(course.getContex
   private val mMargin = R.dimen.course_item_margin.dimen.toInt()
   
   init {
-    addView(mImageView)
+    super.addView(mImageView)
   }
   
   override fun initializeView(context: Context): View {

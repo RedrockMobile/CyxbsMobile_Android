@@ -2,6 +2,7 @@ package com.mredrock.cyxbs.lib.course.item.single
 
 import android.view.Gravity
 import com.mredrock.cyxbs.lib.course.internal.view.course.lp.ItemLayoutParams
+import com.ndhzs.netlayout.attrs.NetLayoutParams
 
 /**
  * ...
@@ -52,5 +53,14 @@ open class SingleDayLayoutParams(
     endColumn = weekNum
     startRow = startNode
     endRow = startNode + length - 1
+  }
+  
+  /**
+   * 如果你需要控制课表中 item 的显示顺序，你需要重写该方法
+   *
+   * 返回 1，则显示在上面
+   */
+  override fun compareTo(other: NetLayoutParams): Int {
+    return super.compareTo(other)
   }
 }

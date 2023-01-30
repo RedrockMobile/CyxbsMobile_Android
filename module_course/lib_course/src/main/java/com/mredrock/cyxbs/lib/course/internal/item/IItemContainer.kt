@@ -21,13 +21,13 @@ interface IItemContainer {
   fun findPairUnderByFilter(filter: IItem.(View) -> Boolean): Pair<IItem, View>?
   
   /**
-   * @return 添加是否成功，因为可能会被拦截
+   * @return 添加是否成功，因为可能会被 [OnItemExistListener] 拦截
    */
   fun addItem(item: IItem): Boolean
   
   /**
    * 移除 [IItem]
-   * @return 移除是否成功，如果移除失败，说明容器中没有添加该 item，可能是再添加的时候被其他人拦截了
+   * @return 移除是否成功，如果移除失败，说明容器中没有添加该 item，可能是在添加的时候被 [OnItemExistListener]拦截了
    */
   fun removeItem(item: IItem): Boolean
   

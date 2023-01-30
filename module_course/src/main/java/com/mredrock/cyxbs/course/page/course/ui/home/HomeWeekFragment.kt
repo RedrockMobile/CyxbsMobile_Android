@@ -18,8 +18,8 @@ import com.mredrock.cyxbs.course.page.course.utils.container.LinkLessonContainer
 import com.mredrock.cyxbs.course.page.course.utils.container.SelfLessonContainerProxy
 import com.mredrock.cyxbs.lib.course.fragment.page.CourseWeekFragment
 import com.mredrock.cyxbs.lib.course.helper.affair.CreateAffairDispatcher
-import com.mredrock.cyxbs.lib.course.helper.affair.ICreateAffairHandler
-import com.mredrock.cyxbs.lib.course.helper.affair.ITouchAffair
+import com.mredrock.cyxbs.lib.course.helper.affair.expose.ITouchAffairItem
+import com.mredrock.cyxbs.lib.course.helper.affair.expose.ITouchCallback
 import com.mredrock.cyxbs.lib.course.internal.item.IItem
 import com.mredrock.cyxbs.lib.course.internal.item.IItemContainer
 import com.mredrock.cyxbs.lib.utils.extensions.getSp
@@ -120,17 +120,17 @@ class HomeWeekFragment : CourseWeekFragment() {
         setOnClickListener {
           IAffairService::class.impl
             .startActivityForAddAffair(mWeek, lp.weekNum - 1, getBeginLesson(lp.startRow), lp.length)
-          remove()
+          cancelShow()
         }
         addTouchCallback(
-          object : ICreateAffairHandler.TouchCallback {
+          object : ITouchCallback {
             override fun onTouchEnd(
               pointerId: Int,
               initialRow: Int,
               initialColumn: Int,
+              touchRow: Int,
               topRow: Int,
               bottomRow: Int,
-              touchRow: Int,
             ) {
               if (bottomRow == topRow) {
                 tryToastSingleRow()
@@ -138,7 +138,7 @@ class HomeWeekFragment : CourseWeekFragment() {
             }
   
             /**
-             * 在只是单独点击时，只会生成长度为 1 的 [ITouchAffair]，
+             * 在只是单独点击时，只会生成长度为 1 的 [ITouchAffairItem]，
              * 所以需要弹个 toast 来提示用户可以长按空白区域上下移动来生成更长的事务
              * (不然可能他一直不知道怎么生成更长的事务)
              */
@@ -159,7 +159,7 @@ class HomeWeekFragment : CourseWeekFragment() {
   }
   
   override fun isExhibitionItem(item: IItem): Boolean {
-    return super.isExhibitionItem(item) || item is ITouchAffair
+    return super.isExhibitionItem(item) || item is ITouchAffairItem
   }
   
   /**

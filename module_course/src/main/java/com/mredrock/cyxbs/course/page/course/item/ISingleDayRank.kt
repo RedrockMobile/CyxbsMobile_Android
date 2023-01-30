@@ -21,6 +21,9 @@ interface ISingleDayRank : ISingleDayData, IWeek {
    */
   val rank: Int
   
+  /**
+   * 返回 1，则显示在上面
+   */
   fun compareToInternal(other: ISingleDayRank): Int {
     if (this === other) return 0 // 如果是同一个对象直接返回 0
     return compareBy(other.week - week) { // 周数小的显示在上面
@@ -47,6 +50,7 @@ interface ISingleDayRank : ISingleDayData, IWeek {
                   }
                 }
               } else {
+                // 长度相同，但起始位置不同，以当前时间来计算谁在谁上面
                 compareBy(getEndTimeMinute(e1) - getNowTime()) {
                   -1
                 }

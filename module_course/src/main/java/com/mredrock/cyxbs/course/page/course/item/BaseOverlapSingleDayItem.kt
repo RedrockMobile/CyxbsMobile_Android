@@ -11,6 +11,7 @@ import com.mredrock.cyxbs.lib.course.fragment.course.expose.overlap.IOverlapItem
 import com.mredrock.cyxbs.lib.course.internal.item.forEachRow
 import com.mredrock.cyxbs.lib.course.item.single.AbstractOverlapSingleDayItem
 import com.mredrock.cyxbs.lib.course.item.single.ISingleDayData
+import com.mredrock.cyxbs.lib.course.item.single.SingleDayLayoutParams
 import com.mredrock.cyxbs.lib.utils.extensions.setOnSingleClickListener
 import com.ndhzs.netlayout.view.NetLayout
 import java.util.TreeSet
@@ -32,6 +33,8 @@ abstract class BaseOverlapSingleDayItem<V, D> : AbstractOverlapSingleDayItem(),
 where V : View, V :IOverlapTag, D : ISingleDayData, D : IWeek // 用于提醒子类需要实现这些接口
 {
   abstract val data: D
+  
+  abstract override val lp: SingleDayLayoutParams
   
   abstract override fun createView(context: Context): V
   
