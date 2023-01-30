@@ -6,6 +6,7 @@ import android.view.View
 import androidx.core.util.forEach
 import androidx.core.util.isNotEmpty
 import com.mredrock.cyxbs.lib.course.R
+import com.mredrock.cyxbs.lib.course.fragment.course.base.OverlapImpl
 import com.mredrock.cyxbs.lib.course.fragment.course.expose.overlap.IOverlap
 import com.mredrock.cyxbs.lib.course.fragment.course.expose.overlap.IOverlapItem
 import com.mredrock.cyxbs.lib.course.fragment.course.expose.overlap.OverlapHelper
@@ -17,6 +18,21 @@ import java.util.Collections
 
 /**
  * 用于实现单列的可重叠 item
+ *
+ * ## 重叠是什么？
+ * 比如我有一个 1、2、3、4 节的课，但是另一节课是在 2、3 节，此时就会导致一节课被分开展示
+ *
+ * ## 怎么解决被分开展示的问题？
+ * 按照产品给的需求：这分开的区域每个都要单独显示，且显示的形式与 1、2、3、4 节相同，只不过大小不同。
+ *
+ * 根据上述需求，一个 item 可以由多行组成（当前未考虑多列），我将 item 对应的 view 设为了 NetLayout，
+ * 在 NetLayout 里面填充多个相同的子 View 来实现分开展示
+ *
+ * ## 怎么计算重叠的？
+ * 重叠的计算具体逻辑请看 [OverlapImpl]
+ *
+ * 这里讲一下大致思路：课表是网格布局，每个格子都有一条引用链，串联起了这个格子上的所有 item。
+ * 正常情况下只会显示最顶上的 item，如果你将顶上的 item removed 或者 gone，引用链会重新计算并刷新显示
  *
  * @author 985892345 (Guo Xiangrui)
  * @email guo985892345@foxmail.com
@@ -196,14 +212,13 @@ abstract class AbstractOverlapSingleDayItem : IOverlapItem, OverlapHelper.IOverl
   private val mFreeAreaMap = SparseIntArray()
   
   /**
-   * 刷新空闲区域
+   * 刷新空闲区域，重新计算自己可以显示的节点
    */
   private fun refreshFreeArea() {
     mFreeAreaMap.clear()
     val column = lp.weekNum
     var s = lp.startRow
     var e = s - 1
-    // 实现重叠后分开显示的逻辑
     lp.forEachRow { row ->
       if (overlap.isDisplayable(row, column)) {
         e = row

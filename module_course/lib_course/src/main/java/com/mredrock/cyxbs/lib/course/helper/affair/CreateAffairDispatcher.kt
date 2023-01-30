@@ -37,14 +37,14 @@ class CreateAffairDispatcher(
   init {
     page.addCourseLifecycleObservable(
       object : ICourseWrapper.CourseLifecycleObserver {
-        override fun onCreateCourse(course: ICourseViewGroup) {}
         override fun onDestroyCourse(course: ICourseViewGroup) {
           mPointerHandlerPool.clear() // Fragment 调用 onDestroy() 时需要清空池子
         }
-      }, false
+      }
     )
   }
   
+  // ICreateAffairHandler 的复用池
   private val mPointerHandlerPool = arrayListOf<ICreateAffairHandler>()
   private var mIsAllowIntercept = true
   private var mOnClickListener: (ITouchAffair.() -> Unit)? = null
@@ -96,6 +96,9 @@ class CreateAffairDispatcher(
     }
   }
   
+  /**
+   * 得到空闲的 ICreateAffairHandler 或者生成一个新的 ICreateAffairHandler
+   */
   private fun getFreeHandler(): ICreateAffairHandler {
     mPointerHandlerPool.forEach {
       // 如果没有被使用，就直接 return
@@ -116,7 +119,7 @@ class CreateAffairDispatcher(
     mTouchCallbacks.forEachReversed { it.onLongPressStart(pointerId, initialRow, initialColumn) }
   }
   
-  override fun onMove(
+  override fun onTouchMove(
     pointerId: Int,
     initialRow: Int,
     initialColumn: Int,
@@ -126,7 +129,7 @@ class CreateAffairDispatcher(
   ) {
     unfoldNoonOrDuskIfNecessary(initialRow, touchRow)
     mTouchCallbacks.forEachReversed {
-      it.onMove(
+      it.onTouchMove(
         pointerId,
         initialRow,
         initialColumn,
@@ -137,7 +140,7 @@ class CreateAffairDispatcher(
     }
   }
   
-  override fun onEnd(
+  override fun onTouchEnd(
     pointerId: Int,
     initialRow: Int,
     initialColumn: Int,
@@ -146,7 +149,7 @@ class CreateAffairDispatcher(
     touchRow: Int,
   ) {
     mTouchCallbacks.forEachReversed {
-      it.onEnd(
+      it.onTouchEnd(
         pointerId,
         initialRow,
         initialColumn,

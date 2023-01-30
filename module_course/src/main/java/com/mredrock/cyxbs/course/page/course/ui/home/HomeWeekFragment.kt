@@ -40,7 +40,7 @@ class HomeWeekFragment : CourseWeekFragment() {
     fun newInstance(week: Int): HomeWeekFragment {
       return HomeWeekFragment().apply {
         arguments = bundleOf(
-          "mWeek" to week
+          this::mWeek.name to week
         )
       }
     }
@@ -124,7 +124,7 @@ class HomeWeekFragment : CourseWeekFragment() {
         }
         addTouchCallback(
           object : ICreateAffairHandler.TouchCallback {
-            override fun onEnd(
+            override fun onTouchEnd(
               pointerId: Int,
               initialRow: Int,
               initialColumn: Int,

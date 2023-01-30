@@ -4,13 +4,10 @@ import android.graphics.Canvas
 import android.view.View
 import android.view.ViewConfiguration
 import android.view.ViewGroup
-import androidx.core.content.edit
 import androidx.core.view.isGone
 import com.mredrock.cyxbs.lib.course.helper.ScrollTouchHandler
 import com.mredrock.cyxbs.lib.course.internal.view.course.ICourseViewGroup
 import com.mredrock.cyxbs.lib.course.internal.view.course.lp.ItemLayoutParams
-import com.mredrock.cyxbs.lib.utils.extensions.getSp
-import com.mredrock.cyxbs.lib.utils.extensions.toast
 import com.mredrock.cyxbs.lib.utils.utils.VibratorUtil
 import com.ndhzs.netlayout.draw.ItemDecoration
 import com.ndhzs.netlayout.touch.multiple.event.IPointerEvent
@@ -130,7 +127,7 @@ class CreateAffairHandler(
           mIsInLongPress = false // 重置
           mScrollRunnable.cancel()
           course.removeItemDecoration(mItemDecoration)
-          iTouch.onEnd(mPointerId, mInitialRow, mInitialColumn, mTopRow, mBottomRow, mTouchRow)
+          iTouch.onTouchEnd(mPointerId, mInitialRow, mInitialColumn, mTopRow, mBottomRow, mTouchRow)
         } else {
           mLongPressRunnable.cancel()
           if (abs(x - mLastMoveX) <= mTouchSlop
@@ -147,7 +144,7 @@ class CreateAffairHandler(
           mIsInLongPress = false // 重置
           mScrollRunnable.cancel()
           course.removeItemDecoration(mItemDecoration)
-          iTouch.onEnd(mPointerId, mInitialRow, mInitialColumn, mTopRow, mBottomRow, mTouchRow)
+          iTouch.onTouchEnd(mPointerId, mInitialRow, mInitialColumn, mTopRow, mBottomRow, mTouchRow)
         } else {
           mLongPressRunnable.cancel()
         }
@@ -206,7 +203,7 @@ class CreateAffairHandler(
     if (topRow < mUpperRow) topRow = mUpperRow // 根据上限再次修正 topRow
     if (bottomRow > mLowerRow) bottomRow = mLowerRow // 根据下限再次修正 bottomRow
     
-    iTouch.onMove(mPointerId, mInitialRow, mInitialColumn, topRow, bottomRow, mTouchRow)
+    iTouch.onTouchMove(mPointerId, mInitialRow, mInitialColumn, topRow, bottomRow, mTouchRow)
     
     if (topRow != mTopRow || bottomRow != mBottomRow) { // 避免不必要的刷新
       affair.refresh(mTopRow, mBottomRow, topRow, bottomRow)

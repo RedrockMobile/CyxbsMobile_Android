@@ -5,6 +5,7 @@ import com.mredrock.cyxbs.lib.course.fragment.course.expose.wrapper.ICourseWrapp
 import com.mredrock.cyxbs.lib.course.internal.item.IItem
 import com.mredrock.cyxbs.lib.course.internal.item.IItemContainer
 import com.mredrock.cyxbs.lib.course.internal.view.course.ICourseViewGroup
+import java.util.*
 
 /**
  * 管理 Item 回收池
@@ -28,11 +29,14 @@ abstract class ItemPoolController<Item, Data : Any>(
   private val mShowItems = arrayListOf<Item>()
   
   init {
-    // 这里需要以添加监听的方式来修改 mOldDataMap
-    // 因为 item 存在被其他地方移除的情况
+    // 课表生命周期的监听
+    // 因为使用这个类的一般是 Fragment，他与 View 的生命周期不一致，需要在 View 被摧毁时清空对 item 的引用
     wrapper.addCourseLifecycleObservable(
       object : ICourseWrapper.CourseLifecycleObserver {
         
+        // 添加 item 的监听
+        // 这里需要以添加监听的方式来修改 mOldDataMap
+        // 因为 item 存在被其他地方移除的情况
         val listener = object : IItemContainer.OnItemExistListener {
           override fun onItemAddedAfter(item: IItem, view: View) {
             if (itemClass.isInstance(item)) {
@@ -74,7 +78,6 @@ abstract class ItemPoolController<Item, Data : Any>(
           mRecyclePool.clear()
           mShowItems.clear()
           clearDataFromOldList()
-          course.postRemoveItemExistListener(listener)
         }
       }, true
     )
@@ -136,6 +139,6 @@ abstract class ItemPoolController<Item, Data : Any>(
   }
   
   protected fun getShowItems(): List<Item> {
-    return mShowItems
+    return Collections.unmodifiableList(mShowItems)
   }
 }

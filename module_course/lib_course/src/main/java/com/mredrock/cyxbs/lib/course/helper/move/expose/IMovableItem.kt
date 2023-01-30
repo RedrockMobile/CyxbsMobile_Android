@@ -15,6 +15,8 @@ import com.mredrock.cyxbs.lib.course.internal.view.course.ICourseViewGroup
  */
 interface IMovableItem : IItem {
   
+  val move: IMove
+  
   /**
    * 父布局
    */
@@ -37,20 +39,4 @@ interface IMovableItem : IItem {
    * - 该方法返回的 View 可以不用返回 [IItem.initializeView]，返回其他 View 也是可行的，但你应该返回相同样子的 View
    */
   fun createMovableView(): View
-  
-  /**
-   * 是否允许开启长按整体移动功能
-   */
-  val isAllowMove: Boolean
-    get() = true
-  
-  fun onMoveStart(view: View, initialX: Int, initialAbsoluteY: Int) {}
-  
-  fun onMoving(view: View, initialX: Int, initialAbsoluteY: Int, nowX: Int, nowAbsoluteY: Int) {}
-  
-  fun onMoveEnd(view: View, initialX: Int, initialAbsoluteY: Int, nowX: Int, nowAbsoluteY: Int) {}
-  
-  fun handleMove(view: View, initialX: Int, initialAbsoluteY: Int, nowX: Int, nowAbsoluteY: Int) {
-  
-  }
 }

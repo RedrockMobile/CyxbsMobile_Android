@@ -111,42 +111,42 @@ abstract class CourseContainerImpl @JvmOverloads constructor(
   }
   
   
-  @Deprecated("禁止子类调用", level = DeprecationLevel.HIDDEN)
+  @Deprecated("请使用 addItem()", level = DeprecationLevel.ERROR)
   final override fun addNetChild(child: View, lp: NetLayoutParams) {
     super.addNetChild(child, lp)
   }
   
-  @Deprecated("禁止子类调用", level = DeprecationLevel.HIDDEN)
+  @Deprecated("请使用 addItem()", level = DeprecationLevel.ERROR)
   final override fun addView(child: View?) {
     super.addView(child)
   }
   
-  @Deprecated("禁止子类调用", level = DeprecationLevel.HIDDEN)
+  @Deprecated("请使用 addItem()", level = DeprecationLevel.ERROR)
   final override fun addView(child: View?, index: Int) {
     super.addView(child, index)
   }
   
-  @Deprecated("禁止子类调用", level = DeprecationLevel.HIDDEN)
+  @Deprecated("请使用 addItem()", level = DeprecationLevel.ERROR)
   final override fun addView(child: View?, width: Int, height: Int) {
     super.addView(child, width, height)
   }
   
-  @Deprecated("禁止子类调用", level = DeprecationLevel.HIDDEN)
+  @Deprecated("请使用 addItem()", level = DeprecationLevel.ERROR)
   final override fun addView(child: View?, params: LayoutParams?) {
     super.addView(child, params)
   }
   
-  @Deprecated("禁止子类调用", level = DeprecationLevel.HIDDEN)
+  @Deprecated("请使用 removeItem()", level = DeprecationLevel.ERROR)
   final override fun removeView(view: View?) {
     super.removeView(view)
   }
   
-  @Deprecated("禁止子类调用", level = DeprecationLevel.HIDDEN)
+  @Deprecated("请使用 removeItem()", level = DeprecationLevel.ERROR)
   final override fun removeViewAt(index: Int) {
     super.removeViewAt(index)
   }
   
-  @Deprecated("禁止子类调用", level = DeprecationLevel.HIDDEN)
+  @Deprecated("请使用 removeItem()", level = DeprecationLevel.ERROR)
   final override fun removeViews(start: Int, count: Int) {
     super.removeViews(start, count)
   }

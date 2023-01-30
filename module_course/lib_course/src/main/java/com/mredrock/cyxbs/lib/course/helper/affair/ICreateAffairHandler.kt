@@ -39,7 +39,7 @@ interface ICreateAffairHandler : IPointerTouchHandler {
      * @param bottomRow 与下界比较后的实际值
      * @param touchRow 当前触摸的值
      */
-    fun onMove(
+    fun onTouchMove(
       pointerId: Int,
       initialRow: Int,
       initialColumn: Int,
@@ -48,7 +48,7 @@ interface ICreateAffairHandler : IPointerTouchHandler {
       touchRow: Int
     ) {}
     
-    fun onEnd(
+    fun onTouchEnd(
       pointerId: Int,
       initialRow: Int,
       initialColumn: Int,

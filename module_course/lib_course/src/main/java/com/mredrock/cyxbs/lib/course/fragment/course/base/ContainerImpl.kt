@@ -5,8 +5,10 @@ import android.view.View
 import android.view.animation.AlphaAnimation
 import androidx.annotation.CallSuper
 import com.mredrock.cyxbs.lib.course.fragment.course.expose.container.ICourseContainer
+import com.mredrock.cyxbs.lib.course.fragment.course.expose.wrapper.ICourseWrapper
 import com.mredrock.cyxbs.lib.course.internal.item.IItem
 import com.mredrock.cyxbs.lib.course.internal.item.IItemContainer
+import com.mredrock.cyxbs.lib.course.internal.view.course.ICourseViewGroup
 import com.mredrock.cyxbs.lib.course.item.affair.IAffairItem
 import com.mredrock.cyxbs.lib.course.item.lesson.ILessonItem
 import com.mredrock.cyxbs.lib.course.utils.forEachInline
@@ -14,6 +16,9 @@ import java.util.*
 
 /**
  * 掌控 [ILessonItem] 和 [IAffairItem] 的容器
+ *
+ * ## 注意
+ * - 虽然 `course.addItem()` 可能会被拦截而添加失败，但是这一层并没有做任何处理，而是直接保存进单独的一个集合里
  *
  * @author 985892345 (Guo Xiangrui)
  * @email guo985892345@foxmail.com
@@ -24,9 +29,21 @@ abstract class ContainerImpl : AbstractCourseBaseFragment(), ICourseContainer {
   private val mLessons = hashSetOf<ILessonItem>()
   private val mAffairs = hashSetOf<IAffairItem>()
   
+  init {
+    // 回收 item，解决 Fragment 与 View 生命周期不一致问题
+    addCourseLifecycleObservable(
+      object : ICourseWrapper.CourseLifecycleObserver {
+        override fun onDestroyCourse(course: ICourseViewGroup) {
+          mLessons.clear()
+          mAffairs.clear()
+        }
+      }
+    )
+  }
+  
   final override fun addLesson(lesson: ILessonItem) {
-    course.addItem(lesson)
     mLessons.add(lesson)
+    course.addItem(lesson)
   }
   
   final override fun addLesson(lessons: List<ILessonItem>) {
@@ -39,14 +56,13 @@ abstract class ContainerImpl : AbstractCourseBaseFragment(), ICourseContainer {
   }
   
   final override fun clearLesson() {
-    // 因为后面的监听中会调用 mLessons.remove()，所以这里使用迭代先删除
+    // 因为后面的监听中会调用 mLessons.remove()，所以这里使用迭代先删除，不然迭代中在其他地方删除会报异常
     val iterator = mLessons.iterator()
     while (iterator.hasNext()) {
       val next = iterator.next()
       iterator.remove() // 先删除
       course.removeItem(next)
     }
-    mLessons.clear()
   }
   
   final override fun getLessonsSize(): Int {
@@ -64,8 +80,8 @@ abstract class ContainerImpl : AbstractCourseBaseFragment(), ICourseContainer {
   
   
   final override fun addAffair(affair: IAffairItem) {
-    course.addItem(affair)
     mAffairs.add(affair)
+    course.addItem(affair)
   }
   
   final override fun addAffair(affairs: List<IAffairItem>) {
@@ -78,14 +94,13 @@ abstract class ContainerImpl : AbstractCourseBaseFragment(), ICourseContainer {
   }
   
   final override fun clearAffair() {
-    // 因为后面的监听中会调用 mLessons.remove()，所以这里使用迭代先删除
+    // 因为后面的监听中会调用 mLessons.remove()，所以这里使用迭代先删除，不然迭代中在其他地方删除会报异常
     val iterator = mAffairs.iterator()
     while (iterator.hasNext()) {
       val next = iterator.next()
       iterator.remove() // 先删除
       course.removeItem(next)
     }
-    mAffairs.clear()
   }
   
   final override fun getAffairsSize(): Int {

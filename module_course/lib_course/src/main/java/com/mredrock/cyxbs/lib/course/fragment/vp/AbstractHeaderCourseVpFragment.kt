@@ -14,7 +14,7 @@ import com.mredrock.cyxbs.lib.utils.extensions.lazyUnlock
 import com.mredrock.cyxbs.lib.utils.extensions.setOnSingleClickListener
 
 /**
- * ...
+ * 在 [AbstractCourseVpFragment] 的基础上封装了课表头
  *
  * @author 985892345 (Guo Xiangrui)
  * @email guo985892345@foxmail.com

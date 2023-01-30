@@ -7,10 +7,12 @@ import android.view.ViewGroup
 import androidx.annotation.CallSuper
 import com.mredrock.cyxbs.lib.course.fragment.course.expose.overlap.IOverlapContainer
 import com.mredrock.cyxbs.lib.course.fragment.course.expose.overlap.IOverlapItem
+import com.mredrock.cyxbs.lib.course.fragment.course.expose.wrapper.ICourseWrapper
 import com.mredrock.cyxbs.lib.course.internal.item.IItem
 import com.mredrock.cyxbs.lib.course.internal.item.IItemContainer
 import com.mredrock.cyxbs.lib.course.internal.item.forEachColumn
 import com.mredrock.cyxbs.lib.course.internal.item.forEachRow
+import com.mredrock.cyxbs.lib.course.internal.view.course.ICourseViewGroup
 import com.mredrock.cyxbs.lib.course.utils.getOrPut
 import com.ndhzs.netlayout.transition.OnChildVisibleListener
 import java.util.*
@@ -19,8 +21,18 @@ import java.util.*
  * 操控重叠的类
  *
  * ## 特别注意
- * - 该类会拦截使用 addItem() 添加进来的 [IOverlapItem]
- * - 然后在下一个 Runnable 中添加**部分**之前被拦截的 item (如果添加全部会浪费性能)
+ * - 如果你的 item 实现了 [IOverlapItem] 接口，那么在使用 addItem() 添加时会被拦截添加
+ * - 然后在下一个 Runnable 中添加 **部分** 之前被拦截的 item (原因请看下方)
+ *
+ * ## 为什么要拦截使用 addItem() 添加进来的 [IOverlapItem] ?
+ * addItem() 后会立马初始化 View 对象，但是并不是所有的 item 都会被显示在课表上，如果全部初始化，
+ * 会导致大量 View 对象的产生
+ *
+ * ## 为什么要在下一个 Runnable 中添加 View ?
+ * 根据事件机制，我在上一个 Runnable 中拦截了你添加进来的 item，如果想恢复的话，只能选择在下一个 Runnable 中添加。
+ *
+ * 值得注意的是，因为该延迟添加的机制，会导致一些操作失效，
+ * 在必要情况下请使用 post 或者 使用 course#addItemExistListener 进行监听
  *
  * @author 985892345 (Guo Xiangrui)
  * @email guo985892345@foxmail.com
@@ -100,6 +112,19 @@ abstract class OverlapImpl : FoldImpl(), IOverlapContainer {
     )
   }
   
+  init {
+    // 回收 item，解决 Fragment 与 View 生命周期不一致问题
+    addCourseLifecycleObservable(
+      object : ICourseWrapper.CourseLifecycleObserver {
+        override fun onDestroyCourse(course: ICourseViewGroup) {
+          mItemInFreeSet.clear()
+          mItemInParentSet.clear()
+          mRowColumnMap.clear()
+        }
+      }
+    )
+  }
+  
   private val mItemInFreeSet = hashSetOf<IOverlapItem>()
   private val mItemInParentSet = hashSetOf<IOverlapItem>()
   
@@ -173,6 +198,9 @@ abstract class OverlapImpl : FoldImpl(), IOverlapContainer {
   
   /**
    * 管理每个表格的工具类
+   *
+   * 课表是网格布局，每个格子都有一条引用链，串联起了这个格子上的所有 item。
+   * 正常情况下只会显示最顶上的 item，如果你将顶上的 item removed 或者 gone，引用链会重新计算并刷新显示
    */
   private inner class Grid(val row: Int, val column: Int) {
     

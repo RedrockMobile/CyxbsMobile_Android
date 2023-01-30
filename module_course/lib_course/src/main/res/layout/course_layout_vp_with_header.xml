@@ -9,7 +9,7 @@
         android:id="@+id/course_header"
         layout="@layout/course_layout_header" />
 
-    <!--解决 BottomSheet 与 Vp、NSV 的嵌套滑动-->
+    <!--解决 BottomSheet 与 Vp、NSV 的嵌套滑动问题-->
     <com.mredrock.cyxbs.lib.course.widget.VpBottomSheetNestedView
         android:layout_width="match_parent"
         android:layout_height="match_parent" >
