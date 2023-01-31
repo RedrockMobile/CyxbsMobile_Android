@@ -22,11 +22,6 @@ interface IOverlap {
   fun isAddIntoParent(): Boolean
   
   /**
-   * 添加进父布局是否成功的回调
-   */
-  fun onAddIntoParentResult(isSuccess: Boolean)
-  
-  /**
    * 刷新重叠
    *
    * ## 注意

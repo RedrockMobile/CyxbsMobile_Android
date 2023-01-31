@@ -26,7 +26,7 @@ abstract class ItemPoolController<Item, Data : Any>(
   private val mRecyclePool = hashSetOf<Item>()
   
   // 在父布局中显示的 item
-  private val mShowItems = arrayListOf<Item>()
+  private val mShowItems = hashSetOf<Item>()
   
   init {
     // 课表生命周期的监听
@@ -38,7 +38,7 @@ abstract class ItemPoolController<Item, Data : Any>(
         // 这里需要以添加监听的方式来修改 mOldDataMap
         // 因为 item 存在被其他地方移除的情况
         val listener = object : IItemContainer.OnItemExistListener {
-          override fun onItemAddedAfter(item: IItem, view: View) {
+          override fun onItemAddedAfter(item: IItem, view: View?) {
             if (itemClass.isInstance(item)) {
               item as Item
               val data = item.data
@@ -47,11 +47,13 @@ abstract class ItemPoolController<Item, Data : Any>(
                 mOldDataMap[data] = item
                 addNewDataIntoOldList(data)
               }
-              mShowItems.add(item)
+              if (view != null) {
+                mShowItems.add(item)
+              }
             }
           }
   
-          override fun onItemRemovedAfter(item: IItem, view: View) {
+          override fun onItemRemovedAfter(item: IItem, view: View?) {
             if (itemClass.isInstance(item)) {
               item as Item
               // 当你使用其他方式移除时
@@ -63,7 +65,9 @@ abstract class ItemPoolController<Item, Data : Any>(
                 }
                 removeDataFromOldList(data) // 这里是通过其他方式删除的
               }
-              mShowItems.remove(item)
+              if (view != null) {
+                mShowItems.remove(item)
+              }
             }
           }
         }
@@ -138,7 +142,7 @@ abstract class ItemPoolController<Item, Data : Any>(
     return newItem(this)
   }
   
-  protected fun getShowItems(): List<Item> {
-    return Collections.unmodifiableList(mShowItems)
+  protected fun getShowItems(): Set<Item> {
+    return Collections.unmodifiableSet(mShowItems)
   }
 }

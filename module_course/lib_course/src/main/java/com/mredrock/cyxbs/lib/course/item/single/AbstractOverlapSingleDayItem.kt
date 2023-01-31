@@ -56,11 +56,6 @@ abstract class AbstractOverlapSingleDayItem : IOverlapItem, OverlapHelper.IOverl
   protected open fun onAddIntoCourse() {}
   
   /**
-   * 添加进父布局是否成功的回调
-   */
-  override fun onAddIntoParentResult(isSuccess: Boolean) {}
-  
-  /**
    * 刷新重叠区域时的回调
    *
    * ## 注意

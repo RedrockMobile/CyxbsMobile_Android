@@ -17,9 +17,6 @@ import java.util.*
 /**
  * 掌控 [ILessonItem] 和 [IAffairItem] 的容器
  *
- * ## 注意
- * - 虽然 `course.addItem()` 可能会被拦截而添加失败，但是这一层并没有做任何处理，而是直接保存进单独的一个集合里
- *
  * @author 985892345 (Guo Xiangrui)
  * @email guo985892345@foxmail.com
  * @date 2022/8/25 15:36
@@ -130,36 +127,32 @@ abstract class ContainerImpl : AbstractCourseBaseFragment(), ICourseContainer {
   @CallSuper
   override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
     super.onViewCreated(view, savedInstanceState)
+    
     // 可能存在使用其他方法添加进来的，所以需要监听一下
     course.addItemExistListener(
       object : IItemContainer.OnItemExistListener {
-        override fun onItemAddedFail(item: IItem) {
-          // 被拦截了也需要添加进去
-          when (item) {
-            is ILessonItem -> mLessons.add(item)
-            is IAffairItem -> mAffairs.add(item)
-          }
-        }
         
-        override fun onItemAddedAfter(item: IItem, view: View) {
+        override fun onItemAddedAfter(item: IItem, view: View?) {
           when (item) {
             is ILessonItem -> mLessons.add(item)
             is IAffairItem -> mAffairs.add(item)
           }
         }
   
-        override fun onItemRemovedBefore(item: IItem, view: View) {
+        override fun onItemRemovedBefore(item: IItem, view: View?) {
           when (item) {
             is ILessonItem, is IAffairItem -> {
-              if (view.isAttachedToWindow) {
-                // 只对还显示在屏幕内的 view 开启动画
-                startExitAnimation(view)
+              if (view != null) {
+                if (view.isAttachedToWindow) {
+                  // 只对还显示在屏幕内的 view 开启动画
+                  startExitAnimation(view)
+                }
               }
             }
           }
         }
   
-        override fun onItemRemovedAfter(item: IItem, view: View) {
+        override fun onItemRemovedAfter(item: IItem, view: View?) {
           when (item) {
             is ILessonItem -> mLessons.remove(item)
             is IAffairItem -> mAffairs.remove(item)

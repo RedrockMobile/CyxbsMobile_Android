@@ -63,12 +63,14 @@ abstract class NoLessonImpl : CourseTouchImpl(), INoLesson {
     course.apply {
       addItemExistListener(
         object : IItemContainer.OnItemExistListener {
-          override fun onItemAddedAfter(item: IItem, view: View) {
+          override fun onItemAddedAfter(item: IItem, view: View?) {
+            if (view == null) return
             if (isExhibitionItem(item)) mExhibitionItemCount++
             tryPostRefreshNoLessonRunnable()
           }
           
-          override fun onItemRemovedAfter(item: IItem, view: View) {
+          override fun onItemRemovedAfter(item: IItem, view: View?) {
+            if (view == null) return
             if (isExhibitionItem(item)) mExhibitionItemCount--
             tryPostRefreshNoLessonRunnable()
           }

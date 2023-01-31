@@ -125,13 +125,24 @@ class HomeSemesterFragment : CourseSemesterFragment() {
       // 只有在第一次显示 Fragment 时才进行监听，后面的折叠状态会由 CourseFoldHelper 保存
       course.addItemExistListener(
         object : IItemContainer.OnItemExistListener {
-          override fun onItemAddedAfter(item: IItem, view: View) {
+          override fun onItemAddedAfter(item: IItem, view: View?) {
+            if (view == null) return
             val lp = item.lp
             if (compareNoonPeriod(lp.startRow) * compareNoonPeriod(lp.endRow) <= 0) {
               unfoldNoon()
+              course.postRemoveItemExistListener(this) // 只需要展开一次
             }
+          }
+        }
+      )
+      course.addItemExistListener(
+        object : IItemContainer.OnItemExistListener {
+          override fun onItemAddedAfter(item: IItem, view: View?) {
+            if (view == null) return
+            val lp = item.lp
             if (compareDuskPeriod(lp.startRow) * compareDuskPeriod(lp.endRow) <= 0) {
               unfoldDusk()
+              course.postRemoveItemExistListener(this) // 只需要展开一次
             }
           }
         }

@@ -20,8 +20,6 @@ class OverlapHelper(
   
   override fun isAddIntoParent() = logic.isAddIntoParent()
   
-  override fun onAddIntoParentResult(isSuccess: Boolean) = logic.onAddIntoParentResult(isSuccess)
-  
   override fun refreshOverlap() = logic.refreshOverlap()
   
   override fun clearOverlap() {
@@ -78,11 +76,6 @@ class OverlapHelper(
      * [IOverlap.isAddIntoParent]
      */
     fun isAddIntoParent(): Boolean
-  
-    /**
-     * 添加进父布局是否成功的回调
-     */
-    fun onAddIntoParentResult(isSuccess: Boolean)
   
     /**
      * [IOverlap.refreshOverlap]

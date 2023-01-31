@@ -31,11 +31,6 @@ import java.util.*
  * ## 为什么要在下一个 Runnable 中添加 View ?
  * 根据事件机制，我在上一个 Runnable 中拦截了你添加进来的 item，如果想恢复的话，只能选择在下一个 Runnable 中添加。
  *
- * ## 注意
- * - 因为该延迟添加的机制，会导致一些操作失效，在必要情况下请使用 post 设置属性 或者 使用 course#addItemExistListener 进行监听
- * - 如果一个 item 在此处正处于被拦截的状态 (即没有添加进 course)，但是你调用了 removeItem() 尝试删除该 item，
- * 虽然 removeItem() 返回 false，但是该类内部监听了 onItemRemovedFail，会直接删除这个被拦截的 item
- *
  * @author 985892345 (Guo Xiangrui)
  * @email guo985892345@foxmail.com
  * @date 2022/9/8 12:19
@@ -49,38 +44,42 @@ abstract class OverlapImpl : FoldImpl(), IOverlapContainer {
   @CallSuper
   override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
     super.onViewCreated(view, savedInstanceState)
-    
+  
     // 观察子 View 的添加，筛选出 IOverlapItem
-    course.addItemExistListener(
-      object : IItemContainer.OnItemExistListener {
-        override fun isAllowToAddItem(item: IItem): Boolean {
+    course.addItemInterceptor(
+      object : IItemContainer.IItemInterceptor {
+        override fun addItem(item: IItem): Boolean {
           return if (item is IOverlapItem) {
             if (mIsInRefreshOverlapRunnable) {
               // 这里按正常逻辑是下一个 Runnable 中添加进来的
-              true
+              false
             } else {
               mItemInFreeSet.add(item) // 先暂时保存起来
               setOverlap(item)
               tryPostRefreshOverlapRunnable()
-              false // IOverlapItem 需要延迟添加进去
+              true // IOverlapItem 需要延迟添加进去
             }
-          } else true
+          } else false
         }
   
-        override fun onItemRemovedBefore(item: IItem, view: View) {
+        override fun removeItem(item: IItem) {
           if (item is IOverlapItem) {
-            if (mItemInParentSet.remove(item)) {
+            if (mItemInFreeSet.remove(item)) {
               deleteOverlap(item)
               item.overlap.clearOverlap()
               tryPostRefreshOverlapRunnable()
             }
           }
         }
-  
-        override fun onItemRemovedFail(item: IItem) {
+      }
+    )
+    
+    // 子 View 被移除时需要取消重叠
+    course.addItemExistListener(
+      object : IItemContainer.OnItemExistListener {
+        override fun onItemRemovedBefore(item: IItem, view: View?) {
           if (item is IOverlapItem) {
-            // 这里说明原操控者需要删除该 item，但可能是因为被上方的拦截而删除失败
-            if (mItemInFreeSet.remove(item)) {
+            if (mItemInParentSet.remove(item)) {
               deleteOverlap(item)
               item.overlap.clearOverlap()
               tryPostRefreshOverlapRunnable()
@@ -148,16 +147,10 @@ abstract class OverlapImpl : FoldImpl(), IOverlapContainer {
         while (iterator.hasNext()) {
           val next = iterator.next()
           if (next.overlap.isAddIntoParent()) {
-            // 这里 addItem 又会回调 前面的 OnItemExistListener
-            if (course.addItem(next)) {
-              next.overlap.onAddIntoParentResult(true)
-              iterator.remove()
-              mItemInParentSet.add(next)
-            } else {
-              // 这里正常情况下是能够添加进课表的，因为自身没有再进行拦截
-              // 但存在被其他 OnItemExistListener 拦截的可能性
-              next.overlap.onAddIntoParentResult(false)
-            }
+            // 这里 addItem 又会回调 前面的 IItemInterceptor
+            course.addItem(next)
+            iterator.remove()
+            mItemInParentSet.add(next)
           }
         }
         // 遍历所有添加进去的 item 刷新重叠区域

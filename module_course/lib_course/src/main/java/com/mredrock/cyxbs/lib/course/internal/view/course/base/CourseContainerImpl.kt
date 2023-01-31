@@ -8,7 +8,7 @@ import com.mredrock.cyxbs.lib.course.internal.item.IItem
 import com.mredrock.cyxbs.lib.course.internal.item.IItemContainer
 import com.mredrock.cyxbs.lib.course.utils.forEachInline
 import com.ndhzs.netlayout.attrs.NetLayoutParams
-import java.util.*
+import java.util.Collections
 import kotlin.collections.ArrayList
 
 /**
@@ -28,50 +28,67 @@ abstract class CourseContainerImpl @JvmOverloads constructor(
 {
   
   private val mOnItemExistListeners = ArrayList<IItemContainer.OnItemExistListener>(2)
+  private val mItemInterceptors = ArrayList<IItemContainer.IItemInterceptor>(2)
   private val mItemByView = hashMapOf<View, IItem>()
   private val mViewByItem = hashMapOf<IItem, View>()
+  private val mInterceptorByItem = hashMapOf<IItem, IItemContainer.IItemInterceptor>()
   
   final override fun addItemExistListener(l: IItemContainer.OnItemExistListener) {
     mOnItemExistListeners.add(l)
   }
   
-  override fun postRemoveItemExistListener(l: IItemContainer.OnItemExistListener) {
+  final override fun postRemoveItemExistListener(l: IItemContainer.OnItemExistListener) {
     post {
       // 由于遍历中不能直接删除，所以使用 post 来延迟删除
       mOnItemExistListeners.remove(l)
     }
   }
   
-  final override fun addItem(item: IItem): Boolean {
+  final override fun addItemInterceptor(interceptor: IItemContainer.IItemInterceptor) {
+    mItemInterceptors.add(interceptor)
+  }
+  
+  final override fun addItem(item: IItem) {
     if (mViewByItem.contains(item)) {
       error("该 View 已经被添加了，请检查所有调用该方法的地方！")
     }
-    if (mOnItemExistListeners.all { it.isAllowToAddItem(item) }) {
-      val view = item.initializeView(context)
+    mInterceptorByItem.remove(item) // 需要先删除关联的拦截器，因为可能是第二次添加
+    mOnItemExistListeners.forEachInline { it.onItemAddedBefore(item) }
+    var isIntercept = false
+    for (it in mItemInterceptors) {
+      if (it.addItem(item)) {
+        isIntercept = true
+        mInterceptorByItem[item] = it
+        break
+      }
+    }
+    var view: View? = null
+    if (!isIntercept) {
+      view = item.initializeView(context)
       mItemByView[view] = item
       mViewByItem[item] = view
-      mOnItemExistListeners.forEachInline { it.onItemAddedBefore(item, view) }
+      // 此时才能添加进课表
       super.addNetChild(view, item.lp)
-      mOnItemExistListeners.forEachInline { it.onItemAddedAfter(item, view) }
-      return true
     }
-    mOnItemExistListeners.forEachInline { it.onItemAddedFail(item) }
-    return false
+    mOnItemExistListeners.forEachInline { it.onItemAddedAfter(item, view) }
   }
   
-  final override fun removeItem(item: IItem): Boolean {
-    val view = mViewByItem[item]
-    if (view != null) {
-      mOnItemExistListeners.forEachInline { it.onItemRemovedBefore(item, view) }
-      super.removeView(view)
-      mOnItemExistListeners.forEachInline { it.onItemRemovedAfter(item, view) }
-      mItemByView.remove(view)
-      mViewByItem.remove(item)
-      return true
+  final override fun removeItem(item: IItem) {
+    val interceptor = mInterceptorByItem.remove(item)
+    if (interceptor != null) {
+      mOnItemExistListeners.forEachInline { it.onItemRemovedBefore(item, null) }
+      interceptor.removeItem(item)
+      mOnItemExistListeners.forEachInline { it.onItemRemovedAfter(item, null) }
+    } else {
+      val view = mViewByItem[item]
+      if (view != null) {
+        mOnItemExistListeners.forEachInline { it.onItemRemovedBefore(item, view) }
+        super.removeView(view)
+        mItemByView.remove(view)
+        mViewByItem.remove(item)
+        mOnItemExistListeners.forEachInline { it.onItemRemovedAfter(item, view) }
+      }
     }
-    // 此时说明没有添加过该 item，但可能是因为之前的添加中有 listener 把它拦截了
-    mOnItemExistListeners.forEachInline { it.onItemRemovedFail(item) }
-    return false
   }
   
   final override fun getItemByView(view: View?): IItem? {
