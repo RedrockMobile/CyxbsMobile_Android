@@ -8,14 +8,15 @@ import com.mredrock.cyxbs.api.affair.IAffairService
 import com.mredrock.cyxbs.api.course.ILessonService
 import com.mredrock.cyxbs.api.course.utils.getBeginLesson
 import com.mredrock.cyxbs.config.config.SchoolCalendar
-import com.mredrock.cyxbs.course.page.course.base.CompareWeekSemesterFragment
+import com.mredrock.cyxbs.course.page.course.data.LessonData
 import com.mredrock.cyxbs.course.page.course.ui.home.utils.EnterAnimUtils
 import com.mredrock.cyxbs.course.page.course.ui.home.viewmodel.HomeCourseViewModel
 import com.mredrock.cyxbs.course.page.course.utils.container.AffairContainerProxy
 import com.mredrock.cyxbs.course.page.course.utils.container.LinkLessonContainerProxy
 import com.mredrock.cyxbs.course.page.course.utils.container.SelfLessonContainerProxy
+import com.mredrock.cyxbs.lib.course.fragment.page.CourseSemesterFragment
 import com.mredrock.cyxbs.lib.course.helper.affair.CreateAffairDispatcher
-import com.mredrock.cyxbs.lib.course.helper.affair.ITouchAffair
+import com.mredrock.cyxbs.lib.course.helper.affair.expose.ITouchAffairItem
 import com.mredrock.cyxbs.lib.course.internal.item.IItem
 import com.mredrock.cyxbs.lib.course.internal.item.IItemContainer
 import com.mredrock.cyxbs.lib.utils.service.impl
@@ -29,7 +30,7 @@ import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
  * @email guo985892345@foxmail.com
  * @date 2022/8/20 19:25
  */
-class HomeSemesterFragment : CompareWeekSemesterFragment() {
+class HomeSemesterFragment : CourseSemesterFragment() {
   
   private val mParentViewModel by createViewModelLazy(
     HomeCourseViewModel::class,
@@ -105,14 +106,14 @@ class HomeSemesterFragment : CompareWeekSemesterFragment() {
         setOnClickListener {
           IAffairService::class.impl
             .startActivityForAddAffair(0, lp.weekNum - 1, getBeginLesson(lp.startRow), lp.length)
-          remove()
+          cancelShow()
         }
       }
     )
   }
   
   override fun isExhibitionItem(item: IItem): Boolean {
-    return super.isExhibitionItem(item) || item is ITouchAffair
+    return super.isExhibitionItem(item) || item is ITouchAffairItem
   }
   
   /**
@@ -124,13 +125,24 @@ class HomeSemesterFragment : CompareWeekSemesterFragment() {
       // 只有在第一次显示 Fragment 时才进行监听，后面的折叠状态会由 CourseFoldHelper 保存
       course.addItemExistListener(
         object : IItemContainer.OnItemExistListener {
-          override fun onItemAddedAfter(item: IItem, view: View) {
+          override fun onItemAddedAfter(item: IItem, view: View?) {
+            if (view == null) return
             val lp = item.lp
             if (compareNoonPeriod(lp.startRow) * compareNoonPeriod(lp.endRow) <= 0) {
               unfoldNoon()
+              course.postRemoveItemExistListener(this) // 只需要展开一次
             }
+          }
+        }
+      )
+      course.addItemExistListener(
+        object : IItemContainer.OnItemExistListener {
+          override fun onItemAddedAfter(item: IItem, view: View?) {
+            if (view == null) return
+            val lp = item.lp
             if (compareDuskPeriod(lp.startRow) * compareDuskPeriod(lp.endRow) <= 0) {
               unfoldDusk()
+              course.postRemoveItemExistListener(this) // 只需要展开一次
             }
           }
         }
@@ -159,5 +171,21 @@ class HomeSemesterFragment : CompareWeekSemesterFragment() {
         }
       }
     }
+  }
+  
+  /**
+   * 筛选掉重复的课程，只留下最小周数的课程
+   */
+  private fun <T : LessonData> Map<Int, List<T>>.mapToMinWeek(): List<T> {
+    val map = hashMapOf<LessonData.Course, T>()
+    forEach { entry ->
+      entry.value.forEach {
+        val value = map[it.course]
+        if (value == null || value.week > it.week) {
+          map[it.course] = it
+        }
+      }
+    }
+    return map.map { it.value }
   }
 }

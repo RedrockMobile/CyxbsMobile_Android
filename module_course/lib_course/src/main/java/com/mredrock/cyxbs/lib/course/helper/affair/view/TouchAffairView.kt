@@ -13,7 +13,7 @@ import androidx.core.animation.doOnEnd
 import androidx.core.animation.doOnStart
 import androidx.core.view.doOnNextLayout
 import com.mredrock.cyxbs.lib.course.R
-import com.mredrock.cyxbs.lib.course.helper.affair.ITouchAffair
+import com.mredrock.cyxbs.lib.course.helper.affair.expose.ITouchAffairItem
 import com.mredrock.cyxbs.lib.course.internal.view.course.ICourseViewGroup
 import com.mredrock.cyxbs.lib.course.internal.view.course.lp.ItemLayoutParams
 import com.mredrock.cyxbs.lib.course.item.single.SingleDayLayoutParams
@@ -23,13 +23,15 @@ import com.mredrock.cyxbs.lib.utils.extensions.setOnSingleClickListener
 import kotlin.math.roundToInt
 
 /**
- * .
+ * 这是长按空白区域生成的带有加号的那个灰色 View。用于点击一下打开事务添加界面
  *
  * @author 985892345
  * @date 2022/9/19 14:55
  */
 @SuppressLint("ViewConstructor")
-class TouchAffairView(val course: ICourseViewGroup) : ViewGroup(course.getContext()), ITouchAffair {
+open class TouchAffairView(
+  val course: ICourseViewGroup,
+) : ViewGroup(course.getContext()), ITouchAffairItem {
   
   // 扩展动画
   private var mExpandValueAnimator: ValueAnimator? = null
@@ -58,24 +60,11 @@ class TouchAffairView(val course: ICourseViewGroup) : ViewGroup(course.getContex
   }
   
   override fun show(topRow: Int, bottomRow: Int, initialColumn: Int) {
-    if (!this::lp.isInitialized) {
-      lp = SingleDayLayoutParams(0, 0, 0).apply {
-        startColumn = initialColumn
-        endColumn = initialColumn
-        startRow = topRow
-        endRow = bottomRow
-        leftMargin = mMargin
-        rightMargin = mMargin
-        topMargin = mMargin
-        bottomMargin = mMargin
-      }
-    } else {
-      lp.apply {
-        startColumn = initialColumn
-        endColumn = initialColumn
-        startRow = topRow
-        endRow = bottomRow
-      }
+    lp.apply {
+      startColumn = initialColumn
+      endColumn = initialColumn
+      startRow = topRow
+      endRow = bottomRow
     }
     // 添加一个入场动画
     startAnimation(AlphaAnimation(0F, 1F).apply { duration = 200 })
@@ -84,6 +73,7 @@ class TouchAffairView(val course: ICourseViewGroup) : ViewGroup(course.getContex
   
   override fun onLayout(changed: Boolean, l: Int, t: Int, r: Int, b: Int) {
     if (mExpandValueAnimator == null) {
+      // 动画中是手动调用的 layout() 进行布局
       mImageView.layout(0, 0, r - l, b - t)
     }
   }
@@ -91,13 +81,13 @@ class TouchAffairView(val course: ICourseViewGroup) : ViewGroup(course.getContex
   /**
    * 该方法作用：
    * - 计算当前位置并刷新布局
-   * - 启动一个生长的动画
+   * - 启动一个过度动画
    */
   override fun refresh(
     oldTopRow: Int,
     oldBottomRow: Int,
     topRow: Int,
-    bottomRow: Int
+    bottomRow: Int,
   ) {
     val lp = layoutParams as ItemLayoutParams
     lp.startRow = topRow
@@ -109,7 +99,8 @@ class TouchAffairView(val course: ICourseViewGroup) : ViewGroup(course.getContex
     }
   }
   
-  override fun remove() {
+  override fun cancelShow() {
+    mExpandValueAnimator?.end()
     // 离场动画
     startAnimation(AlphaAnimation(1F, 0F).apply { duration = 200 })
     course.removeItem(this)
@@ -121,20 +112,18 @@ class TouchAffairView(val course: ICourseViewGroup) : ViewGroup(course.getContex
     }
   }
   
-  override fun setOnClickListener(onClick: ITouchAffair.() -> Unit) {
-    setOnSingleClickListener {
-      onClick.invoke(this)
-    }
+  override fun setOnClickListener(l: () -> Unit) {
+    setOnSingleClickListener { l.invoke() }
   }
   
   /**
-   * 启动生长动画
+   * 启动过度动画
    */
   private fun startExpandValueAnimator(
     oldTopRow: Int,
     oldBottomRow: Int,
     topRow: Int,
-    bottomRow: Int
+    bottomRow: Int,
   ) {
     mExpandValueAnimator?.end() // 取消之前的动画
     mExpandValueAnimator = ValueAnimator.ofFloat(0F, 1F).apply {
@@ -159,7 +148,7 @@ class TouchAffairView(val course: ICourseViewGroup) : ViewGroup(course.getContex
       doOnEnd {
         mExpandValueAnimator = null
         (parent as ViewGroup).clipChildren = true // 及时关闭，减少不必要绘制
-        // 设置为 ImageView 的背景后，这样会使整体移动中改变 translationZ 带有阴影效果
+        // 设置为 ImageView 的背景后，这样会使整体移动中改变 translationZ 时带有阴影效果
         background = mImageView.background
         mImageView.background = null
       }
@@ -173,12 +162,17 @@ class TouchAffairView(val course: ICourseViewGroup) : ViewGroup(course.getContex
   private val mMargin = R.dimen.course_item_margin.dimen.toInt()
   
   init {
-    addView(mImageView)
+    super.addView(mImageView)
   }
   
   override fun initializeView(context: Context): View {
     return this
   }
   
-  override lateinit var lp: SingleDayLayoutParams
+  override val lp = SingleDayLayoutParams(-1, -1, 0).apply {
+    leftMargin = mMargin
+    rightMargin = mMargin
+    topMargin = mMargin
+    bottomMargin = mMargin
+  }
 }

@@ -17,7 +17,7 @@ interface ICourseWrapper {
    * 添加 [ICourseViewGroup] 生命周期的监听
    * @param isCallbackIfCrested 如果添加监听时已经创建，则是否需要立马回调
    */
-  fun addCourseLifecycleObservable(observer: CourseLifecycleObserver, isCallbackIfCrested: Boolean)
+  fun addCourseLifecycleObservable(observer: CourseLifecycleObserver, isCallbackIfCrested: Boolean = false)
   
   /**
    * 移除 [ICourseViewGroup] 生命周期的监听
@@ -31,11 +31,11 @@ interface ICourseWrapper {
     /**
      * 创建了 [ICourseViewGroup] 的回调
      */
-    fun onCreateCourse(course: ICourseViewGroup)
+    fun onCreateCourse(course: ICourseViewGroup) {}
   
     /**
      * [ICourseViewGroup] 即将被摧毁时的回调
      */
-    fun onDestroyCourse(course: ICourseViewGroup)
+    fun onDestroyCourse(course: ICourseViewGroup) {}
   }
 }

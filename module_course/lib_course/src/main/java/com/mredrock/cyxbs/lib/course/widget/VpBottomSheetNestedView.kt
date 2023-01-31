@@ -17,7 +17,7 @@ import androidx.core.view.ViewCompat
  *
  * ## 解决方案
  * ### 一、中转嵌套滑动
- * 使用当前布局包裹在 Vp2 外面，这样 BottomSheet 就会直接该布局进行嵌套关联
+ * 使用当前布局包裹在 Vp2 外面，这样 BottomSheet 就会直接与该布局进行嵌套关联
  *
  * 当 Vp2 里面的 NSV 需要寻找嵌套滑动父 View 时，就会找到当前 View，然后把事件分发给当前 View，当前 View 又把事件分发给 BottomSheet
  *

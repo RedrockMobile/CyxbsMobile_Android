@@ -21,15 +21,17 @@ interface IItemContainer {
   fun findPairUnderByFilter(filter: IItem.(View) -> Boolean): Pair<IItem, View>?
   
   /**
-   * @return 添加是否成功，因为可能会被拦截
+   * 添加 item
+   *
+   * ## 注意
+   * - 添加 item 后不一定就会立马添加进父布局中，因为存在 [IItemInterceptor] 会中途拦截
    */
-  fun addItem(item: IItem): Boolean
+  fun addItem(item: IItem)
   
   /**
    * 移除 [IItem]
-   * @return 移除是否成功，如果移除失败，说明容器中没有添加该 item，可能是再添加的时候被其他人拦截了
    */
-  fun removeItem(item: IItem): Boolean
+  fun removeItem(item: IItem)
   
   /**
    * 在已经添加进来的 [view] 中查找 [IItem]
@@ -61,43 +63,68 @@ interface IItemContainer {
    */
   fun postRemoveItemExistListener(l: OnItemExistListener)
   
+  /**
+   * 添加 [IItem] 和移除 [IItem] 的拦截器
+   *
+   * 考虑到移除 item 的时候需要回调 [IItemInterceptor.removeItem]，所以没有删除拦截的方法
+   */
+  fun addItemInterceptor(interceptor: IItemInterceptor)
+  
   
   interface OnItemExistListener {
-    /**
-     * 是否允许添加该 item，在 [onItemAddedBefore] 前回调
-     */
-    fun isAllowToAddItem(item: IItem): Boolean = true
-  
-    /**
-     * 添加 item 失败时回调
-     */
-    fun onItemAddedFail(item: IItem) {}
   
     /**
      * 调用 addView() 前回调
+     *
+     * ## 注意
+     * - view 如果被 [IItemInterceptor] 拦截，则为 null
+     * - 存在第二次回调中的参数 [item] 是第一次回调中的对象，所以必要时请使用 Set 集合
      */
-    fun onItemAddedBefore(item: IItem, view: View) {}
+    fun onItemAddedBefore(item: IItem) {}
   
     /**
      * 调用 addView() 后回调
+     *
+     * ## 注意
+     * - view 如果被 [IItemInterceptor] 拦截，则为 null
+     * - 存在第二次回调中的参数 [item] 是第一次回调中的对象，所以必要时请使用 Set 集合
      */
-    fun onItemAddedAfter(item: IItem, view: View) {}
+    fun onItemAddedAfter(item: IItem, view: View?) {}
   
     /**
      * 调用 removeView() 前回调，此时可用于设置退场动画
+     *
+     * ## 注意
+     * - view 如果被 [IItemInterceptor] 拦截，则为 null
+     * - 存在第二次回调中的参数 [item] 是第一次回调中的对象，所以必要时请使用 Set 集合
      */
-    fun onItemRemovedBefore(item: IItem, view: View) {}
+    fun onItemRemovedBefore(item: IItem, view: View?) {}
   
     /**
      * 调用 removeView() 后回调
+     *
+     * ## 注意
+     * - view 如果被 [IItemInterceptor] 拦截，则为 null
+     * - 存在第二次回调中的参数 [item] 是第一次回调中的对象，所以必要时请使用 Set 集合
      */
-    fun onItemRemovedAfter(item: IItem, view: View) {}
+    fun onItemRemovedAfter(item: IItem, view: View?) {}
+  
+  }
+  
+  interface IItemInterceptor {
   
     /**
-     * 移除失败，说明该 item 并没有被添加进容器，有以下两种情况：
-     * - 之前添加的时候被 [isAllowToAddItem] 拦截
-     * - 之前根本就没有添加过该 item
+     * 拦截 item 的添加
+     *
+     * 返回 true 后将不再继续遍历后面的 [IItemInterceptor]
+     *
+     * @return true：进行拦截；false：不进行拦截
      */
-    fun onItemRemovedFail(item: IItem) {}
+    fun addItem(item: IItem): Boolean
+  
+    /**
+     * 移除 item 时的回调
+     */
+    fun removeItem(item: IItem)
   }
 }

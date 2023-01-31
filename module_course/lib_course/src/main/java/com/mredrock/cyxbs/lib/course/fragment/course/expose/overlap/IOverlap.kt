@@ -17,14 +17,9 @@ interface IOverlap {
    * ## 注意
    * - 这个回调是在把所有 Item 都添加完后的一个 Runnable 中调用的
    * - 你需要在这个回调判断是否能添加到父布局中
-   * - 即使你返回 true，并不能保证就一定能添加进父布局中，因为有拦截机制
+   * - 即使你返回 true，并不能保证就一定能添加进父布局中，因为有 item 拦截机制
    */
   fun isAddIntoParent(): Boolean
-  
-  /**
-   * 添加进父布局是否成功的回调
-   */
-  fun onAddIntoParentResult(isSuccess: Boolean)
   
   /**
    * 刷新重叠

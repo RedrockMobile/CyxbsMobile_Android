@@ -1,7 +1,6 @@
 package com.mredrock.cyxbs.lib.course.helper.move.expose
 
 import com.mredrock.cyxbs.lib.course.internal.view.course.lp.ItemLayoutParams
-import com.mredrock.cyxbs.lib.utils.utils.VibratorUtil
 
 /**
  * ...
@@ -17,15 +16,6 @@ abstract class BaseMoveItemWrapper(private val item: IMovableItem) {
   
   open fun onLongPressStart() {
     mIsInLongPress = true
-    
-    val parent = item.parent
-    // 禁止父布局拦截
-    parent.getParent().requestDisallowInterceptTouchEvent(true)
-    VibratorUtil.start(36) // 长按触发来个震动提醒
-    
-    item.hideView()
-    
-    val moveView = item.createMovableView()
   }
   
   protected open fun getMovableViewLayoutParams(

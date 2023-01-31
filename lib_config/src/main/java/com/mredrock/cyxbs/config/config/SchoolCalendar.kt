@@ -60,9 +60,9 @@ object SchoolCalendar {
    *
    * # 注意：存在返回负数的情况！！！
    * ```
-   *     -1      0      1      2       3        4
+   *     -1      0      1      2       3        4             返回值
    *  ----------------------------------------------------------->
-   * -14     -7      0      7      14       21       28
+   * -14     -7      0      7      14       21       28       天数差
    * ```
    */
   fun getWeekOfTerm(): Int? {
@@ -137,6 +137,8 @@ object SchoolCalendar {
     return Calendar.getInstance()[Calendar.MONTH + 1] > 8
   }
   
+  // Rxjava-Subject 教程 https://www.jianshu.com/p/d7efc29ec9d3
+  // BehaviorSubject 与 LiveData 一致，订阅时会发送最后一次数据
   private val mBehaviorSubject = BehaviorSubject.create<Calendar>()
     .apply {
       val oldTimestamp = defaultSp.getLong(FIRST_MON_DAY, 0L)

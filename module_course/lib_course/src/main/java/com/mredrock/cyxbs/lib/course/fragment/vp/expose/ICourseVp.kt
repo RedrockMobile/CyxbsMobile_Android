@@ -36,6 +36,12 @@ interface ICourseVp {
   
   /**
    * 当前周数
+   *
+   * ## 注意
+   * - 可能为负数，请做好越界处理。建议使用下面的写法
+   * ```
+   * if (mNowWeek >= mVpAdapter.itemCount) 0 else max(mNowWeek, 0)
+   * ```
    */
   val mNowWeek: Int
 }

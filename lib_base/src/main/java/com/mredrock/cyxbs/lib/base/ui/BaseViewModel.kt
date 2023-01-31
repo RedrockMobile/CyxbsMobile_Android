@@ -32,9 +32,28 @@ import kotlinx.coroutines.launch
  *     }
  * ```
  *
+ * ## 三、区分 状态 与 事件
+ * [可以看看这篇文章](https://juejin.cn/post/7046191406825603109)
+ * ### 状态
+ * 一般是指 UI 状态，特点是 转屏/黑夜模式切换 后导致 重建的 Activity 能够恢复以前的 UI 状态
  *
+ * ### 事件
+ * 比如购买成功后弹出的 toast 就是事件，特点：只需要消费一次，重建后的 Activity 不需要再次消费
  *
+ * ### 使用上的注意点
+ * - LiveData 一般用于状态
+ * - SharedFlow 一般用于事件（不带缓存的 SharedFlow，带有缓存的就表状态）
  *
+ * 但是往往存在模棱两可的情况
+ *
+ * 比如：我有个观察回调，用于记录数据请求是否成功。回调中既需要设置 UI 状态，也需要弹 toast。这种情况下回调中既有状态也有事件
+ *
+ * ### 推荐做法
+ * - ViewModel 写两个变量分开观察
+ * - 一个是 `xxxState: LiveData` 用于表示状态
+ * - 另一个 `xxxEvent: SharedFlow` 用于表示事件
+ * - 为了减少数据源的操作量，可以这样： `xxxEvent = xxxState.asSharedFlow()`
+ * - 然后只需要发送数据给 `xxxState` 即可 (`xxxEvent` 会自动接收新数据)
  *
  *
  * # 更多封装请往父类和接口查看
@@ -68,6 +87,8 @@ abstract class BaseViewModel : ViewModel(), RxjavaLifecycle, ToastUtils {
    * 返回一个缓存值为 0 表示事件的 SharedFlow，不会因为 Activity 重建而出现数据倒灌问题
    *
    * [关于状态跟事件的区别可以看这篇文章](https://juejin.cn/post/7046191406825603109)
+   *
+   * 推荐的使用方式可以查看头注释
    */
   protected fun <T> LiveData<T>.asShareFlow(): SharedFlow<T> {
     val sharedFlow = MutableSharedFlow<T>()

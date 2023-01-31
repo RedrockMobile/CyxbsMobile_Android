@@ -3,8 +3,8 @@ package com.mredrock.cyxbs.course.page.find.ui.course.base
 import android.os.Bundle
 import android.view.View
 import androidx.annotation.CallSuper
-import com.mredrock.cyxbs.course.page.course.base.CompareWeekSemesterFragment
 import com.mredrock.cyxbs.course.page.course.data.LessonData
+import com.mredrock.cyxbs.lib.course.fragment.page.CourseSemesterFragment
 import com.mredrock.cyxbs.lib.course.item.lesson.ILessonItem
 
 /**
@@ -16,7 +16,7 @@ import com.mredrock.cyxbs.lib.course.item.lesson.ILessonItem
  * @email guo985892345@foxmail.com
  * @date 2022/9/12 14:16
  */
-abstract class BaseFindSemesterFragment<D : LessonData> : CompareWeekSemesterFragment() {
+abstract class BaseFindSemesterFragment<D : LessonData> : CourseSemesterFragment() {
   
   /**
    * 得到宿主的 [BaseFindViewModel]
@@ -49,4 +49,20 @@ abstract class BaseFindSemesterFragment<D : LessonData> : CompareWeekSemesterFra
    * 得到数据对应的 [ILessonItem]
    */
   protected abstract fun List<D>.getLessonItem(): List<ILessonItem>
+  
+  /**
+   * 筛选掉重复的课程，只留下最小周数的课程
+   */
+  private fun <T : LessonData> Map<Int, List<T>>.mapToMinWeek(): List<T> {
+    val map = hashMapOf<LessonData.Course, T>()
+    forEach { entry ->
+      entry.value.forEach {
+        val value = map[it.course]
+        if (value == null || value.week > it.week) {
+          map[it.course] = it
+        }
+      }
+    }
+    return map.map { it.value }
+  }
 }

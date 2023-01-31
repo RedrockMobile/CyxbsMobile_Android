@@ -15,5 +15,8 @@ import com.mredrock.cyxbs.lib.course.item.single.AbstractOverlapSingleDayItem
  * @date 2022/8/25 17:30
  */
 interface IOverlapItem : IItem, Comparable<IOverlapItem> {
+  
   val overlap: IOverlap
+  
+  override fun compareTo(other: IOverlapItem): Int
 }

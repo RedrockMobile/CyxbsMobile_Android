@@ -5,6 +5,7 @@ import com.mredrock.cyxbs.lib.course.fragment.course.expose.wrapper.ICourseWrapp
 import com.mredrock.cyxbs.lib.course.internal.item.IItem
 import com.mredrock.cyxbs.lib.course.internal.item.IItemContainer
 import com.mredrock.cyxbs.lib.course.internal.view.course.ICourseViewGroup
+import java.util.*
 
 /**
  * 管理 Item 回收池
@@ -25,16 +26,19 @@ abstract class ItemPoolController<Item, Data : Any>(
   private val mRecyclePool = hashSetOf<Item>()
   
   // 在父布局中显示的 item
-  private val mShowItems = arrayListOf<Item>()
+  private val mShowItems = hashSetOf<Item>()
   
   init {
-    // 这里需要以添加监听的方式来修改 mOldDataMap
-    // 因为 item 存在被其他地方移除的情况
+    // 课表生命周期的监听
+    // 因为使用这个类的一般是 Fragment，他与 View 的生命周期不一致，需要在 View 被摧毁时清空对 item 的引用
     wrapper.addCourseLifecycleObservable(
       object : ICourseWrapper.CourseLifecycleObserver {
         
+        // 添加 item 的监听
+        // 这里需要以添加监听的方式来修改 mOldDataMap
+        // 因为 item 存在被其他地方移除的情况
         val listener = object : IItemContainer.OnItemExistListener {
-          override fun onItemAddedAfter(item: IItem, view: View) {
+          override fun onItemAddedAfter(item: IItem, view: View?) {
             if (itemClass.isInstance(item)) {
               item as Item
               val data = item.data
@@ -43,11 +47,13 @@ abstract class ItemPoolController<Item, Data : Any>(
                 mOldDataMap[data] = item
                 addNewDataIntoOldList(data)
               }
-              mShowItems.add(item)
+              if (view != null) {
+                mShowItems.add(item)
+              }
             }
           }
   
-          override fun onItemRemovedAfter(item: IItem, view: View) {
+          override fun onItemRemovedAfter(item: IItem, view: View?) {
             if (itemClass.isInstance(item)) {
               item as Item
               // 当你使用其他方式移除时
@@ -59,7 +65,9 @@ abstract class ItemPoolController<Item, Data : Any>(
                 }
                 removeDataFromOldList(data) // 这里是通过其他方式删除的
               }
-              mShowItems.remove(item)
+              if (view != null) {
+                mShowItems.remove(item)
+              }
             }
           }
         }
@@ -74,7 +82,6 @@ abstract class ItemPoolController<Item, Data : Any>(
           mRecyclePool.clear()
           mShowItems.clear()
           clearDataFromOldList()
-          course.postRemoveItemExistListener(listener)
         }
       }, true
     )
@@ -135,7 +142,7 @@ abstract class ItemPoolController<Item, Data : Any>(
     return newItem(this)
   }
   
-  protected fun getShowItems(): List<Item> {
-    return mShowItems
+  protected fun getShowItems(): Set<Item> {
+    return Collections.unmodifiableSet(mShowItems)
   }
 }

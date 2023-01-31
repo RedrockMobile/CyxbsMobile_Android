@@ -7,10 +7,12 @@ import android.view.ViewGroup
 import androidx.annotation.CallSuper
 import com.mredrock.cyxbs.lib.course.fragment.course.expose.overlap.IOverlapContainer
 import com.mredrock.cyxbs.lib.course.fragment.course.expose.overlap.IOverlapItem
+import com.mredrock.cyxbs.lib.course.fragment.course.expose.wrapper.ICourseWrapper
 import com.mredrock.cyxbs.lib.course.internal.item.IItem
 import com.mredrock.cyxbs.lib.course.internal.item.IItemContainer
 import com.mredrock.cyxbs.lib.course.internal.item.forEachColumn
 import com.mredrock.cyxbs.lib.course.internal.item.forEachRow
+import com.mredrock.cyxbs.lib.course.internal.view.course.ICourseViewGroup
 import com.mredrock.cyxbs.lib.course.utils.getOrPut
 import com.ndhzs.netlayout.transition.OnChildVisibleListener
 import java.util.*
@@ -19,8 +21,15 @@ import java.util.*
  * 操控重叠的类
  *
  * ## 特别注意
- * - 该类会拦截使用 addItem() 添加进来的 [IOverlapItem]
- * - 然后在下一个 Runnable 中添加**部分**之前被拦截的 item (如果添加全部会浪费性能)
+ * - 如果你的 item 实现了 [IOverlapItem] 接口，那么在使用 addItem() 添加时会被拦截添加
+ * - 然后在下一个 Runnable 中添加 **部分** 之前被拦截的 item (原因请看下方)
+ *
+ * ## 为什么要拦截使用 addItem() 添加进来的 [IOverlapItem] ?
+ * addItem() 后会立马初始化 View 对象，但是并不是所有的 item 都会被显示在课表上，如果全部初始化，
+ * 会导致大量 View 对象的产生
+ *
+ * ## 为什么要在下一个 Runnable 中添加 View ?
+ * 根据事件机制，我在上一个 Runnable 中拦截了你添加进来的 item，如果想恢复的话，只能选择在下一个 Runnable 中添加。
  *
  * @author 985892345 (Guo Xiangrui)
  * @email guo985892345@foxmail.com
@@ -35,38 +44,42 @@ abstract class OverlapImpl : FoldImpl(), IOverlapContainer {
   @CallSuper
   override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
     super.onViewCreated(view, savedInstanceState)
-    
+  
     // 观察子 View 的添加，筛选出 IOverlapItem
-    course.addItemExistListener(
-      object : IItemContainer.OnItemExistListener {
-        override fun isAllowToAddItem(item: IItem): Boolean {
+    course.addItemInterceptor(
+      object : IItemContainer.IItemInterceptor {
+        override fun addItem(item: IItem): Boolean {
           return if (item is IOverlapItem) {
             if (mIsInRefreshOverlapRunnable) {
               // 这里按正常逻辑是下一个 Runnable 中添加进来的
-              true
+              false
             } else {
-              mItemInFreeSet.add(item)
+              mItemInFreeSet.add(item) // 先暂时保存起来
               setOverlap(item)
               tryPostRefreshOverlapRunnable()
-              false // IOverlapItem 需要延迟添加进去
+              true // IOverlapItem 需要延迟添加进去
             }
-          } else true
+          } else false
         }
   
-        override fun onItemRemovedBefore(item: IItem, view: View) {
+        override fun removeItem(item: IItem) {
           if (item is IOverlapItem) {
-            if (mItemInParentSet.remove(item)) {
+            if (mItemInFreeSet.remove(item)) {
               deleteOverlap(item)
               item.overlap.clearOverlap()
               tryPostRefreshOverlapRunnable()
             }
           }
         }
-  
-        override fun onItemRemovedFail(item: IItem) {
+      }
+    )
+    
+    // 子 View 被移除时需要取消重叠
+    course.addItemExistListener(
+      object : IItemContainer.OnItemExistListener {
+        override fun onItemRemovedBefore(item: IItem, view: View?) {
           if (item is IOverlapItem) {
-            // 这里说明原操控者需要删除该 item，但可能是因为被上方的拦截而删除失败
-            if (mItemInFreeSet.remove(item)) {
+            if (mItemInParentSet.remove(item)) {
               deleteOverlap(item)
               item.overlap.clearOverlap()
               tryPostRefreshOverlapRunnable()
@@ -100,6 +113,19 @@ abstract class OverlapImpl : FoldImpl(), IOverlapContainer {
     )
   }
   
+  init {
+    // 回收 item，解决 Fragment 与 View 生命周期不一致问题
+    addCourseLifecycleObservable(
+      object : ICourseWrapper.CourseLifecycleObserver {
+        override fun onDestroyCourse(course: ICourseViewGroup) {
+          mItemInFreeSet.clear()
+          mItemInParentSet.clear()
+          mRowColumnMap.clear()
+        }
+      }
+    )
+  }
+  
   private val mItemInFreeSet = hashSetOf<IOverlapItem>()
   private val mItemInParentSet = hashSetOf<IOverlapItem>()
   
@@ -121,20 +147,24 @@ abstract class OverlapImpl : FoldImpl(), IOverlapContainer {
         while (iterator.hasNext()) {
           val next = iterator.next()
           if (next.overlap.isAddIntoParent()) {
-            // 这里 addItem 又会回调 前面的 OnItemExistListener
-            if (course.addItem(next)) {
-              next.overlap.onAddIntoParentResult(true)
-              iterator.remove()
-              mItemInParentSet.add(next)
-            } else {
-              next.overlap.onAddIntoParentResult(false)
-            }
+            // 这里 addItem 又会回调 前面的 IItemInterceptor
+            course.addItem(next)
+            iterator.remove()
+            mItemInParentSet.add(next)
           }
         }
         // 遍历所有添加进去的 item 刷新重叠区域
         mItemInParentSet.forEach {
           it.overlap.refreshOverlap()
         }
+        /*
+        * 上面的逻辑简单来说就是：
+        * 遍历 mItemInFreeSet(被拦截的集合)，如果符合要求，就添加进 course，然后保存在 mItemInParentSet 中，
+        * 最后刷新 mItemInParentSet 的 item
+        *
+        * 可以发现，mItemInParentSet 只有在使用 removeItem() 后才会被删除，达到一定条件时，最后 mItemInFreeSet
+        * 会全部存入 mItemInParentSet 中
+        * */
         mIsInRefreshOverlapRunnable = false
       }
       return true
@@ -173,6 +203,9 @@ abstract class OverlapImpl : FoldImpl(), IOverlapContainer {
   
   /**
    * 管理每个表格的工具类
+   *
+   * 课表是网格布局，每个格子都有一条引用链，串联起了这个格子上的所有 item。
+   * 正常情况下只会显示最顶上的 item，如果你将顶上的 item removed 或者 gone，引用链会重新计算并刷新显示
    */
   private inner class Grid(val row: Int, val column: Int) {
     

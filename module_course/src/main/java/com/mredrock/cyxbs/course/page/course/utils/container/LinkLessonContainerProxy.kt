@@ -4,7 +4,6 @@ import com.mredrock.cyxbs.course.page.course.data.StuLessonData
 import com.mredrock.cyxbs.course.page.course.item.lesson.LinkLesson
 import com.mredrock.cyxbs.course.page.course.utils.container.base.ItemPoolController
 import com.mredrock.cyxbs.lib.course.fragment.course.expose.container.ICourseContainer
-import com.mredrock.cyxbs.lib.course.fragment.course.expose.overlap.IOverlapItem
 import com.mredrock.cyxbs.lib.utils.extensions.anim
 
 /**
@@ -45,20 +44,25 @@ class LinkLessonContainerProxy(
     return LinkLesson(data)
   }
   
+  
+  private val mStartAnimationRun = Runnable {
+    /*
+    * 使用 Runnable 的原因
+    * 1、因为 [LinkLesson] 是 [IOverlapItem]，它会延迟添加 item，所以需要使用 post 个 Runnable
+    * */
+    getShowItems().forEachIndexed { index, item ->
+      // 因为 Animation 没有公开 clone() 方法，所以只能每次 new 一个新的
+      val anim = com.mredrock.cyxbs.lib.course.R.anim.course_anim_entrance.anim
+      anim.startOffset = index * 60L
+      item.startAnimation(anim)
+    }
+  }
+  
   /**
    * 开启关联人 item 的入场动画
    */
   fun startAnimation() {
-    /**
-     * 注意：因为 [LinkLesson] 是 [IOverlapItem]，它会延迟添加 item，所以需要使用 post
-     */
-    container.course.post {
-      getShowItems().forEachIndexed { index, item ->
-        // 因为 Animation 没有公开 clone() 方法，所以只能每次 new 一个新的
-        val anim = com.mredrock.cyxbs.lib.course.R.anim.course_anim_entrance.anim
-        anim.startOffset = index * 60L
-        item.startAnimation(anim)
-      }
-    }
+    container.course.removeCallbacks(mStartAnimationRun)
+    container.course.post(mStartAnimationRun)
   }
 }
