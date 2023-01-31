@@ -11,7 +11,7 @@ import com.mredrock.cyxbs.lib.course.internal.view.course.ICourseViewGroup
 interface IBoundary {
   
   /**
-   * 得到上边界
+   * 得到上边界，每次有效移动都会回调
    * @param initialRow 手指刚触摸时的行数
    * @param nowRow 当前手指触摸的行数
    * @param initialColumn 手指刚触摸时的列数
@@ -19,7 +19,7 @@ interface IBoundary {
   fun getUpperRow(course: ICourseViewGroup, initialRow: Int, nowRow: Int, initialColumn: Int): Int
   
   /**
-   * 得到下边界
+   * 得到下边界，每次有效移动都会回调
    * @param initialRow 手指刚触摸时的行数
    * @param nowRow 当前手指触摸的行数
    * @param initialColumn 手指刚触摸时的列数

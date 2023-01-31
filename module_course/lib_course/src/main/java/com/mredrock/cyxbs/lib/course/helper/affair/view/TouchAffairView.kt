@@ -60,24 +60,11 @@ open class TouchAffairView(
   }
   
   override fun show(topRow: Int, bottomRow: Int, initialColumn: Int) {
-    if (!this::lp.isInitialized) {
-      lp = SingleDayLayoutParams(0, 0, 0).apply {
-        startColumn = initialColumn
-        endColumn = initialColumn
-        startRow = topRow
-        endRow = bottomRow
-        leftMargin = mMargin
-        rightMargin = mMargin
-        topMargin = mMargin
-        bottomMargin = mMargin
-      }
-    } else {
-      lp.apply {
-        startColumn = initialColumn
-        endColumn = initialColumn
-        startRow = topRow
-        endRow = bottomRow
-      }
+    lp.apply {
+      startColumn = initialColumn
+      endColumn = initialColumn
+      startRow = topRow
+      endRow = bottomRow
     }
     // 添加一个入场动画
     startAnimation(AlphaAnimation(0F, 1F).apply { duration = 200 })
@@ -113,6 +100,7 @@ open class TouchAffairView(
   }
   
   override fun cancelShow() {
+    mExpandValueAnimator?.end()
     // 离场动画
     startAnimation(AlphaAnimation(1F, 0F).apply { duration = 200 })
     course.removeItem(this)
@@ -181,5 +169,10 @@ open class TouchAffairView(
     return this
   }
   
-  override lateinit var lp: SingleDayLayoutParams
+  override val lp = SingleDayLayoutParams(-1, -1, 0).apply {
+    leftMargin = mMargin
+    rightMargin = mMargin
+    topMargin = mMargin
+    bottomMargin = mMargin
+  }
 }

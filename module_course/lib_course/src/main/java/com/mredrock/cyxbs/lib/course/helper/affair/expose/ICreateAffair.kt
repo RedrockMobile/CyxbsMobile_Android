@@ -28,9 +28,11 @@ interface ICreateAffair : IBoundary {
   /**
    * 创建 [ITouchAffairItem]，可以继承于 [TouchAffairView]
    *
-   * 如果返回 null 的话将不会生成任何 item
+   * @param x 当前触摸点 X 值
+   * @param y 当前触摸点 Y 值
+   * @return 如果返回 null 的话将不会显示任何 item，但是其他效果仍然存在
    */
-  fun createTouchAffairItem(course: ICourseViewGroup): ITouchAffairItem?
+  fun createTouchAffairItem(course: ICourseViewGroup, x: Int, y: Int): ITouchAffairItem?
   
   
   companion object Default : ICreateAffair {
@@ -48,11 +50,11 @@ interface ICreateAffair : IBoundary {
       }
       return false
     }
-  
-    override fun createTouchAffairItem(course: ICourseViewGroup): ITouchAffairItem {
+    
+    override fun createTouchAffairItem(course: ICourseViewGroup, x: Int, y: Int): ITouchAffairItem {
       return TouchAffairView(course)
     }
-  
+    
     override fun getUpperRow(
       course: ICourseViewGroup,
       initialRow: Int,
@@ -62,7 +64,7 @@ interface ICreateAffair : IBoundary {
       calculateUpperLowerRow(course, initialRow, nowRow, initialColumn)
       return _upperRow
     }
-  
+    
     override fun getLowerRow(
       course: ICourseViewGroup,
       initialRow: Int,
@@ -72,7 +74,7 @@ interface ICreateAffair : IBoundary {
       calculateUpperLowerRow(course, initialRow, nowRow, initialColumn)
       return _lowerRow
     }
-  
+    
     /**
      * 计算 [_upperRow] 和 [_lowerRow]
      */
@@ -91,7 +93,7 @@ interface ICreateAffair : IBoundary {
           when {
             initialRow > lp.endRow -> _upperRow = max(_upperRow, lp.endRow + 1)
             initialRow < lp.startRow -> _lowerRow = min(_lowerRow, lp.startRow - 1)
-            else -> continue // 此时触摸点在一个 item 里面，这应该由你自己的逻辑单独处理
+            else -> continue // 此时触摸点在一个 item 里面，正常情况下不存在该情况 (如果你没有修改逻辑的话，可能是 getRow() 精度问题，但概率很低)
           }
         }
       }

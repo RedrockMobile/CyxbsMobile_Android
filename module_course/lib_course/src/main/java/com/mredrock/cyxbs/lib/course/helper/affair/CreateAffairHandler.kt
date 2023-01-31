@@ -201,8 +201,8 @@ internal class CreateAffairHandler(
     if (bottomRow > mLowerRow) bottomRow = mLowerRow // 根据下限再次修正 bottomRow
     
     if (mTouchRow != nowTouchRow) {
-      iTouch.onTouchMove(mPointerId, mInitialRow, mInitialColumn, mTouchRow, topRow, bottomRow)
       mTouchRow = nowTouchRow
+      iTouch.onTouchMove(mPointerId, mInitialRow, mInitialColumn, nowTouchRow, topRow, bottomRow)
     }
     
     if (topRow != mTopRow || bottomRow != mBottomRow) { // 避免不必要的刷新

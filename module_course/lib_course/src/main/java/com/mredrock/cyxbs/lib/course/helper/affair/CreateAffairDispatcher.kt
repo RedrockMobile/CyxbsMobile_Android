@@ -77,7 +77,7 @@ class CreateAffairDispatcher(
   }
   
   override fun getInterceptHandler(event: IPointerEvent, view: ViewGroup): IPointerTouchHandler {
-    return getFreeHandler()
+    return getFreeHandler(event.x.toInt(), event.y.toInt())
   }
   
   override fun onDispatchTouchEvent(event: MotionEvent, view: ViewGroup) {
@@ -100,7 +100,7 @@ class CreateAffairDispatcher(
         }
       }
       MotionEvent.ACTION_POINTER_DOWN -> {
-        mIsAllowIntercept = true // 但第二跟手指触摸时就允许拦截
+        mIsAllowIntercept = true // 但第二跟手指触摸时就允许拦截 (如果没有被其他拦截的话)
       }
     }
   }
@@ -108,8 +108,8 @@ class CreateAffairDispatcher(
   /**
    * 生成一个新的 [ICreateAffairHandler]
    */
-  private fun getFreeHandler(): ICreateAffairHandler {
-    val touchAffairItem = iCreateAffair.createTouchAffairItem(page.course)
+  private fun getFreeHandler(x: Int, y: Int): ICreateAffairHandler {
+    val touchAffairItem = iCreateAffair.createTouchAffairItem(page.course, x, y)
     // 这里统一给 TouchAffairItem 设置点击事件
     touchAffairItem?.setOnClickListener { mOnClickListener?.invoke(touchAffairItem) }
     mPointerHandlerPool.forEach {
