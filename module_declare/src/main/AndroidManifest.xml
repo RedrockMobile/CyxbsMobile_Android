@@ -3,6 +3,13 @@
 
     <application>
         <activity
+            android:name=".pages.main.page.activity.DeclareHomeActivity"
+            android:exported="false">
+            <meta-data
+                android:name="android.app.lib_name"
+                android:value="" />
+        </activity>
+        <activity
             android:name=".pages.post.PostActivity"
             android:exported="false">
             <meta-data
