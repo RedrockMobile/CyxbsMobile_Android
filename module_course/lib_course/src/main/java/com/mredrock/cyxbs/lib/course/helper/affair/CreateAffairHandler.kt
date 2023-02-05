@@ -2,9 +2,7 @@ package com.mredrock.cyxbs.lib.course.helper.affair
 
 import android.graphics.Canvas
 import android.view.View
-import android.view.ViewConfiguration
 import android.view.ViewGroup
-import com.mredrock.cyxbs.lib.course.helper.ScrollTouchHandler
 import com.mredrock.cyxbs.lib.course.helper.affair.expose.IBoundary
 import com.mredrock.cyxbs.lib.course.helper.affair.expose.ITouchAffairItem
 import com.mredrock.cyxbs.lib.course.helper.affair.expose.ITouchCallback
@@ -13,7 +11,6 @@ import com.mredrock.cyxbs.lib.utils.utils.VibratorUtil
 import com.ndhzs.netlayout.draw.ItemDecoration
 import com.ndhzs.netlayout.touch.multiple.event.IPointerEvent
 import com.ndhzs.netlayout.touch.multiple.event.IPointerEvent.Action.*
-import kotlin.math.abs
 import kotlin.math.max
 import kotlin.math.min
 
@@ -24,7 +21,7 @@ import kotlin.math.min
  * @author 985892345
  * @date 2022/9/20 17:11
  */
-internal class CreateAffairHandler(
+class CreateAffairHandler(
   val course: ICourseViewGroup,
   val iTouch: ITouchCallback,
   val iBoundary: IBoundary,
@@ -40,38 +37,22 @@ internal class CreateAffairHandler(
   private var mLowerRow = course.rowCount - 1 // 选择区域的下限
   
   private var mPointerId = 0
-  private var mIsInLongPress = false
-  
-  private var mIsScrollHandle = false // 是否处于 ScrollTouchHandler 拦截的状态
   
   private var mTouchAffairItem: ITouchAffairItem? = null
   
-  // 认定是在滑动的最小移动值，其中 ScrollView 拦截事件就与该值有关，不建议修改该值
-  private var mTouchSlop = ViewConfiguration.get(course.getContext()).scaledTouchSlop
-  
-  private val mLongPressRunnable = object : Runnable {
-    override fun run() {
-      longPressStart()
-    }
-    
-    fun start() {
-      course.removeCallbacks(this)
-      course.postDelayed(ViewConfiguration.getLongPressTimeout().toLong(), this)
-    }
-    
-    fun cancel() {
-      course.removeCallbacks(this)
-    }
-  }
-  
   // 用于刷新 TouchAffairView 长度的回调，在每一帧时进行回调
+  // 不单独使用 view.postOnAnimation() 的原因在于其他地方触发刷新时会导致自身无法刷新
   private val mItemDecoration = object : ItemDecoration {
+    
+    private val refreshRunnable = Runnable { refreshTouchAffairView() }
+    
     override fun onDrawBelow(canvas: Canvas, view: View) {
       if (isInUse()) {
-        refreshTouchAffairView()
+        view.post(refreshRunnable) // 使用 post 防止绘制卡顿
       }
     }
   }
+  
   
   private var mInitialX = 0
   private var mInitialY = 0
@@ -83,15 +64,6 @@ internal class CreateAffairHandler(
   private var mIsInTouch = false
   
   override fun onPointerTouchEvent(event: IPointerEvent, view: ViewGroup) {
-    if (mIsScrollHandle) {
-      // 把事件转移给 ScrollTouchHandler 处理
-      ScrollTouchHandler.onPointerTouchEvent(event, view)
-      if (event.action == UP || event.action == CANCEL) {
-        mIsInTouch = false // 结束
-        mIsScrollHandle = false // 还原
-      }
-      return
-    }
     val x = event.x.toInt()
     val y = event.y.toInt()
     when (event.action) {
@@ -107,60 +79,26 @@ internal class CreateAffairHandler(
         mTopRow = mInitialRow // 重置
         mBottomRow = mInitialRow // 重置
         mTouchRow = mInitialRow // 重置
-        mIsInLongPress = false // 重置
-        mLongPressRunnable.start()
         mUpperRow = 0 // 重置
         mLowerRow = course.rowCount - 1 // 重置
       }
       MOVE -> {
-        if (mIsInLongPress) {
-          // 核心代码
-          mScrollRunnable.startIfCan() // 触发 mScrollRunnable 中的核心代码
-          course.invalidate()
-        } else {
-          if (abs(x - mLastMoveX) > mTouchSlop
-            || abs(y - mLastMoveY) > mTouchSlop
-          ) {
-            mLongPressRunnable.cancel()
-            mIsScrollHandle = true // 把事件转移给 ScrollTouchHandler 处理
-          }
-        }
+        // 核心代码
+        mScrollRunnable.startIfCan() // 触发 mScrollRunnable 中的核心代码
+        course.invalidate()
         mLastMoveX = x
         mLastMoveY = y
       }
-      UP -> {
+      UP, CANCEL -> {
         mIsInTouch = false // 结束
-        if (mIsInLongPress) {
-          mIsInLongPress = false // 重置
-          mScrollRunnable.cancel()
-          course.removeItemDecoration(mItemDecoration)
-          iTouch.onTouchEnd(mPointerId, mInitialRow, mInitialColumn, mTouchRow, mTopRow, mBottomRow)
-        } else {
-          mLongPressRunnable.cancel()
-          if (abs(x - mLastMoveX) <= mTouchSlop
-            && abs(y - mLastMoveY) <= mTouchSlop
-          ) {
-            // 这里说明移动的距离小于 mTouchSlop，但还是得把点击的事务给绘制上，但是只有一格
-            mTouchAffairItem?.show(mTopRow, mBottomRow, mInitialColumn)
-          }
-        }
-      }
-      CANCEL -> {
-        mIsInTouch = false // 结束
-        if (mIsInLongPress) {
-          mIsInLongPress = false // 重置
-          mScrollRunnable.cancel()
-          course.removeItemDecoration(mItemDecoration)
-          iTouch.onTouchEnd(mPointerId, mInitialRow, mInitialColumn, mTouchRow, mTopRow, mBottomRow)
-        } else {
-          mLongPressRunnable.cancel()
-        }
+        mScrollRunnable.cancel()
+        course.removeItemDecoration(mItemDecoration)
+        iTouch.onTouchEnd(mPointerId, mInitialRow, mInitialColumn, mTouchRow, mTopRow, mBottomRow)
       }
     }
   }
   
-  private fun longPressStart() {
-    mIsInLongPress = true
+  override fun onLongPressStart() {
     // 禁止父布局拦截
     course.getParent().requestDisallowInterceptTouchEvent(true)
     VibratorUtil.start(36) // 长按被触发来个震动提醒

@@ -3,8 +3,8 @@ package com.mredrock.cyxbs.lib.course.helper.affair
 import com.mredrock.cyxbs.lib.course.helper.affair.expose.IBoundary
 import com.mredrock.cyxbs.lib.course.helper.affair.expose.ITouchAffairItem
 import com.mredrock.cyxbs.lib.course.helper.affair.expose.ITouchCallback
+import com.mredrock.cyxbs.lib.course.helper.base.ILongPressTouchHandler
 import com.mredrock.cyxbs.lib.course.internal.view.course.ICourseViewGroup
-import com.ndhzs.netlayout.touch.multiple.IPointerTouchHandler
 
 /**
  * 处理创建事务的单根手指处理者
@@ -12,7 +12,7 @@ import com.ndhzs.netlayout.touch.multiple.IPointerTouchHandler
  * @author 985892345
  * @date 2022/9/21 15:20
  */
-internal interface ICreateAffairHandler : IPointerTouchHandler {
+internal interface ICreateAffairHandler : ILongPressTouchHandler {
   
   /**
    * 是否正在使用中

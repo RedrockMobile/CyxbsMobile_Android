@@ -1,6 +1,6 @@
 package com.mredrock.cyxbs.lib.course.fragment.page.expose
 
-import com.mredrock.cyxbs.lib.course.helper.CourseDownAnimDispatcher
+import com.mredrock.cyxbs.lib.course.helper.show.CourseDownAnimDispatcher
 import com.mredrock.cyxbs.lib.course.internal.touch.IMultiTouch
 
 /**

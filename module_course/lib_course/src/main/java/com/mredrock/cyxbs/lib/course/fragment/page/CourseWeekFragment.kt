@@ -3,7 +3,7 @@ package com.mredrock.cyxbs.lib.course.fragment.page
 import android.os.Bundle
 import android.view.View
 import androidx.annotation.CallSuper
-import com.mredrock.cyxbs.lib.course.helper.CourseNowTimeHelper
+import com.mredrock.cyxbs.lib.course.helper.show.CourseNowTimeHelper
 import com.mredrock.cyxbs.lib.utils.extensions.lazyUnlock
 import com.mredrock.cyxbs.config.config.SchoolCalendar
 import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers

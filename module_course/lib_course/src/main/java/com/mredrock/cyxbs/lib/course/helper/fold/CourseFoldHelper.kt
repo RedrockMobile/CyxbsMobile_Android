@@ -1,4 +1,4 @@
-package com.mredrock.cyxbs.lib.course.helper
+package com.mredrock.cyxbs.lib.course.helper.fold
 
 import android.os.Bundle
 import android.os.Parcelable
