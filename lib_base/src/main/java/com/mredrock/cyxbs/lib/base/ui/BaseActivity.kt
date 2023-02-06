@@ -228,18 +228,4 @@ abstract class BaseActivity : OperationActivity() {
   
   
   
-  init {
-    // Umeng 统计当前 Activity
-    super.getLifecycle().addObserver(
-      object : DefaultLifecycleObserver {
-        override fun onResume(owner: LifecycleOwner) {
-          MobclickAgent.onPageStart(javaClass.name)
-        }
-      
-        override fun onPause(owner: LifecycleOwner) {
-          MobclickAgent.onPageEnd(javaClass.name)
-        }
-      }
-    )
-  }
 }

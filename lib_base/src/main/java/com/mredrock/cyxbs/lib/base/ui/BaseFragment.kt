@@ -11,7 +11,6 @@ import androidx.fragment.app.FragmentTransaction
 import androidx.lifecycle.*
 import com.mredrock.cyxbs.lib.base.operations.OperationFragment
 import com.mredrock.cyxbs.lib.base.utils.ArgumentHelper
-import com.umeng.analytics.MobclickAgent
 
 /**
  * 绝对基础的抽象
@@ -222,19 +221,4 @@ abstract class BaseFragment : OperationFragment {
   )
   val lifecycleScope: LifecycleCoroutineScope
     get() = super.getLifecycle().coroutineScope
-  
-  init {
-    // Umeng 统计当前 Fragment
-    super.getLifecycle().addObserver(
-      object : DefaultLifecycleObserver {
-        override fun onResume(owner: LifecycleOwner) {
-          MobclickAgent.onPageStart(javaClass.name)
-        }
-  
-        override fun onPause(owner: LifecycleOwner) {
-          MobclickAgent.onPageEnd(javaClass.name)
-        }
-      }
-    )
-  }
 }

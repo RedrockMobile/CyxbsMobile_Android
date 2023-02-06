@@ -6,6 +6,7 @@ import androidx.core.os.bundleOf
 import com.mredrock.cyxbs.lib.course.fragment.page.CoursePageFragment
 import com.mredrock.cyxbs.lib.course.fragment.vp.AbstractHeaderCourseVpFragment
 import com.mredrock.cyxbs.noclass.bean.NoClassSpareTime
+import kotlin.math.max
 
 /**
  *
@@ -43,6 +44,9 @@ class NoClassCourseVpFragment : AbstractHeaderCourseVpFragment() {
   }
   
   private fun initViewPager(){
-    mViewPager.setCurrentItem(if (mNowWeek >= mVpAdapter.itemCount) 0 else mNowWeek, false)
+    mViewPager.setCurrentItem(
+      if (mNowWeek >= mVpAdapter.itemCount) 0 else max(mNowWeek, 0),
+      false
+    )
   }
 }

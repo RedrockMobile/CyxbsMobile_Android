@@ -4,6 +4,7 @@ import androidx.recyclerview.widget.AsyncDifferConfig
 import androidx.recyclerview.widget.AsyncListDiffer
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListUpdateCallback
+import java.util.Collections
 
 /**
  * 差分比较刷新
@@ -30,7 +31,7 @@ abstract class DiffRefreshController<Data : Any> : DiffUtil.ItemCallback<Data>()
     mNewData = ArrayList(newData) // 不能直接使用传来的数据
     mAsyncListDiffer.submitList(newData) {
       mOldData = mNewData // 保存旧数据，提供给下次刷新使用
-      action?.invoke(newData)
+      action?.invoke(Collections.unmodifiableList(mNewData))
     }
   }
   

@@ -1,10 +1,9 @@
 package com.mredrock.cyxbs.lib.base.dailog
 
 import android.content.Context
-import android.util.SizeF
+import android.util.Size
 import android.view.Gravity
 import android.view.View
-import android.view.ViewGroup
 import android.widget.FrameLayout
 import android.widget.TextView
 import androidx.annotation.ColorRes
@@ -82,27 +81,27 @@ open class ChooseDialog protected constructor(
    * @param negativeButtonText 取消按钮文本
    * @param positiveButtonColor 确定按钮颜色
    * @param negativeButtonColor 取消按钮颜色
-   * @param width dialog 的宽，默认为 wrap_content
-   * @param height dialog 的高，默认为 wrap_content
+   * @param width dialog 的宽
+   * @param height dialog 的高
    * @param backgroundId dialog 的背景，默认背景应该能满足
    * @param buttonSize button 的大小，单位 dp
    */
-  data class Data(
+  open class Data(
     val content: String = "弹窗内容为空",
     val contentSize: Float = 13F,
     val contentGravity: Int = Gravity.CENTER,
-    override val type: DialogType = DialogType.TWO_BUT,
-    override val positiveButtonText: String = "确定",
-    override val negativeButtonText: String = "取消",
+    override val type: DialogType = BaseDialog.Data.type,
+    override val positiveButtonText: String = BaseDialog.Data.positiveButtonText,
+    override val negativeButtonText: String = BaseDialog.Data.negativeButtonText,
     @ColorRes
-    override val positiveButtonColor: Int = R.color.config_choose_dialog_btn_positive,
+    override val positiveButtonColor: Int = BaseDialog.Data.positiveButtonColor,
     @ColorRes
-    override val negativeButtonColor: Int = R.color.config_choose_dialog_btn_negative,
-    override val width: Int = ViewGroup.LayoutParams.WRAP_CONTENT,
-    override val height: Int = ViewGroup.LayoutParams.WRAP_CONTENT,
+    override val negativeButtonColor: Int = BaseDialog.Data.negativeButtonColor,
+    override val buttonSize: Size = BaseDialog.Data.buttonSize,
+    override val width: Int = BaseDialog.Data.width,
+    override val height: Int = BaseDialog.Data.height,
     @DrawableRes
-    override val backgroundId: Int = R.drawable.config_shape_round_corner_dialog,
-    override val buttonSize: SizeF = BaseDialog.Data.buttonSize,
+    override val backgroundId: Int = BaseDialog.Data.backgroundId,
   ) : BaseDialog.Data
   
   override fun createContentView(context: Context): View {

@@ -23,7 +23,7 @@ import kotlinx.coroutines.flow.SharedFlow
  * @since 2022/8/2 14:02
  */
 @Route(path = DIALOG_SERVICE)
-class DialogService() : IDialogService {
+class DialogService : IDialogService {
     internal val mutableEventChannel: MutableSharedFlow<DialogWebEvent> = MutableSharedFlow()
 
     override val webEventChannel: SharedFlow<DialogWebEvent> = mutableEventChannel
@@ -35,7 +35,7 @@ class DialogService() : IDialogService {
         handleWebView: WebView.() -> Unit
     ) {
         val dialog = MaterialDialog(context)
-            .customView(R.layout.layout_dialog)
+            .customView(R.layout.dialog_layout)
         val webView = dialog.getCustomView() as DialogWebView
         webView.handleWebView()
         webView.loadUrl(url)

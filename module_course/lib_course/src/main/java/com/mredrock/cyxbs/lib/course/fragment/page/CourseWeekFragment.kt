@@ -25,7 +25,7 @@ abstract class CourseWeekFragment : CoursePageFragment() {
    *   fun newInstance(week: Int): XXXWeekFragment {
    *     return XXXWeekFragment().apply {
    *       arguments = bundleOf(
-   *         "mWeek" to week
+   *         this::mWeek.name to week
    *       )
    *     }
    *   }
@@ -47,6 +47,7 @@ abstract class CourseWeekFragment : CoursePageFragment() {
    * @return 今天是否在本周
    */
   protected open fun initWeekNum() {
+    // 因为开学第一周的数据来自其他地方，存在此时没有被加载的情况，所以采用观察的形式
     SchoolCalendar.observeFirstMonDayOfTerm()
       .firstElement()
       .observeOn(AndroidSchedulers.mainThread())

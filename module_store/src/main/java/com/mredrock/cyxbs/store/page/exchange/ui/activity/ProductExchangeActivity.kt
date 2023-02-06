@@ -54,12 +54,12 @@ class ProductExchangeActivity : BaseBindActivity<StoreActivityProductExchangeBin
     window.setBackgroundDrawableResource(android.R.color.transparent)
     super.onCreate(savedInstanceState)
     // 降低因使用共享动画进入 activity 后的白闪情况
-    initData()
+    initView()
     initJump()
     initObserve()
   }
   
-  private fun initData() {
+  private fun initView() {
     if (mIsPurchased) { // 如果已经购买过
       binding.storeBtnExchange.setBackgroundColor(R.color.store_btn_ban_product_exchange.color)
     }

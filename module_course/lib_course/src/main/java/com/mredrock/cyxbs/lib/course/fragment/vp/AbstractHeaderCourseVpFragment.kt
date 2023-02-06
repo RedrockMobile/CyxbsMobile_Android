@@ -12,9 +12,10 @@ import com.mredrock.cyxbs.lib.course.R
 import com.mredrock.cyxbs.lib.course.fragment.vp.expose.IHeaderCourseVp
 import com.mredrock.cyxbs.lib.utils.extensions.lazyUnlock
 import com.mredrock.cyxbs.lib.utils.extensions.setOnSingleClickListener
+import kotlin.math.max
 
 /**
- * ...
+ * 在 [AbstractCourseVpFragment] 的基础上封装了课表头
  *
  * @author 985892345 (Guo Xiangrui)
  * @email guo985892345@foxmail.com
@@ -72,9 +73,15 @@ abstract class AbstractHeaderCourseVpFragment : AbstractCourseVpFragment(), IHea
           positionOffset: Float,
           positionOffsetPixels: Int
         ) {
+          val nowWeekPosition = getPositionByNowWeek()
           when (position) {
-            mNowWeek - 1 -> showNowWeek(positionOffset)
-            mNowWeek -> showNowWeek(1 - positionOffset)
+            nowWeekPosition - 1 -> showNowWeek(position, positionOffset)
+            nowWeekPosition -> showNowWeek(position, 1 - positionOffset)
+            else -> {
+              /*
+              * 因为课表打开就是显示当前周，所以可以不用在其他周还原，减少回调
+              * */
+            }
           }
         }
       }
@@ -86,7 +93,7 @@ abstract class AbstractHeaderCourseVpFragment : AbstractCourseVpFragment(), IHea
    */
   protected open fun getPositionByNowWeek(): Int {
     // 回到本周，如果周数大于等于了总的 itemCount，则默认显示第 0 页
-    return if (mNowWeek >= mVpAdapter.itemCount) 0 else mNowWeek
+    return if (mNowWeek >= mVpAdapter.itemCount) 0 else max(mNowWeek, 0)
   }
   
   /**
@@ -100,11 +107,17 @@ abstract class AbstractHeaderCourseVpFragment : AbstractCourseVpFragment(), IHea
    * 显示本周的进度
    * @param positionOffset 为 0.0 -> 1.0 的值，最后为 1.0 时表示完全显示本周
    */
-  protected open fun showNowWeek(positionOffset: Float) {
+  protected open fun showNowWeek(position: Int, positionOffset: Float) {
     mTvNowWeek.alpha = positionOffset
     mTvNowWeek.scaleX = positionOffset
     mTvNowWeek.scaleY = positionOffset
     mBtnBackNowWeek.alpha = (1 - positionOffset)
     mBtnBackNowWeek.translationX = positionOffset * (mHeader.width - mBtnBackNowWeek.left)
+    
+    if (position == 0) {
+      // 整学期界面不显示“本周”
+      // 这里有些小问题，这里是父类，并不知道子类有没有整学期这个界面（目前是都有），先暂时这样吧
+      mTvNowWeek.alpha = 0F
+    }
   }
 }

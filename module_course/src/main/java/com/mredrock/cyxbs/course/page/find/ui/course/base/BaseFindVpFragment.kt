@@ -4,6 +4,7 @@ import android.os.Bundle
 import android.view.View
 import com.mredrock.cyxbs.course.page.course.data.LessonData
 import com.mredrock.cyxbs.lib.course.fragment.vp.AbstractHeaderCourseVpFragment
+import kotlin.math.max
 
 /**
  * 查看他人课表的 vp 界面，是 [BaseFindSemesterFragment] 和 [BaseFindWeekFragment] 的宿主
@@ -26,6 +27,9 @@ abstract class BaseFindVpFragment<D : LessonData> : AbstractHeaderCourseVpFragme
   
   override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
     super.onViewCreated(view, savedInstanceState)
-    mViewPager.setCurrentItem(if (mNowWeek >= mVpAdapter.itemCount) 0 else mNowWeek, false)
+    mViewPager.setCurrentItem(
+      if (mNowWeek >= mVpAdapter.itemCount) 0 else max(mNowWeek, 0),
+      false
+    )
   }
 }

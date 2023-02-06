@@ -1,5 +1,6 @@
 package com.mredrock.cyxbs.main.widget
 
+import android.annotation.SuppressLint
 import android.app.Dialog
 import android.content.ClipData
 import android.content.ClipboardManager
@@ -8,6 +9,8 @@ import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
 import android.os.Bundle
 import android.widget.TextView
+import com.mredrock.cyxbs.lib.base.utils.Umeng
+import com.mredrock.cyxbs.lib.utils.extensions.gone
 import com.mredrock.cyxbs.lib.utils.extensions.toast
 import com.mredrock.cyxbs.main.R
 
@@ -28,16 +31,25 @@ class DebugDataDialog(context: Context) : Dialog(context) {
     initDialog()
   }
   
+  @SuppressLint("SetTextI18n")
   private fun initDialog() {
-    val tvDeviceId = findViewById<TextView>(R.id.device_id)
-    val tvDeviceData = findViewById<TextView>(R.id.device_data)
+    val tvDeviceId = findViewById<TextView>(R.id.umeng_device_id)
+    tvDeviceId.text = Umeng.deviceId
     tvDeviceId.setOnLongClickListener {
       textViewToClipboard(tvDeviceId.text)
       true
     }
-    tvDeviceData.setOnLongClickListener {
-      textViewToClipboard(tvDeviceData.text)
-      true
+    
+    val tvTitle = findViewById<TextView>(R.id.umeng_device_title)
+    if (context.packageName != "com.mredrock.cyxbs") {
+      tvDeviceId.gone()
+      tvTitle.text = "包名不为 com.mredrock.cyxbs，Umeng 注册失败，无法获取 deviceId !"
+      /*
+      * 如果你当前使用了 debug 下 apk 共存功能，会导致 debug 下包名不为 com.mredrock.cyxbs，所以注册会失败
+      *
+      * 请修改 build-logic/core/version 模块中的 Config#getApplicationId() 方法即可解决
+      *
+      * */
     }
   }
   

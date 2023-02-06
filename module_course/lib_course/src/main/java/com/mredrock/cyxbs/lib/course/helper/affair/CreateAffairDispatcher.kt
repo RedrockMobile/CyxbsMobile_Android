@@ -5,6 +5,9 @@ import android.view.ViewGroup
 import com.mredrock.cyxbs.lib.course.fragment.course.expose.fold.FoldState
 import com.mredrock.cyxbs.lib.course.fragment.course.expose.wrapper.ICourseWrapper
 import com.mredrock.cyxbs.lib.course.fragment.page.ICoursePage
+import com.mredrock.cyxbs.lib.course.helper.affair.expose.ICreateAffair
+import com.mredrock.cyxbs.lib.course.helper.affair.expose.ITouchAffairItem
+import com.mredrock.cyxbs.lib.course.helper.affair.expose.ITouchCallback
 import com.mredrock.cyxbs.lib.course.internal.view.course.ICourseViewGroup
 import com.mredrock.cyxbs.lib.course.utils.forEachReversed
 import com.ndhzs.netlayout.touch.multiple.IPointerDispatcher
@@ -15,52 +18,58 @@ import com.ndhzs.netlayout.touch.multiple.event.IPointerEvent.Action.DOWN
 /**
  * 长按生成事务的事件分发者
  *
+ * ## 注意
+ * - 如果你需要添加一些约束性的交互 (比如某时候不允许生成 View)，建议写在 [iCreateAffair] 中
+ *
  * @author 985892345
  * @date 2022/9/19 14:48
  */
 class CreateAffairDispatcher(
   val page: ICoursePage,
-) : IPointerDispatcher, ICreateAffairHandler.TouchCallback {
+  val iCreateAffair: ICreateAffair = ICreateAffair.Default, // 如果你需要与外界进行交互，建议写在这个里面
+) : IPointerDispatcher {
   
-  fun setOnClickListener(onClick: ITouchAffair.() -> Unit) {
+  /**
+   * 设置点击 [ITouchAffairItem] 的点击监听
+   */
+  fun setOnClickListener(onClick: ITouchAffairItem.() -> Unit) {
     mOnClickListener = onClick
   }
   
-  fun addTouchCallback(callback: ICreateAffairHandler.TouchCallback) {
-    mTouchCallbacks.add(callback)
+  /**
+   * 长按手指移动的回调
+   */
+  fun addTouchCallback(callback: ITouchCallback) {
+    mTouchCallbackImpl.mTouchCallbacks.add(callback)
   }
   
-  fun removeTouchCallback(callback: ICreateAffairHandler.TouchCallback) {
-    mTouchCallbacks.remove(callback)
+  fun removeTouchCallback(callback: ITouchCallback) {
+    mTouchCallbackImpl.mTouchCallbacks.remove(callback)
   }
   
   init {
     page.addCourseLifecycleObservable(
       object : ICourseWrapper.CourseLifecycleObserver {
-        override fun onCreateCourse(course: ICourseViewGroup) {}
         override fun onDestroyCourse(course: ICourseViewGroup) {
-          mPointerHandlerPool.clear() // Fragment 调用 onDestroy() 时需要清空池子
+          mPointerHandlerPool.clear() // Fragment 调用 onDestroyView() 时需要清空池子
         }
-      }, false
+      }
     )
   }
   
+  // ICreateAffairHandler 的复用池 (因为一个 handler 里面包含对 course 的很多监听，所以采取复用策略)
   private val mPointerHandlerPool = arrayListOf<ICreateAffairHandler>()
   private var mIsAllowIntercept = true
-  private var mOnClickListener: (ITouchAffair.() -> Unit)? = null
-  private val mTouchCallbacks = arrayListOf<ICreateAffairHandler.TouchCallback>()
+  private var mOnClickListener: (ITouchAffairItem.() -> Unit)? = null
   
   override fun isPrepareToIntercept(event: IPointerEvent, view: ViewGroup): Boolean {
     val x = event.x.toInt()
     val y = event.y.toInt()
     if (event.action == DOWN) {
       if (mIsAllowIntercept) {
-        if (x > page.getTimelineEndWidth()) {
-          // 触摸位置大于左边时间轴的宽度时
-          if (page.course.findPairUnderByXY(x, y) == null) {
-            // 当前触摸的是空白位置时才准备拦截，之后会立即回调 getInterceptHandler()
-            return true
-          }
+        if (iCreateAffair.isValidDown(page, x, y)) {
+          // 之后会立即回调 getInterceptHandler()
+          return true
         }
       }
     }
@@ -68,7 +77,7 @@ class CreateAffairDispatcher(
   }
   
   override fun getInterceptHandler(event: IPointerEvent, view: ViewGroup): IPointerTouchHandler {
-    return getFreeHandler()
+    return getFreeHandler(event.x.toInt(), event.y.toInt())
   }
   
   override fun onDispatchTouchEvent(event: MotionEvent, view: ViewGroup) {
@@ -79,7 +88,7 @@ class CreateAffairDispatcher(
         if (page.course.findPairUnderByXY(
             event.x.toInt(),
             event.y.toInt()
-          )?.first !is ITouchAffair
+          )?.first !is ITouchAffairItem
         ) {
           // DOWN 事件时如果点击的不是 TouchAffair，则取消已经显示的 TouchAffair
           mPointerHandlerPool.forEach {
@@ -91,93 +100,105 @@ class CreateAffairDispatcher(
         }
       }
       MotionEvent.ACTION_POINTER_DOWN -> {
-        mIsAllowIntercept = true // 但第二跟手指触摸时就允许拦截
+        mIsAllowIntercept = true // 但第二跟手指触摸时就允许拦截 (如果没有被其他拦截的话)
       }
-    }
-  }
-  
-  private fun getFreeHandler(): ICreateAffairHandler {
-    mPointerHandlerPool.forEach {
-      // 如果没有被使用，就直接 return
-      if (!it.isInUse()) return it
-    }
-    val newHandler = ICreateAffairHandler.getImpl(
-      page.course,
-      ITouchAffair
-        .getImpl(page.course)
-        .apply { setOnClickListener { mOnClickListener?.invoke(this) } },
-      this
-    )
-    mPointerHandlerPool.add(newHandler)
-    return newHandler
-  }
-  
-  override fun onLongPressStart(pointerId: Int, initialRow: Int, initialColumn: Int) {
-    mTouchCallbacks.forEachReversed { it.onLongPressStart(pointerId, initialRow, initialColumn) }
-  }
-  
-  override fun onMove(
-    pointerId: Int,
-    initialRow: Int,
-    initialColumn: Int,
-    topRow: Int,
-    bottomRow: Int,
-    touchRow: Int,
-  ) {
-    unfoldNoonOrDuskIfNecessary(initialRow, touchRow)
-    mTouchCallbacks.forEachReversed {
-      it.onMove(
-        pointerId,
-        initialRow,
-        initialColumn,
-        topRow,
-        bottomRow,
-        touchRow
-      )
-    }
-  }
-  
-  override fun onEnd(
-    pointerId: Int,
-    initialRow: Int,
-    initialColumn: Int,
-    topRow: Int,
-    bottomRow: Int,
-    touchRow: Int,
-  ) {
-    mTouchCallbacks.forEachReversed {
-      it.onEnd(
-        pointerId,
-        initialRow,
-        initialColumn,
-        topRow,
-        bottomRow,
-        touchRow
-      )
     }
   }
   
   /**
-   * 判断当前滑动中是否需要自动展开中午或者傍晚时间段
-   * @param initialRow 最开始触摸的行数
-   * @param touchRow 当前触摸的行数
+   * 生成一个新的 [ICreateAffairHandler]
    */
-  private fun unfoldNoonOrDuskIfNecessary(initialRow: Int, touchRow: Int) {
-    when (page.getNoonRowState()) {
-      FoldState.FOLD, FoldState.FOLD_ANIM, FoldState.UNKNOWN -> {
-        if (page.compareNoonPeriod(initialRow) * page.compareNoonPeriod(touchRow) <= 0) {
-          page.unfoldNoon()
-        }
+  private fun getFreeHandler(x: Int, y: Int): ICreateAffairHandler {
+    val touchAffairItem = iCreateAffair.createTouchAffairItem(page.course, x, y)
+    // 这里统一给 TouchAffairItem 设置点击事件
+    touchAffairItem?.setOnClickListener { mOnClickListener?.invoke(touchAffairItem) }
+    mPointerHandlerPool.forEach {
+      // 如果没有被使用，就直接 return
+      if (!it.isInUse()) {
+        it.setTouchAffairItem(touchAffairItem)
+        return it
       }
-      else -> {}
     }
-    when (page.getDuskRowState()) {
-      FoldState.FOLD, FoldState.FOLD_ANIM, FoldState.UNKNOWN -> {
-        if (page.compareDuskPeriod(initialRow) * page.compareDuskPeriod(touchRow) <= 0) {
-          page.unfoldDusk()
-        }
+    val newHandler = ICreateAffairHandler.getImpl(page.course, mTouchCallbackImpl, iCreateAffair)
+    mPointerHandlerPool.add(newHandler)
+    newHandler.setTouchAffairItem(touchAffairItem)
+    return newHandler
+  }
+  
+  /**
+   * [ITouchCallback] 的实现类
+   */
+  private val mTouchCallbackImpl = object : ITouchCallback {
+    
+    val mTouchCallbacks = arrayListOf<ITouchCallback>()
+    
+    override fun onLongPressStart(pointerId: Int, initialRow: Int, initialColumn: Int) {
+      mTouchCallbacks.forEachReversed { it.onLongPressStart(pointerId, initialRow, initialColumn) }
+    }
+  
+    override fun onTouchMove(
+      pointerId: Int,
+      initialRow: Int,
+      initialColumn: Int,
+      touchRow: Int,
+      topRow: Int,
+      bottomRow: Int,
+    ) {
+      unfoldNoonOrDuskIfNecessary(initialRow, touchRow)
+      mTouchCallbacks.forEachReversed {
+        it.onTouchMove(
+          pointerId,
+          initialRow,
+          initialColumn,
+          touchRow,
+          topRow,
+          bottomRow
+        )
       }
-      else -> {}
+    }
+  
+    override fun onTouchEnd(
+      pointerId: Int,
+      initialRow: Int,
+      initialColumn: Int,
+      touchRow: Int,
+      topRow: Int,
+      bottomRow: Int,
+    ) {
+      mTouchCallbacks.forEachReversed {
+        it.onTouchEnd(
+          pointerId,
+          initialRow,
+          initialColumn,
+          touchRow,
+          topRow,
+          bottomRow
+        )
+      }
+    }
+  
+    /**
+     * 判断当前滑动中是否需要自动展开中午或者傍晚时间段
+     * @param initialRow 最开始触摸的行数
+     * @param touchRow 当前触摸的行数
+     */
+    private fun unfoldNoonOrDuskIfNecessary(initialRow: Int, touchRow: Int) {
+      when (page.getNoonRowState()) {
+        FoldState.FOLD, FoldState.FOLD_ANIM, FoldState.UNKNOWN -> {
+          if (page.compareNoonPeriod(initialRow) * page.compareNoonPeriod(touchRow) <= 0) {
+            page.unfoldNoon()
+          }
+        }
+        else -> {}
+      }
+      when (page.getDuskRowState()) {
+        FoldState.FOLD, FoldState.FOLD_ANIM, FoldState.UNKNOWN -> {
+          if (page.compareDuskPeriod(initialRow) * page.compareDuskPeriod(touchRow) <= 0) {
+            page.unfoldDusk()
+          }
+        }
+        else -> {}
+      }
     }
   }
 }

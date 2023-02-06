@@ -12,7 +12,18 @@ import com.mredrock.cyxbs.lib.course.fragment.vp.expose.ICourseVp
 import com.mredrock.cyxbs.lib.utils.extensions.lazyUnlock
 
 /**
- * ...
+ * 封装了 Vp2 的课表 Fragment
+ *
+ * ```
+ * 我推荐的课表框架为：
+ *                                               *CourseVpFragment
+ *                                                      ↓
+ *            +---------------------------+---------------------------+---------------------------+
+ *            ↓                           ↓                           ↓                           ↓
+ * CourseSemesterFragment         CourseWeekFragment          CourseWeekFragment         CourseWeekFragment
+ *
+ * ```
+ * - `*CourseVpFragment` 指 [AbstractCourseVpFragment] 或者 [AbstractHeaderCourseVpFragment] 的子类
  *
  * @author 985892345 (Guo Xiangrui)
  * @email guo985892345@foxmail.com

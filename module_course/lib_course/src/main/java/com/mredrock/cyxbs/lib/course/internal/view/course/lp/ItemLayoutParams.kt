@@ -36,4 +36,13 @@ open class ItemLayoutParams : NetLayoutParams, IItemBean {
     height: Int = MATCH_PARENT,
     gravity: Int = Gravity.CENTER,
   ) : super(startRow, endRow, startColumn, endColumn, width, height, gravity)
+  
+  /**
+   * 如果你需要控制课表中 item 的显示顺序，你需要重写该方法
+   *
+   * 返回 1，则显示在上面
+   */
+  override fun compareTo(other: NetLayoutParams): Int {
+    return super.compareTo(other)
+  }
 }
