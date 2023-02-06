@@ -11,7 +11,9 @@ import androidx.cardview.widget.CardView
 import com.mredrock.cyxbs.lib.utils.extensions.*
 
 /**
- * ...
+ * 用于 item 中通用的一个 View
+ *
+ * 包含圆角背景、标题、描述
  *
  * @author 985892345 (Guo Xiangrui)
  * @email guo985892345@foxmail.com
@@ -22,6 +24,9 @@ abstract class ItemView(context: Context) : CardView(context) {
   val tvTitle: TextView
   val tvContent: TextView
   
+  /**
+   * 设置标题和描述
+   */
   open fun setText(title: String, content: String) {
     tvTitle.text = title
     tvContent.text = content

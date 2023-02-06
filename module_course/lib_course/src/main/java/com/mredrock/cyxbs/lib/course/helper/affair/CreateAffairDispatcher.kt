@@ -52,13 +52,9 @@ class CreateAffairDispatcher(
   }
   
   init {
-    page.addCourseLifecycleObservable(
-      object : ICourseWrapper.CourseLifecycleObserver {
-        override fun onDestroyCourse(course: ICourseViewGroup) {
-          mPointerHandlerPool.clear() // Fragment 调用 onDestroyView() 时需要清空池子
-        }
-      }
-    )
+    page.doOnCourseDestroy {
+      mPointerHandlerPool.clear() // Fragment 调用 onDestroyView() 时需要清空池子
+    }
   }
   
   // ICreateAffairHandler 的复用池 (因为一个 handler 里面包含对 course 的很多监听，所以采取复用策略)
@@ -67,11 +63,9 @@ class CreateAffairDispatcher(
   private var mOnClickListener: (ITouchAffairItem.() -> Unit)? = null
   
   override fun handleEvent(event: IPointerEvent, view: ViewGroup): ILongPressTouchHandler? {
-    val x = event.x.toInt()
-    val y = event.y.toInt()
     if (mIsAllowIntercept) {
-      if (iCreateAffair.isValidDown(page, x, y)) {
-        return getFreeHandler(event.x.toInt(), event.y.toInt())
+      if (iCreateAffair.isValidDown(page, event)) {
+        return getFreeHandler(event)
       }
     }
     return null
@@ -90,7 +84,7 @@ class CreateAffairDispatcher(
         val touchSlop = ViewConfiguration.get(view.context).scaledTouchSlop
         if (abs(x - initialX) <= touchSlop && abs(y - initialY) <= touchSlop) {
           // 这里说明移动的距离小于 touchSlop，但还是得把点击的事务给绘制上，但是只有一格
-          val item = initializeTouchAffairItem(x, y)
+          val item = initializeTouchAffairItem(event)
           if (item != null) {
             val initialRow = page.course.getRow(y)
             val initialColumn = page.course.getColumn(x)
@@ -129,8 +123,8 @@ class CreateAffairDispatcher(
   /**
    * 生成一个新的 [ICreateAffairHandler]
    */
-  private fun getFreeHandler(x: Int, y: Int): ICreateAffairHandler {
-    val touchAffairItem = initializeTouchAffairItem(x, y)
+  private fun getFreeHandler(event: IPointerEvent): ICreateAffairHandler {
+    val touchAffairItem = initializeTouchAffairItem(event)
     mPointerHandlerPool.forEach {
       // 如果没有被使用，就直接 return
       if (!it.isInUse()) {
@@ -147,8 +141,8 @@ class CreateAffairDispatcher(
   /**
    * 初始化 [ITouchAffairItem]
    */
-  private fun initializeTouchAffairItem(x: Int, y: Int): ITouchAffairItem? {
-    val item = iCreateAffair.createTouchAffairItem(page.course, x, y)
+  private fun initializeTouchAffairItem(event: IPointerEvent): ITouchAffairItem? {
+    val item = iCreateAffair.createTouchAffairItem(page.course, event)
     // 这里统一给 TouchAffairItem 设置点击事件
     item?.setOnClickListener { mOnClickListener?.invoke(item) }
     return item

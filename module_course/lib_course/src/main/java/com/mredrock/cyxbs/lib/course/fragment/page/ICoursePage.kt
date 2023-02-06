@@ -1,7 +1,7 @@
 package com.mredrock.cyxbs.lib.course.fragment.page
 
 import com.mredrock.cyxbs.lib.course.fragment.course.ICourseBase
-import com.mredrock.cyxbs.lib.course.fragment.page.expose.ICourseTouch
+import com.mredrock.cyxbs.lib.course.fragment.page.expose.ICourseDefaultTouch
 import com.mredrock.cyxbs.lib.course.fragment.page.expose.INoLesson
 import com.mredrock.cyxbs.lib.course.fragment.page.expose.IToday
 import com.mredrock.cyxbs.lib.course.fragment.page.expose.IWeekWrapper
@@ -14,10 +14,10 @@ import com.mredrock.cyxbs.lib.course.fragment.page.expose.IWeekWrapper
  * @date 2022/8/31 17:57
  */
 interface ICoursePage :
-  ICourseBase,
-  ICourseTouch,
-  INoLesson,
-  IToday,
-  IWeekWrapper
+  ICourseBase, // course 包
+  ICourseDefaultTouch, // 包含默认的触摸事件
+  INoLesson, // 没课时显示的图片
+  IToday, // 显示今天是周几的逻辑
+  IWeekWrapper // 包含课表上方的周视图
 {
 }

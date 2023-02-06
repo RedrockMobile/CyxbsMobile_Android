@@ -25,6 +25,16 @@ interface ICourseWrapper {
   fun removeCourseLifecycleObserver(observer: CourseLifecycleObserver)
   
   /**
+   * [addCourseLifecycleObservable] 的快捷方式
+   */
+  fun doOnCourseCreate(action: ICourseViewGroup.() -> Unit, isCallbackIfCrested: Boolean = false)
+  
+  /**
+   * [addCourseLifecycleObservable] 的快捷方式
+   */
+  fun doOnCourseDestroy(action: ICourseViewGroup.() -> Unit)
+  
+  /**
    * 解决 Fragment 与 View 生命周期不一致的问题
    */
   interface CourseLifecycleObserver {

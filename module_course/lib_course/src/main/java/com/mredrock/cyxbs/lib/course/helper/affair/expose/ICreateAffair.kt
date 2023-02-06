@@ -6,6 +6,7 @@ import com.mredrock.cyxbs.lib.course.helper.affair.CreateAffairDispatcher
 import com.mredrock.cyxbs.lib.course.helper.affair.view.TouchAffairView
 import com.mredrock.cyxbs.lib.course.internal.view.course.ICourseViewGroup
 import com.mredrock.cyxbs.lib.course.internal.view.course.lp.ItemLayoutParams
+import com.ndhzs.netlayout.touch.multiple.event.IPointerEvent
 import kotlin.math.max
 import kotlin.math.min
 
@@ -23,16 +24,14 @@ interface ICreateAffair : IBoundary {
   /**
    * 当前 Down 的触摸点是否合法，合法才会拦截触摸事件并生成 [ITouchAffairItem]
    */
-  fun isValidDown(page: ICoursePage, x: Int, y: Int): Boolean
+  fun isValidDown(page: ICoursePage, event: IPointerEvent): Boolean
   
   /**
    * 创建 [ITouchAffairItem]，可以继承于 [TouchAffairView]
    *
-   * @param x 当前触摸点 X 值
-   * @param y 当前触摸点 Y 值
    * @return 如果返回 null 的话将不会显示任何 item，但是其他效果仍然存在
    */
-  fun createTouchAffairItem(course: ICourseViewGroup, x: Int, y: Int): ITouchAffairItem?
+  fun createTouchAffairItem(course: ICourseViewGroup, event: IPointerEvent): ITouchAffairItem?
   
   
   companion object Default : ICreateAffair {
@@ -40,7 +39,9 @@ interface ICreateAffair : IBoundary {
     private var _upperRow = Int.MIN_VALUE // 临时变量
     private var _lowerRow = Int.MAX_VALUE // 临时变量
     
-    override fun isValidDown(page: ICoursePage, x: Int, y: Int): Boolean {
+    override fun isValidDown(page: ICoursePage, event: IPointerEvent): Boolean {
+      val x = event.x.toInt()
+      val y = event.y.toInt()
       if (x > page.getTimelineEndWidth()) {
         // 触摸位置大于左边时间轴的宽度时
         if (page.course.findPairUnderByXY(x, y) == null) {
@@ -51,7 +52,10 @@ interface ICreateAffair : IBoundary {
       return false
     }
     
-    override fun createTouchAffairItem(course: ICourseViewGroup, x: Int, y: Int): ITouchAffairItem {
+    override fun createTouchAffairItem(
+      course: ICourseViewGroup,
+      event: IPointerEvent
+    ): ITouchAffairItem {
       return TouchAffairView(course)
     }
     

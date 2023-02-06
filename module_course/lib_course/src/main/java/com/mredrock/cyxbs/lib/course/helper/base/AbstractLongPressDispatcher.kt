@@ -39,7 +39,7 @@ abstract class AbstractLongPressDispatcher : IPointerDispatcher {
   abstract fun handleEvent(event: IPointerEvent, view: ViewGroup): ILongPressTouchHandler?
   
   /**
-   * 长按时间被取消时的回调
+   * 长按触发前被取消时的回调
    *
    * 允许返回 [IPointerTouchHandler] 用于继续处理事件，建议返回用于滑动滚轴的 handler
    */
@@ -83,6 +83,8 @@ abstract class AbstractLongPressDispatcher : IPointerDispatcher {
         // 在长按延时前手指抬起，应该传递 CANCEL 给 handler
         val manager = mLongPressManagerByPointerId.get(event.pointerId)
         manager.cancelLongPress(event)
+        mLongPressManagerByPointerId.remove(event.pointerId)
+        
         val initialPoint = mInitialPointByPointerId.get(event.pointerId)
         onCancelLongPress(event, view, initialPoint.x.toInt(), initialPoint.y.toInt())
       }
@@ -99,7 +101,10 @@ abstract class AbstractLongPressDispatcher : IPointerDispatcher {
   ): IPointerTouchHandler? {
     val manager = mLongPressManagerByPointerId.get(event.pointerId)
     val handler = manager.tryGetHandler()
-    if (handler != null) return handler
+    if (handler != null) {
+      mLongPressManagerByPointerId.remove(event.pointerId)
+      return handler
+    }
     // handler 为 null 时说明处于长按延时内或者已经取消了长按
     
     val touchSlop = ViewConfiguration.get(view.context).scaledTouchSlop

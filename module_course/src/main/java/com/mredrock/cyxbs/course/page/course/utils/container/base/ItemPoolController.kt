@@ -82,6 +82,7 @@ abstract class ItemPoolController<Item, Data : Any>(
           mRecyclePool.clear()
           mShowItems.clear()
           clearDataFromOldList()
+          course.postRemoveItemExistListener(listener)
         }
       }, true
     )
