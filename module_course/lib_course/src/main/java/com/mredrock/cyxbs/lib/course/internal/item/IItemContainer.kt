@@ -10,13 +10,28 @@ import android.view.View
  * @date 2022/8/25 16:08
  */
 interface IItemContainer {
+  
   /**
    * 寻找对应坐标的 [IItem]
+   *
+   * ## 注意
+   * - 如果是正在被 [IItemInterceptor] 拦截的 item，则可能返回 null
+   */
+  fun findItemUnderByXY(x: Int, y: Int): IItem?
+  
+  /**
+   * 寻找对应坐标的 [IItem] 和 View
+   *
+   * ## 注意
+   * - 如果是正在被 [IItemInterceptor] 拦截的 item，则可能返回 null
    */
   fun findPairUnderByXY(x: Int, y: Int): Pair<IItem, View>?
   
   /**
-   * 通过自定义筛选器查找 [IItem]
+   * 通过自定义筛选器查找 [IItem] 和 View
+   *
+   * ## 注意
+   * - 如果是正在被 [IItemInterceptor] 拦截的 item，则可能返回 null
    */
   fun findPairUnderByFilter(filter: IItem.(View) -> Boolean): Pair<IItem, View>?
   

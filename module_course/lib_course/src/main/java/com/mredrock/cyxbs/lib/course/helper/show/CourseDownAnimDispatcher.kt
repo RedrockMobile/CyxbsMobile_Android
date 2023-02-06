@@ -1,4 +1,4 @@
-package com.mredrock.cyxbs.lib.course.helper
+package com.mredrock.cyxbs.lib.course.helper.show
 
 import android.graphics.Point
 import android.util.SparseArray
@@ -48,8 +48,8 @@ open class CourseDownAnimDispatcher(
   /**
    * 是否需要动画
    */
-  open fun isNeedAnim(pair: Pair<IItem, View>): Boolean {
-    return pair.first is ILessonItem || pair.first is IAffairItem
+  open fun isNeedAnim(item: IItem, view: View): Boolean {
+    return item is ILessonItem || item is IAffairItem
   }
   
   final override fun isPrepareToIntercept(event: IPointerEvent, view: ViewGroup): Boolean {
@@ -71,7 +71,7 @@ open class CourseDownAnimDispatcher(
         val x = event.getX(index).toInt()
         val y = event.getY(index).toInt()
         val pair = course.findPairUnderByXY(x, y) ?: return
-        if (isNeedAnim(pair)) {
+        if (isNeedAnim(pair.first, pair.second)) {
           startAnim(pair.second, x, y)
           changeView(pair.second, x, y, x, y)
           mViewWithRawPointById[id] = Pair(pair.second, Point(x, y))

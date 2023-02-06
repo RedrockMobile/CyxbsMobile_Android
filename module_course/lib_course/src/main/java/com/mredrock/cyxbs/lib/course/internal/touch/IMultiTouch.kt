@@ -25,6 +25,11 @@ interface IMultiTouch {
   fun setDefaultHandler(handler: DefaultHandler?)
   
   /**
+   * 得到 [pointerId] 对应的 [IPointerTouchHandler]
+   */
+  fun getTouchHandler(pointerId: Int): IPointerTouchHandler?
+  
+  /**
    * 默认多指处理者，在当前 PointerId 对应的事件没有处理者拦截时触发
    */
   fun interface DefaultHandler {

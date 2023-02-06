@@ -107,6 +107,11 @@ abstract class CourseContainerImpl @JvmOverloads constructor(
     return Collections.unmodifiableMap(mViewByItem)
   }
   
+  override fun findItemUnderByXY(x: Int, y: Int): IItem? {
+    val view = findViewUnderByXY(x, y)
+    return getItemByView(view)
+  }
+  
   final override fun findPairUnderByXY(x: Int, y: Int): Pair<IItem, View>? {
     val view = findViewUnderByXY(x, y)
     val item = getItemByView(view)

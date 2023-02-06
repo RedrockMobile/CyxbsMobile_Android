@@ -9,7 +9,7 @@ import androidx.core.animation.doOnCancel
 import androidx.core.animation.doOnEnd
 import com.mredrock.cyxbs.lib.course.R
 import com.mredrock.cyxbs.lib.course.fragment.course.expose.fold.*
-import com.mredrock.cyxbs.lib.course.helper.CourseFoldHelper
+import com.mredrock.cyxbs.lib.course.helper.fold.CourseFoldHelper
 import com.mredrock.cyxbs.lib.course.internal.view.course.ICourseViewGroup
 import com.mredrock.cyxbs.lib.course.utils.forEachInline
 import com.mredrock.cyxbs.lib.utils.extensions.invisible

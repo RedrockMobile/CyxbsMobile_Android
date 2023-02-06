@@ -41,6 +41,10 @@ abstract class CourseMultiTouchImpl @JvmOverloads constructor(
     super.addOnAttachStateChangeListener(listener)
   }
   
+  final override fun getTouchHandler(pointerId: Int): IPointerTouchHandler? {
+    return mMultiTouchDispatcherHelper.getTouchHandler(pointerId)
+  }
+  
   init {
     addItemTouchListener(mMultiTouchDispatcherHelper)
     addOnAttachStateChangeListener(

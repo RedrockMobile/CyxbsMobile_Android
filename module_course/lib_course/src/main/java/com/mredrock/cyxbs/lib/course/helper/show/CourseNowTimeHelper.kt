@@ -1,4 +1,4 @@
-package com.mredrock.cyxbs.lib.course.helper
+package com.mredrock.cyxbs.lib.course.helper.show
 
 import android.graphics.Canvas
 import android.graphics.Paint

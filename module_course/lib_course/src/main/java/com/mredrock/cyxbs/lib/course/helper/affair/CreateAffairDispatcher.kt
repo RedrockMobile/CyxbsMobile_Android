@@ -1,19 +1,23 @@
 package com.mredrock.cyxbs.lib.course.helper.affair
 
 import android.view.MotionEvent
+import android.view.ViewConfiguration
 import android.view.ViewGroup
 import com.mredrock.cyxbs.lib.course.fragment.course.expose.fold.FoldState
 import com.mredrock.cyxbs.lib.course.fragment.course.expose.wrapper.ICourseWrapper
 import com.mredrock.cyxbs.lib.course.fragment.page.ICoursePage
+import com.mredrock.cyxbs.lib.course.helper.ScrollTouchHandler
 import com.mredrock.cyxbs.lib.course.helper.affair.expose.ICreateAffair
 import com.mredrock.cyxbs.lib.course.helper.affair.expose.ITouchAffairItem
 import com.mredrock.cyxbs.lib.course.helper.affair.expose.ITouchCallback
+import com.mredrock.cyxbs.lib.course.helper.base.AbstractLongPressDispatcher
+import com.mredrock.cyxbs.lib.course.helper.base.ILongPressTouchHandler
 import com.mredrock.cyxbs.lib.course.internal.view.course.ICourseViewGroup
 import com.mredrock.cyxbs.lib.course.utils.forEachReversed
-import com.ndhzs.netlayout.touch.multiple.IPointerDispatcher
 import com.ndhzs.netlayout.touch.multiple.IPointerTouchHandler
 import com.ndhzs.netlayout.touch.multiple.event.IPointerEvent
-import com.ndhzs.netlayout.touch.multiple.event.IPointerEvent.Action.DOWN
+import com.ndhzs.netlayout.touch.multiple.event.IPointerEvent.Action.*
+import kotlin.math.abs
 
 /**
  * 长按生成事务的事件分发者
@@ -27,7 +31,7 @@ import com.ndhzs.netlayout.touch.multiple.event.IPointerEvent.Action.DOWN
 class CreateAffairDispatcher(
   val page: ICoursePage,
   val iCreateAffair: ICreateAffair = ICreateAffair.Default, // 如果你需要与外界进行交互，建议写在这个里面
-) : IPointerDispatcher {
+) : AbstractLongPressDispatcher() {
   
   /**
    * 设置点击 [ITouchAffairItem] 的点击监听
@@ -48,13 +52,9 @@ class CreateAffairDispatcher(
   }
   
   init {
-    page.addCourseLifecycleObservable(
-      object : ICourseWrapper.CourseLifecycleObserver {
-        override fun onDestroyCourse(course: ICourseViewGroup) {
-          mPointerHandlerPool.clear() // Fragment 调用 onDestroyView() 时需要清空池子
-        }
-      }
-    )
+    page.doOnCourseDestroy {
+      mPointerHandlerPool.clear() // Fragment 调用 onDestroyView() 时需要清空池子
+    }
   }
   
   // ICreateAffairHandler 的复用池 (因为一个 handler 里面包含对 course 的很多监听，所以采取复用策略)
@@ -62,22 +62,40 @@ class CreateAffairDispatcher(
   private var mIsAllowIntercept = true
   private var mOnClickListener: (ITouchAffairItem.() -> Unit)? = null
   
-  override fun isPrepareToIntercept(event: IPointerEvent, view: ViewGroup): Boolean {
-    val x = event.x.toInt()
-    val y = event.y.toInt()
-    if (event.action == DOWN) {
-      if (mIsAllowIntercept) {
-        if (iCreateAffair.isValidDown(page, x, y)) {
-          // 之后会立即回调 getInterceptHandler()
-          return true
-        }
+  override fun handleEvent(event: IPointerEvent, view: ViewGroup): ILongPressTouchHandler? {
+    if (mIsAllowIntercept) {
+      if (iCreateAffair.isValidDown(page, event)) {
+        return getFreeHandler(event)
       }
     }
-    return false
+    return null
   }
   
-  override fun getInterceptHandler(event: IPointerEvent, view: ViewGroup): IPointerTouchHandler {
-    return getFreeHandler(event.x.toInt(), event.y.toInt())
+  override fun onCancelLongPress(
+    event: IPointerEvent,
+    view: ViewGroup,
+    initialX: Int,
+    initialY: Int
+  ): IPointerTouchHandler? {
+    return when (event.action) {
+      UP -> {
+        val x = event.x.toInt()
+        val y = event.y.toInt()
+        val touchSlop = ViewConfiguration.get(view.context).scaledTouchSlop
+        if (abs(x - initialX) <= touchSlop && abs(y - initialY) <= touchSlop) {
+          // 这里说明移动的距离小于 touchSlop，但还是得把点击的事务给绘制上，但是只有一格
+          val item = initializeTouchAffairItem(event)
+          if (item != null) {
+            val initialRow = page.course.getRow(y)
+            val initialColumn = page.course.getColumn(x)
+            item.show(initialRow, initialRow, initialColumn)
+          }
+        }
+        null
+      }
+      MOVE -> ScrollTouchHandler // MOVE 中被取消长按说明手指移动距离过大
+      else -> null
+    }
   }
   
   override fun onDispatchTouchEvent(event: MotionEvent, view: ViewGroup) {
@@ -85,11 +103,8 @@ class CreateAffairDispatcher(
     when (event.actionMasked) {
       MotionEvent.ACTION_DOWN -> {
         mIsAllowIntercept = true // 还原
-        if (page.course.findPairUnderByXY(
-            event.x.toInt(),
-            event.y.toInt()
-          )?.first !is ITouchAffairItem
-        ) {
+        val item = page.course.findItemUnderByXY(event.x.toInt(), event.y.toInt())
+        if (item !is ITouchAffairItem) {
           // DOWN 事件时如果点击的不是 TouchAffair，则取消已经显示的 TouchAffair
           mPointerHandlerPool.forEach {
             if (it.isInShow()) {
@@ -108,10 +123,8 @@ class CreateAffairDispatcher(
   /**
    * 生成一个新的 [ICreateAffairHandler]
    */
-  private fun getFreeHandler(x: Int, y: Int): ICreateAffairHandler {
-    val touchAffairItem = iCreateAffair.createTouchAffairItem(page.course, x, y)
-    // 这里统一给 TouchAffairItem 设置点击事件
-    touchAffairItem?.setOnClickListener { mOnClickListener?.invoke(touchAffairItem) }
+  private fun getFreeHandler(event: IPointerEvent): ICreateAffairHandler {
+    val touchAffairItem = initializeTouchAffairItem(event)
     mPointerHandlerPool.forEach {
       // 如果没有被使用，就直接 return
       if (!it.isInUse()) {
@@ -126,6 +139,16 @@ class CreateAffairDispatcher(
   }
   
   /**
+   * 初始化 [ITouchAffairItem]
+   */
+  private fun initializeTouchAffairItem(event: IPointerEvent): ITouchAffairItem? {
+    val item = iCreateAffair.createTouchAffairItem(page.course, event)
+    // 这里统一给 TouchAffairItem 设置点击事件
+    item?.setOnClickListener { mOnClickListener?.invoke(item) }
+    return item
+  }
+  
+  /**
    * [ITouchCallback] 的实现类
    */
   private val mTouchCallbackImpl = object : ITouchCallback {
@@ -135,7 +158,7 @@ class CreateAffairDispatcher(
     override fun onLongPressStart(pointerId: Int, initialRow: Int, initialColumn: Int) {
       mTouchCallbacks.forEachReversed { it.onLongPressStart(pointerId, initialRow, initialColumn) }
     }
-  
+    
     override fun onTouchMove(
       pointerId: Int,
       initialRow: Int,
@@ -156,7 +179,7 @@ class CreateAffairDispatcher(
         )
       }
     }
-  
+    
     override fun onTouchEnd(
       pointerId: Int,
       initialRow: Int,
@@ -176,7 +199,7 @@ class CreateAffairDispatcher(
         )
       }
     }
-  
+    
     /**
      * 判断当前滑动中是否需要自动展开中午或者傍晚时间段
      * @param initialRow 最开始触摸的行数

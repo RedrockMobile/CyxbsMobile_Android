@@ -24,7 +24,7 @@ import com.mredrock.cyxbs.lib.utils.extensions.visible
  * @date 2022/8/31 17:59
  */
 @Suppress("LeakingThis")
-abstract class NoLessonImpl : CourseTouchImpl(), INoLesson {
+abstract class NoLessonImpl : CourseDefaultTouchImpl(), INoLesson {
   
   override val viewNoLesson by R.id.course_view_no_lesson.view<View>()
   override val ivNoLesson by R.id.course_iv_no_lesson.view<ImageView>()

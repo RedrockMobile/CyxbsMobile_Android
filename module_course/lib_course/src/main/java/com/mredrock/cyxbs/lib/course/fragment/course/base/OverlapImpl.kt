@@ -115,15 +115,11 @@ abstract class OverlapImpl : FoldImpl(), IOverlapContainer {
   
   init {
     // 回收 item，解决 Fragment 与 View 生命周期不一致问题
-    addCourseLifecycleObservable(
-      object : ICourseWrapper.CourseLifecycleObserver {
-        override fun onDestroyCourse(course: ICourseViewGroup) {
-          mItemInFreeSet.clear()
-          mItemInParentSet.clear()
-          mRowColumnMap.clear()
-        }
-      }
-    )
+    doOnCourseDestroy {
+      mItemInFreeSet.clear()
+      mItemInParentSet.clear()
+      mRowColumnMap.clear()
+    }
   }
   
   private val mItemInFreeSet = hashSetOf<IOverlapItem>()
