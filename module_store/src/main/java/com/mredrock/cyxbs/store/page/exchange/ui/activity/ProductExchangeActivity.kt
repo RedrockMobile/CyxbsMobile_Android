@@ -5,10 +5,12 @@ import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.widget.ImageButton
-import androidx.activity.viewModels
 import androidx.core.app.ActivityOptionsCompat
 import androidx.core.util.Pair
+import com.mredrock.cyxbs.lib.base.dailog.BaseDialog
+import com.mredrock.cyxbs.lib.base.dailog.ChooseDialog
 import com.mredrock.cyxbs.lib.base.ui.BaseBindActivity
+import com.mredrock.cyxbs.lib.base.ui.viewModelBy
 import com.mredrock.cyxbs.lib.utils.extensions.color
 import com.mredrock.cyxbs.lib.utils.extensions.setImageFromUrl
 import com.mredrock.cyxbs.lib.utils.extensions.setOnSingleClickListener
@@ -17,7 +19,6 @@ import com.mredrock.cyxbs.store.bean.ProductDetail
 import com.mredrock.cyxbs.store.databinding.StoreActivityProductExchangeBinding
 import com.mredrock.cyxbs.store.page.exchange.viewmodel.ProductExchangeViewModel
 import com.mredrock.cyxbs.store.ui.activity.PhotoActivity
-import com.mredrock.cyxbs.store.ui.fragment.ExchangeDialog
 import com.mredrock.cyxbs.store.utils.StoreType
 import com.ndhzs.slideshow.adapter.ImageViewAdapter
 import com.ndhzs.slideshow.adapter.setImgAdapter
@@ -31,25 +32,21 @@ import com.ndhzs.slideshow.viewpager.transformer.ScaleInTransformer
  */
 class ProductExchangeActivity : BaseBindActivity<StoreActivityProductExchangeBinding>() {
   
-  private val mViewModel by viewModels<ProductExchangeViewModel>()
+  private val mViewModel by viewModelBy { ProductExchangeViewModel(mShopId) }
   
   private lateinit var mData: ProductDetail // 记录该页面的商品数据, 用于之后的判断
-  private var mShopId = "" //商品ID
-  private var mStampCount = 0 //我的余额
-  private var mIsPurchased = false // 是否已经购买过, 只有邮货才有购买限制
+  private val mShopId by intent<Int>() //商品ID
+  private var mStampCount by intent<Int>() //我的余额
+  private val mIsPurchased by intent<Boolean>() // 是否已经购买过, 只有邮货才有购买限制
   
   companion object {
-    
-    private const val INTENT_PRODUCT_ID = "id" // 商品 id
-    private const val INTENT_STAMP_COUNT = "stampCount" // 邮票数量
-    private const val INTENT_HAS_BOUGHT = "isPurchased" // 是否已经购买过了, 只有邮货才有购买限制
-    
     fun activityStart(context: Context, id: Int, stampCount: Int, isPurchased: Boolean) {
-      val intent = Intent(context, ProductExchangeActivity::class.java)
-      intent.putExtra(INTENT_PRODUCT_ID, id)
-      intent.putExtra(INTENT_STAMP_COUNT, stampCount)
-      intent.putExtra(INTENT_HAS_BOUGHT, isPurchased)
-      context.startActivity(intent)
+      context.startActivity(
+        Intent(context, ProductExchangeActivity::class.java)
+          .putExtra(ProductExchangeActivity::mShopId.name, id)
+          .putExtra(ProductExchangeActivity::mStampCount.name, stampCount)
+          .putExtra(ProductExchangeActivity::mIsPurchased.name, isPurchased)
+      )
     }
   }
   
@@ -63,16 +60,11 @@ class ProductExchangeActivity : BaseBindActivity<StoreActivityProductExchangeBin
   }
   
   private fun initData() {
-    mShopId = intent.getIntExtra(INTENT_PRODUCT_ID, 0).toString()
-    mStampCount = intent.getIntExtra(INTENT_STAMP_COUNT, 0)
-    mIsPurchased = intent.getBooleanExtra(INTENT_HAS_BOUGHT, false)
     if (mIsPurchased) { // 如果已经购买过
       binding.storeBtnExchange.setBackgroundColor(R.color.store_btn_ban_product_exchange.color)
     }
-    
     binding.storeTvUserStampCount.text = mStampCount.toString()
-    
-    mViewModel.getProductDetail(mShopId) // 请求商品详细页数据
+    binding.storeBtnExchange.isCheckable = true // 防止因为 Activity 重建而导致没有恢复
   }
   
   private fun initJump() {
@@ -81,27 +73,28 @@ class ProductExchangeActivity : BaseBindActivity<StoreActivityProductExchangeBin
     button.setOnSingleClickListener { finishAfterTransition() }
     
     binding.storeBtnExchange.setOnSingleClickListener {
-      if (mIsPurchased) { // 如果已经购买过就禁止显示 diolog
+      if (mIsPurchased) { // 如果已经购买过就禁止显示 dialog
         toast("每种商品只限领一次哦")
         return@setOnSingleClickListener
       }
       it.isClickable = false // 在继续显示 dialog 期间禁止用户点击
-      ExchangeDialog.show(
-        supportFragmentManager,
-        null,
-        type = ExchangeDialog.DialogType.TWO_BUTTON,
-        exchangeTips = "确认要用${binding.storeTvExchangeDetailPrice.text}" +
-          "邮票兑换${binding.storeTvProductName.text}吗？",
-        onPositiveClick = {
-          mViewModel.getExchangeResult(mShopId) // 请求用户是否能购买
-          dismiss()
-        },
-        onNegativeClick = {
-          dismiss()
-          it.isClickable = true
-        },
-        cancelCallback = { it.isClickable = true }
-      )
+      ChooseDialog.Builder(
+        this,
+        ChooseDialog.Data(
+          content = "确认要用${binding.storeTvExchangeDetailPrice.text}" +
+            "邮票兑换${binding.storeTvProductName.text}吗？",
+          width = 300,
+          height = 178,
+        )
+      ).setPositiveClick {
+        mViewModel.getExchangeResult(mShopId) // 请求用户是否能购买
+        dismiss()
+      }.setNegativeClick {
+        dismiss()
+        it.isClickable = true
+      }.setCancelCallback {
+        it.isClickable = true
+      }.show()
     }
   }
   
@@ -131,78 +124,106 @@ class ProductExchangeActivity : BaseBindActivity<StoreActivityProductExchangeBin
       //保存
       mData = it
     }
-    
-    // 请求购买成功的观察
-    mViewModel.exchangeResult.observe {
+  
+    // 请求购买成功的观察（状态）
+    mViewModel.exchangeResultState.observe {
       // 根据不同商品类型弹出不同dialog
       when (mData.type) {
         StoreType.Product.DRESS -> {
-          //刷新兑换后的余额与库存 下同
-          mStampCount -= mData.price
           mData.amount = it.amount //由兑换成功时获取到的最新amount来更新mData 下同
           binding.data = mData //重新绑定是实现 购买后库存为0时 兑换按钮置灰(是否置灰的逻辑绑定在xml里) 下同
-          binding.storeTvUserStampCount.text =
-            mStampCount.toString()
-          ExchangeDialog.show(
-            supportFragmentManager,
-            null,
-            type = ExchangeDialog.DialogType.TWO_BUTTON,
-            exchangeTips = "兑换成功！现在就换掉原来的名片吧！",
-            positiveString = "好的",
-            negativeString = "再想想",
-            onNegativeClick = { dismiss() },
-            onPositiveClick = {
-              toast("个人界面即将上线")
-              /*
-              * 这里按下"好的", 应该还要写一个跳转
-              *
-              * 应该是跳转到个人界面
-              * */
-              dismiss()
-            },
-            dismissCallback = { binding.storeBtnExchange.isClickable = true }
-          )
+          binding.storeTvUserStampCount.text = mStampCount.toString()
+        }
+        StoreType.Product.GOODS -> {
+          mData.amount = it.amount
+          binding.data = mData
+          binding.storeTvUserStampCount.text = mStampCount.toString()
+        }
+      }
+    }
+  
+    // 请求购买成功的观察（事件）
+    mViewModel.exchangeResultEvent.collectLaunch {
+      // 根据不同商品类型弹出不同dialog
+      when (mData.type) {
+        StoreType.Product.DRESS -> {
+          mStampCount -= mData.price
+          ChooseDialog.Builder(
+            this,
+            ChooseDialog.Data(
+              content = "兑换成功！现在就换掉原来的名片吧！",
+              width = 300,
+              height = 178,
+              positiveButtonText = "好的",
+              negativeButtonText = "再想想"
+            )
+          ).setPositiveClick {
+            toast("个人界面即将上线")
+            /*
+            * 这里按下"好的", 应该还要写一个跳转
+            *
+            * 应该是跳转到个人界面
+            *
+            * TODO 23年：个人中心已下架，这里暂时搁置
+            * */
+            dismiss()
+          }.setNegativeClick {
+            dismiss()
+          }.setDismissCallback {
+            binding.storeBtnExchange.isClickable = true
+          }.show()
         }
         StoreType.Product.GOODS -> {
           mStampCount -= mData.price
-          mData.amount = it.amount
-          binding.data = mData
-          binding.storeTvUserStampCount.text =
-            mStampCount.toString()
-          ExchangeDialog.show(
-            supportFragmentManager,
-            null,
-            type = ExchangeDialog.DialogType.ONR_BUTTON,
-            exchangeTips = "兑换成功！请在30天内到红岩网校领取哦",
-            onPositiveClick = { dismiss() },
-            dismissCallback = { binding.storeBtnExchange.isClickable = true }
-          )
+          ChooseDialog.Builder(
+            this,
+            ChooseDialog.Data(
+              content = "兑换成功！请在30天内到红岩网校领取哦",
+              width = 300,
+              height = 178,
+              type = BaseDialog.DialogType.ONE_BUT
+            )
+          ).setPositiveClick {
+            dismiss()
+          }.setDismissCallback {
+            binding.storeBtnExchange.isClickable = true
+          }.show()
         }
       }
     }
     
-    // 请求失败的观察
-    mViewModel.exchangeError.observe {
+    // 请求失败的观察（事件）
+    mViewModel.exchangeErrorEvent.collectLaunch {
       when (it) {
         StoreType.ExchangeError.OUT_OF_STOCK -> {
-          ExchangeDialog.show(
-            supportFragmentManager,
-            null,
-            type = ExchangeDialog.DialogType.ONR_BUTTON,
-            exchangeTips = "啊欧，手慢了！下次再来吧=.=",
-            onPositiveClick = { dismiss() },
-            dismissCallback = { binding.storeBtnExchange.isClickable = true }
-          )
+          ChooseDialog.Builder(
+            this,
+            ChooseDialog.Data(
+              content = "啊欧，手慢了！下次再来吧=.=",
+              width = 300,
+              height = 178,
+              type = BaseDialog.DialogType.ONE_BUT
+            )
+          ).setPositiveClick {
+            dismiss()
+          }.setDismissCallback {
+            binding.storeBtnExchange.isClickable = true
+          }.show()
         }
         StoreType.ExchangeError.NOT_ENOUGH_MONEY -> {
-          ExchangeDialog.show(
-            supportFragmentManager,
-            null,
-            type = ExchangeDialog.DialogType.ONR_BUTTON,
-            exchangeTips = "诶......邮票不够啊......穷日子真不好过呀QAQ",
-            onPositiveClick = { dismiss() },
-            dismissCallback = { binding.storeBtnExchange.isClickable = true }
-          )
+          ChooseDialog.Builder(
+            this,
+            ChooseDialog.Data(
+              content = "诶......邮票不够啊......穷日子真不好过呀QAQ",
+              width = 300,
+              height = 178,
+              type = BaseDialog.DialogType.ONE_BUT
+            )
+          ).setPositiveClick {
+            dismiss()
+          }.setDismissCallback {
+            binding.storeBtnExchange.isClickable = true
+          }.show()
         }
         StoreType.ExchangeError.IS_PURCHASED -> {
           /*

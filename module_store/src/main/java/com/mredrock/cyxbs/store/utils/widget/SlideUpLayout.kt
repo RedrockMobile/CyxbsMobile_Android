@@ -215,7 +215,7 @@ class SlideUpLayout(
             if (y != mUpperHeight) {
                 slowlyAnimate(y, mUpperHeight) { moveTo(it) }
             }
-        }else if (y >= halfY) { // 大于一半就回到展开状态
+        } else { // 大于一半就回到展开状态
             if (y != mOriginalFirstChildRect.bottom) { // 这里的判断与上方原因相同
                 slowlyAnimate(y, mOriginalFirstChildRect.bottom) { moveTo(it) }
             }

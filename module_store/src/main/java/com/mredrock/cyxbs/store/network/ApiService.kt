@@ -21,7 +21,7 @@ interface ApiService : IApi {
     @GET("/magipoke-intergral/Integral/getItemInfo")
     fun getProductDetail(
         @Query("id")
-        id: String
+        id: Int
     ): Single<ApiWrapper<ProductDetail>>
 
     //购买商品
@@ -29,7 +29,7 @@ interface ApiService : IApi {
     @FormUrlEncoded
     fun buyProduct(
         @Field("id")
-        id: String
+        id: Int
     ): Single<ApiWrapper<ExchangeState>>
 
     //得到兑换记录

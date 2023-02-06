@@ -20,12 +20,12 @@ interface INightPeriod {
   fun compareNightPeriod(row: Int): Int
   
   /**
-   * 得到晚上时间段开始时的高度值
+   * 得到晚上时间段开始时的高度值（距离课表上边缘）
    */
   fun getNightStartHeight(): Int
   
   /**
-   * 得到晚上时间段结束时的高度值
+   * 得到晚上时间段结束时的高度值（距离课表上边缘）
    */
   fun getNightEndHeight(): Int
 }

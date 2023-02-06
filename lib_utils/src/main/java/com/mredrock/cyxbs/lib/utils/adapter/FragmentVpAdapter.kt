@@ -7,7 +7,27 @@ import androidx.lifecycle.Lifecycle
 import androidx.viewpager2.adapter.FragmentStateAdapter
 
 /**
- * ...
+ *
+ * 正确的 FragmentStateAdapter 用法
+ * ```
+ * // 下面这种封装是错误的 !!!
+ *
+ * class FragmentVpAdapter(activity: FragmentActivity, list: List<Fragment>) : FragmentStateAdapter(activity) {
+ *     override fun createFragment(position: Int): Fragment = list[position]
+ * }
+ *
+ * val list = listOf(Fragment1(), Fragment2())
+ * FragmentVpAdapter(this, list)
+ * ```
+ *
+ * ## 原因
+ * createFragment() 方法并不是每次都会回调，如果经历了屏幕旋转等，Activity 恢复后创建的 Vp2 他会自动帮你还原 Fragment，
+ * 此时就不会再回调 createFragment()
+ *
+ * 你传进来的 list 就创建了多余的 Fragment，如果你还直接拿来用，就会导致一系列的问题
+ *
+ * 所以需要使用接口延迟创建 Fragment，正确的创建时机是在 createFragment() 回调时
+ *
  * @author 985892345 (Guo Xiangrui)
  * @email guo985892345@foxmail.com
  * @date 2022/7/25 18:22

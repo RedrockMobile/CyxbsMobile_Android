@@ -30,6 +30,7 @@ import kotlin.reflect.KClass
  * 或者：
  * interface XXXApiService : IApi
  *
+ * 使用：
  * XXXApiService::class.impl
  *     .getXXX()
  * ```

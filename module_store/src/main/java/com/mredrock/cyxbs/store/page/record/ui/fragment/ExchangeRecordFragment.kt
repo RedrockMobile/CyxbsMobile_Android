@@ -1,9 +1,7 @@
 package com.mredrock.cyxbs.store.page.record.ui.fragment
 
 import android.os.Bundle
-import android.view.LayoutInflater
 import android.view.View
-import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.fragment.app.activityViewModels
@@ -24,21 +22,13 @@ import com.mredrock.cyxbs.store.page.record.viewmodel.RecordViewModel
  * @date 2021/9/4
  * @time 12:46
  */
-class ExchangeRecordFragment : BaseFragment() {
+class ExchangeRecordFragment : BaseFragment(R.layout.store_fragment_record_exchange) {
     // 因为我只需要 Activity 的 ViewModel, 所以没有继承于 BaseViewModelFragment
     private val viewModel by activityViewModels<RecordViewModel>()
 
     private lateinit var mRecyclerView: RecyclerView
     private lateinit var mImageView: ImageView
     private lateinit var mTextView: TextView
-
-    override fun onCreateView(
-        inflater: LayoutInflater,
-        container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View {
-        return inflater.inflate(R.layout.store_fragment_record_exchange, container, false)
-    }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -53,7 +43,7 @@ class ExchangeRecordFragment : BaseFragment() {
     }
 
     private fun initObserve() {
-        viewModel.exchangeRecordIsSuccessful.observe {
+        viewModel.exchangeRecordIsSuccessfulState.observe {
             if (!it) {
                 showNoInterceptImage()
             }
