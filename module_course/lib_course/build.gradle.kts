@@ -23,5 +23,5 @@ dependencies {
   implementation(Android.`fragment-ktx`)
   implementation(Android.cardview)
   // 20 级郭祥瑞封装的课表底层控件，如果有问题，欢迎来联系 👀
-  api("io.github.985892345:NetLayout:1.1.0-SNAPSHOT")
+  api("io.github.985892345:NetLayout:1.1.0-0207.1-SNAPSHOT")
 }
