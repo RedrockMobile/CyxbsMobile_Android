@@ -1,6 +1,5 @@
 package com.mredrock.cyxbs.lib.course.item.touch
 
-import android.view.MotionEvent
 import android.view.View
 import android.view.ViewGroup
 import com.ndhzs.netlayout.touch.multiple.event.IPointerEvent
@@ -14,48 +13,15 @@ import com.ndhzs.netlayout.touch.multiple.event.IPointerEvent
 class TouchItemHelper(
   private vararg val helpers: ITouchItemHelper
 ) : ITouchItemHelper {
-  
-  override fun onDownTouchEvent(
+  override fun onPointerTouchEvent(
     event: IPointerEvent,
     parent: ViewGroup,
     child: View,
     item: ITouchItem
   ) {
-    helpers.forEach {
-      it.onDownTouchEvent(event, parent, child, item)
-    }
-  }
-  
-  override fun onMoveTouchEvent(
-    event: MotionEvent,
-    parent: ViewGroup,
-    child: View,
-    item: ITouchItem
-  ) {
-    helpers.forEach {
-      it.onMoveTouchEvent(event, parent, child, item)
-    }
-  }
-  
-  override fun onUpTouchEvent(
-    event: IPointerEvent,
-    parent: ViewGroup,
-    child: View,
-    item: ITouchItem
-  ) {
-    helpers.forEach {
-      it.onUpTouchEvent(event, parent, child, item)
-    }
-  }
-  
-  override fun onCancelTouchEvent(
-    event: MotionEvent,
-    parent: ViewGroup,
-    child: View,
-    item: ITouchItem
-  ) {
-    helpers.forEach {
-      it.onCancelTouchEvent(event, parent, child, item)
+    repeat(helpers.size) {
+      val helper = helpers[it]
+      helper.onPointerTouchEvent(event, parent, child, item)
     }
   }
 }

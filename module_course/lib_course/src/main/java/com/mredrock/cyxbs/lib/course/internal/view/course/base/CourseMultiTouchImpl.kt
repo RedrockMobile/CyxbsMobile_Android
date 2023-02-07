@@ -10,7 +10,6 @@ import com.mredrock.cyxbs.lib.course.internal.touch.IMultiTouch
 import com.ndhzs.netlayout.touch.multiple.IPointerDispatcher
 import com.ndhzs.netlayout.touch.multiple.IPointerTouchHandler
 import com.ndhzs.netlayout.touch.multiple.MultiTouchDispatcherHelper
-import com.ndhzs.netlayout.touch.multiple.event.IPointerEvent
 
 /**
  * ...
@@ -25,15 +24,18 @@ abstract class CourseMultiTouchImpl @JvmOverloads constructor(
   defStyleRes: Int = 0
 ) : CourseLayoutParamsHandler(context, attrs, defStyleAttr, defStyleRes), IMultiTouch {
   
-  private val mMultiTouchDispatcherHelper = CourseMultiTouchDispatcherHelper()
-  private var mDefaultHandler: IMultiTouch.DefaultHandler? = null
+  private val mMultiTouchDispatcherHelper = MultiTouchDispatcherHelper()
   
   final override fun addPointerDispatcher(dispatcher: IPointerDispatcher) {
     mMultiTouchDispatcherHelper.addPointerDispatcher(dispatcher)
   }
   
-  final override fun setDefaultHandler(handler: IMultiTouch.DefaultHandler?) {
-    mDefaultHandler = handler
+  final override fun setDefaultPointerDispatcher(dispatcher: IPointerDispatcher?) {
+    mMultiTouchDispatcherHelper.setDefaultPointerDispatcher(dispatcher)
+  }
+  
+  final override fun getDefaultPointerDispatcher(): IPointerDispatcher? {
+    return mMultiTouchDispatcherHelper.getDefaultPointerDispatcher()
   }
   
   // 打上 final 修饰
@@ -78,14 +80,5 @@ abstract class CourseMultiTouchImpl @JvmOverloads constructor(
         }
       }
     )
-  }
-  
-  private inner class CourseMultiTouchDispatcherHelper : MultiTouchDispatcherHelper() {
-    override fun getDefaultTouchHandler(
-      event: IPointerEvent,
-      view: ViewGroup
-    ): IPointerTouchHandler? {
-      return mDefaultHandler?.getDefaultPointerHandler(event, view)
-    }
   }
 }
