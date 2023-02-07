@@ -1,19 +1,19 @@
-package com.mredrock.cyxbs.lib.course.helper.item
+package com.mredrock.cyxbs.lib.course.item.touch.helper
 
 import android.view.MotionEvent
 import android.view.View
 import android.view.ViewGroup
+import com.mredrock.cyxbs.lib.course.item.touch.ITouchItem
+import com.mredrock.cyxbs.lib.course.item.touch.ITouchItemHelper
 import com.ndhzs.netlayout.touch.multiple.event.IPointerEvent
 
 /**
- * 用于组合多个 [ITouchItemHelper]
+ * .
  *
  * @author 985892345
- * 2023/2/6 15:29
+ * 2023/2/6 21:35
  */
-class TouchItemHelper(
-  private vararg val helpers: ITouchItemHelper
-) : ITouchItemHelper {
+class ExpandableItemHelper : ITouchItemHelper {
   
   override fun onDownTouchEvent(
     event: IPointerEvent,
@@ -21,9 +21,7 @@ class TouchItemHelper(
     child: View,
     item: ITouchItem
   ) {
-    helpers.forEach {
-      it.onDownTouchEvent(event, parent, child, item)
-    }
+    TODO("Not yet implemented")
   }
   
   override fun onMoveTouchEvent(
@@ -32,9 +30,7 @@ class TouchItemHelper(
     child: View,
     item: ITouchItem
   ) {
-    helpers.forEach {
-      it.onMoveTouchEvent(event, parent, child, item)
-    }
+    TODO("Not yet implemented")
   }
   
   override fun onUpTouchEvent(
@@ -43,9 +39,7 @@ class TouchItemHelper(
     child: View,
     item: ITouchItem
   ) {
-    helpers.forEach {
-      it.onUpTouchEvent(event, parent, child, item)
-    }
+    TODO("Not yet implemented")
   }
   
   override fun onCancelTouchEvent(
@@ -54,8 +48,6 @@ class TouchItemHelper(
     child: View,
     item: ITouchItem
   ) {
-    helpers.forEach {
-      it.onCancelTouchEvent(event, parent, child, item)
-    }
+    TODO("Not yet implemented")
   }
 }

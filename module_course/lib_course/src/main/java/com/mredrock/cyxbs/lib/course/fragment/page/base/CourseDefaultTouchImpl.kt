@@ -4,6 +4,7 @@ import android.os.Bundle
 import android.util.SparseArray
 import android.view.MotionEvent
 import android.view.View
+import android.view.ViewConfiguration
 import android.view.ViewGroup
 import androidx.annotation.CallSuper
 import androidx.core.util.forEach
@@ -11,10 +12,11 @@ import androidx.core.view.isVisible
 import com.mredrock.cyxbs.lib.course.fragment.page.expose.ICourseDefaultTouch
 import com.mredrock.cyxbs.lib.course.helper.show.CourseDownAnimDispatcher
 import com.mredrock.cyxbs.lib.course.helper.ScrollTouchHandler
-import com.mredrock.cyxbs.lib.course.helper.item.ITouchItem
+import com.mredrock.cyxbs.lib.course.item.touch.ITouchItem
 import com.mredrock.cyxbs.lib.course.internal.view.course.ICourseViewGroup
 import com.ndhzs.netlayout.touch.multiple.IPointerTouchHandler
 import com.ndhzs.netlayout.touch.multiple.event.IPointerEvent
+import kotlin.math.abs
 
 /**
  * 这里面写需要默认添加的触摸事件帮助类
@@ -25,11 +27,13 @@ import com.ndhzs.netlayout.touch.multiple.event.IPointerEvent
  */
 abstract class CourseDefaultTouchImpl : AbstractCoursePageFragment(), ICourseDefaultTouch {
   
+  private val mDefaultPointerHandler = DefaultPointerHandler()
+  
   override fun getDefaultPointerHandler(
     event: IPointerEvent,
-    view: View
+    view: ViewGroup
   ): IPointerTouchHandler? {
-    return DefaultPointerHandler
+    return mDefaultPointerHandler.get(event, view)
   }
   
   @CallSuper
@@ -49,9 +53,47 @@ abstract class CourseDefaultTouchImpl : AbstractCoursePageFragment(), ICourseDef
   /**
    * 在没有 handler 处理时，会将事件分发给 [ITouchItem] 或者是 [ScrollTouchHandler] 处理
    */
-  object DefaultPointerHandler : IPointerTouchHandler {
-    
+  class DefaultPointerHandler : IPointerTouchHandler {
+  
+    private var mLastMoveX = 0F
+    private var mLastMoveY = 0F
     private val mItemByPointerId = SparseArray<Pair<ITouchItem, View>>()
+    
+    fun get(event: IPointerEvent, view: ViewGroup): IPointerTouchHandler? {
+      /*
+      * 因为直接 return this，会导致子 View 事件被直接拦截，而无法触发子 View 的点击事件
+      * 所以在 touchSlop 的移动距离内，以直接调用 onPointerTouchEvent 的方式来同时触发 item 的事件分发和子 View 的事件分发,
+      * 如果超过 touchSlop，则直接拦截子 View 事件
+      *
+      * 如果你想突破 touchSlop 的限制，只想要子 View 处理事件，可以调用 view.parent.requestDisallowInterceptTouchEvent(true)
+      * 来禁止课表的事件拦截，但是，这样会导致课表的多指触摸功能失效
+      * */
+      val x = event.x
+      val y = event.y
+      when (event.action) {
+        IPointerEvent.Action.DOWN -> {
+          mLastMoveX = x
+          mLastMoveY = y
+          onPointerTouchEvent(event, view)
+          return null
+        }
+        IPointerEvent.Action.MOVE, IPointerEvent.Action.UP -> {
+          val touchSlop = ViewConfiguration.get(view.context).scaledTouchSlop
+          if (abs(x - mLastMoveX) <= touchSlop && abs(y - mLastMoveY) <= touchSlop) {
+            mLastMoveX = x
+            mLastMoveY = y
+            onPointerTouchEvent(event, view)
+            return null
+          } else {
+            return this
+          }
+        }
+        IPointerEvent.Action.CANCEL -> {
+          onPointerTouchEvent(event, view)
+          return null
+        }
+      }
+    }
     
     override fun onPointerTouchEvent(event: IPointerEvent, view: ViewGroup) {
       val x = event.x.toInt()

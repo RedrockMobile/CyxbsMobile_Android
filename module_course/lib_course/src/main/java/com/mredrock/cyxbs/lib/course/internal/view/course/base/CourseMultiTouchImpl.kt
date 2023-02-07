@@ -41,6 +41,10 @@ abstract class CourseMultiTouchImpl @JvmOverloads constructor(
     super.addOnAttachStateChangeListener(listener)
   }
   
+  final override fun removeOnAttachStateChangeListener(listener: OnAttachStateChangeListener) {
+    super.removeOnAttachStateChangeListener(listener)
+  }
+  
   final override fun getTouchHandler(pointerId: Int): IPointerTouchHandler? {
     return mMultiTouchDispatcherHelper.getTouchHandler(pointerId)
   }
@@ -58,7 +62,7 @@ abstract class CourseMultiTouchImpl @JvmOverloads constructor(
           var parent: ViewParent? = parent
           while (parent is ViewGroup) {
             // 这个 isMotionEventSplittingEnabled 在 dispatchTouchEvent() 中有用到，
-            // 你看官方注释的话应该能看懂它的作用，事件分发源码从没看过? 那我不建议你来修课表 (
+            // 你看官方注释的话应该能看懂它的作用，事件分发源码从没看过? 那我不建议你来修课表 :(
             parent.isMotionEventSplittingEnabled = false
             parent = parent.parent
           }

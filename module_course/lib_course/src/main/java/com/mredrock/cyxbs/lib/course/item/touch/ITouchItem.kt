@@ -1,4 +1,4 @@
-package com.mredrock.cyxbs.lib.course.helper.item
+package com.mredrock.cyxbs.lib.course.item.touch
 
 import com.mredrock.cyxbs.lib.course.fragment.page.base.CourseDefaultTouchImpl
 import com.mredrock.cyxbs.lib.course.internal.item.IItem

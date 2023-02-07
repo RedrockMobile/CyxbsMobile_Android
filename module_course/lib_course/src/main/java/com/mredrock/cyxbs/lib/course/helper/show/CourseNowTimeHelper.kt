@@ -4,6 +4,8 @@ import android.graphics.Canvas
 import android.graphics.Paint
 import android.view.View
 import com.mredrock.cyxbs.lib.course.fragment.course.ICourseBase
+import com.mredrock.cyxbs.lib.course.fragment.course.expose.wrapper.ICourseWrapper
+import com.mredrock.cyxbs.lib.course.internal.view.course.ICourseViewGroup
 import com.mredrock.cyxbs.lib.course.internal.view.course.base.AbstractCourseViewGroup
 import com.mredrock.cyxbs.lib.utils.extensions.color
 import com.ndhzs.netlayout.draw.ItemDecoration
@@ -29,10 +31,8 @@ open class CourseNowTimeHelper private constructor(
 ) : ItemDecoration {
   
   companion object {
-    fun attach(course: ICourseBase): CourseNowTimeHelper {
-      return CourseNowTimeHelper(course).also {
-        course.course.addItemDecoration(it)
-      }
+    fun attach(base: ICourseBase): CourseNowTimeHelper {
+      return CourseNowTimeHelper(base)
     }
   }
   
@@ -86,16 +86,35 @@ open class CourseNowTimeHelper private constructor(
     if (base.course.isAttachedToWindow()) {
       mRefreshRunnable.start()
     }
-    // 添加 View 状态的监听，在脱离视图时取消 mRefreshRunnable，防止内存泄漏
-    base.course.addOnAttachStateChangeListener(object : View.OnAttachStateChangeListener {
-      override fun onViewAttachedToWindow(v: View) {
-        mRefreshRunnable.start()
+  
+    // 添加 course 生命周期监听，解决 Fragment 与 View 生命周期不同的问题
+    base.addCourseLifecycleObservable(
+      object : ICourseWrapper.CourseLifecycleObserver {
+  
+        // 添加 View 状态的监听，在脱离视图时取消 mRefreshRunnable，防止内存泄漏
+        val attachListener = object : View.OnAttachStateChangeListener {
+          override fun onViewAttachedToWindow(v: View) {
+            mRefreshRunnable.start()
+          }
+  
+          override fun onViewDetachedFromWindow(v: View) {
+            mRefreshRunnable.cancel()
+          }
+        }
+        
+        override fun onCreateCourse(course: ICourseViewGroup) {
+          super.onCreateCourse(course)
+          base.course.addItemDecoration(this@CourseNowTimeHelper)
+          course.addOnAttachStateChangeListener(attachListener)
+        }
+  
+        override fun onDestroyCourse(course: ICourseViewGroup) {
+          super.onDestroyCourse(course)
+          base.course.removeItemDecoration(this@CourseNowTimeHelper)
+          course.removeOnAttachStateChangeListener(attachListener)
+        }
       }
-      
-      override fun onViewDetachedFromWindow(v: View) {
-        mRefreshRunnable.cancel()
-      }
-    })
+    )
   }
   
   override fun onDrawBelow(canvas: Canvas, view: View) {

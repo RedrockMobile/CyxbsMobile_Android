@@ -1,6 +1,6 @@
 package com.mredrock.cyxbs.lib.course.internal.touch
 
-import android.view.View
+import android.view.ViewGroup
 import com.ndhzs.netlayout.touch.multiple.IPointerDispatcher
 import com.ndhzs.netlayout.touch.multiple.IPointerTouchHandler
 import com.ndhzs.netlayout.touch.multiple.event.IPointerEvent
@@ -33,6 +33,12 @@ interface IMultiTouch {
    * 默认多指处理者，在当前 PointerId 对应的事件没有处理者拦截时触发
    */
   fun interface DefaultHandler {
-    fun getDefaultPointerHandler(event: IPointerEvent, view: View): IPointerTouchHandler?
+  
+    /**
+     * 每个 pointerId 都需要绑定一个 [IPointerTouchHandler]，且只绑定一次
+     *
+     * 所以这个函数在返回非 null 值后，当前 pointerId 就不会再次回调
+     */
+    fun getDefaultPointerHandler(event: IPointerEvent, view: ViewGroup): IPointerTouchHandler?
   }
 }
