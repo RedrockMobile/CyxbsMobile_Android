@@ -2,12 +2,10 @@ package com.mredrock.cyxbs.lib.course.fragment.page.base
 
 import android.os.Bundle
 import android.util.SparseArray
-import android.view.MotionEvent
 import android.view.View
 import android.view.ViewConfiguration
 import android.view.ViewGroup
 import androidx.annotation.CallSuper
-import androidx.core.util.forEach
 import androidx.core.view.isVisible
 import com.mredrock.cyxbs.lib.course.fragment.page.expose.ICourseDefaultTouch
 import com.mredrock.cyxbs.lib.course.helper.show.CourseDownAnimDispatcher
@@ -57,7 +55,7 @@ abstract class CourseDefaultTouchImpl : AbstractCoursePageFragment(), ICourseDef
   
     private var mLastMoveX = 0F
     private var mLastMoveY = 0F
-  
+    
     override fun isPrepareToIntercept(event: IPointerEvent, view: ViewGroup): Boolean {
       when (event.action) {
         IPointerEvent.Action.DOWN -> {
@@ -67,6 +65,7 @@ abstract class CourseDefaultTouchImpl : AbstractCoursePageFragment(), ICourseDef
         }
         IPointerEvent.Action.UP, IPointerEvent.Action.CANCEL -> {
           // 如果这里能接受到回调，说明 getInterceptHandler() 没有 return handler
+          // 因为没有 return，所以 mDefaultPointerHandler 不会收到 onPointerTouchEvent() 回调，需要手动调用
           mDefaultPointerHandler.onPointerTouchEvent(event, view)
         }
         IPointerEvent.Action.MOVE -> {
@@ -104,26 +103,6 @@ abstract class CourseDefaultTouchImpl : AbstractCoursePageFragment(), ICourseDef
       }
       return null
     }
-  
-    override fun onAfterDispatchTouchEvent(event: MotionEvent, view: ViewGroup) {
-      super.onAfterDispatchTouchEvent(event, view)
-      when (event.action) {
-        MotionEvent.ACTION_MOVE -> {
-          // 在这里回调 onMoveTouchEvent 是因为 MOVE 事件需要把所有手指的事件整合在一起进行分发，下同
-          mDefaultPointerHandler.itemByPointerId.forEach { _, pair ->
-            val item = pair.first
-            item.touchHelper.onMoveTouchEvent(event, view, pair.second, item)
-          }
-        }
-        MotionEvent.ACTION_CANCEL -> {
-          mDefaultPointerHandler.itemByPointerId.forEach { _, pair ->
-            val item = pair.first
-            item.touchHelper.onCancelTouchEvent(event, view, pair.second, item)
-          }
-          mDefaultPointerHandler.itemByPointerId.clear()
-        }
-      }
-    }
   }
   
   /**
@@ -131,41 +110,32 @@ abstract class CourseDefaultTouchImpl : AbstractCoursePageFragment(), ICourseDef
    */
   class DefaultPointerHandler : IPointerTouchHandler {
   
-    val itemByPointerId = SparseArray<Pair<ITouchItem, View>>()
+    private val mItemByPointerId = SparseArray<Pair<ITouchItem, View>>()
     
     override fun onPointerTouchEvent(event: IPointerEvent, view: ViewGroup) {
       val x = event.x.toInt()
       val y = event.y.toInt()
       when (event.action) {
         IPointerEvent.Action.DOWN -> {
+          // DOWN 事件是手动传递下来的
           val course = view as ICourseViewGroup
           val pair = course.findPairUnderByXY(x, y)
           if (pair != null && pair.first is ITouchItem && pair.second.isVisible) {
             @Suppress("UNCHECKED_CAST")
-            itemByPointerId.put(event.pointerId, pair as Pair<ITouchItem, View>)
+            mItemByPointerId.put(event.pointerId, pair as Pair<ITouchItem, View>)
             val item = pair.first
-            item.touchHelper.onDownTouchEvent(event, view, pair.second, item)
+            item.touchHelper.onPointerTouchEvent(event, view, pair.second, item)
           } else {
             ScrollTouchHandler.onPointerTouchEvent(event, view)
           }
         }
-        IPointerEvent.Action.UP -> {
-          val pair = itemByPointerId.get(event.pointerId)
+        IPointerEvent.Action.MOVE,
+        IPointerEvent.Action.UP,
+        IPointerEvent.Action.CANCEL -> {
+          val pair = mItemByPointerId.get(event.pointerId)
           if (pair != null) {
-            pair.first.touchHelper.onUpTouchEvent(event, view, pair.second, pair.first)
-            itemByPointerId.remove(event.pointerId)
-          } else {
-            ScrollTouchHandler.onPointerTouchEvent(event, view)
-          }
-        }
-        else -> {
-          val item = itemByPointerId.get(event.pointerId)
-          if (item != null) {
-            /**
-             * MOVE 和 CANCEL 交给 onAfterDispatchTouchEvent() 回调
-             * 因为多根手指触摸同个 item 时，MOVE 事件应该只回调一次，而不是回调多次，
-             * 这样可以方便处理多指同 item 的情况
-             */
+            pair.first.touchHelper.onPointerTouchEvent(event, view, pair.second, pair.first)
+            mItemByPointerId.remove(event.pointerId)
           } else {
             ScrollTouchHandler.onPointerTouchEvent(event, view)
           }
