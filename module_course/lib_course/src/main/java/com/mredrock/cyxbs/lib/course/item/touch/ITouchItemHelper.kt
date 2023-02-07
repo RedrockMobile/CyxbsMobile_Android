@@ -1,4 +1,4 @@
-package com.mredrock.cyxbs.lib.course.helper.item
+package com.mredrock.cyxbs.lib.course.item.touch
 
 import android.view.MotionEvent
 import android.view.View
