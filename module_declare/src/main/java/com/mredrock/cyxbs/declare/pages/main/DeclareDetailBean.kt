@@ -1,7 +1,5 @@
 package com.mredrock.cyxbs.declare.pages.main
 
-import com.google.gson.annotations.SerializedName
-
 /**
  * ...
  * @author RQ527 (Ran Sixiang)
@@ -9,9 +7,10 @@ import com.google.gson.annotations.SerializedName
  * @date 2023/2/4
  * @Description:
  */
-data class HomeDataBean(
-    @SerializedName("Id")
+data class DeclareDetailBean(
+    val choices: List<String>,
     val id: Int,
-    @SerializedName("Title")
-    val title: String
-    )
+    val statistic: Map<String, Int>,
+    val title: String,
+    val voted: String
+)

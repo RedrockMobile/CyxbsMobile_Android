@@ -23,18 +23,14 @@
             app:layout_constraintTop_toTopOf="parent">
 
             <ImageButton
-                android:id="@+id/store_iv_toolbar_no_line_arrow_left"
+                android:id="@+id/declare_iv_toolbar_arrow_left"
                 android:layout_width="36dp"
                 android:layout_height="18dp"
                 android:layout_marginStart="3dp"
                 android:background="?attr/selectableItemBackgroundBorderless"
                 android:scaleType="centerInside"
                 android:src="@drawable/declare_ic_arrow_left"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent"
-                app:layout_constraintVertical_bias="0.037"
-                tools:ignore="ContentDescription" />
+                tools:ignore="ContentDescription,SpeakableTextPresentCheck,SpeakableTextPresentCheck,TouchTargetSizeCheck" />
 
             <TextView
                 android:id="@+id/declare_home_bar"
@@ -44,6 +40,18 @@
                 android:text="@string/declare_home"
                 android:textColor="@color/cardview_dark_background"
                 android:textSize="20sp" />
+
+            <ImageButton
+                android:id="@+id/declare_home_toolbar_post"
+                android:layout_width="36dp"
+                android:layout_height="18dp"
+                android:layout_gravity="end"
+                android:layout_marginEnd="20dp"
+                android:visibility="gone"
+                android:background="?attr/selectableItemBackgroundBorderless"
+                android:scaleType="centerInside"
+                android:src="@drawable/declare_ic_arrow_left"
+                tools:ignore="TouchTargetSizeCheck,SpeakableTextPresentCheck" />
         </androidx.appcompat.widget.Toolbar>
 
         <androidx.recyclerview.widget.RecyclerView

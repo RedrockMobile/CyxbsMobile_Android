@@ -2,6 +2,7 @@ package com.mredrock.cyxbs.declare.pages.main.page.viewmodel
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
+import com.mredrock.cyxbs.declare.pages.main.DeclareDetailBean
 import com.mredrock.cyxbs.declare.pages.main.HomeDataBean
 import com.mredrock.cyxbs.declare.pages.main.net.ApiService
 import com.mredrock.cyxbs.lib.base.ui.BaseViewModel
@@ -17,12 +18,16 @@ import io.reactivex.rxjava3.schedulers.Schedulers
  * @date 2023/2/4
  * @Description:
  */
-class DeclareHomeViewModel:BaseViewModel() {
-    val homeLiveData:LiveData<List<HomeDataBean>>
+class DeclareHomeViewModel : BaseViewModel() {
+    val homeLiveData: LiveData<List<HomeDataBean>>
         get() = _mutableHomeLiveData
     private val _mutableHomeLiveData = MutableLiveData<List<HomeDataBean>>()
 
-    fun getHomeData(){
+    val detailLiveData: LiveData<DeclareDetailBean>
+        get() = _mutableDetailLiveData
+    private val _mutableDetailLiveData = MutableLiveData<DeclareDetailBean>()
+
+    fun getHomeData() {
         ApiService::class.api
             .getHomeData()
             .subscribeOn(Schedulers.io())
@@ -31,7 +36,20 @@ class DeclareHomeViewModel:BaseViewModel() {
                 toast("${this.throwable.message}")
             }
             .safeSubscribeBy {
-                _mutableHomeLiveData.value = it
+                _mutableHomeLiveData.postValue(it)
+            }
+    }
+
+    fun getDeclareDetail(id: Int) {
+        ApiService::class.api
+            .getDetailDeclareData(id)
+            .subscribeOn(Schedulers.io())
+            .observeOn(AndroidSchedulers.mainThread())
+            .mapOrInterceptException {
+                toast("${this.throwable.message}")
+            }
+            .safeSubscribeBy {
+                _mutableDetailLiveData.postValue(it)
             }
     }
 }

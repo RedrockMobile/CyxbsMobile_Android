@@ -14,7 +14,7 @@ import com.mredrock.cyxbs.lib.base.BaseDebugActivity
  */
 class DebugActivity:BaseDebugActivity() {
     override val isNeedLogin: Boolean
-        get() = false
+        get() = true
     override fun onDebugCreate(savedInstanceState: Bundle?) {
         startActivity(Intent(this, DeclareHomeActivity::class.java))
     }
