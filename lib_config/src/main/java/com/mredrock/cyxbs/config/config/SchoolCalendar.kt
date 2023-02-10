@@ -130,13 +130,6 @@ object SchoolCalendar {
       .map { it.timeInMillis }
   }
   
-  /**
-   * 是否是上学期（即秋季学期），否则是下学期（春季学期）
-   */
-  fun isFirstSemester() : Boolean {
-    return Calendar.getInstance()[Calendar.MONTH + 1] > 8
-  }
-  
   // Rxjava-Subject 教程 https://www.jianshu.com/p/d7efc29ec9d3
   // BehaviorSubject 与 LiveData 一致，订阅时会发送最后一次数据
   private val mBehaviorSubject = BehaviorSubject.create<Calendar>()
