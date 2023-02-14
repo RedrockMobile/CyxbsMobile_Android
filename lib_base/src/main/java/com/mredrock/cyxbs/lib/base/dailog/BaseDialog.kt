@@ -5,7 +5,7 @@ import android.content.Context
 import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
 import android.os.Bundle
-import android.util.SizeF
+import android.util.Size
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -18,7 +18,28 @@ import com.mredrock.cyxbs.config.R
 import com.mredrock.cyxbs.lib.utils.extensions.dp2px
 
 /**
- * .
+ * 支持自定义内容视图的圆角 dialog，该 dialog 样式符合视觉要求的大部分场景
+ *
+ * 你可以参考它的实现类 [ChooseDialog] 和 UserAgreementDialog 来适配你需要的场景
+ *
+ * ## 1、为什么不用 DialogFragment ?
+ * 虽然官方推荐使用 DialogFragment，但是 Fragment 与父容器通信很麻烦，并且目前掌邮强制竖屏，所以不打算使用 DialogFragment
+ *
+ * ## 2、DialogFragment 推荐用法
+ * DialogFragment 主要有两个坑
+ * - Fragment 重建导致的数据丢失问题
+ * - Fragment 不好与父容器直接通信
+ *
+ * 问题一可以采用 ViewModel 或者 savedInstanceState 解决
+ * 问题二可以采用 ViewModel 或者 DialogFragment 直接 getActivity()/getParentFragment() 强转解决(强烈建议用接口约束下有哪些方法)
+ *
+ * ## 3、本 Dialog 可直接变为 DialogFragment
+ * DialogFragment 提供了 onCreateDialog(): Dialog 方法用于自定义 Dialog，如果有必要的话，可以重写该方法。
+ * 但请遵守 Fragment 的使用规范 (详细请查看飞书易错点文档)
+ *
+ *
+ *
+ * 更多注释请查看 [ChooseDialog]
  *
  * @author 985892345
  * 2022/12/29 20:08
@@ -50,7 +71,13 @@ abstract class BaseDialog<T : BaseDialog<T, D>, D: BaseDialog.Data> protected co
     val view = LayoutInflater.from(context).inflate(data.type.layoutId, null)
     val insertView = createContentView(view.context)
     view.findViewWithTag<FrameLayout>("choose_dialog_content").addView(insertView)
-    setContentView(view, ViewGroup.LayoutParams(data.width, data.height))
+    setContentView(
+      view,
+      ViewGroup.LayoutParams(
+        data.width.let { if (it > 0) it.dp2px else it },
+        data.height.let { if (it > 0) it.dp2px else it }
+      )
+    )
     initViewInternal(view)
     initContentView(insertView)
   }
@@ -59,15 +86,15 @@ abstract class BaseDialog<T : BaseDialog<T, D>, D: BaseDialog.Data> protected co
   private fun initViewInternal(view: View) {
     // 根据不同类型进行不同的设置
     when (data.type) {
-      DialogType.ONR_BUT -> {
+      DialogType.ONE_BUT -> {
         val ivBg: ImageView = view.findViewById(R.id.config_iv_choose_dialog_one_btn_background)
         val btnPositive: MaterialButton =
           view.findViewById(R.id.config_btn_choose_dialog_one_btn_positive)
         ivBg.setImageResource(data.backgroundId)
         btnPositive.text = data.positiveButtonText
         btnPositive.layoutParams.apply {
-          width = data.buttonSize.width.dp2px
-          height = data.buttonSize.height.dp2px
+          width = data.buttonSize.width.let { if (it > 0) it.dp2px else it }
+          height = data.buttonSize.height.let { if (it > 0) it.dp2px else it }
         }
         btnPositive.setBackgroundColor(
           ContextCompat.getColor(context, data.positiveButtonColor)
@@ -86,12 +113,12 @@ abstract class BaseDialog<T : BaseDialog<T, D>, D: BaseDialog.Data> protected co
         btnPositive.text = data.positiveButtonText
         btnNegative.text = data.negativeButtonText
         btnPositive.layoutParams.apply {
-          width = data.buttonSize.width.dp2px
-          height = data.buttonSize.height.dp2px
+          width = data.buttonSize.width.let { if (it > 0) it.dp2px else it }
+          height = data.buttonSize.height.let { if (it > 0) it.dp2px else it }
         }
         btnNegative.layoutParams.apply {
-          width = data.buttonSize.width.dp2px
-          height = data.buttonSize.height.dp2px
+          width = data.buttonSize.width.let { if (it > 0) it.dp2px else it }
+          height = data.buttonSize.height.let { if (it > 0) it.dp2px else it }
         }
         btnPositive.setBackgroundColor(
           ContextCompat.getColor(context, data.positiveButtonColor)
@@ -200,17 +227,26 @@ abstract class BaseDialog<T : BaseDialog<T, D>, D: BaseDialog.Data> protected co
     val negativeButtonColor: Int
   
     /**
-     * button 的按钮大小，单位 dp
+     * button 的按钮大小
+     * - 默认为 80dp-34dp
+     * - 单位 dp
+     * - 支持 LayoutParams.WRAP_CONTENT、LayoutParams.MATCH_PARENT
      */
-    val buttonSize: SizeF
+    val buttonSize: Size
   
     /**
-     * dialog 的宽，默认为 300dp
+     * dialog 的宽
+     * - 默认为 300dp
+     * - 单位 dp
+     * - 支持 LayoutParams.WRAP_CONTENT、LayoutParams.MATCH_PARENT
      */
     val width: Int
   
     /**
-     * dialog 的高，默认为 wrap_content
+     * dialog 的高
+     * - 默认为 wrap_content
+     * - 单位 dp
+     * - 支持 LayoutParams.WRAP_CONTENT、LayoutParams.MATCH_PARENT
      */
     val height: Int
   
@@ -231,10 +267,10 @@ abstract class BaseDialog<T : BaseDialog<T, D>, D: BaseDialog.Data> protected co
         get() = R.color.config_choose_dialog_btn_positive
       override val negativeButtonColor: Int
         get() = R.color.config_choose_dialog_btn_negative
-      override val buttonSize: SizeF
-        get() = SizeF(80F, 34F)
+      override val buttonSize: Size
+        get() = Size(80, 34)
       override val width: Int
-        get() = 300.dp2px
+        get() = 300
       override val height: Int
         get() = ViewGroup.LayoutParams.WRAP_CONTENT
       override val backgroundId: Int
@@ -244,7 +280,7 @@ abstract class BaseDialog<T : BaseDialog<T, D>, D: BaseDialog.Data> protected co
   
   enum class DialogType(val layoutId: Int) {
     // 只有一个 Button
-    ONR_BUT(R.layout.config_choose_dialog_one_btn),
+    ONE_BUT(R.layout.config_choose_dialog_one_btn),
     
     // 有两个 Button
     TWO_BUT(R.layout.config_choose_dialog_two_btn)

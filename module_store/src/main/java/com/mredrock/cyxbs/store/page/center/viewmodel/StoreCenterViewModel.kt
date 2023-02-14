@@ -29,10 +29,12 @@ class StoreCenterViewModel : BaseViewModel() {
   val stampCenterData: LiveData<StampCenter>
     get() = _stampCenterData
   
-  // 网络请求是否刷新成功
-  private val _refreshIsSuccessful = MutableLiveData<Boolean>()
-  val refreshIsSuccessful: LiveData<Boolean>
-    get() = _refreshIsSuccessful
+  // 网络请求是否刷新成功（状态）
+  private val _refreshIsSuccessfulState = MutableLiveData<Boolean>()
+  val refreshIsSuccessfulState: LiveData<Boolean>
+    get() = _refreshIsSuccessfulState
+  // 网络请求是否刷新成功（事件）
+  val refreshIsSuccessfulEvent = _refreshIsSuccessfulState.asShareFlow()
   
   // 是否展示邮票中心界面 TabLayout 的小圆点, 产品给的需求是每天只显示一遍
   var isShowTabLayoutBadge: Boolean
@@ -58,11 +60,15 @@ class StoreCenterViewModel : BaseViewModel() {
       .subscribeOn(Schedulers.io())
       .observeOn(AndroidSchedulers.mainThread())
       .mapOrInterceptException {
-        _refreshIsSuccessful.postValue(false)
+        _refreshIsSuccessfulState.postValue(false)
       }.safeSubscribeBy {
-        _refreshIsSuccessful.postValue(true)
+        _refreshIsSuccessfulState.postValue(true)
         _stampCenterData.postValue(it)
       }
+  }
+  
+  init {
+    refresh() // 初始化时刷新一次
   }
   
   /*

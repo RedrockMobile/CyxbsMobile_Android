@@ -43,7 +43,7 @@ import kotlin.reflect.KClass
  * ```
  * 目前该逻辑已封装进 Rxjava 和 Flow
  * ```
- * .mapOrThrowApiException {
+ * .mapOrInterceptException {
  *     HttpException<XXXBean>(500) {
  *         it.xxx
  *

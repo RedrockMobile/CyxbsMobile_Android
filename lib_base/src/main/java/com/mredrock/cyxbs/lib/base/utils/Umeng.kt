@@ -11,6 +11,9 @@ import com.umeng.analytics.MobclickAgent
  */
 object Umeng {
   
+  // 注册成功会返回 deviceId，是推送消息的唯一标志
+  var deviceId: String? = null
+  
   // 发送自定义事件
   fun sendEvent(event: Event) {
     if (event.map != null) {

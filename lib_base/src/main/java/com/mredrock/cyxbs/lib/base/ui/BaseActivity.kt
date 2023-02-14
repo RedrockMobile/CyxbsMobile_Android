@@ -87,14 +87,15 @@ abstract class BaseActivity : OperationActivity() {
   /**
    * 是否沉浸式状态栏
    *
-   * 注意，沉浸式后，状态栏不会再有东西占位，界面会默认上移，
-   * 可以给根布局加上 android:fitsSystemWindows=true，
+   * ## 注意
+   * 沉浸式后，状态栏不会再有东西占位，界面会默认上移，
+   * 可以给布局加上 android:fitsSystemWindows=true (但不建议给根布局加，一般是给第二个布局加)，
    * 不同布局该属性效果不同，请给合适的布局添加
    * 
    * ## 比如
    * - 大部分情况下是给第二层布局添加 fitsSystemWindows=true，因为最外层布局需要提供背景给状态栏，而第二层布局需要下移状态栏
    * - 如果你使用了 BottomSheet，那么大概率需要给 BottomSheet 加上 fitsSystemWindows=true。
-   *   (注意: CoordinatorLayout 设置 fitsSystemWindows 无效，但可以在外面包一层 FrameLayout，给它加上 fitsSystemWindows)
+   *   (注意: CoordinatorLayout 设置 fitsSystemWindows 无效，但可以在外面包一层 FrameLayout，给它加上 fitsSystemWindows，具体可以看 main 模块里面的课表写法)
    * - 
    */
   protected open val isCancelStatusBar: Boolean
@@ -152,8 +153,8 @@ abstract class BaseActivity : OperationActivity() {
       // 处于 onCreate 时
       if (mIsActivityRebuilt) {
         // 如果此时 Activity 处于重建状态，Fragment 会自动恢复，不能重复提交而改变之前的状态
-        // 因为存在重建前你在 onCreate 中提交的 Fragment 在后面因为点击事件而被替换掉，
-        // 如果你在这里进行提交，就会导致本来被取消了的 界面 重新出现
+        // 因为存在重建前你在 onCreate 中提交的 Fragment 在后面因为其他事件取消了，
+        // 但如果你在这里进行提交，就会导致本来被取消了的 界面 重新出现
       } else {
         // Activity 正常被创建，即没有被异常摧毁
         supportFragmentManager.beginTransaction()
@@ -179,10 +180,23 @@ abstract class BaseActivity : OperationActivity() {
   /**
    * 快速得到 intent 中的变量，直接使用反射拿了变量的名字
    * ```
-   * var key by intent<String>() // 支持声明为 var 修改参数
+   * companion object {
+   *     fun start(
+   *         context: Context
+   *         key: String
+   *     ) {
+   *         context.startActivity(
+   *             Intent(context, XXXActivity::class.java)
+   *                 .put(XXXActivity::key.name, key)
+   *         )
+   *     }
+   * }
+   *
+   * var key by arguments<String>() // 支持声明为 var 修改参数
    *
    * 这样写会在 intent 中寻找名字叫 key 的参数
    * ```
+   *
    * 但对于使用 ARouter 时该写法并不能起到很大的帮助，但我个人不是很推荐需要传参的 ARouter 启动，不如直接 api 模块
    */
   inline fun <reified T : Any> intent() = IntentHelper(T::class.java) { intent }
@@ -214,18 +228,4 @@ abstract class BaseActivity : OperationActivity() {
   
   
   
-  init {
-    // Umeng 统计当前 Activity
-    super.getLifecycle().addObserver(
-      object : DefaultLifecycleObserver {
-        override fun onResume(owner: LifecycleOwner) {
-          MobclickAgent.onPageStart(javaClass.name)
-        }
-      
-        override fun onPause(owner: LifecycleOwner) {
-          MobclickAgent.onPageEnd(javaClass.name)
-        }
-      }
-    )
-  }
 }

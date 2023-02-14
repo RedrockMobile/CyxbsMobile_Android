@@ -53,6 +53,7 @@ object Config {
         } else {
           // debug 状态下使用 debug 的包名，方便测试
           "com.mredrock.cyxbs.debug"
+//          "com.mredrock.cyxbs" // 取消注释即可还原包名，但注意：取消注释后需要点一下右上角的大象刷新 gradle 才能生效
         }
       }
       else -> "com.mredrock.cyxbs.${project.name}"

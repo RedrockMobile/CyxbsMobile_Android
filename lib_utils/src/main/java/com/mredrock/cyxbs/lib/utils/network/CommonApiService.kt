@@ -18,9 +18,9 @@ interface CommonApiService : IApi {
   /**
    * 下发接口，目前适用于title--content，公共可用
    * exp:
-   *  ApiGenerator
-   * .getCommonApiService(CommonApiService::class.java)
-   * .getDownMessage(DownMessageParams("name"))
+   * ApiGenerator
+   *     .getCommonApiService(CommonApiService::class.java)
+   *     .getDownMessage(DownMessageParams("name"))
    */
   @Headers("Content-Type: application/json")
   @POST("/magipoke-text/text/get")

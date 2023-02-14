@@ -20,12 +20,12 @@ interface INoonPeriod {
   fun compareNoonPeriod(row: Int): Int
   
   /**
-   * 得到中午时间段开始时的高度值
+   * 得到中午时间段开始时的高度值（距离课表上边缘）
    */
   fun getNoonStartHeight(): Int
   
   /**
-   * 得到中午时间段结束时的高度值
+   * 得到中午时间段结束时的高度值（距离课表上边缘）
    */
   fun getNoonEndHeight(): Int
 }

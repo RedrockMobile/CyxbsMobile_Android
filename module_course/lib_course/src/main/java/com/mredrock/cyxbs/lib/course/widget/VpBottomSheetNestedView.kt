@@ -4,7 +4,10 @@ import android.content.Context
 import android.util.AttributeSet
 import android.view.View
 import android.widget.FrameLayout
-import androidx.core.view.*
+import androidx.core.view.NestedScrollingChild3
+import androidx.core.view.NestedScrollingChildHelper
+import androidx.core.view.NestedScrollingParent3
+import androidx.core.view.ViewCompat
 
 /**
  * 解决 BottomSheet 跟 vp 嵌套的 bug
@@ -35,7 +38,7 @@ class VpBottomSheetNestedView @JvmOverloads constructor(
   context: Context,
   attrs: AttributeSet? = null,
   defStyleAttr: Int = 0,
-  defStyleRes: Int = 0
+  defStyleRes: Int = 0,
 ) : FrameLayout(context, attrs, defStyleAttr, defStyleRes), NestedScrollingChild3, NestedScrollingParent3 {
   
   private val mNestedChildHelper = NestedScrollingChildHelper(this)
@@ -71,7 +74,7 @@ class VpBottomSheetNestedView @JvmOverloads constructor(
     dyConsumed: Int,
     dxUnconsumed: Int,
     dyUnconsumed: Int,
-    offsetInWindow: IntArray?
+    offsetInWindow: IntArray?,
   ): Boolean {
     return mNestedChildHelper.dispatchNestedScroll(
       dxConsumed,
@@ -86,7 +89,7 @@ class VpBottomSheetNestedView @JvmOverloads constructor(
     dx: Int,
     dy: Int,
     consumed: IntArray?,
-    offsetInWindow: IntArray?
+    offsetInWindow: IntArray?,
   ): Boolean {
     return mNestedChildHelper.dispatchNestedPreScroll(dx, dy, consumed, offsetInWindow)
   }
@@ -119,7 +122,7 @@ class VpBottomSheetNestedView @JvmOverloads constructor(
     dxUnconsumed: Int,
     dyUnconsumed: Int,
     offsetInWindow: IntArray?,
-    type: Int
+    type: Int,
   ): Boolean {
     return mNestedChildHelper.dispatchNestedScroll(dxConsumed, dyConsumed, dxUnconsumed, dyUnconsumed, offsetInWindow, type)
   }
@@ -129,7 +132,7 @@ class VpBottomSheetNestedView @JvmOverloads constructor(
     dy: Int,
     consumed: IntArray?,
     offsetInWindow: IntArray?,
-    type: Int
+    type: Int,
   ): Boolean {
     return mNestedChildHelper.dispatchNestedPreScroll(dx, dy, consumed, offsetInWindow, type)
   }
@@ -143,7 +146,7 @@ class VpBottomSheetNestedView @JvmOverloads constructor(
     dyUnconsumed: Int,
     offsetInWindow: IntArray?,
     type: Int,
-    consumed: IntArray
+    consumed: IntArray,
   ) {
     mNestedChildHelper.dispatchNestedScroll(dxConsumed, dyConsumed, dxUnconsumed, dyUnconsumed, offsetInWindow, type, consumed)
   }
@@ -152,10 +155,10 @@ class VpBottomSheetNestedView @JvmOverloads constructor(
   
   // NestedScrollingParent
   
-  private var mNestedScrollAxes = SCROLL_AXIS_NONE
+  private var mNestedScrollAxes = ViewCompat.SCROLL_AXIS_NONE
   
   override fun onStartNestedScroll(
-    child: View, target: View, axes: Int
+    child: View, target: View, axes: Int,
   ): Boolean {
     return startNestedScroll(axes).also {
       if (it) {
@@ -166,7 +169,7 @@ class VpBottomSheetNestedView @JvmOverloads constructor(
   }
   
   override fun onNestedScrollAccepted(
-    child: View, target: View, axes: Int
+    child: View, target: View, axes: Int,
   ) {
     // 该方法由 NestedScrollingChildHelper 内部在使用了 startNestedScroll() 后主动调用
     // 所以这里不需要做什么
@@ -174,13 +177,13 @@ class VpBottomSheetNestedView @JvmOverloads constructor(
   
   override fun onStopNestedScroll(target: View) {
     stopNestedScroll()
-    mNestedScrollAxes = SCROLL_AXIS_NONE
+    mNestedScrollAxes = ViewCompat.SCROLL_AXIS_NONE
     mTargetView = null
   }
   
   override fun onNestedScroll(
     target: View, dxConsumed: Int, dyConsumed: Int,
-    dxUnconsumed: Int, dyUnconsumed: Int
+    dxUnconsumed: Int, dyUnconsumed: Int,
   ) {
     dispatchNestedScroll(dxConsumed, dyConsumed, dxUnconsumed, dyUnconsumed, null)
   }
@@ -190,7 +193,7 @@ class VpBottomSheetNestedView @JvmOverloads constructor(
   }
   
   override fun onNestedFling(
-    target: View, velocityX: Float, velocityY: Float, consumed: Boolean
+    target: View, velocityX: Float, velocityY: Float, consumed: Boolean,
   ): Boolean {
     return dispatchNestedFling(velocityX, velocityY, consumed)
   }
@@ -221,7 +224,7 @@ class VpBottomSheetNestedView @JvmOverloads constructor(
   
   override fun onStopNestedScroll(target: View, type: Int) {
     stopNestedScroll(type)
-    mNestedScrollAxes = SCROLL_AXIS_NONE
+    mNestedScrollAxes = ViewCompat.SCROLL_AXIS_NONE
     mTargetView = null
   }
   
@@ -231,7 +234,7 @@ class VpBottomSheetNestedView @JvmOverloads constructor(
     dyConsumed: Int,
     dxUnconsumed: Int,
     dyUnconsumed: Int,
-    type: Int
+    type: Int,
   ) {
     dispatchNestedScroll(dxConsumed, dyConsumed, dxUnconsumed, dyUnconsumed, null, type)
   }
@@ -249,7 +252,7 @@ class VpBottomSheetNestedView @JvmOverloads constructor(
     dxUnconsumed: Int,
     dyUnconsumed: Int,
     type: Int,
-    consumed: IntArray
+    consumed: IntArray,
   ) {
     dispatchNestedScroll(dxConsumed, dyConsumed, dxUnconsumed, dyUnconsumed, null, type, consumed)
   }

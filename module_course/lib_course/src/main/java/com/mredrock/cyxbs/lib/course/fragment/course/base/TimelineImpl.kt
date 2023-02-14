@@ -17,8 +17,8 @@ import com.mredrock.cyxbs.lib.course.fragment.course.expose.timeline.ITimeline
 @Suppress("LeakingThis")
 abstract class TimelineImpl : PeriodImpl(), ITimeline {
   
-  final override fun isIncludeTimeline(row: Int): Boolean {
-    return row in TIMELINE_LEFT .. TIMELINE_RIGHT
+  final override fun compareTimelineColumn(column: Int): Int {
+    return if (column < TIMELINE_LEFT) -1 else if (column > TIMELINE_RIGHT) 1 else 0
   }
   
   final override fun forEachTimelineRow(block: (row: Int) -> Unit) {

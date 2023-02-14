@@ -53,7 +53,7 @@ class FindStuFragment : BaseFragment() {
   override fun onCreateView(
     inflater: LayoutInflater,
     container: ViewGroup?,
-    savedInstanceState: Bundle?
+    savedInstanceState: Bundle?,
   ): View = inflater.inflate(R.layout.course_fragment_find_stu, container, false)
   
   override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -82,15 +82,15 @@ class FindStuFragment : BaseFragment() {
               requireContext(),
               ChooseDialog.Data(
                 content = "你已有一位关联的同学\n确定要替换吗？",
-                width = 255.dp2px,
-                height = 167.dp2px
+                width = 255,
+                height = 167
               )
             ).setPositiveClick {
-                mViewModel.changeLinkStudent(num)
-                dismiss()
-              }.setNegativeClick {
-                dismiss()
-              }.show()
+              mViewModel.changeLinkStudent(num)
+              dismiss()
+            }.setNegativeClick {
+              dismiss()
+            }.show()
           }
         }
       }.apply {
@@ -109,7 +109,10 @@ class FindStuFragment : BaseFragment() {
         mViewModel.searchStudents(text.toString())
         // 取消键盘
         (requireActivity().getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager)
-          .hideSoftInputFromWindow(requireActivity().currentFocus?.windowToken, InputMethodManager.HIDE_NOT_ALWAYS)
+          .hideSoftInputFromWindow(
+            requireActivity().currentFocus?.windowToken,
+            InputMethodManager.HIDE_NOT_ALWAYS
+          )
         true
       }
     }

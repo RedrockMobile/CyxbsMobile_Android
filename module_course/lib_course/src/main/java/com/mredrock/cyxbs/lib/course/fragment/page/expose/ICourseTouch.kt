@@ -11,5 +11,8 @@ import com.mredrock.cyxbs.lib.course.internal.touch.IMultiTouch
  * @date 2022/8/31 18:23
  */
 interface ICourseTouch : IMultiTouch.DefaultHandler {
+  /**
+   * 得到点击 View 后 Q 弹动画的事件帮助类
+   */
   fun getCourseDownAnimDispatcher(): CourseDownAnimDispatcher?
 }

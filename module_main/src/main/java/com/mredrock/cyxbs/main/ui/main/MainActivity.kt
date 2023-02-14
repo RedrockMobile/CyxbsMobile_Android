@@ -147,7 +147,7 @@ class MainActivity : BaseActivity() {
         0, 2 -> {
           mBottomNavLayout.cardElevation = 0F
           if (!mIsActivityRebuilt) {
-            // 在重建 Activity 后这里会回调一次，这个时候需要还原之前的状态，这里不能去设置成 false
+            // 只在 Activity 没有重建时才设置成 false
             mViewModel.courseBottomSheetExpand.value = false
           }
         }
@@ -157,7 +157,7 @@ class MainActivity : BaseActivity() {
         1 ->{
           mBottomNavLayout.cardElevation = 0F
           if (!mIsActivityRebuilt) {
-            // 在重建 Activity 后这里会回调一次，这个时候需要还原之前的状态，这里不能去设置成 false
+            // 只在 Activity 没有重建时才设置成 false
             mViewModel.courseBottomSheetExpand.value = false
           }
         }
