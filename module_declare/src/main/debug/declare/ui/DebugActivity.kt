@@ -1,6 +1,5 @@
 package declare.ui
 
-import android.content.Intent
 import android.os.Bundle
 import com.mredrock.cyxbs.declare.pages.main.page.activity.DeclareHomeActivity
 import com.mredrock.cyxbs.lib.base.BaseDebugActivity
@@ -12,10 +11,11 @@ import com.mredrock.cyxbs.lib.base.BaseDebugActivity
  * @date 2023/2/4
  * @Description:
  */
-class DebugActivity:BaseDebugActivity() {
+class DebugActivity : BaseDebugActivity() {
     override val isNeedLogin: Boolean
         get() = true
+
     override fun onDebugCreate(savedInstanceState: Bundle?) {
-        startActivity(Intent(this, DeclareHomeActivity::class.java))
+        DeclareHomeActivity.startActivity(this)
     }
 }

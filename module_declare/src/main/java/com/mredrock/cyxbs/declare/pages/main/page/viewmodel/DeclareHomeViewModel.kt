@@ -2,9 +2,8 @@ package com.mredrock.cyxbs.declare.pages.main.page.viewmodel
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
-import com.mredrock.cyxbs.declare.pages.main.DeclareDetailBean
-import com.mredrock.cyxbs.declare.pages.main.HomeDataBean
-import com.mredrock.cyxbs.declare.pages.main.net.ApiService
+import com.mredrock.cyxbs.declare.pages.main.bean.HomeDataBean
+import com.mredrock.cyxbs.declare.pages.main.net.HomeApiService
 import com.mredrock.cyxbs.lib.base.ui.BaseViewModel
 import com.mredrock.cyxbs.lib.utils.network.api
 import com.mredrock.cyxbs.lib.utils.network.mapOrInterceptException
@@ -23,12 +22,11 @@ class DeclareHomeViewModel : BaseViewModel() {
         get() = _mutableHomeLiveData
     private val _mutableHomeLiveData = MutableLiveData<List<HomeDataBean>>()
 
-    val detailLiveData: LiveData<DeclareDetailBean>
-        get() = _mutableDetailLiveData
-    private val _mutableDetailLiveData = MutableLiveData<DeclareDetailBean>()
-
+    /**
+     * 获取主页数据
+     */
     fun getHomeData() {
-        ApiService::class.api
+        HomeApiService::class.api
             .getHomeData()
             .subscribeOn(Schedulers.io())
             .observeOn(AndroidSchedulers.mainThread())
@@ -37,19 +35,6 @@ class DeclareHomeViewModel : BaseViewModel() {
             }
             .safeSubscribeBy {
                 _mutableHomeLiveData.postValue(it)
-            }
-    }
-
-    fun getDeclareDetail(id: Int) {
-        ApiService::class.api
-            .getDetailDeclareData(id)
-            .subscribeOn(Schedulers.io())
-            .observeOn(AndroidSchedulers.mainThread())
-            .mapOrInterceptException {
-                toast("${this.throwable.message}")
-            }
-            .safeSubscribeBy {
-                _mutableDetailLiveData.postValue(it)
             }
     }
 }

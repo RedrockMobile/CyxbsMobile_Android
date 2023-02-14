@@ -3,11 +3,10 @@ package com.mredrock.cyxbs.declare.pages.main.utils
 import android.os.Handler
 import android.os.Looper
 import android.os.Message
-import android.util.Log
 import android.view.View
 
 /**
- * ...
+ * ... 实现五击和双击的view
  * @author RQ527 (Ran Sixiang)
  * @email 1799796122@qq.com
  * @date 2023/2/4
@@ -18,7 +17,7 @@ fun View.setOnFiveAndDoubleClickListener(
     listener: FiveAndDoubleClickListener
 ) {
     /**
-     * 用于区分双击和五击的延时判定
+     * 用于区分双击和五击的延时判定（实在想不到更好的方法了，如果有更好的方法随便改这的代码）
      */
     val mHandler = object : Handler(Looper.myLooper()!!) {
         override fun handleMessage(msg: Message) {
@@ -40,6 +39,7 @@ fun View.setOnFiveAndDoubleClickListener(
                     mHandler.sendEmptyMessageDelayed(0, 200)
                 }
                 3 -> {
+                    //三击就取消响应双击
                     mHandler.removeCallbacksAndMessages(null)
                 }
             }

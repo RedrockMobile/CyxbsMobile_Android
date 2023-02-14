@@ -10,69 +10,80 @@
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        tools:context=".pages.main.page.activity.DeclareHomeActivity">
+        tools:context=".pages.detail.page.activity.DeclareDetailActivity">
 
         <androidx.constraintlayout.widget.ConstraintLayout
-            android:id="@+id/declare_home_toolbar"
+            android:id="@+id/declare_detail_toolbar"
             android:layout_width="match_parent"
-            android:layout_height="110dp"
-            android:background="#FFFFFF"
+            android:layout_height="226dp"
+            android:background="@drawable/declare_ic_detail_header_bg"
             android:fitsSystemWindows="true"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent">
 
             <ImageButton
-                android:id="@+id/declare_iv_toolbar_arrow_left"
+                android:id="@+id/declare_detail_iv_toolbar_arrow_left"
                 android:layout_width="10dp"
                 android:layout_height="16dp"
                 android:background="?attr/selectableItemBackgroundBorderless"
-                android:src="@drawable/declare_ic_home_arrow_left"
-                app:layout_constraintBottom_toBottomOf="@+id/declare_home_bar"
+                android:src="@drawable/declare_ic_detail_arrow_left"
+                app:layout_constraintBottom_toBottomOf="@+id/declare_detail_bar"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintHorizontal_bias="0.042666"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="@+id/declare_home_bar"
+                app:layout_constraintTop_toTopOf="@+id/declare_detail_bar"
                 app:layout_constraintVertical_bias="0.545454545"
                 tools:ignore="ContentDescription,SpeakableTextPresentCheck,SpeakableTextPresentCheck,TouchTargetSizeCheck" />
 
             <TextView
-                android:id="@+id/declare_home_bar"
+                android:id="@+id/declare_detail_bar"
                 android:layout_width="67dp"
                 android:layout_height="31dp"
                 android:text="@string/declare_home"
-                android:textColor="#15315B"
+                android:textColor="#FFFFFF"
                 android:textSize="22sp"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintHorizontal_bias="0.126"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
-                app:layout_constraintVertical_bias="0.4818" />
+                app:layout_constraintVertical_bias="0.2345" />
 
             <ImageButton
                 android:id="@+id/declare_home_toolbar_post"
                 android:layout_width="18dp"
                 android:layout_height="18dp"
-                android:src="@drawable/declare_ic_home_post"
-                android:visibility="gone"
-                app:layout_constraintBottom_toBottomOf="@+id/declare_home_bar"
+                android:src="@drawable/declare_ic_detail_share"
+                app:layout_constraintBottom_toBottomOf="@+id/declare_detail_bar"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintHorizontal_bias="0.929"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="@+id/declare_home_bar"
+                app:layout_constraintTop_toTopOf="@+id/declare_detail_bar"
                 app:layout_constraintVertical_bias="0.536" />
-        </androidx.constraintlayout.widget.ConstraintLayout>
 
+            <TextView
+                android:id="@+id/declare_detail_title"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginHorizontal="15dp"
+                android:layout_marginBottom="30dp"
+                android:textSize="18sp"
+                android:textColor="#FFFFFF"
+                tools:text="哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent" />
+        </androidx.constraintlayout.widget.ConstraintLayout>
         <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/declare_home_recyclerview"
+            android:id="@+id/declare_detail_recyclerview"
             android:layout_width="match_parent"
             android:layout_height="0dp"
-            android:layout_marginTop="10dp"
+            android:layout_marginTop="20dp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/declare_home_toolbar"
+            app:layout_constraintTop_toBottomOf="@+id/declare_detail_toolbar"
             app:layout_constraintVertical_bias="0.0" />
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>
