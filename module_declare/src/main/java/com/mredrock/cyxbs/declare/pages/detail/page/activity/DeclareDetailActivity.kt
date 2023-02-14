@@ -3,6 +3,7 @@ package com.mredrock.cyxbs.declare.pages.detail.page.activity
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
+import android.view.View
 import androidx.activity.viewModels
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.mredrock.cyxbs.declare.databinding.DeclareActivityDetailBinding
@@ -83,6 +84,16 @@ class DeclareDetailActivity : BaseBindActivity<DeclareActivityDetailBinding>() {
                 mViewModel.putChoice(id, it.choice)
             } else if (it.voted == it.choice) {//已经投票并且点击的是投票选项就取消投票
                 mViewModel.cancelChoice(id)
+            }
+        }
+
+        mViewModel.errorLiveData.observe {
+            if (it) {
+                binding.declareDetailCl.visibility = View.GONE
+                binding.declareDetailNoNet.visibility = View.VISIBLE
+            } else {
+                binding.declareDetailCl.visibility = View.VISIBLE
+                binding.declareDetailNoNet.visibility = View.GONE
             }
         }
 

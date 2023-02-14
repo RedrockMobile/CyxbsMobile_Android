@@ -22,6 +22,10 @@ class DeclareHomeViewModel : BaseViewModel() {
         get() = _mutableHomeLiveData
     private val _mutableHomeLiveData = MutableLiveData<List<HomeDataBean>>()
 
+    val errorLiveData: LiveData<Boolean>
+        get() = _mutableErrorLiveData
+    private val _mutableErrorLiveData = MutableLiveData<Boolean>()
+
     /**
      * 获取主页数据
      */
@@ -31,9 +35,10 @@ class DeclareHomeViewModel : BaseViewModel() {
             .subscribeOn(Schedulers.io())
             .observeOn(AndroidSchedulers.mainThread())
             .mapOrInterceptException {
-                toast("${this.throwable.message}")
+                _mutableErrorLiveData.postValue(true)
             }
             .safeSubscribeBy {
+                _mutableErrorLiveData.postValue(false)
                 _mutableHomeLiveData.postValue(it)
             }
     }

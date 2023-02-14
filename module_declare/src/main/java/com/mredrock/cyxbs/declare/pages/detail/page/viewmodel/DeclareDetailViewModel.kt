@@ -1,6 +1,5 @@
 package com.mredrock.cyxbs.declare.pages.detail.page.viewmodel
 
-import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import com.mredrock.cyxbs.declare.pages.detail.bean.CancelChoiceBean
@@ -33,6 +32,10 @@ class DeclareDetailViewModel : BaseViewModel() {
         get() = _mutableCancelLiveData
     private val _mutableCancelLiveData = MutableLiveData<CancelChoiceBean>()
 
+    val errorLiveData: LiveData<Boolean>
+        get() = _mutableErrorLiveData
+    private val _mutableErrorLiveData = MutableLiveData<Boolean>()
+
     /**
      * 获取投票详情数据
      */
@@ -42,9 +45,10 @@ class DeclareDetailViewModel : BaseViewModel() {
             .subscribeOn(Schedulers.io())
             .observeOn(AndroidSchedulers.mainThread())
             .mapOrInterceptException {
-                toast("${this.throwable.message}")
+                _mutableErrorLiveData.postValue(true)
             }
             .safeSubscribeBy {
+                _mutableErrorLiveData.postValue(false)
                 _mutableDetailLiveData.postValue(it)
             }
     }
@@ -58,9 +62,10 @@ class DeclareDetailViewModel : BaseViewModel() {
             .subscribeOn(Schedulers.io())
             .observeOn(AndroidSchedulers.mainThread())
             .mapOrInterceptException {
-                toast("${this.throwable.message}")
+                _mutableErrorLiveData.postValue(true)
             }
             .safeSubscribeBy {
+                _mutableErrorLiveData.postValue(false)
                 _mutableVotedLiveData.postValue(it)
             }
 
@@ -75,10 +80,10 @@ class DeclareDetailViewModel : BaseViewModel() {
             .subscribeOn(Schedulers.io())
             .observeOn(AndroidSchedulers.mainThread())
             .mapOrInterceptException {
-                toast("${this.throwable}")
-                Log.d("RQ", "cancelChoice: ${this.throwable.printStackTrace()}")
+                _mutableErrorLiveData.postValue(true)
             }
             .safeSubscribeBy {
+                _mutableErrorLiveData.postValue(false)
                 _mutableCancelLiveData.postValue(it)
             }
     }

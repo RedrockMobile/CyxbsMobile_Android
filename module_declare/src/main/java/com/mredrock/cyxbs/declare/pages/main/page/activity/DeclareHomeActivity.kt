@@ -54,7 +54,21 @@ class DeclareHomeActivity : BaseBindActivity<DeclareActivityHomeBinding>() {
             finish()
         }
         mViewModel.homeLiveData.observe {
-            declareHomeRvAdapter.submitList(it)
+            if (it.isEmpty()) {
+                binding.declareHomeNoData.visibility = View.VISIBLE
+            } else {
+                binding.declareHomeNoData.visibility = View.GONE
+                declareHomeRvAdapter.submitList(it)
+            }
+        }
+        mViewModel.errorLiveData.observe {
+            if (it) {
+                binding.declareHomeCl.visibility = View.GONE
+                binding.declareHomeNoNet.visibility = View.VISIBLE
+            } else {
+                binding.declareHomeCl.visibility = View.VISIBLE
+                binding.declareHomeNoNet.visibility = View.GONE
+            }
         }
         mViewModel.getHomeData()
     }

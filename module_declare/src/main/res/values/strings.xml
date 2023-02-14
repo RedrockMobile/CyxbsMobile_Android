@@ -1,3 +1,5 @@
 <resources>
-    <string name="declare_home">表态区</string>
+    <string name="declare_home_toolbar">表态区</string>
+    <string name="declare_home_no_data">话题菌伺服偷懒了</string>
+    <string name="declare_home_no_net">网络菌伺服西去了联系QwQ</string>
 </resources>
