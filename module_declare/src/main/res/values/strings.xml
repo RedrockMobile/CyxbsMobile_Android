@@ -2,4 +2,7 @@
     <string name="declare_toolbar_title">表态区</string>
     <string name="declare_submit_edit">完成编辑</string>
     <string name="declare_add_section">添加选项</string>
+    <string name="declare_home_toolbar">表态区</string>
+    <string name="declare_home_no_data">话题菌伺服偷懒了</string>
+    <string name="declare_home_no_net">网络菌伺服西去了联系QwQ</string>
 </resources>
