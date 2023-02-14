@@ -4,12 +4,12 @@
     <application
         android:name="com.mredrock.cyxbs.lib.base.BaseApp"
         android:allowBackup="true"
-        android:label="module_sport"
+        android:label="module_declare"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
 
         <activity
-            android:name="sport.ui.DebugActivity"
+            android:name="declare.ui.DebugActivity"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -17,7 +17,7 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".ui.activity.SportDetailActivity"
+            android:name=".pages.post.PostActivity"
             android:theme="@style/AppTheme" />
     </application>
 

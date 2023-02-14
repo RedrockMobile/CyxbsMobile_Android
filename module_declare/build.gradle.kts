@@ -1,6 +1,5 @@
 plugins {
-    id("module-manager")
-    id("org.jetbrains.kotlin.android")
+    id("module-debug")
 }
 
 
@@ -11,8 +10,9 @@ dependLibConfig()
 dependRxjava()
 dependNetwork()
 dependCoroutinesRx3()
+
 dependencies {
-    implementation("androidx.appcompat:appcompat:1.5.1")
-    implementation("com.google.android.material:material:1.4.0")
-    implementation("androidx.constraintlayout:constraintlayout:2.1.4")
+    implementation(Android.appcompat)
+    implementation(Android.constraintlayout)
+    implementation(Android.material)
 }

@@ -1,5 +1,16 @@
 package com.mredrock.cyxbs.declare.pages.post.adapter
 
+import android.view.LayoutInflater
+import android.view.ViewGroup
+import androidx.core.widget.addTextChangedListener
+import androidx.recyclerview.widget.DiffUtil
+import androidx.recyclerview.widget.ListAdapter
+import androidx.recyclerview.widget.RecyclerView
+import androidx.viewbinding.ViewBinding
+import com.mredrock.cyxbs.declare.databinding.DeclareItemAddSectionBinding
+import com.mredrock.cyxbs.declare.databinding.DeclareItemSectionBinding
+
+
 /**
  * com.mredrock.cyxbs.declare.pages.post.adapter.PostSectionRvAdapter.kt
  * CyxbsMobile_Android
@@ -7,5 +18,81 @@ package com.mredrock.cyxbs.declare.pages.post.adapter
  * @author 寒雨
  * @since 2023/2/8 下午4:56
  */
-class PostSectionRvAdapter {
+class PostSectionRvAdapter(
+    private val list: MutableList<String> = mutableListOf(
+        "", "", "", ""
+    )
+) : RecyclerView.Adapter<PostSectionRvAdapter.Holder>() {
+
+    inner class Holder(val binding: ViewBinding) : RecyclerView.ViewHolder(binding.root) {
+        init {
+            if (binding is DeclareItemSectionBinding) {
+                binding.sivRm.setOnClickListener {
+                    list.removeAt(bindingAdapterPosition)
+                    notifyItemRemoved(bindingAdapterPosition)
+                    // 刷新下面所有的item，让选项号保持顺序
+                    (bindingAdapterPosition..list.size).forEach {
+                        notifyItemChanged(it)
+                    }
+                }
+                binding.et.addTextChangedListener {
+                    list[bindingAdapterPosition] = it?.toString() ?: ""
+                }
+            } else if (binding is DeclareItemAddSectionBinding) {
+                binding.sivAdd.setOnClickListener {
+                    list.add("")
+                    notifyItemInserted(list.size - 1)
+                }
+            }
+        }
+    }
+
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): Holder {
+        return Holder(
+            if (viewType == TYPE_TAIL) {
+                DeclareItemAddSectionBinding.inflate(
+                    LayoutInflater.from(parent.context),
+                    parent,
+                    false
+                )
+            } else {
+                DeclareItemSectionBinding.inflate(
+                    LayoutInflater.from(parent.context),
+                    parent,
+                    false
+                )
+            }
+        )
+    }
+
+    override fun onBindViewHolder(holder: Holder, position: Int) {
+        when (getItemViewType(position)) {
+            TYPE_NORMAL -> {
+                val binding = holder.binding as DeclareItemSectionBinding
+                if (binding.et.hint != "选项${position + 1}") {
+                    binding.root.post {
+                        binding.et.hint = "选项${position + 1}"
+                    }
+                }
+            }
+        }
+    }
+
+    override fun getItemViewType(position: Int): Int {
+        // 最后一个
+        if (position == itemCount - 1) {
+            return TYPE_TAIL
+        }
+        return TYPE_NORMAL
+    }
+
+    // 尾部
+    override fun getItemCount(): Int {
+        return list.size + 1
+    }
+
+    companion object {
+        private const val TYPE_NORMAL = 0
+        private const val TYPE_TAIL = 1
+    }
 }

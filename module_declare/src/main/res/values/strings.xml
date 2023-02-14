@@ -1,1 +1,5 @@
-<resources></resources>
+<resources>
+    <string name="declare_toolbar_title">表态区</string>
+    <string name="declare_submit_edit">完成编辑</string>
+    <string name="declare_add_section">添加选项</string>
+</resources>
