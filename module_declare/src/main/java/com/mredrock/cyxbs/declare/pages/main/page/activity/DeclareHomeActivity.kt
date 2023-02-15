@@ -12,6 +12,7 @@ import com.mredrock.cyxbs.declare.pages.main.page.adapter.DeclareHomeRvAdapter
 import com.mredrock.cyxbs.declare.pages.main.page.viewmodel.DeclareHomeViewModel
 import com.mredrock.cyxbs.declare.pages.main.utils.FiveAndDoubleClickListener
 import com.mredrock.cyxbs.declare.pages.main.utils.setOnFiveAndDoubleClickListener
+import com.mredrock.cyxbs.declare.pages.post.PostActivity
 import com.mredrock.cyxbs.lib.base.ui.BaseBindActivity
 
 class DeclareHomeActivity : BaseBindActivity<DeclareActivityHomeBinding>() {
@@ -49,6 +50,7 @@ class DeclareHomeActivity : BaseBindActivity<DeclareActivityHomeBinding>() {
         }
         binding.declareHomeToolbarPost.setOnClickListener {
             //跳至发布话题页面
+            PostActivity.start(this)
         }
         binding.declareIvToolbarArrowLeft.setOnClickListener {
             finish()

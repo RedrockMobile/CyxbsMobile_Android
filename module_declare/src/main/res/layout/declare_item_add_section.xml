@@ -9,32 +9,24 @@
 
     <androidx.appcompat.widget.LinearLayoutCompat
         android:layout_width="match_parent"
-        android:paddingVertical="8dp"
+        android:paddingVertical="16dp"
         android:layout_height="wrap_content">
 
         <com.google.android.material.imageview.ShapeableImageView
             android:id="@+id/siv_add"
-            android:layout_marginEnd="16dp"
+            android:layout_marginEnd="24dp"
             app:shapeAppearance="@style/declare_circle_style"
-            app:srcCompat="@drawable/declare_add_circle_outline_24"
+            app:srcCompat="@drawable/declare_ic_add"
             android:layout_gravity="center"
-            android:layout_width="32dp"
-            android:layout_height="32dp" />
+            android:layout_width="24dp"
+            android:layout_height="24dp" />
 
-        <com.google.android.material.textfield.TextInputLayout
-            android:theme="@style/Theme.Material3.DayNight"
-            style="@style/Widget.Material3.TextInputLayout.OutlinedBox"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content">
-
-            <com.google.android.material.textfield.TextInputEditText
-                style="@style/Widget.Material3.TextInputEditText.OutlinedBox"
-                android:hint="@string/declare_add_section"
-                android:enabled="false"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent" />
-
-        </com.google.android.material.textfield.TextInputLayout>
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="22sp"
+            android:textColor="#4A44E4"
+            android:text="@string/declare_add_section" />
 
     </androidx.appcompat.widget.LinearLayoutCompat>
 

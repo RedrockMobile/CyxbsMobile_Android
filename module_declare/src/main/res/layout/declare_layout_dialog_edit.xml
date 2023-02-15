@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:tools="http://schemas.android.com/tools"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <data>
+
+    </data>
+
+    <androidx.appcompat.widget.LinearLayoutCompat
+        android:orientation="vertical"
+        android:padding="24dp"
+        android:layout_width="300dp"
+        android:layout_height="wrap_content">
+
+        <com.google.android.material.textfield.TextInputLayout
+            android:theme="@style/Theme.Material3.DayNight"
+            style="@style/Widget.Material3.TextInputLayout.OutlinedBox"
+            android:id="@+id/text_input_layout"
+            app:boxStrokeWidth="0dp"
+            app:boxStrokeWidthFocused="0dp"
+            app:counterEnabled="true"
+            app:counterMaxLength="30"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <com.google.android.material.textfield.TextInputEditText
+                style="@style/Widget.Material3.TextInputEditText.OutlinedBox"
+                android:background="@drawable/declare_input_bg"
+                android:id="@+id/et"
+                android:gravity="center|top"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:maxLength="30"
+                android:minHeight="80dp"
+                android:textColor="#CC15315B"
+                android:textColorHint="#8015315B" />
+
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <FrameLayout
+            android:layout_marginTop="10dp"
+            android:layout_marginHorizontal="15dp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/btn_cancel"
+                android:layout_gravity="start"
+                android:theme="@style/Theme.MaterialComponents"
+                android:backgroundTint="#C3D4EE"
+                app:cornerRadius="32dp"
+                android:elevation="0dp"
+                android:textColor="@color/config_white_black"
+                android:text="@string/declare_cancel"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" />
+
+            <androidx.appcompat.widget.AppCompatButton
+                android:id="@+id/btn_submit"
+                android:layout_gravity="end"
+                android:theme="@style/Theme.MaterialComponents"
+                android:background="@drawable/declare_ic_btn_background"
+                android:textColor="@color/config_white_black"
+                android:text="@string/declare_confirm"
+                android:layout_marginVertical="6dp"
+                android:layout_width="wrap_content"
+                android:layout_height="36dp" />
+        </FrameLayout>
+
+    </androidx.appcompat.widget.LinearLayoutCompat>
+</layout>

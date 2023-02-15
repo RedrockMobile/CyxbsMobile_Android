@@ -10,4 +10,5 @@ import com.mredrock.cyxbs.lib.base.ui.BaseViewModel
  * @since 2023/2/8 下午3:28
  */
 class PostViewModel : BaseViewModel() {
+
 }

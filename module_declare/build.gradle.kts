@@ -10,6 +10,7 @@ dependLibConfig()
 dependRxjava()
 dependNetwork()
 dependCoroutinesRx3()
+dependMaterialDialog()
 
 dependencies {
     implementation(Android.appcompat)

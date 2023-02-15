@@ -9,28 +9,38 @@
 
     <androidx.appcompat.widget.LinearLayoutCompat
         android:layout_width="match_parent"
-        android:paddingVertical="8dp"
+        android:paddingVertical="16dp"
         android:layout_height="wrap_content">
 
         <com.google.android.material.imageview.ShapeableImageView
             android:id="@+id/siv_rm"
-            android:layout_marginEnd="16dp"
+            android:layout_marginEnd="24dp"
             app:shapeAppearance="@style/declare_circle_style"
-            app:srcCompat="@drawable/declare_remove_circle_outline_24"
+            app:srcCompat="@drawable/declare_ic_remove"
             android:layout_gravity="center"
-            android:layout_width="32dp"
-            android:layout_height="32dp" />
+            android:layout_width="24dp"
+            android:layout_height="24dp" />
 
         <com.google.android.material.textfield.TextInputLayout
             android:theme="@style/Theme.Material3.DayNight"
             style="@style/Widget.Material3.TextInputLayout.OutlinedBox"
+            app:boxStrokeWidth="0dp"
+            app:boxStrokeWidthFocused="0dp"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+            android:layout_height="48dp">
 
             <com.google.android.material.textfield.TextInputEditText
                 style="@style/Widget.Material3.TextInputEditText.OutlinedBox"
+                android:background="@drawable/declare_input_bg_2"
                 android:id="@+id/et"
                 tools:hint="选项"
+                android:maxLines="1"
+                android:ellipsize="end"
+                android:padding="0dp"
+                android:textColorHint="#8015315B"
+                android:textColor="#CC15315B"
+                android:textSize="14sp"
+                android:gravity="center"
                 android:inputType="textNoSuggestions"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent" />
