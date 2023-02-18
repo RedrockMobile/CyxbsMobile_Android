@@ -1,6 +1,5 @@
 plugins {
     id("module-manager")
-    id("kotlin-android-extensions") // todo kt 获取 View 的插件已被废弃，新模块禁止再使用！
 }
 
 
@@ -12,7 +11,7 @@ dependApiLogin()
 // 除了 Bugly、Sophix 等一些只需要 module_app 模块才需要
 dependCoroutines()
 dependCoroutinesRx3()
-dependEventBus()
+dependEventBus() // 避免使用 EventBus，如果需要跨模块通信，请使用 api 模块
 dependGlide()
 dependLottie()
 dependLPhotoPicker()

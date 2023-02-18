@@ -2,6 +2,7 @@ package com.mredrock.cyxbs.lib.course.item.touch
 
 import android.view.View
 import android.view.ViewGroup
+import com.mredrock.cyxbs.lib.course.fragment.page.ICoursePage
 import com.ndhzs.netlayout.touch.multiple.event.IPointerEvent
 
 /**
@@ -17,11 +18,12 @@ class TouchItemHelper(
     event: IPointerEvent,
     parent: ViewGroup,
     child: View,
-    item: ITouchItem
+    item: ITouchItem,
+    course: ICoursePage
   ) {
     repeat(helpers.size) {
       val helper = helpers[it]
-      helper.onPointerTouchEvent(event, parent, child, item)
+      helper.onPointerTouchEvent(event, parent, child, item, course)
     }
   }
 }
