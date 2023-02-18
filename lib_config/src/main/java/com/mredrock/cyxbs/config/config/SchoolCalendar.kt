@@ -31,7 +31,9 @@ object SchoolCalendar {
   fun getDayOfTerm(): Int? {
     return mBehaviorSubject.value?.run {
       val diff = System.currentTimeMillis() - timeInMillis
-      TimeUnit.DAYS.convert(diff, TimeUnit.MILLISECONDS).toInt()
+      TimeUnit.DAYS.convert(diff, TimeUnit.MILLISECONDS).toInt().let {
+        if (diff < 0) it - 1 else it
+      }
     }
   }
   
@@ -43,13 +45,17 @@ object SchoolCalendar {
    * ```
    * observeOn(AndroidSchedulers.mainThread())
    * ```
+   *
+   * # 注意：存在返回负数的情况！！！
    */
   fun observeDayOfTerm(): Observable<Int> {
     return mBehaviorSubject
       .distinctUntilChanged()
-      .map {
-        val diff = System.currentTimeMillis() - it.timeInMillis
-        TimeUnit.DAYS.convert(diff, TimeUnit.MILLISECONDS).toInt()
+      .map { calendar ->
+        val diff = System.currentTimeMillis() - calendar.timeInMillis
+        TimeUnit.DAYS.convert(diff, TimeUnit.MILLISECONDS).toInt().let {
+          if (diff < 0) it - 1 else it
+        }
       }
   }
   
@@ -78,6 +84,8 @@ object SchoolCalendar {
    * ```
    * observeOn(AndroidSchedulers.mainThread())
    * ```
+   *
+   * # 注意：存在返回负数的情况！！！
    */
   fun observeWeekOfTerm(): Observable<Int> {
     return observeDayOfTerm()
