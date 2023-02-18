@@ -2,6 +2,7 @@ package com.mredrock.cyxbs.lib.course.item.touch.helper
 
 import android.view.View
 import android.view.ViewGroup
+import com.mredrock.cyxbs.lib.course.fragment.page.ICoursePage
 import com.mredrock.cyxbs.lib.course.item.touch.ITouchItem
 import com.mredrock.cyxbs.lib.course.item.touch.ITouchItemHelper
 import com.ndhzs.netlayout.touch.multiple.event.IPointerEvent
@@ -17,7 +18,8 @@ class ExpandableItemHelper : ITouchItemHelper {
     event: IPointerEvent,
     parent: ViewGroup,
     child: View,
-    item: ITouchItem
+    item: ITouchItem,
+    course: ICoursePage
   ) {
     TODO("Not yet implemented")
   }

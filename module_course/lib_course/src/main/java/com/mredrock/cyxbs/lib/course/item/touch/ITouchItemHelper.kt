@@ -2,6 +2,7 @@ package com.mredrock.cyxbs.lib.course.item.touch
 
 import android.view.View
 import android.view.ViewGroup
+import com.mredrock.cyxbs.lib.course.fragment.page.ICoursePage
 import com.ndhzs.netlayout.touch.multiple.event.IPointerEvent
 
 /**
@@ -19,6 +20,13 @@ interface ITouchItemHelper {
    * @param parent 父布局
    * @param child [item] 对应的 View
    * @param item 触摸的 item
+   * @param
    */
-  fun onPointerTouchEvent(event: IPointerEvent, parent: ViewGroup, child: View, item: ITouchItem)
+  fun onPointerTouchEvent(
+    event: IPointerEvent,
+    parent: ViewGroup,
+    child: View,
+    item: ITouchItem,
+    course: ICoursePage
+  )
 }

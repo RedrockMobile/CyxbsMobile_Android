@@ -6,6 +6,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.viewpager.widget.PagerAdapter
 
+@Deprecated("老代码，不建议再使用")
 abstract class BasePagerAdapter<V : View, D>(var list: List<D> = listOf()) : PagerAdapter() {
 
     fun refresh(list: List<D>) {

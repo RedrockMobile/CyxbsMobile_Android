@@ -7,6 +7,7 @@ import android.view.ViewConfiguration
 import android.view.ViewGroup
 import androidx.annotation.CallSuper
 import androidx.core.view.isVisible
+import com.mredrock.cyxbs.lib.course.fragment.page.ICoursePage
 import com.mredrock.cyxbs.lib.course.fragment.page.expose.ICourseDefaultTouch
 import com.mredrock.cyxbs.lib.course.helper.show.CourseDownAnimDispatcher
 import com.mredrock.cyxbs.lib.course.helper.ScrollTouchHandler
@@ -36,7 +37,7 @@ abstract class CourseDefaultTouchImpl : AbstractCoursePageFragment(), ICourseDef
     if (dispatcher != null) {
       course.addPointerDispatcher(dispatcher)
     }
-    course.setDefaultPointerDispatcher(DefaultPointerDispatcher())
+    course.setDefaultPointerDispatcher(DefaultPointerDispatcher(this))
   }
   
   override fun getCourseDownAnimDispatcher(): CourseDownAnimDispatcher? {
@@ -49,9 +50,11 @@ abstract class CourseDefaultTouchImpl : AbstractCoursePageFragment(), ICourseDef
    * 为了不拦截子 View 的点击事件，采取了跟 ScrollView 一样的策略，在 MOVE 超过 touchSlop 距离后才进行拦截。
    * 同时，为了保证 [ITouchItem] 能够得到 DOWN 事件，所以手动调用了 onPointerTouchEvent() 方法
    */
-  class DefaultPointerDispatcher : IPointerDispatcher {
+  class DefaultPointerDispatcher(
+    val course: ICoursePage
+  ) : IPointerDispatcher {
   
-    private val mDefaultPointerHandler = DefaultPointerHandler()
+    private val mDefaultPointerHandler = DefaultPointerHandler(course)
   
     private var mLastMoveX = 0F
     private var mLastMoveY = 0F
@@ -108,7 +111,9 @@ abstract class CourseDefaultTouchImpl : AbstractCoursePageFragment(), ICourseDef
   /**
    * 在没有 handler 处理时，会将事件分发给 [ITouchItem] 或者是 [ScrollTouchHandler] 处理
    */
-  class DefaultPointerHandler : IPointerTouchHandler {
+  class DefaultPointerHandler(
+    val course: ICoursePage
+  ) : IPointerTouchHandler {
   
     private val mItemByPointerId = SparseArray<Pair<ITouchItem, View>>()
     
@@ -118,13 +123,12 @@ abstract class CourseDefaultTouchImpl : AbstractCoursePageFragment(), ICourseDef
       when (event.action) {
         IPointerEvent.Action.DOWN -> {
           // DOWN 事件是手动传递下来的
-          val course = view as ICourseViewGroup
-          val pair = course.findPairUnderByXY(x, y)
+          val pair = course.course.findPairUnderByXY(x, y)
           if (pair != null && pair.first is ITouchItem && pair.second.isVisible) {
             @Suppress("UNCHECKED_CAST")
             mItemByPointerId.put(event.pointerId, pair as Pair<ITouchItem, View>)
             val item = pair.first
-            item.touchHelper.onPointerTouchEvent(event, view, pair.second, item)
+            item.touchHelper.onPointerTouchEvent(event, view, pair.second, item, course)
           } else {
             ScrollTouchHandler.onPointerTouchEvent(event, view)
           }
@@ -134,7 +138,7 @@ abstract class CourseDefaultTouchImpl : AbstractCoursePageFragment(), ICourseDef
         IPointerEvent.Action.CANCEL -> {
           val pair = mItemByPointerId.get(event.pointerId)
           if (pair != null) {
-            pair.first.touchHelper.onPointerTouchEvent(event, view, pair.second, pair.first)
+            pair.first.touchHelper.onPointerTouchEvent(event, view, pair.second, pair.first, course)
             mItemByPointerId.remove(event.pointerId)
           } else {
             ScrollTouchHandler.onPointerTouchEvent(event, view)
