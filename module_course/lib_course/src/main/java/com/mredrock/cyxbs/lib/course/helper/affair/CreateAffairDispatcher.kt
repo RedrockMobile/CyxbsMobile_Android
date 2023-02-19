@@ -4,7 +4,6 @@ import android.view.MotionEvent
 import android.view.ViewConfiguration
 import android.view.ViewGroup
 import com.mredrock.cyxbs.lib.course.fragment.course.expose.fold.FoldState
-import com.mredrock.cyxbs.lib.course.fragment.course.expose.wrapper.ICourseWrapper
 import com.mredrock.cyxbs.lib.course.fragment.page.ICoursePage
 import com.mredrock.cyxbs.lib.course.helper.ScrollTouchHandler
 import com.mredrock.cyxbs.lib.course.helper.affair.expose.ICreateAffair
@@ -12,7 +11,6 @@ import com.mredrock.cyxbs.lib.course.helper.affair.expose.ITouchAffairItem
 import com.mredrock.cyxbs.lib.course.helper.affair.expose.ITouchCallback
 import com.mredrock.cyxbs.lib.course.helper.base.AbstractLongPressDispatcher
 import com.mredrock.cyxbs.lib.course.helper.base.ILongPressTouchHandler
-import com.mredrock.cyxbs.lib.course.internal.view.course.ICourseViewGroup
 import com.mredrock.cyxbs.lib.course.utils.forEachReversed
 import com.ndhzs.netlayout.touch.multiple.IPointerTouchHandler
 import com.ndhzs.netlayout.touch.multiple.event.IPointerEvent
@@ -51,21 +49,15 @@ class CreateAffairDispatcher(
     mTouchCallbackImpl.mTouchCallbacks.remove(callback)
   }
   
-  init {
-    page.doOnCourseDestroy {
-      mPointerHandlerPool.clear() // Fragment 调用 onDestroyView() 时需要清空池子
-    }
-  }
-  
-  // ICreateAffairHandler 的复用池 (因为一个 handler 里面包含对 course 的很多监听，所以采取复用策略)
-  private val mPointerHandlerPool = arrayListOf<ICreateAffairHandler>()
+  // 暂时保存 ITouchAffairItem 用于取消显示
+  private val mTouchAffairViews = arrayListOf<ITouchAffairItem>()
   private var mIsAllowIntercept = true
   private var mOnClickListener: (ITouchAffairItem.() -> Unit)? = null
   
   override fun handleEvent(event: IPointerEvent, view: ViewGroup): ILongPressTouchHandler? {
     if (mIsAllowIntercept) {
       if (iCreateAffair.isValidDown(page, event)) {
-        return getFreeHandler(event)
+        return getHandler(event)
       }
     }
     return null
@@ -85,11 +77,9 @@ class CreateAffairDispatcher(
         if (abs(x - initialX) <= touchSlop && abs(y - initialY) <= touchSlop) {
           // 这里说明移动的距离小于 touchSlop，但还是得把点击的事务给绘制上，但是只有一格
           val item = initializeTouchAffairItem(event)
-          if (item != null) {
-            val initialRow = page.course.getRow(y)
-            val initialColumn = page.course.getColumn(x)
-            item.show(initialRow, initialRow, initialColumn)
-          }
+          val initialRow = page.course.getRow(y)
+          val initialColumn = page.course.getColumn(x)
+          item.show(initialRow, initialRow, initialColumn)
         }
         null
       }
@@ -106,12 +96,13 @@ class CreateAffairDispatcher(
         val item = page.course.findItemUnderByXY(event.x.toInt(), event.y.toInt())
         if (item !is ITouchAffairItem) {
           // DOWN 事件时如果点击的不是 TouchAffair，则取消已经显示的 TouchAffair
-          mPointerHandlerPool.forEach {
+          mTouchAffairViews.forEach {
             if (it.isInShow()) {
               mIsAllowIntercept = false // 如果存在正在显示的 TouchAffair，则这次 DOWN 事件不拦截
-              it.cancelShow()
+              it.cancelShow() // 取消正在显示的 TouchAffair
             }
           }
+          mTouchAffairViews.clear()
         }
       }
       MotionEvent.ACTION_POINTER_DOWN -> {
@@ -121,30 +112,21 @@ class CreateAffairDispatcher(
   }
   
   /**
-   * 生成一个新的 [ICreateAffairHandler]
+   * 得到一个 [CreateAffairHandler]
    */
-  private fun getFreeHandler(event: IPointerEvent): ICreateAffairHandler {
+  private fun getHandler(event: IPointerEvent): CreateAffairHandler {
     val touchAffairItem = initializeTouchAffairItem(event)
-    mPointerHandlerPool.forEach {
-      // 如果没有被使用，就直接 return
-      if (!it.isInUse()) {
-        it.setTouchAffairItem(touchAffairItem)
-        return it
-      }
-    }
-    val newHandler = ICreateAffairHandler.getImpl(page.course, mTouchCallbackImpl, iCreateAffair)
-    mPointerHandlerPool.add(newHandler)
-    newHandler.setTouchAffairItem(touchAffairItem)
-    return newHandler
+    return CreateAffairHandler(page.course, mTouchCallbackImpl, iCreateAffair, touchAffairItem)
   }
   
   /**
    * 初始化 [ITouchAffairItem]
    */
-  private fun initializeTouchAffairItem(event: IPointerEvent): ITouchAffairItem? {
+  private fun initializeTouchAffairItem(event: IPointerEvent): ITouchAffairItem {
     val item = iCreateAffair.createTouchAffairItem(page.course, event)
+    mTouchAffairViews.add(item)
     // 这里统一给 TouchAffairItem 设置点击事件
-    item?.setOnClickListener { mOnClickListener?.invoke(item) }
+    item.setOnClickListener { mOnClickListener?.invoke(item) }
     return item
   }
   

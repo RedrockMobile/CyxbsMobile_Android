@@ -22,16 +22,14 @@ import kotlin.math.min
 interface ICreateAffair : IBoundary {
   
   /**
-   * 当前 Down 的触摸点是否合法，合法才会拦截触摸事件并生成 [ITouchAffairItem]
+   * 当前 Down 的触摸点是否合法，合法才会拦截触摸事件
    */
   fun isValidDown(page: ICoursePage, event: IPointerEvent): Boolean
   
   /**
    * 创建 [ITouchAffairItem]，可以继承于 [TouchAffairView]
-   *
-   * @return 如果返回 null 的话将不会显示任何 item，但是其他效果仍然存在
    */
-  fun createTouchAffairItem(course: ICourseViewGroup, event: IPointerEvent): ITouchAffairItem?
+  fun createTouchAffairItem(course: ICourseViewGroup, event: IPointerEvent): ITouchAffairItem
   
   
   companion object Default : ICreateAffair {
@@ -44,7 +42,7 @@ interface ICreateAffair : IBoundary {
       val y = event.y.toInt()
       if (x > page.getTimelineEndWidth()) {
         // 触摸位置大于左边时间轴的宽度时
-        if (page.course.findPairUnderByXY(x, y) == null) {
+        if (page.course.findItemUnderByXY(x, y) == null) {
           // 当前触摸的是空白位置时才准备拦截
           return true
         }

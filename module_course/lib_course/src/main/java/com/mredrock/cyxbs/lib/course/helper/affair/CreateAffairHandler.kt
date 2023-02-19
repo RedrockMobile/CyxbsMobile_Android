@@ -6,6 +6,7 @@ import android.view.ViewGroup
 import com.mredrock.cyxbs.lib.course.helper.affair.expose.IBoundary
 import com.mredrock.cyxbs.lib.course.helper.affair.expose.ITouchAffairItem
 import com.mredrock.cyxbs.lib.course.helper.affair.expose.ITouchCallback
+import com.mredrock.cyxbs.lib.course.helper.base.ILongPressTouchHandler
 import com.mredrock.cyxbs.lib.course.internal.view.course.ICourseViewGroup
 import com.mredrock.cyxbs.lib.utils.utils.VibratorUtil
 import com.ndhzs.netlayout.draw.ItemDecoration
@@ -25,7 +26,8 @@ class CreateAffairHandler(
   val course: ICourseViewGroup,
   val iTouch: ITouchCallback,
   val iBoundary: IBoundary,
-) : ICreateAffairHandler {
+  val touchAffairItem: ITouchAffairItem
+) : ILongPressTouchHandler {
   
   private var mTopRow = 0 // Move 事件中选择区域的开始行数
   private var mBottomRow = 0 // Move 事件中选择区域的结束行数
@@ -38,8 +40,6 @@ class CreateAffairHandler(
   
   private var mPointerId = 0
   
-  private var mTouchAffairItem: ITouchAffairItem? = null
-  
   // 用于刷新 TouchAffairView 长度的回调，在每一帧时进行回调
   // 不单独使用 view.postOnAnimation() 的原因在于其他地方触发刷新时会导致自身无法刷新
   private val mItemDecoration = object : ItemDecoration {
@@ -47,9 +47,7 @@ class CreateAffairHandler(
     private val refreshRunnable = Runnable { refreshTouchAffairView() }
     
     override fun onDrawBelow(canvas: Canvas, view: View) {
-      if (isInUse()) {
-        view.post(refreshRunnable) // 使用 post 防止绘制卡顿
-      }
+      view.post(refreshRunnable) // 使用 post 防止绘制卡顿
     }
   }
   
@@ -102,7 +100,7 @@ class CreateAffairHandler(
     // 禁止父布局拦截
     course.getParent().requestDisallowInterceptTouchEvent(true)
     VibratorUtil.start(36) // 长按被触发来个震动提醒
-    mTouchAffairItem?.show(mTopRow, mBottomRow, mInitialColumn)
+    touchAffairItem.show(mTopRow, mBottomRow, mInitialColumn)
     iTouch.onLongPressStart(mPointerId, mInitialRow, mInitialColumn)
     course.addItemDecoration(mItemDecoration)
   }
@@ -144,7 +142,7 @@ class CreateAffairHandler(
     }
     
     if (topRow != mTopRow || bottomRow != mBottomRow) { // 避免不必要的刷新
-      mTouchAffairItem?.refresh(mTopRow, mBottomRow, topRow, bottomRow)
+      touchAffairItem.refresh(mTopRow, mBottomRow, topRow, bottomRow)
       mTopRow = topRow
       mBottomRow = bottomRow
     }
@@ -221,22 +219,5 @@ class CreateAffairHandler(
       }
       return isAllowScroll
     }
-  }
-  
-  override fun isInUse(): Boolean {
-    return mIsInTouch || isInShow()
-  }
-  
-  override fun isInShow(): Boolean {
-    return mTouchAffairItem?.isInShow() ?: false
-  }
-  
-  override fun cancelShow() {
-    mTouchAffairItem?.cancelShow()
-    mTouchAffairItem = null
-  }
-  
-  override fun setTouchAffairItem(item: ITouchAffairItem?) {
-    mTouchAffairItem = item
   }
 }
