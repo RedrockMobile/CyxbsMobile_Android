@@ -19,7 +19,7 @@ class ExpandableItemHelper : ITouchItemHelper {
     parent: ViewGroup,
     child: View,
     item: ITouchItem,
-    course: ICoursePage
+    page: ICoursePage
   ) {
     TODO("Not yet implemented")
   }

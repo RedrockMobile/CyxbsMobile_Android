@@ -4,6 +4,7 @@ import android.annotation.SuppressLint
 import android.content.Context
 import android.graphics.Canvas
 import com.mredrock.cyxbs.api.course.utils.parseClassRoom
+import com.mredrock.cyxbs.course.BuildConfig
 import com.mredrock.cyxbs.course.page.course.data.StuLessonData
 import com.mredrock.cyxbs.course.page.course.item.BaseOverlapSingleDayItem
 import com.mredrock.cyxbs.course.page.course.item.lesson.lp.SelfLessonLayoutParams
@@ -13,6 +14,10 @@ import com.mredrock.cyxbs.course.page.course.utils.container.base.IDataOwner
 import com.mredrock.cyxbs.course.page.course.utils.container.base.IRecycleItem
 import com.mredrock.cyxbs.lib.course.item.lesson.ILessonItem
 import com.mredrock.cyxbs.lib.course.item.lesson.LessonPeriod
+import com.mredrock.cyxbs.lib.course.item.touch.ITouchItem
+import com.mredrock.cyxbs.lib.course.item.touch.ITouchItemHelper
+import com.mredrock.cyxbs.lib.course.item.touch.TouchItemHelper
+import com.mredrock.cyxbs.lib.course.item.touch.helper.MovableItemHelper
 import com.mredrock.cyxbs.lib.course.item.view.CommonLessonView
 
 /**
@@ -26,8 +31,8 @@ class SelfLesson(private var lessonData: StuLessonData) :
   BaseOverlapSingleDayItem<SelfLesson.SelfLessonView, StuLessonData>(),
   IDataOwner<StuLessonData>,
   ILessonItem,
-  IRecycleItem
-{
+  IRecycleItem,
+  ITouchItem {
   
   override fun setNewData(newData: StuLessonData) {
     getChildIterable().forEach {
@@ -68,20 +73,20 @@ class SelfLesson(private var lessonData: StuLessonData) :
         }
       }
     }
-  
+    
     override fun onDraw(canvas: Canvas) {
       super.onDraw(canvas)
       mHelper.drawOverlapTag(canvas)
     }
-  
+    
     override fun setIsShowOverlapTag(isShow: Boolean) {
       mHelper.setIsShowOverlapTag(isShow)
     }
-  
+    
     init {
       setNewData(data)
     }
-  
+    
     override fun setNewData(newData: StuLessonData) {
       data = newData
       setLessonColor(data.lessonPeriod)
@@ -102,6 +107,10 @@ class SelfLesson(private var lessonData: StuLessonData) :
   
   override val rank: Int
     get() = lp.rank
+  
+  // TODO 待实现中...
+  override val touchHelper: ITouchItemHelper =
+    if (BuildConfig.DEBUG) MovableItemHelper() else TouchItemHelper()
   
   override val lp: SelfLessonLayoutParams = SelfLessonLayoutParams(lessonData)
   

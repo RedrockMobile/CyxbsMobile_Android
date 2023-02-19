@@ -5,6 +5,7 @@ import android.util.AttributeSet
 import android.util.SparseIntArray
 import android.view.MotionEvent
 import com.mredrock.cyxbs.lib.course.internal.view.course.ICourseScrollControl
+import com.mredrock.cyxbs.lib.course.utils.forEachReversed
 
 /**
  * ...
@@ -21,7 +22,7 @@ abstract class ScrollControlImpl @JvmOverloads constructor(
   
   private val mAbsoluteYById = SparseIntArray()
   
-  override fun dispatchTouchEvent(ev: MotionEvent): Boolean {
+  final override fun dispatchTouchEvent(ev: MotionEvent): Boolean {
     when (ev.actionMasked) {
       MotionEvent.ACTION_DOWN, MotionEvent.ACTION_POINTER_DOWN -> {
         val id = ev.getPointerId(ev.actionIndex)
@@ -39,27 +40,44 @@ abstract class ScrollControlImpl @JvmOverloads constructor(
     return super.dispatchTouchEvent(ev)
   }
   
-  override fun scrollCourseBy(dy: Int) {
+  final override fun scrollCourseBy(dy: Int) {
     scrollBy(0, dy)
   }
   
-  override fun scrollCourseY(y: Int) {
+  final override fun scrollCourseY(y: Int) {
     scrollY = y
   }
   
-  override fun getScrollCourseY(): Int {
+  final override fun getScrollCourseY(): Int {
     return scrollY
   }
   
-  override fun getAbsoluteY(pointerId: Int): Int {
+  final override fun getAbsoluteY(pointerId: Int): Int {
     return mAbsoluteYById.get(pointerId)
   }
   
-  override fun getScrollHeight(): Int {
+  final override fun getScrollHeight(): Int {
     return height
   }
   
-  override fun canCourseScrollVertically(direction: Int): Boolean {
+  final override fun canCourseScrollVertically(direction: Int): Boolean {
     return canScrollVertically(direction)
+  }
+  
+  final override fun addOnScrollYChanged(l: ICourseScrollControl.OnScrollYChangedListener) {
+    mOnScrollYChangedListeners.add(l)
+  }
+  
+  final override fun removeOnScrollYChanged(l: ICourseScrollControl.OnScrollYChangedListener) {
+    mOnScrollYChangedListeners.remove(l)
+  }
+  
+  private val mOnScrollYChangedListeners = arrayListOf<ICourseScrollControl.OnScrollYChangedListener>()
+  
+  final override fun onScrollChanged(scrollX: Int, scrollY: Int, oldScrollX: Int, oldtSCrollY: Int) {
+    super.onScrollChanged(scrollX, scrollY, oldScrollX, oldtSCrollY)
+    mOnScrollYChangedListeners.forEachReversed {
+      it.onScrollYChanged(oldtSCrollY, scrollY)
+    }
   }
 }

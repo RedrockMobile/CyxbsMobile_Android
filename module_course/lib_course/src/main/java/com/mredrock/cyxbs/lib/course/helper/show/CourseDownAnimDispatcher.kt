@@ -86,9 +86,9 @@ open class CourseDownAnimDispatcher(
             val y = event.getY(index).toInt()
             val child = pair.first
             val point = pair.second
-            val l = child.x.toInt()
+            val l = child.left
             val r = l + child.width
-            val t = child.y.toInt()
+            val t = child.top
             val b = t + child.height
             if (x in l .. r && y in t .. b) {
               changeView(child, point.x, point.y, x, y)
@@ -131,8 +131,8 @@ open class CourseDownAnimDispatcher(
   }
   
   protected open fun changeView(view: View, initialX: Int, initialY: Int, nowX: Int, nowY: Int) {
-    view.rotationX = -(nowY - initialY) / view.height.toFloat() * 360
-    view.rotationY = (nowX - initialX) / view.width.toFloat() * 90
+    view.rotationX = -(nowY - initialY) / view.height.toFloat() * 180 // 上下翻转
+    view.rotationY = (nowX - initialX) / view.width.toFloat() * 90 // 左右翻转
   }
   
   protected open fun endAnim(view: View, initialX: Int, initialY: Int) {

@@ -48,4 +48,18 @@ interface ICourseScrollControl {
    * ```
    */
   fun canCourseScrollVertically(direction: Int): Boolean
+  
+  /**
+   * 添加 scrollY 的监听
+   */
+  fun addOnScrollYChanged(l: OnScrollYChangedListener)
+  
+  /**
+   * 移除 scrollY 的监听
+   */
+  fun removeOnScrollYChanged(l: OnScrollYChangedListener)
+  
+  fun interface OnScrollYChangedListener {
+    fun onScrollYChanged(oldScrollY: Int, scrollY: Int)
+  }
 }

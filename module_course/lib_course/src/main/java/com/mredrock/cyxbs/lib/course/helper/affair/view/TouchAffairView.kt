@@ -129,11 +129,11 @@ open class TouchAffairView(
     mExpandValueAnimator = ValueAnimator.ofFloat(0F, 1F).apply {
       addUpdateListener {
         val now = animatedValue as Float
-        val oldTop = course.getRowsHeight(0, oldTopRow - 1)
-        val newTop = course.getRowsHeight(0, topRow - 1)
+        val oldTop = course.getRowsHeight(0, oldTopRow - 1) + course.getPaddingTop()
+        val newTop = course.getRowsHeight(0, topRow - 1) + course.getPaddingTop()
         val nowTop = ((oldTop - newTop) * (1 - now)).roundToInt()
-        val oldBottom = course.getRowsHeight(0, oldBottomRow)
-        val newBottom = course.getRowsHeight(0, bottomRow)
+        val oldBottom = course.getRowsHeight(0, oldBottomRow) + course.getPaddingTop()
+        val newBottom = course.getRowsHeight(0, bottomRow) + course.getPaddingTop()
         val nowBottom =
           ((newBottom - oldBottom) * now).roundToInt() + oldBottom - newTop - 2 * mMargin
         // 手动调用布局

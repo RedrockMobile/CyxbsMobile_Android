@@ -1,7 +1,9 @@
 package com.mredrock.cyxbs.lib.course.fragment.page.base
 
+import android.graphics.PointF
 import android.os.Bundle
 import android.util.SparseArray
+import android.view.MotionEvent
 import android.view.View
 import android.view.ViewConfiguration
 import android.view.ViewGroup
@@ -12,7 +14,7 @@ import com.mredrock.cyxbs.lib.course.fragment.page.expose.ICourseDefaultTouch
 import com.mredrock.cyxbs.lib.course.helper.show.CourseDownAnimDispatcher
 import com.mredrock.cyxbs.lib.course.helper.ScrollTouchHandler
 import com.mredrock.cyxbs.lib.course.item.touch.ITouchItem
-import com.mredrock.cyxbs.lib.course.internal.view.course.ICourseViewGroup
+import com.mredrock.cyxbs.lib.course.utils.getOrPut
 import com.ndhzs.netlayout.touch.multiple.IPointerDispatcher
 import com.ndhzs.netlayout.touch.multiple.IPointerTouchHandler
 import com.ndhzs.netlayout.touch.multiple.event.IPointerEvent
@@ -51,13 +53,14 @@ abstract class CourseDefaultTouchImpl : AbstractCoursePageFragment(), ICourseDef
    * 同时，为了保证 [ITouchItem] 能够得到 DOWN 事件，所以手动调用了 onPointerTouchEvent() 方法
    */
   class DefaultPointerDispatcher(
-    val course: ICoursePage
+    val page: ICoursePage
   ) : IPointerDispatcher {
   
-    private val mDefaultPointerHandler = DefaultPointerHandler(course)
+    private val mDefaultPointerHandler = DefaultPointerHandler(page)
   
-    private var mLastMoveX = 0F
-    private var mLastMoveY = 0F
+    private val mLastMovePointByPointerId = SparseArray<PointF>()
+  
+    private var mIsAdvanceIntercept = false
     
     override fun isPrepareToIntercept(event: IPointerEvent, view: ViewGroup): Boolean {
       when (event.action) {
@@ -83,16 +86,26 @@ abstract class CourseDefaultTouchImpl : AbstractCoursePageFragment(), ICourseDef
       val y = event.y
       when (event.action) {
         IPointerEvent.Action.DOWN -> {
-          mLastMoveX = x
-          mLastMoveY = y
+          val point = mLastMovePointByPointerId.getOrPut(event.pointerId) { PointF() }
+          point.x = x
+          point.y = y
           // DOWN 事件不能返回 handler，因为返回后会直接拦截子 View 事件，导致点击监听失效
           return null
         }
         IPointerEvent.Action.MOVE -> {
+          if (mIsAdvanceIntercept) {
+            return mDefaultPointerHandler
+          }
+          mIsAdvanceIntercept = mDefaultPointerHandler.isAdvanceIntercept(event.pointerId)
+          if (mIsAdvanceIntercept) {
+            return mDefaultPointerHandler
+          }
+          val point = mLastMovePointByPointerId.get(event.pointerId)
           val touchSlop = ViewConfiguration.get(view.context).scaledTouchSlop
-          if (abs(x - mLastMoveX) <= touchSlop && abs(y - mLastMoveY) <= touchSlop) {
-            mLastMoveX = x
-            mLastMoveY = y
+          val isInTouchSlop = abs(point.x - x) <= touchSlop && abs(point.y - y) <= touchSlop
+          if (isInTouchSlop) {
+            point.x = x
+            point.y = y
             return null
           } else {
             // 超过 touchSlop，可以拦截子 View 事件了
@@ -106,16 +119,28 @@ abstract class CourseDefaultTouchImpl : AbstractCoursePageFragment(), ICourseDef
       }
       return null
     }
+  
+    override fun onDispatchTouchEvent(event: MotionEvent, view: ViewGroup) {
+      super.onDispatchTouchEvent(event, view)
+      if (event.action == MotionEvent.ACTION_DOWN) {
+        mIsAdvanceIntercept = false // 重置
+      }
+    }
   }
   
   /**
    * 在没有 handler 处理时，会将事件分发给 [ITouchItem] 或者是 [ScrollTouchHandler] 处理
    */
   class DefaultPointerHandler(
-    val course: ICoursePage
+    val page: ICoursePage
   ) : IPointerTouchHandler {
   
     private val mItemByPointerId = SparseArray<Pair<ITouchItem, View>>()
+    
+    fun isAdvanceIntercept(pointerId: Int): Boolean {
+      val pair = mItemByPointerId.get(pointerId) ?: return false
+      return pair.first.touchHelper.isAdvanceIntercept()
+    }
     
     override fun onPointerTouchEvent(event: IPointerEvent, view: ViewGroup) {
       val x = event.x.toInt()
@@ -123,22 +148,29 @@ abstract class CourseDefaultTouchImpl : AbstractCoursePageFragment(), ICourseDef
       when (event.action) {
         IPointerEvent.Action.DOWN -> {
           // DOWN 事件是手动传递下来的
-          val pair = course.course.findPairUnderByXY(x, y)
+          val pair = page.course.findPairUnderByXY(x, y)
           if (pair != null && pair.first is ITouchItem && pair.second.isVisible) {
             @Suppress("UNCHECKED_CAST")
             mItemByPointerId.put(event.pointerId, pair as Pair<ITouchItem, View>)
             val item = pair.first
-            item.touchHelper.onPointerTouchEvent(event, view, pair.second, item, course)
+            item.touchHelper.onPointerTouchEvent(event, view, pair.second, item, page)
           } else {
             ScrollTouchHandler.onPointerTouchEvent(event, view)
           }
         }
-        IPointerEvent.Action.MOVE,
+        IPointerEvent.Action.MOVE -> {
+          val pair = mItemByPointerId.get(event.pointerId)
+          if (pair != null) {
+            pair.first.touchHelper.onPointerTouchEvent(event, view, pair.second, pair.first, page)
+          } else {
+            ScrollTouchHandler.onPointerTouchEvent(event, view)
+          }
+        }
         IPointerEvent.Action.UP,
         IPointerEvent.Action.CANCEL -> {
           val pair = mItemByPointerId.get(event.pointerId)
           if (pair != null) {
-            pair.first.touchHelper.onPointerTouchEvent(event, view, pair.second, pair.first, course)
+            pair.first.touchHelper.onPointerTouchEvent(event, view, pair.second, pair.first, page)
             mItemByPointerId.remove(event.pointerId)
           } else {
             ScrollTouchHandler.onPointerTouchEvent(event, view)

@@ -128,7 +128,7 @@ class HomeSemesterFragment : CourseSemesterFragment() {
           override fun onItemAddedAfter(item: IItem, view: View?) {
             if (view == null) return
             val lp = item.lp
-            if (compareNoonPeriod(lp.startRow) * compareNoonPeriod(lp.endRow) <= 0) {
+            if (compareNoonPeriodByRow(lp.startRow) * compareNoonPeriodByRow(lp.endRow) <= 0) {
               unfoldNoon()
               course.postRemoveItemExistListener(this) // 只需要展开一次
             }
@@ -140,7 +140,7 @@ class HomeSemesterFragment : CourseSemesterFragment() {
           override fun onItemAddedAfter(item: IItem, view: View?) {
             if (view == null) return
             val lp = item.lp
-            if (compareDuskPeriod(lp.startRow) * compareDuskPeriod(lp.endRow) <= 0) {
+            if (compareDuskPeriodByRow(lp.startRow) * compareDuskPeriodByRow(lp.endRow) <= 0) {
               unfoldDusk()
               course.postRemoveItemExistListener(this) // 只需要展开一次
             }

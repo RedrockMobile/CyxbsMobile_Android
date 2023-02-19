@@ -19,11 +19,11 @@ class TouchItemHelper(
     parent: ViewGroup,
     child: View,
     item: ITouchItem,
-    course: ICoursePage
+    page: ICoursePage
   ) {
     repeat(helpers.size) {
       val helper = helpers[it]
-      helper.onPointerTouchEvent(event, parent, child, item, course)
+      helper.onPointerTouchEvent(event, parent, child, item, page)
     }
   }
 }

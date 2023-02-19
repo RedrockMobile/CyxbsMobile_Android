@@ -34,11 +34,11 @@ abstract class TimelineImpl : PeriodImpl(), ITimeline {
   }
   
   final override fun getTimelineStartWidth(): Int {
-    return course.getColumnsWidth(0, TIMELINE_LEFT - 1)
+    return course.getColumnsWidth(0, TIMELINE_LEFT - 1) + course.getPaddingLeft()
   }
   
   final override fun getTimelineEndWidth(): Int {
-    return course.getColumnsWidth(0, TIMELINE_RIGHT)
+    return course.getColumnsWidth(0, TIMELINE_RIGHT) + course.getPaddingLeft()
   }
   
   override val tvLesson1        by R.id.course_tv_lesson_1.view<TextView>()

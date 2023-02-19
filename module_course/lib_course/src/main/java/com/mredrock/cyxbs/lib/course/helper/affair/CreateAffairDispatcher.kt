@@ -190,7 +190,7 @@ class CreateAffairDispatcher(
     private fun unfoldNoonOrDuskIfNecessary(initialRow: Int, touchRow: Int) {
       when (page.getNoonRowState()) {
         FoldState.FOLD, FoldState.FOLD_ANIM, FoldState.UNKNOWN -> {
-          if (page.compareNoonPeriod(initialRow) * page.compareNoonPeriod(touchRow) <= 0) {
+          if (page.compareNoonPeriodByRow(initialRow) * page.compareNoonPeriodByRow(touchRow) <= 0) {
             page.unfoldNoon()
           }
         }
@@ -198,7 +198,7 @@ class CreateAffairDispatcher(
       }
       when (page.getDuskRowState()) {
         FoldState.FOLD, FoldState.FOLD_ANIM, FoldState.UNKNOWN -> {
-          if (page.compareDuskPeriod(initialRow) * page.compareDuskPeriod(touchRow) <= 0) {
+          if (page.compareDuskPeriodByRow(initialRow) * page.compareDuskPeriodByRow(touchRow) <= 0) {
             page.unfoldDusk()
           }
         }
