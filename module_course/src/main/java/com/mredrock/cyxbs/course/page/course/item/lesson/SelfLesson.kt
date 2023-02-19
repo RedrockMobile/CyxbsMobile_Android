@@ -12,12 +12,15 @@ import com.mredrock.cyxbs.course.page.course.item.view.IOverlapTag
 import com.mredrock.cyxbs.course.page.course.item.view.OverlapTagHelper
 import com.mredrock.cyxbs.course.page.course.utils.container.base.IDataOwner
 import com.mredrock.cyxbs.course.page.course.utils.container.base.IRecycleItem
+import com.mredrock.cyxbs.lib.course.internal.view.course.ICourseViewGroup
 import com.mredrock.cyxbs.lib.course.item.lesson.ILessonItem
 import com.mredrock.cyxbs.lib.course.item.lesson.LessonPeriod
 import com.mredrock.cyxbs.lib.course.item.touch.ITouchItem
 import com.mredrock.cyxbs.lib.course.item.touch.ITouchItemHelper
 import com.mredrock.cyxbs.lib.course.item.touch.TouchItemHelper
-import com.mredrock.cyxbs.lib.course.item.touch.helper.MovableItemHelper
+import com.mredrock.cyxbs.lib.course.item.touch.helper.move.IMovableItemHelperConfig
+import com.mredrock.cyxbs.lib.course.item.touch.helper.move.LocationUtil
+import com.mredrock.cyxbs.lib.course.item.touch.helper.move.MovableItemHelper
 import com.mredrock.cyxbs.lib.course.item.view.CommonLessonView
 
 /**
@@ -110,7 +113,18 @@ class SelfLesson(private var lessonData: StuLessonData) :
   
   // TODO 待实现中...
   override val touchHelper: ITouchItemHelper =
-    if (BuildConfig.DEBUG) MovableItemHelper() else TouchItemHelper()
+    if (!BuildConfig.DEBUG) TouchItemHelper()
+    else MovableItemHelper(
+      object : IMovableItemHelperConfig by IMovableItemHelperConfig.Default {
+        override fun isMovableToNewLocation(
+          parent: ICourseViewGroup,
+          item: ITouchItem,
+          newLocation: LocationUtil.Location
+        ): Boolean {
+          return false
+        }
+      }
+    )
   
   override val lp: SelfLessonLayoutParams = SelfLessonLayoutParams(lessonData)
   

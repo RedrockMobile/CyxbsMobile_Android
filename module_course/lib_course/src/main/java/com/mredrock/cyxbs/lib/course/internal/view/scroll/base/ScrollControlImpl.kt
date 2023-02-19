@@ -74,10 +74,10 @@ abstract class ScrollControlImpl @JvmOverloads constructor(
   
   private val mOnScrollYChangedListeners = arrayListOf<ICourseScrollControl.OnScrollYChangedListener>()
   
-  final override fun onScrollChanged(scrollX: Int, scrollY: Int, oldScrollX: Int, oldtSCrollY: Int) {
-    super.onScrollChanged(scrollX, scrollY, oldScrollX, oldtSCrollY)
+  final override fun onScrollChanged(scrollX: Int, scrollY: Int, oldScrollX: Int, oldtScrollY: Int) {
+    super.onScrollChanged(scrollX, scrollY, oldScrollX, oldtScrollY)
     mOnScrollYChangedListeners.forEachReversed {
-      it.onScrollYChanged(oldtSCrollY, scrollY)
+      it.onScrollYChanged(oldtScrollY, scrollY)
     }
   }
 }

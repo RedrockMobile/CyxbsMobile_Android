@@ -13,18 +13,22 @@ import com.mredrock.cyxbs.api.course.utils.getBeginLesson
 import com.mredrock.cyxbs.config.config.SchoolCalendar
 import com.mredrock.cyxbs.course.page.course.ui.home.utils.EnterAnimUtils
 import com.mredrock.cyxbs.course.page.course.ui.home.viewmodel.HomeCourseViewModel
+import com.mredrock.cyxbs.course.page.course.ui.home.widget.MovableTouchAffairItem
 import com.mredrock.cyxbs.course.page.course.utils.container.AffairContainerProxy
 import com.mredrock.cyxbs.course.page.course.utils.container.LinkLessonContainerProxy
 import com.mredrock.cyxbs.course.page.course.utils.container.SelfLessonContainerProxy
 import com.mredrock.cyxbs.lib.course.fragment.page.CourseWeekFragment
 import com.mredrock.cyxbs.lib.course.helper.affair.CreateAffairDispatcher
+import com.mredrock.cyxbs.lib.course.helper.affair.expose.ICreateAffairConfig
 import com.mredrock.cyxbs.lib.course.helper.affair.expose.ITouchAffairItem
 import com.mredrock.cyxbs.lib.course.helper.affair.expose.ITouchCallback
 import com.mredrock.cyxbs.lib.course.internal.item.IItem
 import com.mredrock.cyxbs.lib.course.internal.item.IItemContainer
+import com.mredrock.cyxbs.lib.course.internal.view.course.ICourseViewGroup
 import com.mredrock.cyxbs.lib.utils.extensions.getSp
 import com.mredrock.cyxbs.lib.utils.service.impl
 import com.mredrock.cyxbs.lib.utils.utils.judge.NetworkUtil
+import com.ndhzs.netlayout.touch.multiple.event.IPointerEvent
 import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
 
 /**
@@ -116,7 +120,15 @@ class HomeWeekFragment : CourseWeekFragment() {
    */
   private fun initCreateAffair() {
     course.addPointerDispatcher(
-      CreateAffairDispatcher(this).apply {
+      CreateAffairDispatcher(
+        this,
+        object : ICreateAffairConfig by ICreateAffairConfig.Default {
+          override fun createTouchAffairItem(
+            course: ICourseViewGroup,
+            event: IPointerEvent
+          ): ITouchAffairItem = MovableTouchAffairItem(course)
+        }
+      ).apply {
         setOnClickListener {
           IAffairService::class.impl
             .startActivityForAddAffair(mWeek, lp.weekNum - 1, getBeginLesson(lp.startRow), lp.length)

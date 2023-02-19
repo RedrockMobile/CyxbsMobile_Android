@@ -1,4 +1,4 @@
-package com.mredrock.cyxbs.lib.course.item.touch.helper
+package com.mredrock.cyxbs.lib.course.item.touch.helper.expand
 
 import android.view.View
 import android.view.ViewGroup

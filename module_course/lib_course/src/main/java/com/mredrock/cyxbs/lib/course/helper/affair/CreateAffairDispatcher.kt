@@ -6,7 +6,7 @@ import android.view.ViewGroup
 import com.mredrock.cyxbs.lib.course.fragment.course.expose.fold.FoldState
 import com.mredrock.cyxbs.lib.course.fragment.page.ICoursePage
 import com.mredrock.cyxbs.lib.course.helper.ScrollTouchHandler
-import com.mredrock.cyxbs.lib.course.helper.affair.expose.ICreateAffair
+import com.mredrock.cyxbs.lib.course.helper.affair.expose.ICreateAffairConfig
 import com.mredrock.cyxbs.lib.course.helper.affair.expose.ITouchAffairItem
 import com.mredrock.cyxbs.lib.course.helper.affair.expose.ITouchCallback
 import com.mredrock.cyxbs.lib.course.helper.base.AbstractLongPressDispatcher
@@ -28,7 +28,7 @@ import kotlin.math.abs
  */
 class CreateAffairDispatcher(
   val page: ICoursePage,
-  val iCreateAffair: ICreateAffair = ICreateAffair.Default, // 如果你需要与外界进行交互，建议写在这个里面
+  val iCreateAffair: ICreateAffairConfig = ICreateAffairConfig.Default, // 如果你需要与外界进行交互，建议写在这个里面
 ) : AbstractLongPressDispatcher() {
   
   /**

@@ -19,7 +19,7 @@ import kotlin.math.min
  * @author 985892345
  * 2023/1/30 16:40
  */
-interface ICreateAffair : IBoundary {
+interface ICreateAffairConfig : IBoundary {
   
   /**
    * 当前 Down 的触摸点是否合法，合法才会拦截触摸事件
@@ -32,7 +32,7 @@ interface ICreateAffair : IBoundary {
   fun createTouchAffairItem(course: ICourseViewGroup, event: IPointerEvent): ITouchAffairItem
   
   
-  companion object Default : ICreateAffair {
+  companion object Default : ICreateAffairConfig {
     
     private var _upperRow = Int.MIN_VALUE // 临时变量
     private var _lowerRow = Int.MAX_VALUE // 临时变量
