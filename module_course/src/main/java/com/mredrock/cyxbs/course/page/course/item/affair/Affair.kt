@@ -3,6 +3,7 @@ package com.mredrock.cyxbs.course.page.course.item.affair
 import android.annotation.SuppressLint
 import android.content.Context
 import android.graphics.*
+import android.view.View
 import com.mredrock.cyxbs.course.page.course.data.AffairData
 import com.mredrock.cyxbs.course.page.course.item.BaseOverlapSingleDayItem
 import com.mredrock.cyxbs.course.page.course.item.affair.lp.AffairLayoutParams
@@ -10,7 +11,16 @@ import com.mredrock.cyxbs.course.page.course.item.view.IOverlapTag
 import com.mredrock.cyxbs.course.page.course.item.view.OverlapTagHelper
 import com.mredrock.cyxbs.course.page.course.utils.container.base.IDataOwner
 import com.mredrock.cyxbs.course.page.course.utils.container.base.IRecycleItem
+import com.mredrock.cyxbs.lib.course.fragment.page.ICoursePage
+import com.mredrock.cyxbs.lib.course.internal.view.course.ICourseViewGroup
 import com.mredrock.cyxbs.lib.course.item.affair.IAffairItem
+import com.mredrock.cyxbs.lib.course.item.touch.ITouchItem
+import com.mredrock.cyxbs.lib.course.item.touch.ITouchItemHelper
+import com.mredrock.cyxbs.lib.course.item.touch.TouchItemHelper
+import com.mredrock.cyxbs.lib.course.item.touch.helper.move.IMovableItemHelperConfig
+import com.mredrock.cyxbs.lib.course.item.touch.helper.move.IMovableListener
+import com.mredrock.cyxbs.lib.course.item.touch.helper.move.LocationUtil
+import com.mredrock.cyxbs.lib.course.item.touch.helper.move.MovableItemHelper
 import com.mredrock.cyxbs.lib.course.item.view.AffairItemView
 
 /**
@@ -24,7 +34,8 @@ class Affair(private var affairData: AffairData) :
   BaseOverlapSingleDayItem<Affair.AffairView, AffairData>(),
   IDataOwner<AffairData>,
   IAffairItem,
-  IRecycleItem
+  IRecycleItem,
+  ITouchItem
 {
   
   override fun setNewData(newData: AffairData) {
@@ -101,4 +112,37 @@ class Affair(private var affairData: AffairData) :
   
   override val data: AffairData
     get() = affairData
+  
+  override val touchHelper: ITouchItemHelper = TouchItemHelper(
+    MovableItemHelper(
+      object : IMovableItemHelperConfig by IMovableItemHelperConfig {
+        override fun isMovableToNewLocation(
+          parent: ICourseViewGroup, item: ITouchItem, newLocation: LocationUtil.Location
+        ): Boolean {
+          // 目前事务涉及到复杂事务和简单事务，暂时不进行移动
+          return false
+        }
+      }
+    ).apply {
+      addMovableListener(
+        object : IMovableListener {
+          override fun onLongPressStart(
+            page: ICoursePage, item: ITouchItem, child: View,
+            initialX: Int, initialY: Int, x: Int, y: Int
+          ) {
+            super.onLongPressStart(page, item, child, initialX, initialY, x, y)
+            page.changeOverlap(this@Affair, false) // 暂时取消重叠
+          }
+          
+          override fun onOverAnimStart(
+            newLocation: LocationUtil.Location?,
+            page: ICoursePage, item: ITouchItem, child: View
+          ) {
+            super.onOverAnimEnd(newLocation, page, item, child)
+            page.changeOverlap(this@Affair, true) // 恢复重叠
+          }
+        }
+      )
+    }
+  )
 }

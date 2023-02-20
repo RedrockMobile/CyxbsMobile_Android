@@ -179,7 +179,7 @@ class FragmentBindView<T : View>(
   init {
     fragment.viewLifecycleOwnerLiveData.observe(fragment) {
       // 当 viewLifecycleOwnerLiveData 值变为 null 时，说明已经调用 onDestroyView()
-      if (it == null) {
+      if (it == null && fragment.view == null) {
         forceSetNull()
       }
     }

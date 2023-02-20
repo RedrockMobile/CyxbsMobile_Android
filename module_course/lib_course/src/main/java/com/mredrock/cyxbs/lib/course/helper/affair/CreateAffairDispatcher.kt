@@ -142,42 +142,26 @@ class CreateAffairDispatcher(
     }
     
     override fun onTouchMove(
-      pointerId: Int,
-      initialRow: Int,
-      initialColumn: Int,
-      touchRow: Int,
-      topRow: Int,
-      bottomRow: Int,
+      pointerId: Int, initialRow: Int, initialColumn: Int,
+      touchRow: Int, topRow: Int, bottomRow: Int,
     ) {
       unfoldNoonOrDuskIfNecessary(initialRow, touchRow)
       mTouchCallbacks.forEachReversed {
         it.onTouchMove(
-          pointerId,
-          initialRow,
-          initialColumn,
-          touchRow,
-          topRow,
-          bottomRow
+          pointerId, initialRow, initialColumn,
+          touchRow, topRow, bottomRow
         )
       }
     }
     
     override fun onTouchEnd(
-      pointerId: Int,
-      initialRow: Int,
-      initialColumn: Int,
-      touchRow: Int,
-      topRow: Int,
-      bottomRow: Int,
+      pointerId: Int, initialRow: Int, initialColumn: Int,
+      touchRow: Int, topRow: Int, bottomRow: Int,
     ) {
       mTouchCallbacks.forEachReversed {
         it.onTouchEnd(
-          pointerId,
-          initialRow,
-          initialColumn,
-          touchRow,
-          topRow,
-          bottomRow
+          pointerId, initialRow, initialColumn,
+          touchRow, topRow, bottomRow
         )
       }
     }

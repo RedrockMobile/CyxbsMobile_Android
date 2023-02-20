@@ -3,6 +3,7 @@ package com.mredrock.cyxbs.lib.course.item.touch.helper.move
 import android.view.View
 import com.mredrock.cyxbs.lib.course.internal.view.course.ICourseViewGroup
 import com.mredrock.cyxbs.lib.course.item.touch.ITouchItem
+import com.ndhzs.netlayout.touch.multiple.event.IPointerEvent
 import kotlin.math.hypot
 import kotlin.math.pow
 
@@ -21,8 +22,9 @@ interface IMovableItemHelperConfig {
   
   /**
    * 是否允许长按移动
+   * @param child [item] 对应的 View
    */
-  fun isMovable(parent: ICourseViewGroup, item: ITouchItem): Boolean
+  fun isMovable(event: IPointerEvent, parent: ICourseViewGroup, item: ITouchItem, child: View): Boolean
   
   /**
    * 是否允许移动到 [newLocation]
@@ -44,7 +46,12 @@ interface IMovableItemHelperConfig {
       return false
     }
   
-    override fun isMovable(parent: ICourseViewGroup, item: ITouchItem): Boolean {
+    override fun isMovable(
+      event: IPointerEvent,
+      parent: ICourseViewGroup,
+      item: ITouchItem,
+      child: View
+    ): Boolean {
       return true
     }
   

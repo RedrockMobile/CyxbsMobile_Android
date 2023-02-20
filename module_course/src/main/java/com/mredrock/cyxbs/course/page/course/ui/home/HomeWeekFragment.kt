@@ -26,6 +26,7 @@ import com.mredrock.cyxbs.lib.course.internal.item.IItem
 import com.mredrock.cyxbs.lib.course.internal.item.IItemContainer
 import com.mredrock.cyxbs.lib.course.internal.view.course.ICourseViewGroup
 import com.mredrock.cyxbs.lib.utils.extensions.getSp
+import com.mredrock.cyxbs.lib.utils.extensions.launch
 import com.mredrock.cyxbs.lib.utils.service.impl
 import com.mredrock.cyxbs.lib.utils.utils.judge.NetworkUtil
 import com.ndhzs.netlayout.touch.multiple.event.IPointerEvent
@@ -119,59 +120,53 @@ class HomeWeekFragment : CourseWeekFragment() {
    * 长按创建事务
    */
   private fun initCreateAffair() {
-    course.addPointerDispatcher(
-      CreateAffairDispatcher(
-        this,
-        object : ICreateAffairConfig by ICreateAffairConfig.Default {
-          override fun createTouchAffairItem(
-            course: ICourseViewGroup,
-            event: IPointerEvent
-          ): ITouchAffairItem = MovableTouchAffairItem(course)
-        }
-      ).apply {
-        setOnClickListener {
-          IAffairService::class.impl
-            .startActivityForAddAffair(mWeek, lp.weekNum - 1, getBeginLesson(lp.startRow), lp.length)
-          cancelShow()
-        }
-        addTouchCallback(
-          object : ITouchCallback {
-            override fun onTouchEnd(
-              pointerId: Int,
-              initialRow: Int,
-              initialColumn: Int,
-              touchRow: Int,
-              topRow: Int,
-              bottomRow: Int,
-            ) {
-              if (bottomRow == topRow) {
-                tryToastSingleRow()
-              }
-            }
-  
-            /**
-             * 在只是单独点击时，只会生成长度为 1 的 [ITouchAffairItem]，
-             * 所以需要弹个 toast 来提示用户可以长按空白区域上下移动来生成更长的事务
-             * (不然可能他一直不知道怎么生成更长的事务)
-             */
-            private fun tryToastSingleRow() {
-              val sp = course.getContext().getSp("课表长按生成事务")
-              val times = sp.getInt("点击单行事务的次数", 0)
-              when (times) {
-                1, 5, 12 -> {
-                  toast("可以长按空白处上下移动添加哦~")
-                }
-              }
-              sp.edit { putInt("点击单行事务的次数", times + 1) }
-            }
-          }
-        )
+    val dispatcher = CreateAffairDispatcher(
+      this,
+      object : ICreateAffairConfig by ICreateAffairConfig.Default {
+        override fun createTouchAffairItem(
+          course: ICourseViewGroup,
+          event: IPointerEvent
+        ): ITouchAffairItem = MovableTouchAffairItem(course)
       }
     )
+    dispatcher.setOnClickListener {
+      IAffairService::class.impl
+        .startActivityForAddAffair(mWeek, lp.weekNum - 1, getBeginLesson(lp.startRow), lp.length)
+      cancelShow()
+    }
+    dispatcher.addTouchCallback(
+      object : ITouchCallback {
+        override fun onTouchEnd(
+          pointerId: Int, initialRow: Int, initialColumn: Int,
+          touchRow: Int, topRow: Int, bottomRow: Int,
+        ) {
+          if (bottomRow == topRow) {
+            tryToastSingleRow()
+          }
+        }
+      
+        /**
+         * 在只是单独点击时，只会生成长度为 1 的 [ITouchAffairItem]，
+         * 所以需要弹个 toast 来提示用户可以长按空白区域上下移动来生成更长的事务
+         * (不然可能他一直不知道怎么生成更长的事务)
+         */
+        private fun tryToastSingleRow() {
+          val sp = course.getContext().getSp("课表长按生成事务")
+          val times = sp.getInt("点击单行事务的次数", 0)
+          when (times) {
+            1, 5, 12 -> {
+              toast("可以长按空白处上下移动添加哦~")
+            }
+          }
+          sp.edit { putInt("点击单行事务的次数", times + 1) }
+        }
+      }
+    )
+    course.addPointerDispatcher(dispatcher)
   }
   
-  override fun isExhibitionItem(item: IItem): Boolean {
-    return super.isExhibitionItem(item) || item is ITouchAffairItem
+  override fun isHideNoLessonImg(item: IItem): Boolean {
+    return super.isHideNoLessonImg(item) || item is ITouchAffairItem
   }
   
   /**
@@ -215,19 +210,14 @@ class HomeWeekFragment : CourseWeekFragment() {
     if (!ILessonService.isUseLocalSaveLesson) {
       val noLessonImage = ivNoLesson.drawable
       val noLessonText = tvNoLesson.text
-      if (!NetworkUtil.isAvailable()) {
-        ivNoLesson.setImageResource(com.mredrock.cyxbs.config.R.drawable.config_ic_404)
-        tvNoLesson.text = "联网才能查看课表哦~"
-        mParentViewModel.homeWeekData.map {
-          it[mWeek] ?: HomeCourseViewModel.HomePageResult
-        }.observeUntil {
-          NetworkUtil.isAvailable().also {
-            if (it) {
-              // 网络可用了就还原设置
-              ivNoLesson.setImageDrawable(noLessonImage)
-              tvNoLesson.text = noLessonText
-            }
-          }
+      launch {
+        if (!NetworkUtil.isAvailableExact()) {
+          ivNoLesson.setImageResource(com.mredrock.cyxbs.config.R.drawable.config_ic_404)
+          tvNoLesson.text = "联网才能查看课表哦~"
+          NetworkUtil.suspendUntilAvailable() // 挂起直到网络可用
+          // 网络可用了就还原设置
+          ivNoLesson.setImageDrawable(noLessonImage)
+          tvNoLesson.text = noLessonText
         }
       }
     }

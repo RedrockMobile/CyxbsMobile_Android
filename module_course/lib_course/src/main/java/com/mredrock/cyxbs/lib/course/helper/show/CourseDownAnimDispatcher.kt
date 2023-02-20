@@ -38,7 +38,7 @@ open class CourseDownAnimDispatcher(
             if (pair.first === child) {
               val x = pair.second.x
               val y = pair.second.y
-              endAnim(child, x, y, x, y)
+              cancelAnim(child, x, y)
               mViewWithRawPointById.remove(id)
               return
             }
@@ -155,6 +155,13 @@ open class CourseDownAnimDispatcher(
       .rotationY(0F)
       .setInterpolator(OvershootInterpolator)
       .start()
+  }
+  
+  /**
+   * 取消动画，说明 View 被 remove，你需要在这里面还原为初始状态，防止下次使用时出现异常
+   */
+  protected open fun cancelAnim(view: View, initialX: Int, initialY: Int) {
+  
   }
   
   companion object {

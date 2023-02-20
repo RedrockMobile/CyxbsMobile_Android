@@ -19,6 +19,7 @@ import com.mredrock.cyxbs.lib.course.helper.affair.CreateAffairDispatcher
 import com.mredrock.cyxbs.lib.course.helper.affair.expose.ITouchAffairItem
 import com.mredrock.cyxbs.lib.course.internal.item.IItem
 import com.mredrock.cyxbs.lib.course.internal.item.IItemContainer
+import com.mredrock.cyxbs.lib.utils.extensions.launch
 import com.mredrock.cyxbs.lib.utils.service.impl
 import com.mredrock.cyxbs.lib.utils.utils.judge.NetworkUtil
 import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
@@ -112,8 +113,8 @@ class HomeSemesterFragment : CourseSemesterFragment() {
     )
   }
   
-  override fun isExhibitionItem(item: IItem): Boolean {
-    return super.isExhibitionItem(item) || item is ITouchAffairItem
+  override fun isHideNoLessonImg(item: IItem): Boolean {
+    return super.isHideNoLessonImg(item) || item is ITouchAffairItem
   }
   
   /**
@@ -157,17 +158,14 @@ class HomeSemesterFragment : CourseSemesterFragment() {
     if (!ILessonService.isUseLocalSaveLesson) {
       val noLessonImage = ivNoLesson.drawable
       val noLessonText = tvNoLesson.text
-      if (!NetworkUtil.isAvailable()) {
-        ivNoLesson.setImageResource(com.mredrock.cyxbs.config.R.drawable.config_ic_404)
-        tvNoLesson.text = "联网才能查看课表哦~"
-        mParentViewModel.homeWeekData.observeUntil {
-          NetworkUtil.isAvailable().also {
-            if (it) {
-              // 网络可用了就还原设置
-              ivNoLesson.setImageDrawable(noLessonImage)
-              tvNoLesson.text = noLessonText
-            }
-          }
+      launch {
+        if (!NetworkUtil.isAvailableExact()) {
+          ivNoLesson.setImageResource(com.mredrock.cyxbs.config.R.drawable.config_ic_404)
+          tvNoLesson.text = "联网才能查看课表哦~"
+          NetworkUtil.suspendUntilAvailable() // 挂起直到网络可用
+          // 网络可用了就还原设置
+          ivNoLesson.setImageDrawable(noLessonImage)
+          tvNoLesson.text = noLessonText
         }
       }
     }

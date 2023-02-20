@@ -17,5 +17,7 @@ import com.mredrock.cyxbs.lib.course.item.touch.helper.move.MovableItemHelper
  */
 @SuppressLint("ViewConstructor")
 class MovableTouchAffairItem(course: ICourseViewGroup) : TouchAffairView(course), ITouchItem {
-  override val touchHelper: ITouchItemHelper = if (!BuildConfig.DEBUG) TouchItemHelper() else MovableItemHelper()
+  override val touchHelper: ITouchItemHelper = TouchItemHelper(
+    MovableItemHelper()
+  )
 }

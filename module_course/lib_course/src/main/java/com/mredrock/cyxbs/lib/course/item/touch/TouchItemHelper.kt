@@ -26,4 +26,14 @@ class TouchItemHelper(
       helper.onPointerTouchEvent(event, parent, child, item, page)
     }
   }
+  
+  override fun isAdvanceIntercept(): Boolean {
+    repeat(helpers.size) {
+      val helper = helpers[it]
+      if (helper.isAdvanceIntercept()) {
+        return true
+      }
+    }
+    return false
+  }
 }

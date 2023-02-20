@@ -94,6 +94,7 @@ abstract class CourseDefaultTouchImpl : AbstractCoursePageFragment(), ICourseDef
         }
         IPointerEvent.Action.MOVE -> {
           if (mIsAdvanceIntercept) {
+            // 如果已经提前拦截，此时就不需要传递事件给子 View，直接返回 handler 即可
             return mDefaultPointerHandler
           }
           mIsAdvanceIntercept = mDefaultPointerHandler.isAdvanceIntercept(event.pointerId)

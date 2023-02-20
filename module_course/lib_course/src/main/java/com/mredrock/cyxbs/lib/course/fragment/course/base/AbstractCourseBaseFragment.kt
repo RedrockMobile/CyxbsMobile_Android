@@ -48,6 +48,10 @@ abstract class AbstractCourseBaseFragment : BaseFragment(), ICourseBase {
     return inflater.inflate(R.layout.course_layout_course, container, false)
   }
   
+  final override fun isCourseDestroyed(): Boolean {
+    return view == null
+  }
+  
   private val mCourseLifecycleObservers = arrayListOf<ICourseWrapper.CourseLifecycleObserver>()
   
   final override fun addCourseLifecycleObservable(

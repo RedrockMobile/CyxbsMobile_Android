@@ -11,7 +11,17 @@ import com.mredrock.cyxbs.lib.course.internal.view.course.ICourseViewGroup
  */
 interface ICourseWrapper {
   
+  /**
+   * 课表布局
+   *
+   * 在某些特定的情况下（比如切换黑夜模式），会导致闪退，可以使用 [isCourseDestroyed] 进行判断
+   */
   val course: ICourseViewGroup
+  
+  /**
+   * 当前课表是否已经被摧毁
+   */
+  fun isCourseDestroyed(): Boolean
   
   /**
    * 添加 [ICourseViewGroup] 生命周期的监听

@@ -1,18 +1,16 @@
 package com.mredrock.cyxbs.lib.course.item.touch.helper.move
 
-import android.animation.ValueAnimator
 import android.view.MotionEvent
 import android.view.View
 import android.view.ViewConfiguration
 import android.view.ViewGroup
-import android.view.animation.OvershootInterpolator
-import androidx.core.animation.addListener
 import androidx.core.view.doOnNextLayout
 import com.mredrock.cyxbs.lib.course.BuildConfig
 import com.mredrock.cyxbs.lib.course.fragment.page.ICoursePage
 import com.mredrock.cyxbs.lib.course.internal.view.course.ICourseScrollControl
 import com.mredrock.cyxbs.lib.course.item.touch.ITouchItem
 import com.mredrock.cyxbs.lib.course.item.touch.ITouchItemHelper
+import com.mredrock.cyxbs.lib.course.utils.forEachReversed
 import com.mredrock.cyxbs.lib.utils.extensions.toast
 import com.mredrock.cyxbs.lib.utils.utils.VibratorUtil
 import com.ndhzs.netlayout.touch.multiple.event.IPointerEvent
@@ -28,6 +26,14 @@ class MovableItemHelper(
   val config: IMovableItemHelperConfig = IMovableItemHelperConfig.Default
 ) : ITouchItemHelper {
   
+  fun addMovableListener(l: IMovableListener) {
+    mMovableListener.add(l)
+  }
+  
+  fun removeMovableListener(l: IMovableListener) {
+    mMovableListener.remove(l)
+  }
+  
   companion object {
     
     private var isShowDebugToast = false
@@ -39,6 +45,8 @@ class MovableItemHelper(
       }
     }
   }
+  
+  private val mMovableListener = arrayListOf<IMovableListener>()
   
   private var mPointerId = MotionEvent.INVALID_POINTER_ID
   private var mInitialX = 0
@@ -65,14 +73,16 @@ class MovableItemHelper(
   
   // Scroll 滚动会导致整个坐标系的移动，也需要同步修改 View 的位置
   private val mScrollYChangedListener =
-    ICourseScrollControl.OnScrollYChangedListener { oldScrollY, scrollY ->
-      move()
+    ICourseScrollControl.OnScrollYChangedListener { _, _ ->
+      if (mIsInLongPress == true) {
+        move()
+      }
     }
   
   // 在展开中午时，中午高度以下的 View 都会向下移动，此时也需要同步修改 View 的位置
   private val mLayoutChangeListener =
     View.OnLayoutChangeListener { _, _, top, _, _, _, oldTop, _, _ ->
-      if (top != oldTop) {
+      if (top != oldTop && mIsInLongPress == true) {
         move()
       }
     }
@@ -91,7 +101,8 @@ class MovableItemHelper(
     when (val action = event.action) {
       IPointerEvent.Action.DOWN -> {
         if (mPointerId == MotionEvent.INVALID_POINTER_ID) {
-          if (config.isMovable(page.course, item)) {
+          if (config.isMovable(event, page.course, item, child)) {
+            if (!BuildConfig.DEBUG) return
             mPointerId = event.pointerId
             mInitialX = event.x.toInt() // 重置
             mInitialY = event.y.toInt() // 重置
@@ -104,6 +115,9 @@ class MovableItemHelper(
             mCoursePage = page
             mTouchItem = item
             mItemView = child
+            mMovableListener.forEachReversed {
+              it.onDown(page, item, child, mInitialX, mInitialY)
+            }
           }
         }
       }
@@ -115,22 +129,31 @@ class MovableItemHelper(
             val y = event.y.toInt()
             if (!isInLongPress) {
               val touchSlop = ViewConfiguration.get(parent.context).scaledTouchSlop
-              if (abs(x - mLastMoveX) > touchSlop || abs(y - mLastMoveY) > touchSlop) {
+              val isInTouchSlop = abs(x - mLastMoveX) <= touchSlop && abs(y - mLastMoveY) <= touchSlop
+              val isInChild = (x - child.x.toInt()) in 0..child.width &&
+                (y - child.y.toInt()) in 0..child.height
+              if (!isInTouchSlop || !isInChild) {
                 mLongPressRunnable.cancel(parent)
                 mIsInLongPress = null // 结束
+                mMovableListener.forEachReversed {
+                  it.onLongPressCancel(page, item, child, mInitialX, mInitialY, x, y)
+                }
               }
+              mLastMoveX = x
+              mLastMoveY = y
             } else {
               // 该分支表明已经触发长按
+              mLastMoveX = x
+              mLastMoveY = y
               move()
             }
-            mLastMoveX = x
-            mLastMoveY = y
           }
         }
       }
       IPointerEvent.Action.UP, IPointerEvent.Action.CANCEL -> {
         if (event.pointerId == mPointerId) {
           val course = page.course
+          // 长按状态判断
           when (mIsInLongPress) {
             false -> {
               // 没有激活长按就抬起手或者被 CANCEL
@@ -164,6 +187,17 @@ class MovableItemHelper(
               // 回调这里说明前面长按因为距离超过 touchSlop 被取消
             }
           }
+          // 回调监听
+          if (action == IPointerEvent.Action.UP) {
+            mMovableListener.forEachReversed {
+              it.onUp(page, item, child, mInitialX, mInitialY, mLastMoveX, mLastMoveY, mIsInLongPress)
+            }
+          } else {
+            mMovableListener.forEachReversed {
+              it.onCancel(page, item, child, mInitialX, mInitialY, mLastMoveX, mLastMoveY, mIsInLongPress)
+            }
+          }
+          // 还原变量
           mPointerId = MotionEvent.INVALID_POINTER_ID
           mIsInLongPress = null
           mCoursePage = null
@@ -177,6 +211,7 @@ class MovableItemHelper(
   private fun longPressStart() {
     debugToast()
     val page = mCoursePage ?: return
+    val item = mTouchItem ?: return
     val view = mItemView ?: return
     val course = page.course
     
@@ -192,9 +227,13 @@ class MovableItemHelper(
     mOldTranslationY = view.translationY
     mOldTranslationZ = view.translationZ
     
-    view.translationZ = mOldTranslationZ + mPointerId * 0.1F + 1.1F // 让 View 显示在其他 View 上方
+    view.translationZ = mOldTranslationZ + mPointerId * 0.1F + 2.1F // 让 View 显示在其他 View 上方
     mViewDiffY = view.top - course.getAbsoluteY(mPointerId)
     mOldScrollY = course.getScrollCourseY()
+  
+    mMovableListener.forEachReversed {
+      it.onLongPressStart(page, item, view, mInitialX, mInitialY, mLastMoveX, mLastMoveY)
+    }
   }
   
   private fun unfoldNoonDuskIfNeed() {
@@ -241,14 +280,23 @@ class MovableItemHelper(
   }
   
   private fun move() {
+    if (mIsInLongPress != true) return
+    val item = mTouchItem ?: return
     val view = mItemView ?: return
     val page = mCoursePage ?: return
     val course = page.course
+    
+    // 因为存在 scrollY 的改变和中午傍晚的展开导致的坐标系变化的问题
+    // 所以要使用 ScrollView 的绝对位置来计算 Y 轴偏移量
+    val absoluteY = course.getAbsoluteY(mPointerId)
+    val scrollY = course.getScrollCourseY()
     view.translationX = (mLastMoveX - mInitialX).toFloat() + mOldTranslationX
-    view.translationY =
-      (course.getAbsoluteY(mPointerId) + mViewDiffY - view.top) + mOldTranslationY +
-        (course.getScrollCourseY() - mOldScrollY)
+    view.translationY = (absoluteY + mViewDiffY - view.top) + mOldTranslationY + (scrollY - mOldScrollY)
     unfoldNoonDuskIfNeed()
+  
+    mMovableListener.forEachReversed {
+      it.onMove(page, item, view, mInitialX, mInitialY, mLastMoveX, absoluteY + absoluteY + scrollY)
+    }
   }
   
   private fun over(
@@ -266,6 +314,9 @@ class MovableItemHelper(
       val oldTransitionZ = child.translationZ
       child.doOnNextLayout {
         // 在 child 重新布局后开启动画
+        mMovableListener.forEachReversed { listener ->
+          listener.onOverAnimStart(location, page, item, child)
+        }
         val dx = oldX - (it.left + mOldTranslationX)
         val dy = oldY - (it.top + mOldTranslationY)
         MoveAnimation(dx, dy, config.getMoveAnimatorDuration(dx, dy)) { x, y, fraction ->
@@ -273,14 +324,23 @@ class MovableItemHelper(
           child.translationY = mOldTranslationY + y
           child.translationZ =
             (oldTransitionZ - mOldTranslationZ) * (1 - fraction) + mOldTranslationZ
+          mMovableListener.forEachReversed { listener ->
+            listener.onOverAnimUpdate(location, page, item, child, fraction)
+          }
         }.doOnEnd {
           child.translationX = mOldTranslationX
           child.translationY = mOldTranslationY
           child.translationZ = mOldTranslationZ
+          mMovableListener.forEachReversed { listener ->
+            listener.onOverAnimEnd(location, page, item, child)
+          }
         }.start()
       }
     } else {
       // 回到原位置
+      mMovableListener.forEachReversed { listener ->
+        listener.onOverAnimStart(null, page, item, child)
+      }
       val dx = child.x - (child.left + mOldTranslationX)
       val dy = child.y - (child.top + mOldTranslationY)
       val oldTransitionZ = child.translationZ
@@ -288,40 +348,17 @@ class MovableItemHelper(
         child.translationX = mOldTranslationX + x
         child.translationY = mOldTranslationY + y
         child.translationZ = (oldTransitionZ - mOldTranslationZ) * (1 - fraction) + mOldTranslationZ
+        mMovableListener.forEachReversed { listener ->
+          listener.onOverAnimUpdate(null, page, item, child, fraction)
+        }
       }.doOnEnd {
         child.translationX = mOldTranslationX
         child.translationY = mOldTranslationY
         child.translationZ = mOldTranslationZ
-      }.start()
-    }
-  }
-  
-  // 移动动画的封装
-  private class MoveAnimation(
-    private val dx: Float,
-    private val dy: Float,
-    private val time: Long,
-    private val onChange: (x: Float, y: Float, fraction: Float) -> Unit
-  ) {
-    private val animator = ValueAnimator.ofFloat(0F, 1F)
-    fun start(): MoveAnimation {
-      animator.run {
-        addUpdateListener {
-          val fraction = it.animatedFraction
-          val x = dx * (1 - fraction)
-          val y = dy * (1 - fraction)
-          onChange.invoke(x, y, fraction)
+        mMovableListener.forEachReversed { listener ->
+          listener.onOverAnimEnd(null, page, item, child)
         }
-        duration = time
-        interpolator = OvershootInterpolator(0.6F) // 个人认为 0.6F 的回弹比较合适
-        start()
-      }
-      return this
-    }
-    
-    fun doOnEnd(onEnd: () -> Unit): MoveAnimation {
-      animator.addListener(onEnd = { onEnd.invoke() })
-      return this
+      }.start()
     }
   }
 }
