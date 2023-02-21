@@ -212,8 +212,9 @@ class CreateAffairHandler(
       val isAllowScroll = isNeedScrollUp || isNeedScrollDown
       if (isAllowScroll) {
         velocity = if (isNeedScrollUp) {
-          min((absoluteY - (course.getScrollHeight() - moveBoundary)) / 10 + minV, maxV)
+          min((absoluteY - (course.getScrollHeight() - moveBoundary)) / 2 + minV, maxV)
         } else {
+          // 如果是向下滚动稍稍降低加速度，因为顶部手指可以移动出去，很容易满速
           -min(((moveBoundary - absoluteY) / 10 + minV), maxV)
         }
       }

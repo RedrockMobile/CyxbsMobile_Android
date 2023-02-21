@@ -43,8 +43,8 @@ interface ICourseScrollControl {
    * @param direction 正值检查手指向上滑动，负值检查手指向下滑动
    * ```
    *                                       true               false
-   * canCourseScrollVertically(1)     手指能够向上滑动       手指不能向上滑动
-   * canCourseScrollVertically(-1)    手指能够向下滑动       手指不能向下滑动
+   * canCourseScrollVertically(1)     手指能够向上滑动       手指不能向上滑动（滑到底）
+   * canCourseScrollVertically(-1)    手指能够向下滑动       手指不能向下滑动（滑到顶）
    * ```
    */
   fun canCourseScrollVertically(direction: Int): Boolean

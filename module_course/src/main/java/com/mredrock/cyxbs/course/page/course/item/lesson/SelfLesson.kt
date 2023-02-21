@@ -122,7 +122,8 @@ class SelfLesson(private var lessonData: StuLessonData) :
     MovableItemHelper(
       object : IMovableItemHelperConfig by IMovableItemHelperConfig.Default {
         override fun isMovableToNewLocation(
-          parent: ICourseViewGroup, item: ITouchItem, newLocation: LocationUtil.Location
+          parent: ICourseViewGroup, item: ITouchItem,
+          child: View, newLocation: LocationUtil.Location
         ): Boolean {
           return false // 课程不能移动到新位置
         }

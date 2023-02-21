@@ -54,6 +54,13 @@ class HomeCourseVpFragment : HomeCourseVpLinkFragment() {
         true
       } else false
     }
+  
+    // 点击第几周按钮可以刷新课表数据，自己加的功能
+    mTvWhichWeek.setOnLongClickListener {
+      toast("重新加载课表数据")
+      mViewModel.refreshDataObserve()
+      true
+    }
   }
   
   private fun initViewPager() {

@@ -32,6 +32,7 @@ interface IMovableItemHelperConfig {
   fun isMovableToNewLocation(
     parent: ICourseViewGroup,
     item: ITouchItem,
+    child: View,
     newLocation: LocationUtil.Location
   ): Boolean
   
@@ -58,6 +59,7 @@ interface IMovableItemHelperConfig {
     override fun isMovableToNewLocation(
       parent: ICourseViewGroup,
       item: ITouchItem,
+      child: View,
       newLocation: LocationUtil.Location
     ): Boolean {
       return true

@@ -117,9 +117,12 @@ class Affair(private var affairData: AffairData) :
     MovableItemHelper(
       object : IMovableItemHelperConfig by IMovableItemHelperConfig {
         override fun isMovableToNewLocation(
-          parent: ICourseViewGroup, item: ITouchItem, newLocation: LocationUtil.Location
+          parent: ICourseViewGroup,
+          item: ITouchItem,
+          child: View,
+          newLocation: LocationUtil.Location
         ): Boolean {
-          // 目前事务涉及到复杂事务和简单事务，暂时不进行移动
+          // 存在重复事务，暂不支持移动
           return false
         }
       }

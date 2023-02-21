@@ -25,6 +25,7 @@ dependencyResolutionManagement {
     maven("https://s01.oss.sonatype.org/content/repositories/snapshots/")
     maven("https://maven.aliyun.com/repository/public")
     maven("https://maven.aliyun.com/repository/google")
+    mavenLocal() // maven 默认的本地依赖位置：用户名/.m2/repository 中
   }
 }
 

@@ -259,7 +259,7 @@ abstract class AbstractOverlapSingleDayItem : IOverlapItem, OverlapHelper.IOverl
     init {
       /**
        * 这里将 [netLayout] 套进两层 FrameLayout 是为了解决 ChangeBounds 的 Transition 动画调用的 suppressLayout(true)
-       * 导致的中午或傍晚展开动画卡顿的问题，原因可以看 [FoldImpl] 的头注释
+       * 导致中午或傍晚展开动画卡顿的问题，原因可以看 [FoldImpl] 的头注释
        *
        * 为了好看的动画，多层嵌套这点性能不值一提 :)
        */

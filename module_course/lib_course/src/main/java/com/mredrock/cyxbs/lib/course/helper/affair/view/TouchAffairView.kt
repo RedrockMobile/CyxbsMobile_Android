@@ -23,7 +23,7 @@ import com.mredrock.cyxbs.lib.utils.extensions.setOnSingleClickListener
 import kotlin.math.roundToInt
 
 /**
- * 这是长按空白区域生成的带有加号的那个灰色 View。用于点击一下打开事务添加界面
+ * 这是长按空白区域生成的带有加号的那个灰色 View。用于点击一下打开添加事务界面
  *
  * @author 985892345
  * @date 2022/9/19 14:55
