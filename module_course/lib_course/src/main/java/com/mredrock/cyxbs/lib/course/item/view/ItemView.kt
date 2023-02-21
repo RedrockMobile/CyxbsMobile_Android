@@ -11,7 +11,7 @@ import androidx.cardview.widget.CardView
 import com.mredrock.cyxbs.lib.utils.extensions.*
 
 /**
- * 用于 item 中通用的一个 View
+ * 用于 item 中的一个通用 View
  *
  * 包含圆角背景、标题、描述
  *
@@ -32,11 +32,11 @@ abstract class ItemView(context: Context) : CardView(context) {
     tvContent.text = content
   }
   
-  // 课表背景色
-  protected val mFloorColor = com.mredrock.cyxbs.config.R.color.config_common_background_color.color
+  // 底色
+  protected val mBottomColor = com.mredrock.cyxbs.config.R.color.config_common_background_color.color
   
   override fun draw(canvas: Canvas) {
-    canvas.drawColor(mFloorColor) // 需要在底层绘制背景色，不然黑夜模式下 item 颜色会透过去
+    canvas.drawColor(mBottomColor) // 需要在底层绘制背景色，不然黑夜模式下 item 颜色会透过去
     super.draw(canvas)
   }
   

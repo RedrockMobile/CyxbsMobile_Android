@@ -19,11 +19,21 @@ class TouchItemHelper(
     parent: ViewGroup,
     child: View,
     item: ITouchItem,
-    course: ICoursePage
+    page: ICoursePage
   ) {
     repeat(helpers.size) {
       val helper = helpers[it]
-      helper.onPointerTouchEvent(event, parent, child, item, course)
+      helper.onPointerTouchEvent(event, parent, child, item, page)
     }
+  }
+  
+  override fun isAdvanceIntercept(): Boolean {
+    repeat(helpers.size) {
+      val helper = helpers[it]
+      if (helper.isAdvanceIntercept()) {
+        return true
+      }
+    }
+    return false
   }
 }

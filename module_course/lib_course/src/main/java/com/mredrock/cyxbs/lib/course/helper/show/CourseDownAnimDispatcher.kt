@@ -15,6 +15,7 @@ import com.ndhzs.netlayout.child.OnChildExistListener
 import com.ndhzs.netlayout.touch.multiple.IPointerDispatcher
 import com.ndhzs.netlayout.touch.multiple.IPointerTouchHandler
 import com.ndhzs.netlayout.touch.multiple.event.IPointerEvent
+import kotlin.math.abs
 import kotlin.math.pow
 
 /**
@@ -35,7 +36,9 @@ open class CourseDownAnimDispatcher(
         override fun onChildViewRemoved(parent: ViewGroup, child: View) {
           mViewWithRawPointById.forEach { id, pair ->
             if (pair.first === child) {
-              endAnim(child, pair.second.x, pair.second.y)
+              val x = pair.second.x
+              val y = pair.second.y
+              cancelAnim(child, x, y)
               mViewWithRawPointById.remove(id)
               return
             }
@@ -82,20 +85,25 @@ open class CourseDownAnimDispatcher(
           val id = event.getPointerId(index)
           val pair = mViewWithRawPointById[id]
           if (pair != null) {
-            val x = event.getX(index).toInt()
-            val y = event.getY(index).toInt()
             val child = pair.first
             val point = pair.second
-            val l = child.x.toInt()
-            val r = l + child.width
-            val t = child.y.toInt()
-            val b = t + child.height
-            if (x in l .. r && y in t .. b) {
-              changeView(child, point.x, point.y, x, y)
-            } else {
-              // 移动到 View 外面就取消动画
-              endAnim(child, point.x, point.y)
+            val x = event.getX(index).toInt()
+            val y = event.getY(index).toInt()
+            if (abs(child.translationX) > 30 || abs(child.translationY) > 30) {
+              endAnim(child, point.x, point.y, x, y)
               mViewWithRawPointById.remove(id)
+            } else {
+              val l = child.left
+              val r = l + child.width
+              val t = child.top
+              val b = t + child.height
+              if (x in l..r && y in t..b) {
+                changeView(child, point.x, point.y, x, y)
+              } else {
+                // 移动到 View 外面就取消动画
+                endAnim(child, point.x, point.y, x, y)
+                mViewWithRawPointById.remove(id)
+              }
             }
           }
         }
@@ -105,7 +113,9 @@ open class CourseDownAnimDispatcher(
         val id = event.getPointerId(index)
         val pair = mViewWithRawPointById[id]
         if (pair != null) {
-          endAnim(pair.first, pair.second.x, pair.second.y)
+          val x = event.getX(index).toInt()
+          val y = event.getY(index).toInt()
+          endAnim(pair.first, pair.second.x, pair.second.y, x, y)
           mViewWithRawPointById.remove(id)
         }
       }
@@ -114,7 +124,9 @@ open class CourseDownAnimDispatcher(
           val id = event.getPointerId(index)
           val pair = mViewWithRawPointById[id]
           if (pair != null) {
-            endAnim(pair.first, pair.second.x, pair.second.y)
+            val x = event.getX(index).toInt()
+            val y = event.getY(index).toInt()
+            endAnim(pair.first, pair.second.x, pair.second.y, x, y)
           }
         }
         mViewWithRawPointById.clear()
@@ -131,11 +143,11 @@ open class CourseDownAnimDispatcher(
   }
   
   protected open fun changeView(view: View, initialX: Int, initialY: Int, nowX: Int, nowY: Int) {
-    view.rotationX = -(nowY - initialY) / view.height.toFloat() * 360
-    view.rotationY = (nowX - initialX) / view.width.toFloat() * 90
+    view.rotationX = -(nowY - initialY) / view.height.toFloat() * 180 // 上下翻转
+    view.rotationY = (nowX - initialX) / view.width.toFloat() * 90 // 左右翻转
   }
   
-  protected open fun endAnim(view: View, initialX: Int, initialY: Int) {
+  protected open fun endAnim(view: View, initialX: Int, initialY: Int, nowX: Int, nowY: Int) {
     view.animate()
       .scaleX(1F)
       .scaleY(1F)
@@ -143,6 +155,13 @@ open class CourseDownAnimDispatcher(
       .rotationY(0F)
       .setInterpolator(OvershootInterpolator)
       .start()
+  }
+  
+  /**
+   * 取消动画，说明 View 被 remove，你需要在这里面还原为初始状态，防止下次使用时出现异常
+   */
+  protected open fun cancelAnim(view: View, initialX: Int, initialY: Int) {
+  
   }
   
   companion object {

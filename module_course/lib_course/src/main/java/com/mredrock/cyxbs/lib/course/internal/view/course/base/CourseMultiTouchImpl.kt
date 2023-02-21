@@ -69,7 +69,7 @@ abstract class CourseMultiTouchImpl @JvmOverloads constructor(
             parent = parent.parent
           }
         }
-  
+
         override fun onViewDetachedFromWindow(v: View) {
           // 还原，应该不会有其他 View 需要用到这个特性吧，就直接设置成 true 算了
           var parent2: ViewParent? = parent

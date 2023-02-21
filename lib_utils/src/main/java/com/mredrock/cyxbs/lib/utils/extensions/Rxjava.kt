@@ -19,7 +19,7 @@ import java.io.Serializable
 /**
  * 使用优雅的 DSL 来拦截异常
  *
- * # 如果你是想看网络请求的用法，请移步与 network/ApiRxjava.kt
+ * # 如果你是想看网络请求的用法，请移步于 network/ApiRxjava.kt
  * # 该 api 的详细用法请查看 [Flow.interceptException]，注意事项也与 Flow 一致
  */
 fun <T : Any> Single<T>.interceptException(

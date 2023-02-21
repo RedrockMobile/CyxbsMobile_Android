@@ -10,13 +10,11 @@ import androidx.annotation.IdRes
 import androidx.core.view.WindowCompat
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentTransaction
-import androidx.lifecycle.DefaultLifecycleObserver
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleOwner
 import com.mredrock.cyxbs.lib.base.operations.OperationActivity
 import com.mredrock.cyxbs.lib.base.utils.IntentHelper
 import com.mredrock.cyxbs.lib.utils.extensions.isDaytimeMode
-import com.umeng.analytics.MobclickAgent
 
 /**
  * 绝对基础的抽象

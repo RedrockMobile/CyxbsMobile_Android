@@ -66,8 +66,10 @@ open class CourseNowTimeHelper private constructor(
   // 用于每隔一段时间就刷新的 Runnable
   private val mRefreshRunnable = object : Runnable {
     override fun run() {
-      base.course.invalidate()
-      base.course.postDelayed(1000 * 20, this) // 20 秒刷新一次，但记得要取消，防止内存泄漏
+      if (!base.isCourseDestroyed()) {
+        base.course.invalidate()
+        base.course.postDelayed(1000 * 20, this) // 20 秒刷新一次，但记得要取消，防止内存泄漏
+      }
     }
     
     fun start() {
@@ -82,11 +84,6 @@ open class CourseNowTimeHelper private constructor(
   }
   
   init {
-    // 如果类初始化时 View 已经被添加到屏幕上，则直接 start()
-    if (base.course.isAttachedToWindow()) {
-      mRefreshRunnable.start()
-    }
-  
     // 添加 course 生命周期监听，解决 Fragment 与 View 生命周期不同的问题
     base.addCourseLifecycleObservable(
       object : ICourseWrapper.CourseLifecycleObserver {
@@ -112,8 +109,9 @@ open class CourseNowTimeHelper private constructor(
           super.onDestroyCourse(course)
           base.course.removeItemDecoration(this@CourseNowTimeHelper)
           course.removeOnAttachStateChangeListener(attachListener)
+          mRefreshRunnable.cancel()
         }
-      }
+      }, true
     )
   }
   

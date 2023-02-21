@@ -33,15 +33,15 @@ interface INoLesson {
    * 是否是用于展示的 item，会影响没课图片的显示
    * @return 返回 true，则表示该 [item] 是用于展示的
    */
-  fun isExhibitionItem(item: IItem): Boolean
+  fun isHideNoLessonImg(item: IItem): Boolean
   
   /**
-   * 显示没课图片。更建议重写 [isExhibitionItem]，而不是手动控制
+   * 显示没课图片。更建议重写 [isHideNoLessonImg]，而不是手动控制
    */
   fun showViewNoLesson()
   
   /**
-   * 隐藏没课图片。更建议重写 [isExhibitionItem]，而不是手动控制
+   * 隐藏没课图片。更建议重写 [isHideNoLessonImg]，而不是手动控制
    */
   fun hideViewNoLesson()
 }

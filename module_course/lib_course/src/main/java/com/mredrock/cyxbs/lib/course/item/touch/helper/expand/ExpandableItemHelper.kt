@@ -1,4 +1,4 @@
-package com.mredrock.cyxbs.lib.course.item.touch.helper
+package com.mredrock.cyxbs.lib.course.item.touch.helper.expand
 
 import android.view.View
 import android.view.ViewGroup
@@ -19,7 +19,7 @@ class ExpandableItemHelper : ITouchItemHelper {
     parent: ViewGroup,
     child: View,
     item: ITouchItem,
-    course: ICoursePage
+    page: ICoursePage
   ) {
     TODO("Not yet implemented")
   }

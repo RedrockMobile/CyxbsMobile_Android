@@ -35,4 +35,16 @@ interface IView {
   fun getWidth(): Int
   
   fun getParent(): ViewParent
+  
+  fun getPaddingLeft(): Int
+  
+  fun getPaddingRight(): Int
+  
+  fun getPaddingStart(): Int
+  
+  fun getPaddingEnd(): Int
+  
+  fun getPaddingTop(): Int
+  
+  fun getPaddingBottom(): Int
 }

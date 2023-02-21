@@ -31,9 +31,11 @@ abstract class NoLessonImpl : CourseDefaultTouchImpl(), INoLesson {
   override val tvNoLesson by R.id.course_tv_no_lesson.view<TextView>()
   
   /**
-   * 如果你给 item 添加了新的类型，并且需要隐藏没课图片，那么你需要重写该方法
+   * 是否隐藏没课图片
+   *
+   * 每添加一个 item 进课表就会回调该方法来判断是否需要继续显示没课图片
    */
-  override fun isExhibitionItem(item: IItem): Boolean {
+  override fun isHideNoLessonImg(item: IItem): Boolean {
     return item is ILessonItem || item is IAffairItem
   }
   
@@ -65,13 +67,13 @@ abstract class NoLessonImpl : CourseDefaultTouchImpl(), INoLesson {
         object : IItemContainer.OnItemExistListener {
           override fun onItemAddedAfter(item: IItem, view: View?) {
             if (view == null) return
-            if (isExhibitionItem(item)) mExhibitionItemCount++
+            if (isHideNoLessonImg(item)) mExhibitionItemCount++
             tryPostRefreshNoLessonRunnable()
           }
           
           override fun onItemRemovedAfter(item: IItem, view: View?) {
             if (view == null) return
-            if (isExhibitionItem(item)) mExhibitionItemCount--
+            if (isHideNoLessonImg(item)) mExhibitionItemCount--
             tryPostRefreshNoLessonRunnable()
           }
         }
