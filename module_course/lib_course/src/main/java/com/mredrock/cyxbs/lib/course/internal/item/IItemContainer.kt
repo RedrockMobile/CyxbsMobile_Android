@@ -74,9 +74,9 @@ interface IItemContainer {
   fun addItemExistListener(l: OnItemExistListener)
   
   /**
-   * 发送一个 Runnable 延迟到下一个事件序列中删除监听
+   * 删除监听
    */
-  fun postRemoveItemExistListener(l: OnItemExistListener)
+  fun removeItemExistListener(l: OnItemExistListener)
   
   /**
    * 添加 [IItem] 和移除 [IItem] 的拦截器

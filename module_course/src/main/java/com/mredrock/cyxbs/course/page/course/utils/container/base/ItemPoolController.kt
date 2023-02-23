@@ -1,6 +1,7 @@
 package com.mredrock.cyxbs.course.page.course.utils.container.base
 
 import android.view.View
+import com.mredrock.cyxbs.course.page.course.data.AffairData
 import com.mredrock.cyxbs.lib.course.fragment.course.expose.wrapper.ICourseWrapper
 import com.mredrock.cyxbs.lib.course.internal.item.IItem
 import com.mredrock.cyxbs.lib.course.internal.item.IItemContainer
@@ -42,7 +43,7 @@ abstract class ItemPoolController<Item, Data : Any>(
             if (itemClass.isInstance(item)) {
               item as Item
               val data = item.data
-              if (!mOldDataMap.contains(data)) {
+              if (!mOldDataMap.containsKey(data)) {
                 // 不包含的时候说明是通过其他方式添加进来的
                 mOldDataMap[data] = item
                 addNewDataIntoOldList(data)
@@ -82,7 +83,7 @@ abstract class ItemPoolController<Item, Data : Any>(
           mRecyclePool.clear()
           mShowItems.clear()
           clearDataFromOldList()
-          course.postRemoveItemExistListener(listener)
+          course.removeItemExistListener(listener)
         }
       }, true
     )
@@ -117,9 +118,8 @@ abstract class ItemPoolController<Item, Data : Any>(
   }
   
   final override fun onChanged(oldData: Data, newData: Data) {
-    val item = mOldDataMap[oldData]
+    val item = mOldDataMap.remove(oldData)
     if (item != null) {
-      mOldDataMap.remove(oldData)
       mOldDataMap[newData] = item
       item.setNewData(newData)
     }
@@ -145,5 +145,14 @@ abstract class ItemPoolController<Item, Data : Any>(
   
   protected fun getShowItems(): Set<Item> {
     return Collections.unmodifiableSet(mShowItems)
+  }
+  
+  override fun replaceDataFromOldList(oldData: Data, newData: Data) {
+    super.replaceDataFromOldList(oldData, newData)
+    val item = mOldDataMap.remove(oldData)
+    if (item != null) {
+      mOldDataMap[newData] = item
+      item.setNewData(newData)
+    }
   }
 }

@@ -108,8 +108,10 @@ interface IMovableListener {
   /**
    * 结束动画开始
    *
+   * ## 注意
+   * 如果 [newLocation] 不为 null，此时 item 已经移动到了新位置，即 item.lp 已经被修改为 [newLocation]
+   *
    * @param newLocation 新的位置。如果为 null，则回到原位置
-   * @param fraction 动画进度，0 -> 1
    */
   fun onOverAnimStart(
     newLocation: LocationUtil.Location?,

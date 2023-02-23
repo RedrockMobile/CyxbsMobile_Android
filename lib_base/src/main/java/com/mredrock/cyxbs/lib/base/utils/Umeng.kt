@@ -31,7 +31,7 @@ object Umeng {
     object CourseShow : Event("course_show", null)
     
     // 点击课表item查看课程详情
-    data class ClickCourseItem(
+    data class CourseDetail(
       val isHead: Boolean // 是否来自主页课表头部的点击
     ) : Event("click_course_item", mapOf("is_head" to isHead))
     

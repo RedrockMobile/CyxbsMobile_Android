@@ -17,7 +17,7 @@ data class AffairData(
   override val hashDay: Int, // 星期数，星期一为 0
   override val beginLesson: Int, // 开始节数，如：1、2 节课以 1 开始；3、4 节课以 3 开始，注意：中午是以 -1 开始，傍晚是以 -2 开始
   override val period: Int, // 长度
-  val onlyId: Int, // 事务唯一 id，但这个 id 可以表示多个不同时间段的事务
+  val onlyId: Int, // 事务唯一 id，但这个 id 可以表示多个不同时间段的事务，即可以存在多个不同的 AffairData 拥有相同的 id
   val time: Int, // 提醒时间
   val title: String,
   val content: String,
@@ -53,4 +53,18 @@ fun List<IAffairService.Affair>.toAffairData(): List<AffairData> {
       it.content
     )
   }
+}
+
+fun AffairData.toAffair(): IAffairService.Affair {
+  return IAffairService.Affair(
+    stuNum,
+    onlyId,
+    time,
+    title,
+    content,
+    week,
+    beginLesson,
+    hashDay,
+    period
+  )
 }

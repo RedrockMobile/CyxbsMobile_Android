@@ -40,28 +40,20 @@ class AffairServiceImpl : IAffairService {
   }
   
   override fun updateAffair(affair: IAffairService.Affair): Completable {
-    return getAffair()
-      .doOnSuccess { list ->
-        val isSingle = list.filter { it.onlyId == affair.onlyId }.size == 1
-        require(isSingle) {
-          "该方法目前只能更新不重复的单一事务！"
-        }
-      }.flatMapCompletable {
-        AffairRepository.updateAffair(
-          affair.onlyId,
-          affair.time,
-          affair.title,
-          affair.content,
-          listOf(
-            AffairEntity.AtWhatTime(
-              affair.beginLesson,
-              affair.day,
-              affair.period,
-              listOf(affair.week)
-            )
-          )
+    return AffairRepository.updateAffair(
+      affair.onlyId,
+      affair.time,
+      affair.title,
+      affair.content,
+      listOf(
+        AffairEntity.AtWhatTime(
+          affair.beginLesson,
+          affair.day,
+          affair.period,
+          listOf(affair.week)
         )
-      }
+      )
+    )
   }
   
   override fun startActivityForAddAffair(

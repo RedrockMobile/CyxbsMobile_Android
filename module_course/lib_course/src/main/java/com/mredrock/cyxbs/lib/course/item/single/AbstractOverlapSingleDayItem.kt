@@ -46,7 +46,8 @@ import java.util.Collections
  * @email guo985892345@foxmail.com
  * @date 2022/8/26 17:00
  */
-abstract class AbstractOverlapSingleDayItem : IOverlapItem, OverlapHelper.IOverlapLogic, ISingleDayItem {
+abstract class AbstractOverlapSingleDayItem : IOverlapItem, OverlapHelper.IOverlapLogic,
+  ISingleDayItem {
   
   /**
    * 创建子 View，这个 View 才是真正用于显示的
@@ -85,14 +86,14 @@ abstract class AbstractOverlapSingleDayItem : IOverlapItem, OverlapHelper.IOverl
     return object : Iterable<View> {
       override fun iterator(): Iterator<View> {
         return object : Iterator<View> {
-  
+          
           val iterator1 = mChildInFree.iterator()
           val iterator2 = mChildInParent.iterator()
-  
+          
           override fun hasNext(): Boolean {
             return iterator1.hasNext() || iterator2.hasNext()
           }
-  
+          
           override fun next(): View {
             return if (iterator1.hasNext()) iterator1.next() else iterator2.next()
           }
@@ -174,20 +175,22 @@ abstract class AbstractOverlapSingleDayItem : IOverlapItem, OverlapHelper.IOverl
   private val mChildInParent = arrayListOf<View>()
   
   final override fun refreshOverlap() {
-    // 设置动画
-    TransitionManager.beginDelayedTransition(mNetLayout, createTransition())
     // 这里需要重新设置一遍总行数，因为外面可能重新设置了 lp，但 mView 的属性与 lp 并没有相互绑定
     mNetLayout.setRowColumnCount(lp.rowCount, lp.columnCount)
     // 刷新空闲区域
     refreshFreeArea()
+    // 设置动画
+    TransitionManager.beginDelayedTransition(mNetLayout, createTransition())
+    
+    val diffSize = mChildInParent.size - mFreeAreaMap.size()
     // 移除掉多的子 View
-    repeat(mChildInParent.size - mFreeAreaMap.size()) {
+    repeat(diffSize) {
       val view = mChildInParent.removeLast()
       mNetLayout.removeView(view)
       mChildInFree.add(view)
     }
     // 添加新的子 View
-    repeat(mFreeAreaMap.size() - mChildInParent.size) {
+    repeat(-diffSize) {
       val view = mChildInFree.removeLastOrNull() ?: createView(mNetLayout.context)
       val params = view.layoutParams as? NetLayoutParams ?: createNetLayoutParams()
       mNetLayout.addNetChild(view, params)
@@ -212,7 +215,7 @@ abstract class AbstractOverlapSingleDayItem : IOverlapItem, OverlapHelper.IOverl
    * 创建子 View 的 [NetLayoutParams]
    */
   private fun createNetLayoutParams(): NetLayoutParams {
-    return NetLayoutParams(0, 0,0, 0).apply {
+    return NetLayoutParams(0, 0, 0, 0).apply {
       leftMargin = R.dimen.course_item_margin.dimen.toInt()
       rightMargin = leftMargin
       topMargin = leftMargin
@@ -263,7 +266,10 @@ abstract class AbstractOverlapSingleDayItem : IOverlapItem, OverlapHelper.IOverl
        *
        * 为了好看的动画，多层嵌套这点性能不值一提 :)
        */
-      val lp = ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT)
+      val lp = ViewGroup.LayoutParams(
+        ViewGroup.LayoutParams.MATCH_PARENT,
+        ViewGroup.LayoutParams.MATCH_PARENT
+      )
       val layout = FrameLayout(context).apply { setWillNotDraw(true); layoutParams = lp }
       layout.addView(netLayout)
       addView(layout)

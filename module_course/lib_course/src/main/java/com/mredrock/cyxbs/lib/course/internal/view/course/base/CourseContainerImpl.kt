@@ -6,7 +6,7 @@ import android.view.View
 import com.mredrock.cyxbs.lib.course.R
 import com.mredrock.cyxbs.lib.course.internal.item.IItem
 import com.mredrock.cyxbs.lib.course.internal.item.IItemContainer
-import com.mredrock.cyxbs.lib.course.utils.forEachInline
+import com.mredrock.cyxbs.lib.course.utils.forEachReversed
 import com.ndhzs.netlayout.attrs.NetLayoutParams
 import java.util.Collections
 import kotlin.collections.ArrayList
@@ -24,8 +24,7 @@ abstract class CourseContainerImpl @JvmOverloads constructor(
   defStyleAttr: Int = R.attr.courseLayoutStyle,
   defStyleRes: Int = 0
 ) : AbstractCourseViewGroup(context, attrs, defStyleAttr, defStyleRes),
-  IItemContainer
-{
+  IItemContainer {
   
   private val mOnItemExistListeners = ArrayList<IItemContainer.OnItemExistListener>(2)
   private val mItemInterceptors = ArrayList<IItemContainer.IItemInterceptor>(2)
@@ -37,11 +36,8 @@ abstract class CourseContainerImpl @JvmOverloads constructor(
     mOnItemExistListeners.add(l)
   }
   
-  final override fun postRemoveItemExistListener(l: IItemContainer.OnItemExistListener) {
-    post {
-      // 由于遍历中不能直接删除，所以使用 post 来延迟删除
-      mOnItemExistListeners.remove(l)
-    }
+  final override fun removeItemExistListener(l: IItemContainer.OnItemExistListener) {
+    mOnItemExistListeners.remove(l)
   }
   
   final override fun addItemInterceptor(interceptor: IItemContainer.IItemInterceptor) {
@@ -53,7 +49,7 @@ abstract class CourseContainerImpl @JvmOverloads constructor(
       error("该 View 已经被添加了，请检查所有调用该方法的地方！")
     }
     mInterceptorByItem.remove(item) // 需要先删除关联的拦截器，因为可能是第二次添加
-    mOnItemExistListeners.forEachInline { it.onItemAddedBefore(item) }
+    mOnItemExistListeners.forEachReversed { it.onItemAddedBefore(item) }
     var isIntercept = false
     for (it in mItemInterceptors) {
       if (it.addItem(item)) {
@@ -70,23 +66,23 @@ abstract class CourseContainerImpl @JvmOverloads constructor(
       // 此时才能添加进课表
       super.addNetChild(view, item.lp)
     }
-    mOnItemExistListeners.forEachInline { it.onItemAddedAfter(item, view) }
+    mOnItemExistListeners.forEachReversed { it.onItemAddedAfter(item, view) }
   }
   
   final override fun removeItem(item: IItem) {
     val interceptor = mInterceptorByItem.remove(item)
     if (interceptor != null) {
-      mOnItemExistListeners.forEachInline { it.onItemRemovedBefore(item, null) }
+      mOnItemExistListeners.forEachReversed { it.onItemRemovedBefore(item, null) }
       interceptor.removeItem(item)
-      mOnItemExistListeners.forEachInline { it.onItemRemovedAfter(item, null) }
+      mOnItemExistListeners.forEachReversed { it.onItemRemovedAfter(item, null) }
     } else {
       val view = mViewByItem[item]
       if (view != null) {
-        mOnItemExistListeners.forEachInline { it.onItemRemovedBefore(item, view) }
+        mOnItemExistListeners.forEachReversed { it.onItemRemovedBefore(item, view) }
         super.removeView(view)
         mItemByView.remove(view)
         mViewByItem.remove(item)
-        mOnItemExistListeners.forEachInline { it.onItemRemovedAfter(item, view) }
+        mOnItemExistListeners.forEachReversed { it.onItemRemovedAfter(item, view) }
       }
     }
   }

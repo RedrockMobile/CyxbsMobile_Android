@@ -6,6 +6,8 @@ import androidx.core.os.bundleOf
 import androidx.fragment.app.createViewModelLazy
 import androidx.lifecycle.distinctUntilChanged
 import androidx.lifecycle.map
+import com.mredrock.cyxbs.course.page.course.ui.home.utils.MovableAffairManager
+import com.mredrock.cyxbs.course.page.course.ui.home.utils.PageFragmentHelper
 import com.mredrock.cyxbs.course.page.course.ui.home.viewmodel.HomeCourseViewModel
 import com.mredrock.cyxbs.course.page.course.utils.container.AffairContainerProxy
 import com.mredrock.cyxbs.course.page.course.utils.container.LinkLessonContainerProxy
@@ -21,7 +23,7 @@ import com.mredrock.cyxbs.lib.course.internal.item.IItem
  * @email guo985892345@foxmail.com
  * @date 2022/8/20 19:25
  */
-class HomeWeekFragment : CourseWeekFragment() {
+class HomeWeekFragment : CourseWeekFragment(), IHomePageFragment {
   
   companion object {
     fun newInstance(week: Int): HomeWeekFragment {
@@ -39,13 +41,13 @@ class HomeWeekFragment : CourseWeekFragment() {
   val week: Int
    get() = mWeek
   
-  val parentViewModel by createViewModelLazy(
+  override val parentViewModel by createViewModelLazy(
     HomeCourseViewModel::class,
     { requireParentFragment().viewModelStore }
   )
   
   // 大部分的初始化方法在这里面
-  private val mPageFragmentHelper = PageFragmentHelper()
+  private val mPageFragmentHelper = PageFragmentHelper<HomeWeekFragment>()
   
   override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
     super.onViewCreated(view, savedInstanceState)
@@ -60,9 +62,9 @@ class HomeWeekFragment : CourseWeekFragment() {
    */
   private var mIsShowLinkEventAfterClick: Boolean? = null
   
-  private val mSelfLessonContainerProxy = SelfLessonContainerProxy(this)
-  private val mLinkLessonContainerProxy = LinkLessonContainerProxy(this)
-  private val mAffairContainerProxy = AffairContainerProxy(this)
+  override val selfLessonContainerProxy = SelfLessonContainerProxy(this)
+  override val linkLessonContainerProxy = LinkLessonContainerProxy(this)
+  override val affairContainerProxy = AffairContainerProxy(this, MovableAffairManager(this))
   
   private fun initObserve() {
     parentViewModel.showLinkEvent
@@ -74,12 +76,12 @@ class HomeWeekFragment : CourseWeekFragment() {
       .map { it[mWeek] ?: HomeCourseViewModel.HomePageResult }
       .distinctUntilChanged()
       .observe {
-        mAffairContainerProxy.diffRefresh(it.affair)
-        mSelfLessonContainerProxy.diffRefresh(it.self)
-        mLinkLessonContainerProxy.diffRefresh(it.link) { data ->
+        affairContainerProxy.diffRefresh(it.affair)
+        selfLessonContainerProxy.diffRefresh(it.self)
+        linkLessonContainerProxy.diffRefresh(it.link) { data ->
           if (mIsShowLinkEventAfterClick == true && parentViewModel.currentItem == mWeek && data.isNotEmpty()) {
             // 这时说明触发了关联人的显示，需要开启入场动画
-            mLinkLessonContainerProxy.startAnimation()
+            linkLessonContainerProxy.startAnimation()
           }
         }
       }
