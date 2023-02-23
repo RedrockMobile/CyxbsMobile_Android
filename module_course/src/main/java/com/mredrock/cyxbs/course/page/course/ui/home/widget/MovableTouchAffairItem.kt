@@ -1,7 +1,6 @@
 package com.mredrock.cyxbs.course.page.course.ui.home.widget
 
 import android.annotation.SuppressLint
-import com.mredrock.cyxbs.course.BuildConfig
 import com.mredrock.cyxbs.lib.course.helper.affair.view.TouchAffairView
 import com.mredrock.cyxbs.lib.course.internal.view.course.ICourseViewGroup
 import com.mredrock.cyxbs.lib.course.item.touch.ITouchItem

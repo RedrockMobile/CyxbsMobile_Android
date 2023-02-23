@@ -1,4 +1,4 @@
-package com.mredrock.cyxbs.course.page.course.ui.home
+package com.mredrock.cyxbs.course.page.course.ui.home.utils
 
 import android.os.Bundle
 import android.view.View
@@ -7,7 +7,9 @@ import com.mredrock.cyxbs.api.affair.IAffairService
 import com.mredrock.cyxbs.api.course.ILessonService
 import com.mredrock.cyxbs.api.course.utils.getBeginLesson
 import com.mredrock.cyxbs.config.config.SchoolCalendar
-import com.mredrock.cyxbs.course.page.course.ui.home.utils.EnterAnimUtils
+import com.mredrock.cyxbs.course.page.course.ui.home.HomeSemesterFragment
+import com.mredrock.cyxbs.course.page.course.ui.home.HomeWeekFragment
+import com.mredrock.cyxbs.course.page.course.ui.home.IHomePageFragment
 import com.mredrock.cyxbs.course.page.course.ui.home.widget.MovableTouchAffairItem
 import com.mredrock.cyxbs.lib.course.fragment.page.CoursePageFragment
 import com.mredrock.cyxbs.lib.course.helper.affair.CreateAffairDispatcher
@@ -30,9 +32,9 @@ import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
  * @author 985892345
  * 2023/2/20 21:28
  */
-class PageFragmentHelper {
+class PageFragmentHelper<T> where T: IHomePageFragment, T: CoursePageFragment {
   
-  fun init(fragment: CoursePageFragment, savedInstanceState: Bundle?) {
+  fun init(fragment: T, savedInstanceState: Bundle?) {
     val isFragmentRebuilt = savedInstanceState != null
     fragment.apply {
       initEntrance(isFragmentRebuilt)
@@ -45,7 +47,7 @@ class PageFragmentHelper {
   /**
    * 入场动画的实现
    */
-  private fun CoursePageFragment.initEntrance(isFragmentRebuilt: Boolean) {
+  private fun T.initEntrance(isFragmentRebuilt: Boolean) {
     // 如果是被异常重启，则不执行动画
     if (!isFragmentRebuilt) {
       /**
@@ -77,7 +79,8 @@ class PageFragmentHelper {
   /**
    * 点击中午和傍晚的折叠
    */
-  private fun CoursePageFragment.initFoldLogic(isFragmentRebuilt: Boolean) {
+  private fun T.initFoldLogic(isFragmentRebuilt: Boolean) {
+    this as CoursePageFragment
     if (!isFragmentRebuilt) {
       // 在初始打开时，如果存在 item 在中午或者傍晚时间段，就主动展开
       // 只有在第一次显示 Fragment 时才进行监听，后面的折叠状态会由 CourseFoldHelper 保存
@@ -88,7 +91,7 @@ class PageFragmentHelper {
             val lp = item.lp
             if (compareNoonPeriodByRow(lp.startRow) * compareNoonPeriodByRow(lp.endRow) <= 0) {
               unfoldNoon()
-              course.postRemoveItemExistListener(this) // 只需要展开一次
+              course.removeItemExistListener(this) // 只需要展开一次
             }
           }
         }
@@ -100,7 +103,7 @@ class PageFragmentHelper {
             val lp = item.lp
             if (compareDuskPeriodByRow(lp.startRow) * compareDuskPeriodByRow(lp.endRow) <= 0) {
               unfoldDusk()
-              course.postRemoveItemExistListener(this) // 只需要展开一次
+              course.removeItemExistListener(this) // 只需要展开一次
             }
           }
         }
@@ -111,10 +114,10 @@ class PageFragmentHelper {
   /**
    * 长按创建事务
    */
-  private fun CoursePageFragment.initCreateAffair() {
+  private fun T.initCreateAffair() {
     val dispatcher = CreateAffairDispatcher(
       this,
-      object : ICreateAffairConfig by ICreateAffairConfig {
+      object : ICreateAffairConfig {
         override fun createTouchAffairItem(
           course: ICourseViewGroup,
           event: IPointerEvent
@@ -128,7 +131,7 @@ class PageFragmentHelper {
       val week = when (this@initCreateAffair) {
         is HomeSemesterFragment -> 0
         is HomeWeekFragment -> week
-        else -> error("错误使用")
+        else -> error("")
       }
       // 打开编辑事务详细的界面
       IAffairService::class.impl
@@ -170,7 +173,7 @@ class PageFragmentHelper {
   /**
    * 初始化没有网络连接时的逻辑
    */
-  private fun CoursePageFragment.initNoInternetLogic() {
+  private fun T.initNoInternetLogic() {
     if (!ILessonService.isUseLocalSaveLesson) {
       val noLessonImage = ivNoLesson.drawable
       val noLessonText = tvNoLesson.text

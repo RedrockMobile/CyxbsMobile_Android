@@ -5,6 +5,8 @@ import android.view.View
 import androidx.fragment.app.createViewModelLazy
 import androidx.lifecycle.distinctUntilChanged
 import com.mredrock.cyxbs.course.page.course.data.LessonData
+import com.mredrock.cyxbs.course.page.course.ui.home.utils.MovableAffairManager
+import com.mredrock.cyxbs.course.page.course.ui.home.utils.PageFragmentHelper
 import com.mredrock.cyxbs.course.page.course.ui.home.viewmodel.HomeCourseViewModel
 import com.mredrock.cyxbs.course.page.course.utils.container.AffairContainerProxy
 import com.mredrock.cyxbs.course.page.course.utils.container.LinkLessonContainerProxy
@@ -20,15 +22,15 @@ import com.mredrock.cyxbs.lib.course.internal.item.IItem
  * @email guo985892345@foxmail.com
  * @date 2022/8/20 19:25
  */
-class HomeSemesterFragment : CourseSemesterFragment() {
+class HomeSemesterFragment : CourseSemesterFragment(), IHomePageFragment {
   
-  val parentViewModel by createViewModelLazy(
+  override val parentViewModel by createViewModelLazy(
     HomeCourseViewModel::class,
     { requireParentFragment().viewModelStore }
   )
   
   // 大部分的初始化方法在这里面
-  private val mPageFragmentHelper = PageFragmentHelper()
+  private val mPageFragmentHelper = PageFragmentHelper<HomeSemesterFragment>()
   
   override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
     super.onViewCreated(view, savedInstanceState)
@@ -43,9 +45,9 @@ class HomeSemesterFragment : CourseSemesterFragment() {
    */
   private var mIsShowLinkEventAfterClick: Boolean? = null
   
-  private val mSelfLessonContainerProxy = SelfLessonContainerProxy(this)
-  private val mLinkLessonContainerProxy = LinkLessonContainerProxy(this)
-  private val mAffairContainerProxy = AffairContainerProxy(this)
+  override val selfLessonContainerProxy = SelfLessonContainerProxy(this)
+  override val linkLessonContainerProxy = LinkLessonContainerProxy(this)
+  override val affairContainerProxy = AffairContainerProxy(this, MovableAffairManager(this))
   
   private fun initObserve() {
     parentViewModel.showLinkEvent
@@ -59,12 +61,12 @@ class HomeSemesterFragment : CourseSemesterFragment() {
         val self = map.mapValues { it.value.self }.mapToMinWeek()
         val link = map.mapValues { it.value.link }.mapToMinWeek()
         val affair = map.values.map { it.affair }.flatten()
-        mAffairContainerProxy.diffRefresh(affair)
-        mSelfLessonContainerProxy.diffRefresh(self)
-        mLinkLessonContainerProxy.diffRefresh(link) {
+        affairContainerProxy.diffRefresh(affair)
+        selfLessonContainerProxy.diffRefresh(self)
+        linkLessonContainerProxy.diffRefresh(link) {
           if (mIsShowLinkEventAfterClick == true && parentViewModel.currentItem == 0 && it.isNotEmpty()) {
             // 这时说明触发了关联人的显示，需要开启入场动画
-            mLinkLessonContainerProxy.startAnimation()
+            linkLessonContainerProxy.startAnimation()
           }
         }
       }

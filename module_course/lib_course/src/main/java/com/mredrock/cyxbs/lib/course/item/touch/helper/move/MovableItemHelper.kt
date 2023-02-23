@@ -6,13 +6,11 @@ import android.view.View
 import android.view.ViewConfiguration
 import android.view.ViewGroup
 import androidx.core.view.doOnNextLayout
-import com.mredrock.cyxbs.lib.course.BuildConfig
 import com.mredrock.cyxbs.lib.course.fragment.page.ICoursePage
 import com.mredrock.cyxbs.lib.course.internal.view.course.ICourseScrollControl
 import com.mredrock.cyxbs.lib.course.item.touch.ITouchItem
 import com.mredrock.cyxbs.lib.course.item.touch.ITouchItemHelper
 import com.mredrock.cyxbs.lib.course.utils.forEachReversed
-import com.mredrock.cyxbs.lib.utils.extensions.toast
 import com.mredrock.cyxbs.lib.utils.utils.VibratorUtil
 import com.ndhzs.netlayout.draw.ItemDecoration
 import com.ndhzs.netlayout.touch.multiple.event.IPointerEvent
@@ -38,18 +36,6 @@ class MovableItemHelper(
   
   fun removeMovableListener(l: IMovableListener) {
     mMovableListener.remove(l)
-  }
-  
-  companion object {
-    
-    private var isShowDebugToast = false
-    
-    fun debugToast() {
-      if (!isShowDebugToast && BuildConfig.DEBUG) {
-        isShowDebugToast = true
-        toast("实验性功能，只在 debug 状态下开启")
-      }
-    }
   }
   
   private val mMovableListener = arrayListOf<IMovableListener>()
@@ -113,8 +99,7 @@ class MovableItemHelper(
     when (val action = event.action) {
       IPointerEvent.Action.DOWN -> {
         if (mPointerId == MotionEvent.INVALID_POINTER_ID) {
-          if (config.isMovable(event, page.course, item, child)) {
-            if (!BuildConfig.DEBUG) return // TODO
+          if (config.isMovable(event, page, item, child)) {
             mPointerId = event.pointerId
             mInitialX = event.x.toInt() // 重置
             mInitialY = event.y.toInt() // 重置
@@ -187,10 +172,10 @@ class MovableItemHelper(
               var newLocation: LocationUtil.Location? = null // 需要移动到的新位置
               if (action == IPointerEvent.Action.UP) {
                 val location = LocationUtil.getLocation(child, course) {
-                  config.isAllowOverlap(course, child)
+                  config.isAllowOverlap(page, child)
                 }
                 if (location != null) {
-                  if (config.isMovableToNewLocation(course, item, child, location)) {
+                  if (config.isMovableToNewLocation(page, item, child, location)) {
                     newLocation = location
                   }
                 }
@@ -224,7 +209,6 @@ class MovableItemHelper(
   
   // 长按激活时的回调
   private fun longPressStart() {
-    debugToast() // TODO
     val page = mCoursePage ?: return
     val item = mTouchItem ?: return
     val view = mItemView ?: return

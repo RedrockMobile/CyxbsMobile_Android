@@ -16,7 +16,6 @@ import com.mredrock.cyxbs.course.page.course.item.view.OverlapTagHelper
 import com.mredrock.cyxbs.course.page.course.utils.container.base.IDataOwner
 import com.mredrock.cyxbs.course.page.course.utils.container.base.IRecycleItem
 import com.mredrock.cyxbs.lib.course.fragment.page.ICoursePage
-import com.mredrock.cyxbs.lib.course.internal.view.course.ICourseViewGroup
 import com.mredrock.cyxbs.lib.course.item.lesson.ILessonItem
 import com.mredrock.cyxbs.lib.course.item.touch.ITouchItem
 import com.mredrock.cyxbs.lib.course.item.touch.ITouchItemHelper
@@ -128,9 +127,9 @@ class LinkLesson(private var lessonData: StuLessonData) :
   override fun initializeTouchItemHelper(): List<ITouchItemHelper> {
     return super.initializeTouchItemHelper() + listOf(
       MovableItemHelper(
-        object : IMovableItemHelperConfig by IMovableItemHelperConfig {
+        object : IMovableItemHelperConfig {
           override fun isMovableToNewLocation(
-            parent: ICourseViewGroup, item: ITouchItem,
+            page: ICoursePage, item: ITouchItem,
             child: View, newLocation: LocationUtil.Location
           ): Boolean {
             return false // 课程不能移动到新位置

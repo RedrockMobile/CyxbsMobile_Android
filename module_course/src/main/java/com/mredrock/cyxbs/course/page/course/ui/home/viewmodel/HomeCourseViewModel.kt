@@ -65,12 +65,21 @@ class HomeCourseViewModel : BaseViewModel() {
   private var mDataObserveDisposable = initObserve()
   
   /**
-   * 刷新整个课表数据的观察流，相当于刷新课表数据
+   * 取消课表数据的观察流
+   *
+   * 建议与 [refreshDataObserve] 配合使用
    */
-  fun refreshDataObserve() {
+  fun cancelDataObserve() {
     if (!mDataObserveDisposable.isDisposed) {
       mDataObserveDisposable.dispose()
     }
+  }
+  
+  /**
+   * 刷新整个课表数据的观察流，相当于刷新课表数据
+   */
+  fun refreshDataObserve() {
+    cancelDataObserve()
     mDataObserveDisposable = initObserve()
   }
   
