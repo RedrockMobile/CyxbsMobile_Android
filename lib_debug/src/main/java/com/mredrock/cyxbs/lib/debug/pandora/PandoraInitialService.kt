@@ -30,7 +30,7 @@ class PandoraInitialService: InitialService, SensorDetector.Callback {
     SensorDetector(this)
     
     /*
-    * 除了摇一摇以外，点击屏幕顶部状态栏下正中间区域 10 下也能打开
+    * 除了摇一摇以外，点击屏幕顶部状态栏下正中间区域 3 下也能打开
     * */
     manager.application.registerActivityLifecycleCallbacks(
       object : Application.ActivityLifecycleCallbacks by defaultImpl() {

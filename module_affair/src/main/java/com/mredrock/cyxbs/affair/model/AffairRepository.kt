@@ -1,5 +1,6 @@
 package com.mredrock.cyxbs.affair.model
 
+import android.annotation.SuppressLint
 import com.google.gson.Gson
 import com.mredrock.cyxbs.affair.bean.toAffairDateBean
 import com.mredrock.cyxbs.affair.net.AffairApiService
@@ -166,6 +167,7 @@ object AffairRepository {
       }.subscribeOn(Schedulers.io())
   }
   
+  @SuppressLint("CheckResult")
   private fun updateAffairInternal(
     stuNum: String,
     onlyId: Int,
@@ -243,6 +245,7 @@ object AffairRepository {
       }.subscribeOn(Schedulers.io())
   }
   
+  @SuppressLint("CheckResult")
   private fun deleteAffairInternal(stuNum: String, onlyId: Int): Completable {
     return Completable.create { emitter ->
       // 存在概率很小的同步问题，可能此时正在执行另一个 uploadLocalAffair()，所以使用 runInTransaction
@@ -295,6 +298,7 @@ object AffairRepository {
    * 一是为了同时在 runInTransaction  使用
    * 二是为了可读性，并没有全部写在 Completable.create {} 里面
    */
+  @SuppressLint("CheckResult")
   private fun uploadLocalAffair(stuNum: String): Completable {
     // 本地临时添加的事务
     val localAdd = {

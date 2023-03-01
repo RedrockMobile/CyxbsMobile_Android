@@ -40,6 +40,7 @@ public class CyxbsToast {
             list.remove(0);
             StringBuilder builder = new StringBuilder();
             boolean isFoundFirst = false;
+            // 下面这些是用于定位堆栈信息
             for (StackTraceElement it : list) {
                 if (!it.isNativeMethod()
                   && it.getFileName() != null

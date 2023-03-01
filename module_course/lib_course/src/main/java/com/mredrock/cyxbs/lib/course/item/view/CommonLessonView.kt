@@ -16,6 +16,7 @@ import com.mredrock.cyxbs.lib.utils.extensions.color
  */
 abstract class CommonLessonView(context: Context) : ItemView(context) {
   
+  // 写这里不写成静态变量是因为黑夜切换会导致颜色改变，但静态变量就不容易处理
   protected open val mAmTextColor = R.color.course_am_lesson_tv.color
   protected open val mPmTextColor = R.color.course_pm_lesson_tv.color
   protected open val mNightTextColor = R.color.course_night_lesson_tv.color

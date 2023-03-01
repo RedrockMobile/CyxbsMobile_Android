@@ -14,22 +14,30 @@ import com.mredrock.cyxbs.common.service.impl
 import com.mredrock.cyxbs.lib.utils.UtilsApplicationWrapper.Companion.application
 import com.mredrock.cyxbs.lib.utils.extensions.doPermissionAction
 import com.mredrock.cyxbs.lib.utils.extensions.toast
+import kotlinx.coroutines.suspendCancellableCoroutine
 import java.util.*
 import kotlin.coroutines.resume
-import kotlin.coroutines.suspendCoroutine
 
 /**
+ * 一个给手机日历添加事件的工具类
+ *
+ * 能实现的需求：
+ * - 定时提醒 (允许使用闹钟的提醒)
+ * - 塞一些“永久”信息 (即使软件被卸载后也能保留在手机上 :)
+ *
+ *
  * https://developer.android.google.cn/guide/topics/providers/calendar-provider?hl=zh-cn
  *
  * 除了官方文档外，你可能还需要阅读以下文档，因为日历信息的添加是有一套国际标准的
  * RFC5545 规范中英对照文档：http://rfc2cn.com/rfc5545.html（如果你想详细研究一下怎么写规则，强烈推荐看下这篇文档）
- * RERIOD 规则: 3.3.9
- * RDATE 规则：3.8.5.2
- * RRULE 规则：3.8.5.3、3.3.10
- * DURATION 规则：3.3.6、3.8.2.5
- * DATE 规则：3.3.4
+ *               对应章节
+ * RERIOD    规则: 3.3.9
+ * RDATE     规则：3.8.5.2
+ * RRULE     规则：3.8.5.3、3.3.10
+ * DURATION  规则：3.3.6、3.8.2.5
+ * DATE      规则：3.3.4
  * DATE-TIME 规则：3.3.5
- * DTSTART 规则：3.8.2.4
+ * DTSTART   规则：3.8.2.4
  *
  * 当然，你觉得太麻烦了也不可以不用阅读，我对添加事件进行了封装，你只需要传入 [Event] 即可
  *
@@ -55,27 +63,42 @@ object PhoneCalendar {
   /**
    * 添加事件，成功就返回事件 Id，失败返回 null
    *
+   * 该方法自带了权限申请，所以使用协程
+   *
    * @param accountType 账户类型。这个不同可以生成不同的日历账号
    */
-  suspend fun add(activity: FragmentActivity, event: Event, accountType: String = ACCOUNT_TYPE) = suspendCoroutine {
+  suspend fun add(
+    activity: FragmentActivity,
+    event: Event,
+    accountType: String = ACCOUNT_TYPE
+  ): Long? = suspendCancellableCoroutine {
     if (checkPermission()) {
       it.resume(add(event, accountType))
     } else {
-      activity.doPermissionAction(
+      val dialog = activity.doPermissionAction(
         Manifest.permission.READ_CALENDAR,
         Manifest.permission.WRITE_CALENDAR
       ) {
         doAfterGranted {
-          it.resume(add(event, accountType))
+          if (it.isActive) {
+            it.resume(add(event, accountType))
+          }
         }
         doAfterRefused {
           toast("申请读写日历权限被拒绝")
-          it.resume(null)
+          if (it.isActive) {
+            it.resume(null)
+          }
         }
         doOnCancel {
           toast("申请读写日历权限被取消")
-          it.resume(null)
+          if (it.isActive) {
+            it.resume(null)
+          }
         }
+      }
+      it.invokeOnCancellation {
+        dialog?.cancel()
       }
     }
   }
@@ -271,12 +294,16 @@ object PhoneCalendar {
    *
    * @return 返回 CALENDAR_ID，不存在时返回 null
    */
-  fun getCalendarAccount(accountName: String = getAccountName(), accountType: String = ACCOUNT_TYPE): Long? {
+  fun getCalendarAccount(
+    accountName: String = getAccountName(),
+    accountType: String = ACCOUNT_TYPE
+  ): Long? {
     if (!checkPermission()) return null
     return try {
       context.contentResolver.query(
         Calendars.CONTENT_URI,
-        arrayOf( // 这个是查询结果只展示这几列
+        arrayOf(
+          // 这个是查询结果只展示这几列
           Calendars._ID,
           Calendars.ACCOUNT_NAME,
           Calendars.ACCOUNT_TYPE,
@@ -284,7 +311,8 @@ object PhoneCalendar {
         // 下面这个是 WHERE 语句
         "(${Calendars.ACCOUNT_NAME}=?) AND " +
           "(${Calendars.ACCOUNT_TYPE}=?)",
-        arrayOf( // 这个是用于填充上面写的 ? 值
+        arrayOf(
+          // 这个是用于填充上面写的 ? 值
           accountName,
           accountType,
         ),

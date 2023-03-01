@@ -55,6 +55,14 @@ abstract class CourseScrollControlImpl @JvmOverloads constructor(
     return getScrollImpl().canCourseScrollVertically(direction)
   }
   
+  final override fun addOnScrollYChanged(l: ICourseScrollControl.OnScrollYChangedListener) {
+    getScrollImpl().addOnScrollYChanged(l)
+  }
+  
+  final override fun removeOnScrollYChanged(l: ICourseScrollControl.OnScrollYChangedListener) {
+    getScrollImpl().removeOnScrollYChanged(l)
+  }
+  
   final override fun measureChildWithRatio(
     child: View,
     parentWidthMeasureSpec: Int,

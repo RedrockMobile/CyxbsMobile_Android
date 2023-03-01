@@ -1,4 +1,4 @@
-package com.mredrock.cyxbs.lib.course.helper
+package com.mredrock.cyxbs.lib.course.helper.fold
 
 import android.os.Bundle
 import android.os.Parcelable
@@ -7,6 +7,7 @@ import android.view.ViewGroup
 import androidx.core.os.bundleOf
 import com.mredrock.cyxbs.lib.course.fragment.course.ICourseBase
 import com.mredrock.cyxbs.lib.course.fragment.course.expose.fold.FoldState
+import com.mredrock.cyxbs.lib.course.utils.getOrPut
 import com.ndhzs.netlayout.save.OnSaveStateListener
 import com.ndhzs.netlayout.touch.multiple.IPointerDispatcher
 import com.ndhzs.netlayout.touch.multiple.IPointerTouchHandler
@@ -32,23 +33,21 @@ class CourseFoldHelper private constructor(
     val y = event.y.toInt()
     val timeLineLeft = course.getTimelineStartWidth()
     val timeLineRight = course.getTimelineEndWidth()
-    if (x !in timeLineLeft .. timeLineRight) return false
-    val clickRange = 30 // 点击的范围
+    if (x !in timeLineLeft..timeLineRight) return false
+    val clickRange = 50 // 点击的范围
     when (event.action) {
       IPointerEvent.Action.DOWN -> {
         when (course.getNoonRowState()) {
           FoldState.FOLD, FoldState.UNFOLD -> {
             val noonTop = course.getNoonStartHeight()
             val noonBottom = course.getNoonEndHeight()
-            if (y in (noonTop - clickRange) .. (noonBottom + clickRange)) {
-              var point = mDownPointById[event.pointerId]
-              if (point !is NoonPoint) {
-                point = NoonPoint(x, y)
-                mDownPointById[event.pointerId] = point
-              } else {
-                point.x = x
-                point.y = y
+            if (y in (noonTop - clickRange)..(noonBottom + clickRange)) {
+              val point = mDownPointById.getOrPut(event.pointerId) { Point(0, 0, false) }
+              if (!point.isNoon) {
+                point.isNoon = true
               }
+              point.x = x
+              point.y = y
               return true
             }
           }
@@ -58,15 +57,13 @@ class CourseFoldHelper private constructor(
           FoldState.FOLD, FoldState.UNFOLD -> {
             val duskTop = course.getDuskStartHeight()
             val duskBottom = course.getDuskEndHeight()
-            if (y in (duskTop - clickRange) .. (duskBottom + clickRange)) {
-              var point = mDownPointById[event.pointerId]
-              if (point !is DuskPoint) {
-                point = DuskPoint(x, y)
-                mDownPointById[event.pointerId] = point
-              } else {
-                point.x = x
-                point.y = y
+            if (y in (duskTop - clickRange)..(duskBottom + clickRange)) {
+              val point = mDownPointById.getOrPut(event.pointerId) { Point(0, 0, false) }
+              if (point.isNoon) {
+                point.isNoon = false
               }
+              point.x = x
+              point.y = y
               return true
             }
           }
@@ -77,15 +74,15 @@ class CourseFoldHelper private constructor(
         // 因为 getInterceptHandler 一直返回 null，所以会收到 UP 事件
         // 写在 UP 事件的原因在于点击事件本来就是在 UP 中触发的
         // 上面 DOWN 中虽然返回了 true，但 getInterceptHandler() 却一直返回 null，可以保证事件不会被 View 自身拦截
-        when (mDownPointById[event.pointerId]) {
-          is NoonPoint -> {
+        when (mDownPointById[event.pointerId].isNoon) {
+          true -> {
             when (course.getNoonRowState()) {
               FoldState.FOLD -> course.unfoldNoon()
               FoldState.UNFOLD -> course.foldNoon()
               else -> {}
             }
           }
-          is DuskPoint -> {
+          false -> {
             when (course.getDuskRowState()) {
               FoldState.FOLD -> course.unfoldDusk()
               FoldState.UNFOLD -> course.foldDusk()
@@ -103,9 +100,7 @@ class CourseFoldHelper private constructor(
     return null
   }
   
-  sealed class Point(var x: Int, var y: Int)
-  private class NoonPoint(x: Int, y: Int) : Point(x, y)
-  private class DuskPoint(x: Int, y: Int) : Point(x, y)
+  class Point(var x: Int, var y: Int, var isNoon: Boolean)
   
   override fun onRestoreState(savedState: Parcelable?) {
     if (savedState is Bundle) {

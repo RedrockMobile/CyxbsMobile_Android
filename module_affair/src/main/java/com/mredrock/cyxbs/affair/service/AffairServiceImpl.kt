@@ -19,7 +19,7 @@ import io.reactivex.rxjava3.core.Single
  */
 @Route(path = AFFAIR_SERVICE, name = AFFAIR_SERVICE)
 class AffairServiceImpl : IAffairService {
-
+  
   override fun getAffair(): Single<List<IAffairService.Affair>> {
     return AffairRepository.getAffair()
       .map { it.toAffair() }
@@ -34,11 +34,28 @@ class AffairServiceImpl : IAffairService {
     return AffairRepository.observeAffair()
       .map { it.toAffair() }
   }
-
+  
   override fun deleteAffair(onlyId: Int): Completable {
     return AffairRepository.deleteAffair(onlyId)
   }
-
+  
+  override fun updateAffair(affair: IAffairService.Affair): Completable {
+    return AffairRepository.updateAffair(
+      affair.onlyId,
+      affair.time,
+      affair.title,
+      affair.content,
+      listOf(
+        AffairEntity.AtWhatTime(
+          affair.beginLesson,
+          affair.day,
+          affair.period,
+          listOf(affair.week)
+        )
+      )
+    )
+  }
+  
   override fun startActivityForAddAffair(
     week: Int,
     day: Int,
@@ -47,14 +64,14 @@ class AffairServiceImpl : IAffairService {
   ) {
     AffairActivity.startForAdd(week, day, beginLesson, period)
   }
-
+  
   override fun startActivityForEditActivity(onlyId: Int) {
     AffairActivity.startForEdit(onlyId)
   }
-
+  
   override fun init(context: Context) {
   }
-
+  
   private fun List<AffairEntity>.toAffair(): List<IAffairService.Affair> {
     return buildList {
       this@toAffair.forEach { entity ->

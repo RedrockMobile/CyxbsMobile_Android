@@ -44,8 +44,7 @@ import com.mredrock.cyxbs.lib.utils.extensions.dp2pxF
  */
 class OverlapTagHelper(val view: View) : IOverlapTag {
   
-  protected var mIsShowOverlapTag = false
-    private set
+  private var mIsShowOverlapTag = false
   
   override fun setIsShowOverlapTag(isShow: Boolean) {
     mIsShowOverlapTag = isShow

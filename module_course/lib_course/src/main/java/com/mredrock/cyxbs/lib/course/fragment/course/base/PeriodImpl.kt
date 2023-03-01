@@ -18,7 +18,7 @@ abstract class PeriodImpl : OverlapImpl(), ICoursePeriod {
    */
   final override fun getLessonStartHeight(num: Int): Int {
     require(num >= 1)
-    return course.getRowsHeight(0, transformLessonToNode(num) - 1)
+    return course.getRowsHeight(0, transformLessonToNode(num) - 1) + course.getPaddingTop()
   }
   
   /**
@@ -28,15 +28,19 @@ abstract class PeriodImpl : OverlapImpl(), ICoursePeriod {
    */
   final override fun getLessonEndHeight(num: Int): Int {
     require(num >= 1)
-    return course.getRowsHeight(0, transformLessonToNode(num))
+    return course.getRowsHeight(0, transformLessonToNode(num)) + course.getPaddingTop()
   }
   
   
   
   // 上午
   
-  final override fun compareAmPeriod(row: Int): Int {
+  final override fun compareAmPeriodByRow(row: Int): Int {
     return if (row < AM_TOP) -1 else if (row > AM_BOTTOM) 1 else 0
+  }
+  
+  final override fun compareAmPeriodByHeight(height: Int): Int {
+    return if (height < getAmStartHeight()) -1 else if (height > getAmEndHeight()) 1 else 0
   }
   
   final override fun forEachAm(block: (row: Int) -> Unit) {
@@ -46,17 +50,21 @@ abstract class PeriodImpl : OverlapImpl(), ICoursePeriod {
   }
   
   final override fun getAmStartHeight(): Int {
-    return course.getRowsHeight(0, AM_TOP - 1)
+    return course.getRowsHeight(0, AM_TOP - 1) + course.getPaddingTop()
   }
   
   final override fun getAmEndHeight(): Int {
-    return course.getRowsHeight(0, AM_BOTTOM)
+    return course.getRowsHeight(0, AM_BOTTOM) + course.getPaddingTop()
   }
   
   // 中午
   
-  final override fun compareNoonPeriod(row: Int): Int {
+  final override fun compareNoonPeriodByRow(row: Int): Int {
     return if (row < NOON_TOP) -1 else if (row > NOON_BOTTOM) 1 else 0
+  }
+  
+  final override fun compareNoonPeriodByHeight(height: Int): Int {
+    return if (height < getNoonStartHeight()) -1 else if (height > getNoonEndHeight()) 1 else 0
   }
   
   final override fun forEachNoon(block: (row: Int) -> Unit) {
@@ -66,17 +74,21 @@ abstract class PeriodImpl : OverlapImpl(), ICoursePeriod {
   }
   
   final override fun getNoonStartHeight(): Int {
-    return course.getRowsHeight(0, NOON_TOP - 1)
+    return course.getRowsHeight(0, NOON_TOP - 1) + course.getPaddingTop()
   }
   
   final override fun getNoonEndHeight(): Int {
-    return course.getRowsHeight(0, NOON_BOTTOM)
+    return course.getRowsHeight(0, NOON_BOTTOM) + course.getPaddingTop()
   }
   
   // 下午
   
-  final override fun comparePmPeriod(row: Int): Int {
+  final override fun comparePmPeriodByRow(row: Int): Int {
     return if (row < PM_TOP) -1 else if (row > PM_BOTTOM) 1 else 0
+  }
+  
+  final override fun comparePmPeriodByHeight(height: Int): Int {
+    return if (height < getPmStartHeight()) -1 else if (height > getPmEndHeight()) 1 else 0
   }
   
   final override fun forEachPm(block: (row: Int) -> Unit) {
@@ -86,17 +98,21 @@ abstract class PeriodImpl : OverlapImpl(), ICoursePeriod {
   }
   
   final override fun getPmStartHeight(): Int {
-    return course.getRowsHeight(0, PM_TOP - 1)
+    return course.getRowsHeight(0, PM_TOP - 1) + course.getPaddingTop()
   }
   
   final override fun getPmEndHeight(): Int {
-    return course.getRowsHeight(0, PM_BOTTOM)
+    return course.getRowsHeight(0, PM_BOTTOM) + course.getPaddingTop()
   }
   
   // 傍晚
   
-  final override fun compareDuskPeriod(row: Int): Int {
+  final override fun compareDuskPeriodByRow(row: Int): Int {
     return if (row < DUSK_TOP) -1 else if (row > DUSK_BOTTOM) 1 else 0
+  }
+  
+  final override fun compareDuskPeriodByHeight(height: Int): Int {
+    return if (height < getDuskStartHeight()) -1 else if (height > getDuskEndHeight()) 1 else 0
   }
   
   final override fun forEachDusk(block: (row: Int) -> Unit) {
@@ -106,17 +122,21 @@ abstract class PeriodImpl : OverlapImpl(), ICoursePeriod {
   }
   
   final override fun getDuskStartHeight(): Int {
-    return course.getRowsHeight(0, DUSK_TOP - 1)
+    return course.getRowsHeight(0, DUSK_TOP - 1) + course.getPaddingTop()
   }
   
   final override fun getDuskEndHeight(): Int {
-    return course.getRowsHeight(0, DUSK_BOTTOM)
+    return course.getRowsHeight(0, DUSK_BOTTOM) + course.getPaddingTop()
   }
   
   // 晚上
   
-  final override fun compareNightPeriod(row: Int): Int {
+  final override fun compareNightPeriodByRow(row: Int): Int {
     return if (row < NIGHT_TOP) -1 else if (row > NIGHT_BOTTOM) 1 else 0
+  }
+  
+  final override fun compareNightPeriodByHeight(height: Int): Int {
+    return if (height < getNightStartHeight()) -1 else if (height > getNightEndHeight()) 1 else 0
   }
   
   final override fun forEachNight(block: (row: Int) -> Unit) {
@@ -126,11 +146,11 @@ abstract class PeriodImpl : OverlapImpl(), ICoursePeriod {
   }
   
   final override fun getNightStartHeight(): Int {
-    return course.getRowsHeight(0, NIGHT_TOP - 1)
+    return course.getRowsHeight(0, NIGHT_TOP - 1) + course.getPaddingTop()
   }
   
   final override fun getNightEndHeight(): Int {
-    return course.getRowsHeight(0, NIGHT_BOTTOM)
+    return course.getRowsHeight(0, NIGHT_BOTTOM) + course.getPaddingTop()
   }
   
   companion object {

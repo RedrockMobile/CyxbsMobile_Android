@@ -1,6 +1,7 @@
 package com.mredrock.cyxbs.lib.utils.extensions
 
 import android.content.Context
+import android.content.DialogInterface
 import androidx.appcompat.app.AlertDialog
 import androidx.core.content.edit
 import androidx.fragment.app.Fragment
@@ -16,23 +17,28 @@ import com.tbruyelle.rxpermissions3.RxPermissions
 /*
 eg:
 doPermissionAction(Manifest.permission.READ_PHONE_STATE, Manifest.permission.CALL_PHONE) {
-    reason = "为使用xxx需要您的xxx权限"  //optional. show a dialog to tell user why need this permission before request permission
+
+    reason = "为使用xxx需要您的xxx权限"  // 可选的。dialog 的内容
 
     doAfterGranted {
-        //optional. do something after permission granted
+        // 可选的。权限申请成功
     }
 
     doAfterRefused {
-        //optional. do something after permission refused by user
+        // 可选的。权限被系统拒绝
+    }
+    
+    doOnCancel {
+        // 可选的。权限被用户拒绝或者被用户取消
     }
     
     doNeverShow {
-        // 在设置成永远不显示时回调
-        true // 如果返回 true，则什么都不会发送，如果返回 false，则会再次显示授权弹窗
+        // 在之前设置了永远不显示后的再次申请时回调
+        true // 如果返回 true，则回调 [doOnCancel]，然后终止该次权限申请；如果返回 false，则会再次显示授权弹窗
     }
 }
 
-// if you think this may cause user feel bad, you can add a neverNotice flag like this:
+// 如果你希望用户可以永远关闭弹窗，可以添加一个 永远不再提醒 的标志：
 doPermissionAction(Manifest.permission.READ_PHONE_STATE, Manifest.permission.CALL_PHONE) {
     isShowNeverNotice = true
     ...
@@ -90,6 +96,7 @@ class PermissionActionBuilder {
      * - 点击了不再提示
      * - 点击了其他区域
      * - 按了返回键
+     * - [doNeverShow] 返回 true
      *
      * 注意：只有 [reason] 不为 null 时才会有 dialog 的显示
      */
@@ -98,8 +105,8 @@ class PermissionActionBuilder {
     }
     
     /**
-     * 在设置了永远不显示时回调
-     * @return 返回 true，则什么都不干，返回 false，则取消永远不显示，并再回调
+     * 在之前设置了永远不显示后的再次申请时回调
+     * @return 返回 true，则回调 [doOnCancel]，然后终止该次权限申请；返回 false，则取消永远不显示，并再次显示授权弹窗
      */
     fun doNeverShow(action: () -> Boolean) {
         doNeverShow = action
@@ -124,26 +131,27 @@ private fun performRequestPermission(
     rxPermissions: RxPermissions,
     vararg permissionsRequired: String,
     actionBuilder: PermissionActionBuilder.() -> Unit
-) {
+) : DialogInterface? {
     val builder = PermissionActionBuilder().apply(actionBuilder)
     val permissionsToRequest = permissionsRequired.filterNot { rxPermissions.isGranted(it) }
     if (permissionsToRequest.isEmpty()) {
         builder.doAfterGranted?.invoke()
-        return
+        return null
     }
     var isNeverShow = context.getSp(permissionsRequired.toString())
         .getBoolean("isNeverShow", false)
     if (isNeverShow) {
         isNeverShow = builder.doNeverShow?.invoke() ?: true
         if (isNeverShow) {
-            return // 仍然是 NeverShow 时直接结束
+            builder.doOnCancel?.invoke()
+            return null // 仍然是 NeverShow 时直接结束
         }
         context.getSp(permissionsRequired.toString()).edit {
             putBoolean("isNeverShow", false)
         }
     }
     if (builder.reason != null) {
-        AlertDialog.Builder(context).apply {
+        return AlertDialog.Builder(context).apply {
             setMessage(builder.reason)
             setPositiveButton(android.R.string.ok) { _, _ ->
                 requestPermission(rxPermissions, builder, *permissionsToRequest.toTypedArray())
@@ -156,7 +164,7 @@ private fun performRequestPermission(
                     builder.doOnCancel?.invoke()
                 }
             } else if (builder.isShowCancelNotice) {
-                setNegativeButton(android.R.string.cancel) { dialog, _ ->
+                setNegativeButton(android.R.string.cancel) { _, _ ->
                     builder.doOnCancel?.invoke()
                 }
             }
@@ -166,14 +174,15 @@ private fun performRequestPermission(
         }.show()
     } else {
         requestPermission(rxPermissions, builder, *permissionsToRequest.toTypedArray())
+        return null
     }
 }
 
 fun FragmentActivity.doPermissionAction(
     vararg permissionsRequired: String,
     actionBuilder: PermissionActionBuilder.() -> Unit
-) {
-    performRequestPermission(
+): DialogInterface? {
+    return performRequestPermission(
         this,
         RxPermissions(this),
         *permissionsRequired,
@@ -184,8 +193,8 @@ fun FragmentActivity.doPermissionAction(
 fun Fragment.doPermissionAction(
     vararg permissionsRequired: String,
     actionBuilder: PermissionActionBuilder.() -> Unit
-) {
-    performRequestPermission(
+): DialogInterface? {
+    return performRequestPermission(
         activity!!,
         RxPermissions(this),
         *permissionsRequired,

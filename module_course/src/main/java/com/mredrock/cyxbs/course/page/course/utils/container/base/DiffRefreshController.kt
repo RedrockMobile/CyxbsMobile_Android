@@ -1,5 +1,6 @@
 package com.mredrock.cyxbs.course.page.course.utils.container.base
 
+import androidx.annotation.CallSuper
 import androidx.recyclerview.widget.AsyncDifferConfig
 import androidx.recyclerview.widget.AsyncListDiffer
 import androidx.recyclerview.widget.DiffUtil
@@ -19,7 +20,6 @@ import java.util.Collections
 abstract class DiffRefreshController<Data : Any> : DiffUtil.ItemCallback<Data>() {
   
   private var mOldData = arrayListOf<Data>()
-  private var mNewData = arrayListOf<Data>()
   
   val currentData: List<Data>
     get() = mAsyncListDiffer.currentList
@@ -28,31 +28,41 @@ abstract class DiffRefreshController<Data : Any> : DiffUtil.ItemCallback<Data>()
    * 异步差分刷新
    */
   fun diffRefresh(newData: List<Data>, action: ((List<Data>) -> Unit)? = null) {
-    mNewData = ArrayList(newData) // 不能直接使用传来的数据
-    mAsyncListDiffer.submitList(newData) {
-      mOldData = mNewData // 保存旧数据，提供给下次刷新使用
-      action?.invoke(Collections.unmodifiableList(mNewData))
+    val data = ArrayList(newData) // 不能直接使用传来的数据
+    mAsyncListDiffer.submitList(data) {
+      mOldData = data // 保存旧数据，提供给下次刷新使用
+      action?.invoke(Collections.unmodifiableList(data))
     }
   }
   
   /**
    * 从旧数据集合中增加 data，应该在被意外删除时调用
    */
-  fun addNewDataIntoOldList(data: Data) {
+  protected fun addNewDataIntoOldList(data: Data) {
     mOldData.add(data)
   }
   
   /**
    * 从旧数据集合中移除 data，应该在被意外删除时调用
    */
-  fun removeDataFromOldList(data: Data) {
+  protected fun removeDataFromOldList(data: Data) {
     mOldData.remove(data)
+  }
+  
+  /**
+   * 用 [newData] 替换 [oldData]，位置不变
+   */
+  @CallSuper
+  open fun replaceDataFromOldList(oldData: Data, newData: Data) {
+    val index = mOldData.indexOf(oldData)
+    mOldData.removeAt(index)
+    mOldData.add(index, newData)
   }
   
   /**
    * 从旧数据集合中清空 data，应该在 Fragment 回调 onDestroyView() 时调用
    */
-  fun clearDataFromOldList() {
+  protected fun clearDataFromOldList() {
     mOldData.clear()
   }
   
@@ -67,7 +77,7 @@ abstract class DiffRefreshController<Data : Any> : DiffUtil.ItemCallback<Data>()
     object : ListUpdateCallback {
       override fun onInserted(position: Int, count: Int) {
         repeat(count) {
-          onInserted(mNewData[position + it])
+          onInserted(currentData[position + it])
         }
       }
       
@@ -78,12 +88,11 @@ abstract class DiffRefreshController<Data : Any> : DiffUtil.ItemCallback<Data>()
       }
       
       override fun onMoved(fromPosition: Int, toPosition: Int) {
-        onChanged(mOldData[fromPosition], mNewData[toPosition])
       }
       
       override fun onChanged(position: Int, count: Int, payload: Any?) {
         repeat(count) {
-          onChanged(mOldData[position + it], mNewData[position + it])
+          onChanged(mOldData[position + it], currentData[position + it])
         }
       }
     }, AsyncDifferConfig.Builder(this).build()

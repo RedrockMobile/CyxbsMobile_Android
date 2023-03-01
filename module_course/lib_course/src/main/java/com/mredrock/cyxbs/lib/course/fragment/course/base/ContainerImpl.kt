@@ -28,14 +28,10 @@ abstract class ContainerImpl : AbstractCourseBaseFragment(), ICourseContainer {
   
   init {
     // 回收 item，解决 Fragment 与 View 生命周期不一致问题
-    addCourseLifecycleObservable(
-      object : ICourseWrapper.CourseLifecycleObserver {
-        override fun onDestroyCourse(course: ICourseViewGroup) {
-          mLessons.clear()
-          mAffairs.clear()
-        }
-      }
-    )
+    doOnCourseDestroy {
+      mLessons.clear()
+      mAffairs.clear()
+    }
   }
   
   final override fun addLesson(lesson: ILessonItem) {

@@ -174,11 +174,14 @@ class DiscoverHomeFragment : BaseViewModelFragment<DiscoverHomeViewModel>() {
                                 }
                             }
                         }.onBind {
-                            Glide.with(this@DiscoverHomeFragment)
-                                .load(data.picture_url)
-                                .placeholder(R.drawable.discover_ic_cyxbsv6)
-                                .error(R.drawable.discover_ic_cyxbsv6)
-                                .into(view)
+                            if (this@DiscoverHomeFragment.activity != null) {
+                                // 解决黑夜模式切换后出现的闪退
+                                Glide.with(this@DiscoverHomeFragment)
+                                    .load(data.picture_url)
+                                    .placeholder(R.drawable.discover_ic_cyxbsv6)
+                                    .error(R.drawable.discover_ic_cyxbsv6)
+                                    .into(view)
+                            }
                         }
                 )
         }

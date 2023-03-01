@@ -17,7 +17,12 @@ interface INightPeriod {
    * 跟晚上时间段作对比
    * @return 1、返回正数，说明 [row] 在晚上时间段下面；2、返回负数，说明在上面；3、返回 0，说明在里面
    */
-  fun compareNightPeriod(row: Int): Int
+  fun compareNightPeriodByRow(row: Int): Int
+  
+  /**
+   * 同 [compareNightPeriodByRow]，但比较的是高度 [height]
+   */
+  fun compareNightPeriodByHeight(height: Int): Int
   
   /**
    * 得到晚上时间段开始时的高度值（距离课表上边缘）

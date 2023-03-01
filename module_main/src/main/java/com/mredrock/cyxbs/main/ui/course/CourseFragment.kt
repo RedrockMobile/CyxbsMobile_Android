@@ -72,9 +72,6 @@ class CourseFragment : BaseFragment() {
       if (mBottomSheet.isDraggable) {
         if (mBottomSheet.state == BottomSheetBehavior.STATE_COLLAPSED) {
           mBottomSheet.state = BottomSheetBehavior.STATE_EXPANDED
-          
-          // Umeng 埋点统计
-          Umeng.sendEvent(Umeng.Event.ClickCourseItem(true))
         }
       }
     }
@@ -124,6 +121,8 @@ class CourseFragment : BaseFragment() {
                 }
                 mTvHeaderTitle.setOnSingleClickListener {
                   mCourseService.openBottomSheetDialogByLesson(requireContext(), header.item.lesson)
+                  // Umeng 埋点统计
+                  Umeng.sendEvent(Umeng.Event.CourseDetail(true))
                 }
               }
               is CourseHeaderHelper.AffairItem -> {

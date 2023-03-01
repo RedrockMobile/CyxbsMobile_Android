@@ -104,6 +104,25 @@ interface RxjavaLifecycle {
   ): Disposable = subscribe(onComplete, onError)
 }
 
+fun <T : Any> Single<T>.safeSubscribeBy(
+  lifecycle: RxjavaLifecycle,
+  onError: (Throwable) -> Unit = {},
+  onSuccess: (T) -> Unit = {}
+): Disposable = lifecycle.run { safeSubscribeBy(onError, onSuccess) }
+
+fun <T : Any> Observable<T>.safeSubscribeBy(
+  lifecycle: RxjavaLifecycle,
+  onError: (Throwable) -> Unit = {},
+  onComplete: () -> Unit = {},
+  onNext: (T) -> Unit = {}
+): Disposable = lifecycle.run { safeSubscribeBy(onError, onComplete, onNext) }
+
+fun Completable.safeSubscribeBy(
+  lifecycle: RxjavaLifecycle,
+  onError: (Throwable) -> Unit = {},
+  onComplete: () -> Unit = {},
+): Disposable = lifecycle.run { safeSubscribeBy(onError, onComplete) }
+
 /**
  * 关联 View 的生命周期，因为 View 生命周期回调的残缺，只能绑定 OnAttachStateChangeListener ，
  * 但这个其实是不完整的，因为 View 不显示在屏幕上时也会回调
@@ -170,3 +189,4 @@ fun Completable.safeSubscribeBy(
     }
   )
 }
+
