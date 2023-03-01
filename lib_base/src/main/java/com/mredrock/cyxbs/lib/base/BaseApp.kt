@@ -1,12 +1,17 @@
 package com.mredrock.cyxbs.lib.base
 
+import android.annotation.SuppressLint
+import android.app.Activity
 import android.app.Application
+import android.os.Bundle
 import androidx.annotation.CallSuper
 import com.alibaba.android.arouter.launcher.ARouter
 import com.mredrock.cyxbs.init.InitialManager
 import com.mredrock.cyxbs.init.InitialService
 import com.mredrock.cyxbs.config.sp.SP_PRIVACY_AGREED
 import com.mredrock.cyxbs.config.sp.defaultSp
+import com.mredrock.cyxbs.lib.utils.utils.impl.ActivityLifecycleCallbacksImpl
+import java.lang.ref.WeakReference
 import java.util.*
 import kotlin.properties.Delegates
 
@@ -18,7 +23,17 @@ import kotlin.properties.Delegates
  */
 open class BaseApp : Application() {
   companion object {
+    @SuppressLint("StaticFieldLeak")
     lateinit var baseApp: BaseApp
+      private set
+  
+    /**
+     * 获取栈顶的 Activity
+     *
+     * 栈顶 Activity 可用于实现全局 dialog
+     */
+    @SuppressLint("StaticFieldLeak")
+    lateinit var topActivity: WeakReference<Activity>
       private set
   }
   
@@ -30,6 +45,7 @@ open class BaseApp : Application() {
     baseApp = this
     initARouter()
     initInitialService()
+    initActivityManger()
   }
   
   /**
@@ -55,6 +71,22 @@ open class BaseApp : Application() {
   //没同意
   fun privacyDenied(){
     mInitialManager.privacyDenied()
+  }
+  
+  private fun initActivityManger() {
+    registerActivityLifecycleCallbacks(
+      object : ActivityLifecycleCallbacksImpl {
+        override fun onActivityCreated(activity: Activity, savedInstanceState: Bundle?) {
+          topActivity = WeakReference(activity)
+        }
+  
+        override fun onActivityResumed(activity: Activity) {
+          if (activity !== topActivity.get()) {
+            topActivity = WeakReference(activity)
+          }
+        }
+      }
+    )
   }
   
   /**

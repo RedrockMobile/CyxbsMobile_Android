@@ -9,6 +9,7 @@ dependLibConfig()
 
 dependApiAccount()
 dependApiAffair()
+dependApiCrash()
 
 dependRoom()
 dependRoomRxjava()

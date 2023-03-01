@@ -11,6 +11,7 @@ import androidx.fragment.app.activityViewModels
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.mredrock.cyxbs.api.account.IAccountService
 import com.mredrock.cyxbs.api.course.ICourseService
+import com.mredrock.cyxbs.api.crash.ICrashService
 import com.mredrock.cyxbs.config.route.COURSE_POS_TO_MAP
 import com.mredrock.cyxbs.config.route.DISCOVER_MAP
 import com.mredrock.cyxbs.lib.base.ui.BaseFragment
@@ -98,13 +99,25 @@ class CourseFragment : BaseFragment() {
             mTvHeaderPlace.invisible()
             mTvHeaderContent.invisible()
             mTvHeaderHint.visible()
-            mTvHeaderHint.text = header.hint
+            val throwable = header.throwable
+            if (throwable == null) {
+              mTvHeaderHint.text = header.hint
+            } else {
+              mTvHeaderHint.text = "内部异常，长按显示异常，请向反馈群反馈，谢谢！"
+              mTvHeaderHint.setOnLongClickListener {
+                ICrashService::class.impl
+                  .createCrashDialog(throwable)
+                  .show()
+                true
+              }
+            }
           }
           is CourseHeaderHelper.ShowHeader -> {
             mTvHeaderState.visible()
             mTvHeaderTitle.visible()
             mTvHeaderTime.visible()
             mTvHeaderHint.invisible()
+            mTvHeaderHint.setOnLongClickListener(null)
             mTvHeaderState.text = header.state
             mTvHeaderTitle.text = header.title
             mTvHeaderTime.text = header.time
@@ -233,7 +246,7 @@ class CourseFragment : BaseFragment() {
    * 用于拦截返回键，在 BottomSheet 未折叠时先折叠
    */
   private val mCollapsedBackPressedCallback by lazy {
-    requireActivity().onBackPressedDispatcher.addCallback {
+    requireActivity().onBackPressedDispatcher.addCallback(this) {
       mBottomSheet.state = BottomSheetBehavior.STATE_COLLAPSED
     }
   }

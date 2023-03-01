@@ -2,8 +2,10 @@
 
 package com.mredrock.cyxbs.lib.utils.extensions
 
+import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
 import io.reactivex.rxjava3.core.*
 import io.reactivex.rxjava3.disposables.Disposable
+import io.reactivex.rxjava3.schedulers.Schedulers
 import kotlinx.coroutines.flow.Flow
 import java.io.Serializable
 
@@ -107,6 +109,22 @@ fun Completable.unsafeSubscribeBy(
   onError: (Throwable) -> Unit = {},
   onComplete: () -> Unit = {},
 ): Disposable = subscribe(onComplete, onError)
+
+
+/**
+ * 不是很推荐你使用它，虽然很方便，但你知道这个的原理吗？
+ */
+fun <T: Any> Observable<T>.setSchedulers(
+  subscribeOn: Scheduler = Schedulers.io(),
+  unsubscribeOn: Scheduler = Schedulers.io(),
+  observeOn: Scheduler = AndroidSchedulers.mainThread()
+): Observable<T> = subscribeOn(subscribeOn)
+  .unsubscribeOn(unsubscribeOn)
+  .observeOn(observeOn)
+
+
+
+
 
 
 /**

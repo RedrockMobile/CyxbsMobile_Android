@@ -7,15 +7,12 @@ import com.alibaba.android.arouter.facade.annotation.Route
 import com.mredrock.cyxbs.api.account.IAccountService
 import com.mredrock.cyxbs.api.login.ILoginService
 import com.mredrock.cyxbs.api.update.IAppUpdateService
-import com.mredrock.cyxbs.config.route.DISCOVER_EMPTY_ROOM
-import com.mredrock.cyxbs.config.route.DISCOVER_GRADES
 import com.mredrock.cyxbs.config.route.DISCOVER_SCHOOL_CAR
 import com.mredrock.cyxbs.config.route.MAIN_MAIN
 import com.mredrock.cyxbs.config.sp.SP_COURSE_SHOW_STATE
 import com.mredrock.cyxbs.config.sp.defaultSp
 import com.mredrock.cyxbs.lib.base.ui.BaseActivity
 import com.mredrock.cyxbs.lib.base.utils.Umeng
-import com.mredrock.cyxbs.lib.utils.extensions.dp2pxF
 import com.mredrock.cyxbs.lib.utils.service.ServiceManager
 import com.mredrock.cyxbs.lib.utils.service.impl
 import com.mredrock.cyxbs.main.R

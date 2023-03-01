@@ -80,40 +80,14 @@ abstract class BaseActivity : AppCompatActivity() {
         }
     }
 
-    @Deprecated("老学长的远古遗留代码，经过几次迭代后，不建议再使用")
     val common_toolbar by R.id.toolbar.view<JToolbar>()
-
-    @Deprecated(message = "废弃，请使用initWithSplitLine()", replaceWith = ReplaceWith("JToolbar.initWithSplitLine()", "com.mredrock.cyxbs.common.ui"))
-    protected fun JToolbar.init(title: String,
-                                @DrawableRes icon: Int = R.drawable.common_ic_back,
-                                listener: View.OnClickListener? = View.OnClickListener { finish() }) {
-        withSplitLine(true)
-        initInternal(title, icon, listener)
-    }
-
-    private fun JToolbar.initInternal(title: String,
-                                      @DrawableRes icon: Int = R.drawable.common_ic_back,
-                                      listener: View.OnClickListener? = View.OnClickListener { finish() },
-                                      titleOnLeft: Boolean = true) {
-        this.title = title
-        setSupportActionBar(this)
-        setTitleLocationAtLeft(titleOnLeft)
-        if (listener == null) {
-            navigationIcon = null
-        } else {
-            setNavigationIcon(icon)
-            setNavigationOnClickListener(listener)
-        }
-    }
 
     protected fun JToolbar.initWithSplitLine(title: String,
                                              withSplitLine: Boolean = true,
                                              @DrawableRes icon: Int = R.drawable.common_ic_back,
                                              listener: View.OnClickListener? = View.OnClickListener { finish() },
                                              titleOnLeft: Boolean = true) {
-        setTitleLocationAtLeft(false)
-        withSplitLine(withSplitLine)
-        initInternal(title, icon, listener, titleOnLeft)
+        init(this@BaseActivity, title, withSplitLine, icon, listener, titleOnLeft)
     }
 
     override fun onRestart() {

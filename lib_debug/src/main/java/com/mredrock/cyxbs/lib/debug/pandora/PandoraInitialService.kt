@@ -1,7 +1,6 @@
 package com.mredrock.cyxbs.lib.debug.pandora
 
 import android.app.Activity
-import android.app.Application
 import android.os.Bundle
 import android.view.Gravity
 import android.view.View
@@ -10,7 +9,7 @@ import com.google.auto.service.AutoService
 import com.mredrock.cyxbs.init.InitialManager
 import com.mredrock.cyxbs.init.InitialService
 import com.mredrock.cyxbs.lib.debug.SecretActivity
-import com.mredrock.cyxbs.lib.utils.utils.defaultImpl
+import com.mredrock.cyxbs.lib.utils.utils.impl.ActivityLifecycleCallbacksImpl
 import tech.linjiang.pandora.Pandora
 import tech.linjiang.pandora.util.SensorDetector
 
@@ -33,7 +32,7 @@ class PandoraInitialService: InitialService, SensorDetector.Callback {
     * 除了摇一摇以外，点击屏幕顶部状态栏下正中间区域 3 下也能打开
     * */
     manager.application.registerActivityLifecycleCallbacks(
-      object : Application.ActivityLifecycleCallbacks by defaultImpl() {
+      object : ActivityLifecycleCallbacksImpl {
         override fun onActivityCreated(activity: Activity, savedInstanceState: Bundle?) {
           val decorView = activity.window.decorView as FrameLayout
           decorView.addView(
