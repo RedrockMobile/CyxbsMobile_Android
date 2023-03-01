@@ -1,11 +1,14 @@
 package com.mredrock.cyxbs.course.page.course.bean
 
 import com.google.gson.annotations.SerializedName
+import com.mredrock.cyxbs.course.page.course.room.ILessonEntity
 import com.mredrock.cyxbs.course.page.course.room.StuLessonEntity
 import com.mredrock.cyxbs.lib.utils.network.IApiWrapper
 import java.io.Serializable
 
-// 详细的字段解释请看数据库中的实体类
+/**
+ * 详细的字段解释请看数据库中的实体类 [ILessonEntity]
+ */
 data class StuLessonBean(
   @SerializedName("data")
   override val `data`: List<StuLesson>,

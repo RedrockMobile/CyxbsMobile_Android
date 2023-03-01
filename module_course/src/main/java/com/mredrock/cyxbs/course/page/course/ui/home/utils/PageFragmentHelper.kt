@@ -80,7 +80,6 @@ class PageFragmentHelper<T> where T: IHomePageFragment, T: CoursePageFragment {
    * 点击中午和傍晚的折叠
    */
   private fun T.initFoldLogic(isFragmentRebuilt: Boolean) {
-    this as CoursePageFragment
     if (!isFragmentRebuilt) {
       // 在初始打开时，如果存在 item 在中午或者傍晚时间段，就主动展开
       // 只有在第一次显示 Fragment 时才进行监听，后面的折叠状态会由 CourseFoldHelper 保存
@@ -141,13 +140,23 @@ class PageFragmentHelper<T> where T: IHomePageFragment, T: CoursePageFragment {
     // 长按创建事务时的回调
     dispatcher.addTouchCallback(
       object : ITouchCallback {
-        override fun onTouchEnd(
-          pointerId: Int, initialRow: Int, initialColumn: Int,
-          touchRow: Int, topRow: Int, bottomRow: Int,
+        
+        private var mIsInLongPress = false
+        
+        override fun onLongPressStart(pointerId: Int, initialRow: Int, initialColumn: Int) {
+          mIsInLongPress = true
+        }
+  
+        override fun onShowTouchAffairItem(
+          course: ICourseViewGroup,
+          item: ITouchAffairItem,
+          initialRow: Int
         ) {
-          if (bottomRow == topRow) {
+          if (!mIsInLongPress) {
+            // 没有触发长按时显示 TouchAffairItem 说明它只是普通的点击
             tryToastSingleRow()
           }
+          mIsInLongPress = false
         }
         
         /**

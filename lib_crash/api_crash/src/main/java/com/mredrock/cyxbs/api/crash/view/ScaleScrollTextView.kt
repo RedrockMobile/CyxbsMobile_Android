@@ -1,7 +1,8 @@
-package com.mredrock.cyxbs.lib.debug.crash
+package com.mredrock.cyxbs.api.crash.view
 
 import android.annotation.SuppressLint
 import android.content.Context
+import android.content.res.Configuration
 import android.util.AttributeSet
 import android.util.TypedValue
 import android.view.Gravity
@@ -9,12 +10,11 @@ import android.view.MotionEvent
 import android.view.ScaleGestureDetector
 import android.view.ViewGroup
 import android.widget.TextView
-import com.mredrock.cyxbs.lib.utils.extensions.dp2px
 import kotlin.math.max
 import kotlin.math.min
 
 /**
- * .
+ * 一个用于带有左侧行号的文本显示 View，并且支持双指放大缩小
  *
  * @author 985892345
  * @date 2022/9/23 19:19
@@ -24,6 +24,11 @@ class ScaleScrollTextView(
   attrs: AttributeSet?
 ) : ViewGroup(context, attrs) {
   
+  /**
+   * 设置文本
+   *
+   * 内部会自动根据 \n 分行
+   */
   fun setText(text: CharSequence) {
     mTvContent.text = text
     val builder = StringBuilder()
@@ -33,6 +38,28 @@ class ScaleScrollTextView(
         .appendLine()
     }
     mTvLineNum.text = builder.toString()
+  }
+  
+  /**
+   * 设置字体大小，默认大小为 12F，单位 SP
+   */
+  fun setTextSize(sp: Float) {
+    mTvLineNum.textSize = sp
+    mTvContent.textSize = sp
+  }
+  
+  /**
+   * 设置侧边显示行数的字体颜色
+   */
+  fun setSideTextColor(color: Int) {
+    mTvLineNum.setTextColor(color)
+  }
+  
+  /**
+   * 设置侧边显示行数的背景颜色
+   */
+  fun setSideBackgroundColor(color: Int) {
+    mTvLineNum.setBackgroundColor(color)
   }
   
   private val mScaleGestureDetector = ScaleGestureDetector(
@@ -70,8 +97,8 @@ class ScaleScrollTextView(
   
   private val mTvLineNum = TextView(context).apply {
     textSize = 12F
-    setTextColor(0xFF595959.toInt())
-    setBackgroundColor(0xFFE6E6E6.toInt())
+    setTextColor(if (isDaytimeMode()) 0xFF595959.toInt() else 0xFFDFDFDF.toInt())
+    setBackgroundColor(if (isDaytimeMode()) 0xFFE6E6E6.toInt() else 0xFF434343.toInt())
     setPadding(12.dp2px, paddingTop, 10.dp2px, paddingBottom)
     gravity = Gravity.END
   }
@@ -176,6 +203,17 @@ class ScaleScrollTextView(
   
   private fun move(dx: Float, dy: Float) {
     mTvContent.translationX += dx
+    if (dx > 0) {
+      // 手指向右移动
+      if (mTvContent.translationX > 0) {
+        mTvContent.translationX = 0F
+      }
+    } else {
+      // 手指向左移动
+      if (mTvContent.translationX + mTvContent.width < width - 200) {
+        mTvContent.translationX = (width - 200 - mTvContent.width).toFloat()
+      }
+    }
     if (mTvLineNum.height > height) {
       mTvContent.translationY += dy
       mTvLineNum.translationY += dy
@@ -184,12 +222,20 @@ class ScaleScrollTextView(
         mTvLineNum.translationY = (height - mTvLineNum.height).toFloat()
       }
     }
-    if (mTvContent.translationX > 0) {
-      mTvContent.translationX = 0F
-    }
     if (mTvContent.translationY > 0) {
       mTvContent.translationY = 0F
       mTvLineNum.translationY = 0F
     }
+  }
+  
+  private val Int.dp2pxF: Float
+    get() = context.resources.displayMetrics.density * this
+  
+  private val Int.dp2px: Int
+    get() = dp2pxF.toInt()
+  
+  private fun isDaytimeMode(): Boolean {
+    val uiMode = context.resources.configuration.uiMode
+    return (uiMode and Configuration.UI_MODE_NIGHT_MASK) == Configuration.UI_MODE_NIGHT_NO
   }
 }

@@ -11,6 +11,7 @@ import com.mredrock.cyxbs.lib.course.helper.affair.expose.ITouchAffairItem
 import com.mredrock.cyxbs.lib.course.helper.affair.expose.ITouchCallback
 import com.mredrock.cyxbs.lib.course.helper.base.AbstractLongPressDispatcher
 import com.mredrock.cyxbs.lib.course.helper.base.ILongPressTouchHandler
+import com.mredrock.cyxbs.lib.course.internal.view.course.ICourseViewGroup
 import com.mredrock.cyxbs.lib.course.utils.forEachReversed
 import com.ndhzs.netlayout.touch.multiple.IPointerTouchHandler
 import com.ndhzs.netlayout.touch.multiple.event.IPointerEvent
@@ -77,9 +78,11 @@ class CreateAffairDispatcher(
         if (abs(x - initialX) <= touchSlop && abs(y - initialY) <= touchSlop) {
           // 这里说明移动的距离小于 touchSlop，但还是得把点击的事务给绘制上，但是只有一格
           val item = initializeTouchAffairItem(event)
-          val initialRow = page.course.getRow(y)
-          val initialColumn = page.course.getColumn(x)
+          val course = page.course
+          val initialRow = course.getRow(y)
+          val initialColumn = course.getColumn(x)
           item.show(initialRow, initialRow, initialColumn)
+          mTouchCallbackImpl.onShowTouchAffairItem(course, item, initialRow)
         }
         null
       }
@@ -156,16 +159,26 @@ class CreateAffairDispatcher(
     
     override fun onTouchEnd(
       pointerId: Int, initialRow: Int, initialColumn: Int,
-      touchRow: Int, topRow: Int, bottomRow: Int,
+      touchRow: Int, topRow: Int, bottomRow: Int, isCancel: Boolean,
     ) {
       mTouchCallbacks.forEachReversed {
         it.onTouchEnd(
           pointerId, initialRow, initialColumn,
-          touchRow, topRow, bottomRow
+          touchRow, topRow, bottomRow, isCancel
         )
       }
     }
-    
+  
+    override fun onShowTouchAffairItem(
+      course: ICourseViewGroup,
+      item: ITouchAffairItem,
+      initialRow: Int
+    ) {
+      mTouchCallbacks.forEachReversed {
+        onShowTouchAffairItem(course, item, initialRow)
+      }
+    }
+  
     /**
      * 判断当前滑动中是否需要自动展开中午或者傍晚时间段
      * @param initialRow 最开始触摸的行数

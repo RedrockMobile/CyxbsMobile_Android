@@ -90,7 +90,6 @@
             android:drawablePadding="16dp"
             android:hint="请输入学号"
             android:inputType="text"
-            android:maxLength="10"
             android:selectAllOnFocus="true"
             android:singleLine="true"
             android:textColor="@color/login_et_text_color"

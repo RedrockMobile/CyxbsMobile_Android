@@ -9,7 +9,6 @@ import com.mredrock.cyxbs.course.page.course.bean.StuLessonBean
 import com.mredrock.cyxbs.course.page.course.room.LessonDataBase
 import com.mredrock.cyxbs.course.page.course.room.StuLessonEntity
 import com.mredrock.cyxbs.course.page.course.network.CourseApiServices
-import com.mredrock.cyxbs.lib.utils.network.ApiException
 import com.mredrock.cyxbs.lib.utils.network.api
 import com.mredrock.cyxbs.lib.utils.service.impl
 import com.mredrock.cyxbs.config.config.SchoolCalendar
@@ -20,6 +19,7 @@ import io.reactivex.rxjava3.core.Observable
 import io.reactivex.rxjava3.schedulers.Schedulers
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.rx3.asObservable
+import retrofit2.HttpException
 
 /**
  * ...
@@ -127,12 +127,9 @@ object StuLessonRepository {
             throw throwable
           }
         } else {
-          if (throwable is ApiException) {
-            // 这里说明网络连接成功，但出现了其他未知的请求错误
-            throw throwable
-          } else {
-            // 不允许本地保存时抛出不允许本地保存的异常
-            throw CourseDisallowLocalSaveException
+          when (throwable) {
+            is HttpException -> throw CourseDisallowLocalSaveException
+            else -> throw throwable
           }
         }
       }

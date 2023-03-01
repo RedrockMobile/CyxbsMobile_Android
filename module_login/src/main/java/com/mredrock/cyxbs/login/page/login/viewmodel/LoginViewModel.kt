@@ -36,10 +36,14 @@ class LoginViewModel : BaseViewModel() {
     isLanding = true
     val startTime = System.currentTimeMillis()
     Completable.create {
-      IAccountService::class.impl
-        .getVerifyService()
-        .login(appContext, stuNum, password)
-      it.onComplete()
+      try {
+        IAccountService::class.impl
+          .getVerifyService()
+          .login(appContext, stuNum, password)
+        it.onComplete()
+      } catch (e: Exception) {
+        it.tryOnError(e)
+      }
     }.subscribeOn(Schedulers.io())
       .delay(
         // 网络太快会闪一下，像bug，就让它最少待两秒吧

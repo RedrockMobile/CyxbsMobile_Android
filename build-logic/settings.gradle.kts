@@ -3,22 +3,22 @@
 pluginManagement {
     repositories {
         includeBuild(".")
-        maven("https://maven.aliyun.com/repository/public")
-        maven("https://maven.aliyun.com/repository/google")
         gradlePluginPortal()
-        maven("https://jitpack.io")
         google()
         mavenCentral()
+        maven("https://maven.aliyun.com/repository/public")
+        maven("https://maven.aliyun.com/repository/google")
+        maven("https://jitpack.io")
     }
 }
 
 dependencyResolutionManagement {
     repositories {
+        google()
+        mavenCentral()
         maven("https://maven.aliyun.com/repository/public")
         maven("https://maven.aliyun.com/repository/google")
         maven("https://jitpack.io")
-        google()
-        mavenCentral()
     }
     // 开启 versionCatalogs 功能
     versionCatalogs {

@@ -11,6 +11,7 @@ dependApiAccount()
 dependApiUpdate()
 dependApiLogin()
 dependApiAffair()
+dependApiCrash()
 
 dependApiCourse()
 dependLibCourse() // 需要它的背景图

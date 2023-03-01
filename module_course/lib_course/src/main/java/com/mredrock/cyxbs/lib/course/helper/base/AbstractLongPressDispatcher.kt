@@ -42,6 +42,8 @@ abstract class AbstractLongPressDispatcher : IPointerDispatcher {
    * 长按触发前被取消时的回调
    *
    * 允许返回 [IPointerTouchHandler] 用于继续处理事件，建议返回用于滑动滚轴的 handler
+   *
+   * 可以接收到 MOVE、UP、CANCEL
    */
   open fun onCancelLongPress(
     event: IPointerEvent,

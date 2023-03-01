@@ -1,7 +1,6 @@
 package com.mredrock.cyxbs.course.page.course.utils.container.base
 
 import android.view.View
-import com.mredrock.cyxbs.course.page.course.data.AffairData
 import com.mredrock.cyxbs.lib.course.fragment.course.expose.wrapper.ICourseWrapper
 import com.mredrock.cyxbs.lib.course.internal.item.IItem
 import com.mredrock.cyxbs.lib.course.internal.item.IItemContainer

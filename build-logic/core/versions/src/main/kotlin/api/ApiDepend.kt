@@ -1,5 +1,3 @@
-
-
 import org.gradle.api.Project
 import api.utils.ApiDependUtils
 
@@ -53,6 +51,9 @@ object ApiDepend {
     get() = { substringBeforeLast(":") }
 }
 
+/*
+* todo 下面这个都是模板代码。后面的学弟可以考虑写一个 gradle 插件自动生成
+* */
 fun Project.dependApiAccount() {
   ApiDepend.account.dependApiOnly(this)
 }

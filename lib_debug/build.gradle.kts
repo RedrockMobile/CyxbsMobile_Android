@@ -8,6 +8,7 @@ dependLibBase()
 dependLibUtils()
 dependLibConfig()
 
+dependApiCrash()
 dependApiAccount()
 dependAutoService()
 

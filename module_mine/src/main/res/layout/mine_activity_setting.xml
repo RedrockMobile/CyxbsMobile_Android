@@ -14,8 +14,7 @@
         android:orientation="vertical">
 
         <include
-            android:id="@+id/mine_setting_toolbar"
-            layout="@layout/common_toolbar" />
+            layout="@layout/config_toolbar" />
 
         <FrameLayout
             android:layout_width="match_parent"
@@ -62,7 +61,7 @@
         </FrameLayout>
 
         <FrameLayout
-            android:id="@+id/mine_setting_fm_shield_person"
+            android:id="@+id/mine_setting_fm_clear"
             android:layout_width="match_parent"
             android:layout_height="36dp"
             android:layout_marginTop="23dp">
@@ -71,7 +70,7 @@
                 android:layout_height="wrap_content"
                 android:textSize="15sp"
                 android:textColor="@color/common_level_three_font_color"
-                android:text="屏蔽的人"
+                android:text="清理软件数据"
                 android:layout_marginStart="15dp"
                 android:layout_gravity="center_vertical" />
             <ImageView
@@ -81,6 +80,7 @@
                 android:layout_gravity="end|center_vertical"
                 android:layout_marginEnd="16dp"/>
         </FrameLayout>
+
         <Button
             android:id="@+id/mine_setting_btn_exit"
             style="?android:attr/borderlessButtonStyle"

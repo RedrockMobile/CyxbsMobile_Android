@@ -43,20 +43,15 @@ object CourseHeaderHelper {
         if (week !in 1..ICourseService.maxWeek) Observable.just(HintHeader("享受假期吧～"))
         else observeHeader1(week)
           .startWithItem(HintHeader("加载数据中"))
-          .onErrorReturnItem(HintHeader("数据加载失败"))
+          .retry(3) // 存在中途断网的情况，这个时候调用 getStuLesson() 会抛异常，所以重新订阅以检查网络是否可用
+          .onErrorReturn {
+            // 因为上流用的观察流，一般是不会发送异常到下流的，除了在断网时调用 getStuLesson()，
+            // 但已经经过 retry 后还是出错，可能就是内部异常了
+            HintHeader("", it)
+          }
       }
       // 如果在获取不了周数时说明没有请求过课表数据，因为周数是从课表接口来的
       .startWithItem(HintHeader("登录后即可查看课表"))
-      .retry(3) // 存在中途断网的情况，这个时候调用 getStuLesson() 会抛异常，所以重新订阅以检查网络是否可用
-      // 因为上流用的观察流，一般是不会发送异常到下流的，除了在断网时调用 getStuLesson()，
-      // 但已经经过 retry 后还是出错，可能就是内部异常了
-      .onErrorReturn {
-        if (BuildConfig.DEBUG) {
-          it.printStackTrace()
-          toast("课表内部异常：${it.message}")
-        }
-        HintHeader("内部错误")
-      }
   }
   
   /**
@@ -330,7 +325,8 @@ object CourseHeaderHelper {
   sealed interface Header
   
   data class HintHeader(
-    val hint: String
+    val hint: String,
+    val throwable: Throwable? = null
   ) : Header
   
   data class ShowHeader(

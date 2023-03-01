@@ -143,7 +143,7 @@ class NewsItemActivity : BaseViewModelActivity<NewsItemViewModel>(), NewsItemVie
         super.onCreate(savedInstanceState)
         setContentView(R.layout.news_activity_detail)
 
-        common_toolbar.init("详情")
+        common_toolbar.init(this, "详情")
 
         rxPermissions = RxPermissions(this)
 

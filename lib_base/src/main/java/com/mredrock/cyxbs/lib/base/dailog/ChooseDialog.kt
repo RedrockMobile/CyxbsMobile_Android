@@ -87,7 +87,7 @@ open class ChooseDialog protected constructor(
    * @param buttonSize button 的大小，单位 dp
    */
   open class Data(
-    val content: String = "弹窗内容为空",
+    val content: CharSequence = "弹窗内容为空",
     val contentSize: Float = 13F,
     val contentGravity: Int = Gravity.CENTER,
     override val type: DialogType = BaseDialog.Data.type,

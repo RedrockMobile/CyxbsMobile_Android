@@ -7,6 +7,7 @@ import org.gradle.api.JavaVersion
 import org.gradle.api.plugins.ExtensionAware
 import org.gradle.kotlin.dsl.apply
 import org.gradle.kotlin.dsl.configure
+import org.gradle.kotlin.dsl.dependencies
 import org.jetbrains.kotlin.gradle.dsl.KotlinJvmOptions
 
 /**
@@ -115,7 +116,6 @@ internal class BaseApplicationPlugin : BasePlugin() {
         }
         //潘多拉
         debugDependLibDebug()
-
     }
 
 }

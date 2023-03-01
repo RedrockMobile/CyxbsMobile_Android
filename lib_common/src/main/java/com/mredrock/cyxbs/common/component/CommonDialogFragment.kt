@@ -10,6 +10,7 @@ import android.view.ViewGroup
 import android.view.Window
 import android.widget.Button
 import android.widget.FrameLayout
+import android.widget.ImageView
 import androidx.annotation.LayoutRes
 import androidx.fragment.app.DialogFragment
 import com.mredrock.cyxbs.common.R
@@ -67,11 +68,11 @@ class CommonDialogFragment() : DialogFragment() {
             onPositiveClick?.invoke()
         }
         btnPositive.text = positiveString
-        val btnNegative = view.findViewById<Button>(R.id.common_dialog_btn_negative)
+        val ivNegative = view.findViewById<ImageView>(R.id.common_dialog_btn_negative)
         if (onNegativeClick == null) {
-            btnNegative.gone()
+            ivNegative.gone()
         } else {
-            btnNegative.setOnSingleClickListener {
+            ivNegative.setOnSingleClickListener {
                 onNegativeClick?.invoke()
             }
         }

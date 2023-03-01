@@ -290,10 +290,7 @@ class LoginActivity : BaseActivity() {
   }
 
   private fun checkDataCorrect(stuNum: String, idNum: String): Boolean {
-    if (stuNum.length < 10) {
-      toast("请检查一下学号吧，似乎有点问题")
-      return false
-    } else if (idNum.length < 6) {
+    if (idNum.length < 6) {
       toast("请检查一下密码吧，似乎有点问题")
       return false
     }

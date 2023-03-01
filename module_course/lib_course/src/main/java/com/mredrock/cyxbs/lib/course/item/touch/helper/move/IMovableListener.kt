@@ -5,7 +5,7 @@ import com.mredrock.cyxbs.lib.course.fragment.page.ICoursePage
 import com.mredrock.cyxbs.lib.course.item.touch.ITouchItem
 
 /**
- * .
+ * [MovableItemHelper] 的回调
  *
  * @author 985892345
  * 2023/2/20 11:19

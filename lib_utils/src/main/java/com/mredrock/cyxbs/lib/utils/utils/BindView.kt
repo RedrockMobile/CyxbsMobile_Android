@@ -1,12 +1,12 @@
 package com.mredrock.cyxbs.lib.utils.utils
 
 import android.app.Activity
-import android.app.Application
 import android.content.res.Resources
 import android.view.View
 import androidx.annotation.IdRes
 import androidx.fragment.app.Fragment
 import com.mredrock.cyxbs.lib.utils.extensions.appContext
+import com.mredrock.cyxbs.lib.utils.utils.impl.ActivityLifecycleCallbacksImpl
 import java.lang.ref.WeakReference
 import kotlin.properties.ReadOnlyProperty
 import kotlin.reflect.KProperty
@@ -142,7 +142,7 @@ abstract class BindView<T : View>(
 class ActivityBindView<T : View>(
   override val resId: Int,
   val activity: Activity
-) : BindView<T>(resId), Application.ActivityLifecycleCallbacks by defaultImpl() {
+) : BindView<T>(resId), ActivityLifecycleCallbacksImpl {
   
   // 是否已经调用了 onDestroy()
   private var isPostDestroy = false
