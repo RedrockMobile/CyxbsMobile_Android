@@ -235,7 +235,7 @@ class MovableItemHelper(
     }
   }
   
-  // 展开中午或者傍晚，如果可以的话
+  // 展开中午或者傍晚，如果需要的话
   private fun unfoldNoonDuskIfNeed() {
     val page = mCoursePage ?: return
     val view = mItemView ?: return
@@ -249,7 +249,7 @@ class MovableItemHelper(
         page.lockFoldNoon() // 锁定中午，后面会还原
         mIsLockedNoon = true
         // 虽然不一定会展开成功，因为可能会在其他地方被锁住，但是解锁次数需要等于上锁次数才能完全解锁，所以最终还是仍被锁的
-        // 其实只要在移动期间禁止中午发生改变就可以了，不然会导致 item 大小跟随改变
+        // 其实只需要在移动期间禁止中午发生改变就可以了，不然会导致 item 大小跟随改变
       }
     }
     if (!mIsLockedDusk) {

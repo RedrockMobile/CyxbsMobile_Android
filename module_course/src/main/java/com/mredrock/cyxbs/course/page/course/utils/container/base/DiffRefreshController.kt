@@ -36,6 +36,16 @@ abstract class DiffRefreshController<Data : Any> : DiffUtil.ItemCallback<Data>()
   }
   
   /**
+   * 用 [newData] 替换 [oldData]，位置不变
+   */
+  @CallSuper
+  open fun replaceDataFromOldList(oldData: Data, newData: Data) {
+    val index = mOldData.indexOf(oldData)
+    mOldData.removeAt(index)
+    mOldData.add(index, newData)
+  }
+  
+  /**
    * 从旧数据集合中增加 data，应该在被意外删除时调用
    */
   protected fun addNewDataIntoOldList(data: Data) {
@@ -47,16 +57,6 @@ abstract class DiffRefreshController<Data : Any> : DiffUtil.ItemCallback<Data>()
    */
   protected fun removeDataFromOldList(data: Data) {
     mOldData.remove(data)
-  }
-  
-  /**
-   * 用 [newData] 替换 [oldData]，位置不变
-   */
-  @CallSuper
-  open fun replaceDataFromOldList(oldData: Data, newData: Data) {
-    val index = mOldData.indexOf(oldData)
-    mOldData.removeAt(index)
-    mOldData.add(index, newData)
   }
   
   /**

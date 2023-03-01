@@ -58,15 +58,13 @@ class CreateAffairHandler(
   private var mLastMoveX = 0
   private var mLastMoveY = 0
   
-  // 是否正处于触摸中
-  private var mIsInTouch = false
+  private var mIsInLongPress = false
   
   override fun onPointerTouchEvent(event: IPointerEvent, view: ViewGroup) {
     val x = event.x.toInt()
     val y = event.y.toInt()
     when (event.action) {
       DOWN -> {
-        mIsInTouch = true // 开始
         mInitialX = x // 重置
         mInitialY = y // 重置
         mLastMoveX = x // 重置
@@ -79,6 +77,7 @@ class CreateAffairHandler(
         mTouchRow = mInitialRow // 重置
         mUpperRow = 0 // 重置
         mLowerRow = course.rowCount - 1 // 重置
+        mIsInLongPress = false // 重置
       }
       MOVE -> {
         // 核心代码
@@ -88,21 +87,33 @@ class CreateAffairHandler(
         mLastMoveY = y
       }
       UP, CANCEL -> {
-        mIsInTouch = false // 结束
-        mScrollRunnable.cancel()
-        course.removeItemDecoration(mItemDecoration)
-        iTouch.onTouchEnd(mPointerId, mInitialRow, mInitialColumn, mTouchRow, mTopRow, mBottomRow)
+        if (mIsInLongPress) {
+          mScrollRunnable.cancel()
+          course.removeItemDecoration(mItemDecoration)
+          iTouch.onTouchEnd(
+            mPointerId,
+            mInitialRow,
+            mInitialColumn,
+            mTouchRow,
+            mTopRow,
+            mBottomRow,
+            event.action == CANCEL
+          )
+        }
       }
     }
   }
   
   override fun onLongPressStart() {
+    mIsInLongPress = true
     // 禁止父布局拦截
     course.getParent().requestDisallowInterceptTouchEvent(true)
-    VibratorUtil.start(36) // 长按被触发来个震动提醒
-    touchAffairItem.show(mTopRow, mBottomRow, mInitialColumn)
-    iTouch.onLongPressStart(mPointerId, mInitialRow, mInitialColumn)
     course.addItemDecoration(mItemDecoration)
+    VibratorUtil.start(36) // 长按被触发来个震动提醒
+    iTouch.onLongPressStart(mPointerId, mInitialRow, mInitialColumn)
+    
+    touchAffairItem.show(mTopRow, mBottomRow, mInitialColumn)
+    iTouch.onShowTouchAffairItem(course, touchAffairItem, mInitialRow)
   }
   
   private fun refreshTouchAffairView() {

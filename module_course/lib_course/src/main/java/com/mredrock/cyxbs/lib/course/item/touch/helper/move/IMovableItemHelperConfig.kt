@@ -8,7 +8,7 @@ import kotlin.math.hypot
 import kotlin.math.pow
 
 /**
- * .
+ * [MovableItemHelper] 的配置类
  *
  * @author 985892345
  * 2023/2/19 20:52
