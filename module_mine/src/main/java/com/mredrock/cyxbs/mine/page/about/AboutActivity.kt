@@ -1,5 +1,6 @@
 package com.mredrock.cyxbs.mine.page.about
 
+import android.annotation.SuppressLint
 import android.app.Dialog
 import android.content.Intent
 import android.graphics.Color
@@ -29,8 +30,10 @@ import android.widget.TextView
 
 import androidx.core.content.FileProvider
 import androidx.recyclerview.widget.RecyclerView
+import com.mredrock.cyxbs.api.update.BuildConfig
 import com.mredrock.cyxbs.common.config.DIR_LOG
 import com.mredrock.cyxbs.common.config.OKHTTP_LOCAL_LOG
+import com.mredrock.cyxbs.mine.util.ui.DebugUpdateDialog
 import java.io.File
 
 
@@ -44,6 +47,7 @@ class AboutActivity : BaseViewModelActivity<AboutViewModel>()  {
     private val mine_about_version by R.id.mine_about_version.view<TextView>()
     private val mine_about_tv_already_up_to_date by R.id.mine_about_tv_already_up_to_date.view<TextView>()
 
+    @SuppressLint("SetTextI18n")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.mine_activity_about)
@@ -63,8 +67,22 @@ class AboutActivity : BaseViewModelActivity<AboutViewModel>()  {
         mine_about_rl_share.setOnClickListener { onShareClick() }
         mine_about_rl_update.setOnClickListener { clickUpdate() }
         mine_about_rl_function.setOnClickListener { clickFeatureIntroduction() }
-        mine_about_tv_copy_right.setOnLongClickListener {
-            clickLogLocal() }
+        mine_about_tv_copy_right.setOnLongClickListener { clickLogLocal() }
+        
+        if (BuildConfig.DEBUG) {
+            val title = mine_about_rl_update.findViewById<TextView>(R.id.mine_about_update_title)
+            val oldText = title.text
+            title.text = "$oldText 长按测试(debug才显示)"
+            mine_about_rl_update.setOnLongClickListener {
+                DebugUpdateDialog.Builder(this).setPositiveClick {
+                    ServiceManager(IAppUpdateService::class).debug(
+                        this@AboutActivity,
+                        getContent()
+                    )
+                }.show()
+                true
+            }
+        }
     }
 
     private fun clickLogLocal():Boolean{

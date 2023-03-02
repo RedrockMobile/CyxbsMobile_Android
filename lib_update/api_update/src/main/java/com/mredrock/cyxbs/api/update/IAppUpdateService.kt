@@ -16,4 +16,11 @@ interface IAppUpdateService : IProvider {
     fun noticeUpdate(activity: FragmentActivity)
     // 尝试通知用户更新，内部有时间和状态判断
     fun tryNoticeUpdate(activity: FragmentActivity)
+    
+    
+    /**
+     * 用于测试更新服务，只在 debug 时才允许调用
+     * @param updateContent 更新的内容
+     */
+    fun debug(activity: FragmentActivity, updateContent: String)
 }
