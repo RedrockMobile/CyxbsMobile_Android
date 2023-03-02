@@ -1,30 +1,17 @@
 package com.mredrock.cyxbs.lib.utils.utils.get
 
-import android.content.pm.PackageManager
-import android.os.Build
-import com.mredrock.cyxbs.lib.utils.extensions.appContext
+import com.mredrock.cyxbs.lib.utils.BuildConfig
 
 /**
- * getAppVersionCode
+ * 获取版本号
  */
 fun getAppVersionCode(): Long {
-    return try {
-        val packageInfo = appContext.packageManager.getPackageInfo(appContext.packageName, 0)
-        when {
-            Build.VERSION.SDK_INT >= Build.VERSION_CODES.P -> packageInfo.longVersionCode
-            else -> packageInfo.versionCode.toLong()
-        }
-    } catch (e: PackageManager.NameNotFoundException) {
-        0
-    }
+    return BuildConfig.VERSION_CODE
 }
 
-fun getAppVersionName(): String? {
-    return try {
-        val packageManager = appContext.packageManager
-        val info = packageManager.getPackageInfo(appContext.packageName, 0)
-        info.versionName
-    } catch (e: PackageManager.NameNotFoundException) {
-        null
-    }
+/**
+ * 获取版本名字
+ */
+fun getAppVersionName(): String {
+    return BuildConfig.VERSION_NAME
 }

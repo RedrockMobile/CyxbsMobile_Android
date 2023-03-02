@@ -175,7 +175,7 @@ class CreateAffairDispatcher(
       initialRow: Int
     ) {
       mTouchCallbacks.forEachReversed {
-        onShowTouchAffairItem(course, item, initialRow)
+        it.onShowTouchAffairItem(course, item, initialRow)
       }
     }
   

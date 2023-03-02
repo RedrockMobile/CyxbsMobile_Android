@@ -6,6 +6,7 @@ import com.mredrock.cyxbs.lib.utils.extensions.unsafeSubscribeBy
 import com.mredrock.cyxbs.lib.utils.network.ApiGenerator
 import com.mredrock.cyxbs.lib.utils.network.getBaseUrl
 import com.mredrock.cyxbs.lib.utils.utils.get.getAppVersionCode
+import com.mredrock.cyxbs.lib.utils.utils.get.getAppVersionName
 import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
 import io.reactivex.rxjava3.schedulers.Schedulers
 import retrofit2.Retrofit
@@ -43,7 +44,16 @@ object AppUpdateModel {
             }.unsafeSubscribeBy {
                 updateInfo = it
                 status.value = when {
-                    it.versionCode <= APP_VERSION_CODE -> AppUpdateStatus.VALID
+                    it.versionCode == APP_VERSION_CODE -> {
+                        val name = getAppVersionName()
+                        if (name != it.versionName) {
+                            // 名字不相等，说明安装的版本有问题，可能是测试版
+                            AppUpdateStatus.DATED
+                        } else AppUpdateStatus.VALID
+                    }
+                    it.versionCode < APP_VERSION_CODE -> {
+                        AppUpdateStatus.VALID
+                    }
                     else -> AppUpdateStatus.DATED
                 }
             }
