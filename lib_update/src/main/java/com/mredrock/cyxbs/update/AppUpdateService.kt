@@ -12,6 +12,7 @@ import com.mredrock.cyxbs.api.update.APP_UPDATE_SERVICE
 import com.mredrock.cyxbs.api.update.AppUpdateStatus
 import com.mredrock.cyxbs.api.update.IAppUpdateService
 import com.mredrock.cyxbs.update.model.AppUpdateModel
+import com.mredrock.cyxbs.update.model.UpdateInfo
 import java.util.concurrent.TimeUnit
 
 /**
@@ -27,6 +28,10 @@ internal class AppUpdateService : IAppUpdateService {
 
     override fun noticeUpdate(activity: FragmentActivity) {
         val info = AppUpdateModel.updateInfo ?: return
+        noticeUpdateInternal(activity, info)
+    }
+    
+    private fun noticeUpdateInternal(activity: FragmentActivity, info: UpdateInfo) {
         MaterialDialog(activity).show {
             title(text = "有新版本更新")
             message(text = "最新版本:" + info.versionName + "\n" + info.updateContent + "\n点击点击，现在就更新一发吧~")
@@ -61,6 +66,15 @@ internal class AppUpdateService : IAppUpdateService {
                     sp.edit { putLong("上次提醒更新时间", nowTime) }
                 }
             }
+        }
+    }
+    
+    override fun debug(activity: FragmentActivity, updateContent: String) {
+        if (BuildConfig.DEBUG) {
+            val info = AppUpdateModel.updateInfo
+                ?.copy(updateContent = updateContent)
+                ?: UpdateInfo(updateContent = updateContent)
+            noticeUpdateInternal(activity, info)
         }
     }
     

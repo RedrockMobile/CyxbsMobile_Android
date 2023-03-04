@@ -20,7 +20,7 @@ import com.mredrock.cyxbs.lib.utils.extensions.dp2px
 /**
  * 支持自定义内容视图的圆角 dialog，该 dialog 样式符合视觉要求的大部分场景
  *
- * 你可以参考它的实现类 [ChooseDialog] 和 UserAgreementDialog 来适配你需要的场景
+ * 你可以参考它的实现类 [ChooseDialog]、DebugUpdateDialog 和 UserAgreementDialog 来适配你需要的场景
  *
  * ## 1、为什么不用 DialogFragment ?
  * 虽然官方推荐使用 DialogFragment，但是 Fragment 与父容器通信很麻烦，并且目前掌邮强制竖屏，所以不打算使用 DialogFragment
@@ -39,7 +39,7 @@ import com.mredrock.cyxbs.lib.utils.extensions.dp2px
  *
  *
  *
- * 更多注释请查看 [ChooseDialog]
+ * 更多注释请查看 [ChooseDialog]，自定义 dialog 可以参考 DebugUpdateDialog
  *
  * @author 985892345
  * 2022/12/29 20:08
@@ -200,6 +200,15 @@ abstract class BaseDialog<T : BaseDialog<T, D>, D: BaseDialog.Data> protected co
     }
   }
   
+  /**
+   * 如果不考虑继承，简单的 dialog 你可以这样实现
+   * ```
+   * class Data(
+   *     override val width: Int = 320,
+   *     override val height: Int = 300,
+   * ) : BaseDialog.Data by BaseDialog.Data.DEFAULT // 使用 by 进行接口代理
+   * ```
+   */
   interface Data {
     /**
      * Dialog 类型

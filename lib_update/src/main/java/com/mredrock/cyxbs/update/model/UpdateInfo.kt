@@ -8,7 +8,7 @@ data class UpdateInfo(
     @SerializedName("update_content")
     val updateContent: String = "",
     @SerializedName("version_code")
-    val versionCode: Int = 0,
+    val versionCode: Long = 0,
     @SerializedName("version_name")
     val versionName: String = ""
 )

@@ -1,6 +1,5 @@
 plugins {
   id("module-manager")
-//  id("me.ele.lancet") // CodeLocator 所需要的插件
 }
 
 
@@ -20,7 +19,7 @@ dependencies {
   implementation("com.squareup.leakcanary:leakcanary-android:2.9.1")
   
   /**
-   * 很牛逼的检测工具，debug 模式下摇一摇手机触发
+   * 很牛逼的检测工具，debug 模式下摇一摇手机或者按三次手机中间顶部区域触发
    *
    * 支持功能：
    * 1、网络请求监听
@@ -32,31 +31,36 @@ dependencies {
    *
    * 注意：
    * 1、摇一摇手机后会出现一个小条，那个小条是可以左右滑动的滑动后有更多功能
-   * 2、为了防止其他非开发人员使用，请在 lib_debug 中注册你的学号
-   * 3、单模块调试时可以不用注册，直接摇一摇触发
+   * 2、pandora-plugin 插件使用了会在 gradle 8.0 移除的 transform API，我的建议是你们 fork 下仓库，
+   *   然后改了发一个 jitpack 依赖（发这个依赖很简单，不需要账号）
+   * 3、Pandora 已停止维护，可以使用 doKit 进行代替
    */
   implementation("com.github.whataa:pandora:androidx_v2.1.0")
   
+}
+
+dependencies {
   /**
-   * 进字节的学长在用的代码调试工具，请先在插件送搜索下载 CodeLocator
-   * 进字节的某位学长表示：如果没有这个插件，我连抖音代码的新需求都不知道从何入手
+   * 比 Pandora 更牛逼的检测工具 DoKit
    *
-   * 功能很多，常用的几个功能：
-   * 1、定位事件分发链上所有的 View
-   * 2、极其强大的跳转至对应代码的功能
+   * 官网文档：https://xingyun.xiaojukeji.com/docs/dokit/#/androidGuide
+   * github 仓库：https://github.com/didi/DoKit
    *
-   * 注意：每次使用时记得先按第一个手掌的功能抓取当前界面，不然你会发现找不到对应 View
+   * todo 截止 23年3/3，doKit 没有适配高版本的 gradle，所以插件引入会导致编译失败
+   *  如果后面 doKit 适配高版本了，麻烦改下 doKit 版本
+   *  issue: https://github.com/didi/DoKit/issues/1073
    *
-   * 仓库地址：https://github.com/bytedance/CodeLocator
+   * 经过多次尝试后，我总结一下问题：
+   * doKit 底层使用了 booster 框架，但是用的低版本 4.0.0，没有适配 AGP 7.3，会报找不到 getGlobalScope() 异常，
+   * booster 框架是适配了 AGP 7.3 的，所以我直接依赖高版本的 booster 4.15.0，这时又报找不到 getMergedManifests() 方法，
    *
-   * 使用文档：https://github.com/bytedance/CodeLocator/blob/main/how_to_use_codelocator_zh.md
-   *
-   * 22.7.30：
-   * 在做了尝试后，目前因为 LaunchX 太老而无法使用跳转功能，所以目前 CodeLocator 只能拿来定位事件分发和普通使用，基础功能也还行
+   * getGlobalScope() 找不到是 AGP 升级后移除了
+   * getMergedManifests() 找不到是 booster 升级后把返回值改了 https://github.com/didi/booster/issues/330
+   * ......
    */
-  val codeLocatorVersion = "2.0.0"
-//  implementation("com.bytedance.tools.codelocator:codelocator-core:$codeLocatorVersion")
-  // 下面这个是高级功能，目前无法正常使用，如果需要使用基础功能的话，取消上面这个注释即可
-//  implementation("com.bytedance.tools.codelocator:codelocator-lancet-all:$codeLocatorVersion")
-  // CodeLocator 问题比较多，会疯狂抛被抓的异常出来，影响其他异常，加上目前高级功能无法使用，所以暂时先注释
+  implementation("io.github.didi.dokit:dokitx:${libs.versions.doKit.version.get()}")
+  
+  // 不知道 DoKit 干了什么，会导致前面的 dependAutoService() 中写的 compileOnly 失效
+  // 只能单独依赖进来（除了 lib_debug 外其他模块不建议这样做）
+  implementation(AutoService.autoService)
 }

@@ -10,6 +10,7 @@ pluginManagement {
     gradlePluginPortal()
     mavenCentral()
     google()
+    maven("https://jitpack.io")
   }
 }
 dependencyResolutionManagement {
@@ -17,7 +18,7 @@ dependencyResolutionManagement {
   repositories {
     maven("$rootDir/build/maven") // 本地模块缓存文件夹
     google()
-    mavenCentral() // 优先 MavenCentral，一是：aliyun 镜像有坑；二是：开 VPN 访问 aliyun 反而变慢了
+    mavenCentral() // 优先 MavenCentral，一是：github CI 下不了 aliyun 依赖；二是：开 VPN 访问 aliyun 反而变慢了
     maven("https://jitpack.io")
     jcenter() // 部分依赖需要
     // mavenCentral 快照仓库
