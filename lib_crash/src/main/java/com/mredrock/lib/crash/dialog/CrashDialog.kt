@@ -124,7 +124,7 @@ class CrashDialog private constructor(
     val title = "异常信息（双指支持放大缩小）\n截图请向左滑动，确保能看到前几个红色的文字\n"
     builder.insert(0, title)
     builder.setSpan(
-      ForegroundColorSpan(Color.YELLOW),
+      ForegroundColorSpan(0xFFFF8800.toInt()),
       0,
       title.length,
       Spannable.SPAN_EXCLUSIVE_EXCLUSIVE

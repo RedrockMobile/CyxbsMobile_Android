@@ -1,9 +1,15 @@
 package com.mredrock.cyxbs.course.page.course.bean
 
+import android.os.Handler
+import android.os.Looper
 import com.google.gson.annotations.SerializedName
+import com.mredrock.cyxbs.api.crash.ICrashService
+import com.mredrock.cyxbs.course.BuildConfig
 import com.mredrock.cyxbs.course.page.course.room.ILessonEntity
 import com.mredrock.cyxbs.course.page.course.room.StuLessonEntity
+import com.mredrock.cyxbs.lib.utils.extensions.toast
 import com.mredrock.cyxbs.lib.utils.network.IApiWrapper
+import com.mredrock.cyxbs.lib.utils.service.impl
 import java.io.Serializable
 
 /**
@@ -62,29 +68,47 @@ data class StuLessonBean(
     get() = stuNum
   
   fun toStuLessonEntity(): List<StuLessonEntity> {
+    var isNotified = false
     return buildList {
       data.forEach {
-        add(
-          StuLessonEntity(
-            stuNum,
-            it.beginLesson,
-            it.classroom,
-            it.course,
-            it.courseNum,
-            it.day,
-            it.hashDay,
-            it.hashLesson,
-            it.lesson,
-            it.period,
-            it.rawWeek,
-            it.teacher,
-            it.type,
-            it.week,
-            it.weekBegin,
-            it.weekEnd,
-            it.weekModel
+        try {
+          add(
+            StuLessonEntity(
+              stuNum,
+              it.beginLesson,
+              it.classroom,
+              it.course,
+              it.courseNum,
+              it.day,
+              it.hashDay,
+              it.hashLesson,
+              it.lesson,
+              it.period,
+              it.rawWeek,
+              it.teacher,
+              it.type,
+              it.week,
+              it.weekBegin,
+              it.weekEnd,
+              it.weekModel
+            )
           )
-        )
+        } catch (e: Exception) {
+          // 后端返回的数据经常出问题，如果有人在群里反馈，就打开 debug 版查他课表就会自动显示异常原因弹窗
+          if (!isNotified) {
+            isNotified = true
+            Handler(Looper.getMainLooper()).post {
+              if (BuildConfig.DEBUG) {
+                toast("发生课表数据异常！")
+                ICrashService::class.impl
+                  .createCrashDialog(e)
+                  .show()
+              } else {
+                toast("课表数据可能存在异常，请向我们反馈")
+              }
+            }
+          }
+        }
       }
     }
   }
