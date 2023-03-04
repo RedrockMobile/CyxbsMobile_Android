@@ -7,7 +7,6 @@ import org.gradle.api.JavaVersion
 import org.gradle.api.plugins.ExtensionAware
 import org.gradle.kotlin.dsl.apply
 import org.gradle.kotlin.dsl.configure
-import org.gradle.kotlin.dsl.dependencies
 import org.jetbrains.kotlin.gradle.dsl.KotlinJvmOptions
 
 /**
@@ -26,6 +25,9 @@ internal class BaseApplicationPlugin : BasePlugin() {
         apply(plugin = "com.android.application")
 
         apply(plugin = "base.android")
+    
+        // lib_debug 模块以及只在 debug 时需要的一些插件
+        DebugConfiguration.initApplication(this)
 
         androidApp {
             
@@ -114,8 +116,6 @@ internal class BaseApplicationPlugin : BasePlugin() {
             }
 
         }
-        //潘多拉
-        debugDependLibDebug()
     }
 
 }

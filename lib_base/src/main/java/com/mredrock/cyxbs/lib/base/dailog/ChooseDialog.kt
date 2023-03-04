@@ -22,7 +22,8 @@ import com.mredrock.cyxbs.lib.utils.extensions.dp2px
  *     ChooseDialog.Data(
  *         content = "你已有一位关联的同学\n确定要替换吗？",
  *         width = 255.dp2px,
- *         height = 167.dp2px
+ *         height = 167.dp2px,
+ *         type = DialogType.ONE_BUT // 设置为单按钮，默认为双按钮
  *     )
  * ).setPositiveClick {
  *     // 点击确认按钮

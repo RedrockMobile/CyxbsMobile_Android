@@ -79,7 +79,7 @@ class DebugUpdateDialog private constructor(
   }
   
   override fun initContentView(view: View) {
-    mEditText.hint = "点击输入更新内容"
+    mEditText.hint = "点击输入更新内容\n点击“${data.positiveButtonText}”才是最终的显示效果\n长按可以复制文本"
     mEditText.setBackgroundColor(Color.TRANSPARENT)
   }
 }
