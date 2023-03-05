@@ -8,6 +8,7 @@ import com.mredrock.cyxbs.course.BuildConfig
 import com.mredrock.cyxbs.course.page.course.room.ILessonEntity
 import com.mredrock.cyxbs.course.page.course.room.StuLessonEntity
 import com.mredrock.cyxbs.lib.utils.extensions.toast
+import com.mredrock.cyxbs.lib.utils.extensions.toastLong
 import com.mredrock.cyxbs.lib.utils.network.IApiWrapper
 import com.mredrock.cyxbs.lib.utils.service.impl
 import java.io.Serializable
@@ -94,17 +95,19 @@ data class StuLessonBean(
             )
           )
         } catch (e: Exception) {
-          // 后端返回的数据经常出问题，如果有人在群里反馈，就打开 debug 版查他课表就会自动显示异常原因弹窗
+          // 后端返回的数据经常出问题，如果有人在群里反馈，
+          // 就打开 debug 版查他课表就会自动显示异常原因弹窗
           if (!isNotified) {
             isNotified = true
             Handler(Looper.getMainLooper()).post {
               if (BuildConfig.DEBUG) {
+                // debug 版查他人课表直接显示异常原因
                 toast("发生课表数据异常！")
                 ICrashService::class.impl
                   .createCrashDialog(e)
                   .show()
               } else {
-                toast("课表数据可能存在异常，请向我们反馈")
+                toastLong("课表数据可能存在异常，请向我们反馈")
               }
             }
           }

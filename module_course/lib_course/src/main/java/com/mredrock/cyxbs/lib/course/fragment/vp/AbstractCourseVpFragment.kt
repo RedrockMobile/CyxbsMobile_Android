@@ -9,6 +9,7 @@ import com.mredrock.cyxbs.api.course.ICourseService
 import com.mredrock.cyxbs.config.config.SchoolCalendar
 import com.mredrock.cyxbs.lib.base.ui.BaseFragment
 import com.mredrock.cyxbs.lib.course.fragment.vp.expose.ICourseVp
+import com.mredrock.cyxbs.lib.course.widget.VpBottomSheetNestedView
 import com.mredrock.cyxbs.lib.utils.extensions.lazyUnlock
 
 /**
@@ -53,6 +54,10 @@ abstract class AbstractCourseVpFragment : BaseFragment(), ICourseVp {
     super.onViewCreated(view, savedInstanceState)
     mViewPager.adapter = mVpAdapter
     mViewPager.offscreenPageLimit = 1 // 预加载一页，减少页面刚加载时就滑动的卡顿
+    /**
+     * 取消 VP2 中 RV 的嵌套滑动，为了解决 [VpBottomSheetNestedView] 头注释中描述的 bug
+     */
+    mViewPager.getChildAt(0).isNestedScrollingEnabled = false
   }
   
   private inner class CourseAdapter(fragment: Fragment) : FragmentStateAdapter(fragment) {
