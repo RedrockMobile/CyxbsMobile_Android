@@ -1,11 +1,11 @@
 package com.mredrock.cyxbs.common.component
 
-import android.annotation.SuppressLint
 import android.content.Context
 import android.graphics.Canvas
 import android.graphics.Paint
 import android.util.AttributeSet
 import android.view.View
+import android.view.ViewGroup
 import android.widget.TextView
 import androidx.annotation.DrawableRes
 import androidx.appcompat.app.AppCompatActivity
@@ -20,11 +20,13 @@ import java.util.*
  * 常用：
  * [init]              初始化
  *
- * 其他设置：
- * [setTitle]                       设置标题
- * [setSubtitle]                    设置副标题
+ * 自定义方法：
  * [withSplitLine]                  是否绘制分割线
  * [setTitleLocationAtLeft]         设置 title 是否左对齐，否则居中
+ *
+ * Toolbar 原有方法：
+ * [setTitle]                       设置标题
+ * [setSubtitle]                    设置副标题
  * [setNavigationIcon]              设置图标
  * [setNavigationOnClickListener]   设置图标的点击监听
  * [setTitleTextColor]
@@ -65,8 +67,8 @@ class JToolbar(context: Context, attrs: AttributeSet?) : Toolbar(context, attrs)
     withSplitLine: Boolean = true,
     @DrawableRes
     icon: Int = R.drawable.common_ic_back,
-    clickIcon: OnClickListener? = View.OnClickListener { activity.finishAfterTransition() },
-    titleOnLeft: Boolean = true
+    titleOnLeft: Boolean = true,
+    clickIcon: OnClickListener? = OnClickListener { activity.finishAfterTransition() }
   ) {
     this.title = title
     withSplitLine(withSplitLine)
@@ -110,15 +112,23 @@ class JToolbar(context: Context, attrs: AttributeSet?) : Toolbar(context, attrs)
   
   override fun setTitle(title: CharSequence?) {
     super.setTitle(title)
-    if (mTitleTextView == null) {
-      mTitleTextView = getTitleTv("mTitleTextView")
+    if (mTitleTextView == null && title != null) {
+      for (i in 0 until childCount) {
+        if (tryInitTitleTextView(getChildAt(i))) {
+          break
+        }
+      }
     }
   }
   
   override fun setSubtitle(subtitle: CharSequence?) {
     super.setSubtitle(subtitle)
-    if (mSubtitleTextView == null) {
-      mSubtitleTextView = getTitleTv("mSubtitleTextView")
+    if (mSubtitleTextView == null && subtitle != null) {
+      for (i in 0 until childCount) {
+        if (tryInitSubtitleTextView(getChildAt(i))) {
+          break
+        }
+      }
     }
   }
   
@@ -161,19 +171,35 @@ class JToolbar(context: Context, attrs: AttributeSet?) : Toolbar(context, attrs)
   private val Int.dp2pxF
     get() = context.resources.displayMetrics.density * this
   
-  @SuppressLint("ResourceAsColor")
-  private fun getTitleTv(name: String): TextView? {
-    try {
-      // 以前学长遗留的代码，用的反射，如果后面不行了，可以采取 getChildAt() 在合适的位置拿子 View
-      val field = Objects.requireNonNull(javaClass.superclass).getDeclaredField(name)
-      field.isAccessible = true
-      val view = field[this] as TextView
-      view.paint.isFakeBoldText = true
-      view.setTextColor(ContextCompat.getColor(context, R.color.common_level_two_font_color))
-      return view
-    } catch (e: Exception) {
-      e.printStackTrace()
+  override fun addView(child: View?, index: Int, params: ViewGroup.LayoutParams?) {
+    super.addView(child, index, params)
+    // 经过看源码发现，存在 Toolbar 先把 mTitleTextView 放在 mHiddenViews 中的情况，所以这里只是做一个二重保障
+    if (mTitleTextView == null) {
+      if (!tryInitSubtitleTextView(child)) {
+        if (mSubtitleTextView == null) {
+          tryInitSubtitleTextView(child)
+        }
+      }
     }
-    return null
+  }
+  
+  private fun tryInitTitleTextView(child: View?): Boolean {
+    if (child is TextView && child.text == title) {
+      mTitleTextView = child
+      child.paint.isFakeBoldText = true
+      child.setTextColor(ContextCompat.getColor(context, R.color.common_level_two_font_color))
+      return true
+    }
+    return false
+  }
+  
+  private fun tryInitSubtitleTextView(child: View?): Boolean {
+    if (child is TextView && child.text == subtitle) {
+      mSubtitleTextView = child
+      child.paint.isFakeBoldText = true
+      child.setTextColor(ContextCompat.getColor(context, R.color.common_level_two_font_color))
+      return true
+    }
+    return false
   }
 }

@@ -87,7 +87,7 @@ abstract class BaseActivity : AppCompatActivity() {
                                              @DrawableRes icon: Int = R.drawable.common_ic_back,
                                              listener: View.OnClickListener? = View.OnClickListener { finish() },
                                              titleOnLeft: Boolean = true) {
-        init(this@BaseActivity, title, withSplitLine, icon, listener, titleOnLeft)
+        init(this@BaseActivity, title, withSplitLine, icon, titleOnLeft, listener)
     }
 
     override fun onRestart() {
