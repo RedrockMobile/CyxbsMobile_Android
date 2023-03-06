@@ -9,7 +9,6 @@ import com.mredrock.cyxbs.lib.utils.service.impl
 import com.mredrock.cyxbs.config.config.SchoolCalendar
 import com.mredrock.cyxbs.lib.utils.extensions.toast
 import com.mredrock.cyxbs.lib.utils.utils.judge.NetworkUtil
-import com.mredrock.cyxbs.main.BuildConfig
 import io.reactivex.rxjava3.core.Observable
 import io.reactivex.rxjava3.core.Single
 import io.reactivex.rxjava3.schedulers.Schedulers
@@ -93,7 +92,12 @@ object CourseHeaderHelper {
         if (linkData.selfNum.isBlank()) {
           Observable.just(HintHeader("登录后即可查看课表"))
         } else {
-          observeHeader3(nowWeek, linkData.selfNum, linkData.linkNum, linkData.isBoy)
+          observeHeader3(
+            nowWeek,
+            linkData.selfNum,
+            if (linkData.isShowLink) linkData.linkNum else "",
+            linkData.isBoy
+          )
         }
       }
   }

@@ -88,7 +88,7 @@ class HomeCourseViewModel : BaseViewModel() {
    */
   private fun initObserve(): Disposable {
     // 自己课的观察流
-    val selfLessonObservable = StuLessonRepository.observeSelfLesson()
+    val selfLessonObservable = StuLessonRepository.observeSelfLesson(true)
   
     // 关联人课的观察流
     val linkLessonObservable = LinkRepository.observeLinkStudent()
