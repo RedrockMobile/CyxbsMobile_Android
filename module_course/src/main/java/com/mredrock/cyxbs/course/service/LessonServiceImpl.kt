@@ -52,8 +52,8 @@ class LessonServiceImpl : ILessonService {
     }
   }
   
-  override fun observeSelfLesson(): Observable<List<ILessonService.Lesson>> {
-    return StuLessonRepository.observeSelfLesson()
+  override fun observeSelfLesson(isForce: Boolean): Observable<List<ILessonService.Lesson>> {
+    return StuLessonRepository.observeSelfLesson(isForce)
       .map { it.toLesson() }
   }
   

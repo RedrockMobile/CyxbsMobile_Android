@@ -11,6 +11,9 @@ import org.gradle.kotlin.dsl.*
 import java.io.File
 
 /**
+ *
+ * 考虑到单模块调试，所以应该把通用的设置放在 BaseApplicationPlugin 里面，这里面只用来放特殊的设置
+ *
  *@author ZhiQiang Tu
  *@time 2022/10/11  17:28
  *@signature There are no stars in the hills.
@@ -77,6 +80,7 @@ class AppPlugin : BasePlugin() {
             //多渠道包的输出目录，默认为new File(project.buildDir,"channel")
             outputDir = File(project.buildDir, "channel")
             //多渠道包的命名规则，默认为：${appName}-${versionName}-${versionCode}-${flavorName}-${buildType}-${buildTime}
+            //这个命名跟发版 CI 有对应关系，请不要随意修改 ！！！
             apkNameFormat = "掌上重邮-\${versionName}-\${flavorName}-\${buildType}-\${buildTime}"
             //快速模式：生成渠道包时不进行校验（速度可以提升10倍以上，默认为false）
             fastMode = false

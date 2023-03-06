@@ -4,7 +4,6 @@ import androidx.annotation.WorkerThread
 import androidx.collection.ArrayMap
 import com.mredrock.cyxbs.api.account.IAccountService
 import com.mredrock.cyxbs.api.course.ILessonService
-import com.mredrock.cyxbs.api.course.ILessonService.CourseDisallowLocalSaveException
 import com.mredrock.cyxbs.course.page.course.bean.StuLessonBean
 import com.mredrock.cyxbs.course.page.course.room.LessonDataBase
 import com.mredrock.cyxbs.course.page.course.room.StuLessonEntity
@@ -19,7 +18,6 @@ import io.reactivex.rxjava3.core.Observable
 import io.reactivex.rxjava3.schedulers.Schedulers
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.rx3.asObservable
-import retrofit2.HttpException
 
 /**
  * ...
@@ -41,7 +39,7 @@ object StuLessonRepository {
    * - 没有连接网络并且不允许使用本地缓存时会一直不发送数据给下游
    * - 不会抛出异常给下游
    */
-  fun observeSelfLesson(): Observable<List<StuLessonEntity>> {
+  fun observeSelfLesson(isForce: Boolean = false): Observable<List<StuLessonEntity>> {
     return IAccountService::class.impl
       .getUserService()
       .observeStuNumState()
@@ -54,7 +52,7 @@ object StuLessonRepository {
               .observeLesson(stuNum)
               .doOnSubscribe {
                 // 在开始订阅时异步请求一次云端数据，所以下游会先拿到本地数据库中的数据，如果远端数据更新了，整个流会再次通知
-                refreshLesson(stuNum).unsafeSubscribeBy()
+                refreshLesson(stuNum, isForce).unsafeSubscribeBy()
               }.distinctUntilChanged() // 去重
               .subscribeOn(Schedulers.io())
           } else {
@@ -65,7 +63,7 @@ object StuLessonRepository {
               emit(Unit)
             }.asObservable()
               .switchMap {
-                refreshLesson(stuNum)
+                refreshLesson(stuNum, isForce)
                   .onErrorComplete() // 网络请求的异常全部吞掉
                   .toObservable()
               }
@@ -108,7 +106,6 @@ object StuLessonRepository {
   
   /**
    * 得到某人的课，在得不到这个人课表数据时会抛出异常，
-   * 在不允许使用本地数据且得到课表数据失败时抛出 [CourseDisallowLocalSaveException] 异常
    */
   fun getLesson(
     stuNum: String,
@@ -127,10 +124,7 @@ object StuLessonRepository {
             throw throwable
           }
         } else {
-          when (throwable) {
-            is HttpException -> throw CourseDisallowLocalSaveException
-            else -> throw throwable
-          }
+          throw throwable
         }
       }
   }

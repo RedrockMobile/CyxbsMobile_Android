@@ -20,8 +20,12 @@ interface ILinkService : IProvider {
   fun getLinkStu(): Single<LinkStu>
   
   /**
-   * 观察当前登录人的关联情况
-   * - 不会抛异常
+   * 观察当前登录人的我的关联数据
+   * - 支持换账号登录后返回新登录人的数据
+   * - 没登录返回的数据全为空串
+   * - 第一次观察时会请求新的数据
+   * - 使用了 distinctUntilChanged()，只会在数据更改了才会回调
+   * - 上游不会抛出错误到下游
    *
    * ## 注意
    * - 观察后是一定有值发送下来的，请使用 [LinkStu.isNull] 来判断是否存在关联人
