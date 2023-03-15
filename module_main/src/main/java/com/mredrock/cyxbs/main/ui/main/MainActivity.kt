@@ -13,6 +13,7 @@ import com.mredrock.cyxbs.config.sp.SP_COURSE_SHOW_STATE
 import com.mredrock.cyxbs.config.sp.defaultSp
 import com.mredrock.cyxbs.lib.base.ui.BaseActivity
 import com.mredrock.cyxbs.lib.base.utils.Umeng
+import com.mredrock.cyxbs.lib.utils.extensions.launch
 import com.mredrock.cyxbs.lib.utils.service.ServiceManager
 import com.mredrock.cyxbs.lib.utils.service.impl
 import com.mredrock.cyxbs.main.R
@@ -49,6 +50,13 @@ class MainActivity : BaseActivity() {
     if (isLogin != null) {
       mIsLogin = isLogin
       initUI()
+      if (mIsLogin) {
+        launch {
+          tryPingNetWork()?.onFailure {
+            toast("后端服务暂不可用")
+          }
+        }
+      }
     }
   }
   

@@ -20,14 +20,12 @@ import com.mredrock.cyxbs.config.sp.defaultSp
 import com.mredrock.cyxbs.config.view.JToolbar
 import com.mredrock.cyxbs.lib.base.dailog.ChooseDialog
 import com.mredrock.cyxbs.lib.base.ui.BaseActivity
+import com.mredrock.cyxbs.lib.utils.extensions.launch
 import com.mredrock.cyxbs.lib.utils.extensions.setOnSingleClickListener
-import com.mredrock.cyxbs.lib.utils.extensions.setSchedulers
 import com.mredrock.cyxbs.mine.R
 import com.mredrock.cyxbs.mine.page.security.activity.SecurityActivity
-import com.mredrock.cyxbs.mine.util.apiService
 import com.mredrock.cyxbs.mine.util.ui.WarningDialog
 import com.mredrock.cyxbs.mine.util.widget.SwitchPlus
-import io.reactivex.rxjava3.disposables.Disposable
 
 class SettingActivity : BaseActivity() {
     private val mSwitch by R.id.mine_setting_switch.view<SwitchPlus>()
@@ -116,40 +114,37 @@ class SettingActivity : BaseActivity() {
     }
 
     /**
-     * 退出时的网络请求，用于在 activity onDestroy() 时及时取消
+     * 当前是否正在 ping 后端网络，防止重复点击退出
      */
-    private var mExitDisposable: Disposable? = null
+    private var mIsInPingNetWork: Boolean = false
 
     private fun onExitClick() {
-        val disposable = mExitDisposable
-        if (disposable != null) {
-            if (!disposable.isDisposed) {
-                // 防止重复点击
-                return
-            }
+        if (mIsInPingNetWork) {
+            // 防止重复点击
+            return
         }
-        mExitDisposable = apiService.pingMagipoke()
-            .setSchedulers()
-            .safeSubscribeBy(
-                onNext = {
-                    //判定magipoke系列接口正常，允许正常退出登陆
-                    doExit()
-                },
-                onError = {
-                    //判定magipoke系列接口异常，极有可能会导致退出之后无法重新登陆，弹一个dialog提示一下
-                    WarningDialog.showDialog(
-                        this,
-                        "温馨提示",
-                        "因服务器或当前手机网络原因，检测到掌邮核心服务暂不可用，退出登录之后有可能会导致无法正常登录，是否确认退出登录？",
-                        onNegativeClick = {
-                            //内部已经将dialog消除，这里啥都不用处理
-                        },
-                        onPositiveClick = {
-                            jumpToLoginActivity()
-                        }
-                    )
-                }
-            )
+        mIsInPingNetWork = true
+        launch {
+            val result = tryPingNetWork()
+            if (result != null && result.isSuccess) {
+                //判定magipoke系列接口正常，允许正常退出登陆
+                doExit()
+            } else {
+                //判定magipoke系列接口异常，极有可能会导致退出之后无法重新登陆，弹一个dialog提示一下
+                WarningDialog.showDialog(
+                    this@SettingActivity,
+                    "温馨提示",
+                    "因服务器或当前手机网络原因，检测到掌邮核心服务暂不可用，退出登录之后有可能会导致无法正常登录，是否确认退出登录？",
+                    onNegativeClick = {
+                        //内部已经将dialog消除，这里啥都不用处理
+                    },
+                    onPositiveClick = {
+                        jumpToLoginActivity()
+                    }
+                )
+            }
+            mIsInPingNetWork = false
+        }
     }
 
     private fun doExit() {

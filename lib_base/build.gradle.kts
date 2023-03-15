@@ -12,6 +12,7 @@ dependApiLogin()
 
 dependCoroutines()
 dependCoroutinesRx3()
+dependNetwork()
 
 dependUmeng()
 
