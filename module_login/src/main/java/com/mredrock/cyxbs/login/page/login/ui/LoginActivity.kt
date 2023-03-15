@@ -35,10 +35,7 @@ import com.mredrock.cyxbs.config.sp.SP_PRIVACY_AGREED
 import com.mredrock.cyxbs.config.sp.defaultSp
 import com.mredrock.cyxbs.lib.base.BaseApp
 import com.mredrock.cyxbs.lib.base.ui.BaseActivity
-import com.mredrock.cyxbs.lib.utils.extensions.appContext
-import com.mredrock.cyxbs.lib.utils.extensions.lazyUnlock
-import com.mredrock.cyxbs.lib.utils.extensions.setOnSingleClickListener
-import com.mredrock.cyxbs.lib.utils.extensions.wrapByNoLeak
+import com.mredrock.cyxbs.lib.utils.extensions.*
 import com.mredrock.cyxbs.lib.utils.service.ServiceManager
 import com.mredrock.cyxbs.lib.utils.service.impl
 import com.mredrock.cyxbs.login.R
@@ -110,6 +107,9 @@ class LoginActivity : BaseActivity() {
   private val mTvForget by R.id.login_tv_forget_password.view<TextView>()
   private val mTvUserAgreement by R.id.login_tv_user_agreement.view<TextView>()
   private val mContainer by R.id.login_container.view<ViewGroup>()
+  
+  // 后端是否可用
+  private var mIsServerAvailable = true
 
   override fun onCreate(savedInstanceState: Bundle?) {
     super.onCreate(savedInstanceState)
@@ -117,6 +117,7 @@ class LoginActivity : BaseActivity() {
     initView()
     initObserve()
     initUpdate()
+    initCheckNetWork()
   }
 
   private fun initView() {
@@ -129,6 +130,9 @@ class LoginActivity : BaseActivity() {
     }
     mBtnLogin.setOnSingleClickListener {
       loginAction()
+      if (!mIsServerAvailable) {
+        toast("当前后端服务不可用，可能无法正常登录")
+      }
     }
     mLavCheck.setOnSingleClickListener {
       mLavCheck.playAnimation()
@@ -299,5 +303,13 @@ class LoginActivity : BaseActivity() {
 
   private fun initUpdate() {
     IAppUpdateService::class.impl.tryNoticeUpdate(this)
+  }
+  
+  private fun initCheckNetWork() {
+    launch {
+      tryPingNetWork()?.onFailure {
+        mIsServerAvailable = false
+      }
+    }
   }
 }

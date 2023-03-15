@@ -11,9 +11,7 @@ import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.SharedFlow
 import kotlinx.coroutines.launch
 import retrofit2.HttpException
-import java.net.ConnectException
-import java.net.SocketTimeoutException
-import java.net.UnknownHostException
+import java.io.IOException
 import java.util.concurrent.TimeUnit
 
 /**
@@ -55,10 +53,7 @@ class LoginViewModel : BaseViewModel() {
         isLanding = false
       }.doOnError {
         when (it) {
-          is SocketTimeoutException,
-          is ConnectException,
-          is UnknownHostException,
-          -> toast("网络中断，请检查您的网络状态")
+          is IOException -> toast("网络中断，请检查您的网络状态") // Retrofit 对于网络无法连接将抛出 IOException
           is HttpException -> toast("登录服务暂时不可用")
           is IllegalStateException -> toast("登录失败：学号或者密码错误,请检查输入")
           else -> {

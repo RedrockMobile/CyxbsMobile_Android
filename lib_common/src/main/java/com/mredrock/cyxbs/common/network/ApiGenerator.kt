@@ -255,7 +255,7 @@ object ApiGenerator {
             // 判断之前的过期 token 是否跟现在的 token 一样
             if (expiredToken == token) {
                 // 一样的话说明需要刷新 token
-                mAccountService.getVerifyService().refresh() ?: error("刷新 token 失败")
+                mAccountService.getVerifyService().refresh()
             }
             // 如果本来网络就是崩的，一堆请求会堵在这里刷新 token，但这种情况本来就会因为网络问题而全部请求失败，
             // 所以不用管这种情况（万一有个请求刷新成功了?）
