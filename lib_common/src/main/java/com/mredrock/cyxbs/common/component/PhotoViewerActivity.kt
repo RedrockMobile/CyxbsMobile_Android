@@ -9,6 +9,7 @@ import android.view.LayoutInflater
 import android.view.View
 import androidx.annotation.LayoutRes
 import androidx.viewpager.widget.PagerAdapter
+import androidx.viewpager.widget.ViewPager
 import com.bumptech.glide.Glide
 import com.bumptech.glide.RequestManager
 import com.bumptech.glide.request.RequestOptions
@@ -17,7 +18,6 @@ import com.mredrock.cyxbs.common.R
 import com.mredrock.cyxbs.common.ui.BaseActivity
 import com.mredrock.cyxbs.common.utils.extensions.setFullScreen
 import com.mredrock.cyxbs.common.utils.extensions.startActivity
-import kotlinx.android.synthetic.main.common_activity_photo_viewer.*
 import com.mredrock.cyxbs.common.utils.extensions.setOnSingleClickListener
 
 /**
@@ -27,6 +27,7 @@ fun showPhotos(context: Context, photoList: List<String>, pos: Int = 0) {
     context.startActivity<PhotoViewerActivity>("photos" to photoList.toTypedArray(), "position" to pos)
 }
 
+@Deprecated("遗留的老代码，不建议再使用")
 open class PhotoViewerActivity : BaseActivity() {
 
 
@@ -36,6 +37,8 @@ open class PhotoViewerActivity : BaseActivity() {
     protected open val backgroundColor: Int = Color.BLACK
     protected open val glideOption: RequestOptions? = null
     protected open val thumbnail: Float = 0.1f
+    
+    protected val vp_photo by R.id.vp_photo.view<ViewPager>()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -72,7 +75,7 @@ open class PhotoViewerActivity : BaseActivity() {
             }
         }
 
-        vp_photo.apply {
+        findViewById<ViewPager>(R.id.vp_photo).apply {
             adapter = mAdapter
             currentItem = curPos
             setBackgroundColor(backgroundColor)
@@ -85,5 +88,5 @@ open class PhotoViewerActivity : BaseActivity() {
     protected open fun onLongClick(mData: String, mPos: Int) = false
 
     protected fun addFloatView(@LayoutRes floatLayoutId: Int): View =
-            LayoutInflater.from(this).inflate(floatLayoutId, fl_photo_content, true)
+            LayoutInflater.from(this).inflate(floatLayoutId, findViewById(R.id.fl_photo_content), true)
 }

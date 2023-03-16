@@ -30,7 +30,7 @@ class IncreaseCardView @JvmOverloads constructor(
         setWillNotDraw(false)
         animator = ValueAnimator.ofInt(0, 100)
             .apply {
-                duration = 1000//时长5s
+                duration = 1000//时长1s
                 interpolator = LinearInterpolator()//线性插值器
                 addUpdateListener {
                     val value = it.animatedValue.toString().toInt()

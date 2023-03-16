@@ -23,7 +23,7 @@ import com.mredrock.cyxbs.lib.utils.extensions.setOnSingleClickListener
 import kotlin.math.roundToInt
 
 /**
- * 这是长按空白区域生成的带有加号的那个灰色 View。用于点击一下打开事务添加界面
+ * 这是长按空白区域生成的带有加号的那个灰色 View。用于点击一下打开添加事务界面
  *
  * @author 985892345
  * @date 2022/9/19 14:55
@@ -129,11 +129,11 @@ open class TouchAffairView(
     mExpandValueAnimator = ValueAnimator.ofFloat(0F, 1F).apply {
       addUpdateListener {
         val now = animatedValue as Float
-        val oldTop = course.getRowsHeight(0, oldTopRow - 1)
-        val newTop = course.getRowsHeight(0, topRow - 1)
+        val oldTop = course.getRowsHeight(0, oldTopRow - 1) + course.getPaddingTop()
+        val newTop = course.getRowsHeight(0, topRow - 1) + course.getPaddingTop()
         val nowTop = ((oldTop - newTop) * (1 - now)).roundToInt()
-        val oldBottom = course.getRowsHeight(0, oldBottomRow)
-        val newBottom = course.getRowsHeight(0, bottomRow)
+        val oldBottom = course.getRowsHeight(0, oldBottomRow) + course.getPaddingTop()
+        val newBottom = course.getRowsHeight(0, bottomRow) + course.getPaddingTop()
         val nowBottom =
           ((newBottom - oldBottom) * now).roundToInt() + oldBottom - newTop - 2 * mMargin
         // 手动调用布局

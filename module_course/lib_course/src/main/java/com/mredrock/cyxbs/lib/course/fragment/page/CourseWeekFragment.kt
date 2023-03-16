@@ -3,7 +3,8 @@ package com.mredrock.cyxbs.lib.course.fragment.page
 import android.os.Bundle
 import android.view.View
 import androidx.annotation.CallSuper
-import com.mredrock.cyxbs.lib.course.helper.CourseNowTimeHelper
+import com.mredrock.cyxbs.api.course.ICourseService
+import com.mredrock.cyxbs.lib.course.helper.show.CourseNowTimeHelper
 import com.mredrock.cyxbs.lib.utils.extensions.lazyUnlock
 import com.mredrock.cyxbs.config.config.SchoolCalendar
 import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
@@ -11,6 +12,9 @@ import java.util.*
 
 /**
  * 每一周的页面模板
+ *
+ * 因为 [CourseWeekFragment] 和 [CourseSemesterFragment] 高度相似，有很多初始化方法都是一样的，
+ * 为了减少书写，你可以参考主页课表的写法，使用一个帮助类来整合这两个 Fragment 需要的方法
  *
  * @author 985892345 (Guo Xiangrui)
  * @email guo985892345@foxmail.com
@@ -44,21 +48,28 @@ abstract class CourseWeekFragment : CoursePageFragment() {
   
   /**
    * 设置星期数
-   * @return 今天是否在本周
    */
   protected open fun initWeekNum() {
-    // 因为开学第一周的数据来自其他地方，存在此时没有被加载的情况，所以采用观察的形式
-    SchoolCalendar.observeFirstMonDayOfTerm()
-      .firstElement()
-      .observeOn(AndroidSchedulers.mainThread())
-      .safeSubscribeBy {
-        it.add(Calendar.DATE, (mWeek - 1) * 7)
-        val startTimestamp = it.timeInMillis
-        setMonth(it)
-        it.add(Calendar.DATE, 7)
-        val isInThisWeek = System.currentTimeMillis() in startTimestamp .. it.timeInMillis
-        onIsInThisWeek(isInThisWeek)
-      }
+    val nowWeek = SchoolCalendar.getWeekOfTerm()
+    if (nowWeek == null || nowWeek <= ICourseService.maxWeek + 1) {
+      // 因为开学第一周的数据来自其他地方，存在此时没有被加载的情况，所以采用观察的形式
+      // nowWeek 是可能返回负数的，这点需要额外注意一下
+      SchoolCalendar.observeFirstMonDayOfTerm()
+        .firstElement()
+        .observeOn(AndroidSchedulers.mainThread())
+        .safeSubscribeBy {
+          it.add(Calendar.DATE, (mWeek - 1) * 7)
+          val startTimestamp = it.timeInMillis
+          setMonth(it)
+          it.add(Calendar.DATE, 7)
+          val isInThisWeek = System.currentTimeMillis() in startTimestamp .. it.timeInMillis
+          onIsInThisWeek(isInThisWeek)
+        }
+    } else {
+      // 这里说明 nowWeek 大于 ICourseService.maxWeek + 1
+      // 此时处于放假期间，考虑到 jwzx 会在开学前更新课表，所以这里不显示日期
+      onIsInThisWeek(false)
+    }
   }
   
   protected open val mCourseNowTimeHelper by lazyUnlock {

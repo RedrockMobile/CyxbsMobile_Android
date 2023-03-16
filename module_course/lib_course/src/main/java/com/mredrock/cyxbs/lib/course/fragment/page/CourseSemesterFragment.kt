@@ -3,11 +3,14 @@ package com.mredrock.cyxbs.lib.course.fragment.page
 import android.os.Bundle
 import android.view.View
 import androidx.annotation.CallSuper
-import com.mredrock.cyxbs.lib.course.helper.CourseNowTimeHelper
+import com.mredrock.cyxbs.lib.course.helper.show.CourseNowTimeHelper
 import java.util.*
 
 /**
  * 整学期页面模板
+ *
+ * 因为 [CourseWeekFragment] 和 [CourseSemesterFragment] 高度相似，有很多初始化方法都是一样的，
+ * 为了减少书写，你可以参考主页课表的写法，使用一个帮助类来整合这两个 Fragment 需要的方法
  *
  * @author 985892345 (Guo Xiangrui)
  * @email guo985892345@foxmail.com

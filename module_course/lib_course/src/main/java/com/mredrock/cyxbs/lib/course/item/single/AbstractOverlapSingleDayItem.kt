@@ -1,11 +1,19 @@
 package com.mredrock.cyxbs.lib.course.item.single
 
 import android.content.Context
+import android.transition.ChangeBounds
+import android.transition.Fade
+import android.transition.Transition
+import android.transition.TransitionManager
+import android.transition.TransitionSet
 import android.util.SparseIntArray
 import android.view.View
+import android.view.ViewGroup
+import android.widget.FrameLayout
 import androidx.core.util.forEach
 import androidx.core.util.isNotEmpty
 import com.mredrock.cyxbs.lib.course.R
+import com.mredrock.cyxbs.lib.course.fragment.course.base.FoldImpl
 import com.mredrock.cyxbs.lib.course.fragment.course.base.OverlapImpl
 import com.mredrock.cyxbs.lib.course.fragment.course.expose.overlap.IOverlap
 import com.mredrock.cyxbs.lib.course.fragment.course.expose.overlap.IOverlapItem
@@ -38,12 +46,15 @@ import java.util.Collections
  * @email guo985892345@foxmail.com
  * @date 2022/8/26 17:00
  */
-abstract class AbstractOverlapSingleDayItem : IOverlapItem, OverlapHelper.IOverlapLogic, ISingleDayItem {
+abstract class AbstractOverlapSingleDayItem : IOverlapItem, OverlapHelper.IOverlapLogic,
+  ISingleDayItem {
   
   /**
    * 创建子 View，这个 View 才是真正用于显示的
    *
    * 因为存在重叠分开显示的情况，所以需要单独用子 View 来实现（比如：1 2 3 4 节课，中间的 2 3 节课被遮挡了）
+   *
+   * 该方法返回的 View 将被缓存，如果需要修改属性可以使用 [getChildInFree]、 [getChildInParent]、[getChildIterable]
    */
   protected abstract fun createView(context: Context): View
   
@@ -75,14 +86,14 @@ abstract class AbstractOverlapSingleDayItem : IOverlapItem, OverlapHelper.IOverl
     return object : Iterable<View> {
       override fun iterator(): Iterator<View> {
         return object : Iterator<View> {
-  
+          
           val iterator1 = mChildInFree.iterator()
           val iterator2 = mChildInParent.iterator()
-  
+          
           override fun hasNext(): Boolean {
             return iterator1.hasNext() || iterator2.hasNext()
           }
-  
+          
           override fun next(): View {
             return if (iterator1.hasNext()) iterator1.next() else iterator2.next()
           }
@@ -92,14 +103,14 @@ abstract class AbstractOverlapSingleDayItem : IOverlapItem, OverlapHelper.IOverl
   }
   
   /**
-   * 得到使用 [createView] 生成但目前不在 [mView] 中显示的所有 view 集合的迭代器
+   * 得到使用 [createView] 生成但目前不在 [mNetLayout] 中显示的所有 view 集合的迭代器
    */
   fun getChildInFree(): List<View> {
     return Collections.unmodifiableList(mChildInFree)
   }
   
   /**
-   * 得到使用 [createView] 生成并在 [mView] 中显示的所有 view 集合的迭代器
+   * 得到使用 [createView] 生成并在 [mNetLayout] 中显示的所有 view 集合的迭代器
    */
   fun getChildInParent(): List<View> {
     return Collections.unmodifiableList(mChildInParent)
@@ -121,9 +132,12 @@ abstract class AbstractOverlapSingleDayItem : IOverlapItem, OverlapHelper.IOverl
   
   /**
    * 得到当前 item 的 View
+   *
+   * ## 注意
+   * 这个 View 并不一定就是 [initializeView] 返回的 View
    */
   fun getView(): NetLayout? {
-    return if (this::mView.isInitialized) mView else null
+    return if (this::mNetLayout.isInitialized) mNetLayout else null
   }
   
   /**
@@ -131,21 +145,21 @@ abstract class AbstractOverlapSingleDayItem : IOverlapItem, OverlapHelper.IOverl
    *
    * [createView] 中得到的 View 都会添加进这个 view 中
    */
-  private lateinit var mView: NetLayout
+  private lateinit var mNetLayout: NetLayout
   
   @Suppress("LeakingThis")
   final override val overlap: IOverlap = OverlapHelper(this)
   
   final override fun initializeView(context: Context): View {
-    if (!this::mView.isInitialized) {
-      mView = NetLayout(context).apply {
+    if (!this::mNetLayout.isInitialized) {
+      mNetLayout = NetLayout(context).apply {
         setRowColumnCount(lp.rowCount, lp.columnCount)
       }
     } else {
-      mView.setRowColumnCount(lp.rowCount, lp.columnCount)
+      mNetLayout.setRowColumnCount(lp.rowCount, lp.columnCount)
     }
-    onInitializeView(mView)
-    return mView
+    onInitializeView(mNetLayout)
+    return RootLayout(mNetLayout)
   }
   
   final override fun isAddIntoParent(): Boolean {
@@ -162,22 +176,27 @@ abstract class AbstractOverlapSingleDayItem : IOverlapItem, OverlapHelper.IOverl
   
   final override fun refreshOverlap() {
     // 这里需要重新设置一遍总行数，因为外面可能重新设置了 lp，但 mView 的属性与 lp 并没有相互绑定
-    mView.setRowColumnCount(lp.rowCount, lp.columnCount)
+    mNetLayout.setRowColumnCount(lp.rowCount, lp.columnCount)
     // 刷新空闲区域
     refreshFreeArea()
+    // 设置动画
+    TransitionManager.beginDelayedTransition(mNetLayout, createTransition())
+    
+    val diffSize = mChildInParent.size - mFreeAreaMap.size()
     // 移除掉多的子 View
-    repeat(mChildInParent.size - mFreeAreaMap.size()) {
+    repeat(diffSize) {
       val view = mChildInParent.removeLast()
-      mView.removeView(view)
+      mNetLayout.removeView(view)
       mChildInFree.add(view)
     }
     // 添加新的子 View
-    repeat(mFreeAreaMap.size() - mChildInParent.size) {
-      val view = mChildInFree.removeLastOrNull() ?: createView(mView.context)
+    repeat(-diffSize) {
+      val view = mChildInFree.removeLastOrNull() ?: createView(mNetLayout.context)
       val params = view.layoutParams as? NetLayoutParams ?: createNetLayoutParams()
-      mView.addNetChild(view, params)
+      mNetLayout.addNetChild(view, params)
       mChildInParent.add(view)
     }
+    // 重新设置 View 的位置
     repeat(mFreeAreaMap.size()) {
       val startRow = mFreeAreaMap.keyAt(it)
       val endRow = mFreeAreaMap.valueAt(it)
@@ -196,7 +215,7 @@ abstract class AbstractOverlapSingleDayItem : IOverlapItem, OverlapHelper.IOverl
    * 创建子 View 的 [NetLayoutParams]
    */
   private fun createNetLayoutParams(): NetLayoutParams {
-    return NetLayoutParams(0, 0,0, 0).apply {
+    return NetLayoutParams(0, 0, 0, 0).apply {
       leftMargin = R.dimen.course_item_margin.dimen.toInt()
       rightMargin = leftMargin
       topMargin = leftMargin
@@ -227,6 +246,45 @@ abstract class AbstractOverlapSingleDayItem : IOverlapItem, OverlapHelper.IOverl
     // 判断 e 是不是最后一格，如果是的话，就要单独加上
     if (e == lp.endRow) {
       mFreeAreaMap.put(s, e)
+    }
+  }
+  
+  private fun createTransition(): Transition {
+    return TransitionSet().apply {
+      addTransition(ChangeBounds())
+      addTransition(Fade())
+      duration = 160
+    }
+  }
+  
+  private class RootLayout(val netLayout: NetLayout) : FrameLayout(netLayout.context) {
+    
+    init {
+      /**
+       * 这里将 [netLayout] 套进两层 FrameLayout 是为了解决 ChangeBounds 的 Transition 动画调用的 suppressLayout(true)
+       * 导致中午或傍晚展开动画卡顿的问题，原因可以看 [FoldImpl] 的头注释
+       *
+       * 为了好看的动画，多层嵌套这点性能不值一提 :)
+       */
+      val lp = ViewGroup.LayoutParams(
+        ViewGroup.LayoutParams.MATCH_PARENT,
+        ViewGroup.LayoutParams.MATCH_PARENT
+      )
+      val layout = FrameLayout(context).apply { setWillNotDraw(true); layoutParams = lp }
+      layout.addView(netLayout)
+      addView(layout)
+      setWillNotDraw(true)
+    }
+    
+    override fun setTranslationZ(translationZ: Float) {
+      super.setTranslationZ(translationZ)
+      // 设置 translationZ 可以在部分 View 中绘制阴影（FrameLayout 不会绘制）
+      // 但外布局不知道子 View 的圆角大小，所以交给子 View 绘制阴影
+      val childCount = netLayout.childCount
+      for (i in 0 until childCount) {
+        val child = netLayout.getChildAt(i)
+        child.translationZ = translationZ
+      }
     }
   }
 }

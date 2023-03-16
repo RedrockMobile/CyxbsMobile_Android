@@ -1,6 +1,7 @@
 package com.mredrock.cyxbs.declare.pages.main.net
 
-import com.mredrock.cyxbs.declare.pages.main.bean.HomeDataBean
+import com.mredrock.cyxbs.declare.pages.main.bean.HasPermBean
+import com.mredrock.cyxbs.declare.pages.main.bean.VotesBean
 import com.mredrock.cyxbs.lib.utils.network.ApiWrapper
 import com.mredrock.cyxbs.lib.utils.network.IApi
 import io.reactivex.rxjava3.core.Single
@@ -18,5 +19,17 @@ interface HomeApiService : IApi {
      * 获取主页数据
      */
     @GET("/magipoke-attitude/declare/homepage")
-    fun getHomeData(): Single<ApiWrapper<List<HomeDataBean>>>
+    fun getHomeData(): Single<ApiWrapper<List<VotesBean>>>
+
+    /**
+     * 是否有权限发布投票
+     */
+    @GET("magipoke-attitude/declare/perm")
+    fun hasAccessPost(): Single<ApiWrapper<HasPermBean>>
+
+    /**
+     * 获取自己发布过得投票
+     */
+    @GET("magipoke-attitude/declare/posts")
+    fun getPostedVotes(): Single<ApiWrapper<List<VotesBean>>>
 }

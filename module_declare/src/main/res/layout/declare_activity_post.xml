@@ -28,7 +28,7 @@
                 tools:ignore="ContentDescription" />
 
             <TextView
-                android:id="@+id/declare_home_bar"
+                android:id="@+id/declare_home_toolbar_tv"
                 android:layout_width="67dp"
                 android:layout_height="31dp"
                 android:layout_marginStart="32dp"

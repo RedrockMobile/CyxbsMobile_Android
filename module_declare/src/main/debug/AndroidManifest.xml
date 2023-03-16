@@ -8,14 +8,17 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
         <activity
-            android:name=".pages.detail.page.activity.DeclareDetailActivity"
+            android:name=".pages.main.page.activity.PostedActivity"
+            android:exported="false" />
+        <activity
+            android:name=".pages.detail.page.activity.DetailActivity"
             android:exported="false">
             <meta-data
                 android:name="android.app.lib_name"
                 android:value="" />
         </activity>
         <activity
-            android:name=".pages.main.page.activity.DeclareHomeActivity"
+            android:name=".pages.main.page.activity.HomeActivity"
             android:exported="false">
             <meta-data
                 android:name="android.app.lib_name"
@@ -26,6 +29,7 @@
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
+
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>

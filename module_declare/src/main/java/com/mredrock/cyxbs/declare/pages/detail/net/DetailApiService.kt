@@ -37,8 +37,9 @@ interface DetailApiService : IApi {
     /**
      * 取消投票
      */
-    @DELETE("/magipoke-attitude/declare")
+    @HTTP(method = "DELETE", path = "/magipoke-attitude/declare", hasBody = true)
+    @FormUrlEncoded
     fun cancelChoice(
-        @Query("id") id: Int
+        @Field("id") id: Int
     ): Single<ApiWrapper<CancelChoiceBean>>
 }

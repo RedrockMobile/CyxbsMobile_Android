@@ -4,8 +4,9 @@ import android.annotation.SuppressLint
 import android.content.Context
 import android.graphics.Canvas
 import com.mredrock.cyxbs.api.course.utils.parseClassRoom
+import com.mredrock.cyxbs.course.page.course.data.ICourseItemData
 import com.mredrock.cyxbs.course.page.course.data.StuLessonData
-import com.mredrock.cyxbs.course.page.course.item.BaseOverlapSingleDayItem
+import com.mredrock.cyxbs.course.page.course.item.BaseItem
 import com.mredrock.cyxbs.course.page.course.item.ISingleDayRank
 import com.mredrock.cyxbs.course.page.course.item.view.IOverlapTag
 import com.mredrock.cyxbs.course.page.course.item.view.OverlapTagHelper
@@ -23,12 +24,15 @@ import com.ndhzs.netlayout.attrs.NetLayoutParams
  * @date 2022/9/12 15:08
  */
 class StuLessonItem(
-  override val data: StuLessonData
-) : BaseOverlapSingleDayItem<StuLessonItem.StuLessonView, StuLessonData>(),
+  val data: StuLessonData
+) : BaseItem<StuLessonItem.StuLessonView>(),
   ILessonItem
 {
   
   override val lp = StuLayoutLayoutParams(data)
+  
+  override val week: Int
+    get() = data.week
   
   override fun createView(context: Context): StuLessonView {
     return StuLessonView(context, data)
@@ -39,6 +43,9 @@ class StuLessonItem(
   
   override val rank: Int
     get() = lp.rank
+  
+  override val iCourseItemData: ICourseItemData
+    get() = data
   
   class StuLayoutLayoutParams(val data: StuLessonData) : BaseLessonLayoutParams(data), ISingleDayRank {
     override val rank: Int

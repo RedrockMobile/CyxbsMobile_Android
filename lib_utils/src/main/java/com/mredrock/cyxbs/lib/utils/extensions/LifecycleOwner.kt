@@ -46,7 +46,9 @@ fun LifecycleOwner.launch(block: suspend CoroutineScope.() -> Unit): Job {
  * # 注意：只有你主动写了 .catch {} 后它才启动协程
  * 如果想直接调用，建议使用前面的 LifecycleOwner.launch
  *
- * ```
+ * ## 为什么不实现只写 launchCatch 就可以调用的效果？
+ * 因为 LifecycleOwner 实现的协程调度是 Dispatchers.Main.immediate，
+ * 带有 immediate 会使当前协程如果已经在正确的上下文中时立即执行协程
  */
 fun LifecycleOwner.launchCatch(block: suspend CoroutineScope.() -> Unit): CatchSaver {
   return CatchSaver(this.lifecycleScope, block)

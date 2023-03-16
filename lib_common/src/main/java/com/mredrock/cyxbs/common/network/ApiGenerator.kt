@@ -22,7 +22,6 @@ import com.mredrock.cyxbs.common.config.*
 import com.mredrock.cyxbs.common.service.impl
 import com.mredrock.cyxbs.common.utils.LogLocal
 import retrofit2.adapter.rxjava3.RxJava3CallAdapterFactory
-import java.net.URLConnection
 import java.util.concurrent.CopyOnWriteArrayList
 import java.util.concurrent.locks.ReentrantLock
 import kotlin.concurrent.withLock
@@ -321,7 +320,9 @@ object ApiGenerator {
                     }
                 }
                 END_POINT_REDROCK_PROD -> {
-                    useBackupUrl(getBackupUrl(), chain)
+                    val url = getBackupUrl()
+                    mBackupUrl = url
+                    useBackupUrl(url, chain)
                 }
                 else -> throw RuntimeException("未知请求头！")
             }
@@ -339,9 +340,13 @@ object ApiGenerator {
         private val mLock = ReentrantLock()
     
         private fun getBackupUrl(): String {
+            val backupUrl = mBackupUrl
+            if (backupUrl != null) {
+                return backupUrl
+            }
             return mLock.withLock {
-                val backupUrl = mBackupUrl
-                if (backupUrl != null) backupUrl // 如果 mBackupUrl 不为 null 则说明前一个线程已经请求到了容灾地址
+                val url = mBackupUrl
+                if (url != null) url // 如果 mBackupUrl 不为 null 则说明前一个线程已经请求到了容灾地址
                 else {
                     val okHttpClient = OkHttpClient()
                     val request: Request = Request.Builder()

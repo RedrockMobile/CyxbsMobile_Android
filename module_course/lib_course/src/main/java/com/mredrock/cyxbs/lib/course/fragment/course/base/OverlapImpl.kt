@@ -7,12 +7,10 @@ import android.view.ViewGroup
 import androidx.annotation.CallSuper
 import com.mredrock.cyxbs.lib.course.fragment.course.expose.overlap.IOverlapContainer
 import com.mredrock.cyxbs.lib.course.fragment.course.expose.overlap.IOverlapItem
-import com.mredrock.cyxbs.lib.course.fragment.course.expose.wrapper.ICourseWrapper
 import com.mredrock.cyxbs.lib.course.internal.item.IItem
 import com.mredrock.cyxbs.lib.course.internal.item.IItemContainer
 import com.mredrock.cyxbs.lib.course.internal.item.forEachColumn
 import com.mredrock.cyxbs.lib.course.internal.item.forEachRow
-import com.mredrock.cyxbs.lib.course.internal.view.course.ICourseViewGroup
 import com.mredrock.cyxbs.lib.course.utils.getOrPut
 import com.ndhzs.netlayout.transition.OnChildVisibleListener
 import java.util.*
@@ -39,6 +37,17 @@ abstract class OverlapImpl : FoldImpl(), IOverlapContainer {
   
   override fun compareOverlayItem(row: Int, column: Int, o1: IOverlapItem, o2: IOverlapItem): Int {
     return o1.compareTo(o2)
+  }
+  
+  final override fun changeOverlap(item: IOverlapItem, isOverlap: Boolean): Boolean {
+    if (mItemInParentSet.contains(item)) {
+      val result = if (isOverlap) setOverlap(item) else deleteOverlap(item)
+      if (result) {
+        tryPostRefreshOverlapRunnable()
+        return true
+      }
+    }
+    return false
   }
   
   @CallSuper
@@ -115,15 +124,11 @@ abstract class OverlapImpl : FoldImpl(), IOverlapContainer {
   
   init {
     // 回收 item，解决 Fragment 与 View 生命周期不一致问题
-    addCourseLifecycleObservable(
-      object : ICourseWrapper.CourseLifecycleObserver {
-        override fun onDestroyCourse(course: ICourseViewGroup) {
-          mItemInFreeSet.clear()
-          mItemInParentSet.clear()
-          mRowColumnMap.clear()
-        }
-      }
-    )
+    doOnCourseDestroy {
+      mItemInFreeSet.clear()
+      mItemInParentSet.clear()
+      mRowColumnMap.clear()
+    }
   }
   
   private val mItemInFreeSet = hashSetOf<IOverlapItem>()
@@ -175,23 +180,31 @@ abstract class OverlapImpl : FoldImpl(), IOverlapContainer {
   /**
    * 设置重叠，不一定是在 item 被添加进来时调用
    */
-  private fun setOverlap(item: IOverlapItem) {
+  private fun setOverlap(item: IOverlapItem): Boolean {
+    var result = false
     item.lp.forEachRow { row ->
       item.lp.forEachColumn { column ->
-        getGrid(row, column).setOverlap(item)
+        if (getGrid(row, column).setOverlap(item)) {
+          result = true
+        }
       }
     }
+    return result
   }
   
   /**
    * 删除重叠
    */
-  private fun deleteOverlap(item: IOverlapItem) {
+  private fun deleteOverlap(item: IOverlapItem): Boolean {
+    var result = false
     item.lp.forEachRow { row ->
       item.lp.forEachColumn { column ->
-        getGrid(row, column).deleteOverlap(item)
+        if (getGrid(row, column).deleteOverlap(item)) {
+          result = true
+        }
       }
     }
+    return result
   }
   
   private val mRowColumnMap = SparseArray<SparseArray<Grid>>()
@@ -224,15 +237,19 @@ abstract class OverlapImpl : FoldImpl(), IOverlapContainer {
     /**
      * 设置重叠
      */
-    fun setOverlap(item: IOverlapItem) {
-      sort.add(item)
-      val higher = sort.higher(item)
-      higher?.overlap?.onBelowItem(row, column, item)
-      item.overlap.onAboveItem(row, column, higher)
-      
-      val lower = sort.lower(item)
-      item.overlap.onBelowItem(row, column, lower)
-      lower?.overlap?.onAboveItem(row, column, item)
+    fun setOverlap(item: IOverlapItem): Boolean {
+      if (!sort.contains(item)) {
+        sort.add(item)
+        val higher = sort.higher(item)
+        higher?.overlap?.onBelowItem(row, column, item)
+        item.overlap.onAboveItem(row, column, higher)
+  
+        val lower = sort.lower(item)
+        item.overlap.onBelowItem(row, column, lower)
+        lower?.overlap?.onAboveItem(row, column, item)
+        return true
+      }
+      return false
     }
     
     /**
@@ -240,14 +257,18 @@ abstract class OverlapImpl : FoldImpl(), IOverlapContainer {
      *
      * 注意：这个 remove 必须要满足 Compare 比较等于 0 时才能被 remove 掉
      */
-    fun deleteOverlap(item: IOverlapItem) {
+    fun deleteOverlap(item: IOverlapItem): Boolean {
       if (sort.contains(item)) {
         val higher = sort.higher(item)
         val lower = sort.lower(item)
         higher?.overlap?.onBelowItem(row, column, lower)
         lower?.overlap?.onAboveItem(row, column, higher)
+        item.overlap.onBelowItem(row, column, null)
+        item.overlap.onAboveItem(row, column, null)
         sort.remove(item)
+        return true
       }
+      return false
     }
   }
 }

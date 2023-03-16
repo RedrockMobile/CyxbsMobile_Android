@@ -14,4 +14,9 @@ interface IOverlapContainer {
    * @return > 0，则 o1 显示在 o2 上（只允许是同一个对象时返回 0）
    */
   fun compareOverlayItem(row: Int, column: Int, o1: IOverlapItem, o2: IOverlapItem): Int
+  
+  /**
+   * 改变重叠状态
+   */
+  fun changeOverlap(item: IOverlapItem, isOverlap: Boolean): Boolean
 }

@@ -34,7 +34,18 @@ interface IAffairService : IProvider {
   fun observeSelfAffair(): Observable<List<Affair>>
 
   fun deleteAffair(onlyId: Int): Completable
-
+  
+  /**
+   * 更新事务，只能更新不重复的单一事务 !!!
+   *
+   * ## 注意
+   * 由于课表可以进行 item 的长按移动，但在移动事务时会涉及到重复事务对应多段时间的问题，
+   * 所以目前暂时只能移动不重复的事务，该方法就是用来更新不重复的单一事务的
+   *
+   * 后面应该会考虑对事务进行重构，到时候该方法需要重新设计
+   */
+  fun updateAffair(affair: Affair): Completable
+  
   data class Affair(
     val stuNum: String,
     val onlyId: Int, // 事务唯一 id
@@ -51,7 +62,7 @@ interface IAffairService : IProvider {
    * 打开 AffairActivity，用于选择一个区域打算添加一个事务时调用
    */
   fun startActivityForAddAffair(
-    week: Int, //周数
+    week: Int, //周数，如果为 0，则表示整学期
     day: Int, // 星期数，星期一为 0
     beginLesson: Int, // 开始节数，如：1、2 节课以 1 开始；3、4 节课以 3 开始，注意：中午是以 -1 开始，傍晚是以 -2 开始
     period: Int // 长度

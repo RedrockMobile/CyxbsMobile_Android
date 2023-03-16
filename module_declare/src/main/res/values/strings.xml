@@ -1,9 +1,11 @@
 <resources>
-    <string name="declare_toolbar_title">表态区</string>
+    <string name="declare_home_title">表态区</string>
+    <string name="declare_posted_title">个人中心</string>
     <string name="declare_submit_edit">完成编辑</string>
     <string name="declare_add_section">添加选项</string>
     <string name="declare_home_toolbar">表态区</string>
     <string name="declare_home_no_data">话题菌伺服偷懒了</string>
+    <string name="declare_posted_no_data">菌似乎还没有发布过话题,点击右上角去发布吧!</string>
     <string name="declare_home_no_net">网络菌伺服西去了联系QwQ</string>
     <string name="declare_please_input_topic">请输入话题</string>
     <string name="declare_submit_title">是否确认发布该条“态度”，一旦发布后将不可更改!</string>

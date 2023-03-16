@@ -2,6 +2,7 @@ package com.mredrock.cyxbs.course.page.course.utils.container
 
 import com.mredrock.cyxbs.course.page.course.data.AffairData
 import com.mredrock.cyxbs.course.page.course.item.affair.Affair
+import com.mredrock.cyxbs.course.page.course.item.affair.IMovableAffairManager
 import com.mredrock.cyxbs.course.page.course.utils.container.base.ItemPoolController
 import com.mredrock.cyxbs.lib.course.fragment.course.expose.container.ICourseContainer
 
@@ -18,6 +19,7 @@ import com.mredrock.cyxbs.lib.course.fragment.course.expose.container.ICourseCon
  */
 class AffairContainerProxy(
   val container: ICourseContainer,
+  val iMovableAffairManager: IMovableAffairManager
 ) : ItemPoolController<Affair, AffairData>(container) {
   
   override fun areItemsTheSame(oldItem: AffairData, newItem: AffairData): Boolean {
@@ -40,6 +42,6 @@ class AffairContainerProxy(
   }
   
   override fun newItem(data: AffairData): Affair {
-    return Affair(data)
+    return Affair(data, iMovableAffairManager)
   }
 }
