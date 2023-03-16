@@ -9,7 +9,7 @@ import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.mredrock.cyxbs.declare.R
-import com.mredrock.cyxbs.declare.pages.main.bean.HomeDataBean
+import com.mredrock.cyxbs.declare.pages.main.bean.VotesBean
 
 /**
  * ... 主页数据的adapter
@@ -18,12 +18,12 @@ import com.mredrock.cyxbs.declare.pages.main.bean.HomeDataBean
  * @date 2023/2/4
  * @Description:
  */
-class DeclareHomeRvAdapter : ListAdapter<HomeDataBean, DeclareHomeRvAdapter.InnerViewHolder>(
-    object : DiffUtil.ItemCallback<HomeDataBean>() {
-        override fun areItemsTheSame(oldItem: HomeDataBean, newItem: HomeDataBean): Boolean =
+class HomeRvAdapter : ListAdapter<VotesBean, HomeRvAdapter.InnerViewHolder>(
+    object : DiffUtil.ItemCallback<VotesBean>() {
+        override fun areItemsTheSame(oldItem: VotesBean, newItem: VotesBean): Boolean =
             oldItem.id == newItem.id
 
-        override fun areContentsTheSame(oldItem: HomeDataBean, newItem: HomeDataBean): Boolean =
+        override fun areContentsTheSame(oldItem: VotesBean, newItem: VotesBean): Boolean =
             oldItem.title == newItem.title
 
     }

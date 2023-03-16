@@ -19,7 +19,7 @@ import io.reactivex.rxjava3.schedulers.Schedulers
  * @date 2023/2/13
  * @Description:
  */
-class DeclareDetailViewModel : BaseViewModel() {
+class DetailViewModel : BaseViewModel() {
     val detailLiveData: LiveData<DetailBean>
         get() = _mutableDetailLiveData
     private val _mutableDetailLiveData = MutableLiveData<DetailBean>()

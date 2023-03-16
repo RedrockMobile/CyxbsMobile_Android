@@ -8,11 +8,11 @@ import androidx.activity.viewModels
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.mredrock.cyxbs.declare.databinding.DeclareActivityDetailBinding
 import com.mredrock.cyxbs.declare.pages.detail.bean.VoteData
-import com.mredrock.cyxbs.declare.pages.detail.page.adapter.DeclareDetailRvAdapter
-import com.mredrock.cyxbs.declare.pages.detail.page.viewmodel.DeclareDetailViewModel
+import com.mredrock.cyxbs.declare.pages.detail.page.adapter.DetailRvAdapter
+import com.mredrock.cyxbs.declare.pages.detail.page.viewmodel.DetailViewModel
 import com.mredrock.cyxbs.lib.base.ui.BaseBindActivity
 
-class DeclareDetailActivity : BaseBindActivity<DeclareActivityDetailBinding>() {
+class DetailActivity : BaseBindActivity<DeclareActivityDetailBinding>() {
     companion object {
         /**
          * 启动投票详情页面
@@ -21,12 +21,12 @@ class DeclareDetailActivity : BaseBindActivity<DeclareActivityDetailBinding>() {
             context.startActivity(
                 Intent(
                     context,
-                    DeclareDetailActivity::class.java
+                    DetailActivity::class.java
                 ).apply { putExtra("id", id) })
         }
     }
 
-    private val mViewModel by viewModels<DeclareDetailViewModel>()
+    private val mViewModel by viewModels<DetailViewModel>()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -34,10 +34,10 @@ class DeclareDetailActivity : BaseBindActivity<DeclareActivityDetailBinding>() {
         //因为投票后返回的是个map，map是无序的，所以这里用个list记下未投票之前的选项排布顺序
         val voteDataList = mutableListOf<VoteData>()
 
-        val declareDetailRvAdapter = DeclareDetailRvAdapter()
+        val declareDetailRvAdapter = DetailRvAdapter()
 
         binding.declareDetailRecyclerview.run {
-            layoutManager = LinearLayoutManager(this@DeclareDetailActivity)
+            layoutManager = LinearLayoutManager(this@DetailActivity)
             adapter = declareDetailRvAdapter
         }
 

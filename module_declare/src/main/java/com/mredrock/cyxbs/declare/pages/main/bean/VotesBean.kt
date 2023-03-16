@@ -9,7 +9,7 @@ import com.google.gson.annotations.SerializedName
  * @date 2023/2/4
  * @Description:
  */
-data class HomeDataBean(
+data class VotesBean(
     @SerializedName("Id")
     val id: Int,
     @SerializedName("Title")

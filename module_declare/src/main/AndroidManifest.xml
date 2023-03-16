@@ -1,10 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android">
 
-    <application
-        android:theme="@style/AppTheme">
+    <application android:theme="@style/AppTheme">
         <activity
-            android:name=".pages.main.page.activity.DeclareHomeActivity"
+            android:name=".pages.main.page.activity.HomeActivity"
             android:exported="false">
             <meta-data
                 android:name="android.app.lib_name"
@@ -12,6 +11,20 @@
         </activity>
         <activity
             android:name=".pages.post.PostActivity"
+            android:exported="false">
+            <meta-data
+                android:name="android.app.lib_name"
+                android:value="" />
+        </activity>
+        <activity
+            android:name=".pages.main.page.activity.PostedActivity"
+            android:exported="false">
+            <meta-data
+                android:name="android.app.lib_name"
+                android:value="" />
+        </activity>
+        <activity
+            android:name=".pages.detail.page.activity.DetailActivity"
             android:exported="false">
             <meta-data
                 android:name="android.app.lib_name"

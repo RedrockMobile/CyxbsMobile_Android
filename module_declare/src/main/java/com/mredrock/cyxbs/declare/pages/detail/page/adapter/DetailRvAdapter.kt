@@ -21,8 +21,8 @@ import com.mredrock.cyxbs.lib.utils.extensions.setOnSingleClickListener
  * @date 2023/2/13
  * @Description:
  */
-class DeclareDetailRvAdapter :
-    ListAdapter<VoteData, DeclareDetailRvAdapter.InnerHolder>(
+class DetailRvAdapter :
+    ListAdapter<VoteData, DetailRvAdapter.InnerHolder>(
         object : DiffUtil.ItemCallback<VoteData>() {
             override fun areItemsTheSame(oldItem: VoteData, newItem: VoteData): Boolean {
                 return oldItem.choice == newItem.choice

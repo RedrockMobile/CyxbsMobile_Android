@@ -7,50 +7,40 @@ import android.view.View
 import androidx.activity.viewModels
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.mredrock.cyxbs.declare.databinding.DeclareActivityHomeBinding
-import com.mredrock.cyxbs.declare.pages.detail.page.activity.DeclareDetailActivity
-import com.mredrock.cyxbs.declare.pages.main.page.adapter.DeclareHomeRvAdapter
-import com.mredrock.cyxbs.declare.pages.main.page.viewmodel.DeclareHomeViewModel
-import com.mredrock.cyxbs.declare.pages.main.utils.FiveAndDoubleClickListener
-import com.mredrock.cyxbs.declare.pages.main.utils.setOnFiveAndDoubleClickListener
-import com.mredrock.cyxbs.declare.pages.post.PostActivity
+import com.mredrock.cyxbs.declare.pages.detail.page.activity.DetailActivity
+import com.mredrock.cyxbs.declare.pages.main.page.adapter.HomeRvAdapter
+import com.mredrock.cyxbs.declare.pages.main.page.viewmodel.HomeViewModel
 import com.mredrock.cyxbs.lib.base.ui.BaseBindActivity
+import com.mredrock.cyxbs.lib.utils.extensions.setOnDoubleClickListener
 
-class DeclareHomeActivity : BaseBindActivity<DeclareActivityHomeBinding>() {
+class HomeActivity : BaseBindActivity<DeclareActivityHomeBinding>() {
     companion object {
         /**
          * 启动表态主页
          */
         fun startActivity(context: Context) {
-            context.startActivity(Intent(context, DeclareHomeActivity::class.java))
+            context.startActivity(Intent(context, HomeActivity::class.java))
         }
     }
-
-    private val mViewModel by viewModels<DeclareHomeViewModel>()
+    private val mViewModel by viewModels<HomeViewModel>()
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        val declareHomeRvAdapter = DeclareHomeRvAdapter()
+        val declareHomeRvAdapter = HomeRvAdapter()
         binding.run {
             declareHomeRecyclerview.run {
-                layoutManager = LinearLayoutManager(this@DeclareHomeActivity)
+                layoutManager = LinearLayoutManager(this@HomeActivity)
                 adapter = declareHomeRvAdapter
-                declareHomeBar.setOnFiveAndDoubleClickListener(listener = object :
-                    FiveAndDoubleClickListener {
-                    override fun doubleClick(view: View) {//双击
-                        smoothScrollToPosition(0)
-                    }
-
-                    override fun fiveClick(view: View) {//五击
-                        binding.declareHomeToolbarPost.visibility = View.VISIBLE
-                    }
-                })
+                declareHomeToolbarTv.setOnDoubleClickListener {
+                    smoothScrollToPosition(0)
+                }
             }
         }
         declareHomeRvAdapter.setOnItemClickedListener {
-            DeclareDetailActivity.startActivity(this, it)
+            DetailActivity.startActivity(this, it)
         }
         binding.declareHomeToolbarPost.setOnClickListener {
-            //跳至发布话题页面
-            PostActivity.start(this)
+            //跳至自己发布过的话题页面
+            PostedActivity.startActivity(this)
         }
         binding.declareIvToolbarArrowLeft.setOnClickListener {
             finish()
@@ -63,7 +53,7 @@ class DeclareHomeActivity : BaseBindActivity<DeclareActivityHomeBinding>() {
                 declareHomeRvAdapter.submitList(it)
             }
         }
-        mViewModel.errorLiveData.observe {
+        mViewModel.homeErrorLiveData.observe {
             if (it) {
                 binding.declareHomeCl.visibility = View.GONE
                 binding.declareHomeNoNet.visibility = View.VISIBLE
@@ -72,6 +62,10 @@ class DeclareHomeActivity : BaseBindActivity<DeclareActivityHomeBinding>() {
                 binding.declareHomeNoNet.visibility = View.GONE
             }
         }
+        mViewModel.permLiveData.observe {
+            binding.declareHomeToolbarPost.visibility = if (it.isPerm) View.VISIBLE else View.GONE
+        }
+        mViewModel.hasPerm()
         mViewModel.getHomeData()
     }
 }
