@@ -67,6 +67,16 @@ class PostActivity : BaseBindActivity<DeclareActivityPostBinding>() {
         binding.declareIvToolbarArrowLeft.setOnClickListener {
             finish()
         }
+        lifecycleScope.launch {
+            viewModel.postResultFlow.collectLaunch {
+                if (it.isSuccess()) {
+                    toast("发布成功")
+                    finish()
+                } else {
+                    toast("发布失败 $it")
+                }
+            }
+        }
     }
 
     private fun initDialog() {
@@ -84,7 +94,9 @@ class PostActivity : BaseBindActivity<DeclareActivityPostBinding>() {
             submitDialog.hide()
         }
         submitDialogLayoutBinding.btnSubmit.setOnClickListener {
-            // TODO 后端还没有接口 这里应该提交结果
+            lifecycleScope.launch {
+                viewModel.post(binding.etTopic.text.toString(), sectionAdapter.list)
+            }
             submitDialog.hide()
         }
     }

@@ -40,7 +40,6 @@
                 android:textColorHint="#8015315B"
                 android:textColor="#CC15315B"
                 android:textSize="14sp"
-                android:gravity="center"
                 android:inputType="textNoSuggestions"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent" />
