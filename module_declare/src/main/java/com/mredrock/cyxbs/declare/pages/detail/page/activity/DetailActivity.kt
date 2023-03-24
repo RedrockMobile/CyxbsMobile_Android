@@ -3,7 +3,6 @@ package com.mredrock.cyxbs.declare.pages.detail.page.activity
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
-import android.view.View
 import androidx.activity.viewModels
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.mredrock.cyxbs.declare.databinding.DeclareActivityDetailBinding
@@ -11,6 +10,8 @@ import com.mredrock.cyxbs.declare.pages.detail.bean.VoteData
 import com.mredrock.cyxbs.declare.pages.detail.page.adapter.DetailRvAdapter
 import com.mredrock.cyxbs.declare.pages.detail.page.viewmodel.DetailViewModel
 import com.mredrock.cyxbs.lib.base.ui.BaseBindActivity
+import com.mredrock.cyxbs.lib.utils.extensions.gone
+import com.mredrock.cyxbs.lib.utils.extensions.visible
 
 class DetailActivity : BaseBindActivity<DeclareActivityDetailBinding>() {
     companion object {
@@ -39,6 +40,10 @@ class DetailActivity : BaseBindActivity<DeclareActivityDetailBinding>() {
         binding.declareDetailRecyclerview.run {
             layoutManager = LinearLayoutManager(this@DetailActivity)
             adapter = declareDetailRvAdapter
+        }
+
+        binding.declareDetailIvToolbarArrowLeft.setOnClickListener {
+            finish()
         }
 
         mViewModel.detailLiveData.observe {
@@ -89,11 +94,11 @@ class DetailActivity : BaseBindActivity<DeclareActivityDetailBinding>() {
 
         mViewModel.errorLiveData.observe {
             if (it) {
-                binding.declareDetailCl.visibility = View.GONE
-                binding.declareDetailNoNet.visibility = View.VISIBLE
+                binding.declareDetailCl.gone()
+                binding.declareDetailNoNet.visible()
             } else {
-                binding.declareDetailCl.visibility = View.VISIBLE
-                binding.declareDetailNoNet.visibility = View.GONE
+                binding.declareDetailCl.visible()
+                binding.declareDetailNoNet.gone()
             }
         }
 
