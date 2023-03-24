@@ -29,7 +29,7 @@
 
                 <ImageButton
                     android:id="@+id/declare_iv_toolbar_arrow_left"
-                    android:layout_width="10dp"
+                    android:layout_width="17dp"
                     android:layout_height="16dp"
                     android:background="?attr/selectableItemBackgroundBorderless"
                     android:src="@drawable/declare_ic_home_arrow_left"
@@ -44,7 +44,8 @@
                 <TextView
                     android:id="@+id/declare_home_toolbar_tv"
                     android:layout_width="wrap_content"
-                    android:layout_height="31dp"
+                    android:layout_height="40dp"
+                    android:gravity="center_vertical"
                     android:text="@string/declare_home_toolbar"
                     android:textColor="#15315B"
                     android:textSize="22sp"
@@ -103,7 +104,6 @@
                 android:id="@+id/declare_home_recyclerview"
                 android:layout_width="match_parent"
                 android:layout_height="0dp"
-                android:layout_marginTop="10dp"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"

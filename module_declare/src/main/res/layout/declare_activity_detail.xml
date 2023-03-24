@@ -29,7 +29,7 @@
 
                 <ImageButton
                     android:id="@+id/declare_detail_iv_toolbar_arrow_left"
-                    android:layout_width="10dp"
+                    android:layout_width="17dp"
                     android:layout_height="16dp"
                     android:background="?attr/selectableItemBackgroundBorderless"
                     android:src="@drawable/declare_ic_detail_arrow_left"
@@ -45,6 +45,7 @@
                     android:id="@+id/declare_detail_bar"
                     android:layout_width="67dp"
                     android:layout_height="31dp"
+                    android:gravity="center_vertical"
                     android:text="@string/declare_home_toolbar"
                     android:textColor="#FFFFFF"
                     android:textSize="22sp"
@@ -73,13 +74,13 @@
                 android:id="@+id/declare_detail_recyclerview"
                 android:layout_width="match_parent"
                 android:layout_height="0dp"
-                android:layout_marginTop="20dp"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/declare_detail_toolbar"
                 app:layout_constraintVertical_bias="0.0" />
         </androidx.constraintlayout.widget.ConstraintLayout>
+
         <LinearLayout
             android:id="@+id/declare_detail_no_net"
             android:layout_width="wrap_content"

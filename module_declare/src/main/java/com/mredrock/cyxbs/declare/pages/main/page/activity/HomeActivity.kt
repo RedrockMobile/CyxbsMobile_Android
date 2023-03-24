@@ -3,7 +3,6 @@ package com.mredrock.cyxbs.declare.pages.main.page.activity
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
-import android.view.View
 import androidx.activity.viewModels
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.mredrock.cyxbs.declare.databinding.DeclareActivityHomeBinding
@@ -11,7 +10,9 @@ import com.mredrock.cyxbs.declare.pages.detail.page.activity.DetailActivity
 import com.mredrock.cyxbs.declare.pages.main.page.adapter.HomeRvAdapter
 import com.mredrock.cyxbs.declare.pages.main.page.viewmodel.HomeViewModel
 import com.mredrock.cyxbs.lib.base.ui.BaseBindActivity
+import com.mredrock.cyxbs.lib.utils.extensions.gone
 import com.mredrock.cyxbs.lib.utils.extensions.setOnDoubleClickListener
+import com.mredrock.cyxbs.lib.utils.extensions.visible
 
 class HomeActivity : BaseBindActivity<DeclareActivityHomeBinding>() {
     companion object {
@@ -22,6 +23,7 @@ class HomeActivity : BaseBindActivity<DeclareActivityHomeBinding>() {
             context.startActivity(Intent(context, HomeActivity::class.java))
         }
     }
+
     private val mViewModel by viewModels<HomeViewModel>()
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -47,23 +49,25 @@ class HomeActivity : BaseBindActivity<DeclareActivityHomeBinding>() {
         }
         mViewModel.homeLiveData.observe {
             if (it.isEmpty()) {
-                binding.declareHomeNoData.visibility = View.VISIBLE
+                binding.declareHomeNoData.visible()
             } else {
-                binding.declareHomeNoData.visibility = View.GONE
+                binding.declareHomeNoData.gone()
                 declareHomeRvAdapter.submitList(it)
             }
         }
         mViewModel.homeErrorLiveData.observe {
             if (it) {
-                binding.declareHomeCl.visibility = View.GONE
-                binding.declareHomeNoNet.visibility = View.VISIBLE
+                binding.declareHomeCl.gone()
+                binding.declareHomeNoNet.visible()
             } else {
-                binding.declareHomeCl.visibility = View.VISIBLE
-                binding.declareHomeNoNet.visibility = View.GONE
+                binding.declareHomeCl.visible()
+                binding.declareHomeNoNet.gone()
             }
         }
         mViewModel.permLiveData.observe {
-            binding.declareHomeToolbarPost.visibility = if (it.isPerm) View.VISIBLE else View.GONE
+            binding.declareHomeToolbarPost.run {
+                if (it.isPerm) visible() else gone()
+            }
         }
         mViewModel.hasPerm()
         mViewModel.getHomeData()

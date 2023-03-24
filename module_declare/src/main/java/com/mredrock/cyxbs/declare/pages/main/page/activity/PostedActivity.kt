@@ -3,7 +3,6 @@ package com.mredrock.cyxbs.declare.pages.main.page.activity
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
-import android.view.View
 import androidx.activity.viewModels
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.mredrock.cyxbs.declare.R
@@ -32,7 +31,7 @@ class PostedActivity : BaseBindActivity<DeclareActivityHomeBinding>() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         val declareHomeRvAdapter = HomeRvAdapter()
-        binding.declareHomeToolbarPost.visibility = View.VISIBLE
+        binding.declareHomeToolbarPost.visible()
         binding.run {
             declareHomeRecyclerview.run {
                 layoutManager = LinearLayoutManager(this@PostedActivity)
@@ -44,6 +43,7 @@ class PostedActivity : BaseBindActivity<DeclareActivityHomeBinding>() {
             }
             declareHomeNoDataPic.setImageResource(R.drawable.declare_ic_posted_no_data)
             declareHomeNoDataTv.text = resources.getString(R.string.declare_posted_no_data)
+            declareHomeToolbarPost.setImageResource(R.drawable.declare_ic_mine_post)
         }
         declareHomeRvAdapter.setOnItemClickedListener {
             DetailActivity.startActivity(this, it)
