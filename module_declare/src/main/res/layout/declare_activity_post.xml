@@ -95,7 +95,7 @@
                         android:text="@string/declare_submit_edit"
                         android:textSize="18sp"
                         android:textColor="@color/config_white_black"
-                        android:background="@drawable/declare_ic_btn_background"
+                        android:background="@drawable/declare_ic_btn_background_inactive"
                         android:layout_marginVertical="8dp"
                         android:layout_marginHorizontal="16dp"
                         android:paddingHorizontal="32dp"

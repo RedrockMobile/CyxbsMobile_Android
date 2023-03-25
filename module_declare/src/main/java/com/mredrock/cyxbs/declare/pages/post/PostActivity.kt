@@ -5,12 +5,16 @@ import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.text.InputFilter.LengthFilter
+import android.text.TextWatcher
 import android.view.MenuItem
 import androidx.activity.viewModels
+import androidx.appcompat.widget.AppCompatButton
+import androidx.core.widget.addTextChangedListener
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.afollestad.materialdialogs.MaterialDialog
 import com.afollestad.materialdialogs.customview.customView
+import com.mredrock.cyxbs.declare.R
 import com.mredrock.cyxbs.declare.databinding.DeclareActivityPostBinding
 import com.mredrock.cyxbs.declare.databinding.DeclareLayoutDialogEditBinding
 import com.mredrock.cyxbs.declare.databinding.DeclareLayoutDialogSubmitBinding
@@ -18,6 +22,7 @@ import com.mredrock.cyxbs.declare.pages.post.adapter.PostSectionRvAdapter
 import com.mredrock.cyxbs.lib.base.ui.BaseBindActivity
 import com.mredrock.cyxbs.lib.utils.extensions.dp2px
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.suspendCancellableCoroutine
 import java.util.Optional
 import kotlin.coroutines.resume
 import kotlin.coroutines.suspendCoroutine
@@ -42,24 +47,32 @@ class PostActivity : BaseBindActivity<DeclareActivityPostBinding>() {
         initDialog()
         binding.rvTopic.apply {
             layoutManager = LinearLayoutManager(this@PostActivity)
-            adapter = PostSectionRvAdapter { list, position, et ->
-                lifecycleScope.launch {
-                    // 长度限制15
-                    openEdit(15, list[position]).ifPresent {
-                        et.setText(it)
-                        list[position] = it
+            adapter = PostSectionRvAdapter(
+                onItemTouch = { list, position, et ->
+                    lifecycleScope.launch {
+                        // 长度限制15
+                        openEdit(15, list[position]).ifPresent {
+                            et.setText(it)
+                            list[position] = it
+                            // 更新主页按钮状态
+                            binding.btnSubmit.active(active = list.all { s -> s.isNotBlank() } && !binding.etTopic.text?.toString().isNullOrBlank())
+                        }
                     }
-                }
-            }.also { sectionAdapter = it }
+                },
+                onItemUpdate = { binding.btnSubmit.active(active = it.all { s -> s.isNotBlank() } && !binding.etTopic.text?.toString().isNullOrBlank()) }
+            ).also { sectionAdapter = it }
         }
         binding.btnSubmit.setOnClickListener {
-            // 弹出Dialog
-            submitDialog.show()
+            if (sectionAdapter.list.all { it.isNotBlank() } && !binding.etTopic.text?.toString().isNullOrBlank()) {
+                // 弹出Dialog
+                submitDialog.show()
+            }
         }
         binding.etTopic.setOnTouchListener { _, _ ->
             lifecycleScope.launch {
                 openEdit(30, binding.etTopic.text.toString()).ifPresent {
                     binding.etTopic.setText(it)
+                    binding.btnSubmit.active(active = sectionAdapter.list.all { s -> s.isNotBlank() } && !binding.etTopic.text?.toString().isNullOrBlank())
                 }
             }
             true
@@ -95,22 +108,27 @@ class PostActivity : BaseBindActivity<DeclareActivityPostBinding>() {
         }
         submitDialogLayoutBinding.btnSubmit.setOnClickListener {
             lifecycleScope.launch {
+                // 空白选项不能发
                 viewModel.post(binding.etTopic.text.toString(), sectionAdapter.list)
             }
             submitDialog.hide()
         }
     }
 
-    private suspend fun openEdit(maxLen: Int, originText: String = ""): Optional<String> = suspendCoroutine { co ->
+    private suspend fun openEdit(maxLen: Int, originText: String = ""): Optional<String> = suspendCancellableCoroutine  { co ->
         editDialogLayoutBinding.apply {
             // 重置edittext状态
             et.setText(originText)
             et.filters = arrayOf(LengthFilter(maxLen))
             textInputLayout.counterMaxLength = maxLen
-
+            btnSubmit.active(et.text.toString().isNotBlank())
+            val textWatcher = et.addTextChangedListener {
+                btnSubmit.active(!it?.toString().isNullOrBlank())
+            }
             fun resetListeners() {
                 btnCancel.setOnClickListener(null)
                 btnSubmit.setOnClickListener(null)
+                et.removeTextChangedListener(textWatcher)
             }
             btnCancel.setOnClickListener {
                 editDialog.cancel()
@@ -118,12 +136,30 @@ class PostActivity : BaseBindActivity<DeclareActivityPostBinding>() {
                 co.resume(Optional.empty())
             }
             btnSubmit.setOnClickListener {
-                editDialog.hide()
+                val str = et.text.toString()
+                if (str.isNotBlank()) {
+                    editDialog.hide()
+                    resetListeners()
+                    co.resume(Optional.of(str))
+                }
+            }
+            co.invokeOnCancellation {
+                editDialog.cancel()
                 resetListeners()
-                co.resume(Optional.of(et.text.toString()))
             }
         }
-        editDialog.show()
+        editDialog.apply {
+            setOnCancelListener { co.cancel() }
+            show()
+        }
+    }
+
+    private fun AppCompatButton.active(active: Boolean = true) {
+        if (active) {
+            setBackgroundResource(R.drawable.declare_ic_btn_background)
+        } else {
+            setBackgroundResource(R.drawable.declare_ic_btn_background_inactive)
+        }
     }
 
     companion object {

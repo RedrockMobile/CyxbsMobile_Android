@@ -21,7 +21,10 @@ import com.mredrock.cyxbs.lib.utils.extensions.toast
  * @author 寒雨
  * @since 2023/2/8 下午4:56
  */
-class PostSectionRvAdapter(private val onItemTouch: (list: MutableList<String>, position: Int, et: EditText) -> Unit) : RecyclerView.Adapter<PostSectionRvAdapter.Holder>() {
+class PostSectionRvAdapter(
+    private val onItemTouch: (list: MutableList<String>, position: Int, et: EditText) -> Unit,
+    private val onItemUpdate: (list: MutableList<String>) -> Unit
+) : RecyclerView.Adapter<PostSectionRvAdapter.Holder>() {
 
     val list: MutableList<String> = mutableListOf(
         "", "", "", ""
@@ -38,6 +41,7 @@ class PostSectionRvAdapter(private val onItemTouch: (list: MutableList<String>, 
                     (bindingAdapterPosition..list.size).forEach {
                         notifyItemChanged(it)
                     }
+                    onItemUpdate(list)
                 }
                 binding.et.setOnTouchListener { _, _ ->
                     onItemTouch(list, bindingAdapterPosition, binding.et)
@@ -51,6 +55,7 @@ class PostSectionRvAdapter(private val onItemTouch: (list: MutableList<String>, 
                     }
                     list.add("")
                     notifyItemInserted(list.size - 1)
+                    onItemUpdate(list)
                 }
             }
         }
