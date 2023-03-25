@@ -8,7 +8,7 @@ package com.mredrock.cyxbs.declare.pages.detail.bean
  * @Description:
  */
 data class DetailBean(
-    val choices: List<String>,
+    val choices: List<String>?,
     val id: Int,
     val statistic: Map<String, Int>?,
     val title: String,

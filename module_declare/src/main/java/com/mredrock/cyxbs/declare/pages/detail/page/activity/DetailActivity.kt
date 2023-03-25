@@ -50,8 +50,11 @@ class DetailActivity : BaseBindActivity<DeclareActivityDetailBinding>() {
             voteDataList.clear()
             binding.declareDetailTitle.text = it.title
             val votedList = mutableListOf<VoteData>()//差分刷新要求 源数据集和新数据集 不是同一个对象才能生效
-            for (s: String in it.choices) {//未投票
-                voteDataList.add(VoteData(it.voted, s, 0))
+
+            if (it.choices != null) {//防止后端返回个没有选项的投票
+                for (s: String in it.choices) {//未投票
+                    voteDataList.add(VoteData(it.voted, s, 0))
+                }
             }
 
             if (it.statistic != null) {//投过票
