@@ -19,6 +19,7 @@ import io.reactivex.rxjava3.schedulers.Schedulers
  * @Description:
  */
 class HomeViewModel : BaseViewModel() {
+
     val homeLiveData: LiveData<List<VotesBean>>
         get() = _mutableHomeLiveData
     private val _mutableHomeLiveData = MutableLiveData<List<VotesBean>>()
@@ -30,14 +31,6 @@ class HomeViewModel : BaseViewModel() {
     val permLiveData: LiveData<HasPermBean>
         get() = _mutablePermLiveData
     private val _mutablePermLiveData = MutableLiveData<HasPermBean>()
-
-    val postedLiveData: LiveData<List<VotesBean>>
-        get() = _mutablePostedLiveData
-    private val _mutablePostedLiveData = MutableLiveData<List<VotesBean>>()
-
-    val postedErrorLiveData: LiveData<Boolean>
-        get() = _mutablePostedErrorLiveData
-    private val _mutablePostedErrorLiveData = MutableLiveData<Boolean>()
 
     /**
      * 获取主页数据
@@ -70,23 +63,6 @@ class HomeViewModel : BaseViewModel() {
             .safeSubscribeBy {
                 _mutableHomeErrorLiveData.postValue(false)
                 _mutablePermLiveData.postValue(it)
-            }
-    }
-
-    /**
-     * 获取自己发布过的投票
-     */
-    fun getPostedVotes() {
-        HomeApiService::class.api
-            .getPostedVotes()
-            .subscribeOn(Schedulers.io())
-            .observeOn(AndroidSchedulers.mainThread())
-            .mapOrInterceptException {
-                _mutablePostedErrorLiveData.postValue(true)
-            }
-            .safeSubscribeBy {
-                _mutablePostedErrorLiveData.postValue(false)
-                _mutablePostedLiveData.postValue(it)
             }
     }
 }

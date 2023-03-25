@@ -3,14 +3,13 @@ package com.mredrock.cyxbs.declare.pages.main.page.activity
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
-import android.view.View
 import androidx.activity.viewModels
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.mredrock.cyxbs.declare.R
 import com.mredrock.cyxbs.declare.databinding.DeclareActivityHomeBinding
 import com.mredrock.cyxbs.declare.pages.detail.page.activity.DetailActivity
 import com.mredrock.cyxbs.declare.pages.main.page.adapter.HomeRvAdapter
-import com.mredrock.cyxbs.declare.pages.main.page.viewmodel.HomeViewModel
+import com.mredrock.cyxbs.declare.pages.main.page.viewmodel.PostedViewModel
 import com.mredrock.cyxbs.declare.pages.post.PostActivity
 import com.mredrock.cyxbs.lib.base.ui.BaseBindActivity
 import com.mredrock.cyxbs.lib.utils.extensions.gone
@@ -21,18 +20,21 @@ import com.mredrock.cyxbs.lib.utils.extensions.visible
  * 因为发布过投票的页面和主页面差不多，所以这里就共用了主页面的xml
  */
 class PostedActivity : BaseBindActivity<DeclareActivityHomeBinding>() {
+    /**
+     * 启动表态详情页面
+     */
     companion object {
         fun startActivity(context: Context) {
             context.startActivity(Intent(context, PostedActivity::class.java))
         }
     }
 
-    private val mViewModel by viewModels<HomeViewModel>()
+    private val mViewModel by viewModels<PostedViewModel>()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         val declareHomeRvAdapter = HomeRvAdapter()
-        binding.declareHomeToolbarPost.visibility = View.VISIBLE
+        binding.declareHomeToolbarPost.visible()
         binding.run {
             declareHomeRecyclerview.run {
                 layoutManager = LinearLayoutManager(this@PostedActivity)
@@ -44,6 +46,7 @@ class PostedActivity : BaseBindActivity<DeclareActivityHomeBinding>() {
             }
             declareHomeNoDataPic.setImageResource(R.drawable.declare_ic_posted_no_data)
             declareHomeNoDataTv.text = resources.getString(R.string.declare_posted_no_data)
+            declareHomeToolbarPost.setImageResource(R.drawable.declare_ic_mine_post)
         }
         declareHomeRvAdapter.setOnItemClickedListener {
             DetailActivity.startActivity(this, it)
@@ -72,6 +75,10 @@ class PostedActivity : BaseBindActivity<DeclareActivityHomeBinding>() {
                 binding.declareHomeNoNet.gone()
             }
         }
+    }
+
+    override fun onResume() {
+        super.onResume()
         mViewModel.getPostedVotes()
     }
 }
