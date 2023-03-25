@@ -5,8 +5,6 @@ import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.text.InputFilter.LengthFilter
-import android.text.TextWatcher
-import android.view.MenuItem
 import androidx.activity.viewModels
 import androidx.appcompat.widget.AppCompatButton
 import androidx.core.widget.addTextChangedListener
@@ -25,7 +23,6 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.suspendCancellableCoroutine
 import java.util.Optional
 import kotlin.coroutines.resume
-import kotlin.coroutines.suspendCoroutine
 
 class PostActivity : BaseBindActivity<DeclareActivityPostBinding>() {
 
@@ -55,15 +52,15 @@ class PostActivity : BaseBindActivity<DeclareActivityPostBinding>() {
                             et.setText(it)
                             list[position] = it
                             // 更新主页按钮状态
-                            binding.btnSubmit.active(active = list.all { s -> s.isNotBlank() } && !binding.etTopic.text?.toString().isNullOrBlank())
+                            binding.btnSubmit.active()
                         }
                     }
                 },
-                onItemUpdate = { binding.btnSubmit.active(active = it.all { s -> s.isNotBlank() } && !binding.etTopic.text?.toString().isNullOrBlank()) }
+                onItemUpdate = { binding.btnSubmit.active() }
             ).also { sectionAdapter = it }
         }
         binding.btnSubmit.setOnClickListener {
-            if (sectionAdapter.list.all { it.isNotBlank() } && !binding.etTopic.text?.toString().isNullOrBlank()) {
+            if (isPublishable()) {
                 // 弹出Dialog
                 submitDialog.show()
             }
@@ -72,7 +69,7 @@ class PostActivity : BaseBindActivity<DeclareActivityPostBinding>() {
             lifecycleScope.launch {
                 openEdit(30, binding.etTopic.text.toString()).ifPresent {
                     binding.etTopic.setText(it)
-                    binding.btnSubmit.active(active = sectionAdapter.list.all { s -> s.isNotBlank() } && !binding.etTopic.text?.toString().isNullOrBlank())
+                    binding.btnSubmit.active()
                 }
             }
             true
@@ -154,7 +151,14 @@ class PostActivity : BaseBindActivity<DeclareActivityPostBinding>() {
         }
     }
 
-    private fun AppCompatButton.active(active: Boolean = true) {
+    // 发布前的预检
+    private fun isPublishable(): Boolean {
+        return sectionAdapter.list.all { s -> s.isNotBlank() }
+                && !binding.etTopic.text?.toString().isNullOrBlank()
+                && sectionAdapter.list.size >= 2
+    }
+
+    private fun AppCompatButton.active(active: Boolean = isPublishable()) {
         if (active) {
             setBackgroundResource(R.drawable.declare_ic_btn_background)
         } else {
