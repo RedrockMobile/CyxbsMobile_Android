@@ -9,7 +9,7 @@ import com.mredrock.cyxbs.declare.R
 import com.mredrock.cyxbs.declare.databinding.DeclareActivityHomeBinding
 import com.mredrock.cyxbs.declare.pages.detail.page.activity.DetailActivity
 import com.mredrock.cyxbs.declare.pages.main.page.adapter.HomeRvAdapter
-import com.mredrock.cyxbs.declare.pages.main.page.viewmodel.HomeViewModel
+import com.mredrock.cyxbs.declare.pages.main.page.viewmodel.PostedViewModel
 import com.mredrock.cyxbs.declare.pages.post.PostActivity
 import com.mredrock.cyxbs.lib.base.ui.BaseBindActivity
 import com.mredrock.cyxbs.lib.utils.extensions.gone
@@ -20,13 +20,16 @@ import com.mredrock.cyxbs.lib.utils.extensions.visible
  * 因为发布过投票的页面和主页面差不多，所以这里就共用了主页面的xml
  */
 class PostedActivity : BaseBindActivity<DeclareActivityHomeBinding>() {
+    /**
+     * 启动表态详情页面
+     */
     companion object {
         fun startActivity(context: Context) {
             context.startActivity(Intent(context, PostedActivity::class.java))
         }
     }
 
-    private val mViewModel by viewModels<HomeViewModel>()
+    private val mViewModel by viewModels<PostedViewModel>()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -72,6 +75,10 @@ class PostedActivity : BaseBindActivity<DeclareActivityHomeBinding>() {
                 binding.declareHomeNoNet.gone()
             }
         }
+    }
+
+    override fun onResume() {
+        super.onResume()
         mViewModel.getPostedVotes()
     }
 }
