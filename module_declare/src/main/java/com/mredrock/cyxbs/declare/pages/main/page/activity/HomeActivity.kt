@@ -69,6 +69,10 @@ class HomeActivity : BaseBindActivity<DeclareActivityHomeBinding>() {
                 if (it.isPerm) visible() else gone()
             }
         }
+    }
+
+    override fun onResume() {
+        super.onResume()
         mViewModel.hasPerm()
         mViewModel.getHomeData()
     }
