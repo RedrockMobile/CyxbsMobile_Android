@@ -1,6 +1,5 @@
 package com.mredrock.cyxbs.lib.base.dailog
 
-import android.app.Dialog
 import android.content.Context
 import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
@@ -11,6 +10,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.FrameLayout
 import android.widget.ImageView
+import androidx.activity.ComponentDialog
 import androidx.annotation.DrawableRes
 import androidx.core.content.ContextCompat
 import com.google.android.material.button.MaterialButton
@@ -51,7 +51,7 @@ abstract class BaseDialog<T : BaseDialog<T, D>, D: BaseDialog.Data> protected co
   protected val dismissCallback: (T.() -> Unit)? = null,
   protected val cancelCallback: (T.() -> Unit)? = null,
   protected val data: D,
-) : Dialog(context) {
+) : ComponentDialog(context) {
   
   /**
    * 创建显示的内容，你可以在这里面返回你自己的内容视图
