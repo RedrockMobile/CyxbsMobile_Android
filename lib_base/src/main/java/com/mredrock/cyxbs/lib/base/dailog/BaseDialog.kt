@@ -13,12 +13,16 @@ import android.widget.ImageView
 import androidx.activity.ComponentDialog
 import androidx.annotation.DrawableRes
 import androidx.core.content.ContextCompat
+import androidx.lifecycle.LifecycleOwner
 import com.google.android.material.button.MaterialButton
 import com.mredrock.cyxbs.config.R
+import com.mredrock.cyxbs.lib.base.ui.BaseUi
 import com.mredrock.cyxbs.lib.utils.extensions.dp2px
 
 /**
  * 支持自定义内容视图的圆角 dialog，该 dialog 样式符合视觉要求的大部分场景
+ *
+ * 继承于 ComponentDialog，支持 LifecycleOwner，对应的也支持协程
  *
  * 你可以参考它的实现类 [ChooseDialog]、DebugUpdateDialog 和 UserAgreementDialog 来适配你需要的场景
  *
@@ -51,7 +55,7 @@ abstract class BaseDialog<T : BaseDialog<T, D>, D: BaseDialog.Data> protected co
   protected val dismissCallback: (T.() -> Unit)? = null,
   protected val cancelCallback: (T.() -> Unit)? = null,
   protected val data: D,
-) : ComponentDialog(context) {
+) : ComponentDialog(context), BaseUi {
   
   /**
    * 创建显示的内容，你可以在这里面返回你自己的内容视图
@@ -294,4 +298,15 @@ abstract class BaseDialog<T : BaseDialog<T, D>, D: BaseDialog.Data> protected co
     // 有两个 Button
     TWO_BUT(R.layout.config_choose_dialog_two_btn)
   }
+  
+  
+  
+  
+  
+  // BaseUi
+  
+  override val rootView: View
+    get() = window!!.decorView
+  
+  override fun getViewLifecycleOwner(): LifecycleOwner = this
 }

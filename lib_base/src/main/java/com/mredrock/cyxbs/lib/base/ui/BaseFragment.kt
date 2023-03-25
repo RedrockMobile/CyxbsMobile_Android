@@ -36,12 +36,11 @@ import com.mredrock.cyxbs.lib.base.utils.ArgumentHelper
  * private val mActivityViewModel by activityViewModels<XXXViewModel>()
  *
  * 2、获取父 Fragment 的 ViewModel：
- * // 由于比较少见，再加上不愿意封装得过于彻底，所以这个并没有封装
+ * // 由于比较少用，再加上不愿意封装得过于彻底，所以这个并没有封装，直接用官方的写法
  * private val mParentViewModel by createViewModelLazy(
  *     XXXViewModel::class,
  *     { requireParentFragment().viewModelStore }
  * )
- *
  * // 特别注意：宿主的 ViewModel 如果构造器需要传参，那么子 Fragment 是不需要传参进去的，因为此时宿主的 ViewModel 已经被加载，可以直接拿
  * ```
  *

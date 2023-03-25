@@ -3,6 +3,7 @@ package com.mredrock.cyxbs.lib.utils.utils
 import android.app.Activity
 import android.content.res.Resources
 import android.view.View
+import androidx.activity.ComponentDialog
 import androidx.annotation.IdRes
 import androidx.fragment.app.Fragment
 import com.mredrock.cyxbs.lib.utils.extensions.appContext
@@ -81,10 +82,12 @@ abstract class BindView<T : View>(
   
   private var mWeakReference: WeakReference<T>? = null
   
+  private var isInitialized = false
+  
   final override fun getValue(thisRef: Any, property: KProperty<*>): T {
     var view = mWeakReference?.get()
     val exception: Exception? = try {
-      checkLifecycleValid(view) // 检查此时生命周期是否合法
+      checkLifecycleValid(view, isInitialized) // 检查此时生命周期是否合法
     } catch (e: Exception) { e }
     if (exception != null) {
       // 生命周期处于不合法状态，直接抛错
@@ -96,8 +99,13 @@ abstract class BindView<T : View>(
     if (view == null) {
       view = findViewById(resId)
       mWeakReference = WeakReference(view)
-      mInitializeList.forEach {
-        it.invoke(view)
+      // 如果 isInitialized = true，则说明通过了生命周期检查，但 View 被重新 find 了
+      // 这是一种比较奇怪的情况，目前只有 ComponentDialogBindView 会出现，具体的可以去看看我写的注释
+      if (!isInitialized) {
+        isInitialized = true
+        mInitializeList.forEach {
+          it.invoke(view)
+        }
       }
     }
     return view
@@ -106,9 +114,11 @@ abstract class BindView<T : View>(
   /**
    * 检查生命周期是否合法，如果生命周期不对，返回 Exception 或者直接抛错即可
    *
-   * 每次请求 View 时都会回调
+   * 每次请求 View 时都会回调，
+   * @param nowView 为 null 时可能是第一次调用，或者因为弱引用已经被回收
+   * @param isInitialized 是否已经初始化过一次 View
    */
-  abstract fun checkLifecycleValid(nowView: View?): Exception?
+  abstract fun checkLifecycleValid(nowView: View?, isInitialized: Boolean): Exception?
   abstract fun findViewById(id: Int): T
   
   /**
@@ -147,9 +157,9 @@ class ActivityBindView<T : View>(
   // 是否已经调用了 onDestroy()
   private var isPostDestroy = false
   
-  override fun checkLifecycleValid(nowView: View?): Exception? {
+  override fun checkLifecycleValid(nowView: View?, isInitialized: Boolean): Exception? {
     return if (isPostDestroy) {
-      error("此时 ${activity::class.simpleName} 已经经历了 onDestroy() !")
+      throw IllegalStateException("此时 ${activity::class.simpleName} 已经经历了 onDestroy() !")
     } else null
   }
   
@@ -185,7 +195,7 @@ class FragmentBindView<T : View>(
     }
   }
   
-  override fun checkLifecycleValid(nowView: View?): Exception? {
+  override fun checkLifecycleValid(nowView: View?, isInitialized: Boolean): Exception? {
     // 检查 rootView 能否获得，因为 Fragment 在 onDestroyView() 后将 View 置为了 null
     fragment.requireView() // 如果获取不了，将会抛异常
     return null
@@ -194,5 +204,44 @@ class FragmentBindView<T : View>(
   override fun findViewById(id: Int): T {
     return fragment.requireView().findViewById(resId)
       ?: throw IllegalStateException("该根布局中找不到名字为 ${getIdName()} 的 id")
+  }
+}
+
+
+class ComponentDialogBindView<T : View>(
+  override val resId: Int,
+  val dialog: ComponentDialog
+) : BindView<T>(resId) {
+  
+  /**
+   * 这里直接保存 View 对象有它的原因，请看 [findViewById] 的注释
+   */
+  private lateinit var mView: T
+  
+  override fun checkLifecycleValid(nowView: View?, isInitialized: Boolean): Exception? {
+    /**
+     * 这里不能判断 dialog.lifecycle.currentState 是否为 DESTROYED
+     *
+     * 因为 ComponentDialog 在 onStop() 中设置的 DESTROYED，
+     * 按照习惯，子类一般把 super.onStop() 写在前面，就会导致在 onStop() 中调用 View 时出现问题
+     *
+     * 但是 dialog 源码中并没有其他更好的方式检查生命周期了，所以这里只能不检查了
+     */
+    return null
+  }
+  
+  /**
+   * 因为 dialog 源码中是先将 DecorView 置空，再回调的 onStop()，又因为该属性代理方案使用的弱引用保存 View，
+   * 就会存在 mView 提前被垃圾回收后调用 onStop() 重新回调该方法 [findViewById]
+   *
+   * 所以这里直接保存 mView，让 dialog 持有 mView 对象
+   *
+   * 这样写了后与直接在 dialog 中保存 View 对象无任何区别
+   */
+  override fun findViewById(id: Int): T {
+    if (!this::mView.isInitialized) {
+      mView = dialog.findViewById(id) ?: throw IllegalStateException("该根布局中找不到名字为 ${getIdName()} 的 id")
+    }
+    return mView
   }
 }

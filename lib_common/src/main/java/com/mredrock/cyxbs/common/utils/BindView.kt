@@ -69,6 +69,7 @@ import kotlin.reflect.KProperty
  * @date 2021/9/8
  * @time 17:34
  */
+@Deprecated("请使用 lib_utils 中的 BindView")
 abstract class BindView<T : View>(
   @IdRes
   open val resId: Int
