@@ -43,4 +43,13 @@
     <!-- dialog分割线颜色-->
     <color name="food_text_dialog_line"> #0D000000</color>
 
+    <!-- dialog按钮的颜色-->
+    <color name="food_dialog_btn_negative"> #C3D4EE</color>
+
+    <!-- result界面的颜色-->
+    <color name="food_cl_result"> #EFF4FF</color>
+
+    <color name="food_dialog_detail_content"> #8015315B</color>
+
+    <color name="food_btn_pressed_text"> #6615315B</color>
 </resources>

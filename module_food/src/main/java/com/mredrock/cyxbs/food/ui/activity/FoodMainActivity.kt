@@ -3,11 +3,10 @@ package com.mredrock.cyxbs.food.ui.activity
 import android.animation.ObjectAnimator
 import android.os.Bundle
 import android.util.Size
-import android.view.View
 import android.widget.Button
 import android.widget.ImageView
 import android.widget.TextView
-import androidx.constraintlayout.widget.ConstraintLayout
+import androidx.appcompat.content.res.AppCompatResources
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.flexbox.FlexDirection
@@ -15,23 +14,24 @@ import com.google.android.flexbox.FlexWrap
 import com.google.android.flexbox.FlexboxLayoutManager
 import com.mredrock.cyxbs.food.R
 import com.mredrock.cyxbs.food.ui.adapters.FoodMainRvAdapter
+import com.mredrock.cyxbs.food.ui.view.FoodDetailDialog
 import com.mredrock.cyxbs.food.ui.view.FoodMainDialog
 import com.mredrock.cyxbs.food.viewmodel.FoodMainViewModel
 import com.mredrock.cyxbs.lib.base.dailog.BaseDialog
 import com.mredrock.cyxbs.lib.base.dailog.ChooseDialog
 import com.mredrock.cyxbs.lib.base.ui.BaseActivity
-import com.mredrock.cyxbs.lib.utils.extensions.dp2px
-import com.mredrock.cyxbs.lib.utils.extensions.invisible
-import com.mredrock.cyxbs.lib.utils.extensions.setOnSingleClickListener
-import com.mredrock.cyxbs.lib.utils.extensions.visible
+import com.mredrock.cyxbs.lib.utils.extensions.*
 
+@Suppress("LABEL_NAME_CLASH")
 class FoodMainActivity : BaseActivity() {
     private val viewModel by lazy { ViewModelProvider(this)[FoodMainViewModel::class.java] }
     private val mRvRegion by R.id.food_main_rv_canteen_region.view<RecyclerView>()
         .addInitialize {
             val flexboxLayoutManager = FlexboxLayoutManager(this@FoodMainActivity)
-            flexboxLayoutManager.flexDirection = FlexDirection.ROW
-            flexboxLayoutManager.flexWrap = FlexWrap.WRAP
+            flexboxLayoutManager.apply {
+                flexDirection = FlexDirection.ROW
+                flexWrap = FlexWrap.WRAP
+            }
             this.layoutManager = flexboxLayoutManager
             this.overScrollMode = 2
             this.isNestedScrollingEnabled = false
@@ -40,8 +40,10 @@ class FoodMainActivity : BaseActivity() {
     private val mRvNumber by R.id.food_main_rv_canteen_number.view<RecyclerView>()
         .addInitialize {
             val flexboxLayoutManager = FlexboxLayoutManager(this@FoodMainActivity)
-            flexboxLayoutManager.flexDirection = FlexDirection.ROW
-            flexboxLayoutManager.flexWrap = FlexWrap.WRAP
+            flexboxLayoutManager.apply {
+                flexDirection = FlexDirection.ROW
+                flexWrap = FlexWrap.WRAP
+            }
             this.layoutManager = flexboxLayoutManager
             this.overScrollMode = 2
             this.isNestedScrollingEnabled = false
@@ -50,8 +52,10 @@ class FoodMainActivity : BaseActivity() {
     private val mRvFeature by R.id.food_main_rv_canteen_feature.view<RecyclerView>()
         .addInitialize {
             val flexboxLayoutManager = FlexboxLayoutManager(this@FoodMainActivity)
-            flexboxLayoutManager.flexDirection = FlexDirection.ROW
-            flexboxLayoutManager.flexWrap = FlexWrap.WRAP
+            flexboxLayoutManager.apply {
+                flexDirection = FlexDirection.ROW
+                flexWrap = FlexWrap.WRAP
+            }
             this.layoutManager = flexboxLayoutManager
             this.isNestedScrollingEnabled = false
             this.overScrollMode = 2
@@ -62,39 +66,180 @@ class FoodMainActivity : BaseActivity() {
     private val mBtnChange by R.id.food_main_btn_change.view<Button>()
     private val mBtnDetermine by R.id.food_main_btn_determine.view<Button>()
     private val mTvMeal by R.id.food_main_tv_meal.view<TextView>()
+    private val mBtnDetail by R.id.food_main_btn_detail.view<Button>()
+    private val mImgRefresh by R.id.food_main_img_refresh.view<ImageView>()
+    private val mImgPicture by R.id.food_main_img_picture.view<ImageView>()
 
-    //这个参数用于判断是否第一次请求随机生成
-    private var mFirstDetermine = false
+    //是否改变标签
+    private var changeLabel = true
 
-    private val dataRegion = listOf("1", "2", "3", "4", "5", "6", "7")
-    private val dataNumber = listOf("1", "2", "3")
-    private val dataFeature = listOf("1", "2", "3", "4", "5", "6", "重麻重辣")
-
-
-    private val listRegion = arrayListOf(false, false, false, false, false, false, false)
-    private val listNumber = arrayListOf(false, false, false)
-    private val listFeature = arrayListOf(false, false, false, false, false, false, false)
+    private val foodRegionRvAdapter = FoodMainRvAdapter() { state, position ->
+        changeBtnState(state, position, mRvRegion)
+        viewModel.hashMapRegion.replace(viewModel.dataRegion[position], state)
+    }
+    private val foodNumRvAdapter = FoodMainRvAdapter() { state, position ->
+        //先将所有的hashMap键值对改为false，因为是单选
+        viewModel.run {
+            hashMapNumber.replaceAll { t, u ->
+                false
+            }
+            //将所有的button状态改为false
+            for (i in 0 until dataNumber.size) changeBtnState(false, i, mRvNumber)
+            changeBtnState(state, position, mRvNumber)
+            hashMapNumber.replace(dataNumber[position], state)
+        }
+    }
+    private val foodFeatureRvAdapter = FoodMainRvAdapter() { state, position ->
+        changeBtnState(state, position, mRvFeature)
+        viewModel.apply { hashMapFeature.replace(dataFeature[position], state) }
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.food_activity_food_main)
-        initRecycleViewAdapter()
+        initObserver()
         initView()
+    }
+
+    private fun initObserver() {
+        viewModel.foodMainBean.observe {
+            mImgPicture.setImageFromUrl(it.picture)
+            initRecycleViewAdapter()
+        }
+        viewModel.determineSuccess.observe {
+            mBtnDetail.visible()
+            mBtnChange.visible()
+            mBtnDetermine.gone()
+        }
+        viewModel.foodResultBean.observe {
+//            if (it.isEmpty()) mTvMeal.text = ""
+            changeLabel = false
+            if (viewModel.foodNum < it.size) {
+                mTvMeal.text = it[viewModel.foodNum].name
+                val objectAnimation = ObjectAnimator.ofFloat(mTvMeal, "alpha", 0f, 1f)
+                objectAnimation.duration = 1500
+                objectAnimation.start()
+            } else {
+                FoodMainDialog.Builder(
+                    this,
+                    data = ChooseDialog.Data(
+                        width = 255,
+                        height = 183,
+                        content = "如果还没找到你喜欢的美食，可以尝试多选一些关键词哦！",
+                        type = BaseDialog.DialogType.ONE_BUT,
+                        buttonSize = Size(130, 37)
+                    )
+                ).setPositiveClick {
+                    this.dismiss()
+                }.show()
+            }
+        }
+        viewModel.foodRefreshBean.observe {
+            foodFeatureRvAdapter.submitList(viewModel.dataFeature)
+            viewModel.run {
+                hashMapFeature.replaceAll { t, u ->
+                    false
+                }
+                //将所有的button状态改为false
+                for (i in dataFeature.indices) changeBtnState(false, i, mRvFeature)
+            }
+        }
+        viewModel.resultChoose.observe {
+            if (!it) {
+                FoodMainDialog.Builder(
+                    this,
+                    data = ChooseDialog.Data(
+                        width = 255,
+                        height = 183,
+                        content = "请选择标签",
+                        type = BaseDialog.DialogType.ONE_BUT,
+                        buttonSize = Size(130, 37)
+                    )
+                ).setPositiveClick {
+                    this.dismiss()
+                }.show()
+                viewModel.resultChoose.value = true
+            }
+        }
     }
 
     private fun initView() {
         mBtnDetermine.setOnSingleClickListener {
             //此时是未第一次点击的时候，查看详情还未显示出来
-            if (mBtnChange.visibility == View.GONE) {
-                mBtnChange.visible()
-                mBtnDetermine.text = "查看详情"
-                //第一次已请求
-                mFirstDetermine = true
+            viewModel.postFoodResult()
+        }
+        mBtnDetail.setOnSingleClickListener {
+            viewModel.dataFoodResult[viewModel.foodNum].apply {
+                FoodDetailDialog.Builder(
+                    this@FoodMainActivity,
+                    data = FoodDetailDialog.Data(
+                        content = introduce,
+                        foodName = name,
+                        imageUrl = picture,
+                        praiseNum = praise_num,
+                        positiveButtonBackground = if (this.praise_is) R.drawable.food_shape_btn_praise else R.drawable.food_shape_btn_determine,
+                        width = 255,
+                        height = 330,
+                    )
+                )
+                    .setNegativeClick {
+                        this.dismiss()
+                    }
+                    .setPositiveClick {
+                        viewModel.postFoodPraise(this@apply.name)
+                        viewModel.foodPraiseBean.observe {
+                            this.findViewById<TextView>(R.id.food_dialog_tv_praise_num).text =
+                                it.praise_num.toString()
+                            if (it.praise_is) {
+                                this.findViewById<Button>(R.id.food_dialog_detail_btn_positive)
+                                    .apply {
+                                        background = AppCompatResources.getDrawable(
+                                            context,
+                                            R.drawable.food_shape_btn_praise
+                                        )
+                                    }
+                            } else {
+                                this.findViewById<Button>(R.id.food_dialog_detail_btn_positive)
+                                    .apply {
+                                        background = AppCompatResources.getDrawable(
+                                            context,
+                                            R.drawable.food_shape_btn_determine
+                                        )
+                                    }
+                            }
+                        }
+                    }
+                    .build()
+                    .show()
             }
-            mTvMeal.text = "莘莘干锅鸡"
-            val objectAnimation = ObjectAnimator.ofFloat(mTvMeal, "alpha", 0f, 1f)
-            objectAnimation.duration = 1500
-            objectAnimation.start()
+        }
+        mBtnChange.setOnSingleClickListener {
+            viewModel.apply {
+                if (!changeLabel) {
+                    if (foodNum < dataFoodResult.size - 1){
+                        foodNum++
+                        mTvMeal.text = viewModel.dataFoodResult.get(viewModel.foodNum).name
+                        val objectAnimation = ObjectAnimator.ofFloat(mTvMeal, "alpha", 0f, 1f)
+                        objectAnimation.duration = 1500
+                        objectAnimation.start()
+                    }else {
+                        FoodMainDialog.Builder(
+                            this@FoodMainActivity,
+                            data = ChooseDialog.Data(
+                                width = 255,
+                                height = 183,
+                                content = "如果还没找到你喜欢的美食，可以尝试多选一些关键词哦！",
+                                type = BaseDialog.DialogType.ONE_BUT,
+                                buttonSize = Size(130, 37)
+                            )
+                        ).setPositiveClick {
+                            this.dismiss()
+                        }.show()
+                    }
+                } else {
+                    postFoodResult()
+                }
+            }
         }
         mImgNotification.setOnSingleClickListener {
             FoodMainDialog.Builder(
@@ -107,105 +252,61 @@ class FoodMainActivity : BaseActivity() {
                             "了各位初来学校的新生学子更好的体验学校各处的美食！按照要求通过标签进行选择，" +
                             "卷卷会帮助你选择最符合要求的美食哦！",
                     type = BaseDialog.DialogType.ONE_BUT,
-                    buttonSize = Size(130,37)
+                    buttonSize = Size(130, 37)
                 )
             ).setPositiveClick {
                 this.dismiss()
-            }
-                .show()
+            }.show()
+        }
+        mImgRefresh.setOnClickListener {
+            viewModel.postFoodRefresh()
         }
     }
 
     private fun initRecycleViewAdapter() {
-        val adapterRegion = FoodMainRvAdapter(dataRegion) { state, position ->
-            run {
-                judgeBtnState(state, listRegion, position, mRvRegion)
-            }
+        viewModel.apply {
+            //可多选的情况，列表为就餐区域，餐饮特征
+            mRvRegion.adapter = foodRegionRvAdapter
+            foodRegionRvAdapter.submitList(dataRegion)
+            mRvFeature.adapter = foodFeatureRvAdapter
+            foodFeatureRvAdapter.submitList(dataFeature)
+            //只可单选的情况，就餐人数
+            mRvNumber.adapter = foodNumRvAdapter
+            foodNumRvAdapter.submitList(dataNumber)
         }
-        val adapterNumber = FoodMainRvAdapter(dataNumber) { state, position ->
-            run {
-                if (state) {
-                    for (i in dataNumber.indices) {
-                        mRvNumber.layoutManager?.findViewByPosition(i)
-                            .run {
-                                this?.findViewById<Button>(R.id.food_rv_item_btn)?.apply {
-                                    if (position == i) {
-                                        this.isSelected = true
-                                        this.background =
-                                            resources.getDrawable(R.drawable.food_shape_btn_pressed)
-                                    } else {
-                                        this.isSelected = false
-                                        this.background =
-                                            resources.getDrawable(R.drawable.food_shape_btn_normal)
-                                    }
-                                }
-                                this?.findViewById<ConstraintLayout>(R.id.food_rv_item_cl)?.apply {
-                                    if (position == i) {
-                                        this.visible()
-                                    } else {
-                                        this.invisible()
-                                    }
-                                }
-                            }
-                    }
-                } else {
-                    for (i in dataNumber.indices) {
-                        mRvNumber.layoutManager?.findViewByPosition(i)
-                            .run {
-                                this?.findViewById<Button>(R.id.food_rv_item_btn)?.apply {
-                                    this.isSelected = false
-                                    this.background =
-                                        resources.getDrawable(R.drawable.food_shape_btn_normal)
-                                }
-                                this?.findViewById<ConstraintLayout>(R.id.food_rv_item_cl)?.apply {
-                                    this.invisible()
-                                }
-                                listNumber.clear()
-                            }
-                    }
-                    findViewById<ConstraintLayout>(R.id.food_rv_item_cl).apply {
-                        this.invisible()
-                    }
-                }
-            }
-        }
-        val adapterFeature = FoodMainRvAdapter(dataFeature) { state, position ->
-            run {
-                judgeBtnState(state, listFeature, position, mRvFeature)
-            }
-        }
-        mRvRegion.adapter = adapterRegion
-        mRvNumber.adapter = adapterNumber
-        mRvFeature.adapter = adapterFeature
     }
 
-    private fun judgeBtnState(
+    /**
+     * 改变button的状态，从选中到未选中或者从未选中到选中
+     * 此时的state在rv回调的时候已经取了反，此时的state为需要改变的状态
+     */
+    private fun changeBtnState(
         state: Boolean,
-        arraylist: ArrayList<Boolean>,
         position: Int,
-        rv: RecyclerView
+        rv: RecyclerView,
     ) {
+        changeLabel = true
         rv.layoutManager?.findViewByPosition(position)?.let {
             it.findViewById<Button>(R.id.food_rv_item_btn)
                 ?.apply {
                     this.isSelected = state
                     if (state) {
-                        this.background =
-                            resources.getDrawable(R.drawable.food_shape_btn_pressed)
+                        background =
+                            AppCompatResources.getDrawable(
+                                context,
+                                R.drawable.food_ic_btn_pressed
+                            )
+                        setTextColor(getColor(R.color.food_main))
                     } else {
-                        this.background =
-                            resources.getDrawable(R.drawable.food_shape_btn_normal)
+                        background =
+                            AppCompatResources.getDrawable(
+                                context,
+                                R.drawable.food_shape_btn_normal
+                            )
+                        setTextColor(getColor(R.color.food_btn_pressed_text))
                     }
                 }
-            it.findViewById<ConstraintLayout>(R.id.food_rv_item_cl)
-                ?.apply {
-                    if (state) {
-                        this.visible()
-                    } else {
-                        this.invisible()
-                    }
-                }
-            arraylist[position] = state
         }
     }
+
 }

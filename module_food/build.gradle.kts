@@ -7,6 +7,7 @@ dependNetwork()
 dependLibBase()
 dependLibUtils()
 dependRxjava()
+dependGlide()
 
 
 dependencies {

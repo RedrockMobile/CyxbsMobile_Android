@@ -1,7 +1,6 @@
 package com.mredrock.cyxbs.food.ui.view
 
 import android.content.Context
-import android.util.Size
 import android.view.Gravity
 import android.view.View
 import android.widget.LinearLayout
@@ -43,7 +42,7 @@ class FoodMainDialog private constructor(
                 negativeClick,
                 dismissCallback,
                 cancelCallback,
-                data
+                data,
             )
         }
     }

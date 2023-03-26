@@ -4,10 +4,10 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
-import androidx.constraintlayout.widget.ConstraintLayout
+import androidx.recyclerview.widget.DiffUtil
+import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.mredrock.cyxbs.food.R
-import com.mredrock.cyxbs.lib.utils.extensions.toast
 
 /**
  * Create by bangbangp on 2023/2/4 20:03
@@ -15,13 +15,20 @@ import com.mredrock.cyxbs.lib.utils.extensions.toast
  * Description:
  */
 class FoodMainRvAdapter(
-    private val data: List<String>,
     private val click: (state: Boolean, position: Int) -> Unit
 ) :
-    RecyclerView.Adapter<FoodMainRvAdapter.InnerHolder>() {
+    ListAdapter<String, FoodMainRvAdapter.InnerHolder>(object :DiffUtil.ItemCallback<String>(){
+        override fun areItemsTheSame(oldItem: String, newItem: String): Boolean {
+            return oldItem == newItem
+        }
+
+        override fun areContentsTheSame(oldItem: String, newItem: String): Boolean {
+            return oldItem == newItem
+        }
+
+    }) {
 
     inner class InnerHolder(view: View) : RecyclerView.ViewHolder(view) {
-        val mCl = view.findViewById<ConstraintLayout>(R.id.food_rv_item_cl)
         val mBtn = view.findViewById<Button>(R.id.food_rv_item_btn)
             .apply {
                 this.setOnClickListener {
@@ -39,8 +46,7 @@ class FoodMainRvAdapter(
     }
 
     override fun onBindViewHolder(holder: InnerHolder, position: Int) {
-        holder.mBtn.text = data[position]
+        holder.mBtn.text = getItem(position)
     }
 
-    override fun getItemCount(): Int = data.size
 }

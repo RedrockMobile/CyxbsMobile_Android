@@ -55,17 +55,29 @@
 
         </androidx.constraintlayout.widget.ConstraintLayout>
 
+        <ImageView
+            android:id="@+id/food_main_img_picture"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            android:layout_marginStart="16dp"
+            android:layout_marginEnd="16dp"
+            app:layout_constraintTop_toBottomOf="@id/food_main_cl"
+            android:layout_marginTop="16dp"/>
+
         <TextView
             android:id="@+id/food_main_tv_canteen_region"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="16dp"
-            android:layout_marginTop="16dp"
+            android:layout_marginTop="33dp"
             android:text="就餐区域"
             android:textColor="@color/food_text_color_white"
             android:textSize="14sp"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/food_main_cl" />
+            app:layout_constraintTop_toBottomOf="@id/food_main_img_picture"
+            />
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="wrap_content"
@@ -101,6 +113,8 @@
             android:id="@+id/food_main_rv_canteen_region"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_marginStart="10dp"
+            android:layout_marginTop="7dp"
             app:layout_constraintTop_toBottomOf="@id/food_main_tv_canteen_region" />
 
         <TextView
@@ -108,7 +122,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="16dp"
-            android:layout_marginTop="16dp"
+            android:layout_marginTop="21dp"
             android:text="就餐人数"
             android:textColor="@color/food_text_color_white"
             android:textSize="14sp"
@@ -149,6 +163,8 @@
             android:id="@+id/food_main_rv_canteen_number"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_marginStart="10dp"
+            android:layout_marginTop="7dp"
             app:layout_constraintTop_toBottomOf="@id/food_main_tv_canteen_number" />
 
         <TextView
@@ -156,12 +172,23 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="16dp"
-            android:layout_marginTop="16dp"
+            android:layout_marginTop="21dp"
             android:text="餐饮特征"
             android:textColor="@color/food_text_color_white"
             android:textSize="14sp"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/food_main_rv_canteen_number" />
+            app:layout_constraintTop_toBottomOf="@id/food_main_rv_canteen_number"
+            />
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/food_main_img_refresh"
+            android:src="@drawable/food_ic_food_main_refresh"
+            app:layout_constraintTop_toBottomOf="@id/food_main_rv_canteen_number"
+            app:layout_constraintEnd_toEndOf="parent"
+            android:layout_marginEnd="16dp"
+            android:layout_marginTop="18dp"/>
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="wrap_content"
@@ -196,16 +223,18 @@
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/food_main_rv_canteen_feature"
             android:layout_width="match_parent"
+            android:layout_marginTop="7dp"
             android:layout_height="wrap_content"
+            android:layout_marginStart="10dp"
             app:layout_constraintTop_toBottomOf="@id/food_main_tv_canteen_feature" />
 
 
         <androidx.constraintlayout.widget.ConstraintLayout
-            android:background="@drawable/food_shape_cl"
             android:id="@+id/food_main_cl_result"
             android:layout_width="238dp"
             android:layout_height="51dp"
             android:layout_marginTop="32dp"
+            android:background="@drawable/food_shape_cl"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/food_main_rv_canteen_feature">
@@ -214,28 +243,47 @@
                 android:id="@+id/food_main_tv_meal"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="千喜鹤烤盘饭"
                 android:textColor="@color/food_text_result_background"
                 android:textSize="16sp"
-                app:layout_constraintTop_toTopOf="parent"
                 app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
                 tools:text="test" />
 
 
         </androidx.constraintlayout.widget.ConstraintLayout>
+
 
         <Button
             android:id="@+id/food_main_btn_determine"
             android:layout_width="80dp"
             android:layout_height="40dp"
             android:layout_marginTop="18dp"
+            android:layout_marginBottom="82dp"
             android:background="@drawable/food_shape_btn_determine"
             android:text="随机生成"
             android:textColor="@color/food_background"
-            app:layout_constraintEnd_toEndOf="parent"
             android:textSize="14sp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/food_main_cl_result" />
+
+        <Button
+            android:id="@+id/food_main_btn_detail"
+            android:layout_width="80dp"
+            android:layout_height="40dp"
+            android:layout_marginTop="18dp"
+            android:layout_marginBottom="82dp"
+            android:background="@drawable/food_shape_btn_determine"
+            android:text="查看详情"
+            android:textColor="@color/food_background"
+            android:textSize="14sp"
+            android:layout_marginEnd="96dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            android:visibility="gone"
+            app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/food_main_cl_result" />
 
@@ -243,17 +291,16 @@
             android:id="@+id/food_main_btn_change"
             android:layout_width="80dp"
             android:layout_height="40dp"
-            android:layout_marginTop="12dp"
-            android:layout_marginBottom="64dp"
             android:background="@drawable/food_shape_btn_change"
-            android:visibility="gone"
             android:text="换一个"
-            android:textSize="14sp"
+            android:visibility="gone"
             android:textColor="@color/food_text_change"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/food_main_btn_determine" />
+            android:textSize="14sp"
+            android:layout_marginStart="14dp"
+            app:layout_constraintBottom_toBottomOf="@id/food_main_btn_detail"
+            app:layout_constraintTop_toTopOf="@id/food_main_btn_detail"
+            app:layout_constraintStart_toEndOf="@id/food_main_btn_detail"
+            />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 
