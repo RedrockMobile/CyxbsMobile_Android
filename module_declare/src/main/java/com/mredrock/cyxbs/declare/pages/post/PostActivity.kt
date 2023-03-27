@@ -49,6 +49,10 @@ class PostActivity : BaseBindActivity<DeclareActivityPostBinding>() {
                     lifecycleScope.launch {
                         // 长度限制15
                         openEdit(15, list[position]).ifPresent {
+                            if (list.any { s -> it == s }) {
+                                toast("不允许存在多个相同的选项哦")
+                                return@ifPresent
+                            }
                             et.setText(it)
                             list[position] = it
                             // 更新主页按钮状态
@@ -156,6 +160,7 @@ class PostActivity : BaseBindActivity<DeclareActivityPostBinding>() {
         return sectionAdapter.list.all { s -> s.isNotBlank() }
                 && !binding.etTopic.text?.toString().isNullOrBlank()
                 && sectionAdapter.list.size >= 2
+                && sectionAdapter.list.distinct().size == sectionAdapter.list.size
     }
 
     private fun AppCompatButton.active(active: Boolean = isPublishable()) {
