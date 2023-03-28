@@ -13,7 +13,6 @@ import com.mredrock.cyxbs.config.sp.defaultSp
 import com.mredrock.cyxbs.lib.utils.utils.impl.ActivityLifecycleCallbacksImpl
 import java.lang.ref.WeakReference
 import java.util.*
-import kotlin.properties.Delegates
 
 /**
  * ...
@@ -37,7 +36,7 @@ open class BaseApp : Application() {
       private set
   }
   
-  private var mInitialManager by Delegates.notNull<InitialManagerImpl>()
+  private lateinit var mInitialManager: InitialManagerImpl
   
   @CallSuper
   override fun onCreate() {

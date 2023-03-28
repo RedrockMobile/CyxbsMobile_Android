@@ -5,6 +5,7 @@ import android.view.MotionEvent
 import android.view.View
 import androidx.annotation.FloatRange
 import com.mredrock.cyxbs.common.utils.extensions.onTouch
+import com.mredrock.cyxbs.lib.utils.R
 import kotlin.math.pow
 
 /**
@@ -35,11 +36,11 @@ fun View.visible(): View {
  */
 fun View.setOnSingleClickListener(interval: Long = 500, click: (View) -> Unit) {
   setOnClickListener {
-    val tag = getTag(423612342) as? Long
+    val tag = getTag(R.id.utils_single_click_id) as? Long
     if (System.currentTimeMillis() - (tag ?: 0L) > interval) {
       click(it)
     }
-    it.setTag(423612342, System.currentTimeMillis())
+    it.setTag(R.id.utils_single_click_id, System.currentTimeMillis())
   }
 }
 
@@ -49,11 +50,11 @@ fun View.setOnSingleClickListener(interval: Long = 500, click: (View) -> Unit) {
  */
 fun View.setOnDoubleClickListener(interval: Long = 500, click: (View) -> Unit) {
   setOnClickListener {
-    val tag = getTag(2078660398) as? Long
+    val tag = getTag(R.id.utils_double_click_id) as? Long
     if (System.currentTimeMillis() - (tag ?: 0L) < interval) {
       click(it)
     }
-    it.setTag(2078660398, System.currentTimeMillis())
+    it.setTag(R.id.utils_double_click_id, System.currentTimeMillis())
   }
 }
 

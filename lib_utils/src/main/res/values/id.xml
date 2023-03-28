@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <item name="utils_single_click_id" type="id"/>
+    <item name="utils_double_click_id" type="id"/>
+    <item name="utils_ClickableSpan_id" type="id"/>
+</resources>

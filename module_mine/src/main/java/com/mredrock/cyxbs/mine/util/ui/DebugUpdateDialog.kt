@@ -20,34 +20,15 @@ import com.mredrock.cyxbs.lib.utils.extensions.dp2px
  */
 class DebugUpdateDialog private constructor(
   context: Context,
-  positiveClick: (DebugUpdateDialog.() -> Unit)? = null,
-  negativeClick: (DebugUpdateDialog.() -> Unit)? = null,
-  dismissCallback: (DebugUpdateDialog.() -> Unit)? = null,
-  cancelCallback: (DebugUpdateDialog.() -> Unit)? = null,
-  data: Data
-) : BaseDialog<DebugUpdateDialog, DebugUpdateDialog.Data>(
-  context,
-  positiveClick,
-  negativeClick,
-  dismissCallback,
-  cancelCallback,
-  data
-) {
+) : BaseDialog<DebugUpdateDialog, DebugUpdateDialog.Data>(context) {
   
   fun getContent(): String {
     return mEditText.text.toString()
   }
   
   class Builder(context: Context) : BaseDialog.Builder<DebugUpdateDialog, Data>(context, Data()) {
-    override fun build(): DebugUpdateDialog {
-      return DebugUpdateDialog(
-        context,
-        positiveClick,
-        negativeClick,
-        dismissCallback,
-        cancelCallback,
-        data
-      )
+    override fun buildInternal(): DebugUpdateDialog {
+      return DebugUpdateDialog(context)
     }
   }
   

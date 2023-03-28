@@ -18,7 +18,6 @@ import com.mredrock.cyxbs.lib.base.dailog.ChooseDialog
 import com.mredrock.cyxbs.lib.utils.extensions.collectUsefulStackTrace
 import com.mredrock.cyxbs.lib.utils.extensions.color
 import com.mredrock.cyxbs.lib.utils.extensions.dp2px
-import com.mredrock.cyxbs.lib.utils.extensions.toast
 
 /**
  * .
@@ -27,13 +26,8 @@ import com.mredrock.cyxbs.lib.utils.extensions.toast
  * 2023/3/1 10:29
  */
 class CrashDialog private constructor(
-  context: Context,
-  positiveClick: (ChooseDialog.() -> Unit)? = null,
-  negativeClick: (ChooseDialog.() -> Unit)? = null,
-  dismissCallback: (ChooseDialog.() -> Unit)? = null,
-  cancelCallback: (ChooseDialog.() -> Unit)? = null,
-  data: Data
-) : ChooseDialog(context, positiveClick, negativeClick, dismissCallback, cancelCallback, data) {
+  context: Context
+) : ChooseDialog(context) {
   
   class Builder(
     context: Context,
@@ -49,7 +43,7 @@ class CrashDialog private constructor(
       height = 500
     ),
   ) {
-    override fun build(): CrashDialog {
+    override fun buildInternal(): CrashDialog {
       setPositiveClick {
         val cm = context.getSystemService(Context.CLIPBOARD_SERVICE) as ClipboardManager
         cm.setPrimaryClip(ClipData.newPlainText("掌邮崩溃记录", data.content))
@@ -57,14 +51,7 @@ class CrashDialog private constructor(
       }.setNegativeClick {
         dismiss()
       }
-      return CrashDialog(
-        context,
-        positiveClick,
-        negativeClick,
-        dismissCallback,
-        cancelCallback,
-        data
-      )
+      return CrashDialog(context)
     }
   }
   

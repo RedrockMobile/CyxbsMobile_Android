@@ -49,12 +49,7 @@ import com.mredrock.cyxbs.lib.utils.extensions.dp2px
  * 2022/12/29 20:08
  */
 abstract class BaseDialog<T : BaseDialog<T, D>, D: BaseDialog.Data> protected constructor(
-  context: Context,
-  protected val positiveClick: (T.() -> Unit)? = null,
-  protected val negativeClick: (T.() -> Unit)? = null,
-  protected val dismissCallback: (T.() -> Unit)? = null,
-  protected val cancelCallback: (T.() -> Unit)? = null,
-  protected val data: D,
+  context: Context
 ) : ComponentDialog(context), BaseUi {
   
   /**
@@ -66,6 +61,14 @@ abstract class BaseDialog<T : BaseDialog<T, D>, D: BaseDialog.Data> protected co
    * @param view 你在 [createContentView] 返回的 View
    */
   abstract fun initContentView(view: View)
+  
+  private var _data: D? = null
+  
+  protected val data: D get() = _data!!
+  protected var positiveClick: (T.() -> Unit)? = null
+  protected var negativeClick: (T.() -> Unit)? = null
+  protected var dismissCallback: (T.() -> Unit)? = null
+  protected var cancelCallback: (T.() -> Unit)? = null
   
   override fun onCreate(savedInstanceState: Bundle?) {
     // 取消 dialog 默认背景
@@ -194,8 +197,19 @@ abstract class BaseDialog<T : BaseDialog<T, D>, D: BaseDialog.Data> protected co
       return this
     }
     
-    abstract fun build(): T
-  
+    fun build(): T {
+      val dialog = buildInternal()
+      dialog._data = data
+      dialog.positiveClick = positiveClick
+      dialog.negativeClick = negativeClick
+      dialog.dismissCallback = dismissCallback
+      dialog.cancelCallback = cancelCallback
+      return dialog
+    }
+    
+    // 用于生成  Dialog 对应对象
+    protected abstract fun buildInternal(): T
+    
     /**
      * 直接展示
      */
@@ -218,27 +232,27 @@ abstract class BaseDialog<T : BaseDialog<T, D>, D: BaseDialog.Data> protected co
      * Dialog 类型
      */
     val type: DialogType
-  
+    
     /**
      * 确定按钮文本，默认为
      */
     val positiveButtonText: String
-  
+    
     /**
      * 取消按钮文本
      */
     val negativeButtonText: String
-  
+    
     /**
      * 确定按钮颜色
      */
     val positiveButtonColor: Int
-  
+    
     /**
      * 取消按钮颜色
      */
     val negativeButtonColor: Int
-  
+    
     /**
      * button 的按钮大小
      * - 默认为 80dp-34dp
@@ -246,7 +260,7 @@ abstract class BaseDialog<T : BaseDialog<T, D>, D: BaseDialog.Data> protected co
      * - 支持 LayoutParams.WRAP_CONTENT、LayoutParams.MATCH_PARENT
      */
     val buttonSize: Size
-  
+    
     /**
      * dialog 的宽
      * - 默认为 300dp
@@ -254,7 +268,7 @@ abstract class BaseDialog<T : BaseDialog<T, D>, D: BaseDialog.Data> protected co
      * - 支持 LayoutParams.WRAP_CONTENT、LayoutParams.MATCH_PARENT
      */
     val width: Int
-  
+    
     /**
      * dialog 的高
      * - 默认为 wrap_content
@@ -262,7 +276,7 @@ abstract class BaseDialog<T : BaseDialog<T, D>, D: BaseDialog.Data> protected co
      * - 支持 LayoutParams.WRAP_CONTENT、LayoutParams.MATCH_PARENT
      */
     val height: Int
-  
+    
     /**
      * dialog 的背景，默认背景应该能满足
      */
