@@ -13,6 +13,7 @@ import com.mredrock.cyxbs.config.sp.SP_COURSE_SHOW_STATE
 import com.mredrock.cyxbs.config.sp.defaultSp
 import com.mredrock.cyxbs.lib.base.ui.BaseActivity
 import com.mredrock.cyxbs.lib.base.utils.Umeng
+import com.mredrock.cyxbs.lib.utils.extensions.dp2pxF
 import com.mredrock.cyxbs.lib.utils.extensions.launch
 import com.mredrock.cyxbs.lib.utils.service.ServiceManager
 import com.mredrock.cyxbs.lib.utils.service.impl
@@ -156,20 +157,10 @@ class MainActivity : BaseActivity() {
             mViewModel.courseBottomSheetExpand.value = false
           }
         }
-        /**
-         * TODO 关闭服务 邮问位置课表上拉
-         */
-        1 ->{
-          mBottomNavLayout.cardElevation = 0F
-          if (!mIsActivityRebuilt) {
-            // 只在 Activity 没有重建时才设置成 false
-            mViewModel.courseBottomSheetExpand.value = false
-          }
+        1 -> {
+          mBottomNavLayout.cardElevation = 4.dp2pxF
+          mViewModel.courseBottomSheetExpand.value = null
         }
-//        1 -> {
-//          mBottomNavLayout.cardElevation = 4.dp2pxF
-//          mViewModel.courseBottomSheetExpand.value = null
-//        }
       }
       
       

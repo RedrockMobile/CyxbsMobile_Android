@@ -46,31 +46,12 @@ import com.mredrock.cyxbs.lib.utils.extensions.dp2px
  */
 open class ChooseDialog protected constructor(
   context: Context,
-  positiveClick: (ChooseDialog.() -> Unit)? = null,
-  negativeClick: (ChooseDialog.() -> Unit)? = null,
-  dismissCallback: (ChooseDialog.() -> Unit)? = null,
-  cancelCallback: (ChooseDialog.() -> Unit)? = null,
-  data: Data,
-) : BaseDialog<ChooseDialog, ChooseDialog.Data>(
-  context,
-  positiveClick,
-  negativeClick,
-  dismissCallback,
-  cancelCallback,
-  data
-) {
+) : BaseDialog<ChooseDialog, ChooseDialog.Data>(context,) {
   
   open class Builder(context: Context, data: Data) : BaseDialog.Builder<ChooseDialog, Data>(context, data) {
     
-    override fun build(): ChooseDialog {
-      return ChooseDialog(
-        context,
-        positiveClick,
-        negativeClick,
-        dismissCallback,
-        cancelCallback,
-        data
-      )
+    override fun buildInternal(): ChooseDialog {
+      return ChooseDialog(context)
     }
   }
   

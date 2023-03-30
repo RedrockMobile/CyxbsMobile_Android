@@ -1,8 +1,14 @@
 package com.mredrock.cyxbs.lib.base.ui
 
 import android.content.Context
+import androidx.activity.ComponentActivity
+import androidx.activity.viewModels
 import androidx.annotation.CallSuper
+import androidx.fragment.app.Fragment
+import androidx.fragment.app.viewModels
 import androidx.lifecycle.*
+import androidx.lifecycle.viewmodel.initializer
+import androidx.lifecycle.viewmodel.viewModelFactory
 import com.mredrock.cyxbs.lib.base.BaseApp
 import com.mredrock.cyxbs.lib.base.utils.RxjavaLifecycle
 import com.mredrock.cyxbs.lib.base.utils.ToastUtils
@@ -54,6 +60,32 @@ import kotlinx.coroutines.launch
  * - 另一个 `xxxEvent: SharedFlow` 用于表示事件
  * - 为了减少数据源的操作量，可以这样： `xxxEvent = xxxState.asSharedFlow()`
  * - 然后只需要发送数据给 `xxxState` 即可 (`xxxEvent` 会自动接收新数据)
+ *
+ *
+ * ## 四、ViewModel 获取方式
+ * ### 获取自身的 ViewModel
+ * ```
+ * 1、ViewModel 构造器无参数
+ * private val mViewModel by viewModels<XXXViewModel>()
+ *
+ * 2、ViewModel 构造器需要参数（即需要 Factory 的情况）
+ * private val mViewModel by viewModelBy {
+ *     XXXViewModel(stuNum)
+ * }
+ * ```
+ * ### Fragment 获取宿主的 ViewModel
+ * ```
+ * 1、获取 activity 的 ViewModel：
+ * private val mActivityViewModel by activityViewModels<XXXViewModel>()
+ *
+ * 2、获取父 Fragment 的 ViewModel：
+ * // 由于比较少用，再加上不愿意封装得过于彻底，所以这个并没有封装，直接用官方的写法
+ * private val mParentViewModel by createViewModelLazy(
+ *     XXXViewModel::class,
+ *     { requireParentFragment().viewModelStore }
+ * )
+ * // 特别注意：宿主的 ViewModel 如果构造器需要传参，那么子 Fragment 是不需要传参进去的，因为此时宿主的 ViewModel 已经被加载，可以直接拿
+ * ```
  *
  *
  * # 更多封装请往父类和接口查看
@@ -113,4 +145,29 @@ abstract class BaseViewModel : ViewModel(), RxjavaLifecycle, ToastUtils {
   final override fun onAddRxjava(disposable: Disposable) {
     mDisposableList.add(disposable)
   }
+}
+
+
+/**
+ * 用于快捷获取带有参数的 ViewModel
+ *
+ * 使用方法：
+ * ```
+ * private val mViewModel by viewModelBy {
+ *     XXXViewModel(stuNum)
+ * }
+ * ```
+ */
+inline fun <reified VM : ViewModel> ComponentActivity.viewModelBy(
+  noinline instance: (() -> VM)? = null
+) = viewModels<VM> {
+  if (instance == null) defaultViewModelProviderFactory
+  else viewModelFactory { initializer { instance.invoke() } }
+}
+
+inline fun <reified VM : ViewModel> Fragment.viewModelBy(
+  noinline instance: (() -> VM)?
+) = viewModels<VM> {
+  if (instance == null) defaultViewModelProviderFactory
+  else viewModelFactory { initializer { instance.invoke() } }
 }

@@ -30,19 +30,7 @@ import com.mredrock.cyxbs.login.page.useragree.UserAgreeActivity
  */
 class UserAgreementDialog private constructor(
   context: Context,
-  positiveClick: (ChooseDialog.() -> Unit)? = null,
-  negativeClick: (ChooseDialog.() -> Unit)? = null,
-  dismissCallback: (ChooseDialog.() -> Unit)? = null,
-  cancelCallback: (ChooseDialog.() -> Unit)? = null,
-  data: Data,
-) : ChooseDialog(
-  context,
-  positiveClick,
-  negativeClick,
-  dismissCallback,
-  cancelCallback,
-  data
-) {
+) : ChooseDialog(context) {
   
   class Builder(context: Context) : ChooseDialog.Builder(
     context,
@@ -52,15 +40,8 @@ class UserAgreementDialog private constructor(
       buttonSize = Size(119, 38)
     )
   ) {
-    override fun build(): UserAgreementDialog {
-      return UserAgreementDialog(
-        context,
-        positiveClick,
-        negativeClick,
-        dismissCallback,
-        cancelCallback,
-        data
-      )
+    override fun buildInternal(): UserAgreementDialog {
+      return UserAgreementDialog(context)
     }
   }
   

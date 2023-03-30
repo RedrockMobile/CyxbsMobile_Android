@@ -1,27 +1,21 @@
 package com.mredrock.cyxbs.lib.base.ui
 
-import android.app.Activity
 import android.view.View
 import androidx.activity.ComponentActivity
-import androidx.activity.viewModels
+import androidx.activity.ComponentDialog
 import androidx.fragment.app.Fragment
-import androidx.fragment.app.viewModels
-import androidx.lifecycle.ViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.Observer
 import androidx.lifecycle.whenStarted
 import androidx.lifecycle.flowWithLifecycle
-import androidx.lifecycle.viewmodel.initializer
-import androidx.lifecycle.viewmodel.viewModelFactory
 import com.mredrock.cyxbs.lib.base.operations.OperationUi
 import com.mredrock.cyxbs.lib.utils.extensions.launch
-import com.mredrock.cyxbs.lib.utils.utils.ActivityBindView
-import com.mredrock.cyxbs.lib.utils.utils.FragmentBindView
+import com.mredrock.cyxbs.lib.utils.utils.BindView
 import kotlinx.coroutines.flow.Flow
 
 /**
- * 从 BaseActivity 和 BaseFragment 中抽离的共用函数
+ * 从 BaseActivity、BaseFragment、BaseDialog 中抽离的共用函数
  *
  * 这里面不要跟业务挂钩！！！
  * 比如：使用 api 模块
@@ -95,8 +89,9 @@ interface BaseUi : OperationUi {
    * ```
    */
   fun <T : View> Int.view() = when (this@BaseUi) {
-    is Activity -> ActivityBindView<T>(this, this@BaseUi)
-    is Fragment -> FragmentBindView(this, this@BaseUi)
+    is ComponentActivity -> BindView<T>(this, this@BaseUi)
+    is Fragment -> BindView(this, this@BaseUi)
+    is ComponentDialog -> BindView(this, this@BaseUi)
     else -> error("未实现，请自己实现该功能！")
   }
   
@@ -110,7 +105,7 @@ interface BaseUi : OperationUi {
   }
   
   /**
-   * 只观察一次 LiveData
+   * 只观察一次 LiveData，仍然会数据倒灌
    */
   fun <T> LiveData<T>.observeOnce(observer: (T) -> Unit) {
     observe(
@@ -178,27 +173,4 @@ interface BaseUi : OperationUi {
   fun <T> Flow<T>.collectRestart(action: suspend (value: T) -> Unit) {
     flowWithLifecycle(getViewLifecycleOwner().lifecycle).collectLaunch(action)
   }
-}
-
-
-/**
- * 官方的 viewModel 高阶函数在需要使用 Factory 时有些不方便，所以改了一下，用法如下：
- * ```
- * private val mViewModel by viewModelBy {
- *   HomeCourseViewModel(mNowWeek)
- * }
- * ```
- */
-inline fun <reified VM : ViewModel> BaseUi.viewModelBy(
-  noinline instance: (() -> VM)? = null
-) = when (this) {
-  is ComponentActivity -> this.viewModels {
-    if (instance == null) defaultViewModelProviderFactory
-    else viewModelFactory { initializer { instance.invoke() } }
-  }
-  is Fragment -> this.viewModels<VM> {
-    if (instance == null) defaultViewModelProviderFactory
-    else viewModelFactory { initializer { instance.invoke() } }
-  }
-  else -> error("未实现！")
 }
