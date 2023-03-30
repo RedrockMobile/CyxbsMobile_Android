@@ -24,7 +24,6 @@ import com.mredrock.cyxbs.lib.base.dailog.ChooseDialog
 import com.mredrock.cyxbs.lib.base.ui.BaseActivity
 import com.mredrock.cyxbs.lib.utils.extensions.lazyUnlock
 import com.mredrock.cyxbs.lib.utils.extensions.setOnSingleClickListener
-import com.mredrock.cyxbs.lib.utils.utils.ActivityBindView
 import com.mredrock.cyxbs.lib.utils.utils.BindView
 import java.io.Serializable
 
@@ -127,7 +126,7 @@ class ShowResultActivity : BaseActivity() {
     
     abstract fun ShowResultActivity.initialize()
     
-    protected fun <T : View> Int.view(): BindView<T> = ActivityBindView(this, activity)
+    protected fun <T : View> Int.view(): BindView<T> = BindView(this, activity)
     
     // 这里是需要不同实现的控件
     protected val mTvTitle: TextView by R.id.course_tv_show_result_title.view()

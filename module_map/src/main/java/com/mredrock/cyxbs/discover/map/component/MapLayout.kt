@@ -45,7 +45,17 @@ class MapLayout : FrameLayout, View.OnClickListener {
 
     private var url: String? = null
     var isLock = false
-
+    
+    /**
+     * 用于加载大图的第三方控件
+     *
+     * 如果有一个内存泄漏是 Thread(AsyncTask) -> SubsamplingScaleImageView -> View.mContext，可以不用修它
+     *
+     * 这第三方控件是没有大问题的，虽然使用的 AsyncTask，但都是用的弱引用，
+     * 导致泄漏的原因在于方法栈中持有 View 对象，并且长时间没有回收导致的。属于很少见的方法栈引起的泄漏。
+     *
+     * 如果你多停留几秒该泄漏就会消失。
+     */
     /** Sub-samplingScaleImageView第三方控件 */
     private val subsamplingScaleImageView = SubsamplingScaleImageView(context)
 
@@ -642,10 +652,6 @@ class MapLayout : FrameLayout, View.OnClickListener {
 
     private fun setOnUrlGetListener(onUrlGetListener: OnUrlGetListener) {
         this.onUrlGetListener = onUrlGetListener
-    }
-
-    fun removeMyViews() {
-        this.removeAllViews()
     }
 
     fun setOpenSiteId(id: String) {
