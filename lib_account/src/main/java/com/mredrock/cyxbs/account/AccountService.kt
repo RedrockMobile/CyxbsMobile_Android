@@ -1,8 +1,6 @@
 package com.mredrock.cyxbs.account
 
 import android.content.Context
-import android.os.Handler
-import android.os.Looper
 import androidx.annotation.MainThread
 import androidx.annotation.WorkerThread
 import androidx.core.content.edit
@@ -374,6 +372,18 @@ internal class AccountService : IAccountService {
 
         override fun getToken(): String {
             return tokenWrapper?.token ?: ""
+        }
+
+        override fun refreshTokenExpired() {
+            defaultSp.edit {
+                putLong(SP_KEY_REFRESH_TOKEN_EXPIRED, 0)
+            }
+        }
+
+        override fun tokenExpired() {
+            defaultSp.edit {
+                putLong(SP_KEY_TOKEN_EXPIRED, 0)
+            }
         }
     }
     

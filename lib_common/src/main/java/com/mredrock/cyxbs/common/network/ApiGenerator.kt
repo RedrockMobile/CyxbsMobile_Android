@@ -235,9 +235,9 @@ object ApiGenerator {
                 
                 /**
                  * 所有请求添加token到header
-                 * TODO 目前 22 年后端已经更改 token 过期机制，token 过期时 http 状态码为 200，status 为 20003
-                 * TODO 目前还能正常刷新的原因是 token 过期时间没变。但为了以后考虑，需要完善 token 刷新机制
-                 * 后端文档：https://redrock.feishu.cn/wiki/wikcnB9p6U45ZJZmxwTEu8QXvye
+                 *
+                 * 在 ApiWrapper 中会根据 status 判断是否过期，过期就会赋值为过期的时间戳，
+                 * 然后这里 isTokenExpired() 会返回 true，最后触发刷新
                  */
                 if (isTokenExpired()) {
                     checkRefresh(it, mAccountService.getUserTokenService().getToken())
