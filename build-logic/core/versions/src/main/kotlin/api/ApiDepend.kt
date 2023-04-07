@@ -1,4 +1,3 @@
-import org.gradle.api.Project
 import api.utils.ApiDependUtils
 
 /**
@@ -7,6 +6,8 @@ import api.utils.ApiDependUtils
  * 因为单模块调试时 ARouter 如果不把实现模块一起拿来编译，就会报空指针，
  * 但谁是 api 模块的实现模块是不能被定义的（虽然目前只有父模块是实现模块），
  * 所以为了单模块调试，需要统一 api 模块的依赖写法
+ *
+ * 写了后会由一个 gradle 脚本自动生成对应 dependApi*() 方法
  *
  * @author 985892345 (Guo Xiangrui)
  * @email 2767465918@qq.com
@@ -22,6 +23,8 @@ object ApiDepend {
   * by:     通过 by 来连接实现模块的 path
   * parent: 如果父模块是实现模块，则使用该方式可直接添加
   * add:    用于连接多个实现模块，比如后面写的 module_xxx，就是 api_test 的另一个实现模块
+  *
+  * 写了后会由一个 gradle 脚本自动生成对应 dependApi*() 方法
   * */
   
   // 下面的顺序尽量根据模块的排序来写
@@ -49,67 +52,4 @@ object ApiDepend {
   
   private val parent: String.() -> String
     get() = { substringBeforeLast(":") }
-}
-
-/*
-* todo 下面这个都是模板代码。后面的学弟可以考虑写一个 gradle 插件自动生成
-* */
-fun Project.dependApiAccount() {
-  ApiDepend.account.dependApiOnly(this)
-}
-
-fun Project.dependApiProtocol() {
-  ApiDepend.protocol.dependApiOnly(this)
-}
-
-fun Project.dependApiUpdate() {
-  ApiDepend.update.dependApiOnly(this)
-}
-
-fun Project.dependApiElectricity() {
-  ApiDepend.electricity.dependApiOnly(this)
-}
-
-fun Project.dependApiLogin() {
-  ApiDepend.login.dependApiOnly(this)
-}
-
-fun Project.dependApiStore() {
-  ApiDepend.store.dependApiOnly(this)
-}
-
-fun Project.dependApiTodo() {
-  ApiDepend.todo.dependApiOnly(this)
-}
-
-fun Project.dependApiVolunteer() {
-  ApiDepend.volunteer.dependApiOnly(this)
-}
-
-fun Project.dependApiDialog() {
-  ApiDepend.dialog.dependApiOnly(this)
-}
-
-fun Project.dependApiWidget() {
-  ApiDepend.widget.dependApiOnly(this)
-}
-
-fun Project.dependApiSport() {
-  ApiDepend.sport.dependApiOnly(this)
-}
-
-fun Project.dependApiMine(){
-  ApiDepend.mine.dependApiOnly(this)
-}
-
-fun Project.dependApiCourse(){
-  ApiDepend.course.dependApiOnly(this)
-}
-
-fun Project.dependApiAffair(){
-  ApiDepend.affair.dependApiOnly(this)
-}
-
-fun Project.dependApiCrash(){
-  ApiDepend.crash.dependApiOnly(this)
 }

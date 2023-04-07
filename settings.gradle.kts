@@ -12,6 +12,7 @@ pluginManagement {
     mavenCentral()
     google()
     maven("https://jitpack.io")
+    jcenter() // 部分依赖需要
   }
 }
 dependencyResolutionManagement {
