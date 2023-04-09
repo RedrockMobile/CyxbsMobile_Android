@@ -7,16 +7,14 @@ dependLibBase()
 dependLibUtils()
 dependLibConfig()
 
+dependApiInit()
 dependApiCrash()
 dependApiAccount()
-dependAutoService()
 
 dependencies {
   
-  implementation(project(":api_init")) // 因为 api_init 没有实现模块，所以写这里
-  
   // 依赖 LeakCanary，检查内存泄漏 https://github.com/square/leakcanary
-  implementation("com.squareup.leakcanary:leakcanary-android:2.9.1")
+  implementation("com.squareup.leakcanary:leakcanary-android:2.10")
   
   /**
    * 很牛逼的检测工具，debug 模式下摇一摇手机或者按三次手机中间顶部区域触发

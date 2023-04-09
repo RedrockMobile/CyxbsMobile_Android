@@ -1,4 +1,6 @@
 import api.utils.ApiDependUtils
+import org.gradle.api.Project
+import org.gradle.kotlin.dsl.dependencies
 
 /**
  * 为什么要把 api 模块单独写出来？
@@ -50,6 +52,18 @@ object ApiDepend {
       .by(implPath.invoke(this))
   }
   
+  private fun String.byNoImpl(): ApiDependUtils.IApiDependUtils = ApiDependUtils(this).byNoImpl()
+  
   private val parent: String.() -> String
     get() = { substringBeforeLast(":") }
+}
+
+/**
+ * api_init 模块没有实现模块，所以单独写
+ */
+fun Project.dependApiInit() {
+  dependencies {
+    "implementation"(project(":api_init"))
+  }
+  dependAutoService()
 }
