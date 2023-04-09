@@ -51,8 +51,7 @@ class ApiDependUtils(val apiProjectPath: String) {
     }
   
     override fun dependApiOnly(project: Project) {
-      if (isNoImpl) return
-      if (list.isEmpty()) {
+      if (list.isEmpty() && !isNoImpl) {
         throw RuntimeException("api 模块 $apiProjectPath 没得实现模块，你正确书写了吗？")
       }
       project.run {

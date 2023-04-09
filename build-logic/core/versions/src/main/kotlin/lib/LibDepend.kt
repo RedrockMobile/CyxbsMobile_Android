@@ -21,12 +21,19 @@ object LibDepend {
   * 写了后会由一个 gradle 脚本自动生成对应 dependLib*() 方法
   * */
   
+  const val common = ":lib_common"
   const val base = ":lib_base"
   const val config = ":lib_config"
   const val utils = ":lib_utils"
   const val debug = ":lib_debug"
   const val course = ":module_course:lib_course"
 }
+
+////////////////////////////////////////////////////////////////////////////////////////////////////
+//
+//     如果你的模块需要单独写依赖逻辑，请以 fun Project.xxx[Name]() 开头书写，这样脚本就不会自动生成对应方法
+//
+////////////////////////////////////////////////////////////////////////////////////////////////////
 
 /**
  * 由于脚本不能添加 Deprecated，所以这里单独写 dependLibCommon()
@@ -40,6 +47,6 @@ object LibDepend {
 )
 fun Project.dependLibCommon() {
   dependencies {
-    "implementation"(project(":lib_common"))
+    "implementation"(project(LibDepend.common))
   }
 }
