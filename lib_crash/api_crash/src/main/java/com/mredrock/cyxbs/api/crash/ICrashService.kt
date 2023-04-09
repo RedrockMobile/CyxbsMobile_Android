@@ -1,6 +1,8 @@
 package com.mredrock.cyxbs.api.crash
 
 import android.app.Dialog
+import android.os.Handler
+import android.os.Looper
 import com.alibaba.android.arouter.facade.template.IProvider
 
 /**
@@ -19,4 +21,21 @@ interface ICrashService : IProvider{
    * 记得主动调用 show()（注意：非主线程会无法显示）
    */
   fun createCrashDialog(throwable: Throwable): Dialog
+  
+  /**
+   * 显示 Dialog
+   *
+   * 如果是非主线程，则将 post 到主线程
+   */
+  fun showCrashDialog(throwable: Throwable, action: (Dialog.() -> Unit)? = null) {
+    if (Looper.getMainLooper().isCurrentThread) {
+      val dialog = createCrashDialog(throwable)
+      action?.invoke(dialog)
+    } else {
+      Handler(Looper.getMainLooper()).post {
+        val dialog = createCrashDialog(throwable)
+        action?.invoke(dialog)
+      }
+    }
+  }
 }

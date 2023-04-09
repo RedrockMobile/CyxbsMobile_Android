@@ -251,7 +251,7 @@ class CourseFragment : BaseFragment() {
   /**
    * 用于拦截返回键，在 BottomSheet 未折叠时先折叠
    */
-  private val mCollapsedBackPressedCallback by lazy {
+  private val mCollapsedBackPressedCallback by lazyUnlock {
     requireActivity().onBackPressedDispatcher.addCallback(this) {
       mBottomSheet.state = BottomSheetBehavior.STATE_COLLAPSED
     }

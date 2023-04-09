@@ -37,8 +37,10 @@ fun writeDependApi(classFile: File, code: (List<String>) -> String) {
   }
   val file = classFile.parentFile.resolve(classFile.name.substringBeforeLast(".kt") + "_fun.kt")
   if (file.exists()) {
-    val lines = file.readLines()
-    if (lines[0] == "// $field") {
+    val firstLine = file.bufferedReader().use {
+      it.readLine()
+    }
+    if (firstLine == "// $field") {
       // 未过时
       return
     }

@@ -59,6 +59,8 @@ object PhoneCalendar {
   
   // 账户类型。这个不会显示给用户
   private const val ACCOUNT_TYPE = "掌上重邮"
+  // 日历路径来源。这个在手机日历账号管理中可以看到。比如：Xiaomi Calendar
+  private const val NAME = "红岩网校工作站"
   
   /**
    * 添加事件，成功就返回事件 Id，失败返回 null
@@ -358,7 +360,7 @@ object PhoneCalendar {
     if (!checkPermission()) return null
     val value = ContentValues().apply {
       // 日历路径来源。这个在手机日历账号管理中可以看到。比如：Xiaomi Calendar
-      put(Calendars.NAME, "红岩网校工作站")
+      put(Calendars.NAME, NAME)
       put(Calendars.ACCOUNT_NAME, getAccountName())
       // 账户类型。这个不会显示给用户
       put(Calendars.ACCOUNT_TYPE, accountType)
