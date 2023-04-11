@@ -374,6 +374,18 @@ internal class AccountService : IAccountService {
         override fun getToken(): String {
             return tokenWrapper?.token ?: ""
         }
+
+        override fun refreshTokenExpired() {
+            defaultSp.edit {
+                putLong(SP_KEY_REFRESH_TOKEN_EXPIRED, 0)
+            }
+        }
+
+        override fun tokenExpired() {
+            defaultSp.edit {
+                putLong(SP_KEY_TOKEN_EXPIRED, 0)
+            }
+        }
     }
     
     companion object {

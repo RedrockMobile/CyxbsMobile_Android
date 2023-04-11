@@ -1,7 +1,10 @@
 package com.mredrock.cyxbs.lib.utils.network
 
 import com.google.gson.annotations.SerializedName
+import com.mredrock.cyxbs.api.account.IAccountService
+import com.mredrock.cyxbs.lib.utils.service.ServiceManager
 import java.io.Serializable
+import java.util.concurrent.atomic.AtomicBoolean
 import kotlin.jvm.Throws
 
 /**
@@ -67,6 +70,25 @@ interface IApiStatus : Serializable {
   
   @Throws(ApiException::class)
   fun throwApiExceptionIfFail() {
+    // 后端文档：https://redrock.feishu.cn/wiki/wikcnB9p6U45ZJZmxwTEu8QXvye
+    if (status == 20003) {
+      // token 过期
+      if (checkTokenExpired.compareAndSet(false, true)) {
+        userTokenService.tokenExpired()
+      }
+    } else if (status == 20004) {
+      // refreshToken 过期
+      if (checkRefreshTokenExpired.compareAndSet(false, true)) {
+        userTokenService.refreshTokenExpired()
+      }
+    }
     if (!isSuccess()) throw ApiException(status, info)
   }
+}
+
+// 是否触发过一次 refreshToken 过期，设计成全局变量的原因在于下一次重新打开应用失效
+private val checkRefreshTokenExpired = AtomicBoolean(false)
+private var checkTokenExpired = AtomicBoolean(false)
+private val userTokenService by lazy {
+  ServiceManager.invoke(IAccountService::class).getUserTokenService()
 }
