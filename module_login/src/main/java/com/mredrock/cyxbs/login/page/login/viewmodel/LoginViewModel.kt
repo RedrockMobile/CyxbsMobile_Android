@@ -1,5 +1,6 @@
 package com.mredrock.cyxbs.login.page.login.viewmodel
 
+import android.util.Log
 import androidx.lifecycle.viewModelScope
 import com.mredrock.cyxbs.api.account.IAccountService
 import com.mredrock.cyxbs.lib.base.BaseApp
@@ -88,7 +89,14 @@ class LoginViewModel : BaseViewModel() {
           BaseApp.getAndroidID(),
           BaseApp.getDeviceModel(),
           ipAddress
-        ))
+        )).subscribeOn(Schedulers.io())
+          .observeOn(AndroidSchedulers.mainThread())
+          .doOnError {
+            it.printStackTrace()
+          }
+          .safeSubscribeBy {
+            //不做处理
+          }
       }
   }
 }
