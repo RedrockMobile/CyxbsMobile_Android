@@ -5,6 +5,7 @@ import com.mredrock.cyxbs.BuildConfig
 import com.mredrock.cyxbs.api.account.IAccountService
 import com.mredrock.cyxbs.init.InitialManager
 import com.mredrock.cyxbs.init.InitialService
+import com.mredrock.cyxbs.lib.base.BaseApp
 import com.mredrock.cyxbs.lib.utils.service.impl
 import com.tencent.bugly.Bugly
 import com.tencent.bugly.crashreport.CrashReport
@@ -37,8 +38,8 @@ class BuglyInitialService : InitialService {
         
         //设置上报进程
         val strategy = CrashReport.UserStrategy(appContext).apply {
-            deviceID = manager.getAndroidID() // 设备 id
-            deviceModel = manager.getDeviceModel() // 设备型号
+            deviceID = BaseApp.getAndroidID() // 设备 id
+            deviceModel = BaseApp.getDeviceModel() // 设备型号
             isUploadProcess = true // 增加上报进程
             appVersion = BuildConfig.VERSION_NAME
             appPackageName = BuildConfig.APPLICATION_ID

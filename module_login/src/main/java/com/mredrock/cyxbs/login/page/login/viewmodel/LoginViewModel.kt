@@ -1,9 +1,14 @@
 package com.mredrock.cyxbs.login.page.login.viewmodel
 
+import android.util.Log
 import androidx.lifecycle.viewModelScope
 import com.mredrock.cyxbs.api.account.IAccountService
+import com.mredrock.cyxbs.lib.base.BaseApp
 import com.mredrock.cyxbs.lib.base.ui.BaseViewModel
 import com.mredrock.cyxbs.lib.utils.service.impl
+import com.mredrock.cyxbs.lib.utils.utils.judge.NetworkUtil
+import com.mredrock.cyxbs.login.bean.DeviceInfoParams
+import com.mredrock.cyxbs.login.network.LoginApiService
 import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
 import io.reactivex.rxjava3.core.Completable
 import io.reactivex.rxjava3.schedulers.Schedulers
@@ -67,6 +72,31 @@ class LoginViewModel : BaseViewModel() {
         viewModelScope.launch {
           _loginEvent.emit(true)
         }
+        /**
+         * 登录后向后端发送一次登录时的设备信息以及wifi的ip（如果连接了wifi并且能获取到）
+         * 如果连接方式为流量或者无法获取到wifi的ip，则直接上传 [null] 即可
+         */
+        var ipAddress: String? = null
+        //检测网络的连接方式
+        NetworkUtil.checkCurrentNetworkType()?.let {
+          //如果是通过wifi连接，则尝试获取wifi的ip
+          if (!it) {
+            ipAddress = NetworkUtil.getWifiIPAddress()
+          }
+        }
+        //上传设备以及ip信息
+        LoginApiService.INSTANCE.recordDeviceInfo(DeviceInfoParams(
+          BaseApp.getAndroidID(),
+          BaseApp.getDeviceModel(),
+          ipAddress
+        )).subscribeOn(Schedulers.io())
+          .observeOn(AndroidSchedulers.mainThread())
+          .doOnError {
+            it.printStackTrace()
+          }
+          .safeSubscribeBy {
+            //不做处理
+          }
       }
   }
 }

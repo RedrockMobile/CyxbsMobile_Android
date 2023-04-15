@@ -3,7 +3,9 @@ package com.mredrock.cyxbs.lib.base
 import android.annotation.SuppressLint
 import android.app.Activity
 import android.app.Application
+import android.os.Build
 import android.os.Bundle
+import android.provider.Settings
 import androidx.annotation.CallSuper
 import com.alibaba.android.arouter.launcher.ARouter
 import com.mredrock.cyxbs.init.InitialManager
@@ -34,6 +36,25 @@ open class BaseApp : Application() {
     @SuppressLint("StaticFieldLeak")
     lateinit var topActivity: WeakReference<Activity>
       private set
+
+    /**
+     * 使用 androidId 来代替设备 id
+     *
+     * android id 会在设备重置后还原，并且不具有唯一性
+     *
+     * 但都重置系统了，可以不用管这么多
+     */
+    fun getAndroidID(): String {
+      return Settings.Secure.getString(baseApp.contentResolver, Settings.Secure.ANDROID_ID)
+    }
+
+    /**
+     * 获取设备型号
+     */
+    @SuppressLint("PrivateApi")
+    fun getDeviceModel(): String {
+      return "${Build.MANUFACTURER} ${Build.MODEL}"
+    }
   }
   
   private lateinit var mInitialManager: InitialManagerImpl
