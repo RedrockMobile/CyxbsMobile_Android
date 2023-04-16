@@ -55,8 +55,10 @@ dependencies {
    * getGlobalScope() 找不到是 AGP 升级后移除了
    * getMergedManifests() 找不到是 booster 升级后把返回值改了 https://github.com/didi/booster/issues/330
    * ......
+   *
+   * 23/4/9: 因为编译太慢 + Pandora 更好用，所以注释
    */
-  implementation("io.github.didi.dokit:dokitx:${libs.versions.doKit.version.get()}")
+//  implementation("io.github.didi.dokit:dokitx:${libs.versions.doKit.version.get()}")
   
   // 不知道 DoKit 干了什么，会导致前面的 dependAutoService() 中写的 compileOnly 失效
   // 只能单独依赖进来（除了 lib_debug 外其他模块不建议这样做）

@@ -8,7 +8,10 @@ import com.mredrock.cyxbs.lib.course.item.single.AbstractOverlapSingleDayItem
 import java.util.*
 
 /**
- * .
+ * 提供打开 dialog 的基类
+ *
+ * ## 注意：
+ * - 需要手动调用 showCourseBottomDialog() 才会打开 dialog (目前是在 [TouchItemImpl] 中调用)
  *
  * @author 985892345
  * 2023/2/22 12:43

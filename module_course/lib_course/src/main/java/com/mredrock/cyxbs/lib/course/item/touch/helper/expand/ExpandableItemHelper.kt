@@ -8,7 +8,9 @@ import com.mredrock.cyxbs.lib.course.item.touch.ITouchItemHelper
 import com.ndhzs.netlayout.touch.multiple.event.IPointerEvent
 
 /**
- * .
+ * 双指放大缩小事务的帮助类
+ *
+ * todo 未实现
  *
  * @author 985892345
  * 2023/2/6 21:35
@@ -21,6 +23,5 @@ class ExpandableItemHelper : ITouchItemHelper {
     item: ITouchItem,
     page: ICoursePage
   ) {
-    TODO("Not yet implemented")
   }
 }

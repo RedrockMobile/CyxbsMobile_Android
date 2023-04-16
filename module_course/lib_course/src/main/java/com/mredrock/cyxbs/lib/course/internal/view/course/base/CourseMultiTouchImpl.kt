@@ -9,7 +9,9 @@ import com.ndhzs.netlayout.touch.multiple.IPointerTouchHandler
 import com.ndhzs.netlayout.touch.multiple.MultiTouchDispatcherHelper
 
 /**
- * ...
+ * 实现多指触摸的父类
+ *
+ *
  * @author 985892345 (Guo Xiangrui)
  * @email guo985892345@foxmail.com
  * @date 2022/8/18 12:39
