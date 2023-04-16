@@ -24,7 +24,7 @@ interface ITouchItemHelper {
    * 如果移动距离一旦超过 touchSlop，就会拦截子 View 事件，然后交给该方法处理
    *
    * 当然，存在子 View 调用 requestDisallowInterceptTouchEvent(true)，
-   * 此时因为该方法接受到 DOWN 事件，所以此时会收到一个 CANCEL 事件下来
+   * 此时因为该方法接受到 DOWN 事件，所以稍后一定会收到一个 CANCEL 事件
    *
    * @param parent 父布局
    * @param child [item] 对应的 View

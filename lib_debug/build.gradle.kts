@@ -56,7 +56,7 @@ dependencies {
    * getMergedManifests() 找不到是 booster 升级后把返回值改了 https://github.com/didi/booster/issues/330
    * ......
    *
-   * 23/4/9: 因为编译太慢 + Pandora 更好用，所以注释
+   * todo 23/4/9: 因为编译太慢 + Pandora 更好用，所以注释
    */
 //  implementation("io.github.didi.dokit:dokitx:${libs.versions.doKit.version.get()}")
   
