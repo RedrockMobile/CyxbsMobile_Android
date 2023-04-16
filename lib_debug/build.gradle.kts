@@ -7,16 +7,14 @@ dependLibBase()
 dependLibUtils()
 dependLibConfig()
 
+dependApiInit()
 dependApiCrash()
 dependApiAccount()
-dependAutoService()
 
 dependencies {
   
-  implementation(project(":api_init")) // 因为 api_init 没有实现模块，所以写这里
-  
   // 依赖 LeakCanary，检查内存泄漏 https://github.com/square/leakcanary
-  implementation("com.squareup.leakcanary:leakcanary-android:2.9.1")
+  implementation("com.squareup.leakcanary:leakcanary-android:2.10")
   
   /**
    * 很牛逼的检测工具，debug 模式下摇一摇手机或者按三次手机中间顶部区域触发
@@ -57,8 +55,10 @@ dependencies {
    * getGlobalScope() 找不到是 AGP 升级后移除了
    * getMergedManifests() 找不到是 booster 升级后把返回值改了 https://github.com/didi/booster/issues/330
    * ......
+   *
+   * 23/4/9: 因为编译太慢 + Pandora 更好用，所以注释
    */
-  implementation("io.github.didi.dokit:dokitx:${libs.versions.doKit.version.get()}")
+//  implementation("io.github.didi.dokit:dokitx:${libs.versions.doKit.version.get()}")
   
   // 不知道 DoKit 干了什么，会导致前面的 dependAutoService() 中写的 compileOnly 失效
   // 只能单独依赖进来（除了 lib_debug 外其他模块不建议这样做）

@@ -6,11 +6,7 @@ package com.mredrock.cyxbs.init
  * 在自己的模块中参考以下写法即可实现注入：
  * ```
  * 添加依赖：
- * dependAutoService()
- *
- * dependencies {
- *     implementation(project(":api_init")) // 因为 api_init 没有实现模块，所以写这里
- * }
+ * dependApiInit() // 已包含 AutoService
  *
  * 实现接口：
  * @AutoService(InitialService::class)

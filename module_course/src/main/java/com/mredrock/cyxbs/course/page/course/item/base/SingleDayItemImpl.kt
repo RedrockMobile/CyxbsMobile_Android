@@ -5,7 +5,7 @@ import com.mredrock.cyxbs.lib.course.item.single.ISingleDayData
 import com.mredrock.cyxbs.lib.course.item.single.SingleDayLayoutParams
 
 /**
- * .
+ * 只显示一天的 Item 的基类
  *
  * @author 985892345
  * 2023/2/22 12:29

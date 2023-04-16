@@ -94,6 +94,7 @@ class MovableAffairManager(
         beginLesson = getBeginLesson(newLocation.startRow),
       )
       // 修改差分刷新时比对的数据
+      // 当然也是可以不修改的，只是如果不修改的话，会因为差分比对出数据发生改变而重新添加 item 导致出现闪动
       fragment.affairContainerProxy.replaceDataFromOldList(data, newData)
   
       incCount()

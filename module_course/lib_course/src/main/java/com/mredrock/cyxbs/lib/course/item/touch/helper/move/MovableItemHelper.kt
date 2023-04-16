@@ -18,7 +18,7 @@ import kotlin.math.abs
 import kotlin.math.min
 
 /**
- * .
+ * 长按 item 实现移动的帮助类
  *
  * @author 985892345
  * 2023/2/6 21:34

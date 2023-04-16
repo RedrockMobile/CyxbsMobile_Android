@@ -7,6 +7,7 @@ import android.view.View
 import android.widget.FrameLayout
 import android.widget.ImageButton
 import android.widget.TextView
+import androidx.activity.addCallback
 import androidx.activity.viewModels
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -74,7 +75,17 @@ class ShowResultActivity : BaseActivity() {
     mPersonHandler.apply { initialize() }
     mBottomSheet.addBottomSheetCallback(
       object : BottomSheetBehavior.BottomSheetCallback() {
-        override fun onStateChanged(bottomSheet: View, newState: Int) {}
+        override fun onStateChanged(bottomSheet: View, newState: Int) {
+          when (newState) {
+            BottomSheetBehavior.STATE_EXPANDED -> {
+              mCollapsedBackPressedCallback.isEnabled = true
+            }
+            BottomSheetBehavior.STATE_COLLAPSED -> {
+              mCollapsedBackPressedCallback.isEnabled = false
+            }
+            else -> {}
+          }
+        }
         override fun onSlide(bottomSheet: View, slideOffset: Float) {
           if (slideOffset >= 0) {
             mBottomSheetView.alpha = slideOffset
@@ -90,11 +101,12 @@ class ShowResultActivity : BaseActivity() {
     }
   }
   
-  override fun onBackPressed() {
-    if (mBottomSheet.state == BottomSheetBehavior.STATE_EXPANDED) {
+  /**
+   * 用于拦截返回键，在 BottomSheet 未折叠时先折叠
+   */
+  private val mCollapsedBackPressedCallback by lazyUnlock {
+    onBackPressedDispatcher.addCallback {
       mBottomSheet.state = BottomSheetBehavior.STATE_COLLAPSED
-    } else {
-      super.onBackPressed()
     }
   }
   

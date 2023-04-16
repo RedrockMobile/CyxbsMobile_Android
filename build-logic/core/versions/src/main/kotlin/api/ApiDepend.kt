@@ -1,4 +1,5 @@
 import api.utils.ApiDependUtils
+import org.gradle.api.Project
 
 /**
  * 为什么要把 api 模块单独写出来？
@@ -28,6 +29,7 @@ object ApiDepend {
   * */
   
   // 下面的顺序尽量根据模块的排序来写
+  val init = ":api_init".byNoImpl()
   val account = ":lib_account:api_account" by parent
   val protocol = ":lib_protocol:api_protocol" by parent
   val update = ":lib_update:api_update" by parent
@@ -50,6 +52,22 @@ object ApiDepend {
       .by(implPath.invoke(this))
   }
   
+  private fun String.byNoImpl(): ApiDependUtils.IApiDependUtils = ApiDependUtils(this).byNoImpl()
+  
   private val parent: String.() -> String
     get() = { substringBeforeLast(":") }
+}
+
+////////////////////////////////////////////////////////////////////////////////////////////////////
+//
+//     如果你的模块需要单独写依赖逻辑，请以 fun Project.xxx[Name]() 开头书写，这样脚本就不会自动生成对应方法
+//
+////////////////////////////////////////////////////////////////////////////////////////////////////
+
+/**
+ * api_init 模块没有实现模块，所以单独写
+ */
+fun Project.dependApiInit() {
+  ApiDepend.init.dependApiOnly(this)
+  dependAutoService()
 }

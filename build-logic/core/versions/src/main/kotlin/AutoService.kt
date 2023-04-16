@@ -17,7 +17,7 @@ object AutoService {
 fun Project.dependAutoService() {
   dependencies {
     // 谷歌官方的一种动态加载库 https://github.com/google/auto/tree/main/service
-    "kapt"(AutoService.autoService)
     "compileOnly"(AutoService.autoService)
+    "kapt"(AutoService.autoService)
   }
 }

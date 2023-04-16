@@ -177,7 +177,7 @@ class MainActivity : BaseActivity() {
     // 长按桌面图标的那个东西，对应 AndroidManifest.xml 中的设置
     const val DESKTOP_SHORTCUT_COURSE = "com.mredrock.cyxbs.action.COURSE"
 //    const val DESKTOP_SHORTCUT_EXAM = "android.intent.action.EXAM"
-    const val DESKTOP_SHORTCUT_SCHOOL_CAR = "android.intent.action.SCHOOL_CAR"
+    const val DESKTOP_SHORTCUT_SCHOOL_CAR = "android.intent.action.SCHOOLCAR"
 //    const val DESKTOP_SHORTCUT_EMPTY_ROOM = "android.intent.action.EMPTY_ROOM"
   }
 }

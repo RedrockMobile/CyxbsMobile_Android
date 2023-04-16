@@ -7,7 +7,10 @@ import com.mredrock.cyxbs.lib.course.item.touch.helper.click.ClickItemHelper
 import com.mredrock.cyxbs.lib.utils.extensions.lazyUnlock
 
 /**
- * .
+ * 设置 Item 通用 Touch 事件的基类
+ *
+ * ## 注意：
+ * - 已通过 [ClickItemHelper] 实现多指触摸下的 item 点击事件
  *
  * @author 985892345
  * 2023/2/22 12:18

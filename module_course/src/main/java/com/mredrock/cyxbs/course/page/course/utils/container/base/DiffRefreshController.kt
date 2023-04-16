@@ -88,6 +88,8 @@ abstract class DiffRefreshController<Data : Any> : DiffUtil.ItemCallback<Data>()
       }
       
       override fun onMoved(fromPosition: Int, toPosition: Int) {
+        val data = mOldData.removeAt(fromPosition)
+        mOldData.add(toPosition, data)
       }
       
       override fun onChanged(position: Int, count: Int, payload: Any?) {
