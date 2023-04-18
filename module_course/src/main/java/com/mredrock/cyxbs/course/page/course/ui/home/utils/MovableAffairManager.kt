@@ -5,7 +5,7 @@ import com.mredrock.cyxbs.api.affair.IAffairService
 import com.mredrock.cyxbs.api.course.utils.getBeginLesson
 import com.mredrock.cyxbs.course.page.course.data.AffairData
 import com.mredrock.cyxbs.course.page.course.data.toAffair
-import com.mredrock.cyxbs.course.page.course.item.affair.Affair
+import com.mredrock.cyxbs.course.page.course.item.affair.AffairItem
 import com.mredrock.cyxbs.course.page.course.item.affair.IMovableAffairManager
 import com.mredrock.cyxbs.course.page.course.ui.home.HomeSemesterFragment
 import com.mredrock.cyxbs.course.page.course.ui.home.HomeWeekFragment
@@ -36,7 +36,7 @@ class MovableAffairManager(
   
   override fun isMovableToNewLocation(
     page: ICoursePage,
-    affair: Affair,
+    affair: AffairItem,
     child: View,
     newLocation: LocationUtil.Location,
     data: AffairData
@@ -74,7 +74,7 @@ class MovableAffairManager(
   
   override fun onLongPressStart(
     page: ICoursePage,
-    affair: Affair,
+    affair: AffairItem,
     child: View,
     data: AffairData
   ) {
@@ -84,7 +84,7 @@ class MovableAffairManager(
   override fun onOverAnimStart(
     newLocation: LocationUtil.Location?,
     page: ICoursePage,
-    affair: Affair,
+    affair: AffairItem,
     child: View,
     data: AffairData
   ) {
@@ -110,7 +110,7 @@ class MovableAffairManager(
   override fun onOverAnimEnd(
     newLocation: LocationUtil.Location?,
     page: ICoursePage,
-    affair: Affair,
+    affair: AffairItem,
     child: View,
     data: AffairData
   ) {

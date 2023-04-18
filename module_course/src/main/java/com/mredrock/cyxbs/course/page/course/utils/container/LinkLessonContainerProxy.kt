@@ -1,17 +1,17 @@
 package com.mredrock.cyxbs.course.page.course.utils.container
 
 import com.mredrock.cyxbs.course.page.course.data.StuLessonData
-import com.mredrock.cyxbs.course.page.course.item.lesson.LinkLesson
+import com.mredrock.cyxbs.course.page.course.item.lesson.LinkLessonItem
 import com.mredrock.cyxbs.course.page.course.utils.container.base.ItemPoolController
 import com.mredrock.cyxbs.lib.course.fragment.course.expose.container.ICourseContainer
 import com.mredrock.cyxbs.lib.utils.extensions.anim
 
 /**
- * 代理添加 [LinkLesson]
+ * 代理添加 [LinkLessonItem]
  *
  * - 提供差分刷新方法 [diffRefresh]
- * - 实现了 [LinkLesson] 的回收池用于复用
- * - 监听了使用其他方式删除的 [LinkLesson]，用于解决差分旧数据不同步的问题
+ * - 实现了 [LinkLessonItem] 的回收池用于复用
+ * - 监听了使用其他方式删除的 [LinkLessonItem]，用于解决差分旧数据不同步的问题
  *
  * @author 985892345 (Guo Xiangrui)
  * @email guo985892345@foxmail.com
@@ -19,7 +19,7 @@ import com.mredrock.cyxbs.lib.utils.extensions.anim
  */
 class LinkLessonContainerProxy(
   val container: ICourseContainer
-) : ItemPoolController<LinkLesson, StuLessonData>(container) {
+) : ItemPoolController<LinkLessonItem, StuLessonData>(container) {
   
   override fun areItemsTheSame(oldItem: StuLessonData, newItem: StuLessonData): Boolean {
     return StuLessonData.areItemsTheSame(oldItem, newItem)
@@ -29,19 +29,19 @@ class LinkLessonContainerProxy(
     return StuLessonData.areContentsTheSame(oldItem, newItem)
   }
   
-  override val itemClass: Class<LinkLesson>
-    get() = LinkLesson::class.java
+  override val itemClass: Class<LinkLessonItem>
+    get() = LinkLessonItem::class.java
   
-  override fun addItem(item: LinkLesson) {
+  override fun addItem(item: LinkLessonItem) {
     container.addLesson(item)
   }
   
-  override fun removeItem(item: LinkLesson) {
+  override fun removeItem(item: LinkLessonItem) {
     container.removeLesson(item)
   }
   
-  override fun newItem(data: StuLessonData): LinkLesson {
-    return LinkLesson(data)
+  override fun newItem(data: StuLessonData): LinkLessonItem {
+    return LinkLessonItem(data)
   }
   
   
