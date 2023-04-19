@@ -25,7 +25,7 @@ import com.ndhzs.netlayout.touch.multiple.IPointerTouchHandler
  */
 interface ILongPressTouchHandler : IPointerTouchHandler {
   /**
-   * 长按开始时
+   * 长按激活时回调
    */
-  fun onLongPressStart()
+  fun onLongPressed()
 }

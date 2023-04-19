@@ -34,11 +34,11 @@ class LinkLessonMovableHelper(
   ).apply {
     addMovableListener(
       object : IMovableListener {
-        override fun onLongPressStart(
+        override fun onLongPressed(
           page: ICoursePage, item: ITouchItem, child: View,
           initialX: Int, initialY: Int, x: Int, y: Int
         ) {
-          super.onLongPressStart(page, item, child, initialX, initialY, x, y)
+          super.onLongPressed(page, item, child, initialX, initialY, x, y)
           page.changeOverlap(lesson, false) // 暂时取消重叠
         }
       

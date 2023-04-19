@@ -151,7 +151,7 @@ abstract class ItemPoolController<Item, Data : Any>(
     val item = mOldDataMap.remove(oldData)
     if (item != null) {
       mOldDataMap[newData] = item
-      item.setNewData(newData)
+      item.setNewData(newData) // 重新设置 item 的数据
     }
   }
 }

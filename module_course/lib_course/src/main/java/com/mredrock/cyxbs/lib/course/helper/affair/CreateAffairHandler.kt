@@ -104,13 +104,13 @@ class CreateAffairHandler(
     }
   }
   
-  override fun onLongPressStart() {
+  override fun onLongPressed() {
     mIsInLongPress = true
     // 禁止父布局拦截
     course.getParent().requestDisallowInterceptTouchEvent(true)
     course.addItemDecoration(mItemDecoration)
     VibratorUtil.start(36) // 长按被触发来个震动提醒
-    iTouch.onLongPressStart(mPointerId, mInitialRow, mInitialColumn)
+    iTouch.onLongPressed(mPointerId, mInitialRow, mInitialColumn)
     
     touchAffairItem.show(mTopRow, mBottomRow, mInitialColumn)
     iTouch.onShowTouchAffairItem(course, touchAffairItem, mInitialRow)

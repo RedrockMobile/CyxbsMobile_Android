@@ -140,8 +140,8 @@ class CreateAffairDispatcher(
     
     val mTouchCallbacks = arrayListOf<ITouchCallback>()
     
-    override fun onLongPressStart(pointerId: Int, initialRow: Int, initialColumn: Int) {
-      mTouchCallbacks.forEachReversed { it.onLongPressStart(pointerId, initialRow, initialColumn) }
+    override fun onLongPressed(pointerId: Int, initialRow: Int, initialColumn: Int) {
+      mTouchCallbacks.forEachReversed { it.onLongPressed(pointerId, initialRow, initialColumn) }
     }
     
     override fun onTouchMove(

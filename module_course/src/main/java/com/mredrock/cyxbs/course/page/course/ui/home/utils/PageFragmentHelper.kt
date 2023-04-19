@@ -143,7 +143,7 @@ class PageFragmentHelper<T> where T: IHomePageFragment, T: CoursePageFragment {
         
         private var mIsInLongPress = false
         
-        override fun onLongPressStart(pointerId: Int, initialRow: Int, initialColumn: Int) {
+        override fun onLongPressed(pointerId: Int, initialRow: Int, initialColumn: Int) {
           mIsInLongPress = true
         }
   

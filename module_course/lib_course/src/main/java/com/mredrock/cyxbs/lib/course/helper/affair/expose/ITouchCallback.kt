@@ -10,7 +10,7 @@ import com.mredrock.cyxbs.lib.course.internal.view.course.ICourseViewGroup
  */
 interface ITouchCallback {
   
-  fun onLongPressStart(pointerId: Int, initialRow: Int, initialColumn: Int) {}
+  fun onLongPressed(pointerId: Int, initialRow: Int, initialColumn: Int) {}
   
   /**
    * @param initialRow 初始行
@@ -50,8 +50,8 @@ interface ITouchCallback {
   /**
    * 显示 [ITouchAffairItem] 的回调
    *
-   * [onLongPressStart] 调用后会立马调用 [onShowTouchAffairItem]，但用户只是快速的点击并抬手，
-   * 就不会回调 [onLongPressStart] 而直接回调 [onShowTouchAffairItem]
+   * [onLongPressed] 调用后会立马调用 [onShowTouchAffairItem]，但用户只是快速的点击并抬手，
+   * 就不会回调 [onLongPressed] 而直接回调 [onShowTouchAffairItem]
    */
   fun onShowTouchAffairItem(
     course: ICourseViewGroup,

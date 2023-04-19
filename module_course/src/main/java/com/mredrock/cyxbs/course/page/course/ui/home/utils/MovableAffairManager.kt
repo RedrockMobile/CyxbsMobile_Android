@@ -3,7 +3,6 @@ package com.mredrock.cyxbs.course.page.course.ui.home.utils
 import android.view.View
 import com.mredrock.cyxbs.api.affair.IAffairService
 import com.mredrock.cyxbs.api.course.utils.getBeginLesson
-import com.mredrock.cyxbs.course.page.course.data.AffairData
 import com.mredrock.cyxbs.course.page.course.data.toAffair
 import com.mredrock.cyxbs.course.page.course.item.affair.AffairItem
 import com.mredrock.cyxbs.course.page.course.item.affair.IMovableAffairManager
@@ -39,7 +38,6 @@ class MovableAffairManager(
     affair: AffairItem,
     child: View,
     newLocation: LocationUtil.Location,
-    data: AffairData
   ): Boolean {
     return when (fragment) {
       is HomeSemesterFragment -> false // 整学期课表中的事务不允许移动
@@ -51,7 +49,7 @@ class MovableAffairManager(
         outer@ for (entry in homePageResultMap) {
           // 遍历所有事务数据，从中寻找拥有相同 id 的 affair 有几个
           for (it in entry.value.affair) {
-            if (it.onlyId == data.onlyId) {
+            if (it.onlyId == affair.data.onlyId) {
               result++
             }
             if (result > 1) {
@@ -72,11 +70,10 @@ class MovableAffairManager(
     }
   }
   
-  override fun onLongPressStart(
+  override fun onLongPressed(
     page: ICoursePage,
     affair: AffairItem,
     child: View,
-    data: AffairData
   ) {
     incCount()
   }
@@ -86,16 +83,16 @@ class MovableAffairManager(
     page: ICoursePage,
     affair: AffairItem,
     child: View,
-    data: AffairData
   ) {
     if (newLocation != null) {
-      val newData = data.copy(
+      val oldData = affair.data
+      val newData = oldData.copy(
         hashDay = newLocation.startColumn - 1,
         beginLesson = getBeginLesson(newLocation.startRow),
       )
-      // 修改差分刷新时比对的数据
+      // 修改差分刷新时比对的数据，这个调用后也会同步修改 affair.data
       // 当然也是可以不修改的，只是如果不修改的话，会因为差分比对出数据发生改变而重新添加 item 导致出现闪动
-      fragment.affairContainerProxy.replaceDataFromOldList(data, newData)
+      fragment.affairContainerProxy.replaceDataFromOldList(oldData, newData)
   
       incCount()
       IAffairService::class.impl
@@ -112,7 +109,6 @@ class MovableAffairManager(
     page: ICoursePage,
     affair: AffairItem,
     child: View,
-    data: AffairData
   ) {
     decCount()
   }

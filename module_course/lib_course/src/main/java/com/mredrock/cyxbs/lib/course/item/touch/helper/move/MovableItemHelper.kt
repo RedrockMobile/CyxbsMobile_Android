@@ -208,7 +208,7 @@ class MovableItemHelper(
   }
   
   // 长按激活时的回调
-  private fun longPressStart() {
+  private fun longPressed() {
     val page = mCoursePage ?: return
     val item = mTouchItem ?: return
     val view = mItemView ?: return
@@ -231,7 +231,7 @@ class MovableItemHelper(
     mInitialScrollY = course.getScrollCourseY()
   
     mMovableListener.forEachReversed {
-      it.onLongPressStart(page, item, view, mInitialX, mInitialY, mLastMoveX, mLastMoveY)
+      it.onLongPressed(page, item, view, mInitialX, mInitialY, mLastMoveX, mLastMoveY)
     }
   }
   
@@ -267,7 +267,7 @@ class MovableItemHelper(
   
   private val mLongPressRunnable = object : Runnable {
     override fun run() {
-      longPressStart()
+      longPressed()
     }
     
     fun start(view: View) {
