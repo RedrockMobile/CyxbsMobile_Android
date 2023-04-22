@@ -6,7 +6,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.annotation.CallSuper
 import com.mredrock.cyxbs.lib.course.fragment.course.expose.overlap.IOverlapContainer
-import com.mredrock.cyxbs.lib.course.fragment.course.expose.overlap.IOverlapItem
+import com.mredrock.cyxbs.lib.course.item.overlap.IOverlapItem
 import com.mredrock.cyxbs.lib.course.internal.item.IItem
 import com.mredrock.cyxbs.lib.course.internal.item.IItemContainer
 import com.mredrock.cyxbs.lib.course.internal.item.forEachColumn
@@ -48,6 +48,11 @@ abstract class OverlapImpl : FoldImpl(), IOverlapContainer {
       }
     }
     return false
+  }
+  
+  final override fun refreshOverlap(itemsWithoutAnim: List<IOverlapItem>) {
+    mItemsWithoutAnim.addAll(itemsWithoutAnim)
+    tryPostRefreshOverlapRunnable()
   }
   
   @CallSuper
@@ -128,11 +133,13 @@ abstract class OverlapImpl : FoldImpl(), IOverlapContainer {
       mItemInFreeSet.clear()
       mItemInParentSet.clear()
       mRowColumnMap.clear()
+      mItemsWithoutAnim.clear()
     }
   }
   
   private val mItemInFreeSet = hashSetOf<IOverlapItem>()
   private val mItemInParentSet = hashSetOf<IOverlapItem>()
+  private val mItemsWithoutAnim = hashSetOf<IOverlapItem>()
   
   // 是否正处于刷新的 Runnable 中
   private var mIsInRefreshOverlapRunnable = false
@@ -160,7 +167,7 @@ abstract class OverlapImpl : FoldImpl(), IOverlapContainer {
         }
         // 遍历所有添加进去的 item 刷新重叠区域
         mItemInParentSet.forEach {
-          it.overlap.refreshOverlap()
+          it.overlap.refreshOverlap(!mItemsWithoutAnim.contains(it))
         }
         /*
         * 上面的逻辑简单来说就是：
@@ -170,6 +177,8 @@ abstract class OverlapImpl : FoldImpl(), IOverlapContainer {
         * 可以发现，mItemInParentSet 只有在使用 removeItem() 后才会被删除，达到一定条件时，最后 mItemInFreeSet
         * 会全部存入 mItemInParentSet 中
         * */
+  
+        mItemsWithoutAnim.clear()
         mIsInRefreshOverlapRunnable = false
       }
       return true

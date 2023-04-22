@@ -1,4 +1,4 @@
-package com.mredrock.cyxbs.course.page.course.item.helper
+package com.mredrock.cyxbs.course.page.course.item.affair.helper
 
 import android.view.View
 import android.view.ViewGroup

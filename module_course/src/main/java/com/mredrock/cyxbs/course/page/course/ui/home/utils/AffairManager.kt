@@ -17,7 +17,7 @@ import com.mredrock.cyxbs.lib.utils.service.impl
 import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
 
 /**
- * 管理课表事务的长按移动后更新的逻辑
+ * 管理课表事务的长按移动以及扩展后数据更新的逻辑
  *
  * 因为课表采取观察者模式，如果直接更新数据库，会导致课表直接更新布局，
  * 但是此时可能正在执行最后的移动动画，更新布局会导致动画出问题，
@@ -27,7 +27,7 @@ import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
  * @author 985892345
  * 2023/2/23 13:09
  */
-class MovableAffairManager(
+class AffairManager(
   val fragment: IHomePageFragment,
 ) : IMovableAffairManager {
   

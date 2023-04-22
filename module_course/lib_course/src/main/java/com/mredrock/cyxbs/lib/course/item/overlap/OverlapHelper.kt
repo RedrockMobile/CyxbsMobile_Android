@@ -1,4 +1,4 @@
-package com.mredrock.cyxbs.lib.course.fragment.course.expose.overlap
+package com.mredrock.cyxbs.lib.course.item.overlap
 
 import android.util.SparseArray
 import androidx.core.util.forEach
@@ -19,9 +19,14 @@ class OverlapHelper(
   private val mAboveItemByRowColumn = SparseArray<SparseArray<IOverlapItem>>()
   private val mBelowItemByRowColumn = SparseArray<SparseArray<IOverlapItem>>()
   
+  // 刷新动画上锁次数
+  private var mRefreshAnimLockCount = 0
+  
   override fun isAddIntoParent() = logic.isAddIntoParent()
   
-  override fun refreshOverlap() = logic.refreshOverlap()
+  override fun refreshOverlap(isAllowAnim: Boolean) {
+    logic.refreshOverlap(mRefreshAnimLockCount == 0 && isAllowAnim)
+  }
   
   override fun clearOverlap() {
     mAboveItemByRowColumn.clear()
@@ -85,6 +90,14 @@ class OverlapHelper(
     return false
   }
   
+  override fun lockRefreshAnim() {
+    mRefreshAnimLockCount++
+  }
+  
+  override fun unlockRefreshAnim() {
+    mRefreshAnimLockCount--
+  }
+  
   interface IOverlapLogic {
   
     /**
@@ -95,7 +108,7 @@ class OverlapHelper(
     /**
      * [IOverlap.refreshOverlap]
      */
-    fun refreshOverlap()
+    fun refreshOverlap(isAllowAnim: Boolean)
   
     /**
      * 需要清除重叠区域时的回调

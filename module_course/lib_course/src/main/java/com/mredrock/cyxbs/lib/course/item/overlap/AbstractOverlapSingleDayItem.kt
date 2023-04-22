@@ -15,9 +15,6 @@ import androidx.core.util.isNotEmpty
 import com.mredrock.cyxbs.lib.course.R
 import com.mredrock.cyxbs.lib.course.fragment.course.base.FoldImpl
 import com.mredrock.cyxbs.lib.course.fragment.course.base.OverlapImpl
-import com.mredrock.cyxbs.lib.course.fragment.course.expose.overlap.IOverlap
-import com.mredrock.cyxbs.lib.course.fragment.course.expose.overlap.IOverlapItem
-import com.mredrock.cyxbs.lib.course.fragment.course.expose.overlap.OverlapHelper
 import com.mredrock.cyxbs.lib.course.internal.item.forEachRow
 import com.mredrock.cyxbs.lib.course.item.single.ISingleDayItem
 import com.mredrock.cyxbs.lib.utils.extensions.dimen
@@ -42,6 +39,9 @@ import java.util.Collections
  *
  * 这里讲一下大致思路：课表是网格布局，每个格子都有一条引用链，串联起了这个格子上的所有 item。
  * 正常情况下只会显示最顶上的 item，如果你将顶上的 item removed 或者 gone，引用链会重新计算并刷新显示
+ *
+ * ## 注意
+ * - 如果你遇到了重新布局时只有 Item 出现卡顿的情况，可以看看 [IOverlap.lockRefreshAnim]
  *
  * @author 985892345 (Guo Xiangrui)
  * @email guo985892345@foxmail.com
@@ -184,14 +184,21 @@ abstract class AbstractOverlapSingleDayItem : IOverlapItem, OverlapHelper.IOverl
   private val mChildInFree = arrayListOf<View>()
   private val mChildInParent = arrayListOf<View>()
   
-  final override fun refreshOverlap() {
-    // 这里需要重新设置一遍总行数，因为外面可能重新设置了 lp，但 mView 的属性与 lp 并没有相互绑定
-    mNetLayout.setRowColumnCount(lp.rowCount, lp.columnCount)
+  final override fun refreshOverlap(isAllowAnim: Boolean) {
+    if (lp.rowCount != mNetLayout.rowCount || lp.columnCount != mNetLayout.columnCount) {
+      // 这里需要重新设置一遍总行数，因为外面重新设置了 lp，但 mView 的属性与 lp 并没有相互绑定
+      mNetLayout.setRowColumnCount(lp.rowCount, lp.columnCount)
+    }
     // 刷新空闲区域
     refreshFreeArea()
+    // 没有发生改变就直接退出
+    if (!mHasChangedFreeArea) return
+    mHasChangedFreeArea = false
+  
     // 设置动画
-    TransitionManager.beginDelayedTransition(mNetLayout, createTransition())
-    
+    if (isAllowAnim) {
+      TransitionManager.beginDelayedTransition(mNetLayout, createTransition())
+    }
     val diffSize = mChildInParent.size - mFreeAreaMap.size()
     // 移除掉多的子 View
     repeat(diffSize) {
@@ -234,11 +241,13 @@ abstract class AbstractOverlapSingleDayItem : IOverlapItem, OverlapHelper.IOverl
   }
   
   private val mFreeAreaMap = SparseIntArray()
+  private var mHasChangedFreeArea = false
   
   /**
    * 刷新空闲区域，重新计算自己可以显示的节点
    */
   private fun refreshFreeArea() {
+    val old = if (!mHasChangedFreeArea) mFreeAreaMap.toString() else null
     mFreeAreaMap.clear()
     val column = lp.weekNum
     var s = lp.startRow
@@ -256,6 +265,11 @@ abstract class AbstractOverlapSingleDayItem : IOverlapItem, OverlapHelper.IOverl
     // 判断 e 是不是最后一格，如果是的话，就要单独加上
     if (e == lp.endRow) {
       mFreeAreaMap.put(s, e)
+    }
+    val new = if (!mHasChangedFreeArea) mFreeAreaMap.toString() else null
+    if (old != new) {
+      // 直接用字符串进行比较，这样更方便
+      mHasChangedFreeArea = true
     }
   }
   

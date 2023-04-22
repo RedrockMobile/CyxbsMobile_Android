@@ -1,9 +1,15 @@
-package com.mredrock.cyxbs.lib.course.fragment.course.expose.overlap
+package com.mredrock.cyxbs.lib.course.item.overlap
+
+import com.mredrock.cyxbs.lib.course.fragment.course.base.FoldImpl
+import com.mredrock.cyxbs.lib.course.fragment.course.expose.overlap.IOverlapContainer
 
 /**
  * 重叠相关的接口
  *
  * 使用了 [OverlapHelper] 来完成部分接口的默认实现
+ *
+ * ## 注意
+ * - 如果你遇到了重新布局时只有 Item 出现卡顿的情况，可以看看 [IOverlap.lockRefreshAnim]
  *
  * @author 985892345 (Guo Xiangrui)
  * @email guo985892345@foxmail.com
@@ -25,10 +31,14 @@ interface IOverlap {
    * 刷新重叠
    *
    * ## 注意
-   * - 只有添加进父布局的才会收到回调
-   * - 在父布局添加或移除了 [IOverlapItem] 和某个 [IOverlapItem] 的 visibility 发生改变时回调
+   * - 只有添加进父布局的才可能会收到回调
+   * - 在父布局添加或移除了 [IOverlapItem] 时回调
+   * - 某个 [IOverlapItem] 的 visibility 发生改变时回调
+   * - 手动调用 [IOverlapContainer.refreshOverlap] 时回调
+   *
+   * @param isAllowAnim 是否允许执行动画，因为动画会抑制布局，在改变 View 位置时会修改失败
    */
-  fun refreshOverlap()
+  fun refreshOverlap(isAllowAnim: Boolean)
   
   /**
    * 即将被移除时的回调
@@ -87,4 +97,24 @@ interface IOverlap {
    * 是否存在在自身区域下的 [IOverlapItem]
    */
   fun hasBelowItem(): Boolean
+  
+  /**
+   * 是否锁定刷新动画，锁定后将不执行行数改变时的动画
+   *
+   * 因为刷新动画使用了 ChangeBounds，会导致布局被抑制，出现的效果就是突然的卡一下，
+   * 与 [FoldImpl] 头注释上表述的原因相同，
+   * 所以提供该方法用于暂时取消动画
+   *
+   * ## 注意
+   * - 上锁次数与解锁次数相等时才能成功解锁
+   * - 因为刷新是通过 post 到下一个 Runnable 中执行的，所以不能立即解锁，可以在使用 [IOverlapContainer.refreshOverlap] 时传入该 item
+   *
+   * @see IOverlapContainer.refreshOverlap 另一种解决方法
+   */
+  fun lockRefreshAnim()
+  
+  /**
+   * 解锁刷新动画
+   */
+  fun unlockRefreshAnim()
 }

@@ -10,7 +10,7 @@ import com.mredrock.cyxbs.config.config.SchoolCalendar
 import com.mredrock.cyxbs.course.page.course.ui.home.HomeSemesterFragment
 import com.mredrock.cyxbs.course.page.course.ui.home.HomeWeekFragment
 import com.mredrock.cyxbs.course.page.course.ui.home.IHomePageFragment
-import com.mredrock.cyxbs.course.page.course.ui.home.widget.MovableTouchAffairItem
+import com.mredrock.cyxbs.course.page.course.ui.home.widget.TouchAffairItem
 import com.mredrock.cyxbs.lib.course.fragment.page.CoursePageFragment
 import com.mredrock.cyxbs.lib.course.helper.affair.CreateAffairDispatcher
 import com.mredrock.cyxbs.lib.course.helper.affair.expose.ICreateAffairConfig
@@ -121,7 +121,7 @@ class PageFragmentHelper<T> where T: IHomePageFragment, T: CoursePageFragment {
           course: ICourseViewGroup,
           event: IPointerEvent
         ): ITouchAffairItem {
-          return MovableTouchAffairItem(course) // 支持长按移动 item 的 ITouchAffairItem
+          return TouchAffairItem(course) // 支持长按移动 item 的 ITouchAffairItem
         }
       }
     )

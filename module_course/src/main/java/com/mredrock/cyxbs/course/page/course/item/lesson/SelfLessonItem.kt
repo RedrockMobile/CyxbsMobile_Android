@@ -7,7 +7,7 @@ import com.mredrock.cyxbs.api.course.utils.parseClassRoom
 import com.mredrock.cyxbs.course.page.course.data.ICourseItemData
 import com.mredrock.cyxbs.course.page.course.data.StuLessonData
 import com.mredrock.cyxbs.course.page.course.item.BaseItem
-import com.mredrock.cyxbs.course.page.course.item.helper.SelfLessonMovableHelper
+import com.mredrock.cyxbs.course.page.course.item.lesson.helper.SelfLessonMovableHelper
 import com.mredrock.cyxbs.course.page.course.item.lesson.lp.SelfLessonLayoutParams
 import com.mredrock.cyxbs.course.page.course.item.view.IOverlapTag
 import com.mredrock.cyxbs.course.page.course.item.view.OverlapTagHelper
@@ -120,7 +120,7 @@ class SelfLessonItem(private var lessonData: StuLessonData) :
   
   override fun initializeTouchItemHelper(): List<ITouchItemHelper> {
     return super.initializeTouchItemHelper() + listOf(
-      SelfLessonMovableHelper(this)
+      SelfLessonMovableHelper()
     )
   }
 }

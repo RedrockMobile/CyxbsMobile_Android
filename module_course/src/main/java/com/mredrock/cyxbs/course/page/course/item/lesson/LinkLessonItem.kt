@@ -5,7 +5,7 @@ import android.view.animation.Animation
 import com.mredrock.cyxbs.course.page.course.data.ICourseItemData
 import com.mredrock.cyxbs.course.page.course.data.StuLessonData
 import com.mredrock.cyxbs.course.page.course.item.BaseItem
-import com.mredrock.cyxbs.course.page.course.item.helper.LinkLessonMovableHelper
+import com.mredrock.cyxbs.course.page.course.item.lesson.helper.LinkLessonMovableHelper
 import com.mredrock.cyxbs.course.page.course.item.lesson.lp.LinkLessonLayoutParams
 import com.mredrock.cyxbs.course.page.course.utils.container.base.IDataOwner
 import com.mredrock.cyxbs.course.page.course.utils.container.base.IRecycleItem
@@ -79,7 +79,7 @@ class LinkLessonItem(private var lessonData: StuLessonData) :
   
   override fun initializeTouchItemHelper(): List<ITouchItemHelper> {
     return super.initializeTouchItemHelper() + listOf(
-      LinkLessonMovableHelper(this)
+      LinkLessonMovableHelper()
     )
   }
 }

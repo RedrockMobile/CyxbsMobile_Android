@@ -67,6 +67,7 @@ open class DefaultMovableHandler : IMovableItemHandler {
   }
   
   override fun onMove(page: ICoursePage, item: ITouchItem, child: View, x: Int, y: Int) {
+    // 存在手指不移动但 View 坐标系发生了改变，所以计算 View 自身位置的偏移量
     child.translationX += x - mLastMoveX + mLastChildLeft - child.left
     child.translationY += y - mLastMoveY + mLastChildTop - child.top
     resetLastMoveXY(x, y)

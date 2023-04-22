@@ -5,7 +5,7 @@ import com.mredrock.cyxbs.course.page.course.data.AffairData
 import com.mredrock.cyxbs.course.page.course.data.ICourseItemData
 import com.mredrock.cyxbs.course.page.course.item.BaseItem
 import com.mredrock.cyxbs.course.page.course.item.affair.lp.AffairLayoutParams
-import com.mredrock.cyxbs.course.page.course.item.helper.AffairMovableHelper
+import com.mredrock.cyxbs.course.page.course.item.affair.helper.AffairMovableHelper
 import com.mredrock.cyxbs.course.page.course.utils.container.base.IDataOwner
 import com.mredrock.cyxbs.course.page.course.utils.container.base.IRecycleItem
 import com.mredrock.cyxbs.lib.course.item.affair.IAffairItem

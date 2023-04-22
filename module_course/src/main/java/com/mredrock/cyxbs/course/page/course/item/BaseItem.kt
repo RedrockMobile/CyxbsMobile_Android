@@ -4,7 +4,7 @@ import android.content.Context
 import android.view.View
 import com.mredrock.cyxbs.course.page.course.item.base.TouchItemImpl
 import com.mredrock.cyxbs.course.page.course.item.view.IOverlapTag
-import com.mredrock.cyxbs.lib.course.fragment.course.expose.overlap.IOverlapItem
+import com.mredrock.cyxbs.lib.course.item.overlap.IOverlapItem
 import com.mredrock.cyxbs.lib.course.internal.item.forEachRow
 
 /**

@@ -13,16 +13,19 @@ import com.mredrock.cyxbs.lib.course.R
 import com.mredrock.cyxbs.lib.course.fragment.course.expose.fold.*
 import com.mredrock.cyxbs.lib.course.helper.fold.CourseFoldHelper
 import com.mredrock.cyxbs.lib.course.internal.view.course.ICourseViewGroup
+import com.mredrock.cyxbs.lib.course.item.overlap.AbstractOverlapSingleDayItem
+import com.mredrock.cyxbs.lib.course.item.overlap.IOverlap
 import com.mredrock.cyxbs.lib.course.utils.forEachInline
 import com.mredrock.cyxbs.lib.utils.extensions.invisible
 import com.mredrock.cyxbs.lib.utils.extensions.visible
 
 /**
  * ## 展开时出现卡顿
- * 如果你在后期修改中发现展开动画出现卡顿，很有可能是有东西调用了 ViewGroup.suppressLayout(true) 导致的。
- * 该方法会抑制 ViewGroup 的 layout() 回调，将使 ViewGroup 不再进行布局，
- * 但目前展开动画依赖于实时布局，所以要么跟它错开，要么在外面包两层 FrameLayout。
- * （官方的很多需要改变 View 大小的动画中使用了 suppressLayout(true)）
+ * 如果你在后期修改中发现调用展开动画时，部分 item 出现卡顿，很有可能是有东西调用了 ViewGroup.suppressLayout(true) 导致的。
+ * 该方法会抑制 ViewGroup 的 layout() 回调，将使 ViewGroup 不再进行布局（官方的很多需要改变 View 大小的动画中使用了 suppressLayout(true)）
+ * ### 解决方法
+ * 1. 如果是因为 item 行数方式改变导致的，可能是因为调用了 [IOverlap.refreshOverlap] 导致的，可以看看 [IOverlap.lockRefreshAnim]
+ * 2. 如果是因为其他东西导致的，要么跟它错开，要么在外面包两层 FrameLayout，可以参考 [AbstractOverlapSingleDayItem.RootLayout]
  *
  * @author 985892345 (Guo Xiangrui)
  * @email guo985892345@foxmail.com

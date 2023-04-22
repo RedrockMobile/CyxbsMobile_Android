@@ -6,7 +6,7 @@ import androidx.core.os.bundleOf
 import androidx.fragment.app.createViewModelLazy
 import androidx.lifecycle.distinctUntilChanged
 import androidx.lifecycle.map
-import com.mredrock.cyxbs.course.page.course.ui.home.utils.MovableAffairManager
+import com.mredrock.cyxbs.course.page.course.ui.home.utils.AffairManager
 import com.mredrock.cyxbs.course.page.course.ui.home.utils.PageFragmentHelper
 import com.mredrock.cyxbs.course.page.course.ui.home.viewmodel.HomeCourseViewModel
 import com.mredrock.cyxbs.course.page.course.utils.container.AffairContainerProxy
@@ -64,7 +64,7 @@ class HomeWeekFragment : CourseWeekFragment(), IHomePageFragment {
   
   override val selfLessonContainerProxy = SelfLessonContainerProxy(this)
   override val linkLessonContainerProxy = LinkLessonContainerProxy(this)
-  override val affairContainerProxy = AffairContainerProxy(this, MovableAffairManager(this))
+  override val affairContainerProxy = AffairContainerProxy(this, AffairManager(this))
   
   private fun initObserve() {
     parentViewModel.showLinkEvent

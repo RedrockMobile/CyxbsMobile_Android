@@ -1,4 +1,4 @@
-package com.mredrock.cyxbs.course.page.course.item.helper
+package com.mredrock.cyxbs.course.page.course.item.lesson.helper
 
 import android.view.View
 import android.view.ViewGroup
@@ -18,39 +18,40 @@ import com.ndhzs.netlayout.touch.multiple.event.IPointerEvent
  * @author 985892345
  * 2023/4/18 19:22
  */
-class LinkLessonMovableHelper(
-  val lesson: LinkLessonItem
-) : ITouchItemHelper {
+class LinkLessonMovableHelper : ITouchItemHelper {
   
-  private val mMovableHelper = MovableItemHelper(
-    object : IMovableItemConfig {
-      override fun isMovableToNewLocation(
-        page: ICoursePage, item: ITouchItem,
-        child: View, newLocation: LocationUtil.Location
-      ): Boolean {
-        return false // 课程不能移动到新位置
-      }
+  private val mMovableConfig = object : IMovableItemConfig {
+    override fun isMovableToNewLocation(
+      page: ICoursePage, item: ITouchItem,
+      child: View, newLocation: LocationUtil.Location
+    ): Boolean {
+      return false // 课程不能移动到新位置
     }
-  ).apply {
-    addMovableListener(
-      object : IMovableItemListener {
-        override fun onLongPressed(
-          page: ICoursePage, item: ITouchItem, child: View,
-          x: Int, y: Int
-        ) {
-          super.onLongPressed(page, item, child, x, y)
-          page.changeOverlap(lesson, false) // 暂时取消重叠
-        }
-      
-        override fun onOverAnimStart(
-          newLocation: LocationUtil.Location?,
-          page: ICoursePage, item: ITouchItem, child: View
-        ) {
-          super.onOverAnimEnd(newLocation, page, item, child)
-          page.changeOverlap(lesson, true) // 恢复重叠
-        }
-      }
-    )
+  }
+  
+  private val mMovableListener = object : IMovableItemListener {
+    override fun onLongPressed(
+      page: ICoursePage,
+      item: ITouchItem,
+      child: View,
+      x: Int,
+      y: Int
+    ) {
+      item as LinkLessonItem
+      page.changeOverlap(item, false) // 暂时取消重叠
+    }
+    
+    override fun onOverAnimStart(
+      newLocation: LocationUtil.Location?,
+      page: ICoursePage, item: ITouchItem, child: View
+    ) {
+      item as LinkLessonItem
+      page.changeOverlap(item, true) // 恢复重叠
+    }
+  }
+  
+  private val mMovableHelper = MovableItemHelper(mMovableConfig).apply {
+    addMovableListener(mMovableListener)
   }
   
   override fun onPointerTouchEvent(
