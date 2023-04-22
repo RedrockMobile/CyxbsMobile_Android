@@ -51,7 +51,7 @@ open class CourseDownAnimDispatcher(
   /**
    * 是否需要动画
    */
-  open fun isNeedAnim(item: IItem, view: View): Boolean {
+  open fun isNeedAnim(item: IItem, view: View, x: Int, y: Int): Boolean {
     return item is ILessonItem || item is IAffairItem
   }
   
@@ -74,7 +74,7 @@ open class CourseDownAnimDispatcher(
         val x = event.getX(index).toInt()
         val y = event.getY(index).toInt()
         val pair = course.findPairUnderByXY(x, y) ?: return
-        if (isNeedAnim(pair.first, pair.second)) {
+        if (isNeedAnim(pair.first, pair.second, x, y)) {
           startAnim(pair.second, x, y)
           changeView(pair.second, x, y, x, y)
           mViewWithRawPointById[id] = Pair(pair.second, Point(x, y))

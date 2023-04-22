@@ -5,6 +5,7 @@ import com.mredrock.cyxbs.course.page.course.utils.container.AffairContainerProx
 import com.mredrock.cyxbs.course.page.course.utils.container.LinkLessonContainerProxy
 import com.mredrock.cyxbs.course.page.course.utils.container.SelfLessonContainerProxy
 import com.mredrock.cyxbs.lib.base.ui.BaseUi
+import com.mredrock.cyxbs.lib.course.fragment.page.ICoursePage
 
 /**
  * 因为 [HomeSemesterFragment] 和 [HomeWeekFragment] 是分开的两个类，
@@ -13,7 +14,7 @@ import com.mredrock.cyxbs.lib.base.ui.BaseUi
  * @author 985892345
  * 2023/2/23 13:18
  */
-sealed interface IHomePageFragment : BaseUi {
+sealed interface IHomePageFragment : ICoursePage, BaseUi {
   val parentViewModel: HomeCourseViewModel
   val selfLessonContainerProxy: SelfLessonContainerProxy
   val linkLessonContainerProxy: LinkLessonContainerProxy

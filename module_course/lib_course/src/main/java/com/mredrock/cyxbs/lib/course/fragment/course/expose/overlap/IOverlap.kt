@@ -67,6 +67,11 @@ interface IOverlap {
   fun getAboveItems(): List<IOverlapItem>
   
   /**
+   * 是否存在在自身区域上的 [IOverlapItem]
+   */
+  fun hasAboveItem(): Boolean
+  
+  /**
    * 得到 ([row], [column]) 位置重叠在下面的 item
    */
   fun getBelowItem(row: Int, column: Int): IOverlapItem?
@@ -77,4 +82,9 @@ interface IOverlap {
    * - 没有传递获取子级的重叠
    */
   fun getBelowItems(): List<IOverlapItem>
+  
+  /**
+   * 是否存在在自身区域下的 [IOverlapItem]
+   */
+  fun hasBelowItem(): Boolean
 }

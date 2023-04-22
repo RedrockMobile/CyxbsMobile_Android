@@ -2,6 +2,7 @@ package com.mredrock.cyxbs.lib.course.fragment.course.expose.overlap
 
 import android.util.SparseArray
 import androidx.core.util.forEach
+import androidx.core.util.isNotEmpty
 import com.mredrock.cyxbs.lib.course.utils.getOrPut
 
 /**
@@ -56,6 +57,13 @@ class OverlapHelper(
     return list
   }
   
+  override fun hasAboveItem(): Boolean {
+    mAboveItemByRowColumn.forEach { _, array ->
+      if (array.isNotEmpty()) return true
+    }
+    return false
+  }
+  
   override fun getBelowItem(row: Int, column: Int): IOverlapItem? {
     return mBelowItemByRowColumn.get(row)?.get(column)
   }
@@ -68,6 +76,13 @@ class OverlapHelper(
       }
     }
     return list
+  }
+  
+  override fun hasBelowItem(): Boolean {
+    mBelowItemByRowColumn.forEach { _, array ->
+      if (array.isNotEmpty()) return true
+    }
+    return false
   }
   
   interface IOverlapLogic {
