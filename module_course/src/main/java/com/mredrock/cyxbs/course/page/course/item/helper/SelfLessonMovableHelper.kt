@@ -6,9 +6,9 @@ import com.mredrock.cyxbs.course.page.course.item.lesson.SelfLessonItem
 import com.mredrock.cyxbs.lib.course.fragment.page.ICoursePage
 import com.mredrock.cyxbs.lib.course.item.touch.ITouchItem
 import com.mredrock.cyxbs.lib.course.item.touch.ITouchItemHelper
-import com.mredrock.cyxbs.lib.course.item.touch.helper.move.IMovableItemHelperConfig
-import com.mredrock.cyxbs.lib.course.item.touch.helper.move.IMovableListener
-import com.mredrock.cyxbs.lib.course.item.touch.helper.move.LocationUtil
+import com.mredrock.cyxbs.lib.course.item.touch.helper.move.IMovableItemConfig
+import com.mredrock.cyxbs.lib.course.item.touch.helper.move.IMovableItemListener
+import com.mredrock.cyxbs.lib.course.item.touch.helper.move.utils.LocationUtil
 import com.mredrock.cyxbs.lib.course.item.touch.helper.move.MovableItemHelper
 import com.ndhzs.netlayout.touch.multiple.event.IPointerEvent
 
@@ -23,7 +23,7 @@ class SelfLessonMovableHelper(
 ) : ITouchItemHelper {
   
   private val mMovableHelper = MovableItemHelper(
-    object : IMovableItemHelperConfig {
+    object : IMovableItemConfig {
       override fun isMovableToNewLocation(
         page: ICoursePage, item: ITouchItem,
         child: View, newLocation: LocationUtil.Location
@@ -33,12 +33,12 @@ class SelfLessonMovableHelper(
     }
   ).apply {
     addMovableListener(
-      object : IMovableListener {
+      object : IMovableItemListener {
         override fun onLongPressed(
           page: ICoursePage, item: ITouchItem, child: View,
-          initialX: Int, initialY: Int, x: Int, y: Int
+          x: Int, y: Int
         ) {
-          super.onLongPressed(page, item, child, initialX, initialY, x, y)
+          super.onLongPressed(page, item, child, x, y)
           page.changeOverlap(lesson, false) // 暂时取消重叠
         }
       

@@ -2,7 +2,7 @@ package com.mredrock.cyxbs.course.page.course.item.affair
 
 import android.view.View
 import com.mredrock.cyxbs.lib.course.fragment.page.ICoursePage
-import com.mredrock.cyxbs.lib.course.item.touch.helper.move.LocationUtil
+import com.mredrock.cyxbs.lib.course.item.touch.helper.move.utils.LocationUtil
 
 /**
  * 可长按移动事务的管理类

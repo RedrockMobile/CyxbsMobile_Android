@@ -10,7 +10,7 @@ import com.mredrock.cyxbs.course.page.course.ui.home.HomeSemesterFragment
 import com.mredrock.cyxbs.course.page.course.ui.home.HomeWeekFragment
 import com.mredrock.cyxbs.course.page.course.ui.home.IHomePageFragment
 import com.mredrock.cyxbs.lib.course.fragment.page.ICoursePage
-import com.mredrock.cyxbs.lib.course.item.touch.helper.move.LocationUtil
+import com.mredrock.cyxbs.lib.course.item.touch.helper.move.utils.LocationUtil
 import com.mredrock.cyxbs.lib.utils.extensions.toast
 import com.mredrock.cyxbs.lib.utils.extensions.unsafeSubscribeBy
 import com.mredrock.cyxbs.lib.utils.service.impl

@@ -17,9 +17,9 @@ import com.mredrock.cyxbs.lib.course.item.lesson.ILessonItem
 import com.mredrock.cyxbs.lib.course.item.lesson.LessonPeriod
 import com.mredrock.cyxbs.lib.course.item.touch.ITouchItem
 import com.mredrock.cyxbs.lib.course.item.touch.ITouchItemHelper
-import com.mredrock.cyxbs.lib.course.item.touch.helper.move.IMovableItemHelperConfig
-import com.mredrock.cyxbs.lib.course.item.touch.helper.move.IMovableListener
-import com.mredrock.cyxbs.lib.course.item.touch.helper.move.LocationUtil
+import com.mredrock.cyxbs.lib.course.item.touch.helper.move.IMovableItemConfig
+import com.mredrock.cyxbs.lib.course.item.touch.helper.move.IMovableItemListener
+import com.mredrock.cyxbs.lib.course.item.touch.helper.move.utils.LocationUtil
 import com.mredrock.cyxbs.lib.course.item.touch.helper.move.MovableItemHelper
 import com.mredrock.cyxbs.lib.course.item.view.CommonLessonView
 import com.ndhzs.netlayout.attrs.NetLayoutParams
@@ -58,7 +58,7 @@ class TeaLessonItem(
   override fun initializeTouchItemHelper(): List<ITouchItemHelper> {
     return super.initializeTouchItemHelper() + listOf(
       MovableItemHelper(
-        object : IMovableItemHelperConfig {
+        object : IMovableItemConfig {
           override fun isMovableToNewLocation(
             page: ICoursePage, item: ITouchItem,
             child: View, newLocation: LocationUtil.Location
@@ -68,12 +68,12 @@ class TeaLessonItem(
         }
       ).apply {
         addMovableListener(
-          object : IMovableListener {
+          object : IMovableItemListener {
             override fun onLongPressed(
               page: ICoursePage, item: ITouchItem, child: View,
-              initialX: Int, initialY: Int, x: Int, y: Int
+              x: Int, y: Int
             ) {
-              super.onLongPressed(page, item, child, initialX, initialY, x, y)
+              super.onLongPressed(page, item, child, x, y)
               page.changeOverlap(this@TeaLessonItem, false) // 暂时取消重叠
             }
             

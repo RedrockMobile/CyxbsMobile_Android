@@ -3,17 +3,18 @@ package com.mredrock.cyxbs.lib.course.item.touch.helper.move
 import android.view.View
 import com.mredrock.cyxbs.lib.course.fragment.page.ICoursePage
 import com.mredrock.cyxbs.lib.course.item.touch.ITouchItem
+import com.mredrock.cyxbs.lib.course.item.touch.helper.longpress.ILongPressItemConfig
+import com.mredrock.cyxbs.lib.course.item.touch.helper.move.utils.DefaultMovableHandler
+import com.mredrock.cyxbs.lib.course.item.touch.helper.move.utils.LocationUtil
 import com.ndhzs.netlayout.touch.multiple.event.IPointerEvent
-import kotlin.math.hypot
-import kotlin.math.pow
 
 /**
- * [MovableItemHelper] 的配置类
+ * [MovableItemHelper] 的相关配置
  *
  * @author 985892345
  * 2023/2/19 20:52
  */
-interface IMovableItemHelperConfig {
+interface IMovableItemConfig : ILongPressItemConfig {
   
   /**
    * 新位置是否允许与 [view] 重叠
@@ -22,11 +23,7 @@ interface IMovableItemHelperConfig {
    */
   fun isAllowOverlap(page: ICoursePage, view: View): Boolean = false
   
-  /**
-   * 是否允许长按移动
-   * @param child [item] 对应的 View
-   */
-  fun isMovable(
+  override fun isLongPress(
     event: IPointerEvent,
     page: ICoursePage,
     item: ITouchItem,
@@ -44,13 +41,11 @@ interface IMovableItemHelperConfig {
   ): Boolean = true
   
   /**
-   * 得到最后移动到新位置或者回到原位置的动画时长
+   * 得到处理 View 移动的工具类
    */
-  fun getMoveAnimatorDuration(dx: Float, dy: Float): Long {
-    // 自己拟合的一条由距离求出时间的函数，感觉比较适合动画效果 :)
-    // y = 50 * x^0.25 + 90
-    return (hypot(dx, dy).pow(0.25F) * 50 + 90).toLong()
+  fun getMovableHandler(): IMovableItemHandler {
+    return DefaultMovableHandler()
   }
   
-  companion object Default : IMovableItemHelperConfig
+  companion object Default : IMovableItemConfig
 }

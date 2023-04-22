@@ -1,4 +1,4 @@
-package com.mredrock.cyxbs.lib.course.item.touch.helper.move
+package com.mredrock.cyxbs.lib.course.item.touch.helper.move.utils
 
 import android.view.View
 import androidx.annotation.UiThread
