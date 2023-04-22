@@ -34,9 +34,14 @@ interface ICourseScrollControl {
   fun getAbsoluteY(pointerId: Int): Int
   
   /**
-   * 得到滚轴的高度
+   * 得到滚轴的外高度
    */
-  fun getScrollHeight(): Int
+  fun getScrollOuterHeight(): Int
+  
+  /**
+   * 得到滚轴的内高度
+   */
+  fun getScrollInnerHeight(): Int
   
   /**
    * 得到对应方向上能否继续滑动

@@ -2,7 +2,7 @@ package com.mredrock.cyxbs.lib.course.fragment.course.expose.overlap
 
 import com.mredrock.cyxbs.lib.course.fragment.course.base.OverlapImpl
 import com.mredrock.cyxbs.lib.course.internal.item.IItem
-import com.mredrock.cyxbs.lib.course.item.single.AbstractOverlapSingleDayItem
+import com.mredrock.cyxbs.lib.course.item.overlap.AbstractOverlapSingleDayItem
 
 /**
  * 支持重叠的 item

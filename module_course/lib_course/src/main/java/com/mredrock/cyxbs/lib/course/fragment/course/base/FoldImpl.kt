@@ -21,7 +21,7 @@ import com.mredrock.cyxbs.lib.utils.extensions.visible
  * ## 展开时出现卡顿
  * 如果你在后期修改中发现展开动画出现卡顿，很有可能是有东西调用了 ViewGroup.suppressLayout(true) 导致的。
  * 该方法会抑制 ViewGroup 的 layout() 回调，将使 ViewGroup 不再进行布局，
- * 但目前展开动画依赖于实时布局，所以要么跟它错开，要么在外面包一层 FrameLayout。
+ * 但目前展开动画依赖于实时布局，所以要么跟它错开，要么在外面包两层 FrameLayout。
  * （官方的很多需要改变 View 大小的动画中使用了 suppressLayout(true)）
  *
  * @author 985892345 (Guo Xiangrui)

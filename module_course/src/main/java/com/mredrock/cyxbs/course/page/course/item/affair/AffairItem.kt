@@ -94,7 +94,7 @@ class AffairItem(
   }
   
   override fun onReuse(): Boolean {
-    val view = getView() ?: return true
+    val view = getNetView() ?: return true
     return view.run {
       parent == null && !isAttachedToWindow
     }

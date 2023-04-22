@@ -306,7 +306,7 @@ class MovableItemHelper(
     view.translationY = (absoluteY + mViewDiffY - view.top) + mOldTranslationY + (scrollY - mInitialScrollY)
   
     mMovableListener.forEachReversed {
-      it.onMove(page, item, view, mInitialX, mInitialY, mLastMoveX, absoluteY + absoluteY + scrollY)
+      it.onMove(page, item, view, mInitialX, mInitialY, mLastMoveX, absoluteY + scrollY)
     }
   }
   
@@ -381,26 +381,26 @@ class MovableItemHelper(
     val course = page.course
     
     val courseScrollY = course.getScrollCourseY()
-    val courseScrollHeight = course.getScrollHeight()
+    val scrollOuterHeight = course.getScrollOuterHeight()
     val topHeight = child.y.toInt() - courseScrollY
     val bottomHeight = topHeight + child.height
     val moveBoundary = 60 // 移动的边界值
     
     // 向上滚动，即手指移到底部，需要显示下面的内容
     val isNeedScrollUp =
-      bottomHeight > courseScrollHeight - moveBoundary
-        && bottomHeight - (courseScrollHeight - moveBoundary) > (moveBoundary - topHeight)
+      bottomHeight > scrollOuterHeight - moveBoundary
+        && bottomHeight - (scrollOuterHeight - moveBoundary) > (moveBoundary - topHeight)
         && course.canCourseScrollVertically(1) // 是否滑到底
   
     // 向下滚动，即手指移到顶部，需要显示上面的内容
     val isNeedScrollDown =
       topHeight < moveBoundary
-        && (moveBoundary - topHeight) > bottomHeight - (courseScrollHeight - moveBoundary)
+        && (moveBoundary - topHeight) > bottomHeight - (scrollOuterHeight - moveBoundary)
         && course.canCourseScrollVertically(-1) // 是否滑到顶
     
     val velocity = if (isNeedScrollUp) {
       // 速度最小为 6，最大为 12，与边界的差值成线性关系
-      min((bottomHeight - (courseScrollHeight - moveBoundary)) / 10 + 6, 12)
+      min((bottomHeight - (scrollOuterHeight - moveBoundary)) / 10 + 6, 12)
     } else if (isNeedScrollDown) {
       -min(((moveBoundary - topHeight) / 10 + 6), 12)
     } else 0

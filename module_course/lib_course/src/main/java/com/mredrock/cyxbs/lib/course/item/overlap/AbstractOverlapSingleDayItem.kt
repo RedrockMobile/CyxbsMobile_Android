@@ -1,4 +1,4 @@
-package com.mredrock.cyxbs.lib.course.item.single
+package com.mredrock.cyxbs.lib.course.item.overlap
 
 import android.content.Context
 import android.transition.ChangeBounds
@@ -19,6 +19,7 @@ import com.mredrock.cyxbs.lib.course.fragment.course.expose.overlap.IOverlap
 import com.mredrock.cyxbs.lib.course.fragment.course.expose.overlap.IOverlapItem
 import com.mredrock.cyxbs.lib.course.fragment.course.expose.overlap.OverlapHelper
 import com.mredrock.cyxbs.lib.course.internal.item.forEachRow
+import com.mredrock.cyxbs.lib.course.item.single.ISingleDayItem
 import com.mredrock.cyxbs.lib.utils.extensions.dimen
 import com.ndhzs.netlayout.attrs.NetLayoutParams
 import com.ndhzs.netlayout.view.NetLayout
@@ -131,13 +132,20 @@ abstract class AbstractOverlapSingleDayItem : IOverlapItem, OverlapHelper.IOverl
   protected open fun onInitializeView(view: NetLayout) {}
   
   /**
-   * 得到当前 item 的 View
+   * 得到包裹 [createView] 的 ViewGroup
    *
    * ## 注意
-   * 这个 View 并不一定就是 [initializeView] 返回的 View
+   * 这个 View 并不是 [initializeView] 返回的 View
    */
-  fun getView(): NetLayout? {
+  fun getNetView(): NetLayout? {
     return if (this::mNetLayout.isInitialized) mNetLayout else null
+  }
+  
+  /**
+   * 得到 Item 对应的 View
+   */
+  fun getRootView(): ViewGroup? {
+    return if (this::mRootLayout.isInitialized) mRootLayout else null
   }
   
   /**
@@ -146,6 +154,7 @@ abstract class AbstractOverlapSingleDayItem : IOverlapItem, OverlapHelper.IOverl
    * [createView] 中得到的 View 都会添加进这个 view 中
    */
   private lateinit var mNetLayout: NetLayout
+  private lateinit var mRootLayout: RootLayout
   
   @Suppress("LeakingThis")
   final override val overlap: IOverlap = OverlapHelper(this)
@@ -155,11 +164,12 @@ abstract class AbstractOverlapSingleDayItem : IOverlapItem, OverlapHelper.IOverl
       mNetLayout = NetLayout(context).apply {
         setRowColumnCount(lp.rowCount, lp.columnCount)
       }
+      mRootLayout = RootLayout(mNetLayout)
     } else {
       mNetLayout.setRowColumnCount(lp.rowCount, lp.columnCount)
     }
     onInitializeView(mNetLayout)
-    return RootLayout(mNetLayout)
+    return mRootLayout
   }
   
   final override fun isAddIntoParent(): Boolean {

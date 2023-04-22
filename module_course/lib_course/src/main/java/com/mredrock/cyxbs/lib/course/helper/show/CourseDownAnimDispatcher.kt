@@ -143,7 +143,7 @@ open class CourseDownAnimDispatcher(
   }
   
   protected open fun changeView(view: View, initialX: Int, initialY: Int, nowX: Int, nowY: Int) {
-    view.rotationX = -(nowY - initialY) / view.height.toFloat() * 180 // 上下翻转
+    view.rotationX = -(nowY - initialY) / view.height.toFloat() * 50 // 上下翻转
     view.rotationY = (nowX - initialX) / view.width.toFloat() * 90 // 左右翻转
   }
   

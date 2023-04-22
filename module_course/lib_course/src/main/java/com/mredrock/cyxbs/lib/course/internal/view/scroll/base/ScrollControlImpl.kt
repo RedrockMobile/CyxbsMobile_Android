@@ -56,8 +56,12 @@ abstract class ScrollControlImpl @JvmOverloads constructor(
     return mAbsoluteYById.get(pointerId)
   }
   
-  final override fun getScrollHeight(): Int {
+  final override fun getScrollOuterHeight(): Int {
     return height
+  }
+  
+  final override fun getScrollInnerHeight(): Int {
+    return getChildAt(0).height
   }
   
   final override fun canCourseScrollVertically(direction: Int): Boolean {

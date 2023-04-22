@@ -204,6 +204,7 @@ class CreateAffairHandler(
      */
     private fun isAllowScrollAndCalculateVelocity(): Boolean {
       val absoluteY = course.getAbsoluteY(mPointerId)
+      val scrollOuterHeight = course.getScrollOuterHeight()
       val moveBoundary = 100 // 移动的边界值
       val minV = 6 // 最小速度
       val maxV = 20 // 最大速度
@@ -211,7 +212,7 @@ class CreateAffairHandler(
       
       // 向上滚动，即手指移到底部，需要显示下面的内容
       val isNeedScrollUp =
-        absoluteY > course.getScrollHeight() - moveBoundary
+        absoluteY > scrollOuterHeight - moveBoundary
           && mTouchRow <= mLowerRow // 当前触摸的行数在下限以上
           && course.canCourseScrollVertically(1) // 没有滑到底
       
@@ -223,7 +224,7 @@ class CreateAffairHandler(
       val isAllowScroll = isNeedScrollUp || isNeedScrollDown
       if (isAllowScroll) {
         velocity = if (isNeedScrollUp) {
-          min((absoluteY - (course.getScrollHeight() - moveBoundary)) / 2 + minV, maxV)
+          min((absoluteY - (scrollOuterHeight - moveBoundary)) / 2 + minV, maxV)
         } else {
           // 如果是向下滚动稍稍降低加速度，因为顶部手指可以移动出去，很容易满速
           -min(((moveBoundary - absoluteY) / 10 + minV), maxV)
