@@ -52,7 +52,14 @@ open class CourseDownAnimDispatcher(
    * 是否需要动画
    */
   open fun isNeedAnim(item: IItem, view: View, x: Int, y: Int): Boolean {
-    return item is ILessonItem || item is IAffairItem
+    val whichItem = item is ILessonItem || item is IAffairItem
+    // 触摸边缘区域不开启动画
+    val l = view.x + view.width * 0.2F
+    val r = view.x + view.width * 0.8F
+    val t = view.y + view.height * 0.2F
+    val b = view.y + view.height * 0.8F
+    val where = x.toFloat() in l .. r && y.toFloat() in t .. b
+    return whichItem && where
   }
   
   final override fun isPrepareToIntercept(event: IPointerEvent, view: ViewGroup): Boolean {
@@ -74,6 +81,14 @@ open class CourseDownAnimDispatcher(
         val x = event.getX(index).toInt()
         val y = event.getY(index).toInt()
         val pair = course.findPairUnderByXY(x, y) ?: return
+        mViewWithRawPointById.forEach { key, value ->
+          if (value.first === pair.second) {
+            // 如果第二根手指触摸，则直接结束
+            endAnim(value.first, value.second.x, value.second.y, x, y)
+            mViewWithRawPointById.remove(key)
+            return
+          }
+        }
         if (isNeedAnim(pair.first, pair.second, x, y)) {
           startAnim(pair.second, x, y)
           changeView(pair.second, x, y, x, y)

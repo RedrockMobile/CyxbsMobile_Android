@@ -35,7 +35,8 @@ class LinkLessonMovableHelper : ITouchItemHelper {
       item: ITouchItem,
       child: View,
       x: Int,
-      y: Int
+      y: Int,
+      pointerId: Int
     ) {
       item as LinkLessonItem
       page.changeOverlap(item, false) // 暂时取消重叠

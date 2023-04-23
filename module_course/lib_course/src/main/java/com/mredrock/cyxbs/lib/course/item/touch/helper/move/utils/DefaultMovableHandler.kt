@@ -1,11 +1,9 @@
 package com.mredrock.cyxbs.lib.course.item.touch.helper.move.utils
 
-import android.view.MotionEvent
 import android.view.View
 import com.mredrock.cyxbs.lib.course.fragment.page.ICoursePage
 import com.mredrock.cyxbs.lib.course.item.touch.ITouchItem
 import com.mredrock.cyxbs.lib.course.item.touch.helper.move.IMovableItemHandler
-import com.ndhzs.netlayout.touch.multiple.event.IPointerEvent
 import kotlin.math.hypot
 import kotlin.math.pow
 
@@ -33,9 +31,6 @@ open class DefaultMovableHandler : IMovableItemHandler {
     mLastMoveY = y
   }
   
-  protected var mPointerId: Int = MotionEvent.INVALID_POINTER_ID
-    private set
-  
   protected var mLastMoveX = 0
     private set
   protected var mLastMoveY = 0
@@ -53,17 +48,20 @@ open class DefaultMovableHandler : IMovableItemHandler {
   protected var mOldTranslationZ = 0F
     private set
   
-  override fun onDown(page: ICoursePage, item: ITouchItem, child: View, event: IPointerEvent) {
-    mPointerId = event.pointerId
-  }
-  
-  override fun onLongPressed(page: ICoursePage, item: ITouchItem, child: View, x: Int, y: Int) {
+  override fun onLongPressed(
+    page: ICoursePage,
+    item: ITouchItem,
+    child: View,
+    x: Int,
+    y: Int,
+    pointerId: Int
+  ) {
     resetLastMoveXY(x, y)
     resetChildLeftTop(child.left, child.top)
     mOldTranslationX = child.translationX
     mOldTranslationY = child.translationY
     mOldTranslationZ = child.translationZ
-    child.translationZ = mOldTranslationZ + mPointerId * 0.1F + 2.1F // 让 View 显示在其他 View 上方
+    child.translationZ = mOldTranslationZ + pointerId * 0.1F + 2.1F // 让 View 显示在其他 View 上方
   }
   
   override fun onMove(page: ICoursePage, item: ITouchItem, child: View, x: Int, y: Int) {

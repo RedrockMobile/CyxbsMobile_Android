@@ -10,7 +10,7 @@ import com.mredrock.cyxbs.config.config.SchoolCalendar
 import com.mredrock.cyxbs.course.page.course.ui.home.HomeSemesterFragment
 import com.mredrock.cyxbs.course.page.course.ui.home.HomeWeekFragment
 import com.mredrock.cyxbs.course.page.course.ui.home.IHomePageFragment
-import com.mredrock.cyxbs.course.page.course.ui.home.widget.TouchAffairItem
+import com.mredrock.cyxbs.course.page.course.ui.home.widget.HomeTouchAffairItem
 import com.mredrock.cyxbs.lib.course.fragment.page.CoursePageFragment
 import com.mredrock.cyxbs.lib.course.helper.affair.CreateAffairDispatcher
 import com.mredrock.cyxbs.lib.course.helper.affair.expose.ICreateAffairConfig
@@ -121,7 +121,7 @@ class PageFragmentHelper<T> where T: IHomePageFragment, T: CoursePageFragment {
           course: ICourseViewGroup,
           event: IPointerEvent
         ): ITouchAffairItem {
-          return TouchAffairItem(course) // 支持长按移动 item 的 ITouchAffairItem
+          return HomeTouchAffairItem(course.getContext()) // 支持长按移动 item 的 ITouchAffairItem
         }
       }
     )
@@ -143,15 +143,11 @@ class PageFragmentHelper<T> where T: IHomePageFragment, T: CoursePageFragment {
         
         private var mIsInLongPress = false
         
-        override fun onLongPressed(pointerId: Int, initialRow: Int, initialColumn: Int) {
+        override fun onLongPressed(pointerId: Int, row: Int, column: Int) {
           mIsInLongPress = true
         }
   
-        override fun onShowTouchAffairItem(
-          course: ICourseViewGroup,
-          item: ITouchAffairItem,
-          initialRow: Int
-        ) {
+        override fun onShowTouchAffairItem(course: ICourseViewGroup, item: ITouchAffairItem) {
           if (!mIsInLongPress) {
             // 没有触发长按时显示 TouchAffairItem 说明它只是普通的点击
             tryToastSingleRow()

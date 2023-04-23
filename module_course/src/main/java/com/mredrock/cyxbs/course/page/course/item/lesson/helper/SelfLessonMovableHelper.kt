@@ -35,7 +35,8 @@ class SelfLessonMovableHelper : ITouchItemHelper {
       item: ITouchItem,
       child: View,
       x: Int,
-      y: Int
+      y: Int,
+      pointerId: Int
     ) {
       item as SelfLessonItem
       page.changeOverlap(item, false) // 暂时取消重叠

@@ -81,8 +81,9 @@ class CreateAffairDispatcher(
           val course = page.course
           val initialRow = course.getRow(y)
           val initialColumn = course.getColumn(x)
-          item.show(initialRow, initialRow, initialColumn)
-          mTouchCallbackImpl.onShowTouchAffairItem(course, item, initialRow)
+          item.onMoveStart(course, initialRow, initialColumn)
+          item.onMoveEnd(course)
+          mTouchCallbackImpl.onShowTouchAffairItem(course, item)
         }
         null
       }
@@ -140,45 +141,35 @@ class CreateAffairDispatcher(
     
     val mTouchCallbacks = arrayListOf<ITouchCallback>()
     
-    override fun onLongPressed(pointerId: Int, initialRow: Int, initialColumn: Int) {
-      mTouchCallbacks.forEachReversed { it.onLongPressed(pointerId, initialRow, initialColumn) }
+    override fun onLongPressed(pointerId: Int, row: Int, column: Int) {
+      mTouchCallbacks.forEachReversed { it.onLongPressed(pointerId, row, column) }
     }
     
-    override fun onTouchMove(
-      pointerId: Int, initialRow: Int, initialColumn: Int,
-      touchRow: Int, topRow: Int, bottomRow: Int,
-    ) {
-      unfoldNoonOrDuskIfNecessary(initialRow, touchRow)
+    override fun onTouchMove(pointerId: Int, row: Int, touchRow: Int, showRow: Int) {
+      unfoldNoonOrDuskIfNecessary(row, touchRow)
       mTouchCallbacks.forEachReversed {
-        it.onTouchMove(
-          pointerId, initialRow, initialColumn,
-          touchRow, topRow, bottomRow
-        )
+        it.onTouchMove(pointerId, row, touchRow, showRow)
       }
     }
     
     override fun onTouchEnd(
-      pointerId: Int, initialRow: Int, initialColumn: Int,
-      touchRow: Int, topRow: Int, bottomRow: Int, isCancel: Boolean,
+      pointerId: Int,
+      row: Int,
+      touchRow: Int,
+      showRow: Int,
+      isCancel: Boolean
     ) {
       mTouchCallbacks.forEachReversed {
-        it.onTouchEnd(
-          pointerId, initialRow, initialColumn,
-          touchRow, topRow, bottomRow, isCancel
-        )
+        it.onTouchEnd(pointerId, row, touchRow, showRow, isCancel)
       }
     }
-  
-    override fun onShowTouchAffairItem(
-      course: ICourseViewGroup,
-      item: ITouchAffairItem,
-      initialRow: Int
-    ) {
+    
+    override fun onShowTouchAffairItem(course: ICourseViewGroup, item: ITouchAffairItem) {
       mTouchCallbacks.forEachReversed {
-        it.onShowTouchAffairItem(course, item, initialRow)
+        it.onShowTouchAffairItem(course, item)
       }
     }
-  
+    
     /**
      * 判断当前滑动中是否需要自动展开中午或者傍晚时间段
      * @param initialRow 最开始触摸的行数

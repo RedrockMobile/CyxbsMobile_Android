@@ -35,7 +35,8 @@ interface ILongPressItemListener {
     item: ITouchItem,
     child: View,
     x: Int,
-    y: Int
+    y: Int,
+    pointerId: Int
   ) {}
   
   /**

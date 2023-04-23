@@ -166,7 +166,8 @@ abstract class AbstractLongPressItemHelper(
       item,
       view,
       mLastMoveX,
-      mLastMoveY
+      mLastMoveY,
+      mPointerId
     )
   }
   

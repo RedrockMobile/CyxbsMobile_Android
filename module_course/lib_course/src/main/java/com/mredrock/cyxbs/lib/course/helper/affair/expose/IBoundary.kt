@@ -15,7 +15,7 @@ import kotlin.math.min
 interface IBoundary {
   
   /**
-   * 得到上边界，每次有效移动都会回调
+   * 得到能到达的上边界，每次有效移动都会回调
    * @param initialRow 手指刚触摸时的行数
    * @param nowRow 当前手指触摸的行数
    * @param initialColumn 手指刚触摸时的列数
@@ -28,7 +28,7 @@ interface IBoundary {
       if (initialColumn in lp.startColumn..lp.endColumn) {
         when {
           initialRow > lp.endRow -> upperRow = max(upperRow, lp.endRow + 1)
-          else -> continue // 此时触摸点在一个 item 里面，正常情况下不存在该情况 (如果你没有修改逻辑的话，可能是 getRow() 精度问题，但概率很低)
+          else -> continue // 此时触摸点在一个 item 里面，正常情况下不存在该情况，除非他把其他 item 移开了
         }
       }
     }
@@ -36,7 +36,7 @@ interface IBoundary {
   }
   
   /**
-   * 得到下边界，每次有效移动都会回调
+   * 得到能到达的下边界，每次有效移动都会回调
    * @param initialRow 手指刚触摸时的行数
    * @param nowRow 当前手指触摸的行数
    * @param initialColumn 手指刚触摸时的列数
@@ -49,7 +49,7 @@ interface IBoundary {
       if (initialColumn in lp.startColumn..lp.endColumn) {
         when {
           initialRow < lp.startRow -> lowerRow = min(lowerRow, lp.startRow - 1)
-          else -> continue // 此时触摸点在一个 item 里面，正常情况下不存在该情况 (如果你没有修改逻辑的话，可能是 getRow() 精度问题，但概率很低)
+          else -> continue // 此时触摸点在一个 item 里面，正常情况下不存在该情况，除非他把其他 item 移开了
         }
       }
     }

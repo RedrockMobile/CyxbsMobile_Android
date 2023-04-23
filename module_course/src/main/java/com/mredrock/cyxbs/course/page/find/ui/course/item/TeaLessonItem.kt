@@ -71,9 +71,8 @@ class TeaLessonItem(
           object : IMovableItemListener {
             override fun onLongPressed(
               page: ICoursePage, item: ITouchItem, child: View,
-              x: Int, y: Int
+              x: Int, y: Int, pointerId: Int
             ) {
-              super.onLongPressed(page, item, child, x, y)
               page.changeOverlap(this@TeaLessonItem, false) // 暂时取消重叠
             }
             
@@ -81,7 +80,6 @@ class TeaLessonItem(
               newLocation: LocationUtil.Location?,
               page: ICoursePage, item: ITouchItem, child: View
             ) {
-              super.onOverAnimEnd(newLocation, page, item, child)
               page.changeOverlap(this@TeaLessonItem, true) // 恢复重叠
             }
           }

@@ -78,7 +78,14 @@ class MovableItemHelper(
       }
     }
     
-    override fun onLongPressed(page: ICoursePage, item: ITouchItem, child: View, x: Int, y: Int) {
+    override fun onLongPressed(
+      page: ICoursePage,
+      item: ITouchItem,
+      child: View,
+      x: Int,
+      y: Int,
+      pointerId: Int
+    ) {
       val course = page.course
       
       VibratorUtil.start(36) // 长按被触发来个震动提醒
@@ -89,7 +96,7 @@ class MovableItemHelper(
       (child.parent as ViewGroup).addOnLayoutChangeListener(mLayoutChangeListener)
       
       mMovableItemListeners.forEachReversed {
-        it.onLongPressed(page, item, child, x, y)
+        it.onLongPressed(page, item, child, x, y, pointerId)
       }
     }
     

@@ -40,9 +40,8 @@ class AffairMovableHelper(
     
     override fun onLongPressed(
       page: ICoursePage, item: ITouchItem, child: View,
-      x: Int, y: Int
+      x: Int, y: Int, pointerId: Int
     ) {
-      super.onLongPressed(page, item, child, x, y)
       page.changeOverlap(affair, false) // 暂时取消重叠
       iMovableAffairManager.onLongPressed(page, affair, child)
     }
@@ -51,7 +50,6 @@ class AffairMovableHelper(
       newLocation: LocationUtil.Location?,
       page: ICoursePage, item: ITouchItem, child: View
     ) {
-      super.onOverAnimEnd(newLocation, page, item, child)
       page.changeOverlap(affair, true) // 恢复重叠
       iMovableAffairManager.onOverAnimStart(newLocation, page, affair, child)
     }
@@ -62,7 +60,6 @@ class AffairMovableHelper(
       item: ITouchItem,
       child: View
     ) {
-      super.onOverAnimEnd(newLocation, page, item, child)
       iMovableAffairManager.onOverAnimEnd(newLocation, page, affair, child)
     }
   }
