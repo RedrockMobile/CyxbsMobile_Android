@@ -39,13 +39,23 @@ class OverlapHelper(
   }
   
   override fun onAboveItem(row: Int, column: Int, item: IOverlapItem?) {
-    mAboveItemByRowColumn.getOrPut(row) { SparseArray() }
-      .put(column, item)
+    mAboveItemByRowColumn.getOrPut(row) { SparseArray() }.apply {
+      if (item == null) {
+        delete(column)
+      } else {
+        put(column, item)
+      }
+    }
   }
   
   override fun onBelowItem(row: Int, column: Int, item: IOverlapItem?) {
-    mBelowItemByRowColumn.getOrPut(row) { SparseArray() }
-      .put(column, item)
+    mBelowItemByRowColumn.getOrPut(row) { SparseArray() }.apply {
+      if (item == null) {
+        delete(column)
+      } else {
+        put(column, item)
+      }
+    }
   }
   
   override fun getAboveItem(row: Int, column: Int): IOverlapItem? {

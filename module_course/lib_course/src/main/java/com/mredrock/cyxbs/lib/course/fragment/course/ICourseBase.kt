@@ -3,8 +3,6 @@ package com.mredrock.cyxbs.lib.course.fragment.course
 import com.mredrock.cyxbs.lib.course.fragment.course.expose.container.ICourseContainer
 import com.mredrock.cyxbs.lib.course.fragment.course.expose.fold.IFold
 import com.mredrock.cyxbs.lib.course.fragment.course.expose.overlap.IOverlapContainer
-import com.mredrock.cyxbs.lib.course.fragment.course.expose.fold.IFoldDusk
-import com.mredrock.cyxbs.lib.course.fragment.course.expose.fold.IFoldNoon
 import com.mredrock.cyxbs.lib.course.fragment.course.expose.period.ICoursePeriod
 import com.mredrock.cyxbs.lib.course.fragment.course.expose.wrapper.ICourseWrapper
 import com.mredrock.cyxbs.lib.course.fragment.course.expose.wrapper.IScrollWrapper

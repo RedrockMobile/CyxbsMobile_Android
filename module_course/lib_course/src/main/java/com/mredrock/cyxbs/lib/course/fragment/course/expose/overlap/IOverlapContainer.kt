@@ -24,7 +24,7 @@ interface IOverlapContainer {
   /**
    * 改变重叠状态
    */
-  fun changeOverlap(item: IOverlapItem, isOverlap: Boolean): Boolean
+  fun changeOverlap(item: IOverlapItem?, isOverlap: Boolean): Boolean
   
   /**
    * 刷新所有 Item 的重叠状态

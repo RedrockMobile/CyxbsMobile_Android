@@ -24,6 +24,9 @@ import com.mredrock.cyxbs.lib.course.internal.item.IItem
  */
 class HomeSemesterFragment : CourseSemesterFragment(), IHomePageFragment {
   
+  override val week: Int
+    get() = 0
+  
   override val parentViewModel by createViewModelLazy(
     HomeCourseViewModel::class,
     { requireParentFragment().viewModelStore }
@@ -64,7 +67,10 @@ class HomeSemesterFragment : CourseSemesterFragment(), IHomePageFragment {
         affairContainerProxy.diffRefresh(affair)
         selfLessonContainerProxy.diffRefresh(self)
         linkLessonContainerProxy.diffRefresh(link) {
-          if (mIsShowLinkEventAfterClick == true && parentViewModel.currentItem == 0 && it.isNotEmpty()) {
+          if (mIsShowLinkEventAfterClick == true
+            && parentViewModel.currentItem.value == 0
+            && link.isNotEmpty()
+          ) {
             // 这时说明触发了关联人的显示，需要开启入场动画
             linkLessonContainerProxy.startAnimation()
           }

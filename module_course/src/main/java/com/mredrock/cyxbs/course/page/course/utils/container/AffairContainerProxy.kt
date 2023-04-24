@@ -4,7 +4,7 @@ import com.mredrock.cyxbs.course.page.course.data.AffairData
 import com.mredrock.cyxbs.course.page.course.item.affair.AffairItem
 import com.mredrock.cyxbs.course.page.course.item.affair.IMovableAffairManager
 import com.mredrock.cyxbs.course.page.course.utils.container.base.ItemPoolController
-import com.mredrock.cyxbs.lib.course.fragment.course.expose.container.ICourseContainer
+import com.mredrock.cyxbs.lib.course.fragment.page.ICoursePage
 
 /**
  * 代理添加 [AffairItem]
@@ -18,9 +18,9 @@ import com.mredrock.cyxbs.lib.course.fragment.course.expose.container.ICourseCon
  * @date 2022/9/10 18:24
  */
 class AffairContainerProxy(
-  val container: ICourseContainer,
+  val page: ICoursePage,
   val iMovableAffairManager: IMovableAffairManager
-) : ItemPoolController<AffairItem, AffairData>(container) {
+) : ItemPoolController<AffairItem, AffairData>(page) {
   
   override fun areItemsTheSame(oldItem: AffairData, newItem: AffairData): Boolean {
     return AffairData.areItemsTheSame(oldItem, newItem)
@@ -33,15 +33,27 @@ class AffairContainerProxy(
   override val itemClass: Class<AffairItem>
     get() = AffairItem::class.java
   
+  override fun onChanged(oldData: AffairData, newData: AffairData) {
+    val item = mOldDataMap[oldData]
+    page.changeOverlap(item, false) // 取消重叠
+    super.onChanged(oldData, newData)
+    page.changeOverlap(item, true) // 恢复重叠
+  }
+  
   override fun addItem(item: AffairItem) {
-    container.addAffair(item)
+    page.addAffair(item)
   }
   
   override fun removeItem(item: AffairItem) {
-    container.removeAffair(item)
+    page.removeAffair(item)
   }
   
   override fun newItem(data: AffairData): AffairItem {
     return AffairItem(data, iMovableAffairManager)
+  }
+  
+  override fun onDiffRefreshOver(oldData: List<AffairData>, newData: List<AffairData>) {
+    super.onDiffRefreshOver(oldData, newData)
+    page.refreshOverlap() // 刷新重叠
   }
 }

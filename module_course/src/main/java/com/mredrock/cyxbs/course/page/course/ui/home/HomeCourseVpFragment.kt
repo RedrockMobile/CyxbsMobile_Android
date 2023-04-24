@@ -80,7 +80,7 @@ class HomeCourseVpFragment : HomeCourseVpLinkFragment() {
     mViewPager.registerOnPageChangeCallback(
       object : OnPageChangeCallback() {
         override fun onPageSelected(position: Int) {
-          mViewModel.currentItem = position
+          mViewModel.currentItem.value = position
         }
       }
     )

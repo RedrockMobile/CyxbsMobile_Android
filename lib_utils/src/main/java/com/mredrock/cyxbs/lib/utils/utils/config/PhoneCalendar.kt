@@ -13,7 +13,7 @@ import com.mredrock.cyxbs.api.account.IAccountService
 import com.mredrock.cyxbs.common.service.impl
 import com.mredrock.cyxbs.lib.utils.UtilsApplicationWrapper.Companion.application
 import com.mredrock.cyxbs.lib.utils.extensions.doPermissionAction
-import com.mredrock.cyxbs.lib.utils.extensions.toast
+import io.reactivex.rxjava3.core.Completable
 import kotlinx.coroutines.suspendCancellableCoroutine
 import java.util.*
 import kotlin.coroutines.resume
@@ -62,6 +62,42 @@ object PhoneCalendar {
   // 日历路径来源。这个在手机日历账号管理中可以看到。比如：Xiaomi Calendar
   private const val NAME = "红岩网校工作站"
   
+  fun checkPermission(): Boolean {
+    return context.checkSelfPermission(Manifest.permission.READ_CALENDAR) == PackageManager.PERMISSION_GRANTED
+      && context.checkSelfPermission(Manifest.permission.WRITE_CALENDAR) == PackageManager.PERMISSION_GRANTED
+  }
+  
+  /**
+   * 申请日历读写权限
+   */
+  fun applyForPermission(activity: FragmentActivity): Completable {
+    return if (checkPermission()) {
+      Completable.complete()
+    } else {
+      Completable.create {
+        val dialog = activity.doPermissionAction(
+          Manifest.permission.READ_CALENDAR,
+          Manifest.permission.WRITE_CALENDAR
+        ) {
+          doAfterGranted {
+            if (!it.isDisposed) {
+              it.onComplete()
+            }
+          }
+          doAfterRefused {
+            it.tryOnError(RuntimeException("申请权限被拒绝"))
+          }
+          doOnCancel {
+            it.tryOnError(RuntimeException("申请权限被取消"))
+          }
+        }
+        it.setCancellable {
+          dialog?.cancel()
+        }
+      }
+    }
+  }
+  
   /**
    * 添加事件，成功就返回事件 Id，失败返回 null
    *
@@ -73,35 +109,18 @@ object PhoneCalendar {
     activity: FragmentActivity,
     event: Event,
     accountType: String = ACCOUNT_TYPE
-  ): Long? = suspendCancellableCoroutine {
-    if (checkPermission()) {
-      it.resume(add(event, accountType))
-    } else {
-      val dialog = activity.doPermissionAction(
-        Manifest.permission.READ_CALENDAR,
-        Manifest.permission.WRITE_CALENDAR
-      ) {
-        doAfterGranted {
-          if (it.isActive) {
-            it.resume(add(event, accountType))
+  ): Long? = suspendCancellableCoroutine { continuation ->
+    val dispose = applyForPermission(activity)
+      .subscribe(
+        {
+          if (continuation.isActive) {
+            continuation.resume(add(event, accountType))
           }
-        }
-        doAfterRefused {
-          toast("申请读写日历权限被拒绝")
-          if (it.isActive) {
-            it.resume(null)
-          }
-        }
-        doOnCancel {
-          toast("申请读写日历权限被取消")
-          if (it.isActive) {
-            it.resume(null)
-          }
-        }
-      }
-      it.invokeOnCancellation {
-        dialog?.cancel()
-      }
+        },
+        { continuation.resume(null) }
+      )
+    continuation.invokeOnCancellation {
+      dispose.dispose()
     }
   }
   
@@ -384,11 +403,6 @@ object PhoneCalendar {
         .build(),
       value
     )?.lastPathSegment?.toLong()
-  }
-  
-  private fun checkPermission(): Boolean {
-    return context.checkSelfPermission(Manifest.permission.READ_CALENDAR) == PackageManager.PERMISSION_GRANTED
-      && context.checkSelfPermission(Manifest.permission.WRITE_CALENDAR) == PackageManager.PERMISSION_GRANTED
   }
   
   /**

@@ -16,6 +16,12 @@ import kotlin.collections.ArrayList
 /**
  * [IItemContainer] 的实现类
  *
+ * 功能如下：
+ * - 实现 [IItem] 的添加
+ * - 关联 View 的移除回调，在 View 被移除时同时移除 Item
+ * - 提供监听 Item 添加、移除的方法
+ * - 提供查找 Item 的方法
+ *
  * @author 985892345 (Guo Xiangrui)
  * @email guo985892345@foxmail.com
  * @date 2022/8/17 0:23

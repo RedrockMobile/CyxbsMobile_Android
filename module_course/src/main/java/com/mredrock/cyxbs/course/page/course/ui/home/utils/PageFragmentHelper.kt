@@ -58,26 +58,16 @@ class PageFragmentHelper<T> where T: IHomePageFragment, T: CoursePageFragment {
         .firstElement()
         .observeOn(AndroidSchedulers.mainThread())
         .safeSubscribeBy {
-          when (this) {
-            is HomeSemesterFragment -> {
-              if (it == 0) {
-                // 判断周数，只对当前周进行动画
-                EnterAnimUtils.startEnterAnim(course, parentViewModel, viewLifecycleOwner)
-              }
-            }
-            is HomeWeekFragment -> {
-              if (it == week) {
-                // 判断周数，只对当前周进行动画
-                EnterAnimUtils.startEnterAnim(course, parentViewModel, viewLifecycleOwner)
-              }
-            }
+          if (it == week) {
+            // 判断周数，只对当前周进行动画
+            EnterAnimUtils.startEnterAnim(course, parentViewModel, viewLifecycleOwner)
           }
         }
     }
   }
   
   /**
-   * 点击中午和傍晚的折叠
+   * 中午和傍晚的默认折叠状态
    */
   private fun T.initFoldLogic(isFragmentRebuilt: Boolean) {
     if (!isFragmentRebuilt) {
@@ -127,11 +117,6 @@ class PageFragmentHelper<T> where T: IHomePageFragment, T: CoursePageFragment {
     )
     // 事务的点击监听
     dispatcher.setOnClickListener {
-      val week = when (this@initCreateAffair) {
-        is HomeSemesterFragment -> 0
-        is HomeWeekFragment -> week
-        else -> error("")
-      }
       // 打开编辑事务详细的界面
       IAffairService::class.impl
         .startActivityForAddAffair(week, lp.weekNum - 1, getBeginLesson(lp.startRow), lp.length)

@@ -3,7 +3,7 @@ package com.mredrock.cyxbs.course.page.course.utils.container
 import com.mredrock.cyxbs.course.page.course.data.StuLessonData
 import com.mredrock.cyxbs.course.page.course.item.lesson.LinkLessonItem
 import com.mredrock.cyxbs.course.page.course.utils.container.base.ItemPoolController
-import com.mredrock.cyxbs.lib.course.fragment.course.expose.container.ICourseContainer
+import com.mredrock.cyxbs.lib.course.fragment.page.ICoursePage
 import com.mredrock.cyxbs.lib.utils.extensions.anim
 
 /**
@@ -18,8 +18,8 @@ import com.mredrock.cyxbs.lib.utils.extensions.anim
  * @date 2022/9/10 18:22
  */
 class LinkLessonContainerProxy(
-  val container: ICourseContainer
-) : ItemPoolController<LinkLessonItem, StuLessonData>(container) {
+  val page: ICoursePage
+) : ItemPoolController<LinkLessonItem, StuLessonData>(page) {
   
   override fun areItemsTheSame(oldItem: StuLessonData, newItem: StuLessonData): Boolean {
     return StuLessonData.areItemsTheSame(oldItem, newItem)
@@ -32,18 +32,29 @@ class LinkLessonContainerProxy(
   override val itemClass: Class<LinkLessonItem>
     get() = LinkLessonItem::class.java
   
+  override fun onChanged(oldData: StuLessonData, newData: StuLessonData) {
+    val item = mOldDataMap[oldData]
+    page.changeOverlap(item, false) // 取消重叠
+    super.onChanged(oldData, newData)
+    page.changeOverlap(item, true) // 恢复重叠
+  }
+  
   override fun addItem(item: LinkLessonItem) {
-    container.addLesson(item)
+    page.addLesson(item)
   }
   
   override fun removeItem(item: LinkLessonItem) {
-    container.removeLesson(item)
+    page.removeLesson(item)
   }
   
   override fun newItem(data: StuLessonData): LinkLessonItem {
     return LinkLessonItem(data)
   }
   
+  override fun onDiffRefreshOver(oldData: List<StuLessonData>, newData: List<StuLessonData>) {
+    super.onDiffRefreshOver(oldData, newData)
+    page.refreshOverlap() // 刷新重叠
+  }
   
   private val mStartAnimationRun = Runnable {
     /*
@@ -62,7 +73,7 @@ class LinkLessonContainerProxy(
    * 开启关联人 item 的入场动画
    */
   fun startAnimation() {
-    container.course.removeCallbacks(mStartAnimationRun)
-    container.course.post(mStartAnimationRun)
+    page.course.removeCallbacks(mStartAnimationRun)
+    page.course.post(mStartAnimationRun)
   }
 }

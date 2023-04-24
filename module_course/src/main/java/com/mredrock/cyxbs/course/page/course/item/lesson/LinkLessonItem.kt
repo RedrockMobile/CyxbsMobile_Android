@@ -36,6 +36,8 @@ class LinkLessonItem(private var lessonData: StuLessonData) :
     }
     lp.setNewData(newData)
     lessonData = newData
+    getRootView()?.requestLayout()
+    refreshShowOverlapTag()
   }
   
   override fun createView(context: Context): LinkLessonView {

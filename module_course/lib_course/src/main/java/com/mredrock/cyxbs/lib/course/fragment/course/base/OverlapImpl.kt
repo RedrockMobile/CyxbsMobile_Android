@@ -18,6 +18,11 @@ import java.util.*
 /**
  * 操控重叠的类
  *
+ * 功能如下：
+ * - 拦截 [IOverlapItem] 的添加，然后延后自动添加部分符合要求的 item
+ * - 观察 item 的移除回调。在被移除时自动取消重叠
+ * - 观察 View 的 Visibility，在设置成 GONE 或 VISIBLE 时自动改变重叠状态 (INVISIBLE 不改变)
+ *
  * ## 特别注意
  * - 如果你的 item 实现了 [IOverlapItem] 接口，那么在使用 addItem() 添加时会被拦截添加
  * - 然后在下一个 Runnable 中添加 **部分** 之前被拦截的 item (原因请看下方)
@@ -39,7 +44,8 @@ abstract class OverlapImpl : FoldImpl(), IOverlapContainer {
     return o1.compareTo(o2)
   }
   
-  final override fun changeOverlap(item: IOverlapItem, isOverlap: Boolean): Boolean {
+  final override fun changeOverlap(item: IOverlapItem?, isOverlap: Boolean): Boolean {
+    if (item == null) return false
     if (mItemInParentSet.contains(item)) {
       val result = if (isOverlap) setOverlap(item) else deleteOverlap(item)
       if (result) {
@@ -110,8 +116,7 @@ abstract class OverlapImpl : FoldImpl(), IOverlapContainer {
           if (newVisibility == View.INVISIBLE) return // 只监听 GONE 和 VISIBLE
           val item = course.getItemByView(child)
           if (item is IOverlapItem) {
-            deleteOverlap(item)
-            tryPostRefreshOverlapRunnable()
+            changeOverlap(item, false)
           }
         }
   
@@ -119,8 +124,7 @@ abstract class OverlapImpl : FoldImpl(), IOverlapContainer {
           if (oldVisibility == View.INVISIBLE) return // 只监听 GONE 和 VISIBLE
           val item = course.getItemByView(child)
           if (item is IOverlapItem) {
-            setOverlap(item)
-            tryPostRefreshOverlapRunnable()
+            changeOverlap(item, true)
           }
         }
       }

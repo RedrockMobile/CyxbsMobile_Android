@@ -38,7 +38,7 @@ class HomeWeekFragment : CourseWeekFragment(), IHomePageFragment {
   override val mWeek by arguments<Int>()
   
   // 供外部调用
-  val week: Int
+  override val week: Int
    get() = mWeek
   
   override val parentViewModel by createViewModelLazy(
@@ -78,8 +78,11 @@ class HomeWeekFragment : CourseWeekFragment(), IHomePageFragment {
       .observe {
         affairContainerProxy.diffRefresh(it.affair)
         selfLessonContainerProxy.diffRefresh(it.self)
-        linkLessonContainerProxy.diffRefresh(it.link) { data ->
-          if (mIsShowLinkEventAfterClick == true && parentViewModel.currentItem == mWeek && data.isNotEmpty()) {
+        linkLessonContainerProxy.diffRefresh(it.link) {
+          if (mIsShowLinkEventAfterClick == true
+            && parentViewModel.currentItem.value == mWeek
+            && it.link.isNotEmpty()
+          ) {
             // 这时说明触发了关联人的显示，需要开启入场动画
             linkLessonContainerProxy.startAnimation()
           }

@@ -36,6 +36,8 @@ class AffairItem(
     }
     lp.setNewData(newData)
     affairData = newData
+    getRootView()?.requestLayout()
+    refreshShowOverlapTag()
   }
   
   override fun createView(context: Context): AffairView {

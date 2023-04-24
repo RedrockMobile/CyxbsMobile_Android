@@ -5,10 +5,8 @@ import android.view.View
 import android.view.animation.AlphaAnimation
 import androidx.annotation.CallSuper
 import com.mredrock.cyxbs.lib.course.fragment.course.expose.container.ICourseContainer
-import com.mredrock.cyxbs.lib.course.fragment.course.expose.wrapper.ICourseWrapper
 import com.mredrock.cyxbs.lib.course.internal.item.IItem
 import com.mredrock.cyxbs.lib.course.internal.item.IItemContainer
-import com.mredrock.cyxbs.lib.course.internal.view.course.ICourseViewGroup
 import com.mredrock.cyxbs.lib.course.item.affair.IAffairItem
 import com.mredrock.cyxbs.lib.course.item.lesson.ILessonItem
 import com.mredrock.cyxbs.lib.course.utils.forEachInline

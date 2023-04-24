@@ -3,7 +3,7 @@ package com.mredrock.cyxbs.course.page.course.utils.container
 import com.mredrock.cyxbs.course.page.course.data.StuLessonData
 import com.mredrock.cyxbs.course.page.course.item.lesson.SelfLessonItem
 import com.mredrock.cyxbs.course.page.course.utils.container.base.ItemPoolController
-import com.mredrock.cyxbs.lib.course.fragment.course.expose.container.ICourseContainer
+import com.mredrock.cyxbs.lib.course.fragment.page.ICoursePage
 
 /**
  * 代理添加 [SelfLessonItem]
@@ -17,8 +17,8 @@ import com.mredrock.cyxbs.lib.course.fragment.course.expose.container.ICourseCon
  * @date 2022/9/10 17:27
  */
 class SelfLessonContainerProxy(
-  val container: ICourseContainer
-) : ItemPoolController<SelfLessonItem, StuLessonData>(container) {
+  val page: ICoursePage
+) : ItemPoolController<SelfLessonItem, StuLessonData>(page) {
   
   override fun areItemsTheSame(oldItem: StuLessonData, newItem: StuLessonData): Boolean {
     return StuLessonData.areItemsTheSame(oldItem, newItem)
@@ -31,15 +31,27 @@ class SelfLessonContainerProxy(
   override val itemClass: Class<SelfLessonItem>
     get() = SelfLessonItem::class.java
   
+  override fun onChanged(oldData: StuLessonData, newData: StuLessonData) {
+    val item = mOldDataMap[oldData]
+    page.changeOverlap(item, false) // 取消重叠
+    super.onChanged(oldData, newData)
+    page.changeOverlap(item, true) // 恢复重叠
+  }
+  
   override fun addItem(item: SelfLessonItem) {
-    container.addLesson(item)
+    page.addLesson(item)
   }
   
   override fun removeItem(item: SelfLessonItem) {
-    container.removeLesson(item)
+    page.removeLesson(item)
   }
   
   override fun newItem(data: StuLessonData): SelfLessonItem {
     return SelfLessonItem(data)
+  }
+  
+  override fun onDiffRefreshOver(oldData: List<StuLessonData>, newData: List<StuLessonData>) {
+    super.onDiffRefreshOver(oldData, newData)
+    page.refreshOverlap() // 刷新重叠
   }
 }
