@@ -139,7 +139,7 @@ abstract class AbstractLongPressDispatcher : IPointerDispatcher {
     
     private val mLongPressRunnable = object : Runnable {
       override fun run() {
-        longPressStart()
+        longPressed()
       }
       
       fun start() {
@@ -151,9 +151,9 @@ abstract class AbstractLongPressDispatcher : IPointerDispatcher {
       }
     }
     
-    private fun longPressStart() {
+    private fun longPressed() {
       mIsInLongPress = true
-      handler.onLongPressStart()
+      handler.onLongPressed()
     }
     
     /**

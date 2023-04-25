@@ -4,8 +4,7 @@ import android.content.Context
 import android.view.View
 import com.mredrock.cyxbs.course.page.course.item.base.TouchItemImpl
 import com.mredrock.cyxbs.course.page.course.item.view.IOverlapTag
-import com.mredrock.cyxbs.lib.course.fragment.course.expose.overlap.IOverlapItem
-import com.mredrock.cyxbs.lib.course.internal.item.forEachRow
+import com.mredrock.cyxbs.lib.course.item.overlap.IOverlapItem
 
 /**
  * 课表 item 的基类
@@ -25,13 +24,14 @@ abstract class BaseItem<V> : TouchItemImpl()
   
   override fun onRefreshOverlap() {
     super.onRefreshOverlap()
-    var isNeedShowOverlapTag = false
-    lp.forEachRow { row ->
-      if (overlap.getBelowItem(row, lp.singleColumn) != null) {
-        isNeedShowOverlapTag = true
-        return@forEachRow
-      }
-    }
+    refreshShowOverlapTag()
+  }
+  
+  /**
+   * 刷新显示 item 右上角重叠标志
+   */
+  fun refreshShowOverlapTag() {
+    val isNeedShowOverlapTag = overlap.hasBelowItem()
     getChildIterable().forEach {
       if (it is IOverlapTag) {
         it.setIsShowOverlapTag(isNeedShowOverlapTag)

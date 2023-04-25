@@ -1,7 +1,8 @@
-package com.mredrock.cyxbs.lib.course.fragment.course.expose.overlap
+package com.mredrock.cyxbs.lib.course.item.overlap
 
 import android.util.SparseArray
 import androidx.core.util.forEach
+import androidx.core.util.isNotEmpty
 import com.mredrock.cyxbs.lib.course.utils.getOrPut
 
 /**
@@ -18,9 +19,14 @@ class OverlapHelper(
   private val mAboveItemByRowColumn = SparseArray<SparseArray<IOverlapItem>>()
   private val mBelowItemByRowColumn = SparseArray<SparseArray<IOverlapItem>>()
   
+  // 刷新动画上锁次数
+  private var mRefreshAnimLockCount = 0
+  
   override fun isAddIntoParent() = logic.isAddIntoParent()
   
-  override fun refreshOverlap() = logic.refreshOverlap()
+  override fun refreshOverlap(isAllowAnim: Boolean) {
+    logic.refreshOverlap(mRefreshAnimLockCount == 0 && isAllowAnim)
+  }
   
   override fun clearOverlap() {
     mAboveItemByRowColumn.clear()
@@ -33,13 +39,23 @@ class OverlapHelper(
   }
   
   override fun onAboveItem(row: Int, column: Int, item: IOverlapItem?) {
-    mAboveItemByRowColumn.getOrPut(row) { SparseArray() }
-      .put(column, item)
+    mAboveItemByRowColumn.getOrPut(row) { SparseArray() }.apply {
+      if (item == null) {
+        delete(column)
+      } else {
+        put(column, item)
+      }
+    }
   }
   
   override fun onBelowItem(row: Int, column: Int, item: IOverlapItem?) {
-    mBelowItemByRowColumn.getOrPut(row) { SparseArray() }
-      .put(column, item)
+    mBelowItemByRowColumn.getOrPut(row) { SparseArray() }.apply {
+      if (item == null) {
+        delete(column)
+      } else {
+        put(column, item)
+      }
+    }
   }
   
   override fun getAboveItem(row: Int, column: Int): IOverlapItem? {
@@ -56,6 +72,13 @@ class OverlapHelper(
     return list
   }
   
+  override fun hasAboveItem(): Boolean {
+    mAboveItemByRowColumn.forEach { _, array ->
+      if (array.isNotEmpty()) return true
+    }
+    return false
+  }
+  
   override fun getBelowItem(row: Int, column: Int): IOverlapItem? {
     return mBelowItemByRowColumn.get(row)?.get(column)
   }
@@ -70,6 +93,21 @@ class OverlapHelper(
     return list
   }
   
+  override fun hasBelowItem(): Boolean {
+    mBelowItemByRowColumn.forEach { _, array ->
+      if (array.isNotEmpty()) return true
+    }
+    return false
+  }
+  
+  override fun lockRefreshAnim() {
+    mRefreshAnimLockCount++
+  }
+  
+  override fun unlockRefreshAnim() {
+    mRefreshAnimLockCount--
+  }
+  
   interface IOverlapLogic {
   
     /**
@@ -80,7 +118,7 @@ class OverlapHelper(
     /**
      * [IOverlap.refreshOverlap]
      */
-    fun refreshOverlap()
+    fun refreshOverlap(isAllowAnim: Boolean)
   
     /**
      * 需要清除重叠区域时的回调

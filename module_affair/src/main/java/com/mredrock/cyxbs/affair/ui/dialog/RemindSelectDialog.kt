@@ -19,17 +19,12 @@ class RemindSelectDialog(context: Context, callback: (text: String, minute: Int)
   
   companion object {
     private val REMIND_ARRAY = arrayOf("不提醒", "提前5分钟", "提前10分钟", "提前20分钟", "提前30分钟", "提前1小时")
-    
+  
     fun getTextByMinute(minute: Int): String {
-      return when (minute) {
-        0 -> "不提醒"
-        5 -> "提前5分钟"
-        10 -> "提前10分钟"
-        20 -> "提前20分钟"
-        30 -> "提前30分钟"
-        60 -> "提前1小时"
-        else -> "不提醒"
-      }
+      if (minute == 0) return "不提醒"
+      val h = (minute / 60).let { if (it == 0) "" else "${it}小时" }
+      val m = (minute % 60).let { if (it == 0) "" else "${it}分钟" }
+      return "提前${h}${m}"
     }
   }
   

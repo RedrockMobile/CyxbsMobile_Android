@@ -17,9 +17,9 @@ import com.mredrock.cyxbs.lib.course.item.lesson.ILessonItem
 import com.mredrock.cyxbs.lib.course.item.lesson.LessonPeriod
 import com.mredrock.cyxbs.lib.course.item.touch.ITouchItem
 import com.mredrock.cyxbs.lib.course.item.touch.ITouchItemHelper
-import com.mredrock.cyxbs.lib.course.item.touch.helper.move.IMovableItemHelperConfig
-import com.mredrock.cyxbs.lib.course.item.touch.helper.move.IMovableListener
-import com.mredrock.cyxbs.lib.course.item.touch.helper.move.LocationUtil
+import com.mredrock.cyxbs.lib.course.item.touch.helper.move.IMovableItemConfig
+import com.mredrock.cyxbs.lib.course.item.touch.helper.move.IMovableItemListener
+import com.mredrock.cyxbs.lib.course.item.touch.helper.move.utils.LocationUtil
 import com.mredrock.cyxbs.lib.course.item.touch.helper.move.MovableItemHelper
 import com.mredrock.cyxbs.lib.course.item.view.CommonLessonView
 import com.ndhzs.netlayout.attrs.NetLayoutParams
@@ -58,7 +58,7 @@ class StuLessonItem(
   override fun initializeTouchItemHelper(): List<ITouchItemHelper> {
     return super.initializeTouchItemHelper() + listOf(
       MovableItemHelper(
-        object : IMovableItemHelperConfig {
+        object : IMovableItemConfig {
           override fun isMovableToNewLocation(
             page: ICoursePage, item: ITouchItem,
             child: View, newLocation: LocationUtil.Location
@@ -68,12 +68,11 @@ class StuLessonItem(
         }
       ).apply {
         addMovableListener(
-          object : IMovableListener {
-            override fun onLongPressStart(
+          object : IMovableItemListener {
+            override fun onLongPressed(
               page: ICoursePage, item: ITouchItem, child: View,
-              initialX: Int, initialY: Int, x: Int, y: Int
+              x: Int, y: Int, pointerId: Int
             ) {
-              super.onLongPressStart(page, item, child, initialX, initialY, x, y)
               page.changeOverlap(this@StuLessonItem, false) // 暂时取消重叠
             }
         
@@ -81,7 +80,6 @@ class StuLessonItem(
               newLocation: LocationUtil.Location?,
               page: ICoursePage, item: ITouchItem, child: View
             ) {
-              super.onOverAnimEnd(newLocation, page, item, child)
               page.changeOverlap(this@StuLessonItem, true) // 恢复重叠
             }
           }

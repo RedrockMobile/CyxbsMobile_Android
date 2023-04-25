@@ -10,7 +10,7 @@ import com.mredrock.cyxbs.config.config.SchoolCalendar
 import com.mredrock.cyxbs.course.page.course.ui.home.HomeSemesterFragment
 import com.mredrock.cyxbs.course.page.course.ui.home.HomeWeekFragment
 import com.mredrock.cyxbs.course.page.course.ui.home.IHomePageFragment
-import com.mredrock.cyxbs.course.page.course.ui.home.widget.MovableTouchAffairItem
+import com.mredrock.cyxbs.course.page.course.ui.home.widget.HomeTouchAffairItem
 import com.mredrock.cyxbs.lib.course.fragment.page.CoursePageFragment
 import com.mredrock.cyxbs.lib.course.helper.affair.CreateAffairDispatcher
 import com.mredrock.cyxbs.lib.course.helper.affair.expose.ICreateAffairConfig
@@ -58,26 +58,16 @@ class PageFragmentHelper<T> where T: IHomePageFragment, T: CoursePageFragment {
         .firstElement()
         .observeOn(AndroidSchedulers.mainThread())
         .safeSubscribeBy {
-          when (this) {
-            is HomeSemesterFragment -> {
-              if (it == 0) {
-                // 判断周数，只对当前周进行动画
-                EnterAnimUtils.startEnterAnim(course, parentViewModel, viewLifecycleOwner)
-              }
-            }
-            is HomeWeekFragment -> {
-              if (it == week) {
-                // 判断周数，只对当前周进行动画
-                EnterAnimUtils.startEnterAnim(course, parentViewModel, viewLifecycleOwner)
-              }
-            }
+          if (it == week) {
+            // 判断周数，只对当前周进行动画
+            EnterAnimUtils.startEnterAnim(course, parentViewModel, viewLifecycleOwner)
           }
         }
     }
   }
   
   /**
-   * 点击中午和傍晚的折叠
+   * 中午和傍晚的默认折叠状态
    */
   private fun T.initFoldLogic(isFragmentRebuilt: Boolean) {
     if (!isFragmentRebuilt) {
@@ -121,17 +111,12 @@ class PageFragmentHelper<T> where T: IHomePageFragment, T: CoursePageFragment {
           course: ICourseViewGroup,
           event: IPointerEvent
         ): ITouchAffairItem {
-          return MovableTouchAffairItem(course) // 支持长按移动 item 的 ITouchAffairItem
+          return HomeTouchAffairItem(course.getContext()) // 支持长按移动 item 的 ITouchAffairItem
         }
       }
     )
     // 事务的点击监听
     dispatcher.setOnClickListener {
-      val week = when (this@initCreateAffair) {
-        is HomeSemesterFragment -> 0
-        is HomeWeekFragment -> week
-        else -> error("")
-      }
       // 打开编辑事务详细的界面
       IAffairService::class.impl
         .startActivityForAddAffair(week, lp.weekNum - 1, getBeginLesson(lp.startRow), lp.length)
@@ -143,15 +128,11 @@ class PageFragmentHelper<T> where T: IHomePageFragment, T: CoursePageFragment {
         
         private var mIsInLongPress = false
         
-        override fun onLongPressStart(pointerId: Int, initialRow: Int, initialColumn: Int) {
+        override fun onLongPressed(pointerId: Int, row: Int, column: Int) {
           mIsInLongPress = true
         }
   
-        override fun onShowTouchAffairItem(
-          course: ICourseViewGroup,
-          item: ITouchAffairItem,
-          initialRow: Int
-        ) {
+        override fun onShowTouchAffairItem(course: ICourseViewGroup, item: ITouchAffairItem) {
           if (!mIsInLongPress) {
             // 没有触发长按时显示 TouchAffairItem 说明它只是普通的点击
             tryToastSingleRow()

@@ -17,6 +17,8 @@ import com.ndhzs.netlayout.touch.multiple.event.IPointerEvent
 interface ITouchItemHelper {
   
   /**
+   * - 能接受到所有触摸在 item 上的 [IPointerEvent] 事件 (子类应自己筛选需要的 pointerId)
+   *
    * ## 注意
    * 为了与子 View 的点击事件共存，该方法能接收到 DOWN 事件(因此肯定会收到 UP、CANCEL)，
    * 但接收不到 MOVE 中相邻移动距离小于 touchSlop 的事件。

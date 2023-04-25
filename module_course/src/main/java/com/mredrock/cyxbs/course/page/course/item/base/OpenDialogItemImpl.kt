@@ -4,7 +4,7 @@ import com.mredrock.cyxbs.course.page.course.data.ICourseItemData
 import com.mredrock.cyxbs.course.page.course.ui.dialog.CourseBottomDialog
 import com.mredrock.cyxbs.lib.base.utils.Umeng
 import com.mredrock.cyxbs.lib.course.internal.item.forEachRow
-import com.mredrock.cyxbs.lib.course.item.single.AbstractOverlapSingleDayItem
+import com.mredrock.cyxbs.lib.course.item.overlap.AbstractOverlapSingleDayItem
 import java.util.*
 
 /**
@@ -28,7 +28,7 @@ abstract class OpenDialogItemImpl : AbstractOverlapSingleDayItem() {
    * 显示点击课表 item 后的 [CourseBottomDialog]
    */
   protected open fun showCourseBottomDialog() {
-    val context = getView()?.context ?: return
+    val context = getNetView()?.context ?: return
     val treeSet = TreeSet<OpenDialogItemImpl> { o1, o2 ->
       o2.compareTo(o1) // 这里需要逆序
     }

@@ -1,4 +1,4 @@
-package com.mredrock.cyxbs.lib.course.item.touch.helper.move
+package com.mredrock.cyxbs.lib.course.item.touch.helper.move.utils
 
 import android.view.View
 import androidx.annotation.UiThread
@@ -53,10 +53,10 @@ object LocationUtil {
     var leftColumn = parent.getColumn(l)
     var rightColumn = parent.getColumn(r)
     
-    val topDistance = parent.getRowsHeight(0, topRow) - t
-    val bottomDistance = b - parent.getRowsHeight(0, bottomRow - 1)
-    val leftDistance = parent.getColumnsWidth(0, leftColumn) - l
-    val rightDistance = r - parent.getColumnsWidth(0, rightColumn - 1)
+    val topDistance = parent.getRowsHeight(0, topRow) + parent.getPaddingTop() - t
+    val bottomDistance = b - (parent.getRowsHeight(0, bottomRow - 1) + parent.getPaddingTop())
+    val leftDistance = parent.getColumnsWidth(0, leftColumn) + parent.getPaddingLeft() - l
+    val rightDistance = r - (parent.getColumnsWidth(0, rightColumn - 1) + parent.getPaddingLeft())
     
     /*
     * 第一次修正：

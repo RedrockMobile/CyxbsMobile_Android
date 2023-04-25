@@ -5,7 +5,6 @@ import androidx.recyclerview.widget.AsyncDifferConfig
 import androidx.recyclerview.widget.AsyncListDiffer
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListUpdateCallback
-import java.util.Collections
 
 /**
  * 差分比较刷新
@@ -27,11 +26,13 @@ abstract class DiffRefreshController<Data : Any> : DiffUtil.ItemCallback<Data>()
   /**
    * 异步差分刷新
    */
-  fun diffRefresh(newData: List<Data>, action: ((List<Data>) -> Unit)? = null) {
+  fun diffRefresh(newData: List<Data>, action: (() -> Unit)? = null) {
+    val oldData = mOldData
     val data = ArrayList(newData) // 不能直接使用传来的数据
     mAsyncListDiffer.submitList(data) {
       mOldData = data // 保存旧数据，提供给下次刷新使用
-      action?.invoke(Collections.unmodifiableList(data))
+      action?.invoke()
+      onDiffRefreshOver(oldData, data)
     }
   }
   
@@ -71,6 +72,11 @@ abstract class DiffRefreshController<Data : Any> : DiffUtil.ItemCallback<Data>()
   protected abstract fun onRemoved(oldData: Data)
   
   protected abstract fun onChanged(oldData: Data, newData: Data)
+  
+  /**
+   * 在差分刷新结束时回调
+   */
+  protected open fun onDiffRefreshOver(oldData: List<Data>, newData: List<Data>) {}
   
   @Suppress("LeakingThis")
   private val mAsyncListDiffer = AsyncListDiffer(

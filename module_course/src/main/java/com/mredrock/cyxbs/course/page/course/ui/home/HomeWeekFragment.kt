@@ -6,7 +6,7 @@ import androidx.core.os.bundleOf
 import androidx.fragment.app.createViewModelLazy
 import androidx.lifecycle.distinctUntilChanged
 import androidx.lifecycle.map
-import com.mredrock.cyxbs.course.page.course.ui.home.utils.MovableAffairManager
+import com.mredrock.cyxbs.course.page.course.ui.home.utils.AffairManager
 import com.mredrock.cyxbs.course.page.course.ui.home.utils.PageFragmentHelper
 import com.mredrock.cyxbs.course.page.course.ui.home.viewmodel.HomeCourseViewModel
 import com.mredrock.cyxbs.course.page.course.utils.container.AffairContainerProxy
@@ -38,7 +38,7 @@ class HomeWeekFragment : CourseWeekFragment(), IHomePageFragment {
   override val mWeek by arguments<Int>()
   
   // 供外部调用
-  val week: Int
+  override val week: Int
    get() = mWeek
   
   override val parentViewModel by createViewModelLazy(
@@ -64,7 +64,7 @@ class HomeWeekFragment : CourseWeekFragment(), IHomePageFragment {
   
   override val selfLessonContainerProxy = SelfLessonContainerProxy(this)
   override val linkLessonContainerProxy = LinkLessonContainerProxy(this)
-  override val affairContainerProxy = AffairContainerProxy(this, MovableAffairManager(this))
+  override val affairContainerProxy = AffairContainerProxy(this, AffairManager(this))
   
   private fun initObserve() {
     parentViewModel.showLinkEvent
@@ -78,8 +78,11 @@ class HomeWeekFragment : CourseWeekFragment(), IHomePageFragment {
       .observe {
         affairContainerProxy.diffRefresh(it.affair)
         selfLessonContainerProxy.diffRefresh(it.self)
-        linkLessonContainerProxy.diffRefresh(it.link) { data ->
-          if (mIsShowLinkEventAfterClick == true && parentViewModel.currentItem == mWeek && data.isNotEmpty()) {
+        linkLessonContainerProxy.diffRefresh(it.link) {
+          if (mIsShowLinkEventAfterClick == true
+            && parentViewModel.currentItem.value == mWeek
+            && it.link.isNotEmpty()
+          ) {
             // 这时说明触发了关联人的显示，需要开启入场动画
             linkLessonContainerProxy.startAnimation()
           }
