@@ -1,7 +1,7 @@
 package com.mredrock.cyxbs.lib.course.item.touch.helper.expand
 
+import android.graphics.Canvas
 import android.view.View
-import android.view.ViewGroup
 import com.mredrock.cyxbs.lib.course.fragment.page.ICoursePage
 import com.mredrock.cyxbs.lib.course.internal.view.course.ICourseScrollControl
 import com.mredrock.cyxbs.lib.course.item.touch.ITouchItem
@@ -9,6 +9,7 @@ import com.mredrock.cyxbs.lib.course.item.touch.helper.longpress.AbstractLongPre
 import com.mredrock.cyxbs.lib.course.item.touch.helper.longpress.ILongPressItemListener
 import com.mredrock.cyxbs.lib.course.utils.forEachReversed
 import com.mredrock.cyxbs.lib.utils.utils.VibratorUtil
+import com.ndhzs.netlayout.draw.ItemDecoration
 import com.ndhzs.netlayout.touch.multiple.event.IPointerEvent
 import kotlin.math.min
 
@@ -24,7 +25,7 @@ import kotlin.math.min
  * 2023/4/19 10:35
  */
 class ExpandableItemHelper(
-  val config: IExpandableItemConfig = IExpandableItemConfig
+  val config: IExpandableItemConfig = IExpandableItemConfig.Default
 ) : AbstractLongPressItemHelper(config) {
   
   /**
@@ -52,18 +53,25 @@ class ExpandableItemHelper(
     private var mIsLockedNoon = false // 是否锁定了中午时间段
     private var mIsLockedDusk = false // 是否锁定了中午时间段
     
-    // Scroll 滚动时回调 move()
+    private var mIsMoving = false // 控制 move 的调用
+    
+    // Scroll 滚动不一定会导致 mItemDecoration 被回调，所以需要强制刷新
     private val mScrollYChangedListener =
       ICourseScrollControl.OnScrollYChangedListener { _, _ ->
         if (mIsInLongPress == true) {
-          move()
+          mIsMoving = true
+          mCoursePage?.course?.invalidate()
         }
       }
     
-    // 布局发送改变回调 move()
-    private val mLayoutChangeListener = View.OnLayoutChangeListener { _, _, _, _, _, _, _, _, _ ->
-      if (mIsInLongPress == true) {
-        move()
+    // 用于在每一帧时回调 move() 方法
+    private val mItemDecoration = object : ItemDecoration {
+      
+      override fun onDrawBelow(canvas: Canvas, view: View) {
+        if (mIsMoving) {
+          move() // 调用 move 方法
+          mIsMoving = false
+        }
       }
     }
     
@@ -91,7 +99,7 @@ class ExpandableItemHelper(
       unfoldNoonDuskIfNeed()
       
       course.addOnScrollYChanged(mScrollYChangedListener)
-      (child.parent as ViewGroup).addOnLayoutChangeListener(mLayoutChangeListener)
+      course.addItemDecoration(mItemDecoration)
       
       mExpandableItemListeners.forEachReversed {
         it.onLongPressed(page, item, child, x, y, pointerId)
@@ -110,7 +118,8 @@ class ExpandableItemHelper(
     }
     
     override fun onMove(page: ICoursePage, item: ITouchItem, child: View, x: Int, y: Int) {
-      move()
+      mIsMoving = true
+      page.course.invalidate() // 之后会回调 mItemDecoration
     }
     
     override fun onEventEnd(
@@ -131,7 +140,7 @@ class ExpandableItemHelper(
           page.unlockFoldDusk()
         }
         course.removeOnScrollYChanged(mScrollYChangedListener)
-        (child.parent as ViewGroup).removeOnLayoutChangeListener(mLayoutChangeListener)
+        course.removeItemDecoration(mItemDecoration)
       }
       mExpandableItemListeners.forEachReversed {
         it.onEventEnd(page, item, child, event, isInLongPress, isCancel)
@@ -172,13 +181,14 @@ class ExpandableItemHelper(
      * item 扩展的核心代码
      *
      * ### 不要直接调用该方法
-     * 请使用 page.course.invalidate() 来间接调用该方法 (invalidate() -> mItemDecoration -> move())。
+     * 请使用 page.course.invalidate() 和设置 mIsMoving=true 来间接调用该方法 (invalidate() -> mItemDecoration -> move())。
      * 原因在于：
-     * - 减少计算次数
+     * - 一帧只能回调一次 move，多次回调会多次计算导致效果出现问题 (比如滚轴会加倍移动)
      * - 如果手动调用，会导致调用 [changeScrollYIfNeed] 后出现鬼畜的移动效果
      */
     private fun move() {
       if (mIsInLongPress != true) return
+      if (!mIsMoving) return
       val item = mTouchItem ?: return
       val view = mItemView ?: return
       val page = mCoursePage ?: return

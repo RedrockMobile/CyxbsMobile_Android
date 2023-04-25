@@ -1,5 +1,6 @@
 package com.mredrock.cyxbs.lib.course.helper.affair
 
+import android.graphics.Canvas
 import android.view.View
 import android.view.ViewGroup
 import com.mredrock.cyxbs.lib.course.helper.affair.expose.IBoundary
@@ -9,6 +10,7 @@ import com.mredrock.cyxbs.lib.course.helper.base.ILongPressTouchHandler
 import com.mredrock.cyxbs.lib.course.internal.view.course.ICourseScrollControl
 import com.mredrock.cyxbs.lib.course.internal.view.course.ICourseViewGroup
 import com.mredrock.cyxbs.lib.utils.utils.VibratorUtil
+import com.ndhzs.netlayout.draw.ItemDecoration
 import com.ndhzs.netlayout.touch.multiple.event.IPointerEvent
 import com.ndhzs.netlayout.touch.multiple.event.IPointerEvent.Action.*
 import kotlin.math.max
@@ -38,15 +40,26 @@ class CreateAffairHandler(
   
   private var mPointerId = 0
   
-  // Scroll 滚动时回调 refreshTouchAffairView()
+  private var mIsMoving = false // 控制 refreshTouchAffairView 的调用
+  
+  // Scroll 滚动不一定会导致 mItemDecoration 被回调，所以需要强制刷新
   private val mScrollYChangedListener =
     ICourseScrollControl.OnScrollYChangedListener { _, _ ->
-      refreshTouchAffairView()
+      if (mIsInLongPress) {
+        mIsMoving = true
+        course.invalidate() // 触发刷新，然后 mItemDecoration 会回调 refreshTouchAffairView
+      }
     }
   
-  // 布局发送改变回调 refreshTouchAffairView()
-  private val mLayoutChangeListener = View.OnLayoutChangeListener { _, _, _, _, _, _, _, _, _ ->
-    refreshTouchAffairView()
+  // 用于在每一帧时回调 refreshTouchAffairView() 方法
+  private val mItemDecoration = object : ItemDecoration {
+    
+    override fun onDrawBelow(canvas: Canvas, view: View) {
+      if (mIsMoving) {
+        refreshTouchAffairView() // 调用 refreshTouchAffairView 方法
+        mIsMoving = false
+      }
+    }
   }
   
   private var mIsInLongPress = false
@@ -72,13 +85,14 @@ class CreateAffairHandler(
       }
       MOVE -> {
         mScrollRunnable.startIfCan() // 触发 mScrollRunnable 中的核心代码
-        refreshTouchAffairView()
+        mIsMoving = true
+        course.invalidate() // 触发刷新，然后 mItemDecoration 会回调 refreshTouchAffairView
       }
       UP, CANCEL -> {
         if (mIsInLongPress) {
           mScrollRunnable.cancel()
           course.removeOnScrollYChanged(mScrollYChangedListener)
-          view.removeOnLayoutChangeListener(mLayoutChangeListener)
+          course.removeItemDecoration(mItemDecoration)
           touchAffairItem.onMoveEnd(course)
           iTouch.onTouchEnd(
             mPointerId,
@@ -97,6 +111,7 @@ class CreateAffairHandler(
     // 禁止父布局拦截
     course.getParent().requestDisallowInterceptTouchEvent(true)
     course.addOnScrollYChanged(mScrollYChangedListener)
+    course.addItemDecoration(mItemDecoration)
     
     VibratorUtil.start(36) // 长按被触发来个震动提醒
     iTouch.onLongPressed(mPointerId, mInitialRow, mInitialColumn)
@@ -106,7 +121,18 @@ class CreateAffairHandler(
     iTouch.onShowTouchAffairItem(course, touchAffairItem)
   }
   
+  /**
+   * 刷新 [ITouchAffairItem] 的核心方法
+   *
+   * ### 不要直接调用该方法
+   * 请使用 page.course.invalidate() 和设置 mIsMoving=true 来间接调用该方法
+   * (invalidate() -> mItemDecoration -> refreshTouchAffairView())。
+   *
+   * 原因在于：
+   * - 一帧只能回调一次 refreshTouchAffairView，多次回调会多次计算导致效果出现问题 (比如滚轴会加倍移动)
+   */
   private fun refreshTouchAffairView() {
+    if (!mIsMoving) return
     val y = course.getAbsoluteY(mPointerId) + course.getScrollCourseY()
     val nowTouchRow = course.getRow(y) // 当前触摸的行数
     if (nowTouchRow < mTouchRow) {
@@ -158,6 +184,7 @@ class CreateAffairHandler(
       if (isAllowScrollAndCalculateVelocity()) {
         // 核心运行代码
         course.scrollCourseBy(velocity) // 滚动
+        mIsMoving = true
         course.invalidate() // 刷新，之后会回调 mItemDecoration
         course.postOnAnimation(this) // 一直循环下去
       } else {
