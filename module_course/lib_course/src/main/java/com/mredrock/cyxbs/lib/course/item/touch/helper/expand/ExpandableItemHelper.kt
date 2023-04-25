@@ -39,9 +39,10 @@ class ExpandableItemHelper(
     mExpandableItemListeners.remove(l)
   }
   
-  // ExpandableHandler 直接放进 mExpandableItemListeners 中
+  // ExpandableHandler 不能放进 mExpandableItemListeners 中，因为 mExpandableItemListeners 是倒序遍历的
+  // ExpandableHandler 需要保证第一个回调
   private val mExpandableHandler = config.getExpandableHandler()
-  private val mExpandableItemListeners = arrayListOf<IExpandableItemListener>(mExpandableHandler)
+  private val mExpandableItemListeners = arrayListOf<IExpandableItemListener>()
   private val mLongPressItemListener = LongPressExpandableItemListener()
   
   init {
@@ -78,6 +79,7 @@ class ExpandableItemHelper(
     override fun onDown(page: ICoursePage, item: ITouchItem, child: View, event: IPointerEvent) {
       mIsLockedNoon = false // 重置
       mIsLockedDusk = false // 重置
+      mExpandableHandler.onDown(page, item, child, event)
       mExpandableItemListeners.forEachReversed {
         it.onDown(page, item, child, event)
       }
@@ -101,6 +103,7 @@ class ExpandableItemHelper(
       course.addOnScrollYChanged(mScrollYChangedListener)
       course.addItemDecoration(mItemDecoration)
       
+      mExpandableHandler.onLongPressed(page, item, child, x, y, pointerId)
       mExpandableItemListeners.forEachReversed {
         it.onLongPressed(page, item, child, x, y, pointerId)
       }
@@ -112,6 +115,7 @@ class ExpandableItemHelper(
       child: View,
       event: IPointerEvent
     ) {
+      mExpandableHandler.onLongPressCancel(page, item, child, event)
       mExpandableItemListeners.forEachReversed {
         it.onLongPressCancel(page, item, child, event)
       }
@@ -142,6 +146,7 @@ class ExpandableItemHelper(
         course.removeOnScrollYChanged(mScrollYChangedListener)
         course.removeItemDecoration(mItemDecoration)
       }
+      mExpandableHandler.onEventEnd(page, item, child, event, isInLongPress, isCancel)
       mExpandableItemListeners.forEachReversed {
         it.onEventEnd(page, item, child, event, isInLongPress, isCancel)
       }
@@ -204,6 +209,7 @@ class ExpandableItemHelper(
       
       val x = mLastMoveX
       val y = absoluteY + scrollY
+      mExpandableHandler.onMove(page, item, view, x, y)
       mExpandableItemListeners.forEachReversed {
         it.onMove(page, item, view, x, y)
       }

@@ -17,7 +17,7 @@ open class SingleDayLayoutParams(
   length: Int,
   width: Int = MATCH_PARENT,
   height: Int = MATCH_PARENT,
-  gravity: Int = Gravity.CENTER
+  gravity: Int = Gravity.TOP
 ) : ItemLayoutParams(
   startNode,
   startNode + length - 1,

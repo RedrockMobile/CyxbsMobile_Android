@@ -76,7 +76,9 @@ open class DefaultExpandableHandler : IExpandableItemHandler {
     val side = mSideExpandable
     check(side != null) { "未初始化，mSideExpandable 变量为 null" }
     val course = page.course
-    val centerY = (item.lp.constraintTop + item.lp.constraintBottom) / 2
+    // y 是当前手指触摸值，需要跟 mBoundaryDistance 进行计算才能得出边界值
+    // 所以在这个 centerY 没有设置对时，会出现在某个值左右移动时出现鬼畜的效果
+    val centerY = child.y + child.height / 2
     if (mDownTopOrBottom) {
       // 说明初始时是触摸的上方
       if (y > centerY) {

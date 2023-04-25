@@ -10,6 +10,7 @@ import com.mredrock.cyxbs.lib.course.fragment.page.ICoursePage
  * ## 规定
  * - [onStart] 和 [onEnd] 必须一对一调用
  * - [onChange] 必须在 [onStart] 与 [onEnd] 间调用，在没有发生修改时也可以不调用
+ * - [onChange] 建议只调用一次，因为内部会更新数据库也可能会发送网络数据
  * - 目前只有单一的事务才允许修改，请使用 [isSingleAffair] 判断，如果不判断，则 [onChange] 不会进行真正的数据更新
  * - 必须遵守以上规定，不然将出现数据更新失败
  *

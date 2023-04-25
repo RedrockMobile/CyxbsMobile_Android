@@ -42,9 +42,10 @@ class MovableItemHelper(
     mMovableItemListeners.remove(l)
   }
   
-  // MovableHandler 直接放进 mMovableItemListeners 中
+  // MovableHandler 不能放进 mMovableItemListeners 中，因为 mMovableItemListeners 是倒序遍历的
+  // MovableHandler 需要保证第一个回调
   private val mMovableHandler = config.getMovableHandler()
-  private val mMovableItemListeners = arrayListOf<IMovableItemListener>(mMovableHandler)
+  private val mMovableItemListeners = arrayListOf<IMovableItemListener>()
   private val mLongPressMovableItemListener = LongPressMovableItemListener()
   
   init {
@@ -81,6 +82,7 @@ class MovableItemHelper(
     override fun onDown(page: ICoursePage, item: ITouchItem, child: View, event: IPointerEvent) {
       mIsLockedNoon = false // 重置
       mIsLockedDusk = false // 重置
+      mMovableHandler.onDown(page, item, child, event)
       mMovableItemListeners.forEachReversed {
         it.onDown(page, item, child, event)
       }
@@ -103,6 +105,7 @@ class MovableItemHelper(
       course.addOnScrollYChanged(mScrollYChangedListener)
       course.addItemDecoration(mItemDecoration)
       
+      mMovableHandler.onLongPressed(page, item, child, x, y, pointerId)
       mMovableItemListeners.forEachReversed {
         it.onLongPressed(page, item, child, x, y, pointerId)
       }
@@ -114,6 +117,7 @@ class MovableItemHelper(
       child: View,
       event: IPointerEvent
     ) {
+      mMovableHandler.onLongPressCancel(page, item, child, event)
       mMovableItemListeners.forEachReversed {
         it.onLongPressCancel(page, item, child, event)
       }
@@ -157,6 +161,7 @@ class MovableItemHelper(
         }
         over(newLocation, page, item, child) // 最后执行动画
       }
+      mMovableHandler.onEventEnd(page, item, child, event, isInLongPress, isCancel)
       mMovableItemListeners.forEachReversed {
         it.onEventEnd(page, item, child, event, isInLongPress, isCancel)
       }
@@ -220,6 +225,7 @@ class MovableItemHelper(
       
       val x = mLastMoveX
       val y = absoluteY + scrollY
+      mMovableHandler.onMove(page, item, view, x, y)
       mMovableItemListeners.forEachReversed {
         it.onMove(page, item, view, x, y)
       }
@@ -233,14 +239,17 @@ class MovableItemHelper(
       child: View
     ) {
       fun startAnim(location: LocationUtil.Location?) {
+        mMovableHandler.onOverAnimStart(location, page, item, child)
         mMovableItemListeners.forEachReversed { listener ->
           listener.onOverAnimStart(location, page, item, child)
         }
         MoveAnimation(mMovableHandler.getMoveAnimatorDuration()) { fraction ->
+          mMovableHandler.onOverAnimUpdate(location, page, item, child, fraction)
           mMovableItemListeners.forEachReversed { listener ->
             listener.onOverAnimUpdate(location, page, item, child, fraction)
           }
         }.doOnEnd {
+          mMovableHandler.onOverAnimEnd(location, page, item, child)
           mMovableItemListeners.forEachReversed { listener ->
             listener.onOverAnimEnd(location, page, item, child)
           }
