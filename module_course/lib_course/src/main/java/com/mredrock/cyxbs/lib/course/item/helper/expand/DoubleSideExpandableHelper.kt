@@ -22,9 +22,12 @@ class DoubleSideExpandableHelper : IDoubleSideExpandable {
   
   private var mIsRunning = false
   
-  private var mTopMargin = 0
-  private var mBottomMargin = 0
+  private var mInitialTopMargin = 0
+  private var mInitialBottomMargin = 0
   private var mGravity = Gravity.NO_GRAVITY
+  
+  private var mInitialTopRow = 0
+  private var mInitialBottomRow = 0
   
   private var mTopEndValueAnimator: ValueAnimator? = null
   private var mBottomEndValueAnimator: ValueAnimator? = null
@@ -41,9 +44,11 @@ class DoubleSideExpandableHelper : IDoubleSideExpandable {
     mIsRunning = true
     mTopEndValueAnimator?.end()
     mBottomEndValueAnimator?.end()
-    mTopMargin = item.lp.topMargin
-    mBottomMargin = item.lp.bottomMargin
+    mInitialTopMargin = item.lp.topMargin
+    mInitialBottomMargin = item.lp.bottomMargin
     mGravity = item.lp.gravity
+    mInitialTopRow = item.lp.startRow
+    mInitialBottomRow = item.lp.endRow
   }
   
   override fun onDoubleMove(course: ICourseViewGroup, item: IItem, child: View, y1: Int, y2: Int) {
@@ -60,8 +65,8 @@ class DoubleSideExpandableHelper : IDoubleSideExpandable {
         oldEndRow = endRow
         startRow = row1
         endRow = row2
-        topMargin = mTopMargin
-        bottomMargin = mBottomMargin
+        topMargin = mInitialTopMargin
+        bottomMargin = mInitialBottomMargin
       }
     } else {
       item.lp.apply {
@@ -88,8 +93,8 @@ class DoubleSideExpandableHelper : IDoubleSideExpandable {
         oldEndRow = endRow
         startRow = row
         endRow = row
-        topMargin = mTopMargin
-        bottomMargin = mBottomMargin
+        topMargin = mInitialTopMargin
+        bottomMargin = mInitialBottomMargin
         gravity = mGravity
       }
     } else if (otherRow > row) {
@@ -98,7 +103,7 @@ class DoubleSideExpandableHelper : IDoubleSideExpandable {
         oldEndRow = endRow
         startRow = row
         endRow = otherRow
-        topMargin = mTopMargin
+        topMargin = mInitialTopMargin
         bottomMargin = course.getRowsHeight(0, otherRow) + course.getPaddingTop() - y
         gravity = Gravity.TOP
       }
@@ -109,7 +114,7 @@ class DoubleSideExpandableHelper : IDoubleSideExpandable {
         startRow = otherRow
         endRow = row
         topMargin = y - (course.getRowsHeight(0, otherRow - 1) + course.getPaddingTop())
-        bottomMargin = mBottomMargin
+        bottomMargin = mInitialBottomMargin
         gravity = Gravity.BOTTOM
       }
     }
@@ -117,11 +122,13 @@ class DoubleSideExpandableHelper : IDoubleSideExpandable {
     forEachOnRowChangedListener(course, item, child, oldStartRow, oldEndRow)
   }
   
-  override fun onMoveEnd(course: ICourseViewGroup, item: IItem, child: View) {
+  override fun onMoveEnd(course: ICourseViewGroup, item: IItem, child: View, isValid: Boolean) {
     check(mIsRunning) { "未调用 onMoveStart 方法" }
     val oldStartRow = item.lp.startRow
     val oldEndRow = item.lp.endRow
-    if (runTopMarginAnim(course, item, child) or runBottomMarginAnim(course, item, child)) {
+    if (runTopMarginAnim(course, item, child, isValid)
+      or runBottomMarginAnim(course, item, child, isValid)
+    ) {
       // 使用 or 保证两个都会执行
       forEachAnimStartListener(course, item, child)
     }
@@ -130,25 +137,35 @@ class DoubleSideExpandableHelper : IDoubleSideExpandable {
   }
   
   // 上边界动画
-  private fun runTopMarginAnim(course: ICourseViewGroup, item: IItem, child: View): Boolean {
+  private fun runTopMarginAnim(
+    course: ICourseViewGroup,
+    item: IItem,
+    child: View,
+    isValid: Boolean
+  ): Boolean {
     var nowTopMargin = item.lp.topMargin
-    if (nowTopMargin != mTopMargin) {
+    if (isValid) {
       val finaTopMargin = isFinalTopRow(course, item)
       if (finaTopMargin != null) {
         item.lp.startRow += 1
         nowTopMargin = finaTopMargin
       }
+    } else {
+      nowTopMargin += course.getRowsHeight(mInitialTopRow, item.lp.startRow - 1)
+      item.lp.startRow = mInitialTopRow
+    }
+    if (nowTopMargin != mInitialTopMargin) {
       mTopEndValueAnimator = ValueAnimator.ofFloat(0F, 1F).apply {
         addUpdateListener {
           val fraction = it.animatedFraction
-          item.lp.topMargin = (mTopMargin + (nowTopMargin - mTopMargin) * (1 - fraction)).toInt()
+          item.lp.topMargin = (mInitialTopMargin + (nowTopMargin - mInitialTopMargin) * (1 - fraction)).toInt()
           child.layoutParams = item.lp
         }
         doOnEnd {
           mTopEndValueAnimator = null
           doIfOnAllAnimEnd(course, item, child)
         }
-        duration = getAnimDuration(nowTopMargin - mTopMargin)
+        duration = getAnimDuration(nowTopMargin - mInitialTopMargin)
         start()
       }
     }
@@ -156,32 +173,41 @@ class DoubleSideExpandableHelper : IDoubleSideExpandable {
   }
   
   // 下边界动画
-  private fun runBottomMarginAnim(course: ICourseViewGroup, item: IItem, child: View): Boolean {
+  private fun runBottomMarginAnim(
+    course: ICourseViewGroup,
+    item: IItem,
+    child: View,
+    isValid: Boolean
+  ): Boolean {
     var nowBottomMargin = item.lp.bottomMargin
-    if (nowBottomMargin != mBottomMargin) {
+    if (isValid) {
       val finalBottomMargin = isFinalBottomRow(course, item)
       if (finalBottomMargin != null) {
         item.lp.endRow -= 1
         nowBottomMargin = finalBottomMargin
       }
+    } else {
+      nowBottomMargin += course.getRowsHeight(item.lp.endRow + 1, mInitialBottomRow)
+      item.lp.endRow = mInitialBottomRow
+    }
+    if (nowBottomMargin != mInitialBottomMargin) {
       mBottomEndValueAnimator = ValueAnimator.ofFloat(0F, 1F).apply {
         addUpdateListener {
           val fraction = it.animatedFraction
           item.lp.bottomMargin =
-            (mBottomMargin + (nowBottomMargin - mBottomMargin) * (1 - fraction)).toInt()
+            (mInitialBottomMargin + (nowBottomMargin - mInitialBottomMargin) * (1 - fraction)).toInt()
           child.layoutParams = item.lp
         }
         doOnEnd {
           mBottomEndValueAnimator = null
           doIfOnAllAnimEnd(course, item, child)
         }
-        duration = getAnimDuration(nowBottomMargin - mBottomMargin)
+        duration = getAnimDuration(nowBottomMargin - mInitialBottomMargin)
         start()
       }
     }
     return mBottomEndValueAnimator != null
   }
-  
   
   
   ////////////////////////////////////

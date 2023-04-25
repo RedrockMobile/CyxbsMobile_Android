@@ -5,7 +5,7 @@ import com.mredrock.cyxbs.course.page.course.data.AffairData
 import com.mredrock.cyxbs.course.page.course.data.ICourseItemData
 import com.mredrock.cyxbs.course.page.course.item.BaseItem
 import com.mredrock.cyxbs.course.page.course.item.affair.lp.AffairLayoutParams
-import com.mredrock.cyxbs.course.page.course.item.affair.helper.AffairMovableHelper
+import com.mredrock.cyxbs.course.page.course.item.affair.helper.AffairTouchHelper
 import com.mredrock.cyxbs.course.page.course.utils.container.base.IDataOwner
 import com.mredrock.cyxbs.course.page.course.utils.container.base.IRecycleItem
 import com.mredrock.cyxbs.lib.course.item.affair.IAffairItem
@@ -21,7 +21,7 @@ import com.mredrock.cyxbs.lib.course.item.touch.ITouchItemHelper
  */
 class AffairItem(
   private var affairData: AffairData,
-  private val iMovableAffairManager: IMovableAffairManager
+  private val iAffairManager: IAffairManager
 ) : BaseItem<AffairView>(),
   IDataOwner<AffairData>,
   IAffairItem,
@@ -74,7 +74,7 @@ class AffairItem(
   
   override fun initializeTouchItemHelper(): List<ITouchItemHelper> {
     return super.initializeTouchItemHelper() + listOf(
-      AffairMovableHelper(this, iMovableAffairManager)
+      AffairTouchHelper(iAffairManager)
     )
   }
 }

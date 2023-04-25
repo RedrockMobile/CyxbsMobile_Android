@@ -7,6 +7,9 @@ import com.mredrock.cyxbs.lib.course.internal.view.course.ICourseViewGroup
 /**
  * 单边扩展 Item 的帮助类接口
  *
+ * ## 注意
+ * - 内部通过修改 [IItem.lp] 的 topMargin、bottomMargin、startRow、endRow 实现扩展
+ *
  * @author 985892345
  * 2023/4/19 21:05
  */
@@ -35,8 +38,10 @@ interface ISingleSideExpandable {
   
   /**
    * 移动结束时的回调
+   *
+   * @param isValid 移动是否有效，传入 false 则将还原至 [onMoveStart] 时的状态，当前状态可直接通过 [IItem.lp] 获得
    */
-  fun onMoveEnd(course: ICourseViewGroup, item: IItem, child: View)
+  fun onMoveEnd(course: ICourseViewGroup, item: IItem, child: View, isValid: Boolean)
   
   /**
    * 添加行改变的监听

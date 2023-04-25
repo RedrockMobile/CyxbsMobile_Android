@@ -2,7 +2,7 @@ package com.mredrock.cyxbs.course.page.course.utils.container
 
 import com.mredrock.cyxbs.course.page.course.data.AffairData
 import com.mredrock.cyxbs.course.page.course.item.affair.AffairItem
-import com.mredrock.cyxbs.course.page.course.item.affair.IMovableAffairManager
+import com.mredrock.cyxbs.course.page.course.item.affair.IAffairManager
 import com.mredrock.cyxbs.course.page.course.utils.container.base.ItemPoolController
 import com.mredrock.cyxbs.lib.course.fragment.page.ICoursePage
 
@@ -19,7 +19,7 @@ import com.mredrock.cyxbs.lib.course.fragment.page.ICoursePage
  */
 class AffairContainerProxy(
   val page: ICoursePage,
-  val iMovableAffairManager: IMovableAffairManager
+  val iAffairManager: IAffairManager
 ) : ItemPoolController<AffairItem, AffairData>(page) {
   
   override fun areItemsTheSame(oldItem: AffairData, newItem: AffairData): Boolean {
@@ -49,7 +49,7 @@ class AffairContainerProxy(
   }
   
   override fun newItem(data: AffairData): AffairItem {
-    return AffairItem(data, iMovableAffairManager)
+    return AffairItem(data, iAffairManager)
   }
   
   override fun onDiffRefreshOver(oldData: List<AffairData>, newData: List<AffairData>) {

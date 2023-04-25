@@ -48,7 +48,7 @@ open class TouchAffairView(context: Context) : ItemView(context), ITouchAffairIt
   }
   
   override fun onMoveEnd(course: ICourseViewGroup) {
-    mSideExpandable.onMoveEnd(course, this, this)
+    mSideExpandable.onMoveEnd(course, this, this, true)
   }
   
   override fun isInShow(): Boolean {

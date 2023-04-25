@@ -108,8 +108,27 @@ open class DefaultExpandableHandler : IExpandableItemHandler {
   ) {
     val side = mSideExpandable
     check(side != null) { "未初始化，mSideExpandable 变量为 null" }
-    side.onMoveEnd(page.course, item, child)
+    side.onMoveEnd(
+      page.course,
+      item,
+      child,
+      getIsMoveValid(page, item, child, event, isInLongPress, isCancel)
+    )
     mSideExpandable = null
     mIsRunning = false
+  }
+  
+  /**
+   * 移动是否有效，如果返回 false 则将自动还原到最开始的状态
+   */
+  protected open fun getIsMoveValid(
+    page: ICoursePage,
+    item: ITouchItem,
+    child: View,
+    event: IPointerEvent,
+    isInLongPress: Boolean?,
+    isCancel: Boolean
+  ): Boolean {
+    return true
   }
 }
