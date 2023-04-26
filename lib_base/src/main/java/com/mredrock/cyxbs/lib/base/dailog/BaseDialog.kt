@@ -55,7 +55,7 @@ abstract class BaseDialog<T : BaseDialog<T, D>, D: BaseDialog.Data> protected co
   /**
    * 创建显示的内容，你可以在这里面返回你自己的内容视图
    */
-  abstract fun createContentView(context: Context): View
+  abstract fun createContentView(parent: ViewGroup): View
   
   /**
    * @param view 你在 [createContentView] 返回的 View
@@ -76,8 +76,9 @@ abstract class BaseDialog<T : BaseDialog<T, D>, D: BaseDialog.Data> protected co
     super.onCreate(savedInstanceState)
     
     val view = LayoutInflater.from(context).inflate(data.type.layoutId, null)
-    val insertView = createContentView(view.context)
-    view.findViewWithTag<FrameLayout>("choose_dialog_content").addView(insertView)
+    val parent = view.findViewWithTag<FrameLayout>("choose_dialog_content")
+    val insertView = createContentView(parent)
+    parent.addView(insertView)
     setContentView(
       view,
       ViewGroup.LayoutParams(

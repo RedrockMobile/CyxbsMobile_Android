@@ -10,6 +10,7 @@ import android.text.style.ForegroundColorSpan
 import android.util.Size
 import android.view.Gravity
 import android.view.View
+import android.view.ViewGroup
 import android.widget.FrameLayout
 import android.widget.LinearLayout
 import android.widget.TextView
@@ -91,7 +92,7 @@ class CrashDialog private constructor(
     addView(mScaleScrollTextView)
   }
   
-  override fun createContentView(context: Context): View {
+  override fun createContentView(parent: ViewGroup): View {
     return mLinearLayout
   }
   
