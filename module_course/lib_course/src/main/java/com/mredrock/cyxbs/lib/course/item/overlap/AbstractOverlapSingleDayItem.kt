@@ -19,6 +19,8 @@ import com.mredrock.cyxbs.lib.course.internal.item.forEachRow
 import com.mredrock.cyxbs.lib.course.item.single.ISingleDayItem
 import com.mredrock.cyxbs.lib.utils.extensions.dimen
 import com.ndhzs.netlayout.attrs.NetLayoutParams
+import com.ndhzs.netlayout.attrs.SideType
+import com.ndhzs.netlayout.callback.OnWeightChangeListener
 import com.ndhzs.netlayout.view.NetLayout
 import java.util.Collections
 
@@ -315,6 +317,28 @@ abstract class AbstractOverlapSingleDayItem : IOverlapItem, OverlapHelper.IOverl
         val child = netLayout.getChildAt(i)
         child.translationZ = translationZ
       }
+    }
+  
+    // 关联课表与 netLayout 的行比重，主要用于中午和傍晚时间段的折叠，但这里不想过于耦合，所以采取这种写法
+    private val mOnWeightChangeListener =
+      OnWeightChangeListener { _, newWeight, which, sideType ->
+        if (sideType == SideType.ROW) {
+          val lp = layoutParams as NetLayoutParams
+          if (which in lp.startRow .. lp.endRow) {
+            netLayout.setRowShowWeight(which - lp.startRow, newWeight)
+          }
+        }
+      }
+  
+    override fun onAttachedToWindow() {
+      super.onAttachedToWindow()
+      // 父布局就是课表，课表基于 NetLayout
+      (parent as NetLayout).addOnWeightChangeListener(mOnWeightChangeListener)
+    }
+  
+    override fun onDetachedFromWindow() {
+      super.onDetachedFromWindow()
+      (parent as NetLayout).removeOnWeightChangeListener(mOnWeightChangeListener)
     }
   }
 }
