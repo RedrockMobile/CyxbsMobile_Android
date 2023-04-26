@@ -22,8 +22,8 @@ abstract class BaseItem<V> : TouchItemImpl()
 {
   abstract override fun createView(context: Context): V
   
-  override fun onRefreshOverlap() {
-    super.onRefreshOverlap()
+  override fun onRefreshOverlap(isAllowAnim: Boolean, hasChanged: Boolean) {
+    super.onRefreshOverlap(isAllowAnim, hasChanged)
     refreshShowOverlapTag()
   }
   

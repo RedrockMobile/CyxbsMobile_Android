@@ -72,8 +72,11 @@ abstract class AbstractOverlapSingleDayItem : IOverlapItem, OverlapHelper.IOverl
    *
    * ## 注意
    * - 只有添加进父布局的才会收到回调
+   *
+   * @param isAllowAnim 是否允许动画
+   * @param hasChanged 显示的区域是否发生了改变
    */
-  protected open fun onRefreshOverlap() {}
+  protected open fun onRefreshOverlap(isAllowAnim: Boolean, hasChanged: Boolean) {}
   
   /**
    * 需要清除重叠区域时的回调
@@ -192,7 +195,10 @@ abstract class AbstractOverlapSingleDayItem : IOverlapItem, OverlapHelper.IOverl
     // 刷新空闲区域
     refreshFreeArea()
     // 没有发生改变就直接退出
-    if (!mHasChangedFreeArea) return
+    if (!mHasChangedFreeArea) {
+      onRefreshOverlap(isAllowAnim, false)
+      return
+    }
     mHasChangedFreeArea = false
   
     // 设置动画
@@ -225,7 +231,7 @@ abstract class AbstractOverlapSingleDayItem : IOverlapItem, OverlapHelper.IOverl
       params.endRow = endRow - lp.startRow
       view.layoutParams = params
     }
-    onRefreshOverlap()
+    onRefreshOverlap(isAllowAnim, true)
   }
   
   /**
