@@ -59,7 +59,7 @@ class AffairDurationAdapter :
     if (list != null) {
       super.submitList(list.sortList())
     } else {
-      super.submitList(list)
+      super.submitList(null)
     }
   }
   
@@ -67,7 +67,7 @@ class AffairDurationAdapter :
     if (list != null) {
       super.submitList(list.sortList(), commitCallback)
     } else {
-      super.submitList(list, commitCallback)
+      super.submitList(null, commitCallback)
     }
   }
 
@@ -164,6 +164,16 @@ class AffairDurationAdapter :
           val tmp = currentList.filter { it !== data }
           submitList(tmp)
         }
+      }
+      tvTime.setOnSingleClickListener {
+        val data = getItem(layoutPosition) as AffairTimeData
+        TimeSelectDialog(it.context, data) { newData ->
+          val newList = currentList.toMutableList()
+          val index = newList.indexOf(data)
+          newList.removeAt(index)
+          newList.add(index, newData)
+          submitList(newList)
+        }.show()
       }
     }
   }

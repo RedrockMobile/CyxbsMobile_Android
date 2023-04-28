@@ -4,6 +4,7 @@ import android.content.Context
 import android.util.Size
 import android.view.Gravity
 import android.view.View
+import android.view.ViewGroup
 import android.widget.FrameLayout
 import android.widget.TextView
 import androidx.annotation.ColorRes
@@ -86,8 +87,8 @@ open class ChooseDialog protected constructor(
     override val backgroundId: Int = BaseDialog.Data.backgroundId,
   ) : BaseDialog.Data
   
-  override fun createContentView(context: Context): View {
-    return TextView(context).apply {
+  override fun createContentView(parent: ViewGroup): View {
+    return TextView(parent.context).apply {
       layoutParams = FrameLayout.LayoutParams(
         FrameLayout.LayoutParams.MATCH_PARENT,
         FrameLayout.LayoutParams.MATCH_PARENT,

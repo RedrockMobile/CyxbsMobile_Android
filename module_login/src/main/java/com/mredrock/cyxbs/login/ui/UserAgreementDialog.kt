@@ -12,6 +12,7 @@ import android.text.style.ForegroundColorSpan
 import android.util.Size
 import android.view.Gravity
 import android.view.View
+import android.view.ViewGroup
 import android.widget.LinearLayout
 import android.widget.TextView
 import androidx.core.content.ContextCompat
@@ -60,12 +61,12 @@ class UserAgreementDialog private constructor(
     textSize = 14F
   }
   
-  override fun createContentView(context: Context): View {
-    return LinearLayout(context).apply {
+  override fun createContentView(parent: ViewGroup): View {
+    return LinearLayout(parent.context).apply {
       orientation = LinearLayout.VERTICAL
       addView(
         // 标题
-        TextView(context).apply {
+        TextView(parent.context).apply {
           text = "温馨提示"
           layoutParams = LinearLayout.LayoutParams(
             LinearLayout.LayoutParams.MATCH_PARENT,

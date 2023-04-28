@@ -19,6 +19,8 @@ import com.mredrock.cyxbs.lib.course.internal.item.forEachRow
 import com.mredrock.cyxbs.lib.course.item.single.ISingleDayItem
 import com.mredrock.cyxbs.lib.utils.extensions.dimen
 import com.ndhzs.netlayout.attrs.NetLayoutParams
+import com.ndhzs.netlayout.attrs.SideType
+import com.ndhzs.netlayout.callback.OnWeightChangeListener
 import com.ndhzs.netlayout.view.NetLayout
 import java.util.Collections
 
@@ -72,8 +74,11 @@ abstract class AbstractOverlapSingleDayItem : IOverlapItem, OverlapHelper.IOverl
    *
    * ## 注意
    * - 只有添加进父布局的才会收到回调
+   *
+   * @param isAllowAnim 是否允许动画
+   * @param hasChanged 显示的区域是否发生了改变
    */
-  protected open fun onRefreshOverlap() {}
+  protected open fun onRefreshOverlap(isAllowAnim: Boolean, hasChanged: Boolean) {}
   
   /**
    * 需要清除重叠区域时的回调
@@ -192,7 +197,10 @@ abstract class AbstractOverlapSingleDayItem : IOverlapItem, OverlapHelper.IOverl
     // 刷新空闲区域
     refreshFreeArea()
     // 没有发生改变就直接退出
-    if (!mHasChangedFreeArea) return
+    if (!mHasChangedFreeArea) {
+      onRefreshOverlap(isAllowAnim, false)
+      return
+    }
     mHasChangedFreeArea = false
   
     // 设置动画
@@ -225,7 +233,7 @@ abstract class AbstractOverlapSingleDayItem : IOverlapItem, OverlapHelper.IOverl
       params.endRow = endRow - lp.startRow
       view.layoutParams = params
     }
-    onRefreshOverlap()
+    onRefreshOverlap(isAllowAnim, true)
   }
   
   /**
@@ -309,6 +317,33 @@ abstract class AbstractOverlapSingleDayItem : IOverlapItem, OverlapHelper.IOverl
         val child = netLayout.getChildAt(i)
         child.translationZ = translationZ
       }
+    }
+  
+    // 关联课表与 netLayout 的行比重，主要用于中午和傍晚时间段的折叠，但这里不想过于耦合，所以采取这种写法
+    private val mOnWeightChangeListener =
+      OnWeightChangeListener { _, newWeight, which, sideType ->
+        if (sideType == SideType.ROW) {
+          val lp = layoutParams as NetLayoutParams
+          if (which in lp.startRow .. lp.endRow) {
+            netLayout.setRowShowWeight(which - lp.startRow, newWeight)
+          }
+        }
+      }
+  
+    // 课表父布局，基于 NetLayout
+    private var mParent: NetLayout? = null
+  
+    override fun onAttachedToWindow() {
+      super.onAttachedToWindow()
+      val parent = parent as NetLayout
+      parent.addOnWeightChangeListener(mOnWeightChangeListener)
+      mParent = parent
+    }
+  
+    override fun onDetachedFromWindow() {
+      super.onDetachedFromWindow()
+      mParent?.removeOnWeightChangeListener(mOnWeightChangeListener)
+      mParent = null
     }
   }
 }
