@@ -330,15 +330,20 @@ abstract class AbstractOverlapSingleDayItem : IOverlapItem, OverlapHelper.IOverl
         }
       }
   
+    // 课表父布局，基于 NetLayout
+    private var mParent: NetLayout? = null
+  
     override fun onAttachedToWindow() {
       super.onAttachedToWindow()
-      // 父布局就是课表，课表基于 NetLayout
-      (parent as NetLayout).addOnWeightChangeListener(mOnWeightChangeListener)
+      val parent = parent as NetLayout
+      parent.addOnWeightChangeListener(mOnWeightChangeListener)
+      mParent = parent
     }
   
     override fun onDetachedFromWindow() {
       super.onDetachedFromWindow()
-      (parent as NetLayout).removeOnWeightChangeListener(mOnWeightChangeListener)
+      mParent?.removeOnWeightChangeListener(mOnWeightChangeListener)
+      mParent = null
     }
   }
 }
