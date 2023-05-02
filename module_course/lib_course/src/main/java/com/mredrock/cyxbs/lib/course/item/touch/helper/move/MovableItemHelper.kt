@@ -56,32 +56,13 @@ class MovableItemHelper(
     
     private var mIsLockedNoon = false // 是否锁定了中午时间段
     private var mIsLockedDusk = false // 是否锁定了中午时间段
-    
+  
     private var mIsMoving = false // 控制 move 的调用
-    
-    // Scroll 滚动不一定会导致 mItemDecoration 被回调，所以需要强制刷新
-    private val mScrollYChangedListener =
-      ICourseScrollControl.OnScrollYChangedListener { _, _ ->
-        if (mIsInLongPress == true) {
-          mIsMoving = true
-          mCoursePage?.course?.invalidate()
-        }
-      }
-    
-    // 用于在每一帧时回调 move() 方法
-    private val mItemDecoration = object : ItemDecoration {
-      
-      override fun onDrawBelow(canvas: Canvas, view: View) {
-        if (mIsMoving) {
-          move() // 调用 move 方法
-          mIsMoving = false
-        }
-      }
-    }
     
     override fun onDown(page: ICoursePage, item: ITouchItem, child: View, event: IPointerEvent) {
       mIsLockedNoon = false // 重置
       mIsLockedDusk = false // 重置
+      mIsMoving = false // 重置
       mMovableHandler.onDown(page, item, child, event)
       mMovableItemListeners.forEachReversed {
         it.onDown(page, item, child, event)
@@ -103,6 +84,7 @@ class MovableItemHelper(
       unfoldNoonDuskIfNeed()
       
       course.addOnScrollYChanged(mScrollYChangedListener)
+      course.addOnLayoutChangeListener(mOnLayoutChanged)
       course.addItemDecoration(mItemDecoration)
       
       mMovableHandler.onLongPressed(page, item, child, x, y, pointerId)
@@ -124,8 +106,7 @@ class MovableItemHelper(
     }
     
     override fun onMove(page: ICoursePage, item: ITouchItem, child: View, x: Int, y: Int) {
-      mIsMoving = true
-      page.course.invalidate() // 之后会回调 mItemDecoration
+      tryPostMove()
     }
     
     override fun onEventEnd(
@@ -146,6 +127,7 @@ class MovableItemHelper(
           page.unlockFoldDusk()
         }
         course.removeOnScrollYChanged(mScrollYChangedListener)
+        course.removeOnLayoutChangeListener(mOnLayoutChanged)
         course.removeItemDecoration(mItemDecoration)
         
         var newLocation: LocationUtil.Location? = null // 需要移动到的新位置
@@ -164,70 +146,6 @@ class MovableItemHelper(
       mMovableHandler.onEventEnd(page, item, child, event, isInLongPress, isCancel)
       mMovableItemListeners.forEachReversed {
         it.onEventEnd(page, item, child, event, isInLongPress, isCancel)
-      }
-    }
-    
-    
-    // 展开中午或者傍晚，如果需要的话
-    private fun unfoldNoonDuskIfNeed() {
-      val page = mCoursePage ?: return
-      val view = mItemView ?: return
-      if (!mIsLockedNoon) {
-        val viewY = view.y.toInt()
-        val isViewContainNoon =
-          page.compareNoonPeriodByHeight(viewY) * page.compareNoonPeriodByHeight(viewY + view.height) <= 0
-        if (isViewContainNoon) {
-          // 这里需要展开中午
-          page.unfoldNoon()
-          page.lockFoldNoon() // 锁定中午，后面会还原
-          mIsLockedNoon = true
-          // 虽然不一定会展开成功，因为可能会在其他地方被锁住，但是解锁次数需要等于上锁次数才能完全解锁，所以最终还是仍被锁的
-          // 其实只需要在移动期间禁止中午发生改变就可以了，不然会导致 item 大小跟随改变
-        }
-      }
-      if (!mIsLockedDusk) {
-        val viewY = view.y.toInt()
-        val isViewContainDusk =
-          page.compareDuskPeriodByHeight(viewY) * page.compareDuskPeriodByHeight(viewY + view.height) <= 0
-        if (isViewContainDusk) {
-          // 这里需要展开傍晚
-          page.unfoldDusk()
-          page.lockFoldDusk() // 锁定中午，后面会还原
-          mIsLockedDusk = true
-        }
-      }
-    }
-    
-    /**
-     * item 移动的核心代码
-     *
-     * ### 不要直接调用该方法
-     * 请使用 page.course.invalidate() 和设置 mIsMoving=true 来间接调用该方法 (invalidate() -> mItemDecoration -> move())。
-     * 原因在于：
-     * - 一帧只能回调一次 move，多次回调会多次计算导致效果出现问题 (比如滚轴会加倍移动)
-     * - 如果手动调用，会导致调用 [changeScrollYIfNeed] 后出现鬼畜的移动效果
-     */
-    private fun move() {
-      if (mIsInLongPress != true) return
-      if (!mIsMoving) return
-      val item = mTouchItem ?: return
-      val view = mItemView ?: return
-      val page = mCoursePage ?: return
-      val course = page.course
-      
-      changeScrollYIfNeed()
-      unfoldNoonDuskIfNeed()
-      
-      // 因为存在 scrollY 的改变和中午傍晚的展开导致的坐标系变化的问题
-      // 所以要使用 ScrollView 的绝对位置来计算 Y 轴偏移量
-      val absoluteY = course.getAbsoluteY(mPointerId)
-      val scrollY = course.getScrollCourseY()
-      
-      val x = mLastMoveX
-      val y = absoluteY + scrollY
-      mMovableHandler.onMove(page, item, view, x, y)
-      mMovableItemListeners.forEachReversed {
-        it.onMove(page, item, view, x, y)
       }
     }
     
@@ -268,6 +186,90 @@ class MovableItemHelper(
         startAnim(null)
       }
     }
+  
+    ///////////////////////////////
+    //
+    //          移动逻辑
+    //
+    ///////////////////////////////
+  
+    /**
+     * 尝试发送一次刷新来回调 [mItemDecoration]
+     *
+     * 但值得注意的是，并不是直接调用 move()，而是在每一帧时回调 move() 方法，
+     * 官方源码中经常这样操作，目的是为了统一回调时机，减少回调次数
+     *
+     * 这里调用后会在下一帧中回调 [mItemDecoration]，然后触发刷新操作
+     */
+    private fun tryPostMove() {
+      if (!mIsMoving && mIsInLongPress == true) {
+        mIsMoving = true
+        mCoursePage?.course?.invalidate()
+      }
+    }
+  
+    // Scroll 滚动不一定会导致 mItemDecoration 被回调，所以需要强制刷新
+    private val mScrollYChangedListener =
+      ICourseScrollControl.OnScrollYChangedListener { _, _ ->
+        tryPostMove()
+      }
+  
+    // 课表布局发生改变时也需要回调 mItemDecoration，然后触发 move()
+    private val mOnLayoutChanged =
+      View.OnLayoutChangeListener { _, _, _, _, _, _, _, _, _ ->
+        tryPostMove()
+      }
+  
+    // 用于在每一帧时回调 move() 方法
+    private val mItemDecoration = object : ItemDecoration {
+      override fun onDrawBelow(canvas: Canvas, view: View) {
+        if (mIsMoving && mIsInLongPress == true) {
+          move() // 调用 move 方法
+          mIsMoving = false
+        }
+      }
+  
+      /**
+       * item 移动的核心代码
+       *
+       * ### 不要直接调用该方法
+       * 请使用 page.course.invalidate() 和设置 mIsMoving=true 来间接调用该方法 (invalidate() -> mItemDecoration -> move())。
+       * 原因在于：
+       * - 一帧只能回调一次 move，多次回调会多次计算导致效果出现问题 (比如滚轴会加倍移动)，
+       *  官方源码中经常这样操作，目的是为了统一回调时机，减少回调次数
+       * - 如果手动调用，会导致调用 [changeScrollYIfNeed] 后出现鬼畜的移动效果
+       */
+      private fun move() {
+        if (mIsInLongPress != true) return
+        if (!mIsMoving) return
+        val item = mTouchItem ?: return
+        val view = mItemView ?: return
+        val page = mCoursePage ?: return
+        val course = page.course
+    
+        changeScrollYIfNeed()
+        unfoldNoonDuskIfNeed()
+    
+        // 因为存在 scrollY 的改变和中午傍晚的展开导致的坐标系变化的问题
+        // 所以要使用 ScrollView 的绝对位置来计算 Y 轴偏移量
+        val absoluteY = course.getAbsoluteY(mPointerId)
+        val scrollY = course.getScrollCourseY()
+    
+        val x = mLastMoveX
+        val y = absoluteY + scrollY
+        mMovableHandler.onMove(page, item, view, x, y)
+        mMovableItemListeners.forEachReversed {
+          it.onMove(page, item, view, x, y)
+        }
+      }
+    }
+  
+  
+    ///////////////////////////////
+    //
+    //           滚轴相关
+    //
+    ///////////////////////////////
     
     // 控制课表滚轴滚动
     private fun changeScrollYIfNeed() {
@@ -302,6 +304,43 @@ class MovableItemHelper(
         -min(((moveBoundary - topHeight) / 10 + 6), 12)
       } else 0
       course.scrollCourseBy(velocity) // 这里调用后会回调 mScrollYChangedListener，然后又回调 move()
+    }
+  
+  
+    ///////////////////////////////
+    //
+    //         中午傍晚相关
+    //
+    ///////////////////////////////
+  
+    // 展开中午或者傍晚，如果需要的话
+    private fun unfoldNoonDuskIfNeed() {
+      val page = mCoursePage ?: return
+      val view = mItemView ?: return
+      if (!mIsLockedNoon) {
+        val viewY = view.y.toInt()
+        val isViewContainNoon =
+          page.compareNoonPeriodByHeight(viewY) * page.compareNoonPeriodByHeight(viewY + view.height) <= 0
+        if (isViewContainNoon) {
+          // 这里需要展开中午
+          page.unfoldNoon()
+          page.lockFoldNoon() // 锁定中午，后面会还原
+          mIsLockedNoon = true
+          // 虽然不一定会展开成功，因为可能会在其他地方被锁住，但是解锁次数需要等于上锁次数才能完全解锁，所以最终还是仍被锁的
+          // 其实只需要在移动期间禁止中午发生改变就可以了，不然会导致 item 大小跟随改变
+        }
+      }
+      if (!mIsLockedDusk) {
+        val viewY = view.y.toInt()
+        val isViewContainDusk =
+          page.compareDuskPeriodByHeight(viewY) * page.compareDuskPeriodByHeight(viewY + view.height) <= 0
+        if (isViewContainDusk) {
+          // 这里需要展开傍晚
+          page.unfoldDusk()
+          page.lockFoldDusk() // 锁定中午，后面会还原
+          mIsLockedDusk = true
+        }
+      }
     }
   }
 }
