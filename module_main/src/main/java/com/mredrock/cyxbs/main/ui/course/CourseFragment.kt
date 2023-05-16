@@ -106,8 +106,7 @@ class CourseFragment : BaseFragment() {
               mTvHeaderHint.text = "发生异常，长按显示"
               mTvHeaderHint.setOnLongClickListener {
                 ICrashService::class.impl
-                  .createCrashDialog(throwable)
-                  .show()
+                  .showCrashDialog(throwable)
                 true
               }
             }

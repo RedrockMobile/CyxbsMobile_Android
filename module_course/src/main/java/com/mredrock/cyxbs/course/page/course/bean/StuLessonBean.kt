@@ -104,8 +104,7 @@ data class StuLessonBean(
                 // debug 版查他人课表直接显示异常原因
                 toast("发生课表数据异常！")
                 ICrashService::class.impl
-                  .createCrashDialog(e)
-                  .show()
+                  .showCrashDialog(e)
               } else {
                 toastLong("课表数据可能存在异常，请向我们反馈")
               }

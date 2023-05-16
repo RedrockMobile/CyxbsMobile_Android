@@ -69,13 +69,13 @@ abstract class AbstractCourseBaseFragment : BaseFragment(), ICourseBase {
     mCourseLifecycleObservers.remove(observer)
   }
   
-  final override fun doOnCourseCreate(action: ICourseViewGroup.() -> Unit, isCallbackIfCrested: Boolean) {
+  final override fun doOnCourseCreate(action: ICourseViewGroup.() -> Unit, isCallbackIfCreated: Boolean) {
     addCourseLifecycleObservable(
       object : ICourseWrapper.CourseLifecycleObserver {
         override fun onCreateCourse(course: ICourseViewGroup) {
           action.invoke(course)
         }
-      }, isCallbackIfCrested
+      }, isCallbackIfCreated
     )
   }
   

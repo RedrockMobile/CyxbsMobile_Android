@@ -22,6 +22,7 @@ import com.mredrock.cyxbs.lib.base.dailog.ChooseDialog
 import com.mredrock.cyxbs.lib.base.ui.BaseActivity
 import com.mredrock.cyxbs.lib.utils.extensions.launch
 import com.mredrock.cyxbs.lib.utils.extensions.setOnSingleClickListener
+import com.mredrock.cyxbs.lib.utils.utils.config.PhoneCalendar
 import com.mredrock.cyxbs.mine.R
 import com.mredrock.cyxbs.mine.page.security.activity.SecurityActivity
 import com.mredrock.cyxbs.mine.util.ui.WarningDialog
@@ -164,7 +165,7 @@ class SettingActivity : BaseActivity() {
     }
     
     private fun jumpToLoginActivity() {
-        cleanAppWidgetCache()
+        cleanData()
         //清除user信息，必须要在LoginStateChangeEvent之前
         ServiceManager(IAccountService::class).getVerifyService()
             .logout(this@SettingActivity)
@@ -176,10 +177,16 @@ class SettingActivity : BaseActivity() {
         }
     }
 
-    private fun cleanAppWidgetCache() {
+    private fun cleanData() {
+        // 清理小组件缓存
         defaultSp.edit {
             putString(WIDGET_COURSE, "")
             putBoolean(SP_WIDGET_NEED_FRESH, true)
+        }
+        // 清除手机日历事件
+        val calendarId = PhoneCalendar.getCalendarAccount()
+        if (calendarId != null) {
+            PhoneCalendar.deleteCalendarAccount(calendarId)
         }
     }
 }
