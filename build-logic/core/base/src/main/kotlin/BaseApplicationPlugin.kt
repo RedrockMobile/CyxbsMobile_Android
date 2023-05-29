@@ -26,6 +26,11 @@ internal class BaseApplicationPlugin : BasePlugin() {
 
         apply(plugin = "base.android")
     
+        // ARouter 的 gradle 插件编译失败，所以取消引入，也就意味着路由采用运行时加载的方式
+        // ARouter 采取扫描 dex 下所有 class 的方式加载路由，严重影响升级后的第一次启动速度
+        // 加上 ARouter 不再维护，建议向 Component 移植：https://github.com/xiaojinzi123/KComponent
+//        apply(plugin = "com.alibaba.arouter")
+    
         // lib_debug 模块以及只在 debug 时需要的一些插件
         DebugConfiguration.initApplication(this)
 

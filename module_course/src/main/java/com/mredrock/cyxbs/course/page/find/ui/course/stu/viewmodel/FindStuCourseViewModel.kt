@@ -41,8 +41,7 @@ class FindStuCourseViewModel : BaseFindViewModel<StuLessonData>() {
           if (BuildConfig.DEBUG) {
             toast("请求课表出现异常")
             ICrashService::class.impl
-              .createCrashDialog(it)
-              .show()
+              .showCrashDialog(it)
           }
         }.safeSubscribeBy {
           _findLessonData.value = it

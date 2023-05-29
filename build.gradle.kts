@@ -31,13 +31,20 @@ buildscript {
     // 版本号在 根目录/gradle/libs.versions.toml 中
     classpath(libs.android.gradlePlugin)
     classpath(libs.kotlin.gradlePlugin)
+  
+    // ARouter https://github.com/alibaba/ARouter
+    // ARouter 使用该插件用于加载路由信息，该插件在 build-logic/core/base/.../BaseApplicationPlugin 中引入
+    // ARouter 的 gradle 插件编译失败，所以取消引入，也就意味着路由采用运行时加载的方式
+    // ARouter 采取扫描 dex 下所有 class 的方式加载路由，严重影响升级后的第一次启动速度
+    // 加上 ARouter 不再维护，建议向 Component 移植：https://github.com/xiaojinzi123/KComponent
+//    classpath("com.alibaba:arouter-register:1.0.2")
     
     // 很牛逼的检测工具 debug 模式下摇一摇手机触发 https://github.com/whataa/pandora
     // 在 lib_debug 模块中使用
     classpath("com.github.whataa:pandora-plugin:1.0.0")
     
     /**
-     * 每次新建模块这里斗湖自己加一个：
+     * 每次新建模块这里都会自己加一个：
      * classpath("org.jetbrains.kotlin:kotlin-gradle-plugin:x.x.xx")
      * TODO 把它删掉！！！！！
      */

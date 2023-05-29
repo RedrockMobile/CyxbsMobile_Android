@@ -64,6 +64,7 @@ class CrashDialog private constructor(
       leftMargin = 10.dp2px
     }
     textSize = 12F
+    setTextIsSelectable(true)
   }
   
   private val mScaleScrollTextView = ScaleScrollTextView(context, null).apply {

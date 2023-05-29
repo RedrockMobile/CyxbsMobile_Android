@@ -337,6 +337,7 @@ abstract class AbstractOverlapSingleDayItem : IOverlapItem, OverlapHelper.IOverl
       super.onAttachedToWindow()
       val parent = parent as NetLayout
       parent.addOnWeightChangeListener(mOnWeightChangeListener)
+      setNetLayoutRow(parent)
       mParent = parent
     }
   
@@ -344,6 +345,14 @@ abstract class AbstractOverlapSingleDayItem : IOverlapItem, OverlapHelper.IOverl
       super.onDetachedFromWindow()
       mParent?.removeOnWeightChangeListener(mOnWeightChangeListener)
       mParent = null
+    }
+  
+    // 同步行比重
+    private fun setNetLayoutRow(parent: NetLayout) {
+      val lp = layoutParams as NetLayoutParams
+      for (row in lp.startRow .. lp.endRow) {
+        netLayout.setRowShowWeight(row - lp.startRow, parent.getRowsShowWeight(row, row))
+      }
     }
   }
 }

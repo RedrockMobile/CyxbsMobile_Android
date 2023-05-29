@@ -105,6 +105,7 @@ class ScaleScrollTextView(
   
   private val mTvContent = TextView(context).apply {
     textSize = 12F
+    setTextIsSelectable(true) // 内容可长按复制
   }
   
   init {

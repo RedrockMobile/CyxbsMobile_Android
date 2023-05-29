@@ -52,6 +52,8 @@ interface ILongPressItemListener {
   /**
    * 手指移动
    *
+   * 该方法前提条件是 [onLongPressed] 已经被回调，即长按已经触发
+   *
    * 包含下面几种情况：
    * - 手指移动
    * - 滚轴移动

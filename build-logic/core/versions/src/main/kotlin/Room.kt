@@ -1,5 +1,7 @@
 import org.gradle.api.Project
+import org.gradle.kotlin.dsl.configure
 import org.gradle.kotlin.dsl.dependencies
+import org.jetbrains.kotlin.gradle.plugin.KaptExtension
 
 /**
  * ...
@@ -26,6 +28,11 @@ object Room {
 }
 
 fun Project.dependRoom() {
+  extensions.configure<KaptExtension> {
+    arguments {
+      arg("room.schemaLocation", "${project.projectDir}/schemas") // room 的架构导出目录
+    }
+  }
   dependencies {
     "implementation"(Room.`room-runtime`)
     "implementation"(Room.`room-ktx`)
