@@ -8,7 +8,9 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.view.animation.AnimationUtils
+import android.widget.LinearLayout
 import android.widget.PopupWindow
+import android.widget.TextSwitcher
 import android.widget.TextView
 import android.widget.ViewSwitcher
 import androidx.core.content.ContextCompat
@@ -17,6 +19,7 @@ import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import com.mredrock.cyxbs.common.mark.EventBusLifecycleSubscriber
 import com.mredrock.cyxbs.common.ui.BaseFragment
 import com.mredrock.cyxbs.common.utils.extensions.dp2px
@@ -27,7 +30,6 @@ import com.mredrock.cyxbs.volunteer.bean.VolunteerTime
 import com.mredrock.cyxbs.volunteer.event.VolunteerLoginEvent
 import com.mredrock.cyxbs.volunteer.utils.DateUtils
 import com.mredrock.cyxbs.volunteer.viewmodel.VolunteerRecordViewModel
-import kotlinx.android.synthetic.main.volunteer_fragment_volunteer_time.*
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
 
@@ -35,6 +37,12 @@ import org.greenrobot.eventbus.ThreadMode
  * Created by yyfbe, Date on 2020/9/4.
  */
 class VolunteerRecordFragment : BaseFragment(), EventBusLifecycleSubscriber, ViewSwitcher.ViewFactory {
+
+    private val volunteer_time_recycler by R.id.volunteer_time_recycler.view<RecyclerView>()
+    private val swc_volunteer_record_year by R.id.swc_volunteer_record_year.view<TextSwitcher>()
+    private val tv_volunteer_record_year_time by R.id.tv_volunteer_record_year_time.view<TextView>()
+    private val srl_refresh by R.id.srl_refresh.view<SwipeRefreshLayout>()
+    private val ll_volunteer_record_year by R.id.ll_volunteer_record_year.view<LinearLayout>()
 
     //last当前，first最早的一年
     private val firstYear by lazy(LazyThreadSafetyMode.NONE) { mutableListOf<VolunteerTime.RecordBean>() }

@@ -4,9 +4,12 @@ import android.content.Context
 import android.os.Bundle
 import android.view.inputmethod.EditorInfo
 import android.view.inputmethod.InputMethodManager
+import android.widget.Button
+import android.widget.FrameLayout
 import android.widget.Toast
 import androidx.core.view.iterator
 import com.alibaba.android.arouter.facade.annotation.Route
+import com.google.android.material.textfield.TextInputEditText
 import com.mredrock.cyxbs.common.component.CyxbsToast
 import com.mredrock.cyxbs.common.config.DISCOVER_VOLUNTEER
 import com.mredrock.cyxbs.common.ui.BaseViewModelActivity
@@ -17,7 +20,6 @@ import com.mredrock.cyxbs.common.utils.extensions.visible
 import com.mredrock.cyxbs.volunteer.event.VolunteerLoginEvent
 import com.mredrock.cyxbs.volunteer.viewmodel.VolunteerLoginViewModel
 import com.mredrock.cyxbs.volunteer.widget.EncryptPassword
-import kotlinx.android.synthetic.main.volunteer_activity_login.*
 import org.greenrobot.eventbus.EventBus
 
 @Route(path = DISCOVER_VOLUNTEER)
@@ -29,6 +31,12 @@ class VolunteerLoginActivity : BaseViewModelActivity<VolunteerLoginViewModel>() 
         const val INVALID_ACCOUNT: Int = -2
         const val WRONG_PASSWORD: Int = 3
     }
+
+    private val et_volunteer_password by R.id.et_volunteer_password.view<TextInputEditText>()
+    private val et_volunteer_account by R.id.et_volunteer_account.view<TextInputEditText>()
+    private val btn_volunteer_login by R.id.btn_volunteer_login.view<Button>()
+    private val iv_back by R.id.iv_back.view<Button>()
+    private val fl_root by R.id.fl_root.view<FrameLayout>()
 
     //进入登录页面，说明发现页的vm中志愿数据为空，或者用户主动接触绑定
     override fun onCreate(savedInstanceState: Bundle?) {

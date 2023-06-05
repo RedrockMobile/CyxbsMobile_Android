@@ -47,4 +47,5 @@ open class RedRockBottomSheetDialog(context: Context) : BottomSheetDialog(contex
     override fun <T : View> findViewById(id: Int): T {
         return super.findViewById(id)!!
     }
+
 }

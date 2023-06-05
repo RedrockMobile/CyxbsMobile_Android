@@ -2,9 +2,9 @@ package com.mredrock.cyxbs.volunteer.widget
 
 import android.content.Context
 import android.view.LayoutInflater
+import android.widget.TextView
 import androidx.appcompat.app.AlertDialog
 import com.mredrock.cyxbs.volunteer.R
-import kotlinx.android.synthetic.main.volunteer_dialog_choose.view.*
 
 /**
  * @date 2020-09-14
@@ -21,13 +21,13 @@ object LogoutDialog {
         dialog.show()
 
         //表示用户点击取消退出（保持登录）
-        view.tv_volunteer_dialog_cancel_logout.setOnClickListener {
+        view.findViewById<TextView>(R.id.tv_volunteer_dialog_cancel_logout).setOnClickListener {
             onDeny()
             dialog.dismiss()
         }
 
         //表示用户确认需要退出登录
-        view.tv_volunteer_dialog_confirm_logout.setOnClickListener {
+        view.findViewById<TextView>(R.id.tv_volunteer_dialog_confirm_logout).setOnClickListener {
             onConfirm()
             dialog.dismiss()
         }

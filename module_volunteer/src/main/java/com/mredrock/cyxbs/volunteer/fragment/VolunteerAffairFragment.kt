@@ -5,18 +5,23 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import com.mredrock.cyxbs.common.ui.BaseViewModelFragment
 import com.mredrock.cyxbs.volunteer.R
 import com.mredrock.cyxbs.volunteer.adapter.VolunteerAffairAdapter
 import com.mredrock.cyxbs.volunteer.viewmodel.VolunteerAffairViewModel
 import com.mredrock.cyxbs.volunteer.widget.VolunteerAffairBottomSheetDialog
-import kotlinx.android.synthetic.main.volunteer_fragment_volunteer_affair.*
 
 /**
  * Created by yyfbe, Date on 2020/9/4.
  */
 class VolunteerAffairFragment : BaseViewModelFragment<VolunteerAffairViewModel>() {
     private var volunteerAffairBottomSheetDialog: VolunteerAffairBottomSheetDialog? = null
+
+    private val swl_volunteer_affair by R.id.swl_volunteer_affair.view<SwipeRefreshLayout>()
+    private val rl_volunteer_affair by R.id.rl_volunteer_affair.view<RecyclerView>()
+
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         return LayoutInflater.from(context).inflate(R.layout.volunteer_fragment_volunteer_affair, container, false)
     }

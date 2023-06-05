@@ -3,9 +3,14 @@ package com.mredrock.cyxbs.volunteer
 import android.app.Activity
 import android.content.Intent
 import android.os.Bundle
+import android.widget.TextView
+import androidx.appcompat.widget.AppCompatImageView
+import androidx.appcompat.widget.AppCompatTextView
 import androidx.lifecycle.Observer
+import androidx.viewpager.widget.ViewPager
 import com.alibaba.android.arouter.facade.annotation.Route
 import com.alibaba.android.arouter.launcher.ARouter
+import com.google.android.material.tabs.TabLayout
 import com.google.gson.Gson
 import com.mredrock.cyxbs.common.config.DISCOVER_VOLUNTEER
 import com.mredrock.cyxbs.common.config.DISCOVER_VOLUNTEER_RECORD
@@ -18,14 +23,18 @@ import com.mredrock.cyxbs.volunteer.fragment.VolunteerAffairFragment
 import com.mredrock.cyxbs.volunteer.fragment.VolunteerRecordFragment
 import com.mredrock.cyxbs.volunteer.viewmodel.VolunteerRecordViewModel
 import com.mredrock.cyxbs.volunteer.widget.LogoutDialog
-import kotlinx.android.synthetic.main.volunteer_activity_record.*
-import kotlinx.android.synthetic.main.volunteer_layout_record_view.*
 import org.greenrobot.eventbus.EventBus
 
 
 @Route(path = DISCOVER_VOLUNTEER_RECORD)
 class VolunteerRecordActivity : BaseViewModelActivity<VolunteerRecordViewModel>() {
 
+    private val vp_volunteer_category by R.id.vp_volunteer_category.view<ViewPager>()
+    private val tl_volunteer_category by R.id.tl_volunteer_category.view<TabLayout>()
+    private val iv_back by R.id.iv_back.view<AppCompatImageView>()
+    private val tv_volunteer_logout by R.id.tv_volunteer_logout.view<TextView>()
+    private val tv_volunteer_total_time by R.id.tv_volunteer_total_time.view<AppCompatTextView>()
+    private val tv_volunteer_total_times by R.id.tv_volunteer_total_times.view<AppCompatTextView>()
     companion object {
         fun startActivity(activity: Activity, volunteerTime: VolunteerTime) {
             activity.startActivity(
