@@ -3,7 +3,7 @@ plugins {
 }
 
 
-dependLibCommon()
+
 
 dependApiAccount()
 dependApiInit()

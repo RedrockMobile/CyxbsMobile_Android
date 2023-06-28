@@ -32,6 +32,8 @@ dependencyResolutionManagement {
 
 // 测试使用，排除掉不需要的模块，记得还原！！！
 val excludeList = listOf<String>(
+  "module_qa",
+  
 )
 
 //对文件夹进行遍历，深度为2

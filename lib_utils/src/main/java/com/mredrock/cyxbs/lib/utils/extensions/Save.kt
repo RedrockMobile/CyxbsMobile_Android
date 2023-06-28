@@ -5,10 +5,12 @@ import android.content.Context
 import android.database.Cursor
 import android.graphics.Bitmap
 import android.net.Uri
+import android.os.Build
 import android.os.Environment
 import android.provider.MediaStore
 import android.webkit.MimeTypeMap
-import com.mredrock.cyxbs.common.config.DIR_PHOTO
+import androidx.annotation.RequiresApi
+import com.mredrock.cyxbs.config.dir.DIR_PHOTO
 import java.io.File
 import java.io.OutputStream
 
@@ -45,14 +47,15 @@ fun Context.saveImage(bitmap: Bitmap?, name: String, quality: Int = 100,
     outputStream.close()
   } catch (e: Exception) {
     if (uri != null) {
-      contentResolver.delete(uri, null, null);
+      contentResolver.delete(uri, null, null)
     }
   } finally {
     outputStream?.close()
   }
 }
 
-fun Context.saveFile(byteStream:ByteArray,name:String):Uri?{
+@RequiresApi(Build.VERSION_CODES.Q)
+fun Context.saveFile(byteStream:ByteArray, name:String):Uri?{
   val values = ContentValues()
   values.put(MediaStore.MediaColumns.DISPLAY_NAME, name.split("/").last())
   val type = MimeTypeMap.getSingleton().getMimeTypeFromExtension(name.subSequence(name.indexOfLast{ it == '.' },name.length-1).toString())
@@ -75,7 +78,7 @@ fun Context.saveFile(byteStream:ByteArray,name:String):Uri?{
     return uri
   } catch (e: Exception) {
     if (uri != null) {
-      contentResolver.delete(uri, null, null);
+      contentResolver.delete(uri, null, null)
     }
     return null
   } finally {

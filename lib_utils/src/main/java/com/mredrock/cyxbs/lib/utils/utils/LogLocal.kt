@@ -1,6 +1,12 @@
 package com.mredrock.cyxbs.lib.utils.utils
 
-import com.mredrock.cyxbs.common.utils.LogLocal
+import android.os.Process
+import com.mredrock.cyxbs.config.dir.DIR_LOG
+import com.mredrock.cyxbs.config.dir.OKHTTP_LOCAL_LOG
+import com.mredrock.cyxbs.lib.utils.UtilsApplicationWrapper
+import com.mredrock.cyxbs.lib.utils.extensions.unsafeSubscribeBy
+import io.reactivex.rxjava3.core.Observable
+import io.reactivex.rxjava3.schedulers.Schedulers
 
 /**
  *
@@ -16,7 +22,20 @@ import com.mredrock.cyxbs.common.utils.LogLocal
  * @Description:
  */
 object LogLocal {
+    private var logLocalHelper: LogLocalHelper? = null
+    private val filePath: String = "${UtilsApplicationWrapper.application.filesDir.absolutePath}${DIR_LOG}/"
+    private val pid = Process.myPid()
     fun log(tag: String = "tag", msg: String, throwable: Throwable? = null) {
-        LogLocal.log(tag, msg, throwable)
+        Observable.create<String> {
+            it.onNext("$tag $msg")
+        }
+            .subscribeOn(Schedulers.io())
+            .map {
+                if (logLocalHelper == null) {
+                    logLocalHelper = LogLocalHelper(pid.toString(), filePath, OKHTTP_LOCAL_LOG)
+                }
+                logLocalHelper?.write(it)
+                Unit
+            }.unsafeSubscribeBy {}
     }
 }

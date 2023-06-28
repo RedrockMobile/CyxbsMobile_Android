@@ -49,7 +49,7 @@ class CrashActivity : BaseActivity() {
             CrashActivity::mNetworkResult.name,
             ApiGenerator.apiResultList.mapTo(ArrayList()) {
               // 因为 CrashActivity 是在另一个进程中启动，所以只能以 String 的形式传过去
-              NetworkApiResult(it.first.toString(), it.second.toString(), it.third.toString())
+              NetworkApiResult(it.request.toString(), it.response.toString(), it.stackTrace.toString())
             }
           ).putExtra(CrashActivity::mProcessName.name, processName)
           .putExtra(CrashActivity::mThreadName.name, threadName)

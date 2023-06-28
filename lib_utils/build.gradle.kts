@@ -5,7 +5,7 @@ plugins {
 }
 
 
-dependLibCommon()
+
 dependLibConfig()
 
 dependApiInit()

@@ -14,13 +14,13 @@ import com.mredrock.cyxbs.init.InitialService
 class CrashInitialService : InitialService {
   
   override fun onMainProcess(manager: InitialManager) {
-    Thread.setDefaultUncaughtExceptionHandler { thread, throwable ->
-      CrashActivity.start(
-        throwable,
-        manager.currentProcessName() ?: "未知",
-        thread.name
-      )
-    }
+//    Thread.setDefaultUncaughtExceptionHandler { thread, throwable ->
+//      CrashActivity.start(
+//        throwable,
+//        manager.currentProcessName() ?: "未知",
+//        thread.name
+//      )
+//    }
   }
   
   override fun onOtherProcess(manager: InitialManager) {
