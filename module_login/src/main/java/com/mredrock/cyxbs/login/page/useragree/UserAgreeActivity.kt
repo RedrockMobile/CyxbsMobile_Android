@@ -3,6 +3,7 @@ package com.mredrock.cyxbs.login.page.useragree
 import android.os.Bundle
 import android.view.View
 import android.widget.ProgressBar
+import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.mredrock.cyxbs.lib.base.ui.BaseActivity
 import com.mredrock.cyxbs.lib.utils.extensions.*
@@ -14,21 +15,22 @@ import io.reactivex.rxjava3.schedulers.Schedulers
 import java.util.concurrent.TimeUnit
 
 class UserAgreeActivity : BaseActivity() {
-    
+
     private val mBack by R.id.login_view_user_agree_back.view<View>()
     private val mRecyclerView by R.id.login_rv_user_agree.view<RecyclerView>()
     private val mProgressBar by R.id.login_pb_user_agree_loader.view<ProgressBar>()
-    
+
     private var mDownMessage: DownMessage? = null
-    
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.login_activity_user_agree)
-        
+
         mBack.setOnSingleClickListener {
             finish()
         }
-    
+
+        mRecyclerView.layoutManager = LinearLayoutManager(this)
         // 因为界面简单，所以就没有必要使用 ViewModel，使用最原始的保存数据方式就可以了
         if (savedInstanceState == null) {
             getDownMessage()
@@ -42,7 +44,7 @@ class UserAgreeActivity : BaseActivity() {
             }
         }
     }
-    
+
     private fun getDownMessage() {
         val startTime = System.currentTimeMillis()
         CommonApiService::class.commonApi
@@ -61,7 +63,7 @@ class UserAgreeActivity : BaseActivity() {
                 mRecyclerView.adapter = UserAgreementAdapter(it.textList)
             }
     }
-    
+
     override fun onSaveInstanceState(outState: Bundle) {
         super.onSaveInstanceState(outState)
         outState.putSerializable(this::mDownMessage.name, mDownMessage)
