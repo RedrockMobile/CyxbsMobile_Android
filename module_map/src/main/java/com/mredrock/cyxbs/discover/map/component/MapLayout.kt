@@ -164,7 +164,9 @@ class MapLayout : FrameLayout, View.OnClickListener {
                         url?.let {
                             ProgressInterceptor.addListener(it, object : ProgressListener {
                                 override fun onProgress(progress: Int) {
-                                    GlideProgressDialog.setProcess(progress)
+                                    this@MapLayout.post {
+                                        GlideProgressDialog.setProcess(progress)
+                                    }
                                 }
 
                             })
