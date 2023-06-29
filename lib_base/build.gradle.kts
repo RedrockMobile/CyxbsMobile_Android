@@ -3,7 +3,6 @@ plugins {
 }
 
 
-dependLibCommon()
 dependLibUtils()
 dependLibConfig()
 

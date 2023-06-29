@@ -1,10 +1,11 @@
 package com.mredrock.cyxbs.lib.utils.extensions
 
 import android.animation.ValueAnimator
+import android.annotation.SuppressLint
 import android.view.MotionEvent
 import android.view.View
 import androidx.annotation.FloatRange
-import com.mredrock.cyxbs.common.utils.extensions.onTouch
+
 import com.mredrock.cyxbs.lib.utils.R
 import kotlin.math.pow
 
@@ -65,14 +66,16 @@ fun View.setOnDoubleClickListener(interval: Long = 500, click: (View) -> Unit) {
  * @param rate 按下按钮到达scale的速度，值越大越快到达scale倍数
  * @param onTouch 这里占用了onTouch监听，所以要是还想设置这个监听的话，可以通过这里来设置
  */
+@SuppressLint("ClickableViewAccessibility")
 fun View.pressToZoomOut(
   scale: Float = 0.85f,
   @FloatRange(from = 1.0, to = 10.0) rate: Float = 6f,
+  returnValue:Boolean = false,
   onTouch: View.OnTouchListener? = null
 ) {
   var progressTag = false
   val animatorList = mutableListOf<ValueAnimator>()
-  this.onTouch { v, event ->
+  this.setOnTouchListener { v, event ->
     if (event.action == MotionEvent.ACTION_DOWN) {
       animatorList.forEach { it.cancel() }
       animatorList.clear()
@@ -99,5 +102,6 @@ fun View.pressToZoomOut(
       progressTag = false
     }
     onTouch?.onTouch(v, event)
+    returnValue
   }
 }
