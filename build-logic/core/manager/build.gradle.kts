@@ -25,9 +25,7 @@ dependencies {
             it.name != "plugin"
         }.forEach {
             implementation(
-                group = it.group.toString(),
-                name = it.name,
-                version = it.version.toString()
+                project(":plugin:${it.name}")
             )
         }
 }
