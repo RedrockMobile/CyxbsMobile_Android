@@ -419,7 +419,7 @@ class TodoModel {
                 },
 
                 onError = {
-                    BaseApp.appContext.toast("拉取数据失败，请检查网络状况")
+                    toast("拉取数据失败，请检查网络状况")
                 }
             )
     }
@@ -457,7 +457,7 @@ class TodoModel {
                                             addOffLineModifyTodo(type = CHANGE)
                                         },
                                         onError = {
-                                            BaseApp.appContext.toast("本地修改重传失败")
+                                            toast("本地修改重传失败")
                                         }
                                 )
                     }
@@ -479,7 +479,7 @@ class TodoModel {
                                             addOffLineModifyTodo(type = CHANGE)
                                         },
                                         onError = {
-                                            BaseApp.appContext.toast("本地删除重传失败")
+                                            toast("本地删除重传失败")
                                         }
                                 )
                     }
@@ -516,7 +516,7 @@ class TodoModel {
                         },
                         onError = {
                             //提示用户强制上传失败
-                            BaseApp.appContext.toast("强制上传失败 :(")
+                            toast("强制上传失败 :(")
                         }
                     )
             }

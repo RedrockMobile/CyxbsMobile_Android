@@ -1,11 +1,11 @@
 package com.cyxbsmobile_single.module_todo.adapter
 
 import android.graphics.Typeface
+import androidx.appcompat.widget.AppCompatTextView
 import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.RecyclerView
 import com.cyxbsmobile_single.module_todo.R
 import com.mredrock.cyxbs.common.utils.extensions.pressToZoomOut
-import kotlinx.android.synthetic.main.todo_rv_item_choose_year.view.*
 
 /**
  * Author: RayleighZ
@@ -21,6 +21,7 @@ class ChooseYearAdapter(
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
         //默认第一年展示
         holder.itemView.apply {
+            val todo_tv_year = findViewById<AppCompatTextView>(R.id.todo_tv_year)
             todo_tv_year.apply {
 
                 if (position == curSelPosition) {

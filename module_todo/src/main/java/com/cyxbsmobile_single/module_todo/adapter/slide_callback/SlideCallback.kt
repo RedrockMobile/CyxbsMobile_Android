@@ -3,13 +3,18 @@ package com.cyxbsmobile_single.module_todo.adapter.slide_callback
 import android.animation.ValueAnimator
 import android.graphics.Canvas
 import android.view.animation.DecelerateInterpolator
+import android.widget.FrameLayout
+import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.animation.doOnEnd
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.RecyclerView
-import com.cyxbsmobile_single.module_todo.adapter.slide_callback.SlideCallback.CurStatus.*
-import com.cyxbsmobile_single.module_todo.adapter.slide_callback.SlideCallback.UserIntent.*
+import com.cyxbsmobile_single.module_todo.R
+import com.cyxbsmobile_single.module_todo.adapter.slide_callback.SlideCallback.CurStatus.CLOSE
+import com.cyxbsmobile_single.module_todo.adapter.slide_callback.SlideCallback.CurStatus.OPEN
+import com.cyxbsmobile_single.module_todo.adapter.slide_callback.SlideCallback.UserIntent.LEFT
+import com.cyxbsmobile_single.module_todo.adapter.slide_callback.SlideCallback.UserIntent.RIGHT
+import com.cyxbsmobile_single.module_todo.adapter.slide_callback.SlideCallback.UserIntent.UNDEFINE
 import com.mredrock.cyxbs.common.utils.LogUtils
-import kotlinx.android.synthetic.main.todo_rv_item_todo.view.*
 
 /**
  * @date 2021-08-14
@@ -98,6 +103,7 @@ class SlideCallback :
         isCurrentlyActive: Boolean
     ) {
         viewHolder.itemView.apply {
+            val todo_fl_del = findViewById<FrameLayout>(R.id.todo_fl_del)
             if (todo_fl_del == null){
                 return
             }
@@ -121,7 +127,7 @@ class SlideCallback :
                     alpha = animeProcess
                 }
             }
-
+            val todo_cl_item_main = findViewById<ConstraintLayout>(R.id.todo_cl_item_main)
             if (isCurrentlyActive) {
                 isFirstTimeReleaseFinger = true
                 if (touchFingerCount == 0L) {
