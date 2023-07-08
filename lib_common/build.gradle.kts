@@ -2,6 +2,7 @@ plugins {
     id("module-manager")
 }
 
+dependLibConfig()
 dependLibUtils()
 dependApiAccount()
 dependApiProtocol()

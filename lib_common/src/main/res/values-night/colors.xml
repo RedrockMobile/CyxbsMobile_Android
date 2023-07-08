@@ -1,8 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources xmlns:tools="http://schemas.android.com/tools">
-    <color name="colorPrimary" tools:ignore="ResourceName">#000000</color>
-    <color name="colorPrimaryDark" tools:ignore="ResourceName">#000000</color>
-    <color name="colorAccent" tools:ignore="ResourceName">#ffffff</color>
 
 <!--
 TODO 以后不要再把颜色写在这里面 ！！！

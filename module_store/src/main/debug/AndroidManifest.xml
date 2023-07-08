@@ -6,7 +6,7 @@
         android:allowBackup="true"
         android:label="module_store"
         android:supportsRtl="true"
-        android:theme="@style/AppTheme">
+        android:theme="@style/ConfigAppTheme">
 
         <activity android:name="store.ui.DebugActivity"
             android:exported="true">
@@ -18,20 +18,20 @@
 
         <activity
             android:name=".page.center.ui.activity.StoreCenterActivity"
-            android:theme="@style/AppTheme_NoSplitMotionEvent">
+            android:theme="@style/StoreAppTheme_NoSplitMotionEvent">
         </activity>
         <activity
             android:name=".page.record.ui.activity.ExchangeDetailActivity"
-            android:theme="@style/AppTheme_NoSplitMotionEvent"/>
+            android:theme="@style/StoreAppTheme_NoSplitMotionEvent"/>
         <activity
             android:name=".page.record.ui.activity.StampDetailActivity"
-            android:theme="@style/AppTheme_NoSplitMotionEvent"/>
+            android:theme="@style/StoreAppTheme_NoSplitMotionEvent"/>
         <activity
             android:name=".page.exchange.ui.activity.ProductExchangeActivity"
-            android:theme="@style/AppTheme_NoSplitMotionEvent"/>
+            android:theme="@style/StoreAppTheme_NoSplitMotionEvent"/>
         <activity
             android:name=".page.qa.ui.activity.QaActivity"
-            android:theme="@style/AppTheme_NoSplitMotionEvent"/>
+            android:theme="@style/StoreAppTheme_NoSplitMotionEvent"/>
         <activity
             android:name=".ui.activity.PhotoActivity" />
     </application>

@@ -6,7 +6,7 @@
         android:allowBackup="true"
         android:label="module_login"
         android:supportsRtl="true"
-        android:theme="@style/AppTheme">
+        android:theme="@style/ConfigAppTheme">
 
         <activity android:name="login.ui.DebugActivity"
             android:exported="true">
