@@ -22,7 +22,7 @@ class PublishPlugin : Plugin<Project> {
 
             apply(plugin = "org.gradle.maven-publish")
             // 开启模块缓存的总开关
-            var isOpenModuleCache = false
+            var isOpenModuleCache = true
 
             if (plugins.hasPlugin("com.android.application")) {
                 extensions.configure<BaseAppModuleExtension> {

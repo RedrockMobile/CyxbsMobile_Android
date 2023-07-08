@@ -4,9 +4,13 @@ import android.content.Context
 import android.os.Bundle
 import android.view.inputmethod.EditorInfo
 import android.view.inputmethod.InputMethodManager
+import android.widget.Button
+import android.widget.FrameLayout
 import android.widget.Toast
+import androidx.appcompat.widget.AppCompatImageView
 import androidx.core.view.iterator
 import com.alibaba.android.arouter.facade.annotation.Route
+import com.google.android.material.textfield.TextInputEditText
 import com.mredrock.cyxbs.common.component.CyxbsToast
 import com.mredrock.cyxbs.common.config.DISCOVER_VOLUNTEER
 import com.mredrock.cyxbs.common.ui.BaseViewModelActivity
@@ -17,11 +21,16 @@ import com.mredrock.cyxbs.common.utils.extensions.visible
 import com.mredrock.cyxbs.volunteer.event.VolunteerLoginEvent
 import com.mredrock.cyxbs.volunteer.viewmodel.VolunteerLoginViewModel
 import com.mredrock.cyxbs.volunteer.widget.EncryptPassword
-import kotlinx.android.synthetic.main.volunteer_activity_login.*
 import org.greenrobot.eventbus.EventBus
 
 @Route(path = DISCOVER_VOLUNTEER)
 class VolunteerLoginActivity : BaseViewModelActivity<VolunteerLoginViewModel>() {
+
+    private val btn_volunteer_login by R.id.btn_volunteer_login.view<Button>()
+    private val iv_back by R.id.iv_back.view<AppCompatImageView>()
+    private val et_volunteer_password by R.id.et_volunteer_password.view<TextInputEditText>()
+    private val et_volunteer_account by R.id.et_volunteer_account.view<TextInputEditText>()
+    private val fl_root by R.id.fl_root.view<FrameLayout>()
 
     companion object {
         const val BIND_SUCCESS: Int = 0
@@ -55,13 +64,21 @@ class VolunteerLoginActivity : BaseViewModelActivity<VolunteerLoginViewModel>() 
 
 
     private fun loginAction() {
-        if (et_volunteer_account.text.toString().isEmpty() || et_volunteer_password.text.toString().isEmpty()) {
+        if (et_volunteer_account.text.toString().isEmpty() || et_volunteer_password.text.toString()
+                .isEmpty()
+        ) {
             CyxbsToast.makeText(this, "账号或密码不能为空", Toast.LENGTH_SHORT).show()
             return
         }
-        (getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager).hideSoftInputFromWindow(currentFocus?.windowToken, InputMethodManager.HIDE_NOT_ALWAYS)
+        (getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager).hideSoftInputFromWindow(
+            currentFocus?.windowToken,
+            InputMethodManager.HIDE_NOT_ALWAYS
+        )
         displayLottie()
-        viewModel.login(et_volunteer_account.text.toString(), EncryptPassword.encrypt(et_volunteer_password.text.toString())) {
+        viewModel.login(
+            et_volunteer_account.text.toString(),
+            EncryptPassword.encrypt(et_volunteer_password.text.toString())
+        ) {
             CyxbsToast.makeText(this, "服务暂时不可使用~", Toast.LENGTH_SHORT).show()
             stopLottie()
         }
