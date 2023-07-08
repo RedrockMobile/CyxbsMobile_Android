@@ -1,12 +1,10 @@
 package com.mredrock.cyxbs.mine.page.security.viewmodel
 
 import androidx.lifecycle.MutableLiveData
-import com.mredrock.cyxbs.common.BaseApp
 import com.mredrock.cyxbs.common.network.ApiGenerator
 import com.mredrock.cyxbs.common.utils.extensions.doOnErrorWithDefaultErrorHandler
 import com.mredrock.cyxbs.common.utils.extensions.unsafeSubscribeBy
 import com.mredrock.cyxbs.common.utils.extensions.setSchedulers
-import com.mredrock.cyxbs.common.utils.extensions.toast
 import com.mredrock.cyxbs.common.viewmodel.BaseViewModel
 import com.mredrock.cyxbs.mine.network.ApiService
 
@@ -20,7 +18,7 @@ class BindEmailViewModel : BaseViewModel() {
         ApiGenerator.getApiService(ApiService::class.java)
                 .getEmailCode(email)
                 .doOnErrorWithDefaultErrorHandler {
-                    BaseApp.appContext.toast(it.toString())
+                    toast(it.toString())
                     true
                 }
                 .setSchedulers()

@@ -42,7 +42,7 @@ class HistoryListPresenter : BasePresenter<HistoryListViewModel>() {
                 emptyList<HistoryFeedback.Data.Feedback>()
             }
             .unsafeSubscribeBy(onError = {
-                appContext.toast("出问题啦~ ${it.message}")
+                toast("出问题啦~ ${it.message}")
             },
                                onComplete = {
                 }, onNext = {

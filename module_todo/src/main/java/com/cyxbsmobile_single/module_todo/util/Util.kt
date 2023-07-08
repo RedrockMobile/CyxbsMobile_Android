@@ -86,7 +86,7 @@ fun repeatMode2RemindTime(remindMode: RemindMode): String {
         RemindMode.MONTH -> {
             remindMode.day.sort()
             if (remindMode.day.last() > 31) {
-                appContext.toast("提醒日期错误")
+                toast("提醒日期错误")
                 return "提醒日期错误"
             }
             repeat(12) {

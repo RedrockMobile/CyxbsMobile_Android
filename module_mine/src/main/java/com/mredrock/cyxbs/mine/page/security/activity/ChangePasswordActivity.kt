@@ -13,7 +13,6 @@ import androidx.appcompat.widget.AppCompatEditText
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.Observer
 import com.mredrock.cyxbs.api.account.IAccountService
-import com.mredrock.cyxbs.common.BaseApp
 import com.mredrock.cyxbs.common.component.CyxbsToast
 import com.mredrock.cyxbs.common.service.ServiceManager
 import com.mredrock.cyxbs.common.ui.BaseViewModelActivity
@@ -357,7 +356,7 @@ class ChangePasswordActivity : BaseViewModelActivity<ChangePasswordViewModel>() 
                 mEtSecurityFirstInputPassword.setText("")
                 isOriginView = false
             } else {
-                this.toast("旧密码错误!")
+                toast("旧密码错误!")
             }
         })
         mBtnSecurityChangePasswordConfirm.setOnSingleClickListener {
@@ -385,7 +384,7 @@ class ChangePasswordActivity : BaseViewModelActivity<ChangePasswordViewModel>() 
                                     mTvSecurityTipLine1.visibility = View.VISIBLE
                                 }
                             } else {
-                                BaseApp.appContext.toast("后端返回的认证码存在问题，修改失败")
+                                toast("后端返回的认证码存在问题，修改失败")
                             }
                         } else {
                             if (it.length in 6..16) {
@@ -409,7 +408,7 @@ class ChangePasswordActivity : BaseViewModelActivity<ChangePasswordViewModel>() 
                 mPbSecurityChangePassword.visibility = View.GONE
                 if (viewModel.isDefaultPassword) {
                     //如果是默认密码
-                    this.toast(getString(R.string.mine_security_default_password_hint))
+                    toast(getString(R.string.mine_security_default_password_hint))
                 } else {
                     viewModel.checkBinding(stuNum) {
                         //此处的dialog需要传递来源，是来自登陆界面还是来自个人界面

@@ -61,7 +61,7 @@ class IdentityAdapter(val list:List<AuthenticationStatus.Data>, val context: Con
                     })
 
                 }else{
-                    context.toast("不可以对别人的身份动手动脚哦！")
+                    toast("不可以对别人的身份动手动脚哦！")
                 }
             }
             vh.menuViewSetting.setOnClickListener(this)
@@ -125,7 +125,7 @@ class IdentityAdapter(val list:List<AuthenticationStatus.Data>, val context: Con
             intent.putExtra("redid",redid)
             context.startActivity(intent)
         }else{
-            context.toast("不可以对别人的身份动手动脚哦！")
+            toast("不可以对别人的身份动手动脚哦！")
         }
 
     }
