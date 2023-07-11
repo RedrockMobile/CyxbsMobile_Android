@@ -69,6 +69,9 @@ class AppPlugin : BasePlugin() {
                     signingConfig = signingConfigs.getByName("config")
                 }
             }
+            buildFeatures{
+                buildConfig=true
+            }
 
 
         }

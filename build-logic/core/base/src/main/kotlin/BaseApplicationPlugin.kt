@@ -78,8 +78,8 @@ internal class BaseApplicationPlugin : BasePlugin() {
             }
 
             compileOptions {
-                sourceCompatibility = JavaVersion.VERSION_1_8
-                targetCompatibility = JavaVersion.VERSION_1_8
+                sourceCompatibility = JavaVersion.VERSION_17
+                targetCompatibility = JavaVersion.VERSION_17
             }
 
             lint {
@@ -91,7 +91,7 @@ internal class BaseApplicationPlugin : BasePlugin() {
             }
 
             (this as ExtensionAware).extensions.configure<KotlinJvmOptions> {
-                jvmTarget = "1.8"
+                jvmTarget = "17"
             }
 
             // 命名规范设置，因为多模块相同资源名在打包时会合并，所以必须强制开启
@@ -118,6 +118,9 @@ internal class BaseApplicationPlugin : BasePlugin() {
             packagingOptions {
                 jniLibs.excludes += Config.jniExclude
                 resources.excludes += Config.resourcesExclude
+            }
+            buildFeatures{
+                buildConfig=true
             }
 
         }

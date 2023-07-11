@@ -47,6 +47,9 @@ class ModuleDebugPlugin : BasePlugin() {
                     }
                 }
             }
+            buildFeatures{
+                buildConfig=true
+            }
         }
 
         dependencies {
