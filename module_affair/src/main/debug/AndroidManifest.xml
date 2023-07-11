@@ -5,7 +5,7 @@
         android:allowBackup="true"
         android:label="module_affair"
         android:supportsRtl="true"
-        android:theme="@style/AppTheme">
+        android:theme="@style/ConfigAppTheme">
 
         <activity
             android:name="affair.DebugActivity"
@@ -16,8 +16,7 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".ui.activity.AffairActivity"
-            android:theme="@style/AppTheme" />
+            android:name=".ui.activity.AffairActivity" />
     </application>
 
 </manifest>

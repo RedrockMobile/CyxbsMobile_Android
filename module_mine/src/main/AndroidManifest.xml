@@ -2,7 +2,7 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools">
 
-    <application android:theme="@style/AppTheme">
+    <application>
         <activity android:name=".page.feedback.center.ui.FeedbackCenterActivity" />
         <activity android:name=".page.feedback.center.ui.FeedbackDetailActivity" />
         <activity android:name=".page.feedback.history.detail.HistoryDetailActivity" />
@@ -26,7 +26,7 @@
         <activity android:name=".page.mine.ui.activity.FanActivity" />
         <activity
             android:name=".page.security.activity.SecurityActivity"
-            android:theme="@style/AppTheme.NoActionBar" />
+            android:theme="@style/ConfigAppTheme.NoActionBar" />
         <activity
             android:name=".page.edit.EditInfoActivity"
             android:launchMode="singleTop"
@@ -39,8 +39,7 @@
             android:launchMode="singleTop" />
         <activity
             android:name="com.yalantis.ucrop.UCropActivity"
-            android:screenOrientation="portrait"
-            android:theme="@style/AppTheme" />
+            android:screenOrientation="portrait" />
     </application>
 
 </manifest>

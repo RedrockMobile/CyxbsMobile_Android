@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources xmlns:tools="http://schemas.android.com/tools">
     <!--用于禁用多点触摸-->
-    <style name="AppTheme_NoSplitMotionEvent" parent="@style/AppTheme" tools:ignore="ResourceName">
+    <style name="StoreAppTheme_NoSplitMotionEvent" parent="@style/ConfigAppTheme" tools:ignore="ResourceName">
         <item name="android:windowEnableSplitTouch">false</item>
         <item name="android:splitMotionEvents">false</item>
     </style>
