@@ -52,4 +52,6 @@
     <color name="food_dialog_detail_content"> #8015315B</color>
 
     <color name="food_btn_pressed_text"> #6615315B</color>
+
+    <color name="food_result_text">#2F5085</color>
 </resources>

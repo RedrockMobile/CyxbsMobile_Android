@@ -7,11 +7,15 @@ import android.widget.Button
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.appcompat.content.res.AppCompatResources
+import androidx.constraintlayout.widget.ConstraintLayout
+import androidx.core.animation.addListener
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.RecyclerView
+import com.alibaba.android.arouter.facade.annotation.Route
 import com.google.android.flexbox.FlexDirection
 import com.google.android.flexbox.FlexWrap
 import com.google.android.flexbox.FlexboxLayoutManager
+import com.mredrock.cyxbs.config.route.CENTER_FOOD_ENTRY
 import com.mredrock.cyxbs.food.R
 import com.mredrock.cyxbs.food.ui.adapters.FoodMainRvAdapter
 import com.mredrock.cyxbs.food.ui.view.FoodDetailDialog
@@ -23,6 +27,7 @@ import com.mredrock.cyxbs.lib.base.ui.BaseActivity
 import com.mredrock.cyxbs.lib.utils.extensions.*
 
 @Suppress("LABEL_NAME_CLASH")
+@Route(path = CENTER_FOOD_ENTRY)
 class FoodMainActivity : BaseActivity() {
     private val viewModel by lazy { ViewModelProvider(this)[FoodMainViewModel::class.java] }
     private val mRvRegion by R.id.food_main_rv_canteen_region.view<RecyclerView>()
@@ -65,12 +70,16 @@ class FoodMainActivity : BaseActivity() {
 
     private val mBtnChange by R.id.food_main_btn_change.view<Button>()
     private val mBtnDetermine by R.id.food_main_btn_determine.view<Button>()
-    private val mTvMeal by R.id.food_main_tv_meal.view<TextView>()
+    private val mTvMealNew by R.id.food_main_tv_meal_new.view<TextView>()
+    private val mTvMealOld by R.id.food_main_tv_meal_old.view<TextView>()
+    private val mClResult by R.id.food_main_cl_result.view<ConstraintLayout>()
     private val mBtnDetail by R.id.food_main_btn_detail.view<Button>()
     private val mImgRefresh by R.id.food_main_img_refresh.view<ImageView>()
     private val mImgPicture by R.id.food_main_img_picture.view<ImageView>()
+    private val mClMeal by R.id.food_main_cl_meal.view<ConstraintLayout>()
+    private var dialog:FoodDetailDialog? = null
 
-    //是否改变标签
+    //是否改变标签，如果标签改变了换一换需要重新请求数据
     private var changeLabel = true
 
     private val foodRegionRvAdapter = FoodMainRvAdapter() { state, position ->
@@ -80,7 +89,7 @@ class FoodMainActivity : BaseActivity() {
     private val foodNumRvAdapter = FoodMainRvAdapter() { state, position ->
         //先将所有的hashMap键值对改为false，因为是单选
         viewModel.run {
-            hashMapNumber.replaceAll { t, u ->
+            hashMapNumber.replaceAll { _, _ ->
                 false
             }
             //将所有的button状态改为false
@@ -112,13 +121,10 @@ class FoodMainActivity : BaseActivity() {
             mBtnDetermine.gone()
         }
         viewModel.foodResultBean.observe {
-//            if (it.isEmpty()) mTvMeal.text = ""
             changeLabel = false
             if (viewModel.foodNum < it.size) {
-                mTvMeal.text = it[viewModel.foodNum].name
-                val objectAnimation = ObjectAnimator.ofFloat(mTvMeal, "alpha", 0f, 1f)
-                objectAnimation.duration = 1500
-                objectAnimation.start()
+                mTvMealNew.text = it[viewModel.foodNum].name
+                changeResult()
             } else {
                 FoodMainDialog.Builder(
                     this,
@@ -161,6 +167,27 @@ class FoodMainActivity : BaseActivity() {
                 viewModel.resultChoose.value = true
             }
         }
+        viewModel.foodPraiseBean.observe {
+            dialog?.findViewById<TextView>(R.id.food_dialog_tv_praise_num)?.text =
+                it.praise_num.toString()
+            if (it.praise_is) {
+                dialog?.findViewById<Button>(R.id.food_dialog_detail_btn_positive)
+                    ?.apply {
+                        background = AppCompatResources.getDrawable(
+                            context,
+                            R.drawable.food_shape_btn_praise
+                        )
+                    }
+            } else {
+                dialog?.findViewById<Button>(R.id.food_dialog_detail_btn_positive)
+                    ?.apply {
+                        background = AppCompatResources.getDrawable(
+                            context,
+                            R.drawable.food_shape_btn_determine
+                        )
+                    }
+            }
+        }
     }
 
     private fun initView() {
@@ -170,7 +197,7 @@ class FoodMainActivity : BaseActivity() {
         }
         mBtnDetail.setOnSingleClickListener {
             viewModel.dataFoodResult[viewModel.foodNum].apply {
-                FoodDetailDialog.Builder(
+                dialog = FoodDetailDialog.Builder(
                     this@FoodMainActivity,
                     data = FoodDetailDialog.Data(
                         content = introduce,
@@ -187,42 +214,19 @@ class FoodMainActivity : BaseActivity() {
                     }
                     .setPositiveClick {
                         viewModel.postFoodPraise(this@apply.name)
-                        viewModel.foodPraiseBean.observe {
-                            this.findViewById<TextView>(R.id.food_dialog_tv_praise_num).text =
-                                it.praise_num.toString()
-                            if (it.praise_is) {
-                                this.findViewById<Button>(R.id.food_dialog_detail_btn_positive)
-                                    .apply {
-                                        background = AppCompatResources.getDrawable(
-                                            context,
-                                            R.drawable.food_shape_btn_praise
-                                        )
-                                    }
-                            } else {
-                                this.findViewById<Button>(R.id.food_dialog_detail_btn_positive)
-                                    .apply {
-                                        background = AppCompatResources.getDrawable(
-                                            context,
-                                            R.drawable.food_shape_btn_determine
-                                        )
-                                    }
-                            }
-                        }
                     }
                     .build()
-                    .show()
+                dialog?.show()
             }
         }
         mBtnChange.setOnSingleClickListener {
             viewModel.apply {
                 if (!changeLabel) {
-                    if (foodNum < dataFoodResult.size - 1){
+                    if (foodNum < dataFoodResult.size - 1) {
                         foodNum++
-                        mTvMeal.text = viewModel.dataFoodResult.get(viewModel.foodNum).name
-                        val objectAnimation = ObjectAnimator.ofFloat(mTvMeal, "alpha", 0f, 1f)
-                        objectAnimation.duration = 1500
-                        objectAnimation.start()
-                    }else {
+                        mTvMealNew.text = viewModel.dataFoodResult[foodNum].name
+                        changeResult()
+                    } else {
                         FoodMainDialog.Builder(
                             this@FoodMainActivity,
                             data = ChooseDialog.Data(
@@ -237,6 +241,7 @@ class FoodMainActivity : BaseActivity() {
                         }.show()
                     }
                 } else {
+                    viewModel.foodNum = 0
                     postFoodResult()
                 }
             }
@@ -307,6 +312,37 @@ class FoodMainActivity : BaseActivity() {
                     }
                 }
         }
+    }
+
+    private fun changeResult() {
+        viewTranslation(1000)
+    }
+
+    private fun viewTranslation(
+        duration: Long
+    ) {
+        //当换一个按钮为可见时，说明菜品位置已经有菜品了，此时
+        val translation = ObjectAnimator.ofFloat(
+            mClMeal,
+            "translationY",
+            0f,
+            mClMeal.height.toFloat() / 2 -10
+        )
+        translation.duration = duration
+        translation.addListener {
+            //动画完成后 新旧的view交换位置
+            mTvMealOld.text = mTvMealNew.text
+            mTvMealNew.text = ""
+            val t2 = ObjectAnimator.ofFloat(
+                mClMeal,
+                "translationY",
+                mClMeal.y,
+                0f
+            )
+            t2.duration = 0
+            t2.start()
+        }
+        translation.start()
     }
 
 }

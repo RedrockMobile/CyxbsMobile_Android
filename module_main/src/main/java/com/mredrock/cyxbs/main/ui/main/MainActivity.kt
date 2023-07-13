@@ -7,8 +7,6 @@ import com.alibaba.android.arouter.facade.annotation.Route
 import com.mredrock.cyxbs.api.account.IAccountService
 import com.mredrock.cyxbs.api.login.ILoginService
 import com.mredrock.cyxbs.api.update.IAppUpdateService
-import com.mredrock.cyxbs.config.route.DISCOVER_EMPTY_ROOM
-import com.mredrock.cyxbs.config.route.DISCOVER_GRADES
 import com.mredrock.cyxbs.config.route.DISCOVER_SCHOOL_CAR
 import com.mredrock.cyxbs.config.route.MAIN_MAIN
 import com.mredrock.cyxbs.config.sp.SP_COURSE_SHOW_STATE
@@ -154,17 +152,17 @@ class MainActivity : BaseActivity() {
         /**
          * TODO 关闭服务 邮问位置课表上拉
          */
-        1 ->{
+        /*1 ->{
           mBottomNavLayout.cardElevation = 0F
           if (!mIsActivityRebuilt) {
             // 只在 Activity 没有重建时才设置成 false
             mViewModel.courseBottomSheetExpand.value = false
           }
+        }*/
+        1 -> {
+          mBottomNavLayout.cardElevation = 4.dp2pxF
+          mViewModel.courseBottomSheetExpand.value = null
         }
-//        1 -> {
-//          mBottomNavLayout.cardElevation = 4.dp2pxF
-//          mViewModel.courseBottomSheetExpand.value = null
-//        }
       }
       
       

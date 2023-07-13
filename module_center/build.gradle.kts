@@ -1,14 +1,12 @@
 plugins {
-    id("module-debug")
+    id("module-manager")
 }
 
+dependLibConfig()
 dependNetwork()
 dependLibBase()
 dependLibUtils()
 dependRxjava()
-dependGlide()
-dependLibConfig()
-
 
 dependencies {
 

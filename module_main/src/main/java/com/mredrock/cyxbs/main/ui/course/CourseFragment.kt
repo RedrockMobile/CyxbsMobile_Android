@@ -147,16 +147,22 @@ class CourseFragment : BaseFragment() {
           when (newState) {
             BottomSheetBehavior.STATE_EXPANDED -> {
               mViewHeader.gone()
-              mActivityViewModel.courseBottomSheetExpand.value = true
+              if(mActivityViewModel.courseBottomSheetExpand.value != true){
+                mActivityViewModel.courseBottomSheetExpand.value = true
+              }
               mCollapsedBackPressedCallback.isEnabled = true
             }
             BottomSheetBehavior.STATE_COLLAPSED -> {
               mFcvCourse.gone()
-              mActivityViewModel.courseBottomSheetExpand.value = false
+              if (mActivityViewModel.courseBottomSheetExpand.value != false) {
+                mActivityViewModel.courseBottomSheetExpand.value = false
+              }
               mCollapsedBackPressedCallback.isEnabled = false
             }
             BottomSheetBehavior.STATE_HIDDEN -> {
-              mActivityViewModel.courseBottomSheetExpand.value = null
+              if(mActivityViewModel.courseBottomSheetExpand.value != null) {
+                mActivityViewModel.courseBottomSheetExpand.value = null
+              }
               mCollapsedBackPressedCallback.isEnabled = false
             }
             else -> {}
