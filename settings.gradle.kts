@@ -32,7 +32,7 @@ dependencyResolutionManagement {
 
 // 测试使用，排除掉不需要的模块，记得还原！！！
 val excludeList = listOf<String>(
-  "module_qa",
+  "module_qa", // qa 模块因合规问题下线，新的代替将上线，所以排除 qa
   
 )
 

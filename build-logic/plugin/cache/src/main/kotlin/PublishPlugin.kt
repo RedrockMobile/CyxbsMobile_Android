@@ -6,6 +6,7 @@ import org.gradle.api.artifacts.component.ProjectComponentSelector
 import org.gradle.api.publish.PublishingExtension
 import org.gradle.api.publish.maven.MavenPublication
 import org.gradle.kotlin.dsl.*
+import java.util.Locale
 
 
 /**
@@ -103,9 +104,12 @@ class PublishPlugin : Plugin<Project> {
                     }
                 }
             }
+            
+            val mavenName = cache.localMavenName.replaceFirstChar {
+                if (it.isLowerCase()) it.titlecase(Locale.getDefault()) else it.toString()
+            }
 
-            val publishTaskName =
-                "publishModuleCachePublicationTo${cache.localMavenName.capitalize()}Repository"
+            val publishTaskName = "publishModuleCachePublicationTo${mavenName}Repository"
 
             tasks.register("cacheToLocalMaven") {
                 group = "publishing"

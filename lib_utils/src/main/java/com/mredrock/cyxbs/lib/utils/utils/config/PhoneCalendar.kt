@@ -155,7 +155,6 @@ object PhoneCalendar {
     val value = when (event) {
       is CommonEvent -> getCommonEventContent(event, calendarId)
       is FrequencyEvent -> getFrequencyEventContent(event, calendarId)
-      else -> {null}
     } ?: return null
     try {
       val eventId = context.contentResolver.insert(Events.CONTENT_URI, value)
@@ -220,8 +219,6 @@ object PhoneCalendar {
       is FrequencyEvent -> getFrequencyEventContent(event, calendarId) {
         putNull(Events.RDATE) // 删除 RDATE，防止之前是 CommonEvent
       }
-
-      else -> {null}
     } ?: return false
     val updateUri = ContentUris.withAppendedId(Events.CONTENT_URI, eventId)
     try {
@@ -499,7 +496,7 @@ object PhoneCalendar {
   //
   ///////////////////////////////
   
-  interface Event {
+  sealed interface Event {
     val title: String
     val description: String
     
@@ -576,16 +573,8 @@ object PhoneCalendar {
     val byMonth: List<Int> = emptyList(),
     val bySetPos: List<Int> = emptyList(),
   ) : Event {
-    enum class Freq {
-      /**
-       * 暂时去掉密封类的使用，待R8完全支持后请改回来，原因：
-       * 密封类在 D8 和 R8 编译器（产生错误的编译器）中不完全受支持。
-       * 在 https://issuetracker.google.com/227160052 中跟踪完全支持的密封类。
-       * D8支持将出现在Android Studio Electric Eel中，目前处于预览状态，而R8支持在更高版本之前不会出现
-       * stackoverflow上的回答：
-       * https://stackoverflow.com/questions/73453524/what-is-causing-this-error-com-android-tools-r8-internal-nc-sealed-classes-are#:~:text=This%20is%20due%20to%20building%20using%20JDK%2017,that%20the%20dexer%20won%27t%20be%20able%20to%20handle.
-       */SECONDLY, MINUTELY, HOURLY, DAILY, WEEKLY, MONTHLY, YEARLY }
-    abstract class ByDay(val name: String) {
+    enum class Freq { SECONDLY, MINUTELY, HOURLY, DAILY, WEEKLY, MONTHLY, YEARLY }
+    sealed class ByDay(val name: String) {
       /**
        * 用于表示在每月或每年的 “RRULE” 中特定日期的第 n 次出现。支持负数
        *

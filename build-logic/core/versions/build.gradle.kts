@@ -3,10 +3,10 @@ import org.gradle.configurationcache.extensions.capitalized
 plugins {
   `kotlin-dsl`
 }
-java.toolchain.languageVersion.set(JavaLanguageVersion.of(17))
+java.toolchain.languageVersion.set(JavaLanguageVersion.of(libs.versions.java.targetVersion.get()))
 tasks.withType<org.jetbrains.kotlin.gradle.tasks.KotlinCompile>().configureEach {
   kotlinOptions {
-    jvmTarget = "17"
+    jvmTarget = libs.versions.kotlin.jvmTargetVersion.get()
   }
 }
 

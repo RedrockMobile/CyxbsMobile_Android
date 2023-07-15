@@ -9,3 +9,7 @@ dependApiInit()
 dependApiAccount()
 
 dependRxjava()
+
+android {
+
+}

@@ -24,13 +24,5 @@ interface InitialManager {
             }?.processName
     }
 
-
     fun applicationId() = application.packageName
-    fun applicationVersion() = application.packageManager.getPackageInfo(application.packageName, 0).versionName
-    fun applicationCode() = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
-        application.packageManager.getPackageInfo(application.packageName, 0).longVersionCode
-    } else {
-        application.packageManager.getPackageInfo(application.packageName, 0).versionCode.toLong()
-    }
-
 }

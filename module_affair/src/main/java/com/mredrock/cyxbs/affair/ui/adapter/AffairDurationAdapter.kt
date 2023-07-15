@@ -38,14 +38,14 @@ class AffairDurationAdapter :
           false
         } else oldItem.onlyId == newItem.onlyId
       }
-
+      
       override fun areContentsTheSame(
         oldItem: AffairAdapterData,
         newItem: AffairAdapterData
       ): Boolean {
         return oldItem == newItem
       }
-
+      
       override fun getChangePayload(
         oldItem: AffairAdapterData,
         newItem: AffairAdapterData
@@ -70,7 +70,7 @@ class AffairDurationAdapter :
       super.submitList(null, commitCallback)
     }
   }
-
+  
   override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): VHolder {
     val inflater = LayoutInflater.from(parent.context)
     return when (viewType) {
@@ -98,11 +98,11 @@ class AffairDurationAdapter :
       else -> error("???")
     }
   }
-
+  
   override fun onBindViewHolder(holder: VHolder, position: Int) {
     val data = getItem(position)
     val lp = holder.itemView.layoutParams as FlexboxLayoutManager.LayoutParams
-
+    
     when (holder) {
       is WeekDataVHolder -> {
         data as AffairWeekData
@@ -118,28 +118,20 @@ class AffairDurationAdapter :
       }
     }
   }
-
+  
   override fun getItemViewType(position: Int): Int {
     return when (getItem(position)) {
       is AffairWeekData -> WeekDataVHolder::class.hashCode()
       is AffairTimeData -> TimeDataVHolder::class.hashCode()
       is AffairTimeAdd -> TimeAddVHolder::class.hashCode()
-      else -> {throw RuntimeException("AffairDurationAdapter#getItemViewType 未匹配")}
     }
   }
-  /**
-   * 暂时去掉密封类的使用，待R8完全支持后请改回来，原因：
-   * 密封类在 D8 和 R8 编译器（产生错误的编译器）中不完全受支持。
-   * 在 https://issuetracker.google.com/227160052 中跟踪完全支持的密封类。
-   * D8支持将出现在Android Studio Electric Eel中，目前处于预览状态，而R8支持在更高版本之前不会出现
-   * stackoverflow上的回答：
-   * https://stackoverflow.com/questions/73453524/what-is-causing-this-error-com-android-tools-r8-internal-nc-sealed-classes-are#:~:text=This%20is%20due%20to%20building%20using%20JDK%2017,that%20the%20dexer%20won%27t%20be%20able%20to%20handle.
-   */
-  open class VHolder(itemView: View) : RecyclerView.ViewHolder(itemView)
-
+  
+  sealed class VHolder(itemView: View) : RecyclerView.ViewHolder(itemView)
+  
   inner class WeekDataVHolder(itemView: View) : VHolder(itemView) {
     val tvWeek: TextView = itemView.findViewById(R.id.affair_tv_add_affair_week)
-
+    
     init {
       tvWeek.setOnSingleClickListener { view ->
         val dialog =
@@ -157,11 +149,11 @@ class AffairDurationAdapter :
       }
     }
   }
-
+  
   inner class TimeDataVHolder(itemView: View) : VHolder(itemView) {
     val tvTime: TextView = itemView.findViewById(R.id.affair_tv_find_course_history_name)
     val ivDelete: ImageView = itemView.findViewById(R.id.affair_ib_find_course_history_delete)
-
+    
     init {
       ivDelete.setOnSingleClickListener {
         val data = getItem(layoutPosition) as AffairTimeData
@@ -185,10 +177,10 @@ class AffairDurationAdapter :
       }
     }
   }
-
+  
   inner class TimeAddVHolder(itemView: View) : VHolder(itemView) {
     val ivAdd: ImageView = itemView.findViewById(R.id.affair_iv_add_time)
-
+    
     init {
       ivAdd.setOnSingleClickListener {
         val dialog = TimeSelectDialog(it.context) { timeData ->

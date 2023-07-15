@@ -26,8 +26,6 @@ class AppPlugin : BasePlugin() {
         apply(plugin="base.application")
         apply(plugin= "com.tencent.vasdolly")
         apply(from = "$rootDir/build-logic/secret/secret.gradle")
-//        apply(from = "$rootDir/build-logic/script/andresguard.gradle")
-//        apply(from = "$rootDir/build-logic/script/redex.gradle")
 
         dependAllProject()
         dependBugly()
@@ -69,10 +67,9 @@ class AppPlugin : BasePlugin() {
                     signingConfig = signingConfigs.getByName("config")
                 }
             }
-            buildFeatures{
-                buildConfig=true
+            buildFeatures {
+                buildConfig = true
             }
-
 
         }
 

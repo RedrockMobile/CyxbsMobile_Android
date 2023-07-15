@@ -46,7 +46,6 @@ class DialogBottomVpAdapter(
       is AffairData -> AffairVH::class.hashCode()
       is StuLessonData -> StuLessonVH::class.hashCode()
       is TeaLessonData -> TeaLessonVH::class.hashCode()
-      else -> {throw RuntimeException("DialogBottomVpAdapter#getItemViewType 未匹配")}
     }
   }
   

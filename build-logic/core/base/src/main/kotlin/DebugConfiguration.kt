@@ -22,7 +22,7 @@ object DebugConfiguration {
       /**
        * todo 截止 23年3/3，doKit 没有适配高版本的 gradle，所以插件引入会导致编译失败
        *  如果后面 doKit 适配高版本了，麻烦改下 doKit 版本
-       *  更详细的原因可以看 build.gradle 里面写的注释
+       *  更详细的原因可以看 lib_debug 模块 中build.gradle 里面写的注释
        */
 //      apply(plugin = "com.didi.dokit")
 //      extensions.configure<DoKitExt> {
@@ -61,7 +61,7 @@ object DebugConfiguration {
        * 23.3.4
        * 又去看了一下，有人升级了 LaunchX：https://github.com/eleme/lancet/issues/69，但仍然无法集成进来
        */
-      val codeLocatorVersion = "2.0.0"
+      // val codeLocatorVersion = "2.0.0"
       // CodeLocator 问题比较多，会疯狂抛被抓的异常出来，加上目前高级功能无法使用，所以暂时先注释
 //      "debugImplementation"("com.bytedance.tools.codelocator:codelocator-core:$codeLocatorVersion")
       // 下面这个是高级功能，目前无法正常使用，如果需要使用基础功能的话，取消上面这个注释即可
