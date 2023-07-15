@@ -6,7 +6,7 @@
     android:layout_height="match_parent"
     android:fitsSystemWindows="true"
     android:orientation="vertical"
-    android:background="@color/common_white_background"
+    android:background="@color/config_window_background"
     tools:context=".CalendarActivity">
 
 
@@ -50,7 +50,7 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="15dp"
         android:text="@string/calendar_the_calendar_service_is_temporarily_unavailable"
-        android:textColor="@color/common_level_two_font_color"
+        android:textColor="@color/config_level_two_font_color"
         android:visibility="gone"
         app:layout_constraintEnd_toEndOf="@+id/calendar_image_view"
         app:layout_constraintStart_toStartOf="@+id/calendar_image_view"

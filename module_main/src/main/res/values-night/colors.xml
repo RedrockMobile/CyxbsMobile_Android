@@ -5,5 +5,9 @@
     <color name="main_btn_bottom_un_focused">#5b585c</color>
     <!--    底部tab聚焦字体颜色-->
     <color name="main_btn_bottom_focused">#465FFF</color>
+    <!--    启动页颜色-->
+    <color name="main_start_page_white_color">#333333</color>
 
+    <!--    忘记密码按钮颜色            -->
+    <color name="main_mine_security_dialog_back_color">#2e2e2e</color>
 </resources>
