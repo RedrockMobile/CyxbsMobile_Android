@@ -10,7 +10,7 @@
         android:layout_width="match_parent"
         android:layout_height="178dp"
         android:orientation="vertical"
-        android:src="@drawable/common_shape_round_corner_dialog"
+        android:src="@drawable/config_shape_round_corner_dialog"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         tools:ignore="ContentDescription" />
@@ -36,7 +36,7 @@
         android:layout_width="80dp"
         android:layout_height="34dp"
         android:layout_marginBottom="30dp"
-        android:textColor="@color/common_white_font_color"
+        android:textColor="@android:color/white"
         android:textSize="14sp"
         android:theme="@style/Theme.MaterialComponents"
         android:insetTop="0dp"
