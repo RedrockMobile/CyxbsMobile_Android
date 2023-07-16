@@ -29,7 +29,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginStart="14dp"
                     android:text="体育打卡"
-                    android:textColor="@color/common_level_two_font_color"
+                    android:textColor="@color/config_level_two_font_color"
                     android:textSize="18sp"
                     android:textStyle="bold"
                     tools:ignore="HardcodedText" />
@@ -53,7 +53,7 @@
                 android:layout_marginEnd="15dp"
                 android:alpha="0.54"
                 android:text="实际以教务在线为准"
-                android:textColor="@color/common_level_two_font_color"
+                android:textColor="@color/config_level_two_font_color"
                 android:textSize="11sp"
                 tools:ignore="HardcodedText" />
         </FrameLayout>

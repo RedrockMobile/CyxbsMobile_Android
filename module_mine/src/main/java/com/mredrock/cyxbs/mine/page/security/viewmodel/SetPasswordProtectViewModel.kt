@@ -1,12 +1,10 @@
 package com.mredrock.cyxbs.mine.page.security.viewmodel
 
 import androidx.databinding.ObservableField
-import com.mredrock.cyxbs.common.BaseApp
 import com.mredrock.cyxbs.common.utils.LogUtils
 import com.mredrock.cyxbs.common.utils.extensions.doOnErrorWithDefaultErrorHandler
 import com.mredrock.cyxbs.common.utils.extensions.unsafeSubscribeBy
 import com.mredrock.cyxbs.common.utils.extensions.setSchedulers
-import com.mredrock.cyxbs.common.utils.extensions.toast
 import com.mredrock.cyxbs.common.viewmodel.BaseViewModel
 import com.mredrock.cyxbs.mine.network.model.SecurityQuestion
 import com.mredrock.cyxbs.mine.util.apiService
@@ -35,7 +33,7 @@ class SetPasswordProtectViewModel : BaseViewModel() {
         apiService.getAllSecurityQuestions()
                 .setSchedulers()
                 .doOnErrorWithDefaultErrorHandler {
-                    BaseApp.appContext.toast("获取密保问题失败")
+                    toast("获取密保问题失败")
                     true
                 }
                 .unsafeSubscribeBy {
@@ -55,12 +53,12 @@ class SetPasswordProtectViewModel : BaseViewModel() {
                         content = securityAnswer.get().toString())
                         .setSchedulers()
                         .doOnErrorWithDefaultErrorHandler {
-                            BaseApp.appContext.toast(it.toString())
+                            toast(it.toString())
                             true
                         }
                         .unsafeSubscribeBy {
                             if (it.status == 10000) {
-                                BaseApp.appContext.toast("恭喜您，设置成功")
+                                toast("恭喜您，设置成功")
                                 onSucceed()
                             }
                         }

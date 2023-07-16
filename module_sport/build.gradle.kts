@@ -15,3 +15,7 @@ dependNetwork()
 dependRxjava()
 dependSmartRefreshLayout()
 dependMaterialDialog()
+
+
+useDataBinding()
+useARouter()

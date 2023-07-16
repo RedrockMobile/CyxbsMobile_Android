@@ -32,31 +32,7 @@ dependencies {
    * 2、pandora-plugin 插件使用了会在 gradle 8.0 移除的 transform API，我的建议是你们 fork 下仓库，
    *   然后改了发一个 jitpack 依赖（发这个依赖很简单，不需要账号）
    * 3、Pandora 已停止维护，可以使用 doKit 进行代替
+   * (doKit 在之前引入过，但因为不兼容AGP版本所以后面删除了，如果想再次引入，可参考 23/7/16 时“移除 doKit” 的 commit)
    */
   implementation("com.github.whataa:pandora:androidx_v2.1.0")
-  
-}
-
-dependencies {
-  /**
-   * 比 Pandora 更牛逼的检测工具 DoKit
-   *
-   * 官网文档：https://xingyun.xiaojukeji.com/docs/dokit/#/androidGuide
-   * github 仓库：https://github.com/didi/DoKit
-   *
-   * todo 截止 23年3/3，doKit 没有适配高版本的 gradle，所以插件引入会导致编译失败
-   *  如果后面 doKit 适配高版本了，麻烦改下 doKit 版本
-   *  issue: https://github.com/didi/DoKit/issues/1073
-   *
-   * 经过多次尝试后，我总结一下问题：
-   * doKit 底层使用了 booster 框架，但是用的低版本 4.0.0，没有适配 AGP 7.3，会报找不到 getGlobalScope() 异常，
-   * booster 框架是适配了 AGP 7.3 的，所以我直接依赖高版本的 booster 4.15.0，这时又报找不到 getMergedManifests() 方法，
-   *
-   * getGlobalScope() 找不到是 AGP 升级后移除了
-   * getMergedManifests() 找不到是 booster 升级后把返回值改了 https://github.com/didi/booster/issues/330
-   * ......
-   *
-   * todo 23/4/9: 因为编译太慢 + Pandora 更好用，所以注释
-   */
-//  implementation("io.github.didi.dokit:dokitx:${libs.versions.doKit.version.get()}")
 }

@@ -11,7 +11,6 @@ import android.view.View
 import android.widget.CompoundButton
 import androidx.annotation.RequiresApi
 import com.google.android.material.chip.Chip
-import com.mredrock.cyxbs.common.BaseApp.Companion.appContext
 import com.mredrock.cyxbs.common.utils.extensions.getRequestBody
 import com.mredrock.cyxbs.common.utils.extensions.unsafeSubscribeBy
 import com.mredrock.cyxbs.common.utils.extensions.setSchedulers
@@ -75,10 +74,10 @@ class FeedbackEditPresenter(val activity:Activity) : BasePresenter<FeedbackEditV
             .doOnError { }
             .unsafeSubscribeBy(
                 onNext = {
-                    appContext.toast("提交成功  我们会在十四个工作日内回复")
+                    toast("提交成功  我们会在十四个工作日内回复")
                 },
                 onError = {
-                    appContext.toast("网络请求失败")
+                    toast("网络请求失败")
                 },
                 onComplete = {
                     vm?.sendFinishEvent()

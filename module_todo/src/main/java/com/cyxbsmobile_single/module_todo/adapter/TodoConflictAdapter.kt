@@ -8,13 +8,15 @@ import android.text.style.ForegroundColorSpan
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.appcompat.widget.AppCompatButton
+import androidx.appcompat.widget.AppCompatTextView
 import androidx.core.content.ContextCompat
 import com.cyxbsmobile_single.module_todo.R
 import com.cyxbsmobile_single.module_todo.model.TodoModel
 import com.mredrock.cyxbs.common.ui.BaseFeedFragment
-import kotlinx.android.synthetic.main.todo_fragment_on_confilt.view.*
 import java.text.SimpleDateFormat
-import java.util.*
+import java.util.Date
+import java.util.Locale
 
 /**
  * Author: RayleighZ
@@ -59,13 +61,15 @@ class TodoConflictAdapter(
             sb.append(localTime, conflictSpan)
             sb.append("存在冲突，请选择一个存档予以保留", normalSpan)
 
+            val todo_tv_fragment_conflict_show = findViewById<AppCompatTextView>(R.id.todo_tv_fragment_conflict_show)
+            val todo_btn_fragment_conflict_local = findViewById<AppCompatButton>(R.id.todo_btn_fragment_conflict_local)
             todo_tv_fragment_conflict_show.text = sb
 
             todo_btn_fragment_conflict_local.setOnClickListener {
                 TodoModel.INSTANCE.forcePush { onConflictHandled.invoke() }
             }
 
-            todo_btn_fragment_conflict_remote.setOnClickListener {
+            findViewById<AppCompatButton>(R.id.todo_btn_fragment_conflict_remote).setOnClickListener {
                 TodoModel.INSTANCE.getAllTodoFromNet(true) { onConflictHandled.invoke() }
             }
         }

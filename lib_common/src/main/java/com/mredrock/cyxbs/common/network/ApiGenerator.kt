@@ -9,7 +9,7 @@ import retrofit2.converter.gson.GsonConverterFactory
 
 
 /**
- * 即将被废弃的 lib_common 模块中的网络请求工具类
+ * 已被废弃的 lib_common 模块中的网络请求工具类
  *
  * 网络请求的示例代码请看 lib_utils 模块中的 ApiGenerator
  *

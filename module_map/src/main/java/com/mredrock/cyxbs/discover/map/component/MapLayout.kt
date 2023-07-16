@@ -13,6 +13,7 @@ import android.view.ViewGroup
 import android.widget.FrameLayout
 import android.widget.ImageView
 import android.widget.Toast
+import com.bumptech.glide.Glide
 import com.bumptech.glide.load.model.GlideUrl
 import com.davemorrissey.labs.subscaleview.ImageSource
 import com.davemorrissey.labs.subscaleview.SubsamplingScaleImageView
@@ -23,7 +24,6 @@ import com.mredrock.cyxbs.discover.map.R
 import com.mredrock.cyxbs.discover.map.bean.IconBean
 import com.mredrock.cyxbs.discover.map.model.DataSet
 import com.mredrock.cyxbs.discover.map.util.SubsamplingScaleImageViewTarget
-import com.mredrock.cyxbs.discover.map.widget.GlideApp
 import com.mredrock.cyxbs.discover.map.widget.GlideProgressDialog
 import com.mredrock.cyxbs.discover.map.widget.ProgressInterceptor
 import com.mredrock.cyxbs.discover.map.widget.ProgressListener
@@ -171,7 +171,7 @@ class MapLayout : FrameLayout, View.OnClickListener {
 
                             })
                         }
-                        GlideApp.with(context)
+                        Glide.with(context)
                                 .download(GlideUrl(url))
                                 .into(SubsamplingScaleImageViewTarget(context, subsamplingScaleImageView, url
                                         ?: ""))

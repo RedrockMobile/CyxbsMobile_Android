@@ -1,10 +1,10 @@
 plugins {
     `kotlin-dsl`
 }
-java.toolchain.languageVersion.set(JavaLanguageVersion.of(11))
+java.toolchain.languageVersion.set(JavaLanguageVersion.of(libs.versions.java.targetVersion.get()))
 tasks.withType<org.jetbrains.kotlin.gradle.tasks.KotlinCompile>().configureEach {
     kotlinOptions {
-        jvmTarget = "11"
+        jvmTarget = libs.versions.kotlin.jvmTargetVersion.get()
     }
 }
 
@@ -35,15 +35,6 @@ dependencies {
 }
 
 dependencies {
-    /**
-     * 类似于 Pandora 但比他更牛逼的检测工具 https://xingyun.xiaojukeji.com/docs/dokit/#/androidGuide
-     * 在 lib_debug 模块中使用，版本号在 根目录/gradle/libs.versions.toml 中
-     *
-     * todo 截止 23年3/3，doKit 没有适配高版本的 gradle，所以插件引入会导致编译失败
-     *  如果后面 doKit 适配高版本了，麻烦改下 doKit 版本
-     *  详细原因请看 lib_debug 中 build.gradle 中写的注释
-     */
-    implementation("io.github.didi.dokit:dokitx-plugin:${libs.versions.doKit.version.get()}")
     
     /*
     * 一个轻量级 Android AOP 框架，在本项目中 CodeLocator 需要使用

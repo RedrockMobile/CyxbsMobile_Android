@@ -6,7 +6,6 @@ import com.alibaba.android.arouter.facade.annotation.Interceptor
 import com.alibaba.android.arouter.facade.callback.InterceptorCallback
 import com.alibaba.android.arouter.facade.template.IInterceptor
 import com.alibaba.android.arouter.launcher.ARouter
-import com.mredrock.cyxbs.config.route.*
 
 /**
  *@Author:SnowOwlet
@@ -45,7 +44,7 @@ class DefaultPageInterceptor: IInterceptor {
     MINE_PERSON_PAGE,
   )
   override fun init(context: Context) {
-
+    println(context)
   }
 
   override fun process(postcard: Postcard, callback: InterceptorCallback) {

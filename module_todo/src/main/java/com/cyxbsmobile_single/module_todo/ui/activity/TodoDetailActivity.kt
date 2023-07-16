@@ -6,12 +6,18 @@ import android.content.Intent
 import android.os.Bundle
 import android.view.View
 import android.view.WindowManager
+import android.widget.TextView
+import androidx.appcompat.widget.AppCompatEditText
+import androidx.appcompat.widget.AppCompatImageView
+import androidx.appcompat.widget.AppCompatTextView
 import androidx.core.content.ContextCompat
 import androidx.core.widget.addTextChangedListener
 import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import com.alibaba.android.arouter.facade.annotation.Route
 import com.cyxbsmobile_single.module_todo.R
 import com.cyxbsmobile_single.module_todo.adapter.RepeatInnerAdapter
+import com.cyxbsmobile_single.module_todo.component.CheckLineView
 import com.cyxbsmobile_single.module_todo.model.TodoModel
 import com.cyxbsmobile_single.module_todo.model.bean.Todo
 import com.cyxbsmobile_single.module_todo.ui.dialog.AddItemDialog
@@ -22,7 +28,7 @@ import com.google.gson.Gson
 import com.mredrock.cyxbs.common.config.TODO_TODO_DETAIL
 import com.mredrock.cyxbs.common.ui.BaseViewModelActivity
 import com.mredrock.cyxbs.common.utils.extensions.toast
-import kotlinx.android.synthetic.main.todo_activity_inner_detail.*
+
 
 @Route(path = TODO_TODO_DETAIL)
 class TodoDetailActivity : BaseViewModelActivity<TodoDetailViewModel>() {
@@ -30,6 +36,16 @@ class TodoDetailActivity : BaseViewModelActivity<TodoDetailViewModel>() {
     lateinit var todo: Todo
     private lateinit var repeatAdapter: RepeatInnerAdapter
     private var backTime = 2
+
+    private val todo_inner_detail_remark_ed by R.id.todo_inner_detail_remark_ed.view<AppCompatEditText>()
+    private val todo_tv_todo_title by R.id.todo_tv_todo_title.view<AppCompatEditText>()
+    private val todo_tv_inner_detail_time by R.id.todo_tv_inner_detail_time.view<AppCompatTextView>()
+    private val todo_inner_detail_back by R.id.todo_inner_detail_back.view<TextView>()
+    private val todo_tv_inner_detail_del_todo by R.id.todo_tv_inner_detail_del_todo.view<AppCompatTextView>()
+    private val todo_rv_inner_detail_repeat_time by R.id.todo_rv_inner_detail_repeat_time.view<RecyclerView>()
+    private val todo_iv_todo_item by R.id.todo_iv_todo_item.view<CheckLineView>()
+    private val todo_thing_detail_save by R.id.todo_thing_detail_save.view<TextView>()
+    private val todo_iv_check by R.id.todo_iv_check.view<AppCompatImageView>()
 
     companion object {
         fun startActivity(todo: Todo, context: Context) {

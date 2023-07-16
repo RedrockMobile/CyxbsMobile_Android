@@ -2,12 +2,12 @@
 
 import check.rule.ModuleNamespaceCheckRule
 import config.Config
-
 import org.gradle.api.JavaVersion
-import org.gradle.api.plugins.ExtensionAware
 import org.gradle.kotlin.dsl.apply
 import org.gradle.kotlin.dsl.configure
+import org.jetbrains.kotlin.gradle.dsl.KotlinAndroidProjectExtension
 import org.jetbrains.kotlin.gradle.dsl.KotlinJvmOptions
+import utils.libsVersion
 
 /**
  *@author ZhiQiang Tu
@@ -21,7 +21,6 @@ internal class BaseApplicationPlugin : BasePlugin() {
     override fun PluginScope.configure() {
 
         apply(plugin = "org.jetbrains.kotlin.android")
-        apply(plugin = "org.jetbrains.kotlin.kapt")
         apply(plugin = "com.android.application")
 
         apply(plugin = "base.android")
@@ -78,25 +77,24 @@ internal class BaseApplicationPlugin : BasePlugin() {
             }
 
             compileOptions {
-                sourceCompatibility = JavaVersion.VERSION_1_8
-                targetCompatibility = JavaVersion.VERSION_1_8
+                val javaVersion = libsVersion("java_targetVersion").requiredVersion
+                sourceCompatibility = JavaVersion.toVersion(javaVersion)
+                targetCompatibility = JavaVersion.toVersion(javaVersion)
             }
-
+    
+            // kotlinOptions 闭包
+            // 这里的 extensions 拿的是 android 闭包中的 extensions，不能拿 Project.extensions
+            extensions.configure<KotlinJvmOptions> {
+                jvmTarget = libsVersion("kotlin_jvmTargetVersion").requiredVersion
+            }
+    
             lint {
                 // 编译遇到错误不退出
                 abortOnError = false
-                // 未知
-                // todo
-                disable += listOf("TrustAllX509TrustManager")
-            }
-
-            (this as ExtensionAware).extensions.configure<KotlinJvmOptions> {
-                jvmTarget = "1.8"
             }
 
             // 命名规范设置，因为多模块相同资源名在打包时会合并，所以必须强制开启
             resourcePrefix = project.name.substringAfter("_")
-
 
             defaultConfig {
                 applicationId = Config.getApplicationId(project)
@@ -106,7 +104,8 @@ internal class BaseApplicationPlugin : BasePlugin() {
             }
 
             buildFeatures {
-                dataBinding = true
+                buildConfig = true
+                // dataBinding 按需开启，请使用 useDataBinding() 方法
             }
 
             buildTypes {
@@ -114,12 +113,16 @@ internal class BaseApplicationPlugin : BasePlugin() {
                     isShrinkResources = true
                 }
             }
-
-            packagingOptions {
+            
+            packaging {
                 jniLibs.excludes += Config.jniExclude
                 resources.excludes += Config.resourcesExclude
             }
-
+        }
+    
+        // kotlin 闭包
+        extensions.configure<KotlinAndroidProjectExtension> {
+            jvmToolchain(libsVersion("kotlin_jvmTargetVersion").requiredVersion.toInt())
         }
     }
 

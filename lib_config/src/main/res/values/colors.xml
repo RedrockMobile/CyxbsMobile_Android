@@ -47,4 +47,9 @@
     <!--分割线颜色-->
     <color name="config_default_divide_line_color">#19f8f9fc</color>
 
+    <!--    按钮渐变起始颜色-->
+    <color name="config_button_gradient_start_color">#4841E2</color>
+    <!--    按钮渐变终止颜色-->
+    <color name="config_button_gradient_end_color">#5D5DF7</color>
+
 </resources>

@@ -17,7 +17,7 @@ import kotlinx.coroutines.flow.Flow
 abstract class HistoryDataBase : RoomDatabase() {
   abstract fun getStuDao(): FindStuDao
   abstract fun getTeaDao(): FindTeaDao
-
+  
   companion object {
     val INSTANCE by lazy {
       Room.databaseBuilder(
@@ -45,13 +45,13 @@ data class FindStuEntity(
 
 @Dao
 interface FindStuDao {
-
+  
   @Insert(onConflict = OnConflictStrategy.REPLACE)
   fun insertStu(stu: FindStuEntity)
-
+  
   @Query("DELETE FROM student WHERE num in (:stuNum)")
   fun deleteStuFromNum(vararg stuNum: String)
-
+  
   @Query("SELECT * FROM student")
   fun observeAllStu(): Observable<List<FindStuEntity>>
 }
@@ -70,10 +70,10 @@ interface FindTeaDao {
   
   @Insert(onConflict = OnConflictStrategy.REPLACE)
   fun insertTea(stu: FindTeaEntity)
-
+  
   @Query("DELETE FROM teacher WHERE num in (:teaNum)")
   fun deleteTeaFromNum(vararg teaNum: String)
-
+  
   @Query("SELECT * FROM teacher")
   fun observeAllTea(): Flow<List<FindTeaEntity>>
 }

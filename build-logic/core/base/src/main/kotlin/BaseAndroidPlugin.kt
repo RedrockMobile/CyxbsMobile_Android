@@ -16,13 +16,14 @@ internal class BaseAndroidPlugin : BasePlugin() {
         
         dependTestBase()
         
-        // 所有 Android 模块都已引入 appcompat 和 ARouter
+        // 所有 Android 模块都已引入 Android 基础依赖
         dependAndroidBase()
-        dependARouter()
+        dependAndroidView()
+        dependAndroidKtx()
+        dependLifecycleKtx()
 
+        // 自动依赖模块中的直接子模块
         dependencies {
-
-
             // 根 gradle 中包含的所有子模块
             val includeProjects = rootProject.subprojects.map { it.name }
 

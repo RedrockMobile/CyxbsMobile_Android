@@ -18,3 +18,6 @@ dependencies {
     // TODO 这个是之前强神从 implementation 改成 compileOnly 的，但很奇怪的是能跑起来，应该是存在间接依赖
     compileOnly("com.davemorrissey.labs:subsampling-scale-image-view-androidx:3.10.0")
 }
+
+useDataBinding()
+useARouter()

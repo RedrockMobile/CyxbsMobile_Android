@@ -22,3 +22,5 @@ dependencies {
   implementation("io.github.985892345:SlideShow:2.0.1")
 }
 
+useARouter()
+

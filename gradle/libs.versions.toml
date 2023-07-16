@@ -1,8 +1,9 @@
 [versions]
-android_gradle_version = "7.3.1"
-kotlin_gradle_version = "1.7.21"
+android_gradle_version = "8.0.2"
+kotlin_gradle_version = "1.8.20"
 vasDolly_version = "3.0.4"
-doKit_version = "3.7.1"
+java_targetVersion = "11"
+kotlin_jvmTargetVersion = "11"
 
 [libraries]
 android-gradlePlugin = { module = "com.android.tools.build:gradle", version.ref = "android_gradle_version" }

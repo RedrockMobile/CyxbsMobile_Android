@@ -17,3 +17,6 @@ dependencies {
     // https://github.com/koral--/android-gif-drawable
     implementation("pl.droidsonroids.gif:android-gif-drawable:1.2.25")
 }
+
+useDataBinding()
+useARouter()

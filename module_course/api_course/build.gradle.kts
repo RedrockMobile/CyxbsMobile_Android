@@ -9,3 +9,5 @@ dependApiAffair()
 dependencies {
   implementation(Rxjava.rxjava3)
 }
+
+useARouter()

@@ -2,24 +2,16 @@ package com.mredrock.cyxbs.common.utils.extensions
 
 import android.app.Activity
 import android.content.Context
-import android.content.Intent
 import android.content.res.Configuration
-import android.content.res.Resources
-import android.graphics.Point
 import android.os.Build
-import android.os.Handler
-import android.os.Looper
 import android.view.View
-import android.view.ViewGroup
 import android.view.WindowManager
-import android.widget.Toast
-import androidx.annotation.DimenRes
-import androidx.annotation.IdRes
 import androidx.fragment.app.Fragment
-import com.mredrock.cyxbs.common.component.CyxbsToast
 import com.mredrock.cyxbs.common.service.ServiceManager
 import com.mredrock.cyxbs.api.account.IAccountService
 import com.mredrock.cyxbs.common.utils.Internals
+import com.mredrock.cyxbs.lib.utils.extensions.appContext
+import com.mredrock.cyxbs.lib.utils.extensions.toastLong
 
 /**
  * Created by anriku on 2018/8/14.
@@ -47,10 +39,10 @@ fun Activity.setFullScreen() {
 }
 
 @Deprecated("使用 lib_utils 中 toast() 替换", replaceWith = ReplaceWith(""))
-fun Context.toast(message: CharSequence) = CyxbsToast.makeText(this, message, Toast.LENGTH_SHORT).show()
+fun toast(message: CharSequence) = com.mredrock.cyxbs.lib.utils.extensions.toast(message)
 
 @Deprecated("使用 lib_utils 中 toast() 替换", replaceWith = ReplaceWith(""))
-fun Context.toast(res: Int) = CyxbsToast.makeText(this, res, Toast.LENGTH_SHORT).show()
+fun toast(res: Int) = com.mredrock.cyxbs.lib.utils.extensions.toast(appContext.resources.getText(res))
 
 @Deprecated("使用 lib_utils 中 isDarkMode() 替换")
 fun Context.getDarkModeStatus(): Boolean {
@@ -59,14 +51,10 @@ fun Context.getDarkModeStatus(): Boolean {
 }
 
 @Deprecated("使用 lib_utils 中 toastLong() 替换", replaceWith = ReplaceWith(""))
-fun Context.longToast(message: CharSequence) = CyxbsToast
-        .makeText(this, message, Toast.LENGTH_LONG)
-        .show()
+fun longToast(message: CharSequence) = toastLong(message)
 
 @Deprecated("使用 lib_utils 中 toastLong() 替换", replaceWith = ReplaceWith(""))
-fun Context.longToast(res: Int) = CyxbsToast
-        .makeText(this, res, Toast.LENGTH_LONG)
-        .show()
+fun longToast(res: Int) = toastLong(appContext.resources.getText(res))
 
 
 @Deprecated("使用 lib_base 中 OperationUi#doIfLogin() 替换", replaceWith = ReplaceWith(""))

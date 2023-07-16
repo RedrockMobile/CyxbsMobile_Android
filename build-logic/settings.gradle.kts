@@ -22,7 +22,7 @@ dependencyResolutionManagement {
     }
     // 开启 versionCatalogs 功能
     versionCatalogs {
-        // 这个 libs 名字是固定的，搞了好久才解决这个问题
+        // 名称固定写成 libs
         create("libs") {
             // 这个 libs.versions.toml 名字也必须固定，不能改成其他的
             from(files("../gradle/libs.versions.toml"))

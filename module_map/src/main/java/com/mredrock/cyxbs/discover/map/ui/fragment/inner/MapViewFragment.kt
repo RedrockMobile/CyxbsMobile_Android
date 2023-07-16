@@ -515,4 +515,9 @@ class MapViewFragment : BaseFragment() {
         lastClickTime = curClickTime
         return flag
     }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        GlideProgressDialog.hide()
+    }
 }

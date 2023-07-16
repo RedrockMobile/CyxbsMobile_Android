@@ -3,9 +3,7 @@ package com.mredrock.cyxbs.common.viewmodel
 import androidx.annotation.CallSuper
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import com.mredrock.cyxbs.common.BaseApp
 import com.mredrock.cyxbs.common.utils.extensions.longToast
-import com.mredrock.cyxbs.common.utils.extensions.toast
 import com.mredrock.cyxbs.common.viewmodel.event.ProgressDialogEvent
 import com.mredrock.cyxbs.common.viewmodel.event.SingleLiveEvent
 import io.reactivex.rxjava3.disposables.Disposable
@@ -44,10 +42,10 @@ open class BaseViewModel : ViewModel() {
     }
 
     protected fun toast(s: CharSequence) {
-        BaseApp.appContext.toast(s)
+        com.mredrock.cyxbs.lib.utils.extensions.toast(s)
     }
 
     protected fun toastLong(s: CharSequence) {
-        BaseApp.appContext.longToast(s)
+        longToast(s)
     }
 }
