@@ -15,9 +15,6 @@ object DebugConfiguration {
   
   private fun Project.initApplicationInternal() {
     if (!gradle.startParameter.taskNames.any { it.contains("Release") }) {
-      // Pandora 插件使用了会在 gradle 8.0 移除的 transform API，
-      // 我的建议是你们 fork 下仓库，然后改了发一个 jitpack 依赖（发这个依赖很简单，不需要账号）
-//      apply(plugin = "pandora-plugin")
 //      apply(plugin = "me.ele.lancet") // CodeLocator 高级功能所需要的插件，目前无法使用
     }
     dependencies {

@@ -39,10 +39,6 @@ buildscript {
     // 加上 ARouter 不再维护，建议向 Component 移植：https://github.com/xiaojinzi123/KComponent
 //    classpath("com.alibaba:arouter-register:1.0.2")
     
-    // 很牛逼的检测工具 debug 模式下摇一摇手机触发 https://github.com/whataa/pandora
-    // 在 lib_debug 模块中使用
-    classpath("com.github.whataa:pandora-plugin:1.0.0")
-    
     /**
      * 每次新建模块这里都会自己加一个：
      * classpath("org.jetbrains.kotlin:kotlin-gradle-plugin:x.x.xx")
