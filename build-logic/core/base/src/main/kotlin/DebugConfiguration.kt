@@ -19,25 +19,6 @@ object DebugConfiguration {
       // 我的建议是你们 fork 下仓库，然后改了发一个 jitpack 依赖（发这个依赖很简单，不需要账号）
 //      apply(plugin = "pandora-plugin")
 //      apply(plugin = "me.ele.lancet") // CodeLocator 高级功能所需要的插件，目前无法使用
-      /**
-       * todo 截止 23年3/3，doKit 没有适配高版本的 gradle，所以插件引入会导致编译失败
-       *  如果后面 doKit 适配高版本了，麻烦改下 doKit 版本
-       *  更详细的原因可以看 lib_debug 模块 中build.gradle 里面写的注释
-       */
-//      apply(plugin = "com.didi.dokit")
-//      extensions.configure<DoKitExt> {
-//        //通用设置
-//        comm {
-//          //地图经纬度开关
-//          gpsSwitch = true
-//          //网络开关
-//          networkSwitch = true
-//          //大图开关
-//          bigImgSwitch = true
-//          //webView js 抓包
-//          webViewSwitch = false
-//        }
-//      }
     }
     dependencies {
       "debugImplementation"(project(LibDepend.debug))
