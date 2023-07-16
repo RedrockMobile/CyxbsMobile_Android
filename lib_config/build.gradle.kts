@@ -18,3 +18,5 @@ dependencies {
   implementation(Android.constraintlayout)
   implementation(Android.material)
 }
+
+useARouter()

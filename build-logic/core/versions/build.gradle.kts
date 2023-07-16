@@ -12,6 +12,7 @@ tasks.withType<org.jetbrains.kotlin.gradle.tasks.KotlinCompile>().configureEach 
 
 dependencies {
   api(libs.kotlin.gradlePlugin)
+  api(libs.android.gradlePlugin)
 }
 
 

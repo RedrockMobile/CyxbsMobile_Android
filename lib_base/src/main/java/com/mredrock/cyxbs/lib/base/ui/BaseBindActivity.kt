@@ -15,6 +15,12 @@ import java.lang.reflect.Method
  *
  * 该类封装了 DataBind，可直接使用 [binding] 获得
  *
+ * ## 零、使用 DataBinding 需要打开开关
+ * ```
+ * // 在你模块的 build.gradle.kts 中调用
+ * useDataBinding()
+ * ```
+ *
  * ## 一、获取 ViewModel 的规范写法
  * 请查看该父类 [BaseFragment]
  *

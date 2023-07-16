@@ -3,7 +3,7 @@ package com.mredrock.cyxbs.common.service
 import androidx.fragment.app.Fragment
 import com.alibaba.android.arouter.facade.Postcard
 import com.alibaba.android.arouter.facade.template.IProvider
-import com.alibaba.android.arouter.launcher.ARouter
+import com.mredrock.cyxbs.lib.utils.service.ServiceManager
 import kotlin.reflect.KClass
 
 /**
@@ -32,7 +32,7 @@ object ServiceManager {
      * ```
      */
     operator fun <T : Any> invoke(serviceClass: KClass<T>): T {
-        return ARouter.getInstance().navigation(serviceClass.java)
+        return ServiceManager.invoke(serviceClass)
     }
     
     /**
@@ -46,21 +46,15 @@ object ServiceManager {
      */
     @Suppress("UNCHECKED_CAST")
     operator fun <T : Any> invoke(servicePath: String): T {
-        return ARouter.getInstance().build(servicePath).navigation() as T
+        return ServiceManager.invoke(servicePath)
     }
     
     fun fragment(servicePath: String, with: (Postcard.() -> Unit)? = null): Fragment {
-        return ARouter.getInstance()
-            .build(servicePath)
-            .apply { with?.invoke(this) }
-            .navigation() as Fragment
+        return ServiceManager.fragment(servicePath, with)
     }
     
     fun activity(servicePath: String, with: (Postcard.() -> Unit)? = null) {
-        ARouter.getInstance()
-            .build(servicePath)
-            .apply { with?.invoke(this) }
-            .navigation()
+        ServiceManager.activity(servicePath, with)
     }
 }
 

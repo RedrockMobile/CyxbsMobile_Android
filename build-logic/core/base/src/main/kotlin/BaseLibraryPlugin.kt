@@ -22,8 +22,7 @@ internal class BaseLibraryPlugin : BasePlugin() {
 
         apply(plugin = "com.android.library")
         apply(plugin = "org.jetbrains.kotlin.android")
-        apply(plugin = "org.jetbrains.kotlin.kapt")
-        
+
         apply(plugin = "base.android")
 
         androidLib {
@@ -88,9 +87,6 @@ internal class BaseLibraryPlugin : BasePlugin() {
             lint {
                 // 编译遇到错误不退出
                 abortOnError = false
-                // 未知
-                // todo
-                disable += listOf("TrustAllX509TrustManager")
             }
             
             // 命名规范设置，因为多模块相同资源名在打包时会合并，所以必须强制开启
@@ -102,11 +98,11 @@ internal class BaseLibraryPlugin : BasePlugin() {
             }
 
             buildFeatures {
-                dataBinding = true
                 buildConfig = true
+                // dataBinding 按需开启，请使用 useDataBinding() 方法
             }
         }
-    
+
         // kotlin 闭包
         extensions.configure<KotlinAndroidProjectExtension> {
             jvmToolchain(libsVersion("kotlin_jvmTargetVersion").requiredVersion.toInt())

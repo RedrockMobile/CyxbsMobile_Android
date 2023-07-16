@@ -8,8 +8,6 @@ import api.utils.ApiDependUtils
 import org.gradle.api.Project
 import org.gradle.api.artifacts.ProjectDependency
 import org.gradle.kotlin.dsl.apply
-import org.gradle.kotlin.dsl.dependencies
-import org.gradle.kotlin.dsl.project
 
 /**
  *@author ZhiQiang Tu
@@ -24,10 +22,6 @@ class ModuleDebugPlugin : BasePlugin() {
         //check
         if (plugins.hasPlugin("com.android.library")) {
             throw RuntimeException("开启单模块调试前，请先注释多模块插件！")
-        }
-
-        if (!gradle.startParameter.taskNames.any { it.contains("Release") }) {
-            apply(plugin = "pandora-plugin")
         }
 
         apply(plugin = "base.application")
@@ -51,14 +45,6 @@ class ModuleDebugPlugin : BasePlugin() {
                 buildConfig=true
             }
         }
-
-        dependencies {
-            "debugImplementation"(project(LibDepend.debug))
-        }
-
-        dependAndroidView()
-        dependAndroidKtx()
-        dependLifecycleKtx()
 
         passOnApiImplDepend(project, project, hashSetOf(), hashSetOf())
 

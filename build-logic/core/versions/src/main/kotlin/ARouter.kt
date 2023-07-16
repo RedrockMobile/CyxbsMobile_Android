@@ -1,4 +1,5 @@
 import org.gradle.api.Project
+import org.gradle.kotlin.dsl.apply
 import org.gradle.kotlin.dsl.configure
 import org.gradle.kotlin.dsl.dependencies
 import org.jetbrains.kotlin.gradle.plugin.KaptExtension
@@ -23,16 +24,28 @@ object ARouter {
 }
 
 /**
- * 所有使用 build_logic 插件的模块都默认依赖了 ARouter
+ * 使用 ARouter
+ *
+ * 单独给每个模块都添加而不是直接在 build-logic 中全部添加的原因:
+ * - 为了按需引入 kapt
+ * - 部分 lib 模块只使用依赖，不包含注解
+ *
+ * @param isNeedProcessAnnotation 是否需要处理注解，对于非实现模块是不需要处理注解的，比如 api 模块
  */
-fun Project.dependARouter() {
-    extensions.configure<KaptExtension> {
-        arguments {
-            arg("AROUTER_MODULE_NAME", project.name)
+fun Project.useARouter(isNeedProcessAnnotation: Boolean = !name.startsWith("api_")) {
+    if (isNeedProcessAnnotation) {
+        // kapt 按需引入
+        apply(plugin = "org.jetbrains.kotlin.kapt")
+        extensions.configure<KaptExtension> {
+            arguments {
+                arg("AROUTER_MODULE_NAME", project.name)
+            }
+        }
+        dependencies {
+            "kapt"(ARouter.`arouter-compiler`)
         }
     }
     dependencies {
         "implementation"(ARouter.`arouter-api`)
-        "kapt"(ARouter.`arouter-compiler`)
     }
 }

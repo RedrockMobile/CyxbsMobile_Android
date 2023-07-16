@@ -28,3 +28,5 @@ dependRxjava()
 dependRxPermissions()
 dependUmeng()
 
+useARouter(false) // lib_common 模块不包含实现类，不需要处理注解
+
