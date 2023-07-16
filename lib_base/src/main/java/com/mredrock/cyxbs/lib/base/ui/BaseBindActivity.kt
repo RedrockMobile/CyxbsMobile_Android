@@ -19,6 +19,8 @@ import java.lang.reflect.Method
  * ```
  * // 在你模块的 build.gradle.kts 中调用
  * useDataBinding()
+ *
+ * // 如果你只依赖 DataBinding 而不开启 DataBinding 这个功能，可以给上述函数传入 true 参数
  * ```
  *
  * ## 一、获取 ViewModel 的规范写法
