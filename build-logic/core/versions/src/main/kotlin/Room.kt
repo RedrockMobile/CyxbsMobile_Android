@@ -13,7 +13,7 @@ import org.jetbrains.kotlin.gradle.plugin.KaptExtension
 @Suppress("MemberVisibilityCanBePrivate", "ObjectPropertyName", "SpellCheckingInspection")
 object Room {
   // https://developer.android.com/jetpack/androidx/releases/room?hl=en
-  const val room_version = "2.5.1"
+  const val room_version = "2.5.2"
   
   const val `room-runtime` = "androidx.room:room-runtime:$room_version"
   const val `room-compiler` = "androidx.room:room-compiler:$room_version"
@@ -33,6 +33,7 @@ fun Project.dependRoom() {
   extensions.configure<KaptExtension> {
     arguments {
       arg("room.schemaLocation", "${project.projectDir}/schemas") // room 的架构导出目录
+      arg("room.incremental", true)
     }
   }
   dependencies {
