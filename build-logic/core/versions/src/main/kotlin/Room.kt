@@ -2,7 +2,7 @@ import org.gradle.api.Project
 import org.gradle.kotlin.dsl.apply
 import org.gradle.kotlin.dsl.configure
 import org.gradle.kotlin.dsl.dependencies
-import org.jetbrains.kotlin.gradle.plugin.KaptExtension
+import com.google.devtools.ksp.gradle.KspExtension
 
 /**
  * ...
@@ -28,18 +28,16 @@ object Room {
 }
 
 fun Project.dependRoom() {
-  // kapt 按需引入
-  apply(plugin = "org.jetbrains.kotlin.kapt")
-  extensions.configure<KaptExtension> {
-    arguments {
-      arg("room.schemaLocation", "${project.projectDir}/schemas") // room 的架构导出目录
-      arg("room.incremental", true)
-    }
+  // ksp 按需引入
+  apply(plugin = "com.google.devtools.ksp")
+  extensions.configure<KspExtension> {
+    arg("room.schemaLocation", "${project.projectDir}/schemas") // room 的架构导出目录
+    arg("room.incremental", "true")
   }
   dependencies {
     "implementation"(Room.`room-runtime`)
     "implementation"(Room.`room-ktx`)
-    "kapt"(Room.`room-compiler`)
+    "ksp"(Room.`room-compiler`)
   }
 }
 

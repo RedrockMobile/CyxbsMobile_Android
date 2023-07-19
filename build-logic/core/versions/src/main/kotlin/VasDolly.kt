@@ -19,12 +19,12 @@ import org.gradle.kotlin.dsl.dependencies
 * 因为 VasDolly 在 build.gradle 中要使用，为了统一版本号，只能这样写
 * 其中版本号统一写在 build-logic 的 settings.gradle.kts 中
 * */
-val Project.vasDolly_version: String
-  get() = libsVersion("vasDolly.version").requiredVersion
+val Project.vasDollyVersion: String
+  get() = libsVersion("vasDolly").requiredVersion
 
 // 内部使用，只给 AppProject 配置，单模块调试时不需要
 fun Project.dependVasDolly() {
   dependencies {
-    "implementation"("com.tencent.vasdolly:helper:${vasDolly_version}")
+    "implementation"("com.tencent.vasdolly:helper:${vasDollyVersion}")
   }
 }

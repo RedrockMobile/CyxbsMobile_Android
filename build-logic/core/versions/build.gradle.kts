@@ -3,16 +3,17 @@ import org.gradle.configurationcache.extensions.capitalized
 plugins {
   `kotlin-dsl`
 }
-java.toolchain.languageVersion.set(JavaLanguageVersion.of(libs.versions.java.targetVersion.get()))
+java.toolchain.languageVersion.set(JavaLanguageVersion.of(libs.versions.javaTarget.get()))
 tasks.withType<org.jetbrains.kotlin.gradle.tasks.KotlinCompile>().configureEach {
   kotlinOptions {
-    jvmTarget = libs.versions.kotlin.jvmTargetVersion.get()
+    jvmTarget = libs.versions.kotlinJvmTarget.get()
   }
 }
 
 dependencies {
-  api(libs.kotlin.gradlePlugin)
   api(libs.android.gradlePlugin)
+  api(libs.kotlin.gradlePlugin)
+  api(libs.ksp.gradlePlugin)
 }
 
 

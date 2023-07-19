@@ -77,7 +77,7 @@ internal class BaseApplicationPlugin : BasePlugin() {
             }
 
             compileOptions {
-                val javaVersion = libsVersion("java_targetVersion").requiredVersion
+                val javaVersion = libsVersion("javaTarget").requiredVersion
                 sourceCompatibility = JavaVersion.toVersion(javaVersion)
                 targetCompatibility = JavaVersion.toVersion(javaVersion)
             }
@@ -85,7 +85,7 @@ internal class BaseApplicationPlugin : BasePlugin() {
             // kotlinOptions 闭包
             // 这里的 extensions 拿的是 android 闭包中的 extensions，不能拿 Project.extensions
             extensions.configure<KotlinJvmOptions> {
-                jvmTarget = libsVersion("kotlin_jvmTargetVersion").requiredVersion
+                jvmTarget = libsVersion("kotlinJvmTarget").requiredVersion
             }
     
             lint {
@@ -122,7 +122,7 @@ internal class BaseApplicationPlugin : BasePlugin() {
     
         // kotlin 闭包
         extensions.configure<KotlinAndroidProjectExtension> {
-            jvmToolchain(libsVersion("kotlin_jvmTargetVersion").requiredVersion.toInt())
+            jvmToolchain(libsVersion("kotlinJvmTarget").requiredVersion.toInt())
         }
     }
 
