@@ -1,12 +1,13 @@
 plugins {
     `kotlin-dsl`
 }
-java.toolchain.languageVersion.set(JavaLanguageVersion.of(libs.versions.java.targetVersion.get()))
+java.toolchain.languageVersion.set(JavaLanguageVersion.of(libs.versions.javaTarget.get()))
 tasks.withType<org.jetbrains.kotlin.gradle.tasks.KotlinCompile>().configureEach {
     kotlinOptions {
-        jvmTarget = libs.versions.kotlin.jvmTargetVersion.get()
+        jvmTarget = libs.versions.kotlinJvmTarget.get()
     }
 }
+
 dependencies {
     implementation(project(":core:base"))
     // 腾讯多渠道打包 https://github.com/Tencent/VasDolly

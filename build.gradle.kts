@@ -24,13 +24,14 @@ buildscript {
   dependencies {
     /*
     * 可能你会好奇这里与 build-logic 中有什么区别，
-    * 如果你在 build-logic 中要使用插件，需要 implementation() 才行，
+    * 如果你在 build-logic 中要拿到插件中的某个类，需要 implementation() 才行，
     * 而如果你只是在某个模块里面使用，那直接在这里写即可，但请写好注释和对应链接！！！
     * */
     
     // 版本号在 根目录/gradle/libs.versions.toml 中
     classpath(libs.android.gradlePlugin)
     classpath(libs.kotlin.gradlePlugin)
+    classpath(libs.ksp.gradlePlugin)
   
     // ARouter https://github.com/alibaba/ARouter
     // ARouter 使用该插件用于加载路由信息，该插件在 build-logic/core/base/.../BaseApplicationPlugin 中引入
