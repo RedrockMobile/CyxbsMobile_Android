@@ -20,20 +20,21 @@ internal fun reStartApp(reason: String, e: Throwable): Boolean {
         time = getLong("time", 0)
         count = getInt("count", 0)
     }
-    if (count > 2 && System.currentTimeMillis() - time < 3000) {
+    if (count > 2 && System.currentTimeMillis() - time < 3000) {//3s内重启三次以上
         sp.edit().run {
             putLong("time", 0)
             putInt("count", 0)
             commit()
         }
+        //重启失败
         return false
-    } else if (System.currentTimeMillis() - time > 3000) {
+    } else if (System.currentTimeMillis() - time > 3000) {//距离上一次重启时间超过3s，清空次数记录
         sp.edit().run {
             putLong("time", 0)
             putInt("count", 0)
             commit()
         }
-    } else sp.edit().run {
+    } else sp.edit().run {//记录重启时间和次数
         if (count == 0) putLong("time", System.currentTimeMillis())
         putInt("count", sp.getInt("count", 0) + 1)
         commit()
