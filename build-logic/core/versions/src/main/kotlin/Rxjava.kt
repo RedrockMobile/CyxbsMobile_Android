@@ -12,7 +12,7 @@ import org.gradle.kotlin.dsl.dependencies
 @Suppress("MemberVisibilityCanBePrivate", "ObjectPropertyName", "SpellCheckingInspection")
 object Rxjava {
   // https://github.com/ReactiveX/RxJava
-  const val rxjava3 = "io.reactivex.rxjava3:rxjava:3.1.5"
+  const val rxjava3 = "io.reactivex.rxjava3:rxjava:3.1.6"
   // https://github.com/ReactiveX/RxAndroid
   const val `rxjava3-android` = "io.reactivex.rxjava3:rxandroid:3.0.2"
   // https://github.com/ReactiveX/RxKotlin

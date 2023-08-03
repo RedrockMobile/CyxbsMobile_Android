@@ -13,7 +13,7 @@ import org.gradle.kotlin.dsl.dependencies
 object Lottie {
   // https://lottiefiles.com/blog/working-with-lottie/getting-started-with-lottie-animations-in-android-app
   // 最新版本号查看：https://maven-badges.herokuapp.com/maven-central/com.airbnb.android/lottie/badge.svg
-  const val lottie = "com.airbnb.android:lottie:5.2.0"
+  const val lottie = "com.airbnb.android:lottie:6.1.0"
 }
 
 fun Project.dependLottie() {
