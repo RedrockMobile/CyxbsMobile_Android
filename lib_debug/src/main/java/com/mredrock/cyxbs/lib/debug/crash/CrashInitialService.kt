@@ -21,6 +21,7 @@ class CrashInitialService : InitialService {
         thread.name
       )
     }
+
   }
   
   override fun onOtherProcess(manager: InitialManager) {
