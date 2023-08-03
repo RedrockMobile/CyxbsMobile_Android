@@ -1,19 +1,16 @@
 package com.mredrock.cyxbs.mine.page.feedback.history.list
 
 import android.content.Intent
-import android.util.Log
 import android.view.View
 import androidx.lifecycle.LiveData
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.mredrock.cyxbs.common.utils.extensions.setOnSingleClickListener
-import com.mredrock.cyxbs.common.utils.extensions.toast
 import com.mredrock.cyxbs.mine.R
 import com.mredrock.cyxbs.mine.databinding.MineActivityHistoryListBinding
 import com.mredrock.cyxbs.mine.page.feedback.adapter.RvListAdapter
 import com.mredrock.cyxbs.mine.page.feedback.base.ui.BaseMVPVMActivity
 import com.mredrock.cyxbs.mine.page.feedback.history.detail.HistoryDetailActivity
 import com.mredrock.cyxbs.mine.page.feedback.history.list.bean.History
-import java.util.*
 
 class HistoryListActivity :
     BaseMVPVMActivity<HistoryListViewModel, MineActivityHistoryListBinding, HistoryListPresenter>() {
@@ -94,7 +91,7 @@ class HistoryListActivity :
      * Rv的数据
      */
     private fun observeRvList(listData: LiveData<List<History>>) {
-        listData.observe({ lifecycle }) {
+        listData.observe {
             rvAdapter.submitList(it)
         }
     }

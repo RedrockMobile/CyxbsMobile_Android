@@ -94,7 +94,7 @@ class FeedbackEditActivity :
     }
 
     private fun observeFinish(finish: SingleLiveEvent<Unit>) {
-        finish.observe({ lifecycle }) {
+        finish.observe {
             finish()
         }
     }
@@ -115,7 +115,7 @@ class FeedbackEditActivity :
      * 观察图片Uri并对rv_banner进行初始化操作
      */
     private fun observePics(uris: LiveData<List<Uri>>) {
-        uris.observe({ lifecycle }) {
+        uris.observe {
             val list = presenter?.getBinderList(it,
                 { view, i ->
                 }, { view, i ->

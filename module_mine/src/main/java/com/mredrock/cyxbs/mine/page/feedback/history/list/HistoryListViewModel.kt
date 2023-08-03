@@ -1,9 +1,8 @@
 package com.mredrock.cyxbs.mine.page.feedback.history.list
 
-import android.net.Uri
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.Transformations
+import androidx.lifecycle.map
 import com.mredrock.cyxbs.common.viewmodel.BaseViewModel
 import com.mredrock.cyxbs.mine.page.feedback.history.list.bean.History
 
@@ -24,7 +23,7 @@ class HistoryListViewModel : BaseViewModel() {
         _listData.value = value
     }
 
-    val hasHistory: LiveData<Boolean> = Transformations.map(_listData) {
+    val hasHistory: LiveData<Boolean> = _listData.map {
         it.isNotEmpty()
     }
 
