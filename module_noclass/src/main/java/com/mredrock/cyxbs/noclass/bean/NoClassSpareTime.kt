@@ -16,7 +16,7 @@ import java.io.Serializable
  * @Description:    用于记录所有人的没课情况
  */
 
-data class NoClassSpareTime (
+data class NoClassSpareTime (   //todo 一周的空闲时间
     //记录一天的空闲时间
     val spareDayTime : HashMap<Int,SpareLineTime>
 ) : Serializable {
@@ -33,15 +33,15 @@ data class NoClassSpareTime (
   var mIdToNameMap : HashMap<String,String> = hashMapOf()
   
   //记录从上当下一行的空闲时间
-  data class SpareLineTime(
+  data class SpareLineTime(  //todo 一天的空闲时间
     //此时有空闲时间的学号
-    val SpareItem: ArrayList<SpareIds>,
+    val SpareItem: ArrayList<SpareIds>,   //todo 对应一天格子的集合
     //此时是否空闲 false代表没课
-    val isSpare: HashMap<Int,Boolean>,
+    val isSpare: HashMap<Int,Boolean>,   //todo 对应每一个格子是否空闲
   ): Serializable {
     //每格格子上空闲的人数
     data class SpareIds(
-      val spareId : ArrayList<String>
+      val spareId : ArrayList<String>  //todo 每个格子的空闲的人数
     ) : Serializable
   }
 }
@@ -82,10 +82,10 @@ fun Map<Int, List<ILessonService.Lesson>>.toSpareTime() : HashMap<Int, NoClassSp
         }
         //如果这个格子上已经没人了，就标记为有课
         if(line.SpareItem[lesson.beginLesson + it].spareId.isEmpty())
-        line.isSpare[lesson.beginLesson + it] = true
+          line.isSpare[lesson.beginLesson + it] = false
         //整个学期的有没课状态
         if(semesterLine!!.SpareItem[lesson.beginLesson + it].spareId.isEmpty())
-          semesterLine.isSpare[lesson.beginLesson + it] = true
+          semesterLine.isSpare[lesson.beginLesson + it] = false
       }
     }
   }
@@ -104,7 +104,7 @@ fun Map<Int, List<ILessonService.Lesson>>.toSpareTime() : HashMap<Int, NoClassSp
 /**
  * 一个新的SpareTime对象
  */
-private fun getNewSpareTime(stuIds : ArrayList<String>): NoClassSpareTime {
+private fun getNewSpareTime(stuIds : ArrayList<String>): NoClassSpareTime {  //todo 创建的是一个实际的空闲时间对象
   return NoClassSpareTime(hashMapOf()).apply {
     // 0 .. 6 指星期数
     (0..6).map {
@@ -127,7 +127,7 @@ private fun getNewSpareTime(stuIds : ArrayList<String>): NoClassSpareTime {
 }
 
 
-private fun getNewEmptySpareTime(): NoClassSpareTime {
+private fun getNewEmptySpareTime(): NoClassSpareTime {  //todo 创建一个空的空闲时间对象
   return NoClassSpareTime(hashMapOf()).apply {
     (0..6).map {
       spareDayTime[it] =

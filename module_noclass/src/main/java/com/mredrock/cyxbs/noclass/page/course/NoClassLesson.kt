@@ -1,6 +1,7 @@
 package com.mredrock.cyxbs.noclass.page.course
 
 import android.content.Context
+import android.util.Log
 import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 import com.mredrock.cyxbs.lib.course.item.lesson.BaseLessonLayoutParams
@@ -28,7 +29,7 @@ class NoClassLesson(
   private val mLastingTime : Pair<Int,Int>
 ) : ILessonItem{
   
-  override fun initializeView(context: Context): View {
+  override fun initializeView(context: Context): View {   //添加item到课表中
     return NoClassLesson.newInstance(context,data ,mGatheringList,mNoGatheringList,mLastingTime)
   }
   
@@ -53,17 +54,31 @@ class NoClassLesson(
     companion object {
       fun newInstance(context: Context, data: NoClassLessonData, mGatheringList : List<String>, mNoGatheringList: List<String>,mLastingTime : Pair<Int,Int>): NoClassLesson {
         return NoClassLesson(context).apply {
-          setColor(data.timeType)
+          Log.d("lx", "mGatheringList:=${mGatheringList.size}  mNoGatheringList:=${mNoGatheringList.size}")
+          val busyMode = if (mNoGatheringList.isEmpty()){
+            Log.d("lx", "BusyMode.NAN: ")
+            BusyMode.NAN
+          }else if (mGatheringList.isEmpty()){
+            Log.d("lx", "BusyMode.ALL: ")
+            BusyMode.ALL
+          }else if (mGatheringList.size > mNoGatheringList.size){
+            Log.d("lx", "BusyMode.LESS: ")
+            BusyMode.LESS
+          }else{
+            Log.d("lx", "BusyMode.MORE: ")
+            BusyMode.MORE
+          }
+          setColor(busyMode)
           setText(names = data.names,height = data.length)
           setOnClickListener {
             //所有学生列表
-            //没课的在前面
+            //忙碌的放在前面
             val stuList = arrayListOf<Pair<String,Boolean>>()
-            mGatheringList.forEach {
-              stuList.add(Pair(it, true))
-            }
             mNoGatheringList.forEach {
               stuList.add(Pair(it,false))
+            }
+            mGatheringList.forEach {
+              stuList.add(Pair(it, true))
             }
             val duration = mLastingTime.second - mLastingTime.first
             //开始与结束序列
@@ -86,7 +101,7 @@ class NoClassLesson(
               else -> ""
             }
             val textTime = "时间：${month} ${beginLesson}-${beginLesson + duration - 1} ${beginTime}-${endTime}"
-            NoClassGatherDialog(stuList, textTime).show((context as AppCompatActivity).supportFragmentManager, "NoClassGatherDialog")
+            NoClassGatherDialog(stuList, textTime).show((context as AppCompatActivity).supportFragmentManager, "NoClassGatherDialog")  //todo 这里是点击事件的地方
           }
         }
       }
@@ -105,34 +120,32 @@ class NoClassLesson(
     private val mNoonTextColor = R.color.noclass_course_noon_text_color.color
     private val mDuskTextColor = R.color.noclass_course_dusk_text_color.color
   
-    private fun setColor(type: NoClassLessonData.Type) {
-      when (type) {
-        NoClassLessonData.Type.AM -> {
+    private fun setColor(busyMode : BusyMode) {
+      when (busyMode) {
+        BusyMode.NAN -> {
           mTvNames.setTextColor(mAmTextColor)
           setCardBackgroundColor(mAmBgColor)
           setOverlapTagColor(mAmTextColor)
         }
-        NoClassLessonData.Type.NOON -> {
+        BusyMode.LESS -> {
           mTvNames.setTextColor(mNoonTextColor)
           setCardBackgroundColor(mNoonBgColor)
           setOverlapTagColor(mNoonTextColor)
         }
-        NoClassLessonData.Type.PM -> {
+        BusyMode.MORE -> {
           mTvNames.setTextColor(mPmTextColor)
           setCardBackgroundColor(mPmBgColor)
           setOverlapTagColor(mPmTextColor)
         }
-        NoClassLessonData.Type.DUSK -> {
+        BusyMode.ALL -> {
           mTvNames.setTextColor(mDuskTextColor)
           setCardBackgroundColor(mDuskBgColor)
           setOverlapTagColor(mDuskTextColor)
         }
-        NoClassLessonData.Type.NIGHT -> {
-          mTvNames.setTextColor(mNightTextColor)
-          setCardBackgroundColor(mNightBgColor)
-          setOverlapTagColor(mNightTextColor)
-        }
       }
+    }
+    enum class BusyMode{
+      NAN,LESS,MORE,ALL
     }
   }
   

@@ -35,7 +35,7 @@
             app:layout_constraintHorizontal_bias="0"
             app:layout_constraintVertical_bias="0"
             android:textColor="@color/noclass_primary_text_color"
-            android:text="集合！！出发"
+            android:text="忙碌0人"
             android:textSize="18sp"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -43,7 +43,7 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            android:id="@+id/noclassTextview" />
+            android:id="@+id/noclass_tv_gathering_busy_total" />
 
         <TextView
             android:id="@+id/noclass_tv_gathering_total"
@@ -60,7 +60,7 @@
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/noclassTextview"
+            app:layout_constraintTop_toBottomOf="@+id/noclass_tv_gathering_busy_total"
             />
 
         <TextView

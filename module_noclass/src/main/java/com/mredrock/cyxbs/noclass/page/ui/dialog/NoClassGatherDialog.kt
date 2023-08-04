@@ -40,7 +40,12 @@ class NoClassGatherDialog (
   
   private fun initView(dialog: Dialog){
     dialog.findViewById<TextView>(R.id.noclass_tv_gathering_total).apply {
-      text = "人数：共计 ${mStuList.filter{ it.second }.size} 人"
+      val describe = "人数：共计 ${mStuList.size} 人"
+      text = describe
+    }
+    dialog.findViewById<TextView>(R.id.noclass_tv_gathering_busy_total).apply {
+      val busyNum = "忙碌${mStuList.filter { !it.second }.size}人"
+      text = busyNum
     }
     dialog.findViewById<TextView>(R.id.noclass_tv_gathering_time).apply {
       text = mTextTime

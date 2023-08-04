@@ -41,9 +41,9 @@ class NoClassGatheringAdapter(private val context : Context,private val mMap : H
       val textView = view.findViewById<TextView>(R.id.noclass_tv_gathering_name).apply {
         text = it.first
       }
-      if (!it.second){
-        linearLayout.setBackgroundResource(R.drawable.noclass_shape_gathering_class_bg)
-        textView.setTextColor(R.color.noclass_gather_text_class_bg.color)
+      if (!it.second){   //忙碌
+        linearLayout.setBackgroundResource(R.drawable.noclass_shape_gathering_noclass_bg)
+        textView.setTextColor(R.color.noclass_gather_noclass_bg.color)
       }
       holder.parentView.addView(view)
     }

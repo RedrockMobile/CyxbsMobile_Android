@@ -155,7 +155,7 @@ class GroupManagerActivity : BaseActivity() {
                     it.cancel()
                 }.show()
             }
-        }
+         }
         mRecyclerView.adapter = mRvAdapter
         mRecyclerView.layoutManager = LinearLayoutManager(this)
         mRecyclerView.itemAnimator = null
@@ -343,6 +343,7 @@ class GroupManagerActivity : BaseActivity() {
                 mRvAdapter.onStateChange(mGroupState)
             }
         }
+        //todo 这里不再需要额外的按钮，只需要一个按钮
     }
 
     /**

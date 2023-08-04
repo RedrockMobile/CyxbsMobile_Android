@@ -466,6 +466,7 @@ class NoClassActivity : BaseActivity(){
     (getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager).hideSoftInputFromWindow(currentFocus?.windowToken, InputMethodManager.HIDE_NOT_ALWAYS)
     mEditTextView.setText("")
     mViewModel.searchStudent(stu = name)
+    //todo 需要加入班级分组的查询操作
   }
   
   /**
@@ -524,7 +525,7 @@ class NoClassActivity : BaseActivity(){
     //在滑动下拉课表容器中添加整个课表
     mViewModel.noclassData.observe(this){
       mCourseSheetBehavior.state = BottomSheetBehavior.STATE_EXPANDED
-      mNeedShow = mGroupId == "-1"
+      mNeedShow = mGroupId == "-1"   //todo 用来判断是否需要弹窗：保存到分组中
     }
   }
   

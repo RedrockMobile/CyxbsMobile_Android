@@ -91,16 +91,16 @@ class NoClassViewModel : BaseViewModel() {
       }
       .safeSubscribeBy (
         onNext = {
-          studentsLessons[stuNumList.indexOf(it[0].stuNum)] = it
+          studentsLessons[stuNumList.indexOf(it[0].stuNum)] = it   //todo 将课程对应学号的索引 对应的studentsLessons设置为it  []里面是获取学号对应传入list的索引的
         },
         onComplete = {
-          _noclassData.postValue(studentsLessons.toSpareTime().apply {
+          _noclassData.postValue(studentsLessons.toSpareTime().apply {   //todo 将new的studentsLessons变成空闲时间对象
             val mMap = hashMapOf<String,String>()
             members.forEach {
-              mMap[it.stuNum] = it.stuName
+              mMap[it.stuNum] = it.stuName    //todo 学号和姓名的映射表
             }
             forEach {
-              it.value.mIdToNameMap = mMap
+              it.value.mIdToNameMap = mMap   //todo 每一位学生的映射表获取了所有同学的学号姓名映射表？
             }
           })
         },

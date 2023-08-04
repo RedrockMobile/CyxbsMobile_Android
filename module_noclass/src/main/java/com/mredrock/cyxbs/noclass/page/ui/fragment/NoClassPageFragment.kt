@@ -1,5 +1,6 @@
 package com.mredrock.cyxbs.noclass.page.ui.fragment
 
+import android.util.Log
 import com.mredrock.cyxbs.lib.course.fragment.page.CoursePageFragment
 import com.mredrock.cyxbs.noclass.bean.NoClassSpareTime
 import com.mredrock.cyxbs.noclass.page.course.NoClassLesson
@@ -18,7 +19,7 @@ import com.mredrock.cyxbs.noclass.page.course.NoClassLessonData
  */
 abstract class NoClassPageFragment: CoursePageFragment() {
   
-  private lateinit var mNameMap : HashMap<String,String>
+  private lateinit var mNameMap : HashMap<String,String>   //学号和姓名的映射表
   private lateinit var mNoClassSpareTime : NoClassSpareTime
   
   /**
@@ -49,7 +50,7 @@ abstract class NoClassPageFragment: CoursePageFragment() {
   
   private fun addLessonAm(lineTime: NoClassSpareTime.SpareLineTime,line : Int) {
     val week = line + 1
-    val id1 = lineTime.SpareItem[1].spareId
+    val id1 = lineTime.SpareItem[1].spareId   //每一个格子空闲的所有学号
     val id2 = lineTime.SpareItem[2].spareId
     val id3 = lineTime.SpareItem[3].spareId
     val id4 = lineTime.SpareItem[4].spareId
@@ -138,33 +139,28 @@ abstract class NoClassPageFragment: CoursePageFragment() {
     begin: Int,
     week: Int,
     length : Int,
-    gatheringIdList: List<String>,
+    gatheringIdList: List<String>,  //空闲的id
   ) : NoClassLesson{
-    val noGatheringIdList : List<String> = mNameMap.map { it.key }.toMutableList().apply {
+    val noGatheringIdList : List<String> = mNameMap.map { it.key }.toMutableList().apply {  //忙碌的id
       gatheringIdList.forEach {
         this.remove(it)
       }
     }
-    val gatheringList : List<String> = gatheringIdList.map { mNameMap[it]!! }
-    val noGatheringList : List<String> = noGatheringIdList.map { mNameMap[it]!! }
-    return NoClassLesson(NoClassLessonData(week, begin, length, gatheringIdList.idListToNames()),gatheringList,noGatheringList,Pair(begin,begin+length))
+    Log.d("lx", "gatheringIdList: ${gatheringIdList} ")
+    Log.d("lx", "noGatheringIdList: ${noGatheringIdList} ")
+    val gatheringList : List<String> = gatheringIdList.map { mNameMap[it]!! }   //空闲的人名
+    val noGatheringList : List<String> = noGatheringIdList.map { mNameMap[it]!! }   //忙碌的人名
+    return NoClassLesson(NoClassLessonData(week, begin, length, gatheringIdList.showText()),gatheringList,noGatheringList,Pair(begin,begin+length))
   }
-  
+
   /**
-   * 将id的list转化为课表上的文字
+   * 根据忙碌人数展示忙碌*人
    */
-  private fun List<String>.idListToNames() : String{
-    if (this.size == mNameMap.size)
-      return "全体\n成员"
-    val nameList = this.sorted().map { mNameMap[it]!! }.toString().let { it.substring(1, it.length-1) }
-    var names = ""
-    nameList.split(",").forEachIndexed { index, s ->
-      names += s
-      if(index != size-1){
-        names += "\n"
-      }
-    }
-    return names
+  private fun List<String>.showText(): String {
+    if (this.size == mNameMap.size)  //如果空闲人id的集合为所有，那么就不显示忙碌
+      return ""
+    //改成几人忙碌
+    return "${mNameMap.size - this.size}人\n忙碌"
   }
   
   
