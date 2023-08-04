@@ -1,6 +1,5 @@
 package com.mredrock.cyxbs.mine.page.feedback.history.detail
 
-import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.recyclerview.widget.GridLayoutManager
 import com.mredrock.cyxbs.common.utils.extensions.setOnSingleClickListener
@@ -68,7 +67,7 @@ class HistoryDetailActivity :
      * 观察vm中回复的图片的url地址的变化
      */
     private fun observeReplyBannerUrl(replyPicUrls: LiveData<List<String>>) {
-        replyPicUrls.observe({lifecycle}) {
+        replyPicUrls.observe {
             replyBannerRvAdapter.submitList(it)
         }
     }

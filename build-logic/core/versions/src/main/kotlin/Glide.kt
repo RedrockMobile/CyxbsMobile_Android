@@ -12,7 +12,7 @@ import org.gradle.kotlin.dsl.dependencies
 @Suppress("MemberVisibilityCanBePrivate", "ObjectPropertyName", "SpellCheckingInspection")
 object Glide {
   // https://github.com/bumptech/glide
-  const val glide_version = "4.14.2"
+  const val glide_version = "4.15.1"
   
   const val glide = "com.github.bumptech.glide:glide:$glide_version"
 

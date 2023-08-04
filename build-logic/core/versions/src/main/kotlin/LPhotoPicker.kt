@@ -15,7 +15,7 @@ import org.gradle.kotlin.dsl.dependencies
 @Suppress("MemberVisibilityCanBePrivate", "ObjectPropertyName", "SpellCheckingInspection")
 object LPhotoPicker  {
   // https://github.com/limuyang2/LPhotoPicker
-  const val lPhotoPicker = "com.github.limuyang2:LPhotoPicker:2.6"
+  const val lPhotoPicker = "com.github.limuyang2:LPhotoPicker:2.7"
 }
 
 fun Project.dependLPhotoPicker() {

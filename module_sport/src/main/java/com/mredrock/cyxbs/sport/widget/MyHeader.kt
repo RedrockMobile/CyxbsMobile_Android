@@ -108,6 +108,9 @@ class MyHeader(context: Context, attrs: AttributeSet?, defStyleAttr: Int) :
     }
 
     override fun isSupportHorizontalDrag(): Boolean = false
+    override fun autoOpen(duration: Int, dragRate: Float, animationOnly: Boolean): Boolean {
+        return true
+    }
 
     override fun setPrimaryColors(vararg colors: Int) {
     }
