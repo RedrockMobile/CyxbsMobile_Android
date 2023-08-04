@@ -13,7 +13,7 @@ import org.gradle.kotlin.dsl.dependencies
 object SmartRefreshLayout {
   // https://github.com/scwang90/SmartRefreshLayout
   
-  const val version = "2.0.5"
+  const val version = "2.0.6"
   
   const val kernel = "io.github.scwang90:refresh-layout-kernel:$version"
   

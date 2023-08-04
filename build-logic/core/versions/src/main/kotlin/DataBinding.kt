@@ -12,7 +12,7 @@ import org.gradle.kotlin.dsl.dependencies
  * 2023/7/16 16:02
  */
 object DataBinding {
-  const val version = "8.0.2"
+  const val version = "8.1.0"
 
   // https://mvnrepository.com/artifact/androidx.databinding/databinding-runtime
   val `databinding-runtime` = "androidx.databinding:databinding-runtime:$version"
