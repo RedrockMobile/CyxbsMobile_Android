@@ -61,6 +61,12 @@ interface AffairApiService {
   @GET("/magipoke-reminder/Person/getHotWord")
   fun getTitleCandidate(): Single<ApiWrapper<List<String>>>
 
+  //没课约专属发送通知接口
+  @POST()
+  @FormUrlEncoded
+  @Headers("App-Version:74")
+  fun sendNotification(stuNum : List<String>) : ApiStatus
+
   companion object {
     val INSTANCE by lazy {
       ApiGenerator.getApiService(AffairApiService::class)

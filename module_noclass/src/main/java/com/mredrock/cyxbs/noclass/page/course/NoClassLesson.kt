@@ -77,9 +77,9 @@ class NoClassLesson(
             mNoGatheringList.forEach {
               stuList.add(Pair(it,false))
             }
-            mGatheringList.forEach {
-              stuList.add(Pair(it, true))
-            }
+//            mGatheringList.forEach {  //这里是休闲的学生
+//              stuList.add(Pair(it, true))
+//            }
             val duration = mLastingTime.second - mLastingTime.first
             //开始与结束序列
             val begin = mLastingTime.first

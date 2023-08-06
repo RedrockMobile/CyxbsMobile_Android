@@ -80,6 +80,17 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/noclass_tv_gathering_total" />
 
+        <Button
+            android:id="@+id/noclass_btn_arrange_plan"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@drawable/noclass_shape_gathering_class_bg"
+            android:layout_marginTop="20dp"
+            android:layout_marginEnd="16dp"
+            android:text="安排行程"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
         <View
             app:layout_constraintVertical_bias="0.4"
             android:background="@color/noclass_gather_line_bg"

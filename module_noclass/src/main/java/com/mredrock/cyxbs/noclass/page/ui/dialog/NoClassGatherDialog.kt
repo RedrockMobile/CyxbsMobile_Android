@@ -2,9 +2,13 @@ package com.mredrock.cyxbs.noclass.page.ui.dialog
 
 import android.app.Dialog
 import android.os.Bundle
+import android.widget.Button
 import android.widget.TextView
 import androidx.viewpager2.widget.ViewPager2
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
+import com.mredrock.cyxbs.api.affair.IAffairService
+import com.mredrock.cyxbs.api.affair.NoClassBean
+import com.mredrock.cyxbs.lib.utils.service.impl
 import com.mredrock.cyxbs.noclass.R
 import com.mredrock.cyxbs.noclass.page.adapter.NoClassGatheringAdapter
 import com.mredrock.cyxbs.noclass.widget.StickIndicator
@@ -49,6 +53,13 @@ class NoClassGatherDialog (
     }
     dialog.findViewById<TextView>(R.id.noclass_tv_gathering_time).apply {
       text = mTextTime
+    }
+    //安排行程
+    dialog.findViewById<Button>(R.id.noclass_btn_arrange_plan).apply {
+      setOnClickListener {
+        //跳转到安排行程模块
+        IAffairService::class.impl.startActivityForNoClass(NoClassBean(mStuList))
+      }
     }
     val mViewPager2 = dialog.findViewById<ViewPager2>(R.id.noclass_vp_gather_container).apply {
       var index = 0
