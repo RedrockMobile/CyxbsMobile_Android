@@ -1,19 +1,18 @@
 package com.mredrock.cyxbs.affair.ui.viewmodel.fragment
 
+import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
-import com.mredrock.cyxbs.affair.model.AffairRepository
 import com.mredrock.cyxbs.affair.net.AffairApiService
-import com.mredrock.cyxbs.affair.room.AffairEntity
 import com.mredrock.cyxbs.lib.base.ui.BaseViewModel
+import com.mredrock.cyxbs.lib.utils.extensions.launchCatch
 import com.mredrock.cyxbs.lib.utils.network.ApiStatus
 import com.mredrock.cyxbs.lib.utils.network.mapOrInterceptException
 import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
 import io.reactivex.rxjava3.schedulers.Schedulers
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.asSharedFlow
-import kotlinx.coroutines.launch
 
 
 class NoClassAffairViewModel : BaseViewModel() {
@@ -22,14 +21,19 @@ class NoClassAffairViewModel : BaseViewModel() {
     val titleCandidates: LiveData<List<String>>
         get() = _titleCandidates
 
+    private val _hotLocation = MutableLiveData<List<String>>()
+    val hotLocation: LiveData<List<String>>
+        get() = _hotLocation
+
     //没课约专属,发送通知
     private val _mutableNotificationSharedFlow = MutableSharedFlow<ApiStatus>()
     val notificationSharedFlow get() = _mutableNotificationSharedFlow.asSharedFlow()
 
     //没课约最后发送通知
     fun sendNotification(stuNumList : List<String>){
-        viewModelScope.launch{
-            _mutableNotificationSharedFlow.emit(AffairApiService.INSTANCE.sendNotification(stuNumList))
+        viewModelScope.launchCatch{
+            Log.d("lx", "sendNotification发送成功: ${stuNumList}")
+//            _mutableNotificationSharedFlow.emit(AffairApiService.INSTANCE.sendNotification(stuNumList))
         }
     }
 
@@ -43,6 +47,16 @@ class NoClassAffairViewModel : BaseViewModel() {
                 emitter.onSuccess(listOf("自习", "值班", "考试", "英语", "开会", "作业", "补课", "实验", "复习", "学习"))
             }.safeSubscribeBy {
                 _titleCandidates.value = it
+            }
+
+        AffairApiService.INSTANCE.getHotLocation()
+            .subscribeOn(Schedulers.io())
+            .observeOn(AndroidSchedulers.mainThread())
+            .mapOrInterceptException {
+                // 网络请求失败就发送这个默认显示
+                emitter.onSuccess(listOf("二教", "三教", "四教", "五教", "八教", "九教", "风华运动场", "太极运动场", "风雨运动场", "校外"))
+            }.safeSubscribeBy {
+                _hotLocation.value = it
             }
     }
 }

@@ -16,10 +16,7 @@ import com.google.android.flexbox.FlexDirection
 import com.google.android.flexbox.FlexWrap
 import com.google.android.flexbox.FlexboxLayoutManager
 import com.mredrock.cyxbs.affair.R
-import com.mredrock.cyxbs.affair.ui.adapter.AffairDurationAdapter
 import com.mredrock.cyxbs.affair.ui.adapter.TitleCandidateAdapter
-import com.mredrock.cyxbs.affair.ui.adapter.data.toAtWhatTime
-import com.mredrock.cyxbs.affair.ui.fragment.utils.AffairPageManager
 import com.mredrock.cyxbs.affair.ui.fragment.utils.NoClassPageManager
 import com.mredrock.cyxbs.affair.ui.viewmodel.activity.AffairViewModel
 import com.mredrock.cyxbs.affair.ui.viewmodel.fragment.NoClassAffairViewModel
@@ -41,16 +38,15 @@ class NoClassAffairFragment : BaseFragment(R.layout.affair_fragment_noclass_affa
 
     private val mNoClassBean by arguments<NoClassBean>()
     private val mViewModel by viewModels<NoClassAffairViewModel>()
-
-    private val mRootView: ConstraintLayout by R.id.affair_root_no_class_affair.view()
-    private val mEditText by R.id.affair_et_no_class_affair.view<EditText>()
     private val mActivityViewModel by activityViewModels<AffairViewModel>()
 
-    private val mRvTitleCandidate by R.id.affair_rv_no_class_affair_title_candidate.view<RecyclerView>()
+    private val mTvLeftSpare by R.id.affair_tv_no_class_affair_spare_stu.view<RecyclerView>()   //选择空闲成员
+    private val mTvRightAll by R.id.affair_tv_no_class_affair_all_stu.view<RecyclerView>()   //选择所有人员
+    private val mRootView: ConstraintLayout by R.id.affair_root_no_class_affair.view()
+    private val mEditText by R.id.affair_et_no_class_affair.view<EditText>()
+    private val mRvTitleCandidate by R.id.affair_rv_no_class_affair_title_candidate.view<RecyclerView>()  //候选热词
+
     private val mRvTitleCandidateAdapter = TitleCandidateAdapter()
-
-    private var mRemindMinute = 0 // 提醒时间的分钟数，用于临时保存后进行网络请求
-
     private val mPageManager = NoClassPageManager(this)
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -65,7 +61,9 @@ class NoClassAffairFragment : BaseFragment(R.layout.affair_fragment_noclass_affa
     private fun initRv() {
         mRvTitleCandidate.adapter = mRvTitleCandidateAdapter
             .setClickListener {
-                //todo 点击完毕之后就跳转
+                val index = mEditText.selectionStart // 得到光标位置
+                val text = mEditText.text
+                text.insert(index, it)
             }
         mRvTitleCandidate.layoutManager =
             FlexboxLayoutManager(requireContext(), FlexDirection.ROW, FlexWrap.WRAP)
@@ -90,7 +88,14 @@ class NoClassAffairFragment : BaseFragment(R.layout.affair_fragment_noclass_affa
 
         mActivityViewModel.clickAffect.collectLaunch {
             if (mPageManager.isEndPage()) {
-                //todo 发送通知
+                val stuNumList = ArrayList<String>()
+                //如果是发送给所有，就不必判断值
+                if(mPageManager.isSendAll()){
+                    stuNumList.addAll(mNoClassBean.mStuList.map { it.first })
+                }else{
+                    stuNumList.addAll(mNoClassBean.mStuList.filter { it.second }.map { it.first })
+                }
+                mViewModel.sendNotification(stuNumList)
                 requireActivity().finish()
             } else {
                 mPageManager.loadNextPage()

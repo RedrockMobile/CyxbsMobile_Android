@@ -28,13 +28,15 @@ class NoClassPageManager(val fragment: BaseFragment){
 
     private fun <T : View> Int.view() = fragment.run { view<T>() }
 
-    private val mRootView: ConstraintLayout by R.id.affair_root_no_class_affair.view()
-    private val mTvText1: TextView by R.id.affair_tv_no_class_affair_text_1.view()
-    private val mTvText2: TextView by R.id.affair_tv_no_class_affair_text_2.view()
-    private val mTvText3: TextView by R.id.affair_tv_no_class_affair_text_3.view()
-    private val mEtTitle by R.id.affair_tv_no_class_affair_title.view<EditText>()
-    private val mEditText by R.id.affair_et_no_class_affair.view<EditText>()
-    private val mRvTitleCandidate by R.id.affair_rv_no_class_affair_title_candidate.view<RecyclerView>()
+    private val mRootView: ConstraintLayout by R.id.affair_root_no_class_affair.view()   //根布局
+    private val mTvText1: TextView by R.id.affair_tv_no_class_affair_text_1.view()   //标题这两个字
+    private val mTvText2: TextView by R.id.affair_tv_no_class_affair_text_2.view()   //为你的行程添加
+    private val mTvText3: TextView by R.id.affair_tv_no_class_affair_text_3.view()   //一个标题
+    private val mEtTitle by R.id.affair_tv_no_class_affair_title.view<EditText>()    //标题的内容
+    private val mEditText by R.id.affair_et_no_class_affair.view<EditText>()         //输入框
+    private val mRvTitleCandidate by R.id.affair_rv_no_class_affair_title_candidate.view<RecyclerView>()   //热词名单
+    private val mTvLeftSpare by R.id.affair_tv_no_class_affair_spare_stu.view<TextView>()   //选择空闲成员
+    private val mTvRightAll by R.id.affair_tv_no_class_affair_all_stu.view<TextView>()   //选择所有人员
 
     private var mAffairPage: AffairPage = AffairPage.ADD_TITLE
 
@@ -93,6 +95,20 @@ class NoClassPageManager(val fragment: BaseFragment){
         return mContent
     }
 
+    /**
+     * 得到地点
+     */
+    fun getLocation() : String{
+        return mLoc
+    }
+
+    /**
+     * 得到选择，true代表是空闲人员，false反之
+     */
+    fun isSendAll() : Boolean{
+        return true
+    }
+
     // 拦截返回键
     private val mOnBackPressedCallback = object : OnBackPressedCallback(false) {
         override fun handleOnBackPressed() {
@@ -120,7 +136,9 @@ class NoClassPageManager(val fragment: BaseFragment){
 
     private var mTitle = ""
     private var mContent = ""
+    private var mLoc = ""
 
+    //事务界面，几个页面就写几个枚举类(在原有fragment之上改变的)
     private enum class AffairPage {
         ADD_TITLE {
             override fun NoClassPageManager.nextInterval(): Boolean {
@@ -128,7 +146,7 @@ class NoClassPageManager(val fragment: BaseFragment){
                 if (mTitle.isNotBlank()) {
                     TransitionManager.beginDelayedTransition(mRootView, createTransition())
                     mTvText1.visible()
-                    mTvText3.text = "具体内容"
+                    mTvText3.text = "具体地点"
                     mEtTitle.setText(mTitle)
                     mEtTitle.visible()
                     mEditText.text = null
@@ -148,10 +166,14 @@ class NoClassPageManager(val fragment: BaseFragment){
                 mEtTitle.textSize = 34F
                 mEtTitle.setText(mTitle) // 重复设置，用于刷新，不然文字会因为动画而出现显示问题
                 mContent = mEditText.text.toString()
+                mLoc = mEditText.text.toString()
                 TransitionManager.beginDelayedTransition(mRootView, createTransition())
                 mTvText1.invisible()
                 mTvText2.invisible()
                 mTvText3.invisible()
+                mEditText.invisible()
+                mTvLeftSpare.visible()
+                mTvRightAll.visible()
                 val set = ConstraintSet().apply { clone(mRootView) }
                 set.connect(mEtTitle.id, ConstraintSet.START, mRootView.id, ConstraintSet.START)
                 set.connect(mEtTitle.id, ConstraintSet.TOP, mTvText1.id, ConstraintSet.BOTTOM)
@@ -167,12 +189,14 @@ class NoClassPageManager(val fragment: BaseFragment){
                 mTvText3.text = "一个标题"
                 mTitle = mEtTitle.text.toString()
                 mContent = ""
+                mLoc = ""
                 mEtTitle.invisible()
                 mEditText.setText(mTitle)
                 mRvTitleCandidate.visible()
                 return true
             }
         },
+        //选择通知人员
         ADD_PEOPLE {
             override fun NoClassPageManager.nextInterval(): Boolean {
                 mTitle = mEtTitle.text.toString()
@@ -185,6 +209,9 @@ class NoClassPageManager(val fragment: BaseFragment){
                 mTvText1.visible()
                 mTvText2.visible()
                 mTvText3.visible()
+                mEditText.visible()
+                mTvLeftSpare.invisible()
+                mTvRightAll.invisible()
                 val set = ConstraintSet().apply { clone(mRootView) }
                 set.connect(mEtTitle.id, ConstraintSet.START, mTvText1.id, ConstraintSet.END)
                 set.connect(mEtTitle.id, ConstraintSet.TOP, mTvText1.id, ConstraintSet.TOP)

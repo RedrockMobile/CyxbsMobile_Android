@@ -61,7 +61,10 @@ interface AffairApiService {
   @GET("/magipoke-reminder/Person/getHotWord")
   fun getTitleCandidate(): Single<ApiWrapper<List<String>>>
 
-  //没课约专属发送通知接口
+  @GET("/magipoke-reminder/Person/getHotLocation")
+  fun getHotLocation(): Single<ApiWrapper<List<String>>>
+
+  //todo 没课约专属发送通知接口
   @POST()
   @FormUrlEncoded
   @Headers("App-Version:74")
