@@ -45,6 +45,8 @@ object ApiDepend {
   val course = ":module_course:api_course" by parent
   val affair = ":module_affair:api_affair" by parent
   val dialog = ":module_dialog:api_dialog" by parent
+  val ufield = ":module_ufield:api_ufield" by parent
+
 
   private infix fun String.by(implPath: String): ApiDependUtils.IApiDependUtils = by { implPath }
   private infix fun String.by(implPath: String.() -> String): ApiDependUtils.IApiDependUtils {

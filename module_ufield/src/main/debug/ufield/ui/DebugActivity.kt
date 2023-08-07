@@ -1,4 +1,4 @@
-package com.mredrock.cyxbs.ufield
+package ufield.ui
 
 import android.content.Intent
 import android.os.Bundle

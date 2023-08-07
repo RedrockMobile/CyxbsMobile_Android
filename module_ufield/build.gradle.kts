@@ -1,5 +1,5 @@
 plugins {
-    id("module-debug")
+    id("module-manager")
 }
 
 
@@ -17,3 +17,9 @@ dependNetwork()
 dependRxjava()
 //使用ARouter
 useARouter()
+dependencies {
+    implementation(libs.appcompat)
+    implementation(libs.material)
+    implementation(libs.constraintlayout)
+}
+
