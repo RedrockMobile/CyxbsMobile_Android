@@ -3,8 +3,7 @@
 
     <application>
         <activity
-            android:name=".UfieldActivity"
-            android:exported="true" >
+            android:name=".lyt.ui.UFieldActivity">
         </activity>
     </application>
 
