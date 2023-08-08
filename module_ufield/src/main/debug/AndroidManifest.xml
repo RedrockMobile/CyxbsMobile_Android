@@ -7,16 +7,24 @@
         android:label="module_field"
         android:supportsRtl="true"
         android:theme="@style/ConfigAppTheme">
-
+        <activity
+            android:name=".lyt.ui.CheckActivity"
+            android:exported="false" />
+        <activity
+            android:name=".lyt.ui.SearchActivity"
+            android:exported="false" />
+        <activity
+            android:name=".lyt.ui.UFieldActivity"
+            android:exported="false" />
         <activity
             android:name="ufield.ui.DebugActivity"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
+
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name="com.mredrock.cyxbs.ufield.lyt.ui.UFieldActivity" />
 
     </application>
 
