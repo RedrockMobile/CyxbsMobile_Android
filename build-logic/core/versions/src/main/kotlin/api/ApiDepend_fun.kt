@@ -1,4 +1,4 @@
-// [account, protocol, update, crash, electricity, login, sport, store, todo, volunteer, widget, mine, course, affair, dialog, ufield]
+// [account, protocol, update, crash, electricity, login, sport, store, todo, volunteer, widget, mine, course, affair, dialog]
 // 自动生成的代码，请不要修改 !!!
 import org.gradle.api.Project
 
@@ -60,8 +60,4 @@ fun Project.dependApiAffair() {
 
 fun Project.dependApiDialog() {
   ApiDepend.dialog.dependApiOnly(this)
-}
-
-fun Project.dependApiUfield() {
-  ApiDepend.ufield.dependApiOnly(this)
 }
