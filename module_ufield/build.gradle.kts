@@ -24,7 +24,8 @@ dependMaterialDialog()
 dependRoom()
 //使用viewmodel livedata
 dependLifecycleKtx()
-
+//android常用库
+dependAndroidView()
 
 
 
