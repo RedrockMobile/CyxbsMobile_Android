@@ -7,7 +7,6 @@ dependLibBase()
 dependLibConfig()
 dependLibUtils()
 
-
 //使用ARouter
 useARouter()
 
