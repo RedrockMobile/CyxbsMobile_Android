@@ -1,5 +1,6 @@
 plugins {
     id("module-debug")
+    id("org.jetbrains.kotlin.android")
 }
 
 
