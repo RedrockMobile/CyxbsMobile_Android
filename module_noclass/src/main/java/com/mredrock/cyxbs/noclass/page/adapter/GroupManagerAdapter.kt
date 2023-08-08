@@ -120,7 +120,7 @@ class GroupManagerAdapter(
             setOnFirstMoveListener{
                 mViews.forEach {
                     if(it.key != absoluteAdapterPosition)
-                    it.value.slideContainer.closeRightSlide()
+                      it.value.slideContainer.closeRightSlide()
                 }
             }
 

@@ -18,11 +18,11 @@ import com.mredrock.cyxbs.lib.base.ui.BaseActivity
 import com.mredrock.cyxbs.lib.utils.extensions.setOnSingleClickListener
 import com.mredrock.cyxbs.noclass.R
 import com.mredrock.cyxbs.noclass.bean.NoclassGroup
-import com.mredrock.cyxbs.noclass.page.adapter.NoClassGroupAdapter
+import com.mredrock.cyxbs.noclass.page.adapter.NoClassTemporaryAdapter
 import com.mredrock.cyxbs.noclass.page.ui.dialog.ConfirmReturnDialog
 import com.mredrock.cyxbs.noclass.page.ui.dialog.RenameGroupDialog
 import com.mredrock.cyxbs.noclass.page.ui.dialog.SearchStudentDialog
-import com.mredrock.cyxbs.noclass.page.viewmodel.GroupDetailViewModel
+import com.mredrock.cyxbs.noclass.page.viewmodel.activity.GroupDetailViewModel
 
 /**
  *
@@ -102,7 +102,7 @@ class GroupDetailActivity : BaseActivity(){
     /**
      * Adapter
      */
-    private lateinit var mGroupAdapter : NoClassGroupAdapter
+    private lateinit var mGroupAdapter : NoClassTemporaryAdapter
 
     /**
      * 预更改的标题
@@ -190,7 +190,7 @@ class GroupDetailActivity : BaseActivity(){
      */
     private fun initRv(){
         mRecyclerView.layoutManager = LinearLayoutManager(this)
-        mGroupAdapter = NoClassGroupAdapter().apply {
+        mGroupAdapter = NoClassTemporaryAdapter().apply {
             if (mPosition != -1){
                 submitList(mCurrentMembers.toMutableList())
             }

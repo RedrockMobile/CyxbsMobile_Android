@@ -8,7 +8,7 @@ import com.mredrock.cyxbs.api.course.ICourseService
 import com.mredrock.cyxbs.lib.course.helper.show.CourseNowTimeHelper
 import com.mredrock.cyxbs.config.config.SchoolCalendar
 import com.mredrock.cyxbs.noclass.bean.NoClassSpareTime
-import com.mredrock.cyxbs.noclass.page.viewmodel.NoClassViewModel
+import com.mredrock.cyxbs.noclass.page.viewmodel.activity.NoClassViewModel
 import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
 import java.util.*
 

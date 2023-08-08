@@ -29,11 +29,11 @@ import com.mredrock.cyxbs.lib.utils.service.ServiceManager
 import com.mredrock.cyxbs.noclass.R
 import com.mredrock.cyxbs.noclass.bean.NoClassSpareTime
 import com.mredrock.cyxbs.noclass.bean.NoclassGroup
-import com.mredrock.cyxbs.noclass.page.adapter.NoClassGroupAdapter
+import com.mredrock.cyxbs.noclass.page.adapter.NoClassTemporaryAdapter
 import com.mredrock.cyxbs.noclass.page.ui.dialog.SearchDoneDialog
 import com.mredrock.cyxbs.noclass.page.ui.dialog.SearchStudentDialog
 import com.mredrock.cyxbs.noclass.page.ui.fragment.NoClassCourseVpFragment
-import com.mredrock.cyxbs.noclass.page.viewmodel.NoClassViewModel
+import com.mredrock.cyxbs.noclass.page.viewmodel.activity.NoClassViewModel
 import com.mredrock.cyxbs.noclass.util.alphaAnim
 import com.mredrock.cyxbs.noclass.util.collapseAnim
 import com.mredrock.cyxbs.noclass.util.expandAnim
@@ -78,7 +78,7 @@ class NoClassActivity : BaseActivity(){
   /**
    * Rv的Adapter
    */
-  private lateinit var mAdapter : NoClassGroupAdapter
+  private lateinit var mAdapter : NoClassTemporaryAdapter
   
   /**
    * 上方添加同学的编辑框
@@ -240,7 +240,7 @@ class NoClassActivity : BaseActivity(){
    * 初始化RV
    */
   private fun initRv(){
-    mAdapter = NoClassGroupAdapter().apply {
+    mAdapter = NoClassTemporaryAdapter().apply {
       setOnItemDelete {
         //删除RV下方的成员
         if (mGroupId != "-1"){

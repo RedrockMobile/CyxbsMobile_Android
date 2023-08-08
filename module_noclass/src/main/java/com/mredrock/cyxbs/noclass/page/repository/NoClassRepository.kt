@@ -2,6 +2,7 @@ package com.mredrock.cyxbs.noclass.page.repository
 
 import com.mredrock.cyxbs.lib.utils.network.ApiStatus
 import com.mredrock.cyxbs.lib.utils.network.ApiWrapper
+import com.mredrock.cyxbs.noclass.bean.NoClassTemporarySearch
 import com.mredrock.cyxbs.noclass.bean.NoclassGroup
 import com.mredrock.cyxbs.noclass.bean.NoclassGroupId
 import com.mredrock.cyxbs.noclass.bean.Student
@@ -108,6 +109,16 @@ object NoClassRepository {
             .subscribeOn(Schedulers.io())
             .observeOn(AndroidSchedulers.mainThread())
     }
-    
+
+    /**
+     * 临时分组页面查询所有
+     */
+    fun searchAll(content : String) : Single<ApiWrapper<NoClassTemporarySearch>>{
+        return NoclassApiService
+            .INSTANCE
+            .searchAll(content)
+            .subscribeOn(Schedulers.io())
+            .observeOn(AndroidSchedulers.mainThread())
+    }
 
 }

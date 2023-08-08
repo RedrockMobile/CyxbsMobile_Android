@@ -1,4 +1,4 @@
-package com.mredrock.cyxbs.noclass.page.viewmodel
+package com.mredrock.cyxbs.noclass.page.viewmodel.activity
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData

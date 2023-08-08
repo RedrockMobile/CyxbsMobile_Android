@@ -22,7 +22,7 @@ import com.mredrock.cyxbs.noclass.bean.NoclassGroup
  * @Version:        1.0
  * @Description:    没课约主页RV的Adapter
  */
-class NoClassGroupAdapter : ListAdapter<NoclassGroup.Member,NoClassGroupAdapter.VH>(
+class NoClassTemporaryAdapter : ListAdapter<NoclassGroup.Member,NoClassTemporaryAdapter.VH>(
     noClassGroupDiffUtil
 ){
 

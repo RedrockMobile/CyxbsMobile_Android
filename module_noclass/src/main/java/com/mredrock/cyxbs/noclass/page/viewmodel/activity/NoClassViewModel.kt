@@ -1,4 +1,4 @@
-package com.mredrock.cyxbs.noclass.page.viewmodel
+package com.mredrock.cyxbs.noclass.page.viewmodel.activity
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
@@ -44,7 +44,7 @@ class NoClassViewModel : BaseViewModel() {
    */
   val students : LiveData<List<Student>> get() = _students
   private val _students = MutableLiveData<List<Student>>()
-  
+
   /**
    * 没课时段
    */
@@ -91,16 +91,19 @@ class NoClassViewModel : BaseViewModel() {
       }
       .safeSubscribeBy (
         onNext = {
-          studentsLessons[stuNumList.indexOf(it[0].stuNum)] = it   //todo 将课程对应学号的索引 对应的studentsLessons设置为it  []里面是获取学号对应传入list的索引的
+          //将课程对应学号的索引 对应的studentsLessons设置为it  []里面是获取学号对应传入list的索引的
+          studentsLessons[stuNumList.indexOf(it[0].stuNum)] = it
         },
         onComplete = {
-          _noclassData.postValue(studentsLessons.toSpareTime().apply {   //todo 将new的studentsLessons变成空闲时间对象
+          //将new的studentsLessons变成空闲时间对象
+          _noclassData.postValue(studentsLessons.toSpareTime().apply {
             val mMap = hashMapOf<String,String>()
             members.forEach {
-              mMap[it.stuNum] = it.stuName    //todo 学号和姓名的映射表
+              //学号和姓名的映射表
+              mMap[it.stuNum] = it.stuName
             }
             forEach {
-              it.value.mIdToNameMap = mMap   //todo 每一位学生的映射表获取了所有同学的学号姓名映射表？
+              it.value.mIdToNameMap = mMap
             }
           })
         },

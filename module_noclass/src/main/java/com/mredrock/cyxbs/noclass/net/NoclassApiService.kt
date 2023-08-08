@@ -3,6 +3,7 @@ package com.mredrock.cyxbs.noclass.net
 import com.mredrock.cyxbs.lib.utils.network.ApiGenerator
 import com.mredrock.cyxbs.lib.utils.network.ApiStatus
 import com.mredrock.cyxbs.lib.utils.network.ApiWrapper
+import com.mredrock.cyxbs.noclass.bean.NoClassTemporarySearch
 import com.mredrock.cyxbs.noclass.bean.NoclassGroup
 import com.mredrock.cyxbs.noclass.bean.NoclassGroupId
 import com.mredrock.cyxbs.noclass.bean.Student
@@ -86,5 +87,10 @@ interface NoclassApiService {
     fun searchPeople(
         @Query("stu") stu: String
     ) : Single<ApiWrapper<List<Student>>>
+
+    @GET("/magipoke-text/search/people/temporary")
+    fun searchAll(
+        @Query("content") content : String
+    ) : Single<ApiWrapper<NoClassTemporarySearch>>
 
 }

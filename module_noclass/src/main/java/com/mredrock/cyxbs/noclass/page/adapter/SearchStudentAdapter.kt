@@ -31,11 +31,11 @@ class SearchStudentAdapter(
     private val studentDiffUtil : DiffUtil.ItemCallback<Student> = object : DiffUtil.ItemCallback<Student>(){
       
       override fun areItemsTheSame(oldItem: Student, newItem: Student): Boolean {
-        return oldItem.stuNum == newItem.stuNum
+        return oldItem.id == newItem.id
       }
   
       override fun areContentsTheSame(oldItem: Student, newItem: Student): Boolean {
-        return oldItem.stuNum == newItem.stuNum && oldItem.major == newItem.major && oldItem.name == newItem.name
+        return oldItem.id == newItem.id && oldItem.major == newItem.major && oldItem.name == newItem.name
       }
   
     }
@@ -48,7 +48,7 @@ class SearchStudentAdapter(
     private val btnAdd = itemView.findViewById<ImageView>(R.id.noclass_iv_student_add).apply {
       setOnClickListener {
         val student = currentList[absoluteAdapterPosition]
-        val member = NoclassGroup.Member(student.name,student.stuNum)
+        val member = NoclassGroup.Member(student.name,student.id)
         onAddClick.invoke(member)
       }
     }
@@ -62,7 +62,7 @@ class SearchStudentAdapter(
   override fun onBindViewHolder(holder: VH, position: Int) {
     holder.tvName.text = currentList[position].name
     holder.tvMajor.text = currentList[position].major
-    holder.tvNum.text = currentList[position].stuNum
+    holder.tvNum.text = currentList[position].id
   }
   
 }

@@ -14,7 +14,7 @@ import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import com.mredrock.cyxbs.lib.utils.extensions.setOnSingleClickListener
 import com.mredrock.cyxbs.lib.utils.extensions.toast
 import com.mredrock.cyxbs.noclass.R
-import com.mredrock.cyxbs.noclass.page.viewmodel.GroupManagerViewModel
+import com.mredrock.cyxbs.noclass.page.viewmodel.activity.GroupManagerViewModel
 import com.mredrock.cyxbs.noclass.util.startShake
 
 /**

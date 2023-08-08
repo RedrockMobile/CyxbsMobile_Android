@@ -19,7 +19,7 @@ import com.mredrock.cyxbs.noclass.bean.NoclassGroup
 import com.mredrock.cyxbs.noclass.page.adapter.GroupManagerAdapter
 import com.mredrock.cyxbs.noclass.page.ui.dialog.ConfirmDeleteDialog
 import com.mredrock.cyxbs.noclass.page.ui.dialog.CreateGroupDialogFragment
-import com.mredrock.cyxbs.noclass.page.viewmodel.GroupManagerViewModel
+import com.mredrock.cyxbs.noclass.page.viewmodel.activity.GroupManagerViewModel
 import java.io.Serializable
 
 /**
