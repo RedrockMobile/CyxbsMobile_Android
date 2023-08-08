@@ -6,8 +6,6 @@ plugins {
 dependLibBase()
 dependLibConfig()
 dependLibUtils()
-dependLibCourse()
-
 
 //使用ARouter
 useARouter()
