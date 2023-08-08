@@ -18,4 +18,6 @@ dependRxjava()
 //使用ARouter
 useARouter()
 
+//一般使用depend关键字编译器会有提示，导入依赖，亦可以使用自己的依赖，请在下面添加
+
 
