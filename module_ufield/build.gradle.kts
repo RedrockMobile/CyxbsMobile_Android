@@ -8,8 +8,6 @@ dependLibConfig()
 dependLibUtils()
 dependLibCourse()
 
-dependApiAccount()
-dependApiCourse()
 
 //使用ARouter
 useARouter()
