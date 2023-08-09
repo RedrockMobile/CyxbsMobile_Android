@@ -1,23 +1,18 @@
 package com.mredrock.cyxbs.noclass.page.ui.fragment
 
 
-import android.content.Context
 import android.os.Bundle
 import android.text.TextUtils
 import android.view.View
-import android.view.WindowManager
 import android.view.inputmethod.EditorInfo
-import android.view.inputmethod.InputMethodManager
 import android.widget.Button
 import android.widget.EditText
 import android.widget.FrameLayout
-import androidx.core.content.edit
 import androidx.fragment.app.viewModels
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.mredrock.cyxbs.api.account.IAccountService
-import com.mredrock.cyxbs.config.sp.defaultSp
 import com.mredrock.cyxbs.lib.base.ui.BaseFragment
 import com.mredrock.cyxbs.lib.utils.extensions.setOnSingleClickListener
 import com.mredrock.cyxbs.lib.utils.service.ServiceManager
@@ -25,7 +20,6 @@ import com.mredrock.cyxbs.noclass.R
 import com.mredrock.cyxbs.noclass.bean.NoClassSpareTime
 import com.mredrock.cyxbs.noclass.page.adapter.NoClassTemporaryAdapter
 import com.mredrock.cyxbs.noclass.page.ui.dialog.SearchAllDialog
-import com.mredrock.cyxbs.noclass.page.ui.dialog.SearchDoneDialog
 import com.mredrock.cyxbs.noclass.page.viewmodel.fragment.TemporaryViewModel
 
 /**
@@ -62,11 +56,6 @@ class NoClassTemporaryFragment : BaseFragment(R.layout.noclass_fragment_temporar
      * bottom dialog 查询结果
      */
     private lateinit var mCourseSheetBehavior: BottomSheetBehavior<FrameLayout>
-
-    /**
-     * 是否弹出下次不在勾选这个框框
-     */
-    private var mNeedShow = true
 
     /**
      * 临时分组界面展示人员的Rv和adapter
@@ -127,14 +116,20 @@ class NoClassTemporaryFragment : BaseFragment(R.layout.noclass_fragment_temporar
                 val result = it.data
                 if (result.isExist) {
                     searchAllDialog = SearchAllDialog(it).apply {
-                        setOnClickClass {
-                            toast("点到班级了")
+                        setOnClickClass {cls ->
+                            val clsList = mAdapter.currentList.toMutableSet()
+                            clsList.addAll(cls.members)
+                            mAdapter.submitList(clsList.toList())
                         }
-                        setOnClickStudent {
-                            toast("点到学生了")
+                        setOnClickStudent {stu ->
+                            val stuList = mAdapter.currentList.toMutableSet()
+                            stuList.add(stu)
+                            mAdapter.submitList(stuList.toList())
                         }
-                        setOnClickGroup {
-                            toast("点到分组了")
+                        setOnClickGroup {group ->
+                            val groupList = mAdapter.currentList.toMutableSet()
+                            groupList.addAll(group.members)
+                            mAdapter.submitList(groupList.toList())
                         }
                     }
                     searchAllDialog!!.show(childFragmentManager,"SearchAllDialog")
@@ -151,8 +146,6 @@ class NoClassTemporaryFragment : BaseFragment(R.layout.noclass_fragment_temporar
      * 搜索操作的初始化
      */
     private fun initSearchEvent() {
-        //防止软键盘弹起导致视图错位
-        requireActivity().window.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_NOTHING)
         mCourseSheetBehavior = BottomSheetBehavior.from(mCourseContainer)
         mCourseSheetBehavior.addBottomSheetCallback(object :
             BottomSheetBehavior.BottomSheetCallback() {
@@ -163,19 +156,9 @@ class NoClassTemporaryFragment : BaseFragment(R.layout.noclass_fragment_temporar
             override fun onStateChanged(bottomSheet: View, newState: Int) {
                 when (newState) {
                     BottomSheetBehavior.STATE_EXPANDED -> { //展开操作
-                        mEditTextView.apply {
-                            clearFocus()
-                            isFocusable = false
-                            isFocusableInTouchMode = false
-                        }
                     }
 
                     BottomSheetBehavior.STATE_COLLAPSED, BottomSheetBehavior.STATE_HIDDEN -> { //折叠操作
-                        mEditTextView.apply {
-                            isFocusable = true
-                            isFocusableInTouchMode = true
-                            requestFocus()
-                        }
                     }
 
                     else -> {}
@@ -190,7 +173,7 @@ class NoClassTemporaryFragment : BaseFragment(R.layout.noclass_fragment_temporar
         mCourseSheetBehavior.state = BottomSheetBehavior.STATE_HIDDEN
 
         //设置查询课表
-        mBtnQuery.setOnSingleClickListener {
+        mBtnQuery.setOnSingleClickListener(interval = 1000) {
             doSearchCourse()
         }
         //设置键盘上点击搜索的监听
@@ -212,11 +195,6 @@ class NoClassTemporaryFragment : BaseFragment(R.layout.noclass_fragment_temporar
             toast("输入为空")
             return
         }
-        (requireActivity().getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager).hideSoftInputFromWindow(
-            requireActivity().currentFocus?.windowToken,
-            InputMethodManager.HIDE_NOT_ALWAYS
-        )
-        mEditTextView.setText("")
         mViewModel.getSearchAllResult(content)
     }
 

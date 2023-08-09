@@ -163,7 +163,7 @@ class GroupDetailActivity : BaseActivity(){
                         }
                         mToAddSet.add(it)
                         mCurrentMembers.add(it)
-                        mGroupAdapter.submitList(mCurrentMembers.toMutableList())
+//                        mGroupAdapter.submitList(mCurrentMembers.toMutableList())
                         toast("添加成功")
                         setBtnState(true)
                         mSearchStudentDialog?.dismiss()
@@ -192,12 +192,12 @@ class GroupDetailActivity : BaseActivity(){
         mRecyclerView.layoutManager = LinearLayoutManager(this)
         mGroupAdapter = NoClassTemporaryAdapter().apply {
             if (mPosition != -1){
-                submitList(mCurrentMembers.toMutableList())
+//                submitList(mCurrentMembers.toMutableList())
             }
             setOnItemDelete {
                 mCurrentMembers.remove(it)
                 mToDeleteSet.add(it)
-                submitList(mCurrentMembers.toMutableList())
+//                submitList(mCurrentMembers.toMutableList())
                 setBtnState(true)
             }
         }

@@ -4,6 +4,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
+import android.widget.ImageView
 import android.widget.TextView
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
@@ -49,8 +50,8 @@ class TemporarySearchAdapter:  ListAdapter<NoClassItem,RecyclerView.ViewHolder>(
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
         return when(viewType){
             TEM_STUDENT -> StudentHolder(LayoutInflater.from(parent.context).inflate(R.layout.noclass_item_search_student,parent,false))
-            TEM_CLASS -> GroupHolder(LayoutInflater.from(parent.context).inflate(R.layout.noclass_item_search_group,parent,false))
-            TEM_GROUP -> ClassHolder(LayoutInflater.from(parent.context).inflate(R.layout.noclass_item_search_class,parent,false))
+            TEM_CLASS -> ClassHolder(LayoutInflater.from(parent.context).inflate(R.layout.noclass_item_search_class,parent,false))
+            TEM_GROUP -> GroupHolder(LayoutInflater.from(parent.context).inflate(R.layout.noclass_item_search_group,parent,false))
             else -> throw Exception("无法绑定！未定义的类型")
         }
     }
@@ -88,7 +89,7 @@ class TemporarySearchAdapter:  ListAdapter<NoClassItem,RecyclerView.ViewHolder>(
         val tvName : TextView = itemView.findViewById(R.id.noclass_tv_student_name)
         val tvMajor : TextView = itemView.findViewById(R.id.noclass_tv_student_major)
         val tvStuNum : TextView = itemView.findViewById(R.id.noclass_tv_student_id)
-        private val btnAdd : Button = itemView.findViewById(R.id.noclass_iv_student_add)
+        private val btnAdd : ImageView = itemView.findViewById(R.id.noclass_iv_student_add)
         init {
             btnAdd.setOnSingleClickListener {
                 onClickStudent?.invoke(getItem(bindingAdapterPosition) as Student)
@@ -105,7 +106,7 @@ class TemporarySearchAdapter:  ListAdapter<NoClassItem,RecyclerView.ViewHolder>(
 
     inner class GroupHolder(itemView: View) : RecyclerView.ViewHolder(itemView){
         val tvName : TextView = itemView.findViewById(R.id.noclass_item_tv_group_name)
-        private val btnAdd : Button = itemView.findViewById(R.id.noclass_item_iv_group_add)
+        private val btnAdd : ImageView = itemView.findViewById(R.id.noclass_item_iv_group_add)
         init {
             btnAdd.setOnSingleClickListener {
                 onClickGroup?.invoke(getItem(bindingAdapterPosition) as GroupDetail)
@@ -122,8 +123,8 @@ class TemporarySearchAdapter:  ListAdapter<NoClassItem,RecyclerView.ViewHolder>(
 
     inner class ClassHolder(itemView: View) :RecyclerView.ViewHolder(itemView){
         val tvNum : TextView = itemView.findViewById(R.id.noclass_item_tv_class_num)
-        val tvName : TextView = itemView.findViewById(R.id.noclass_tv_student_name)
-        private val btnAdd : Button = itemView.findViewById(R.id.noclass_item_iv_class_add)
+        val tvName : TextView = itemView.findViewById(R.id.noclass_item_tv_class_major)
+        private val btnAdd : ImageView = itemView.findViewById(R.id.noclass_item_iv_class_add)
         init {
             btnAdd.setOnSingleClickListener {
                 onClickClass?.invoke(getItem(bindingAdapterPosition) as Cls)
@@ -135,6 +136,6 @@ class TemporarySearchAdapter:  ListAdapter<NoClassItem,RecyclerView.ViewHolder>(
     fun deleteStudent(student: Student){
         val list = currentList.toMutableList()
         list.remove(student)
-        deleteStudent(student)
+        submitList(list)
     }
 }

@@ -62,6 +62,9 @@ class SearchAllDialog(
                 dialog.cancel()
             }
         }
+        //点击空白处取消
+        dialog.setCancelable(true)
+        //设置dialog中的rv
         dialog.findViewById<RecyclerView>(R.id.rv_noclass_search_container).apply {
             layoutManager = LinearLayoutManager(context)
             adapter = TemporarySearchAdapter().apply {
@@ -86,7 +89,7 @@ class SearchAllDialog(
                                 dialog.cancel()
                             }
                             isOnlyGroup = false
-                            searchResultList.add(data.cls)
+                            searchResultList.add(data.`class`)
                         }
                         GROUP -> {
                             setOnClickGroup {

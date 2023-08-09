@@ -10,7 +10,7 @@ data class NoClassTemporarySearch(
     val status: Int
 ) {
     data class Data(
-        val cls: Cls,
+        val `class` : Cls,
         val group: GroupDetail,
         val isExist: Boolean,
         val students: List<Student>,

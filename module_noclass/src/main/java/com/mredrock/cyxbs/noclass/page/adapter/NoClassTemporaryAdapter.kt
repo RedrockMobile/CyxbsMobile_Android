@@ -3,6 +3,7 @@ package com.mredrock.cyxbs.noclass.page.adapter
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.LinearLayout
 import android.widget.TextView
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
@@ -20,7 +21,7 @@ import com.mredrock.cyxbs.noclass.bean.Student
  * @CreateDate:     2022年08月28日 06:57:00
  * @UpdateRemark:   更新说明：
  * @Version:        1.0
- * @Description:    没课约主页RV的Adapter
+ * @Description:    没课约临时分组RV的Adapter
  */
 class NoClassTemporaryAdapter : ListAdapter<Student,NoClassTemporaryAdapter.VH>(
     noClassGroupDiffUtil
@@ -50,17 +51,15 @@ class NoClassTemporaryAdapter : ListAdapter<Student,NoClassTemporaryAdapter.VH>(
     inner class VH(itemView : View) : RecyclerView.ViewHolder(itemView){
         val tvName : TextView = itemView.findViewById(R.id.noclass_tv_member_name)
         val tvId : TextView = itemView.findViewById(R.id.noclass_tv_member_id)
-//        val ivDelete : ImageView = itemView.findViewById<ImageView?>(R.id.noclass_iv_member_delete).apply {
-//            setOnClickListener {
-//                //要删除的成员
-//                val member = currentList[absoluteAdapterPosition]
-////                //要更新的列表
-////                val toBeList = currentList.toMutableList()
-////                toBeList.remove(member)
-////                submitList(toBeList)
-//                mOnItemDelete?.invoke(member)
-//            }
-//        }
+        val tvDelete : TextView = itemView.findViewById<TextView?>(R.id.noclass_item_tv_delete).apply {
+            setOnClickListener {
+                val stu = getItem(bindingAdapterPosition)
+                deleteMember(stu)
+            }
+        }
+        val rootView : LinearLayout = itemView.findViewById<LinearLayout?>(R.id.noclass_item_group_member).apply {
+            setOnClickListener {  }
+        }
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): VH {
@@ -73,15 +72,15 @@ class NoClassTemporaryAdapter : ListAdapter<Student,NoClassTemporaryAdapter.VH>(
         holder.tvId.text = currentList[position].id
     }
     
-    fun addMember(member : Student){
+    fun addMember(stu : Student){
         val list = currentList.toMutableList()
-        list.add(member)
+        list.add(stu)
         submitList(list)
     }
     
-    fun deleteMember(member : Student){
+    fun deleteMember(stu : Student){
         val list = currentList.toMutableList()
-        list.remove(member)
+        list.remove(stu)
         submitList(list)
     }
 

@@ -209,11 +209,11 @@ class NoClassActivity : BaseActivity(){
 //    }
 //  }
 //
-//  /**
-//   * 取消状态栏
-//   */
-//  override val isCancelStatusBar: Boolean
-//    get() = true
+  /**
+   * 取消状态栏
+   */
+  override val isCancelStatusBar: Boolean
+    get() = true
 
   override fun onCreate(savedInstanceState: Bundle?) {
     super.onCreate(savedInstanceState)

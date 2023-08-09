@@ -4,7 +4,8 @@
     xmlns:tools="http://schemas.android.com/tools"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:background="@color/config_white_black">
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
@@ -42,15 +43,18 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/noclass_temporary_et_add_classmate" />
 
-        <androidx.recyclerview.widget.RecyclerView
+
+        <com.mredrock.cyxbs.noclass.widget.SlideRecyclerView
             android:id="@+id/noclass_temporary_rv_show"
             android:layout_width="match_parent"
-            android:layout_height="0dp"
+            android:layout_height="wrap_content"
+            android:background="@color/config_white_black"
             app:layout_constraintBottom_toTopOf="@+id/noclass_temporary_btn_query"
             app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.0"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/noclassView3" />
-
+            app:layout_constraintTop_toBottomOf="@+id/noclassView3"
+            app:layout_constraintVertical_bias="0.0" />
 
         <Button
             android:id="@+id/noclass_temporary_btn_query"
