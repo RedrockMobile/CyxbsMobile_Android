@@ -14,6 +14,7 @@ import com.mredrock.cyxbs.noclass.bean.CLASS
 import com.mredrock.cyxbs.noclass.bean.Cls
 import com.mredrock.cyxbs.noclass.bean.GROUP
 import com.mredrock.cyxbs.noclass.bean.GroupDetail
+import com.mredrock.cyxbs.noclass.bean.NoClassItem
 import com.mredrock.cyxbs.noclass.bean.NoClassTemporarySearch
 import com.mredrock.cyxbs.noclass.bean.STUDENT
 import com.mredrock.cyxbs.noclass.bean.Student
@@ -65,34 +66,47 @@ class SearchAllDialog(
             layoutManager = LinearLayoutManager(context)
             adapter = TemporarySearchAdapter().apply {
                 val data = searchResult.data
-                when(data.type){
-                    STUDENT -> {
-                        setOnClickStudent {
-                            onClickStudent?.invoke(it)
-                            dialog.cancel()
+                val searchResultList = ArrayList<NoClassItem>()
+                // 是否只有分组
+                var isOnlyGroup = true
+                //遍历类型，可能为学生，分组，班级，也可能为学生和分组重名组合
+                for (type in data.types){
+                    when(type){
+                        STUDENT -> {
+                            setOnClickStudent {
+                                onClickStudent?.invoke(it)
+                                dialog.cancel()
+                            }
+                            isOnlyGroup = false
+                            searchResultList.addAll(data.students)
                         }
-                        submitList(data.students)
-                    }
-                    CLASS -> {
-                        setOnClickClass {
-                            onClickClass?.invoke(it)
-                            dialog.cancel()
+                        CLASS -> {
+                            setOnClickClass {
+                                onClickClass?.invoke(it)
+                                dialog.cancel()
+                            }
+                            isOnlyGroup = false
+                            searchResultList.add(data.cls)
                         }
-                        submitList(data.cls)
-                    }
-                    GROUP -> {
-                        setOnClickGroup {
-                            onClickGroup?.invoke(it)
-                            dialog.cancel()
+                        GROUP -> {
+                            setOnClickGroup {
+                                onClickGroup?.invoke(it)
+                                dialog.cancel()
+                            }
+                            searchResultList.add(data.group)
+                            // 如果只有分组，此时才显示分组下面的学生
+                            if (isOnlyGroup){
+                                searchResultList.addAll(data.group.members)
+                                //单独设置的原因是因为要求点击分组下面的组员要求弹窗不消失
+                                setOnClickStudent {
+                                    onClickStudent?.invoke(it)
+                                    deleteStudent(it)
+                                }
+                            }
                         }
-                        //单独设置的原因是因为要求点击分组下面的组员要求弹窗不消失
-                        setOnClickStudent {
-                            onClickStudent?.invoke(it)
-                            deleteStudent(it)
-                        }
-                        submitGroup(data.group)
                     }
                 }
+                submitList(searchResultList)
             }
         }
     }

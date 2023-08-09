@@ -10,11 +10,11 @@ data class NoClassTemporarySearch(
     val status: Int
 ) {
     data class Data(
-        val cls: List<Cls>,
-        val group: List<GroupDetail>,
+        val cls: Cls,
+        val group: GroupDetail,
         val isExist: Boolean,
         val students: List<Student>,
-        val type: String   // 1:学生  2:班级  3:分组
+        val types: List<String>
     )
 }
 

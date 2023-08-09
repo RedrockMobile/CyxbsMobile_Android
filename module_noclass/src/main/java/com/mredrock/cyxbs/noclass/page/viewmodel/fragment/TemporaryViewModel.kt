@@ -8,7 +8,7 @@ import com.mredrock.cyxbs.lib.utils.network.mapOrInterceptException
 import com.mredrock.cyxbs.lib.utils.service.impl
 import com.mredrock.cyxbs.noclass.bean.NoClassSpareTime
 import com.mredrock.cyxbs.noclass.bean.NoClassTemporarySearch
-import com.mredrock.cyxbs.noclass.bean.NoclassGroup
+import com.mredrock.cyxbs.noclass.bean.Student
 import com.mredrock.cyxbs.noclass.bean.toSpareTime
 import com.mredrock.cyxbs.noclass.page.repository.NoClassRepository
 import io.reactivex.rxjava3.core.Observable
@@ -34,7 +34,7 @@ class TemporaryViewModel : BaseViewModel(){
             }
     }
 
-    fun getLessons(stuNumList: List<String>,members : List<NoclassGroup.Member>){
+    fun getLessons(stuNumList: List<String>,members : List<Student>){
         val studentsLessons =  mutableMapOf<Int,List<ILessonService.Lesson>>()
         Observable.fromIterable(stuNumList)
             .flatMap {
@@ -53,7 +53,7 @@ class TemporaryViewModel : BaseViewModel(){
                         val mMap = hashMapOf<String,String>()
                         members.forEach {
                             //学号和姓名的映射表
-                            mMap[it.stuNum] = it.stuName
+                            mMap[it.id] = it.name
                         }
                         forEach {
                             it.value.mIdToNameMap = mMap

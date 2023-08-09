@@ -104,7 +104,7 @@ class TemporarySearchAdapter:  ListAdapter<NoClassItem,RecyclerView.ViewHolder>(
     }
 
     inner class GroupHolder(itemView: View) : RecyclerView.ViewHolder(itemView){
-        val tvName : TextView = itemView.findViewById(R.id.noclass_tv_group_name)
+        val tvName : TextView = itemView.findViewById(R.id.noclass_item_tv_group_name)
         private val btnAdd : Button = itemView.findViewById(R.id.noclass_item_iv_group_add)
         init {
             btnAdd.setOnSingleClickListener {
@@ -131,14 +131,6 @@ class TemporarySearchAdapter:  ListAdapter<NoClassItem,RecyclerView.ViewHolder>(
         }
     }
 
-    fun submitGroup(groupList : List<GroupDetail>){
-        for (group in groupList){
-            val list = currentList.toMutableList()
-            list.add(group)
-            this@TemporarySearchAdapter.submitList(list)  //先提交一次组，然后提交组下面的成员
-            this@TemporarySearchAdapter.submitList(group.members)
-        }
-    }
 
     fun deleteStudent(student: Student){
         val list = currentList.toMutableList()

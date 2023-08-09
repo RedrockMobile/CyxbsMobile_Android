@@ -3,13 +3,13 @@ package com.mredrock.cyxbs.noclass.page.adapter
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.ImageView
 import android.widget.TextView
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.mredrock.cyxbs.noclass.R
 import com.mredrock.cyxbs.noclass.bean.NoclassGroup
+import com.mredrock.cyxbs.noclass.bean.Student
 
 /**
  *
@@ -22,24 +22,24 @@ import com.mredrock.cyxbs.noclass.bean.NoclassGroup
  * @Version:        1.0
  * @Description:    没课约主页RV的Adapter
  */
-class NoClassTemporaryAdapter : ListAdapter<NoclassGroup.Member,NoClassTemporaryAdapter.VH>(
+class NoClassTemporaryAdapter : ListAdapter<Student,NoClassTemporaryAdapter.VH>(
     noClassGroupDiffUtil
 ){
 
     companion object{
-        private val noClassGroupDiffUtil : DiffUtil.ItemCallback<NoclassGroup.Member> = object : DiffUtil.ItemCallback<NoclassGroup.Member>(){
+        private val noClassGroupDiffUtil : DiffUtil.ItemCallback<Student> = object : DiffUtil.ItemCallback<Student>(){
             override fun areItemsTheSame(
-                oldItem: NoclassGroup.Member,
-                newItem: NoclassGroup.Member
+                oldItem: Student,
+                newItem: Student
             ): Boolean {
-                return oldItem.stuNum == newItem.stuNum
+                return oldItem.id == newItem.id
             }
 
             override fun areContentsTheSame(
-                oldItem: NoclassGroup.Member,
-                newItem: NoclassGroup.Member
+                oldItem: Student,
+                newItem: Student
             ): Boolean {
-                return oldItem.stuNum == newItem.stuNum && oldItem.stuName == oldItem.stuName
+                return oldItem == newItem
             }
 
         }
@@ -50,17 +50,17 @@ class NoClassTemporaryAdapter : ListAdapter<NoclassGroup.Member,NoClassTemporary
     inner class VH(itemView : View) : RecyclerView.ViewHolder(itemView){
         val tvName : TextView = itemView.findViewById(R.id.noclass_tv_member_name)
         val tvId : TextView = itemView.findViewById(R.id.noclass_tv_member_id)
-        val ivDelete : ImageView = itemView.findViewById<ImageView?>(R.id.noclass_iv_member_delete).apply {
-            setOnClickListener {
-                //要删除的成员
-                val member = currentList[absoluteAdapterPosition]
-//                //要更新的列表
-//                val toBeList = currentList.toMutableList()
-//                toBeList.remove(member)
-//                submitList(toBeList)
-                mOnItemDelete?.invoke(member)
-            }
-        }
+//        val ivDelete : ImageView = itemView.findViewById<ImageView?>(R.id.noclass_iv_member_delete).apply {
+//            setOnClickListener {
+//                //要删除的成员
+//                val member = currentList[absoluteAdapterPosition]
+////                //要更新的列表
+////                val toBeList = currentList.toMutableList()
+////                toBeList.remove(member)
+////                submitList(toBeList)
+//                mOnItemDelete?.invoke(member)
+//            }
+//        }
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): VH {
@@ -69,17 +69,17 @@ class NoClassTemporaryAdapter : ListAdapter<NoclassGroup.Member,NoClassTemporary
     }
 
     override fun onBindViewHolder(holder: VH, position: Int) {
-        holder.tvName.text = currentList[position].stuName
-        holder.tvId.text = currentList[position].stuNum
+        holder.tvName.text = currentList[position].name
+        holder.tvId.text = currentList[position].id
     }
     
-    fun addMember(member : NoclassGroup.Member){
+    fun addMember(member : Student){
         val list = currentList.toMutableList()
         list.add(member)
         submitList(list)
     }
     
-    fun deleteMember(member : NoclassGroup.Member){
+    fun deleteMember(member : Student){
         val list = currentList.toMutableList()
         list.remove(member)
         submitList(list)

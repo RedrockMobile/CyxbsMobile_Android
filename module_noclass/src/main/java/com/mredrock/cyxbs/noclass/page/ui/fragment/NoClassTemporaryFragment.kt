@@ -13,10 +13,14 @@ import android.widget.EditText
 import android.widget.FrameLayout
 import androidx.core.content.edit
 import androidx.fragment.app.viewModels
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.bottomsheet.BottomSheetBehavior
+import com.mredrock.cyxbs.api.account.IAccountService
 import com.mredrock.cyxbs.config.sp.defaultSp
 import com.mredrock.cyxbs.lib.base.ui.BaseFragment
 import com.mredrock.cyxbs.lib.utils.extensions.setOnSingleClickListener
+import com.mredrock.cyxbs.lib.utils.service.ServiceManager
 import com.mredrock.cyxbs.noclass.R
 import com.mredrock.cyxbs.noclass.bean.NoClassSpareTime
 import com.mredrock.cyxbs.noclass.page.adapter.NoClassTemporaryAdapter
@@ -28,6 +32,16 @@ import com.mredrock.cyxbs.noclass.page.viewmodel.fragment.TemporaryViewModel
  * 临时分组的fragment
  */
 class NoClassTemporaryFragment : BaseFragment(R.layout.noclass_fragment_temporary) {
+
+    /**
+     * 用户名称
+     */
+    private lateinit var mUserName : String
+
+    /**
+     * 用户id
+     */
+    private lateinit var mUserId : String
 
     /**
      * 查询按钮
@@ -55,16 +69,44 @@ class NoClassTemporaryFragment : BaseFragment(R.layout.noclass_fragment_temporar
     private var mNeedShow = true
 
     /**
-     * 临时分组界面展示人员的adapter
+     * 临时分组界面展示人员的Rv和adapter
      */
-    private lateinit var mAdapter : NoClassTemporaryAdapter
+    private val mRecyclerView : RecyclerView by R.id.noclass_temporary_rv_show.view()
+    private val mAdapter by lazy { NoClassTemporaryAdapter() }
 
     private val mViewModel by viewModels<TemporaryViewModel>()
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        initUserInfo()
+        initRv()
         initObserver()
         initSearchEvent()
+    }
+
+    /**
+     * 初始化临时分组页面的rv
+     */
+    private fun initRv() {
+        mRecyclerView.apply {
+            layoutManager = LinearLayoutManager(requireContext())
+            adapter = mAdapter.apply {
+                //加入本人
+//                val mRvList = ArrayList<Student>()
+//                mRvList.add(Student("","","","",mUserId,mUserName))
+//                submitList(mRvList)
+            }
+        }
+    }
+
+    /**
+     * 初始化用户信息
+     */
+    private fun initUserInfo(){
+        ServiceManager.invoke(IAccountService::class).getUserService().apply {
+            mUserName = this.getRealName()
+            mUserId = this.getStuNum()
+        }
     }
 
 
@@ -72,29 +114,30 @@ class NoClassTemporaryFragment : BaseFragment(R.layout.noclass_fragment_temporar
      * 执行查询课程的操作
      */
     private fun doSearchCourse() {
-        mViewModel.getLessons(mAdapter.currentList.map { it.stuNum }, mAdapter.currentList)
+        mViewModel.getLessons(mAdapter.currentList.map { it.id }, mAdapter.currentList)
     }
 
     /**
      * 初始化观察者
      */
     private fun initObserver() {
-        var searchAllDialog: SearchAllDialog? = null
+        var searchAllDialog: SearchAllDialog?
         mViewModel.searchAll.observe(viewLifecycleOwner) {
             if (it.info == "success") {
                 val result = it.data
                 if (result.isExist) {
                     searchAllDialog = SearchAllDialog(it).apply {
                         setOnClickClass {
-
+                            toast("点到班级了")
                         }
                         setOnClickStudent {
-                            //todo 添加到当前list
+                            toast("点到学生了")
                         }
                         setOnClickGroup {
-
+                            toast("点到分组了")
                         }
                     }
+                    searchAllDialog!!.show(childFragmentManager,"SearchAllDialog")
                 } else {
                     toast("查无此人")
                 }
@@ -133,40 +176,14 @@ class NoClassTemporaryFragment : BaseFragment(R.layout.noclass_fragment_temporar
                             isFocusableInTouchMode = true
                             requestFocus()
                         }
-                        if (mNeedShow) {
-                            if (defaultSp.getBoolean("NeverRemindNextOnNoClass", false)) {
-                                return
-                            }
-                            SearchDoneDialog(requireContext()).apply {
-                                setOnReturnClick { searchDoneDialog, remind ->
-                                    if (remind) {
-                                        defaultSp.edit {
-                                            putBoolean("NeverRemindNextOnNoClass", remind)
-                                        }
-                                    }
-                                    searchDoneDialog.dismiss()
-                                }
-                                setOnContinueClick { searchDoneDialog, remind ->
-                                    if (remind) {
-                                        defaultSp.edit {
-                                            putBoolean("NeverRemindNextOnNoClass", remind)
-                                        }
-                                    }
-                                    searchDoneDialog.dismiss()
-                                }
-                            }.show()
-                        }
-                        mNeedShow = false
                     }
 
-                    else -> {
-                        //忽略
-                    }
+                    else -> {}
                 }
             }
         })
 
-        replaceFragment(R.id.noclass_course_bottom_sheet_container) {
+        replaceFragment(R.id.noclass_temporary_bottom_sheet_container) {
             NoClassCourseVpFragment.newInstance(NoClassSpareTime.EMPTY_PAGE)
         }
 
@@ -199,6 +216,7 @@ class NoClassTemporaryFragment : BaseFragment(R.layout.noclass_fragment_temporar
             requireActivity().currentFocus?.windowToken,
             InputMethodManager.HIDE_NOT_ALWAYS
         )
+        mEditTextView.setText("")
         mViewModel.getSearchAllResult(content)
     }
 
