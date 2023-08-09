@@ -15,16 +15,13 @@ import com.mredrock.cyxbs.account.bean.TokenWrapper
 import com.mredrock.cyxbs.account.utils.UserInfoEncryption
 import com.mredrock.cyxbs.api.account.*
 import com.mredrock.cyxbs.api.account.utils.Value
-import com.mredrock.cyxbs.api.electricity.IElectricityService
 import com.mredrock.cyxbs.api.login.ILoginService
-import com.mredrock.cyxbs.api.volunteer.IVolunteerService
 import com.mredrock.cyxbs.config.sp.defaultSp
 import com.mredrock.cyxbs.lib.utils.extensions.dp2pxF
 import com.mredrock.cyxbs.lib.utils.extensions.toast
 import com.mredrock.cyxbs.lib.utils.network.ApiException
 import com.mredrock.cyxbs.lib.utils.network.ApiGenerator
 import com.mredrock.cyxbs.lib.utils.network.ApiWrapper
-import com.mredrock.cyxbs.lib.utils.service.ServiceManager
 import com.mredrock.cyxbs.lib.utils.service.impl
 import io.reactivex.rxjava3.core.Observable
 import io.reactivex.rxjava3.subjects.BehaviorSubject
@@ -347,8 +344,6 @@ internal class AccountService : IAccountService {
                 putLong(SP_KEY_REFRESH_TOKEN_EXPIRED, 0)
                 putLong(SP_KEY_TOKEN_EXPIRED, 0)
             }
-            ServiceManager(IElectricityService::class).clearSP()
-            ServiceManager(IVolunteerService::class).clearSP()
             user = null
             // 通知 StuNum 更新
             (mUserService as UserService).emitStuNum(null)

@@ -8,6 +8,4 @@ import com.alibaba.android.arouter.facade.template.IProvider
  */
 interface IVolunteerService : IProvider {
     fun getVolunteerFeed(): Fragment
-    fun clearSP()
-
 }
