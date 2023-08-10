@@ -32,3 +32,10 @@ data class NoclassGroup(
         val stuNum: String
     ) : Serializable
 }
+
+data class GroupDetail(
+    override val id: String,
+    override val members: List<Student>,
+    override val name: String,
+    val isTop: Boolean,
+) : Group

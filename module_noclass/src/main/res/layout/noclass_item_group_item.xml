@@ -23,8 +23,8 @@
                 android:paddingStart="16dp"
                 android:paddingEnd="16dp"
                 android:gravity="center"
-                tools:text="取消置顶"
-                android:text="取消置顶"
+                tools:text="置顶"
+                android:text="置顶"
                 android:textColor="@color/config_white_black"
                 android:background="@color/noclass_group_top_bg"
                 android:layout_width="wrap_content"
@@ -49,7 +49,6 @@
             android:layout_height="match_parent">
 
             <ImageView
-                android:alpha="0"
                 android:layout_marginStart="16dp"
                 app:layout_constraintHorizontal_bias="0"
                 android:id="@+id/iv_noclass_group_delete_icon"
@@ -64,20 +63,18 @@
                 />
 
             <TextView
-               app:layout_constraintVertical_bias="0.48"
-                app:layout_constraintHorizontal_bias="0"
-                android:layout_marginStart="16dp"
-                android:paddingStart="16dp"
-                android:paddingEnd="16dp"
                 android:id="@+id/tv_noclass_group_name"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_vertical"
+                android:paddingStart="16dp"
+                android:paddingEnd="16dp"
                 android:textColor="@color/noclass_primary_text_color"
                 android:textSize="18sp"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintHorizontal_bias="0.112"
+                app:layout_constraintStart_toEndOf="@+id/iv_noclass_group_delete_icon"
                 app:layout_constraintTop_toTopOf="parent"
                 tools:text="分组1" />
         </androidx.constraintlayout.widget.ConstraintLayout>

@@ -39,7 +39,7 @@ class GroupManagerAdapter(
     companion object{
         private val groupManageDiffUtil : DiffUtil.ItemCallback<NoclassGroup> = object : DiffUtil.ItemCallback<NoclassGroup>(){
             override fun areItemsTheSame(oldItem: NoclassGroup, newItem: NoclassGroup): Boolean {
-                return oldItem.id == newItem.name
+                return oldItem.id == newItem.id
             }
 
             override fun areContentsTheSame(oldItem: NoclassGroup, newItem: NoclassGroup): Boolean {

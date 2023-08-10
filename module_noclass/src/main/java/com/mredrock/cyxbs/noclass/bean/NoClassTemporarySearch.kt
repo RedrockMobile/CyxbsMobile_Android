@@ -27,7 +27,6 @@ interface NoClassItem{
     val name: String
 }
 
-
 interface Group : NoClassItem{
     val members: List<Student>
 }
@@ -38,9 +37,3 @@ data class Cls(
     override val name: String,
 ) : Group
 
-data class GroupDetail(
-    override val id: String,
-    override val members: List<Student>,
-    override val name: String,
-    val isTop: Boolean,
-) : Group

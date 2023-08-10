@@ -99,7 +99,7 @@ class NoClassTemporaryFragment : BaseFragment(R.layout.noclass_fragment_temporar
 
 
     /**
-     * 执行查询课程的操作
+     * 执行查询空闲课程的操作
      */
     private fun doSearchCourse() {
         mParentViewModel.getLessons(mAdapter.currentList.map { it.id }, mAdapter.currentList)

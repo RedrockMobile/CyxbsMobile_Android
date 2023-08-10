@@ -27,7 +27,7 @@ import com.mredrock.cyxbs.noclass.page.adapter.SearchStudentAdapter
  */
 class SearchStudentDialog(
   private val students : List<Student>,
-  private val onAddClick:(NoclassGroup.Member) -> Unit
+  private val onAddClick:(Student) -> Unit
 ) : BottomSheetDialogFragment() {
   
   override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
@@ -66,10 +66,12 @@ class SearchStudentDialog(
       }
     }
     dialog.findViewById<RecyclerView>(R.id.rv_noclass_search_container).apply {
-      adapter = SearchStudentAdapter {
-        onAddClick(it)
-        dismiss()
-      }.apply {
+      adapter = SearchStudentAdapter().apply {
+        setOnAddClick {
+          onAddClick(it)
+          deleteStudent(it)
+          dismiss()
+        }
         submitList(students)
       }
       layoutManager = LinearLayoutManager(context)
