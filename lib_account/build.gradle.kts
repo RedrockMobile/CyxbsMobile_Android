@@ -2,9 +2,6 @@ plugins {
     id("module-manager")
 }
 
-
-dependApiElectricity()
-dependApiVolunteer()
 dependApiLogin()
 
 dependMaterialDialog()
