@@ -58,6 +58,7 @@ class NoClassViewModel : BaseViewModel() {
           })
         },
         onError = {
+          it.printStackTrace()
           toast("网络似乎开小差了~")
         }
       )

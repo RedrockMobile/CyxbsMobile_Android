@@ -1,6 +1,5 @@
 package com.mredrock.cyxbs.noclass.page.ui.fragment
 
-import android.util.Log
 import com.mredrock.cyxbs.lib.course.fragment.page.CoursePageFragment
 import com.mredrock.cyxbs.noclass.bean.NoClassSpareTime
 import com.mredrock.cyxbs.noclass.page.course.NoClassLesson
@@ -54,12 +53,8 @@ abstract class NoClassPageFragment: CoursePageFragment() {
     val id2 = lineTime.SpareItem[2].spareId
     val id3 = lineTime.SpareItem[3].spareId
     val id4 = lineTime.SpareItem[4].spareId
-    val spare1 = !lineTime.isSpare[1]!!
-    val spare2 = !lineTime.isSpare[2]!!
-    val spare3 = !lineTime.isSpare[3]!!
-    val spare4 = !lineTime.isSpare[4]!!
-    addLessonByJudge(0,week,id1, id2, spare1, spare2)
-    addLessonByJudge(2,week,id3, id4, spare3, spare4)
+    addLessonByJudge(0,week,id1, id2)
+    addLessonByJudge(2,week,id3, id4)
   }
   private fun addLessonNoon(line: Int){
     addLesson(getFullStuLesson(4,line+1))
@@ -70,12 +65,8 @@ abstract class NoClassPageFragment: CoursePageFragment() {
     val id2 = lineTime.SpareItem[6].spareId
     val id3 = lineTime.SpareItem[7].spareId
     val id4 = lineTime.SpareItem[8].spareId
-    val spare1 = !lineTime.isSpare[5]!!
-    val spare2 = !lineTime.isSpare[6]!!
-    val spare3 = !lineTime.isSpare[7]!!
-    val spare4 = !lineTime.isSpare[8]!!
-    addLessonByJudge(5,week,id1, id2, spare1, spare2)
-    addLessonByJudge(7,week,id3, id4, spare3, spare4)
+    addLessonByJudge(5,week,id1, id2)
+    addLessonByJudge(7,week,id3, id4)
   }
   private fun addLessonDusk(line: Int){
     addLesson(getFullStuLesson(9,line+1))
@@ -86,12 +77,8 @@ abstract class NoClassPageFragment: CoursePageFragment() {
     val id2 = lineTime.SpareItem[10].spareId
     val id3 = lineTime.SpareItem[11].spareId
     val id4 = lineTime.SpareItem[12].spareId
-    val spare1 = !lineTime.isSpare[9]!!
-    val spare2 = !lineTime.isSpare[10]!!
-    val spare3 = !lineTime.isSpare[11]!!
-    val spare4 = !lineTime.isSpare[12]!!
-    addLessonByJudge(10,week,id1, id2, spare1, spare2)
-    addLessonByJudge(12,week,id3, id4, spare3, spare4)
+    addLessonByJudge(10,week,id1, id2)
+    addLessonByJudge(12,week,id3, id4)
   }
   
   /**
@@ -104,21 +91,12 @@ abstract class NoClassPageFragment: CoursePageFragment() {
     week: Int,
     id1: List<String>,
     id2: List<String>,
-    spare1: Boolean,
-    spare2: Boolean
   ){
-    if (id1 == id2 && spare1 && spare2) {
+    if (id1 == id2) {
       addLesson(getLesson(begin,week,2,id1))
-    } else if (id1 != id2 && spare1 && spare2) {
+    } else if (id1 != id2) {
       addLesson(getLesson(begin,week,1,id1))
       addLesson(getLesson(begin+1,week,1,id2))
-    } else {
-      if (spare1) {
-        addLesson(getLesson(begin,week,1,id1))
-      }
-      if (spare2) {
-        addLesson(getLesson(begin+1,week,1,id2))
-      }
     }
   }
   
@@ -146,8 +124,6 @@ abstract class NoClassPageFragment: CoursePageFragment() {
         this.remove(it)
       }
     }
-    Log.d("lx", "gatheringIdList: ${gatheringIdList} ")
-    Log.d("lx", "noGatheringIdList: ${noGatheringIdList} ")
     val gatheringList : List<String> = gatheringIdList.map { mNameMap[it]!! }   //空闲的人名
     val noGatheringList : List<String> = noGatheringIdList.map { mNameMap[it]!! }   //忙碌的人名
     return NoClassLesson(NoClassLessonData(week, begin, length, gatheringIdList.showText()),gatheringList,noGatheringList,Pair(begin,begin+length))

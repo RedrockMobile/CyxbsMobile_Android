@@ -36,8 +36,6 @@ data class NoClassSpareTime (   //todo 一周的空闲时间
   data class SpareLineTime(  //todo 一天的空闲时间
     //此时有空闲时间的学号
     val SpareItem: ArrayList<SpareIds>,   //todo 对应一天格子的集合
-    //此时是否空闲 false代表没课
-    val isSpare: HashMap<Int,Boolean>,   //todo 对应每一个格子是否空闲
   ): Serializable {
     //每格格子上空闲的人数
     data class SpareIds(
@@ -80,12 +78,6 @@ fun Map<Int, List<ILessonService.Lesson>>.toSpareTime() : HashMap<Int, NoClassSp
           line.SpareItem[lesson.beginLesson + it].spareId.remove(lesson.stuNum)
           semesterLine!!.SpareItem[lesson.beginLesson + it].spareId.remove(lesson.stuNum)
         }
-        //如果这个格子上已经没人了，就标记为有课
-        if(line.SpareItem[lesson.beginLesson + it].spareId.isEmpty())
-          line.isSpare[lesson.beginLesson + it] = false
-        //整个学期的有没课状态
-        if(semesterLine!!.SpareItem[lesson.beginLesson + it].spareId.isEmpty())
-          semesterLine.isSpare[lesson.beginLesson + it] = false
       }
     }
   }
@@ -115,11 +107,6 @@ private fun getNewSpareTime(stuIds : ArrayList<String>): NoClassSpareTime {  //t
             (0..13).forEach { _ ->
               add(NoClassSpareTime.SpareLineTime.SpareIds((stuIds.clone() as ArrayList<String>)))
             }
-          },
-          hashMapOf<Int, Boolean>().apply {
-            (0..13).forEach{ index ->
-              this[index] = false
-            }
           }
         )
     }
@@ -135,11 +122,6 @@ private fun getNewEmptySpareTime(): NoClassSpareTime {  //todo 创建一个空�
           ArrayList<NoClassSpareTime.SpareLineTime.SpareIds>(13).apply {
             (0..13).forEach { _ ->
               add(NoClassSpareTime.SpareLineTime.SpareIds(arrayListOf()))
-            }
-          },
-          hashMapOf<Int, Boolean>().apply {
-            (0..13).forEach{ index ->
-              this[index] = false
             }
           }
         )

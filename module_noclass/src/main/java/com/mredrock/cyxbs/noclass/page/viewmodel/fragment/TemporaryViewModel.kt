@@ -54,7 +54,7 @@ class TemporaryViewModel : BaseViewModel(){
 //                                gender = "男",
 //                                grade = "23",
 //                                major = "数据科学与大数据技术",
-//                                "喵喵",
+//                                name = "喵喵",
 //                                id = "2022241392"
 //                            ),
 //                            Student(
@@ -62,7 +62,7 @@ class TemporaryViewModel : BaseViewModel(){
 //                                gender = "女",
 //                                grade = "24",
 //                                major = "大数据管理与应用",
-//                                "喵喵",
+//                                name = "喵喵",
 //                                id = "2021251392"
 //                            )
                         ),"大数据实验班"),
@@ -70,17 +70,17 @@ class TemporaryViewModel : BaseViewModel(){
                             Student(
                                 classNum = "04082201",
                                 gender = "男",
-                                grade = "21",
-                                major = "数据科学与大数据技术",
-                                "汪汪",
+                                grade = "22",
+                                major = "大数据管理与应用",
+                                name = "张琳",
                                 id = "2022211293"
                             ),
                             Student(
                                 classNum = "04082202",
-                                gender = "女",
-                                grade = "23",
+                                gender = "男",
+                                grade = "22",
                                 major = "大数据管理与应用",
-                                "呱呱",
+                                name = "周博",
                                 id = "2022211292"
                             )
                         ),"喵喵",true)

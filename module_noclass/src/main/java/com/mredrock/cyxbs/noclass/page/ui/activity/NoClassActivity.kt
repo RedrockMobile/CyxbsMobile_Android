@@ -42,7 +42,7 @@ class NoClassActivity : BaseActivity() {
     private lateinit var mCourseSheetBehavior: BottomSheetBehavior<FrameLayout>
 
 //  /**
-//   * 是否有更改值
+//   * 获取批量添加界面的返回值
 //   */
 //  private val startForResult = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
 //    if (result.resultCode == Activity.RESULT_OK) {
@@ -104,6 +104,7 @@ class NoClassActivity : BaseActivity() {
                                         defaultSp.edit()
                                             .putBoolean("NeverRemindNextOnNoClass", true).apply()
                                     }
+                                    dialog.dismiss()
                                 }
                                 setOnContinueClick { dialog, isRemind ->
                                     if (isRemind) {
