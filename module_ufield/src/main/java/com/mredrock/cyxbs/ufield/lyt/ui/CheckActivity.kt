@@ -4,17 +4,15 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import com.mredrock.cyxbs.ufield.R
 /**
- * description ：最初从中心模块跳转到这个activity
+ * description ：审核中心的activity
  * author : lytMoon
  * email : yytds@foxmail.com
- * date : 2023/8/7 19:49
+ * date :  2023/8/8 16:34
  * version: 1.0
  */
-class UFieldActivity : AppCompatActivity() {
+class CheckActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.ufield_activity_ufield)
+        setContentView(R.layout.ufield_activity_check)
     }
-
-
 }
