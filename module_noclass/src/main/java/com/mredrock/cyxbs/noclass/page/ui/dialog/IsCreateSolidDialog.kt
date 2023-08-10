@@ -19,19 +19,19 @@ import com.mredrock.cyxbs.noclass.R
  * @CreateDate:     2022年09月05日 19:15:00
  * @UpdateRemark:   更新说明：
  * @Version:        1.0
- * @Description:    搜索完成返回的弹窗
+ * @Description:    查询完成时候课表页面的弹窗,是否创建固定分组，是就进入创建界面，否就弹窗消失
  */
-class SearchDoneDialog(context: Context) : AlertDialog(context) {
+class IsCreateSolidDialog(context: Context) : AlertDialog(context) {
   
   /**
    * 退出按钮回调
    */
-  private var mOnReturnClick : ((SearchDoneDialog,Boolean) -> Unit)? = null
+  private var mOnReturnClick : ((IsCreateSolidDialog, Boolean) -> Unit)? = null
   
   /**
    * 继续按钮的回调
    */
-  private var mOnContinue : ((SearchDoneDialog,Boolean) -> Unit)? = null
+  private var mOnContinue : ((IsCreateSolidDialog, Boolean) -> Unit)? = null
   
   override fun onCreate(savedInstanceState: Bundle?) {
     super.onCreate(savedInstanceState)
@@ -47,25 +47,25 @@ class SearchDoneDialog(context: Context) : AlertDialog(context) {
     
     findViewById<Button>(R.id.btn_noclass_dialog_search_done_back).apply {
       setOnSingleClickListener {
-        mOnReturnClick?.invoke(this@SearchDoneDialog,checkBox.isChecked)
+        mOnReturnClick?.invoke(this@IsCreateSolidDialog,checkBox.isChecked)
       }
     }
     
     findViewById<Button>(R.id.btn_noclass_dialog_search_done_continue).apply {
       setOnSingleClickListener {
-        mOnContinue?.invoke(this@SearchDoneDialog,checkBox.isChecked)
+        mOnContinue?.invoke(this@IsCreateSolidDialog,checkBox.isChecked)
       }
     }
     
   }
   
-  fun setOnReturnClick(onReturnClick : (SearchDoneDialog,Boolean) -> Unit) : SearchDoneDialog{
+  fun setOnReturnClick(onReturnClick : (IsCreateSolidDialog, Boolean) -> Unit) : IsCreateSolidDialog{
     return this.apply {
       mOnReturnClick = onReturnClick
     }
   }
   
-  fun setOnContinueClick(onContinue : (SearchDoneDialog,Boolean) -> Unit) : SearchDoneDialog{
+  fun setOnContinueClick(onContinue : (IsCreateSolidDialog, Boolean) -> Unit) : IsCreateSolidDialog{
     return this.apply {
       mOnContinue = onContinue
     }

@@ -4,13 +4,10 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import com.mredrock.cyxbs.api.course.ILessonService
 import com.mredrock.cyxbs.lib.base.ui.BaseViewModel
-import com.mredrock.cyxbs.lib.utils.network.mapOrInterceptException
 import com.mredrock.cyxbs.lib.utils.service.impl
 import com.mredrock.cyxbs.noclass.bean.NoClassSpareTime
-import com.mredrock.cyxbs.noclass.bean.NoclassGroup
 import com.mredrock.cyxbs.noclass.bean.Student
 import com.mredrock.cyxbs.noclass.bean.toSpareTime
-import com.mredrock.cyxbs.noclass.page.repository.NoClassRepository
 import io.reactivex.rxjava3.core.Observable.fromIterable
 
 
@@ -28,60 +25,13 @@ import io.reactivex.rxjava3.core.Observable.fromIterable
 
 
 class NoClassViewModel : BaseViewModel() {
-  
-  init {
-    getNoclassGroupDetail()
-  }
-  
-  /**
-   * 没课约所有分组详情界面的 Livedata
-   */
-  val groupList: LiveData<List<NoclassGroup>> get() = _groupList
-  private val _groupList = MutableLiveData<List<NoclassGroup>>()
-  
-  /**
-   * 查找学生
-   */
-  val students : LiveData<List<Student>> get() = _students
-  private val _students = MutableLiveData<List<Student>>()
-
   /**
    * 没课时段
    */
   val noclassData : LiveData<HashMap<Int, NoClassSpareTime>> get() = _noclassData
   private val _noclassData : MutableLiveData<HashMap<Int, NoClassSpareTime>> = MutableLiveData()
   
-  /**
-   * 获得全部分组数据
-   * NoClassActivity只需要再init里请求一次
-   */
-  private fun getNoclassGroupDetail() {
-    NoClassRepository
-      .getNoclassGroupDetail()
-      .mapOrInterceptException {
-        ApiException { }
-      }.doOnError {
-        _groupList.postValue(emptyList())
-      }.safeSubscribeBy {
-        _groupList.postValue(it)
-      }
-  }
-  
-  /**
-   * 查询学生
-   */
-  fun searchStudent(stu : String){
-    NoClassRepository
-      .searchStudent(stu)
-      .mapOrInterceptException {
-      
-      }
-      .safeSubscribeBy {
-        _students.postValue(it)
-      }
-  }
-  
-  fun getLessons(stuNumList: List<String>,members : List<NoclassGroup.Member>){
+  fun getLessons(stuNumList: List<String>,students : List<Student>){
     val studentsLessons =  mutableMapOf<Int,List<ILessonService.Lesson>>()
     fromIterable(stuNumList)
       .flatMap {
@@ -98,9 +48,9 @@ class NoClassViewModel : BaseViewModel() {
           //将new的studentsLessons变成空闲时间对象
           _noclassData.postValue(studentsLessons.toSpareTime().apply {
             val mMap = hashMapOf<String,String>()
-            members.forEach {
+            students.forEach {
               //学号和姓名的映射表
-              mMap[it.stuNum] = it.stuName
+              mMap[it.id] = it.name
             }
             forEach {
               it.value.mIdToNameMap = mMap

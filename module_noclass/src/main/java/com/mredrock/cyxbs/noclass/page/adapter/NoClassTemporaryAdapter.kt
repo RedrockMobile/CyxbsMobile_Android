@@ -57,6 +57,7 @@ class NoClassTemporaryAdapter : ListAdapter<Student,NoClassTemporaryAdapter.VH>(
                 deleteMember(stu)
             }
         }
+        // 可以侧边滑动的要求也就是view必须捕获事件
         val rootView : LinearLayout = itemView.findViewById<LinearLayout?>(R.id.noclass_item_group_member).apply {
             setOnClickListener {  }
         }

@@ -28,9 +28,7 @@ import com.mredrock.cyxbs.noclass.util.startShake
  * @Version:        1.0
  * @Description:    创建新分组的bottom sheet dial og
  */
-class CreateGroupDialogFragment(
-  private val existsName: List<String>
-) : BottomSheetDialogFragment() {
+class CreateGroupDialog() : BottomSheetDialogFragment() {
   
   private val viewModel by activityViewModels<GroupManagerViewModel>()
   
@@ -107,6 +105,8 @@ class CreateGroupDialogFragment(
    * 创建成功
    */
   private fun createDone(name: String, tvHint: TextView) {
+    //todo 等待网络请求到existsName
+    val existsName = ArrayList<String>()
     for (i in existsName) { //判断是否有重名
       if (i == name) {
         tvHint.text = "和已有分组重名，再想想吧"

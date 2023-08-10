@@ -18,7 +18,7 @@ import com.mredrock.cyxbs.noclass.R
 import com.mredrock.cyxbs.noclass.bean.NoclassGroup
 import com.mredrock.cyxbs.noclass.page.adapter.GroupManagerAdapter
 import com.mredrock.cyxbs.noclass.page.ui.dialog.ConfirmDeleteDialog
-import com.mredrock.cyxbs.noclass.page.ui.dialog.CreateGroupDialogFragment
+import com.mredrock.cyxbs.noclass.page.ui.dialog.CreateGroupDialog
 import com.mredrock.cyxbs.noclass.page.viewmodel.activity.GroupManagerViewModel
 import java.io.Serializable
 
@@ -283,7 +283,7 @@ class GroupManagerActivity : BaseActivity() {
         for (i in mGroupList){
             mNameList.add(i.name)
         }
-        val mBottomSheetDialog = CreateGroupDialogFragment(mNameList).apply {
+        val mBottomSheetDialog = CreateGroupDialog().apply {
             if (extraList?.isNotEmpty() == true){
                 var extraNums = ""
                 extraList.forEachIndexed { index, member ->
