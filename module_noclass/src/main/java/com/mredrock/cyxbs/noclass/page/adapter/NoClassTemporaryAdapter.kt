@@ -46,7 +46,7 @@ class NoClassTemporaryAdapter : ListAdapter<Student,NoClassTemporaryAdapter.VH>(
         }
     }
 
-    private var mOnItemDelete : ((NoclassGroup.Member) -> Unit)? = null
+    private var mOnItemDelete : ((Student) -> Unit)? = null
 
     inner class VH(itemView : View) : RecyclerView.ViewHolder(itemView){
         val tvName : TextView = itemView.findViewById(R.id.noclass_tv_member_name)
@@ -55,6 +55,7 @@ class NoClassTemporaryAdapter : ListAdapter<Student,NoClassTemporaryAdapter.VH>(
             setOnClickListener {
                 val stu = getItem(bindingAdapterPosition)
                 deleteMember(stu)
+                mOnItemDelete?.invoke(stu)
             }
         }
         // 可以侧边滑动的要求也就是view必须捕获事件
@@ -85,7 +86,7 @@ class NoClassTemporaryAdapter : ListAdapter<Student,NoClassTemporaryAdapter.VH>(
         submitList(list)
     }
 
-    fun setOnItemDelete(listener : (NoclassGroup.Member) -> Unit){
+    fun setOnItemDelete(listener : (Student) -> Unit){
         mOnItemDelete = listener
     }
 

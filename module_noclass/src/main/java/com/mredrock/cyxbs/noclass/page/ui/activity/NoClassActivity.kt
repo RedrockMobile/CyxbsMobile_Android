@@ -14,6 +14,7 @@ import com.mredrock.cyxbs.noclass.bean.NoClassSpareTime
 import com.mredrock.cyxbs.noclass.page.ui.dialog.CreateGroupDialog
 import com.mredrock.cyxbs.noclass.page.ui.dialog.IsCreateSolidDialog
 import com.mredrock.cyxbs.noclass.page.ui.fragment.NoClassCourseVpFragment
+import com.mredrock.cyxbs.noclass.page.ui.fragment.NoClassSolidFragment
 import com.mredrock.cyxbs.noclass.page.ui.fragment.NoClassTemporaryFragment
 import com.mredrock.cyxbs.noclass.page.viewmodel.activity.NoClassViewModel
 
@@ -65,7 +66,8 @@ class NoClassActivity : BaseActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.noclass_activity_no_class)
         replaceFragment(R.id.fragment_container) {
-            NoClassTemporaryFragment.newInstance()
+//            NoClassTemporaryFragment.newInstance()
+            NoClassSolidFragment.newInstance()
         }
         initObserve()
         initQueryEvent()

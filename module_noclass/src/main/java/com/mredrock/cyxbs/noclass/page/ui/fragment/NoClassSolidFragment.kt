@@ -6,6 +6,7 @@ import android.text.TextUtils
 import android.view.View
 import android.view.WindowManager
 import android.view.inputmethod.EditorInfo
+import android.widget.Button
 import android.widget.EditText
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.fragment.app.viewModels
@@ -14,8 +15,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.mredrock.cyxbs.lib.base.ui.BaseFragment
 import com.mredrock.cyxbs.noclass.R
 import com.mredrock.cyxbs.noclass.page.adapter.NoClassSolidAdapter
-import com.mredrock.cyxbs.noclass.page.adapter.SearchStudentAdapter
-import com.mredrock.cyxbs.noclass.page.ui.dialog.SearchAllDialog
+import com.mredrock.cyxbs.noclass.page.ui.dialog.CreateGroupDialog
 import com.mredrock.cyxbs.noclass.page.ui.dialog.SearchStudentDialog
 import com.mredrock.cyxbs.noclass.page.viewmodel.fragment.SolidViewModel
 
@@ -39,6 +39,11 @@ class NoClassSolidFragment : BaseFragment(R.layout.noclass_fragment_solid) {
      */
     private val mAdapter : NoClassSolidAdapter by lazy { NoClassSolidAdapter() }
 
+    /**
+     * 创建按钮
+     */
+    private val mBtnCreate : Button by R.id.noclass_solid_btn_create.view()
+
     private val mViewModel by viewModels<SolidViewModel>()
 
     /**
@@ -60,6 +65,23 @@ class NoClassSolidFragment : BaseFragment(R.layout.noclass_fragment_solid) {
         initObserver()
         getAllGroup()
         initSearchEvent()
+        initClickCreate()
+    }
+
+    /**
+     * 初始化创建的点击事件
+     */
+    private fun initClickCreate() {
+        mBtnCreate.setOnClickListener {
+            //弹出创建分组的弹窗
+            val existNames = mAdapter.currentList.map { it.name }
+            CreateGroupDialog(existNames){
+                //这里是创建分组之后的事
+                val orderList = mAdapter.currentList.toMutableList()
+                orderList.add(it)
+                mAdapter.submitListToOrder(orderList)
+            }.show(childFragmentManager,"SolidCreateGroupDialog")
+        }
     }
 
     private fun getAllGroup() {
@@ -74,10 +96,12 @@ class NoClassSolidFragment : BaseFragment(R.layout.noclass_fragment_solid) {
                     //todo 进入组内，需要跳转，通过registerforresult来跳
                 }
                 setOnClickGroupDelete {
-                    //todo 需要删除，更新云端状态
+                    //删除更新云端状态
+                    mViewModel.deleteGroup(it.id)
                 }
                 setOnClickGroupIsTop {
-                    //todo 置顶之后需要更新云端状态
+                    //更新云端置顶状态
+                    mViewModel.updateGroup(it.id,it.name,it.isTop.toString())
                 }
             }
         }
@@ -87,8 +111,7 @@ class NoClassSolidFragment : BaseFragment(R.layout.noclass_fragment_solid) {
         var searchStudentDialog: SearchStudentDialog?
         mViewModel.searchStudent.observe(viewLifecycleOwner) {
             searchStudentDialog = SearchStudentDialog(it) {
-                // 仅需要添加到当前，dialog删除item的逻辑在dialog里面
-
+                //todo  点击加号之后的逻辑，需要弹窗选择分组加入
             }
             searchStudentDialog!!.show(childFragmentManager, "SearchStudentDialog")
         }

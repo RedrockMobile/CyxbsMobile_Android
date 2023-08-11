@@ -5,7 +5,6 @@ import androidx.lifecycle.MutableLiveData
 import com.mredrock.cyxbs.lib.base.ui.BaseViewModel
 import com.mredrock.cyxbs.lib.utils.network.ApiStatus
 import com.mredrock.cyxbs.lib.utils.network.mapOrInterceptException
-import com.mredrock.cyxbs.noclass.bean.NoclassGroup
 import com.mredrock.cyxbs.noclass.bean.Student
 import com.mredrock.cyxbs.noclass.page.repository.NoClassRepository
 import io.reactivex.rxjava3.core.Flowable
@@ -73,17 +72,17 @@ class GroupDetailViewModel : BaseViewModel() {
       }
   }
   
-  fun addAndDeleteStu(groupId: String,addSet : Set<NoclassGroup.Member>,deleteSet : Set<NoclassGroup.Member>){
+  fun addAndDeleteStu(groupId: String,addSet : Set<Student>,deleteSet : Set<Student>){
     var addStu = ""
     var deleteStu = ""
     for ((index,stu) in addSet.withIndex()){
-      addStu += stu.stuNum
+      addStu += stu.id
       if (index != addSet.size-1){
         addStu += ","
       }
     }
     for ((index,stu) in deleteSet.withIndex()){
-      deleteStu += stu.stuNum
+      deleteStu += stu.id
       if (index != deleteSet.size-1){
         deleteStu += ","
       }

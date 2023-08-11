@@ -18,6 +18,7 @@ import com.mredrock.cyxbs.lib.base.ui.BaseActivity
 import com.mredrock.cyxbs.lib.utils.extensions.setOnSingleClickListener
 import com.mredrock.cyxbs.noclass.R
 import com.mredrock.cyxbs.noclass.bean.NoclassGroup
+import com.mredrock.cyxbs.noclass.bean.Student
 import com.mredrock.cyxbs.noclass.page.adapter.NoClassTemporaryAdapter
 import com.mredrock.cyxbs.noclass.page.ui.dialog.ConfirmReturnDialog
 import com.mredrock.cyxbs.noclass.page.ui.dialog.RenameGroupDialog
@@ -82,12 +83,12 @@ class GroupDetailActivity : BaseActivity(){
     /**
      * 预增加用户
      */
-    private var mToAddSet : MutableSet<NoclassGroup.Member> = mutableSetOf()
+    private var mToAddSet : MutableSet<Student> = mutableSetOf()
 
     /**
      * 预删除用户
      */
-    private var mToDeleteSet : MutableSet<NoclassGroup.Member> = mutableSetOf()
+    private var mToDeleteSet : MutableSet<Student> = mutableSetOf()
 
     /**
      * 当前选择的NoclassGroup
@@ -97,7 +98,7 @@ class GroupDetailActivity : BaseActivity(){
     /**
      * 当前选择的members
      */
-    private lateinit var mCurrentMembers : MutableList<NoclassGroup.Member>
+    private lateinit var mCurrentMembers : MutableList<Student>
     
     /**
      * Adapter

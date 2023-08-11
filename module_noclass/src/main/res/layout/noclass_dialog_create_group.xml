@@ -87,7 +87,7 @@
                 android:textColor="@color/noclass_hint_text_color_dark"
                 android:layout_marginStart="8dp"
                 android:layout_marginEnd="16dp"
-                android:id="@+id/et_noclass_create_group"
+                android:id="@+id/et_noclass_group_name"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"

@@ -51,7 +51,7 @@ class RenameGroupDialog (context: Context) : AlertDialog(context) {
         //提示tv
         val mTvHint : TextView = findViewById(R.id.tv_noclass_group_rename_hint)
         //重命名EditText
-        val mEtName : EditText = findViewById<EditText?>(R.id.et_noclass_create_group).apply {
+        val mEtName : EditText = findViewById<EditText?>(R.id.et_noclass_rename_group).apply {
             addTextChangedListener(
                 onTextChanged = { s, _, _, _ ->
                     if (s?.length == 0) {

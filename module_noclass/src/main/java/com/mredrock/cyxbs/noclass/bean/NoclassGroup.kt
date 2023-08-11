@@ -21,17 +21,10 @@ data class NoclassGroup(
     @SerializedName("is_top")
     val isTop: Boolean,
     @SerializedName("members")
-    var members: List<Member>,
+    var members: List<Student>,
     @SerializedName("name")
     val name: String
-) : Serializable{
-    data class Member(
-        @SerializedName("stu_name")
-        val stuName: String,
-        @SerializedName("stu_num")
-        val stuNum: String
-    ) : Serializable
-}
+) : Serializable
 
 data class GroupDetail(
     override val id: String,

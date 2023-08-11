@@ -11,9 +11,12 @@ import androidx.core.view.postDelayed
 import androidx.core.widget.addTextChangedListener
 import androidx.fragment.app.activityViewModels
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
+import com.mredrock.cyxbs.api.account.IAccountService
 import com.mredrock.cyxbs.lib.utils.extensions.setOnSingleClickListener
 import com.mredrock.cyxbs.lib.utils.extensions.toast
+import com.mredrock.cyxbs.lib.utils.service.ServiceManager
 import com.mredrock.cyxbs.noclass.R
+import com.mredrock.cyxbs.noclass.bean.NoclassGroup
 import com.mredrock.cyxbs.noclass.page.viewmodel.activity.GroupManagerViewModel
 import com.mredrock.cyxbs.noclass.util.startShake
 
@@ -27,13 +30,34 @@ import com.mredrock.cyxbs.noclass.util.startShake
  * @UpdateRemark:   更新说明：
  * @Version:        1.0
  * @Description:    创建新分组的bottom sheet dial og
+ * @param existName 如果是固定分组界面，已有分组，可空
+ * @param afterCreate 固定分组创建成功之后的操作
+ *
  */
-class CreateGroupDialog() : BottomSheetDialogFragment() {
-  
-  private val viewModel by activityViewModels<GroupManagerViewModel>()
-  
+class CreateGroupDialog(
+  var existNames : List<String>? = null,
+  val afterCreate : ((NoclassGroup) -> Unit)? = null
+) : BottomSheetDialogFragment() {
+
+  private val mViewModel by activityViewModels<GroupManagerViewModel>()
+
   private var mExtraNums : String? = null
-  
+
+  /**
+   * 用户名称
+   */
+  private lateinit var mUserName: String
+
+  /**
+   * 用户id
+   */
+  private lateinit var mUserId: String
+
+  /**
+   * 创建分组的名称
+   */
+  private var mGroupName : String? = null
+
   override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
     super.onCreateDialog(savedInstanceState)
     val dialog = super.onCreateDialog(savedInstanceState)
@@ -41,17 +65,54 @@ class CreateGroupDialog() : BottomSheetDialogFragment() {
     initView(dialog)
     return dialog
   }
-  
+
+  /**
+   * 观察
+   */
+  private fun initObserve() {
+    // 获得全部分组的观察者
+    mViewModel.groupList.observe(this){
+      existNames = it.map { it.name }
+      val mHint = dialog?.findViewById<TextView>(R.id.tv_noclass_create_group_hint)
+      if (mHint != null) {
+        createDone(mUserName,mHint, existNames!!)
+      }
+    }
+    // 上传分组的观察者
+    mViewModel.isCreateSuccess.observe(this) {
+      if (it.id == -1) {
+        toast("似乎出现了什么问题呢,请稍后再试")
+      } else {
+        toast("创建成功")
+        val noclassGroup = NoclassGroup(it.id.toString(),false,ArrayList(),mGroupName ?: "未知分组")
+        afterCreate?.invoke(noclassGroup)
+        dialog?.cancel()
+      }
+    }
+  }
+
   override fun onCreate(savedInstanceState: Bundle?) {
     super.onCreate(savedInstanceState)
     setStyle(STYLE_NORMAL, R.style.noclass_sheet_dialog_style)
+    initUserInfo()
+    initObserve()
   }
-  
+
+  /**
+   * 初始化用户信息
+   */
+  private fun initUserInfo() {
+    ServiceManager.invoke(IAccountService::class).getUserService().apply {
+      mUserName = this.getRealName()
+      mUserId = this.getStuNum()
+    }
+  }
+
   private fun initView(dialog: Dialog) {
     //分组名称textview
     val tvName = dialog.findViewById<TextView>(R.id.tv_noclass_create_group_name)
     //创建分组名称dialog
-    val etName = dialog.findViewById<EditText>(R.id.et_noclass_create_group)
+    val etName = dialog.findViewById<EditText>(R.id.et_noclass_group_name)
     //创建完成按钮上方的提示
     val tvHint = dialog.findViewById<TextView>(R.id.tv_noclass_create_group_hint).apply {
       visibility = View.INVISIBLE
@@ -62,7 +123,7 @@ class CreateGroupDialog() : BottomSheetDialogFragment() {
         dialog.cancel()
       }
     }
-    
+
     //TextWatcher监听
     etName.addTextChangedListener(
       onTextChanged = { s, _, before, _ ->
@@ -86,7 +147,7 @@ class CreateGroupDialog() : BottomSheetDialogFragment() {
         }
       }
     )
-    
+
     //创建完成的按钮
     dialog.findViewById<Button>(R.id.btn_noclass_group_create_done).apply {
       setOnSingleClickListener {
@@ -95,19 +156,24 @@ class CreateGroupDialog() : BottomSheetDialogFragment() {
           tvHint.text = "请输入你的分组名称"
           tvHint.visibility = View.VISIBLE
         } else {
-          createDone(etName.text.toString(), tvHint)
+          val name = etName.text.toString()
+          //如果传入的existName为空，那么就网络请求获取到所有的分组信息
+          if (existNames == null){
+            mViewModel.postNoclassGroup(name, stuNums = mUserId)
+          }else{
+            //不为空直接调用
+            createDone(name,tvHint, existNames!!)
+          }
         }
       }
     }
   }
-  
+
   /**
    * 创建成功
    */
-  private fun createDone(name: String, tvHint: TextView) {
-    //todo 等待网络请求到existsName
-    val existsName = ArrayList<String>()
-    for (i in existsName) { //判断是否有重名
+  private fun createDone(name: String, tvHint: TextView ,existNames: List<String>) {
+    for (i in existNames) { //判断是否有重名
       if (i == name) {
         tvHint.text = "和已有分组重名，再想想吧"
         tvHint.visibility = View.VISIBLE
@@ -115,15 +181,8 @@ class CreateGroupDialog() : BottomSheetDialogFragment() {
         return
       }
     }
-    viewModel.postNoclassGroup(name, mExtraNums ?: "")
-    viewModel.isCreateSuccess.observe(this) {
-      if (it.id == -1) {
-        toast("似乎出现了什么问题呢,请稍后再试")
-      } else {
-        toast("创建成功")
-        dialog?.cancel()
-      }
-    }
+    mGroupName = name
+    mViewModel.postNoclassGroup(name, mExtraNums ?: "")
   }
   
   /**
