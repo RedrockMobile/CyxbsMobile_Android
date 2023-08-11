@@ -12,7 +12,7 @@ import com.mredrock.cyxbs.noclass.bean.NoclassGroup
 
 
 /**
- * 没课约固定分组界面的adapter,全部是分组！
+ * 没课约固定分组界面的adapter
  */
 class NoClassSolidAdapter : ListAdapter<NoclassGroup, NoClassSolidAdapter.MyHolder>(solidDiffUtil) {
     companion object {
@@ -29,9 +29,8 @@ class NoClassSolidAdapter : ListAdapter<NoclassGroup, NoClassSolidAdapter.MyHold
                     oldItem: NoclassGroup,
                     newItem: NoclassGroup
                 ): Boolean {
-                    return oldItem.isTop == newItem.isTop && oldItem.id == newItem.id && oldItem.name == oldItem.name
+                    return oldItem.isTop == newItem.isTop && oldItem.name == newItem.name
                 }
-
             }
     }
 
@@ -57,11 +56,12 @@ class NoClassSolidAdapter : ListAdapter<NoclassGroup, NoClassSolidAdapter.MyHold
         val groupIsTop: TextView = itemView.findViewById(R.id.tv_noclass_group_top_name)
         val groupDelete: TextView = itemView.findViewById(R.id.tv_noclass_group_delete_item)
         init {
-            val item = getItem(bindingAdapterPosition)
             groupName.setOnClickListener {
+                val item = getItem(bindingAdapterPosition)
                 onClickGroupName?.invoke(item)
             }
             groupIsTop.setOnClickListener {
+                val item = getItem(bindingAdapterPosition)
                 val list = currentList.toMutableList()
                 if (item.isTop){
                     groupIsTop.text = "取消置顶"
@@ -78,6 +78,7 @@ class NoClassSolidAdapter : ListAdapter<NoclassGroup, NoClassSolidAdapter.MyHold
                 onClickGroupIsTop?.invoke(item)
             }
             groupDelete.setOnClickListener {
+                val item = getItem(bindingAdapterPosition)
                 onClickGroupDelete?.invoke(item)
             }
         }
@@ -97,7 +98,6 @@ class NoClassSolidAdapter : ListAdapter<NoclassGroup, NoClassSolidAdapter.MyHold
             groupIsTop.text = if(item.isTop) "取消置顶" else "置顶"
         }
     }
-
     /**
      * 将传进来的列表变成有序列表，上面是置顶
      */

@@ -14,6 +14,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.mredrock.cyxbs.lib.base.ui.BaseFragment
 import com.mredrock.cyxbs.noclass.R
+import com.mredrock.cyxbs.noclass.bean.NoclassGroup
 import com.mredrock.cyxbs.noclass.page.adapter.NoClassSolidAdapter
 import com.mredrock.cyxbs.noclass.page.ui.dialog.CreateGroupDialog
 import com.mredrock.cyxbs.noclass.page.ui.dialog.SearchStudentDialog
@@ -43,6 +44,16 @@ class NoClassSolidFragment : BaseFragment(R.layout.noclass_fragment_solid) {
      * 创建按钮
      */
     private val mBtnCreate : Button by R.id.noclass_solid_btn_create.view()
+
+    /**
+     * 删除缓冲区：可能想要删除，但是云端没删除成功，所以本地也不能删掉。必须云端删除成功本地才能删除成功
+     */
+    private var waitDeleteGroup : NoclassGroup? = null
+
+    /**
+     * 更新缓冲区
+     */
+    private var waitUpDate : NoclassGroup? = null
 
     private val mViewModel by viewModels<SolidViewModel>()
 
@@ -96,11 +107,12 @@ class NoClassSolidFragment : BaseFragment(R.layout.noclass_fragment_solid) {
                     //todo 进入组内，需要跳转，通过registerforresult来跳
                 }
                 setOnClickGroupDelete {
-                    //删除更新云端状态
+                    //删除：加入缓冲区，并且更新云端状态
+                    waitDeleteGroup = it
                     mViewModel.deleteGroup(it.id)
                 }
                 setOnClickGroupIsTop {
-                    //更新云端置顶状态
+                    //置顶：加入缓冲区，更新云端置顶状态
                     mViewModel.updateGroup(it.id,it.name,it.isTop.toString())
                 }
             }
@@ -111,12 +123,25 @@ class NoClassSolidFragment : BaseFragment(R.layout.noclass_fragment_solid) {
         var searchStudentDialog: SearchStudentDialog?
         mViewModel.searchStudent.observe(viewLifecycleOwner) {
             searchStudentDialog = SearchStudentDialog(it) {
-                //todo  点击加号之后的逻辑，需要弹窗选择分组加入
+                //点击加号之后的逻辑，需要弹窗选择分组加入
+                
             }
             searchStudentDialog!!.show(childFragmentManager, "SearchStudentDialog")
         }
         mViewModel.groupList.observe(viewLifecycleOwner){
             mAdapter.submitListToOrder(it)
+        }
+        mViewModel.isDeleteSuccess.observe(viewLifecycleOwner){
+            //todo 删除成功或者失败之后的操作
+        }
+        mViewModel.isCreateSuccess.observe(viewLifecycleOwner){
+            if(it.id ==  -1){
+                toast("创建失败")
+            }
+            //todo 创建成功或者失败之后的操作
+        }
+        mViewModel.isUpdateSuccess.observe(viewLifecycleOwner){
+            //todo 更新成功或者失败之后的操作
         }
     }
 

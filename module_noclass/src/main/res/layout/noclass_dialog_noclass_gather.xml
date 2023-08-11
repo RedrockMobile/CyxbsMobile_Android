@@ -78,7 +78,7 @@
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/noclass_tv_gathering_total" />
+            app:layout_constraintTop_toBottomOf="@+id/noclass_tv_gathering_busy_total" />
 
         <Button
             android:id="@+id/noclass_btn_arrange_plan"
