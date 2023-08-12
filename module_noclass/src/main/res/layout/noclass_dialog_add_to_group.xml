@@ -12,13 +12,13 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
-        app:layout_constraintGuide_percent="0.60" />
+        app:layout_constraintGuide_percent="0.618" />
 
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/csl_noclass_gather_dialog"
         android:layout_width="match_parent"
-        android:layout_height="290dp"
+        android:layout_height="275dp"
         android:background="@drawable/noclass_shape_sheet_dialog_bg"
         android:orientation="vertical"
         app:layout_constraintBottom_toBottomOf="parent"
@@ -98,7 +98,7 @@
             style="?android:attr/borderlessButtonStyle"
             android:layout_width="100dp"
             android:layout_height="40dp"
-            android:background="@drawable/noclass_shape_button_common_bg"
+            android:background="@drawable/noclass_shape_button_save_default_bg"
             android:text="完成"
             android:textColor="@color/config_white_black"
             android:textSize="14sp"

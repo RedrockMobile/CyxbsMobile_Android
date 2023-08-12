@@ -4,11 +4,15 @@ import android.app.Dialog
 import android.os.Bundle
 import android.widget.Button
 import android.widget.TextView
+import androidx.fragment.app.viewModels
 import androidx.viewpager2.widget.ViewPager2
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
+import com.mredrock.cyxbs.lib.utils.extensions.toast
 import com.mredrock.cyxbs.noclass.R
 import com.mredrock.cyxbs.noclass.bean.NoclassGroup
+import com.mredrock.cyxbs.noclass.bean.Student
 import com.mredrock.cyxbs.noclass.page.adapter.NoClassAddToGroupAdapter
+import com.mredrock.cyxbs.noclass.page.viewmodel.fragment.SolidViewModel
 import com.mredrock.cyxbs.noclass.widget.StickIndicator
 
 /**
@@ -16,7 +20,8 @@ import com.mredrock.cyxbs.noclass.widget.StickIndicator
  */
 
 class AddToGroupDialog(
-    private val groupList: List<NoclassGroup>
+    private val groupList: List<NoclassGroup>,
+    private val student: Student
 ) : BottomSheetDialogFragment() {
 
     /**
@@ -29,31 +34,66 @@ class AddToGroupDialog(
      */
     private lateinit var mIndicator : StickIndicator
 
+    /**
+     * 完成点击按钮
+     */
+    private lateinit var mBtnDone : Button
+
+    /**
+     * 选中的分组
+     */
+    private var chooseGroup : List<NoclassGroup>? = null
+
+    /**
+     * 固定分组fragment的viewModel
+     */
+    private val mSolidViewModel by viewModels<SolidViewModel>()
+
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
         super.onCreateDialog(savedInstanceState)
         val dialog = super.onCreateDialog(savedInstanceState)
         dialog.setContentView(R.layout.noclass_dialog_add_to_group)
         initView(dialog)
+        initObserver()
         initVp()
         return dialog
     }
 
+    private fun initObserver() {
+        mSolidViewModel.saveState.observe(this){
+            if (!it){
+                toast("添加失败")
+            }
+        }
+    }
+
     private fun initVp() {
         // 一面八条数据,满八进一
-        val groupListByPage = HashMap<Int,ArrayList<String>>()
+        val groupListByPage = HashMap<Int,ArrayList<NoclassGroup>>()
         var index = 0
         for (i in groupList.indices){
             if (groupListByPage[index] == null){
                 groupListByPage[index] = ArrayList()
             }
-            groupListByPage[index]!![i%8] = groupList[i].name
+            groupListByPage[index]!!.add(groupList[i])
             // 如果不是0，且是八的倍数，那么就换页
             if (groupListByPage[index]!!.size == 8){
                 index++
             }
         }
         mVp.apply {
-            adapter = NoClassAddToGroupAdapter(groupListByPage,context)
+            adapter = NoClassAddToGroupAdapter(groupListByPage,context){ isOk , chooseGroup ->
+                //true为可以点击完成,也就是深色
+                if (isOk){
+                    mBtnDone.setBackgroundResource(R.drawable.noclass_shape_button_common_bg)
+                    //更新分组
+                    this@AddToGroupDialog.chooseGroup = chooseGroup
+                    mBtnDone.isClickable = true
+                }else{
+                    mBtnDone.setBackgroundResource(R.drawable.noclass_shape_button_save_default_bg)
+                    mBtnDone.isClickable = false
+                }
+            }
         }
         // indicator 设置总数量
         mIndicator.setTotalCount(groupList.size / 8 + 1)
@@ -77,9 +117,12 @@ class AddToGroupDialog(
         mVp = dialog.findViewById(R.id.noclass_add_to_group_vp_container)
         mIndicator = dialog.findViewById(R.id.noclass_add_to_group_indicator)
         // 完成按钮
-        dialog.findViewById<Button>(R.id.noclass_add_to_group_done).apply {
+        mBtnDone = dialog.findViewById<Button>(R.id.noclass_add_to_group_done).apply {
             setOnClickListener {
-                //todo 添加该学生到该分组
+                chooseGroup!!.forEach {
+                    //每一个被选中的分组添加成员
+                    mSolidViewModel.addAndDeleteStu(it.id, setOf(student) ,setOf())
+                }
                 dismiss()
             }
         }

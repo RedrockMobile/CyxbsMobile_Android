@@ -3,11 +3,13 @@ package com.mredrock.cyxbs.noclass.page.ui.fragment
 import android.app.Activity
 import android.os.Bundle
 import android.text.TextUtils
+import android.util.Log
 import android.view.View
 import android.view.WindowManager
 import android.view.inputmethod.EditorInfo
 import android.widget.Button
 import android.widget.EditText
+import android.widget.TextView
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.fragment.app.viewModels
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -16,6 +18,7 @@ import com.mredrock.cyxbs.lib.base.ui.BaseFragment
 import com.mredrock.cyxbs.noclass.R
 import com.mredrock.cyxbs.noclass.bean.NoclassGroup
 import com.mredrock.cyxbs.noclass.page.adapter.NoClassSolidAdapter
+import com.mredrock.cyxbs.noclass.page.ui.dialog.AddToGroupDialog
 import com.mredrock.cyxbs.noclass.page.ui.dialog.CreateGroupDialog
 import com.mredrock.cyxbs.noclass.page.ui.dialog.SearchStudentDialog
 import com.mredrock.cyxbs.noclass.page.viewmodel.fragment.SolidViewModel
@@ -48,12 +51,12 @@ class NoClassSolidFragment : BaseFragment(R.layout.noclass_fragment_solid) {
     /**
      * 删除缓冲区：可能想要删除，但是云端没删除成功，所以本地也不能删掉。必须云端删除成功本地才能删除成功
      */
-    private var waitDeleteGroup : NoclassGroup? = null
+    private val mWaitDeleteGroup :ArrayList<NoclassGroup> by lazy { ArrayList() }
 
     /**
-     * 更新缓冲区
+     * 是否置顶的noClassGroup和textview，用完之后及时置为null
      */
-    private var waitUpDate : NoclassGroup? = null
+    private val mWaitIsTop : LinkedHashMap<NoclassGroup,TextView> by lazy { LinkedHashMap() }
 
     private val mViewModel by viewModels<SolidViewModel>()
 
@@ -105,15 +108,15 @@ class NoClassSolidFragment : BaseFragment(R.layout.noclass_fragment_solid) {
             adapter = mAdapter.apply {
                 setOnClickGroupName {
                     //todo 进入组内，需要跳转，通过registerforresult来跳
+                    toast(it.name)
                 }
                 setOnClickGroupDelete {
                     //删除：加入缓冲区，并且更新云端状态
-                    waitDeleteGroup = it
                     mViewModel.deleteGroup(it.id)
                 }
-                setOnClickGroupIsTop {
+                setOnClickGroupIsTop { noclassGroup,tvIsTop ->
                     //置顶：加入缓冲区，更新云端置顶状态
-                    mViewModel.updateGroup(it.id,it.name,it.isTop.toString())
+                    mViewModel.updateGroup(noclassGroup.id,noclassGroup.name,noclassGroup.isTop.toString())
                 }
             }
         }
@@ -122,9 +125,12 @@ class NoClassSolidFragment : BaseFragment(R.layout.noclass_fragment_solid) {
     private fun initObserver() {
         var searchStudentDialog: SearchStudentDialog?
         mViewModel.searchStudent.observe(viewLifecycleOwner) {
-            searchStudentDialog = SearchStudentDialog(it) {
+            searchStudentDialog = SearchStudentDialog(it) {stu ->
                 //点击加号之后的逻辑，需要弹窗选择分组加入
-                
+                Log.d("lx", "mAdapter.currentList = ${mAdapter.currentList}: ")
+                AddToGroupDialog(mAdapter.currentList,stu).apply {
+                    //todo 期待更新
+                }.show(childFragmentManager,"AddToGroupDialog")
             }
             searchStudentDialog!!.show(childFragmentManager, "SearchStudentDialog")
         }
@@ -132,16 +138,36 @@ class NoClassSolidFragment : BaseFragment(R.layout.noclass_fragment_solid) {
             mAdapter.submitListToOrder(it)
         }
         mViewModel.isDeleteSuccess.observe(viewLifecycleOwner){
-            //todo 删除成功或者失败之后的操作
-        }
-        mViewModel.isCreateSuccess.observe(viewLifecycleOwner){
-            if(it.id ==  -1){
-                toast("创建失败")
+            //删除成功就把本地的删掉，删除失败就不删本地的
+            if (it.second){
+                for (index in 0 until mWaitDeleteGroup.size){
+                    val item = mWaitDeleteGroup[index]
+                    if (item.id == it.first){
+                        // 如果学号相等，那么就删除adapter中的item和缓冲区的item
+                        mAdapter.deleteGroup(item)
+                        mWaitDeleteGroup.remove(item)
+                        //从前往后，遇到就break
+                        break
+                    }
+                }
+            }else{
+                toast("删除失败")
             }
-            //todo 创建成功或者失败之后的操作
         }
+        // 目前更新接口参数需要id，name，isTop，id和name无需更新，所以目前下面一定是置顶
         mViewModel.isUpdateSuccess.observe(viewLifecycleOwner){
-            //todo 更新成功或者失败之后的操作
+            if (it.second){
+                for (itemKey in mWaitIsTop.keys){
+                    if (itemKey.id  == it.first){
+                        mAdapter.addItemToOrder(itemKey,mWaitIsTop[itemKey]!!)
+                        mWaitIsTop.remove(itemKey)
+                        break
+                    }
+                }
+            }else{
+                toast("更新失败")
+            }
+            // 用完及时置为null
         }
     }
 
