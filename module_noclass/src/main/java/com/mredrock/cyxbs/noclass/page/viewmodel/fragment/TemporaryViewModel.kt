@@ -82,7 +82,23 @@ class TemporaryViewModel : BaseViewModel(){
                                 major = "大数据管理与应用",
                                 name = "周博",
                                 id = "2022211292"
-                            )
+                            ),
+                            Student(
+                                classNum = "04082201",
+                                gender = "男",
+                                grade = "22",
+                                major = "大数据管理与应用",
+                                name = "威威",
+                                id = "2022211294"
+                            ),
+                            Student(
+                                classNum = "04082203",
+                                gender = "男",
+                                grade = "21",
+                                major = "大数据管理与应用",
+                                name = "陈晨",
+                                id = "2022211295"
+                            ),
                         ),"喵喵",true)
                     )
                 )

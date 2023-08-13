@@ -29,7 +29,7 @@ class NoClassSolidAdapter : ListAdapter<NoclassGroup, NoClassSolidAdapter.MyHold
                     oldItem: NoclassGroup,
                     newItem: NoclassGroup
                 ): Boolean {
-                    return oldItem.isTop == newItem.isTop && oldItem.name == newItem.name
+                    return oldItem == newItem
                 }
             }
     }

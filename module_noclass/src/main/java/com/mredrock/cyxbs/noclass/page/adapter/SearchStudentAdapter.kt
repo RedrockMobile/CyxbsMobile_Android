@@ -32,7 +32,7 @@ class SearchStudentAdapter() : ListAdapter<Student,SearchStudentAdapter.VH>(stud
       }
   
       override fun areContentsTheSame(oldItem: Student, newItem: Student): Boolean {
-        return oldItem.id == newItem.id && oldItem.major == newItem.major && oldItem.name == newItem.name
+        return oldItem == newItem
       }
   
     }

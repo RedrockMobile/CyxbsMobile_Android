@@ -76,13 +76,16 @@ class NoClassTemporaryAdapter : ListAdapter<Student,NoClassTemporaryAdapter.VH>(
         list.add(stu)
         submitList(list)
     }
-    
+
     fun deleteMember(stu : Student){
         val list = currentList.toMutableList()
         list.remove(stu)
         submitList(list)
     }
 
+    /**
+     * 删除已经完成，主要是删除之后的事情
+     */
     fun setOnItemDelete(listener : (Student) -> Unit){
         mOnItemDelete = listener
     }
