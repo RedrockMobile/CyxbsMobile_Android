@@ -1,61 +1,71 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
+<FrameLayout
     android:id="@+id/noclass_item_group_member"
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:layout_marginTop="12dp"
-    android:orientation="horizontal">
+    android:layout_height="50dp"
+    android:layout_marginTop="12dp">
 
-    <androidx.constraintlayout.widget.ConstraintLayout
+    <com.mredrock.cyxbs.noclass.widget.SlideMenuLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
-
-        <com.google.android.material.imageview.ShapeableImageView
-            android:id="@+id/noclassShapeableimageview"
-            android:layout_width="30dp"
-            android:layout_height="30dp"
-            android:layout_marginStart="16dp"
-            android:background="@color/pd_blue"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
-
-        <TextView
-            android:id="@+id/noclass_tv_member_name"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textColor="@color/noclass_member_name_color"
-            android:textSize="14sp"
-            android:layout_marginStart="16dp"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintStart_toEndOf="@+id/noclassShapeableimageview"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintVertical_bias="0"
-            tools:text="陈思言" />
-
-        <TextView
-            android:id="@+id/noclass_tv_member_id"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="2dp"
-            android:layout_marginStart="16dp"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintStart_toEndOf="@+id/noclassShapeableimageview"
-            app:layout_constraintTop_toBottomOf="@+id/noclass_tv_member_name"
-            app:layout_constraintVertical_bias="0"
-            tools:text="2021214171" />
-
-    </androidx.constraintlayout.widget.ConstraintLayout>
-
-    <TextView
-        android:id="@+id/noclass_item_tv_delete"
-        android:layout_width="50dp"
         android:layout_height="match_parent"
-        android:gravity="center"
-        android:background="@color/pd_blue"
-        android:text="删除"/>
+        android:background="@drawable/noclass_selector_item_selected_bg"
+        app:noclass_slideMode="right"
+        app:noclass_isFixedView="false">
 
-</LinearLayout>
+        <TextView
+            android:id="@+id/noclass_item_tv_delete"
+            android:layout_width="50dp"
+            android:layout_height="match_parent"
+            android:gravity="center"
+            android:background="@color/pd_blue"
+            android:text="删除"/>
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <ImageView
+                android:id="@+id/noclassShapeableimageview"
+                android:layout_width="30dp"
+                android:layout_height="30dp"
+                android:layout_marginStart="16dp"
+                android:background="@color/pd_blue"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <TextView
+                android:id="@+id/noclass_tv_member_name"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="@color/noclass_member_name_color"
+                android:textSize="14sp"
+                android:layout_marginStart="16dp"
+                android:layout_marginTop="5dp"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintStart_toEndOf="@+id/noclassShapeableimageview"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintVertical_bias="0"
+                tools:text="陈思言" />
+
+            <TextView
+                android:id="@+id/noclass_tv_member_id"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="16dp"
+                android:layout_marginBottom="5dp"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintStart_toEndOf="@+id/noclassShapeableimageview"
+                tools:text="2021214171" />
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+
+    </com.mredrock.cyxbs.noclass.widget.SlideMenuLayout>
+
+
+
+</FrameLayout>

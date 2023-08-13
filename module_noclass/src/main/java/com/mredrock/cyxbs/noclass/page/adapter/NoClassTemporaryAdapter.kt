@@ -3,6 +3,7 @@ package com.mredrock.cyxbs.noclass.page.adapter
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.FrameLayout
 import android.widget.LinearLayout
 import android.widget.TextView
 import androidx.recyclerview.widget.DiffUtil
@@ -57,10 +58,6 @@ class NoClassTemporaryAdapter : ListAdapter<Student,NoClassTemporaryAdapter.VH>(
                 deleteMember(stu)
                 mOnItemDelete?.invoke(stu)
             }
-        }
-        // 可以侧边滑动的要求也就是view必须捕获事件
-        val rootView : LinearLayout = itemView.findViewById<LinearLayout?>(R.id.noclass_item_group_member).apply {
-            setOnClickListener {  }
         }
     }
 

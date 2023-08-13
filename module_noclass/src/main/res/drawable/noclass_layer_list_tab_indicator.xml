@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layer-list xmlns:android="http://schemas.android.com/apk/res/android">
+<!--    不要在这里设置tabLayout的indicator的高，会出现遮挡情况-->
+    <item
+        android:gravity="center">
+        <shape>
+            <corners android:radius="5dp" />
+            <!--color无效，源码用tabIndicatorColor-->
+            <solid android:color="@color/pd_blue" />
+        </shape>
+    </item>
+</layer-list>

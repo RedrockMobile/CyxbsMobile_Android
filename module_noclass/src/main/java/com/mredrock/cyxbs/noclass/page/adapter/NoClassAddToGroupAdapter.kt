@@ -81,7 +81,10 @@ class NoClassAddToGroupAdapter(
             val child = parentView.getChildAt(index)
             child.visible()
             child.findViewById<TextView>(R.id.noclass_tv_gathering_name).apply {
-                text = onePageData[index].name
+                var ordinateText = onePageData[index].name
+                val len = if (ordinateText.length <= 3) ordinateText.length else 3
+                ordinateText = ordinateText.substring(0,len) + ".."
+                text = ordinateText
             }
         }
     }

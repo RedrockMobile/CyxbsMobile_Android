@@ -69,7 +69,7 @@ class SolidViewModel : BaseViewModel() {
                                     id = "2021241392"
                                 )
                             ),
-                            "菜鸡"
+                            "adef.."
                         ),
                         NoclassGroup(
                             "2",
@@ -92,7 +92,168 @@ class SolidViewModel : BaseViewModel() {
                                     id = "2021241392"
                                 )
                             ),
-                            "喵喵"
+                            "adef.."
+                        ),
+                        NoclassGroup(
+                            "3",
+                            false,
+                            listOf(
+                                Student(
+                                    classNum = "04082201",
+                                    gender = "男",
+                                    grade = "21",
+                                    major = "数据科学与大数据技术",
+                                    "喵喵",
+                                    id = "2022231392"
+                                ),
+                                Student(
+                                    classNum = "04082203",
+                                    gender = "女",
+                                    grade = "23",
+                                    major = "大数据管理与应用",
+                                    "喵喵",
+                                    id = "2021241392"
+                                )
+                            ),
+                            "adef.."
+                        ),
+                        NoclassGroup(
+                            "4",
+                            false,
+                            listOf(
+                                Student(
+                                    classNum = "04082201",
+                                    gender = "男",
+                                    grade = "21",
+                                    major = "数据科学与大数据技术",
+                                    "喵喵",
+                                    id = "2022231392"
+                                ),
+                                Student(
+                                    classNum = "04082203",
+                                    gender = "女",
+                                    grade = "23",
+                                    major = "大数据管理与应用",
+                                    "喵喵",
+                                    id = "2021241392"
+                                )
+                            ),
+                            "abeg.."
+                        ),
+                        NoclassGroup(
+                            "5",
+                            false,
+                            listOf(
+                                Student(
+                                    classNum = "04082201",
+                                    gender = "男",
+                                    grade = "21",
+                                    major = "数据科学与大数据技术",
+                                    "喵喵",
+                                    id = "2022231392"
+                                ),
+                                Student(
+                                    classNum = "04082203",
+                                    gender = "女",
+                                    grade = "23",
+                                    major = "大数据管理与应用",
+                                    "喵喵",
+                                    id = "2021241392"
+                                )
+                            ),
+                            "abdg.."
+                        ),
+                        NoclassGroup(
+                            "6",
+                            false,
+                            listOf(
+                                Student(
+                                    classNum = "04082201",
+                                    gender = "男",
+                                    grade = "21",
+                                    major = "数据科学与大数据技术",
+                                    "喵喵",
+                                    id = "2022231392"
+                                ),
+                                Student(
+                                    classNum = "04082203",
+                                    gender = "女",
+                                    grade = "23",
+                                    major = "大数据管理与应用",
+                                    "喵喵",
+                                    id = "2021241392"
+                                )
+                            ),
+                            "abdc.."
+                        ),
+                        NoclassGroup(
+                            "7",
+                            false,
+                            listOf(
+                                Student(
+                                    classNum = "04082201",
+                                    gender = "男",
+                                    grade = "21",
+                                    major = "数据科学与大数据技术",
+                                    "喵喵",
+                                    id = "2022231392"
+                                ),
+                                Student(
+                                    classNum = "04082203",
+                                    gender = "女",
+                                    grade = "23",
+                                    major = "大数据管理与应用",
+                                    "喵喵",
+                                    id = "2021241392"
+                                )
+                            ),
+                            "abdd.."
+                        ),
+                        NoclassGroup(
+                            "8",
+                            false,
+                            listOf(
+                                Student(
+                                    classNum = "04082201",
+                                    gender = "男",
+                                    grade = "21",
+                                    major = "数据科学与大数据技术",
+                                    "喵喵",
+                                    id = "2022231392"
+                                ),
+                                Student(
+                                    classNum = "04082203",
+                                    gender = "女",
+                                    grade = "23",
+                                    major = "大数据管理与应用",
+                                    "喵喵",
+                                    id = "2021241392"
+                                )
+                            ),
+                            "abcg.."
+                        ),
+                        NoclassGroup(
+                            "9",
+                            false,
+                            listOf(
+                                Student(
+                                    classNum = "04082201",
+                                    gender = "男",
+                                    grade = "21",
+                                    major = "数据科学与大数据技术",
+                                    "喵喵",
+                                    id = "2022231392"
+                                ),
+                                Student(
+                                    classNum = "04082203",
+                                    gender = "女",
+                                    grade = "23",
+                                    major = "大数据管理与应用",
+                                    "喵喵",
+                                    id = "2021241392"
+                                )
+                            ),
+                            "忽略"
                         )
                     )
                 )
@@ -126,8 +287,40 @@ class SolidViewModel : BaseViewModel() {
                             gender = "女",
                             grade = "23",
                             major = "大数据管理与应用",
-                            "喵喵",
-                            id = "2021241392"
+                            "狗狗",
+                            id = "2021241393"
+                        ),
+                        Student(
+                            classNum = "04082203",
+                            gender = "男",
+                            grade = "21",
+                            major = "数据科学与大数据技术",
+                            "汪汪",
+                            id = "2022231394"
+                        ),
+                        Student(
+                            classNum = "04082204",
+                            gender = "女",
+                            grade = "23",
+                            major = "大数据管理与应用",
+                            "呱呱",
+                            id = "2021241395"
+                        ),
+                        Student(
+                            classNum = "04082206",
+                            gender = "男",
+                            grade = "21",
+                            major = "数据科学与大数据技术",
+                            "叽叽",
+                            id = "2022231396"
+                        ),
+                        Student(
+                            classNum = "04082207",
+                            gender = "女",
+                            grade = "23",
+                            major = "大数据管理与应用",
+                            "芜湖",
+                            id = "2021241397"
                         )
                     )
                 )

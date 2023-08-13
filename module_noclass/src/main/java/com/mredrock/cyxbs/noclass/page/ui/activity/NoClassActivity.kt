@@ -1,14 +1,20 @@
 package com.mredrock.cyxbs.noclass.page.ui.activity
 
+import android.os.Build
 import android.os.Bundle
 import android.view.View
 import android.widget.FrameLayout
+import android.widget.TableLayout
 import androidx.activity.viewModels
+import androidx.viewpager2.widget.ViewPager2
 import com.alibaba.android.arouter.facade.annotation.Route
 import com.google.android.material.bottomsheet.BottomSheetBehavior
+import com.google.android.material.tabs.TabLayout
+import com.google.android.material.tabs.TabLayoutMediator
 import com.mredrock.cyxbs.config.route.DISCOVER_NO_CLASS
 import com.mredrock.cyxbs.config.sp.defaultSp
 import com.mredrock.cyxbs.lib.base.ui.BaseActivity
+import com.mredrock.cyxbs.lib.utils.adapter.FragmentVpAdapter
 import com.mredrock.cyxbs.noclass.R
 import com.mredrock.cyxbs.noclass.bean.NoClassSpareTime
 import com.mredrock.cyxbs.noclass.page.ui.dialog.CreateGroupDialog
@@ -35,12 +41,27 @@ class NoClassActivity : BaseActivity() {
 
     private val mViewModel by viewModels<NoClassViewModel>()
 
-    /**
-     * 底部查询fragment的container
-     */
+//    /**
+//     * 底部查询fragment的container
+//     */
     private val mCourseContainer: FrameLayout by R.id.noclass_course_bottom_sheet_container.view()
 
     private lateinit var mCourseSheetBehavior: BottomSheetBehavior<FrameLayout>
+
+    /**
+     * 首页的tabLayout
+     */
+    private val mTabLayout : TabLayout by R.id.noclass_main_tab.view()
+
+    /**
+     * 首页的viewpager2
+     */
+    private val mViewPager : ViewPager2 by R.id.noclass_main_vp.view()
+
+    /**
+     * 首页vp的adapter
+     */
+    private val mAdapter : FragmentVpAdapter = FragmentVpAdapter(this)
 
 //  /**
 //   * 获取批量添加界面的返回值
@@ -65,13 +86,45 @@ class NoClassActivity : BaseActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.noclass_activity_no_class)
-        replaceFragment(R.id.fragment_container) {
-//            NoClassTemporaryFragment.newInstance()
-            NoClassSolidFragment.newInstance()
-        }
+//        replaceFragment(R.id.fragment_container) {
+////            NoClassTemporaryFragment.newInstance()
+//            NoClassSolidFragment.newInstance()
+//        }
         initObserve()
         initQueryEvent()
         initCourse()
+        initViewPage()
+        initTabLayout()
+    }
+
+    /**
+     * 初始化viewpager的
+     */
+    private fun initViewPage() {
+        // 给adapter中增加fragment
+        mAdapter.add(NoClassTemporaryFragment::class.java)
+            .add(NoClassSolidFragment::class.java)
+        mViewPager.apply {
+            adapter = mAdapter
+        }
+    }
+
+    /**
+     * 初始化tabLayout的设置
+     */
+    private fun initTabLayout() {
+        // 取消tabLayout的长按点击事件
+        mTabLayout.isLongClickable = false
+        // api 26 以上 设置空text
+        if (Build.VERSION.SDK_INT > Build.VERSION_CODES.O) {
+            mTabLayout.tooltipText = ""
+        }
+        //和viewpager联动起来
+        val titles = listOf("临时分组","固定分组")
+        TabLayoutMediator(mTabLayout, mViewPager) { tab, position ->
+            tab.text = titles[position]
+        }.attach()
+
     }
 
     private fun initCourse() {

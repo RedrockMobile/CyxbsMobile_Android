@@ -44,7 +44,7 @@
             app:layout_constraintTop_toBottomOf="@+id/noclass_temporary_et_add_classmate" />
 
 
-        <com.mredrock.cyxbs.noclass.widget.SlideRecyclerView
+        <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/noclass_temporary_rv_show"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
