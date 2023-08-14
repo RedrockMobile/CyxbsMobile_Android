@@ -236,22 +236,22 @@ class SolidViewModel : BaseViewModel() {
                             "9",
                             false,
                             listOf(
-                                Student(
-                                    classNum = "04082201",
-                                    gender = "男",
-                                    grade = "21",
-                                    major = "数据科学与大数据技术",
-                                    "喵喵",
-                                    id = "2022231392"
-                                ),
-                                Student(
-                                    classNum = "04082203",
-                                    gender = "女",
-                                    grade = "23",
-                                    major = "大数据管理与应用",
-                                    "喵喵",
-                                    id = "2021241392"
-                                )
+//                                Student(
+//                                    classNum = "04082201",
+//                                    gender = "男",
+//                                    grade = "21",
+//                                    major = "数据科学与大数据技术",
+//                                    "喵喵",
+//                                    id = "2022231392"
+//                                ),
+//                                Student(
+//                                    classNum = "04082203",
+//                                    gender = "女",
+//                                    grade = "23",
+//                                    major = "大数据管理与应用",
+//                                    "喵喵",
+//                                    id = "2021241392"
+//                                )
                             ),
                             "忽略"
                         )

@@ -65,20 +65,18 @@
 
         <TextView
             android:id="@+id/noclass_tv_gathering_time"
-            android:layout_marginTop="8dp"
-            app:layout_constraintVertical_bias="0"
-            android:layout_marginStart="16dp"
-            app:layout_constraintHorizontal_bias="0"
-            android:alpha="0.6"
-            android:textColor="@color/noclass_primary_text_color"
-            tools:text="时间：周日 9-10 19:00-20:40"
-            android:textSize="12sp"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            app:layout_constraintBottom_toBottomOf="parent"
+            android:layout_marginStart="16dp"
+            android:alpha="0.6"
+            android:textColor="@color/noclass_primary_text_color"
+            android:textSize="12sp"
+            android:layout_marginTop="8dp"
             app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/noclass_tv_gathering_busy_total" />
+            app:layout_constraintTop_toBottomOf="@+id/noclass_tv_gathering_total"
+            tools:text="时间：周日 9-10 19:00-20:40" />
 
         <Button
             android:id="@+id/noclass_btn_arrange_plan"

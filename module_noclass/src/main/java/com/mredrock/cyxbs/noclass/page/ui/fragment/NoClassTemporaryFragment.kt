@@ -19,6 +19,7 @@ import com.mredrock.cyxbs.lib.utils.service.ServiceManager
 import com.mredrock.cyxbs.noclass.R
 import com.mredrock.cyxbs.noclass.page.adapter.NoClassTemporaryAdapter
 import com.mredrock.cyxbs.noclass.page.ui.dialog.SearchAllDialog
+import com.mredrock.cyxbs.noclass.page.viewmodel.activity.CourseViewModel
 import com.mredrock.cyxbs.noclass.page.viewmodel.activity.NoClassViewModel
 import com.mredrock.cyxbs.noclass.page.viewmodel.fragment.TemporaryViewModel
 
@@ -54,7 +55,7 @@ class NoClassTemporaryFragment : BaseFragment(R.layout.noclass_fragment_temporar
     private val mAdapter by lazy { NoClassTemporaryAdapter() }
 
     private val mViewModel by viewModels<TemporaryViewModel>()
-    private val mParentViewModel by activityViewModels<NoClassViewModel>()
+    private val mCourseViewModel by activityViewModels<CourseViewModel>()
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -105,7 +106,7 @@ class NoClassTemporaryFragment : BaseFragment(R.layout.noclass_fragment_temporar
      * 执行查询空闲课程的操作
      */
     private fun doSearchCourse() {
-        mParentViewModel.getLessons(mAdapter.currentList.map { it.id }, mAdapter.currentList)
+        mCourseViewModel.getLessons(mAdapter.currentList.map { it.id }, mAdapter.currentList)
     }
 
     /**

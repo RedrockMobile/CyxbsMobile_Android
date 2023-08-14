@@ -4,7 +4,6 @@ import android.os.Build
 import android.os.Bundle
 import android.view.View
 import android.widget.FrameLayout
-import android.widget.TableLayout
 import androidx.activity.viewModels
 import androidx.viewpager2.widget.ViewPager2
 import com.alibaba.android.arouter.facade.annotation.Route
@@ -22,6 +21,7 @@ import com.mredrock.cyxbs.noclass.page.ui.dialog.IsCreateSolidDialog
 import com.mredrock.cyxbs.noclass.page.ui.fragment.NoClassCourseVpFragment
 import com.mredrock.cyxbs.noclass.page.ui.fragment.NoClassSolidFragment
 import com.mredrock.cyxbs.noclass.page.ui.fragment.NoClassTemporaryFragment
+import com.mredrock.cyxbs.noclass.page.viewmodel.activity.CourseViewModel
 import com.mredrock.cyxbs.noclass.page.viewmodel.activity.NoClassViewModel
 
 /**
@@ -39,11 +39,14 @@ import com.mredrock.cyxbs.noclass.page.viewmodel.activity.NoClassViewModel
 @Route(path = DISCOVER_NO_CLASS)
 class NoClassActivity : BaseActivity() {
 
+    // 暂时用不上，但是也不删除
     private val mViewModel by viewModels<NoClassViewModel>()
 
-//    /**
-//     * 底部查询fragment的container
-//     */
+    private val mCourseViewModel by viewModels<CourseViewModel>()
+
+    /**
+     * 底部查询fragment的container
+     */
     private val mCourseContainer: FrameLayout by R.id.noclass_course_bottom_sheet_container.view()
 
     private lateinit var mCourseSheetBehavior: BottomSheetBehavior<FrameLayout>
@@ -185,7 +188,7 @@ class NoClassActivity : BaseActivity() {
 
     private fun initObserve() {
         //在滑动下拉课表容器中添加整个课表,等待fragment中请求数据
-        mViewModel.noclassData.observe(this) {
+        mCourseViewModel.noclassData.observe(this) {
             mCourseSheetBehavior.state = BottomSheetBehavior.STATE_EXPANDED
         }
     }

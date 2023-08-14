@@ -9,17 +9,22 @@ import android.view.inputmethod.EditorInfo
 import android.view.inputmethod.InputMethodManager
 import android.widget.Button
 import android.widget.EditText
+import android.widget.FrameLayout
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.activity.viewModels
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.mredrock.cyxbs.lib.base.ui.BaseActivity
 import com.mredrock.cyxbs.noclass.R
+import com.mredrock.cyxbs.noclass.bean.NoClassSpareTime
 import com.mredrock.cyxbs.noclass.bean.NoclassGroup
 import com.mredrock.cyxbs.noclass.bean.Student
 import com.mredrock.cyxbs.noclass.page.adapter.NoClassTemporaryAdapter
 import com.mredrock.cyxbs.noclass.page.ui.dialog.SearchAllDialog
+import com.mredrock.cyxbs.noclass.page.ui.fragment.NoClassCourseVpFragment
+import com.mredrock.cyxbs.noclass.page.viewmodel.activity.CourseViewModel
 import com.mredrock.cyxbs.noclass.page.viewmodel.activity.GroupDetailViewModel
 
 /**
@@ -36,6 +41,11 @@ import com.mredrock.cyxbs.noclass.page.viewmodel.activity.GroupDetailViewModel
 class GroupDetailActivity : BaseActivity(){
     
     private val mViewModel by viewModels<GroupDetailViewModel>()
+
+    /**
+     * 课表专属viewModel
+     */
+    private val mCourseViewModel by viewModels<CourseViewModel>()
 
     /**
      * 上方添加同学的编辑框
@@ -55,8 +65,17 @@ class GroupDetailActivity : BaseActivity(){
     /**
      * 按钮
      */
-    private val mBtnQuery : Button by R.id.btn_noclass_group_detail_save.view()
+    private val mBtnQuery : Button by R.id.btn_noclass_group_detail_query.view()
 
+    /**
+     * 底部承载课表的container
+     */
+    private val mCourseContainer : FrameLayout by R.id.noclass_group_detail_bottom_sheet_course_container.view()
+
+    /**
+     * 课表上弹和下滑的行为
+     */
+    private lateinit var mCourseBehavior : BottomSheetBehavior<FrameLayout>
 
     /**
      * 当前选择的NoclassGroup
@@ -73,6 +92,12 @@ class GroupDetailActivity : BaseActivity(){
      */
     private val mWaitDeleteList : ArrayList<Student> by lazy { ArrayList() }
 
+    /**
+     * 取消状态栏
+     */
+    override val isCancelStatusBar: Boolean
+        get() = true
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.noclass_activity_group_detail)
@@ -81,7 +106,20 @@ class GroupDetailActivity : BaseActivity(){
         initRv()
         initTextView()
         initEditText()
+        initCourseContainer()
         initQuery()
+    }
+
+    /**
+     * 初始化课表的容器
+     */
+    private fun initCourseContainer() {
+        mCourseBehavior = BottomSheetBehavior.from(mCourseContainer)
+        //先将课表替换为空课表
+        replaceFragment(R.id.noclass_group_detail_bottom_sheet_course_container) {
+            NoClassCourseVpFragment.newInstance(NoClassSpareTime.EMPTY_PAGE)
+        }
+        mCourseBehavior.state = BottomSheetBehavior.STATE_HIDDEN
     }
 
     /**
@@ -132,6 +170,10 @@ class GroupDetailActivity : BaseActivity(){
                 toast("删除失败")
             }
         }
+        // 观察noClassData，如果有变化就展开
+        mCourseViewModel.noclassData.observe(this){
+            mCourseBehavior.state = BottomSheetBehavior.STATE_EXPANDED
+        }
     }
     
     /**
@@ -169,7 +211,8 @@ class GroupDetailActivity : BaseActivity(){
      */
     private fun initQuery(){
         mBtnQuery.setOnClickListener {
-            //记得将用户本人放进去一起查
+            //todo 记得将用户本人放进去一起查
+            mCourseViewModel.getLessons(mAdapter.currentList.map { it.id },mAdapter.currentList)
         }
     }
 
