@@ -17,6 +17,7 @@ import com.mredrock.cyxbs.lib.base.ui.BaseFragment
 import com.mredrock.cyxbs.lib.utils.extensions.setOnSingleClickListener
 import com.mredrock.cyxbs.lib.utils.service.ServiceManager
 import com.mredrock.cyxbs.noclass.R
+import com.mredrock.cyxbs.noclass.bean.Student
 import com.mredrock.cyxbs.noclass.page.adapter.NoClassTemporaryAdapter
 import com.mredrock.cyxbs.noclass.page.ui.dialog.SearchAllDialog
 import com.mredrock.cyxbs.noclass.page.viewmodel.activity.CourseViewModel
@@ -81,9 +82,9 @@ class NoClassTemporaryFragment : BaseFragment(R.layout.noclass_fragment_temporar
             layoutManager = LinearLayoutManager(requireContext())
             adapter = mAdapter.apply {
                 //加入本人
-//                val mRvList = ArrayList<Student>()
-//                mRvList.add(Student("","","","",mUserId,mUserName))
-//                submitList(mRvList)
+                val mRvList = ArrayList<Student>()
+                mRvList.add(Student("","","","",mUserId,mUserName))
+                submitList(mRvList)
                 setOnItemDelete {
                     deleteMember(it)
                 }

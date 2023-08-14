@@ -70,9 +70,18 @@ class NoClassSolidFragment : BaseFragment(R.layout.noclass_fragment_solid) {
         registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
             if (result.resultCode == Activity.RESULT_OK) {
                 val intent = result.data
-                val extra = intent?.getSerializableExtra("GroupResult")
+                val extra = intent?.getSerializableExtra("GroupDetailResult") as? NoclassGroup
                 if (extra != null) {
-                    //todo 等待处理返回结果
+                    // 移除旧的并且更新
+                    val list = mAdapter.currentList.toMutableList()
+                    for (index in 0 until  list.size){
+                        if (list[index].id == extra.id){
+                            list.removeAt(index)
+                            list.add(index,extra)
+                            break
+                        }
+                    }
+                    mAdapter.submitList(list)
                 }
             }
         }

@@ -1,6 +1,7 @@
 package com.mredrock.cyxbs.noclass.page.ui.activity
 
 import android.content.Context
+import android.content.Intent
 import android.os.Bundle
 import android.text.TextUtils
 import android.util.Log
@@ -18,6 +19,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.mredrock.cyxbs.lib.base.ui.BaseActivity
 import com.mredrock.cyxbs.noclass.R
+import com.mredrock.cyxbs.noclass.bean.GroupDetail
 import com.mredrock.cyxbs.noclass.bean.NoClassSpareTime
 import com.mredrock.cyxbs.noclass.bean.NoclassGroup
 import com.mredrock.cyxbs.noclass.bean.Student
@@ -211,7 +213,6 @@ class GroupDetailActivity : BaseActivity(){
      */
     private fun initQuery(){
         mBtnQuery.setOnClickListener {
-            //todo 记得将用户本人放进去一起查
             mCourseViewModel.getLessons(mAdapter.currentList.map { it.id },mAdapter.currentList)
         }
     }
@@ -246,15 +247,15 @@ class GroupDetailActivity : BaseActivity(){
         mViewModel.getSearchAllResult(content)
     }
 
-//    override fun onBackPressed() {
-//        //todo 先将课表界面退出
-//        if (mCourseSheetBehavior.state == BottomSheetBehavior.STATE_EXPANDED) {
-//            mCourseSheetBehavior.state = BottomSheetBehavior.STATE_HIDDEN
-//        } else {
-//            setResult(RESULT_OK, Intent().apply {
-//                //todo 等待添加完毕之后，返回具体的值
-//            })
-//            super.onBackPressed()
-//        }
-//    }
+    override fun onBackPressed() {
+        if (mCourseBehavior.state == BottomSheetBehavior.STATE_EXPANDED) {
+            mCourseBehavior.state = BottomSheetBehavior.STATE_HIDDEN
+        } else {
+            setResult(RESULT_OK, Intent().apply {
+                val noClassGroup = NoclassGroup(mCurrentNoclassGroup.id,mCurrentNoclassGroup.isTop,mAdapter.currentList,mCurrentNoclassGroup.name)
+                putExtra("GroupDetailResult",noClassGroup)
+            })
+            super.onBackPressed()
+        }
+    }
 }
