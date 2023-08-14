@@ -5,29 +5,23 @@ package com.mredrock.cyxbs.noclass.bean
  * 没课约临时分组搜索结果
  */
 data class NoClassTemporarySearch(
-    val `data`: Data,
-    val info: String,
-    val status: Int
-) {
-    data class Data(
-        val `class` : Cls,
-        val group: GroupDetail,
-        val isExist: Boolean,
-        val students: List<Student>,
-        val types: List<String>
-    )
-}
+    val `class`: Cls,
+    val group: GroupDetail,
+    val isExist: Boolean,
+    val students: List<Student>,
+    val types: List<String>
+)
 
 const val STUDENT = "学生"
 const val CLASS = "班级"
 const val GROUP = "分组"
 
-interface NoClassItem{
+interface NoClassItem {
     val id: String
     val name: String
 }
 
-interface Group : NoClassItem{
+interface Group : NoClassItem {
     val members: List<Student>
 }
 

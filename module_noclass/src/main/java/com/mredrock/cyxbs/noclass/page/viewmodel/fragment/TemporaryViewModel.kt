@@ -9,28 +9,25 @@ import com.mredrock.cyxbs.noclass.bean.NoClassTemporarySearch
 import com.mredrock.cyxbs.noclass.bean.Student
 import com.mredrock.cyxbs.noclass.page.repository.NoClassRepository
 
-class TemporaryViewModel : BaseViewModel(){
+class TemporaryViewModel : BaseViewModel() {
 
     private val _searchAll = MutableLiveData<NoClassTemporarySearch>()
     val searchAll get() = _searchAll
 
     //临时分组页面搜索全部
-    fun getSearchAllResult(content : String){
+    fun getSearchAllResult(content: String) {
         NoClassRepository.searchAll(content)
             .mapOrInterceptException {
                 toast("网络异常")
                 //下面是测试数据
                 val noClassTemporarySearch = NoClassTemporarySearch(
-                    status = 10000,
-                    info = "success",
-                    data = NoClassTemporarySearch.Data(
-                        isExist = true,
-                        types = listOf(
+                    isExist = true,
+                    types = listOf(
 //                            "学生",
 //                            "班级",
-                            "分组"
-                        ),
-                        students = listOf(
+                        "分组"
+                    ),
+                    students = listOf(
 //                            Student(
 //                                classNum = "04082201",
 //                                gender = "男",
@@ -47,8 +44,9 @@ class TemporaryViewModel : BaseViewModel(){
 //                                "喵喵",
 //                                id = "2021241392"
 //                            )
-                        ),
-                        `class` = Cls("04082201", listOf(
+                    ),
+                    `class` = Cls(
+                        "04082201", listOf(
 //                            Student(
 //                                classNum = "04082204",
 //                                gender = "男",
@@ -65,8 +63,10 @@ class TemporaryViewModel : BaseViewModel(){
 //                                name = "喵喵",
 //                                id = "2021251392"
 //                            )
-                        ),"大数据实验班"),
-                        group = GroupDetail("5555", listOf(
+                        ), "大数据实验班"
+                    ),
+                    group = GroupDetail(
+                        "5555", listOf(
                             Student(
                                 classNum = "04082201",
                                 gender = "男",
@@ -99,7 +99,7 @@ class TemporaryViewModel : BaseViewModel(){
                                 name = "陈晨",
                                 id = "2022211295"
                             ),
-                        ),"喵喵",true)
+                        ), "喵喵", true
                     )
                 )
                 _searchAll.postValue(noClassTemporarySearch)

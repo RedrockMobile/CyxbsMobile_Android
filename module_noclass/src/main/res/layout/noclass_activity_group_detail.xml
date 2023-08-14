@@ -1,102 +1,119 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout
+<androidx.coordinatorlayout.widget.CoordinatorLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:fitsSystemWindows="true"
     android:background="@color/config_white_black">
 
-    <androidx.appcompat.widget.Toolbar
-        app:layout_constraintVertical_bias="0"
-        android:id="@+id/tb_noclass_group_detail"
+    <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintBottom_toBottomOf="parent">
+        android:layout_height="match_parent"
+        android:fitsSystemWindows="true">
 
-        <ImageView
-            android:id="@+id/iv_noclass_group_detail_return"
-            android:paddingStart="7dp"
-            android:paddingEnd="6dp"
-            android:layout_width="wrap_content"
+        <androidx.appcompat.widget.Toolbar
+            android:id="@+id/tb_noclass_group_detail"
+            app:layout_constraintVertical_bias="0"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            app:srcCompat="@drawable/noclass_ic_return" />
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent">
 
-        <TextView
-            android:id="@+id/tv_noclass_detail_title"
-            android:paddingStart="6dp"
-            android:paddingEnd="12dp"
-            android:textColor="@color/noclass_primary_text_color"
-            android:textSize="21sp"
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent" />
-    </androidx.appcompat.widget.Toolbar>
+            <ImageView
+                android:id="@+id/iv_noclass_group_detail_return"
+                android:paddingStart="7dp"
+                android:paddingEnd="6dp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:srcCompat="@drawable/noclass_ic_return" />
 
-    <View
-        app:layout_constraintVertical_bias="0"
-        android:id="@+id/noclass_group_detail_tb_line"
+            <TextView
+                android:id="@+id/tv_noclass_detail_title"
+                android:paddingStart="6dp"
+                android:paddingEnd="12dp"
+                android:textColor="@color/noclass_primary_text_color"
+                android:textSize="21sp"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent" />
+        </androidx.appcompat.widget.Toolbar>
+
+        <View
+            android:id="@+id/noclass_group_detail_tb_line"
+            app:layout_constraintVertical_bias="0"
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:alpha="0.1"
+            android:background="@color/noclass_line_bg_color"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/tb_noclass_group_detail"
+            app:layout_constraintBottom_toBottomOf="parent" />
+
+        <EditText
+            android:id="@+id/et_noclass_group_add_classmate"
+            android:layout_marginStart="16dp"
+            android:layout_marginEnd="16dp"
+            android:layout_marginTop="18dp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@drawable/noclass_shape_add_shape_bg"
+            android:hint="添加同学、分组或班级"
+            android:textColorHint="@color/noclass_hint_text_color_light"
+            android:imeOptions="actionSearch"
+            android:maxLines="1"
+            android:paddingStart="19dp"
+            android:paddingTop="12dp"
+            android:paddingEnd="19dp"
+            android:paddingBottom="12dp"
+            android:singleLine="true"
+            android:textColor="@color/config_level_two_font_color"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/noclass_group_detail_tb_line" />
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/rv_noclass_group_detail_container"
+            android:layout_marginBottom="16dp"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:layout_marginTop="18dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="1.0"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/et_noclass_group_add_classmate"
+            app:layout_constraintVertical_bias="1.0"
+            app:layout_constraintBottom_toTopOf="@+id/btn_noclass_group_detail_save" />
+
+        <Button
+            android:id="@+id/btn_noclass_group_detail_save"
+            style="?android:attr/borderlessButtonStyle"
+            android:layout_width="120dp"
+            android:layout_height="40dp"
+            android:background="@drawable/noclass_shape_button_common_bg"
+            android:text="查询"
+            android:textColor="@color/config_white_black"
+            android:textSize="18sp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintVertical_bias="0.92"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+    <FrameLayout
+        android:id="@+id/noclass_course_bottom_sheet_container"
         android:layout_width="match_parent"
-        android:layout_height="1dp"
-        android:alpha="0.1"
-        android:background="@color/noclass_line_bg_color"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/tb_noclass_group_detail"
-        app:layout_constraintBottom_toBottomOf="parent" />
+        android:layout_height="match_parent"
+        app:behavior_hideable="true"
+        android:fitsSystemWindows="true"
+        android:paddingTop="10dp"
+        app:behavior_peekHeight="0dp"
+        android:layout_marginBottom="0dp"
+        app:layout_behavior="@string/bottom_sheet_behavior">
+    </FrameLayout>
 
-    <EditText
-        android:id="@+id/et_noclass_group_add_classmate"
-        android:layout_marginStart="16dp"
-        android:layout_marginEnd="16dp"
-        android:layout_marginTop="18dp"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:background="@drawable/noclass_shape_add_shape_bg"
-        android:hint="添加同学"
-        android:textColorHint="@color/noclass_hint_text_color_light"
-        android:imeOptions="actionSearch"
-        android:maxLines="1"
-        android:paddingStart="19dp"
-        android:paddingTop="12dp"
-        android:paddingEnd="19dp"
-        android:paddingBottom="12dp"
-        android:singleLine="true"
-        android:textColor="@color/config_level_two_font_color"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/noclass_group_detail_tb_line" />
-
-    <androidx.recyclerview.widget.RecyclerView
-        android:layout_marginBottom="16dp"
-        android:id="@+id/rv_noclass_group_detail_container"
-        android:layout_width="0dp"
-        android:layout_height="0dp"
-        android:layout_marginTop="18dp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="1.0"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/et_noclass_group_add_classmate"
-        app:layout_constraintVertical_bias="1.0"
-        app:layout_constraintBottom_toTopOf="@+id/btn_noclass_group_detail_save" />
-
-    <Button
-        style="?android:attr/borderlessButtonStyle"
-        android:id="@+id/btn_noclass_group_detail_save"
-        android:layout_width="120dp"
-        android:layout_height="40dp"
-        android:background="@drawable/noclass_shape_button_save_default_bg"
-        android:text="保存"
-        android:textColor="@color/config_white_black"
-        android:textSize="18sp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.5"
-        app:layout_constraintVertical_bias="0.92"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
-
-
-</androidx.constraintlayout.widget.ConstraintLayout>
+</androidx.coordinatorlayout.widget.CoordinatorLayout>

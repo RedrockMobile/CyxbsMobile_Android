@@ -83,6 +83,9 @@ class NoClassTemporaryFragment : BaseFragment(R.layout.noclass_fragment_temporar
 //                val mRvList = ArrayList<Student>()
 //                mRvList.add(Student("","","","",mUserId,mUserName))
 //                submitList(mRvList)
+                setOnItemDelete {
+                    deleteMember(it)
+                }
             }
         }
     }
@@ -111,32 +114,28 @@ class NoClassTemporaryFragment : BaseFragment(R.layout.noclass_fragment_temporar
     private fun initObserver() {
         var searchAllDialog: SearchAllDialog?
         mViewModel.searchAll.observe(viewLifecycleOwner) {
-            if (it.info == "success") {
-                val result = it.data
-                if (result.isExist) {
-                    searchAllDialog = SearchAllDialog(it).apply {
-                        setOnClickClass { cls ->
-                            val clsList = mAdapter.currentList.toMutableSet()
-                            clsList.addAll(cls.members)
-                            mAdapter.submitList(clsList.toList())
-                        }
-                        setOnClickStudent { stu ->
-                            val stuList = mAdapter.currentList.toMutableSet()
-                            stuList.add(stu)
-                            mAdapter.submitList(stuList.toList())
-                        }
-                        setOnClickGroup { group ->
-                            val groupList = mAdapter.currentList.toMutableSet()
-                            groupList.addAll(group.members)
-                            mAdapter.submitList(groupList.toList())
-                        }
+            val result = it
+            if (result.isExist) {
+                searchAllDialog = SearchAllDialog(it).apply {
+                    setOnClickClass { cls ->
+                        val clsList = mAdapter.currentList.toMutableSet()
+                        clsList.addAll(cls.members)
+                        mAdapter.submitList(clsList.toList())
                     }
-                    searchAllDialog!!.show(childFragmentManager, "SearchAllDialog")
-                } else {
-                    toast("查无此人")
+                    setOnClickStudent { stu ->
+                        val stuList = mAdapter.currentList.toMutableSet()
+                        stuList.add(stu)
+                        mAdapter.submitList(stuList.toList())
+                    }
+                    setOnClickGroup { group ->
+                        val groupList = mAdapter.currentList.toMutableSet()
+                        groupList.addAll(group.members)
+                        mAdapter.submitList(groupList.toList())
+                    }
                 }
+                searchAllDialog!!.show(childFragmentManager, "SearchAllDialog")
             } else {
-                toast("网络错误")
+                toast("查无此人")
             }
         }
     }

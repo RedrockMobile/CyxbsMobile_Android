@@ -55,7 +55,6 @@ class NoClassTemporaryAdapter : ListAdapter<Student,NoClassTemporaryAdapter.VH>(
         val tvDelete : TextView = itemView.findViewById<TextView?>(R.id.noclass_item_tv_delete).apply {
             setOnClickListener {
                 val stu = getItem(bindingAdapterPosition)
-                deleteMember(stu)
                 mOnItemDelete?.invoke(stu)
             }
         }

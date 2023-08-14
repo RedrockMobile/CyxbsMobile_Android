@@ -1,6 +1,7 @@
 package com.mredrock.cyxbs.noclass.page.ui.fragment
 
 import android.app.Activity
+import android.content.Intent
 import android.os.Bundle
 import android.text.TextUtils
 import android.util.Log
@@ -16,8 +17,10 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.mredrock.cyxbs.lib.base.ui.BaseFragment
 import com.mredrock.cyxbs.noclass.R
+import com.mredrock.cyxbs.noclass.bean.GroupDetail
 import com.mredrock.cyxbs.noclass.bean.NoclassGroup
 import com.mredrock.cyxbs.noclass.page.adapter.NoClassSolidAdapter
+import com.mredrock.cyxbs.noclass.page.ui.activity.GroupDetailActivity
 import com.mredrock.cyxbs.noclass.page.ui.dialog.AddToGroupDialog
 import com.mredrock.cyxbs.noclass.page.ui.dialog.CreateGroupDialog
 import com.mredrock.cyxbs.noclass.page.ui.dialog.SearchStudentDialog
@@ -67,8 +70,9 @@ class NoClassSolidFragment : BaseFragment(R.layout.noclass_fragment_solid) {
         registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
             if (result.resultCode == Activity.RESULT_OK) {
                 val intent = result.data
-                val extra = intent?.getSerializableExtra("GroupListResult")
+                val extra = intent?.getSerializableExtra("GroupResult")
                 if (extra != null) {
+                    //todo 等待处理返回结果
                 }
             }
         }
@@ -107,15 +111,18 @@ class NoClassSolidFragment : BaseFragment(R.layout.noclass_fragment_solid) {
             layoutManager = LinearLayoutManager(requireContext())
             adapter = mAdapter.apply {
                 setOnClickGroupName {
-                    //todo 进入组内，需要跳转，通过registerforresult来跳
-                    toast(it.name)
+                    startForResult.launch(Intent(requireContext(),GroupDetailActivity::class.java).apply {
+                        putExtra("NoClassGroup",it)
+                    })
                 }
                 setOnClickGroupDelete {
                     //删除：加入缓冲区，并且更新云端状态
+                    mWaitDeleteGroup.add(it)
                     mViewModel.deleteGroup(it.id)
                 }
                 setOnClickGroupIsTop { noclassGroup,tvIsTop ->
                     //置顶：加入缓冲区，更新云端置顶状态
+                    mWaitIsTop[noclassGroup] = tvIsTop
                     mViewModel.updateGroup(noclassGroup.id,noclassGroup.name,noclassGroup.isTop.toString())
                 }
             }

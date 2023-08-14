@@ -86,10 +86,6 @@ class NoClassActivity : BaseActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.noclass_activity_no_class)
-//        replaceFragment(R.id.fragment_container) {
-////            NoClassTemporaryFragment.newInstance()
-//            NoClassSolidFragment.newInstance()
-//        }
         initObserve()
         initQueryEvent()
         initCourse()
@@ -106,6 +102,7 @@ class NoClassActivity : BaseActivity() {
             .add(NoClassSolidFragment::class.java)
         mViewPager.apply {
             adapter = mAdapter
+            isUserInputEnabled = false; //true:滑动，false：禁止滑动
         }
     }
 
