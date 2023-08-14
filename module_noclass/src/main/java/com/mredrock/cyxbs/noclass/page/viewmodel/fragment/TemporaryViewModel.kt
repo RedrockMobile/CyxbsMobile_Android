@@ -21,7 +21,7 @@ class TemporaryViewModel : BaseViewModel() {
                 toast("网络异常")
                 //下面是测试数据
                 val noClassTemporarySearch = NoClassTemporarySearch(
-                    isExist = true,
+                    isExist = false,
                     types = listOf(
 //                            "学生",
 //                            "班级",

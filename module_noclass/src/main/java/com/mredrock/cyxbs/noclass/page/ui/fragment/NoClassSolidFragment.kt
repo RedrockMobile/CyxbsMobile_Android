@@ -23,6 +23,7 @@ import com.mredrock.cyxbs.noclass.page.adapter.NoClassSolidAdapter
 import com.mredrock.cyxbs.noclass.page.ui.activity.GroupDetailActivity
 import com.mredrock.cyxbs.noclass.page.ui.dialog.AddToGroupDialog
 import com.mredrock.cyxbs.noclass.page.ui.dialog.CreateGroupDialog
+import com.mredrock.cyxbs.noclass.page.ui.dialog.SearchNoExistDialog
 import com.mredrock.cyxbs.noclass.page.ui.dialog.SearchStudentDialog
 import com.mredrock.cyxbs.noclass.page.viewmodel.fragment.SolidViewModel
 
@@ -141,14 +142,18 @@ class NoClassSolidFragment : BaseFragment(R.layout.noclass_fragment_solid) {
     private fun initObserver() {
         var searchStudentDialog: SearchStudentDialog?
         mViewModel.searchStudent.observe(viewLifecycleOwner) {
-            searchStudentDialog = SearchStudentDialog(it) {stu ->
-                //点击加号之后的逻辑，需要弹窗选择分组加入
-                Log.d("lx", "mAdapter.currentList = ${mAdapter.currentList}: ")
-                AddToGroupDialog(mAdapter.currentList,stu).apply {
-                    //todo 期待更新
-                }.show(childFragmentManager,"AddToGroupDialog")
+            if(it != null && it.isNotEmpty()){
+                searchStudentDialog = SearchStudentDialog(it) {stu ->
+                    //点击加号之后的逻辑，需要弹窗选择分组加入
+                    Log.d("lx", "mAdapter.currentList = ${mAdapter.currentList}: ")
+                    AddToGroupDialog(mAdapter.currentList,stu).apply {
+                        //todo 期待更新
+                    }.show(childFragmentManager,"AddToGroupDialog")
+                }
+                searchStudentDialog!!.show(childFragmentManager, "SearchStudentDialog")
+            }else{
+                SearchNoExistDialog(requireContext()).show()
             }
-            searchStudentDialog!!.show(childFragmentManager, "SearchStudentDialog")
         }
         mViewModel.groupList.observe(viewLifecycleOwner){
             mAdapter.submitListToOrder(it)

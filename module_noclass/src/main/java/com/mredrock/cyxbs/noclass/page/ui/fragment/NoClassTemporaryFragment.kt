@@ -20,6 +20,7 @@ import com.mredrock.cyxbs.noclass.R
 import com.mredrock.cyxbs.noclass.bean.Student
 import com.mredrock.cyxbs.noclass.page.adapter.NoClassTemporaryAdapter
 import com.mredrock.cyxbs.noclass.page.ui.dialog.SearchAllDialog
+import com.mredrock.cyxbs.noclass.page.ui.dialog.SearchNoExistDialog
 import com.mredrock.cyxbs.noclass.page.viewmodel.activity.CourseViewModel
 import com.mredrock.cyxbs.noclass.page.viewmodel.activity.NoClassViewModel
 import com.mredrock.cyxbs.noclass.page.viewmodel.fragment.TemporaryViewModel
@@ -137,7 +138,7 @@ class NoClassTemporaryFragment : BaseFragment(R.layout.noclass_fragment_temporar
                 }
                 searchAllDialog!!.show(childFragmentManager, "SearchAllDialog")
             } else {
-                toast("查无此人")
+                SearchNoExistDialog(requireContext()).show()
             }
         }
     }

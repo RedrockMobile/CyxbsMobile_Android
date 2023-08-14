@@ -25,6 +25,7 @@ import com.mredrock.cyxbs.noclass.bean.NoclassGroup
 import com.mredrock.cyxbs.noclass.bean.Student
 import com.mredrock.cyxbs.noclass.page.adapter.NoClassTemporaryAdapter
 import com.mredrock.cyxbs.noclass.page.ui.dialog.SearchAllDialog
+import com.mredrock.cyxbs.noclass.page.ui.dialog.SearchNoExistDialog
 import com.mredrock.cyxbs.noclass.page.ui.fragment.NoClassCourseVpFragment
 import com.mredrock.cyxbs.noclass.page.viewmodel.activity.CourseViewModel
 import com.mredrock.cyxbs.noclass.page.viewmodel.activity.GroupDetailViewModel
@@ -154,7 +155,7 @@ class GroupDetailActivity : BaseActivity(){
                 }
                 searchAllDialog!!.show(supportFragmentManager, "SearchAllDialog")
             } else {
-                toast("查无此人")
+                SearchNoExistDialog(this).show()
             }
         }
         // 监听删除是否成功决定本地是否删除

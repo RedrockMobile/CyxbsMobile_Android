@@ -36,7 +36,7 @@
                 app:layout_constraintVertical_bias="0.279" />
 
             <Button
-                android:id="@+id/btn_noclass_dialog_return_continue"
+                android:id="@+id/noclass_dialog_search_not_exist_confirm"
                 style="?android:attr/borderlessButtonStyle"
                 android:layout_width="120dp"
                 android:layout_height="40dp"
