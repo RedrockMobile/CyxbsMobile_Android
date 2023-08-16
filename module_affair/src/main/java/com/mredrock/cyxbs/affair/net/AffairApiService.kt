@@ -2,6 +2,7 @@ package com.mredrock.cyxbs.affair.net
 
 import com.mredrock.cyxbs.affair.bean.AddAffairBean
 import com.mredrock.cyxbs.affair.bean.AffairBean
+import com.mredrock.cyxbs.api.affair.NotificationBean
 import com.mredrock.cyxbs.lib.utils.network.ApiGenerator
 import com.mredrock.cyxbs.lib.utils.network.ApiStatus
 import com.mredrock.cyxbs.lib.utils.network.ApiWrapper
@@ -68,7 +69,7 @@ interface AffairApiService {
   @POST("/magipoke-reminder/Person/send")
   @FormUrlEncoded
   @Headers("App-Version:74")
-  fun sendNotification(stuNum : List<String>) : ApiStatus
+  fun sendNotification(@Body notification : NotificationBean) : ApiStatus
 
   companion object {
     val INSTANCE by lazy {

@@ -4,6 +4,7 @@ import android.content.Context
 import android.util.Log
 import android.view.View
 import androidx.appcompat.app.AppCompatActivity
+import com.mredrock.cyxbs.api.affair.DateJson
 import com.mredrock.cyxbs.api.affair.NoClassBean
 import com.mredrock.cyxbs.lib.course.item.lesson.BaseLessonLayoutParams
 import com.mredrock.cyxbs.lib.course.item.lesson.ILessonItem
@@ -27,11 +28,12 @@ class NoClassLesson(
   val data: NoClassLessonData,
   private val mGatheringList : List<String>,
   private val mNoGatheringList: List<String>,
-  private val mLastingTime : Pair<Int,Int>
+  private val mLastingTime : Pair<Int,Int>,
+  private val mWeek : Int  //第几周
 ) : ILessonItem{
   
   override fun initializeView(context: Context): View {   //添加item到课表中
-    return NoClassLesson.newInstance(context,data ,mGatheringList,mNoGatheringList,mLastingTime)
+    return NoClassLesson.newInstance(context,data ,mGatheringList,mNoGatheringList,mLastingTime,mWeek)
   }
   
   override val lp: BaseLessonLayoutParams
@@ -41,7 +43,7 @@ class NoClassLesson(
       topMargin = 1.2F.dp2px
       bottomMargin = 1.2F.dp2px
     }
-  
+  // 星期几
   override val weekNum: Int
     get() = data.weekNum
   override val startNode: Int
@@ -53,7 +55,7 @@ class NoClassLesson(
     context: Context
   ) : NoClassItemView(context){
     companion object {
-      fun newInstance(context: Context, data: NoClassLessonData, mGatheringList : List<String>, mNoGatheringList: List<String>,mLastingTime : Pair<Int,Int>): NoClassLesson {
+      fun newInstance(context: Context, data: NoClassLessonData, mGatheringList : List<String>, mNoGatheringList: List<String>,mLastingTime : Pair<Int,Int>,mWeek: Int): NoClassLesson {
         return NoClassLesson(context).apply {
           val busyMode = if (mNoGatheringList.isEmpty()){
             BusyMode.NAN
@@ -98,7 +100,8 @@ class NoClassLesson(
             }
             val textTime = "时间：${month} ${beginLesson}-${beginLesson + duration - 1} ${beginTime}-${endTime}"
             //todo waiting
-            NoClassGatherDialog(stuList, textTime).show((context as AppCompatActivity).supportFragmentManager, "NoClassGatherDialog")
+            val dateJson = DateJson(beginLesson,data.weekNum,duration,mWeek)
+            NoClassGatherDialog(dateJson,stuList, textTime).show((context as AppCompatActivity).supportFragmentManager, "NoClassGatherDialog")
           }
         }
       }

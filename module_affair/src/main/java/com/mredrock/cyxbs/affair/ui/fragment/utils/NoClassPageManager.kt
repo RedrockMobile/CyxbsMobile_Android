@@ -130,6 +130,14 @@ class NoClassPageManager(val fragment: BaseFragment){
         this.mLoc = loc
     }
 
+    fun getTitle() : String{
+        return mTitle
+    }
+
+    fun getLoc() : String{
+        return mLoc
+    }
+
     //事务界面，几个页面就写几个枚举类(在原有fragment之上改变的)
     private enum class AffairPage {
         ADD_TITLE {

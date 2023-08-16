@@ -39,7 +39,8 @@ class NoClassWeekFragment : NoClassPageFragment(){
   private val mParentViewModel by activityViewModels<CourseViewModel>()
 
   private var mNoClassSpareTime by arguments<NoClassSpareTime>()
-  private val mWeek by arguments<Int>()
+  // 第几周
+  override val mWeek by arguments<Int>()
   
   override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
     super.onViewCreated(view, savedInstanceState)

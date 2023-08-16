@@ -18,6 +18,7 @@ import com.mredrock.cyxbs.affair.ui.fragment.utils.NoClassPageManager
 import com.mredrock.cyxbs.affair.ui.viewmodel.activity.AffairViewModel
 import com.mredrock.cyxbs.affair.ui.viewmodel.fragment.NoClassAffairViewModel
 import com.mredrock.cyxbs.api.affair.NoClassBean
+import com.mredrock.cyxbs.api.affair.NotificationBean
 import com.mredrock.cyxbs.lib.base.ui.BaseFragment
 
 
@@ -171,7 +172,8 @@ class NoClassAffairFragment : BaseFragment(R.layout.affair_fragment_noclass_affa
             }else if (mPageManager.isEndPage()) {
                 // 如果是发送通知界面，这次点击相当于发送通知
                 if (mWaitSubmit != null && mWaitSubmit!!.isNotEmpty()){
-                    mViewModel.sendNotification(mWaitSubmit!!)
+                    val notificationBean = NotificationBean(mWaitSubmit!!,mNoClassBean.dateJson,mPageManager.getTitle(),mPageManager.getLoc())
+                    mViewModel.sendNotification(notificationBean)
                 }else{
                     toast("掌友，人员不能为空哦")
                 }

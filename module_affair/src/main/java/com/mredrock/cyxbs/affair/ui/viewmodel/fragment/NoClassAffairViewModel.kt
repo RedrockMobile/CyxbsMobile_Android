@@ -5,6 +5,7 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
 import com.mredrock.cyxbs.affair.net.AffairApiService
+import com.mredrock.cyxbs.api.affair.NotificationBean
 import com.mredrock.cyxbs.lib.base.ui.BaseViewModel
 import com.mredrock.cyxbs.lib.utils.extensions.launchCatch
 import com.mredrock.cyxbs.lib.utils.network.ApiStatus
@@ -30,10 +31,9 @@ class NoClassAffairViewModel : BaseViewModel() {
     val notificationSharedFlow get() = _mutableNotificationSharedFlow.asSharedFlow()
 
     //没课约最后发送通知
-    fun sendNotification(stuNumList : List<String>){
+    fun sendNotification(notificationBean: NotificationBean){
         viewModelScope.launchCatch{
-            Log.d("lx", "sendNotification发送成功: ${stuNumList}")
-//            _mutableNotificationSharedFlow.emit(AffairApiService.INSTANCE.sendNotification(stuNumList))
+            _mutableNotificationSharedFlow.emit(AffairApiService.INSTANCE.sendNotification(notificationBean))
         }
     }
 

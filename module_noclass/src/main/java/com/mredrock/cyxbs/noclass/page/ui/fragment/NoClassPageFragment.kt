@@ -20,6 +20,8 @@ abstract class NoClassPageFragment: CoursePageFragment() {
   
   private lateinit var mNameMap : HashMap<String,String>   //学号和姓名的映射表
   private lateinit var mNoClassSpareTime : NoClassSpareTime
+  // 第几个星期，默认为0，也就是整个学期的课表
+  protected open val mWeek : Int = 0
   
   /**
    * 添加课程
@@ -126,7 +128,7 @@ abstract class NoClassPageFragment: CoursePageFragment() {
     }
     val gatheringList : List<String> = gatheringIdList.map { mNameMap[it]!! }   //空闲的人名
     val noGatheringList : List<String> = noGatheringIdList.map { mNameMap[it]!! }   //忙碌的人名
-    return NoClassLesson(NoClassLessonData(week, begin, length, gatheringIdList.showText()),gatheringList,noGatheringList,Pair(begin,begin+length))
+    return NoClassLesson(NoClassLessonData(week, begin, length, gatheringIdList.showText()),gatheringList,noGatheringList,Pair(begin,begin+length),mWeek)
   }
 
   /**

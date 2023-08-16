@@ -20,18 +20,26 @@ import java.io.Serializable
  *
  * period Int 长度
  *
- * week List<Int> 在哪几周，特别注意：整学期的 week 为 0
+ * week List<Int> 在哪周，特别注意：整学期的 week 为 0
  */
 
 data class NoClassBean(
     val mStuList : List<Pair<String,Boolean>>,
     //存储点击的时间信息
-//    val dateJson : DateJson
-) : Serializable{
-    data class DateJson(
-        val beginLesson : Int,
-        val day : Int,
-        val period : Int,
-        val week : List<Int>
-    )
-}
+    val dateJson : DateJson
+) : Serializable
+
+data class NotificationBean(
+    val mStuList : List<String>,
+    //存储点击的时间信息
+    val dateJson : DateJson,
+    val title : String,
+    val loc : String,
+) : Serializable
+
+data class DateJson(
+    val beginLesson : Int,
+    val day : Int,
+    val period : Int,
+    val week : Int
+) : Serializable
