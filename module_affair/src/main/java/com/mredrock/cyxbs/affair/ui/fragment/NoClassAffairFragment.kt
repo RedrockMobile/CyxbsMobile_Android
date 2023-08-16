@@ -2,12 +2,9 @@ package com.mredrock.cyxbs.affair.ui.fragment
 
 import android.os.Bundle
 import android.util.Log
-import android.view.KeyEvent
 import android.view.View
-import android.view.inputmethod.EditorInfo
-import android.widget.EditText
+import android.view.ViewGroup
 import android.widget.TextView
-import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.os.bundleOf
 import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
@@ -40,66 +37,154 @@ class NoClassAffairFragment : BaseFragment(R.layout.affair_fragment_noclass_affa
     private val mViewModel by viewModels<NoClassAffairViewModel>()
     private val mActivityViewModel by activityViewModels<AffairViewModel>()
 
-    private val mTvLeftSpare by R.id.affair_tv_no_class_affair_spare_stu.view<RecyclerView>()   //选择空闲成员
-    private val mTvRightAll by R.id.affair_tv_no_class_affair_all_stu.view<RecyclerView>()   //选择所有人员
-    private val mRootView: ConstraintLayout by R.id.affair_root_no_class_affair.view()
-    private val mEditText by R.id.affair_et_no_class_affair.view<EditText>()
+    private val mTvLeftSpare by R.id.affair_tv_no_class_affair_spare_stu.view<TextView>()   //选择空闲成员
+    private val mTvRightAll by R.id.affair_tv_no_class_affair_all_stu.view<TextView>()   //选择所有人员
+
     private val mRvTitleCandidate by R.id.affair_rv_no_class_affair_title_candidate.view<RecyclerView>()  //候选热词
+    private val mRvHotLoc by R.id.affair_rv_no_class_affair_hot_loc.view<RecyclerView>()  //候选热词
 
     private val mRvTitleCandidateAdapter = TitleCandidateAdapter()
+    private val mRvHotLocAdapter = TitleCandidateAdapter()
     private val mPageManager = NoClassPageManager(this)
+
+    /**
+     * 需要发送通知的
+     */
+    private var mWaitSubmit : ArrayList<String>? = null
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         Log.d("lx", "noclassfragment:${mNoClassBean}: ")
         initRv()
-        initListener()
         initObserve()
+        initClickChoose()
+    }
 
+    /**
+     * 点击空闲人员和全体人员之后的操作
+     */
+    private fun initClickChoose() {
+        //所有空闲人员
+        val spareList = mNoClassBean.mStuList.filter { it.second }.map { it.first }
+        //全体人员
+        val allList = mNoClassBean.mStuList.map { it.first }
+        // 点击空闲人员，右边的选择所有要白底黑字，空闲人员要白字紫底
+        mTvLeftSpare.setOnClickListener {
+            mWaitSubmit = ArrayList()
+            mWaitSubmit!!.addAll(spareList)
+            mTvLeftSpare.apply{
+                setBackgroundResource(R.drawable.affair_shape_affair_modify_button_background)
+                setTextColor(resources.getColor(com.mredrock.cyxbs.config.R.color.config_white_black))
+            }
+            mTvRightAll.apply {
+                setBackgroundResource(R.drawable.affair_shape_button_default_bg)
+                setTextColor(resources.getColor(com.mredrock.cyxbs.config.R.color.config_black_white))
+            }
+        }
+        mTvRightAll.setOnClickListener {
+            mWaitSubmit = ArrayList()
+            mWaitSubmit!!.addAll(allList)
+            mTvLeftSpare.apply{
+                setBackgroundResource(R.drawable.affair_shape_button_default_bg)
+                setTextColor(resources.getColor(com.mredrock.cyxbs.config.R.color.config_black_white))
+            }
+            mTvRightAll.apply {
+                setBackgroundResource(R.drawable.affair_shape_affair_modify_button_background)
+                setTextColor(resources.getColor(com.mredrock.cyxbs.config.R.color.config_white_black))
+            }
+        }
     }
 
     private fun initRv() {
-        mRvTitleCandidate.adapter = mRvTitleCandidateAdapter
-            .setClickListener {
-                val index = mEditText.selectionStart // 得到光标位置
-                val text = mEditText.text
-                text.insert(index, it)
+        // 仅对本例生效
+        fun setDefault(recyclerView: RecyclerView, lastIndex: Int){
+            val parentView = recyclerView.getChildAt(lastIndex) as ViewGroup
+            // 获得索引为0的时候
+            val textView = parentView.getChildAt(0) as TextView
+            textView.setBackgroundResource(R.drawable.affair_shape_button_default_bg)
+            textView.setTextColor(resources.getColor(com.mredrock.cyxbs.config.R.color.config_black_white))
+        }
+        fun setSelect(recyclerView: RecyclerView,currentIndex : Int){
+            // 找到当前选中的child
+            val parentView = recyclerView.getChildAt(currentIndex) as ViewGroup
+            // 获得索引为0的时候
+            val textView = parentView.getChildAt(0) as TextView
+            textView.setBackgroundResource(R.drawable.affair_shape_affair_modify_button_background)
+            textView.setTextColor(resources.getColor(com.mredrock.cyxbs.config.R.color.config_white_black))
+        }
+        // 上一次选中的索引
+        var lastIndex : Int? = null
+        mRvTitleCandidate.apply {
+            layoutManager = FlexboxLayoutManager(requireContext(), FlexDirection.ROW, FlexWrap.WRAP)
+            adapter = mRvTitleCandidateAdapter.apply {
+                setClickListener {
+                    // 记录下来
+                    mPageManager.setTitle(it.toString())
+                    // 取消上一次选中的
+                    if (lastIndex != null){
+                        setDefault(mRvTitleCandidate,lastIndex!!)
+                    }
+                    // 找到当前选中的index
+                    val chooseIndex = mRvTitleCandidateAdapter.currentList.indexOf(it)
+                    setSelect(mRvTitleCandidate,chooseIndex)
+                    lastIndex = chooseIndex
+                }
             }
-        mRvTitleCandidate.layoutManager =
-            FlexboxLayoutManager(requireContext(), FlexDirection.ROW, FlexWrap.WRAP)
-    }
-
-    private fun initListener() {
-        //点到键盘上的下个执行和点击下一个按钮相同的操作
-        mEditText.setOnEditorActionListener(object : TextView.OnEditorActionListener {
-            override fun onEditorAction(p0: TextView?, p1: Int, p2: KeyEvent?): Boolean {
-                return if (p1 == EditorInfo.IME_ACTION_NEXT) {
-                    mActivityViewModel.clickNextBtn()
-                    return true
-                } else false
+        }
+        // 上一次选中的索引
+        var hotLocLastIndex : Int? = null
+        mRvHotLoc.apply {
+            layoutManager = FlexboxLayoutManager(requireContext(), FlexDirection.ROW, FlexWrap.WRAP)
+            adapter = mRvHotLocAdapter.apply {
+                setClickListener {
+                    // 记录下来
+                    mPageManager.setLoc(it.toString())
+                    // 取消上一次选中的
+                    if (hotLocLastIndex != null){
+                        setDefault(mRvHotLoc,hotLocLastIndex!!)
+                    }
+                    // 找到当前选中的index
+                    val chooseIndex = mRvHotLocAdapter.currentList.indexOf(it)
+                    setSelect(mRvHotLoc,chooseIndex)
+                    hotLocLastIndex = chooseIndex
+                }
             }
-        })
+        }
     }
 
     private fun initObserve() {
         mViewModel.titleCandidates.observe {
             mRvTitleCandidateAdapter.submitList(it)
         }
+        mViewModel.hotLocation.observe{
+            mRvHotLocAdapter.submitList(it)
+        }
 
         mActivityViewModel.clickAffect.collectLaunch {
-            if (mPageManager.isEndPage()) {
-                val stuNumList = ArrayList<String>()
-                //如果是发送给所有，就不必判断值
-                if(mPageManager.isSendAll()){
-                    stuNumList.addAll(mNoClassBean.mStuList.map { it.first })
-                }else{
-                    stuNumList.addAll(mNoClassBean.mStuList.filter { it.second }.map { it.first })
-                }
-                mViewModel.sendNotification(stuNumList)
-                requireActivity().finish()
-            } else {
+            // 如果是标题页，点击下一页就请求地点，然后加载到下一页上
+            if (mPageManager.isStartPage()){
+                mViewModel.getHotLoc()
                 mPageManager.loadNextPage()
+            }else if (mPageManager.isChooseLoc()){
+                //如果是选择地点界面，那么这次点击相当于进入通知界面
+                mPageManager.loadNextPage()
+            }else if (mPageManager.isEndPage()) {
+                // 如果是发送通知界面，这次点击相当于发送通知
+                if (mWaitSubmit != null && mWaitSubmit!!.isNotEmpty()){
+                    mViewModel.sendNotification(mWaitSubmit!!)
+                }else{
+                    toast("掌友，人员不能为空哦")
+                }
+            }
+        }
+
+        mViewModel.notificationSharedFlow.collectLaunch {
+            if (it.isSuccess()){
+                toast("发送成功")
+            }else{
+                toast("发送失败")
             }
         }
     }
+
 }

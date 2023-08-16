@@ -19,4 +19,7 @@
     <!--按钮渐变颜色-->
     <color name="affair_button_gradient_start_color">#2921D1</color>
     <color name="affair_button_gradient_end_color">#5D5DF7</color>
+
+    <!--未被选中颜色-->
+    <color name="affair_button_gradient_un_choose_color">#99A7B9</color>
 </resources>

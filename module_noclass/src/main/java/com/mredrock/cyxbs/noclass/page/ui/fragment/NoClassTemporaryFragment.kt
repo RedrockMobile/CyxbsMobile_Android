@@ -2,12 +2,15 @@ package com.mredrock.cyxbs.noclass.page.ui.fragment
 
 
 import android.os.Bundle
+import android.os.Handler
+import android.os.Looper
 import android.text.TextUtils
 import android.view.View
 import android.view.WindowManager
 import android.view.inputmethod.EditorInfo
 import android.widget.Button
 import android.widget.EditText
+import android.widget.TextView
 import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -22,8 +25,8 @@ import com.mredrock.cyxbs.noclass.page.adapter.NoClassTemporaryAdapter
 import com.mredrock.cyxbs.noclass.page.ui.dialog.SearchAllDialog
 import com.mredrock.cyxbs.noclass.page.ui.dialog.SearchNoExistDialog
 import com.mredrock.cyxbs.noclass.page.viewmodel.activity.CourseViewModel
-import com.mredrock.cyxbs.noclass.page.viewmodel.activity.NoClassViewModel
 import com.mredrock.cyxbs.noclass.page.viewmodel.fragment.TemporaryViewModel
+import com.mredrock.cyxbs.noclass.util.alphaAnim
 
 /**
  * 临时分组的fragment
@@ -51,6 +54,11 @@ class NoClassTemporaryFragment : BaseFragment(R.layout.noclass_fragment_temporar
     private val mEditTextView: EditText by R.id.noclass_temporary_et_add_classmate.view()
 
     /**
+     * 下面得提示文字，试试左滑删除列表
+     */
+    private val mHintText : TextView by R.id.noclass_temporary_tv_hint.view()
+
+    /**
      * 临时分组界面展示人员的Rv和adapter
      */
     private val mRecyclerView: RecyclerView by R.id.noclass_temporary_rv_show.view()
@@ -59,6 +67,12 @@ class NoClassTemporaryFragment : BaseFragment(R.layout.noclass_fragment_temporar
     private val mViewModel by viewModels<TemporaryViewModel>()
     private val mCourseViewModel by activityViewModels<CourseViewModel>()
 
+    /**
+     * 设置两秒后消失得runnable和handler，注意及时释放
+     */
+    private var mRunnable : Runnable? = null
+    private var mHandler : Handler? = null
+
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         initUserInfo()
@@ -66,6 +80,18 @@ class NoClassTemporaryFragment : BaseFragment(R.layout.noclass_fragment_temporar
         initObserver()
         initSearchEvent()
         initFindCourse()
+        initHintText()
+    }
+
+    /**
+     * 初始化下面试试左滑删除列表，设置两秒后消失
+     */
+    private fun initHintText() {
+        mHandler = Handler(Looper.getMainLooper())
+        mRunnable = Runnable {
+            mHintText.alphaAnim(mHintText.alpha,0f,200).start()
+        }
+        mHandler!!.postDelayed(mRunnable!!,2000)
     }
 
     private fun initFindCourse() {
@@ -83,9 +109,8 @@ class NoClassTemporaryFragment : BaseFragment(R.layout.noclass_fragment_temporar
             layoutManager = LinearLayoutManager(requireContext())
             adapter = mAdapter.apply {
                 //加入本人
-                val mRvList = ArrayList<Student>()
-                mRvList.add(Student("","","","",mUserId,mUserName))
-                submitList(mRvList)
+                val list = listOf(Student("","","","",mUserId,mUserName))
+                submitList(list)
                 setOnItemDelete {
                     deleteMember(it)
                 }
@@ -169,6 +194,11 @@ class NoClassTemporaryFragment : BaseFragment(R.layout.noclass_fragment_temporar
             return
         }
         mViewModel.getSearchAllResult(content)
+    }
+
+    override fun onStop() {
+        super.onStop()
+        mRunnable?.let { mHandler?.removeCallbacks(it) }
     }
 
 

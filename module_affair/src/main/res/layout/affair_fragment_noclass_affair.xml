@@ -63,34 +63,22 @@
         app:layout_constraintTop_toBottomOf="@id/affair_tv_no_class_affair_text_2"
         tools:ignore="HardcodedText" />
 
-    <EditText
-        android:id="@+id/affair_et_no_class_affair"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="16dp"
-        android:background="@drawable/affair_shape_item_text_bg"
-        android:gravity="center_vertical"
-        android:imeOptions="actionNext"
-        android:inputType="text"
-        android:maxEms="250"
-        android:maxLength="180"
-        android:maxLines="1"
-        android:paddingStart="18dp"
-        android:paddingTop="12dp"
-        android:paddingEnd="18dp"
-        android:paddingBottom="12dp"
-        android:textColor="@color/config_level_three_font_color"
-        android:textSize="21sp"
-        app:layout_constraintTop_toBottomOf="@+id/affair_tv_no_class_affair_text_3"
-        tools:ignore="Autofill,LabelFor" />
 
     <!--这个 rv 用于第一页的候选词-->
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/affair_rv_no_class_affair_title_candidate"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="8dp"
-        app:layout_constraintTop_toBottomOf="@id/affair_et_no_class_affair"
+        app:layout_constraintTop_toBottomOf="@+id/affair_tv_no_class_affair_text_3"
+        tools:listitem="@layout/affair_rv_item_add_affair_candidate" />
+
+    <!--这个 rv 用于第二页的候选词-->
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/affair_rv_no_class_affair_hot_loc"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:visibility="gone"
+        app:layout_constraintTop_toBottomOf="@+id/affair_tv_no_class_affair_text_3"
         tools:listitem="@layout/affair_rv_item_add_affair_candidate" />
 
 
@@ -108,10 +96,9 @@
         android:visibility="gone"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.258"
+        app:layout_constraintHorizontal_bias="0.231"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.667"
+        app:layout_constraintTop_toBottomOf="@+id/affair_tv_no_class_affair_text_3"
         tools:ignore="HardcodedText,SpUsage"
         tools:visibility="invisible" />
 
@@ -129,10 +116,9 @@
         android:visibility="gone"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.696"
+        app:layout_constraintHorizontal_bias="0.72"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.667"
+        app:layout_constraintTop_toBottomOf="@+id/affair_tv_no_class_affair_text_3"
         tools:ignore="HardcodedText,SpUsage"
         tools:visibility="invisible" />
 </androidx.constraintlayout.widget.ConstraintLayout>

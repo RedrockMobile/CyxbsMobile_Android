@@ -4,6 +4,7 @@ import android.content.Context
 import android.util.Log
 import android.view.View
 import androidx.appcompat.app.AppCompatActivity
+import com.mredrock.cyxbs.api.affair.NoClassBean
 import com.mredrock.cyxbs.lib.course.item.lesson.BaseLessonLayoutParams
 import com.mredrock.cyxbs.lib.course.item.lesson.ILessonItem
 import com.mredrock.cyxbs.lib.utils.extensions.color
@@ -54,18 +55,13 @@ class NoClassLesson(
     companion object {
       fun newInstance(context: Context, data: NoClassLessonData, mGatheringList : List<String>, mNoGatheringList: List<String>,mLastingTime : Pair<Int,Int>): NoClassLesson {
         return NoClassLesson(context).apply {
-          Log.d("lx", "mGatheringList:=${mGatheringList.size}  mNoGatheringList:=${mNoGatheringList.size}")
           val busyMode = if (mNoGatheringList.isEmpty()){
-            Log.d("lx", "BusyMode.NAN: ")
             BusyMode.NAN
           }else if (mGatheringList.isEmpty()){
-            Log.d("lx", "BusyMode.ALL: ")
             BusyMode.ALL
           }else if (mGatheringList.size > mNoGatheringList.size){
-            Log.d("lx", "BusyMode.LESS: ")
             BusyMode.LESS
           }else{
-            Log.d("lx", "BusyMode.MORE: ")
             BusyMode.MORE
           }
           setColor(busyMode)
@@ -91,17 +87,18 @@ class NoClassLesson(
             val beginLesson =  if(mLastingTime.first >= 10) mLastingTime.first - 1 else if (mLastingTime.first<=3) mLastingTime.first + 1 else mLastingTime.first
 
             val month = when(data.weekNum){
-               1 -> " 周日"
-               2 -> " 周一"
-               3 -> " 周二"
-               4 -> " 周三"
-               5 -> " 周四"
-               6 -> " 周五"
-               7 -> " 周六"
+               1 -> " 周一"
+               2 -> " 周二"
+               3 -> " 周三"
+               4 -> " 周四"
+               5 -> " 周五"
+               6 -> " 周六"
+               7 -> " 周日"
               else -> ""
             }
             val textTime = "时间：${month} ${beginLesson}-${beginLesson + duration - 1} ${beginTime}-${endTime}"
-            NoClassGatherDialog(stuList, textTime).show((context as AppCompatActivity).supportFragmentManager, "NoClassGatherDialog")  //todo 这里是点击事件的地方
+            //todo waiting
+            NoClassGatherDialog(stuList, textTime).show((context as AppCompatActivity).supportFragmentManager, "NoClassGatherDialog")
           }
         }
       }

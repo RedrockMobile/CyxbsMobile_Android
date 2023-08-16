@@ -37,6 +37,18 @@ class NoClassAffairViewModel : BaseViewModel() {
         }
     }
 
+    fun getHotLoc(){
+        AffairApiService.INSTANCE.getHotLocation()
+            .subscribeOn(Schedulers.io())
+            .observeOn(AndroidSchedulers.mainThread())
+            .mapOrInterceptException {
+                // 网络请求失败就发送这个默认显示
+                emitter.onSuccess(listOf("二教", "三教", "四教", "五教", "八教", "九教", "风华运动场", "太极运动场", "风雨运动场", "校外"))
+            }.safeSubscribeBy {
+                _hotLocation.value = it
+            }
+    }
+
     init {
         //虽然是没课约，但是候选的关键词都是一样的，如果后续不一样，接口再分割。
         AffairApiService.INSTANCE.getTitleCandidate()
@@ -47,16 +59,6 @@ class NoClassAffairViewModel : BaseViewModel() {
                 emitter.onSuccess(listOf("自习", "值班", "考试", "英语", "开会", "作业", "补课", "实验", "复习", "学习"))
             }.safeSubscribeBy {
                 _titleCandidates.value = it
-            }
-
-        AffairApiService.INSTANCE.getHotLocation()
-            .subscribeOn(Schedulers.io())
-            .observeOn(AndroidSchedulers.mainThread())
-            .mapOrInterceptException {
-                // 网络请求失败就发送这个默认显示
-                emitter.onSuccess(listOf("二教", "三教", "四教", "五教", "八教", "九教", "风华运动场", "太极运动场", "风雨运动场", "校外"))
-            }.safeSubscribeBy {
-                _hotLocation.value = it
             }
     }
 }

@@ -13,8 +13,25 @@ import java.io.Serializable
 
 /**
  * 发送通知的时候需要的学号的集合：前面是学号，后面是是否空闲，true代表空闲
+ *
+ * beginLesson Int 开始节数，如：1、2 节课以 1 开始；3、4 节课以 3 开始，注意：中午是以 -1 开始，傍晚是以 -2 开始
+ *
+ * day Int 星期数，星期一为 0
+ *
+ * period Int 长度
+ *
+ * week List<Int> 在哪几周，特别注意：整学期的 week 为 0
  */
 
 data class NoClassBean(
-    val mStuList : List<Pair<String,Boolean>>
-) : Serializable
+    val mStuList : List<Pair<String,Boolean>>,
+    //存储点击的时间信息
+//    val dateJson : DateJson
+) : Serializable{
+    data class DateJson(
+        val beginLesson : Int,
+        val day : Int,
+        val period : Int,
+        val week : List<Int>
+    )
+}
