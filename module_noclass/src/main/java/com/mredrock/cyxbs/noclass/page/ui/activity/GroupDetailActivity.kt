@@ -19,9 +19,8 @@ import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.mredrock.cyxbs.lib.base.ui.BaseActivity
 import com.mredrock.cyxbs.noclass.R
-import com.mredrock.cyxbs.noclass.bean.GroupDetail
 import com.mredrock.cyxbs.noclass.bean.NoClassSpareTime
-import com.mredrock.cyxbs.noclass.bean.NoclassGroup
+import com.mredrock.cyxbs.noclass.bean.NoClassGroup
 import com.mredrock.cyxbs.noclass.bean.Student
 import com.mredrock.cyxbs.noclass.page.adapter.NoClassTemporaryAdapter
 import com.mredrock.cyxbs.noclass.page.ui.dialog.SearchAllDialog
@@ -83,7 +82,7 @@ class GroupDetailActivity : BaseActivity(){
     /**
      * 当前选择的NoclassGroup
      */
-    private lateinit var mCurrentNoclassGroup : NoclassGroup
+    private lateinit var mCurrentNoclassGroup : NoClassGroup
     
     /**
      * Adapter
@@ -129,7 +128,7 @@ class GroupDetailActivity : BaseActivity(){
      * 接受外部传来的数据
      */
     private fun getList(){
-        mCurrentNoclassGroup = intent.getSerializableExtra("NoClassGroup") as NoclassGroup
+        mCurrentNoclassGroup = intent.getSerializableExtra("NoClassGroup") as NoClassGroup
         mTitleText.text = mCurrentNoclassGroup.name
     }
     
@@ -141,7 +140,7 @@ class GroupDetailActivity : BaseActivity(){
         var searchAllDialog: SearchAllDialog?
         mViewModel.searchAll.observe(this){it ->
             Log.d("lx", "searchResult: =${it}")
-            if (it.isExist) {
+            if (it != null) {
                 searchAllDialog = SearchAllDialog(
                     searchResult = it,
                     groupId = mCurrentNoclassGroup.id
@@ -253,7 +252,7 @@ class GroupDetailActivity : BaseActivity(){
             mCourseBehavior.state = BottomSheetBehavior.STATE_HIDDEN
         } else {
             setResult(RESULT_OK, Intent().apply {
-                val noClassGroup = NoclassGroup(mCurrentNoclassGroup.id,mCurrentNoclassGroup.isTop,mAdapter.currentList,mCurrentNoclassGroup.name)
+                val noClassGroup = NoClassGroup(mCurrentNoclassGroup.id,mCurrentNoclassGroup.isTop,mAdapter.currentList,mCurrentNoclassGroup.name)
                 putExtra("GroupDetailResult",noClassGroup)
             })
             super.onBackPressed()

@@ -26,7 +26,7 @@ data class Student(
   @SerializedName("major")
     val major: String,
   @SerializedName("name")
-  override val name: String,
+  val name: String,
   @SerializedName("stunum")
   override val id: String,
   ) : Serializable,NoClassItem

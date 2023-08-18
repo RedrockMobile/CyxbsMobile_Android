@@ -16,7 +16,7 @@ import com.mredrock.cyxbs.noclass.R
 import com.mredrock.cyxbs.noclass.bean.CLASS
 import com.mredrock.cyxbs.noclass.bean.Cls
 import com.mredrock.cyxbs.noclass.bean.GROUP
-import com.mredrock.cyxbs.noclass.bean.GroupDetail
+import com.mredrock.cyxbs.noclass.bean.NoClassGroup
 import com.mredrock.cyxbs.noclass.bean.NoClassItem
 import com.mredrock.cyxbs.noclass.bean.NoClassTemporarySearch
 import com.mredrock.cyxbs.noclass.bean.STUDENT
@@ -236,9 +236,9 @@ class SearchAllDialog(
     }
 
     //点击group的回调
-    private var onClickGroup: ((groupDetail: GroupDetail) -> Unit)? = null
+    private var onClickGroup: ((noClassGroup: NoClassGroup) -> Unit)? = null
 
-    fun setOnClickGroup(onClickGroup: (groupDetail: GroupDetail) -> Unit) {
+    fun setOnClickGroup(onClickGroup: (noClassGroup: NoClassGroup) -> Unit) {
         this.onClickGroup = onClickGroup
     }
 

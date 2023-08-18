@@ -3,8 +3,8 @@ package com.mredrock.cyxbs.noclass.net
 import com.mredrock.cyxbs.lib.utils.network.ApiGenerator
 import com.mredrock.cyxbs.lib.utils.network.ApiStatus
 import com.mredrock.cyxbs.lib.utils.network.ApiWrapper
+import com.mredrock.cyxbs.noclass.bean.NoClassGroup
 import com.mredrock.cyxbs.noclass.bean.NoClassTemporarySearch
-import com.mredrock.cyxbs.noclass.bean.NoclassGroup
 import com.mredrock.cyxbs.noclass.bean.NoclassGroupId
 import com.mredrock.cyxbs.noclass.bean.Student
 import io.reactivex.rxjava3.core.Single
@@ -32,7 +32,7 @@ interface NoclassApiService {
      * 没课约获取全部分组信息
      */
     @GET("/magipoke-jwzx/no_class/group/all")
-    fun getGroupAll() : Single<ApiWrapper<List<NoclassGroup>>>
+    fun getGroupAll() : Single<ApiWrapper<List<NoClassGroup>>>
 
     /**
      * 没课约上传分组

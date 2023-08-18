@@ -16,7 +16,7 @@ import com.mredrock.cyxbs.lib.utils.extensions.setOnSingleClickListener
 import com.mredrock.cyxbs.lib.utils.extensions.toast
 import com.mredrock.cyxbs.lib.utils.service.ServiceManager
 import com.mredrock.cyxbs.noclass.R
-import com.mredrock.cyxbs.noclass.bean.NoclassGroup
+import com.mredrock.cyxbs.noclass.bean.NoClassGroup
 import com.mredrock.cyxbs.noclass.page.viewmodel.activity.GroupManagerViewModel
 import com.mredrock.cyxbs.noclass.util.startShake
 
@@ -36,7 +36,7 @@ import com.mredrock.cyxbs.noclass.util.startShake
  */
 class CreateGroupDialog(
   var existNames : List<String>? = null,
-  val afterCreate : ((NoclassGroup) -> Unit)? = null
+  val afterCreate : ((NoClassGroup) -> Unit)? = null
 ) : BottomSheetDialogFragment() {
 
   private val mViewModel by activityViewModels<GroupManagerViewModel>()
@@ -84,7 +84,7 @@ class CreateGroupDialog(
         toast("似乎出现了什么问题呢,请稍后再试")
       } else {
         toast("创建成功")
-        val noclassGroup = NoclassGroup(it.id.toString(),false,ArrayList(),mGroupName ?: "未知分组")
+        val noclassGroup = NoClassGroup(it.id.toString(),false,ArrayList(),mGroupName ?: "未知分组")
         afterCreate?.invoke(noclassGroup)
         dialog?.cancel()
       }

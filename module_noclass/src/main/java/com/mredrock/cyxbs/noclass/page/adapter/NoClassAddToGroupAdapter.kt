@@ -1,7 +1,6 @@
 package com.mredrock.cyxbs.noclass.page.adapter
 
 import android.content.Context
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -12,19 +11,18 @@ import androidx.recyclerview.widget.RecyclerView
 import com.mredrock.cyxbs.lib.utils.extensions.invisible
 import com.mredrock.cyxbs.lib.utils.extensions.visible
 import com.mredrock.cyxbs.noclass.R
-import com.mredrock.cyxbs.noclass.bean.NoclassGroup
-import java.lang.ref.WeakReference
+import com.mredrock.cyxbs.noclass.bean.NoClassGroup
 
 class NoClassAddToGroupAdapter(
-    val groupListByPage: HashMap<Int, ArrayList<NoclassGroup>>,
+    val groupListByPage: HashMap<Int, ArrayList<NoClassGroup>>,
     val context: Context,
-    val setDoneStatus: (isOk: Boolean, chooseGroup: List<NoclassGroup>) -> Unit
+    val setDoneStatus: (isOk: Boolean, chooseGroup: List<NoClassGroup>) -> Unit
 ) : RecyclerView.Adapter<NoClassAddToGroupAdapter.MyHolder>() {
 
     /**
      * 选择分组缓冲区
      */
-    private val chooseGroup by lazy { ArrayList<NoclassGroup>() }
+    private val chooseGroup by lazy { ArrayList<NoClassGroup>() }
 
     inner class MyHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         val containerView = itemView.findViewById<GridLayout>(R.id.noclass_gl_container)

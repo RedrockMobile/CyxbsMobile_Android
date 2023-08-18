@@ -8,26 +8,26 @@ import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.mredrock.cyxbs.noclass.R
-import com.mredrock.cyxbs.noclass.bean.NoclassGroup
+import com.mredrock.cyxbs.noclass.bean.NoClassGroup
 
 
 /**
  * 没课约固定分组界面的adapter
  */
-class NoClassSolidAdapter : ListAdapter<NoclassGroup, NoClassSolidAdapter.MyHolder>(solidDiffUtil) {
+class NoClassSolidAdapter : ListAdapter<NoClassGroup, NoClassSolidAdapter.MyHolder>(solidDiffUtil) {
     companion object {
-        private val solidDiffUtil: DiffUtil.ItemCallback<NoclassGroup> =
-            object : DiffUtil.ItemCallback<NoclassGroup>() {
+        private val solidDiffUtil: DiffUtil.ItemCallback<NoClassGroup> =
+            object : DiffUtil.ItemCallback<NoClassGroup>() {
                 override fun areItemsTheSame(
-                    oldItem: NoclassGroup,
-                    newItem: NoclassGroup
+                    oldItem: NoClassGroup,
+                    newItem: NoClassGroup
                 ): Boolean {
                     return oldItem.id == newItem.id
                 }
 
                 override fun areContentsTheSame(
-                    oldItem: NoclassGroup,
-                    newItem: NoclassGroup
+                    oldItem: NoClassGroup,
+                    newItem: NoClassGroup
                 ): Boolean {
                     return oldItem == newItem
                 }
@@ -35,19 +35,19 @@ class NoClassSolidAdapter : ListAdapter<NoclassGroup, NoClassSolidAdapter.MyHold
     }
 
     //分别是点击名称，置顶，和删除的回调
-    private var onClickGroupName : ((noclassGroup: NoclassGroup) -> Unit)? = null
-    private var onClickGroupIsTop : ((noclassGroup: NoclassGroup,tvIsGroup : TextView) -> Unit)? = null
-    private var onClickGroupDelete : ((noclassGroup: NoclassGroup) -> Unit)? = null
+    private var onClickGroupName : ((noclassGroup: NoClassGroup) -> Unit)? = null
+    private var onClickGroupIsTop : ((noclassGroup: NoClassGroup, tvIsGroup : TextView) -> Unit)? = null
+    private var onClickGroupDelete : ((noclassGroup: NoClassGroup) -> Unit)? = null
 
-    fun setOnClickGroupName(onClickGroupName : (noclassGroup: NoclassGroup) -> Unit){
+    fun setOnClickGroupName(onClickGroupName : (noclassGroup: NoClassGroup) -> Unit){
         this.onClickGroupName = onClickGroupName
     }
 
-    fun setOnClickGroupIsTop(onClickGroupIsTop : (noclassGroup: NoclassGroup,tvIsGroup : TextView) -> Unit){
+    fun setOnClickGroupIsTop(onClickGroupIsTop : (noclassGroup: NoClassGroup, tvIsGroup : TextView) -> Unit){
         this.onClickGroupIsTop = onClickGroupIsTop
     }
 
-    fun setOnClickGroupDelete(onClickGroupDelete : (noclassGroup: NoclassGroup) -> Unit){
+    fun setOnClickGroupDelete(onClickGroupDelete : (noclassGroup: NoClassGroup) -> Unit){
         this.onClickGroupDelete = onClickGroupDelete
     }
 
@@ -88,8 +88,8 @@ class NoClassSolidAdapter : ListAdapter<NoclassGroup, NoClassSolidAdapter.MyHold
     /**
      * 将传进来的列表变成有序列表，上面是置顶
      */
-    fun submitListToOrder(noclassGroups: List<NoclassGroup>){
-        val orderList = ArrayList<NoclassGroup>()
+    fun submitListToOrder(noclassGroups: List<NoClassGroup>){
+        val orderList = ArrayList<NoClassGroup>()
         noclassGroups.forEach {
             if (it.isTop){
                 orderList.add(0,it)
@@ -100,7 +100,7 @@ class NoClassSolidAdapter : ListAdapter<NoclassGroup, NoClassSolidAdapter.MyHold
         submitList(orderList)
     }
 
-    fun deleteGroup(noclassGroup: NoclassGroup){
+    fun deleteGroup(noclassGroup: NoClassGroup){
         val list = currentList.toMutableList()
         list.remove(noclassGroup)
         submitList(list)
@@ -109,18 +109,18 @@ class NoClassSolidAdapter : ListAdapter<NoclassGroup, NoClassSolidAdapter.MyHold
     /**
      * 远端更新成功之后就调用，将该条数据按照是否有序插入并且提交，相比于submitListToOrder减少了比较
      */
-    fun addItemToOrder(item : NoclassGroup,tvIsGroup : TextView){
+    fun addItemToOrder(item : NoClassGroup, tvIsGroup : TextView){
         val list = currentList.toMutableList()
         if (item.isTop){
             tvIsGroup.text = "取消置顶"
             list.remove(item)
             //取消置顶就放到最后
-            list.add(NoclassGroup(item.id,false,item.members,item.name))  //置顶效果
+            list.add(NoClassGroup(item.id,false,item.members,item.name))  //置顶效果
         }else{
             tvIsGroup.text = "置顶"
             list.remove(item)
             //置顶就放到第一个
-            list.add(0, NoclassGroup(item.id,true,item.members,item.name))  //置顶效果
+            list.add(0, NoClassGroup(item.id,true,item.members,item.name))  //置顶效果
         }
         submitList(list)
     }

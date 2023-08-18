@@ -41,6 +41,14 @@
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
                 tools:ignore="HardcodedText" />
+
+            <TextView
+                android:id="@+id/no_class_tv_bulk_additions"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="end"
+                android:layout_marginEnd="16dp"
+                android:text="批量添加"/>
         </androidx.appcompat.widget.Toolbar>
 
         <View

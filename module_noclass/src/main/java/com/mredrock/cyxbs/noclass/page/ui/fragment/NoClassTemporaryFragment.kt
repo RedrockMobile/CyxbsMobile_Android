@@ -143,7 +143,7 @@ class NoClassTemporaryFragment : BaseFragment(R.layout.noclass_fragment_temporar
         var searchAllDialog: SearchAllDialog?
         mViewModel.searchAll.observe(viewLifecycleOwner) {
             val result = it
-            if (result.isExist) {
+            if (result != null) {
                 searchAllDialog = SearchAllDialog(it).apply {
                     setOnClickClass { cls ->
                         val clsList = mAdapter.currentList.toMutableSet()

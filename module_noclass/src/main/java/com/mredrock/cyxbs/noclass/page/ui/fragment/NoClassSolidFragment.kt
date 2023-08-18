@@ -12,19 +12,20 @@ import android.widget.Button
 import android.widget.EditText
 import android.widget.TextView
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.mredrock.cyxbs.lib.base.ui.BaseFragment
 import com.mredrock.cyxbs.noclass.R
-import com.mredrock.cyxbs.noclass.bean.GroupDetail
-import com.mredrock.cyxbs.noclass.bean.NoclassGroup
+import com.mredrock.cyxbs.noclass.bean.NoClassGroup
 import com.mredrock.cyxbs.noclass.page.adapter.NoClassSolidAdapter
 import com.mredrock.cyxbs.noclass.page.ui.activity.GroupDetailActivity
 import com.mredrock.cyxbs.noclass.page.ui.dialog.AddToGroupDialog
 import com.mredrock.cyxbs.noclass.page.ui.dialog.CreateGroupDialog
 import com.mredrock.cyxbs.noclass.page.ui.dialog.SearchNoExistDialog
 import com.mredrock.cyxbs.noclass.page.ui.dialog.SearchStudentDialog
+import com.mredrock.cyxbs.noclass.page.viewmodel.activity.NoClassViewModel
 import com.mredrock.cyxbs.noclass.page.viewmodel.fragment.SolidViewModel
 
 /**
@@ -55,14 +56,19 @@ class NoClassSolidFragment : BaseFragment(R.layout.noclass_fragment_solid) {
     /**
      * 删除缓冲区：可能想要删除，但是云端没删除成功，所以本地也不能删掉。必须云端删除成功本地才能删除成功
      */
-    private val mWaitDeleteGroup :ArrayList<NoclassGroup> by lazy { ArrayList() }
+    private val mWaitDeleteGroup :ArrayList<NoClassGroup> by lazy { ArrayList() }
 
     /**
      * 是否置顶的noClassGroup和textview，用完之后及时置为null
      */
-    private val mWaitIsTop : LinkedHashMap<NoclassGroup,TextView> by lazy { LinkedHashMap() }
+    private val mWaitIsTop : LinkedHashMap<NoClassGroup,TextView> by lazy { LinkedHashMap() }
 
     private val mViewModel by viewModels<SolidViewModel>()
+
+    /**
+     * 将获取所有分组放到了父activity中，原因是因为activity层在批量添加之后需要修改固定分组fragment的分组
+     */
+    private val mParentViewModel by activityViewModels<NoClassViewModel>()
 
     /**
      * 进入组内管理界面，判断是否有更改值
@@ -71,7 +77,7 @@ class NoClassSolidFragment : BaseFragment(R.layout.noclass_fragment_solid) {
         registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
             if (result.resultCode == Activity.RESULT_OK) {
                 val intent = result.data
-                val extra = intent?.getSerializableExtra("GroupDetailResult") as? NoclassGroup
+                val extra = intent?.getSerializableExtra("GroupDetailResult") as? NoClassGroup
                 if (extra != null) {
                     // 移除旧的并且更新
                     val list = mAdapter.currentList.toMutableList()
@@ -113,7 +119,7 @@ class NoClassSolidFragment : BaseFragment(R.layout.noclass_fragment_solid) {
     }
 
     private fun getAllGroup() {
-        mViewModel.getAllGroup()
+        mParentViewModel.getAllGroup()
     }
 
     private fun initView() {
@@ -155,7 +161,7 @@ class NoClassSolidFragment : BaseFragment(R.layout.noclass_fragment_solid) {
                 SearchNoExistDialog(requireContext()).show()
             }
         }
-        mViewModel.groupList.observe(viewLifecycleOwner){
+        mParentViewModel.groupList.observe(viewLifecycleOwner){
             mAdapter.submitListToOrder(it)
         }
         mViewModel.isDeleteSuccess.observe(viewLifecycleOwner){

@@ -9,7 +9,7 @@ import androidx.viewpager2.widget.ViewPager2
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import com.mredrock.cyxbs.lib.utils.extensions.toast
 import com.mredrock.cyxbs.noclass.R
-import com.mredrock.cyxbs.noclass.bean.NoclassGroup
+import com.mredrock.cyxbs.noclass.bean.NoClassGroup
 import com.mredrock.cyxbs.noclass.bean.Student
 import com.mredrock.cyxbs.noclass.page.adapter.NoClassAddToGroupAdapter
 import com.mredrock.cyxbs.noclass.page.viewmodel.fragment.SolidViewModel
@@ -20,7 +20,7 @@ import com.mredrock.cyxbs.noclass.widget.StickIndicator
  */
 
 class AddToGroupDialog(
-    private val groupList: List<NoclassGroup>,
+    private val groupList: List<NoClassGroup>,
     private val student: Student
 ) : BottomSheetDialogFragment() {
 
@@ -42,7 +42,7 @@ class AddToGroupDialog(
     /**
      * 选中的分组
      */
-    private var chooseGroup : List<NoclassGroup>? = null
+    private var chooseGroup : List<NoClassGroup>? = null
 
     /**
      * 固定分组fragment的viewModel
@@ -69,7 +69,7 @@ class AddToGroupDialog(
 
     private fun initVp() {
         // 一面八条数据,满八进一
-        val groupListByPage = HashMap<Int,ArrayList<NoclassGroup>>()
+        val groupListByPage = HashMap<Int,ArrayList<NoClassGroup>>()
         var index = 0
         for (i in groupList.indices){
             if (groupListByPage[index] == null){

@@ -1,6 +1,8 @@
 package com.mredrock.cyxbs.noclass.bean
 
 import com.google.gson.annotations.SerializedName
+import com.mredrock.cyxbs.noclass.bean.Group
+import com.mredrock.cyxbs.noclass.bean.Student
 import java.io.Serializable
 
 /**
@@ -15,20 +17,13 @@ import java.io.Serializable
  * @Description:    每个分组的bean类
  */
 
-data class NoclassGroup(
+data class NoClassGroup(
     @SerializedName("id")
-    val id: String,
+    override val id: String,
     @SerializedName("is_top")
     val isTop: Boolean,
     @SerializedName("members")
-    var members: List<Student>,
+    override var members: List<Student>,
     @SerializedName("name")
     val name: String
-) : Serializable
-
-data class GroupDetail(
-    override val id: String,
-    override val members: List<Student>,
-    override val name: String,
-    val isTop: Boolean,
-) : Group
+) : Serializable, Group

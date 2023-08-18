@@ -11,7 +11,7 @@ import android.widget.*
 import androidx.core.content.ContextCompat
 import com.mredrock.cyxbs.lib.utils.extensions.dp2px
 import com.mredrock.cyxbs.noclass.R
-import com.mredrock.cyxbs.noclass.bean.NoclassGroup
+import com.mredrock.cyxbs.noclass.bean.NoClassGroup
 
 /**
  *
@@ -80,12 +80,12 @@ class FlexHorizontalScrollView @JvmOverloads constructor(
     /**
      * 数据项
      */
-    private lateinit var mList: List<NoclassGroup>
+    private lateinit var mList: List<NoClassGroup>
     
     /**
      * 总的数据项
      */
-    private lateinit var mTotalList : List<NoclassGroup>
+    private lateinit var mTotalList : List<NoClassGroup>
 
     /**
      * 记录每一个view
@@ -95,7 +95,7 @@ class FlexHorizontalScrollView @JvmOverloads constructor(
     /**
      * 选择view进行的回调
      */
-    private var mOnItemSelected : ( (NoclassGroup,Boolean) -> Unit )? = null
+    private var mOnItemSelected : ( (NoClassGroup, Boolean) -> Unit )? = null
 
     /**
      * 记录上一个被点击的position
@@ -136,7 +136,7 @@ class FlexHorizontalScrollView @JvmOverloads constructor(
     /**
      * 设置数据进行加载View
      */
-    fun setData(list: List<NoclassGroup>) {
+    fun setData(list: List<NoClassGroup>) {
         //延迟以获取距离屏幕左侧的距离用来支持 margin 和 padding
         post {
             mContainer.removeAllViews()
@@ -163,7 +163,7 @@ class FlexHorizontalScrollView @JvmOverloads constructor(
     /**
      * 默认填充TextView
      */
-    private fun fillDataInTextView(list: List<NoclassGroup>, flexLayout: MyFlexLayout ,mLastIndex : Int) {
+    private fun fillDataInTextView(list: List<NoClassGroup>, flexLayout: MyFlexLayout, mLastIndex : Int) {
         if(list.isEmpty()){
             //这个view是当元素为空的时候显示
             val lp = MarginLayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT)
@@ -218,7 +218,7 @@ class FlexHorizontalScrollView @JvmOverloads constructor(
                     if (mLastPosition != -1){
                         mOnItemSelected?.invoke(mTotalList[index],true)
                     }else{
-                        mOnItemSelected?.invoke(NoclassGroup("-1",false, emptyList(),"default"),false)
+                        mOnItemSelected?.invoke(NoClassGroup("-1",false, emptyList(),"default"),false)
                     }
                 }
             }
@@ -239,7 +239,7 @@ class FlexHorizontalScrollView @JvmOverloads constructor(
                     return@Runnable
                 }
                 //subList生成子列表后，不要试图去操作原列表 解决ConcurrentModificationException
-                val cache: MutableList<NoclassGroup> = ArrayList()
+                val cache: MutableList<NoClassGroup> = ArrayList()
                 cache.addAll(mList.subList(index, count))
                 if (cache.isEmpty()) {
                     mOnCompleteCallback?.onComplete(mPageCount)
@@ -317,7 +317,7 @@ class FlexHorizontalScrollView @JvmOverloads constructor(
         return super.onTouchEvent(ev)
     }
 
-    fun setOnItemSelected(listener : (NoclassGroup,Boolean) -> Unit){
+    fun setOnItemSelected(listener : (NoClassGroup, Boolean) -> Unit){
         mOnItemSelected = listener
     }
 

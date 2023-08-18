@@ -4,7 +4,7 @@ import androidx.lifecycle.MutableLiveData
 import com.mredrock.cyxbs.lib.base.ui.BaseViewModel
 import com.mredrock.cyxbs.lib.utils.network.mapOrInterceptException
 import com.mredrock.cyxbs.noclass.bean.Cls
-import com.mredrock.cyxbs.noclass.bean.GroupDetail
+import com.mredrock.cyxbs.noclass.bean.NoClassGroup
 import com.mredrock.cyxbs.noclass.bean.NoClassTemporarySearch
 import com.mredrock.cyxbs.noclass.bean.Student
 import com.mredrock.cyxbs.noclass.page.repository.NoClassRepository
@@ -18,10 +18,9 @@ class TemporaryViewModel : BaseViewModel() {
     fun getSearchAllResult(content: String) {
         NoClassRepository.searchAll(content)
             .mapOrInterceptException {
-                toast("网络异常")
+                toast("网络异常，请检查网络")
                 //下面是测试数据
                 val noClassTemporarySearch = NoClassTemporarySearch(
-                    isExist = false,
                     types = listOf(
 //                            "学生",
 //                            "班级",
@@ -65,8 +64,8 @@ class TemporaryViewModel : BaseViewModel() {
 //                            )
                         ), "大数据实验班"
                     ),
-                    group = GroupDetail(
-                        "5555", listOf(
+                    group = NoClassGroup(
+                        "5555", members = listOf(
                             Student(
                                 classNum = "04082201",
                                 gender = "男",
@@ -99,7 +98,7 @@ class TemporaryViewModel : BaseViewModel() {
                                 name = "陈晨",
                                 id = "2022211295"
                             ),
-                        ), "喵喵", true
+                        ), name = "喵喵", isTop = true
                     )
                 )
                 _searchAll.postValue(noClassTemporarySearch)

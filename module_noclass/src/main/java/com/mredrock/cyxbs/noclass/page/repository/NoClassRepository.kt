@@ -3,7 +3,7 @@ package com.mredrock.cyxbs.noclass.page.repository
 import com.mredrock.cyxbs.lib.utils.network.ApiStatus
 import com.mredrock.cyxbs.lib.utils.network.ApiWrapper
 import com.mredrock.cyxbs.noclass.bean.NoClassTemporarySearch
-import com.mredrock.cyxbs.noclass.bean.NoclassGroup
+import com.mredrock.cyxbs.noclass.bean.NoClassGroup
 import com.mredrock.cyxbs.noclass.bean.NoclassGroupId
 import com.mredrock.cyxbs.noclass.bean.Student
 import com.mredrock.cyxbs.noclass.net.NoclassApiService
@@ -27,7 +27,7 @@ object NoClassRepository {
     /**
      * 获得全部分组数据
      */
-    fun getNoclassGroupDetail() : Single<ApiWrapper<List<NoclassGroup>>>{
+    fun getNoclassGroupDetail() : Single<ApiWrapper<List<NoClassGroup>>>{
         return NoclassApiService
             .INSTANCE
             .getGroupAll()

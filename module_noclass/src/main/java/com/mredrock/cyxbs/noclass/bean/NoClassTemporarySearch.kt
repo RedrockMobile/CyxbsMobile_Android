@@ -6,8 +6,7 @@ package com.mredrock.cyxbs.noclass.bean
  */
 data class NoClassTemporarySearch(
     val `class`: Cls,
-    val group: GroupDetail,
-    val isExist: Boolean,
+    val group: NoClassGroup,
     val students: List<Student>,
     val types: List<String>
 )
@@ -18,7 +17,6 @@ const val GROUP = "分组"
 
 interface NoClassItem {
     val id: String
-    val name: String
 }
 
 interface Group : NoClassItem {
@@ -28,6 +26,6 @@ interface Group : NoClassItem {
 data class Cls(
     override val id: String,
     override val members: List<Student>,
-    override val name: String,
+    val name: String,
 ) : Group
 

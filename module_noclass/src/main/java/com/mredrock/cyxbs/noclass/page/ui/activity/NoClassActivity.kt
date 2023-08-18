@@ -1,9 +1,13 @@
 package com.mredrock.cyxbs.noclass.page.ui.activity
 
+import android.app.Activity
+import android.content.Intent
 import android.os.Build
 import android.os.Bundle
 import android.view.View
 import android.widget.FrameLayout
+import android.widget.TextView
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.activity.viewModels
 import androidx.viewpager2.widget.ViewPager2
 import com.alibaba.android.arouter.facade.annotation.Route
@@ -45,6 +49,11 @@ class NoClassActivity : BaseActivity() {
     private val mCourseViewModel by viewModels<CourseViewModel>()
 
     /**
+     * 批量添加文字
+     */
+    private val mTvBulkAdditions by R.id.no_class_tv_bulk_additions.view<TextView>()
+
+    /**
      * 底部查询fragment的container
      */
     private val mCourseContainer: FrameLayout by R.id.noclass_course_bottom_sheet_container.view()
@@ -66,20 +75,20 @@ class NoClassActivity : BaseActivity() {
      */
     private val mAdapter : FragmentVpAdapter = FragmentVpAdapter(this)
 
-//  /**
-//   * 获取批量添加界面的返回值
-//   */
-//  private val startForResult = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
-//    if (result.resultCode == Activity.RESULT_OK) {
-//      val intent = result.data
-//      val extra = intent?.getSerializableExtra("GroupListResult")
-//      if (extra != null){
-//        mList = extra as MutableList<NoclassGroup>
-//        initFlexLayout(mList,false)
-//      }
-//    }
-//  }
-//
+  /**
+   * 获取批量添加界面的返回值
+   */
+  private val startForResult = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
+    if (result.resultCode == Activity.RESULT_OK) {
+      val intent = result.data
+      val haveExtra = intent?.getSerializableExtra("BulkAdditions") as Boolean?
+      if (haveExtra != null && haveExtra){
+          toast("hello!")
+//          mViewModel.getAllGroup()
+      }
+    }
+  }
+
     /**
      * 取消状态栏
      */
@@ -94,6 +103,18 @@ class NoClassActivity : BaseActivity() {
         initCourse()
         initViewPage()
         initTabLayout()
+        initClick()
+    }
+
+    private fun initClick() {
+        //批量添加的点击事件
+        mTvBulkAdditions.setOnClickListener {
+//            startForResult.launch(Intent(
+//                //todo 等待好
+//                toast("pili")
+////                this@NoClassActivity,
+//            ))
+        }
     }
 
     /**

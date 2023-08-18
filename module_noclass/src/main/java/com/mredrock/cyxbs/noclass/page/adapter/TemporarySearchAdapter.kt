@@ -1,9 +1,9 @@
 package com.mredrock.cyxbs.noclass.page.adapter
 
+import android.annotation.SuppressLint
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Button
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.recyclerview.widget.DiffUtil
@@ -12,7 +12,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.mredrock.cyxbs.lib.utils.extensions.setOnSingleClickListener
 import com.mredrock.cyxbs.noclass.R
 import com.mredrock.cyxbs.noclass.bean.Cls
-import com.mredrock.cyxbs.noclass.bean.GroupDetail
+import com.mredrock.cyxbs.noclass.bean.NoClassGroup
 import com.mredrock.cyxbs.noclass.bean.NoClassItem
 import com.mredrock.cyxbs.noclass.bean.Student
 
@@ -28,8 +28,9 @@ class TemporarySearchAdapter:  ListAdapter<NoClassItem,RecyclerView.ViewHolder>(
                 return oldItem.id == newItem.id
             }
 
+            @SuppressLint("DiffUtilEquals")
             override fun areContentsTheSame(oldItem: NoClassItem, newItem: NoClassItem): Boolean {
-                return oldItem.name == newItem.name
+                return oldItem == newItem
             }
         }
         const val TEM_STUDENT = 1
@@ -42,7 +43,7 @@ class TemporarySearchAdapter:  ListAdapter<NoClassItem,RecyclerView.ViewHolder>(
         return when(getItem(position)){
             is Student -> TEM_STUDENT
             is Cls ->  TEM_CLASS
-            is GroupDetail ->  TEM_GROUP
+            is NoClassGroup ->  TEM_GROUP
             else -> throw Exception("未定义的类型")
         }
     }
@@ -67,10 +68,9 @@ class TemporarySearchAdapter:  ListAdapter<NoClassItem,RecyclerView.ViewHolder>(
                 }
                 is Cls ->  {
                     this as ClassHolder
-                    tvName.text = itemData.name
                     tvNum.text = itemData.id
                 }
-                is GroupDetail -> {
+                is NoClassGroup -> {
                     this as GroupHolder
                     tvName.text = itemData.name
                 }
@@ -98,9 +98,9 @@ class TemporarySearchAdapter:  ListAdapter<NoClassItem,RecyclerView.ViewHolder>(
     }
 
     //点击group的回调
-    private var onClickGroup : ((groupDetail: GroupDetail) -> Unit)? = null
+    private var onClickGroup : ((groupDetail: NoClassGroup) -> Unit)? = null
 
-    fun setOnClickGroup(onClickGroup : (groupDetail: GroupDetail) -> Unit){
+    fun setOnClickGroup(onClickGroup : (groupDetail: NoClassGroup) -> Unit){
         this.onClickGroup = onClickGroup
     }
 
@@ -109,7 +109,7 @@ class TemporarySearchAdapter:  ListAdapter<NoClassItem,RecyclerView.ViewHolder>(
         private val btnAdd : ImageView = itemView.findViewById(R.id.noclass_item_iv_group_add)
         init {
             btnAdd.setOnSingleClickListener {
-                onClickGroup?.invoke(getItem(bindingAdapterPosition) as GroupDetail)
+                onClickGroup?.invoke(getItem(bindingAdapterPosition) as NoClassGroup)
             }
         }
     }
@@ -123,7 +123,6 @@ class TemporarySearchAdapter:  ListAdapter<NoClassItem,RecyclerView.ViewHolder>(
 
     inner class ClassHolder(itemView: View) :RecyclerView.ViewHolder(itemView){
         val tvNum : TextView = itemView.findViewById(R.id.noclass_item_tv_class_num)
-        val tvName : TextView = itemView.findViewById(R.id.noclass_item_tv_class_major)
         private val btnAdd : ImageView = itemView.findViewById(R.id.noclass_item_iv_class_add)
         init {
             btnAdd.setOnSingleClickListener {

@@ -5,7 +5,7 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import com.mredrock.cyxbs.lib.base.ui.BaseViewModel
 import com.mredrock.cyxbs.lib.utils.network.mapOrInterceptException
-import com.mredrock.cyxbs.noclass.bean.NoclassGroup
+import com.mredrock.cyxbs.noclass.bean.NoClassGroup
 import com.mredrock.cyxbs.noclass.bean.NoclassGroupId
 import com.mredrock.cyxbs.noclass.page.repository.NoClassRepository
 
@@ -36,8 +36,8 @@ class GroupManagerViewModel : BaseViewModel() {
   private val _isDeleteSuccess = MutableLiveData<Pair<String,Boolean>>()
   
   //分组
-  val groupList : LiveData<List<NoclassGroup>> get() = _groupList
-  private val _groupList = MutableLiveData<List<NoclassGroup>>()
+  val groupList : LiveData<List<NoClassGroup>> get() = _groupList
+  private val _groupList = MutableLiveData<List<NoClassGroup>>()
   
   /**
    * 获得所有分组
