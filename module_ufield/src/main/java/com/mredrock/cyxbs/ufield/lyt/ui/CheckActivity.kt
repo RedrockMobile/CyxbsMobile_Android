@@ -55,4 +55,6 @@ class CheckActivity : BaseActivity() {
     private fun iniBack() {
         mBack.apply { setOnClickListener { finish() } }
     }
+
+
 }

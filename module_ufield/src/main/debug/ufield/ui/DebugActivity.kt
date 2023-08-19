@@ -15,7 +15,7 @@ import com.mredrock.cyxbs.ufield.lyt.ui.UFieldActivity
  */
 class DebugActivity : BaseDebugActivity() {
     override val isNeedLogin: Boolean
-        get() = false
+        get() = true
 
     override fun onDebugCreate(savedInstanceState: Bundle?) {
         startActivity(Intent(this, CheckActivity::class.java))

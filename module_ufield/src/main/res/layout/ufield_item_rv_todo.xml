@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <androidx.cardview.widget.CardView
+        app:cardCornerRadius="8dp"
+        android:layout_width="343dp"
+        android:layout_height="190dp"
+        android:layout_marginLeft="16dp"
+        android:layout_marginRight="16dp" >
+    </androidx.cardview.widget.CardView>
+
+</LinearLayout>

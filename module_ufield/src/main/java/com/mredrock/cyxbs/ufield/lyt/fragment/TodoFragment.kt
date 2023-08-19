@@ -4,6 +4,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.recyclerview.widget.RecyclerView
 import com.mredrock.cyxbs.lib.base.ui.BaseFragment
 import com.mredrock.cyxbs.ufield.R
 
@@ -15,6 +16,8 @@ import com.mredrock.cyxbs.ufield.R
  * version: 1.0
  */
 class TodoFragment : BaseFragment() {
+
+    private val mRv : RecyclerView by R.id.uField_todo_rv.view()
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
