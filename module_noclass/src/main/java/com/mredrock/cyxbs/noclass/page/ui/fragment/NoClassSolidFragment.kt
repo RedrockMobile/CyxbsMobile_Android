@@ -108,12 +108,8 @@ class NoClassSolidFragment : BaseFragment(R.layout.noclass_fragment_solid) {
     private fun initClickCreate() {
         mBtnCreate.setOnClickListener {
             //弹出创建分组的弹窗
-            val existNames = mAdapter.currentList.map { it.name }
-            CreateGroupDialog(existNames){
-                //这里是创建分组之后的事
-                val orderList = mAdapter.currentList.toMutableList()
-                orderList.add(it)
-                mAdapter.submitListToOrder(orderList)
+            CreateGroupDialog(){
+                mParentViewModel.getAllGroup()
             }.show(childFragmentManager,"SolidCreateGroupDialog")
         }
     }

@@ -101,6 +101,10 @@ class NoClassLesson(
             val textTime = "时间：${month} ${beginLesson}-${beginLesson + duration - 1} ${beginTime}-${endTime}"
             //todo waiting
             val dateJson = DateJson(beginLesson,data.weekNum,duration,mWeek)
+            Log.d("lx", "beginLesson: = ${beginLesson} ")
+            Log.d("lx", "data.weekNum: = ${data.weekNum} ")
+            Log.d("lx", "duration: = ${duration} ")
+            Log.d("lx", "mWeek: = ${mWeek} ")
             NoClassGatherDialog(dateJson,stuList, textTime).show((context as AppCompatActivity).supportFragmentManager, "NoClassGatherDialog")
           }
         }

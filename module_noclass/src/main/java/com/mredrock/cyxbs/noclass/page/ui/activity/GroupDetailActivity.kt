@@ -26,7 +26,7 @@ import com.mredrock.cyxbs.noclass.page.adapter.NoClassTemporaryAdapter
 import com.mredrock.cyxbs.noclass.page.ui.dialog.SearchAllDialog
 import com.mredrock.cyxbs.noclass.page.ui.dialog.SearchNoExistDialog
 import com.mredrock.cyxbs.noclass.page.ui.fragment.NoClassCourseVpFragment
-import com.mredrock.cyxbs.noclass.page.viewmodel.activity.CourseViewModel
+import com.mredrock.cyxbs.noclass.page.viewmodel.other.CourseViewModel
 import com.mredrock.cyxbs.noclass.page.viewmodel.activity.GroupDetailViewModel
 
 /**

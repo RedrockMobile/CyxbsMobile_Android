@@ -1,9 +1,9 @@
 package com.mredrock.cyxbs.noclass.page.ui.activity
 
 import android.app.Activity
-import android.content.Intent
 import android.os.Build
 import android.os.Bundle
+import android.util.Log
 import android.view.View
 import android.widget.FrameLayout
 import android.widget.TextView
@@ -25,8 +25,9 @@ import com.mredrock.cyxbs.noclass.page.ui.dialog.IsCreateSolidDialog
 import com.mredrock.cyxbs.noclass.page.ui.fragment.NoClassCourseVpFragment
 import com.mredrock.cyxbs.noclass.page.ui.fragment.NoClassSolidFragment
 import com.mredrock.cyxbs.noclass.page.ui.fragment.NoClassTemporaryFragment
-import com.mredrock.cyxbs.noclass.page.viewmodel.activity.CourseViewModel
+import com.mredrock.cyxbs.noclass.page.viewmodel.other.CourseViewModel
 import com.mredrock.cyxbs.noclass.page.viewmodel.activity.NoClassViewModel
+import com.mredrock.cyxbs.noclass.page.viewmodel.other.CreateGroupViewModel
 
 /**
  *
@@ -43,9 +44,10 @@ import com.mredrock.cyxbs.noclass.page.viewmodel.activity.NoClassViewModel
 @Route(path = DISCOVER_NO_CLASS)
 class NoClassActivity : BaseActivity() {
 
-    // 暂时用不上，但是也不删除
+    // 点击批量添加之后和固定分组fragment通信(3G)
     private val mViewModel by viewModels<NoClassViewModel>()
 
+    //由于课表不止这一个界面要显示，所以做成了单独的ViewModel，方便调用
     private val mCourseViewModel by viewModels<CourseViewModel>()
 
     /**
@@ -63,31 +65,37 @@ class NoClassActivity : BaseActivity() {
     /**
      * 首页的tabLayout
      */
-    private val mTabLayout : TabLayout by R.id.noclass_main_tab.view()
+    private val mTabLayout: TabLayout by R.id.noclass_main_tab.view()
 
     /**
      * 首页的viewpager2
      */
-    private val mViewPager : ViewPager2 by R.id.noclass_main_vp.view()
+    private val mViewPager: ViewPager2 by R.id.noclass_main_vp.view()
 
     /**
      * 首页vp的adapter
      */
-    private val mAdapter : FragmentVpAdapter = FragmentVpAdapter(this)
+    private val mAdapter: FragmentVpAdapter = FragmentVpAdapter(this)
 
-  /**
-   * 获取批量添加界面的返回值
-   */
-  private val startForResult = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
-    if (result.resultCode == Activity.RESULT_OK) {
-      val intent = result.data
-      val haveExtra = intent?.getSerializableExtra("BulkAdditions") as Boolean?
-      if (haveExtra != null && haveExtra){
-          toast("hello!")
+    /**
+     * 储存临时分组学号的列表
+     */
+    private var mStuList : MutableSet<String>? = null
+
+    /**
+     * 获取批量添加界面的返回值
+     */
+    private val startForResult =
+        registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
+            if (result.resultCode == Activity.RESULT_OK) {
+                val intent = result.data
+                val haveExtra = intent?.getSerializableExtra("BulkAdditions") as Boolean?
+                if (haveExtra != null && haveExtra) {
+                    toast("hello!")
 //          mViewModel.getAllGroup()
-      }
-    }
-  }
+                }
+            }
+        }
 
     /**
      * 取消状态栏
@@ -141,7 +149,7 @@ class NoClassActivity : BaseActivity() {
             mTabLayout.tooltipText = ""
         }
         //和viewpager联动起来
-        val titles = listOf("临时分组","固定分组")
+        val titles = listOf("临时分组", "固定分组")
         TabLayoutMediator(mTabLayout, mViewPager) { tab, position ->
             tab.text = titles[position]
         }.attach()
@@ -189,7 +197,12 @@ class NoClassActivity : BaseActivity() {
                                             .putBoolean("NeverRemindNextOnNoClass", true).apply()
                                     }
                                     dialog.dismiss()
-                                    CreateGroupDialog().show(
+                                    CreateGroupDialog {
+                                        // 创建成功之后的操作
+                                        getAllGroup()
+                                    }.apply {
+                                        setExtraMembers(mStuList!!.toList())
+                                    }.show(
                                         supportFragmentManager,
                                         "CreateGroupDialogFragment"
                                     )
@@ -207,9 +220,14 @@ class NoClassActivity : BaseActivity() {
         })
     }
 
+    private fun getAllGroup(){
+        mViewModel.getAllGroup()
+    }
+
     private fun initObserve() {
         //在滑动下拉课表容器中添加整个课表,等待fragment中请求数据
         mCourseViewModel.noclassData.observe(this) {
+            mStuList = it[0]!!.mIdToNameMap.keys
             mCourseSheetBehavior.state = BottomSheetBehavior.STATE_EXPANDED
         }
     }

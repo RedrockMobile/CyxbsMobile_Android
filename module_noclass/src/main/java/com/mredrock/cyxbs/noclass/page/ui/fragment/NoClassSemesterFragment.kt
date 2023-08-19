@@ -6,7 +6,7 @@ import androidx.core.os.bundleOf
 import androidx.fragment.app.activityViewModels
 import com.mredrock.cyxbs.lib.course.helper.show.CourseNowTimeHelper
 import com.mredrock.cyxbs.noclass.bean.NoClassSpareTime
-import com.mredrock.cyxbs.noclass.page.viewmodel.activity.CourseViewModel
+import com.mredrock.cyxbs.noclass.page.viewmodel.other.CourseViewModel
 import java.util.*
 
 /**
