@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layer-list xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:ignore="ResourceName">
+    <item android:bottom="2dp">
+        <shape>
+            <corners android:radius="4dp" />
+            <size android:height="4dp" />
+        </shape>
+    </item>
+</layer-list>
+
