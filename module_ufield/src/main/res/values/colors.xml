@@ -4,5 +4,6 @@
     <color name="white" tools:ignore="ResourceName">#FFFFFFFF</color>
     <color name="uField_check_tabSelected">#15315B</color>
     <color name="uField_check_tab">#15315B</color>
-    <color name="uField_check_background">#F8F9FC</color>
+    <color name="uField_check_tabText">#15315B66</color>
+    <color name="uField_check_background">#15315B66</color>
 </resources>

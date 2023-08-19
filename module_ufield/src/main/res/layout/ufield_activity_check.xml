@@ -2,6 +2,7 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:background="@color/white"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
@@ -14,7 +15,7 @@
         android:orientation="horizontal">
 
         <ImageView
-            android:id="@+id/ufield_check_back"
+            android:id="@+id/uField_check_back"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginLeft="16dp"
@@ -33,7 +34,7 @@
     <com.google.android.material.tabs.TabLayout
         android:id="@+id/uField_check_tab_layout"
         android:layout_width="match_parent"
-        android:layout_height="45dp"
+        android:layout_height="50dp"
         android:layout_marginLeft="70.5dp"
         android:layout_marginTop="5dp"
         android:layout_marginRight="70.5dp"
@@ -42,13 +43,14 @@
         app:tabIndicatorFullWidth="false"
         app:tabRippleColor="@null"
         app:tabSelectedTextColor="@color/uField_check_tabSelected"
-        app:tabTextAppearance="@style/UfieldMyTabTextStyle"
-        app:tabTextColor="@color/black" />
+        app:tabTextAppearance="@style/uFieldMyTabTextStyle"
+        app:tabTextColor="@color/uField_check_tabText" />
 
     <androidx.viewpager2.widget.ViewPager2
         android:id="@+id/uField_check_view_pager"
         android:layout_width="match_parent"
         android:layout_height="match_parent" />
+
 
 
 </LinearLayout>
