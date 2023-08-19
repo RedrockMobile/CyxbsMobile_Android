@@ -20,14 +20,6 @@ class ElectricityService : IElectricityService {
         return ARouter.getInstance().build(DISCOVER_ELECTRICITY_FEED).navigation() as Fragment
     }
 
-    override fun clearSP() {
-        mContext?.defaultSharedPreferences?.editor {
-            remove("select_building_head_position")
-            remove("select_building_foot_position")
-            remove("select_room_position")
-        }
-    }
-
     override fun init(context: Context?) {
         this.mContext = context
     }

@@ -8,6 +8,4 @@ import com.alibaba.android.arouter.facade.template.IProvider
  */
 interface IElectricityService : IProvider {
     fun getElectricityFeed():Fragment
-
-    fun clearSP()
 }

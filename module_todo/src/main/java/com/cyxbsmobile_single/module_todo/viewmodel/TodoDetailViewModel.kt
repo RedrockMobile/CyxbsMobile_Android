@@ -25,4 +25,14 @@ class TodoDetailViewModel: BaseViewModel() {
     fun delTodo(todo: Todo, onSuccess: () -> Unit){
         TodoModel.INSTANCE.delTodo(todo.todoId, onSuccess)
     }
+
+    override fun onCleared() {
+        super.onCleared()
+        TodoModel.INSTANCE.rxjavaDisposables.forEach {
+            if (!it.isDisposed){
+                it.dispose()
+            }
+        }
+        TodoModel.INSTANCE.rxjavaDisposables.clear()
+    }
 }

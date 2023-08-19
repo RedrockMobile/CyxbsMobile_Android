@@ -20,12 +20,6 @@ class VolunteerService : IVolunteerService {
         return ARouter.getInstance().build(DISCOVER_VOLUNTEER_FEED).navigation() as Fragment
     }
 
-    override fun clearSP() {
-        mContext?.let {
-            EventBus.getDefault().postSticky(VolunteerLogoutEvent())
-        }
-    }
-
     override fun init(context: Context?) {
         this.mContext = context
     }
