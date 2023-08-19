@@ -1,6 +1,5 @@
 package com.mredrock.cyxbs.ufield.lyt.ui
 
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import com.mredrock.cyxbs.lib.base.ui.BaseActivity
 import com.mredrock.cyxbs.ufield.R

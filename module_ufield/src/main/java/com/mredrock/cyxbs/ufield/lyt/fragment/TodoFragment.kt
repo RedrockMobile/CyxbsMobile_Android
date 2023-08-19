@@ -7,7 +7,13 @@ import android.view.ViewGroup
 import com.mredrock.cyxbs.lib.base.ui.BaseFragment
 import com.mredrock.cyxbs.ufield.R
 
-
+/**
+ * description ：还没有审核的活动
+ * author : lytMoon
+ * email : yytds@foxmail.com
+ * date : 2023/8/7 19:49
+ * version: 1.0
+ */
 class TodoFragment : BaseFragment() {
 
     override fun onCreateView(

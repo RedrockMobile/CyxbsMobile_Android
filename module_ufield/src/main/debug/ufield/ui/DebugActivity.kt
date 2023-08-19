@@ -3,6 +3,7 @@ package ufield.ui
 import android.content.Intent
 import android.os.Bundle
 import com.mredrock.cyxbs.lib.base.BaseDebugActivity
+import com.mredrock.cyxbs.ufield.lyt.ui.CheckActivity
 import com.mredrock.cyxbs.ufield.lyt.ui.UFieldActivity
 
 /**
@@ -17,6 +18,6 @@ class DebugActivity : BaseDebugActivity() {
         get() = false
 
     override fun onDebugCreate(savedInstanceState: Bundle?) {
-        startActivity(Intent(this, UFieldActivity::class.java))
+        startActivity(Intent(this, CheckActivity::class.java))
     }
 }

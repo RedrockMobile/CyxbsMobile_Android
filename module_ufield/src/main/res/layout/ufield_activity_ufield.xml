@@ -18,7 +18,7 @@
         android:layout_width="300dp"
         android:layout_height="400dp"
         android:layout_gravity="center_horizontal"
-        android:src="@drawable/ufield_ic_fkls" />
+        android:src="@drawable/ufield_ic_check_back" />
 
     <TextView
         android:layout_width="wrap_content"

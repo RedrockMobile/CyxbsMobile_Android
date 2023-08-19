@@ -7,6 +7,13 @@ import android.view.ViewGroup
 import com.mredrock.cyxbs.lib.base.ui.BaseFragment
 import com.mredrock.cyxbs.ufield.R
 
+/**
+ * description ：已经审核过的活动
+ * author : lytMoon
+ * email : yytds@foxmail.com
+ * date : 2023/8/7 19:49
+ * version: 1.0
+ */
 class DoneFragment : BaseFragment() {
 
     override fun onCreateView(
