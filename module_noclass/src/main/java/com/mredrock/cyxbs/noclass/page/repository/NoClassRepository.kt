@@ -2,10 +2,12 @@ package com.mredrock.cyxbs.noclass.page.repository
 
 import com.mredrock.cyxbs.lib.utils.network.ApiStatus
 import com.mredrock.cyxbs.lib.utils.network.ApiWrapper
+import com.mredrock.cyxbs.noclass.bean.NoClassBatchResponseInfo
 import com.mredrock.cyxbs.noclass.bean.NoClassTemporarySearch
 import com.mredrock.cyxbs.noclass.bean.NoClassGroup
 import com.mredrock.cyxbs.noclass.bean.NoclassGroupId
 import com.mredrock.cyxbs.noclass.bean.Student
+import com.mredrock.cyxbs.noclass.bean.UploadBatchInfoToBean
 import com.mredrock.cyxbs.noclass.net.NoclassApiService
 import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
 import io.reactivex.rxjava3.core.Single
@@ -117,6 +119,17 @@ object NoClassRepository {
         return NoclassApiService
             .INSTANCE
             .searchAll(content)
+            .subscribeOn(Schedulers.io())
+            .observeOn(AndroidSchedulers.mainThread())
+    }
+
+    /**
+     * 批量添加页面，检查上传的信息
+     */
+    fun checkUploadInfo(content: List<String>) :Single<ApiWrapper<NoClassBatchResponseInfo>> {
+        return NoclassApiService
+            .INSTANCE
+            .checkUploadInfo(UploadBatchInfoToBean(content))
             .subscribeOn(Schedulers.io())
             .observeOn(AndroidSchedulers.mainThread())
     }

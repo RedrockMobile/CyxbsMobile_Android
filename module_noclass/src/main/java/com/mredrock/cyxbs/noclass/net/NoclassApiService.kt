@@ -3,10 +3,12 @@ package com.mredrock.cyxbs.noclass.net
 import com.mredrock.cyxbs.lib.utils.network.ApiGenerator
 import com.mredrock.cyxbs.lib.utils.network.ApiStatus
 import com.mredrock.cyxbs.lib.utils.network.ApiWrapper
+import com.mredrock.cyxbs.noclass.bean.NoClassBatchResponseInfo
 import com.mredrock.cyxbs.noclass.bean.NoClassGroup
 import com.mredrock.cyxbs.noclass.bean.NoClassTemporarySearch
 import com.mredrock.cyxbs.noclass.bean.NoclassGroupId
 import com.mredrock.cyxbs.noclass.bean.Student
+import com.mredrock.cyxbs.noclass.bean.UploadBatchInfoToBean
 import io.reactivex.rxjava3.core.Single
 import retrofit2.http.*
 
@@ -22,7 +24,7 @@ import retrofit2.http.*
  * @Description:
  */
 interface NoclassApiService {
-    companion object{
+    companion object {
         val INSTANCE by lazy {
             ApiGenerator.getApiService(NoclassApiService::class)
         }
@@ -32,7 +34,7 @@ interface NoclassApiService {
      * 没课约获取全部分组信息
      */
     @GET("/magipoke-jwzx/no_class/group/all")
-    fun getGroupAll() : Single<ApiWrapper<List<NoClassGroup>>>
+    fun getGroupAll(): Single<ApiWrapper<List<NoClassGroup>>>
 
     /**
      * 没课约上传分组
@@ -40,17 +42,17 @@ interface NoclassApiService {
     @FormUrlEncoded
     @POST("/magipoke-jwzx/no_class/group")
     fun postGroup(
-        @Field("name") name : String,
-        @Field("stu_nums") stuNums : String,
-    ) : Single<ApiWrapper<NoclassGroupId>>
+        @Field("name") name: String,
+        @Field("stu_nums") stuNums: String,
+    ): Single<ApiWrapper<NoclassGroupId>>
 
     /**
      * 没课约删除分组
      */
     @DELETE("/magipoke-jwzx/no_class/group")
     fun deleteGroup(
-        @Query("group_ids") groupIds : String
-    ) : Single<ApiStatus>
+        @Query("group_ids") groupIds: String
+    ): Single<ApiStatus>
 
     /**
      * 没课约更新分组
@@ -61,7 +63,7 @@ interface NoclassApiService {
         @Field("group_id") groupId: String,
         @Field("name") name: String,
         @Field("is_top") isTop: String,
-    ) : Single<ApiStatus>
+    ): Single<ApiStatus>
 
     /**
      * 没课约分组添加成员
@@ -70,27 +72,34 @@ interface NoclassApiService {
     @POST("/magipoke-jwzx/no_class/member")
     fun addGroupMember(
         @Field("group_id") groupId: String,
-        @Field("stu_nums") stuNum : String
-    ) : Single<ApiStatus>
+        @Field("stu_nums") stuNum: String
+    ): Single<ApiStatus>
 
     /**
      * 没课约分组删除成员
      */
-    @HTTP(method = "DELETE",path = "/magipoke-jwzx/no_class/member", hasBody = true)
+    @HTTP(method = "DELETE", path = "/magipoke-jwzx/no_class/member", hasBody = true)
     @FormUrlEncoded
     fun deleteGroupMember(
         @Field("group_id") groupId: String,
-        @Field("stu_nums") stuNum : String,
-    ) : Single<ApiStatus>
+        @Field("stu_nums") stuNum: String,
+    ): Single<ApiStatus>
 
     @GET("/magipoke-text/search/people")
     fun searchPeople(
         @Query("stu") stu: String
-    ) : Single<ApiWrapper<List<Student>>>
+    ): Single<ApiWrapper<List<Student>>>
 
     @GET("/magipoke-text/search/people/temporary")
     fun searchAll(
-        @Query("content") content : String
-    ) : Single<ApiWrapper<NoClassTemporarySearch>>
+        @Query("content") content: String
+    ): Single<ApiWrapper<NoClassTemporarySearch>>
 
+    /**
+     * 批量添加的添加信息检查
+     */
+    @POST("/magipoke-jwzx/no_class/member/check")
+    fun checkUploadInfo(
+        @Body content : UploadBatchInfoToBean
+    ): Single<ApiWrapper<NoClassBatchResponseInfo>>
 }
