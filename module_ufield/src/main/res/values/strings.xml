@@ -5,4 +5,8 @@
     <string name="ufield_todo_ac_phone">联系电话：</string>
     <string name="ufield_btn_refuse">驳回</string>
     <string name="ufield_btn_accept">同意</string>
+    <string name="uField_all">全部</string>
+    <string name="uField_culture">文娱活动</string>
+    <string name="uField_education">教育活动</string>
+    <string name="ufield_sports">体育</string>
 </resources>

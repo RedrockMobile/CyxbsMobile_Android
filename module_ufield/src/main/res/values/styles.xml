@@ -6,4 +6,9 @@
         <item name="android:textSize">18sp</item>
     </style>
 
+    <style name="uFieldMyTextStyle">parent="@android:style/TextAppearance.Widget.TabWidget">
+        <item name="textAllCaps">false</item>
+        <item name="android:textSize">14sp</item>
+    </style>
+
 </resources>
