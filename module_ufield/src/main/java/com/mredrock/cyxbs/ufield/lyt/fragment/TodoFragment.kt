@@ -6,9 +6,11 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.viewModels
+import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.mredrock.cyxbs.lib.base.ui.BaseFragment
 import com.mredrock.cyxbs.ufield.R
+import com.mredrock.cyxbs.ufield.lyt.adapter.TodoRvAdapter
 import com.mredrock.cyxbs.ufield.lyt.viewmodel.fragment.DoneViewModel
 import com.mredrock.cyxbs.ufield.lyt.viewmodel.fragment.TodoViewModel
 
@@ -21,9 +23,11 @@ import com.mredrock.cyxbs.ufield.lyt.viewmodel.fragment.TodoViewModel
  */
 class TodoFragment : BaseFragment() {
 
-    private val mRv : RecyclerView by R.id.uField_todo_rv.view()
+    private val mRv: RecyclerView by R.id.uField_todo_rv.view()
 
     private val mViewModel by viewModels<TodoViewModel>()
+
+    private val mAdapter: TodoRvAdapter by lazy { TodoRvAdapter() }
 
 
     override fun onCreateView(
@@ -35,8 +39,26 @@ class TodoFragment : BaseFragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        mViewModel.getTodoData()
+        iniRv()
 
+
+    }
+
+    /**
+     * 初始化Rv，展示待审核的数据
+     */
+    private fun iniRv() {
+
+        mViewModel.apply {
+            todoList.observe(requireActivity()) {
+                mAdapter.submitList(it)
+                Log.d("iniRv", "测试结果-->> $it");
+            }
+        }
+        mRv.apply {
+            layoutManager = LinearLayoutManager(requireContext())
+            adapter = mAdapter
+        }
     }
 
 }

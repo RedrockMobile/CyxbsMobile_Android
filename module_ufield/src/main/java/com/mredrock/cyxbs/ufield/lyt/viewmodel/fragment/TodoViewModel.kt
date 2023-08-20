@@ -24,6 +24,9 @@ class TodoViewModel : BaseViewModel() {
     private val _todoList = MutableLiveData<List<TodoBean>>()
     val todoList: LiveData<List<TodoBean>>
         get() = _todoList
+    init {
+        getTodoData()
+    }
 
     /**
      * 获取待审核活动的数据

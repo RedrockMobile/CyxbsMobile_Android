@@ -1,11 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources xmlns:tools="http://schemas.android.com/tools">
     <color name="black" tools:ignore="ResourceName">#FF000000</color>
-    <color name="white" tools:ignore="ResourceName">#FFFFFFFF</color>
+    <color name="uField_white" tools:ignore="ResourceName">#FFFFFFFF</color>
     <color name="uField_check_tabSelected">#15315B</color>
     <color name="uField_check_tab">#15315B</color>
     <color name="uField_check_tabText">#15315B66</color>
     <color name="uField_check_background">#15315B66</color>
     <color name="uField_todo_background">#F8F9FC</color>
+    <color name="uField_15315b">#15315B</color>
+    <color name="uField_15315b66_40">#15315B66</color>
+    <color name="uField_tab_selected">#4F4AE9</color>
+    <color name="uField_tab_color">#2A4E84</color>
+    <color name="uField_646382">#646382</color>
+
 
 </resources>

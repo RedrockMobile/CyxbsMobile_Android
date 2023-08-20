@@ -3,6 +3,7 @@
 
     <style name="uFieldMyTabTextStyle">parent="@android:style/TextAppearance.Widget.TabWidget">
         <item name="textAllCaps">false</item>
-        <item name="android:textSize">20sp</item>
+        <item name="android:textSize">18sp</item>
     </style>
+
 </resources>

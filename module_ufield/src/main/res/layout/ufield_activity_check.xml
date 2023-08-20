@@ -2,9 +2,9 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:background="@color/white"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@color/uField_white"
     android:orientation="vertical"
     tools:context=".lyt.ui.CheckActivity">
 
@@ -39,8 +39,8 @@
         android:layout_marginTop="5dp"
         android:layout_marginRight="70.5dp"
         app:tabBackground="@null"
-        app:tabIndicatorColor="#2CDEFF"
         app:tabIndicator="@drawable/ufield_layer_list_indicator_full_tab_shape"
+        app:tabIndicatorColor="#2CDEFF"
         app:tabIndicatorFullWidth="false"
         app:tabRippleColor="@null"
         app:tabSelectedTextColor="@color/uField_check_tabSelected"
@@ -51,7 +51,6 @@
         android:id="@+id/uField_check_view_pager"
         android:layout_width="match_parent"
         android:layout_height="match_parent" />
-
 
 
 </LinearLayout>

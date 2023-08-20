@@ -1,6 +1,7 @@
 package com.mredrock.cyxbs.ufield.lyt.bean
 
 import com.google.gson.annotations.SerializedName
+import java.io.Serializable
 
 /**
  *  author : lytMoon
@@ -35,7 +36,9 @@ data class TodoBean(
     val activity_type: String,
     @SerializedName("activity_watch_number")
     val activity_watch_number: Int,
+    @SerializedName("phone")
+    val activity_phone: String,
     @SerializedName("want_to_watch")
     val want_to_watch: Boolean
-)
+) : Serializable
 
