@@ -53,19 +53,17 @@
             android:layout_height="240dp"
             android:layout_marginStart="16dp"
             android:layout_marginTop="12dp"
-            app:layout_constraintBottom_toTopOf="@+id/noclass_batch_select_same_name_dialog_bottom_layout"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.0"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/noclass_batch_tv_select_student_dialog_title"
-            app:layout_constraintVertical_bias="0.0" />
+            app:layout_constraintTop_toBottomOf="@+id/noclass_batch_tv_select_student_dialog_title" />
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:id="@+id/noclass_batch_select_same_name_dialog_bottom_layout"
             android:layout_width="match_parent"
             android:layout_height="98dp"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintStart_toStartOf="parent">
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/noclass_batch_rv_dialog_students_container">
 
             <Button
                 android:id="@+id/noclass_batch_btn_confirm_selected_students"

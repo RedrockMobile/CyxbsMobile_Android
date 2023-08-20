@@ -2,6 +2,8 @@ package com.mredrock.cyxbs.noclass.page.ui.dialog
 
 import android.app.AlertDialog
 import android.content.Context
+import android.graphics.Color
+import android.graphics.drawable.ColorDrawable
 import android.os.Bundle
 import android.widget.Button
 import android.widget.TextView
@@ -19,6 +21,8 @@ class BatchQueryErrorDialog(context: Context, private val errList: List<String>)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.noclass_dialog_batch_query_err)
+        window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
+        setCanceledOnTouchOutside(false)
         initView()
     }
 
