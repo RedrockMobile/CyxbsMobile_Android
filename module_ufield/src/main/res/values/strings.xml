@@ -1,4 +1,8 @@
 <resources xmlns:tools="http://schemas.android.com/tools">
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment" tools:ignore="ResourceName">Hello blank fragment</string>
+    <string name="ufield_todo_ac_name">活动类型 ：</string>
+    <string name="ufield_todo_ac_p_name">创建人 ：</string>
+    <string name="ufield_todo_ac_phone">联系电话 ：</string>
+    <string name="ufield_btn_refuse">拒绝</string>
 </resources>

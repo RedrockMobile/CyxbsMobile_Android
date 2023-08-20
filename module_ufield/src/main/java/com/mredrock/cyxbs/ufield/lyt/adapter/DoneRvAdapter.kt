@@ -6,5 +6,6 @@ package com.mredrock.cyxbs.ufield.lyt.adapter
  *  description :负责展示已经审核过的活动Rv adapter
  *  version ： 1.0
  */
-class DoneAdapter {
+class DoneRvAdapter {
+
 }

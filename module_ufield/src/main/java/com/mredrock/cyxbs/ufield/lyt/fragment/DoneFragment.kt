@@ -20,7 +20,7 @@ import com.mredrock.cyxbs.ufield.lyt.viewmodel.fragment.DoneViewModel
  */
 class DoneFragment : BaseFragment() {
 
-    private val mRv : RecyclerView by R.id.uField_done_rv.view()
+    private val mRv: RecyclerView by R.id.uField_done_rv.view()
 
 
     private val mViewModel by viewModels<DoneViewModel>()
@@ -34,6 +34,6 @@ class DoneFragment : BaseFragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        mViewModel.getTodoData()
+
     }
 }
