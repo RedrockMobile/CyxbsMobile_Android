@@ -4,8 +4,6 @@ import android.content.Intent
 import android.os.Bundle
 import com.mredrock.cyxbs.lib.base.BaseDebugActivity
 import com.mredrock.cyxbs.ufield.gyd.CreateActivity
-import com.mredrock.cyxbs.ufield.gyd.MainActivity
-import com.mredrock.cyxbs.ufield.lyt.ui.UFieldActivity
 
 /**
  * description ：

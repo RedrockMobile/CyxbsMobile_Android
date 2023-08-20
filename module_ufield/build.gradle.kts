@@ -30,6 +30,7 @@ dependAndroidView()
 
 dependUCrop()
 dependencies {
+    implementation ("com.contrarywind:Android-PickerView:4.1.9")
     implementation(libs.appcompat)
     implementation(libs.material)
     implementation(libs.constraintlayout)

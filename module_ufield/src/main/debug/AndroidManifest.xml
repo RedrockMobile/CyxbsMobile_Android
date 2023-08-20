@@ -10,9 +10,7 @@
         android:theme="@style/ConfigAppTheme">
         <activity
             android:name=".gyd.CreateActivity"
-            android:exported="false" />
-        <activity
-            android:name=".gyd.MainActivity"
+            android:windowSoftInputMode="adjustPan"
             android:exported="false" />
         <activity
             android:name=".lyt.ui.CheckActivity"
