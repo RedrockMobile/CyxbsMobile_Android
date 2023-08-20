@@ -6,7 +6,9 @@ import android.util.Log
 import android.widget.Button
 import android.widget.TextView
 import androidx.constraintlayout.widget.ConstraintLayout
+import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
+import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.bottomsheet.BottomSheetBehavior
@@ -29,7 +31,7 @@ class SameNameSelectionDialog(
     private val sameNameData: List<Student>
 ): BottomSheetDialogFragment() {
 
-    private val batchAdditionViewModel by viewModels<BatchAdditionViewModel>()
+    private val batchAdditionViewModel by activityViewModels<BatchAdditionViewModel>()
 
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
         super.onCreateDialog(savedInstanceState)
@@ -78,9 +80,7 @@ class SameNameSelectionDialog(
             layoutManager = LinearLayoutManager(context)
         }
         dialog.findViewById<Button>(R.id.noclass_batch_btn_confirm_selected_students).apply {
-//            Log.d("ProgressTest","get there")
             setOnClickListener {
-//                Log.d("ProgressTest","get there")
                 val targetList = mutableListOf<Pair<String,String>>() // 学号-姓名 组合对的list
                 sameNameData.forEach {
                     if (it.isSelected){  // 该重名学生被选中了
@@ -88,8 +88,9 @@ class SameNameSelectionDialog(
                     }
                 }
                 batchAdditionViewModel.setSelectedStudents(targetList)
-                dialog.setOnDismissListener(null)
                 dialog.cancel()
+//                Log.d("DataTest","viewmodel obj address ${System.identityHashCode(batchAdditionViewModel)}")
+//                batchAdditionViewModel.getTestObjAddress()
             }
         }
     }

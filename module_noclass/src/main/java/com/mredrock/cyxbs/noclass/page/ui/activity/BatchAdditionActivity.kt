@@ -1,6 +1,7 @@
 package com.mredrock.cyxbs.noclass.page.ui.activity
 
 import android.os.Bundle
+import android.util.Log
 import android.view.WindowManager
 import android.widget.Button
 import android.widget.EditText
@@ -181,12 +182,14 @@ class BatchAdditionActivity : BaseActivity() {
 
         // 观察selectedSameNameStudents数据，即是否进行了重名学生的选择, 数据更新代表完成了新一次的选择
         batchAdditionViewModel.selectedSameNameStudents.observe(this) {
+            Log.d("ProgressTest","检测到进行了重名学生的选择")
             tempPreparedList.addAll(it)
             batchAdditionViewModel.setPreparedStudents(tempPreparedList)
         }
 
         // 观察selectedSameNameStudents数据, 数据更新就执行查询空闲课程的操作
         batchAdditionViewModel.batchAdditionStudents.observe(this) {
+            Log.d("ProgressTest","进行空闲课表查询")
             val tempList = mutableListOf<String>() // 临时的stuNumList
             it.forEach { pair ->
                 tempList.add(pair.first)
