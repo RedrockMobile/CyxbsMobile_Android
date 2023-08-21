@@ -4,13 +4,13 @@ import com.google.gson.annotations.SerializedName
 import java.io.Serializable
 
 /**
- *  description :
+ *  description :全部 文娱 教育 体育 活动 使用相同的数据接受类
  *  author : lytMoon
  *  date : 2023/8/20 18:05
  *  email : yytds@foxmail.com
  *  version ： 1.0
  */
-data class AllActivityBean(
+data class ItemActivityBean(
     @SerializedName("ended")
     var ended: List<ItemAll>,
     @SerializedName("ongoing")

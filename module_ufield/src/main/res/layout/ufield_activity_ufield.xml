@@ -28,6 +28,18 @@
         app:layout_constraintTop_toTopOf="parent" />
 
     <ImageView
+        android:id="@+id/uField_activity_isAdmin"
+        android:layout_width="20.02dp"
+        android:layout_height="21dp"
+        android:layout_marginStart="303dp"
+        android:layout_marginTop="59dp"
+        android:src="@drawable/ufield_ic_administrator"
+        android:visibility="gone"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:visibility="visible" />
+
+    <ImageView
         android:id="@+id/uField_cup"
         android:layout_width="16dp"
         android:layout_height="20.5dp"
@@ -85,6 +97,7 @@
             android:id="@+id/uField_viewpager2"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
+            android:layout_marginTop="20dp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toStartOf="parent" />
 
