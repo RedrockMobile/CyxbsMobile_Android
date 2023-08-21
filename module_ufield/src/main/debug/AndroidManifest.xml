@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<manifest xmlns:android="http://schemas.android.com/apk/res/android">
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools">
 
     <application
         android:name="ufield.app.DebugApp"
@@ -7,6 +8,10 @@
         android:label="module_field"
         android:supportsRtl="true"
         android:theme="@style/ConfigAppTheme">
+        <activity
+            android:name=".gyd.CreateActivity"
+            android:windowSoftInputMode="adjustPan"
+            android:exported="false" />
         <activity
             android:name=".lyt.ui.CheckActivity"
             android:exported="false" />
@@ -17,6 +22,10 @@
             android:name=".lyt.ui.UFieldActivity"
             android:exported="false" />
         <activity
+            android:name="com.yalantis.ucrop.UCropActivity"
+            android:screenOrientation="portrait"
+            />
+        <activity
             android:name="ufield.ui.DebugActivity"
             android:exported="true">
             <intent-filter>
@@ -25,7 +34,6 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-
     </application>
 
 </manifest>
