@@ -1,7 +1,6 @@
-package com.mredrock.cyxbs.ufield.lyt.fragment
+package com.mredrock.cyxbs.ufield.lyt.fragment.ufieldfragment
 
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -14,10 +13,10 @@ import com.mredrock.cyxbs.ufield.lyt.adapter.UfieldRvAdapter
 import com.mredrock.cyxbs.ufield.lyt.ui.helper.GridSpacingItemDecoration
 import com.mredrock.cyxbs.ufield.lyt.viewmodel.ui.UFieldViewModel
 
-class CultureFragment : BaseFragment() {
 
+class SportsFragment : BaseFragment() {
 
-    private val mRv: RecyclerView by R.id.uField_culture_rv.view()
+    private val mRv: RecyclerView by R.id.uField_sports_rv.view()
     private val mViewModel by lazy {
         ViewModelProvider(requireActivity())[UFieldViewModel::class.java]
     }
@@ -27,23 +26,21 @@ class CultureFragment : BaseFragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        return inflater.inflate(R.layout.ufield_fragment_culture, container, false)
+        return inflater.inflate(R.layout.ufield_fragment_sports, container, false)
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         iniRv()
-
     }
 
     /**
-     * 初始化Rv展示的活动
+     * 展示体育活动列表数据
      */
     private fun iniRv() {
         mViewModel.apply {
-            cultureList.observe(requireActivity()) {
+            sportsList.observe(requireActivity()) {
                 mAdapter.submitList(it)
-                Log.d("logTest", "测试结果-->> $it");
             }
         }
         mRv.apply {

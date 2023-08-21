@@ -1,7 +1,6 @@
-package com.mredrock.cyxbs.ufield.lyt.fragment
+package com.mredrock.cyxbs.ufield.lyt.fragment.ufieldfragment
 
 import android.os.Bundle
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup

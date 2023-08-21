@@ -1,7 +1,6 @@
-package com.mredrock.cyxbs.ufield.lyt.fragment
+package com.mredrock.cyxbs.ufield.lyt.fragment.ufieldfragment
 
 import android.os.Bundle
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -15,9 +14,9 @@ import com.mredrock.cyxbs.ufield.lyt.ui.helper.GridSpacingItemDecoration
 import com.mredrock.cyxbs.ufield.lyt.viewmodel.ui.UFieldViewModel
 
 
-class SportsFragment : BaseFragment() {
+class AllFragment : BaseFragment() {
 
-    private val mRv: RecyclerView by R.id.uField_sports_rv.view()
+    private val mRv: RecyclerView by R.id.uField_all_rv.view()
     private val mViewModel by lazy {
         ViewModelProvider(requireActivity())[UFieldViewModel::class.java]
     }
@@ -27,7 +26,7 @@ class SportsFragment : BaseFragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        return inflater.inflate(R.layout.ufield_fragment_sports, container, false)
+        return inflater.inflate(R.layout.ufield_fragment_all, container, false)
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -36,11 +35,12 @@ class SportsFragment : BaseFragment() {
     }
 
     /**
-     * 展示体育活动列表数据
+     * 初始化展示Rv
      */
     private fun iniRv() {
+
         mViewModel.apply {
-            sportsList.observe(requireActivity()) {
+            allList.observe(requireActivity()) {
                 mAdapter.submitList(it)
             }
         }
@@ -49,6 +49,7 @@ class SportsFragment : BaseFragment() {
             adapter = mAdapter
             addItemDecoration(GridSpacingItemDecoration(2, 20, true))
         }
+
     }
 
 

@@ -1,23 +1,20 @@
 package com.mredrock.cyxbs.ufield.lyt.ui
 
 import android.os.Bundle
-import android.util.Log
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import androidx.activity.viewModels
-import androidx.lifecycle.ViewModel
-import androidx.lifecycle.ViewModelProvider
 import androidx.viewpager2.widget.ViewPager2
 import com.google.android.material.tabs.TabLayout
 import com.google.android.material.tabs.TabLayoutMediator
 import com.mredrock.cyxbs.lib.base.ui.BaseActivity
 import com.mredrock.cyxbs.lib.utils.adapter.FragmentVpAdapter
 import com.mredrock.cyxbs.ufield.R
-import com.mredrock.cyxbs.ufield.lyt.fragment.AllFragment
-import com.mredrock.cyxbs.ufield.lyt.fragment.CultureFragment
-import com.mredrock.cyxbs.ufield.lyt.fragment.EducationFragment
-import com.mredrock.cyxbs.ufield.lyt.fragment.SportsFragment
+import com.mredrock.cyxbs.ufield.lyt.fragment.ufieldfragment.AllFragment
+import com.mredrock.cyxbs.ufield.lyt.fragment.ufieldfragment.CultureFragment
+import com.mredrock.cyxbs.ufield.lyt.fragment.ufieldfragment.EducationFragment
+import com.mredrock.cyxbs.ufield.lyt.fragment.ufieldfragment.SportsFragment
 import com.mredrock.cyxbs.ufield.lyt.viewmodel.ui.UFieldViewModel
 
 /**

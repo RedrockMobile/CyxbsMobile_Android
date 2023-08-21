@@ -4,7 +4,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    tools:context=".lyt.fragment.AllFragment"
+    tools:context=".lyt.fragment.ufieldfragment.AllFragment"
     tools:ignore="ResourceName">
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/uField_all_rv"

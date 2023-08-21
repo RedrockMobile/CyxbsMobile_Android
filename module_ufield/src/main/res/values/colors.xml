@@ -13,6 +13,7 @@
     <color name="uField_tab_color">#2A4E84</color>
     <color name="uField_646382">#646382</color>
     <color name="uField_background">#FCFCFD</color>
+    <color name="uField_search_background">#FBFCFF</color>
     <color name="uField_15315b99">#15315B</color>
 
 </resources>

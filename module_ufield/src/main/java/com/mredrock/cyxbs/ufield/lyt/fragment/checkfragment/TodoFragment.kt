@@ -1,4 +1,4 @@
-package com.mredrock.cyxbs.ufield.lyt.fragment
+package com.mredrock.cyxbs.ufield.lyt.fragment.checkfragment
 
 import android.os.Bundle
 import android.util.Log
@@ -11,7 +11,6 @@ import androidx.recyclerview.widget.RecyclerView
 import com.mredrock.cyxbs.lib.base.ui.BaseFragment
 import com.mredrock.cyxbs.ufield.R
 import com.mredrock.cyxbs.ufield.lyt.adapter.TodoRvAdapter
-import com.mredrock.cyxbs.ufield.lyt.viewmodel.fragment.DoneViewModel
 import com.mredrock.cyxbs.ufield.lyt.viewmodel.fragment.TodoViewModel
 
 /**

@@ -4,7 +4,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/uField_todo_background"
-    tools:context=".lyt.fragment.TodoFragment">
+    tools:context=".lyt.fragment.checkfragment.TodoFragment">
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/uField_todo_rv"
