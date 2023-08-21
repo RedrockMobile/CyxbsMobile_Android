@@ -10,52 +10,6 @@ import java.io.Serializable
  *  email : yytds@foxmail.com
  *  version ： 1.0
  */
-//data class AllActivityBean(
-//    val `data`: Data,
-//)
-//
-//data class Data(
-//    val ended: List<Ended>,
-//    val ongoing: List<Ongoing>
-//)
-//
-//data class Ended(
-//    val activity_cover_url: String,
-//    val activity_create_timestamp: Int,
-//    val activity_creator: String,
-//    val activity_detail: String,
-//    val activity_end_at: Int,
-//    val activity_id: Int,
-//    val activity_organizer: String,
-//    val activity_place: String,
-//    val activity_registration_type: String,
-//    val activity_start_at: Int,
-//    val activity_title: String,
-//    val activity_type: String,
-//    val activity_watch_number: Int,
-//    val ended: Boolean,
-//    val want_to_watch: Boolean
-//)
-//
-//data class Ongoing(
-//    val activity_cover_url: String,
-//    val activity_create_timestamp: Int,
-//    val activity_creator: String,
-//    val activity_detail: String,
-//    val activity_end_at: Long,
-//    val activity_id: Int,
-//    val activity_organizer: String,
-//    val activity_place: String,
-//    val activity_registration_type: String,
-//    val activity_start_at: Int,
-//    val activity_title: String,
-//    val activity_type: String,
-//    val activity_watch_number: Int,
-//    val ended: Boolean,
-//    val want_to_watch: Boolean
-//)
-
-
 data class AllActivityBean(
     @SerializedName("ended")
     var ended: List<ItemAll>,
@@ -94,18 +48,6 @@ data class AllActivityBean(
         @SerializedName("ended")
         val ended: Boolean
     ) : Serializable
-
-
-
-
-//    fun getMergedList(): List<MergedAllBean> {
-//        val mergedList = mutableListOf<MergedAllBean>()
-//        for (it in ongoing) {
-//            mergedList.add(MergedAllBean(it, "ongoing"))
-//        }
-//
-//
-//    }
 
 
 }

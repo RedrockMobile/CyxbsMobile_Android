@@ -1,19 +1,15 @@
 package com.mredrock.cyxbs.ufield.lyt.fragment
 
 import android.os.Bundle
-import android.util.Log
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.GridLayoutManager
-import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.mredrock.cyxbs.lib.base.ui.BaseFragment
 import com.mredrock.cyxbs.ufield.R
-import com.mredrock.cyxbs.ufield.lyt.adapter.AllActivityRvAdapter
-import com.mredrock.cyxbs.ufield.lyt.adapter.TodoRvAdapter
+import com.mredrock.cyxbs.ufield.lyt.adapter.AllRvAdapter
 import com.mredrock.cyxbs.ufield.lyt.viewmodel.ui.UFieldViewModel
 
 
@@ -23,7 +19,7 @@ class AllFragment : BaseFragment() {
     private val mViewModel by lazy {
         ViewModelProvider(requireActivity())[UFieldViewModel::class.java]
     }
-    private val mAdapter: AllActivityRvAdapter by lazy { AllActivityRvAdapter() }
+    private val mAdapter: AllRvAdapter by lazy { AllRvAdapter() }
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,

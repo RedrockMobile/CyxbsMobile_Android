@@ -62,7 +62,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_marginTop="156dp"
-        android:background="@color/uField_check_background"
+        android:background="@color/uField_background"
         android:orientation="vertical">
 
         <com.google.android.material.tabs.TabLayout

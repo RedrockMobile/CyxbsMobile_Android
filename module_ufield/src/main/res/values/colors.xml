@@ -12,6 +12,6 @@
     <color name="uField_tab_selected">#4F4AE9</color>
     <color name="uField_tab_color">#2A4E84</color>
     <color name="uField_646382">#646382</color>
-
+    <color name="uField_background">#FCFCFD</color>
 
 </resources>

@@ -27,6 +27,8 @@ dependRoom()
 dependLifecycleKtx()
 //android常用库
 dependAndroidView()
+//使用glide
+dependGlide()
 
 
 
