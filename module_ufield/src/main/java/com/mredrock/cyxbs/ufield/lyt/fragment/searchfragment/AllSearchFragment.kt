@@ -1,7 +1,6 @@
 package com.mredrock.cyxbs.ufield.lyt.fragment.searchfragment
 
 import android.os.Bundle
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -11,10 +10,8 @@ import androidx.recyclerview.widget.RecyclerView
 import com.mredrock.cyxbs.lib.base.ui.BaseFragment
 import com.mredrock.cyxbs.ufield.R
 import com.mredrock.cyxbs.ufield.lyt.adapter.SearchRvAdapter
-import com.mredrock.cyxbs.ufield.lyt.adapter.UfieldRvAdapter
 import com.mredrock.cyxbs.ufield.lyt.ui.helper.GridSpacingItemDecoration
 import com.mredrock.cyxbs.ufield.lyt.viewmodel.ui.SearchViewModel
-import com.mredrock.cyxbs.ufield.lyt.viewmodel.ui.UFieldViewModel
 
 class AllSearchFragment : BaseFragment() {
 

@@ -2,22 +2,13 @@ package com.mredrock.cyxbs.ufield.lyt.ui
 
 import android.content.Context
 import android.graphics.Color
-import android.graphics.Rect
-import android.media.Image
 import android.os.Bundle
-import android.util.Log
 import android.view.ViewGroup
-import android.view.ViewTreeObserver
-import android.view.inputmethod.EditorInfo
 import android.view.inputmethod.InputMethodManager
 import android.widget.EditText
 import android.widget.ImageView
-import android.widget.SearchView
-import android.widget.TextView
-import android.widget.Toast
 import androidx.activity.viewModels
 import androidx.cardview.widget.CardView
-import androidx.room.util.query
 import androidx.viewpager2.widget.ViewPager2
 import com.google.android.material.tabs.TabLayout
 import com.google.android.material.tabs.TabLayoutMediator
@@ -30,7 +21,6 @@ import com.mredrock.cyxbs.ufield.lyt.fragment.searchfragment.EducationSearchFrag
 import com.mredrock.cyxbs.ufield.lyt.fragment.searchfragment.SportsSearchFragment
 import com.mredrock.cyxbs.ufield.lyt.ui.helper.SoftKeyBoardListener
 import com.mredrock.cyxbs.ufield.lyt.viewmodel.ui.SearchViewModel
-import com.mredrock.cyxbs.ufield.lyt.viewmodel.ui.UFieldViewModel
 
 
 /**
@@ -85,6 +75,11 @@ class SearchActivity : BaseActivity() {
         //让初始化的第一个先变色
         (mTabLayout.getChildAt(0) as ViewGroup).getChildAt(0)
             .setBackgroundResource(R.drawable.ufield_ic_tab_shape_selected)
+        //设置其他三个icon颜色
+        for(i in 1 until mTabLayout.tabCount){
+            val tab = (mTabLayout.getChildAt(0) as ViewGroup).getChildAt(i)
+            tab.setBackgroundResource(R.drawable.ufield_ic_tab_shape)
+        }
         for (i in 0 until mTabLayout.tabCount) {
             val tab = (mTabLayout.getChildAt(0) as ViewGroup).getChildAt(i)
             val params = tab.layoutParams as ViewGroup.MarginLayoutParams

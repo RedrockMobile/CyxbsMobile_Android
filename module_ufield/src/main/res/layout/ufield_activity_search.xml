@@ -23,17 +23,19 @@
         android:id="@+id/uField_search_text"
         android:layout_width="36dp"
         android:layout_height="14dp"
-        android:layout_marginStart="331dp"
+        android:layout_marginStart="5dp"
         android:layout_marginTop="62dp"
+        android:layout_marginEnd="44dp"
         android:src="@drawable/ufield_ic_search_text"
-        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/uField_cardView"
         app:layout_constraintTop_toTopOf="parent" />
 
     <androidx.cardview.widget.CardView
         android:id="@+id/uField_cardView"
         android:layout_width="288dp"
         android:layout_height="38dp"
-        android:layout_marginStart="35dp"
+        android:layout_marginStart="40dp"
         android:layout_marginTop="50dp"
         android:layout_marginEnd="8dp"
         android:layout_marginBottom="16dp"
@@ -41,7 +43,7 @@
         app:cardCornerRadius="29dp"
         app:layout_constraintBottom_toTopOf="@+id/ufield_Linearlayout"
         app:layout_constraintEnd_toStartOf="@+id/uField_search_text"
-        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/uField_back_search"
         app:layout_constraintTop_toTopOf="parent">
 
         <ImageView
@@ -77,7 +79,6 @@
             android:layout_height="30dp"
             android:layout_marginStart="16dp"
             android:layout_marginEnd="16dp"
-            app:tabBackground="@drawable/ufield_ic_tab_shape"
             app:tabIndicatorFullWidth="false"
             app:tabIndicatorHeight="0dp"
             app:tabRippleColor="@null"
