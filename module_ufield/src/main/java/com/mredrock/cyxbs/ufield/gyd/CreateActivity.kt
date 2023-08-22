@@ -6,6 +6,8 @@ import android.app.Activity
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.graphics.Bitmap
+import android.graphics.BitmapFactory
+import android.graphics.Canvas
 import android.graphics.Color
 import android.net.Uri
 import android.os.Bundle
@@ -18,27 +20,34 @@ import android.text.TextWatcher
 import android.text.style.RelativeSizeSpan
 import android.util.Log
 import android.view.Gravity
+import android.widget.Button
 import android.widget.EditText
 import android.widget.FrameLayout
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.widget.Toolbar
+import androidx.cardview.widget.CardView
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.core.content.FileProvider
+import androidx.lifecycle.ViewModelProvider
 import com.afollestad.materialdialogs.MaterialDialog
 import com.afollestad.materialdialogs.list.listItems
 import com.bigkoo.pickerview.builder.OptionsPickerBuilder
 import com.bigkoo.pickerview.builder.TimePickerBuilder
 import com.bigkoo.pickerview.view.OptionsPickerView
 import com.bigkoo.pickerview.view.TimePickerView
-import com.mredrock.cyxbs.common.ui.BaseViewModelActivity
+
+import com.mredrock.cyxbs.lib.base.ui.BaseActivity
+
 import com.mredrock.cyxbs.lib.utils.extensions.gone
-import com.mredrock.cyxbs.lib.utils.extensions.toast
+
 import com.mredrock.cyxbs.ufield.R
+
 import com.yalantis.ucrop.UCrop
 import java.io.File
+import java.io.FileOutputStream
 import java.io.IOException
 import java.text.SimpleDateFormat
 import java.util.Calendar
@@ -46,7 +55,7 @@ import java.util.Date
 import java.util.Locale
 
 
-class CreateActivity : BaseViewModelActivity<CreateViewModel>() {
+class CreateActivity : BaseActivity() {
 
     private val toolbar by R.id.create_toolbar.view<Toolbar>()
     private val etIntroduce by R.id.et_introduce.view<EditText>()
@@ -60,12 +69,17 @@ class CreateActivity : BaseViewModelActivity<CreateViewModel>() {
     private val etWay by R.id.ufield_et_way.view<EditText>()
     private val etSponsor by R.id.ufield_et_sponsor.view<EditText>()
     private val etPhone by R.id.ufield_et_phone.view<EditText>()
+    private val btCreate by R.id.bt_create.view<Button>()
+    private val card by R.id.ufield_card.view<CardView>()
 
-    private var digitCount = 0
+    private val viewModel by lazy { ViewModelProvider(this)[CreateViewModel::class.java] }
+
+    private  lateinit var coverFile:File
 
     private lateinit var pvtype: OptionsPickerView<String>
     private var index = 0
     private var isChanged = false
+    private var selectedType: String = ""
     private val typeList = mutableListOf("文娱活动", "体育活动", "教育活动")
 
     private lateinit var pvtime: TimePickerView
@@ -97,6 +111,8 @@ class CreateActivity : BaseViewModelActivity<CreateViewModel>() {
         @SuppressLint("ResourceAsColor")
         override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
             val text = s.toString()
+            val phoneColor = ContextCompat.getColor(this@CreateActivity, R.color.phonecolor)
+            val editColor = ContextCompat.getColor(this@CreateActivity, R.color.editColor)
 
             // 只允许输入数字
             if (text.matches(Regex("\\d*"))) {
@@ -104,9 +120,11 @@ class CreateActivity : BaseViewModelActivity<CreateViewModel>() {
                 val digits = text.filter { it.isDigit() }
 
                 if (digits.length < 11) {
-                    etPhone.setTextColor(Color.RED)
+                    btCreate.setBackgroundResource(R.drawable.ufield_shape_createbutton)
+                    btCreate.setOnClickListener(null)
+                    etPhone.setTextColor(phoneColor)
                 } else {
-                    etPhone.setTextColor(R.color.editColor)
+                    etPhone.setTextColor(editColor)
                     check()
                 }
             } else {
@@ -115,7 +133,7 @@ class CreateActivity : BaseViewModelActivity<CreateViewModel>() {
         }
     }
 
-    @SuppressLint("RestrictedApi")
+    @SuppressLint("RestrictedApi", "SuspiciousIndentation")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_createactivity)
@@ -124,7 +142,18 @@ class CreateActivity : BaseViewModelActivity<CreateViewModel>() {
         coverImage.setOnClickListener {
             getPhoto()
         }
-
+        viewModel.publishStatus.observe(this) {
+            if (it) {
+                btCreate.gone()
+                val params = card.layoutParams
+                params.height = 1 // 设置高度
+                card.layoutParams = params
+                toast("提交成功")
+            } else {
+                check()
+                toast("由什么不知名原因导致提交失败")
+            }
+        }
     }
 
 
@@ -262,11 +291,70 @@ class CreateActivity : BaseViewModelActivity<CreateViewModel>() {
         super.onActivityResult(requestCode, resultCode, data)
         if (resultCode == RESULT_OK && requestCode == UCrop.REQUEST_CROP) {
             val resultUri = UCrop.getOutput(data!!)
+            // 获取裁剪后图片的实际文件路径
+            val imageFile = File(resultUri!!.path)
+
+            // 获取实际图片路径
+            val imagePath = imageFile.absolutePath
+
+            coverFile= convertToPNG(imagePath)?.let { File(it) }!!
             coverImage.setImageURI(resultUri)
             coverText.gone()
         } else if (resultCode == UCrop.RESULT_ERROR) {
             toast("裁剪失败")
         }
+    }
+    private fun convertToPNG(filePath: String): String? {
+        val originalFile = File(filePath)
+
+        // 检查文件是否存在
+        if (!originalFile.exists()) {
+            return null
+        }
+
+        // 检查文件是否已经是 PNG 格式
+        if (isPNGFile(originalFile)) {
+            return filePath
+        }
+
+        // 加载原始图片文件为 Bitmap
+        val originalBitmap = BitmapFactory.decodeFile(filePath)
+
+        // 创建目标文件的路径
+        val targetFilePath = originalFile.parent + File.separator + "converted.png"
+        val targetFile = File(targetFilePath)
+
+        try {
+            // 创建目标 Bitmap，格式为 ARGB_8888
+            val targetBitmap = Bitmap.createBitmap(
+                originalBitmap.width,
+                originalBitmap.height,
+                Bitmap.Config.ARGB_8888
+            )
+
+            // 在目标 Bitmap 上绘制原始 Bitmap
+            val canvas = Canvas(targetBitmap)
+            val paint = Bitmap.createBitmap(originalBitmap.width, originalBitmap.height, Bitmap.Config.ARGB_8888)
+            canvas.drawBitmap(originalBitmap, 0f, 0f, null)
+
+            // 将目标 Bitmap 保存为 PNG 文件
+            val outputStream = FileOutputStream(targetFile)
+            targetBitmap.compress(Bitmap.CompressFormat.PNG, 100, outputStream)
+            outputStream.close()
+
+            // 回收原始 Bitmap 和目标 Bitmap 的资源
+            originalBitmap.recycle()
+            targetBitmap.recycle()
+
+            return targetFilePath
+        } catch (e: Exception) {
+            e.printStackTrace()
+        }
+
+        return null
+    }
+    private fun isPNGFile(file: File): Boolean {
+        return file.extension.equals("png", true)
     }
 
     private fun launchCamera() {
@@ -330,6 +418,13 @@ class CreateActivity : BaseViewModelActivity<CreateViewModel>() {
                 index = p1
                 isChanged = true
                 chooseText.text = typeList[index]
+
+                selectedType = when (typeList[index]) {
+                    "文娱活动" -> "culture"
+                    "体育活动" -> "sports"
+                    "教育活动" -> "education"
+                    else -> ""
+                }
             }
                 .setLayoutRes(R.layout.popup_activitytype_layout) {
                     it.findViewById<TextView>(R.id.ufield_tv_dialog_ensure).setOnClickListener {
@@ -374,7 +469,7 @@ class CreateActivity : BaseViewModelActivity<CreateViewModel>() {
                 add(Calendar.YEAR, 5)
             }
             pvtime = TimePickerBuilder(this) { date, _ ->
-                selectedStartTimestamp = date.time
+                selectedStartTimestamp = date.time / 1000
                 startText.text = getDate(date)
             }
                 .setLayoutRes(R.layout.popup_time_layout) {
@@ -420,7 +515,7 @@ class CreateActivity : BaseViewModelActivity<CreateViewModel>() {
                 add(Calendar.YEAR, 5)
             }
             pvtime = TimePickerBuilder(this) { date, _ ->
-                selectedEndTimestamp = date.time
+                selectedEndTimestamp = date.time / 1000
                 endText.text = getDate(date)
             }
                 .setLayoutRes(R.layout.popup_time_layout) {
@@ -493,11 +588,33 @@ class CreateActivity : BaseViewModelActivity<CreateViewModel>() {
         val introduce = etIntroduce.text.toString()
         val phone = etPhone.text.toString()
         if (name.isNotEmpty() && way.isNotEmpty() && address.isNotEmpty() && introduce.isNotEmpty() && sponsor.isNotEmpty() && phone.length == 11 && isChanged) {
-            if (selectedEndTimestamp > selectedStartTimestamp&& selectedEndTimestamp.toInt() !=0&&selectedStartTimestamp.toInt()!=0) {
-                toast("成功")
+            if (selectedEndTimestamp > selectedStartTimestamp && selectedEndTimestamp.toInt() != 0 && selectedStartTimestamp.toInt() != 0) {
+                btCreate.apply {
+                    setBackgroundResource(R.drawable.ufield_shape_createbutton2)
+                    setOnClickListener {
+                        viewModel.postActivity(
+                            name,
+                            selectedType,
+                            selectedStartTimestamp.toInt(),
+                            selectedEndTimestamp.toInt(),
+                            address,
+                            way,
+                            sponsor,
+                            phone,
+                            introduce,
+                            coverFile
+                        )
+                        setOnClickListener(null)
+                    }
+                }
             } else {
+                btCreate.setBackgroundResource(R.drawable.ufield_shape_createbutton)
+                btCreate.setOnClickListener(null)
                 toast("结束时间要大于开始时间")
             }
+        } else {
+            btCreate.setBackgroundResource(R.drawable.ufield_shape_createbutton)
+            btCreate.setOnClickListener(null)
         }
     }
 

@@ -12,7 +12,7 @@
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:fillViewport="true"
-        app:layout_constraintBottom_toTopOf="@+id/bt_create"
+        app:layout_constraintBottom_toTopOf="@+id/ufield_card"
         app:layout_constraintTop_toTopOf="parent">
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
@@ -329,22 +329,32 @@
                 android:id="@+id/et_introduce"
                 android:layout_width="350dp"
                 android:layout_height="150dp"
+                android:background="@drawable/ufield_shape_edit"
                 android:gravity="top"
+                android:maxLength="100"
                 android:textColor="@color/editColor"
                 android:textSize="14sp"
-                android:layout_marginTop="20dp"
-                android:maxLength="100"
-                android:background="@drawable/ufield_shape_edit"
+                android:layout_marginTop="750dp"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintHorizontal_bias="0.5"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/ufieldTextview13" />
+                app:layout_constraintTop_toTopOf="parent"
+                 />
 
         </androidx.constraintlayout.widget.ConstraintLayout>
 
     </ScrollView>
-
+<androidx.cardview.widget.CardView
+    android:id="@+id/ufield_card"
+    android:layout_width="match_parent"
+    android:layout_height="120dp"
+    app:layout_constraintBottom_toBottomOf="parent"
+    app:layout_constraintEnd_toEndOf="parent"
+    app:layout_constraintHorizontal_bias="0.5"
+    app:layout_constraintStart_toStartOf="parent"
+    app:layout_constraintTop_toTopOf="parent"
+    app:layout_constraintVertical_bias="1">
     <Button
         android:id="@+id/bt_create"
         android:layout_width="350dp"
@@ -354,12 +364,11 @@
         android:textSize="14sp"
         android:textColor="#FFFFFF"
         android:stateListAnimator="@null"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.5"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="1" />
+        android:layout_gravity="center_horizontal"
+        android:layout_marginTop="15dp"
+        />
+</androidx.cardview.widget.CardView>
+
 </androidx.constraintlayout.widget.ConstraintLayout>
 
 
