@@ -62,14 +62,14 @@ interface AffairApiService {
   @GET("/magipoke-reminder/Person/getHotWord")
   fun getTitleCandidate(): Single<ApiWrapper<List<String>>>
 
-  @GET("/magipoke-reminder/Person/getHotLocation")
+  @GET("/magipoke-jwzx/itinerary/hotLocation")
   fun getHotLocation(): Single<ApiWrapper<List<String>>>
 
   // 没课约专属发送通知接口
-  @POST("/magipoke-reminder/Person/send")
+  @POST("/magipoke-system/Person/send")
   @FormUrlEncoded
   @Headers("App-Version:74")
-  fun sendNotification(@Body notification : NotificationBean) : ApiStatus
+  fun sendNotification(@Body notification : NotificationBean) : Single<ApiStatus>
 
   companion object {
     val INSTANCE by lazy {

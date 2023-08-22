@@ -1,14 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
-<GridLayout
+<com.mredrock.cyxbs.noclass.widget.MyFlexLayout
     android:id="@+id/noclass_gl_container"
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:columnCount="4"
-    android:rowCount="2"
     android:layout_marginTop="16dp"
     android:layout_marginBottom="16dp"
     android:layout_gravity="center">
 
 
-</GridLayout>
+</com.mredrock.cyxbs.noclass.widget.MyFlexLayout>

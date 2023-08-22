@@ -1,4 +1,4 @@
-package com.mredrock.cyxbs.noclass.page.viewmodel.other
+package com.mredrock.cyxbs.noclass.page.viewmodel.dialog
 
 import android.util.Log
 import androidx.lifecycle.LiveData

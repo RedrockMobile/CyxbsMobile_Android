@@ -27,14 +27,17 @@ class NoClassAffairViewModel : BaseViewModel() {
         get() = _hotLocation
 
     //没课约专属,发送通知
-    private val _mutableNotificationSharedFlow = MutableSharedFlow<ApiStatus>()
-    val notificationSharedFlow get() = _mutableNotificationSharedFlow.asSharedFlow()
+    private val _mutableNotification = MutableLiveData<ApiStatus>()
+    val notification get() = _mutableNotification
 
     //没课约最后发送通知
     fun sendNotification(notificationBean: NotificationBean){
-        viewModelScope.launchCatch{
-            _mutableNotificationSharedFlow.emit(AffairApiService.INSTANCE.sendNotification(notificationBean))
-        }
+           AffairApiService.INSTANCE.sendNotification(notificationBean)
+               .subscribeOn(Schedulers.io())
+               .observeOn(AndroidSchedulers.mainThread())
+               .safeSubscribeBy {
+                   _mutableNotification.value = it
+               }
     }
 
     fun getHotLoc(){

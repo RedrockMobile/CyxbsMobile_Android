@@ -112,10 +112,10 @@
             app:layout_constraintStart_toStartOf="parent"
             android:layout_marginBottom="32dp"/>
 
-        <com.mredrock.cyxbs.noclass.widget.StickIndicator
+        <com.mredrock.cyxbs.noclass.widget.MyVpIndicatorView
             android:id="@+id/noclass_indicator_gathering"
-            app:layout_constraintVertical_bias="0"
-            app:noclass_indicator_show_count="5"
+            app:layout_constraintVertical_bias="0.5"
+            app:layout_constraintHorizontal_bias="0.5"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             app:layout_constraintBottom_toBottomOf="parent"

@@ -5,7 +5,6 @@ import android.util.Log
 import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 import com.mredrock.cyxbs.api.affair.DateJson
-import com.mredrock.cyxbs.api.affair.NoClassBean
 import com.mredrock.cyxbs.lib.course.item.lesson.BaseLessonLayoutParams
 import com.mredrock.cyxbs.lib.course.item.lesson.ILessonItem
 import com.mredrock.cyxbs.lib.utils.extensions.color
@@ -26,14 +25,13 @@ import com.mredrock.cyxbs.noclass.page.ui.dialog.NoClassGatherDialog
  */
 class NoClassLesson(
   val data: NoClassLessonData,
-  private val mGatheringList : List<String>,
-  private val mNoGatheringList: List<String>,
+  private val mNumNameIsSpare : HashMap<Pair<String,String>,Boolean>,
   private val mLastingTime : Pair<Int,Int>,
   private val mWeek : Int  //第几周
 ) : ILessonItem{
   
   override fun initializeView(context: Context): View {   //添加item到课表中
-    return NoClassLesson.newInstance(context,data ,mGatheringList,mNoGatheringList,mLastingTime,mWeek)
+    return NoClassLesson.newInstance(context,data ,mNumNameIsSpare ,mLastingTime,mWeek)
   }
   
   override val lp: BaseLessonLayoutParams
@@ -55,13 +53,16 @@ class NoClassLesson(
     context: Context
   ) : NoClassItemView(context){
     companion object {
-      fun newInstance(context: Context, data: NoClassLessonData, mGatheringList : List<String>, mNoGatheringList: List<String>,mLastingTime : Pair<Int,Int>,mWeek: Int): NoClassLesson {
+      fun newInstance(context: Context, data: NoClassLessonData,mNumNameIsSpare : HashMap<Pair<String,String>,Boolean> ,mLastingTime : Pair<Int,Int>,mWeek: Int): NoClassLesson {
         return NoClassLesson(context).apply {
-          val busyMode = if (mNoGatheringList.isEmpty()){
+          val sparePeopleNameList = mNumNameIsSpare.filter { it.value }.keys.map { it.second }
+          val noSparePeopleNameList = mNumNameIsSpare.filter { !it.value }.keys.map { it.second }
+          val busyMode = if (noSparePeopleNameList.isEmpty()){
+            // 如果没有忙碌的人，那么NAN
             BusyMode.NAN
-          }else if (mGatheringList.isEmpty()){
+          }else if (sparePeopleNameList.isEmpty()){
             BusyMode.ALL
-          }else if (mGatheringList.size > mNoGatheringList.size){
+          }else if (sparePeopleNameList.size > noSparePeopleNameList.size){
             BusyMode.LESS
           }else{
             BusyMode.MORE
@@ -69,15 +70,6 @@ class NoClassLesson(
           setColor(busyMode)
           setText(names = data.names,height = data.length)
           setOnClickListener {
-            //所有学生列表
-            //忙碌的放在前面
-            val stuList = arrayListOf<Pair<String,Boolean>>()
-            mNoGatheringList.forEach {
-              stuList.add(Pair(it,false))
-            }
-//            mGatheringList.forEach {  //这里是休闲的学生
-//              stuList.add(Pair(it, true))
-//            }
             val duration = mLastingTime.second - mLastingTime.first
             //开始与结束序列
             val begin = mLastingTime.first
@@ -105,7 +97,7 @@ class NoClassLesson(
             Log.d("lx", "data.weekNum: = ${data.weekNum} ")
             Log.d("lx", "duration: = ${duration} ")
             Log.d("lx", "mWeek: = ${mWeek} ")
-            NoClassGatherDialog(dateJson,stuList, textTime).show((context as AppCompatActivity).supportFragmentManager, "NoClassGatherDialog")
+            NoClassGatherDialog(dateJson,mNumNameIsSpare, textTime).show((context as AppCompatActivity).supportFragmentManager, "NoClassGatherDialog")
           }
         }
       }

@@ -1,5 +1,6 @@
 package com.mredrock.cyxbs.noclass.page.ui.fragment
 
+import android.util.Log
 import com.mredrock.cyxbs.lib.course.fragment.page.CoursePageFragment
 import com.mredrock.cyxbs.noclass.bean.NoClassSpareTime
 import com.mredrock.cyxbs.noclass.page.course.NoClassLesson
@@ -50,7 +51,7 @@ abstract class NoClassPageFragment: CoursePageFragment() {
   }
   
   private fun addLessonAm(lineTime: NoClassSpareTime.SpareLineTime,line : Int) {
-    val week = line + 1
+    val week = line + 1  //周几
     val id1 = lineTime.SpareItem[1].spareId   //每一个格子空闲的所有学号
     val id2 = lineTime.SpareItem[2].spareId
     val id3 = lineTime.SpareItem[3].spareId
@@ -94,7 +95,12 @@ abstract class NoClassPageFragment: CoursePageFragment() {
     id1: List<String>,
     id2: List<String>,
   ){
+    // 如果上一节课
+    if (id1.isEmpty() && id2.isEmpty()){
+
+    }
     if (id1 == id2) {
+      Log.d("lx", "11111:这里根本走不到 ")
       addLesson(getLesson(begin,week,2,id1))
     } else if (id1 != id2) {
       addLesson(getLesson(begin,week,1,id1))
@@ -121,14 +127,12 @@ abstract class NoClassPageFragment: CoursePageFragment() {
     length : Int,
     gatheringIdList: List<String>,  //空闲的id
   ) : NoClassLesson{
-    val noGatheringIdList : List<String> = mNameMap.map { it.key }.toMutableList().apply {  //忙碌的id
-      gatheringIdList.forEach {
-        this.remove(it)
-      }
+    // 学号，姓名，是否空闲，空闲为true
+    val stuMap = HashMap<Pair<String,String>,Boolean>()
+    mNameMap.keys.forEach {
+      stuMap[it to (mNameMap[it] ?: "无名")] = it in gatheringIdList
     }
-    val gatheringList : List<String> = gatheringIdList.map { mNameMap[it]!! }   //空闲的人名
-    val noGatheringList : List<String> = noGatheringIdList.map { mNameMap[it]!! }   //忙碌的人名
-    return NoClassLesson(NoClassLessonData(week, begin, length, gatheringIdList.showText()),gatheringList,noGatheringList,Pair(begin,begin+length),mWeek)
+    return NoClassLesson(NoClassLessonData(week, begin, length, gatheringIdList.showText()),stuMap,Pair(begin,begin+length),mWeek)
   }
 
   /**

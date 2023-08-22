@@ -83,14 +83,14 @@ interface NoclassApiService {
         @Field("stu_nums") stuNum : String,
     ) : Single<ApiStatus>
 
-    @GET("/magipoke-text/search/people")
+    @GET("/magipoke-jwzx/search/people")
     fun searchPeople(
         @Query("stu") stu: String
     ) : Single<ApiWrapper<List<Student>>>
 
-    @GET("/magipoke-text/search/people/temporary")
+    @GET("/magipoke-jwzx/search")
     fun searchAll(
-        @Query("content") content : String
+        @Query("key") key : String
     ) : Single<ApiWrapper<NoClassTemporarySearch>>
 
 }

@@ -109,7 +109,7 @@ class NoClassTemporaryFragment : BaseFragment(R.layout.noclass_fragment_temporar
             layoutManager = LinearLayoutManager(requireContext())
             adapter = mAdapter.apply {
                 //加入本人
-                val list = listOf(Student("","","","",mUserId,mUserName))
+                val list = listOf(Student("","","","",mUserName,mUserId))
                 submitList(list)
                 setOnItemDelete {
                     deleteMember(it)

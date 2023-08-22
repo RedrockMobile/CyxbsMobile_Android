@@ -67,8 +67,10 @@ class NoClassAffairFragment : BaseFragment(R.layout.affair_fragment_noclass_affa
     private fun initClickChoose() {
         //所有空闲人员
         val spareList = mNoClassBean.mStuList.filter { it.second }.map { it.first }
+        Log.d("lx", "sparedpeople: $spareList")
         //全体人员
         val allList = mNoClassBean.mStuList.map { it.first }
+        Log.d("lx", "allpeople: $allList")
         // 点击空闲人员，右边的选择所有要白底黑字，空闲人员要白字紫底
         mTvLeftSpare.setOnClickListener {
             mWaitSubmit = ArrayList()
@@ -171,8 +173,10 @@ class NoClassAffairFragment : BaseFragment(R.layout.affair_fragment_noclass_affa
                 mPageManager.loadNextPage()
             }else if (mPageManager.isEndPage()) {
                 // 如果是发送通知界面，这次点击相当于发送通知
+                Log.d("lx", "mWaitSubmit = ${mWaitSubmit}: ")
                 if (mWaitSubmit != null && mWaitSubmit!!.isNotEmpty()){
                     val notificationBean = NotificationBean(mWaitSubmit!!,mNoClassBean.dateJson,mPageManager.getTitle(),mPageManager.getLoc())
+                    Log.d("lx", "notificationBean = ${notificationBean}: ")
                     mViewModel.sendNotification(notificationBean)
                 }else{
                     toast("掌友，人员不能为空哦")
@@ -180,7 +184,7 @@ class NoClassAffairFragment : BaseFragment(R.layout.affair_fragment_noclass_affa
             }
         }
 
-        mViewModel.notificationSharedFlow.collectLaunch {
+        mViewModel.notification.observe{
             if (it.isSuccess()){
                 toast("发送成功")
             }else{

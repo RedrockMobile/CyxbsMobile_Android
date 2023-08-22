@@ -12,6 +12,7 @@ import com.mredrock.cyxbs.lib.utils.extensions.invisible
 import com.mredrock.cyxbs.lib.utils.extensions.visible
 import com.mredrock.cyxbs.noclass.R
 import com.mredrock.cyxbs.noclass.bean.NoClassGroup
+import com.mredrock.cyxbs.noclass.widget.MyFlexLayout
 
 class NoClassAddToGroupAdapter(
     val groupListByPage: HashMap<Int, ArrayList<NoClassGroup>>,
@@ -25,7 +26,7 @@ class NoClassAddToGroupAdapter(
     private val chooseGroup by lazy { ArrayList<NoClassGroup>() }
 
     inner class MyHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
-        val containerView = itemView.findViewById<GridLayout>(R.id.noclass_gl_container)
+        val containerView = itemView.findViewById<MyFlexLayout>(R.id.noclass_gl_container)
         // 在containerView中添加八个子视图，方便设置点击事件
         init {
             for (i in 0 until 8) {

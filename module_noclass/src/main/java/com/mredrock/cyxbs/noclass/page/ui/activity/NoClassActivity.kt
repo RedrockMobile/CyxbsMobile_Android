@@ -3,7 +3,6 @@ package com.mredrock.cyxbs.noclass.page.ui.activity
 import android.app.Activity
 import android.os.Build
 import android.os.Bundle
-import android.util.Log
 import android.view.View
 import android.widget.FrameLayout
 import android.widget.TextView
@@ -27,7 +26,6 @@ import com.mredrock.cyxbs.noclass.page.ui.fragment.NoClassSolidFragment
 import com.mredrock.cyxbs.noclass.page.ui.fragment.NoClassTemporaryFragment
 import com.mredrock.cyxbs.noclass.page.viewmodel.other.CourseViewModel
 import com.mredrock.cyxbs.noclass.page.viewmodel.activity.NoClassViewModel
-import com.mredrock.cyxbs.noclass.page.viewmodel.other.CreateGroupViewModel
 
 /**
  *

@@ -16,7 +16,7 @@ import com.mredrock.cyxbs.lib.utils.extensions.setOnSingleClickListener
 import com.mredrock.cyxbs.lib.utils.extensions.toast
 import com.mredrock.cyxbs.lib.utils.service.ServiceManager
 import com.mredrock.cyxbs.noclass.R
-import com.mredrock.cyxbs.noclass.page.viewmodel.other.CreateGroupViewModel
+import com.mredrock.cyxbs.noclass.page.viewmodel.dialog.CreateGroupViewModel
 import com.mredrock.cyxbs.noclass.util.startShake
 
 /**
