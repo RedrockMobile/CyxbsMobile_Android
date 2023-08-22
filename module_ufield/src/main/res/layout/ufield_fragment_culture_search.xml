@@ -4,10 +4,10 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    tools:context=".lyt.fragment.searchfragment.AllSearchFragment"
+    tools:context=".lyt.fragment.searchfragment.CultureSearchFragment"
     tools:ignore="ResourceName">
     <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/uField_all_rv_search"
+        android:id="@+id/uField_all_rv_culture_search"
         android:layout_width="match_parent"
         android:layout_height="match_parent"/>
 

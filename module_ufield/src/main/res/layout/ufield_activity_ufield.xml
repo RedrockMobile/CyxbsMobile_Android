@@ -90,7 +90,7 @@
             app:tabRippleColor="@null"
             app:tabSelectedTextColor="@color/uField_tab_selected"
             app:tabTextAppearance="@style/uFieldMyTextStyle"
-            app:tabTextColor="@color/uField_tab_color" />
+            app:tabTextColor="@color/uField_15315b66" />
 
 
         <androidx.viewpager2.widget.ViewPager2

@@ -8,95 +8,92 @@
     android:orientation="vertical"
     tools:context=".lyt.ui.SearchActivity">
 
-  <ImageView
-      android:id="@+id/uField_back"
-      android:layout_width="7dp"
-      android:layout_height="16dp"
-      android:layout_marginStart="17dp"
-      android:layout_marginTop="60dp"
-      android:src="@drawable/ufield_ic_search_back"
-      app:layout_constraintStart_toStartOf="parent"
-      app:layout_constraintTop_toTopOf="parent" />
-
-
-
-  <ImageView
-      android:id="@+id/uField_search_text"
-      android:layout_width="36dp"
-      android:layout_height="14dp"
-      android:layout_marginStart="331dp"
-      android:layout_marginTop="62dp"
-      android:src="@drawable/ufield_ic_search_text"
-      app:layout_constraintStart_toStartOf="parent"
-      app:layout_constraintTop_toTopOf="parent" />
-
-  <androidx.cardview.widget.CardView
-      android:id="@+id/uField_searchView"
-      android:layout_width="288dp"
-      android:layout_height="38dp"
-      android:layout_marginStart="35dp"
-      android:layout_marginTop="50dp"
-      android:layout_marginEnd="8dp"
-      android:layout_marginBottom="16dp"
-      app:cardCornerRadius="29dp"
-      android:background="@color/uField_white"
-      app:layout_constraintBottom_toTopOf="@+id/ufieldLinearlayout"
-      app:layout_constraintEnd_toStartOf="@+id/uField_search_text"
-      app:layout_constraintStart_toStartOf="parent"
-      app:layout_constraintTop_toTopOf="parent" >
-    
     <ImageView
-        android:src="@drawable/ufield_ic_logo_search"
-        android:layout_gravity="center_vertical"
-        android:layout_marginStart="15dp"
-        android:layout_width="17dp"
-        android:layout_height="17dp"/>
+        android:id="@+id/uField_back_search"
+        android:layout_width="7dp"
+        android:layout_height="16dp"
+        android:layout_marginStart="17dp"
+        android:layout_marginTop="60dp"
+        android:src="@drawable/ufield_ic_search_back"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 
-    <androidx.appcompat.widget.SearchView
-        android:layout_marginStart="20dp"
+
+    <ImageView
+        android:id="@+id/uField_search_text"
+        android:layout_width="36dp"
+        android:layout_height="14dp"
+        android:layout_marginStart="331dp"
+        android:layout_marginTop="62dp"
+        android:src="@drawable/ufield_ic_search_text"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <androidx.cardview.widget.CardView
+        android:id="@+id/uField_cardView"
+        android:layout_width="288dp"
+        android:layout_height="38dp"
+        android:layout_marginStart="35dp"
+        android:layout_marginTop="50dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginBottom="16dp"
+        android:background="@color/uField_white"
+        app:cardCornerRadius="29dp"
+        app:layout_constraintBottom_toTopOf="@+id/ufield_Linearlayout"
+        app:layout_constraintEnd_toStartOf="@+id/uField_search_text"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <ImageView
+            android:layout_width="17dp"
+            android:layout_height="17dp"
+            android:layout_gravity="center_vertical"
+            android:layout_marginStart="15dp"
+            android:src="@drawable/ufield_ic_logo_search" />
+
+        <androidx.appcompat.widget.SearchView
+            android:id="@+id/uField_searchView"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginStart="20dp"
+            app:iconifiedByDefault="false"
+            app:searchIcon="@null" />
+
+
+    </androidx.cardview.widget.CardView>
+
+    <LinearLayout
+        android:id="@+id/ufield_Linearlayout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="104dp"
+        android:orientation="vertical"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <com.google.android.material.tabs.TabLayout
+            android:id="@+id/uField_search_tabLayout"
+            android:layout_width="match_parent"
+            android:layout_height="30dp"
+            android:layout_marginStart="16dp"
+            android:layout_marginEnd="16dp"
+            app:tabBackground="@drawable/ufield_ic_tab_shape"
+            app:tabIndicatorFullWidth="false"
+            app:tabIndicatorHeight="0dp"
+            app:tabRippleColor="@null"
+            app:tabSelectedTextColor="@color/uField_tab_selected"
+            app:tabTextAppearance="@style/uFieldMyTextStyle"
+            app:tabTextColor="@color/uField_15315b66" />
+    </LinearLayout>
+
+
+    <androidx.viewpager2.widget.ViewPager2
+        android:id="@+id/uField_search_viewpager2"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:hint="@string/uField_look_more"
-        app:iconifiedByDefault="false"
-        app:searchIcon="@null" />
-
-
-  </androidx.cardview.widget.CardView>
-
-  <LinearLayout
-      android:id="@+id/ufieldLinearlayout"
-      android:layout_width="match_parent"
-      android:layout_height="wrap_content"
-      android:layout_marginTop="104dp"
-      android:orientation="vertical"
-      app:layout_constraintStart_toStartOf="parent"
-      app:layout_constraintTop_toTopOf="parent">
-
-    <com.google.android.material.tabs.TabLayout
-        android:id="@+id/uField_search_tabLayout"
-        android:layout_width="match_parent"
-        android:layout_height="30dp"
-        android:layout_marginStart="16dp"
-        android:layout_marginTop="21dp"
-        android:layout_marginEnd="16dp"
-        app:tabBackground="@drawable/ufield_ic_tab_shape"
-        app:tabIndicatorFullWidth="false"
-        app:tabIndicatorHeight="0dp"
-        app:tabRippleColor="@null"
-        app:tabSelectedTextColor="@color/uField_tab_selected"
-        app:tabTextAppearance="@style/uFieldMyTextStyle"
-        app:tabTextColor="@color/uField_tab_color" />
-  </LinearLayout>
-
-
-  <androidx.viewpager2.widget.ViewPager2
-      android:id="@+id/uField_search_viewpager2"
-      android:layout_width="match_parent"
-      android:layout_height="match_parent"
-      android:layout_marginTop="179dp"
-      android:background="@color/uField_white"
-      app:layout_constraintTop_toTopOf="parent" />
-
+        android:layout_marginTop="150dp"
+        android:background="@color/uField_white"
+        app:layout_constraintTop_toTopOf="parent" />
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>

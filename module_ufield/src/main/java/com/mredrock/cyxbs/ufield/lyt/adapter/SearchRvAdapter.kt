@@ -11,6 +11,8 @@ import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
+import com.bumptech.glide.load.resource.bitmap.CenterCrop
+import com.bumptech.glide.load.resource.bitmap.RoundedCorners
 import com.mredrock.cyxbs.ufield.R
 import com.mredrock.cyxbs.ufield.lyt.bean.ItemActivityBean
 import java.time.Instant
@@ -18,36 +20,37 @@ import java.time.ZoneId
 import java.time.format.DateTimeFormatter
 
 /**
- *  description :用于活动布告栏的Rv adapter
+ *  description :
  *  author : lytMoon
- *  date : 2023/8/20 20:40
+ *  date : 2023/8/22 14:49
  *  email : yytds@foxmail.com
  *  version ： 1.0
  */
-class UfieldRvAdapter :
-    ListAdapter<ItemActivityBean.ItemAll, UfieldRvAdapter.RvAllActViewHolder>((RvAllDiffCallback())) {
+class SearchRvAdapter :
+    ListAdapter<ItemActivityBean.ItemAll, SearchRvAdapter.RvSearchActViewHolder>((RvSearchDiffCallback())) {
 
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RvAllActViewHolder {
-        return RvAllActViewHolder(
-            LayoutInflater.from(parent.context).inflate(R.layout.ufield_item_rv_all, parent, false)
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RvSearchActViewHolder {
+        return RvSearchActViewHolder(
+            LayoutInflater.from(parent.context)
+                .inflate(R.layout.ufield_item_rv_search, parent, false)
         )
     }
 
     @RequiresApi(Build.VERSION_CODES.O)
-    override fun onBindViewHolder(holder: RvAllActViewHolder, position: Int) {
+    override fun onBindViewHolder(holder: RvSearchActViewHolder, position: Int) {
         val itemView = getItem(position)
 
         holder.bind(itemView)
     }
 
 
-    class RvAllActViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
+    class RvSearchActViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
 
-        private val actPic: ImageView = itemView.findViewById(R.id.uField_activity_pic)
-        private val actName: TextView = itemView.findViewById(R.id.uField_activity_name)
-        private val actIsGoing: ImageView = itemView.findViewById(R.id.uField_activity_isGoing)
-        private val actType: TextView = itemView.findViewById(R.id.uField_activity_type)
-        private val actTime: TextView = itemView.findViewById(R.id.uField_activity_time)
+        private val actPic: ImageView = itemView.findViewById(R.id.uField_search_act_image)
+        private val actName: TextView = itemView.findViewById(R.id.Ufield_search_act_ame)
+        private val actHint: TextView = itemView.findViewById(R.id.Ufield_search_act_what)
+        private val actIsGoing: ImageView = itemView.findViewById(R.id.uField_search_isGoing)
+        private val actTime: TextView = itemView.findViewById(R.id.uField_search_ddl)
 
 
         /**
@@ -56,7 +59,7 @@ class UfieldRvAdapter :
         @RequiresApi(Build.VERSION_CODES.O)
         fun bind(itemData: ItemActivityBean.ItemAll) {
             actName.text = itemData.activity_title
-            actType.text = itemData.activity_type
+            actHint.text = itemData.activity_detail
             actTime.text = timeFormat(itemData.activity_start_at)
 
             when (itemData.ended) {
@@ -64,15 +67,11 @@ class UfieldRvAdapter :
                 else -> actIsGoing.setImageResource(R.drawable.ufield_ic_activity_off)
             }
 
-            when (itemData.activity_type) {
-                "culture" -> actType.text = "文娱活动"
-                "sports" -> actType.text = "体育活动"
-                else -> actType.text = "教育活动"
-            }
 
             Glide.with(itemView.context)
                 .load(itemData.activity_cover_url)
                 .centerCrop() //中心比例的缩放（如果效果不稳定请删除）
+                .transform(CenterCrop(), RoundedCorners(8))//设置圆角
                 .into(actPic)
 
         }
@@ -92,7 +91,7 @@ class UfieldRvAdapter :
     }
 
 
-    class RvAllDiffCallback : DiffUtil.ItemCallback<ItemActivityBean.ItemAll>() {
+    class RvSearchDiffCallback : DiffUtil.ItemCallback<ItemActivityBean.ItemAll>() {
         override fun areItemsTheSame(
             oldItem: ItemActivityBean.ItemAll,
             newItem: ItemActivityBean.ItemAll

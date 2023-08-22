@@ -15,5 +15,8 @@
     <color name="uField_background">#FCFCFD</color>
     <color name="uField_search_background">#FBFCFF</color>
     <color name="uField_15315b99">#15315B</color>
+    <color name="uField_112c54">#112C54</color>
+    <color name="uField_15315b66">#A1ADBD</color>
+    <color name="uField_112c5499">#708098</color>
 
 </resources>

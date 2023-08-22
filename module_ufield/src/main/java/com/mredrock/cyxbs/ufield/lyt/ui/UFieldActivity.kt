@@ -1,5 +1,6 @@
 package com.mredrock.cyxbs.ufield.lyt.ui
 
+import android.content.Intent
 import android.os.Bundle
 import android.view.View
 import android.view.ViewGroup
@@ -51,11 +52,8 @@ class UFieldActivity : BaseActivity() {
      * 初始化tabLayout
      */
     private fun iniTab() {
-        mVp.adapter = FragmentVpAdapter(this)
-            .add { AllFragment() }
-            .add { CultureFragment() }
-            .add { SportsFragment() }
-            .add { EducationFragment() }
+        mVp.adapter = FragmentVpAdapter(this).add { AllFragment() }.add { CultureFragment() }
+            .add { SportsFragment() }.add { EducationFragment() }
         TabLayoutMediator(mTabLayout, mVp) { tab, position ->
             when (position) {
                 0 -> tab.text = "全部活动"
@@ -112,7 +110,7 @@ class UFieldActivity : BaseActivity() {
     private fun iniClick() {
         mBack.setOnClickListener { finish() }
         mSearch.setOnClickListener {
-
+            startActivity(Intent(this, SearchActivity::class.java))
         }
         mAdmin.setOnClickListener {
 

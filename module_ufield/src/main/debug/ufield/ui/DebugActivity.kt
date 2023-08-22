@@ -19,6 +19,6 @@ class DebugActivity : BaseDebugActivity() {
         get() = true
 
     override fun onDebugCreate(savedInstanceState: Bundle?) {
-        startActivity(Intent(this, SearchActivity::class.java))
+        startActivity(Intent(this, UFieldActivity::class.java))
     }
 }

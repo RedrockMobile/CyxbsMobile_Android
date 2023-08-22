@@ -4,7 +4,6 @@ import com.mredrock.cyxbs.lib.utils.network.ApiGenerator
 import com.mredrock.cyxbs.lib.utils.network.ApiWrapper
 import com.mredrock.cyxbs.ufield.lyt.bean.IsAdminBean
 import com.mredrock.cyxbs.ufield.lyt.bean.ItemActivityBean
-import com.mredrock.cyxbs.ufield.lyt.bean.TodoBean
 import io.reactivex.rxjava3.core.Single
 import retrofit2.http.GET
 
@@ -15,9 +14,9 @@ import retrofit2.http.GET
  *  email : yytds@foxmail.com
  *  version ： 1.0
  */
-interface UFieldActivityApiService {
+interface UFieldApiService {
     companion object {
-        val INSTANCE by lazy { ApiGenerator.getApiService(UFieldActivityApiService::class) }
+        val INSTANCE by lazy { ApiGenerator.getApiService(UFieldApiService::class) }
     }
 
     /**

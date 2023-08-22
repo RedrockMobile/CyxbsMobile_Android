@@ -45,7 +45,7 @@
             android:layout_height="17dp"
             android:layout_marginStart="12dp"
             android:layout_marginTop="11dp"
-            android:textColor="@color/uField_15315b"
+            android:textColor="@color/uField_15315b66"
             android:textSize="12sp"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/uField_activity_name" />
@@ -64,8 +64,8 @@
             android:layout_width="110dp"
             android:layout_height="17dp"
             android:layout_marginStart="36dp"
-            android:layout_marginTop="13dp"
-            android:textColor="@color/uField_15315b99"
+            android:layout_marginTop="14dp"
+            android:textColor="@color/uField_112c5499"
             android:textSize="12sp"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/uField_activity_type" />

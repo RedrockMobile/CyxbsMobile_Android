@@ -4,11 +4,10 @@ import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import com.mredrock.cyxbs.lib.base.ui.BaseViewModel
-import com.mredrock.cyxbs.lib.base.utils.safeSubscribeBy
 import com.mredrock.cyxbs.lib.utils.network.mapOrInterceptException
 import com.mredrock.cyxbs.ufield.lyt.bean.IsAdminBean
 import com.mredrock.cyxbs.ufield.lyt.bean.ItemActivityBean
-import com.mredrock.cyxbs.ufield.lyt.repository.UFieldActivityRepository
+import com.mredrock.cyxbs.ufield.lyt.repository.UFieldRepository
 
 /**
  *  author : lytMoon
@@ -53,7 +52,7 @@ class UFieldViewModel : BaseViewModel() {
      */
     fun getAllActivityList() {
 
-        UFieldActivityRepository
+        UFieldRepository
             .receiveAllData()
             .mapOrInterceptException { Log.d("getAllActivityList", "测试结果-->> ${it.message}"); }
             .doOnError { Log.d("getAllActivityList", "测试结果-->> ${it.message}"); }
@@ -66,7 +65,7 @@ class UFieldViewModel : BaseViewModel() {
      * 得到文娱活动数据
      */
     fun getCultureActivityList() {
-        UFieldActivityRepository
+        UFieldRepository
             .receiveCultureData()
             .mapOrInterceptException {
                 Log.d(
@@ -86,7 +85,7 @@ class UFieldViewModel : BaseViewModel() {
      * 得到体育活动数据
      */
     fun getSportsActivityList() {
-        UFieldActivityRepository
+        UFieldRepository
             .receiveSportsData()
             .mapOrInterceptException {
                 Log.d(
@@ -105,7 +104,7 @@ class UFieldViewModel : BaseViewModel() {
      * 得到教育活动数据
      */
     fun getEducationActivityList() {
-        UFieldActivityRepository
+        UFieldRepository
             .receiveEductionData()
             .mapOrInterceptException {
                 Log.d(
@@ -124,7 +123,7 @@ class UFieldViewModel : BaseViewModel() {
      */
 
     fun getIsAdmin(){
-        UFieldActivityRepository
+        UFieldRepository
             .receiveIsAdmin()
             .mapOrInterceptException { Log.d("getIsAdmin", "测试结果-->> ${it.message}");}
             .doOnError { Log.d("getIsAdmin", "测试结果-->> ${it.message}"); }

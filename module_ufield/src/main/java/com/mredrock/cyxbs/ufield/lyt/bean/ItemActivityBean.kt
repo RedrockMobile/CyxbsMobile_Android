@@ -20,7 +20,7 @@ data class ItemActivityBean(
         @SerializedName("activity_cover_url")
         val activity_cover_url: String,
         @SerializedName("activity_create_timestamp")
-        val activity_create_timestamp: Int,
+        val activity_create_timestamp: Long,
         @SerializedName("activity_creator")
         val activity_creator: String,
         @SerializedName("activity_detail")
@@ -36,7 +36,7 @@ data class ItemActivityBean(
         @SerializedName("activity_registration_type")
         val activity_registration_type: String,
         @SerializedName("activity_start_at")
-        val activity_start_at: Int,
+        val activity_start_at: Long,
         @SerializedName("activity_title")
         val activity_title: String,
         @SerializedName("activity_type")
