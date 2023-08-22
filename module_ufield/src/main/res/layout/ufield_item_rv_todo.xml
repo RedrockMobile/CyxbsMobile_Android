@@ -43,7 +43,7 @@
 
             <TextView
                 android:id="@+id/uField_todo_activity_time"
-                android:layout_width="75dp"
+                android:layout_width="90dp"
                 android:layout_height="20dp"
                 android:layout_marginStart="16dp"
                 android:layout_marginTop="20dp"

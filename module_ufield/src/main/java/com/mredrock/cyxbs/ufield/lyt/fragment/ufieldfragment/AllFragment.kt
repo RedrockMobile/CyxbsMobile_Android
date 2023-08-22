@@ -10,7 +10,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.mredrock.cyxbs.lib.base.ui.BaseFragment
 import com.mredrock.cyxbs.ufield.R
 import com.mredrock.cyxbs.ufield.lyt.adapter.UfieldRvAdapter
-import com.mredrock.cyxbs.ufield.lyt.ui.helper.GridSpacingItemDecoration
+import com.mredrock.cyxbs.ufield.lyt.helper.GridSpacingItemDecoration
 import com.mredrock.cyxbs.ufield.lyt.viewmodel.ui.UFieldViewModel
 
 
@@ -47,7 +47,7 @@ class AllFragment : BaseFragment() {
         mRv.apply {
             layoutManager = GridLayoutManager(requireContext(), 2)
             adapter = mAdapter
-            addItemDecoration(GridSpacingItemDecoration(2, 20, true))
+            addItemDecoration(GridSpacingItemDecoration(2, 20, false))
         }
 
     }

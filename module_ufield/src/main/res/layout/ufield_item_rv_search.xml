@@ -2,67 +2,79 @@
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:layout_marginTop="20dp"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content">
+    android:layout_height="wrap_content"
+    android:layout_marginTop="20dp">
+    <!--这里突然发现，如果再套一个的话，可以实现,Rv的item居中分布，虽然对于一行一个这种线性布局可以指定代码（两列的尚未发现），这里不改了，直接xml，利用约束布局来约束item-->
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="350dp"
+        android:layout_height="105dp"
+        android:layout_marginStart="20dp"
+        android:layout_marginEnd="20dp"
 
-
-    <ImageView
-        android:id="@+id/uField_search_act_image"
-        android:layout_width="101dp"
-        android:layout_height="101dp"
-        android:layout_marginStart="16dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.062">
 
-    <TextView
-        android:id="@+id/Ufield_search_act_ame"
-        android:layout_width="113dp"
-        android:layout_height="38dp"
-        android:layout_marginStart="15dp"
-        android:textColor="@color/uField_112c54"
-        android:textSize="16sp"
-        app:layout_constraintStart_toEndOf="@+id/uField_search_act_image"
-        app:layout_constraintTop_toTopOf="parent" />
+        <ImageView
+            android:id="@+id/uField_search_act_image"
+            android:layout_width="101dp"
+            android:layout_height="101dp"
+            android:layout_marginStart="16dp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
 
-    <ImageView
-        android:id="@+id/uField_search_isGoing"
-        android:layout_width="32dp"
-        android:layout_height="14sp"
-        android:layout_marginStart="10dp"
-        app:layout_constraintStart_toEndOf="@+id/Ufield_search_act_ame"
-        app:layout_constraintTop_toTopOf="parent" />
+        <TextView
+            android:id="@+id/Ufield_search_act_ame"
+            android:layout_width="113dp"
+            android:layout_height="38dp"
+            android:layout_marginStart="15dp"
+            android:textColor="@color/uField_112c54"
+            android:textSize="16sp"
+            app:layout_constraintStart_toEndOf="@+id/uField_search_act_image"
+            app:layout_constraintTop_toTopOf="parent" />
 
-    <TextView
-        android:id="@+id/Ufield_search_act_what"
-        android:layout_width="199dp"
-        android:layout_height="20dp"
-        android:layout_marginStart="15dp"
-        android:layout_marginTop="12dp"
-        android:textColor="@color/uField_15315b66"
-        android:textSize="14sp"
-        app:layout_constraintStart_toEndOf="@+id/uField_search_act_image"
-        app:layout_constraintTop_toBottomOf="@+id/Ufield_search_act_ame" />
+        <ImageView
+            android:id="@+id/uField_search_isGoing"
+            android:layout_width="32dp"
+            android:layout_height="14sp"
+            android:layout_marginStart="10dp"
+            app:layout_constraintStart_toEndOf="@+id/Ufield_search_act_ame"
+            app:layout_constraintTop_toTopOf="parent" />
 
-    <ImageView
-        android:layout_width="16dp"
-        android:layout_height="16dp"
-        android:layout_marginStart="15dp"
-        android:layout_marginTop="15dp"
-        android:src="@drawable/ufield_ic_activity_time"
-        app:layout_constraintStart_toEndOf="@+id/uField_search_act_image"
-        app:layout_constraintTop_toBottomOf="@+id/Ufield_search_act_what" />
+        <TextView
+            android:id="@+id/Ufield_search_act_what"
+            android:layout_width="199dp"
+            android:layout_height="20dp"
+            android:layout_marginStart="15dp"
+            android:layout_marginTop="12dp"
+            android:textColor="@color/uField_15315b66"
+            android:textSize="14sp"
+            app:layout_constraintStart_toEndOf="@+id/uField_search_act_image"
+            app:layout_constraintTop_toBottomOf="@+id/Ufield_search_act_ame" />
 
-    <TextView
-        android:id="@+id/uField_search_ddl"
-        android:layout_width="150dp"
-        android:layout_height="17dp"
-        android:layout_marginStart="155dp"
-        android:layout_marginTop="14dp"
-        android:textSize="12sp"
-        android:textColor="@color/uField_112c5499"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/Ufield_search_act_what" />
+        <ImageView
+            android:layout_width="16dp"
+            android:layout_height="16dp"
+            android:layout_marginStart="15dp"
+            android:layout_marginTop="15dp"
+            android:src="@drawable/ufield_ic_activity_time"
+            app:layout_constraintStart_toEndOf="@+id/uField_search_act_image"
+            app:layout_constraintTop_toBottomOf="@+id/Ufield_search_act_what" />
+
+        <TextView
+            android:id="@+id/uField_search_ddl"
+            android:layout_width="150dp"
+            android:layout_height="17dp"
+            android:layout_marginStart="155dp"
+            android:layout_marginTop="14dp"
+            android:textColor="@color/uField_112c5499"
+            android:textSize="12sp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/Ufield_search_act_what" />
+    </androidx.constraintlayout.widget.ConstraintLayout>
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>

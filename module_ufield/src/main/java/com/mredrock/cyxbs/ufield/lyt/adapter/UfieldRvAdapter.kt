@@ -35,9 +35,9 @@ class UfieldRvAdapter :
 
     @RequiresApi(Build.VERSION_CODES.O)
     override fun onBindViewHolder(holder: RvAllActViewHolder, position: Int) {
-        val itemView = getItem(position)
+        val itemData = getItem(position)
 
-        holder.bind(itemView)
+        holder.bind(itemData)
     }
 
 

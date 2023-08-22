@@ -10,10 +10,8 @@ import androidx.recyclerview.widget.RecyclerView
 import com.mredrock.cyxbs.lib.base.ui.BaseFragment
 import com.mredrock.cyxbs.ufield.R
 import com.mredrock.cyxbs.ufield.lyt.adapter.SearchRvAdapter
-import com.mredrock.cyxbs.ufield.lyt.adapter.UfieldRvAdapter
-import com.mredrock.cyxbs.ufield.lyt.ui.helper.GridSpacingItemDecoration
+import com.mredrock.cyxbs.ufield.lyt.helper.GridSpacingItemDecoration
 import com.mredrock.cyxbs.ufield.lyt.viewmodel.ui.SearchViewModel
-import com.mredrock.cyxbs.ufield.lyt.viewmodel.ui.UFieldViewModel
 
 class SportsSearchFragment : BaseFragment() {
     private val mRv: RecyclerView by R.id.uField_sports_rv_search.view()
@@ -43,7 +41,7 @@ class SportsSearchFragment : BaseFragment() {
         mRv.apply {
             layoutManager = GridLayoutManager(requireContext(), 1)
             adapter = mAdapter
-            addItemDecoration(GridSpacingItemDecoration(1, 20, true))
+            addItemDecoration(GridSpacingItemDecoration(1, 20, false))
         }
 
     }

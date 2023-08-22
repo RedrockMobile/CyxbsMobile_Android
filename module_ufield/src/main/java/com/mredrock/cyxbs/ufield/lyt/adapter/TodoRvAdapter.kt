@@ -1,9 +1,11 @@
 package com.mredrock.cyxbs.ufield.lyt.adapter
 
 import android.os.Build
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Button
 import android.widget.TextView
 import androidx.annotation.RequiresApi
 import androidx.recyclerview.widget.DiffUtil
@@ -39,25 +41,58 @@ class TodoRvAdapter :
     }
 
 
-    class RvTodoViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
+    /**
+     * 点击同意按钮的回调
+     */
+
+    private var mOnPassClick: ((Int) -> Unit)? = null
+
+    /**
+     * 点击驳回按钮的回调
+     */
+    private var mRejectClick: ((Int) -> Unit)? = null
+
+
+    fun setOnPassClick(listener: (Int) -> Unit){
+        mOnPassClick = listener
+    }
+
+    fun setOnRejectClick(listener: (Int) -> Unit){
+        mRejectClick = listener
+    }
+
+
+   inner class RvTodoViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
 
         private val actName: TextView = itemView.findViewById(R.id.uField_todo_activity_name)
         private val actTime: TextView = itemView.findViewById(R.id.uField_todo_activity_time)
         private val actType: TextView = itemView.findViewById(R.id.uField_todo_activity_type)
         private val actAuthor: TextView = itemView.findViewById(R.id.uField_todo_activity_author)
         private val actPhone: TextView = itemView.findViewById(R.id.uField_todo_activity_phone)
+        private val actPass:Button = itemView.findViewById(R.id.uField_todo_btn_accept)
+        private val actReject:Button = itemView.findViewById(R.id.uField_todo_btn_reject)
+
+
+        init {
+            actPass.setOnClickListener {
+                mOnPassClick?.invoke(absoluteAdapterPosition)
+            }
+            actReject.setOnClickListener {
+                mRejectClick?.invoke(absoluteAdapterPosition)
+            }
+        }
 
 
         /**
          * 进行视图的绑定
          */
         @RequiresApi(Build.VERSION_CODES.O)
-        fun bind(itemView: TodoBean) {
-            actName.text = itemView.activity_title
-            actTime.text = timeFormat(itemView.activity_create_timestamp)
-            actType.text = itemView.activity_type
-            actAuthor.text = itemView.activity_creator
-            actPhone.text = itemView.activity_phone
+        fun bind(itemData: TodoBean) {
+            actName.text = itemData.activity_title
+            actTime.text = timeFormat(itemData.activity_create_timestamp)
+            actType.text = itemData.activity_type
+            actAuthor.text = itemData.activity_creator
+            actPhone.text = itemData.activity_phone
         }
 
 

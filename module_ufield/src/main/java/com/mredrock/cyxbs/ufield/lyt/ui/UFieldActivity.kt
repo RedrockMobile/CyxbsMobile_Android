@@ -65,6 +65,12 @@ class UFieldActivity : BaseActivity() {
         //让初始化的第一个先变色
         (mTabLayout.getChildAt(0) as ViewGroup).getChildAt(0)
             .setBackgroundResource(R.drawable.ufield_ic_tab_shape_selected)
+        //设置其他三个icon颜色
+        for(i in 1 until mTabLayout.tabCount){
+            val tab = (mTabLayout.getChildAt(0) as ViewGroup).getChildAt(i)
+            tab.setBackgroundResource(R.drawable.ufield_ic_tab_shape)
+        }
+        //设置间距
         for (i in 0 until mTabLayout.tabCount) {
             val tab = (mTabLayout.getChildAt(0) as ViewGroup).getChildAt(i)
             val params = tab.layoutParams as ViewGroup.MarginLayoutParams
@@ -113,6 +119,7 @@ class UFieldActivity : BaseActivity() {
             startActivity(Intent(this, SearchActivity::class.java))
         }
         mAdmin.setOnClickListener {
+            startActivity(Intent(this, CheckActivity::class.java))
 
         }
         mAdd.setOnClickListener {

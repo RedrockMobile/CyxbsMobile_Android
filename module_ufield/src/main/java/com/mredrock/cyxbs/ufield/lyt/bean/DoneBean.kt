@@ -4,16 +4,17 @@ import com.google.gson.annotations.SerializedName
 import java.io.Serializable
 
 /**
+ *  description :
  *  author : lytMoon
- *  date : 2023/8/19 20:42
- *  description :管理员待审核活动的数据接受类
+ *  date : 2023/8/23 16:42
+ *  email : yytds@foxmail.com
  *  version ： 1.0
  */
-data class TodoBean(
+data class DoneBean(
     @SerializedName("activity_cover_url")
     val activity_cover_url: String,
     @SerializedName("activity_create_timestamp")
-    val activity_create_timestamp: Int,
+    val activity_create_timestamp: Long,
     @SerializedName("activity_creator")
     val activity_creator: String,
     @SerializedName("activity_detail")
@@ -39,6 +40,7 @@ data class TodoBean(
     @SerializedName("phone")
     val activity_phone: String,
     @SerializedName("want_to_watch")
-    val want_to_watch: Boolean
+    val want_to_watch: Boolean,
+    @SerializedName("state")
+    val state: String
 ) : Serializable
-

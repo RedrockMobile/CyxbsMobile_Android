@@ -1,4 +1,4 @@
-package com.mredrock.cyxbs.ufield.lyt.ui.helper
+package com.mredrock.cyxbs.ufield.lyt.helper
 
 import android.app.Activity
 import android.graphics.Rect

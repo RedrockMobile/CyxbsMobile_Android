@@ -2,22 +2,14 @@ package com.mredrock.cyxbs.ufield.lyt.ui
 
 import android.content.Context
 import android.graphics.Color
-import android.graphics.Rect
-import android.media.Image
 import android.os.Bundle
 import android.util.Log
 import android.view.ViewGroup
-import android.view.ViewTreeObserver
-import android.view.inputmethod.EditorInfo
 import android.view.inputmethod.InputMethodManager
 import android.widget.EditText
 import android.widget.ImageView
-import android.widget.SearchView
-import android.widget.TextView
-import android.widget.Toast
 import androidx.activity.viewModels
 import androidx.cardview.widget.CardView
-import androidx.room.util.query
 import androidx.viewpager2.widget.ViewPager2
 import com.google.android.material.tabs.TabLayout
 import com.google.android.material.tabs.TabLayoutMediator
@@ -28,9 +20,8 @@ import com.mredrock.cyxbs.ufield.lyt.fragment.searchfragment.AllSearchFragment
 import com.mredrock.cyxbs.ufield.lyt.fragment.searchfragment.CultureSearchFragment
 import com.mredrock.cyxbs.ufield.lyt.fragment.searchfragment.EducationSearchFragment
 import com.mredrock.cyxbs.ufield.lyt.fragment.searchfragment.SportsSearchFragment
-import com.mredrock.cyxbs.ufield.lyt.ui.helper.SoftKeyBoardListener
+import com.mredrock.cyxbs.ufield.lyt.helper.SoftKeyBoardListener
 import com.mredrock.cyxbs.ufield.lyt.viewmodel.ui.SearchViewModel
-import com.mredrock.cyxbs.ufield.lyt.viewmodel.ui.UFieldViewModel
 
 
 /**
@@ -85,6 +76,11 @@ class SearchActivity : BaseActivity() {
         //让初始化的第一个先变色
         (mTabLayout.getChildAt(0) as ViewGroup).getChildAt(0)
             .setBackgroundResource(R.drawable.ufield_ic_tab_shape_selected)
+        //设置其他三个icon颜色
+        for (i in 1 until mTabLayout.tabCount) {
+            val tab = (mTabLayout.getChildAt(0) as ViewGroup).getChildAt(i)
+            tab.setBackgroundResource(R.drawable.ufield_ic_tab_shape)
+        }
         for (i in 0 until mTabLayout.tabCount) {
             val tab = (mTabLayout.getChildAt(0) as ViewGroup).getChildAt(i)
             val params = tab.layoutParams as ViewGroup.MarginLayoutParams
@@ -111,23 +107,25 @@ class SearchActivity : BaseActivity() {
      * 监听搜索框,初始化搜索框
      */
     private fun iniSearch() {
-        mSearch.queryHint="点我开始搜索吧"
         val mSearchEditText =
             mSearch.findViewById<EditText>(androidx.appcompat.R.id.search_src_text)
-
-        mSearchEditText.textSize = 16F
         mSearchEditText.setTextColor(Color.parseColor("#A1ADBD"))
-
+        mSearch.queryHint = "点我开始搜索吧"
+        mSearchEditText.textSize = 16F
 
         mCardView.setOnClickListener {
             mSearch.isIconified = false
         }
 
+
         mSearch.setOnQueryTextListener(object :
             androidx.appcompat.widget.SearchView.OnQueryTextListener {
             override fun onQueryTextSubmit(query: String): Boolean {
-                mViewModel.iniSearchList(query)
-                mSearch.clearFocus()
+                //这种判断有点多虑，因为现在的输入法一定非空，因为直接提交是esc，走不到这个方法里面
+                if (query.isNotEmpty()) {
+                    mViewModel.iniSearchList(query)
+                    mSearch.clearFocus()
+                }
                 return false
             }
 
@@ -136,14 +134,7 @@ class SearchActivity : BaseActivity() {
                 return false
             }
         })
-        mSearch.setOnQueryTextFocusChangeListener { _, hasFocus ->
-            if (!hasFocus) {
-                val imm = this.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
-                if (!imm.isAcceptingText) { // 如果软键盘已经关闭
-                    mSearch.clearFocus() // 清除SearchView的焦点
-                }
-            }
-        }
+
     }
 
     private fun iniClick() {

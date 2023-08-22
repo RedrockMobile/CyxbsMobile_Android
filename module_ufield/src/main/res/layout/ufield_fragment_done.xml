@@ -1,9 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<com.scwang.smart.refresh.layout.SmartRefreshLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/uField_todo_background"
+    android:id="@+id/uField_check_refresh_done"
     tools:context=".lyt.fragment.checkfragment.DoneFragment">
 
 
@@ -12,4 +13,4 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent" />
 
-</FrameLayout>
+</com.scwang.smart.refresh.layout.SmartRefreshLayout>
