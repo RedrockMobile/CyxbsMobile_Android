@@ -35,17 +35,17 @@ class NoClassViewModel : BaseViewModel() {
     /**
      * 课表界面每一项的人名数据
      */
-    val busyNameList : LiveData<List<String>> get() = _busyNameList
+    val busyNameList: LiveData<List<String>> get() = _busyNameList
     private val _busyNameList = MutableLiveData<List<String>>()
 
     /**
      * 仅获得索引之后的list
      */
-    fun removeBusyName(index : Int){
+    fun removeBusyName(index: Int) {
         if (busyNameList.value == null) return
-        if (index < busyNameList.value!!.size){
+        if (index < busyNameList.value!!.size) {
             Log.d("lx", "removeBusyName: index=${index}")
-            val list = busyNameList.value!!.subList(index,busyNameList.value!!.size)
+            val list = busyNameList.value!!.subList(index, busyNameList.value!!.size)
             _busyNameList.value = list
         }
     }
@@ -53,10 +53,8 @@ class NoClassViewModel : BaseViewModel() {
     /**
      * 首次设置list
      */
-    fun setBusyNameList(busyNameList : List<String>){
-        if (busyNameList.isNotEmpty()){
-            _busyNameList.value = busyNameList
-        }
+    fun setBusyNameList(busyNameList: List<String>) {
+        _busyNameList.value = busyNameList
     }
 
     /**

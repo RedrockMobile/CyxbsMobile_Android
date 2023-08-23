@@ -66,8 +66,7 @@ interface AffairApiService {
   fun getHotLocation(): Single<ApiWrapper<List<String>>>
 
   // 没课约专属发送通知接口
-  @POST("/magipoke-system/Person/send")
-  @FormUrlEncoded
+  @POST("magipoke-jwzx/itinerary")
   @Headers("App-Version:74")
   fun sendNotification(@Body notification : NotificationBean) : Single<ApiStatus>
 

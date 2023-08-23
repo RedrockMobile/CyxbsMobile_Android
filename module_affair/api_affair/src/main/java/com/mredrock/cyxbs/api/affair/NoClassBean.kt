@@ -30,11 +30,11 @@ data class NoClassBean(
 ) : Serializable
 
 data class NotificationBean(
-    val mStuList : List<String>,
+    val stuNumList : List<String>,
     //存储点击的时间信息
     val dateJson : DateJson,
     val title : String,
-    val loc : String,
+    val location : String,
 ) : Serializable
 
 data class DateJson(

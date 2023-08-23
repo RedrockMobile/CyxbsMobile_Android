@@ -111,4 +111,9 @@ class NoClassGatherDialog (
       }
     })
   }
+
+  override fun onDestroy() {
+    super.onDestroy()
+    mParentViewModel.setBusyNameList(listOf())
+  }
 }

@@ -1,6 +1,5 @@
 package com.mredrock.cyxbs.noclass.page.ui.fragment
 
-import android.util.Log
 import com.mredrock.cyxbs.lib.course.fragment.page.CoursePageFragment
 import com.mredrock.cyxbs.noclass.bean.NoClassSpareTime
 import com.mredrock.cyxbs.noclass.page.course.NoClassLesson
@@ -95,14 +94,11 @@ abstract class NoClassPageFragment: CoursePageFragment() {
     id1: List<String>,
     id2: List<String>,
   ){
-    // 如果上一节课
-    if (id1.isEmpty() && id2.isEmpty()){
-
-    }
-    if (id1 == id2) {
-      Log.d("lx", "11111:这里根本走不到 ")
+    // 空闲人员的id的列表
+    if (id1 == id2 && id1.size != mNameMap.size){
+      // 也就是有人在忙
       addLesson(getLesson(begin,week,2,id1))
-    } else if (id1 != id2) {
+    }else{
       addLesson(getLesson(begin,week,1,id1))
       addLesson(getLesson(begin+1,week,1,id2))
     }

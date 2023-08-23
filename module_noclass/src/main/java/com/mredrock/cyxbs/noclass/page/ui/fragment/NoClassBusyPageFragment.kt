@@ -39,6 +39,7 @@ class NoClassBusyPageFragment : BaseFragment(R.layout.noclass_layout_gathering) 
             Log.d("lx", "newInstance:我希望我只出现一次 ")
             return NoClassBusyPageFragment()
         }
+
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
