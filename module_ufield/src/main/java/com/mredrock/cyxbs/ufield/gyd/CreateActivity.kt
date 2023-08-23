@@ -8,7 +8,6 @@ import android.content.pm.PackageManager
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import android.graphics.Canvas
-import android.graphics.Color
 import android.net.Uri
 import android.os.Bundle
 import android.os.Environment
@@ -18,7 +17,6 @@ import android.text.Spannable
 import android.text.SpannableStringBuilder
 import android.text.TextWatcher
 import android.text.style.RelativeSizeSpan
-import android.util.Log
 import android.view.Gravity
 import android.widget.Button
 import android.widget.EditText
@@ -74,7 +72,8 @@ class CreateActivity : BaseActivity() {
 
     private val viewModel by lazy { ViewModelProvider(this)[CreateViewModel::class.java] }
 
-    private  lateinit var coverFile:File
+    private lateinit var coverFile: File
+    private var isCovered = false
 
     private lateinit var pvtype: OptionsPickerView<String>
     private var index = 0
@@ -297,13 +296,15 @@ class CreateActivity : BaseActivity() {
             // 获取实际图片路径
             val imagePath = imageFile.absolutePath
 
-            coverFile= convertToPNG(imagePath)?.let { File(it) }!!
+            coverFile = convertToPNG(imagePath)?.let { File(it) }!!
+            isCovered = true
             coverImage.setImageURI(resultUri)
             coverText.gone()
         } else if (resultCode == UCrop.RESULT_ERROR) {
             toast("裁剪失败")
         }
     }
+
     private fun convertToPNG(filePath: String): String? {
         val originalFile = File(filePath)
 
@@ -334,7 +335,7 @@ class CreateActivity : BaseActivity() {
 
             // 在目标 Bitmap 上绘制原始 Bitmap
             val canvas = Canvas(targetBitmap)
-            val paint = Bitmap.createBitmap(originalBitmap.width, originalBitmap.height, Bitmap.Config.ARGB_8888)
+
             canvas.drawBitmap(originalBitmap, 0f, 0f, null)
 
             // 将目标 Bitmap 保存为 PNG 文件
@@ -353,6 +354,7 @@ class CreateActivity : BaseActivity() {
 
         return null
     }
+
     private fun isPNGFile(file: File): Boolean {
         return file.extension.equals("png", true)
     }
@@ -592,19 +594,35 @@ class CreateActivity : BaseActivity() {
                 btCreate.apply {
                     setBackgroundResource(R.drawable.ufield_shape_createbutton2)
                     setOnClickListener {
-                        viewModel.postActivity(
-                            name,
-                            selectedType,
-                            selectedStartTimestamp.toInt(),
-                            selectedEndTimestamp.toInt(),
-                            address,
-                            way,
-                            sponsor,
-                            phone,
-                            introduce,
-                            coverFile
-                        )
-                        setOnClickListener(null)
+                        if (isCovered) {
+                            viewModel.postActivityWithCover(
+                                name,
+                                selectedType,
+                                selectedStartTimestamp.toInt(),
+                                selectedEndTimestamp.toInt(),
+                                address,
+                                way,
+                                sponsor,
+                                phone,
+                                introduce,
+                                coverFile
+                            )
+                            setOnClickListener(null)
+                        } else {
+                            viewModel.postActivityNotCover(
+                                name,
+                                selectedType,
+                                selectedStartTimestamp.toInt(),
+                                selectedEndTimestamp.toInt(),
+                                address,
+                                way,
+                                sponsor,
+                                phone,
+                                introduce
+                            )
+                            setOnClickListener(null)
+
+                        }
                     }
                 }
             } else {
