@@ -5,6 +5,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.GridLayout
+import android.widget.ImageView
 import android.widget.LinearLayout
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
@@ -15,7 +16,7 @@ import com.mredrock.cyxbs.noclass.bean.NoClassGroup
 import com.mredrock.cyxbs.noclass.widget.MyFlexLayout
 
 class NoClassAddToGroupAdapter(
-    val groupListByPage: HashMap<Int, ArrayList<NoClassGroup>>,
+    private val groupList: List<NoClassGroup>,
     val context: Context,
     val setDoneStatus: (isOk: Boolean, chooseGroup: List<NoClassGroup>) -> Unit
 ) : RecyclerView.Adapter<NoClassAddToGroupAdapter.MyHolder>() {
@@ -26,37 +27,30 @@ class NoClassAddToGroupAdapter(
     private val chooseGroup by lazy { ArrayList<NoClassGroup>() }
 
     inner class MyHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
-        val containerView = itemView.findViewById<MyFlexLayout>(R.id.noclass_gl_container)
-        // 在containerView中添加八个子视图，方便设置点击事件
+        val containerView = itemView.findViewById<LinearLayout>(R.id.noclass_item_add_to_group)
+        val mImg = itemView.findViewById<ImageView>(R.id.noclass_item_add_to_group_img)
+        val mTv = itemView.findViewById<TextView>(R.id.noclass_item_add_to_group_tv)
+
         init {
-            for (i in 0 until 8) {
-                val child = groupNameView(containerView.context)
-                child.invisible()
-                child.setOnClickListener {
-                    if (child.visibility == View.VISIBLE){
-                        //判断是否选中，选中需要更改背景,同时加入缓冲区
-                        val noClassGroup = groupListByPage[bindingAdapterPosition]?.get(i)!!
-                        val linearLayout =
-                            it.findViewById<LinearLayout>(R.id.noclass_ll_gathering_item_container)
-                        if (chooseGroup.contains(noClassGroup)) {
-                            //这是是取消选中
-                            chooseGroup.remove(noClassGroup)
-                            linearLayout.setBackgroundResource(R.drawable.noclass_shape_button_save_default_bg)
-                        } else {
-                            //这里是选中
-                            chooseGroup.add(noClassGroup)
-                            linearLayout.setBackgroundResource(R.drawable.noclass_shape_button_common_bg)
-                        }
-                        //判断分组缓冲区是否为空，如果为空，那么就回调传进来的点击事件
-                        if (chooseGroup.isEmpty()) {
-                            setDoneStatus(false, chooseGroup)
-                        } else {
-                            setDoneStatus(true, chooseGroup)
-                        }
-                    }
+            containerView.setOnClickListener {
+                //判断是否选中，选中需要更改背景,同时加入缓冲区
+                val noClassGroup = groupList[bindingAdapterPosition]
+                if (chooseGroup.contains(noClassGroup)) {
+                    //这是是取消选中
+                    //todo 图标的改变
+                    chooseGroup.remove(noClassGroup)
+                    containerView.setBackgroundResource(R.drawable.noclass_shape_button_save_default_bg)
+                } else {
+                    //这里是选中
+                    chooseGroup.add(noClassGroup)
+                    containerView.setBackgroundResource(R.drawable.noclass_shape_button_common_bg)
                 }
-                // 别忘了把这个子view添加进去
-                containerView.addView(child)
+                //判断分组缓冲区是否为空，如果为空，那么就回调传进来的点击事件
+                if (chooseGroup.isEmpty()) {
+                    setDoneStatus(false, chooseGroup)
+                } else {
+                    setDoneStatus(true, chooseGroup)
+                }
             }
         }
     }
@@ -64,40 +58,16 @@ class NoClassAddToGroupAdapter(
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MyHolder {
         return MyHolder(
             LayoutInflater.from(parent.context)
-                .inflate(R.layout.noclass_layout_gathering, parent, false)
+                .inflate(R.layout.noclass_item_add_to_group, parent, false)
         )
     }
 
     override fun getItemCount(): Int {
-        return groupListByPage.size
+        return groupList.size
     }
 
     override fun onBindViewHolder(holder: MyHolder, position: Int) {
-        val parentView = holder.containerView
-        // 一页内的八条数据
-        val onePageData = groupListByPage[position]!!
-        for (index in 0 until onePageData.size){
-            val child = parentView.getChildAt(index)
-            child.visible()
-            child.findViewById<TextView>(R.id.noclass_tv_gathering_name).apply {
-                var ordinateText = onePageData[index].name
-                val len = if (ordinateText.length <= 3) ordinateText.length else 3
-                ordinateText = ordinateText.substring(0,len) + ".."
-                text = ordinateText
-            }
-        }
-    }
-
-    /**
-     * 一页中的一个view
-     */
-    private fun groupNameView(context: Context): View {
-        return LayoutInflater.from(context).inflate(R.layout.noclass_item_gathering, null).apply {
-            layoutParams = GridLayout.LayoutParams().apply {
-                setMargins(12, 14, 12, 14)
-                columnSpec = GridLayout.spec(GridLayout.UNDEFINED, 1f)
-            }
-        }
+        holder.mTv.text = groupList[position].name
     }
 
 }

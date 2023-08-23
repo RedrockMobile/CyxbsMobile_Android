@@ -70,28 +70,29 @@
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintVertical_bias="0.19" />
 
-        <androidx.viewpager2.widget.ViewPager2
-            android:id="@+id/noclass_add_to_group_vp_container"
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/noclass_add_to_group_rv_container"
             android:layout_width="0dp"
             android:layout_height="0dp"
             android:layout_marginStart="16dp"
             android:layout_marginEnd="16dp"
             android:layout_marginBottom="8dp"
             android:layout_marginTop="8dp"
-            app:layout_constraintBottom_toTopOf="@+id/noclass_add_to_group_indicator"
+            app:layout_constraintBottom_toTopOf="@+id/noclass_add_to_group_seekbar"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/noclassView3" />
 
-        <com.mredrock.cyxbs.noclass.widget.StickIndicator
-            android:id="@+id/noclass_add_to_group_indicator"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+        <SeekBar
+            android:id="@+id/noclass_add_to_group_seekbar"
+            android:layout_width="50dp"
+            android:layout_height="3dp"
             android:layout_marginBottom="8dp"
+            android:progressDrawable="@drawable/noclass_shape_seek_bar_progress"
+            android:thumb="@drawable/noclass_shape_seek_bar_thumb"
             app:layout_constraintBottom_toTopOf="@+id/noclass_add_to_group_done"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:noclass_indicator_show_count="5" />
+            app:layout_constraintStart_toStartOf="parent" />
 
         <Button
             android:id="@+id/noclass_add_to_group_done"

@@ -3,9 +3,11 @@ package com.mredrock.cyxbs.noclass.page.ui.dialog
 import android.app.Dialog
 import android.os.Bundle
 import android.widget.Button
+import android.widget.SeekBar
 import android.widget.TextView
 import androidx.fragment.app.viewModels
-import androidx.viewpager2.widget.ViewPager2
+import androidx.recyclerview.widget.GridLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import com.mredrock.cyxbs.lib.utils.extensions.toast
 import com.mredrock.cyxbs.noclass.R
@@ -13,7 +15,6 @@ import com.mredrock.cyxbs.noclass.bean.NoClassGroup
 import com.mredrock.cyxbs.noclass.bean.Student
 import com.mredrock.cyxbs.noclass.page.adapter.NoClassAddToGroupAdapter
 import com.mredrock.cyxbs.noclass.page.viewmodel.fragment.SolidViewModel
-import com.mredrock.cyxbs.noclass.widget.StickIndicator
 
 /**
  * 将该学生添加到指定的分组中
@@ -25,14 +26,14 @@ class AddToGroupDialog(
 ) : BottomSheetDialogFragment() {
 
     /**
-     * vp，放置分组，每一页放置八个
+     * 分组文字的recyclerView
      */
-    private lateinit var mVp : ViewPager2
+    private lateinit var mRv : RecyclerView
 
     /**
-     * vp的指示器
+     * seekbar
      */
-    private lateinit var mIndicator : StickIndicator
+    private lateinit var mSb : SeekBar
 
     /**
      * 完成点击按钮
@@ -54,8 +55,9 @@ class AddToGroupDialog(
         val dialog = super.onCreateDialog(savedInstanceState)
         dialog.setContentView(R.layout.noclass_dialog_add_to_group)
         initView(dialog)
+        initRv()
+        initScroll()
         initObserver()
-        initVp()
         return dialog
     }
 
@@ -67,22 +69,10 @@ class AddToGroupDialog(
         }
     }
 
-    private fun initVp() {
-        // 一面八条数据,满八进一
-        val groupListByPage = HashMap<Int,ArrayList<NoClassGroup>>()
-        var index = 0
-        for (i in groupList.indices){
-            if (groupListByPage[index] == null){
-                groupListByPage[index] = ArrayList()
-            }
-            groupListByPage[index]!!.add(groupList[i])
-            // 如果不是0，且是八的倍数，那么就换页
-            if (groupListByPage[index]!!.size == 8){
-                index++
-            }
-        }
-        mVp.apply {
-            adapter = NoClassAddToGroupAdapter(groupListByPage,context){ isOk , chooseGroup ->
+    private fun initRv() {
+        mRv.apply {
+            layoutManager = GridLayoutManager(requireContext(),3,RecyclerView.HORIZONTAL,false)
+            adapter = NoClassAddToGroupAdapter(groupList,context){ isOk , chooseGroup ->
                 //true为可以点击完成,也就是深色
                 if (isOk){
                     mBtnDone.setBackgroundResource(R.drawable.noclass_shape_button_common_bg)
@@ -95,27 +85,18 @@ class AddToGroupDialog(
                 }
             }
         }
-        // indicator 设置总数量
-        mIndicator.setTotalCount(groupList.size / 8 + 1)
-        // 增加vp页面改变的监视器
-        mVp.registerOnPageChangeCallback(object : ViewPager2.OnPageChangeCallback(){
-            override fun onPageSelected(position: Int) {
-                mIndicator.setCurIndex(position)
-                super.onPageSelected(position)
-            }
-        })
     }
 
 
     private fun initView(dialog : Dialog) {
+        mRv = dialog.findViewById(R.id.noclass_add_to_group_rv_container)
+        mSb = dialog.findViewById(R.id.noclass_add_to_group_seekbar)
         // 弹窗的取消按钮
         dialog.findViewById<TextView>(R.id.noclass_add_to_group_tv_cancel).apply {
             setOnClickListener {
                 dismiss()
             }
         }
-        mVp = dialog.findViewById(R.id.noclass_add_to_group_vp_container)
-        mIndicator = dialog.findViewById(R.id.noclass_add_to_group_indicator)
         // 完成按钮
         mBtnDone = dialog.findViewById<Button>(R.id.noclass_add_to_group_done).apply {
             setOnClickListener {
@@ -132,5 +113,41 @@ class AddToGroupDialog(
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setStyle(STYLE_NORMAL, R.style.noclass_sheet_dialog_style)
+    }
+
+    /**
+     * 这个方法用来rv和seekbar协作滑动，滑动事件监听
+     */
+    private fun initScroll() {
+        mRv.addOnScrollListener(object : RecyclerView.OnScrollListener() {
+            override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
+                super.onScrolled(recyclerView, dx, dy)
+                val haveScrolled = recyclerView.computeHorizontalScrollOffset().toDouble()
+                val rvMaxWidth = recyclerView.computeHorizontalScrollRange().toDouble()
+                val percent: Double = haveScrolled / rvMaxWidth
+                val processWidth = mSb.measuredWidth
+                val scrollDistance = processWidth * percent
+                mSb.progress = scrollDistance.toInt()
+            }
+        })
+
+        mSb.setOnSeekBarChangeListener(object :
+            SeekBar.OnSeekBarChangeListener {
+            override fun onProgressChanged(seekBar: SeekBar?, progress: Int, fromUser: Boolean) {
+                if (fromUser) {
+                    val haveScrolled = progress.toDouble()
+                    val sbMaxWidth = mSb.measuredWidth.toDouble()
+                    val percent: Double = haveScrolled / sbMaxWidth
+                    val rvScrollWidth =
+                        mRv.computeHorizontalScrollRange().toDouble()
+                    val scrollDistance = rvScrollWidth * percent
+                    mRv.smoothScrollToPosition(scrollDistance.toInt())
+                }
+            }
+
+            override fun onStartTrackingTouch(seekBar: SeekBar?) {}
+
+            override fun onStopTrackingTouch(seekBar: SeekBar?) {}
+        })
     }
 }

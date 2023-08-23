@@ -90,7 +90,7 @@ class NoClassViewModel : BaseViewModel() {
                                     id = "2021241392"
                                 )
                             ),
-                            "adef.."
+                            "分组最长十个字"
                         ),
                         NoClassGroup(
                             "2",
@@ -113,7 +113,7 @@ class NoClassViewModel : BaseViewModel() {
                                     id = "2021241392"
                                 )
                             ),
-                            "adef.."
+                            "真的是太棒了"
                         ),
                         NoClassGroup(
                             "3",
@@ -136,7 +136,7 @@ class NoClassViewModel : BaseViewModel() {
                                     id = "2021241392"
                                 )
                             ),
-                            "adef.."
+                            "站至终章"
                         ),
                         NoClassGroup(
                             "4",
@@ -159,7 +159,7 @@ class NoClassViewModel : BaseViewModel() {
                                     id = "2021241392"
                                 )
                             ),
-                            "abeg.."
+                            "一二三四五六七八九十"
                         ),
                         NoClassGroup(
                             "5",
@@ -182,7 +182,7 @@ class NoClassViewModel : BaseViewModel() {
                                     id = "2021241392"
                                 )
                             ),
-                            "abdg.."
+                            "amazing"
                         ),
                         NoClassGroup(
                             "6",
@@ -205,7 +205,7 @@ class NoClassViewModel : BaseViewModel() {
                                     id = "2021241392"
                                 )
                             ),
-                            "abdc.."
+                            "孤注一掷"
                         ),
                         NoClassGroup(
                             "7",
@@ -228,7 +228,7 @@ class NoClassViewModel : BaseViewModel() {
                                     id = "2021241392"
                                 )
                             ),
-                            "abdd.."
+                            "海阔天空"
                         ),
                         NoClassGroup(
                             "8",
@@ -251,7 +251,7 @@ class NoClassViewModel : BaseViewModel() {
                                     id = "2021241392"
                                 )
                             ),
-                            "abcg.."
+                            "飞流"
                         ),
                         NoClassGroup(
                             "9",
@@ -274,7 +274,7 @@ class NoClassViewModel : BaseViewModel() {
 //                                    id = "2021241392"
 //                                )
                             ),
-                            "忽略"
+                            "成长的道路纵有千般"
                         )
                     )
                 )

@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="horizontal"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:id="@+id/noclass_item_add_to_group">
+
+    <ImageView
+        android:id="@+id/noclass_item_add_to_group_img"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:src="@drawable/pd_more"
+        android:layout_gravity="center_vertical"/>
+
+    <TextView
+        android:id="@+id/noclass_item_add_to_group_tv"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="未知分组"
+        android:textSize="20sp"/>
+
+</LinearLayout>
