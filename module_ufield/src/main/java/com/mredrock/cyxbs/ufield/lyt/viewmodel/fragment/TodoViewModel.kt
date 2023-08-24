@@ -77,7 +77,7 @@ class TodoViewModel : BaseViewModel() {
     /**
      * 驳回活动
      */
-    fun rejectActivity(id: Int, reason: String = "好好好") {
+    fun rejectActivity(id: Int, reason: String ) {
         CheckRepository
             .sendReject(id, reason)
             .doOnError {

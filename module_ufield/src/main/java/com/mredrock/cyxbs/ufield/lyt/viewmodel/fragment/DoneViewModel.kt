@@ -54,5 +54,4 @@ class DoneViewModel : BaseViewModel() {
                 _doneList.value = _doneList.value?.plus(it)
             }
     }
-
 }

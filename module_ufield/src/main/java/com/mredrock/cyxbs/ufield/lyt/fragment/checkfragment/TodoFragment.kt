@@ -92,18 +92,23 @@ class TodoFragment : BaseFragment() {
                         CheckDialog.Builder(
                             requireContext(),
                             CheckDialog.Data(
-                                content = "请输入驳回理由",
+                                content = "请输入驳回理由（1-10个字）",
                                 width = 255,
                                 height = 207
                             )
                         ).setPositiveClick {
                             mViewModel.apply {
-                                rejectActivity(mDataList[position].activity_id)
-                                getTodoData()
-                                getTodoUpData(mDataList.lastOrNull()?.activity_id!!)
-                                notifyDataSetChanged()
+                                if (!getInput().isEmpty()) {
+                                    rejectActivity(mDataList[position].activity_id, getInput())
+                                    getTodoData()
+                                    getTodoUpData(mDataList.lastOrNull()?.activity_id!!)
+                                    notifyDataSetChanged()
+                                    dismiss()
+                                    toast("已经驳回")
+                                } else {
+                                    toast("输入不能为空")
+                                }
                             }
-                            dismiss()
                         }.setNegativeClick {
                             dismiss()
                         }.show()

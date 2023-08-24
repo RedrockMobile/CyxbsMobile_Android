@@ -62,12 +62,15 @@ class SearchRvAdapter :
             actName.text = itemData.activity_title
             actHint.text = itemData.activity_detail
             actTime.text = timeFormat(itemData.activity_start_at)
+          //  actPic.setImageFromUrl(itemData.activity_cover_url)
             when (itemData.ended) {
                 false -> actIsGoing.setImageResource(R.drawable.ufield_ic_activity_on)
                 else -> actIsGoing.setImageResource(R.drawable.ufield_ic_activity_off)
             }
 
-
+            /**
+             * 满足中心比例的缩放，没用setImageFromUrl
+             */
             Glide.with(itemView.context)
                 .load(itemData.activity_cover_url)
                 .centerCrop() //中心比例的缩放（如果效果不稳定请删除）

@@ -13,7 +13,7 @@ data class TodoBean(
     @SerializedName("activity_cover_url")
     val activity_cover_url: String,
     @SerializedName("activity_create_timestamp")
-    val activity_create_timestamp: Int,
+    val activity_create_timestamp: Long,
     @SerializedName("activity_creator")
     val activity_creator: String,
     @SerializedName("activity_detail")

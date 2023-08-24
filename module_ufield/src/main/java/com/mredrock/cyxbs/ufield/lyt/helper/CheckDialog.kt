@@ -1,6 +1,8 @@
 package com.mredrock.cyxbs.ufield.lyt.helper
 
 import android.content.Context
+import android.text.Editable
+import android.text.TextWatcher
 import android.util.Size
 import android.view.Gravity
 import android.view.View
@@ -89,15 +91,37 @@ open class CheckDialog protected constructor(
 
     override fun initContentView(view: View) {
         view as EditText
-        view.hint = data.content
-        view.textSize = data.contentSize
-        view.gravity = data.contentGravity
+        view.apply {
+            hint = data.content
+            textSize = data.contentSize
+            gravity = data.contentGravity
+            addTextChangedListener(textWatcher)
+        }
+
+    }
+
+    // 定义文本变化监听器
+    private val textWatcher = object : TextWatcher {
+        override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
+
+        override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {}
+
+        override fun afterTextChanged(s: Editable?) {
+            // 检查输入的文本长度
+            val inputText = s.toString()
+            if (inputText.length > 10) {
+                // 如果超过10个字，则截取前10个字
+                toast("已经超过十个字了哦")
+                val limitedText = inputText.substring(0, 10)
+                editText.setText(limitedText)
+                editText.setSelection(limitedText.length)
+            }
+        }
     }
 
     fun getInput(): String {
         return editText.text.toString()
     }
-
 
 }
 

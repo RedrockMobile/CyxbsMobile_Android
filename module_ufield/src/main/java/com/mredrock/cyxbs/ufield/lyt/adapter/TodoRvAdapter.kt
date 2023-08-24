@@ -118,13 +118,13 @@ class TodoRvAdapter :
          * 加工时间戳,把时间戳转化为“年.月.日”格式
          */
         @RequiresApi(Build.VERSION_CODES.O)
-        fun timeFormat(time: Int): String {
+        fun timeFormat(time: Long): String {
             return Instant
-                .ofEpochSecond(time.toLong())
+                .ofEpochSecond(time)
                 .atZone(ZoneId.systemDefault())
                 .toLocalDateTime()
-                // .format(DateTimeFormatter.ofPattern("yyyy.MM.dd"))
-                .format(DateTimeFormatter.ofPattern("HH:mm:ss"))//测试用
+                .format(DateTimeFormatter.ofPattern("yyyy.MM.dd"))
+               // .format(DateTimeFormatter.ofPattern("HH:mm:ss"))//测试用
         }
     }
 
