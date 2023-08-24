@@ -142,7 +142,11 @@ class AffairActivity : BaseActivity() {
   
   private fun initClick() {
     mBtnBack.setOnSingleClickListener {
-      finishAfterTransition()
+      if (mArguments is NoClassAffairArgument){
+        mViewModel.clickLastBtn()
+      }else{
+        finishAfterTransition()
+      }
     }
     
     mBtnNext.setOnSingleClickListener {

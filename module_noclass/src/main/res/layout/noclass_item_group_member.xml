@@ -9,6 +9,7 @@
     android:layout_marginTop="12dp">
 
     <com.mredrock.cyxbs.noclass.widget.SlideMenuLayout
+        android:id="@+id/noclass_item_group_member_slide_layout"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:background="@drawable/noclass_selector_item_selected_bg"

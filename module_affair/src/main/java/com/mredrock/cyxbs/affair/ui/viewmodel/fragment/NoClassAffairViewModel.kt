@@ -4,6 +4,7 @@ import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
+import com.mredrock.cyxbs.affair.bean.NotificationResultBean
 import com.mredrock.cyxbs.affair.net.AffairApiService
 import com.mredrock.cyxbs.api.affair.NotificationBean
 import com.mredrock.cyxbs.lib.base.ui.BaseViewModel
@@ -27,7 +28,7 @@ class NoClassAffairViewModel : BaseViewModel() {
         get() = _hotLocation
 
     //没课约专属,发送通知
-    private val _mutableNotification = MutableLiveData<ApiStatus>()
+    private val _mutableNotification = MutableLiveData<NotificationResultBean>()
     val notification get() = _mutableNotification
 
     //没课约最后发送通知

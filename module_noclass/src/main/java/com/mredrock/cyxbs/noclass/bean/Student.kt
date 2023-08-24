@@ -14,19 +14,24 @@ import java.io.Serializable
  * @Version:        1.0
  * @Description:
  */
-
+/**
+ * 要注意以下两点
+ * 1：在计算hashmap值的时候会跳过类型为可空并且为空的，但是如果类型是不可空的，由于网络请求没有填装进去，所以为null，此时就会报空指针异常
+ * 解决办法：让类型变成可空的，这样hashmap就会在值已空的情况下跳过了
+ * 2：textView的text是可以为null的，所以下面你的major也不必担心
+ */
 
 data class Student(
   @SerializedName("classnum")
-    val classNum: String,
+    val classNum: String?,
   @SerializedName("gender")
-    val gender: String,
+    val gender: String?,
   @SerializedName("grade")
-    val grade: String,
+    val grade: String?,
   @SerializedName("major")
-    val major: String,
-  @SerializedName("name")
+    val major: String?,
+  @SerializedName("stu_name")
   val name: String,
-  @SerializedName("stunum")
+  @SerializedName("stu_num")
   override val id: String,
   ) : Serializable,NoClassItem

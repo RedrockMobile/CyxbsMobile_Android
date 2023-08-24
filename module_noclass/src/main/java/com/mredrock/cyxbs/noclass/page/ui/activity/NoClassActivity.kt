@@ -1,6 +1,7 @@
 package com.mredrock.cyxbs.noclass.page.ui.activity
 
 import android.app.Activity
+import android.content.Intent
 import android.os.Build
 import android.os.Bundle
 import android.view.View
@@ -78,7 +79,7 @@ class NoClassActivity : BaseActivity() {
     /**
      * 储存临时分组学号的列表
      */
-    private var mStuList : MutableSet<String>? = null
+    private var mStuList: MutableSet<String>? = null
 
     /**
      * 获取批量添加界面的返回值
@@ -89,8 +90,7 @@ class NoClassActivity : BaseActivity() {
                 val intent = result.data
                 val haveExtra = intent?.getSerializableExtra("BulkAdditions") as Boolean?
                 if (haveExtra != null && haveExtra) {
-                    toast("hello!")
-//          mViewModel.getAllGroup()
+                    mViewModel.getAllGroup()
                 }
             }
         }
@@ -115,11 +115,11 @@ class NoClassActivity : BaseActivity() {
     private fun initClick() {
         //批量添加的点击事件
         mTvBulkAdditions.setOnClickListener {
-//            startForResult.launch(Intent(
-//                //todo 等待好
-//                toast("pili")
-////                this@NoClassActivity,
-//            ))
+            startForResult.launch(
+                Intent(
+                    this@NoClassActivity,BatchAdditionActivity::class.java
+                )
+            )
         }
     }
 
@@ -218,7 +218,7 @@ class NoClassActivity : BaseActivity() {
         })
     }
 
-    private fun getAllGroup(){
+    private fun getAllGroup() {
         mViewModel.getAllGroup()
     }
 

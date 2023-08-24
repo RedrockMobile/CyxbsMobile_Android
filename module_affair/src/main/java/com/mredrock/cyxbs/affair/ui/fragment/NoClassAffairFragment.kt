@@ -184,11 +184,23 @@ class NoClassAffairFragment : BaseFragment(R.layout.affair_fragment_noclass_affa
             }
         }
 
+        mActivityViewModel.clickBack.collectLaunch {
+            if (mPageManager.isStartPage()){
+                requireActivity().finishAfterTransition()
+            }else{
+                mPageManager.loadLastPage()
+            }
+        }
+
         mViewModel.notification.observe{
             if (it.isSuccess()){
-                toast("发送成功")
+                if (it.data == "limit"){
+                    toast("一天只能发送五次哦~")
+                }else{
+                    toast("发送成功~")
+                }
             }else{
-                toast("发送失败")
+                toast("发送失败!")
             }
         }
     }

@@ -59,7 +59,7 @@ class NoClassSolidFragment : BaseFragment(R.layout.noclass_fragment_solid) {
     private val mWaitDeleteGroup :ArrayList<NoClassGroup> by lazy { ArrayList() }
 
     /**
-     * 是否置顶的noClassGroup和textview，用完之后及时置为null
+     * 是否置顶的noClassGroup和textview，用完之后及时移除
      */
     private val mWaitIsTop : LinkedHashMap<NoClassGroup,TextView> by lazy { LinkedHashMap() }
 
@@ -134,6 +134,9 @@ class NoClassSolidFragment : BaseFragment(R.layout.noclass_fragment_solid) {
                 }
                 setOnClickGroupIsTop { noclassGroup,tvIsTop ->
                     //置顶：加入缓冲区，更新云端置顶状态
+                    Log.d("lx", "mWaitIsTop:${mWaitIsTop} ")
+                    Log.d("lx", "noclassGroup:${noclassGroup} ")
+                    Log.d("lx", "tvIsTop ${tvIsTop}: ")
                     mWaitIsTop[noclassGroup] = tvIsTop
                     mViewModel.updateGroup(noclassGroup.id,noclassGroup.name,noclassGroup.isTop.toString())
                 }
@@ -147,10 +150,7 @@ class NoClassSolidFragment : BaseFragment(R.layout.noclass_fragment_solid) {
             if(it != null && it.isNotEmpty()){
                 searchStudentDialog = SearchStudentDialog(it) {stu ->
                     //点击加号之后的逻辑，需要弹窗选择分组加入
-                    Log.d("lx", "mAdapter.currentList = ${mAdapter.currentList}: ")
-                    AddToGroupDialog(mAdapter.currentList,stu).apply {
-                        //todo 期待更新
-                    }.show(childFragmentManager,"AddToGroupDialog")
+                    AddToGroupDialog(mAdapter.currentList,stu).show(childFragmentManager,"AddToGroupDialog")
                 }
                 searchStudentDialog!!.show(childFragmentManager, "SearchStudentDialog")
             }else{

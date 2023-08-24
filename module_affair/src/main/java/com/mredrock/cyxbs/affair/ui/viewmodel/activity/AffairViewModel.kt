@@ -18,9 +18,21 @@ class AffairViewModel : BaseViewModel() {
   val clickAffect: SharedFlow<Unit>
     get() = _clickAffect
 
+  val clickBack : SharedFlow<Unit> get() = _clickBack
+  private val _clickBack = MutableSharedFlow<Unit>()
+
   fun clickNextBtn() {
     viewModelScope.launch {
       _clickAffect.emit(Unit)
+    }
+  }
+
+  /**
+   * 目前仅支持没课越
+   */
+  fun clickLastBtn(){
+    viewModelScope.launch {
+      _clickBack.emit(Unit)
     }
   }
 }

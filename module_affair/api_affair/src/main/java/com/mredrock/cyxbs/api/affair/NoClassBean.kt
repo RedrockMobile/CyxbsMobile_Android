@@ -16,7 +16,7 @@ import java.io.Serializable
  *
  * beginLesson Int 开始节数，如：1、2 节课以 1 开始；3、4 节课以 3 开始，注意：中午是以 4 开始，傍晚是以 9 开始
  *
- * weekday Int 星期数，星期一为 0
+ * day Int 星期数，星期一为 0
  *
  * period Int 长度
  *
@@ -39,7 +39,7 @@ data class NotificationBean(
 
 data class DateJson(
     val beginLesson : Int,
-    val weekday : Int,
+    val day : Int,
     val period : Int,
     val week : Int
 ) : Serializable
