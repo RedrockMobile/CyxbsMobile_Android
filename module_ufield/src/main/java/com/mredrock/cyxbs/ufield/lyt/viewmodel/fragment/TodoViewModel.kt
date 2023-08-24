@@ -39,7 +39,7 @@ class TodoViewModel : BaseViewModel() {
      */
 
     @SuppressLint("CheckResult")
-    fun getTodoData() {
+     fun getTodoData() {
         CheckRepository
             .receiveTodoData()
             .mapOrInterceptException { Log.e("TodoApiError", it.toString()) }
@@ -48,6 +48,17 @@ class TodoViewModel : BaseViewModel() {
                 _todoList.postValue(it)
             }
     }
+    @SuppressLint("CheckResult")
+    fun getTodoUpData(lowerID:Int) {
+        CheckRepository
+            .receiveTodoUpData(lowerID)
+            .mapOrInterceptException { Log.e("getTodoUpData", it.toString()) }
+            .doOnError { Log.e("getTodoUpData", it.toString()) }
+            .safeSubscribeBy {
+                _todoList.value= _todoList.value?.plus(it)
+            }
+    }
+
 
     /**
      * 通过审核

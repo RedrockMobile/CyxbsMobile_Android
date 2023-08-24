@@ -11,12 +11,13 @@ import androidx.annotation.RequiresApi
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
+import com.mredrock.cyxbs.lib.utils.extensions.toast
 import com.mredrock.cyxbs.ufield.R
 import com.mredrock.cyxbs.ufield.lyt.bean.TodoBean
 import java.time.Instant
-import java.time.LocalDateTime
 import java.time.ZoneId
 import java.time.format.DateTimeFormatter
+import java.util.Calendar
 
 /**
  *  author : lytMoon
@@ -35,9 +36,9 @@ class TodoRvAdapter :
 
     @RequiresApi(Build.VERSION_CODES.O)
     override fun onBindViewHolder(holder: RvTodoViewHolder, position: Int) {
-        val itemView = getItem(position)
 
-        holder.bind(itemView)
+        val itemData = getItem(position)
+        holder.bind(itemData)
     }
 
 
@@ -53,35 +54,52 @@ class TodoRvAdapter :
     private var mRejectClick: ((Int) -> Unit)? = null
 
 
-    fun setOnPassClick(listener: (Int) -> Unit){
+    fun setOnPassClick(listener: (Int) -> Unit) {
         mOnPassClick = listener
     }
 
-    fun setOnRejectClick(listener: (Int) -> Unit){
+    fun setOnRejectClick(listener: (Int) -> Unit) {
         mRejectClick = listener
     }
 
 
-   inner class RvTodoViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
+    // 1秒内防止多次点击
+    private val minDelayTime = 1000
+    private var lastClickTime: Long = 0
+
+
+    inner class RvTodoViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
+
 
         private val actName: TextView = itemView.findViewById(R.id.uField_todo_activity_name)
         private val actTime: TextView = itemView.findViewById(R.id.uField_todo_activity_time)
         private val actType: TextView = itemView.findViewById(R.id.uField_todo_activity_type)
         private val actAuthor: TextView = itemView.findViewById(R.id.uField_todo_activity_author)
         private val actPhone: TextView = itemView.findViewById(R.id.uField_todo_activity_phone)
-        private val actPass:Button = itemView.findViewById(R.id.uField_todo_btn_accept)
-        private val actReject:Button = itemView.findViewById(R.id.uField_todo_btn_reject)
+        private val actPass: Button = itemView.findViewById(R.id.uField_todo_btn_accept)
+        private val actReject: Button = itemView.findViewById(R.id.uField_todo_btn_reject)
 
 
         init {
             actPass.setOnClickListener {
-                mOnPassClick?.invoke(absoluteAdapterPosition)
+                val currentTime: Long = Calendar.getInstance().timeInMillis
+                if (currentTime - lastClickTime > minDelayTime) {
+                    mOnPassClick?.invoke(absoluteAdapterPosition)
+                    lastClickTime = currentTime;
+                } else {
+                    toast("短时间内请不要重复点击按钮哦！")
+                }
             }
             actReject.setOnClickListener {
-                mRejectClick?.invoke(absoluteAdapterPosition)
+                val currentTime: Long = Calendar.getInstance().timeInMillis
+                if (currentTime - lastClickTime > minDelayTime) {
+                    mRejectClick?.invoke(absoluteAdapterPosition)
+                    lastClickTime = currentTime;
+                } else {
+                    toast("短时间内请不要重复点击按钮哦！")
+                }
             }
         }
-
 
         /**
          * 进行视图的绑定
@@ -105,7 +123,8 @@ class TodoRvAdapter :
                 .ofEpochSecond(time.toLong())
                 .atZone(ZoneId.systemDefault())
                 .toLocalDateTime()
-                .format(DateTimeFormatter.ofPattern("yyyy.MM.dd"))
+                // .format(DateTimeFormatter.ofPattern("yyyy.MM.dd"))
+                .format(DateTimeFormatter.ofPattern("HH:mm:ss"))//测试用
         }
     }
 

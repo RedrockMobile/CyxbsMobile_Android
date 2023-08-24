@@ -39,6 +39,20 @@ class DoneRvAdapter :
     }
 
 
+
+    /**
+     * 点击按钮的回调
+     */
+
+    private var mClick: ((Int) -> Unit)? = null
+
+
+    fun setOnItemClick(listener: (Int) -> Unit){
+        mClick = listener
+    }
+
+
+
     inner class RvDoneViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
 
         private val actName: TextView = itemView.findViewById(R.id.uField_done_activity_name)
@@ -46,6 +60,13 @@ class DoneRvAdapter :
         private val actType: TextView = itemView.findViewById(R.id.uField_done_activity_type)
         private val actAuthor: TextView = itemView.findViewById(R.id.uField_done_activity_author)
         private val actImage: ImageView = itemView.findViewById(R.id.uField_todo_activity_isPass)
+
+
+        init {
+            itemView.setOnClickListener {
+                mClick?.invoke(absoluteAdapterPosition)
+            }
+        }
 
 
         /**

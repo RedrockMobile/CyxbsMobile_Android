@@ -6,7 +6,6 @@ import androidx.lifecycle.MutableLiveData
 import com.mredrock.cyxbs.lib.base.ui.BaseViewModel
 import com.mredrock.cyxbs.lib.utils.network.mapOrInterceptException
 import com.mredrock.cyxbs.ufield.lyt.bean.DoneBean
-import com.mredrock.cyxbs.ufield.lyt.bean.TodoBean
 import com.mredrock.cyxbs.ufield.lyt.repository.CheckRepository
 
 
@@ -24,22 +23,36 @@ class DoneViewModel : BaseViewModel() {
         get() = _doneList
 
 
-
     init {
-        //要实现分页，初始化加载二十个
-        getViewedData(10)
+        getViewedData()
     }
 
-    fun getViewedData(upID:Int) {
-        Log.d("upID55555", "测试结果-->> ${upID}");
+    /**
+     * 初始化加载
+     */
+     fun getViewedData() {
         CheckRepository
-            .receiveDoneData(upID)
+            .receiveDoneData()
             .mapOrInterceptException { Log.d("getViewedData", "测试结果-->> $it"); }
             .doOnError { Log.d("getViewedData", "测试结果-->> $it"); }
             .safeSubscribeBy {
                 _doneList.postValue(it)
             }
 
-
     }
+
+    /**
+     * 加载更多
+     */
+    fun getViewedUpData(upID: Int) {
+        Log.d("upID55555", "测试结果-->> $upID");
+        CheckRepository
+            .receiveDoneUpData(upID)
+            .mapOrInterceptException { Log.d("getViewedUpData", "测试结果-->> $it"); }
+            .doOnError { Log.d("getViewedUpData", "测试结果-->> $it"); }
+            .safeSubscribeBy {
+                _doneList.value = _doneList.value?.plus(it)
+            }
+    }
+
 }

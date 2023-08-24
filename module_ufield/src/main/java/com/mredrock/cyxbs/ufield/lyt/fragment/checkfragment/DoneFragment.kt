@@ -2,7 +2,6 @@ package com.mredrock.cyxbs.ufield.lyt.fragment.checkfragment
 
 import android.annotation.SuppressLint
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -13,7 +12,6 @@ import com.mredrock.cyxbs.lib.base.ui.BaseFragment
 import com.mredrock.cyxbs.ufield.R
 import com.mredrock.cyxbs.ufield.lyt.adapter.DoneRvAdapter
 import com.mredrock.cyxbs.ufield.lyt.bean.DoneBean
-import com.mredrock.cyxbs.ufield.lyt.bean.TodoBean
 import com.mredrock.cyxbs.ufield.lyt.viewmodel.fragment.DoneViewModel
 import com.scwang.smart.refresh.footer.ClassicsFooter
 import com.scwang.smart.refresh.header.ClassicsHeader
@@ -62,10 +60,13 @@ class DoneFragment : BaseFragment() {
         }
         mRv.apply {
             layoutManager = LinearLayoutManager(requireContext())
-            adapter = mAdapter
+            adapter = mAdapter.apply {
+                setOnItemClick {
+                    //todo 这里跳转到详情页面  mDataList[it].id 拿着 id 跳转就行
+
+                }
+            }
         }
-
-
     }
 
     /**
@@ -73,21 +74,28 @@ class DoneFragment : BaseFragment() {
      */
     @SuppressLint("NotifyDataSetChanged")
     private fun iniRefresh() {
+        /**
+         * 我最初的理解是 刷新和加载都一个效果，所以把头和尾的数据都刷新了，但是逻辑复杂 而且错误较为复杂（有异常情况）
+         * 现在统一一下，上拉加载只能在后面加数据 上拉刷新只加载表头数据
+         */
         mRefresh.apply {
             setRefreshHeader(ClassicsHeader(requireContext()))
             setRefreshFooter(ClassicsFooter(requireContext()))
             //下拉刷新
             setOnRefreshListener {
-                mViewModel.getViewedData(mDataList.lastOrNull()?.activity_id!!)
-                mRefresh.finishRefresh(1000)
+                mViewModel.apply {
+                    getViewedData()
+                //    getViewedUpData(mDataList.lastOrNull()?.activity_id?:1)
+                }
+                finishRefresh(1000)
             }
             //上拉加载
             setOnLoadMoreListener {
                 mViewModel.apply {
-                    getViewedData(mDataList.lastOrNull()?.activity_id?.plus(2) ?: 0)
+                    getViewedUpData(mDataList.lastOrNull()?.activity_id?:1)
                 }
                 mAdapter.notifyDataSetChanged()
-                mRefresh.finishLoadMore(500)
+                finishLoadMore(1000)
             }
         }
     }

@@ -11,7 +11,7 @@ import com.mredrock.cyxbs.lib.utils.adapter.FragmentVpAdapter
 import com.mredrock.cyxbs.ufield.R
 import com.mredrock.cyxbs.ufield.lyt.fragment.checkfragment.DoneFragment
 import com.mredrock.cyxbs.ufield.lyt.fragment.checkfragment.TodoFragment
-import com.scwang.smart.refresh.layout.SmartRefreshLayout
+import com.mredrock.cyxbs.ufield.lyt.helper.CheckDialog
 
 /**
  * description ：审核中心的activity

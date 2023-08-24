@@ -66,7 +66,7 @@ class UFieldActivity : BaseActivity() {
         (mTabLayout.getChildAt(0) as ViewGroup).getChildAt(0)
             .setBackgroundResource(R.drawable.ufield_ic_tab_shape_selected)
         //设置其他三个icon颜色
-        for(i in 1 until mTabLayout.tabCount){
+        for (i in 1 until mTabLayout.tabCount) {
             val tab = (mTabLayout.getChildAt(0) as ViewGroup).getChildAt(i)
             tab.setBackgroundResource(R.drawable.ufield_ic_tab_shape)
         }
@@ -120,7 +120,7 @@ class UFieldActivity : BaseActivity() {
         }
         mAdmin.setOnClickListener {
             startActivity(Intent(this, CheckActivity::class.java))
-
+            toast("已进入审核中心")
         }
         mAdd.setOnClickListener {
 

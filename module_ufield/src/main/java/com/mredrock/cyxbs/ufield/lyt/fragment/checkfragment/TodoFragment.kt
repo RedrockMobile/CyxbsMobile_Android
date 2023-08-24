@@ -13,6 +13,7 @@ import com.mredrock.cyxbs.lib.base.ui.BaseFragment
 import com.mredrock.cyxbs.ufield.R
 import com.mredrock.cyxbs.ufield.lyt.adapter.TodoRvAdapter
 import com.mredrock.cyxbs.ufield.lyt.bean.TodoBean
+import com.mredrock.cyxbs.ufield.lyt.helper.CheckDialog
 import com.mredrock.cyxbs.ufield.lyt.viewmodel.fragment.TodoViewModel
 import com.scwang.smart.refresh.footer.ClassicsFooter
 import com.scwang.smart.refresh.header.ClassicsHeader
@@ -63,7 +64,6 @@ class TodoFragment : BaseFragment() {
             todoList.observe {
                 mAdapter.submitList(it)
                 mDataList = it as MutableList<TodoBean>
-                Log.d("iniRv", "测试结果-->> $it");
             }
         }
         mRv.apply {
@@ -74,11 +74,11 @@ class TodoFragment : BaseFragment() {
                  */
                 setOnPassClick { position ->
                     run {
-                        Log.d("96366", "测试结果-->> $position");
                         mViewModel.apply {
+                            Log.d("9666", "测试结果-->> $position");
                             passActivity(mDataList[position].activity_id)
-                            Log.d("logTest", "测试结果-->> ${mDataList[position].activity_id}");
                             getTodoData()
+                            getTodoUpData(mDataList.lastOrNull()?.activity_id!!)
                             notifyDataSetChanged()
                         }
                     }
@@ -89,39 +89,59 @@ class TodoFragment : BaseFragment() {
                  */
                 setOnRejectClick { position ->
                     run {
-                        mViewModel.apply {
-                            rejectActivity(mDataList[position].activity_id)
-                            getTodoData()
-                            notifyDataSetChanged()
-                        }
+                        CheckDialog.Builder(
+                            requireContext(),
+                            CheckDialog.Data(
+                                content = "请输入驳回理由",
+                                width = 255,
+                                height = 207
+                            )
+                        ).setPositiveClick {
+                            mViewModel.apply {
+                                rejectActivity(mDataList[position].activity_id)
+                                getTodoData()
+                                getTodoUpData(mDataList.lastOrNull()?.activity_id!!)
+                                notifyDataSetChanged()
+                            }
+                            dismiss()
+                        }.setNegativeClick {
+                            dismiss()
+                        }.show()
+
                     }
                 }
             }
         }
+
     }
 
     /**
      * 处理刷新和加载
      */
     private fun iniRefresh() {
+        /**
+         * 我最初的理解是 刷新和加载都一个效果，所以把头和尾的数据都刷新了，但是逻辑复杂 而且错误较为复杂（有异常情况）
+         * 现在统一一下，上拉加载只能在后面加数据 上拉刷新只加载表头数据
+         */
         mRefresh.apply {
             setRefreshHeader(ClassicsHeader(requireContext()))
             setRefreshFooter(ClassicsFooter(requireContext()))
             //下拉刷新
             setOnRefreshListener {
-
-
-                mRefresh.finishRefresh(1000)
-
-
+                mViewModel.apply {
+                    getTodoData()
+                    //  getTodoUpData(mDataList.lastOrNull()?.activity_id?:1)
+                }
+                finishRefresh(1000)
             }
             //上拉加载
             setOnLoadMoreListener {
-                mRefresh.finishLoadMore(500)
-                toast("已经加载到底啦")
+                mViewModel.apply {
+                    getTodoUpData(mDataList.lastOrNull()?.activity_id ?: 1)
+                }
+                finishLoadMore(1000)
             }
         }
-
     }
 
 }

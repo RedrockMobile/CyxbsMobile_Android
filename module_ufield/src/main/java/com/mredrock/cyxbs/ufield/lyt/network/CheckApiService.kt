@@ -21,11 +21,12 @@ interface CheckApiService {
         val INSTANCE by lazy { ApiGenerator.getApiService(CheckApiService::class) }
     }
 
-    /**
-     * 邮乐场获取待审核的活动的全部数据
-     */
     @GET("/magipoke-ufield/activity/list/tobe-examine")
     fun getTodoList(): Single<ApiWrapper<List<TodoBean>>>
+
+    @GET("/magipoke-ufield/activity/list/tobe-examine")
+    fun getTodoUpList(@Query("lower_id")lower_id:Int): Single<ApiWrapper<List<TodoBean>>>
+
 
     @PUT("/magipoke-ufield/activity/action/examine/")
     fun passDecision(
@@ -41,9 +42,11 @@ interface CheckApiService {
         @Query("decision") decision: String = "reject"
     ): Single<ApiStatus>
 
+    @GET("/magipoke-ufield/activity/list/examined/")
+    fun getDoneList(): Single<ApiWrapper<List<DoneBean>>>
+
 
     @GET("/magipoke-ufield/activity/list/examined/")
-    fun getDoneList(@Query("upper_id") upperID: Int): Single<ApiWrapper<List<DoneBean>>>
-
+    fun getDoneUpList(@Query("upper_id") upperID: Int): Single<ApiWrapper<List<DoneBean>>>
 
 }
