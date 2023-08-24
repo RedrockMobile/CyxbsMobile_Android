@@ -6,6 +6,7 @@ import android.os.Build
 import android.os.Bundle
 import android.view.View
 import android.widget.FrameLayout
+import android.widget.ImageView
 import android.widget.TextView
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.activity.viewModels
@@ -48,6 +49,11 @@ class NoClassActivity : BaseActivity() {
 
     //由于课表不止这一个界面要显示，所以做成了单独的ViewModel，方便调用
     private val mCourseViewModel by viewModels<CourseViewModel>()
+
+    /**
+     * 返回图标
+     */
+    private val mImgReturn : ImageView by R.id.iv_noclass_return.view()
 
     /**
      * 批量添加文字
@@ -120,6 +126,10 @@ class NoClassActivity : BaseActivity() {
                     this@NoClassActivity,BatchAdditionActivity::class.java
                 )
             )
+        }
+        // 返回的点击事件
+        mImgReturn.setOnClickListener {
+            finish()
         }
     }
 

@@ -1,8 +1,12 @@
 package com.mredrock.cyxbs.noclass.page.course
 
+import android.animation.ValueAnimator
 import android.content.Context
+import android.os.Handler
+import android.os.Looper
 import android.util.Log
 import android.view.View
+import android.view.animation.LinearInterpolator
 import androidx.appcompat.app.AppCompatActivity
 import com.mredrock.cyxbs.api.affair.DateJson
 import com.mredrock.cyxbs.lib.course.item.lesson.BaseLessonLayoutParams
@@ -53,6 +57,7 @@ class NoClassLesson(
     context: Context
   ) : NoClassItemView(context){
     companion object {
+      //mNumNameIsSpare   <<id,name>,isSpare>
       fun newInstance(context: Context, data: NoClassLessonData,mNumNameIsSpare : HashMap<Pair<String,String>,Boolean> ,mLastingTime : Pair<Int,Int>,mWeek: Int): NoClassLesson {
         return NoClassLesson(context).apply {
           val sparePeopleNameList = mNumNameIsSpare.filter { it.value }.keys.map { it.second }
@@ -70,6 +75,16 @@ class NoClassLesson(
           setColor(busyMode)
           setText(names = data.names,height = data.length)
           setOnClickListener {
+            // 点击空白处，先变成灰色，1s后再渐变成白色，渐变时间为0.5s
+            // 空白处也就是没有忙碌人员，全是闲人
+            if (sparePeopleNameList.size == mNumNameIsSpare.size){
+              setCardBackgroundColor(mNightBgColor)
+              val runnable = Runnable {
+                setColorAnim(mNightBgColor,mAmBgColor,500).start()
+              }
+              // 如果1.5秒钟还是能出现内存泄漏，那么就只好设置为全局变量然后在销毁的时候移除了
+              Handler(Looper.getMainLooper()!!).postDelayed(runnable,1000)
+            }
             val duration = mLastingTime.second - mLastingTime.first
             //开始与结束序列
             val begin = mLastingTime.first
@@ -91,7 +106,6 @@ class NoClassLesson(
               else -> ""
             }
             val textTime = "时间：${month} ${beginLesson}-${beginLesson + duration - 1} ${beginTime}-${endTime}"
-            //todo waiting
             val dateJson = DateJson(beginLesson,data.weekNum,duration,mWeek)
             Log.d("lx", "beginLesson: = ${beginLesson} ")
             Log.d("lx", "data.weekNum: = ${data.weekNum} ")
@@ -142,6 +156,19 @@ class NoClassLesson(
     }
     enum class BusyMode{
       NAN,LESS,MORE,ALL
+    }
+
+    /**
+     * 设置颜色动画：专属定制setCardBackgroundColor
+     */
+    private fun setColorAnim(fromColor:Int,toColor : Int,time: Long) : ValueAnimator{
+      return ValueAnimator.ofArgb(fromColor,toColor).apply {
+        duration = time
+        interpolator = LinearInterpolator()
+        addUpdateListener {
+          setCardBackgroundColor(it.animatedValue as Int)
+        }
+      }
     }
   }
   
