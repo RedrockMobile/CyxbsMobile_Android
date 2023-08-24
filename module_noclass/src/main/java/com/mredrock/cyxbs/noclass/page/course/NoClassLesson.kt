@@ -106,8 +106,14 @@ class NoClassLesson(
               else -> ""
             }
             val textTime = "时间：${month} ${beginLesson}-${beginLesson + duration - 1} ${beginTime}-${endTime}"
-            val dateJson = DateJson(beginLesson,data.weekNum,duration,mWeek)
-            Log.d("lx", "beginLesson: = ${beginLesson} ")
+            // 中午吃饭时间是-1 下午吃饭时间是-2，所以要传入特殊的beginLesson
+            val specialBeginLesson = if(mLastingTime.first >= 10) { mLastingTime.first - 1 }
+            else if (mLastingTime.first == 9){ -2 }
+            else if (mLastingTime.first == 4){ -1 }
+            else if (mLastingTime.first<=3) { mLastingTime.first + 1 }
+            else { mLastingTime.first }
+            val dateJson = DateJson(specialBeginLesson,data.weekNum,duration,mWeek)
+            Log.d("lx", "specialBeginLesson: = ${specialBeginLesson} ")
             Log.d("lx", "data.weekNum: = ${data.weekNum} ")
             Log.d("lx", "duration: = ${duration} ")
             Log.d("lx", "mWeek: = ${mWeek} ")
