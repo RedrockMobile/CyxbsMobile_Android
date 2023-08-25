@@ -36,35 +36,7 @@
             tools:ignore="HardcodedText" />
     </androidx.appcompat.widget.LinearLayoutCompat>
 
-    <RelativeLayout
-        android:id="@+id/ufield_campaign_no_message"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:gravity="center"
-        android:visibility="gone"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent">
 
-        <ImageView
-            android:id="@+id/ufield_fragment_iv_no"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentStart="true"
-            android:layout_alignParentTop="true"
-            android:layout_marginTop="-200dp"
-            app:srcCompat="@drawable/notification_ic_no_message" />
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="17dp"
-            android:layout_below="@+id/ufield_fragment_iv_no"
-            android:layout_alignParentStart="true"
-            android:layout_marginStart="85dp"
-            android:layout_marginTop="30dp"
-            android:lineHeight="16.8dp"
-            android:text="这里空空如也"
-            android:textSize="12sp" />
-    </RelativeLayout>
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/notification_rv_act"
         android:layout_width="match_parent"

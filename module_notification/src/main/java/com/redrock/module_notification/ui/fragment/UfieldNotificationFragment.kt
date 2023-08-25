@@ -6,7 +6,6 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.view.animation.AnimationUtils
-import android.widget.RelativeLayout
 import androidx.appcompat.widget.LinearLayoutCompat
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.activityViewModels
@@ -18,6 +17,7 @@ import com.mredrock.cyxbs.lib.utils.extensions.gone
 import com.mredrock.cyxbs.lib.utils.extensions.visible
 import com.redrock.module_notification.R
 import com.redrock.module_notification.adapter.ActivityUfieldRVAdapter
+import com.redrock.module_notification.bean.UfieldMsgBean
 import com.redrock.module_notification.ui.activity.NotificationActivity
 import com.redrock.module_notification.viewmodel.NotificationViewModel
 import kotlin.properties.Delegates
@@ -28,7 +28,6 @@ class UfieldNotificationFragment : BaseFragment() {
 
     private val notification_ll_no_internet by R.id.notification_ll_no_internet.view<LinearLayoutCompat>()
 
-    private val ufield_campaign_no_message by R.id.ufield_campaign_no_message.view<RelativeLayout>()
     //rv适配器
     private lateinit var adapter: ActivityUfieldRVAdapter
 
@@ -37,6 +36,8 @@ class UfieldNotificationFragment : BaseFragment() {
 
     //使用和Activity同一个ViewModel来与activity通信
     private val viewModel: NotificationViewModel by activityViewModels()
+
+    private lateinit var allNotification : MutableList<UfieldMsgBean>
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -51,6 +52,8 @@ class UfieldNotificationFragment : BaseFragment() {
         initRV()
         initObserver()
     }
+
+
 
     private fun initRV() {
         adapter = ActivityUfieldRVAdapter(viewModel)
@@ -71,21 +74,20 @@ class UfieldNotificationFragment : BaseFragment() {
 
     private fun initObserver() {
         viewModel.ufieldActivityMsg.observe(viewLifecycleOwner) {
-            adapter.submitList(it)
             if (it.isEmpty()){
-                ufield_campaign_no_message.visible()
                 notification_rv_act.gone()
                 notification_ll_no_internet.gone()
+            }else{
+                allNotification=it.reversed() as MutableList<UfieldMsgBean>
+                adapter.submitList(allNotification)
             }
         }
         viewModel.getUfieldMsgSuccessful.observe(viewLifecycleOwner) {
             if (it == false) {
                 notification_ll_no_internet.visible()
-                ufield_campaign_no_message.gone()
                 notification_rv_act.gone()
             } else {
                 notification_rv_act.visible()
-                ufield_campaign_no_message.gone()
                 notification_ll_no_internet.gone()
             }
         }

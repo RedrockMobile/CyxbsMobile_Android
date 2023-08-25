@@ -71,7 +71,6 @@ class NotificationActivity : BaseViewModelActivity<NotificationViewModel>() {
         initObserver()
         initRefreshLayout()
         viewModel.getAllMsg()
-        viewModel.getUFieldActivity()
     }
 
     override fun onStart() {
@@ -87,6 +86,7 @@ class NotificationActivity : BaseViewModelActivity<NotificationViewModel>() {
             changeTabRedDotsVisibility(0, View.INVISIBLE)
             changeTabRedDotsVisibility(1, View.INVISIBLE)
         }
+        viewModel.getUFieldActivity()
     }
 
 

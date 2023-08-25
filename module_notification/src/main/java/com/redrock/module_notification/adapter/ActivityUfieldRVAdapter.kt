@@ -75,10 +75,10 @@ class ActivityUfieldRVAdapter(private var viewmodel: NotificationViewModel) :
             realName.text = currentList[position].activityInfo.activityTitle
             realPlace.text = currentList[position].activityInfo.activityPlace
             time.text = formatNumberToTime(currentList[position].activityInfo.createdAt)
-            if (currentList[position].clicked){
-                redDot.visibility=View.GONE
-            }else{
-                redDot.visibility=View.VISIBLE
+            if (currentList[position].clicked) {
+                redDot.visibility = View.GONE
+            } else {
+                redDot.visibility = View.VISIBLE
             }
             when (currentList[position].messageType) {
                 "examine_report_reject" -> {
@@ -111,6 +111,7 @@ class ActivityUfieldRVAdapter(private var viewmodel: NotificationViewModel) :
                     )
                     yesNo.setBackgroundResource(R.drawable.notification_ic_bk_pass)
                 }
+
                 "activity_report" -> {
                     notificationTitle.text = "活动通知"
                     yesNo.visibility = View.GONE
