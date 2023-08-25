@@ -66,7 +66,7 @@ class UserFragment : BaseFragment(){
     private val mine_user_tv_unchecked_comment by R.id.mine_user_tv_unchecked_comment.view<TextView>()
     private val mine_user_username by R.id.mine_user_username.view<TextView>()
     private val mine_user_introduce by R.id.mine_user_introduce.view<TextView>()
-
+    private val mine_user_iv_center_activity by R.id.mine_user_iv_center_activity.view<ImageView>()
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
@@ -85,6 +85,7 @@ class UserFragment : BaseFragment(){
             mine_user_tv_praise_number.setOnSingleClickListener { doIfLogin { jumpAndSaveTime(QA_MY_PRAISE, 2) } }
             mine_user_tv_praise.setOnSingleClickListener { doIfLogin { jumpAndSaveTime(QA_MY_PRAISE, 2) } }
             mine_user_iv_center_stamp.setOnSingleClickListener { doIfLogin { jump(STORE_ENTRY) } }
+            mine_user_iv_center_activity.setOnSingleClickListener { doIfLogin { jump(CAMPAIGN_CENTER) } }
             mine_user_iv_center_feedback.setOnSingleClickListener { doIfLogin { startActivity(Intent(this,FeedbackCenterActivity::class.java)) } }
 
             mine_user_tv_sign.setOnSingleClickListener { doIfLogin { startActivity(Intent(this,DailySignActivity::class.java)) } }

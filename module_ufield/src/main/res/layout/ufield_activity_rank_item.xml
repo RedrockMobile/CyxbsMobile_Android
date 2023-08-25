@@ -1,0 +1,97 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.appcompat.widget.LinearLayoutCompat xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:paddingTop="10dp"
+    android:paddingBottom="10dp">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/ufield_activity_rank_cl_click"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <ImageView
+            android:id="@+id/ufield_activity_rank_iv_number"
+            android:layout_width="24dp"
+            android:layout_height="30dp"
+            android:layout_marginStart="24dp"
+            android:layout_marginTop="5dp"
+            android:visibility="gone"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:srcCompat="@drawable/ufield_ic_activity_rank_number1" />
+
+        <TextView
+            android:id="@+id/ufield_activity_rank_tv_number"
+            android:layout_width="wrap_content"
+            android:layout_height="28dp"
+            android:layout_marginStart="29dp"
+            android:layout_marginTop="8dp"
+            android:letterSpacing="0.03"
+            android:text="4"
+            android:textColor="#994A44E4"
+            android:textSize="20sp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <androidx.cardview.widget.CardView
+            android:id="@+id/ufield_activity_rank_cv_head"
+            android:layout_width="42dp"
+            android:layout_height="42dp"
+            android:layout_marginStart="59dp"
+            app:cardCornerRadius="8dp"
+            app:cardElevation="0dp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent">
+
+            <ImageView
+                android:id="@+id/ufield_activity_rank_iv_head"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:scaleType="centerCrop"
+                app:srcCompat="@drawable/ufield_ic_activity_rank_head" />
+        </androidx.cardview.widget.CardView>
+
+        <TextView
+            android:id="@+id/ufield_activity_rank_tv_title"
+            android:layout_width="wrap_content"
+            android:layout_height="25dp"
+            android:layout_marginStart="5dp"
+            android:layout_marginBottom="8dp"
+            android:ellipsize="end"
+            android:lineHeight="25.2dp"
+            android:letterSpacing="0.03"
+            android:maxEms="7"
+            android:text="你好,你好你好你好"
+            android:textColor="#112C54"
+            android:textSize="18sp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toEndOf="@+id/ufield_activity_rank_cv_head" />
+
+        <TextView
+            android:id="@+id/ufield_activity_rank_tv_fire"
+            android:layout_width="55dp"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="16dp"
+            android:gravity="center"
+            android:layout_marginBottom="8dp"
+            android:letterSpacing="0.03"
+            android:text="245"
+            android:textColor="#2921D1"
+            android:textSize="18sp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent" />
+
+        <ImageView
+            android:id="@+id/ufield_activity_rank_iv_fire"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="13dp"
+            app:layout_constraintEnd_toStartOf="@+id/ufield_activity_rank_tv_fire"
+            app:layout_constraintTop_toTopOf="parent"
+            app:srcCompat="@drawable/ufield_ic_activity_rank_fire" />
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</androidx.appcompat.widget.LinearLayoutCompat>

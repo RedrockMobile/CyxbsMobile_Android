@@ -19,7 +19,7 @@ import com.alibaba.android.arouter.facade.annotation.Route
 import com.mredrock.cyxbs.common.config.NOTIFICATION_SETTING
 import com.mredrock.cyxbs.common.service.ServiceManager
 import com.mredrock.cyxbs.common.ui.BaseViewModelActivity
-import com.mredrock.cyxbs.common.utils.extensions.visible
+import com.mredrock.cyxbs.lib.utils.extensions.visible
 import com.mredrock.cyxbs.api.mine.IGetDaySignClassService
 import com.redrock.module_notification.BuildConfig
 import com.redrock.module_notification.R

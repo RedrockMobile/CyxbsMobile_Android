@@ -7,7 +7,12 @@
         android:label="module_field"
         android:supportsRtl="true"
         android:theme="@style/ConfigAppTheme">
-
+        <activity
+            android:name=".lxh.ui.activity.RankActivity"
+            android:exported="false" />
+        <activity
+            android:name=".lxh.ui.activity.CampaignActivity"
+            android:exported="false" />
         <activity
             android:name="ufield.ui.DebugActivity"
             android:exported="true">
@@ -16,8 +21,7 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name="com.mredrock.cyxbs.ufield.lyt.ui.UFieldActivity" />
-
+        <activity android:name=".lyt.ui.UFieldActivity" />
     </application>
 
 </manifest>

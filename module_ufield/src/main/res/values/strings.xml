@@ -1,2 +1,8 @@
 <resources>
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="ufield_campaign_watch">我想看</string>
+    <string name="ufield_campaign_join">已参与</string>
+    <string name="ufield_campaign_publish">已发布</string>
+    <string name="ufield_campaign_check">待审核</string>
+    <string name="ufield_campaign_no_message">这里空空如也</string>
 </resources>

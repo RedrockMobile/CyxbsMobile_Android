@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources xmlns:tools="http://schemas.android.com/tools">
+
+    <style name="ufield_toolbar_tv">
+
+        <item name="android:textSize">
+            22sp
+        </item>
+
+        <item name="android:textColor">
+            #112C54
+        </item>
+
+    </style>
+    <style name="tab_style" tools:ignore="ResourceName">
+        <item name="android:textSize">18sp</item>
+    </style>
+</resources>

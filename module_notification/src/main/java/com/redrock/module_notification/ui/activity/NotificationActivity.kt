@@ -19,12 +19,12 @@ import com.mredrock.cyxbs.common.config.NOTIFICATION_SETTING
 import com.mredrock.cyxbs.common.ui.BaseViewModelActivity
 import com.mredrock.cyxbs.common.utils.extensions.dp2px
 import com.mredrock.cyxbs.common.utils.extensions.editor
-import com.mredrock.cyxbs.common.utils.extensions.setOnSingleClickListener
+import com.mredrock.cyxbs.lib.utils.extensions.setOnSingleClickListener
 import com.redrock.module_notification.R
 import com.redrock.module_notification.adapter.NotificationVp2Adapter
 import com.redrock.module_notification.bean.ChangeReadStatusToBean
-import com.redrock.module_notification.ui.fragment.ActivityNotificationFragment
 import com.redrock.module_notification.ui.fragment.SysNotificationFragment
+import com.redrock.module_notification.ui.fragment.UfieldNotificationFragment
 import com.redrock.module_notification.util.Constant.HAS_USER_ENTER_SETTING_PAGE
 import com.redrock.module_notification.util.Constant.IS_SWITCH1_SELECT
 import com.redrock.module_notification.util.NotificationSp
@@ -38,7 +38,7 @@ import kotlin.properties.Delegates
 class NotificationActivity : BaseViewModelActivity<NotificationViewModel>() {
     private var tab2View by Delegates.notNull<View>()
     private var tab1View by Delegates.notNull<View>()
-    
+
     private val notification_rl_home_back by R.id.notification_rl_home_back.view<RelativeLayout>()
     private val notification_rl_home_dots by R.id.notification_rl_home_dots.view<RelativeLayout>()
     private val notification_home_red_dots by R.id.notification_home_red_dots.view<ImageView>()
@@ -54,8 +54,8 @@ class NotificationActivity : BaseViewModelActivity<NotificationViewModel>() {
 
     //Vp2下的俩个fragment的实例
     private lateinit var sysFragment: SysNotificationFragment
-    private lateinit var activeFragment: ActivityNotificationFragment
-
+    //   private lateinit var activeFragment: ActivityNotificationFragment
+    private lateinit var ufieldActiveFragment : UfieldNotificationFragment
     //目前ViewPager处于哪个页面
     private var whichPageIsIn = 0
 
@@ -71,6 +71,7 @@ class NotificationActivity : BaseViewModelActivity<NotificationViewModel>() {
         initObserver()
         initRefreshLayout()
         viewModel.getAllMsg()
+        viewModel.getUFieldActivity()
     }
 
     override fun onStart() {
@@ -95,9 +96,10 @@ class NotificationActivity : BaseViewModelActivity<NotificationViewModel>() {
     }
 
     private fun initPopupWindow() {
-        var popupWindow by Delegates.notNull<LoadMoreWindow>()
         when (whichPageIsIn) {
             0 -> {
+                var popupWindow by Delegates.notNull<LoadMoreWindow>()
+
                 popupWindow = buildLoadMoreWindow {
                     context = this@NotificationActivity
                     window = this@NotificationActivity.window
@@ -128,10 +130,24 @@ class NotificationActivity : BaseViewModelActivity<NotificationViewModel>() {
                         notification_home_red_dots.visibility = View.INVISIBLE
                         NotificationSp.editor { putBoolean(HAS_USER_ENTER_SETTING_PAGE, true) }
                     }
+                    if (NotificationSp.getBoolean(HAS_USER_ENTER_SETTING_PAGE, false))
+                        popupWindow
+                            .contentView
+                            .findViewById<ImageView>(R.id.notification_iv_popup_setting)
+                            .setImageResource(R.drawable.notification_ic_home_setting_normal)
+
+                    popupWindow.showAsDropDown(
+                        notification_rl_home_dots,
+                        0,
+                        dp2px(15.toFloat()),
+                        Gravity.END
+                    )
                 }
             }
 
             1 -> {
+                ARouter.getInstance().build(NOTIFICATION_SETTING).navigation()
+            }/*{
                 popupWindow = buildLoadMoreWindow {
                     context = this@NotificationActivity
                     window = this@NotificationActivity.window
@@ -150,25 +166,18 @@ class NotificationActivity : BaseViewModelActivity<NotificationViewModel>() {
                         NotificationSp.editor { putBoolean(HAS_USER_ENTER_SETTING_PAGE, true) }
                     }
                 }
-            }
+            }*/
         }
 
-        if (NotificationSp.getBoolean(HAS_USER_ENTER_SETTING_PAGE, false))
-            popupWindow
-                .contentView
-                .findViewById<ImageView>(R.id.notification_iv_popup_setting)
-                .setImageResource(R.drawable.notification_ic_home_setting_normal)
-
-        popupWindow.showAsDropDown(notification_rl_home_dots, 0, dp2px(15.toFloat()), Gravity.END)
 
     }
 
     private fun initVp2() {
         sysFragment = SysNotificationFragment()
-        activeFragment = ActivityNotificationFragment()
+        ufieldActiveFragment = UfieldNotificationFragment()
         notification_home_vp2.adapter = NotificationVp2Adapter(
             this, listOf(
-                sysFragment, activeFragment
+                sysFragment, ufieldActiveFragment
             )
         )
         notification_home_vp2.setPageTransformer(ScaleInTransformer())
@@ -236,7 +245,16 @@ class NotificationActivity : BaseViewModelActivity<NotificationViewModel>() {
             }
         }
 
-        viewModel.activeMsg.observe {
+        viewModel.ufieldActivityMsg.observe{
+            allUnreadActiveMsgIds =ArrayList()
+            for (value in it){
+                if (!value.clicked){
+                    changeTabRedDotsVisibility(1, View.VISIBLE)
+                    allUnreadActiveMsgIds.add(value.messageId.toString())
+                }
+            }
+        }
+        /*viewModel.activeMsg.observe {
             allUnreadActiveMsgIds = ArrayList()
             for (value in it!!) {
                 if (!value.has_read) {
@@ -245,7 +263,7 @@ class NotificationActivity : BaseViewModelActivity<NotificationViewModel>() {
                 }
             }
         }
-
+*/
         viewModel.popupWindowClickableStatus.observe {
             it?.let { notification_rl_home_dots.isClickable = it }
         }
@@ -274,6 +292,7 @@ class NotificationActivity : BaseViewModelActivity<NotificationViewModel>() {
     private fun initRefreshLayout() {
         notification_refresh.setOnRefreshListener {
             viewModel.getAllMsg()
+            viewModel.getUFieldActivity()
         }
         notification_refresh.isRefreshing = true
     }
@@ -285,12 +304,12 @@ class NotificationActivity : BaseViewModelActivity<NotificationViewModel>() {
         }
     }
 
-    fun removeUnreadActiveMsgIds(id: String) {
+/*    fun removeUnreadActiveMsgIds(id: String) {
         allUnreadActiveMsgIds.remove(id)
         if (allUnreadActiveMsgIds.size == 0) {
             changeTabRedDotsVisibility(1, View.INVISIBLE)
         }
-    }
+    }*/
 
     //改变TabLayout小红点的显示状态
     private fun changeTabRedDotsVisibility(position: Int, visibility: Int) {
@@ -304,6 +323,7 @@ class NotificationActivity : BaseViewModelActivity<NotificationViewModel>() {
                 tab1View.findViewById<View>(R.id.notification_iv_tl_red_dots).visibility =
                     vis
             }
+
             1 -> {
                 tab2View.findViewById<View>(R.id.notification_iv_tl_red_dots).visibility =
                     vis

@@ -1,5 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="black">#FF000000</color>
-    <color name="white">#FFFFFFFF</color>
+    <color name="ufield_white_background">#ffffff</color>
+    <color name="ufield_white_font_color">#ffffff</color>
+    <color name="ufield_back_detail_ripple">#FFFFFF</color>
+    <color name="ufield_setting_back_detail_ripple">#F2F3F8</color>
+    <color name="ufield_home_tabLayout_text_selected">#112C54</color>
+    <color name="ufield_home_tabLayout_text_unselect">#66142C52</color>
+    <color name="ufield_fragment_head_title">#112C54</color>
+    <color name="ufield_fragment_detail">#6615315B</color>
+    <color name="ufield_fragment_time_color">#CC2A4E84</color>
+
 </resources>

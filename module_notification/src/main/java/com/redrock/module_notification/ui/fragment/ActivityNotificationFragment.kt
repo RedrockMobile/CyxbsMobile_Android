@@ -1,3 +1,4 @@
+/*
 package com.redrock.module_notification.ui.fragment
 
 import android.os.Bundle
@@ -8,8 +9,8 @@ import androidx.fragment.app.activityViewModels
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.mredrock.cyxbs.common.ui.BaseFragment
-import com.mredrock.cyxbs.common.utils.extensions.gone
-import com.mredrock.cyxbs.common.utils.extensions.visible
+import com.mredrock.cyxbs.lib.utils.extensions.gone
+import com.mredrock.cyxbs.lib.utils.extensions.visible
 import com.redrock.module_notification.R
 import com.redrock.module_notification.adapter.ActivityNotificationRvAdapter
 import com.redrock.module_notification.adapter.ActivityNotificationRvAdapter.Companion.CHANGE_DOT_STATUS
@@ -18,11 +19,13 @@ import com.redrock.module_notification.ui.activity.NotificationActivity
 import com.redrock.module_notification.viewmodel.NotificationViewModel
 import kotlin.properties.Delegates
 
+*/
 /**
  * Author by OkAndGreat
  * Date on 2022/4/27 17:32.
  *
- */
+ *//*
+
 class ActivityNotificationFragment : BaseFragment() {
     
     private val notification_rv_act by R.id.notification_rv_act.view<RecyclerView>()
@@ -98,3 +101,4 @@ class ActivityNotificationFragment : BaseFragment() {
         }
     }
 }
+*/

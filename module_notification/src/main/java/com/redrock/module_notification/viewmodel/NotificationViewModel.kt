@@ -1,16 +1,18 @@
 package com.redrock.module_notification.viewmodel
 
 import android.util.Log
+import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import com.mredrock.cyxbs.common.network.ApiGenerator
 import com.mredrock.cyxbs.common.utils.extensions.mapOrThrowApiException
-import com.mredrock.cyxbs.common.utils.extensions.unsafeSubscribeBy
-import com.mredrock.cyxbs.common.utils.extensions.setSchedulers
 import com.mredrock.cyxbs.common.viewmodel.BaseViewModel
-import com.redrock.module_notification.bean.ActiveMsgBean
+import com.mredrock.cyxbs.lib.utils.extensions.setSchedulers
+import com.mredrock.cyxbs.lib.utils.extensions.unsafeSubscribeBy
+import com.mredrock.cyxbs.lib.utils.network.mapOrThrowApiException
 import com.redrock.module_notification.bean.ChangeReadStatusToBean
 import com.redrock.module_notification.bean.DeleteMsgToBean
 import com.redrock.module_notification.bean.SystemMsgBean
+import com.redrock.module_notification.bean.UfieldMsgBean
 import com.redrock.module_notification.network.ApiService
 import com.redrock.module_notification.util.Constant.NOTIFICATION_LOG_TAG
 
@@ -20,7 +22,12 @@ import com.redrock.module_notification.util.Constant.NOTIFICATION_LOG_TAG
  *
  */
 class NotificationViewModel : BaseViewModel() {
-    val activeMsg = MutableLiveData<List<ActiveMsgBean>>()
+
+    private val _ufieldActivityMsg = MutableLiveData<List<UfieldMsgBean>>()
+
+    val ufieldActivityMsg: LiveData<List<UfieldMsgBean>> get() = _ufieldActivityMsg
+
+    // val activeMsg = MutableLiveData<List<ActiveMsgBean>>()
     val systemMsg = MutableLiveData<List<SystemMsgBean>>()
     val checkInStatus = MutableLiveData<Boolean>()
 
@@ -39,7 +46,48 @@ class NotificationViewModel : BaseViewModel() {
     //获取数据是否成功
     val getMsgSuccessful = MutableLiveData<Boolean>()
 
+    //获取游乐场的消息是否成功
+    val getUfieldMsgSuccessful = MutableLiveData<Boolean>()
+
     private val retrofit by lazy { ApiGenerator.getApiService(ApiService::class.java) }
+
+    /*
+    * 获取活动消息
+    * */
+    fun getUFieldActivity() {
+        retrofit.getUFieldActivity()
+            .setSchedulers()
+            .mapOrThrowApiException()
+            .unsafeSubscribeBy(
+                onError = {
+                    toast("服务君似乎打盹了呢~")
+                    getUfieldMsgSuccessful.value = false
+                },
+                onNext = {
+                    Log.d("hui", "getUFieldActivity: $it")
+                    _ufieldActivityMsg.postValue(it)
+                    getUfieldMsgSuccessful.value = true
+                }
+            ).lifeCycle()
+
+    }
+    /*
+    * 改变活动消息的读取状态
+    * */
+
+    fun changeUfieldMsgStatus(messageId: Int) {
+        retrofit.changeUfieldMsgStatus(messageId)
+            .setSchedulers()
+            .mapOrThrowApiException()
+            .unsafeSubscribeBy(
+                onError = {
+                    Log.d("hui", "changeUfieldMsgStatus1:$it ")
+                },
+                onNext = {
+                    Log.d("hui", "changeUfieldMsgStatus2: $it")
+                }
+            ).lifeCycle()
+    }
 
     /**
      * 获取所有通知信息
@@ -53,16 +101,16 @@ class NotificationViewModel : BaseViewModel() {
                     /**
                      * onNext第一次发送null的时候会到onError，第二次就不会了
                      */
-                    if(it is NullPointerException){
+                    if (it is NullPointerException) {
                         getAllMsg()
-                    }else {
+                    } else {
                         Log.w(NOTIFICATION_LOG_TAG, "getAllMsg failed $it")
                         getMsgSuccessful.value = false
                     }
                 },
                 onNext = {
                     Log.d(NOTIFICATION_LOG_TAG, "getAllMsg: $it")
-                    activeMsg.value = it.active_msg
+                    //  activeMsg.value = it.active_msg
                     systemMsg.value = it.system_msg
                     getMsgSuccessful.value = true
                 }

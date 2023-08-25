@@ -8,10 +8,10 @@ import androidx.fragment.app.activityViewModels
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.android.material.button.MaterialButton
 import com.mredrock.cyxbs.common.ui.BaseFragment
-import com.mredrock.cyxbs.common.utils.extensions.gone
-import com.mredrock.cyxbs.common.utils.extensions.invisible
-import com.mredrock.cyxbs.common.utils.extensions.setOnSingleClickListener
-import com.mredrock.cyxbs.common.utils.extensions.visible
+import com.mredrock.cyxbs.lib.utils.extensions.gone
+import com.mredrock.cyxbs.lib.utils.extensions.invisible
+import com.mredrock.cyxbs.lib.utils.extensions.setOnSingleClickListener
+import com.mredrock.cyxbs.lib.utils.extensions.visible
 import com.redrock.module_notification.R
 import com.redrock.module_notification.adapter.SystemNotificationRvAdapter
 import com.redrock.module_notification.adapter.SystemNotificationRvAdapter.Companion.CHANGE_DOT_STATUS
@@ -90,7 +90,7 @@ class SysNotificationFragment : BaseFragment() {
                         allReadSysMsg.add(value)
                 }
             }
-   //         data = it as ArrayList<SystemMsgBean>
+   //       data = it as ArrayList<SystemMsgBean>
             data.addAll(it)
             adapter.changeAllData(data)
             notification_rv_sys.scheduleLayoutAnimation()
