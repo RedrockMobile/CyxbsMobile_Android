@@ -78,9 +78,9 @@ class NoClassLesson(
             // 点击空白处，先变成灰色，1s后再渐变成白色，渐变时间为0.5s
             // 空白处也就是没有忙碌人员，全是闲人
             if (sparePeopleNameList.size == mNumNameIsSpare.size){
-              setCardBackgroundColor(mNightBgColor)
+              setCardBackgroundColor(mClickSpareBg)
               val runnable = Runnable {
-                setColorAnim(mNightBgColor,mAmBgColor,500).start()
+                setColorAnim(mClickSpareBg,mAllSpare,500).start()
               }
               // 如果1.5秒钟还是能出现内存泄漏，那么就只好设置为全局变量然后在销毁的时候移除了
               Handler(Looper.getMainLooper()!!).postDelayed(runnable,1000)
@@ -124,39 +124,36 @@ class NoClassLesson(
     }
   
 
-    private val mAmBgColor = R.color.noclass_course_am_lesson_color.color
-    private val mPmBgColor = R.color.noclass_course_pm_lesson_color.color
-    private val mNightBgColor = R.color.noclass_course_night_lesson_color.color
-    private val mNoonBgColor = R.color.noclass_course_noon_lesson_color.color
-    private val mDuskBgColor = R.color.noclass_course_dusk_lesson_color.color
-    
-    private val mAmTextColor = R.color.noclass_course_am_text_color.color
-    private val mPmTextColor = R.color.noclass_course_pm_text_color.color
-    private val mNightTextColor = R.color.noclass_course_night_text_color.color
-    private val mNoonTextColor = R.color.noclass_course_noon_text_color.color
-    private val mDuskTextColor = R.color.noclass_course_dusk_text_color.color
-  
+    private val mAllSpare = R.color.noclass_course_all_spare_lesson_color.color
+    private val mAllBusyBg = R.color.noclass_course_all_busy_lesson_bg.color
+    private val mAllBusyTextColor = R.color.noclass_course_all_busy_lesson_color.color
+    private val mMoreSpareBg = R.color.noclass_course_more_spare_lesson_bg.color
+    private val mMoreSpareTextColor = R.color.noclass_course_more_spare_lesson_color.color
+    private val mMoreBusyBg = R.color.noclass_course_more_busy_lesson_bg.color
+    private val mMoreBusyTextColor = R.color.noclass_course_more_busy_lesson_color.color
+    private val mClickSpareBg = R.color.noclass_course_click_spare_lesson_bg.color
+
     private fun setColor(busyMode : BusyMode) {
       when (busyMode) {
         BusyMode.NAN -> {
-          mTvNames.setTextColor(mAmTextColor)
-          setCardBackgroundColor(mAmBgColor)
-          setOverlapTagColor(mAmTextColor)
+          mTvNames.setTextColor(mAllSpare)
+          setCardBackgroundColor(mAllSpare)
+          setOverlapTagColor(mAllSpare)
         }
         BusyMode.LESS -> {
-          mTvNames.setTextColor(mNoonTextColor)
-          setCardBackgroundColor(mNoonBgColor)
-          setOverlapTagColor(mNoonTextColor)
+          mTvNames.setTextColor(mMoreSpareTextColor)
+          setCardBackgroundColor(mMoreSpareBg)
+          setOverlapTagColor(mMoreSpareTextColor)
         }
         BusyMode.MORE -> {
-          mTvNames.setTextColor(mPmTextColor)
-          setCardBackgroundColor(mPmBgColor)
-          setOverlapTagColor(mPmTextColor)
+          mTvNames.setTextColor(mMoreBusyTextColor)
+          setCardBackgroundColor(mMoreBusyBg)
+          setOverlapTagColor(mMoreBusyTextColor)
         }
         BusyMode.ALL -> {
-          mTvNames.setTextColor(mDuskTextColor)
-          setCardBackgroundColor(mDuskBgColor)
-          setOverlapTagColor(mDuskTextColor)
+          mTvNames.setTextColor(mAllBusyTextColor)
+          setCardBackgroundColor(mAllBusyBg)
+          setOverlapTagColor(mAllBusyTextColor)
         }
       }
     }

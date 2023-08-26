@@ -16,20 +16,10 @@
     <color name="noclass_hint_text_color_light">#7AF0F0F2</color>
     <color name="noclass_hint_text_color_dark">#F0F0F2</color>
     <color name="noclass_create_hint_text_color">#9A98FF</color>
-    <!--    没课约分割横线-->
-    <color name="noclass_line_bg_color">#F0F0F2</color>
-    <!--    没课约删除颜色-->
-    <color name="noclass_delete_bg_color">#515151</color>
     <!--    分组成员名字颜色-->
     <color name="noclass_member_name_color">#F0F0F2</color>
-    <!--    分组管理置顶背景-->
-    <color name="noclass_group_top_bg">#474A50</color>
-    <!--    分组管理删除背景-->
-    <color name="noclass_group_delete_bg">#ED535C</color>
     <!--    分组管理被选中背景-->
     <color name="noclass_group_delete_selected_bg">#4F4F4F</color>
-    <!--    分组管理没有被选中的背景-->
-    <color name="noclass_group_delete_unselected_bg">#000101</color>
     <!--    保存按钮的默认颜色-->
     <color name="noclass_save_bg_color">#334153</color>
     <!--    查找学生的颜色-->
@@ -37,39 +27,25 @@
     <!--    集合弹窗的划分线-->
     <color name="noclass_gather_line_bg">#2D2D2D</color>
     <color name="noclass_gather_text_noclass_bg">#D4DAFF</color>
-    <!--    集合弹窗没课背景-->
-    <color name="noclass_gather_noclass_bg">#4841E2</color>
-    <!--    集合弹窗有课字体-->
-    <color name="noclass_gather_text_class_bg">#878787</color>
-    <!--    集合弹窗有课背景-->
-    <color name="noclass_gather_class_bg">#878787</color>
     <!--    创建新分组的背景-->
     <color name="noclass_create_group_bg">#2D2D2D</color>
     <!--    创建新分组的提示文字-->
     <color name="noclass_create_group_tint_bg">#F0F0F0</color>
 
-    <!--    以下为课表颜色-->
-    <!--    上午-->
-    <color name="noclass_course_am_lesson_color">#3F3831</color>
-    <!--    下午-->
-    <color name="noclass_course_pm_lesson_color">#3F3030</color>
-    <!--    晚上-->
-    <color name="noclass_course_night_lesson_color">#30343F</color>
-    <!--    中午-->
-    <color name="noclass_course_noon_lesson_color">#5A5A5A</color>
-    <!--    傍晚-->
-    <color name="noclass_course_dusk_lesson_color">#5A5A5A</color>
 
-    <!--    以下为课表字体颜色-->
-    <!--    上午-->
-    <color name="noclass_course_am_text_color">#F0F0F2</color>
-    <!--    下午-->
-    <color name="noclass_course_pm_text_color">#F0F0F2</color>
-    <!--    晚上-->
-    <color name="noclass_course_night_text_color">#F0F0F2</color>
-    <!--    中午-->
-    <color name="noclass_course_noon_text_color">#33F0F0F0</color>
-    <!--    傍晚-->
-    <color name="noclass_course_dusk_text_color">#33F0F0F0</color>
+    <!--    以下为课表背景颜色-->
+    <!--    全部空闲-->
+    <color name="noclass_course_all_spare_lesson_color">#00000000</color>
+    <!--    全员忙碌-->
+    <color name="noclass_course_all_busy_lesson_bg">#F9E3E4</color>
+    <color name="noclass_course_all_busy_lesson_color">#FF6262</color>
+    <!--    忙碌大于空闲-->
+    <color name="noclass_course_more_busy_lesson_bg">#FF8015</color>
+    <color name="noclass_course_more_busy_lesson_color">#FF8015</color>
+    <!--    空闲大于忙碌-->
+    <color name="noclass_course_more_spare_lesson_bg">#DDE3F8</color>
+    <color name="noclass_course_more_spare_lesson_color">#4066EA</color>
 
+    <!--点击空白处的灰色-->
+    <color name="noclass_course_click_spare_lesson_bg">#808080</color>
 </resources>

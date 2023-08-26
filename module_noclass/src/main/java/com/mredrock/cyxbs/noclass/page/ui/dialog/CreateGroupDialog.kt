@@ -29,7 +29,6 @@ import com.mredrock.cyxbs.noclass.util.startShake
  * @UpdateRemark:   更新说明：
  * @Version:        1.0
  * @Description:    创建新分组的bottom sheet dial og
- * @param existName 如果是固定分组界面，已有分组，可空
  * @param afterCreate 固定分组创建成功之后的操作
  *
  */

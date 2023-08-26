@@ -4,6 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="#00FFFFFF"
     tools:ignore="HardcodedText">
 
     <androidx.cardview.widget.CardView
@@ -25,9 +26,8 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="25dp"
                 android:text="格式有误，请重新输入"
-                android:textColor="#15315B"
+                android:textColor="@color/noclass_primary_text_color"
                 android:textSize="15sp"
-                android:textStyle="bold"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintHorizontal_bias="0.505"
                 app:layout_constraintStart_toStartOf="parent"

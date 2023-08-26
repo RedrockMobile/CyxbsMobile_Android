@@ -5,8 +5,8 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="50dp"
-    android:layout_marginTop="12dp">
+    android:layout_height="46dp"
+    android:layout_marginBottom="6dp">
 
     <com.mredrock.cyxbs.noclass.widget.SlideMenuLayout
         android:id="@+id/noclass_item_group_member_slide_layout"
@@ -18,10 +18,11 @@
 
         <TextView
             android:id="@+id/noclass_item_tv_delete"
-            android:layout_width="50dp"
+            android:layout_width="82dp"
             android:layout_height="match_parent"
             android:gravity="center"
-            android:background="@color/pd_blue"
+            android:background="@color/noclass_delete_bg"
+            android:textColor="@color/config_white_black"
             android:text="删除"/>
 
         <androidx.constraintlayout.widget.ConstraintLayout
@@ -30,10 +31,12 @@
 
             <ImageView
                 android:id="@+id/noclassShapeableimageview"
-                android:layout_width="30dp"
-                android:layout_height="30dp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
                 android:layout_marginStart="16dp"
-                android:background="@color/pd_blue"
+                android:paddingTop="3dp"
+                android:paddingBottom="5dp"
+                android:src="@drawable/noclass_ic_user"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
@@ -41,23 +44,23 @@
             <TextView
                 android:id="@+id/noclass_tv_member_name"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_height="23dp"
+                android:textSize="16sp"
+                android:layout_marginStart="9dp"
                 android:textColor="@color/noclass_member_name_color"
-                android:textSize="14sp"
-                android:layout_marginStart="16dp"
-                android:layout_marginTop="5dp"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintStart_toEndOf="@+id/noclassShapeableimageview"
                 app:layout_constraintTop_toTopOf="parent"
                 app:layout_constraintVertical_bias="0"
-                tools:text="陈思言" />
+                tools:text="陈思言"/>
 
             <TextView
                 android:id="@+id/noclass_tv_member_id"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="16dp"
-                android:layout_marginBottom="5dp"
+                android:layout_height="23dp"
+                android:layout_marginStart="9dp"
+                android:textSize="14sp"
+                android:textColor="@color/noclass_member_stu_num_color"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintStart_toEndOf="@+id/noclassShapeableimageview"
                 tools:text="2021214171" />

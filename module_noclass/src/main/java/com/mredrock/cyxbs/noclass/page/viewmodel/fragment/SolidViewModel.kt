@@ -5,6 +5,7 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import com.mredrock.cyxbs.lib.base.ui.BaseViewModel
 import com.mredrock.cyxbs.lib.utils.network.ApiStatus
+import com.mredrock.cyxbs.lib.utils.network.ApiWrapper
 import com.mredrock.cyxbs.lib.utils.network.mapOrInterceptException
 import com.mredrock.cyxbs.noclass.bean.NoclassGroupId
 import com.mredrock.cyxbs.noclass.bean.Student
@@ -26,7 +27,7 @@ class SolidViewModel : BaseViewModel() {
     private val _isDeleteSuccess = MutableLiveData<Pair<String, Boolean>>()
 
     //搜索结果
-    private val _searchStudent = MutableLiveData<List<Student>>()
+    private val _searchStudent = MutableLiveData<ApiWrapper<List<Student>>>()
     val searchStudent get() = _searchStudent
 
     //保存成员变化
@@ -37,64 +38,11 @@ class SolidViewModel : BaseViewModel() {
      */
     fun getSearchResult(content: String) {
         NoClassRepository.searchStudent(content)
-            .mapOrInterceptException {
-                it.printStackTrace()
-                toast("网络异常，请重试~")
-                _searchStudent.postValue(
-                    listOf(
-                        Student(
-                            classNum = "04082201",
-                            gender = "男",
-                            grade = "21",
-                            major = "数据科学与大数据技术",
-                            "喵喵",
-                            id = "2022231392"
-                        ),
-                        Student(
-                            classNum = "04082202",
-                            gender = "女",
-                            grade = "23",
-                            major = "大数据管理与应用",
-                            "狗狗",
-                            id = "2021241393"
-                        ),
-                        Student(
-                            classNum = "04082203",
-                            gender = "男",
-                            grade = "21",
-                            major = "数据科学与大数据技术",
-                            "汪汪",
-                            id = "2022231394"
-                        ),
-                        Student(
-                            classNum = "04082204",
-                            gender = "女",
-                            grade = "23",
-                            major = "大数据管理与应用",
-                            "呱呱",
-                            id = "2021241395"
-                        ),
-                        Student(
-                            classNum = "04082206",
-                            gender = "男",
-                            grade = "21",
-                            major = "数据科学与大数据技术",
-                            "叽叽",
-                            id = "2022231396"
-                        ),
-                        Student(
-                            classNum = "04082207",
-                            gender = "女",
-                            grade = "23",
-                            major = "大数据管理与应用",
-                            "芜湖",
-                            id = "2021241397"
-                        )
-                    )
-                )
+            .doOnError {
+                Log.d("lx", "getSearchResultError:${it} ")
             }
             .safeSubscribeBy {
-                _searchStudent.postValue(it)
+                _searchStudent.postValue(ApiWrapper(data,10000,"success"))
             }
     }
 
@@ -190,4 +138,55 @@ class SolidViewModel : BaseViewModel() {
 
     }
 
+
+    val data =  listOf(
+        Student(
+            classNum = "04082201",
+            gender = "男",
+            grade = "21",
+            major = "数据科学与大数据技术",
+            "喵喵",
+            id = "2022231392"
+        ),
+        Student(
+            classNum = "04082202",
+            gender = "女",
+            grade = "23",
+            major = "大数据管理与应用",
+            "狗狗",
+            id = "2021241393"
+        ),
+        Student(
+            classNum = "04082203",
+            gender = "男",
+            grade = "21",
+            major = "数据科学与大数据技术",
+            "汪汪",
+            id = "2022231394"
+        ),
+        Student(
+            classNum = "04082204",
+            gender = "女",
+            grade = "23",
+            major = "大数据管理与应用",
+            "呱呱",
+            id = "2021241395"
+        ),
+        Student(
+            classNum = "04082206",
+            gender = "男",
+            grade = "21",
+            major = "数据科学与大数据技术",
+            "叽叽",
+            id = "2022231396"
+        ),
+        Student(
+            classNum = "04082207",
+            gender = "女",
+            grade = "23",
+            major = "大数据管理与应用",
+            "芜湖",
+            id = "2021241397"
+        )
+    )
 }

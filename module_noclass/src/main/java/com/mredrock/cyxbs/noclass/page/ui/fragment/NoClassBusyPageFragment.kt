@@ -61,7 +61,7 @@ class NoClassBusyPageFragment : BaseFragment(R.layout.noclass_layout_gathering) 
     private fun initObserve() {
         mParentViewModel.busyNameList.observe{
             // 每次观察的时候判断，当前有没有子view，如果没有就添加进去
-            if (myFlexLayout.childCount == 0){
+            if (it.isNotEmpty() && myFlexLayout.childCount == 0){
                 setView(requireContext(),it)
             }
         }

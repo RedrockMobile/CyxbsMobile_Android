@@ -5,13 +5,13 @@
     xmlns:tools="http://schemas.android.com/tools"
     tools:ignore="HardcodedText"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:background="@color/noclass_main">
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:fitsSystemWindows="true"
-        android:background="@color/config_window_background">
+        android:fitsSystemWindows="true">
 
         <androidx.appcompat.widget.Toolbar
             app:layout_constraintVertical_bias="0"
@@ -25,43 +25,54 @@
 
             <ImageView
                 android:id="@+id/iv_noclass_return"
-                android:paddingStart="7dp"
-                android:paddingEnd="6dp"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 app:srcCompat="@drawable/noclass_ic_return"
-                tools:ignore="ContentDescription" />
+                tools:ignore="ContentDescription"
+                android:paddingTop="3dp"
+                android:layout_marginStart="16dp"/>
 
             <TextView
-                android:paddingStart="6dp"
-                android:paddingEnd="12dp"
-                android:textColor="@color/noclass_primary_text_color"
-                android:textSize="21sp"
+                android:textColor="@color/config_black_white"
+                android:textSize="22sp"
                 android:text="没课约"
                 android:layout_width="wrap_content"
-                android:layout_height="match_parent"
-                tools:ignore="HardcodedText" />
+                android:layout_height="wrap_content"
+                tools:ignore="HardcodedText"
+                android:layout_marginStart="16dp"/>
 
-            <TextView
+            <LinearLayout
                 android:id="@+id/no_class_tv_bulk_additions"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:orientation="horizontal"
                 android:layout_gravity="end"
-                android:layout_marginEnd="16dp"
-                android:text="批量添加"/>
-        </androidx.appcompat.widget.Toolbar>
+                android:background="@drawable/noclass_shape_batch_add"
+                android:layout_marginEnd="16dp">
 
-        <View
-            app:layout_constraintVertical_bias="0"
-            android:id="@+id/noclassView2"
-            android:layout_width="match_parent"
-            android:layout_height="1dp"
-            android:alpha="0.1"
-            android:background="@color/noclass_line_bg_color"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/tb_noclass_main"
-            app:layout_constraintBottom_toBottomOf="parent" />
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:src="@drawable/noclass_ic_batch_add"
+                    android:layout_gravity="center"
+                    android:layout_marginStart="11dp"
+                    android:paddingTop="7dp"
+                    android:paddingBottom="7dp"/>
+
+                <TextView
+                    android:textColor="@color/config_choose_dialog_btn_positive"
+                    android:textSize="12sp"
+                    android:text="批量添加"
+                    android:layout_marginEnd="11dp"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    tools:ignore="HardcodedText"
+                    android:layout_marginStart="6dp"
+                    android:paddingTop="3dp"
+                    android:paddingBottom="3dp"/>
+
+            </LinearLayout>
+        </androidx.appcompat.widget.Toolbar>
 
         <com.google.android.material.tabs.TabLayout
             android:id="@+id/noclass_main_tab"
@@ -69,16 +80,15 @@
             android:layout_height="wrap_content"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/noclassView2"
+            app:layout_constraintTop_toBottomOf="@+id/tb_noclass_main"
+            app:tabIndicator="@drawable/noclass_ic_tab_indicator"
+            app:tabIndicatorFullWidth="false"
             app:tabMaxWidth="200dp"
             app:tabMinWidth="100dp"
             app:tabMode="fixed"
-            app:tabIndicator="@drawable/noclass_layer_list_tab_indicator"
-            app:tabIndicatorHeight="5dp"
-            app:tabIndicatorFullWidth="false"
-            app:tabIndicatorColor="@color/pd_blue"
-            app:tabSelectedTextAppearance="@color/pd_blue"
-            app:tabTextColor="@color/config_black_white">
+            app:tabTextAppearance="@style/TabLayoutTextStyle"
+            app:tabSelectedTextAppearance="@color/config_level_one_font_color"
+            app:tabTextColor="@color/config_level_three_font_color">
 
         </com.google.android.material.tabs.TabLayout>
 
@@ -97,7 +107,7 @@
         android:layout_height="match_parent"
         app:behavior_hideable="true"
         android:fitsSystemWindows="true"
-        android:paddingTop="10dp"
+        android:paddingTop="25dp"
         app:behavior_peekHeight="0dp"
         android:layout_marginBottom="0dp"
         app:layout_behavior="@string/bottom_sheet_behavior">

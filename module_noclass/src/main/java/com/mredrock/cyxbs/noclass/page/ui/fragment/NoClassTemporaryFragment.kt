@@ -17,7 +17,9 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.mredrock.cyxbs.api.account.IAccountService
 import com.mredrock.cyxbs.lib.base.ui.BaseFragment
+import com.mredrock.cyxbs.lib.utils.extensions.gone
 import com.mredrock.cyxbs.lib.utils.extensions.setOnSingleClickListener
+import com.mredrock.cyxbs.lib.utils.extensions.visible
 import com.mredrock.cyxbs.lib.utils.service.ServiceManager
 import com.mredrock.cyxbs.noclass.R
 import com.mredrock.cyxbs.noclass.bean.Student
@@ -86,10 +88,13 @@ class NoClassTemporaryFragment : BaseFragment(R.layout.noclass_fragment_temporar
     /**
      * 初始化下面试试左滑删除列表，设置两秒后消失
      */
-    private fun initHintText() {
+    private fun initHintText(content : String? = null) {
         mHandler = Handler(Looper.getMainLooper())
         mRunnable = Runnable {
+            mHintText.visible()
+            content?.let { mHintText.text = it }
             mHintText.alphaAnim(mHintText.alpha,0f,200).start()
+            mHintText.gone()
         }
         mHandler!!.postDelayed(mRunnable!!,2000)
     }
@@ -142,28 +147,31 @@ class NoClassTemporaryFragment : BaseFragment(R.layout.noclass_fragment_temporar
     private fun initObserver() {
         var searchAllDialog: SearchAllDialog?
         mViewModel.searchAll.observe(viewLifecycleOwner) {
-            val result = it
-            if (result != null) {
-                searchAllDialog = SearchAllDialog(it).apply {
-                    setOnClickClass { cls ->
-                        val clsList = mAdapter.currentList.toMutableSet()
-                        clsList.addAll(cls.members)
-                        mAdapter.submitList(clsList.toList())
+            if (it != null){
+                if (it.isSuccess()) {
+                    searchAllDialog = SearchAllDialog(it.data).apply {
+                        setOnClickClass { cls ->
+                            val clsList = mAdapter.currentList.toMutableSet()
+                            clsList.addAll(cls.members)
+                            mAdapter.submitList(clsList.toList())
+                        }
+                        setOnClickStudent { stu ->
+                            val stuList = mAdapter.currentList.toMutableSet()
+                            stuList.add(stu)
+                            mAdapter.submitList(stuList.toList())
+                        }
+                        setOnClickGroup { group ->
+                            val groupList = mAdapter.currentList.toMutableSet()
+                            groupList.addAll(group.members)
+                            mAdapter.submitList(groupList.toList())
+                        }
                     }
-                    setOnClickStudent { stu ->
-                        val stuList = mAdapter.currentList.toMutableSet()
-                        stuList.add(stu)
-                        mAdapter.submitList(stuList.toList())
-                    }
-                    setOnClickGroup { group ->
-                        val groupList = mAdapter.currentList.toMutableSet()
-                        groupList.addAll(group.members)
-                        mAdapter.submitList(groupList.toList())
-                    }
+                    searchAllDialog!!.show(childFragmentManager, "SearchAllDialog")
+                } else {
+                    SearchNoExistDialog(requireContext()).show()
                 }
-                searchAllDialog!!.show(childFragmentManager, "SearchAllDialog")
-            } else {
-                SearchNoExistDialog(requireContext()).show()
+            }else{
+                initHintText("网络异常请检查网络")
             }
         }
     }

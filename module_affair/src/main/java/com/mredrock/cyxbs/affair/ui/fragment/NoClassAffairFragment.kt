@@ -20,6 +20,7 @@ import com.mredrock.cyxbs.affair.ui.viewmodel.fragment.NoClassAffairViewModel
 import com.mredrock.cyxbs.api.affair.NoClassBean
 import com.mredrock.cyxbs.api.affair.NotificationBean
 import com.mredrock.cyxbs.lib.base.ui.BaseFragment
+import com.mredrock.cyxbs.lib.utils.extensions.color
 
 
 //没课约的安排日程
@@ -59,6 +60,16 @@ class NoClassAffairFragment : BaseFragment(R.layout.affair_fragment_noclass_affa
         initRv()
         initObserve()
         initClickChoose()
+        initPageManager()
+    }
+
+    /**
+     * 此为发送通知界面返回上一页改变activity的按钮的操作
+     */
+    private fun initPageManager() {
+        mPageManager.setClickLast {
+            mActivityViewModel.setBtnBg(4)
+        }
     }
 
     /**
@@ -76,24 +87,24 @@ class NoClassAffairFragment : BaseFragment(R.layout.affair_fragment_noclass_affa
             mWaitSubmit = ArrayList()
             mWaitSubmit!!.addAll(spareList)
             mTvLeftSpare.apply{
-                setBackgroundResource(R.drawable.affair_shape_affair_modify_button_background)
-                setTextColor(resources.getColor(com.mredrock.cyxbs.config.R.color.config_white_black))
+                setBackgroundResource(R.drawable.affair_shape_noclass_choose_bg)
+                setTextColor(R.color.affair_noclass_text_choose_color.color)
             }
             mTvRightAll.apply {
-                setBackgroundResource(R.drawable.affair_shape_button_default_bg)
-                setTextColor(resources.getColor(com.mredrock.cyxbs.config.R.color.config_black_white))
+                setBackgroundResource(R.drawable.affair_shape_noclass_default_bg)
+                setTextColor(R.color.affair_noclass_text_un_choose_color.color)
             }
         }
         mTvRightAll.setOnClickListener {
             mWaitSubmit = ArrayList()
             mWaitSubmit!!.addAll(allList)
             mTvLeftSpare.apply{
-                setBackgroundResource(R.drawable.affair_shape_button_default_bg)
-                setTextColor(resources.getColor(com.mredrock.cyxbs.config.R.color.config_black_white))
+                setBackgroundResource(R.drawable.affair_shape_noclass_default_bg)
+                setTextColor(R.color.affair_noclass_text_un_choose_color.color)
             }
             mTvRightAll.apply {
-                setBackgroundResource(R.drawable.affair_shape_affair_modify_button_background)
-                setTextColor(resources.getColor(com.mredrock.cyxbs.config.R.color.config_white_black))
+                setBackgroundResource(R.drawable.affair_shape_noclass_choose_bg)
+                setTextColor(R.color.affair_noclass_text_choose_color.color)
             }
         }
     }
@@ -102,18 +113,18 @@ class NoClassAffairFragment : BaseFragment(R.layout.affair_fragment_noclass_affa
         // 仅对本例生效
         fun setDefault(recyclerView: RecyclerView, lastIndex: Int){
             val parentView = recyclerView.getChildAt(lastIndex) as ViewGroup
+            parentView.setBackgroundResource(R.drawable.affair_shape_noclass_default_bg)
             // 获得索引为0的时候
             val textView = parentView.getChildAt(0) as TextView
-            textView.setBackgroundResource(R.drawable.affair_shape_button_default_bg)
-            textView.setTextColor(resources.getColor(com.mredrock.cyxbs.config.R.color.config_black_white))
+            textView.setTextColor(R.color.affair_noclass_text_un_choose_color.color)
         }
         fun setSelect(recyclerView: RecyclerView,currentIndex : Int){
             // 找到当前选中的child
             val parentView = recyclerView.getChildAt(currentIndex) as ViewGroup
+            parentView.setBackgroundResource(R.drawable.affair_shape_noclass_choose_bg)
             // 获得索引为0的时候
             val textView = parentView.getChildAt(0) as TextView
-            textView.setBackgroundResource(R.drawable.affair_shape_affair_modify_button_background)
-            textView.setTextColor(resources.getColor(com.mredrock.cyxbs.config.R.color.config_white_black))
+            textView.setTextColor(R.color.affair_noclass_text_choose_color.color)
         }
         // 上一次选中的索引
         var lastIndex : Int? = null
@@ -126,6 +137,9 @@ class NoClassAffairFragment : BaseFragment(R.layout.affair_fragment_noclass_affa
                     // 取消上一次选中的
                     if (lastIndex != null){
                         setDefault(mRvTitleCandidate,lastIndex!!)
+                    }else{
+                        // 点击的时候如果上一次为null，那么就将下一步的按钮的img换成深色的
+                        mActivityViewModel.setBtnBg(1)
                     }
                     // 找到当前选中的index
                     val chooseIndex = mRvTitleCandidateAdapter.currentList.indexOf(it)
@@ -170,6 +184,8 @@ class NoClassAffairFragment : BaseFragment(R.layout.affair_fragment_noclass_affa
                 mPageManager.loadNextPage()
             }else if (mPageManager.isChooseLoc()){
                 //如果是选择地点界面，那么这次点击相当于进入通知界面
+                // 改变按钮为发送通知
+                mActivityViewModel.setBtnBg(2)
                 mPageManager.loadNextPage()
             }else if (mPageManager.isEndPage()) {
                 // 如果是发送通知界面，这次点击相当于发送通知
@@ -198,6 +214,7 @@ class NoClassAffairFragment : BaseFragment(R.layout.affair_fragment_noclass_affa
                     toast("一天只能发送五次哦~")
                 }else{
                     toast("发送成功~")
+                    mActivityViewModel.setBtnBg(3)
                 }
             }else{
                 toast("发送失败!")

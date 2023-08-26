@@ -7,6 +7,7 @@ import android.os.Bundle
 import android.view.View
 import android.widget.FrameLayout
 import android.widget.ImageView
+import android.widget.LinearLayout
 import android.widget.TextView
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.activity.viewModels
@@ -58,7 +59,7 @@ class NoClassActivity : BaseActivity() {
     /**
      * 批量添加文字
      */
-    private val mTvBulkAdditions by R.id.no_class_tv_bulk_additions.view<TextView>()
+    private val mTvBulkAdditions by R.id.no_class_tv_bulk_additions.view<LinearLayout>()
 
     /**
      * 底部查询fragment的container

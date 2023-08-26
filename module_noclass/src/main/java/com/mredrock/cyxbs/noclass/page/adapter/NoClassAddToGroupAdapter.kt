@@ -9,6 +9,7 @@ import android.widget.ImageView
 import android.widget.LinearLayout
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
+import com.mredrock.cyxbs.lib.utils.extensions.color
 import com.mredrock.cyxbs.lib.utils.extensions.invisible
 import com.mredrock.cyxbs.lib.utils.extensions.visible
 import com.mredrock.cyxbs.noclass.R
@@ -37,13 +38,14 @@ class NoClassAddToGroupAdapter(
                 val noClassGroup = groupList[bindingAdapterPosition]
                 if (chooseGroup.contains(noClassGroup)) {
                     //这是是取消选中
-                    //todo 图标的改变
                     chooseGroup.remove(noClassGroup)
-                    containerView.setBackgroundResource(R.drawable.noclass_shape_button_save_default_bg)
+                    mImg.setImageResource(R.drawable.noclass_ic_unchoose)
+                    mTv.setTextColor(R.color.noclass_add_to_group_no_choose_color.color)
                 } else {
                     //这里是选中
                     chooseGroup.add(noClassGroup)
-                    containerView.setBackgroundResource(R.drawable.noclass_shape_button_common_bg)
+                    mImg.setImageResource(R.drawable.noclass_ic_choose_group)
+                    mTv.setTextColor(R.color.noclass_primary_text_color.color)
                 }
                 //判断分组缓冲区是否为空，如果为空，那么就回调传进来的点击事件
                 if (chooseGroup.isEmpty()) {

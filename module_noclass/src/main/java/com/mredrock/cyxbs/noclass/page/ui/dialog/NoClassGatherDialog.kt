@@ -56,7 +56,7 @@ class NoClassGatherDialog (
     var beforeSize = mNumNameIsSpare.size
     mParentViewModel.busyNameList.observe(this){
       // 如果不等，就说明页面已经满了，回调
-      if (it.size != beforeSize){
+      if (it.isNotEmpty() && it.size != beforeSize){
         beforeSize = it.size
         mAdapter.add(NoClassBusyPageFragment::class.java)
         indicatorNum++
@@ -114,6 +114,7 @@ class NoClassGatherDialog (
 
   override fun onDestroy() {
     super.onDestroy()
+    Log.d("lx", "onDestroy: ")
     mParentViewModel.setBusyNameList(listOf())
   }
 }

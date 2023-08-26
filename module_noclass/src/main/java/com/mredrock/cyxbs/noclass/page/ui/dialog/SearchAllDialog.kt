@@ -130,6 +130,8 @@ class SearchAllDialog(
             layoutManager = LinearLayoutManager(context)
             adapter = mAdapter.apply {
                 val data = searchResult
+                // 这也就是判断是否有学生和分组重名
+                setDisPlay(data.types.size >= 2)
                 val searchResultList = ArrayList<NoClassItem>()
                 // 是否只有分组
                 var isOnlyGroup = true

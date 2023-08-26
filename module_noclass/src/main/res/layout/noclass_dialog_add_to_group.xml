@@ -18,7 +18,7 @@
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/csl_noclass_gather_dialog"
         android:layout_width="match_parent"
-        android:layout_height="275dp"
+        android:layout_height="282dp"
         android:background="@drawable/noclass_shape_sheet_dialog_bg"
         android:orientation="vertical"
         app:layout_constraintBottom_toBottomOf="parent"
@@ -44,69 +44,53 @@
             app:layout_constraintVertical_bias="0" />
 
         <TextView
+            android:id="@+id/noclassTextview2"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="12dp"
-            android:layout_marginEnd="25dp"
+            android:layout_marginStart="16dp"
+            android:layout_marginTop="13dp"
             android:text="添加到"
             android:textColor="@color/noclass_hint_text_color_dark"
-            android:textSize="25sp"
-            app:layout_constraintBottom_toTopOf="@+id/noclassView3"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.54"
+            android:textSize="18sp"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintVertical_bias="0.381" />
-
-        <View
-            android:id="@+id/noclassView3"
-            android:layout_width="match_parent"
-            android:layout_height="1dp"
-            android:background="@color/noclass_gather_line_bg"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.0"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintVertical_bias="0.19" />
+            app:layout_constraintTop_toBottomOf="@+id/noclass_add_to_group_tv_cancel" />
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/noclass_add_to_group_rv_container"
             android:layout_width="0dp"
             android:layout_height="0dp"
-            android:layout_marginStart="16dp"
-            android:layout_marginEnd="16dp"
-            android:layout_marginBottom="8dp"
-            android:layout_marginTop="8dp"
+            android:layout_marginTop="15dp"
+            android:layout_marginBottom="15dp"
             app:layout_constraintBottom_toTopOf="@+id/noclass_add_to_group_seekbar"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/noclassView3" />
+            app:layout_constraintTop_toBottomOf="@+id/noclassTextview2" />
 
         <SeekBar
             android:id="@+id/noclass_add_to_group_seekbar"
-            android:layout_width="50dp"
+            android:layout_width="62dp"
             android:layout_height="3dp"
-            android:layout_marginBottom="8dp"
+            android:layout_marginBottom="20dp"
             android:progressDrawable="@drawable/noclass_shape_seek_bar_progress"
             android:thumb="@drawable/noclass_shape_seek_bar_thumb"
             app:layout_constraintBottom_toTopOf="@+id/noclass_add_to_group_done"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent" />
+            app:layout_constraintStart_toStartOf="parent"
+            android:visibility="invisible"/>
 
         <Button
             android:id="@+id/noclass_add_to_group_done"
             style="?android:attr/borderlessButtonStyle"
-            android:layout_width="100dp"
-            android:layout_height="40dp"
+            android:layout_width="120dp"
+            android:layout_height="42dp"
             android:background="@drawable/noclass_shape_button_save_default_bg"
             android:text="完成"
             android:textColor="@color/config_white_black"
-            android:textSize="14sp"
+            android:textSize="18sp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            android:layout_marginBottom="8dp"/>
+            android:layout_marginBottom="28dp"/>
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 

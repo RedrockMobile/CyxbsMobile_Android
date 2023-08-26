@@ -10,6 +10,7 @@ import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.mredrock.cyxbs.lib.utils.extensions.setOnSingleClickListener
+import com.mredrock.cyxbs.lib.utils.extensions.visible
 import com.mredrock.cyxbs.noclass.R
 import com.mredrock.cyxbs.noclass.bean.Cls
 import com.mredrock.cyxbs.noclass.bean.NoClassGroup
@@ -38,6 +39,15 @@ class TemporarySearchAdapter:  ListAdapter<NoClassItem,RecyclerView.ViewHolder>(
         const val TEM_GROUP = 3
     }
 
+    /**
+     * 状态位，是否要显示头像
+     */
+    private var isDisplay = false
+
+    fun setDisPlay(isDisplay : Boolean){
+        this.isDisplay = isDisplay
+    }
+
 
     override fun getItemViewType(position: Int): Int {
         return when(getItem(position)){
@@ -63,8 +73,10 @@ class TemporarySearchAdapter:  ListAdapter<NoClassItem,RecyclerView.ViewHolder>(
                 is Student -> {
                     this as StudentHolder
                     tvName.text = itemData.name
-                    tvMajor.text = itemData.major
                     tvStuNum.text = itemData.id
+                    if (isDisplay){
+                        imgUser.visible()
+                    }
                 }
                 is Cls ->  {
                     this as ClassHolder
@@ -73,6 +85,9 @@ class TemporarySearchAdapter:  ListAdapter<NoClassItem,RecyclerView.ViewHolder>(
                 is NoClassGroup -> {
                     this as GroupHolder
                     tvName.text = itemData.name
+                    if (isDisplay){
+                        imgUser.visible()
+                    }
                 }
             }
         }
@@ -86,8 +101,8 @@ class TemporarySearchAdapter:  ListAdapter<NoClassItem,RecyclerView.ViewHolder>(
     }
 
     inner class StudentHolder(itemView : View) : RecyclerView.ViewHolder(itemView){
+        val imgUser : ImageView = itemView.findViewById(R.id.noclass_item_img_user)
         val tvName : TextView = itemView.findViewById(R.id.noclass_tv_student_name)
-        val tvMajor : TextView = itemView.findViewById(R.id.noclass_tv_student_major)
         val tvStuNum : TextView = itemView.findViewById(R.id.noclass_tv_student_id)
         private val btnAdd : ImageView = itemView.findViewById(R.id.noclass_iv_student_add)
         init {
@@ -105,6 +120,7 @@ class TemporarySearchAdapter:  ListAdapter<NoClassItem,RecyclerView.ViewHolder>(
     }
 
     inner class GroupHolder(itemView: View) : RecyclerView.ViewHolder(itemView){
+        val imgUser : ImageView = itemView.findViewById(R.id.noclass_item_img_group)
         val tvName : TextView = itemView.findViewById(R.id.noclass_item_tv_group_name)
         private val btnAdd : ImageView = itemView.findViewById(R.id.noclass_item_iv_group_add)
         init {

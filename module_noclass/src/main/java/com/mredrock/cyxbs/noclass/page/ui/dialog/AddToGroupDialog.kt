@@ -1,7 +1,11 @@
 package com.mredrock.cyxbs.noclass.page.ui.dialog
 
 import android.app.Dialog
+import android.content.Context
 import android.os.Bundle
+import android.util.Log
+import android.view.View
+import android.view.ViewTreeObserver
 import android.widget.Button
 import android.widget.SeekBar
 import android.widget.TextView
@@ -10,6 +14,7 @@ import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import com.mredrock.cyxbs.lib.utils.extensions.toast
+import com.mredrock.cyxbs.lib.utils.extensions.visible
 import com.mredrock.cyxbs.noclass.R
 import com.mredrock.cyxbs.noclass.bean.NoClassGroup
 import com.mredrock.cyxbs.noclass.bean.Student
@@ -131,6 +136,12 @@ class AddToGroupDialog(
             }
         })
 
+        // 等待布局完成之后
+        mRv.addOnLayoutChangeListener { v, left, top, right, bottom, oldLeft, oldTop, oldRight, oldBottom ->
+            if (mRv.width >= resources.displayMetrics.widthPixels){
+                mSb.visible()
+            }
+        }
         mSb.setOnSeekBarChangeListener(object :
             SeekBar.OnSeekBarChangeListener {
             override fun onProgressChanged(seekBar: SeekBar?, progress: Int, fromUser: Boolean) {

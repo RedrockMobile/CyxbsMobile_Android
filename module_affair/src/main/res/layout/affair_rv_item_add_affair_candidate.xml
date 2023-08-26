@@ -3,18 +3,21 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
+    android:layout_marginEnd="5dp"
+    android:layout_marginBottom="5dp"
     android:id="@+id/affair_frame_layout"
-    android:padding="4dp">
+    android:background="@drawable/affair_shape_noclass_default_bg">
 
     <TextView
         android:id="@+id/affair_tv_add_affair_candidate"
         android:layout_width="wrap_content"
-        android:layout_height="34dp"
-        android:background="@drawable/affair_shape_item_text_bg"
+        android:layout_height="wrap_content"
         android:gravity="center"
-        android:paddingStart="13dp"
-        android:paddingEnd="13dp"
-        android:textColor="@color/config_level_two_font_color"
+        android:paddingStart="18dp"
+        android:paddingEnd="18dp"
+        android:paddingTop="6dp"
+        android:paddingBottom="6dp"
+        android:textColor="@color/affair_noclass_text_un_choose_color"
         android:textSize="12dp"
         tools:ignore="SpUsage"
         tools:text="会议" />

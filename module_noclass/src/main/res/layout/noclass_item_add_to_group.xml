@@ -2,21 +2,27 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:orientation="horizontal"
     android:layout_width="wrap_content"
-    android:layout_height="wrap_content"
+    android:layout_height="22dp"
+    android:layout_marginBottom="4dp"
+    android:layout_marginTop="4dp"
+    android:layout_marginStart="16dp"
+    android:layout_marginEnd="70dp"
     android:id="@+id/noclass_item_add_to_group">
 
     <ImageView
         android:id="@+id/noclass_item_add_to_group_img"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:src="@drawable/pd_more"
+        android:src="@drawable/noclass_ic_unchoose"
         android:layout_gravity="center_vertical"/>
 
     <TextView
         android:id="@+id/noclass_item_add_to_group_tv"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:textColor="@color/noclass_add_to_group_no_choose_color"
         android:text="未知分组"
-        android:textSize="20sp"/>
+        android:layout_marginStart="6.73dp"
+        android:textSize="16sp"/>
 
 </LinearLayout>

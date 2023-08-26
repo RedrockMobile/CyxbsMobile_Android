@@ -44,7 +44,6 @@ class SearchStudentAdapter() : ListAdapter<Student,SearchStudentAdapter.VH>(stud
   }
   inner class VH(itemView : View) : RecyclerView.ViewHolder(itemView){
     val tvName: TextView = itemView.findViewById(R.id.noclass_tv_student_name)
-    val tvMajor: TextView = itemView.findViewById(R.id.noclass_tv_student_major)
     val tvNum: TextView = itemView.findViewById(R.id.noclass_tv_student_id)
     private val btnAdd = itemView.findViewById<ImageView>(R.id.noclass_iv_student_add).apply {
       setOnClickListener {
@@ -61,7 +60,6 @@ class SearchStudentAdapter() : ListAdapter<Student,SearchStudentAdapter.VH>(stud
   
   override fun onBindViewHolder(holder: VH, position: Int) {
     holder.tvName.text = currentList[position].name
-    holder.tvMajor.text = currentList[position].major
     holder.tvNum.text = currentList[position].id
   }
 

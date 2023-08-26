@@ -8,47 +8,46 @@
     android:layout_height="match_parent">
 
     <androidx.cardview.widget.CardView
-        app:layout_constraintVertical_bias="0.45"
+        app:layout_constraintVertical_bias="0.382"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        app:cardCornerRadius="12dp"
+        app:cardCornerRadius="11dp"
+        app:cardElevation="0dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent">
 
         <androidx.constraintlayout.widget.ConstraintLayout
-            android:layout_width="303dp"
-            android:layout_height="166dp">
+            android:layout_width="238dp"
+            android:layout_height="133dp">
 
             <TextView
                 android:id="@+id/noclassTextview"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_marginTop="25dp"
                 android:text="信息有误，请重新输入"
-                android:textSize="20sp"
-                android:textStyle="bold"
-                app:layout_constraintBottom_toBottomOf="parent"
+                android:textColor="@color/noclass_primary_text_color"
+                android:textSize="15sp"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintHorizontal_bias="0.495"
+                app:layout_constraintHorizontal_bias="0.505"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent"
-                app:layout_constraintVertical_bias="0.279" />
+                app:layout_constraintTop_toTopOf="parent" />
 
             <Button
                 android:id="@+id/noclass_dialog_search_not_exist_confirm"
                 style="?android:attr/borderlessButtonStyle"
-                android:layout_width="120dp"
-                android:layout_height="40dp"
+                android:layout_width="92dp"
+                android:layout_height="36dp"
+                android:layout_marginBottom="25dp"
                 android:background="@drawable/noclass_shape_button_common_bg"
                 android:text="确定"
                 android:textColor="@color/config_white_black"
-                android:textSize="18sp"
+                android:textSize="15sp"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent"
-                app:layout_constraintVertical_bias="0.753" />
+                app:layout_constraintStart_toStartOf="parent" />
 
         </androidx.constraintlayout.widget.ConstraintLayout>
 

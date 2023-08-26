@@ -138,6 +138,9 @@ abstract class NoClassPageFragment: CoursePageFragment() {
     if (this.size == mNameMap.size)  //如果空闲人id的集合为所有，那么就不显示忙碌
       return ""
     //改成几人忙碌
+    if (this.isEmpty()){
+      return "全员\n忙碌"
+    }
     return "${mNameMap.size - this.size}人\n忙碌"
   }
   

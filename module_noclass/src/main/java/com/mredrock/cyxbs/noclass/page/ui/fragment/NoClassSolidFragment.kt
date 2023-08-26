@@ -3,6 +3,8 @@ package com.mredrock.cyxbs.noclass.page.ui.fragment
 import android.app.Activity
 import android.content.Intent
 import android.os.Bundle
+import android.os.Handler
+import android.os.Looper
 import android.text.TextUtils
 import android.util.Log
 import android.view.View
@@ -17,6 +19,8 @@ import androidx.fragment.app.viewModels
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.mredrock.cyxbs.lib.base.ui.BaseFragment
+import com.mredrock.cyxbs.lib.utils.extensions.gone
+import com.mredrock.cyxbs.lib.utils.extensions.visible
 import com.mredrock.cyxbs.noclass.R
 import com.mredrock.cyxbs.noclass.bean.NoClassGroup
 import com.mredrock.cyxbs.noclass.page.adapter.NoClassSolidAdapter
@@ -27,6 +31,7 @@ import com.mredrock.cyxbs.noclass.page.ui.dialog.SearchNoExistDialog
 import com.mredrock.cyxbs.noclass.page.ui.dialog.SearchStudentDialog
 import com.mredrock.cyxbs.noclass.page.viewmodel.activity.NoClassViewModel
 import com.mredrock.cyxbs.noclass.page.viewmodel.fragment.SolidViewModel
+import com.mredrock.cyxbs.noclass.util.alphaAnim
 
 /**
  * 固定分组的fragment
@@ -71,6 +76,17 @@ class NoClassSolidFragment : BaseFragment(R.layout.noclass_fragment_solid) {
     private val mParentViewModel by activityViewModels<NoClassViewModel>()
 
     /**
+     * 下面得提示文字，试试左滑删除列表
+     */
+    private val mHintText : TextView by R.id.noclass_solid_tv_hint.view()
+
+    /**
+     * 设置两秒后消失得runnable和handler，注意及时释放
+     */
+    private var mRunnable : Runnable? = null
+    private var mHandler : Handler? = null
+
+    /**
      * 进入组内管理界面，判断是否有更改值
      */
     private val startForResult =
@@ -100,6 +116,11 @@ class NoClassSolidFragment : BaseFragment(R.layout.noclass_fragment_solid) {
         getAllGroup()
         initSearchEvent()
         initClickCreate()
+    }
+
+    override fun onStop() {
+        super.onStop()
+        mRunnable?.let { mHandler?.removeCallbacks(it) }
     }
 
     /**
@@ -147,14 +168,18 @@ class NoClassSolidFragment : BaseFragment(R.layout.noclass_fragment_solid) {
     private fun initObserver() {
         var searchStudentDialog: SearchStudentDialog?
         mViewModel.searchStudent.observe(viewLifecycleOwner) {
-            if(it != null && it.isNotEmpty()){
-                searchStudentDialog = SearchStudentDialog(it) {stu ->
-                    //点击加号之后的逻辑，需要弹窗选择分组加入
-                    AddToGroupDialog(mAdapter.currentList,stu).show(childFragmentManager,"AddToGroupDialog")
+            if (it != null){
+                if (it.isSuccess() && it.data.isNotEmpty()){
+                    searchStudentDialog = SearchStudentDialog(it.data) {stu ->
+                        //点击加号之后的逻辑，需要弹窗选择分组加入
+                        AddToGroupDialog(mAdapter.currentList,stu).show(childFragmentManager,"AddToGroupDialog")
+                    }
+                    searchStudentDialog!!.show(childFragmentManager, "SearchStudentDialog")
+                }else{
+                    SearchNoExistDialog(requireContext()).show()
                 }
-                searchStudentDialog!!.show(childFragmentManager, "SearchStudentDialog")
             }else{
-                SearchNoExistDialog(requireContext()).show()
+                initHintText("网络异常请检查网络")
             }
         }
         mParentViewModel.groupList.observe(viewLifecycleOwner){
@@ -192,6 +217,20 @@ class NoClassSolidFragment : BaseFragment(R.layout.noclass_fragment_solid) {
             }
             // 用完及时置为null
         }
+    }
+
+    /**
+     * 初始化下面试试左滑删除列表，设置两秒后消失
+     */
+    private fun initHintText(content : String? = null) {
+        mHandler = Handler(Looper.getMainLooper())
+        mRunnable = Runnable {
+            mHintText.visible()
+            content?.let { mHintText.text = it }
+            mHintText.alphaAnim(mHintText.alpha,0f,200).start()
+            mHintText.gone()
+        }
+        mHandler!!.postDelayed(mRunnable!!,2000)
     }
 
     /**

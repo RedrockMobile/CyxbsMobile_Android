@@ -17,7 +17,7 @@ class MyVpIndicatorView @JvmOverloads constructor(
     private var activeDotColor: Int = Color.BLACK
     private var inActiveDotColor: Int = Color.WHITE
     private var dotSpace: Int = 10   //点和点之间的空间
-    private var dotRadius: Float = 8.0F  //点的半径
+    private var dotRadius: Float = 7F  //点的半径
     private var id: Int = 0
 
     init {
