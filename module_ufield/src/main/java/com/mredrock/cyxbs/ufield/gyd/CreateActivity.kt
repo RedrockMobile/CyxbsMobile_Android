@@ -165,9 +165,7 @@ class CreateActivity : BaseActivity() {
         supportActionBar?.setHomeAsUpIndicator(R.drawable.ufield_ic_toolbar_back)
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
 
-        val layoutParams = toolbar.getChildAt(0).layoutParams as Toolbar.LayoutParams
-        layoutParams.setMargins(27, 0, 0, 0)
-        toolbar.getChildAt(0).layoutParams = layoutParams
+
 
 
         val hint = "关于活动的简介（不超过100个字）"

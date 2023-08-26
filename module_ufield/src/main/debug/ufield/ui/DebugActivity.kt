@@ -4,6 +4,7 @@ import android.content.Intent
 import android.os.Bundle
 import com.mredrock.cyxbs.lib.base.BaseDebugActivity
 import com.mredrock.cyxbs.ufield.gyd.CreateActivity
+import com.mredrock.cyxbs.ufield.gyd.DetailActivity
 
 /**
  * description ：
@@ -17,6 +18,6 @@ class DebugActivity : BaseDebugActivity() {
         get() = true
 
     override fun onDebugCreate(savedInstanceState: Bundle?) {
-        startActivity(Intent(this, CreateActivity::class.java))
+        startActivity(Intent(this, DetailActivity::class.java))
     }
 }

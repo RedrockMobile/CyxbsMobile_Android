@@ -9,9 +9,12 @@
         android:supportsRtl="true"
         android:theme="@style/ConfigAppTheme">
         <activity
-            android:name=".gyd.CreateActivity"
-            android:windowSoftInputMode="adjustPan"
+            android:name=".gyd.DetailActivity"
             android:exported="false" />
+        <activity
+            android:name=".gyd.CreateActivity"
+            android:exported="false"
+            android:windowSoftInputMode="adjustPan" />
         <activity
             android:name=".lyt.ui.CheckActivity"
             android:exported="false" />
@@ -23,8 +26,7 @@
             android:exported="false" />
         <activity
             android:name="com.yalantis.ucrop.UCropActivity"
-            android:screenOrientation="portrait"
-            />
+            android:screenOrientation="portrait" />
         <activity
             android:name="ufield.ui.DebugActivity"
             android:exported="true">
