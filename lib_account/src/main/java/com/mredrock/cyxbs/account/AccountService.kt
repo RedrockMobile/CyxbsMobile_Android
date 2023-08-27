@@ -1,8 +1,6 @@
 package com.mredrock.cyxbs.account
 
 import android.content.Context
-import android.os.Handler
-import android.os.Looper
 import androidx.annotation.MainThread
 import androidx.annotation.WorkerThread
 import androidx.core.content.edit
@@ -17,16 +15,13 @@ import com.mredrock.cyxbs.account.bean.TokenWrapper
 import com.mredrock.cyxbs.account.utils.UserInfoEncryption
 import com.mredrock.cyxbs.api.account.*
 import com.mredrock.cyxbs.api.account.utils.Value
-import com.mredrock.cyxbs.api.electricity.IElectricityService
 import com.mredrock.cyxbs.api.login.ILoginService
-import com.mredrock.cyxbs.api.volunteer.IVolunteerService
 import com.mredrock.cyxbs.config.sp.defaultSp
 import com.mredrock.cyxbs.lib.utils.extensions.dp2pxF
 import com.mredrock.cyxbs.lib.utils.extensions.toast
 import com.mredrock.cyxbs.lib.utils.network.ApiException
 import com.mredrock.cyxbs.lib.utils.network.ApiGenerator
 import com.mredrock.cyxbs.lib.utils.network.ApiWrapper
-import com.mredrock.cyxbs.lib.utils.service.ServiceManager
 import com.mredrock.cyxbs.lib.utils.service.impl
 import io.reactivex.rxjava3.core.Observable
 import io.reactivex.rxjava3.subjects.BehaviorSubject
@@ -237,8 +232,8 @@ internal class AccountService : IAccountService {
             }
             notifyAllStateListeners(state)
         }
-        override fun refresh(): String? {
-            val refreshToken = tokenWrapper?.refreshToken ?: return null
+        override fun refresh() {
+            val refreshToken = tokenWrapper?.refreshToken ?: error("refreshToken初始值为空，请尝试重新登录")
             val response = ApiGenerator.getCommonApiService(ApiService::class)
                 .refresh(RefreshParams(refreshToken),mUserService.getStuNum()).execute()
             val body = response.body()
@@ -246,10 +241,12 @@ internal class AccountService : IAccountService {
                 // 根据后端标准返回文档：https://redrock.feishu.cn/wiki/wikcnB9p6U45ZJZmxwTEu8QXvye
                 if (body.status == 20004) {
                     toast("用户认证刷新失败，请重新登录")
-                    return null
+                    // 直接将 refreshToken 过期时间清零，用户下次打开就会直接跳转至重新登录
+                    defaultSp.edit { putLong(SP_KEY_REFRESH_TOKEN_EXPIRED, 0) }
+                    error("用户认证刷新失败，请重新登录！")
                 }
-            } else return null
-            return body.data.let { data ->
+            } else error("用户认证刷新失败，请尝试重新登录\nhttp code = ${response.code()}")
+            body.data.let { data ->
                 bind(data)
                 isTouristMode = false
                 defaultSp.edit {
@@ -266,7 +263,6 @@ internal class AccountService : IAccountService {
                     )
                 }
                 notifyAllStateListeners(IUserStateService.UserState.REFRESH)
-                data.token
             }
         }
 
@@ -348,8 +344,6 @@ internal class AccountService : IAccountService {
                 putLong(SP_KEY_REFRESH_TOKEN_EXPIRED, 0)
                 putLong(SP_KEY_TOKEN_EXPIRED, 0)
             }
-            ServiceManager(IElectricityService::class).clearSP()
-            ServiceManager(IVolunteerService::class).clearSP()
             user = null
             // 通知 StuNum 更新
             (mUserService as UserService).emitStuNum(null)
@@ -374,6 +368,18 @@ internal class AccountService : IAccountService {
 
         override fun getToken(): String {
             return tokenWrapper?.token ?: ""
+        }
+
+        override fun refreshTokenExpired() {
+            defaultSp.edit {
+                putLong(SP_KEY_REFRESH_TOKEN_EXPIRED, 0)
+            }
+        }
+
+        override fun tokenExpired() {
+            defaultSp.edit {
+                putLong(SP_KEY_TOKEN_EXPIRED, 0)
+            }
         }
     }
     

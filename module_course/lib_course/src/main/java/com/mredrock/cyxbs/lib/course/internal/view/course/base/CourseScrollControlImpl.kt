@@ -47,12 +47,24 @@ abstract class CourseScrollControlImpl @JvmOverloads constructor(
     return getScrollImpl().getAbsoluteY(pointerId)
   }
   
-  final override fun getScrollHeight(): Int {
-    return getScrollImpl().getScrollHeight()
+  final override fun getScrollOuterHeight(): Int {
+    return getScrollImpl().getScrollOuterHeight()
+  }
+  
+  final override fun getScrollInnerHeight(): Int {
+    return getScrollImpl().getScrollInnerHeight()
   }
   
   final override fun canCourseScrollVertically(direction: Int): Boolean {
     return getScrollImpl().canCourseScrollVertically(direction)
+  }
+  
+  final override fun addOnScrollYChanged(l: ICourseScrollControl.OnScrollYChangedListener) {
+    getScrollImpl().addOnScrollYChanged(l)
+  }
+  
+  final override fun removeOnScrollYChanged(l: ICourseScrollControl.OnScrollYChangedListener) {
+    getScrollImpl().removeOnScrollYChanged(l)
   }
   
   final override fun measureChildWithRatio(

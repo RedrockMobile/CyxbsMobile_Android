@@ -13,10 +13,6 @@ interface IUserStateService {
         TOURIST, // 进入访客模式发送的事件
         REFRESH // 刷新Token发送的事件
     }
-
-    interface StateListener {
-        fun onStateChanged(state: UserState)
-    }
     
     /**
      * 这个 context 不能传入 appContext
@@ -36,7 +32,7 @@ interface IUserStateService {
     fun loginByTourist()
 
     @Throws(Exception::class)
-    fun refresh(): String?
+    fun refresh()
 
     fun isLogin(): Boolean
 

@@ -5,11 +5,7 @@
 ### 1. 添加依赖
 在 `build.gradle` 中添加如下依赖
 ```kotlin
-dependAutoService()
-
-dependencies {
-  implementation(project(":api_init")) // 因为 api_init 没有实现模块，所以写这里
-}
+dependApiInit() // 已包含 AutoService
 ```
 
 ### 2. 设置启动类

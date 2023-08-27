@@ -1,9 +1,28 @@
+# 写在这里的目的是为了让整个项目的 build.gradle.kts 和 build_-ogic 的都能统一设置版本号
+# 如果是只有模块使用的话，建议写在 build-logic/core/versions/ 里面，一定要写好对应依赖的链接!!!
+
 [versions]
-android_gradle_version = "7.3.1"
-kotlin_gradle_version = "1.7.21"
-vasDolly_version = "3.0.4"
+# 在 kts 中可以直接写 lib.version.xxx 获取版本号
+# 如果是在 build-logic 中的 kt 类中获取，请使用封装好的 Project.libVersion(...) 扩展方法
+androidGradlePlugin = "8.0.2"
+kotlin = "1.8.21"
+ksp = "1.8.21-1.0.11"
+# ksp 版本与 kotlin 版本强绑定，升级 kotlin 记得去更 ksp (https://github.com/google/ksp/releases)
+
+javaTarget = "11"
+kotlinJvmTarget = "11"
+
+# ==================================================
+#                    其他三方依赖版本
+# ==================================================
+vasDolly = "3.0.4"
 
 [libraries]
-android-gradlePlugin = { module = "com.android.tools.build:gradle", version.ref = "android_gradle_version" }
-kotlin-gradlePlugin = { module = "org.jetbrains.kotlin:kotlin-gradle-plugin", version.ref = "kotlin_gradle_version" }
-vasDolly_gradlePlugin = { module = "com.tencent.vasdolly:plugin", version.ref = "vasDolly_version" }
+android-gradlePlugin = { module = "com.android.tools.build:gradle", version.ref = "androidGradlePlugin" }
+kotlin-gradlePlugin = { module = "org.jetbrains.kotlin:kotlin-gradle-plugin", version.ref = "kotlin" }
+ksp-gradlePlugin = { group = "com.google.devtools.ksp", name = "com.google.devtools.ksp.gradle.plugin", version.ref = "ksp" }
+
+# ==================================================
+#                     其他三方依赖
+# ==================================================
+vasDolly-gradlePlugin = { module = "com.tencent.vasdolly:plugin", version.ref = "vasDolly" }

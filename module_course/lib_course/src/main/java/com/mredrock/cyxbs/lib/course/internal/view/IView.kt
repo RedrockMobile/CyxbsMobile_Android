@@ -2,6 +2,7 @@ package com.mredrock.cyxbs.lib.course.internal.view
 
 import android.content.Context
 import android.view.View
+import android.view.View.OnAttachStateChangeListener
 import android.view.ViewParent
 
 /**
@@ -26,11 +27,29 @@ interface IView {
   
   fun isAttachedToWindow(): Boolean
   
-  fun addOnAttachStateChangeListener(listener: View.OnAttachStateChangeListener)
+  fun addOnAttachStateChangeListener(listener: OnAttachStateChangeListener)
+  
+  fun removeOnAttachStateChangeListener(listener: OnAttachStateChangeListener)
+  
+  fun addOnLayoutChangeListener(l: View.OnLayoutChangeListener)
+  
+  fun removeOnLayoutChangeListener(l: View.OnLayoutChangeListener)
   
   fun getHeight(): Int
   
   fun getWidth(): Int
   
   fun getParent(): ViewParent
+  
+  fun getPaddingLeft(): Int
+  
+  fun getPaddingRight(): Int
+  
+  fun getPaddingStart(): Int
+  
+  fun getPaddingEnd(): Int
+  
+  fun getPaddingTop(): Int
+  
+  fun getPaddingBottom(): Int
 }

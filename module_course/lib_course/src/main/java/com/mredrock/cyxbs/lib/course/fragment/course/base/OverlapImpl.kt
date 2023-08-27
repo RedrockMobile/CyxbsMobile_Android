@@ -6,19 +6,22 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.annotation.CallSuper
 import com.mredrock.cyxbs.lib.course.fragment.course.expose.overlap.IOverlapContainer
-import com.mredrock.cyxbs.lib.course.fragment.course.expose.overlap.IOverlapItem
-import com.mredrock.cyxbs.lib.course.fragment.course.expose.wrapper.ICourseWrapper
+import com.mredrock.cyxbs.lib.course.item.overlap.IOverlapItem
 import com.mredrock.cyxbs.lib.course.internal.item.IItem
 import com.mredrock.cyxbs.lib.course.internal.item.IItemContainer
 import com.mredrock.cyxbs.lib.course.internal.item.forEachColumn
 import com.mredrock.cyxbs.lib.course.internal.item.forEachRow
-import com.mredrock.cyxbs.lib.course.internal.view.course.ICourseViewGroup
 import com.mredrock.cyxbs.lib.course.utils.getOrPut
 import com.ndhzs.netlayout.transition.OnChildVisibleListener
 import java.util.*
 
 /**
  * 操控重叠的类
+ *
+ * 功能如下：
+ * - 拦截 [IOverlapItem] 的添加，然后延后自动添加部分符合要求的 item
+ * - 观察 item 的移除回调。在被移除时自动取消重叠
+ * - 观察 View 的 Visibility，在设置成 GONE 或 VISIBLE 时自动改变重叠状态 (INVISIBLE 不改变)
  *
  * ## 特别注意
  * - 如果你的 item 实现了 [IOverlapItem] 接口，那么在使用 addItem() 添加时会被拦截添加
@@ -39,6 +42,23 @@ abstract class OverlapImpl : FoldImpl(), IOverlapContainer {
   
   override fun compareOverlayItem(row: Int, column: Int, o1: IOverlapItem, o2: IOverlapItem): Int {
     return o1.compareTo(o2)
+  }
+  
+  final override fun changeOverlap(item: IOverlapItem?, isOverlap: Boolean): Boolean {
+    if (item == null) return false
+    if (mItemInParentSet.contains(item)) {
+      val result = if (isOverlap) setOverlap(item) else deleteOverlap(item)
+      if (result) {
+        tryPostRefreshOverlapRunnable()
+        return true
+      }
+    }
+    return false
+  }
+  
+  final override fun refreshOverlap(itemsWithoutAnim: List<IOverlapItem>) {
+    mItemsWithoutAnim.addAll(itemsWithoutAnim)
+    tryPostRefreshOverlapRunnable()
   }
   
   @CallSuper
@@ -96,8 +116,7 @@ abstract class OverlapImpl : FoldImpl(), IOverlapContainer {
           if (newVisibility == View.INVISIBLE) return // 只监听 GONE 和 VISIBLE
           val item = course.getItemByView(child)
           if (item is IOverlapItem) {
-            deleteOverlap(item)
-            tryPostRefreshOverlapRunnable()
+            changeOverlap(item, false)
           }
         }
   
@@ -105,8 +124,7 @@ abstract class OverlapImpl : FoldImpl(), IOverlapContainer {
           if (oldVisibility == View.INVISIBLE) return // 只监听 GONE 和 VISIBLE
           val item = course.getItemByView(child)
           if (item is IOverlapItem) {
-            setOverlap(item)
-            tryPostRefreshOverlapRunnable()
+            changeOverlap(item, true)
           }
         }
       }
@@ -115,19 +133,17 @@ abstract class OverlapImpl : FoldImpl(), IOverlapContainer {
   
   init {
     // 回收 item，解决 Fragment 与 View 生命周期不一致问题
-    addCourseLifecycleObservable(
-      object : ICourseWrapper.CourseLifecycleObserver {
-        override fun onDestroyCourse(course: ICourseViewGroup) {
-          mItemInFreeSet.clear()
-          mItemInParentSet.clear()
-          mRowColumnMap.clear()
-        }
-      }
-    )
+    doOnCourseDestroy {
+      mItemInFreeSet.clear()
+      mItemInParentSet.clear()
+      mRowColumnMap.clear()
+      mItemsWithoutAnim.clear()
+    }
   }
   
   private val mItemInFreeSet = hashSetOf<IOverlapItem>()
   private val mItemInParentSet = hashSetOf<IOverlapItem>()
+  private val mItemsWithoutAnim = hashSetOf<IOverlapItem>()
   
   // 是否正处于刷新的 Runnable 中
   private var mIsInRefreshOverlapRunnable = false
@@ -155,7 +171,7 @@ abstract class OverlapImpl : FoldImpl(), IOverlapContainer {
         }
         // 遍历所有添加进去的 item 刷新重叠区域
         mItemInParentSet.forEach {
-          it.overlap.refreshOverlap()
+          it.overlap.refreshOverlap(!mItemsWithoutAnim.contains(it))
         }
         /*
         * 上面的逻辑简单来说就是：
@@ -165,6 +181,8 @@ abstract class OverlapImpl : FoldImpl(), IOverlapContainer {
         * 可以发现，mItemInParentSet 只有在使用 removeItem() 后才会被删除，达到一定条件时，最后 mItemInFreeSet
         * 会全部存入 mItemInParentSet 中
         * */
+  
+        mItemsWithoutAnim.clear()
         mIsInRefreshOverlapRunnable = false
       }
       return true
@@ -175,23 +193,31 @@ abstract class OverlapImpl : FoldImpl(), IOverlapContainer {
   /**
    * 设置重叠，不一定是在 item 被添加进来时调用
    */
-  private fun setOverlap(item: IOverlapItem) {
+  private fun setOverlap(item: IOverlapItem): Boolean {
+    var result = false
     item.lp.forEachRow { row ->
       item.lp.forEachColumn { column ->
-        getGrid(row, column).setOverlap(item)
+        if (getGrid(row, column).setOverlap(item)) {
+          result = true
+        }
       }
     }
+    return result
   }
   
   /**
    * 删除重叠
    */
-  private fun deleteOverlap(item: IOverlapItem) {
+  private fun deleteOverlap(item: IOverlapItem): Boolean {
+    var result = false
     item.lp.forEachRow { row ->
       item.lp.forEachColumn { column ->
-        getGrid(row, column).deleteOverlap(item)
+        if (getGrid(row, column).deleteOverlap(item)) {
+          result = true
+        }
       }
     }
+    return result
   }
   
   private val mRowColumnMap = SparseArray<SparseArray<Grid>>()
@@ -224,15 +250,19 @@ abstract class OverlapImpl : FoldImpl(), IOverlapContainer {
     /**
      * 设置重叠
      */
-    fun setOverlap(item: IOverlapItem) {
-      sort.add(item)
-      val higher = sort.higher(item)
-      higher?.overlap?.onBelowItem(row, column, item)
-      item.overlap.onAboveItem(row, column, higher)
-      
-      val lower = sort.lower(item)
-      item.overlap.onBelowItem(row, column, lower)
-      lower?.overlap?.onAboveItem(row, column, item)
+    fun setOverlap(item: IOverlapItem): Boolean {
+      if (!sort.contains(item)) {
+        sort.add(item)
+        val higher = sort.higher(item)
+        higher?.overlap?.onBelowItem(row, column, item)
+        item.overlap.onAboveItem(row, column, higher)
+  
+        val lower = sort.lower(item)
+        item.overlap.onBelowItem(row, column, lower)
+        lower?.overlap?.onAboveItem(row, column, item)
+        return true
+      }
+      return false
     }
     
     /**
@@ -240,14 +270,18 @@ abstract class OverlapImpl : FoldImpl(), IOverlapContainer {
      *
      * 注意：这个 remove 必须要满足 Compare 比较等于 0 时才能被 remove 掉
      */
-    fun deleteOverlap(item: IOverlapItem) {
+    fun deleteOverlap(item: IOverlapItem): Boolean {
       if (sort.contains(item)) {
         val higher = sort.higher(item)
         val lower = sort.lower(item)
         higher?.overlap?.onBelowItem(row, column, lower)
         lower?.overlap?.onAboveItem(row, column, higher)
+        item.overlap.onBelowItem(row, column, null)
+        item.overlap.onAboveItem(row, column, null)
         sort.remove(item)
+        return true
       }
+      return false
     }
   }
 }

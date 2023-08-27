@@ -4,6 +4,7 @@ import android.text.TextPaint
 import android.text.style.CharacterStyle
 import android.text.style.ClickableSpan
 import android.view.View
+import com.mredrock.cyxbs.lib.utils.R
 import java.lang.ref.WeakReference
 
 /**
@@ -21,9 +22,9 @@ import java.lang.ref.WeakReference
  */
 fun ClickableSpan.wrapByNoLeak(view: View): ClickableSpan {
   // 如果你在方法体中使用弱引用，就会导致这个 this 被回收，所以需要有一个跟生命周期相关的东西强引用 this
-  val list = view.getTag(73587853)
+  val list = view.getTag(R.id.utils_ClickableSpan_id)
   if (list !is MutableList<*>) {
-    view.setTag(73587853, mutableListOf(this))
+    view.setTag(R.id.utils_ClickableSpan_id, mutableListOf(this))
   } else {
     @Suppress("UNCHECKED_CAST")
     list as MutableList<ClickableSpan>

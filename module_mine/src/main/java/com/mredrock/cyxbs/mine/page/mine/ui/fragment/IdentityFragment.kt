@@ -53,7 +53,7 @@ class IdentityFragment() : BaseViewModelFragment<IdentityViewModel>(), OnGetRedi
 
     fun initListener() {
         (context as HomepageActivity).viewModel.redRockApiStatusDelete.observeForever {
-            activity?.toast("删除身份成功!")
+            toast("删除身份成功!")
             viewModel.getAllIdentify(redid)
         }
     }

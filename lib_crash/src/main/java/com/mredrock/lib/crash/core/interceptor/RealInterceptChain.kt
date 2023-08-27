@@ -20,7 +20,7 @@ class RealInterceptChain(
      */
     private var index: Int = 0,
     /**
-     * 已启动的activity，最前台的在最后
+     * 已启动的activity，最前台的在list最后
      */
     val activities: List<Activity>,
     /**
@@ -38,7 +38,7 @@ class RealInterceptChain(
 ) : Interceptor.Chain {
 
     override fun proceed():Boolean {
-        if (index >= interceptors.size) return false//对应所以拦截器都没处理，是未知异常
+        if (index >= interceptors.size) return false//对应所有拦截器都没处理，是未知异常
         //下一个拦截器执行
         val next = RealInterceptChain(interceptors, index + 1, activities, t, e, message)
         val interceptor = interceptors[index]

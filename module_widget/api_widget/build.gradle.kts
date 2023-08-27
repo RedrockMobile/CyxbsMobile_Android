@@ -5,3 +5,5 @@ plugins {
 
 dependApiCourse()
 dependApiAffair()
+
+useARouter()

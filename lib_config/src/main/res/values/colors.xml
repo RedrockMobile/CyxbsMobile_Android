@@ -1,6 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources xmlns:tools="http://schemas.android.com/tools">
 
+    <color name="colorPrimary" tools:ignore="ResourceName">#ffffff</color>
+    <color name="colorPrimaryDark" tools:ignore="ResourceName">#00000000</color>
+    <color name="colorAccent" tools:ignore="ResourceName">#788EFA</color>
+
     <!--如果要使用纯白色和纯黑色（日间和夜间模式也一样），请使用 @android:color/white-->
 
     <color name="config_white_black">#FFFFFF</color>
@@ -39,5 +43,13 @@
 
     <!--主页面的整体灰色背景-->
     <color name="config_window_background">#F2F3F8</color>
+
+    <!--分割线颜色-->
+    <color name="config_default_divide_line_color">#19f8f9fc</color>
+
+    <!--    按钮渐变起始颜色-->
+    <color name="config_button_gradient_start_color">#4841E2</color>
+    <!--    按钮渐变终止颜色-->
+    <color name="config_button_gradient_end_color">#5D5DF7</color>
 
 </resources>

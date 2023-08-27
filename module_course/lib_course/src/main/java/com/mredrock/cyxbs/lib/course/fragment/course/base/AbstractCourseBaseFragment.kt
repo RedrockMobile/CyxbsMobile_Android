@@ -48,6 +48,10 @@ abstract class AbstractCourseBaseFragment : BaseFragment(), ICourseBase {
     return inflater.inflate(R.layout.course_layout_course, container, false)
   }
   
+  final override fun isCourseDestroyed(): Boolean {
+    return view == null
+  }
+  
   private val mCourseLifecycleObservers = arrayListOf<ICourseWrapper.CourseLifecycleObserver>()
   
   final override fun addCourseLifecycleObservable(
@@ -63,6 +67,26 @@ abstract class AbstractCourseBaseFragment : BaseFragment(), ICourseBase {
   
   final override fun removeCourseLifecycleObserver(observer: ICourseWrapper.CourseLifecycleObserver) {
     mCourseLifecycleObservers.remove(observer)
+  }
+  
+  final override fun doOnCourseCreate(action: ICourseViewGroup.() -> Unit, isCallbackIfCreated: Boolean) {
+    addCourseLifecycleObservable(
+      object : ICourseWrapper.CourseLifecycleObserver {
+        override fun onCreateCourse(course: ICourseViewGroup) {
+          action.invoke(course)
+        }
+      }, isCallbackIfCreated
+    )
+  }
+  
+  final override fun doOnCourseDestroy(action: ICourseViewGroup.() -> Unit) {
+    addCourseLifecycleObservable(
+      object : ICourseWrapper.CourseLifecycleObserver {
+        override fun onDestroyCourse(course: ICourseViewGroup) {
+          action.invoke(course)
+        }
+      }
+    )
   }
   
   @CallSuper

@@ -66,14 +66,15 @@ class NoClassLesson(
               stuList.add(Pair(it,false))
             }
             val duration = mLastingTime.second - mLastingTime.first
-            val begin = if(mLastingTime.first >= 10) mLastingTime.first - 1 else mLastingTime.first
-            val end = if(mLastingTime.first >= 10) begin + duration - 1 else begin + duration
+            //开始与结束序列
+            val begin = mLastingTime.first
+            val end = mLastingTime.second - 1
             
             val beginTime = com.mredrock.cyxbs.api.course.utils.getShowStartTimeStr(begin)
             val endTime = com.mredrock.cyxbs.api.course.utils.getShowEndTimeStr(end)
             
             val beginLesson =  if(mLastingTime.first >= 10) mLastingTime.first - 1 else if (mLastingTime.first<=3) mLastingTime.first + 1 else mLastingTime.first
-  
+
             val month = when(data.weekNum){
                1 -> " 周日"
                2 -> " 周一"

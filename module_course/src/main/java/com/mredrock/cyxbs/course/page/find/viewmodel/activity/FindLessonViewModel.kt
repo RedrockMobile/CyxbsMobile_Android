@@ -11,7 +11,7 @@ import com.mredrock.cyxbs.lib.base.ui.BaseViewModel
  * @date 2022/4/22 18:07
  */
 class FindLessonViewModel : BaseViewModel() {
-
+  
   /**
    * 课表是否打开的状态
    *
@@ -24,7 +24,7 @@ class FindLessonViewModel : BaseViewModel() {
   private val _findTest = MutableLiveData<FindText>()
   val findText: LiveData<FindText>
     get() = _findTest
-
+  
   /**
    * 改变课表
    * @param num 学号或工号

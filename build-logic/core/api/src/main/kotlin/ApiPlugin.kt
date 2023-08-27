@@ -12,6 +12,4 @@ class ApiPlugin : BasePlugin() {
     override fun PluginScope.configure() {
         apply(plugin="base.library")
     }
-
-
 }

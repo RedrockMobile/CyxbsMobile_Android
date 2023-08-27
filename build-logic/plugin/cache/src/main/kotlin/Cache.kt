@@ -76,8 +76,7 @@ abstract class Cache(private val project: Project) {
    *
    * 这里面主要是写执行哪些 gradle 命令时不开启缓存替换功能
    */
-  internal fun
-          isAllowSelfUseCache(ifTrue: () -> Unit): Boolean {
+  internal fun isAllowSelfUseCache(ifTrue: () -> Unit): Boolean {
     if (!isAllowSelfUseCache) {
       return false
     }

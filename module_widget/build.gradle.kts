@@ -16,4 +16,6 @@ dependRxjava()
 dependNetwork()
 dependRoomRxjava()
 
+useARouter()
+
 

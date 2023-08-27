@@ -22,6 +22,7 @@ import com.mredrock.cyxbs.discover.map.util.KeyboardController
 import com.mredrock.cyxbs.discover.map.viewmodel.MapViewModel
 import com.mredrock.cyxbs.discover.map.widget.GlideProgressDialog
 import com.mredrock.cyxbs.discover.map.widget.ProgressDialog
+import com.mredrock.cyxbs.discover.map.widget.ProgressInterceptor
 import top.limuyang2.photolibrary.LPhotoHelper
 import java.io.File
 
@@ -132,9 +133,10 @@ class MapActivity : BaseViewModelActivity<MapViewModel>() {
     }
 
     override fun onDestroy() {
+        super.onDestroy()
         ProgressDialog.hide()
         GlideProgressDialog.hide()
-        super.onDestroy()
+        ProgressInterceptor.removeAllListener()
     }
 
     override fun onSaveInstanceState(outState: Bundle) {

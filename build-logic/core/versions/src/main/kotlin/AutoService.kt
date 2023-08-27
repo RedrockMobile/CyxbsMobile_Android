@@ -1,6 +1,7 @@
 
 
 import org.gradle.api.Project
+import org.gradle.kotlin.dsl.apply
 import org.gradle.kotlin.dsl.dependencies
 
 /**
@@ -10,14 +11,18 @@ import org.gradle.kotlin.dsl.dependencies
  * @date 2022/7/20 15:13
  */
 object AutoService {
-  // 谷歌官方的一种动态加载库 https://github.com/google/auto/tree/master/service
-  const val autoService = "com.google.auto.service:auto-service:1.0.1"
+  // 谷歌官方的一种动态加载库 https://github.com/google/auto/tree/main/service
+  val version = "1.1.1"
+  val `autoServic-core` = "com.google.auto.service:auto-service-annotations:$version"
+  val autoService = "com.google.auto.service:auto-service:$version"
 }
 
 fun Project.dependAutoService() {
+  // kapt 按需引入
+  apply(plugin = "org.jetbrains.kotlin.kapt")
   dependencies {
-    // 谷歌官方的一种动态加载库 https://github.com/google/auto/tree/master/service
+    // 谷歌官方的一种动态加载库 https://github.com/google/auto/tree/main/service
+    "compileOnly"(AutoService.`autoServic-core`)
     "kapt"(AutoService.autoService)
-    "compileOnly"(AutoService.autoService)
   }
 }

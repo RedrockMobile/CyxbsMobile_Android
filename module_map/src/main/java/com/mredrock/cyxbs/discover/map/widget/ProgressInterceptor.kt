@@ -25,5 +25,9 @@ class ProgressInterceptor : Interceptor {
         fun removeListener(url: String) {
             LISTENER_MAP.remove(url)
         }
+
+        fun removeAllListener(){
+            LISTENER_MAP.clear()
+        }
     }
 }

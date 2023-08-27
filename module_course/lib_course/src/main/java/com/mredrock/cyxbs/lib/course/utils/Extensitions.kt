@@ -29,7 +29,7 @@ inline fun <T> List<T>.forEachInline(action: (T) -> Unit) {
 }
 
 /**
- * 倒着迭代，用于需要在迭代中 remove 的场景，但只允许 remove 自身后面的元素，如果移除前面位置的，会导致位置变化而迭代出错
+ * 倒着迭代，用于需要在迭代中 remove 的场景，但只允许 remove 自身以及后面的元素，如果移除前面位置的，会导致位置变化而迭代出错
  */
 inline fun <T> List<T>.forEachReversed(action: (T) -> Unit) {
   var index = size - 1

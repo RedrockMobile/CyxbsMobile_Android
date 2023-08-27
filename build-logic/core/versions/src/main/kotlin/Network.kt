@@ -18,12 +18,12 @@ object Network {
   const val `adapter-rxjava3` = "com.squareup.retrofit2:adapter-rxjava3:$retrofit_version"
   
   // https://github.com/square/okhttp
-  const val okhttp_version = "4.10.0"
+  const val okhttp_version = "4.11.0"
   const val okhttp = "com.squareup.okhttp3:okhttp:$okhttp_version"
   const val `logging-interceptor` = "com.squareup.okhttp3:logging-interceptor:$okhttp_version"
   
   // https://github.com/google/gson
-  const val gson = "com.google.code.gson:gson:2.10"
+  const val gson = "com.google.code.gson:gson:2.10.1"
 }
 
 fun Project.dependNetwork() {
@@ -31,16 +31,5 @@ fun Project.dependNetwork() {
     "implementation"(Network.retrofit)
     "implementation"(Network.okhttp)
     "implementation"(Network.gson)
-  }
-}
-
-/**
- * 有特殊用途的依赖，一般模块不需要引入
- */
-fun Project.dependNetworkInternal() {
-  dependencies {
-    "implementation"(Network.`converter-gson`)
-    "implementation"(Network.`adapter-rxjava3`)
-    "implementation"(Network.`logging-interceptor`)
   }
 }

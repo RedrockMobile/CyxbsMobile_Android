@@ -19,6 +19,9 @@ import com.mredrock.cyxbs.lib.base.utils.ArgumentHelper
  * 比如：使用 api 模块
  * 这种操作请放在 [OperationFragment] 中
  *
+ * ## 零、Fragment 易错点必看文档 (必须看完并理解 !!!!!)
+ * https://redrock.feishu.cn/wiki/wikcnSDEtcCJzyWXSsfQGqWxqGe
+ *
  * ## 一、获取 ViewModel 的规范写法
  * ### 获取自身的 ViewModel
  * ```
@@ -36,12 +39,11 @@ import com.mredrock.cyxbs.lib.base.utils.ArgumentHelper
  * private val mActivityViewModel by activityViewModels<XXXViewModel>()
  *
  * 2、获取父 Fragment 的 ViewModel：
- * // 由于比较少见，再加上不愿意封装得过于彻底，所以这个并没有封装
+ * // 由于比较少用，再加上不愿意封装得过于彻底，所以这个并没有封装，直接用官方的写法
  * private val mParentViewModel by createViewModelLazy(
  *     XXXViewModel::class,
  *     { requireParentFragment().viewModelStore }
  * )
- *
  * // 特别注意：宿主的 ViewModel 如果构造器需要传参，那么子 Fragment 是不需要传参进去的，因为此时宿主的 ViewModel 已经被加载，可以直接拿
  * ```
  *
@@ -72,7 +74,7 @@ import com.mredrock.cyxbs.lib.base.utils.ArgumentHelper
  *
  *
  *
- * # 更多封装请往父类和接口查看
+ * # 更多封装请往父类和接口查看，[BaseUi] 必看
  * @author 985892345
  * @email 2767465918@qq.com
  * @date 2021/5/25
@@ -120,7 +122,7 @@ abstract class BaseFragment : OperationFragment {
     fragmentManager: FragmentManager = childFragmentManager,
     func: FragmentTransaction.() -> F
   ) {
-    if (super.getLifecycle().currentState == Lifecycle.State.CREATED) {
+    if (super.lifecycle.currentState == Lifecycle.State.CREATED) {
       // 处于 onCreate 时
       if (mIsFragmentRebuilt) {
         // 如果此时 Fragment 处于重建状态，Fragment 会自动恢复，不能重复提交而改变之前的状态
@@ -204,8 +206,9 @@ abstract class BaseFragment : OperationFragment {
     "你确定你需要的是 Lifecycle 而不是 viewLifecycle?",
     ReplaceWith("viewLifecycle")
   )
-  override fun getLifecycle(): Lifecycle = super.getLifecycle()
-  
+  override val lifecycle: Lifecycle
+    get() = super.lifecycle
+
   val viewLifecycle: Lifecycle
     get() = viewLifecycleOwner.lifecycle
   
@@ -220,5 +223,5 @@ abstract class BaseFragment : OperationFragment {
     ReplaceWith("viewLifecycleScope")
   )
   val lifecycleScope: LifecycleCoroutineScope
-    get() = super.getLifecycle().coroutineScope
+    get() = super.lifecycle.coroutineScope
 }

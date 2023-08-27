@@ -7,4 +7,8 @@ package com.mredrock.cyxbs.api.account
 interface IUserTokenService {
     fun getRefreshToken(): String
     fun getToken(): String
+
+    fun refreshTokenExpired()
+
+    fun tokenExpired()
 }

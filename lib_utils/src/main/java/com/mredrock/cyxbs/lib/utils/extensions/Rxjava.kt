@@ -2,8 +2,10 @@
 
 package com.mredrock.cyxbs.lib.utils.extensions
 
+import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
 import io.reactivex.rxjava3.core.*
 import io.reactivex.rxjava3.disposables.Disposable
+import io.reactivex.rxjava3.schedulers.Schedulers
 import kotlinx.coroutines.flow.Flow
 import java.io.Serializable
 
@@ -19,7 +21,7 @@ import java.io.Serializable
 /**
  * 使用优雅的 DSL 来拦截异常
  *
- * # 如果你是想看网络请求的用法，请移步与 network/ApiRxjava.kt
+ * # 如果你是想看网络请求的用法，请移步于 network/ApiRxjava.kt
  * # 该 api 的详细用法请查看 [Flow.interceptException]，注意事项也与 Flow 一致
  */
 fun <T : Any> Single<T>.interceptException(
@@ -107,6 +109,22 @@ fun Completable.unsafeSubscribeBy(
   onError: (Throwable) -> Unit = {},
   onComplete: () -> Unit = {},
 ): Disposable = subscribe(onComplete, onError)
+
+
+/**
+ * 不是很推荐你使用它，虽然很方便，但你知道这个的原理吗？
+ */
+fun <T: Any> Observable<T>.setSchedulers(
+  subscribeOn: Scheduler = Schedulers.io(),
+  unsubscribeOn: Scheduler = Schedulers.io(),
+  observeOn: Scheduler = AndroidSchedulers.mainThread()
+): Observable<T> = subscribeOn(subscribeOn)
+  .unsubscribeOn(unsubscribeOn)
+  .observeOn(observeOn)
+
+
+
+
 
 
 /**

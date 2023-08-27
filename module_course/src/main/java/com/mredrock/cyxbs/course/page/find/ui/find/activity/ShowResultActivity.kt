@@ -7,6 +7,7 @@ import android.view.View
 import android.widget.FrameLayout
 import android.widget.ImageButton
 import android.widget.TextView
+import androidx.activity.addCallback
 import androidx.activity.viewModels
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -24,7 +25,6 @@ import com.mredrock.cyxbs.lib.base.dailog.ChooseDialog
 import com.mredrock.cyxbs.lib.base.ui.BaseActivity
 import com.mredrock.cyxbs.lib.utils.extensions.lazyUnlock
 import com.mredrock.cyxbs.lib.utils.extensions.setOnSingleClickListener
-import com.mredrock.cyxbs.lib.utils.utils.ActivityBindView
 import com.mredrock.cyxbs.lib.utils.utils.BindView
 import java.io.Serializable
 
@@ -75,7 +75,17 @@ class ShowResultActivity : BaseActivity() {
     mPersonHandler.apply { initialize() }
     mBottomSheet.addBottomSheetCallback(
       object : BottomSheetBehavior.BottomSheetCallback() {
-        override fun onStateChanged(bottomSheet: View, newState: Int) {}
+        override fun onStateChanged(bottomSheet: View, newState: Int) {
+          when (newState) {
+            BottomSheetBehavior.STATE_EXPANDED -> {
+              mCollapsedBackPressedCallback.isEnabled = true
+            }
+            BottomSheetBehavior.STATE_COLLAPSED -> {
+              mCollapsedBackPressedCallback.isEnabled = false
+            }
+            else -> {}
+          }
+        }
         override fun onSlide(bottomSheet: View, slideOffset: Float) {
           if (slideOffset >= 0) {
             mBottomSheetView.alpha = slideOffset
@@ -91,11 +101,12 @@ class ShowResultActivity : BaseActivity() {
     }
   }
   
-  override fun onBackPressed() {
-    if (mBottomSheet.state == BottomSheetBehavior.STATE_EXPANDED) {
+  /**
+   * 用于拦截返回键，在 BottomSheet 未折叠时先折叠
+   */
+  private val mCollapsedBackPressedCallback by lazyUnlock {
+    onBackPressedDispatcher.addCallback {
       mBottomSheet.state = BottomSheetBehavior.STATE_COLLAPSED
-    } else {
-      super.onBackPressed()
     }
   }
   
@@ -127,7 +138,7 @@ class ShowResultActivity : BaseActivity() {
     
     abstract fun ShowResultActivity.initialize()
     
-    protected fun <T : View> Int.view(): BindView<T> = ActivityBindView(this, activity)
+    protected fun <T : View> Int.view(): BindView<T> = BindView(this, activity)
     
     // 这里是需要不同实现的控件
     protected val mTvTitle: TextView by R.id.course_tv_show_result_title.view()

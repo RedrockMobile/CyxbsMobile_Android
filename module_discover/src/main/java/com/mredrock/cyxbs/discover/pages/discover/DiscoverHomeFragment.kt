@@ -214,11 +214,7 @@ class DiscoverHomeFragment : BaseViewModelFragment<DiscoverHomeViewModel>() {
             maxLines = 1
             overScrollMode = OVER_SCROLL_IF_CONTENT_SCROLLS
 
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-                setTextColor(context.resources.getColor(com.mredrock.cyxbs.common.R.color.common_menu_font_color_found, context.theme))
-            } else {
-                setTextColor(ContextCompat.getColor(context, com.mredrock.cyxbs.common.R.color.common_menu_font_color_found))
-            }
+            setTextColor(ContextCompat.getColor(context, com.mredrock.cyxbs.common.R.color.common_menu_font_color_found))
             textSize = 15f
             setOnSingleClickListener {
                 ARouter.getInstance().build(DISCOVER_NEWS_ITEM).withString("id", id).navigation()

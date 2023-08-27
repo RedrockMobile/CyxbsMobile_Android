@@ -18,11 +18,5 @@ class ModulePlugin : BasePlugin() {
         }
 
         apply(plugin="base.library")
-
-        dependAndroidView()
-        dependAndroidKtx()
-        dependLifecycleKtx()
-
-
     }
 }

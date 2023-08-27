@@ -3,12 +3,13 @@ plugins {
 }
 
 
-dependApiAccount()
 dependLibUtils()
 
-dependAutoService()
+dependApiInit()
+dependApiAccount()
+
 dependRxjava()
 
-dependencies {
-    implementation(project(":api_init")) // 因为 api_init 没有实现模块，所以写这里
-}
+
+useARouter(false) // module_app 模块不包含实现类，不需要处理注解
+useDataBinding()

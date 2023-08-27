@@ -13,34 +13,12 @@ import org.gradle.kotlin.dsl.dependencies
 internal class LibBasePlugin : BasePlugin() {
 
     override fun PluginScope.configure() {
-
         apply(plugin = "base.library")
 
         dependencies {
-            "implementation"(Android.constraintlayout)
-            "implementation"(Android.recyclerview)
-            "implementation"(Android.cardview)
-            "implementation"(Android.viewpager2)
-            "implementation"(Android.material)
-            "implementation"(Android.swiperefreshlayout)
-            "implementation"(Android.flexbox)
+            // 因为 lib_base 模块没有开启 dataBinding，所以需要单独引入 dataBinding 依赖供父类使用
+            // 开启 dataBinding 后也会开启编译处理，但是 lib_base 模块是不需要编译处理的
+            "implementation"("androidx.databinding:databinding-runtime:8.0.2")
         }
-
-        dependencies {
-            "implementation"(Android.`core-ktx`)
-            "implementation"(Android.`collection-ktx`)
-            "implementation"(Android.`fragment-ktx`)
-            "implementation"(Android.`activity-ktx`)
-        }
-
-        dependencies {
-            "implementation"(Lifecycle.`viewmodel-ktx`)
-            "implementation"(Lifecycle.`livedata-ktx`)
-            "implementation"(Lifecycle.`runtime-ktx`)
-            "kapt"(Lifecycle.`lifecycle-compiler`)
-        }
-
     }
-
-
 }

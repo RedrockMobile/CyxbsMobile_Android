@@ -59,9 +59,9 @@ class FeedbackCenterActivity :
      */
     override fun observeData() {
         viewModel.apply {
-            contentList.observe({ lifecycle }, {
+            contentList.observe{
                 mAdapter.setData(it)
-            })
+            }
         }
     }
 

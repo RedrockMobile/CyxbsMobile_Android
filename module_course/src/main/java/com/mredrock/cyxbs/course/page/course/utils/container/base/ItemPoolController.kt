@@ -20,13 +20,13 @@ abstract class ItemPoolController<Item, Data : Any>(
 ) : DiffRefreshController<Data>() where Item : IRecycleItem, Item : IDataOwner<Data> {
   
   // 旧数据与 item 的 map
-  private val mOldDataMap = hashMapOf<Data, Item>()
+  protected val mOldDataMap = hashMapOf<Data, Item>()
   
   // 回收的 item 池子
-  private val mRecyclePool = hashSetOf<Item>()
+  protected val mRecyclePool = hashSetOf<Item>()
   
   // 在父布局中显示的 item
-  private val mShowItems = hashSetOf<Item>()
+  protected val mShowItems = hashSetOf<Item>()
   
   init {
     // 课表生命周期的监听
@@ -42,7 +42,7 @@ abstract class ItemPoolController<Item, Data : Any>(
             if (itemClass.isInstance(item)) {
               item as Item
               val data = item.data
-              if (!mOldDataMap.contains(data)) {
+              if (!mOldDataMap.containsKey(data)) {
                 // 不包含的时候说明是通过其他方式添加进来的
                 mOldDataMap[data] = item
                 addNewDataIntoOldList(data)
@@ -82,6 +82,7 @@ abstract class ItemPoolController<Item, Data : Any>(
           mRecyclePool.clear()
           mShowItems.clear()
           clearDataFromOldList()
+          course.removeItemExistListener(listener)
         }
       }, true
     )
@@ -95,14 +96,14 @@ abstract class ItemPoolController<Item, Data : Any>(
   
   protected abstract fun newItem(data: Data): Item
   
-  final override fun onInserted(newData: Data) {
+  override fun onInserted(newData: Data) {
     val item = newData.getFreeAffair()
     mOldDataMap[newData] = item
     // 这个 addItem() 需要放在 mOldDataMap[newData] = item 后
     addItem(item)
   }
   
-  final override fun onRemoved(oldData: Data) {
+  override fun onRemoved(oldData: Data) {
     val item = mOldDataMap[oldData]
     if (item != null) {
       mOldDataMap.remove(oldData)
@@ -115,10 +116,9 @@ abstract class ItemPoolController<Item, Data : Any>(
     }
   }
   
-  final override fun onChanged(oldData: Data, newData: Data) {
-    val item = mOldDataMap[oldData]
+  override fun onChanged(oldData: Data, newData: Data) {
+    val item = mOldDataMap.remove(oldData)
     if (item != null) {
-      mOldDataMap.remove(oldData)
       mOldDataMap[newData] = item
       item.setNewData(newData)
     }
@@ -144,5 +144,14 @@ abstract class ItemPoolController<Item, Data : Any>(
   
   protected fun getShowItems(): Set<Item> {
     return Collections.unmodifiableSet(mShowItems)
+  }
+  
+  override fun replaceDataFromOldList(oldData: Data, newData: Data) {
+    super.replaceDataFromOldList(oldData, newData)
+    val item = mOldDataMap.remove(oldData)
+    if (item != null) {
+      mOldDataMap[newData] = item
+      item.setNewData(newData) // 重新设置 item 的数据
+    }
   }
 }

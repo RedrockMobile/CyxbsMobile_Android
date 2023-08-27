@@ -5,3 +5,5 @@ plugins {
 dependencies {
     implementation(Rxjava.rxjava3)
 }
+
+useARouter()

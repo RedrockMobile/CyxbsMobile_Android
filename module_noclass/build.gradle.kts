@@ -14,4 +14,6 @@ dependApiCourse()
 dependNetwork()
 dependRxjava()
 
+useARouter()
+
 

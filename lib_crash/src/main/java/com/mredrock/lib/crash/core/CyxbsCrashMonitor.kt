@@ -21,15 +21,24 @@ import java.lang.reflect.Field
  * @date 2022/8/5
  * @Description: 全局Crash监控
  * 发生异常的种类(如果不全请补充)：
- * 1.handler处理普通的message异常，例如onClick ----不finish掉activity，弹窗提示
- * 2.子线程异常 ----不finish掉activity，弹窗提示
- * 3.Activity生命周期异常，例如在onCreate的里面发生异常，此类异常和绘制异常不销毁activity都会导致黑屏  ----finish掉activity，弹窗提示
- * 4.view绘制异常导致ViewRootImpl挂掉或者Rv的onCreateViewHolder和onBindViewHolder异常   ----finish掉activity，弹窗提示
- * 5.主线程异常也就是UI线程，直接重启app ----弹窗提示
+ * 1.handler处理普通的message异常，例如onClick ----不finish掉activity，屏蔽异常
+ * 2.子线程异常 ----不finish掉activity，屏蔽异常
+ * 3.Activity生命周期异常，例如在onCreate的里面发生异常，此类异常和绘制异常不销毁activity都会导致黑屏  ----finish掉activity，屏蔽异常
+ * 4.view绘制异常导致ViewRootImpl挂掉或者Rv的onCreateViewHolder和onBindViewHolder异常   ----finish掉activity，屏蔽异常
+ * 5.主线程异常也就是UI线程，直接重启app
+ * 6.如果出现了新的异常类型请补充，并给出解决方案添加在拦截链里面
  */
 
 object CyxbsCrashMonitor : Thread.UncaughtExceptionHandler {
 
+    /**
+     * 如果后人发现了没有囊括的异常类型，请将新的拦截链添加在此处，添加顺序决定优先级。
+     */
+    private val newInterceptors = mutableListOf<Interceptor>(
+
+    )
+
+    //已启动的activity
     private val activities = mutableListOf<Activity>()
 
     /**
@@ -39,6 +48,18 @@ object CyxbsCrashMonitor : Thread.UncaughtExceptionHandler {
      * 所以在此用个变量记录生命周期异常时是否已移出activities
      */
     private var isActivityRemovedAfterFinished = false
+
+    //记录上一次捕捉异常的时间
+    private var lastExceptionTime = 0L
+
+    //默认异常处理拦截链
+    private val interceptors = mutableListOf(//请不要随意修改添加顺序，顺序决定异常处理的优先级
+        CommonMessageCrashInterceptor(),
+        ChildThreadCrashInterceptor(),
+        LifecycleCrashInterceptor(),
+        ViewDrawCrashInterceptor(),
+        MainThreadCrashInterceptor()
+    )
 
     fun install(application: Application) {
         initListener(application)
@@ -56,7 +77,7 @@ object CyxbsCrashMonitor : Thread.UncaughtExceptionHandler {
         val stackInfo = sp.getString("stackInfo", "")
         val reason = sp.getString("reason", "")
         if (stackInfo != null && stackInfo != "" && reason != null && reason != "") {
-            // nothing
+            // 因为异常重启保存的异常信息
         }
         sp.edit().run {
             putString("stackInfo", "")
@@ -87,70 +108,60 @@ object CyxbsCrashMonitor : Thread.UncaughtExceptionHandler {
         })
         //接管activity生命周期异常
         initActivityLifecycleCrash()
-        //用于保存时间
-        var lastExceptionTime = 0L
-        // loop 的第一次报错上传至 bugly
-        var isFirstError = true
-        //接管message异常的监听
-        Handler(Looper.getMainLooper()).post {
-            while (true) {
-                try {
-                    Looper.loop()
-                } catch (e: Throwable) {
-                    if (isFirstError) {
-                        CrashReport.postCatchedException(e)
-                        LogLocal.log(
-                            tag = "CrashMonitor",
-                            msg = "第一次 loop 报错",
-                            e
-                        )
-                        isFirstError = false
-                    }
-                    val currentTime = System.currentTimeMillis()
-                    //设定一秒只内只处理一个错误，如果一秒内发送了多个错误将重启
-                    if (lastExceptionTime != 0L && currentTime - lastExceptionTime < 1000) {
-                        if (!reStartApp("普通Message错误太多",e)){
-                            activities.forEach { it.finish() }
-                        }
-                    } else lastExceptionTime = currentTime
-                    try {//这里再抓取处理异常可能发生的异常，防止重复调用进入死循环
-                        handleException(e = e)
-                    } catch (e: Throwable) {
-                        e.printStackTrace()
-                    }
-                }
-            }
-        }
+
     }
 
     /**
      * 线程的异常会走这里
      */
     override fun uncaughtException(t: Thread, e: Throwable) {
-        if (t != Looper.getMainLooper().thread) {
-//            CrashReport.postCatchedException(e)
+        //再次try-catch防止异常责任链异常，导致进入死循环
+        try {
+            handleException(t, e)
+        } catch (e: Throwable) {
+            CrashReport.postCatchedException(e)
             LogLocal.log(
                 tag = "CrashMonitor",
-                msg = "非主线程异常",
+                msg = "异常拦截链异常!!!",
                 e
             )
+            //防止继续递归调用
+            return
         }
-        handleException(t, e)
+        //子线程可能会出现Looper为null情况
+        if (Looper.myLooper() == null) {
+            Looper.prepare()
+        }
+        try {
+            //兜底保持线程运行
+            Looper.loop()
+        } catch (e: Throwable) {
+            val currentTime = System.currentTimeMillis()
+            //设定一秒只内只处理一个错误，如果一秒内发送了多个错误将重启
+            if (lastExceptionTime != 0L && currentTime - lastExceptionTime < 1000) {
+                if (!reStartApp("普通Message错误太多", e)) {
+                    activities.forEach { it.finish() }
+                }
+            } else lastExceptionTime = currentTime
+            //捕捉的异常
+            uncaughtException(t, e)
+        }
     }
 
     /**
      * 处理异常，使用拦截链模式
      */
     private fun handleException(t: Thread? = null, e: Throwable, message: Message? = null) {
-        val interceptors = mutableListOf(//这可添加自定义拦截器
-            CommonMessageCrashInterceptor(),
-            ChildThreadCrashInterceptor(),
-            LifecycleCrashInterceptor(),
-            ViewDrawCrashInterceptor(),
-            MainThreadCrashInterceptor()
+        //检测到异常上报bugly并保存日志
+        CrashReport.postCatchedException(e)
+        LogLocal.log(
+            tag = "CrashMonitor",
+            msg = "CrashMonitor检测到异常",
+            e
         )
+
         val realChain = RealInterceptChain(
-            interceptors,
+            interceptors.apply { addAll(newInterceptors) },
             activities = activities,
             t = t, e = e, message = message
         )
@@ -172,7 +183,7 @@ object CyxbsCrashMonitor : Thread.UncaughtExceptionHandler {
     }
 
     /**
-     * 替换不同版本的mH.mCallback，反射会爆黄，它提醒我们会影响发布，但我们只是try catch，不做其他事情
+     * 替换不同版本的mH.mCallback，我们只是try catch，不做其他事情
      */
     @SuppressLint("PrivateApi", "DiscouragedPrivateApi")
     private fun hookmH() {

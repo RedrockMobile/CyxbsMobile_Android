@@ -12,6 +12,8 @@ pluginManagement {
     gradlePluginPortal()
     mavenCentral()
     google()
+    maven("https://jitpack.io")
+    jcenter() // 部分依赖需要
   }
 }
 dependencyResolutionManagement {
@@ -19,17 +21,21 @@ dependencyResolutionManagement {
   repositories {
     maven("$rootDir/build/maven") // 本地模块缓存文件夹
     google()
-    mavenCentral() // 优先 MavenCentral，一是：aliyun 镜像有坑；二是：开 VPN 访问 aliyun 反而变慢了
+    mavenCentral() // 优先 MavenCentral，一是：github CI 下不了 aliyun 依赖；二是：开 VPN 访问 aliyun 反而变慢了
     maven("https://jitpack.io")
+    jcenter() // 部分依赖需要
     // mavenCentral 快照仓库
     maven("https://s01.oss.sonatype.org/content/repositories/snapshots/")
     maven("https://maven.aliyun.com/repository/public")
     maven("https://maven.aliyun.com/repository/google")
+    mavenLocal() // maven 默认的本地依赖位置：用户名/.m2/repository 中
   }
 }
 
 // 测试使用，排除掉不需要的模块，记得还原！！！
 val excludeList = listOf<String>(
+  "module_qa", // qa 模块因合规问题下线，新的代替将上线，所以排除 qa
+  
 )
 
 //对文件夹进行遍历，深度为2
@@ -73,7 +79,7 @@ rootDir.walk()
 
 
 
-
+// 如果 build 窗口乱码，去 顶部栏 - Help - Edit Custom VM Options 里面添加 -Dfile.encoding=UTF-8，然后重启 AS
 // 制作网址：http://patorjk.com/software/taag/
 val redrock = """
   

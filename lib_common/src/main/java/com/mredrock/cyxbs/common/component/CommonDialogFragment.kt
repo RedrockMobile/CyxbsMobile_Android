@@ -8,14 +8,14 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.view.Window
+import android.widget.Button
 import android.widget.FrameLayout
+import android.widget.ImageView
 import androidx.annotation.LayoutRes
 import androidx.fragment.app.DialogFragment
 import com.mredrock.cyxbs.common.R
 import com.mredrock.cyxbs.common.utils.extensions.gone
-import kotlinx.android.synthetic.main.common_dialog.*
-import com.mredrock.cyxbs.common.utils.extensions.*
-
+import com.mredrock.cyxbs.common.utils.extensions.setOnSingleClickListener
 
 
 /**
@@ -63,13 +63,19 @@ class CommonDialogFragment() : DialogFragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        common_dialog_btn_positive.apply {
-            setOnSingleClickListener { onPositiveClick?.invoke() }
-            text = positiveString
+        val btnPositive = view.findViewById<Button>(R.id.common_dialog_btn_positive)
+        btnPositive.setOnSingleClickListener {
+            onPositiveClick?.invoke()
         }
-        onNegativeClick ?: common_dialog_btn_negative.gone()
-        common_dialog_btn_negative.setOnSingleClickListener { onNegativeClick?.invoke() }
-
+        btnPositive.text = positiveString
+        val ivNegative = view.findViewById<ImageView>(R.id.common_dialog_btn_negative)
+        if (onNegativeClick == null) {
+            ivNegative.gone()
+        } else {
+            ivNegative.setOnSingleClickListener {
+                onNegativeClick?.invoke()
+            }
+        }
         elseFunction?.invoke(view)
     }
 }

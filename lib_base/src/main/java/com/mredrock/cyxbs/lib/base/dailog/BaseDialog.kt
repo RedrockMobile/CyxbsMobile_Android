@@ -1,6 +1,5 @@
 package com.mredrock.cyxbs.lib.base.dailog
 
-import android.app.Dialog
 import android.content.Context
 import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
@@ -11,16 +10,21 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.FrameLayout
 import android.widget.ImageView
+import androidx.activity.ComponentDialog
 import androidx.annotation.DrawableRes
 import androidx.core.content.ContextCompat
+import androidx.lifecycle.LifecycleOwner
 import com.google.android.material.button.MaterialButton
 import com.mredrock.cyxbs.config.R
+import com.mredrock.cyxbs.lib.base.ui.BaseUi
 import com.mredrock.cyxbs.lib.utils.extensions.dp2px
 
 /**
  * 支持自定义内容视图的圆角 dialog，该 dialog 样式符合视觉要求的大部分场景
  *
- * 你可以参考它的实现类 [ChooseDialog] 和 UserAgreementDialog 来适配你需要的场景
+ * 继承于 ComponentDialog，支持 LifecycleOwner，对应的也支持协程
+ *
+ * 你可以参考它的实现类 [ChooseDialog]、DebugUpdateDialog 和 UserAgreementDialog 来适配你需要的场景
  *
  * ## 1、为什么不用 DialogFragment ?
  * 虽然官方推荐使用 DialogFragment，但是 Fragment 与父容器通信很麻烦，并且目前掌邮强制竖屏，所以不打算使用 DialogFragment
@@ -36,32 +40,35 @@ import com.mredrock.cyxbs.lib.utils.extensions.dp2px
  * ## 3、本 Dialog 可直接变为 DialogFragment
  * DialogFragment 提供了 onCreateDialog(): Dialog 方法用于自定义 Dialog，如果有必要的话，可以重写该方法。
  * 但请遵守 Fragment 的使用规范 (详细请查看飞书易错点文档)
+ * 请查看：https://redrock.feishu.cn/wiki/wikcnSDEtcCJzyWXSsfQGqWxqGe
  *
  *
- *
- * 更多注释请查看 [ChooseDialog]
+ * 更多注释请查看 [ChooseDialog]，自定义 dialog 可以参考 DebugUpdateDialog
  *
  * @author 985892345
  * 2022/12/29 20:08
  */
 abstract class BaseDialog<T : BaseDialog<T, D>, D: BaseDialog.Data> protected constructor(
-  context: Context,
-  protected val positiveClick: (T.() -> Unit)? = null,
-  protected val negativeClick: (T.() -> Unit)? = null,
-  protected val dismissCallback: (T.() -> Unit)? = null,
-  protected val cancelCallback: (T.() -> Unit)? = null,
-  protected val data: D,
-) : Dialog(context) {
+  context: Context
+) : ComponentDialog(context), BaseUi {
   
   /**
    * 创建显示的内容，你可以在这里面返回你自己的内容视图
    */
-  abstract fun createContentView(context: Context): View
+  abstract fun createContentView(parent: ViewGroup): View
   
   /**
    * @param view 你在 [createContentView] 返回的 View
    */
   abstract fun initContentView(view: View)
+  
+  private var _data: D? = null
+  
+  protected val data: D get() = _data!!
+  protected var positiveClick: (T.() -> Unit)? = null
+  protected var negativeClick: (T.() -> Unit)? = null
+  protected var dismissCallback: (T.() -> Unit)? = null
+  protected var cancelCallback: (T.() -> Unit)? = null
   
   override fun onCreate(savedInstanceState: Bundle?) {
     // 取消 dialog 默认背景
@@ -69,8 +76,9 @@ abstract class BaseDialog<T : BaseDialog<T, D>, D: BaseDialog.Data> protected co
     super.onCreate(savedInstanceState)
     
     val view = LayoutInflater.from(context).inflate(data.type.layoutId, null)
-    val insertView = createContentView(view.context)
-    view.findViewWithTag<FrameLayout>("choose_dialog_content").addView(insertView)
+    val parent = view.findViewWithTag<FrameLayout>("choose_dialog_content")
+    val insertView = createContentView(parent)
+    parent.addView(insertView)
     setContentView(
       view,
       ViewGroup.LayoutParams(
@@ -190,8 +198,19 @@ abstract class BaseDialog<T : BaseDialog<T, D>, D: BaseDialog.Data> protected co
       return this
     }
     
-    abstract fun build(): T
-  
+    fun build(): T {
+      val dialog = buildInternal()
+      dialog._data = data
+      dialog.positiveClick = positiveClick
+      dialog.negativeClick = negativeClick
+      dialog.dismissCallback = dismissCallback
+      dialog.cancelCallback = cancelCallback
+      return dialog
+    }
+    
+    // 用于生成  Dialog 对应对象
+    protected abstract fun buildInternal(): T
+    
     /**
      * 直接展示
      */
@@ -200,32 +219,41 @@ abstract class BaseDialog<T : BaseDialog<T, D>, D: BaseDialog.Data> protected co
     }
   }
   
+  /**
+   * 如果不考虑继承，简单的 dialog 你可以这样实现
+   * ```
+   * class Data(
+   *     override val width: Int = 320,
+   *     override val height: Int = 300,
+   * ) : BaseDialog.Data by BaseDialog.Data.DEFAULT // 使用 by 进行接口代理
+   * ```
+   */
   interface Data {
     /**
      * Dialog 类型
      */
     val type: DialogType
-  
+    
     /**
      * 确定按钮文本，默认为
      */
     val positiveButtonText: String
-  
+    
     /**
      * 取消按钮文本
      */
     val negativeButtonText: String
-  
+    
     /**
      * 确定按钮颜色
      */
     val positiveButtonColor: Int
-  
+    
     /**
      * 取消按钮颜色
      */
     val negativeButtonColor: Int
-  
+    
     /**
      * button 的按钮大小
      * - 默认为 80dp-34dp
@@ -233,7 +261,7 @@ abstract class BaseDialog<T : BaseDialog<T, D>, D: BaseDialog.Data> protected co
      * - 支持 LayoutParams.WRAP_CONTENT、LayoutParams.MATCH_PARENT
      */
     val buttonSize: Size
-  
+    
     /**
      * dialog 的宽
      * - 默认为 300dp
@@ -241,7 +269,7 @@ abstract class BaseDialog<T : BaseDialog<T, D>, D: BaseDialog.Data> protected co
      * - 支持 LayoutParams.WRAP_CONTENT、LayoutParams.MATCH_PARENT
      */
     val width: Int
-  
+    
     /**
      * dialog 的高
      * - 默认为 wrap_content
@@ -249,7 +277,7 @@ abstract class BaseDialog<T : BaseDialog<T, D>, D: BaseDialog.Data> protected co
      * - 支持 LayoutParams.WRAP_CONTENT、LayoutParams.MATCH_PARENT
      */
     val height: Int
-  
+    
     /**
      * dialog 的背景，默认背景应该能满足
      */
@@ -285,4 +313,15 @@ abstract class BaseDialog<T : BaseDialog<T, D>, D: BaseDialog.Data> protected co
     // 有两个 Button
     TWO_BUT(R.layout.config_choose_dialog_two_btn)
   }
+  
+  
+  
+  
+  
+  // BaseUi
+  
+  override val rootView: View
+    get() = window!!.decorView
+  
+  override fun getViewLifecycleOwner(): LifecycleOwner = this
 }

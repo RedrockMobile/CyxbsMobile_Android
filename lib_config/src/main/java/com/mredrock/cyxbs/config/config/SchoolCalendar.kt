@@ -31,7 +31,9 @@ object SchoolCalendar {
   fun getDayOfTerm(): Int? {
     return mBehaviorSubject.value?.run {
       val diff = System.currentTimeMillis() - timeInMillis
-      TimeUnit.DAYS.convert(diff, TimeUnit.MILLISECONDS).toInt()
+      TimeUnit.DAYS.convert(diff, TimeUnit.MILLISECONDS).toInt().let {
+        if (diff < 0) it - 1 else it
+      }
     }
   }
   
@@ -43,13 +45,17 @@ object SchoolCalendar {
    * ```
    * observeOn(AndroidSchedulers.mainThread())
    * ```
+   *
+   * # 注意：存在返回负数的情况！！！
    */
   fun observeDayOfTerm(): Observable<Int> {
     return mBehaviorSubject
       .distinctUntilChanged()
-      .map {
-        val diff = System.currentTimeMillis() - it.timeInMillis
-        TimeUnit.DAYS.convert(diff, TimeUnit.MILLISECONDS).toInt()
+      .map { calendar ->
+        val diff = System.currentTimeMillis() - calendar.timeInMillis
+        TimeUnit.DAYS.convert(diff, TimeUnit.MILLISECONDS).toInt().let {
+          if (diff < 0) it - 1 else it
+        }
       }
   }
   
@@ -78,6 +84,8 @@ object SchoolCalendar {
    * ```
    * observeOn(AndroidSchedulers.mainThread())
    * ```
+   *
+   * # 注意：存在返回负数的情况！！！
    */
   fun observeWeekOfTerm(): Observable<Int> {
     return observeDayOfTerm()
@@ -128,13 +136,6 @@ object SchoolCalendar {
     return mBehaviorSubject
       .distinctUntilChanged()
       .map { it.timeInMillis }
-  }
-  
-  /**
-   * 是否是上学期（即秋季学期），否则是下学期（春季学期）
-   */
-  fun isFirstSemester() : Boolean {
-    return Calendar.getInstance()[Calendar.MONTH + 1] > 8
   }
   
   // Rxjava-Subject 教程 https://www.jianshu.com/p/d7efc29ec9d3

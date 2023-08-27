@@ -6,7 +6,7 @@
         android:allowBackup="true"
         android:label="module_crash"
         android:supportsRtl="true"
-        android:theme="@style/AppTheme">
+        android:theme="@style/ConfigAppTheme">
         <activity
             android:name="crash.ui.DebugThirdActivity"
             android:exported="false" />

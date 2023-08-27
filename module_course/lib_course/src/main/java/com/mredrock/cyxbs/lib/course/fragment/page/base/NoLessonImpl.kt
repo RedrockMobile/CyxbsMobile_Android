@@ -24,16 +24,18 @@ import com.mredrock.cyxbs.lib.utils.extensions.visible
  * @date 2022/8/31 17:59
  */
 @Suppress("LeakingThis")
-abstract class NoLessonImpl : CourseTouchImpl(), INoLesson {
+abstract class NoLessonImpl : CourseDefaultTouchImpl(), INoLesson {
   
   override val viewNoLesson by R.id.course_view_no_lesson.view<View>()
   override val ivNoLesson by R.id.course_iv_no_lesson.view<ImageView>()
   override val tvNoLesson by R.id.course_tv_no_lesson.view<TextView>()
   
   /**
-   * 如果你给 item 添加了新的类型，并且需要隐藏没课图片，那么你需要重写该方法
+   * 是否隐藏没课图片
+   *
+   * 每添加一个 item 进课表就会回调该方法来判断是否需要继续显示没课图片
    */
-  override fun isExhibitionItem(item: IItem): Boolean {
+  override fun isHideNoLessonImg(item: IItem): Boolean {
     return item is ILessonItem || item is IAffairItem
   }
   
@@ -65,13 +67,13 @@ abstract class NoLessonImpl : CourseTouchImpl(), INoLesson {
         object : IItemContainer.OnItemExistListener {
           override fun onItemAddedAfter(item: IItem, view: View?) {
             if (view == null) return
-            if (isExhibitionItem(item)) mExhibitionItemCount++
+            if (isHideNoLessonImg(item)) mExhibitionItemCount++
             tryPostRefreshNoLessonRunnable()
           }
           
           override fun onItemRemovedAfter(item: IItem, view: View?) {
             if (view == null) return
-            if (isExhibitionItem(item)) mExhibitionItemCount--
+            if (isHideNoLessonImg(item)) mExhibitionItemCount--
             tryPostRefreshNoLessonRunnable()
           }
         }

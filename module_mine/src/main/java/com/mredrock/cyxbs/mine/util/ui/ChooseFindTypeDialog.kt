@@ -43,7 +43,7 @@ class ChooseFindTypeDialog(context: Context, theme: Int) : Dialog(context, theme
                     chooseFindTypeDialog.dismiss()
                 } else {
                     //弹出toast提示没有进行密码绑定
-                    context.toast("您好像还没有绑定邮箱")
+                    toast("您好像还没有绑定邮箱")
                 }
             }
             tvProtect.setOnSingleClickListener {
@@ -59,7 +59,7 @@ class ChooseFindTypeDialog(context: Context, theme: Int) : Dialog(context, theme
                     activity.finish()
                     chooseFindTypeDialog.dismiss()
                 } else {
-                    context.toast("您好像还没有设置密保问题")
+                    toast("您好像还没有设置密保问题")
                 }
             }
             tvIds.setOnSingleClickListener {

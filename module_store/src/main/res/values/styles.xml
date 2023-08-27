@@ -8,11 +8,6 @@
         <item name="android:textAllCaps">true</item>
     </style>
 
-    <style name="AppTheme.NoActionBar" tools:ignore="ResourceName">
-        <item name="windowActionBar">false</item>
-        <item name="windowNoTitle">true</item>
-    </style>
-
     <style name="transparent_dialog" parent="Theme.AppCompat.Dialog" tools:ignore="ResourceName">
         <item name="android:windowBackground">@null</item>
     </style>

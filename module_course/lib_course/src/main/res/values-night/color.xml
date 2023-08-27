@@ -24,7 +24,7 @@
     <color name="course_pm_lesson_bg">#26FF979B</color>
     <color name="course_night_lesson_bg">#269BB2FF</color>
     <color name="course_link_lesson_bg">#2690DBFB</color>
-    <color name="course_affair_bg">#4D000000</color>
+    <color name="course_affair_bg">#202223</color>
 
     <!--事务备忘条纹-->
     <color name="course_affair_stripe">#4d4b4c</color>

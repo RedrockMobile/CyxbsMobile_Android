@@ -178,7 +178,9 @@ open class SchoolCalendar {
         fun getDayOfTerm(): Int? {
             return checkFirstDay {
                 val diff = System.currentTimeMillis() - mFirstMonDayCalendar.timeInMillis
-                TimeUnit.DAYS.convert(diff, TimeUnit.MILLISECONDS).toInt()
+                TimeUnit.DAYS.convert(diff, TimeUnit.MILLISECONDS).toInt().let {
+                    if (diff < 0) it - 1 else it
+                }
             }
         }
         
@@ -193,33 +195,6 @@ open class SchoolCalendar {
         fun getWeekOfTerm(): Int? {
             val dayOfTerm = getDayOfTerm() ?: return null
             return if (dayOfTerm >= 0) dayOfTerm / 7 + 1 else dayOfTerm / 7
-        }
-        
-        /**
-         * 是否是上学期（即秋季学期），否则是下学期（春季学期）
-         */
-        @Deprecated("使用 lib_config 中的 SchoolCalendar 进行替换")
-        fun isFirstSemester() : Boolean {
-            return Calendar.getInstance()[Calendar.MONTH + 1] > 8
-        }
-        
-        /**
-         * 得到开学第一周的星期一
-         *
-         * @return 返回 null，则说明不知道开学第一天是好久
-         */
-        @Deprecated("使用 lib_config 中的 SchoolCalendar 进行替换")
-        fun getFirstMonDayOfTerm(): Calendar? {
-            return checkFirstDay {
-                mFirstMonDayCalendar.clone() as Calendar
-            }
-        }
-    
-        @Deprecated("使用 lib_config 中的 SchoolCalendar 进行替换")
-        fun getFirstMonDayTimestamp(): Long? {
-            return checkFirstDay {
-                mFirstMonDayCalendar.timeInMillis
-            }
         }
         
         private var mFirstMonDayCalendar = Calendar.getInstance().apply {

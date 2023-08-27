@@ -2,18 +2,17 @@ package com.mredrock.cyxbs.lib.course.helper.affair
 
 import android.graphics.Canvas
 import android.view.View
-import android.view.ViewConfiguration
 import android.view.ViewGroup
-import com.mredrock.cyxbs.lib.course.helper.ScrollTouchHandler
 import com.mredrock.cyxbs.lib.course.helper.affair.expose.IBoundary
 import com.mredrock.cyxbs.lib.course.helper.affair.expose.ITouchAffairItem
 import com.mredrock.cyxbs.lib.course.helper.affair.expose.ITouchCallback
+import com.mredrock.cyxbs.lib.course.helper.base.ILongPressTouchHandler
+import com.mredrock.cyxbs.lib.course.internal.view.course.ICourseScrollControl
 import com.mredrock.cyxbs.lib.course.internal.view.course.ICourseViewGroup
 import com.mredrock.cyxbs.lib.utils.utils.VibratorUtil
 import com.ndhzs.netlayout.draw.ItemDecoration
 import com.ndhzs.netlayout.touch.multiple.event.IPointerEvent
 import com.ndhzs.netlayout.touch.multiple.event.IPointerEvent.Action.*
-import kotlin.math.abs
 import kotlin.math.max
 import kotlin.math.min
 
@@ -24,193 +23,191 @@ import kotlin.math.min
  * @author 985892345
  * @date 2022/9/20 17:11
  */
-internal class CreateAffairHandler(
+class CreateAffairHandler(
   val course: ICourseViewGroup,
   val iTouch: ITouchCallback,
   val iBoundary: IBoundary,
-) : ICreateAffairHandler {
+  val touchAffairItem: ITouchAffairItem
+) : ILongPressTouchHandler {
   
-  private var mTopRow = 0 // Move 事件中选择区域的开始行数
-  private var mBottomRow = 0 // Move 事件中选择区域的结束行数
   private var mInitialRow = 0 // Down 事件中触摸的初始行数
   private var mInitialColumn = 0 // Down 事件中触摸的初始列数
   
   private var mTouchRow = 0 // 当前触摸的行数
+  private var mShowRow = 0 // 实际显示的行数
   private var mUpperRow = 0 // 选择区域的上限
   private var mLowerRow = course.rowCount - 1 // 选择区域的下限
   
   private var mPointerId = 0
+  
+  private var mIsMoving = false // 控制 refreshTouchAffairView 的调用
+  
   private var mIsInLongPress = false
   
-  private var mIsScrollHandle = false // 是否处于 ScrollTouchHandler 拦截的状态
-  
-  private var mTouchAffairItem: ITouchAffairItem? = null
-  
-  // 认定是在滑动的最小移动值，其中 ScrollView 拦截事件就与该值有关，不建议修改该值
-  private var mTouchSlop = ViewConfiguration.get(course.getContext()).scaledTouchSlop
-  
-  private val mLongPressRunnable = object : Runnable {
-    override fun run() {
-      longPressStart()
-    }
-    
-    fun start() {
-      course.removeCallbacks(this)
-      course.postDelayed(ViewConfiguration.getLongPressTimeout().toLong(), this)
-    }
-    
-    fun cancel() {
-      course.removeCallbacks(this)
-    }
-  }
-  
-  // 用于刷新 TouchAffairView 长度的回调，在每一帧时进行回调
-  private val mItemDecoration = object : ItemDecoration {
-    override fun onDrawBelow(canvas: Canvas, view: View) {
-      if (isInUse()) {
-        refreshTouchAffairView()
-      }
-    }
-  }
-  
-  private var mInitialX = 0
-  private var mInitialY = 0
-  
-  private var mLastMoveX = 0
-  private var mLastMoveY = 0
-  
-  // 是否正处于触摸中
-  private var mIsInTouch = false
+  private var mTopMargin = 0
+  private var mBottomMargin = 0
   
   override fun onPointerTouchEvent(event: IPointerEvent, view: ViewGroup) {
-    if (mIsScrollHandle) {
-      // 把事件转移给 ScrollTouchHandler 处理
-      ScrollTouchHandler.onPointerTouchEvent(event, view)
-      if (event.action == UP || event.action == CANCEL) {
-        mIsInTouch = false // 结束
-        mIsScrollHandle = false // 还原
-      }
-      return
-    }
     val x = event.x.toInt()
     val y = event.y.toInt()
     when (event.action) {
       DOWN -> {
-        mIsInTouch = true // 开始
-        mInitialX = x // 重置
-        mInitialY = y // 重置
-        mLastMoveX = x // 重置
-        mLastMoveY = y // 重置
         mInitialRow = course.getRow(y) // 重置
         mInitialColumn = course.getColumn(x) // 重置
         mPointerId = event.pointerId // 重置
-        mTopRow = mInitialRow // 重置
-        mBottomRow = mInitialRow // 重置
         mTouchRow = mInitialRow // 重置
-        mIsInLongPress = false // 重置
-        mLongPressRunnable.start()
+        mShowRow = mInitialRow // 重置
         mUpperRow = 0 // 重置
         mLowerRow = course.rowCount - 1 // 重置
+        mIsInLongPress = false // 重置
+        mTopMargin = touchAffairItem.lp.topMargin // 重置
+        mBottomMargin = touchAffairItem.lp.bottomMargin // 重置
+        mIsMoving = false // 重置
       }
       MOVE -> {
-        if (mIsInLongPress) {
-          // 核心代码
-          mScrollRunnable.startIfCan() // 触发 mScrollRunnable 中的核心代码
-          course.invalidate()
-        } else {
-          if (abs(x - mLastMoveX) > mTouchSlop
-            || abs(y - mLastMoveY) > mTouchSlop
-          ) {
-            mLongPressRunnable.cancel()
-            mIsScrollHandle = true // 把事件转移给 ScrollTouchHandler 处理
-          }
-        }
-        mLastMoveX = x
-        mLastMoveY = y
+        // 此时 MOVE 已经触发长按
+        mScrollRunnable.startIfCan() // 触发 mScrollRunnable 中的核心代码
+        tryPostRefreshTouchAffairView()
       }
-      UP -> {
-        mIsInTouch = false // 结束
+      UP, CANCEL -> {
         if (mIsInLongPress) {
-          mIsInLongPress = false // 重置
           mScrollRunnable.cancel()
+          course.removeOnScrollYChanged(mScrollYChangedListener)
+          course.removeOnLayoutChangeListener(mOnLayoutChanged)
           course.removeItemDecoration(mItemDecoration)
-          iTouch.onTouchEnd(mPointerId, mInitialRow, mInitialColumn, mTouchRow, mTopRow, mBottomRow)
-        } else {
-          mLongPressRunnable.cancel()
-          if (abs(x - mLastMoveX) <= mTouchSlop
-            && abs(y - mLastMoveY) <= mTouchSlop
-          ) {
-            // 这里说明移动的距离小于 mTouchSlop，但还是得把点击的事务给绘制上，但是只有一格
-            mTouchAffairItem?.show(mTopRow, mBottomRow, mInitialColumn)
-          }
-        }
-      }
-      CANCEL -> {
-        mIsInTouch = false // 结束
-        if (mIsInLongPress) {
-          mIsInLongPress = false // 重置
-          mScrollRunnable.cancel()
-          course.removeItemDecoration(mItemDecoration)
-          iTouch.onTouchEnd(mPointerId, mInitialRow, mInitialColumn, mTouchRow, mTopRow, mBottomRow)
-        } else {
-          mLongPressRunnable.cancel()
+          touchAffairItem.onMoveEnd(course)
+          iTouch.onTouchEnd(
+            mPointerId,
+            mInitialRow,
+            mTouchRow,
+            mShowRow,
+            event.action == CANCEL
+          )
         }
       }
     }
   }
   
-  private fun longPressStart() {
+  override fun onLongPressed() {
     mIsInLongPress = true
     // 禁止父布局拦截
     course.getParent().requestDisallowInterceptTouchEvent(true)
-    VibratorUtil.start(36) // 长按被触发来个震动提醒
-    mTouchAffairItem?.show(mTopRow, mBottomRow, mInitialColumn)
-    iTouch.onLongPressStart(mPointerId, mInitialRow, mInitialColumn)
+    course.addOnScrollYChanged(mScrollYChangedListener)
+    course.addOnLayoutChangeListener(mOnLayoutChanged)
     course.addItemDecoration(mItemDecoration)
+    
+    VibratorUtil.start(36) // 长按被触发来个震动提醒
+    iTouch.onLongPressed(mPointerId, mInitialRow, mInitialColumn)
+    
+    touchAffairItem.onMoveStart(course, mInitialRow, mInitialColumn)
+    
+    iTouch.onShowTouchAffairItem(course, touchAffairItem)
   }
   
-  private fun refreshTouchAffairView() {
-    val y = course.getAbsoluteY(mPointerId) + course.getScrollCourseY()
-    val nowTouchRow = course.getRow(y) // 当前触摸的行数
-    if (nowTouchRow < mTouchRow) {
-      // 手指往上移动
-      if (nowTouchRow < mInitialRow) {
-        mUpperRow = max(iBoundary.getUpperRow(course, mInitialRow, nowTouchRow, mInitialColumn), 0)
-      }
-    } else if (nowTouchRow > mTouchRow) {
-      // 手指往下移动
-      if (nowTouchRow > mInitialRow) {
-        mLowerRow = min(
-          iBoundary.getLowerRow(course, mInitialRow, nowTouchRow, mInitialColumn),
-          course.rowCount - 1
-        )
-      }
-    }
-    
-    var topRow: Int
-    var bottomRow: Int
-    // 根据当前触摸的行数与初始行数比较，得到 topRow、bottomRow
-    if (nowTouchRow > mInitialRow) {
-      topRow = mInitialRow
-      bottomRow = nowTouchRow
-    } else {
-      topRow = nowTouchRow
-      bottomRow = mInitialRow
-    }
-    if (topRow < mUpperRow) topRow = mUpperRow // 根据上限再次修正 topRow
-    if (bottomRow > mLowerRow) bottomRow = mLowerRow // 根据下限再次修正 bottomRow
-    
-    if (mTouchRow != nowTouchRow) {
-      mTouchRow = nowTouchRow
-      iTouch.onTouchMove(mPointerId, mInitialRow, mInitialColumn, nowTouchRow, topRow, bottomRow)
-    }
-    
-    if (topRow != mTopRow || bottomRow != mBottomRow) { // 避免不必要的刷新
-      mTouchAffairItem?.refresh(mTopRow, mBottomRow, topRow, bottomRow)
-      mTopRow = topRow
-      mBottomRow = bottomRow
+  
+  ///////////////////////////////
+  //
+  //          刷新逻辑
+  //
+  ///////////////////////////////
+  
+  /**
+   * 尝试发送一次刷新来回调 [mItemDecoration]
+   *
+   * 但值得注意的是，并不是直接调用 refreshTouchAffairView()，而是在每一帧时回调 refreshTouchAffairView() 方法，
+   * 官方源码中经常这样操作，目的是为了统一回调时机，减少回调次数
+   *
+   * 这里调用后会在下一帧中回调 [mItemDecoration]，然后触发刷新操作
+   */
+  private fun tryPostRefreshTouchAffairView() {
+    if (!mIsMoving && mIsInLongPress) {
+      mIsMoving = true
+      course.invalidate() // 触发刷新，然后 mItemDecoration 会回调 refreshTouchAffairView
     }
   }
+  
+  // Scroll 滚动不一定会导致 mItemDecoration 被回调，所以需要强制刷新
+  private val mScrollYChangedListener =
+    ICourseScrollControl.OnScrollYChangedListener { _, _ ->
+      tryPostRefreshTouchAffairView()
+    }
+  
+  // 课表布局发生改变时也需要回调 mItemDecoration，然后触发 refreshTouchAffairView()
+  private val mOnLayoutChanged =
+    View.OnLayoutChangeListener { _, _, _, _, _, _, _, _, _ ->
+      tryPostRefreshTouchAffairView()
+    }
+  
+  // 用于在每一帧时回调 refreshTouchAffairView() 方法
+  private val mItemDecoration = object : ItemDecoration {
+    override fun onDrawBelow(canvas: Canvas, view: View) {
+      if (mIsMoving && mIsInLongPress) {
+        refreshTouchAffairView() // 调用 refreshTouchAffairView 方法
+        mIsMoving = false
+      }
+    }
+    
+    /**
+     * 刷新 [ITouchAffairItem] 的核心方法
+     *
+     * ### 不要直接调用该方法
+     * 请使用 page.course.invalidate() 和设置 mIsMoving=true 来间接调用该方法
+     * (invalidate() -> mItemDecoration -> refreshTouchAffairView())。
+     *
+     * 原因在于：
+     * - 一帧只能回调一次 refreshTouchAffairView，多次回调会多次计算导致效果出现问题 (比如滚轴会加倍移动)
+     *  官方源码中经常这样操作，目的是为了统一回调时机，减少计算
+     */
+    private fun refreshTouchAffairView() {
+      if (!mIsMoving) return
+      if (!mIsInLongPress) return
+      val y = course.getAbsoluteY(mPointerId) + course.getScrollCourseY()
+      val nowTouchRow = course.getRow(y) // 当前触摸的行数
+      if (nowTouchRow < mTouchRow) {
+        // 手指往上移动
+        if (nowTouchRow < mInitialRow) {
+          // 在 item 上方移动
+          mUpperRow = max(iBoundary.getUpperRow(course, mInitialRow, nowTouchRow, mInitialColumn), 0)
+          mShowRow = max(mUpperRow, nowTouchRow)
+        } else {
+          mShowRow = nowTouchRow
+        }
+      } else if (nowTouchRow > mTouchRow) {
+        // 手指往下移动
+        if (nowTouchRow > mInitialRow) {
+          // 在 item 下方移动
+          mLowerRow = min(
+            iBoundary.getLowerRow(course, mInitialRow, nowTouchRow, mInitialColumn),
+            course.rowCount - 1
+          )
+          mShowRow = min(mLowerRow, nowTouchRow)
+        } else {
+          mShowRow = nowTouchRow
+        }
+      }
+      if (nowTouchRow != mTouchRow) {
+        mTouchRow = nowTouchRow
+        iTouch.onTouchMove(mPointerId, mInitialRow, mTouchRow, mShowRow)
+      }
+      if (mTouchRow < mUpperRow) {
+        val newY = course.getRowsHeight(0, mUpperRow - 1) + mTopMargin
+        touchAffairItem.onSingleMove(course, mInitialRow, newY)
+      } else if (mTouchRow > mLowerRow) {
+        val newY = course.getRowsHeight(0, mLowerRow) - mBottomMargin
+        touchAffairItem.onSingleMove(course, mInitialRow, newY)
+      } else {
+        touchAffairItem.onSingleMove(course, mInitialRow, y)
+      }
+    }
+  }
+  
+  
+  
+  ///////////////////////////////
+  //
+  //           滚轴相关
+  //
+  ///////////////////////////////
   
   // 滑到显示区域顶部或者底部时，使 mCourseScrollView 滚动的 Runnable
   private val mScrollRunnable = object : Runnable {
@@ -224,7 +221,7 @@ internal class CreateAffairHandler(
       if (isAllowScrollAndCalculateVelocity()) {
         // 核心运行代码
         course.scrollCourseBy(velocity) // 滚动
-        course.invalidate() // 刷新，之后会回调 mItemDecoration
+        tryPostRefreshTouchAffairView()
         course.postOnAnimation(this) // 一直循环下去
       } else {
         isInScrolling = false
@@ -264,7 +261,7 @@ internal class CreateAffairHandler(
       
       // 向上滚动，即手指移到底部，需要显示下面的内容
       val isNeedScrollUp =
-        absoluteY > course.getScrollHeight() - moveBoundary
+        absoluteY > course.getScrollOuterHeight() - moveBoundary
           && mTouchRow <= mLowerRow // 当前触摸的行数在下限以上
           && course.canCourseScrollVertically(1) // 没有滑到底
       
@@ -276,29 +273,13 @@ internal class CreateAffairHandler(
       val isAllowScroll = isNeedScrollUp || isNeedScrollDown
       if (isAllowScroll) {
         velocity = if (isNeedScrollUp) {
-          min((absoluteY - (course.getScrollHeight() - moveBoundary)) / 10 + minV, maxV)
+          min((absoluteY - (course.getScrollOuterHeight() - moveBoundary)) / 2 + minV, maxV)
         } else {
+          // 如果是向下滚动稍稍降低加速度，因为顶部手指可以移动出去，很容易满速
           -min(((moveBoundary - absoluteY) / 10 + minV), maxV)
         }
       }
       return isAllowScroll
     }
-  }
-  
-  override fun isInUse(): Boolean {
-    return mIsInTouch || isInShow()
-  }
-  
-  override fun isInShow(): Boolean {
-    return mTouchAffairItem?.isInShow() ?: false
-  }
-  
-  override fun cancelShow() {
-    mTouchAffairItem?.cancelShow()
-    mTouchAffairItem = null
-  }
-  
-  override fun setTouchAffairItem(item: ITouchAffairItem?) {
-    mTouchAffairItem = item
   }
 }

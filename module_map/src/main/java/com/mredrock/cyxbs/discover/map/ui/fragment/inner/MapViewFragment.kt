@@ -506,14 +506,6 @@ class MapViewFragment : BaseFragment() {
         return true
     }
 
-    /**
-     * 销毁时移除所有view，防止二次创建
-     */
-    override fun onDestroyView() {
-        mMapLayout.removeMyViews()
-        super.onDestroyView()
-    }
-
     private fun isFastClick(): Boolean {
         var flag = false
         val curClickTime = System.currentTimeMillis()
@@ -522,5 +514,10 @@ class MapViewFragment : BaseFragment() {
         }
         lastClickTime = curClickTime
         return flag
+    }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        GlideProgressDialog.hide()
     }
 }

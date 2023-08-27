@@ -44,6 +44,8 @@ class TodoModel {
         val apiGenerator: Api by lazy { ApiGenerator.getApiService(Api::class.java) }
     }
 
+    val rxjavaDisposables= mutableListOf<Disposable>()
+
     private val todoList by lazy { ArrayList<Todo>() }
 
     //获取todolist
@@ -54,6 +56,7 @@ class TodoModel {
         //首先试图从远程获取todo
         getFromNet(
             onSuccess, onError = {
+
                 //G了之后, 从本地数据库拿
                 TodoDatabase.INSTANCE.todoDao()
                     .queryAllTodo()
@@ -79,7 +82,7 @@ class TodoModel {
                     .updateTodo(todo)
             }.setSchedulers().unsafeSubscribeBy {
                 onSuccess?.invoke()
-            }
+            }.addToList()
         apiGenerator.pushTodo(
             TodoListPushWrapper(
                 todoList = listOf(todo),
@@ -97,7 +100,7 @@ class TodoModel {
                     //缓存为本地修改
                     addOffLineModifyTodo(todo.todoId, CHANGE)
                 }
-            )
+            ).addToList()
     }
 
     fun delTodo(todoId: Long, onSuccess: () -> Unit) {
@@ -108,7 +111,7 @@ class TodoModel {
                     .deleteTodoById(todoId)
             }.setSchedulers().unsafeSubscribeBy {
                 onSuccess.invoke()
-            }
+            }.addToList()
         apiGenerator.delTodo(
             DelPushWrapper(
                 delTodoList = listOf(todoId),
@@ -125,7 +128,7 @@ class TodoModel {
                     //缓存为本地修改
                     addOffLineModifyTodo(todoId, DEL)
                 }
-            )
+            ).addToList()
     }
 
     fun getTodoById(todoId: Long, onSuccess: (todo: Todo) -> Unit, onError: () -> Unit) {
@@ -138,7 +141,7 @@ class TodoModel {
                 onError = {
                     onError.invoke()
                 }
-            )
+            ).addToList()
     }
 
     fun getTodoByIdList(idList: List<Long>, onSuccess: (todo: List<Todo>) -> Unit){
@@ -148,7 +151,7 @@ class TodoModel {
                 .toObservable().setSchedulers()
                 .unsafeSubscribeBy {
                     onSuccess(it)
-                }
+                }.addToList()
     }
 
     fun addTodo(todo: Todo, onSuccess: (todoId: Long) -> Unit) {
@@ -177,8 +180,8 @@ class TodoModel {
                             //缓存为本地修改
                             addOffLineModifyTodo(todo.todoId, CHANGE)
                         }
-                    )
-            }
+                    ).addToList()
+            }.addToList()
     }
 
     enum class ModifyType {
@@ -269,7 +272,7 @@ class TodoModel {
                     onSuccess(it)
                     firstTimeGet = false
                 }
-            }
+            }.addToList()
     }
 
     private fun getFromNet(
@@ -311,11 +314,11 @@ class TodoModel {
                                                         .insertTodoList(list)
                                                 }
                                                 .setSchedulers()
-                                                .unsafeSubscribeBy { }
+                                                .unsafeSubscribeBy { }.addToList()
                                         }
                                     }
                                 }
-                            )
+                            ).addToList()
                     } else {
                         //本地数据库有记录
                         if (lastSyncTime == remoteSyncTime) {
@@ -352,7 +355,7 @@ class TodoModel {
                                                 .map { list ->
                                                     TodoDatabase.INSTANCE
                                                         .todoDao().insertTodoList(list)
-                                                }.setSchedulers().unsafeSubscribeBy { }
+                                                }.setSchedulers().unsafeSubscribeBy { }.addToList()
                                             //删除本地
                                             Observable.fromArray(wrapper.data.delTodoArray)
                                                 .map { idList ->
@@ -360,7 +363,7 @@ class TodoModel {
                                                         TodoDatabase.INSTANCE.todoDao()
                                                             .deleteTodoById(id)
                                                     }
-                                                }.setSchedulers().unsafeSubscribeBy { }
+                                                }.setSchedulers().unsafeSubscribeBy { }.addToList()
 
                                             //两个时间记录同步处理
                                             setLastSyncTime(wrapper.data.syncTime)
@@ -370,7 +373,7 @@ class TodoModel {
                                         onError = {
                                             onError.invoke()
                                         }
-                                    )
+                                    ).addToList()
                             } else {
                                 //此时说明存在冲突，需要展示
                                 onConflict?.invoke(remoteSyncTime, lastSyncTime)
@@ -382,7 +385,7 @@ class TodoModel {
                     LogUtils.d("RayleighZ", it.toString())
                     onError.invoke()
                 }
-            )
+            ).addToList()
     }
 
     fun getAllTodoFromNet(
@@ -407,7 +410,7 @@ class TodoModel {
                                     .todoDao()
                                     .insertTodoList(list)
                             }.setSchedulers()
-                            .unsafeSubscribeBy { }
+                            .unsafeSubscribeBy { }.addToList()
                     }
                     todoList.clear()
                     it.data.todoArray?.let { list ->
@@ -419,9 +422,9 @@ class TodoModel {
                 },
 
                 onError = {
-                    BaseApp.appContext.toast("拉取数据失败，请检查网络状况")
+                    toast("拉取数据失败，请检查网络状况")
                 }
-            )
+            ).addToList()
     }
 
     private fun resendModifyList() {
@@ -457,9 +460,9 @@ class TodoModel {
                                             addOffLineModifyTodo(type = CHANGE)
                                         },
                                         onError = {
-                                            BaseApp.appContext.toast("本地修改重传失败")
+                                            toast("本地修改重传失败")
                                         }
-                                )
+                                ).addToList()
                     }
 
 
@@ -479,15 +482,15 @@ class TodoModel {
                                             addOffLineModifyTodo(type = CHANGE)
                                         },
                                         onError = {
-                                            BaseApp.appContext.toast("本地删除重传失败")
+                                            toast("本地删除重传失败")
                                         }
-                                )
+                                ).addToList()
                     }
                 },
                 onError = {
                     LogUtils.d("RayleighZ", "resend error = $it")
                 }
-            )
+            ).addToList()
     }
 
     //强制重传所有的todo
@@ -516,10 +519,10 @@ class TodoModel {
                         },
                         onError = {
                             //提示用户强制上传失败
-                            BaseApp.appContext.toast("强制上传失败 :(")
+                            toast("强制上传失败 :(")
                         }
-                    )
-            }
+                    ).addToList()
+            }.addToList()
     }
     
     /**
@@ -532,7 +535,7 @@ class TodoModel {
      *
      * Created by anriku on 2018/9/18.
      */
-    private class ExecuteOnceObserver<T: Any>(
+    private inner class ExecuteOnceObserver<T: Any>(
         val onExecuteOnceNext: (T) -> Unit = {},
         val onExecuteOnceComplete: () -> Unit = {},
         val onExecuteOnceError: (Throwable) -> Unit = {},
@@ -547,6 +550,7 @@ class TodoModel {
         
         override fun onSubscribe(d: Disposable) {
             mDisposable = d
+            rxjavaDisposables.add(d)
         }
         
         override fun onNext(t: T) {
@@ -567,5 +571,8 @@ class TodoModel {
             onExecuteOnceError(e)
         }
         
+    }
+    private fun Disposable.addToList(){
+        rxjavaDisposables.add(this)
     }
 }

@@ -10,26 +10,34 @@ import android.provider.CalendarContract.*
 import androidx.annotation.IntRange
 import androidx.fragment.app.FragmentActivity
 import com.mredrock.cyxbs.api.account.IAccountService
-import com.mredrock.cyxbs.common.service.impl
 import com.mredrock.cyxbs.lib.utils.UtilsApplicationWrapper.Companion.application
 import com.mredrock.cyxbs.lib.utils.extensions.doPermissionAction
-import com.mredrock.cyxbs.lib.utils.extensions.toast
+import com.mredrock.cyxbs.lib.utils.service.impl
+import io.reactivex.rxjava3.core.Completable
+import kotlinx.coroutines.suspendCancellableCoroutine
 import java.util.*
 import kotlin.coroutines.resume
-import kotlin.coroutines.suspendCoroutine
 
 /**
+ * 一个给手机日历添加事件的工具类
+ *
+ * 能实现的需求：
+ * - 定时提醒 (允许使用闹钟的提醒)
+ * - 塞一些“永久”信息 (即使软件被卸载后也能保留在手机上 :)
+ *
+ *
  * https://developer.android.google.cn/guide/topics/providers/calendar-provider?hl=zh-cn
  *
  * 除了官方文档外，你可能还需要阅读以下文档，因为日历信息的添加是有一套国际标准的
  * RFC5545 规范中英对照文档：http://rfc2cn.com/rfc5545.html（如果你想详细研究一下怎么写规则，强烈推荐看下这篇文档）
- * RERIOD 规则: 3.3.9
- * RDATE 规则：3.8.5.2
- * RRULE 规则：3.8.5.3、3.3.10
- * DURATION 规则：3.3.6、3.8.2.5
- * DATE 规则：3.3.4
+ *               对应章节
+ * RERIOD    规则: 3.3.9
+ * RDATE     规则：3.8.5.2
+ * RRULE     规则：3.8.5.3、3.3.10
+ * DURATION  规则：3.3.6、3.8.2.5
+ * DATE      规则：3.3.4
  * DATE-TIME 规则：3.3.5
- * DTSTART 规则：3.8.2.4
+ * DTSTART   规则：3.8.2.4
  *
  * 当然，你觉得太麻烦了也不可以不用阅读，我对添加事件进行了封装，你只需要传入 [Event] 即可
  *
@@ -45,38 +53,91 @@ object PhoneCalendar {
    *
    * 注意：ACCOUNT_NAME 和 ACCOUNT_TYPE 是一个人日历账户的唯一标识
    */
-  private fun getAccountName(): String {
+  fun getAccountName(): String {
     return IAccountService::class.impl.getUserService().getStuNum()
   }
   
   // 账户类型。这个不会显示给用户
-  private const val ACCOUNT_TYPE = "掌上重邮"
+  const val ACCOUNT_TYPE = "掌上重邮"
+  // 日历路径来源。这个在手机日历账号管理中可以看到。比如：Xiaomi Calendar
+  const val NAME = "红岩网校工作站"
+  
+  
+  
+  ///////////////////////////////
+  //
+  //          权限相关
+  //
+  ///////////////////////////////
+  
+  /**
+   * 检查权限，如果未申请则返回 false
+   */
+  fun checkPermission(): Boolean {
+    return context.checkSelfPermission(Manifest.permission.READ_CALENDAR) == PackageManager.PERMISSION_GRANTED
+      && context.checkSelfPermission(Manifest.permission.WRITE_CALENDAR) == PackageManager.PERMISSION_GRANTED
+  }
+  
+  /**
+   * 申请日历读写权限
+   */
+  fun applyForPermission(activity: FragmentActivity): Completable {
+    return if (checkPermission()) {
+      Completable.complete()
+    } else {
+      Completable.create {
+        val dialog = activity.doPermissionAction(
+          Manifest.permission.READ_CALENDAR,
+          Manifest.permission.WRITE_CALENDAR
+        ) {
+          doAfterGranted {
+            if (!it.isDisposed) {
+              it.onComplete()
+            }
+          }
+          doAfterRefused {
+            it.tryOnError(RuntimeException("申请权限被拒绝"))
+          }
+          doOnCancel {
+            it.tryOnError(RuntimeException("申请权限被取消"))
+          }
+        }
+        it.setCancellable {
+          dialog?.cancel()
+        }
+      }
+    }
+  }
+  
+  ///////////////////////////////
+  //
+  //        Event 增删改查
+  //
+  ///////////////////////////////
   
   /**
    * 添加事件，成功就返回事件 Id，失败返回 null
    *
+   * 该方法自带了权限申请，所以使用协程
+   *
    * @param accountType 账户类型。这个不同可以生成不同的日历账号
    */
-  suspend fun add(activity: FragmentActivity, event: Event, accountType: String = ACCOUNT_TYPE) = suspendCoroutine {
-    if (checkPermission()) {
-      it.resume(add(event, accountType))
-    } else {
-      activity.doPermissionAction(
-        Manifest.permission.READ_CALENDAR,
-        Manifest.permission.WRITE_CALENDAR
-      ) {
-        doAfterGranted {
-          it.resume(add(event, accountType))
-        }
-        doAfterRefused {
-          toast("申请读写日历权限被拒绝")
-          it.resume(null)
-        }
-        doOnCancel {
-          toast("申请读写日历权限被取消")
-          it.resume(null)
-        }
-      }
+  suspend fun add(
+    activity: FragmentActivity,
+    event: Event,
+    accountType: String = ACCOUNT_TYPE
+  ): Long? = suspendCancellableCoroutine { continuation ->
+    val dispose = applyForPermission(activity)
+      .subscribe(
+        {
+          if (continuation.isActive) {
+            continuation.resume(add(event, accountType))
+          }
+        },
+        { continuation.resume(null) }
+      )
+    continuation.invokeOnCancellation {
+      dispose.dispose()
     }
   }
   
@@ -107,6 +168,277 @@ object PhoneCalendar {
       e.printStackTrace()
       return null
     }
+  }
+  
+  /**
+   * 删除事件,成功返回 true，失败返回 false
+   */
+  fun delete(eventId: Long): Boolean {
+    if (!checkPermission()) return false
+    val deleteUri = ContentUris.withAppendedId(Events.CONTENT_URI, eventId)
+    return try {
+      deleteRemind(eventId) // 经检查，删除 Event 时会自动同步删除
+      context.contentResolver.delete(deleteUri, null, null) > 0
+    } catch (e: Exception) {
+      e.printStackTrace()
+      false
+    }
+  }
+  
+  /**
+   * 删除当前账号下所有的事件
+   */
+  fun deleteAll(accountType: String = ACCOUNT_TYPE): Boolean {
+    if (!checkPermission()) return false
+    val calendarId = getCalendarAccount(accountType = accountType) ?: return false
+    return try {
+      context.contentResolver.delete(
+        Events.CONTENT_URI,
+        "${Events.CALENDAR_ID}=?",
+        arrayOf(calendarId.toString())
+      ) > 0
+    } catch (e: Exception) {
+      e.printStackTrace()
+      false
+    }
+  }
+  
+  /**
+   * 更新事件,成功返回 true,失败返回 false
+   */
+  fun update(eventId: Long, event: Event, accountType: String = ACCOUNT_TYPE): Boolean {
+    if (!checkPermission()) return false
+    val calendarId = getCalendarAccount(accountType = accountType) ?: return false
+    if (calendarId < 1) return false
+    val value = when (event) {
+      is CommonEvent -> {
+        getCommonEventContent(event, calendarId) {
+          putNull(Events.RRULE) // 删除 RRULE，防止之前是 FrequencyEvent
+        }
+      }
+      is FrequencyEvent -> getFrequencyEventContent(event, calendarId) {
+        putNull(Events.RDATE) // 删除 RDATE，防止之前是 CommonEvent
+      }
+    } ?: return false
+    val updateUri = ContentUris.withAppendedId(Events.CONTENT_URI, eventId)
+    try {
+      if (context.contentResolver.update(updateUri, value, null, null) > 0) {
+        // 因为不知道之前有没有设置过提醒时间，所以只能先删除再添加
+        deleteRemind(eventId)
+        if (event.remind > 0) {
+          addRemind(eventId, event.remind)
+        }
+        return true
+      }
+    } catch (e: Exception) {
+      e.printStackTrace()
+    }
+    return false
+  }
+  
+  /**
+   * 得到当前账户下所有的 Event
+   */
+  fun getAllEventId(accountType: String = ACCOUNT_TYPE): List<Long>? {
+    if (!checkPermission()) return null
+    val calendarId = getCalendarAccount(accountType = accountType) ?: return null
+    val result = mutableListOf<Long>()
+    context.contentResolver.query(
+      Events.CONTENT_URI,
+      arrayOf(Events._ID),
+      "${Events.CALENDAR_ID}=?",
+      arrayOf(calendarId.toString()),
+      null
+    )?.use {
+      while (it.moveToNext()) {
+        val id = it.getLong(it.getColumnIndexOrThrow(Events._ID))
+        result.add(id)
+      }
+    }
+    return result
+  }
+  
+  
+  
+  
+  ///////////////////////////////
+  //
+  //        Remind 增删改查
+  //
+  ///////////////////////////////
+  
+  /**
+   * 为事件设定提醒
+   * @param eventId 事件 id
+   * @param minute 分钟数
+   */
+  private fun addRemind(eventId: Long, minute: Int): Boolean {
+    val values = ContentValues().apply {
+      put(Reminders.EVENT_ID, eventId)
+      put(Reminders.MINUTES, minute)
+      put(Reminders.METHOD, Reminders.METHOD_ALERT)
+    }
+    return try {
+      context.contentResolver.insert(Reminders.CONTENT_URI, values) ?: return false
+      true
+    } catch (e: Exception) {
+      e.printStackTrace()
+      false
+    }
+  }
+  
+  private fun deleteRemind(eventId: Long): Boolean {
+    return try {
+      context.contentResolver.delete(
+        Reminders.CONTENT_URI,
+        "${Reminders.EVENT_ID}=?",
+        arrayOf(eventId.toString())
+      ) > 0
+    } catch (e: Exception) {
+      e.printStackTrace()
+      false
+    }
+  }
+  
+  
+  
+  ///////////////////////////////
+  //
+  //       日历账户 增删改查
+  //
+  ///////////////////////////////
+  
+  /**
+   * 检查是否存在日历账户，不存在时返回 null
+   *
+   * @param accountType 账户类型。默认是 [ACCOUNT_TYPE]，但你可以在 [add] 时传入其他的
+   *
+   * @return 返回 CALENDAR_ID，不存在时返回 null
+   */
+  fun getCalendarAccount(
+    accountType: String = ACCOUNT_TYPE,
+  ): Long? {
+    if (!checkPermission()) return null
+    return try {
+      context.contentResolver.query(
+        Calendars.CONTENT_URI,
+        arrayOf(
+          // 这个是查询结果只展示这几列
+          Calendars._ID,
+          Calendars.ACCOUNT_NAME,
+          Calendars.ACCOUNT_TYPE,
+        ),
+        // 下面这个是 WHERE 语句
+        "(${Calendars.ACCOUNT_NAME}=?) AND " +
+          "(${Calendars.ACCOUNT_TYPE}=?)",
+        arrayOf(
+          // 这个是用于填充上面写的 ? 值
+          getAccountName(),
+          accountType,
+        ),
+        null
+      ).use { cursor ->
+        if (cursor == null || cursor.count == 0) return null
+        cursor.moveToNext() // 必须调用，不然查询就报错
+        cursor.getColumnIndex(Calendars._ID).let {
+          if (it >= 0) cursor.getLong(it) else null
+        }
+      }
+    } catch (e: Exception) {
+      e.printStackTrace()
+      null
+    }
+  }
+  
+  /**
+   * 删除创建的日历账户
+   * @param CALENDAR_ID 可以使用 [getCalendarAccount] 获得
+   */
+  fun deleteCalendarAccount(CALENDAR_ID: Long): Boolean {
+    if (!checkPermission()) return false
+    return try {
+      context.contentResolver.delete(
+        Calendars.CONTENT_URI,
+        // 下面这个是 WHERE 语句
+        "${Calendars._ID}=?",
+        arrayOf( // 这个是用于填充上面写的 ? 值
+          CALENDAR_ID.toString()
+        )
+      ) > 0
+    } catch (e: Exception) {
+      e.printStackTrace()
+      false
+    }
+  }
+  
+  /**
+   * 获取日历 ID，如果不存在，则添加一个日历账号
+   * @return 日历 ID
+   */
+  private fun checkOrAddCalendarAccounts(accountType: String): Long? {
+    val oldId = getCalendarAccount(accountType = accountType)
+    return oldId ?: addCalendarAccount(accountType = accountType)
+  }
+  
+  /**
+   * 添加一个日历账户
+   */
+  private fun addCalendarAccount(accountType: String): Long? {
+    if (!checkPermission()) return null
+    val value = ContentValues().apply {
+      // 日历路径来源。这个在手机日历账号管理中可以看到。比如：Xiaomi Calendar
+      put(Calendars.NAME, NAME)
+      put(Calendars.ACCOUNT_NAME, getAccountName())
+      // 账户类型。这个不会显示给用户
+      put(Calendars.ACCOUNT_TYPE, accountType)
+      // 给用户显示的该日历名称，一般与 accountType 保持一致。比如：小米日历
+      put(Calendars.CALENDAR_DISPLAY_NAME, accountType)
+      // 账户账号。日历中添加事件选择日历账户时可以看到，一般与 ACCOUNT_NAME 保持一致
+      put(Calendars.OWNER_ACCOUNT, getAccountName())
+      put(Calendars.VISIBLE, 1)
+      put(Calendars.CALENDAR_COLOR, Color.BLUE)
+      put(Calendars.CALENDAR_ACCESS_LEVEL, Calendars.CAL_ACCESS_OWNER)
+      put(Calendars.SYNC_EVENTS, 1)
+      put(Calendars.CALENDAR_TIME_ZONE, TimeZone.getDefault().id)
+      put(Calendars.CAN_ORGANIZER_RESPOND, 0)
+    }
+    
+    return context.contentResolver.insert(
+      Calendars.CONTENT_URI.buildUpon()
+        .appendQueryParameter(CALLER_IS_SYNCADAPTER, "true")
+        .appendQueryParameter(Calendars.ACCOUNT_NAME, getAccountName())
+        .appendQueryParameter(Calendars.ACCOUNT_TYPE, accountType)
+        .build(),
+      value
+    )?.lastPathSegment?.toLong()
+  }
+  
+  
+  ///////////////////////////////
+  //
+  //        其他工具类函数
+  //
+  ///////////////////////////////
+  
+  /**
+   * 将时间戳根据 国际 RFC5545 规则装换为 DATE-TIME 类型
+   * RFC5545 规范中英对照文档：http://rfc2cn.com/rfc5545.html
+   * DATE-TIME 规则：3.3.5
+   */
+  private fun Calendar.toDateTime(): String {
+    val year = get(Calendar.YEAR)
+    val month = get(Calendar.MONTH) + 1
+    val date = get(Calendar.DATE)
+    val hour = get(Calendar.HOUR_OF_DAY)
+    val minute = get(Calendar.MINUTE)
+    val second = get(Calendar.SECOND)
+    return "$year" +
+      "${if (month < 10) "0$month" else month}" +
+      "${if (date < 10) "0$date" else date}" +
+      "T" +
+      "${if (hour < 10) "0$hour" else hour}" +
+      "${if (minute < 10) "0$minute" else minute}" +
+      "${if (second < 10) "0$second" else second}"
   }
   
   private fun getCommonEventContent(
@@ -155,232 +487,14 @@ object PhoneCalendar {
     }
   }
   
-  /**
-   * 删除事件,成功返回 true，失败返回 false
-   */
-  fun delete(eventId: Long): Boolean {
-    if (!checkPermission()) return false
-    val deleteUri = ContentUris.withAppendedId(Events.CONTENT_URI, eventId)
-    return try {
-      context.contentResolver.delete(deleteUri, null, null) > 0
-    } catch (e: Exception) {
-      e.printStackTrace()
-      false
-    }
-  }
   
-  /**
-   * 删除当前账号下所有的事件
-   */
-  fun deleteAll(): Boolean {
-    if (!checkPermission()) return false
-    val calendarId = getCalendarAccount()
-    return try {
-      if (calendarId != null) {
-        context.contentResolver.delete(
-          Events.CONTENT_URI,
-          "${Events.CALENDAR_ID}=?",
-          arrayOf(calendarId.toString())
-        ) > 0
-      } else false
-    } catch (e: Exception) {
-      e.printStackTrace()
-      false
-    }
-  }
   
-  /**
-   * 更新事件,成功返回 true,失败返回 false
-   */
-  fun update(eventId: Long, event: Event, accountType: String = ACCOUNT_TYPE): Boolean {
-    if (!checkPermission()) return false
-    val calendarId = checkOrAddCalendarAccounts(accountType) ?: return false
-    if (calendarId < 1) return false
-    val value = when (event) {
-      is CommonEvent -> {
-        getCommonEventContent(event, calendarId) {
-          putNull(Events.RRULE) // 删除 RRULE，防止之前是 FrequencyEvent
-        }
-      }
-      is FrequencyEvent -> getFrequencyEventContent(event, calendarId) {
-        putNull(Events.RDATE) // 删除 RDATE，防止之前是 CommonEvent
-      }
-    } ?: return false
-    val updateUri = ContentUris.withAppendedId(Events.CONTENT_URI, eventId)
-    try {
-      if (context.contentResolver.update(updateUri, value, null, null) > 0) {
-        // 因为不知道之前设置的提醒时间，所以只能先删除再添加
-        deleteRemind(eventId)
-        if (event.remind > 0) {
-          addRemind(eventId, event.remind)
-        }
-        return true
-      }
-    } catch (e: Exception) {
-      e.printStackTrace()
-    }
-    return false
-  }
   
-  /**
-   * 为事件设定提醒
-   * @param eventId 事件 id
-   * @param minute 分钟数
-   */
-  private fun addRemind(eventId: Long, minute: Int): Boolean {
-    val values = ContentValues().apply {
-      put(Reminders.EVENT_ID, eventId)
-      put(Reminders.MINUTES, minute)
-      put(Reminders.METHOD, Reminders.METHOD_ALERT)
-    }
-    return try {
-      context.contentResolver.insert(Reminders.CONTENT_URI, values) ?: return false
-      true
-    } catch (e: Exception) {
-      e.printStackTrace()
-      false
-    }
-  }
-  
-  private fun deleteRemind(eventId: Long): Boolean {
-    return try {
-      context.contentResolver.delete(
-        Reminders.CONTENT_URI,
-        "${Reminders.EVENT_ID}=?",
-        arrayOf(eventId.toString())
-      ) > 0
-    } catch (e: Exception) {
-      e.printStackTrace()
-      false
-    }
-  }
-  
-  /**
-   * 获取日历 ID，如果不存在，则添加一个日历账号
-   * @return 日历 ID
-   */
-  private fun checkOrAddCalendarAccounts(accountType: String): Long? {
-    val oldId = getCalendarAccount(accountType)
-    return oldId ?: addCalendarAccount(accountType)
-  }
-  
-  /**
-   * 检查是否存在日历账户，不存在时返回 null
-   * @param accountName 账号。掌邮里面以学号作为日历账号
-   * @param accountType 账户类型。默认是 [ACCOUNT_TYPE]，但你可以在 [add] 时传入其他的
-   *
-   * @return 返回 CALENDAR_ID，不存在时返回 null
-   */
-  fun getCalendarAccount(accountName: String = getAccountName(), accountType: String = ACCOUNT_TYPE): Long? {
-    if (!checkPermission()) return null
-    return try {
-      context.contentResolver.query(
-        Calendars.CONTENT_URI,
-        arrayOf( // 这个是查询结果只展示这几列
-          Calendars._ID,
-          Calendars.ACCOUNT_NAME,
-          Calendars.ACCOUNT_TYPE,
-        ),
-        // 下面这个是 WHERE 语句
-        "(${Calendars.ACCOUNT_NAME}=?) AND " +
-          "(${Calendars.ACCOUNT_TYPE}=?)",
-        arrayOf( // 这个是用于填充上面写的 ? 值
-          accountName,
-          accountType,
-        ),
-        null
-      ).use { cursor ->
-        if (cursor == null || cursor.count == 0) return null
-        cursor.moveToNext() // 必须调用，不然查询就报错
-        cursor.getColumnIndex(Calendars._ID).let {
-          if (it >= 0) cursor.getLong(it) else null
-        }
-      }
-    } catch (e: Exception) {
-      e.printStackTrace()
-      null
-    }
-  }
-  
-  /**
-   * 删除创建的日历账户
-   * @param CALENDAR_ID 可以使用 [getCalendarAccount] 获得
-   */
-  fun deleteCalendarAccount(CALENDAR_ID: Long): Boolean {
-    if (!checkPermission()) return false
-    return try {
-      context.contentResolver.delete(
-        Calendars.CONTENT_URI,
-        // 下面这个是 WHERE 语句
-        "${Calendars._ID}=?",
-        arrayOf( // 这个是用于填充上面写的 ? 值
-          CALENDAR_ID.toString()
-        )
-      ) > 0
-    } catch (e: Exception) {
-      e.printStackTrace()
-      false
-    }
-  }
-  
-  /**
-   * 添加一个日历账户
-   */
-  private fun addCalendarAccount(accountType: String): Long? {
-    if (!checkPermission()) return null
-    val value = ContentValues().apply {
-      // 日历路径来源。这个在手机日历账号管理中可以看到。比如：Xiaomi Calendar
-      put(Calendars.NAME, "红岩网校工作站")
-      put(Calendars.ACCOUNT_NAME, getAccountName())
-      // 账户类型。这个不会显示给用户
-      put(Calendars.ACCOUNT_TYPE, accountType)
-      // 给用户显示的该日历名称，一般与 accountType 保持一致。比如：小米日历
-      put(Calendars.CALENDAR_DISPLAY_NAME, accountType)
-      // 账户账号。日历中添加事件选择日历账户时可以看到，一般与 ACCOUNT_NAME 保持一致
-      put(Calendars.OWNER_ACCOUNT, getAccountName())
-      put(Calendars.VISIBLE, 1)
-      put(Calendars.CALENDAR_COLOR, Color.BLUE)
-      put(Calendars.CALENDAR_ACCESS_LEVEL, Calendars.CAL_ACCESS_OWNER)
-      put(Calendars.SYNC_EVENTS, 1)
-      put(Calendars.CALENDAR_TIME_ZONE, TimeZone.getDefault().id)
-      put(Calendars.CAN_ORGANIZER_RESPOND, 0)
-    }
-    
-    return context.contentResolver.insert(
-      Calendars.CONTENT_URI.buildUpon()
-        .appendQueryParameter(CALLER_IS_SYNCADAPTER, "true")
-        .appendQueryParameter(Calendars.ACCOUNT_NAME, getAccountName())
-        .appendQueryParameter(Calendars.ACCOUNT_TYPE, accountType)
-        .build(),
-      value
-    )?.lastPathSegment?.toLong()
-  }
-  
-  private fun checkPermission(): Boolean {
-    return context.checkSelfPermission(Manifest.permission.READ_CALENDAR) == PackageManager.PERMISSION_GRANTED
-      && context.checkSelfPermission(Manifest.permission.WRITE_CALENDAR) == PackageManager.PERMISSION_GRANTED
-  }
-  
-  /**
-   * 将时间戳根据 国际 RFC5545 规则装换为 DATE-TIME 类型
-   * RFC5545 规范中英对照文档：http://rfc2cn.com/rfc5545.html
-   * DATE-TIME 规则：3.3.5
-   */
-  private fun Calendar.toDateTime(): String {
-    val year = get(Calendar.YEAR)
-    val month = get(Calendar.MONTH) + 1
-    val date = get(Calendar.DATE)
-    val hour = get(Calendar.HOUR_OF_DAY)
-    val minute = get(Calendar.MINUTE)
-    val second = get(Calendar.SECOND)
-    return "$year" +
-      "${if (month < 10) "0$month" else month}" +
-      "${if (date < 10) "0$date" else date}" +
-      "T" +
-      "${if (hour < 10) "0$hour" else hour}" +
-      "${if (minute < 10) "0$minute" else minute}" +
-      "${if (second < 10) "0$second" else second}"
-  }
+  ///////////////////////////////
+  //
+  //            Event
+  //
+  ///////////////////////////////
   
   sealed interface Event {
     val title: String
@@ -460,7 +574,7 @@ object PhoneCalendar {
     val bySetPos: List<Int> = emptyList(),
   ) : Event {
     enum class Freq { SECONDLY, MINUTELY, HOURLY, DAILY, WEEKLY, MONTHLY, YEARLY }
-    sealed class ByDay {
+    sealed class ByDay(val name: String) {
       /**
        * 用于表示在每月或每年的 “RRULE” 中特定日期的第 n 次出现。支持负数
        *
@@ -469,20 +583,20 @@ object PhoneCalendar {
        */
       abstract val num: Int
       
-      class MO(override val num: Int = 0) : ByDay()
-      class TU(override val num: Int = 0) : ByDay()
-      class WE(override val num: Int = 0) : ByDay()
-      class TH(override val num: Int = 0) : ByDay()
-      class FR(override val num: Int = 0) : ByDay()
-      class SA(override val num: Int = 0) : ByDay()
-      class SU(override val num: Int = 0) : ByDay()
+      class MO(override val num: Int = 0) : ByDay("MO")
+      class TU(override val num: Int = 0) : ByDay("TU")
+      class WE(override val num: Int = 0) : ByDay("WE")
+      class TH(override val num: Int = 0) : ByDay("TH")
+      class FR(override val num: Int = 0) : ByDay("FR")
+      class SA(override val num: Int = 0) : ByDay("SA")
+      class SU(override val num: Int = 0) : ByDay("SU")
       
       override fun toString(): String {
-        return if (num == 0) javaClass.simpleName else "$num" + javaClass.simpleName
+        return if (num == 0) name else "$num" + name
       }
     }
     
-    // 转变成 RRULE，请看：3.3.10、3.8.5.3
+    // 转变成 RRULE，请看：3.3.10 的限制
     internal fun toRRule(): String {
       return "FREQ=${freq.name};INTERVAL=$interval;" +
         (until?.toDateTime() ?: "") +

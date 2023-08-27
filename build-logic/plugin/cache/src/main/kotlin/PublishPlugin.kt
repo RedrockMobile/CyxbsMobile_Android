@@ -6,23 +6,37 @@ import org.gradle.api.artifacts.component.ProjectComponentSelector
 import org.gradle.api.publish.PublishingExtension
 import org.gradle.api.publish.maven.MavenPublication
 import org.gradle.kotlin.dsl.*
+import java.util.Locale
 
 
 /**
+ * 模块缓存是 985892345 写的，ZhiQiang Tu 进行了移动
+ *
  *@author ZhiQiang Tu
  *@time 2022/10/11  21:17
  *@signature There are no stars in the hills.
  *@mail  2623036785@qq.com
  */
+/*
+* todo 模块缓存插件存在一定缺陷，目前只是简单的比较一个模块的大小是否发生改变来决定缓存，
+*  但是存在上层模块未改变，但因为下层模块的改变导致缓存的上层模块出现问题。
+*  正确的配置应该是检查模块之间的依赖，对于下层模块的改变需要使所有上层模块都重新缓存。
+*  可以你参考这个 aar 缓存思路：https://www.bilibili.com/video/BV1MP411X7Xf/?spm_id_from=333.999.0.0
+*  目前掌邮可以使用单模块，也可以提高开发速度，模块缓存暂时关闭，等有缘人来完善 :)
+*  23/7/8 ——985892345
+* */
 
 class PublishPlugin : Plugin<Project> {
     override fun apply(target: Project) {
+        // 开启模块缓存的总开关
+        val isOpenModuleCache = false
+        if (!isOpenModuleCache) {
+            return
+        }
 
         with(target) {
 
             apply(plugin = "org.gradle.maven-publish")
-            // 开启模块缓存的总开关
-            var isOpenModuleCache = false
 
             if (plugins.hasPlugin("com.android.application")) {
                 extensions.configure<BaseAppModuleExtension> {
@@ -90,9 +104,12 @@ class PublishPlugin : Plugin<Project> {
                     }
                 }
             }
+            
+            val mavenName = cache.localMavenName.replaceFirstChar {
+                if (it.isLowerCase()) it.titlecase(Locale.getDefault()) else it.toString()
+            }
 
-            val publishTaskName =
-                "publishModuleCachePublicationTo${cache.localMavenName.capitalize()}Repository"
+            val publishTaskName = "publishModuleCachePublicationTo${mavenName}Repository"
 
             tasks.register("cacheToLocalMaven") {
                 group = "publishing"

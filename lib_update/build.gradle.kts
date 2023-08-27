@@ -14,3 +14,5 @@ dependencies {
     implementation(Network.`converter-gson`)
     implementation(Network.`adapter-rxjava3`)
 }
+
+useARouter()

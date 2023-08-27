@@ -172,6 +172,7 @@ class NotificationActivity : BaseViewModelActivity<NotificationViewModel>() {
             )
         )
         notification_home_vp2.setPageTransformer(ScaleInTransformer())
+        // 因为第一页有左滑删除，所以禁止 vp 滑动
         notification_home_vp2.isUserInputEnabled = false
 
         notification_home_vp2.registerOnPageChangeCallback(object :

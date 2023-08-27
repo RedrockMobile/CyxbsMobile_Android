@@ -95,9 +95,9 @@ class RollerViewActivity : BaseActivity() {
             override fun onReceivedTitle(view: WebView?, title: String) {
                 //拿到web的标题，并设置,可以判断是否使用后端下发的标题
                 if (title != "") {
-                    common_toolbar.init(title)
+                    common_toolbar.init(this@RollerViewActivity, title)
                 } else {
-                    intent.getStringExtra("Key")?.let { common_toolbar.init(it) }
+                    intent.getStringExtra("Key")?.let { common_toolbar.init(this@RollerViewActivity, title) }
                 }
                 super.onReceivedTitle(view, title)
             }

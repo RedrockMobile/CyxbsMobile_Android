@@ -236,10 +236,6 @@ interface ApiService {
     @POST("/user-secret/user/judge/origin")
     fun checkDefaultPassword(@Field("stu_num") stu_num: String): Observable<RedrockApiStatus>
 
-    //仿ping接口，用于检测magipoke系列接口状态
-    @GET("magipoke/ping")
-    fun pingMagipoke(): Observable<RedrockApiStatus>
-
     /**
      * 获取用户的动态、评论、获赞数
      */

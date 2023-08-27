@@ -12,6 +12,8 @@ import com.mredrock.cyxbs.affair.ui.adapter.data.AffairTimeData.Companion.DAY_AR
 import com.mredrock.cyxbs.affair.ui.adapter.data.AffairTimeData.Companion.LESSON_ARRAY
 import com.mredrock.cyxbs.affair.ui.dialog.base.RedRockBottomSheetDialog
 import com.mredrock.cyxbs.api.course.utils.getBeginLesson
+import com.mredrock.cyxbs.api.course.utils.getEndRow
+import com.mredrock.cyxbs.api.course.utils.getStartRow
 import com.mredrock.cyxbs.lib.utils.extensions.setOnSingleClickListener
 import com.mredrock.cyxbs.lib.utils.extensions.toast
 
@@ -21,7 +23,7 @@ import com.mredrock.cyxbs.lib.utils.extensions.toast
  * date: 2022/9/7
  * description:
  */
-class TimeSelectDialog(context: Context, callback: (timeData: AffairTimeData) -> Unit) :
+class TimeSelectDialog(context: Context, data: AffairTimeData? = null, callback: (timeData: AffairTimeData) -> Unit) :
   RedRockBottomSheetDialog(context) {
   var view: View = LayoutInflater.from(context).inflate(R.layout.affair_dialog_time_select, null)
   val weekWV: WheelView = view.findViewById(R.id.affair_wheel_view_week)
@@ -34,6 +36,12 @@ class TimeSelectDialog(context: Context, callback: (timeData: AffairTimeData) ->
     weekWV.data = DAY_ARRAY.toList()
     beginWV.data = LESSON_ARRAY.toList()
     endWV.data = LESSON_ARRAY.toList()
+  
+    if (data != null) {
+      weekWV.scrollTo(data.weekNum)
+      beginWV.scrollTo(getStartRow(data.beginLesson))
+      endWV.scrollTo(getEndRow(data.beginLesson, data.period))
+    }
 
     tvSure.setOnSingleClickListener {
       if (endWV.currentPosition < beginWV.currentPosition) {
@@ -43,7 +51,7 @@ class TimeSelectDialog(context: Context, callback: (timeData: AffairTimeData) ->
           AffairTimeData(
             weekWV.currentPosition,
             getBeginLesson(beginWV.currentPosition),
-            endWV.currentPosition - beginWV.currentPosition + 1
+            endWV.currentPosition - beginWV.currentPosition + 1,
           )
         )
         dismiss()

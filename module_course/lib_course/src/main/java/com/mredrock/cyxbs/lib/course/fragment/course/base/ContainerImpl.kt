@@ -5,10 +5,8 @@ import android.view.View
 import android.view.animation.AlphaAnimation
 import androidx.annotation.CallSuper
 import com.mredrock.cyxbs.lib.course.fragment.course.expose.container.ICourseContainer
-import com.mredrock.cyxbs.lib.course.fragment.course.expose.wrapper.ICourseWrapper
 import com.mredrock.cyxbs.lib.course.internal.item.IItem
 import com.mredrock.cyxbs.lib.course.internal.item.IItemContainer
-import com.mredrock.cyxbs.lib.course.internal.view.course.ICourseViewGroup
 import com.mredrock.cyxbs.lib.course.item.affair.IAffairItem
 import com.mredrock.cyxbs.lib.course.item.lesson.ILessonItem
 import com.mredrock.cyxbs.lib.course.utils.forEachInline
@@ -28,14 +26,10 @@ abstract class ContainerImpl : AbstractCourseBaseFragment(), ICourseContainer {
   
   init {
     // 回收 item，解决 Fragment 与 View 生命周期不一致问题
-    addCourseLifecycleObservable(
-      object : ICourseWrapper.CourseLifecycleObserver {
-        override fun onDestroyCourse(course: ICourseViewGroup) {
-          mLessons.clear()
-          mAffairs.clear()
-        }
-      }
-    )
+    doOnCourseDestroy {
+      mLessons.clear()
+      mAffairs.clear()
+    }
   }
   
   final override fun addLesson(lesson: ILessonItem) {

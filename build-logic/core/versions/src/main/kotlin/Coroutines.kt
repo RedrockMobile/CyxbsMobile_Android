@@ -12,7 +12,7 @@ import org.gradle.kotlin.dsl.dependencies
 @Suppress("MemberVisibilityCanBePrivate", "ObjectPropertyName", "SpellCheckingInspection")
 object Coroutines {
   // https://developer.android.com/kotlin/coroutines
-  const val coroutines_version = "1.6.4"
+  const val coroutines_version = "1.7.3"
   
   const val `coroutines-android` = "org.jetbrains.kotlinx:kotlinx-coroutines-android:$coroutines_version"
   

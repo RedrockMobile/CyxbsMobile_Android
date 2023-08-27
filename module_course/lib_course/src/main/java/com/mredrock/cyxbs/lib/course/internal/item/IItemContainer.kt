@@ -3,20 +3,35 @@ package com.mredrock.cyxbs.lib.course.internal.item
 import android.view.View
 
 /**
- * ...
+ * [IItem] 的容器接口
  *
  * @author 985892345 (Guo Xiangrui)
  * @email guo985892345@foxmail.com
  * @date 2022/8/25 16:08
  */
 interface IItemContainer {
+  
   /**
    * 寻找对应坐标的 [IItem]
+   *
+   * ## 注意
+   * - 如果是正在被 [IItemInterceptor] 拦截的 item，则可能返回 null
+   */
+  fun findItemUnderByXY(x: Int, y: Int): IItem?
+  
+  /**
+   * 寻找对应坐标的 [IItem] 和 View
+   *
+   * ## 注意
+   * - 如果是正在被 [IItemInterceptor] 拦截的 item，则可能返回 null
    */
   fun findPairUnderByXY(x: Int, y: Int): Pair<IItem, View>?
   
   /**
-   * 通过自定义筛选器查找 [IItem]
+   * 通过自定义筛选器查找 [IItem] 和 View
+   *
+   * ## 注意
+   * - 如果是正在被 [IItemInterceptor] 拦截的 item，则可能返回 null
    */
   fun findPairUnderByFilter(filter: IItem.(View) -> Boolean): Pair<IItem, View>?
   
@@ -59,9 +74,9 @@ interface IItemContainer {
   fun addItemExistListener(l: OnItemExistListener)
   
   /**
-   * 发送一个 Runnable 延迟到下一个事件序列中删除监听
+   * 删除监听
    */
-  fun postRemoveItemExistListener(l: OnItemExistListener)
+  fun removeItemExistListener(l: OnItemExistListener)
   
   /**
    * 添加 [IItem] 和移除 [IItem] 的拦截器

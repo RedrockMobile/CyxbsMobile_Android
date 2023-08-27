@@ -14,3 +14,5 @@ dependLottie()
 dependRxjava()
 dependNetwork()
 dependGlide()
+
+useARouter()

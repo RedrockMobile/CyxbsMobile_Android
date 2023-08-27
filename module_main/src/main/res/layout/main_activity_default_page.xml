@@ -34,7 +34,7 @@
         android:layout_marginTop="16dp"
         android:text="服务升级ing...敬请期待"
         android:textSize="12sp"
-        android:textColor="@color/common_level_one_font_color"
+        android:textColor="@color/config_level_one_font_color"
         app:layout_constraintEnd_toEndOf="@+id/main_iv_default_page"
         app:layout_constraintStart_toStartOf="@+id/main_iv_default_page"
         app:layout_constraintTop_toBottomOf="@+id/main_iv_default_page" />

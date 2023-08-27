@@ -7,16 +7,21 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.view.animation.OvershootInterpolator
+import android.widget.FrameLayout
+import androidx.appcompat.widget.AppCompatEditText
+import androidx.appcompat.widget.AppCompatImageView
+import androidx.appcompat.widget.AppCompatTextView
 import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import com.cyxbsmobile_single.module_todo.R
 import com.cyxbsmobile_single.module_todo.adapter.DoubleListFoldRvAdapter.ShowType.THREE
+import com.cyxbsmobile_single.module_todo.component.CheckLineView
 import com.cyxbsmobile_single.module_todo.ui.activity.TodoDetailActivity
 import com.cyxbsmobile_single.module_todo.viewmodel.TodoViewModel
 import com.mredrock.cyxbs.common.ui.BaseFeedFragment
 import com.mredrock.cyxbs.common.utils.LogUtils
 import com.mredrock.cyxbs.common.utils.extensions.setOnSingleClickListener
-import kotlinx.android.synthetic.main.todo_fragment_feed.view.*
-import kotlinx.android.synthetic.main.todo_rv_item_todo.view.*
+
 
 /**
  * Author: RayleighZ
@@ -47,6 +52,8 @@ class TodoFeedAdapter(private val todoViewModel: TodoViewModel, private val acti
             if (todoViewModel.uncheckTodoList.isNullOrEmpty()) {
                 changeToEmpty()
             } else {
+                val todo_rv_todo_list = findViewById<RecyclerView>(R.id.todo_rv_todo_list)
+                val todo_tv_feed_empty_notify = findViewById<AppCompatTextView>(R.id.todo_tv_feed_empty_notify)
                 todo_rv_todo_list.visibility = View.VISIBLE
                 todo_tv_feed_empty_notify.visibility = View.GONE
                 //这里可以保证，viewModel和adapter的list是同一个引用，可以保证操作的同步性
@@ -59,18 +66,19 @@ class TodoFeedAdapter(private val todoViewModel: TodoViewModel, private val acti
                     //此处不可能出现title，但为了稳一波，还是加上了判断
                     if (viewType == DoubleListFoldRvAdapter.TODO) {
                         view.apply {
-                            todo_fl_todo_back.setOnClickListener {
+                            findViewById<FrameLayout>(R.id.todo_fl_todo_back).setOnClickListener {
                                 wrapper.todo?.let {
                                     TodoDetailActivity.startActivity(it, context)
                                 }
                             }
 
-                            todo_tv_todo_title.setOnClickListener {
+                            findViewById<AppCompatEditText>(R.id.todo_tv_todo_title).setOnClickListener {
                                 wrapper.todo?.let {
                                     TodoDetailActivity.startActivity(it, context)
                                 }
                             }
-
+                            val todo_iv_todo_item = findViewById<CheckLineView>(R.id.todo_iv_todo_item)
+                            val todo_iv_check = findViewById<AppCompatImageView>(R.id.todo_iv_check)
                             todo_iv_todo_item.setOnSingleClickListener {
                                 todo_iv_check.visibility = View.VISIBLE
                                 checkImageBoomAnime.addUpdateListener {
@@ -98,8 +106,8 @@ class TodoFeedAdapter(private val todoViewModel: TodoViewModel, private val acti
     //转换为没有代办的情况
     private fun changeToEmpty() {
         feedView.apply {
-            todo_rv_todo_list.visibility = View.GONE
-            todo_tv_feed_empty_notify.visibility = View.VISIBLE
+            findViewById<RecyclerView>(R.id.todo_rv_todo_list).visibility = View.GONE
+            findViewById<AppCompatTextView>(R.id.todo_tv_feed_empty_notify).visibility = View.VISIBLE
         }
     }
 }
