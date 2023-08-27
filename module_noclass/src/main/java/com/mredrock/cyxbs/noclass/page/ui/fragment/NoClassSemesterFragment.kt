@@ -38,6 +38,7 @@ class NoClassSemesterFragment : NoClassPageFragment() {
   
   override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
     super.onViewCreated(view, savedInstanceState)
+    initCreateAffair()
     initToday()
     initObserve()
     addLessons(mNoClassSpareTime)

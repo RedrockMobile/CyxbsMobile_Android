@@ -1,9 +1,16 @@
 package com.mredrock.cyxbs.noclass.page.ui.fragment
 
+
 import com.mredrock.cyxbs.lib.course.fragment.page.CoursePageFragment
+import com.mredrock.cyxbs.lib.course.helper.affair.CreateAffairDispatcher
+import com.mredrock.cyxbs.lib.course.helper.affair.expose.ICreateAffairConfig
+import com.mredrock.cyxbs.lib.course.helper.affair.expose.ITouchAffairItem
+import com.mredrock.cyxbs.lib.course.internal.view.course.ICourseViewGroup
 import com.mredrock.cyxbs.noclass.bean.NoClassSpareTime
 import com.mredrock.cyxbs.noclass.page.course.NoClassLesson
 import com.mredrock.cyxbs.noclass.page.course.NoClassLessonData
+import com.mredrock.cyxbs.noclass.page.course.NoClassTouchAffairItem
+import com.ndhzs.netlayout.touch.multiple.event.IPointerEvent
 
 /**
  *
@@ -17,12 +24,12 @@ import com.mredrock.cyxbs.noclass.page.course.NoClassLessonData
  * @Description:
  */
 abstract class NoClassPageFragment: CoursePageFragment() {
-  
+
   private lateinit var mNameMap : HashMap<String,String>   //学号和姓名的映射表
   private lateinit var mNoClassSpareTime : NoClassSpareTime
   // 第几个星期，默认为0，也就是整个学期的课表
   protected open val mWeek : Int = 0
-  
+
   /**
    * 添加课程
    */
@@ -34,7 +41,7 @@ abstract class NoClassPageFragment: CoursePageFragment() {
       addLessonsByLine(lineSpareTime, it)
     }
   }
-  
+
   /**
    * 添加每一竖行的课程
    *
@@ -43,12 +50,10 @@ abstract class NoClassPageFragment: CoursePageFragment() {
    */
   private fun addLessonsByLine(lineTime: NoClassSpareTime.SpareLineTime, line: Int){
     addLessonAm(lineTime,line)
-    addLessonNoon(line)
     addLessonPm(lineTime,line)
-    addLessonDusk(line)
     addLessonNight(lineTime,line)
   }
-  
+
   private fun addLessonAm(lineTime: NoClassSpareTime.SpareLineTime,line : Int) {
     val week = line + 1  //周几
     val id1 = lineTime.SpareItem[1].spareId   //每一个格子空闲的所有学号
@@ -58,9 +63,7 @@ abstract class NoClassPageFragment: CoursePageFragment() {
     addLessonByJudge(0,week,id1, id2)
     addLessonByJudge(2,week,id3, id4)
   }
-  private fun addLessonNoon(line: Int){
-    addLesson(getFullStuLesson(4,line+1))
-  }
+
   private fun addLessonPm(lineTime: NoClassSpareTime.SpareLineTime, line: Int){
     val week = line + 1
     val id1 = lineTime.SpareItem[5].spareId
@@ -69,9 +72,6 @@ abstract class NoClassPageFragment: CoursePageFragment() {
     val id4 = lineTime.SpareItem[8].spareId
     addLessonByJudge(5,week,id1, id2)
     addLessonByJudge(7,week,id3, id4)
-  }
-  private fun addLessonDusk(line: Int){
-    addLesson(getFullStuLesson(9,line+1))
   }
   private fun addLessonNight(lineTime: NoClassSpareTime.SpareLineTime, line: Int){
     val week = line + 1
@@ -82,7 +82,7 @@ abstract class NoClassPageFragment: CoursePageFragment() {
     addLessonByJudge(10,week,id1, id2)
     addLessonByJudge(12,week,id3, id4)
   }
-  
+
   /**
    * 在两个区间中通过添加没课状态
    * 如某一行[0,1]中通过判断0的数据和1的数据
@@ -94,32 +94,26 @@ abstract class NoClassPageFragment: CoursePageFragment() {
     id1: List<String>,
     id2: List<String>,
   ){
-    // 空闲人员的id的列表
-    if (id1 == id2 && id1.size != mNameMap.size){
-      // 也就是有人在忙
-      addLesson(getLesson(begin,week,2,id1))
-    }else{
-      addLesson(getLesson(begin,week,1,id1))
-      addLesson(getLesson(begin+1,week,1,id2))
+    val isId1Busy = id1.size != mNameMap.size
+    val isId2Busy = id2.size != mNameMap.size
+
+    if (id1 == id2) {
+      if (isId1Busy) {
+        addLesson(getLesson(begin, week, 2, id1))
+      }
+    } else {
+      if (isId1Busy) {
+        addLesson(getLesson(begin, week, 1, id1))
+      }
+      if (isId2Busy) {
+        addLesson(getLesson(begin + 1, week, 1, id2))
+      }
     }
   }
-  
-  /**
-   * 获得满员的课
-   */
-  private fun getFullStuLesson(
-    begin: Int,
-    week: Int,
-  ) : NoClassLesson{
-    val list = mNameMap.map{
-      it.key
-    }
-    return getLesson(begin,week,1,list)
-  }
-  
+
   private fun getLesson(
     begin: Int,
-    week: Int,
+    week: Int,  //周几
     length : Int,
     gatheringIdList: List<String>,  //空闲的id
   ) : NoClassLesson{
@@ -143,6 +137,24 @@ abstract class NoClassPageFragment: CoursePageFragment() {
     }
     return "${mNameMap.size - this.size}人\n忙碌"
   }
-  
-  
+
+  /**
+   * 点击空白处
+   */
+  protected fun initCreateAffair() {
+    val dispatcher = CreateAffairDispatcher(
+      this,
+      object : ICreateAffairConfig {
+        override fun createTouchAffairItem(
+          course: ICourseViewGroup,
+          event: IPointerEvent
+        ): ITouchAffairItem {
+          return NoClassTouchAffairItem(course.getContext(),mNameMap,mWeek) // 支持长按移动 item 的 ITouchAffairItem
+        }
+      }
+    )
+    course.addPointerDispatcher(dispatcher)
+  }
+
+
 }

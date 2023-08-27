@@ -44,6 +44,7 @@ class NoClassWeekFragment : NoClassPageFragment(){
   
   override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
     super.onViewCreated(view, savedInstanceState)
+    initCreateAffair()
     setWeekNum()
     addLessons(mNoClassSpareTime)
     initObserve()
