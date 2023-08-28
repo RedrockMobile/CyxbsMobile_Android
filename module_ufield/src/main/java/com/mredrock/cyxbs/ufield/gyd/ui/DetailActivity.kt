@@ -95,9 +95,7 @@ class DetailActivity : BaseActivity() {
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
 
         ivMap.setOnClickListener {
-            ServiceManager.activity(DISCOVER_MAP) {
-                withString(COURSE_POS_TO_MAP, "风雨操场")
-            }
+            ServiceManager.activity(DISCOVER_MAP)
         }
 
         viewModel.detailData.observe(this) {
