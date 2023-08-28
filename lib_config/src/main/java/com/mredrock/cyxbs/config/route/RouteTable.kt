@@ -20,6 +20,7 @@ const val DEFAULT_PAGE = "/main/default"
 const val DEFAULT_FRAGMENT_PAGE = "/main/default2"
 
 const val COURSE_ENTRY = "/course/entry"
+const val FAIRGROUND_ENTRY="/fairground/entry"
 const val QA_ENTRY = "/qa/entry"
 const val DISCOVER_ENTRY = "/discover/entry"
 const val MINE_ENTRY = "/mine/entry"
