@@ -30,7 +30,7 @@ class SearchAllDialogViewModel : BaseViewModel(){
                 ) to true
             )
         }.safeSubscribeBy {
-            _addMembers.postValue(addSet.map { it.id }.toSet() to it.isSuccess())
+            _addMembers.postValue(addSet.map { stu -> stu.id }.toSet() to it.isSuccess())
         }
 
     }

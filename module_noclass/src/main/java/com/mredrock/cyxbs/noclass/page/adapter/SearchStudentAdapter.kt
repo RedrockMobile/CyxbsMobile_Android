@@ -22,7 +22,7 @@ import com.mredrock.cyxbs.noclass.bean.Student
  * @Version:        1.0
  * @Description:    查找学生RV的adapter
  */
-class SearchStudentAdapter() : ListAdapter<Student,SearchStudentAdapter.VH>(studentDiffUtil){
+class SearchStudentAdapter : ListAdapter<Student,SearchStudentAdapter.VH>(studentDiffUtil){
  
   companion object{
     private val studentDiffUtil : DiffUtil.ItemCallback<Student> = object : DiffUtil.ItemCallback<Student>(){
@@ -45,10 +45,12 @@ class SearchStudentAdapter() : ListAdapter<Student,SearchStudentAdapter.VH>(stud
   inner class VH(itemView : View) : RecyclerView.ViewHolder(itemView){
     val tvName: TextView = itemView.findViewById(R.id.noclass_tv_student_name)
     val tvNum: TextView = itemView.findViewById(R.id.noclass_tv_student_id)
-    private val btnAdd = itemView.findViewById<ImageView>(R.id.noclass_iv_student_add).apply {
-      setOnClickListener {
-        val student = getItem(bindingAdapterPosition)
-        onAddClick?.invoke(student)
+    init {
+      itemView.findViewById<ImageView>(R.id.noclass_iv_student_add).apply {
+        setOnClickListener {
+          val student = getItem(bindingAdapterPosition)
+          onAddClick?.invoke(student)
+        }
       }
     }
   }

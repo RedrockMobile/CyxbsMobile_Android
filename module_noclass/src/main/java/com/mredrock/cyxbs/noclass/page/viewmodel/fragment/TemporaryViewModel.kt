@@ -4,7 +4,6 @@ import android.util.Log
 import androidx.lifecycle.MutableLiveData
 import com.mredrock.cyxbs.lib.base.ui.BaseViewModel
 import com.mredrock.cyxbs.lib.utils.network.ApiWrapper
-import com.mredrock.cyxbs.lib.utils.network.mapOrInterceptException
 import com.mredrock.cyxbs.noclass.bean.Cls
 import com.mredrock.cyxbs.noclass.bean.NoClassGroup
 import com.mredrock.cyxbs.noclass.bean.NoClassTemporarySearch
@@ -28,7 +27,7 @@ class TemporaryViewModel : BaseViewModel() {
     }
 
     //下面是测试数据
-    val noClassTemporarySearch = NoClassTemporarySearch(
+    private val noClassTemporarySearch = NoClassTemporarySearch(
         types = listOf(
 //            "学生",
 //                            "班级",

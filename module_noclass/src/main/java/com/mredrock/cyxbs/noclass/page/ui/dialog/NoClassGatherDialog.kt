@@ -44,7 +44,16 @@ class NoClassGatherDialog (
   private lateinit var mIndicator : MyVpIndicatorView
 
   private var indicatorNum : Int = 1
-  
+
+  /**
+   * 点击空白处，取消当前dialog之后回调的方法
+   */
+  private var mClickBlankCancel : (() -> Unit)? = null
+
+  fun setClickBlankCancel(mClickBlankCancel : () -> Unit){
+    this.mClickBlankCancel = mClickBlankCancel
+  }
+
   override fun onCreate(savedInstanceState: Bundle?) {
     super.onCreate(savedInstanceState)
     setStyle(STYLE_NORMAL, R.style.noclass_sheet_dialog_style)
@@ -116,5 +125,6 @@ class NoClassGatherDialog (
     super.onDestroy()
     Log.d("lx", "onDestroy: ")
     mParentViewModel.setBusyNameList(listOf())
+    mClickBlankCancel?.invoke()
   }
 }

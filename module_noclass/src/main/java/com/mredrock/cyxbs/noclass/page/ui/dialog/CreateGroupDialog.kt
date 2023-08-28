@@ -1,5 +1,6 @@
 package com.mredrock.cyxbs.noclass.page.ui.dialog
 
+import android.annotation.SuppressLint
 import android.app.Dialog
 import android.os.Bundle
 import android.view.Gravity
@@ -33,7 +34,7 @@ import com.mredrock.cyxbs.noclass.util.startShake
  *
  */
 class CreateGroupDialog(
-    val afterCreate: (() -> Unit)? = null
+    private val afterCreate: (() -> Unit)? = null
 ) : BottomSheetDialogFragment() {
 
     private val mViewModel by viewModels<CreateGroupViewModel>()
@@ -54,11 +55,6 @@ class CreateGroupDialog(
     private lateinit var mUserId: String
 
     /**
-     * 创建分组的名称
-     */
-    private var mGroupName: String? = null
-
-    /**
      * 输入错误的隐藏文字
      */
     private lateinit var mTvHint: TextView
@@ -77,17 +73,21 @@ class CreateGroupDialog(
     private fun initObserve() {
         // 上传分组的观察者
         mViewModel.isCreateSuccess.observe(this) {
-            if (it.id == -1) {
-                toast("似乎出现了什么问题呢,请稍后再试")
-            } else if (it.id == -2) {
-                mTvHint.text = "和已有分组重名，再想想吧"
-                mTvHint.visibility = View.VISIBLE
-                createUndone(mTvHint)
-            } else {
-                toast("创建成功")
-                // 唤醒传进来的创建完成之后的方法
-                afterCreate?.invoke()
-                dialog?.cancel()
+            when (it.id) {
+                -1 -> {
+                    toast("似乎出现了什么问题呢,请稍后再试")
+                }
+                -2 -> {
+                    mTvHint.text = "和已有分组重名，再想想吧"
+                    mTvHint.visibility = View.VISIBLE
+                    createUndone(mTvHint)
+                }
+                else -> {
+                    toast("创建成功")
+                    // 唤醒传进来的创建完成之后的方法
+                    afterCreate?.invoke()
+                    dialog?.cancel()
+                }
             }
         }
     }
@@ -109,6 +109,7 @@ class CreateGroupDialog(
         }
     }
 
+    @SuppressLint("SetTextI18n")
     private fun initView(dialog: Dialog) {
         //分组名称textview
         val tvName = dialog.findViewById<TextView>(R.id.tv_noclass_create_group_name)
@@ -127,24 +128,28 @@ class CreateGroupDialog(
 
         //TextWatcher监听
         etName.addTextChangedListener(
-            onTextChanged = { s, _, before, _ ->
-                if (s?.length == 0) {
-                    etName.gravity = Gravity.NO_GRAVITY
-                    tvName.visibility = View.VISIBLE
-                    mTvHint.text = "请输入你的分组名称"
-                    mTvHint.visibility = View.VISIBLE
-                } else if (s?.length == 10) {
-                    etName.gravity = Gravity.CENTER
-                    tvName.visibility = View.GONE
-                    mTvHint.postDelayed(3000) {
+            onTextChanged = { s, _, _, _ ->
+                when (s?.length) {
+                    0 -> {
+                        etName.gravity = Gravity.NO_GRAVITY
+                        tvName.visibility = View.VISIBLE
+                        mTvHint.text = "请输入你的分组名称"
+                        mTvHint.visibility = View.VISIBLE
+                    }
+                    10 -> {
+                        etName.gravity = Gravity.CENTER
+                        tvName.visibility = View.GONE
+                        mTvHint.postDelayed(3000) {
+                            mTvHint.visibility = View.INVISIBLE
+                        }
+                        mTvHint.text = "分组名称不能超过10个字符"
+                        mTvHint.visibility = View.VISIBLE
+                    }
+                    else -> {
+                        etName.gravity = Gravity.CENTER
+                        tvName.visibility = View.GONE
                         mTvHint.visibility = View.INVISIBLE
                     }
-                    mTvHint.text = "分组名称不能超过10个字符"
-                    mTvHint.visibility = View.VISIBLE
-                } else {
-                    etName.gravity = Gravity.CENTER
-                    tvName.visibility = View.GONE
-                    mTvHint.visibility = View.INVISIBLE
                 }
             }
         )

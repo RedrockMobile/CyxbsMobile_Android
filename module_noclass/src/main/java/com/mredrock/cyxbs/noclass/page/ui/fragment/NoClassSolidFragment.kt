@@ -129,7 +129,7 @@ class NoClassSolidFragment : BaseFragment(R.layout.noclass_fragment_solid) {
     private fun initClickCreate() {
         mBtnCreate.setOnClickListener {
             //弹出创建分组的弹窗
-            CreateGroupDialog(){
+            CreateGroupDialog{
                 mParentViewModel.getAllGroup()
             }.show(childFragmentManager,"SolidCreateGroupDialog")
         }

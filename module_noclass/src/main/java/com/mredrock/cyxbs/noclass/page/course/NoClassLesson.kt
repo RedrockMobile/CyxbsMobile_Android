@@ -1,12 +1,8 @@
 package com.mredrock.cyxbs.noclass.page.course
 
-import android.animation.ValueAnimator
 import android.content.Context
-import android.os.Handler
-import android.os.Looper
 import android.util.Log
 import android.view.View
-import android.view.animation.LinearInterpolator
 import androidx.appcompat.app.AppCompatActivity
 import com.mredrock.cyxbs.api.affair.DateJson
 import com.mredrock.cyxbs.api.course.utils.getBeginLesson
@@ -105,12 +101,12 @@ class NoClassLesson(
               else -> "${beginLesson}-${beginLesson + duration - 1}"
             }
 
-            val textTime = "时间：${month} ${timeText} ${beginTime}-${endTime}"
+            val textTime = "时间：${month} $timeText ${beginTime}-${endTime}"
             val dateJson = DateJson(specialBeginLesson,data.weekNum,duration,mWeek)
-            Log.d("lx", "specialBeginLesson: = ${specialBeginLesson} ")
+            Log.d("lx", "specialBeginLesson: = $specialBeginLesson ")
             Log.d("lx", "data.weekNum: = ${data.weekNum} ")
-            Log.d("lx", "duration: = ${duration} ")
-            Log.d("lx", "mWeek: = ${mWeek} ")
+            Log.d("lx", "duration: = $duration ")
+            Log.d("lx", "mWeek: = $mWeek ")
             NoClassGatherDialog(dateJson,mNumNameIsSpare, textTime).show((context as AppCompatActivity).supportFragmentManager, "NoClassGatherDialog")
           }
         }
@@ -125,7 +121,6 @@ class NoClassLesson(
     private val mMoreSpareTextColor = R.color.noclass_course_more_spare_lesson_color.color
     private val mMoreBusyBg = R.color.noclass_course_more_busy_lesson_bg.color
     private val mMoreBusyTextColor = R.color.noclass_course_more_busy_lesson_color.color
-    private val mClickSpareBg = R.color.noclass_course_click_spare_lesson_bg.color
 
     private fun setColor(busyMode : BusyMode) {
       when (busyMode) {
@@ -153,19 +148,6 @@ class NoClassLesson(
     }
     enum class BusyMode{
       NAN,LESS,MORE,ALL
-    }
-
-    /**
-     * 设置颜色动画：专属定制setCardBackgroundColor
-     */
-    private fun setColorAnim(fromColor:Int,toColor : Int,time: Long) : ValueAnimator{
-      return ValueAnimator.ofArgb(fromColor,toColor).apply {
-        duration = time
-        interpolator = LinearInterpolator()
-        addUpdateListener {
-          setCardBackgroundColor(it.animatedValue as Int)
-        }
-      }
     }
   }
 

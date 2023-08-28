@@ -13,6 +13,7 @@ import android.widget.EditText
 import android.widget.FrameLayout
 import android.widget.ImageView
 import android.widget.TextView
+import androidx.activity.OnBackPressedCallback
 import androidx.activity.viewModels
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -103,6 +104,7 @@ class GroupDetailActivity : BaseActivity(){
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.noclass_activity_group_detail)
+        initBack()
         getList()
         initObserve()
         initRv()
@@ -110,6 +112,28 @@ class GroupDetailActivity : BaseActivity(){
         initEditText()
         initCourseContainer()
         initQuery()
+    }
+
+    /**
+     * 由于onBackPress已经废弃，所以改用OnBackPressedDispatcher
+     *
+     */
+    private fun initBack() {
+        val backCallBack = object : OnBackPressedCallback(true){
+            override fun handleOnBackPressed() {
+                if (mCourseBehavior.state == BottomSheetBehavior.STATE_EXPANDED) {
+                    mCourseBehavior.state = BottomSheetBehavior.STATE_HIDDEN
+                } else {
+                    setResult(RESULT_OK, Intent().apply {
+                        val noClassGroup = NoClassGroup(mCurrentNoclassGroup.id,mCurrentNoclassGroup.isTop,mAdapter.currentList,mCurrentNoclassGroup.name)
+                        putExtra("GroupDetailResult",noClassGroup)
+                    })
+                    finish()
+                }
+            }
+
+        }
+        onBackPressedDispatcher.addCallback(this, backCallBack)
     }
 
     /**
@@ -138,7 +162,7 @@ class GroupDetailActivity : BaseActivity(){
     private fun initObserve(){
         //观察搜索结果出来就弹窗
         var searchAllDialog: SearchAllDialog?
-        mViewModel.searchAll.observe(this){it ->
+        mViewModel.searchAll.observe(this){
             Log.d("lx", "searchResult: =${it}")
             if (it != null) {
                 searchAllDialog = SearchAllDialog(
@@ -203,7 +227,7 @@ class GroupDetailActivity : BaseActivity(){
         // 点击回退到主界面
         findViewById<ImageView>(R.id.iv_noclass_group_detail_return).apply {
             setOnClickListener {
-                onBackPressed()
+                finish()
             }
         }
     }
@@ -245,17 +269,5 @@ class GroupDetailActivity : BaseActivity(){
         (getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager).hideSoftInputFromWindow(currentFocus?.windowToken, InputMethodManager.HIDE_NOT_ALWAYS)
         mEditTextView.setText("")
         mViewModel.getSearchAllResult(content)
-    }
-
-    override fun onBackPressed() {
-        if (mCourseBehavior.state == BottomSheetBehavior.STATE_EXPANDED) {
-            mCourseBehavior.state = BottomSheetBehavior.STATE_HIDDEN
-        } else {
-            setResult(RESULT_OK, Intent().apply {
-                val noClassGroup = NoClassGroup(mCurrentNoclassGroup.id,mCurrentNoclassGroup.isTop,mAdapter.currentList,mCurrentNoclassGroup.name)
-                putExtra("GroupDetailResult",noClassGroup)
-            })
-            super.onBackPressed()
-        }
     }
 }

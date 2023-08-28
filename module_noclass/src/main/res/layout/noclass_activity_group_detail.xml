@@ -27,7 +27,8 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:paddingTop="3dp"
-                app:srcCompat="@drawable/noclass_ic_return" />
+                app:srcCompat="@drawable/noclass_ic_return"
+                android:importantForAccessibility="no" />
 
             <TextView
                 android:id="@+id/tv_noclass_detail_title"
@@ -37,7 +38,7 @@
                 android:text="组内管理"
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
-                tools:ignore="RtlSymmetry" />
+                tools:ignore="HardcodedText,RtlSymmetry" />
         </androidx.appcompat.widget.Toolbar>
 
         <EditText
@@ -60,7 +61,8 @@
             android:textColorHint="@color/noclass_hint_text_color_light"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/tb_noclass_group_detail" />
+            app:layout_constraintTop_toBottomOf="@+id/tb_noclass_group_detail"
+            tools:ignore="HardcodedText" />
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/rv_noclass_group_detail_container"

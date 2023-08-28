@@ -1,20 +1,14 @@
 package com.mredrock.cyxbs.affair.ui.viewmodel.fragment
 
-import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.viewModelScope
 import com.mredrock.cyxbs.affair.bean.NotificationResultBean
 import com.mredrock.cyxbs.affair.net.AffairApiService
 import com.mredrock.cyxbs.api.affair.NotificationBean
 import com.mredrock.cyxbs.lib.base.ui.BaseViewModel
-import com.mredrock.cyxbs.lib.utils.extensions.launchCatch
-import com.mredrock.cyxbs.lib.utils.network.ApiStatus
 import com.mredrock.cyxbs.lib.utils.network.mapOrInterceptException
 import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
 import io.reactivex.rxjava3.schedulers.Schedulers
-import kotlinx.coroutines.flow.MutableSharedFlow
-import kotlinx.coroutines.flow.asSharedFlow
 
 
 class NoClassAffairViewModel : BaseViewModel() {

@@ -17,8 +17,8 @@ import com.mredrock.cyxbs.noclass.page.ui.dialog.NoClassGatherDialog
 
 class NoClassTouchAffairItem(
     context: Context,
-    val nameMap: HashMap<String, String>,
-    val week: Int
+    private val nameMap: HashMap<String, String>,
+    private val week: Int
 ) : TouchAffairView(context) {
 
     init {
@@ -29,7 +29,6 @@ class NoClassTouchAffairItem(
     override fun cancelShow() {
         startAnimation(AlphaAnimation(1F, 0F).apply {
             duration = 500
-            startOffset = 1000
         })
         (parent as ViewGroup).removeView(this)
     }
@@ -45,7 +44,6 @@ class NoClassTouchAffairItem(
                 ) {
                     super.onAnimEnd(side, course, item, child)
                     // 这里取消的原因是slideExpandable的属性动画会和cancelShow的补间动画发生冲突
-                    cancelShow()
                     toastGatheringDialog()
                 }
             })
@@ -106,6 +104,8 @@ class NoClassTouchAffairItem(
             dateJson,
             mNumNameIsSpare,
             textTime
-        ).show((context as AppCompatActivity).supportFragmentManager, "NoClassGatherDialog")
+        ).apply {
+            setClickBlankCancel { cancelShow() }
+        }.show((context as AppCompatActivity).supportFragmentManager, "NoClassGatherDialog")
     }
 }

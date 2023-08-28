@@ -6,17 +6,11 @@ import androidx.lifecycle.MutableLiveData
 import com.mredrock.cyxbs.lib.base.ui.BaseViewModel
 import com.mredrock.cyxbs.lib.utils.network.ApiStatus
 import com.mredrock.cyxbs.lib.utils.network.ApiWrapper
-import com.mredrock.cyxbs.lib.utils.network.mapOrInterceptException
-import com.mredrock.cyxbs.noclass.bean.NoclassGroupId
 import com.mredrock.cyxbs.noclass.bean.Student
 import com.mredrock.cyxbs.noclass.page.repository.NoClassRepository
 import io.reactivex.rxjava3.core.Flowable
 
 class SolidViewModel : BaseViewModel() {
-
-    //是否创建成功，返回-1为创建失败，其它为成功
-    val isCreateSuccess: LiveData<NoclassGroupId> get() = _isCreateSuccess
-    private val _isCreateSuccess = MutableLiveData<NoclassGroupId>()
 
     //是否更新成功
     val isUpdateSuccess: LiveData<Pair<String, Boolean>> get() = _isUpdateSuccess
@@ -43,25 +37,6 @@ class SolidViewModel : BaseViewModel() {
             }
             .safeSubscribeBy {
                 _searchStudent.postValue(ApiWrapper(data,10000,"success"))
-            }
-    }
-
-    /**
-     * 上传分组
-     */
-    fun postNoclassGroup(
-        name: String,
-        stuNums: String,
-    ) {
-        NoClassRepository
-            .postNoclassGroup(name, stuNums)
-            .mapOrInterceptException {
-
-            }.doOnError {
-                _isCreateSuccess.postValue(NoclassGroupId(-1))
-                Log.e("ListGroupError", it.toString())
-            }.safeSubscribeBy {
-                _isCreateSuccess.postValue(it)
             }
     }
 
@@ -120,7 +95,7 @@ class SolidViewModel : BaseViewModel() {
                 add.mergeWith(delete)
             }else if (addStu == "" && deleteStu != ""){
                 delete.toFlowable()
-            }else if (addStu != "" && deleteStu == ""){
+            }else if (addStu != ""){
                 add.toFlowable()
             }else{
                 null

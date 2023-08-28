@@ -8,7 +8,7 @@ import android.view.View
 import android.widget.FrameLayout
 import android.widget.ImageView
 import android.widget.LinearLayout
-import android.widget.TextView
+import androidx.activity.OnBackPressedCallback
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.activity.viewModels
 import androidx.viewpager2.widget.ViewPager2
@@ -54,7 +54,7 @@ class NoClassActivity : BaseActivity() {
     /**
      * 返回图标
      */
-    private val mImgReturn : ImageView by R.id.iv_noclass_return.view()
+    private val mImgReturn: ImageView by R.id.iv_noclass_return.view()
 
     /**
      * 批量添加文字
@@ -111,6 +111,7 @@ class NoClassActivity : BaseActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.noclass_activity_no_class)
+        initBack()
         initObserve()
         initQueryEvent()
         initCourse()
@@ -119,12 +120,29 @@ class NoClassActivity : BaseActivity() {
         initClick()
     }
 
+
+    /**
+     * 由于onBackPress已经废弃，所以改用OnBackPressedDispatcher
+     */
+    private fun initBack() {
+        val backCallBack = object : OnBackPressedCallback(true) {
+            override fun handleOnBackPressed() {
+                if (mCourseSheetBehavior.state == BottomSheetBehavior.STATE_EXPANDED) {
+                    mCourseSheetBehavior.state = BottomSheetBehavior.STATE_HIDDEN
+                }else{
+                    finish()
+                }
+            }
+        }
+        onBackPressedDispatcher.addCallback(this, backCallBack)
+    }
+
     private fun initClick() {
         //批量添加的点击事件
         mTvBulkAdditions.setOnClickListener {
             startForResult.launch(
                 Intent(
-                    this@NoClassActivity,BatchAdditionActivity::class.java
+                    this@NoClassActivity, BatchAdditionActivity::class.java
                 )
             )
         }
@@ -143,7 +161,7 @@ class NoClassActivity : BaseActivity() {
             .add(NoClassSolidFragment::class.java)
         mViewPager.apply {
             adapter = mAdapter
-            isUserInputEnabled = false; //true:滑动，false：禁止滑动
+            isUserInputEnabled = false //true:滑动，false：禁止滑动
         }
     }
 
@@ -238,14 +256,6 @@ class NoClassActivity : BaseActivity() {
         mCourseViewModel.noclassData.observe(this) {
             mStuList = it[0]!!.mIdToNameMap.keys
             mCourseSheetBehavior.state = BottomSheetBehavior.STATE_EXPANDED
-        }
-    }
-
-    override fun onBackPressed() {
-        if (mCourseSheetBehavior.state == BottomSheetBehavior.STATE_EXPANDED) {
-            mCourseSheetBehavior.state = BottomSheetBehavior.STATE_HIDDEN
-        } else {
-            super.onBackPressed()
         }
     }
 

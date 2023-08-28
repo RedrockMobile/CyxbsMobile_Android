@@ -54,7 +54,7 @@ class NoClassSolidAdapter : ListAdapter<NoClassGroup, NoClassSolidAdapter.MyHold
     inner class MyHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         val tvGroupName: TextView = itemView.findViewById(R.id.tv_noclass_group_name)
         val tvGroupIsTop: TextView = itemView.findViewById(R.id.tv_noclass_group_top_name)
-        val tvGroupDelete: TextView = itemView.findViewById(R.id.tv_noclass_group_delete_item)
+        private val tvGroupDelete: TextView = itemView.findViewById(R.id.tv_noclass_group_delete_item)
         init {
             tvGroupName.setOnClickListener {
                 val item = getItem(bindingAdapterPosition)

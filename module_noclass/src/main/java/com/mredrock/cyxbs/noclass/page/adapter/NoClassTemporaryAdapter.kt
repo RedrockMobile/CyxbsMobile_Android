@@ -49,10 +49,12 @@ class NoClassTemporaryAdapter : ListAdapter<Student,NoClassTemporaryAdapter.VH>(
     inner class VH(itemView : View) : RecyclerView.ViewHolder(itemView){
         val tvName : TextView = itemView.findViewById(R.id.noclass_tv_member_name)
         val tvId : TextView = itemView.findViewById(R.id.noclass_tv_member_id)
-        val tvDelete : TextView = itemView.findViewById<TextView?>(R.id.noclass_item_tv_delete).apply {
-            setOnClickListener {
-                val stu = getItem(bindingAdapterPosition)
-                mOnItemDelete?.invoke(stu)
+        init {
+            itemView.findViewById<TextView?>(R.id.noclass_item_tv_delete).apply {
+                setOnClickListener {
+                    val stu = getItem(bindingAdapterPosition)
+                    mOnItemDelete?.invoke(stu)
+                }
             }
         }
     }
@@ -65,12 +67,6 @@ class NoClassTemporaryAdapter : ListAdapter<Student,NoClassTemporaryAdapter.VH>(
     override fun onBindViewHolder(holder: VH, position: Int) {
         holder.tvName.text = currentList[position].name
         holder.tvId.text = currentList[position].id
-    }
-    
-    fun addMember(stu : Student){
-        val list = currentList.toMutableList()
-        list.add(stu)
-        submitList(list)
     }
 
     fun deleteMember(stu : Student){

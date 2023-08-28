@@ -1,11 +1,7 @@
 package com.mredrock.cyxbs.noclass.page.ui.dialog
 
 import android.app.Dialog
-import android.content.Context
 import android.os.Bundle
-import android.util.Log
-import android.view.View
-import android.view.ViewTreeObserver
 import android.widget.Button
 import android.widget.SeekBar
 import android.widget.TextView
@@ -137,7 +133,7 @@ class AddToGroupDialog(
         })
 
         // 等待布局完成之后
-        mRv.addOnLayoutChangeListener { v, left, top, right, bottom, oldLeft, oldTop, oldRight, oldBottom ->
+        mRv.addOnLayoutChangeListener { _, _, _, _, _, _, _, _, _ ->
             if (mRv.width >= resources.displayMetrics.widthPixels){
                 mSb.visible()
             }

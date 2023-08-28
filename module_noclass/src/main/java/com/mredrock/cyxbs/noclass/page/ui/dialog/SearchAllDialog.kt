@@ -84,11 +84,11 @@ class SearchAllDialog(
             if (it.second) {
                 // 需要看看对应mWaitAdd的哪个
                 for (key in mWaitAdd.keys) {
-                    val stuNumSet = key.map { it.id }.toSet()
+                    val stuNumSet = key.map { stu -> stu.id }.toSet()
                     Log.d("lx", "stuNumSet=${stuNumSet} ")
                     if (it.first.containsAll(stuNumSet)) {
                         // 这个添加到组内管理界面
-                        Log.d("lx", "key = ${key} ")
+                        Log.d("lx", "key = $key ")
                         onClickGroupDetailAdd?.invoke(key.toList())
                         // 接下来判断当前dialog是否取消
                         if (searchResult.types.size == 2) {
@@ -104,7 +104,7 @@ class SearchAllDialog(
                                 if (mWaitAdd[key] == GROUP) {
                                     dismiss()
                                 } else if (mWaitAdd[key] == STUDENT) {
-                                    key.forEach { mAdapter.deleteStudent(it) }
+                                    key.forEach {stu -> mAdapter.deleteStudent(stu) }
                                 }
                             }
                         }

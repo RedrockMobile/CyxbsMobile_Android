@@ -4,17 +4,13 @@ import android.content.Context
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.GridLayout
 import android.widget.ImageView
 import android.widget.LinearLayout
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.mredrock.cyxbs.lib.utils.extensions.color
-import com.mredrock.cyxbs.lib.utils.extensions.invisible
-import com.mredrock.cyxbs.lib.utils.extensions.visible
 import com.mredrock.cyxbs.noclass.R
 import com.mredrock.cyxbs.noclass.bean.NoClassGroup
-import com.mredrock.cyxbs.noclass.widget.MyFlexLayout
 
 class NoClassAddToGroupAdapter(
     private val groupList: List<NoClassGroup>,
@@ -28,9 +24,9 @@ class NoClassAddToGroupAdapter(
     private val chooseGroup by lazy { ArrayList<NoClassGroup>() }
 
     inner class MyHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
-        val containerView = itemView.findViewById<LinearLayout>(R.id.noclass_item_add_to_group)
-        val mImg = itemView.findViewById<ImageView>(R.id.noclass_item_add_to_group_img)
-        val mTv = itemView.findViewById<TextView>(R.id.noclass_item_add_to_group_tv)
+        private val containerView: LinearLayout = itemView.findViewById(R.id.noclass_item_add_to_group)
+        private val mImg: ImageView = itemView.findViewById(R.id.noclass_item_add_to_group_img)
+        val mTv: TextView = itemView.findViewById(R.id.noclass_item_add_to_group_tv)
 
         init {
             containerView.setOnClickListener {
