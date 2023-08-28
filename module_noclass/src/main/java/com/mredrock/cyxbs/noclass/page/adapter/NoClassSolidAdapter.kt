@@ -112,12 +112,12 @@ class NoClassSolidAdapter : ListAdapter<NoClassGroup, NoClassSolidAdapter.MyHold
     fun addItemToOrder(item : NoClassGroup, tvIsGroup : TextView){
         val list = currentList.toMutableList()
         if (item.isTop){
-            tvIsGroup.text = "取消置顶"
+            tvIsGroup.text = "置顶"
             list.remove(item)
             //取消置顶就放到最后
             list.add(NoClassGroup(item.id,false,item.members,item.name))  //置顶效果
         }else{
-            tvIsGroup.text = "置顶"
+            tvIsGroup.text = "取消置顶"
             list.remove(item)
             //置顶就放到第一个
             list.add(0, NoClassGroup(item.id,true,item.members,item.name))  //置顶效果

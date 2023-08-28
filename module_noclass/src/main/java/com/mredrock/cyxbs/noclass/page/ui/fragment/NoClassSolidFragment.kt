@@ -157,9 +157,9 @@ class NoClassSolidFragment : BaseFragment(R.layout.noclass_fragment_solid) {
                     //置顶：加入缓冲区，更新云端置顶状态
                     Log.d("lx", "mWaitIsTop:${mWaitIsTop} ")
                     Log.d("lx", "noclassGroup:${noclassGroup} ")
-                    Log.d("lx", "tvIsTop ${tvIsTop}: ")
+                    Log.d("lx", "noclassGroup.isTop ${noclassGroup.isTop}: ")
                     mWaitIsTop[noclassGroup] = tvIsTop
-                    mViewModel.updateGroup(noclassGroup.id,noclassGroup.name,noclassGroup.isTop.toString())
+                    mViewModel.updateGroup(noclassGroup.id,noclassGroup.name,(!noclassGroup.isTop).toString())
                 }
             }
         }
