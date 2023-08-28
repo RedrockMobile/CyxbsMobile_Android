@@ -5,6 +5,7 @@ import androidx.fragment.app.FragmentActivity
 import androidx.viewpager2.adapter.FragmentStateAdapter
 import com.mredrock.cyxbs.config.route.DEFAULT_FRAGMENT_PAGE
 import com.mredrock.cyxbs.config.route.DISCOVER_ENTRY
+import com.mredrock.cyxbs.config.route.FAIRGROUND_ENTRY
 import com.mredrock.cyxbs.config.route.MINE_ENTRY
 import com.mredrock.cyxbs.config.route.QA_ENTRY
 import com.mredrock.cyxbs.lib.utils.service.ServiceManager
@@ -22,7 +23,7 @@ class MainAdapter(activity: FragmentActivity) : FragmentStateAdapter(activity) {
       /**
        * TODO 关闭服务 邮问
        */
-      1 -> ServiceManager.fragment(DEFAULT_FRAGMENT_PAGE)
+      1 -> ServiceManager.fragment(FAIRGROUND_ENTRY)
       2 -> ServiceManager.fragment(MINE_ENTRY)
       else -> error("??? 改了 getItemCount() 为什么不改这个 ?")
     }
