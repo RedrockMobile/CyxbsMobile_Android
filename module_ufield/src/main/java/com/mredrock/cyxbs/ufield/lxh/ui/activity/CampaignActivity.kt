@@ -11,7 +11,7 @@ import androidx.viewpager2.widget.ViewPager2
 import com.alibaba.android.arouter.facade.annotation.Route
 import com.google.android.material.tabs.TabLayout
 import com.google.android.material.tabs.TabLayoutMediator
-import com.mredrock.cyxbs.config.route.CAMPAIGN_CENTER
+import com.mredrock.cyxbs.config.route.UFIELD_CENTER
 import com.mredrock.cyxbs.lib.base.ui.BaseActivity
 import com.mredrock.cyxbs.lib.utils.adapter.FragmentVpAdapter
 import com.mredrock.cyxbs.lib.utils.extensions.setOnSingleClickListener
@@ -22,7 +22,7 @@ import com.mredrock.cyxbs.ufield.lxh.ui.fragment.PublishFragment
 import com.mredrock.cyxbs.ufield.lxh.ui.fragment.WatchFragment
 import com.mredrock.cyxbs.ufield.lxh.viewmodel.MessageViewModel
 import kotlin.properties.Delegates
-@Route(path = CAMPAIGN_CENTER)
+@Route(path = UFIELD_CENTER)
 class CampaignActivity : BaseActivity() {
 
 

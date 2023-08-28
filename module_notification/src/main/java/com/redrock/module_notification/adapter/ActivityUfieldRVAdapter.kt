@@ -1,5 +1,6 @@
 package com.redrock.module_notification.adapter
 
+import android.content.Intent
 import android.os.Build
 import android.view.LayoutInflater
 import android.view.View
@@ -9,16 +10,22 @@ import android.widget.LinearLayout
 import android.widget.TextView
 import androidx.annotation.RequiresApi
 import androidx.core.content.ContextCompat
+import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
+import com.alibaba.android.arouter.launcher.ARouter
+import com.mredrock.cyxbs.config.route.UFIELD_DETAIL
 import com.mredrock.cyxbs.lib.utils.extensions.setOnSingleClickListener
 import com.redrock.module_notification.R
 import com.redrock.module_notification.bean.UfieldMsgBean
 import com.redrock.module_notification.util.formatNumberToTime
 import com.redrock.module_notification.viewmodel.NotificationViewModel
 
-class ActivityUfieldRVAdapter(private var viewmodel: NotificationViewModel) :
+class ActivityUfieldRVAdapter(
+    private val context: Fragment,
+    private var viewmodel: NotificationViewModel
+) :
     ListAdapter<UfieldMsgBean, ActivityUfieldRVAdapter.ViewHolder>(
         object : DiffUtil.ItemCallback<UfieldMsgBean>() {
             override fun areContentsTheSame(
@@ -59,6 +66,14 @@ class ActivityUfieldRVAdapter(private var viewmodel: NotificationViewModel) :
             }
             clickDetail.setOnSingleClickListener {
                 viewmodel.changeUfieldMsgStatus(currentList[absoluteAdapterPosition].messageId)
+                getItem(absoluteAdapterPosition).run {
+                        ARouter.getInstance().build(UFIELD_DETAIL)
+                            .withInt(
+                                "actID",
+                                currentList[absoluteAdapterPosition].activityInfo.activityId
+                            )
+                            .navigation(context.activity?.application?.applicationContext)
+                }
             }
         }
     }

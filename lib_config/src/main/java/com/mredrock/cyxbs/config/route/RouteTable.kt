@@ -99,7 +99,9 @@ const val LOGIN_BIND_IDS="/login/bind_ids/entry"
 const val COURSE_POS_TO_MAP = "COURSE_POS_TO_MAP"
 
 //活动中心
-const val CAMPAIGN_CENTER="/campaign/entry"
+const val UFIELD_CENTER="/ufield/campaign/entry"
+//活动详情
+const val UFIELD_DETAIL="/ufield/detail/entry"
 
 
 

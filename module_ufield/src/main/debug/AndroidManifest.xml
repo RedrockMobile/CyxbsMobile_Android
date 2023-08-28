@@ -25,9 +25,6 @@
             android:name=".lyt.ui.UFieldActivity"
             android:exported="false" />
         <activity
-            android:name="com.yalantis.ucrop.UCropActivity"
-            android:screenOrientation="portrait" />
-        <activity
             android:name=".lxh.ui.activity.RankActivity"
             android:exported="false" />
         <activity
@@ -42,7 +39,6 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".lyt.ui.UFieldActivity" />
     </application>
 
 </manifest>

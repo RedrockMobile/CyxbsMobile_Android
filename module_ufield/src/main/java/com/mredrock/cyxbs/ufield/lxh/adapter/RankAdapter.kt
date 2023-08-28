@@ -1,11 +1,13 @@
 package com.mredrock.cyxbs.ufield.lxh.adapter
 
+import android.content.Intent
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.constraintlayout.widget.ConstraintLayout
+import androidx.core.content.ContextCompat.startActivity
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
@@ -13,6 +15,7 @@ import com.mredrock.cyxbs.lib.utils.extensions.setImageFromId
 import com.mredrock.cyxbs.lib.utils.extensions.setImageFromUrl
 import com.mredrock.cyxbs.lib.utils.extensions.setOnSingleClickListener
 import com.mredrock.cyxbs.ufield.R
+import com.mredrock.cyxbs.ufield.gyd.ui.DetailActivity
 import com.mredrock.cyxbs.ufield.lxh.bean.RankBean
 
 class RankAdapter : ListAdapter<RankBean, RankAdapter.ViewHolder>(
@@ -55,7 +58,9 @@ class RankAdapter : ListAdapter<RankBean, RankAdapter.ViewHolder>(
             }
             clClick.setOnSingleClickListener {
                 getItemId(absoluteAdapterPosition).run {
-
+                    val intent = Intent(view.context, DetailActivity::class.java)
+                    intent.putExtra("actID", currentList[absoluteAdapterPosition].activityId)
+                    startActivity(view.context,intent,null)
                 }
             }
 

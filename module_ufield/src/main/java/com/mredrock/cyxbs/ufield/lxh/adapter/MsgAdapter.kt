@@ -1,5 +1,6 @@
 package com.mredrock.cyxbs.ufield.lxh.adapter
 
+import android.content.Intent
 import android.os.Build
 import android.view.LayoutInflater
 import android.view.View
@@ -8,12 +9,14 @@ import android.widget.ImageView
 import android.widget.TextView
 import androidx.annotation.RequiresApi
 import androidx.cardview.widget.CardView
+import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.mredrock.cyxbs.lib.utils.extensions.setImageFromUrl
 import com.mredrock.cyxbs.lib.utils.extensions.setOnSingleClickListener
 import com.mredrock.cyxbs.ufield.R
+import com.mredrock.cyxbs.ufield.gyd.ui.DetailActivity
 import com.mredrock.cyxbs.ufield.lxh.bean.DetailMsg
 import com.mredrock.cyxbs.ufield.lxh.util.formatNumberToTime
 
@@ -51,7 +54,11 @@ class MsgAdapter : ListAdapter<DetailMsg, MsgAdapter.ViewHolder>(
             }
             mtClick.setOnSingleClickListener {
                 getItemId(absoluteAdapterPosition).run {
-
+                    getItemId(absoluteAdapterPosition).run {
+                        val intent = Intent(view.context, DetailActivity::class.java)
+                        intent.putExtra("actID", currentList[absoluteAdapterPosition].activityId)
+                        ContextCompat.startActivity(view.context, intent, null)
+                    }
                 }
             }
         }

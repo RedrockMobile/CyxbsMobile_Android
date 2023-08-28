@@ -56,7 +56,7 @@ class UfieldNotificationFragment : BaseFragment() {
 
 
     private fun initRV() {
-        adapter = ActivityUfieldRVAdapter(viewModel)
+        adapter = ActivityUfieldRVAdapter(this,viewModel)
         notification_rv_act.adapter = adapter
         //动画效果
         val resId = R.anim.notification_layout_animation_fall_down

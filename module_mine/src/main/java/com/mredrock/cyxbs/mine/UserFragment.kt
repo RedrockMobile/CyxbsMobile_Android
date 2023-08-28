@@ -189,7 +189,7 @@ class UserFragment : BaseFragment() {
             }
             mine_user_iv_center_activity.setOnSingleClickListener {
                 doIfLogin {
-                    ARouter.getInstance().build(CAMPAIGN_CENTER).navigation()
+                    ARouter.getInstance().build(UFIELD_CENTER).navigation()
                 }
             }
 

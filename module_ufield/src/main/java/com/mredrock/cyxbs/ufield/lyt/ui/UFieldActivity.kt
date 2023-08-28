@@ -13,6 +13,7 @@ import com.mredrock.cyxbs.lib.base.ui.BaseActivity
 import com.mredrock.cyxbs.lib.utils.adapter.FragmentVpAdapter
 import com.mredrock.cyxbs.ufield.R
 import com.mredrock.cyxbs.ufield.gyd.ui.CreateActivity
+import com.mredrock.cyxbs.ufield.lxh.ui.activity.RankActivity
 import com.mredrock.cyxbs.ufield.lyt.fragment.ufieldfragment.AllFragment
 import com.mredrock.cyxbs.ufield.lyt.fragment.ufieldfragment.CultureFragment
 import com.mredrock.cyxbs.ufield.lyt.fragment.ufieldfragment.EducationFragment
@@ -128,7 +129,7 @@ class UFieldActivity : BaseActivity() {
             startActivity(Intent(this, CreateActivity::class.java))
         }
         mCup.setOnClickListener {
-
+            startActivity(Intent(this, RankActivity::class.java))
         }
 
     }

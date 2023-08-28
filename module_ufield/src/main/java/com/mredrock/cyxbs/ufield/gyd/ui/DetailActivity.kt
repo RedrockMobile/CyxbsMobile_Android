@@ -13,8 +13,10 @@ import android.widget.ImageView
 import android.widget.TextView
 import androidx.appcompat.widget.Toolbar
 import androidx.core.content.ContextCompat
+import com.alibaba.android.arouter.facade.annotation.Route
 import com.mredrock.cyxbs.config.route.COURSE_POS_TO_MAP
 import com.mredrock.cyxbs.config.route.DISCOVER_MAP
+import com.mredrock.cyxbs.config.route.UFIELD_DETAIL
 import com.mredrock.cyxbs.lib.base.ui.BaseActivity
 import com.mredrock.cyxbs.lib.base.ui.viewModelBy
 import com.mredrock.cyxbs.lib.utils.extensions.setImageFromUrl
@@ -28,6 +30,7 @@ import java.util.Date
 import java.util.Locale
 import kotlin.properties.Delegates
 
+@Route(path = UFIELD_DETAIL)
 class DetailActivity : BaseActivity() {
     private var id by Delegates.notNull<Int>()
     private val toolbar by R.id.detail_toolbar.view<Toolbar>()
@@ -45,9 +48,9 @@ class DetailActivity : BaseActivity() {
     private val tvStart by R.id.ufield_tv_starttime.view<TextView>()
     private val tvEnd by R.id.ufield_tv_endtime.view<TextView>()
     private val ivMap by R.id.ufield_map.view<ImageView>()
-    private lateinit var countDownTimer:CountDownTimer
+    private lateinit var countDownTimer: CountDownTimer
     private val viewModel by viewModelBy {
-         id = intent.getIntExtra("actID", 1)
+        id=intent.getIntExtra("actID", 1)
         DetailViewModel(id)
     }
 
@@ -127,7 +130,7 @@ class DetailActivity : BaseActivity() {
                 }
             }
             if (it.data.ended) {
-                countDownTimer=object :CountDownTimer(1,1000){
+                countDownTimer = object : CountDownTimer(1, 1000) {
                     override fun onTick(p0: Long) {
                     }
 
@@ -148,7 +151,7 @@ class DetailActivity : BaseActivity() {
                     val remainingTimeInSeconds = startTimeInSeconds - currentTimeInSeconds
 
                     // 创建并启动倒计时
-                     countDownTimer =
+                    countDownTimer =
                         object : CountDownTimer(remainingTimeInSeconds * 1000, 1000) {
                             override fun onTick(millisUntilFinished: Long) {
                                 val days =
@@ -252,7 +255,7 @@ class DetailActivity : BaseActivity() {
 
                     countDownTimer.start()
                 } else if (currentTimeInSeconds in startTimeInSeconds until endTimeInSeconds) {
-                    countDownTimer=object :CountDownTimer(1,1000){
+                    countDownTimer = object : CountDownTimer(1, 1000) {
                         override fun onTick(p0: Long) {
                         }
 
@@ -261,7 +264,7 @@ class DetailActivity : BaseActivity() {
                     }
                     tvTime.text = "活动进行中"
                 } else {
-                    countDownTimer=object :CountDownTimer(1,1000){
+                    countDownTimer = object : CountDownTimer(1, 1000) {
                         override fun onTick(p0: Long) {
                         }
 

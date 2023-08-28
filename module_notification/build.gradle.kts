@@ -7,6 +7,7 @@ plugins {
 dependApiAccount()
 
 dependApiMine()
+dependLibConfig()
 
 dependNetwork()
 dependRxjava()
