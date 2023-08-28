@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:gravity="center"
+    android:layout_marginTop="10dp"
+    android:layout_marginBottom="30dp">
+
+    <androidx.cardview.widget.CardView
+        android:id="@+id/ufield_fragment_mc_click"
+        android:layout_width="339dp"
+        android:layout_height="101dp"
+        app:cardElevation="2dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <androidx.cardview.widget.CardView
+            android:layout_width="101dp"
+            android:layout_height="101dp"
+            app:cardCornerRadius="8dp"
+            app:cardElevation="0dp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent">
+
+            <ImageView
+                android:id="@+id/ufield_fragment_iv_head"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:scaleType="centerCrop"
+                app:srcCompat="@drawable/ufield_ic_fragment_head" />
+        </androidx.cardview.widget.CardView>
+
+        <TextView
+            android:id="@+id/ufield_fragment_tv_title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="111dp"
+            android:layout_marginEnd="3dp"
+            android:letterSpacing="0.05"
+            android:lineHeight="18.96dp"
+            android:maxLines="2"
+            android:text="啦啦啦啦啦啦啦啦啦啦啦啦啦啦啦啦啦"
+            android:textColor="@color/ufield_fragment_head_title"
+            android:textSize="16sp" />
+
+        <TextView
+            android:id="@+id/ufield_fragment_tv_detail"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="111dp"
+            android:layout_marginTop="50dp"
+            android:ellipsize="end"
+            android:lineHeight="19.6dp"
+            android:maxLines="1"
+            android:text="呜呜呜呜呜呜呜呜呜呜呜呜呜呜呜呜呜"
+            android:textColor="@color/ufield_fragment_detail"
+            android:textSize="14sp" />
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="112dp"
+            android:layout_marginTop="80dp"
+            android:src="@drawable/ufield_ic_activity_campaign_time" />
+
+        <TextView
+            android:id="@+id/ufield_fragment_tv_time"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="140dp"
+            android:layout_marginTop="79dp"
+            android:lineHeight="16.8dp"
+            android:text="2023年8月23日"
+            android:textColor="@color/ufield_fragment_time_color"
+            android:textSize="12sp" />
+    </androidx.cardview.widget.CardView>
+</RelativeLayout>

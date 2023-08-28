@@ -309,5 +309,9 @@ interface ApiService {
     // 获取动态、评论、获赞、粉丝、关注数接口
     @GET("magipoke-loop/user/count")
     fun getPersonalCount(@Query("redid") redid: String?): Observable<PersonalCount>
+
+    //获取活动的数量
+    @GET("/magipoke-ufield/message/list/")
+    fun getUFieldActivity(): Observable<ApiWrapper<List<UfieldMsgBean>>>
 }
 

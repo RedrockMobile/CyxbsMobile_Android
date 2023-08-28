@@ -30,7 +30,9 @@ import com.mredrock.cyxbs.common.utils.extensions.loadAvatar
 import com.mredrock.cyxbs.config.route.*
 import com.mredrock.cyxbs.lib.base.ui.BaseFragment
 import com.mredrock.cyxbs.lib.utils.extensions.appContext
+import com.mredrock.cyxbs.lib.utils.extensions.gone
 import com.mredrock.cyxbs.lib.utils.extensions.setOnSingleClickListener
+import com.mredrock.cyxbs.lib.utils.extensions.visible
 import com.mredrock.cyxbs.lib.utils.service.ServiceManager
 import com.mredrock.cyxbs.mine.noyification.NotificationUtils
 
@@ -41,12 +43,12 @@ import com.mredrock.cyxbs.mine.noyification.NotificationUtils
  */
 @SuppressLint("SetTextI18n")
 @Route(path = MINE_ENTRY)
-class UserFragment : BaseFragment(){
-    
+class UserFragment : BaseFragment() {
+
     private val viewModel by viewModels<UserViewModel>()
-    
+
     private val mine_user_tv_dynamic_number by R.id.mine_user_tv_dynamic_number.view<TextView>()
-    private val mine_user_tv_dynamic by R.id. mine_user_tv_dynamic.view<TextView>()
+    private val mine_user_tv_dynamic by R.id.mine_user_tv_dynamic.view<TextView>()
     private val mine_user_ib_arrow by R.id.mine_user_ib_arrow.view<ImageButton>()
     private val mine_user_tv_comment_number by R.id.mine_user_tv_comment_number.view<TextView>()
     private val mine_user_tv_comment by R.id.mine_user_tv_comment.view<TextView>()
@@ -66,7 +68,8 @@ class UserFragment : BaseFragment(){
     private val mine_user_tv_unchecked_comment by R.id.mine_user_tv_unchecked_comment.view<TextView>()
     private val mine_user_username by R.id.mine_user_username.view<TextView>()
     private val mine_user_introduce by R.id.mine_user_introduce.view<TextView>()
-
+    private val mine_user_iv_center_activity by R.id.mine_user_iv_center_activity.view<ImageView>()
+    private val mine_user_tv_center_notification_count by R.id.mine_user_tv_center_notification_count.view<TextView>()
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
@@ -79,24 +82,131 @@ class UserFragment : BaseFragment(){
         context?.apply {
             mine_user_tv_dynamic_number.setOnSingleClickListener { doIfLogin { jump(QA_DYNAMIC_MINE) } }
             mine_user_tv_dynamic.setOnSingleClickListener { doIfLogin { jump(QA_DYNAMIC_MINE) } }
-            mine_user_ib_arrow.setOnSingleClickListener { doIfLogin { HomepageActivity.startHomePageActivity(null,context as Activity) } }
-            mine_user_tv_comment_number.setOnSingleClickListener { doIfLogin { jumpAndSaveTime(QA_MY_COMMENT, 1) } }
-            mine_user_tv_comment.setOnSingleClickListener { doIfLogin { jumpAndSaveTime(QA_MY_COMMENT, 1) } }
-            mine_user_tv_praise_number.setOnSingleClickListener { doIfLogin { jumpAndSaveTime(QA_MY_PRAISE, 2) } }
-            mine_user_tv_praise.setOnSingleClickListener { doIfLogin { jumpAndSaveTime(QA_MY_PRAISE, 2) } }
+            mine_user_ib_arrow.setOnSingleClickListener {
+                doIfLogin {
+                    HomepageActivity.startHomePageActivity(
+                        null,
+                        context as Activity
+                    )
+                }
+            }
+            mine_user_tv_comment_number.setOnSingleClickListener {
+                doIfLogin {
+                    jumpAndSaveTime(
+                        QA_MY_COMMENT,
+                        1
+                    )
+                }
+            }
+            mine_user_tv_comment.setOnSingleClickListener {
+                doIfLogin {
+                    jumpAndSaveTime(
+                        QA_MY_COMMENT,
+                        1
+                    )
+                }
+            }
+            mine_user_tv_praise_number.setOnSingleClickListener {
+                doIfLogin {
+                    jumpAndSaveTime(
+                        QA_MY_PRAISE,
+                        2
+                    )
+                }
+            }
+            mine_user_tv_praise.setOnSingleClickListener {
+                doIfLogin {
+                    jumpAndSaveTime(
+                        QA_MY_PRAISE,
+                        2
+                    )
+                }
+            }
             mine_user_iv_center_stamp.setOnSingleClickListener { doIfLogin { jump(STORE_ENTRY) } }
-            mine_user_iv_center_feedback.setOnSingleClickListener { doIfLogin { startActivity(Intent(this,FeedbackCenterActivity::class.java)) } }
+            mine_user_iv_center_feedback.setOnSingleClickListener {
+                doIfLogin {
+                    startActivity(
+                        Intent(
+                            this,
+                            FeedbackCenterActivity::class.java
+                        )
+                    )
+                }
+            }
 
-            mine_user_tv_sign.setOnSingleClickListener { doIfLogin { startActivity(Intent(this,DailySignActivity::class.java)) } }
-            mine_user_btn_sign.setOnSingleClickListener { doIfLogin { startActivity(Intent(this,DailySignActivity::class.java)) } }
+            mine_user_tv_sign.setOnSingleClickListener {
+                doIfLogin {
+                    startActivity(
+                        Intent(
+                            this,
+                            DailySignActivity::class.java
+                        )
+                    )
+                }
+            }
+            mine_user_btn_sign.setOnSingleClickListener {
+                doIfLogin {
+                    startActivity(
+                        Intent(
+                            this,
+                            DailySignActivity::class.java
+                        )
+                    )
+                }
+            }
 
-            mine_user_fm_about_us.setOnSingleClickListener { doIfLogin { startActivity(Intent(this,AboutActivity::class.java)) } }
-            mine_user_fm_setting.setOnSingleClickListener { doIfLogin { startActivity(Intent(this,SettingActivity::class.java)) } }
-            mine_user_cl_info.setOnSingleClickListener { doIfLogin { HomepageActivity.startHomePageActivity(null,context as Activity) } }
+            mine_user_fm_about_us.setOnSingleClickListener {
+                doIfLogin {
+                    startActivity(
+                        Intent(
+                            this,
+                            AboutActivity::class.java
+                        )
+                    )
+                }
+            }
+            mine_user_fm_setting.setOnSingleClickListener {
+                doIfLogin {
+                    startActivity(
+                        Intent(
+                            this,
+                            SettingActivity::class.java
+                        )
+                    )
+                }
+            }
+            mine_user_cl_info.setOnSingleClickListener {
+                doIfLogin {
+                    HomepageActivity.startHomePageActivity(
+                        null,
+                        context as Activity
+                    )
+                }
+            }
 
-            mine_user_iv_center_notification.setOnSingleClickListener { ARouter.getInstance().build(NOTIFICATION_HOME).navigation() }
+            mine_user_iv_center_notification.setOnSingleClickListener {
+                ARouter.getInstance().build(NOTIFICATION_HOME).navigation()
+            }
+            mine_user_iv_center_activity.setOnSingleClickListener {
+                doIfLogin {
+                    ARouter.getInstance().build(CAMPAIGN_CENTER).navigation()
+                }
+            }
 
-            mine_user_avatar.setOnSingleClickListener { doIfLogin { startActivity(Intent(context, EditInfoActivity::class.java), ActivityOptionsCompat.makeSceneTransitionAnimation(context as Activity, Pair(mine_user_avatar, "avatar")).toBundle()) } }
+            mine_user_avatar.setOnSingleClickListener {
+                doIfLogin {
+                    startActivity(
+                        Intent(
+                            context,
+                            EditInfoActivity::class.java
+                        ),
+                        ActivityOptionsCompat.makeSceneTransitionAnimation(
+                            context as Activity,
+                            Pair(mine_user_avatar, "avatar")
+                        ).toBundle()
+                    )
+                }
+            }
         }
     }
 
@@ -112,7 +222,12 @@ class UserFragment : BaseFragment(){
                         null
                     )
                     text = "已签到"
-                    setTextColor(ContextCompat.getColor(context, com.mredrock.cyxbs.common.R.color.common_grey_button_text))
+                    setTextColor(
+                        ContextCompat.getColor(
+                            context,
+                            com.mredrock.cyxbs.common.R.color.common_grey_button_text
+                        )
+                    )
                 }
             } else {
                 mine_user_btn_sign.apply {
@@ -122,7 +237,12 @@ class UserFragment : BaseFragment(){
                         R.drawable.mine_shape_bg_user_btn_sign,
                         null
                     )
-                    setTextColor(ContextCompat.getColor(context, com.mredrock.cyxbs.common.R.color.common_white_font_color))
+                    setTextColor(
+                        ContextCompat.getColor(
+                            context,
+                            com.mredrock.cyxbs.common.R.color.common_white_font_color
+                        )
+                    )
                 }
             }
         })
@@ -164,13 +284,30 @@ class UserFragment : BaseFragment(){
             }
         })
 
-
     }
-    
+
     override fun onStart() {
         super.onStart()
         // 发送签到的通知
         NotificationUtils.tryNotificationSign(viewModel.status.value?.isChecked ?: false)
+        viewModel.getUFieldActivity()
+        viewModel.ufieldNewCount.observe(viewLifecycleOwner) {
+            val list = it.filter { element ->
+                element.clicked == false
+            }
+            if (list.isEmpty()){
+                mine_user_tv_center_notification_count.gone()
+            }else{
+                mine_user_tv_center_notification_count.visible()
+                if (list.size>99){
+                    mine_user_tv_center_notification_count.text="99+"
+                }else{
+                    mine_user_tv_center_notification_count.text = list.size.toString()
+                }
+            }
+
+
+        }
     }
 
     override fun onResume() {
@@ -191,10 +328,14 @@ class UserFragment : BaseFragment(){
         val userService = ServiceManager(IAccountService::class).getUserService()
         context?.loadAvatar(userService.getAvatarImgUrl(), mine_user_avatar)
         mine_user_username.text =
-            if (userService.getNickname().isBlank()) appContext.getString(R.string.mine_user_empty_username)
+            if (userService.getNickname()
+                    .isBlank()
+            ) appContext.getString(R.string.mine_user_empty_username)
             else userService.getNickname()
         mine_user_introduce.text =
-            if (userService.getIntroduction().isBlank()) appContext.getString(R.string.mine_user_empty_introduce)
+            if (userService.getIntroduction()
+                    .isBlank()
+            ) appContext.getString(R.string.mine_user_empty_introduce)
             else userService.getIntroduction()
 
         if (userService.getNickname().isNotBlank() &&

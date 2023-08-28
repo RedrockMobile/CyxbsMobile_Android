@@ -3,7 +3,7 @@
 
     <application>
         <activity
-            android:name=".lyt.ui.UFieldActivity">
+            android:name=".lxh.ui.activity.CampaignActivity">
         </activity>
     </application>
 
