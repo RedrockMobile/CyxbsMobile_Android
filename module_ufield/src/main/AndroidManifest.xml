@@ -5,6 +5,9 @@
         <activity
             android:name=".lxh.ui.activity.CampaignActivity">
         </activity>
+        <activity
+            android:name=".gyd.ui.DetailActivity">
+        </activity>
     </application>
 
 </manifest>

@@ -9,7 +9,7 @@ import android.widget.ImageView
 import android.widget.TextView
 import androidx.annotation.RequiresApi
 import androidx.cardview.widget.CardView
-import androidx.core.content.ContextCompat
+import androidx.core.content.ContextCompat.startActivity
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
@@ -57,7 +57,7 @@ class MsgAdapter : ListAdapter<DetailMsg, MsgAdapter.ViewHolder>(
                     getItemId(absoluteAdapterPosition).run {
                         val intent = Intent(view.context, DetailActivity::class.java)
                         intent.putExtra("actID", currentList[absoluteAdapterPosition].activityId)
-                        ContextCompat.startActivity(view.context, intent, null)
+                        startActivity(view.context, intent, null)
                     }
                 }
             }
