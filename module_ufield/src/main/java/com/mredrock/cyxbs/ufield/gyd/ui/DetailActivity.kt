@@ -45,7 +45,13 @@ class DetailActivity : BaseActivity() {
     private val tvStart by R.id.ufield_tv_starttime.view<TextView>()
     private val tvEnd by R.id.ufield_tv_endtime.view<TextView>()
     private val ivMap by R.id.ufield_map.view<ImageView>()
-    private lateinit var countDownTimer:CountDownTimer
+    private var countDownTimer:CountDownTimer=object :CountDownTimer(1,1000){
+        override fun onTick(p0: Long) {
+        }
+
+        override fun onFinish() {
+        }
+    }
     private val viewModel by viewModelBy {
          id = intent.getIntExtra("actID", 1)
         DetailViewModel(id)
@@ -127,13 +133,6 @@ class DetailActivity : BaseActivity() {
                 }
             }
             if (it.data.ended) {
-                countDownTimer=object :CountDownTimer(1,1000){
-                    override fun onTick(p0: Long) {
-                    }
-
-                    override fun onFinish() {
-                    }
-                }
                 tvTime.text = "活动已结束"
             } else {
                 // 活动开始时间戳和结束时间戳（以秒为单位）
@@ -252,22 +251,8 @@ class DetailActivity : BaseActivity() {
 
                     countDownTimer.start()
                 } else if (currentTimeInSeconds in startTimeInSeconds until endTimeInSeconds) {
-                    countDownTimer=object :CountDownTimer(1,1000){
-                        override fun onTick(p0: Long) {
-                        }
-
-                        override fun onFinish() {
-                        }
-                    }
                     tvTime.text = "活动进行中"
                 } else {
-                    countDownTimer=object :CountDownTimer(1,1000){
-                        override fun onTick(p0: Long) {
-                        }
-
-                        override fun onFinish() {
-                        }
-                    }
                     tvTime.text = "活动已结束"
                 }
             }

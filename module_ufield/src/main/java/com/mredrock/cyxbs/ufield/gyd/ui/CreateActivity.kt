@@ -168,8 +168,6 @@ class CreateActivity : BaseActivity() {
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
 
 
-
-
         val hint = "关于活动的简介（不超过100个字）"
 
         val spannableStringBuilder = SpannableStringBuilder(hint)
@@ -211,6 +209,7 @@ class CreateActivity : BaseActivity() {
                     getPhotoInPhotoAlbum.launch("image/*")
                 }
             }
+
             cornerRadius(res = com.mredrock.cyxbs.common.R.dimen.common_corner_radius)
         }
     }
@@ -635,6 +634,7 @@ class CreateActivity : BaseActivity() {
             btCreate.setOnClickListener(null)
         }
     }
+
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         when (item.itemId) {
             android.R.id.home -> {
