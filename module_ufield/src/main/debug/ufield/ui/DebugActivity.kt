@@ -3,7 +3,6 @@ package ufield.ui
 import android.content.Intent
 import android.os.Bundle
 import com.mredrock.cyxbs.lib.base.BaseDebugActivity
-import com.mredrock.cyxbs.ufield.lyt.ui.CheckActivity
 import com.mredrock.cyxbs.ufield.lyt.ui.UFieldActivity
 
 /**
@@ -15,9 +14,9 @@ import com.mredrock.cyxbs.ufield.lyt.ui.UFieldActivity
  */
 class DebugActivity : BaseDebugActivity() {
     override val isNeedLogin: Boolean
-        get() = false
+        get() = true
 
     override fun onDebugCreate(savedInstanceState: Bundle?) {
-        startActivity(Intent(this, CheckActivity::class.java))
+        startActivity(Intent(this, UFieldActivity::class.java))
     }
 }
