@@ -1,4 +1,4 @@
-package com.mredrock.cyxbs.ufield.gyd
+package com.mredrock.cyxbs.ufield.gyd.ui
 
 import android.annotation.SuppressLint
 import android.graphics.Color
@@ -8,6 +8,7 @@ import android.text.Spannable
 import android.text.SpannableString
 import android.text.SpannableStringBuilder
 import android.text.style.RelativeSizeSpan
+import android.view.MenuItem
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.appcompat.widget.Toolbar
@@ -19,13 +20,16 @@ import com.mredrock.cyxbs.lib.base.ui.viewModelBy
 import com.mredrock.cyxbs.lib.utils.extensions.setImageFromUrl
 import com.mredrock.cyxbs.lib.utils.service.ServiceManager
 import com.mredrock.cyxbs.ufield.R
+import com.mredrock.cyxbs.ufield.gyd.viewmodel.DetailViewModel
 import com.mredrock.cyxbs.ufield.gyd.span.RoundBackgroundSpan
 import com.mredrock.cyxbs.ufield.gyd.span.VerticalCenterSpan
 import java.text.SimpleDateFormat
 import java.util.Date
 import java.util.Locale
+import kotlin.properties.Delegates
 
 class DetailActivity : BaseActivity() {
+    private var id by Delegates.notNull<Int>()
     private val toolbar by R.id.detail_toolbar.view<Toolbar>()
     private val tvSee by R.id.ufield_tv_wantsee.view<TextView>()
     private val tvTitle by R.id.ufield_tv_title.view<TextView>()
@@ -41,14 +45,22 @@ class DetailActivity : BaseActivity() {
     private val tvStart by R.id.ufield_tv_starttime.view<TextView>()
     private val tvEnd by R.id.ufield_tv_endtime.view<TextView>()
     private val ivMap by R.id.ufield_map.view<ImageView>()
+    private lateinit var countDownTimer:CountDownTimer
     private val viewModel by viewModelBy {
-        DetailViewModel(2)
+         id = intent.getIntExtra("actID", 1)
+        DetailViewModel(id)
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        countDownTimer.cancel()
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_detail)
         initView()
+        //Log.d("827857", "测试结果-->> $id");
         viewModel.wantToSee.observe(this) {
             if (it) {
                 toast("想看成功")
@@ -80,7 +92,7 @@ class DetailActivity : BaseActivity() {
         }
 
         viewModel.detailData.observe(this) {
-            tvTitle.text = it.data.activity_detail
+            tvTitle.text = it.data.activity_title
             when (it.data.activity_type) {
                 "culture" -> tvType.text = "文娱活动"
                 "sports" -> tvType.text = "体育活动"
@@ -111,10 +123,17 @@ class DetailActivity : BaseActivity() {
                 )
                 tvSee.text = spannableString
                 tvSee.setOnClickListener {
-                    viewModel.wantToSee(2)
+                    viewModel.wantToSee(id)
                 }
             }
             if (it.data.ended) {
+                countDownTimer=object :CountDownTimer(1,1000){
+                    override fun onTick(p0: Long) {
+                    }
+
+                    override fun onFinish() {
+                    }
+                }
                 tvTime.text = "活动已结束"
             } else {
                 // 活动开始时间戳和结束时间戳（以秒为单位）
@@ -129,7 +148,7 @@ class DetailActivity : BaseActivity() {
                     val remainingTimeInSeconds = startTimeInSeconds - currentTimeInSeconds
 
                     // 创建并启动倒计时
-                    val countDownTimer =
+                     countDownTimer =
                         object : CountDownTimer(remainingTimeInSeconds * 1000, 1000) {
                             override fun onTick(millisUntilFinished: Long) {
                                 val days =
@@ -233,13 +252,37 @@ class DetailActivity : BaseActivity() {
 
                     countDownTimer.start()
                 } else if (currentTimeInSeconds in startTimeInSeconds until endTimeInSeconds) {
+                    countDownTimer=object :CountDownTimer(1,1000){
+                        override fun onTick(p0: Long) {
+                        }
+
+                        override fun onFinish() {
+                        }
+                    }
                     tvTime.text = "活动进行中"
                 } else {
+                    countDownTimer=object :CountDownTimer(1,1000){
+                        override fun onTick(p0: Long) {
+                        }
+
+                        override fun onFinish() {
+                        }
+                    }
                     tvTime.text = "活动已结束"
                 }
             }
         }
 
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        when (item.itemId) {
+            android.R.id.home -> {
+                finishAfterTransition()
+                return true
+            }
+        }
+        return super.onOptionsItemSelected(item)
     }
 
     private fun trans(timestampInSeconds: Long): String {

@@ -1,4 +1,4 @@
-package com.mredrock.cyxbs.ufield.gyd
+package com.mredrock.cyxbs.ufield.gyd.ui
 
 import android.Manifest
 import android.annotation.SuppressLint
@@ -18,6 +18,7 @@ import android.text.SpannableStringBuilder
 import android.text.TextWatcher
 import android.text.style.RelativeSizeSpan
 import android.view.Gravity
+import android.view.MenuItem
 import android.widget.Button
 import android.widget.EditText
 import android.widget.FrameLayout
@@ -42,6 +43,7 @@ import com.mredrock.cyxbs.lib.base.ui.BaseActivity
 import com.mredrock.cyxbs.lib.utils.extensions.gone
 
 import com.mredrock.cyxbs.ufield.R
+import com.mredrock.cyxbs.ufield.gyd.viewmodel.CreateViewModel
 
 import com.yalantis.ucrop.UCrop
 import java.io.File
@@ -633,6 +635,14 @@ class CreateActivity : BaseActivity() {
             btCreate.setOnClickListener(null)
         }
     }
-
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        when (item.itemId) {
+            android.R.id.home -> {
+                finishAfterTransition()
+                return true
+            }
+        }
+        return super.onOptionsItemSelected(item)
+    }
 
 }

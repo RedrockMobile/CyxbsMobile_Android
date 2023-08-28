@@ -12,6 +12,7 @@ import com.google.android.material.tabs.TabLayoutMediator
 import com.mredrock.cyxbs.lib.base.ui.BaseActivity
 import com.mredrock.cyxbs.lib.utils.adapter.FragmentVpAdapter
 import com.mredrock.cyxbs.ufield.R
+import com.mredrock.cyxbs.ufield.gyd.ui.CreateActivity
 import com.mredrock.cyxbs.ufield.lyt.fragment.ufieldfragment.AllFragment
 import com.mredrock.cyxbs.ufield.lyt.fragment.ufieldfragment.CultureFragment
 import com.mredrock.cyxbs.ufield.lyt.fragment.ufieldfragment.EducationFragment
@@ -36,6 +37,7 @@ class UFieldActivity : BaseActivity() {
     private val mTabLayout: TabLayout by R.id.uField_tabLayout.view()
     private val mVp: ViewPager2 by R.id.uField_viewpager2.view()
     private val mViewModel by viewModels<UFieldViewModel>()
+
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -123,7 +125,7 @@ class UFieldActivity : BaseActivity() {
             toast("已进入审核中心")
         }
         mAdd.setOnClickListener {
-
+            startActivity(Intent(this, CreateActivity::class.java))
         }
         mCup.setOnClickListener {
 

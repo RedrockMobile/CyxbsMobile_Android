@@ -1,4 +1,4 @@
-package com.mredrock.cyxbs.ufield.gyd
+package com.mredrock.cyxbs.ufield.gyd.viewmodel
 
 import android.annotation.SuppressLint
 import android.util.Log

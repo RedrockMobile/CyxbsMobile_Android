@@ -1,7 +1,9 @@
 package com.mredrock.cyxbs.ufield.lyt.fragment.checkfragment
 
 import android.annotation.SuppressLint
+import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -10,6 +12,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.mredrock.cyxbs.lib.base.ui.BaseFragment
 import com.mredrock.cyxbs.ufield.R
+import com.mredrock.cyxbs.ufield.gyd.ui.DetailActivity
 import com.mredrock.cyxbs.ufield.lyt.adapter.DoneRvAdapter
 import com.mredrock.cyxbs.ufield.lyt.bean.DoneBean
 import com.mredrock.cyxbs.ufield.lyt.viewmodel.fragment.DoneViewModel
@@ -62,8 +65,10 @@ class DoneFragment : BaseFragment() {
             layoutManager = LinearLayoutManager(requireContext())
             adapter = mAdapter.apply {
                 setOnItemClick {
-                    //todo 这里跳转到详情页面  mDataList[it].id 拿着 id 跳转就行
-
+                    val intent = Intent(requireContext(), DetailActivity::class.java)
+                    intent.putExtra("actID", mDataList[it].activity_id)
+                    Log.d("595995", "测试结果-->> ${mDataList[it].activity_id}");
+                    startActivity(intent)
                 }
             }
         }
@@ -85,14 +90,14 @@ class DoneFragment : BaseFragment() {
             setOnRefreshListener {
                 mViewModel.apply {
                     getViewedData()
-                //    getViewedUpData(mDataList.lastOrNull()?.activity_id?:1)
+                    //    getViewedUpData(mDataList.lastOrNull()?.activity_id?:1)
                 }
                 finishRefresh(1000)
             }
             //上拉加载
             setOnLoadMoreListener {
                 mViewModel.apply {
-                    getViewedUpData(mDataList.lastOrNull()?.activity_id?:1)
+                    getViewedUpData(mDataList.lastOrNull()?.activity_id ?: 1)
                 }
                 mAdapter.notifyDataSetChanged()
                 finishLoadMore(1000)

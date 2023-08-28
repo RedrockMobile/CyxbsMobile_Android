@@ -27,6 +27,18 @@ import java.time.format.DateTimeFormatter
 class UfieldRvAdapter :
     ListAdapter<ItemActivityBean.ItemAll, UfieldRvAdapter.RvAllActViewHolder>((RvAllDiffCallback())) {
 
+
+    /**
+     * 点击活动的回调
+     */
+    private var mActivityClick: ((Int) -> Unit)? = null
+
+    fun setOnActivityClick(listener: (Int) -> Unit) {
+        mActivityClick = listener
+    }
+
+
+
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RvAllActViewHolder {
         return RvAllActViewHolder(
             LayoutInflater.from(parent.context).inflate(R.layout.ufield_item_rv_all, parent, false)
@@ -41,7 +53,7 @@ class UfieldRvAdapter :
     }
 
 
-    class RvAllActViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
+  inner  class RvAllActViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
 
         private val actPic: ImageView = itemView.findViewById(R.id.uField_activity_pic)
         private val actName: TextView = itemView.findViewById<TextView?>(R.id.uField_activity_name).apply { isSelected=true }
@@ -49,6 +61,11 @@ class UfieldRvAdapter :
         private val actType: TextView = itemView.findViewById(R.id.uField_activity_type)
         private val actTime: TextView = itemView.findViewById(R.id.uField_activity_time)
 
+        init {
+            itemView.setOnClickListener {
+                mActivityClick?.invoke(absoluteAdapterPosition)
+            }
+        }
 
         /**
          * 进行视图的绑定

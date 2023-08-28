@@ -9,10 +9,10 @@
         android:supportsRtl="true"
         android:theme="@style/ConfigAppTheme">
         <activity
-            android:name=".gyd.DetailActivity"
+            android:name=".gyd.ui.DetailActivity"
             android:exported="false" />
         <activity
-            android:name=".gyd.CreateActivity"
+            android:name=".gyd.ui.CreateActivity"
             android:exported="false"
             android:windowSoftInputMode="adjustPan" />
         <activity

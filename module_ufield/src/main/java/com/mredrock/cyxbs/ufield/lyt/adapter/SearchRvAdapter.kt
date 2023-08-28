@@ -27,6 +27,16 @@ import java.time.format.DateTimeFormatter
 class SearchRvAdapter :
     ListAdapter<ItemActivityBean.ItemAll, SearchRvAdapter.RvSearchActViewHolder>((RvSearchDiffCallback())) {
 
+
+    /**
+     * 点击活动的回调
+     */
+    private var mActivityClick: ((Int) -> Unit)? = null
+
+    fun setOnActivityClick(listener: (Int) -> Unit) {
+        mActivityClick = listener
+    }
+
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RvSearchActViewHolder {
         return RvSearchActViewHolder(
             LayoutInflater.from(parent.context)
@@ -41,14 +51,22 @@ class SearchRvAdapter :
     }
 
 
-    class RvSearchActViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
+    inner class RvSearchActViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
 
         private val actPic: ImageView = itemView.findViewById(R.id.uField_search_act_image)
-        private val actName: TextView = itemView.findViewById<TextView?>(R.id.Ufield_search_act_ame).apply { isSelected=true }
-        private val actHint: TextView = itemView.findViewById<TextView?>(R.id.Ufield_search_act_what).apply { isSelected=true }
+        private val actName: TextView =
+            itemView.findViewById<TextView?>(R.id.Ufield_search_act_ame).apply { isSelected = true }
+        private val actHint: TextView =
+            itemView.findViewById<TextView?>(R.id.Ufield_search_act_what)
+                .apply { isSelected = true }
         private val actIsGoing: ImageView = itemView.findViewById(R.id.uField_search_isGoing)
         private val actTime: TextView = itemView.findViewById(R.id.uField_search_ddl)
 
+        init {
+            itemView.setOnClickListener {
+                mActivityClick?.invoke(absoluteAdapterPosition)
+            }
+        }
 
         /**
          * 进行视图的绑定
