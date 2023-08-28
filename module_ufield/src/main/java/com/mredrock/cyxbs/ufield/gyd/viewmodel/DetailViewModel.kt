@@ -49,7 +49,7 @@ private val _wantToSee=MutableLiveData<Boolean>()
             .subscribeOn(Schedulers.io())
             .observeOn(AndroidSchedulers.mainThread())
             .doOnError {
-                Log.e("JJJJ", "getActivityData: ",it )
+                Log.e("JJJJ", "wantsee ",it )
                 toast("请求失败")
                 _wantToSee.postValue(false)
             }
