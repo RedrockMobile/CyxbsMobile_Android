@@ -39,6 +39,12 @@
                 android:layout_marginTop="13dp"
                 android:textColor="@color/uField_15315b"
                 android:textSize="16sp"
+                android:singleLine="true"
+                android:ellipsize="marquee"
+                android:marqueeRepeatLimit="marquee_forever"
+                android:focusable="true"
+                android:focusableInTouchMode="true"
+                android:scrollHorizontally="true"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/uField_activity_pic" />
 

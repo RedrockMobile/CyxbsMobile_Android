@@ -50,11 +50,14 @@ class UFieldViewModel : BaseViewModel() {
     /**
      * 得到所有的数据
      */
-    fun getAllActivityList() {
+    private fun getAllActivityList() {
 
         UFieldRepository
             .receiveAllData()
-            .mapOrInterceptException { Log.d("getAllActivityList", "测试结果-->> ${it.message}"); }
+            .mapOrInterceptException {
+                Log.d("getAllActivityList", "测试结果-->> ${it.message}");
+                toast("网络似乎有点问题~")
+            }
             .doOnError { Log.d("getAllActivityList", "测试结果-->> ${it.message}"); }
             .safeSubscribeBy {
                 _allList.value = it.ongoing + it.ended
@@ -64,7 +67,7 @@ class UFieldViewModel : BaseViewModel() {
     /**
      * 得到文娱活动数据
      */
-    fun getCultureActivityList() {
+    private fun getCultureActivityList() {
         UFieldRepository
             .receiveCultureData()
             .mapOrInterceptException {
@@ -84,7 +87,7 @@ class UFieldViewModel : BaseViewModel() {
     /**
      * 得到体育活动数据
      */
-    fun getSportsActivityList() {
+    private fun getSportsActivityList() {
         UFieldRepository
             .receiveSportsData()
             .mapOrInterceptException {
@@ -103,7 +106,7 @@ class UFieldViewModel : BaseViewModel() {
     /**
      * 得到教育活动数据
      */
-    fun getEducationActivityList() {
+    private fun getEducationActivityList() {
         UFieldRepository
             .receiveEductionData()
             .mapOrInterceptException {
@@ -122,16 +125,15 @@ class UFieldViewModel : BaseViewModel() {
      * 查看是否是管理员
      */
 
-    fun getIsAdmin(){
+    fun getIsAdmin() {
         UFieldRepository
             .receiveIsAdmin()
-            .mapOrInterceptException { Log.d("getIsAdmin", "测试结果-->> ${it.message}");}
+            .mapOrInterceptException { Log.d("getIsAdmin", "测试结果-->> ${it.message}"); }
             .doOnError { Log.d("getIsAdmin", "测试结果-->> ${it.message}"); }
-            .safeSubscribeBy{
+            .safeSubscribeBy {
                 _isAdmin.postValue(listOf(it))
             }
     }
-
 
 
 }

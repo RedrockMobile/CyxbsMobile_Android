@@ -36,8 +36,7 @@ class SearchViewModel : BaseViewModel() {
         get() = _educationSearchList
 
 
-
-    fun iniSearchList(keyword: String){
+    fun iniSearchList(keyword: String) {
         searchAll(keyword)
         searchCulture(keyword)
         searchSports(keyword)
@@ -47,20 +46,28 @@ class SearchViewModel : BaseViewModel() {
     /**
      * 搜索全部活动
      */
-    fun searchAll(keyword: String) {
+    private fun searchAll(keyword: String) {
         SearchRepository
             .receiveSearchData("all", 50, "create_timestamp", keyword)
-            .mapOrInterceptException { Log.d("searchAll", "测试结果-->>$it "); }
+            .mapOrInterceptException {
+                Log.d("searchAll", "测试结果-->>$it ");
+                toast("网络似乎有点问题~")
+            }
             .doOnError { Log.d("searchAll", "测试结果-->> $it"); }
             .safeSubscribeBy {
-                _allSearchList.postValue(it)
+                if (it.isEmpty()) {
+                    toast("搜索为空，请检查搜索内容")
+                } else {
+                    _allSearchList.postValue(it)
+
+                }
             }
     }
 
     /**
      * 搜索文娱活动
      */
-    fun searchCulture(keyword: String) {
+    private fun searchCulture(keyword: String) {
         SearchRepository
             .receiveSearchData("culture", 50, "create_timestamp", keyword)
             .mapOrInterceptException { Log.d("searchCulture", "测试结果-->>$it "); }
@@ -73,7 +80,7 @@ class SearchViewModel : BaseViewModel() {
     /**
      * 搜索体育活动
      */
-    fun searchSports(keyword: String) {
+    private fun searchSports(keyword: String) {
         SearchRepository
             .receiveSearchData("sports", 50, "create_timestamp", keyword)
             .mapOrInterceptException { Log.d("searchSports", "测试结果-->>$it "); }
@@ -86,7 +93,7 @@ class SearchViewModel : BaseViewModel() {
     /**
      * 搜索教育活动
      */
-    fun searchEducation(keyword: String) {
+    private fun searchEducation(keyword: String) {
         SearchRepository
             .receiveSearchData("education", 50, "create_timestamp", keyword)
             .mapOrInterceptException { Log.d("searchEducation", "测试结果-->>$it "); }

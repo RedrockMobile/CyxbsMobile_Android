@@ -33,6 +33,12 @@
             android:layout_marginStart="15dp"
             android:textColor="@color/uField_112c54"
             android:textSize="16sp"
+            android:singleLine="true"
+            android:ellipsize="marquee"
+            android:marqueeRepeatLimit="marquee_forever"
+            android:focusable="true"
+            android:focusableInTouchMode="true"
+            android:scrollHorizontally="true"
             app:layout_constraintStart_toEndOf="@+id/uField_search_act_image"
             app:layout_constraintTop_toTopOf="parent" />
 
@@ -52,6 +58,12 @@
             android:layout_marginTop="12dp"
             android:textColor="@color/uField_15315b66"
             android:textSize="14sp"
+            android:singleLine="true"
+            android:ellipsize="marquee"
+            android:marqueeRepeatLimit="marquee_forever"
+            android:focusable="true"
+            android:focusableInTouchMode="true"
+            android:scrollHorizontally="true"
             app:layout_constraintStart_toEndOf="@+id/uField_search_act_image"
             app:layout_constraintTop_toBottomOf="@+id/Ufield_search_act_ame" />
 

@@ -45,7 +45,7 @@ class UfieldRvAdapter :
     class RvAllActViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
 
         private val actPic: ImageView = itemView.findViewById(R.id.uField_activity_pic)
-        private val actName: TextView = itemView.findViewById(R.id.uField_activity_name)
+        private val actName: TextView = itemView.findViewById<TextView?>(R.id.uField_activity_name).apply { isSelected=true }
         private val actIsGoing: ImageView = itemView.findViewById(R.id.uField_activity_isGoing)
         private val actType: TextView = itemView.findViewById(R.id.uField_activity_type)
         private val actTime: TextView = itemView.findViewById(R.id.uField_activity_time)
@@ -93,6 +93,8 @@ class UfieldRvAdapter :
                 .toLocalDateTime()
                 .format(DateTimeFormatter.ofPattern("yyyy年MM月dd日"))
         }
+
+
     }
 
 

@@ -48,8 +48,8 @@ class SearchRvAdapter :
     class RvSearchActViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
 
         private val actPic: ImageView = itemView.findViewById(R.id.uField_search_act_image)
-        private val actName: TextView = itemView.findViewById(R.id.Ufield_search_act_ame)
-        private val actHint: TextView = itemView.findViewById(R.id.Ufield_search_act_what)
+        private val actName: TextView = itemView.findViewById<TextView?>(R.id.Ufield_search_act_ame).apply { isSelected=true }
+        private val actHint: TextView = itemView.findViewById<TextView?>(R.id.Ufield_search_act_what).apply { isSelected=true }
         private val actIsGoing: ImageView = itemView.findViewById(R.id.uField_search_isGoing)
         private val actTime: TextView = itemView.findViewById(R.id.uField_search_ddl)
 

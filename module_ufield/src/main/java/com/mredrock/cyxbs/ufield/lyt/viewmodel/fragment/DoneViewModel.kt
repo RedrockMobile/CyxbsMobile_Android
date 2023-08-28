@@ -45,7 +45,6 @@ class DoneViewModel : BaseViewModel() {
      * 加载更多
      */
     fun getViewedUpData(upID: Int) {
-        Log.d("upID55555", "测试结果-->> $upID");
         CheckRepository
             .receiveDoneUpData(upID)
             .mapOrInterceptException { Log.d("getViewedUpData", "测试结果-->> $it"); }

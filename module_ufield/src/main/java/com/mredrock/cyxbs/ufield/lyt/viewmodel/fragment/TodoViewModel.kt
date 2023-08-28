@@ -39,7 +39,7 @@ class TodoViewModel : BaseViewModel() {
      */
 
     @SuppressLint("CheckResult")
-     fun getTodoData() {
+    fun getTodoData() {
         CheckRepository
             .receiveTodoData()
             .mapOrInterceptException { Log.e("TodoApiError", it.toString()) }
@@ -48,14 +48,15 @@ class TodoViewModel : BaseViewModel() {
                 _todoList.postValue(it)
             }
     }
+
     @SuppressLint("CheckResult")
-    fun getTodoUpData(lowerID:Int) {
+    fun getTodoUpData(lowerID: Int) {
         CheckRepository
             .receiveTodoUpData(lowerID)
             .mapOrInterceptException { Log.e("getTodoUpData", it.toString()) }
             .doOnError { Log.e("getTodoUpData", it.toString()) }
             .safeSubscribeBy {
-                _todoList.value= _todoList.value?.plus(it)
+                _todoList.value = _todoList.value?.plus(it)
             }
     }
 
@@ -77,11 +78,11 @@ class TodoViewModel : BaseViewModel() {
     /**
      * 驳回活动
      */
-    fun rejectActivity(id: Int, reason: String ) {
+    fun rejectActivity(id: Int, reason: String) {
         CheckRepository
             .sendReject(id, reason)
             .doOnError {
-                Log.d("rejectActivity", "测试结果-->> ");
+                Log.d("rejectActivity", "测试结果-->> $it");
             }
             .safeSubscribeBy {
                 _isPassSuccess.postValue(it)
