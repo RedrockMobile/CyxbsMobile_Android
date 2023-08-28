@@ -4,6 +4,7 @@ import android.content.Intent
 import android.os.Bundle
 import com.mredrock.cyxbs.lib.base.BaseDebugActivity
 import com.mredrock.cyxbs.ufield.gyd.CreateActivity
+import com.mredrock.cyxbs.ufield.gyd.DetailActivity
 
 /**
  * description ：
@@ -14,9 +15,9 @@ import com.mredrock.cyxbs.ufield.gyd.CreateActivity
  */
 class DebugActivity : BaseDebugActivity() {
     override val isNeedLogin: Boolean
-        get() = false
+        get() = true
 
     override fun onDebugCreate(savedInstanceState: Bundle?) {
-        startActivity(Intent(this, CreateActivity::class.java))
+        startActivity(Intent(this, DetailActivity::class.java))
     }
 }

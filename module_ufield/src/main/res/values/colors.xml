@@ -3,4 +3,7 @@
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
     <color name="editColor">#15315B</color>
+    <color name="phonecolor">#ED535C</color>
+    <color name="timecolor">#ECEEF2</color>
+    <color name="seecolor">#994A44E4</color>
 </resources>
