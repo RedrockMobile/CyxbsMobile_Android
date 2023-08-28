@@ -27,6 +27,7 @@
                 android:id="@+id/uField_activity_pic"
                 android:layout_width="167dp"
                 android:layout_height="145dp"
+                android:scaleType="centerCrop"
                 android:background="@drawable/ufield_shape_pic_shape"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />

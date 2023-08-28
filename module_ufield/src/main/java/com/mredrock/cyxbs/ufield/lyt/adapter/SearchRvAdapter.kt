@@ -10,9 +10,6 @@ import androidx.annotation.RequiresApi
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
-import com.bumptech.glide.Glide
-import com.bumptech.glide.load.resource.bitmap.CenterCrop
-import com.bumptech.glide.load.resource.bitmap.RoundedCorners
 import com.mredrock.cyxbs.lib.utils.extensions.setImageFromUrl
 import com.mredrock.cyxbs.ufield.R
 import com.mredrock.cyxbs.ufield.lyt.bean.ItemActivityBean
@@ -40,7 +37,6 @@ class SearchRvAdapter :
     @RequiresApi(Build.VERSION_CODES.O)
     override fun onBindViewHolder(holder: RvSearchActViewHolder, position: Int) {
         val itemData = getItem(position)
-
         holder.bind(itemData)
     }
 
@@ -62,20 +58,20 @@ class SearchRvAdapter :
             actName.text = itemData.activity_title
             actHint.text = itemData.activity_detail
             actTime.text = timeFormat(itemData.activity_start_at)
-          //  actPic.setImageFromUrl(itemData.activity_cover_url)
+            actPic.setImageFromUrl(itemData.activity_cover_url)
             when (itemData.ended) {
                 false -> actIsGoing.setImageResource(R.drawable.ufield_ic_activity_on)
                 else -> actIsGoing.setImageResource(R.drawable.ufield_ic_activity_off)
             }
 
-            /**
-             * 满足中心比例的缩放，没用setImageFromUrl
-             */
-            Glide.with(itemView.context)
-                .load(itemData.activity_cover_url)
-                .centerCrop() //中心比例的缩放（如果效果不稳定请删除）
-                .transform(CenterCrop(), RoundedCorners(8))//设置圆角
-                .into(actPic)
+//            /**
+//             * 满足中心比例的缩放
+//             */
+//            Glide.with(itemView.context)
+//                .load(itemData.activity_cover_url)
+//                .centerCrop() //中心比例的缩放（如果效果不稳定请删除）
+//                .transform(CenterCrop(), RoundedCorners(8))//设置圆角
+//                .into(actPic)
 
         }
 

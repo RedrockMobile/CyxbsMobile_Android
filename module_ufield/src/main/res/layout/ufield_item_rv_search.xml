@@ -23,6 +23,7 @@
             android:layout_width="101dp"
             android:layout_height="101dp"
             android:layout_marginStart="16dp"
+            android:scaleType="centerCrop"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 

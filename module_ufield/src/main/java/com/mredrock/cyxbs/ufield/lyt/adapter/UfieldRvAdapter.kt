@@ -10,7 +10,6 @@ import androidx.annotation.RequiresApi
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
-import com.bumptech.glide.Glide
 import com.mredrock.cyxbs.lib.utils.extensions.setImageFromUrl
 import com.mredrock.cyxbs.ufield.R
 import com.mredrock.cyxbs.ufield.lyt.bean.ItemActivityBean
@@ -59,7 +58,7 @@ class UfieldRvAdapter :
             actName.text = itemData.activity_title
             actType.text = itemData.activity_type
             actTime.text = timeFormat(itemData.activity_start_at)
-       //     actPic.setImageFromUrl(itemData.activity_cover_url)
+            actPic.setImageFromUrl(itemData.activity_cover_url)
 
             when (itemData.ended) {
                 false -> actIsGoing.setImageResource(R.drawable.ufield_ic_activity_on)
@@ -71,13 +70,13 @@ class UfieldRvAdapter :
                 "sports" -> actType.text = "体育活动"
                 else -> actType.text = "教育活动"
             }
-            /**
-             * 满足中心比例的缩放，没用setImageFromUrl
-             */
-            Glide.with(itemView.context)
-                .load(itemData.activity_cover_url)
-                .centerCrop() //中心比例的缩放（如果效果不稳定请删除）
-                .into(actPic)
+//            /**
+//             * 满足中心比例的缩放
+//             */
+//            Glide.with(itemView.context)
+//                .load(itemData.activity_cover_url)
+//                .centerCrop() //中心比例的缩放（如果效果不稳定请删除）
+//                .into(actPic)
 
         }
 
