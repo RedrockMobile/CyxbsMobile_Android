@@ -46,8 +46,6 @@ class NotificationActivity : BaseViewModelActivity<NotificationViewModel>() {
     private val notification_home_tl by R.id.notification_home_tl.view<TabLayout>()
     private val notification_refresh by R.id.notification_refresh.view<VerticalSwipeRefreshLayout>()
 
-    //所有还未读的活动通知消息的id 用来给一键已读使用
-    private var allUnreadActiveMsgIds = ArrayList<String>()
 
     //所有还未读的系统通知消息的id 用来给一键已读使用
     private var allUnreadSysMsgIds = ArrayList<String>()
@@ -80,13 +78,12 @@ class NotificationActivity : BaseViewModelActivity<NotificationViewModel>() {
         if (shouldShowRedDots) {
             if (allUnreadSysMsgIds.size != 0)
                 changeTabRedDotsVisibility(0, View.VISIBLE)
-            if (allUnreadActiveMsgIds.size != 0)
-                changeTabRedDotsVisibility(1, View.VISIBLE)
         } else {
             changeTabRedDotsVisibility(0, View.INVISIBLE)
             changeTabRedDotsVisibility(1, View.INVISIBLE)
         }
         viewModel.getUFieldActivity()
+        initObserver()
     }
 
 
@@ -246,12 +243,12 @@ class NotificationActivity : BaseViewModelActivity<NotificationViewModel>() {
         }
 
         viewModel.ufieldActivityMsg.observe{
-            allUnreadActiveMsgIds =ArrayList()
             for (value in it){
                 if (!value.clicked){
                     changeTabRedDotsVisibility(1, View.VISIBLE)
-                    allUnreadActiveMsgIds.add(value.messageId.toString())
+                    break
                 }
+                viewModel.changeActiveDotStatus(false)
             }
         }
         /*viewModel.activeMsg.observe {
