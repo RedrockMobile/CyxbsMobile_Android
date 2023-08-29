@@ -432,6 +432,9 @@ class CreateActivity : BaseActivity() {
                         pvtype.returnData()
                         pvtype.dismiss()
                     }
+                    it.findViewById<TextView>(R.id.ufield_type_cancel).setOnClickListener {
+                        pvtype.dismiss()
+                    }
                 }
                 .setContentTextSize(16)
                 .setLineSpacingMultiplier(2.5f)
@@ -476,6 +479,9 @@ class CreateActivity : BaseActivity() {
                 .setLayoutRes(R.layout.popup_time_layout) {
                     it.findViewById<TextView>(R.id.mine_tv_dialog_ensure).setOnClickListener {
                         pvtime.returnData()
+                        pvtime.dismiss()
+                    }
+                    it.findViewById<TextView>(R.id.ufield_time_cancel).setOnClickListener {
                         pvtime.dismiss()
                     }
                 }

@@ -60,6 +60,19 @@
             android:layout_weight="1.1" />
     </LinearLayout>
 
+    <TextView
+        android:id="@+id/ufield_time_cancel"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="取消"
+        android:textColor="@color/black"
+        android:textSize="16sp"
+        app:layout_constraintHorizontal_bias="0.95"
+        app:layout_constraintVertical_bias="0.08"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
     <ImageView
         android:id="@+id/mine_imageview"
         android:layout_width="6dp"
