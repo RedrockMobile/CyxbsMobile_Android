@@ -104,4 +104,9 @@ const val UFIELD_CENTER="/ufield/campaign/entry"
 const val UFIELD_DETAIL="/ufield/detail/entry"
 
 
+//下面是邮乐场板块的地址
+//活动布告栏
+const val UFIELD_ACTIVITY="/ufield/activity/main"
+
+
 
