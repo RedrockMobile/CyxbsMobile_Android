@@ -123,7 +123,6 @@ class UFieldActivity : BaseActivity() {
         }
         mAdmin.setOnClickListener {
             startActivity(Intent(this, CheckActivity::class.java))
-            toast("已进入审核中心")
         }
         mAdd.setOnClickListener {
             startActivity(Intent(this, CreateActivity::class.java))
