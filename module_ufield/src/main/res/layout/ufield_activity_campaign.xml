@@ -6,6 +6,7 @@
     android:layout_height="match_parent">
 
     <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/ufieldConstraintlayout2"
         android:layout_width="match_parent"
         android:layout_height="152dp"
         android:background="@drawable/ufield_shape_activity_campaign_cl_container"
@@ -62,9 +63,13 @@
         app:tabRippleColor="@android:color/transparent"
         app:tabTextAppearance="@style/tab_style"
         app:tabTextColor="@color/ufield_home_tabLayout_text_selected" />
+
     <androidx.viewpager2.widget.ViewPager2
-        android:layout_marginTop="154dp"
         android:id="@+id/ufield_activity_campaign_vp2"
         android:layout_width="match_parent"
-        android:layout_height="match_parent" />
+        android:layout_height="wrap_content"
+        android:layout_marginTop="15dp"
+        android:paddingBottom="180dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/ufieldConstraintlayout2" />
 </androidx.constraintlayout.widget.ConstraintLayout>
