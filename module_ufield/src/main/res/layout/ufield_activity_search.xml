@@ -4,16 +4,16 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/uField_background"
+    android:background="@color/uField_search_background"
     android:orientation="vertical"
     tools:context=".lyt.ui.SearchActivity">
 
     <ImageView
         android:id="@+id/uField_back_search"
-        android:layout_width="7dp"
-        android:layout_height="16dp"
+        android:layout_width="9dp"
+        android:layout_height="25dp"
         android:layout_marginStart="17dp"
-        android:layout_marginTop="60dp"
+        android:layout_marginTop="55dp"
         android:src="@drawable/ufield_ic_search_back"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
@@ -41,12 +41,14 @@
         android:layout_marginBottom="16dp"
         android:background="@color/uField_white"
         app:cardCornerRadius="29dp"
+        app:cardElevation="0dp"
         app:layout_constraintBottom_toTopOf="@+id/ufield_Linearlayout"
         app:layout_constraintEnd_toStartOf="@+id/uField_search_text"
         app:layout_constraintStart_toEndOf="@+id/uField_back_search"
         app:layout_constraintTop_toTopOf="parent">
 
         <ImageView
+            android:id="@+id/uField_search_logo"
             android:layout_width="17dp"
             android:layout_height="17dp"
             android:layout_gravity="center_vertical"
@@ -55,11 +57,12 @@
 
         <androidx.appcompat.widget.SearchView
             android:id="@+id/uField_searchView"
-            android:layout_width="match_parent"
+            android:layout_width="300dp"
             android:layout_height="40dp"
-            android:layout_marginStart="20dp"
+            android:layout_marginStart="28dp"
             app:iconifiedByDefault="false"
             app:searchIcon="@null" />
+        <!-- app:closeIcon="@color/common_transparent_background"-->
         <!-- android:layout_height="40dp" 这里多设置2dp是为了隐藏searchView下划线的效果-->
 
     </androidx.cardview.widget.CardView>

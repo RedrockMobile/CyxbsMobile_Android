@@ -2,18 +2,17 @@
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:layout_marginTop="20dp"
+    android:layout_marginTop="10dp"
     android:layout_width="match_parent"
-    android:layout_height="200dp">
+    android:layout_height="220dp">
 
     <androidx.cardview.widget.CardView
         android:layout_width="343dp"
-        android:layout_height="190dp"
-        android:layout_marginTop="5dp"
-        android:layout_marginBottom="5dp"
+        android:layout_height="220dp"
+
         android:layout_gravity="center_horizontal"
         app:cardCornerRadius="8dp"
-        app:cardElevation="5dp"
+        app:cardElevation="0dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -32,12 +31,10 @@
                 android:id="@+id/uField_todo_activity_name"
                 android:layout_width="114dp"
                 android:layout_height="25dp"
-                android:layout_marginStart="23dp"
+                android:layout_marginStart="28dp"
                 android:layout_marginTop="20dp"
-                android:textSize="18sp"
                 android:textColor="@color/uField_15315b"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintHorizontal_bias="0.024"
+                android:textSize="18sp"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
 
@@ -45,102 +42,106 @@
                 android:id="@+id/uField_todo_activity_time"
                 android:layout_width="90dp"
                 android:layout_height="20dp"
-                android:layout_marginStart="16dp"
-                android:layout_marginTop="20dp"
-                android:layout_marginEnd="16dp"
+                android:layout_marginTop="25dp"
+                android:layout_marginEnd="25dp"
+                android:textColor="@color/ufield_todo_time_color"
                 android:textSize="14sp"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintHorizontal_bias="0.949"
-                app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
 
             <TextView
                 android:id="@+id/ufieldTextview"
-                android:layout_width="80dp"
+                android:layout_width="wrap_content"
                 android:layout_height="20dp"
+                android:layout_marginStart="28dp"
                 android:layout_marginTop="56dp"
-                android:layout_marginEnd="240dp"
                 android:text="@string/ufield_todo_ac_name"
                 android:textSize="14sp"
-                app:layout_constraintEnd_toEndOf="parent"
+                android:textColor="@color/uField_9915315b"
+                app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
 
             <TextView
                 android:id="@+id/uField_todo_activity_type"
-                android:layout_width="63dp"
+                android:layout_width="wrap_content"
                 android:layout_height="20dp"
+                android:layout_marginStart="1dp"
                 android:layout_marginTop="56dp"
-                android:layout_marginEnd="156dp"
                 android:textSize="14sp"
-                app:layout_constraintEnd_toEndOf="parent"
+                android:textColor="@color/uField_6615315b"
+                app:layout_constraintStart_toEndOf="@+id/ufieldTextview"
                 app:layout_constraintTop_toTopOf="parent" />
 
             <TextView
                 android:id="@+id/ufieldTextview2"
-                android:layout_width="80dp"
+                android:layout_width="wrap_content"
                 android:layout_height="20dp"
-                android:layout_marginTop="84dp"
-                android:layout_marginEnd="240dp"
+                android:layout_marginStart="28dp"
+                android:layout_marginTop="8dp"
                 android:text="@string/ufield_todo_ac_p_name"
+                android:textColor="@color/uField_9915315b"
                 android:textSize="14sp"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toTopOf="parent" />
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/ufieldTextview" />
 
             <TextView
                 android:id="@+id/uField_todo_activity_author"
                 android:layout_width="63dp"
                 android:layout_height="20dp"
-                android:layout_marginTop="84dp"
-                android:layout_marginEnd="156dp"
+                android:layout_marginStart="1dp"
+                android:layout_marginTop="8dp"
+                android:textColor="@color/uField_6615315b"
                 android:textSize="14sp"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toTopOf="parent" />
+                app:layout_constraintStart_toEndOf="@+id/ufieldTextview2"
+                app:layout_constraintTop_toBottomOf="@+id/ufieldTextview" />
 
             <TextView
                 android:id="@+id/ufieldTextview3"
-                android:layout_width="80dp"
+                android:layout_width="wrap_content"
                 android:layout_height="20dp"
-                android:layout_marginTop="112dp"
-                android:layout_marginEnd="240dp"
+                android:layout_marginStart="28dp"
+                android:layout_marginTop="8dp"
                 android:text="@string/ufield_todo_ac_phone"
+                android:textColor="@color/uField_9915315b"
                 android:textSize="14sp"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toTopOf="parent" />
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/ufieldTextview2" />
 
             <TextView
                 android:id="@+id/uField_todo_activity_phone"
                 android:layout_width="125dp"
                 android:layout_height="20dp"
-                android:layout_marginTop="112dp"
-                android:layout_marginEnd="93dp"
+                android:layout_marginStart="1dp"
+                android:layout_marginTop="8dp"
+                android:textColor="@color/uField_6615315b"
                 android:textSize="14sp"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toTopOf="parent" />
+                app:layout_constraintStart_toEndOf="@+id/ufieldTextview3"
+                app:layout_constraintTop_toBottomOf="@+id/uField_todo_activity_author" />
 
 
             <Button
                 android:id="@+id/uField_todo_btn_reject"
                 android:layout_width="93dp"
                 android:layout_height="34dp"
-                android:layout_marginStart="124dp"
-                android:layout_marginBottom="18dp"
+                android:layout_marginEnd="15dp"
+                android:layout_marginBottom="25dp"
                 android:background="@drawable/ufield_selector_btn_shape_one"
                 android:text="@string/ufield_btn_refuse"
                 android:textColor="@color/uField_646382"
                 app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintStart_toStartOf="parent" />
+                app:layout_constraintEnd_toStartOf="@+id/uField_todo_btn_accept" />
 
             <Button
                 android:id="@+id/uField_todo_btn_accept"
                 android:layout_width="93dp"
                 android:layout_height="34dp"
-                android:layout_marginStart="232dp"
-                android:layout_marginBottom="18dp"
+                android:layout_marginEnd="25dp"
+                android:layout_marginBottom="25dp"
                 android:background="@drawable/ufield_selector_btn_shape_two"
                 android:text="@string/ufield_btn_accept"
                 android:textColor="@color/uField_white"
                 app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintStart_toStartOf="parent" />
+                app:layout_constraintEnd_toEndOf="parent" />
 
 
         </androidx.constraintlayout.widget.ConstraintLayout>

@@ -25,7 +25,7 @@
         <ImageView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="10dp"
+            android:layout_marginLeft="15dp"
             android:src="@drawable/ufield_ic_check_text" />
 
     </LinearLayout>
@@ -35,9 +35,7 @@
         android:id="@+id/uField_check_tab_layout"
         android:layout_width="match_parent"
         android:layout_height="47dp"
-        android:layout_marginLeft="70.5dp"
         android:layout_marginTop="5dp"
-        android:layout_marginRight="70.5dp"
         app:tabBackground="@null"
         app:tabIndicator="@drawable/ufield_layer_list_indicator_full_tab_shape"
         app:tabIndicatorColor="#2CDEFF"

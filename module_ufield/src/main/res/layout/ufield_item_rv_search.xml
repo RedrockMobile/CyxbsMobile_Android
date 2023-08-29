@@ -2,14 +2,14 @@
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:layout_marginTop="20dp"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:layout_marginTop="20dp">
+    android:layout_height="wrap_content">
     <!--这里突然发现，如果再套一个的话，可以实现,Rv的item居中分布，虽然对于一行一个这种线性布局可以指定代码（两列的尚未发现），这里不改了，直接xml，利用约束布局来约束item-->
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="350dp"
         android:layout_height="105dp"
-        android:layout_marginStart="20dp"
+        android:layout_marginStart="10dp"
         android:layout_marginEnd="20dp"
 
         app:layout_constraintBottom_toBottomOf="parent"
@@ -22,32 +22,37 @@
             android:id="@+id/uField_search_act_image"
             android:layout_width="101dp"
             android:layout_height="101dp"
-            android:layout_marginStart="16dp"
+            android:layout_marginStart="0dp"
             android:scaleType="centerCrop"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
         <TextView
             android:id="@+id/Ufield_search_act_ame"
-            android:layout_width="113dp"
-            android:layout_height="38dp"
+            android:layout_width="wrap_content"
+            android:layout_height="25dp"
             android:layout_marginStart="15dp"
-            android:textColor="@color/uField_112c54"
-            android:textSize="16sp"
-            android:singleLine="true"
-            android:ellipsize="marquee"
-            android:marqueeRepeatLimit="marquee_forever"
+            android:layout_marginTop="5dp"
+            android:ellipsize="end"
             android:focusable="true"
             android:focusableInTouchMode="true"
+            android:marqueeRepeatLimit="marquee_forever"
+            android:maxWidth="82dp"
+            android:maxLines="1"
             android:scrollHorizontally="true"
+            android:singleLine="true"
+            android:textColor="@color/uField_112c54"
+            android:textSize="16sp"
             app:layout_constraintStart_toEndOf="@+id/uField_search_act_image"
             app:layout_constraintTop_toTopOf="parent" />
+        <!--       因为视觉要求，关闭跑马灯 android:ellipsize="marquee"-->
 
         <ImageView
             android:id="@+id/uField_search_isGoing"
             android:layout_width="32dp"
             android:layout_height="14sp"
-            android:layout_marginStart="10dp"
+            android:layout_marginStart="5dp"
+            android:layout_marginTop="10dp"
             app:layout_constraintStart_toEndOf="@+id/Ufield_search_act_ame"
             app:layout_constraintTop_toTopOf="parent" />
 
@@ -56,19 +61,22 @@
             android:layout_width="199dp"
             android:layout_height="20dp"
             android:layout_marginStart="15dp"
-            android:layout_marginTop="12dp"
-            android:textColor="@color/uField_15315b66"
-            android:textSize="14sp"
-            android:singleLine="true"
-            android:ellipsize="marquee"
-            android:marqueeRepeatLimit="marquee_forever"
+            android:layout_marginTop="5dp"
+            android:ellipsize="end"
             android:focusable="true"
             android:focusableInTouchMode="true"
+            android:marqueeRepeatLimit="marquee_forever"
+            android:maxLines="1"
             android:scrollHorizontally="true"
+            android:singleLine="true"
+            android:textColor="@color/uField_15315b66"
+            android:textSize="14sp"
             app:layout_constraintStart_toEndOf="@+id/uField_search_act_image"
             app:layout_constraintTop_toBottomOf="@+id/Ufield_search_act_ame" />
+        <!--因为视觉要求，关闭跑马灯android:ellipsize="marquee"-->
 
         <ImageView
+            android:id="@+id/ufieldImageview3"
             android:layout_width="16dp"
             android:layout_height="16dp"
             android:layout_marginStart="15dp"
@@ -81,11 +89,11 @@
             android:id="@+id/uField_search_ddl"
             android:layout_width="150dp"
             android:layout_height="17dp"
-            android:layout_marginStart="155dp"
-            android:layout_marginTop="14dp"
+            android:layout_marginStart="7dp"
+            android:layout_marginTop="13dp"
             android:textColor="@color/uField_112c5499"
             android:textSize="12sp"
-            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintStart_toEndOf="@+id/ufieldImageview3"
             app:layout_constraintTop_toBottomOf="@+id/Ufield_search_act_what" />
     </androidx.constraintlayout.widget.ConstraintLayout>
 

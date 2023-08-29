@@ -14,6 +14,7 @@ import com.mredrock.cyxbs.ufield.R
 import com.mredrock.cyxbs.ufield.lyt.adapter.TodoRvAdapter
 import com.mredrock.cyxbs.ufield.lyt.bean.TodoBean
 import com.mredrock.cyxbs.ufield.lyt.helper.CheckDialog
+import com.mredrock.cyxbs.ufield.lyt.helper.GridSpacingItemDecoration
 import com.mredrock.cyxbs.ufield.lyt.viewmodel.fragment.TodoViewModel
 import com.scwang.smart.refresh.footer.ClassicsFooter
 import com.scwang.smart.refresh.header.ClassicsHeader
@@ -92,7 +93,7 @@ class TodoFragment : BaseFragment() {
                         CheckDialog.Builder(
                             requireContext(),
                             CheckDialog.Data(
-                                content = "请输入驳回理由（1-10个字）",
+                                content = "不得超过10个字",
                                 width = 255,
                                 height = 207
                             )
@@ -115,6 +116,9 @@ class TodoFragment : BaseFragment() {
 
                     }
                 }
+                addItemDecoration(GridSpacingItemDecoration(1, 0, false))
+
+
             }
         }
 

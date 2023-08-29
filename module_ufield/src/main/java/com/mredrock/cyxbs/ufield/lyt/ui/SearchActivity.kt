@@ -4,6 +4,7 @@ import android.content.Context
 import android.graphics.Color
 import android.os.Bundle
 import android.util.Log
+import android.view.View
 import android.view.ViewGroup
 import android.view.inputmethod.InputMethodManager
 import android.widget.EditText
@@ -97,6 +98,7 @@ class SearchActivity : BaseActivity() {
 
             override fun onTabUnselected(tab: TabLayout.Tab) {
                 tab.view.setBackgroundResource(R.drawable.ufield_ic_tab_shape)
+
             }
 
             override fun onTabReselected(tab: TabLayout.Tab) {}
@@ -109,7 +111,12 @@ class SearchActivity : BaseActivity() {
     private fun iniSearch() {
         val mSearchEditText =
             mSearch.findViewById<EditText>(androidx.appcompat.R.id.search_src_text)
-        mSearchEditText.setTextColor(Color.parseColor("#A1ADBD"))
+        mSearchEditText.setTextColor(Color.parseColor("#15315B"))
+        mSearchEditText.setHintTextColor(Color.parseColor("#6615315B"))
+        // 移除删除按钮的点击事件
+        val closeButton: ImageView = mSearch.findViewById(androidx.appcompat.R.id.search_close_btn)
+        closeButton.isClickable = false
+        closeButton.isFocusable = false
         mSearch.queryHint = "点我开始搜索吧"
         mSearchEditText.textSize = 16F
 
@@ -130,7 +137,6 @@ class SearchActivity : BaseActivity() {
             }
 
             override fun onQueryTextChange(newText: String): Boolean {
-
                 return false
             }
         })

@@ -10,6 +10,7 @@ import androidx.annotation.RequiresApi
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
+import com.bumptech.glide.request.RequestOptions
 import com.mredrock.cyxbs.lib.utils.extensions.setImageFromUrl
 import com.mredrock.cyxbs.ufield.R
 import com.mredrock.cyxbs.ufield.lyt.bean.ItemActivityBean
@@ -56,7 +57,9 @@ class UfieldRvAdapter :
   inner  class RvAllActViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
 
         private val actPic: ImageView = itemView.findViewById(R.id.uField_activity_pic)
-        private val actName: TextView = itemView.findViewById<TextView?>(R.id.uField_activity_name).apply { isSelected=true }
+        private val actName: TextView = itemView.findViewById<TextView?>(R.id.uField_activity_name).apply {
+//            isSelected=true
+        }
         private val actIsGoing: ImageView = itemView.findViewById(R.id.uField_activity_isGoing)
         private val actType: TextView = itemView.findViewById(R.id.uField_activity_type)
         private val actTime: TextView = itemView.findViewById(R.id.uField_activity_time)
@@ -81,6 +84,7 @@ class UfieldRvAdapter :
                 false -> actIsGoing.setImageResource(R.drawable.ufield_ic_activity_on)
                 else -> actIsGoing.setImageResource(R.drawable.ufield_ic_activity_off)
             }
+
 
             when (itemData.activity_type) {
                 "culture" -> actType.text = "文娱活动"

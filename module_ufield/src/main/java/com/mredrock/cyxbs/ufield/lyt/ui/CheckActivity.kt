@@ -1,7 +1,7 @@
 package com.mredrock.cyxbs.ufield.lyt.ui
 
 import android.os.Bundle
-import android.util.Log
+import android.view.ViewGroup
 import android.widget.ImageView
 import androidx.viewpager2.widget.ViewPager2
 import com.google.android.material.tabs.TabLayout
@@ -11,7 +11,6 @@ import com.mredrock.cyxbs.lib.utils.adapter.FragmentVpAdapter
 import com.mredrock.cyxbs.ufield.R
 import com.mredrock.cyxbs.ufield.lyt.fragment.checkfragment.DoneFragment
 import com.mredrock.cyxbs.ufield.lyt.fragment.checkfragment.TodoFragment
-import com.mredrock.cyxbs.ufield.lyt.helper.CheckDialog
 
 /**
  * description ：审核中心的activity
@@ -46,6 +45,15 @@ class CheckActivity : BaseActivity() {
                 1 -> tab.text = "已处理"
             }
         }.attach()
+
+        //设置tab的左右间距
+        for (i in 0 until mTabLayout.tabCount) {
+            val tabView = (mTabLayout.getChildAt(0) as ViewGroup).getChildAt(i)
+            val params = tabView.layoutParams as ViewGroup.MarginLayoutParams
+            params.setMargins(75, params.topMargin, 75, params.bottomMargin)
+            tabView.layoutParams = params
+            tabView.requestLayout()
+        }
     }
 
     /**
