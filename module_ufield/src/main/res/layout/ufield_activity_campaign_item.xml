@@ -4,14 +4,15 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:gravity="center"
-    android:layout_marginTop="10dp"
-    android:layout_marginBottom="30dp">
+    android:layout_marginTop="15dp"
+    android:layout_marginBottom="15dp">
 
     <androidx.cardview.widget.CardView
         android:id="@+id/ufield_fragment_mc_click"
         android:layout_width="339dp"
         android:layout_height="101dp"
-        app:cardElevation="2dp"
+        app:cardElevation="0dp"
+            app:cardBackgroundColor="#00ffffff"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent">
 
@@ -20,6 +21,7 @@
             android:layout_height="101dp"
             app:cardCornerRadius="8dp"
             app:cardElevation="0dp"
+
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent">
 

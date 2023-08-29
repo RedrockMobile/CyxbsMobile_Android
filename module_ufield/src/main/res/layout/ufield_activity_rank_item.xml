@@ -73,7 +73,7 @@
 
         <TextView
             android:id="@+id/ufield_activity_rank_tv_fire"
-            android:layout_width="55dp"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginEnd="16dp"
             android:gravity="center"
@@ -81,7 +81,7 @@
             android:letterSpacing="0.03"
             android:text="245"
             android:textColor="#2921D1"
-            android:textSize="18sp"
+            android:textSize="20sp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent" />
 
@@ -89,7 +89,8 @@
             android:id="@+id/ufield_activity_rank_iv_fire"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="13dp"
+            android:layout_marginTop="12dp"
+            android:layout_marginRight="3dp"
             app:layout_constraintEnd_toStartOf="@+id/ufield_activity_rank_tv_fire"
             app:layout_constraintTop_toTopOf="parent"
             app:srcCompat="@drawable/ufield_ic_activity_rank_fire" />
