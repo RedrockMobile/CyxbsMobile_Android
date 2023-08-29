@@ -47,7 +47,7 @@ class AllFragment : BaseFragment() {
     private fun iniRv() {
 
         mViewModel.apply {
-            allList.observe(requireActivity()) {
+            allList.observe{
                 mDataList = it as MutableList<ItemActivityBean.ItemAll>
                 mAdapter.submitList(it)
             }
@@ -62,7 +62,8 @@ class AllFragment : BaseFragment() {
                     startActivity(intent)
                 }
             }
-            addItemDecoration(GridSpacingItemDecoration(2, 5, false))
+            addItemDecoration(GridSpacingItemDecoration(2, 5, 50))
+
         }
     }
 }

@@ -116,7 +116,7 @@ class TodoFragment : BaseFragment() {
 
                     }
                 }
-                addItemDecoration(GridSpacingItemDecoration(1, 0, false))
+
 
 
             }
