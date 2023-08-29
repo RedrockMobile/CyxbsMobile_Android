@@ -12,18 +12,21 @@ import android.text.style.StyleSpan
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Button
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.fragment.app.viewModels
 import com.mredrock.cyxbs.lib.utils.extensions.setAvatarImageFromUrl
 import com.alibaba.android.arouter.facade.annotation.Route
 import com.mredrock.cyxbs.config.route.FAIRGROUND_ENTRY
+import com.mredrock.cyxbs.config.route.UFIELD_ACTIVITY
 import com.mredrock.cyxbs.lib.base.ui.BaseFragment
+import com.mredrock.cyxbs.lib.utils.service.ServiceManager
 import com.mredrock.cyxbs.main.R
 import com.mredrock.cyxbs.main.viewmodel.FairgroundViewModel
 
 /**
- * description ： TODO:类的作用
+ *
  * author : 苟云东
  * email : 2191288460@qq.com
  * date : 2023/8/26 14:59
@@ -35,6 +38,8 @@ class FairgroundPageFragment : BaseFragment(R.layout.main_fragment_fairground) {
     private val tvDays by R.id.main_tv_days.view<TextView>()
     private val tvNickname by R.id.tv_nickname.view<TextView>()
     private val ivHead by R.id.main_iv_head.view<ImageView>()
+    private val ivActivity by R.id.main_fairground_iv_dctivity.view<ImageView>()
+    private val btActivity by R.id.main_fairground_bt_dctivity.view<Button>()
     @SuppressLint("SetTextI18n")
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -43,6 +48,12 @@ class FairgroundPageFragment : BaseFragment(R.layout.main_fragment_fairground) {
     ): View? {
         val viewModel by viewModels<FairgroundViewModel>()
         viewModel.days.observe(viewLifecycleOwner) {
+            ivActivity.setOnClickListener {
+                ServiceManager.activity(UFIELD_ACTIVITY)
+            }
+            btActivity.setOnClickListener {
+                ServiceManager.activity(UFIELD_ACTIVITY)
+            }
             val text = "这是你来到邮乐园的第 $it 天"
 
             val spannableStringBuilder = SpannableStringBuilder(text)

@@ -7,8 +7,10 @@ import android.view.ViewGroup
 import android.widget.ImageView
 import androidx.activity.viewModels
 import androidx.viewpager2.widget.ViewPager2
+import com.alibaba.android.arouter.facade.annotation.Route
 import com.google.android.material.tabs.TabLayout
 import com.google.android.material.tabs.TabLayoutMediator
+import com.mredrock.cyxbs.config.route.UFIELD_ACTIVITY
 import com.mredrock.cyxbs.lib.base.ui.BaseActivity
 import com.mredrock.cyxbs.lib.utils.adapter.FragmentVpAdapter
 import com.mredrock.cyxbs.ufield.R
@@ -27,6 +29,7 @@ import com.mredrock.cyxbs.ufield.lyt.viewmodel.ui.UFieldViewModel
  * date : 2023/8/7 19:49
  * version: 1.0
  */
+@Route(path = UFIELD_ACTIVITY)
 class UFieldActivity : BaseActivity() {
 
     private val mBack: ImageView by R.id.uField_back.view()
@@ -123,7 +126,6 @@ class UFieldActivity : BaseActivity() {
         }
         mAdmin.setOnClickListener {
             startActivity(Intent(this, CheckActivity::class.java))
-            toast("已进入审核中心")
         }
         mAdd.setOnClickListener {
             startActivity(Intent(this, CreateActivity::class.java))

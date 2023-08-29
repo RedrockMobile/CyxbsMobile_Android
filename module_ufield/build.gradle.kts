@@ -1,5 +1,5 @@
 plugins {
-    id("module-debug")
+    id("module-manager")
 }
 
 

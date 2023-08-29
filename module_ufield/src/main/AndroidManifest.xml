@@ -1,13 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
-<manifest xmlns:android="http://schemas.android.com/apk/res/android" >
+<manifest xmlns:android="http://schemas.android.com/apk/res/android">
 
     <application>
-        <activity
-            android:name=".lxh.ui.activity.CampaignActivity">
-        </activity>
-        <activity
-            android:name=".gyd.ui.DetailActivity">
-        </activity>
+        <activity android:name=".lxh.ui.activity.CampaignActivity" />
+        <activity android:name=".gyd.ui.DetailActivity" />
+        <activity android:name=".lyt.ui.UFieldActivity" />
+        <activity android:name=".lyt.ui.CheckActivity" />
+        <activity android:name=".lyt.ui.SearchActivity" />
+        <activity android:name=".gyd.ui.CreateActivity" />
+        <activity android:name=".lxh.ui.activity.RankActivity" />
     </application>
 
 </manifest>
