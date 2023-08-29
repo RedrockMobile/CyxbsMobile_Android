@@ -9,6 +9,7 @@ import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.mredrock.cyxbs.noclass.R
 import com.mredrock.cyxbs.noclass.bean.NoClassGroup
+import com.mredrock.cyxbs.noclass.widget.SlideMenuLayout
 
 
 /**
@@ -55,7 +56,9 @@ class NoClassSolidAdapter : ListAdapter<NoClassGroup, NoClassSolidAdapter.MyHold
         val tvGroupName: TextView = itemView.findViewById(R.id.tv_noclass_group_name)
         val tvGroupIsTop: TextView = itemView.findViewById(R.id.tv_noclass_group_top_name)
         private val tvGroupDelete: TextView = itemView.findViewById(R.id.tv_noclass_group_delete_item)
+        private val mMenuLayout : SlideMenuLayout = itemView.findViewById(R.id.slide_noclass_container)
         init {
+            tvGroupIsTop.text = "取消置顶"
             tvGroupName.setOnClickListener {
                 val item = getItem(bindingAdapterPosition)
                 onClickGroupName?.invoke(item)
@@ -63,10 +66,12 @@ class NoClassSolidAdapter : ListAdapter<NoClassGroup, NoClassSolidAdapter.MyHold
             tvGroupIsTop.setOnClickListener {
                 val item = getItem(bindingAdapterPosition)
                 onClickGroupIsTop?.invoke(item,tvGroupIsTop)
+                mMenuLayout.closeRightSlide()
             }
             tvGroupDelete.setOnClickListener {
                 val item = getItem(bindingAdapterPosition)
                 onClickGroupDelete?.invoke(item)
+                mMenuLayout.closeRightSlide()
             }
         }
     }

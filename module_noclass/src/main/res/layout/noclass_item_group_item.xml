@@ -24,11 +24,11 @@
                 android:paddingStart="16dp"
                 android:paddingEnd="16dp"
                 android:gravity="center"
-                tools:text="置顶"
-                android:text="置顶"
+                tools:text="取消置顶"
+                android:text="取消置顶"
                 android:textColor="@color/config_white_black"
                 android:background="@color/noclass_top_bg"
-                android:layout_width="wrap_content"
+                android:layout_width="100dp"
                 android:layout_height="46dp"/>
             <TextView
                 android:id="@+id/tv_noclass_group_delete_item"
@@ -39,7 +39,7 @@
                 android:background="@color/noclass_delete_bg"
                 android:text="删除"
                 tools:text="删除"
-                android:layout_width="wrap_content"
+                android:layout_width="82dp"
                 android:layout_height="46dp"/>
         </LinearLayout>
 
