@@ -1,7 +1,9 @@
 plugins {
-    id("module-manager")
+    id("module-debug")
 }
-
+dependLibBase()
+dependLibConfig()
+dependLibUtils()
 
 dependApiAccount()
 

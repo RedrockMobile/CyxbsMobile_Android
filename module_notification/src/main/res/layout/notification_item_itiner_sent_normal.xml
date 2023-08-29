@@ -1,0 +1,234 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tool="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginBottom="8dp"
+    android:background="@color/notification_white"
+    app:cardCornerRadius="12dp">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:padding="17dp">
+
+        <TextView
+            android:id="@+id/notification_itinerary_tv_sent_title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAppearance="@style/notification_itinerary_item_title_text_style"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            tool:text="活动通知" />
+
+        <LinearLayout
+            android:id="@+id/notification_itinerary_ll_status"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@android:color/transparent"
+            android:gravity="center_vertical"
+            android:orientation="horizontal"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent">
+
+            <ImageView
+                android:id="@+id/notification_itinerary_iv_status_uncancel_dot"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="5dp"
+                android:background="@drawable/notification_ic_itinerary_uncancel_dot"
+                android:visibility="visible"
+                tool:ignore="ContentDescription" />
+
+            <TextView
+                android:id="@+id/notification_itinerary_tv_start_status_hint"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/notification_notStart"
+                android:textAppearance="@style/notification_itinerary_item_start_status_hint_style"
+                tool:ignore="HardcodedText" />
+        </LinearLayout>
+
+        <TextView
+            android:id="@+id/notification_itinerary_tv_sent_content"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="3dp"
+            android:textAppearance="@style/notification_itinerary_item_content_text_style"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/notification_itinerary_tv_sent_title"
+            tool:text="你提醒嘎嘎嘎于8月15日周三第5节课和第6节课在灯光篮球场上打篮球" />
+
+        <TextView
+            android:id="@+id/notification_itinerary_tv_sent_generate_time"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="3dp"
+            android:textAppearance="@style/notification_itinerary_item_generate_time_text_style"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/notification_itinerary_tv_sent_content"
+            tool:text="8/14 12:00" />
+
+        <TextView
+            android:id="@+id/notification_itinerary_tv_canceled_hint"
+            android:layout_width="wrap_content"
+            android:layout_height="21dp"
+            android:layout_marginTop="13dp"
+            android:gravity="center_horizontal"
+            android:text="已取消"
+            android:textAppearance="@style/notification_itinerary_item_canceled_hint_style"
+            android:visibility="gone"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/notification_itinerary_tv_sent_generate_time"
+            tool:ignore="HardcodedText" />
+
+
+        <LinearLayout
+            android:id="@+id/notification_itinerary_ll_cancel_reminder"
+            android:layout_width="wrap_content"
+            android:layout_height="21dp"
+            android:layout_marginTop="13dp"
+            android:background="@android:color/transparent"
+            android:gravity="center_horizontal"
+            android:orientation="horizontal"
+            android:visibility="visible"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/notification_itinerary_tv_sent_generate_time">
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:background="@drawable/notification_ic_cancel"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                tool:ignore="ContentDescription"
+                tool:layout_editor_absoluteX="166dp" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="21dp"
+                android:layout_gravity="center_vertical"
+                android:layout_marginStart="5dp"
+                android:text="取消提醒"
+                android:textAppearance="@style/notification_itinerary_item_cancel_reminder_text_style"
+                tool:ignore="HardcodedText" />
+
+        </LinearLayout>
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+    <!--下方是该item布局的另一种写法，按照估计，下面的那种写法开销也许会更小？-->
+
+    <!--    <LinearLayout-->
+    <!--        android:layout_width="match_parent"-->
+    <!--        android:layout_height="match_parent"-->
+    <!--        android:orientation="vertical"-->
+    <!--        android:padding="17dp">-->
+
+    <!--        <RelativeLayout-->
+    <!--            android:layout_width="wrap_content"-->
+    <!--            android:layout_height="wrap_content">-->
+
+    <!--            <TextView-->
+    <!--                android:id="@+id/notification_itinerary_tv_sent_title"-->
+    <!--                android:layout_width="wrap_content"-->
+    <!--                android:layout_height="wrap_content"-->
+    <!--                android:layout_alignParentStart="true"-->
+    <!--                android:layout_marginEnd="251dp"-->
+    <!--                android:layout_toStartOf="@+id/notification_itinerary_ll_status"-->
+    <!--                android:textAppearance="@style/notification_itinerary_item_title_text_style"-->
+    <!--                app:layout_constraintStart_toStartOf="parent"-->
+    <!--                app:layout_constraintTop_toTopOf="parent"-->
+    <!--                tool:text="活动通知:" />-->
+
+    <!--            <LinearLayout-->
+    <!--                android:id="@+id/notification_itinerary_ll_status"-->
+    <!--                android:layout_width="wrap_content"-->
+    <!--                android:layout_height="wrap_content"-->
+    <!--                android:layout_alignParentTop="true"-->
+    <!--                android:layout_alignParentEnd="true"-->
+    <!--                android:background="@android:color/transparent"-->
+    <!--                android:gravity="center_vertical"-->
+    <!--                android:orientation="horizontal">-->
+
+    <!--                <ImageView-->
+    <!--                    android:id="@+id/notification_itinerary_iv_status_uncancel_dot"-->
+    <!--                    android:layout_width="wrap_content"-->
+    <!--                    android:layout_height="wrap_content"-->
+    <!--                    android:layout_marginEnd="5dp"-->
+    <!--                    android:background="@drawable/notification_ic_itinerary_uncancel_dot"-->
+    <!--                    android:visibility="visible"-->
+    <!--                    tool:ignore="ContentDescription" />-->
+
+    <!--                <TextView-->
+    <!--                    android:layout_width="wrap_content"-->
+    <!--                    android:layout_height="wrap_content"-->
+    <!--                    android:text="未开始"-->
+    <!--                    android:textAppearance="@style/notification_itinerary_item_start_status_hint_style"-->
+    <!--                    tool:ignore="HardcodedText" />-->
+    <!--            </LinearLayout>-->
+    <!--        </RelativeLayout>-->
+
+    <!--        <TextView-->
+    <!--            android:id="@+id/notification_itinerary_tv_sent_content"-->
+    <!--            android:layout_width="wrap_content"-->
+    <!--            android:layout_height="wrap_content"-->
+    <!--            android:layout_marginTop="3dp"-->
+    <!--            android:textAppearance="@style/notification_itinerary_item_content_text_style"-->
+    <!--            tool:text="你提醒嘎嘎嘎于8月15日周三第5节课和第6节课在灯光篮球场上打篮球" />-->
+
+    <!--        <TextView-->
+    <!--            android:id="@+id/notification_itinerary_tv_sent_generate_time"-->
+    <!--            android:layout_width="wrap_content"-->
+    <!--            android:layout_height="wrap_content"-->
+    <!--            android:layout_marginTop="3dp"-->
+    <!--            android:textAppearance="@style/notification_itinerary_item_generate_time_text_style"-->
+    <!--            tool:text="8/14 12：00" />-->
+
+    <!--        <TextView-->
+    <!--            android:id="@+id/notification_itinerary_tv_canceled_hint"-->
+    <!--            android:layout_width="wrap_content"-->
+    <!--            android:layout_height="21dp"-->
+    <!--            android:layout_marginTop="13dp"-->
+    <!--            android:gravity="center_horizontal"-->
+    <!--            android:text="已取消"-->
+    <!--            android:textAppearance="@style/notification_itinerary_item_canceled_hint_style"-->
+    <!--            android:visibility="gone"-->
+    <!--            tool:ignore="HardcodedText" />-->
+
+    <!--        <LinearLayout-->
+    <!--            android:id="@+id/notification_itinerary_ll_cancel_reminder"-->
+    <!--            android:layout_width="wrap_content"-->
+    <!--            android:layout_height="21dp"-->
+    <!--            android:layout_gravity="center_horizontal"-->
+    <!--            android:layout_marginTop="13dp"-->
+    <!--            android:background="@android:color/transparent"-->
+    <!--            android:gravity="center_vertical"-->
+    <!--            android:orientation="horizontal"-->
+    <!--            android:visibility="visible">-->
+
+    <!--            <ImageView-->
+    <!--                android:layout_width="wrap_content"-->
+    <!--                android:layout_height="wrap_content"-->
+    <!--                android:layout_gravity="center_vertical"-->
+    <!--                android:background="@drawable/notification_ic_cancel"-->
+    <!--                tool:ignore="ContentDescription"-->
+    <!--                tool:layout_editor_absoluteX="166dp" />-->
+
+    <!--            <TextView-->
+    <!--                android:layout_width="wrap_content"-->
+    <!--                android:layout_height="21dp"-->
+    <!--                android:layout_gravity="center_vertical"-->
+    <!--                android:layout_marginStart="5dp"-->
+    <!--                android:text="取消提醒"-->
+    <!--                android:textAppearance="@style/notification_itinerary_item_cancel_reminder_text_style-->
+    <!--                tool:ignore="HardcodedText" />-->
+
+    <!--        </LinearLayout>-->
+
+    <!--    </LinearLayout>-->
+</androidx.cardview.widget.CardView>

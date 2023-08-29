@@ -9,8 +9,9 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_centerInParent="true"
+        android:text="行程通知"
         android:maxLines="1"
-        android:text="系统通知"
+        android:ellipsize="none"
         android:textColor="@color/notification_home_tabLayout_text_unselect"
         android:textSize="18sp"
         tools:ignore="HardcodedText" />

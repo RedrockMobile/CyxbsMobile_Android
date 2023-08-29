@@ -1,2 +1,4 @@
 <resources>
+    <string name="notification_notStart">未开始</string>
+    <string name="notification_hasStarted">已开始</string>
 </resources>

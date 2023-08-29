@@ -63,7 +63,90 @@
 
     </style>
 
-    <style name="tab_style" tools:ignore="ResourceName">
+    <style name="notification_home_tab_style" tools:ignore="ResourceName">
         <item name="android:textSize">18sp</item>
+    </style>
+
+    <style name="notification_itinerary_tab_text_style" tools:ignore="ResourceName">
+        <item name="android:textSize">16sp</item>
+    </style>
+
+    <style name="notification_itinerary_auto_clear_hint_text_style" tools:ignore="ResourceName">
+        <item name="android:textSize">12sp</item>
+        <item name="android:textColor">@color/notification_itinerary_auto_clear_hint_text</item>
+    </style>
+
+    <style name="notification_itinerary_item_title_text_style" tools:ignore="ResourceName">
+        <item name="android:textSize">17sp</item>
+        <item name="android:textColor">@color/notification_itinerary_item_title_text</item>
+        <item name="android:textStyle">bold</item>
+    </style>
+
+    <style name="notification_itinerary_item_canceled_title_text_style" tools:ignore="ResourceName">
+        <item name="android:textSize">17sp</item>
+        <item name="android:textColor">@color/notification_itinerary_item_canceled_title_text</item>
+        <item name="android:textStyle">bold</item>
+    </style>
+
+
+    <style name="notification_itinerary_item_content_text_style" tools:ignore="ResourceName">
+        <item name="android:textSize">14sp</item>
+        <item name="android:textColor">@color/notification_itinerary_item_content_text</item>
+    </style>
+
+    <style name="notification_itinerary_item_canceled_content_text_style" tools:ignore="ResourceName">
+        <item name="android:textSize">14sp</item>
+        <item name="android:textColor">@color/notification_itinerary_item_canceled_content_text
+        </item>
+    </style>
+
+
+    <style name="notification_itinerary_item_generate_time_text_style" tools:ignore="ResourceName">
+        <item name="android:textSize">14sp</item>
+        <item name="android:textColor">@color/notification_itinerary_item_generate_time_text</item>
+    </style>
+
+    <style name="notification_itinerary_item_canceled_generate_time_text_style" tools:ignore="ResourceName">
+        <item name="android:textSize">14sp</item>
+        <item name="android:textColor">
+            @color/notification_itinerary_item_canceled_generate_time_text
+        </item>
+    </style>
+
+
+    <style name="notification_itinerary_item_start_status_hint_style" tools:ignore="ResourceName">
+        <item name="android:textSize">13sp</item>
+        <item name="android:textColor">@color/notification_itinerary_item_start_status_hint_text
+        </item>
+    </style>
+
+    <style name="notification_itinerary_item_canceled_start_status_hint_style" tools:ignore="ResourceName">
+        <item name="android:textSize">13sp</item>
+        <item name="android:textColor">
+            @color/notification_itinerary_item_canceled_start_status_hint_text
+        </item>
+    </style>
+
+
+    <style name="notification_itinerary_item_cancel_reminder_text_style" tools:ignore="ResourceName">
+        <item name="android:textSize">15sp</item>
+        <item name="android:textColor">@color/notification_itinerary_item_cancel_reminder_text
+        </item>
+    </style>
+
+    <style name="notification_itinerary_item_canceled_hint_style" tools:ignore="ResourceName">
+        <item name="android:textSize">15sp</item>
+        <item name="android:textColor">@color/notification_itinerary_item_canceled_hint_text</item>
+    </style>
+
+    <style name="notification_itinerary_item_add_affair_text_style" tools:ignore="ResourceName">
+        <item name="android:textSize">16sp</item>
+        <item name="android:textColor">@color/notification_itinerary_item_add_affair_text</item>
+    </style>
+
+    <style name="notification_itinerary_item_affair_added_hint_style" tools:ignore="ResourceName">
+        <item name="android:textSize">15sp</item>
+        <item name="android:textColor">@color/notification_itinerary_item_affair_added_hint_text
+        </item>
     </style>
 </resources>

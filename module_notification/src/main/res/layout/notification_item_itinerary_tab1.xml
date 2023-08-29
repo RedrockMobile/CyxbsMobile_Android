@@ -9,18 +9,19 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_centerInParent="true"
+        android:gravity="center_vertical"
         android:maxLines="1"
-        android:text="系统通知"
-        android:textColor="@color/notification_home_tabLayout_text_unselect"
-        android:textSize="18sp"
+        android:text="接收"
+        android:textColor="@color/notification_itinerary_tabLayout_text_selected"
+        android:textSize="16sp"
         tools:ignore="HardcodedText" />
 
     <ImageView
         android:id="@+id/notification_iv_tl_red_dots"
         android:layout_width="wrap_content"
-        android:layout_alignParentEnd="true"
-        android:visibility="invisible"
         android:layout_height="wrap_content"
-        android:background="@drawable/notification_ic_home_reddots"/>
+        android:layout_alignParentEnd="true"
+        android:background="@drawable/notification_ic_home_reddots"
+        android:visibility="invisible" />
 
 </RelativeLayout>
