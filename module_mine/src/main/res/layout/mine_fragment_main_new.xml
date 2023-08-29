@@ -238,10 +238,10 @@
 
             <ImageView
                 android:id="@+id/mine_user_iv_center_activity"
-                android:layout_width="41dp"
-                android:layout_height="40dp"
+                android:layout_width="43dp"
+                android:layout_height="41dp"
                 android:layout_marginTop="30dp"
-                android:scaleType="centerInside"
+                android:scaleType="centerCrop"
                 app:layout_constraintEnd_toEndOf="@+id/mine_user_iv_center_notification"
                 app:layout_constraintTop_toBottomOf="@+id/mine_user_tv_center_notification"
                 app:srcCompat="@drawable/mine_ic_activity_center" />
