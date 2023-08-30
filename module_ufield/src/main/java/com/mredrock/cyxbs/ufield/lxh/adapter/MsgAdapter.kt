@@ -20,7 +20,7 @@ import com.mredrock.cyxbs.ufield.gyd.ui.DetailActivity
 import com.mredrock.cyxbs.ufield.lxh.bean.DetailMsg
 import com.mredrock.cyxbs.ufield.lxh.util.formatNumberToTime
 
-class MsgAdapter : ListAdapter<DetailMsg, MsgAdapter.ViewHolder>(
+class MsgAdapter : ListAdapter<DetailMsg, RecyclerView.ViewHolder>(
     object : DiffUtil.ItemCallback<DetailMsg>() {
         override fun areItemsTheSame(
             oldItem: DetailMsg,
@@ -37,6 +37,21 @@ class MsgAdapter : ListAdapter<DetailMsg, MsgAdapter.ViewHolder>(
         }
     }
 ) {
+    companion object {
+        const val TYPE_ONE = 1
+        const val TYPE_SECOND = 2
+    }
+
+    override fun getItemViewType(position: Int): Int {
+        return if (position == 0) TYPE_ONE
+        else TYPE_SECOND
+    }
+
+    override fun getItemCount(): Int {
+        return currentList.size + 1
+    }
+
+    inner class BlankHolder(itemView: View) : RecyclerView.ViewHolder(itemView)
     inner class ViewHolder(view: View) : RecyclerView.ViewHolder(view) {
         private val mtClick: CardView
         val headImageView: ImageView
@@ -64,19 +79,38 @@ class MsgAdapter : ListAdapter<DetailMsg, MsgAdapter.ViewHolder>(
         }
     }
 
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
-        val view = LayoutInflater.from(parent.context)
-            .inflate(R.layout.ufield_activity_campaign_item, parent, false)
-        return ViewHolder(view)
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
+        var holder: RecyclerView.ViewHolder? = null
+
+
+        when (viewType) {
+            TYPE_ONE -> {
+                holder = BlankHolder(
+                    LayoutInflater.from(parent.context)
+                        .inflate(R.layout.ufield_fragment_campaign_blank, parent, false)
+                )
+            }
+
+            TYPE_SECOND -> {
+                holder = ViewHolder(
+                    LayoutInflater.from(parent.context)
+                        .inflate(R.layout.ufield_activity_campaign_item, parent, false)
+                )
+            }
+        }
+
+        return holder!!
     }
 
     @RequiresApi(Build.VERSION_CODES.O)
-    override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-        holder.run {
-            headImageView.setImageFromUrl(currentList[position].activityCoverUrl)
-            title.text = currentList[position].activityTitle
-            detail.text = currentList[position].activityDetail
-            time.text = formatNumberToTime(currentList[position].activityEndAt)
+    override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
+        if (holder is ViewHolder) {
+            holder.run {
+                headImageView.setImageFromUrl(currentList[position-1].activityCoverUrl)
+                title.text = currentList[position-1].activityTitle
+                detail.text = currentList[position-1].activityDetail
+                time.text = formatNumberToTime(currentList[position-1].activityEndAt)
+            }
         }
     }
 }

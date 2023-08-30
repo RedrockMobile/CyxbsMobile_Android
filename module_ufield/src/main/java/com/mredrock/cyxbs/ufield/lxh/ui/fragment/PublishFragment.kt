@@ -6,6 +6,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.RelativeLayout
+import androidx.appcompat.widget.LinearLayoutCompat
 import androidx.fragment.app.activityViewModels
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -22,7 +23,7 @@ class PublishFragment : BaseFragment() {
 
     private val mHaveMessage by R.id.ufield_campaign_have_message.view<RelativeLayout>()
 
-    private val mNoMessage by R.id.ufield_campaign_no_message.view<RelativeLayout>()
+    private val mNoMessage by R.id.ufield_campaign_no_message.view<LinearLayoutCompat>()
 
     private val mRecyclerView by R.id.ufield_activity_campaign_rv_watch.view<RecyclerView>()
 
