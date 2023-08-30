@@ -68,13 +68,13 @@ class MsgAdapter : ListAdapter<DetailMsg, RecyclerView.ViewHolder>(
                 time = findViewById(R.id.ufield_fragment_tv_time)
             }
             mtClick.setOnSingleClickListener {
-                getItemId(absoluteAdapterPosition).run {
-                    getItemId(absoluteAdapterPosition).run {
+
+                    getItemId(absoluteAdapterPosition-1).run {
                         val intent = Intent(view.context, DetailActivity::class.java)
-                        intent.putExtra("actID", currentList[absoluteAdapterPosition].activityId)
+                        intent.putExtra("actID", currentList[absoluteAdapterPosition-1].activityId)
                         startActivity(view.context, intent, null)
                     }
-                }
+
             }
         }
     }
