@@ -6,7 +6,7 @@
         android:allowBackup="true"
         android:supportsRtl="true"
         android:label="lib_course"
-        android:theme="@style/AppTheme">
+        android:theme="@style/ConfigAppTheme">
         <activity android:name="lib.course.ui.DebugActivity"
             android:exported="true">
             <intent-filter>

@@ -76,7 +76,7 @@ class FollowFragment : BaseViewModelFragment<FollowViewModel>() {
                                             R.drawable.mine_shape_tv_focused
                                         )
                                     text = if (user.isFocus) "互相关注" else " 已关注"
-                                    context.toast(R.string.mine_person_focus_success)
+                                    toast(R.string.mine_person_focus_success)
                                 }else{
                                     background = ContextCompat
                                         .getDrawable(
@@ -84,7 +84,7 @@ class FollowFragment : BaseViewModelFragment<FollowViewModel>() {
                                             R.drawable.mine_shape_tv_unfocus
                                         )
                                     text = "+关注"
-                                    context.toast(R.string.mine_person_unfocus_success)
+                                    toast(R.string.mine_person_unfocus_success)
 
                                 }
                             }

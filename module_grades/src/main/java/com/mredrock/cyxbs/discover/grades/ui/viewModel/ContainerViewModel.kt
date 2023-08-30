@@ -82,7 +82,7 @@ class ContainerViewModel : BaseViewModel() {
                             _analyzeData.postValue(gpaStatus)
                             isBinding.value = false
                         } catch (e: Exception) {
-                            BaseApp.appContext.toast("加载绩点失败")
+                            toast("加载绩点失败")
                         }
                     } else {
                         //此时说明是一些其他的错误
@@ -91,7 +91,7 @@ class ContainerViewModel : BaseViewModel() {
                         val gpaStatus = Gson().fromJson(s, GPAStatus::class.java)
                         _analyzeData.postValue(gpaStatus)
                         isBinding.value = false
-                        BaseApp.appContext.toast("加载绩点失败")
+                        toast("加载绩点失败")
                     }
                 }
             ).lifeCycle()

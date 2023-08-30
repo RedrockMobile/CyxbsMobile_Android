@@ -8,7 +8,9 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.view.animation.AnimationUtils
+import android.widget.LinearLayout
 import android.widget.PopupWindow
+import android.widget.TextSwitcher
 import android.widget.TextView
 import android.widget.ViewSwitcher
 import androidx.core.content.ContextCompat
@@ -17,6 +19,7 @@ import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import com.mredrock.cyxbs.common.mark.EventBusLifecycleSubscriber
 import com.mredrock.cyxbs.common.ui.BaseFragment
 import com.mredrock.cyxbs.common.utils.extensions.dp2px
@@ -27,20 +30,25 @@ import com.mredrock.cyxbs.volunteer.bean.VolunteerTime
 import com.mredrock.cyxbs.volunteer.event.VolunteerLoginEvent
 import com.mredrock.cyxbs.volunteer.utils.DateUtils
 import com.mredrock.cyxbs.volunteer.viewmodel.VolunteerRecordViewModel
-import kotlinx.android.synthetic.main.volunteer_fragment_volunteer_time.*
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
 
 /**
  * Created by yyfbe, Date on 2020/9/4.
  */
-class VolunteerRecordFragment : BaseFragment(), EventBusLifecycleSubscriber, ViewSwitcher.ViewFactory {
+class VolunteerRecordFragment : BaseFragment(), EventBusLifecycleSubscriber,
+    ViewSwitcher.ViewFactory {
 
     //last当前，first最早的一年
     private val firstYear by lazy(LazyThreadSafetyMode.NONE) { mutableListOf<VolunteerTime.RecordBean>() }
     private val secondYear by lazy(LazyThreadSafetyMode.NONE) { mutableListOf<VolunteerTime.RecordBean>() }
     private val thirdYear by lazy(LazyThreadSafetyMode.NONE) { mutableListOf<VolunteerTime.RecordBean>() }
     private val lastYear by lazy(LazyThreadSafetyMode.NONE) { mutableListOf<VolunteerTime.RecordBean>() }
+    private val volunteer_time_recycler by R.id.volunteer_time_recycler.view<RecyclerView>()
+    private val swc_volunteer_record_year by R.id.swc_volunteer_record_year.view<TextSwitcher>()
+    private val tv_volunteer_record_year_time by R.id.tv_volunteer_record_year_time.view<TextView>()
+    private val srl_refresh by R.id.srl_refresh.view<SwipeRefreshLayout>()
+    private val ll_volunteer_record_year by R.id.ll_volunteer_record_year.view<LinearLayout>()
 
     //每年在rv的index
     private var firstYearIndex = -1
@@ -60,20 +68,26 @@ class VolunteerRecordFragment : BaseFragment(), EventBusLifecycleSubscriber, Vie
     private val yearsMap by lazy(LazyThreadSafetyMode.NONE) { SparseArray<MutableList<VolunteerTime.RecordBean>>() }
     private val years: List<Int> by lazy(LazyThreadSafetyMode.NONE) {
         listOf(
-                DateUtils.thisYear(),
-                (DateUtils.thisYear() - 1),
-                (DateUtils.thisYear() - 2),
-                (DateUtils.thisYear() - 3)
+            DateUtils.thisYear(),
+            (DateUtils.thisYear() - 1),
+            (DateUtils.thisYear() - 2),
+            (DateUtils.thisYear() - 3)
         )
     }
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        return LayoutInflater.from(context).inflate(R.layout.volunteer_fragment_volunteer_time, container, false)
+    override fun onCreateView(
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View? {
+        return LayoutInflater.from(context)
+            .inflate(R.layout.volunteer_fragment_volunteer_time, container, false)
     }
 
     override fun onAttach(context: Context) {
         super.onAttach(context)
-        viewModel = activity?.let { ViewModelProvider(it).get(VolunteerRecordViewModel::class.java) }
+        viewModel =
+            activity?.let { ViewModelProvider(it).get(VolunteerRecordViewModel::class.java) }
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -92,26 +106,61 @@ class VolunteerRecordFragment : BaseFragment(), EventBusLifecycleSubscriber, Vie
                         firstYearIndex -> {
                             if (currentIndexYear == 0) return
                             currentIndexYear = 0
-                            swc_volunteer_record_year.setText(getString(R.string.volunteer_string_year, years[3].toString()))
-                            tv_volunteer_record_year_time.text = resources.getString(R.string.volunteer_string_hours_all, firstYearValue.toString())
+                            swc_volunteer_record_year.setText(
+                                getString(
+                                    R.string.volunteer_string_year,
+                                    years[3].toString()
+                                )
+                            )
+                            tv_volunteer_record_year_time.text = resources.getString(
+                                R.string.volunteer_string_hours_all,
+                                firstYearValue.toString()
+                            )
                         }
+
                         secondYearIndex, firstYearIndex - 1 -> {
                             if (currentIndexYear == 1) return
                             currentIndexYear = 1
-                            swc_volunteer_record_year.setText(getString(R.string.volunteer_string_year, years[2].toString()))
-                            tv_volunteer_record_year_time.text = resources.getString(R.string.volunteer_string_hours_all, secondYearValue.toString())
+                            swc_volunteer_record_year.setText(
+                                getString(
+                                    R.string.volunteer_string_year,
+                                    years[2].toString()
+                                )
+                            )
+                            tv_volunteer_record_year_time.text = resources.getString(
+                                R.string.volunteer_string_hours_all,
+                                secondYearValue.toString()
+                            )
                         }
+
                         thirdYearIndex, secondYearIndex - 1 -> {
                             if (currentIndexYear == 2) return
                             currentIndexYear = 2
-                            swc_volunteer_record_year.setText(getString(R.string.volunteer_string_year, years[1].toString()))
-                            tv_volunteer_record_year_time.text = resources.getString(R.string.volunteer_string_hours_all, thirdYearValue.toString())
+                            swc_volunteer_record_year.setText(
+                                getString(
+                                    R.string.volunteer_string_year,
+                                    years[1].toString()
+                                )
+                            )
+                            tv_volunteer_record_year_time.text = resources.getString(
+                                R.string.volunteer_string_hours_all,
+                                thirdYearValue.toString()
+                            )
                         }
+
                         lastYearIndex, thirdYearIndex - 1 -> {
                             if (currentIndexYear == 3) return
                             currentIndexYear = 3
-                            swc_volunteer_record_year.setText(getString(R.string.volunteer_string_year, years[0].toString()))
-                            tv_volunteer_record_year_time.text = resources.getString(R.string.volunteer_string_hours_all, lastYearValue.toString())
+                            swc_volunteer_record_year.setText(
+                                getString(
+                                    R.string.volunteer_string_year,
+                                    years[0].toString()
+                                )
+                            )
+                            tv_volunteer_record_year_time.text = resources.getString(
+                                R.string.volunteer_string_hours_all,
+                                lastYearValue.toString()
+                            )
                         }
                     }
 
@@ -127,7 +176,8 @@ class VolunteerRecordFragment : BaseFragment(), EventBusLifecycleSubscriber, Vie
             if (srl_refresh.isRefreshing) {
                 srl_refresh.isRefreshing = false
             }
-            volunteer_time_recycler.adapter = it.record?.let { data -> VolunteerRecordAdapter(data) }
+            volunteer_time_recycler.adapter =
+                it.record?.let { data -> VolunteerRecordAdapter(data) }
             val thisYear = DateUtils.thisYear()
             if (!it.record.isNullOrEmpty()) {
                 //重置
@@ -143,6 +193,7 @@ class VolunteerRecordFragment : BaseFragment(), EventBusLifecycleSubscriber, Vie
                                 lastYearIndex = 0
                             }
                         }
+
                         thisYear - 1 -> {
                             thirdYear.add(i)
                             thirdYearValue += i.hours?.toFloat() ?: 0f
@@ -151,6 +202,7 @@ class VolunteerRecordFragment : BaseFragment(), EventBusLifecycleSubscriber, Vie
                                 thirdYearIndex = index
                             }
                         }
+
                         thisYear - 2 -> {
                             secondYear.add(i)
                             secondYearValue += i.hours?.toFloat() ?: 0f
@@ -159,6 +211,7 @@ class VolunteerRecordFragment : BaseFragment(), EventBusLifecycleSubscriber, Vie
                                 secondYearIndex = index
                             }
                         }
+
                         thisYear - 3 -> {
                             firstYear.add(i)
                             firstYearValue += i.hours?.toFloat() ?: 0f
@@ -167,6 +220,7 @@ class VolunteerRecordFragment : BaseFragment(), EventBusLifecycleSubscriber, Vie
                                 firstYearIndex = index
                             }
                         }
+
                         else -> {
                             //啊这，这种情况，高中就加时长了吗，那就直接展示，不给定位了
                         }
@@ -178,20 +232,25 @@ class VolunteerRecordFragment : BaseFragment(), EventBusLifecycleSubscriber, Vie
                 lastYearValue > 0 -> {
                     lastYearValue.toString()
                 }
+
                 thirdYearValue > 0 -> {
                     thirdYearValue.toString()
                 }
+
                 secondYearValue > 0 -> {
                     secondYearValue.toString()
                 }
+
                 firstYearValue > 0 -> {
                     firstYearValue.toString()
                 }
+
                 else -> {
                     it.hours.toString()
                 }
             }
-            tv_volunteer_record_year_time.text = resources.getString(R.string.volunteer_string_hours_all, displayTime)
+            tv_volunteer_record_year_time.text =
+                resources.getString(R.string.volunteer_string_hours_all, displayTime)
             showPopup()
         })
     }
@@ -216,7 +275,11 @@ class VolunteerRecordFragment : BaseFragment(), EventBusLifecycleSubscriber, Vie
             }
         }
         val popupView = View.inflate(context, R.layout.volunteer_layout_pop_year_menu, null)
-        val popupWindow = PopupWindow(popupView, ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT)
+        val popupWindow = PopupWindow(
+            popupView,
+            ViewGroup.LayoutParams.WRAP_CONTENT,
+            ViewGroup.LayoutParams.WRAP_CONTENT
+        )
         popupWindow.isOutsideTouchable = true
         popupView.findViewById<RecyclerView>(R.id.rl_pop_menu_year).apply {
             layoutManager = LinearLayoutManager(context)
@@ -230,7 +293,11 @@ class VolunteerRecordFragment : BaseFragment(), EventBusLifecycleSubscriber, Vie
         ll_volunteer_record_year.setOnClickListener {
             context ?: return@setOnClickListener
             if (!popupWindow.isShowing) {
-                popupWindow.showAsDropDown(swc_volunteer_record_year, context!!.dp2px(-8f), 0)
+                popupWindow.showAsDropDown(
+                    swc_volunteer_record_year,
+                    requireContext().dp2px(-8f),
+                    0
+                )
                 popupWindow.update()
             } else {
                 popupWindow.dismiss()
@@ -248,28 +315,43 @@ class VolunteerRecordFragment : BaseFragment(), EventBusLifecycleSubscriber, Vie
                 if (lastYearIndex >= 0) {
                     mLayoutManager.scrollToPositionWithOffset(lastYearIndex, 0)
 //                    volunteer_time_recycler.smoothScrollToPosition(lastYearIndex)
-                    tv_volunteer_record_year_time.text = resources.getString(R.string.volunteer_string_hours_all, lastYearValue.toString())
+                    tv_volunteer_record_year_time.text = resources.getString(
+                        R.string.volunteer_string_hours_all,
+                        lastYearValue.toString()
+                    )
                 }
             }
+
             (DateUtils.thisYear() - 1).toString() -> {
                 if (thirdYearIndex >= 0) {
                     mLayoutManager.scrollToPositionWithOffset(thirdYearIndex, 0)
 //                    volunteer_time_recycler.smoothScrollToPosition(thirdYearIndex)
-                    tv_volunteer_record_year_time.text = resources.getString(R.string.volunteer_string_hours_all, thirdYearValue.toString())
+                    tv_volunteer_record_year_time.text = resources.getString(
+                        R.string.volunteer_string_hours_all,
+                        thirdYearValue.toString()
+                    )
                 }
             }
+
             (DateUtils.thisYear() - 2).toString() -> {
                 if (secondYearIndex >= 0) {
                     mLayoutManager.scrollToPositionWithOffset(secondYearIndex, 0)
 //                    volunteer_time_recycler.smoothScrollToPosition(secondYearIndex)
-                    tv_volunteer_record_year_time.text = resources.getString(R.string.volunteer_string_hours_all, secondYearValue.toString())
+                    tv_volunteer_record_year_time.text = resources.getString(
+                        R.string.volunteer_string_hours_all,
+                        secondYearValue.toString()
+                    )
                 }
             }
+
             (DateUtils.thisYear() - 3).toString() -> {
                 if (firstYearIndex >= 0) {
                     mLayoutManager.scrollToPositionWithOffset(firstYearIndex, 0)
 //                    volunteer_time_recycler.smoothScrollToPosition(firstYearIndex)
-                    tv_volunteer_record_year_time.text = resources.getString(R.string.volunteer_string_hours_all, firstYearValue.toString())
+                    tv_volunteer_record_year_time.text = resources.getString(
+                        R.string.volunteer_string_hours_all,
+                        firstYearValue.toString()
+                    )
                 }
             }
         }
@@ -297,8 +379,13 @@ class VolunteerRecordFragment : BaseFragment(), EventBusLifecycleSubscriber, Vie
     override fun makeView(): View {
         val textView = TextView(context)
         context ?: return textView
-        textView.textSize = context!!.dp2px(5f).toFloat()
-        textView.setTextColor(ContextCompat.getColor(context!!, com.mredrock.cyxbs.common.R.color.common_level_three_font_color))
+        textView.textSize = requireContext().dp2px(5f).toFloat()
+        textView.setTextColor(
+            ContextCompat.getColor(
+                requireContext(),
+                com.mredrock.cyxbs.common.R.color.common_level_three_font_color
+            )
+        )
         return textView
     }
 }

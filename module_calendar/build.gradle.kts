@@ -8,3 +8,6 @@ dependLibConfig()
 dependLibUtils()
 
 dependGlide()
+
+
+useARouter()

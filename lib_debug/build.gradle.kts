@@ -1,6 +1,5 @@
 plugins {
   id("module-manager")
-//  id("me.ele.lancet") // CodeLocator 所需要的插件
 }
 
 
@@ -8,18 +7,17 @@ dependLibBase()
 dependLibUtils()
 dependLibConfig()
 
+dependApiInit()
+dependApiCrash()
 dependApiAccount()
-dependAutoService()
 
 dependencies {
   
-  implementation(project(":api_init")) // 因为 api_init 没有实现模块，所以写这里
-  
   // 依赖 LeakCanary，检查内存泄漏 https://github.com/square/leakcanary
-  implementation("com.squareup.leakcanary:leakcanary-android:2.9.1")
+  implementation("com.squareup.leakcanary:leakcanary-android:2.10")
   
   /**
-   * 很牛逼的检测工具，debug 模式下摇一摇手机触发
+   * 很牛逼的检测工具，debug 模式下摇一摇手机或者按三次手机中间顶部区域触发
    *
    * 支持功能：
    * 1、网络请求监听
@@ -31,31 +29,10 @@ dependencies {
    *
    * 注意：
    * 1、摇一摇手机后会出现一个小条，那个小条是可以左右滑动的滑动后有更多功能
-   * 2、为了防止其他非开发人员使用，请在 lib_debug 中注册你的学号
-   * 3、单模块调试时可以不用注册，直接摇一摇触发
+   * 2、pandora-plugin 插件使用了会在 gradle 8.0 移除的 transform API，我的建议是你们 fork 下仓库，
+   *   然后改了发一个 jitpack 依赖（发这个依赖很简单，不需要账号）
+   * 3、Pandora 已停止维护，可以使用 doKit 进行代替
+   * (doKit 在之前引入过，但因为不兼容AGP版本所以后面删除了，如果想再次引入，可参考 23/7/16 时“移除 doKit” 的 commit)
    */
   implementation("com.github.whataa:pandora:androidx_v2.1.0")
-  
-  /**
-   * 进字节的学长在用的代码调试工具，请先在插件送搜索下载 CodeLocator
-   * 进字节的某位学长表示：如果没有这个插件，我连抖音代码的新需求都不知道从何入手
-   *
-   * 功能很多，常用的几个功能：
-   * 1、定位事件分发链上所有的 View
-   * 2、极其强大的跳转至对应代码的功能
-   *
-   * 注意：每次使用时记得先按第一个手掌的功能抓取当前界面，不然你会发现找不到对应 View
-   *
-   * 仓库地址：https://github.com/bytedance/CodeLocator
-   *
-   * 使用文档：https://github.com/bytedance/CodeLocator/blob/main/how_to_use_codelocator_zh.md
-   *
-   * 22.7.30：
-   * 在做了尝试后，目前因为 LaunchX 太老而无法使用跳转功能，所以目前 CodeLocator 只能拿来定位事件分发和普通使用，基础功能也还行
-   */
-  val codeLocatorVersion = "2.0.0"
-//  implementation("com.bytedance.tools.codelocator:codelocator-core:$codeLocatorVersion")
-  // 下面这个是高级功能，目前无法正常使用，如果需要使用基础功能的话，取消上面这个注释即可
-//  implementation("com.bytedance.tools.codelocator:codelocator-lancet-all:$codeLocatorVersion")
-  // CodeLocator 问题比较多，会疯狂抛被抓的异常出来，影响其他异常，加上目前高级功能无法使用，所以暂时先注释
 }

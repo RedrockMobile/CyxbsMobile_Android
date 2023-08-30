@@ -4,10 +4,7 @@ import android.content.Context
 import android.util.AttributeSet
 import android.view.View
 import android.widget.FrameLayout
-import androidx.core.view.NestedScrollingChild3
-import androidx.core.view.NestedScrollingChildHelper
-import androidx.core.view.NestedScrollingParent3
-import androidx.core.view.ViewCompat
+import androidx.core.view.*
 
 /**
  * 解决 BottomSheet 跟 vp 嵌套的 bug
@@ -30,6 +27,40 @@ import androidx.core.view.ViewCompat
  *
  * **缺点:** 嵌套滑动失效，在你移动时会被 BottomSheet 直接拦截事件
  *
+ *
+ * ## bug 记录
+ * ### 一、长按课表 item 后，下一次触摸时上下滑动不再与 BottomSheet 关联
+ *
+ * 原因：
+ * 0. 触摸事件分为两次，分别为前一次和后一次，两次是分开独立的事件，即前一次经过了 UP 事件
+ *
+ * 1. 长按课表 item 时，此时为前一次事件，DOWN 事件经过了 RV(VP2中的) 和 NSV 的 onInterceptTouchEvent()，
+ *   其中 RV 和 NSV 依次调用了 startNestedScroll()，最后 NSV 跟 VpBottomSheetNestedView 嵌套成功，
+ *   RV 没有找到嵌套滑动父布局 (所以前一次事件中 RV 全程不会触发嵌套滑动，后面将不再考虑前一次事件中的 RV)
+ *
+ * 2. 前一次事件因为触发长按，调用了 parent.requestDisallowInterceptTouchEvent(true)
+ *   导致 NSV 的 onInterceptTouchEvent() 不再回调
+ *
+ * 3. 前一次事件在收到 UP 事件时，因为 NSV 的 onInterceptTouchEvent() 不再被调用，
+ *   所以 NSV 无法调用 stopNestedScroll() 结束嵌套
+ *
+ * 4. 后一次事件正常上下滑动，先是 DOWN，与前一次事件中的 DOWN 一样的步骤，但是 NSV 因为没有停止上一次的嵌套滑动，
+ *   导致 NSV 这次调用 startNestedScroll() 不会通知 VpBottomSheetNestedView
+ *
+ * 5. 但是 RV 却向上遍历到 CoordinatorLayout，CoordinatorLayout 的 onStartNestedScroll() 被回调，
+ *   但是却没有 Behavior 同意嵌套，最后 CoordinatorLayout 调用了 lp.setNestedScrollAccepted(type, false)，
+ *   把 BottomSheetBehavior 对应 View 中的 lp.mDidAcceptNestedScrollTouch 设置成了 false，
+ *   导致 BottomSheetBehavior 被取消了嵌套滑动 (CoordinatorLayout onNestedPreScroll() 会判断这个变量以决定是否分发嵌套滑动)
+ *
+ * 6. 所以就导致 bug 的出现
+ *
+ * 解决办法：
+ * - 从 5 入手，取消 VP2 中 RV 的嵌套滑动 (但是如果有其他嵌套的 View，此问题会再次出现)
+ * - 从 3 入手，在合适时间调用 NSV 的 stopNestedScroll() (原因：因为 NSV 在 RV 后面调用 startNestedScroll()，在 RV 设置成 false 后会被 NSV 再次改为 true)
+ *
+ *
+ * ### 二、...
+ *
  * @author 985892345 (Guo Xiangrui)
  * @email guo985892345@foxmail.com
  * @date 2022/9/13 14:15
@@ -42,6 +73,7 @@ class VpBottomSheetNestedView @JvmOverloads constructor(
 ) : FrameLayout(context, attrs, defStyleAttr, defStyleRes), NestedScrollingChild3, NestedScrollingParent3 {
   
   private val mNestedChildHelper = NestedScrollingChildHelper(this)
+  private val mNestedParentHelper = NestedScrollingParentHelper(this)
   
   init {
     isNestedScrollingEnabled = true
@@ -155,30 +187,20 @@ class VpBottomSheetNestedView @JvmOverloads constructor(
   
   // NestedScrollingParent
   
-  private var mNestedScrollAxes = ViewCompat.SCROLL_AXIS_NONE
-  
   override fun onStartNestedScroll(
     child: View, target: View, axes: Int,
   ): Boolean {
-    return startNestedScroll(axes).also {
-      if (it) {
-        mNestedScrollAxes = axes
-        mTargetView = target
-      }
-    }
+    return onStartNestedScroll(child, target, axes, ViewCompat.TYPE_TOUCH)
   }
   
   override fun onNestedScrollAccepted(
     child: View, target: View, axes: Int,
   ) {
-    // 该方法由 NestedScrollingChildHelper 内部在使用了 startNestedScroll() 后主动调用
-    // 所以这里不需要做什么
+    mNestedParentHelper.onNestedScrollAccepted(child, target, axes)
   }
   
   override fun onStopNestedScroll(target: View) {
-    stopNestedScroll()
-    mNestedScrollAxes = ViewCompat.SCROLL_AXIS_NONE
-    mTargetView = null
+    onStopNestedScroll(target, ViewCompat.TYPE_TOUCH)
   }
   
   override fun onNestedScroll(
@@ -203,29 +225,29 @@ class VpBottomSheetNestedView @JvmOverloads constructor(
   }
   
   override fun getNestedScrollAxes(): Int {
-    return mNestedScrollAxes
+    return mNestedParentHelper.nestedScrollAxes
   }
   
   // NestedScrollingParent2
   
   override fun onStartNestedScroll(child: View, target: View, axes: Int, type: Int): Boolean {
-    return startNestedScroll(axes, type).also {
-      if (it) {
-        mNestedScrollAxes = axes
+    if (axes and ViewCompat.SCROLL_AXIS_VERTICAL != 0) {
+      if (startNestedScroll(axes, type)) {
         mTargetView = target
+        return true
       }
     }
+    return false
   }
   
   override fun onNestedScrollAccepted(child: View, target: View, axes: Int, type: Int) {
-    // 该方法由 NestedScrollingChildHelper 内部在使用了 startNestedScroll() 后主动调用
-    // 所以这里不需要做什么
+    mNestedParentHelper.onNestedScrollAccepted(child, target, axes, type)
   }
   
   override fun onStopNestedScroll(target: View, type: Int) {
     stopNestedScroll(type)
-    mNestedScrollAxes = ViewCompat.SCROLL_AXIS_NONE
     mTargetView = null
+    mNestedParentHelper.onStopNestedScroll(target, type)
   }
   
   override fun onNestedScroll(

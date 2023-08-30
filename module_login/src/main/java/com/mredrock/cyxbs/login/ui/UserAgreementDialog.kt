@@ -12,6 +12,7 @@ import android.text.style.ForegroundColorSpan
 import android.util.Size
 import android.view.Gravity
 import android.view.View
+import android.view.ViewGroup
 import android.widget.LinearLayout
 import android.widget.TextView
 import androidx.core.content.ContextCompat
@@ -30,19 +31,7 @@ import com.mredrock.cyxbs.login.page.useragree.UserAgreeActivity
  */
 class UserAgreementDialog private constructor(
   context: Context,
-  positiveClick: (ChooseDialog.() -> Unit)? = null,
-  negativeClick: (ChooseDialog.() -> Unit)? = null,
-  dismissCallback: (ChooseDialog.() -> Unit)? = null,
-  cancelCallback: (ChooseDialog.() -> Unit)? = null,
-  data: Data,
-) : ChooseDialog(
-  context,
-  positiveClick,
-  negativeClick,
-  dismissCallback,
-  cancelCallback,
-  data
-) {
+) : ChooseDialog(context) {
   
   class Builder(context: Context) : ChooseDialog.Builder(
     context,
@@ -52,15 +41,8 @@ class UserAgreementDialog private constructor(
       buttonSize = Size(119, 38)
     )
   ) {
-    override fun build(): UserAgreementDialog {
-      return UserAgreementDialog(
-        context,
-        positiveClick,
-        negativeClick,
-        dismissCallback,
-        cancelCallback,
-        data
-      )
+    override fun buildInternal(): UserAgreementDialog {
+      return UserAgreementDialog(context)
     }
   }
   
@@ -79,12 +61,12 @@ class UserAgreementDialog private constructor(
     textSize = 14F
   }
   
-  override fun createContentView(context: Context): View {
-    return LinearLayout(context).apply {
+  override fun createContentView(parent: ViewGroup): View {
+    return LinearLayout(parent.context).apply {
       orientation = LinearLayout.VERTICAL
       addView(
         // 标题
-        TextView(context).apply {
+        TextView(parent.context).apply {
           text = "温馨提示"
           layoutParams = LinearLayout.LayoutParams(
             LinearLayout.LayoutParams.MATCH_PARENT,

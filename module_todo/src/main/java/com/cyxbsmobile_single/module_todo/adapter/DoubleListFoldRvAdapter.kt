@@ -6,6 +6,12 @@ import android.content.Intent
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.FrameLayout
+import android.widget.TextView
+import androidx.appcompat.widget.AppCompatEditText
+import androidx.appcompat.widget.AppCompatImageView
+import androidx.appcompat.widget.AppCompatTextView
+import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
@@ -13,18 +19,17 @@ import com.cyxbsmobile_single.module_todo.R
 import com.cyxbsmobile_single.module_todo.adapter.DoubleListFoldRvAdapter.ShowType.NORMAL
 import com.cyxbsmobile_single.module_todo.adapter.DoubleListFoldRvAdapter.ShowType.THREE
 import com.cyxbsmobile_single.module_todo.adapter.slide_callback.SlideCallback
+import com.cyxbsmobile_single.module_todo.component.CheckLineView
 import com.cyxbsmobile_single.module_todo.model.TodoModel
 import com.cyxbsmobile_single.module_todo.model.bean.Todo
 import com.cyxbsmobile_single.module_todo.model.bean.TodoItemWrapper
+import com.cyxbsmobile_single.module_todo.ui.activity.TodoDetailActivity
 import com.cyxbsmobile_single.module_todo.ui.widget.TodoWidget
 import com.cyxbsmobile_single.module_todo.util.getColor
 import com.cyxbsmobile_single.module_todo.util.isOutOfTime
 import com.cyxbsmobile_single.module_todo.util.repeatMode2RemindTime
 import com.mredrock.cyxbs.common.BaseApp
 import com.mredrock.cyxbs.common.utils.LogUtils
-import kotlinx.android.synthetic.main.todo_rv_item_empty.view.*
-import kotlinx.android.synthetic.main.todo_rv_item_title.view.*
-import kotlinx.android.synthetic.main.todo_rv_item_todo.view.*
 
 /**
  * Author: RayleighZ
@@ -48,6 +53,7 @@ class DoubleListFoldRvAdapter(
         NORMAL,
         THREE
     }
+    class
 
     private val uncheckedArray by lazy { ArrayList<TodoItemWrapper>() }
     private val checkedArray by lazy { ArrayList<TodoItemWrapper>() }
@@ -233,8 +239,8 @@ class DoubleListFoldRvAdapter(
         //在这里进行基础的数据类绑定
         when (curWrapper.viewType) {
             TITLE -> {
-                itemView.todo_tv_item_title.text = curWrapper.title
-                itemView.todo_iv_hide_list.visibility = if (position != 0) {
+                itemView.findViewById<AppCompatTextView>(R.id.todo_tv_item_title).text = curWrapper.title
+                itemView.findViewById<AppCompatImageView>(R.id.todo_iv_hide_list).visibility = if (position != 0) {
                     View.VISIBLE
                 } else {
                     View.GONE
@@ -242,11 +248,16 @@ class DoubleListFoldRvAdapter(
             }
 
             TODO -> {
-                if (itemView.todo_cl_item_main.translationX != 0f) {
+                if (itemView.findViewById<ConstraintLayout>(R.id.todo_cl_item_main).translationX != 0f) {
                     clearView(viewHolder = holder)
                 }
                 itemView.apply {
                     curWrapper.todo?.let { todo ->
+                        val todo_iv_todo_item = findViewById<CheckLineView>(R.id.todo_iv_todo_item)
+                        val todo_fl_del = findViewById<FrameLayout>(R.id.todo_fl_del)
+                        val todo_tv_todo_title = findViewById<AppCompatEditText>(R.id.todo_tv_todo_title)
+                        val todo_tv_notify_time = findViewById<AppCompatTextView>(R.id.todo_tv_notify_time)
+                        val todo_iv_check = findViewById<AppCompatImageView>(R.id.todo_iv_check)
                         //重置todo的代办情况，并且不添加动画
                         todo_iv_todo_item.setStatusWithoutAnime(todo.getIsChecked())
                         todo_fl_del.visibility = View.GONE
@@ -292,8 +303,8 @@ class DoubleListFoldRvAdapter(
                 itemView.apply {
                     if (position != 1) {
                         //认定为下方的缺省
-                        todo_rv_item_iv_empty.setImageResource(R.drawable.todo_ic_empty2)
-                        todo_rv_item_tv_empty.text = "还没有已完成事项哦，期待你的好消息！"
+                        findViewById<AppCompatImageView>(R.id.todo_rv_item_iv_empty).setImageResource(R.drawable.todo_ic_empty2)
+                        findViewById<TextView>(R.id.todo_rv_item_tv_empty).text = "还没有已完成事项哦，期待你的好消息！"
                     }
                 }
             }
@@ -345,7 +356,7 @@ class DoubleListFoldRvAdapter(
 
     private fun clearView(viewHolder: RecyclerView.ViewHolder) {
         viewHolder.itemView.apply {
-            todo_fl_del.apply {
+            findViewById<FrameLayout>(R.id.todo_fl_del).apply {
                 pivotX = 0f
                 pivotY = height.toFloat() / 2f
                 scaleX = 1f
@@ -353,7 +364,7 @@ class DoubleListFoldRvAdapter(
                 alpha = 1f
                 isClickable = false
             }
-            todo_cl_item_main.translationX = 0f
+            findViewById<ConstraintLayout>(R.id.todo_cl_item_main).translationX = 0f
         }
     }
 
@@ -397,15 +408,15 @@ class DoubleListFoldRvAdapter(
 
     private fun hideNotifyTime(itemView: View) {
         itemView.apply {
-            todo_tv_notify_time.visibility = View.GONE
-            todo_iv_bell.visibility = View.GONE
+            findViewById<AppCompatTextView>(R.id.todo_tv_notify_time).visibility = View.GONE
+            findViewById<AppCompatImageView>(R.id.todo_iv_bell).visibility = View.GONE
         }
     }
 
     private fun showNotifyTime(itemView: View) {
         itemView.apply {
-            todo_tv_notify_time.visibility = View.VISIBLE
-            todo_iv_bell.visibility = View.VISIBLE
+            findViewById<AppCompatTextView>(R.id.todo_tv_notify_time).visibility = View.VISIBLE
+            findViewById<AppCompatImageView>(R.id.todo_iv_bell).visibility = View.VISIBLE
         }
     }
 }

@@ -28,6 +28,7 @@ object LinkRepository {
   /**
    * 观察当前登录人的我的关联数据
    * - 支持换账号登录后返回新登录人的数据
+   * - 没登录返回 [LinkStuEntity.NULL]
    * - 第一次观察时会请求新的数据
    * - 使用了 distinctUntilChanged()，只会在数据更改了才会回调
    * - 上游不会抛出错误到下游

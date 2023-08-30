@@ -28,7 +28,7 @@ class NewsListActivity : BaseViewModelActivity<NewsListViewModel>() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.news_activity_list)
 
-        common_toolbar.init("教务新闻")
+        common_toolbar.init(this, "教务新闻")
 
         viewModel.newsEvent.observe {
             srl_list.isRefreshing = false

@@ -4,10 +4,6 @@
 #
 #####################################################################
 #noinspection ShrinkerUnresolvedReference
-#基线包使用，生成mapping.txtt
--printmapping mapping.txt
-#补丁包使用，应用mapping.txt
-#-applymapping mapping.txt
 #-------------------------------------------定制化区域----------------------------------------------
 #---------------------------------1.实体类---------------------------------
 #原因：实体类数据，一定不能混淆，忽略了Serializable接口和Parcelable接口,实体类必须实现这两个接口
@@ -133,7 +129,7 @@
 ## hotfix
 ## Sophix https://help.aliyun.com/document_detail/61082.html
 #基线包使用，生成mapping.txt
--printmapping mapping.txt
+#-printmapping mapping.txt # 后面已经生成混淆映射文件
 #生成的mapping.txt在app/build/outputs/mapping/release路径下，移动到/app路径下
 #修复后的项目使用，保证混淆结果一致
 #-applymapping mapping.txt

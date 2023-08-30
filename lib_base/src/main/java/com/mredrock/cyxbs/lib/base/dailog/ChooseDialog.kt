@@ -4,6 +4,7 @@ import android.content.Context
 import android.util.Size
 import android.view.Gravity
 import android.view.View
+import android.view.ViewGroup
 import android.widget.FrameLayout
 import android.widget.TextView
 import androidx.annotation.ColorRes
@@ -22,7 +23,8 @@ import com.mredrock.cyxbs.lib.utils.extensions.dp2px
  *     ChooseDialog.Data(
  *         content = "你已有一位关联的同学\n确定要替换吗？",
  *         width = 255.dp2px,
- *         height = 167.dp2px
+ *         height = 167.dp2px,
+ *         type = DialogType.ONE_BUT // 设置为单按钮，默认为双按钮
  *     )
  * ).setPositiveClick {
  *     // 点击确认按钮
@@ -45,31 +47,12 @@ import com.mredrock.cyxbs.lib.utils.extensions.dp2px
  */
 open class ChooseDialog protected constructor(
   context: Context,
-  positiveClick: (ChooseDialog.() -> Unit)? = null,
-  negativeClick: (ChooseDialog.() -> Unit)? = null,
-  dismissCallback: (ChooseDialog.() -> Unit)? = null,
-  cancelCallback: (ChooseDialog.() -> Unit)? = null,
-  data: Data,
-) : BaseDialog<ChooseDialog, ChooseDialog.Data>(
-  context,
-  positiveClick,
-  negativeClick,
-  dismissCallback,
-  cancelCallback,
-  data
-) {
+) : BaseDialog<ChooseDialog, ChooseDialog.Data>(context,) {
   
   open class Builder(context: Context, data: Data) : BaseDialog.Builder<ChooseDialog, Data>(context, data) {
     
-    override fun build(): ChooseDialog {
-      return ChooseDialog(
-        context,
-        positiveClick,
-        negativeClick,
-        dismissCallback,
-        cancelCallback,
-        data
-      )
+    override fun buildInternal(): ChooseDialog {
+      return ChooseDialog(context)
     }
   }
   
@@ -87,7 +70,7 @@ open class ChooseDialog protected constructor(
    * @param buttonSize button 的大小，单位 dp
    */
   open class Data(
-    val content: String = "弹窗内容为空",
+    val content: CharSequence = "弹窗内容为空",
     val contentSize: Float = 13F,
     val contentGravity: Int = Gravity.CENTER,
     override val type: DialogType = BaseDialog.Data.type,
@@ -104,8 +87,8 @@ open class ChooseDialog protected constructor(
     override val backgroundId: Int = BaseDialog.Data.backgroundId,
   ) : BaseDialog.Data
   
-  override fun createContentView(context: Context): View {
-    return TextView(context).apply {
+  override fun createContentView(parent: ViewGroup): View {
+    return TextView(parent.context).apply {
       layoutParams = FrameLayout.LayoutParams(
         FrameLayout.LayoutParams.MATCH_PARENT,
         FrameLayout.LayoutParams.MATCH_PARENT,

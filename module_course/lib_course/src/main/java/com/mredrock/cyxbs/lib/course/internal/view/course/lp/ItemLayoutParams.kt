@@ -24,7 +24,7 @@ open class ItemLayoutParams : NetLayoutParams, IItemBean {
     data: IItemBean,
     width: Int = MATCH_PARENT,
     height: Int = MATCH_PARENT,
-    gravity: Int = Gravity.CENTER,
+    gravity: Int = Gravity.TOP,
   ) : super(data, width, height, gravity)
   
   constructor(
@@ -34,7 +34,7 @@ open class ItemLayoutParams : NetLayoutParams, IItemBean {
     endColumn: Int,
     width: Int = MATCH_PARENT,
     height: Int = MATCH_PARENT,
-    gravity: Int = Gravity.CENTER,
+    gravity: Int = Gravity.TOP,
   ) : super(startRow, endRow, startColumn, endColumn, width, height, gravity)
   
   /**

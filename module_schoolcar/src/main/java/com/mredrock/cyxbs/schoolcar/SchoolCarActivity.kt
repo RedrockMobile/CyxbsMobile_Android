@@ -28,7 +28,6 @@ import com.mredrock.cyxbs.common.utils.extensions.defaultSharedPreferences
 import com.mredrock.cyxbs.common.utils.extensions.dip
 import com.mredrock.cyxbs.common.utils.extensions.px2dip
 import com.mredrock.cyxbs.schoolcar.Interface.SchoolCarInterface
-import com.mredrock.cyxbs.schoolcar.R
 import com.mredrock.cyxbs.schoolcar.adapter.CarIconAdapter
 import com.mredrock.cyxbs.schoolcar.adapter.CarSiteAdapter
 import com.mredrock.cyxbs.schoolcar.bean.SchoolCarLocation
@@ -36,7 +35,6 @@ import com.mredrock.cyxbs.schoolcar.widget.SchoolCarsSmoothMove
 import com.mredrock.cyxbs.schoolcar.databinding.SchoolcarActivitySchoolcarBinding
 import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
 import io.reactivex.rxjava3.core.Observable
-import io.reactivex.rxjava3.core.Observer
 import io.reactivex.rxjava3.disposables.Disposable
 import java.io.File
 import java.util.concurrent.TimeUnit
@@ -472,25 +470,11 @@ class SchoolCarActivity:BaseActivity() {
   }
 
   private fun timer(name: String) {
-
-    Observable.interval(1, TimeUnit.SECONDS)
+    disposable?.dispose()
+    disposable = Observable.interval(1, TimeUnit.SECONDS)
       .doOnNext {
         smoothMoveData!!.loadCarLocation(NOT_ADD_TIMER)
-      }.observeOn(AndroidSchedulers.mainThread()).subscribe(object : Observer<Long> {
-        override fun onSubscribe(d: Disposable) {
-          disposable = d
-        }
-
-        override fun onNext(t: Long) {
-
-        }
-
-        override fun onError(e: Throwable) {
-
-        }
-
-        override fun onComplete() {}
-      })
+      }.observeOn(AndroidSchedulers.mainThread()).subscribe()
   }
 
   //权限检查

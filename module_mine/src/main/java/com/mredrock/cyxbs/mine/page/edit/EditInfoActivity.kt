@@ -659,10 +659,10 @@ class EditInfoActivity
             )
         )
         options.setToolbarColor(
-            ContextCompat.getColor(this, com.mredrock.cyxbs.common.R.color.colorPrimaryDark)
+            ContextCompat.getColor(this, com.mredrock.cyxbs.config.R.color.colorPrimaryDark)
         )
         options.setStatusBarColor(
-            ContextCompat.getColor(this, com.mredrock.cyxbs.common.R.color.colorPrimaryDark)
+            ContextCompat.getColor(this, com.mredrock.cyxbs.config.R.color.colorPrimaryDark)
         )
         uCrop.withOptions(options)
             .withAspectRatio(300f, 300f)

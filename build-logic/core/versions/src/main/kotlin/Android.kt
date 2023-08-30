@@ -29,29 +29,29 @@ import org.gradle.kotlin.dsl.dependencies
 @Suppress("MemberVisibilityCanBePrivate", "ObjectPropertyName", "SpellCheckingInspection")
 object Android {
     // 基础库 这个版本号跟 targetSdk 相关
-    const val appcompat = "androidx.appcompat:appcompat:1.5.1"
+    const val appcompat = "androidx.appcompat:appcompat:1.6.1"
 
     // 官方控件库
     const val constraintlayout = "androidx.constraintlayout:constraintlayout:2.1.4"
-    const val recyclerview = "androidx.recyclerview:recyclerview:1.2.1"
+    const val recyclerview = "androidx.recyclerview:recyclerview:1.3.1"
     const val cardview = "androidx.cardview:cardview:1.0.0"
     const val viewpager2 = "androidx.viewpager2:viewpager2:1.0.0"
-    const val material = "com.google.android.material:material:1.7.0"
+    const val material = "com.google.android.material:material:1.9.0"
     const val swiperefreshlayout = "androidx.swiperefreshlayout:swiperefreshlayout:1.1.0"
     const val flexbox = "com.google.android.flexbox:flexbox:3.0.0"
 
     // 官方扩展库
     // https://developer.android.google.cn/kotlin/ktx?hl=zh_cn#core
-    const val `core-ktx` = "androidx.core:core-ktx:1.9.0"
+    const val `core-ktx` = "androidx.core:core-ktx:1.10.1"
 
     // https://developer.android.google.cn/kotlin/ktx/extensions-list#dependency_4
     const val `collection-ktx` = "androidx.collection:collection-ktx:1.2.0"
 
     // https://developer.android.google.cn/kotlin/ktx/extensions-list#androidxfragmentapp
-    const val `fragment-ktx` = "androidx.fragment:fragment-ktx:1.5.5"
+    const val `fragment-ktx` = "androidx.fragment:fragment-ktx:1.6.1"
 
     // // https://developer.android.google.cn/kotlin/ktx/extensions-list#androidxactivity
-    const val `activity-ktx` = "androidx.activity:activity-ktx:1.6.1"
+    const val `activity-ktx` = "androidx.activity:activity-ktx:1.7.2"
 }
 
 /**

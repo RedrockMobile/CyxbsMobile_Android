@@ -1,5 +1,8 @@
 import org.gradle.api.Project
+import org.gradle.kotlin.dsl.apply
+import org.gradle.kotlin.dsl.configure
 import org.gradle.kotlin.dsl.dependencies
+import com.google.devtools.ksp.gradle.KspExtension
 
 /**
  * ...
@@ -9,9 +12,8 @@ import org.gradle.kotlin.dsl.dependencies
  */
 @Suppress("MemberVisibilityCanBePrivate", "ObjectPropertyName", "SpellCheckingInspection")
 object Room {
-  // https://developer.android.com/training/data-storage/room
   // https://developer.android.com/jetpack/androidx/releases/room?hl=en
-  const val room_version = "2.5.0-rc01"
+  const val room_version = "2.5.2"
   
   const val `room-runtime` = "androidx.room:room-runtime:$room_version"
   const val `room-compiler` = "androidx.room:room-compiler:$room_version"
@@ -26,10 +28,16 @@ object Room {
 }
 
 fun Project.dependRoom() {
+  // ksp 按需引入
+  apply(plugin = "com.google.devtools.ksp")
+  extensions.configure<KspExtension> {
+    arg("room.schemaLocation", "${project.projectDir}/schemas") // room 的架构导出目录
+    arg("room.incremental", "true")
+  }
   dependencies {
     "implementation"(Room.`room-runtime`)
     "implementation"(Room.`room-ktx`)
-    "kapt"(Room.`room-compiler`)
+    "ksp"(Room.`room-compiler`)
   }
 }
 

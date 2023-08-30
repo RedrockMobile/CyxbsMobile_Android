@@ -14,7 +14,7 @@ import com.mredrock.cyxbs.common.component.JToolbar
 import com.mredrock.cyxbs.common.mark.ActionLoginStatusSubscriber
 import com.mredrock.cyxbs.common.mark.EventBusLifecycleSubscriber
 import com.mredrock.cyxbs.common.service.ServiceManager
-import com.mredrock.cyxbs.common.utils.ActivityBindView
+import com.mredrock.cyxbs.common.utils.BindView
 import com.mredrock.cyxbs.common.utils.LogUtils
 import com.mredrock.cyxbs.common.utils.extensions.getDarkModeStatus
 import org.greenrobot.eventbus.EventBus
@@ -80,40 +80,14 @@ abstract class BaseActivity : AppCompatActivity() {
         }
     }
 
-    @Deprecated("老学长的远古遗留代码，经过几次迭代后，不建议再使用")
     val common_toolbar by R.id.toolbar.view<JToolbar>()
-
-    @Deprecated(message = "废弃，请使用initWithSplitLine()", replaceWith = ReplaceWith("JToolbar.initWithSplitLine()", "com.mredrock.cyxbs.common.ui"))
-    protected fun JToolbar.init(title: String,
-                                @DrawableRes icon: Int = R.drawable.common_ic_back,
-                                listener: View.OnClickListener? = View.OnClickListener { finish() }) {
-        withSplitLine(true)
-        initInternal(title, icon, listener)
-    }
-
-    private fun JToolbar.initInternal(title: String,
-                                      @DrawableRes icon: Int = R.drawable.common_ic_back,
-                                      listener: View.OnClickListener? = View.OnClickListener { finish() },
-                                      titleOnLeft: Boolean = true) {
-        this.title = title
-        setSupportActionBar(this)
-        setTitleLocationAtLeft(titleOnLeft)
-        if (listener == null) {
-            navigationIcon = null
-        } else {
-            setNavigationIcon(icon)
-            setNavigationOnClickListener(listener)
-        }
-    }
 
     protected fun JToolbar.initWithSplitLine(title: String,
                                              withSplitLine: Boolean = true,
                                              @DrawableRes icon: Int = R.drawable.common_ic_back,
                                              listener: View.OnClickListener? = View.OnClickListener { finish() },
                                              titleOnLeft: Boolean = true) {
-        setTitleLocationAtLeft(false)
-        withSplitLine(withSplitLine)
-        initInternal(title, icon, listener, titleOnLeft)
+        init(this@BaseActivity, title, withSplitLine, icon, titleOnLeft, listener)
     }
 
     override fun onRestart() {
@@ -181,12 +155,9 @@ abstract class BaseActivity : AppCompatActivity() {
      *    val mTvNum: TextView by R.id.xxx.view()
      * or
      *    val mTvNum by R.id.xxx.view<TextView>()
-     *
-     * 方便程度比较：
-     *    kt 插件(被废弃) > 属性代理 > ButterKnife(被废弃) > DataBinding > ViewBinding
      * ```
      */
-    protected fun <T: View> Int.view() = ActivityBindView<T>(this, this@BaseActivity)
+    protected fun <T: View> Int.view() = BindView<T>(this, this@BaseActivity)
     
     
     

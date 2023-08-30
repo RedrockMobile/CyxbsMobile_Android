@@ -1,12 +1,10 @@
 package com.mredrock.cyxbs.mine.page.security.viewmodel
 
 import com.mredrock.cyxbs.api.account.IAccountService
-import com.mredrock.cyxbs.common.BaseApp
 import com.mredrock.cyxbs.common.service.ServiceManager
 import com.mredrock.cyxbs.common.utils.extensions.doOnErrorWithDefaultErrorHandler
 import com.mredrock.cyxbs.common.utils.extensions.unsafeSubscribeBy
 import com.mredrock.cyxbs.common.utils.extensions.setSchedulers
-import com.mredrock.cyxbs.common.utils.extensions.toast
 import com.mredrock.cyxbs.common.viewmodel.BaseViewModel
 import com.mredrock.cyxbs.mine.util.apiService
 
@@ -26,7 +24,7 @@ class SecurityActivityViewModel : BaseViewModel() {
         )
                 .setSchedulers()
                 .doOnErrorWithDefaultErrorHandler {
-                    BaseApp.appContext.toast("对不起，获取是否绑定邮箱和密保失败，错误原因:$it")
+                    toast("对不起，获取是否绑定邮箱和密保失败，错误原因:$it")
                     true
                 }
                 .unsafeSubscribeBy {

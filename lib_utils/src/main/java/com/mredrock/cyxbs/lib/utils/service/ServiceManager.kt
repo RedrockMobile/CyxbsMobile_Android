@@ -7,6 +7,21 @@ import com.alibaba.android.arouter.launcher.ARouter
 import kotlin.reflect.KClass
 
 /**
+ *
+ * ## 零、使用 ARouter 需要打开开关
+ * ```
+ * // 在你模块的 build.gradle.kts 中调用
+ *
+ * // 如果该模块使用了 ARouter 的注解
+ * useARouter()
+ *
+ * // 如果该模块只使用了 ARouter 相关的类，不需要注解，传入 false (api 模块已默认设置为 false)
+ * useARouter(false)
+ *
+ * // 但是为了后面好替换 ARouter，更推荐使用 ServiceManager 而不是跟 ARouter 强依赖 (注解只能强依赖没办法)
+ * ```
+ *
+ *
  * 对服务获取的封装，便于以后修改为其他依赖注入的框架，建议都通过该文件提供的方法获取服务，
  * 不采用 @Autowired 的方式，便于以后更换实现。
  * 使用方法：

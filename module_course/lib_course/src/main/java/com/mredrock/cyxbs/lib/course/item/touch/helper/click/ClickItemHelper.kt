@@ -19,7 +19,7 @@ import kotlin.math.abs
  * 2023/2/22 11:57
  */
 class ClickItemHelper(
-  val click: () -> Unit
+  private val click: () -> Unit
 ) : ITouchItemHelper {
   
   fun setClickable(boolean: Boolean) {
@@ -38,7 +38,7 @@ class ClickItemHelper(
   
   private var mIsClickable = true
   
-  private var mIsTriggerClick = true // 是否允许触发长按。如果移动距离过大，则不会触发长按
+  private var mIsTriggerClick = true // 是否允许触发点击。如果移动距离过大，则不会触发点击
   
   override fun onPointerTouchEvent(
     event: IPointerEvent,

@@ -6,8 +6,15 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.FrameLayout
+import android.widget.ImageView
+import android.widget.TextView
+import androidx.appcompat.widget.AppCompatEditText
+import androidx.appcompat.widget.AppCompatImageView
+import androidx.appcompat.widget.AppCompatTextView
+import androidx.appcompat.widget.LinearLayoutCompat
 import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import com.aigestudio.wheelpicker.WheelPicker
 import com.cyxbsmobile_single.module_todo.R
 import com.cyxbsmobile_single.module_todo.adapter.ChooseYearAdapter
@@ -21,9 +28,6 @@ import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.mredrock.cyxbs.common.utils.extensions.dip
 import com.mredrock.cyxbs.common.utils.extensions.toast
-import kotlinx.android.synthetic.main.todo_activity_inner_detail.*
-import kotlinx.android.synthetic.main.todo_dialog_add_todo.*
-import kotlinx.android.synthetic.main.todo_rv_item_todo.*
 import java.util.*
 import kotlin.collections.ArrayList
 
@@ -41,12 +45,31 @@ class AddItemDialog(context: Context, val onConfirm: (Todo) -> Unit) :
     private val todo by lazy { Todo.generateEmptyTodo() }
 
     private val dateBeenStringList by lazy { ArrayList<List<String>>() }
+    private val todo_tv_set_notify_time by lazy { findViewById<TextView>(R.id.todo_tv_set_notify_time)!! }
+    private val todo_inner_add_thing_second by lazy { findViewById<WheelPicker>(R.id.todo_inner_add_thing_second)!! }
+    private val todo_inner_add_thing_third by lazy { findViewById<WheelPicker>(R.id.todo_inner_add_thing_third)!! }
+    private val todo_inner_add_thing_first by lazy { findViewById<WheelPicker>(R.id.todo_inner_add_thing_first)!! }
+    private val todo_inner_add_rv_thing_repeat_list by lazy { findViewById<RecyclerView>(R.id.todo_inner_add_rv_thing_repeat_list)!! }
+    private val todo_tv_set_repeat_time by lazy { findViewById<TextView>(R.id.todo_tv_set_repeat_time)!! }
+    private val todo_iv_add_repeat by lazy { findViewById<AppCompatImageView>(R.id.todo_iv_add_repeat)!! }
+    private val todo_inner_add_thing_repeat_time_confirm by lazy { findViewById<AppCompatTextView>(R.id.todo_inner_add_thing_repeat_time_confirm)!! }
+    private val todo_inner_add_thing_repeat_time_cancel by lazy { findViewById<AppCompatTextView>(R.id.todo_inner_add_thing_repeat_time_cancel)!! }
+    private val todo_tv_del_notify_time by lazy { findViewById<AppCompatTextView>(R.id.todo_tv_del_notify_time)!! }
+    private val todo_tv_add_thing_save by lazy { findViewById<TextView>(R.id.todo_tv_add_thing_save)!! }
+    private val todo_et_todo_title by lazy { findViewById<AppCompatEditText>(R.id.todo_et_todo_title)!! }
+    private val todo_iv_inner_add_thing_repeat_time_index by lazy { findViewById<ImageView>(R.id.todo_iv_inner_add_thing_repeat_time_index)!! }
+    private val todo_tv_add_thing_cancel by lazy { findViewById<TextView>(R.id.todo_tv_add_thing_cancel)!! }
+    private val todo_inner_add_thing_header by lazy { findViewById<FrameLayout>(R.id.todo_inner_add_thing_header)!! }
+    private val todo_iv_add_bell by lazy { findViewById<ImageView>(R.id.todo_iv_add_bell)!! }
+    private val todo_ll_notify_time by lazy { findViewById<LinearLayoutCompat>(R.id.todo_ll_notify_time)!! }
+
 
     private val chooseYearAdapter by lazy {
         ChooseYearAdapter(
             ArrayList(getNextFourYears())
         ) { currentYearOffset ->
             if (currentYearOffset != 0) {
+
                 todo.remindMode.notifyDateTime =
                     "${currentYearOffset + Calendar.getInstance().get(Calendar.YEAR)}年1月1日00:00"
                 todo_tv_set_notify_time.text = "1月1日00:00"
@@ -202,7 +225,7 @@ class AddItemDialog(context: Context, val onConfirm: (Todo) -> Unit) :
         todo_tv_add_thing_save.setOnClickListener {
             //如果没输入标题，就ban掉
             if (todo_et_todo_title.text.toString().isEmpty()) {
-                context.toast("掌友，标题不能为空哦")
+                toast("掌友，标题不能为空哦")
                 return@setOnClickListener
             }
             todo.title = todo_et_todo_title.text.toString()
@@ -484,7 +507,7 @@ class AddItemDialog(context: Context, val onConfirm: (Todo) -> Unit) :
                 todo_inner_add_rv_thing_repeat_list.scrollToPosition(0)
             }
         } else {
-            context.toast("掌友，只能选择一种重复模式哦！")
+            toast("掌友，只能选择一种重复模式哦！")
         }
     }
 

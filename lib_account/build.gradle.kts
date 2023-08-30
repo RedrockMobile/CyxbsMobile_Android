@@ -2,9 +2,6 @@ plugins {
     id("module-manager")
 }
 
-
-dependApiElectricity()
-dependApiVolunteer()
 dependApiLogin()
 
 dependMaterialDialog()
@@ -16,3 +13,5 @@ dependLibConfig()
 dependencies {
     implementation(Rxjava.rxjava3)
 }
+
+useARouter()

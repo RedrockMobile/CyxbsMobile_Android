@@ -7,7 +7,6 @@ import org.gradle.api.Project
  *@signature There are no stars in the hills.
  *@mail  2623036785@qq.com
  */
-
 abstract class BasePlugin : Plugin<Project> {
 
     lateinit var project: Project

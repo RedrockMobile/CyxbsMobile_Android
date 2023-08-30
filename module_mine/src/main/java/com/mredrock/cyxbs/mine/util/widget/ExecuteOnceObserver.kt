@@ -14,7 +14,7 @@ import io.reactivex.rxjava3.disposables.Disposable
  *
  * Created by anriku on 2018/9/18.
  */
-class ExecuteOnceObserver<T>(val onExecuteOnceNext: (T) -> Unit = {},
+class ExecuteOnceObserver<T:Any>(val onExecuteOnceNext: (T) -> Unit = {},
                              val onExecuteOnceComplete: () -> Unit = {},
                              val onExecuteOnceError: (Throwable) -> Unit = {},
                              val onExecuteOnFinal:()->Unit={}) : Observer<T> {

@@ -11,6 +11,7 @@ dependApiAccount()
 dependApiUpdate()
 dependApiLogin()
 dependApiAffair()
+dependApiCrash()
 
 dependApiCourse()
 dependLibCourse() // 需要它的背景图
@@ -18,3 +19,5 @@ dependLibCourse() // 需要它的背景图
 dependRxjava()
 dependNetwork()
 dependCoroutinesRx3()
+
+useARouter()

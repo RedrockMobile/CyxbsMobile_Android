@@ -5,7 +5,6 @@ import android.net.Uri
 import androidx.appcompat.app.AppCompatActivity
 import com.mredrock.cyxbs.common.utils.extensions.doPermissionAction
 import com.mredrock.cyxbs.common.utils.extensions.longToast
-import com.mredrock.cyxbs.mine.R
 import top.limuyang2.photolibrary.LPhotoHelper
 import top.limuyang2.photolibrary.util.LPPImageType
 

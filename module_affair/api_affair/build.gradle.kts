@@ -4,3 +4,6 @@ plugins {
 
 
 dependRxjava()
+
+
+useARouter()

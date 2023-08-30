@@ -17,7 +17,7 @@
         <!--状态栏字体颜色，只是在安卓6.0以上可用-->
         <item name="android:windowLightStatusBar" >true</item>
         <!--去除dialog最底部的灰色背景-->
-        <item name="colorBackgroundFloating">@color/common_transparent_background</item>
+        <item name="colorBackgroundFloating">@android:color/transparent</item>
         <!--去除dialog默认白色背景-->
         <item name="android:background">@android:color/transparent</item>
         <!--是否加遮罩（对话框出现时，背景变暗。为true则充许变暗）-->

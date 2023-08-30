@@ -3,7 +3,7 @@ package com.mredrock.cyxbs.lib.course.internal.item
 import android.view.View
 
 /**
- * ...
+ * [IItem] 的容器接口
  *
  * @author 985892345 (Guo Xiangrui)
  * @email guo985892345@foxmail.com

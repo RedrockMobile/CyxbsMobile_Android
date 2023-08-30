@@ -5,7 +5,6 @@ import androidx.recyclerview.widget.AsyncDifferConfig
 import androidx.recyclerview.widget.AsyncListDiffer
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListUpdateCallback
-import java.util.Collections
 
 /**
  * 差分比较刷新
@@ -27,12 +26,24 @@ abstract class DiffRefreshController<Data : Any> : DiffUtil.ItemCallback<Data>()
   /**
    * 异步差分刷新
    */
-  fun diffRefresh(newData: List<Data>, action: ((List<Data>) -> Unit)? = null) {
+  fun diffRefresh(newData: List<Data>, action: (() -> Unit)? = null) {
+    val oldData = mOldData
     val data = ArrayList(newData) // 不能直接使用传来的数据
     mAsyncListDiffer.submitList(data) {
       mOldData = data // 保存旧数据，提供给下次刷新使用
-      action?.invoke(Collections.unmodifiableList(data))
+      action?.invoke()
+      onDiffRefreshOver(oldData, data)
     }
+  }
+  
+  /**
+   * 用 [newData] 替换 [oldData]，位置不变
+   */
+  @CallSuper
+  open fun replaceDataFromOldList(oldData: Data, newData: Data) {
+    val index = mOldData.indexOf(oldData)
+    mOldData.removeAt(index)
+    mOldData.add(index, newData)
   }
   
   /**
@@ -50,16 +61,6 @@ abstract class DiffRefreshController<Data : Any> : DiffUtil.ItemCallback<Data>()
   }
   
   /**
-   * 用 [newData] 替换 [oldData]，位置不变
-   */
-  @CallSuper
-  open fun replaceDataFromOldList(oldData: Data, newData: Data) {
-    val index = mOldData.indexOf(oldData)
-    mOldData.removeAt(index)
-    mOldData.add(index, newData)
-  }
-  
-  /**
    * 从旧数据集合中清空 data，应该在 Fragment 回调 onDestroyView() 时调用
    */
   protected fun clearDataFromOldList() {
@@ -71,6 +72,11 @@ abstract class DiffRefreshController<Data : Any> : DiffUtil.ItemCallback<Data>()
   protected abstract fun onRemoved(oldData: Data)
   
   protected abstract fun onChanged(oldData: Data, newData: Data)
+  
+  /**
+   * 在差分刷新结束时回调
+   */
+  protected open fun onDiffRefreshOver(oldData: List<Data>, newData: List<Data>) {}
   
   @Suppress("LeakingThis")
   private val mAsyncListDiffer = AsyncListDiffer(
@@ -88,6 +94,8 @@ abstract class DiffRefreshController<Data : Any> : DiffUtil.ItemCallback<Data>()
       }
       
       override fun onMoved(fromPosition: Int, toPosition: Int) {
+        val data = mOldData.removeAt(fromPosition)
+        mOldData.add(toPosition, data)
       }
       
       override fun onChanged(position: Int, count: Int, payload: Any?) {

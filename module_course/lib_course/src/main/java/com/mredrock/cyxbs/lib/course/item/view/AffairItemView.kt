@@ -6,6 +6,7 @@ import com.mredrock.cyxbs.lib.course.R
 import com.mredrock.cyxbs.lib.utils.extensions.color
 import com.mredrock.cyxbs.lib.utils.extensions.dp2px
 import kotlin.math.max
+import kotlin.math.min
 import kotlin.math.sqrt
 
 /**
@@ -26,39 +27,35 @@ open class AffairItemView(context: Context) : ItemView(context) {
     tvContent.setTextColor(mTextColor)
   }
   
+  // 线条的宽度
+  private val mLineWidth = 8.dp2px
+  // 线条之间的间隔
+  private val mLineSpace = mLineWidth * sqrt(2F)
+  
   private val mPaint = Paint().apply {
     color = mStripeColor
+    strokeWidth = mLineWidth.toFloat()
+    style = Paint.Style.FILL
   }
   
-  private val mRectF = RectF()
-  private val mClipBounds = Rect()
+  private val mPath = Path()
   
   override fun onDraw(canvas: Canvas) {
     super.onDraw(canvas)
-    canvas.getClipBounds(mClipBounds)
-    val width = mClipBounds.width()
-    val height = mClipBounds.height()
-    val drawEdge = max(width, height) * sqrt(2F)
-    val space = 8.dp2px
-    val num = (drawEdge / (space * 2)).toInt()
-    canvas.save()
-    canvas.translate(width / 2F, height / 2F)
-    canvas.rotate(45F)
-    mRectF.set(
-      -drawEdge / 2,
-      drawEdge / 2,
-      -drawEdge / 2 + space,
-      -drawEdge / 2
-    )
-    for (i in 0 until num) {
-      canvas.drawRect(mRectF, mPaint)
-      mRectF.set(
-        mRectF.left + (space * 2),
-        mRectF.top,
-        mRectF.right + (space * 2),
-        mRectF.bottom
-      )
+    val w = width
+    val h = height
+    
+    val end = max(w, h) + min(w, h) * 1.414213F
+    var pos = 0F
+    while (pos < end) {
+      mPath.reset()
+      mPath.moveTo(0F, pos)
+      mPath.lineTo(0F, pos + mLineSpace)
+      mPath.lineTo(pos + mLineSpace, 0F)
+      mPath.lineTo(pos, 0F)
+      mPath.close()
+      canvas.drawPath(mPath, mPaint)
+      pos += mLineSpace * 2
     }
-    canvas.restore()
   }
 }

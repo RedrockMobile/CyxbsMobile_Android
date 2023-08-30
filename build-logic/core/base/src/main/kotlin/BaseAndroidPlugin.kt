@@ -1,8 +1,6 @@
 import check.AndroidProjectChecker
-import org.gradle.kotlin.dsl.configure
 import org.gradle.kotlin.dsl.dependencies
 import org.gradle.kotlin.dsl.project
-import org.jetbrains.kotlin.gradle.plugin.KaptExtension
 
 /**
  *@author ZhiQiang Tu
@@ -16,24 +14,16 @@ internal class BaseAndroidPlugin : BasePlugin() {
         // 项目检查工具
         AndroidProjectChecker.configBefore(project)
         
+        dependTestBase()
+        
+        // 所有 Android 模块都已引入 Android 基础依赖
+        dependAndroidBase()
+        dependAndroidView()
+        dependAndroidKtx()
+        dependLifecycleKtx()
+
+        // 自动依赖模块中的直接子模块
         dependencies {
-            "testImplementation"(Test.junit)
-            "androidTestImplementation"(Test.`junit-android`)
-            "androidTestImplementation"(Test.`espresso-core`)
-        }
-
-        dependencies {
-            "implementation"(Android.appcompat)
-        }
-
-        dependencies {
-            "implementation"(ARouter.`arouter-api`)
-            "kapt"(ARouter.`arouter-compiler`)
-        }
-
-        dependencies {
-
-
             // 根 gradle 中包含的所有子模块
             val includeProjects = rootProject.subprojects.map { it.name }
 
@@ -48,13 +38,6 @@ internal class BaseAndroidPlugin : BasePlugin() {
                 "implementation"(project(":${name}:${it.name}"))
             }
 
-        }
-
-        extensions.configure<KaptExtension> {
-            arguments {
-                arg("AROUTER_MODULE_NAME", project.name)
-                arg("room.schemaLocation", "${project.projectDir}/schemas") // room 的架构导出目录
-            }
         }
     
         // 项目检查工具

@@ -6,7 +6,7 @@
         android:allowBackup="true"
         android:label="module_sport"
         android:supportsRtl="true"
-        android:theme="@style/AppTheme">
+        android:theme="@style/ConfigAppTheme">
 
         <activity
             android:name="sport.ui.DebugActivity"
@@ -17,8 +17,7 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".ui.activity.SportDetailActivity"
-            android:theme="@style/AppTheme" />
+            android:name=".ui.activity.SportDetailActivity" />
     </application>
 
 </manifest>

@@ -30,9 +30,15 @@ class EditAffairViewModel : BaseViewModel() {
     content: String,
     atWhatTime: List<AffairEntity.AtWhatTime>,
   ) {
-    AffairRepository.updateAffair(onlyId, time, title, content, atWhatTime)
-      .observeOn(AndroidSchedulers.mainThread())
-      .safeSubscribeBy { "更新成功".toast() }
+    if (atWhatTime.isNotEmpty()) {
+      AffairRepository.updateAffair(onlyId, time, title, content, atWhatTime)
+        .observeOn(AndroidSchedulers.mainThread())
+        .safeSubscribeBy { "更新成功".toast() }
+    } else {
+      AffairRepository.deleteAffair(onlyId)
+        .observeOn(AndroidSchedulers.mainThread())
+        .safeSubscribeBy { "删除成功".toast() }
+    }
   }
 
   fun findAffairEntity(onlyId: Int) {

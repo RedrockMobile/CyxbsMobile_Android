@@ -62,7 +62,7 @@ import com.mredrock.cyxbs.lib.utils.extensions.isDaytimeMode
  *
  *
  *
- * # 更多封装请往父类和接口查看
+ * # 更多封装请往父类和接口查看，[BaseUi] 必看
  * @author 985892345
  * @email 2767465918@qq.com
  * @date 2021/5/25

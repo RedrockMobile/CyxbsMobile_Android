@@ -11,6 +11,7 @@ import com.mredrock.cyxbs.lib.course.helper.affair.expose.ITouchAffairItem
 import com.mredrock.cyxbs.lib.course.helper.affair.expose.ITouchCallback
 import com.mredrock.cyxbs.lib.course.helper.base.AbstractLongPressDispatcher
 import com.mredrock.cyxbs.lib.course.helper.base.ILongPressTouchHandler
+import com.mredrock.cyxbs.lib.course.internal.view.course.ICourseViewGroup
 import com.mredrock.cyxbs.lib.course.utils.forEachReversed
 import com.ndhzs.netlayout.touch.multiple.IPointerTouchHandler
 import com.ndhzs.netlayout.touch.multiple.event.IPointerEvent
@@ -77,9 +78,12 @@ class CreateAffairDispatcher(
         if (abs(x - initialX) <= touchSlop && abs(y - initialY) <= touchSlop) {
           // 这里说明移动的距离小于 touchSlop，但还是得把点击的事务给绘制上，但是只有一格
           val item = initializeTouchAffairItem(event)
-          val initialRow = page.course.getRow(y)
-          val initialColumn = page.course.getColumn(x)
-          item.show(initialRow, initialRow, initialColumn)
+          val course = page.course
+          val initialRow = course.getRow(y)
+          val initialColumn = course.getColumn(x)
+          item.onMoveStart(course, initialRow, initialColumn)
+          item.onMoveEnd(course)
+          mTouchCallbackImpl.onShowTouchAffairItem(course, item)
         }
         null
       }
@@ -137,32 +141,32 @@ class CreateAffairDispatcher(
     
     val mTouchCallbacks = arrayListOf<ITouchCallback>()
     
-    override fun onLongPressStart(pointerId: Int, initialRow: Int, initialColumn: Int) {
-      mTouchCallbacks.forEachReversed { it.onLongPressStart(pointerId, initialRow, initialColumn) }
+    override fun onLongPressed(pointerId: Int, row: Int, column: Int) {
+      mTouchCallbacks.forEachReversed { it.onLongPressed(pointerId, row, column) }
     }
     
-    override fun onTouchMove(
-      pointerId: Int, initialRow: Int, initialColumn: Int,
-      touchRow: Int, topRow: Int, bottomRow: Int,
-    ) {
-      unfoldNoonOrDuskIfNecessary(initialRow, touchRow)
+    override fun onTouchMove(pointerId: Int, row: Int, touchRow: Int, showRow: Int) {
+      unfoldNoonOrDuskIfNecessary(row, touchRow)
       mTouchCallbacks.forEachReversed {
-        it.onTouchMove(
-          pointerId, initialRow, initialColumn,
-          touchRow, topRow, bottomRow
-        )
+        it.onTouchMove(pointerId, row, touchRow, showRow)
       }
     }
     
     override fun onTouchEnd(
-      pointerId: Int, initialRow: Int, initialColumn: Int,
-      touchRow: Int, topRow: Int, bottomRow: Int,
+      pointerId: Int,
+      row: Int,
+      touchRow: Int,
+      showRow: Int,
+      isCancel: Boolean
     ) {
       mTouchCallbacks.forEachReversed {
-        it.onTouchEnd(
-          pointerId, initialRow, initialColumn,
-          touchRow, topRow, bottomRow
-        )
+        it.onTouchEnd(pointerId, row, touchRow, showRow, isCancel)
+      }
+    }
+    
+    override fun onShowTouchAffairItem(course: ICourseViewGroup, item: ITouchAffairItem) {
+      mTouchCallbacks.forEachReversed {
+        it.onShowTouchAffairItem(course, item)
       }
     }
     

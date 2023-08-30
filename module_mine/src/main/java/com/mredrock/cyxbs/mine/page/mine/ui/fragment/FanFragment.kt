@@ -78,7 +78,7 @@ class FanFragment : BaseViewModelFragment<FanViewModel>() {
                                                 R.drawable.mine_shape_tv_focused
                                             )
                                         text = "互相关注"
-                                        context.toast(R.string.mine_person_focus_success)
+                                        toast(R.string.mine_person_focus_success)
 
                                     }else{
                                         background = ContextCompat
@@ -87,7 +87,7 @@ class FanFragment : BaseViewModelFragment<FanViewModel>() {
                                                 R.drawable.mine_shape_tv_unfocus
                                             )
                                         text = "+关注"
-                                        context.toast(R.string.mine_person_unfocus_success)
+                                        toast(R.string.mine_person_unfocus_success)
 
                                     }
                                 }

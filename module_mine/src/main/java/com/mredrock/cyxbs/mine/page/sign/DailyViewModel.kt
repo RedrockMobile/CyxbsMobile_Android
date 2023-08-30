@@ -2,10 +2,8 @@ package com.mredrock.cyxbs.mine.page.sign
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
-import com.mredrock.cyxbs.common.BaseApp
 import com.mredrock.cyxbs.common.service.ServiceManager
 import com.mredrock.cyxbs.common.utils.extensions.unsafeSubscribeBy
-import com.mredrock.cyxbs.common.utils.extensions.toast
 import com.mredrock.cyxbs.common.viewmodel.BaseViewModel
 import com.mredrock.cyxbs.common.viewmodel.event.SingleLiveEvent
 import com.mredrock.cyxbs.mine.network.model.ScoreStatus
@@ -38,7 +36,7 @@ class DailyViewModel : BaseViewModel() {
                             _status.postValue(it)
                         },
                         onError = {
-                            BaseApp.appContext.toast("获取积分失败")
+                            toast("获取积分失败")
                         }
                 )
                 .lifeCycle()
@@ -62,7 +60,7 @@ class DailyViewModel : BaseViewModel() {
                             .postTask(IStoreService.Task.DAILY_SIGN, "")
                         },
                         onError = {
-                            BaseApp.appContext.toast("签到失败")
+                            toast("签到失败")
                         }
                 )
                 .lifeCycle()

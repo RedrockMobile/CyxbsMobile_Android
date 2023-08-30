@@ -47,7 +47,7 @@ class HomeCourseViewModel : BaseViewModel() {
   val courseService = ICourseService::class.impl as CourseServiceImpl
   
   // Vp2 的 currentItem
-  var currentItem: Int = 0
+  val currentItem = MutableLiveData<Int>()
   
   /**
    * 改变关联人的可见性
@@ -88,7 +88,7 @@ class HomeCourseViewModel : BaseViewModel() {
    */
   private fun initObserve(): Disposable {
     // 自己课的观察流
-    val selfLessonObservable = StuLessonRepository.observeSelfLesson()
+    val selfLessonObservable = StuLessonRepository.observeSelfLesson(true)
   
     // 关联人课的观察流
     val linkLessonObservable = LinkRepository.observeLinkStudent()

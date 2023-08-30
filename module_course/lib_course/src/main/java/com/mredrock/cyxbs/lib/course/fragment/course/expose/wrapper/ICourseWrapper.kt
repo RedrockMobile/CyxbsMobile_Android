@@ -37,7 +37,7 @@ interface ICourseWrapper {
   /**
    * [addCourseLifecycleObservable] 的快捷方式
    */
-  fun doOnCourseCreate(action: ICourseViewGroup.() -> Unit, isCallbackIfCrested: Boolean = false)
+  fun doOnCourseCreate(action: ICourseViewGroup.() -> Unit, isCallbackIfCreated: Boolean = false)
   
   /**
    * [addCourseLifecycleObservable] 的快捷方式

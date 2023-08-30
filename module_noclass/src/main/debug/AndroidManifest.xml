@@ -6,7 +6,7 @@
         android:allowBackup="true"
         android:label="module_noclass"
         android:supportsRtl="true"
-        android:theme="@style/AppTheme">
+        android:theme="@style/ConfigAppTheme">
 
         <activity android:name="noclass.ui.DebugActivity"
             android:exported="true">

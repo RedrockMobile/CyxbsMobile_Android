@@ -1,14 +1,10 @@
 package com.mredrock.cyxbs.lib.course.helper.affair.expose
 
-import androidx.core.view.isGone
 import com.mredrock.cyxbs.lib.course.fragment.page.ICoursePage
 import com.mredrock.cyxbs.lib.course.helper.affair.CreateAffairDispatcher
 import com.mredrock.cyxbs.lib.course.helper.affair.view.TouchAffairView
 import com.mredrock.cyxbs.lib.course.internal.view.course.ICourseViewGroup
-import com.mredrock.cyxbs.lib.course.internal.view.course.lp.ItemLayoutParams
 import com.ndhzs.netlayout.touch.multiple.event.IPointerEvent
-import kotlin.math.max
-import kotlin.math.min
 
 /**
  * [CreateAffairDispatcher] 与外界进行交互的接口
@@ -41,7 +37,7 @@ interface ICreateAffairConfig : IBoundary {
    * 创建 [ITouchAffairItem]，可以继承于 [TouchAffairView]
    */
   fun createTouchAffairItem(course: ICourseViewGroup, event: IPointerEvent): ITouchAffairItem {
-    return TouchAffairView(course)
+    return TouchAffairView(course.getContext())
   }
   
   companion object Default : ICreateAffairConfig

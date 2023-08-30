@@ -1,6 +1,7 @@
 package com.mredrock.cyxbs.lib.course.internal.view
 
 import android.content.Context
+import android.view.View
 import android.view.View.OnAttachStateChangeListener
 import android.view.ViewParent
 
@@ -29,6 +30,10 @@ interface IView {
   fun addOnAttachStateChangeListener(listener: OnAttachStateChangeListener)
   
   fun removeOnAttachStateChangeListener(listener: OnAttachStateChangeListener)
+  
+  fun addOnLayoutChangeListener(l: View.OnLayoutChangeListener)
+  
+  fun removeOnLayoutChangeListener(l: View.OnLayoutChangeListener)
   
   fun getHeight(): Int
   

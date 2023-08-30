@@ -1,13 +1,19 @@
 package com.mredrock.cyxbs.lib.utils.utils.judge
 
+import android.content.Context
 import android.net.ConnectivityManager
 import android.net.Network
+import android.net.NetworkCapabilities
+import android.net.wifi.WifiManager
 import com.mredrock.cyxbs.lib.utils.extensions.appContext
 import com.mredrock.cyxbs.lib.utils.extensions.processLifecycleScope
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.suspendCancellableCoroutine
+import java.net.InetAddress
+import java.nio.ByteBuffer
+import java.nio.ByteOrder
 import kotlin.coroutines.resume
 
 
@@ -68,6 +74,74 @@ object NetworkUtil {
         }
       )
     }
+  }
+
+  /**
+   * 判断当前网络的连接方式
+   * @return
+   * true -> 流量
+   *
+   * false -> WIFI
+   *
+   * null -> 其他
+   */
+  fun checkCurrentNetworkType(): Boolean? {
+    // 获取 ConnectivityManager 实例
+    val connectivityManager = appContext.getSystemService(ConnectivityManager::class.java)
+    // 如果有网络连接，则检查网络类型
+    connectivityManager.run {
+      // 获取当前活动的网络连接
+      activeNetwork?.let { network ->
+        // Android M 以上建议使用getNetworkCapabilities API，由于掌邮目前（2023.4）最低SDK版本为24，因此未添加低版本的适配代码
+        getNetworkCapabilities(network)?.let { networkCapabilities ->
+          // 检查网络连接是否有效
+          if (networkCapabilities.hasCapability(NetworkCapabilities.NET_CAPABILITY_VALIDATED)) {
+            // 检查网络类型并返回结果
+            when {
+              networkCapabilities.hasTransport(NetworkCapabilities.TRANSPORT_CELLULAR) -> {
+                // 通过手机流量连接
+                return true
+              }
+              networkCapabilities.hasTransport(NetworkCapabilities.TRANSPORT_WIFI) -> {
+                // 通过WIFI连接
+                return false
+              }
+            }
+          }
+        }
+      }
+    }
+    // 如果无法检查网络类型，则返回 null
+    return null
+  }
+
+  /**
+   * 此函数获取设备WiFi连接的IP地址。
+   * @return 表示设备WiFi连接的IP地址的字符串，如果无法获取IP地址，则返回 null
+   *
+   * 返回值示例： "10.20.204.92"
+   */
+  fun getWifiIPAddress(): String? {
+    // 获取WifiManager系统服务。
+    val wifiManager = appContext.getSystemService(Context.WIFI_SERVICE) as WifiManager
+    val wifiInfo = wifiManager.connectionInfo
+    // 检查wifiInfo不为空且WiFi已启用。
+    if (wifiInfo != null && wifiManager.isWifiEnabled) {
+      try {
+        // 获取设备的IP地址。
+        val ipAddress = wifiInfo.ipAddress
+        // 将设备IP地址转换为InetAddress。
+        val inetAddress = InetAddress.getByAddress(
+          ByteBuffer.allocate(4).order(ByteOrder.LITTLE_ENDIAN).putInt(ipAddress).array()
+        )
+        // 返回表示设备WiFi连接的IP地址的字符串。
+        return inetAddress.hostAddress
+      } catch (e: Exception) {
+        e.printStackTrace()
+      }
+    }
+    // 如果无法获取IP地址，则返回null。
+    return null
   }
   
   private val _state = MutableStateFlow(false)

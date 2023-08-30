@@ -13,6 +13,7 @@ import android.view.ViewGroup
 import android.widget.FrameLayout
 import android.widget.ImageView
 import android.widget.Toast
+import com.bumptech.glide.Glide
 import com.bumptech.glide.load.model.GlideUrl
 import com.davemorrissey.labs.subscaleview.ImageSource
 import com.davemorrissey.labs.subscaleview.SubsamplingScaleImageView
@@ -23,7 +24,6 @@ import com.mredrock.cyxbs.discover.map.R
 import com.mredrock.cyxbs.discover.map.bean.IconBean
 import com.mredrock.cyxbs.discover.map.model.DataSet
 import com.mredrock.cyxbs.discover.map.util.SubsamplingScaleImageViewTarget
-import com.mredrock.cyxbs.discover.map.widget.GlideApp
 import com.mredrock.cyxbs.discover.map.widget.GlideProgressDialog
 import com.mredrock.cyxbs.discover.map.widget.ProgressInterceptor
 import com.mredrock.cyxbs.discover.map.widget.ProgressListener
@@ -45,7 +45,17 @@ class MapLayout : FrameLayout, View.OnClickListener {
 
     private var url: String? = null
     var isLock = false
-
+    
+    /**
+     * 用于加载大图的第三方控件
+     *
+     * 如果有一个内存泄漏是 Thread(AsyncTask) -> SubsamplingScaleImageView -> View.mContext，可以不用修它
+     *
+     * 这第三方控件是没有大问题的，虽然使用的 AsyncTask，但都是用的弱引用，
+     * 导致泄漏的原因在于方法栈中持有 View 对象，并且长时间没有回收导致的。属于很少见的方法栈引起的泄漏。
+     *
+     * 如果你多停留几秒该泄漏就会消失。
+     */
     /** Sub-samplingScaleImageView第三方控件 */
     private val subsamplingScaleImageView = SubsamplingScaleImageView(context)
 
@@ -154,12 +164,14 @@ class MapLayout : FrameLayout, View.OnClickListener {
                         url?.let {
                             ProgressInterceptor.addListener(it, object : ProgressListener {
                                 override fun onProgress(progress: Int) {
-                                    GlideProgressDialog.setProcess(progress)
+                                    this@MapLayout.post {
+                                        GlideProgressDialog.setProcess(progress)
+                                    }
                                 }
 
                             })
                         }
-                        GlideApp.with(context)
+                        Glide.with(context)
                                 .download(GlideUrl(url))
                                 .into(SubsamplingScaleImageViewTarget(context, subsamplingScaleImageView, url
                                         ?: ""))
@@ -642,10 +654,6 @@ class MapLayout : FrameLayout, View.OnClickListener {
 
     private fun setOnUrlGetListener(onUrlGetListener: OnUrlGetListener) {
         this.onUrlGetListener = onUrlGetListener
-    }
-
-    fun removeMyViews() {
-        this.removeAllViews()
     }
 
     fun setOpenSiteId(id: String) {

@@ -38,3 +38,6 @@ dependencies {
     
     implementation(Network.`converter-gson`)
 }
+
+useDataBinding()
+useARouter()

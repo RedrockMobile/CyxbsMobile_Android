@@ -213,7 +213,7 @@
             android:layout_marginEnd="16dp"
             android:layout_marginBottom="17dp"
             android:text="@string/store_exchange"
-            android:textColor="@color/common_white_font_color"
+            android:textColor="@android:color/white"
             android:textSize="16dp"
             android:textStyle="bold"
             android:theme="@style/Theme.MaterialComponents"

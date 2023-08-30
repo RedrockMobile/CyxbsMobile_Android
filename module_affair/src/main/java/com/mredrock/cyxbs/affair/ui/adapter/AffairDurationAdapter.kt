@@ -38,14 +38,14 @@ class AffairDurationAdapter :
           false
         } else oldItem.onlyId == newItem.onlyId
       }
-
+      
       override fun areContentsTheSame(
         oldItem: AffairAdapterData,
         newItem: AffairAdapterData
       ): Boolean {
         return oldItem == newItem
       }
-
+      
       override fun getChangePayload(
         oldItem: AffairAdapterData,
         newItem: AffairAdapterData
@@ -59,7 +59,7 @@ class AffairDurationAdapter :
     if (list != null) {
       super.submitList(list.sortList())
     } else {
-      super.submitList(list)
+      super.submitList(null)
     }
   }
   
@@ -67,10 +67,10 @@ class AffairDurationAdapter :
     if (list != null) {
       super.submitList(list.sortList(), commitCallback)
     } else {
-      super.submitList(list, commitCallback)
+      super.submitList(null, commitCallback)
     }
   }
-
+  
   override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): VHolder {
     val inflater = LayoutInflater.from(parent.context)
     return when (viewType) {
@@ -98,11 +98,11 @@ class AffairDurationAdapter :
       else -> error("???")
     }
   }
-
+  
   override fun onBindViewHolder(holder: VHolder, position: Int) {
     val data = getItem(position)
     val lp = holder.itemView.layoutParams as FlexboxLayoutManager.LayoutParams
-
+    
     when (holder) {
       is WeekDataVHolder -> {
         data as AffairWeekData
@@ -118,7 +118,7 @@ class AffairDurationAdapter :
       }
     }
   }
-
+  
   override fun getItemViewType(position: Int): Int {
     return when (getItem(position)) {
       is AffairWeekData -> WeekDataVHolder::class.hashCode()
@@ -126,12 +126,12 @@ class AffairDurationAdapter :
       is AffairTimeAdd -> TimeAddVHolder::class.hashCode()
     }
   }
-
+  
   sealed class VHolder(itemView: View) : RecyclerView.ViewHolder(itemView)
-
+  
   inner class WeekDataVHolder(itemView: View) : VHolder(itemView) {
     val tvWeek: TextView = itemView.findViewById(R.id.affair_tv_add_affair_week)
-
+    
     init {
       tvWeek.setOnSingleClickListener { view ->
         val dialog =
@@ -149,11 +149,11 @@ class AffairDurationAdapter :
       }
     }
   }
-
+  
   inner class TimeDataVHolder(itemView: View) : VHolder(itemView) {
     val tvTime: TextView = itemView.findViewById(R.id.affair_tv_find_course_history_name)
     val ivDelete: ImageView = itemView.findViewById(R.id.affair_ib_find_course_history_delete)
-
+    
     init {
       ivDelete.setOnSingleClickListener {
         val data = getItem(layoutPosition) as AffairTimeData
@@ -165,12 +165,22 @@ class AffairDurationAdapter :
           submitList(tmp)
         }
       }
+      tvTime.setOnSingleClickListener {
+        val data = getItem(layoutPosition) as AffairTimeData
+        TimeSelectDialog(it.context, data) { newData ->
+          val newList = currentList.toMutableList()
+          val index = newList.indexOf(data)
+          newList.removeAt(index)
+          newList.add(index, newData)
+          submitList(newList)
+        }.show()
+      }
     }
   }
-
+  
   inner class TimeAddVHolder(itemView: View) : VHolder(itemView) {
     val ivAdd: ImageView = itemView.findViewById(R.id.affair_iv_add_time)
-
+    
     init {
       ivAdd.setOnSingleClickListener {
         val dialog = TimeSelectDialog(it.context) { timeData ->

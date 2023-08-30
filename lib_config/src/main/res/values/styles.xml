@@ -1,5 +1,30 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources xmlns:tools="http://schemas.android.com/tools">
     <!-- Base application theme. -->
-    <style name="ConfigAppTheme" parent="AppTheme" />
+    <style name="ConfigAppTheme" parent="Theme.AppCompat.DayNight.NoActionBar">
+        <!-- Customize your theme here. -->
+        <item name="colorPrimary">@color/colorPrimary</item>
+        <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
+        <item name="colorAccent">@color/colorAccent</item>
+        <!--        透明状态栏-->
+        <item name="statusBarBackground">@android:color/transparent</item>
+        <item name="android:windowLightStatusBar">true</item>
+        <!--        每个Activity的Window背景，最好别设置透明或者空-->
+        <item name="android:windowBackground">@color/config_window_background</item>
+        <item name="actionMenuTextColor">@color/config_level_two_font_color</item>
+        <!--   Material Dialog color-->
+        <item name="md_color_title">@color/config_level_three_font_color</item>
+        <item name="md_color_content">@color/config_level_four_font_color</item>
+        <item name="md_color_button_text">@color/config_level_two_font_color</item>
+    </style>
+
+    <style name="ConfigAppTheme.FullScreen" parent="ConfigAppTheme">
+        <item name="android:windowFullscreen">true</item>
+    </style>
+
+    <style name="ConfigAppTheme.NoActionBar">
+        <item name="windowActionBar">false</item>
+        <item name="windowNoTitle">true</item>
+    </style>
+
 </resources>
