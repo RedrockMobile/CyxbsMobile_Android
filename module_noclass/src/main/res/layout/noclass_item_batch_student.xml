@@ -34,13 +34,14 @@
         app:layout_constraintVertical_bias="0"
         tools:text="20xx114514" />
 
-    <com.google.android.material.checkbox.MaterialCheckBox
+    <CheckBox
         android:id="@+id/noclass_batch_cb_student_select_status"
         android:layout_width="17dp"
         android:layout_height="17dp"
+        android:layout_marginEnd="16dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:srcCompat="@drawable/noclass_ic_add_student"
+        android:button="@drawable/noclass_selector_item_samename_checkbox"
         tools:ignore="ContentDescription" />
 </androidx.constraintlayout.widget.ConstraintLayout>

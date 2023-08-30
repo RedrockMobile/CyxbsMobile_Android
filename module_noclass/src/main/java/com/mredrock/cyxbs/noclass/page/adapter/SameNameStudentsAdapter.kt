@@ -37,8 +37,7 @@ class SameNameStudentsAdapter : ListAdapter<Student, SameNameStudentsAdapter.Vie
         val studentNumber : TextView = itemView.findViewById(R.id.noclass_batch_tv_student_id)
         val isSelected : CheckBox = itemView.findViewById(R.id.noclass_batch_cb_student_select_status)
         init {
-            isSelected.setOnCheckedChangeListener { button, status ->
-                button.isChecked = status
+            isSelected.setOnCheckedChangeListener { _, status ->
                 getItem(bindingAdapterPosition).isSelected = status
             }
         }

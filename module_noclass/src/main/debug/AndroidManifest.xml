@@ -21,6 +21,9 @@
             android:windowSoftInputMode="adjustNothing"/>
         <activity android:name=".page.ui.activity.GroupDetailActivity"/>
 
+        <activity
+            android:name=".page.ui.activity.BatchAdditionActivity"
+            android:windowSoftInputMode="adjustNothing"/>
     </application>
 
 </manifest>

@@ -53,7 +53,7 @@ class SameNameSelectionDialog(
         super.onStart()
         if (dialog is BottomSheetDialog) {
             val behaviour = (dialog as BottomSheetDialog).behavior
-            behaviour.isDraggable=true
+            behaviour.isDraggable=false
             behaviour.state = BottomSheetBehavior.STATE_EXPANDED
         }
     }
@@ -70,8 +70,8 @@ class SameNameSelectionDialog(
                 dialog.cancel()
             }
         }
-        //点击空白处取消
-        dialog.setCancelable(true)
+        // 禁用点击空白处取消
+        dialog.setCancelable(false)
 
         dialog.findViewById<RecyclerView>(R.id.noclass_batch_rv_dialog_students_container).apply {
             adapter = SameNameStudentsAdapter().apply {
