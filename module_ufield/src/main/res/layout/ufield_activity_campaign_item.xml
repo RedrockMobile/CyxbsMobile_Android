@@ -11,8 +11,8 @@
         android:id="@+id/ufield_fragment_mc_click"
         android:layout_width="339dp"
         android:layout_height="101dp"
+        app:cardBackgroundColor="#00ffffff"
         app:cardElevation="0dp"
-            app:cardBackgroundColor="#00ffffff"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent">
 
@@ -21,7 +21,6 @@
             android:layout_height="101dp"
             app:cardCornerRadius="8dp"
             app:cardElevation="0dp"
-
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent">
 
@@ -37,11 +36,11 @@
             android:id="@+id/ufield_fragment_tv_title"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginStart="111dp"
+            android:layout_marginStart="110.5dp"
+            android:layout_marginTop="1dp"
             android:layout_marginEnd="3dp"
             android:letterSpacing="0.05"
-            android:lineHeight="18.96dp"
-            android:maxLines="2"
+            android:maxLines="1"
             android:text="啦啦啦啦啦啦啦啦啦啦啦啦啦啦啦啦啦"
             android:textColor="@color/ufield_fragment_head_title"
             android:textSize="16sp" />
@@ -51,10 +50,10 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="111dp"
-            android:layout_marginTop="50dp"
+            android:layout_marginTop="29.5dp"
             android:ellipsize="end"
             android:lineHeight="19.6dp"
-            android:maxLines="1"
+            android:maxLines="2"
             android:text="呜呜呜呜呜呜呜呜呜呜呜呜呜呜呜呜呜"
             android:textColor="@color/ufield_fragment_detail"
             android:textSize="14sp" />
@@ -62,7 +61,7 @@
         <ImageView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginStart="112dp"
+            android:layout_marginStart="111dp"
             android:layout_marginTop="80dp"
             android:src="@drawable/ufield_ic_activity_campaign_time" />
 
@@ -70,8 +69,8 @@
             android:id="@+id/ufield_fragment_tv_time"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginStart="140dp"
-            android:layout_marginTop="79dp"
+            android:layout_marginStart="132dp"
+            android:layout_marginTop="79.5dp"
             android:lineHeight="16.8dp"
             android:text="2023年8月23日"
             android:textColor="@color/ufield_fragment_time_color"
