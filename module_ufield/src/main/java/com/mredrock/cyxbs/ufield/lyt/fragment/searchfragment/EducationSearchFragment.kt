@@ -56,7 +56,6 @@ class EducationSearchFragment : BaseFragment() {
                     startActivity(intent)
                 }
             }
-         //   addItemDecoration(GridSpacingItemDecoration(1, 10, false))
         }
 
     }

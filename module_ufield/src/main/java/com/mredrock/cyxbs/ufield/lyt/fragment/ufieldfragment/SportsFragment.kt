@@ -61,7 +61,7 @@ class SportsFragment : BaseFragment() {
                     startActivity(intent)
                 }
             }
-            addItemDecoration(GridSpacingItemDecoration(2, 5, 50))
+            addItemDecoration(GridSpacingItemDecoration(2, 0, 50))
 
         }
     }

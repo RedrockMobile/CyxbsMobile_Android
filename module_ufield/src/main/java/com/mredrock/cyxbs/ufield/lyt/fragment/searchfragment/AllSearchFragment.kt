@@ -56,7 +56,6 @@ class AllSearchFragment : BaseFragment() {
                     startActivity(intent)
                 }
             }
-         //   addItemDecoration(GridSpacingItemDecoration(1, 10, false))
         }
 
 
