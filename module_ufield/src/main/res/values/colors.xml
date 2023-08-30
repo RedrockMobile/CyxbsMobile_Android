@@ -32,4 +32,5 @@
     <color name="ufield_fragment_head_title">#112C54</color>
     <color name="ufield_fragment_detail">#6615315B</color>
     <color name="ufield_fragment_time_color">#CC2A4E84</color>
+    <color name="ufield_fragment_time_transparent">#00000000</color>
 </resources>
