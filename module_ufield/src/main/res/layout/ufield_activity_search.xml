@@ -12,7 +12,7 @@
         android:id="@+id/uField_back_search"
         android:layout_width="9dp"
         android:layout_height="25dp"
-        android:layout_marginStart="17dp"
+        android:layout_marginStart="23dp"
         android:layout_marginTop="55dp"
         android:src="@drawable/ufield_ic_search_back"
         app:layout_constraintStart_toStartOf="parent"
@@ -33,18 +33,18 @@
 
     <androidx.cardview.widget.CardView
         android:id="@+id/uField_cardView"
-        android:layout_width="288dp"
+        android:layout_width="273dp"
         android:layout_height="38dp"
-        android:layout_marginStart="40dp"
         android:layout_marginTop="50dp"
         android:layout_marginEnd="8dp"
+        android:layout_marginStart="70dp"
         android:layout_marginBottom="16dp"
         android:background="@color/uField_white"
         app:cardCornerRadius="29dp"
         app:cardElevation="0dp"
         app:layout_constraintBottom_toTopOf="@+id/ufield_Linearlayout"
         app:layout_constraintEnd_toStartOf="@+id/uField_search_text"
-        app:layout_constraintStart_toEndOf="@+id/uField_back_search"
+        app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent">
 
         <ImageView
@@ -52,18 +52,18 @@
             android:layout_width="17dp"
             android:layout_height="17dp"
             android:layout_gravity="center_vertical"
-            android:layout_marginStart="15dp"
+            android:layout_marginStart="17dp"
             android:src="@drawable/ufield_ic_logo_search" />
 
         <androidx.appcompat.widget.SearchView
             android:id="@+id/uField_searchView"
-            android:layout_width="300dp"
+            android:layout_width="350dp"
             android:layout_height="40dp"
             android:layout_marginStart="28dp"
             app:iconifiedByDefault="false"
             app:searchIcon="@null" />
         <!-- app:closeIcon="@color/common_transparent_background"-->
-        <!-- android:layout_height="40dp" 这里多设置2dp是为了隐藏searchView下划线的效果-->
+        <!-- android:layout_height="40dp" (最初是)这里多设置2dp是为了隐藏searchView下划线的效果-->
 
     </androidx.cardview.widget.CardView>
 

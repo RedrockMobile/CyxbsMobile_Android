@@ -2,7 +2,7 @@
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:layout_marginTop="10dp"
+    android:layout_marginTop="26dp"
     android:layout_width="match_parent"
     android:layout_height="220dp">
 
@@ -124,7 +124,7 @@
                 android:layout_width="93dp"
                 android:layout_height="34dp"
                 android:layout_marginEnd="15dp"
-                android:layout_marginBottom="25dp"
+                android:layout_marginBottom="30dp"
                 android:background="@drawable/ufield_selector_btn_shape_one"
                 android:text="@string/ufield_btn_refuse"
                 android:textColor="@color/uField_646382"
@@ -136,7 +136,7 @@
                 android:layout_width="93dp"
                 android:layout_height="34dp"
                 android:layout_marginEnd="25dp"
-                android:layout_marginBottom="25dp"
+                android:layout_marginBottom="30dp"
                 android:background="@drawable/ufield_selector_btn_shape_two"
                 android:text="@string/ufield_btn_accept"
                 android:textColor="@color/uField_white"

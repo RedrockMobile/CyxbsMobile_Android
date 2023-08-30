@@ -3,11 +3,11 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="270dp">
+    android:layout_height="260dp">
 
     <FrameLayout
         android:layout_width="167dp"
-        android:layout_height="250dp"
+        android:layout_height="240dp"
         android:layout_gravity="center_horizontal"
         android:layout_marginStart="50dp"
         android:layout_marginEnd="50dp"
@@ -17,7 +17,7 @@
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="167dp"
-            android:layout_height="250dp"
+            android:layout_height="240dp"
             android:background="@drawable/ufield_shape_pic_shape"
             android:layout_gravity="center_horizontal">
 
@@ -61,10 +61,10 @@
 
             <ImageView
                 android:id="@+id/uField_activity_isGoing"
-                android:layout_width="35dp"
-                android:layout_height="13dp"
+                android:layout_width="40dp"
+                android:layout_height="16dp"
                 android:layout_marginStart="5dp"
-                android:layout_marginTop="20dp"
+                android:layout_marginTop="19dp"
                 app:layout_constraintStart_toEndOf="@+id/uField_activity_name"
                 app:layout_constraintTop_toBottomOf="@+id/uField_all_frameLayout" />
 
@@ -73,7 +73,7 @@
                 android:layout_width="70dp"
                 android:layout_height="17dp"
                 android:layout_marginStart="12dp"
-                android:layout_marginTop="11dp"
+                android:layout_marginTop="5dp"
                 android:textColor="@color/uField_15315b66"
                 android:textSize="12sp"
                 app:layout_constraintStart_toStartOf="parent"
@@ -83,7 +83,7 @@
                 android:layout_width="16dp"
                 android:layout_height="16dp"
                 android:layout_marginStart="12dp"
-                android:layout_marginTop="16dp"
+                android:layout_marginTop="8dp"
                 android:src="@drawable/ufield_ic_activity_time"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/uField_activity_type" />
@@ -93,7 +93,7 @@
                 android:layout_width="110dp"
                 android:layout_height="17dp"
                 android:layout_marginStart="36dp"
-                android:layout_marginTop="14dp"
+                android:layout_marginTop="6dp"
                 android:textColor="@color/uField_112c5499"
                 android:textSize="12sp"
                 app:layout_constraintStart_toStartOf="parent"

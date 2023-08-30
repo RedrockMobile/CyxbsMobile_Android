@@ -12,13 +12,14 @@
         android:id="@+id/uField_back"
         android:layout_width="9dp"
         android:layout_height="18dp"
-        android:layout_marginStart="17dp"
+        android:layout_marginStart="20dp"
         android:layout_marginTop="60dp"
         android:src="@drawable/ufield_ic_back"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
     <ImageView
+        android:id="@+id/ufieldImageview4"
         android:layout_width="110dp"
         android:layout_height="31dp"
         android:layout_marginStart="15dp"
@@ -31,11 +32,11 @@
         android:id="@+id/uField_activity_isAdmin"
         android:layout_width="20.02dp"
         android:layout_height="21dp"
+        android:layout_marginStart="168dp"
         android:layout_marginTop="59dp"
-        android:layout_marginEnd="20dp"
         android:src="@drawable/ufield_ic_administrator"
         android:visibility="gone"
-        app:layout_constraintEnd_toStartOf="@+id/uField_cup"
+        app:layout_constraintStart_toEndOf="@+id/ufieldImageview4"
         app:layout_constraintTop_toTopOf="parent"
         tools:visibility="visible" />
 
@@ -44,20 +45,18 @@
         android:layout_width="16dp"
         android:layout_height="20.5dp"
         android:layout_marginTop="60dp"
-        android:layout_marginEnd="33dp"
+        android:layout_marginEnd="20dp"
         android:src="@drawable/ufield_ic_cup"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
     <ImageView
         android:id="@+id/uField_search"
-        android:layout_width="308dp"
-        android:layout_height="38dp"
-        android:layout_marginStart="35dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="20dp"
         android:layout_marginTop="98dp"
-        android:layout_marginEnd="7dp"
         android:src="@drawable/ufield_ic_search"
-        app:layout_constraintEnd_toStartOf="@+id/uField_add"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
@@ -66,7 +65,7 @@
         android:layout_width="28dp"
         android:layout_height="28dp"
         android:layout_marginTop="103dp"
-        android:layout_marginEnd="33dp"
+        android:layout_marginEnd="20dp"
         android:src="@drawable/ufield_ic_add"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
