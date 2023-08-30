@@ -11,7 +11,7 @@ dependRxjava()
 dependNetwork()
 dependCoroutinesRx3()
 dependMaterialDialog()
-
+useDataBinding()
 dependencies {
     implementation(Android.appcompat)
     implementation(Android.constraintlayout)

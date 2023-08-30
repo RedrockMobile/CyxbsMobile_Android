@@ -6,7 +6,7 @@
         android:allowBackup="true"
         android:label="module_declare"
         android:supportsRtl="true"
-        android:theme="@style/AppTheme">
+        android:theme="@style/ConfigAppTheme">
         <activity
             android:name=".pages.main.page.activity.PostedActivity"
             android:exported="false" />
@@ -34,8 +34,7 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".pages.post.PostActivity"
-            android:theme="@style/AppTheme" />
+            android:name=".pages.post.PostActivity" />
     </application>
 
 </manifest>

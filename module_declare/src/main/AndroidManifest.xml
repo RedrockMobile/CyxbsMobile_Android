@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android">
 
-    <application android:theme="@style/AppTheme">
+    <application >
         <activity
             android:name=".pages.main.page.activity.HomeActivity"
             android:exported="false">

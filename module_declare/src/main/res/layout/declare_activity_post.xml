@@ -25,7 +25,7 @@
                 android:layout_height="16dp"
                 android:background="?attr/selectableItemBackgroundBorderless"
                 android:src="@drawable/declare_ic_home_arrow_left"
-                tools:ignore="ContentDescription" />
+                tools:ignore="ContentDescription,TouchTargetSizeCheck,SpeakableTextPresentCheck" />
 
             <TextView
                 android:id="@+id/declare_home_toolbar_tv"
@@ -39,7 +39,7 @@
         </androidx.appcompat.widget.Toolbar>
 
         <androidx.cardview.widget.CardView
-            android:background="@color/common_grades_item_cardView_bg"
+            android:background="@color/declare_post_item_cardView_bg"
             android:layout_margin="8dp"
             app:cardCornerRadius="6dp"
             android:elevation="30dp"
