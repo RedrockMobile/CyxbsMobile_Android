@@ -11,15 +11,16 @@ import android.text.style.ReplacementSpan
  * email : 2191288460@qq.com
  * date : 2023/8/24 19:42
  */
-class RoundBackgroundSpan(
+class RoundedBackgroundSpan(
     private val backgroundColor: Int,
-    private val backgroundPadding: Float,
     private val cornerRadius: Float,
     private val textColor: Int
 ) : ReplacementSpan() {
 
-    override fun getSize(paint: Paint, text: CharSequence?, start: Int, end: Int, fm: Paint.FontMetricsInt?): Int {
-        return (paint.measureText(text, start, end) + backgroundPadding * 2).toInt()
+    override fun getSize(
+        paint: Paint, text: CharSequence?, start: Int, end: Int, fm: Paint.FontMetricsInt?
+    ): Int {
+        return (paint.measureText(text, start, end) + 2 * cornerRadius).toInt()
     }
 
     override fun draw(
@@ -29,17 +30,18 @@ class RoundBackgroundSpan(
         val textWidth = paint.measureText(text, start, end)
         val textHeight = bottom - top
 
-        val backgroundWidth = textWidth + backgroundPadding * 2
-        val backgroundRight = x + backgroundWidth
-        val backgroundTop = top.toFloat()
-        val backgroundBottom = bottom.toFloat()
+        val sideLength = maxOf(textWidth, textHeight.toFloat()) + (2 * cornerRadius)
+        val backgroundLeft = x + ((textWidth - sideLength) / 2)
+        val backgroundTop = y.toFloat()
+        val backgroundRight = backgroundLeft + sideLength
+        val backgroundBottom = backgroundTop + sideLength
 
-        val textX = x + backgroundPadding
-        val textY = y.toFloat()
+        val textX = backgroundLeft + (sideLength - textWidth) / 2
+        val textY = y + textHeight - ((paint.descent() + paint.ascent()) / 2)
 
         paint.color = backgroundColor
         canvas.drawRoundRect(
-            RectF(x, backgroundTop, backgroundRight, backgroundBottom),
+            RectF(backgroundLeft, backgroundTop, backgroundRight, backgroundBottom),
             cornerRadius, cornerRadius, paint
         )
 

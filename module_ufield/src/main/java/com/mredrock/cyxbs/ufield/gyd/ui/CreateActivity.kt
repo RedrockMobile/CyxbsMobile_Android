@@ -57,7 +57,7 @@ import java.util.Locale
 
 class CreateActivity : BaseActivity() {
 
-    private val toolbar by R.id.create_toolbar.view<Toolbar>()
+    private val ivBack by R.id.ufield_iv_back.view<ImageView>()
     private val etIntroduce by R.id.et_introduce.view<EditText>()
     private val coverImage by R.id.iv_cover.view<ImageView>()
     private val coverText by R.id.tv_cover.view<TextView>()
@@ -161,24 +161,20 @@ class CreateActivity : BaseActivity() {
     @SuppressLint("SetTextI18n")
     private fun initView() {
 
-
-        toolbar.title = ""
-        setSupportActionBar(toolbar)
-        supportActionBar?.setHomeAsUpIndicator(R.drawable.ufield_ic_toolbar_back)
-        supportActionBar?.setDisplayHomeAsUpEnabled(true)
+        ivBack.setOnClickListener {
+            finishAfterTransition()
+        }
 
 
         val hint = "关于活动的简介（不超过100个字）"
 
         val spannableStringBuilder = SpannableStringBuilder(hint)
 
-// 设置文字"介绍活动简介"的大小
-        val introSizeSpan = RelativeSizeSpan(0.9f)
-        spannableStringBuilder.setSpan(introSizeSpan, 0, 7, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE)
+
 
 
 // 设置文字"（不超过100字）"的大小
-        val limitSizeSpan = RelativeSizeSpan(0.6f)
+        val limitSizeSpan = RelativeSizeSpan(0.8f)
         spannableStringBuilder.setSpan(
             limitSizeSpan,
             7,

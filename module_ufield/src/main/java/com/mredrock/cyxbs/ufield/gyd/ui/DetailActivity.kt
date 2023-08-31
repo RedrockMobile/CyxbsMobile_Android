@@ -1,39 +1,33 @@
 package com.mredrock.cyxbs.ufield.gyd.ui
 
 import android.annotation.SuppressLint
-import android.graphics.Color
 import android.os.Bundle
 import android.os.CountDownTimer
-import android.text.Spannable
-import android.text.SpannableString
-import android.text.SpannableStringBuilder
-import android.text.style.RelativeSizeSpan
-import android.view.MenuItem
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.appcompat.widget.Toolbar
+import androidx.constraintlayout.widget.ConstraintLayout
+import androidx.constraintlayout.widget.ConstraintSet
 import androidx.core.content.ContextCompat
 import com.alibaba.android.arouter.facade.annotation.Route
-import com.mredrock.cyxbs.config.route.COURSE_POS_TO_MAP
 import com.mredrock.cyxbs.config.route.DISCOVER_MAP
 import com.mredrock.cyxbs.config.route.UFIELD_DETAIL
 import com.mredrock.cyxbs.lib.base.ui.BaseActivity
 import com.mredrock.cyxbs.lib.base.ui.viewModelBy
+import com.mredrock.cyxbs.lib.utils.extensions.gone
 import com.mredrock.cyxbs.lib.utils.extensions.setImageFromUrl
 import com.mredrock.cyxbs.lib.utils.service.ServiceManager
 import com.mredrock.cyxbs.ufield.R
 import com.mredrock.cyxbs.ufield.gyd.viewmodel.DetailViewModel
-import com.mredrock.cyxbs.ufield.gyd.span.RoundBackgroundSpan
-import com.mredrock.cyxbs.ufield.gyd.span.VerticalCenterSpan
 import java.text.SimpleDateFormat
 import java.util.Date
 import java.util.Locale
+import kotlin.math.floor
 import kotlin.properties.Delegates
 
 @Route(path = UFIELD_DETAIL)
 class DetailActivity : BaseActivity() {
     private var id by Delegates.notNull<Int>()
-    private val toolbar by R.id.detail_toolbar.view<Toolbar>()
     private val tvSee by R.id.ufield_tv_wantsee.view<TextView>()
     private val tvTitle by R.id.ufield_tv_title.view<TextView>()
     private val tvType by R.id.ufield_tv_type.view<TextView>()
@@ -48,7 +42,21 @@ class DetailActivity : BaseActivity() {
     private val tvStart by R.id.ufield_tv_starttime.view<TextView>()
     private val tvEnd by R.id.ufield_tv_endtime.view<TextView>()
     private val ivMap by R.id.ufield_map.view<ImageView>()
-    private var countDownTimer:CountDownTimer=object :CountDownTimer(1,1000){
+    private val ivGoing by R.id.ufield_iv_going.view<ImageView>()
+    private val tvGoing by R.id.ufield_tv_going.view<TextView>()
+    private val ivAdd by R.id.ufield_iv_add.view<ImageView>()
+    private val tvDays by R.id.ufield_tv_days.view<TextView>()
+    private val tvDay by R.id.ufield_tv_day.view<TextView>()
+    private val tvHours by R.id.ufield_tv_hours.view<TextView>()
+    private val tvHour by R.id.ufield_tv_hour.view<TextView>()
+    private val tvMinutes by R.id.ufield_tv_minutes.view<TextView>()
+    private val tvMinute by R.id.ufield_tv_minute.view<TextView>()
+    private val tvSeconds by R.id.ufield_tv_seconds.view<TextView>()
+    private val tvSecond by R.id.ufield_tv_second.view<TextView>()
+    private val tvTimeHead by R.id.ufield_tv_timehead.view<TextView>()
+    private val ivBack by R.id.ufield_iv_back.view<ImageView>()
+    private lateinit var layout: ConstraintLayout
+    private var countDownTimer: CountDownTimer = object : CountDownTimer(1, 1000) {
         override fun onTick(p0: Long) {
         }
 
@@ -56,7 +64,7 @@ class DetailActivity : BaseActivity() {
         }
     }
     private val viewModel by viewModelBy {
-        id=intent.getIntExtra("actID", 1)
+        id = intent.getIntExtra("actID", 1)
         DetailViewModel(id)
     }
 
@@ -68,6 +76,7 @@ class DetailActivity : BaseActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_detail)
+        layout = findViewById(R.id.ufield_layout_wantsee)
         initView()
         //Log.d("827857", "测试结果-->> $id");
         viewModel.wantToSee.observe(this) {
@@ -76,6 +85,20 @@ class DetailActivity : BaseActivity() {
                 tvSee.apply {
                     text = "已想看"
                     setTextColor(ContextCompat.getColor(this@DetailActivity, R.color.seecolor))
+                    val layoutParams = ConstraintLayout.LayoutParams(
+                        ConstraintLayout.LayoutParams.WRAP_CONTENT,
+                        ConstraintLayout.LayoutParams.WRAP_CONTENT
+                    )
+                    layoutParams.startToStart = ConstraintSet.PARENT_ID
+                    layoutParams.endToEnd = ConstraintSet.PARENT_ID
+                    layoutParams.topToTop = ConstraintSet.PARENT_ID
+                    layoutParams.bottomToBottom = ConstraintSet.PARENT_ID
+                    layoutParams.horizontalBias = 0.5f
+                    layoutParams.verticalBias = 0.5f
+                    tvSee.layoutParams=layoutParams
+                    ivAdd.gone()
+                }
+                layout.apply {
                     setBackgroundResource(R.drawable.ufield_shape_haveseen)
                     setOnClickListener(null)
                 }
@@ -89,15 +112,13 @@ class DetailActivity : BaseActivity() {
 
     @SuppressLint("SetTextI18n")
     private fun initView() {
-        toolbar.title = ""
-        setSupportActionBar(toolbar)
-        supportActionBar?.setHomeAsUpIndicator(R.drawable.ufield_ic_toolbar_back)
-        supportActionBar?.setDisplayHomeAsUpEnabled(true)
-
         ivMap.setOnClickListener {
             ServiceManager.activity(DISCOVER_MAP)
         }
 
+        ivBack.setOnClickListener {
+            finishAfterTransition()
+        }
         viewModel.detailData.observe(this) {
             tvTitle.text = it.data.activity_title
             when (it.data.activity_type) {
@@ -114,31 +135,44 @@ class DetailActivity : BaseActivity() {
             ivCover.setImageFromUrl(it.data.activity_cover_url)
             tvStart.text = trans(it.data.activity_start_at)
             tvEnd.text = trans(it.data.activity_end_at)
+            if(it.data.activity_state!="published"){
+                layout.gone()
+                tvGoing.gone()
+                ivGoing.gone()
+            }
             if (it.data.want_to_watch) {
                 tvSee.text = "已想看"
                 tvSee.setTextColor(ContextCompat.getColor(this, R.color.seecolor))
-                tvSee.setBackgroundResource(R.drawable.ufield_shape_haveseen)
-            } else {
-                val spannableString = SpannableString(" + 想看")
-
-                // 调整加号的大小为相对于文字大小的比值（这里设置为 1.3）
-                spannableString.setSpan(
-                    RelativeSizeSpan(1.3f),
-                    1,
-                    2,
-                    Spannable.SPAN_INCLUSIVE_INCLUSIVE
+                val layoutParams = ConstraintLayout.LayoutParams(
+                    ConstraintLayout.LayoutParams.WRAP_CONTENT,
+                    ConstraintLayout.LayoutParams.WRAP_CONTENT
                 )
-                tvSee.text = spannableString
-                tvSee.setOnClickListener {
+
+                layoutParams.startToStart = ConstraintSet.PARENT_ID
+                layoutParams.endToEnd = ConstraintSet.PARENT_ID
+                layoutParams.topToTop = ConstraintSet.PARENT_ID
+                layoutParams.bottomToBottom = ConstraintSet.PARENT_ID
+                layoutParams.horizontalBias = 0.5f
+                layoutParams.verticalBias = 0.5f
+                tvSee.layoutParams=layoutParams
+                ivAdd.gone()
+                layout.setBackgroundResource(R.drawable.ufield_shape_haveseen)
+            } else {
+                layout.setOnClickListener {
                     viewModel.wantToSee(id)
                 }
             }
             if (it.data.ended) {
+                tvGoing.text = "已结束"
+                ivGoing.setImageResource(R.drawable.ufield_ic_finished)
                 tvTime.text = "活动已结束"
+                tvDays.gone()
+                tvHours.gone()
+                tvMinutes.gone()
+                tvSeconds.gone()
             } else {
                 // 活动开始时间戳和结束时间戳（以秒为单位）
                 val startTimeInSeconds = it.data.activity_start_at
-                val endTimeInSeconds = it.data.activity_end_at
 
                 val currentTimeInSeconds = System.currentTimeMillis() / 1000
 
@@ -150,126 +184,54 @@ class DetailActivity : BaseActivity() {
                     // 创建并启动倒计时
                     countDownTimer =
                         object : CountDownTimer(remainingTimeInSeconds * 1000, 1000) {
+                            @SuppressLint("UseCompatLoadingForDrawables")
                             override fun onTick(millisUntilFinished: Long) {
                                 val days =
-                                    kotlin.math.floor(millisUntilFinished / (1000 * 60 * 60 * 24.0))
+                                    floor(millisUntilFinished / (1000 * 60 * 60 * 24.0))
                                         .toLong()
                                 val hours =
-                                    kotlin.math.floor((millisUntilFinished % (1000 * 60 * 60 * 24.0)) / (1000 * 60 * 60.0))
+                                    floor((millisUntilFinished % (1000 * 60 * 60 * 24.0)) / (1000 * 60 * 60.0))
                                         .toLong()
                                 val minutes =
-                                    kotlin.math.floor((millisUntilFinished % (1000 * 60 * 60.0)) / (1000 * 60.0))
+                                    floor((millisUntilFinished % (1000 * 60 * 60.0)) / (1000 * 60.0))
                                         .toLong()
                                 val seconds =
-                                    kotlin.math.floor((millisUntilFinished % (1000 * 60.0)) / 1000)
+                                    floor((millisUntilFinished % (1000 * 60.0)) / 1000)
                                         .toLong()
-
-                                val countdownText =
-                                    "距离开始还有 ${days}天 ${hours}时 ${minutes}分 ${seconds}秒"
-
-                                val spannableBuilder = SpannableStringBuilder(countdownText)
-
-
-                                val backgroundColor = Color.parseColor("#ECEEF2")
-
-                                val backgroundColorSpanDays =
-                                    RoundBackgroundSpan(backgroundColor, 10F, 20F, Color.BLACK)
-                                val backgroundColorSpanHours =
-                                    RoundBackgroundSpan(backgroundColor, 20F, 20F, Color.BLACK)
-                                val backgroundColorSpanMinutes =
-                                    RoundBackgroundSpan(backgroundColor, 20F, 20F, Color.BLACK)
-                                val backgroundColorSpanSeconds =
-                                    RoundBackgroundSpan(backgroundColor, 20F, 20F, Color.BLACK)
-
-// 设置天的样式
-                                spannableBuilder.setSpan(
-                                    backgroundColorSpanDays,
-                                    "距离开始还有 ".length,
-                                    "距离开始还有 ".length + days.toString().length,
-                                    SpannableStringBuilder.SPAN_EXCLUSIVE_EXCLUSIVE
-                                )
-                                spannableBuilder.setSpan(
-                                    VerticalCenterSpan(),
-                                    "距离开始还有 ".length,
-                                    "距离开始还有 ".length + days.toString().length,
-                                    SpannableStringBuilder.SPAN_EXCLUSIVE_EXCLUSIVE
-                                )
-
-
-// 设置小时的样式
-                                spannableBuilder.setSpan(
-                                    backgroundColorSpanHours,
-                                    "距离开始还有 ${days}天 ".length,
-                                    "距离开始还有 ${days}天 ".length + hours.toString().length,
-                                    SpannableStringBuilder.SPAN_EXCLUSIVE_EXCLUSIVE
-                                )
-                                spannableBuilder.setSpan(
-                                    VerticalCenterSpan(),
-                                    "距离开始还有 ${days}天 ".length,
-                                    "距离开始还有 ${days}天 ".length + hours.toString().length,
-                                    SpannableStringBuilder.SPAN_EXCLUSIVE_EXCLUSIVE
-                                )
-
-
-// 设置分钟的样式
-                                spannableBuilder.setSpan(
-                                    backgroundColorSpanMinutes,
-                                    "距离开始还有 ${days}天 ${hours}时 ".length,
-                                    "距离开始还有 ${days}天 ${hours}时 ".length + minutes.toString().length,
-                                    SpannableStringBuilder.SPAN_EXCLUSIVE_EXCLUSIVE
-                                )
-                                spannableBuilder.setSpan(
-                                    VerticalCenterSpan(),
-                                    "距离开始还有 ${days}天 ${hours}时 ".length,
-                                    "距离开始还有 ${days}天 ${hours}时 ".length + minutes.toString().length,
-                                    SpannableStringBuilder.SPAN_EXCLUSIVE_EXCLUSIVE
-                                )
-
-
-// 设置秒的样式
-                                spannableBuilder.setSpan(
-                                    backgroundColorSpanSeconds,
-                                    "距离开始还有 ${days}天 ${hours}时 ${minutes}分 ".length,
-                                    countdownText.length - 1,
-                                    SpannableStringBuilder.SPAN_EXCLUSIVE_EXCLUSIVE
-                                )
-                                spannableBuilder.setSpan(
-                                    VerticalCenterSpan(),
-                                    "距离开始还有 ${days}天 ${hours}时 ${minutes}分 ".length,
-                                    countdownText.length - 1,
-                                    SpannableStringBuilder.SPAN_EXCLUSIVE_EXCLUSIVE
-                                )
-
-
-                                tvTime.text = spannableBuilder
+                                tvTimeHead.text="距离结束还有"
+                                tvDay.text="天"
+                                tvHour.text="小时"
+                                tvMinute.text="分"
+                                tvSecond.text="秒"
+                                tvDays.text="$days"
+                                tvHours.text="$hours"
+                                tvMinutes.text="$minutes"
+                                tvSeconds.text="$seconds"
                             }
-
                             override fun onFinish() {
                                 // 倒计时结束处理逻辑
                                 tvTime.text = "活动开始"
+                                tvDays.gone()
+                                tvHours.gone()
+                                tvMinutes.gone()
+                                tvSeconds.gone()
                             }
                         }
 
                     countDownTimer.start()
-                } else if (currentTimeInSeconds in startTimeInSeconds until endTimeInSeconds) {
-                    tvTime.text = "活动进行中"
                 } else {
-                    tvTime.text = "活动已结束"
+                    tvTime.text = "活动进行中"
+                    tvDays.gone()
+                    tvHours.gone()
+                    tvMinutes.gone()
+                    tvSeconds.gone()
                 }
             }
         }
 
     }
 
-    override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        when (item.itemId) {
-            android.R.id.home -> {
-                finishAfterTransition()
-                return true
-            }
-        }
-        return super.onOptionsItemSelected(item)
-    }
+
 
     private fun trans(timestampInSeconds: Long): String {
         val date = Date(timestampInSeconds * 1000L)
@@ -278,3 +240,4 @@ class DetailActivity : BaseActivity() {
         return format.format(date)
     }
 }
+
