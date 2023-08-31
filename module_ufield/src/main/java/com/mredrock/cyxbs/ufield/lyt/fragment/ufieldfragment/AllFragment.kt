@@ -47,7 +47,7 @@ class AllFragment : BaseFragment() {
     private fun iniRv() {
 
         mViewModel.apply {
-            allList.observe{
+            allList.observe {
                 mDataList = it as MutableList<ItemActivityBean.ItemAll>
                 mAdapter.submitList(it)
             }

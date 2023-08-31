@@ -8,6 +8,7 @@ import android.view.ViewGroup
 import android.widget.Button
 import android.widget.TextView
 import androidx.annotation.RequiresApi
+import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
@@ -52,6 +53,10 @@ class TodoRvAdapter :
      * 点击驳回按钮的回调
      */
     private var mRejectClick: ((Int) -> Unit)? = null
+    /**
+     * 点击每一个item的回调
+     */
+    private var mItemClick: ((Int) -> Unit)? = null
 
 
     fun setOnPassClick(listener: (Int) -> Unit) {
@@ -61,6 +66,10 @@ class TodoRvAdapter :
     fun setOnRejectClick(listener: (Int) -> Unit) {
         mRejectClick = listener
     }
+    fun setOnItemClick(listener: (Int) -> Unit) {
+        mItemClick = listener
+    }
+
 
 
     // 1秒内防止多次点击
@@ -78,7 +87,7 @@ class TodoRvAdapter :
         private val actPhone: TextView = itemView.findViewById(R.id.uField_todo_activity_phone)
         private val actPass: Button = itemView.findViewById(R.id.uField_todo_btn_accept)
         private val actReject: Button = itemView.findViewById(R.id.uField_todo_btn_reject)
-
+        private val actItem: ConstraintLayout = itemView.findViewById(R.id.ufield_check_constraintlayout)
 
         init {
             actPass.setOnClickListener {
@@ -98,6 +107,9 @@ class TodoRvAdapter :
                 } else {
                     toast("短时间内请不要重复点击按钮哦！")
                 }
+            }
+            actItem.setOnClickListener {
+                mItemClick?.invoke(absoluteAdapterPosition)
             }
         }
 

@@ -2,14 +2,13 @@
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:layout_marginTop="26dp"
     android:layout_width="match_parent"
-    android:layout_height="220dp">
+    android:layout_height="220dp"
+    android:layout_marginTop="26dp">
 
     <androidx.cardview.widget.CardView
         android:layout_width="343dp"
         android:layout_height="220dp"
-
         android:layout_gravity="center_horizontal"
         app:cardCornerRadius="8dp"
         app:cardElevation="0dp"
@@ -20,7 +19,7 @@
         app:layout_constraintVertical_bias="0.062">
 
         <androidx.constraintlayout.widget.ConstraintLayout
-            android:id="@+id/ufieldConstraintlayout"
+            android:id="@+id/ufield_check_constraintlayout"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             app:layout_constraintBottom_toTopOf="@+id/ufieldTextview3"
@@ -56,8 +55,8 @@
                 android:layout_marginStart="28dp"
                 android:layout_marginTop="56dp"
                 android:text="@string/ufield_todo_ac_name"
-                android:textSize="14sp"
                 android:textColor="@color/uField_9915315b"
+                android:textSize="14sp"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
 
@@ -67,8 +66,8 @@
                 android:layout_height="20dp"
                 android:layout_marginStart="1dp"
                 android:layout_marginTop="56dp"
-                android:textSize="14sp"
                 android:textColor="@color/uField_6615315b"
+                android:textSize="14sp"
                 app:layout_constraintStart_toEndOf="@+id/ufieldTextview"
                 app:layout_constraintTop_toTopOf="parent" />
 
