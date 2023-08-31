@@ -1,9 +1,11 @@
 package com.mredrock.cyxbs.ufield.lyt.ui
 
+import android.annotation.SuppressLint
 import android.content.Context
 import android.graphics.Color
 import android.os.Bundle
 import android.util.Log
+import android.view.View
 import android.view.ViewGroup
 import android.view.inputmethod.InputMethodManager
 import android.widget.EditText
@@ -55,7 +57,6 @@ class SearchActivity : BaseActivity() {
 
     }
 
-
     /**
      * 初始化tabLayout
      */
@@ -97,6 +98,7 @@ class SearchActivity : BaseActivity() {
 
             override fun onTabUnselected(tab: TabLayout.Tab) {
                 tab.view.setBackgroundResource(R.drawable.ufield_ic_tab_shape)
+
             }
 
             override fun onTabReselected(tab: TabLayout.Tab) {}
@@ -107,33 +109,38 @@ class SearchActivity : BaseActivity() {
      * 监听搜索框,初始化搜索框
      */
     private fun iniSearch() {
-        val mSearchEditText =
-            mSearch.findViewById<EditText>(androidx.appcompat.R.id.search_src_text)
-        mSearchEditText.setTextColor(Color.parseColor("#A1ADBD"))
-        mSearch.queryHint = "点我开始搜索吧"
-        mSearchEditText.textSize = 16F
 
+        mSearch.apply {
+            findViewById<EditText>(androidx.appcompat.R.id.search_src_text).apply {
+                setTextColor(Color.parseColor("#15315B"))
+                setHintTextColor(Color.parseColor("#6615315B"))
+                textSize = 16F
+            }
+            findViewById<ImageView>(androidx.appcompat.R.id.search_close_btn).apply {
+                // 移除删除按钮的点击事件
+                isClickable = false
+                isFocusable = false
+            }
+            queryHint = "点我开始搜索吧"
+            setOnQueryTextListener(object :
+                androidx.appcompat.widget.SearchView.OnQueryTextListener {
+                override fun onQueryTextSubmit(query: String): Boolean {
+                    //这种判断有点多虑，因为现在的输入法一定非空，因为直接提交是esc，走不到这个方法里面
+                    if (query.isNotEmpty()) {
+                        mViewModel.iniSearchList(query)
+                        mSearch.clearFocus()
+                    }
+                    return false
+                }
+
+                override fun onQueryTextChange(newText: String): Boolean {
+                    return false
+                }
+            })
+        }
         mCardView.setOnClickListener {
             mSearch.isIconified = false
         }
-
-
-        mSearch.setOnQueryTextListener(object :
-            androidx.appcompat.widget.SearchView.OnQueryTextListener {
-            override fun onQueryTextSubmit(query: String): Boolean {
-                //这种判断有点多虑，因为现在的输入法一定非空，因为直接提交是esc，走不到这个方法里面
-                if (query.isNotEmpty()) {
-                    mViewModel.iniSearchList(query)
-                    mSearch.clearFocus()
-                }
-                return false
-            }
-
-            override fun onQueryTextChange(newText: String): Boolean {
-
-                return false
-            }
-        })
 
     }
 
@@ -147,7 +154,6 @@ class SearchActivity : BaseActivity() {
                 mViewModel.iniSearchList(mSearch.query.toString())
                 mSearch.clearFocus()
             }
-
         }
     }
 
@@ -167,6 +173,7 @@ class SearchActivity : BaseActivity() {
                 }
             })
     }
+
 
 }
 

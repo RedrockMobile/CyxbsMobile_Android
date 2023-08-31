@@ -65,14 +65,10 @@ class DoneFragment : BaseFragment() {
             layoutManager = LinearLayoutManager(requireContext())
             adapter = mAdapter.apply {
                 setOnItemClick {
-                    if (mDataList[it].state == "rejected") {
-                        toast("未通过的活动不能点击哦")
-                    } else {
-                        val intent = Intent(requireContext(), DetailActivity::class.java)
-                        intent.putExtra("actID", mDataList[it].activity_id)
-                        Log.d("595995", "测试结果-->> ${mDataList[it].activity_id}");
-                        startActivity(intent)
-                    }
+                    val intent = Intent(requireContext(), DetailActivity::class.java)
+                    intent.putExtra("actID", mDataList[it].activity_id)
+                    Log.d("595995", "测试结果-->> ${mDataList[it].activity_id}");
+                    startActivity(intent)
                 }
             }
         }

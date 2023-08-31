@@ -56,7 +56,6 @@ class CultureSearchFragment : BaseFragment() {
                     startActivity(intent)
                 }
             }
-            addItemDecoration(GridSpacingItemDecoration(1, 20, false))
         }
 
     }

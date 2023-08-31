@@ -58,7 +58,8 @@ class EducationFragment : BaseFragment() {
                     startActivity(intent)
                 }
             }
-            addItemDecoration(GridSpacingItemDecoration(2, 20, false))
+            addItemDecoration(GridSpacingItemDecoration(2, 0, 50))
+
         }
 
     }

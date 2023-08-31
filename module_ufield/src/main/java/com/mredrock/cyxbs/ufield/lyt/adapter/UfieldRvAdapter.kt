@@ -10,6 +10,22 @@ import androidx.annotation.RequiresApi
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
+import com.bumptech.glide.request.RequestOptions
+import android.graphics.Bitmap
+import android.graphics.BitmapShader
+import android.graphics.Canvas
+import android.graphics.Paint
+import android.graphics.Path
+import android.graphics.RectF
+import android.graphics.Shader
+import android.graphics.drawable.Drawable
+import com.bumptech.glide.Glide
+import com.bumptech.glide.load.engine.DiskCacheStrategy
+import com.bumptech.glide.load.resource.bitmap.CenterCrop
+import com.bumptech.glide.load.resource.bitmap.RoundedCorners
+import com.bumptech.glide.request.target.CustomTarget
+import com.bumptech.glide.request.target.SimpleTarget
+import com.bumptech.glide.request.transition.Transition
 import com.mredrock.cyxbs.lib.utils.extensions.setImageFromUrl
 import com.mredrock.cyxbs.ufield.R
 import com.mredrock.cyxbs.ufield.lyt.bean.ItemActivityBean
@@ -38,7 +54,6 @@ class UfieldRvAdapter :
     }
 
 
-
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RvAllActViewHolder {
         return RvAllActViewHolder(
             LayoutInflater.from(parent.context).inflate(R.layout.ufield_item_rv_all, parent, false)
@@ -53,10 +68,13 @@ class UfieldRvAdapter :
     }
 
 
-  inner  class RvAllActViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
+    inner class RvAllActViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
 
         private val actPic: ImageView = itemView.findViewById(R.id.uField_activity_pic)
-        private val actName: TextView = itemView.findViewById<TextView?>(R.id.uField_activity_name).apply { isSelected=true }
+        private val actName: TextView =
+            itemView.findViewById<TextView?>(R.id.uField_activity_name).apply {
+//            isSelected=true
+            }
         private val actIsGoing: ImageView = itemView.findViewById(R.id.uField_activity_isGoing)
         private val actType: TextView = itemView.findViewById(R.id.uField_activity_type)
         private val actTime: TextView = itemView.findViewById(R.id.uField_activity_time)
@@ -82,16 +100,21 @@ class UfieldRvAdapter :
                 else -> actIsGoing.setImageResource(R.drawable.ufield_ic_activity_off)
             }
 
+
             when (itemData.activity_type) {
                 "culture" -> actType.text = "文娱活动"
                 "sports" -> actType.text = "体育活动"
                 else -> actType.text = "教育活动"
             }
+            //   loadAndCropImageWithCenterScale(itemData.activity_cover_url,16f,16f,0f,0f,actPic)
+
+
 //            /**
 //             * 满足中心比例的缩放
 //             */
 //            Glide.with(itemView.context)
 //                .load(itemData.activity_cover_url)
+//                .transform(CenterCrop(), RoundedCorners(50))//设置圆角
 //                .centerCrop() //中心比例的缩放（如果效果不稳定请删除）
 //                .into(actPic)
 
@@ -108,6 +131,73 @@ class UfieldRvAdapter :
                 .atZone(ZoneId.systemDefault())
                 .toLocalDateTime()
                 .format(DateTimeFormatter.ofPattern("yyyy年MM月dd日"))
+        }
+
+
+        // 加载并设置圆角切割和中心缩放的图像
+        fun loadAndCropImageWithCenterScale(
+            url: String,
+            topLeftRadius: Float,
+            topRightRadius: Float,
+            bottomRightRadius: Float,
+            bottomLeftRadius: Float,
+            imageView: ImageView
+        ) {
+            val requestOptions = RequestOptions()
+                .diskCacheStrategy(DiskCacheStrategy.ALL)
+
+            Glide.with(imageView)
+                .asBitmap()
+                .load(url)
+                .apply(requestOptions)
+                .into(object : CustomTarget<Bitmap>() {
+                    override fun onResourceReady(
+                        resource: Bitmap,
+                        transition: Transition<in Bitmap>?
+                    ) {
+                        val result = cropImageWithRadius(
+                            resource,
+                            topLeftRadius,
+                            topRightRadius,
+                            bottomRightRadius,
+                            bottomLeftRadius
+                        )
+                        imageView.setImageBitmap(result)
+                    }
+
+                    override fun onLoadCleared(placeholder: Drawable?) {}
+                })
+        }
+
+        // 切割图像并设置圆角
+        private fun cropImageWithRadius(
+            source: Bitmap,
+            topLeftRadius: Float,
+            topRightRadius: Float,
+            bottomRightRadius: Float,
+            bottomLeftRadius: Float
+        ): Bitmap {
+            val paint = Paint().apply {
+                isAntiAlias = true
+                shader = BitmapShader(source, Shader.TileMode.CLAMP, Shader.TileMode.CLAMP)
+            }
+
+            val path = Path()
+            val rect = RectF(0f, 0f, source.width.toFloat(), source.height.toFloat())
+            path.addRoundRect(
+                rect, floatArrayOf(
+                    topLeftRadius, topLeftRadius, // 左上角
+                    topRightRadius, topRightRadius, // 右上角
+                    bottomRightRadius, bottomRightRadius, // 右下角
+                    bottomLeftRadius, bottomLeftRadius // 左下角
+                ), Path.Direction.CW
+            )
+
+            val result = Bitmap.createBitmap(source.width, source.height, Bitmap.Config.ARGB_8888)
+            val canvas = Canvas(result)
+            canvas.drawPath(path, paint)
+
+            return result
         }
 
 

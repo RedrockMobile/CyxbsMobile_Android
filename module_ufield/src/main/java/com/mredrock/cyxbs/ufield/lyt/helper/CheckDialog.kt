@@ -1,6 +1,7 @@
 package com.mredrock.cyxbs.ufield.lyt.helper
 
 import android.content.Context
+import android.graphics.Color
 import android.text.Editable
 import android.text.TextWatcher
 import android.util.Size
@@ -9,6 +10,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.EditText
 import android.widget.FrameLayout
+import android.widget.LinearLayout
 import android.widget.TextView
 import androidx.annotation.ColorRes
 import androidx.annotation.DrawableRes
@@ -85,16 +87,38 @@ open class CheckDialog protected constructor(
                 rightMargin = leftMargin
             }
         }
-        return editText
+        return LinearLayout(parent.context).apply {
+            orientation = LinearLayout.VERTICAL
+            addView(
+                // 标题
+                TextView(parent.context).apply {
+                    text = "驳回理由"
+                    layoutParams = LinearLayout.LayoutParams(
+                        LinearLayout.LayoutParams.MATCH_PARENT,
+                        LinearLayout.LayoutParams.WRAP_CONTENT
+                    ).apply {
+                        topMargin = 28.dp2px
+                    }
+                    setTextColor(com.mredrock.cyxbs.config.R.color.config_level_four_font_color.color)
+                    textSize = 18F
+                    gravity = Gravity.CENTER
+                }
+            )
+            addView(editText)
+        }
+
 
     }
 
     override fun initContentView(view: View) {
-        view as EditText
-        view.apply {
+      //  view as EditText
+        editText.apply {
             hint = data.content
             textSize = data.contentSize
             gravity = data.contentGravity
+            setHintTextColor(Color.parseColor("#6615315B"))
+            setTextColor(Color.parseColor("#CC15315B"))
+            setBackgroundResource(R.drawable.ufield_shape_edit_shape)
             addTextChangedListener(textWatcher)
         }
 
