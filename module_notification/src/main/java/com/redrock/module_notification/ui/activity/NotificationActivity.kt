@@ -7,26 +7,35 @@ import android.view.Gravity
 import android.view.LayoutInflater
 import android.view.View
 import android.widget.ImageView
+import android.widget.LinearLayout
 import android.widget.RelativeLayout
 import android.widget.TextView
+import androidx.core.content.edit
 import androidx.viewpager2.widget.ViewPager2
 import com.alibaba.android.arouter.facade.annotation.Route
 import com.alibaba.android.arouter.launcher.ARouter
 import com.google.android.material.tabs.TabLayout
 import com.google.android.material.tabs.TabLayoutMediator
-import com.mredrock.cyxbs.common.config.NOTIFICATION_HOME
-import com.mredrock.cyxbs.common.config.NOTIFICATION_SETTING
+import com.mredrock.cyxbs.config.route.NOTIFICATION_HOME
+import com.mredrock.cyxbs.config.route.NOTIFICATION_SETTING
 import com.mredrock.cyxbs.common.ui.BaseViewModelActivity
 import com.mredrock.cyxbs.common.utils.extensions.dp2px
 import com.mredrock.cyxbs.common.utils.extensions.editor
+import com.mredrock.cyxbs.lib.utils.adapter.FragmentVpAdapter
+import com.mredrock.cyxbs.lib.utils.extensions.gone
 import com.mredrock.cyxbs.lib.utils.extensions.setOnSingleClickListener
+import com.mredrock.cyxbs.lib.utils.extensions.visible
 import com.redrock.module_notification.R
 import com.redrock.module_notification.adapter.NotificationVp2Adapter
 import com.redrock.module_notification.bean.ChangeReadStatusToBean
+import com.redrock.module_notification.ui.fragment.ActivityNotificationFragment
+import com.redrock.module_notification.ui.fragment.ItineraryNotificationFragment
 import com.redrock.module_notification.ui.fragment.SysNotificationFragment
 import com.redrock.module_notification.ui.fragment.UfieldNotificationFragment
 import com.redrock.module_notification.util.Constant.HAS_USER_ENTER_SETTING_PAGE
 import com.redrock.module_notification.util.Constant.IS_SWITCH1_SELECT
+import com.redrock.module_notification.util.Constant.LAST_RECEIVED_ITINERARY_PAGE_READ_TIME
+import com.redrock.module_notification.util.Constant.LAST_SENT_ITINERARY_PAGE_READ_TIME
 import com.redrock.module_notification.util.NotificationSp
 import com.redrock.module_notification.util.myGetColor
 import com.redrock.module_notification.util.noOpDelegate
@@ -36,9 +45,11 @@ import kotlin.properties.Delegates
 
 @Route(path = NOTIFICATION_HOME)
 class NotificationActivity : BaseViewModelActivity<NotificationViewModel>() {
-    private var tab2View by Delegates.notNull<View>()
-    private var tab1View by Delegates.notNull<View>()
+    private var tab3View by Delegates.notNull<View>()  // 行程通知
+    private var tab2View by Delegates.notNull<View>()  // 系统通知
+    private var tab1View by Delegates.notNull<View>()  // 活动通知
 
+    private val notification_main_container_bg by R.id.notification_main_column_container_background.view<LinearLayout>()
     private val notification_rl_home_back by R.id.notification_rl_home_back.view<RelativeLayout>()
     private val notification_rl_home_dots by R.id.notification_rl_home_dots.view<RelativeLayout>()
     private val notification_home_red_dots by R.id.notification_home_red_dots.view<ImageView>()
@@ -50,7 +61,8 @@ class NotificationActivity : BaseViewModelActivity<NotificationViewModel>() {
     //所有还未读的系统通知消息的id 用来给一键已读使用
     private var allUnreadSysMsgIds = ArrayList<String>()
 
-    //Vp2下的俩个fragment的实例
+    //Vp2下的三个fragment的实例
+    private lateinit var itineraryFragment: ItineraryNotificationFragment
     private lateinit var sysFragment: SysNotificationFragment
     //   private lateinit var activeFragment: ActivityNotificationFragment
     private lateinit var ufieldActiveFragment : UfieldNotificationFragment
@@ -69,6 +81,7 @@ class NotificationActivity : BaseViewModelActivity<NotificationViewModel>() {
         initObserver()
         initRefreshLayout()
         viewModel.getAllMsg()
+        viewModel.getAllItineraryMsg()
     }
 
     override fun onStart() {
@@ -170,13 +183,14 @@ class NotificationActivity : BaseViewModelActivity<NotificationViewModel>() {
     }
 
     private fun initVp2() {
+        itineraryFragment = ItineraryNotificationFragment()
         sysFragment = SysNotificationFragment()
         ufieldActiveFragment = UfieldNotificationFragment()
-        notification_home_vp2.adapter = NotificationVp2Adapter(
-            this, listOf(
-                sysFragment, ufieldActiveFragment
-            )
-        )
+
+        notification_home_vp2.adapter = FragmentVpAdapter(this)
+            .add { UfieldNotificationFragment() }     // whichPageIsIn = 0
+            .add { SysNotificationFragment() }          // whichPageIsIn = 1
+            .add { ItineraryNotificationFragment() }    // whichPageIsIn = 2
         notification_home_vp2.setPageTransformer(ScaleInTransformer())
         // 因为第一页有左滑删除，所以禁止 vp 滑动
         notification_home_vp2.isUserInputEnabled = false
@@ -185,6 +199,11 @@ class NotificationActivity : BaseViewModelActivity<NotificationViewModel>() {
             ViewPager2.OnPageChangeCallback() {
             override fun onPageSelected(position: Int) {
                 whichPageIsIn = position
+                if (position == 2) {
+                    notification_main_container_bg.visible()
+                } else {
+                    notification_main_container_bg.gone()
+                }
             }
         })
 
@@ -193,8 +212,9 @@ class NotificationActivity : BaseViewModelActivity<NotificationViewModel>() {
     @SuppressLint("InflateParams")
     private fun initTabLayout() {
         val tabs = arrayOf(
+            "活动通知",
             "系统通知",
-            "活动通知"
+            "行程通知"
         )
         TabLayoutMediator(
             notification_home_tl,
@@ -203,12 +223,15 @@ class NotificationActivity : BaseViewModelActivity<NotificationViewModel>() {
 
         val tab1 = notification_home_tl.getTabAt(0)
         val tab2 = notification_home_tl.getTabAt(1)
+        val tab3 = notification_home_tl.getTabAt(2)
 
-        //设置俩个tab的自定义View
+        //设置三个tab的自定义View
         tab1View = LayoutInflater.from(this).inflate(R.layout.notification_item_tab1, null)
         tab1?.customView = tab1View
         tab2View = LayoutInflater.from(this).inflate(R.layout.notification_item_tab2, null)
         tab2?.customView = tab2View
+        tab3View = LayoutInflater.from(this).inflate(R.layout.notification_item_tab3, null)
+        tab3?.customView = tab3View
 
         //改变文字颜色
         val onTabSelectedListener = object : TabLayout.OnTabSelectedListener by noOpDelegate() {
@@ -232,6 +255,22 @@ class NotificationActivity : BaseViewModelActivity<NotificationViewModel>() {
     }
 
     private fun initObserver() {
+        viewModel.itineraryMsg.observe(this) {
+            val tempTime1 = NotificationSp.getLong(LAST_RECEIVED_ITINERARY_PAGE_READ_TIME, 0L)
+            for (item in it.receivedItineraryList) {
+                if (tempTime1 < item.updateTime) {
+                    viewModel.changeItineraryDotStatus(true)
+                    return@observe
+                }
+            }
+            val tempTime2 = NotificationSp.getLong(LAST_SENT_ITINERARY_PAGE_READ_TIME, 0L)
+            for (item in it.sentItineraryList) {
+                if (tempTime2 < item.updateTime) {
+                    viewModel.changeItineraryDotStatus(true)
+                    return@observe
+                }
+            }
+        }
         viewModel.systemMsg.observe {
             allUnreadSysMsgIds = ArrayList()
             for (value in it!!) {
@@ -278,6 +317,12 @@ class NotificationActivity : BaseViewModelActivity<NotificationViewModel>() {
             else
                 changeTabRedDotsVisibility(1, View.INVISIBLE)
         }
+        viewModel.itineraryDotStatus.observe(this) {
+            if (it)
+                changeTabRedDotsVisibility(2, View.VISIBLE)
+            else
+                changeTabRedDotsVisibility(2, View.INVISIBLE)
+        }
 
         //请求数据是否成功的监听
         viewModel.getMsgSuccessful.observe {
@@ -289,7 +334,7 @@ class NotificationActivity : BaseViewModelActivity<NotificationViewModel>() {
     private fun initRefreshLayout() {
         notification_refresh.setOnRefreshListener {
             viewModel.getAllMsg()
-            viewModel.getUFieldActivity()
+            viewModel.getAllItineraryMsg()
         }
         notification_refresh.isRefreshing = true
     }
@@ -323,6 +368,11 @@ class NotificationActivity : BaseViewModelActivity<NotificationViewModel>() {
 
             1 -> {
                 tab2View.findViewById<View>(R.id.notification_iv_tl_red_dots).visibility =
+                    vis
+            }
+
+            2 -> {
+                tab3View.findViewById<View>(R.id.notification_iv_tl_red_dots).visibility =
                     vis
             }
         }

@@ -3,6 +3,7 @@ plugins {
 }
 
 
+dependApiInit()
 dependApiAccount()
 dependApiStore()
 

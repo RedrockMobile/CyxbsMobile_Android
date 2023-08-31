@@ -11,10 +11,13 @@ import com.mredrock.cyxbs.lib.utils.extensions.unsafeSubscribeBy
 import com.mredrock.cyxbs.lib.utils.network.mapOrThrowApiException
 import com.redrock.module_notification.bean.ChangeReadStatusToBean
 import com.redrock.module_notification.bean.DeleteMsgToBean
+import com.redrock.module_notification.bean.ItineraryAllMsg
 import com.redrock.module_notification.bean.SystemMsgBean
 import com.redrock.module_notification.bean.UfieldMsgBean
 import com.redrock.module_notification.network.ApiService
 import com.redrock.module_notification.util.Constant.NOTIFICATION_LOG_TAG
+import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
+import io.reactivex.rxjava3.schedulers.Schedulers
 
 /**
  * Author by OkAndGreat
@@ -29,7 +32,24 @@ class NotificationViewModel : BaseViewModel() {
 
     // val activeMsg = MutableLiveData<List<ActiveMsgBean>>()
     val systemMsg = MutableLiveData<List<SystemMsgBean>>()
+
+    // 所有可收到的行程消息的列表
+    val itineraryMsg: LiveData<ItineraryAllMsg> get() = _itineraryMsg
+    private val _itineraryMsg = MutableLiveData<ItineraryAllMsg>()
+
+    // 在该viewModel中获取所有行程消息的请求 是否成功（状态）
+    val itineraryMsgIsSuccessfulState: LiveData<Boolean> get() = _itineraryMsgIsSuccessfulState
+    private val _itineraryMsgIsSuccessfulState = MutableLiveData<Boolean>()
+    var getItineraryIsSuccessful: Boolean  = false
+        private set
+    var itineraryUpdateTime: Long = 0L
+        private set
+
     val checkInStatus = MutableLiveData<Boolean>()
+
+    //通知tablayout行程通知小红点显示状态
+    val itineraryDotStatus: LiveData<Boolean> get() = _itineraryDotStatus
+    private val _itineraryDotStatus = MutableLiveData<Boolean>()
 
     //通知tablayout系统通知小红点显示状态
     val sysDotStatus = MutableLiveData<Boolean>()
@@ -90,7 +110,7 @@ class NotificationViewModel : BaseViewModel() {
     }
 
     /**
-     * 获取所有通知信息
+     * 获取所有活动和系统通知信息
      */
     fun getAllMsg() {
         retrofit.getAllMsg()
@@ -176,9 +196,44 @@ class NotificationViewModel : BaseViewModel() {
     }
 
     /**
+     * 通知改变tablayout行程通知小红点显示状态
+     */
+    fun changeItineraryDotStatus(status: Boolean) {
+        _itineraryDotStatus.value = status
+    }
+
+    /**
      * 通知改变popupwindow是否可以弹出
      */
     fun changePopUpWindowClickableStatus(status: Boolean) {
         popupWindowClickableStatus.value = status
+    }
+
+    /**
+     * 获取所有行程消息
+     */
+    fun getAllItineraryMsg() {
+        retrofit.getReceivedItinerary()
+            .flatMap {received->
+                retrofit.getSentItinerary().map {sent->
+                    val emptyItineraryMsg = ItineraryAllMsg(sent.data, received.data)
+                    emptyItineraryMsg
+                }.subscribeOn(Schedulers.io())
+            }
+            .observeOn(Schedulers.io())
+            .subscribeOn(AndroidSchedulers.mainThread())
+            .unsafeSubscribeBy (
+                onError = {
+                    Log.w(NOTIFICATION_LOG_TAG, "getAllItineraryMsg failed of ${it.message}")
+                    _itineraryMsgIsSuccessfulState.postValue(false)
+                    getItineraryIsSuccessful = false
+                },
+                onSuccess = {
+                    itineraryUpdateTime = System.currentTimeMillis()
+                    _itineraryMsg.value = it
+                    getItineraryIsSuccessful = true
+                    _itineraryMsgIsSuccessfulState.postValue(true)
+                }
+            ).lifeCycle()
     }
 }

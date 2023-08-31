@@ -90,4 +90,14 @@ class TodoViewModel : BaseViewModel() {
                     onSuccess.invoke()
                 }
     }
+
+    override fun onCleared() {
+        super.onCleared()
+        TodoModel.INSTANCE.rxjavaDisposables.forEach {
+            if (!it.isDisposed){
+                it.dispose()
+            }
+        }
+        TodoModel.INSTANCE.rxjavaDisposables.clear()
+    }
 }
