@@ -36,7 +36,7 @@ data class SentItineraryMsg(
     val title: String,
     @SerializedName("content")
     val content: String,
-    @SerializedName("type")
+    @SerializedName("typ")
     val type: String,
     @SerializedName("hasStart")
     var hasStart: Boolean,
@@ -70,7 +70,7 @@ data class ReceivedItineraryMsg(
     val title: String,
     @SerializedName("content")
     val content: String,
-    @SerializedName("type")
+    @SerializedName("typ")
     val type: String,
     @SerializedName("hasStart")
     val hasStart: Boolean,
