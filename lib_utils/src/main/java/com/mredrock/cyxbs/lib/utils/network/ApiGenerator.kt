@@ -14,6 +14,7 @@ import com.mredrock.cyxbs.lib.utils.service.ServiceManager
 import com.mredrock.cyxbs.lib.utils.service.impl
 import com.mredrock.cyxbs.lib.utils.utils.LogLocal
 import com.mredrock.cyxbs.lib.utils.utils.LogUtils
+import okhttp3.Dns
 import okhttp3.HttpUrl
 import okhttp3.Interceptor
 import okhttp3.OkHttpClient
@@ -23,6 +24,7 @@ import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit
 import retrofit2.adapter.rxjava3.RxJava3CallAdapterFactory
 import retrofit2.converter.gson.GsonConverterFactory
+import java.net.InetAddress
 import java.util.concurrent.CopyOnWriteArrayList
 import java.util.concurrent.TimeUnit
 import java.util.concurrent.locks.ReentrantLock
@@ -211,6 +213,16 @@ object ApiGenerator {
                         .addHeader("APPVersion", BuildConfig.VERSION_NAME)
                         .build()
                 )
+            })
+            //release版才替换ip，dev暂时不管
+            if (!BuildConfig.DEBUG) dns(object : Dns {
+                override fun lookup(hostname: String): List<InetAddress> {
+                    return if (hostname == END_POINT_REDROCK_PROD) {
+                        InetAddress.getAllByName("222.177.140.110").asList()
+                    }else{
+                        Dns.SYSTEM.lookup(hostname)
+                    }
+                }
             })
             addInterceptor(logging)
             //这里是在debug模式下方便开发人员简单确认 http 错误码 和 url(magipoke开始切的)
