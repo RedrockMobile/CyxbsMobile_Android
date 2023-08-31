@@ -217,7 +217,7 @@ object ApiGenerator {
             //release版才替换ip，dev暂时不管
             if (!BuildConfig.DEBUG) dns(object : Dns {
                 override fun lookup(hostname: String): List<InetAddress> {
-                    return if (hostname == END_POINT_REDROCK_PROD) {
+                    return if (hostname == "be-prod.redrock.cqupt.edu.cn") {
                         InetAddress.getAllByName("222.177.140.110").asList()
                     }else{
                         Dns.SYSTEM.lookup(hostname)
