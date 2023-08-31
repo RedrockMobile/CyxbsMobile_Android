@@ -4,7 +4,8 @@
     <!-- 设置阴影 -->
     <item>
         <shape android:shape="rectangle">
-            <solid android:color="#00000000" /> <!-- 阴影的背景颜色为透明 -->
+            <solid android:color="#00000000" />
+            <!-- 阴影的背景颜色为透明 -->
             <corners android:radius="14dp" /> <!-- 设置阴影层的圆角半径 -->
         </shape>
     </item>
@@ -12,10 +13,7 @@
     <!-- 设置内容背景 -->
     <item>
         <shape android:shape="rectangle">
-            <gradient
-                android:startColor="#1AF4F7FF"
-            android:endColor="#FFFFFF"
-            android:angle="270" /> <!-- 渐变角度，90 表示从上到下渐变 -->
+            <solid android:color="#1AFFFFFF" />
 
             <stroke
                 android:color="#FFFFFF"

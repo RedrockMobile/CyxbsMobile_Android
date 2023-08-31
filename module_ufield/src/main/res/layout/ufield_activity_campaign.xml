@@ -6,6 +6,7 @@
     android:layout_height="match_parent">
 
     <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/ufieldConstraintlayout2"
         android:layout_width="match_parent"
         android:layout_height="152dp"
         android:background="@drawable/ufield_shape_activity_campaign_cl_container"
@@ -16,7 +17,7 @@
         android:id="@+id/ufield_activity_campaign_rl_back"
         android:layout_width="30dp"
         android:layout_height="30dp"
-        android:layout_marginStart="7dp"
+        android:layout_marginStart="17dp"
         android:layout_marginTop="60dp"
         android:background="@drawable/ufield_ripple_activity_campaign_ripple_back"
         app:layout_constraintLeft_toLeftOf="parent"
@@ -35,7 +36,7 @@
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="37dp"
+        android:layout_marginStart="47dp"
         android:text="活动中心"
         android:textAppearance="@style/ufield_toolbar_tv"
         android:textStyle="bold"
@@ -49,6 +50,8 @@
         android:layout_width="match_parent"
         android:layout_height="50dp"
         android:layout_marginTop="102dp"
+        android:layout_marginStart="22dp"
+        android:layout_marginEnd="22dp"
         android:backgroundTint="@android:color/transparent"
         android:theme="@style/Theme.MaterialComponents"
         app:layout_constraintLeft_toLeftOf="parent"
@@ -62,9 +65,11 @@
         app:tabRippleColor="@android:color/transparent"
         app:tabTextAppearance="@style/tab_style"
         app:tabTextColor="@color/ufield_home_tabLayout_text_selected" />
+
+
     <androidx.viewpager2.widget.ViewPager2
-        android:layout_marginTop="154dp"
         android:id="@+id/ufield_activity_campaign_vp2"
         android:layout_width="match_parent"
-        android:layout_height="match_parent" />
+        android:layout_height="match_parent"
+        android:paddingTop="152dp" />
 </androidx.constraintlayout.widget.ConstraintLayout>
