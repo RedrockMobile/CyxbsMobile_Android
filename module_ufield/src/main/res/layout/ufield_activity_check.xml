@@ -57,6 +57,10 @@
 
     </LinearLayout>
 
+    <View
+        android:background="@color/uField_todo_background"
+        android:layout_width="match_parent"
+        android:layout_height="20dp"/>
 
     <androidx.viewpager2.widget.ViewPager2
         android:id="@+id/uField_check_view_pager"

@@ -63,7 +63,7 @@ class AllFragment : BaseFragment() {
                 }
 
             }
-            addItemDecoration(GridSpacingItemDecoration(2, 0, 50))
+            addItemDecoration(GridSpacingItemDecoration(2))
 
         }
 

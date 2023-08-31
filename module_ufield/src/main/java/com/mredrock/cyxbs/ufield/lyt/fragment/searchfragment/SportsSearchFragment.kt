@@ -54,6 +54,8 @@ class SportsSearchFragment : BaseFragment() {
                     Log.d("595995", "测试结果-->> ${mDataList[it].activity_id}");
                     startActivity(intent)
                 }
+                addItemDecoration(GridSpacingItemDecoration(1))
+
             }
         }
 

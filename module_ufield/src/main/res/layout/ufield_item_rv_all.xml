@@ -63,7 +63,7 @@
                 android:id="@+id/uField_activity_isGoing"
                 android:layout_width="40dp"
                 android:layout_height="16dp"
-                android:layout_marginStart="5dp"
+                android:layout_marginStart="2dp"
                 android:layout_marginTop="16dp"
                 app:layout_constraintStart_toEndOf="@+id/uField_activity_name"
                 app:layout_constraintTop_toBottomOf="@+id/uField_all_frameLayout" />
@@ -80,6 +80,7 @@
                 app:layout_constraintTop_toBottomOf="@+id/uField_activity_name" />
 
             <ImageView
+                android:id="@+id/ufieldImageview5"
                 android:layout_width="16dp"
                 android:layout_height="16dp"
                 android:layout_marginStart="12dp"
@@ -92,11 +93,11 @@
                 android:id="@+id/uField_activity_time"
                 android:layout_width="110dp"
                 android:layout_height="17dp"
-                android:layout_marginStart="36dp"
+                android:layout_marginStart="4dp"
                 android:layout_marginTop="9dp"
                 android:textColor="@color/uField_112c5499"
                 android:textSize="12sp"
-                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintStart_toEndOf="@+id/ufieldImageview5"
                 app:layout_constraintTop_toBottomOf="@+id/uField_activity_type" />
 
         </androidx.constraintlayout.widget.ConstraintLayout>
