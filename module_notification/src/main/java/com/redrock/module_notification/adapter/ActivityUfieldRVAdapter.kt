@@ -16,7 +16,6 @@ import androidx.recyclerview.widget.RecyclerView
 import com.alibaba.android.arouter.launcher.ARouter
 import com.mredrock.cyxbs.config.route.UFIELD_DETAIL
 import com.mredrock.cyxbs.lib.utils.extensions.setOnSingleClickListener
-import com.mredrock.cyxbs.lib.utils.extensions.toast
 import com.redrock.module_notification.R
 import com.redrock.module_notification.bean.UfieldMsgBean
 import com.redrock.module_notification.util.formatNumberToTime
@@ -65,9 +64,6 @@ class ActivityUfieldRVAdapter(
                 notificationTitle = findViewById(R.id.item_activity_notification_tv_title)
             }
             clickDetail.setOnSingleClickListener {
-                if (currentList[absoluteAdapterPosition].messageType == "examine_report_reject") {
-                    toast("未通过的消息无详情哟~")
-                } else {
                     viewmodel.changeUfieldMsgStatus(currentList[absoluteAdapterPosition].messageId)
                     getItem(absoluteAdapterPosition).run {
                         ARouter.getInstance().build(UFIELD_DETAIL)
@@ -77,7 +73,7 @@ class ActivityUfieldRVAdapter(
                             )
                             .navigation(context.activity?.application?.applicationContext)
                     }
-                }
+
             }
         }
     }

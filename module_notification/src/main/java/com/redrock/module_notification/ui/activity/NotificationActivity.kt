@@ -83,7 +83,6 @@ class NotificationActivity : BaseViewModelActivity<NotificationViewModel>() {
             changeTabRedDotsVisibility(1, View.INVISIBLE)
         }
         viewModel.getUFieldActivity()
-        initObserver()
     }
 
 
