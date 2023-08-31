@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="220dp"
-    android:layout_marginTop="26dp">
+    android:layout_marginTop="16dp">
 
     <androidx.cardview.widget.CardView
         android:layout_width="343dp"
