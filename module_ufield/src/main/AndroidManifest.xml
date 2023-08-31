@@ -7,7 +7,8 @@
         <activity android:name=".lyt.ui.UFieldActivity" />
         <activity android:name=".lyt.ui.CheckActivity" />
         <activity android:name=".lyt.ui.SearchActivity" />
-        <activity android:name=".gyd.ui.CreateActivity" />
+        <activity android:name=".gyd.ui.CreateActivity"
+            android:windowSoftInputMode="adjustPan"/>
         <activity android:name=".lxh.ui.activity.RankActivity" />
     </application>
 
