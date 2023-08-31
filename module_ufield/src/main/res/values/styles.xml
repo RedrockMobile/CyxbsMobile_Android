@@ -30,6 +30,12 @@
 
     </style>
     <style name="tab_style" tools:ignore="ResourceName">
+        <item name="tabPaddingStart">16dp</item>
+        <item name="tabPaddingEnd">16dp</item>
         <item name="android:textSize">18sp</item>
     </style>
+    <style name="AppSearchView" parent="Widget.AppCompat.SearchView" tools:ignore="ResourceName">
+        <item name="android:background">@drawable/ufield_selector_searchview_background</item>
+    </style>
+
 </resources>

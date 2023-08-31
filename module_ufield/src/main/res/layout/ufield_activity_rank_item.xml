@@ -24,18 +24,24 @@
             app:layout_constraintTop_toTopOf="parent"
             app:srcCompat="@drawable/ufield_ic_activity_rank_number1" />
 
-        <TextView
-            android:id="@+id/ufield_activity_rank_tv_number"
-            android:layout_width="wrap_content"
+        <RelativeLayout
+            android:layout_width="30dp"
             android:layout_height="28dp"
-            android:layout_marginStart="29dp"
+            android:gravity="center"
+            android:layout_marginStart="20dp"
             android:layout_marginTop="8dp"
-            android:letterSpacing="0.03"
-            android:text="4"
-            android:textColor="#994A44E4"
-            android:textSize="20sp"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+            app:layout_constraintTop_toTopOf="parent">
+
+            <TextView
+                android:id="@+id/ufield_activity_rank_tv_number"
+                android:layout_width="wrap_content"
+                android:layout_height="28dp"
+                android:letterSpacing="0.03"
+                android:text="12"
+                android:textColor="#994A44E4"
+                android:textSize="20sp" />
+        </RelativeLayout>
 
         <androidx.cardview.widget.CardView
             android:id="@+id/ufield_activity_rank_cv_head"
@@ -62,8 +68,8 @@
             android:layout_marginStart="5dp"
             android:layout_marginBottom="8dp"
             android:ellipsize="end"
-            android:lineHeight="25.2dp"
             android:letterSpacing="0.03"
+            android:lineHeight="25.2dp"
             android:maxEms="7"
             android:text="你好,你好你好你好"
             android:textColor="#112C54"
@@ -71,26 +77,38 @@
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toEndOf="@+id/ufield_activity_rank_cv_head" />
 
-        <TextView
-            android:id="@+id/ufield_activity_rank_tv_fire"
-            android:layout_width="55dp"
+        <LinearLayout
+            android:id="@+id/ufield_actibity_rank_ll_item"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginEnd="16dp"
+            android:layout_marginEnd="36dp"
             android:gravity="center"
-            android:layout_marginBottom="8dp"
-            android:letterSpacing="0.03"
-            android:text="245"
-            android:textColor="#2921D1"
-            android:textSize="18sp"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent" />
+            app:layout_constraintEnd_toEndOf="parent"
+            android:layout_marginStart="185dp"
+            app:layout_constraintStart_toEndOf="@+id/ufield_activity_rank_cv_head"
+            app:layout_constraintTop_toTopOf="parent">
+
+            <TextView
+                android:id="@+id/ufield_activity_rank_tv_fire"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:letterSpacing="0.03"
+                android:text="245"
+                android:textColor="#2921D1"
+                android:textSize="20sp"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent" />
+        </LinearLayout>
 
         <ImageView
             android:id="@+id/ufield_activity_rank_iv_fire"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="13dp"
-            app:layout_constraintEnd_toStartOf="@+id/ufield_activity_rank_tv_fire"
+            android:layout_marginTop="12dp"
+            android:layout_marginRight="5dp"
+            app:layout_constraintEnd_toStartOf="@+id/ufield_actibity_rank_ll_item"
             app:layout_constraintTop_toTopOf="parent"
             app:srcCompat="@drawable/ufield_ic_activity_rank_fire" />
     </androidx.constraintlayout.widget.ConstraintLayout>

@@ -1,6 +1,7 @@
 package com.mredrock.cyxbs.ufield.lyt.fragment.checkfragment
 
 import android.annotation.SuppressLint
+import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
@@ -11,9 +12,11 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.mredrock.cyxbs.lib.base.ui.BaseFragment
 import com.mredrock.cyxbs.ufield.R
+import com.mredrock.cyxbs.ufield.gyd.ui.DetailActivity
 import com.mredrock.cyxbs.ufield.lyt.adapter.TodoRvAdapter
 import com.mredrock.cyxbs.ufield.lyt.bean.TodoBean
 import com.mredrock.cyxbs.ufield.lyt.helper.CheckDialog
+import com.mredrock.cyxbs.ufield.lyt.helper.GridSpacingItemDecoration
 import com.mredrock.cyxbs.ufield.lyt.viewmodel.fragment.TodoViewModel
 import com.scwang.smart.refresh.footer.ClassicsFooter
 import com.scwang.smart.refresh.header.ClassicsHeader
@@ -92,7 +95,7 @@ class TodoFragment : BaseFragment() {
                         CheckDialog.Builder(
                             requireContext(),
                             CheckDialog.Data(
-                                content = "请输入驳回理由（1-10个字）",
+                                content = "不得超过10个字",
                                 width = 255,
                                 height = 207
                             )
@@ -114,6 +117,15 @@ class TodoFragment : BaseFragment() {
                         }.show()
 
                     }
+                }
+                /**
+                 * 点击每一个item
+                 */
+                setOnItemClick {
+                    val intent = Intent(requireContext(), DetailActivity::class.java)
+                    intent.putExtra("actID", mDataList[it].activity_id)
+                    Log.d("595995", "测试结果-->> ${mDataList[it].activity_id}");
+                    startActivity(intent)
                 }
             }
         }

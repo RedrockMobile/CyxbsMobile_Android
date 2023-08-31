@@ -61,6 +61,7 @@ class UFieldViewModel : BaseViewModel() {
             .doOnError { Log.d("getAllActivityList", "测试结果-->> ${it.message}"); }
             .safeSubscribeBy {
                 _allList.value = it.ongoing + it.ended
+                Log.d("logTest", "测试结果-->> $it");
             }
     }
 

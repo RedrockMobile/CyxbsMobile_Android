@@ -13,8 +13,8 @@ import androidx.recyclerview.widget.RecyclerView
  *  在正常写完Rv后加入如下代码
  *  mRv.addItemDecoration(GridSpacingItemDecoration(spanCount, spacingDp, includeEdge))
  *  spanCount：多少列
- *  spacingDp：间距的dp（默认设置上下间距）
- *  includeEdge：是否包括边距，为true的时候，左右也会有spacingDp
+ *  spacingUPDp：间距的dp（默认设置上下间距）
+ *  spacingLRDp：左右间距（目前仅仅支持2列）
  *
  *
  *  author : lytMoon
@@ -25,8 +25,8 @@ import androidx.recyclerview.widget.RecyclerView
 
 class GridSpacingItemDecoration(
     private val spanCount: Int,
-    private val spacingDp: Int,
-    private val includeEdge: Boolean
+    private val spacingUPDp: Int,
+    private val spacingLRDp: Int
 ) :
     RecyclerView.ItemDecoration() {
     private var spacingPx: Int = 0
@@ -37,26 +37,15 @@ class GridSpacingItemDecoration(
         state: RecyclerView.State
     ) {
         if (spacingPx == 0) {
-            spacingPx = dpToPx(view.context, spacingDp)
+            spacingPx = dpToPx(view.context, spacingUPDp)
         }
 
         val position = parent.getChildAdapterPosition(view)
         val column = position % spanCount
 
-        outRect.left = column * spacingPx / spanCount
-        outRect.right = spacingPx - (column + 1) * spacingPx / spanCount
-
-        if (includeEdge) {
-            outRect.left = spacingPx - column * spacingPx / spanCount
-            outRect.right = (column + 1) * spacingPx / spanCount
-        } else {
-            outRect.left = column * spacingPx / spanCount
-            outRect.right = spacingPx - (column + 1) * spacingPx / spanCount
-        }
-
-        if (position >= spanCount) {
-            outRect.top = spacingPx
-        }
+        outRect.top = spacingPx
+        outRect.right = if (column == 1) spacingLRDp else spacingLRDp / 2
+        outRect.left = if (column == 1) spacingLRDp / 2 else spacingLRDp
     }
 
     private fun dpToPx(context: Context, dp: Int): Int {

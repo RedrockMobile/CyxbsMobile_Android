@@ -15,43 +15,53 @@
             android:id="@+id/ufield_activity_campaign_rv_watch"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:paddingBottom="10dp"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
             android:overScrollMode="never"
-
             tools:listitem="@layout/ufield_activity_campaign_item" />
 
     </RelativeLayout>
 
 
-    <RelativeLayout
+    <androidx.appcompat.widget.LinearLayoutCompat
         android:id="@+id/ufield_campaign_no_message"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:gravity="center"
-        android:visibility="gone"
+        android:orientation="vertical"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent">
 
         <ImageView
             android:id="@+id/ufield_fragment_iv_no"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_width="200dp"
+            android:layout_height="150dp"
             android:layout_alignParentStart="true"
             android:layout_alignParentTop="true"
-            android:layout_marginTop="-200dp"
+            android:layout_marginTop="200dp"
+            android:layout_gravity="center"
+            android:scaleType="centerInside"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.497"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintVertical_bias="0.739"
             app:srcCompat="@drawable/ufield_ic_no_message" />
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="17dp"
-            android:layout_below="@+id/ufield_fragment_iv_no"
+            android:layout_gravity="center"
             android:layout_alignParentStart="true"
-            android:layout_marginStart="85dp"
             android:layout_marginTop="30dp"
             android:lineHeight="16.8dp"
             android:text="@string/ufield_campaign_no_message"
-            android:textSize="12sp" />
-    </RelativeLayout>
+            android:textSize="12sp"
+            app:layout_constraintEnd_toEndOf="@+id/ufield_fragment_iv_no"
+            app:layout_constraintHorizontal_bias="0.496"
+            app:layout_constraintStart_toStartOf="@+id/ufield_fragment_iv_no"
+            app:layout_constraintTop_toBottomOf="@+id/ufield_fragment_iv_no" />
+    </androidx.appcompat.widget.LinearLayoutCompat>
 
 </androidx.constraintlayout.widget.ConstraintLayout>
