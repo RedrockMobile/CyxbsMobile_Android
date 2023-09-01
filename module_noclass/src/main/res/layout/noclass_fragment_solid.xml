@@ -5,7 +5,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/config_white_black">
+    android:background="@color/noclass_main">
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
@@ -17,7 +17,6 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="16dp"
             android:layout_marginEnd="16dp"
-            android:layout_marginTop="23dp"
             android:background="@drawable/noclass_shape_add_shape_bg"
             android:hint="添加同学"
             android:imeOptions="actionSearch"
@@ -39,8 +38,8 @@
             android:id="@+id/noclass_solid_rv_show"
             android:layout_width="match_parent"
             android:layout_height="0dp"
-            android:background="@color/config_white_black"
-            android:layout_marginTop="17dp"
+            android:background="@color/noclass_main"
+            android:layout_marginTop="14dp"
             android:layout_marginBottom="28dp"
             app:layout_constraintBottom_toTopOf="@+id/noclass_solid_btn_create"
             app:layout_constraintEnd_toEndOf="parent"

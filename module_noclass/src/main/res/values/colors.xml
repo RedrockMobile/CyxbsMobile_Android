@@ -97,4 +97,6 @@
     <!--    打字框背景颜色-->
     <color name="noclass_write_able_area_background_shallow">#E8F0FC</color>
 
+    <!--    透明-->
+    <color name="noclass_transparent">#00FFFFFF</color>
 </resources>

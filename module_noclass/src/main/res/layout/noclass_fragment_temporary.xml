@@ -5,7 +5,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/config_white_black">
+    android:background="@color/noclass_main">
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
@@ -17,7 +17,6 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="16dp"
             android:layout_marginEnd="16dp"
-            android:layout_marginTop="23dp"
             android:background="@drawable/noclass_shape_add_shape_bg"
             android:hint="添加同学、分组或班级"
             android:imeOptions="actionSearch"
@@ -41,7 +40,6 @@
             android:layout_height="0dp"
             android:layout_marginTop="17dp"
             android:layout_marginBottom="28dp"
-            android:background="@color/config_white_black"
             app:layout_constraintBottom_toTopOf="@+id/noclass_temporary_btn_query"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.0"
@@ -73,6 +71,7 @@
             android:layout_height="42dp"
             android:background="@drawable/noclass_shape_button_common_bg"
             android:text="查询"
+            android:textStyle="bold"
             android:textColor="@color/config_white_black"
             android:textSize="18sp"
             android:layout_marginBottom="28dp"

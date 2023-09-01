@@ -51,6 +51,7 @@
             android:text="创建新的分组"
             android:textColor="@color/noclass_primary_text_color"
             android:textSize="19sp"
+            android:textStyle="bold"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
@@ -60,42 +61,41 @@
 
         <LinearLayout
             android:id="@+id/noclassLinearlayout"
-            android:layout_width="0dp"
-            android:layout_height="50dp"
-            android:layout_marginStart="70dp"
-            android:layout_marginEnd="70dp"
-            android:background="@drawable/noclass_shape_group_et_bg"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
             android:orientation="horizontal"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.0"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintVertical_bias="0.4">
 
             <TextView
-                android:textColor="@color/noclass_hint_text_color_dark"
-                android:layout_marginStart="16dp"
                 android:id="@+id/tv_noclass_create_group_name"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_vertical"
+                android:layout_marginStart="16dp"
                 android:text="分组名称："
+                android:textColor="@color/noclass_hint_text_color_dark"
                 android:textSize="14sp" />
 
             <EditText
                 android:textColorHint="@color/noclass_create_group_tint_bg"
                 android:textColor="@color/noclass_member_name_color"
-                android:layout_marginStart="8dp"
                 android:layout_marginEnd="16dp"
+                android:paddingTop="10.5dp"
+                android:paddingBottom="10.5dp"
+                android:paddingStart="21dp"
+                android:paddingEnd="21dp"
                 android:id="@+id/et_noclass_group_name"
-                android:layout_width="match_parent"
+                android:layout_width="183dp"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
-                android:background="@color/noclass_create_group_bg"
-                android:hint="请输入你的分组名称"
+                android:background="@drawable/noclass_shape_create_group"
+                android:hint="10个字以内"
                 android:textSize="14sp"
-                android:maxLength="12"
+                android:maxLength="10"
                 android:maxLines="1"
                 android:singleLine="true" />
         </LinearLayout>
