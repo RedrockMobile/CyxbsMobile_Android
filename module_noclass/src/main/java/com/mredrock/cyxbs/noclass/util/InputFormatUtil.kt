@@ -44,4 +44,18 @@ object InputFormatUtil {
         return chineseRegex.matches(s)
     }
 
+    /**
+     * 检查一个字符串是否是哪种序列类型
+     * @param s 待检查字符串
+     * @return 目前1表示纯数字序列，2表示纯中文序列
+     */
+    fun isWhatType(s: String): Int {
+        return if(!isNumbersSequence(s)){
+            if (!isChineseCharacters(s))
+                0  // 未在已有字符串标准找到
+            else
+                2  // 纯中文序列
+        } else 1 // 纯数字序列
+    }
+
 }

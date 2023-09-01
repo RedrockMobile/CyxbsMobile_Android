@@ -1,20 +1,26 @@
 package com.mredrock.cyxbs.noclass.page.ui.activity
 
+import android.content.Intent
 import android.os.Bundle
 import android.util.Log
+import android.view.View
 import android.view.WindowManager
 import android.widget.Button
 import android.widget.EditText
 import android.widget.FrameLayout
 import android.widget.ImageView
+import androidx.activity.OnBackPressedCallback
 import androidx.activity.viewModels
 import com.google.android.material.bottomsheet.BottomSheetBehavior
+import com.mredrock.cyxbs.config.sp.defaultSp
 import com.mredrock.cyxbs.lib.base.ui.BaseActivity
 import com.mredrock.cyxbs.lib.utils.extensions.setOnSingleClickListener
 import com.mredrock.cyxbs.noclass.R
 import com.mredrock.cyxbs.noclass.bean.NoClassSpareTime
 import com.mredrock.cyxbs.noclass.page.ui.dialog.BatchInputErrorDialog
 import com.mredrock.cyxbs.noclass.page.ui.dialog.BatchQueryErrorDialog
+import com.mredrock.cyxbs.noclass.page.ui.dialog.CreateGroupDialog
+import com.mredrock.cyxbs.noclass.page.ui.dialog.IsCreateSolidDialog
 import com.mredrock.cyxbs.noclass.page.ui.dialog.SameNameSelectionDialog
 import com.mredrock.cyxbs.noclass.page.ui.fragment.NoClassCourseVpFragment
 import com.mredrock.cyxbs.noclass.page.viewmodel.activity.BatchAdditionViewModel
@@ -49,6 +55,9 @@ class BatchAdditionActivity : BaseActivity() {
     // 批量添加 已经检查好的学生list 的缓冲list
     private var tempPreparedList = mutableListOf<Pair<String, String>>()
 
+    // 批量添加 已经检查好的学生的学号list
+    private var tempStuNumList = mutableListOf<String>()
+
     /**
      * 绑定部分view的实例
      */
@@ -65,12 +74,16 @@ class BatchAdditionActivity : BaseActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.noclass_activity_batch_addition)
+        initBackCallBack()
         initObserve()
         initInteractView()
         initCourse()
 
     }
 
+    /**
+     * 一些可交互view的初始化
+     */
     private fun initInteractView() {
         initButton()
         initTextView()
@@ -88,7 +101,7 @@ class BatchAdditionActivity : BaseActivity() {
     private fun initTextView() {
         // 点击返回图标执行回退逻辑
         back2NoClassHome.setOnClickListener {
-            onBackPressed()
+            finish()
         }
     }
 
@@ -113,32 +126,34 @@ class BatchAdditionActivity : BaseActivity() {
         val contentList = batchInputBox.text.toString().split("\n")
         // 状态位 , 输入内容是否符合标准
         var standardFlag = true
-        // 0为纯数字序列标准, 1为纯汉字序列标准
-        for (standardType in 0 until 2) {
-            run loop@{
-                when (standardType) {
-                    0 -> {
-                        standardFlag = true
-                        contentList.forEach {
-                            if (!InputFormatUtil.isNumbersSequence(it)) {
-                                standardFlag = false
-                                return@loop
-                            }
-                        }
-                    }
+        // 0为未在已有字符串标准找到, 1为纯数字序列标准, 2为纯汉字序列标准
+        val standardType = InputFormatUtil.isWhatType(contentList[0])
 
-                    1 -> {
-                        standardFlag = true
-                        contentList.forEach {
-                            if (!InputFormatUtil.isChineseCharacters(it)) {
-                                standardFlag = false
-                                return@loop
-                            }
+        run loop@{
+            when (standardType) {
+                1 -> {
+                    standardFlag = true
+                    contentList.forEach {
+                        if (!InputFormatUtil.isNumbersSequence(it)) {
+                            standardFlag = false
+                            return@loop
                         }
                     }
                 }
+
+                2 -> {
+                    standardFlag = true
+                    contentList.forEach {
+                        if (!InputFormatUtil.isChineseCharacters(it)) {
+                            standardFlag = false
+                            return@loop
+                        }
+                    }
+                }
+                else ->{
+                    standardFlag = false
+                }
             }
-            if (standardFlag) break
         }
 
         if (standardFlag) {
@@ -164,14 +179,21 @@ class BatchAdditionActivity : BaseActivity() {
                 return@observe
             }
 
-            // 弹出重名的信息
-            SameNameSelectionDialog(it.repeat).show(supportFragmentManager, "SameNameSelectionDialog")
-
+            if (it.repeat.isNotEmpty()) {
+                // 弹出重名的信息
+                SameNameSelectionDialog(it.repeat).show(
+                    supportFragmentManager,
+                    "SameNameSelectionDialog"
+                )
+            }
             // 暂存normal的返回数据，待到重名信息选择完毕之后再一起给到ViewModel
-            if (tempPreparedList.isNotEmpty())
-                tempPreparedList.removeAll(tempPreparedList)
+            tempPreparedList.clear()
+            tempStuNumList.clear()
+            tempPreparedList = mutableListOf()
+            tempStuNumList = mutableListOf()
             it.normal.forEach { normal ->
                 tempPreparedList.add(Pair(normal.id, normal.name))
+                tempStuNumList.add(normal.id)
             }
         }
 
@@ -182,14 +204,17 @@ class BatchAdditionActivity : BaseActivity() {
 
         // 观察selectedSameNameStudents数据，即是否进行了重名学生的选择, 数据更新代表完成了新一次的选择
         batchAdditionViewModel.selectedSameNameStudents.observe(this) {
-            Log.d("ProgressTest","检测到进行了重名学生的选择")
+            Log.d("ProgressTest", "检测到进行了重名学生的选择")
             tempPreparedList.addAll(it)
+            it.forEach { selected ->
+                tempStuNumList.add(selected.first)
+            }
             batchAdditionViewModel.setPreparedStudents(tempPreparedList)
         }
 
-        // 观察selectedSameNameStudents数据, 数据更新就执行查询空闲课程的操作
+        // 观察batchAdditionStudents数据, 数据更新就执行查询空闲课程的操作
         batchAdditionViewModel.batchAdditionStudents.observe(this) {
-            Log.d("ProgressTest","进行空闲课表查询")
+            Log.d("ProgressTest", "进行空闲课表查询")
             val tempList = mutableListOf<String>() // 临时的stuNumList
             it.forEach { pair ->
                 tempList.add(pair.first)
@@ -198,6 +223,9 @@ class BatchAdditionActivity : BaseActivity() {
         }
     }
 
+    /**
+     * 初始化空闲课表
+     */
     private fun initCourse() {
         // 绑定行为和布局
         mCourseSheetBehavior = BottomSheetBehavior.from(freeCourseContainer)
@@ -206,13 +234,73 @@ class BatchAdditionActivity : BaseActivity() {
             NoClassCourseVpFragment.newInstance(NoClassSpareTime.EMPTY_PAGE)
         }
         mCourseSheetBehavior.state = BottomSheetBehavior.STATE_HIDDEN
+        mCourseSheetBehavior.addBottomSheetCallback(object :
+            BottomSheetBehavior.BottomSheetCallback() {
+            override fun onStateChanged(bottomSheet: View, newState: Int) {
+                when (newState) {
+                    BottomSheetBehavior.STATE_EXPANDED -> { // 课表展开
+                        // 下次不再提醒，默认值为false，也就是默认下次需要提醒
+                        if (!defaultSp.getBoolean("NeverRemindNextOnNoClass", false)) {
+                            IsCreateSolidDialog(this@BatchAdditionActivity).apply {
+                                // 等待弹窗的选择，然后进入下一个弹窗
+                                setOnReturnClick { dialog, isRemind ->
+                                    if (isRemind) {
+                                        dialog.dismiss()
+                                        defaultSp.edit()
+                                            .putBoolean("NeverRemindNextOnNoClass", true).apply()
+                                    }
+                                    dialog.dismiss()
+                                }
+                                setOnContinueClick { dialog, isRemind ->
+                                    if (isRemind) {
+                                        dialog.dismiss()
+                                        defaultSp.edit()
+                                            .putBoolean("NeverRemindNextOnNoClass", true).apply()
+                                    }
+                                    dialog.dismiss()
+                                    CreateGroupDialog {
+                                        // 创建成功之后的操作
+                                        setResult(
+                                            RESULT_OK,
+                                            Intent().putExtra("BulkAdditions", true)
+                                        )
+                                    }.apply {
+                                        setExtraMembers(tempStuNumList.toList())
+                                    }.show(
+                                        supportFragmentManager,
+                                        "CreateGroupDialogFragment"
+                                    )
+                                }
+                            }.show()
+                        }
+                    }
+
+                    BottomSheetBehavior.STATE_COLLAPSED, BottomSheetBehavior.STATE_HIDDEN -> { //折叠操作
+                    }
+
+                    else -> {}
+                }
+            }
+
+            override fun onSlide(bottomSheet: View, slideOffset: Float) {
+            }
+
+        })
     }
 
-    override fun onBackPressed() {
-        if (mCourseSheetBehavior.state == BottomSheetBehavior.STATE_EXPANDED) {
-            mCourseSheetBehavior.state = BottomSheetBehavior.STATE_HIDDEN
-        } else {
-            super.onBackPressed()
+    /**
+     * 由于onBackPress已经废弃，所以改用OnBackPressedDispatcher
+     */
+    private fun initBackCallBack() {
+        val backCallBack = object : OnBackPressedCallback(true) {
+            override fun handleOnBackPressed() {
+                if (mCourseSheetBehavior.state == BottomSheetBehavior.STATE_EXPANDED) {
+                    mCourseSheetBehavior.state = BottomSheetBehavior.STATE_HIDDEN
+                } else {
+                    finish()
+                }
+            }
         }
+        onBackPressedDispatcher.addCallback(this, backCallBack)
     }
 }

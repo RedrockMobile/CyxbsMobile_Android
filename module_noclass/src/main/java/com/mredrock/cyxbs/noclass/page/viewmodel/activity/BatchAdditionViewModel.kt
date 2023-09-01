@@ -50,7 +50,8 @@ class BatchAdditionViewModel : BaseViewModel() {
         NoClassRepository
             .checkUploadInfo(content)
             .mapOrInterceptException {
-                toast("网络异常,假数据测试中") // 请求异常
+                toast("查询失败,假数据测试中,可用真实学号测试") // 请求异常
+                Log.d("DataTest","批量查询失败，可利用真实学号测试后续功能，自行到拦截器处添加")
                 // 给_checkResult传一些假数据测试
                 val falseData = NoClassBatchResponseInfo(
                     isWrong = false,
@@ -63,13 +64,14 @@ class BatchAdditionViewModel : BaseViewModel() {
                     ),
                     normal = listOf(
                         NoClassBatchResponseInfo.Normal("2022121391","张三"),
-                        NoClassBatchResponseInfo.Normal("2022121392","李四")
+                        NoClassBatchResponseInfo.Normal("2022121392","李四"),
+                        NoClassBatchResponseInfo.Normal("2021121393","王五")
                     ),
                     repeat = listOf(
-                        NoClassBatchResponseInfo.Student("2021121393","黎明","大数据管理与应用","114514"),
-                        NoClassBatchResponseInfo.Student("2021121394","黎明","大数据管理与应用","114514"),
-                        NoClassBatchResponseInfo.Student("2021121395","李明","大数据管理与应用","114514"),
-                        NoClassBatchResponseInfo.Student("2021121396","李明","大数据管理与应用","114514"),
+                        NoClassBatchResponseInfo.Student("2021121393","黎明(假学号，会失败)","大数据管理与应用","114514"),
+                        NoClassBatchResponseInfo.Student("2021121394","黎明(假学号，会失败)","大数据管理与应用","114514"),
+                        NoClassBatchResponseInfo.Student("2021121395","李明(假学号，会失败)","大数据管理与应用","114514"),
+                        NoClassBatchResponseInfo.Student("2021121396","李明(假学号，会失败)","大数据管理与应用","114514"),
                     )
                 )
                 _infoCheckResult.postValue(falseData)
