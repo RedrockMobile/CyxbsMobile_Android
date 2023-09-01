@@ -494,12 +494,12 @@
         android:layout_height="wrap_content"
         android:text="2023年8月15日12点15分"
         android:textColor="#CC15315B"
-        android:layout_marginStart="225dp"
+        android:layout_marginRight="16dp"
         android:gravity="right"
         android:textSize="14sp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintHorizontal_bias="1.0"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_bias="0.64" />
@@ -518,6 +518,7 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_bias="0.67" />
+
     <TextView
         android:id="@+id/ufield_tv_endtime"
         android:layout_width="170dp"
@@ -525,11 +526,11 @@
         android:text="2023年8月15日12点15分"
         android:gravity="right"
         android:textColor="#CC15315B"
-        android:layout_marginStart="225dp"
+        android:layout_marginRight="16dp"
         android:textSize="14sp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintHorizontal_bias="1.0"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_bias="0.67" />
