@@ -48,20 +48,16 @@ object LinkRepository {
             .distinctUntilChanged() // 必加，因为 Room 每次修改都会回调，所以需要加个这个去重
             .doOnSubscribe {
               // 在开始订阅时请求一次云端数据
-              getLinkStudent().unsafeSubscribeBy()
+              refreshLinkStudent().unsafeSubscribeBy()
             }.subscribeOn(Schedulers.io())
         }
       }
   }
-  
+
   /**
-   * 只是单纯的得到数据，如果要观察请使用 [observeLinkStudent]
-   *
-   * ## 注意
-   * - 只要学号不为空串，就不会返回异常
-   * - 网络连接失败时会返回本地数据，本地数据为 null 时会返回一个空的 [LinkStuEntity]，但会包含自己的学号
+   * 只是单纯的刷新数据，如果要观察请使用 [observeLinkStudent]
    */
-  fun getLinkStudent(): Single<LinkStuEntity> {
+  fun refreshLinkStudent(): Single<LinkStuEntity> {
     val selfNum = IAccountService::class.impl.getUserService().getStuNum()
     if (selfNum.isBlank()) return Single.error(IllegalStateException("学号为空！"))
     return LinkApiServices::class.api
@@ -80,7 +76,26 @@ object LinkRepository {
         val newLinkStu = LinkStuEntity(it, it.isNotEmpty(), it.gender == "男")
         mLinkStuDB.insertLinkStu(newLinkStu)
         newLinkStu
-      }.onErrorReturn {
+      }.doOnError {
+        // 如果网络失败就插一个空的值到数据库中，防止观察流不回调
+        if (mLinkStuDB.getLinkStu(selfNum) == null) {
+          mLinkStuDB.insertLinkStu(LinkStuEntity.NULL.copy(selfNum = selfNum))
+        }
+      }.subscribeOn(Schedulers.io())
+  }
+  
+  /**
+   * 只是单纯的得到数据，如果要观察请使用 [observeLinkStudent]
+   *
+   * ## 注意
+   * - 只要学号不为空串，就不会返回异常
+   * - 网络连接失败时会返回本地数据，本地数据为 null 时会返回一个空的 [LinkStuEntity]，但会包含自己的学号
+   */
+  fun getLinkStudent(): Single<LinkStuEntity> {
+    val selfNum = IAccountService::class.impl.getUserService().getStuNum()
+    if (selfNum.isBlank()) return Single.error(IllegalStateException("学号为空！"))
+    return refreshLinkStudent()
+      .onErrorReturn {
         // 这里说明网络连接失败，只能使用本地数据
         mLinkStuDB.getLinkStu(selfNum) ?: LinkStuEntity.NULL.copy(selfNum = selfNum)
       }.subscribeOn(Schedulers.io())

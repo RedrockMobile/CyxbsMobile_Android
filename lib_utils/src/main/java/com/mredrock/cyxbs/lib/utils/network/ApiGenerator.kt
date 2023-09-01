@@ -214,12 +214,12 @@ object ApiGenerator {
                         .build()
                 )
             })
-            //release版才替换ip，dev暂时不管
-            if (!BuildConfig.DEBUG) dns(object : Dns {
+            dns(object : Dns {
                 override fun lookup(hostname: String): List<InetAddress> {
+                    // release 版本用的 prod 环境，debug 版本用的 dev 环境，可以在 getBaseUrl() 那里改
                     return if (hostname == "be-prod.redrock.cqupt.edu.cn") {
                         InetAddress.getAllByName("222.177.140.110").asList()
-                    }else{
+                    } else {
                         Dns.SYSTEM.lookup(hostname)
                     }
                 }

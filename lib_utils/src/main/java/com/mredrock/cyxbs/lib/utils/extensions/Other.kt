@@ -1,5 +1,6 @@
 package com.mredrock.cyxbs.lib.utils.extensions
 
+import android.content.pm.ApplicationInfo
 import android.content.res.Configuration
 import androidx.lifecycle.LifecycleCoroutineScope
 import com.alibaba.android.arouter.facade.template.IProvider
@@ -46,5 +47,12 @@ fun isDaytimeMode(): Boolean {
  * 是否是夜间模式
  */
 fun isDarkMode() = !isDaytimeMode()
+
+/**
+ * 是否是 debug 构建
+ */
+val isDebuggableBuild: Boolean
+  get() = (appContext.applicationInfo.flags and ApplicationInfo.FLAG_DEBUGGABLE) != 0
+
 
 
