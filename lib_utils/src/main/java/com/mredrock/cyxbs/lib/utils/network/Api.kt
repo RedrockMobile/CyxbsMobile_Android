@@ -25,3 +25,4 @@ const val BASE_NORMAL_BACKUP_GET = "https://be-prod.redrock.team/cloud-manager/c
 
 //获取baseUrl的方法
 fun getBaseUrl() = if (BuildConfig.DEBUG) END_POINT_REDROCK_DEV else END_POINT_REDROCK_PROD
+//fun getBaseUrl() = END_POINT_REDROCK_PROD

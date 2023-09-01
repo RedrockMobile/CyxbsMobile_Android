@@ -22,7 +22,15 @@ import io.reactivex.rxjava3.core.Single
 class LessonServiceImpl : ILessonService {
   
   private val mAccountService = ServiceManager(IAccountService::class)
-  
+
+  override fun refreshLesson(
+    stuNum: String,
+    isForce: Boolean
+  ): Single<List<ILessonService.Lesson>> {
+    return StuLessonRepository.refreshLesson(stuNum, isForce)
+      .map { it.toLesson() }
+  }
+
   override fun getStuLesson(stuNum: String): Single<List<ILessonService.Lesson>> {
     return StuLessonRepository.getLesson(stuNum)
       .map { it.toLesson() }
