@@ -169,10 +169,6 @@ class CreateActivity : BaseActivity() {
         val hint = "关于活动的简介（不超过100个字）"
 
         val spannableStringBuilder = SpannableStringBuilder(hint)
-
-
-
-
 // 设置文字"（不超过100字）"的大小
         val limitSizeSpan = RelativeSizeSpan(0.8f)
         spannableStringBuilder.setSpan(
