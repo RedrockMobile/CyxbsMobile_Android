@@ -55,7 +55,7 @@ object Date {
 
     /**
      * 给每一条行程消息获取格式化后的日期字符串
-     * @param time 行程消息的时间戳
+     * @param time 行程消息的时间戳, 单位是秒
      */
     fun getItineraryUpdateTime(time: Long): String {
         val date = Date(time * 1000)

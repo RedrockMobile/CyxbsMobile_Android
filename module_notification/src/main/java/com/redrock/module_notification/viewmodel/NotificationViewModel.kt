@@ -3,11 +3,12 @@ package com.redrock.module_notification.viewmodel
 import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
-import com.mredrock.cyxbs.common.network.ApiGenerator
+import androidx.lifecycle.viewModelScope
 import com.mredrock.cyxbs.common.utils.extensions.mapOrThrowApiException
 import com.mredrock.cyxbs.common.viewmodel.BaseViewModel
 import com.mredrock.cyxbs.lib.utils.extensions.setSchedulers
 import com.mredrock.cyxbs.lib.utils.extensions.unsafeSubscribeBy
+import com.mredrock.cyxbs.lib.utils.network.ApiGenerator
 import com.mredrock.cyxbs.lib.utils.network.mapOrThrowApiException
 import com.redrock.module_notification.bean.ChangeReadStatusToBean
 import com.redrock.module_notification.bean.DeleteMsgToBean
@@ -18,6 +19,9 @@ import com.redrock.module_notification.network.ApiService
 import com.redrock.module_notification.util.Constant.NOTIFICATION_LOG_TAG
 import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
 import io.reactivex.rxjava3.schedulers.Schedulers
+import kotlinx.coroutines.flow.MutableSharedFlow
+import kotlinx.coroutines.flow.SharedFlow
+import kotlinx.coroutines.launch
 
 /**
  * Author by OkAndGreat
@@ -25,6 +29,18 @@ import io.reactivex.rxjava3.schedulers.Schedulers
  *
  */
 class NotificationViewModel : BaseViewModel() {
+    /**
+     * 由于暂时无法迁移到lib_base的BaseViewModel下，先把asShareFlow方法提取出来使用
+     */
+    private fun <T> LiveData<T>.asShareFlow(): SharedFlow<T> {
+        val sharedFlow = MutableSharedFlow<T>()
+        observeForever {
+            viewModelScope.launch {
+                sharedFlow.emit(it)
+            }
+        }
+        return sharedFlow
+    }
 
     private val _ufieldActivityMsg = MutableLiveData<List<UfieldMsgBean>>()
 
@@ -40,9 +56,8 @@ class NotificationViewModel : BaseViewModel() {
     // 在该viewModel中获取所有行程消息的请求 是否成功（状态）
     val itineraryMsgIsSuccessfulState: LiveData<Boolean> get() = _itineraryMsgIsSuccessfulState
     private val _itineraryMsgIsSuccessfulState = MutableLiveData<Boolean>()
+    // 是否获取成功获取过行程数据
     var getItineraryIsSuccessful: Boolean  = false
-        private set
-    var itineraryUpdateTime: Long = 0L
         private set
 
     val checkInStatus = MutableLiveData<Boolean>()
@@ -214,25 +229,35 @@ class NotificationViewModel : BaseViewModel() {
      */
     fun getAllItineraryMsg() {
         retrofit.getReceivedItinerary()
-            .flatMap {received->
-                retrofit.getSentItinerary().map {sent->
-                    val emptyItineraryMsg = ItineraryAllMsg(sent.data, received.data)
-                    emptyItineraryMsg
-                }.subscribeOn(Schedulers.io())
-            }
-            .observeOn(Schedulers.io())
+            .subscribeOn(Schedulers.io())
             .subscribeOn(AndroidSchedulers.mainThread())
-            .unsafeSubscribeBy (
+            .mapOrThrowApiException()
+            .unsafeSubscribeBy(
                 onError = {
-                    Log.w(NOTIFICATION_LOG_TAG, "getAllItineraryMsg failed of ${it.message}")
+                    Log.d("Hsj-getAllItinerary", "getAllItineraryMsg 1 failed of ${it.message}")
                     _itineraryMsgIsSuccessfulState.postValue(false)
-                    getItineraryIsSuccessful = false
+                    getMsgSuccessful.postValue(false)
                 },
-                onSuccess = {
-                    itineraryUpdateTime = System.currentTimeMillis()
-                    _itineraryMsg.value = it
-                    getItineraryIsSuccessful = true
-                    _itineraryMsgIsSuccessfulState.postValue(true)
+                onSuccess = { received->
+                    Log.d("Hsj-getAllItinerary", "getAllItineraryMsg 1 success")
+                    retrofit.getSentItinerary()
+                        .subscribeOn(Schedulers.io())
+                        .subscribeOn(AndroidSchedulers.mainThread())
+                        .mapOrThrowApiException()
+                        .unsafeSubscribeBy(
+                            onError = {
+                                Log.d("Hsj-getAllItinerary", "getAllItineraryMsg 2 failed of ${it.message}")
+                                _itineraryMsgIsSuccessfulState.postValue(false)
+                                getMsgSuccessful.postValue(false)
+                            },
+                            onSuccess = {sent->
+
+                                _itineraryMsg.postValue(ItineraryAllMsg(sent, received))
+                                getItineraryIsSuccessful = true
+                                _itineraryMsgIsSuccessfulState.postValue(true)
+                                getMsgSuccessful.postValue(true)
+                            }
+                        ).lifeCycle()
                 }
             ).lifeCycle()
     }

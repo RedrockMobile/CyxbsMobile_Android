@@ -1,12 +1,12 @@
 package com.redrock.module_notification.ui.fragment
 
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.widget.LinearLayout
 import android.widget.TextView
 import androidx.core.content.ContextCompat
-import androidx.core.content.edit
 import androidx.fragment.app.activityViewModels
 import androidx.viewpager2.widget.ViewPager2
 import com.google.android.material.tabs.TabLayout
@@ -16,10 +16,9 @@ import com.mredrock.cyxbs.lib.base.ui.viewModelBy
 import com.mredrock.cyxbs.lib.utils.adapter.FragmentVpAdapter
 import com.mredrock.cyxbs.lib.utils.extensions.color
 import com.redrock.module_notification.R
-import com.redrock.module_notification.adapter.ActivityNotificationRvAdapter.Companion.CHANGE_DOT_STATUS
 import com.redrock.module_notification.bean.ItineraryAllMsg
 import com.redrock.module_notification.ui.activity.NotificationActivity
-import com.redrock.module_notification.util.Constant
+import com.redrock.module_notification.util.Constant.IS_SWITCH1_SELECT
 import com.redrock.module_notification.util.NotificationSp
 import com.redrock.module_notification.util.noOpDelegate
 import com.redrock.module_notification.viewmodel.ItineraryViewModel
@@ -67,16 +66,11 @@ class ItineraryNotificationFragment : BaseFragment(R.layout.notification_fragmen
         get() = itineraryViewModel.currentPageIndex.value!!
         set(value) = itineraryViewModel.changeCurrentPageIndex(value)
 
-    // 状态位
-    private var isWrittenLatestSentTime = true
-
-    // 状态位
-    private var isWrittenLatestReceivedTime = true
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         myActivity = requireActivity() as NotificationActivity
-        shouldShowTabRedDots = true
+        shouldShowTabRedDots = myActivity.NotificationSp.getBoolean(IS_SWITCH1_SELECT, true)
         initCollect()
         initObserver()
         initViewPager2()
@@ -122,7 +116,10 @@ class ItineraryNotificationFragment : BaseFragment(R.layout.notification_fragmen
         val linearLayout = itineraryTypeTab.getChildAt(0) as LinearLayout
         linearLayout.apply {
             showDividers = LinearLayout.SHOW_DIVIDER_MIDDLE
-            dividerDrawable = ContextCompat.getDrawable(myActivity,R.drawable.notification_shape_tab_divider_vertical)
+            dividerDrawable = ContextCompat.getDrawable(
+                myActivity,
+                R.drawable.notification_shape_tab_divider_vertical
+            )
             dividerPadding = 2
         }
 
@@ -136,66 +133,86 @@ class ItineraryNotificationFragment : BaseFragment(R.layout.notification_fragmen
         tab2View = LayoutInflater.from(myActivity)
             .inflate(R.layout.notification_item_itinerary_tab2, null)
         tab2?.customView = tab2View
-
+        itineraryTypeTab.getTabAt(currentPageIndex)?.select()
+        changeTabRedDotsVisibility(currentPageIndex, View.INVISIBLE)
     }
 
     private fun initObserver() {
 
-        itineraryViewModel.receivedItineraryList.observe {
-            val tempTime1 = myActivity.NotificationSp
-                .getLong(Constant.LAST_RECEIVED_ITINERARY_PAGE_READ_TIME, 0L)
-            for (item in it) {
-                if (tempTime1 < item.updateTime) {
-                    changeTabRedDotsVisibility(0, View.VISIBLE)
-                    return@observe
+        itineraryViewModel.receivedItineraryList.observe { list ->
+            // 如果receivedItineraryList中存在未读行程, 获取其中所有未读行程 的id
+            var isVisibleRedDot = false
+            val tempList = mutableListOf<Int>()
+            list.forEach {
+                if (!it.hasRead){
+                    tempList.add(it.id)
+                    if (!isVisibleRedDot) {
+                        changeTabRedDotsVisibility(0, View.VISIBLE)
+                        isVisibleRedDot = true
+                    }
                 }
             }
+            if (!isVisibleRedDot) changeTabRedDotsVisibility(0, View.INVISIBLE)
+            Log.d("hsj-ItineraryPage","received UnRead count is ${tempList.size}")
+            itineraryViewModel.setUnReadReceivedItineraryIds(tempList)
+        }
 
-        }
-        itineraryViewModel.sentItineraryList.observe {
-            val tempTime2 = myActivity.NotificationSp
-                .getLong(Constant.LAST_SENT_ITINERARY_PAGE_READ_TIME, 0L)
-            for (item in it) {
-                if (tempTime2 < item.updateTime) {
-                    changeTabRedDotsVisibility(1, View.VISIBLE)
-                    return@observe
+        itineraryViewModel.sentItineraryList.observe { list ->
+            // 如果sentItineraryList中存在未读行程, 获取其中所有未读行程 的id
+            var isVisibleRedDot = false
+            val tempList = mutableListOf<Int>()
+            list.forEach {
+                if (!it.hasRead){
+                    tempList.add(it.id)
+                    if (!isVisibleRedDot) {
+                        changeTabRedDotsVisibility(1, View.VISIBLE)
+                        isVisibleRedDot = true
+                    }
                 }
             }
+            if (!isVisibleRedDot) changeTabRedDotsVisibility(1, View.INVISIBLE)
+            Log.d("hsj-ItineraryPage","sent UnRead count is ${tempList.size}")
+            itineraryViewModel.setUnReadSentItineraryIds(tempList)
         }
+
         itineraryViewModel.currentPageIndex.observe {
+            Log.d("hsj-itineraryPageIndex","currentIndex is $it")
             changeTabRedDotsVisibility(it, View.INVISIBLE)
             when (it) {
                 0 -> {
-                    if (!isWrittenLatestReceivedTime)
-                        myActivity.NotificationSp.edit {
-                            putLong(Constant.LAST_RECEIVED_ITINERARY_PAGE_READ_TIME,
-                                itineraryViewModel.lastReceivedItineraryUpdateTime)
-                            isWrittenLatestReceivedTime = true
+                    itineraryViewModel.allUnReadReceivedItineraryIds.apply {
+                        if (this.isEmpty()) {
+                            Log.d("hsj-itineraryPageIndex", "UnReadReceived is null")
+                            return@observe
                         }
+                        itineraryViewModel.changeItineraryReadStatus(this)
+                    }
                 }
 
                 1 -> {
-                    if (!isWrittenLatestSentTime)
-                        myActivity.NotificationSp.edit {
-                            putLong(Constant.LAST_SENT_ITINERARY_PAGE_READ_TIME,
-                                itineraryViewModel.lastSentItineraryUpdateTime)
-                            isWrittenLatestSentTime = true
+                    itineraryViewModel.allUnReadSentItineraryIds.apply {
+                        if (isEmpty()) {
+                            Log.d("hsj-itineraryPageIndex", "UnReadSent is null")
+                            return@observe
                         }
+                        itineraryViewModel.changeItineraryReadStatus(this,false)
+                    }
                 }
             }
         }
 
     }
+
     private fun initCollect() {
         itineraryViewModel.receivedItineraryListIsSuccessfulEvent.collectLaunch {
             if (it) {
-                isWrittenLatestReceivedTime = false
+
             }
 
         }
         itineraryViewModel.sentItineraryListIsSuccessfulEvent.collectLaunch {
             if (it) {
-                isWrittenLatestSentTime = false
+
             }
         }
     }

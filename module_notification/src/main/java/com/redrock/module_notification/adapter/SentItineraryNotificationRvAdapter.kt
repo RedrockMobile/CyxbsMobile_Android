@@ -1,6 +1,5 @@
 package com.redrock.module_notification.adapter
 
-import android.annotation.SuppressLint
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -12,9 +11,10 @@ import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.mredrock.cyxbs.lib.utils.extensions.gone
 import com.mredrock.cyxbs.lib.utils.extensions.setOnSingleClickListener
+import com.mredrock.cyxbs.lib.utils.extensions.string
 import com.mredrock.cyxbs.lib.utils.extensions.visible
 import com.redrock.module_notification.R
-import com.redrock.module_notification.bean.SentItineraryMsg
+import com.redrock.module_notification.bean.SentItineraryMsgBean
 import com.redrock.module_notification.util.Date
 import com.redrock.module_notification.util.myGetColor
 
@@ -28,18 +28,18 @@ import com.redrock.module_notification.util.myGetColor
  */
 class SentItineraryNotificationRvAdapter(
     private val onCancelReminderClick: ((itineraryId: Int, index: Int) -> Unit)? = null
-) : ListAdapter<SentItineraryMsg, SentItineraryNotificationRvAdapter.VH>(sentItineraryDiffUtil) {
+) : ListAdapter<SentItineraryMsgBean, SentItineraryNotificationRvAdapter.VH>(sentItineraryDiffUtil) {
     companion object {
-        private val sentItineraryDiffUtil: DiffUtil.ItemCallback<SentItineraryMsg> =
-            object : DiffUtil.ItemCallback<SentItineraryMsg>() {
+        private val sentItineraryDiffUtil: DiffUtil.ItemCallback<SentItineraryMsgBean> =
+            object : DiffUtil.ItemCallback<SentItineraryMsgBean>() {
                 override fun areItemsTheSame(
-                    oldItem: SentItineraryMsg, newItem: SentItineraryMsg
+                    oldItem: SentItineraryMsgBean, newItem: SentItineraryMsgBean
                 ): Boolean {
                     return oldItem.id == newItem.id
                 }
 
                 override fun areContentsTheSame(
-                    oldItem: SentItineraryMsg, newItem: SentItineraryMsg
+                    oldItem: SentItineraryMsgBean, newItem: SentItineraryMsgBean
                 ): Boolean {
                     return oldItem.title == newItem.title &&
                             oldItem.content == newItem.content &&
@@ -91,9 +91,9 @@ class SentItineraryNotificationRvAdapter(
         bindItemData(holder, itemData)
     }
 
-    private fun bindItemData(holder: VH, data: SentItineraryMsg) {
+    private fun bindItemData(holder: VH, data: SentItineraryMsgBean) {
         holder.apply {
-            title.text = data.title
+            title.text = String.format(R.string.notification_itinerary_item_rawTitle.string, data.title)
             content.text = data.content
             startTime.text = Date.getItineraryUpdateTime(data.publishTime)
             if (data.hasStart) startStatusHint.setText(R.string.notification_hasStarted)

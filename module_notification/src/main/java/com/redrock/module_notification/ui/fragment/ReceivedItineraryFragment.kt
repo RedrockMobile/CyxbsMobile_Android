@@ -11,9 +11,10 @@ import androidx.recyclerview.widget.RecyclerView
 import com.mredrock.cyxbs.lib.base.ui.BaseFragment
 import com.mredrock.cyxbs.lib.utils.extensions.gone
 import com.mredrock.cyxbs.lib.utils.extensions.visible
+import com.mredrock.cyxbs.lib.utils.utils.LogUtils
 import com.redrock.module_notification.R
 import com.redrock.module_notification.adapter.ReceivedItineraryNotificationRvAdapter
-import com.redrock.module_notification.bean.ReceivedItineraryMsg
+import com.redrock.module_notification.bean.ReceivedItineraryMsgBean
 import com.redrock.module_notification.ui.activity.NotificationActivity
 import com.redrock.module_notification.viewmodel.ItineraryViewModel
 import kotlin.properties.Delegates
@@ -33,7 +34,7 @@ class ReceivedItineraryFragment : BaseFragment(R.layout.notification_fragment_it
     private val autoClearHintView by R.id.notification_itinerary_auto_clear_hint.view<TextView>()
 
     // SentItineraryFragment页面的 rv数据
-    private var data = ArrayList<ReceivedItineraryMsg>()
+    private var data = ArrayList<ReceivedItineraryMsgBean>()
 
     // rv适配器
     private val adapter by lazy { ReceivedItineraryNotificationRvAdapter(::addToSchedule) }
@@ -75,17 +76,22 @@ class ReceivedItineraryFragment : BaseFragment(R.layout.notification_fragment_it
 
     private fun initObserver() {
         itineraryViewModel.hostViewModel.itineraryMsgIsSuccessfulState.observe {
-            if (it) itineraryViewModel.getReceivedItinerary()
-            else itineraryViewModel.getReceivedItinerary(true)
+            // 如果Activity的viewModel "获取行程是否成功" 的最新状态为true（或者最新状态为false但有之前的获取数据）
+            if (it || itineraryViewModel.hostViewModel.getItineraryIsSuccessful)
+                itineraryViewModel.getReceivedItinerary()
+            else {
+                LogUtils.d("Hsj-getReceivedItinerary","发起请求")
+                itineraryViewModel.getReceivedItinerary(true)
+            }
         }
 //        itineraryViewModel.hostViewModel.itineraryMsg.observe {
-//            data = it.receivedItineraryList as ArrayList<ReceivedItineraryMsg>
+//            data = it.receivedItineraryList as ArrayList<ReceivedItineraryMsgBean>
 //            adapter.submitList(data)
 //            //让数据更改有动画效果
 //            receivedItineraryRv.scheduleLayoutAnimation()
 //        }
         itineraryViewModel.receivedItineraryList.observe {
-            data = it as ArrayList<ReceivedItineraryMsg>
+            data = it as ArrayList<ReceivedItineraryMsgBean>
             adapter.submitList(data)
             //让数据更改有动画效果
             receivedItineraryRv.scheduleLayoutAnimation()
@@ -110,8 +116,8 @@ class ReceivedItineraryFragment : BaseFragment(R.layout.notification_fragment_it
     private fun initCollect() {
         itineraryViewModel.add2scheduleIsSuccessfulEvent.collectLaunch{
             if (it.second) {
-                val tempList = ArrayList<ReceivedItineraryMsg>()
-                data[it.first].hasAdded = true
+                val tempList = ArrayList<ReceivedItineraryMsgBean>()
+                data[it.first].hasAdd = true
                 tempList.addAll(data)
                 adapter.submitList(tempList)
             }
@@ -123,9 +129,7 @@ class ReceivedItineraryFragment : BaseFragment(R.layout.notification_fragment_it
         itineraryViewModel.addItineraryToSchedule(
             index,
             0,
-            itemData.title,
-            itemData.content,
-            itemData.dateJson
+            itemData
         )
     }
 }

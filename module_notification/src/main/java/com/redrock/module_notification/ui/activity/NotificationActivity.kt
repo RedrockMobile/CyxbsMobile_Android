@@ -16,26 +16,22 @@ import com.alibaba.android.arouter.facade.annotation.Route
 import com.alibaba.android.arouter.launcher.ARouter
 import com.google.android.material.tabs.TabLayout
 import com.google.android.material.tabs.TabLayoutMediator
-import com.mredrock.cyxbs.config.route.NOTIFICATION_HOME
-import com.mredrock.cyxbs.config.route.NOTIFICATION_SETTING
 import com.mredrock.cyxbs.common.ui.BaseViewModelActivity
 import com.mredrock.cyxbs.common.utils.extensions.dp2px
 import com.mredrock.cyxbs.common.utils.extensions.editor
+import com.mredrock.cyxbs.config.route.NOTIFICATION_HOME
+import com.mredrock.cyxbs.config.route.NOTIFICATION_SETTING
 import com.mredrock.cyxbs.lib.utils.adapter.FragmentVpAdapter
 import com.mredrock.cyxbs.lib.utils.extensions.gone
 import com.mredrock.cyxbs.lib.utils.extensions.setOnSingleClickListener
 import com.mredrock.cyxbs.lib.utils.extensions.visible
 import com.redrock.module_notification.R
-import com.redrock.module_notification.adapter.NotificationVp2Adapter
 import com.redrock.module_notification.bean.ChangeReadStatusToBean
-import com.redrock.module_notification.ui.fragment.ActivityNotificationFragment
 import com.redrock.module_notification.ui.fragment.ItineraryNotificationFragment
 import com.redrock.module_notification.ui.fragment.SysNotificationFragment
 import com.redrock.module_notification.ui.fragment.UfieldNotificationFragment
 import com.redrock.module_notification.util.Constant.HAS_USER_ENTER_SETTING_PAGE
 import com.redrock.module_notification.util.Constant.IS_SWITCH1_SELECT
-import com.redrock.module_notification.util.Constant.LAST_RECEIVED_ITINERARY_PAGE_READ_TIME
-import com.redrock.module_notification.util.Constant.LAST_SENT_ITINERARY_PAGE_READ_TIME
 import com.redrock.module_notification.util.NotificationSp
 import com.redrock.module_notification.util.myGetColor
 import com.redrock.module_notification.util.noOpDelegate
@@ -61,11 +57,14 @@ class NotificationActivity : BaseViewModelActivity<NotificationViewModel>() {
     //所有还未读的系统通知消息的id 用来给一键已读使用
     private var allUnreadSysMsgIds = ArrayList<String>()
 
-    //Vp2下的三个fragment的实例
+    /**
+     * new出fragment实例放入VP2的adpater的写法有bug，不推荐这样的写法
+     */
+    /* //Vp2下的三个fragment的实例
     private lateinit var itineraryFragment: ItineraryNotificationFragment
     private lateinit var sysFragment: SysNotificationFragment
     //   private lateinit var activeFragment: ActivityNotificationFragment
-    private lateinit var ufieldActiveFragment : UfieldNotificationFragment
+    private lateinit var ufieldActiveFragment : UfieldNotificationFragment */
     //目前ViewPager处于哪个页面
     private var whichPageIsIn = 0
 
@@ -94,17 +93,27 @@ class NotificationActivity : BaseViewModelActivity<NotificationViewModel>() {
         } else {
             changeTabRedDotsVisibility(0, View.INVISIBLE)
             changeTabRedDotsVisibility(1, View.INVISIBLE)
+            changeTabRedDotsVisibility(2, View.INVISIBLE)
         }
         viewModel.getUFieldActivity()
-        initObserver()
+//        initObserver()
     }
 
 
     private fun initViewClickListener() {
         notification_rl_home_back.setOnSingleClickListener { finish() }
-        notification_rl_home_dots.setOnSingleClickListener { initPopupWindow() }
+        notification_rl_home_dots.setOnSingleClickListener { enterSettingPage() }
     }
 
+    private fun enterSettingPage() {
+        ARouter.getInstance().build(NOTIFICATION_SETTING).navigation()
+        notification_home_red_dots.visibility = View.INVISIBLE
+        NotificationSp.edit { putBoolean(HAS_USER_ENTER_SETTING_PAGE, true) }
+    }
+
+    /**
+     * 按产品要求取消了弹窗，该方法弃用
+     */
     private fun initPopupWindow() {
         when (whichPageIsIn) {
             0 -> {
@@ -127,7 +136,7 @@ class NotificationActivity : BaseViewModelActivity<NotificationViewModel>() {
                             null,
                             tips = "确认要删除所有已读消息吗",
                             onPositiveClick = {
-                                sysFragment.deleteAllReadMsg()
+                               /* sysFragment.deleteAllReadMsg() */
                                 dismiss()
                             },
                             onNegativeClick = {
@@ -183,9 +192,11 @@ class NotificationActivity : BaseViewModelActivity<NotificationViewModel>() {
     }
 
     private fun initVp2() {
+        /*
         itineraryFragment = ItineraryNotificationFragment()
         sysFragment = SysNotificationFragment()
         ufieldActiveFragment = UfieldNotificationFragment()
+         */
 
         notification_home_vp2.adapter = FragmentVpAdapter(this)
             .add { UfieldNotificationFragment() }     // whichPageIsIn = 0
@@ -200,6 +211,7 @@ class NotificationActivity : BaseViewModelActivity<NotificationViewModel>() {
             override fun onPageSelected(position: Int) {
                 whichPageIsIn = position
                 if (position == 2) {
+                    changeTabRedDotsVisibility(2, View.INVISIBLE)
                     notification_main_container_bg.visible()
                 } else {
                     notification_main_container_bg.gone()
@@ -256,20 +268,19 @@ class NotificationActivity : BaseViewModelActivity<NotificationViewModel>() {
 
     private fun initObserver() {
         viewModel.itineraryMsg.observe(this) {
-            val tempTime1 = NotificationSp.getLong(LAST_RECEIVED_ITINERARY_PAGE_READ_TIME, 0L)
             for (item in it.receivedItineraryList) {
-                if (tempTime1 < item.updateTime) {
+                if (!item.hasRead) {
                     viewModel.changeItineraryDotStatus(true)
                     return@observe
                 }
             }
-            val tempTime2 = NotificationSp.getLong(LAST_SENT_ITINERARY_PAGE_READ_TIME, 0L)
             for (item in it.sentItineraryList) {
-                if (tempTime2 < item.updateTime) {
+                if (!item.hasRead) {
                     viewModel.changeItineraryDotStatus(true)
                     return@observe
                 }
             }
+            viewModel.changeItineraryDotStatus(false)
         }
         viewModel.systemMsg.observe {
             allUnreadSysMsgIds = ArrayList()
@@ -307,15 +318,15 @@ class NotificationActivity : BaseViewModelActivity<NotificationViewModel>() {
         //这里通过与Activity同一个viewmodel来与activity通信 控制activity上的TabLayout上的小红点的显示状态
         viewModel.sysDotStatus.observe {
             if (it == true)
-                changeTabRedDotsVisibility(0, View.VISIBLE)
-            else
-                changeTabRedDotsVisibility(0, View.INVISIBLE)
-        }
-        viewModel.activeDotStatus.observe {
-            if (it == true)
                 changeTabRedDotsVisibility(1, View.VISIBLE)
             else
                 changeTabRedDotsVisibility(1, View.INVISIBLE)
+        }
+        viewModel.activeDotStatus.observe {
+            if (it == true)
+                changeTabRedDotsVisibility(0, View.VISIBLE)
+            else
+                changeTabRedDotsVisibility(0, View.INVISIBLE)
         }
         viewModel.itineraryDotStatus.observe(this) {
             if (it)
@@ -335,6 +346,7 @@ class NotificationActivity : BaseViewModelActivity<NotificationViewModel>() {
         notification_refresh.setOnRefreshListener {
             viewModel.getAllMsg()
             viewModel.getAllItineraryMsg()
+            viewModel.getUFieldActivity()
         }
         notification_refresh.isRefreshing = true
     }

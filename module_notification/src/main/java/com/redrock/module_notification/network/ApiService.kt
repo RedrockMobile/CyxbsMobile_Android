@@ -66,19 +66,37 @@ interface ApiService {
      * 获取行程消息中的sent itinerary
      */
     @GET("/magipoke-jwzx/itinerary/allMsg")
-    fun getSentItinerary(@Query("typ") type: String = "sent"): Single<ApiWrapper<List<SentItineraryMsg>>>
+    fun getSentItinerary(@Query("typ") type: String = "sent"): Single<ApiWrapper<List<SentItineraryMsgBean>>>
 
     /**
      * 获取行程消息中的received itinerary
      */
     @GET("/magipoke-jwzx/itinerary/allMsg")
-    fun getReceivedItinerary(@Query("typ") type: String = "received"): Single<ApiWrapper<List<ReceivedItineraryMsg>>>
+    fun getReceivedItinerary(@Query("typ") type: String = "received"): Single<ApiWrapper<List<ReceivedItineraryMsgBean>>>
 
     /**
      * 取消itineraryId对应的行程的提醒
      */
     @PUT("/magipoke-jwzx/itinerary/cancel")
-    fun cancelItineraryReminder(@Field("id") itineraryId: String): Single<ApiStatus>
+    fun cancelItineraryReminder(@Query("id") itineraryId: String): Single<ApiStatus>
+
+    /**
+     * 改变行程消息的已读状态
+     * @param changeBody    囊括了要变更的id数组和想变成的状态
+     */
+    @PUT("/magipoke-jwzx/itinerary/read")
+    fun changeItineraryReadStatus(@Body changeBody: ChangeItineraryReadStatusUploadBean): Single<ApiStatus>
+
+    /**
+     * 改变行程消息的是否被添加到日程（课表事务）的状态
+     * @param itineraryId
+     * @param status        默认为true，即变更为已添加
+     */
+    @PUT("/magipoke-jwzx/itinerary/read")
+    fun changeItineraryAddStatus(
+        @Query("id") itineraryId: Int,
+        @Query("status") status: Boolean = true
+    ): Single<ApiStatus>
 
     /**
      * 添加进日程

@@ -6,24 +6,18 @@ import android.view.View
 import android.view.animation.AnimationUtils
 import android.widget.TextView
 import androidx.appcompat.widget.LinearLayoutCompat
-import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.createViewModelLazy
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import androidx.viewpager2.widget.ViewPager2
-import com.google.android.material.tabs.TabLayout
 import com.mredrock.cyxbs.lib.base.ui.BaseFragment
 import com.mredrock.cyxbs.lib.utils.extensions.gone
 import com.mredrock.cyxbs.lib.utils.extensions.visible
+import com.mredrock.cyxbs.lib.utils.utils.LogUtils
 import com.redrock.module_notification.R
-import com.redrock.module_notification.adapter.ActivityNotificationRvAdapter
-import com.redrock.module_notification.adapter.ActivityNotificationRvAdapter.Companion.CHANGE_DOT_STATUS
 import com.redrock.module_notification.adapter.SentItineraryNotificationRvAdapter
-import com.redrock.module_notification.bean.ActiveMsgBean
-import com.redrock.module_notification.bean.SentItineraryMsg
+import com.redrock.module_notification.bean.SentItineraryMsgBean
 import com.redrock.module_notification.ui.activity.NotificationActivity
 import com.redrock.module_notification.viewmodel.ItineraryViewModel
-import com.redrock.module_notification.viewmodel.NotificationViewModel
 import kotlin.properties.Delegates
 
 /**
@@ -41,7 +35,7 @@ class SentItineraryFragment : BaseFragment(R.layout.notification_fragment_itiner
     private val autoClearHintView by R.id.notification_itinerary_auto_clear_hint.view<TextView>()
 
     // SentItineraryFragment页面的 rv数据
-    private var data = ArrayList<SentItineraryMsg>()
+    private var data = ArrayList<SentItineraryMsgBean>()
 
     // rv适配器
     private val adapter by lazy { SentItineraryNotificationRvAdapter(::cancelReminder) }
@@ -80,20 +74,22 @@ class SentItineraryFragment : BaseFragment(R.layout.notification_fragment_itiner
 
     private fun initObserver() {
         itineraryViewModel.hostViewModel.itineraryMsgIsSuccessfulState.observe {
-            if (it) itineraryViewModel.getSentItinerary()
+            // 如果Activity的viewModel "获取行程是否成功" 的最新状态为true（或者最新状态为false但有之前的获取数据）
+            if (it || itineraryViewModel.hostViewModel.getItineraryIsSuccessful)
+                itineraryViewModel.getSentItinerary()
             else {
-                Log.d("ProgressTest","发起请求")
+                LogUtils.d("Hsj-getSentItinerary","发起请求")
                 itineraryViewModel.getSentItinerary(true)
             }
         }
 //        itineraryViewModel.hostViewModel.itineraryMsg.observe {
-//            data = it.sentItineraryList as ArrayList<SentItineraryMsg>
+//            data = it.sentItineraryList as ArrayList<SentItineraryMsgBean>
 //            adapter.submitList(data)
 //            //让数据更改有动画效果
 //            sentItineraryRv.scheduleLayoutAnimation()
 //        }
         itineraryViewModel.sentItineraryList.observe {
-            data = it as ArrayList<SentItineraryMsg>
+            data = it as ArrayList<SentItineraryMsgBean>
             adapter.submitList(data)
             //让数据更改有动画效果
             sentItineraryRv.scheduleLayoutAnimation()
@@ -117,7 +113,7 @@ class SentItineraryFragment : BaseFragment(R.layout.notification_fragment_itiner
 
         itineraryViewModel.cancelReminderIsSuccessfulEvent.collectLaunch {
             if (it.second) {  // 取消提醒成功
-                val tempList = ArrayList<SentItineraryMsg>()
+                val tempList = ArrayList<SentItineraryMsgBean>()
                 data[it.first].hasCancel = true
                 tempList.addAll(data)
                 adapter.submitList(tempList)

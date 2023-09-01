@@ -5,11 +5,10 @@ import androidx.lifecycle.MutableLiveData
 import com.mredrock.cyxbs.lib.base.ui.BaseViewModel
 import com.mredrock.cyxbs.lib.utils.network.mapOrInterceptException
 import com.mredrock.cyxbs.lib.utils.network.throwOrInterceptException
-import com.redrock.module_notification.bean.ReceivedItineraryMsg
-import com.redrock.module_notification.bean.SentItineraryMsg
+import com.mredrock.cyxbs.lib.utils.utils.LogUtils
+import com.redrock.module_notification.bean.ReceivedItineraryMsgBean
+import com.redrock.module_notification.bean.SentItineraryMsgBean
 import com.redrock.module_notification.model.NotificationRepository
-import com.redrock.module_notification.util.Constant
-import com.redrock.module_notification.util.NotificationSp
 
 /**
  * ...
@@ -21,8 +20,10 @@ import com.redrock.module_notification.util.NotificationSp
  */
 class ItineraryViewModel(val hostViewModel: NotificationViewModel) : BaseViewModel() {
     // 用户已经发送的行程消息的列表
-    val sentItineraryList: LiveData<List<SentItineraryMsg>> get() = _sentItineraryList
-    private val _sentItineraryList = MutableLiveData<List<SentItineraryMsg>>()
+    val sentItineraryList: LiveData<List<SentItineraryMsgBean>> get() = _sentItineraryList
+    private val _sentItineraryList = MutableLiveData<List<SentItineraryMsgBean>>()
+    var allUnReadSentItineraryIds = listOf<Int>()
+        private set
 
     // 获取-已经发送的行程消息列表 请求是否成功（状态）
     val sentItineraryListIsSuccessfulState: LiveData<Boolean> get() = _sentItineraryListIsSuccessfulState
@@ -31,15 +32,13 @@ class ItineraryViewModel(val hostViewModel: NotificationViewModel) : BaseViewMod
     // 获取-已经发送的行程消息列表 请求是否成功（事件）
     val sentItineraryListIsSuccessfulEvent = _sentItineraryListIsSuccessfulState.asShareFlow()
 
-    // 上一次已发送的行程数据更新时间
-    var lastSentItineraryUpdateTime =
-        appContext.NotificationSp.getLong(Constant.LAST_SENT_ITINERARY_PAGE_READ_TIME, 0L)
-        private set
 
 
     // 用户被通知到的行程消息的列表
-    val receivedItineraryList: LiveData<List<ReceivedItineraryMsg>> get() = _receivedItineraryList
-    private val _receivedItineraryList = MutableLiveData<List<ReceivedItineraryMsg>>()
+    val receivedItineraryList: LiveData<List<ReceivedItineraryMsgBean>> get() = _receivedItineraryList
+    private val _receivedItineraryList = MutableLiveData<List<ReceivedItineraryMsgBean>>()
+    var allUnReadReceivedItineraryIds = listOf<Int>()
+        private set
 
     // 获取-被通知到的行程消息列表 请求是否成功（状态）
     val receivedItineraryListIsSuccessfulState: LiveData<Boolean> get() = _receivedItineraryListIsSuccessfulState
@@ -49,16 +48,10 @@ class ItineraryViewModel(val hostViewModel: NotificationViewModel) : BaseViewMod
     val receivedItineraryListIsSuccessfulEvent =
         _receivedItineraryListIsSuccessfulState.asShareFlow()
 
-    // 上一次被通知的行程数据更新时间
-    var lastReceivedItineraryUpdateTime =
-        appContext.NotificationSp.getLong(Constant.LAST_RECEIVED_ITINERARY_PAGE_READ_TIME, 0L)
-        private set
 
 
     // 取消某行程的提醒 请求是否成功（状态）
-    val cancelReminderIsSuccessfulState: LiveData<Pair<Int, Boolean>> get() = _cancelReminderIsSuccessfulState
     private val _cancelReminderIsSuccessfulState = MutableLiveData<Pair<Int, Boolean>>()
-
     // 取消某行程的提醒 请求是否成功（事件）
     val cancelReminderIsSuccessfulEvent = _cancelReminderIsSuccessfulState.asShareFlow()
 
@@ -84,13 +77,12 @@ class ItineraryViewModel(val hostViewModel: NotificationViewModel) : BaseViewMod
                     _sentItineraryListIsSuccessfulState.postValue(false)
                 }
                 .safeSubscribeBy {
-                    lastSentItineraryUpdateTime = System.currentTimeMillis()
                     _sentItineraryListIsSuccessfulState.postValue(true)
                     _sentItineraryList.postValue(it)
                 }
         } else {
             if (hostViewModel.getItineraryIsSuccessful) {
-                lastSentItineraryUpdateTime = hostViewModel.itineraryUpdateTime
+                LogUtils.d("Hsj-getSentItinerary","从宿主Activity的viewModel中获取SentItinerary")
                 _sentItineraryListIsSuccessfulState.postValue(true)
                 _sentItineraryList.postValue(hostViewModel.itineraryMsg.value!!.sentItineraryList)
             } else {
@@ -109,13 +101,13 @@ class ItineraryViewModel(val hostViewModel: NotificationViewModel) : BaseViewMod
                     _receivedItineraryListIsSuccessfulState.postValue(false)
                 }
                 .safeSubscribeBy {
-                    lastReceivedItineraryUpdateTime = System.currentTimeMillis()
+
                     _receivedItineraryListIsSuccessfulState.postValue(true)
                     _receivedItineraryList.postValue(it)
                 }
         } else {
             if (hostViewModel.getItineraryIsSuccessful) {
-                lastReceivedItineraryUpdateTime = hostViewModel.itineraryUpdateTime
+                LogUtils.d("Hsj-getReceivedItinerary","从宿主Activity的viewModel中获取ReceivedItinerary")
                 _receivedItineraryListIsSuccessfulState.postValue(true)
                 _receivedItineraryList.postValue(hostViewModel.itineraryMsg.value!!.receivedItineraryList)
             } else {
@@ -138,20 +130,66 @@ class ItineraryViewModel(val hostViewModel: NotificationViewModel) : BaseViewMod
             }
     }
 
+    /**
+     * 改变行程已读状态
+     * @param unReadIdList
+     * @param status
+     */
+    fun changeItineraryReadStatus(unReadIdList: List<Int>, status: Boolean = true) {
+        if (unReadIdList.isEmpty()) return
+        NotificationRepository.changeItineraryReadStatus(unReadIdList, status)
+            .throwOrInterceptException {
+                ApiException{exception ->
+                    LogUtils.w("Hsj-Itinerary","changeReadStatus Exception status:${exception.status}")
+                }
+                LogUtils.w("Hsj-Itinerary","changeReadStatus Exception:${it.message}")
+                LogUtils.w("Hsj-Itinerary","changeReadStatus fail")
+            }
+            .safeSubscribeBy {
+                LogUtils.d("Hsj-Itinerary","changeReadStatus success")
+            }
+    }
+
+
+    /**
+     * 改变行程是否添加到了日程的状态
+     * @param itineraryId
+     * @param status
+     */
+    private fun changeItineraryAddStatus(itineraryId: Int, status: Boolean = true) {
+        NotificationRepository.changeItineraryAddStatus(itineraryId, status)
+            .throwOrInterceptException {
+                "与服务器同通信失败 TAT~".toast()
+                ApiException{exception ->
+                    LogUtils.w("Hsj-Itinerary","changeAddStatus Exception status:${exception.status}")
+                }
+                LogUtils.w("Hsj-Itinerary","changeAddStatus Exception:${it.message}")
+            }
+    }
+
+    /**
+     * 把行程添加到日程(课表事务)
+     * @param index
+     * @param remindTime
+     * @param info
+     */
     fun addItineraryToSchedule(
         index: Int,
-        time: Int,
-        title: String,
-        content: String,
-        dateJson: String
+        remindTime: Int,
+        info: ReceivedItineraryMsgBean
     ) {
-        NotificationRepository.addAffair(time, title, content, dateJson)
+        NotificationRepository.addAffair(remindTime, info)
             .throwOrInterceptException {
                 "添加失败".toast()
+                ApiException{exception->
+                    LogUtils.w("Hsj-Itinerary","add2Schedule Exception status:${exception.status}")
+                }
+                LogUtils.w("Hsj-Itinerary","add2Schedule Exception:${it.message}")
                 _add2scheduleIsSuccessfulState.postValue(Pair(index, false))
             }
             .safeSubscribeBy {
                 "添加成功".toast()
+                changeItineraryAddStatus(info.id)
                 _add2scheduleIsSuccessfulState.postValue(Pair(index, true))
             }
     }
@@ -160,8 +198,16 @@ class ItineraryViewModel(val hostViewModel: NotificationViewModel) : BaseViewMod
         _currentPageIndex.value = index
     }
 
+    fun setUnReadSentItineraryIds(list: List<Int>) {
+        allUnReadSentItineraryIds = list
+    }
+
+    fun setUnReadReceivedItineraryIds(list: List<Int>) {
+        allUnReadReceivedItineraryIds = list
+    }
+
     init {
-        getReceivedItinerary()
-        getSentItinerary()
+//        getReceivedItinerary()
+//        getSentItinerary()
     }
 }
