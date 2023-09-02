@@ -78,7 +78,6 @@
         android:layout_width="match_parent"
         android:layout_height="50dp"
         android:layout_marginTop="102dp"
-        android:paddingTop="10dp"
         android:backgroundTint="@android:color/transparent"
         android:theme="@style/Theme.MaterialComponents"
         app:layout_constraintLeft_toLeftOf="parent"
