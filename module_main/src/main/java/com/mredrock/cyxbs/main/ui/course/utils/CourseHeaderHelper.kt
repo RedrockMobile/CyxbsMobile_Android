@@ -1,5 +1,7 @@
 package com.mredrock.cyxbs.main.ui.course.utils
 
+import android.util.Log
+import com.mredrock.cyxbs.api.account.IAccountService
 import com.mredrock.cyxbs.api.affair.IAffairService
 import com.mredrock.cyxbs.api.course.ICourseService
 import com.mredrock.cyxbs.api.course.ILessonService
@@ -7,6 +9,7 @@ import com.mredrock.cyxbs.api.course.ILinkService
 import com.mredrock.cyxbs.api.course.utils.*
 import com.mredrock.cyxbs.lib.utils.service.impl
 import com.mredrock.cyxbs.config.config.SchoolCalendar
+import com.mredrock.cyxbs.lib.utils.extensions.isDebuggableBuild
 import com.mredrock.cyxbs.lib.utils.extensions.toast
 import com.mredrock.cyxbs.lib.utils.utils.judge.NetworkUtil
 import io.reactivex.rxjava3.core.Observable
@@ -27,11 +30,13 @@ import kotlin.math.abs
  * @date 2022/9/14 17:03
  */
 object CourseHeaderHelper {
-  
+
+  private const val TAG = "CourseHeaderHelper"
+
   private val lessonService = ILessonService::class.impl
   private val linkService = ILinkService::class.impl
   private val affairService = IAffairService::class.impl
-  
+
   /**
    * 观察课表头的变化
    */
@@ -39,10 +44,12 @@ object CourseHeaderHelper {
     return SchoolCalendar.observeWeekOfTerm()
       .observeOn(Schedulers.io())
       .switchMap { week ->
-        if (week !in 1..ICourseService.maxWeek) Observable.just(HintHeader("享受假期吧～"))
-        else observeHeader1(week)
+        if (week !in 1..ICourseService.maxWeek) {
+          observeHeaderOnVacation()
+        } else observeHeader1(week)
           .startWithItem(HintHeader("加载数据中"))
           .retry(3) // 存在中途断网的情况，这个时候调用 getStuLesson() 会抛异常，所以重新订阅以检查网络是否可用
+          .doOnError { Log.d(TAG, "课表请求异常: \n${it.stackTraceToString()}") }
           .onErrorReturn {
             // 因为上流用的观察流，一般是不会发送异常到下流的，除了在断网时调用 getStuLesson()，
             // 但已经经过 retry 后还是出错，可能就是内部异常了
@@ -50,9 +57,33 @@ object CourseHeaderHelper {
           }
       }
       // 如果在获取不了周数时说明没有请求过课表数据，因为周数是从课表接口来的
-      .startWithItem(HintHeader("登录后即可查看课表"))
+      .startWithItem(HintHeader(""))
   }
-  
+
+  /**
+   * 放假期间的课表头
+   */
+  private fun observeHeaderOnVacation(): Observable<Header> {
+    val textOnVacation = "享受假期吧～"
+    return IAccountService::class.impl
+      .getUserService()
+      .observeStuNumState()
+      .switchMap { value ->
+        value.nullUnless(Observable.empty()) {
+          lessonService.refreshLesson(it, true)
+            .toObservable()
+            .flatMap { Observable.empty<Header>() }
+            .doOnError {
+              if (isDebuggableBuild) {
+                toast("课表崩了，长按课表头显示")
+              }
+            }.onErrorReturn { throwable ->
+              HintHeader(textOnVacation, throwable)
+            }
+        }
+      }.startWithItem(HintHeader(textOnVacation))
+  }
+
   /**
    * 处理是否允许使用本地数据的逻辑
    */
@@ -80,7 +111,7 @@ object CourseHeaderHelper {
         if (it) observeHeader2(nowWeek) else Observable.just(HintHeader("联网才能查看课表哦~"))
       }
   }
-  
+
   /**
    * 处理是否登录的逻辑
    */
@@ -101,7 +132,7 @@ object CourseHeaderHelper {
         }
       }
   }
-  
+
   /**
    * 处理数据流合并的逻辑
    */
@@ -140,7 +171,7 @@ object CourseHeaderHelper {
         }
     }
   }
-  
+
   private fun getHeader(
     selfNum: String,
     nowWeek: Int,
@@ -192,7 +223,7 @@ object CourseHeaderHelper {
         if (tomorrowHashDay == 0) {
           // 明天是下周一
           week == nowWeek && hashDay == todayHashDay
-            || week == nowWeek + 1 && hashDay == tomorrowHashDay
+              || week == nowWeek + 1 && hashDay == tomorrowHashDay
         } else {
           week == nowWeek && (hashDay == todayHashDay || hashDay == tomorrowHashDay)
         }
@@ -209,7 +240,7 @@ object CourseHeaderHelper {
         if (tomorrowHashDay == 0) {
           // 明天是下周一
           week == nowWeek && day == todayHashDay
-            || week == nowWeek + 1 && day == tomorrowHashDay
+              || week == nowWeek + 1 && day == tomorrowHashDay
         } else {
           week == nowWeek && (day == todayHashDay || day == tomorrowHashDay)
         }
@@ -230,6 +261,7 @@ object CourseHeaderHelper {
               parseClassRoom(item.lesson.classroom),
               item
             )
+
             is AffairItem -> ShowHeader(
               "下个事务",
               item.affair.title,
@@ -247,6 +279,7 @@ object CourseHeaderHelper {
               parseClassRoom(item.lesson.classroom),
               item
             )
+
             is AffairItem -> ShowHeader(
               "进行中...",
               item.affair.title,
@@ -269,6 +302,7 @@ object CourseHeaderHelper {
             parseClassRoom(item.lesson.classroom),
             item
           )
+
           is AffairItem -> ShowHeader(
             "明天事务",
             item.affair.title,
@@ -286,8 +320,8 @@ object CourseHeaderHelper {
     //    }
     return HintHeader("今天和明天都没课咯～")
   }
-  
-  
+
+
   /**
    * @param hashDay 星期数，星期一为 0
    * @param beginLesson 开始节数，如：1、2 节课以 1 开始；3、4 节课以 3 开始，注意：中午是以 -1 开始，傍晚是以 -2 开始
@@ -302,11 +336,11 @@ object CourseHeaderHelper {
   ) {
     // 开始时间大小，为 小时数 * 60 + 分钟数
     val startTime: Int = getStartTimeMinute(getStartRow(beginLesson))
-    
+
     // 结束时间大小，为 小时数 * 60 + 分钟数
     val endTime: Int = getEndTimeMinute(getEndRow(beginLesson, period))
   }
-  
+
   data class LessonItem(
     val lesson: ILessonService.Lesson,
     val isSelf: Boolean
@@ -316,7 +350,7 @@ object CourseHeaderHelper {
     lesson.period,
     if (isSelf) 0 else 2 // 自己的课优先在前面
   )
-  
+
   data class AffairItem(
     val affair: IAffairService.Affair
   ) : Item(
@@ -325,14 +359,14 @@ object CourseHeaderHelper {
     affair.period,
     1 // 事务放到自己课后面，关联人课前面
   )
-  
+
   sealed interface Header
-  
+
   data class HintHeader(
     val hint: String,
     val throwable: Throwable? = null
   ) : Header
-  
+
   data class ShowHeader(
     val state: String,
     val title: String,

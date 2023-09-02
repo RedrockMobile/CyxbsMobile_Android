@@ -103,7 +103,9 @@ class CourseFragment : BaseFragment() {
             if (throwable == null) {
               mTvHeaderHint.text = header.hint
             } else {
-              mTvHeaderHint.text = "发生异常，长按显示"
+              if (mTvHeaderHint.text.isEmpty()) {
+                mTvHeaderHint.text = "发生异常，长按显示"
+              }
               mTvHeaderHint.setOnLongClickListener {
                 ICrashService::class.impl
                   .showCrashDialog(throwable)
