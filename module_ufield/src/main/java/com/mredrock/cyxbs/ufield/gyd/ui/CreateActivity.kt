@@ -462,7 +462,7 @@ class CreateActivity : BaseActivity() {
 
             val currentTime = Calendar.getInstance()
             val endTime = Calendar.getInstance().apply {
-                add(Calendar.YEAR, 5)
+                add(Calendar.YEAR, 1)
             }
             pvtime = TimePickerBuilder(this) { date, _ ->
                 selectedStartTimestamp = date.time / 1000
@@ -511,7 +511,7 @@ class CreateActivity : BaseActivity() {
         endText.setOnClickListener {
             val currentTime = Calendar.getInstance()
             val endTime = Calendar.getInstance().apply {
-                add(Calendar.YEAR, 5)
+                add(Calendar.YEAR, 1)
             }
             pvtime = TimePickerBuilder(this) { date, _ ->
                 selectedEndTimestamp = date.time / 1000
