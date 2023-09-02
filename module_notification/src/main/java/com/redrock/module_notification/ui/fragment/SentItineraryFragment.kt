@@ -36,7 +36,7 @@ class SentItineraryFragment : BaseFragment(R.layout.notification_fragment_itiner
     private val autoClearHintView by R.id.notification_itinerary_auto_clear_hint.view<TextView>()
 
     // SentItineraryFragment页面的 rv数据
-    private var data = ArrayList<SentItineraryMsgBean>()
+    private var data = listOf<SentItineraryMsgBean>()
 
     // rv适配器
     private val adapter by lazy { SentItineraryNotificationRvAdapter(::cancelReminder) }
@@ -84,7 +84,7 @@ class SentItineraryFragment : BaseFragment(R.layout.notification_fragment_itiner
 //            }
 //        }
         itineraryViewModel.sentItineraryList.observe {
-            data = it as ArrayList<SentItineraryMsgBean>
+            data = it
             adapter.submitList(data)
             //让数据更改有动画效果
             sentItineraryRv.scheduleLayoutAnimation()
@@ -108,10 +108,11 @@ class SentItineraryFragment : BaseFragment(R.layout.notification_fragment_itiner
 
         itineraryViewModel.cancelReminderIsSuccessfulEvent.collectLaunch {
             if (it.second) {  // 取消提醒成功
-                val tempList = ArrayList<SentItineraryMsgBean>()
-                data[it.first].hasCancel = true
-                tempList.addAll(data)
+                val tempList = adapter.currentList.toMutableList().apply {
+                    this[it.first] = this[it.first].copy(hasCancel = true)
+                }
                 adapter.submitList(tempList)
+                data = tempList
             }
         }
 

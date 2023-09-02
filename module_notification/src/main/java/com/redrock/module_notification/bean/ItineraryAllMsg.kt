@@ -114,7 +114,7 @@ data class ChangeItineraryReadStatusUploadBean(
     @SerializedName("id")
     val ids: List<Int>,
     @SerializedName("status")
-    var status: Boolean = true
+    var status: Boolean
 ) : Serializable
 
 data class ChangeItineraryAddStatusUploadBean(

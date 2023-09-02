@@ -223,7 +223,7 @@ class ItineraryViewModel(val hostViewModel: NotificationViewModel) : BaseViewMod
                 },
                 onSuccess = {
                 "添加成功".toast()
-                changeItineraryAddStatus(info.id)
+                changeItineraryAddStatus(info.id,false)
                 _add2scheduleIsSuccessfulState.postValue(Pair(index, true))
             })
     }

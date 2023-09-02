@@ -1,5 +1,6 @@
 package com.redrock.module_notification.adapter
 
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -44,8 +45,9 @@ class ReceivedItineraryNotificationRvAdapter(
                     return oldItem.title == newItem.title &&
                             oldItem.content == newItem.content &&
                             oldItem.updateTime == newItem.updateTime &&
-                            oldItem.hasCancel == newItem.hasCancel &&
-                            oldItem.hasStart == newItem.hasStart
+                            oldItem.hasStart == newItem.hasStart &&
+                            oldItem.hasAdd == newItem.hasAdd &&
+                            oldItem.hasCancel == newItem.hasCancel
                 }
 
             }
@@ -180,7 +182,6 @@ class ReceivedItineraryNotificationRvAdapter(
                     addAffairArea.gone()
                     addedHint.visible()
                 }
-
             }
         }
     }

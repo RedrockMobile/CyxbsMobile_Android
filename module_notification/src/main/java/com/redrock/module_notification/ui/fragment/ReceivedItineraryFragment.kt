@@ -34,7 +34,7 @@ class ReceivedItineraryFragment : BaseFragment(R.layout.notification_fragment_it
     private val autoClearHintView by R.id.notification_itinerary_auto_clear_hint.view<TextView>()
 
     // SentItineraryFragment页面的 rv数据
-    private var data = ArrayList<ReceivedItineraryMsgBean>()
+    private var data = listOf<ReceivedItineraryMsgBean>()
 
     // rv适配器
     private val adapter by lazy { ReceivedItineraryNotificationRvAdapter(::addToSchedule) }
@@ -85,7 +85,7 @@ class ReceivedItineraryFragment : BaseFragment(R.layout.notification_fragment_it
 //            }
 //        }
         itineraryViewModel.receivedItineraryList.observe {
-            data = it as ArrayList<ReceivedItineraryMsgBean>
+            data = it
             adapter.submitList(data)
             //让数据更改有动画效果
             receivedItineraryRv.scheduleLayoutAnimation()
@@ -110,10 +110,11 @@ class ReceivedItineraryFragment : BaseFragment(R.layout.notification_fragment_it
     private fun initCollect() {
         itineraryViewModel.add2scheduleIsSuccessfulEvent.collectLaunch{
             if (it.second) {
-                val tempList = ArrayList<ReceivedItineraryMsgBean>()
-                data[it.first].hasAdd = true
-                tempList.addAll(data)
+                val tempList = adapter.currentList.toMutableList().apply {
+                    this[it.first] = this[it.first].copy(hasAdd = true)
+                }
                 adapter.submitList(tempList)
+                data = tempList
             }
         }
     }

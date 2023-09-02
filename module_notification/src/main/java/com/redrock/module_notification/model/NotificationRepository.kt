@@ -71,7 +71,7 @@ object NotificationRepository {
      * @param itineraryId 行程id
      */
     fun cancelItineraryReminder(itineraryId: Int) : Single<ApiStatus> {
-        return api.cancelItineraryReminder(CancelItineraryReminderUploadBean(itineraryId))
+        return api.cancelItineraryReminder(itineraryId.toString())
             .observeOn(Schedulers.io())
             .subscribeOn(Schedulers.io())
     }
@@ -81,7 +81,7 @@ object NotificationRepository {
      * @param idList 行程id
      */
     fun changeItineraryReadStatus(idList: List<Int>, status: Boolean = true) : Single<ApiStatus> {
-        return api.changeItineraryReadStatus(ChangeItineraryReadStatusUploadBean(idList, status))
+        return api.changeItineraryReadStatus(idList, status)
             .observeOn(Schedulers.io())
             .subscribeOn(Schedulers.io())
     }
@@ -91,7 +91,7 @@ object NotificationRepository {
      * @param itineraryId 行程id
      */
     fun changeItineraryAddStatus(itineraryId: Int, status: Boolean = true) : Single<ApiStatus> {
-        return api.changeItineraryAddStatus(ChangeItineraryAddStatusUploadBean(itineraryId, status))
+        return api.changeItineraryAddStatus(itineraryId, status)
             .observeOn(Schedulers.io())
             .subscribeOn(Schedulers.io())
     }
