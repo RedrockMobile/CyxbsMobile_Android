@@ -25,7 +25,7 @@
         android:id="@+id/notification_main_column_container_background"
         android:layout_width="match_parent"
         android:layout_height="139dp"
-        android:background="#FBFCFC"
+        android:background="@color/notification_home_page_tabLayout_shadow"
         android:orientation="horizontal"
         android:visibility="gone"
         app:layout_constraintLeft_toLeftOf="parent"

@@ -20,6 +20,7 @@
     <color name="notification_home_tabLayout_text_unselect">#66142C52</color>
     <color name="notification_home_tablayout_badge">#FF6262</color>
     <color name="notification_home_delete"> #4A44E4</color>
+    <color name="notification_home_page_tabLayout_shadow">#FBFCFC</color>
 
     <color name="notification_delete_dialog_tv_tips">#15315B</color>
     <color name="notification_delete_dialog_btn_negative">#C3D4EE</color>
@@ -27,6 +28,8 @@
 
     <color name="notification_itinerary_tabLayout_text_selected">#15C6E7</color>
     <color name="notification_itinerary_tabLayout_text_unselect">#A1ABBA</color>
+    <color name="notification_itinerary_tabLayout_top_start_color">#FCFCFE</color>
+    <color name="notification_itinerary_tabLayout_bottom_end_color">#FFFFFF</color>
     <color name="notification_itinerary_auto_clear_hint_text">#ABB5C4</color>
     <color name="notification_itinerary_item_title_text">#15315B</color>
     <color name="notification_itinerary_item_canceled_title_text">#8F9CAF</color>

@@ -1,9 +1,9 @@
 package com.redrock.module_notification.ui.fragment
 
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
+import android.view.ViewGroup
 import android.widget.LinearLayout
 import android.widget.TextView
 import androidx.core.content.ContextCompat
@@ -16,7 +16,6 @@ import com.mredrock.cyxbs.lib.base.ui.viewModelBy
 import com.mredrock.cyxbs.lib.utils.adapter.FragmentVpAdapter
 import com.mredrock.cyxbs.lib.utils.extensions.color
 import com.redrock.module_notification.R
-import com.redrock.module_notification.bean.ItineraryAllMsg
 import com.redrock.module_notification.ui.activity.NotificationActivity
 import com.redrock.module_notification.util.Constant.IS_SWITCH1_SELECT
 import com.redrock.module_notification.util.NotificationSp
@@ -64,11 +63,22 @@ class ItineraryNotificationFragment : BaseFragment(R.layout.notification_fragmen
         super.onViewCreated(view, savedInstanceState)
         myActivity = requireActivity() as NotificationActivity
         shouldShowTabRedDots = myActivity.NotificationSp.getBoolean(IS_SWITCH1_SELECT, true)
+//        initUIModeConfig()
         initCollect()
         initObserver()
         initViewPager2()
         initTabLayout()
     }
+    /*
+    private fun initUIModeConfig() {
+        //  app应用了何种模式
+        var uiMode = resources.configuration.uiMode
+        val uiModeManager =  myActivity.getSystemService(AppCompatActivity.UI_MODE_SERVICE) as UiModeManager
+        if (uiModeManager.nightMode == UiModeManager.MODE_NIGHT_YES) { // 系统当前为夜间模式
+            itineraryTypeTab.background = myActivity.getDrawable(R.drawable.notification_shape_itinerary_cl_container_night)
+        }
+    }
+     */
 
     private fun initViewPager2() {
         itineraryDisplayContainer.adapter = FragmentVpAdapter(this)
@@ -80,7 +90,6 @@ class ItineraryNotificationFragment : BaseFragment(R.layout.notification_fragmen
         itineraryDisplayContainer.registerOnPageChangeCallback(object :
             ViewPager2.OnPageChangeCallback() {
             override fun onPageSelected(position: Int) {
-                Log.d("hsj-test","onPageSelected $position")
                 currentPageIndex = position
             }
         })
@@ -120,15 +129,14 @@ class ItineraryNotificationFragment : BaseFragment(R.layout.notification_fragmen
 
         val tab1 = itineraryTypeTab.getTabAt(0)
         tab1View = LayoutInflater.from(myActivity)
-            .inflate(R.layout.notification_item_itinerary_tab1, null)
+            .inflate(R.layout.notification_item_itinerary_tab1, itineraryTypeTab.parent as ViewGroup, false)
         tab1?.customView = tab1View
 
         val tab2 = itineraryTypeTab.getTabAt(1)
         tab2View = LayoutInflater.from(myActivity)
-            .inflate(R.layout.notification_item_itinerary_tab2, null)
+            .inflate(R.layout.notification_item_itinerary_tab2, itineraryTypeTab.parent as ViewGroup, false)
         tab2?.customView = tab2View
 //        itineraryTypeTab.getTabAt(currentPageIndex)?.select()
-        Log.d("hsj-initTabLayout","currentPageIndex is $currentPageIndex")
         changeTabRedDotsVisibility(currentPageIndex, View.INVISIBLE)
     }
 
@@ -152,7 +160,6 @@ class ItineraryNotificationFragment : BaseFragment(R.layout.notification_fragmen
                 }
             }
             if (!isVisibleRedDot) changeTabRedDotsVisibility(0, View.INVISIBLE)
-            Log.d("hsj-ItineraryPage0","received UnRead count is ${tempList.size}")
             itineraryViewModel.setUnReadReceivedItineraryIds(tempList)
         }
 
@@ -170,22 +177,18 @@ class ItineraryNotificationFragment : BaseFragment(R.layout.notification_fragmen
                 }
             }
             if (!isVisibleRedDot) changeTabRedDotsVisibility(1, View.INVISIBLE)
-            Log.d("hsj-ItineraryPage1","sent UnRead count is ${tempList.size}")
             itineraryViewModel.setUnReadSentItineraryIds(tempList)
         }
 
         itineraryViewModel.currentPageIndex.observe {
-            Log.d("hsj-itineraryPageIndex","currentIndex is $it")
             changeTabRedDotsVisibility(it, View.INVISIBLE)
             when (it) {
                 0 -> {
                     itineraryViewModel.allUnReadReceivedItineraryIds.apply {
                         if (this.value.isNullOrEmpty()) {
-                            Log.d("hsj-itineraryPage0", "UnReadReceived is null")
                             return@observe
                         }
                         if (myActivity.whichPageIsIn == 2) {
-                            Log.d("hsj-itineraryPage0", "UnReadReceived start changeReadStatus")
                             itineraryViewModel.changeItineraryReadStatus(this.value!!, 0)
                         }
                     }
@@ -194,11 +197,9 @@ class ItineraryNotificationFragment : BaseFragment(R.layout.notification_fragmen
                 1 -> {
                     itineraryViewModel.allUnReadSentItineraryIds.apply {
                         if (this.value.isNullOrEmpty()) {
-                            Log.d("hsj-itineraryPage1", "UnReadSent is null")
                             return@observe
                         }
                         if (myActivity.whichPageIsIn == 2) {
-                            Log.d("hsj-itineraryPage1", "UnReadSent start changeReadStatus")
                             itineraryViewModel.changeItineraryReadStatus(this.value!!, 1)
                         }
                     }
@@ -210,16 +211,12 @@ class ItineraryNotificationFragment : BaseFragment(R.layout.notification_fragmen
 
     private fun initCollect() {
         itineraryViewModel.newUnReadSentItineraryIds.collectLaunch {
-            Log.d("hsj-Collect","enter newUnReadSent")
             if (!it.isNullOrEmpty() && myActivity.whichPageIsIn == 2 && currentPageIndex == 1) {
-                Log.d("hsj-Collect","it's size is ${it.size}")
                 itineraryViewModel.changeItineraryReadStatus(it, 1)
             }
         }
         itineraryViewModel.newUnReadReceivedItineraryIds.collectLaunch {
-            Log.d("hsj-Collect","enter newUnReadReceived")
             if (!it.isNullOrEmpty() && myActivity.whichPageIsIn == 2 && currentPageIndex == 0) {
-                Log.d("hsj-Collect","it's size is ${it.size}")
                 itineraryViewModel.changeItineraryReadStatus(it, 0)
             }
         }

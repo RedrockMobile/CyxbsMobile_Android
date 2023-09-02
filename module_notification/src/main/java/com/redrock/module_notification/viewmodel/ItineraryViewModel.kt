@@ -62,7 +62,6 @@ class ItineraryViewModel(val hostViewModel: NotificationViewModel) : BaseViewMod
 
 
     // 添加某一行程到日程（添加事务） 请求是否成功（状态）
-    val add2scheduleIsSuccessfulState: LiveData<Pair<Int, Boolean>> get() = _add2scheduleIsSuccessfulState
     private val _add2scheduleIsSuccessfulState = MutableLiveData<Pair<Int, Boolean>>()
 
     // 添加某一行程到日程（添加事务） 请求是否成功（事件）
@@ -163,8 +162,8 @@ class ItineraryViewModel(val hostViewModel: NotificationViewModel) : BaseViewMod
                 onSuccess = {
                 LogUtils.d("Hsj-changeItineraryReadStatus","changeReadStatus success")
                 when(page) {
-                    0 -> _allUnReadReceivedItineraryIds.value = emptyList()
-                    1 -> _allUnReadSentItineraryIds.value = emptyList()
+                    0 -> _allUnReadReceivedItineraryIds.postValue(emptyList())
+                    1 -> _allUnReadSentItineraryIds.postValue(emptyList())
                     else ->{}
                 }
             })
@@ -209,12 +208,12 @@ class ItineraryViewModel(val hostViewModel: NotificationViewModel) : BaseViewMod
     ) {
         NotificationRepository.addAffair(remindTime, info)
             .throwOrInterceptException {
-//                "添加失败".toast()
-//                ApiException{exception->
-//                    LogUtils.w("Hsj-Itinerary","add2Schedule Exception status:${exception.status}")
-//                }
-//                LogUtils.w("Hsj-Itinerary","add2Schedule Exception:${it.message}")
-//                _add2scheduleIsSuccessfulState.postValue(Pair(index, false))
+                "添加失败".toast()
+                ApiException{exception->
+                    LogUtils.w("Hsj-Itinerary","add2Schedule Exception status:${exception.status}")
+                }
+                LogUtils.w("Hsj-Itinerary","add2Schedule Exception:${it.message}")
+                _add2scheduleIsSuccessfulState.postValue(Pair(index, false))
             }
             .safeSubscribeBy (
                 onError = {
@@ -223,7 +222,7 @@ class ItineraryViewModel(val hostViewModel: NotificationViewModel) : BaseViewMod
                 },
                 onSuccess = {
                 "添加成功".toast()
-                changeItineraryAddStatus(info.id,false)
+                changeItineraryAddStatus(info.id,true)
                 _add2scheduleIsSuccessfulState.postValue(Pair(index, true))
             })
     }
@@ -240,8 +239,4 @@ class ItineraryViewModel(val hostViewModel: NotificationViewModel) : BaseViewMod
         _allUnReadReceivedItineraryIds.value = list
     }
 
-    init {
-//        getReceivedItinerary()
-//        getSentItinerary()
-    }
 }

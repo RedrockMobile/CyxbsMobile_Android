@@ -40,6 +40,10 @@
         android:layout_height="wrap_content"
         android:layout_marginHorizontal="16dp"
         android:layout_marginTop="12dp"
+        android:layout_marginBottom="51dp"
+        app:layout_constrainedHeight="true"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintHeight_default="wrap"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
@@ -49,6 +53,7 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="4dp"
         android:gravity="center_horizontal"
+        android:layout_marginBottom="30dp"
         android:text="@string/notification_itinerary_message_clear_Hint"
         android:textAppearance="@style/notification_itinerary_auto_clear_hint_text_style"
         app:layout_constraintEnd_toEndOf="parent"

@@ -11,7 +11,6 @@ import androidx.recyclerview.widget.RecyclerView
 import com.mredrock.cyxbs.lib.base.ui.BaseFragment
 import com.mredrock.cyxbs.lib.utils.extensions.gone
 import com.mredrock.cyxbs.lib.utils.extensions.visible
-import com.mredrock.cyxbs.lib.utils.utils.LogUtils
 import com.redrock.module_notification.R
 import com.redrock.module_notification.adapter.ReceivedItineraryNotificationRvAdapter
 import com.redrock.module_notification.bean.ReceivedItineraryMsgBean
@@ -66,12 +65,12 @@ class ReceivedItineraryFragment : BaseFragment(R.layout.notification_fragment_it
     private fun initRv() {
         receivedItineraryRv.adapter = adapter
 
+        // 动画效果
         val resId = R.anim.notification_layout_animation_fall_down
         val anim = AnimationUtils.loadLayoutAnimation(myActivity, resId)
         receivedItineraryRv.layoutAnimation = anim
 
-        receivedItineraryRv.layoutManager =
-            LinearLayoutManager(this.context, RecyclerView.VERTICAL, true)
+        receivedItineraryRv.layoutManager = LinearLayoutManager(this.context)
     }
 
     private fun initObserver() {
@@ -85,7 +84,7 @@ class ReceivedItineraryFragment : BaseFragment(R.layout.notification_fragment_it
 //            }
 //        }
         itineraryViewModel.receivedItineraryList.observe {
-            data = it
+            data = it.reversed()
             adapter.submitList(data)
             //让数据更改有动画效果
             receivedItineraryRv.scheduleLayoutAnimation()

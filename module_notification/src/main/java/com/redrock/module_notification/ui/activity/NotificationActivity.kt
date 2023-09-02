@@ -29,7 +29,6 @@ import com.mredrock.cyxbs.common.utils.extensions.editor
 import com.mredrock.cyxbs.config.route.NOTIFICATION_HOME
 import com.mredrock.cyxbs.config.route.NOTIFICATION_SETTING
 import com.mredrock.cyxbs.lib.utils.adapter.FragmentVpAdapter
-import com.mredrock.cyxbs.lib.utils.extensions.color
 import com.mredrock.cyxbs.lib.utils.extensions.dp2pxF
 import com.mredrock.cyxbs.lib.utils.extensions.gone
 import com.mredrock.cyxbs.lib.utils.extensions.setOnSingleClickListener
@@ -404,6 +403,9 @@ class NotificationActivity : BaseViewModelActivity<NotificationViewModel>() {
     }
 
 
+    /**
+     * 要对某View显示投影（阴影）的一种简易解决方案
+     */
     private fun initShadowShape() {
         val shapePathModel = ShapeAppearanceModel.builder()
             .setBottomLeftCorner(RoundedCornerTreatment())

@@ -1,7 +1,6 @@
 package com.redrock.module_notification.ui.fragment
 
 import android.os.Bundle
-import android.util.Log
 import android.view.View
 import android.view.animation.AnimationUtils
 import android.widget.TextView
@@ -12,7 +11,6 @@ import androidx.recyclerview.widget.RecyclerView
 import com.mredrock.cyxbs.lib.base.ui.BaseFragment
 import com.mredrock.cyxbs.lib.utils.extensions.gone
 import com.mredrock.cyxbs.lib.utils.extensions.visible
-import com.mredrock.cyxbs.lib.utils.utils.LogUtils
 import com.redrock.module_notification.R
 import com.redrock.module_notification.adapter.SentItineraryNotificationRvAdapter
 import com.redrock.module_notification.bean.SentItineraryMsgBean
@@ -65,12 +63,12 @@ class SentItineraryFragment : BaseFragment(R.layout.notification_fragment_itiner
     private fun initRv() {
         sentItineraryRv.adapter = adapter
 
+        // 动画效果
         val resId = R.anim.notification_layout_animation_fall_down
         val anim = AnimationUtils.loadLayoutAnimation(myActivity, resId)
         sentItineraryRv.layoutAnimation = anim
-        // item从底部开始放置
-        sentItineraryRv.layoutManager =
-            LinearLayoutManager(this.context, RecyclerView.VERTICAL, true)
+
+        sentItineraryRv.layoutManager = LinearLayoutManager(this.context)
     }
 
     private fun initObserver() {
@@ -84,7 +82,7 @@ class SentItineraryFragment : BaseFragment(R.layout.notification_fragment_itiner
 //            }
 //        }
         itineraryViewModel.sentItineraryList.observe {
-            data = it
+            data = it.reversed()
             adapter.submitList(data)
             //让数据更改有动画效果
             sentItineraryRv.scheduleLayoutAnimation()
@@ -97,7 +95,6 @@ class SentItineraryFragment : BaseFragment(R.layout.notification_fragment_itiner
             } else {
                 toast("获取最新发送的行程失败")
                 if (data.isEmpty()) {
-                    Log.d("DataTest","null")
                     getItineraryFailureView.visible()
                     sentItineraryRv.gone()
                     autoClearHintView.gone()

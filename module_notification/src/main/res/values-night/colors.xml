@@ -17,7 +17,10 @@
     <color name="notification_home_tabLayout_text_unselect">#8CF0F0F0</color>
     <color name="notification_itinerary_tabLayout_text_selected">#15C6E7</color>
     <color name="notification_itinerary_tabLayout_text_unselect">#8CF0F0F0</color>
+    <color name="notification_itinerary_tabLayout_top_start_color">#CC000000</color>
+    <color name="notification_itinerary_tabLayout_bottom_end_color">#BF000000</color>
     <color name="notification_home_item_tv_time">#F0F0F0</color>
+    <color name="notification_home_page_tabLayout_shadow">#E6000000</color>
 
     <color name="notification_delete_dialog_tv_tips">#F0F0F2</color>
     <color name="notification_delete_dialog_btn_negative">#4E4E4E</color>
