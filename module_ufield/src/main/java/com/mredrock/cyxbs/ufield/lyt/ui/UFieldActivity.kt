@@ -2,6 +2,7 @@ package com.mredrock.cyxbs.ufield.lyt.ui
 
 import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
@@ -108,6 +109,7 @@ class UFieldActivity : BaseActivity() {
         mViewModel.apply {
             getIsAdmin()
             isAdmin.observe(this@UFieldActivity) {
+                Log.d("966555", "测试结果-->> ${it[0].admin}");
                 if (it[0].admin) {
                     mAdmin.visibility = View.VISIBLE
                 }

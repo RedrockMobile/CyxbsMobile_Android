@@ -40,7 +40,7 @@ class FairgroundPageFragment : BaseFragment(R.layout.main_fragment_fairground) {
     private val ivHead by R.id.main_iv_head.view<ImageView>()
     private val ivActivity by R.id.main_fairground_iv_dctivity.view<ImageView>()
     private val btActivity by R.id.main_fairground_bt_dctivity.view<Button>()
-    @SuppressLint("SetTextI18n")
+    @SuppressLint("SetTextI18n", "SuspiciousIndentation")
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -91,7 +91,7 @@ class FairgroundPageFragment : BaseFragment(R.layout.main_fragment_fairground) {
         viewModel.message.observe(viewLifecycleOwner){
             if (it != null) {
                 tvNickname.text="Hi, ${it.nickname}"
-                    ivHead.setAvatarImageFromUrl(it.photo_src)
+                ivHead.setAvatarImageFromUrl(it.photo_src)
             }
         }
         return super.onCreateView(inflater, container, savedInstanceState)

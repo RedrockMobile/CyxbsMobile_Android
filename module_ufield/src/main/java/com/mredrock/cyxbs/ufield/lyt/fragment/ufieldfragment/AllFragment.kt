@@ -61,9 +61,11 @@ class AllFragment : BaseFragment() {
                     Log.d("595995", "测试结果-->> ${mDataList[it].activity_id}");
                     startActivity(intent)
                 }
+
             }
-            addItemDecoration(GridSpacingItemDecoration(2, 0, 50))
+            addItemDecoration(GridSpacingItemDecoration(2))
 
         }
+
     }
 }
