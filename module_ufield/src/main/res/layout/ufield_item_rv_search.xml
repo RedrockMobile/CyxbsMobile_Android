@@ -16,15 +16,15 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.062">
+        app:layout_constraintVertical_bias="1.0">
 
         <androidx.cardview.widget.CardView
             android:id="@+id/Ufield_search_iv_card"
             android:layout_width="101dp"
             android:layout_height="101dp"
+            android:padding="0dp"
             app:cardCornerRadius="8dp"
             app:cardElevation="0dp"
-            android:padding="0dp"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent">
 
@@ -60,8 +60,8 @@
             android:id="@+id/uField_search_isGoing"
             android:layout_width="40dp"
             android:layout_height="16dp"
-            android:layout_marginStart="5dp"
-            android:layout_marginTop="15dp"
+            android:layout_marginStart="2dp"
+            android:layout_marginTop="13.5dp"
             app:layout_constraintStart_toEndOf="@+id/Ufield_search_act_ame"
             app:layout_constraintTop_toTopOf="parent" />
 
@@ -100,7 +100,7 @@
             android:layout_width="150dp"
             android:layout_height="17dp"
             android:layout_marginStart="7dp"
-            android:layout_marginTop="13dp"
+            android:layout_marginTop="15dp"
             android:textColor="@color/uField_112c5499"
             android:textSize="12sp"
             app:layout_constraintStart_toEndOf="@+id/ufieldImageview3"

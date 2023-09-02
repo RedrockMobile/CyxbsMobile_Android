@@ -70,7 +70,7 @@
                     android:layout_height="16dp"
                     android:layout_gravity="center_vertical"
                     android:layout_marginStart="2dp"
-                    android:layout_marginTop="2dp" />
+                   />
             </LinearLayout>
 
 
@@ -87,15 +87,14 @@
 
             <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="18dp"
+                android:layout_height="16dp"
                 android:layout_marginStart="10dp"
-                android:layout_marginTop="9dp"
+                android:layout_marginTop="11dp"
                 android:orientation="horizontal"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/uField_activity_type">
 
                 <ImageView
-                   android:layout_marginTop="2dp"
                     android:id="@+id/ufieldImageview5"
                     android:layout_width="16dp"
                     android:layout_height="16dp"
@@ -106,7 +105,6 @@
                     android:layout_width="110dp"
                     android:layout_height="16dp"
                     android:layout_marginStart="4dp"
-                    android:layout_marginTop="0.5dp"
                     android:textColor="@color/uField_112c5499"
                     android:textSize="12sp" />
 
