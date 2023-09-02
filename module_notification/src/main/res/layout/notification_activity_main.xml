@@ -6,6 +6,21 @@
     android:layout_height="match_parent"
     tools:context=".ui.activity.NotificationActivity">
 
+    <com.redrock.module_notification.widget.VerticalSwipeRefreshLayout
+        android:id="@+id/notification_refresh"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginTop="139dp"
+        android:paddingBottom="8dp"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <androidx.viewpager2.widget.ViewPager2
+            android:id="@+id/notification_home_vp2"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" />
+    </com.redrock.module_notification.widget.VerticalSwipeRefreshLayout>
+
     <LinearLayout
         android:id="@+id/notification_main_column_container_background"
         android:layout_width="match_parent"
@@ -107,20 +122,20 @@
         app:tabTextAppearance="@style/notification_home_tab_style"
         app:tabTextColor="@color/notification_home_tabLayout_text_selected" />
 
-    <com.redrock.module_notification.widget.VerticalSwipeRefreshLayout
-        android:id="@+id/notification_refresh"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_marginTop="139dp"
-        android:paddingBottom="8dp"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintTop_toTopOf="parent">
+<!--    <com.redrock.module_notification.widget.VerticalSwipeRefreshLayout-->
+<!--        android:id="@+id/notification_refresh"-->
+<!--        android:layout_width="match_parent"-->
+<!--        android:layout_height="match_parent"-->
+<!--        android:layout_marginTop="139dp"-->
+<!--        android:paddingBottom="8dp"-->
+<!--        app:layout_constraintLeft_toLeftOf="parent"-->
+<!--        app:layout_constraintTop_toTopOf="parent">-->
 
-        <androidx.viewpager2.widget.ViewPager2
-            android:id="@+id/notification_home_vp2"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent" />
-    </com.redrock.module_notification.widget.VerticalSwipeRefreshLayout>
+<!--        <androidx.viewpager2.widget.ViewPager2-->
+<!--            android:id="@+id/notification_home_vp2"-->
+<!--            android:layout_width="match_parent"-->
+<!--            android:layout_height="match_parent" />-->
+<!--    </com.redrock.module_notification.widget.VerticalSwipeRefreshLayout>-->
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>

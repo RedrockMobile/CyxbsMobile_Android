@@ -75,20 +75,14 @@ class ReceivedItineraryFragment : BaseFragment(R.layout.notification_fragment_it
     }
 
     private fun initObserver() {
-        itineraryViewModel.hostViewModel.itineraryMsgIsSuccessfulState.observe {
-            // 如果Activity的viewModel "获取行程是否成功" 的最新状态为true（或者最新状态为false但有之前的获取数据）
-            if (it || itineraryViewModel.hostViewModel.getItineraryIsSuccessful)
-                itineraryViewModel.getReceivedItinerary()
-            else {
-                LogUtils.d("Hsj-getReceivedItinerary","发起请求")
-                itineraryViewModel.getReceivedItinerary(true)
-            }
-        }
-//        itineraryViewModel.hostViewModel.itineraryMsg.observe {
-//            data = it.receivedItineraryList as ArrayList<ReceivedItineraryMsgBean>
-//            adapter.submitList(data)
-//            //让数据更改有动画效果
-//            receivedItineraryRv.scheduleLayoutAnimation()
+//        itineraryViewModel.hostViewModel.itineraryMsgIsSuccessfulState.observe {
+//            // 如果Activity的viewModel "获取行程是否成功" 的最新状态为true（或者最新状态为false但有之前的获取数据）
+//            if (it || itineraryViewModel.hostViewModel.getItineraryIsSuccessful)
+//                itineraryViewModel.getReceivedItinerary()
+//            else {
+//                LogUtils.d("Hsj-getReceivedItinerary","发起请求")
+//                itineraryViewModel.getReceivedItinerary(true)
+//            }
 //        }
         itineraryViewModel.receivedItineraryList.observe {
             data = it as ArrayList<ReceivedItineraryMsgBean>

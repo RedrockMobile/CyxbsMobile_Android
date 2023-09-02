@@ -42,13 +42,6 @@ class ItineraryNotificationFragment : BaseFragment(R.layout.notification_fragmen
     private val itineraryDisplayContainer by R.id.notification_itinerary_vp2.view<ViewPager2>()
     private val itineraryTypeTab by R.id.notification_itinerary_tl_itiner_type.view<TabLayout>()
 
-    // DisplayContainer里的两个fragment的实例
-    private lateinit var sentFragment: SentItineraryFragment
-    private lateinit var receivedFragment: ReceivedItineraryFragment
-
-    // 所有行程的数据
-    private lateinit var allItineraryDatas: ItineraryAllMsg
-
     // 是否需要展示tab的红点
     private var shouldShowTabRedDots by Delegates.notNull<Boolean>()
 
@@ -87,6 +80,7 @@ class ItineraryNotificationFragment : BaseFragment(R.layout.notification_fragmen
         itineraryDisplayContainer.registerOnPageChangeCallback(object :
             ViewPager2.OnPageChangeCallback() {
             override fun onPageSelected(position: Int) {
+                Log.d("hsj-test","onPageSelected $position")
                 currentPageIndex = position
             }
         })
@@ -133,11 +127,16 @@ class ItineraryNotificationFragment : BaseFragment(R.layout.notification_fragmen
         tab2View = LayoutInflater.from(myActivity)
             .inflate(R.layout.notification_item_itinerary_tab2, null)
         tab2?.customView = tab2View
-        itineraryTypeTab.getTabAt(currentPageIndex)?.select()
+//        itineraryTypeTab.getTabAt(currentPageIndex)?.select()
+        Log.d("hsj-initTabLayout","currentPageIndex is $currentPageIndex")
         changeTabRedDotsVisibility(currentPageIndex, View.INVISIBLE)
     }
 
     private fun initObserver() {
+        parentViewModel.itineraryMsg.observe {
+            itineraryViewModel.getReceivedItinerary()
+            itineraryViewModel.getSentItinerary()
+        }
 
         itineraryViewModel.receivedItineraryList.observe { list ->
             // 如果receivedItineraryList中存在未读行程, 获取其中所有未读行程 的id
@@ -153,7 +152,7 @@ class ItineraryNotificationFragment : BaseFragment(R.layout.notification_fragmen
                 }
             }
             if (!isVisibleRedDot) changeTabRedDotsVisibility(0, View.INVISIBLE)
-            Log.d("hsj-ItineraryPage","received UnRead count is ${tempList.size}")
+            Log.d("hsj-ItineraryPage0","received UnRead count is ${tempList.size}")
             itineraryViewModel.setUnReadReceivedItineraryIds(tempList)
         }
 
@@ -171,7 +170,7 @@ class ItineraryNotificationFragment : BaseFragment(R.layout.notification_fragmen
                 }
             }
             if (!isVisibleRedDot) changeTabRedDotsVisibility(1, View.INVISIBLE)
-            Log.d("hsj-ItineraryPage","sent UnRead count is ${tempList.size}")
+            Log.d("hsj-ItineraryPage1","sent UnRead count is ${tempList.size}")
             itineraryViewModel.setUnReadSentItineraryIds(tempList)
         }
 
@@ -181,21 +180,27 @@ class ItineraryNotificationFragment : BaseFragment(R.layout.notification_fragmen
             when (it) {
                 0 -> {
                     itineraryViewModel.allUnReadReceivedItineraryIds.apply {
-                        if (this.isEmpty()) {
-                            Log.d("hsj-itineraryPageIndex", "UnReadReceived is null")
+                        if (this.value.isNullOrEmpty()) {
+                            Log.d("hsj-itineraryPage0", "UnReadReceived is null")
                             return@observe
                         }
-                        itineraryViewModel.changeItineraryReadStatus(this)
+                        if (myActivity.whichPageIsIn == 2) {
+                            Log.d("hsj-itineraryPage0", "UnReadReceived start changeReadStatus")
+                            itineraryViewModel.changeItineraryReadStatus(this.value!!, 0)
+                        }
                     }
                 }
 
                 1 -> {
                     itineraryViewModel.allUnReadSentItineraryIds.apply {
-                        if (isEmpty()) {
-                            Log.d("hsj-itineraryPageIndex", "UnReadSent is null")
+                        if (this.value.isNullOrEmpty()) {
+                            Log.d("hsj-itineraryPage1", "UnReadSent is null")
                             return@observe
                         }
-                        itineraryViewModel.changeItineraryReadStatus(this,false)
+                        if (myActivity.whichPageIsIn == 2) {
+                            Log.d("hsj-itineraryPage1", "UnReadSent start changeReadStatus")
+                            itineraryViewModel.changeItineraryReadStatus(this.value!!, 1)
+                        }
                     }
                 }
             }
@@ -204,15 +209,18 @@ class ItineraryNotificationFragment : BaseFragment(R.layout.notification_fragmen
     }
 
     private fun initCollect() {
-        itineraryViewModel.receivedItineraryListIsSuccessfulEvent.collectLaunch {
-            if (it) {
-
+        itineraryViewModel.newUnReadSentItineraryIds.collectLaunch {
+            Log.d("hsj-Collect","enter newUnReadSent")
+            if (!it.isNullOrEmpty() && myActivity.whichPageIsIn == 2 && currentPageIndex == 1) {
+                Log.d("hsj-Collect","it's size is ${it.size}")
+                itineraryViewModel.changeItineraryReadStatus(it, 1)
             }
-
         }
-        itineraryViewModel.sentItineraryListIsSuccessfulEvent.collectLaunch {
-            if (it) {
-
+        itineraryViewModel.newUnReadReceivedItineraryIds.collectLaunch {
+            Log.d("hsj-Collect","enter newUnReadReceived")
+            if (!it.isNullOrEmpty() && myActivity.whichPageIsIn == 2 && currentPageIndex == 0) {
+                Log.d("hsj-Collect","it's size is ${it.size}")
+                itineraryViewModel.changeItineraryReadStatus(it, 0)
             }
         }
     }
@@ -222,7 +230,7 @@ class ItineraryNotificationFragment : BaseFragment(R.layout.notification_fragmen
         if ((visibility != View.INVISIBLE) and (visibility != View.VISIBLE))
             throw Exception("参数只可以是View.INVISIBLE 或者 View.VISIBLE！！！")
         var vis = visibility
-        if (!shouldShowTabRedDots)
+        if (!shouldShowTabRedDots || position == currentPageIndex)
             vis = View.INVISIBLE
         when (position) {
             0 -> {

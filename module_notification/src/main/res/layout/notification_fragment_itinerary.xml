@@ -9,7 +9,6 @@
         android:layout_width="match_parent"
         android:layout_height="42dp"
         android:background="@drawable/notification_shape_itinerary_cl_container"
-        android:backgroundTint="#FCFCFD"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 

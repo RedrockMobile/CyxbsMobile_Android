@@ -25,7 +25,7 @@
                 android:layout_marginTop="28dp"
                 android:text="是否撤回此条行程提醒"
                 android:textColor="@color/notification_primary_text_color"
-                android:textSize="14sp"
+                android:textSize="15sp"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />

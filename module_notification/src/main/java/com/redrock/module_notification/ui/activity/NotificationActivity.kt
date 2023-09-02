@@ -2,18 +2,25 @@ package com.redrock.module_notification.ui.activity
 
 import android.annotation.SuppressLint
 import android.content.res.ColorStateList
+import android.graphics.Color
+import android.graphics.Paint
 import android.os.Bundle
 import android.view.Gravity
 import android.view.LayoutInflater
 import android.view.View
+import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.LinearLayout
 import android.widget.RelativeLayout
 import android.widget.TextView
+import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.content.edit
 import androidx.viewpager2.widget.ViewPager2
 import com.alibaba.android.arouter.facade.annotation.Route
 import com.alibaba.android.arouter.launcher.ARouter
+import com.google.android.material.shape.MaterialShapeDrawable
+import com.google.android.material.shape.RoundedCornerTreatment
+import com.google.android.material.shape.ShapeAppearanceModel
 import com.google.android.material.tabs.TabLayout
 import com.google.android.material.tabs.TabLayoutMediator
 import com.mredrock.cyxbs.common.ui.BaseViewModelActivity
@@ -22,6 +29,8 @@ import com.mredrock.cyxbs.common.utils.extensions.editor
 import com.mredrock.cyxbs.config.route.NOTIFICATION_HOME
 import com.mredrock.cyxbs.config.route.NOTIFICATION_SETTING
 import com.mredrock.cyxbs.lib.utils.adapter.FragmentVpAdapter
+import com.mredrock.cyxbs.lib.utils.extensions.color
+import com.mredrock.cyxbs.lib.utils.extensions.dp2pxF
 import com.mredrock.cyxbs.lib.utils.extensions.gone
 import com.mredrock.cyxbs.lib.utils.extensions.setOnSingleClickListener
 import com.mredrock.cyxbs.lib.utils.extensions.visible
@@ -46,6 +55,8 @@ class NotificationActivity : BaseViewModelActivity<NotificationViewModel>() {
     private var tab1View by Delegates.notNull<View>()  // 活动通知
 
     private val notification_main_container_bg by R.id.notification_main_column_container_background.view<LinearLayout>()
+    private val notification_main_container by R.id.notification_main_column_container.view<ConstraintLayout>()
+
     private val notification_rl_home_back by R.id.notification_rl_home_back.view<RelativeLayout>()
     private val notification_rl_home_dots by R.id.notification_rl_home_dots.view<RelativeLayout>()
     private val notification_home_red_dots by R.id.notification_home_red_dots.view<ImageView>()
@@ -66,13 +77,15 @@ class NotificationActivity : BaseViewModelActivity<NotificationViewModel>() {
     //   private lateinit var activeFragment: ActivityNotificationFragment
     private lateinit var ufieldActiveFragment : UfieldNotificationFragment */
     //目前ViewPager处于哪个页面
-    private var whichPageIsIn = 0
+    var whichPageIsIn = 0
+        private set
 
     //是否需要展示
     private var shouldShowRedDots by Delegates.notNull<Boolean>()
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.notification_activity_main)
+//        initShadowShape()
         initViewClickListener()
         initVp2()
         initTabLayout()
@@ -370,7 +383,7 @@ class NotificationActivity : BaseViewModelActivity<NotificationViewModel>() {
         if ((visibility != View.INVISIBLE) and (visibility != View.VISIBLE))
             throw Exception("参数只可以是View.INVISIBLE 或者 View.VISIBLE！！！")
         var vis = visibility
-        if (!shouldShowRedDots)
+        if (!shouldShowRedDots || position == whichPageIsIn)
             vis = View.INVISIBLE
         when (position) {
             0 -> {
@@ -390,4 +403,26 @@ class NotificationActivity : BaseViewModelActivity<NotificationViewModel>() {
         }
     }
 
+
+    private fun initShadowShape() {
+        val shapePathModel = ShapeAppearanceModel.builder()
+            .setBottomLeftCorner(RoundedCornerTreatment())
+            .setBottomRightCorner(RoundedCornerTreatment())
+            .setBottomLeftCornerSize(16F.dp2pxF)
+            .setBottomRightCornerSize(16F.dp2pxF)
+            .build()
+
+        val backgroundDrawable = MaterialShapeDrawable(shapePathModel).apply {
+//            setTint(com.mredrock.cyxbs.common.R.color.common_white_background.color)
+            setTint(Color.parseColor("#27838D"))
+            paintStyle = Paint.Style.FILL
+            shadowCompatibilityMode = MaterialShapeDrawable.SHADOW_COMPAT_MODE_ALWAYS
+            initializeElevationOverlay(this@NotificationActivity)
+            elevation = 101F.dp2pxF
+            setShadowColor(Color.parseColor("#2D538D"))
+//            shadowVerticalOffset = 13F.dp2pxF.toInt()
+        }
+        (notification_main_container.parent as ViewGroup).clipChildren = false
+        notification_main_container.background = backgroundDrawable
+    }
 }

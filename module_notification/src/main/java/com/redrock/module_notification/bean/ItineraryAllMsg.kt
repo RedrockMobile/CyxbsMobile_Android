@@ -97,7 +97,7 @@ data class ReceivedItineraryMsgBean(
         @SerializedName("beginLesson")
         val beginLesson: Int,   // 开始节数，如：1、2 节课以 1 开始；3、4 节课以 3 开始，注意：中午是以 -1 开始，傍晚是以 -2 开始
         @SerializedName("day")
-        val day: Int,           // 星期数，这里的星期一为 1，注意与添加事务的day不一样，那里的day是星期一为 0
+        val day: Int,           // 星期数，这里的星期一为 1(存疑)，注意与添加事务的日期bean的day不一样，那里的day是星期一为 0
         @SerializedName("period")
         val period: Int,        // 长度，几节课
         @SerializedName("week")
@@ -105,9 +105,21 @@ data class ReceivedItineraryMsgBean(
     ) : Serializable
 }
 
+data class CancelItineraryReminderUploadBean(
+    @SerializedName("id")
+    val id: Int
+) : Serializable
+
 data class ChangeItineraryReadStatusUploadBean(
     @SerializedName("id")
     val ids: List<Int>,
+    @SerializedName("status")
+    var status: Boolean = true
+) : Serializable
+
+data class ChangeItineraryAddStatusUploadBean(
+    @SerializedName("id")
+    val id: Int,
     @SerializedName("status")
     var status: Boolean = true
 ) : Serializable
@@ -131,6 +143,8 @@ data class AffairDateBean(
     val week: List<Int>
 ) : Serializable
 
-fun ReceivedItineraryMsgBean.ItineraryDateBean.toAffairDateBean(): AffairDateBean {
-    return AffairDateBean(this.beginLesson, this.day, this.period, listOf(this.week))
+fun List<ReceivedItineraryMsgBean.ItineraryDateBean>.toAffairDateBean(): List<AffairDateBean> {
+    return map {
+        AffairDateBean(it.beginLesson, it.day, it.period, listOf(it.week))
+    }
 }

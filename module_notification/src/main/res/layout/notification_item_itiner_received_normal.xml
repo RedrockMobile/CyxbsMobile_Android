@@ -68,7 +68,7 @@
             android:textAppearance="@style/notification_itinerary_item_generate_time_text_style"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/notification_itinerary_tv_received_content"
-            tool:text="8/14 12：00" />
+            tool:text="8/14  12：00" />
 
         <TextView
             android:id="@+id/notification_itinerary_tv_added_hint"

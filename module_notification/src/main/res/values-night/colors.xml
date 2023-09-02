@@ -3,7 +3,7 @@
 
     <color name="notification_white">#2D2D2D</color>
 
-    <!--    没课约文字主体颜色-->
+    <!--    消息通知文字主体颜色-->
     <color name="notification_primary_text_color">#F0F0F2</color>
     <!--    消息通知消极按钮颜色-->
     <color name="notification_button_negative_bg_color">#515151</color>

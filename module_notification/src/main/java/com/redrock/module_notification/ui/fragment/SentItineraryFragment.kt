@@ -17,6 +17,7 @@ import com.redrock.module_notification.R
 import com.redrock.module_notification.adapter.SentItineraryNotificationRvAdapter
 import com.redrock.module_notification.bean.SentItineraryMsgBean
 import com.redrock.module_notification.ui.activity.NotificationActivity
+import com.redrock.module_notification.ui.dialog.RevokeReminderDialog
 import com.redrock.module_notification.viewmodel.ItineraryViewModel
 import kotlin.properties.Delegates
 
@@ -73,20 +74,14 @@ class SentItineraryFragment : BaseFragment(R.layout.notification_fragment_itiner
     }
 
     private fun initObserver() {
-        itineraryViewModel.hostViewModel.itineraryMsgIsSuccessfulState.observe {
-            // 如果Activity的viewModel "获取行程是否成功" 的最新状态为true（或者最新状态为false但有之前的获取数据）
-            if (it || itineraryViewModel.hostViewModel.getItineraryIsSuccessful)
-                itineraryViewModel.getSentItinerary()
-            else {
-                LogUtils.d("Hsj-getSentItinerary","发起请求")
-                itineraryViewModel.getSentItinerary(true)
-            }
-        }
-//        itineraryViewModel.hostViewModel.itineraryMsg.observe {
-//            data = it.sentItineraryList as ArrayList<SentItineraryMsgBean>
-//            adapter.submitList(data)
-//            //让数据更改有动画效果
-//            sentItineraryRv.scheduleLayoutAnimation()
+//        itineraryViewModel.hostViewModel.itineraryMsgIsSuccessfulState.observe {
+//            // 如果Activity的viewModel "获取行程是否成功" 的最新状态为true（或者最新状态为false但有之前的获取数据）
+//            if (it || itineraryViewModel.hostViewModel.getItineraryIsSuccessful)
+//                itineraryViewModel.getSentItinerary()
+//            else {
+//                LogUtils.d("Hsj-getSentItinerary","发起请求")
+//                itineraryViewModel.getSentItinerary(true)
+//            }
 //        }
         itineraryViewModel.sentItineraryList.observe {
             data = it as ArrayList<SentItineraryMsgBean>
@@ -123,6 +118,10 @@ class SentItineraryFragment : BaseFragment(R.layout.notification_fragment_itiner
     }
 
     private fun cancelReminder(itineraryId: Int, index: Int) {
-        itineraryViewModel.cancelItineraryReminder(itineraryId, index)
+        val revokeReminderDialog = RevokeReminderDialog(myActivity)
+        revokeReminderDialog.setConfirmSelected {
+            itineraryViewModel.cancelItineraryReminder(itineraryId, index)
+            it.cancel()
+        }.show()
     }
 }

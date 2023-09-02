@@ -3,7 +3,6 @@ package com.redrock.module_notification.viewmodel
 import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.viewModelScope
 import com.mredrock.cyxbs.common.utils.extensions.mapOrThrowApiException
 import com.mredrock.cyxbs.common.viewmodel.BaseViewModel
 import com.mredrock.cyxbs.lib.utils.extensions.setSchedulers
@@ -19,9 +18,6 @@ import com.redrock.module_notification.network.ApiService
 import com.redrock.module_notification.util.Constant.NOTIFICATION_LOG_TAG
 import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
 import io.reactivex.rxjava3.schedulers.Schedulers
-import kotlinx.coroutines.flow.MutableSharedFlow
-import kotlinx.coroutines.flow.SharedFlow
-import kotlinx.coroutines.launch
 
 /**
  * Author by OkAndGreat
@@ -29,18 +25,6 @@ import kotlinx.coroutines.launch
  *
  */
 class NotificationViewModel : BaseViewModel() {
-    /**
-     * 由于暂时无法迁移到lib_base的BaseViewModel下，先把asShareFlow方法提取出来使用
-     */
-    private fun <T> LiveData<T>.asShareFlow(): SharedFlow<T> {
-        val sharedFlow = MutableSharedFlow<T>()
-        observeForever {
-            viewModelScope.launch {
-                sharedFlow.emit(it)
-            }
-        }
-        return sharedFlow
-    }
 
     private val _ufieldActivityMsg = MutableLiveData<List<UfieldMsgBean>>()
 
@@ -235,10 +219,8 @@ class NotificationViewModel : BaseViewModel() {
             .unsafeSubscribeBy(
                 onError = {
                     Log.d("Hsj-getAllItinerary", "getAllItineraryMsg 1 failed of ${it.message}")
-                    _itineraryMsgIsSuccessfulState.postValue(false)
-                    getMsgSuccessful.postValue(false)
                 },
-                onSuccess = { received->
+                onSuccess = {received->
                     Log.d("Hsj-getAllItinerary", "getAllItineraryMsg 1 success")
                     retrofit.getSentItinerary()
                         .subscribeOn(Schedulers.io())
@@ -251,7 +233,6 @@ class NotificationViewModel : BaseViewModel() {
                                 getMsgSuccessful.postValue(false)
                             },
                             onSuccess = {sent->
-
                                 _itineraryMsg.postValue(ItineraryAllMsg(sent, received))
                                 getItineraryIsSuccessful = true
                                 _itineraryMsgIsSuccessfulState.postValue(true)

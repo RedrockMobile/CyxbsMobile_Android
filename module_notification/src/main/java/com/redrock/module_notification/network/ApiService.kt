@@ -78,7 +78,7 @@ interface ApiService {
      * 取消itineraryId对应的行程的提醒
      */
     @PUT("/magipoke-jwzx/itinerary/cancel")
-    fun cancelItineraryReminder(@Query("id") itineraryId: String): Single<ApiStatus>
+    fun cancelItineraryReminder(@Body changeBody: CancelItineraryReminderUploadBean): Single<ApiStatus>
 
     /**
      * 改变行程消息的已读状态
@@ -92,11 +92,8 @@ interface ApiService {
      * @param itineraryId
      * @param status        默认为true，即变更为已添加
      */
-    @PUT("/magipoke-jwzx/itinerary/read")
-    fun changeItineraryAddStatus(
-        @Query("id") itineraryId: Int,
-        @Query("status") status: Boolean = true
-    ): Single<ApiStatus>
+    @PUT("/magipoke-jwzx/itinerary/add")
+    fun changeItineraryAddStatus(@Body changeBody: ChangeItineraryAddStatusUploadBean): Single<ApiStatus>
 
     /**
      * 添加进日程

@@ -1,10 +1,17 @@
 package com.redrock.module_notification.model
 
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
 import com.google.gson.Gson
 import com.mredrock.cyxbs.common.bean.RedrockApiWrapper
+import com.mredrock.cyxbs.lib.base.utils.safeSubscribeBy
+import com.mredrock.cyxbs.lib.utils.extensions.unsafeSubscribeBy
 import com.mredrock.cyxbs.lib.utils.network.ApiStatus
 import com.mredrock.cyxbs.lib.utils.network.ApiWrapper
+import com.mredrock.cyxbs.lib.utils.network.mapOrInterceptException
 import com.redrock.module_notification.bean.AffairDateBean
+import com.redrock.module_notification.bean.CancelItineraryReminderUploadBean
+import com.redrock.module_notification.bean.ChangeItineraryAddStatusUploadBean
 import com.redrock.module_notification.bean.ChangeItineraryReadStatusUploadBean
 import com.redrock.module_notification.bean.MsgBeanData
 import com.redrock.module_notification.bean.ReceivedItineraryMsgBean
@@ -29,7 +36,7 @@ object NotificationRepository {
     private val mGson = Gson()
 
 
-    private fun ReceivedItineraryMsgBean.ItineraryDateBean.toPostDateJson(): String {
+    private fun List<ReceivedItineraryMsgBean.ItineraryDateBean>.toPostDateJson(): String {
         return mGson.toJson(toAffairDateBean())
     }
     /**
@@ -64,9 +71,9 @@ object NotificationRepository {
      * @param itineraryId 行程id
      */
     fun cancelItineraryReminder(itineraryId: Int) : Single<ApiStatus> {
-        return api.cancelItineraryReminder(itineraryId.toString())
+        return api.cancelItineraryReminder(CancelItineraryReminderUploadBean(itineraryId))
             .observeOn(Schedulers.io())
-            .subscribeOn(AndroidSchedulers.mainThread())
+            .subscribeOn(Schedulers.io())
     }
 
     /**
@@ -76,7 +83,7 @@ object NotificationRepository {
     fun changeItineraryReadStatus(idList: List<Int>, status: Boolean = true) : Single<ApiStatus> {
         return api.changeItineraryReadStatus(ChangeItineraryReadStatusUploadBean(idList, status))
             .observeOn(Schedulers.io())
-            .subscribeOn(AndroidSchedulers.mainThread())
+            .subscribeOn(Schedulers.io())
     }
 
     /**
@@ -84,23 +91,43 @@ object NotificationRepository {
      * @param itineraryId 行程id
      */
     fun changeItineraryAddStatus(itineraryId: Int, status: Boolean = true) : Single<ApiStatus> {
-        return api.changeItineraryAddStatus(itineraryId, status)
+        return api.changeItineraryAddStatus(ChangeItineraryAddStatusUploadBean(itineraryId, status))
             .observeOn(Schedulers.io())
-            .subscribeOn(AndroidSchedulers.mainThread())
+            .subscribeOn(Schedulers.io())
     }
 
     /**
      * 添加行程到事务中
-     *
-     * @param time
-     * @param title
-     * @param content
-     * @param dateJson
-     * @return
      */
     fun addAffair(remindTime: Int, info: ReceivedItineraryMsgBean) : Single<ApiStatus>{
-        return api.addAffair(remindTime, info.title, info.content, info.dateJson.toPostDateJson())
+        return api.addAffair(remindTime, info.title, info.content, listOf(info.dateJson).toPostDateJson())
             .observeOn(Schedulers.io())
-            .subscribeOn(AndroidSchedulers.mainThread())
+            .subscribeOn(Schedulers.io())
+    }
+
+    /**
+     * 获取未读的行程（即hasRead字段为false的行程）有多少条
+     */
+    fun getNewItineraryCount(resultContainer: MutableLiveData<Int>) {
+        var result = 0
+        getSentItinerary()
+            .mapOrInterceptException {
+            }
+            .flatMap {list1->
+                result += list1.filter { !it.hasRead }.size
+                getReceivedItinerary()
+            }
+            .mapOrInterceptException {  }
+            .map {list2->
+                list2.filter { !it.hasRead }.size
+            }
+            .unsafeSubscribeBy(
+             onError = {
+                 resultContainer.value = result
+             },
+             onSuccess = {
+                 result += it
+                 resultContainer.value = result
+             })
     }
 }
