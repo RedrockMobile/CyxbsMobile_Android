@@ -62,7 +62,7 @@ class CultureFragment : BaseFragment() {
                     startActivity(intent)
                 }
             }
-            addItemDecoration(GridSpacingItemDecoration(2, 0, 50))
+            addItemDecoration(GridSpacingItemDecoration(2))
 
         }
     }

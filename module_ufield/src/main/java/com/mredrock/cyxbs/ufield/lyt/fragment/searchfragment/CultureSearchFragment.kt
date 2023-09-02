@@ -6,6 +6,7 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.core.view.marginBottom
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -55,6 +56,7 @@ class CultureSearchFragment : BaseFragment() {
                     Log.d("595995", "测试结果-->> ${mDataList[it].activity_id}");
                     startActivity(intent)
                 }
+                addItemDecoration(GridSpacingItemDecoration(1))
             }
         }
 

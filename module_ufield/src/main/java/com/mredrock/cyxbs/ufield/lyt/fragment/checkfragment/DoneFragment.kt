@@ -15,6 +15,7 @@ import com.mredrock.cyxbs.ufield.R
 import com.mredrock.cyxbs.ufield.gyd.ui.DetailActivity
 import com.mredrock.cyxbs.ufield.lyt.adapter.DoneRvAdapter
 import com.mredrock.cyxbs.ufield.lyt.bean.DoneBean
+import com.mredrock.cyxbs.ufield.lyt.helper.GridSpacingItemDecoration
 import com.mredrock.cyxbs.ufield.lyt.viewmodel.fragment.DoneViewModel
 import com.scwang.smart.refresh.footer.ClassicsFooter
 import com.scwang.smart.refresh.header.ClassicsHeader
@@ -70,6 +71,8 @@ class DoneFragment : BaseFragment() {
                     Log.d("595995", "测试结果-->> ${mDataList[it].activity_id}");
                     startActivity(intent)
                 }
+                addItemDecoration(GridSpacingItemDecoration(3))
+
             }
         }
     }

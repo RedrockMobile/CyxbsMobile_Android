@@ -177,6 +177,8 @@ class NotificationActivity : BaseViewModelActivity<NotificationViewModel>() {
             }
 
             1 -> {
+                notification_home_red_dots.visibility = View.INVISIBLE
+                NotificationSp.editor { putBoolean(HAS_USER_ENTER_SETTING_PAGE, true) }
                 ARouter.getInstance().build(NOTIFICATION_SETTING).navigation()
             }/*{
                 popupWindow = buildLoadMoreWindow {
