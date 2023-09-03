@@ -4,7 +4,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    tools:context=".lyt.fragment.searchfragment.EducationSearchFragment"
+    tools:context=".ui.fragment.searchfragment.EducationSearchFragment"
     tools:ignore="ResourceName">
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/uField_education_rv_search"

@@ -6,7 +6,7 @@
     android:layout_height="match_parent"
     android:background="@color/uField_white"
     android:orientation="vertical"
-    tools:context=".lyt.ui.UFieldActivity">
+    tools:context=".ui.activity.UFieldActivity">
 
     <ImageView
         android:id="@+id/uField_back"
