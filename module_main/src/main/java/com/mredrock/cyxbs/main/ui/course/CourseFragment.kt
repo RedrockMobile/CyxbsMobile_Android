@@ -11,6 +11,7 @@ import androidx.fragment.app.activityViewModels
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.mredrock.cyxbs.api.account.IAccountService
 import com.mredrock.cyxbs.api.course.ICourseService
+import com.mredrock.cyxbs.api.crash.ICrashService
 import com.mredrock.cyxbs.config.route.COURSE_POS_TO_MAP
 import com.mredrock.cyxbs.config.route.DISCOVER_MAP
 import com.mredrock.cyxbs.lib.base.ui.BaseFragment
@@ -72,9 +73,6 @@ class CourseFragment : BaseFragment() {
       if (mBottomSheet.isDraggable) {
         if (mBottomSheet.state == BottomSheetBehavior.STATE_COLLAPSED) {
           mBottomSheet.state = BottomSheetBehavior.STATE_EXPANDED
-          
-          // Umeng 埋点统计
-          Umeng.sendEvent(Umeng.Event.ClickCourseItem(true))
         }
       }
     }
@@ -101,13 +99,26 @@ class CourseFragment : BaseFragment() {
             mTvHeaderPlace.invisible()
             mTvHeaderContent.invisible()
             mTvHeaderHint.visible()
-            mTvHeaderHint.text = header.hint
+            val throwable = header.throwable
+            if (throwable == null) {
+              mTvHeaderHint.text = header.hint
+            } else {
+              if (mTvHeaderHint.text.isEmpty()) {
+                mTvHeaderHint.text = "发生异常，长按显示"
+              }
+              mTvHeaderHint.setOnLongClickListener {
+                ICrashService::class.impl
+                  .showCrashDialog(throwable)
+                true
+              }
+            }
           }
           is CourseHeaderHelper.ShowHeader -> {
             mTvHeaderState.visible()
             mTvHeaderTitle.visible()
             mTvHeaderTime.visible()
             mTvHeaderHint.invisible()
+            mTvHeaderHint.setOnLongClickListener(null)
             mTvHeaderState.text = header.state
             mTvHeaderTitle.text = header.title
             mTvHeaderTime.text = header.time
@@ -124,6 +135,8 @@ class CourseFragment : BaseFragment() {
                 }
                 mTvHeaderTitle.setOnSingleClickListener {
                   mCourseService.openBottomSheetDialogByLesson(requireContext(), header.item.lesson)
+                  // Umeng 埋点统计
+                  Umeng.sendEvent(Umeng.Event.CourseDetail(true))
                 }
               }
               is CourseHeaderHelper.AffairItem -> {
@@ -147,7 +160,7 @@ class CourseFragment : BaseFragment() {
           when (newState) {
             BottomSheetBehavior.STATE_EXPANDED -> {
               mViewHeader.gone()
-              if(mActivityViewModel.courseBottomSheetExpand.value != true){
+              if (mActivityViewModel.courseBottomSheetExpand.value != true) {
                 mActivityViewModel.courseBottomSheetExpand.value = true
               }
               mCollapsedBackPressedCallback.isEnabled = true
@@ -160,7 +173,7 @@ class CourseFragment : BaseFragment() {
               mCollapsedBackPressedCallback.isEnabled = false
             }
             BottomSheetBehavior.STATE_HIDDEN -> {
-              if(mActivityViewModel.courseBottomSheetExpand.value != null) {
+              if (mActivityViewModel.courseBottomSheetExpand.value != null) {
                 mActivityViewModel.courseBottomSheetExpand.value = null
               }
               mCollapsedBackPressedCallback.isEnabled = false
@@ -239,8 +252,8 @@ class CourseFragment : BaseFragment() {
   /**
    * 用于拦截返回键，在 BottomSheet 未折叠时先折叠
    */
-  private val mCollapsedBackPressedCallback by lazy {
-    requireActivity().onBackPressedDispatcher.addCallback {
+  private val mCollapsedBackPressedCallback by lazyUnlock {
+    requireActivity().onBackPressedDispatcher.addCallback(this) {
       mBottomSheet.state = BottomSheetBehavior.STATE_COLLAPSED
     }
   }
