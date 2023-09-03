@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".lxh.ui.activity.RankActivity">
+    tools:context=".ui.activity.RankActivity">
 
     <RelativeLayout
         android:id="@+id/ufield_activity_rl_bk"
