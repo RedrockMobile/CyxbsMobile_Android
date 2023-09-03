@@ -28,29 +28,13 @@ class CreateViewModel : BaseViewModel() {
 
     @SuppressLint("CheckResult")
     fun postActivityWithCover(
-        activityTitle: String,
-        activityType: String,
-        activityStartAt: Int,
-        activityEndAt: Int,
-        activityPlace: String,
-        activityRegistrationType: String,
-        activityOrganizer: String,
-        creatorPhone: String,
-        activityDetail: String,
+        requestMap: MutableMap<String, RequestBody>,
         coverFile: File
     ) {
         PublishApiService
             .INSTANCE
             .postActivityWithCover(
-                activityTitle.toRequestBody("multipart/form-data".toMediaTypeOrNull()),
-                activityType.toRequestBody("multipart/form-data".toMediaTypeOrNull()),
-                activityStartAt.toString().toRequestBody("multipart/form-data".toMediaTypeOrNull()),
-                activityEndAt.toString().toRequestBody("multipart/form-data".toMediaTypeOrNull()),
-                activityPlace.toRequestBody("multipart/form-data".toMediaTypeOrNull()),
-                activityRegistrationType.toRequestBody("multipart/form-data".toMediaTypeOrNull()),
-                activityOrganizer.toRequestBody("multipart/form-data".toMediaTypeOrNull()),
-                creatorPhone.toRequestBody("multipart/form-data".toMediaTypeOrNull()),
-                activityDetail.toRequestBody("multipart/form-data".toMediaTypeOrNull()),
+                requestMap,
                 coverFile.toMultipartBodyPart("activity_cover_file")
             )
             .subscribeOn(Schedulers.io())
@@ -67,28 +51,12 @@ class CreateViewModel : BaseViewModel() {
 
     @SuppressLint("CheckResult")
     fun postActivityNotCover(
-        activityTitle: String,
-        activityType: String,
-        activityStartAt: Int,
-        activityEndAt: Int,
-        activityPlace: String,
-        activityRegistrationType: String,
-        activityOrganizer: String,
-        creatorPhone: String,
-        activityDetail: String,
+        requestMap: MutableMap<String, RequestBody>
     ) {
         PublishApiService
             .INSTANCE
             .postActivityNotCover(
-                activityTitle.toRequestBody("multipart/form-data".toMediaTypeOrNull()),
-                activityType.toRequestBody("multipart/form-data".toMediaTypeOrNull()),
-                activityStartAt.toString().toRequestBody("multipart/form-data".toMediaTypeOrNull()),
-                activityEndAt.toString().toRequestBody("multipart/form-data".toMediaTypeOrNull()),
-                activityPlace.toRequestBody("multipart/form-data".toMediaTypeOrNull()),
-                activityRegistrationType.toRequestBody("multipart/form-data".toMediaTypeOrNull()),
-                activityOrganizer.toRequestBody("multipart/form-data".toMediaTypeOrNull()),
-                creatorPhone.toRequestBody("multipart/form-data".toMediaTypeOrNull()),
-                activityDetail.toRequestBody("multipart/form-data".toMediaTypeOrNull()),
+                requestMap
             )
             .subscribeOn(Schedulers.io())
             .observeOn(AndroidSchedulers.mainThread())
