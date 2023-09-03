@@ -49,13 +49,14 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="10dp"
+        android:layout_marginTop="96dp"
         android:src="@drawable/ufield_ic_going"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toEndOf="@+id/ufieldCardview"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.112" />
+        app:layout_constraintVertical_bias="0.0" />
 
     <TextView
         android:id="@+id/ufield_tv_going"
@@ -63,6 +64,7 @@
         android:layout_height="wrap_content"
         android:text="进行中"
         android:textSize="10sp"
+        android:layout_marginTop="96dp"
         android:textColor="#FFFFFF"
         android:layout_marginStart="17dp"
         app:layout_constraintBottom_toBottomOf="parent"
@@ -70,7 +72,7 @@
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toEndOf="@+id/ufieldCardview"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.113" />
+        app:layout_constraintVertical_bias="0.0" />
 
 
     <ImageView
@@ -79,12 +81,13 @@
         android:layout_height="wrap_content"
         android:background="@drawable/ufield_ic_type"
         app:layout_constraintBottom_toBottomOf="parent"
+        android:layout_marginTop="140dp"
         android:layout_marginStart="10dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toEndOf="@+id/ufieldCardview"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.165"/>
+        app:layout_constraintVertical_bias="0.0"/>
 
     <TextView
         android:id="@+id/ufield_tv_title"
@@ -92,6 +95,7 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="10dp"
         android:text="大学生摸鱼辩论赛"
+        android:layout_marginTop="113dp"
         android:textColor="#112C54"
         android:textSize="18sp"
         app:layout_constraintBottom_toBottomOf="parent"
@@ -99,7 +103,7 @@
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toEndOf="@+id/ufieldCardview"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.135" />
+        app:layout_constraintVertical_bias="0.0" />
 
     <TextView
         android:id="@+id/ufield_tv_type"
@@ -107,6 +111,7 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="33dp"
         android:text="文娱活动"
+        android:layout_marginTop="140dp"
         android:textColor="#66112C54"
         android:textSize="14sp"
         app:layout_constraintBottom_toBottomOf="parent"
@@ -114,19 +119,20 @@
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toEndOf="@+id/ufieldCardview"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.165" />
+        app:layout_constraintVertical_bias="0.0" />
 
     <TextView
         android:id="@+id/ufield_tv_sum_wantsee"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="100人想看"
+        android:layout_marginTop="175dp"
         android:textColor="#992A4E84"
         android:layout_marginStart="10dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintVertical_bias="0.205"
+        app:layout_constraintVertical_bias="0.0"
         app:layout_constraintStart_toEndOf="@+id/ufieldCardview"
         app:layout_constraintTop_toTopOf="parent" />
 
@@ -135,13 +141,14 @@
         android:layout_width="74dp"
         android:layout_height="30dp"
         android:background="@drawable/ufield_shape_createbutton2"
+        android:layout_marginTop="170dp"
         android:layout_marginRight="16dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="1.0"
         app:layout_constraintStart_toEndOf="@+id/ufieldCardview"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.205">
+        app:layout_constraintVertical_bias="0.0">
 
         <TextView
             android:id="@+id/ufield_tv_wantsee"
