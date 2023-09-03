@@ -17,7 +17,8 @@ import com.mredrock.cyxbs.noclass.R
  * @Description:
  *
  */
-class BatchQueryErrorDialog(context: Context, private val errList: List<String>) : AlertDialog(context) {
+class BatchQueryErrorDialog(context: Context, private val errList: List<String>) :
+    AlertDialog(context) {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.noclass_dialog_batch_query_err)
@@ -30,13 +31,17 @@ class BatchQueryErrorDialog(context: Context, private val errList: List<String>)
         findViewById<Button>(R.id.noclass_dialog_batch_query_err_confirm).setOnClickListener {
             dismiss()
         }
-        var errMessageHead: String
-        if (errList[0].length > 5){
-            errMessageHead = "${errList[0].substring(0..4)}.."
-        }
-        errMessageHead = errList[0]
+        var errMessageHead: String?
+        val errMessage: String
+        errMessageHead = errList.firstOrNull { it.trim().isNotBlank() }
 
-        val errMessage = "${errMessageHead}等${errList.size}人信息有误\\n请重新输入"
+        if (errMessageHead.isNullOrBlank()) {
+            errMessage = "输入信息有误\n请重新输入"
+        } else {
+            if (errMessageHead.length > 5)
+                errMessageHead = "${errMessageHead.substring(0..4)}.."
+            errMessage = "${errMessageHead}等${errList.size}人信息有误\n请重新输入"
+        }
         findViewById<TextView>(R.id.noclass_batch_tv_query_err_hint).text = errMessage
     }
 }

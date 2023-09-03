@@ -25,6 +25,14 @@ class BatchAdditionViewModel : BaseViewModel() {
     private val _infoCheckResult = MutableLiveData<NoClassBatchResponseInfo>()
 
     /**
+     * 获取传入信息的检查结果 （事件）
+     *
+     * **tip**-该事件 与 点击获取检查结果的”行为“强关联
+     */
+    val getInfoCheckResult = _infoCheckResult.asShareFlow()
+
+
+    /**
      * 分组是否新建成功，返回-1为创建失败，其它为成功
      */
     val isCreateSuccess: LiveData<NoclassGroupId> get() = _isCreateSuccess
@@ -36,12 +44,26 @@ class BatchAdditionViewModel : BaseViewModel() {
     val selectedSameNameStudents: LiveData<List<Pair<String, String>>> get() = _selectedSameNameStudents
     private val _selectedSameNameStudents = MutableLiveData<List<Pair<String, String>>>()
 
+    /**
+     * 获取被选中的重名学生列表 （事件）
+     *
+     * **tip**-该事件 与 点击提交被选中的重名学生的”行为“强关联
+     */
+    val getSelectedSameNameStudents = _selectedSameNameStudents.asShareFlow()
+
 
     /**
      * 已经检查好的要进行批量添加的学生列表, 列表元素类型为 “学号-姓名”对
      */
     val batchAdditionStudents: LiveData<List<Pair<String, String>>> get() = _batchAdditionStudents
     private val _batchAdditionStudents = MutableLiveData<List<Pair<String, String>>>()
+
+    /**
+     * 获取要进行批量添加的学生列表 （事件）
+     *
+     * **tip**-该事件 与 点击查询按钮按照既定流程完成相关操作的”行为“强关联
+     */
+    val getBatchAdditionStudents = _batchAdditionStudents.asShareFlow()
 
     /**
      * 获取传入信息的检查结果
@@ -63,15 +85,32 @@ class BatchAdditionViewModel : BaseViewModel() {
 //                        "大碗宽面"
                     ),
                     normal = listOf(
-                        NoClassBatchResponseInfo.Normal("2022121391","张三"),
-                        NoClassBatchResponseInfo.Normal("2022121392","李四"),
-                        NoClassBatchResponseInfo.Normal("2021121393","王五")
+//                        NoClassBatchResponseInfo.Normal("2022121391","张三"),
+//                        NoClassBatchResponseInfo.Normal("2022121392","李四"),
+//                        NoClassBatchResponseInfo.Normal("2021121393","王五")
+                        NoClassBatchResponseInfo.Normal("2021212561","胡蜀军"),
+                        NoClassBatchResponseInfo.Normal("2021212562","胡2"),
+                        NoClassBatchResponseInfo.Normal("2021212563","胡3"),
+                        NoClassBatchResponseInfo.Normal("2021212564","胡4"),
+                        NoClassBatchResponseInfo.Normal("2021212565","胡5"),
+                        NoClassBatchResponseInfo.Normal("2021212566","胡6"),
+                        NoClassBatchResponseInfo.Normal("2021212567","胡7"),
+                        NoClassBatchResponseInfo.Normal("2021212568","胡8"),
+                        NoClassBatchResponseInfo.Normal("2021212569","胡8"),
+                        NoClassBatchResponseInfo.Normal("2021212570","李1"),
+                        NoClassBatchResponseInfo.Normal("2021212571","王2")
                     ),
                     repeat = listOf(
                         NoClassBatchResponseInfo.Student("2021121393","黎明(假学号，会失败)","大数据管理与应用","114514"),
                         NoClassBatchResponseInfo.Student("2021121394","黎明(假学号，会失败)","大数据管理与应用","114514"),
                         NoClassBatchResponseInfo.Student("2021121395","李明(假学号，会失败)","大数据管理与应用","114514"),
                         NoClassBatchResponseInfo.Student("2021121396","李明(假学号，会失败)","大数据管理与应用","114514"),
+                        NoClassBatchResponseInfo.Student("2021121397","李明(假学号，会失败)","大数据管理与应用","114514"),
+                        NoClassBatchResponseInfo.Student("2021121398","李明(假学号，会失败)","大数据管理与应用","114514"),
+                        NoClassBatchResponseInfo.Student("2021121399","李明(假学号，会失败)","大数据管理与应用","114514"),
+                        NoClassBatchResponseInfo.Student("2021121400","李明(假学号，会失败)","大数据管理与应用","114514"),
+                        NoClassBatchResponseInfo.Student("2021121401","李明(假学号，会失败)","大数据管理与应用","114514"),
+                        NoClassBatchResponseInfo.Student("2021121402","李明(假学号，会失败)","大数据管理与应用","114514"),
                     )
                 )
                 _infoCheckResult.postValue(falseData)
@@ -85,7 +124,7 @@ class BatchAdditionViewModel : BaseViewModel() {
     /**
      * 新建分组（上传分组）
      */
-    fun postNoclassGroup(
+    private fun postNoClassGroup(
         name: String,
         stuNums: String
     ) {
@@ -95,7 +134,6 @@ class BatchAdditionViewModel : BaseViewModel() {
                 toast("网络异常") // 请求异常
             }.doOnError {
                 _isCreateSuccess.postValue(NoclassGroupId(-1))
-                Log.e("ListGroupError", it.toString())
             }.safeSubscribeBy {
                 _isCreateSuccess.postValue(it)
             }

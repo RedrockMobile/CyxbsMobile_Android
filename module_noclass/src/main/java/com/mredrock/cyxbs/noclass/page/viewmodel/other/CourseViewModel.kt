@@ -5,6 +5,7 @@ import androidx.lifecycle.MutableLiveData
 import com.mredrock.cyxbs.api.course.ILessonService
 import com.mredrock.cyxbs.lib.base.ui.BaseViewModel
 import com.mredrock.cyxbs.lib.utils.service.impl
+import com.mredrock.cyxbs.lib.utils.utils.LogUtils
 import com.mredrock.cyxbs.noclass.bean.NoClassSpareTime
 import com.mredrock.cyxbs.noclass.bean.Student
 import com.mredrock.cyxbs.noclass.bean.toSpareTime
@@ -53,6 +54,12 @@ class CourseViewModel : BaseViewModel(){
             )
     }
     fun getLessonsFromNum2Name(stuNumList: List<String>, num2namePair: List<Pair<String,String>>){
+        if (stuNumList.isEmpty() || num2namePair.isEmpty())
+            return
+        if (stuNumList.size != num2namePair.size){
+            LogUtils.d("","getFreeLessons param length error")
+            return
+        }
         val studentsLessons = mutableMapOf<Int,List<ILessonService.Lesson>>()
         Observable.fromIterable(num2namePair)
             .concatMap {

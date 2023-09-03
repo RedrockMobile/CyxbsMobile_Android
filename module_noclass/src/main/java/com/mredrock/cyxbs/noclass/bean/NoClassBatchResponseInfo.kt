@@ -12,10 +12,14 @@ import java.io.Serializable
  *
  */
 data class NoClassBatchResponseInfo(
+    @SerializedName("isWrong")
     val isWrong : Boolean,
+    @SerializedName("errList")
     val errList: List<String>,
-    val normal: List<Normal>,
-    val repeat: List<Student>
+    @SerializedName("normal")
+    val normal: List<Normal>?,
+    @SerializedName("repeat")
+    val repeat: List<Student>?
 ){
     data class Normal(
         @SerializedName("stu_num")
@@ -24,9 +28,13 @@ data class NoClassBatchResponseInfo(
         val name:String
     )
     data class Student(
+        @SerializedName("stunum")
         val id: String,
+        @SerializedName("name")
         val name:String,
+        @SerializedName("major")
         val major: String,
+        @SerializedName("classnum")
         val classNum: String,
         var isSelected: Boolean = false
     )

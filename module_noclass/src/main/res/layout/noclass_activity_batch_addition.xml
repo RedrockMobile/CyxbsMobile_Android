@@ -15,7 +15,7 @@
         <androidx.appcompat.widget.Toolbar
             android:id="@+id/tb_noclass_batch"
             android:layout_width="match_parent"
-            android:layout_height="37dp"
+            android:layout_height="53dp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
@@ -30,18 +30,20 @@
                     android:id="@+id/noclass_batch_iv_back"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:layout_marginBottom="7dp"
                     android:paddingTop="2dp"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="parent"
+
                     app:srcCompat="@drawable/noclass_ic_batch_page_back"
                     tools:ignore="ContentDescription" />
 
                 <TextView
                     android:layout_width="wrap_content"
-                    android:layout_height="match_parent"
+                    android:layout_height="wrap_content"
                     android:layout_marginStart="10dp"
                     android:gravity="center_vertical"
+                    android:paddingTop="17dp"
                     android:text="批量添加"
                     android:textColor="@color/noclass_primary_text_color"
                     android:textSize="21sp"
