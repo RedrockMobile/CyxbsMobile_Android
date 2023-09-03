@@ -38,8 +38,12 @@ class FairgroundPageFragment : BaseFragment(R.layout.main_fragment_fairground) {
     private val tvDays by R.id.main_tv_days.view<TextView>()
     private val tvNickname by R.id.tv_nickname.view<TextView>()
     private val ivHead by R.id.main_iv_head.view<ImageView>()
-    private val ivActivity by R.id.main_fairground_iv_dctivity.view<ImageView>()
-    private val btActivity by R.id.main_fairground_bt_dctivity.view<Button>()
+    private val ivActivity by R.id.main_fairground_iv_activity.view<ImageView>()
+    private val btActivity by R.id.main_fairground_bt_activity.view<Button>()
+    private val btFood by R.id.main_fairground_bt_food.view<Button>()
+    private val ivFood by R.id.main_fairground_iv_food.view<ImageView>()
+    private val btSquare by R.id.main_fairground_bt_square.view<Button>()
+    private val ivSquare by R.id.main_fairground_iv_square.view<ImageView>()
     @SuppressLint("SetTextI18n", "SuspiciousIndentation")
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -53,6 +57,18 @@ class FairgroundPageFragment : BaseFragment(R.layout.main_fragment_fairground) {
             }
             btActivity.setOnClickListener {
                 ServiceManager.activity(UFIELD_ACTIVITY)
+            }
+            btFood.setOnClickListener {
+                //跳美食
+            }
+            ivFood.setOnClickListener {
+                //跳美食
+            }
+            btSquare.setOnClickListener {
+                //跳广场
+            }
+            ivSquare.setOnClickListener {
+                //跳广场
             }
             val text = "这是你来到邮乐园的第 $it 天"
 
