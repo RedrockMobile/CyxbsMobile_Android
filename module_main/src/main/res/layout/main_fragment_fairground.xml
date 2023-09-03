@@ -64,6 +64,7 @@
     </androidx.constraintlayout.widget.ConstraintLayout>
 
     <ImageView
+        android:id="@+id/main_fairground_iv_food"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:src="@drawable/main_ic_food"
@@ -75,6 +76,7 @@
         app:layout_constraintVertical_bias="0.301" />
 
     <Button
+        android:id="@+id/main_fairground_bt_food"
         android:layout_width="142dp"
         android:layout_height="55dp"
         android:text="美食咨询处"
@@ -90,6 +92,7 @@
         app:layout_constraintVertical_bias="0.45" />
 
     <ImageView
+        android:id="@+id/main_fairground_iv_square"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:src="@drawable/main_ic_square"
@@ -101,6 +104,7 @@
         app:layout_constraintVertical_bias="0.529" />
 
     <Button
+        android:id="@+id/main_fairground_bt_square"
         android:layout_width="125dp"
         android:layout_height="50dp"
         android:background="@drawable/main_ic_fairgroundbutton"
@@ -116,7 +120,7 @@
         app:layout_constraintVertical_bias="0.665" />
 
     <ImageView
-        android:id="@+id/main_fairground_iv_dctivity"
+        android:id="@+id/main_fairground_iv_activity"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:src="@drawable/main_ic_activity"
@@ -128,7 +132,7 @@
         app:layout_constraintVertical_bias="0.80" />
 
     <Button
-        android:id="@+id/main_fairground_bt_dctivity"
+        android:id="@+id/main_fairground_bt_activity"
         android:layout_width="142dp"
         android:layout_height="55dp"
         android:background="@drawable/main_ic_fairgroundbutton"
