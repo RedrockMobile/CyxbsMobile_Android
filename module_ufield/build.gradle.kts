@@ -6,7 +6,6 @@ plugins {
 dependLibBase()
 dependLibConfig()
 dependLibUtils()
-dependLibCommon()
 
 //使用ARouter
 useARouter()
@@ -21,8 +20,7 @@ dependCoroutines()
 dependSmartRefreshLayout()
 //使用对话框
 dependMaterialDialog()
-//使用room(可能要用)
-dependRoom()
+
 //使用viewmodel livedata
 dependLifecycleKtx()
 //android常用库
