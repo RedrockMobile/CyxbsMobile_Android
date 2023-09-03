@@ -1,0 +1,41 @@
+package com.mredrock.cyxbs.declare.pages.post.net
+
+import com.google.gson.Gson
+import com.mredrock.cyxbs.declare.pages.post.bean.PostReqBean
+import com.mredrock.cyxbs.lib.utils.network.ApiStatus
+import com.mredrock.cyxbs.lib.utils.network.ApiWrapper
+import com.mredrock.cyxbs.lib.utils.network.IApi
+import com.mredrock.cyxbs.lib.utils.network.api
+import io.reactivex.rxjava3.core.Single
+import okhttp3.MediaType.Companion.toMediaType
+import okhttp3.RequestBody
+import okhttp3.RequestBody.Companion.toRequestBody
+import retrofit2.http.Body
+import retrofit2.http.Headers
+import retrofit2.http.POST
+
+/**
+ * com.mredrock.cyxbs.declare.pages.post.net.PostApiService.kt
+ * CyxbsMobile_Android
+ *
+ * @author 寒雨
+ * @since 2023/3/17 下午12:02
+ */
+interface PostApiService : IApi {
+    @POST("magipoke-attitude/declare")
+    @Headers("Content-Type: application/json")
+    fun postVote(
+        @Body
+        body: RequestBody
+    ): Single<ApiStatus>
+
+    companion object : PostApiService by PostApiService::class.api {
+
+        private val gson = Gson()
+        private val json = "application/json".toMediaType()
+
+        fun postVote(title: String, choices: List<String>): Single<ApiStatus> {
+            return postVote(gson.toJson(PostReqBean(title, choices)).toRequestBody(json))
+        }
+    }
+}
