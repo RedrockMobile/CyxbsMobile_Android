@@ -25,7 +25,6 @@ dependMaterialDialog()
 dependLifecycleKtx()
 //android常用库
 dependAndroidView()
-dependGlide()
 
 dependUCrop()
 dependencies {

@@ -6,7 +6,7 @@
     android:layout_height="match_parent"
     android:background="@color/uField_todo_background"
     android:orientation="vertical"
-    tools:context=".lyt.ui.CheckActivity">
+    tools:context=".ui.activity.CheckActivity">
 
     <LinearLayout
         android:layout_width="match_parent"
