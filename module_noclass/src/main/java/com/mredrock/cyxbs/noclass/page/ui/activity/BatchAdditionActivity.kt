@@ -2,7 +2,6 @@ package com.mredrock.cyxbs.noclass.page.ui.activity
 
 import android.content.Intent
 import android.os.Bundle
-import android.util.Log
 import android.view.View
 import android.view.WindowManager
 import android.widget.Button
@@ -11,6 +10,7 @@ import android.widget.FrameLayout
 import android.widget.ImageView
 import androidx.activity.OnBackPressedCallback
 import androidx.activity.viewModels
+import androidx.lifecycle.lifecycleScope
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.mredrock.cyxbs.config.sp.defaultSp
 import com.mredrock.cyxbs.lib.base.ui.BaseActivity
@@ -26,6 +26,8 @@ import com.mredrock.cyxbs.noclass.page.ui.fragment.NoClassCourseVpFragment
 import com.mredrock.cyxbs.noclass.page.viewmodel.activity.BatchAdditionViewModel
 import com.mredrock.cyxbs.noclass.page.viewmodel.other.CourseViewModel
 import com.mredrock.cyxbs.noclass.util.InputFormatUtil
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 
 /**
  * ...
@@ -58,6 +60,9 @@ class BatchAdditionActivity : BaseActivity() {
     // 批量添加 已经检查好的学生的学号list
     private var tempStuNumList = mutableListOf<String>()
 
+    // 状态位，是否已经将最新的一次成功查询的结果中的normal信息添加到了tempPreparedList中
+    private var isSuccessSaveLatestNormal = false
+
     /**
      * 绑定部分view的实例
      */
@@ -75,6 +80,7 @@ class BatchAdditionActivity : BaseActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.noclass_activity_batch_addition)
         initBackCallBack()
+        initAction()
         initObserve()
         initInteractView()
         initCourse()
@@ -94,7 +100,7 @@ class BatchAdditionActivity : BaseActivity() {
         //防止软键盘弹起导致视图错位
         window.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_NOTHING)
         batchInputBox.hint =
-            "样例输入1:卷卷\n                   卷娘\n样例输入2:2022213333\n                   2011118888\n错误输入1:卷卷，卷娘\n                   卷卷，卷娘\n错误输入2:卷卷\n                   2022222222"
+            "样例输入1:卷卷\n                    卷娘\n样例输入2:2022213333\n                    2011118888\n错误输入1:卷卷，卷娘\n                    卷卷，卷娘\n错误输入2:卷卷\n                    2022222222"
 
     }
 
@@ -122,10 +128,15 @@ class BatchAdditionActivity : BaseActivity() {
      * 执行搜索操作
      */
     private fun doSearch() {
-        // 输入框内容的合法性检测
-        val contentList = batchInputBox.text.toString().split("\n")
-        // 状态位 , 输入内容是否符合标准
-        var standardFlag = true
+        // 首先进行输入框内容的合法性检测
+        val contentList = batchInputBox.text.toString().trim().split("\n").map { it.trim() }
+
+        /**
+         * 去除字符串所有空格
+         * str.replace("\\s".toRegex(), "")
+         */
+        // 状态位 , 输入内容是否符合已定义的标准
+        var standardFlag: Boolean
         // 0为未在已有字符串标准找到, 1为纯数字序列标准, 2为纯汉字序列标准
         val standardType = InputFormatUtil.isWhatType(contentList[0])
 
@@ -160,7 +171,7 @@ class BatchAdditionActivity : BaseActivity() {
             // 发起信息检查请求
             batchAdditionViewModel.getCheckUploadInfoResult(contentList)
         } else {
-            // 显示格式有误
+            // 格式有误，显示对应dialog
             BatchInputErrorDialog(this).show()
         }
 
@@ -171,55 +182,76 @@ class BatchAdditionActivity : BaseActivity() {
         freeCourseViewModel.noclassData.observe(this) {
             mCourseSheetBehavior.state = BottomSheetBehavior.STATE_EXPANDED
         }
+    }
 
-        // 观察infoCheckResult数据, 数据更新后进行处理
-        batchAdditionViewModel.infoCheckResult.observe(this) {
+    /**
+     * 初始化一些与行为强关联的逻辑
+     */
+    private fun initAction() {
+        batchAdditionViewModel.getInfoCheckResult.collectLaunch {
             if (it.isWrong) { // 检查后发现数据有误，即it.errList不为空
                 BatchQueryErrorDialog(this, it.errList).show()
-                return@observe
+                return@collectLaunch
             }
-
-            if (it.repeat.isNotEmpty()) {
+            isSuccessSaveLatestNormal = false
+            if (!it.repeat.isNullOrEmpty()) {
                 // 弹出重名的信息
                 SameNameSelectionDialog(it.repeat).show(
                     supportFragmentManager,
                     "SameNameSelectionDialog"
                 )
             }
-            // 暂存normal的返回数据，待到重名信息选择完毕之后再一起给到ViewModel
+            // 暂存最新normal的返回数据，待到重名信息选择完毕之后再一起给到ViewModel进行空闲课表的网络请求
             tempPreparedList.clear()
             tempStuNumList.clear()
             tempPreparedList = mutableListOf()
             tempStuNumList = mutableListOf()
-            it.normal.forEach { normal ->
+            it.normal?.forEach { normal ->
                 tempPreparedList.add(Pair(normal.id, normal.name))
                 tempStuNumList.add(normal.id)
             }
-        }
-
-        // 观察isCreateSuccess数据（即新建分组是否成功）, 数据更新后进行处理
-        batchAdditionViewModel.isCreateSuccess.observe(this) {
-
-        }
-
-        // 观察selectedSameNameStudents数据，即是否进行了重名学生的选择, 数据更新代表完成了新一次的选择
-        batchAdditionViewModel.selectedSameNameStudents.observe(this) {
-            Log.d("ProgressTest", "检测到进行了重名学生的选择")
-            tempPreparedList.addAll(it)
-            it.forEach { selected ->
-                tempStuNumList.add(selected.first)
+            isSuccessSaveLatestNormal = true
+            if (it.repeat.isNullOrEmpty()) { // 没有重名信息数组
+                if(tempPreparedList.isNotEmpty())
+                    freeCourseViewModel.getLessonsFromNum2Name(tempStuNumList, tempPreparedList)
+                else
+                    "没有查到任何结果o(╥﹏╥)o".toast()
             }
-            batchAdditionViewModel.setPreparedStudents(tempPreparedList)
         }
 
-        // 观察batchAdditionStudents数据, 数据更新就执行查询空闲课程的操作
-        batchAdditionViewModel.batchAdditionStudents.observe(this) {
-            Log.d("ProgressTest", "进行空闲课表查询")
-            val tempList = mutableListOf<String>() // 临时的stuNumList
-            it.forEach { pair ->
-                tempList.add(pair.first)
+        batchAdditionViewModel.getSelectedSameNameStudents.collectLaunch {
+            if (it.isEmpty()) {  // 有重名学生，但未进行重名学生的选择
+                waitLatestNormalSave {
+                    if(tempPreparedList.isNotEmpty())
+                        freeCourseViewModel.getLessonsFromNum2Name(tempStuNumList, tempPreparedList)
+                    else
+                        "没有查到任何结果o(╥﹏╥)o".toast()
+                }
+                return@collectLaunch
             }
-            freeCourseViewModel.getLessonsFromNum2Name(tempList, it)
+            // 进行了重名学生的选择
+            waitLatestNormalSave {
+                tempPreparedList.addAll(it)
+                it.forEach { selected ->
+                    tempStuNumList.add(selected.first)
+                }
+                batchAdditionViewModel.setPreparedStudents(tempPreparedList)
+            }
+        }
+
+        batchAdditionViewModel.getBatchAdditionStudents.collectLaunch {
+            // 进行空闲课表查询
+            /**
+             * 下面这种获取StuNumList数据会更准确，但会更消耗时间
+             */
+//            val tempList = mutableListOf<String>() // 临时的stuNumList
+//            it.forEach { pair ->
+//                tempList.add(pair.first)
+//            }
+            if(tempPreparedList.isNotEmpty())
+                freeCourseViewModel.getLessonsFromNum2Name(tempStuNumList, it)
+            else
+                "没有查到任何结果o(╥﹏╥)o".toast()
         }
     }
 
@@ -302,5 +334,25 @@ class BatchAdditionActivity : BaseActivity() {
             }
         }
         onBackPressedDispatcher.addCallback(this, backCallBack)
+    }
+
+    /**
+     * 等待最新的请求到的normal数据遍历暂存完成
+     * @param daAfterFinished       最新的normal数据暂存完成后的操作
+     */
+    private fun waitLatestNormalSave(daAfterFinished: () -> Unit) {
+        if (isSuccessSaveLatestNormal) {
+            daAfterFinished.invoke()
+            return
+        }
+        lifecycleScope.launch {
+            while (true){
+                if (isSuccessSaveLatestNormal) {
+                    daAfterFinished.invoke()
+                    break
+                }
+                delay(200)
+            }
+        }
     }
 }

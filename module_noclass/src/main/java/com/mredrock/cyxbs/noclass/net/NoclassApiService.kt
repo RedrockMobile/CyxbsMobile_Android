@@ -8,7 +8,6 @@ import com.mredrock.cyxbs.noclass.bean.NoClassGroup
 import com.mredrock.cyxbs.noclass.bean.NoClassTemporarySearch
 import com.mredrock.cyxbs.noclass.bean.NoclassGroupId
 import com.mredrock.cyxbs.noclass.bean.Student
-import com.mredrock.cyxbs.noclass.bean.UploadBatchInfoToBean
 import io.reactivex.rxjava3.core.Single
 import retrofit2.http.*
 
@@ -98,8 +97,9 @@ interface NoclassApiService {
     /**
      * 批量添加的添加信息检查
      */
+    @FormUrlEncoded
     @POST("/magipoke-jwzx/no_class/member/check")
     fun checkUploadInfo(
-        @Body content : UploadBatchInfoToBean
+        @Field("content") content : List<String>
     ): Single<ApiWrapper<NoClassBatchResponseInfo>>
 }
