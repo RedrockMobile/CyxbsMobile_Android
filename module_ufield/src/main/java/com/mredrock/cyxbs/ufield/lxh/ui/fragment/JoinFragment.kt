@@ -1,7 +1,6 @@
 package com.mredrock.cyxbs.ufield.lxh.ui.fragment
 
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -38,15 +37,14 @@ class JoinFragment : BaseFragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        adapter = MsgAdapter()
+        mRecyclerView.adapter = adapter
+        mRecyclerView.layoutManager = LinearLayoutManager(context)
         mViewModel.joinMsg.observe(viewLifecycleOwner) {
-            Log.d("hui", "onViewCreated:$it")
             if (it.isEmpty()) {
                 mHaveMessage.gone()
                 mNoMessage.visible()
             } else {
-                adapter = MsgAdapter()
-                mRecyclerView.adapter = adapter
-                mRecyclerView.layoutManager = LinearLayoutManager(context)
                 mHaveMessage.visible()
                 adapter.submitList(it)
                 mNoMessage.gone()
