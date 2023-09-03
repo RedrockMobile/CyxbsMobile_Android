@@ -1,6 +1,5 @@
 package com.mredrock.cyxbs.ufield.lxh.viewmodel
 
-import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import com.mredrock.cyxbs.lib.base.ui.BaseViewModel
@@ -26,17 +25,11 @@ class MessageViewModel : BaseViewModel() {
             .mapOrThrowApiException()
             .doOnError {
                 toast("服务君似乎打盹了呢~")
-                Log.d("hui", "getAllMsg: $it")
             }.safeSubscribeBy {
                 _watchMsg.postValue(it.watchMsg)
-                Log.d("hui", "getAllMsg: ${it.watchMsg}")
                 _joinMsg.postValue(it.joinMsg)
-                Log.d("hui", "getAllMsg: ${it.joinMsg}")
                 _publishMsg.postValue(it.publishMsg)
-                Log.d("hui", "getAllMsg: ${it.publishMsg}")
                 _checkMsg.postValue(it.checkMsg)
-                Log.d("hui", "getAllMsg: ${it.checkMsg}")
-
             }
     }
 }
