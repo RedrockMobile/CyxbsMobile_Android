@@ -4,6 +4,7 @@ import android.annotation.SuppressLint
 import android.app.Activity
 import android.content.Intent
 import android.os.Bundle
+import android.os.CountDownTimer
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -78,6 +79,8 @@ class UserFragment : BaseFragment() {
     }
 
     private fun initView() {
+        // 获取最新的Notification数量，以初始化红点
+        getNewNotificationCount()
         //功能按钮
         context?.apply {
             mine_user_tv_dynamic_number.setOnSingleClickListener { doIfLogin { jump(QA_DYNAMIC_MINE) } }
@@ -186,6 +189,8 @@ class UserFragment : BaseFragment() {
 
             mine_user_iv_center_notification.setOnSingleClickListener {
                 ARouter.getInstance().build(NOTIFICATION_HOME).navigation()
+                // 进入消息中心，移除红点
+                mine_user_tv_center_notification_count.gone()
             }
             mine_user_iv_center_activity.setOnSingleClickListener {
                 doIfLogin {
@@ -290,7 +295,7 @@ class UserFragment : BaseFragment() {
         super.onStart()
         // 发送签到的通知
         NotificationUtils.tryNotificationSign(viewModel.status.value?.isChecked ?: false)
-        viewModel.getUFieldActivity()
+        /*
         viewModel.ufieldNewCount.observe(viewLifecycleOwner) {
             val list = it.filter { element ->
                 element.clicked == false
@@ -308,6 +313,7 @@ class UserFragment : BaseFragment() {
 
 
         }
+         */
     }
 
     override fun onResume() {
@@ -363,5 +369,25 @@ class UserFragment : BaseFragment() {
     private fun jumpAndSaveTime(path: String, type: Int) {
         viewModel.saveCheckTimeStamp(type)
         jump(path)
+    }
+    private fun getNewNotificationCount() {
+        // 消息中心的红点？（蓝点）显示逻辑
+        viewModel.newNotificationCount.observe(viewLifecycleOwner,object : Observer<Int>{
+            override fun onChanged(value: Int) {
+                viewModel.newNotificationCount.removeObserver(this)
+                if (value == 0) {
+                    mine_user_tv_center_notification_count.gone()
+                } else {
+                    mine_user_tv_center_notification_count.visible()
+                    if (value > 99) {
+                        mine_user_tv_center_notification_count.text = "99+"
+                    } else {
+                        mine_user_tv_center_notification_count.text = value.toString()
+                    }
+                }
+            }
+        })
+
+        viewModel.getNewNotificationCount()
     }
 }

@@ -214,6 +214,22 @@
                 app:layout_constraintTop_toTopOf="parent"
                 app:srcCompat="@drawable/mine_ic_notification_center" />
 
+            <TextView
+                android:id="@+id/mine_user_tv_center_notification_red_dot"
+                android:layout_width="15dp"
+                android:layout_height="15dp"
+                android:layout_marginStart="94dp"
+                android:layout_marginTop="25dp"
+                android:textSize="10sp"
+                android:lineHeight="12dp"
+                android:gravity="center"
+                android:textColor="#FFFFFF"
+                android:visibility="gone"
+                android:background="@drawable/mine_ic_new_notification_red_dot"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                tools:text="83"/>
+
             <ImageView
                 android:id="@+id/mine_user_iv_center_stamp"
                 android:layout_width="41dp"

@@ -9,10 +9,6 @@ import com.mredrock.cyxbs.lib.utils.extensions.unsafeSubscribeBy
 import com.mredrock.cyxbs.lib.utils.network.ApiStatus
 import com.mredrock.cyxbs.lib.utils.network.ApiWrapper
 import com.mredrock.cyxbs.lib.utils.network.mapOrInterceptException
-import com.redrock.module_notification.bean.AffairDateBean
-import com.redrock.module_notification.bean.CancelItineraryReminderUploadBean
-import com.redrock.module_notification.bean.ChangeItineraryAddStatusUploadBean
-import com.redrock.module_notification.bean.ChangeItineraryReadStatusUploadBean
 import com.redrock.module_notification.bean.MsgBeanData
 import com.redrock.module_notification.bean.ReceivedItineraryMsgBean
 import com.redrock.module_notification.bean.SentItineraryMsgBean
