@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <application
+        android:name="com.mredrock.cyxbs.lib.base.BaseApp"
+        android:allowBackup="true"
+        android:label="module_declare"
+        android:supportsRtl="true"
+        android:theme="@style/ConfigAppTheme">
+        <activity
+            android:name=".pages.main.page.activity.PostedActivity"
+            android:exported="false" />
+        <activity
+            android:name=".pages.detail.page.activity.DetailActivity"
+            android:exported="false">
+            <meta-data
+                android:name="android.app.lib_name"
+                android:value="" />
+        </activity>
+        <activity
+            android:name=".pages.main.page.activity.HomeActivity"
+            android:exported="false">
+            <meta-data
+                android:name="android.app.lib_name"
+                android:value="" />
+        </activity>
+        <activity
+            android:name="declare.ui.DebugActivity"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+        <activity
+            android:name=".pages.post.PostActivity" />
+    </application>
+
+</manifest>
