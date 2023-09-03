@@ -31,6 +31,15 @@ interface ILessonService : IProvider {
       get() = defaultSp.getBoolean("是否使用本地课表数据", false)
       set(value) = defaultSp.edit { putBoolean("是否使用本地课表数据", value) }
   }
+
+  /**
+   * 刷新当前学号的课
+   * - 上游已主动切换成 io 线程
+   * - 在得不到这个人课表数据时会抛出异常，比如学号为空串时
+   *
+   * @param isForce 如果为 false，则将使用掌邮应用生命周期内的临时缓存，而不再去网络请求
+   */
+  fun refreshLesson(stuNum: String, isForce: Boolean): Single<List<Lesson>>
   
   /**
    * 直接得到当前学号的课
