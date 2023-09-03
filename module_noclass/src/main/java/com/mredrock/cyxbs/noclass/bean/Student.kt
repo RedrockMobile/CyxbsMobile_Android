@@ -30,8 +30,10 @@ data class Student(
     val grade: String?,
   @SerializedName("major")
     val major: String?,
-  @SerializedName("stu_name")
+  @SerializedName("name")
   val name: String,
-  @SerializedName("stu_num")
+  @SerializedName("stunum")
   override val id: String,
+  @SerializedName("depart")
+  val depart : String?,   //depart是学院
   ) : Serializable,NoClassItem

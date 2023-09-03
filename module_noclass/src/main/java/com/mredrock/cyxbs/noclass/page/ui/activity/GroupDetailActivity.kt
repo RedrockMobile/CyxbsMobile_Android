@@ -164,7 +164,7 @@ class GroupDetailActivity : BaseActivity(){
         var searchAllDialog: SearchAllDialog?
         mViewModel.searchAll.observe(this){
             Log.d("lx", "searchResult: =${it}")
-            if (it != null) {
+            if (it?.types != null) {
                 searchAllDialog = SearchAllDialog(
                     searchResult = it,
                     groupId = mCurrentNoclassGroup.id

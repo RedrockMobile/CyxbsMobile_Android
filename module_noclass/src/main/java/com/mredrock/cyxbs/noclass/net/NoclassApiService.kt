@@ -90,7 +90,7 @@ interface NoclassApiService {
         @Query("stu") stu: String
     ): Single<ApiWrapper<List<Student>>>
 
-    @GET("/magipoke-jwzx/search")
+    @GET("/magipoke-jwzx/no_class/group/search/temporary")
     fun searchAll(
         @Query("key") key : String
     ) : Single<ApiWrapper<NoClassTemporarySearch>>

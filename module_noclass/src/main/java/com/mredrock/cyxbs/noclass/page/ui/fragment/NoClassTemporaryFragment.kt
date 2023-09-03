@@ -114,7 +114,7 @@ class NoClassTemporaryFragment : BaseFragment(R.layout.noclass_fragment_temporar
             layoutManager = LinearLayoutManager(requireContext())
             adapter = mAdapter.apply {
                 //加入本人
-                val list = listOf(Student("","","","",mUserName,mUserId))
+                val list = listOf(Student("","","","",mUserName,mUserId,""))
                 submitList(list)
                 setOnItemDelete {
                     deleteMember(it)
@@ -147,8 +147,8 @@ class NoClassTemporaryFragment : BaseFragment(R.layout.noclass_fragment_temporar
     private fun initObserver() {
         var searchAllDialog: SearchAllDialog?
         mViewModel.searchAll.observe(viewLifecycleOwner) {
-            if (it != null){
-                if (it.isSuccess()) {
+            if (it != null && it.isSuccess()){
+                if (it.data.types != null && it.data.types!!.isNotEmpty()) {
                     searchAllDialog = SearchAllDialog(it.data).apply {
                         setOnClickClass { cls ->
                             val clsList = mAdapter.currentList.toMutableSet()
