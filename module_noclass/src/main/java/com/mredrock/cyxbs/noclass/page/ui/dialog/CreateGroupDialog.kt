@@ -78,7 +78,7 @@ class CreateGroupDialog(
                     toast("似乎出现了什么问题呢,请稍后再试")
                 }
                 -2 -> {
-                    mTvHint.text = "和已有分组重名，再想想吧"
+                    mTvHint.text = "名称重复，请重新输入"
                     mTvHint.visibility = View.VISIBLE
                     createUndone(mTvHint)
                 }
@@ -133,7 +133,7 @@ class CreateGroupDialog(
                     0 -> {
                         etName.gravity = Gravity.NO_GRAVITY
                         tvName.visibility = View.VISIBLE
-                        mTvHint.text = "请输入你的分组名称"
+                        mTvHint.text = "名称不能为空"
                         mTvHint.visibility = View.VISIBLE
                     }
                     10 -> {
@@ -159,7 +159,7 @@ class CreateGroupDialog(
             setOnSingleClickListener {
                 if (etName.text.isEmpty()) {
                     createUndone(mTvHint)
-                    mTvHint.text = "请输入你的分组名称"
+                    mTvHint.text = "名称不能为空"
                     mTvHint.visibility = View.VISIBLE
                 } else {
                     val name = etName.text.toString()
