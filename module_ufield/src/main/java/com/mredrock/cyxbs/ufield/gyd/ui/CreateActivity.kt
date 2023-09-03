@@ -25,7 +25,6 @@ import android.widget.FrameLayout
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.activity.result.contract.ActivityResultContracts
-import androidx.appcompat.widget.Toolbar
 import androidx.cardview.widget.CardView
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
@@ -37,15 +36,14 @@ import com.bigkoo.pickerview.builder.OptionsPickerBuilder
 import com.bigkoo.pickerview.builder.TimePickerBuilder
 import com.bigkoo.pickerview.view.OptionsPickerView
 import com.bigkoo.pickerview.view.TimePickerView
-
 import com.mredrock.cyxbs.lib.base.ui.BaseActivity
-
 import com.mredrock.cyxbs.lib.utils.extensions.gone
-
 import com.mredrock.cyxbs.ufield.R
 import com.mredrock.cyxbs.ufield.gyd.viewmodel.CreateViewModel
-
 import com.yalantis.ucrop.UCrop
+import okhttp3.MediaType.Companion.toMediaTypeOrNull
+import okhttp3.RequestBody
+import okhttp3.RequestBody.Companion.toRequestBody
 import java.io.File
 import java.io.FileOutputStream
 import java.io.IOException
@@ -202,7 +200,7 @@ class CreateActivity : BaseActivity() {
                 }
             }
 
-            cornerRadius(res = com.mredrock.cyxbs.common.R.dimen.common_corner_radius)
+            cornerRadius(16F)
         }
     }
 
@@ -381,12 +379,6 @@ class CreateActivity : BaseActivity() {
         options.setCropGridStrokeWidth(5)
         options.setCompressionFormat(Bitmap.CompressFormat.PNG)
         options.setCompressionQuality(100)
-        options.setLogoColor(
-            ContextCompat.getColor(
-                this,
-                com.mredrock.cyxbs.common.R.color.common_level_two_font_color
-            )
-        )
         options.setToolbarColor(
             ContextCompat.getColor(this, com.mredrock.cyxbs.config.R.color.colorPrimaryDark)
         )
@@ -593,29 +585,29 @@ class CreateActivity : BaseActivity() {
                     setOnClickListener {
                         if (isCovered) {
                             viewModel.postActivityWithCover(
-                                name,
-                                selectedType,
-                                selectedStartTimestamp.toInt(),
-                                selectedEndTimestamp.toInt(),
-                                address,
-                                way,
-                                sponsor,
-                                phone,
-                                introduce,
+                               getMap( name,
+                                   selectedType,
+                                   selectedStartTimestamp.toInt(),
+                                   selectedEndTimestamp.toInt(),
+                                   address,
+                                   way,
+                                   sponsor,
+                                   phone,
+                                   introduce),
                                 coverFile
                             )
                             setOnClickListener(null)
                         } else {
                             viewModel.postActivityNotCover(
-                                name,
-                                selectedType,
-                                selectedStartTimestamp.toInt(),
-                                selectedEndTimestamp.toInt(),
-                                address,
-                                way,
-                                sponsor,
-                                phone,
-                                introduce
+                                getMap( name,
+                                    selectedType,
+                                    selectedStartTimestamp.toInt(),
+                                    selectedEndTimestamp.toInt(),
+                                    address,
+                                    way,
+                                    sponsor,
+                                    phone,
+                                    introduce)
                             )
                             setOnClickListener(null)
 
@@ -631,6 +623,31 @@ class CreateActivity : BaseActivity() {
             btCreate.setBackgroundResource(R.drawable.ufield_shape_createbutton)
             btCreate.setOnClickListener(null)
         }
+    }
+
+    fun getMap(
+        activityTitle: String,
+        activityType: String,
+        activityStartAt: Int,
+        activityEndAt: Int,
+        activityPlace: String,
+        activityRegistrationType: String,
+        activityOrganizer: String,
+        creatorPhone: String,
+        activityDetail: String
+    ): MutableMap<String, RequestBody> {
+        val map = mutableMapOf<String, RequestBody>()
+        map["activity_title"] =
+            activityTitle.toRequestBody("multipart/form-data".toMediaTypeOrNull())
+        map["activity_type"]=activityType.toRequestBody("multipart/form-data".toMediaTypeOrNull())
+        map["activity_start_at"]=activityStartAt.toString().toRequestBody("multipart/form-data".toMediaTypeOrNull())
+        map["activity_end_at"]=activityEndAt.toString().toRequestBody("multipart/form-data".toMediaTypeOrNull())
+        map["activity_place"]=activityPlace.toRequestBody("multipart/form-data".toMediaTypeOrNull())
+        map["activity_registration_type"]= activityRegistrationType.toRequestBody("multipart/form-data".toMediaTypeOrNull())
+map["activity_organizer"]=activityOrganizer.toRequestBody("multipart/form-data".toMediaTypeOrNull())
+        map["creator_phone"]=creatorPhone.toRequestBody("multipart/form-data".toMediaTypeOrNull())
+        map["activity_detail"]=activityDetail.toRequestBody("multipart/form-data".toMediaTypeOrNull())
+        return map
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
