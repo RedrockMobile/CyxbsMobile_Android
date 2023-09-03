@@ -5,7 +5,6 @@ import android.os.Bundle
 import android.os.CountDownTimer
 import android.widget.ImageView
 import android.widget.TextView
-import androidx.appcompat.widget.Toolbar
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.constraintlayout.widget.ConstraintSet
 import androidx.core.content.ContextCompat
@@ -78,24 +77,14 @@ class DetailActivity : BaseActivity() {
         setContentView(R.layout.activity_detail)
         layout = findViewById(R.id.ufield_layout_wantsee)
         initView()
-        //Log.d("827857", "测试结果-->> $id");
         viewModel.wantToSee.observe(this) {
             if (it) {
+                //在将文本替换为“已想看”后，修改文本位置，使其位于中心
                 toast("想看成功")
                 tvSee.apply {
                     text = "已想看"
                     setTextColor(ContextCompat.getColor(this@DetailActivity, R.color.seecolor))
-                    val layoutParams = ConstraintLayout.LayoutParams(
-                        ConstraintLayout.LayoutParams.WRAP_CONTENT,
-                        ConstraintLayout.LayoutParams.WRAP_CONTENT
-                    )
-                    layoutParams.startToStart = ConstraintSet.PARENT_ID
-                    layoutParams.endToEnd = ConstraintSet.PARENT_ID
-                    layoutParams.topToTop = ConstraintSet.PARENT_ID
-                    layoutParams.bottomToBottom = ConstraintSet.PARENT_ID
-                    layoutParams.horizontalBias = 0.5f
-                    layoutParams.verticalBias = 0.5f
-                    tvSee.layoutParams=layoutParams
+                    tvSee.layoutParams =getConstrainLayoutParams()
                     ivAdd.gone()
                 }
                 layout.apply {
@@ -108,6 +97,19 @@ class DetailActivity : BaseActivity() {
             }
         }
 
+    }
+    private fun getConstrainLayoutParams():ConstraintLayout.LayoutParams{
+        val layoutParams = ConstraintLayout.LayoutParams(
+            ConstraintLayout.LayoutParams.WRAP_CONTENT,
+            ConstraintLayout.LayoutParams.WRAP_CONTENT
+        )
+        layoutParams.startToStart = ConstraintSet.PARENT_ID
+        layoutParams.endToEnd = ConstraintSet.PARENT_ID
+        layoutParams.topToTop = ConstraintSet.PARENT_ID
+        layoutParams.bottomToBottom = ConstraintSet.PARENT_ID
+        layoutParams.horizontalBias = 0.5f
+        layoutParams.verticalBias = 0.5f
+        return layoutParams
     }
 
     @SuppressLint("SetTextI18n")
@@ -135,28 +137,18 @@ class DetailActivity : BaseActivity() {
             ivCover.setImageFromUrl(it.data.activity_cover_url)
             tvStart.text = trans(it.data.activity_start_at)
             tvEnd.text = trans(it.data.activity_end_at)
-            if(it.data.activity_state!="published"){
+            if (it.data.activity_state != "published") {
                 layout.gone()
                 tvGoing.gone()
                 ivGoing.gone()
             }
             if (it.data.want_to_watch) {
+                //在将文本替换为“已想看”后，修改文本位置，使其位于中心
                 tvSee.text = "已想看"
                 tvSee.setTextColor(ContextCompat.getColor(this, R.color.seecolor))
-                val layoutParams = ConstraintLayout.LayoutParams(
-                    ConstraintLayout.LayoutParams.WRAP_CONTENT,
-                    ConstraintLayout.LayoutParams.WRAP_CONTENT
-                )
-
-                layoutParams.startToStart = ConstraintSet.PARENT_ID
-                layoutParams.endToEnd = ConstraintSet.PARENT_ID
-                layoutParams.topToTop = ConstraintSet.PARENT_ID
-                layoutParams.bottomToBottom = ConstraintSet.PARENT_ID
-                layoutParams.horizontalBias = 0.5f
-                layoutParams.verticalBias = 0.5f
-                tvSee.layoutParams=layoutParams
-                ivAdd.gone()
+                tvSee.layoutParams = getConstrainLayoutParams()
                 layout.setBackgroundResource(R.drawable.ufield_shape_haveseen)
+                ivAdd.gone()
             } else {
                 layout.setOnClickListener {
                     viewModel.wantToSee(id)
@@ -171,66 +163,68 @@ class DetailActivity : BaseActivity() {
                 tvMinutes.gone()
                 tvSeconds.gone()
             } else {
-                // 活动开始时间戳和结束时间戳（以秒为单位）
-                val startTimeInSeconds = it.data.activity_start_at
-
-                val currentTimeInSeconds = System.currentTimeMillis() / 1000
-
-                // 判断活动状态
-                if (currentTimeInSeconds < startTimeInSeconds) {
-                    // 距离开始的剩余时间
-                    val remainingTimeInSeconds = startTimeInSeconds - currentTimeInSeconds
-
-                    // 创建并启动倒计时
-                    countDownTimer =
-                        object : CountDownTimer(remainingTimeInSeconds * 1000, 1000) {
-                            @SuppressLint("UseCompatLoadingForDrawables")
-                            override fun onTick(millisUntilFinished: Long) {
-                                val days =
-                                    floor(millisUntilFinished / (1000 * 60 * 60 * 24.0))
-                                        .toLong()
-                                val hours =
-                                    floor((millisUntilFinished % (1000 * 60 * 60 * 24.0)) / (1000 * 60 * 60.0))
-                                        .toLong()
-                                val minutes =
-                                    floor((millisUntilFinished % (1000 * 60 * 60.0)) / (1000 * 60.0))
-                                        .toLong()
-                                val seconds =
-                                    floor((millisUntilFinished % (1000 * 60.0)) / 1000)
-                                        .toLong()
-                                tvTimeHead.text="距离结束还有"
-                                tvDay.text="天"
-                                tvHour.text="小时"
-                                tvMinute.text="分"
-                                tvSecond.text="秒"
-                                tvDays.text="$days"
-                                tvHours.text="$hours"
-                                tvMinutes.text="$minutes"
-                                tvSeconds.text="$seconds"
-                            }
-                            override fun onFinish() {
-                                // 倒计时结束处理逻辑
-                                tvTime.text = "活动开始"
-                                tvDays.gone()
-                                tvHours.gone()
-                                tvMinutes.gone()
-                                tvSeconds.gone()
-                            }
-                        }
-
-                    countDownTimer.start()
-                } else {
-                    tvTime.text = "活动进行中"
-                    tvDays.gone()
-                    tvHours.gone()
-                    tvMinutes.gone()
-                    tvSeconds.gone()
-                }
+               startDownTimer(it.data.activity_start_at)
             }
         }
 
     }
+    fun startDownTimer(startTime:Long){
+        // 活动开始时间戳和结束时间戳（以秒为单位）
 
+        val currentTimeInSeconds = System.currentTimeMillis() / 1000
+
+        // 判断活动状态
+        if (currentTimeInSeconds < startTime) {
+            // 距离开始的剩余时间
+            val remainingTimeInSeconds = startTime - currentTimeInSeconds
+
+            // 创建并启动倒计时
+            countDownTimer =
+                object : CountDownTimer(remainingTimeInSeconds * 1000, 1000) {
+                    @SuppressLint("UseCompatLoadingForDrawables")
+                    override fun onTick(millisUntilFinished: Long) {
+                        val days =
+                            floor(millisUntilFinished / (1000 * 60 * 60 * 24.0))
+                                .toLong()
+                        val hours =
+                            floor((millisUntilFinished % (1000 * 60 * 60 * 24.0)) / (1000 * 60 * 60.0))
+                                .toLong()
+                        val minutes =
+                            floor((millisUntilFinished % (1000 * 60 * 60.0)) / (1000 * 60.0))
+                                .toLong()
+                        val seconds =
+                            floor((millisUntilFinished % (1000 * 60.0)) / 1000)
+                                .toLong()
+                        tvTimeHead.text = "距离结束还有"
+                        tvDay.text = "天"
+                        tvHour.text = "小时"
+                        tvMinute.text = "分"
+                        tvSecond.text = "秒"
+                        tvDays.text = "$days"
+                        tvHours.text = "$hours"
+                        tvMinutes.text = "$minutes"
+                        tvSeconds.text = "$seconds"
+                    }
+
+                    override fun onFinish() {
+                        // 倒计时结束处理逻辑
+                        tvTime.text = "活动开始"
+                        tvDays.gone()
+                        tvHours.gone()
+                        tvMinutes.gone()
+                        tvSeconds.gone()
+                    }
+                }
+
+            countDownTimer.start()
+        } else {
+            tvTime.text = "活动进行中"
+            tvDays.gone()
+            tvHours.gone()
+            tvMinutes.gone()
+            tvSeconds.gone()
+        }
+    }
 
 
     private fun trans(timestampInSeconds: Long): String {
