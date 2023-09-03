@@ -8,6 +8,7 @@ dependLibUtils()
 dependRxjava()
 dependGlide()
 dependLibConfig()
+useARouter()
 
 
 dependencies {

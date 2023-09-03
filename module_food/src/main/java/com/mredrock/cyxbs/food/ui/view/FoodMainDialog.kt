@@ -3,6 +3,7 @@ package com.mredrock.cyxbs.food.ui.view
 import android.content.Context
 import android.view.Gravity
 import android.view.View
+import android.view.ViewGroup
 import android.widget.LinearLayout
 import android.widget.TextView
 import com.mredrock.cyxbs.food.R
@@ -17,37 +18,20 @@ import com.mredrock.cyxbs.lib.utils.extensions.dp2px
  */
 class FoodMainDialog private constructor(
     context: Context,
-    positiveClick: (ChooseDialog.() -> Unit)? = null,
-    negativeClick: (ChooseDialog.() -> Unit)? = null,
-    dismissCallback: (ChooseDialog.() -> Unit)? = null,
-    cancelCallback: (ChooseDialog.() -> Unit)? = null,
-    data: Data,
 ) : ChooseDialog(
     context,
-    positiveClick,
-    negativeClick,
-    dismissCallback,
-    cancelCallback,
-    data
 ) {
 
     class Builder(context: Context, data: Data) : ChooseDialog.Builder(
         context,
         data
     ) {
-        override fun build(): FoodMainDialog {
-            return FoodMainDialog(
-                context,
-                positiveClick,
-                negativeClick,
-                dismissCallback,
-                cancelCallback,
-                data,
-            )
+        override fun buildInternal(): ChooseDialog {
+            return FoodMainDialog(context)
         }
     }
 
-    override fun createContentView(context: Context): View {
+    override fun createContentView(parent: ViewGroup): View {
         return LinearLayout(context).apply {
             orientation = LinearLayout.VERTICAL
             addView(
