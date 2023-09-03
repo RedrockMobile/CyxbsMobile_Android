@@ -6,7 +6,7 @@ import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
-import com.mredrock.cyxbs.common.utils.extensions.setOnSingleClickListener
+import com.mredrock.cyxbs.lib.utils.extensions.setOnSingleClickListener
 import com.redrock.module_notification.R
 import com.redrock.module_notification.bean.SelectedItem
 import com.redrock.module_notification.bean.SystemMsgBean

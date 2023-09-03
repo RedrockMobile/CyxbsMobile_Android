@@ -20,6 +20,7 @@ const val DEFAULT_PAGE = "/main/default"
 const val DEFAULT_FRAGMENT_PAGE = "/main/default2"
 
 const val COURSE_ENTRY = "/course/entry"
+const val FAIRGROUND_ENTRY="/fairground/entry"
 const val QA_ENTRY = "/qa/entry"
 const val DISCOVER_ENTRY = "/discover/entry"
 const val MINE_ENTRY = "/mine/entry"
@@ -96,6 +97,16 @@ const val LOGIN_BIND_IDS="/login/bind_ids/entry"
 
 //课表上课地点跳转到地图key
 const val COURSE_POS_TO_MAP = "COURSE_POS_TO_MAP"
+
+//活动中心
+const val UFIELD_CENTER="/ufield/campaign/entry"
+//活动详情
+const val UFIELD_DETAIL="/ufield/detail/entry"
+
+
+//下面是邮乐场板块的地址
+//活动布告栏
+const val UFIELD_ACTIVITY="/ufield/activity/main"
 
 
 

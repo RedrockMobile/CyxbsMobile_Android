@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<selector xmlns:android="http://schemas.android.com/apk/res/android">
+    <!--    <item android:state_pressed="true">-->
+    <!--        <shape android:shape="rectangle">-->
+    <!--            <corners android:radius="8dp" /> &lt;!&ndash; 设置圆角半径 &ndash;&gt;-->
+    <!--            <solid android:color="#FF0000" /> &lt;!&ndash; 设置按下时的背景颜色 &ndash;&gt;-->
+    <!--        </shape>-->
+    <!--    </item>-->
+    <item>
+        <shape android:shape="rectangle">
+            <corners android:radius="26dp" /> <!-- 设置圆角半径 -->
+            <solid android:color="#EDEDF4" /> <!-- 设置默认背景颜色 -->
+        </shape>
+    </item>
+</selector>

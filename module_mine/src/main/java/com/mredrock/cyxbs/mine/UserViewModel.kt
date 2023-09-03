@@ -1,23 +1,35 @@
 package com.mredrock.cyxbs.mine
 
 import android.animation.ValueAnimator
+import android.util.Log
 import android.view.View
 import android.view.animation.DecelerateInterpolator
 import android.widget.TextView
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.viewModelScope
 import com.mredrock.cyxbs.api.account.IAccountService
 import com.mredrock.cyxbs.common.BaseApp.Companion.appContext
 import com.mredrock.cyxbs.common.service.ServiceManager
 import com.mredrock.cyxbs.common.utils.extensions.*
 import com.mredrock.cyxbs.common.viewmodel.BaseViewModel
+import com.mredrock.cyxbs.lib.utils.extensions.setSchedulers
+import com.mredrock.cyxbs.lib.utils.extensions.unsafeSubscribeBy
+import com.mredrock.cyxbs.lib.utils.network.ApiWrapper
+import com.mredrock.cyxbs.lib.utils.network.mapOrThrowApiException
+import com.mredrock.cyxbs.mine.network.model.ItineraryMsgBean
 import com.mredrock.cyxbs.mine.network.model.QANumber
 import com.mredrock.cyxbs.mine.network.model.ScoreStatus
+import com.mredrock.cyxbs.mine.network.model.UfieldMsgBean
 import com.mredrock.cyxbs.mine.network.model.UserCount
 import com.mredrock.cyxbs.mine.network.model.UserUncheckCount
 import com.mredrock.cyxbs.mine.util.apiService
 import com.mredrock.cyxbs.mine.util.extension.normalWrapper
+import kotlinx.coroutines.CoroutineExceptionHandler
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.async
+import kotlinx.coroutines.launch
 
 
 /**
@@ -45,6 +57,95 @@ class UserViewModel : BaseViewModel() {
     private val _userUncheckCount = MutableLiveData<UserUncheckCount?>()
     val userUncheckCount: LiveData<UserUncheckCount?>
         get() = _userUncheckCount
+
+    private val _ufieldNewCount = MutableLiveData<List<UfieldMsgBean>>()
+
+    val ufieldNewCount: LiveData<List<UfieldMsgBean>> get() = _ufieldNewCount
+
+    /**
+     * 新通知消息（状态为未读的）的数量
+     */
+    val newNotificationCount: LiveData<Int> get() = _newNotificationCount
+    private val _newNotificationCount = MutableLiveData<Int>()
+
+
+    /**
+     * Exception handler
+     *
+     * 用于捕获并打印异常信息
+     */
+    val exceptionPrinter = CoroutineExceptionHandler { _, e ->
+        e.printStackTrace()
+        Log.d("ExceptionHandler", "err:${e.toString()}")
+    }
+
+    /**
+     * 用携程异步获取未读的notification数量
+     */
+    fun getNewNotificationCount() {
+        viewModelScope.launch(exceptionPrinter + Dispatchers.IO) {
+            val uFieldActivityList = apiService.getUFieldActivityList()
+            val sentItineraryList = apiService.getSentItinerary()
+            val receivedItineraryList = apiService.getReceivedItinerary()
+
+            val ufieldActivityNewCount = async {
+                getNewActivityCount(uFieldActivityList)
+            }
+            val newItineraryCount = async {
+                getNewItineraryCount(sentItineraryList, receivedItineraryList)
+            }
+            _newNotificationCount.postValue(ufieldActivityNewCount.await() + newItineraryCount.await())
+        }
+    }
+
+    /**
+     * 移除上一次的消息中心新消息提示红点（数据驱动型），
+     * 但产品给出的红点 显示/消失 逻辑 为行为驱动型，该方法暂时用不上
+     */
+    fun removeLastNewNotification() {
+        _newNotificationCount.value = 0
+    }
+
+    private suspend fun getNewActivityCount(result: ApiWrapper<List<UfieldMsgBean>>) : Int{
+        return if (result.isSuccess()) {
+            val list = result.data.filter { !it.clicked }
+            list.size
+        } else
+            0
+    }
+    private suspend fun getNewItineraryCount(
+        sent: ApiWrapper<List<ItineraryMsgBean>>,
+        received: ApiWrapper<List<ItineraryMsgBean>>
+    ) : Int{
+        val receivedCount: Int = if (received.isSuccess()) {
+            val list = received.data.filter { !it.hasRead }
+            list.size
+        } else 0
+        val sentCount: Int = if (sent.isSuccess()) {
+            val list = sent.data.filter { !it.hasRead }
+            list.size
+        } else 0
+        return receivedCount + sentCount
+    }
+
+    /**
+     * 由于获取未读notification的接口（活动通知和行程通知不统一获取）不统一，故下面的方法暂时废弃
+     */
+    /*
+  * 获取活动消息
+  * */
+    fun getUFieldActivity() {
+        apiService.getUFieldActivity()
+            .setSchedulers()
+            .mapOrThrowApiException()
+            .unsafeSubscribeBy(
+                onNext = {
+                    _ufieldNewCount.postValue(it)
+                }
+            ).lifeCycle()
+
+    }
+
 
     fun getScoreStatus() {
         apiService.getScoreStatus()
@@ -180,6 +281,7 @@ class UserViewModel : BaseViewModel() {
                 1 -> {
                     12
                 }
+
                 0 -> 0
                 else -> 15
             }

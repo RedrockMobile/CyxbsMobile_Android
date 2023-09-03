@@ -1,0 +1,120 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="260dp">
+
+    <FrameLayout
+        android:layout_width="167dp"
+        android:layout_height="240dp"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginStart="50dp"
+        android:layout_marginEnd="50dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="167dp"
+            android:layout_height="240dp"
+            android:layout_gravity="center_horizontal"
+            android:background="@drawable/ufield_shape_pic_shape">
+
+            <FrameLayout
+                android:id="@+id/uField_all_frameLayout"
+                android:layout_width="167dp"
+                android:layout_height="145dp"
+                android:background="@drawable/ufield_shape_pic_shape"
+                app:cardCornerRadius="16dp"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent">
+
+                <com.mredrock.cyxbs.ufield.lyt.helper.RoundedImageView
+                    android:id="@+id/uField_activity_pic"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:scaleType="centerCrop" />
+
+            </FrameLayout>
+
+
+            <LinearLayout
+                android:id="@+id/uField_all_lin"
+                android:layout_width="match_parent"
+                android:layout_height="22dp"
+                android:layout_marginStart="12dp"
+                android:layout_marginTop="10dp"
+                android:orientation="horizontal"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/uField_all_frameLayout">
+
+                <TextView
+                    android:id="@+id/uField_activity_name"
+                    android:layout_width="wrap_content"
+                    android:layout_height="22dp"
+                    android:ellipsize="end"
+                    android:focusable="true"
+                    android:focusableInTouchMode="true"
+                    android:marqueeRepeatLimit="marquee_forever"
+                    android:maxWidth="82dp"
+                    android:maxLines="1"
+                    android:scrollHorizontally="true"
+                    android:singleLine="true"
+                    android:textColor="@color/uField_15315b"
+                    android:textSize="16sp" />
+                <!-- 因视觉关闭跑马灯android:ellipsize="marquee"-->
+                <ImageView
+                    android:id="@+id/uField_activity_isGoing"
+                    android:layout_width="40dp"
+                    android:layout_height="16dp"
+                    android:layout_gravity="center_vertical"
+                    android:layout_marginStart="2dp"
+                   />
+            </LinearLayout>
+
+
+            <TextView
+                android:id="@+id/uField_activity_type"
+                android:layout_width="70dp"
+                android:layout_height="17dp"
+                android:layout_marginStart="12dp"
+                android:layout_marginTop="5dp"
+                android:textColor="@color/uField_15315b66"
+                android:textSize="12sp"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/uField_all_lin" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="16dp"
+                android:layout_marginStart="10dp"
+                android:layout_marginTop="11dp"
+                android:orientation="horizontal"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/uField_activity_type">
+
+                <ImageView
+                    android:id="@+id/ufieldImageview5"
+                    android:layout_width="16dp"
+                    android:layout_height="16dp"
+                    android:src="@drawable/ufield_ic_activity_time" />
+
+                <TextView
+                    android:id="@+id/uField_activity_time"
+                    android:layout_width="110dp"
+                    android:layout_height="16dp"
+                    android:layout_marginStart="4dp"
+                    android:textColor="@color/uField_112c5499"
+                    android:textSize="12sp" />
+
+            </LinearLayout>
+
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+
+    </FrameLayout>
+
+
+</androidx.constraintlayout.widget.ConstraintLayout>
