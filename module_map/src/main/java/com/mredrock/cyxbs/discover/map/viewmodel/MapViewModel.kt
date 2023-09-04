@@ -459,7 +459,7 @@ class MapViewModel : BaseViewModel() {
                 if (!it.textList.isNullOrEmpty()) {
                     vrUrl = it.textList[0].content
                 }
-            }
+            }.lifeCycle()
 
     }
 

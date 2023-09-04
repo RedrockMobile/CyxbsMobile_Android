@@ -15,8 +15,8 @@ object Config {
   const val targetSdk = 33
   const val compileSdk = targetSdk
   
-  const val versionCode = 82 // 线上81，开发82
-  const val versionName = "6.6.2-alpha" // 线上6.6.1，开发6.6.2，自己打包 -alpha，内测 -beta
+  const val versionCode = 83 // 线上82，开发83
+  const val versionName = "6.6.3-alpha" // 线上6.6.2，开发6.6.3，自己打包 -alpha，内测 -beta
   
   val releaseAbiFilters = listOf("arm64-v8a")
   val debugAbiFilters = listOf("arm64-v8a","x86_64")
