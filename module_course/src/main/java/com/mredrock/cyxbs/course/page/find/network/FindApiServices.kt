@@ -16,7 +16,7 @@ import retrofit2.http.*
 interface FindApiServices : IApi {
 
   // 搜索学生信息
-  @GET("/magipoke-text/search/people")
+  @GET("/magipoke-jwzx/search/people")
   fun getStudents(
     @Query("stu")
     stu: String // 不完整的学号或者姓名
