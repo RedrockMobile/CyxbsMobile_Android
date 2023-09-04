@@ -1,5 +1,7 @@
 package com.mredrock.cyxbs.noclass.util
 
+import android.text.TextUtils
+
 /**
  * ...
  * @author: Black-skyline
@@ -10,7 +12,7 @@ package com.mredrock.cyxbs.noclass.util
  */
 object InputFormatUtil {
     fun isNoInput(s: String): Boolean {
-        return s.trim().isEmpty()
+        return TextUtils.isEmpty(s.trim())
     }
 
     /**

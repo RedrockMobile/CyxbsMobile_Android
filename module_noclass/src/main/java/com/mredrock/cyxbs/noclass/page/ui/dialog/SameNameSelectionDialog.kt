@@ -2,7 +2,6 @@ package com.mredrock.cyxbs.noclass.page.ui.dialog
 
 import android.app.Dialog
 import android.os.Bundle
-import android.util.Log
 import android.widget.Button
 import android.widget.TextView
 import androidx.constraintlayout.widget.ConstraintLayout
@@ -25,22 +24,17 @@ import com.mredrock.cyxbs.noclass.page.viewmodel.activity.BatchAdditionViewModel
  * @Description:
  *
  */
-class SameNameSelectionDialog
-//    (private val sameNameData: List<Student>)
-    : BottomSheetDialogFragment {
+class SameNameSelectionDialog : BottomSheetDialogFragment {
     private val sameNameData: List<Student>
     constructor(sameNameData: List<Student>) : super() {
         this.sameNameData = sameNameData
     }
+    // 无参构造器是为了给 Activity重建（如配置更新时、夜间模式等）后恢复 该BottomSheetDialogFragment用（防止APP崩溃）
     constructor() : super() {
         this.sameNameData = emptyList()
     }
 
-//    init {
-//        this.sameNameData = emptyList()
-//    }
-
-
+    // 批量添加页面activity的viewModel
     private val batchAdditionViewModel by activityViewModels<BatchAdditionViewModel>()
 
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
@@ -61,6 +55,8 @@ class SameNameSelectionDialog
 
     override fun onStart() {
         super.onStart()
+        // 一般认为调用无参构造器时sameNameData才为空，此时默认为fragment恢复，则该dialog可取消
+        // 或者按逻辑讲如果有参构造器传入的也是空列表，那么该dialog也没必要出现
         if (sameNameData.isEmpty()) dialog?.cancel()
         if (dialog is BottomSheetDialog) {
             val behaviour = (dialog as BottomSheetDialog).behavior
@@ -92,18 +88,14 @@ class SameNameSelectionDialog
         }
         dialog.findViewById<Button>(R.id.noclass_batch_btn_confirm_selected_students).apply {
             setOnClickListener {
-                Log.d("ProgressTest", "开始收集选中的重名信息")
                 val targetList = mutableListOf<Pair<String,String>>() // 学号-姓名 组合对的list
                 sameNameData.forEach {
                     if (it.isSelected){  // 该重名学生被选中了
                         targetList.add(Pair(it.id, it.name))
                     }
                 }
-                Log.d("DataTest", "选中了${targetList.size}个")
                 batchAdditionViewModel.setSelectedStudents(targetList)
                 dialog.cancel()
-//                Log.d("DataTest","viewmodel obj address ${System.identityHashCode(batchAdditionViewModel)}")
-//                batchAdditionViewModel.getTestObjAddress()
             }
         }
     }

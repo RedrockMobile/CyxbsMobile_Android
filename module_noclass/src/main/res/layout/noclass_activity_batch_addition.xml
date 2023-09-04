@@ -15,7 +15,7 @@
         <androidx.appcompat.widget.Toolbar
             android:id="@+id/tb_noclass_batch"
             android:layout_width="match_parent"
-            android:layout_height="53dp"
+            android:layout_height="56dp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
@@ -30,20 +30,18 @@
                     android:id="@+id/noclass_batch_iv_back"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginBottom="7dp"
-                    android:paddingTop="2dp"
+                    android:layout_marginBottom="9dp"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
-
                     app:srcCompat="@drawable/noclass_ic_batch_page_back"
                     tools:ignore="ContentDescription" />
 
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginStart="10dp"
+                    android:layout_marginStart="13dp"
                     android:gravity="center_vertical"
-                    android:paddingTop="17dp"
+                    android:layout_marginTop="17dp"
                     android:text="批量添加"
                     android:textColor="@color/noclass_primary_text_color"
                     android:textSize="21sp"
@@ -76,10 +74,20 @@
             android:gravity="top|start"
             android:importantForAutofill="no"
             android:inputType="textMultiLine"
-            android:padding="13dp"
+            android:paddingTop="16dp"
+            android:paddingStart="13dp"
+            android:paddingEnd="6dp"
+            android:paddingBottom="16dp"
+            android:scrollbarStyle="insideInset"
+            android:scrollbars="vertical"
+            android:scrollbarSize="4dp"
+            android:lineSpacingExtra="8dp"
+            android:fadeScrollbars="true"
+            android:scrollbarThumbVertical="@drawable/noclass_shape_edit_box_scrollbar_vertical"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/tb_noclass_batch" />
+            app:layout_constraintTop_toBottomOf="@+id/tb_noclass_batch"
+            tools:ignore="LabelFor" />
 
         <Button
             android:id="@+id/noclass_batch_btn_query"
