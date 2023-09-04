@@ -130,7 +130,7 @@ class ActivityUfieldRVAdapter(
                 "activity_report" -> {
                     notificationTitle.text = "活动通知"
                     yesNo.visibility = View.GONE
-                    fakePlace.text="活动地点"
+                    fakePlace.text="活动地点:"
                     realPlace.text=currentList[position].activityInfo.activityPlace
                     yesNo.visibility = View.GONE
                 }

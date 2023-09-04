@@ -71,8 +71,8 @@ class UserFragment : BaseFragment() {
     private val mine_user_iv_center_activity by R.id.mine_user_iv_center_activity.view<ImageView>()
     private val mine_user_tv_center_notification_count by R.id.mine_user_tv_center_notification_count.view<TextView>()
 
-    override fun onActivityCreated(savedInstanceState: Bundle?) {
-        super.onActivityCreated(savedInstanceState)
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
         addObserver()
         initView()
     }
@@ -283,6 +283,23 @@ class UserFragment : BaseFragment() {
                 }
             }
         })
+        viewModel.ufieldNewCount.observe(viewLifecycleOwner) {
+            val list = it.filter { element ->
+                element.clicked == false
+            }
+            if (list.isEmpty()) {
+                mine_user_tv_center_notification_count.gone()
+            } else {
+                mine_user_tv_center_notification_count.visible()
+                if (list.size > 99) {
+                    mine_user_tv_center_notification_count.text = "99+"
+                } else {
+                    mine_user_tv_center_notification_count.text = list.size.toString()
+                }
+            }
+
+
+        }
 
     }
 
@@ -290,24 +307,6 @@ class UserFragment : BaseFragment() {
         super.onStart()
         // 发送签到的通知
         NotificationUtils.tryNotificationSign(viewModel.status.value?.isChecked ?: false)
-        viewModel.getUFieldActivity()
-        viewModel.ufieldNewCount.observe(viewLifecycleOwner) {
-            val list = it.filter { element ->
-                element.clicked == false
-            }
-            if (list.isEmpty()){
-                mine_user_tv_center_notification_count.gone()
-            }else{
-                mine_user_tv_center_notification_count.visible()
-                if (list.size>99){
-                    mine_user_tv_center_notification_count.text="99+"
-                }else{
-                    mine_user_tv_center_notification_count.text = list.size.toString()
-                }
-            }
-
-
-        }
     }
 
     override fun onResume() {
@@ -315,6 +314,8 @@ class UserFragment : BaseFragment() {
         if (ServiceManager(IAccountService::class).getVerifyService().isLogin()) {
             fetchInfo()
         }
+        viewModel.getUFieldActivity()
+
     }
 
     private fun fetchInfo() {
