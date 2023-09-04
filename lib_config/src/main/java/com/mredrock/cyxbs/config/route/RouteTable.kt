@@ -23,6 +23,7 @@ const val COURSE_ENTRY = "/course/entry"
 const val QA_ENTRY = "/qa/entry"
 const val DISCOVER_ENTRY = "/discover/entry"
 const val MINE_ENTRY = "/mine/entry"
+const val CENTER_ENTRY = "/center/entry"
 
 const val DISCOVER_OTHER_COURSE = "/other_course/discover/entry"
 const val DISCOVER_NO_CLASS = "/no_class/discover/entry"
@@ -97,5 +98,5 @@ const val LOGIN_BIND_IDS="/login/bind_ids/entry"
 //课表上课地点跳转到地图key
 const val COURSE_POS_TO_MAP = "COURSE_POS_TO_MAP"
 
-
+const val CENTER_FOOD_ENTRY ="/food/center/entry"
 
