@@ -1,8 +1,14 @@
 package com.mredrock.cyxbs.food.network.bean
 
+import com.google.gson.annotations.SerializedName
+import java.io.Serializable
+
 data class FoodMainBean(
-    val eat_area: List<String>,
-    val eat_num: List<String>,
-    val eat_property: List<String>,
+    @SerializedName("eat_area")
+    val eatArea: List<String>,
+    @SerializedName("eat_num")
+    val eatNum: List<String>,
+    @SerializedName("eat_property")
+    val eatProperty: List<String>,
     val picture: String
-)
+):Serializable

@@ -26,7 +26,6 @@ import com.mredrock.cyxbs.lib.base.dailog.ChooseDialog
 import com.mredrock.cyxbs.lib.base.ui.BaseActivity
 import com.mredrock.cyxbs.lib.utils.extensions.*
 
-@Suppress("LABEL_NAME_CLASH")
 @Route(path = CENTER_FOOD_ENTRY)
 class FoodMainActivity : BaseActivity() {
     private val viewModel by lazy { ViewModelProvider(this)[FoodMainViewModel::class.java] }
@@ -72,7 +71,6 @@ class FoodMainActivity : BaseActivity() {
     private val mBtnDetermine by R.id.food_main_btn_determine.view<Button>()
     private val mTvMealNew by R.id.food_main_tv_meal_new.view<TextView>()
     private val mTvMealOld by R.id.food_main_tv_meal_old.view<TextView>()
-    private val mClResult by R.id.food_main_cl_result.view<ConstraintLayout>()
     private val mBtnDetail by R.id.food_main_btn_detail.view<Button>()
     private val mImgRefresh by R.id.food_main_img_refresh.view<ImageView>()
     private val mImgPicture by R.id.food_main_img_picture.view<ImageView>()
@@ -106,8 +104,8 @@ class FoodMainActivity : BaseActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.food_activity_food_main)
-        initObserver()
         initView()
+        initObserver()
     }
 
     private fun initObserver() {
@@ -169,8 +167,8 @@ class FoodMainActivity : BaseActivity() {
         }
         viewModel.foodPraiseBean.observe {
             dialog?.findViewById<TextView>(R.id.food_dialog_tv_praise_num)?.text =
-                it.praise_num.toString()
-            if (it.praise_is) {
+                it.praiseNum.toString()
+            if (it.praiseIs) {
                 dialog?.findViewById<Button>(R.id.food_dialog_detail_btn_positive)
                     ?.apply {
                         background = AppCompatResources.getDrawable(
@@ -203,8 +201,8 @@ class FoodMainActivity : BaseActivity() {
                         content = introduce,
                         foodName = name,
                         imageUrl = picture,
-                        praiseNum = praise_num,
-                        positiveButtonBackground = if (this.praise_is) R.drawable.food_shape_btn_praise else R.drawable.food_shape_btn_determine,
+                        praiseNum = praiseNum,
+                        positiveButtonBackground = if (this.praiseIs) R.drawable.food_shape_btn_praise else R.drawable.food_shape_btn_determine,
                         width = 255,
                         height = 330,
                     )

@@ -6,7 +6,6 @@ import com.mredrock.cyxbs.food.network.bean.*
 import com.mredrock.cyxbs.lib.base.ui.BaseViewModel
 import com.mredrock.cyxbs.lib.utils.network.mapOrInterceptException
 import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
-import io.reactivex.rxjava3.core.Observable
 import io.reactivex.rxjava3.schedulers.Schedulers
 
 class FoodMainViewModel : BaseViewModel() {
@@ -54,19 +53,16 @@ class FoodMainViewModel : BaseViewModel() {
                 toast(it.toString())
             }
             .safeSubscribeBy {
-                dataRegion.addAll(it.eat_area)
-                dataNumber.addAll(it.eat_num)
+                dataRegion.addAll(it.eatArea)
+                dataNumber.addAll(it.eatNum)
                 dataFeature = buildList {
-                    addAll(it.eat_property)
+                    addAll(it.eatProperty)
                 }
                 putHashMap(hashMapRegion, dataRegion)
                 putHashMap(hashMapNumber, dataNumber)
                 putHashMap(hashMapFeature, dataFeature)
                 foodMainBean.value = it
             }
-        Observable.create<Int> {
-
-        }.observeOn(Schedulers.io())
     }
 
     fun postFoodResult() {
@@ -78,8 +74,6 @@ class FoodMainViewModel : BaseViewModel() {
                 hashMapToString(hashMapNumber),
                 hashMapToList(hashMapFeature)
             )
-                .doOnError {
-                }
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .mapOrInterceptException {
@@ -96,13 +90,6 @@ class FoodMainViewModel : BaseViewModel() {
                     toast(it.toString())
                 }
                 .safeSubscribeBy {
-                    val l = listOf<FoodResultBeanItem>(
-                        FoodResultBeanItem("123","123","123",true,123),
-                        FoodResultBeanItem("123","234","123",true,123),
-                        FoodResultBeanItem("123","345","123",true,123),
-                        FoodResultBeanItem("123","456","123",true,123),
-                        FoodResultBeanItem("123","678","123",true,123)
-                    )
                     if (it.isNotEmpty()) {
                         determineSuccess.value = true
                         dataFoodResult = it
@@ -142,7 +129,7 @@ class FoodMainViewModel : BaseViewModel() {
             .mapOrInterceptException { }
             .safeSubscribeBy {
                 dataFeature = buildList {
-                    addAll(it.eat_property)
+                    addAll(it.eatProperty)
                 }
                 putHashMap(hashMapFeature, dataFeature)
                 foodRefreshBean.value = it

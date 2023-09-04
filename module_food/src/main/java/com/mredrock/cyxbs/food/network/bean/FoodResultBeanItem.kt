@@ -1,6 +1,9 @@
 package com.mredrock.cyxbs.food.network.bean
 
 import com.google.gson.annotations.SerializedName
+import java.io.Serializable
+
+
 
 data class FoodResultBeanItem(
     @SerializedName("Introduce")
@@ -10,7 +13,7 @@ data class FoodResultBeanItem(
     @SerializedName("Picture")
     val picture: String,
     @SerializedName("PraiseIs")
-    val praise_is: Boolean,
+    val praiseIs: Boolean,
     @SerializedName("PraiseNum")
-    val praise_num: Int
-)
+    val praiseNum: Int
+):Serializable
