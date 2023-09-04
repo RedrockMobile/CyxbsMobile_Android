@@ -21,14 +21,6 @@ class SearchAllDialogViewModel : BaseViewModel(){
         val addStu = concatSet(addSet)
         NoClassRepository.addNoclassGroupMember(groupId, addStu).doOnError {
             toast("网络异常")
-            _addMembers.postValue(
-                setOf(
-                    "2022211293",
-//                    "2022211292",
-//                    "2022211294",
-//                    "2022211295",
-                ) to true
-            )
         }.safeSubscribeBy {
             _addMembers.postValue(addSet.map { stu -> stu.id }.toSet() to it.isSuccess())
         }

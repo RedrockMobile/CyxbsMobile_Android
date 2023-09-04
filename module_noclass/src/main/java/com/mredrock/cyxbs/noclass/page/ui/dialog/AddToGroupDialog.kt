@@ -2,6 +2,7 @@ package com.mredrock.cyxbs.noclass.page.ui.dialog
 
 import android.app.Dialog
 import android.os.Bundle
+import android.util.Log
 import android.widget.Button
 import android.widget.SeekBar
 import android.widget.TextView
@@ -51,6 +52,11 @@ class AddToGroupDialog(
      */
     private val mSolidViewModel by viewModels<SolidViewModel>()
 
+    /**
+     * 剩余人员数量
+     */
+    private var restNum : Int = 0
+
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
         super.onCreateDialog(savedInstanceState)
         val dialog = super.onCreateDialog(savedInstanceState)
@@ -63,10 +69,15 @@ class AddToGroupDialog(
     }
 
     private fun initObserver() {
-        mSolidViewModel.saveState.observe(this){
-            if (!it){
+        mSolidViewModel.addMembers.observe(this){
+            Log.d("lx", "restNum: = ${restNum}")
+            if (!it.second){
                 toast("添加失败")
+            }else if(restNum == 0){
+                toast("添加成功")
+                dismiss()
             }
+            restNum--
         }
     }
 
@@ -101,11 +112,12 @@ class AddToGroupDialog(
         // 完成按钮
         mBtnDone = dialog.findViewById<Button>(R.id.noclass_add_to_group_done).apply {
             setOnClickListener {
+                restNum = (chooseGroup!!.size - 2).coerceAtLeast(0)
                 chooseGroup!!.forEach {
                     //每一个被选中的分组添加成员
-                    mSolidViewModel.addAndDeleteStu(it.id, setOf(student) ,setOf())
+                    Log.d("lx", "chooseGroup=$chooseGroup ")
+                    mSolidViewModel.addMembers(it.id, setOf(student))
                 }
-                dismiss()
             }
         }
     }

@@ -24,9 +24,12 @@ class SolidViewModel : BaseViewModel() {
     private val _searchStudent = MutableLiveData<ApiWrapper<List<Student>>>()
     val searchStudent get() = _searchStudent
 
-    //保存成员变化
-    val saveState : LiveData<Boolean> get() = _saveState
-    private val _saveState = MutableLiveData<Boolean>()
+    /**
+     * 组内添加成员，前面是要增加的学生的学号，后面是是否添加
+     */
+    private val _addMembers = MutableLiveData<Pair<Set<String>,Boolean>>()
+    val addMembers get() = _addMembers
+
     /**
      * 获得搜索的结果
      */
@@ -72,44 +75,31 @@ class SolidViewModel : BaseViewModel() {
             }
     }
 
-
-    fun addAndDeleteStu(groupId: String,addSet : Set<Student>,deleteSet : Set<Student>){
-        var addStu = ""
-        var deleteStu = ""
-        for ((index,stu) in addSet.withIndex()){
-            addStu += stu.id
-            if (index != addSet.size-1){
-                addStu += ","
-            }
-        }
-        for ((index,stu) in deleteSet.withIndex()){
-            deleteStu += stu.id
-            if (index != deleteSet.size-1){
-                deleteStu += ","
-            }
-        }
-        val add =  NoClassRepository.addNoclassGroupMember(groupId,addStu)
-        val delete = NoClassRepository.deleteNoclassGroupMember(groupId,deleteStu)
-        val result : Flowable<ApiStatus>? =
-            if (addStu != "" && deleteStu != ""){
-                add.mergeWith(delete)
-            }else if (addStu == "" && deleteStu != ""){
-                delete.toFlowable()
-            }else if (addStu != ""){
-                add.toFlowable()
-            }else{
-                null
-            }
-
-        if (result == null){
-            return
-        }
-
-        result.doOnError {
-
+    /**
+     * 添加成员
+     * @param groupId 组id
+     */
+    fun addMembers(groupId: String, addSet: Set<Student>) {
+        val addStu = concatSet(addSet)
+        NoClassRepository.addNoclassGroupMember(groupId, addStu).doOnError {
+            toast("网络异常")
         }.safeSubscribeBy {
-            _saveState.postValue(it.isSuccess())
+            _addMembers.postValue(addSet.map { stu -> stu.id }.toSet() to it.isSuccess())
         }
 
+    }
+
+    /**
+     * 一个用来拼接set中元素的方法
+     */
+    private fun concatSet(set: Set<Student>): String {
+        var stuNums = ""
+        for ((index, stu) in set.withIndex()) {
+            stuNums += stu.id
+            if (index != set.size - 1) {
+                stuNums += ","
+            }
+        }
+        return stuNums
     }
 }
