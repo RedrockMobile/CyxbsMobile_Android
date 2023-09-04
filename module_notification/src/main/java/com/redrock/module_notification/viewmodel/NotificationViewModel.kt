@@ -64,7 +64,6 @@ class NotificationViewModel : BaseViewModel() {
                     getUfieldMsgSuccessful.value = false
                 },
                 onNext = {
-                    Log.d("hui", "getUFieldActivity: $it")
                     _ufieldActivityMsg.postValue(it)
                     getUfieldMsgSuccessful.value = true
                 }
@@ -79,14 +78,7 @@ class NotificationViewModel : BaseViewModel() {
         retrofit.changeUfieldMsgStatus(messageId)
             .setSchedulers()
             .mapOrThrowApiException()
-            .unsafeSubscribeBy(
-                onError = {
-                    Log.d("hui", "changeUfieldMsgStatus1:$it ")
-                },
-                onNext = {
-                    Log.d("hui", "changeUfieldMsgStatus2: $it")
-                }
-            ).lifeCycle()
+            .unsafeSubscribeBy().lifeCycle()
     }
 
     /**
@@ -128,8 +120,6 @@ class NotificationViewModel : BaseViewModel() {
             .setSchedulers()
             .unsafeSubscribeBy {
                 toast("删除消息成功")
-                Log.d("wzt", "deleteMsg: ")
-
             }
             .lifeCycle()
     }
