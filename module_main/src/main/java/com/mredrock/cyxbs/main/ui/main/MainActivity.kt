@@ -60,6 +60,12 @@ class MainActivity : BaseActivity() {
       }
     }
   }
+
+  override fun onResume() {
+    super.onResume()
+    // 获取（远端消息数据可能发生更新后）最新的未读消息数量，一般认为在从其他Activity返回后调用
+    mViewModel.getNotificationUnReadStatus()
+  }
   
   private fun checkIsLogin(): Boolean? {
     if (!mAccountService.getVerifyService().isTouristMode()) {
@@ -87,6 +93,7 @@ class MainActivity : BaseActivity() {
     initCourse()
     initViewPager()
     initBottomNav()
+    initNotification()
     initUpdate()
   }
   
@@ -168,7 +175,19 @@ class MainActivity : BaseActivity() {
       Umeng.sendEvent(Umeng.Event.ClickBottomTab(it))
     }
   }
-  
+
+  private fun initNotification() {
+    mViewModel.hasUnReadNotification.observe {
+      if (!it) {
+        // 设置为无红点的状态
+        mBottomNavLayout.setBtnSelector(2,true)
+        return@observe
+      }
+      // 设置为有红点的状态
+      mBottomNavLayout.setBtnSelector(2,false)
+    }
+  }
+
   private fun initUpdate() {
     IAppUpdateService::class.impl.tryNoticeUpdate(this)
   }

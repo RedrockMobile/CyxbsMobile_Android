@@ -70,11 +70,7 @@ class NotificationActivity : BaseViewModelActivity<NotificationViewModel>() {
     /**
      * new出fragment实例放入VP2的adpater的写法有bug，不推荐这样的写法
      */
-    /* //Vp2下的三个fragment的实例
-    private lateinit var itineraryFragment: ItineraryNotificationFragment
-    private lateinit var sysFragment: SysNotificationFragment
-    //   private lateinit var activeFragment: ActivityNotificationFragment
-    private lateinit var ufieldActiveFragment : UfieldNotificationFragment */
+
     //目前ViewPager处于哪个页面
     var whichPageIsIn = 0
         private set
@@ -108,7 +104,6 @@ class NotificationActivity : BaseViewModelActivity<NotificationViewModel>() {
             changeTabRedDotsVisibility(2, View.INVISIBLE)
         }
         viewModel.getUFieldActivity()
-//        initObserver()
     }
 
 

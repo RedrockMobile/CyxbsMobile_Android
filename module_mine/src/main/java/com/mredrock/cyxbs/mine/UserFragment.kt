@@ -79,7 +79,7 @@ class UserFragment : BaseFragment() {
 
     private fun initView() {
         // 获取最新的Notification数量，以初始化红点
-        getNewNotificationCount()
+        initNewNotificationCountShow()
         //功能按钮
         context?.apply {
             mine_user_tv_dynamic_number.setOnSingleClickListener { doIfLogin { jump(QA_DYNAMIC_MINE) } }
@@ -189,7 +189,7 @@ class UserFragment : BaseFragment() {
             mine_user_iv_center_notification.setOnSingleClickListener {
                 ARouter.getInstance().build(NOTIFICATION_HOME).navigation()
                 // 进入消息中心，移除红点
-                mine_user_tv_center_notification_count.gone()
+                mine_user_tv_center_notification_count.text ="0"
             }
             mine_user_iv_center_activity.setOnSingleClickListener {
                 doIfLogin {
@@ -294,25 +294,8 @@ class UserFragment : BaseFragment() {
         super.onStart()
         // 发送签到的通知
         NotificationUtils.tryNotificationSign(viewModel.status.value?.isChecked ?: false)
-        /*
-        viewModel.ufieldNewCount.observe(viewLifecycleOwner) {
-            val list = it.filter { element ->
-                element.clicked == false
-            }
-            if (list.isEmpty()){
-                mine_user_tv_center_notification_count.gone()
-            }else{
-                mine_user_tv_center_notification_count.visible()
-                if (list.size>99){
-                    mine_user_tv_center_notification_count.text="99+"
-                }else{
-                    mine_user_tv_center_notification_count.text = list.size.toString()
-                }
-            }
-
-
-        }
-         */
+        // 更新最新未读消息数量
+        viewModel.getNewNotificationCount()
     }
 
     override fun onResume() {
@@ -369,24 +352,20 @@ class UserFragment : BaseFragment() {
         viewModel.saveCheckTimeStamp(type)
         jump(path)
     }
-    private fun getNewNotificationCount() {
-        // 消息中心的红点？（蓝点）显示逻辑
-        viewModel.newNotificationCount.observe(viewLifecycleOwner,object : Observer<Int>{
-            override fun onChanged(value: Int) {
-                viewModel.newNotificationCount.removeObserver(this)
-                if (value == 0) {
-                    mine_user_tv_center_notification_count.gone()
+    private fun initNewNotificationCountShow() {
+        // 消息中心的红点显示逻辑
+        viewModel.newNotificationCount.observe(viewLifecycleOwner
+        ) { value ->
+            if (value == 0) {
+                mine_user_tv_center_notification_count.gone()
+            } else {
+                mine_user_tv_center_notification_count.visible()
+                if (value > 99) {
+                    mine_user_tv_center_notification_count.text = "99+"
                 } else {
-                    mine_user_tv_center_notification_count.visible()
-                    if (value > 99) {
-                        mine_user_tv_center_notification_count.text = "99+"
-                    } else {
-                        mine_user_tv_center_notification_count.text = value.toString()
-                    }
+                    mine_user_tv_center_notification_count.text = value.toString()
                 }
             }
-        })
-        // 先注册观察者再请求数据
-        viewModel.getNewNotificationCount()
+        }
     }
 }
