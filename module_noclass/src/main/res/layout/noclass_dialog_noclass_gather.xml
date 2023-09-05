@@ -103,7 +103,7 @@
             android:layout_width="0dp"
             android:layout_height="0dp"
             android:layout_marginTop="10dp"
-            android:layout_marginBottom="35dp"
+            android:layout_marginBottom="20dp"
             android:layout_marginStart="16dp"
             android:layout_marginEnd="16dp"
             app:layout_constraintBottom_toBottomOf="parent"
@@ -118,6 +118,7 @@
             app:active_color="@color/noclass_indicator_inactive_bg"
             app:inactive_color="@color/noclass_indicator_active_bg"
             app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.0"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/noclass_tv_gathering_time" />
 
