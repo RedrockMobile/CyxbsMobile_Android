@@ -1,4 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="noclass_empty_search_result" translatable="false">没有找到这个人～</string>
+    <string name="noclass_batch_input_format_hint" translatable="false">样例输入1:卷卷\n                    卷娘\n样例输入2:2022213333\n                    2011118888\n错误输入1:卷卷，卷娘\n                    卷卷，卷娘\n错误输入2:卷卷\n                    2022222222</string>
 </resources>

@@ -29,4 +29,11 @@
         <attr name="noclass_indicator_stick_enable" format="boolean" />
         <attr name="noclass_indicator_show_count" format="integer" />
     </declare-styleable>
+    <!--指示器的属性-->
+    <declare-styleable name="MyVpIndicatorView" tools:ignore="ResourceName">
+        <attr name="android:id" format="reference"/>
+        <attr name="active_color" format="color|reference"/>
+        <attr name="inactive_color" format="reference|color"/>
+    </declare-styleable>
+
 </resources>

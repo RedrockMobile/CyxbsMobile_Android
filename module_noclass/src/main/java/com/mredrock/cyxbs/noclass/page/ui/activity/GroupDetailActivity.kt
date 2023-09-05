@@ -4,25 +4,31 @@ import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.text.TextUtils
+import android.util.Log
 import android.view.WindowManager
 import android.view.inputmethod.EditorInfo
 import android.view.inputmethod.InputMethodManager
 import android.widget.Button
 import android.widget.EditText
+import android.widget.FrameLayout
 import android.widget.ImageView
 import android.widget.TextView
+import androidx.activity.OnBackPressedCallback
 import androidx.activity.viewModels
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.mredrock.cyxbs.lib.base.ui.BaseActivity
-import com.mredrock.cyxbs.lib.utils.extensions.setOnSingleClickListener
 import com.mredrock.cyxbs.noclass.R
-import com.mredrock.cyxbs.noclass.bean.NoclassGroup
-import com.mredrock.cyxbs.noclass.page.adapter.NoClassGroupAdapter
-import com.mredrock.cyxbs.noclass.page.ui.dialog.ConfirmReturnDialog
-import com.mredrock.cyxbs.noclass.page.ui.dialog.RenameGroupDialog
-import com.mredrock.cyxbs.noclass.page.ui.dialog.SearchStudentDialog
-import com.mredrock.cyxbs.noclass.page.viewmodel.GroupDetailViewModel
+import com.mredrock.cyxbs.noclass.bean.NoClassSpareTime
+import com.mredrock.cyxbs.noclass.bean.NoClassGroup
+import com.mredrock.cyxbs.noclass.bean.Student
+import com.mredrock.cyxbs.noclass.page.adapter.NoClassTemporaryAdapter
+import com.mredrock.cyxbs.noclass.page.ui.dialog.SearchAllDialog
+import com.mredrock.cyxbs.noclass.page.ui.dialog.SearchNoExistDialog
+import com.mredrock.cyxbs.noclass.page.ui.fragment.NoClassCourseVpFragment
+import com.mredrock.cyxbs.noclass.page.viewmodel.other.CourseViewModel
+import com.mredrock.cyxbs.noclass.page.viewmodel.activity.GroupDetailViewModel
 
 /**
  *
@@ -38,6 +44,11 @@ import com.mredrock.cyxbs.noclass.page.viewmodel.GroupDetailViewModel
 class GroupDetailActivity : BaseActivity(){
     
     private val mViewModel by viewModels<GroupDetailViewModel>()
+
+    /**
+     * 课表专属viewModel
+     */
+    private val mCourseViewModel by viewModels<CourseViewModel>()
 
     /**
      * 上方添加同学的编辑框
@@ -57,78 +68,91 @@ class GroupDetailActivity : BaseActivity(){
     /**
      * 按钮
      */
-    private val mBtnSave : Button by R.id.btn_noclass_group_detail_save.view()
+    private val mBtnQuery : Button by R.id.btn_noclass_group_detail_query.view()
 
     /**
-     * 该界面是否改变（是否发生网络请求为标准）
+     * 底部承载课表的container
      */
-    private var mHasChanged : Boolean = false
-    
-    /**
-     * 需不需要保存(按钮颜色为标准)
-     */
-    private var mNeedSave : Boolean = false
+    private val mCourseContainer : FrameLayout by R.id.noclass_group_detail_bottom_sheet_course_container.view()
 
     /**
-     * 设置list
+     * 课表上弹和下滑的行为
      */
-    private var mGroupList : MutableList<NoclassGroup> = mutableListOf()
-
-    /**
-     * 设置position
-     */
-    private var mPosition : Int = -1
-
-    /**
-     * 预增加用户
-     */
-    private var mToAddSet : MutableSet<NoclassGroup.Member> = mutableSetOf()
-
-    /**
-     * 预删除用户
-     */
-    private var mToDeleteSet : MutableSet<NoclassGroup.Member> = mutableSetOf()
+    private lateinit var mCourseBehavior : BottomSheetBehavior<FrameLayout>
 
     /**
      * 当前选择的NoclassGroup
      */
-    private lateinit var mCurrentNoclassGroup : NoclassGroup
-
-    /**
-     * 当前选择的members
-     */
-    private lateinit var mCurrentMembers : MutableList<NoclassGroup.Member>
+    private lateinit var mCurrentNoclassGroup : NoClassGroup
     
     /**
      * Adapter
      */
-    private lateinit var mGroupAdapter : NoClassGroupAdapter
+    private val mAdapter : NoClassTemporaryAdapter by lazy { NoClassTemporaryAdapter() }
 
     /**
-     * 预更改的标题
+     * 删除缓冲区
      */
-    private var mTobeTitle = ""
-    
+    private val mWaitDeleteList : ArrayList<Student> by lazy { ArrayList() }
+
+    /**
+     * 取消状态栏
+     */
+    override val isCancelStatusBar: Boolean
+        get() = true
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.noclass_activity_group_detail)
+        initBack()
         getList()
         initObserve()
         initRv()
         initTextView()
         initEditText()
-        initBtn()
+        initCourseContainer()
+        initQuery()
+    }
+
+    /**
+     * 由于onBackPress已经废弃，所以改用OnBackPressedDispatcher
+     *
+     */
+    private fun initBack() {
+        val backCallBack = object : OnBackPressedCallback(true){
+            override fun handleOnBackPressed() {
+                if (mCourseBehavior.state == BottomSheetBehavior.STATE_EXPANDED) {
+                    mCourseBehavior.state = BottomSheetBehavior.STATE_HIDDEN
+                } else {
+                    setResult(RESULT_OK, Intent().apply {
+                        val noClassGroup = NoClassGroup(mCurrentNoclassGroup.id,mCurrentNoclassGroup.isTop,mAdapter.currentList,mCurrentNoclassGroup.name)
+                        putExtra("GroupDetailResult",noClassGroup)
+                    })
+                    finish()
+                }
+            }
+
+        }
+        onBackPressedDispatcher.addCallback(this, backCallBack)
+    }
+
+    /**
+     * 初始化课表的容器
+     */
+    private fun initCourseContainer() {
+        mCourseBehavior = BottomSheetBehavior.from(mCourseContainer)
+        //先将课表替换为空课表
+        replaceFragment(R.id.noclass_group_detail_bottom_sheet_course_container) {
+            NoClassCourseVpFragment.newInstance(NoClassSpareTime.EMPTY_PAGE)
+        }
+        mCourseBehavior.state = BottomSheetBehavior.STATE_HIDDEN
     }
 
     /**
      * 接受外部传来的数据
      */
     private fun getList(){
-        val extra = intent.getSerializableExtra("GroupList")
-        mPosition = intent.getIntExtra("GroupPosition",-1)
-        mGroupList = extra as MutableList<NoclassGroup>
-        mCurrentNoclassGroup = mGroupList[mPosition]
-        mCurrentMembers = mCurrentNoclassGroup.members.toMutableList()
+        mCurrentNoclassGroup = intent.getSerializableExtra("NoClassGroup") as NoClassGroup
         mTitleText.text = mCurrentNoclassGroup.name
     }
     
@@ -136,52 +160,45 @@ class GroupDetailActivity : BaseActivity(){
      * 初始化观测livedata
      */
     private fun initObserve(){
-        mViewModel.isUpdateSuccess.observe(this){
-            if (it){
-                mHasChanged = true
-                if (mTobeTitle != ""){
-                    mTitleText.text = mTobeTitle
-                    mTobeTitle = ""
+        //观察搜索结果出来就弹窗
+        var searchAllDialog: SearchAllDialog?
+        mViewModel.searchAll.observe(this){
+            Log.d("lx", "searchResult: =${it}")
+            if (it?.types != null) {
+                searchAllDialog = SearchAllDialog(
+                    searchResult = it,
+                    groupId = mCurrentNoclassGroup.id
+                ).apply {
+                    setOnClickGroupDetailAdd { students ->
+                        val stuList = mAdapter.currentList.toMutableSet()
+                        stuList.addAll(students)
+                        mAdapter.submitList(stuList.toList())
+                        Log.d("lx", "添加成功 = ${students}} ")
+                    }
+                }
+                searchAllDialog!!.show(supportFragmentManager, "SearchAllDialog")
+            } else {
+                SearchNoExistDialog(this).show()
+            }
+        }
+        // 监听删除是否成功决定本地是否删除
+        mViewModel.deleteMembers.observe(this){
+            // 如果删除成功
+            if (it.second){
+                for (stu in mWaitDeleteList){
+                    // 如果待删除学生的id和要删除的学生的id一致,就真的删除，并且移除缓冲区中的元素
+                    if (stu.id == it.first){
+                        mAdapter.deleteMember(stu)
+                        mWaitDeleteList.remove(stu)
+                    }
                 }
             }else{
-                toast("网络请求错误,请稍后重试")
+                toast("删除失败")
             }
         }
-        
-        var mSearchStudentDialog : SearchStudentDialog? = null
-        mViewModel.students.observe(this){   students ->
-            if(students.isEmpty()){
-                toast("查无此人")
-            }else{
-                mSearchStudentDialog = SearchStudentDialog(students){
-                        if (mCurrentNoclassGroup.id =="-1"){
-                            return@SearchStudentDialog
-                        }
-                        if (mCurrentMembers.contains(it)){
-                            toast("用户已经存在分组中了哦~")
-                            return@SearchStudentDialog
-                        }
-                        mToAddSet.add(it)
-                        mCurrentMembers.add(it)
-                        mGroupAdapter.submitList(mCurrentMembers.toMutableList())
-                        toast("添加成功")
-                        setBtnState(true)
-                        mSearchStudentDialog?.dismiss()
-                    }.apply {
-                        show(supportFragmentManager,"searchStudentDialog")
-                    }
-            }
-        }
-        mViewModel.saveState.observe(this){
-            if (it){
-                mToAddSet.clear()
-                mToDeleteSet.clear()
-                mHasChanged = true
-                setBtnState(false)
-                toast("保存成功")
-            }else{
-                toast("保存失败")
-            }
+        // 观察noClassData，如果有变化就展开
+        mCourseViewModel.noclassData.observe(this){
+            mCourseBehavior.state = BottomSheetBehavior.STATE_EXPANDED
         }
     }
     
@@ -189,72 +206,38 @@ class GroupDetailActivity : BaseActivity(){
      * 初始化RV
      */
     private fun initRv(){
-        mRecyclerView.layoutManager = LinearLayoutManager(this)
-        mGroupAdapter = NoClassGroupAdapter().apply {
-            if (mPosition != -1){
-                submitList(mCurrentMembers.toMutableList())
-            }
-            setOnItemDelete {
-                mCurrentMembers.remove(it)
-                mToDeleteSet.add(it)
-                submitList(mCurrentMembers.toMutableList())
-                setBtnState(true)
+        mRecyclerView.apply {
+            layoutManager = LinearLayoutManager(this@GroupDetailActivity)
+            adapter = mAdapter.apply {
+                //设置删除功能
+                setOnItemDelete {
+                    mWaitDeleteList.add(it)
+                    mViewModel.deleteMembers(mCurrentNoclassGroup.id,it)
+                }
             }
         }
-        mRecyclerView.adapter = mGroupAdapter
+        // 将跳转过来的数据填充进去
+        mAdapter.submitList(mCurrentNoclassGroup.members)
     }
 
     /**
      * 完成上方标题点击初始化
      */
     private fun initTextView(){
+        // 点击回退到主界面
         findViewById<ImageView>(R.id.iv_noclass_group_detail_return).apply {
             setOnClickListener {
-                onBackPressed()
+                finish()
             }
-        }
-        
-        mTitleText.setOnSingleClickListener {
-            (getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager).hideSoftInputFromWindow(currentFocus?.windowToken, InputMethodManager.HIDE_NOT_ALWAYS)
-            RenameGroupDialog(this)
-                .setOnGroupRename {
-                    for (i in mGroupList){//判断是否有重复值
-                        if (it == i.name){
-                            return@setOnGroupRename false
-                        }
-                    }
-                    mTobeTitle = it
-                    mViewModel.updateGroup(mCurrentNoclassGroup.id, it, mCurrentNoclassGroup.isTop.toString())
-                    true
-                }
-                .show()
         }
     }
 
     /**
-     * 初始化保留按钮
+     * 这个是查询课表按钮
      */
-    private fun initBtn(){
-        mBtnSave.setOnClickListener {
-            if (mToAddSet.isEmpty() && mToDeleteSet.isEmpty()){
-                return@setOnClickListener
-            }
-            mViewModel.addAndDeleteStu(mCurrentNoclassGroup.id, mToAddSet, mToDeleteSet)
-        }
-    }
-
-    /**
-     * 设置按钮状态
-     */
-    private fun setBtnState(unSaveState : Boolean){
-        if (unSaveState){//需要保存状态
-            mBtnSave.isClickable = true
-            mBtnSave.setBackgroundResource(R.drawable.noclass_shape_button_common_bg)
-            mNeedSave = true
-        }else{//已经保存的状态
-            mBtnSave.isClickable = false
-            mBtnSave.setBackgroundResource(R.drawable.noclass_shape_button_save_default_bg)
-            mNeedSave = false
+    private fun initQuery(){
+        mBtnQuery.setOnClickListener {
+            mCourseViewModel.getLessons(mAdapter.currentList.map { it.id },mAdapter.currentList)
         }
     }
 
@@ -265,7 +248,7 @@ class GroupDetailActivity : BaseActivity(){
         //防止软键盘弹起导致视图错位
         window.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_NOTHING)
         //设置键盘上点击搜索的监听
-        mEditTextView.setOnEditorActionListener{ v, actionId, event ->
+        mEditTextView.setOnEditorActionListener{ _, actionId, _ ->
             if (actionId == EditorInfo.IME_ACTION_SEARCH) {
                 doSearch()
                 return@setOnEditorActionListener true
@@ -278,31 +261,13 @@ class GroupDetailActivity : BaseActivity(){
      * 执行搜索操作
      */
     private fun doSearch(){
-        val name = mEditTextView.text.toString().trim()
-        if (TextUtils.isEmpty(name)) {
+        val content = mEditTextView.text.toString().trim()
+        if (TextUtils.isEmpty(content)) {
             toast("输入为空")
             return
         }
         (getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager).hideSoftInputFromWindow(currentFocus?.windowToken, InputMethodManager.HIDE_NOT_ALWAYS)
         mEditTextView.setText("")
-        mViewModel.searchStudent(stu = name)
-    }
-
-    override fun onBackPressed() {
-        if (mToAddSet.isEmpty() && mToDeleteSet.isEmpty() && !mNeedSave){
-            if (mHasChanged){
-                setResult(RESULT_OK, Intent().apply {
-                    putExtra("GroupDetailResult",true)
-                })
-            }
-            super.onBackPressed()
-        }else{
-            ConfirmReturnDialog(this).setOnReturnClick {
-                mToAddSet.clear()
-                mToDeleteSet.clear()
-                mNeedSave = false
-                onBackPressed()
-            }.show()
-        }
+        mViewModel.getSearchAllResult(content)
     }
 }

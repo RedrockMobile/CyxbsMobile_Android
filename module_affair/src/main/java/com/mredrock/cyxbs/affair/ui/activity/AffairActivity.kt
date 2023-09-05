@@ -3,18 +3,25 @@ package com.mredrock.cyxbs.affair.ui.activity
 import android.animation.ValueAnimator
 import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import android.view.View
+import android.widget.Button
 import android.widget.ImageButton
 import androidx.activity.viewModels
+import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.lifecycle.DefaultLifecycleObserver
 import androidx.lifecycle.LifecycleOwner
 import com.mredrock.cyxbs.affair.R
 import com.mredrock.cyxbs.affair.ui.fragment.AddAffairFragment
 import com.mredrock.cyxbs.affair.ui.fragment.EditAffairFragment
+import com.mredrock.cyxbs.affair.ui.fragment.NoClassAffairFragment
 import com.mredrock.cyxbs.affair.ui.viewmodel.activity.AffairViewModel
+import com.mredrock.cyxbs.api.affair.NoClassBean
 import com.mredrock.cyxbs.lib.base.ui.BaseActivity
 import com.mredrock.cyxbs.lib.utils.extensions.appContext
+import com.mredrock.cyxbs.lib.utils.extensions.gone
 import com.mredrock.cyxbs.lib.utils.extensions.setOnSingleClickListener
+import com.mredrock.cyxbs.lib.utils.extensions.visible
 import java.io.Serializable
 import kotlin.math.PI
 import kotlin.math.cos
@@ -45,6 +52,18 @@ class AffairActivity : BaseActivity() {
           .putExtra(AffairActivity::mArguments.name, EditAffairArgument(onlyId))
       )
     }
+    /**
+     *  没课约的专属跳转方法
+     *  @param noClassBean : 学号：是否空闲
+     */
+    fun startForNoClass(noClassBean: NoClassBean){
+      Log.d("lx", "startForNoClass:${noClassBean} ")
+      appContext.startActivity(
+        Intent(appContext,AffairActivity::class.java)
+          .addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+          .putExtra(AffairActivity::mArguments.name, NoClassAffairArgument(noClassBean))
+      )
+    }
     
     sealed interface Argument : Serializable
     data class AddAffairArgument(
@@ -55,6 +74,10 @@ class AffairActivity : BaseActivity() {
     ) : Argument
     
     data class EditAffairArgument(val onlyId: Int) : Argument
+
+    data class NoClassAffairArgument(
+      val noClassBean : NoClassBean
+    ) : Argument
   }
   
   // 启动参数
@@ -72,15 +95,46 @@ class AffairActivity : BaseActivity() {
   
   // 事务设置的下一项
   private val mBtnNext: ImageButton by R.id.affair_btn_edit_affair_next.view()
+
+  // 没课越设置的下一项
+  private val mBtnNoClassNext : Button by R.id.affair_btn_noclass_affair_next.view()
   
   override fun onCreate(savedInstanceState: Bundle?) {
     super.onCreate(savedInstanceState)
     setContentView(R.layout.affair_activity_affair)
     initBackground()
+    initObserve()
     initClick()
     initFragment()
   }
-  
+
+  /**
+   * 目前没课越专属使用,用于更改按钮的背景
+   */
+  private fun initObserve() {
+    mViewModel.changeBtn.collectLaunch {
+      when(it){
+        1 -> { mBtnNoClassNext.setBackgroundResource(R.drawable.affair_ic_next_process_positive) }
+        2 -> {
+          mBtnNoClassNext.apply{
+            setBackgroundResource(R.drawable.affair_ic_send_notification)
+            text = "发送通知"
+          }
+        }
+        3 -> {
+          //todo 发送成功之后跳转到消息中心
+          toast("跳转到消息中心")
+        }
+        4 -> {
+          mBtnNoClassNext.apply{
+            setBackgroundResource(R.drawable.affair_ic_next_process_positive)
+            text = "下一步"
+          }
+        }
+      }
+    }
+  }
+
   private fun initBackground() {
     // 使用 LifecycleObserver，便于及时取消动画
     lifecycle.addObserver(
@@ -122,12 +176,24 @@ class AffairActivity : BaseActivity() {
   }
   
   private fun initClick() {
-    mBtnBack.setOnSingleClickListener {
-      finishAfterTransition()
-    }
-    
-    mBtnNext.setOnSingleClickListener {
-      mViewModel.clickNextBtn()
+
+    if (mArguments !is NoClassAffairArgument){
+      mBtnNext.setOnSingleClickListener {
+        mViewModel.clickNextBtn()
+      }
+      mBtnBack.setOnSingleClickListener {
+          finishAfterTransition()
+      }
+    }else{
+      // 如果是没课越的事务界面
+      mBtnNext.gone()
+      mBtnNoClassNext.visible()
+      mBtnNoClassNext.setOnSingleClickListener {
+        mViewModel.clickNextBtn()
+      }
+      mBtnBack.setOnSingleClickListener {
+        mViewModel.clickLastBtn()
+      }
     }
   }
   
@@ -142,6 +208,11 @@ class AffairActivity : BaseActivity() {
       is AddAffairArgument -> {
         replaceFragment(R.id.affair_fcv_edit_affair) {
           AddAffairFragment.newInstance(it.week, it.day, it.beginLesson, it.period)
+        }
+      }
+      is NoClassAffairArgument -> {
+        replaceFragment(R.id.affair_fcv_edit_affair) {
+          NoClassAffairFragment.newInstance(it.noClassBean)
         }
       }
     }

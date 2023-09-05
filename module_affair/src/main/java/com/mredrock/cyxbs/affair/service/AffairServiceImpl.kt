@@ -7,6 +7,7 @@ import com.mredrock.cyxbs.affair.room.AffairEntity
 import com.mredrock.cyxbs.affair.ui.activity.AffairActivity
 import com.mredrock.cyxbs.api.affair.AFFAIR_SERVICE
 import com.mredrock.cyxbs.api.affair.IAffairService
+import com.mredrock.cyxbs.api.affair.NoClassBean
 import io.reactivex.rxjava3.core.Completable
 import io.reactivex.rxjava3.core.Observable
 import io.reactivex.rxjava3.core.Single
@@ -68,7 +69,11 @@ class AffairServiceImpl : IAffairService {
   override fun startActivityForEditActivity(onlyId: Int) {
     AffairActivity.startForEdit(onlyId)
   }
-  
+
+  override fun startActivityForNoClass(noClassBean: NoClassBean) {
+    AffairActivity.startForNoClass(noClassBean)
+  }
+
   override fun init(context: Context) {
   }
   

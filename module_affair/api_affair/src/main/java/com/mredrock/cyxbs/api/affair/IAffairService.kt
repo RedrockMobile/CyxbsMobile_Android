@@ -73,4 +73,10 @@ interface IAffairService : IProvider {
    * @param onlyId 事务唯一 id
    */
   fun startActivityForEditActivity(onlyId: Int)
+
+
+  /**
+   * 来自没课约的跳转，需要有不同于事务的界面
+   */
+  fun startActivityForNoClass(noClassBean: NoClassBean)
 }

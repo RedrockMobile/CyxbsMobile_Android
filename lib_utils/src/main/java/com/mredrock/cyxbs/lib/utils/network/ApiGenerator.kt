@@ -351,6 +351,7 @@ object ApiGenerator {
         block: (Request.Builder.() -> Unit)? = null
     ): Response {
         val token = mAccountService.getUserTokenService().getToken()
+        Log.d("lx", "token: $token")
         return proceed(
             request()
                 .newBuilder()

@@ -12,13 +12,13 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
-        app:layout_constraintGuide_percent="0.64" />
+        app:layout_constraintGuide_percent="0.66" />
 
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/csl_noclass_gather_dialog"
         android:layout_width="match_parent"
-        android:layout_height="263dp"
+        android:layout_height="247dp"
         android:background="@drawable/noclass_shape_sheet_dialog_bg"
         android:orientation="vertical"
         app:layout_constraintBottom_toBottomOf="parent"
@@ -29,90 +29,97 @@
         app:layout_constraintVertical_bias="1.0">
 
         <TextView
-            android:textStyle="bold"
-            android:layout_marginTop="20dp"
-            android:layout_marginStart="16dp"
-            app:layout_constraintHorizontal_bias="0"
-            app:layout_constraintVertical_bias="0"
-            android:textColor="@color/noclass_primary_text_color"
-            android:text="集合！！出发"
-            android:textSize="18sp"
+            android:id="@+id/noclass_tv_gathering_busy_total"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
+            android:layout_marginStart="16dp"
+            android:layout_marginTop="20dp"
+            android:text="忙碌0人"
+            android:textColor="@color/noclass_primary_text_color"
+            android:textSize="18sp"
+            android:textStyle="bold"
             app:layout_constraintStart_toStartOf="parent"
-            android:id="@+id/noclassTextview" />
+            app:layout_constraintTop_toTopOf="parent" />
 
         <TextView
             android:id="@+id/noclass_tv_gathering_total"
-            android:layout_marginTop="8dp"
-            android:layout_marginStart="16dp"
-            app:layout_constraintVertical_bias="0"
-            app:layout_constraintHorizontal_bias="0"
-            android:alpha="0.6"
-            android:textColor="@color/noclass_primary_text_color"
-            android:text="人数：共记 6 人"
-            android:textSize="12sp"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            app:layout_constraintBottom_toBottomOf="parent"
+            android:layout_marginStart="16dp"
+            android:layout_marginTop="16dp"
+            android:alpha="0.6"
+            android:text="人数：共记 0 人"
+            android:textColor="@color/noclass_primary_text_color"
+            android:textSize="14sp"
             app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/noclassTextview"
-            />
+            app:layout_constraintTop_toBottomOf="@+id/noclass_tv_gathering_busy_total" />
 
         <TextView
             android:id="@+id/noclass_tv_gathering_time"
-            android:layout_marginTop="8dp"
-            app:layout_constraintVertical_bias="0"
-            android:layout_marginStart="16dp"
-            app:layout_constraintHorizontal_bias="0"
-            android:alpha="0.6"
-            android:textColor="@color/noclass_primary_text_color"
-            tools:text="时间：周日 9-10 19:00-20:40"
-            android:textSize="12sp"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            app:layout_constraintBottom_toBottomOf="parent"
+            android:layout_marginStart="16dp"
+            android:alpha="0.6"
+            android:textColor="@color/noclass_primary_text_color"
+            android:textSize="14sp"
+            android:layout_marginTop="8dp"
             app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/noclass_tv_gathering_total" />
+            app:layout_constraintTop_toBottomOf="@+id/noclass_tv_gathering_total"
+            tools:text="时间：周日 9-10 19:00-20:40" />
+
+        <Button
+            android:id="@+id/noclass_btn_arrange_plan"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@drawable/noclass_shape_btn_notification"
+            android:layout_marginTop="20dp"
+            android:layout_marginEnd="16dp"
+            android:paddingTop="7dp"
+            android:paddingBottom="7dp"
+            android:paddingStart="15dp"
+            android:paddingEnd="15dp"
+            android:text="安排行程"
+            android:textSize="12sp"
+            android:textColor="@color/config_white_black"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
 
         <View
-            app:layout_constraintVertical_bias="0.4"
-            android:background="@color/noclass_gather_line_bg"
+            android:id="@+id/noclassView3"
             android:layout_width="match_parent"
             android:layout_height="1dp"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
+            android:layout_marginTop="14dp"
+            android:background="@color/noclass_gather_line_bg"
             app:layout_constraintEnd_toEndOf="parent"
-            android:id="@+id/noclassView3" />
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/noclass_tv_gathering_time" />
 
         <androidx.viewpager2.widget.ViewPager2
             android:id="@+id/noclass_vp_gather_container"
-            android:layout_marginStart="16dp"
-            android:layout_marginEnd="16dp"
             android:layout_width="0dp"
             android:layout_height="0dp"
+            android:layout_marginTop="10dp"
+            android:layout_marginBottom="35dp"
+            android:layout_marginStart="16dp"
+            android:layout_marginEnd="16dp"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/noclassView3"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            android:layout_marginBottom="32dp"/>
+            app:layout_constraintTop_toBottomOf="@+id/noclassView3" />
 
-        <com.mredrock.cyxbs.noclass.widget.StickIndicator
+        <com.mredrock.cyxbs.noclass.widget.MyVpIndicatorView
             android:id="@+id/noclass_indicator_gathering"
-            app:layout_constraintVertical_bias="0"
-            app:noclass_indicator_show_count="5"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/noclass_vp_gather_container"
+            app:active_color="@color/noclass_indicator_inactive_bg"
+            app:inactive_color="@color/noclass_indicator_active_bg"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent" />
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/noclass_tv_gathering_time" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 

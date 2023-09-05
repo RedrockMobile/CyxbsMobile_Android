@@ -2,6 +2,7 @@ package com.mredrock.cyxbs.noclass.widget
 
 import android.content.Context
 import android.util.AttributeSet
+import android.util.Log
 import android.view.View
 import android.view.ViewGroup
 
@@ -27,7 +28,7 @@ class MyFlexLayout @JvmOverloads constructor(
 
     companion object{
         //最大的高度限制
-        private const val mMaxLine = 4
+        private const val mMaxLine = 2
     }
 
     override fun generateLayoutParams(
@@ -72,6 +73,7 @@ class MyFlexLayout @JvmOverloads constructor(
         var currentWidth = 0
         var currentHeight = 0
 
+        Log.d("lx", "flex的测量 ")
         /**
          * 记录每一行的宽度，width不断取最大宽度
          */
@@ -113,6 +115,7 @@ class MyFlexLayout @JvmOverloads constructor(
                 currentHeight += lineHeight
                 // 开启记录下一行的高度
                 lineHeight = childHeight
+                // 从第0行开始的
                 if (lineCount == mMaxLine) {
                     break
                 }
@@ -136,6 +139,18 @@ class MyFlexLayout @JvmOverloads constructor(
     private val mAllViews: MutableList<MutableList<View>> = ArrayList()
 
     /**
+     * 当布局完成之后的回调
+     */
+    private var onLayoutCallBack : ((List<Int>) -> Unit)? = null
+
+    /**
+     * 设置布局完成之后的回调
+     */
+    fun setOnLayoutCallBack(onLayoutCallBack : (List<Int>) -> Unit){
+        this.onLayoutCallBack = onLayoutCallBack
+    }
+
+    /**
      * 记录每一行的最大高度
      */
     private val mLineHeight: MutableList<Int> = ArrayList()
@@ -147,8 +162,9 @@ class MyFlexLayout @JvmOverloads constructor(
 
         var lineWidth = 0
         var lineHeight = 0
+        var lineCount = 0
         // 存储每一行所有的childView
-        var lineViews: MutableList<View> = arrayListOf()
+        mAllViews.add(arrayListOf())
         // 遍历所有的子view
         for (i in 0 until childCount) {
             val child: View = getChildAt(i)
@@ -161,38 +177,36 @@ class MyFlexLayout @JvmOverloads constructor(
                 // 记录这一行所有的View以及最大高度
                 mLineHeight.add(lineHeight)
                 // 将当前行的childView保存，然后开启新的ArrayList保存下一行的childView
-                mAllViews.add(lineViews)
+                Log.d("lx", "add - mLinesViews: = ${mAllViews.size} ")
                 lineWidth = 0 // 重置行宽
-                lineViews = ArrayList()
                 if (mAllViews.size == mMaxLine) {
                     break
                 }
+                lineCount ++
+                mAllViews.add(arrayListOf())
             }
             /**
              * 如果不需要换行，则累加
              */
             lineWidth += childWidth + lp.leftMargin + lp.rightMargin
             lineHeight = lineHeight.coerceAtLeast(childHeight + lp.topMargin + lp.bottomMargin)
-            lineViews.add(child)
+            mAllViews[lineCount].add(child)
         }
 
         // 记录最后一行
         mLineHeight.add(lineHeight)
-        mAllViews.add(lineViews)
         var left = 0
         var top = 0
         // 得到总行数
         val lineNums = mAllViews.size
 
         for (i in 0 until lineNums) {
-            // 每一行的所有的views
-            lineViews = mAllViews[i]
             // 当前行的最大高度
             lineHeight = mLineHeight[i]
 
             // 遍历当前行所有的View
-            for (j in lineViews.indices) {
-                val child: View = lineViews[j]
+            for (j in mAllViews[i].indices) {
+                val child: View = mAllViews[i][j]
                 if (View.GONE == child.visibility) { continue }
                 val lp = child.layoutParams as MarginLayoutParams
 
@@ -207,14 +221,14 @@ class MyFlexLayout @JvmOverloads constructor(
             left = 0
             top += lineHeight
         }
-
-        //填充完毕一页
-        var n = 0
-        for (i in mAllViews.indices) {
-            n += mAllViews[i].size
+        // 填充完毕一页
+        if (lineNums == mMaxLine){
+            var n = 0
+            for (i in mAllViews.indices) {
+                n += mAllViews[i].size
+            }
+            mOnFillCallback.onFill(n)
         }
-
-        mOnFillCallback.onFill(n)
 //        设置是否居中
 //        adjust()
     }
@@ -246,7 +260,7 @@ class MyFlexLayout @JvmOverloads constructor(
     }
 
     interface OnFillCallback {
-        fun onFill(index: Int)
+        fun onFill(itemsSize: Int)
     }
 
     enum class FlexState{

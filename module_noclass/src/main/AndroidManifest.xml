@@ -5,7 +5,7 @@
 
         <activity android:name="com.mredrock.cyxbs.noclass.page.ui.activity.NoClassActivity"/>
         <activity
-            android:name=".page.ui.activity.GroupManagerActivity"
+            android:name=".page.ui.activity.BatchAdditionActivity"
             android:windowSoftInputMode="adjustNothing"/>
         <activity android:name=".page.ui.activity.GroupDetailActivity"/>
 
