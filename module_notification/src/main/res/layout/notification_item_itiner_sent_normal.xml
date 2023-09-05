@@ -6,6 +6,8 @@
     android:layout_height="wrap_content"
     android:layout_marginBottom="8dp"
     android:background="@color/notification_white"
+    app:cardElevation="0dp"
+    app:cardMaxElevation="0dp"
     app:cardCornerRadius="12dp">
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -18,6 +20,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textAppearance="@style/notification_itinerary_item_title_text_style"
+            android:letterSpacing="0.14"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
             tool:text="活动通知" />
@@ -29,8 +32,9 @@
             android:background="@android:color/transparent"
             android:gravity="center_vertical"
             android:orientation="horizontal"
+            app:layout_constraintBottom_toBottomOf="@+id/notification_itinerary_tv_sent_title"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toTopOf="parent">
+            app:layout_constraintTop_toTopOf="@+id/notification_itinerary_tv_sent_title">
 
             <ImageView
                 android:id="@+id/notification_itinerary_iv_status_uncancel_dot"
@@ -56,6 +60,7 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="3dp"
             android:textAppearance="@style/notification_itinerary_item_content_text_style"
+            android:letterSpacing="0.15"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/notification_itinerary_tv_sent_title"
             tool:text="你提醒嘎嘎嘎于8月15日周三第5节课和第6节课在灯光篮球场上打篮球" />
@@ -66,6 +71,7 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="3dp"
             android:textAppearance="@style/notification_itinerary_item_generate_time_text_style"
+            android:letterSpacing="0.1"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/notification_itinerary_tv_sent_content"
             tool:text="8/14 12:00" />
@@ -114,6 +120,7 @@
                 android:layout_gravity="center_vertical"
                 android:layout_marginStart="5dp"
                 android:text="取消提醒"
+                android:letterSpacing="0.075"
                 android:textAppearance="@style/notification_itinerary_item_cancel_reminder_text_style"
                 tool:ignore="HardcodedText" />
 

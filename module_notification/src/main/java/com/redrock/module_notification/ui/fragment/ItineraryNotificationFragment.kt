@@ -70,6 +70,7 @@ class ItineraryNotificationFragment : BaseFragment(R.layout.notification_fragmen
         initTabLayout()
     }
     /*
+    // 动态适配夜间模式的一些配置
     private fun initUIModeConfig() {
         //  app应用了何种模式
         var uiMode = resources.configuration.uiMode
@@ -123,7 +124,7 @@ class ItineraryNotificationFragment : BaseFragment(R.layout.notification_fragmen
                 myActivity,
                 R.drawable.notification_shape_tab_divider_vertical
             )
-            dividerPadding = 2
+//            dividerPadding = 3
         }
 
 
@@ -136,16 +137,18 @@ class ItineraryNotificationFragment : BaseFragment(R.layout.notification_fragmen
         tab2View = LayoutInflater.from(myActivity)
             .inflate(R.layout.notification_item_itinerary_tab2, itineraryTypeTab.parent as ViewGroup, false)
         tab2?.customView = tab2View
-//        itineraryTypeTab.getTabAt(currentPageIndex)?.select()
+        // 取消当前显示fragment页面的对应的tab的红点
         changeTabRedDotsVisibility(currentPageIndex, View.INVISIBLE)
     }
 
     private fun initObserver() {
+        // 如果在宿主Activity中获取行程消息成功，则从宿主Activity的viewModel拿数据
         parentViewModel.itineraryMsg.observe {
             itineraryViewModel.getReceivedItinerary()
             itineraryViewModel.getSentItinerary()
         }
 
+        // 也许后续会考虑把观察者的遍历逻辑放入携程中
         itineraryViewModel.receivedItineraryList.observe { list ->
             // 如果receivedItineraryList中存在未读行程, 获取其中所有未读行程 的id
             var isVisibleRedDot = false
@@ -163,6 +166,7 @@ class ItineraryNotificationFragment : BaseFragment(R.layout.notification_fragmen
             itineraryViewModel.setUnReadReceivedItineraryIds(tempList)
         }
 
+        // 同上
         itineraryViewModel.sentItineraryList.observe { list ->
             // 如果sentItineraryList中存在未读行程, 获取其中所有未读行程 的id
             var isVisibleRedDot = false
@@ -180,6 +184,8 @@ class ItineraryNotificationFragment : BaseFragment(R.layout.notification_fragmen
             itineraryViewModel.setUnReadSentItineraryIds(tempList)
         }
 
+        // 观察 放置两种行程消息的viewPager的当前页面index，接收为 0，发送为 1
+        // 把这个index放入ViewModel持久化保存以便发生Activity重建时可以记住之前的位置
         itineraryViewModel.currentPageIndex.observe {
             changeTabRedDotsVisibility(it, View.INVISIBLE)
             when (it) {
@@ -188,7 +194,7 @@ class ItineraryNotificationFragment : BaseFragment(R.layout.notification_fragmen
                         if (this.value.isNullOrEmpty()) {
                             return@observe
                         }
-                        if (myActivity.whichPageIsIn == 2) {
+                        if (myActivity.whichPageIsIn == 2) { // 行程页面可见
                             itineraryViewModel.changeItineraryReadStatus(this.value!!, 0)
                         }
                     }
@@ -199,7 +205,7 @@ class ItineraryNotificationFragment : BaseFragment(R.layout.notification_fragmen
                         if (this.value.isNullOrEmpty()) {
                             return@observe
                         }
-                        if (myActivity.whichPageIsIn == 2) {
+                        if (myActivity.whichPageIsIn == 2) { // 行程页面可见
                             itineraryViewModel.changeItineraryReadStatus(this.value!!, 1)
                         }
                     }
@@ -209,6 +215,9 @@ class ItineraryNotificationFragment : BaseFragment(R.layout.notification_fragmen
 
     }
 
+    /**
+     * 未读消息更新时
+     */
     private fun initCollect() {
         itineraryViewModel.newUnReadSentItineraryIds.collectLaunch {
             if (!it.isNullOrEmpty() && myActivity.whichPageIsIn == 2 && currentPageIndex == 1) {

@@ -90,7 +90,8 @@ class SysNotificationFragment : BaseFragment() {
                         allReadSysMsg.add(value)
                 }
             }
-            data = it as ArrayList<SystemMsgBean>
+            if (it.isNotEmpty())
+                data = it as ArrayList<SystemMsgBean>
             data.addAll(it)
             adapter.changeAllData(data)
             notification_rv_sys.scheduleLayoutAnimation()

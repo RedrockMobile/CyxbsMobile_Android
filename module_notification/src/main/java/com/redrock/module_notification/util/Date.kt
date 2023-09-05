@@ -16,8 +16,8 @@ object Date {
     private val sdf1 = SimpleDateFormat("yyyy.M.d", Locale.CHINA)
     private val sdf2 = SimpleDateFormat("yyyy-MM-dd HH:mm", Locale.CHINA)
     private val sdf3 = SimpleDateFormat("yyyy-MM-dd", Locale.CHINA)
-    private val sdf4 = SimpleDateFormat("yyyy/M/d H:mm", Locale.CHINA)
-    private val sdf5 = SimpleDateFormat("M/d H:mm", Locale.CHINA)
+    private val sdf4 = SimpleDateFormat("yyyy/M/d  H:mm", Locale.CHINA)
+    private val sdf5 = SimpleDateFormat("M/d  H:mm", Locale.CHINA)
 
     /**
      * 根据时间戳获取日期, 形式为 yyyy.M.d

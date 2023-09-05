@@ -8,7 +8,9 @@ import com.mredrock.cyxbs.common.viewmodel.BaseViewModel
 import com.mredrock.cyxbs.lib.utils.extensions.setSchedulers
 import com.mredrock.cyxbs.lib.utils.extensions.unsafeSubscribeBy
 import com.mredrock.cyxbs.lib.utils.network.ApiGenerator
+import com.mredrock.cyxbs.lib.utils.network.mapOrInterceptException
 import com.mredrock.cyxbs.lib.utils.network.mapOrThrowApiException
+import com.mredrock.cyxbs.lib.utils.utils.LogUtils
 import com.redrock.module_notification.bean.ChangeReadStatusToBean
 import com.redrock.module_notification.bean.DeleteMsgToBean
 import com.redrock.module_notification.bean.ItineraryAllMsg
@@ -37,9 +39,6 @@ class NotificationViewModel : BaseViewModel() {
     val itineraryMsg: LiveData<ItineraryAllMsg> get() = _itineraryMsg
     private val _itineraryMsg = MutableLiveData<ItineraryAllMsg>()
 
-    // 在该viewModel中获取所有行程消息的请求 是否成功（状态）
-    val itineraryMsgIsSuccessfulState: LiveData<Boolean> get() = _itineraryMsgIsSuccessfulState
-    private val _itineraryMsgIsSuccessfulState = MutableLiveData<Boolean>()
     // 是否获取成功获取过行程数据
     var getItineraryIsSuccessful: Boolean  = false
         private set
@@ -212,20 +211,20 @@ class NotificationViewModel : BaseViewModel() {
      * 获取所有行程消息
      */
     fun getAllItineraryMsg() {
+        /* // 朴素但有效的写法
         retrofit.getReceivedItinerary()
             .subscribeOn(Schedulers.io())
             .subscribeOn(AndroidSchedulers.mainThread())
-            .mapOrThrowApiException()
+            .mapOrInterceptException{  }
             .unsafeSubscribeBy(
                 onError = {
                     Log.d("Hsj-getAllItinerary", "getAllItineraryMsg 1 failed of ${it.message}")
                 },
                 onSuccess = {received->
-                    Log.d("Hsj-getAllItinerary", "getAllItineraryMsg 1 success")
                     retrofit.getSentItinerary()
                         .subscribeOn(Schedulers.io())
                         .subscribeOn(AndroidSchedulers.mainThread())
-                        .mapOrThrowApiException()
+                        .mapOrInterceptException{  }
                         .unsafeSubscribeBy(
                             onError = {
                                 Log.d("Hsj-getAllItinerary", "getAllItineraryMsg 2 failed of ${it.message}")
@@ -241,5 +240,40 @@ class NotificationViewModel : BaseViewModel() {
                         ).lifeCycle()
                 }
             ).lifeCycle()
+        */
+        val tempList = ItineraryAllMsg(emptyList(), emptyList())
+        retrofit.getReceivedItinerary()
+            .flatMap {
+                if (it.isSuccess()) {
+                    tempList.receivedItineraryList = it.data
+                } else {
+                    it.throwApiExceptionIfFail()
+                }
+                retrofit.getSentItinerary()
+            }
+            .subscribeOn(Schedulers.io())
+            .subscribeOn(AndroidSchedulers.mainThread())
+            .mapOrInterceptException {
+//                LogUtils.d("H57-err","getAllItineraryMsg fair")
+//                getMsgSuccessful.postValue(false)
+                ApiException {
+                // 处理全部 ApiException 错误
+                }.catchOther {
+                // 处理非 ApiException 的其他异常
+                }
+            }
+            .unsafeSubscribeBy(
+                onError = {
+                    LogUtils.d("H57-err","getAllItineraryMsg fair")
+                    getMsgSuccessful.postValue(false)
+                },
+                onSuccess = {
+                    tempList.sentItineraryList = it
+                    _itineraryMsg.postValue(tempList)
+                    getItineraryIsSuccessful = true
+                    getMsgSuccessful.postValue(true)
+                }
+            ).lifeCycle()
+
     }
 }
