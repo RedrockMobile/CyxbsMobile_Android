@@ -14,7 +14,6 @@ import com.mredrock.cyxbs.config.sp.defaultSp
 import com.mredrock.cyxbs.lib.base.ui.BaseActivity
 import com.mredrock.cyxbs.lib.base.utils.Umeng
 import com.mredrock.cyxbs.lib.utils.extensions.dp2pxF
-import com.mredrock.cyxbs.lib.utils.extensions.launch
 import com.mredrock.cyxbs.lib.utils.service.ServiceManager
 import com.mredrock.cyxbs.lib.utils.service.impl
 import com.mredrock.cyxbs.main.R
@@ -51,13 +50,6 @@ class MainActivity : BaseActivity() {
     if (isLogin != null) {
       mIsLogin = isLogin
       initUI()
-      if (mIsLogin) {
-        launch {
-          tryPingNetWork()?.onFailure {
-            toast("后端服务暂不可用")
-          }
-        }
-      }
     }
   }
 
@@ -164,6 +156,16 @@ class MainActivity : BaseActivity() {
             mViewModel.courseBottomSheetExpand.value = false
           }
         }
+        /**
+         * TODO 关闭服务 邮问位置课表上拉
+         */
+        /*1 ->{
+          mBottomNavLayout.cardElevation = 0F
+          if (!mIsActivityRebuilt) {
+            // 只在 Activity 没有重建时才设置成 false
+            mViewModel.courseBottomSheetExpand.value = false
+          }
+        }*/
         1 -> {
           mBottomNavLayout.cardElevation = 4.dp2pxF
           mViewModel.courseBottomSheetExpand.value = null
@@ -196,7 +198,7 @@ class MainActivity : BaseActivity() {
     // 长按桌面图标的那个东西，对应 AndroidManifest.xml 中的设置
     const val DESKTOP_SHORTCUT_COURSE = "com.mredrock.cyxbs.action.COURSE"
 //    const val DESKTOP_SHORTCUT_EXAM = "android.intent.action.EXAM"
-    const val DESKTOP_SHORTCUT_SCHOOL_CAR = "android.intent.action.SCHOOLCAR"
+    const val DESKTOP_SHORTCUT_SCHOOL_CAR = "android.intent.action.SCHOOL_CAR"
 //    const val DESKTOP_SHORTCUT_EMPTY_ROOM = "android.intent.action.EMPTY_ROOM"
   }
 }

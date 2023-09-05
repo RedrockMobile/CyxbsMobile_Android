@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="84dp"
+    android:layout_height="39dp">
+
+    <!--<View
+        android:layout_width="13dp"
+        android:layout_height="12dp"
+        android:layout_marginStart="72dp"
+        android:layout_marginTop="20dp"
+        android:background="@drawable/food_shape_view_pressed"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        android:layout_marginEnd="20dp"
+        android:layout_marginBottom="20sp"
+        />-->
+
+    <Button
+        android:id="@+id/food_rv_item_btn"
+        android:layout_width="74dp"
+        android:layout_height="29dp"
+        android:layout_marginTop="3dp"
+        android:background="@drawable/food_shape_btn_normal"
+        android:stateListAnimator="@null"
+        android:textSize="12sp"
+        android:textColor="@color/food_btn_pressed_text"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:text="test" />
+
+    <!--<androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/food_rv_item_cl"
+        android:layout_width="74dp"
+        android:layout_height="29dp"
+        android:background="@drawable/food_ic_btn_pressed"
+        android:visibility="invisible"
+        app:layout_constraintBottom_toBottomOf="@id/food_rv_item_btn"
+        app:layout_constraintEnd_toEndOf="@id/food_rv_item_btn"
+        >
+
+
+    </androidx.constraintlayout.widget.ConstraintLayout>-->
+
+
+</androidx.constraintlayout.widget.ConstraintLayout>
