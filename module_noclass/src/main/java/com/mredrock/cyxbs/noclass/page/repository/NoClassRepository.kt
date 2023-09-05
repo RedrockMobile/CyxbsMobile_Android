@@ -1,6 +1,5 @@
 package com.mredrock.cyxbs.noclass.page.repository
 
-import android.util.Log
 import com.mredrock.cyxbs.lib.utils.network.ApiStatus
 import com.mredrock.cyxbs.lib.utils.network.ApiWrapper
 import com.mredrock.cyxbs.noclass.bean.NoClassBatchResponseInfo
@@ -127,7 +126,6 @@ object NoClassRepository {
      * 批量添加页面，检查上传的信息
      */
     fun checkUploadInfo(content: List<String>) :Single<ApiWrapper<NoClassBatchResponseInfo>> {
-        Log.d("test","开始请求")
         return NoclassApiService
             .INSTANCE
             .checkUploadInfo(content)

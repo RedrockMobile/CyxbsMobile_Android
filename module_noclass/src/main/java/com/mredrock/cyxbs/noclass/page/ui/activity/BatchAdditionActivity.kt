@@ -2,6 +2,7 @@ package com.mredrock.cyxbs.noclass.page.ui.activity
 
 import android.content.Intent
 import android.os.Bundle
+import android.view.MotionEvent
 import android.view.View
 import android.view.WindowManager
 import android.widget.Button
@@ -61,7 +62,7 @@ class BatchAdditionActivity : BaseActivity() {
     private var tempStuNumList = mutableListOf<String>()
 
     // 状态位，是否已经将最新的一次成功查询的结果中的normal信息添加到了tempPreparedList中
-    private var isSuccessSaveLatestNormal = false
+    private var isSuccessSaveLatestNormal = true
 
     /**
      * 绑定部分view的实例
@@ -85,6 +86,14 @@ class BatchAdditionActivity : BaseActivity() {
         initInteractView()
         initCourse()
 
+    }
+
+    /**
+     * 点击屏幕内除了编辑框的任何位置，取消编辑框焦点
+     */
+    override fun onTouchEvent(event: MotionEvent?): Boolean {
+        batchInputBox.clearFocus()
+        return super.onTouchEvent(event)
     }
 
     /**
@@ -120,7 +129,8 @@ class BatchAdditionActivity : BaseActivity() {
                 toast("输入为空")
                 return@setOnSingleClickListener
             }
-            doSearch()
+            if (isSuccessSaveLatestNormal) // 当前保存的Normal已经是最新的normal才允许执行下一次的查询操作
+                doSearch()
         }
     }
 
@@ -128,9 +138,11 @@ class BatchAdditionActivity : BaseActivity() {
      * 执行搜索操作
      */
     private fun doSearch() {
-        // 首先进行输入框内容的合法性检测
-        val contentList = batchInputBox.text.toString().trim().split("\n").map { it.trim() }
+        // 首先将输入框的内容按换行符分割
+        val contentList = batchInputBox.text.toString().trim() // 先去除原始内容的 前导与后驱的所有空字符
+            .split("\n").map { it.trim() }
 
+        // 然后进行输入框内容的合法性检测
         /**
          * 去除字符串所有空格
          * str.replace("\\s".toRegex(), "")
@@ -146,6 +158,7 @@ class BatchAdditionActivity : BaseActivity() {
                     standardFlag = true
                     contentList.forEach {
                         if (!InputFormatUtil.isNumbersSequence(it)) {
+                            // 检测到内容不是纯数字序列
                             standardFlag = false
                             return@loop
                         }
@@ -156,12 +169,13 @@ class BatchAdditionActivity : BaseActivity() {
                     standardFlag = true
                     contentList.forEach {
                         if (!InputFormatUtil.isChineseCharacters(it)) {
+                            // 检测到内容不是纯汉字序列
                             standardFlag = false
                             return@loop
                         }
                     }
                 }
-                else ->{
+                else ->{ // 检测到内容不是 已定义的字符序列
                     standardFlag = false
                 }
             }
@@ -188,20 +202,23 @@ class BatchAdditionActivity : BaseActivity() {
      * 初始化一些与行为强关联的逻辑
      */
     private fun initAction() {
+        // 发起信息检查请求后，收集服务器返回的数据，并处理
         batchAdditionViewModel.getInfoCheckResult.collectLaunch {
-            if (it.isWrong) { // 检查后发现数据有误，即it.errList不为空
+            if (it.isWrong) { // 检查后发现传入的数据有误，即it.errList不为空（逻辑上是这样，但得考虑到数据出错的情况）
+                // 已要求后端哪怕传入的数据没有err，也得返回应该空list而不是直接返回null
                 BatchQueryErrorDialog(this, it.errList).show()
                 return@collectLaunch
             }
+            // 传入的数据无误，有了最新版的normal数据
             isSuccessSaveLatestNormal = false
             if (!it.repeat.isNullOrEmpty()) {
-                // 弹出重名的信息
+                // 弹出重名的信息列表
                 SameNameSelectionDialog(it.repeat).show(
                     supportFragmentManager,
                     "SameNameSelectionDialog"
                 )
             }
-            // 暂存最新normal的返回数据，待到重名信息选择完毕之后再一起给到ViewModel进行空闲课表的网络请求
+            // 暂存最新的normal数据，待到重名信息选择完毕之后再一起给到freeCourseViewModel进行空闲课表的网络请求
             tempPreparedList.clear()
             tempStuNumList.clear()
             tempPreparedList = mutableListOf()
@@ -210,15 +227,17 @@ class BatchAdditionActivity : BaseActivity() {
                 tempPreparedList.add(Pair(normal.id, normal.name))
                 tempStuNumList.add(normal.id)
             }
+            // 最新的normal数据暂存成功
             isSuccessSaveLatestNormal = true
             if (it.repeat.isNullOrEmpty()) { // 没有重名信息数组
                 if(tempPreparedList.isNotEmpty())
                     freeCourseViewModel.getLessonsFromNum2Name(tempStuNumList, tempPreparedList)
                 else
-                    "没有查到任何结果o(╥﹏╥)o".toast()
+                    "没有查到任何结果o(╥﹏╥)o".toast() // 最新的normal数据为空则不进行后续步骤
             }
         }
 
+        // 从弹出重名的信息列表开始，直到点击了确认按钮后，收集在这期间选择的重名学生信息
         batchAdditionViewModel.getSelectedSameNameStudents.collectLaunch {
             if (it.isEmpty()) {  // 有重名学生，但未进行重名学生的选择
                 waitLatestNormalSave {
@@ -271,13 +290,14 @@ class BatchAdditionActivity : BaseActivity() {
             override fun onStateChanged(bottomSheet: View, newState: Int) {
                 when (newState) {
                     BottomSheetBehavior.STATE_EXPANDED -> { // 课表展开
-                        // 下次不再提醒，默认值为false，也就是默认下次需要提醒
+                        // 记录下次是否不再提醒 的键值对，默认值为false，也就是默认下次需要提醒
                         if (!defaultSp.getBoolean("NeverRemindNextOnNoClass", false)) {
                             IsCreateSolidDialog(this@BatchAdditionActivity).apply {
                                 // 等待弹窗的选择，然后进入下一个弹窗
                                 setOnReturnClick { dialog, isRemind ->
                                     if (isRemind) {
                                         dialog.dismiss()
+                                        // 记录下次是否需要该询问弹窗dialog
                                         defaultSp.edit()
                                             .putBoolean("NeverRemindNextOnNoClass", true).apply()
                                     }
@@ -286,6 +306,7 @@ class BatchAdditionActivity : BaseActivity() {
                                 setOnContinueClick { dialog, isRemind ->
                                     if (isRemind) {
                                         dialog.dismiss()
+                                        // 记录下次是否需要该询问弹窗dialog
                                         defaultSp.edit()
                                             .putBoolean("NeverRemindNextOnNoClass", true).apply()
                                     }
@@ -338,6 +359,16 @@ class BatchAdditionActivity : BaseActivity() {
 
     /**
      * 等待最新的请求到的normal数据遍历暂存完成
+     *
+     * ## **tip:**
+     * 由于查询空闲课表的操作无可避免的需要用到服务器返回的最新normal数据 （必须要保证最新且完整）
+     * 故使用状态位``isSuccessSaveLatestNormal``表示当前暂存的normal数据是否为最新（且完整的）
+     * 当有操作需要用到保存的normal时，就得保证保存的normal已经更新完成
+     *
+     * ### 为什么必须要保证是最新的normal：
+     * 信息有时效性，服务器返回的结果与当次发起查询的行为有强关联性
+     * （相当于该结果就是一个应该在 得到当次查询结果之后~下次查询行为开始前 被消费的事件）
+     *
      * @param daAfterFinished       最新的normal数据暂存完成后的操作
      */
     private fun waitLatestNormalSave(daAfterFinished: () -> Unit) {

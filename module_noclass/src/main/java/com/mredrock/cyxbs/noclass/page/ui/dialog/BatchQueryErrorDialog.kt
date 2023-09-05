@@ -33,9 +33,10 @@ class BatchQueryErrorDialog(context: Context, private val errList: List<String>)
         }
         var errMessageHead: String?
         val errMessage: String
+        // 确保取到errList中不为空字符的信息，否则errMessageHead为空
         errMessageHead = errList.firstOrNull { it.trim().isNotBlank() }
 
-        if (errMessageHead.isNullOrBlank()) {
+        if (errMessageHead.isNullOrBlank()) { // 如果errList里没有符合要求的非空字符信息
             errMessage = "输入信息有误\n请重新输入"
         } else {
             if (errMessageHead.length > 5)
