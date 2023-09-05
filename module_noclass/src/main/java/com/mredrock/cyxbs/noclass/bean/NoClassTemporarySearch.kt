@@ -11,9 +11,9 @@ data class NoClassTemporarySearch(
     val types: List<String>
 )
 
-const val STUDENT = "学生"
-const val CLASS = "班级"
-const val GROUP = "分组"
+const val STUDENT_TYPE = "学生"
+const val CLASS_TYPE = "班级"
+const val GROUP_TYPE = "分组"
 
 interface NoClassItem {
     val id: String

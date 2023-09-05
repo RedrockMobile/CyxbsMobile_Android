@@ -13,13 +13,13 @@ import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import com.mredrock.cyxbs.lib.utils.extensions.toast
 import com.mredrock.cyxbs.noclass.R
-import com.mredrock.cyxbs.noclass.bean.CLASS
+import com.mredrock.cyxbs.noclass.bean.CLASS_TYPE
 import com.mredrock.cyxbs.noclass.bean.Cls
-import com.mredrock.cyxbs.noclass.bean.GROUP
+import com.mredrock.cyxbs.noclass.bean.GROUP_TYPE
 import com.mredrock.cyxbs.noclass.bean.NoClassGroup
 import com.mredrock.cyxbs.noclass.bean.NoClassItem
 import com.mredrock.cyxbs.noclass.bean.NoClassTemporarySearch
-import com.mredrock.cyxbs.noclass.bean.STUDENT
+import com.mredrock.cyxbs.noclass.bean.STUDENT_TYPE
 import com.mredrock.cyxbs.noclass.bean.Student
 import com.mredrock.cyxbs.noclass.page.adapter.TemporarySearchAdapter
 import com.mredrock.cyxbs.noclass.page.viewmodel.dialog.SearchAllDialogViewModel
@@ -97,13 +97,13 @@ class SearchAllDialog(
                         }
                         // 此时绝对只有一条数据
                         when (searchResult.types[0]) {
-                            STUDENT -> dismiss()
-                            CLASS -> dismiss()
-                            GROUP -> {
+                            STUDENT_TYPE -> dismiss()
+                            CLASS_TYPE -> dismiss()
+                            GROUP_TYPE -> {
                                 // 如果是分组的话，会有整体的分组和成员的item，所以如果点击group的加号才取消
-                                if (mWaitAdd[key] == GROUP) {
+                                if (mWaitAdd[key] == GROUP_TYPE) {
                                     dismiss()
-                                } else if (mWaitAdd[key] == STUDENT) {
+                                } else if (mWaitAdd[key] == STUDENT_TYPE) {
                                     key.forEach {stu -> mAdapter.deleteStudent(stu) }
                                 }
                             }
@@ -139,7 +139,7 @@ class SearchAllDialog(
                 if (groupId == "-1") {
                     for (type in data.types) {
                         when (type) {
-                            STUDENT -> {
+                            STUDENT_TYPE -> {
                                 //如果分组id为-1，说明从临时分组界面过来，不进行网络请求直接添加。
                                 setOnClickStudent {
                                     onClickStudent?.invoke(it)
@@ -149,7 +149,7 @@ class SearchAllDialog(
                                 searchResultList.addAll(data.students)
                             }
 
-                            CLASS -> {
+                            CLASS_TYPE -> {
                                 setOnClickClass {
                                     onClickClass?.invoke(it)
                                     dialog.cancel()
@@ -158,7 +158,7 @@ class SearchAllDialog(
                                 searchResultList.add(data.`class`)
                             }
 
-                            GROUP -> {
+                            GROUP_TYPE -> {
                                 //能够到这里就只剩分组了，所以如果只有分组，则显示学生，并且会覆盖对student的点击事件
                                 setOnClickGroup {
                                     onClickGroup?.invoke(it)
@@ -180,43 +180,45 @@ class SearchAllDialog(
                 } else {
                     for (type in data.types) {
                         when (type) {
-                            STUDENT -> {
+                            STUDENT_TYPE -> {
                                 //如果分组id为-1，说明从临时分组界面过来，不进行网络请求直接添加。
                                 setOnClickStudent {
                                     // 添加至缓冲区
                                     val stuSet = setOf(it)
-                                    mWaitAdd[stuSet] = STUDENT
+                                    mWaitAdd[stuSet] = STUDENT_TYPE
                                     // 进行网络请求增加组内成员
                                     mViewModel.addMembers(groupId, stuSet)
-                                    isOnlyGroup = false
                                 }
+                                isOnlyGroup = false
                                 searchResultList.addAll(data.students)
                             }
 
-                            CLASS -> {
+                            CLASS_TYPE -> {
                                 setOnClickClass {
                                     // 添加至缓冲区
                                     val stuSet = it.members.toSet()
-                                    mWaitAdd[stuSet] = CLASS
+                                    mWaitAdd[stuSet] = CLASS_TYPE
                                     // 进行网络请求增加班级内成员
                                     mViewModel.addMembers(groupId, stuSet)
-                                    isOnlyGroup = false
                                 }
+                                isOnlyGroup = false
                                 searchResultList.add(data.`class`)
                             }
 
-                            GROUP -> {
+                            GROUP_TYPE -> {
                                 setOnClickGroup {
                                     val stuSet = it.members.toSet()
-                                    mWaitAdd[stuSet] = GROUP
+                                    mWaitAdd[stuSet] = GROUP_TYPE
                                     mViewModel.addMembers(groupId, stuSet)
                                 }
                                 searchResultList.add(data.group)
                                 // 如果只有分组，此时才显示分组下面的学生
                                 if (isOnlyGroup) {
+                                    Log.d("lx", "isOnlyGroup = ${isOnlyGroup}: ")
+                                    Log.d("lx", "data.group = ${data.group.members}: ")
                                     setOnClickStudent {
                                         val stuSet = setOf(it)
-                                        mWaitAdd[stuSet] = STUDENT
+                                        mWaitAdd[stuSet] = STUDENT_TYPE
                                         mViewModel.addMembers(groupId, stuSet)
                                     }
                                     searchResultList.addAll(data.group.members)
