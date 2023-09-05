@@ -230,7 +230,7 @@
 
             <EditText
                 android:id="@+id/ufield_et_address"
-                android:layout_width="300dp"
+                android:layout_width="290dp"
                 android:layout_height="35dp"
                 android:background="@drawable/ufield_shape_edit"
                 android:hint="不超过10个字"
@@ -262,7 +262,7 @@
 
             <EditText
                 android:id="@+id/ufield_et_way"
-                android:layout_width="300dp"
+                android:layout_width="290dp"
                 android:layout_height="35dp"
                 android:background="@drawable/ufield_shape_edit"
                 android:hint="不超过15个字"
@@ -294,7 +294,7 @@
 
             <EditText
                 android:id="@+id/ufield_et_sponsor"
-                android:layout_width="300dp"
+                android:layout_width="290dp"
                 android:layout_height="35dp"
                 android:layout_marginRight="16dp"
                 android:background="@drawable/ufield_shape_edit"
@@ -326,7 +326,7 @@
 
             <EditText
                 android:id="@+id/ufield_et_phone"
-                android:layout_width="252dp"
+                android:layout_width="242dp"
                 android:layout_height="35dp"
                 android:layout_marginRight="16dp"
                 android:background="@drawable/ufield_shape_edit"

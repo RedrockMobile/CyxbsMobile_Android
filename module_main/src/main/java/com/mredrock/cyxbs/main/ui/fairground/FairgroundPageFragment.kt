@@ -15,6 +15,7 @@ import android.view.ViewGroup
 import android.widget.Button
 import android.widget.ImageView
 import android.widget.TextView
+import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.fragment.app.viewModels
 import com.mredrock.cyxbs.lib.utils.extensions.setAvatarImageFromUrl
 import com.alibaba.android.arouter.facade.annotation.Route
@@ -38,12 +39,9 @@ class FairgroundPageFragment : BaseFragment(R.layout.main_fragment_fairground) {
     private val tvDays by R.id.main_tv_days.view<TextView>()
     private val tvNickname by R.id.tv_nickname.view<TextView>()
     private val ivHead by R.id.main_iv_head.view<ImageView>()
-    private val ivActivity by R.id.main_fairground_iv_activity.view<ImageView>()
-    private val btActivity by R.id.main_fairground_bt_activity.view<Button>()
-    private val btFood by R.id.main_fairground_bt_food.view<Button>()
-    private val ivFood by R.id.main_fairground_iv_food.view<ImageView>()
-    private val btSquare by R.id.main_fairground_bt_square.view<Button>()
-    private val ivSquare by R.id.main_fairground_iv_square.view<ImageView>()
+    private val startActivity by R.id.main_fairground_activity.view<ConstraintLayout>()
+    private val startFood by R.id.main_fairground_food.view<ConstraintLayout>()
+    private val startSquare by R.id.main_fairground_square.view<ConstraintLayout>()
     @SuppressLint("SetTextI18n", "SuspiciousIndentation")
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -52,22 +50,13 @@ class FairgroundPageFragment : BaseFragment(R.layout.main_fragment_fairground) {
     ): View? {
         val viewModel by viewModels<FairgroundViewModel>()
         viewModel.days.observe(viewLifecycleOwner) {
-            ivActivity.setOnClickListener {
+            startActivity.setOnClickListener {
                 ServiceManager.activity(UFIELD_ACTIVITY)
             }
-            btActivity.setOnClickListener {
-                ServiceManager.activity(UFIELD_ACTIVITY)
-            }
-            btFood.setOnClickListener {
+            startFood.setOnClickListener {
                 //跳美食
             }
-            ivFood.setOnClickListener {
-                //跳美食
-            }
-            btSquare.setOnClickListener {
-                //跳广场
-            }
-            ivSquare.setOnClickListener {
+            startSquare.setOnClickListener {
                 //跳广场
             }
             val text = "这是你来到邮乐园的第 $it 天"
