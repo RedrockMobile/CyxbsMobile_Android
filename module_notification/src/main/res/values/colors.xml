@@ -22,4 +22,11 @@
     <color name="notification_delete_dialog_btn_positive">#4A44E4</color>
 
     <color name="notification_popup_ripple">#777777</color>
+
+    <color name="notification_activity_name">#CC15315B</color>
+    <color name="notification_activity_time">#9915315B</color>
+    <color name="notification_activity_detail">#CC6E69E9</color>
+    <color name="notification_textview_pass">#18D19A</color>
+    <color name="notification_textview_no_pass">#E5FF4646
+    </color>
 </resources>

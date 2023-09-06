@@ -1,0 +1,140 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:paddingTop="18dp"
+    android:paddingBottom="18dp">
+
+    <ImageView
+        android:id="@+id/item_activity_notification_iv_red_dot"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:background="@drawable/notification_ic_home_reddots"
+        app:layout_constraintBottom_toBottomOf="@+id/item_activity_notification_tv_title"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/item_activity_notification_tv_title" />
+
+    <androidx.appcompat.widget.AppCompatTextView
+        android:id="@+id/item_activity_notification_tv_title"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="30dp"
+        android:layout_marginEnd="10dp"
+        android:lineHeight="22.4dp"
+        android:text="活动通知"
+        android:textColor="@color/notification_delete_dialog_tv_tips"
+        android:textSize="16sp"
+        android:textStyle="bold"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+
+    <TextView
+        android:id="@+id/item_activity_notification_tv_yes_no"
+        android:layout_width="wrap_content"
+        android:layout_height="21dp"
+        android:background="@drawable/notification_ic_bk_pass"
+        android:gravity="center"
+        android:lineHeight="14dp"
+        android:text="通过"
+        android:textColor="@color/notification_textview_pass"
+        android:textSize="10sp"
+        app:layout_constraintBottom_toBottomOf="@+id/item_activity_notification_tv_title"
+        app:layout_constraintStart_toStartOf="@+id/item_activity_notification_tv_real_name"
+        app:layout_constraintTop_toTopOf="@+id/item_activity_notification_tv_title" />
+
+    <androidx.appcompat.widget.AppCompatTextView
+        android:id="@+id/item_activity_notification_tv_name"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="12dp"
+        android:lineHeight="19.6dp"
+        android:text="活动名称: "
+        android:textColor="@color/notification_activity_name"
+        android:textSize="14sp"
+        app:layout_constraintStart_toStartOf="@+id/item_activity_notification_tv_title"
+        app:layout_constraintTop_toBottomOf="@+id/item_activity_notification_tv_title" />
+
+    <TextView
+        android:id="@+id/item_activity_notification_tv_real_name"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:lineHeight="19.6dp"
+        android:text="辩论赛"
+        android:textColor="@color/notification_activity_name"
+        android:textSize="14sp"
+        app:layout_constraintStart_toEndOf="@+id/item_activity_notification_tv_name"
+        app:layout_constraintTop_toTopOf="@+id/item_activity_notification_tv_name" />
+
+    <TextView
+        android:id="@+id/item_activity_notification_tv_place"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:lineHeight="19.6dp"
+        android:text="活动地点: "
+        android:textColor="@color/notification_activity_name"
+        android:textSize="14sp"
+        app:layout_constraintStart_toStartOf="@+id/item_activity_notification_tv_name"
+        app:layout_constraintTop_toBottomOf="@+id/item_activity_notification_tv_name" />
+
+    <TextView
+        android:id="@+id/item_activity_notification_tv_real_place"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:lineHeight="19.6dp"
+        android:text="辩论赛"
+        android:textColor="@color/notification_activity_name"
+        android:textSize="14sp"
+        app:layout_constraintStart_toStartOf="@+id/item_activity_notification_tv_real_name"
+        app:layout_constraintTop_toTopOf="@+id/item_activity_notification_tv_place" />
+
+    <TextView
+        android:id="@+id/item_notification_time"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="21.6dp"
+        android:lineHeight="15.4dp"
+        android:text="2023.2.2"
+        android:textColor="@color/notification_activity_time"
+        android:textSize="11sp"
+        app:layout_constraintBottom_toBottomOf="@+id/item_activity_notification_tv_yes_no"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/item_activity_notification_tv_yes_no" />
+
+
+    <LinearLayout
+        android:id="@+id/item_activity_ll_jump"
+        android:layout_width="80dp"
+        android:layout_height="15dp"
+        android:orientation="horizontal"
+        app:layout_constraintBottom_toBottomOf="@+id/item_activity_notification_tv_real_place"
+        app:layout_constraintEnd_toEndOf="@+id/item_notification_time">
+
+        <TextView
+            android:id="@+id/item_notification_detail"
+            android:layout_width="68dp"
+            android:gravity="end"
+            android:layout_height="wrap_content"
+            android:lineHeight="14dp"
+            android:text="查看活动详情"
+            android:textColor="@color/notification_activity_detail"
+            android:textSize="10sp"
+            app:layout_constraintEnd_toEndOf="@+id/item_notification_time"
+            app:layout_constraintTop_toTopOf="@+id/item_activity_notification_tv_real_place" />
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="6dp"
+            android:layout_marginTop="3dp"
+            app:layout_constraintStart_toEndOf="@+id/item_notification_detail"
+            app:layout_constraintTop_toTopOf="@+id/item_notification_detail"
+            app:srcCompat="@drawable/notification_ic_ufield_detail_query" />
+    </LinearLayout>
+
+
+</androidx.constraintlayout.widget.ConstraintLayout>

@@ -4,15 +4,15 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@color/mine_bg_user_header"
     android:fitsSystemWindows="true"
-    android:orientation="vertical"
-    android:background="@color/mine_bg_user_header">
+    android:orientation="vertical">
 
     <FrameLayout
         android:layout_width="match_parent"
         android:layout_height="300dp"
-        android:layout_marginTop="-22dp"
         android:layout_marginStart="-25dp"
+        android:layout_marginTop="-22dp"
         android:layout_marginEnd="-25dp"
         android:background="@drawable/mine_ic_info_header">
 
@@ -194,9 +194,9 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:elevation="12dp"
         android:layout_marginTop="-55dp"
         android:background="@drawable/mine_shape_bg_user"
+        android:elevation="12dp"
         android:orientation="vertical">
 
         <androidx.constraintlayout.widget.ConstraintLayout
@@ -236,6 +236,16 @@
                 app:layout_constraintTop_toTopOf="parent"
                 app:srcCompat="@drawable/mine_ic_feedback_center" />
 
+            <ImageView
+                android:id="@+id/mine_user_iv_center_activity"
+                android:layout_width="43dp"
+                android:layout_height="41dp"
+                android:layout_marginTop="30dp"
+                android:scaleType="centerInside"
+                app:layout_constraintEnd_toEndOf="@+id/mine_user_iv_center_notification"
+                app:layout_constraintTop_toBottomOf="@+id/mine_user_tv_center_notification"
+                app:srcCompat="@drawable/mine_ic_activity_center" />
+
             <TextView
                 android:id="@+id/mine_user_tv_center_notification"
                 android:layout_width="wrap_content"
@@ -273,6 +283,18 @@
                 app:layout_constraintTop_toTopOf="@+id/mine_user_tv_center_stamp" />
 
             <TextView
+                android:id="@+id/mine_user_tv_center_activity"
+                android:layout_width="wrap_content"
+                android:layout_height="20dp"
+                android:text="活动中心"
+                android:layout_marginTop="8dp"
+
+                android:textColor="@color/mine_text_setting"
+                android:textSize="14sp"
+                app:layout_constraintEnd_toEndOf="@+id/mine_user_tv_center_notification"
+                app:layout_constraintTop_toBottomOf="@+id/mine_user_iv_center_activity" />
+
+            <TextView
                 android:id="@+id/mine_user_tv_unchecked_notification_count"
                 android:layout_width="15dp"
                 android:layout_height="15dp"
@@ -286,6 +308,22 @@
                 android:visibility="gone"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
+
+            <TextView
+                android:visibility="gone"
+                android:id="@+id/mine_user_tv_center_notification_count"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                android:textSize="10sp"
+                android:text="88"
+                android:lineHeight="11.72dp"
+                android:gravity="center"
+                android:textColor="#FFFFFF"
+                android:background="@drawable/mine_ic_notification_count"
+                app:layout_constraintStart_toEndOf="@+id/mine_user_iv_center_notification"
+                app:layout_constraintTop_toTopOf="parent" />
+
         </androidx.constraintlayout.widget.ConstraintLayout>
 
         <FrameLayout
@@ -298,9 +336,9 @@
                 android:id="@+id/mine_user_tv_sign"
                 android:layout_width="wrap_content"
                 android:layout_height="22dp"
-                android:layout_marginBottom="10dp"
                 android:layout_gravity="start|center_vertical"
                 android:layout_marginStart="32dp"
+                android:layout_marginBottom="10dp"
                 android:text="已连续签到 0 天"
                 android:textColor="@color/mine_text_sign"
                 android:textSize="16sp" />
@@ -334,9 +372,9 @@
                 android:layout_height="22dp"
                 android:layout_marginStart="16dp"
                 android:text="关于我们"
-                android:textStyle="bold"
                 android:textColor="@color/mine_text_setting"
-                android:textSize="16sp" />
+                android:textSize="16sp"
+                android:textStyle="bold" />
 
             <ImageView
                 android:layout_width="8dp"
@@ -358,9 +396,9 @@
                 android:layout_height="22dp"
                 android:layout_marginStart="16dp"
                 android:text="设置"
-                android:textStyle="bold"
                 android:textColor="@color/mine_text_setting"
-                android:textSize="16sp" />
+                android:textSize="16sp"
+                android:textStyle="bold" />
 
             <ImageView
                 android:layout_width="8dp"

@@ -155,6 +155,7 @@
             android:background="@drawable/main_ic_fairgroundbutton"
             android:gravity="center"
             android:text="活动布告栏"
+            android:clickable="false"
             android:textColor="#4A44E4"
             android:textSize="16sp"
             android:textStyle="bold"
