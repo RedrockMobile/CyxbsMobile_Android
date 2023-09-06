@@ -11,11 +11,15 @@ import android.widget.FrameLayout
 import android.widget.ImageView
 import androidx.activity.OnBackPressedCallback
 import androidx.activity.viewModels
+import androidx.constraintlayout.widget.Group
+import androidx.core.widget.addTextChangedListener
 import androidx.lifecycle.lifecycleScope
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.mredrock.cyxbs.config.sp.defaultSp
 import com.mredrock.cyxbs.lib.base.ui.BaseActivity
+import com.mredrock.cyxbs.lib.utils.extensions.gone
 import com.mredrock.cyxbs.lib.utils.extensions.setOnSingleClickListener
+import com.mredrock.cyxbs.lib.utils.extensions.visible
 import com.mredrock.cyxbs.noclass.R
 import com.mredrock.cyxbs.noclass.bean.NoClassSpareTime
 import com.mredrock.cyxbs.noclass.page.ui.dialog.BatchInputErrorDialog
@@ -76,6 +80,9 @@ class BatchAdditionActivity : BaseActivity() {
     // 查询按钮
     private val batchQuery: Button by R.id.noclass_batch_btn_query.view()
 
+    // 编辑框的提示
+    private val editHint: Group by R.id.noclass_batch_group_edit_hint.view()
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -108,9 +115,14 @@ class BatchAdditionActivity : BaseActivity() {
     private fun initEditText() {
         //防止软键盘弹起导致视图错位
         window.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_NOTHING)
-        batchInputBox.hint =
-            "样例输入1:卷卷\n                    卷娘\n样例输入2:2022213333\n                    2011118888\n错误输入1:卷卷，卷娘\n                    卷卷，卷娘\n错误输入2:卷卷\n                    2022222222"
-
+        editHint.visible()
+        batchInputBox.addTextChangedListener {
+            if (it.isNullOrEmpty()) {
+                editHint.visible()
+                return@addTextChangedListener
+            }
+            editHint.gone()
+        }
     }
 
     private fun initTextView() {
@@ -213,6 +225,7 @@ class BatchAdditionActivity : BaseActivity() {
             isSuccessSaveLatestNormal = false
             if (!it.repeat.isNullOrEmpty()) {
                 // 弹出重名的信息列表
+
                 SameNameSelectionDialog(it.repeat).show(
                     supportFragmentManager,
                     "SameNameSelectionDialog"

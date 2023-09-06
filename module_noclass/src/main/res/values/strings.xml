@@ -1,5 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="noclass_empty_search_result" translatable="false">没有找到这个人～</string>
-    <string name="noclass_batch_input_format_hint" translatable="false">样例输入1:卷卷\n                    卷娘\n样例输入2:2022213333\n                    2011118888\n错误输入1:卷卷，卷娘\n                    卷卷，卷娘\n错误输入2:卷卷\n                    2022222222</string>
+    <string name="noclass_batch_input_format_hint" translatable="false"><font color="#6B89B7">样例输入1：卷卷\n                       卷娘</font>\n<font color="#6B89B7">样例输入2：2022213333\n                       2011118888</font>\n<font color="#EFB7AB">错误输入1：卷卷，卷娘\n                       卷卷，卷娘\n错误输入2：卷卷\n                       2022222222</font></string>
+<!--    <string name="noclass_batch_edit_hint_example_input_1" translatable="false"><font color="#6B89B7">样例输入1：卷卷\n&#12288;&#12288;&#12288;&#12288;&#8194;&#12288;卷娘</font></string>-->
+    <string name="noclass_batch_edit_hint_example_input_1" translatable="false"><font color="#6B89B7">样例输入1：卷卷\n\u3000\u3000\u3000\u3000\u3000\u0020\u0020卷娘</font></string>
+<!--                       -->
+    <string name="noclass_batch_edit_hint_example_input_2" translatable="false"><font color="#6B89B7">样例输入2：2022213333\n&#12288;&#12288;&#12288;&#12288;&#8194;&#12288;2011118888</font></string>
+    <string name="noclass_batch_edit_hint_err_input_1" translatable="false"><font color="#EFB7AB">错误输入1：卷卷，卷娘\n&#12288;&#12288;&#12288;&#12288;&#8194;&#12288;卷卷，卷娘</font></string>
+    <string name="noclass_batch_edit_hint_err_input_2" translatable="false"><font color="#EFB7AB">错误输入2：卷卷\n&#12288;&#12288;&#12288;&#12288;&#8194;&#12288;2022222222</font></string>
 </resources>

@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<resources
-    xmlns:tools="http://schemas.android.com/tools">
+<resources xmlns:tools="http://schemas.android.com/tools">
 
     <!--    每个组的默认背景色-->
     <color name="noclass_group_default_bg">#E8F0FC</color>
@@ -20,7 +19,6 @@
     <color name="noclass_gather_text_noclass_bg">#D4DAFF</color>
     <!--    创建新分组的背景-->
     <color name="noclass_create_group_bg">#FFFFFF</color>
-
 
 
     <!--    以下为课表背景颜色-->
@@ -99,4 +97,12 @@
 
     <!--    透明-->
     <color name="noclass_transparent">#00FFFFFF</color>
+
+    <!--    批量添加页面背景颜色-->
+    <color name="noclass_batch_window_bg">#FEFEFE</color>
+
+    <!--    批量添加页面输入框文字颜色-->
+    <color name="noclass_batch_edit_text">#2D4D80</color>
+
+    <color name="noclass_same_name_select_cancel_text">#ABB5C4</color>
 </resources>

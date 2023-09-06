@@ -19,7 +19,8 @@ import com.mredrock.cyxbs.noclass.bean.NoClassBatchResponseInfo.Student
  * @Description:
  *
  */
-class SameNameStudentsAdapter : ListAdapter<Student, SameNameStudentsAdapter.ViewHolder>(diffUtil){
+class SameNameStudentsAdapter(val setDoneStatus: (isChooseAny: Boolean, selectedList: List<Student>) -> Unit)
+    : ListAdapter<Student, SameNameStudentsAdapter.ViewHolder>(diffUtil){
     companion object {
         private val diffUtil : DiffUtil.ItemCallback<Student> = object : DiffUtil.ItemCallback<Student>(){
             override fun areItemsTheSame(oldItem: Student, newItem: Student): Boolean {
@@ -27,10 +28,14 @@ class SameNameStudentsAdapter : ListAdapter<Student, SameNameStudentsAdapter.Vie
             }
 
             override fun areContentsTheSame(oldItem: Student, newItem: Student): Boolean {
-                return oldItem == newItem
+                return oldItem.id == newItem.id && oldItem.name == newItem.name
             }
         }
     }
+    /**
+     * 已选择的重名学生的 暂存集合
+     */
+    private val hasSelected by lazy { ArrayList<Student>() }
 
     inner class ViewHolder(itemView : View):RecyclerView.ViewHolder(itemView) {
         val studentName : TextView = itemView.findViewById(R.id.noclass_batch_tv_student_name)
@@ -38,7 +43,21 @@ class SameNameStudentsAdapter : ListAdapter<Student, SameNameStudentsAdapter.Vie
         val isSelected : CheckBox = itemView.findViewById(R.id.noclass_batch_cb_student_select_status)
         init {
             isSelected.setOnCheckedChangeListener { _, status ->
-                getItem(bindingAdapterPosition).isSelected = status
+                val itemData = getItem(bindingAdapterPosition)
+                itemData.isSelected = status
+                if (status) { // 如果选中了
+                    if(!hasSelected.contains(itemData))
+                        hasSelected.add(itemData)
+                } else { // 取消选中
+                    if (hasSelected.contains(itemData))
+                        hasSelected.remove(itemData)
+                }
+                // 判断已选择的重名学生的 暂存集合是否为空
+                if (hasSelected.isEmpty()) {
+                    setDoneStatus(false, hasSelected)
+                } else {
+                    setDoneStatus(true, hasSelected)
+                }
             }
         }
     }
@@ -52,5 +71,6 @@ class SameNameStudentsAdapter : ListAdapter<Student, SameNameStudentsAdapter.Vie
         val itemData = getItem(position)
         holder.studentName.text = itemData.name
         holder.studentNumber.text = itemData.id
+        holder.isSelected.isChecked = getItem(position).isSelected
     }
 }

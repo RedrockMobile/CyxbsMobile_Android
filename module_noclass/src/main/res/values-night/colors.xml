@@ -48,4 +48,10 @@
 
     <!--点击空白处的灰色-->
     <color name="noclass_course_click_spare_lesson_bg">#808080</color>
+
+    <!--    批量添加页面背景颜色-->
+    <color name="noclass_batch_window_bg">#000000</color>
+
+    <!--    批量添加页面输入框文字颜色-->
+    <color name="noclass_batch_edit_text">#FFFFFF</color>
 </resources>
