@@ -2,6 +2,7 @@ package com.mredrock.cyxbs.noclass.page.ui.dialog
 
 import android.app.Dialog
 import android.os.Bundle
+import android.util.Log
 import android.widget.Button
 import android.widget.TextView
 import androidx.constraintlayout.widget.ConstraintLayout
@@ -11,6 +12,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
+import com.mredrock.cyxbs.lib.utils.extensions.drawable
 import com.mredrock.cyxbs.noclass.R
 import com.mredrock.cyxbs.noclass.bean.NoClassBatchResponseInfo.Student
 import com.mredrock.cyxbs.noclass.page.adapter.SameNameStudentsAdapter
@@ -36,6 +38,12 @@ class SameNameSelectionDialog : BottomSheetDialogFragment {
 
     // 批量添加页面activity的viewModel
     private val batchAdditionViewModel by activityViewModels<BatchAdditionViewModel>()
+
+    // 选中的重名学生
+    private var selectedStudents : List<Student> = emptyList()
+
+    // 确认（已经选好了重名学生）的按钮
+    private lateinit var mBtnDone : Button
 
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
         super.onCreateDialog(savedInstanceState)
@@ -81,20 +89,39 @@ class SameNameSelectionDialog : BottomSheetDialogFragment {
         dialog.setCancelable(false)
 
         dialog.findViewById<RecyclerView>(R.id.noclass_batch_rv_dialog_students_container).apply {
-            adapter = SameNameStudentsAdapter().apply {
-                submitList(sameNameData)
+            adapter = SameNameStudentsAdapter { isChooseAny, selectedList ->
+                if (isChooseAny) {
+                    mBtnDone.background = R.drawable.noclass_shape_button_common_bg.drawable
+                    selectedStudents = selectedList
+                    mBtnDone.isEnabled = true
+                } else {
+                    mBtnDone.background = R.drawable.noclass_shape_button_save_default_bg.drawable
+                    mBtnDone.isEnabled = false
+                }
+            }.apply {
+                val noRepeatIdMap = mutableMapOf<String, Student>()
+                // 这里对返回的学号相同的数据去重
+                sameNameData.forEach {
+                    noRepeatIdMap[it.id] = it
+                }
+                submitList(noRepeatIdMap.values.toList())
             }
             layoutManager = LinearLayoutManager(context)
         }
-        dialog.findViewById<Button>(R.id.noclass_batch_btn_confirm_selected_students).apply {
+        // 确认按钮
+        mBtnDone = dialog.findViewById<Button>(R.id.noclass_batch_btn_confirm_selected_students).apply {
             setOnClickListener {
-                val targetList = mutableListOf<Pair<String,String>>() // 学号-姓名 组合对的list
-                sameNameData.forEach {
-                    if (it.isSelected){  // 该重名学生被选中了
-                        targetList.add(Pair(it.id, it.name))
+                // val targetList = mutableListOf<Pair<String,String>>()   // 学号-姓名 组合对的list
+                // 学号-姓名 键值对的list，防止后端返回重复的学号数据
+                val targetMap = mutableMapOf<String, String>()
+                Log.d("test","current btn click is ${mBtnDone.isEnabled}")
+                selectedStudents.forEach {
+                    if (it.isSelected){  // 确认该重名学生被选中了
+                        targetMap[it.id] = it.name
+                        // targetList.add(Pair(it.id, it.name))
                     }
                 }
-                batchAdditionViewModel.setSelectedStudents(targetList)
+                batchAdditionViewModel.setSelectedStudents(targetMap.toList())
                 dialog.cancel()
             }
         }
