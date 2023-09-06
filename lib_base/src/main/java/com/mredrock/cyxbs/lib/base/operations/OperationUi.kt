@@ -60,25 +60,6 @@ interface OperationUi : ToastUtils, RxjavaLifecycle {
     }
   }
   
-  /**
-   * 用于 ping 一下网校后端的网络，用于测试当前后端是否寄掉
-   *
-   * @return 如果返回 null，则说明是网络连接异常，此时无法确认后端是否寄掉
-   */
-  suspend fun tryPingNetWork(): Result<ApiStatus>? {
-    try {
-      val result = ApiServer::class.commonApi.pingMagipoke()
-      result.throwApiExceptionIfFail() // 如果 status 状态码不成功将抛出异常
-      return Result.success(result)
-    } catch (e: Exception) {
-      if (e is IOException) {
-        // 如果 Exception 是 IOException，则说明是无法连接网络，而不是后端问题
-        return null
-      }
-      return Result.failure(e)
-    }
-  }
-  
   // Rxjava 自动关流
   @Deprecated("内部方法，禁止调用", level = DeprecationLevel.HIDDEN)
   override fun onAddRxjava(disposable: Disposable) {
@@ -97,11 +78,5 @@ interface OperationUi : ToastUtils, RxjavaLifecycle {
         }
       }
     )
-  }
-  
-  private interface ApiServer : IApi {
-    //仿ping接口，用于检测magipoke系列接口状态
-    @GET("magipoke/ping")
-    suspend fun pingMagipoke(): ApiStatus
   }
 }
