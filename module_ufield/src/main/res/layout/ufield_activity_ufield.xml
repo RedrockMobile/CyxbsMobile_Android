@@ -1,0 +1,109 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/uField_white"
+    android:orientation="vertical"
+    tools:context=".ui.activity.UFieldActivity">
+
+    <ImageView
+        android:id="@+id/uField_back"
+        android:layout_width="9dp"
+        android:layout_height="18dp"
+        android:layout_marginStart="22dp"
+        android:layout_marginTop="60dp"
+        android:src="@drawable/ufield_ic_back"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <ImageView
+        android:id="@+id/ufieldImageview4"
+        android:layout_width="110dp"
+        android:layout_height="31dp"
+        android:layout_marginStart="15dp"
+        android:layout_marginTop="53dp"
+        android:src="@drawable/ufield_ic_title"
+        app:layout_constraintStart_toEndOf="@+id/uField_back"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <ImageView
+        android:id="@+id/uField_activity_isAdmin"
+        android:layout_width="20.02dp"
+        android:layout_height="21dp"
+        android:layout_marginTop="60dp"
+        android:layout_marginEnd="20dp"
+        android:src="@drawable/ufield_ic_administrator"
+        android:visibility="gone"
+        app:layout_constraintEnd_toStartOf="@+id/uField_cup"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:visibility="visible" />
+
+    <ImageView
+        android:id="@+id/uField_cup"
+        android:layout_width="16dp"
+        android:layout_height="20.5dp"
+        android:layout_marginTop="60dp"
+        android:layout_marginEnd="23dp"
+        android:src="@drawable/ufield_ic_cup"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <ImageView
+        android:id="@+id/uField_search"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="20dp"
+        android:layout_marginTop="98dp"
+        android:src="@drawable/ufield_ic_search"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <ImageView
+        android:id="@+id/uField_add"
+        android:layout_width="28dp"
+        android:layout_height="28dp"
+        android:layout_marginStart="20dp"
+        android:layout_marginTop="103dp"
+        android:layout_marginEnd="22dp"
+        android:src="@drawable/ufield_ic_add"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/uField_search"
+        app:layout_constraintTop_toTopOf="parent" />
+
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginTop="150dp"
+        android:background="@color/uField_background"
+        android:orientation="vertical">
+
+        <com.google.android.material.tabs.TabLayout
+            android:id="@+id/uField_tabLayout"
+            android:layout_width="match_parent"
+            android:layout_height="30dp"
+            android:layout_marginStart="20dp"
+            android:layout_marginTop="15dp"
+            android:layout_marginEnd="20dp"
+            app:tabIndicatorFullWidth="false"
+            app:tabIndicatorHeight="0dp"
+            app:tabRippleColor="@null"
+            app:tabSelectedTextColor="@color/uField_tab_selected"
+            app:tabTextAppearance="@style/uFieldMyTextStyle"
+            app:tabTextColor="@color/uField_15315b66" />
+
+
+        <androidx.viewpager2.widget.ViewPager2
+            android:id="@+id/uField_viewpager2"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginTop="20dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent" />
+
+    </LinearLayout>
+
+
+</androidx.constraintlayout.widget.ConstraintLayout>
