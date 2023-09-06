@@ -17,6 +17,7 @@ import com.mredrock.cyxbs.lib.utils.extensions.dp2pxF
 import com.mredrock.cyxbs.lib.utils.extensions.launch
 import com.mredrock.cyxbs.lib.utils.service.ServiceManager
 import com.mredrock.cyxbs.lib.utils.service.impl
+import com.mredrock.cyxbs.lib.utils.utils.judge.NetworkUtil
 import com.mredrock.cyxbs.main.R
 import com.mredrock.cyxbs.main.adapter.MainAdapter
 import com.mredrock.cyxbs.main.ui.course.CourseFragment
@@ -53,7 +54,7 @@ class MainActivity : BaseActivity() {
       initUI()
       if (mIsLogin) {
         launch {
-          tryPingNetWork()?.onFailure {
+          NetworkUtil.tryPingNetWork()?.onFailure {
             toast("后端服务暂不可用")
           }
         }

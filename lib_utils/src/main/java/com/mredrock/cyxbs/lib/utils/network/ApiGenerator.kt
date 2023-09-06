@@ -220,7 +220,12 @@ object ApiGenerator {
                     return if (hostname == "be-prod.redrock.cqupt.edu.cn") {
                         InetAddress.getAllByName("222.177.140.110").asList()
                     } else {
-                        Dns.SYSTEM.lookup(hostname)
+                        try {
+                            Dns.SYSTEM.lookup(hostname)
+                        } catch (e: Exception) {
+                            // 网络无法上网时会抛错
+                            emptyList()
+                        }
                     }
                 }
             })

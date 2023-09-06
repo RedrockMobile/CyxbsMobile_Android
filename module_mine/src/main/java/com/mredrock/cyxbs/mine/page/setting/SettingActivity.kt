@@ -23,6 +23,7 @@ import com.mredrock.cyxbs.lib.base.ui.BaseActivity
 import com.mredrock.cyxbs.lib.utils.extensions.launch
 import com.mredrock.cyxbs.lib.utils.extensions.setOnSingleClickListener
 import com.mredrock.cyxbs.lib.utils.utils.config.PhoneCalendar
+import com.mredrock.cyxbs.lib.utils.utils.judge.NetworkUtil
 import com.mredrock.cyxbs.mine.R
 import com.mredrock.cyxbs.mine.page.security.activity.SecurityActivity
 import com.mredrock.cyxbs.mine.util.ui.WarningDialog
@@ -126,7 +127,7 @@ class SettingActivity : BaseActivity() {
         }
         mIsInPingNetWork = true
         launch {
-            val result = tryPingNetWork()
+            val result = NetworkUtil.tryPingNetWork()
             if (result != null && result.isSuccess) {
                 //判定magipoke系列接口正常，允许正常退出登陆
                 doExit()
