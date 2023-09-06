@@ -12,16 +12,15 @@ import android.text.style.StyleSpan
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Button
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.fragment.app.viewModels
-import com.mredrock.cyxbs.lib.utils.extensions.setAvatarImageFromUrl
 import com.alibaba.android.arouter.facade.annotation.Route
 import com.mredrock.cyxbs.config.route.FAIRGROUND_ENTRY
 import com.mredrock.cyxbs.config.route.UFIELD_ACTIVITY
 import com.mredrock.cyxbs.lib.base.ui.BaseFragment
+import com.mredrock.cyxbs.lib.utils.extensions.setAvatarImageFromUrl
 import com.mredrock.cyxbs.lib.utils.service.ServiceManager
 import com.mredrock.cyxbs.main.R
 import com.mredrock.cyxbs.main.viewmodel.FairgroundViewModel
@@ -42,6 +41,7 @@ class FairgroundPageFragment : BaseFragment(R.layout.main_fragment_fairground) {
     private val startActivity by R.id.main_fairground_activity.view<ConstraintLayout>()
     private val startFood by R.id.main_fairground_food.view<ConstraintLayout>()
     private val startSquare by R.id.main_fairground_square.view<ConstraintLayout>()
+
     @SuppressLint("SetTextI18n", "SuspiciousIndentation")
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -93,9 +93,9 @@ class FairgroundPageFragment : BaseFragment(R.layout.main_fragment_fairground) {
             tvDays.text = spannableStringBuilder
         }
 
-        viewModel.message.observe(viewLifecycleOwner){
+        viewModel.message.observe(viewLifecycleOwner) {
             if (it != null) {
-                tvNickname.text="Hi, ${it.nickname}"
+                tvNickname.text = "Hi, ${it.nickname}"
                 ivHead.setAvatarImageFromUrl(it.photo_src)
             }
         }

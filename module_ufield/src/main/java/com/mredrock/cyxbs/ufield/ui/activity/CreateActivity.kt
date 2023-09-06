@@ -144,9 +144,6 @@ class CreateActivity : BaseActivity() {
         viewModel.publishStatus.observe(this) {
             if (it) {
                 btCreate.gone()
-                val params = card.layoutParams
-                params.height = 10 // 设置高度
-                card.layoutParams = params
                 toast("提交成功")
             } else {
                 check()
@@ -585,21 +582,8 @@ class CreateActivity : BaseActivity() {
                     setOnClickListener {
                         if (isCovered) {
                             viewModel.postActivityWithCover(
-                               getMap( name,
-                                   selectedType,
-                                   selectedStartTimestamp.toInt(),
-                                   selectedEndTimestamp.toInt(),
-                                   address,
-                                   way,
-                                   sponsor,
-                                   phone,
-                                   introduce),
-                                coverFile
-                            )
-                            setOnClickListener(null)
-                        } else {
-                            viewModel.postActivityNotCover(
-                                getMap( name,
+                                getMap(
+                                    name,
                                     selectedType,
                                     selectedStartTimestamp.toInt(),
                                     selectedEndTimestamp.toInt(),
@@ -607,7 +591,24 @@ class CreateActivity : BaseActivity() {
                                     way,
                                     sponsor,
                                     phone,
-                                    introduce)
+                                    introduce
+                                ),
+                                coverFile
+                            )
+                            setOnClickListener(null)
+                        } else {
+                            viewModel.postActivityNotCover(
+                                getMap(
+                                    name,
+                                    selectedType,
+                                    selectedStartTimestamp.toInt(),
+                                    selectedEndTimestamp.toInt(),
+                                    address,
+                                    way,
+                                    sponsor,
+                                    phone,
+                                    introduce
+                                )
                             )
                             setOnClickListener(null)
 
@@ -639,14 +640,20 @@ class CreateActivity : BaseActivity() {
         val map = mutableMapOf<String, RequestBody>()
         map["activity_title"] =
             activityTitle.toRequestBody("multipart/form-data".toMediaTypeOrNull())
-        map["activity_type"]=activityType.toRequestBody("multipart/form-data".toMediaTypeOrNull())
-        map["activity_start_at"]=activityStartAt.toString().toRequestBody("multipart/form-data".toMediaTypeOrNull())
-        map["activity_end_at"]=activityEndAt.toString().toRequestBody("multipart/form-data".toMediaTypeOrNull())
-        map["activity_place"]=activityPlace.toRequestBody("multipart/form-data".toMediaTypeOrNull())
-        map["activity_registration_type"]= activityRegistrationType.toRequestBody("multipart/form-data".toMediaTypeOrNull())
-map["activity_organizer"]=activityOrganizer.toRequestBody("multipart/form-data".toMediaTypeOrNull())
-        map["creator_phone"]=creatorPhone.toRequestBody("multipart/form-data".toMediaTypeOrNull())
-        map["activity_detail"]=activityDetail.toRequestBody("multipart/form-data".toMediaTypeOrNull())
+        map["activity_type"] = activityType.toRequestBody("multipart/form-data".toMediaTypeOrNull())
+        map["activity_start_at"] =
+            activityStartAt.toString().toRequestBody("multipart/form-data".toMediaTypeOrNull())
+        map["activity_end_at"] =
+            activityEndAt.toString().toRequestBody("multipart/form-data".toMediaTypeOrNull())
+        map["activity_place"] =
+            activityPlace.toRequestBody("multipart/form-data".toMediaTypeOrNull())
+        map["activity_registration_type"] =
+            activityRegistrationType.toRequestBody("multipart/form-data".toMediaTypeOrNull())
+        map["activity_organizer"] =
+            activityOrganizer.toRequestBody("multipart/form-data".toMediaTypeOrNull())
+        map["creator_phone"] = creatorPhone.toRequestBody("multipart/form-data".toMediaTypeOrNull())
+        map["activity_detail"] =
+            activityDetail.toRequestBody("multipart/form-data".toMediaTypeOrNull())
         return map
     }
 

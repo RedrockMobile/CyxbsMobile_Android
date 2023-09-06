@@ -84,7 +84,7 @@ class DetailActivity : BaseActivity() {
                 tvSee.apply {
                     text = "已想看"
                     setTextColor(ContextCompat.getColor(this@DetailActivity, R.color.seecolor))
-                    tvSee.layoutParams =getConstrainLayoutParams()
+                    tvSee.layoutParams = getConstrainLayoutParams()
                     ivAdd.gone()
                 }
                 layout.apply {
@@ -98,7 +98,8 @@ class DetailActivity : BaseActivity() {
         }
 
     }
-    private fun getConstrainLayoutParams():ConstraintLayout.LayoutParams{
+
+    private fun getConstrainLayoutParams(): ConstraintLayout.LayoutParams {
         val layoutParams = ConstraintLayout.LayoutParams(
             ConstraintLayout.LayoutParams.WRAP_CONTENT,
             ConstraintLayout.LayoutParams.WRAP_CONTENT
@@ -163,12 +164,13 @@ class DetailActivity : BaseActivity() {
                 tvMinutes.gone()
                 tvSeconds.gone()
             } else {
-               startDownTimer(it.activity_start_at)
+                startDownTimer(it.activity_start_at)
             }
         }
 
     }
-    private fun startDownTimer(startTime:Long){
+
+    private fun startDownTimer(startTime: Long) {
         // 活动开始时间戳和结束时间戳（以秒为单位）
 
         val currentTimeInSeconds = System.currentTimeMillis() / 1000
