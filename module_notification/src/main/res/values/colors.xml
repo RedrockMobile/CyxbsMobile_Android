@@ -29,7 +29,7 @@
     <color name="notification_itinerary_tabLayout_text_selected">#15C6E7</color>
     <color name="notification_itinerary_tabLayout_text_unselect">#A1ABBA</color>
     <color name="notification_itinerary_tabLayout_top_start_color">#FCFCFE</color>
-    <color name="notification_itinerary_tabLayout_bottom_end_color">#FFFFFF</color>
+    <color name="notification_itinerary_tabLayout_bottom_end_color">#F5F7FA</color>
     <color name="notification_itinerary_auto_clear_hint_text">#ABB5C4</color>
     <color name="notification_itinerary_item_title_text">#15315B</color>
     <color name="notification_itinerary_item_canceled_title_text">#8F9CAF</color>

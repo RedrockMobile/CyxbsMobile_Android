@@ -6,6 +6,8 @@
     android:layout_height="wrap_content"
     android:layout_marginBottom="8dp"
     android:background="@color/notification_white"
+    app:cardElevation="0dp"
+    app:cardMaxElevation="0dp"
     app:cardCornerRadius="12dp">
 
     <!--    <androidx.constraintlayout.widget.ConstraintLayout-->
@@ -105,6 +107,7 @@
                 android:layout_marginEnd="251dp"
                 android:layout_toStartOf="@+id/notification_itinerary_ll_status"
                 android:textAppearance="@style/notification_itinerary_item_canceled_title_text_style"
+                android:letterSpacing="0.14"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
                 tool:text="活动通知:" />
@@ -113,7 +116,7 @@
                 android:id="@+id/notification_itinerary_ll_status"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_alignParentTop="true"
+                android:layout_centerVertical="true"
                 android:layout_alignParentEnd="true"
                 android:background="@android:color/transparent"
                 android:gravity="center_vertical"
@@ -142,6 +145,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="3dp"
+            android:letterSpacing="0.15"
             android:textAppearance="@style/notification_itinerary_item_canceled_content_text_style"
             tool:text="你提醒嘎嘎嘎于8月15日周三第5节课和第6节课在灯光篮球场上打篮球" />
 
@@ -150,6 +154,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="3dp"
+            android:letterSpacing="0.1"
             android:textAppearance="@style/notification_itinerary_item_canceled_generate_time_text_style"
             tool:text="8/14 12：00" />
 
@@ -161,6 +166,7 @@
             android:layout_marginTop="13dp"
             android:gravity="center_horizontal"
             android:text="已取消"
+            android:letterSpacing="0.075"
             android:textAppearance="@style/notification_itinerary_item_canceled_hint_style"
             tool:ignore="HardcodedText" />
 

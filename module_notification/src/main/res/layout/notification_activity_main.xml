@@ -113,7 +113,7 @@
         app:tabIndicatorColor="@android:color/transparent"
         app:tabIndicatorFullWidth="false"
         app:tabIndicatorHeight="3dp"
-        app:tabMinWidth="160dp"
+        app:tabMinWidth="107dp"
         app:tabMode="fixed"
         app:tabPaddingBottom="9dp"
         app:tabPaddingEnd="17dp"

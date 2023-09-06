@@ -67,10 +67,6 @@ class NotificationActivity : BaseViewModelActivity<NotificationViewModel>() {
     //所有还未读的系统通知消息的id 用来给一键已读使用
     private var allUnreadSysMsgIds = ArrayList<String>()
 
-    /**
-     * new出fragment实例放入VP2的adpater的写法有bug，不推荐这样的写法
-     */
-
     //目前ViewPager处于哪个页面
     var whichPageIsIn = 0
         private set
@@ -87,8 +83,8 @@ class NotificationActivity : BaseViewModelActivity<NotificationViewModel>() {
         initSettingRedDots()
         initObserver()
         initRefreshLayout()
-        viewModel.getAllMsg()
-        viewModel.getAllItineraryMsg()
+        initMsgData()
+        initPageSelect()
     }
 
     override fun onStart() {
@@ -119,7 +115,7 @@ class NotificationActivity : BaseViewModelActivity<NotificationViewModel>() {
     }
 
     /**
-     * 按产品要求取消了弹窗，该方法弃用
+     * 按产品要求取消了弹窗, 该方法弃用, 也许后续更新会用到，暂作保留
      */
     private fun initPopupWindow() {
         when (whichPageIsIn) {
@@ -201,14 +197,8 @@ class NotificationActivity : BaseViewModelActivity<NotificationViewModel>() {
     }
 
     private fun initVp2() {
-        /*
-        itineraryFragment = ItineraryNotificationFragment()
-        sysFragment = SysNotificationFragment()
-        ufieldActiveFragment = UfieldNotificationFragment()
-         */
-
         notification_home_vp2.adapter = FragmentVpAdapter(this)
-            .add { UfieldNotificationFragment() }     // whichPageIsIn = 0
+            .add { UfieldNotificationFragment() }       // whichPageIsIn = 0
             .add { SysNotificationFragment() }          // whichPageIsIn = 1
             .add { ItineraryNotificationFragment() }    // whichPageIsIn = 2
         notification_home_vp2.setPageTransformer(ScaleInTransformer())
@@ -310,16 +300,7 @@ class NotificationActivity : BaseViewModelActivity<NotificationViewModel>() {
                 viewModel.changeActiveDotStatus(false)
             }
         }
-        /*viewModel.activeMsg.observe {
-            allUnreadActiveMsgIds = ArrayList()
-            for (value in it!!) {
-                if (!value.has_read) {
-                    changeTabRedDotsVisibility(1, View.VISIBLE)
-                    allUnreadActiveMsgIds.add(value.id.toString())
-                }
-            }
-        }
-*/
+
         viewModel.popupWindowClickableStatus.observe {
             it?.let { notification_rl_home_dots.isClickable = it }
         }
@@ -344,7 +325,7 @@ class NotificationActivity : BaseViewModelActivity<NotificationViewModel>() {
                 changeTabRedDotsVisibility(2, View.INVISIBLE)
         }
 
-        //请求数据是否成功的监听
+        // 请求（刷新）数据是否成功的监听
         viewModel.getMsgSuccessful.observe {
             notification_refresh.isRefreshing = false
         }
@@ -360,6 +341,35 @@ class NotificationActivity : BaseViewModelActivity<NotificationViewModel>() {
         notification_refresh.isRefreshing = true
     }
 
+    private fun initMsgData() {
+        viewModel.getAllMsg()
+        viewModel.getAllItineraryMsg()
+    }
+
+    /**
+     * 初始化选择哪种类型的通知页面
+     * #### 0 为     活动通知页面
+     * #### 1 为     系统通知页面
+     * #### 2 为     行程通知页面
+     * 如下面的进入消息中心后初始显示行程通知页面的写法
+     * ```
+     * ServiceManager.activity(NOTIFICATION_HOME){
+     *      withInt("MsgType", 2)
+     * }
+     * ```
+     */
+    private fun initPageSelect() {
+        var msgType: Int
+        intent.apply {
+            msgType = getIntExtra("MsgType",-1)
+        }
+        if (msgType > -1 && msgType < notification_home_tl.tabCount) {
+            notification_home_tl.getTabAt(msgType)?.select()
+            intent.removeExtra("MsgType")
+        }
+    }
+
+
     fun removeUnreadSysMsgId(id: String) {
         allUnreadSysMsgIds.remove(id)
         if (allUnreadSysMsgIds.size == 0) {
@@ -367,12 +377,6 @@ class NotificationActivity : BaseViewModelActivity<NotificationViewModel>() {
         }
     }
 
-/*    fun removeUnreadActiveMsgIds(id: String) {
-        allUnreadActiveMsgIds.remove(id)
-        if (allUnreadActiveMsgIds.size == 0) {
-            changeTabRedDotsVisibility(1, View.INVISIBLE)
-        }
-    }*/
 
     //改变TabLayout小红点的显示状态
     private fun changeTabRedDotsVisibility(position: Int, visibility: Int) {

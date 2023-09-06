@@ -19,51 +19,44 @@ import com.redrock.module_notification.model.NotificationRepository
  *
  */
 class ItineraryViewModel(val hostViewModel: NotificationViewModel) : BaseViewModel() {
-    // 用户已经发送的行程消息的列表
+    // 用户已经发送的行程消息的列表（发送的行程）
     val sentItineraryList: LiveData<List<SentItineraryMsgBean>> get() = _sentItineraryList
     private val _sentItineraryList = MutableLiveData<List<SentItineraryMsgBean>>()
 
+    // 所有未读的用户发送的行程
     val allUnReadSentItineraryIds: LiveData<List<Int>> get() = _allUnReadSentItineraryIds
     private val _allUnReadSentItineraryIds = MutableLiveData<List<Int>>()
     val newUnReadSentItineraryIds = _allUnReadSentItineraryIds.asShareFlow()
 
-    // 获取-已经发送的行程消息列表 请求是否成功（状态）
+    // 获取-“已经发送的行程消息列表” 该请求是否成功（状态）
     val sentItineraryListIsSuccessfulState: LiveData<Boolean> get() = _sentItineraryListIsSuccessfulState
     private val _sentItineraryListIsSuccessfulState = MutableLiveData<Boolean>()
 
-    // 获取-已经发送的行程消息列表 请求是否成功（事件）
-    val sentItineraryListIsSuccessfulEvent = _sentItineraryListIsSuccessfulState.asShareFlow()
 
 
-
-    // 用户被通知到的行程消息的列表
+    // 用户被通知到的行程消息的列表（接收的行程）
     val receivedItineraryList: LiveData<List<ReceivedItineraryMsgBean>> get() = _receivedItineraryList
     private val _receivedItineraryList = MutableLiveData<List<ReceivedItineraryMsgBean>>()
 
+    // 所有未读的用户接收的行程
     val allUnReadReceivedItineraryIds: LiveData<List<Int>> get() = _allUnReadReceivedItineraryIds
     private val _allUnReadReceivedItineraryIds = MutableLiveData<List<Int>>()
     val newUnReadReceivedItineraryIds = _allUnReadReceivedItineraryIds.asShareFlow()
 
-
-    // 获取-被通知到的行程消息列表 请求是否成功（状态）
+    // 获取-“被通知到的行程消息列表” 该请求是否成功（状态）
     val receivedItineraryListIsSuccessfulState: LiveData<Boolean> get() = _receivedItineraryListIsSuccessfulState
     private val _receivedItineraryListIsSuccessfulState = MutableLiveData<Boolean>()
 
-    // 获取-被通知到的行程消息列表 请求是否成功（事件）
-    val receivedItineraryListIsSuccessfulEvent =
-        _receivedItineraryListIsSuccessfulState.asShareFlow()
 
 
-
-    // 取消某行程的提醒 请求是否成功（状态）
+    // 取消某行程的提醒 该请求是否成功（状态）
     private val _cancelReminderIsSuccessfulState = MutableLiveData<Pair<Int, Boolean>>()
-    // 取消某行程的提醒 请求是否成功（事件）
+    // 取消某行程的提醒 该请求是否成功（事件）
     val cancelReminderIsSuccessfulEvent = _cancelReminderIsSuccessfulState.asShareFlow()
 
 
     // 添加某一行程到日程（添加事务） 请求是否成功（状态）
     private val _add2scheduleIsSuccessfulState = MutableLiveData<Pair<Int, Boolean>>()
-
     // 添加某一行程到日程（添加事务） 请求是否成功（事件）
     val add2scheduleIsSuccessfulEvent = _add2scheduleIsSuccessfulState.asShareFlow()
 
@@ -86,7 +79,6 @@ class ItineraryViewModel(val hostViewModel: NotificationViewModel) : BaseViewMod
                 }
         } else {
             if (hostViewModel.getItineraryIsSuccessful) {
-                LogUtils.d("Hsj-getSentItinerary","从宿主Activity的viewModel中获取SentItinerary")
                 _sentItineraryListIsSuccessfulState.postValue(true)
                 _sentItineraryList.postValue(hostViewModel.itineraryMsg.value!!.sentItineraryList)
             } else {
@@ -111,7 +103,6 @@ class ItineraryViewModel(val hostViewModel: NotificationViewModel) : BaseViewMod
                 }
         } else {
             if (hostViewModel.getItineraryIsSuccessful) {
-                LogUtils.d("Hsj-getReceivedItinerary","从宿主Activity的viewModel中获取ReceivedItinerary")
                 _receivedItineraryListIsSuccessfulState.postValue(true)
                 _receivedItineraryList.postValue(hostViewModel.itineraryMsg.value!!.receivedItineraryList)
             } else {
@@ -130,13 +121,14 @@ class ItineraryViewModel(val hostViewModel: NotificationViewModel) : BaseViewMod
                 _cancelReminderIsSuccessfulState.postValue(Pair(index, false))
             }
             .safeSubscribeBy (
-                onError = {
+                onError =
+                {
                     it.printStackTrace()
-                    LogUtils.d("Hsj-cancelItineraryReminder","err: ${it.printStackTrace()}")
-                          },
-                onSuccess = {
+                },
+                onSuccess =
+                {
                 _cancelReminderIsSuccessfulState.postValue(Pair(index, true))
-            })
+                })
     }
 
     /**
@@ -149,18 +141,15 @@ class ItineraryViewModel(val hostViewModel: NotificationViewModel) : BaseViewMod
         NotificationRepository.changeItineraryReadStatus(unReadIdList, status)
             .throwOrInterceptException {
                 ApiException{exception ->
-                    LogUtils.w("Hsj-changeItineraryReadStatus","changeReadStatus Exception status:${exception.status}")
+                    LogUtils.w("H57-changeReadStatus","response Exception status:${exception.status}")
                 }
-                LogUtils.w("Hsj-changeItineraryReadStatus","changeReadStatus Exception:${it.message}")
-                LogUtils.w("Hsj-changeItineraryReadStatus","changeReadStatus fail")
             }
             .safeSubscribeBy (
                 onError = {
                     it.printStackTrace()
-                    LogUtils.d("Hsj-changeItineraryReadStatus","err: ${it.printStackTrace()}")
                 },
                 onSuccess = {
-                LogUtils.d("Hsj-changeItineraryReadStatus","changeReadStatus success")
+                LogUtils.d("H57","changeReadStatus success")
                 when(page) {
                     0 -> _allUnReadReceivedItineraryIds.postValue(emptyList())
                     1 -> _allUnReadSentItineraryIds.postValue(emptyList())
@@ -179,18 +168,12 @@ class ItineraryViewModel(val hostViewModel: NotificationViewModel) : BaseViewMod
         NotificationRepository.changeItineraryAddStatus(itineraryId, status)
             .throwOrInterceptException {
                 "与服务器君通信失败 TAT~".toast()
-                ApiException{exception ->
-                    LogUtils.w("Hsj-Itinerary","changeAddStatus Exception status:${exception.status}")
-                }
-                LogUtils.w("Hsj-Itinerary","changeAddStatus Exception:${it.message}")
             }
             .safeSubscribeBy(
                 onError = {
                     it.printStackTrace()
-                    LogUtils.d("Hsj-changeItineraryAddStatus","err: ${it.printStackTrace()}")
                 },
                 onSuccess = {
-                    LogUtils.d("Hsj-changeItineraryAddStatus","changeAddStatus Success")
                 }
             )
     }
@@ -209,20 +192,15 @@ class ItineraryViewModel(val hostViewModel: NotificationViewModel) : BaseViewMod
         NotificationRepository.addAffair(remindTime, info)
             .throwOrInterceptException {
                 "添加失败".toast()
-                ApiException{exception->
-                    LogUtils.w("Hsj-Itinerary","add2Schedule Exception status:${exception.status}")
-                }
-                LogUtils.w("Hsj-Itinerary","add2Schedule Exception:${it.message}")
                 _add2scheduleIsSuccessfulState.postValue(Pair(index, false))
             }
             .safeSubscribeBy (
                 onError = {
                     it.printStackTrace()
-                    LogUtils.d("Hsj-addItineraryToSchedule","err: ${it.printStackTrace()}")
                 },
                 onSuccess = {
                 "添加成功".toast()
-                changeItineraryAddStatus(info.id,true)
+                changeItineraryAddStatus(info.id)
                 _add2scheduleIsSuccessfulState.postValue(Pair(index, true))
             })
     }

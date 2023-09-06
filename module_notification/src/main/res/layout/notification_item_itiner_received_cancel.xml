@@ -15,6 +15,8 @@
         android:layout_height="wrap_content"
         android:layout_marginBottom="8dp"
         android:background="@color/notification_white"
+        app:cardElevation="0dp"
+        app:cardMaxElevation="0dp"
         app:cardCornerRadius="12dp">
 
         <LinearLayout
@@ -32,9 +34,9 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_alignParentStart="true"
-
                     android:layout_toStartOf="@+id/notification_itinerary_ll_status_new"
                     android:text="取消通知:"
+                    android:letterSpacing="0.14"
                     android:textAppearance="@style/notification_itinerary_item_title_text_style"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent" />
@@ -43,7 +45,7 @@
                     android:id="@+id/notification_itinerary_ll_status_new"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_alignParentTop="true"
+                    android:layout_centerVertical="true"
                     android:layout_alignParentEnd="true"
                     android:background="@android:color/transparent"
                     android:gravity="center_vertical"
@@ -73,6 +75,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="3dp"
+                android:letterSpacing="0.15"
                 android:textAppearance="@style/notification_itinerary_item_content_text_style"
                 tool:text="拉拉拉在提醒你8月15日周三第5节课和第6节课在灯光篮球场上打篮球的行程已取消" />
 
@@ -81,8 +84,9 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="3dp"
+                android:letterSpacing="0.1"
                 android:textAppearance="@style/notification_itinerary_item_generate_time_text_style"
-                tool:text="8/14 12：00" />
+                tool:text="8/14 12:00" />
 
             <TextView
                 android:id="@+id/notification_itinerary_tv_canceled_hint"
@@ -92,6 +96,7 @@
                 android:layout_marginTop="13dp"
                 android:gravity="center_horizontal"
                 android:text="已取消"
+                android:letterSpacing="0.075"
                 android:textAppearance="@style/notification_itinerary_item_canceled_hint_style"
                 tool:ignore="HardcodedText" />
 
@@ -103,6 +108,8 @@
         android:layout_height="wrap_content"
         android:layout_marginBottom="8dp"
         android:background="@color/notification_white"
+        app:cardElevation="0dp"
+        app:cardMaxElevation="0dp"
         app:cardCornerRadius="12dp">
 
         <LinearLayout
@@ -120,9 +127,9 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_alignParentStart="true"
-
                     android:layout_toStartOf="@+id/notification_itinerary_ll_status_old"
                     android:textAppearance="@style/notification_itinerary_item_canceled_title_text_style"
+                    android:letterSpacing="0.14"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent"
                     tool:text="活动通知:" />
@@ -131,7 +138,7 @@
                     android:id="@+id/notification_itinerary_ll_status_old"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_alignParentTop="true"
+                    android:layout_centerVertical="true"
                     android:layout_alignParentEnd="true"
                     android:background="@android:color/transparent"
                     android:gravity="center_vertical"
@@ -161,6 +168,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="3dp"
+                android:letterSpacing="0.15"
                 android:textAppearance="@style/notification_itinerary_item_canceled_content_text_style"
                 tool:text="拉拉拉在提醒你8月15日周三第5节课和第6节课在灯光篮球场上打篮球" />
 
@@ -169,8 +177,9 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="3dp"
+                android:letterSpacing="0.1"
                 android:textAppearance="@style/notification_itinerary_item_canceled_generate_time_text_style"
-                tool:text="8/14 12：00" />
+                tool:text="8/14  12:00" />
 
             <!--            <TextView-->
             <!--                android:id="@+id/notification_itinerary_tv_canceled_hint"-->
@@ -221,6 +230,7 @@
                     android:layout_gravity="center_vertical"
                     android:layout_marginStart="5dp"
                     android:text="添加到日程"
+                    android:letterSpacing="0.075"
                     android:textAppearance="@style/notification_itinerary_item_add_affair_text_style"
                     android:textColor="#ABBCD8"
                     tool:ignore="HardcodedText" />

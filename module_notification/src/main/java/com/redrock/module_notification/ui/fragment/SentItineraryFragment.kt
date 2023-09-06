@@ -72,15 +72,6 @@ class SentItineraryFragment : BaseFragment(R.layout.notification_fragment_itiner
     }
 
     private fun initObserver() {
-//        itineraryViewModel.hostViewModel.itineraryMsgIsSuccessfulState.observe {
-//            // 如果Activity的viewModel "获取行程是否成功" 的最新状态为true（或者最新状态为false但有之前的获取数据）
-//            if (it || itineraryViewModel.hostViewModel.getItineraryIsSuccessful)
-//                itineraryViewModel.getSentItinerary()
-//            else {
-//                LogUtils.d("Hsj-getSentItinerary","发起请求")
-//                itineraryViewModel.getSentItinerary(true)
-//            }
-//        }
         itineraryViewModel.sentItineraryList.observe {
             data = it.reversed()
             adapter.submitList(data)

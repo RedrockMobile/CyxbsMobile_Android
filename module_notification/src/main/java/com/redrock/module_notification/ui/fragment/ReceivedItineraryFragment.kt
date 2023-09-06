@@ -74,22 +74,13 @@ class ReceivedItineraryFragment : BaseFragment(R.layout.notification_fragment_it
     }
 
     private fun initObserver() {
-//        itineraryViewModel.hostViewModel.itineraryMsgIsSuccessfulState.observe {
-//            // 如果Activity的viewModel "获取行程是否成功" 的最新状态为true（或者最新状态为false但有之前的获取数据）
-//            if (it || itineraryViewModel.hostViewModel.getItineraryIsSuccessful)
-//                itineraryViewModel.getReceivedItinerary()
-//            else {
-//                LogUtils.d("Hsj-getReceivedItinerary","发起请求")
-//                itineraryViewModel.getReceivedItinerary(true)
-//            }
-//        }
         itineraryViewModel.receivedItineraryList.observe {
             data = it.reversed()
             adapter.submitList(data)
             //让数据更改有动画效果
             receivedItineraryRv.scheduleLayoutAnimation()
         }
-
+        // 根据获取对应行程数据是否成功的状态判断是否应该展示没网的页面
         itineraryViewModel.receivedItineraryListIsSuccessfulState.observe {
             if (it) {
                 receivedItineraryRv.visible()
