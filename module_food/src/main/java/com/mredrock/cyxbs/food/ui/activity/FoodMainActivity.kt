@@ -15,7 +15,7 @@ import com.alibaba.android.arouter.facade.annotation.Route
 import com.google.android.flexbox.FlexDirection
 import com.google.android.flexbox.FlexWrap
 import com.google.android.flexbox.FlexboxLayoutManager
-import com.mredrock.cyxbs.config.route.CENTER_FOOD_ENTRY
+import com.mredrock.cyxbs.config.route.FOOD_ENTRY
 import com.mredrock.cyxbs.food.R
 import com.mredrock.cyxbs.food.ui.adapters.FoodMainRvAdapter
 import com.mredrock.cyxbs.food.ui.view.FoodDetailDialog
@@ -26,7 +26,7 @@ import com.mredrock.cyxbs.lib.base.dailog.ChooseDialog
 import com.mredrock.cyxbs.lib.base.ui.BaseActivity
 import com.mredrock.cyxbs.lib.utils.extensions.*
 
-@Route(path = CENTER_FOOD_ENTRY)
+@Route(path = FOOD_ENTRY)
 class FoodMainActivity : BaseActivity() {
     private val viewModel by lazy { ViewModelProvider(this)[FoodMainViewModel::class.java] }
     private val mRvRegion by R.id.food_main_rv_canteen_region.view<RecyclerView>()

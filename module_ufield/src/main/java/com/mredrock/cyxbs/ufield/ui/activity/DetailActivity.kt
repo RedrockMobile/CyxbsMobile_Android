@@ -10,7 +10,7 @@ import androidx.constraintlayout.widget.ConstraintSet
 import androidx.core.content.ContextCompat
 import com.alibaba.android.arouter.facade.annotation.Route
 import com.mredrock.cyxbs.config.route.DISCOVER_MAP
-import com.mredrock.cyxbs.config.route.UFIELD_DETAIL
+import com.mredrock.cyxbs.config.route.UFIELD_DETAIL_ENTRY
 import com.mredrock.cyxbs.lib.base.ui.BaseActivity
 import com.mredrock.cyxbs.lib.base.ui.viewModelBy
 import com.mredrock.cyxbs.lib.utils.extensions.gone
@@ -24,7 +24,7 @@ import java.util.Locale
 import kotlin.math.floor
 import kotlin.properties.Delegates
 
-@Route(path = UFIELD_DETAIL)
+@Route(path = UFIELD_DETAIL_ENTRY)
 class DetailActivity : BaseActivity() {
     private var id by Delegates.notNull<Int>()
     private val tvSee by R.id.ufield_tv_wantsee.view<TextView>()

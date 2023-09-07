@@ -2,7 +2,6 @@ package com.mredrock.cyxbs.ufield.ui.activity
 
 import android.content.Intent
 import android.os.Bundle
-import android.util.Log
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
@@ -11,7 +10,7 @@ import androidx.viewpager2.widget.ViewPager2
 import com.alibaba.android.arouter.facade.annotation.Route
 import com.google.android.material.tabs.TabLayout
 import com.google.android.material.tabs.TabLayoutMediator
-import com.mredrock.cyxbs.config.route.UFIELD_ACTIVITY
+import com.mredrock.cyxbs.config.route.UFIELD_MAIN_ENTRY
 import com.mredrock.cyxbs.lib.base.ui.BaseActivity
 import com.mredrock.cyxbs.lib.utils.adapter.FragmentVpAdapter
 import com.mredrock.cyxbs.ufield.R
@@ -28,7 +27,7 @@ import com.mredrock.cyxbs.ufield.viewmodel.UFieldViewModel
  * date : 2023/8/7 19:49
  * version: 1.0
  */
-@Route(path = UFIELD_ACTIVITY)
+@Route(path = UFIELD_MAIN_ENTRY)
 class UFieldActivity : BaseActivity() {
 
     private val mBack: ImageView by R.id.uField_back.view()
@@ -107,7 +106,6 @@ class UFieldActivity : BaseActivity() {
         mViewModel.apply {
             getIsAdmin()
             isAdmin.observe(this@UFieldActivity) {
-                Log.d("966555", "测试结果-->> ${it[0].admin}");
                 if (it[0].admin) {
                     mAdmin.visibility = View.VISIBLE
                 }

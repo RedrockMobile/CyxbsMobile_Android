@@ -14,17 +14,9 @@ import androidx.core.content.ContextCompat
 import androidx.core.content.res.ResourcesCompat
 import androidx.core.util.Pair
 import androidx.fragment.app.viewModels
-import androidx.lifecycle.Observer
 import com.alibaba.android.arouter.facade.annotation.Route
 import com.alibaba.android.arouter.launcher.ARouter
 import com.mredrock.cyxbs.api.account.IAccountService
-import com.mredrock.cyxbs.mine.page.about.AboutActivity
-import com.mredrock.cyxbs.mine.page.edit.EditInfoActivity
-import com.mredrock.cyxbs.mine.page.feedback.center.ui.FeedbackCenterActivity
-import com.mredrock.cyxbs.mine.page.mine.ui.activity.HomepageActivity
-import com.mredrock.cyxbs.mine.page.setting.SettingActivity
-import com.mredrock.cyxbs.mine.page.sign.DailySignActivity
-import de.hdodenhof.circleimageview.CircleImageView
 import com.mredrock.cyxbs.api.store.IStoreService
 import com.mredrock.cyxbs.common.utils.extensions.loadAvatar
 import com.mredrock.cyxbs.config.route.*
@@ -35,6 +27,14 @@ import com.mredrock.cyxbs.lib.utils.extensions.setOnSingleClickListener
 import com.mredrock.cyxbs.lib.utils.extensions.visible
 import com.mredrock.cyxbs.lib.utils.service.ServiceManager
 import com.mredrock.cyxbs.mine.noyification.NotificationUtils
+import com.mredrock.cyxbs.mine.page.about.AboutActivity
+import com.mredrock.cyxbs.mine.page.edit.EditInfoActivity
+import com.mredrock.cyxbs.mine.page.feedback.center.ui.FeedbackCenterActivity
+import com.mredrock.cyxbs.mine.page.mine.ui.activity.HomepageActivity
+import com.mredrock.cyxbs.mine.page.setting.SettingActivity
+import com.mredrock.cyxbs.mine.page.sign.DailySignActivity
+import de.hdodenhof.circleimageview.CircleImageView
+
 /**
  * Created by zzzia on 2018/8/14.
  * 我的 主界面Fragment
@@ -188,7 +188,7 @@ class UserFragment : BaseFragment() {
             }
             mine_user_iv_center_activity.setOnSingleClickListener {
                 doIfLogin {
-                    ARouter.getInstance().build(UFIELD_CENTER).navigation()
+                    ARouter.getInstance().build(UFIELD_CENTER_ENTRY).navigation()
                 }
             }
             mine_user_avatar.setOnSingleClickListener {
@@ -210,7 +210,7 @@ class UserFragment : BaseFragment() {
 
     @SuppressLint("SetTextI18n")
     private fun addObserver() {
-        viewModel.status.observe(viewLifecycleOwner, Observer {
+        viewModel.status.observe(viewLifecycleOwner) {
             mine_user_tv_sign.text = "已连续签到 ${it.serialDays} 天 "
             if (it.isChecked) {
                 mine_user_btn_sign.apply {
@@ -243,8 +243,8 @@ class UserFragment : BaseFragment() {
                     )
                 }
             }
-        })
-        viewModel.userCount.observe(viewLifecycleOwner, Observer {
+        }
+        viewModel.userCount.observe(viewLifecycleOwner) {
             it?.let {
                 //可能会出现部分number为负数的情况，客户端需要处理（虽然是后端的锅）
                 viewModel.judgeChangedAndSetText(mine_user_tv_dynamic_number, it.dynamicCount)
@@ -258,9 +258,9 @@ class UserFragment : BaseFragment() {
                 viewModel.getUserUncheckedCommentCount()
                 viewModel.getUserUncheckedPraiseCount()
             }
-        })
+        }
 
-        viewModel.userUncheckCount.observe(viewLifecycleOwner, Observer {
+        viewModel.userUncheckCount.observe(viewLifecycleOwner) {
             it?.let {
                 it.uncheckPraiseCount?.let { uncheckPraise ->
                     viewModel.setViewWidthAndText(
@@ -280,10 +280,10 @@ class UserFragment : BaseFragment() {
                     )
                 }
             }
-        })
+        }
         viewModel.ufieldNewCount.observe(viewLifecycleOwner) {
             val list = it.filter { element ->
-                element.clicked == false
+                !element.clicked
             }
             if (list.isEmpty()) {
                 mine_user_tv_center_notification_count.gone()
