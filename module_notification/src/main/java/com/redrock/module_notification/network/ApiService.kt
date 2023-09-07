@@ -1,10 +1,10 @@
 package com.redrock.module_notification.network
 
 import com.mredrock.cyxbs.common.bean.RedrockApiWrapper
+import com.mredrock.cyxbs.lib.utils.network.ApiWrapper
 import com.redrock.module_notification.bean.*
 import io.reactivex.rxjava3.core.Observable
 import retrofit2.http.*
-
 /**
  * Author by OkAndGreat
  * Date on 2022/5/1 10:49.
@@ -18,6 +18,19 @@ interface ApiService {
     @GET("/message-system/user/allMsg")
     fun getAllMsg(): Observable<RedrockApiWrapper<MsgBeanData>>
 
+    /*
+  获取活动消息(新版)
+  * */
+    @GET("/magipoke-ufield/message/list/")
+    fun getUFieldActivity(): Observable<ApiWrapper<List<UfieldMsgBean>>>
+
+    /*
+       * 改变读取活动消息的状态
+       * */
+    @PUT("/magipoke-ufield/message/action/click/")
+    fun changeUfieldMsgStatus(
+        @Query("message_id") messageId: Int
+    ): Observable<ApiWrapper<UfieldMsgStatusBean>>
     /**
      * 删除消息
      */

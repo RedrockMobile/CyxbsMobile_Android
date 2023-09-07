@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/ufieldConstraintlayout2"
+        android:layout_width="match_parent"
+        android:layout_height="152dp"
+        android:background="@drawable/ufield_shape_activity_campaign_cl_container"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <RelativeLayout
+        android:id="@+id/ufield_activity_campaign_rl_back"
+        android:layout_width="30dp"
+        android:layout_height="30dp"
+        android:layout_marginStart="17dp"
+        android:layout_marginTop="60dp"
+        android:background="@drawable/ufield_ripple_activity_campaign_ripple_back"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <ImageView
+            android:id="@+id/ufield_activity_campaign_iv_back"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:background="@drawable/ufield_ic_activity_campaign_back"
+            tools:ignore="ContentDescription" />
+    </RelativeLayout>
+
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="47dp"
+        android:text="活动中心"
+        android:textAppearance="@style/ufield_toolbar_tv"
+        android:textStyle="bold"
+        app:layout_constraintBottom_toBottomOf="@+id/ufield_activity_campaign_rl_back"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="@id/ufield_activity_campaign_rl_back"
+        tools:ignore="HardcodedText" />
+
+    <com.google.android.material.tabs.TabLayout
+        android:id="@+id/ufield_activity_campaign_tl"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:layout_marginTop="102dp"
+        android:layout_marginStart="22dp"
+        android:layout_marginEnd="22dp"
+        android:backgroundTint="@android:color/transparent"
+        android:theme="@style/Theme.MaterialComponents"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:tabGravity="fill"
+        app:tabIndicator="@drawable/ufield_ic_activity_campaign_tab_indicator"
+        app:tabIndicatorColor="@android:color/transparent"
+        app:tabIndicatorFullWidth="false"
+        app:tabIndicatorHeight="3dp"
+        app:tabMode="fixed"
+        app:tabRippleColor="@android:color/transparent"
+        app:tabTextAppearance="@style/tab_style"
+        app:tabTextColor="@color/ufield_home_tabLayout_text_selected" />
+
+
+    <androidx.viewpager2.widget.ViewPager2
+        android:id="@+id/ufield_activity_campaign_vp2"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:paddingTop="152dp" />
+</androidx.constraintlayout.widget.ConstraintLayout>

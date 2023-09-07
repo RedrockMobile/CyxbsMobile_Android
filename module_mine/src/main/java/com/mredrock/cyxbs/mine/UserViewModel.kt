@@ -12,8 +12,12 @@ import com.mredrock.cyxbs.common.BaseApp.Companion.appContext
 import com.mredrock.cyxbs.common.service.ServiceManager
 import com.mredrock.cyxbs.common.utils.extensions.*
 import com.mredrock.cyxbs.common.viewmodel.BaseViewModel
+import com.mredrock.cyxbs.lib.utils.extensions.setSchedulers
+import com.mredrock.cyxbs.lib.utils.extensions.unsafeSubscribeBy
+import com.mredrock.cyxbs.lib.utils.network.mapOrThrowApiException
 import com.mredrock.cyxbs.mine.network.model.QANumber
 import com.mredrock.cyxbs.mine.network.model.ScoreStatus
+import com.mredrock.cyxbs.mine.network.model.UfieldMsgBean
 import com.mredrock.cyxbs.mine.network.model.UserCount
 import com.mredrock.cyxbs.mine.network.model.UserUncheckCount
 import com.mredrock.cyxbs.mine.util.apiService
@@ -45,6 +49,25 @@ class UserViewModel : BaseViewModel() {
     private val _userUncheckCount = MutableLiveData<UserUncheckCount?>()
     val userUncheckCount: LiveData<UserUncheckCount?>
         get() = _userUncheckCount
+
+    private val _ufieldNewCount = MutableLiveData<List<UfieldMsgBean>>()
+
+    val ufieldNewCount: LiveData<List<UfieldMsgBean>> get() = _ufieldNewCount
+
+    /*
+* 获取活动消息
+* */
+    fun getUFieldActivity() {
+        apiService.getUFieldActivity()
+            .setSchedulers()
+            .mapOrThrowApiException()
+            .unsafeSubscribeBy(
+                onNext = {
+                    _ufieldNewCount.postValue(it)
+                }
+            ).lifeCycle()
+
+    }
 
     fun getScoreStatus() {
         apiService.getScoreStatus()

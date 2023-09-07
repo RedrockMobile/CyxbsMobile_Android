@@ -12,7 +12,7 @@ import com.mredrock.cyxbs.main.R
  * @time   : 2022/10/30 21:02
  * @bless  : God bless my code
  */
-@Route(path = DEFAULT_FRAGMENT_PAGE)
+
 class DefaultPageFragment: BaseFragment(R.layout.main_activity_default_page) {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
