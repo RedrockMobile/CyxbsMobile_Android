@@ -1,5 +1,6 @@
 package com.mredrock.cyxbs.food.viewmodel
 
+import android.util.Log
 import androidx.lifecycle.MutableLiveData
 import com.mredrock.cyxbs.food.network.FoodApiService
 import com.mredrock.cyxbs.food.network.bean.*
@@ -117,6 +118,7 @@ class FoodMainViewModel : BaseViewModel() {
                 toast(it.toString())
             }
             .safeSubscribeBy {
+                Log.d("bbp", "postFoodPraise:$it ")
                 foodPraiseBean.value = it
             }
     }

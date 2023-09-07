@@ -169,6 +169,11 @@ class FoodMainActivity : BaseActivity() {
         viewModel.foodPraiseBean.observe {
             dialog?.findViewById<TextView>(R.id.food_dialog_tv_praise_num)?.text =
                 it.praiseNum.toString()
+            //dataFoodResult是本地数据，需要对本地数据进行处理
+            viewModel.dataFoodResult[viewModel.foodNum].run {
+                this.praiseNum = it.praiseNum
+                this.praiseIs= it.praiseIs
+            }
             if (it.praiseIs) {
                 dialog?.findViewById<Button>(R.id.food_dialog_detail_btn_positive)
                     ?.apply {
