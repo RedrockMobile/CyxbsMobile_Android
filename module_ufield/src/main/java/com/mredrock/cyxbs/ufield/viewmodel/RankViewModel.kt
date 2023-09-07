@@ -6,7 +6,7 @@ import com.mredrock.cyxbs.lib.base.ui.BaseViewModel
 import com.mredrock.cyxbs.lib.utils.extensions.setSchedulers
 import com.mredrock.cyxbs.lib.utils.network.mapOrThrowApiException
 import com.mredrock.cyxbs.ufield.bean.RankBean
-import com.mredrock.cyxbs.ufield.network.LxhService
+import com.mredrock.cyxbs.ufield.network.RankService
 
 class RankViewModel : BaseViewModel() {
     private val _rank = MutableLiveData<List<RankBean>>()
@@ -16,7 +16,7 @@ class RankViewModel : BaseViewModel() {
         number: Int,
         order: String
     ) {
-        LxhService.INSTANCE.getRank(type, number, order)
+        RankService.INSTANCE.getRank(type, number, order)
             .setSchedulers()
             .mapOrThrowApiException()
             .doOnError {

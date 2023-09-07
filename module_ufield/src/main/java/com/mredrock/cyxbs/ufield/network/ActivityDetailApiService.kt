@@ -16,9 +16,6 @@ import retrofit2.http.Query
  * date : 2023/8/24 11:19
  */
 interface ActivityDetailApiService : IApi {
-//    companion object {
-//        val INSTANCE by lazy { ApiGenerator.getApiService(ActivityDetailApiService::class) }
-//    }
 
     @GET("/magipoke-ufield/activity/")
     fun getActivityData(@Query("activity_id") id: Int): Single<ApiWrapper<ActivityBean>>

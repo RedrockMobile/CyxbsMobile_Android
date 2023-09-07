@@ -52,15 +52,7 @@ class FairgroundPageFragment : BaseFragment(R.layout.main_fragment_fairground) {
     ): View? {
         val viewModel by viewModels<FairgroundViewModel>()
         viewModel.days.observe(viewLifecycleOwner) {
-            startActivity.setOnClickListener {
-                ServiceManager.activity(UFIELD_MAIN_ENTRY)
-            }
-            startFood.setOnClickListener {
-                ServiceManager.activity(FOOD_ENTRY)
-            }
-            startSquare.setOnClickListener {
-                ServiceManager.activity(DECLARE_ENTRY)
-            }
+
             val text = "这是你来到邮乐园的第 $it 天"
 
             val spannableStringBuilder = SpannableStringBuilder(text)
@@ -102,5 +94,24 @@ class FairgroundPageFragment : BaseFragment(R.layout.main_fragment_fairground) {
             }
         }
         return super.onCreateView(inflater, container, savedInstanceState)
+    }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        startActivity.setOnClickListener {
+            doIfLogin {
+                ServiceManager.activity(UFIELD_MAIN_ENTRY)
+            }
+        }
+        startFood.setOnClickListener {
+            doIfLogin {
+                ServiceManager.activity(FOOD_ENTRY)
+            }
+        }
+        startSquare.setOnClickListener {
+            doIfLogin {
+                ServiceManager.activity(DECLARE_ENTRY)
+            }
+        }
     }
 }

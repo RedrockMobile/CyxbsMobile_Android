@@ -28,9 +28,9 @@ interface SearchApiService {
      */
     @GET("/magipoke-ufield/activity/search/")
     fun getSearchData(
-        @Query("activity_type") activity_type: String,
-        @Query("activity_num") activity_num: Int,
-        @Query("order_by") order_by: String,
-        @Query("contain_keyword") contain_keyword: String
+        @Query("activity_type") activityType: String,
+        @Query("activity_num") activityNum: Int,
+        @Query("order_by") orderBy: String,
+        @Query("contain_keyword") containKeyword: String
     ): Single<ApiWrapper<List<ItemActivityBean.ItemAll>>>
 }

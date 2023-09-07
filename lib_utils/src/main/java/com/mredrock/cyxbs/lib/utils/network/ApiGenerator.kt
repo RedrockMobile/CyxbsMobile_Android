@@ -219,8 +219,11 @@ object ApiGenerator {
             dns(object : Dns {
                 override fun lookup(hostname: String): List<InetAddress> {
                     // release 版本用的 prod 环境，debug 版本用的 dev 环境，可以在 getBaseUrl() 那里改
-                    return if (hostname == "be-prod.redrock.cqupt.edu.cn"
-                        || hostname == "be-dev.redrock.cqupt.edu.cn") {
+                    return if (hostname in listOf(
+                            "be-prod.redrock.cqupt.edu.cn",
+                            "be-dev.redrock.cqupt.edu.cn"
+                        )
+                    ) {
                         InetAddress.getAllByName("222.177.140.110").asList()
                     } else {
                         try {

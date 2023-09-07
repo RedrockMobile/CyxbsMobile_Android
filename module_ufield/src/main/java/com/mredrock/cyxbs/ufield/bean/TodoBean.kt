@@ -11,34 +11,34 @@ import java.io.Serializable
  */
 data class TodoBean(
     @SerializedName("activity_cover_url")
-    val activity_cover_url: String,
+    val activityCoverUrl: String,
     @SerializedName("activity_create_timestamp")
-    val activity_create_timestamp: Long,
+    val activityCreateTimestamp: Long,
     @SerializedName("activity_creator")
-    val activity_creator: String,
+    val activityCreator: String,
     @SerializedName("activity_detail")
-    val activity_detail: String,
+    val activityDetail: String,
     @SerializedName("activity_end_at")
-    val activity_end_at: Long,
+    val activityEndAt: Long,
     @SerializedName("activity_id")
-    val activity_id: Int,
+    val activityId: Int,
     @SerializedName("activity_organizer")
-    val activity_organizer: String,
+    val activityOrganizer: String,
     @SerializedName("activity_place")
-    val activity_place: String,
+    val activityPlace: String,
     @SerializedName("activity_registration_type")
-    val activity_registration_type: String,
+    val activityRegistrationType: String,
     @SerializedName("activity_start_at")
-    val activity_start_at: Long,
+    val activityStartAt: Long,
     @SerializedName("activity_title")
-    val activity_title: String,
+    val activityTitle: String,
     @SerializedName("activity_type")
-    val activity_type: String,
+    val activityType: String,
     @SerializedName("activity_watch_number")
-    val activity_watch_number: Int,
+    val activityWatchNumber: Int,
     @SerializedName("phone")
-    val activity_phone: String,
+    val activityPhone: String,
     @SerializedName("want_to_watch")
-    val want_to_watch: Boolean
+    val wantToWatch: Boolean
 ) : Serializable
 
