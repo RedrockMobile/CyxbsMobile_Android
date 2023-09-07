@@ -13,7 +13,8 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent">
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.45">
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="283dp"
@@ -26,7 +27,7 @@
                 android:layout_marginTop="31dp"
                 android:gravity="center"
                 android:text="“孙笑川”等半人信息有误\n请重新输入"
-                android:textColor="#15315B"
+                android:textColor="@color/noclass_primary_text_color"
                 android:textSize="15sp"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
