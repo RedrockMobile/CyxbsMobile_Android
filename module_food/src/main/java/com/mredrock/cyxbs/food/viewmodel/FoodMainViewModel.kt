@@ -93,7 +93,9 @@ class FoodMainViewModel : BaseViewModel() {
                     if (it.isNotEmpty()) {
                         determineSuccess.value = true
                         dataFoodResult = it
+                        foodResultBean.value = it
                     }
+                    dataFoodResult = it
                     foodResultBean.value = it
                 }
         } else {
