@@ -1,5 +1,7 @@
 package com.mredrock.cyxbs.declare.pages.detail.bean
 
+import com.google.gson.annotations.SerializedName
+
 /**
  * ... 投完票的数据bean
  * @author RQ527 (Ran Sixiang)
@@ -8,6 +10,8 @@ package com.mredrock.cyxbs.declare.pages.detail.bean
  * @Description:
  */
 data class VotedBean(
+    @SerializedName("statistic")
     val statistic: Map<String,Int>,
+    @SerializedName("voted")
     val voted: String
 )

@@ -1,5 +1,7 @@
 package com.mredrock.cyxbs.declare.pages.detail.bean
 
+import com.google.gson.annotations.SerializedName
+
 /**
  * ... 取消投票的bean
  * @author RQ527 (Ran Sixiang)
@@ -8,5 +10,6 @@ package com.mredrock.cyxbs.declare.pages.detail.bean
  * @Description:
  */
 data class CancelChoiceBean(
+    @SerializedName("Id")
     val Id: Int
 )
