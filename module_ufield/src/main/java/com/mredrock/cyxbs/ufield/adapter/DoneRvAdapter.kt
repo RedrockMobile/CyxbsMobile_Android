@@ -74,10 +74,10 @@ class DoneRvAdapter :
          */
         @RequiresApi(Build.VERSION_CODES.O)
         fun bind(itemData: DoneBean) {
-            actName.text = itemData.activity_title
-            actTime.text = timeFormat(itemData.activity_create_timestamp)
-            actType.text = itemData.activity_type
-            actAuthor.text = itemData.activity_creator
+            actName.text = itemData.activityTitle
+            actTime.text = timeFormat(itemData.activityCreateTimestamp)
+            actType.text = itemData.activityType
+            actAuthor.text = itemData.activityCreator
 
             when (itemData.state) {
                 "rejected" -> actImage.setImageResource(R.drawable.ufield_ic_reject)
@@ -108,7 +108,7 @@ class DoneRvAdapter :
          * 通过数据类中的一部分特征值来比较
          */
         override fun areContentsTheSame(oldItem: DoneBean, newItem: DoneBean): Boolean {
-            return oldItem.activity_id == newItem.activity_id && oldItem.activity_creator==newItem.activity_creator && oldItem.activity_phone==newItem.activity_phone
+            return oldItem.activityId == newItem.activityId && oldItem.activityCreator==newItem.activityCreator && oldItem.activityPhone==newItem.activityPhone
         }
 
     }

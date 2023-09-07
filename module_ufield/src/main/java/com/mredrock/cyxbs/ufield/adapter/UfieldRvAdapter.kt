@@ -74,10 +74,10 @@ class UfieldRvAdapter :
          */
         @RequiresApi(Build.VERSION_CODES.O)
         fun bind(itemData: ItemActivityBean.ItemAll) {
-            actName.text = itemData.activity_title
-            actType.text = itemData.activity_type
-            actTime.text = timeFormat(itemData.activity_start_at)
-            actPic.setImageFromUrl(itemData.activity_cover_url)
+            actName.text = itemData.activityTitle
+            actType.text = itemData.activityType
+            actTime.text = timeFormat(itemData.activityStartAt)
+            actPic.setImageFromUrl(itemData.activityCoverUrl)
 
             when (itemData.ended) {
                 false -> actIsGoing.setImageResource(R.drawable.ufield_ic_activity_on)
@@ -85,22 +85,11 @@ class UfieldRvAdapter :
             }
 
 
-            when (itemData.activity_type) {
+            when (itemData.activityType) {
                 "culture" -> actType.text = "文娱活动"
                 "sports" -> actType.text = "体育活动"
                 else -> actType.text = "教育活动"
             }
-            //   loadAndCropImageWithCenterScale(itemData.activity_cover_url,16f,16f,0f,0f,actPic)
-
-
-//            /**
-//             * 满足中心比例的缩放
-//             */
-//            Glide.with(itemView.context)
-//                .load(itemData.activity_cover_url)
-//                .transform(CenterCrop(), RoundedCorners(50))//设置圆角
-//                .centerCrop() //中心比例的缩放（如果效果不稳定请删除）
-//                .into(actPic)
 
         }
 
@@ -133,7 +122,7 @@ class UfieldRvAdapter :
             oldItem: ItemActivityBean.ItemAll,
             newItem: ItemActivityBean.ItemAll
         ): Boolean {
-            return oldItem.activity_id == newItem.activity_id && oldItem.activity_creator == newItem.activity_creator && oldItem.activity_start_at == newItem.activity_start_at
+            return oldItem.activityId == newItem.activityId && oldItem.activityCreator == newItem.activityCreator && oldItem.activityStartAt == newItem.activityStartAt
         }
 
     }

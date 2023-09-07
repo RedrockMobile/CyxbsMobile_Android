@@ -21,7 +21,6 @@ class UFieldViewModel : BaseViewModel() {
         getCultureActivityList()
         getSportsActivityList()
         getEducationActivityList()
-        Log.d("init520", "测试结果-->> ");
     }
 
     /**
@@ -55,13 +54,13 @@ class UFieldViewModel : BaseViewModel() {
         UFieldRepository
             .receiveAllData()
             .mapOrInterceptException {
-                Log.d("getAllActivityList", "测试结果-->> ${it.message}");
+                Log.d("getAllActivityList", "测试结果-->> ${it.message}")
                 toast("网络似乎有点问题~")
             }
             .doOnError { Log.d("getAllActivityList", "测试结果-->> ${it.message}"); }
             .safeSubscribeBy {
                 _allList.value = it.ongoing + it.ended
-                Log.d("logTest", "测试结果-->> $it");
+                Log.d("logTest", "测试结果-->> $it")
             }
     }
 
@@ -75,7 +74,7 @@ class UFieldViewModel : BaseViewModel() {
                 Log.d(
                     "getCultureActivityList",
                     "测试结果-->> ${it.message}"
-                );
+                )
             }
             .doOnError { Log.d("getCultureActivityList", "测试结果-->> ${it.message}"); }
             .safeSubscribeBy {
@@ -95,7 +94,7 @@ class UFieldViewModel : BaseViewModel() {
                 Log.d(
                     "getSportsActivityList",
                     "测试结果-->> ${it.message}"
-                );
+                )
             }
             .doOnError { Log.d("getSportsActivityList", "测试结果-->> ${it.message}"); }
             .safeSubscribeBy {
@@ -114,7 +113,7 @@ class UFieldViewModel : BaseViewModel() {
                 Log.d(
                     "getEducationActivityList",
                     "测试结果-->> ${it.message}"
-                );
+                )
             }
             .doOnError { Log.d("getEducationActivityList", "测试结果-->> ${it.message}"); }
             .safeSubscribeBy {

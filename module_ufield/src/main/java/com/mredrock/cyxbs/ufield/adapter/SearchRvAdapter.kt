@@ -78,10 +78,10 @@ class SearchRvAdapter :
          */
         @RequiresApi(Build.VERSION_CODES.O)
         fun bind(itemData: ItemActivityBean.ItemAll) {
-            actName.text = itemData.activity_title
-            actHint.text = itemData.activity_detail
-            actTime.text = timeFormat(itemData.activity_start_at)
-            actPic.setImageFromUrl(itemData.activity_cover_url)
+            actName.text = itemData.activityTitle
+            actHint.text = itemData.activityDetail
+            actTime.text = timeFormat(itemData.activityStartAt)
+            actPic.setImageFromUrl(itemData.activityCoverUrl)
             when (itemData.ended) {
                 false -> actIsGoing.setImageResource(R.drawable.ufield_ic_activity_on)
                 else -> actIsGoing.setImageResource(R.drawable.ufield_ic_activity_off)
@@ -118,7 +118,7 @@ class SearchRvAdapter :
             oldItem: ItemActivityBean.ItemAll,
             newItem: ItemActivityBean.ItemAll
         ): Boolean {
-            return oldItem.activity_id == newItem.activity_id && oldItem.activity_creator == newItem.activity_creator && oldItem.activity_start_at == newItem.activity_start_at
+            return oldItem.activityId == newItem.activityId && oldItem.activityCreator == newItem.activityCreator && oldItem.activityStartAt == newItem.activityStartAt
         }
 
     }

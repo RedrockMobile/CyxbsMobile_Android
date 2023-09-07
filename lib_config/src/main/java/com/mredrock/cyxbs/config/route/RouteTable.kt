@@ -77,10 +77,9 @@ const val MINE_EDIT_INFO = "/edit_info/mine/entry"
 //个人界面的个人主页
 const val MINE_PERSON_PAGE = "/person_page/mine/entry"
 
-const val FAIRGROUND_ENTRY = "/fairground/entry"
-
 // QA
 const val QA_QUIZ = "/quiz/qa/entry"
+
 const val QA_CIRCLE_DETAIL = "/circle_detail/qa/entry"
 const val QA_DYNAMIC_DETAIL = "/dynamic_detail/qa/entry"
 const val QA_DYNAMIC_MINE = "/dynamic_mine/qa/entry"
@@ -88,7 +87,6 @@ const val QA_MY_COMMENT = "/my_comment/qa/entry"
 const val QA_MY_IGNORE = "/my_ignore/qa/entry"
 const val QA_MY_PRAISE = "/my_praise/qa/entry"
 const val QA_DYNAMIC_MINE_FRAGMENT = "/identity/mine/entry"
-
 //todo模块
 //跳转到TODO的详情页
 const val TODO_TODO_DETAIL = "/todo/todo_detail/entry"
@@ -105,15 +103,16 @@ const val LOGIN_BIND_IDS = "/login/bind_ids/entry"
 //课表上课地点跳转到地图key
 const val COURSE_POS_TO_MAP = "COURSE_POS_TO_MAP"
 
-const val CENTER_FOOD_ENTRY = "/food/center/entry"
-
-
 //下面是邮乐场板块的地址
+//游乐场主界面
+const val FAIRGROUND_ENTRY = "/fairground/entry"
 //活动布告栏
-const val UFIELD_ACTIVITY = "/ufield/activity/main"
-
+const val UFIELD_MAIN_ENTRY = "/ufield/main/entry"
 //活动中心
-const val UFIELD_CENTER = "/ufield/campaign/entry"
-
+const val UFIELD_CENTER_ENTRY = "/ufield/campaign/entry"
 //活动详情
-const val UFIELD_DETAIL = "/ufield/detail/entry"
+const val UFIELD_DETAIL_ENTRY = "/ufield/detail/entry"
+//表态页面
+const val DECLARE_ENTRY = "/declare/entry"
+//美食页面
+const val FOOD_ENTRY = "/food/entry"

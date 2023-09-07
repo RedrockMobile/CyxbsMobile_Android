@@ -6,7 +6,7 @@ import com.mredrock.cyxbs.lib.base.ui.BaseViewModel
 import com.mredrock.cyxbs.lib.utils.extensions.setSchedulers
 import com.mredrock.cyxbs.lib.utils.network.mapOrThrowApiException
 import com.mredrock.cyxbs.ufield.bean.DetailMsg
-import com.mredrock.cyxbs.ufield.network.LxhService
+import com.mredrock.cyxbs.ufield.network.RankService
 
 class MessageViewModel : BaseViewModel() {
     private val _watchMsg = MutableLiveData<List<DetailMsg>>()
@@ -20,7 +20,7 @@ class MessageViewModel : BaseViewModel() {
     val checkMsg: LiveData<List<DetailMsg>> get() = _checkMsg
 
     fun getAllMsg() {
-        LxhService.INSTANCE.getAllMsg()
+        RankService.INSTANCE.getAllMsg()
             .setSchedulers()
             .mapOrThrowApiException()
             .doOnError {

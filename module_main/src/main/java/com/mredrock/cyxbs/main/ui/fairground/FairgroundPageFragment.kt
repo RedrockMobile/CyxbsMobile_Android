@@ -17,8 +17,10 @@ import android.widget.TextView
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.fragment.app.viewModels
 import com.alibaba.android.arouter.facade.annotation.Route
+import com.mredrock.cyxbs.config.route.DECLARE_ENTRY
+import com.mredrock.cyxbs.config.route.FOOD_ENTRY
 import com.mredrock.cyxbs.config.route.FAIRGROUND_ENTRY
-import com.mredrock.cyxbs.config.route.UFIELD_ACTIVITY
+import com.mredrock.cyxbs.config.route.UFIELD_MAIN_ENTRY
 import com.mredrock.cyxbs.lib.base.ui.BaseFragment
 import com.mredrock.cyxbs.lib.utils.extensions.setAvatarImageFromUrl
 import com.mredrock.cyxbs.lib.utils.service.ServiceManager
@@ -50,22 +52,14 @@ class FairgroundPageFragment : BaseFragment(R.layout.main_fragment_fairground) {
     ): View? {
         val viewModel by viewModels<FairgroundViewModel>()
         viewModel.days.observe(viewLifecycleOwner) {
-            startActivity.setOnClickListener {
-                ServiceManager.activity(UFIELD_ACTIVITY)
-            }
-            startFood.setOnClickListener {
-                //跳美食
-            }
-            startSquare.setOnClickListener {
-                //跳广场
-            }
+
             val text = "这是你来到邮乐园的第 $it 天"
 
             val spannableStringBuilder = SpannableStringBuilder(text)
             val startIndex = text.indexOf(it)
             val endIndex = startIndex + it.length
 
-// 设置加粗样式
+            // 设置加粗样式
             spannableStringBuilder.setSpan(
                 StyleSpan(Typeface.BOLD),
                 startIndex,
@@ -73,7 +67,7 @@ class FairgroundPageFragment : BaseFragment(R.layout.main_fragment_fairground) {
                 Spannable.SPAN_EXCLUSIVE_EXCLUSIVE
             )
 
-// 设置字体大小
+            // 设置字体大小
             spannableStringBuilder.setSpan(
                 AbsoluteSizeSpan(20, true),
                 startIndex,
@@ -81,7 +75,7 @@ class FairgroundPageFragment : BaseFragment(R.layout.main_fragment_fairground) {
                 Spannable.SPAN_EXCLUSIVE_EXCLUSIVE
             )
 
-// 设置字体颜色
+            // 设置字体颜色
             spannableStringBuilder.setSpan(
                 ForegroundColorSpan(Color.parseColor("#5D5DF7")),
                 startIndex,
@@ -89,7 +83,7 @@ class FairgroundPageFragment : BaseFragment(R.layout.main_fragment_fairground) {
                 Spannable.SPAN_EXCLUSIVE_EXCLUSIVE
             )
 
-// 将 spannableStringBuilder 应用到文本视图
+            // 将 spannableStringBuilder 应用到文本视图
             tvDays.text = spannableStringBuilder
         }
 
@@ -100,5 +94,24 @@ class FairgroundPageFragment : BaseFragment(R.layout.main_fragment_fairground) {
             }
         }
         return super.onCreateView(inflater, container, savedInstanceState)
+    }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        startActivity.setOnClickListener {
+            doIfLogin {
+                ServiceManager.activity(UFIELD_MAIN_ENTRY)
+            }
+        }
+        startFood.setOnClickListener {
+            doIfLogin {
+                ServiceManager.activity(FOOD_ENTRY)
+            }
+        }
+        startSquare.setOnClickListener {
+            doIfLogin {
+                ServiceManager.activity(DECLARE_ENTRY)
+            }
+        }
     }
 }

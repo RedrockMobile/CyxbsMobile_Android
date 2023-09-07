@@ -2,7 +2,6 @@ package com.mredrock.cyxbs.ufield.ui.fragment.ufieldfragment
 
 import android.content.Intent
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -11,10 +10,10 @@ import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.mredrock.cyxbs.lib.base.ui.BaseFragment
 import com.mredrock.cyxbs.ufield.R
-import com.mredrock.cyxbs.ufield.ui.activity.DetailActivity
 import com.mredrock.cyxbs.ufield.adapter.UfieldRvAdapter
 import com.mredrock.cyxbs.ufield.bean.ItemActivityBean
 import com.mredrock.cyxbs.ufield.helper.GridSpacingItemDecoration
+import com.mredrock.cyxbs.ufield.ui.activity.DetailActivity
 import com.mredrock.cyxbs.ufield.viewmodel.UFieldViewModel
 
 
@@ -56,8 +55,7 @@ class SportsFragment : BaseFragment() {
             adapter = mAdapter.apply {
                 setOnActivityClick {
                     val intent = Intent(requireContext(), DetailActivity::class.java)
-                    intent.putExtra("actID", mDataList[it].activity_id)
-                    Log.d("595995", "测试结果-->> ${mDataList[it].activity_id}");
+                    intent.putExtra("actID", mDataList[it].activityId)
                     startActivity(intent)
                 }
             }

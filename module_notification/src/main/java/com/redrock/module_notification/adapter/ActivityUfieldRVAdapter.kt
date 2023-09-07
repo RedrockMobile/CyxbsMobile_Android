@@ -14,7 +14,7 @@ import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.alibaba.android.arouter.launcher.ARouter
-import com.mredrock.cyxbs.config.route.UFIELD_DETAIL
+import com.mredrock.cyxbs.config.route.UFIELD_DETAIL_ENTRY
 import com.mredrock.cyxbs.lib.utils.extensions.setOnSingleClickListener
 import com.redrock.module_notification.R
 import com.redrock.module_notification.bean.UfieldMsgBean
@@ -66,7 +66,7 @@ class ActivityUfieldRVAdapter(
             clickDetail.setOnSingleClickListener {
                     viewmodel.changeUfieldMsgStatus(currentList[absoluteAdapterPosition].messageId)
                     getItem(absoluteAdapterPosition).run {
-                        ARouter.getInstance().build(UFIELD_DETAIL)
+                        ARouter.getInstance().build(UFIELD_DETAIL_ENTRY)
                             .withInt(
                                 "actID",
                                 currentList[absoluteAdapterPosition].activityInfo.activityId

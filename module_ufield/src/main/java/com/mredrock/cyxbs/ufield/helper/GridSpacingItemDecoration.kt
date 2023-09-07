@@ -1,12 +1,8 @@
 package com.mredrock.cyxbs.ufield.helper
 
-import android.content.Context
 import android.graphics.Rect
-import android.util.DisplayMetrics
-import android.util.Log
 import android.view.View
 import androidx.recyclerview.widget.RecyclerView
-import java.lang.Math.ceil
 
 /**
  *  description :用于辅助Rv行列的分布。控制间距大小
@@ -36,7 +32,7 @@ class GridSpacingItemDecoration(
     private val count: Int,
 ) :
     RecyclerView.ItemDecoration() {
-//    private var spacingPx: Int = 0
+
     override fun getItemOffsets(
         outRect: Rect,
         view: View,
@@ -51,7 +47,6 @@ class GridSpacingItemDecoration(
             val spanCount = 2  // 假设是两列的布局
             //因为有奇数的可能，所以向上取整(行数)
             val rowCount = kotlin.math.ceil(itemCount.toDouble() / spanCount).toInt()
-            Log.d("965966", "测试结果-->> ${rowCount}");
 
             // 计算当前item所在的行数和列数
             val row = position / spanCount
@@ -98,8 +93,4 @@ class GridSpacingItemDecoration(
 
     }
 
-//    private fun dpToPx(context: Context, dp: Int): Int {
-//        val displayMetrics: DisplayMetrics = context.resources.displayMetrics
-//        return (dp * displayMetrics.density).toInt()
-//    }
 }

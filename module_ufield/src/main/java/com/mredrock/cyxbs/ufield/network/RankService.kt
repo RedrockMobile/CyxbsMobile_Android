@@ -8,10 +8,10 @@ import io.reactivex.rxjava3.core.Observable
 import retrofit2.http.GET
 import retrofit2.http.Query
 
-interface LxhService {
+interface RankService {
     companion object {
         val INSTANCE by lazy {
-            ApiGenerator.getApiService(LxhService::class)
+            ApiGenerator.getApiService(RankService::class)
         }
     }
 
