@@ -5,6 +5,8 @@ import android.content.Intent
 import android.os.Bundle
 import androidx.activity.viewModels
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.alibaba.android.arouter.facade.annotation.Route
+import com.mredrock.cyxbs.config.route.DECLARE_ENTRY
 import com.mredrock.cyxbs.declare.databinding.DeclareActivityHomeBinding
 import com.mredrock.cyxbs.declare.pages.detail.page.activity.DetailActivity
 import com.mredrock.cyxbs.declare.pages.main.page.adapter.HomeRvAdapter
@@ -14,6 +16,7 @@ import com.mredrock.cyxbs.lib.utils.extensions.gone
 import com.mredrock.cyxbs.lib.utils.extensions.setOnDoubleClickListener
 import com.mredrock.cyxbs.lib.utils.extensions.visible
 
+@Route(path = DECLARE_ENTRY)
 class HomeActivity : BaseBindActivity<DeclareActivityHomeBinding>() {
     companion object {
         /**

@@ -38,6 +38,7 @@ import com.mredrock.cyxbs.lib.base.ui.BaseActivity
 import com.mredrock.cyxbs.lib.utils.extensions.*
 import com.mredrock.cyxbs.lib.utils.service.ServiceManager
 import com.mredrock.cyxbs.lib.utils.service.impl
+import com.mredrock.cyxbs.lib.utils.utils.judge.NetworkUtil
 import com.mredrock.cyxbs.login.R
 import com.mredrock.cyxbs.login.page.login.viewmodel.LoginViewModel
 import com.mredrock.cyxbs.login.page.privacy.PrivacyActivity
@@ -307,7 +308,7 @@ class LoginActivity : BaseActivity() {
   
   private fun initCheckNetWork() {
     launch {
-      tryPingNetWork()?.onFailure {
+      NetworkUtil.tryPingNetWork()?.onFailure {
         mIsServerAvailable = false
       }
     }

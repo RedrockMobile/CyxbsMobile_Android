@@ -325,6 +325,5 @@ interface ApiService {
     @GET("/magipoke-jwzx/itinerary/allMsg")
     suspend fun getReceivedItinerary(@Query("typ") type: String = "received"): ApiWrapper<List<ItineraryMsgBean>>
 
-
 }
 

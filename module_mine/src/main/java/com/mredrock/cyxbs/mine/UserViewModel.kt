@@ -11,15 +11,12 @@ import androidx.lifecycle.viewModelScope
 import com.mredrock.cyxbs.api.account.IAccountService
 import com.mredrock.cyxbs.common.BaseApp.Companion.appContext
 import com.mredrock.cyxbs.common.service.ServiceManager
-import com.mredrock.cyxbs.common.utils.extensions.defaultSharedPreferences
-import com.mredrock.cyxbs.common.utils.extensions.dip
-import com.mredrock.cyxbs.common.utils.extensions.doOnErrorWithDefaultErrorHandler
-import com.mredrock.cyxbs.common.utils.extensions.editor
-import com.mredrock.cyxbs.common.utils.extensions.mapOrThrowApiException
+import com.mredrock.cyxbs.common.utils.extensions.*
 import com.mredrock.cyxbs.common.viewmodel.BaseViewModel
-import com.mredrock.cyxbs.lib.utils.extensions.launchCatch
 import com.mredrock.cyxbs.lib.utils.extensions.setSchedulers
 import com.mredrock.cyxbs.lib.utils.extensions.unsafeSubscribeBy
+import com.mredrock.cyxbs.lib.utils.network.mapOrThrowApiException
+import com.mredrock.cyxbs.lib.utils.extensions.launchCatch
 import com.mredrock.cyxbs.lib.utils.network.ApiWrapper
 import com.mredrock.cyxbs.mine.network.model.ItineraryMsgBean
 import com.mredrock.cyxbs.mine.network.model.QANumber
@@ -258,7 +255,6 @@ class UserViewModel : BaseViewModel() {
                 1 -> {
                     12
                 }
-
                 0 -> 0
                 else -> 15
             }

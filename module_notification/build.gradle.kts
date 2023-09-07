@@ -10,6 +10,9 @@ dependApiAccount()
 dependApiMine()
 dependLibConfig()
 
+dependLibUtils()
+dependLibConfig()
+
 dependNetwork()
 dependRxjava()
 dependGlide()

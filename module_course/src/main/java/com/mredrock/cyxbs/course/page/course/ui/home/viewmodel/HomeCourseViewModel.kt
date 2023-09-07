@@ -98,7 +98,6 @@ class HomeCourseViewModel : BaseViewModel() {
 
     // 关联人课的观察流
     val linkLessonObservable = LinkRepository.observeLinkStudent()
-      .timeout(3, TimeUnit.SECONDS, Observable.just(LinkStuEntity.NULL))
       .doOnNext { _linkStu.postValue(it) }
       .switchMap { entity ->
         // 没得关联人和不显示关联课程时发送空数据
@@ -120,8 +119,7 @@ class HomeCourseViewModel : BaseViewModel() {
     // 事务的观察流
     val affairObservable = IAffairService::class.impl
       .observeSelfAffair()
-      .timeout(3, TimeUnit.SECONDS, Observable.just(emptyList()))
-  
+
     // 合并观察流
     return Observable.combineLatest(
       selfLessonObservable,

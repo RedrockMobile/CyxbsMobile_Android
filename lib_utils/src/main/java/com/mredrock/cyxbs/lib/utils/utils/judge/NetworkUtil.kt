@@ -7,11 +7,18 @@ import android.net.NetworkCapabilities
 import android.net.wifi.WifiManager
 import com.mredrock.cyxbs.lib.utils.extensions.appContext
 import com.mredrock.cyxbs.lib.utils.extensions.processLifecycleScope
-import kotlinx.coroutines.delay
+import com.mredrock.cyxbs.lib.utils.network.ApiStatus
+import com.mredrock.cyxbs.lib.utils.network.IApi
+import com.mredrock.cyxbs.lib.utils.network.commonApi
+import io.reactivex.rxjava3.core.Observable
+import io.reactivex.rxjava3.subjects.BehaviorSubject
+import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.suspendCancellableCoroutine
+import retrofit2.http.GET
 import java.net.InetAddress
+import java.net.UnknownHostException
 import java.nio.ByteBuffer
 import java.nio.ByteOrder
 import kotlin.coroutines.resume
@@ -25,54 +32,46 @@ import kotlin.coroutines.resume
  */
 @Suppress("ObjectPropertyName")
 object NetworkUtil {
-  
+
   /**
-   * 观察网络连接状态
+   * 观察网络连接状态，类似于 LiveData，每次观察会返回上一次下发的值
    */
-  val state: StateFlow<Boolean>
-    get() = _state
-  
+  val state: Observable<Boolean>
+    get() = _state.distinctUntilChanged()
+
   /**
    * 返回当前网络是否可用
    *
    * 网上写的直接获取网络连接状态的那个方法已经被废弃了，官方换成了回调，下面链接中有官方原因
    * https://developer.android.com/reference/android/net/NetworkInfo
    *
-   * 注意：如果是刚开始启动应用时，则会在短时间内处于网络不可用状态，可以使用 [isAvailableExact] 来解决
+   * 注意：如果是刚开始启动应用时，则会在短时间内处于网络不可用状态，会返回 null，可以使用 [isAvailableExact] 来解决
    */
-  fun isAvailable(): Boolean {
-    return state.value
-  }
-  
+  val isAvailable: Boolean?
+    get() = _state.value
+
   /**
    * 返回确切的当前网络是否可用
    */
-  suspend fun isAvailableExact(): Boolean {
-    return (200 - (System.currentTimeMillis() - mInitTime)).let {
-      // 调用时间接近类初始化时间，此时应用没有完全启动完毕，当前网络处于未知状态
-      delay(it)
-      isAvailable()
+  suspend fun isAvailableExact(): Boolean = suspendCancellableCoroutine { cont ->
+    val disposable = state.take(1)
+      .subscribe { cont.resume(it) }
+    cont.invokeOnCancellation {
+      disposable.dispose()
     }
   }
-  
+
   /**
    * 直到第一次网络请求成功前挂起协程
    */
-  suspend fun suspendUntilAvailable() = suspendCancellableCoroutine {
-    appContext.getSystemService(ConnectivityManager::class.java).apply {
-      registerDefaultNetworkCallback(
-        object : ConnectivityManager.NetworkCallback() {
-          override fun onAvailable(network: Network) {
-            unregisterNetworkCallback(this)
-            it.resume(Unit)
-          }
-          init {
-            it.invokeOnCancellation {
-              unregisterNetworkCallback(this)
-            }
-          }
-        }
-      )
+  suspend fun suspendUntilAvailable(): Unit = suspendCancellableCoroutine { cont ->
+    val disposable = state
+      .takeWhile { !it }
+      .doOnComplete {
+        cont.resume(Unit)
+      }.subscribe()
+    cont.invokeOnCancellation {
+      disposable.dispose()
     }
   }
 
@@ -102,6 +101,7 @@ object NetworkUtil {
                 // 通过手机流量连接
                 return true
               }
+
               networkCapabilities.hasTransport(NetworkCapabilities.TRANSPORT_WIFI) -> {
                 // 通过WIFI连接
                 return false
@@ -143,28 +143,68 @@ object NetworkUtil {
     // 如果无法获取IP地址，则返回null。
     return null
   }
-  
-  private val _state = MutableStateFlow(false)
-  
-  // 类初始化时的时间
-  private val mInitTime = System.currentTimeMillis()
-  
+
+  /**
+   * 用于 ping 一下网校后端的网络，用于测试当前后端是否寄掉
+   *
+   * @return 如果返回 null，则说明是网络连接异常，此时无法确认后端是否寄掉
+   */
+  suspend fun tryPingNetWork(): Result<ApiStatus>? {
+    try {
+      val result = ApiServer::class.commonApi.pingMagipoke()
+      result.throwApiExceptionIfFail() // 如果 status 状态码不成功将抛出异常
+      return Result.success(result)
+    } catch (e: Exception) {
+      // 无网返回 UnknownHostException
+      // 有网但无法连接网络时也返回 UnknownHostException
+      if (e is UnknownHostException) {
+        // 如果 Exception 是 UnknownHostException，则说明是无法连接网络，而不是后端问题
+        // 但也可能是运维问题，比如学校经常崩 DNS 解析
+        return null
+      }
+      return Result.failure(e)
+    }
+  }
+
+  private val _state = BehaviorSubject.create<Boolean>()
+
   init {
-    appContext.getSystemService(ConnectivityManager::class.java)
+    val connectivityManager = appContext.getSystemService(ConnectivityManager::class.java)
+    connectivityManager
       .registerDefaultNetworkCallback(
         object : ConnectivityManager.NetworkCallback() {
+
+          var job: Job? = null
+
           override fun onAvailable(network: Network) {
-            processLifecycleScope.launch {
-              _state.emit(true)
+            // 注意：这里回调了 onAvailable 也不代表可用，只是表明连上了网络
+            job = processLifecycleScope.launch {
+              when (tryPingNetWork()?.isSuccess) {
+                true -> _state.onNext(true)
+                false -> _state.onNext(false) // 后端服务问题
+                null -> _state.onNext(false) // 连上了网络，但是网络不可用
+              }
             }
           }
-  
+
           override fun onLost(network: Network) {
-            processLifecycleScope.launch {
-              _state.emit(false)
-            }
+            job?.cancel()
+            _state.onNext(false)
           }
+          // 打开应用就没网的时候 onUnavailable() 不会回调
         }
       )
+    val networkCapabilities = connectivityManager
+      .getNetworkCapabilities(connectivityManager.activeNetwork)
+    if (networkCapabilities == null) {
+      // 此时说明打开应用时就没有连接网络
+      _state.onNext(false)
+    }
+  }
+
+  private interface ApiServer : IApi {
+    //仿ping接口，用于检测magipoke系列接口状态
+    @GET("magipoke/ping")
+    suspend fun pingMagipoke(): ApiStatus
   }
 }

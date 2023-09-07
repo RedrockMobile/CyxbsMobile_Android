@@ -6,7 +6,7 @@
     android:layout_height="match_parent"
     android:background="@color/uField_search_background"
     android:orientation="vertical"
-    tools:context=".lyt.ui.SearchActivity">
+    tools:context=".ui.activity.SearchActivity">
 
     <ImageView
         android:id="@+id/uField_back_search"

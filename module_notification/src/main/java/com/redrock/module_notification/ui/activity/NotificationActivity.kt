@@ -26,6 +26,7 @@ import com.google.android.material.tabs.TabLayoutMediator
 import com.mredrock.cyxbs.common.ui.BaseViewModelActivity
 import com.mredrock.cyxbs.common.utils.extensions.dp2px
 import com.mredrock.cyxbs.common.utils.extensions.editor
+import com.mredrock.cyxbs.lib.utils.extensions.setOnSingleClickListener
 import com.mredrock.cyxbs.config.route.NOTIFICATION_HOME
 import com.mredrock.cyxbs.config.route.NOTIFICATION_SETTING
 import com.mredrock.cyxbs.lib.utils.adapter.FragmentVpAdapter
@@ -300,7 +301,16 @@ class NotificationActivity : BaseViewModelActivity<NotificationViewModel>() {
                 viewModel.changeActiveDotStatus(false)
             }
         }
-
+        /*viewModel.activeMsg.observe {
+            allUnreadActiveMsgIds = ArrayList()
+            for (value in it!!) {
+                if (!value.has_read) {
+                    changeTabRedDotsVisibility(1, View.VISIBLE)
+                    allUnreadActiveMsgIds.add(value.id.toString())
+                }
+            }
+        }
+*/
         viewModel.popupWindowClickableStatus.observe {
             it?.let { notification_rl_home_dots.isClickable = it }
         }
@@ -377,6 +387,12 @@ class NotificationActivity : BaseViewModelActivity<NotificationViewModel>() {
         }
     }
 
+    /*    fun removeUnreadActiveMsgIds(id: String) {
+            allUnreadActiveMsgIds.remove(id)
+            if (allUnreadActiveMsgIds.size == 0) {
+                changeTabRedDotsVisibility(1, View.INVISIBLE)
+            }
+        }*/
 
     //改变TabLayout小红点的显示状态
     private fun changeTabRedDotsVisibility(position: Int, visibility: Int) {
