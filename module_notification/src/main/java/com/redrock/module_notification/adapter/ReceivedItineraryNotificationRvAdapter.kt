@@ -21,7 +21,8 @@ import com.redrock.module_notification.util.Date
  * @author: Black-skyline
  * @email: 2031649401@qq.com
  * @date: 2023/8/22
- * @Description: 针对接收到的行程是否已被取消提醒写了两个不同的item，使用不同的ViewHold展示，而是根据当前行程的提醒状态分开渲染内容
+ * @Description: 针对接收到的行程是否已被取消提醒写了两个不同的item，
+ * 使用不同的ViewHold展示，而是根据当前行程的提醒状态分开渲染内容
  *
  */
 class ReceivedItineraryNotificationRvAdapter(
@@ -61,7 +62,7 @@ class ReceivedItineraryNotificationRvAdapter(
         val generateTime: TextView =
             itemView.findViewById(R.id.notification_itinerary_tv_received_generate_time)
 
-        //        val unCancelDot: ImageView = itemView.findViewById(R.id.notification_itinerary_iv_status_uncancel_dot)
+        //  val unCancelDot: ImageView = itemView.findViewById(R.id.notification_itinerary_iv_status_uncancel_dot)
         val startStatusHint: TextView =
             itemView.findViewById(R.id.notification_itinerary_tv_start_status_hint)
         val addAffairArea: LinearLayout =
@@ -84,7 +85,7 @@ class ReceivedItineraryNotificationRvAdapter(
         val rawTitle: TextView =
             itemView.findViewById(R.id.notification_itinerary_tv_received_title)
 
-        //        val newTitle: TextView = itemView.findViewById(R.id.notification_itinerary_tv_received_title_new)
+        // val newTitle: TextView = itemView.findViewById(R.id.notification_itinerary_tv_received_title_new)
         val rawContent: TextView =
             itemView.findViewById(R.id.notification_itinerary_tv_received_content)
         val newContent: TextView =
@@ -143,7 +144,11 @@ class ReceivedItineraryNotificationRvAdapter(
                     String.format(R.string.notification_itinerary_item_rawTitle.string, data.title)
                 holder.content.text = data.content
                 holder.generateTime.text = Date.getItineraryUpdateTime(data.publishTime)
-                if (data.hasStart) holder.startStatusHint.setText(R.string.notification_hasStarted)
+                if (data.hasStart) {
+                    // 按照逻辑，行程已开始之后再添加进入日程没有意义，故移除点击添加到日程的回调
+                    holder.addAffairArea.setOnClickListener(null)
+                    holder.startStatusHint.setText(R.string.notification_hasStarted)
+                }
                 if (data.hasAdd) item2addedStatus(holder)
             }
 

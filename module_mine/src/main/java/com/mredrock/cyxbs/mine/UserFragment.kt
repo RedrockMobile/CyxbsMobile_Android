@@ -189,7 +189,7 @@ class UserFragment : BaseFragment() {
             mine_user_iv_center_notification.setOnSingleClickListener {
                 ARouter.getInstance().build(NOTIFICATION_HOME).navigation()
                 // 进入消息中心，移除红点
-                mine_user_tv_center_notification_count.text ="0"
+                mine_user_tv_center_notification_count.gone()
             }
             mine_user_iv_center_activity.setOnSingleClickListener {
                 doIfLogin {

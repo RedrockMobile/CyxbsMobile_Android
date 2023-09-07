@@ -23,7 +23,8 @@ import com.redrock.module_notification.util.myGetColor
  * @author: Black-skyline
  * @email: 2031649401@qq.com
  * @date: 2023/8/22
- * @Description: 针对已发送的行程是否取消提醒的item的两种状态，并未使用不同的ViewHold展示，而是根据当前行程的提醒状态分开渲染内容
+ * @Description: 针对已发送的行程是否取消提醒的item的两种状态，
+ * 并未使用不同的ViewHold展示，而是根据当前行程的提醒状态分开渲染内容
  *
  */
 class SentItineraryNotificationRvAdapter(
@@ -96,7 +97,11 @@ class SentItineraryNotificationRvAdapter(
             title.text = String.format(R.string.notification_itinerary_item_rawTitle.string, data.title)
             content.text = data.content
             startTime.text = Date.getItineraryUpdateTime(data.publishTime)
-            if (data.hasStart) startStatusHint.setText(R.string.notification_hasStarted)
+            if (data.hasStart) {
+                // 按照逻辑，行程已开始之后再取消提醒没有意义，故移除点击取消提醒的回调
+                cancelReminder.setOnClickListener(null)
+                startStatusHint.setText(R.string.notification_hasStarted)
+            }
         }
     }
 
