@@ -164,7 +164,7 @@ class SearchAllDialog(
                                     onClickGroup?.invoke(it)
                                     dialog.cancel()
                                 }
-                                searchResultList.add(data.group)
+                                searchResultList.add(0,data.group)
                                 // 如果只有分组，此时才显示分组下面的学生
                                 if (isOnlyGroup) {
                                     searchResultList.addAll(data.group.members)
@@ -211,7 +211,7 @@ class SearchAllDialog(
                                     mWaitAdd[stuSet] = GROUP_TYPE
                                     mViewModel.addMembers(groupId, stuSet)
                                 }
-                                searchResultList.add(data.group)
+                                searchResultList.add(0,data.group)
                                 // 如果只有分组，此时才显示分组下面的学生
                                 if (isOnlyGroup) {
                                     Log.d("lx", "isOnlyGroup = ${isOnlyGroup}: ")

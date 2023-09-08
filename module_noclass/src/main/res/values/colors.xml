@@ -99,4 +99,18 @@
 
     <!--    透明-->
     <color name="noclass_transparent">#00FFFFFF</color>
+
+    <!--弹窗的蒙版阴影    -->
+    <color name="noclass_dialog_shadow_bg">#78000000</color>
+
+    <!--分界处的渐变阴影    -->
+    <color name="noclass_split_from_color">#fbfbfc</color>
+    <color name="noclass_split_to_color">#ffffff</color>
+
+    <!--行程通知淡色深色    -->
+    <color name="noclass_gathering_small">#8F9CAF</color>
+    <color name="noclass_gathering_big">#73839D</color>
+
+    <!--光标的颜色    -->
+    <color name="noclass_cursor">#788efa</color>
 </resources>

@@ -71,6 +71,7 @@
                 android:layout_marginStart="9dp"
                 android:textColor="@color/noclass_member_name_color"
                 android:textSize="16sp"
+                android:textStyle="bold"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintStart_toEndOf="@+id/iv_noclass_group_delete_icon"
                 app:layout_constraintTop_toTopOf="parent"

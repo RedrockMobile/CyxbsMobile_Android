@@ -15,8 +15,8 @@ import com.google.android.flexbox.FlexboxLayoutManager
 import com.mredrock.cyxbs.affair.R
 import com.mredrock.cyxbs.affair.ui.adapter.TitleCandidateAdapter
 import com.mredrock.cyxbs.affair.ui.fragment.utils.NoClassPageManager
-import com.mredrock.cyxbs.affair.ui.viewmodel.activity.AffairViewModel
-import com.mredrock.cyxbs.affair.ui.viewmodel.fragment.NoClassAffairViewModel
+import com.mredrock.cyxbs.affair.ui.viewmodel.activity.NoClassAffairActivityViewModel
+import com.mredrock.cyxbs.affair.ui.viewmodel.fragment.NoClassAffairFragmentViewModel
 import com.mredrock.cyxbs.api.affair.NoClassBean
 import com.mredrock.cyxbs.api.affair.NotificationBean
 import com.mredrock.cyxbs.lib.base.ui.BaseFragment
@@ -36,8 +36,8 @@ class NoClassAffairFragment : BaseFragment(R.layout.affair_fragment_noclass_affa
     }
 
     private val mNoClassBean by arguments<NoClassBean>()
-    private val mViewModel by viewModels<NoClassAffairViewModel>()
-    private val mActivityViewModel by activityViewModels<AffairViewModel>()
+    private val mViewModel by viewModels<NoClassAffairFragmentViewModel>()
+    private val mActivityViewModel by activityViewModels<NoClassAffairActivityViewModel>()
 
     private val mTvLeftSpare by R.id.affair_tv_no_class_affair_spare_stu.view<TextView>()   //选择空闲成员
     private val mTvRightAll by R.id.affair_tv_no_class_affair_all_stu.view<TextView>()   //选择所有人员

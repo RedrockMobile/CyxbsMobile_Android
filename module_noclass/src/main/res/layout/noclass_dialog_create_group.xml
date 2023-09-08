@@ -88,6 +88,7 @@
                 android:paddingBottom="10.5dp"
                 android:paddingStart="21dp"
                 android:paddingEnd="21dp"
+                android:textCursorDrawable="@drawable/noclass_shape_cursor"
                 android:id="@+id/et_noclass_group_name"
                 android:layout_width="183dp"
                 android:layout_height="wrap_content"
@@ -126,6 +127,7 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/noclassLinearlayout"
+            app:layout_constraintHorizontal_bias="0.55"
             app:layout_constraintVertical_bias="0.0" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>

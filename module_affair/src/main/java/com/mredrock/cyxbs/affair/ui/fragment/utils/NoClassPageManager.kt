@@ -152,7 +152,7 @@ class NoClassPageManager(val fragment: BaseFragment){
                     mOnBackPressedCallback.isEnabled = true
                     return true
                 }
-                toast("掌友，标题不能为空哟！")
+                toast("  掌友，标题不能为空哟！")
                 return false
             }
 

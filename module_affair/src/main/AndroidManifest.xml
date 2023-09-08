@@ -5,6 +5,7 @@
             android:name=".ui.activity.AffairActivity"
             android:exported="false" />
         <activity android:name=".ui.activity.DeleteRemindActivity" />
+        <activity android:name=".ui.activity.NoClassAffairActivity" />
     </application>
 
 </manifest>

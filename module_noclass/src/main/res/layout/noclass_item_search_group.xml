@@ -5,9 +5,9 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_marginTop="12dp"
+    android:layout_marginTop="6dp"
     android:layout_marginBottom="6dp"
-    android:layout_marginStart="10dp">
+    android:layout_marginStart="6dp">
 
     <ImageView
         app:layout_constraintHorizontal_bias="0"
@@ -15,7 +15,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center_vertical"
-        android:layout_marginStart="6dp"
+        android:layout_marginStart="10dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -30,7 +30,7 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="8dp"
         android:layout_marginBottom="8dp"
-        android:textColor="@color/noclass_member_name_color"
+        android:textColor="@color/config_level_three_font_color"
         android:textSize="18sp"
         android:textStyle="bold"
         android:layout_marginStart="10dp"
@@ -48,6 +48,6 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:srcCompat="@drawable/noclass_ic_add_student"
+        app:srcCompat="@drawable/noclass_ic_add_group"
         tools:ignore="ContentDescription" />
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -11,7 +11,7 @@ import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
 import io.reactivex.rxjava3.schedulers.Schedulers
 
 
-class NoClassAffairViewModel : BaseViewModel() {
+class NoClassAffairFragmentViewModel : BaseViewModel() {
 
     private val _titleCandidates = MutableLiveData<List<String>>()
     val titleCandidates: LiveData<List<String>>

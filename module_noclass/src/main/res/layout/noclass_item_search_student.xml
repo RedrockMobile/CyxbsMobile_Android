@@ -25,8 +25,9 @@
     <TextView
         android:id="@+id/noclass_tv_student_name"
         android:layout_width="wrap_content"
-        android:layout_height="23dp"
+        android:layout_height="wrap_content"
         android:textSize="16sp"
+        android:textStyle="bold"
         android:textColor="@color/noclass_member_name_color"
         android:layout_marginStart="10dp"
         app:layout_constraintBottom_toBottomOf="parent"
@@ -38,7 +39,7 @@
     <TextView
         android:id="@+id/noclass_tv_student_id"
         android:layout_width="wrap_content"
-        android:layout_height="23dp"
+        android:layout_height="wrap_content"
         android:layout_marginStart="10dp"
         android:textColor="@color/noclass_search_stu_num_color"
         android:textSize="12sp"

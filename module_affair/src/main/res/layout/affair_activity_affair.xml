@@ -67,21 +67,6 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             tools:ignore="ContentDescription" />
-
-        <Button
-            android:id="@+id/affair_btn_noclass_affair_next"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="57dp"
-            android:text="下一步"
-            android:textColor="@color/config_white_black"
-            android:textSize="18sp"
-            android:background="@drawable/affair_ic_next_process"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            tools:ignore="ContentDescription"
-            android:visibility="gone"/>
     </androidx.constraintlayout.widget.ConstraintLayout>
 
     <androidx.constraintlayout.widget.ConstraintLayout

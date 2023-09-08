@@ -3,6 +3,4 @@
     <stroke android:color="@color/noclass_gathering_item_bg"
         android:width="1.14dp"/>
     <corners android:radius="63dp"/>
-    <gradient android:startColor="#E8F0FC"
-        android:endColor="#F8FAFF"/>
 </shape>

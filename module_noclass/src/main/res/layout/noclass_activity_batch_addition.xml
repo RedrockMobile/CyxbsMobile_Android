@@ -33,7 +33,7 @@
                     android:layout_marginBottom="9dp"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:srcCompat="@drawable/noclass_ic_batch_page_back"
+                    app:srcCompat="@drawable/noclass_ic_back"
                     tools:ignore="ContentDescription" />
 
                 <TextView

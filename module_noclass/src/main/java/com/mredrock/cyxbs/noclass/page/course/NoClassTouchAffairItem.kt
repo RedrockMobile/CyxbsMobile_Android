@@ -89,7 +89,7 @@ class NoClassTouchAffairItem(
             else -> "${beginLesson}-${beginLesson + duration - 1}"
         }
 
-        val textTime = "时间：${month} ${timeText} ${beginTime}-${endTime}"
+        val textTime = "${month} ${timeText} ${beginTime}-${endTime}"
 
         val dateJson = DateJson(specialBeginLesson, weekNum, duration, week)
         Log.d("lx", "specialBeginLesson: = ${specialBeginLesson} ")
