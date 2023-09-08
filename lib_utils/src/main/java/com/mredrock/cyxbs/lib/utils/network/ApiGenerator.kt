@@ -126,6 +126,7 @@ object ApiGenerator {
     } else {
         retrofit.create(clazz.java)
     }
+
     /**
      * 带 token 的请求，适配lib_common模块
      */
@@ -141,6 +142,7 @@ object ApiGenerator {
     fun <T : Any> getCommonApiService(clazz: KClass<T>): T {
         return commonRetrofit.create(clazz.java)
     }
+
     /**
      * 不带 token 的请求，适配老模块lib_common
      */
@@ -217,7 +219,11 @@ object ApiGenerator {
             dns(object : Dns {
                 override fun lookup(hostname: String): List<InetAddress> {
                     // release 版本用的 prod 环境，debug 版本用的 dev 环境，可以在 getBaseUrl() 那里改
-                    return if (hostname == "be-prod.redrock.cqupt.edu.cn") {
+                    return if (hostname in listOf(
+                            "be-prod.redrock.cqupt.edu.cn",
+                            "be-dev.redrock.cqupt.edu.cn"
+                        )
+                    ) {
                         InetAddress.getAllByName("222.177.140.110").asList()
                     } else {
                         try {

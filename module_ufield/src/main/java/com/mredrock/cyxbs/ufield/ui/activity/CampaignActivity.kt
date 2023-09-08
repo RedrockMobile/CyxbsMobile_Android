@@ -11,9 +11,10 @@ import androidx.viewpager2.widget.ViewPager2
 import com.alibaba.android.arouter.facade.annotation.Route
 import com.google.android.material.tabs.TabLayout
 import com.google.android.material.tabs.TabLayoutMediator
-import com.mredrock.cyxbs.config.route.UFIELD_CENTER
+import com.mredrock.cyxbs.config.route.UFIELD_CENTER_ENTRY
 import com.mredrock.cyxbs.lib.base.ui.BaseActivity
 import com.mredrock.cyxbs.lib.utils.adapter.FragmentVpAdapter
+import com.mredrock.cyxbs.lib.utils.extensions.color
 import com.mredrock.cyxbs.lib.utils.extensions.setOnSingleClickListener
 import com.mredrock.cyxbs.ufield.R
 import com.mredrock.cyxbs.ufield.ui.fragment.campaignfragment.CheckFragment
@@ -22,7 +23,7 @@ import com.mredrock.cyxbs.ufield.ui.fragment.campaignfragment.PublishFragment
 import com.mredrock.cyxbs.ufield.ui.fragment.campaignfragment.WatchFragment
 import com.mredrock.cyxbs.ufield.viewmodel.MessageViewModel
 import kotlin.properties.Delegates
-@Route(path = UFIELD_CENTER)
+@Route(path = UFIELD_CENTER_ENTRY)
 class CampaignActivity : BaseActivity() {
 
 
@@ -94,12 +95,12 @@ class CampaignActivity : BaseActivity() {
         val onTabSelectedListener = object : TabLayout.OnTabSelectedListener {
             override fun onTabSelected(tab: TabLayout.Tab) {
                 tab.customView?.findViewById<TextView>(R.id.ufield_tv_tl_tab)
-                    ?.setTextColor(ColorStateList.valueOf(resources.getColor(R.color.ufield_home_tabLayout_text_selected)))
+                    ?.setTextColor(ColorStateList.valueOf(R.color.ufield_home_tabLayout_text_selected.color))
             }
 
             override fun onTabUnselected(tab: TabLayout.Tab) {
                 tab.customView?.findViewById<TextView>(R.id.ufield_tv_tl_tab)
-                    ?.setTextColor(ColorStateList.valueOf(resources.getColor(R.color.ufield_home_tabLayout_text_unselect)))
+                    ?.setTextColor(ColorStateList.valueOf(R.color.ufield_home_tabLayout_text_unselect.color))
 
             }
 

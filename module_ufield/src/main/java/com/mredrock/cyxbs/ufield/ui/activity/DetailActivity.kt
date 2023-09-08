@@ -10,7 +10,7 @@ import androidx.constraintlayout.widget.ConstraintSet
 import androidx.core.content.ContextCompat
 import com.alibaba.android.arouter.facade.annotation.Route
 import com.mredrock.cyxbs.config.route.DISCOVER_MAP
-import com.mredrock.cyxbs.config.route.UFIELD_DETAIL
+import com.mredrock.cyxbs.config.route.UFIELD_DETAIL_ENTRY
 import com.mredrock.cyxbs.lib.base.ui.BaseActivity
 import com.mredrock.cyxbs.lib.base.ui.viewModelBy
 import com.mredrock.cyxbs.lib.utils.extensions.gone
@@ -24,7 +24,7 @@ import java.util.Locale
 import kotlin.math.floor
 import kotlin.properties.Delegates
 
-@Route(path = UFIELD_DETAIL)
+@Route(path = UFIELD_DETAIL_ENTRY)
 class DetailActivity : BaseActivity() {
     private var id by Delegates.notNull<Int>()
     private val tvSee by R.id.ufield_tv_wantsee.view<TextView>()
@@ -123,27 +123,27 @@ class DetailActivity : BaseActivity() {
             finishAfterTransition()
         }
         viewModel.detailData.observe(this) {
-            tvTitle.text = it.activity_title
-            when (it.activity_type) {
+            tvTitle.text = it.activityTitle
+            when (it.activityType) {
                 "culture" -> tvType.text = "文娱活动"
                 "sports" -> tvType.text = "体育活动"
                 "education" -> tvType.text = "教育活动"
             }
-            tvSum.text = "${it.activity_watch_number}人想看"
-            tvSponsor.text = it.activity_organizer
-            tvCreator.text = it.activity_creator
-            tvWay.text = it.activity_registration_type
-            tvPlace.text = it.activity_place
-            tvDetail.text = it.activity_detail
-            ivCover.setImageFromUrl(it.activity_cover_url)
-            tvStart.text = trans(it.activity_start_at)
-            tvEnd.text = trans(it.activity_end_at)
-            if (it.activity_state != "published") {
+            tvSum.text = "${it.activityWatchNumber}人想看"
+            tvSponsor.text = it.activityOrganizer
+            tvCreator.text = it.activityCreator
+            tvWay.text = it.activityRegistrationType
+            tvPlace.text = it.activityPlace
+            tvDetail.text = it.activityDetail
+            ivCover.setImageFromUrl(it.activityCoverUrl)
+            tvStart.text = trans(it.activityStartAt)
+            tvEnd.text = trans(it.activityEndAt)
+            if (it.activityState != "published") {
                 layout.gone()
                 tvGoing.gone()
                 ivGoing.gone()
             }
-            if (it.want_to_watch) {
+            if (it.wantToWatch) {
                 //在将文本替换为“已想看”后，修改文本位置，使其位于中心
                 tvSee.text = "已想看"
                 tvSee.setTextColor(ContextCompat.getColor(this, R.color.seecolor))
@@ -164,7 +164,7 @@ class DetailActivity : BaseActivity() {
                 tvMinutes.gone()
                 tvSeconds.gone()
             } else {
-                startDownTimer(it.activity_start_at)
+                startDownTimer(it.activityStartAt)
             }
         }
 

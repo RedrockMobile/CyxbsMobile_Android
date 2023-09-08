@@ -3,7 +3,6 @@ package com.mredrock.cyxbs.ufield.ui.fragment.checkfragment
 import android.annotation.SuppressLint
 import android.content.Intent
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -12,10 +11,10 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.mredrock.cyxbs.lib.base.ui.BaseFragment
 import com.mredrock.cyxbs.ufield.R
-import com.mredrock.cyxbs.ufield.ui.activity.DetailActivity
 import com.mredrock.cyxbs.ufield.adapter.DoneRvAdapter
 import com.mredrock.cyxbs.ufield.bean.DoneBean
 import com.mredrock.cyxbs.ufield.helper.GridSpacingItemDecoration
+import com.mredrock.cyxbs.ufield.ui.activity.DetailActivity
 import com.mredrock.cyxbs.ufield.viewmodel.DoneViewModel
 import com.scwang.smart.refresh.footer.ClassicsFooter
 import com.scwang.smart.refresh.header.ClassicsHeader
@@ -67,8 +66,7 @@ class DoneFragment : BaseFragment() {
             adapter = mAdapter.apply {
                 setOnItemClick {
                     val intent = Intent(requireContext(), DetailActivity::class.java)
-                    intent.putExtra("actID", mDataList[it].activity_id)
-                    Log.d("595995", "测试结果-->> ${mDataList[it].activity_id}");
+                    intent.putExtra("actID", mDataList[it].activityId)
                     startActivity(intent)
                 }
                 addItemDecoration(GridSpacingItemDecoration(3))
@@ -100,7 +98,7 @@ class DoneFragment : BaseFragment() {
             //上拉加载
             setOnLoadMoreListener {
                 mViewModel.apply {
-                    getViewedUpData(mDataList.lastOrNull()?.activity_id ?: 1)
+                    getViewedUpData(mDataList.lastOrNull()?.activityId ?: 1)
                 }
                 mAdapter.notifyDataSetChanged()
                 finishLoadMore(1000)

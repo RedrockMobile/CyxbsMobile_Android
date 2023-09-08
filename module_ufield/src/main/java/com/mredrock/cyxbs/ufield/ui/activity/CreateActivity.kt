@@ -68,7 +68,6 @@ class CreateActivity : BaseActivity() {
     private val etSponsor by R.id.ufield_et_sponsor.view<EditText>()
     private val etPhone by R.id.ufield_et_phone.view<EditText>()
     private val btCreate by R.id.bt_create.view<Button>()
-    private val card by R.id.ufield_card.view<CardView>()
 
     private val viewModel by lazy { ViewModelProvider(this)[CreateViewModel::class.java] }
 
@@ -164,7 +163,7 @@ class CreateActivity : BaseActivity() {
         val hint = "关于活动的简介（不超过100个字）"
 
         val spannableStringBuilder = SpannableStringBuilder(hint)
-// 设置文字"（不超过100字）"的大小
+        // 设置文字"（不超过100字）"的大小
         val limitSizeSpan = RelativeSizeSpan(0.8f)
         spannableStringBuilder.setSpan(
             limitSizeSpan,

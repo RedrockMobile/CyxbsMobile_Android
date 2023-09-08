@@ -14,8 +14,7 @@ useARouter()
 dependNetwork()
 //rxJava
 dependRxjava()
-//使用协程
-dependCoroutines()
+
 //使用smartRefreshLayout(滑动刷新要用)
 dependSmartRefreshLayout()
 //使用对话框

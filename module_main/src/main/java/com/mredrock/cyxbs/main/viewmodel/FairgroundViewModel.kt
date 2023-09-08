@@ -3,7 +3,6 @@ package com.mredrock.cyxbs.main.viewmodel
 import android.annotation.SuppressLint
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.viewModelScope
 import com.mredrock.cyxbs.lib.base.ui.BaseViewModel
 import com.mredrock.cyxbs.lib.utils.network.api
 import com.mredrock.cyxbs.lib.utils.network.mapOrInterceptException
@@ -11,7 +10,6 @@ import com.mredrock.cyxbs.main.bean.MessageBean
 import com.mredrock.cyxbs.main.network.FairgroundApiService
 import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
 import io.reactivex.rxjava3.schedulers.Schedulers
-import kotlinx.coroutines.launch
 
 /**
  * description ： TODO:类的作用
@@ -29,14 +27,12 @@ class FairgroundViewModel : BaseViewModel() {
         get() = _message
 
     init {
-        viewModelScope.launch {
-            getDays()
-            getMessage()
-        }
+        getDays()
+        getMessage()
     }
 
     @SuppressLint("CheckResult")
-    suspend fun getDays() {
+    fun getDays() {
         FairgroundApiService::class.api
             .getDays()
             .subscribeOn(Schedulers.io())
@@ -45,12 +41,11 @@ class FairgroundViewModel : BaseViewModel() {
                 toast("请求失败")
             }
             .safeSubscribeBy {
-
                 _days.postValue(it.days)
             }
     }
 
-    private suspend fun getMessage() {
+    private fun getMessage() {
         FairgroundApiService::class.api
             .getMessage()
             .subscribeOn(Schedulers.io())

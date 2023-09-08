@@ -10,6 +10,7 @@ import io.reactivex.rxjava3.schedulers.Schedulers
 import okhttp3.MediaType.Companion.toMediaTypeOrNull
 import okhttp3.MultipartBody
 import okhttp3.RequestBody
+import okhttp3.RequestBody.Companion.asRequestBody
 import java.io.File
 
 /**
@@ -66,7 +67,7 @@ class CreateViewModel : BaseViewModel() {
             }
     }
     private fun File.toMultipartBodyPart(name: String): MultipartBody.Part {
-        val requestFile = RequestBody.create("image/png".toMediaTypeOrNull(), this)
+        val requestFile = asRequestBody("image/png".toMediaTypeOrNull())
         return MultipartBody.Part.createFormData(name, this.name, requestFile)
     }
 

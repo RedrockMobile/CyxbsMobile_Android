@@ -1,6 +1,5 @@
 package com.mredrock.cyxbs.main.network
 
-import com.mredrock.cyxbs.lib.utils.network.ApiGenerator
 import com.mredrock.cyxbs.lib.utils.network.ApiWrapper
 import com.mredrock.cyxbs.lib.utils.network.IApi
 import com.mredrock.cyxbs.main.bean.DaysBean
@@ -16,9 +15,6 @@ import retrofit2.http.GET
  */
 interface FairgroundApiService :IApi{
 
-//    companion object {
-//        val INSTANCE by lazy { ApiGenerator.getApiService(FairgroundApiService::class) }
-//    }
     @GET("/magipoke-playground/center/days")
     fun getDays():Single<ApiWrapper<DaysBean>>
 

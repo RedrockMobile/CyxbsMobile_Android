@@ -70,12 +70,6 @@ class TodoRvAdapter :
         mItemClick = listener
     }
 
-
-    // 1秒内防止多次点击
-    private val minDelayTime = 1000
-    private var lastClickTime: Long = 0
-
-
     inner class RvTodoViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
 
 
@@ -112,11 +106,11 @@ class TodoRvAdapter :
          */
         @RequiresApi(Build.VERSION_CODES.O)
         fun bind(itemData: TodoBean) {
-            actName.text = itemData.activity_title
-            actTime.text = timeFormat(itemData.activity_create_timestamp)
-            actType.text = itemData.activity_type
-            actAuthor.text = itemData.activity_creator
-            actPhone.text = itemData.activity_phone
+            actName.text = itemData.activityTitle
+            actTime.text = timeFormat(itemData.activityCreateTimestamp)
+            actType.text = itemData.activityType
+            actAuthor.text = itemData.activityCreator
+            actPhone.text = itemData.activityPhone
         }
 
 
@@ -130,7 +124,6 @@ class TodoRvAdapter :
                 .atZone(ZoneId.systemDefault())
                 .toLocalDateTime()
                 .format(DateTimeFormatter.ofPattern("yyyy.MM.dd"))
-            // .format(DateTimeFormatter.ofPattern("HH:mm:ss"))//测试用
         }
     }
 
@@ -144,7 +137,7 @@ class TodoRvAdapter :
          * 通过数据类中的一些特征值来比较
          */
         override fun areContentsTheSame(oldItem: TodoBean, newItem: TodoBean): Boolean {
-            return oldItem.activity_id == newItem.activity_id && oldItem.activity_creator == newItem.activity_creator && oldItem.activity_start_at == newItem.activity_start_at
+            return oldItem.activityId == newItem.activityId && oldItem.activityCreator == newItem.activityCreator && oldItem.activityStartAt == newItem.activityStartAt
         }
 
     }

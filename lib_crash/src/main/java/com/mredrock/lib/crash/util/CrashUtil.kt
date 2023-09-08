@@ -1,6 +1,7 @@
 package com.mredrock.lib.crash.util
 
 import android.content.Intent
+import com.google.gson.Gson
 import com.mredrock.cyxbs.lib.utils.extensions.appContext
 import com.mredrock.cyxbs.lib.utils.extensions.getSp
 import java.io.PrintWriter
@@ -41,7 +42,7 @@ internal fun reStartApp(reason: String, e: Throwable): Boolean {
     }
     //记录因为异常而重启的相关信息
     sp.edit().run {
-        putString("stackInfo", collectCrashInfo(e))
+        putString("throwable", Gson().toJson(e))
         putString("reason", reason)
         commit()
     }
