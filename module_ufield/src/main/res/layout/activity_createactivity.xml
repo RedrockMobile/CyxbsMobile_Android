@@ -77,10 +77,10 @@
 
             <EditText
                 android:id="@+id/ufield_et_name"
-                android:layout_width="240dp"
+                android:layout_width="0dp"
                 android:layout_height="35dp"
                 android:layout_marginStart="12dp"
-                android:layout_marginRight="16dp"
+                android:layout_marginEnd="16dp"
                 android:background="@drawable/ufield_shape_edit"
                 android:hint="不超过12个字"
                 android:maxLength="12"
@@ -256,9 +256,10 @@
 
                 <EditText
                     android:id="@+id/ufield_et_address"
-                    android:layout_width="290dp"
+                    android:layout_width="0dp"
                     android:layout_height="35dp"
-                    android:layout_marginRight="16dp"
+                    android:layout_marginEnd="16dp"
+                    android:layout_marginStart="10dp"
                     android:background="@drawable/ufield_shape_edit"
                     android:hint="不超过10个字"
                     android:maxLength="10"
@@ -299,9 +300,10 @@
 
                 <EditText
                     android:id="@+id/ufield_et_way"
-                    android:layout_width="290dp"
+                    android:layout_width="0dp"
                     android:layout_height="35dp"
-                    android:layout_marginRight="16dp"
+                    android:layout_marginEnd="16dp"
+                    android:layout_marginStart="10dp"
                     android:background="@drawable/ufield_shape_edit"
                     android:hint="不超过15个字"
                     android:maxLength="15"
@@ -344,9 +346,10 @@
 
                 <EditText
                     android:id="@+id/ufield_et_sponsor"
-                    android:layout_width="290dp"
+                    android:layout_width="0dp"
                     android:layout_height="35dp"
-                    android:layout_marginRight="16dp"
+                    android:layout_marginEnd="16dp"
+                    android:layout_marginStart="10dp"
                     android:background="@drawable/ufield_shape_edit"
                     android:hint="不超过10个字"
                     android:maxLength="10"
@@ -388,9 +391,11 @@
 
                 <EditText
                     android:id="@+id/ufield_et_phone"
-                    android:layout_width="242dp"
+                    android:layout_width="0dp"
                     android:layout_height="35dp"
-                    android:layout_marginRight="16dp"
+                    android:layout_marginEnd="16dp"
+                    android:layout_marginStart="10dp"
+                    android:inputType="number"
                     android:background="@drawable/ufield_shape_edit"
                     android:hint="请填写手机号码"
                     android:maxLength="11"
@@ -402,7 +407,8 @@
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintHorizontal_bias="1.0"
                     app:layout_constraintStart_toEndOf="@+id/ufieldTextview12"
-                    app:layout_constraintTop_toTopOf="parent" />
+                    app:layout_constraintTop_toTopOf="parent"
+                    tools:ignore="TextFields" />
             </androidx.constraintlayout.widget.ConstraintLayout>
 
 

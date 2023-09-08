@@ -646,13 +646,12 @@
 
     <TextView
         android:id="@+id/ufield_tv_detail"
-        android:layout_width="match_parent"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginLeft="16dp"
         android:layout_marginRight="16dp"
         android:layout_marginTop="10dp"
-        android:maxWidth="360dp"
-        android:text="我靠靠靠扩坎坎坷坷扩扩咳咳咳咳咳急急急急急急急急急急哈哈哈哈哈哈哈哈"
+        android:text="我靠靠靠扩坎坎坷坷扩扩咳咳咳咳咳急急急急急急急急急急            哈哈哈哈哈哈哈哈"
         android:textColor="#66112C54"
         android:textSize="14sp"
         app:layout_constraintBottom_toBottomOf="parent"

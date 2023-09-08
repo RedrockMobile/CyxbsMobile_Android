@@ -163,6 +163,7 @@ class DetailActivity : BaseActivity() {
                 tvHours.gone()
                 tvMinutes.gone()
                 tvSeconds.gone()
+                layout.gone()
             } else {
                 startDownTimer(it.activityStartAt)
             }
