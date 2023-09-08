@@ -11,11 +11,15 @@ import android.widget.FrameLayout
 import android.widget.ImageView
 import androidx.activity.OnBackPressedCallback
 import androidx.activity.viewModels
+import androidx.constraintlayout.widget.Group
+import androidx.core.widget.addTextChangedListener
 import androidx.lifecycle.lifecycleScope
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.mredrock.cyxbs.config.sp.defaultSp
 import com.mredrock.cyxbs.lib.base.ui.BaseActivity
+import com.mredrock.cyxbs.lib.utils.extensions.gone
 import com.mredrock.cyxbs.lib.utils.extensions.setOnSingleClickListener
+import com.mredrock.cyxbs.lib.utils.extensions.visible
 import com.mredrock.cyxbs.noclass.R
 import com.mredrock.cyxbs.noclass.bean.NoClassSpareTime
 import com.mredrock.cyxbs.noclass.page.ui.dialog.BatchInputErrorDialog
@@ -35,7 +39,7 @@ import kotlinx.coroutines.launch
  * @author: Black-skyline
  * @email: 2031649401@qq.com
  * @date: 2023/8/18
- * @Description:
+ * @Description: 批量添加页面的Activity
  *
  */
 class BatchAdditionActivity : BaseActivity() {
@@ -76,6 +80,9 @@ class BatchAdditionActivity : BaseActivity() {
     // 查询按钮
     private val batchQuery: Button by R.id.noclass_batch_btn_query.view()
 
+    // 编辑框的提示
+    private val editHint: Group by R.id.noclass_batch_group_edit_hint.view()
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -108,9 +115,14 @@ class BatchAdditionActivity : BaseActivity() {
     private fun initEditText() {
         //防止软键盘弹起导致视图错位
         window.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_NOTHING)
-        batchInputBox.hint =
-            "样例输入1:卷卷\n                    卷娘\n样例输入2:2022213333\n                    2011118888\n错误输入1:卷卷，卷娘\n                    卷卷，卷娘\n错误输入2:卷卷\n                    2022222222"
-
+        editHint.visible()
+        batchInputBox.addTextChangedListener {
+            if (it.isNullOrEmpty()) {
+                editHint.visible()
+                return@addTextChangedListener
+            }
+            editHint.gone()
+        }
     }
 
     private fun initTextView() {
@@ -175,7 +187,8 @@ class BatchAdditionActivity : BaseActivity() {
                         }
                     }
                 }
-                else ->{ // 检测到内容不是 已定义的字符序列
+
+                else -> { // 检测到内容不是 已定义的字符序列
                     standardFlag = false
                 }
             }
@@ -213,6 +226,7 @@ class BatchAdditionActivity : BaseActivity() {
             isSuccessSaveLatestNormal = false
             if (!it.repeat.isNullOrEmpty()) {
                 // 弹出重名的信息列表
+
                 SameNameSelectionDialog(it.repeat).show(
                     supportFragmentManager,
                     "SameNameSelectionDialog"
@@ -230,7 +244,7 @@ class BatchAdditionActivity : BaseActivity() {
             // 最新的normal数据暂存成功
             isSuccessSaveLatestNormal = true
             if (it.repeat.isNullOrEmpty()) { // 没有重名信息数组
-                if(tempPreparedList.isNotEmpty())
+                if (tempPreparedList.isNotEmpty())
                     freeCourseViewModel.getLessonsFromNum2Name(tempStuNumList, tempPreparedList)
                 else
                     "没有查到任何结果o(╥﹏╥)o".toast() // 最新的normal数据为空则不进行后续步骤
@@ -241,7 +255,7 @@ class BatchAdditionActivity : BaseActivity() {
         batchAdditionViewModel.getSelectedSameNameStudents.collectLaunch {
             if (it.isEmpty()) {  // 有重名学生，但未进行重名学生的选择
                 waitLatestNormalSave {
-                    if(tempPreparedList.isNotEmpty())
+                    if (tempPreparedList.isNotEmpty())
                         freeCourseViewModel.getLessonsFromNum2Name(tempStuNumList, tempPreparedList)
                     else
                         "没有查到任何结果o(╥﹏╥)o".toast()
@@ -267,7 +281,7 @@ class BatchAdditionActivity : BaseActivity() {
 //            it.forEach { pair ->
 //                tempList.add(pair.first)
 //            }
-            if(tempPreparedList.isNotEmpty())
+            if (tempPreparedList.isNotEmpty())
                 freeCourseViewModel.getLessonsFromNum2Name(tempStuNumList, it)
             else
                 "没有查到任何结果o(╥﹏╥)o".toast()
@@ -377,7 +391,7 @@ class BatchAdditionActivity : BaseActivity() {
             return
         }
         lifecycleScope.launch {
-            while (true){
+            while (true) {
                 if (isSuccessSaveLatestNormal) {
                     daAfterFinished.invoke()
                     break

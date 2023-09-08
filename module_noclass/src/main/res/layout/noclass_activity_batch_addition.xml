@@ -9,7 +9,7 @@
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="@color/config_window_background"
+        android:background="@color/noclass_batch_window_bg"
         android:fitsSystemWindows="true">
 
         <androidx.appcompat.widget.Toolbar
@@ -39,12 +39,13 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginStart="13dp"
+                    android:layout_marginStart="10dp"
                     android:gravity="center_vertical"
                     android:layout_marginTop="17dp"
                     android:text="批量添加"
                     android:textColor="@color/noclass_primary_text_color"
                     android:textSize="21sp"
+                    android:textStyle="bold"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintStart_toEndOf="@+id/noclass_batch_iv_back"
                     app:layout_constraintTop_toTopOf="parent"
@@ -59,7 +60,7 @@
             android:layout_width="match_parent"
             android:layout_height="1dp"
             android:layout_marginTop="0dp"
-            android:background="#2A4E84"
+            android:background="#1A2A4E84"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/tb_noclass_batch" />
@@ -74,20 +75,147 @@
             android:gravity="top|start"
             android:importantForAutofill="no"
             android:inputType="textMultiLine"
-            android:paddingTop="16dp"
+            android:paddingTop="13dp"
             android:paddingStart="13dp"
             android:paddingEnd="6dp"
             android:paddingBottom="16dp"
             android:scrollbarStyle="insideInset"
             android:scrollbars="vertical"
             android:scrollbarSize="4dp"
-            android:lineSpacingExtra="8dp"
+            android:lineSpacingExtra="13dp"
             android:fadeScrollbars="true"
+            android:textColor="@color/noclass_batch_edit_text"
+            android:textSize="14sp"
+            android:includeFontPadding="false"
+            android:fontFamily="@font/source_han_sans_cn_regular"
             android:scrollbarThumbVertical="@drawable/noclass_shape_edit_box_scrollbar_vertical"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/tb_noclass_batch"
             tools:ignore="LabelFor" />
+
+        <androidx.constraintlayout.widget.Group
+            android:id="@+id/noclass_batch_group_edit_hint"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:visibility="visible"
+            app:constraint_referenced_ids="noclass_batch_tv_example_input_1_content,noclass_batch_tv_example_input_2_content,noclass_batch_tv_err_input_1_content,noclass_batch_tv_err_input_2_content,noclass_batch_tv_example_input_1,noclass_batch_tv_example_input_2,noclass_batch_tv_err_input_1,noclass_batch_tv_err_input_2"/>
+
+        <TextView
+            android:id="@+id/noclass_batch_tv_example_input_1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="样例输入1："
+            android:includeFontPadding="false"
+            android:fontFamily="@font/source_han_sans_cn_light"
+            android:textSize="14sp"
+            android:textColor="#6B89B7"
+            android:lineSpacingExtra="1dp"
+            android:layout_marginStart="30dp"
+            android:layout_marginTop="30dp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/tb_noclass_batch"/>
+
+        <TextView
+            android:id="@+id/noclass_batch_tv_example_input_1_content"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="30dp"
+            android:lineSpacingExtra="6dp"
+            android:text="卷卷\n卷娘"
+            android:includeFontPadding="false"
+            android:fontFamily="@font/source_han_sans_cn_light"
+            android:textColor="#6B89B7"
+            android:textSize="14sp"
+            app:layout_constraintStart_toEndOf="@+id/noclass_batch_tv_example_input_1"
+            app:layout_constraintTop_toBottomOf="@+id/tb_noclass_batch" />
+
+        <TextView
+            android:id="@+id/noclass_batch_tv_example_input_2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="样例输入2："
+            android:includeFontPadding="false"
+            android:fontFamily="@font/source_han_sans_cn_light"
+            android:textSize="14sp"
+            android:textColor="#6B89B7"
+            android:lineSpacingExtra="1dp"
+            android:layout_marginStart="30dp"
+            android:layout_marginTop="15dp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/noclass_batch_tv_example_input_1_content"/>
+
+        <TextView
+            android:id="@+id/noclass_batch_tv_example_input_2_content"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="2022213333\n2011118888"
+            android:includeFontPadding="false"
+            android:fontFamily="@font/source_han_sans_cn_light"
+            android:textSize="14sp"
+            android:textColor="#6B89B7"
+            android:lineSpacingExtra="6dp"
+            android:layout_marginTop="15dp"
+            app:layout_constraintStart_toEndOf="@id/noclass_batch_tv_example_input_2"
+            app:layout_constraintTop_toBottomOf="@+id/noclass_batch_tv_example_input_1_content"/>
+
+        <TextView
+            android:id="@+id/noclass_batch_tv_err_input_1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="错误输入1："
+            android:includeFontPadding="false"
+            android:fontFamily="@font/source_han_sans_cn_light"
+            android:textSize="14sp"
+            android:textColor="#EFB7AB"
+            android:lineSpacingExtra="1dp"
+            android:layout_marginStart="30dp"
+            android:layout_marginTop="24dp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/noclass_batch_tv_example_input_2_content"/>
+
+        <TextView
+            android:id="@+id/noclass_batch_tv_err_input_1_content"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="卷卷，卷娘\n卷卷，卷娘"
+            android:includeFontPadding="false"
+            android:fontFamily="@font/source_han_sans_cn_light"
+            android:textSize="14sp"
+            android:textColor="#EFB7AB"
+            android:lineSpacingExtra="6dp"
+            android:layout_marginTop="24dp"
+            app:layout_constraintStart_toEndOf="@+id/noclass_batch_tv_err_input_1"
+            app:layout_constraintTop_toBottomOf="@+id/noclass_batch_tv_example_input_2_content"/>
+
+        <TextView
+            android:id="@+id/noclass_batch_tv_err_input_2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="错误输入2："
+            android:includeFontPadding="false"
+            android:fontFamily="@font/source_han_sans_cn_light"
+            android:textSize="14sp"
+            android:textColor="#EFB7AB"
+            android:lineSpacingExtra="1dp"
+            android:layout_marginStart="30dp"
+            android:layout_marginTop="15dp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/noclass_batch_tv_err_input_1_content"/>
+
+        <TextView
+            android:id="@+id/noclass_batch_tv_err_input_2_content"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="卷卷\n2022222222"
+            android:includeFontPadding="false"
+            android:fontFamily="@font/source_han_sans_cn_light"
+            android:textSize="14sp"
+            android:textColor="#EFB7AB"
+            android:lineSpacingExtra="6dp"
+            android:layout_marginTop="15dp"
+            app:layout_constraintStart_toEndOf="@id/noclass_batch_tv_err_input_2"
+            app:layout_constraintTop_toBottomOf="@+id/noclass_batch_tv_err_input_1_content"/>
 
         <Button
             android:id="@+id/noclass_batch_btn_query"
