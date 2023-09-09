@@ -1,5 +1,7 @@
 package com.redrock.module_notification.ui.fragment
 
+import android.graphics.Color
+import android.graphics.Paint
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -9,12 +11,16 @@ import android.widget.TextView
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.activityViewModels
 import androidx.viewpager2.widget.ViewPager2
+import com.google.android.material.shape.MaterialShapeDrawable
+import com.google.android.material.shape.RoundedCornerTreatment
+import com.google.android.material.shape.ShapeAppearanceModel
 import com.google.android.material.tabs.TabLayout
 import com.google.android.material.tabs.TabLayoutMediator
 import com.mredrock.cyxbs.lib.base.ui.BaseFragment
 import com.mredrock.cyxbs.lib.base.ui.viewModelBy
 import com.mredrock.cyxbs.lib.utils.adapter.FragmentVpAdapter
 import com.mredrock.cyxbs.lib.utils.extensions.color
+import com.mredrock.cyxbs.lib.utils.extensions.dp2pxF
 import com.redrock.module_notification.R
 import com.redrock.module_notification.ui.activity.NotificationActivity
 import com.redrock.module_notification.util.Constant.IS_SWITCH1_SELECT
@@ -40,6 +46,7 @@ class ItineraryNotificationFragment : BaseFragment(R.layout.notification_fragmen
 
     private val itineraryDisplayContainer by R.id.notification_itinerary_vp2.view<ViewPager2>()
     private val itineraryTypeTab by R.id.notification_itinerary_tl_itiner_type.view<TabLayout>()
+    private val itineraryTypeTabShadow by R.id.notification_itinerary_tl_shadow_source.view<View>()
 
     // 是否需要展示tab的红点
     private var shouldShowTabRedDots by Delegates.notNull<Boolean>()
@@ -127,6 +134,8 @@ class ItineraryNotificationFragment : BaseFragment(R.layout.notification_fragmen
 //            dividerPadding = 3
         }
 
+        // 设置tabLayout的阴影
+        initShadowShape()
 
         val tab1 = itineraryTypeTab.getTabAt(0)
         tab1View = LayoutInflater.from(myActivity)
@@ -139,6 +148,27 @@ class ItineraryNotificationFragment : BaseFragment(R.layout.notification_fragmen
         tab2?.customView = tab2View
         // 取消当前显示fragment页面的对应的tab的红点
         changeTabRedDotsVisibility(currentPageIndex, View.INVISIBLE)
+    }
+
+    private fun initShadowShape() {
+        val shapePathModel = ShapeAppearanceModel.builder()
+            .setBottomLeftCorner(RoundedCornerTreatment())
+            .setBottomRightCorner(RoundedCornerTreatment())
+            .setBottomLeftCornerSize(16F.dp2pxF)
+            .setBottomRightCornerSize(16F.dp2pxF)
+            .build()
+
+        val backgroundDrawable = MaterialShapeDrawable(shapePathModel).apply {
+            setTint(Color.parseColor("#00000000"))
+            paintStyle = Paint.Style.FILL
+            shadowCompatibilityMode = MaterialShapeDrawable.SHADOW_COMPAT_MODE_ALWAYS
+            initializeElevationOverlay(myActivity)
+            elevation = 12F.dp2pxF
+            setShadowColor(Color.parseColor("#EBF0F5"))
+//            shadowVerticalOffset = 13F.dp2pxF.toInt()
+        }
+        (itineraryTypeTabShadow.parent as ViewGroup).clipChildren = false
+        itineraryTypeTabShadow.background = backgroundDrawable
     }
 
     private fun initObserver() {

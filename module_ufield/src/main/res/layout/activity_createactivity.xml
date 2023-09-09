@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".gyd.ui.CreateActivity"
+    tools:context=".ui.activity.CreateActivity"
     tools:ignore="ResourceName">
 
     <ScrollView
@@ -32,11 +32,12 @@
                 app:layout_constraintVertical_bias="0.1" />
 
             <androidx.cardview.widget.CardView
+                android:id="@+id/ufieldCardview2"
                 android:layout_width="106dp"
                 android:layout_height="106dp"
-                app:cardCornerRadius="8dp"
                 android:layout_marginStart="16dp"
                 android:layout_marginTop="96dp"
+                app:cardCornerRadius="8dp"
                 app:cardElevation="0dp"
                 app:cardUseCompatPadding="false"
                 app:layout_constraintBottom_toBottomOf="parent"
@@ -50,78 +51,86 @@
                     android:id="@+id/iv_cover"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:src="@drawable/ufield_ic_commoncover"
-                    />
+                    android:src="@drawable/ufield_ic_commoncover" />
+
                 <TextView
                     android:id="@+id/tv_cover"
                     android:layout_width="106dp"
                     android:layout_height="30dp"
+                    android:layout_marginTop="76dp"
                     android:background="@drawable/ufield_shape_cover"
                     android:gravity="center"
                     android:text="上传封面"
-                    android:textColor="#FFFFFF"
-                    android:layout_marginTop="76dp"/>
+                    android:textColor="#FFFFFF" />
             </androidx.cardview.widget.CardView>
+
             <TextView
                 android:id="@+id/ufieldTextview3"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="96dp"
                 android:text="活动名称"
+                android:layout_marginStart="12dp"
                 android:textColor="#15315B"
                 android:textSize="16dp"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintHorizontal_bias="0.41"
-                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintHorizontal_bias="0.0"
+                app:layout_constraintStart_toEndOf="@+id/ufieldCardview2"
                 app:layout_constraintTop_toTopOf="parent"
                 app:layout_constraintVertical_bias="0.0" />
 
             <EditText
                 android:id="@+id/ufield_et_name"
-                android:layout_width="250dp"
+                android:layout_width="240dp"
                 android:layout_height="35dp"
+                android:layout_marginRight="16dp"
                 android:background="@drawable/ufield_shape_edit"
                 android:hint="不超过12个字"
-                android:textColorHint="#6615315b"
-                android:paddingStart="10dp"
-                android:layout_marginRight="16dp"
-                android:textColor="@color/editColor"
-                android:textSize="14sp"
+                android:layout_marginTop="120dp"
+                android:layout_marginStart="12dp"
                 android:maxLength="12"
+                android:paddingStart="10dp"
+                android:textColor="@color/editColor"
+                android:textColorHint="#6615315b"
+                android:textSize="14sp"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintHorizontal_bias="1"
-                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintHorizontal_bias="0.0"
+                app:layout_constraintStart_toEndOf="@+id/ufieldCardview2"
                 app:layout_constraintTop_toTopOf="parent"
-                app:layout_constraintVertical_bias="0.165" />
+                app:layout_constraintVertical_bias="0.0" />
 
             <TextView
                 android:id="@+id/ufieldTextview"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="活动类型"
+                android:layout_marginTop="168dp"
+                android:layout_marginStart="12dp"
                 android:textColor="#15315B"
                 android:textSize="16dp"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintHorizontal_bias="0.41"
-                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintHorizontal_bias="0.0"
+                app:layout_constraintStart_toEndOf="@+id/ufieldCardview2"
                 app:layout_constraintTop_toTopOf="parent"
-                app:layout_constraintVertical_bias="0.225" />
+                app:layout_constraintVertical_bias="0.0" />
 
             <TextView
                 android:id="@+id/tv_choose"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="请选择"
+                android:layout_marginTop="170dp"
+                android:layout_marginStart="5dp"
                 android:textColor="#992921D1"
+                app:layout_constraintHorizontal_bias="0.0"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintHorizontal_bias="0.585"
-                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintStart_toEndOf="@+id/ufieldTextview"
                 app:layout_constraintTop_toTopOf="parent"
-                app:layout_constraintVertical_bias="0.227" />
+                app:layout_constraintVertical_bias="0.0" />
 
 
 
@@ -183,12 +192,14 @@
                 android:layout_width="wrap_content"
                 android:layout_height="10dp"
                 android:src="@drawable/ufield_ic_accept"
+                android:layout_marginStart="4dp"
+                android:layout_marginTop="175dp"
+                app:layout_constraintHorizontal_bias="0.0"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintHorizontal_bias="0.65"
-                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintStart_toEndOf="@+id/tv_choose"
                 app:layout_constraintTop_toTopOf="parent"
-                app:layout_constraintVertical_bias="0.23" />
+                app:layout_constraintVertical_bias="0.0" />
 
             <TextView
                 android:id="@+id/ufieldTextview7"
@@ -219,7 +230,7 @@
 
             <EditText
                 android:id="@+id/ufield_et_address"
-                android:layout_width="300dp"
+                android:layout_width="290dp"
                 android:layout_height="35dp"
                 android:background="@drawable/ufield_shape_edit"
                 android:hint="不超过10个字"
@@ -251,7 +262,7 @@
 
             <EditText
                 android:id="@+id/ufield_et_way"
-                android:layout_width="300dp"
+                android:layout_width="290dp"
                 android:layout_height="35dp"
                 android:background="@drawable/ufield_shape_edit"
                 android:hint="不超过15个字"
@@ -283,7 +294,7 @@
 
             <EditText
                 android:id="@+id/ufield_et_sponsor"
-                android:layout_width="300dp"
+                android:layout_width="290dp"
                 android:layout_height="35dp"
                 android:layout_marginRight="16dp"
                 android:background="@drawable/ufield_shape_edit"
@@ -315,7 +326,7 @@
 
             <EditText
                 android:id="@+id/ufield_et_phone"
-                android:layout_width="252dp"
+                android:layout_width="242dp"
                 android:layout_height="35dp"
                 android:layout_marginRight="16dp"
                 android:background="@drawable/ufield_shape_edit"

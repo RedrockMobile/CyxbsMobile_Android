@@ -2,14 +2,14 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android">
 
     <application>
-        <activity android:name=".lxh.ui.activity.CampaignActivity" />
-        <activity android:name=".gyd.ui.DetailActivity" />
-        <activity android:name=".lyt.ui.UFieldActivity" />
-        <activity android:name=".lyt.ui.CheckActivity" />
-        <activity android:name=".lyt.ui.SearchActivity" />
-        <activity android:name=".gyd.ui.CreateActivity"
+        <activity android:name=".ui.activity.CampaignActivity" />
+        <activity android:name=".ui.activity.DetailActivity" />
+        <activity android:name=".ui.activity.UFieldActivity" />
+        <activity android:name=".ui.activity.CheckActivity" />
+        <activity android:name=".ui.activity.SearchActivity" />
+        <activity android:name=".ui.activity.CreateActivity"
             android:windowSoftInputMode="adjustPan"/>
-        <activity android:name=".lxh.ui.activity.RankActivity" />
+        <activity android:name=".ui.activity.RankActivity" />
     </application>
 
 </manifest>

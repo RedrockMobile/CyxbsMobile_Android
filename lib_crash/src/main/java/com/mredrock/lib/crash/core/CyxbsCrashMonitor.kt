@@ -4,6 +4,7 @@ import android.annotation.SuppressLint
 import android.app.Activity
 import android.app.Application
 import android.os.*
+import com.google.gson.Gson
 import com.mredrock.cyxbs.lib.utils.extensions.appContext
 import com.mredrock.cyxbs.lib.utils.extensions.getSp
 import com.mredrock.cyxbs.lib.utils.extensions.toast
@@ -74,13 +75,20 @@ object CyxbsCrashMonitor : Thread.UncaughtExceptionHandler {
      */
     private fun checkIfHasCrash() {
         val sp = appContext.getSp("crashMonitor")
-        val stackInfo = sp.getString("stackInfo", "")
+        val stackInfo = sp.getString("throwable", "")
         val reason = sp.getString("reason", "")
         if (stackInfo != null && stackInfo != "" && reason != null && reason != "") {
-            // 因为异常重启保存的异常信息
+            //因为异常重启上报一次异常，因为重启之前来不及上传异常应用进程已经结束了
+            val e = Gson().fromJson(stackInfo, Throwable::class.java)
+            CrashReport.postCatchedException(e)
+            LogLocal.log(
+                tag = "CrashMonitor",
+                msg = "异常拦截链异常!!!",
+                e
+            )
         }
         sp.edit().run {
-            putString("stackInfo", "")
+            putString("throwable", "")
             putString("reason", "")
             apply()
         }//用完清空

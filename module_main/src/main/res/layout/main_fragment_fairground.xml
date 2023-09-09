@@ -63,85 +63,110 @@
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 
-    <ImageView
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@id/main_fairground_food"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:src="@drawable/main_ic_food"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.142"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.301" />
+        android:layout_marginTop="40dp"
+        app:layout_constraintVertical_bias="0.0"
+        app:layout_constraintTop_toBottomOf="@+id/mainConstraintlayout">
 
-    <Button
-        android:layout_width="142dp"
-        android:layout_height="55dp"
-        android:text="美食咨询处"
-        android:background="@drawable/main_ic_fairgroundbutton"
-        android:textColor="#4A44E4"
-        android:textSize="16sp"
-        android:textStyle="bold"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.157"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.45" />
+        <ImageView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:src="@drawable/main_ic_food" />
 
-    <ImageView
+        <Button
+            android:layout_width="142dp"
+            android:layout_height="55dp"
+            android:background="@drawable/main_ic_fairgroundbutton"
+            android:text="美食咨询处"
+            android:textColor="#4A44E4"
+            android:textSize="16sp"
+            android:textStyle="bold"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.384"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintVertical_bias="1.0" />
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/main_fairground_square"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:src="@drawable/main_ic_square"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.933"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.529" />
+        android:layout_marginTop="150dp"
+        app:layout_constraintVertical_bias="0.0"
+        app:layout_constraintStart_toEndOf="@+id/main_fairground_food"
+        app:layout_constraintTop_toBottomOf="@+id/mainConstraintlayout">
 
-    <Button
-        android:layout_width="125dp"
-        android:layout_height="50dp"
-        android:background="@drawable/main_ic_fairgroundbutton"
-        android:text="表态广场"
-        android:textColor="#4A44E4"
-        android:textSize="16sp"
-        android:textStyle="bold"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.87"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.665" />
+        <ImageView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:src="@drawable/main_ic_square" />
 
-    <ImageView
-        android:id="@+id/main_fairground_iv_dctivity"
+        <Button
+            android:layout_width="125dp"
+            android:layout_height="50dp"
+            android:background="@drawable/main_ic_fairgroundbutton"
+            android:text="表态广场"
+            android:textColor="#4A44E4"
+            android:textSize="16sp"
+            android:textStyle="bold"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.448"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintVertical_bias="0.933" />
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/main_fairground_activity"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:src="@drawable/main_ic_activity"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.144"
+        app:layout_constraintEnd_toStartOf="@+id/main_fairground_square"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.80" />
+        app:layout_constraintVertical_bias="0.0"
+        android:layout_marginRight="20dp"
+        app:layout_constraintHorizontal_bias="1"
+        android:layout_marginTop="130dp"
+        app:layout_constraintTop_toBottomOf="@+id/main_fairground_food">
 
-    <Button
-        android:id="@+id/main_fairground_bt_dctivity"
-        android:layout_width="142dp"
-        android:layout_height="55dp"
-        android:background="@drawable/main_ic_fairgroundbutton"
-        android:text="活动布告栏"
-        android:gravity="center"
-        android:textColor="#4A44E4"
-        android:textSize="16sp"
-        android:textStyle="bold"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.157"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.851" />
+        <ImageView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:src="@drawable/main_ic_activity"
+            tools:layout_editor_absoluteX="0dp"
+            tools:layout_editor_absoluteY="0dp" />
+
+        <Button
+            android:layout_width="142dp"
+            android:layout_height="55dp"
+            android:background="@drawable/main_ic_fairgroundbutton"
+            android:gravity="center"
+            android:text="活动布告栏"
+            android:clickable="false"
+            android:textColor="#4A44E4"
+            android:textSize="16sp"
+            android:textStyle="bold"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.466"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintVertical_bias="1.0" />
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+
 
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -1,14 +1,13 @@
 package com.redrock.module_notification.model
 
-import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import com.google.gson.Gson
 import com.mredrock.cyxbs.common.bean.RedrockApiWrapper
-import com.mredrock.cyxbs.lib.base.utils.safeSubscribeBy
 import com.mredrock.cyxbs.lib.utils.extensions.unsafeSubscribeBy
 import com.mredrock.cyxbs.lib.utils.network.ApiStatus
 import com.mredrock.cyxbs.lib.utils.network.ApiWrapper
 import com.mredrock.cyxbs.lib.utils.network.mapOrInterceptException
+import com.redrock.module_notification.bean.ItineraryDateBean
 import com.redrock.module_notification.bean.MsgBeanData
 import com.redrock.module_notification.bean.ReceivedItineraryMsgBean
 import com.redrock.module_notification.bean.SentItineraryMsgBean
@@ -32,7 +31,7 @@ object NotificationRepository {
     private val mGson = Gson()
 
 
-    private fun List<ReceivedItineraryMsgBean.ItineraryDateBean>.toPostDateJson(): String {
+    private fun List<ItineraryDateBean>.toPostDateJson(): String {
         return mGson.toJson(toAffairDateBean())
     }
     /**
@@ -103,6 +102,7 @@ object NotificationRepository {
 
     /**
      * 获取未读的行程（即hasRead字段为false的行程）有多少条
+     * 留着后续给api_notification模块填充
      */
     fun getNewItineraryCount(resultContainer: MutableLiveData<Int>) {
         var result = 0

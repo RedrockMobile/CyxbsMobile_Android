@@ -300,7 +300,16 @@ class NotificationActivity : BaseViewModelActivity<NotificationViewModel>() {
                 viewModel.changeActiveDotStatus(false)
             }
         }
-
+        /*viewModel.activeMsg.observe {
+            allUnreadActiveMsgIds = ArrayList()
+            for (value in it!!) {
+                if (!value.has_read) {
+                    changeTabRedDotsVisibility(1, View.VISIBLE)
+                    allUnreadActiveMsgIds.add(value.id.toString())
+                }
+            }
+        }
+*/
         viewModel.popupWindowClickableStatus.observe {
             it?.let { notification_rl_home_dots.isClickable = it }
         }
@@ -377,6 +386,12 @@ class NotificationActivity : BaseViewModelActivity<NotificationViewModel>() {
         }
     }
 
+    /*    fun removeUnreadActiveMsgIds(id: String) {
+            allUnreadActiveMsgIds.remove(id)
+            if (allUnreadActiveMsgIds.size == 0) {
+                changeTabRedDotsVisibility(1, View.INVISIBLE)
+            }
+        }*/
 
     //改变TabLayout小红点的显示状态
     private fun changeTabRedDotsVisibility(position: Int, visibility: Int) {
@@ -409,19 +424,22 @@ class NotificationActivity : BaseViewModelActivity<NotificationViewModel>() {
      */
     private fun initShadowShape() {
         val shapePathModel = ShapeAppearanceModel.builder()
+            // 圆角方案
             .setBottomLeftCorner(RoundedCornerTreatment())
             .setBottomRightCorner(RoundedCornerTreatment())
+            // 圆角弧度
             .setBottomLeftCornerSize(16F.dp2pxF)
             .setBottomRightCornerSize(16F.dp2pxF)
             .build()
 
         val backgroundDrawable = MaterialShapeDrawable(shapePathModel).apply {
-//            setTint(com.mredrock.cyxbs.common.R.color.common_white_background.color)
+            // 给backgroundDrawable填充颜色
             setTint(Color.parseColor("#27838D"))
             paintStyle = Paint.Style.FILL
             shadowCompatibilityMode = MaterialShapeDrawable.SHADOW_COMPAT_MODE_ALWAYS
             initializeElevationOverlay(this@NotificationActivity)
             elevation = 101F.dp2pxF
+            // 给backgroundDrawable设置阴影的起始颜色
             setShadowColor(Color.parseColor("#2D538D"))
 //            shadowVerticalOffset = 13F.dp2pxF.toInt()
         }

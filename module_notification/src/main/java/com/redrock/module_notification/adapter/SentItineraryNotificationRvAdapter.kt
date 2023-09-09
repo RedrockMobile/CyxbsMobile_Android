@@ -3,12 +3,16 @@ package com.redrock.module_notification.adapter
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.view.ViewTreeObserver
 import android.widget.ImageView
 import android.widget.LinearLayout
 import android.widget.TextView
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
+import com.mredrock.cyxbs.lib.utils.extensions.color
+import com.mredrock.cyxbs.lib.utils.extensions.dp2px
+import com.mredrock.cyxbs.lib.utils.extensions.drawable
 import com.mredrock.cyxbs.lib.utils.extensions.gone
 import com.mredrock.cyxbs.lib.utils.extensions.setOnSingleClickListener
 import com.mredrock.cyxbs.lib.utils.extensions.string
@@ -17,13 +21,15 @@ import com.redrock.module_notification.R
 import com.redrock.module_notification.bean.SentItineraryMsgBean
 import com.redrock.module_notification.util.Date
 import com.redrock.module_notification.util.myGetColor
+import com.redrock.module_notification.util.sp2px
 
 /**
  * ...
  * @author: Black-skyline
  * @email: 2031649401@qq.com
  * @date: 2023/8/22
- * @Description: 针对已发送的行程是否取消提醒的item的两种状态，并未使用不同的ViewHold展示，而是根据当前行程的提醒状态分开渲染内容
+ * @Description: 针对已发送的行程是否取消提醒的item的两种状态，
+ * 并未使用不同的ViewHold展示，而是根据当前行程的提醒状态分开渲染内容
  *
  */
 class SentItineraryNotificationRvAdapter(
@@ -74,6 +80,16 @@ class SentItineraryNotificationRvAdapter(
                 }
             }
 
+            // 动态测绘给content留下的空间后，动态设置content的每行的最大文字数，以完成item内的文字对齐
+            content.viewTreeObserver.addOnPreDrawListener(object : ViewTreeObserver.OnPreDrawListener {
+                override fun onPreDraw(): Boolean {
+                    content.viewTreeObserver.removeOnPreDrawListener(this)
+                    val paddingDp = 17
+                    val emsCount = ((itemView.width - 2 * paddingDp.dp2px) / sp2px(14F))
+                    content.setEms(emsCount.toInt())
+                    return true
+                }
+            })
         }
     }
 
@@ -85,10 +101,11 @@ class SentItineraryNotificationRvAdapter(
 
     override fun onBindViewHolder(holder: VH, position: Int) {
         val itemData = getItem(position)
+        // 先绑定数据，再判断是否转变为取消状态
+        bindItemData(holder, itemData)
         if (itemData.hasCancel) {
             item2canceledStatus(holder)
         }
-        bindItemData(holder, itemData)
     }
 
     private fun bindItemData(holder: VH, data: SentItineraryMsgBean) {
@@ -96,10 +113,47 @@ class SentItineraryNotificationRvAdapter(
             title.text = String.format(R.string.notification_itinerary_item_rawTitle.string, data.title)
             content.text = data.content
             startTime.text = Date.getItineraryUpdateTime(data.publishTime)
-            if (data.hasStart) startStatusHint.setText(R.string.notification_hasStarted)
+            if (data.hasStart) {
+                if (data.hasOver) {
+                    item2overStatus(holder)
+                } else
+                    item2doingStatus(holder)
+            }
         }
     }
 
+    /**
+     * 把行程item变为进行中的状态
+     * @param holder
+     */
+    private fun item2doingStatus(holder: VH) {
+        holder.startStatusHint.apply {
+            setText(R.string.notification_isDoing)
+            setTextColor(R.color.notification_itinerary_item_is_doing_hint_text.color)
+        }
+        holder.unCancelDot.background =
+            R.drawable.notification_ic_itinerary_uncancel_dot_doing.drawable
+    }
+
+    /**
+     * 把行程item变为已结束的状态
+     * @param holder
+     */
+    private fun item2overStatus(holder: VH) {
+        // 按照逻辑，行程已结束之后再取消提醒没有意义，故移除点击取消提醒的回调
+        holder.cancelReminder.setOnClickListener(null)
+        holder.startStatusHint.apply {
+            setText(R.string.notification_hasOvered)
+            setTextColor(R.color.notification_itinerary_item_has_overed_hint_text.color)
+        }
+        holder.unCancelDot.background =
+            R.drawable.notification_ic_itinerary_uncancel_dot_over.drawable
+    }
+
+    /**
+     * 把行程item变为已取消的状态
+     * @param holder
+     */
     private fun item2canceledStatus(holder: VH) {
         holder.cancelReminder.apply {
             // 移除点击回调，节省资源
@@ -109,11 +163,15 @@ class SentItineraryNotificationRvAdapter(
 
         holder.unCancelDot.gone()
         holder.canceledHint.visible()
-        changeTextColor(holder)
+        textColor2canceled(holder)
 
     }
 
-    private fun changeTextColor(holder: VH) {
+    /**
+     * 把item部分文本的颜色设置为行程已取消的颜色
+     * @param holder
+     */
+    private fun textColor2canceled(holder: VH) {
         holder.title.setTextColor(myGetColor(R.color.notification_itinerary_item_canceled_title_text))
         holder.content.setTextColor(myGetColor(R.color.notification_itinerary_item_canceled_content_text))
         holder.startTime.setTextColor(myGetColor(R.color.notification_itinerary_item_canceled_generate_time_text))

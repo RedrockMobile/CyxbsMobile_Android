@@ -8,7 +8,6 @@ import com.redrock.module_notification.bean.*
 import io.reactivex.rxjava3.core.Observable
 import io.reactivex.rxjava3.core.Single
 import retrofit2.http.*
-
 /**
  * Author by OkAndGreat
  * Date on 2022/5/1 10:49.

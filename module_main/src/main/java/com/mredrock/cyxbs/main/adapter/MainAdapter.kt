@@ -15,10 +15,6 @@ class MainAdapter(activity: FragmentActivity) : FragmentStateAdapter(activity) {
   override fun createFragment(position: Int): Fragment {
     return when (position) {
       0 -> ServiceManager.fragment(DISCOVER_ENTRY)
-//      1 -> ServiceManager.fragment(QA_ENTRY)
-      /**
-       * TODO 关闭服务 邮问
-       */
       1 -> ServiceManager.fragment(FAIRGROUND_ENTRY)
       2 -> ServiceManager.fragment(MINE_ENTRY)
       else -> error("??? 改了 getItemCount() 为什么不改这个 ?")

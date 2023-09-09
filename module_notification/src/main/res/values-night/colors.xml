@@ -3,6 +3,8 @@
 
     <color name="notification_white">#2D2D2D</color>
 
+    <color name="notification_fragment_bg_white_black">#000000</color>
+
     <!--    消息通知文字主体颜色-->
     <color name="notification_primary_text_color">#F0F0F2</color>
     <!--    消息通知消极按钮颜色-->
