@@ -198,7 +198,7 @@ class DetailActivity : BaseActivity() {
                         val seconds =
                             floor((millisUntilFinished % (1000 * 60.0)) / 1000)
                                 .toLong()
-                        tvTimeHead.text = "距离结束还有"
+                        tvTimeHead.text = "距离开始还有"
                         tvDay.text = "天"
                         tvHour.text = "小时"
                         tvMinute.text = "分"

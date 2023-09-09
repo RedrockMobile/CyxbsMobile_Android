@@ -19,6 +19,7 @@ import android.text.Spannable
 import android.text.SpannableStringBuilder
 import android.text.TextWatcher
 import android.text.style.RelativeSizeSpan
+import android.util.Log
 import android.view.Gravity
 import android.view.MenuItem
 import android.view.MotionEvent
@@ -86,8 +87,8 @@ class CreateActivity : BaseActivity() {
     private val typeList = mutableListOf("文娱活动", "体育活动", "教育活动")
 
     private lateinit var pvtime: TimePickerView
-    private var selectedStartTimestamp: Long = 0
-    private var selectedEndTimestamp: Long = 0
+    private var selectedStartTimestamp: Long = System.currentTimeMillis() / 1000
+    private var selectedEndTimestamp: Long = System.currentTimeMillis() / 1000
 
 
     private val watcher = object : TextWatcher {
@@ -580,7 +581,7 @@ class CreateActivity : BaseActivity() {
         val introduce = etIntroduce.text.toString()
         val phone = etPhone.text.toString()
         if (name.isNotEmpty() && way.isNotEmpty() && address.isNotEmpty() && introduce.isNotEmpty() && sponsor.isNotEmpty() && phone.length == 11 && isChanged) {
-            if (selectedEndTimestamp > selectedStartTimestamp && selectedEndTimestamp.toInt() != 0 && selectedStartTimestamp.toInt() != 0) {
+            if (selectedEndTimestamp > selectedStartTimestamp) {
                 btCreate.apply {
                     setBackgroundResource(R.drawable.ufield_shape_createbutton2)
                     setOnClickListener {
