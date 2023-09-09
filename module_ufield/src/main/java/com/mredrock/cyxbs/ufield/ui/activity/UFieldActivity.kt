@@ -6,6 +6,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import androidx.activity.viewModels
+import androidx.cardview.widget.CardView
 import androidx.viewpager2.widget.ViewPager2
 import com.alibaba.android.arouter.facade.annotation.Route
 import com.google.android.material.tabs.TabLayout
@@ -31,7 +32,7 @@ import com.mredrock.cyxbs.ufield.viewmodel.UFieldViewModel
 class UFieldActivity : BaseActivity() {
 
     private val mBack: ImageView by R.id.uField_back.view()
-    private val mSearch: ImageView by R.id.uField_search.view()
+    private val mSearch: CardView by R.id.uField_search.view()
     private val mAdd: ImageView by R.id.uField_add.view()
     private val mAdmin: ImageView by R.id.uField_activity_isAdmin.view()
     private val mCup: ImageView by R.id.uField_cup.view()

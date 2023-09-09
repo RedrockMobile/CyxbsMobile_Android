@@ -13,7 +13,7 @@ data class FoodResultBeanItem(
     @SerializedName("Picture")
     val picture: String,
     @SerializedName("PraiseIs")
-    val praiseIs: Boolean,
+    var praiseIs: Boolean,
     @SerializedName("PraiseNum")
-    val praiseNum: Int
+    var praiseNum: Int
 ):Serializable
