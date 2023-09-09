@@ -5,6 +5,7 @@ import android.os.Bundle
 import android.view.ViewGroup
 import android.widget.EditText
 import android.widget.ImageView
+import android.widget.TextView
 import androidx.activity.viewModels
 import androidx.cardview.widget.CardView
 import androidx.viewpager2.widget.ViewPager2
@@ -35,7 +36,7 @@ class SearchActivity : BaseActivity() {
     private val mSearch: androidx.appcompat.widget.SearchView by R.id.uField_searchView.view()
     private val mCardView: CardView by R.id.uField_cardView.view()
     private val mBack: ImageView by R.id.uField_back_search.view()
-    private val mSearchText: ImageView by R.id.uField_search_text.view()
+    private val mSearchText: TextView by R.id.uField_search_text.view()
 
 
     private val mViewModel by viewModels<SearchViewModel>()

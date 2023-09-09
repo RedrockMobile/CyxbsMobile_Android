@@ -87,7 +87,7 @@ class GridSpacingItemDecoration(
          */
         if (count == 3) {
             if (position == itemCount - 1) {
-                outRect.bottom = 120
+                outRect.bottom = 160
             }
         }
 

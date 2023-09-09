@@ -93,15 +93,14 @@ class DoneFragment : BaseFragment() {
                     getViewedData()
                     //    getViewedUpData(mDataList.lastOrNull()?.activity_id?:1)
                 }
-                finishRefresh(1000)
+                finishRefresh(600)
             }
             //上拉加载
             setOnLoadMoreListener {
                 mViewModel.apply {
                     getViewedUpData(mDataList.lastOrNull()?.activityId ?: 1)
                 }
-                mAdapter.notifyDataSetChanged()
-                finishLoadMore(1000)
+                finishLoadMore(500)
             }
         }
     }

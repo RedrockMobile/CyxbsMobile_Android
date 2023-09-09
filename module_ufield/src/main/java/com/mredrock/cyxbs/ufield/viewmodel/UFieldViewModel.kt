@@ -49,7 +49,7 @@ class UFieldViewModel : BaseViewModel() {
     /**
      * 得到所有的数据
      */
-    private fun getAllActivityList() {
+     fun getAllActivityList() {
 
         UFieldRepository
             .receiveAllData()
@@ -67,7 +67,7 @@ class UFieldViewModel : BaseViewModel() {
     /**
      * 得到文娱活动数据
      */
-    private fun getCultureActivityList() {
+     fun getCultureActivityList() {
         UFieldRepository
             .receiveCultureData()
             .mapOrInterceptException {
@@ -87,7 +87,7 @@ class UFieldViewModel : BaseViewModel() {
     /**
      * 得到体育活动数据
      */
-    private fun getSportsActivityList() {
+     fun getSportsActivityList() {
         UFieldRepository
             .receiveSportsData()
             .mapOrInterceptException {
@@ -106,7 +106,7 @@ class UFieldViewModel : BaseViewModel() {
     /**
      * 得到教育活动数据
      */
-    private fun getEducationActivityList() {
+     fun getEducationActivityList() {
         UFieldRepository
             .receiveEductionData()
             .mapOrInterceptException {

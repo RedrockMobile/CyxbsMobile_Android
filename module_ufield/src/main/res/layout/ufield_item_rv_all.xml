@@ -42,7 +42,7 @@
             <LinearLayout
                 android:id="@+id/uField_all_lin"
                 android:layout_width="match_parent"
-                android:layout_height="22dp"
+                android:layout_height="wrap_content"
                 android:layout_marginStart="12dp"
                 android:layout_marginTop="10dp"
                 android:orientation="horizontal"
@@ -52,9 +52,10 @@
                 <TextView
                     android:id="@+id/uField_activity_name"
                     android:layout_width="wrap_content"
-                    android:layout_height="22dp"
+                    android:layout_height="wrap_content"
                     android:ellipsize="end"
                     android:focusable="true"
+                    android:layout_gravity="center_vertical"
                     android:focusableInTouchMode="true"
                     android:marqueeRepeatLimit="marquee_forever"
                     android:maxWidth="82dp"
@@ -69,7 +70,6 @@
                     android:layout_width="40dp"
                     android:layout_height="16dp"
                     android:layout_gravity="center_vertical"
-                    android:layout_marginStart="2dp"
                    />
             </LinearLayout>
 
@@ -87,7 +87,7 @@
 
             <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="16dp"
+                android:layout_height="wrap_content"
                 android:layout_marginStart="10dp"
                 android:layout_marginTop="11dp"
                 android:orientation="horizontal"
@@ -98,13 +98,15 @@
                     android:id="@+id/ufieldImageview5"
                     android:layout_width="16dp"
                     android:layout_height="16dp"
+                    android:layout_gravity="center_vertical"
                     android:src="@drawable/ufield_ic_activity_time" />
 
                 <TextView
                     android:id="@+id/uField_activity_time"
                     android:layout_width="110dp"
-                    android:layout_height="16dp"
+                    android:layout_height="wrap_content"
                     android:layout_marginStart="4dp"
+                    android:layout_gravity="center_vertical"
                     android:textColor="@color/uField_112c5499"
                     android:textSize="12sp" />
 

@@ -56,7 +56,7 @@ class SearchViewModel : BaseViewModel() {
             }
             .safeSubscribeBy {
                 if (it.isEmpty()) {
-                    toast("搜索为空，请检查搜索内容")
+                    toast("暂无更多内容~")
                 } else {
                     _allSearchList.postValue(it)
 
