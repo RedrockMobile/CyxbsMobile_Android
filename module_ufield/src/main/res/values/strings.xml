@@ -15,4 +15,8 @@
     <string name="ufield_campaign_publish">已发布</string>
     <string name="ufield_campaign_check">待审核</string>
     <string name="ufield_campaign_no_message">这里空空如也</string>
+    <string name="ufield_name">活动布告栏</string>
+    <string name="ufield_search_more">查看更多活动...</string>
+    <string name="ufield_search_name">搜索</string>
+    <string name="ufield_check_text">审核中心</string>
 </resources>

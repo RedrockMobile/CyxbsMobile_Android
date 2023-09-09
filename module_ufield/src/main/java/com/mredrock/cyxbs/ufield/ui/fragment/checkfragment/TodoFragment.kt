@@ -3,6 +3,7 @@ package com.mredrock.cyxbs.ufield.ui.fragment.checkfragment
 import android.annotation.SuppressLint
 import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -66,6 +67,7 @@ class TodoFragment : BaseFragment() {
             todoList.observe {
                 mAdapter.submitList(it)
                 mDataList = it as MutableList<TodoBean>
+
             }
         }
         mRv.apply {
@@ -78,9 +80,14 @@ class TodoFragment : BaseFragment() {
                     run {
                         mViewModel.apply {
                             passActivity(mDataList[position].activityId)
+                            isPassSuccess.observe {
+                                when (it.status) {
+                                    50001 -> toast("活动不存在")
+                                    50003 -> toast("活动已结束，请拒绝该活动")
+                                }
+                            }
                             getTodoData()
                             getTodoUpData(mDataList.lastOrNull()?.activityId!!)
-                            notifyDataSetChanged()
                         }
                     }
                 }
@@ -147,14 +154,14 @@ class TodoFragment : BaseFragment() {
                 mViewModel.apply {
                     getTodoData()
                 }
-                finishRefresh(1000)
+                finishRefresh(600)
             }
             //上拉加载
             setOnLoadMoreListener {
                 mViewModel.apply {
                     getTodoUpData(mDataList.lastOrNull()?.activityId ?: 1)
                 }
-                finishLoadMore(1000)
+                finishLoadMore(500)
             }
         }
     }

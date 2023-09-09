@@ -8,70 +8,105 @@
     android:orientation="vertical"
     tools:context=".ui.activity.UFieldActivity">
 
-    <ImageView
-        android:id="@+id/uField_back"
-        android:layout_width="9dp"
-        android:layout_height="18dp"
-        android:layout_marginStart="22dp"
-        android:layout_marginTop="60dp"
-        android:src="@drawable/ufield_ic_back"
+    <androidx.appcompat.widget.Toolbar
+        android:layout_width="match_parent"
+        android:layout_height="35dp"
+        android:layout_marginTop="50dp"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="parent">
 
-    <ImageView
-        android:id="@+id/ufieldImageview4"
-        android:layout_width="110dp"
-        android:layout_height="31dp"
-        android:layout_marginStart="15dp"
-        android:layout_marginTop="53dp"
-        android:src="@drawable/ufield_ic_title"
-        app:layout_constraintStart_toEndOf="@+id/uField_back"
-        app:layout_constraintTop_toTopOf="parent" />
+        <ImageView
+            android:id="@+id/uField_back"
+            android:layout_width="9dp"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:layout_marginStart="22dp"
+            android:src="@drawable/ufield_ic_back" />
 
-    <ImageView
-        android:id="@+id/uField_activity_isAdmin"
-        android:layout_width="20.02dp"
-        android:layout_height="21dp"
-        android:layout_marginTop="60dp"
-        android:layout_marginEnd="20dp"
-        android:src="@drawable/ufield_ic_administrator"
-        android:visibility="gone"
-        app:layout_constraintEnd_toStartOf="@+id/uField_cup"
-        app:layout_constraintTop_toTopOf="parent"
-        tools:visibility="visible" />
+        <TextView
+            android:id="@+id/ufieldImageview4"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:layout_marginStart="15dp"
+            android:text="@string/ufield_name"
+            android:textColor="@color/ufield_15315b"
+            android:textSize="22sp" />
 
-    <ImageView
-        android:id="@+id/uField_cup"
-        android:layout_width="16dp"
-        android:layout_height="20.5dp"
-        android:layout_marginTop="60dp"
-        android:layout_marginEnd="23dp"
-        android:src="@drawable/ufield_ic_cup"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        <ImageView
+            android:id="@+id/uField_cup"
+            android:layout_width="16dp"
+            android:layout_height="wrap_content"
+            android:layout_gravity="end|center_vertical"
+            android:layout_marginEnd="23dp"
+            android:src="@drawable/ufield_ic_cup" />
 
-    <ImageView
-        android:id="@+id/uField_search"
-        android:layout_width="wrap_content"
+
+        <ImageView
+            android:id="@+id/uField_activity_isAdmin"
+            android:layout_width="20.02dp"
+            android:layout_height="wrap_content"
+            android:layout_gravity="end|center_vertical"
+            android:layout_marginEnd="20dp"
+            android:src="@drawable/ufield_ic_administrator"
+            android:visibility="gone"
+            tools:visibility="visible" />
+
+
+    </androidx.appcompat.widget.Toolbar>
+
+    <FrameLayout
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginStart="20dp"
         android:layout_marginTop="98dp"
-        android:src="@drawable/ufield_ic_search"
+        android:orientation="horizontal"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="parent">
 
-    <ImageView
-        android:id="@+id/uField_add"
-        android:layout_width="28dp"
-        android:layout_height="28dp"
-        android:layout_marginStart="20dp"
-        android:layout_marginTop="103dp"
-        android:layout_marginEnd="22dp"
-        android:src="@drawable/ufield_ic_add"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toEndOf="@+id/uField_search"
-        app:layout_constraintTop_toTopOf="parent" />
+        <LinearLayout
+            android:layout_marginStart="22dp"
+            android:layout_marginEnd="65dp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
 
+            <androidx.cardview.widget.CardView
+                android:id="@+id/uField_search"
+                android:layout_width="match_parent"
+                android:layout_height="38dp"
+                app:cardBackgroundColor="@color/ufield_0d15315b"
+                app:cardCornerRadius="29dp"
+                app:cardElevation="0dp">
+
+
+                <ImageView
+                    android:layout_width="18dp"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical"
+                    android:layout_marginStart="16dp"
+                    android:src="@drawable/ufield_ic_search_logo_all" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical"
+                    android:layout_marginStart="44dp"
+                    android:text="@string/ufield_search_more"
+                    android:textColor="@color/ufield_3315315b"
+                    android:textSize="16sp" />
+            </androidx.cardview.widget.CardView>
+
+
+        </LinearLayout>
+
+
+        <ImageView
+            android:id="@+id/uField_add"
+            android:layout_width="28dp"
+            android:layout_height="28dp"
+            android:layout_gravity="end|center_vertical"
+            android:layout_marginEnd="23dp"
+            android:src="@drawable/ufield_ic_add" />
+    </FrameLayout>
 
     <LinearLayout
         android:layout_width="match_parent"
