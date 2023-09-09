@@ -26,7 +26,6 @@ import com.google.android.material.tabs.TabLayoutMediator
 import com.mredrock.cyxbs.common.ui.BaseViewModelActivity
 import com.mredrock.cyxbs.common.utils.extensions.dp2px
 import com.mredrock.cyxbs.common.utils.extensions.editor
-import com.mredrock.cyxbs.lib.utils.extensions.setOnSingleClickListener
 import com.mredrock.cyxbs.config.route.NOTIFICATION_HOME
 import com.mredrock.cyxbs.config.route.NOTIFICATION_SETTING
 import com.mredrock.cyxbs.lib.utils.adapter.FragmentVpAdapter
@@ -425,19 +424,22 @@ class NotificationActivity : BaseViewModelActivity<NotificationViewModel>() {
      */
     private fun initShadowShape() {
         val shapePathModel = ShapeAppearanceModel.builder()
+            // 圆角方案
             .setBottomLeftCorner(RoundedCornerTreatment())
             .setBottomRightCorner(RoundedCornerTreatment())
+            // 圆角弧度
             .setBottomLeftCornerSize(16F.dp2pxF)
             .setBottomRightCornerSize(16F.dp2pxF)
             .build()
 
         val backgroundDrawable = MaterialShapeDrawable(shapePathModel).apply {
-//            setTint(com.mredrock.cyxbs.common.R.color.common_white_background.color)
+            // 给backgroundDrawable填充颜色
             setTint(Color.parseColor("#27838D"))
             paintStyle = Paint.Style.FILL
             shadowCompatibilityMode = MaterialShapeDrawable.SHADOW_COMPAT_MODE_ALWAYS
             initializeElevationOverlay(this@NotificationActivity)
             elevation = 101F.dp2pxF
+            // 给backgroundDrawable设置阴影的起始颜色
             setShadowColor(Color.parseColor("#2D538D"))
 //            shadowVerticalOffset = 13F.dp2pxF.toInt()
         }

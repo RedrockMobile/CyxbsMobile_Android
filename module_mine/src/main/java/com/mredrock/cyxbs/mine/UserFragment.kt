@@ -77,8 +77,6 @@ class UserFragment : BaseFragment() {
     }
 
     private fun initView() {
-        // 获取最新的Notification数量，以初始化红点
-        initNewNotificationCountShow()
         //功能按钮
         context?.apply {
             mine_user_tv_dynamic_number.setOnSingleClickListener { doIfLogin { jump(QA_DYNAMIC_MINE) } }
@@ -285,18 +283,16 @@ class UserFragment : BaseFragment() {
                 }
             }
         }
-        viewModel.ufieldNewCount.observe(viewLifecycleOwner) {
-            val list = it.filter { element ->
-                !element.clicked
-            }
-            if (list.isEmpty()) {
+        // 消息中心的红点显示逻辑
+        viewModel.newNotificationCount.observe(viewLifecycleOwner) { value ->
+            if (value == 0) {
                 mine_user_tv_center_notification_count.gone()
             } else {
                 mine_user_tv_center_notification_count.visible()
-                if (list.size > 99) {
+                if (value > 99) {
                     mine_user_tv_center_notification_count.text = "99+"
                 } else {
-                    mine_user_tv_center_notification_count.text = list.size.toString()
+                    mine_user_tv_center_notification_count.text = value.toString()
                 }
             }
         }
@@ -364,21 +360,5 @@ class UserFragment : BaseFragment() {
     private fun jumpAndSaveTime(path: String, type: Int) {
         viewModel.saveCheckTimeStamp(type)
         jump(path)
-    }
-    private fun initNewNotificationCountShow() {
-        // 消息中心的红点显示逻辑
-        viewModel.newNotificationCount.observe(viewLifecycleOwner
-        ) { value ->
-            if (value == 0) {
-                mine_user_tv_center_notification_count.gone()
-            } else {
-                mine_user_tv_center_notification_count.visible()
-                if (value > 99) {
-                    mine_user_tv_center_notification_count.text = "99+"
-                } else {
-                    mine_user_tv_center_notification_count.text = value.toString()
-                }
-            }
-        }
     }
 }

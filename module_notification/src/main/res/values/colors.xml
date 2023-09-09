@@ -5,6 +5,7 @@
 
     <color name="notification_base_main_bg">#F2F3F8</color>
     <color name="notification_base_tv">#112C54</color>
+    <color name="notification_fragment_bg_white_black">#F6F7FB</color>
 
     <color name="notification_setting_item_bg">#FFFFFF</color>
     <!--    消息通知文字主体颜色-->
@@ -29,7 +30,7 @@
     <color name="notification_itinerary_tabLayout_text_selected">#15C6E7</color>
     <color name="notification_itinerary_tabLayout_text_unselect">#A1ABBA</color>
     <color name="notification_itinerary_tabLayout_top_start_color">#FCFCFE</color>
-    <color name="notification_itinerary_tabLayout_bottom_end_color">#F5F7FA</color>
+    <color name="notification_itinerary_tabLayout_bottom_end_color">#FEFEFE</color>
     <color name="notification_itinerary_auto_clear_hint_text">#ABB5C4</color>
     <color name="notification_itinerary_item_title_text">#15315B</color>
     <color name="notification_itinerary_item_canceled_title_text">#8F9CAF</color>
@@ -37,7 +38,10 @@
     <color name="notification_itinerary_item_canceled_content_text">#ABB5C4</color>
     <color name="notification_itinerary_item_generate_time_text">#ABB5C4</color>
     <color name="notification_itinerary_item_canceled_generate_time_text">#B3ABB5C4</color>
-    <color name="notification_itinerary_item_start_status_hint_text">#ABA7FF</color>
+    <color name="notification_itinerary_item_not_start_hint_text">#ABA7FF</color>
+    <color name="notification_itinerary_item_is_doing_hint_text">#7E79EE</color>
+    <color name="notification_itinerary_item_has_overed_hint_text">#C8CDCE</color>
+
     <color name="notification_itinerary_item_canceled_start_status_hint_text">#C3D4EE</color>
     <color name="notification_itinerary_item_cancel_reminder_text">#ABBCD8</color>
     <color name="notification_itinerary_item_canceled_hint_text">#ABBCD8</color>

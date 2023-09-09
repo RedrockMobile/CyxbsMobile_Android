@@ -6,6 +6,7 @@ import androidx.lifecycle.MutableLiveData
 import com.mredrock.cyxbs.common.utils.extensions.mapOrThrowApiException
 import com.mredrock.cyxbs.common.viewmodel.BaseViewModel
 import com.mredrock.cyxbs.lib.utils.extensions.setSchedulers
+import com.mredrock.cyxbs.lib.utils.extensions.toast
 import com.mredrock.cyxbs.lib.utils.extensions.unsafeSubscribeBy
 import com.mredrock.cyxbs.lib.utils.network.ApiGenerator
 import com.mredrock.cyxbs.lib.utils.network.mapOrInterceptException
@@ -217,7 +218,6 @@ class NotificationViewModel : BaseViewModel() {
                         .mapOrInterceptException{  }
                         .unsafeSubscribeBy(
                             onError = {
-                                Log.d("Hsj-getAllItinerary", "getAllItineraryMsg 2 failed of ${it.message}")
                                 _itineraryMsgIsSuccessfulState.postValue(false)
                                 getMsgSuccessful.postValue(false)
                             },
@@ -233,19 +233,19 @@ class NotificationViewModel : BaseViewModel() {
         */
         val tempList = ItineraryAllMsg(emptyList(), emptyList())
         retrofit.getReceivedItinerary()
+            .mapOrInterceptException {
+                "获取行程消息失败".toast()
+                getMsgSuccessful.postValue(false)
+            }
             .flatMap {
-                if (it.isSuccess()) {
-                    tempList.receivedItineraryList = it.data
-                } else {
-                    it.throwApiExceptionIfFail()
-                }
+                tempList.receivedItineraryList = it
                 retrofit.getSentItinerary()
             }
             .subscribeOn(Schedulers.io())
             .subscribeOn(AndroidSchedulers.mainThread())
             .mapOrInterceptException {
-//                LogUtils.d("H57-err","getAllItineraryMsg fair")
-//                getMsgSuccessful.postValue(false)
+                "获取行程消息失败".toast()
+                getMsgSuccessful.postValue(false)
                 ApiException {
                 // 处理全部 ApiException 错误
                 }.catchOther {

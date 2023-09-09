@@ -3,11 +3,13 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/notification_itinerary_page_root"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:background="@color/notification_fragment_bg_white_black" >
 
     <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/notification_itinerary_tl_bg"
         android:layout_width="match_parent"
-        android:layout_height="42dp"
+        android:layout_height="38dp"
         android:background="@drawable/notification_shape_itinerary_cl_container"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
@@ -16,12 +18,11 @@
         android:id="@+id/notification_itinerary_tl_itiner_type"
         android:layout_width="match_parent"
         android:layout_height="22dp"
-        android:layout_marginTop="8dp"
-        android:layout_marginBottom="12dp"
+        android:layout_marginBottom="10dp"
         android:backgroundTint="@android:color/transparent"
         android:theme="@style/Theme.MaterialComponents"
         app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toBottomOf="@+id/notification_itinerary_tl_bg"
         app:tabGravity="fill"
         app:tabIndicator="@drawable/notification_ic_tab_indicator"
         app:tabIndicatorColor="@android:color/transparent"
@@ -36,9 +37,17 @@
         android:id="@+id/notification_itinerary_vp2"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_marginTop="42dp"
+        android:layout_marginTop="38dp"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/notification_itinerary_tl_itiner_type" />
+
+    <View
+        android:id="@+id/notification_itinerary_tl_shadow_source"
+        android:layout_width="match_parent"
+        android:layout_height="38dp"
+        android:background="@android:color/transparent"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>
