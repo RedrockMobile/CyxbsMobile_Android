@@ -68,6 +68,7 @@ class FoodMainActivity : BaseActivity() {
     private val mImgNotification by R.id.food_main_img_notification.view<ImageView>()
 
     private val mBtnChange by R.id.food_main_btn_change.view<Button>()
+    private val mImgBack by R.id.food_main_img_return.view<ImageView>()
     private val mBtnDetermine by R.id.food_main_btn_determine.view<Button>()
     private val mTvMealNew by R.id.food_main_tv_meal_new.view<TextView>()
     private val mTvMealOld by R.id.food_main_tv_meal_old.view<TextView>()
@@ -79,6 +80,8 @@ class FoodMainActivity : BaseActivity() {
 
     //是否改变标签，如果标签改变了换一换需要重新请求数据
     private var changeLabel = true
+
+    var translation:ObjectAnimator? = null
 
     private val foodRegionRvAdapter = FoodMainRvAdapter() { state, position ->
         changeBtnState(state, position, mRvRegion)
@@ -128,7 +131,6 @@ class FoodMainActivity : BaseActivity() {
                     this,
                     data = ChooseDialog.Data(
                         width = 255,
-                        height = 183,
                         content = "如果还没找到你喜欢的美食，可以尝试多选一些关键词哦！",
                         type = BaseDialog.DialogType.ONE_BUT,
                         buttonSize = Size(130, 37)
@@ -154,7 +156,6 @@ class FoodMainActivity : BaseActivity() {
                     this,
                     data = ChooseDialog.Data(
                         width = 255,
-                        height = 183,
                         content = "请选择标签",
                         type = BaseDialog.DialogType.ONE_BUT,
                         buttonSize = Size(130, 37)
@@ -168,6 +169,11 @@ class FoodMainActivity : BaseActivity() {
         viewModel.foodPraiseBean.observe {
             dialog?.findViewById<TextView>(R.id.food_dialog_tv_praise_num)?.text =
                 it.praiseNum.toString()
+            //dataFoodResult是本地数据，需要对本地数据进行处理
+            viewModel.dataFoodResult[viewModel.foodNum].run {
+                this.praiseNum = it.praiseNum
+                this.praiseIs= it.praiseIs
+            }
             if (it.praiseIs) {
                 dialog?.findViewById<Button>(R.id.food_dialog_detail_btn_positive)
                     ?.apply {
@@ -189,6 +195,9 @@ class FoodMainActivity : BaseActivity() {
     }
 
     private fun initView() {
+        mImgBack.setOnClickListener {
+            finish()
+        }
         mBtnDetermine.setOnSingleClickListener {
             //此时是未第一次点击的时候，查看详情还未显示出来
             viewModel.postFoodResult()
@@ -217,7 +226,7 @@ class FoodMainActivity : BaseActivity() {
                 dialog?.show()
             }
         }
-        mBtnChange.setOnSingleClickListener {
+        mBtnChange.setOnClickListener {
             viewModel.apply {
                 if (!changeLabel) {
                     if (foodNum < dataFoodResult.size - 1) {
@@ -229,7 +238,6 @@ class FoodMainActivity : BaseActivity() {
                             this@FoodMainActivity,
                             data = ChooseDialog.Data(
                                 width = 255,
-                                height = 183,
                                 content = "如果还没找到你喜欢的美食，可以尝试多选一些关键词哦！",
                                 type = BaseDialog.DialogType.ONE_BUT,
                                 buttonSize = Size(130, 37)
@@ -249,7 +257,6 @@ class FoodMainActivity : BaseActivity() {
                 this,
                 data = ChooseDialog.Data(
                     width = 255,
-                    height = 327,
                     content = "美食咨询处的设置，一" +
                             "是为了帮助各位选择综合症的邮子们更好的选择自己的需要的美食，对选择综合症说拜拜！二是为" +
                             "了各位初来学校的新生学子更好的体验学校各处的美食！按照要求通过标签进行选择，" +
@@ -313,6 +320,9 @@ class FoodMainActivity : BaseActivity() {
     }
 
     private fun changeResult() {
+        if (translation?.isRunning == true){
+            cancelAnimator()
+        }
         viewTranslation(1000)
     }
 
@@ -340,7 +350,12 @@ class FoodMainActivity : BaseActivity() {
             t2.duration = 0
             t2.start()
         }
+        this.translation = translation
         translation.start()
+    }
+
+    private fun cancelAnimator(){
+        translation?.cancel()
     }
 
 }
