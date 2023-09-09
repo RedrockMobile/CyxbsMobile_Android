@@ -27,9 +27,9 @@
         <RelativeLayout
             android:layout_width="30dp"
             android:layout_height="28dp"
-            android:gravity="center"
             android:layout_marginStart="20dp"
             android:layout_marginTop="8dp"
+            android:gravity="center"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent">
 
@@ -71,7 +71,8 @@
             android:letterSpacing="0.03"
             android:lineHeight="25.2dp"
             android:maxEms="7"
-            android:text="你好,你好你好你好"
+            android:maxLines="1"
+            android:text="12asdasdas"
             android:textColor="#112C54"
             android:textSize="18sp"
             app:layout_constraintBottom_toBottomOf="parent"
@@ -81,11 +82,11 @@
             android:id="@+id/ufield_actibity_rank_ll_item"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginEnd="36dp"
+            android:layout_marginStart="185dp"
+            android:layout_marginEnd="0dp"
             android:gravity="center"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            android:layout_marginStart="185dp"
             app:layout_constraintStart_toEndOf="@+id/ufield_activity_rank_cv_head"
             app:layout_constraintTop_toTopOf="parent">
 

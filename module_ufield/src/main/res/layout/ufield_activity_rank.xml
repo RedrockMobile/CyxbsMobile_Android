@@ -44,25 +44,16 @@
             tools:ignore="ContentDescription" />
     </RelativeLayout>
 
-    <androidx.constraintlayout.widget.ConstraintLayout
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/ufield_activity_rv"
         android:layout_width="match_parent"
-        android:layout_height="700dp"
+        android:layout_height="match_parent"
         android:layout_marginTop="198dp"
         android:background="@drawable/ufield_shape_activity_rank_bottom"
+        android:paddingTop="22dp"
+        android:paddingBottom="40dp"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="@+id/ufield_activity_rl_bk" />
-
-    <androidx.appcompat.widget.LinearLayoutCompat
-        android:layout_width="match_parent"
-        android:layout_height="635dp"
-        android:layout_marginTop="220dp"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" >
-        <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/ufield_activity_rv"
-            android:layout_width="match_parent"
-            android:overScrollMode="never"
-            tools:listitem="@layout/ufield_activity_rank_item"
-            android:layout_height="match_parent"/>
-    </androidx.appcompat.widget.LinearLayoutCompat>
+        app:layout_constraintTop_toTopOf="@+id/ufield_activity_rl_bk"
+        tools:listitem="@layout/ufield_activity_rank_item" />
 </androidx.constraintlayout.widget.ConstraintLayout>
