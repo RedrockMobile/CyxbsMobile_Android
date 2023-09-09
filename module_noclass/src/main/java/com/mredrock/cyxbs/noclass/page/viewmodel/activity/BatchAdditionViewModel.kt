@@ -11,7 +11,7 @@ import com.mredrock.cyxbs.noclass.page.repository.NoClassRepository
  * @author: Black-skyline
  * @email: 2031649401@qq.com
  * @date: 2023/8/19
- * @Description:
+ * @Description: 持有批量添加页面部分UI数据的viewModel
  *
  */
 class BatchAdditionViewModel : BaseViewModel() {
@@ -96,6 +96,7 @@ class BatchAdditionViewModel : BaseViewModel() {
      * @param listData
      */
     fun setPreparedStudents(listData: List<Pair<String, String>>) {
+        // 由于这里无法保证是在主线程提交的数据，故使用postValue
         _batchAdditionStudents.postValue(listData)
     }
 

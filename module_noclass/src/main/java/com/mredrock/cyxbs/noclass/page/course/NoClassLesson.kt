@@ -101,7 +101,7 @@ class NoClassLesson(
               else -> "${beginLesson}-${beginLesson + duration - 1}"
             }
 
-            val textTime = "时间：${month} $timeText ${beginTime}-${endTime}"
+            val textTime = "${month} $timeText ${beginTime}-${endTime}"
             val dateJson = DateJson(specialBeginLesson,data.weekNum,duration,mWeek)
             Log.d("lx", "specialBeginLesson: = $specialBeginLesson ")
             Log.d("lx", "data.weekNum: = ${data.weekNum} ")

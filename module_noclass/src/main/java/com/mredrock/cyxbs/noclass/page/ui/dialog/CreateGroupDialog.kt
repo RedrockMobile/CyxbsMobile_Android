@@ -132,13 +132,11 @@ class CreateGroupDialog(
                 when (s?.length) {
                     0 -> {
                         etName.gravity = Gravity.NO_GRAVITY
-                        tvName.visibility = View.VISIBLE
                         mTvHint.text = "名称不能为空"
                         mTvHint.visibility = View.VISIBLE
                     }
                     10 -> {
                         etName.gravity = Gravity.CENTER
-                        tvName.visibility = View.GONE
                         mTvHint.postDelayed(3000) {
                             mTvHint.visibility = View.INVISIBLE
                         }

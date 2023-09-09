@@ -52,7 +52,6 @@
             android:layout_height="wrap_content"
             android:text="试试左滑删除列表"
             android:textSize="13sp"
-            android:textStyle="bold"
             android:paddingStart="28dp"
             android:paddingTop="9dp"
             android:paddingEnd="28dp"

@@ -62,9 +62,11 @@ class NoClassGatherDialog (
 
   private fun initObserve() {
     // 记录上一次的list的size，方便比较
-    var beforeSize = mNumNameIsSpare.size
+    var beforeSize = mNumNameIsSpare.filter { !it.value }.size
     mParentViewModel.busyNameList.observe(this){
-      // 如果不等，就说明页面已经满了，回调
+      Log.d("lx", "忙碌的人员为: ${it}")
+      Log.d("lx", "beforeSize: ${beforeSize}")
+      // 如果不等，就说明页面已经满了
       if (it.isNotEmpty() && it.size != beforeSize){
         beforeSize = it.size
         mAdapter.add(NoClassBusyPageFragment::class.java)
@@ -85,7 +87,7 @@ class NoClassGatherDialog (
   
   private fun initView(dialog: Dialog){
     dialog.findViewById<TextView>(R.id.noclass_tv_gathering_total).apply {
-      val describe = "人数：共计 ${mNumNameIsSpare.size} 人"
+      val describe = "共计 ${mNumNameIsSpare.size} 人"
       text = describe
     }
     dialog.findViewById<TextView>(R.id.noclass_tv_gathering_busy_total).apply {

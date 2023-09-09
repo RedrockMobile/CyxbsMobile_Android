@@ -75,13 +75,12 @@
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/noclassLinearlayout2" />
 
-            <CheckBox
+            <ImageView
                 android:id="@+id/noclass_cb_remind_next"
-                android:layout_width="25dp"
-                android:layout_height="25dp"
-                android:layout_marginBottom="18dp"
-                android:scaleX="0.6"
-                android:scaleY="0.6"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="25dp"
+                android:src="@drawable/noclass_ic_check_box_unchoose"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintHorizontal_bias="0.356"
@@ -92,7 +91,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginStart="3dp"
                 android:text="下次不再提醒"
-                android:layout_marginBottom="24.15dp"
+                android:layout_marginBottom="24dp"
                 android:textColor="@color/noclass_search_student_color"
                 android:textSize="10sp"
                 app:layout_constraintBottom_toBottomOf="parent"

@@ -39,7 +39,7 @@ import kotlinx.coroutines.launch
  * @author: Black-skyline
  * @email: 2031649401@qq.com
  * @date: 2023/8/18
- * @Description:
+ * @Description: 批量添加页面的Activity
  *
  */
 class BatchAdditionActivity : BaseActivity() {
@@ -187,7 +187,8 @@ class BatchAdditionActivity : BaseActivity() {
                         }
                     }
                 }
-                else ->{ // 检测到内容不是 已定义的字符序列
+
+                else -> { // 检测到内容不是 已定义的字符序列
                     standardFlag = false
                 }
             }
@@ -243,7 +244,7 @@ class BatchAdditionActivity : BaseActivity() {
             // 最新的normal数据暂存成功
             isSuccessSaveLatestNormal = true
             if (it.repeat.isNullOrEmpty()) { // 没有重名信息数组
-                if(tempPreparedList.isNotEmpty())
+                if (tempPreparedList.isNotEmpty())
                     freeCourseViewModel.getLessonsFromNum2Name(tempStuNumList, tempPreparedList)
                 else
                     "没有查到任何结果o(╥﹏╥)o".toast() // 最新的normal数据为空则不进行后续步骤
@@ -254,7 +255,7 @@ class BatchAdditionActivity : BaseActivity() {
         batchAdditionViewModel.getSelectedSameNameStudents.collectLaunch {
             if (it.isEmpty()) {  // 有重名学生，但未进行重名学生的选择
                 waitLatestNormalSave {
-                    if(tempPreparedList.isNotEmpty())
+                    if (tempPreparedList.isNotEmpty())
                         freeCourseViewModel.getLessonsFromNum2Name(tempStuNumList, tempPreparedList)
                     else
                         "没有查到任何结果o(╥﹏╥)o".toast()
@@ -280,7 +281,7 @@ class BatchAdditionActivity : BaseActivity() {
 //            it.forEach { pair ->
 //                tempList.add(pair.first)
 //            }
-            if(tempPreparedList.isNotEmpty())
+            if (tempPreparedList.isNotEmpty())
                 freeCourseViewModel.getLessonsFromNum2Name(tempStuNumList, it)
             else
                 "没有查到任何结果o(╥﹏╥)o".toast()
@@ -390,7 +391,7 @@ class BatchAdditionActivity : BaseActivity() {
             return
         }
         lifecycleScope.launch {
-            while (true){
+            while (true) {
                 if (isSuccessSaveLatestNormal) {
                     daAfterFinished.invoke()
                     break

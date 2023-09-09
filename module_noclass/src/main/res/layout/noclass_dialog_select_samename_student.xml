@@ -24,14 +24,12 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="16dp"
             android:layout_marginEnd="16dp"
+            android:includeFontPadding="false"
             android:text="取消"
             android:textColor="@color/noclass_same_name_select_cancel_text"
-            app:layout_constraintBottom_toBottomOf="parent"
+            android:textSize="12sp"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="1"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintVertical_bias="0" />
+            app:layout_constraintTop_toTopOf="parent" />
 
         <TextView
             android:id="@+id/noclass_batch_tv_select_student_dialog_title"
@@ -51,7 +49,7 @@
             android:layout_width="match_parent"
             android:layout_height="240dp"
             android:layout_marginStart="16dp"
-            android:layout_marginTop="12dp"
+            android:layout_marginTop="24dp"
             android:paddingStart="0dp"
             android:paddingEnd="3dp"
             android:scrollbars="vertical"

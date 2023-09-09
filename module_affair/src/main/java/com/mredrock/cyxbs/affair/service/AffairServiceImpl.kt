@@ -5,6 +5,7 @@ import com.alibaba.android.arouter.facade.annotation.Route
 import com.mredrock.cyxbs.affair.model.AffairRepository
 import com.mredrock.cyxbs.affair.room.AffairEntity
 import com.mredrock.cyxbs.affair.ui.activity.AffairActivity
+import com.mredrock.cyxbs.affair.ui.activity.NoClassAffairActivity
 import com.mredrock.cyxbs.api.affair.AFFAIR_SERVICE
 import com.mredrock.cyxbs.api.affair.IAffairService
 import com.mredrock.cyxbs.api.affair.NoClassBean
@@ -71,7 +72,7 @@ class AffairServiceImpl : IAffairService {
   }
 
   override fun startActivityForNoClass(noClassBean: NoClassBean) {
-    AffairActivity.startForNoClass(noClassBean)
+    NoClassAffairActivity.startForNoClass(noClassBean)
   }
 
   override fun init(context: Context) {

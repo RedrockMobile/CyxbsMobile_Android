@@ -7,6 +7,7 @@ import android.graphics.drawable.ColorDrawable
 import android.os.Bundle
 import android.widget.Button
 import android.widget.CheckBox
+import android.widget.ImageView
 import com.mredrock.cyxbs.lib.utils.extensions.setOnSingleClickListener
 import com.mredrock.cyxbs.noclass.R
 
@@ -42,18 +43,30 @@ class IsCreateSolidDialog(context: Context) : AlertDialog(context) {
   }
   
   private fun initView(){
-    
-    val checkBox = findViewById<CheckBox>(R.id.noclass_cb_remind_next)
-    
+    // checkbox是否被选中
+    var isChecked = false
+
+    findViewById<ImageView>(R.id.noclass_cb_remind_next).apply {
+      setOnClickListener {
+        if (isChecked){
+          isChecked = false
+          setImageResource(R.drawable.noclass_ic_check_box_unchoose)
+        }else{
+          isChecked = true
+          setImageResource(R.drawable.noclass_ic_check_box_choose)
+        }
+      }
+    }
+
     findViewById<Button>(R.id.btn_noclass_dialog_search_done_back).apply {
       setOnSingleClickListener {
-        mOnReturnClick?.invoke(this@IsCreateSolidDialog,checkBox.isChecked)
+        mOnReturnClick?.invoke(this@IsCreateSolidDialog,isChecked)
       }
     }
     
     findViewById<Button>(R.id.btn_noclass_dialog_search_done_continue).apply {
       setOnSingleClickListener {
-        mOnContinue?.invoke(this@IsCreateSolidDialog,checkBox.isChecked)
+        mOnContinue?.invoke(this@IsCreateSolidDialog,isChecked)
       }
     }
     
