@@ -19,7 +19,7 @@
         <androidx.constraintlayout.widget.ConstraintLayout
             android:id="@+id/mine_user_cl_info"
             android:layout_width="match_parent"
-            android:layout_height="208dp"
+            android:layout_height="204dp"
             android:layout_gravity="center_horizontal"
             android:layout_marginStart="25dp"
             android:layout_marginTop="40dp"
@@ -73,16 +73,17 @@
                 android:id="@+id/mine_user_tv_dynamic_number"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginBottom="40dp"
+                android:layout_marginBottom="1dp"
                 android:fontFamily="@font/impact_min"
                 android:gravity="center"
                 android:maxLines="1"
                 android:text="@string/mine_number_default"
                 android:textColor="@color/mine_text_count"
                 android:textSize="25sp"
-                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintBottom_toTopOf="@+id/mine_user_tv_dynamic"
                 app:layout_constraintEnd_toEndOf="@+id/mine_user_tv_dynamic"
-                app:layout_constraintStart_toStartOf="@+id/mine_user_tv_dynamic" />
+                app:layout_constraintStart_toStartOf="@+id/mine_user_tv_dynamic"
+                />
 
             <TextView
                 android:id="@+id/mine_user_tv_comment_number"
@@ -97,7 +98,8 @@
                 android:textSize="25sp"
                 app:layout_constraintBottom_toTopOf="@+id/mine_user_tv_comment"
                 app:layout_constraintEnd_toEndOf="@+id/mine_user_tv_comment"
-                app:layout_constraintStart_toStartOf="@+id/mine_user_tv_comment" />
+                app:layout_constraintStart_toStartOf="@+id/mine_user_tv_comment"
+                app:layout_constraintTop_toTopOf="@+id/mine_user_tv_dynamic_number" />
 
             <TextView
                 android:id="@+id/mine_user_tv_praise_number"
@@ -112,17 +114,18 @@
                 android:textSize="25sp"
                 app:layout_constraintBottom_toTopOf="@+id/mine_user_tv_praise"
                 app:layout_constraintEnd_toEndOf="@+id/mine_user_tv_praise"
-                app:layout_constraintStart_toStartOf="@+id/mine_user_tv_praise" />
+                app:layout_constraintStart_toStartOf="@+id/mine_user_tv_praise"
+                app:layout_constraintTop_toTopOf="@+id/mine_user_tv_dynamic_number" />
 
             <TextView
                 android:id="@+id/mine_user_tv_dynamic"
                 android:layout_width="wrap_content"
-                android:layout_height="17dp"
-                android:layout_marginStart="28dp"
-                android:layout_marginBottom="22dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="34dp"
+                android:layout_marginBottom="18dp"
                 android:text="动态"
                 android:textColor="@color/mine_text_count_bottom"
-                android:textSize="14dp"
+                android:textSize="14sp"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 tools:ignore="SpUsage" />
@@ -130,12 +133,12 @@
             <TextView
                 android:id="@+id/mine_user_tv_comment"
                 android:layout_width="wrap_content"
-                android:layout_height="17dp"
+                android:layout_height="wrap_content"
                 android:layout_marginStart="34dp"
-                android:layout_marginBottom="22dp"
+                android:layout_marginBottom="18dp"
                 android:text="评论"
                 android:textColor="@color/mine_text_count_bottom"
-                android:textSize="14dp"
+                android:textSize="14sp"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintStart_toEndOf="@+id/mine_user_tv_dynamic"
                 tools:ignore="SpUsage" />
@@ -143,12 +146,12 @@
             <TextView
                 android:id="@+id/mine_user_tv_praise"
                 android:layout_width="wrap_content"
-                android:layout_height="17dp"
+                android:layout_height="wrap_content"
                 android:layout_marginStart="34dp"
-                android:layout_marginBottom="22dp"
+                android:layout_marginBottom="18dp"
                 android:text="获赞"
                 android:textColor="@color/mine_text_count_bottom"
-                android:textSize="14dp"
+                android:textSize="14sp"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintStart_toEndOf="@+id/mine_user_tv_comment"
                 tools:ignore="SpUsage" />
@@ -286,8 +289,8 @@
                 android:id="@+id/mine_user_tv_center_activity"
                 android:layout_width="wrap_content"
                 android:layout_height="20dp"
-                android:text="活动中心"
                 android:layout_marginTop="8dp"
+                android:text="活动中心"
 
                 android:textColor="@color/mine_text_setting"
                 android:textSize="14sp"
@@ -310,17 +313,17 @@
                 app:layout_constraintTop_toTopOf="parent" />
 
             <TextView
-                android:visibility="gone"
                 android:id="@+id/mine_user_tv_center_notification_count"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="16dp"
-                android:textSize="10sp"
-                android:text="88"
-                android:lineHeight="11.72dp"
-                android:gravity="center"
-                android:textColor="#FFFFFF"
                 android:background="@drawable/mine_ic_notification_count"
+                android:gravity="center"
+                android:lineHeight="11.72dp"
+                android:text="88"
+                android:textColor="#FFFFFF"
+                android:textSize="10sp"
+                android:visibility="gone"
                 app:layout_constraintStart_toEndOf="@+id/mine_user_iv_center_notification"
                 app:layout_constraintTop_toTopOf="parent" />
 
