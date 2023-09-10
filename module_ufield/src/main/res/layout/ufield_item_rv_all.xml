@@ -69,6 +69,7 @@
                     android:id="@+id/uField_activity_isGoing"
                     android:layout_width="40dp"
                     android:layout_height="16dp"
+                    android:layout_marginStart="2dp"
                     android:layout_gravity="center_vertical"
                    />
             </LinearLayout>
