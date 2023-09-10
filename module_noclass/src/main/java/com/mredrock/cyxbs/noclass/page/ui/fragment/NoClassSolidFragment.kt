@@ -168,8 +168,8 @@ class NoClassSolidFragment : BaseFragment(R.layout.noclass_fragment_solid) {
     private fun initObserver() {
         var searchStudentDialog: SearchStudentDialog?
         mViewModel.searchStudent.observe(viewLifecycleOwner) {
-            if (it != null){
-                if (it.isSuccess() && it.data.isNotEmpty()){
+            if (it != null && it.isSuccess()){
+                if (it.data.isNotEmpty()){
                     searchStudentDialog = SearchStudentDialog(it.data) {stu ->
                         //点击加号之后的逻辑，需要弹窗选择分组加入
                         AddToGroupDialog(mAdapter.currentList,stu).show(childFragmentManager,"AddToGroupDialog")
@@ -223,10 +223,11 @@ class NoClassSolidFragment : BaseFragment(R.layout.noclass_fragment_solid) {
      * 初始化下面试试左滑删除列表，设置两秒后消失
      */
     private fun initHintText(content : String? = null) {
+        mHintText.alpha = 1f
+        mHintText.visible()
+        content?.let { mHintText.text = it }
         mHandler = Handler(Looper.getMainLooper())
         mRunnable = Runnable {
-            mHintText.visible()
-            content?.let { mHintText.text = it }
             mHintText.alphaAnim(mHintText.alpha,0f,200).start()
             mHintText.gone()
         }

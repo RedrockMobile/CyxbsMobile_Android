@@ -3,8 +3,9 @@ package com.mredrock.cyxbs.noclass.page.ui.activity
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
+import android.os.Handler
+import android.os.Looper
 import android.text.TextUtils
-import android.util.Log
 import android.view.WindowManager
 import android.view.inputmethod.EditorInfo
 import android.view.inputmethod.InputMethodManager
@@ -19,6 +20,8 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.mredrock.cyxbs.lib.base.ui.BaseActivity
+import com.mredrock.cyxbs.lib.utils.extensions.gone
+import com.mredrock.cyxbs.lib.utils.extensions.visible
 import com.mredrock.cyxbs.noclass.R
 import com.mredrock.cyxbs.noclass.bean.NoClassSpareTime
 import com.mredrock.cyxbs.noclass.bean.NoClassGroup
@@ -29,6 +32,7 @@ import com.mredrock.cyxbs.noclass.page.ui.dialog.SearchNoExistDialog
 import com.mredrock.cyxbs.noclass.page.ui.fragment.NoClassCourseVpFragment
 import com.mredrock.cyxbs.noclass.page.viewmodel.other.CourseViewModel
 import com.mredrock.cyxbs.noclass.page.viewmodel.activity.GroupDetailViewModel
+import com.mredrock.cyxbs.noclass.util.alphaAnim
 
 /**
  *
@@ -101,6 +105,17 @@ class GroupDetailActivity : BaseActivity(){
     override val isCancelStatusBar: Boolean
         get() = true
 
+    /**
+     * 下面得提示文字，试试左滑删除列表
+     */
+    private val mHintText : TextView by R.id.noclass_group_detail_tv_hint.view()
+
+    /**
+     * 设置两秒后消失得runnable和handler，注意及时释放
+     */
+    private var mRunnable : Runnable? = null
+    private var mHandler : Handler? = null
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.noclass_activity_group_detail)
@@ -163,22 +178,24 @@ class GroupDetailActivity : BaseActivity(){
         //观察搜索结果出来就弹窗
         var searchAllDialog: SearchAllDialog?
         mViewModel.searchAll.observe(this){
-            Log.d("lx", "searchResult: =${it}")
-            if (it?.types != null) {
-                searchAllDialog = SearchAllDialog(
-                    searchResult = it,
-                    groupId = mCurrentNoclassGroup.id
-                ).apply {
-                    setOnClickGroupDetailAdd { students ->
-                        val stuList = mAdapter.currentList.toMutableSet()
-                        stuList.addAll(students)
-                        mAdapter.submitList(stuList.toList())
-                        Log.d("lx", "添加成功 = ${students}} ")
+            if (it != null && it.isSuccess()){
+                if (it.data.types != null) {
+                    searchAllDialog = SearchAllDialog(
+                        searchResult = it.data,
+                        groupId = mCurrentNoclassGroup.id
+                    ).apply {
+                        setOnClickGroupDetailAdd { students ->
+                            val stuList = mAdapter.currentList.toMutableSet()
+                            stuList.addAll(students)
+                            mAdapter.submitList(stuList.toList())
+                        }
                     }
+                    searchAllDialog!!.show(supportFragmentManager, "SearchAllDialog")
+                } else {
+                    SearchNoExistDialog(this).show()
                 }
-                searchAllDialog!!.show(supportFragmentManager, "SearchAllDialog")
-            } else {
-                SearchNoExistDialog(this).show()
+            }else{
+                initHintText("网络异常请检查网络")
             }
         }
         // 监听删除是否成功决定本地是否删除
@@ -200,6 +217,21 @@ class GroupDetailActivity : BaseActivity(){
         mCourseViewModel.noclassData.observe(this){
             mCourseBehavior.state = BottomSheetBehavior.STATE_EXPANDED
         }
+    }
+
+    /**
+     * 初始化下面试试左滑删除列表，设置两秒后消失
+     */
+    private fun initHintText(content : String? = null) {
+        mHintText.alpha = 1f
+        mHintText.visible()
+        content?.let { mHintText.text = it }
+        mHandler = Handler(Looper.getMainLooper())
+        mRunnable = Runnable {
+            mHintText.alphaAnim(mHintText.alpha,0f,200).start()
+            mHintText.gone()
+        }
+        mHandler!!.postDelayed(mRunnable!!,2000)
     }
     
     /**

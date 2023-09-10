@@ -8,7 +8,7 @@ data class NoClassTemporarySearch(
     val `class`: Cls,
     val group: NoClassGroup,
     val students: List<Student>,
-    val types: List<String>
+    val types: List<String>?
 )
 
 const val STUDENT_TYPE = "学生"

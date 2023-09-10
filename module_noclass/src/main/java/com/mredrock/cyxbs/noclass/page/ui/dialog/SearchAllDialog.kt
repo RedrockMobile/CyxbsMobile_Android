@@ -91,7 +91,7 @@ class SearchAllDialog(
                         Log.d("lx", "key = $key ")
                         onClickGroupDetailAdd?.invoke(key.toList())
                         // 接下来判断当前dialog是否取消
-                        if (searchResult.types.size == 2) {
+                        if (searchResult.types!!.size == 2) {
                             dismiss()
                             break
                         }
@@ -131,7 +131,7 @@ class SearchAllDialog(
             adapter = mAdapter.apply {
                 val data = searchResult
                 // 这也就是判断是否有学生和分组重名
-                setDisPlay(data.types.size >= 2)
+                setDisPlay(data.types!!.size >= 2)
                 val searchResultList = ArrayList<NoClassItem>()
                 // 是否只有分组
                 var isOnlyGroup = true

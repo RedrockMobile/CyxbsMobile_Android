@@ -67,13 +67,14 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/noclassTextview2" />
 
-        <SeekBar
+        <com.mredrock.cyxbs.noclass.widget.SeekBarView
             android:id="@+id/noclass_add_to_group_seekbar"
-            android:layout_width="62dp"
+            android:layout_width="50dp"
             android:layout_height="3dp"
-            android:layout_marginBottom="20dp"
-            android:progressDrawable="@drawable/noclass_shape_seek_bar_progress"
-            android:thumb="@drawable/noclass_shape_seek_bar_thumb"
+            android:layout_marginBottom="15dp"
+            app:progressMultiple="0.65"
+            app:progressColor="@color/noclass_seek_bar_thumb"
+            app:underColor="@color/noclass_seek_bar_progress"
             app:layout_constraintBottom_toTopOf="@+id/noclass_add_to_group_done"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"

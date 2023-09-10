@@ -16,7 +16,7 @@
             app:layout_constraintVertical_bias="0"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="20dp"
+            android:layout_marginTop="37dp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
@@ -71,13 +71,31 @@
             android:layout_marginBottom="28dp"
             android:layout_width="0dp"
             android:layout_height="0dp"
-            android:layout_marginTop="11dp"
+            android:layout_marginTop="10dp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="1.0"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/et_noclass_group_add_classmate"
             app:layout_constraintVertical_bias="1.0"
             app:layout_constraintBottom_toTopOf="@+id/btn_noclass_group_detail_query" />
+
+        <TextView
+            android:id="@+id/noclass_group_detail_tv_hint"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@drawable/noclass_shape_toast"
+            android:paddingStart="28dp"
+            android:paddingTop="9dp"
+            android:paddingEnd="28dp"
+            android:paddingBottom="9dp"
+            android:text="试试左滑删除列表"
+            android:textColor="@color/config_white_black"
+            android:textSize="13sp"
+            android:textStyle="bold"
+            android:layout_marginBottom="60dp"
+            app:layout_constraintBottom_toTopOf="@+id/btn_noclass_group_detail_query"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent" />
 
         <Button
             android:id="@+id/btn_noclass_group_detail_query"

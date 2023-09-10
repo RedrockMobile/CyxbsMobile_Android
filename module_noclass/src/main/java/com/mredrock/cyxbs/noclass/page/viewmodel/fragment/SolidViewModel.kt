@@ -1,14 +1,11 @@
 package com.mredrock.cyxbs.noclass.page.viewmodel.fragment
 
-import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import com.mredrock.cyxbs.lib.base.ui.BaseViewModel
-import com.mredrock.cyxbs.lib.utils.network.ApiStatus
 import com.mredrock.cyxbs.lib.utils.network.ApiWrapper
 import com.mredrock.cyxbs.noclass.bean.Student
 import com.mredrock.cyxbs.noclass.page.repository.NoClassRepository
-import io.reactivex.rxjava3.core.Flowable
 
 class SolidViewModel : BaseViewModel() {
 
@@ -36,7 +33,7 @@ class SolidViewModel : BaseViewModel() {
     fun getSearchResult(content: String) {
         NoClassRepository.searchStudent(content)
             .doOnError {
-                Log.d("lx", "getSearchResultError:${it} ")
+                _searchStudent.postValue(ApiWrapper(listOf(),50000,"net error"))
             }
             .safeSubscribeBy {
                 _searchStudent.postValue(it)

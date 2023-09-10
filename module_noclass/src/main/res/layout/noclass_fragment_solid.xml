@@ -61,9 +61,9 @@
             android:textColor="@color/config_white_black"
             android:textSize="13sp"
             android:textStyle="bold"
-            android:layout_marginBottom="45dp"
             android:visibility="gone"
-            app:layout_constraintBottom_toBottomOf="@+id/noclass_solid_rv_show"
+            android:layout_marginBottom="60dp"
+            app:layout_constraintBottom_toTopOf="@+id/noclass_solid_btn_create"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent" />
 

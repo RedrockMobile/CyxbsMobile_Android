@@ -1,9 +1,10 @@
 package com.mredrock.cyxbs.noclass.page.viewmodel.fragment
 
-import android.util.Log
 import androidx.lifecycle.MutableLiveData
 import com.mredrock.cyxbs.lib.base.ui.BaseViewModel
 import com.mredrock.cyxbs.lib.utils.network.ApiWrapper
+import com.mredrock.cyxbs.noclass.bean.Cls
+import com.mredrock.cyxbs.noclass.bean.NoClassGroup
 import com.mredrock.cyxbs.noclass.bean.NoClassTemporarySearch
 import com.mredrock.cyxbs.noclass.page.repository.NoClassRepository
 
@@ -16,7 +17,9 @@ class TemporaryViewModel : BaseViewModel() {
     fun getSearchAllResult(content: String) {
         NoClassRepository.searchAll(content)
             .doOnError {
-                Log.d("lx", "getSearchAllResult: $it")
+                _searchAll.postValue(ApiWrapper(NoClassTemporarySearch(Cls("", listOf(),""),
+                    NoClassGroup("",false, listOf(),""), listOf(), listOf()
+                ),50000,"net error"))
             }
             .safeSubscribeBy {
                 _searchAll.postValue(it)
