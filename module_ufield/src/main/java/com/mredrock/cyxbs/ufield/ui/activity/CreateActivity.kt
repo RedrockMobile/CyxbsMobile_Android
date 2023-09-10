@@ -9,7 +9,6 @@ import android.content.pm.PackageManager
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import android.graphics.Canvas
-import android.graphics.Rect
 import android.net.Uri
 import android.os.Bundle
 import android.os.Environment
@@ -19,9 +18,7 @@ import android.text.Spannable
 import android.text.SpannableStringBuilder
 import android.text.TextWatcher
 import android.text.style.RelativeSizeSpan
-import android.util.Log
 import android.view.Gravity
-import android.view.MenuItem
 import android.view.MotionEvent
 import android.view.View
 import android.view.inputmethod.InputMethodManager
@@ -31,7 +28,6 @@ import android.widget.FrameLayout
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.activity.result.contract.ActivityResultContracts
-import androidx.cardview.widget.CardView
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.core.content.FileProvider
@@ -426,7 +422,6 @@ class CreateActivity : BaseActivity() {
                 .setLineSpacingMultiplier(2.5f)
                 .setOutSideCancelable(false)
                 .setSelectOptions(index)
-                .setOutSideCancelable(true)
                 .build()
 
             pvtype.setPicker(typeList)
@@ -471,6 +466,7 @@ class CreateActivity : BaseActivity() {
                         pvtime.dismiss()
                     }
                 }
+                .setOutSideCancelable(false)
                 .setDate(currentTime)
                 .setRangDate(currentTime, endTime)
                 .setContentTextSize(18)
@@ -516,7 +512,11 @@ class CreateActivity : BaseActivity() {
                         pvtime.returnData()
                         pvtime.dismiss()
                     }
+                    it.findViewById<TextView>(R.id.ufield_time_cancel).setOnClickListener {
+                        pvtime.dismiss()
+                    }
                 }
+                .setOutSideCancelable(false)
                 .setDate(currentTime)
                 .setRangDate(currentTime, endTime)
                 .setContentTextSize(18)
@@ -580,6 +580,11 @@ class CreateActivity : BaseActivity() {
         val address = etAddress.text.toString()
         val introduce = etIntroduce.text.toString()
         val phone = etPhone.text.toString()
+        if(selectedEndTimestamp<selectedStartTimestamp) {
+            btCreate.setBackgroundResource(R.drawable.ufield_shape_createbutton)
+            btCreate.setOnClickListener(null)
+            toast("结束时间要大于开始时间才能创建活动哟")
+        }
         if (name.isNotEmpty() && way.isNotEmpty() && address.isNotEmpty() && introduce.isNotEmpty() && sponsor.isNotEmpty() && phone.length == 11 && isChanged) {
             if (selectedEndTimestamp > selectedStartTimestamp) {
                 btCreate.apply {
@@ -620,10 +625,10 @@ class CreateActivity : BaseActivity() {
                         }
                     }
                 }
-            } else {
+            } else if(selectedEndTimestamp==selectedStartTimestamp) {
                 btCreate.setBackgroundResource(R.drawable.ufield_shape_createbutton)
                 btCreate.setOnClickListener(null)
-                toast("结束时间要大于开始时间")
+                toast("结束时间可不能等于开始时间")
             }
         } else {
             btCreate.setBackgroundResource(R.drawable.ufield_shape_createbutton)

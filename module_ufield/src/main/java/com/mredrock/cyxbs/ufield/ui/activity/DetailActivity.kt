@@ -40,7 +40,7 @@ class DetailActivity : BaseActivity() {
     private val ivCover by R.id.detail_iv_cover.view<ImageView>()
     private val tvStart by R.id.ufield_tv_starttime.view<TextView>()
     private val tvEnd by R.id.ufield_tv_endtime.view<TextView>()
-    private val ivMap by R.id.ufield_map.view<ImageView>()
+    private val layoutMap by R.id.ufield_layout_location.view<ConstraintLayout>()
     private val ivGoing by R.id.ufield_iv_going.view<ImageView>()
     private val tvGoing by R.id.ufield_tv_going.view<TextView>()
     private val ivAdd by R.id.ufield_iv_add.view<ImageView>()
@@ -115,7 +115,7 @@ class DetailActivity : BaseActivity() {
 
     @SuppressLint("SetTextI18n")
     private fun initView() {
-        ivMap.setOnClickListener {
+        layoutMap.setOnClickListener {
             ServiceManager.activity(DISCOVER_MAP)
         }
 
