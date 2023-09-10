@@ -3,18 +3,24 @@ package com.redrock.module_notification.viewmodel
 import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
-import com.mredrock.cyxbs.common.network.ApiGenerator
 import com.mredrock.cyxbs.common.utils.extensions.mapOrThrowApiException
 import com.mredrock.cyxbs.common.viewmodel.BaseViewModel
 import com.mredrock.cyxbs.lib.utils.extensions.setSchedulers
+import com.mredrock.cyxbs.lib.utils.extensions.toast
 import com.mredrock.cyxbs.lib.utils.extensions.unsafeSubscribeBy
+import com.mredrock.cyxbs.lib.utils.network.ApiGenerator
+import com.mredrock.cyxbs.lib.utils.network.mapOrInterceptException
 import com.mredrock.cyxbs.lib.utils.network.mapOrThrowApiException
+import com.mredrock.cyxbs.lib.utils.utils.LogUtils
 import com.redrock.module_notification.bean.ChangeReadStatusToBean
 import com.redrock.module_notification.bean.DeleteMsgToBean
+import com.redrock.module_notification.bean.ItineraryAllMsg
 import com.redrock.module_notification.bean.SystemMsgBean
 import com.redrock.module_notification.bean.UfieldMsgBean
 import com.redrock.module_notification.network.ApiService
 import com.redrock.module_notification.util.Constant.NOTIFICATION_LOG_TAG
+import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
+import io.reactivex.rxjava3.schedulers.Schedulers
 
 /**
  * Author by OkAndGreat
@@ -29,7 +35,20 @@ class NotificationViewModel : BaseViewModel() {
 
     // val activeMsg = MutableLiveData<List<ActiveMsgBean>>()
     val systemMsg = MutableLiveData<List<SystemMsgBean>>()
+
+    // 所有可收到的行程消息的列表
+    val itineraryMsg: LiveData<ItineraryAllMsg> get() = _itineraryMsg
+    private val _itineraryMsg = MutableLiveData<ItineraryAllMsg>()
+
+    // 是否获取成功获取过行程数据
+    var getItineraryIsSuccessful: Boolean  = false
+        private set
+
     val checkInStatus = MutableLiveData<Boolean>()
+
+    //通知tablayout行程通知小红点显示状态
+    val itineraryDotStatus: LiveData<Boolean> get() = _itineraryDotStatus
+    private val _itineraryDotStatus = MutableLiveData<Boolean>()
 
     //通知tablayout系统通知小红点显示状态
     val sysDotStatus = MutableLiveData<Boolean>()
@@ -82,7 +101,7 @@ class NotificationViewModel : BaseViewModel() {
     }
 
     /**
-     * 获取所有通知信息
+     * 获取所有活动和系统通知信息
      */
     fun getAllMsg() {
         retrofit.getAllMsg()
@@ -166,9 +185,85 @@ class NotificationViewModel : BaseViewModel() {
     }
 
     /**
+     * 通知改变tablayout行程通知小红点显示状态
+     */
+    fun changeItineraryDotStatus(status: Boolean) {
+        _itineraryDotStatus.value = status
+    }
+
+    /**
      * 通知改变popupwindow是否可以弹出
      */
     fun changePopUpWindowClickableStatus(status: Boolean) {
         popupWindowClickableStatus.value = status
+    }
+
+    /**
+     * 获取所有行程消息
+     */
+    fun getAllItineraryMsg() {
+        /* // 朴素但有效的写法
+        retrofit.getReceivedItinerary()
+            .subscribeOn(Schedulers.io())
+            .subscribeOn(AndroidSchedulers.mainThread())
+            .mapOrInterceptException{  }
+            .unsafeSubscribeBy(
+                onError = {
+                    Log.d("Hsj-getAllItinerary", "getAllItineraryMsg 1 failed of ${it.message}")
+                },
+                onSuccess = {received->
+                    retrofit.getSentItinerary()
+                        .subscribeOn(Schedulers.io())
+                        .subscribeOn(AndroidSchedulers.mainThread())
+                        .mapOrInterceptException{  }
+                        .unsafeSubscribeBy(
+                            onError = {
+                                _itineraryMsgIsSuccessfulState.postValue(false)
+                                getMsgSuccessful.postValue(false)
+                            },
+                            onSuccess = {sent->
+                                _itineraryMsg.postValue(ItineraryAllMsg(sent, received))
+                                getItineraryIsSuccessful = true
+                                _itineraryMsgIsSuccessfulState.postValue(true)
+                                getMsgSuccessful.postValue(true)
+                            }
+                        ).lifeCycle()
+                }
+            ).lifeCycle()
+        */
+        val tempList = ItineraryAllMsg(emptyList(), emptyList())
+        retrofit.getReceivedItinerary()
+            .mapOrInterceptException {
+                "获取行程消息失败".toast()
+                getMsgSuccessful.postValue(false)
+            }
+            .flatMap {
+                tempList.receivedItineraryList = it
+                retrofit.getSentItinerary()
+            }
+            .subscribeOn(Schedulers.io())
+            .subscribeOn(AndroidSchedulers.mainThread())
+            .mapOrInterceptException {
+                "获取行程消息失败".toast()
+                getMsgSuccessful.postValue(false)
+                ApiException {
+                // 处理全部 ApiException 错误
+                }.catchOther {
+                // 处理非 ApiException 的其他异常
+                }
+            }
+            .unsafeSubscribeBy(
+                onError = {
+                    LogUtils.d("H57-err","getAllItineraryMsg fair")
+                    getMsgSuccessful.postValue(false)
+                },
+                onSuccess = {
+                    tempList.sentItineraryList = it
+                    _itineraryMsg.postValue(tempList)
+                    getItineraryIsSuccessful = true
+                    getMsgSuccessful.postValue(true)
+                }
+            ).lifeCycle()
+
     }
 }

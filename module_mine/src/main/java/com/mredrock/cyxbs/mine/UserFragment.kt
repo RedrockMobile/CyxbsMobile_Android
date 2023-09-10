@@ -185,6 +185,8 @@ class UserFragment : BaseFragment() {
 
             mine_user_iv_center_notification.setOnSingleClickListener {
                 ARouter.getInstance().build(NOTIFICATION_HOME).navigation()
+                // 进入消息中心，移除红点
+                mine_user_tv_center_notification_count.gone()
             }
             mine_user_iv_center_activity.setOnSingleClickListener {
                 doIfLogin {
@@ -281,18 +283,16 @@ class UserFragment : BaseFragment() {
                 }
             }
         }
-        viewModel.ufieldNewCount.observe(viewLifecycleOwner) {
-            val list = it.filter { element ->
-                !element.clicked
-            }
-            if (list.isEmpty()) {
+        // 消息中心的红点显示逻辑
+        viewModel.newNotificationCount.observe(viewLifecycleOwner) { value ->
+            if (value == 0) {
                 mine_user_tv_center_notification_count.gone()
             } else {
                 mine_user_tv_center_notification_count.visible()
-                if (list.size > 99) {
+                if (value > 99) {
                     mine_user_tv_center_notification_count.text = "99+"
                 } else {
-                    mine_user_tv_center_notification_count.text = list.size.toString()
+                    mine_user_tv_center_notification_count.text = value.toString()
                 }
             }
         }
@@ -303,6 +303,8 @@ class UserFragment : BaseFragment() {
         super.onStart()
         // 发送签到的通知
         NotificationUtils.tryNotificationSign(viewModel.status.value?.isChecked ?: false)
+        // 更新最新未读消息数量
+        viewModel.getNewNotificationCount()
     }
 
     override fun onResume() {
@@ -310,8 +312,6 @@ class UserFragment : BaseFragment() {
         if (ServiceManager(IAccountService::class).getVerifyService().isLogin()) {
             fetchInfo()
         }
-        viewModel.getUFieldActivity()
-
     }
 
     private fun fetchInfo() {

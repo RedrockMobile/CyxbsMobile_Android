@@ -1,0 +1,4 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources xmlns:tools="http://schemas.android.com/tools">
+    <dimen name="noclass_tab_text" tools:ignore="ResourceName">18dp</dimen>
+</resources>

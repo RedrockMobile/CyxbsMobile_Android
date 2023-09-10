@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <shape xmlns:android="http://schemas.android.com/apk/res/android">
-    <stroke android:color="@color/noclass_gather_class_bg"
-        android:width="2dp"/>
-    <corners android:radius="14dp"/>
+    <stroke android:color="@color/noclass_gathering_item_bg"
+        android:width="1.14dp"/>
+    <corners android:radius="63dp"/>
 </shape>

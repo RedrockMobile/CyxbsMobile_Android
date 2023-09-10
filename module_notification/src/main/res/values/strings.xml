@@ -1,5 +1,11 @@
-<resources>
+<resources xmlns:tools="http://schemas.android.com/tools">
 
     <!-- TODO: Remove or change this placeholder text -->
-    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="hello_blank_fragment" tools:ignore="ResourceName">Hello blank fragment</string>
+    <string name="notification_notStart">未开始</string>
+    <string name="notification_isDoing">进行中</string>
+    <string name="notification_hasOvered">已结束</string>
+    <string name="notification_itinerary_item_rawTitle">%1$s通知:</string>
+    <string name="notification_itinerary_item_cancelContent">%1$s的行程已取消</string>
+    <string name="notification_itinerary_message_clear_Hint">两周之后消息将自动清空</string>
 </resources>

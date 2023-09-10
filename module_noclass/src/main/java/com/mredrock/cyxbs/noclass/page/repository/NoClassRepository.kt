@@ -2,7 +2,9 @@ package com.mredrock.cyxbs.noclass.page.repository
 
 import com.mredrock.cyxbs.lib.utils.network.ApiStatus
 import com.mredrock.cyxbs.lib.utils.network.ApiWrapper
-import com.mredrock.cyxbs.noclass.bean.NoclassGroup
+import com.mredrock.cyxbs.noclass.bean.NoClassBatchResponseInfo
+import com.mredrock.cyxbs.noclass.bean.NoClassGroup
+import com.mredrock.cyxbs.noclass.bean.NoClassTemporarySearch
 import com.mredrock.cyxbs.noclass.bean.NoclassGroupId
 import com.mredrock.cyxbs.noclass.bean.Student
 import com.mredrock.cyxbs.noclass.net.NoclassApiService
@@ -26,7 +28,7 @@ object NoClassRepository {
     /**
      * 获得全部分组数据
      */
-    fun getNoclassGroupDetail() : Single<ApiWrapper<List<NoclassGroup>>>{
+    fun getNoclassGroupDetail() : Single<ApiWrapper<List<NoClassGroup>>>{
         return NoclassApiService
             .INSTANCE
             .getGroupAll()
@@ -108,6 +110,27 @@ object NoClassRepository {
             .subscribeOn(Schedulers.io())
             .observeOn(AndroidSchedulers.mainThread())
     }
-    
+
+    /**
+     * 临时分组页面查询所有
+     */
+    fun searchAll(content : String) : Single<ApiWrapper<NoClassTemporarySearch>>{
+        return NoclassApiService
+            .INSTANCE
+            .searchAll(content)
+            .subscribeOn(Schedulers.io())
+            .observeOn(AndroidSchedulers.mainThread())
+    }
+
+    /**
+     * 批量添加页面，检查上传的信息
+     */
+    fun checkUploadInfo(content: List<String>) :Single<ApiWrapper<NoClassBatchResponseInfo>> {
+        return NoclassApiService
+            .INSTANCE
+            .checkUploadInfo(content)
+            .subscribeOn(Schedulers.io())
+            .observeOn(AndroidSchedulers.mainThread())
+    }
 
 }

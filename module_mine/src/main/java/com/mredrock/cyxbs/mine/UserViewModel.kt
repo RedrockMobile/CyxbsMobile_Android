@@ -7,6 +7,7 @@ import android.widget.TextView
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.viewModelScope
 import com.mredrock.cyxbs.api.account.IAccountService
 import com.mredrock.cyxbs.common.BaseApp.Companion.appContext
 import com.mredrock.cyxbs.common.service.ServiceManager
@@ -15,6 +16,9 @@ import com.mredrock.cyxbs.common.viewmodel.BaseViewModel
 import com.mredrock.cyxbs.lib.utils.extensions.setSchedulers
 import com.mredrock.cyxbs.lib.utils.extensions.unsafeSubscribeBy
 import com.mredrock.cyxbs.lib.utils.network.mapOrThrowApiException
+import com.mredrock.cyxbs.lib.utils.extensions.launchCatch
+import com.mredrock.cyxbs.lib.utils.network.ApiWrapper
+import com.mredrock.cyxbs.mine.network.model.ItineraryMsgBean
 import com.mredrock.cyxbs.mine.network.model.QANumber
 import com.mredrock.cyxbs.mine.network.model.ScoreStatus
 import com.mredrock.cyxbs.mine.network.model.UfieldMsgBean
@@ -22,6 +26,9 @@ import com.mredrock.cyxbs.mine.network.model.UserCount
 import com.mredrock.cyxbs.mine.network.model.UserUncheckCount
 import com.mredrock.cyxbs.mine.util.apiService
 import com.mredrock.cyxbs.mine.util.extension.normalWrapper
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.async
+import kotlinx.coroutines.awaitAll
 
 
 /**
@@ -50,24 +57,69 @@ class UserViewModel : BaseViewModel() {
     val userUncheckCount: LiveData<UserUncheckCount?>
         get() = _userUncheckCount
 
-    private val _ufieldNewCount = MutableLiveData<List<UfieldMsgBean>>()
+    /**
+     * ”新“通知消息（状态为未读的）的数量
+     */
+    val newNotificationCount: LiveData<Int> get() = _newNotificationCount
+    private val _newNotificationCount = MutableLiveData<Int>()
 
-    val ufieldNewCount: LiveData<List<UfieldMsgBean>> get() = _ufieldNewCount
 
-    /*
-* 获取活动消息
-* */
-    fun getUFieldActivity() {
-        apiService.getUFieldActivity()
-            .setSchedulers()
-            .mapOrThrowApiException()
-            .unsafeSubscribeBy(
-                onNext = {
-                    _ufieldNewCount.postValue(it)
-                }
-            ).lifeCycle()
 
+    init {
+        getNewNotificationCount()
     }
+
+    /**
+     * 用携程异步获取未读的notification数量
+     */
+    fun getNewNotificationCount() {
+        viewModelScope.launchCatch {
+            val uFieldActivityList = async(Dispatchers.IO) { apiService.getUFieldActivityList() }
+            val itineraryList = listOf(
+                async(Dispatchers.IO) { apiService.getSentItinerary() },
+                async(Dispatchers.IO) { apiService.getReceivedItinerary() }
+            )
+            val newUFieldActivityCount = async(Dispatchers.Default) {
+                getNewActivityCount(uFieldActivityList.await())
+            }
+            val newItineraryCount = async(Dispatchers.Default) {
+                getNewItineraryCount(itineraryList.awaitAll())
+            }
+            _newNotificationCount.value = (newUFieldActivityCount.await() + newItineraryCount.await())
+        }.catch {
+            it.printStackTrace()
+//            "获取最新消息失败,请检查网络连接".toast()
+        }
+    }
+
+    /**
+     * 获取“新”活动通知的数量
+     * @param response
+     */
+    private fun getNewActivityCount(response: ApiWrapper<List<UfieldMsgBean>>) : Int{
+        return if (response.isSuccess()) {
+            val list = response.data.filter { !it.clicked }
+            list.size
+        } else
+            0
+    }
+
+    /**
+     * 获取“新”行程通知的数量
+     * @param response
+     */
+    private fun getNewItineraryCount(response: List<ApiWrapper<List<ItineraryMsgBean>>>): Int{
+        val receivedCount: Int = if (response[1].isSuccess()) {
+            val list = response[1].data.filter { !it.hasRead }
+            list.size
+        } else 0
+        val sentCount: Int = if (response[0].isSuccess()) {
+            val list = response[0].data.filter { !it.hasRead }
+            list.size
+        } else 0
+        return receivedCount + sentCount
+    }
+
 
     fun getScoreStatus() {
         apiService.getScoreStatus()

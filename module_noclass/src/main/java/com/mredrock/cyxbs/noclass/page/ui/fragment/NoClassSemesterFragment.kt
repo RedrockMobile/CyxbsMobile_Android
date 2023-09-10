@@ -6,7 +6,7 @@ import androidx.core.os.bundleOf
 import androidx.fragment.app.activityViewModels
 import com.mredrock.cyxbs.lib.course.helper.show.CourseNowTimeHelper
 import com.mredrock.cyxbs.noclass.bean.NoClassSpareTime
-import com.mredrock.cyxbs.noclass.page.viewmodel.NoClassViewModel
+import com.mredrock.cyxbs.noclass.page.viewmodel.other.CourseViewModel
 import java.util.*
 
 /**
@@ -32,12 +32,13 @@ class NoClassSemesterFragment : NoClassPageFragment() {
     }
   }
   
-  private val mParentViewModel by activityViewModels<NoClassViewModel>()
+  private val mParentViewModel by activityViewModels<CourseViewModel>()
   
   private val mNoClassSpareTime by arguments<NoClassSpareTime>()
   
   override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
     super.onViewCreated(view, savedInstanceState)
+    initCreateAffair()
     initToday()
     initObserve()
     addLessons(mNoClassSpareTime)

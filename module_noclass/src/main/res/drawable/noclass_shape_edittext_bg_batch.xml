@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<shape xmlns:android="http://schemas.android.com/apk/res/android">
+    <!-- 设置框内填充颜色 -->
+    <solid android:color="@color/noclass_batch_window_bg"/>
+
+    <!-- 设置边框宽度和颜色 -->
+    <stroke
+        android:width="2dp"
+        android:color="#E6EFFC" />
+
+    <!-- 设置圆角半径 -->
+    <corners android:radius="12dp" />
+</shape>
