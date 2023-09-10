@@ -42,7 +42,7 @@ class RankActivity : BaseActivity() {
     }
 
     private fun initObserve() {
-        mViewModel.getRank("all", 10, "watch")
+        mViewModel.getRank("all", 20, "watch")
     }
 
     private fun initViewClickListener() {

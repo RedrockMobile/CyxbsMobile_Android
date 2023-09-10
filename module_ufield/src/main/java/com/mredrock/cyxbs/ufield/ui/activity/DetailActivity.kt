@@ -138,10 +138,23 @@ class DetailActivity : BaseActivity() {
             ivCover.setImageFromUrl(it.activityCoverUrl)
             tvStart.text = trans(it.activityStartAt)
             tvEnd.text = trans(it.activityEndAt)
-            if (it.activityState != "published") {
-                layout.gone()
-                tvGoing.gone()
-                ivGoing.gone()
+            if (it.activityState == "reviewing") {
+               setStatusText("活动未审核")
+            }else if(it.activityState=="rejected"){
+               setStatusText("活动未通过")
+            }else{
+                if (it.ended) {
+                    tvGoing.text = "已结束"
+                    ivGoing.setImageResource(R.drawable.ufield_ic_finished)
+                    tvTime.text = "活动已结束"
+                    tvDays.gone()
+                    tvHours.gone()
+                    tvMinutes.gone()
+                    tvSeconds.gone()
+                    layout.gone()
+                } else {
+                    startDownTimer(it.activityStartAt)
+                }
             }
             if (it.wantToWatch) {
                 //在将文本替换为“已想看”后，修改文本位置，使其位于中心
@@ -155,17 +168,7 @@ class DetailActivity : BaseActivity() {
                     viewModel.wantToSee(id)
                 }
             }
-            if (it.ended) {
-                tvGoing.text = "已结束"
-                ivGoing.setImageResource(R.drawable.ufield_ic_finished)
-                tvTime.text = "活动已结束"
-                tvDays.gone()
-                tvHours.gone()
-                tvMinutes.gone()
-                tvSeconds.gone()
-            } else {
-                startDownTimer(it.activityStartAt)
-            }
+
         }
 
     }
@@ -197,7 +200,7 @@ class DetailActivity : BaseActivity() {
                         val seconds =
                             floor((millisUntilFinished % (1000 * 60.0)) / 1000)
                                 .toLong()
-                        tvTimeHead.text = "距离结束还有"
+                        tvTimeHead.text = "距离开始还有"
                         tvDay.text = "天"
                         tvHour.text = "小时"
                         tvMinute.text = "分"
@@ -228,6 +231,17 @@ class DetailActivity : BaseActivity() {
         }
     }
 
+    private fun setStatusText(text:String){
+        layout.gone()
+        tvGoing.gone()
+        ivGoing.gone()
+        tvTime.text = text
+        tvDays.gone()
+        tvHours.gone()
+        tvMinutes.gone()
+        tvSeconds.gone()
+        layout.gone()
+    }
 
     private fun trans(timestampInSeconds: Long): String {
         val date = Date(timestampInSeconds * 1000L)

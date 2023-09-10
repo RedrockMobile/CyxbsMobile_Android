@@ -72,6 +72,7 @@ class TodoViewModel : BaseViewModel() {
             }
             .safeSubscribeBy {
                 _isPassSuccess.postValue(it)
+
             }
     }
 

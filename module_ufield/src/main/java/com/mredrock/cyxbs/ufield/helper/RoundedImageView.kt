@@ -25,7 +25,7 @@ class RoundedImageView(context: Context, attrs: AttributeSet) : AppCompatImageVi
     private val rect = RectF()
     private val cornerRadius = TypedValue.applyDimension(
         TypedValue.COMPLEX_UNIT_DIP,
-        10f, // 这里修改度数
+        8f, // 这里修改度数
         context.resources.displayMetrics
     )
 

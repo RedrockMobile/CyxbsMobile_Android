@@ -3,11 +3,13 @@ package com.mredrock.cyxbs.ufield.ui.activity
 import android.Manifest
 import android.annotation.SuppressLint
 import android.app.Activity
+import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import android.graphics.Canvas
+import android.graphics.Rect
 import android.net.Uri
 import android.os.Bundle
 import android.os.Environment
@@ -17,8 +19,12 @@ import android.text.Spannable
 import android.text.SpannableStringBuilder
 import android.text.TextWatcher
 import android.text.style.RelativeSizeSpan
+import android.util.Log
 import android.view.Gravity
 import android.view.MenuItem
+import android.view.MotionEvent
+import android.view.View
+import android.view.inputmethod.InputMethodManager
 import android.widget.Button
 import android.widget.EditText
 import android.widget.FrameLayout
@@ -81,8 +87,8 @@ class CreateActivity : BaseActivity() {
     private val typeList = mutableListOf("文娱活动", "体育活动", "教育活动")
 
     private lateinit var pvtime: TimePickerView
-    private var selectedStartTimestamp: Long = 0
-    private var selectedEndTimestamp: Long = 0
+    private var selectedStartTimestamp: Long = System.currentTimeMillis() / 1000
+    private var selectedEndTimestamp: Long = System.currentTimeMillis() / 1000
 
 
     private val watcher = object : TextWatcher {
@@ -575,7 +581,7 @@ class CreateActivity : BaseActivity() {
         val introduce = etIntroduce.text.toString()
         val phone = etPhone.text.toString()
         if (name.isNotEmpty() && way.isNotEmpty() && address.isNotEmpty() && introduce.isNotEmpty() && sponsor.isNotEmpty() && phone.length == 11 && isChanged) {
-            if (selectedEndTimestamp > selectedStartTimestamp && selectedEndTimestamp.toInt() != 0 && selectedStartTimestamp.toInt() != 0) {
+            if (selectedEndTimestamp > selectedStartTimestamp) {
                 btCreate.apply {
                     setBackgroundResource(R.drawable.ufield_shape_createbutton2)
                     setOnClickListener {
@@ -625,7 +631,7 @@ class CreateActivity : BaseActivity() {
         }
     }
 
-    fun getMap(
+    private fun getMap(
         activityTitle: String,
         activityType: String,
         activityStartAt: Int,
@@ -656,14 +662,39 @@ class CreateActivity : BaseActivity() {
         return map
     }
 
-    override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        when (item.itemId) {
-            android.R.id.home -> {
-                finishAfterTransition()
-                return true
+    //来自学长的代码，源代码在mine模块的资料编辑
+    override fun dispatchTouchEvent(ev: MotionEvent): Boolean {
+        if (ev.action == MotionEvent.ACTION_UP) {
+            val v = currentFocus
+
+            //如果不是落在EditText区域，则需要关闭输入法
+            if (hideKeyboard(v, ev)) {
+                val imm = getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
+                imm.hideSoftInputFromWindow(v?.windowToken, InputMethodManager.HIDE_NOT_ALWAYS)
+                v?.clearFocus()
             }
         }
-        return super.onOptionsItemSelected(item)
+        return super.dispatchTouchEvent(ev)
+    }
+
+    // 根据EditText所在坐标和用户点击的坐标相对比，来判断是否隐藏键盘
+    private fun hideKeyboard(view: View?, event: MotionEvent): Boolean {
+        if (view != null && view is EditText) {
+
+            val location = intArrayOf(0, 0)
+            view.getLocationInWindow(location)
+
+            //获取现在拥有焦点的控件view的位置，即EditText
+            val left = location[0]
+            val top = location[1]
+            val bottom = top + view.height
+            val right = left + view.width
+            //判断我们手指点击的区域是否落在EditText上面，如果不是，则返回true，否则返回false
+            val isInEt = (event.x > left && event.x < right && event.y > top
+                    && event.y < bottom)
+            return !isInEt
+        }
+        return false
     }
 
 }

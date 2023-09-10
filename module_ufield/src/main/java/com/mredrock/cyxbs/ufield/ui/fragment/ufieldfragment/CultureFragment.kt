@@ -15,6 +15,9 @@ import com.mredrock.cyxbs.ufield.bean.ItemActivityBean
 import com.mredrock.cyxbs.ufield.helper.GridSpacingItemDecoration
 import com.mredrock.cyxbs.ufield.ui.activity.DetailActivity
 import com.mredrock.cyxbs.ufield.viewmodel.UFieldViewModel
+import com.scwang.smart.refresh.footer.ClassicsFooter
+import com.scwang.smart.refresh.header.ClassicsHeader
+import com.scwang.smart.refresh.layout.SmartRefreshLayout
 
 class CultureFragment : BaseFragment() {
 
@@ -26,6 +29,7 @@ class CultureFragment : BaseFragment() {
     private val mAdapter: UfieldRvAdapter by lazy { UfieldRvAdapter() }
 
     private lateinit var mDataList: MutableList<ItemActivityBean.ItemAll>
+    private val mRefresh: SmartRefreshLayout by R.id.uField_culture_refresh.view()
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -37,6 +41,7 @@ class CultureFragment : BaseFragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         iniRv()
+        iniRefresh()
 
     }
 
@@ -62,6 +67,24 @@ class CultureFragment : BaseFragment() {
             addItemDecoration(GridSpacingItemDecoration(2))
 
         }
+    }
+    /**
+     * 处理下拉刷新
+     */
+    private fun iniRefresh() {
+        mRefresh.apply {
+            setRefreshHeader(ClassicsHeader(requireContext()))
+            setEnableLoadMore(false)
+            //下拉刷新
+            setOnRefreshListener {
+                mViewModel.apply {
+                    getCultureActivityList()
+                }
+                finishRefresh(500)
+            }
+        }
+
+
     }
 
 
