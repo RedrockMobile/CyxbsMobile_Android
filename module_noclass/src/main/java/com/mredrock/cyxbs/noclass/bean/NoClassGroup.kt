@@ -1,8 +1,6 @@
 package com.mredrock.cyxbs.noclass.bean
 
 import com.google.gson.annotations.SerializedName
-import com.mredrock.cyxbs.noclass.bean.Group
-import com.mredrock.cyxbs.noclass.bean.Student
 import java.io.Serializable
 
 /**

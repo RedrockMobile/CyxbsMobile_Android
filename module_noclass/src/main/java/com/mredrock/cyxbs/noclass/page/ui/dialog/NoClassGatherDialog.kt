@@ -2,7 +2,6 @@ package com.mredrock.cyxbs.noclass.page.ui.dialog
 
 import android.app.Dialog
 import android.os.Bundle
-import android.util.Log
 import android.widget.Button
 import android.widget.TextView
 import androidx.fragment.app.activityViewModels
@@ -64,14 +63,11 @@ class NoClassGatherDialog (
     // 记录上一次的list的size，方便比较
     var beforeSize = mNumNameIsSpare.filter { !it.value }.size
     mParentViewModel.busyNameList.observe(this){
-      Log.d("lx", "忙碌的人员为: ${it}")
-      Log.d("lx", "beforeSize: ${beforeSize}")
       // 如果不等，就说明页面已经满了
       if (it.isNotEmpty() && it.size != beforeSize){
         beforeSize = it.size
         mAdapter.add(NoClassBusyPageFragment::class.java)
         indicatorNum++
-        Log.d("lx", "indicatorNum:${indicatorNum} ")
         mIndicator.setAllDot(indicatorNum)
       }
     }
@@ -125,7 +121,6 @@ class NoClassGatherDialog (
 
   override fun onDestroy() {
     super.onDestroy()
-    Log.d("lx", "onDestroy: ")
     mParentViewModel.setBusyNameList(listOf())
     mClickBlankCancel?.invoke()
   }

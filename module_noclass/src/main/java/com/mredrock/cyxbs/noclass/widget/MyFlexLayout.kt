@@ -2,7 +2,6 @@ package com.mredrock.cyxbs.noclass.widget
 
 import android.content.Context
 import android.util.AttributeSet
-import android.util.Log
 import android.view.View
 import android.view.ViewGroup
 
@@ -73,7 +72,6 @@ class MyFlexLayout @JvmOverloads constructor(
         var currentWidth = 0
         var currentHeight = 0
 
-        Log.d("lx", "flex的测量 ")
         /**
          * 记录每一行的宽度，width不断取最大宽度
          */
@@ -139,18 +137,6 @@ class MyFlexLayout @JvmOverloads constructor(
     private val mAllViews: MutableList<MutableList<View>> = ArrayList()
 
     /**
-     * 当布局完成之后的回调
-     */
-    private var onLayoutCallBack : ((List<Int>) -> Unit)? = null
-
-    /**
-     * 设置布局完成之后的回调
-     */
-    fun setOnLayoutCallBack(onLayoutCallBack : (List<Int>) -> Unit){
-        this.onLayoutCallBack = onLayoutCallBack
-    }
-
-    /**
      * 记录每一行的最大高度
      */
     private val mLineHeight: MutableList<Int> = ArrayList()
@@ -177,7 +163,6 @@ class MyFlexLayout @JvmOverloads constructor(
                 // 记录这一行所有的View以及最大高度
                 mLineHeight.add(lineHeight)
                 // 将当前行的childView保存，然后开启新的ArrayList保存下一行的childView
-                Log.d("lx", "add - mLinesViews: = ${mAllViews.size} ")
                 lineWidth = 0 // 重置行宽
                 if (mAllViews.size == mMaxLine) {
                     break
@@ -261,10 +246,5 @@ class MyFlexLayout @JvmOverloads constructor(
 
     interface OnFillCallback {
         fun onFill(itemsSize: Int)
-    }
-
-    enum class FlexState{
-        COLLAPSING,//收缩状态
-        EXPANDING,//展开状态
     }
 }

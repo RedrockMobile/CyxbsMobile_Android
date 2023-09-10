@@ -111,7 +111,7 @@ class CreateGroupDialog(
     @SuppressLint("SetTextI18n")
     private fun initView(dialog: Dialog) {
         //分组名称textview
-        val tvName = dialog.findViewById<TextView>(R.id.tv_noclass_create_group_name)
+        dialog.findViewById<TextView>(R.id.tv_noclass_create_group_name)
         //创建分组名称dialog
         val etName = dialog.findViewById<EditText>(R.id.et_noclass_group_name)
         //创建完成按钮上方的提示

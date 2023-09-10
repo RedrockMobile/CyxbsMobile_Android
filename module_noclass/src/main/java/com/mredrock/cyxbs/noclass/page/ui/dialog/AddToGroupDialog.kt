@@ -2,7 +2,6 @@ package com.mredrock.cyxbs.noclass.page.ui.dialog
 
 import android.app.Dialog
 import android.os.Bundle
-import android.util.Log
 import android.widget.Button
 import android.widget.TextView
 import androidx.fragment.app.viewModels
@@ -114,7 +113,6 @@ class AddToGroupDialog(
                 restNum = (chooseGroup!!.size - 2).coerceAtLeast(0)
                 chooseGroup!!.forEach {
                     //每一个被选中的分组添加成员
-                    Log.d("lx", "chooseGroup=$chooseGroup ")
                     mSolidViewModel.addMembers(it.id, setOf(student))
                 }
             }

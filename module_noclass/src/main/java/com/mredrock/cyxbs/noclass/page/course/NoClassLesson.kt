@@ -1,7 +1,6 @@
 package com.mredrock.cyxbs.noclass.page.course
 
 import android.content.Context
-import android.util.Log
 import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 import com.mredrock.cyxbs.api.affair.DateJson
@@ -103,10 +102,6 @@ class NoClassLesson(
 
             val textTime = "${month} $timeText ${beginTime}-${endTime}"
             val dateJson = DateJson(specialBeginLesson,data.weekNum,duration,mWeek)
-            Log.d("lx", "specialBeginLesson: = $specialBeginLesson ")
-            Log.d("lx", "data.weekNum: = ${data.weekNum} ")
-            Log.d("lx", "duration: = $duration ")
-            Log.d("lx", "mWeek: = $mWeek ")
             NoClassGatherDialog(dateJson,mNumNameIsSpare, textTime).show((context as AppCompatActivity).supportFragmentManager, "NoClassGatherDialog")
           }
         }

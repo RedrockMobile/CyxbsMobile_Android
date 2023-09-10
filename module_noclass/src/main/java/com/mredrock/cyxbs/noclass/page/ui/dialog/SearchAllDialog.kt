@@ -2,7 +2,6 @@ package com.mredrock.cyxbs.noclass.page.ui.dialog
 
 import android.app.Dialog
 import android.os.Bundle
-import android.util.Log
 import android.widget.TextView
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.fragment.app.viewModels
@@ -80,15 +79,12 @@ class SearchAllDialog(
     private fun initObserve() {
         mViewModel.addMembers.observe(this) {
             //如果成功了才真正添加到里面
-            Log.d("lx", "stuNum=${it.first},isSuccess = ${it.second} ")
             if (it.second) {
                 // 需要看看对应mWaitAdd的哪个
                 for (key in mWaitAdd.keys) {
                     val stuNumSet = key.map { stu -> stu.id }.toSet()
-                    Log.d("lx", "stuNumSet=${stuNumSet} ")
                     if (it.first.containsAll(stuNumSet)) {
                         // 这个添加到组内管理界面
-                        Log.d("lx", "key = $key ")
                         onClickGroupDetailAdd?.invoke(key.toList())
                         // 接下来判断当前dialog是否取消
                         if (searchResult.types!!.size == 2) {
@@ -214,8 +210,6 @@ class SearchAllDialog(
                                 searchResultList.add(0,data.group)
                                 // 如果只有分组，此时才显示分组下面的学生
                                 if (isOnlyGroup) {
-                                    Log.d("lx", "isOnlyGroup = ${isOnlyGroup}: ")
-                                    Log.d("lx", "data.group = ${data.group.members}: ")
                                     setOnClickStudent {
                                         val stuSet = setOf(it)
                                         mWaitAdd[stuSet] = STUDENT_TYPE

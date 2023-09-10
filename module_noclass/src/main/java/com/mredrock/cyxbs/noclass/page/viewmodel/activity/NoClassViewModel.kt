@@ -1,6 +1,5 @@
 package com.mredrock.cyxbs.noclass.page.viewmodel.activity
 
-import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import com.mredrock.cyxbs.lib.base.ui.BaseViewModel
@@ -43,7 +42,6 @@ class NoClassViewModel : BaseViewModel() {
     fun removeBusyName(index: Int) {
         if (busyNameList.value == null) return
         if (index < busyNameList.value!!.size) {
-            Log.d("lx", "removeBusyName: index=${index}")
             val list = busyNameList.value!!.subList(index, busyNameList.value!!.size)
             _busyNameList.value = list
         }
@@ -62,9 +60,7 @@ class NoClassViewModel : BaseViewModel() {
     fun getAllGroup() {
         NoClassRepository
             .getNoclassGroupDetail()
-            .mapOrInterceptException {
-                Log.e("ListNoclassApiError", it.toString())
-            }.safeSubscribeBy {
+            .mapOrInterceptException {}.safeSubscribeBy {
                 _groupList.postValue(it)
             }
     }

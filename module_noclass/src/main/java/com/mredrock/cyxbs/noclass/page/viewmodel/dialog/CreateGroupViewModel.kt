@@ -1,6 +1,5 @@
 package com.mredrock.cyxbs.noclass.page.viewmodel.dialog
 
-import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import com.mredrock.cyxbs.lib.base.ui.BaseViewModel
@@ -31,7 +30,6 @@ class CreateGroupViewModel : BaseViewModel(){
             }
             .doOnError {
                 _isCreateSuccess.postValue(NoclassGroupId(-1))
-                Log.e("ListGroupError",it.toString())
             }.safeSubscribeBy {
                 _isCreateSuccess.postValue(it)
             }

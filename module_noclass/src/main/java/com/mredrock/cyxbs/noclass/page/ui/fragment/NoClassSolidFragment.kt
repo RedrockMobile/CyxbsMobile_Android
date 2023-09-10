@@ -6,7 +6,6 @@ import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
 import android.text.TextUtils
-import android.util.Log
 import android.view.View
 import android.view.WindowManager
 import android.view.inputmethod.EditorInfo
@@ -155,9 +154,6 @@ class NoClassSolidFragment : BaseFragment(R.layout.noclass_fragment_solid) {
                 }
                 setOnClickGroupIsTop { noclassGroup,tvIsTop ->
                     //置顶：加入缓冲区，更新云端置顶状态
-                    Log.d("lx", "mWaitIsTop:${mWaitIsTop} ")
-                    Log.d("lx", "noclassGroup:${noclassGroup} ")
-                    Log.d("lx", "noclassGroup.isTop ${noclassGroup.isTop}: ")
                     mWaitIsTop[noclassGroup] = tvIsTop
                     mViewModel.updateGroup(noclassGroup.id,noclassGroup.name,(!noclassGroup.isTop).toString())
                 }

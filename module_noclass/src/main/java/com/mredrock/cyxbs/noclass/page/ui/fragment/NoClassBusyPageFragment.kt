@@ -2,7 +2,6 @@ package com.mredrock.cyxbs.noclass.page.ui.fragment
 
 import android.content.Context
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -36,7 +35,6 @@ class NoClassBusyPageFragment : BaseFragment(R.layout.noclass_layout_gathering) 
 
     companion object{
         fun newInstance() : NoClassBusyPageFragment{
-            Log.d("lx", "newInstance:我希望我只出现一次 ")
             return NoClassBusyPageFragment()
         }
 

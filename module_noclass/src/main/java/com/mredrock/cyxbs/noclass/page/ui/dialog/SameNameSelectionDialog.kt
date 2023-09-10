@@ -2,7 +2,6 @@ package com.mredrock.cyxbs.noclass.page.ui.dialog
 
 import android.app.Dialog
 import android.os.Bundle
-import android.util.Log
 import android.widget.Button
 import android.widget.TextView
 import androidx.constraintlayout.widget.ConstraintLayout
@@ -114,7 +113,6 @@ class SameNameSelectionDialog : BottomSheetDialogFragment {
                 // val targetList = mutableListOf<Pair<String,String>>()   // 学号-姓名 组合对的list
                 // 学号-姓名 键值对的list，防止后端返回重复的学号数据
                 val targetMap = mutableMapOf<String, String>()
-                Log.d("test","current btn click is ${mBtnDone.isEnabled}")
                 selectedStudents.forEach {
                     if (it.isSelected){  // 确认该重名学生被选中了
                         targetMap[it.id] = it.name

@@ -1,7 +1,6 @@
 package com.mredrock.cyxbs.noclass.page.course
 
 import android.content.Context
-import android.util.Log
 import android.view.View
 import android.view.ViewGroup
 import android.view.animation.AlphaAnimation
@@ -61,10 +60,6 @@ class NoClassTouchAffairItem(
         val begin = lp.startRow   //得到开始的节数
         val end = begin + duration - 1
 
-        Log.d("lx", "toast: $weekNum")
-        Log.d("lx", "toast: $duration")
-        Log.d("lx", "toast: $begin")
-        Log.d("lx", "toast: $end")
         val beginTime = com.mredrock.cyxbs.api.course.utils.getShowStartTimeStr(begin)
         val endTime = com.mredrock.cyxbs.api.course.utils.getShowEndTimeStr(end)
 
@@ -89,13 +84,9 @@ class NoClassTouchAffairItem(
             else -> "${beginLesson}-${beginLesson + duration - 1}"
         }
 
-        val textTime = "${month} ${timeText} ${beginTime}-${endTime}"
+        val textTime = "$month $timeText ${beginTime}-${endTime}"
 
         val dateJson = DateJson(specialBeginLesson, weekNum, duration, week)
-        Log.d("lx", "specialBeginLesson: = ${specialBeginLesson} ")
-        Log.d("lx", "data.weekNum: = ${weekNum} ")
-        Log.d("lx", "duration: = ${duration} ")
-        Log.d("lx", "mWeek: = ${week} ")
         val mNumNameIsSpare = hashMapOf<Pair<String, String>, Boolean>()
         nameMap.forEach { (id, name) ->
             mNumNameIsSpare[id to name] = true
