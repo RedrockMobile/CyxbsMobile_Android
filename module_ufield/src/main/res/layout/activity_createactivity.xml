@@ -81,6 +81,7 @@
                 android:layout_height="35dp"
                 android:layout_marginStart="12dp"
                 android:layout_marginEnd="16dp"
+                android:layout_marginTop="5dp"
                 android:background="@drawable/ufield_shape_edit"
                 android:hint="不超过12个字"
                 android:maxLength="12"
