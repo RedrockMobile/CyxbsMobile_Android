@@ -46,8 +46,7 @@ private val _wantToSee=MutableLiveData<Boolean>()
             .wantToSee(id)
             .subscribeOn(Schedulers.io())
             .observeOn(AndroidSchedulers.mainThread())
-            .mapOrInterceptException {
-                toast("请求失败")
+            .doOnError {
                 _wantToSee.postValue(false)
             }
             .safeSubscribeBy {
