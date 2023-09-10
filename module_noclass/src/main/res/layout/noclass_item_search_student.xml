@@ -43,6 +43,7 @@
         android:layout_marginStart="10dp"
         android:textColor="@color/noclass_search_stu_num_color"
         android:textSize="12sp"
+        android:layout_marginTop="5dp"
         app:layout_constraintBottom_toBottomOf="parent"
         android:gravity="center_vertical"
         app:layout_constraintStart_toEndOf="@+id/noclass_item_img_user"

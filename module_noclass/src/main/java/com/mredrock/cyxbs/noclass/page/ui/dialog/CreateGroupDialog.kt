@@ -3,7 +3,6 @@ package com.mredrock.cyxbs.noclass.page.ui.dialog
 import android.annotation.SuppressLint
 import android.app.Dialog
 import android.os.Bundle
-import android.view.Gravity
 import android.view.View
 import android.widget.Button
 import android.widget.EditText
@@ -131,12 +130,10 @@ class CreateGroupDialog(
             onTextChanged = { s, _, _, _ ->
                 when (s?.length) {
                     0 -> {
-                        etName.gravity = Gravity.NO_GRAVITY
                         mTvHint.text = "名称不能为空"
                         mTvHint.visibility = View.VISIBLE
                     }
                     10 -> {
-                        etName.gravity = Gravity.CENTER
                         mTvHint.postDelayed(3000) {
                             mTvHint.visibility = View.INVISIBLE
                         }
@@ -144,8 +141,6 @@ class CreateGroupDialog(
                         mTvHint.visibility = View.VISIBLE
                     }
                     else -> {
-                        etName.gravity = Gravity.CENTER
-                        tvName.visibility = View.GONE
                         mTvHint.visibility = View.INVISIBLE
                     }
                 }

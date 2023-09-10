@@ -36,4 +36,12 @@
         <attr name="inactive_color" format="reference|color"/>
     </declare-styleable>
 
+    <!--seekbar    -->
+    <declare-styleable name="SeekBarView" tools:ignore="ResourceName">
+        <attr name="progressMultiple" format="float" />
+        <attr name="underColor" format="color" />
+        <attr name="progressColor" format="color" />
+        <attr name="endRadius" format="float" />
+    </declare-styleable>
+
 </resources>

@@ -4,7 +4,6 @@ import android.app.Dialog
 import android.os.Bundle
 import android.util.Log
 import android.widget.Button
-import android.widget.SeekBar
 import android.widget.TextView
 import androidx.fragment.app.viewModels
 import androidx.recyclerview.widget.GridLayoutManager
@@ -17,6 +16,7 @@ import com.mredrock.cyxbs.noclass.bean.NoClassGroup
 import com.mredrock.cyxbs.noclass.bean.Student
 import com.mredrock.cyxbs.noclass.page.adapter.NoClassAddToGroupAdapter
 import com.mredrock.cyxbs.noclass.page.viewmodel.fragment.SolidViewModel
+import com.mredrock.cyxbs.noclass.widget.SeekBarView
 
 /**
  * 将该学生添加到指定的分组中
@@ -30,22 +30,22 @@ class AddToGroupDialog(
     /**
      * 分组文字的recyclerView
      */
-    private lateinit var mRv : RecyclerView
+    private lateinit var mRv: RecyclerView
 
     /**
      * seekbar
      */
-    private lateinit var mSb : SeekBar
+    private lateinit var mSb: SeekBarView
 
     /**
      * 完成点击按钮
      */
-    private lateinit var mBtnDone : Button
+    private lateinit var mBtnDone: Button
 
     /**
      * 选中的分组
      */
-    private var chooseGroup : List<NoClassGroup>? = null
+    private var chooseGroup: List<NoClassGroup>? = null
 
     /**
      * 固定分组fragment的viewModel
@@ -55,7 +55,7 @@ class AddToGroupDialog(
     /**
      * 剩余人员数量
      */
-    private var restNum : Int = 0
+    private var restNum: Int = 0
 
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
         super.onCreateDialog(savedInstanceState)
@@ -69,11 +69,10 @@ class AddToGroupDialog(
     }
 
     private fun initObserver() {
-        mSolidViewModel.addMembers.observe(this){
-            Log.d("lx", "restNum: = ${restNum}")
-            if (!it.second){
+        mSolidViewModel.addMembers.observe(this) {
+            if (!it.second) {
                 toast("添加失败")
-            }else if(restNum == 0){
+            } else if (restNum == 0) {
                 toast("添加成功")
                 dismiss()
             }
@@ -83,15 +82,15 @@ class AddToGroupDialog(
 
     private fun initRv() {
         mRv.apply {
-            layoutManager = GridLayoutManager(requireContext(),3,RecyclerView.HORIZONTAL,false)
-            adapter = NoClassAddToGroupAdapter(groupList,context){ isOk , chooseGroup ->
+            layoutManager = GridLayoutManager(requireContext(), 3, RecyclerView.HORIZONTAL, false)
+            adapter = NoClassAddToGroupAdapter(groupList, context) { isOk, chooseGroup ->
                 //true为可以点击完成,也就是深色
-                if (isOk){
+                if (isOk) {
                     mBtnDone.setBackgroundResource(R.drawable.noclass_shape_button_common_bg)
                     //更新分组
                     this@AddToGroupDialog.chooseGroup = chooseGroup
                     mBtnDone.isClickable = true
-                }else{
+                } else {
                     mBtnDone.setBackgroundResource(R.drawable.noclass_shape_button_save_default_bg)
                     mBtnDone.isClickable = false
                 }
@@ -100,7 +99,7 @@ class AddToGroupDialog(
     }
 
 
-    private fun initView(dialog : Dialog) {
+    private fun initView(dialog: Dialog) {
         mRv = dialog.findViewById(R.id.noclass_add_to_group_rv_container)
         mSb = dialog.findViewById(R.id.noclass_add_to_group_seekbar)
         // 弹窗的取消按钮
@@ -132,41 +131,23 @@ class AddToGroupDialog(
      * 这个方法用来rv和seekbar协作滑动，滑动事件监听
      */
     private fun initScroll() {
-        mRv.addOnScrollListener(object : RecyclerView.OnScrollListener() {
-            override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
-                super.onScrolled(recyclerView, dx, dy)
-                val haveScrolled = recyclerView.computeHorizontalScrollOffset().toDouble()
-                val rvMaxWidth = recyclerView.computeHorizontalScrollRange().toDouble()
-                val percent: Double = haveScrolled / rvMaxWidth
-                val processWidth = mSb.measuredWidth
-                val scrollDistance = processWidth * percent
-                mSb.progress = scrollDistance.toInt()
-            }
-        })
+        mRv.apply {
+            addOnScrollListener(object : RecyclerView.OnScrollListener() {
+                override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
+                    super.onScrolled(recyclerView, dx, dy)
+                    val offset = computeHorizontalScrollOffset().toFloat()
+                    val range = computeHorizontalScrollRange().toFloat()
+                    val extent = computeHorizontalScrollExtent().toFloat()
+                    mSb.doMove(offset / (range - extent))
+                }
+            })
+        }
 
         // 等待布局完成之后
         mRv.addOnLayoutChangeListener { _, _, _, _, _, _, _, _, _ ->
-            if (mRv.width >= resources.displayMetrics.widthPixels){
+            if (mRv.width >= resources.displayMetrics.widthPixels) {
                 mSb.visible()
             }
         }
-        mSb.setOnSeekBarChangeListener(object :
-            SeekBar.OnSeekBarChangeListener {
-            override fun onProgressChanged(seekBar: SeekBar?, progress: Int, fromUser: Boolean) {
-                if (fromUser) {
-                    val haveScrolled = progress.toDouble()
-                    val sbMaxWidth = mSb.measuredWidth.toDouble()
-                    val percent: Double = haveScrolled / sbMaxWidth
-                    val rvScrollWidth =
-                        mRv.computeHorizontalScrollRange().toDouble()
-                    val scrollDistance = rvScrollWidth * percent
-                    mRv.smoothScrollToPosition(scrollDistance.toInt())
-                }
-            }
-
-            override fun onStartTrackingTouch(seekBar: SeekBar?) {}
-
-            override fun onStopTrackingTouch(seekBar: SeekBar?) {}
-        })
     }
 }

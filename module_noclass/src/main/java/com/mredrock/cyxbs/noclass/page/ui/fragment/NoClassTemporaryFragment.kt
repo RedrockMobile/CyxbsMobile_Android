@@ -5,6 +5,7 @@ import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
 import android.text.TextUtils
+import android.util.Log
 import android.view.View
 import android.view.WindowManager
 import android.view.inputmethod.EditorInfo
@@ -80,19 +81,20 @@ class NoClassTemporaryFragment : BaseFragment(R.layout.noclass_fragment_temporar
         initUserInfo()
         initRv()
         initObserver()
+        initHintText()
         initSearchEvent()
         initFindCourse()
-        initHintText()
     }
 
     /**
      * 初始化下面试试左滑删除列表，设置两秒后消失
      */
     private fun initHintText(content : String? = null) {
+        mHintText.alpha = 1f
+        mHintText.visible()
+        content?.let { mHintText.text = it }
         mHandler = Handler(Looper.getMainLooper())
         mRunnable = Runnable {
-            mHintText.visible()
-            content?.let { mHintText.text = it }
             mHintText.alphaAnim(mHintText.alpha,0f,200).start()
             mHintText.gone()
         }
@@ -147,6 +149,7 @@ class NoClassTemporaryFragment : BaseFragment(R.layout.noclass_fragment_temporar
     private fun initObserver() {
         var searchAllDialog: SearchAllDialog?
         mViewModel.searchAll.observe(viewLifecycleOwner) {
+            Log.d("lx", "initObserver: 希望来到这151${it}")
             if (it != null && it.isSuccess()){
                 if (it.data.types != null && it.data.types!!.isNotEmpty()) {
                     searchAllDialog = SearchAllDialog(it.data).apply {
@@ -171,6 +174,7 @@ class NoClassTemporaryFragment : BaseFragment(R.layout.noclass_fragment_temporar
                     SearchNoExistDialog(requireContext()).show()
                 }
             }else{
+                Log.d("lx", "initObserver:走到这没有 ")
                 initHintText("网络异常请检查网络")
             }
         }
@@ -207,6 +211,7 @@ class NoClassTemporaryFragment : BaseFragment(R.layout.noclass_fragment_temporar
     override fun onStop() {
         super.onStop()
         mRunnable?.let { mHandler?.removeCallbacks(it) }
+        mHintText.gone()
     }
 
 

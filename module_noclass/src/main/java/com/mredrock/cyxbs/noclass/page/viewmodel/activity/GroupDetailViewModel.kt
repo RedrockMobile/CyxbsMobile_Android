@@ -2,7 +2,9 @@ package com.mredrock.cyxbs.noclass.page.viewmodel.activity
 
 import androidx.lifecycle.MutableLiveData
 import com.mredrock.cyxbs.lib.base.ui.BaseViewModel
-import com.mredrock.cyxbs.lib.utils.network.mapOrInterceptException
+import com.mredrock.cyxbs.lib.utils.network.ApiWrapper
+import com.mredrock.cyxbs.noclass.bean.Cls
+import com.mredrock.cyxbs.noclass.bean.NoClassGroup
 import com.mredrock.cyxbs.noclass.bean.NoClassTemporarySearch
 import com.mredrock.cyxbs.noclass.bean.Student
 import com.mredrock.cyxbs.noclass.page.repository.NoClassRepository
@@ -20,7 +22,7 @@ import com.mredrock.cyxbs.noclass.page.repository.NoClassRepository
  */
 class GroupDetailViewModel : BaseViewModel() {
 
-    private val _searchAll = MutableLiveData<NoClassTemporarySearch>()
+    private val _searchAll = MutableLiveData<ApiWrapper<NoClassTemporarySearch>>()
     val searchAll get() = _searchAll
 
     /**
@@ -32,9 +34,16 @@ class GroupDetailViewModel : BaseViewModel() {
     //临时分组页面搜索全部
     fun getSearchAllResult(content: String) {
         NoClassRepository.searchAll(content)
-            .mapOrInterceptException {
-                toast("网络异常")
-            }.safeSubscribeBy {
+            .doOnError {
+                _searchAll.postValue(
+                    ApiWrapper(NoClassTemporarySearch(
+                        Cls("", listOf(),""),
+                    NoClassGroup("",false, listOf(),""), listOf(), listOf()
+                ),50000,"net error")
+                )
+                toast("为什么发射没有用")
+            }
+            .safeSubscribeBy {
                 _searchAll.postValue(it)
             }
     }

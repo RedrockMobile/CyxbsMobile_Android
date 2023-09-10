@@ -5,8 +5,9 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="46dp"
-    android:layout_marginBottom="6dp">
+    android:layout_height="42dp"
+    android:layout_marginTop="4dp"
+    android:layout_marginBottom="4dp">
 
     <com.mredrock.cyxbs.noclass.widget.SlideMenuLayout
         android:id="@+id/noclass_item_group_member_slide_layout"
@@ -34,8 +35,6 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="16dp"
-                android:paddingTop="3dp"
-                android:paddingBottom="5dp"
                 android:src="@drawable/noclass_ic_user"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
@@ -44,7 +43,7 @@
             <TextView
                 android:id="@+id/noclass_tv_member_name"
                 android:layout_width="wrap_content"
-                android:layout_height="23dp"
+                android:layout_height="22dp"
                 android:textSize="16sp"
                 android:textStyle="bold"
                 android:layout_marginStart="9dp"
@@ -58,7 +57,7 @@
             <TextView
                 android:id="@+id/noclass_tv_member_id"
                 android:layout_width="wrap_content"
-                android:layout_height="23dp"
+                android:layout_height="20dp"
                 android:layout_marginStart="9dp"
                 android:textSize="14sp"
                 android:textColor="@color/noclass_member_stu_num_color"

@@ -119,4 +119,8 @@
 
     <!--光标的颜色    -->
     <color name="noclass_cursor">#788efa</color>
+
+    <!--seekbar的指示器的背景颜色和指示器颜色    -->
+    <color name="noclass_seek_bar_progress">#E8F0FC</color>
+    <color name="noclass_seek_bar_thumb">#6364F7</color>
 </resources>

@@ -1,5 +1,6 @@
 package com.mredrock.cyxbs.noclass.widget
 
+import android.annotation.SuppressLint
 import android.content.Context
 import android.graphics.Color
 import android.graphics.Paint
@@ -395,7 +396,7 @@ class SlideMenuLayout @JvmOverloads constructor(
             }
             
             MotionEvent.ACTION_CANCEL -> {
-//                closeRightSlide()
+                closeRightSlide()
                 mDx = 0
                 mDy  = 0
                 hasInter = false
@@ -701,6 +702,7 @@ class SlideMenuLayout @JvmOverloads constructor(
         mContentAlpha = contentAlpha
     }
 
+    @SuppressLint("ResourceAsColor")
     override fun setContentShadowColor(@ColorInt color: Int) {
         mContentShadowColor = color
         if(this::mContentShadowPaint.isInitialized){
