@@ -69,15 +69,15 @@ class PostActivity : BaseBindActivity<DeclareActivityPostBinding>() {
                 submitDialog.show()
             }
         }
-        binding.etTopic.setOnTouchListener { _, _ ->
+        binding.etTopic.setOnClickListener {
             lifecycleScope.launch {
                 openEdit(30, binding.etTopic.text.toString()).ifPresent {
                     binding.etTopic.setText(it)
                     binding.btnSubmit.active()
                 }
             }
-            true
         }
+        binding.etTopic.isFocusable = false
         binding.declareIvToolbarArrowLeft.setOnClickListener {
             finish()
         }

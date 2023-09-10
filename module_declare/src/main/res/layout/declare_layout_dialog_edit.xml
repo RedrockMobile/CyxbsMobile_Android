@@ -17,6 +17,7 @@
             android:theme="@style/Theme.Material3.DayNight"
             style="@style/Widget.Material3.TextInputLayout.OutlinedBox"
             android:id="@+id/text_input_layout"
+            android:background="@drawable/declare_input_bg"
             app:boxStrokeWidth="0dp"
             app:boxStrokeWidthFocused="0dp"
             app:counterEnabled="true"
@@ -26,7 +27,6 @@
 
             <com.google.android.material.textfield.TextInputEditText
                 style="@style/Widget.Material3.TextInputEditText.OutlinedBox"
-                android:background="@drawable/declare_input_bg"
                 android:id="@+id/et"
                 android:gravity="center|top"
                 android:layout_width="match_parent"
