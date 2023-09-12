@@ -137,7 +137,7 @@ class PostActivity : BaseBindActivity<DeclareActivityPostBinding>() {
                 co.resume(Optional.empty())
             }
             btnSubmit.setOnClickListener {
-                val str = et.text.toString()
+                val str = et.text.toString().replace("\n"," ")
                 if (str.isNotBlank()) {
                     editDialog.hide()
                     resetListeners()

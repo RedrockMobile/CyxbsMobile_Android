@@ -43,7 +43,7 @@
 
                 <TextView
                     android:id="@+id/declare_detail_bar"
-                    android:layout_width="67dp"
+                    android:layout_width="wrap_content"
                     android:layout_height="31dp"
                     android:gravity="center_vertical"
                     android:text="@string/declare_home_toolbar"
@@ -51,8 +51,8 @@
                     android:textSize="22sp"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintHorizontal_bias="0.126"
-                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintHorizontal_bias="0.036"
+                    app:layout_constraintStart_toEndOf="@+id/declare_detail_iv_toolbar_arrow_left"
                     app:layout_constraintTop_toTopOf="parent"
                     app:layout_constraintVertical_bias="0.2345" />
 

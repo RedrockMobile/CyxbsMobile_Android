@@ -30,7 +30,7 @@ class IncreaseCardView @JvmOverloads constructor(
         setWillNotDraw(false)
         animator = ValueAnimator.ofInt(0, 100)
             .apply {
-                duration = 1000//时长1s
+                duration = (1000*allPercent*0.01f).toLong()//总时长1s
                 interpolator = LinearInterpolator()//线性插值器
                 addUpdateListener {
                     val value = it.animatedValue.toString().toInt()
@@ -50,7 +50,8 @@ class IncreaseCardView @JvmOverloads constructor(
      */
     fun setPercent(percent: Int, color: Int) {
         mPaint.color = color
-        this.allPercent = percent
+        allPercent = percent
+        animator.duration = (1000*allPercent*0.01f).toLong()//总时长1s
         animator.start()
     }
 
