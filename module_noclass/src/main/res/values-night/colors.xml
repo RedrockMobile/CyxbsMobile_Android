@@ -54,4 +54,8 @@
 
     <!--    批量添加页面输入框文字颜色-->
     <color name="noclass_batch_edit_text">#FFFFFF</color>
+
+    <!--分界处的渐变阴影    -->
+    <color name="noclass_split_from_color">#000000</color>
+    <color name="noclass_split_to_color">#000000</color>
 </resources>

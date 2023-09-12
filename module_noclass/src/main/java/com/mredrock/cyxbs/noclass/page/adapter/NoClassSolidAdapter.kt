@@ -64,14 +64,14 @@ class NoClassSolidAdapter : ListAdapter<NoClassGroup, NoClassSolidAdapter.MyHold
                 onClickGroupName?.invoke(item)
             }
             tvGroupIsTop.setOnClickListener {
+                mMenuLayout.closeRightSlide()
                 val item = getItem(bindingAdapterPosition)
                 onClickGroupIsTop?.invoke(item,tvGroupIsTop)
-                mMenuLayout.closeRightSlide()
             }
             tvGroupDelete.setOnClickListener {
+                mMenuLayout.closeRightSlide()
                 val item = getItem(bindingAdapterPosition)
                 onClickGroupDelete?.invoke(item)
-                mMenuLayout.closeRightSlide()
             }
         }
     }

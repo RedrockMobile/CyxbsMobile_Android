@@ -66,13 +66,13 @@ class NoClassTouchAffairItem(
         val beginLesson = if (begin >= 10) begin - 1 else if (begin <= 3) begin + 1 else begin
 
         val month = when (weekNum) {
-            1 -> " 周一"
-            2 -> " 周二"
-            3 -> " 周三"
-            4 -> " 周四"
-            5 -> " 周五"
-            6 -> " 周六"
-            7 -> " 周日"
+            1 -> "周一"
+            2 -> "周二"
+            3 -> "周三"
+            4 -> "周四"
+            5 -> "周五"
+            6 -> "周六"
+            7 -> "周日"
             else -> ""
         }
 
