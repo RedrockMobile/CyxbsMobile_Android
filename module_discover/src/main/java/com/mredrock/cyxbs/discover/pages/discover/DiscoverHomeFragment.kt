@@ -2,7 +2,6 @@ package com.mredrock.cyxbs.discover.pages.discover
 
 import android.content.Context
 import android.graphics.Point
-import android.os.Build
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -10,7 +9,11 @@ import android.view.View.OVER_SCROLL_IF_CONTENT_SCROLLS
 import android.view.ViewGroup
 import android.view.WindowManager
 import android.view.animation.DecelerateInterpolator
-import android.widget.*
+import android.widget.FrameLayout
+import android.widget.ImageView
+import android.widget.TextView
+import android.widget.Toast
+import android.widget.ViewFlipper
 import androidx.appcompat.widget.AppCompatTextView
 import androidx.appcompat.widget.LinearLayoutCompat
 import androidx.core.content.ContextCompat
@@ -20,12 +23,16 @@ import androidx.recyclerview.widget.RecyclerView
 import com.alibaba.android.arouter.facade.annotation.Route
 import com.alibaba.android.arouter.launcher.ARouter
 import com.bumptech.glide.Glide
-import com.mredrock.cyxbs.api.todo.ITodoService
 import com.mredrock.cyxbs.api.account.IAccountService
 import com.mredrock.cyxbs.api.electricity.IElectricityService
+import com.mredrock.cyxbs.api.todo.ITodoService
 import com.mredrock.cyxbs.common.component.CyxbsToast
 import com.mredrock.cyxbs.common.component.SpacesHorizontalItemDecoration
-import com.mredrock.cyxbs.common.config.*
+import com.mredrock.cyxbs.common.config.DISCOVER_ENTRY
+import com.mredrock.cyxbs.common.config.DISCOVER_NEWS
+import com.mredrock.cyxbs.common.config.DISCOVER_NEWS_ITEM
+import com.mredrock.cyxbs.common.config.MINE_CHECK_IN
+import com.mredrock.cyxbs.common.config.NOTIFICATION_HOME
 import com.mredrock.cyxbs.common.service.ServiceManager
 import com.mredrock.cyxbs.common.service.impl
 import com.mredrock.cyxbs.common.ui.BaseViewModelFragment
@@ -36,8 +43,8 @@ import com.mredrock.cyxbs.common.utils.extensions.dp2px
 import com.mredrock.cyxbs.discover.R
 import com.mredrock.cyxbs.discover.pages.RollerViewActivity
 import com.mredrock.cyxbs.discover.pages.discover.adapter.DiscoverMoreFunctionRvAdapter
-import com.mredrock.cyxbs.discover.utils.MoreFunctionProvider
 import com.mredrock.cyxbs.discover.utils.IS_SWITCH1_SELECT
+import com.mredrock.cyxbs.discover.utils.MoreFunctionProvider
 import com.mredrock.cyxbs.discover.utils.NotificationSp
 import com.mredrock.cyxbs.discover.widget.IndicatorView
 import com.mredrock.cyxbs.lib.utils.extensions.dp2pxF
@@ -47,7 +54,7 @@ import com.ndhzs.slideshow.SlideShow
 import com.ndhzs.slideshow.adapter.ImageViewAdapter
 import com.ndhzs.slideshow.adapter.setImgAdapter
 import com.ndhzs.slideshow.viewpager.transformer.ScaleInTransformer
-import java.util.*
+import java.util.Calendar
 
 
 /**
@@ -137,7 +144,10 @@ class DiscoverHomeFragment : BaseViewModelFragment<DiscoverHomeViewModel>() {
         }
     }
 
-
+    override fun onStart() {
+        super.onStart()
+        viewModel.getNotificationUnReadStatus()
+    }
     override fun onResume() {
         super.onResume()
         initFunctions()

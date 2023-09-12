@@ -10,6 +10,7 @@ dependLibCourse()
 
 dependApiAccount()
 dependApiCourse()
+dependApiAffair()
 
 dependNetwork()
 dependRxjava()

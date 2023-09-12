@@ -9,7 +9,6 @@ import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.mredrock.cyxbs.noclass.R
-import com.mredrock.cyxbs.noclass.bean.NoclassGroup
 import com.mredrock.cyxbs.noclass.bean.Student
 
 /**
@@ -23,33 +22,35 @@ import com.mredrock.cyxbs.noclass.bean.Student
  * @Version:        1.0
  * @Description:    查找学生RV的adapter
  */
-class SearchStudentAdapter(
-  private val onAddClick : (NoclassGroup.Member) -> Unit
-) : ListAdapter<Student,SearchStudentAdapter.VH>(studentDiffUtil){
+class SearchStudentAdapter : ListAdapter<Student,SearchStudentAdapter.VH>(studentDiffUtil){
  
   companion object{
     private val studentDiffUtil : DiffUtil.ItemCallback<Student> = object : DiffUtil.ItemCallback<Student>(){
       
       override fun areItemsTheSame(oldItem: Student, newItem: Student): Boolean {
-        return oldItem.stuNum == newItem.stuNum
+        return oldItem.id == newItem.id
       }
   
       override fun areContentsTheSame(oldItem: Student, newItem: Student): Boolean {
-        return oldItem.stuNum == newItem.stuNum && oldItem.major == newItem.major && oldItem.name == newItem.name
+        return oldItem == newItem
       }
   
     }
   }
-  
+
+  private var onAddClick : ((Student) -> Unit)? = null
+  fun setOnAddClick( onAddClick : (Student) -> Unit){
+    this.onAddClick = onAddClick
+  }
   inner class VH(itemView : View) : RecyclerView.ViewHolder(itemView){
     val tvName: TextView = itemView.findViewById(R.id.noclass_tv_student_name)
-    val tvMajor: TextView = itemView.findViewById(R.id.noclass_tv_student_major)
     val tvNum: TextView = itemView.findViewById(R.id.noclass_tv_student_id)
-    private val btnAdd = itemView.findViewById<ImageView>(R.id.noclass_iv_student_add).apply {
-      setOnClickListener {
-        val student = currentList[absoluteAdapterPosition]
-        val member = NoclassGroup.Member(student.name,student.stuNum)
-        onAddClick.invoke(member)
+    init {
+      itemView.findViewById<ImageView>(R.id.noclass_iv_student_add).apply {
+        setOnClickListener {
+          val student = getItem(bindingAdapterPosition)
+          onAddClick?.invoke(student)
+        }
       }
     }
   }
@@ -61,8 +62,12 @@ class SearchStudentAdapter(
   
   override fun onBindViewHolder(holder: VH, position: Int) {
     holder.tvName.text = currentList[position].name
-    holder.tvMajor.text = currentList[position].major
-    holder.tvNum.text = currentList[position].stuNum
+    holder.tvNum.text = currentList[position].id
   }
-  
+
+  fun deleteStudent(student: Student){
+    val stuList = currentList.toMutableList()
+    stuList.remove(student)
+    submitList(stuList)
+  }
 }

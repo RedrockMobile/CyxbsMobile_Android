@@ -2,6 +2,8 @@ package com.mredrock.cyxbs.affair.net
 
 import com.mredrock.cyxbs.affair.bean.AddAffairBean
 import com.mredrock.cyxbs.affair.bean.AffairBean
+import com.mredrock.cyxbs.affair.bean.NotificationResultBean
+import com.mredrock.cyxbs.api.affair.NotificationBean
 import com.mredrock.cyxbs.lib.utils.network.ApiGenerator
 import com.mredrock.cyxbs.lib.utils.network.ApiStatus
 import com.mredrock.cyxbs.lib.utils.network.ApiWrapper
@@ -60,6 +62,14 @@ interface AffairApiService {
 
   @GET("/magipoke-reminder/Person/getHotWord")
   fun getTitleCandidate(): Single<ApiWrapper<List<String>>>
+
+  @GET("/magipoke-jwzx/itinerary/hotLocation")
+  fun getHotLocation(): Single<ApiWrapper<List<String>>>
+
+  // 没课约专属发送通知接口
+  @POST("magipoke-jwzx/itinerary")
+  @Headers("App-Version:74")
+  fun sendNotification(@Body notification : NotificationBean) : Single<NotificationResultBean>
 
   companion object {
     val INSTANCE by lazy {
