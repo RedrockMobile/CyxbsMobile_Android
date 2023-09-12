@@ -76,12 +76,12 @@ class FoodMainActivity : BaseActivity() {
     private val mImgRefresh by R.id.food_main_img_refresh.view<ImageView>()
     private val mImgPicture by R.id.food_main_img_picture.view<ImageView>()
     private val mClMeal by R.id.food_main_cl_meal.view<ConstraintLayout>()
-    private var dialog:FoodDetailDialog? = null
+    private var dialog: FoodDetailDialog? = null
 
     //是否改变标签，如果标签改变了换一换需要重新请求数据
     private var changeLabel = true
 
-    var translation:ObjectAnimator? = null
+    var translation: ObjectAnimator? = null
 
     private val foodRegionRvAdapter = FoodMainRvAdapter() { state, position ->
         changeBtnState(state, position, mRvRegion)
@@ -172,7 +172,7 @@ class FoodMainActivity : BaseActivity() {
             //dataFoodResult是本地数据，需要对本地数据进行处理
             viewModel.dataFoodResult[viewModel.foodNum].run {
                 this.praiseNum = it.praiseNum
-                this.praiseIs= it.praiseIs
+                this.praiseIs = it.praiseIs
             }
             if (it.praiseIs) {
                 dialog?.findViewById<Button>(R.id.food_dialog_detail_btn_positive)
@@ -181,6 +181,7 @@ class FoodMainActivity : BaseActivity() {
                             context,
                             R.drawable.food_shape_btn_praise
                         )
+                        text = "已点赞"
                     }
             } else {
                 dialog?.findViewById<Button>(R.id.food_dialog_detail_btn_positive)
@@ -189,6 +190,7 @@ class FoodMainActivity : BaseActivity() {
                             context,
                             R.drawable.food_shape_btn_determine
                         )
+                        text = "点赞"
                     }
             }
         }
@@ -212,6 +214,7 @@ class FoodMainActivity : BaseActivity() {
                         imageUrl = picture,
                         praiseNum = praiseNum,
                         positiveButtonBackground = if (this.praiseIs) R.drawable.food_shape_btn_praise else R.drawable.food_shape_btn_determine,
+                        praiseIs,
                         width = 255,
                         height = 330,
                     )
@@ -221,9 +224,10 @@ class FoodMainActivity : BaseActivity() {
                     }
                     .setPositiveClick {
                         viewModel.postFoodPraise(this@apply.name)
+
                     }
                     .build()
-                dialog?.show()
+                dialog!!.show()
             }
         }
         mBtnChange.setOnClickListener {
@@ -320,7 +324,7 @@ class FoodMainActivity : BaseActivity() {
     }
 
     private fun changeResult() {
-        if (translation?.isRunning == true){
+        if (translation?.isRunning == true) {
             cancelAnimator()
         }
         viewTranslation(1000)
@@ -334,7 +338,7 @@ class FoodMainActivity : BaseActivity() {
             mClMeal,
             "translationY",
             0f,
-            mClMeal.height.toFloat() / 2 -10
+            mClMeal.height.toFloat() / 2 - 3.dp2px
         )
         translation.duration = duration
         translation.addListener {
@@ -354,7 +358,7 @@ class FoodMainActivity : BaseActivity() {
         translation.start()
     }
 
-    private fun cancelAnimator(){
+    private fun cancelAnimator() {
         translation?.cancel()
     }
 

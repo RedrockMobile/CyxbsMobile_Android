@@ -5,18 +5,14 @@ import android.content.Context
 import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
 import android.os.Bundle
-import android.view.Gravity
 import android.view.LayoutInflater
-import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
 import android.widget.ImageView
-import android.widget.LinearLayout
 import android.widget.TextView
 import androidx.annotation.DrawableRes
 import androidx.appcompat.content.res.AppCompatResources
 import com.mredrock.cyxbs.food.R
-import com.mredrock.cyxbs.lib.utils.extensions.color
 import com.mredrock.cyxbs.lib.utils.extensions.dp2px
 import com.mredrock.cyxbs.lib.utils.extensions.setImageFromUrl
 
@@ -74,6 +70,7 @@ class FoodDetailDialog private constructor(
         val praiseNum:Int = 0,
         @DrawableRes
         val positiveButtonBackground:Int = 0,
+        val praiseIs:Boolean ,
         val width:Int = 0,
         val height:Int = 0
     )
@@ -89,13 +86,17 @@ class FoodDetailDialog private constructor(
         view.findViewById<TextView>(R.id.food_dialog_detail_tv_theme).text = data.foodName
         view.findViewById<TextView>(R.id.food_dialog_detail_tv_content).text = data.content
         view.findViewById<TextView>(R.id.food_dialog_tv_praise_num).text = data.praiseNum.toString()
-        view.findViewById<Button>(R.id.food_dialog_detail_btn_positive).setOnClickListener {
-            positiveClick?.invoke(this)
-        }
-        view.findViewById<Button>(R.id.food_dialog_detail_btn_positive).background =  AppCompatResources.getDrawable(
-            context,
-            data.positiveButtonBackground
-        )
+        view.findViewById<Button>(R.id.food_dialog_detail_btn_positive)
+            .run {
+                setOnClickListener {
+                    positiveClick?.invoke(this@FoodDetailDialog)
+                }
+                background =  AppCompatResources.getDrawable(
+                    context,
+                    data.positiveButtonBackground
+                )
+                text = if (data.praiseIs) "已点赞" else "点赞"
+            }
         view.findViewById<Button>(R.id.food_dialog_detail_btn_negative).setOnClickListener {
             negativeClick?.invoke(this)
         }
