@@ -2,8 +2,10 @@ package com.mredrock.cyxbs.noclass.page.ui.dialog
 
 import android.app.Dialog
 import android.os.Bundle
+import android.view.View
 import android.widget.Button
 import android.widget.TextView
+import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.fragment.app.activityViewModels
 import androidx.viewpager2.widget.ViewPager2
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
@@ -11,6 +13,8 @@ import com.mredrock.cyxbs.api.affair.DateJson
 import com.mredrock.cyxbs.api.affair.IAffairService
 import com.mredrock.cyxbs.api.affair.NoClassBean
 import com.mredrock.cyxbs.lib.utils.adapter.FragmentVpAdapter
+import com.mredrock.cyxbs.lib.utils.extensions.dp2px
+import com.mredrock.cyxbs.lib.utils.extensions.gone
 import com.mredrock.cyxbs.lib.utils.service.impl
 import com.mredrock.cyxbs.noclass.R
 import com.mredrock.cyxbs.noclass.page.ui.fragment.NoClassBusyPageFragment
@@ -108,8 +112,19 @@ class NoClassGatherDialog (
     mViewPager2 = dialog.findViewById<ViewPager2>(R.id.noclass_vp_gather_container).apply {
       // 忙碌的人名
       val busyNames = mNumNameIsSpare.filter { !it.value }.map { it.key }.map { it.second }
-      mParentViewModel.setBusyNameList(busyNames)
-      adapter = mAdapter.add(NoClassBusyPageFragment::class.java)
+      if (busyNames.isEmpty()){
+        // 这里是为了没有忙碌人员的时候不显示线和缩小dialog的高度
+        gone()
+        dialog.findViewById<View>(R.id.noclass_dialog_gathering_line).gone()
+        val constrain = dialog.findViewById<ConstraintLayout>(R.id.noclass_gather_dialog_constraint)
+        val lp = constrain.layoutParams
+        lp.height = 175.dp2px
+        constrain.layoutParams = lp
+        requestLayout()
+      }else{
+        mParentViewModel.setBusyNameList(busyNames)
+        adapter = mAdapter.add(NoClassBusyPageFragment::class.java)
+      }
     }
     mViewPager2.registerOnPageChangeCallback(object : ViewPager2.OnPageChangeCallback(){
       override fun onPageSelected(position: Int) {

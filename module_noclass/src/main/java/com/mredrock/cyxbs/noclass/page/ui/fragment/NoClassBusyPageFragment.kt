@@ -92,7 +92,7 @@ class NoClassBusyPageFragment : BaseFragment(R.layout.noclass_layout_gathering) 
                 LinearLayout.LayoutParams.WRAP_CONTENT,
                 LinearLayout.LayoutParams.WRAP_CONTENT
             ).apply {
-                setMargins(12, 14, 12, 14)
+                setMargins(12, 10, 12, 10)
             }
         }
     }

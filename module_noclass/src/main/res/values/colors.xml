@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<resources xmlns:tools="http://schemas.android.com/tools">
+<resources>
 
     <!--    每个组的默认背景色-->
     <color name="noclass_group_default_bg">#E8F0FC</color>
@@ -123,4 +123,8 @@
     <!--seekbar的指示器的背景颜色和指示器颜色    -->
     <color name="noclass_seek_bar_progress">#E8F0FC</color>
     <color name="noclass_seek_bar_thumb">#6364F7</color>
+
+
+    <!--聚集分割线的颜色    -->
+    <color name="noclass_gathering_line_color">#0D2A4E84</color>
 </resources>
