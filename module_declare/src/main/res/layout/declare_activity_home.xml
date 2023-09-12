@@ -51,21 +51,20 @@
                     android:textSize="22sp"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintHorizontal_bias="0.126"
-                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintHorizontal_bias="0.036"
+                    app:layout_constraintStart_toEndOf="@+id/declare_iv_toolbar_arrow_left"
                     app:layout_constraintTop_toTopOf="parent"
                     app:layout_constraintVertical_bias="0.4818" />
 
-                <ImageButton
+                <androidx.appcompat.widget.AppCompatButton
                     android:id="@+id/declare_home_toolbar_post"
-                    android:layout_width="18dp"
-                    android:layout_height="18dp"
-                    android:src="@drawable/declare_ic_home_post"
-                    android:visibility="gone"
+                    android:layout_width="20dp"
+                    android:layout_height="20dp"
+                    android:background="@drawable/declare_ic_home_post"
+                    android:visibility="visible"
                     app:layout_constraintBottom_toBottomOf="@+id/declare_home_toolbar_tv"
                     app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintHorizontal_bias="0.929"
-                    app:layout_constraintStart_toStartOf="parent"
+                    android:layout_marginEnd="15dp"
                     app:layout_constraintTop_toTopOf="@+id/declare_home_toolbar_tv"
                     app:layout_constraintVertical_bias="0.536" />
             </androidx.constraintlayout.widget.ConstraintLayout>
@@ -104,6 +103,7 @@
                 android:id="@+id/declare_home_recyclerview"
                 android:layout_width="match_parent"
                 android:layout_height="0dp"
+                android:layout_marginTop="2dp"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"

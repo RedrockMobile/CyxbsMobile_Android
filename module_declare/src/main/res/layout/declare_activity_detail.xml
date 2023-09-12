@@ -20,7 +20,7 @@
             <androidx.constraintlayout.widget.ConstraintLayout
                 android:id="@+id/declare_detail_toolbar"
                 android:layout_width="match_parent"
-                android:layout_height="226dp"
+                android:layout_height="200dp"
                 android:background="@drawable/declare_ic_detail_header_bg"
                 android:fitsSystemWindows="true"
                 app:layout_constraintEnd_toEndOf="parent"
@@ -70,15 +70,24 @@
                     tools:text="哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈" />
             </androidx.constraintlayout.widget.ConstraintLayout>
 
-            <androidx.recyclerview.widget.RecyclerView
-                android:id="@+id/declare_detail_recyclerview"
+            <androidx.cardview.widget.CardView
                 android:layout_width="match_parent"
                 android:layout_height="0dp"
+                android:layout_marginBottom="10dp"
+                android:layout_marginTop="-10dp"
+                app:cardCornerRadius="10dp"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/declare_detail_toolbar"
-                app:layout_constraintVertical_bias="0.0" />
+                app:layout_constraintVertical_bias="0.0">
+
+                <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/declare_detail_recyclerview"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent" />
+            </androidx.cardview.widget.CardView>
+
         </androidx.constraintlayout.widget.ConstraintLayout>
 
         <LinearLayout

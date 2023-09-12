@@ -1,70 +1,85 @@
 <?xml version="1.0" encoding="utf-8"?>
-<layout xmlns:tools="http://schemas.android.com/tools"
-    xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto">
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
 
     <data>
 
     </data>
 
     <androidx.appcompat.widget.LinearLayoutCompat
-        android:orientation="vertical"
-        android:padding="24dp"
         android:layout_width="300dp"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:padding="24dp">
 
-        <com.google.android.material.textfield.TextInputLayout
-            android:theme="@style/Theme.Material3.DayNight"
-            style="@style/Widget.Material3.TextInputLayout.OutlinedBox"
-            android:id="@+id/text_input_layout"
-            android:background="@drawable/declare_input_bg"
-            app:boxStrokeWidth="0dp"
-            app:boxStrokeWidthFocused="0dp"
-            app:counterEnabled="true"
-            app:counterMaxLength="30"
+        <androidx.cardview.widget.CardView
             android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+            android:layout_height="wrap_content"
+            app:cardElevation="0dp"
+            app:cardCornerRadius="5dp">
 
-            <com.google.android.material.textfield.TextInputEditText
-                style="@style/Widget.Material3.TextInputEditText.OutlinedBox"
-                android:id="@+id/et"
-                android:gravity="center|top"
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/text_input_layout"
+                style="@style/Widget.Material3.TextInputLayout.OutlinedBox"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:maxLength="30"
-                android:minHeight="80dp"
-                android:textColor="#CC15315B"
-                android:textColorHint="#8015315B" />
+                android:background="#80E8F1FC"
+                android:paddingBottom="10dp"
+                android:theme="@style/Theme.Material3.DayNight"
+                app:boxStrokeWidth="0dp"
+                app:boxStrokeWidthFocused="0dp"
+                app:counterEnabled="true"
+                app:counterMaxLength="30"
+                app:counterTextColor="@color/declare_post_text_light">
 
-        </com.google.android.material.textfield.TextInputLayout>
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/et"
+                    style="@style/Widget.Material3.TextInputEditText.OutlinedBox"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="start|top"
+                    android:maxLength="30"
+                    android:minHeight="80dp"
+                    android:paddingTop="5dp"
+                    android:textColor="#CC15315B"
+                    android:textColorHint="#8015315B"
+                    tools:hint="aaaa" />
+
+            </com.google.android.material.textfield.TextInputLayout>
+        </androidx.cardview.widget.CardView>
 
         <FrameLayout
-            android:layout_marginTop="10dp"
-            android:layout_marginHorizontal="15dp"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp">
+
             <androidx.appcompat.widget.AppCompatButton
                 android:id="@+id/btn_cancel"
+                android:layout_width="110dp"
+                android:layout_height="36dp"
                 android:layout_gravity="start"
-                android:theme="@style/Theme.MaterialComponents"
-                android:elevation="0dp"
-                android:background="@drawable/declare_ic_btn_background_cancel"
-                android:textColor="@color/config_level_three_font_color"
                 android:layout_marginVertical="6dp"
+                android:background="@drawable/declare_ic_btn_background_cancel"
+                android:elevation="0dp"
+                android:gravity="center"
                 android:text="@string/declare_cancel"
-                android:layout_width="90dp"
-                android:layout_height="36dp" />
+                android:textColor="#8015315B"
+                android:textSize="17sp"
+                android:theme="@style/Theme.MaterialComponents" />
 
             <androidx.appcompat.widget.AppCompatButton
                 android:id="@+id/btn_submit"
+                android:layout_width="110dp"
+                android:layout_height="36dp"
                 android:layout_gravity="end"
-                android:theme="@style/Theme.MaterialComponents"
-                android:background="@drawable/declare_ic_btn_background_inactive"
-                android:textColor="@color/config_white_black"
-                android:text="@string/declare_confirm"
+                android:gravity="center"
                 android:layout_marginVertical="6dp"
-                android:layout_width="90dp"
-                android:layout_height="36dp" />
+                android:background="@drawable/declare_ic_btn_background_inactive"
+                android:text="@string/declare_confirm"
+                android:textSize="17sp"
+                android:textColor="@color/config_white_black"
+                android:theme="@style/Theme.MaterialComponents" />
         </FrameLayout>
 
     </androidx.appcompat.widget.LinearLayoutCompat>
