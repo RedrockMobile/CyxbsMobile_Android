@@ -9,6 +9,7 @@ import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.mredrock.cyxbs.noclass.R
 import com.mredrock.cyxbs.noclass.bean.Student
+import com.mredrock.cyxbs.noclass.widget.SlideMenuLayout
 
 /**
  *
@@ -38,9 +39,8 @@ class NoClassTemporaryAdapter : ListAdapter<Student,NoClassTemporaryAdapter.VH>(
                 oldItem: Student,
                 newItem: Student
             ): Boolean {
-                return oldItem.id == newItem.id
+                return oldItem == newItem
             }
-
         }
     }
 
@@ -49,9 +49,11 @@ class NoClassTemporaryAdapter : ListAdapter<Student,NoClassTemporaryAdapter.VH>(
     inner class VH(itemView : View) : RecyclerView.ViewHolder(itemView){
         val tvName : TextView = itemView.findViewById(R.id.noclass_tv_member_name)
         val tvId : TextView = itemView.findViewById(R.id.noclass_tv_member_id)
+        val slideMenu : SlideMenuLayout = itemView.findViewById(R.id.noclass_item_group_member_slide_layout)
         init {
             itemView.findViewById<TextView?>(R.id.noclass_item_tv_delete).apply {
                 setOnClickListener {
+                    slideMenu.closeRightSlide()
                     val stu = getItem(bindingAdapterPosition)
                     mOnItemDelete?.invoke(stu)
                 }

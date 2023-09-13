@@ -74,6 +74,7 @@ class TemporarySearchAdapter:  ListAdapter<NoClassItem,RecyclerView.ViewHolder>(
                     this as StudentHolder
                     tvName.text = itemData.name
                     tvStuNum.text = itemData.id
+                    tvMajor.text = itemData.major
                     if (isDisplay){
                         imgUser.visible()
                     }
@@ -104,6 +105,7 @@ class TemporarySearchAdapter:  ListAdapter<NoClassItem,RecyclerView.ViewHolder>(
         val imgUser : ImageView = itemView.findViewById(R.id.noclass_item_img_user)
         val tvName : TextView = itemView.findViewById(R.id.noclass_tv_student_name)
         val tvStuNum : TextView = itemView.findViewById(R.id.noclass_tv_student_id)
+        val tvMajor : TextView = itemView.findViewById(R.id.noclass_tv_student_major)
         private val btnAdd : ImageView = itemView.findViewById(R.id.noclass_iv_student_add)
         init {
             btnAdd.setOnSingleClickListener {

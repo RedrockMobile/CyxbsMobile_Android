@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<layout xmlns:tools="http://schemas.android.com/tools"
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <data>
@@ -9,22 +8,26 @@
 
     <androidx.appcompat.widget.LinearLayoutCompat
         android:layout_width="match_parent"
-        android:paddingVertical="16dp"
+        android:paddingVertical="10dp"
+        android:gravity="center_vertical"
         android:layout_height="wrap_content">
 
         <com.google.android.material.imageview.ShapeableImageView
             android:id="@+id/siv_add"
-            android:layout_marginEnd="24dp"
+            android:layout_marginEnd="18dp"
             app:shapeAppearance="@style/declare_circle_style"
             app:srcCompat="@drawable/declare_ic_add"
             android:layout_gravity="center"
-            android:layout_width="24dp"
-            android:layout_height="24dp" />
+            android:layout_width="20dp"
+            android:layout_height="20dp" />
 
         <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textSize="22sp"
+            android:layout_width="100dp"
+            android:layout_height="30dp"
+            android:includeFontPadding="false"
+            android:layout_gravity="center_vertical"
+            android:textSize="18sp"
+            android:gravity="center_vertical"
             android:textColor="#4A44E4"
             android:text="@string/declare_add_section" />
 

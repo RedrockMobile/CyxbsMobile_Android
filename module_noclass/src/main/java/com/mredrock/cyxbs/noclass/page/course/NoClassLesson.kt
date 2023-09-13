@@ -82,13 +82,13 @@ class NoClassLesson(
             val beginLesson =  if(mLastingTime.first >= 10) mLastingTime.first - 1 else if (mLastingTime.first<=3) mLastingTime.first + 1 else mLastingTime.first
 
             val month = when(data.weekNum){
-               1 -> " 周一"
-               2 -> " 周二"
-               3 -> " 周三"
-               4 -> " 周四"
-               5 -> " 周五"
-               6 -> " 周六"
-               7 -> " 周日"
+               1 -> "周一"
+               2 -> "周二"
+               3 -> "周三"
+               4 -> "周四"
+               5 -> "周五"
+               6 -> "周六"
+               7 -> "周日"
               else -> ""
             }
             // 中午吃饭时间是-1 下午吃饭时间是-2，所以要传入特殊的beginLesson

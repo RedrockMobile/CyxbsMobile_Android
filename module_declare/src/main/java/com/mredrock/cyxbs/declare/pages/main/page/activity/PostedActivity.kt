@@ -46,7 +46,7 @@ class PostedActivity : BaseBindActivity<DeclareActivityHomeBinding>() {
             }
             declareHomeNoDataPic.setImageResource(R.drawable.declare_ic_posted_no_data)
             declareHomeNoDataTv.text = resources.getString(R.string.declare_posted_no_data)
-            declareHomeToolbarPost.setImageResource(R.drawable.declare_ic_mine_post)
+            declareHomeToolbarPost.setBackgroundResource(R.drawable.declare_ic_mine_post)
         }
         declareHomeRvAdapter.setOnItemClickedListener {
             DetailActivity.startActivity(this, it)

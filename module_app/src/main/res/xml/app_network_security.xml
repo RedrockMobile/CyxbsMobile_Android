@@ -5,6 +5,13 @@
         <domain includeSubdomains="true">android.bugly.qq.com</domain>
     </domain-config>
 
+    <debug-overrides>
+        <trust-anchors>
+            <certificates src="user" />
+            <certificates src="system" />
+        </trust-anchors>
+    </debug-overrides>
+
     <base-config cleartextTrafficPermitted="true" >
         <trust-anchors>
             <certificates src="system"/>
