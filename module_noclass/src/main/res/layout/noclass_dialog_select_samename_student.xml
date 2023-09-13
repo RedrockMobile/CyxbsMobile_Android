@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/noclass_batch_select_same_name_dialog_layout"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:ignore="HardcodedText">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/csl_student_dialog"
+        android:layout_width="match_parent"
+        android:layout_height="447dp"
+        android:background="@drawable/noclass_shape_sheet_dialog_bg"
+        android:orientation="vertical"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="parent">
+
+        <TextView
+            android:id="@+id/noclass_batch_tv_select_student_dialog_cancel"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:layout_marginEnd="16dp"
+            android:includeFontPadding="false"
+            android:text="取消"
+            android:textColor="@color/noclass_same_name_select_cancel_text"
+            android:textSize="12sp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <TextView
+            android:id="@+id/noclass_batch_tv_select_student_dialog_title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="有重名现象，请勾选"
+            android:textStyle="bold"
+            android:textColor="@color/noclass_primary_text_color"
+            android:textSize="18sp"
+            android:layout_marginTop="18dp"
+            android:layout_marginStart="16dp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/noclass_batch_tv_select_student_dialog_cancel" />
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/noclass_batch_rv_dialog_students_container"
+            android:layout_width="match_parent"
+            android:layout_height="240dp"
+            android:layout_marginStart="16dp"
+            android:layout_marginTop="24dp"
+            android:paddingStart="0dp"
+            android:paddingEnd="3dp"
+            android:scrollbars="vertical"
+            android:scrollbarThumbVertical="@drawable/noclass_shape_rv_bar"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.0"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/noclass_batch_tv_select_student_dialog_title" />
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/noclass_batch_select_same_name_dialog_bottom_layout"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/noclass_batch_rv_dialog_students_container">
+
+            <Button
+                android:id="@+id/noclass_batch_btn_confirm_selected_students"
+                style="?android:attr/borderlessButtonStyle"
+                android:layout_width="120dp"
+                android:layout_height="42dp"
+                android:layout_gravity="center_horizontal"
+                android:background="@drawable/noclass_shape_button_save_default_bg"
+                android:text="确定"
+                android:enabled="false"
+                android:textColor="@color/config_white_black"
+                android:textSize="18sp"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+</androidx.constraintlayout.widget.ConstraintLayout>

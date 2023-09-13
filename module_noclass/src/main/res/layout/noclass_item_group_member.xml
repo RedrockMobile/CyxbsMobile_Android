@@ -1,49 +1,75 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout
+<FrameLayout
+    android:id="@+id/noclass_item_group_member"
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:layout_marginTop="12dp">
+    android:layout_height="42dp"
+    android:layout_marginTop="4dp"
+    android:layout_marginBottom="4dp">
 
-    <TextView
-        android:id="@+id/noclass_tv_member_name"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="16dp"
-        android:textColor="@color/noclass_member_name_color"
-        android:textSize="14sp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0"
-        tools:text="陈思言" />
+    <com.mredrock.cyxbs.noclass.widget.SlideMenuLayout
+        android:id="@+id/noclass_item_group_member_slide_layout"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@drawable/noclass_selector_item_selected_bg"
+        app:noclass_slideMode="right"
+        app:noclass_isFixedView="false">
 
-    <TextView
-        android:id="@+id/noclass_tv_member_id"
-        app:layout_constraintVertical_bias="0"
-        app:layout_constraintHorizontal_bias="0"
-        android:layout_marginStart="16dp"
-        android:layout_marginTop="2dp"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/noclass_tv_member_name"
-        tools:text="2021214171" />
+        <TextView
+            android:id="@+id/noclass_item_tv_delete"
+            android:layout_width="82dp"
+            android:layout_height="match_parent"
+            android:gravity="center"
+            android:background="@color/noclass_delete_bg"
+            android:textColor="@color/config_white_black"
+            android:text="删除"/>
 
-    <ImageView
-        android:id="@+id/noclass_iv_member_delete"
-        android:layout_marginEnd="16dp"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:srcCompat="@drawable/noclass_ic_group_delete"
-        tools:ignore="ContentDescription" />
-</androidx.constraintlayout.widget.ConstraintLayout>
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <ImageView
+                android:id="@+id/noclassShapeableimageview"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="16dp"
+                android:src="@drawable/noclass_ic_user"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <TextView
+                android:id="@+id/noclass_tv_member_name"
+                android:layout_width="wrap_content"
+                android:layout_height="22dp"
+                android:textSize="16sp"
+                android:textStyle="bold"
+                android:layout_marginStart="9dp"
+                android:textColor="@color/noclass_member_name_color"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintStart_toEndOf="@+id/noclassShapeableimageview"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintVertical_bias="0"
+                tools:text="陈思言"/>
+
+            <TextView
+                android:id="@+id/noclass_tv_member_id"
+                android:layout_width="wrap_content"
+                android:layout_height="20dp"
+                android:layout_marginStart="9dp"
+                android:textSize="14sp"
+                android:textColor="@color/noclass_member_stu_num_color"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintStart_toEndOf="@+id/noclassShapeableimageview"
+                tools:text="2021214171" />
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+
+    </com.mredrock.cyxbs.noclass.widget.SlideMenuLayout>
+
+
+
+</FrameLayout>

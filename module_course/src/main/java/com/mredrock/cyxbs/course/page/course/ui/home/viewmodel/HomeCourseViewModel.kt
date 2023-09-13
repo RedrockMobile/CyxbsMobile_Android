@@ -1,5 +1,6 @@
 package com.mredrock.cyxbs.course.page.course.ui.home.viewmodel
 
+import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
@@ -25,6 +26,7 @@ import kotlinx.coroutines.flow.SharedFlow
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.rx3.asObservable
+import java.util.concurrent.TimeUnit
 
 /**
  * ...
@@ -34,6 +36,10 @@ import kotlinx.coroutines.rx3.asObservable
  * @date 2022/8/27 17:12
  */
 class HomeCourseViewModel : BaseViewModel() {
+
+  companion object {
+    private const val TAG = "HomeCourseViewModel"
+  }
   
   private val _homeWeekData = MutableLiveData<Map<Int, HomePageResult>>()
   val homeWeekData: LiveData<Map<Int, HomePageResult>> get() = _homeWeekData
@@ -89,7 +95,7 @@ class HomeCourseViewModel : BaseViewModel() {
   private fun initObserve(): Disposable {
     // 自己课的观察流
     val selfLessonObservable = StuLessonRepository.observeSelfLesson(true)
-  
+
     // 关联人课的观察流
     val linkLessonObservable = LinkRepository.observeLinkStudent()
       .doOnNext { _linkStu.postValue(it) }
@@ -113,7 +119,7 @@ class HomeCourseViewModel : BaseViewModel() {
     // 事务的观察流
     val affairObservable = IAffairService::class.impl
       .observeSelfAffair()
-  
+
     // 合并观察流
     return Observable.combineLatest(
       selfLessonObservable,
@@ -126,6 +132,8 @@ class HomeCourseViewModel : BaseViewModel() {
         link.toStuLessonData(),
         affair.toAffairData()
       )
+    }.doOnError {
+      Log.d(TAG, "合并课表数据流发生异常：\n${it.stackTraceToString()}")
     }.subscribeOn(Schedulers.io())
       .safeSubscribeBy {
         _homeWeekData.postValue(it)

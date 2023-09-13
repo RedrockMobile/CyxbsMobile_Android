@@ -71,7 +71,7 @@ open class TouchAffairView(context: Context) : ItemView(context), ITouchAffairIt
     setOnSingleClickListener { l.invoke() }
   }
   
-  private val mImageView = ImageView(context).apply {
+  protected val mImageView = ImageView(context).apply {
     scaleType = ImageView.ScaleType.CENTER_INSIDE
     // 设置 ImageView 的前景图片
     setImageResource(R.drawable.course_ic_touch_affair)

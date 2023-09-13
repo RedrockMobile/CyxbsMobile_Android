@@ -309,5 +309,21 @@ interface ApiService {
     // 获取动态、评论、获赞、粉丝、关注数接口
     @GET("magipoke-loop/user/count")
     fun getPersonalCount(@Query("redid") redid: String?): Observable<PersonalCount>
+
+    //获取活动的数量
+    @GET("/magipoke-ufield/message/list/")
+    fun getUFieldActivity(): Observable<ApiWrapper<List<UfieldMsgBean>>>
+
+    @GET("/magipoke-ufield/message/list/")
+    suspend fun getUFieldActivityList(): ApiWrapper<List<UfieldMsgBean>>
+
+    // 获取发送的行程的数量
+    @GET("/magipoke-jwzx/itinerary/allMsg")
+    suspend fun getSentItinerary(@Query("typ") type: String = "sent"): ApiWrapper<List<ItineraryMsgBean>>
+
+    // 获取接收的行程的数量
+    @GET("/magipoke-jwzx/itinerary/allMsg")
+    suspend fun getReceivedItinerary(@Query("typ") type: String = "received"): ApiWrapper<List<ItineraryMsgBean>>
+
 }
 

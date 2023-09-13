@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<resources>
+<resources xmlns:tools="http://schemas.android.com/tools">
     <!--添加事务时标题-->
     <color name="affair_add_affair_title_tv">#122D55</color>
 
@@ -19,4 +19,16 @@
     <!--按钮渐变颜色-->
     <color name="affair_button_gradient_start_color">#2921D1</color>
     <color name="affair_button_gradient_end_color">#5D5DF7</color>
+
+    <!--未被选中颜色-->
+    <color name="affair_button_gradient_un_choose_color">#99A7B9</color>
+
+    <!--没课越未被选中背景色-->
+    <color name="affair_noclass_un_choose_bg" tools:ignore="MissingDefaultResource">#F2F5FF</color>
+    <!--未被选中文字-->
+    <color name="affair_noclass_text_un_choose_color" tools:ignore="MissingDefaultResource">#992D4D80</color>
+    <!--没课越被选中背景色-->
+    <color name="affair_noclass_choose_bg" tools:ignore="MissingDefaultResource">#E8E8FE</color>
+    <!--选中文字-->
+    <color name="affair_noclass_text_choose_color" tools:ignore="MissingDefaultResource">#4A44E4</color>
 </resources>

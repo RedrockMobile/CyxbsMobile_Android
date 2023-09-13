@@ -18,22 +18,4 @@ class NoClassLessonData(
   override val startNode: Int,
   override val length: Int,
   val names : String,
-) : ILessonData {
-
-  val timeType: Type
-    get() {
-      return when (startNode) {
-        in 0 .. 3 -> Type.AM
-        in 4 .. 4 -> Type.NOON
-        in 5 .. 8 -> Type.PM
-        in 9 .. 9 -> Type.DUSK
-        in 10 .. 13 -> Type.NIGHT
-        else -> throw RuntimeException("未知课程出现在未知时间段！bean = $this")
-      }
-    }
-  
-  enum class Type {
-    AM, NOON ,PM, NIGHT, DUSK
-  }
-  
-}
+) : ILessonData

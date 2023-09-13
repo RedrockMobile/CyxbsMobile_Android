@@ -5,5 +5,10 @@
     <style name="SplashTheme" parent="ConfigAppTheme" tools:ignore="ResourceName">
         <item name="android:windowBackground">@drawable/main_ic_bg_splash_big</item>
     </style>
+    <style name="circleStyle" tools:ignore="ResourceName">
+        <item name="cornerFamily">rounded</item>
+        <item name="cornerSize">50%</item>
+    </style>
+
 
 </resources>

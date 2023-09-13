@@ -1,0 +1,127 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginTop="20dp">
+    <!--这里突然发现，如果再套一个的话，可以实现,Rv的item居中分布，虽然对于一行一个这种线性布局可以指定代码（两列的尚未发现），这里不改了，直接xml，利用约束布局来约束item-->
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="350dp"
+        android:layout_height="101dp"
+        android:layout_marginStart="19dp"
+        android:layout_marginEnd="20dp"
+
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="1.0">
+
+        <androidx.cardview.widget.CardView
+            android:id="@+id/Ufield_search_iv_card"
+            android:layout_width="101dp"
+            android:layout_height="101dp"
+            android:padding="0dp"
+            app:cardCornerRadius="8dp"
+            app:cardElevation="0dp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent">
+
+            <ImageView
+                android:id="@+id/uField_search_act_image"
+                android:layout_width="101dp"
+                android:layout_height="101dp" />
+
+        </androidx.cardview.widget.CardView>
+
+
+        <LinearLayout
+            android:id="@+id/uField_search_linear"
+            android:layout_width="230dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="15dp"
+            android:layout_marginTop="10dp"
+            android:orientation="horizontal"
+            app:layout_constraintStart_toEndOf="@+id/Ufield_search_iv_card"
+            app:layout_constraintTop_toTopOf="parent">
+
+            <TextView
+                android:id="@+id/Ufield_search_act_ame"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:ellipsize="end"
+                android:focusable="true"
+                android:focusableInTouchMode="true"
+                android:marqueeRepeatLimit="marquee_forever"
+                android:maxWidth="180dp"
+                android:maxLines="1"
+                android:scrollHorizontally="true"
+                android:singleLine="true"
+                android:textColor="@color/uField_112c54"
+                android:textSize="16sp" />
+            <!--       因为视觉要求，关闭跑马灯 android:ellipsize="marquee"-->
+
+            <ImageView
+
+                android:id="@+id/uField_search_isGoing"
+                android:layout_width="40dp"
+                android:layout_height="16dp"
+                android:layout_gravity="center_vertical"
+                android:layout_marginStart="2dp" />
+
+        </LinearLayout>
+
+
+        <TextView
+            android:id="@+id/Ufield_search_act_what"
+            android:layout_width="wrap_content"
+            android:layout_height="20dp"
+            android:layout_marginStart="15dp"
+            android:layout_marginTop="5dp"
+            android:ellipsize="end"
+            android:focusable="true"
+            android:focusableInTouchMode="true"
+            android:marqueeRepeatLimit="marquee_forever"
+            android:maxWidth="200dp"
+            android:maxLines="1"
+            android:scrollHorizontally="true"
+            android:singleLine="true"
+            android:textColor="@color/uField_15315b66"
+            android:textSize="14sp"
+            app:layout_constraintStart_toEndOf="@+id/Ufield_search_iv_card"
+            app:layout_constraintTop_toBottomOf="@+id/uField_search_linear" />
+        <!--因为视觉要求，关闭跑马灯android:ellipsize="marquee"-->
+
+        <LinearLayout
+            android:layout_width="230dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="15dp"
+            android:layout_marginTop="15dp"
+            android:orientation="horizontal"
+            app:layout_constraintStart_toEndOf="@+id/Ufield_search_iv_card"
+            app:layout_constraintTop_toBottomOf="@+id/Ufield_search_act_what">
+
+            <ImageView
+                android:id="@+id/ufieldImageview3"
+                android:layout_width="16dp"
+                android:layout_height="16dp"
+                android:layout_gravity="center_vertical"
+                android:src="@drawable/ufield_ic_activity_time" />
+
+
+            <TextView
+                android:id="@+id/uField_search_ddl"
+                android:layout_width="150dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="7dp"
+                android:layout_gravity="center_vertical"
+                android:textColor="@color/uField_112c5499"
+                android:textSize="12sp"/>
+        </LinearLayout>
+
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+
+</androidx.constraintlayout.widget.ConstraintLayout>

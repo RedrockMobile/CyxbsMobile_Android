@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <application>
+        <activity android:name=".pages.main.page.activity.HomeActivity" />
+        <activity android:name=".pages.post.PostActivity" />
+        <activity android:name=".pages.main.page.activity.PostedActivity" />
+        <activity android:name=".pages.detail.page.activity.DetailActivity" />
+    </application>
+
+</manifest>

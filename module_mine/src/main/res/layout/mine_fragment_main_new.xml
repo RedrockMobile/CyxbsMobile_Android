@@ -4,22 +4,22 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@color/mine_bg_user_header"
     android:fitsSystemWindows="true"
-    android:orientation="vertical"
-    android:background="@color/mine_bg_user_header">
+    android:orientation="vertical">
 
     <FrameLayout
         android:layout_width="match_parent"
         android:layout_height="300dp"
-        android:layout_marginTop="-22dp"
         android:layout_marginStart="-25dp"
+        android:layout_marginTop="-22dp"
         android:layout_marginEnd="-25dp"
         android:background="@drawable/mine_ic_info_header">
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:id="@+id/mine_user_cl_info"
             android:layout_width="match_parent"
-            android:layout_height="208dp"
+            android:layout_height="204dp"
             android:layout_gravity="center_horizontal"
             android:layout_marginStart="25dp"
             android:layout_marginTop="40dp"
@@ -73,16 +73,17 @@
                 android:id="@+id/mine_user_tv_dynamic_number"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginBottom="40dp"
+                android:layout_marginBottom="1dp"
                 android:fontFamily="@font/impact_min"
                 android:gravity="center"
                 android:maxLines="1"
                 android:text="@string/mine_number_default"
                 android:textColor="@color/mine_text_count"
                 android:textSize="25sp"
-                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintBottom_toTopOf="@+id/mine_user_tv_dynamic"
                 app:layout_constraintEnd_toEndOf="@+id/mine_user_tv_dynamic"
-                app:layout_constraintStart_toStartOf="@+id/mine_user_tv_dynamic" />
+                app:layout_constraintStart_toStartOf="@+id/mine_user_tv_dynamic"
+                />
 
             <TextView
                 android:id="@+id/mine_user_tv_comment_number"
@@ -97,7 +98,8 @@
                 android:textSize="25sp"
                 app:layout_constraintBottom_toTopOf="@+id/mine_user_tv_comment"
                 app:layout_constraintEnd_toEndOf="@+id/mine_user_tv_comment"
-                app:layout_constraintStart_toStartOf="@+id/mine_user_tv_comment" />
+                app:layout_constraintStart_toStartOf="@+id/mine_user_tv_comment"
+                app:layout_constraintTop_toTopOf="@+id/mine_user_tv_dynamic_number" />
 
             <TextView
                 android:id="@+id/mine_user_tv_praise_number"
@@ -112,17 +114,18 @@
                 android:textSize="25sp"
                 app:layout_constraintBottom_toTopOf="@+id/mine_user_tv_praise"
                 app:layout_constraintEnd_toEndOf="@+id/mine_user_tv_praise"
-                app:layout_constraintStart_toStartOf="@+id/mine_user_tv_praise" />
+                app:layout_constraintStart_toStartOf="@+id/mine_user_tv_praise"
+                app:layout_constraintTop_toTopOf="@+id/mine_user_tv_dynamic_number" />
 
             <TextView
                 android:id="@+id/mine_user_tv_dynamic"
                 android:layout_width="wrap_content"
-                android:layout_height="17dp"
-                android:layout_marginStart="28dp"
-                android:layout_marginBottom="22dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="34dp"
+                android:layout_marginBottom="18dp"
                 android:text="动态"
                 android:textColor="@color/mine_text_count_bottom"
-                android:textSize="14dp"
+                android:textSize="14sp"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 tools:ignore="SpUsage" />
@@ -130,12 +133,12 @@
             <TextView
                 android:id="@+id/mine_user_tv_comment"
                 android:layout_width="wrap_content"
-                android:layout_height="17dp"
+                android:layout_height="wrap_content"
                 android:layout_marginStart="34dp"
-                android:layout_marginBottom="22dp"
+                android:layout_marginBottom="18dp"
                 android:text="评论"
                 android:textColor="@color/mine_text_count_bottom"
-                android:textSize="14dp"
+                android:textSize="14sp"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintStart_toEndOf="@+id/mine_user_tv_dynamic"
                 tools:ignore="SpUsage" />
@@ -143,12 +146,12 @@
             <TextView
                 android:id="@+id/mine_user_tv_praise"
                 android:layout_width="wrap_content"
-                android:layout_height="17dp"
+                android:layout_height="wrap_content"
                 android:layout_marginStart="34dp"
-                android:layout_marginBottom="22dp"
+                android:layout_marginBottom="18dp"
                 android:text="获赞"
                 android:textColor="@color/mine_text_count_bottom"
-                android:textSize="14dp"
+                android:textSize="14sp"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintStart_toEndOf="@+id/mine_user_tv_comment"
                 tools:ignore="SpUsage" />
@@ -194,9 +197,9 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:elevation="12dp"
         android:layout_marginTop="-55dp"
         android:background="@drawable/mine_shape_bg_user"
+        android:elevation="12dp"
         android:orientation="vertical">
 
         <androidx.constraintlayout.widget.ConstraintLayout
@@ -213,6 +216,22 @@
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
                 app:srcCompat="@drawable/mine_ic_notification_center" />
+
+            <TextView
+                android:id="@+id/mine_user_tv_center_notification_count"
+                android:layout_width="15dp"
+                android:layout_height="15dp"
+                android:layout_marginStart="94dp"
+                android:layout_marginTop="23dp"
+                android:textSize="10sp"
+                android:lineHeight="12dp"
+                android:gravity="center"
+                android:textColor="#FFFFFF"
+                android:visibility="gone"
+                android:background="@drawable/mine_ic_new_notification_red_dot"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                tools:text="83"/>
 
             <ImageView
                 android:id="@+id/mine_user_iv_center_stamp"
@@ -235,6 +254,16 @@
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
                 app:srcCompat="@drawable/mine_ic_feedback_center" />
+
+            <ImageView
+                android:id="@+id/mine_user_iv_center_activity"
+                android:layout_width="43dp"
+                android:layout_height="41dp"
+                android:layout_marginTop="30dp"
+                android:scaleType="centerInside"
+                app:layout_constraintEnd_toEndOf="@+id/mine_user_iv_center_notification"
+                app:layout_constraintTop_toBottomOf="@+id/mine_user_tv_center_notification"
+                app:srcCompat="@drawable/mine_ic_activity_center" />
 
             <TextView
                 android:id="@+id/mine_user_tv_center_notification"
@@ -273,6 +302,18 @@
                 app:layout_constraintTop_toTopOf="@+id/mine_user_tv_center_stamp" />
 
             <TextView
+                android:id="@+id/mine_user_tv_center_activity"
+                android:layout_width="wrap_content"
+                android:layout_height="20dp"
+                android:layout_marginTop="8dp"
+                android:text="活动中心"
+
+                android:textColor="@color/mine_text_setting"
+                android:textSize="14sp"
+                app:layout_constraintEnd_toEndOf="@+id/mine_user_tv_center_notification"
+                app:layout_constraintTop_toBottomOf="@+id/mine_user_iv_center_activity" />
+
+            <TextView
                 android:id="@+id/mine_user_tv_unchecked_notification_count"
                 android:layout_width="15dp"
                 android:layout_height="15dp"
@@ -298,9 +339,9 @@
                 android:id="@+id/mine_user_tv_sign"
                 android:layout_width="wrap_content"
                 android:layout_height="22dp"
-                android:layout_marginBottom="10dp"
                 android:layout_gravity="start|center_vertical"
                 android:layout_marginStart="32dp"
+                android:layout_marginBottom="10dp"
                 android:text="已连续签到 0 天"
                 android:textColor="@color/mine_text_sign"
                 android:textSize="16sp" />
@@ -334,9 +375,9 @@
                 android:layout_height="22dp"
                 android:layout_marginStart="16dp"
                 android:text="关于我们"
-                android:textStyle="bold"
                 android:textColor="@color/mine_text_setting"
-                android:textSize="16sp" />
+                android:textSize="16sp"
+                android:textStyle="bold" />
 
             <ImageView
                 android:layout_width="8dp"
@@ -358,9 +399,9 @@
                 android:layout_height="22dp"
                 android:layout_marginStart="16dp"
                 android:text="设置"
-                android:textStyle="bold"
                 android:textColor="@color/mine_text_setting"
-                android:textSize="16sp" />
+                android:textSize="16sp"
+                android:textStyle="bold" />
 
             <ImageView
                 android:layout_width="8dp"

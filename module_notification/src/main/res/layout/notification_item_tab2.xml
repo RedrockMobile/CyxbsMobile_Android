@@ -1,15 +1,21 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <TextView
         android:id="@+id/notification_tv_tl_tab"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_centerInParent="true"
-        android:text="活动通知"
+        android:maxLines="1"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:text="系统通知"
         android:textColor="@color/notification_home_tabLayout_text_unselect"
         android:textSize="18sp"
         tools:ignore="HardcodedText" />
@@ -18,8 +24,11 @@
         android:id="@+id/notification_iv_tl_red_dots"
         android:layout_width="wrap_content"
         android:layout_alignParentEnd="true"
+        app:layout_constraintStart_toEndOf="@id/notification_tv_tl_tab"
+        app:layout_constraintTop_toTopOf="parent"
         android:visibility="invisible"
         android:layout_height="wrap_content"
-        android:background="@drawable/notification_ic_home_reddots"/>
+        android:background="@drawable/notification_ic_home_reddots"
+        tools:ignore="ContentDescription" />
 
-</RelativeLayout>
+</androidx.constraintlayout.widget.ConstraintLayout>

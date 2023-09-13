@@ -3,6 +3,13 @@
 
     <color name="notification_white">#2D2D2D</color>
 
+    <color name="notification_fragment_bg_white_black">#000000</color>
+
+    <!--    消息通知文字主体颜色-->
+    <color name="notification_primary_text_color">#F0F0F2</color>
+    <!--    消息通知消极按钮颜色-->
+    <color name="notification_button_negative_bg_color">#515151</color>
+
     <color name="notification_base_tv">#FFFFFF</color>
     <color name="notification_base_main_bg">#000000</color>
     <color name="notification_setting_back_detail_ripple">#000000</color>
@@ -10,7 +17,12 @@
     <color name="notification_back_detail_ripple">#000000</color>
     <color name="notification_home_tabLayout_text_selected">#F0F0F0</color>
     <color name="notification_home_tabLayout_text_unselect">#8CF0F0F0</color>
+    <color name="notification_itinerary_tabLayout_text_selected">#15C6E7</color>
+    <color name="notification_itinerary_tabLayout_text_unselect">#8CF0F0F0</color>
+    <color name="notification_itinerary_tabLayout_top_start_color">#CC000000</color>
+    <color name="notification_itinerary_tabLayout_bottom_end_color">#BF000000</color>
     <color name="notification_home_item_tv_time">#F0F0F0</color>
+    <color name="notification_home_page_tabLayout_shadow">#E6000000</color>
 
     <color name="notification_delete_dialog_tv_tips">#F0F0F2</color>
     <color name="notification_delete_dialog_btn_negative">#4E4E4E</color>

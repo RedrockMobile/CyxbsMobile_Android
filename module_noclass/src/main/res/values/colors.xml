@@ -1,77 +1,130 @@
 <?xml version="1.0" encoding="utf-8"?>
-<resources
-    xmlns:tools="http://schemas.android.com/tools">
-    <!--    主题颜色-->
-    <color name="noclass_main">#FFFFFF</color>
-    <!--    打字框背景颜色-->
-    <color name="noclass_write_able_area_background_shallow">#F2F5FF</color>
+<resources>
+
     <!--    每个组的默认背景色-->
     <color name="noclass_group_default_bg">#E8F0FC</color>
     <!--    每个组的被点击背景色-->
     <color name="noclass_group_selected_bg">#4A44E4</color>
     <!--    分组被点击后的字体颜色-->
     <color name="noclass_group_selected_text_bg">#FFFFFF</color>
-    <!--    没课约文字主体颜色-->
-    <color name="noclass_primary_text_color">#15315B</color>
-    <!--    没课约提示文字颜色-->
-    <color name="noclass_hint_text_color_light">#ABBCD8</color>
-    <color name="noclass_hint_text_color_dark">#556C8B</color>
-    <color name="noclass_create_hint_text_color">#5D5EF7</color>
-    <!--    没课约分割横线-->
-    <color name="noclass_line_bg_color">#2A4E84</color>
     <!--    没课约删除颜色-->
     <color name="noclass_delete_bg_color">#C3D4EE</color>
-    <!--    分组成员名字颜色-->
-    <color name="noclass_member_name_color">#2D4D80</color>
-    <!--    分组管理置顶背景-->
-    <color name="noclass_group_top_bg">#474A50</color>
-    <!--    分组管理删除背景-->
-    <color name="noclass_group_delete_bg">#ED535C</color>
+
     <!--    分组管理被选中背景-->
     <color name="noclass_group_delete_selected_bg">#F2F4FF</color>
-    <!--    分组管理没有被选中的背景-->
-    <color name="noclass_group_delete_unselected_bg">#FFFFFF</color>
     <!--    保存按钮的默认颜色-->
     <color name="noclass_save_bg_color">#99A7B9</color>
-    <!--    查找学生的颜色-->
-    <color name="noclass_search_student_color">#7B8899</color>
-    <!--    集合弹窗的划分线-->
-    <color name="noclass_gather_line_bg">#E2E8EE</color>
+
     <!--    集合弹窗没课字体-->
     <color name="noclass_gather_text_noclass_bg">#D4DAFF</color>
-    <!--    集合弹窗没课背景-->
-    <color name="noclass_gather_noclass_bg">#4841E2</color>
-    <!--    集合弹窗有课字体-->
-    <color name="noclass_gather_text_class_bg">#94A2B5</color>
-    <!--    集合弹窗有课背景-->
-    <color name="noclass_gather_class_bg">#E9EDF2</color>
     <!--    创建新分组的背景-->
     <color name="noclass_create_group_bg">#FFFFFF</color>
+
+
+    <!--    以下为课表背景颜色-->
+    <!--    全部空闲-->
+    <color name="noclass_course_all_spare_lesson_color">#00000000</color>
+    <!--    全员忙碌-->
+    <color name="noclass_course_all_busy_lesson_bg">#F9E3E4</color>
+    <color name="noclass_course_all_busy_lesson_color">#FF6262</color>
+    <!--    忙碌大于空闲-->
+    <color name="noclass_course_more_busy_lesson_bg">#F9E7D8</color>
+    <color name="noclass_course_more_busy_lesson_color">#FF8015</color>
+    <!--    空闲大于忙碌-->
+    <color name="noclass_course_more_spare_lesson_bg">#DDE3F8</color>
+    <color name="noclass_course_more_spare_lesson_color">#4066EA</color>
+    <!--点击空白处的灰色-->
+    <color name="noclass_course_click_spare_lesson_bg">#808080</color>
+
+    <!--    主题颜色-->
+    <color name="noclass_main">#FFFFFF</color>
+
+    <!--    弹窗颜色-->
+    <color name="noclass_toast_color">#2D4D80</color>
+
+    <!--    没课约提示文字颜色-->
+    <color name="noclass_hint_text_color_light">#66142C52</color>
+    <color name="noclass_hint_text_color_dark">#556C8B</color>
+    <color name="noclass_create_hint_text_color">#4A44E4</color>
+
+    <!--    成员名字颜色-->
+    <color name="noclass_member_name_color">#2D4D80</color>
+
+    <!--    成员学号颜色-->
+    <color name="noclass_member_stu_num_color">#ABB5C4</color>
+
+    <!--    删除背景-->
+    <color name="noclass_delete_bg">#ED535C</color>
+
+    <!--    置顶背景-->
+    <color name="noclass_top_bg">#4741E0</color>
+
+    <!--    查找学生的学号的颜色-->
+    <color name="noclass_search_stu_num_color">#7B8899</color>
+
+    <!--    没课约文字主体颜色-->
+    <color name="noclass_primary_text_color">#15315B</color>
+
     <!--    创建新分组的提示文字-->
     <color name="noclass_create_group_tint_bg">#ABB5C4</color>
 
-    <!--    以下为课表背景颜色-->
-    <!--    上午-->
-    <color name="noclass_course_am_lesson_color">#F9E7D8</color>
-    <!--    下午-->
-    <color name="noclass_course_pm_lesson_color">#F9E3E4</color>
-    <!--    晚上-->
-    <color name="noclass_course_night_lesson_color">#DDE3F8</color>
-    <!--    中午-->
-    <color name="noclass_course_noon_lesson_color">#E9EDF2</color>
-    <!--    傍晚-->
-    <color name="noclass_course_dusk_lesson_color">#E9EDF2</color>
+    <!--    选择分组未被选中文字-->
+    <color name="noclass_add_to_group_no_choose_color">#ABB5C4</color>
 
-    <!--    以下为课表字体颜色-->
-    <!--    上午-->
-    <color name="noclass_course_am_text_color">#FF8015</color>
-    <!--    下午-->
-    <color name="noclass_course_pm_text_color">#FF6262</color>
-    <!--    晚上-->
-    <color name="noclass_course_night_text_color">#4066EA</color>
-    <!--    中午-->
-    <color name="noclass_course_noon_text_color">#9915315B</color>
-    <!--    傍晚-->
-    <color name="noclass_course_dusk_text_color">#9915315B</color>
+    <!--    没课约选择分组按钮默认颜色-->
+    <color name="noclass_add_to_group_default_color">#C3D4EE</color>
 
+    <!--    查找学生的颜色-->
+    <color name="noclass_search_student_color">#7B8899</color>
+
+    <!--    集合弹窗的划分线-->
+    <color name="noclass_gather_line_bg">#0D2A4E84</color>
+
+    <!--    每个组的默认背景色-->
+    <color name="noclass_gathering_item_bg">#E8F0FC</color>
+
+    <!--    每个组的默认背景色-->
+    <color name="noclass_gathering_item_text_color">#969FD2</color>
+
+    <!--    指示器的背景色-->
+    <!--    活跃的-->
+    <color name="noclass_indicator_active_bg">#C3D4EE</color>
+    <!--    不活跃的-->
+    <color name="noclass_indicator_inactive_bg">#6364F7</color>
+
+    <!--    打字框背景颜色-->
+    <color name="noclass_write_able_area_background_shallow">#E8F0FC</color>
+
+    <!--    透明-->
+    <color name="noclass_transparent">#00FFFFFF</color>
+
+    <!--    批量添加页面背景颜色-->
+    <color name="noclass_batch_window_bg">#FEFEFE</color>
+
+    <!--    批量添加页面输入框文字颜色-->
+    <color name="noclass_batch_edit_text">#2D4D80</color>
+
+    <color name="noclass_same_name_select_cancel_text">#ABB5C4</color>
+
+    <!--弹窗的蒙版阴影    -->
+    <color name="noclass_dialog_shadow_bg">#78000000</color>
+
+    <!--分界处的渐变阴影    -->
+    <color name="noclass_split_from_color">#fbfbfc</color>
+    <color name="noclass_split_to_color">#ffffff</color>
+
+    <!--行程通知淡色深色    -->
+    <color name="noclass_gathering_small">#8F9CAF</color>
+    <color name="noclass_gathering_big">#73839D</color>
+
+    <!--光标的颜色    -->
+    <color name="noclass_cursor">#788efa</color>
+
+    <!--seekbar的指示器的背景颜色和指示器颜色    -->
+    <color name="noclass_seek_bar_progress">#E8F0FC</color>
+    <color name="noclass_seek_bar_thumb">#6364F7</color>
+
+
+    <!--聚集分割线的颜色    -->
+    <color name="noclass_gathering_line_color">#0D2A4E84</color>
 </resources>

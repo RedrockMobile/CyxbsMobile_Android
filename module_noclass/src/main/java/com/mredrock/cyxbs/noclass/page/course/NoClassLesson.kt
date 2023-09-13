@@ -3,6 +3,8 @@ package com.mredrock.cyxbs.noclass.page.course
 import android.content.Context
 import android.view.View
 import androidx.appcompat.app.AppCompatActivity
+import com.mredrock.cyxbs.api.affair.DateJson
+import com.mredrock.cyxbs.api.course.utils.getBeginLesson
 import com.mredrock.cyxbs.lib.course.item.lesson.BaseLessonLayoutParams
 import com.mredrock.cyxbs.lib.course.item.lesson.ILessonItem
 import com.mredrock.cyxbs.lib.utils.extensions.color
@@ -23,15 +25,15 @@ import com.mredrock.cyxbs.noclass.page.ui.dialog.NoClassGatherDialog
  */
 class NoClassLesson(
   val data: NoClassLessonData,
-  private val mGatheringList : List<String>,
-  private val mNoGatheringList: List<String>,
-  private val mLastingTime : Pair<Int,Int>
+  private val mNumNameIsSpare : HashMap<Pair<String,String>,Boolean>,
+  private val mLastingTime : Pair<Int,Int>,
+  private val mWeek : Int  //第几周
 ) : ILessonItem{
-  
-  override fun initializeView(context: Context): View {
-    return NoClassLesson.newInstance(context,data ,mGatheringList,mNoGatheringList,mLastingTime)
+
+  override fun initializeView(context: Context): View {   //添加item到课表中
+    return NoClassLesson.newInstance(context,data ,mNumNameIsSpare ,mLastingTime,mWeek)
   }
-  
+
   override val lp: BaseLessonLayoutParams
     get() = NoClassLessonLayoutParams(data).apply {
       leftMargin = 1.2F.dp2px
@@ -39,101 +41,109 @@ class NoClassLesson(
       topMargin = 1.2F.dp2px
       bottomMargin = 1.2F.dp2px
     }
-  
+  // 星期几
   override val weekNum: Int
     get() = data.weekNum
   override val startNode: Int
     get() = data.startNode
   override val length: Int
     get() = data.length
-  
+
   private class NoClassLesson private constructor(
     context: Context
   ) : NoClassItemView(context){
     companion object {
-      fun newInstance(context: Context, data: NoClassLessonData, mGatheringList : List<String>, mNoGatheringList: List<String>,mLastingTime : Pair<Int,Int>): NoClassLesson {
+      //mNumNameIsSpare   <<id,name>,isSpare>
+      fun newInstance(context: Context, data: NoClassLessonData,mNumNameIsSpare : HashMap<Pair<String,String>,Boolean> ,mLastingTime : Pair<Int,Int>,mWeek: Int): NoClassLesson {
         return NoClassLesson(context).apply {
-          setColor(data.timeType)
+          val sparePeopleNameList = mNumNameIsSpare.filter { it.value }.keys.map { it.second }
+          val noSparePeopleNameList = mNumNameIsSpare.filter { !it.value }.keys.map { it.second }
+          val busyMode = if (noSparePeopleNameList.isEmpty()){
+            // 如果没有忙碌的人，那么NAN
+            BusyMode.NAN
+          }else if (sparePeopleNameList.isEmpty()){
+            BusyMode.ALL
+          }else if (sparePeopleNameList.size > noSparePeopleNameList.size){
+            BusyMode.LESS
+          }else{
+            BusyMode.MORE
+          }
+          setColor(busyMode)
           setText(names = data.names,height = data.length)
           setOnClickListener {
-            //所有学生列表
-            //没课的在前面
-            val stuList = arrayListOf<Pair<String,Boolean>>()
-            mGatheringList.forEach {
-              stuList.add(Pair(it, true))
-            }
-            mNoGatheringList.forEach {
-              stuList.add(Pair(it,false))
-            }
             val duration = mLastingTime.second - mLastingTime.first
             //开始与结束序列
             val begin = mLastingTime.first
             val end = mLastingTime.second - 1
-            
+
             val beginTime = com.mredrock.cyxbs.api.course.utils.getShowStartTimeStr(begin)
             val endTime = com.mredrock.cyxbs.api.course.utils.getShowEndTimeStr(end)
-            
+
             val beginLesson =  if(mLastingTime.first >= 10) mLastingTime.first - 1 else if (mLastingTime.first<=3) mLastingTime.first + 1 else mLastingTime.first
 
             val month = when(data.weekNum){
-               1 -> " 周日"
-               2 -> " 周一"
-               3 -> " 周二"
-               4 -> " 周三"
-               5 -> " 周四"
-               6 -> " 周五"
-               7 -> " 周六"
+               1 -> "周一"
+               2 -> "周二"
+               3 -> "周三"
+               4 -> "周四"
+               5 -> "周五"
+               6 -> "周六"
+               7 -> "周日"
               else -> ""
             }
-            val textTime = "时间：${month} ${beginLesson}-${beginLesson + duration - 1} ${beginTime}-${endTime}"
-            NoClassGatherDialog(stuList, textTime).show((context as AppCompatActivity).supportFragmentManager, "NoClassGatherDialog")
+            // 中午吃饭时间是-1 下午吃饭时间是-2，所以要传入特殊的beginLesson
+            val specialBeginLesson = getBeginLesson(begin)
+
+            val timeText =when (specialBeginLesson){
+              -1 -> "中午"
+              -2 -> "傍晚"
+              else -> "${beginLesson}-${beginLesson + duration - 1}"
+            }
+
+            val textTime = "${month} $timeText ${beginTime}-${endTime}"
+            val dateJson = DateJson(specialBeginLesson,data.weekNum,duration,mWeek)
+            NoClassGatherDialog(dateJson,mNumNameIsSpare, textTime).show((context as AppCompatActivity).supportFragmentManager, "NoClassGatherDialog")
           }
         }
       }
     }
-  
 
-    private val mAmBgColor = R.color.noclass_course_am_lesson_color.color
-    private val mPmBgColor = R.color.noclass_course_pm_lesson_color.color
-    private val mNightBgColor = R.color.noclass_course_night_lesson_color.color
-    private val mNoonBgColor = R.color.noclass_course_noon_lesson_color.color
-    private val mDuskBgColor = R.color.noclass_course_dusk_lesson_color.color
-    
-    private val mAmTextColor = R.color.noclass_course_am_text_color.color
-    private val mPmTextColor = R.color.noclass_course_pm_text_color.color
-    private val mNightTextColor = R.color.noclass_course_night_text_color.color
-    private val mNoonTextColor = R.color.noclass_course_noon_text_color.color
-    private val mDuskTextColor = R.color.noclass_course_dusk_text_color.color
-  
-    private fun setColor(type: NoClassLessonData.Type) {
-      when (type) {
-        NoClassLessonData.Type.AM -> {
-          mTvNames.setTextColor(mAmTextColor)
-          setCardBackgroundColor(mAmBgColor)
-          setOverlapTagColor(mAmTextColor)
+
+    private val mAllSpare = R.color.noclass_course_all_spare_lesson_color.color
+    private val mAllBusyBg = R.color.noclass_course_all_busy_lesson_bg.color
+    private val mAllBusyTextColor = R.color.noclass_course_all_busy_lesson_color.color
+    private val mMoreSpareBg = R.color.noclass_course_more_spare_lesson_bg.color
+    private val mMoreSpareTextColor = R.color.noclass_course_more_spare_lesson_color.color
+    private val mMoreBusyBg = R.color.noclass_course_more_busy_lesson_bg.color
+    private val mMoreBusyTextColor = R.color.noclass_course_more_busy_lesson_color.color
+
+    private fun setColor(busyMode : BusyMode) {
+      when (busyMode) {
+        BusyMode.NAN -> {
+          mTvNames.setTextColor(mAllSpare)
+          setCardBackgroundColor(mAllSpare)
+          setOverlapTagColor(mAllSpare)
         }
-        NoClassLessonData.Type.NOON -> {
-          mTvNames.setTextColor(mNoonTextColor)
-          setCardBackgroundColor(mNoonBgColor)
-          setOverlapTagColor(mNoonTextColor)
+        BusyMode.LESS -> {
+          mTvNames.setTextColor(mMoreSpareTextColor)
+          setCardBackgroundColor(mMoreSpareBg)
+          setOverlapTagColor(mMoreSpareTextColor)
         }
-        NoClassLessonData.Type.PM -> {
-          mTvNames.setTextColor(mPmTextColor)
-          setCardBackgroundColor(mPmBgColor)
-          setOverlapTagColor(mPmTextColor)
+        BusyMode.MORE -> {
+          mTvNames.setTextColor(mMoreBusyTextColor)
+          setCardBackgroundColor(mMoreBusyBg)
+          setOverlapTagColor(mMoreBusyTextColor)
         }
-        NoClassLessonData.Type.DUSK -> {
-          mTvNames.setTextColor(mDuskTextColor)
-          setCardBackgroundColor(mDuskBgColor)
-          setOverlapTagColor(mDuskTextColor)
-        }
-        NoClassLessonData.Type.NIGHT -> {
-          mTvNames.setTextColor(mNightTextColor)
-          setCardBackgroundColor(mNightBgColor)
-          setOverlapTagColor(mNightTextColor)
+        BusyMode.ALL -> {
+          mTvNames.setTextColor(mAllBusyTextColor)
+          setCardBackgroundColor(mAllBusyBg)
+          setOverlapTagColor(mAllBusyTextColor)
         }
       }
     }
+    enum class BusyMode{
+      NAN,LESS,MORE,ALL
+    }
   }
-  
+
 }

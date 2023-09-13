@@ -8,6 +8,7 @@ import android.util.AttributeSet
 import android.view.LayoutInflater
 import android.widget.CheckedTextView
 import androidx.cardview.widget.CardView
+import com.mredrock.cyxbs.lib.utils.extensions.drawable
 import com.mredrock.cyxbs.main.BuildConfig
 import com.mredrock.cyxbs.main.R
 
@@ -40,7 +41,7 @@ class BottomNavLayout(
   private var mLastSelectPosition = -1
   
   private val mSelectListeners = arrayListOf<(Int) -> Unit>()
-  
+
   init {
     cardElevation = 0F
     radius = 0F
@@ -97,6 +98,26 @@ class BottomNavLayout(
     }
     mSelectListeners.forEach {
       it.invoke(position)
+    }
+  }
+
+  /**
+   * 暴露给外界的设置底部btn的Selector方法
+   * @param position        底部btn的位置，用于分别是哪个btn
+   * @param showNormal      是否应用一般情况下的Selector，非一般情况下的Selector请自行在代码里设置
+   */
+  fun setBtnSelector(position: Int, showNormal: Boolean) {
+    // 目前由于只有position=2的底部btn有改变Selector的需求，故
+    if (position !in mBtnList.indices || position != 2) return
+    when(position) {
+      2 ->{
+        if (!showNormal)
+          mBtnList[position].setCompoundDrawablesWithIntrinsicBounds(null, R.drawable.main_selector_bottom_mine_red_dot.drawable,null,null)
+        else
+          mBtnList[position].setCompoundDrawablesWithIntrinsicBounds(null, R.drawable.main_selector_bottom_mine.drawable,null,null)
+      }
+      // 还未定义其他底部btn的改变Selector的逻辑
+      else ->{}
     }
   }
   

@@ -17,6 +17,7 @@ import com.mredrock.cyxbs.lib.utils.extensions.dp2pxF
 import com.mredrock.cyxbs.lib.utils.extensions.launch
 import com.mredrock.cyxbs.lib.utils.service.ServiceManager
 import com.mredrock.cyxbs.lib.utils.service.impl
+import com.mredrock.cyxbs.lib.utils.utils.judge.NetworkUtil
 import com.mredrock.cyxbs.main.R
 import com.mredrock.cyxbs.main.adapter.MainAdapter
 import com.mredrock.cyxbs.main.ui.course.CourseFragment
@@ -53,12 +54,18 @@ class MainActivity : BaseActivity() {
       initUI()
       if (mIsLogin) {
         launch {
-          tryPingNetWork()?.onFailure {
+          NetworkUtil.tryPingNetWork()?.onFailure {
             toast("后端服务暂不可用")
           }
         }
       }
     }
+  }
+
+  override fun onResume() {
+    super.onResume()
+    // 获取（远端消息数据可能发生更新后）最新的未读消息数量，一般认为在从其他Activity返回后调用
+    mViewModel.getNotificationUnReadStatus()
   }
   
   private fun checkIsLogin(): Boolean? {
@@ -87,6 +94,7 @@ class MainActivity : BaseActivity() {
     initCourse()
     initViewPager()
     initBottomNav()
+    initNotification()
     initUpdate()
   }
   
@@ -168,7 +176,19 @@ class MainActivity : BaseActivity() {
       Umeng.sendEvent(Umeng.Event.ClickBottomTab(it))
     }
   }
-  
+
+  private fun initNotification() {
+    mViewModel.hasUnReadNotification.observe {
+      if (!it) {
+        // 设置为无红点的状态
+        mBottomNavLayout.setBtnSelector(2,true)
+        return@observe
+      }
+      // 设置为有红点的状态
+      mBottomNavLayout.setBtnSelector(2,false)
+    }
+  }
+
   private fun initUpdate() {
     IAppUpdateService::class.impl.tryNoticeUpdate(this)
   }

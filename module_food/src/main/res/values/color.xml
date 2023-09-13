@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <!--    主题颜色-->
+    <color name="food_main">#4A44E4</color>
+
+    <!--    背景颜色-->
+    <color name="food_background">#FFFFFF</color>
+
+    <!-- 字体颜色-->
+    <color name="food_text_color_white">#15315B</color>
+
+    <!-- 按钮选中颜色-->
+    <color name="food_btn_pressed"> #4A44E4</color>
+
+    <!-- 标题文字颜色-->
+    <color name="food_text_title"> #15315B</color>
+
+    <!-- 按钮未选中颜色-->
+    <color name="food_btn_normal">#F5F6F8</color>
+
+    <!-- 就餐区域等旁边提示文字-->
+    <color name="food_text_unimportance_tip"> #AABCD8</color>
+
+    <!-- 选择结果背景颜色-->
+    <color name="food_result_background"> #1A4A44E4</color>
+
+    <!-- 选择结果文字颜色-->
+    <color name="food_text_result_background"> #4A44E4</color>
+
+    <!-- 查看详情 随机生成按钮颜色-->
+    <color name="food_btn_detail_pressed"> #5D5DF7</color>
+
+    <!-- 换一个 文字颜色-->
+    <color name="food_text_change"> #5C5CF6</color>
+
+    <!-- dialog 文字颜色-->
+    <color name="food_text_dialog"> #9915315B</color>
+
+    <!-- dialog标题 文字颜色-->
+    <color name="food_text_dialog_title"> #15315B</color>
+
+    <!-- dialog分割线颜色-->
+    <color name="food_text_dialog_line"> #0D000000</color>
+
+    <!-- dialog按钮的颜色-->
+    <color name="food_dialog_btn_negative"> #C3D4EE</color>
+
+    <!-- result界面的颜色-->
+    <color name="food_cl_result"> #EFF4FF</color>
+
+    <color name="food_dialog_detail_content"> #8015315B</color>
+
+    <color name="food_btn_pressed_text"> #6615315B</color>
+
+    <color name="food_result_text">#2F5085</color>
+</resources>

@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <application>
+        <activity android:name=".ui.activity.CampaignActivity" />
+        <activity android:name=".ui.activity.DetailActivity" />
+        <activity android:name=".ui.activity.UFieldActivity" />
+        <activity android:name=".ui.activity.CheckActivity" />
+        <activity android:name=".ui.activity.SearchActivity" />
+        <activity android:name=".ui.activity.CreateActivity"
+            android:windowSoftInputMode="adjustPan"/>
+        <activity android:name=".ui.activity.RankActivity" />
+    </application>
+
+</manifest>

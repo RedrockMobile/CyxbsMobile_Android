@@ -1,0 +1,22 @@
+<resources xmlns:tools="http://schemas.android.com/tools">
+    <string name="hello_blank_fragment" tools:ignore="ResourceName">Hello blank fragment</string>
+    <string name="ufield_todo_ac_name">活动类型： </string>
+    <string name="ufield_todo_ac_p_name">创建人： </string>
+    <string name="ufield_todo_ac_phone">联系电话：</string>
+    <string name="ufield_btn_refuse">驳回</string>
+    <string name="ufield_btn_accept">同意</string>
+    <string name="uField_all">全部</string>
+    <string name="uField_culture">文娱活动</string>
+    <string name="uField_education">教育活动</string>
+    <string name="ufield_sports">体育</string>
+    <string name="uField_look_more">查看更多活动...</string>
+    <string name="ufield_campaign_watch">我想看</string>
+    <string name="ufield_campaign_join">已参与</string>
+    <string name="ufield_campaign_publish">已发布</string>
+    <string name="ufield_campaign_check">待审核</string>
+    <string name="ufield_campaign_no_message">这里空空如也</string>
+    <string name="ufield_name">活动布告栏</string>
+    <string name="ufield_search_more">查看更多活动...</string>
+    <string name="ufield_search_name">搜索</string>
+    <string name="ufield_check_text">审核中心</string>
+</resources>

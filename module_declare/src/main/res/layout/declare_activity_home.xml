@@ -1,0 +1,142 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+
+    </data>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        tools:context=".pages.main.page.activity.HomeActivity">
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/declare_home_cl"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:id="@+id/declare_home_toolbar"
+                android:layout_width="match_parent"
+                android:layout_height="110dp"
+                android:background="@android:color/white"
+                android:fitsSystemWindows="true"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent">
+
+                <ImageButton
+                    android:id="@+id/declare_iv_toolbar_arrow_left"
+                    android:layout_width="17dp"
+                    android:layout_height="16dp"
+                    android:background="?attr/selectableItemBackgroundBorderless"
+                    android:src="@drawable/declare_ic_home_arrow_left"
+                    app:layout_constraintBottom_toBottomOf="@+id/declare_home_toolbar_tv"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintHorizontal_bias="0.042666"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="@+id/declare_home_toolbar_tv"
+                    app:layout_constraintVertical_bias="0.545454545"
+                    tools:ignore="ContentDescription,SpeakableTextPresentCheck,SpeakableTextPresentCheck,TouchTargetSizeCheck" />
+
+                <TextView
+                    android:id="@+id/declare_home_toolbar_tv"
+                    android:layout_width="wrap_content"
+                    android:layout_height="40dp"
+                    android:gravity="center_vertical"
+                    android:text="@string/declare_home_toolbar"
+                    android:textColor="#15315B"
+                    android:textSize="22sp"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintHorizontal_bias="0.036"
+                    app:layout_constraintStart_toEndOf="@+id/declare_iv_toolbar_arrow_left"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:layout_constraintVertical_bias="0.4818" />
+
+                <androidx.appcompat.widget.AppCompatButton
+                    android:id="@+id/declare_home_toolbar_post"
+                    android:layout_width="20dp"
+                    android:layout_height="20dp"
+                    android:background="@drawable/declare_ic_home_post"
+                    android:visibility="visible"
+                    app:layout_constraintBottom_toBottomOf="@+id/declare_home_toolbar_tv"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    android:layout_marginEnd="15dp"
+                    app:layout_constraintTop_toTopOf="@+id/declare_home_toolbar_tv"
+                    app:layout_constraintVertical_bias="0.536" />
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+            <LinearLayout
+                android:id="@+id/declare_home_no_data"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:visibility="gone"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintVertical_bias="0.33">
+
+                <ImageView
+                    android:id="@+id/declare_home_no_data_pic"
+                    android:layout_width="185dp"
+                    android:layout_height="141dp"
+                    android:layout_gravity="center_horizontal"
+                    android:src="@drawable/declare_ic_home_no_data" />
+
+                <TextView
+                    android:id="@+id/declare_home_no_data_tv"
+                    android:layout_width="200dp"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_horizontal"
+                    android:gravity="center"
+                    android:text="@string/declare_home_no_data"
+                    android:textColor="#99112C54"
+                    android:textSize="16sp" />
+            </LinearLayout>
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/declare_home_recyclerview"
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/declare_home_toolbar"
+                app:layout_constraintVertical_bias="0.0" />
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+        <LinearLayout
+            android:id="@+id/declare_home_no_net"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintVertical_bias="0.33">
+
+            <ImageView
+                android:id="@+id/declare_home_no_net_pic"
+                android:layout_width="157dp"
+                android:layout_height="96dp"
+                android:layout_gravity="center_horizontal"
+                android:src="@drawable/declare_ic_home_no_net" />
+
+            <TextView
+                android:id="@+id/declare_home_no_net_tv"
+                android:layout_width="197dp"
+                android:layout_height="22dp"
+                android:layout_gravity="center_horizontal"
+                android:gravity="center"
+                android:text="@string/declare_home_no_net"
+                android:textColor="#99112C54"
+                android:textSize="16sp" />
+        </LinearLayout>
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</layout>

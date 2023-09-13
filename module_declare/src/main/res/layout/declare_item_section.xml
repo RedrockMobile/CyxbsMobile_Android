@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+
+    </data>
+
+    <androidx.appcompat.widget.LinearLayoutCompat
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingVertical="10dp">
+
+        <com.google.android.material.imageview.ShapeableImageView
+            android:id="@+id/siv_rm"
+            android:layout_width="20dp"
+            android:layout_height="20dp"
+            android:layout_gravity="center"
+            android:layout_marginEnd="18dp"
+            app:shapeAppearance="@style/declare_circle_style"
+            app:srcCompat="@drawable/declare_ic_remove" />
+
+            <androidx.appcompat.widget.AppCompatEditText
+                android:id="@+id/et"
+                style="@style/Widget.Material3.TextInputEditText.OutlinedBox"
+                android:layout_width="match_parent"
+                android:layout_height="38dp"
+                android:background="@drawable/declare_input_bg_2"
+                android:ellipsize="end"
+                android:focusable="false"
+                android:gravity="center"
+                android:layout_gravity="center_vertical"
+                android:inputType="textNoSuggestions"
+                android:maxLines="1"
+                android:padding="0dp"
+                android:textColor="#CC15315B"
+                android:textColorHint="#8015315B"
+                android:textSize="14sp"
+                tools:hint="选项" />
+
+    </androidx.appcompat.widget.LinearLayoutCompat>
+</layout>

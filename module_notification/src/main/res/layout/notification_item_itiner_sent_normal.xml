@@ -1,0 +1,130 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tool="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginTop="8dp"
+    android:background="@color/notification_white"
+    app:cardCornerRadius="12dp"
+    app:cardElevation="0dp"
+    app:cardMaxElevation="0dp">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:padding="17dp">
+
+        <TextView
+            android:id="@+id/notification_itinerary_tv_sent_title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:letterSpacing="0.14"
+            android:textAppearance="@style/notification_itinerary_item_title_text_style"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            tool:text="活动通知" />
+
+        <LinearLayout
+            android:id="@+id/notification_itinerary_ll_status"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@android:color/transparent"
+            android:gravity="center_vertical"
+            android:orientation="horizontal"
+            android:paddingTop="1dp"
+            app:layout_constraintBottom_toBottomOf="@+id/notification_itinerary_tv_sent_title"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="@+id/notification_itinerary_tv_sent_title">
+
+            <ImageView
+                android:id="@+id/notification_itinerary_iv_status_uncancel_dot"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="5dp"
+                android:background="@drawable/notification_ic_itinerary_uncancel_dot_unstart"
+                android:visibility="visible"
+                tool:ignore="ContentDescription" />
+
+            <TextView
+                android:id="@+id/notification_itinerary_tv_start_status_hint"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/notification_notStart"
+                android:textAppearance="@style/notification_itinerary_item_start_status_hint_style"
+                tool:ignore="HardcodedText" />
+        </LinearLayout>
+
+        <TextView
+            android:id="@+id/notification_itinerary_tv_sent_content"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="3dp"
+            android:textAppearance="@style/notification_itinerary_item_content_text_style"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/notification_itinerary_tv_sent_title"
+            tool:text="你提醒嘎嘎嘎于8月15日周三第5节课和第6节课在灯光篮球场上打篮球" />
+
+        <TextView
+            android:id="@+id/notification_itinerary_tv_sent_generate_time"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="3dp"
+            android:letterSpacing="0.1"
+            android:textAppearance="@style/notification_itinerary_item_generate_time_text_style"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/notification_itinerary_tv_sent_content"
+            tool:text="8/14 12:00" />
+
+        <TextView
+            android:id="@+id/notification_itinerary_tv_canceled_hint"
+            android:layout_width="wrap_content"
+            android:layout_height="21dp"
+            android:layout_marginTop="13dp"
+            android:gravity="center_horizontal"
+            android:text="已取消"
+            android:textAppearance="@style/notification_itinerary_item_canceled_hint_style"
+            android:visibility="gone"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/notification_itinerary_tv_sent_generate_time"
+            tool:ignore="HardcodedText" />
+
+
+        <LinearLayout
+            android:id="@+id/notification_itinerary_ll_cancel_reminder"
+            android:layout_width="wrap_content"
+            android:layout_height="21dp"
+            android:layout_marginTop="13dp"
+            android:background="@android:color/transparent"
+            android:gravity="center_horizontal"
+            android:orientation="horizontal"
+            android:visibility="visible"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/notification_itinerary_tv_sent_generate_time">
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:background="@drawable/notification_ic_cancel"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                tool:ignore="ContentDescription"
+                tool:layout_editor_absoluteX="166dp" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="21dp"
+                android:layout_gravity="center_vertical"
+                android:layout_marginStart="5dp"
+                android:letterSpacing="0.075"
+                android:text="取消提醒"
+                android:textAppearance="@style/notification_itinerary_item_cancel_reminder_text_style"
+                tool:ignore="HardcodedText" />
+
+        </LinearLayout>
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</androidx.cardview.widget.CardView>

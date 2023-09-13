@@ -1,17 +1,23 @@
 plugins {
     id("module-manager")
+    id("org.jetbrains.kotlin.android")
 }
+dependLibBase()
 
 
 dependApiAccount()
 
 dependApiMine()
+dependLibConfig()
+
+dependLibUtils()
+dependLibConfig()
 
 dependNetwork()
 dependRxjava()
 dependGlide()
 dependWorkManger()
-
+dependLibUtils()
 dependLibCommon()
 
 dependencies {

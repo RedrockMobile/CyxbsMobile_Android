@@ -15,6 +15,7 @@ package com.mredrock.cyxbs.config.route
  * 其余配置：缺省页拦截器[DefaultPageInterceptor]
  */
 const val MAIN_MAIN = "/main/entry"
+
 //缺省页
 const val DEFAULT_PAGE = "/main/default"
 const val DEFAULT_FRAGMENT_PAGE = "/main/default2"
@@ -23,6 +24,7 @@ const val COURSE_ENTRY = "/course/entry"
 const val QA_ENTRY = "/qa/entry"
 const val DISCOVER_ENTRY = "/discover/entry"
 const val MINE_ENTRY = "/mine/entry"
+const val CENTER_ENTRY = "/center/entry"
 
 const val DISCOVER_OTHER_COURSE = "/other_course/discover/entry"
 const val DISCOVER_NO_CLASS = "/no_class/discover/entry"
@@ -59,43 +61,58 @@ const val MINE_CHECK_IN = "/check_in/mine/entry"
 
 //通知页主页
 const val NOTIFICATION_HOME = "/notification/entry"
+
 //通知设置页
 const val NOTIFICATION_SETTING = "/notification/setting"
 
 // 个人界面的确认密码模块
 const val MINE_FORGET_PASSWORD = "/forget_password/mine/entry"
+
 // 个人界面的绑定邮箱模块
 const val MINE_BIND_EMAIL = "/bind_email/mine/entry"
+
 // 个人界面的编辑个人信息界面
 const val MINE_EDIT_INFO = "/edit_info/mine/entry"
+
 //个人界面的个人主页
 const val MINE_PERSON_PAGE = "/person_page/mine/entry"
 
-
 // QA
 const val QA_QUIZ = "/quiz/qa/entry"
+
 const val QA_CIRCLE_DETAIL = "/circle_detail/qa/entry"
 const val QA_DYNAMIC_DETAIL = "/dynamic_detail/qa/entry"
 const val QA_DYNAMIC_MINE = "/dynamic_mine/qa/entry"
 const val QA_MY_COMMENT = "/my_comment/qa/entry"
 const val QA_MY_IGNORE = "/my_ignore/qa/entry"
 const val QA_MY_PRAISE = "/my_praise/qa/entry"
-const val QA_DYNAMIC_MINE_FRAGMENT="/identity/mine/entry"
-
+const val QA_DYNAMIC_MINE_FRAGMENT = "/identity/mine/entry"
 //todo模块
 //跳转到TODO的详情页
 const val TODO_TODO_DETAIL = "/todo/todo_detail/entry"
+
 //小组件用，增加todo
 const val TODO_ADD_TODO_BY_WIDGET = "/widget/todo/entry"
 
 // module_store 邮票中心页
-const val STORE_ENTRY="/store/entry"
+const val STORE_ENTRY = "/store/entry"
 
 //绑定教务在线ids页面
-const val LOGIN_BIND_IDS="/login/bind_ids/entry"
+const val LOGIN_BIND_IDS = "/login/bind_ids/entry"
 
 //课表上课地点跳转到地图key
 const val COURSE_POS_TO_MAP = "COURSE_POS_TO_MAP"
 
-
-
+//下面是邮乐场板块的地址
+//游乐场主界面
+const val FAIRGROUND_ENTRY = "/fairground/entry"
+//活动布告栏
+const val UFIELD_MAIN_ENTRY = "/ufield/main/entry"
+//活动中心
+const val UFIELD_CENTER_ENTRY = "/ufield/campaign/entry"
+//活动详情
+const val UFIELD_DETAIL_ENTRY = "/ufield/detail/entry"
+//表态页面
+const val DECLARE_ENTRY = "/declare/entry"
+//美食页面
+const val FOOD_ENTRY = "/food/entry"

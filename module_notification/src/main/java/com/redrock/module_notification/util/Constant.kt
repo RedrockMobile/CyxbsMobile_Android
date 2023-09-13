@@ -22,4 +22,10 @@ object Constant {
 
     //提醒打卡的Worker
     const val NOTIFY_TAG = "notify_tag"
+
+    //上次发送行程页面的阅读最新数据的时间（表示最近一次发送行程页面在数据更新后的打开或查看时间）
+    const val LAST_SENT_ITINERARY_PAGE_READ_TIME = "last_sent_itinerary_page_read_time"
+
+    //上次接收行程页面的阅读最新数据的时间（表示最近一次接收行程页面在数据更新后的打开或查看时间）
+    const val LAST_RECEIVED_ITINERARY_PAGE_READ_TIME = "last_received_itinerary_page_read_time"
 }

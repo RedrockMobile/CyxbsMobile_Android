@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <data>
+
+    </data>
+
+    <androidx.appcompat.widget.LinearLayoutCompat
+        android:orientation="vertical"
+        android:padding="24dp"
+        android:layout_width="300dp"
+        android:layout_height="wrap_content">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="16sp"
+            android:textColor="#15315B"
+            android:layout_marginBottom="5dp"
+            android:lineHeight="20sp"
+            android:textStyle="bold"
+            android:text="@string/declare_submit_title" />
+
+        <TextView
+            android:layout_marginVertical="5dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="#9915315B"
+            android:textSize="14sp"
+            android:text="@string/declare_submit_msg_1"
+            android:layout_marginStart="6dp"
+            android:drawablePadding="6dp"
+            app:drawableStartCompat="@drawable/declare_ic_circle" />
+
+        <TextView
+            android:layout_marginVertical="5dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="#9915315B"
+            android:textSize="14sp"
+            android:text="@string/declare_submit_msg_2"
+            android:layout_marginStart="6dp"
+            android:drawablePadding="6dp"
+            app:drawableStartCompat="@drawable/declare_ic_circle" />
+
+        <FrameLayout
+            android:layout_marginTop="20dp"
+            android:layout_width="match_parent"
+            android:paddingHorizontal="2dp"
+            android:layout_height="wrap_content">
+            <androidx.appcompat.widget.AppCompatButton
+                android:id="@+id/btn_cancel"
+                android:layout_gravity="start"
+                android:theme="@style/Theme.MaterialComponents"
+                android:background="@drawable/declare_ic_btn_background_cancel"
+                android:elevation="0dp"
+                android:textColor="#8015315B"
+                android:text="@string/declare_cancel_submit"
+                android:gravity="center"
+                android:layout_width="82dp"
+                android:layout_height="36dp" />
+
+            <androidx.appcompat.widget.AppCompatButton
+                android:id="@+id/btn_submit"
+                android:layout_gravity="end"
+                android:theme="@style/Theme.MaterialComponents"
+                android:background="@drawable/declare_ic_btn_background"
+                android:textColor="@color/config_white_black"
+                android:text="@string/declare_confirm_submit"
+                android:gravity="center"
+                android:layout_width="82dp"
+                android:layout_height="36dp" />
+        </FrameLayout>
+
+    </androidx.appcompat.widget.LinearLayoutCompat>
+</layout>

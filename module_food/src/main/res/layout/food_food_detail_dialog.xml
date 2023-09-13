@@ -1,0 +1,106 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/food_dialog_detail_cl"
+    android:layout_width="255dp"
+    android:layout_height="330dp"
+    app:cardCornerRadius="8dp">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:background="@drawable/food_ic_food_detail_background"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <androidx.cardview.widget.CardView
+            android:id="@+id/food_dialog_detail_picture"
+            android:layout_width="193dp"
+            android:layout_height="125dp"
+            android:layout_marginTop="35dp"
+            app:cardCornerRadius="8dp"
+            app:cardElevation="0dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent">
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:layout_width="193dp"
+                android:layout_height="match_parent"
+                android:layout_gravity="center">
+
+                <ImageView
+                    android:id="@+id/food_dialog_img_food"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent" />
+
+                <TextView
+                    android:id="@+id/food_dialog_tv_praise_num"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:background="@drawable/food_ic_food_detail_praise_background"
+                    android:text="1"
+                    android:gravity="center_vertical"
+                    android:textColor="@color/food_background"
+                    android:textSize="14sp"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+                    android:paddingHorizontal="10dp"
+                    android:drawablePadding="5dp"
+                    app:drawableStartCompat="@drawable/food_ic_food_detail_praise" />
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
+        </androidx.cardview.widget.CardView>
+
+        <TextView
+            android:id="@+id/food_dialog_detail_tv_theme"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="20dp"
+            android:textColor="@color/food_text_title"
+            android:textSize="18sp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/food_dialog_detail_picture" />
+
+        <TextView
+            android:id="@+id/food_dialog_detail_tv_content"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="15dp"
+            android:layout_marginTop="8dp"
+            android:layout_marginEnd="15dp"
+            android:textColor="@color/food_dialog_detail_content"
+            android:textSize="14sp"
+            tools:text="巴拉哔哩哔哩哔哩哔哩巴拉巴拉巴拉巴拉"
+            android:gravity="center"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/food_dialog_detail_tv_theme" />
+
+        <androidx.appcompat.widget.AppCompatButton
+            android:id="@+id/food_dialog_detail_btn_negative"
+            android:layout_width="93dp"
+            android:layout_height="34dp"
+            android:layout_marginStart="27dp"
+            android:layout_marginBottom="31dp"
+            android:background="@drawable/food_shape_btn_change"
+            android:text="取消"
+            android:textColor="@color/food_main"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent" />
+
+        <androidx.appcompat.widget.AppCompatButton
+            android:id="@+id/food_dialog_detail_btn_positive"
+            android:layout_width="93dp"
+            android:layout_height="34dp"
+            android:layout_marginEnd="27dp"
+            android:elevation="0dp"
+            android:layout_marginBottom="31dp"
+            android:background="@drawable/food_shape_btn_determine"
+            android:text="点赞"
+            android:textColor="@color/food_background"
+            style="?android:attr/borderlessButtonStyle"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent" />
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</androidx.cardview.widget.CardView>

@@ -80,7 +80,7 @@ class AffairActivity : BaseActivity() {
     initClick()
     initFragment()
   }
-  
+
   private fun initBackground() {
     // 使用 LifecycleObserver，便于及时取消动画
     lifecycle.addObserver(
@@ -122,13 +122,12 @@ class AffairActivity : BaseActivity() {
   }
   
   private fun initClick() {
-    mBtnBack.setOnSingleClickListener {
-      finishAfterTransition()
-    }
-    
-    mBtnNext.setOnSingleClickListener {
-      mViewModel.clickNextBtn()
-    }
+      mBtnNext.setOnSingleClickListener {
+        mViewModel.clickNextBtn()
+      }
+      mBtnBack.setOnSingleClickListener {
+          finishAfterTransition()
+      }
   }
   
   private fun initFragment() {
