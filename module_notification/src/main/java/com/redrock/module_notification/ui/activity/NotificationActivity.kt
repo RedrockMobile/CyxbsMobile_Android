@@ -286,7 +286,7 @@ class NotificationActivity : BaseViewModelActivity<NotificationViewModel>() {
             for (value in it!!) {
                 if (!value.has_read) {
                     allUnreadSysMsgIds.add(value.id.toString())
-                    changeTabRedDotsVisibility(0, View.VISIBLE)
+                    changeTabRedDotsVisibility(1, View.VISIBLE)
                 }
             }
         }
@@ -294,7 +294,7 @@ class NotificationActivity : BaseViewModelActivity<NotificationViewModel>() {
         viewModel.ufieldActivityMsg.observe{
             for (value in it){
                 if (!value.clicked){
-                    changeTabRedDotsVisibility(1, View.VISIBLE)
+                    changeTabRedDotsVisibility(0, View.VISIBLE)
                     break
                 }
                 viewModel.changeActiveDotStatus(false)
@@ -368,6 +368,8 @@ class NotificationActivity : BaseViewModelActivity<NotificationViewModel>() {
      * ```
      */
     private fun initPageSelect() {
+        // 先确保shouldShowRedDots不为空
+        shouldShowRedDots = NotificationSp.getBoolean(IS_SWITCH1_SELECT, true)
         var msgType: Int
         intent.apply {
             msgType = getIntExtra("MsgType",-1)

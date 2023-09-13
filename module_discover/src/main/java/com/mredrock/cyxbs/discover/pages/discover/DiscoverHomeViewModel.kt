@@ -95,11 +95,11 @@ class DiscoverHomeViewModel : BaseViewModel() {
         }
       }
       itineraryList.awaitAll().apply {
-        if (this[0].isSuccess() && this[0].data.any { !it.hasRead }) {
+        if (this[0].isSuccess() && (this[0].data?.any { !it.hasRead } == true)) {
           hasUnread.value = true
           return@launchCatch
         }
-        if (this[1].isSuccess() && this[1].data.any { !it.hasRead }) {
+        if (this[1].isSuccess() && (this[1].data?.any { !it.hasRead } == true)) {
           hasUnread.value = true
           return@launchCatch
         }

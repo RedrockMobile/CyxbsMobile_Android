@@ -10,9 +10,11 @@ import com.mredrock.cyxbs.affair.R
 import com.mredrock.cyxbs.affair.ui.fragment.NoClassAffairFragment
 import com.mredrock.cyxbs.affair.ui.viewmodel.activity.NoClassAffairActivityViewModel
 import com.mredrock.cyxbs.api.affair.NoClassBean
+import com.mredrock.cyxbs.config.route.NOTIFICATION_HOME
 import com.mredrock.cyxbs.lib.base.ui.BaseActivity
 import com.mredrock.cyxbs.lib.utils.extensions.appContext
 import com.mredrock.cyxbs.lib.utils.extensions.setOnSingleClickListener
+import com.mredrock.cyxbs.lib.utils.service.ServiceManager
 
 class NoClassAffairActivity : BaseActivity() {
 
@@ -68,8 +70,11 @@ class NoClassAffairActivity : BaseActivity() {
                 }
 
                 3 -> {
-                    //todo 发送成功之后跳转到消息中心
-                    toast("跳转到消息中心")
+                    // 发送成功之后跳转到消息中心
+                    ServiceManager.activity(NOTIFICATION_HOME){
+                        withInt("MsgType", 2)
+                    }
+                    finishAfterTransition()
                 }
 
                 4 -> {
