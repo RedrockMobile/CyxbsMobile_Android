@@ -45,6 +45,7 @@ class SearchStudentAdapter : ListAdapter<Student,SearchStudentAdapter.VH>(studen
   inner class VH(itemView : View) : RecyclerView.ViewHolder(itemView){
     val tvName: TextView = itemView.findViewById(R.id.noclass_tv_student_name)
     val tvNum: TextView = itemView.findViewById(R.id.noclass_tv_student_id)
+    val tvMajor: TextView = itemView.findViewById(R.id.noclass_tv_student_major)
     init {
       itemView.findViewById<ImageView>(R.id.noclass_iv_student_add).apply {
         setOnClickListener {
@@ -61,8 +62,12 @@ class SearchStudentAdapter : ListAdapter<Student,SearchStudentAdapter.VH>(studen
   }
   
   override fun onBindViewHolder(holder: VH, position: Int) {
-    holder.tvName.text = currentList[position].name
-    holder.tvNum.text = currentList[position].id
+    val item = currentList[position]
+    with(holder){
+      tvName.text = item.name
+      tvNum.text = item.id
+      tvMajor.text = item.major
+    }
   }
 
   fun deleteStudent(student: Student){

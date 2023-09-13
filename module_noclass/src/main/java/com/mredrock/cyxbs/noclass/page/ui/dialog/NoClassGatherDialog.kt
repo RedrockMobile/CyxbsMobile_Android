@@ -9,12 +9,14 @@ import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.fragment.app.activityViewModels
 import androidx.viewpager2.widget.ViewPager2
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
+import com.mredrock.cyxbs.api.account.IAccountService
 import com.mredrock.cyxbs.api.affair.DateJson
 import com.mredrock.cyxbs.api.affair.IAffairService
 import com.mredrock.cyxbs.api.affair.NoClassBean
 import com.mredrock.cyxbs.lib.utils.adapter.FragmentVpAdapter
 import com.mredrock.cyxbs.lib.utils.extensions.dp2px
 import com.mredrock.cyxbs.lib.utils.extensions.gone
+import com.mredrock.cyxbs.lib.utils.service.ServiceManager
 import com.mredrock.cyxbs.lib.utils.service.impl
 import com.mredrock.cyxbs.noclass.R
 import com.mredrock.cyxbs.noclass.page.ui.fragment.NoClassBusyPageFragment
@@ -100,10 +102,13 @@ class NoClassGatherDialog (
     //安排行程
     dialog.findViewById<Button>(R.id.noclass_btn_arrange_plan).apply {
       setOnClickListener {
-        //跳转到安排行程模块
+        //跳转到安排行程模块,这里将自己去掉了
+        val mUserId =  ServiceManager.invoke(IAccountService::class).getUserService().getStuNum()
         val idIsSparePair = ArrayList<Pair<String,Boolean>>()
         mNumNameIsSpare.forEach { (idName, isSpare) ->
-          idIsSparePair.add(idName.first to isSpare)
+          if (idName.first != mUserId){
+            idIsSparePair.add(idName.first to isSpare)
+          }
         }
         IAffairService::class.impl.startActivityForNoClass(NoClassBean(idIsSparePair,mDateJson))
       }
