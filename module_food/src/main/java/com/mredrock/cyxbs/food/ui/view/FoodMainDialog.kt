@@ -70,7 +70,9 @@ class FoodMainDialog private constructor(
                 View(context).apply {
                     layoutParams = LinearLayout.LayoutParams(
                         LinearLayout.LayoutParams.MATCH_PARENT,
-                        1)
+                        1).apply {
+                            bottomMargin = 20.dp2px
+                    }
                     setBackgroundColor(R.color.food_text_dialog_line.color)
                 }
             )

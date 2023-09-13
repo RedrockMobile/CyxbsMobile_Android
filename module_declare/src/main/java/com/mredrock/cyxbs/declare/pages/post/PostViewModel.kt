@@ -4,7 +4,6 @@ import com.mredrock.cyxbs.declare.pages.post.net.PostApiService
 import com.mredrock.cyxbs.lib.base.ui.BaseViewModel
 import com.mredrock.cyxbs.lib.utils.extensions.asFlow
 import com.mredrock.cyxbs.lib.utils.network.ApiStatus
-import com.mredrock.cyxbs.lib.utils.network.mapOrInterceptException
 import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
 import io.reactivex.rxjava3.schedulers.Schedulers
 import kotlinx.coroutines.flow.MutableSharedFlow
@@ -23,7 +22,7 @@ class PostViewModel : BaseViewModel() {
     val postResultFlow: SharedFlow<ApiStatus>
         get() = _postResultFlow
 
-    suspend fun post(title: String, choices: List<String>) {
+    fun post(title: String, choices: List<String>) {
         PostApiService.postVote(title, choices)
             .subscribeOn(Schedulers.io())
             .observeOn(AndroidSchedulers.mainThread())
