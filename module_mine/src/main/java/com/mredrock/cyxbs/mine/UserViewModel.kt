@@ -15,7 +15,6 @@ import com.mredrock.cyxbs.common.utils.extensions.*
 import com.mredrock.cyxbs.common.viewmodel.BaseViewModel
 import com.mredrock.cyxbs.lib.utils.extensions.setSchedulers
 import com.mredrock.cyxbs.lib.utils.extensions.unsafeSubscribeBy
-import com.mredrock.cyxbs.lib.utils.network.mapOrThrowApiException
 import com.mredrock.cyxbs.lib.utils.extensions.launchCatch
 import com.mredrock.cyxbs.lib.utils.network.ApiWrapper
 import com.mredrock.cyxbs.mine.network.model.ItineraryMsgBean
@@ -108,13 +107,13 @@ class UserViewModel : BaseViewModel() {
      * 获取“新”行程通知的数量
      * @param response
      */
-    private fun getNewItineraryCount(response: List<ApiWrapper<List<ItineraryMsgBean>>>): Int{
-        val receivedCount: Int = if (response[1].isSuccess()) {
-            val list = response[1].data.filter { !it.hasRead }
+    private fun getNewItineraryCount(response: List<ApiWrapper<List<ItineraryMsgBean>?>>): Int{
+        val receivedCount: Int = if (response[1].isSuccess() && !response[1].data.isNullOrEmpty()) {
+            val list = response[1].data!!.filter { !it.hasRead }
             list.size
         } else 0
-        val sentCount: Int = if (response[0].isSuccess()) {
-            val list = response[0].data.filter { !it.hasRead }
+        val sentCount: Int = if (response[0].isSuccess() && !response[0].data.isNullOrEmpty()) {
+            val list = response[0].data!!.filter { !it.hasRead }
             list.size
         } else 0
         return receivedCount + sentCount
