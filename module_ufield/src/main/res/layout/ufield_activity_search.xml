@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/uField_search_background"
+    android:background="@color/uField_white"
     android:orientation="vertical"
     tools:context=".ui.activity.SearchActivity">
 
@@ -22,7 +22,7 @@
             android:layout_height="25dp"
             android:layout_marginStart="23dp"
             android:layout_gravity="center_vertical"
-            android:src="@drawable/ufield_ic_search_back" />
+            android:src="@drawable/ufield_ic_back" />
 
 
 
@@ -33,7 +33,7 @@
             android:layout_marginStart="45dp"
             android:layout_marginEnd="64dp"
             android:layout_marginBottom="16dp"
-            android:background="@color/uField_white"
+            android:background="@color/ufield_search_background"
             app:cardCornerRadius="29dp"
             app:cardElevation="0dp">
 
@@ -43,7 +43,7 @@
                 android:layout_height="17dp"
                 android:layout_gravity="center_vertical"
                 android:layout_marginStart="17dp"
-                android:src="@drawable/ufield_ic_logo_search" />
+                android:src="@drawable/ufield_ic_search" />
 
             <androidx.appcompat.widget.SearchView
                 android:id="@+id/uField_searchView"

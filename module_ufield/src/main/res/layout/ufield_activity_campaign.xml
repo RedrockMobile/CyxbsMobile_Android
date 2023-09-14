@@ -28,7 +28,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_centerInParent="true"
-            android:background="@drawable/ufield_ic_activity_campaign_back"
+            android:background="@drawable/ufield_ic_back"
             tools:ignore="ContentDescription" />
     </RelativeLayout>
 

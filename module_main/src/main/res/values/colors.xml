@@ -8,6 +8,10 @@
     <!--    启动页颜色-->
     <color name="main_start_page_white_color">#ffffff</color>
 
+    <!--    游乐园昵称字体颜色-->
+    <color name="main_fairground_nickname_color">#15315B</color>
+    <!--    游乐园描述字体颜色-->
+    <color name="main_fairground_describe_color">#8015315B</color>
     <!--    忘记密码按钮颜色            -->
     <color name="main_mine_security_light_button_back_color">#C3D4EE</color>
     <color name="main_mine_security_dialog_back_color">#ffffff</color>

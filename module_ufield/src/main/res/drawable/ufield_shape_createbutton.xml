@@ -2,7 +2,7 @@
 <shape xmlns:android="http://schemas.android.com/apk/res/android"
     android:shape="rectangle"
     android:elevation="0dp">
-<solid android:color="#C3D4EE"/>
+<solid android:color="@color/ufield_create_button"/>
     <corners
         android:radius="60dp"/>
 </shape>

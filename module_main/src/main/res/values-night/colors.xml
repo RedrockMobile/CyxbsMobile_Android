@@ -7,7 +7,10 @@
     <color name="main_btn_bottom_focused">#465FFF</color>
     <!--    启动页颜色-->
     <color name="main_start_page_white_color">#333333</color>
-
+    <!--    游乐园昵称字体颜色-->
+    <color name="main_fairground_nickname_color">#87CEFA</color>
+    <!--    游乐园描述字体颜色-->
+    <color name="main_fairground_describe_color">#A087CEFA</color>
     <!--    忘记密码按钮颜色            -->
     <color name="main_mine_security_dialog_back_color">#2e2e2e</color>
 </resources>

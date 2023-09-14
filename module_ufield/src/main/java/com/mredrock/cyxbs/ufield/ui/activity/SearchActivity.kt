@@ -108,8 +108,8 @@ class SearchActivity : BaseActivity() {
 
         mSearch.apply {
             findViewById<EditText>(androidx.appcompat.R.id.search_src_text).apply {
-                setTextColor(Color.parseColor("#15315B"))
-                setHintTextColor(Color.parseColor("#6615315B"))
+                setTextColor(getColor(R.color.ufield_text_name))
+                setHintTextColor(getColor(R.color.ufield_text_name_alpha))
                 textSize = 16F
             }
             findViewById<ImageView>(androidx.appcompat.R.id.search_close_btn).apply {

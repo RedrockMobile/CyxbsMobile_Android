@@ -65,7 +65,7 @@
             android:id="@+id/ufield_activity_rank_tv_title"
             android:layout_width="wrap_content"
             android:layout_height="25dp"
-            android:layout_marginStart="5dp"
+            android:layout_marginStart="8dp"
             android:layout_marginBottom="8dp"
             android:ellipsize="end"
             android:letterSpacing="0.03"
@@ -73,7 +73,7 @@
             android:maxEms="7"
             android:maxLines="1"
             android:text="12asdasdas"
-            android:textColor="#112C54"
+            android:textColor="@color/uField_112c54"
             android:textSize="18sp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toEndOf="@+id/ufield_activity_rank_cv_head" />

@@ -1,10 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources xmlns:tools="http://schemas.android.com/tools">
-    <color name="black" tools:ignore="ResourceName">#FF000000</color>
+    <color name="uField_cancel_color" tools:ignore="ResourceName">#000000</color>
     <color name="uField_white" tools:ignore="ResourceName">#FFFFFFFF</color>
     <color name="uField_check_tabSelected">#15315B</color>
     <color name="uField_check_tab">#15315B</color>
-    <color name="uField_check_background">#F8F9FC</color>
     <color name="editColor" tools:ignore="ResourceName">#15315B</color>
     <color name="phonecolor" tools:ignore="ResourceName">#ED535C</color>
     <color name="timecolor" tools:ignore="ResourceName">#ECEEF2</color>
@@ -12,10 +11,11 @@
     <color name="uField_check_tabText">#A1ABBA</color>
     <!--    <color name="uField_check_background">#15315B66</color>-->
     <color name="uField_todo_background">#F8F9FC</color>
-    <color name="uField_15315b">#15315B</color>
-    <color name="uField_15315b66_40">#15315B66</color>
+    <color name="uField_activity_item_name">#15315B</color>
+    <color name="uField_15315b66_40">#6615315B</color>
     <color name="uField_tab_selected">#4F4AE9</color>
     <color name="uField_tab_color">#2A4E84</color>
+    <color name="uField_tab_background_color">#E8E9FC</color>
     <color name="uField_646382">#646382</color>
     <color name="uField_background">#FCFCFD</color>
     <color name="uField_search_background">#FBFCFF</color>
@@ -34,10 +34,13 @@
     <color name="ufield_fragment_time_color">#CC2A4E84</color>
     <color name="ufield_todo_time_color">#6615315B</color>
     <color name="uField_9915315b">#9915315B</color>
-    <color name="uField_6615315b">#6615315B</color>
+    <color name="ufield_text_name_alpha">#6615315B</color>
     <color name="uField_check_edit">#F3F8FD</color>
-    <color name="ufield_15315b">#15315B</color>
-    <color name="ufield_0d15315b">#0D15315B</color>
-    <color name="ufield_3315315b">#3315315B</color>
+    <color name="ufield_text_name">#15315B</color>
+    <color name="ufield_search_background">#0D15315B</color>
+    <color name="ufield_search_text_hint">#3315315B</color>
     <color name="ufield_4a44e4">#4A44E4</color>
+    <color name="ufield_detail_description">#66112C54</color>
+    <color name="ufield_create_textfield">#40DBDBDB</color>
+    <color name="ufield_create_button">#C3D4EE</color>
 </resources>

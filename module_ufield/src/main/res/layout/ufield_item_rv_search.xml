@@ -58,7 +58,7 @@
                 android:maxLines="1"
                 android:scrollHorizontally="true"
                 android:singleLine="true"
-                android:textColor="@color/uField_112c54"
+                android:textColor="@color/uField_activity_item_name"
                 android:textSize="16sp" />
             <!--       因为视觉要求，关闭跑马灯 android:ellipsize="marquee"-->
 
