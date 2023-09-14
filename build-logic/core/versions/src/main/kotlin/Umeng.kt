@@ -2,6 +2,7 @@
 
 import org.gradle.api.Project
 import org.gradle.kotlin.dsl.dependencies
+import org.gradle.kotlin.dsl.exclude
 
 /**
  * ...
@@ -22,6 +23,10 @@ fun Project.dependUmeng() {
   dependencies {
     "implementation"(Umeng.common)
     "implementation"(Umeng.asms)
-    "implementation"(Umeng.push)
+    "implementation"(Umeng.push) {
+      //因为友盟和utils模块都使用了阿里云的httpdns，在这里排除友盟的httpdns依赖
+      exclude("com.umeng.umsdk","alicloud-httpdns")
+      exclude("com.umeng.umsdk","alicloud_beacon")
+    }
   }
 }
