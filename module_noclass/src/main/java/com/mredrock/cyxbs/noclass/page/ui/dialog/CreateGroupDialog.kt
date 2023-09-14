@@ -17,6 +17,7 @@ import com.mredrock.cyxbs.lib.utils.extensions.toast
 import com.mredrock.cyxbs.lib.utils.service.ServiceManager
 import com.mredrock.cyxbs.noclass.R
 import com.mredrock.cyxbs.noclass.page.viewmodel.dialog.CreateGroupViewModel
+import com.mredrock.cyxbs.noclass.util.isAllChinese
 import com.mredrock.cyxbs.noclass.util.startShake
 
 /**
@@ -154,7 +155,10 @@ class CreateGroupDialog(
                     createUndone(mTvHint)
                     mTvHint.text = "名称不能为空"
                     mTvHint.visibility = View.VISIBLE
-                } else {
+                }else if (!etName.text.toString().isAllChinese()){
+                    mTvHint.text = "只能是汉字哦~"
+                    mTvHint.visibility = View.VISIBLE
+                }else {
                     val name = etName.text.toString()
                     //不为空直接调用
                     createDone(name)

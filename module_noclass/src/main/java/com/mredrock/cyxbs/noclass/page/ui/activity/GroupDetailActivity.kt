@@ -127,6 +127,7 @@ class GroupDetailActivity : BaseActivity(){
         initEditText()
         initCourseContainer()
         initQuery()
+        initHintText("试试左滑删除列表")
     }
 
     /**
@@ -179,6 +180,8 @@ class GroupDetailActivity : BaseActivity(){
         var searchAllDialog: SearchAllDialog?
         mViewModel.searchAll.observe(this){
             if (it != null && it.isSuccess()){
+                //搜索只要成功就清空搜索框框
+                mEditTextView.setText("")
                 if (it.data.types != null) {
                     searchAllDialog = SearchAllDialog(
                         searchResult = it.data,

@@ -149,6 +149,8 @@ class NoClassTemporaryFragment : BaseFragment(R.layout.noclass_fragment_temporar
         var searchAllDialog: SearchAllDialog?
         mViewModel.searchAll.observe(viewLifecycleOwner) {
             if (it != null && it.isSuccess()){
+                //搜索只要成功就清空搜索框框
+                mEditTextView.setText("")
                 if (it.data.types != null && it.data.types!!.isNotEmpty()) {
                     searchAllDialog = SearchAllDialog(it.data).apply {
                         setOnClickClass { cls ->

@@ -66,6 +66,7 @@
             android:layout_width="wrap_content"
             android:layout_height="25dp"
             android:layout_marginStart="5dp"
+            android:maxWidth="250dp"
             android:layout_marginBottom="8dp"
             android:ellipsize="end"
             android:letterSpacing="0.03"
