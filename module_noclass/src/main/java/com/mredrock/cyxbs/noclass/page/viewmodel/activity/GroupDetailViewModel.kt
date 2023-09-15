@@ -41,7 +41,6 @@ class GroupDetailViewModel : BaseViewModel() {
                     NoClassGroup("",false, listOf(),""), listOf(), listOf()
                 ),50000,"net error")
                 )
-                toast("为什么发射没有用")
             }
             .safeSubscribeBy {
                 _searchAll.postValue(it)

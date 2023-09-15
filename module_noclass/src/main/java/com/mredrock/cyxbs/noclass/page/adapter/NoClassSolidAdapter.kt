@@ -59,7 +59,7 @@ class NoClassSolidAdapter : ListAdapter<NoClassGroup, NoClassSolidAdapter.MyHold
         private val mMenuLayout : SlideMenuLayout = itemView.findViewById(R.id.slide_noclass_container)
         init {
             tvGroupIsTop.text = "取消置顶"
-            mMenuLayout.setOnClickListener {
+            mMenuLayout.setOnTapTouchListener {
                 mMenuLayout.closeRightSlide()
                 val item = getItem(bindingAdapterPosition)
                 onClickGroup?.invoke(item)

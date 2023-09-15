@@ -173,6 +173,7 @@ class NoClassSolidFragment : BaseFragment(R.layout.noclass_fragment_solid) {
 
     private fun initObserver() {
         var searchStudentDialog: SearchStudentDialog?
+        var addToGroupDialog : AddToGroupDialog?
         mViewModel.searchStudent.observe(viewLifecycleOwner) {
             if (it != null) {
                 if (it.isSuccess()){
@@ -181,10 +182,8 @@ class NoClassSolidFragment : BaseFragment(R.layout.noclass_fragment_solid) {
                             searchStudentDialog = SearchStudentDialog.newInstance(it.data).apply {
                                 setOnAddClick { stu ->
                                     //点击加号之后的逻辑，需要弹窗选择分组加入
-                                    AddToGroupDialog(mAdapter.currentList, stu).show(
-                                        childFragmentManager,
-                                        "AddToGroupDialog"
-                                    )
+                                    addToGroupDialog = AddToGroupDialog.newInstance(mAdapter.currentList, stu)
+                                    addToGroupDialog!!.show(childFragmentManager, "AddToGroupDialog")
                                 }
                             }
                             searchStudentDialog!!.show(childFragmentManager, "SearchStudentDialog")

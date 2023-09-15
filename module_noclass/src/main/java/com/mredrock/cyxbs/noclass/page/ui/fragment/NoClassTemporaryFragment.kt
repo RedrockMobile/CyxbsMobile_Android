@@ -161,7 +161,10 @@ class NoClassTemporaryFragment : BaseFragment(R.layout.noclass_fragment_temporar
                             }
                             setOnClickStudent { stu ->
                                 val stuList = mAdapter.currentList.toMutableSet()
-                                stuList.add(stu)
+                                val ids = stuList.map { it.id }
+                                if (stu.id !in ids){
+                                    stuList.add(stu)
+                                }
                                 mAdapter.submitList(stuList.toList())
                             }
                             setOnClickGroup { group ->

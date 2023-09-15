@@ -8,6 +8,7 @@ import android.view.View
 import android.widget.FrameLayout
 import android.widget.ImageView
 import android.widget.LinearLayout
+import android.widget.TextView
 import androidx.activity.OnBackPressedCallback
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.activity.viewModels
@@ -55,6 +56,11 @@ class NoClassActivity : BaseActivity() {
      * 返回图标
      */
     private val mImgReturn: ImageView by R.id.iv_noclass_return.view()
+
+    /**
+     * 没课越文字
+     */
+    private val mTvNoClass : TextView by R.id.iv_noclass_tv_noclass.view()
 
     /**
      * 批量添加文字
@@ -148,6 +154,9 @@ class NoClassActivity : BaseActivity() {
         }
         // 返回的点击事件
         mImgReturn.setOnClickListener {
+            finish()
+        }
+        mTvNoClass.setOnClickListener {
             finish()
         }
     }

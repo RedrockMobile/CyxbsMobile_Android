@@ -4,10 +4,10 @@ import android.app.Dialog
 import android.os.Bundle
 import android.widget.Button
 import android.widget.TextView
+import androidx.core.os.bundleOf
 import androidx.fragment.app.viewModels
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import com.mredrock.cyxbs.lib.utils.extensions.toast
 import com.mredrock.cyxbs.lib.utils.extensions.visible
 import com.mredrock.cyxbs.noclass.R
@@ -15,16 +15,14 @@ import com.mredrock.cyxbs.noclass.bean.NoClassGroup
 import com.mredrock.cyxbs.noclass.bean.Student
 import com.mredrock.cyxbs.noclass.page.adapter.NoClassAddToGroupAdapter
 import com.mredrock.cyxbs.noclass.page.viewmodel.fragment.SolidViewModel
+import com.mredrock.cyxbs.noclass.util.BaseBottomSheetDialogFragment
 import com.mredrock.cyxbs.noclass.widget.SeekBarView
 
 /**
  * 将该学生添加到指定的分组中
  */
 
-class AddToGroupDialog(
-    private val groupList: List<NoClassGroup>,
-    private val student: Student
-) : BottomSheetDialogFragment() {
+class AddToGroupDialog: BaseBottomSheetDialogFragment() {
 
     /**
      * 分组文字的recyclerView
@@ -56,8 +54,13 @@ class AddToGroupDialog(
      */
     private var restNum: Int = 0
 
+    /**
+     * 传过来
+     */
+    private val groupList by arguments<List<NoClassGroup>>()
+    private val student by arguments<Student>()
+
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
-        super.onCreateDialog(savedInstanceState)
         val dialog = super.onCreateDialog(savedInstanceState)
         dialog.setContentView(R.layout.noclass_dialog_add_to_group)
         initView(dialog)
@@ -146,6 +149,15 @@ class AddToGroupDialog(
             if (mRv.width >= resources.displayMetrics.widthPixels) {
                 mSb.visible()
             }
+        }
+    }
+
+    companion object{
+        fun newInstance(groupList: List<NoClassGroup>, student: Student) = AddToGroupDialog().apply {
+            arguments = bundleOf(
+                this::groupList.name to groupList,
+                this::student.name to student
+            )
         }
     }
 }
