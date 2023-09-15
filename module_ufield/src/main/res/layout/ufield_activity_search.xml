@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/uField_white_black_111111"
+    android:background="@color/uField_search_background"
     android:orientation="vertical"
     tools:context=".ui.activity.SearchActivity">
 
@@ -22,7 +22,7 @@
             android:layout_height="25dp"
             android:layout_marginStart="23dp"
             android:layout_gravity="center_vertical"
-            android:src="@drawable/ufield_ic_back" />
+            android:src="@drawable/ufield_ic_search_back" />
 
 
 
@@ -33,7 +33,7 @@
             android:layout_marginStart="45dp"
             android:layout_marginEnd="64dp"
             android:layout_marginBottom="16dp"
-            android:background="@color/uField_search_background"
+            android:background="@color/uField_white_black_111111"
             app:cardCornerRadius="29dp"
             app:cardElevation="0dp">
 
@@ -43,7 +43,7 @@
                 android:layout_height="17dp"
                 android:layout_gravity="center_vertical"
                 android:layout_marginStart="17dp"
-                android:src="@drawable/ufield_ic_search" />
+                android:src="@drawable/ufield_ic_logo_search" />
 
             <androidx.appcompat.widget.SearchView
                 android:id="@+id/uField_searchView"
@@ -65,7 +65,7 @@
             android:layout_gravity="end|center_vertical"
             android:layout_marginEnd="23dp"
             android:text="@string/ufield_search_name"
-            android:textColor="@color/config_choose_dialog_btn_positive"
+            android:textColor="@color/uField_search_text_color"
             android:textSize="14sp" />
 
     </FrameLayout>
@@ -91,7 +91,7 @@
             app:tabRippleColor="@null"
             app:tabSelectedTextColor="@color/uField_tab_selected"
             app:tabTextAppearance="@style/uFieldMyTextStyle"
-            app:tabTextColor="@color/config_alpha_forty_level_two_font_color" />
+            app:tabTextColor="@color/uField_search_tab_background" />
     </LinearLayout>
 
 

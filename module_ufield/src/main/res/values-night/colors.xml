@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources xmlns:tools="http://schemas.android.com/tools">
-    <color name="uField_black_white">#FFFFFF</color>
     <color name="uField_white_black_111111">#111111</color>
     <color name="uField_text_phone">#ED535C</color>
     <color name="uField_text_time">#ECEEF2</color>
@@ -14,5 +13,6 @@
     <color name="uField_alpha_level_three_font_color">#4A5A73</color>
     <color name="uField_check_edit">#333333</color>
     <color name="uField_search_background">#3D7889A3</color>
+    <color name="uField_search_shape_background">#3D7889A3</color>
     <color name="uField_create_textfield">#2D2D2D</color>
 </resources>

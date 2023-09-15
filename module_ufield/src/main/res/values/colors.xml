@@ -13,6 +13,13 @@
     <color name="uField_white_black_333333">#FFFFFF</color>
     <color name="uField_alpha_level_three_font_color">#66142C52</color>
     <color name="uField_check_edit">#F3F8FD</color>
-    <color name="uField_search_background">#0D15315B</color>
+    <color name="uField_search_background">#FBFCFF</color>
+    <color name="uField_search_shape_background">#0D15315B</color>
     <color name="uField_create_textfield">#40DBDBDB</color>
+    <color name="uField_todo_background">#F8F9FC</color>
+    <color name="uField_check_tabSelected">#15315B</color>
+    <color name="uField_search_tab_background">#A1ADBD</color>
+    <color name="uField_search_text_color">#4A44E4</color>
+
+
 </resources>

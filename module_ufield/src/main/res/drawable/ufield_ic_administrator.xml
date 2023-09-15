@@ -7,7 +7,7 @@
       android:pathData="M9.767,5.86m-5.128,0a5.128,5.128 0,1 1,10.256 0a5.128,5.128 0,1 1,-10.256 0"
       android:strokeWidth="1.46512"
       android:fillColor="#00000000"
-      android:strokeColor="#15315B"/>
+      android:strokeColor="@color/config_level_two_font_color"/>
   <path
       android:pathData="M10.012,13.674L10.012,13.674A0.733,0.733 0,0 1,10.744 14.407L10.744,16.849A0.733,0.733 0,0 1,10.012 17.581L10.012,17.581A0.733,0.733 0,0 1,9.279 16.849L9.279,14.407A0.733,0.733 0,0 1,10.012 13.674z"
       android:fillColor="#546787"/>
@@ -15,5 +15,5 @@
       android:pathData="M0.733,18.314C0.733,14.268 4.012,10.988 8.058,10.988H11.965C16.011,10.988 19.291,14.268 19.291,18.314C19.291,19.393 18.416,20.267 17.337,20.267H2.686C1.607,20.267 0.733,19.393 0.733,18.314Z"
       android:strokeWidth="1.46512"
       android:fillColor="#00000000"
-      android:strokeColor="#15315B"/>
+      android:strokeColor="@color/config_level_two_font_color"/>
 </vector>
