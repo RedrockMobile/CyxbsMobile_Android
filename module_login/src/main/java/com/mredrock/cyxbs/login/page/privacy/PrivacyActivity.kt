@@ -13,7 +13,7 @@ import com.mredrock.cyxbs.login.R
 class PrivacyActivity : BaseActivity() {
     
     companion object {
-        const val USER_AGREEMENT_URL = "https://fe-prod.redrock.cqupt.edu.cn/privacy-policy"
+        const val USER_AGREEMENT_URL = "https://fe-prod.redrock.cqupt.edu.cn/privacy-policy/"
     }
     
     private val mWebView by R.id.login_wv_privacy.view<WebView>()
