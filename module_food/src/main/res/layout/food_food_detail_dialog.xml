@@ -8,9 +8,9 @@
     app:cardCornerRadius="8dp">
 
     <androidx.constraintlayout.widget.ConstraintLayout
-        android:background="@drawable/food_ic_food_detail_background"
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        android:background="@drawable/food_ic_food_detail_background">
 
         <androidx.cardview.widget.CardView
             android:id="@+id/food_dialog_detail_picture"
@@ -38,15 +38,15 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:background="@drawable/food_ic_food_detail_praise_background"
-                    android:text="1"
-                    android:gravity="center_vertical"
-                    android:textColor="@color/food_background"
-                    android:textSize="14sp"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="parent"
-                    android:paddingHorizontal="10dp"
                     android:drawablePadding="5dp"
-                    app:drawableStartCompat="@drawable/food_ic_food_detail_praise" />
+                    android:gravity="center_vertical"
+                    android:paddingHorizontal="10dp"
+                    android:text="1"
+                    android:textColor="@android:color/white"
+                    android:textSize="14sp"
+                    app:drawableStartCompat="@drawable/food_ic_food_detail_praise"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
 
             </androidx.constraintlayout.widget.ConstraintLayout>
         </androidx.cardview.widget.CardView>
@@ -56,7 +56,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="20dp"
-            android:textColor="@color/food_text_title"
+            android:textColor="@color/config_alpha_level_two_font_color"
             android:textSize="18sp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
@@ -69,13 +69,13 @@
             android:layout_marginStart="15dp"
             android:layout_marginTop="8dp"
             android:layout_marginEnd="15dp"
+            android:gravity="center"
             android:textColor="@color/food_dialog_detail_content"
             android:textSize="14sp"
-            tools:text="巴拉哔哩哔哩哔哩哔哩巴拉巴拉巴拉巴拉"
-            android:gravity="center"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/food_dialog_detail_tv_theme" />
+            app:layout_constraintTop_toBottomOf="@id/food_dialog_detail_tv_theme"
+            tools:text="巴拉哔哩哔哩哔哩哔哩巴拉巴拉巴拉巴拉" />
 
         <androidx.appcompat.widget.AppCompatButton
             android:id="@+id/food_dialog_detail_btn_negative"
@@ -91,15 +91,15 @@
 
         <androidx.appcompat.widget.AppCompatButton
             android:id="@+id/food_dialog_detail_btn_positive"
+            style="?android:attr/borderlessButtonStyle"
             android:layout_width="93dp"
             android:layout_height="34dp"
             android:layout_marginEnd="27dp"
-            android:elevation="0dp"
             android:layout_marginBottom="31dp"
             android:background="@drawable/food_shape_btn_determine"
+            android:elevation="0dp"
             android:text="点赞"
-            android:textColor="@color/food_background"
-            style="?android:attr/borderlessButtonStyle"
+            android:textColor="@android:color/white"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent" />
     </androidx.constraintlayout.widget.ConstraintLayout>

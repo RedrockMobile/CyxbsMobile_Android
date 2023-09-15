@@ -44,7 +44,7 @@ class FoodMainDialog private constructor(
                     ).apply {
                         topMargin = 28.dp2px
                     }
-                    setTextColor(R.color.food_text_dialog_title.color)
+                    setTextColor(com.mredrock.cyxbs.config.R.color.config_level_three_font_color.color)
                     textSize = 18F
                     gravity = Gravity.CENTER
                 }
@@ -62,7 +62,7 @@ class FoodMainDialog private constructor(
                         rightMargin = leftMargin
                         bottomMargin = 18.dp2px
                     }
-                    setTextColor(R.color.food_text_dialog.color)
+                    setTextColor(com.mredrock.cyxbs.config.R.color.config_alpha_level_two_font_color.color)
                     textSize = 14F
                 }
             )
