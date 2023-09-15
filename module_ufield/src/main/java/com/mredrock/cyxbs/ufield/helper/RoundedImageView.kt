@@ -1,14 +1,13 @@
 package com.mredrock.cyxbs.ufield.helper
 
 
-import android.annotation.SuppressLint
 import android.content.Context
 import android.graphics.Canvas
 import android.graphics.Path
 import android.graphics.RectF
 import android.util.AttributeSet
-import androidx.appcompat.widget.AppCompatImageView
 import android.util.TypedValue
+import androidx.appcompat.widget.AppCompatImageView
 
 /**
  *  description : 自定义的一个imageview 上面圆角 下面没有圆角

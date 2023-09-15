@@ -3,7 +3,6 @@ package com.mredrock.cyxbs.ufield.ui.fragment.checkfragment
 import android.annotation.SuppressLint
 import android.content.Intent
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -15,7 +14,6 @@ import com.mredrock.cyxbs.ufield.R
 import com.mredrock.cyxbs.ufield.adapter.TodoRvAdapter
 import com.mredrock.cyxbs.ufield.bean.TodoBean
 import com.mredrock.cyxbs.ufield.helper.CheckDialog
-import com.mredrock.cyxbs.ufield.helper.GridSpacingItemDecoration
 import com.mredrock.cyxbs.ufield.ui.activity.DetailActivity
 import com.mredrock.cyxbs.ufield.viewmodel.TodoViewModel
 import com.scwang.smart.refresh.footer.ClassicsFooter
@@ -131,8 +129,6 @@ class TodoFragment : BaseFragment() {
                     intent.putExtra("actID", mDataList[it].activityId)
                     startActivity(intent)
                 }
-
-                addItemDecoration(GridSpacingItemDecoration(3))
             }
         }
 

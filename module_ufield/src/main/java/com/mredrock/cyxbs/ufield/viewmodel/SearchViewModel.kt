@@ -47,7 +47,7 @@ class SearchViewModel : BaseViewModel() {
      */
     private fun searchAll(keyword: String) {
         SearchRepository
-            .receiveSearchData("all", 50, "create_timestamp", keyword)
+            .receiveSearchData("all", 50, "start_timestamp_but_ongoing_first", keyword)
             .mapOrInterceptException {
                 toast("网络似乎有点问题~")
             }
@@ -69,7 +69,7 @@ class SearchViewModel : BaseViewModel() {
      */
     private fun searchCulture(keyword: String) {
         SearchRepository
-            .receiveSearchData("culture", 50, "create_timestamp", keyword)
+            .receiveSearchData("culture", 50, "start_timestamp_but_ongoing_first", keyword)
             .mapOrInterceptException { Log.d("searchCulture", "测试结果-->>$it "); }
             .doOnError { Log.d("searchCulture", "测试结果-->> $it"); }
             .safeSubscribeBy {
@@ -82,7 +82,7 @@ class SearchViewModel : BaseViewModel() {
      */
     private fun searchSports(keyword: String) {
         SearchRepository
-            .receiveSearchData("sports", 50, "create_timestamp", keyword)
+            .receiveSearchData("sports", 50, "start_timestamp_but_ongoing_first", keyword)
             .mapOrInterceptException { Log.d("searchSports", "测试结果-->>$it "); }
             .doOnError { Log.d("searchSports", "测试结果-->> $it"); }
             .safeSubscribeBy {
@@ -95,7 +95,7 @@ class SearchViewModel : BaseViewModel() {
      */
     private fun searchEducation(keyword: String) {
         SearchRepository
-            .receiveSearchData("education", 50, "create_timestamp", keyword)
+            .receiveSearchData("education", 50, "start_timestamp_but_ongoing_first", keyword)
             .mapOrInterceptException { Log.d("searchEducation", "测试结果-->>$it "); }
             .doOnError { Log.d("searchEducation", "测试结果-->> $it"); }
             .safeSubscribeBy {
