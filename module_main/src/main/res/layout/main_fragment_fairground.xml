@@ -2,9 +2,15 @@
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:background="@drawable/main_shape_fairgroundback"
+    android:background="@color/config_window_background"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
+<!--    视觉要求的渐变-->
+<!--    <View-->
+<!--        android:layout_width="match_parent"-->
+<!--        android:layout_height="350px"-->
+<!--        android:background="@drawable/main_shape_fairgroundback"-->
+<!--        app:layout_constraintTop_toTopOf="parent" />-->
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/mainConstraintlayout"
@@ -37,7 +43,7 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="15dp"
             android:text="Hi. tutu"
-            android:textColor="#15315B"
+            android:textColor="@color/main_fairground_nickname_color"
             android:textSize="14sp"
             android:textStyle="bold"
             app:layout_constraintBottom_toBottomOf="parent"
@@ -53,7 +59,7 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="15dp"
             android:text="这是你来到邮乐园的第 1 天"
-            android:textColor="#8015315B"
+            android:textColor="@color/main_fairground_describe_color"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.0"

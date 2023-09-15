@@ -10,7 +10,7 @@
         android:layout_height="wrap_content"
         android:layout_centerInParent="true"
         android:text="已参与"
-        android:textColor="@color/ufield_home_tabLayout_text_unselect"
+        android:textColor="@color/uField_alpha_level_three_font_color"
         android:textSize="18sp"
         tools:ignore="HardcodedText" />
 

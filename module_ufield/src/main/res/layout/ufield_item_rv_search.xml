@@ -58,7 +58,7 @@
                 android:maxLines="1"
                 android:scrollHorizontally="true"
                 android:singleLine="true"
-                android:textColor="@color/uField_112c54"
+                android:textColor="@color/config_level_three_font_color"
                 android:textSize="16sp" />
             <!--       因为视觉要求，关闭跑马灯 android:ellipsize="marquee"-->
 
@@ -87,7 +87,7 @@
             android:maxLines="1"
             android:scrollHorizontally="true"
             android:singleLine="true"
-            android:textColor="@color/uField_15315b66"
+            android:textColor="@color/config_alpha_forty_level_two_font_color"
             android:textSize="14sp"
             app:layout_constraintStart_toEndOf="@+id/Ufield_search_iv_card"
             app:layout_constraintTop_toBottomOf="@+id/uField_search_linear" />
@@ -107,7 +107,7 @@
                 android:layout_width="16dp"
                 android:layout_height="16dp"
                 android:layout_gravity="center_vertical"
-                android:src="@drawable/ufield_ic_activity_time" />
+                android:src="@drawable/ufield_ic_time" />
 
 
             <TextView
@@ -116,7 +116,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginStart="7dp"
                 android:layout_gravity="center_vertical"
-                android:textColor="@color/uField_112c5499"
+                android:textColor="@color/config_level_one_font_color"
                 android:textSize="12sp"/>
         </LinearLayout>
 

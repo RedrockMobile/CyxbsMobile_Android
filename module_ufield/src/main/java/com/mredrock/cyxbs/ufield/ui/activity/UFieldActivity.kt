@@ -42,7 +42,6 @@ class UFieldActivity : BaseActivity() {
     private val mViewModel by viewModels<UFieldViewModel>()
 
 
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.ufield_activity_ufield)

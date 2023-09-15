@@ -8,6 +8,6 @@
     tools:ignore="ResourceName">
   <path
       android:pathData="M15.5,0L69.5,0A15,15 0,0 1,84.5 15L84.5,15A15,15 0,0 1,69.5 30L15.5,30A15,15 0,0 1,0.5 15L0.5,15A15,15 0,0 1,15.5 0z"
-      android:fillColor="#E8E9FC" />
+      android:fillColor="@color/uField_tab_background_color" />
 
 </vector>
