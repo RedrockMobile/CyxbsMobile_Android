@@ -183,17 +183,19 @@ class GroupDetailActivity : BaseActivity(){
                 //搜索只要成功就清空搜索框框
                 mEditTextView.setText("")
                 if (it.data.types != null) {
-                    searchAllDialog = SearchAllDialog(
-                        searchResult = it.data,
-                        groupId = mCurrentNoclassGroup.id
-                    ).apply {
-                        setOnClickGroupDetailAdd { students ->
-                            val stuList = mAdapter.currentList.toMutableSet()
-                            stuList.addAll(students)
-                            mAdapter.submitList(stuList.toList())
+                    if (supportFragmentManager.findFragmentByTag("SearchAllDialog") == null){
+                        searchAllDialog = SearchAllDialog.newInstance(
+                            searchResult = it.data,
+                            groupId = mCurrentNoclassGroup.id
+                        ).apply {
+                            setOnClickGroupDetailAdd { students ->
+                                val stuList = mAdapter.currentList.toMutableSet()
+                                stuList.addAll(students)
+                                mAdapter.submitList(stuList.toList())
+                            }
                         }
+                        searchAllDialog!!.show(supportFragmentManager, "SearchAllDialog")
                     }
-                    searchAllDialog!!.show(supportFragmentManager, "SearchAllDialog")
                 } else {
                     SearchNoExistDialog(this).show()
                 }
@@ -304,5 +306,10 @@ class GroupDetailActivity : BaseActivity(){
         (getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager).hideSoftInputFromWindow(currentFocus?.windowToken, InputMethodManager.HIDE_NOT_ALWAYS)
         mEditTextView.setText("")
         mViewModel.getSearchAllResult(content)
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        mRunnable?.let { mHandler?.removeCallbacks(it) }
     }
 }

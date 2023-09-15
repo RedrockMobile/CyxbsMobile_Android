@@ -45,27 +45,27 @@ class NoClassSolidFragment : BaseFragment(R.layout.noclass_fragment_solid) {
     /**
      * 界面的rv
      */
-    private val mRecyclerView : RecyclerView by R.id.noclass_solid_rv_show.view()
+    private val mRecyclerView: RecyclerView by R.id.noclass_solid_rv_show.view()
 
     /**
      * 界面rv的adapter
      */
-    private val mAdapter : NoClassSolidAdapter by lazy { NoClassSolidAdapter() }
+    private val mAdapter: NoClassSolidAdapter by lazy { NoClassSolidAdapter() }
 
     /**
      * 创建按钮
      */
-    private val mBtnCreate : Button by R.id.noclass_solid_btn_create.view()
+    private val mBtnCreate: Button by R.id.noclass_solid_btn_create.view()
 
     /**
      * 删除缓冲区：可能想要删除，但是云端没删除成功，所以本地也不能删掉。必须云端删除成功本地才能删除成功
      */
-    private val mWaitDeleteGroup :ArrayList<NoClassGroup> by lazy { ArrayList() }
+    private val mWaitDeleteGroup: ArrayList<NoClassGroup> by lazy { ArrayList() }
 
     /**
      * 是否置顶的noClassGroup和textview，用完之后及时移除
      */
-    private val mWaitIsTop : LinkedHashMap<NoClassGroup,TextView> by lazy { LinkedHashMap() }
+    private val mWaitIsTop: LinkedHashMap<NoClassGroup, TextView> by lazy { LinkedHashMap() }
 
     private val mViewModel by viewModels<SolidViewModel>()
 
@@ -77,13 +77,13 @@ class NoClassSolidFragment : BaseFragment(R.layout.noclass_fragment_solid) {
     /**
      * 下面得提示文字，试试左滑删除列表
      */
-    private val mHintText : TextView by R.id.noclass_solid_tv_hint.view()
+    private val mHintText: TextView by R.id.noclass_solid_tv_hint.view()
 
     /**
      * 设置两秒后消失得runnable和handler，注意及时释放
      */
-    private var mRunnable : Runnable? = null
-    private var mHandler : Handler? = null
+    private var mRunnable: Runnable? = null
+    private var mHandler: Handler? = null
 
     /**
      * 进入组内管理界面，判断是否有更改值
@@ -96,10 +96,10 @@ class NoClassSolidFragment : BaseFragment(R.layout.noclass_fragment_solid) {
                 if (extra != null) {
                     // 移除旧的并且更新
                     val list = mAdapter.currentList.toMutableList()
-                    for (index in 0 until  list.size){
-                        if (list[index].id == extra.id){
+                    for (index in 0 until list.size) {
+                        if (list[index].id == extra.id) {
                             list.removeAt(index)
-                            list.add(index,extra)
+                            list.add(index, extra)
                             break
                         }
                     }
@@ -120,6 +120,7 @@ class NoClassSolidFragment : BaseFragment(R.layout.noclass_fragment_solid) {
     override fun onStop() {
         super.onStop()
         mRunnable?.let { mHandler?.removeCallbacks(it) }
+        mHintText.gone()
     }
 
     /**
@@ -128,9 +129,9 @@ class NoClassSolidFragment : BaseFragment(R.layout.noclass_fragment_solid) {
     private fun initClickCreate() {
         mBtnCreate.setOnClickListener {
             //弹出创建分组的弹窗
-            CreateGroupDialog{
+            CreateGroupDialog {
                 mParentViewModel.getAllGroup()
-            }.show(childFragmentManager,"SolidCreateGroupDialog")
+            }.show(childFragmentManager, "SolidCreateGroupDialog")
         }
     }
 
@@ -142,20 +143,29 @@ class NoClassSolidFragment : BaseFragment(R.layout.noclass_fragment_solid) {
         mRecyclerView.apply {
             layoutManager = LinearLayoutManager(requireContext())
             adapter = mAdapter.apply {
-                setOnClickGroupName {
-                    startForResult.launch(Intent(requireContext(),GroupDetailActivity::class.java).apply {
-                        putExtra("NoClassGroup",it)
-                    })
+                setOnClickGroup {
+                    startForResult.launch(
+                        Intent(
+                            requireContext(),
+                            GroupDetailActivity::class.java
+                        ).apply {
+                            putExtra("NoClassGroup", it)
+                        })
+                    mViewModel.searchStudent.value = null
                 }
                 setOnClickGroupDelete {
                     //删除：加入缓冲区，并且更新云端状态
                     mWaitDeleteGroup.add(it)
                     mViewModel.deleteGroup(it.id)
                 }
-                setOnClickGroupIsTop { noclassGroup,tvIsTop ->
+                setOnClickGroupIsTop { noclassGroup, tvIsTop ->
                     //置顶：加入缓冲区，更新云端置顶状态
                     mWaitIsTop[noclassGroup] = tvIsTop
-                    mViewModel.updateGroup(noclassGroup.id,noclassGroup.name,(!noclassGroup.isTop).toString())
+                    mViewModel.updateGroup(
+                        noclassGroup.id,
+                        noclassGroup.name,
+                        (!noclassGroup.isTop).toString()
+                    )
                 }
             }
         }
@@ -164,29 +174,38 @@ class NoClassSolidFragment : BaseFragment(R.layout.noclass_fragment_solid) {
     private fun initObserver() {
         var searchStudentDialog: SearchStudentDialog?
         mViewModel.searchStudent.observe(viewLifecycleOwner) {
-            if (it != null && it.isSuccess()){
-                if (it.data.isNotEmpty()){
-                    searchStudentDialog = SearchStudentDialog(it.data) {stu ->
-                        //点击加号之后的逻辑，需要弹窗选择分组加入
-                        AddToGroupDialog(mAdapter.currentList,stu).show(childFragmentManager,"AddToGroupDialog")
+            if (it != null) {
+                if (it.isSuccess()){
+                    if (it.data.isNotEmpty()) {
+                        if (childFragmentManager.findFragmentByTag("SearchStudentDialog") == null){
+                            searchStudentDialog = SearchStudentDialog.newInstance(it.data).apply {
+                                setOnAddClick { stu ->
+                                    //点击加号之后的逻辑，需要弹窗选择分组加入
+                                    AddToGroupDialog(mAdapter.currentList, stu).show(
+                                        childFragmentManager,
+                                        "AddToGroupDialog"
+                                    )
+                                }
+                            }
+                            searchStudentDialog!!.show(childFragmentManager, "SearchStudentDialog")
+                        }
+                    } else {
+                        SearchNoExistDialog(requireContext()).show()
                     }
-                    searchStudentDialog!!.show(childFragmentManager, "SearchStudentDialog")
                 }else{
-                    SearchNoExistDialog(requireContext()).show()
+                    initHintText("网络异常请检查网络")
                 }
-            }else{
-                initHintText("网络异常请检查网络")
             }
         }
-        mParentViewModel.groupList.observe(viewLifecycleOwner){
+        mParentViewModel.groupList.observe(viewLifecycleOwner) {
             mAdapter.submitListToOrder(it)
         }
-        mViewModel.isDeleteSuccess.observe(viewLifecycleOwner){
+        mViewModel.isDeleteSuccess.observe(viewLifecycleOwner) {
             //删除成功就把本地的删掉，删除失败就不删本地的
-            if (it.second){
-                for (index in 0 until mWaitDeleteGroup.size){
+            if (it.second) {
+                for (index in 0 until mWaitDeleteGroup.size) {
                     val item = mWaitDeleteGroup[index]
-                    if (item.id == it.first){
+                    if (item.id == it.first) {
                         // 如果学号相等，那么就删除adapter中的item和缓冲区的item
                         mAdapter.deleteGroup(item)
                         mWaitDeleteGroup.remove(item)
@@ -194,21 +213,21 @@ class NoClassSolidFragment : BaseFragment(R.layout.noclass_fragment_solid) {
                         break
                     }
                 }
-            }else{
+            } else {
                 toast("删除失败")
             }
         }
         // 目前更新接口参数需要id，name，isTop，id和name无需更新，所以目前下面一定是置顶
-        mViewModel.isUpdateSuccess.observe(viewLifecycleOwner){
-            if (it.second){
-                for (itemKey in mWaitIsTop.keys){
-                    if (itemKey.id  == it.first){
-                        mAdapter.addItemToOrder(itemKey,mWaitIsTop[itemKey]!!)
+        mViewModel.isUpdateSuccess.observe(viewLifecycleOwner) {
+            if (it.second) {
+                for (itemKey in mWaitIsTop.keys) {
+                    if (itemKey.id == it.first) {
+                        mAdapter.addItemToOrder(itemKey, mWaitIsTop[itemKey]!!)
                         mWaitIsTop.remove(itemKey)
                         break
                     }
                 }
-            }else{
+            } else {
                 toast("更新失败")
             }
             // 用完及时置为null
@@ -218,16 +237,16 @@ class NoClassSolidFragment : BaseFragment(R.layout.noclass_fragment_solid) {
     /**
      * 初始化下面试试左滑删除列表，设置两秒后消失
      */
-    private fun initHintText(content : String? = null) {
+    private fun initHintText(content: String? = null) {
         mHintText.alpha = 1f
         mHintText.visible()
         content?.let { mHintText.text = it }
         mHandler = Handler(Looper.getMainLooper())
         mRunnable = Runnable {
-            mHintText.alphaAnim(mHintText.alpha,0f,200).start()
+            mHintText.alphaAnim(mHintText.alpha, 0f, 200).start()
             mHintText.gone()
         }
-        mHandler!!.postDelayed(mRunnable!!,2000)
+        mHandler!!.postDelayed(mRunnable!!, 2000)
     }
 
     /**

@@ -1,5 +1,7 @@
 package com.mredrock.cyxbs.noclass.bean
 
+import java.io.Serializable
+
 
 /**
  * 没课约临时分组搜索结果
@@ -9,7 +11,7 @@ data class NoClassTemporarySearch(
     val group: NoClassGroup,
     val students: List<Student>,
     val types: List<String>?
-)
+) : Serializable
 
 const val STUDENT_TYPE = "学生"
 const val CLASS_TYPE = "班级"

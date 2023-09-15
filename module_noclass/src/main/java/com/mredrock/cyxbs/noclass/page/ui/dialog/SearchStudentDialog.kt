@@ -4,14 +4,15 @@ import android.app.Dialog
 import android.os.Bundle
 import android.widget.TextView
 import androidx.constraintlayout.widget.ConstraintLayout
+import androidx.core.os.bundleOf
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.bottomsheet.BottomSheetDialog
-import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import com.mredrock.cyxbs.noclass.R
 import com.mredrock.cyxbs.noclass.bean.Student
 import com.mredrock.cyxbs.noclass.page.adapter.SearchStudentAdapter
+import com.mredrock.cyxbs.noclass.util.BaseBottomSheetDialogFragment
 
 /**
  *
@@ -24,13 +25,18 @@ import com.mredrock.cyxbs.noclass.page.adapter.SearchStudentAdapter
  * @Version:        1.0
  * @Description:    寻找学生的dialog
  */
-class SearchStudentDialog(
-  private val students : List<Student>,
-  private val onAddClick:(Student) -> Unit
-) : BottomSheetDialogFragment() {
-  
+class SearchStudentDialog: BaseBottomSheetDialogFragment() {
+
+  private val students by arguments<List<Student>>()
+
+  private var onAddClick:((Student) -> Unit)? = null
+
+  fun setOnAddClick(onAddClick:(Student) -> Unit){
+    this.onAddClick = onAddClick
+  }
+
+
   override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
-    super.onCreateDialog(savedInstanceState)
     val dialog = super.onCreateDialog(savedInstanceState)
     dialog.setContentView(R.layout.noclass_dialog_search_student)
     val mScreenWidth : Int = resources.displayMetrics.widthPixels
@@ -67,7 +73,7 @@ class SearchStudentDialog(
     dialog.findViewById<RecyclerView>(R.id.rv_noclass_search_container).apply {
       adapter = SearchStudentAdapter().apply {
         setOnAddClick {
-          onAddClick(it)
+          onAddClick?.invoke(it)
           deleteStudent(it)
           dismiss()
         }
@@ -77,6 +83,12 @@ class SearchStudentDialog(
     }
   }
 
-
+  companion object{
+    fun newInstance(students: List<Student>) = SearchStudentDialog().apply {
+      arguments = bundleOf(
+        this::students.name to students
+      )
+    }
+  }
 
 }

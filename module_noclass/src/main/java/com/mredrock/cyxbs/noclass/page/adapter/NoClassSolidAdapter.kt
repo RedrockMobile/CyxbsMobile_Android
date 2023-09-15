@@ -36,12 +36,12 @@ class NoClassSolidAdapter : ListAdapter<NoClassGroup, NoClassSolidAdapter.MyHold
     }
 
     //分别是点击名称，置顶，和删除的回调
-    private var onClickGroupName : ((noclassGroup: NoClassGroup) -> Unit)? = null
+    private var onClickGroup : ((noclassGroup: NoClassGroup) -> Unit)? = null
     private var onClickGroupIsTop : ((noclassGroup: NoClassGroup, tvIsGroup : TextView) -> Unit)? = null
     private var onClickGroupDelete : ((noclassGroup: NoClassGroup) -> Unit)? = null
 
-    fun setOnClickGroupName(onClickGroupName : (noclassGroup: NoClassGroup) -> Unit){
-        this.onClickGroupName = onClickGroupName
+    fun setOnClickGroup(onClickGroup : (noclassGroup: NoClassGroup) -> Unit){
+        this.onClickGroup = onClickGroup
     }
 
     fun setOnClickGroupIsTop(onClickGroupIsTop : (noclassGroup: NoClassGroup, tvIsGroup : TextView) -> Unit){
@@ -62,7 +62,7 @@ class NoClassSolidAdapter : ListAdapter<NoClassGroup, NoClassSolidAdapter.MyHold
             mMenuLayout.setOnClickListener {
                 mMenuLayout.closeRightSlide()
                 val item = getItem(bindingAdapterPosition)
-                onClickGroupName?.invoke(item)
+                onClickGroup?.invoke(item)
             }
             tvGroupIsTop.setOnClickListener {
                 mMenuLayout.closeRightSlide()

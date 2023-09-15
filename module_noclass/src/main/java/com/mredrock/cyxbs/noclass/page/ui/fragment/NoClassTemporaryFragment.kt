@@ -152,24 +152,26 @@ class NoClassTemporaryFragment : BaseFragment(R.layout.noclass_fragment_temporar
                 //搜索只要成功就清空搜索框框
                 mEditTextView.setText("")
                 if (it.data.types != null && it.data.types!!.isNotEmpty()) {
-                    searchAllDialog = SearchAllDialog(it.data).apply {
-                        setOnClickClass { cls ->
-                            val clsList = mAdapter.currentList.toMutableSet()
-                            clsList.addAll(cls.members)
-                            mAdapter.submitList(clsList.toList())
+                    if (childFragmentManager.findFragmentByTag("SearchAllDialog") == null){
+                        searchAllDialog = SearchAllDialog.newInstance(it.data).apply {
+                            setOnClickClass { cls ->
+                                val clsList = mAdapter.currentList.toMutableSet()
+                                clsList.addAll(cls.members)
+                                mAdapter.submitList(clsList.toList())
+                            }
+                            setOnClickStudent { stu ->
+                                val stuList = mAdapter.currentList.toMutableSet()
+                                stuList.add(stu)
+                                mAdapter.submitList(stuList.toList())
+                            }
+                            setOnClickGroup { group ->
+                                val groupList = mAdapter.currentList.toMutableSet()
+                                groupList.addAll(group.members)
+                                mAdapter.submitList(groupList.toList())
+                            }
                         }
-                        setOnClickStudent { stu ->
-                            val stuList = mAdapter.currentList.toMutableSet()
-                            stuList.add(stu)
-                            mAdapter.submitList(stuList.toList())
-                        }
-                        setOnClickGroup { group ->
-                            val groupList = mAdapter.currentList.toMutableSet()
-                            groupList.addAll(group.members)
-                            mAdapter.submitList(groupList.toList())
-                        }
+                        searchAllDialog!!.show(childFragmentManager, "SearchAllDialog")
                     }
-                    searchAllDialog!!.show(childFragmentManager, "SearchAllDialog")
                 } else {
                     SearchNoExistDialog(requireContext()).show()
                 }
