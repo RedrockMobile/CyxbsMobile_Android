@@ -64,7 +64,7 @@
                 android:elevation="0dp"
                 android:gravity="center"
                 android:text="@string/declare_cancel"
-                android:textColor="#8015315B"
+                android:textColor="@color/config_alpha_level_two_font_color"
                 android:textSize="17sp"
                 android:theme="@style/Theme.MaterialComponents" />
 

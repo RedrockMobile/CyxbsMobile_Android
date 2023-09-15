@@ -73,7 +73,7 @@
             android:maxEms="7"
             android:maxLines="1"
             android:text="12asdasdas"
-            android:textColor="@color/uField_112c54"
+            android:textColor="@color/config_level_one_font_color"
             android:textSize="18sp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toEndOf="@+id/ufield_activity_rank_cv_head" />

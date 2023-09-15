@@ -95,12 +95,12 @@ class CampaignActivity : BaseActivity() {
         val onTabSelectedListener = object : TabLayout.OnTabSelectedListener {
             override fun onTabSelected(tab: TabLayout.Tab) {
                 tab.customView?.findViewById<TextView>(R.id.ufield_tv_tl_tab)
-                    ?.setTextColor(ColorStateList.valueOf(R.color.ufield_home_tabLayout_text_selected.color))
+                    ?.setTextColor(ColorStateList.valueOf(com.mredrock.cyxbs.config.R.color.config_level_one_font_color.color))
             }
 
             override fun onTabUnselected(tab: TabLayout.Tab) {
                 tab.customView?.findViewById<TextView>(R.id.ufield_tv_tl_tab)
-                    ?.setTextColor(ColorStateList.valueOf(R.color.ufield_home_tabLayout_text_unselect.color))
+                    ?.setTextColor(ColorStateList.valueOf(R.color.uField_alpha_level_three_font_color.color))
 
             }
 

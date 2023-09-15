@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/uField_white"
+    android:background="@color/uField_white_black_111111"
     android:orientation="vertical"
     tools:context=".ui.activity.UFieldActivity">
 
@@ -30,7 +30,7 @@
             android:layout_gravity="center_vertical"
             android:layout_marginStart="15dp"
             android:text="@string/ufield_name"
-            android:textColor="@color/ufield_text_name"
+            android:textColor="@color/config_level_three_font_color"
             android:textSize="22sp" />
 
         <ImageView
@@ -73,7 +73,7 @@
                 android:id="@+id/uField_search"
                 android:layout_width="match_parent"
                 android:layout_height="38dp"
-                app:cardBackgroundColor="@color/ufield_search_background"
+                app:cardBackgroundColor="@color/uField_search_background"
                 app:cardCornerRadius="29dp"
                 app:cardElevation="0dp">
 
@@ -91,7 +91,7 @@
                     android:layout_gravity="center_vertical"
                     android:layout_marginStart="44dp"
                     android:text="@string/ufield_search_more"
-                    android:textColor="@color/ufield_search_text_hint"
+                    android:textColor="@color/config_alpha_forty_level_two_font_color"
                     android:textSize="16sp" />
             </androidx.cardview.widget.CardView>
 
@@ -127,7 +127,7 @@
             app:tabRippleColor="@null"
             app:tabSelectedTextColor="@color/uField_tab_selected"
             app:tabTextAppearance="@style/uFieldMyTextStyle"
-            app:tabTextColor="@color/uField_15315b66" />
+            app:tabTextColor="@color/config_alpha_forty_level_two_font_color" />
 
 
         <androidx.viewpager2.widget.ViewPager2

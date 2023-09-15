@@ -2,7 +2,7 @@
 <shape xmlns:android="http://schemas.android.com/apk/res/android">
 
     <solid
-        android:color="@color/ufield_create_textfield"/>
+        android:color="@color/uField_create_textfield"/>
     <corners
         android:radius="6dp"/>
 </shape>

@@ -3,7 +3,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/uField_todo_background"
+    android:background="@color/config_default_divide_line_color"
     android:id="@+id/uField_check_refresh_todo"
     tools:context=".ui.fragment.checkfragment.TodoFragment">
 

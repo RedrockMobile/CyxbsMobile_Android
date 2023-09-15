@@ -21,6 +21,7 @@
         app:layout_constraintTop_toTopOf="parent">
 
         <com.contrarywind.view.WheelView
+            android:background="@color/config_window_background"
             android:id="@+id/options1"
             android:layout_width="0dp"
             android:layout_height="match_parent"
