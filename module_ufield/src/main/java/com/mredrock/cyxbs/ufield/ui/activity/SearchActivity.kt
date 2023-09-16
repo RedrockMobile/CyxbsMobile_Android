@@ -1,5 +1,6 @@
 package com.mredrock.cyxbs.ufield.ui.activity
 
+import android.graphics.Color
 import android.os.Bundle
 import android.view.ViewGroup
 import android.widget.EditText
@@ -12,14 +13,12 @@ import com.google.android.material.tabs.TabLayout
 import com.google.android.material.tabs.TabLayoutMediator
 import com.mredrock.cyxbs.lib.base.ui.BaseActivity
 import com.mredrock.cyxbs.lib.utils.adapter.FragmentVpAdapter
-import com.mredrock.cyxbs.lib.utils.extensions.appContext
-import com.mredrock.cyxbs.lib.utils.extensions.dp2px
 import com.mredrock.cyxbs.ufield.R
-import com.mredrock.cyxbs.ufield.helper.SoftKeyBoardListener
 import com.mredrock.cyxbs.ufield.ui.fragment.searchfragment.AllSearchFragment
 import com.mredrock.cyxbs.ufield.ui.fragment.searchfragment.CultureSearchFragment
 import com.mredrock.cyxbs.ufield.ui.fragment.searchfragment.EducationSearchFragment
 import com.mredrock.cyxbs.ufield.ui.fragment.searchfragment.SportsSearchFragment
+import com.mredrock.cyxbs.ufield.helper.SoftKeyBoardListener
 import com.mredrock.cyxbs.ufield.viewmodel.SearchViewModel
 
 
@@ -110,11 +109,8 @@ class SearchActivity : BaseActivity() {
         mSearch.apply {
             findViewById<EditText>(androidx.appcompat.R.id.search_src_text).apply {
                 setTextColor(getColor(com.mredrock.cyxbs.config.R.color.config_level_three_font_color))
-                setHintTextColor(getColor(com.mredrock.cyxbs.config.R.color.config_alpha_level_two_font_color))
+                setHintTextColor(getColor(com.mredrock.cyxbs.config.R.color.config_alpha_forty_level_two_font_color))
                 textSize = 16F
-                (this.layoutParams as ViewGroup.MarginLayoutParams).apply {
-                    setMargins(28.dp2px, 0, 0, 0)
-                }
             }
             findViewById<ImageView>(androidx.appcompat.R.id.search_close_btn).apply {
                 // 移除删除按钮的点击事件
@@ -137,7 +133,6 @@ class SearchActivity : BaseActivity() {
                     return false
                 }
             })
-            background = appContext.getDrawable(R.color.uField_search_background)
         }
         mCardView.setOnClickListener {
             mSearch.isIconified = false
