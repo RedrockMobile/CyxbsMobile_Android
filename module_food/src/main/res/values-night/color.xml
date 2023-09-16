@@ -3,7 +3,7 @@
     <!-- 主题颜色-->
     <color name="food_main">#4A44E4</color>
     <!-- 按钮未选中颜色-->
-    <color name="food_btn_normal">#F5F6F8</color>
+    <color name="food_btn_normal">#111111</color>
     <!-- 就餐区域等旁边提示文字-->
     <color name="food_text_unimportance_tip">#AABCD8</color>
     <!-- 换一个 文字颜色-->
@@ -11,8 +11,8 @@
     <!-- dialog分割线颜色-->
     <color name="food_text_dialog_line">#0D000000</color>
     <!-- result界面的颜色-->
-    <color name="food_cl_result">#EFF4FF</color>
+    <color name="food_cl_result">#2D2D2D</color>
     <color name="food_dialog_detail_content">#8015315B</color>
-    <color name="food_result_text">#2F5085</color>
-    <color name="food_welcome_image">#FFFFFF</color>
+    <color name="food_result_text">#4A6A9E</color>
+    <color name="food_welcome_image">#101010</color>
 </resources>

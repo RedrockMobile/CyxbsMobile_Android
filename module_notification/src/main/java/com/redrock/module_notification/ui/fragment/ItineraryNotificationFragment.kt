@@ -19,6 +19,7 @@ import com.google.android.material.tabs.TabLayoutMediator
 import com.mredrock.cyxbs.lib.base.ui.BaseFragment
 import com.mredrock.cyxbs.lib.base.ui.viewModelBy
 import com.mredrock.cyxbs.lib.utils.adapter.FragmentVpAdapter
+import com.mredrock.cyxbs.lib.utils.extensions.appContext
 import com.mredrock.cyxbs.lib.utils.extensions.color
 import com.mredrock.cyxbs.lib.utils.extensions.dp2pxF
 import com.redrock.module_notification.R
@@ -164,7 +165,7 @@ class ItineraryNotificationFragment : BaseFragment(R.layout.notification_fragmen
             shadowCompatibilityMode = MaterialShapeDrawable.SHADOW_COMPAT_MODE_ALWAYS
             initializeElevationOverlay(myActivity)
             elevation = 12F.dp2pxF
-            setShadowColor(Color.parseColor("#EBF0F5"))
+            setShadowColor(appContext.getColor(R.color.notification_itinerary_tl_shadow_source))
 //            shadowVerticalOffset = 13F.dp2pxF.toInt()
         }
         (itineraryTypeTabShadow.parent as ViewGroup).clipChildren = false

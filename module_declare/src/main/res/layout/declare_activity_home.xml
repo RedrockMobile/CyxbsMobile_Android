@@ -21,7 +21,7 @@
                 android:id="@+id/declare_home_toolbar"
                 android:layout_width="match_parent"
                 android:layout_height="100dp"
-                android:background="@color/config_common_background_color"
+                android:background="@color/config_white_black"
                 android:fitsSystemWindows="true"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
