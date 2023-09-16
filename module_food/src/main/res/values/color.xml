@@ -14,4 +14,5 @@
     <color name="food_cl_result">#EFF4FF</color>
     <color name="food_dialog_detail_content">#8015315B</color>
     <color name="food_result_text">#2F5085</color>
+    <color name="food_welcome_image">#FFFFFF</color>
 </resources>

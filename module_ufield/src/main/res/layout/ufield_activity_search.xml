@@ -49,7 +49,6 @@
                 android:id="@+id/uField_searchView"
                 android:layout_width="350dp"
                 android:layout_height="40dp"
-                android:layout_marginStart="28dp"
                 app:iconifiedByDefault="false"
                 app:searchIcon="@null" />
             <!-- app:closeIcon="@color/common_transparent_background"-->
@@ -91,7 +90,7 @@
             app:tabRippleColor="@null"
             app:tabSelectedTextColor="@color/uField_tab_selected"
             app:tabTextAppearance="@style/uFieldMyTextStyle"
-            app:tabTextColor="@color/config_alpha_forty_level_two_font_color" />
+            app:tabTextColor="@color/config_alpha_level_two_font_color" />
     </LinearLayout>
 
 

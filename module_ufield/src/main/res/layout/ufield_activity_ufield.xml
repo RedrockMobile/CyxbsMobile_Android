@@ -91,7 +91,7 @@
                     android:layout_gravity="center_vertical"
                     android:layout_marginStart="44dp"
                     android:text="@string/ufield_search_more"
-                    android:textColor="@color/config_alpha_forty_level_two_font_color"
+                    android:textColor="@color/config_alpha_level_two_font_color"
                     android:textSize="16sp" />
             </androidx.cardview.widget.CardView>
 
@@ -127,7 +127,7 @@
             app:tabRippleColor="@null"
             app:tabSelectedTextColor="@color/uField_tab_selected"
             app:tabTextAppearance="@style/uFieldMyTextStyle"
-            app:tabTextColor="@color/config_alpha_forty_level_two_font_color" />
+            app:tabTextColor="@color/config_alpha_level_two_font_color" />
 
 
         <androidx.viewpager2.widget.ViewPager2

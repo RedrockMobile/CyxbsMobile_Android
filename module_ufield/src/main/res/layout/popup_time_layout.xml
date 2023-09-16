@@ -11,10 +11,10 @@
     <LinearLayout
         android:id="@+id/timepicker"
         android:layout_width="match_parent"
+        android:layout_height="125dp"
         android:layout_marginStart="68dp"
         android:layout_marginTop="30dp"
         android:layout_marginEnd="68dp"
-        android:layout_height="125dp"
         android:gravity="center"
         android:minHeight="150dp"
         android:orientation="horizontal"
@@ -26,38 +26,43 @@
             android:id="@+id/year"
             android:layout_width="0dp"
             android:layout_height="match_parent"
-            android:layout_weight="1" />
+            android:layout_weight="1"
+            android:background="@color/config_window_background" />
 
         <com.contrarywind.view.WheelView
-
             android:id="@+id/month"
             android:layout_width="0dp"
             android:layout_height="match_parent"
-            android:layout_weight="1.1" />
+            android:layout_weight="1.1"
+            android:background="@color/config_window_background" />
 
         <com.contrarywind.view.WheelView
             android:id="@+id/day"
             android:layout_width="0dp"
             android:layout_height="match_parent"
-            android:layout_weight="1.1" />
+            android:layout_weight="1.1"
+            android:background="@color/config_window_background" />
 
         <com.contrarywind.view.WheelView
             android:id="@+id/hour"
             android:layout_width="0dp"
             android:layout_height="match_parent"
-            android:layout_weight="1.1" />
+            android:layout_weight="1.1"
+            android:background="@color/config_window_background" />
 
         <com.contrarywind.view.WheelView
             android:id="@+id/min"
             android:layout_width="0dp"
             android:layout_height="match_parent"
-            android:layout_weight="1.1" />
+            android:layout_weight="1.1"
+            android:background="@color/config_window_background" />
 
         <com.contrarywind.view.WheelView
             android:id="@+id/second"
             android:layout_width="0dp"
             android:layout_height="match_parent"
-            android:layout_weight="1.1" />
+            android:layout_weight="1.1"
+            android:background="@color/config_window_background" />
     </LinearLayout>
 
     <TextView
@@ -67,12 +72,13 @@
         android:text="取消"
         android:textColor="@color/config_black_white"
         android:textSize="16sp"
-        app:layout_constraintHorizontal_bias="0.95"
-        app:layout_constraintVertical_bias="0.08"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.95"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.08" />
+
     <ImageView
         android:id="@+id/mine_imageview"
         android:layout_width="6dp"
