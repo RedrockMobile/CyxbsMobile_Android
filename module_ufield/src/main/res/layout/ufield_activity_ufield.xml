@@ -73,7 +73,7 @@
                 android:id="@+id/uField_search"
                 android:layout_width="match_parent"
                 android:layout_height="38dp"
-                app:cardBackgroundColor="@color/uField_search_background"
+                app:cardBackgroundColor="@color/uField_search_shape_background"
                 app:cardCornerRadius="29dp"
                 app:cardElevation="0dp">
 

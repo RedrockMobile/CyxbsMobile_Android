@@ -1,16 +1,19 @@
 <?xml version="1.0" encoding="utf-8"?>
 <com.scwang.smart.refresh.layout.SmartRefreshLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/uField_check_refresh_todo"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/config_default_divide_line_color"
-    android:id="@+id/uField_check_refresh_todo"
+    android:background="@color/uField_todo_background"
     tools:context=".ui.fragment.checkfragment.TodoFragment">
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/uField_todo_rv"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"/>
+        android:layout_height="match_parent"
+        android:clipToPadding="false"
+        android:paddingTop="20dp"
+        android:paddingBottom="60dp" />
 
 
 </com.scwang.smart.refresh.layout.SmartRefreshLayout>

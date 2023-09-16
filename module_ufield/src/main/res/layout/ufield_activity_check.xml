@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/config_default_divide_line_color"
+    android:background="@color/uField_todo_background"
     android:orientation="vertical"
     tools:context=".ui.activity.CheckActivity">
 
@@ -26,7 +26,7 @@
                 android:layout_marginStart="27dp"
                 android:layout_gravity="center_vertical"
                 android:layout_marginTop="2dp"
-                android:src="@drawable/ufield_ic_back" />
+                android:src="@drawable/ufield_ic_check_back" />
 
             <TextView
                 android:text="@string/ufield_check_text"
@@ -49,21 +49,17 @@
             android:layout_marginStart="20dp"
             android:layout_marginEnd="20dp"
             app:tabMode="fixed"
-            app:tabIndicator="@drawable/ufield_ic_tab_indicator"
+            app:tabIndicator="@drawable/ufield_ic_layer_list_indicator_full_tab_shape"
             app:tabIndicatorColor="#2CDEFF"
             app:tabIndicatorFullWidth="false"
             app:tabRippleColor="@null"
-            app:tabSelectedTextColor="@color/config_level_three_font_color"
+            app:tabSelectedTextColor="@color/uField_check_tabSelected"
             app:tabTextAppearance="@style/uFieldMyTabTextStyle"
             app:tabTextColor="@color/uField_check_tabText" />
 
 
     </LinearLayout>
 
-    <View
-        android:background="@color/config_default_divide_line_color"
-        android:layout_width="match_parent"
-        android:layout_height="20dp"/>
 
     <androidx.viewpager2.widget.ViewPager2
         android:id="@+id/uField_check_view_pager"
