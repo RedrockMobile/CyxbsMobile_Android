@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/uField_white"
+    android:background="@color/uField_white_black_111111"
     android:orientation="vertical"
     tools:context=".ui.activity.UFieldActivity">
 
@@ -30,7 +30,7 @@
             android:layout_gravity="center_vertical"
             android:layout_marginStart="15dp"
             android:text="@string/ufield_name"
-            android:textColor="@color/ufield_15315b"
+            android:textColor="@color/config_level_three_font_color"
             android:textSize="22sp" />
 
         <ImageView
@@ -73,17 +73,17 @@
                 android:id="@+id/uField_search"
                 android:layout_width="match_parent"
                 android:layout_height="38dp"
-                app:cardBackgroundColor="@color/ufield_0d15315b"
+                app:cardBackgroundColor="@color/uField_search_shape_background"
                 app:cardCornerRadius="29dp"
                 app:cardElevation="0dp">
 
 
                 <ImageView
-                    android:layout_width="18dp"
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_vertical"
                     android:layout_marginStart="16dp"
-                    android:src="@drawable/ufield_ic_search_logo_all" />
+                    android:src="@drawable/ufield_ic_search" />
 
                 <TextView
                     android:layout_width="wrap_content"
@@ -91,7 +91,7 @@
                     android:layout_gravity="center_vertical"
                     android:layout_marginStart="44dp"
                     android:text="@string/ufield_search_more"
-                    android:textColor="@color/ufield_3315315b"
+                    android:textColor="@color/config_alpha_forty_level_two_font_color"
                     android:textSize="16sp" />
             </androidx.cardview.widget.CardView>
 
@@ -127,7 +127,7 @@
             app:tabRippleColor="@null"
             app:tabSelectedTextColor="@color/uField_tab_selected"
             app:tabTextAppearance="@style/uFieldMyTextStyle"
-            app:tabTextColor="@color/uField_15315b66" />
+            app:tabTextColor="@color/config_alpha_forty_level_two_font_color" />
 
 
         <androidx.viewpager2.widget.ViewPager2

@@ -32,7 +32,7 @@
                 android:layout_height="25dp"
                 android:layout_marginStart="28dp"
                 android:layout_marginTop="20dp"
-                android:textColor="@color/uField_15315b"
+                android:textColor="@color/config_level_three_font_color"
                 android:textSize="18sp"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
@@ -43,7 +43,7 @@
                 android:layout_height="20dp"
                 android:layout_marginTop="25dp"
                 android:layout_marginEnd="25dp"
-                android:textColor="@color/ufield_todo_time_color"
+                android:textColor="@color/config_alpha_forty_level_two_font_color"
                 android:textSize="14sp"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
@@ -55,7 +55,7 @@
                 android:layout_marginStart="28dp"
                 android:layout_marginTop="56dp"
                 android:text="@string/ufield_todo_ac_name"
-                android:textColor="@color/uField_9915315b"
+                android:textColor="@color/config_alpha_level_two_font_color"
                 android:textSize="14sp"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
@@ -66,7 +66,7 @@
                 android:layout_height="20dp"
                 android:layout_marginStart="1dp"
                 android:layout_marginTop="56dp"
-                android:textColor="@color/uField_6615315b"
+                android:textColor="@color/config_alpha_forty_level_two_font_color"
                 android:textSize="14sp"
                 app:layout_constraintStart_toEndOf="@+id/ufieldTextview"
                 app:layout_constraintTop_toTopOf="parent" />
@@ -78,7 +78,7 @@
                 android:layout_marginStart="28dp"
                 android:layout_marginTop="8dp"
                 android:text="@string/ufield_todo_ac_p_name"
-                android:textColor="@color/uField_9915315b"
+                android:textColor="@color/config_alpha_level_two_font_color"
                 android:textSize="14sp"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/ufieldTextview" />
@@ -89,7 +89,7 @@
                 android:layout_height="20dp"
                 android:layout_marginStart="1dp"
                 android:layout_marginTop="8dp"
-                android:textColor="@color/uField_6615315b"
+                android:textColor="@color/config_alpha_forty_level_two_font_color"
                 android:textSize="14sp"
                 app:layout_constraintStart_toEndOf="@+id/ufieldTextview2"
                 app:layout_constraintTop_toBottomOf="@+id/ufieldTextview" />
@@ -101,7 +101,7 @@
                 android:layout_marginStart="28dp"
                 android:layout_marginTop="8dp"
                 android:text="@string/ufield_todo_ac_phone"
-                android:textColor="@color/uField_9915315b"
+                android:textColor="@color/config_alpha_level_two_font_color"
                 android:textSize="14sp"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/ufieldTextview2" />
@@ -112,7 +112,7 @@
                 android:layout_height="20dp"
                 android:layout_marginStart="1dp"
                 android:layout_marginTop="8dp"
-                android:textColor="@color/uField_6615315b"
+                android:textColor="@color/config_alpha_forty_level_two_font_color"
                 android:textSize="14sp"
                 app:layout_constraintStart_toEndOf="@+id/ufieldTextview3"
                 app:layout_constraintTop_toBottomOf="@+id/uField_todo_activity_author" />
@@ -126,7 +126,7 @@
                 android:layout_marginBottom="30dp"
                 android:background="@drawable/ufield_selector_btn_shape_one"
                 android:text="@string/ufield_btn_refuse"
-                android:textColor="@color/uField_646382"
+                android:textColor="@color/uField_check_button_reject"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toStartOf="@+id/uField_todo_btn_accept" />
 
@@ -138,7 +138,7 @@
                 android:layout_marginBottom="30dp"
                 android:background="@drawable/ufield_selector_btn_shape_two"
                 android:text="@string/ufield_btn_accept"
-                android:textColor="@color/uField_white"
+                android:textColor="@color/uField_white_black_111111"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent" />
 

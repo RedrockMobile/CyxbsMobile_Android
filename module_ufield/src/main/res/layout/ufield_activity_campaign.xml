@@ -28,7 +28,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_centerInParent="true"
-            android:background="@drawable/ufield_ic_activity_campaign_back"
+            android:background="@drawable/ufield_ic_back"
             tools:ignore="ContentDescription" />
     </RelativeLayout>
 
@@ -57,14 +57,14 @@
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:tabGravity="fill"
-        app:tabIndicator="@drawable/ufield_ic_activity_campaign_tab_indicator"
+        app:tabIndicator="@drawable/ufield_ic_tab_indicator"
         app:tabIndicatorColor="@android:color/transparent"
         app:tabIndicatorFullWidth="false"
         app:tabIndicatorHeight="3dp"
         app:tabMode="fixed"
         app:tabRippleColor="@android:color/transparent"
         app:tabTextAppearance="@style/tab_style"
-        app:tabTextColor="@color/ufield_home_tabLayout_text_selected" />
+        app:tabTextColor="@color/config_level_one_font_color" />
 
 
     <androidx.viewpager2.widget.ViewPager2

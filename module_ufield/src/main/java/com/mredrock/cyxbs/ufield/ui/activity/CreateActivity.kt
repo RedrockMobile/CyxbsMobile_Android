@@ -111,8 +111,8 @@ class CreateActivity : BaseActivity() {
         @SuppressLint("ResourceAsColor")
         override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
             val text = s.toString()
-            val phoneColor = ContextCompat.getColor(this@CreateActivity, R.color.phonecolor)
-            val editColor = ContextCompat.getColor(this@CreateActivity, R.color.editColor)
+            val phoneColor = ContextCompat.getColor(this@CreateActivity, R.color.uField_text_phone)
+            val editColor = ContextCompat.getColor(this@CreateActivity, com.mredrock.cyxbs.config.R.color.config_level_three_font_color)
 
             // 只允许输入数字
             if (text.matches(Regex("\\d*"))) {

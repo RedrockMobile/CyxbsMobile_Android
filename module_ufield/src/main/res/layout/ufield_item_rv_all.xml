@@ -62,16 +62,15 @@
                     android:maxLines="1"
                     android:scrollHorizontally="true"
                     android:singleLine="true"
-                    android:textColor="@color/uField_15315b"
+                    android:textColor="@color/config_level_three_font_color"
                     android:textSize="16sp" />
                 <!-- 因视觉关闭跑马灯android:ellipsize="marquee"-->
                 <ImageView
                     android:id="@+id/uField_activity_isGoing"
                     android:layout_width="40dp"
-                    android:layout_height="16dp"
-                    android:layout_marginStart="2dp"
+                    android:layout_height="15dp"
                     android:layout_gravity="center_vertical"
-                   />
+                    android:layout_marginStart="2dp" />
             </LinearLayout>
 
 
@@ -81,7 +80,7 @@
                 android:layout_height="17dp"
                 android:layout_marginStart="12dp"
                 android:layout_marginTop="5dp"
-                android:textColor="@color/uField_15315b66"
+                android:textColor="@color/config_alpha_forty_level_two_font_color"
                 android:textSize="12sp"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/uField_all_lin" />
@@ -100,7 +99,7 @@
                     android:layout_width="16dp"
                     android:layout_height="16dp"
                     android:layout_gravity="center_vertical"
-                    android:src="@drawable/ufield_ic_activity_time" />
+                    android:src="@drawable/ufield_ic_time" />
 
                 <TextView
                     android:id="@+id/uField_activity_time"
@@ -108,7 +107,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginStart="4dp"
                     android:layout_gravity="center_vertical"
-                    android:textColor="@color/uField_112c5499"
+                    android:textColor="@color/config_level_one_font_color"
                     android:textSize="12sp" />
 
             </LinearLayout>

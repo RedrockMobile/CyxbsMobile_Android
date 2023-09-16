@@ -13,7 +13,6 @@ import com.mredrock.cyxbs.lib.base.ui.BaseFragment
 import com.mredrock.cyxbs.ufield.R
 import com.mredrock.cyxbs.ufield.adapter.DoneRvAdapter
 import com.mredrock.cyxbs.ufield.bean.DoneBean
-import com.mredrock.cyxbs.ufield.helper.GridSpacingItemDecoration
 import com.mredrock.cyxbs.ufield.ui.activity.DetailActivity
 import com.mredrock.cyxbs.ufield.viewmodel.DoneViewModel
 import com.scwang.smart.refresh.footer.ClassicsFooter
@@ -69,7 +68,6 @@ class DoneFragment : BaseFragment() {
                     intent.putExtra("actID", mDataList[it].activityId)
                     startActivity(intent)
                 }
-                addItemDecoration(GridSpacingItemDecoration(3))
 
             }
         }

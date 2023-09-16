@@ -1,43 +1,25 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources xmlns:tools="http://schemas.android.com/tools">
-    <color name="black" tools:ignore="ResourceName">#FF000000</color>
-    <color name="uField_white" tools:ignore="ResourceName">#FFFFFFFF</color>
-    <color name="uField_check_tabSelected">#15315B</color>
-    <color name="uField_check_tab">#15315B</color>
-    <color name="uField_check_background">#F8F9FC</color>
-    <color name="editColor" tools:ignore="ResourceName">#15315B</color>
-    <color name="phonecolor" tools:ignore="ResourceName">#ED535C</color>
-    <color name="timecolor" tools:ignore="ResourceName">#ECEEF2</color>
-    <color name="seecolor" tools:ignore="ResourceName">#994A44E4</color>
+    <color name="uField_black_white">#000000</color>
+    <color name="uField_white_black_111111">#FFFFFFFF</color>
+    <color name="uField_text_phone">#ED535C</color>
+    <color name="uField_text_time">#ECEEF2</color>
+    <color name="uField_text_see">#994A44E4</color>
     <color name="uField_check_tabText">#A1ABBA</color>
-    <!--    <color name="uField_check_background">#15315B66</color>-->
-    <color name="uField_todo_background">#F8F9FC</color>
-    <color name="uField_15315b">#15315B</color>
-    <color name="uField_15315b66_40">#15315B66</color>
     <color name="uField_tab_selected">#4F4AE9</color>
-    <color name="uField_tab_color">#2A4E84</color>
-    <color name="uField_646382">#646382</color>
+    <color name="uField_tab_background_color">#E8E9FC</color>
+    <color name="uField_check_button_reject">#646382</color>
     <color name="uField_background">#FCFCFD</color>
-    <color name="uField_search_background">#FBFCFF</color>
-    <color name="uField_15315b99">#15315B</color>
-    <color name="uField_112c54">#112C54</color>
-    <color name="uField_15315b66">#A1ADBD</color>
-    <color name="uField_112c5499">#708098</color>
-    <color name="ufield_white_background">#ffffff</color>
-    <color name="ufield_white_font_color">#ffffff</color>
-    <color name="ufield_back_detail_ripple">#FFFFFF</color>
-    <color name="ufield_setting_back_detail_ripple">#F2F3F8</color>
-    <color name="ufield_home_tabLayout_text_selected">#112C54</color>
-    <color name="ufield_home_tabLayout_text_unselect">#66142C52</color>
-    <color name="ufield_fragment_head_title">#112C54</color>
-    <color name="ufield_fragment_detail">#6615315B</color>
-    <color name="ufield_fragment_time_color">#CC2A4E84</color>
-    <color name="ufield_todo_time_color">#6615315B</color>
-    <color name="uField_9915315b">#9915315B</color>
-    <color name="uField_6615315b">#6615315B</color>
+    <color name="uField_white_black_333333">#FFFFFF</color>
+    <color name="uField_alpha_level_three_font_color">#66142C52</color>
     <color name="uField_check_edit">#F3F8FD</color>
-    <color name="ufield_15315b">#15315B</color>
-    <color name="ufield_0d15315b">#0D15315B</color>
-    <color name="ufield_3315315b">#3315315B</color>
-    <color name="ufield_4a44e4">#4A44E4</color>
+    <color name="uField_search_background">#FBFCFF</color>
+    <color name="uField_search_shape_background">#0D15315B</color>
+    <color name="uField_create_textfield">#40DBDBDB</color>
+    <color name="uField_todo_background">#F8F9FC</color>
+    <color name="uField_check_tabSelected">#15315B</color>
+    <color name="uField_search_tab_background">#A1ADBD</color>
+    <color name="uField_search_text_color">#4A44E4</color>
+
+
 </resources>
