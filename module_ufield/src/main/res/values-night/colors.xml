@@ -15,4 +15,9 @@
     <color name="uField_search_background">#3D7889A3</color>
     <color name="uField_search_shape_background">#3D7889A3</color>
     <color name="uField_create_textfield">#2D2D2D</color>
+    <color name="uField_activity_time_color">#ECEEF2</color>
+    <color name="uField_activity_style_color">#5A5A5A</color>
+    <color name="uField_activity_hint_color">#5A5A5A</color>
+
+
 </resources>

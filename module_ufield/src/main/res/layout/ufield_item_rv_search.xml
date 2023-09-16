@@ -87,7 +87,7 @@
             android:maxLines="1"
             android:scrollHorizontally="true"
             android:singleLine="true"
-            android:textColor="@color/config_alpha_level_two_font_color"
+            android:textColor="@color/uField_activity_hint_color"
             android:textSize="14sp"
             app:layout_constraintStart_toEndOf="@+id/Ufield_search_iv_card"
             app:layout_constraintTop_toBottomOf="@+id/uField_search_linear" />
@@ -116,7 +116,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginStart="7dp"
                 android:layout_gravity="center_vertical"
-                android:textColor="@color/config_level_one_font_color"
+                android:textColor="@color/uField_activity_time_color"
                 android:textSize="12sp"/>
         </LinearLayout>
 
